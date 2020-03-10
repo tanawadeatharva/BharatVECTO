@@ -7,13 +7,14 @@ using System.ServiceModel.Description;
 using System.Text;
 using System.Threading.Tasks;
 using TUGraz.VectoCommon.BusAuxiliaries;
+using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.Declaration
 {
-	public sealed class CompletedBusSegments : LookupData<int , VehicleCode, string , Segment>
+	public sealed class CompletedBusSegments : LookupData<int , VehicleCode, RegistrationClass, int, Meter, bool, Segment>
 	{
 		private const string COMPLETED_BUS_SEGMENTS_CSV = ".CompletedBusSegmentationTable.csv";
 
@@ -37,35 +38,60 @@ namespace TUGraz.VectoCore.Models.Declaration
 			_segmentTable = table.Copy();
 		}
 
-		public override Segment Lookup(int numberOfAxles, VehicleCode vehicleCode, string vehicleParameterGroup)
+		public override Segment Lookup(int numberOfAxles, VehicleCode vehicleCode, RegistrationClass registrationClass, int passengersLowerDeck, Meter bodyHeight, bool lowEntry)
 		{
-			return LookupCompletedBusVehicle(numberOfAxles, vehicleCode, vehicleParameterGroup);
+			return LookupCompletedBusVehicle(numberOfAxles, vehicleCode, registrationClass, passengersLowerDeck, bodyHeight, lowEntry);
 		}
 		
 
 		#endregion
 
 
-		private Segment LookupCompletedBusVehicle(int numberOfAxles, VehicleCode vehicleCode, string vehicleParameterGroup)
+		private Segment LookupCompletedBusVehicle(int numberOfAxles, VehicleCode vehicleCode, RegistrationClass registrationClass, int passengersLowerDeck, Meter bodyHeight, bool lowEntry)
 		{
 			var rows = _segmentTable.AsEnumerable().Where(
 				r => {
 					var currentNumberOfAxles = r.Field<string>("numaxles").ToInt(0);
 					var currentVehicleCode =  VehicleCodeHelper.Parse(r.Field<string>("vehiclecode"));
-					var currentVehicleParam = r.Field<string>("vehicleparametergroup");
+					var registrationClasses = RegistrationClassHelper.Parse(r.Field<string>("registrationclasses"));
 
 					return currentNumberOfAxles == numberOfAxles 
-							&& currentVehicleCode == vehicleCode 
-							&& currentVehicleParam == vehicleParameterGroup;
+							&& currentVehicleCode == vehicleCode && registrationClasses.Contains(registrationClass);
 				}).ToList();
 			if (rows.Count == 0) {
 				return new Segment { Found = false };
 			}
 
-			var segment = new Segment
-			{
+			if (rows.Count > 1) {
+				if (rows.Any(r => r.Field<string>("passengerslowerdeck") != "-")) {
+					rows = rows.Where(
+						r => {
+							var limits = r.Field<string>("passengerslowerdeck").Split('-');
+							return passengersLowerDeck.IsBetween(limits[0].ToInt(), limits[1].ToInt());
+						}).ToList();
+				} else if (rows.Any(r => r.Field<string>("bodyheight") != "-")) {
+					rows = rows.Where(
+						r => {
+							var limits = r.Field<string>("bodyheight").Split('-');
+							return bodyHeight > limits[0].ToDouble().SI<Meter>() && bodyHeight <= limits[1].ToDouble().SI<Meter>();
+						}).ToList();
+				} else if (rows.All(r => r.Field<string>("lowentry") != "-")) {
+					rows = rows.Where(
+						r => {
+							var isLowEntry = r.Field<string>("lowentry") == "1";
+							return isLowEntry == lowEntry;
+						}).ToList();
+				} else {
+					throw new VectoException("Multiple segments found! {0}", rows.Count);
+				}
+
+			}
+
+			var row = rows.First();
+			var segment = new Segment {
 				Found =  true,
-				Missions = CreateMissions(rows)
+				Missions = CreateMissions(rows), 
+				VehicleClass = VehicleClassHelper.Parse("CB" + row.Field<string>("vehicleparametergroup")),
 			};
 
 			return segment;
@@ -87,35 +113,21 @@ namespace TUGraz.VectoCore.Models.Declaration
 						continue;
 					}
 
-					var lowEntry = row.Field<string>("lowentry");
-					var bodyHeight = row.Field<string>("bodyheight");
-					var passengersLowerDeck = row.Field<string>("passengerslowerdeck");
-					var vehicleCode = VehicleCodeHelper.Parse(row.Field<string>("vehiclecode"));
-					var vehicleParameterGroup = row.Field<string>("vehicleparametergroup");
-
+					var passengerDensity = row.ParseDouble(missionType.ToString()).SI<PerSquareMeter>();
+					
 					var mission = new Mission {
 						MissionType = missionType,
+						MinLoad = null,
+						MaxLoad = null,
+						RefLoad = 100.SI<Kilogram>(), // dummy value to trigger simulation with ref load
+						LowLoad = 10.SI<Kilogram>(), // dummy value to trigger simulation with low load
+						AxleWeightDistribution = GetAxleWeightDistribution(row),
 						DefaultCDxA = row.ParseDouble("cdxastandard").SI<SquareMeter>(),
 						AirDragMeasurement = row.ParseBoolean("airdragmeasurement"),
 						BusParameter = new BusParameters {
-							NumberOfAxles = row.Field<string>("numaxles").ToInt(0),
-							IsArticulated = int.Parse(row.Field<string>("articulated")) != 0,
-							FloorType = GetFloorType(row.Field<string>("floortype")),
-							VehicleCode = vehicleCode,
-							RegistrationClasses = RegistrationClassHelper.Parse(row.Field<string>("registrationclasses")),
-							LowEntry = lowEntry == "-" ? (bool?)null : int.Parse(lowEntry) != 0,
-							NumberPassengersLowerDeck = passengersLowerDeck == "-" ? 0 : row.ParseDouble("passengerslowerdeck"),
-							PassengersSeatsLowerOrEqual = GetPassengersLowerOrEqualValue(passengersLowerDeck, vehicleParameterGroup, vehicleCode),
-							BodyHeight = bodyHeight == "-" ? null : row.ParseDouble("bodyheight").SI<Meter>(),
-							BodyHeightLowerOrEqual = GetBodyHeightLowerOrEqualValue(bodyHeight, vehicleParameterGroup, vehicleCode),
-							VehicleParameterGroup = vehicleParameterGroup,
-							PassengersHeavyUrban = row.Field<string>("heavyurban") == string.Empty ? 0 : row.ParseDouble("heavyurban"),
-							PassengersUrban = row.Field<string>("urban") == string.Empty ? 0 : row.ParseDouble("urban"),
-							PassengersSuburban = row.Field<string>("suburban") == string.Empty ? 0 : row.ParseDouble("suburban"),
-							PassengersInterurban = row.Field<string>("interurban") == string.Empty ? 0 : row.ParseDouble("interurban"),
-							PassengersCoach = row.Field<string>("coach") == string.Empty ? 0 : row.ParseDouble("coach"),
-							AxleLoadDistribution = GetAxleLoadDistribution(row.Field<string>("axleloaddistribution")),
-							VehicleEquipment = GetVehicleEquipment(row)
+							PassengerDensity = row.ParseDouble(missionType.ToString()).SI<PerSquareMeter>(),
+							VehicleEquipment = GetVehicleEquipment(row),
+							AirDragMeasurementAllowed = row.Field<string>("airdragmeasurement") == "1"
 						}
 					};
 
@@ -126,7 +138,17 @@ namespace TUGraz.VectoCore.Models.Declaration
 			return missions.ToArray();
 		}
 
-		
+		private double[] GetAxleWeightDistribution(DataRow row)
+		{
+			var axleDistribution = row.Field<string>("axleloaddistribution");
+			if (string.IsNullOrWhiteSpace(axleDistribution)) {
+				return new double[] { };
+			}
+
+			return axleDistribution.Split('/').ToDouble().Select(x => x / 100.0).ToArray();
+		}
+
+
 		private bool? GetPassengersLowerOrEqualValue(string numberOfPassengers, string vehicleParameterGroup, VehicleCode vehicleCode)
 		{
 			if (numberOfPassengers != "-") {

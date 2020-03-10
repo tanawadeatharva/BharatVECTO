@@ -139,4 +139,9 @@ namespace TUGraz.VectoCore.Models.Declaration
 	{
 		public abstract TValue Lookup(TKey1 key1, TKey2 key2, TKey3 key3, TKey4 key4, TKey5 key5, TKey6 key6);
 	}
+
+	public abstract class LookupData<TKey1, TKey2, TKey3, TKey4, TKey5, TKey6, TKey7, TValue> : LookupData where TValue : struct
+	{
+		public abstract TValue Lookup(TKey1 key1, TKey2 key2, TKey3 key3, TKey4 key4, TKey5 key5, TKey6 key6, TKey7 key7);
+	}
 }

@@ -85,8 +85,20 @@ namespace TUGraz.VectoCore.Models.Declaration
 		ClassPB42,
 		ClassPB43,
 		ClassPB44,
-		ClassPB45
-    }
+		ClassPB45,
+		ClassCB31a,
+		ClassCB31b,
+		ClassCB31c,
+		ClassCB31d,
+		ClassCB31e,
+
+		ClassCB32a,
+		ClassCB32b,
+		ClassCB32c,
+		ClassCB32d,
+		ClassCB32e,
+		ClassCB32f,
+	}
 
 	public static class VehicleClassHelper
 	{

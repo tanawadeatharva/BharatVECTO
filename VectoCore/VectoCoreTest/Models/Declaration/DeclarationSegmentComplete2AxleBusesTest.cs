@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using NUnit.Framework;
 using TUGraz.VectoCommon.BusAuxiliaries;
 using TUGraz.VectoCommon.Models;
+using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Models.Declaration;
 
 namespace TUGraz.VectoCore.Tests.Models.Declaration
@@ -23,28 +24,29 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 		}
 
 		[
-			TestCase(2, VehicleCode.CE, "31a", 3),
-			TestCase(2, VehicleCode.CE, "31b", 3),
-			TestCase(2, VehicleCode.CF, "31c", 3),
-			TestCase(2, VehicleCode.CI, "31d", 3),
-			TestCase(2, VehicleCode.CJ, "31e", 3),
-			TestCase(2, VehicleCode.CA, "32a", 2),
-			TestCase(2, VehicleCode.CA, "32b", 2),
-			TestCase(2, VehicleCode.CA, "32c", 2),
-			TestCase(2, VehicleCode.CA, "32d", 2),
-			TestCase(2, VehicleCode.CB, "32e", 2),
-			TestCase(2, VehicleCode.CB, "32f", 2),
+			TestCase(AxleConfiguration.AxleConfig_4x2, VehicleCode.CE, RegistrationClass.I, 0, 0, false, VehicleClass.ClassCB31a, 3),
+			TestCase(AxleConfiguration.AxleConfig_4x2, VehicleCode.CE, RegistrationClass.I, 0, 0, true, VehicleClass.ClassCB31b, 3),
+			TestCase(AxleConfiguration.AxleConfig_4x2, VehicleCode.CF, RegistrationClass.I, 0, 0, false, VehicleClass.ClassCB31c, 3),
+			TestCase(AxleConfiguration.AxleConfig_4x2, VehicleCode.CI, RegistrationClass.I, 0, 0, false, VehicleClass.ClassCB31d, 3),
+			TestCase(AxleConfiguration.AxleConfig_4x2, VehicleCode.CJ, RegistrationClass.I, 0, 0, false, VehicleClass.ClassCB31e, 3),
+			TestCase(AxleConfiguration.AxleConfig_4x2, VehicleCode.CA, RegistrationClass.II, 0, 0, false, VehicleClass.ClassCB32a, 2),
+			TestCase(AxleConfiguration.AxleConfig_4x2, VehicleCode.CA, RegistrationClass.II_III, 0, 3.1, false, VehicleClass.ClassCB32b, 2),
+			TestCase(AxleConfiguration.AxleConfig_4x2, VehicleCode.CA, RegistrationClass.II_III, 0, 3.1001, false, VehicleClass.ClassCB32c, 2),
+			TestCase(AxleConfiguration.AxleConfig_4x2, VehicleCode.CA, RegistrationClass.III, 0, 0, false, VehicleClass.ClassCB32d, 2),
+			TestCase(AxleConfiguration.AxleConfig_4x2, VehicleCode.CB, RegistrationClass.II, 6, 0, false, VehicleClass.ClassCB32e, 2),
+			TestCase(AxleConfiguration.AxleConfig_4x2, VehicleCode.CB, RegistrationClass.II, 7, 0, false, VehicleClass.ClassCB32f, 2),
 		]
-		public void SegmentLookupTest(int numberOfAxles, VehicleCode vehicleCode, string vehicleParameterGroup, int numberOfMissions)
+		public void SegmentLookupTest(AxleConfiguration axleConfig, VehicleCode vehicleCode, RegistrationClass registrationClass, int passengersLowerDeck, double bodyHeight, bool lowEntry,  VehicleClass vehicleParameterGroup, int numberOfMissions)
 		{
-			var segment = DeclarationData.CompletedBusSegments.Lookup(numberOfAxles, vehicleCode, vehicleParameterGroup);
+			var segment = DeclarationData.CompletedBusSegments.Lookup(axleConfig.NumAxles(), vehicleCode, registrationClass, passengersLowerDeck, bodyHeight.SI<Meter>(), lowEntry);
 			Assert.AreEqual(numberOfMissions, segment.Missions.Length);
+			Assert.AreEqual(vehicleParameterGroup, segment.VehicleClass);
 		}
 
 		[TestCase(2, VehicleCode.CE, "31a")]
-		public void TestComplete2AxlesCompleteBus31A(int numberOfAxles, VehicleCode vehicleCode, string vehicleParameterGroup)
+		public void TestComplete2AxlesCompleteBus31A(AxleConfiguration axleConfig, VehicleCode vehicleCode, RegistrationClass registrationClass, int passengersLowerDeck, double bodyHeight,  string vehicleParameterGroup, int numberOfMissions)
 		{
-			var segment = DeclarationData.CompletedBusSegments.Lookup(numberOfAxles, vehicleCode, vehicleParameterGroup);
+			var segment = DeclarationData.CompletedBusSegments.Lookup(axleConfig.NumAxles(), vehicleCode, registrationClass, passengersLowerDeck, bodyHeight.SI<Meter>());
 			Assert.AreEqual(3, segment.Missions.Length);
 
 			for (int i = 0; i < segment.Missions.Length; i++)
@@ -57,31 +59,21 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 
 				AssertBusParameters(
 					isDoubleDeck: false,
-					numberOfAxles: numberOfAxles,
-					isArticulated: false,
 					floorType: FloorType.LowFloor,
 					vehicleCode: vehicleCode,
-					regClasses: "I/I+II/II/A",
-					lowEntry: false,
-					numPassengersLower: 0,
-					passengersLowerOrEqual: null,
-					bodyHeight: null,
-					bodyHeightLowerOrEqual: null,
-					vehicleParam: vehicleParameterGroup,
 					busParameters: mission.BusParameter
 				);
 
-				AssertAveragePassengers(heavyUrban: 3, urban: 3, suburban: 3, interurban: 0, coach: 0, busParameters: mission.BusParameter);
-				AssertAxleDistribution(axle1: 37.5, axle2: 62.5, axle3: 0, axle4: 0, axleLoadDistribution: mission.BusParameter.AxleLoadDistribution);
+				AssertAxleDistribution(axle1: 37.5, axle2: 62.5, axle3: 0, axle4: 0, axleLoadDistribution: mission.AxleWeightDistribution);
 				AssertVehicleEquipment(externalDisplays: 3, internalDisplays: 2, fridge: 0, kitchenStandard: 0,
 					vehicleEquipment: mission.BusParameter.VehicleEquipment);
 			}
 		}
 
 		[TestCase(2, VehicleCode.CE, "31b")]
-		public void TestComplete2AxlesCompleteBus31B(int numberOfAxles, VehicleCode vehicleCode, string vehicleParameterGroup)
+		public void TestComplete2AxlesCompleteBus31B(AxleConfiguration axleConfig, VehicleCode vehicleCode, RegistrationClass registrationClass, int passengersLowerDeck, double bodyHeight, string vehicleParameterGroup, int numberOfMissions)
 		{
-			var segment = DeclarationData.CompletedBusSegments.Lookup(numberOfAxles, vehicleCode, vehicleParameterGroup);
+			var segment = DeclarationData.CompletedBusSegments.Lookup(axleConfig.NumAxles(), vehicleCode, registrationClass, passengersLowerDeck, bodyHeight.SI<Meter>());
 
 			Assert.AreEqual(3, segment.Missions.Length);
 
@@ -95,30 +87,20 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 
 				AssertBusParameters(
 					isDoubleDeck: false,
-					numberOfAxles: numberOfAxles,
-					isArticulated: false,
 					floorType: FloorType.LowFloor,
 					vehicleCode: vehicleCode,
-					regClasses: "I/I+II/II/A",
-					lowEntry: true,
-					numPassengersLower: 0,
-					passengersLowerOrEqual: null,
-					bodyHeight: null,
-					bodyHeightLowerOrEqual: null,
-					vehicleParam: vehicleParameterGroup,
 					busParameters: mission.BusParameter
 				);
 
-				AssertAveragePassengers(heavyUrban: 3, urban: 3, suburban: 3, interurban: 0, coach: 0, busParameters: mission.BusParameter);
-				AssertAxleDistribution(axle1: 37.5, axle2: 62.5, axle3: 0, axle4: 0, axleLoadDistribution: mission.BusParameter.AxleLoadDistribution);
+				AssertAxleDistribution(axle1: 37.5, axle2: 62.5, axle3: 0, axle4: 0, axleLoadDistribution: mission.AxleWeightDistribution);
 				AssertVehicleEquipment(externalDisplays: 3, internalDisplays: 2, fridge: 0, kitchenStandard: 0, vehicleEquipment: mission.BusParameter.VehicleEquipment);
 			}
 		}
 
 		[TestCase(2, VehicleCode.CF, "31c")]
-		public void TestComplete2AxlesCompleteBus31C(int numberOfAxles, VehicleCode vehicleCode, string vehicleParameterGroup)
+		public void TestComplete2AxlesCompleteBus31C(AxleConfiguration axleConfig, VehicleCode vehicleCode, RegistrationClass registrationClass, int passengersLowerDeck, double bodyHeight,  string vehicleParameterGroup, int numberOfMissions)
 		{
-			var segment = DeclarationData.CompletedBusSegments.Lookup(numberOfAxles, vehicleCode, vehicleParameterGroup);
+			var segment = DeclarationData.CompletedBusSegments.Lookup(axleConfig.NumAxles(), vehicleCode, registrationClass, passengersLowerDeck, bodyHeight.SI<Meter>());
 
 			Assert.AreEqual(3, segment.Missions.Length);
 
@@ -132,30 +114,20 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 
 				AssertBusParameters(
 					isDoubleDeck: true,
-					numberOfAxles: numberOfAxles,
-					isArticulated: false,
 					floorType: FloorType.LowFloor,
 					vehicleCode: vehicleCode,
-					regClasses: "I/I+II/II/A",
-					lowEntry: null,
-					numPassengersLower: 0,
-					passengersLowerOrEqual: null,
-					bodyHeight: null,
-					bodyHeightLowerOrEqual: null,
-					vehicleParam: vehicleParameterGroup,
 					busParameters: mission.BusParameter
 				);
 
-				AssertAveragePassengers(heavyUrban: 3.7, urban: 3.7, suburban: 3.7, interurban: 0, coach: 0, busParameters: mission.BusParameter);
-				AssertAxleDistribution(axle1: 37.5, axle2: 62.5, axle3: 0, axle4: 0, axleLoadDistribution: mission.BusParameter.AxleLoadDistribution);
+				AssertAxleDistribution(axle1: 37.5, axle2: 62.5, axle3: 0, axle4: 0, axleLoadDistribution: mission.AxleWeightDistribution);
 				AssertVehicleEquipment(externalDisplays: 3, internalDisplays: 3, fridge: 0, kitchenStandard: 0, vehicleEquipment: mission.BusParameter.VehicleEquipment);
 			}
 		}
 
 		[TestCase(2, VehicleCode.CI, "31d")]
-		public void TestComplete2AxlesCompleteBus31D(int numberOfAxles, VehicleCode vehicleCode, string vehicleParameterGroup)
+		public void TestComplete2AxlesCompleteBus31D(AxleConfiguration axleConfig, VehicleCode vehicleCode, RegistrationClass registrationClass, int passengersLowerDeck, double bodyHeight,  string vehicleParameterGroup, int numberOfMissions)
 		{
-			var segment = DeclarationData.CompletedBusSegments.Lookup(numberOfAxles, vehicleCode, vehicleParameterGroup);
+			var segment = DeclarationData.CompletedBusSegments.Lookup(axleConfig.NumAxles(), vehicleCode, registrationClass, passengersLowerDeck, bodyHeight.SI<Meter>());
 
 			Assert.AreEqual(3, segment.Missions.Length);
 
@@ -169,30 +141,20 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 
 				AssertBusParameters(
 					isDoubleDeck: false,
-					numberOfAxles: numberOfAxles,
-					isArticulated: false,
 					floorType: FloorType.Unknown,
 					vehicleCode: vehicleCode,
-					regClasses: "I/I+II/II/II+III/III/A/B",
-					lowEntry: null,
-					numPassengersLower: 0,
-					passengersLowerOrEqual: null,
-					bodyHeight: null,
-					bodyHeightLowerOrEqual: null,
-					vehicleParam: vehicleParameterGroup,
 					busParameters: mission.BusParameter
 				);
 
-				AssertAveragePassengers(heavyUrban: 3, urban: 3, suburban: 3, interurban: 0, coach: 0, busParameters: mission.BusParameter);
-				AssertAxleDistribution(axle1: 37.5, axle2: 62.5, axle3: 0, axle4: 0, axleLoadDistribution: mission.BusParameter.AxleLoadDistribution);
+				AssertAxleDistribution(axle1: 37.5, axle2: 62.5, axle3: 0, axle4: 0, axleLoadDistribution: mission.AxleWeightDistribution);
 				AssertVehicleEquipment(externalDisplays: 1, internalDisplays: 1, fridge: 0, kitchenStandard: 0, vehicleEquipment: mission.BusParameter.VehicleEquipment);
 			}
 		}
 
 		[TestCase(2, VehicleCode.CJ, "31e")]
-		public void TestComplete2AxlesCompleteBus31E(int numberOfAxles, VehicleCode vehicleCode, string vehicleParameterGroup)
+		public void TestComplete2AxlesCompleteBus31E(AxleConfiguration axleConfig, VehicleCode vehicleCode, RegistrationClass registrationClass, int passengersLowerDeck, double bodyHeight,  string vehicleParameterGroup, int numberOfMissions)
 		{
-			var segment = DeclarationData.CompletedBusSegments.Lookup(numberOfAxles, vehicleCode, vehicleParameterGroup);
+			var segment = DeclarationData.CompletedBusSegments.Lookup(axleConfig.NumAxles(), vehicleCode, registrationClass, passengersLowerDeck, bodyHeight.SI<Meter>());
 
 			Assert.AreEqual(3, segment.Missions.Length);
 
@@ -206,30 +168,20 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 
 				AssertBusParameters(
 					isDoubleDeck: true,
-					numberOfAxles: numberOfAxles,
-					isArticulated: false,
 					floorType: FloorType.Unknown,
 					vehicleCode: vehicleCode,
-					regClasses: "I/I+II/II/II+III/III/A/B",
-					lowEntry: null,
-					numPassengersLower: 0,
-					passengersLowerOrEqual: null,
-					bodyHeight: null,
-					bodyHeightLowerOrEqual: null,
-					vehicleParam: vehicleParameterGroup,
 					busParameters: mission.BusParameter
 				);
 
-				AssertAveragePassengers(heavyUrban: 3.7, urban: 3.7, suburban: 3.7, interurban: 0, coach: 0, busParameters: mission.BusParameter);
-				AssertAxleDistribution(axle1: 37.5, axle2: 62.5, axle3: 0, axle4: 0, axleLoadDistribution: mission.BusParameter.AxleLoadDistribution);
+				AssertAxleDistribution(axle1: 37.5, axle2: 62.5, axle3: 0, axle4: 0, axleLoadDistribution: mission.AxleWeightDistribution);
 				AssertVehicleEquipment(externalDisplays: 2, internalDisplays: 1, fridge: 0, kitchenStandard: 0, vehicleEquipment: mission.BusParameter.VehicleEquipment);
 			}
 		}
 
 		[TestCase(2, VehicleCode.CA, "32a")]
-		public void TestComplete2AxlesCompleteBus32A(int numberOfAxles, VehicleCode vehicleCode, string vehicleParameterGroup)
+		public void TestComplete2AxlesCompleteBus32A(AxleConfiguration axleConfig, VehicleCode vehicleCode, RegistrationClass registrationClass, int passengersLowerDeck, double bodyHeight,  string vehicleParameterGroup, int numberOfMissions)
 		{
-			var segment = DeclarationData.CompletedBusSegments.Lookup(numberOfAxles, vehicleCode, vehicleParameterGroup);
+			var segment = DeclarationData.CompletedBusSegments.Lookup(axleConfig.NumAxles(), vehicleCode, registrationClass, passengersLowerDeck, bodyHeight.SI<Meter>());
 
 			Assert.AreEqual(2, segment.Missions.Length);
 
@@ -243,30 +195,20 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 
 				AssertBusParameters(
 					isDoubleDeck: false,
-					numberOfAxles: numberOfAxles,
-					isArticulated: false,
 					floorType: FloorType.HighFloor,
 					vehicleCode: vehicleCode,
-					regClasses: "II",
-					lowEntry: null,
-					numPassengersLower: 0,
-					passengersLowerOrEqual: null,
-					bodyHeight: null,
-					bodyHeightLowerOrEqual: null,
-					vehicleParam: vehicleParameterGroup,
 					busParameters: mission.BusParameter
 				);
 
-				AssertAveragePassengers(heavyUrban: 0, urban: 0, suburban: 0, interurban: 2.2, coach: 1.4, busParameters: mission.BusParameter);
-				AssertAxleDistribution(axle1: 37.5, axle2: 62.5, axle3: 0, axle4: 0, axleLoadDistribution: mission.BusParameter.AxleLoadDistribution);
+				AssertAxleDistribution(axle1: 37.5, axle2: 62.5, axle3: 0, axle4: 0, axleLoadDistribution: mission.AxleWeightDistribution);
 				AssertVehicleEquipment(externalDisplays: 3, internalDisplays: 2, fridge: 0, kitchenStandard: 0, vehicleEquipment: mission.BusParameter.VehicleEquipment);
 			}
 		}
 
 		[TestCase(2, VehicleCode.CA, "32b")]
-		public void TestComplete2AxlesCompleteBus32B(int numberOfAxles, VehicleCode vehicleCode, string vehicleParameterGroup)
+		public void TestComplete2AxlesCompleteBus32B(AxleConfiguration axleConfig, VehicleCode vehicleCode, RegistrationClass registrationClass, int passengersLowerDeck, double bodyHeight,  string vehicleParameterGroup, int numberOfMissions)
 		{
-			var segment = DeclarationData.CompletedBusSegments.Lookup(numberOfAxles, vehicleCode, vehicleParameterGroup);
+			var segment = DeclarationData.CompletedBusSegments.Lookup(axleConfig.NumAxles(), vehicleCode, registrationClass, passengersLowerDeck, bodyHeight.SI<Meter>());
 
 			Assert.AreEqual(2, segment.Missions.Length);
 
@@ -280,30 +222,20 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 
 				AssertBusParameters(
 					isDoubleDeck: false,
-					numberOfAxles: numberOfAxles,
-					isArticulated: false,
 					floorType: FloorType.HighFloor,
 					vehicleCode: vehicleCode,
-					regClasses: "II+III",
-					lowEntry: null,
-					numPassengersLower: 0,
-					passengersLowerOrEqual: null,
-					bodyHeight: 3100,
-					bodyHeightLowerOrEqual: true,
-					vehicleParam: vehicleParameterGroup,
 					busParameters: mission.BusParameter
 				);
 
-				AssertAveragePassengers(heavyUrban: 0, urban: 0, suburban: 0, interurban: 2.2, coach: 1.4, busParameters: mission.BusParameter);
-				AssertAxleDistribution(axle1: 37.5, axle2: 62.5, axle3: 0, axle4: 0, axleLoadDistribution: mission.BusParameter.AxleLoadDistribution);
+				AssertAxleDistribution(axle1: 37.5, axle2: 62.5, axle3: 0, axle4: 0, axleLoadDistribution: mission.AxleWeightDistribution);
 				AssertVehicleEquipment(externalDisplays: 3, internalDisplays: 2, fridge: 0, kitchenStandard: 0, vehicleEquipment: mission.BusParameter.VehicleEquipment);
 			}
 		}
 
 		[TestCase(2, VehicleCode.CA, "32c")]
-		public void TestComplete2AxlesCompleteBus32C(int numberOfAxles, VehicleCode vehicleCode, string vehicleParameterGroup)
+		public void TestComplete2AxlesCompleteBus32C(AxleConfiguration axleConfig, VehicleCode vehicleCode, RegistrationClass registrationClass, int passengersLowerDeck, double bodyHeight,  string vehicleParameterGroup, int numberOfMissions)
 		{
-			var segment = DeclarationData.CompletedBusSegments.Lookup(numberOfAxles, vehicleCode, vehicleParameterGroup);
+			var segment = DeclarationData.CompletedBusSegments.Lookup(axleConfig.NumAxles(), vehicleCode, registrationClass, passengersLowerDeck, bodyHeight.SI<Meter>());
 
 			Assert.AreEqual(2, segment.Missions.Length);
 
@@ -317,30 +249,20 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 
 				AssertBusParameters(
 					isDoubleDeck: false,
-					numberOfAxles: numberOfAxles,
-					isArticulated: false,
 					floorType: FloorType.HighFloor,
 					vehicleCode: vehicleCode,
-					regClasses: "II+III",
-					lowEntry: null,
-					numPassengersLower: 0,
-					passengersLowerOrEqual: null,
-					bodyHeight: 3100,
-					bodyHeightLowerOrEqual: false,
-					vehicleParam: vehicleParameterGroup,
 					busParameters: mission.BusParameter
 				);
 
-				AssertAveragePassengers(heavyUrban: 0, urban: 0, suburban: 0, interurban: 2.2, coach: 1.4, busParameters: mission.BusParameter);
-				AssertAxleDistribution(axle1: 37.5, axle2: 62.5, axle3: 0, axle4: 0, axleLoadDistribution: mission.BusParameter.AxleLoadDistribution);
+				AssertAxleDistribution(axle1: 37.5, axle2: 62.5, axle3: 0, axle4: 0, axleLoadDistribution: mission.AxleWeightDistribution);
 				AssertVehicleEquipment(externalDisplays: 1, internalDisplays: 2, fridge: 1, kitchenStandard: 1, vehicleEquipment: mission.BusParameter.VehicleEquipment);
 			}
 		}
 
 		[TestCase(2, VehicleCode.CA, "32d")]
-		public void TestComplete2AxlesCompleteBus32D(int numberOfAxles, VehicleCode vehicleCode, string vehicleParameterGroup)
+		public void TestComplete2AxlesCompleteBus32D(AxleConfiguration axleConfig, VehicleCode vehicleCode, RegistrationClass registrationClass, int passengersLowerDeck, double bodyHeight,  string vehicleParameterGroup, int numberOfMissions)
 		{
-			var segment = DeclarationData.CompletedBusSegments.Lookup(numberOfAxles, vehicleCode, vehicleParameterGroup);
+			var segment = DeclarationData.CompletedBusSegments.Lookup(axleConfig.NumAxles(), vehicleCode, registrationClass, passengersLowerDeck, bodyHeight.SI<Meter>());
 
 			Assert.AreEqual(2, segment.Missions.Length);
 
@@ -354,29 +276,19 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 
 				AssertBusParameters(
 					isDoubleDeck: false,
-					numberOfAxles: numberOfAxles,
-					isArticulated: false,
 					floorType: FloorType.HighFloor,
 					vehicleCode: vehicleCode,
-					regClasses: "III/B",
-					lowEntry: null,
-					numPassengersLower: 0,
-					passengersLowerOrEqual: null,
-					bodyHeight: null,
-					bodyHeightLowerOrEqual: null,
-					vehicleParam: vehicleParameterGroup,
 					busParameters: mission.BusParameter
 				);
 
-				AssertAveragePassengers(heavyUrban: 0, urban: 0, suburban: 0, interurban: 2.2, coach: 1.4, busParameters: mission.BusParameter);
-				AssertAxleDistribution(axle1: 37.5, axle2: 62.5, axle3: 0, axle4: 0, axleLoadDistribution: mission.BusParameter.AxleLoadDistribution);
+				AssertAxleDistribution(axle1: 37.5, axle2: 62.5, axle3: 0, axle4: 0, axleLoadDistribution: mission.AxleWeightDistribution);
 				AssertVehicleEquipment(externalDisplays: 1, internalDisplays: 2, fridge: 1, kitchenStandard: 1, vehicleEquipment: mission.BusParameter.VehicleEquipment);
 			}
 		}
 		[TestCase(2, VehicleCode.CB, "32e")]
-		public void TestComplete2AxlesCompleteBus32E(int numberOfAxles, VehicleCode vehicleCode, string vehicleParameterGroup)
+		public void TestComplete2AxlesCompleteBus32E(AxleConfiguration axleConfig, VehicleCode vehicleCode, RegistrationClass registrationClass, int passengersLowerDeck, double bodyHeight,  string vehicleParameterGroup, int numberOfMissions)
 		{
-			var segment = DeclarationData.CompletedBusSegments.Lookup(numberOfAxles, vehicleCode, vehicleParameterGroup);
+			var segment = DeclarationData.CompletedBusSegments.Lookup(axleConfig.NumAxles(), vehicleCode, registrationClass, passengersLowerDeck, bodyHeight.SI<Meter>());
 
 			Assert.AreEqual(2, segment.Missions.Length);
 
@@ -390,30 +302,21 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 
 				AssertBusParameters(
 					isDoubleDeck: true,
-					numberOfAxles: numberOfAxles,
-					isArticulated: false,
 					floorType: FloorType.HighFloor,
 					vehicleCode: vehicleCode,
-					regClasses: "II/II+III/III/B",
-					lowEntry: null,
-					numPassengersLower: 6,
-					passengersLowerOrEqual: true,
-					bodyHeight: null,
-					bodyHeightLowerOrEqual: null,
-					vehicleParam: vehicleParameterGroup,
 					busParameters: mission.BusParameter
 				);
 
-				AssertAveragePassengers(heavyUrban: 0, urban: 0, suburban: 0, interurban: 2.2, coach: 1.4, busParameters: mission.BusParameter);
-				AssertAxleDistribution(axle1: 37.5, axle2: 62.5, axle3: 0, axle4: 0, axleLoadDistribution: mission.BusParameter.AxleLoadDistribution);
+				
+				AssertAxleDistribution(axle1: 37.5, axle2: 62.5, axle3: 0, axle4: 0, axleLoadDistribution: mission.AxleWeightDistribution);
 				AssertVehicleEquipment(externalDisplays: 1, internalDisplays: 2, fridge: 1, kitchenStandard: 1, vehicleEquipment: mission.BusParameter.VehicleEquipment);
 			}
 		}
 
 		[TestCase(2, VehicleCode.CB, "32f")]
-		public void TestComplete2AxlesCompleteBus32F(int numberOfAxles, VehicleCode vehicleCode, string vehicleParameterGroup)
+		public void TestComplete2AxlesCompleteBus32F(AxleConfiguration axleConfig, VehicleCode vehicleCode, RegistrationClass registrationClass, int passengersLowerDeck, double bodyHeight,  string vehicleParameterGroup, int numberOfMissions)
 		{
-			var segment = DeclarationData.CompletedBusSegments.Lookup(numberOfAxles, vehicleCode, vehicleParameterGroup);
+			var segment = DeclarationData.CompletedBusSegments.Lookup(axleConfig.NumAxles(), vehicleCode, registrationClass, passengersLowerDeck, bodyHeight.SI<Meter>());
 
 			Assert.AreEqual(2, segment.Missions.Length);
 
@@ -427,49 +330,26 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 
 				AssertBusParameters(
 					isDoubleDeck: true,
-					numberOfAxles: numberOfAxles,
-					isArticulated: false,
 					floorType: FloorType.HighFloor,
 					vehicleCode: vehicleCode,
-					regClasses: "II/II+III/III/B",
-					lowEntry: null,
-					numPassengersLower: 6,
-					passengersLowerOrEqual: false,
-					bodyHeight: null,
-					bodyHeightLowerOrEqual: null,
-					vehicleParam: vehicleParameterGroup,
 					busParameters: mission.BusParameter
 				);
 
-				AssertAveragePassengers(heavyUrban: 0, urban: 0, suburban: 0, interurban: 3, coach: 2, busParameters: mission.BusParameter);
-				AssertAxleDistribution(axle1: 37.5, axle2: 62.5, axle3: 0, axle4: 0, axleLoadDistribution: mission.BusParameter.AxleLoadDistribution);
+				AssertAxleDistribution(axle1: 37.5, axle2: 62.5, axle3: 0, axle4: 0, axleLoadDistribution: mission.AxleWeightDistribution);
 				AssertVehicleEquipment(externalDisplays: 1, internalDisplays: 2, fridge: 1, kitchenStandard: 1, vehicleEquipment: mission.BusParameter.VehicleEquipment);
 			}
 		}
 
 		#region Assert Methods
 
-		private void AssertBusParameters(bool isDoubleDeck, int numberOfAxles, bool isArticulated, FloorType floorType, VehicleCode vehicleCode, string regClasses,
-			bool? lowEntry, double numPassengersLower, bool? passengersLowerOrEqual, double? bodyHeight, bool? bodyHeightLowerOrEqual,
-			string vehicleParam, BusParameters busParameters)
+		private void AssertBusParameters(bool isDoubleDeck, FloorType floorType, VehicleCode vehicleCode, BusParameters busParameters)
 		{
 			Assert.AreEqual(isDoubleDeck, vehicleCode.IsDoubleDeckBus());
-			Assert.AreEqual(numberOfAxles, busParameters.NumberOfAxles);
-			Assert.AreEqual(isArticulated, busParameters.IsArticulated);
-			Assert.AreEqual(isArticulated, busParameters.IsArticulated);
+			
 
 			Assert.AreEqual(floorType, busParameters.FloorType);
-			if (floorType == FloorType.Unknown)
-				Assert.IsTrue(vehicleCode.IsOpenDeckBus());
+			
 
-			Assert.AreEqual(vehicleCode, busParameters.VehicleCode);
-			AssertRegistrationClasses(regClasses, busParameters.RegistrationClasses);
-			Assert.AreEqual(lowEntry, busParameters.LowEntry);
-			Assert.AreEqual(numPassengersLower, busParameters.NumberPassengersLowerDeck);
-			Assert.AreEqual(passengersLowerOrEqual, busParameters.PassengersSeatsLowerOrEqual);
-			Assert.AreEqual(bodyHeight, busParameters.BodyHeight?.Value());
-			Assert.AreEqual(bodyHeightLowerOrEqual, busParameters.BodyHeightLowerOrEqual);
-			Assert.AreEqual(vehicleParam, busParameters.VehicleParameterGroup);
 		}
 
 
@@ -485,24 +365,17 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 		}
 
 
-		private void AssertAveragePassengers(double heavyUrban, double urban, double suburban, double interurban, double coach,
-			BusParameters busParameters)
-		{
-			Assert.AreEqual(heavyUrban, busParameters.PassengersHeavyUrban);
-			Assert.AreEqual(urban, busParameters.PassengersUrban);
-			Assert.AreEqual(suburban, busParameters.PassengersSuburban);
-			Assert.AreEqual(interurban, busParameters.PassengersInterurban);
-			Assert.AreEqual(coach, busParameters.PassengersCoach);
-		}
-
-
 		private void AssertAxleDistribution(double axle1, double axle2, double axle3, double axle4,
-			AxleLoadDistribution axleLoadDistribution)
+			double[] axleLoadDistribution)
 		{
-			Assert.AreEqual(axle1, axleLoadDistribution.Axle01);
-			Assert.AreEqual(axle2, axleLoadDistribution.Axle02);
-			Assert.AreEqual(axle3, axleLoadDistribution.Axle03);
-			Assert.AreEqual(axle4, axleLoadDistribution.Axle04);
+			Assert.AreEqual(axle1, axleLoadDistribution[0]);
+			Assert.AreEqual(axle2, axleLoadDistribution[1]);
+			if (axle3 > 0) {
+				Assert.AreEqual(axle3, axleLoadDistribution[2]);
+			}
+			if (axle4 > 0) {
+				Assert.AreEqual(axle4, axleLoadDistribution[3]);
+			}
 		}
 
 
