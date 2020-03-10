@@ -137,7 +137,8 @@ namespace TUGraz.VectoCore.Models.Declaration
 							HVACDoubleGlasing = row.ParseBoolean("hvacdoubleglasing"),
 							HVACHeatpump = row.ParseBoolean("hvacheatpump"),
 							HVACAdjustableAuxHeater = row.ParseBoolean("hvacadjustableauxiliaryheater"),
-							HVACSeparateAirDistributionDucts = row.ParseBoolean("hvacseparateairdistributionducts")
+							HVACSeparateAirDistributionDucts = row.ParseBoolean("hvacseparateairdistributionducts"),
+							VehicleEquipment = GetVehicleEquipment(row)
 						}
 					};
 					missions.Add(mission);
@@ -166,6 +167,33 @@ namespace TUGraz.VectoCore.Models.Declaration
 			}
 
 			return axleDistribution.Split('/').ToDouble().Select(x => x / 100.0).ToArray();
+		}
+		
+		private VehicleEquipment GetVehicleEquipment(DataRow row)
+		{
+			var externalDisplays = row.Field<string>("externaldisplays") == string.Empty
+				? (double?)null
+				: row.ParseDouble("externaldisplays");
+
+			var internalDisplays = row.Field<string>("internaldisplays") == string.Empty
+				? (double?)null
+				: row.ParseDouble("internaldisplays");
+
+			var fridge = row.Field<string>("fridge") == string.Empty
+				? (double?)null
+				: row.ParseDouble("fridge");
+
+			var kitchenStandard = row.Field<string>("kitchenStandard") == string.Empty
+				? (double?)null
+				: row.ParseDouble("kitchenStandard");
+
+			return new VehicleEquipment
+			{
+				ExternalDisplays = externalDisplays,
+				InternalDisplays = internalDisplays,
+				Fridge = fridge,
+				KitchenStandard = kitchenStandard
+			};
 		}
 	}
 }

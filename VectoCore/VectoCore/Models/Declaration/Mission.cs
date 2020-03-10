@@ -147,10 +147,10 @@ namespace TUGraz.VectoCore.Models.Declaration
 
 	public class VehicleEquipment
 	{
-		public double ExternalDisplays { get; internal set; }
-		public double InternalDisplays { get; internal set; }
-		public double Fridge { get; internal set; }
-		public double KitchenStandard { get; internal set; }
+		public double? ExternalDisplays { get; internal set; }
+		public double? InternalDisplays { get; internal set; }
+		public double? Fridge { get; internal set; }
+		public double? KitchenStandard { get; internal set; }
 	}
 
 	public class AxleLoadDistribution
