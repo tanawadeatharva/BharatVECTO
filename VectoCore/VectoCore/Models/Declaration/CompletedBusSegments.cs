@@ -83,6 +83,9 @@ namespace TUGraz.VectoCore.Models.Declaration
 			foreach (var row in rows) {
 
 				foreach (var missionType in missionTypes) {
+					if (string.IsNullOrWhiteSpace(row.Field<string>(missionType.ToString()))){
+						continue;
+					}
 
 					var lowEntry = row.Field<string>("lowentry");
 					var bodyHeight = row.Field<string>("bodyheight");
@@ -160,19 +163,19 @@ namespace TUGraz.VectoCore.Models.Declaration
 		private VehicleEquipment GetVehicleEquipment(DataRow row)
 		{
 			var externalDisplays = row.Field<string>("externaldisplays") == string.Empty
-				? 0.0
+				? (double?)null
 				: row.ParseDouble("externaldisplays");
 
 			var internalDisplays = row.Field<string>("internaldisplays") == string.Empty
-				? 0.0
+				? (double?)null
 				: row.ParseDouble("internaldisplays");
 
 			var fridge = row.Field<string>("fridge") == string.Empty
-				? 0.0
+				? (double?)null
 				: row.ParseDouble("fridge");
 
 			var kitchenStandard = row.Field<string>("kitchenStandard") == string.Empty
-				? 0.0
+				? (double?)null
 				: row.ParseDouble("kitchenStandard");
 
 			return new VehicleEquipment {

@@ -23,31 +23,31 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 		}
 
 		[
-			TestCase(4, VehicleCode.CE, "37a"),
-			TestCase(4, VehicleCode.CE, "37b"),
-			TestCase(4, VehicleCode.CF, "37c"),
-			TestCase(4, VehicleCode.CI, "37d"),
-			TestCase(4, VehicleCode.CJ, "37e"),
-			TestCase(4, VehicleCode.CA, "38a"),
-			TestCase(4, VehicleCode.CA, "38b"),
-			TestCase(4, VehicleCode.CA, "38c"),
-			TestCase(4, VehicleCode.CA, "38d"),
-			TestCase(4, VehicleCode.CB, "38e"),
-			TestCase(4, VehicleCode.CB, "38f"),
-			TestCase(4, VehicleCode.CG, "39a"),
-			TestCase(4, VehicleCode.CG, "39b"),
-			TestCase(4, VehicleCode.CH, "39c"),
-			TestCase(4, VehicleCode.CC, "40a"),
-			TestCase(4, VehicleCode.CC, "40b"),
-			TestCase(4, VehicleCode.CC, "40c"),
-			TestCase(4, VehicleCode.CC, "40d"),
-			TestCase(4, VehicleCode.CD, "40e"),
-			TestCase(4, VehicleCode.CD, "40f"),
+			TestCase(4, VehicleCode.CE, "37a", 3),
+			TestCase(4, VehicleCode.CE, "37b", 3),
+			TestCase(4, VehicleCode.CF, "37c", 3),
+			TestCase(4, VehicleCode.CI, "37d", 3),
+			TestCase(4, VehicleCode.CJ, "37e", 3),
+			TestCase(4, VehicleCode.CA, "38a", 2),
+			TestCase(4, VehicleCode.CA, "38b", 2),
+			TestCase(4, VehicleCode.CA, "38c", 2),
+			TestCase(4, VehicleCode.CA, "38d", 2),
+			TestCase(4, VehicleCode.CB, "38e", 2),
+			TestCase(4, VehicleCode.CB, "38f", 2),
+			TestCase(4, VehicleCode.CG, "39a", 3),
+			TestCase(4, VehicleCode.CG, "39b", 3),
+			TestCase(4, VehicleCode.CH, "39c", 3),
+			TestCase(4, VehicleCode.CC, "40a", 2),
+			TestCase(4, VehicleCode.CC, "40b", 2),
+			TestCase(4, VehicleCode.CC, "40c", 2),
+			TestCase(4, VehicleCode.CC, "40d", 2),
+			TestCase(4, VehicleCode.CD, "40e", 2),
+			TestCase(4, VehicleCode.CD, "40f", 2),
 		]
-		public void SegmentLookupTest(int numberOfAxles, VehicleCode vehicleCode, string vehicleParameterGroup)
+		public void SegmentLookupTest(int numberOfAxles, VehicleCode vehicleCode, string vehicleParameterGroup, int numberOfMissions)
 		{
 			var segment = DeclarationData.CompletedBusSegments.Lookup(numberOfAxles, vehicleCode, vehicleParameterGroup);
-			Assert.AreEqual(5, segment.Missions.Length);
+			Assert.AreEqual(numberOfMissions, segment.Missions.Length);
 		}
 
 		[TestCase(4, VehicleCode.CE, "37a")]
@@ -55,7 +55,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 		{
 			var segment =
 				DeclarationData.CompletedBusSegments.Lookup(numberOfAxles, vehicleCode, vehicleParameterGroup);
-			Assert.AreEqual(_missionsTypes.Length, segment.Missions.Length);
+			Assert.AreEqual(3, segment.Missions.Length);
 
 			for (int i = 0; i < segment.Missions.Length; i++)
 			{
@@ -92,7 +92,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 		{
 			var segment = DeclarationData.CompletedBusSegments.Lookup(numberOfAxles, vehicleCode, vehicleParameterGroup);
 
-			Assert.AreEqual(_missionsTypes.Length, segment.Missions.Length);
+			Assert.AreEqual(3, segment.Missions.Length);
 
 			for (int i = 0; i < segment.Missions.Length; i++)
 			{
@@ -129,7 +129,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 		{
 			var segment = DeclarationData.CompletedBusSegments.Lookup(numberOfAxles, vehicleCode, vehicleParameterGroup);
 
-			Assert.AreEqual(_missionsTypes.Length, segment.Missions.Length);
+			Assert.AreEqual(3, segment.Missions.Length);
 
 			for (int i = 0; i < segment.Missions.Length; i++)
 			{
@@ -166,7 +166,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 		{
 			var segment = DeclarationData.CompletedBusSegments.Lookup(numberOfAxles, vehicleCode, vehicleParameterGroup);
 
-			Assert.AreEqual(_missionsTypes.Length, segment.Missions.Length);
+			Assert.AreEqual(3, segment.Missions.Length);
 
 			for (int i = 0; i < segment.Missions.Length; i++)
 			{
@@ -203,7 +203,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 		{
 			var segment = DeclarationData.CompletedBusSegments.Lookup(numberOfAxles, vehicleCode, vehicleParameterGroup);
 
-			Assert.AreEqual(_missionsTypes.Length, segment.Missions.Length);
+			Assert.AreEqual(3, segment.Missions.Length);
 
 			for (int i = 0; i < segment.Missions.Length; i++)
 			{
@@ -240,13 +240,13 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 		{
 			var segment = DeclarationData.CompletedBusSegments.Lookup(numberOfAxles, vehicleCode, vehicleParameterGroup);
 
-			Assert.AreEqual(_missionsTypes.Length, segment.Missions.Length);
+			Assert.AreEqual(2, segment.Missions.Length);
 
 			for (int i = 0; i < segment.Missions.Length; i++)
 			{
 				var mission = segment.Missions[i];
 
-				Assert.AreEqual(_missionsTypes[i], mission.MissionType);
+				Assert.AreEqual(_missionsTypes[i+3], mission.MissionType);
 				Assert.AreEqual(4.8, mission.DefaultCDxA.Value());
 				Assert.AreEqual(true, mission.AirDragMeasurement);
 
@@ -277,13 +277,13 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 		{
 			var segment = DeclarationData.CompletedBusSegments.Lookup(numberOfAxles, vehicleCode, vehicleParameterGroup);
 
-			Assert.AreEqual(_missionsTypes.Length, segment.Missions.Length);
+			Assert.AreEqual(2, segment.Missions.Length);
 
 			for (int i = 0; i < segment.Missions.Length; i++)
 			{
 				var mission = segment.Missions[i];
 
-				Assert.AreEqual(_missionsTypes[i], mission.MissionType);
+				Assert.AreEqual(_missionsTypes[i+3], mission.MissionType);
 				Assert.AreEqual(4.8, mission.DefaultCDxA.Value());
 				Assert.AreEqual(true, mission.AirDragMeasurement);
 
@@ -314,13 +314,13 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 		{
 			var segment = DeclarationData.CompletedBusSegments.Lookup(numberOfAxles, vehicleCode, vehicleParameterGroup);
 
-			Assert.AreEqual(_missionsTypes.Length, segment.Missions.Length);
+			Assert.AreEqual(2, segment.Missions.Length);
 
 			for (int i = 0; i < segment.Missions.Length; i++)
 			{
 				var mission = segment.Missions[i];
 
-				Assert.AreEqual(_missionsTypes[i], mission.MissionType);
+				Assert.AreEqual(_missionsTypes[i+3], mission.MissionType);
 				Assert.AreEqual(4.8, mission.DefaultCDxA.Value());
 				Assert.AreEqual(true, mission.AirDragMeasurement);
 
@@ -351,13 +351,13 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 		{
 			var segment = DeclarationData.CompletedBusSegments.Lookup(numberOfAxles, vehicleCode, vehicleParameterGroup);
 
-			Assert.AreEqual(_missionsTypes.Length, segment.Missions.Length);
+			Assert.AreEqual(2, segment.Missions.Length);
 
 			for (int i = 0; i < segment.Missions.Length; i++)
 			{
 				var mission = segment.Missions[i];
 
-				Assert.AreEqual(_missionsTypes[i], mission.MissionType);
+				Assert.AreEqual(_missionsTypes[i+3], mission.MissionType);
 				Assert.AreEqual(4.8, mission.DefaultCDxA.Value());
 				Assert.AreEqual(true, mission.AirDragMeasurement);
 
@@ -388,13 +388,13 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 		{
 			var segment = DeclarationData.CompletedBusSegments.Lookup(numberOfAxles, vehicleCode, vehicleParameterGroup);
 
-			Assert.AreEqual(_missionsTypes.Length, segment.Missions.Length);
+			Assert.AreEqual(2, segment.Missions.Length);
 
 			for (int i = 0; i < segment.Missions.Length; i++)
 			{
 				var mission = segment.Missions[i];
 
-				Assert.AreEqual(_missionsTypes[i], mission.MissionType);
+				Assert.AreEqual(_missionsTypes[i+3], mission.MissionType);
 				Assert.AreEqual(5.4, mission.DefaultCDxA.Value());
 				Assert.AreEqual(true, mission.AirDragMeasurement);
 
@@ -425,13 +425,13 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 		{
 			var segment = DeclarationData.CompletedBusSegments.Lookup(numberOfAxles, vehicleCode, vehicleParameterGroup);
 
-			Assert.AreEqual(_missionsTypes.Length, segment.Missions.Length);
+			Assert.AreEqual(2, segment.Missions.Length);
 
 			for (int i = 0; i < segment.Missions.Length; i++)
 			{
 				var mission = segment.Missions[i];
 
-				Assert.AreEqual(_missionsTypes[i], mission.MissionType);
+				Assert.AreEqual(_missionsTypes[i+3], mission.MissionType);
 				Assert.AreEqual(5.4, mission.DefaultCDxA.Value());
 				Assert.AreEqual(true, mission.AirDragMeasurement);
 
@@ -462,7 +462,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 		{
 			var segment = DeclarationData.CompletedBusSegments.Lookup(numberOfAxles, vehicleCode, vehicleParameterGroup);
 
-			Assert.AreEqual(_missionsTypes.Length, segment.Missions.Length);
+			Assert.AreEqual(3, segment.Missions.Length);
 
 			for (int i = 0; i < segment.Missions.Length; i++)
 			{
@@ -499,7 +499,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 		{
 			var segment = DeclarationData.CompletedBusSegments.Lookup(numberOfAxles, vehicleCode, vehicleParameterGroup);
 
-			Assert.AreEqual(_missionsTypes.Length, segment.Missions.Length);
+			Assert.AreEqual(3, segment.Missions.Length);
 
 			for (int i = 0; i < segment.Missions.Length; i++)
 			{
@@ -536,7 +536,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 		{
 			var segment = DeclarationData.CompletedBusSegments.Lookup(numberOfAxles, vehicleCode, vehicleParameterGroup);
 
-			Assert.AreEqual(_missionsTypes.Length, segment.Missions.Length);
+			Assert.AreEqual(3, segment.Missions.Length);
 
 			for (int i = 0; i < segment.Missions.Length; i++)
 			{
@@ -573,13 +573,13 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 		{
 			var segment = DeclarationData.CompletedBusSegments.Lookup(numberOfAxles, vehicleCode, vehicleParameterGroup);
 
-			Assert.AreEqual(_missionsTypes.Length, segment.Missions.Length);
+			Assert.AreEqual(2, segment.Missions.Length);
 
 			for (int i = 0; i < segment.Missions.Length; i++)
 			{
 				var mission = segment.Missions[i];
 
-				Assert.AreEqual(_missionsTypes[i], mission.MissionType);
+				Assert.AreEqual(_missionsTypes[i+3], mission.MissionType);
 				Assert.AreEqual(4.9, mission.DefaultCDxA.Value());
 				Assert.AreEqual(true, mission.AirDragMeasurement);
 
@@ -610,13 +610,13 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 		{
 			var segment = DeclarationData.CompletedBusSegments.Lookup(numberOfAxles, vehicleCode, vehicleParameterGroup);
 
-			Assert.AreEqual(_missionsTypes.Length, segment.Missions.Length);
+			Assert.AreEqual(2, segment.Missions.Length);
 
 			for (int i = 0; i < segment.Missions.Length; i++)
 			{
 				var mission = segment.Missions[i];
 
-				Assert.AreEqual(_missionsTypes[i], mission.MissionType);
+				Assert.AreEqual(_missionsTypes[i+3], mission.MissionType);
 				Assert.AreEqual(4.9, mission.DefaultCDxA.Value());
 				Assert.AreEqual(true, mission.AirDragMeasurement);
 
@@ -647,13 +647,13 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 		{
 			var segment = DeclarationData.CompletedBusSegments.Lookup(numberOfAxles, vehicleCode, vehicleParameterGroup);
 
-			Assert.AreEqual(_missionsTypes.Length, segment.Missions.Length);
+			Assert.AreEqual(2, segment.Missions.Length);
 
 			for (int i = 0; i < segment.Missions.Length; i++)
 			{
 				var mission = segment.Missions[i];
 
-				Assert.AreEqual(_missionsTypes[i], mission.MissionType);
+				Assert.AreEqual(_missionsTypes[i+3], mission.MissionType);
 				Assert.AreEqual(4.9, mission.DefaultCDxA.Value());
 				Assert.AreEqual(true, mission.AirDragMeasurement);
 
@@ -684,13 +684,13 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 		{
 			var segment = DeclarationData.CompletedBusSegments.Lookup(numberOfAxles, vehicleCode, vehicleParameterGroup);
 
-			Assert.AreEqual(_missionsTypes.Length, segment.Missions.Length);
+			Assert.AreEqual(2, segment.Missions.Length);
 
 			for (int i = 0; i < segment.Missions.Length; i++)
 			{
 				var mission = segment.Missions[i];
 
-				Assert.AreEqual(_missionsTypes[i], mission.MissionType);
+				Assert.AreEqual(_missionsTypes[i+3], mission.MissionType);
 				Assert.AreEqual(4.9, mission.DefaultCDxA.Value());
 				Assert.AreEqual(true, mission.AirDragMeasurement);
 
@@ -721,13 +721,13 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 		{
 			var segment = DeclarationData.CompletedBusSegments.Lookup(numberOfAxles, vehicleCode, vehicleParameterGroup);
 
-			Assert.AreEqual(_missionsTypes.Length, segment.Missions.Length);
+			Assert.AreEqual(2, segment.Missions.Length);
 
 			for (int i = 0; i < segment.Missions.Length; i++)
 			{
 				var mission = segment.Missions[i];
 
-				Assert.AreEqual(_missionsTypes[i], mission.MissionType);
+				Assert.AreEqual(_missionsTypes[i+3], mission.MissionType);
 				Assert.AreEqual(5.5, mission.DefaultCDxA.Value());
 				Assert.AreEqual(true, mission.AirDragMeasurement);
 
@@ -758,13 +758,13 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 		{
 			var segment = DeclarationData.CompletedBusSegments.Lookup(numberOfAxles, vehicleCode, vehicleParameterGroup);
 
-			Assert.AreEqual(_missionsTypes.Length, segment.Missions.Length);
+			Assert.AreEqual(2, segment.Missions.Length);
 
 			for (int i = 0; i < segment.Missions.Length; i++)
 			{
 				var mission = segment.Missions[i];
 
-				Assert.AreEqual(_missionsTypes[i], mission.MissionType);
+				Assert.AreEqual(_missionsTypes[i+3], mission.MissionType);
 				Assert.AreEqual(5.5, mission.DefaultCDxA.Value());
 				Assert.AreEqual(true, mission.AirDragMeasurement);
 
