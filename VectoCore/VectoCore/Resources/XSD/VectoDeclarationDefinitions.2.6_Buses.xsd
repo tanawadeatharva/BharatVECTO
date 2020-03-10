@@ -100,7 +100,7 @@
 		<xs:complexContent>
 			<xs:extension base="v2.6:AbstractCompletedVehicleComponentsDeclarationType">
 				<xs:sequence>
-					<xs:element name="AirDrag" type="v2.0:AirDragComponentDeclarationType"/>
+					<xs:element name="AirDrag" type="v2.0:AirDragComponentDeclarationType" minOccurs="0"/>
 					<xs:element name="Auxiliaries" type="v2.6:CompletedVehicleAuxiliariesComponentDeclarationType"/>
 				</xs:sequence>
 			</xs:extension>

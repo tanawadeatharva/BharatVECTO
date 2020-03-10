@@ -7,7 +7,7 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.Interfaces.DownstreamModules.HV
 		
 		Watt ElectricalWBase { get; }
 		Watt MechanicalWBase { get; }
-		KilogramPerSecond FuelPerHBase { get; }
+		//KilogramPerSecond FuelPerHBase { get; }
 
 		Watt ElectricalWAdjusted { get; }
 		Watt MechanicalWBaseAdjusted { get; }

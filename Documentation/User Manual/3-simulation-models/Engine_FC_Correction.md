@@ -35,7 +35,7 @@ $E_\textrm{ice,waste heat} = \sum_\textrm{fuels} FC_\textrm{final,sum}(fuel) * N
 
 $\overline{P}_\textrm{ice,waste heat} = E_\textrm{ice, waste heat} / t_\textrm{cycle}$
 
-$E_{auxHeater} = P_\textrm{HVACSSM,auxHtr}(P_\textrm{ice,waste heat}) * t_\textrm{cycle}$
+$E_{auxHeater} = P_\textrm{HVACSSM,auxHtr}(\overline{P}_\textrm{ice,waste heat}) * t_\textrm{cycle}$
 
 ###Vehicle-Line Approach
 

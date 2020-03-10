@@ -43,6 +43,7 @@
 3-simulation-models/Gearshift_MT.md
 3-simulation-models/TC.md
 3-simulation-models/Auxiliaries.md
+3-simulation-models/BusAuxiliaries.md
 3-simulation-models/PwheelInput.md
 3-simulation-models/PTO.md
 5-input-and-output-files/input-output.md
