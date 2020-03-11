@@ -2,10 +2,6 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
-using System.ServiceModel.Description;
-using System.Text;
-using System.Threading.Tasks;
 using TUGraz.VectoCommon.BusAuxiliaries;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.Models;
@@ -30,7 +26,9 @@ namespace TUGraz.VectoCore.Models.Declaration
 		
 		protected override string ErrorMessage
 		{
-			get { return "ERROR: Could not find the declaration segment for vehicle. Number of Axles: {0}, VehicleCode: {1}, VehicleParameterGroup {2}";}
+			get { return "ERROR: Could not find the declaration segment for vehicle. numberOfAxles: {0}, vehicleCode: {1}, registrationClass: {2}, " +
+						"passengersLowerDeck: {3}, bodyHeight: {4} , lowEntry: {5}";
+			}
 		}
 		
 		protected override void ParseData(DataTable table)
@@ -55,7 +53,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 					var currentVehicleCode =  VehicleCodeHelper.Parse(r.Field<string>("vehiclecode"));
 					var registrationClasses = RegistrationClassHelper.Parse(r.Field<string>("registrationclasses"));
 
-					return currentNumberOfAxles == numberOfAxles 
+					return  currentNumberOfAxles == numberOfAxles 
 							&& currentVehicleCode == vehicleCode && registrationClasses.Contains(registrationClass);
 				}).ToList();
 			if (rows.Count == 0) {
@@ -84,10 +82,12 @@ namespace TUGraz.VectoCore.Models.Declaration
 				} else {
 					throw new VectoException("Multiple segments found! {0}", rows.Count);
 				}
-
 			}
-
+			
 			var row = rows.First();
+			if(!row.ParseBoolean("isvalid"))
+				throw new VectoException("Only invalid vehicles found!");
+			
 			var segment = new Segment {
 				Found =  true,
 				Missions = CreateMissions(rows), 
@@ -112,8 +112,6 @@ namespace TUGraz.VectoCore.Models.Declaration
 					if (string.IsNullOrWhiteSpace(row.Field<string>(missionType.ToString()))){
 						continue;
 					}
-
-					var passengerDensity = row.ParseDouble(missionType.ToString()).SI<PerSquareMeter>();
 					
 					var mission = new Mission {
 						MissionType = missionType,
@@ -123,11 +121,12 @@ namespace TUGraz.VectoCore.Models.Declaration
 						LowLoad = 10.SI<Kilogram>(), // dummy value to trigger simulation with low load
 						AxleWeightDistribution = GetAxleWeightDistribution(row),
 						DefaultCDxA = row.ParseDouble("cdxastandard").SI<SquareMeter>(),
-						AirDragMeasurement = row.ParseBoolean("airdragmeasurement"),
 						BusParameter = new BusParameters {
+							FloorType = GetFloorType(row.Field<string>("floortype")),
 							PassengerDensity = row.ParseDouble(missionType.ToString()).SI<PerSquareMeter>(),
+							AirDragMeasurementAllowed = row.ParseBoolean("airdragmeasurement"),
 							VehicleEquipment = GetVehicleEquipment(row),
-							AirDragMeasurementAllowed = row.Field<string>("airdragmeasurement") == "1"
+							DoubleDecker =  VehicleCodeHelper.Parse(row.Field<string>("vehiclecode")).IsDoubleDeckBus()
 						}
 					};
 
@@ -148,39 +147,6 @@ namespace TUGraz.VectoCore.Models.Declaration
 			return axleDistribution.Split('/').ToDouble().Select(x => x / 100.0).ToArray();
 		}
 
-
-		private bool? GetPassengersLowerOrEqualValue(string numberOfPassengers, string vehicleParameterGroup, VehicleCode vehicleCode)
-		{
-			if (numberOfPassengers != "-") {
-				if (VehicleCodeHelper.IsDoubleDeckBus(vehicleCode)) {
-					if (vehicleParameterGroup.EndsWith("e")) {
-						return true;
-					}
-					return false;
-				}
-			}
-			return null;
-		}
-
-		private bool? GetBodyHeightLowerOrEqualValue(string bodyHeight, string vehicleParameterGroup,
-			VehicleCode vehicleCode)
-		{
-			if (bodyHeight != "-") {
-				if (!VehicleCodeHelper.IsDoubleDeckBus(vehicleCode)) {
-					if (vehicleParameterGroup.EndsWith("b")) {
-						return true;
-					}
-
-					return false;
-				}
-			}
-			return null;
-		}
-
-		private AxleLoadDistribution GetAxleLoadDistribution(string axleLoadDistribution)
-		{
-			return new AxleLoadDistribution(axleLoadDistribution);
-		}
 
 		private VehicleEquipment GetVehicleEquipment(DataRow row)
 		{
@@ -207,7 +173,8 @@ namespace TUGraz.VectoCore.Models.Declaration
 				KitchenStandard = kitchenStandard
 			};
 		}
-		
+
+
 		private FloorType GetFloorType(string field)
 		{
 			switch (field)

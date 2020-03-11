@@ -88,8 +88,6 @@ namespace TUGraz.VectoCore.Models.Declaration
 		}
 		
 		public BusParameters BusParameter { get; internal set; }
-
-		public bool AirDragMeasurement { get; internal set; }
 	}
 
 	public class BusParameters
@@ -150,31 +148,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 		public double? Fridge { get; internal set; }
 		public double? KitchenStandard { get; internal set; }
 	}
-
-	public class AxleLoadDistribution
-	{
-		public double Axle01 { get; private set; }
-		public double Axle02 { get; private set; }
-		public double Axle03 { get; private set; }
-		public double Axle04 { get; private set; }
-
-
-		public AxleLoadDistribution(string loadDistribution)
-		{
-			SetAxleLoadDistribution(loadDistribution);
-		}
-		
-		private void SetAxleLoadDistribution(string loadDistribution)
-		{
-			var splitResult = loadDistribution.Split('/');
-			Axle01 = splitResult[0].ToDouble();
-			Axle02 = splitResult[1].ToDouble();
-			Axle03 = splitResult[2].ToDouble();
-			Axle04 = splitResult[3].ToDouble();
-		}
-	}
-
-
+	
 	public class MissionTrailer
 	{
 		public TrailerType TrailerType { get; internal set; }
