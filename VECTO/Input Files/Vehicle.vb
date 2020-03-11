@@ -696,6 +696,11 @@ Public Class Vehicle
 	End Get
 	End Property
 
+    Public ReadOnly Property ElectricStorage As IElectricStorageEngineeringInputData Implements IVehicleComponentsEngineering.ElectricStorage
+    Public ReadOnly Property IVehicleComponentsDeclaration_ElectricMachines As IElectricMachinesDeclarationInputData Implements IVehicleComponentsDeclaration.ElectricMachines
+    Public ReadOnly Property IVehicleComponentsDeclaration_ElectricStorage As IElectricStorageDeclarationInputData Implements IVehicleComponentsDeclaration.ElectricStorage
+    Public ReadOnly Property ElectricMachines As IElectricMachinesEngineeringInputData Implements IVehicleComponentsEngineering.ElectricMachines
+
     Public ReadOnly Property BusAuxiliaries As IBusAuxiliariesDeclarationData Implements IVehicleComponentsDeclaration.BusAuxiliaries
 
     Public ReadOnly Property VocationalVehicle As Boolean Implements IVehicleDeclarationInputData.VocationalVehicle

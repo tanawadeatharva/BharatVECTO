@@ -89,6 +89,9 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering.DataProvider
 			get { return _axleWheels ?? (_axleWheels = ComponentReader.AxlesEngineeringInputData); }
 		}
 
+		public virtual IElectricStorageEngineeringInputData ElectricStorage { get { return null; } }
+		public virtual IElectricMachinesEngineeringInputData ElectricMachines { get { return null; } }
+
 		#endregion
 
 		#region Implementation of IXMLResource

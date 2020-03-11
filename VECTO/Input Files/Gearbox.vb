@@ -874,6 +874,8 @@ Public Class MockEngineeringVehicle
         Implements IVehicleComponentsEngineering.PTOTransmissionInputData
 
     Public Property AxleWheels As IAxlesEngineeringInputData Implements IVehicleComponentsEngineering.AxleWheels
+    Public ReadOnly Property ElectricStorage As IElectricStorageEngineeringInputData Implements IVehicleComponentsEngineering.ElectricStorage
+    Public ReadOnly Property ElectricMachines As IElectricMachinesEngineeringInputData Implements IVehicleComponentsEngineering.ElectricMachines
 End Class
 
 Public Class MockJobInputData

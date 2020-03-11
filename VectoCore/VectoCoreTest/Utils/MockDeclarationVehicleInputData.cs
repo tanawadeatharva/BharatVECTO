@@ -73,6 +73,8 @@ namespace TUGraz.VectoCore.Tests.Utils {
 		public IPTOTransmissionInputData PTOTransmissionInputData { get; set; }
 		public IAxlesDeclarationInputData AxleWheels { get; set; }
 		public IBusAuxiliariesDeclarationData BusAuxiliaries { get; set; }
+		public IElectricStorageDeclarationInputData ElectricStorage { get; set; }
+		public IElectricMachinesDeclarationInputData ElectricMachines { get; set; }
 
 		#endregion
 	}
@@ -161,6 +163,8 @@ namespace TUGraz.VectoCore.Tests.Utils {
 		public IRetarderInputData RetarderInputData { get; set; }
 		public IPTOTransmissionInputData PTOTransmissionInputData { get; set; }
 		public IAxlesEngineeringInputData AxleWheels { get; set; }
+		public IElectricStorageEngineeringInputData ElectricStorage { get; set; }
+		public IElectricMachinesEngineeringInputData ElectricMachines { get; set; }
 
 		#endregion
 	}

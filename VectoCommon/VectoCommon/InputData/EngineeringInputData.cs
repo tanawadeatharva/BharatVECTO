@@ -378,9 +378,9 @@ namespace TUGraz.VectoCommon.InputData
 		
 	}
 
-	public interface IElectricMachinesEngineeringInputData
+	public interface IElectricMachinesEngineeringInputData : IElectricMachinesDeclarationInputData
 	{
-		IList<ElectricMachineEntry<IElectricMotorEngineeringInputData>> Entries { get; }
+		new IList<ElectricMachineEntry<IElectricMotorEngineeringInputData>> Entries { get; }
 	}
 
 	public interface IElectricStorageEngineeringInputData : IElectricStorageDeclarationInputData

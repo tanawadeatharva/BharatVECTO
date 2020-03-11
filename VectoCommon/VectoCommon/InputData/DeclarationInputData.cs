@@ -34,6 +34,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Xml;
 using System.Xml.Linq;
+using NLog.Filters;
 using TUGraz.VectoCommon.BusAuxiliaries;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.Models;
@@ -211,6 +212,10 @@ namespace TUGraz.VectoCommon.InputData
 		IAxlesDeclarationInputData AxleWheels { get; }
 
 		IBusAuxiliariesDeclarationData BusAuxiliaries { get; }
+
+		IElectricStorageDeclarationInputData ElectricStorage { get; }
+
+		IElectricMachinesDeclarationInputData ElectricMachines { get; }
 	}
 
 	public interface IAxlesDeclarationInputData
@@ -661,6 +666,53 @@ namespace TUGraz.VectoCommon.InputData
 		/// </summary>
 		IList<string> Technology { get; }
 	}
+
+	public interface IElectricMotorDeclarationInputData : IComponentInputData
+	{
+		TableData FullLoadCurve { get; }
+
+		TableData EfficiencyMap { get; }
+
+		KilogramSquareMeter Inertia { get; }
+	}
+
+	public interface IElectricMachinesDeclarationInputData
+	{
+		IList<ElectricMachineEntry<IElectricMotorDeclarationInputData>> Entries { get; }
+	}
+
+	public class ElectricMachineEntry<T> where T : IElectricMotorDeclarationInputData
+	{
+		public T ElectricMachine { get; set; }
+
+		public int Count { get; set; }
+
+		public PowertrainPosition Position { get; set; }
+	}
+
+	public interface IElectricStorageDeclarationInputData
+	{
+		IBatteryPackDeclarationInputData BatteryPack { get; }
+
+		int Count { get; }
+	}
+
+	public interface IBatteryPackDeclarationInputData : IComponentInputData
+	{
+		
+		double MinSOC { get; }
+
+		double MaxSOC { get; }
+
+		AmpereSecond Capacity { get; }
+
+		Ohm InternalResistance { get; }
+
+		TableData CellVoltage { get; }
+
+		Ampere MaxCurrent { get; }
+	}
+
 
 	public interface ITorqueLimitInputData
 	{

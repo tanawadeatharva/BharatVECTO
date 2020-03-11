@@ -46,6 +46,31 @@ using TUGraz.VectoCore.Models.Declaration;
 
 namespace TUGraz.VectoCore.InputData.FileIO.JSON
 {
+	public class JSONVehicleDataV10 : JSONVehicleDataV9
+	{
+		public JSONVehicleDataV10(JObject data, string fileName, IJSONVehicleComponents job, bool tolerateMissing = false) :
+			base(data, fileName, job, tolerateMissing) { }
+
+		#region Overrides of JSONVehicleDataV7
+
+		protected override IElectricMachinesEngineeringInputData GetElectricMachines()
+		{
+			// TODO!
+			throw new NotImplementedException();
+		}
+
+		protected override IElectricStorageEngineeringInputData GetElectricStorage()
+		{
+			// TODO!
+			throw new NotImplementedException();
+		}
+
+		#endregion
+	}
+
+	// ###################################################################
+	// ###################################################################
+
 	public class JSONVehicleDataV9 : JSONVehicleDataV7, IBusAuxiliariesDeclarationData, IElectricSupplyDeclarationData,
 		IElectricConsumersDeclarationData, IPneumaticSupplyDeclarationData, IPneumaticConsumersDeclarationData,
 		IHVACBusAuxiliariesDeclarationData

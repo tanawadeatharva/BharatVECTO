@@ -1045,6 +1045,20 @@ namespace TUGraz.VectoCommon.Utils
 		}
 	}
 
+	public class AmpereSecond : SIBase<AmpereSecond>
+	{
+		private static readonly int[] Units = { 0, 0, 1, 1, 0, 0, 0 };
+
+		private AmpereSecond(double val) : base(val, Units) { }
+
+		public override string UnitString { get { return "As"; } }
+
+		public static Ampere operator /(AmpereSecond ampereSecond, Second t)
+		{
+			return SIBase<Ampere>.Create(ampereSecond.Value() / t.Value());
+		}
+	}
+
 	/// <summary>
 	/// SI Class for Amperer [V].
 	/// V = kgm^2/As^2
@@ -1065,6 +1079,25 @@ namespace TUGraz.VectoCommon.Utils
 		{
 			return SIBase<Ampere>.Create(watt.Value() / volt.Value());
 		}
+
+		public static Ohm operator /(Volt volt, Ampere current)
+		{
+			return SIBase<Ohm>.Create(volt.Value() / current.Value());
+		}
+
+		public static Ampere operator /(Volt volt, Ohm r)
+		{
+			return SIBase<Ampere>.Create(volt.Value() / r.Value());
+		}
+	}
+
+	public class Ohm : SIBase<Ohm>
+	{
+		private static readonly int[] Units = { 1, 2, -3, -2, 0, 0, 0 };
+
+		private Ohm(double val) : base(val, Units) { }
+
+		public override string UnitString { get { return "Ω"; } }
 	}
 
 	public class VolumePerMeter : SIBase<VolumePerMeter>

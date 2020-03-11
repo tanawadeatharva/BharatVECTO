@@ -686,7 +686,11 @@ Public Class DummyVehicle
     Public  Property PTOTransmissionInputData As IPTOTransmissionInputData Implements IVehicleComponentsDeclaration.PTOTransmissionInputData
     Public  Property IVehicleComponentsEngineering_AxleWheels As IAxlesEngineeringInputData Implements IVehicleComponentsEngineering.AxleWheels
     Public  Property AxleWheels As IAxlesDeclarationInputData Implements IVehicleComponentsDeclaration.AxleWheels
+    Public ReadOnly Property IVehicleComponentsEngineering_ElectricStorage As IElectricStorageEngineeringInputData Implements IVehicleComponentsEngineering.ElectricStorage
     Public ReadOnly Property BusAuxiliaries As IBusAuxiliariesDeclarationData Implements IVehicleComponentsDeclaration.BusAuxiliaries
+    Public ReadOnly Property ElectricStorage As IElectricStorageDeclarationInputData Implements IVehicleComponentsDeclaration.ElectricStorage
+    Public ReadOnly Property IVehicleComponentsEngineering_ElectricMachines As IElectricMachinesEngineeringInputData Implements IVehicleComponentsEngineering.ElectricMachines
+    Public ReadOnly Property ElectricMachines As IElectricMachinesDeclarationInputData Implements IVehicleComponentsDeclaration.ElectricMachines
 End Class
 
 
