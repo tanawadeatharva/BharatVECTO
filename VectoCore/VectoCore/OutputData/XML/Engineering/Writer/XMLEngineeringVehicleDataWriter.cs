@@ -123,8 +123,8 @@ namespace TUGraz.VectoCore.OutputData.XML.Engineering.Writer
 			var ptoCycle = new XElement(tns + XMLNames.Vehicle_PTOCycle);
 			ptoCycle.Add(
 				Writer.Configuration.SingleFile
-					? EmbedDataTable(pto.PTOCycle, AttributeMappings.PTOCycleMap)
-					: ExtCSVResource(pto.PTOCycle, Path.Combine(Writer.Configuration.BasePath, Writer.RemoveInvalidFileCharacters("PTO_cycle.vptoc"))));
+					? EmbedDataTable(pto.PTOCycleDuringStop, AttributeMappings.PTOCycleMap)
+					: ExtCSVResource(pto.PTOCycleDuringStop, Path.Combine(Writer.Configuration.BasePath, Writer.RemoveInvalidFileCharacters("PTO_cycle.vptoc"))));
 
 			return new object[] { ptoLossMap, ptoCycle };
 		}

@@ -106,14 +106,15 @@ namespace TUGraz.VectoCore.Tests.Integration
 				Cycle = cycleData,
 				Retarder = new RetarderData() { Type = RetarderType.None },
 				Aux = new List<VectoRunData.AuxData>(),
-				SimulationType = SimulationType.DistanceCycle
+				SimulationType = SimulationType.DistanceCycle,
+				DriverData = driverData
 			};
 			var container = new VehicleContainer(ExecutionMode.Engineering, modData) {
 				RunData = runData,
 			};
 			var cycle = new DistanceBasedDrivingCycle(container, cycleData);
 			var engine = new CombustionEngine(container, engineData);
-			var tmp = cycle.AddComponent(new Driver(container, driverData, new DefaultDriverStrategy()))
+			var tmp = cycle.AddComponent(new Driver(container, driverData, new DefaultDriverStrategy(container)))
 				.AddComponent(new Vehicle(container, vehicleData, airdragData))
 				.AddComponent(new Wheels(container, vehicleData.DynamicTyreRadius, vehicleData.WheelsInertia))
 				.AddComponent(new Brakes(container))

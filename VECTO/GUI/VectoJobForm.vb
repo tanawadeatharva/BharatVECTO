@@ -447,7 +447,7 @@ Public Class VectoJobForm
 		'Start/Stop
 		Dim driver As IDriverEngineeringInputData = inputData.DriverInputData
 
-		If (Cfg.DeclMode) Then
+	    If (Cfg.DeclMode) Then
 			TbDesMaxFile.Text = ""
 			'AA-TB
 			'Try and Select any previously selected Auxiliary Type
@@ -499,7 +499,6 @@ Public Class VectoJobForm
 				LvAux.Items.Add(CreateAuxListEntry(entry.ID, AuxiliaryTypeHelper.ParseKey(entry.ID).Name,
 													If(entry.DemandMap Is Nothing, "", GetRelativePath(entry.DemandMap.Source, _basePath))))
 			Next
-
 		End If
 
 		Try
@@ -1517,6 +1516,7 @@ lbDlog:
 
 	Private Sub LvAux_SelectedIndexChanged(sender As Object, e As EventArgs) Handles LvAux.SelectedIndexChanged
 	End Sub
+
 End Class
 
 
