@@ -28,8 +28,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			var powerDemand = 0.SI<Watt>();
 
 			if (left.PTOActive == PTOActivity.PTOActivityRoadSweeping) {
-				// todo: iterate over cycle from left to right and compute pto energy and then average power demand
-				powerDemand = left.PTOPowerDemandDuringDrive;
+				var right = DataBus.CycleData.RightSample;
+				powerDemand = (left.Distance - right.Distance).IsEqual(0) ? left.PTOPowerDemandDuringDrive :
+					VectoMath.Interpolate(
+					left.Distance, right.Distance, left.PTOPowerDemandDuringDrive, right.PTOPowerDemandDuringDrive, DataBus.Distance);
 			}
 
 			return  powerDemand;
