@@ -122,7 +122,6 @@ namespace TUGraz.VectoCore.Models.Declaration
 						AxleWeightDistribution = GetAxleWeightDistribution(row),
 						DefaultCDxA = row.ParseDouble("cdxastandard").SI<SquareMeter>(),
 						BusParameter = new BusParameters {
-							FloorType = GetFloorType(row.Field<string>("floortype")),
 							PassengerDensity = row.ParseDouble(missionType.ToString()).SI<PerSquareMeter>(),
 							AirDragMeasurementAllowed = row.ParseBoolean("airdragmeasurement"),
 							VehicleEquipment = GetVehicleEquipment(row),

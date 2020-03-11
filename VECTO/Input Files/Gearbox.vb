@@ -831,7 +831,7 @@ Public Class MockEngineeringVehicle
     Public Property DualFuelVehicle As Boolean Implements IVehicleDeclarationInputData.DualFuelVehicle
     Public Property MaxNetPower1 As Watt Implements IVehicleDeclarationInputData.MaxNetPower1
     Public Property MaxNetPower2 As Watt Implements IVehicleDeclarationInputData.MaxNetPower2
-    Public ReadOnly Property RegisteredClass As String Implements IVehicleDeclarationInputData.RegisteredClass
+    Public ReadOnly Property RegisteredClass As RegistrationClass Implements IVehicleDeclarationInputData.RegisteredClass
     Public ReadOnly Property NuberOfPassengersUpperDeck As Integer Implements IVehicleDeclarationInputData.NuberOfPassengersUpperDeck
     Public ReadOnly Property NumberOfPassengersLowerDeck As Integer Implements IVehicleDeclarationInputData.NumberOfPassengersLowerDeck
     Public ReadOnly Property VehicleCode As VehicleCode Implements IVehicleDeclarationInputData.VehicleCode

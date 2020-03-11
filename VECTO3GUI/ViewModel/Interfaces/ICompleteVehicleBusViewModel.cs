@@ -16,7 +16,7 @@ namespace VECTO3GUI.ViewModel.Interfaces
 		string VIN { get; set; }
 		DateTime Date { get; set; }
 		LegislativeClass LegislativeClass { get; set; }
-		string RegisteredClass { get; set; }
+		RegistrationClass RegisteredClass { get; set; }
 		VehicleCode VehicleCode { get; set; }
 		Kilogram CurbMassChassis { get; set; }
 		Kilogram TechnicalPermissibleMaximumLadenMass { get; set; }

@@ -187,7 +187,7 @@ namespace VECTO3GUI.ViewModel.Impl
 
 		private IJobEditViewModel CreatePrimaryBusVehicleViewModel(IInputDataProvider inputData)
 		{
-			var dataProvider = inputData as IPrimaryVehicleInputDataProvider;
+			var dataProvider = inputData as IPrimaryVehicleInformationInputDataProvider;
 			return dataProvider == null ? null : new PrimaryVehicleBusJobViewModel(Kernel, dataProvider);
 		}
 

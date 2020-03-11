@@ -758,7 +758,7 @@ Public Class Vehicle
 	End Get
 	End Property
 
-    Public ReadOnly Property RegisteredClass As String Implements IVehicleDeclarationInputData.RegisteredClass
+    Public ReadOnly Property RegisteredClass As RegistrationClass Implements IVehicleDeclarationInputData.RegisteredClass
     Public ReadOnly Property NuberOfPassengersUpperDeck As Integer Implements IVehicleDeclarationInputData.NuberOfPassengersUpperDeck
     Public ReadOnly Property NumberOfPassengersLowerDeck As Integer Implements IVehicleDeclarationInputData.NumberOfPassengersLowerDeck
     Public ReadOnly Property VehicleCode As VehicleCode Implements IVehicleDeclarationInputData.VehicleCode

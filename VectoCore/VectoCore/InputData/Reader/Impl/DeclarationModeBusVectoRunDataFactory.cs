@@ -44,8 +44,8 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 					"Invalid vehicle category for bus factory! {0}", vehicle.VehicleCategory.GetCategoryName());
 			}
 
-			var segment = DeclarationData.BusSegments.Lookup(
-				vehicle.VehicleCategory, vehicle.AxleConfiguration, vehicle.Articulated, vehicle.FloorType, false, true);
+			var segment = DeclarationData.PrimaryBusSegments.Lookup(
+				vehicle.VehicleCategory, vehicle.AxleConfiguration, vehicle.Articulated, vehicle.FloorType, false);
 			if (!segment.Found) {
 				throw new VectoException(
 					"no segment found for vehicle configruation: vehicle category: {0}, axle configuration: {1}, articulated: {2}, primary",

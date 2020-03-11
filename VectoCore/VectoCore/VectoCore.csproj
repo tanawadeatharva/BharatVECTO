@@ -277,6 +277,9 @@
     <Compile Include="InputData\FileIO\XML\IXMLInputDataReader.cs" />
     <Compile Include="InputData\FileIO\XML\XMLInputDataNinjectModule.cs" />
     <Compile Include="InputData\Reader\DataObjectAdapter\DeclarationDataAdapterSingleBus.cs" />
+    <Compile Include="InputData\Reader\Impl\CombinedBusAuxiliaries.cs" />
+    <Compile Include="InputData\Reader\Impl\DeclarationDataAdapterCompletedBus.cs" />
+    <Compile Include="InputData\Reader\Impl\DeclarationModeCompletedBusVectoRunDataFactory.cs" />
     <Compile Include="Models\BusAuxiliaries\DownstreamModules\Impl\Electrics\SimpleBattery.cs" />
     <Compile Include="Models\BusAuxiliaries\Interfaces\DownstreamModules\Electrics\ISimpleBattery.cs" />
     <Compile Include="Models\BusAuxiliaries\DownstreamModules\Impl\Electrics\M05Impl_P0.cs" />
@@ -362,7 +365,7 @@
     <Compile Include="Models\BusAuxiliaries\Interfaces\Signals.cs" />
     <Compile Include="Models\BusAuxiliaries\Util\FilePathUtils.cs" />
     <Compile Include="Models\Declaration\BusAlternatorTechnologies.cs" />
-    <Compile Include="Models\Declaration\BusSegments.cs" />
+    <Compile Include="Models\Declaration\PrimaryBusSegments.cs" />
     <Compile Include="Models\Declaration\HVACCoolingPower.cs" />
     <Compile Include="Models\Declaration\SteeringPumpBus.cs" />
     <Compile Include="Models\SimulationComponent\Data\Engine\WHRPowerMap.cs" />

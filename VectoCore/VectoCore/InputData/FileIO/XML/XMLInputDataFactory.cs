@@ -144,7 +144,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML
 			}
 		}
 
-		private IPrimaryVehicleInputDataProvider ReadPrimaryVehicleDeclarationJob(XmlDocument xmlDoc, string source)
+		private IPrimaryVehicleInformationInputDataProvider ReadPrimaryVehicleDeclarationJob(XmlDocument xmlDoc, string source)
 		{
 			var versionNumber = XMLHelper.GetXsdType(xmlDoc.DocumentElement?.SchemaInfo.SchemaType);
 			try {

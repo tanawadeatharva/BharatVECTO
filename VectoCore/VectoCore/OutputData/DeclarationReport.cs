@@ -34,6 +34,7 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using TUGraz.VectoCommon.BusAuxiliaries;
 using TUGraz.VectoCommon.Exceptions;
+using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Models.Declaration;
@@ -65,6 +66,8 @@ namespace TUGraz.VectoCore.OutputData
 		 */
 		void AddResult(
 			LoadingType loadingType, Mission mission, int fuelMode, VectoRunData runData, IModalDataContainer modData);
+
+		IPrimaryVehicleInformationInputDataProvider PrimaryResults { get; set; }
 	}
 
 	public interface IResultEntry
@@ -207,6 +210,8 @@ namespace TUGraz.VectoCore.OutputData
 
 			WriteResults();
 		}
+
+		public IPrimaryVehicleInformationInputDataProvider PrimaryResults { get; set; }
 
 		protected IEnumerable<T> OrderedResults
 		{

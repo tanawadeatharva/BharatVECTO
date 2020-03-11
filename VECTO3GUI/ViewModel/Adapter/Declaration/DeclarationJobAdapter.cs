@@ -20,6 +20,8 @@ namespace VECTO3GUI.ViewModel.Adapter.Declaration {
 			get { return this; }
 		}
 
+		public IPrimaryVehicleInformationInputDataProvider PrimaryVehicleData { get; }
+
 		public XElement XMLHash { get { return null; } }
 
 		#endregion

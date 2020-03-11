@@ -106,6 +106,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			get { return this; }
 		}
 
+		public virtual IPrimaryVehicleInformationInputDataProvider PrimaryVehicleData { get { return null; } }
+
 		public XElement XMLHash
 		{
 			get { return new XElement(XMLNames.DI_Signature); }
@@ -416,7 +418,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			get { return null; }
 		}
 
-		public string RegisteredClass { get { return string.Empty; } }
+		public RegistrationClass RegisteredClass { get { return RegistrationClass.unknown; } }
 		public int NuberOfPassengersUpperDeck { get { return 0; } }
 		public int NumberOfPassengersLowerDeck { get { return 0; } }
 		public VehicleCode VehicleCode { get { return VehicleCode.NOT_APPLICABLE; } }

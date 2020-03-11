@@ -14,7 +14,7 @@ namespace VECTO3GUI.ViewModel.Impl
 	public class PrimaryVehicleBusJobViewModel : AbstractJobViewModel, IJobEditViewModel
 	{
 
-		public PrimaryVehicleBusJobViewModel(IKernel kernel, IPrimaryVehicleInputDataProvider inputData)
+		public PrimaryVehicleBusJobViewModel(IKernel kernel, IPrimaryVehicleInformationInputDataProvider inputData)
 		{
 			Kernel = kernel;
 			InputDataProvider = inputData;

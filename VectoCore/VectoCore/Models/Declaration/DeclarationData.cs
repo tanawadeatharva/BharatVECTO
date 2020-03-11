@@ -69,7 +69,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 		public static readonly Watt MinEnginePowerForEMS = 300e3.SI<Watt>();
 
 		public static readonly TruckSegments TruckSegments = new TruckSegments();
-		public static readonly BusSegments BusSegments = new BusSegments();
+		public static readonly PrimaryBusSegments PrimaryBusSegments = new PrimaryBusSegments();
 		public static readonly CompletedBusSegments CompletedBusSegments = new CompletedBusSegments();
 		public static readonly Wheels Wheels = new Wheels();
 		public static readonly PT1 PT1 = new PT1();
@@ -132,6 +132,24 @@ namespace TUGraz.VectoCore.Models.Declaration
 		public static int PoweredAxle()
 		{
 			return 1;
+		}
+
+		public static class FactorMethodBus
+		{
+			public static CombustionEngineData CreateBusEngineData(IEngineDeclarationInputData componentsEngineInputData)
+			{
+				throw new NotImplementedException();
+			}
+
+			public static AxleGearData CreateAxlegearData(IAxleGearInputData axlegearData)
+			{
+				throw new NotImplementedException();
+			}
+
+			public static GearboxData CreateGearboxData(IGearboxDeclarationInputData gearboxData)
+			{
+				throw new NotImplementedException();
+			}
 		}
 
 		public static class BusAuxiliaries

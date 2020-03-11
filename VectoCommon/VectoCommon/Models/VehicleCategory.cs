@@ -42,7 +42,8 @@ namespace TUGraz.VectoCommon.Models
 		CityBus,
 		//InterurbanBus,
 		Coach,
-		HeavyBusPrimaryVehicle
+		HeavyBusPrimaryVehicle,
+		HeavyBusCompletedVehicle
 	}
 
 	public static class VehicleCategoryHelper
@@ -64,6 +65,8 @@ namespace TUGraz.VectoCommon.Models
 				//	return "Coach";
 				case VehicleCategory.HeavyBusPrimaryVehicle:
 					return "Heavy Bus, Primary Vehicle";
+				case VehicleCategory.HeavyBusCompletedVehicle:
+					return "Heavy Bus, Completed Vehicle";
 				default:
 					return category.ToString();
 			}
@@ -86,6 +89,8 @@ namespace TUGraz.VectoCommon.Models
 				//	return "Coach";
 				case VehicleCategory.HeavyBusPrimaryVehicle:
 					return "Heavy Bus, Primary Vehicle";
+				case VehicleCategory.HeavyBusCompletedVehicle:
+					return "Heavy Bus, Completed Vehicle";
 				default:
 					return category.ToString();
 			}
@@ -105,6 +110,8 @@ namespace TUGraz.VectoCommon.Models
 					return "Rigid Lorry";
 				case VehicleCategory.HeavyBusPrimaryVehicle:
 					return "Bus";
+				case VehicleCategory.HeavyBusCompletedVehicle:
+					return "Bus";
 				default:
 					throw new ArgumentOutOfRangeException("vehicleCategory", vehicleCategory, null);
 			}
@@ -121,6 +128,7 @@ namespace TUGraz.VectoCommon.Models
 				//case VehicleCategory.InterurbanBus:
 				case VehicleCategory.Coach:
 				case VehicleCategory.HeavyBusPrimaryVehicle:
+				case VehicleCategory.HeavyBusCompletedVehicle:
 					return false;
 				default:
 					throw new ArgumentOutOfRangeException("VehicleCategory", category, null);
@@ -132,7 +140,8 @@ namespace TUGraz.VectoCommon.Models
 			switch (category) {
 				case VehicleCategory.Coach:
 				case VehicleCategory.CityBus:
-				case VehicleCategory.HeavyBusPrimaryVehicle: return true;
+				case VehicleCategory.HeavyBusPrimaryVehicle:
+				case VehicleCategory.HeavyBusCompletedVehicle: return true;
 				default: return false;
 			}
 		}

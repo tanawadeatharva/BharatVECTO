@@ -223,7 +223,7 @@ namespace VECTO3GUI.ViewModel.Impl
 
 		protected override void InputDataChanged()
 		{
-			var inputData = JobViewModel.InputDataProvider as IPrimaryVehicleInputDataProvider;
+			var inputData = JobViewModel.InputDataProvider as IPrimaryVehicleInformationInputDataProvider;
 			SetVehicleData(inputData?.Vehicle);
 		}
 

@@ -42,6 +42,8 @@ namespace TUGraz.VectoCommon.InputData
 	{
 		IDeclarationJobInputData JobInputData { get; }
 
+		IPrimaryVehicleInformationInputDataProvider PrimaryVehicleData { get; }
+
 		XElement XMLHash { get; }
 	}
 
@@ -54,7 +56,7 @@ namespace TUGraz.VectoCommon.InputData
 
 	}
 
-	public interface IPrimaryVehicleInputDataProvider : IInputDataProvider
+	public interface IPrimaryVehicleInformationInputDataProvider : IInputDataProvider
 	{
 		IVehicleDeclarationInputData Vehicle { get; }
 

@@ -76,8 +76,8 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 			VehicleCategory category, AxleConfiguration axleConfiguration, FloorType floorType, bool doubleDecker,
 			bool articulated, VehicleClass expectedClass)
 		{
-			var segment = DeclarationData.BusSegments.Lookup(
-				category, axleConfiguration, articulated, floorType, doubleDecker, true);
+			var segment = DeclarationData.PrimaryBusSegments.Lookup(
+				category, axleConfiguration, articulated, floorType, doubleDecker);
 
 			Assert.AreEqual(10, segment.Missions.Length);
 			Assert.AreEqual(expectedClass, segment.VehicleClass);
@@ -94,9 +94,9 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 				FloorType = FloorType.LowFloor,
 				DoubleDecker = false
 			};
-			var segment = DeclarationData.BusSegments.Lookup(
+			var segment = DeclarationData.PrimaryBusSegments.Lookup(
 				vehicleData.VehicleCategory, vehicleData.AxleConfiguration, vehicleData.Articulated, vehicleData.FloorType,
-				vehicleData.DoubleDecker, true);
+				vehicleData.DoubleDecker);
 
 			Assert.AreEqual(10, segment.Missions.Length);
 			Assert.AreEqual(VehicleClass.ClassPB41, segment.VehicleClass);
@@ -203,9 +203,9 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 				FloorType = FloorType.LowFloor,
 				DoubleDecker = false
 			};
-			var segment = DeclarationData.BusSegments.Lookup(
+			var segment = DeclarationData.PrimaryBusSegments.Lookup(
 				vehicleData.VehicleCategory, vehicleData.AxleConfiguration, vehicleData.Articulated, vehicleData.FloorType,
-				vehicleData.DoubleDecker, true);
+				vehicleData.DoubleDecker);
 
 			Assert.AreEqual(10, segment.Missions.Length);
 			Assert.AreEqual(VehicleClass.ClassPB42, segment.VehicleClass);
@@ -310,9 +310,9 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 				FloorType = FloorType.LowFloor,
 				DoubleDecker = false
 			};
-			var segment = DeclarationData.BusSegments.Lookup(
+			var segment = DeclarationData.PrimaryBusSegments.Lookup(
 				vehicleData.VehicleCategory, vehicleData.AxleConfiguration, vehicleData.Articulated, vehicleData.FloorType,
-				vehicleData.DoubleDecker, true);
+				vehicleData.DoubleDecker);
 
 			Assert.AreEqual(10, segment.Missions.Length);
 			Assert.AreEqual(VehicleClass.ClassPB43, segment.VehicleClass);
@@ -416,9 +416,9 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 				FloorType = FloorType.LowFloor,
 				DoubleDecker = false
 			};
-			var segment = DeclarationData.BusSegments.Lookup(
+			var segment = DeclarationData.PrimaryBusSegments.Lookup(
 				vehicleData.VehicleCategory, vehicleData.AxleConfiguration, vehicleData.Articulated, vehicleData.FloorType,
-				vehicleData.DoubleDecker, true);
+				vehicleData.DoubleDecker);
 
 			Assert.AreEqual(10, segment.Missions.Length);
 			Assert.AreEqual(VehicleClass.ClassPB44, segment.VehicleClass);
@@ -523,9 +523,9 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 				FloorType = FloorType.LowFloor,
 				DoubleDecker = false
 			};
-			var segment = DeclarationData.BusSegments.Lookup(
+			var segment = DeclarationData.PrimaryBusSegments.Lookup(
 				vehicleData.VehicleCategory, vehicleData.AxleConfiguration, vehicleData.Articulated, vehicleData.FloorType,
-				vehicleData.DoubleDecker, true);
+				vehicleData.DoubleDecker);
 
 			Assert.AreEqual(10, segment.Missions.Length);
 			Assert.AreEqual(VehicleClass.ClassPB45, segment.VehicleClass);

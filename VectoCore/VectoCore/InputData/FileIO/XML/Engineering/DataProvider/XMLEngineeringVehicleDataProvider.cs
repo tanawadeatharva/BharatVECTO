@@ -164,7 +164,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering.DataProvider
 			get { return null; }
 		}
 
-		public virtual string RegisteredClass { get { return string.Empty;} }
+		public virtual RegistrationClass RegisteredClass { get { return RegistrationClass.unknown;} }
 		public virtual int NuberOfPassengersUpperDeck { get { return 0; } }
 		public virtual int NumberOfPassengersLowerDeck { get { return 0; } }
 		public virtual VehicleCode VehicleCode { get { return VehicleCode.NOT_APPLICABLE; } }

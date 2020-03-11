@@ -47,7 +47,7 @@ namespace TUGraz.VectoCore.Tests.XML
 		{
 
 			var reader = XmlReader.Create(vehilcePIFExample);
-			var inputDataProvider = xmlInputReader.Create(reader) as IPrimaryVehicleInputDataProvider;
+			var inputDataProvider = xmlInputReader.Create(reader) as IPrimaryVehicleInformationInputDataProvider;
 
 			var vehicle = inputDataProvider.Vehicle;
 

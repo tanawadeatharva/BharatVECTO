@@ -107,7 +107,7 @@ namespace VECTO3GUI.ViewModel.Adapter.Declaration
 		public bool DualFuelVehicle { get; }
 		public Watt MaxNetPower1 { get; }
 		public Watt MaxNetPower2 { get; }
-		public string RegisteredClass { get; }
+		public RegistrationClass RegisteredClass { get; }
 		public int NuberOfPassengersUpperDeck { get; }
 		public int NumberOfPassengersLowerDeck { get; }
 		public VehicleCode VehicleCode { get; }

@@ -104,6 +104,7 @@
     <Compile Include="Integration\BusAuxiliaries\AAuxTests.cs" />
     <Compile Include="Integration\CoachAdvancedAuxPowertrain.cs" />
     <Compile Include="Integration\CoachPowerTrain.cs" />
+    <Compile Include="Integration\CompletedBus\CompletedBusFactorMethodTest.cs" />
     <Compile Include="Integration\Declaration\ADASVehicleTest.cs" />
     <Compile Include="Integration\Declaration\EngineInputDataTests.cs" />
     <Compile Include="Integration\Declaration\NaturalGasVehicles.cs" />
@@ -295,6 +296,9 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="TestData\Generic Vehicles\Engineering Mode\HeavyBusPrimary\HeavyBusPrimary_DECL.vecto">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Integration\Buses\FactorMethod\CompletedBus.vecto">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="TestData\Integration\Buses\SingleBus.vecto">
@@ -3444,6 +3448,13 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="TestData\Integration\ADAS\Group9_AT_PCCEcoRoll.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="TestData\Integration\Buses\FactorMethod\PIF-heavyBus-sample.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="TestData\Integration\Buses\FactorMethod\vecto_vehicle-completed_heavyBus.xml">
+      <SubType>Designer</SubType>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="TestData\Integration\Buses\vecto_vehicle-completed_heavyBus.xml">

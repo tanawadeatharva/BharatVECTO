@@ -163,7 +163,7 @@ namespace TUGraz.VectoCommon.InputData
 
 		Watt MaxNetPower2 { get; }
 
-		string RegisteredClass { get; }
+		RegistrationClass RegisteredClass { get; }
 
 		int NuberOfPassengersUpperDeck { get; }
 

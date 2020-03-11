@@ -550,6 +550,8 @@ Public Class VectoJob
         End Get
     End Property
 
+    Public ReadOnly Property PrimaryVehicleData As IPrimaryVehicleInformationInputDataProvider Implements IDeclarationInputDataProvider.PrimaryVehicleData
+
     Public ReadOnly Property IDeclarationInputDataProvider_JobInputData As IDeclarationJobInputData _
         Implements IDeclarationInputDataProvider.JobInputData
         Get

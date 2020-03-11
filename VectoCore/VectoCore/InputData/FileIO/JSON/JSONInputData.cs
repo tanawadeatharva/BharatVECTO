@@ -278,6 +278,10 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			get { return this; }
 		}
 
+		public virtual IPrimaryVehicleInformationInputDataProvider PrimaryVehicleData {
+			get { return null; }
+		}
+
 		public XElement XMLHash
 		{
 			get { return new XElement(XMLNames.DI_Signature); }
@@ -1005,6 +1009,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 		#region Implementation of IDeclarationInputDataProvider
 
 		public IDeclarationJobInputData JobInputData { get { return this; } }
+		public virtual IPrimaryVehicleInformationInputDataProvider PrimaryVehicleData { get { return null; } }
 		public XElement XMLHash { get { return new XElement(XMLNames.DI_Signature); } }
 
 		#endregion
@@ -1012,6 +1017,54 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 		#region Implementation of IDeclarationJobInputData
 
 		public IVehicleDeclarationInputData Vehicle { get { return PrimaryVehicle; } }
+		public string JobName { get; }
+		public string ShiftStrategy { get { return ""; } }
+
+		#endregion
+	}
+
+
+	public class JSONInputDataComptededBusFactorMethodV7 : JSONFile, IDeclarationInputDataProvider, IDeclarationJobInputData
+	{
+		private readonly IXMLInputDataReader _xmlInputReader;
+
+		public JSONInputDataComptededBusFactorMethodV7(JObject data, string filename, bool tolerateMissing = false) : base(
+			data, filename, tolerateMissing)
+		{
+			var kernel = new StandardKernel(new VectoNinjectModule());
+			_xmlInputReader = kernel.Get<IXMLInputDataReader>();
+
+			var primaryInputData = Path.Combine(BasePath, Body.GetEx<string>("PrimaryVehicleResults"));
+			var completedInputData = Path.Combine(BasePath, Body.GetEx<string>("CompletedVehicle"));
+
+			//PrimaryVehicle = CreateReader(primaryInputData);
+
+			Vehicle = _xmlInputReader.CreateDeclaration(completedInputData).JobInputData.Vehicle;
+			PrimaryVehicleData = (_xmlInputReader.Create(primaryInputData) as IPrimaryVehicleInformationInputDataProvider);
+			JobName = Vehicle.VIN;
+		}
+
+
+		//private IDeclarationInputDataProvider CreateReader(string vehicleFileName)
+		//{
+		//	if (Path.GetExtension(vehicleFileName) != ".xml") {
+		//		throw new VectoException("unsupported vehicle file format {0}", vehicleFileName);
+		//	}
+
+		//	return ;
+		//}
+
+		#region Implementation of IDeclarationInputDataProvider
+
+		public IDeclarationJobInputData JobInputData { get { return this; } }
+		public IPrimaryVehicleInformationInputDataProvider PrimaryVehicleData { get; }
+		public XElement XMLHash { get; }
+
+		#endregion
+
+		#region Implementation of IDeclarationJobInputData
+
+		public IVehicleDeclarationInputData Vehicle { get; }
 		public string JobName { get; }
 		public string ShiftStrategy { get { return ""; } }
 

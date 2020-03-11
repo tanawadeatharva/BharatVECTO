@@ -31,6 +31,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Runtime.InteropServices;
 using System.Windows.Forms.VisualStyles;
 using System.Xml;
@@ -272,9 +273,9 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 			}
 		}
 
-		public virtual string RegisteredClass
+		public virtual RegistrationClass RegisteredClass
 		{
-			get { return string.Empty; }
+			get { return RegistrationClass.unknown; }
 		}
 
 		public virtual int NuberOfPassengersUpperDeck
@@ -786,9 +787,14 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 		#region Overrides of XMLDeclarationVehicleDataProviderV10
 
-		public override string RegisteredClass
+		public override VehicleCategory VehicleCategory
 		{
-			get { return GetString(XMLNames.Vehicle_RegisteredClass); }
+			get { return VehicleCategory.HeavyBusCompletedVehicle; }
+		}
+
+		public override RegistrationClass RegisteredClass
+		{
+			get { return RegistrationClassHelper.Parse(GetString(XMLNames.Vehicle_RegisteredClass)).First(); }
 		}
 
 		public override VehicleCode VehicleCode
@@ -1020,7 +1026,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		public bool DualFuelVehicle { get; }
 		public Watt MaxNetPower1 { get; }
 		public Watt MaxNetPower2 { get; }
-		public string RegisteredClass { get; }
+		public RegistrationClass RegisteredClass { get; }
 		public VehicleCode VehicleCode { get; }
 		public FloorType FloorType { get; }
 		public bool Articulated { get; }

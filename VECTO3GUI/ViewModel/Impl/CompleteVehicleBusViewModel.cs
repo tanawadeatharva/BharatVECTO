@@ -25,7 +25,7 @@ namespace VECTO3GUI.ViewModel.Impl
 		private string _vin;
 		private DateTime _date;
 		private LegislativeClass _legislativeClass;
-		private string _registeredClass;
+		private RegistrationClass _registeredClass;
 		private VehicleCode _vehicleCode;
 		private Kilogram _curbMassChassis;
 		private Kilogram _technicalPermissibleMaximumLadenMass;
@@ -73,7 +73,7 @@ namespace VECTO3GUI.ViewModel.Impl
 			get { return _legislativeClass; }
 			set { SetProperty(ref _legislativeClass, value); }
 		}
-		public string RegisteredClass
+		public RegistrationClass RegisteredClass
 		{
 			get { return _registeredClass; }
 			set { SetProperty(ref _registeredClass, value); }
