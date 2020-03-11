@@ -228,7 +228,21 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			get { return _axleWheelsDecl; }
 		}
 
+		public IElectricStorageEngineeringInputData ElectricStorage { get { return VehicleData.Components.ElectricStorage; } }
+		public IElectricMachinesEngineeringInputData ElectricMachines { get {
+			return VehicleData.Components.ElectricMachines;
+		} }
+
 		public IBusAuxiliariesDeclarationData BusAuxiliaries { get { return null; } }
+		IElectricStorageDeclarationInputData IVehicleComponentsDeclaration.ElectricStorage
+		{
+			get { return ElectricStorage; }
+		}
+
+		IElectricMachinesDeclarationInputData IVehicleComponentsDeclaration.ElectricMachines
+		{
+			get { return ElectricMachines; }
+		}
 
 		public Meter DynamicTyreRadius
 		{

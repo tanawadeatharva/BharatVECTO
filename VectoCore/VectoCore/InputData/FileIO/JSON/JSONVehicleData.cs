@@ -533,9 +533,39 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			get { return this; }
 		}
 
+		IElectricStorageEngineeringInputData IVehicleComponentsEngineering.ElectricStorage
+		{
+			get { return GetElectricStorage(); }
+		}
+
+		protected virtual IElectricStorageEngineeringInputData GetElectricStorage()
+		{
+			return null;
+		}
+
+		IElectricMachinesEngineeringInputData IVehicleComponentsEngineering.ElectricMachines
+		{
+			get { return GetElectricMachines(); }
+		}
+
+		protected virtual IElectricMachinesEngineeringInputData GetElectricMachines()
+		{
+			return null;
+		}
+
 		public virtual IBusAuxiliariesDeclarationData BusAuxiliaries
 		{
 			get { return null; }
+		}
+
+		IElectricStorageDeclarationInputData IVehicleComponentsDeclaration.ElectricStorage
+		{
+			get { return GetElectricStorage(); }
+		}
+
+		IElectricMachinesDeclarationInputData IVehicleComponentsDeclaration.ElectricMachines
+		{
+			get { return GetElectricMachines(); }
 		}
 
 		IAxlesDeclarationInputData IVehicleComponentsDeclaration.AxleWheels

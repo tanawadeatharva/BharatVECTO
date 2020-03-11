@@ -114,6 +114,12 @@ namespace TUGraz.VectoCommon.InputData
 		/// cf. VECTO Input Parameters.xlsx
 		/// </summary>
 		IAxlesEngineeringInputData AxleWheels { get; }
+
+		//IBusAuxiliariesEngineeringData BusAuxiliaries { get; }
+
+		IElectricStorageEngineeringInputData ElectricStorage { get; }
+
+		IElectricMachinesEngineeringInputData ElectricMachines { get; }
 	}
 
 	public interface IAxlesEngineeringInputData
@@ -365,6 +371,28 @@ namespace TUGraz.VectoCommon.InputData
 		string AuxiliaryVersion { get; }
 
 		string AdvancedAuxiliaryFilePath { get; }
+	}
+
+	public interface IElectricMotorEngineeringInputData : IElectricMotorDeclarationInputData
+	{
+		
+	}
+
+	public interface IElectricMachinesEngineeringInputData
+	{
+		IList<ElectricMachineEntry<IElectricMotorEngineeringInputData>> Entries { get; }
+	}
+
+	public interface IElectricStorageEngineeringInputData : IElectricStorageDeclarationInputData
+	{
+		new IBatteryPackEngineeringInputData BatteryPack { get; }
+
+		int Count { get; }
+	}
+
+	public interface IBatteryPackEngineeringInputData : IBatteryPackDeclarationInputData
+	{
+		
 	}
 
 	public interface IDriverModelData { }
