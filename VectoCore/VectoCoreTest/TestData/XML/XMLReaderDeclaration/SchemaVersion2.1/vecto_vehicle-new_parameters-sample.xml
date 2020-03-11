@@ -31,7 +31,7 @@ urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.1 E:\QUAM\Workspace\VECTO_quam
 		<VocationalVehicle>false</VocationalVehicle>
 		<SleeperCab>true</SleeperCab>
 		<v2.1:ADAS xsi:type="v2.1:AdvancedDriverAssistantSystemsType">
-			<EnginStopStart>false</EnginStopStart>
+			<EngineStopStart>false</EngineStopStart>
 			<EcoRollWithoutEngineStop>false</EcoRollWithoutEngineStop>
 			<EcoRollWithEngineStop>false</EcoRollWithEngineStop>
 			<PredictiveCruiseControl>none</PredictiveCruiseControl>
@@ -43,7 +43,7 @@ urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.1 E:\QUAM\Workspace\VECTO_quam
 		</v2.1:TorqueLimits>
 		<Components xsi:type="v2.0:VehicleComponentsType">
 			<Engine xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0" xsi:type="EngineComponentDeclarationType">
-				<v2.0:Data id="ENG-gooZah3D" xsi:type="v2.1:EngineDataDeclarationType" xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.1">
+				<v2.0:Data id="ENG-gooZah3D" xsi:type="v2.0:EngineDataDeclarationType" xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0">
 					<Manufacturer>Generic Engine Manufacturer</Manufacturer>
 					<Model>Generic 40t Long Haul Truck Engine</Model>
 					<CertificationNumber>e12*0815/8051*2017/05E0000*00</CertificationNumber>
@@ -60,7 +60,7 @@ urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.1 E:\QUAM\Workspace\VECTO_quam
 					<BFColdHot>1.0000</BFColdHot>
 					<CFRegPer>1.0000</CFRegPer>
 					<CFNCV>1.0000</CFNCV>
-					<FuelType>NG CI</FuelType>
+					<FuelType>Diesel CI</FuelType>
 					<FuelConsumptionMap>
 						<Entry engineSpeed="560.00" torque="-149.00" fuelConsumption="0.00" />
 						<Entry engineSpeed="560.00" torque="0.00" fuelConsumption="1256.00" />
@@ -2600,7 +2600,7 @@ urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.1 E:\QUAM\Workspace\VECTO_quam
 				</Signature>
 				</Gearbox>
 				<TorqueConverter  xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0" xsi:type="TorqueConverterComponentDeclarationType">
-					<Data id="tc-123xyz" xsi:type="TorqueConverterDeclarationDataType">
+					<Data id="tc-123xyz" xsi:type="TorqueConverterDataDeclarationType">
 						<Manufacturer>Some Manufacturer</Manufacturer>
 						<Model>Some Model</Model>
 						<CertificationNumber>e12*0815/8051*2017/05E0000*00</CertificationNumber>
