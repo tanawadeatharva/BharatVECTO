@@ -132,7 +132,8 @@ Imports TUGraz.VectoCore.Utils
         RetarderLossMapFileBrowser = New FileBrowser("vrlm")
         TransmissionLossMapFileBrowser = New FileBrowser("vtlm")
         PtoLossMapFileBrowser = New FileBrowser("vptol")
-        PTODrivingCycleFileBrowser = New FileBrowser("vptoc")
+        PTODrivingCycleStandstillFileBrowser = New FileBrowser("vptoc")
+        PTODrivingCycleDrivingFileBrowser = New FileBrowser("vptor")
         TorqueConverterFileBrowser = New FileBrowser("vtcc")
         TorqueConverterShiftPolygonFileBrowser = New FileBrowser("vgbs")
         CrossWindCorrectionFileBrowser = New FileBrowser("vcdx")
@@ -161,7 +162,8 @@ Imports TUGraz.VectoCore.Utils
         RetarderLossMapFileBrowser.Extensions = New String() {"vrlm"}
         TransmissionLossMapFileBrowser.Extensions = New String() {"vtlm"}
         PtoLossMapFileBrowser.Extensions = New String() {"vptol"}
-        PTODrivingCycleFileBrowser.Extensions = New String() {"vptoc"}
+        PTODrivingCycleStandstillFileBrowser.Extensions = New String() {"vptoc"}
+        PTODrivingCycleDrivingFileBrowser.Extensions = New String() { "vptor" }
         TorqueConverterFileBrowser.Extensions = New String() {"vtcc"}
         TorqueConverterShiftPolygonFileBrowser.Extensions = New String() {"vgbs"}
         CrossWindCorrectionFileBrowser.Extensions = New String() {"vcdv", "vcdb"}
@@ -187,7 +189,8 @@ Imports TUGraz.VectoCore.Utils
         RetarderLossMapFileBrowser.Close()
         TransmissionLossMapFileBrowser.Close()
         PtoLossMapFileBrowser.Close()
-        PTODrivingCycleFileBrowser.Close()
+        PTODrivingCycleStandstillFileBrowser.Close()
+        PTODrivingCycleDrivingFileBrowser.Close()
         TorqueConverterFileBrowser.Close()
         TorqueConverterShiftPolygonFileBrowser.Close()
         CrossWindCorrectionFileBrowser.Close()

@@ -38,6 +38,7 @@ using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.Models.Connector.Ports.Impl;
+using TUGraz.VectoCore.Models.Simulation;
 using TUGraz.VectoCore.Models.Simulation.DataBus;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Utils;
@@ -60,8 +61,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		protected readonly Dictionary<DrivingMode, IDriverMode> DrivingModes = new Dictionary<DrivingMode, IDriverMode>();
 
-		public DefaultDriverStrategy()
+		public readonly MeterPerSecond PTODriveMinSpeed;
+
+		public DefaultDriverStrategy(IVehicleContainer dataBus)
 		{
+			PTODriveMinSpeed = dataBus.RunData.DriverData.PTODriveMinSpeed;
 			DrivingModes.Add(DrivingMode.DrivingModeDrive, new DriverModeDrive() { DriverStrategy = this });
 			DrivingModes.Add(DrivingMode.DrivingModeBrake, new DriverModeBrake() { DriverStrategy = this });
 			CurrentDrivingMode = DrivingMode.DrivingModeDrive;
@@ -440,6 +444,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			if (DriverStrategy.OverspeedAllowed(targetVelocity, prohibitOverspeed)) {
 				velocity += DriverData.OverSpeedEcoRoll.OverSpeed;
 			}
+			if (DataBus.CycleData.LeftSample.PTOActive == PTOActivity.PTOActivityRoadSweeping && targetVelocity < DriverStrategy.PTODriveMinSpeed) {
+				velocity = DriverStrategy.PTODriveMinSpeed;
+				targetVelocity = velocity;
+			}
+
 			if (DataBus.GearboxType.AutomaticTransmission() || DataBus.ClutchClosed(absTime)) {
 				for (var i = 0; i < 3; i++) {
 					var retVal = HandleRequestEngaged(absTime, ds, targetVelocity, gradient, prohibitOverspeed, velocity, debug);
