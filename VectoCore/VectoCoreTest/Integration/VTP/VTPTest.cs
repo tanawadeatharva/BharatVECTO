@@ -30,12 +30,18 @@
 */
 
 using System.IO;
+using System.Linq;
+using System.Xml;
+using System.Xml.Linq;
+using System.Xml.XPath;
 using NUnit.Framework;
 using TUGraz.VectoCommon.Models;
+using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.InputData.FileIO.JSON;
 using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.OutputData;
 using TUGraz.VectoCore.OutputData.FileIO;
+using TUGraz.VectoCore.OutputData.XML;
 
 namespace TUGraz.VectoCore.Tests.Integration.VTP
 {
@@ -104,6 +110,45 @@ namespace TUGraz.VectoCore.Tests.Integration.VTP
 			jobContainer.WaitFinished();
 
 			Assert.AreEqual(true, jobContainer.AllCompleted);
+
+			var vtpReport = XDocument.Load(XmlReader.Create(fileWriter.XMLVTPReportName));
+			var vtpFactor = vtpReport.XPathSelectElement("//*[local-name() = 'Results']/*[local-name() = 'VTRatio']")?.Value.ToDouble(0);
+
+			Assert.AreEqual(0.8972, vtpFactor);
+		}
+
+		[Category("LongRunning")]
+		[Category("Integration")]
+		[TestCase(@"TestData\Integration\VTPMode\GenericVehicle_CNG\class_5_generic vehicle_DECL.vecto")]
+		public void RunVTP_Declaration_NCVCorrection_CNG(string jobFile)
+		{
+			var fileWriter = new FileOutputWriter(jobFile);
+			var sumWriter = new SummaryDataContainer(fileWriter);
+			var jobContainer = new JobContainer(sumWriter);
+			var dataProvider = JSONInputDataFactory.ReadJsonJob(jobFile);
+			var runsFactory = new SimulatorFactory(ExecutionMode.Declaration, dataProvider, fileWriter) {
+				ModalResults1Hz = false,
+				WriteModalResults = true,
+				ActualModalData = false,
+				Validate = false,
+			};
+
+			jobContainer.AddRuns(runsFactory);
+
+			Assert.AreEqual(2, jobContainer.Runs.Count);
+			//var i = 0;
+			//jobContainer.Runs[i].Run.Run();
+			//Assert.IsTrue(jobContainer.Runs[i].Run.FinishedWithoutErrors);
+
+			jobContainer.Execute();
+			jobContainer.WaitFinished();
+
+			Assert.AreEqual(true, jobContainer.AllCompleted);
+
+			var vtpReport = XDocument.Load(XmlReader.Create(fileWriter.XMLVTPReportName));
+			var vtpFactor = vtpReport.XPathSelectElement("//*[local-name() = 'Results']/*[local-name() = 'VTRatio']")?.Value.ToDouble(0);
+
+			Assert.AreEqual(0.8972, vtpFactor);
 		}
 
 		[Category("LongRunning")]
