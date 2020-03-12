@@ -253,6 +253,8 @@
     <Compile Include="InputData\FileIO\XML\Declaration\IXMLDeclarationInputDataReader.cs" />
     <Compile Include="InputData\FileIO\XML\IXMLInputDataReader.cs" />
     <Compile Include="InputData\FileIO\XML\XMLInputDataNinjectModule.cs" />
+    <Compile Include="Models\SimulationComponent\Impl\PTODriveAuxiliary.cs" />
+    <Compile Include="Models\SimulationComponent\Impl\RoadSweeperAuxiliary.cs" />
     <Compile Include="Models\Simulation\ISimulatorFactory.cs" />
     <Compile Include="Models\Simulation\ISimulatorFactoryFactory.cs" />
     <Compile Include="Models\Simulation\SimulationFactoryNinjectModule.cs" />
@@ -516,11 +518,6 @@
     <Compile Include="Utils\XMLValidator.cs" />
     <Compile Include="Utils\XPathHelper.cs" />
     <Compile Include="Ninject\VectoNinjectModule.cs" />
-    <Compile Include="VersionNumber1.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>VersionNumber.t4</DependentUpon>
-    </Compile>
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />

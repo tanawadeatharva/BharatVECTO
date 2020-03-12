@@ -42,6 +42,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 	[CustomValidation(typeof(CombustionEngineData), "ValidateData")]
 	public class CombustionEngineData : SimulationComponentData
 	{
+
 		[Required, SIRange(1000 * 1E-6, 20000 * 1E-6)]
 		public CubicMeter Displacement { get; internal set; }
 
@@ -83,7 +84,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 		public NewtonMeter MaxTorqueDeclared { get; internal set; }
 
 		public FuelData.Entry FuelData { get; internal set; }
-		
+
+		public PerSecond PTORoadSweepEngineSpeed;
+
 		public CombustionEngineData()
 		{
 			WHTCUrban = 1;
@@ -117,6 +120,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 				ADASCorrectionFactor = ADASCorrectionFactor,
 				CertificationNumber = CertificationNumber,
 				CertificationMethod = CertificationMethod,
+				PTORoadSweepEngineSpeed = PTORoadSweepEngineSpeed,
 			};
 		}
 

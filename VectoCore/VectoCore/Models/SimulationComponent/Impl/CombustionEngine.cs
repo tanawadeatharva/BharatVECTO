@@ -396,7 +396,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			}
 
 			var fc = result.Value;
-			var fcNCVcorr = fc * ModelData.FuelData.HeatingValueCorrection; // TODO: wird fcNCVcorr
+			var fcNCVcorr = fc * ModelData.FuelData.HeatingValueCorrection;
 
 			var fcWHTC = fcNCVcorr * WHTCCorrectionFactor;
 			var fcAAUX = fcWHTC;
@@ -441,9 +441,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				throw new VectoException("ComputeFullLoadPower cannot compute for simulation interval length 0.");
 			}
 
-			CurrentState.StationaryFullLoadTorque =
-				ModelData.FullLoadCurves[DataBus.Gear].FullLoadStationaryTorque(angularVelocity);
-			var stationaryFullLoadPower = CurrentState.StationaryFullLoadTorque * angularVelocity;
+			var tStatFull = ModelData.FullLoadCurves[DataBus.Gear].FullLoadStationaryTorque(angularVelocity);
+			var stationaryFullLoadPower = tStatFull * angularVelocity;
+			if (!dryRun) {
+				CurrentState.StationaryFullLoadTorque = tStatFull;
+			}
 			Watt dynFullPowerCalculated;
 
 			// disable pt1 behaviour if PT1Disabled is true, or if the previous enginepower is greater than the current stationary fullload power (in this case the pt1 calculation fails)

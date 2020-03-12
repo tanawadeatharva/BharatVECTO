@@ -30,6 +30,7 @@
 */
 
 using System.Collections.Generic;
+using System.Data;
 using System.IO;
 using System.Xml;
 using System.Xml.Linq;
@@ -78,6 +79,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering.DataProvider
 		{
 			get { return _engineOnly ?? (_engineOnly = Reader.CreateEngineOnly); }
 		}
+
+		public virtual TableData PTOCycleWhileDrive { get { return null; } }
 
 		public virtual bool EngineOnlyMode { get; }
 

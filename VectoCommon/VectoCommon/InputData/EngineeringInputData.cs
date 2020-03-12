@@ -30,6 +30,7 @@
 */
 
 using System.Collections.Generic;
+using System.Data;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 
@@ -79,6 +80,12 @@ namespace TUGraz.VectoCommon.InputData
 		new IVehicleComponentsEngineering Components { get; }
 
 		new IAdvancedDriverAssistantSystemsEngineering ADAS { get; }
+
+		// input parameters for road sweeper use case
+
+		uint? PTO_DriveGear { get; }
+
+		PerSecond PTO_DriveEngineSpeed { get; }
 	}
 
 	public interface IAdvancedDriverAssistantSystemsEngineering
@@ -155,7 +162,10 @@ namespace TUGraz.VectoCommon.InputData
 		/// </summary>
 		TableData PTOLossMap { get; }
 
-		TableData PTOCycle { get; }
+		TableData PTOCycleDuringStop { get; }
+
+		TableData PTOCycleWhileDriving { get; }
+
 	}
 
 	public interface IAxleEngineeringInputData : IAxleDeclarationInputData

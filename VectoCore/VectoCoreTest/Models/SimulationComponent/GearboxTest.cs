@@ -281,7 +281,8 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 					}
 				},
 				EngineData = engineData,
-				GearboxData = gearboxData
+				GearboxData = gearboxData,
+				DriverData = new DriverData(),
 			};
 		}
 
@@ -510,6 +511,9 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			var runData = GetDummyRunData(gearboxData);
 			var gearbox = new Gearbox(container, new AMTShiftStrategy(runData, container),
 				runData);
+			var cycleData = DrivingCycleDataReader.ReadFromStream("s,v,grad,stop\n0,0,0,10\n10,20,0,0\n20,21,0,0\n30,22,0,0\n40,23,0,0\n50,24,0,0\n60,25,0,0\n70,26,0,0\n80,27,0,0\n90,28,0,0\n100,29,0,0".ToStream(), CycleType.DistanceBased, "DummyCycle", false);
+			var cycle = new MockDrivingCycle(container, cycleData);
+			container.RunData = new VectoRunData() { Cycle = cycleData };
 
 			var driver = new MockDriver(container);
 			var port = new MockTnOutPort() { EngineN95hSpeed = 2000.RPMtoRad() };
@@ -553,6 +557,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 		TestCase(1, 6, 200, 9000, typeof(ResponseGearShift)),]
 		public void Gearbox_ShiftUp(int gear, int newGear, double tq, double n, Type responseType)
 		{
+
 			var container = new MockVehicleContainer() {
 				VehicleSpeed = 10.SI<MeterPerSecond>(),
 				DriverBehavior = DrivingBehavior.Driving,
@@ -562,6 +567,12 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 				ReducedMassWheels = 100.SI<Kilogram>(),
 				TotalMass = 19000.SI<Kilogram>(),
 				EngineSpeed = n.SI<PerSecond>()
+			};
+			var cycleData = DrivingCycleDataReader.ReadFromStream("s,v,grad,stop\n0,0,0,10\n10,20,0,0\n20,21,0,0\n30,22,0,0\n40,23,0,0\n50,24,0,0\n60,25,0,0\n70,26,0,0\n80,27,0,0\n90,28,0,0\n100,29,0,0".ToStream(), CycleType.DistanceBased, "DummyCycle", false);
+			var cycle = new MockDrivingCycle(container, cycleData);
+			container.RunData = new VectoRunData() { Cycle = cycleData };
+			container.CycleData = new CycleData() {
+				LeftSample = cycleData.Entries.First()
 			};
 			var gearboxData = MockSimulationDataFactory.CreateGearboxDataFromFile(GearboxDataFile, EngineDataFile);
 			var runData = GetDummyRunData(gearboxData);

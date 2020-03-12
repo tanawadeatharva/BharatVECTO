@@ -51,6 +51,7 @@ Public Class VectoJob
 
     Private ReadOnly _lacDfTargetSpeedFile As SubPath
     Private ReadOnly _lacDfVelocityDropFile as SubPath
+    Private ReadOnly _ptoCycleWhileDriveFile as SubPath
 
     Private _startStop As Boolean
     Public StartStopDelay As Double
@@ -102,6 +103,7 @@ Public Class VectoJob
         _gearboxFile = New SubPath
         _lacDfTargetSpeedFile = New SubPath()
         _lacDfVelocityDropFile = New SubPath()
+        _ptoCycleWhileDriveFile = new SubPath()
 
         _driverAccelerationFile = New SubPath
 
@@ -320,6 +322,7 @@ Public Class VectoJob
 
 #End Region
 
+
     ' ReSharper disable once UnusedMember.Global -- used by Validation
     Public Shared Function ValidateJob(vectoJob As VectoJob, validationContext As ValidationContext) As ValidationResult
         Dim modeService As VectoValidationModeServiceContainer =
@@ -516,6 +519,7 @@ Public Class VectoJob
         End Get
     End Property
 
+ 
     Public ReadOnly Property IEngineeringJobInputData_EngineOnly As IEngineEngineeringInputData Implements IEngineeringJobInputData.EngineOnly
         Get
             If Not File.Exists(_engineFile.FullPath) Then Return Nothing
