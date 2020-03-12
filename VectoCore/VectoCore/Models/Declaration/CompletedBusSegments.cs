@@ -90,6 +90,10 @@ namespace TUGraz.VectoCore.Models.Declaration
 			
 			var segment = new Segment {
 				Found =  true,
+				AccelerationFile =
+					RessourceHelper.ReadStream(
+						DeclarationData.DeclarationDataResourcePrefix + ".VACC." +
+						row.Field<string>(".vaccfile")),
 				Missions = CreateMissions(rows), 
 				VehicleClass = VehicleClassHelper.Parse("CB" + row.Field<string>("vehicleparametergroup")),
 			};
@@ -115,6 +119,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 					
 					var mission = new Mission {
 						MissionType = missionType,
+						CrossWindCorrectionParameters = row.Field<string>("crosswindcorrection"),
 						MinLoad = null,
 						MaxLoad = null,
 						RefLoad = 100.SI<Kilogram>(), // dummy value to trigger simulation with ref load

@@ -37,6 +37,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 			var segment = DeclarationData.CompletedBusSegments.Lookup(axleConfig.NumAxles(), vehicleCode, registrationClass, passengersLowerDeck, bodyHeight.SI<Meter>(), lowEntry);
 			Assert.AreEqual(numberOfMissions, segment.Missions.Length);
 			Assert.AreEqual(vehicleParameterGroup, segment.VehicleClass);
+			Assert.IsNotNull(segment.AccelerationFile);
 		}
 
 		[TestCase(AxleConfiguration.AxleConfig_4x2, VehicleCode.CE, RegistrationClass.I, 0, 0, false, VehicleClass.ClassCB31a, 3)]
@@ -53,6 +54,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 
 				Assert.AreEqual(_missionsTypes[i], mission.MissionType);
 				Assert.AreEqual(4.9, mission.DefaultCDxA.Value());
+				Assert.AreEqual("CoachBus", mission.CrossWindCorrectionParameters);
 				AssertAxleDistribution(axle1: 37.5, axle2: 62.5, axle3: 0, axle4: 0, axleLoadDistribution: mission.AxleWeightDistribution);
 				
 				AssertBusParameters(
@@ -84,6 +86,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 
 				Assert.AreEqual(_missionsTypes[i], mission.MissionType);
 				Assert.AreEqual(4.9, mission.DefaultCDxA.Value());
+				Assert.AreEqual("CoachBus", mission.CrossWindCorrectionParameters);
 				AssertAxleDistribution(axle1: 37.5, axle2: 62.5, axle3: 0, axle4: 0, axleLoadDistribution: mission.AxleWeightDistribution);
 
 				AssertBusParameters(
@@ -115,6 +118,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 
 				Assert.AreEqual(_missionsTypes[i], mission.MissionType);
 				Assert.AreEqual(6.2, mission.DefaultCDxA.Value());
+				Assert.AreEqual("CoachBus", mission.CrossWindCorrectionParameters);
 				AssertAxleDistribution(axle1: 37.5, axle2: 62.5, axle3: 0, axle4: 0, axleLoadDistribution: mission.AxleWeightDistribution);
 
 				AssertBusParameters(
@@ -147,6 +151,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 
 				Assert.AreEqual(_missionsTypes[i], mission.MissionType);
 				Assert.AreEqual(5.7, mission.DefaultCDxA.Value());
+				Assert.AreEqual("CoachBus", mission.CrossWindCorrectionParameters);
 				AssertAxleDistribution(axle1: 37.5, axle2: 62.5, axle3: 0, axle4: 0, axleLoadDistribution: mission.AxleWeightDistribution);
 
 				AssertBusParameters(
@@ -179,6 +184,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 
 				Assert.AreEqual(_missionsTypes[i], mission.MissionType);
 				Assert.AreEqual(7, mission.DefaultCDxA.Value());
+				Assert.AreEqual("CoachBus", mission.CrossWindCorrectionParameters);
 				AssertAxleDistribution(axle1: 37.5, axle2: 62.5, axle3: 0, axle4: 0, axleLoadDistribution: mission.AxleWeightDistribution);
 
 				AssertBusParameters(
@@ -211,6 +217,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 
 				Assert.AreEqual(_missionsTypes[i+3], mission.MissionType);
 				Assert.AreEqual(4.6, mission.DefaultCDxA.Value());
+				Assert.AreEqual("CoachBus", mission.CrossWindCorrectionParameters);
 				AssertAxleDistribution(axle1: 37.5, axle2: 62.5, axle3: 0, axle4: 0, axleLoadDistribution: mission.AxleWeightDistribution);
 
 				AssertBusParameters(
@@ -243,6 +250,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 
 				Assert.AreEqual(_missionsTypes[i + 3], mission.MissionType);
 				Assert.AreEqual(4.6, mission.DefaultCDxA.Value());
+				Assert.AreEqual("CoachBus", mission.CrossWindCorrectionParameters);
 				AssertAxleDistribution(axle1: 37.5, axle2: 62.5, axle3: 0, axle4: 0, axleLoadDistribution: mission.AxleWeightDistribution);
 
 				AssertBusParameters(
@@ -274,6 +282,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 
 				Assert.AreEqual(_missionsTypes[i + 3], mission.MissionType);
 				Assert.AreEqual(4.6, mission.DefaultCDxA.Value());
+				Assert.AreEqual("CoachBus", mission.CrossWindCorrectionParameters);
 				AssertAxleDistribution(axle1: 37.5, axle2: 62.5, axle3: 0, axle4: 0, axleLoadDistribution: mission.AxleWeightDistribution);
 
 				AssertBusParameters(
@@ -306,6 +315,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 
 				Assert.AreEqual(_missionsTypes[i + 3], mission.MissionType);
 				Assert.AreEqual(4.6, mission.DefaultCDxA.Value());
+				Assert.AreEqual("CoachBus", mission.CrossWindCorrectionParameters);
 				AssertAxleDistribution(axle1: 37.5, axle2: 62.5, axle3: 0, axle4: 0, axleLoadDistribution: mission.AxleWeightDistribution);
 
 				AssertBusParameters(
@@ -337,6 +347,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 
 				Assert.AreEqual(_missionsTypes[i + 3], mission.MissionType);
 				Assert.AreEqual(5.2, mission.DefaultCDxA.Value());
+				Assert.AreEqual("CoachBus", mission.CrossWindCorrectionParameters);
 				AssertAxleDistribution(axle1: 37.5, axle2: 62.5, axle3: 0, axle4: 0, axleLoadDistribution: mission.AxleWeightDistribution);
 
 				AssertBusParameters(
@@ -368,6 +379,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 
 				Assert.AreEqual(_missionsTypes[i + 3], mission.MissionType);
 				Assert.AreEqual(5.2, mission.DefaultCDxA.Value());
+				Assert.AreEqual("CoachBus", mission.CrossWindCorrectionParameters);
 				AssertAxleDistribution(axle1: 37.5, axle2: 62.5, axle3: 0, axle4: 0, axleLoadDistribution: mission.AxleWeightDistribution);
 
 				AssertBusParameters(
