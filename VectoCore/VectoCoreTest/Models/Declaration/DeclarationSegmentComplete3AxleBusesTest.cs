@@ -75,7 +75,6 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 
 				AssertBusParameters(
 					missionType: mission.MissionType,
-					floorType: FloorType.LowFloor,
 					passengerDensity: new[] { 3.0 },
 					airDragAllowed: false,
 					doubleDecker: false,
@@ -106,7 +105,6 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 
 				AssertBusParameters(
 					missionType: mission.MissionType,
-					floorType: FloorType.LowFloor,
 					passengerDensity: new[] { 3.0 },
 					airDragAllowed: false,
 					doubleDecker: false,
@@ -137,7 +135,6 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 
 				AssertBusParameters(
 					missionType: mission.MissionType,
-					floorType: FloorType.LowFloor,
 					passengerDensity: new[] { 3.7 },
 					airDragAllowed: false,
 					doubleDecker: true,
@@ -169,7 +166,6 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 
 				AssertBusParameters(
 					missionType: mission.MissionType,
-					floorType: FloorType.Unknown,
 					passengerDensity: new[] { 3.0 },
 					airDragAllowed: false,
 					doubleDecker: false,
@@ -201,7 +197,6 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 
 				AssertBusParameters(
 					missionType: mission.MissionType,
-					floorType: FloorType.Unknown,
 					passengerDensity: new[] { 3.7 },
 					airDragAllowed: false,
 					doubleDecker: true,
@@ -233,7 +228,6 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 
 				AssertBusParameters(
 					missionType: mission.MissionType,
-					floorType: FloorType.HighFloor,
 					passengerDensity: new[] { 2.2, 1.4 },
 					airDragAllowed: true,
 					doubleDecker: false,
@@ -265,7 +259,6 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 
 				AssertBusParameters(
 					missionType: mission.MissionType,
-					floorType: FloorType.HighFloor,
 					passengerDensity: new[] { 2.2, 1.4 },
 					airDragAllowed: true,
 					doubleDecker: false,
@@ -297,7 +290,6 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 
 				AssertBusParameters(
 					missionType: mission.MissionType,
-					floorType: FloorType.HighFloor,
 					passengerDensity: new[] { 2.2, 1.4 },
 					airDragAllowed: true,
 					doubleDecker: false,
@@ -329,7 +321,6 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 
 				AssertBusParameters(
 					missionType: mission.MissionType,
-					floorType: FloorType.HighFloor,
 					passengerDensity: new[] { 2.2, 1.4 },
 					airDragAllowed: true,
 					doubleDecker: false,
@@ -361,7 +352,6 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 
 				AssertBusParameters(
 					missionType: mission.MissionType,
-					floorType: FloorType.HighFloor,
 					passengerDensity: new[] { 2.2, 1.4 },
 					airDragAllowed: true,
 					doubleDecker: true,
@@ -393,7 +383,6 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 
 				AssertBusParameters(
 					missionType: mission.MissionType,
-					floorType: FloorType.HighFloor,
 					passengerDensity: new[] { 3.0, 2.0 },
 					airDragAllowed: true,
 					doubleDecker: true,
@@ -423,7 +412,6 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 
 				AssertBusParameters(
 					missionType: mission.MissionType,
-					floorType: FloorType.LowFloor,
 					passengerDensity: new[] { 3.0 },
 					airDragAllowed: false,
 					doubleDecker: false,
@@ -454,7 +442,6 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 
 				AssertBusParameters(
 					missionType: mission.MissionType,
-					floorType: FloorType.LowFloor,
 					passengerDensity: new[] { 3.0 },
 					airDragAllowed: false,
 					doubleDecker: false,
@@ -469,10 +456,9 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 
 		#region Assert Methods
 
-		private void AssertBusParameters(MissionType missionType, FloorType floorType, double[] passengerDensity, bool airDragAllowed,
+		private void AssertBusParameters(MissionType missionType, double[] passengerDensity, bool airDragAllowed,
 			bool doubleDecker, BusParameters busParameters)
 		{
-			Assert.AreEqual(floorType, busParameters.FloorType);
 			switch (missionType)
 			{
 				case MissionType.HeavyUrban:

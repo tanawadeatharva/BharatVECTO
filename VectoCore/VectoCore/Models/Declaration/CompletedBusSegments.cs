@@ -172,16 +172,5 @@ namespace TUGraz.VectoCore.Models.Declaration
 				KitchenStandard = kitchenStandard
 			};
 		}
-
-
-		private FloorType GetFloorType(string field)
-		{
-			switch (field)
-			{
-				case "high": return FloorType.HighFloor;
-				case "low": return FloorType.LowFloor;
-				default: return FloorType.Unknown;
-			}
-		}
 	}
 }

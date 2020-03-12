@@ -68,7 +68,6 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 
 				AssertBusParameters(
 					missionType: mission.MissionType,
-					floorType: FloorType.LowFloor,
 					passengerDensity: new[] { 3.0 },
 					airDragAllowed: false,
 					doubleDecker: false,
@@ -100,7 +99,6 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 
 				AssertBusParameters(
 					missionType: mission.MissionType,
-					floorType: FloorType.LowFloor,
 					passengerDensity: new[] { 3.0 },
 					airDragAllowed: false,
 					doubleDecker: false,
@@ -115,10 +113,9 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 		
 		#region Assert Methods
 
-		private void AssertBusParameters(MissionType missionType, FloorType floorType, double[] passengerDensity, bool airDragAllowed,
+		private void AssertBusParameters(MissionType missionType, double[] passengerDensity, bool airDragAllowed,
 			bool doubleDecker, BusParameters busParameters)
 		{
-			Assert.AreEqual(floorType, busParameters.FloorType);
 			switch (missionType)
 			{
 				case MissionType.HeavyUrban:
