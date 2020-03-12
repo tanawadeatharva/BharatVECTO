@@ -1858,6 +1858,12 @@
     <None Include="TestData\Integration\TotalMassExceededInMU\Gear_9.vtlm">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Include="TestData\Integration\VTPMode\GenericVehicle_CNG\class_5_generic vehicle_DECL.vecto">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Integration\VTPMode\GenericVehicle_CNG\VTP_rural_2Hz.vdri">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="TestData\Integration\VTPMode\GenericVehicle\class_5_generic vehicle_DECL.vecto">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
@@ -2805,6 +2811,12 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="TestData\Integration\DeclarationMode\ExemptedVehicle\vecto_vehicle-sample_exempted.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="TestData\Integration\VTPMode\GenericVehicle_CNG\Tractor_4x2_vehicle-class-5_Generic vehicle.RSLT_MANUFACTURER.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="TestData\Integration\VTPMode\GenericVehicle_CNG\Tractor_4x2_vehicle-class-5_Generic vehicle.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="TestData\Integration\VTPMode\GenericVehicle\CityBus_AT_Ser.RSLT_MANUFACTURER.xml">

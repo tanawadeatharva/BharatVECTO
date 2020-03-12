@@ -396,7 +396,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			}
 
 			var fc = result.Value;
-			var fcNCVcorr = fc * ModelData.FuelData.HeatingValueCorrection; // TODO: wird fcNCVcorr
+			var fcNCVcorr = fc * ModelData.FuelData.HeatingValueCorrection;
 
 			var fcWHTC = fcNCVcorr * WHTCCorrectionFactor;
 			var fcAAUX = fcWHTC;
