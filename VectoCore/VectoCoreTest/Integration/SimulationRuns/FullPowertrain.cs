@@ -163,6 +163,7 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 			var cycle = new DistanceBasedDrivingCycle(container, cycleData);
 
 			var runData = new VectoRunData() {
+				SimulationType = SimulationType.DistanceCycle,
 				EngineData = engineData,
 				VehicleData = vehicleData,
 				AxleGearData = axleGearData,
