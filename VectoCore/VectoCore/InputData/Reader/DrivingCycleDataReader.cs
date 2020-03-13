@@ -242,7 +242,7 @@ namespace TUGraz.VectoCore.InputData.Reader
 					// vehicle stops. duplicate current distance entry with 0 waiting time
 					var tmp = new DrivingCycleData.DrivingCycleEntry(entry) {
 						StoppingTime = 0.SI<Second>(),
-						PTOActive = entry.PTOActive,
+						PTOActive = entry.PTOActive == PTOActivity.PTOActivityRoadSweeping ? entry.PTOActive : PTOActivity.Inactive,
 						RoadGradient = entry.RoadGradient,
 						VehicleTargetSpeed = i < entries.Count - 1 ? entries[i + 1].VehicleTargetSpeed : 0.SI<MeterPerSecond>()
 					};
@@ -311,7 +311,7 @@ namespace TUGraz.VectoCore.InputData.Reader
 				return false;
 			}
 
-			if (first.PTOActive != second.PTOActive || first.PTOActive == PTOActivity.PTOActivityWhileDrive) {
+			if (first.PTOActive != second.PTOActive || first.PTOActive == PTOActivity.PTOActivityWhileDrive || first.PTOActive == PTOActivity.PTOActivityRoadSweeping) {
 				return false;
 			}
 

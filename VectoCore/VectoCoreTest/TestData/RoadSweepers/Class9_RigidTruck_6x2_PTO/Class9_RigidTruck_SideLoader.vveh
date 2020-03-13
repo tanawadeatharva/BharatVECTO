@@ -32,7 +32,7 @@
       "Type": "only the drive shaft of the PTO - multi-disc clutch",
       "LossMap": "PTO-idle.vptol",
       "Cycle": "PTO-cycle.vptoc",
-      "PTOCycleDuringDrive": "PTO-cycle.vptor"
+      "CycleDriving": "PTO-cycle.vptor"
     },
     "AxleConfig": {
       "Type": "6x2",

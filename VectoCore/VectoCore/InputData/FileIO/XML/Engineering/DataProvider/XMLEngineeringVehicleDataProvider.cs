@@ -317,7 +317,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering.DataProvider
 			}
 		}
 
-		public TableData PTOCycleWhileDriving { get { throw new NotImplementedException();} }
+		public TableData PTOCycleWhileDriving { get { return null;} }
 
 		#endregion
 
