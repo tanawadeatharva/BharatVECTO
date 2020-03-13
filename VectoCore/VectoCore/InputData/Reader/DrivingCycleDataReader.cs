@@ -311,7 +311,7 @@ namespace TUGraz.VectoCore.InputData.Reader
 				return false;
 			}
 
-			if (first.PTOActive != second.PTOActive || first.PTOActive == PTOActivity.PTOActivityWhileDrive) {
+			if (first.PTOActive != second.PTOActive || first.PTOActive == PTOActivity.PTOActivityWhileDrive || first.PTOActive == PTOActivity.PTOActivityRoadSweeping) {
 				return false;
 			}
 
