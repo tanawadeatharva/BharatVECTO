@@ -57,6 +57,8 @@ $P_{avg} = \frac{1}{simulation interval} \int{P(t) dt}$.
 | P_roll			|	[kW]	|	Rolling resistance power loss. |
 | P_veh_inertia		|	[kW]	|	Power loss due to the vehicle's inertia |
 | P_aux_<XXX>		|	[kW]	|	Power demand for every individual auxiliary. Only if the run has auxiliaries. |
+| P_PTO_RoadSweeping|	[kW]	|	Power demand from the PTO in PTO mode 2. Only in engineering mode if PTO mode 2 is activated. |
+| P_PTO_DuringDrive |	[kW]	|	Power demand from the PTO cycle in PTO mode 3. Only in engineering mode if PTO mode 3 is activated. |
 | P_PTO_consum		|	[kW]	|	Power demand from the PTO consumer. Only if the vehicle has a PTO consumer. |
 | P_PTO_transmission|	[kW]	|	Power demand from the PTO transmission. Only if the vehicle has a PTO consumer. |
 | AA_NonSmartAlternatorsEfficiency     | [Fraction]  | Non-Smart Alternators Efficiency, Advance Auxiliaries Module |

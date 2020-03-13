@@ -334,7 +334,8 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 					},
 					StartSpeed = 2.SI<MeterPerSecond>()
 				},
-				Retarder = new RetarderData()
+				Retarder = new RetarderData(),
+				DriverData = new DriverData()
 			};
 
 			// call builder (actual test)

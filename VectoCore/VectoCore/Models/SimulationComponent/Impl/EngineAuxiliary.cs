@@ -31,6 +31,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Configuration;
@@ -47,10 +48,15 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 	public class EngineAuxiliary : StatefulVectoSimulationComponent<EngineAuxiliary.State>, IAuxInProvider,
 		IAuxPort
 	{
-		protected readonly Dictionary<string, Func<PerSecond, Watt>> Auxiliaries =
-			new Dictionary<string, Func<PerSecond, Watt>>();
+		protected readonly Dictionary<string, Func<PerSecond, Second, Second, bool, Watt>> Auxiliaries =
+			new Dictionary<string, Func<PerSecond, Second, Second, bool, Watt>>();
 
-		public EngineAuxiliary(IVehicleContainer container) : base(container) {}
+		private bool _writePTO;
+
+		public EngineAuxiliary(IVehicleContainer container) : base(container)
+		{
+			_writePTO = container.RunData?.PTO != null;
+		}
 
 		public IAuxPort Port()
 		{
@@ -64,7 +70,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		/// <param name="powerDemand"></param>
 		public void AddConstant(string auxId, Watt powerDemand)
 		{
-			Add(auxId, _ => powerDemand);
+			Add(auxId, (nEng, absTime, dt, dryRun) => powerDemand);
 		}
 
 		/// <summary>
@@ -73,12 +79,12 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		/// <param name="auxId"></param>
 		public void AddCycle(string auxId)
 		{
-			Add(auxId, _ => DataBus.CycleData.LeftSample.AdditionalAuxPowerDemand);
+			Add(auxId, (nEng, absTime, dt, dryRun) => DataBus.CycleData.LeftSample.AdditionalAuxPowerDemand);
 		}
 
 		public void AddCycle(string auxId, Func<DrivingCycleData.DrivingCycleEntry, Watt> powerLossFunc)
 		{
-			Add(auxId, _ => powerLossFunc(DataBus.CycleData.LeftSample));
+			Add(auxId, (nEng, absTime, dt, dryRun) => powerLossFunc(DataBus.CycleData.LeftSample));
 		}
 
 		/// <summary>
@@ -95,7 +101,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				throw new VectoException(error);
 			}
 
-			Add(auxId, speed => {
+			Add(auxId, (speed, absTime, dt, dryRun) => {
 				var powerSupply = DataBus.CycleData.LeftSample.AuxiliarySupplyPower[auxId];
 				var nAuxiliary = speed * data.TransmissionRatio;
 				var powerAuxOut = powerSupply / data.EfficiencyToSupply;
@@ -109,7 +115,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		/// </summary>
 		/// <param name="auxId"></param>
 		/// <param name="powerLossFunction"></param>
-		public void Add(string auxId, Func<PerSecond, Watt> powerLossFunction)
+		public void Add(string auxId, Func<PerSecond, Second, Second, bool, Watt> powerLossFunction)
 		{
 			Auxiliaries[auxId] = powerLossFunction;
 		}
@@ -121,7 +127,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				return 0.SI<NewtonMeter>();
 			}
 
-			return ComputePowerDemand(angularSpeed, false) / angularSpeed;
+			return ComputePowerDemand(angularSpeed, 0.SI<Second>(), Constants.SimulationSettings.TargetTimeInterval, false) / angularSpeed;
 		}
 
 		/// <summary>
@@ -144,16 +150,16 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				CurrentState.AngularSpeed = angularSpeed;
 			}
 			if (avgAngularSpeed.IsGreater(0)) {
-				return ComputePowerDemand(avgAngularSpeed, dryRun) / avgAngularSpeed;
+				return ComputePowerDemand(avgAngularSpeed, absTime, dt, dryRun) / avgAngularSpeed;
 			}
 			return 0.SI<NewtonMeter>();
 		}
 
-		protected Watt ComputePowerDemand(PerSecond engineSpeed, bool dryRun)
+		protected Watt ComputePowerDemand(PerSecond engineSpeed, Second absTime, Second dt, bool dryRun)
 		{
 			var powerDemands = new Dictionary<string, Watt>(Auxiliaries.Count);
 			foreach (var item in Auxiliaries) {
-				var value = item.Value(engineSpeed);
+				var value = item.Value(engineSpeed, absTime, dt, dryRun);
 				if (value != null) {
 					powerDemands[item.Key] = value;
 				}
@@ -167,15 +173,39 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		protected override void DoWriteModalResults(IModalDataContainer container)
 		{
 			var auxPowerDemand = 0.SI<Watt>();
+			var excludedFromAuxSum = new[] {
+				Constants.Auxiliaries.IDs.PTOTransmission, Constants.Auxiliaries.IDs.PTOConsumer,
+				Constants.Auxiliaries.IDs.PTODuringDrive, Constants.Auxiliaries.IDs.PTORoadsweeping
+			};
+			var ptoConsumerAggregation = new[] {
+				Constants.Auxiliaries.IDs.PTOConsumer,
+				Constants.Auxiliaries.IDs.PTODuringDrive, Constants.Auxiliaries.IDs.PTORoadsweeping
+			};
 			if (CurrentState.PowerDemands != null) {
 				foreach (var kv in CurrentState.PowerDemands) {
 					container[kv.Key] = kv.Value;
 					// mk 2016-10-11: pto's should not be counted in sum auxiliary power demand
-					if (kv.Key != Constants.Auxiliaries.IDs.PTOTransmission && kv.Key != Constants.Auxiliaries.IDs.PTOConsumer) {
+					if (!excludedFromAuxSum.Contains(kv.Key)) {
 						auxPowerDemand += kv.Value;
 					}
 				}
+
+				if (_writePTO) {
+					var ptoConsumer = 0.SI<Watt>();
+					foreach (var kv in CurrentState.PowerDemands) {
+						if (ptoConsumerAggregation.Contains(kv.Key)) {
+							ptoConsumer += kv.Value;
+						}
+					}
+
+					if (container[Constants.Auxiliaries.IDs.PTOConsumer] == null ||
+						container[Constants.Auxiliaries.IDs.PTOConsumer] == DBNull.Value) {
+						container[Constants.Auxiliaries.IDs.PTOConsumer] = ptoConsumer;
+					}
+				}
 			}
+
+
 			if (container[ModalResultField.P_aux] == null || container[ModalResultField.P_aux] == DBNull.Value) {
 				// only overwrite if nobody else already wrote the total aux power
 				container[ModalResultField.P_aux] = auxPowerDemand;

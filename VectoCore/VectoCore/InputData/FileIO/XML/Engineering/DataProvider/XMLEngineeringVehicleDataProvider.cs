@@ -29,6 +29,7 @@
 *   Martin Rexeis, rexeis@ivt.tugraz.at, IVT, Graz University of Technology
 */
 
+using System;
 using System.Collections.Generic;
 using System.Xml;
 using System.Xml.Linq;
@@ -203,6 +204,9 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering.DataProvider
 			get { return null; }
 		}
 
+		public virtual uint? PTO_DriveGear { get { return null; } }
+		public virtual PerSecond PTO_DriveEngineSpeed { get { return null; } }
+
 
 		public IAdvancedDriverAssistantSystemsEngineering ADAS
 		{
@@ -304,7 +308,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering.DataProvider
 			}
 		}
 
-		public virtual TableData PTOCycle
+		public virtual TableData PTOCycleDuringStop
 		{
 			get {
 				return XMLHelper.ReadEntriesOrResource(
@@ -312,6 +316,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering.DataProvider
 					AttributeMappings.PTOCycleMap);
 			}
 		}
+
+		public TableData PTOCycleWhileDriving { get { return null;} }
 
 		#endregion
 

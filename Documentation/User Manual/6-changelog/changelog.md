@@ -1,5 +1,18 @@
 #Changelog
 
+**VECTO 3.3.6**
+
+***Build 1898 (2020-03-13) RELEASE CANDIDATE***
+
+- Improvement
+    * [VECTO-1239] - Adaptation of Mission Profile Weighting Factors
+    * [VECTO-1241] - Engineering mode: Adding support for additional PTO activations
+
+- Bugfixes
+    * [VECTO-1243] - Bug in VTP mode for heavy lorries
+    * [VECTO-1234] - urban cycle at reference load not running for bug when find braking operating point
+
+
 **VECTO 3.3.5**
 
 ***Build 1812 (2019-12-18) OFFICIAL RELEASE***

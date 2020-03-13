@@ -47,7 +47,7 @@ namespace TUGraz.VectoCore.Utils
 		public static string VersionNumber
 		{
 			get {
-				return "3.3.5.1812" + SUFFIX;
+				return "3.3.6.1898" + SUFFIX;
 			}
 		}
 
