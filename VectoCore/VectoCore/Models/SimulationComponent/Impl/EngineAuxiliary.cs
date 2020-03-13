@@ -55,7 +55,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		public EngineAuxiliary(IVehicleContainer container) : base(container)
 		{
-			_writePTO = container.RunData.PTO != null;
+			_writePTO = container.RunData?.PTO != null;
 		}
 
 		public IAuxPort Port()
