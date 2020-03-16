@@ -51,7 +51,7 @@ namespace TUGraz.VectoCore.Tests.XML
 			Assert.AreEqual("VEH-1234567890", vehicle.VIN);
 			Assert.AreEqual(DateTime.Parse("2020-01-09T11:00:00Z").ToUniversalTime(), vehicle.Date);
 			Assert.IsTrue(vehicle.LegislativeClass == LegislativeClass.N2);
-			Assert.AreEqual("II+III", vehicle.RegisteredClass);
+			Assert.AreEqual("II+III", vehicle.RegisteredClass.GetLabel());
 			Assert.IsTrue(vehicle.VehicleCode == VehicleCode.CD);
 			Assert.AreEqual(8300, vehicle.CurbMassChassis.Value());
 			Assert.AreEqual(15400, vehicle.GrossVehicleMassRating.Value());//TechnicalPermissibleMaximumLadenMass ?!?
