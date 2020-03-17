@@ -341,6 +341,15 @@ namespace TUGraz.VectoCommon.Utils
 			}
 		}
 
+		public UnitInstance Ampere
+		{
+			get
+			{
+				_units[3] += 1 * _reciproc * _exponent;
+				return this;
+			}
+		}
+
 		/// <summary>
 		/// Takes all following terms as quadratic terms (=to the power of 2).
 		/// </summary>

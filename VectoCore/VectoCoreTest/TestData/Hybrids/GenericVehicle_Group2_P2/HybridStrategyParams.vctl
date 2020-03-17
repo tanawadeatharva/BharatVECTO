@@ -1,0 +1,15 @@
+{
+  "Header": {
+    "CreatedBy": " ()",
+    "Date": "2016-10-13T08:55:11.0271885Z",
+    "AppVersion": "3",
+    "FileVersion": 1
+  },
+  "Body": {
+	"ICE IgnitionOn Speed": "600" ,
+	"ICE RampUp Torque":  "-800"  ,
+    "Electric Motor Ramp Down Time On Engine Start": "0.1",
+  "Generator Speed": "1400" ,
+  "Generator Torque":  "600" 
+  }
+}

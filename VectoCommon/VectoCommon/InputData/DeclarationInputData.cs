@@ -708,9 +708,9 @@ namespace TUGraz.VectoCommon.InputData
 
 		Ohm InternalResistance { get; }
 
-		TableData CellVoltage { get; }
+		TableData Voltage { get; }
 
-		Ampere MaxCurrent { get; }
+		double MaxCurrentFactor { get; }
 	}
 
 

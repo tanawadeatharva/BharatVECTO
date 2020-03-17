@@ -165,5 +165,32 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 					throw new VectoException("GearshiftParameter-File: Unsupported FileVersion. Got {0}", version);
 			}
 		}
+
+		public static IBatteryPackEngineeringInputData ReadBatteryData(string filename, bool tolerateMissing)
+		{
+			var json = ReadFile(filename);
+			var version = ReadVersion(json);
+			switch (version)
+			{
+				case 1:
+					return new JSONBatteryV1(json, filename, tolerateMissing);
+				default:
+					throw new VectoException("Battery-File: Unsupported FileVersion. Got {0}", version);
+			}
+		}
+
+		public static IElectricMotorEngineeringInputData ReadElectricMotorData(string filename, bool tolerateMissing)
+		{
+			var json = ReadFile(filename);
+			var version = ReadVersion(json);
+			switch (version)
+			{
+				case 1:
+					return new JSONElectricMotorV1(json, filename, tolerateMissing);
+				default:
+					throw new VectoException("ElectricMotor-File: Unsupported FileVersion. Got {0}", version);
+			}
+
+		}
 	}
 }
