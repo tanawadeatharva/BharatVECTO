@@ -21,22 +21,79 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 {
 	public class DeclarationDataAdapterPrimaryBus : DeclarationDataAdapterHeavyLorry
 	{
+
 		//public AirdragData CreateAirdragData(Mission mission)
 		//{
 		//	return DefaultAirdragData(mission);
 		//}
 
+
 		#region Overrides of DeclarationDataAdapterTruck
 
-		public override VehicleData CreateVehicleData(IVehicleDeclarationInputData data, Mission mission, KeyValuePair<LoadingType, Kilogram> loading)
+		//Generic
+
+		public override VehicleData CreateVehicleData(IVehicleDeclarationInputData pifVehicle, Mission mission, KeyValuePair<LoadingType, Kilogram> loading)
 		{
-			var retVal = base.CreateVehicleData(data, mission, loading);
-			retVal.CurbMass = mission.CurbMass;
-			//retVal.Length = mission.BusParameter.VehicleLength;
-			//retVal.Width = mission.BusParameter.VehicleWidth;
-			//retVal.Height = mission.VehicleHeight;
-			return retVal;
+			var vehicleData = new VehicleData {
+				AxleData = GetAxles(pifVehicle.Components.AxleWheels.AxlesDeclaration, mission.AxleWeightDistribution),
+				DynamicTyreRadius = GetDynamicTyreRadius(pifVehicle.Components.AxleWheels.AxlesDeclaration),
+				AxleConfiguration = pifVehicle.AxleConfiguration,
+				CurbMass = mission.CurbMass,
+				BodyAndTrailerMass = 0.SI<Kilogram>(),
+				Loading = mission.RefLoad
+			};
+
+
+			var adas = new VehicleData.ADASData {
+				EngineStopStart = pifVehicle.ADAS.EngineStopStart,
+				EcoRoll = pifVehicle.ADAS.EcoRoll,
+				PredictiveCruiseControl = pifVehicle.ADAS.PredictiveCruiseControl
+			};
+
+			vehicleData.ADAS = adas;
+
+			return vehicleData;
 		}
+
+		public override AirdragData CreateAirdragData(IAirdragDeclarationInputData airdragInputData, Mission mission,
+			Segment segment)
+		{
+
+
+			var airdragData = new AirdragData();
+
+			airdragData.CrossWindCorrectionMode = CrossWindCorrectionMode.DeclarationModeCorrection;
+
+			//Corsswind correction curve
+
+			airdragData.DeclaredAirdragArea = mission.DefaultCDxA;
+			
+
+			return airdragData;
+		}
+
+
+
+		//public override AirdragData CreateAirdragData(
+		//	IAirdragDeclarationInputData airdragData, Mission mission, Segment segment)
+		//{
+		//	if (CompletedVehicle.Components.AirdragInputData == null ||
+		//		CompletedVehicle.Components.AirdragInputData.AirDragArea == null)
+		//	{
+		//		return DefaultAirdragData(mission);
+		//	}
+
+		//	var aerodynamicDragArea = CompletedVehicle.Components.AirdragInputData.AirDragArea;
+		//	var retVal = SetCommonAirdragData(CompletedVehicle.Components.AirdragInputData);
+		//	retVal.CrossWindCorrectionCurve = new CrosswindCorrectionCdxALookup(
+		//		aerodynamicDragArea,
+		//		GetDeclarationAirResistanceCurve(mission.CrossWindCorrectionParameters, aerodynamicDragArea, mission.VehicleHeight),
+		//		CrossWindCorrectionMode.DeclarationModeCorrection);
+
+		//	return retVal;
+		//}
+
+
 
 		public override PTOData CreatePTOTransmissionData(IPTOTransmissionInputData pto)
 		{
@@ -71,7 +128,49 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			return retVal;
 		}
 
+
+		
+		private List<Axle> GetAxles(IList<IAxleDeclarationInputData> axleWheels, double[] axlesDistribution)
+		{
+			var axles = new List<Axle>();
+			for (int i = 0; i < axleWheels.Count; i++)
+			{
+				var axle = new Axle
+				{
+					WheelsDimension = axleWheels[i].Tyre.Dimension,
+					Inertia = DeclarationData.Wheels
+						.Lookup(axleWheels[i].Tyre.Dimension.RemoveWhitespace()).Inertia,
+					TyreTestLoad = axleWheels[i].Tyre.TyreTestLoad,
+					AxleWeightShare = axlesDistribution[i],
+					TwinTyres = axleWheels[i].TwinTyres,
+					AxleType = axleWheels[i].AxleType
+				};
+				axles.Add(axle);
+			}
+
+			return axles;
+		}
+
+		private Meter GetDynamicTyreRadius(IList<IAxleDeclarationInputData> axleWheels)
+		{
+			Meter dynamicTyreRadius = null;
+
+			for (int i = 0; i < axleWheels.Count; i++)
+			{
+				if (axleWheels[i].AxleType == AxleType.VehicleDriven)
+				{
+					dynamicTyreRadius = DeclarationData.Wheels.Lookup(axleWheels[i].Tyre.Dimension.RemoveWhitespace()).DynamicTyreRadius;
+					break;
+				}
+			}
+
+			return dynamicTyreRadius;
+		}
+		
 		#endregion
+
+
+		#region Overrides
 
 		public virtual IAuxiliaryConfig CreateBusAuxiliariesData(
 			Mission mission, IVehicleDeclarationInputData vehicleData, VectoRunData runData)
@@ -383,5 +482,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 				StopBrakeActuation = Constants.BusAuxiliaries.PneumaticConsumersDemands.StopBrakeActuation,
 			};
 		}
+		#endregion
+
 	}
 }

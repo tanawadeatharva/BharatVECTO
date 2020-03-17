@@ -7,6 +7,7 @@ using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Utils;
+using TUGraz.VectoCore.Configuration;
 
 namespace TUGraz.VectoCore.Models.Declaration
 {
@@ -126,6 +127,11 @@ namespace TUGraz.VectoCore.Models.Declaration
 						LowLoad = 10.SI<Kilogram>(), // dummy value to trigger simulation with low load
 						AxleWeightDistribution = GetAxleWeightDistribution(row),
 						DefaultCDxA = row.ParseDouble("cdxastandard").SI<SquareMeter>(),
+						CycleFile =
+							RessourceHelper.ReadStream(
+								DeclarationData.DeclarationDataResourcePrefix + ".MissionCycles." +
+								missionType.ToString().Replace("EMS", "") +
+								Constants.FileExtensions.CycleFile),
 						BusParameter = new BusParameters {
 							PassengerDensity = row.ParseDouble(missionType.ToString()).SI<PerSquareMeter>(),
 							AirDragMeasurementAllowed = row.ParseBoolean("airdragmeasurement"),
