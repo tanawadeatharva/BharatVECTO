@@ -48,6 +48,9 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 {
 	public class JSONVehicleDataV10 : JSONVehicleDataV9
 	{
+		private JSONElectricStorageEngineeringInputData _batteries;
+		private JSONElectricMotors _electricMotors;
+
 		public JSONVehicleDataV10(JObject data, string fileName, IJSONVehicleComponents job, bool tolerateMissing = false) :
 			base(data, fileName, job, tolerateMissing) { }
 
@@ -55,17 +58,71 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 		protected override IElectricMachinesEngineeringInputData GetElectricMachines()
 		{
-			// TODO!
-			throw new NotImplementedException();
+			return _electricMotors ?? (_electricMotors = ReadMotors());
 		}
 
 		protected override IElectricStorageEngineeringInputData GetElectricStorage()
 		{
-			// TODO!
-			throw new NotImplementedException();
+			return _batteries ?? (_batteries = ReadBatteries());
+		}
+
+		protected virtual JSONElectricMotors ReadMotors()
+		{
+			var retVal = new List<ElectricMachineEntry<IElectricMotorEngineeringInputData>>();
+			foreach (var entry in Body["ElectricMotors"])
+			{
+				var tmp = new ElectricMachineEntry<IElectricMotorEngineeringInputData>()
+				{
+					Position = PowertrainPositionHelper.Parse(entry.GetEx<string>("Position")),
+					Count = entry.GetEx<int>("Count"),
+					ElectricMachine = JSONInputDataFactory.ReadElectricMotorData(Path.Combine(BasePath, entry.GetEx<string>("MotorFile")), false)
+				};
+				retVal.Add(tmp);
+			}
+
+			return new JSONElectricMotors(retVal);
+		}
+
+
+		protected virtual JSONElectricStorageEngineeringInputData ReadBatteries()
+		{
+			return new JSONElectricStorageEngineeringInputData() {
+				Count = Body["Battery"].GetEx<int>("NumPacks"),
+				BatteryPack = JSONInputDataFactory.ReadBatteryData(Path.Combine(BasePath, Body["Battery"].GetEx<string>("BatteryFile")), false)
+			};
 		}
 
 		#endregion
+	}
+
+	public class JSONElectricMotors : IElectricMachinesEngineeringInputData {
+		private readonly IList<ElectricMachineEntry<IElectricMotorEngineeringInputData>> _entries;
+
+		public JSONElectricMotors(List<ElectricMachineEntry<IElectricMotorEngineeringInputData>> entries)
+		{
+			_entries = entries;
+		}
+
+		IList<ElectricMachineEntry<IElectricMotorDeclarationInputData>> IElectricMachinesDeclarationInputData.Entries
+		{
+			get { return _entries.Cast<ElectricMachineEntry<IElectricMotorDeclarationInputData>>().ToList(); }
+			//get { return null; }
+		}
+
+		public virtual IList<ElectricMachineEntry<IElectricMotorEngineeringInputData>> Entries
+		{
+			get { return _entries; }
+		}
+	}
+
+	public class JSONElectricStorageEngineeringInputData : IElectricStorageEngineeringInputData {
+		IBatteryPackDeclarationInputData IElectricStorageDeclarationInputData.BatteryPack
+		{
+			get { return BatteryPack; }
+		}
+
+		public IBatteryPackEngineeringInputData BatteryPack { get; internal set; }
+		public int Count { get; internal set; }
 	}
 
 	// ###################################################################

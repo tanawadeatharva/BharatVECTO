@@ -237,6 +237,10 @@ namespace TUGraz.VectoCore.Configuration
 
 			public const string GearshiftDataFile = ".vtcu";
 
+			public const string BatteryFile = ".vbat";
+
+			public const string ElectricMotorFile = ".vem";
+
 			public const string CycleFile = ".vdri";
 
 			public const string DriverAccelerationCurve = ".vacc";

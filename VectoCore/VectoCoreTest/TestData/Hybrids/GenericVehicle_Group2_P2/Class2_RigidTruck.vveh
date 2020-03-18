@@ -3,7 +3,7 @@
     "CreatedBy": "",
     "Date": "2017-07-13T14:14:29.3226830Z",
     "AppVersion": "3",
-    "FileVersion": 7
+    "FileVersion": 10
   },
   "Body": {
     "SavedInDeclMode": false,
@@ -32,16 +32,17 @@
       "LossMap": "",
       "Cycle": ""
     },
-	"ElectricMotors": {
-       [
+	"ElectricMotors": [
+        {
+        "Count": 1,
         "Position": "P2",
         "MotorFile": "GenericEMotor240kW.vem"
+        }
         ],
-    },
-	"Battery": { 
+    "Battery": { 
         "NumPacks": 2,
         "BatteryFile": "GenericBattery.vbat",
-    }
+    },
     "TorqueLimits": {},
     "IdlingSpeed": 0.0,
     "AxleConfig": {

@@ -81,6 +81,12 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 				case Constants.FileExtensions.GearshiftDataFile:
 					tmp = JSONInputDataFactory.ReadShiftParameters(filename, tolerateMissing);
 					break;
+				case Constants.FileExtensions.BatteryFile:
+					tmp = JSONInputDataFactory.ReadBatteryData(filename, tolerateMissing);
+					break;
+				case Constants.FileExtensions.ElectricMotorFile:
+					tmp = JSONInputDataFactory.ReadElectricMotorData(filename, tolerateMissing);
+					break;
 			}
 
 			tmp.Switch()

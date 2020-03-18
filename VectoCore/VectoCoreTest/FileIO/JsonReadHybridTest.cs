@@ -1,5 +1,6 @@
 ﻿using System.IO;
 using NUnit.Framework;
+using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.InputData.FileIO.JSON;
 using TUGraz.VectoCore.InputData.Reader.ComponentData;
@@ -54,8 +55,8 @@ namespace TUGraz.VectoCore.Tests.FileIO
 			Assert.AreEqual("-401.07", fld.Rows[0][ElectricFullLoadCurveReader.Fields.GenerationTorque]);
 
 			var fldMap = ElectricFullLoadCurveReader.Create(fld);
-			Assert.AreEqual(401.07, fldMap.FullLoadDriveTorque(0.RPMtoRad()).Value());
-			Assert.AreEqual(-407.07, fldMap.FullGenerationTorque(0.RPMtoRad()).Value());
+			Assert.AreEqual(-401.07, fldMap.FullLoadDriveTorque(0.RPMtoRad()).Value());
+			Assert.AreEqual(401.07, fldMap.FullGenerationTorque(0.RPMtoRad()).Value());
 
 			var pwr = inputProvider.EfficiencyMap;
 			Assert.AreEqual("0", pwr.Rows[0][ElectricMotorMapReader.Fields.MotorSpeed]);
@@ -63,8 +64,35 @@ namespace TUGraz.VectoCore.Tests.FileIO
 			Assert.AreEqual("9.8449", pwr.Rows[0][ElectricMotorMapReader.Fields.PowerElectrical]);
 
 			var pwrMap = ElectricMotorMapReader.Create(pwr);
-			Assert.AreEqual(9844.9, pwrMap.LookupElectricPower(-0.RPMtoRad(), -800.SI<NewtonMeter>()).ElectricalPower.Value());
+			Assert.AreEqual(-10171.0, pwrMap.LookupElectricPower(-0.RPMtoRad(), -800.SI<NewtonMeter>()).ElectricalPower.Value());
 		}
 
+
+		[TestCase()]
+		public void TestReadHybridVehicle()
+		{
+			var inputProvider = JSONInputDataFactory.ReadJsonJob(@"TestData\Hybrids\GenericVehicle_Group2_P2\Class2_RigidTruck_ParHyb_ENG.vecto");
+
+			var engineering = inputProvider as IEngineeringInputDataProvider;
+
+			Assert.NotNull(engineering);
+
+			var bat = engineering.JobInputData.Vehicle.Components.ElectricStorage;
+
+			Assert.NotNull(bat);
+			Assert.AreEqual(2, bat.Count);
+			Assert.AreEqual(5, bat.BatteryPack.MaxCurrentFactor);
+			Assert.AreEqual(0.12, bat.BatteryPack.InternalResistance.Value());
+
+			var em = engineering.JobInputData.Vehicle.Components.ElectricMachines;
+
+			Assert.NotNull(em);
+			Assert.AreEqual(1, em.Entries.Count);
+
+			Assert.AreEqual(PowertrainPosition.HybridP2, em.Entries[0].Position);
+
+			Assert.AreEqual(0.15, em.Entries[0].ElectricMachine.Inertia.Value());
+
+		}
 	}
 }

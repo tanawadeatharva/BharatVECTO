@@ -8,7 +8,7 @@
   "Body": {
     "SavedInDeclMode": false,
 	"Model": "Generic Battery",
-	"InternalResistance": 1.1,
+	"InternalResistance": 0.12,
 	"SOC_min": 20,
 	"SOC_max": 80,
     "MaxCurrentFactor": 5,
