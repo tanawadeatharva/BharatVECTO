@@ -139,6 +139,8 @@ namespace TUGraz.VectoCore.Models.Declaration
 		public bool AirDragMeasurementAllowed { get; internal set; }
 
 		public VehicleEquipment VehicleEquipment { get; internal set; }
+
+		public Meter DeltaHeight { get; internal set; }
 	}
 
 	public class VehicleEquipment
