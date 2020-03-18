@@ -490,6 +490,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 			}
 			Assert.AreEqual(airDragAllowed, busParameters.AirDragMeasurementAllowed);
 			Assert.AreEqual(doubleDecker, busParameters.DoubleDecker);
+			Assert.AreEqual(0.30.SI<Meter>(), busParameters.DeltaHeight);
 		}
 
 

@@ -136,7 +136,8 @@ namespace TUGraz.VectoCore.Models.Declaration
 							PassengerDensity = row.ParseDouble(missionType.ToString()).SI<PerSquareMeter>(),
 							AirDragMeasurementAllowed = row.ParseBoolean("airdragmeasurement"),
 							VehicleEquipment = GetVehicleEquipment(row),
-							DoubleDecker =  VehicleCodeHelper.Parse(row.Field<string>("vehiclecode")).IsDoubleDeckBus()
+							DoubleDecker =  VehicleCodeHelper.Parse(row.Field<string>("vehiclecode")).IsDoubleDeckBus(),
+							DeltaHeight = row.ParseDouble("deltaheight").SI<Meter>()
 						}
 					};
 
