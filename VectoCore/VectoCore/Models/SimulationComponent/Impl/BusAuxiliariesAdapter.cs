@@ -147,7 +147,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			}
 
 			//CurrentState.TotalFuelConsumption = Auxiliaries.TotalFuel;
-			container[ModalResultField.P_aux] = CurrentState.PowerDemand;
+			container[ModalResultField.P_aux_mech] = CurrentState.PowerDemand;
 
 			container[ModalResultField.P_busAux_ES_HVAC] = Auxiliaries.HVACElectricalPowerConsumer;
 			container[ModalResultField.P_busAux_ES_other] = Auxiliaries.ElectricPowerConsumer;

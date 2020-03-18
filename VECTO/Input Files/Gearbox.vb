@@ -826,6 +826,8 @@ Public Class MockEngineeringVehicle
     Public Property ADAS As IAdvancedDriverAssistantSystemDeclarationInputData _
         Implements IVehicleDeclarationInputData.ADAS
 
+    Public ReadOnly Property InitialSOC As Double Implements IVehicleEngineeringInputData.InitialSOC
+
     Public Property ZeroEmissionVehicle As Boolean Implements IVehicleDeclarationInputData.ZeroEmissionVehicle
     Public Property HybridElectricHDV As Boolean Implements IVehicleDeclarationInputData.HybridElectricHDV
     Public Property DualFuelVehicle As Boolean Implements IVehicleDeclarationInputData.DualFuelVehicle

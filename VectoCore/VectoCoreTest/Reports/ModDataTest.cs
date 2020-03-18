@@ -505,7 +505,7 @@ namespace TUGraz.VectoCore.Tests.Reports
 				var pVehInertia = distanceBased ? (Watt)row[ModalResultField.P_veh_inertia.GetName()] : 0.SI<Watt>();
 				var pTrac = distanceBased ? (Watt)row[ModalResultField.P_trac.GetName()] : pWheelIn;
 
-				// P_﻿eng_out = P﻿_wheel + P_loss﻿gearbox + P_loss﻿axle + P_loss﻿retarder + P_a﻿gbx + Pa_﻿eng + P_aux - P_brake_loss
+				// P_﻿eng_out = P﻿_wheel + P_loss﻿gearbox + P_loss﻿axle + P_loss﻿retarder + P_a﻿gbx + Pa_﻿eng + P_aux_mech - P_brake_loss
 				var pEngOut = (Watt)row[ModalResultField.P_ice_out.GetName()];
 				var pLossGbx = (Watt)row[ModalResultField.P_gbx_loss.GetName()];
 				var pGbxIn = (Watt)row[ModalResultField.P_gbx_in.GetName()];
@@ -522,7 +522,7 @@ namespace TUGraz.VectoCore.Tests.Reports
 					: (Watt)row[ModalResultField.P_gbx_shift_loss.GetName()];
 				var pEngInertia = (Watt)row[ModalResultField.P_ice_inertia.GetName()];
 				var pAux =
-					(Watt)(row[ModalResultField.P_aux.GetName()] != DBNull.Value ? row[ModalResultField.P_aux.GetName()] : 0.SI<Watt>());
+					(Watt)(row[ModalResultField.P_aux_mech.GetName()] != DBNull.Value ? row[ModalResultField.P_aux_mech.GetName()] : 0.SI<Watt>());
 				var pBrakeLoss = distanceBased ? (Watt)row[ModalResultField.P_brake_loss.GetName()] : 0.SI<Watt>();
 				var pBrakeIn =  distanceBased ? (Watt)row[ModalResultField.P_brake_in.GetName()] : pWheelIn;
 
@@ -677,7 +677,7 @@ namespace TUGraz.VectoCore.Tests.Reports
 				var pVehInertia = (Watt)row[ModalResultField.P_veh_inertia.GetName()];
 				var pTrac = (Watt)row[ModalResultField.P_trac.GetName()];
 
-				// Pe_﻿eng = P﻿_wheel + P_loss﻿gearbox + P_loss﻿axle + P_loss﻿retarder + P_a﻿gbx + Pa_﻿eng + P_aux - P_brake_loss
+				// Pe_﻿eng = P﻿_wheel + P_loss﻿gearbox + P_loss﻿axle + P_loss﻿retarder + P_a﻿gbx + Pa_﻿eng + P_aux_mech - P_brake_loss
 				var pEngOut = (Watt)row[ModalResultField.P_ice_out.GetName()];
 				var pLossGbx = (Watt)row[ModalResultField.P_gbx_loss.GetName()];
 				var pGbxIn = (Watt)row[ModalResultField.P_gbx_in.GetName()];
@@ -694,7 +694,7 @@ namespace TUGraz.VectoCore.Tests.Reports
 					: (Watt)row[ModalResultField.P_gbx_shift_loss.GetName()];
 				var pEngInertia = (Watt)row[ModalResultField.P_ice_inertia.GetName()];
 				var pAux =
-					(Watt)(row[ModalResultField.P_aux.GetName()] != DBNull.Value ? row[ModalResultField.P_aux.GetName()] : 0.SI<Watt>());
+					(Watt)(row[ModalResultField.P_aux_mech.GetName()] != DBNull.Value ? row[ModalResultField.P_aux_mech.GetName()] : 0.SI<Watt>());
 				var pBrakeLoss = (Watt)row[ModalResultField.P_brake_loss.GetName()];
 				var pBrakeIn = (Watt)row[ModalResultField.P_brake_in.GetName()];
 				var pTcLoss = (Watt)row[ModalResultField.P_TC_loss.GetName()];

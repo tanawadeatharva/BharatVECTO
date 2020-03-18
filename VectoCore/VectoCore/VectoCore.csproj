@@ -280,6 +280,8 @@
     <Compile Include="InputData\FileIO\XML\XMLInputDataNinjectModule.cs" />
     <Compile Include="InputData\Reader\ComponentData\ElectricMotorMapReader.cs" />
     <Compile Include="InputData\Reader\ComponentData\ElectricFullLoadCurveReader.cs" />
+    <Compile Include="Models\Connector\Ports\Impl\BatteryResponse.cs" />
+    <Compile Include="Models\Connector\Ports\IBatteryPort.cs" />
     <Compile Include="Models\SimulationComponent\Data\Battery\BatteryData.cs" />
     <Compile Include="InputData\Reader\ComponentData\BatterySOCReader.cs" />
     <Compile Include="InputData\Reader\DataObjectAdapter\DeclarationDataAdapterSingleBus.cs" />
@@ -375,7 +377,16 @@
     <Compile Include="Models\SimulationComponent\Data\ElectricMotor\ElectricMotorData.cs" />
     <Compile Include="Models\SimulationComponent\Data\Engine\WHRPowerMap.cs" />
     <Compile Include="InputData\Reader\ComponentData\WHRPowerReader.cs" />
+    <Compile Include="Models\SimulationComponent\ElectricSystem.cs" />
+    <Compile Include="Models\SimulationComponent\IBattery.cs" />
+    <Compile Include="Models\SimulationComponent\IElectricMotor.cs" />
+    <Compile Include="Models\SimulationComponent\IElectricMotorControl.cs" />
+    <Compile Include="Models\SimulationComponent\Impl\Battery.cs" />
+    <Compile Include="Models\SimulationComponent\Impl\ElectricMotor.cs" />
+    <Compile Include="Models\SimulationComponent\Impl\HybridController.cs" />
     <Compile Include="Models\SimulationComponent\Impl\StopStartCombustionEngine.cs" />
+    <Compile Include="Models\Simulation\DataBus\IBatteryInfo.cs" />
+    <Compile Include="Models\Simulation\DataBus\IElectricMotorInfo.cs" />
     <Compile Include="Models\Simulation\DataBus\IEngineControl.cs" />
     <Compile Include="InputData\Reader\Impl\DeclarationModeSingleBusVectoRunDataFactory.cs" />
     <Compile Include="Models\Simulation\Impl\PCCEcoRollEngineStopPreprocessor.cs" />

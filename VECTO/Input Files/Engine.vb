@@ -637,8 +637,9 @@ Public Class DummyVehicle
             return me
     End Get
     End Property
-    Public  Property ADAS As IAdvancedDriverAssistantSystemDeclarationInputData Implements IVehicleDeclarationInputData.ADAS
-	Public  Property ZeroEmissionVehicle As Boolean Implements IVehicleDeclarationInputData.ZeroEmissionVehicle
+	Public Property ADAS As IAdvancedDriverAssistantSystemDeclarationInputData Implements IVehicleDeclarationInputData.ADAS
+	Public ReadOnly Property InitialSOC As Double Implements IVehicleEngineeringInputData.InitialSOC
+	Public Property ZeroEmissionVehicle As Boolean Implements IVehicleDeclarationInputData.ZeroEmissionVehicle
 	Public  Property HybridElectricHDV As Boolean Implements IVehicleDeclarationInputData.HybridElectricHDV
 	Public  Property DualFuelVehicle As Boolean Implements IVehicleDeclarationInputData.DualFuelVehicle
 	Public  Property MaxNetPower1 As Watt Implements IVehicleDeclarationInputData.MaxNetPower1

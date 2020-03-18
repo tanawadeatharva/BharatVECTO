@@ -4,6 +4,7 @@ using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.Utils;
 
 namespace TUGraz.VectoCore.InputData.Reader.ComponentData {
+
 	public class BatteryData
 	{
 		[ValidateObject]

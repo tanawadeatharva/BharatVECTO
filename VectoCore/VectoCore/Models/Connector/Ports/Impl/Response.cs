@@ -70,6 +70,8 @@ namespace TUGraz.VectoCore.Models.Connector.Ports.Impl
 		public Watt AuxiliariesPowerDemand { get; set; }
 
 		public NewtonMeter CardanTorque { get; set; }
+		public Watt ElectricMotorPowerMech { get; set; }
+		public IElectricSystemResponse ElectricSystem { get; set; }
 
 
 		public TorqueConverterOperatingPoint TorqueConverterOperatingPoint { get; set; }

@@ -1,9 +1,15 @@
 ﻿using System.IO;
+using System.Linq;
 using NUnit.Framework;
 using TUGraz.VectoCommon.InputData;
+using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.InputData.FileIO.JSON;
 using TUGraz.VectoCore.InputData.Reader.ComponentData;
+using TUGraz.VectoCore.Models.Simulation.Impl;
+using TUGraz.VectoCore.OutputData;
+using TUGraz.VectoCore.OutputData.FileIO;
+using TUGraz.VectoCore.Tests.Integration.Declaration;
 
 namespace TUGraz.VectoCore.Tests.FileIO
 {
@@ -76,6 +82,7 @@ namespace TUGraz.VectoCore.Tests.FileIO
 			var engineering = inputProvider as IEngineeringInputDataProvider;
 
 			Assert.NotNull(engineering);
+			Assert.AreEqual(0.8, engineering.JobInputData.Vehicle.InitialSOC);
 
 			var bat = engineering.JobInputData.Vehicle.Components.ElectricStorage;
 
@@ -93,6 +100,27 @@ namespace TUGraz.VectoCore.Tests.FileIO
 
 			Assert.AreEqual(0.15, em.Entries[0].ElectricMachine.Inertia.Value());
 
+		}
+
+		[TestCase()]
+		public void TestCreatePowertrain()
+		{
+			var inputProvider = JSONInputDataFactory.ReadJsonJob(@"TestData\Hybrids\GenericVehicle_Group2_P2\Class2_RigidTruck_ParHyb_ENG.vecto");
+
+			var factory = new SimulatorFactory(ExecutionMode.Engineering, inputProvider, null);
+
+			var sumContainer = new SummaryDataContainer(null);
+			var jobContainer = new JobContainer(sumContainer);
+
+			factory.SumData = sumContainer;
+
+			var run = factory.SimulationRuns().ToArray()[0];
+
+			Assert.NotNull(run);
+
+			var pt = run.GetContainer();
+
+			Assert.NotNull(pt);
 		}
 	}
 }

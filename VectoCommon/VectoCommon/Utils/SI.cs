@@ -1038,10 +1038,25 @@ namespace TUGraz.VectoCommon.Utils
 		{
 			return Create(ampere.Val * val);
 		}
-
+		
 		public static Volt operator /(Watt watt, Ampere ampere)
 		{
 			return SIBase<Volt>.Create(watt.Value() / ampere.Value());
+		}
+
+		public static Volt operator *(Ampere i, Ohm r)
+		{
+			return SIBase<Volt>.Create(i.Value() * r.Value());
+		}
+
+		public static Volt operator *(Ohm r, Ampere i)
+		{
+			return SIBase<Volt>.Create(i.Value() * r.Value());
+		}
+
+		public static AmpereSecond operator *(Ampere i, Second t)
+		{
+			return SIBase<AmpereSecond>.Create(i.Value() * t.Value());
 		}
 	}
 
@@ -1052,6 +1067,10 @@ namespace TUGraz.VectoCommon.Utils
 		private AmpereSecond(double val) : base(val, Units) { }
 
 		public override string UnitString { get { return "As"; } }
+		public double AsAmpHour
+		{
+			get { return Val / 3600.0; }
+		}
 
 		public static Ampere operator /(AmpereSecond ampereSecond, Second t)
 		{

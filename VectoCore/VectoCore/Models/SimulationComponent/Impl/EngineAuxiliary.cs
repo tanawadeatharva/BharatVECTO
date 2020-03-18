@@ -221,9 +221,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					}
 				}
 			}
-			if (container[ModalResultField.P_aux] == null || container[ModalResultField.P_aux] == DBNull.Value) {
+			if (container[ModalResultField.P_aux_mech] == null || container[ModalResultField.P_aux_mech] == DBNull.Value) {
 				// only overwrite if nobody else already wrote the total aux power
-				container[ModalResultField.P_aux] = auxPowerDemand;
+				container[ModalResultField.P_aux_mech] = auxPowerDemand;
 			}
 		}
 

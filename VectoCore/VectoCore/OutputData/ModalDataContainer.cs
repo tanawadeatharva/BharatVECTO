@@ -37,6 +37,7 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using TUGraz.VectoCommon.BusAuxiliaries;
 using TUGraz.VectoCommon.Exceptions;
+using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Models.Declaration;
@@ -221,11 +222,34 @@ namespace TUGraz.VectoCore.OutputData
 			TimeIntegral<WattSecond>(ModalResultField.P_brake_loss);
 			TimeIntegral<WattSecond>(ModalResultField.P_wheel_inertia);
 			TimeIntegral<WattSecond>(ModalResultField.P_veh_inertia);
-			TimeIntegral<WattSecond>(ModalResultField.P_aux);
+			TimeIntegral<WattSecond>(ModalResultField.P_aux_mech);
 			TimeIntegral<WattSecond>(ModalResultField.P_slope);
 			TimeIntegral<WattSecond>(ModalResultField.P_roll);
 			TimeIntegral<WattSecond>(ModalResultField.P_air);
 
+		}
+
+		public void AddElectricMotor(PowertrainPosition pos)
+		{
+			var electricMotorColumns = new[] {
+				ModalResultField.n_electricMotor_, ModalResultField.T_electricMotor_,
+				ModalResultField.T_electricMotor_full_, ModalResultField.T_electricMotor_drag_,
+				ModalResultField.P_electricMotor_in_, ModalResultField.P_electricMotor_out_,
+				ModalResultField.P_electricMotor_mech_, ModalResultField.P_electricMotor_el_,
+				ModalResultField.P_electricMotorLoss_, ModalResultField.P_electricMotorInertiaLoss_,
+				ModalResultField.P_electricMotor_brake_, ModalResultField.P_electricMotor_drive_max_,
+				ModalResultField.P_electricMotor_drag_max_
+			};
+			foreach (var entry in electricMotorColumns)
+			{
+				var col = Data.Columns.Add(string.Format(entry.GetAttribute().Caption, pos.ToString()), typeof(SI));
+				col.ExtendedProperties[ModalResults.ExtendedPropertyNames.Decimals] =
+					entry.GetAttribute().Decimals;
+				col.ExtendedProperties[ModalResults.ExtendedPropertyNames.OutputFactor] =
+					entry.GetAttribute().OutputFactor;
+				col.ExtendedProperties[ModalResults.ExtendedPropertyNames.ShowUnit] =
+					entry.GetAttribute().ShowUnit;
+			}
 		}
 
 		public bool HasTorqueConverter { get; set; }
@@ -372,7 +396,7 @@ namespace TUGraz.VectoCore.OutputData
 			}
 			dataColumns.AddRange(
 				new[] {
-					ModalResultField.P_aux
+					ModalResultField.P_aux_mech
 				});
 
 			if (!_writeEngineOnly) {
@@ -500,20 +524,30 @@ namespace TUGraz.VectoCore.OutputData
 
 		public object this[ModalResultField key, IFuelProperties fuel]
 		{
-			get {
-				if (!FuelColumns.ContainsKey(fuel) || !FuelColumns[fuel].ContainsKey(key)) {
+			get
+			{
+				if (!FuelColumns.ContainsKey(fuel) || !FuelColumns[fuel].ContainsKey(key))
+				{
 					throw new VectoException("unknown fuel {0} for key {1}", fuel.GetLabel(), key.GetName());
 				}
 
 				return CurrentRow[FuelColumns[fuel][key]];
 			}
-			set {
-				if (!FuelColumns.ContainsKey(fuel) || !FuelColumns[fuel].ContainsKey(key)) {
+			set
+			{
+				if (!FuelColumns.ContainsKey(fuel) || !FuelColumns[fuel].ContainsKey(key))
+				{
 					throw new VectoException("unknown fuel {0} for key {1}", fuel.GetLabel(), key.GetName());
 				}
 
 				CurrentRow[FuelColumns[fuel][key]] = value;
 			}
+		}
+
+		public object this[ModalResultField key, PowertrainPosition pos]
+		{
+			get { return CurrentRow[string.Format(key.GetCaption(), pos.ToString())]; }
+			set { CurrentRow[string.Format(key.GetCaption(), pos)] = value; }
 		}
 
 		public object this[string auxId]

@@ -89,7 +89,7 @@ namespace TUGraz.VectoCore.Tests.Reports
 				modData[ModalResultField.P_air] = 3000.SI<Watt>();
 				modData[ModalResultField.P_roll] = 3000.SI<Watt>();
 				modData[ModalResultField.P_slope] = 3000.SI<Watt>();
-				modData[ModalResultField.P_aux] = 3000.SI<Watt>();
+				modData[ModalResultField.P_aux_mech] = 3000.SI<Watt>();
 				modData[ModalResultField.P_brake_loss] = 3000.SI<Watt>();
 
 				modData[ModalResultField.FCMap] = 1e-4.SI<KilogramPerSecond>();
@@ -154,7 +154,7 @@ namespace TUGraz.VectoCore.Tests.Reports
 				modData[ModalResultField.P_air] = powerDemand[i % powerDemand.Length];
 				modData[ModalResultField.P_roll] = powerDemand[i % powerDemand.Length];
 				modData[ModalResultField.P_slope] = powerDemand[i % powerDemand.Length];
-				modData[ModalResultField.P_aux] = powerDemand[i % powerDemand.Length];
+				modData[ModalResultField.P_aux_mech] = powerDemand[i % powerDemand.Length];
 				modData[ModalResultField.P_brake_loss] = powerDemand[i % powerDemand.Length];
 
 				modData[ModalResultField.altitude] = 0.SI<Meter>();

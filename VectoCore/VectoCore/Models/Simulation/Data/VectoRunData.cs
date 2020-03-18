@@ -29,15 +29,18 @@
 *   Martin Rexeis, rexeis@ivt.tugraz.at, IVT, Graz University of Technology
 */
 
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Xml.Linq;
 using TUGraz.VectoCommon.BusAuxiliaries;
 using TUGraz.VectoCommon.Exceptions;
+using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Configuration;
+using TUGraz.VectoCore.InputData.Reader.ComponentData;
 using TUGraz.VectoCore.InputData.Reader.Impl;
 using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
@@ -111,6 +114,10 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 		public int JobRunId { get; internal set; }
 
 		public AuxFanData FanData { get; internal set; }
+
+		public List<Tuple<PowertrainPosition, ElectricMotorData>> ElectricMachinesData { get; internal set; }
+
+		public BatteryData BatteryData { get; internal set; }
 
 		public SimulationType SimulationType { get; set; }
 

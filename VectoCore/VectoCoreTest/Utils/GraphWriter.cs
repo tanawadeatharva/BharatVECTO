@@ -221,7 +221,7 @@ namespace TUGraz.VectoCore.Tests.Utils
 					return "Pe_eng";
 				case ModalResultField.T_ice_fcmap:
 					return "Tq_eng";
-				case ModalResultField.P_aux:
+				case ModalResultField.P_aux_mech:
 					return "Paux";
 				//case ModalResultField.AA_TotalCycleFC_Grams:
 				//	return "AA_TotalCycleFC_Grams []";

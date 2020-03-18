@@ -1,0 +1,253 @@
+﻿using TUGraz.VectoCommon.Exceptions;
+using TUGraz.VectoCommon.InputData;
+using TUGraz.VectoCommon.Models;
+using TUGraz.VectoCommon.Utils;
+using TUGraz.VectoCore.Configuration;
+using TUGraz.VectoCore.Models.Connector.Ports;
+using TUGraz.VectoCore.Models.Connector.Ports.Impl;
+using TUGraz.VectoCore.Models.Simulation;
+using TUGraz.VectoCore.Models.Simulation.Data;
+using TUGraz.VectoCore.Models.Simulation.DataBus;
+using TUGraz.VectoCore.Models.SimulationComponent.Data;
+using TUGraz.VectoCore.OutputData;
+using TUGraz.VectoCore.Utils;
+
+namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
+{
+	public class ElectricMotor : StatefulProviderComponent<ElectricMotorState, ITnOutPort, ITnInPort, ITnOutPort>, IPowerTrainComponent, IElectricMotor, ITnOutPort, ITnInPort
+	{
+		public PowertrainPosition MotorId { get; }
+
+		protected IElectricMotorControl Control;
+		protected ElectricMotorData ModelData;
+
+		public ElectricMotor(IVehicleContainer container, ElectricMotorData data, IElectricMotorControl control, PowertrainPosition position) : base(container)
+		{
+			Control = control;
+			ModelData = data;
+			MotorId = position;
+		}
+
+		protected IElectricSystem ElectricPower;
+
+		public IResponse Initialize(NewtonMeter outTorque, PerSecond outAngularVelocity)
+		{
+			PreviousState.OutAngularVelocity = outAngularVelocity;
+			PreviousState.OutTorque = outTorque;
+			PreviousState.InAngularVelocity = outAngularVelocity;
+			PreviousState.InTorque = outTorque;
+			if (NextComponent == null)
+			{
+				return new ResponseSuccess()
+				{
+					Source = this,
+					EnginePowerRequest = outTorque * outAngularVelocity,
+					EngineSpeed = outAngularVelocity
+				};
+			}
+			if (!DataBus.IgnitionOn)
+			{
+				PreviousState.InTorque = 0.SI<NewtonMeter>();
+				PreviousState.InAngularVelocity = outAngularVelocity;
+			}
+			return NextComponent.Initialize(PreviousState.InTorque, PreviousState.InAngularVelocity);
+		}
+
+		/// <summary>
+		/// If the electric motor is operated in generator mode, it adds positive torque to the request for the next component,
+		/// if the electric motor is operated in drive mode, it adds negative torque (i.e., supports the next component)
+		/// </summary>
+		/// <param name="absTime"></param>
+		/// <param name="dt"></param>
+		/// <param name="outTorque"></param>
+		/// <param name="outAngularVelocity"></param>
+		/// <param name="dryRun"></param>
+		/// <returns></returns>
+		public IResponse Request(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity, bool dryRun = false)
+		{
+			var avgSpeed = (PreviousState.OutAngularVelocity + outAngularVelocity) / 2;
+			var inertiaTorqueLoss = avgSpeed.IsEqual(0)
+				? 0.SI<NewtonMeter>()
+				: Formulas.InertiaPower(outAngularVelocity, PreviousState.OutAngularVelocity, ModelData.Inertia, dt) / avgSpeed;
+			var inTorque = outTorque + inertiaTorqueLoss;
+			var maxDriveTorque = ModelData.FullLoadCurve.FullLoadDriveTorque(avgSpeed);
+			var maxDragTorque = ModelData.FullLoadCurve.FullGenerationTorque(avgSpeed);
+			if (!dryRun)
+			{
+				CurrentState.DragMax = maxDragTorque;
+				CurrentState.DriveMax = maxDriveTorque;
+				CurrentState.InertiaTorqueLoss = inertiaTorqueLoss;
+				CurrentState.OutTorque = outTorque;
+			}
+
+			if (ElectricPower == null)
+			{
+				var retVal = ForwardRequest(absTime, dt, inTorque, inTorque, outAngularVelocity, dryRun);
+
+				return retVal;
+			}
+
+			var eMotorTorque = Control.MechanicalAssistPower(absTime, dt, inTorque, PreviousState.OutAngularVelocity, outAngularVelocity, dryRun);
+			if (eMotorTorque.IsEqual(0, 1e-3))
+			{
+				var batteryResponse = ElectricPower.Request(absTime, dt, 0.SI<Watt>(), dryRun);
+				if (!dryRun)
+					CurrentState.ElectricPowerToBattery = 0.SI<Watt>();
+				var retVal = ForwardRequest(absTime, dt, inTorque, inTorque, outAngularVelocity, dryRun);
+				retVal.ElectricSystem = batteryResponse;
+				retVal.ElectricMotorPowerMech = 0.SI<Watt>();
+				return retVal;
+			}
+
+			if (!eMotorTorque.IsBetween(maxDriveTorque, maxDragTorque))
+			{
+				throw new VectoException("Invalid operating point provided by strategy! SupportPower: {0}, max Power: {1}, min Power: {2}", eMotorTorque, maxDriveTorque, maxDragTorque);
+			}
+
+			var electricPower = ModelData.EfficiencyMap
+				.LookupElectricPower(avgSpeed, eMotorTorque, DataBus.ExecutionMode != ExecutionMode.Declaration).ElectricalPower;
+
+			var electricSupplyResponse = ElectricPower.Request(absTime, dt, electricPower, dryRun);
+			if (!dryRun && !(electricSupplyResponse is ElectricSystemResponseSuccess) &&
+				electricPower > electricSupplyResponse.MaxPowerDrag)
+			{
+				// can't charge all power into the battery - probably it's full
+				// dissipate remaining power
+				electricSupplyResponse = ElectricPower.Request(absTime, dt, electricSupplyResponse.MaxPowerDrag);
+				CurrentState.ElectricBrakePower = electricPower - electricSupplyResponse.MaxPowerDrag;
+			}
+			if (!dryRun && !(electricSupplyResponse is ElectricSystemResponseSuccess))
+			{
+				throw new VectoException(
+						"Invalid operating point provided by strategy! SupportPower: {0}, req. electric Power: {1}, battery demand motor: {3}, max Power from Battery: {2}",
+						eMotorTorque, electricPower,
+						eMotorTorque < 0 ? electricSupplyResponse.MaxPowerDrive : electricSupplyResponse.MaxPowerDrag, electricSupplyResponse.ConsumerPower);
+			}
+
+			var response = ForwardRequest(absTime, dt, inTorque, inTorque + eMotorTorque, outAngularVelocity, dryRun);
+
+			response.ElectricSystem = electricSupplyResponse;
+
+			if (!dryRun)
+				CurrentState.ElectricPowerToBattery = electricSupplyResponse.ConsumerPower;
+			return response;
+		}
+
+		public IResponse ForwardRequest(Second absTime, Second dt, NewtonMeter outTorque, NewtonMeter inTorque, PerSecond outAngularVelocity,
+			bool dryRun = false)
+		{
+			var avgSpeed = (PreviousState.OutAngularVelocity + outAngularVelocity) / 2;
+			if (NextComponent == null)
+			{
+				return RequestElectricMotorOnly(absTime, dt, outTorque, inTorque, outAngularVelocity, dryRun, avgSpeed);
+			}
+
+			if (!dryRun)
+			{
+				SetState(inTorque, outAngularVelocity);
+			}
+			var retVal = NextComponent.Request(absTime, dt, inTorque, outAngularVelocity, dryRun);
+			retVal.ElectricMotorPowerMech = (inTorque - outTorque) * avgSpeed;
+			return retVal;
+		}
+
+		private IResponse RequestElectricMotorOnly(Second absTime, Second dt, NewtonMeter outTorque, NewtonMeter inTorque, PerSecond outAngularVelocity, bool dryRun, PerSecond avgSpeed)
+		{
+			var remainingPower = inTorque * avgSpeed;
+			if (dryRun)
+			{
+				var driveTorque = Control.MaxDriveTorque(avgSpeed, dt);
+				var dragTorque = Control.MaxDragTorque(avgSpeed, dt);
+				var powerDemand = outTorque * avgSpeed;
+				return new ResponseDryRun()
+				{
+					Source = this,
+					EngineSpeed = avgSpeed,
+					DeltaFullLoad = remainingPower, //powerDemand + driveTorque * avgSpeed,
+					DeltaDragLoad = powerDemand + dragTorque * avgSpeed,
+				};
+			}
+
+			if ((inTorque * avgSpeed).IsEqual(0, Constants.SimulationSettings.LineSearchTolerance))
+			{
+				SetState(inTorque, outAngularVelocity);
+				return new ResponseSuccess()
+				{
+					ElectricMotorPowerMech = (inTorque - outTorque) * avgSpeed,
+					EnginePowerRequest = 0.SI<Watt>(),
+					Source = this,
+					EngineSpeed = outAngularVelocity
+				};
+			}
+
+			AbstractResponse response;
+
+			if (remainingPower > 0)
+			{
+				response = new ResponseOverload() { Delta = remainingPower };
+			}
+			else
+			{
+				response = new ResponseUnderload() { Delta = remainingPower };
+			}
+			response.Source = this;
+			response.EngineSpeed = avgSpeed;
+			return response;
+		}
+
+		private void SetState(NewtonMeter inTorque, PerSecond outAngularVelocity)
+		{
+			CurrentState.OutAngularVelocity = outAngularVelocity;
+			CurrentState.InAngularVelocity = outAngularVelocity;
+			//CurrentState.OutTorque = outTorque;
+			CurrentState.InTorque = inTorque;
+		}
+
+
+
+
+		protected override void DoWriteModalResults(Second time, Second simulationInterval, IModalDataContainer container)
+		{
+			var avgSpeed = (PreviousState.OutAngularVelocity + CurrentState.OutAngularVelocity) / 2;
+			container[ModalResultField.n_electricMotor_, MotorId] = avgSpeed;
+			container[ModalResultField.T_electricMotor_, MotorId] = CurrentState.InTorque - CurrentState.OutTorque;
+			container[ModalResultField.T_electricMotor_full_, MotorId] = CurrentState.DriveMax;
+			container[ModalResultField.T_electricMotor_drag_, MotorId] = CurrentState.DragMax;
+			container[ModalResultField.P_electricMotor_mech_, MotorId] = (CurrentState.InTorque - CurrentState.OutTorque) * avgSpeed;
+			container[ModalResultField.P_electricMotor_out_, MotorId] = CurrentState.OutTorque * avgSpeed;
+			container[ModalResultField.P_electricMotor_in_, MotorId] = CurrentState.InTorque * avgSpeed;
+			container[ModalResultField.P_electricMotor_el_, MotorId] = CurrentState.ElectricPowerToBattery;
+			container[ModalResultField.P_electricMotor_brake_, MotorId] = CurrentState.ElectricBrakePower;
+			container[ModalResultField.P_electricMotor_drag_max_, MotorId] = CurrentState.DragMax * avgSpeed;
+			container[ModalResultField.P_electricMotor_drive_max_, MotorId] = CurrentState.DriveMax * avgSpeed;
+			container[ModalResultField.P_electricMotorLoss_, MotorId] = (CurrentState.InTorque - CurrentState.OutTorque) * avgSpeed - (CurrentState.ElectricPowerToBattery + CurrentState.ElectricBrakePower);
+			container[ModalResultField.P_electricMotorInertiaLoss_, MotorId] = CurrentState.InertiaTorqueLoss * avgSpeed;
+		}
+
+		public NewtonMeter ElectricDragTorque(PerSecond electricMotorSpeed, Second dt, DrivingBehavior drivingBehavior)
+		{
+			return Control.MaxDragTorque(electricMotorSpeed, dt);
+		}
+
+
+
+		public PerSecond ElectricMotorSpeed
+		{
+			get { return PreviousState.InAngularVelocity; }
+		}
+
+		public void Connect(IElectricSystem powersupply)
+		{
+			ElectricPower = powersupply;
+		}
+	}
+
+	public class ElectricMotorState : SimpleComponentState
+	{
+		public NewtonMeter DriveMax;
+		public NewtonMeter DragMax;
+		public Watt ElectricPowerToBattery;
+		public Watt ElectricBrakePower = 0.SI<Watt>();
+		public NewtonMeter InertiaTorqueLoss;
+	}
+}

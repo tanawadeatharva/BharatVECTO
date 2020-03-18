@@ -728,15 +728,17 @@ Public Class Vehicle
 	End Property
 
 	Public ReadOnly Property ADAS As IAdvancedDriverAssistantSystemDeclarationInputData Implements IVehicleDeclarationInputData.ADAS
-	get
-			return Me
-	End Get
+		Get
+			Return Me
+		End Get
 	End Property
 
+	Public ReadOnly Property InitialSOC As Double Implements IVehicleEngineeringInputData.InitialSOC
+
 	Public ReadOnly Property ZeroEmissionVehicle As Boolean Implements IVehicleDeclarationInputData.ZeroEmissionVehicle
-	get
+		Get
 			Return DeclarationData.Vehicle.ZeroEmissionVehicleDefault
-	End Get
+		End Get
 	End Property
 
 	Public ReadOnly Property HybridElectricHDV As Boolean Implements IVehicleDeclarationInputData.HybridElectricHDV

@@ -185,6 +185,11 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering.DataProvider
 			get { return null; }
 		}
 
+		public double InitialSOC
+		{
+			get { return double.NaN; }
+		}
+
 
 		public IAdvancedDriverAssistantSystemsEngineering ADAS
 		{

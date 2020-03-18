@@ -615,5 +615,52 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 
 			return retVal;
 		}
+
+		public BatteryData CreateBatteryData(IElectricStorageEngineeringInputData batteryInputData, double initialSOC)
+		{
+			if (batteryInputData == null) {
+				return null;
+			}
+
+			return new BatteryData() {
+				MinSOC = batteryInputData.BatteryPack.MinSOC,
+				MaxSOC = batteryInputData.BatteryPack.MaxSOC,
+				MaxCurrent = (batteryInputData.BatteryPack.Capacity.AsAmpHour * batteryInputData.BatteryPack.MaxCurrentFactor * batteryInputData.Count).SI<Ampere>(),
+				Capacity = batteryInputData.Count * batteryInputData.BatteryPack.Capacity,
+				InternalResistance = batteryInputData.BatteryPack.InternalResistance / batteryInputData.Count,
+				SOCMap = BatterySOCReader.Create(batteryInputData.BatteryPack.Voltage),
+				InitialSoC = initialSOC
+			};
+		}
+
+		public List<Tuple<PowertrainPosition, ElectricMotorData>> CreateElectricMachines(IElectricMachinesEngineeringInputData electricMachines)
+		{
+			if (electricMachines == null) {
+				return null;
+			}
+
+			if (electricMachines.Entries.Any(x => x.ElectricMachine.SavedInDeclarationMode)) {
+				WarnEngineeringMode("Electric motor");
+			}
+
+			if (electricMachines.Entries.Select(x => x.Position).Distinct().Count() > 1) {
+				throw new VectoException("multiple electric motors are not supported at the moment");
+			}
+
+			return electricMachines.Entries
+				.Select(x => Tuple.Create(x.Position, CreateElectricMachine(x.ElectricMachine, x.Count))).ToList();
+		}
+
+		private ElectricMotorData CreateElectricMachine(IElectricMotorEngineeringInputData motorData, int count)
+		{
+			if (count > 1) {
+				throw new VectoException("Multiple electric motors at a position are currently not supported");
+			}
+			return new ElectricMotorData() {
+				FullLoadCurve = ElectricFullLoadCurveReader.Create(motorData.FullLoadCurve),
+				EfficiencyMap = ElectricMotorMapReader.Create(motorData.EfficiencyMap),
+				Inertia = motorData.Inertia
+			};
+		}
 	}
 }

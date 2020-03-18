@@ -56,6 +56,11 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 		#region Overrides of JSONVehicleDataV7
 
+		public override double InitialSOC
+		{
+			get { return Body.GetEx<double>("InitialSoC") / 100.0; }
+		}
+
 		protected override IElectricMachinesEngineeringInputData GetElectricMachines()
 		{
 			return _electricMotors ?? (_electricMotors = ReadMotors());
@@ -469,6 +474,11 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 		IAdvancedDriverAssistantSystemsEngineering IVehicleEngineeringInputData.ADAS
 		{
 			get { return this; }
+		}
+
+		public virtual double InitialSOC
+		{
+			get { return double.NaN; }
 		}
 
 		public virtual AxleConfiguration AxleConfiguration

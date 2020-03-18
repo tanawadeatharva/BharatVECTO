@@ -80,6 +80,7 @@ namespace TUGraz.VectoCommon.InputData
 		new IVehicleComponentsEngineering Components { get; }
 
 		new IAdvancedDriverAssistantSystemsEngineering ADAS { get; }
+		double InitialSOC { get; }
 	}
 
 	public interface IAdvancedDriverAssistantSystemsEngineering : IAdvancedDriverAssistantSystemDeclarationInputData

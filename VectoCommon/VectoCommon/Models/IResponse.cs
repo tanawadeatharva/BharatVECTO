@@ -63,5 +63,43 @@ namespace TUGraz.VectoCommon.Models
 		NewtonMeter EngineDynamicFullLoadTorque { get; set; }
 		MeterPerSecond VehicleSpeed { get; set; }
 		NewtonMeter CardanTorque { get; set; }
+
+		Watt ElectricMotorPowerMech { get; set; }
+
+		IElectricSystemResponse ElectricSystem { get; set; }
+	}
+
+	public interface IBatteryResponse
+	{
+		Second AbsTime { get; set; }
+
+		Second SimulationInterval { get; set; }
+
+		Watt MaxBatteryLoadCharge { get; set; }
+
+		Watt MaxBatteryLoadDischarge { get; set; }
+
+		Watt BatteryPower { get; set; }
+
+		Watt BatteryLoss { get; set; }
+
+		object Source { get; }
+	}
+
+	public interface IElectricSystemResponse
+	{
+		IBatteryResponse BatteryResponse { get; set; }
+
+		Watt AuxPower { get; set; }
+
+		Watt ConsumerPower { get; set; }
+
+		Watt ChargingPower { get; set; }
+
+		Watt MaxPowerDrive { get; }
+
+		Watt MaxPowerDrag { get; }
+
+		object Source { get; }
 	}
 }

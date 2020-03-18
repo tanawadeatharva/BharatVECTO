@@ -143,6 +143,8 @@ namespace TUGraz.VectoCore.Tests.Utils {
 			get { return _adas; }
 		}
 
+		public double InitialSOC { get; }
+
 		public bool ZeroEmissionVehicle { get; }
 		public bool HybridElectricHDV { get; }
 		public bool DualFuelVehicle { get; }

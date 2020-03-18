@@ -43,6 +43,7 @@
         "NumPacks": 2,
         "BatteryFile": "GenericBattery.vbat",
     },
+    "InitialSoC": 80,
     "TorqueLimits": {},
     "IdlingSpeed": 0.0,
     "AxleConfig": {

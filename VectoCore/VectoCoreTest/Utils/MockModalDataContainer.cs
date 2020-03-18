@@ -35,6 +35,7 @@ using System.Data;
 using System.Linq;
 using TUGraz.VectoCommon.BusAuxiliaries;
 using TUGraz.VectoCommon.Exceptions;
+using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Models.Declaration;
@@ -117,6 +118,12 @@ namespace TUGraz.VectoCore.Tests.Utils
 
 				CurrentRow[FuelColumns[fuel][key]] = value;
 			}
+		}
+
+		public object this[ModalResultField key, PowertrainPosition pos]
+		{
+			get => throw new NotImplementedException();
+			set => throw new NotImplementedException();
 		}
 
 		public object this[string auxId]
@@ -242,6 +249,11 @@ namespace TUGraz.VectoCore.Tests.Utils
 		}
 
 		public void CalculateAggregateValues()
+		{
+			
+		}
+
+		public void AddElectricMotor(PowertrainPosition pos)
 		{
 			
 		}

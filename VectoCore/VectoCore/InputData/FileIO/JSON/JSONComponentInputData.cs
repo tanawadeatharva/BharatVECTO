@@ -285,6 +285,11 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			get { return this; }
 		}
 
+		public double InitialSOC
+		{
+			get { return VehicleData.InitialSOC; }
+		}
+
 		public IAirdragEngineeringInputData AirdragInputData
 		{
 			get { return AirdragData; }

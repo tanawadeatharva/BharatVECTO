@@ -34,6 +34,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using TUGraz.VectoCommon.BusAuxiliaries;
+using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation.Data;
@@ -58,6 +59,8 @@ namespace TUGraz.VectoCore.OutputData
 		object this[ModalResultField key] { get; set; }
 
 		object this[ModalResultField key, IFuelProperties fuel] { get; set; }
+
+		object this[ModalResultField key, PowertrainPosition pos] { get; set; }
 
 		/// <summary>
 		/// Indexer for auxiliary fields of the DataWriter.
@@ -119,6 +122,7 @@ namespace TUGraz.VectoCore.OutputData
 
 		KilogramPerWattSecond VehicleLineCorrectionFactor(IFuelProperties fuel);
 		void CalculateAggregateValues();
+		void AddElectricMotor(PowertrainPosition pos);
 	}
 
 	public static class ModalDataContainerExtensions
@@ -288,7 +292,7 @@ namespace TUGraz.VectoCore.OutputData
 
 		public static WattSecond WorkAuxiliaries(this IModalDataContainer data)
 		{
-			return data.TimeIntegral<WattSecond>(ModalResultField.P_aux);
+			return data.TimeIntegral<WattSecond>(ModalResultField.P_aux_mech);
 		}
 
 		public static WattSecond WorkRoadGradientResistance(this IModalDataContainer data)
