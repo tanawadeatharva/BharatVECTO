@@ -34,7 +34,8 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 
 		public override VehicleData CreateVehicleData(IVehicleDeclarationInputData pifVehicle, Mission mission, KeyValuePair<LoadingType, Kilogram> loading)
 		{
-			var vehicleData = new VehicleData {
+			var vehicleData = new VehicleData
+			{
 				AxleData = GetAxles(pifVehicle.Components.AxleWheels.AxlesDeclaration, mission.AxleWeightDistribution),
 				DynamicTyreRadius = GetDynamicTyreRadius(pifVehicle.Components.AxleWheels.AxlesDeclaration),
 				AxleConfiguration = pifVehicle.AxleConfiguration,
@@ -42,9 +43,9 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 				BodyAndTrailerMass = 0.SI<Kilogram>(),
 				Loading = mission.RefLoad
 			};
-
-
-			var adas = new VehicleData.ADASData {
+			
+			var adas = new VehicleData.ADASData
+			{
 				EngineStopStart = pifVehicle.ADAS.EngineStopStart,
 				EcoRoll = pifVehicle.ADAS.EcoRoll,
 				PredictiveCruiseControl = pifVehicle.ADAS.PredictiveCruiseControl
@@ -58,41 +59,20 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 		public override AirdragData CreateAirdragData(IAirdragDeclarationInputData airdragInputData, Mission mission,
 			Segment segment)
 		{
+			var aerodynamicDragArea = mission.DefaultCDxA;
 
-
-			var airdragData = new AirdragData();
-
-			airdragData.CrossWindCorrectionMode = CrossWindCorrectionMode.DeclarationModeCorrection;
-
-			//Corsswind correction curve
-
-			airdragData.DeclaredAirdragArea = mission.DefaultCDxA;
-			
+			var airdragData = new AirdragData
+			{
+				CrossWindCorrectionMode = CrossWindCorrectionMode.DeclarationModeCorrection,
+				CrossWindCorrectionCurve = new CrosswindCorrectionCdxALookup(
+					aerodynamicDragArea,
+					GetDeclarationAirResistanceCurve(mission.CrossWindCorrectionParameters, aerodynamicDragArea, mission.BusParameter.BodyHeight),
+					CrossWindCorrectionMode.DeclarationModeCorrection),
+				DeclaredAirdragArea = aerodynamicDragArea
+			};
 
 			return airdragData;
 		}
-
-
-
-		//public override AirdragData CreateAirdragData(
-		//	IAirdragDeclarationInputData airdragData, Mission mission, Segment segment)
-		//{
-		//	if (CompletedVehicle.Components.AirdragInputData == null ||
-		//		CompletedVehicle.Components.AirdragInputData.AirDragArea == null)
-		//	{
-		//		return DefaultAirdragData(mission);
-		//	}
-
-		//	var aerodynamicDragArea = CompletedVehicle.Components.AirdragInputData.AirDragArea;
-		//	var retVal = SetCommonAirdragData(CompletedVehicle.Components.AirdragInputData);
-		//	retVal.CrossWindCorrectionCurve = new CrosswindCorrectionCdxALookup(
-		//		aerodynamicDragArea,
-		//		GetDeclarationAirResistanceCurve(mission.CrossWindCorrectionParameters, aerodynamicDragArea, mission.VehicleHeight),
-		//		CrossWindCorrectionMode.DeclarationModeCorrection);
-
-		//	return retVal;
-		//}
-
 
 
 		public override PTOData CreatePTOTransmissionData(IPTOTransmissionInputData pto)
@@ -104,21 +84,24 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			IAuxiliariesDeclarationInputData auxInputData, IBusAuxiliariesDeclarationData busAuxData, MissionType mission,
 			VehicleClass hdvClass, Meter vehicleLength)
 		{
-			if (auxInputData != null) {
+			if (auxInputData != null)
+			{
 				throw new VectoException("Only BusAuxiliaries can be provided as input!");
 			}
 
 			var retVal = new List<VectoRunData.AuxData>();
 
 			retVal.Add(
-				new VectoRunData.AuxData() {
+				new VectoRunData.AuxData()
+				{
 					DemandType = AuxiliaryDemandType.Constant,
 					Technology = new List<string>() { busAuxData.FanTechnology },
 					ID = Constants.Auxiliaries.IDs.Fan,
 					PowerDemand = DeclarationData.Fan.Lookup(hdvClass, mission, busAuxData.FanTechnology).PowerDemand
 				});
 			retVal.Add(
-				new VectoRunData.AuxData() {
+				new VectoRunData.AuxData()
+				{
 					DemandType = AuxiliaryDemandType.Constant,
 					Technology = busAuxData.SteeringPumpTechnology,
 					ID = Constants.Auxiliaries.IDs.SteeringPump,
@@ -129,7 +112,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 		}
 
 
-		
+
 		private List<Axle> GetAxles(IList<IAxleDeclarationInputData> axleWheels, double[] axlesDistribution)
 		{
 			var axles = new List<Axle>();
@@ -166,7 +149,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 
 			return dynamicTyreRadius;
 		}
-		
+
 		#endregion
 
 
@@ -177,7 +160,8 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 		{
 			var actuations = DeclarationData.BusAuxiliaries.ActuationsMap.Lookup(runData.Mission.MissionType);
 
-			var retVal = new AuxiliaryConfig {
+			var retVal = new AuxiliaryConfig
+			{
 				InputData = vehicleData.Components.BusAuxiliaries,
 				ElectricalUserInputsConfig = GetElectricalUserConfig(mission, vehicleData, actuations),
 				PneumaticUserInputsConfig = GetPneumaticUserConfig(vehicleData, mission),
@@ -197,7 +181,8 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			var currentDemand = CalculateAverageCurrent(mission, vehicleData, actuations);
 			var busAux = vehicleData.Components.BusAuxiliaries;
 
-			return new ElectricsUserInputsConfig() {
+			return new ElectricsUserInputsConfig()
+			{
 				SmartElectrical = busAux.ElectricSupply.SmartElectrics,
 				AverageCurrentDemandInclBaseLoad = currentDemand.Item1,
 				AverageCurrentDemandWithoutBaseLoad = currentDemand.Item2,
@@ -216,7 +201,8 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 		protected virtual double CalculateAlternatorEfficiency(IList<IAlternatorDeclarationInputData> alternators)
 		{
 			var sum = 0.0;
-			foreach (var entry in alternators) {
+			foreach (var entry in alternators)
+			{
 				sum += DeclarationData.BusAuxiliaries.AlternatorTechnologies.Lookup(entry.Technology);
 			}
 
@@ -233,7 +219,8 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 				actuations.CycleTime;
 			var busAux = vehicleData.Components.BusAuxiliaries;
 			var electricDoors = false;
-			foreach (var consumer in DeclarationData.BusAuxiliaries.DefaultElectricConsumerList.Items) {
+			foreach (var consumer in DeclarationData.BusAuxiliaries.DefaultElectricConsumerList.Items)
+			{
 				var nbr = GetNumberOfElectricalConsumersInVehicle(consumer.NumberInActualVehicle, mission);
 				var dutyCycle = electricDoors && consumer.ConsumerName.Equals(
 									Constants.BusAuxiliaries.ElectricalConsumers.DoorsPerVehicleConsumer,
@@ -242,12 +229,14 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 					: consumer.PhaseIdleTractionOn;
 
 				var current = consumer.NominalCurrent(mission.MissionType) * dutyCycle * nbr;
-				if (consumer.Bonus && !VehicleHasElectricalConsumer(consumer.ConsumerName, busAux)) {
+				if (consumer.Bonus && !VehicleHasElectricalConsumer(consumer.ConsumerName, busAux))
+				{
 					current = 0.SI<Ampere>();
 				}
 
 				avgInclBase += current;
-				if (!consumer.BaseVehicle) {
+				if (!consumer.BaseVehicle)
+				{
 					avgWithoutBase += current;
 				}
 			}
@@ -257,7 +246,8 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 
 		protected virtual bool VehicleHasElectricalConsumer(string consumerName, IBusAuxiliariesDeclarationData busAux)
 		{
-			switch (consumerName) {
+			switch (consumerName)
+			{
 				case "Day running lights LED bonus":
 				case "Position lights LED bonus":
 				case "Brake lights LED bonus": return false;
@@ -269,7 +259,8 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 
 		protected virtual double GetNumberOfElectricalConsumersInVehicle(string nbr, Mission mission)
 		{
-			if ("f_IntLight(L_CoC)".Equals(nbr, StringComparison.InvariantCultureIgnoreCase)) {
+			if ("f_IntLight(L_CoC)".Equals(nbr, StringComparison.InvariantCultureIgnoreCase))
+			{
 				var busParams = mission.BusParameter;
 				return DeclarationData.BusAuxiliaries.CalculateLengthInteriorLights(
 										busParams.VehicleLength, busParams.DoubleDecker, busParams.FloorType, busParams.NumberPassengersLowerDeck)
@@ -284,7 +275,8 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			var busAux = vehicleData.Components.BusAuxiliaries;
 
 			//throw new NotImplementedException();
-			return new PneumaticUserInputsConfig() {
+			return new PneumaticUserInputsConfig()
+			{
 				KneelingHeight = mission.BusParameter.FloorType == FloorType.LowFloor
 					? Constants.BusAuxiliaries.PneumaticUserConfig.DefaultKneelingHeight
 					: 0.SI<Meter>(),
@@ -302,7 +294,8 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 		protected virtual ICompressorMap GetCompressorMap(string compressorSize, string clutchType)
 		{
 			var resource = "";
-			switch (compressorSize) {
+			switch (compressorSize)
+			{
 				case "Small":
 					resource = "DEFAULT_1-Cylinder_1-Stage_393ccm.acmp";
 					break;
@@ -318,14 +311,17 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 				case "Large Supply 2-stage":
 					resource = "DEFAULT_3-Cylinder_2-Stage_598ccm.acmp";
 					break;
-				default: throw new ArgumentException(string.Format("unkown compressor size {0}"), compressorSize);
+				default: throw new ArgumentException(string.Format("unkown compressor size {0}", compressorSize));
 			}
 
 			var dragCurveFactorClutch = 1.0;
-			switch (clutchType) {
-				case "visco": dragCurveFactorClutch = Constants.BusAuxiliaries.PneumaticUserConfig.ViscoClutchDragCurveFactor;
+			switch (clutchType)
+			{
+				case "visco":
+					dragCurveFactorClutch = Constants.BusAuxiliaries.PneumaticUserConfig.ViscoClutchDragCurveFactor;
 					break;
-				case "mechically": dragCurveFactorClutch = Constants.BusAuxiliaries.PneumaticUserConfig.MechanicClutchDragCurveFactor;
+				case "mechically":
+					dragCurveFactorClutch = Constants.BusAuxiliaries.PneumaticUserConfig.MechanicClutchDragCurveFactor;
 					break;
 			}
 
@@ -342,7 +338,8 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 				: busParams.VehicleLength;
 			var hvacBusheight = DeclarationData.BusAuxiliaries.CalculateInternalHeight(mission.BusParameter.FloorType, mission.BusParameter.DoubleDecker, busParams.BodyHeight);
 			var coolingPower = CalculateMaxCoolingPower(mission);
-			var retVal = new SSMInputs(null, heatingFuel) {
+			var retVal = new SSMInputs(null, heatingFuel)
+			{
 				BusFloorType = busParams.FloorType,
 				Technologies = GetSSMTechnologyBenefits(busAuxInputData, mission.BusParameter.FloorType),
 				DefaultConditions = new EnvironmentalConditionMapEntry(
@@ -396,14 +393,17 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 		protected virtual TechnologyBenefits GetSSMTechnologyBenefits(IBusAuxiliariesDeclarationData inputData, FloorType floorType)
 		{
 			var onVehicle = new List<SSMTechnology>();
-			foreach (var item in DeclarationData.BusAuxiliaries.SSMTechnologyList) {
+			foreach (var item in DeclarationData.BusAuxiliaries.SSMTechnologyList)
+			{
 				if ("Adjustable coolant thermostat".Equals(item.BenefitName, StringComparison.InvariantCultureIgnoreCase) &&
-					(inputData?.HVACAux.AdjustableCoolantThermostat ?? false)) {
+					(inputData?.HVACAux.AdjustableCoolantThermostat ?? false))
+				{
 					onVehicle.Add(item);
 				}
 
 				if ("Engine waste gas heat exchanger".Equals(item.BenefitName, StringComparison.InvariantCultureIgnoreCase) &&
-					(inputData?.HVACAux.EngineWasteGasHeatExchanger ?? false)) {
+					(inputData?.HVACAux.EngineWasteGasHeatExchanger ?? false))
+				{
 					onVehicle.Add(item);
 				}
 			}
@@ -415,7 +415,8 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 		{
 			var retVal = new TechnologyBenefits();
 
-			switch (floorType) {
+			switch (floorType)
+			{
 				case FloorType.LowFloor:
 					retVal.CValueVariation = onVehicle.Sum(x => x.LowFloorC);
 					retVal.HValueVariation = onVehicle.Sum(x => x.LowFloorH);
@@ -463,7 +464,8 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 
 		protected internal virtual IPneumaticsConsumersDemand CreatePneumaticAuxConfig(RetarderType retarderType)
 		{
-			return new PneumaticsConsumersDemand() {
+			return new PneumaticsConsumersDemand()
+			{
 				AdBlueInjection = Constants.BusAuxiliaries.PneumaticConsumersDemands.AdBlueInjection,
 				AirControlledSuspension = Constants.BusAuxiliaries.PneumaticConsumersDemands.AirControlledSuspension,
 				Braking = retarderType == RetarderType.None

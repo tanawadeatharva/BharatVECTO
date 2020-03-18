@@ -191,7 +191,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 			//	Loading = loading.Key,
 			//	VehicleData = DataAdapterCompleted.CreateVehicleData(primaryVehicle, mission, loading),
 			//	AirdragData = DataAdapterCompleted.CreateAirdragData(null, mission, new Segment()),
-			//	EngineData = DeclarationData.FactorMethodBus.CreateBusEngineData(primaryVehicle.Components.EngineInputData), 
+			//  EngineData = DeclarationData.FactorMethodBus.CreateBusEngineData(primaryVehicle.Components.EngineInputData), 
 			//	GearboxData = _gearboxData,
 			//	AxleGearData = _axlegearData,
 			//	AngledriveData = _angledriveData,
@@ -221,7 +221,12 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 			var simulationRunData = new VectoRunData();
 			simulationRunData.Loading = loading.Key;
 			simulationRunData.VehicleData = DataAdapterCompleted.CreateVehicleData(primaryVehicle, completedVehicle, mission, loading);
-			//simulationRunData.AirdragData = DataAdapterCompleted.CreateAirdragData(, mission)
+			simulationRunData.AirdragData = DataAdapterCompleted.CreateAirdragData(completedVehicle, mission);
+			//simulationRunData.EngineData = DeclarationData.FactorMethodBus.CreateBusEngineData(primaryVehicle); 
+			
+
+
+
 
 			simulationRunData.Cycle = new DrivingCycleProxy(cycle, mission.MissionType.ToString());
 
@@ -277,7 +282,8 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 			var simulationRunData = new VectoRunData();
 			simulationRunData.Loading = loading.Key;
 			simulationRunData.VehicleData = DataAdapterPrimary.CreateVehicleData(primaryVehicle, mission, loading);
-			//simulationRunData.AirdragData = DataAdapterPrimary.CreateAirdragData(pri)
+			simulationRunData.AirdragData = DataAdapterPrimary.CreateAirdragData(null, mission, new Segment());
+			//simulationRunData.EngineData = DeclarationData.FactorMethodBus.CreateBusEngineData(primaryVehicle);
 
 			simulationRunData.Cycle = new DrivingCycleProxy(cycle, mission.MissionType.ToString());
 

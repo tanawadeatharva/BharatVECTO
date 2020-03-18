@@ -16,6 +16,8 @@ using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.OutputData.FileIO;
+using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter;
+using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Tests.Integration.CompletedBus
 {
@@ -100,6 +102,8 @@ namespace TUGraz.VectoCore.Tests.Integration.CompletedBus
 			var index = 0;
 			for (int i = 0; i < relatedRuns.Count; i++) {
 				AssertVehicleData(relatedRuns[i], ref index);
+				AssertAirdragData(relatedRuns[i]);
+				//AssertEngineData(relatedRuns[i]);
 			}
 			
 		}
@@ -197,6 +201,79 @@ namespace TUGraz.VectoCore.Tests.Integration.CompletedBus
 			}
 		}
 		#endregion
+
+		#region Airdrag Data Asserts
+
+		private void AssertAirdragData(RelatedRun relatedRun)
+		{
+			var genericAirdragData = relatedRun.VectoRunDataGenericBody.AirdragData;
+			var specificAirdragData = relatedRun.VectoRunDataSpezificBody.AirdragData;
+			
+			var genericDragArea = 5.2.SI<SquareMeter>();
+			var specificDragArea = 6.34.SI<SquareMeter>();
+
+			var genericVehicleHeight = 3.7.SI<Meter>();
+			var specificVehicleHeight = 3.0.SI<Meter>() + 0.30.SI<Meter>();
+
+			var genericCrosswind = GetCrosswindCorrection("CoachBus", genericDragArea, genericVehicleHeight);
+			var specificCrosswind = GetCrosswindCorrection("CoachBus", specificDragArea, specificVehicleHeight);
+			
+			var genericValueExpected = genericCrosswind.AverageAirDragPowerLoss(20.KMPHtoMeterPerSecond(),
+				21.KMPHtoMeterPerSecond(), Physics.AirDensity).Value();
+
+			var currentGenericValue = genericAirdragData.CrossWindCorrectionCurve.AverageAirDragPowerLoss(
+				20.KMPHtoMeterPerSecond(),21.KMPHtoMeterPerSecond(), Physics.AirDensity).Value();
+
+			var expectedSpecificValue = specificCrosswind.AverageAirDragPowerLoss(21.KMPHtoMeterPerSecond(),
+				22.KMPHtoMeterPerSecond(), Physics.AirDensity).Value();
+
+			var currentSpecificValue = specificAirdragData.CrossWindCorrectionCurve.AverageAirDragPowerLoss(21.KMPHtoMeterPerSecond(),
+				22.KMPHtoMeterPerSecond(), Physics.AirDensity).Value();
+
+
+			Assert.AreEqual(CrossWindCorrectionMode.DeclarationModeCorrection, genericAirdragData.CrossWindCorrectionMode);
+			Assert.AreEqual(genericAirdragData.CrossWindCorrectionMode, specificAirdragData.CrossWindCorrectionMode);
+
+			Assert.AreEqual(genericValueExpected, currentGenericValue);
+			Assert.AreEqual(expectedSpecificValue, currentSpecificValue);
+			
+			Assert.AreEqual(genericDragArea,  genericAirdragData.DeclaredAirdragArea);
+			Assert.AreEqual(genericDragArea, genericAirdragData.CrossWindCorrectionCurve.AirDragArea);
+			Assert.AreEqual(specificDragArea,  specificAirdragData.DeclaredAirdragArea);
+			Assert.AreEqual(specificDragArea,  specificAirdragData.CrossWindCorrectionCurve.AirDragArea);
+		}
+
+
+		#endregion
+
+		#region Engine Data Asserts
+
+		private void AssertEngineData(RelatedRun relatedRun)
+		{
+			var genericEngine = relatedRun.VectoRunDataGenericBody.EngineData;
+			var specificEngine = relatedRun.VectoRunDataSpezificBody.EngineData;
+
+			
+
+		}
+
+
+
+		#endregion
+
+
+		private CrosswindCorrectionCdxALookup GetCrosswindCorrection(string crossWindCorrectionParams,
+			SquareMeter aerodynamicDragArea, Meter vehicleHeight)
+		{
+		  return new CrosswindCorrectionCdxALookup(
+				aerodynamicDragArea,
+				DeclarationDataAdapterHeavyLorry.GetDeclarationAirResistanceCurve(
+					crossWindCorrectionParams,
+					aerodynamicDragArea,
+					vehicleHeight),
+				CrossWindCorrectionMode.DeclarationModeCorrection);
+		}
+
 
 
 		private void SetRelatedVehicleParts(List<VectoRunData> runs)

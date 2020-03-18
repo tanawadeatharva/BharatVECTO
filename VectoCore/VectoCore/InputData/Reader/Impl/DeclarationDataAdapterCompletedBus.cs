@@ -6,6 +6,7 @@ using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
+using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter;
 
 namespace TUGraz.VectoCore.InputData.Reader.Impl
 {
@@ -18,10 +19,39 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 			throw new System.NotImplementedException();
 		}
 
-		public AirdragData CreateAirdragData(IAirdragDeclarationInputData airdragInputData, Mission mission, Segment segment)
+		public AirdragData CreateAirdragData(IVehicleDeclarationInputData completedVehicle, Mission mission)
+		{
+			var airdragData = new AirdragData
+			{
+				CrossWindCorrectionMode = CrossWindCorrectionMode.DeclarationModeCorrection
+			};
+
+			SquareMeter aerodynamicDragArea;
+			if (!mission.BusParameter.AirDragMeasurementAllowed || completedVehicle.Components.AirdragInputData.AirDragArea == null)
+				aerodynamicDragArea = mission.DefaultCDxA;
+			else
+				aerodynamicDragArea = completedVehicle.Components.AirdragInputData.AirDragArea;
+
+			var vehicleHeight = completedVehicle.Height + mission.BusParameter.DeltaHeight;
+
+			airdragData.CrossWindCorrectionCurve = new CrosswindCorrectionCdxALookup(
+				aerodynamicDragArea,
+					DeclarationDataAdapterHeavyLorry.GetDeclarationAirResistanceCurve(
+						mission.CrossWindCorrectionParameters,
+						aerodynamicDragArea,
+						vehicleHeight),
+						CrossWindCorrectionMode.DeclarationModeCorrection);
+
+			airdragData.DeclaredAirdragArea = aerodynamicDragArea;
+
+			return airdragData;
+		}
+		
+		public CombustionEngineData CreateEngineData()
 		{
 			throw new System.NotImplementedException();
 		}
+
 
 		public RetarderData CreateRetarderData(IRetarderInputData retarderInputData)
 		{
