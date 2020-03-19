@@ -109,7 +109,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					continue;
 				}
 
-				if (!IsBelowDownShiftCurve(gear, response.Engine.EnginePowerRequest / response.Engine.EngineSpeed, response.Engine.EngineSpeed)) {
+				if (!IsBelowDownShiftCurve(gear, response.Engine.PowerRequest / response.Engine.EngineSpeed, response.Engine.EngineSpeed)) {
 					_gearbox.TorqueConverterLocked = torqueConverterLocked;
 					_gearbox.Disengaged = false;
 					return gear;
@@ -140,7 +140,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			throw new System.NotImplementedException("AT Shift Strategy does not support disengaging.");
 		}
 
-		public override bool ShiftRequired(
+		protected override bool DoCheckShiftRequired(
 			Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity, NewtonMeter inTorque,
 			PerSecond inAngularVelocity, uint gear, Second lastShiftTime, IResponse response)
 		{

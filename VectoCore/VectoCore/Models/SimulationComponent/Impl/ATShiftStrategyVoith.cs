@@ -163,7 +163,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			base.Request(absTime, dt, outTorque, outAngularVelocity);
 		}
 
-		public override bool ShiftRequired(
+		protected override bool DoCheckShiftRequired(
 			Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity, NewtonMeter inTorque,
 			PerSecond inAngularVelocity, uint gear, Second lastShiftTime, IResponse response)
 		{

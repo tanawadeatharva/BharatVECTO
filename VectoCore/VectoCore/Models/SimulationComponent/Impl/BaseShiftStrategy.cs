@@ -54,13 +54,27 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			DataBus = dataBus;
 		}
 
-		public abstract bool ShiftRequired(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity, NewtonMeter inTorque, PerSecond inAngularVelocity, uint gear, Second lastShiftTime, IResponse response);
+		public virtual bool ShiftRequired(Second absTime, Second dt, NewtonMeter outTorque,
+			PerSecond outAngularVelocity, NewtonMeter inTorque, PerSecond inAngularVelocity, uint gear,
+			Second lastShiftTime, IResponse response)
+		{
+			CheckGearshiftRequired = true;
+			var retVal = DoCheckShiftRequired(absTime, dt, outTorque, outAngularVelocity, inTorque, inAngularVelocity, gear, lastShiftTime, response);
+			CheckGearshiftRequired = false;
+			return retVal;
+		}
+
+		public abstract bool DoCheckShiftRequired(Second absTime, Second dt, NewtonMeter outTorque,
+			PerSecond outAngularVelocity, NewtonMeter inTorque, PerSecond inAngularVelocity, uint gear,
+			Second lastShiftTime, IResponse response);
 
 		public abstract uint InitGear(Second absTime, Second dt, NewtonMeter torque, PerSecond outAngularVelocity);
 		public abstract uint Engage(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity);
 		public abstract void Disengage(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outEngineSpeed);
 		public abstract IGearbox Gearbox { get; set; }
 		public abstract GearInfo NextGear { get; }
+
+		public bool CheckGearshiftRequired { get; protected set; }
 		public virtual void Request(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity)
 		{ }
 

@@ -44,7 +44,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			return DataBus.CycleData.LeftSample.Gear;
 		}
 
-		public override bool ClutchClosed(Second absTime)
+		public override bool GearEngaged(Second absTime)
 		{
 			return DataBus.CycleData.LeftSample.Gear != 0;
 		}

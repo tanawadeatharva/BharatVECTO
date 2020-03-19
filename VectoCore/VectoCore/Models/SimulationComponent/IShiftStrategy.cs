@@ -98,6 +98,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent
 		IGearbox Gearbox { get; set; }
 
         GearInfo NextGear { get; }
+
+		bool CheckGearshiftRequired { get; }
+
 		void Request(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity);
 
 		void WriteModalResults(IModalDataContainer container);

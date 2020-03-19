@@ -70,6 +70,8 @@ namespace TUGraz.VectoCore.Models.Simulation.DataBus
 		uint NumGears { get; }
 
 		bool DisengageGearbox { get; }
+
+		bool GearEngaged(Second absTime);
 	}
 
 	public interface IGearboxControl
