@@ -34,12 +34,12 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON {
 
 		public double MinSOC
 		{
-			get { return Body.GetEx<double>("SOC_min"); }
+			get { return Body.GetEx<double>("SOC_min") / 100.0; }
 		}
 
 		public double MaxSOC
 		{
-			get { return Body.GetEx<double>("SOC_max"); }
+			get { return Body.GetEx<double>("SOC_max") / 100.0; }
 		}
 		public AmpereSecond Capacity
 		{

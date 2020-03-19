@@ -133,27 +133,27 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			var acceleration = 0.SI<MeterPerSquareSecond>();
 			var absTime = 0.SI<Second>();
 			var initialResponse = vehicle.Request(absTime, simulationInterval, acceleration, gradient);
-			var delta = initialResponse.GearboxPowerRequest;
+			var delta = initialResponse.Gearbox.GearboxPowerRequest;
 			try {
 				var time = absTime;
 				acceleration = SearchAlgorithm.Search(
 					acceleration, delta, Constants.SimulationSettings.OperatingPointInitialSearchIntervalAccelerating,
 					getYValue: response => {
 						var r = (ResponseDryRun)response;
-						return r.GearboxPowerRequest;
+						return r.Gearbox.GearboxPowerRequest;
 					},
 					evaluateFunction: acc => {
 						var response = vehicle.Request(time, simulationInterval, acc, gradient, true);
-						response.Acceleration = acc;
+						response.Driver.Acceleration = acc;
 						return response;
 					},
 					criterion: response => {
 						var r = (ResponseDryRun)response;
-						return r.GearboxPowerRequest.Value() * 100;
+						return r.Gearbox.GearboxPowerRequest.Value() * 100;
 					},
 					abortCriterion: (response, cnt) => {
 						var r = (ResponseDryRun)response;
-						return r != null && (vehicle.VehicleSpeed + r.Acceleration * simulationInterval) < 0.KMPHtoMeterPerSecond();
+						return r != null && (vehicle.VehicleSpeed + r.Driver.Acceleration * simulationInterval) < 0.KMPHtoMeterPerSecond();
 					}
 				);
 				var step = vehicle.Request(absTime, simulationInterval, acceleration, gradient);

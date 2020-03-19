@@ -11,6 +11,7 @@
     "VehicleFile": "Class2_RigidTruck.vveh",
     "EngineFile": "Engine_175kW_6.8l.veng",
     "GearboxFile": "AMT_12.vgbx",
+    "TCU": "AMT_12.vgbx",
     "AuxiliaryAssembly": "Classic",
     "AuxiliaryVersion": "CLASSIC",
     "AdvancedAuxiliaryFilePath": "",

@@ -33,7 +33,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl {
 
 			testContainerGbx.Gear = 1;
 			var init = TestContainer.VehiclePort.Initialize(Data.GearshiftParameters.StartVelocity, 0.SI<Radian>());
-			var powertrainRatioWOGearbox = (Data.GearshiftParameters.StartVelocity / init.EngineSpeed * Data.GearboxData.Gears[1].Ratio).Cast<Meter>();
+			var powertrainRatioWOGearbox = (Data.GearshiftParameters.StartVelocity / init.Engine.EngineSpeed * Data.GearboxData.Gears[1].Ratio).Cast<Meter>();
 
 			var engineSpeedSteps = (Data.EngineData.FullLoadCurves[0].N95hSpeed - Data.EngineData.IdleSpeed) / 100;
 
@@ -49,25 +49,25 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl {
 
 					var grad = VectoMath.InclinationToAngle(1);
 					var max = TestContainer.VehiclePort.Initialize(vehicleSpeed, grad);
-					if ((max.EngineTorqueDemandTotal - maxTorque).IsGreater(0)) {
+					if ((max.Engine.EngineTorqueDemandTotal - maxTorque).IsGreater(0)) {
 
 						var first = TestContainer.VehiclePort.Initialize(vehicleSpeed, 0.SI<Radian>());
-						var delta = first.EngineTorqueDemandTotal - maxTorque;
+						var delta = first.Engine.EngineTorqueDemandTotal - maxTorque;
 						grad = SearchAlgorithm.Search(
 							0.SI<Radian>(), delta, 0.1.SI<Radian>(),
 							getYValue: r => {
-								return ((r as AbstractResponse).EngineTorqueDemandTotal - maxTorque);
+								return ((r as AbstractResponse).Engine.EngineTorqueDemandTotal - maxTorque);
 							},
 							evaluateFunction: g => {
 								return TestContainer.VehiclePort.Initialize(vehicleSpeed, g);
 							},
 							criterion: r => {
-								return ((r as AbstractResponse).EngineTorqueDemandTotal - maxTorque).Value() / 1e5;
+								return ((r as AbstractResponse).Engine.EngineTorqueDemandTotal - maxTorque).Value() / 1e5;
 							}
 						);
 						max = TestContainer.VehiclePort.Initialize(vehicleSpeed, grad);
 					}
-					retVal[gearData.Key].Add(new KeyValuePair<PerSecond, NewtonMeter>(max.EngineSpeed, max.CardanTorque));
+					retVal[gearData.Key].Add(new KeyValuePair<PerSecond, NewtonMeter>(max.Engine.EngineSpeed, max.Axlegear.CardanTorque));
 				}
 			}
 

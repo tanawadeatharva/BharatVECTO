@@ -133,8 +133,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				EcoRollState.PreviousBrakePower = Driver.DataBus.BrakePower;
 				if (retVal.Source is ICombustionEngine) {
 					var success = retVal as ResponseSuccess;
-					var avgEngineSpeed = (success.EngineSpeed + Driver.DataBus.EngineSpeed) / 2.0;
-					EcoRollState.AcceleratorPedalIdle = success.DragPower.IsEqual(success.EngineTorqueDemandTotal * avgEngineSpeed, 10.SI<Watt>());
+					var avgEngineSpeed = (success.Engine.EngineSpeed + Driver.DataBus.EngineSpeed) / 2.0;
+					EcoRollState.AcceleratorPedalIdle = success.Engine.DragPower.IsEqual(success.Engine.EngineTorqueDemandTotal * avgEngineSpeed, 10.SI<Watt>());
 				} else {
 					EcoRollState.AcceleratorPedalIdle = false;
 				}
@@ -243,8 +243,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 						Log.Debug(
 							"Current simulation interval exceeds next action distance at {0}. reducing maxDistance to {1}",
 							NextDrivingAction.ActionDistance, NextDrivingAction.ActionDistance - currentDistance);
-						return new ResponseDrivingCycleDistanceExceeded() {
-							Source = this,
+						return new ResponseDrivingCycleDistanceExceeded(this) {
 							MaxDistance = NextDrivingAction.ActionDistance - currentDistance
 						};
 					}
@@ -772,13 +771,13 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			// if we accelerate in the current simulation interval the ActionDistance of the next action
 			// changes and we might pass the ActionDistance - check again...
-			if (response.Acceleration <= 0) {
+			if (response.Driver.Acceleration <= 0) {
 				return response;
 			}
 
 			// if the speed at the end of the simulation interval is below the next target speed 
 			// we are fine (no need to brake right now)
-			var v2 = Driver.DataBus.VehicleSpeed + response.Acceleration * response.SimulationInterval;
+			var v2 = Driver.DataBus.VehicleSpeed + response.Driver.Acceleration * response.SimulationInterval;
 			if (v2 <= DriverStrategy.NextDrivingAction.NextTargetSpeed) {
 				return response;
 			}
@@ -798,7 +797,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			}
 
 			var newOperatingPoint = VectoMath.ComputeTimeInterval(
-				DataBus.VehicleSpeed, response.Acceleration, DataBus.Distance,
+				DataBus.VehicleSpeed, response.Driver.Acceleration, DataBus.Distance,
 				newds);
 			if (newOperatingPoint.SimulationInterval.IsSmaller(Constants.SimulationSettings.LowerBoundTimeInterval)) {
 				// the next time interval will be too short, this may lead to issues with inertia etc. 
@@ -810,8 +809,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			Log.Debug(
 				"Exceeding next ActionDistance at {0}. Reducing max Distance from {2} to {1}",
 				DriverStrategy.NextDrivingAction.ActionDistance, newds, ds);
-			return new ResponseDrivingCycleDistanceExceeded() {
-				Source = this,
+			return new ResponseDrivingCycleDistanceExceeded(this) {
 				MaxDistance = newds,
 			};
 		}
@@ -876,8 +874,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					remainingShiftTime += Constants.SimulationSettings.TargetTimeInterval;
 				}
 
-				return new ResponseFailTimeInterval {
-					Source = this,
+				return new ResponseFailTimeInterval(this) {
 					DeltaT = remainingShiftTime,
 				};
 			}
@@ -996,7 +993,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				DataBus.VehicleSpeed.IsEqual(targetVelocity)) {
 				first = Driver.DrivingActionCoast(absTime, ds, velocityWithOverspeed, gradient);
 				debug.Add(new { action = "Coast", first });
-				if (first is ResponseSuccess && first.Acceleration < 0) {
+				if (first is ResponseSuccess && first.Driver.Acceleration < 0) {
 					first = Driver.DrivingActionAccelerate(absTime, ds, targetVelocity, gradient);
 					debug.Add(new { action = "Coast:(Success & Acc<0) -> Accelerate", first });
 				}
@@ -1021,7 +1018,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				return response;
 			}
 
-			var v2 = Driver.DataBus.VehicleSpeed + response.Acceleration * response.SimulationInterval;
+			var v2 = Driver.DataBus.VehicleSpeed + response.Driver.Acceleration * response.SimulationInterval;
 			var newBrakingDistance = Driver.DriverData.AccelerationCurve.ComputeDecelerationDistance(v2,
 										nextAction.NextTargetSpeed) + DefaultDriverStrategy.BrakingSafetyMargin;
 			switch (DriverStrategy.NextDrivingAction.Action) {
@@ -1147,8 +1144,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			if (DataBus.VehicleSpeed.IsEqual(0) && DriverStrategy.BrakeTrigger.NextTargetSpeed.IsEqual(0)) {
 				if (ds.IsEqual(targetDistance - currentDistance)) {
-					return new ResponseDrivingCycleDistanceExceeded() {
-						Source = this,
+					return new ResponseDrivingCycleDistanceExceeded(this) {
 						MaxDistance = ds / 2
 					};
 				}
@@ -1310,8 +1306,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				Log.Debug("Switching to BRAKE Phase. currentDistance: {0}", currentDistance);
 			} else {
 				if ((currentDistance + ds).IsGreater(DriverStrategy.BrakeTrigger.BrakingStartDistance)) {
-					return new ResponseDrivingCycleDistanceExceeded() {
-						//Source = this,
+					return new ResponseDrivingCycleDistanceExceeded(this) {
 						MaxDistance = DriverStrategy.BrakeTrigger.BrakingStartDistance - currentDistance
 					};
 				}
@@ -1357,7 +1352,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					//response = Driver.DrivingActionBrake(absTime, ds, DriverStrategy.BrakeTrigger.NextTargetSpeed,
 					//	gradient, r);
 					response = Driver.DrivingActionBrake(
-						absTime, ds, DataBus.VehicleSpeed + r.Acceleration * r.SimulationInterval,
+						absTime, ds, DataBus.VehicleSpeed + r.Driver.Acceleration * r.SimulationInterval,
 						gradient, r);
 					if (response != null) {
 						response.Switch().Case<ResponseGearShift>(
@@ -1378,7 +1373,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 											response = Driver.DrivingActionAccelerate(absTime, ds, targetVelocity, gradient);
 										} else {
 											RetryDistanceExceeded = true;
-											response = new ResponseDrivingCycleDistanceExceeded() { MaxDistance = ds / 2 };
+											response = new ResponseDrivingCycleDistanceExceeded(this) { MaxDistance = ds / 2 };
 										}
 									}
 								} else {
@@ -1405,7 +1400,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 						response = Driver.DrivingActionAccelerate(absTime, ds, targetVelocity, gradient);
 					} else {
 						RetryDistanceExceeded = true;
-						response = new ResponseDrivingCycleDistanceExceeded() { MaxDistance = ds / 2 };
+						response = new ResponseDrivingCycleDistanceExceeded(this) { MaxDistance = ds / 2 };
 					}
 				}
 			} else {
@@ -1426,7 +1421,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			switch (nextAction.Action) {
 				case DrivingBehavior.Coasting:
-					var v2 = Driver.DataBus.VehicleSpeed + response.Acceleration * response.SimulationInterval;
+					var v2 = Driver.DataBus.VehicleSpeed + response.Driver.Acceleration * response.SimulationInterval;
 					var newBrakingDistance = Driver.DriverData.AccelerationCurve.ComputeDecelerationDistance(
 						v2,
 						nextAction.NextTargetSpeed);

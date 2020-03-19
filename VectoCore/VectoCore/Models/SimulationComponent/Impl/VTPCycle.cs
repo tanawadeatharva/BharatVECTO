@@ -197,10 +197,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 				var response = Initialize(gear, wheelStartTorque, wheelStartSpeed);
 
-				var fullLoadPower = response.DynamicFullLoadPower; //EnginePowerRequest - response.DeltaFullLoad;
-				var reserve = 1 - response.EnginePowerRequest / fullLoadPower;
+				var fullLoadPower = response.Engine.DynamicFullLoadPower; //EnginePowerRequest - response.DeltaFullLoad;
+				var reserve = 1 - response.Engine.EnginePowerRequest / fullLoadPower;
 
-				if (response.EngineSpeed > DataBus.EngineIdleSpeed && reserve >= RunData.GearboxData.StartTorqueReserve) {
+				if (response.Engine.EngineSpeed > DataBus.EngineIdleSpeed && reserve >= RunData.GearboxData.StartTorqueReserve) {
 					StartGear = gear;
 					return;
 				}
@@ -222,13 +222,18 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			//var fullLoad = DataBus.EngineStationaryFullPower(inAngularVelocity);
 
-			return new ResponseDryRun {
-				Source = this,
-				EnginePowerRequest = response.EnginePowerRequest,
-				EngineSpeed = response.EngineSpeed,
-				DynamicFullLoadPower = response.DynamicFullLoadPower,
-				ClutchPowerRequest = response.ClutchPowerRequest,
-				GearboxPowerRequest = outTorque * outAngularVelocity,
+			return new ResponseDryRun(this) {
+				Engine = {
+					EnginePowerRequest = response.Engine.EnginePowerRequest,
+					EngineSpeed = response.Engine.EngineSpeed,
+					DynamicFullLoadPower = response.Engine.DynamicFullLoadPower,
+				},
+				Clutch = {
+					ClutchPowerRequest = response.Clutch.ClutchPowerRequest,
+				},
+				Gearbox = {
+					GearboxPowerRequest = outTorque * outAngularVelocity,
+				}
 				//DeltaFullLoad = response.EnginePowerRequest - fullLoad
 			};
 		}
@@ -286,14 +291,13 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		public override IResponse Request(Second absTime, Second dt)
 		{
 			if (CycleIterator.LastEntry && CycleIterator.RightSample.Time == absTime) {
-				return new ResponseCycleFinished { Source = this };
+				return new ResponseCycleFinished(this);
 			}
 
 			// interval exceeded
 			if (CycleIterator.RightSample != null && (absTime + dt).IsGreater(CycleIterator.RightSample.Time)) {
-				return new ResponseFailTimeInterval {
+				return new ResponseFailTimeInterval(this) {
 					AbsTime = absTime,
-					Source = this,
 					DeltaT = CycleIterator.RightSample.Time - absTime
 				};
 			}

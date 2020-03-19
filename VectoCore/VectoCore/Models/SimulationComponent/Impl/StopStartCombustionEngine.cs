@@ -52,28 +52,30 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl {
 				//EngineAux.TorqueDemand(absTime, dt, 0.SI<NewtonMeter>(), 0.SI<NewtonMeter>(), ModelData.IdleSpeed);
 				CurrentState.AuxPowerEngineOff = EngineAux.PowerDemandEngineOff(absTime, dt);
 			} else {
-				return new ResponseDryRun {
+				return new ResponseDryRun(this) {
 					DeltaFullLoad = 0.SI<Watt>(),
 					DeltaDragLoad = 0.SI<Watt>(),
-					EngineTorqueDemandTotal = 0.SI<NewtonMeter>(),
+					Engine = {
+						EngineTorqueDemandTotal = 0.SI<NewtonMeter>(),
+						EnginePowerRequest = 0.SI<Watt>(),
+						DynamicFullLoadPower = 0.SI<Watt>(),
+						DragPower = 0.SI<Watt>(),
+						EngineSpeed = 0.RPMtoRad(),
+						AuxiliariesPowerDemand = 0.SI<Watt>(),
+					},
 					DeltaEngineSpeed = 0.RPMtoRad(),
-					EnginePowerRequest = 0.SI<Watt>(),
-					DynamicFullLoadPower = 0.SI<Watt>(),
-					DragPower = 0.SI<Watt>(),
-					AuxiliariesPowerDemand = 0.SI<Watt>(),
-					EngineSpeed = 0.RPMtoRad(),
-					Source = this,
 				};
 			}
 
-			return new ResponseSuccess() {
-				EnginePowerRequest = 0.SI<Watt>(),
-				DynamicFullLoadPower = 0.SI<Watt>(),
-				EngineTorqueDemandTotal = 0.SI<NewtonMeter>(),
-				DragPower = 0.SI<Watt>(),
-				AuxiliariesPowerDemand = 0.SI<Watt>(),
-				EngineSpeed = 0.RPMtoRad(),
-				Source = this
+			return new ResponseSuccess(this) {
+				Engine = {
+					EnginePowerRequest = 0.SI<Watt>(),
+					DynamicFullLoadPower = 0.SI<Watt>(),
+					EngineTorqueDemandTotal = 0.SI<NewtonMeter>(),
+					DragPower = 0.SI<Watt>(),
+					EngineSpeed = 0.RPMtoRad(),
+					AuxiliariesPowerDemand = 0.SI<Watt>(),
+				},
 			};
 		}
 

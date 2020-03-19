@@ -105,11 +105,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				}
 				var response = _gearbox.Initialize(gear, torqueConverterLocked, torque, outAngularVelocity);
 
-				if (response.EngineSpeed > DataBus.EngineRatedSpeed || response.EngineSpeed < DataBus.EngineIdleSpeed) {
+				if (response.Engine.EngineSpeed > DataBus.EngineRatedSpeed || response.Engine.EngineSpeed < DataBus.EngineIdleSpeed) {
 					continue;
 				}
 
-				if (!IsBelowDownShiftCurve(gear, response.EnginePowerRequest / response.EngineSpeed, response.EngineSpeed)) {
+				if (!IsBelowDownShiftCurve(gear, response.Engine.EnginePowerRequest / response.Engine.EngineSpeed, response.Engine.EngineSpeed)) {
 					_gearbox.TorqueConverterLocked = torqueConverterLocked;
 					_gearbox.Disengaged = false;
 					return gear;
@@ -429,7 +429,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 						_nextGear.SetState(tmpCurr);
 						SetGear(tmpGbxState);
 						if (tmpResponseDs.DeltaFullLoad - Formulas.InertiaPower(
-								tmpResponseDs.EngineSpeed, DataBus.EngineSpeed, EngineInertia, dt) < tmpResponseCurr.DeltaFullLoad) {
+								tmpResponseDs.Engine.EngineSpeed, DataBus.EngineSpeed, EngineInertia, dt) < tmpResponseCurr.DeltaFullLoad) {
 							Downshift(absTime, gear);
 							return true;
 						}
@@ -514,7 +514,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			var nextTcOutSpeed = gbxOutSpeed * ModelData.Gears[currentGear + 1].TorqueConverterRatio;
 			
 			var tcNext = ModelData.TorqueConverterData.LookupOperatingPointOut(
-				nextTcOutSpeed, response.EngineSpeed, response.EngineTorqueDemand);
+				nextTcOutSpeed, response.Engine.EngineSpeed, response.Engine.EngineTorqueDemand);
 			var tcLossesNextGear = tcNext.InAngularVelocity * tcNext.InTorque - tcNext.OutAngularVelocity * tcNext.OutTorque;
 			var deltaTcLosses = tcLossesNextGear - tcLossesCurrentGear;
 

@@ -79,7 +79,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			CurrentState.EnginePower = CurrentState.EngineTorque * avgEngineSpeed;
 			if (dryRun) {
-				return new ResponseDryRun {
+				return new ResponseDryRun(this) {
 					DeltaFullLoad = CurrentState.EnginePower - CurrentState.DynamicFullLoadTorque * avgEngineSpeed,
 					DeltaDragLoad = CurrentState.EnginePower - CurrentState.FullDragTorque * avgEngineSpeed
 				};
@@ -87,7 +87,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			//UpdateEngineState(CurrentState.EnginePower, avgEngineSpeed);
 
-			return new ResponseSuccess { Source = this };
+			return new ResponseSuccess(this);
 		}
 
 		protected NewtonMeter LimitEnginePower(NewtonMeter requestedEngineTorque, PerSecond avgEngineSpeed, Second absTime)

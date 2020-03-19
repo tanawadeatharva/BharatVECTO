@@ -42,7 +42,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl {
 				gearbox.Gear = gearData.Key;
 				gearbox.Disengaged = false;
 				var response = vehicle.Initialize(Data.GearshiftParameters.StartVelocity, VectoMath.InclinationToAngle(0));
-				engineSpeeds[gearData.Key] = response.EngineSpeed;
+				engineSpeeds[gearData.Key] = response.Engine.EngineSpeed;
 			}
 		}
 

@@ -187,7 +187,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			var _accMin = (accPower / DataBus.VehicleSpeed / (MaxMass + DataBus.ReducedMassWheels)).Cast<MeterPerSquareSecond>();
 			var _accMax = (accPower / DataBus.VehicleSpeed / (MinMass + DataBus.ReducedMassWheels)).Cast<MeterPerSquareSecond>();
 
-			var engineLoadPercent = inTorque / response.EngineDynamicFullLoadTorque;
+			var engineLoadPercent = inTorque / response.Engine.EngineDynamicFullLoadTorque;
 			var _loadStage = GetLoadStage(engineLoadPercent);
 
 			var shiftSpeed = UpshiftLineTCLocked.LookupShiftSpeed(
@@ -239,7 +239,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			if (DataBus.DriverAcceleration < 0) {
 				return null;
 			}
-			if (response1.EngineTorqueDemand.IsSmaller(DeclarationData.GearboxTCU.DragMarginFactor * fld[currentGear].DragLoadStationaryTorque(response1.EngineSpeed))) {
+			if (response1.Engine.EngineTorqueDemand.IsSmaller(DeclarationData.GearboxTCU.DragMarginFactor * fld[currentGear].DragLoadStationaryTorque(response1.Engine.EngineSpeed))) {
 				return null;
 			}
 
@@ -288,11 +288,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 				//var response = RequestDryRunWithGear(absTime, dt, vehicleSpeedPostShift, DataBus.DriverAcceleration, next);
 
-				if (!response.EnginePowerRequest.IsSmaller(pNextGearMax)) {
+				if (!response.Engine.EnginePowerRequest.IsSmaller(pNextGearMax)) {
 					continue;
 				}
 
-				var inTorque = response.EnginePowerRequest / inAngularVelocity;
+				var inTorque = response.Engine.EnginePowerRequest / inAngularVelocity;
 
 				// if next gear supplied enough power reserve: take it
 				// otherwise take
@@ -300,8 +300,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					continue;
 				}
 
-				var fullLoadPower = response.EnginePowerRequest - response.DeltaFullLoad;
-				var reserve = 1 - response.EnginePowerRequest / fullLoadPower;
+				var fullLoadPower = response.Engine.EnginePowerRequest - response.DeltaFullLoad;
+				var reserve = 1 - response.Engine.EnginePowerRequest / fullLoadPower;
 
 				if (reserve < ModelData.TorqueReserve) {
 					var accelerationFactor = outAngularVelocity * ModelData.Gears[currentGear].Ratio < fld[0].NTq98hSpeed
@@ -319,8 +319,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					response = RequestDryRunWithGear(absTime, dt, reducedTorque, outAngularVelocity, next);
 
 					//response = RequestDryRunWithGear(absTime, dt, vehicleSpeedPostShift, DataBus.DriverAcceleration * accelerationFactor, next);
-					fullLoadPower = response.EnginePowerRequest - response.DeltaFullLoad;
-					reserve = 1 - response.EnginePowerRequest / fullLoadPower;
+					fullLoadPower = response.Engine.EnginePowerRequest - response.DeltaFullLoad;
+					reserve = 1 - response.Engine.EnginePowerRequest / fullLoadPower;
 					if (reserve < ModelData.TorqueReserve) {
 						continue;
 					}
@@ -331,15 +331,15 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					//	absTime, dt, vehicleSpeedForGearRating, DataBus.DriverAcceleration, current);
 					//var responseCurrent = RequestDryRunWithGear(absTime, dt, outTorque, outAngularVelocity, current);
 					var responseCurrent = RequestDryRunWithGear(absTime, dt, outTorqueEst, outAngularVelocityEst, current);
-					var tqCurrent = responseCurrent.EngineTorqueDemand.LimitTo(
-						fld[currentGear].DragLoadStationaryTorque(responseCurrent.EngineSpeed),
-						fld[currentGear].FullLoadStationaryTorque(responseCurrent.EngineSpeed));
-					fcCurrent = GetFCRating(responseCurrent.EngineSpeed, tqCurrent);
+					var tqCurrent = responseCurrent.Engine.EngineTorqueDemand.LimitTo(
+						fld[currentGear].DragLoadStationaryTorque(responseCurrent.Engine.EngineSpeed),
+						fld[currentGear].FullLoadStationaryTorque(responseCurrent.Engine.EngineSpeed));
+					fcCurrent = GetFCRating(responseCurrent.Engine.EngineSpeed, tqCurrent);
 				}
-				var tqNext = response.EngineTorqueDemand.LimitTo(
-					fld[next.Gear].DragLoadStationaryTorque(response.EngineSpeed),
-					fld[next.Gear].FullLoadStationaryTorque(response.EngineSpeed));
-				var fcNext = GetFCRating(response.EngineSpeed, tqNext);
+				var tqNext = response.Engine.EngineTorqueDemand.LimitTo(
+					fld[next.Gear].DragLoadStationaryTorque(response.Engine.EngineSpeed),
+					fld[next.Gear].FullLoadStationaryTorque(response.Engine.EngineSpeed));
+				var fcNext = GetFCRating(response.Engine.EngineSpeed, tqNext);
 
 				if (reserve < ModelData.TorqueReserve ||
 					!fcNext.IsSmaller(fcCurrent * shiftStrategyParameters.RatingFactorCurrentGear) || !fcNext.IsSmaller(minFc)) {
@@ -379,7 +379,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity, NewtonMeter origInTorque,
 			PerSecond origInAngularVelocity, uint currentGear, Second lastShiftTime, IResponse response1)
 		{
-			if (response1.EngineTorqueDemand.IsSmaller(DeclarationData.GearboxTCU.DragMarginFactor * fld[currentGear].DragLoadStationaryTorque(response1.EngineSpeed))) {
+			if (response1.Engine.EngineTorqueDemand.IsSmaller(DeclarationData.GearboxTCU.DragMarginFactor * fld[currentGear].DragLoadStationaryTorque(response1.Engine.EngineSpeed))) {
 				return null;
 			}
 
@@ -412,18 +412,18 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				var response = RequestDryRunWithGear(absTime, dt, outTorque, outAngularVelocity, next);
 
 				var inAngularVelocity = ModelData.Gears[next.Gear].Ratio * outAngularVelocity;
-				var inTorque = response.EnginePowerRequest / inAngularVelocity;
+				var inTorque = response.Engine.EnginePowerRequest / inAngularVelocity;
 
 				if (!IsAboveUpShiftCurve(next.Gear, inTorque, inAngularVelocity, next.TorqueConverterLocked.Value)) {
 					if (double.IsNaN(fcCurrent)) {
 						var responseCurrent = RequestDryRunWithGear(absTime, dt, outTorque, outAngularVelocity, current);
-						fcCurrent = GetFCRating(responseCurrent.EngineSpeed, responseCurrent.EngineTorqueDemand.LimitTo(
-								fld[currentGear].DragLoadStationaryTorque(responseCurrent.EngineSpeed),
-								fld[currentGear].FullLoadStationaryTorque(responseCurrent.EngineSpeed)));
+						fcCurrent = GetFCRating(responseCurrent.Engine.EngineSpeed, responseCurrent.Engine.EngineTorqueDemand.LimitTo(
+								fld[currentGear].DragLoadStationaryTorque(responseCurrent.Engine.EngineSpeed),
+								fld[currentGear].FullLoadStationaryTorque(responseCurrent.Engine.EngineSpeed)));
 					}
-					var fcNext = GetFCRating(response.EngineSpeed, response.EngineTorqueDemand.LimitTo(
-							fld[next.Gear].DragLoadStationaryTorque(response.EngineSpeed),
-							fld[next.Gear].FullLoadStationaryTorque(response.EngineSpeed)));
+					var fcNext = GetFCRating(response.Engine.EngineSpeed, response.Engine.EngineTorqueDemand.LimitTo(
+							fld[next.Gear].DragLoadStationaryTorque(response.Engine.EngineSpeed),
+							fld[next.Gear].FullLoadStationaryTorque(response.Engine.EngineSpeed)));
 
 					if (fcNext.IsSmaller(fcCurrent * shiftStrategyParameters.RatingFactorCurrentGear) && fcNext.IsSmaller(minFc)) {
 						minFcGear = next;

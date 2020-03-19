@@ -264,23 +264,30 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 				es = new ElectricSystem(container);
 				es.Connect(battery);
-				ctl = new HybridController();
+				ctl = new HybridController(container);
 			}
 
 			// DistanceBasedDrivingCycle --> driver --> vehicle --> wheels 
 			// --> axleGear --> (retarder) --> gearBox --> (retarder) --> clutch --> engine <-- Aux
 			var cycle = new DistanceBasedDrivingCycle(container, data.Cycle);
-			var powertrain = cycle.AddComponent(new Driver(container, data.DriverData, new DefaultDriverStrategy(container)))
+			var powertrain = cycle
+				.AddComponent(new Driver(container, data.DriverData, new DefaultDriverStrategy(container)))
 				.AddComponent(new Vehicle(container, data.VehicleData, data.AirdragData))
 				.AddComponent(new Wheels(container, data.VehicleData.DynamicTyreRadius, data.VehicleData.WheelsInertia))
 				.AddComponent(new Brakes(container))
 				.AddComponent(isHybridVehicle ? ctl : null)
-				.AddComponent(isHybridVehicle ? GetElectricMachine(PowertrainPosition.HybridP4,data.ElectricMachinesData, container, es, ctl) : null)
+				.AddComponent(isHybridVehicle
+					? GetElectricMachine(PowertrainPosition.HybridP4, data.ElectricMachinesData, container, es, ctl)
+					: null)
 				.AddComponent(new AxleGear(container, data.AxleGearData))
-				.AddComponent(isHybridVehicle ? GetElectricMachine(PowertrainPosition.HybridP3, data.ElectricMachinesData, container, es, ctl) : null)
+				.AddComponent(isHybridVehicle
+					? GetElectricMachine(PowertrainPosition.HybridP3, data.ElectricMachinesData, container, es, ctl)
+					: null)
 				.AddComponent(data.AngledriveData != null ? new Angledrive(container, data.AngledriveData) : null)
-				.AddComponent(isHybridVehicle ? GetElectricMachine(PowertrainPosition.HybridP2, data.ElectricMachinesData, container, es, ctl) : null)
-				.AddComponent(GetGearbox(container, data), data.Retarder, container);
+				.AddComponent(GetGearbox(container, data), data.Retarder, container)
+				.AddComponent(isHybridVehicle
+					? GetElectricMachine(PowertrainPosition.HybridP2, data.ElectricMachinesData, container, es, ctl)
+					: null);
 			if (data.GearboxData.Type.ManualTransmission()) {
 				powertrain = powertrain.AddComponent(new Clutch(container, data.EngineData));
 			}
@@ -303,8 +310,8 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 		private IElectricMotor GetElectricMachine(PowertrainPosition pos, IList<Tuple<PowertrainPosition, ElectricMotorData>> electricMachinesData, VehicleContainer container, IElectricSystem es, HybridController ctl)
 		{
-			var motorData = electricMachinesData.First(x => x.Item1 == pos);
-			if (motorData != null) {
+			var motorData = electricMachinesData.FirstOrDefault(x => x.Item1 == pos);
+			if (motorData == null) {
 				return null;
 			}
 

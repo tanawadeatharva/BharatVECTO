@@ -176,10 +176,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			var engineSpeedLimit = GetEngineSpeedLimit(absTime);
 			if (!dryRun && avgEngineSpeed.IsGreater(engineSpeedLimit, Constants.SimulationSettings.LineSearchTolerance)) {
-				return new ResponseEngineSpeedTooHigh() {
+				return new ResponseEngineSpeedTooHigh(this) {
 					DeltaEngineSpeed = avgEngineSpeed - engineSpeedLimit,
-					Source = this,
-					EngineSpeed = angularVelocity
+					Engine = {
+						EngineSpeed = angularVelocity
+					}
 				};
 			}
 
@@ -214,20 +215,21 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			//gearboxFullLoad != null ? -gearboxFullLoad : null, false);
 
 			if (dryRun) {
-				return new ResponseDryRun {
+				return new ResponseDryRun(this) {
 					DeltaFullLoad = deltaFull * avgEngineSpeed,
 					DeltaDragLoad = deltaDrag * avgEngineSpeed,
 					DeltaEngineSpeed = avgEngineSpeed - engineSpeedLimit,
-					EnginePowerRequest = torqueOut * avgEngineSpeed,
-					DynamicFullLoadPower = dynamicFullLoadPower,
-					EngineTorqueDemand = torqueOut,
-					EngineTorqueDemandTotal = totalTorqueDemand,
-					EngineDynamicFullLoadTorque = dynamicFullLoadTorque,
-					EngineStationaryFullLoadTorque = stationaryFullLoadTorque,
-					DragPower = fullDragTorque * avgEngineSpeed,
-					AuxiliariesPowerDemand = auxTorqueDemand * avgEngineSpeed,
-					EngineSpeed = angularVelocity,
-					Source = this,
+					Engine = {
+						EngineSpeed = angularVelocity,
+						EnginePowerRequest = torqueOut * avgEngineSpeed,
+						DynamicFullLoadPower = dynamicFullLoadPower,
+						EngineTorqueDemand = torqueOut,
+						EngineTorqueDemandTotal = totalTorqueDemand,
+						EngineDynamicFullLoadTorque = dynamicFullLoadTorque,
+						EngineStationaryFullLoadTorque = stationaryFullLoadTorque,
+						DragPower = fullDragTorque * avgEngineSpeed,
+						AuxiliariesPowerDemand = auxTorqueDemand * avgEngineSpeed,
+					},
 				};
 			}
 			CurrentState.dt = dt;
@@ -261,54 +263,57 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			if (totalTorqueDemand.IsGreater(0) &&
 				(deltaFull * avgEngineSpeed).IsGreater(0, Constants.SimulationSettings.LineSearchTolerance)) {
 				Log.Debug("requested engine power exceeds fullload power: delta: {0}", deltaFull);
-				return new ResponseOverload {
+				return new ResponseOverload(this) {
 					AbsTime = absTime,
 					Delta = deltaFull * avgEngineSpeed,
-					EnginePowerRequest = totalTorqueDemand * avgEngineSpeed,
-					DynamicFullLoadPower = dynamicFullLoadPower,
-					EngineTorqueDemand = torqueOut,
-					EngineTorqueDemandTotal = totalTorqueDemand,
-					EngineStationaryFullLoadTorque = stationaryFullLoadTorque,
-					EngineDynamicFullLoadTorque = dynamicFullLoadTorque,
-					DragPower = CurrentState.FullDragTorque * avgEngineSpeed,
-					Source = this,
-					AuxiliariesPowerDemand = auxTorqueDemand * avgEngineSpeed,
-					EngineSpeed = angularVelocity,
+					Engine = {
+						EngineSpeed = angularVelocity,
+						EnginePowerRequest = totalTorqueDemand * avgEngineSpeed,
+						DynamicFullLoadPower = dynamicFullLoadPower,
+						EngineTorqueDemand = torqueOut,
+						EngineTorqueDemandTotal = totalTorqueDemand,
+						EngineStationaryFullLoadTorque = stationaryFullLoadTorque,
+						EngineDynamicFullLoadTorque = dynamicFullLoadTorque,
+						DragPower = CurrentState.FullDragTorque * avgEngineSpeed,
+						AuxiliariesPowerDemand = auxTorqueDemand * avgEngineSpeed,
+					},
 				};
 			}
 
 			if (totalTorqueDemand.IsSmaller(0) &&
 				(deltaDrag * avgEngineSpeed).IsSmaller(0, Constants.SimulationSettings.LineSearchTolerance)) {
 				Log.Debug("requested engine power is below drag power: delta: {0}", deltaDrag);
-				return new ResponseUnderload {
+				return new ResponseUnderload(this) {
 					AbsTime = absTime,
 					Delta = deltaDrag * avgEngineSpeed,
-					EnginePowerRequest = totalTorqueDemand * avgEngineSpeed,
-					DynamicFullLoadPower = dynamicFullLoadPower,
-					EngineTorqueDemand = torqueOut,
-					EngineTorqueDemandTotal = totalTorqueDemand,
-					EngineStationaryFullLoadTorque = stationaryFullLoadTorque,
-					EngineDynamicFullLoadTorque = dynamicFullLoadTorque,
-					DragPower = CurrentState.FullDragTorque * avgEngineSpeed,
-					Source = this,
-					AuxiliariesPowerDemand = auxTorqueDemand * avgEngineSpeed,
-					EngineSpeed = angularVelocity,
+					Engine = {
+						EnginePowerRequest = totalTorqueDemand * avgEngineSpeed,
+						DynamicFullLoadPower = dynamicFullLoadPower,
+						EngineTorqueDemand = torqueOut,
+						EngineTorqueDemandTotal = totalTorqueDemand,
+						EngineStationaryFullLoadTorque = stationaryFullLoadTorque,
+						EngineDynamicFullLoadTorque = dynamicFullLoadTorque,
+						DragPower = CurrentState.FullDragTorque * avgEngineSpeed,
+						EngineSpeed = angularVelocity,
+						AuxiliariesPowerDemand = auxTorqueDemand * avgEngineSpeed,
+					},
 				};
 			}
 
 			//UpdateEngineState(CurrentState.EnginePower, avgEngineSpeed);
 
-			return new ResponseSuccess {
-				EnginePowerRequest = totalTorqueDemand * avgEngineSpeed,
-				EngineTorqueDemand = torqueOut,
-				EngineTorqueDemandTotal = totalTorqueDemand,
-				EngineStationaryFullLoadTorque = stationaryFullLoadTorque,
-				EngineDynamicFullLoadTorque = dynamicFullLoadTorque,
-				DynamicFullLoadPower = dynamicFullLoadPower,
-				DragPower = CurrentState.FullDragTorque * avgEngineSpeed,
-				AuxiliariesPowerDemand = auxTorqueDemand * avgEngineSpeed,
-				EngineSpeed = angularVelocity,
-				Source = this
+			return new ResponseSuccess(this) {
+				Engine = {
+					EnginePowerRequest = totalTorqueDemand * avgEngineSpeed,
+					EngineTorqueDemand = torqueOut,
+					EngineTorqueDemandTotal = totalTorqueDemand,
+					EngineStationaryFullLoadTorque = stationaryFullLoadTorque,
+					EngineDynamicFullLoadTorque = dynamicFullLoadTorque,
+					DynamicFullLoadPower = dynamicFullLoadPower,
+					DragPower = CurrentState.FullDragTorque * avgEngineSpeed,
+					EngineSpeed = angularVelocity,
+					AuxiliariesPowerDemand = auxTorqueDemand * avgEngineSpeed,
+				},
 			};
 		}
 
@@ -341,13 +346,14 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			};
 			PreviousState.DynamicFullLoadTorque = PreviousState.StationaryFullLoadTorque;
 
-			return new ResponseSuccess {
-				Source = this,
-				EnginePowerRequest = PreviousState.EnginePower,
-				DynamicFullLoadPower = PreviousState.DynamicFullLoadTorque * PreviousState.EngineSpeed,
-				EngineSpeed = outAngularVelocity,
-				EngineTorqueDemand = outTorque,
-				EngineTorqueDemandTotal = outTorque + auxDemand
+			return new ResponseSuccess(this) {
+				Engine = {
+					EnginePowerRequest = PreviousState.EnginePower,
+					DynamicFullLoadPower = PreviousState.DynamicFullLoadTorque * PreviousState.EngineSpeed,
+					EngineSpeed = outAngularVelocity,
+					EngineTorqueDemand = outTorque,
+					EngineTorqueDemandTotal = outTorque + auxDemand
+				}
 			};
 		}
 
@@ -604,7 +610,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			public IResponse Initialize(NewtonMeter outTorque, PerSecond outAngularVelocity)
 			{
-				return new ResponseSuccess { Source = this };
+				return new ResponseSuccess(this);
 			}
 
 			public void Reset()
@@ -711,7 +717,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 				var auxDemandResponse = RequestPort.Request(absTime, dt, 0.SI<NewtonMeter>(), prevEngineSpeed, true);
 
-				var deltaEnginePower = nextEnginePower - (auxDemandResponse.AuxiliariesPowerDemand ?? 0.SI<Watt>());
+				var deltaEnginePower = nextEnginePower - (auxDemandResponse.Engine.AuxiliariesPowerDemand ?? 0.SI<Watt>());
 				var deltaTorque = deltaEnginePower / prevEngineSpeed;
 				var deltaAngularSpeed = deltaTorque / _engine.ModelData.Inertia * dt;
 

@@ -36,13 +36,12 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			PreviousState.OutTorque = outTorque;
 			PreviousState.InAngularVelocity = outAngularVelocity;
 			PreviousState.InTorque = outTorque;
-			if (NextComponent == null)
-			{
-				return new ResponseSuccess()
-				{
-					Source = this,
-					EnginePowerRequest = outTorque * outAngularVelocity,
-					EngineSpeed = outAngularVelocity
+			if (NextComponent == null) {
+				return new ResponseSuccess(this) {
+					Engine = {
+						EnginePowerRequest = outTorque * outAngularVelocity,
+						EngineSpeed = outAngularVelocity
+					}
 				};
 			}
 			if (!DataBus.IgnitionOn)
@@ -95,7 +94,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					CurrentState.ElectricPowerToBattery = 0.SI<Watt>();
 				var retVal = ForwardRequest(absTime, dt, inTorque, inTorque, outAngularVelocity, dryRun);
 				retVal.ElectricSystem = batteryResponse;
-				retVal.ElectricMotorPowerMech = 0.SI<Watt>();
+				retVal.ElectricMotor.ElectricMotorPowerMech = 0.SI<Watt>();
 				return retVal;
 			}
 
@@ -147,7 +146,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				SetState(inTorque, outAngularVelocity);
 			}
 			var retVal = NextComponent.Request(absTime, dt, inTorque, outAngularVelocity, dryRun);
-			retVal.ElectricMotorPowerMech = (inTorque - outTorque) * avgSpeed;
+			retVal.ElectricMotor.ElectricMotorPowerMech = (inTorque - outTorque) * avgSpeed;
 			return retVal;
 		}
 
@@ -159,10 +158,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				var driveTorque = Control.MaxDriveTorque(avgSpeed, dt);
 				var dragTorque = Control.MaxDragTorque(avgSpeed, dt);
 				var powerDemand = outTorque * avgSpeed;
-				return new ResponseDryRun()
-				{
-					Source = this,
+				return new ResponseDryRun(this) {
+					Engine = { 
 					EngineSpeed = avgSpeed,
+					},
 					DeltaFullLoad = remainingPower, //powerDemand + driveTorque * avgSpeed,
 					DeltaDragLoad = powerDemand + dragTorque * avgSpeed,
 				};
@@ -171,12 +170,14 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			if ((inTorque * avgSpeed).IsEqual(0, Constants.SimulationSettings.LineSearchTolerance))
 			{
 				SetState(inTorque, outAngularVelocity);
-				return new ResponseSuccess()
-				{
-					ElectricMotorPowerMech = (inTorque - outTorque) * avgSpeed,
-					EnginePowerRequest = 0.SI<Watt>(),
-					Source = this,
-					EngineSpeed = outAngularVelocity
+				return new ResponseSuccess(this) {
+					ElectricMotor = {
+						ElectricMotorPowerMech = (inTorque - outTorque) * avgSpeed,
+					},
+					Engine = {
+						EnginePowerRequest = 0.SI<Watt>(),
+						EngineSpeed = outAngularVelocity
+					},
 				};
 			}
 
@@ -184,14 +185,13 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			if (remainingPower > 0)
 			{
-				response = new ResponseOverload() { Delta = remainingPower };
+				response = new ResponseOverload(this) { Delta = remainingPower };
 			}
 			else
 			{
-				response = new ResponseUnderload() { Delta = remainingPower };
+				response = new ResponseUnderload(this) { Delta = remainingPower };
 			}
-			response.Source = this;
-			response.EngineSpeed = avgSpeed;
+			response.Engine.EngineSpeed = avgSpeed;
 			return response;
 		}
 

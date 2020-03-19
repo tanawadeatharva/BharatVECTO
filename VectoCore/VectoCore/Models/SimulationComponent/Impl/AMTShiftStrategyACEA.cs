@@ -338,8 +338,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				0.SI<Second>(), Constants.SimulationSettings.TargetTimeInterval,
 				accRsv, gradient, true);
 
-			if (respAccRsv.EngineSpeed < PowertrainConfig.EngineData.IdleSpeed ||
-				respAccRsv.EngineSpeed > PowertrainConfig.EngineData.FullLoadCurves[0].N95hSpeed) {
+			if (respAccRsv.Engine.EngineSpeed < PowertrainConfig.EngineData.IdleSpeed ||
+				respAccRsv.Engine.EngineSpeed > PowertrainConfig.EngineData.FullLoadCurves[0].N95hSpeed) {
 				return new GearRating(GearRatingCase.E, 0, 0.RPMtoRad());
 			}
 
@@ -350,36 +350,36 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				0.SI<Second>(), Constants.SimulationSettings.TargetTimeInterval,
 				0.SI<MeterPerSquareSecond>(), gradient, true);
 			var engineSpeedHighThreshold = GetEngineSpeedLimitHigh(
-				driveOff, gear, respAccRsv.EngineSpeed, respConstVel.CardanTorque);
-			if (respAccRsv.EngineSpeed < engineSpeedLowThreshold) {
+				driveOff, gear, respAccRsv.Engine.EngineSpeed, respConstVel.Axlegear.CardanTorque);
+			if (respAccRsv.Engine.EngineSpeed < engineSpeedLowThreshold) {
 				return new GearRating(
 					GearRatingCase.D,
-					(engineSpeedLowThreshold - respAccRsv.EngineSpeed).AsRPM, engineSpeedHighThreshold);
+					(engineSpeedLowThreshold - respAccRsv.Engine.EngineSpeed).AsRPM, engineSpeedHighThreshold);
 			}
 
-			if (respAccRsv.EngineSpeed > engineSpeedHighThreshold) {
+			if (respAccRsv.Engine.EngineSpeed > engineSpeedHighThreshold) {
 				return new GearRating(
 					GearRatingCase.D,
-					(respAccRsv.EngineSpeed - engineSpeedHighThreshold).AsRPM, engineSpeedHighThreshold);
+					(respAccRsv.Engine.EngineSpeed - engineSpeedHighThreshold).AsRPM, engineSpeedHighThreshold);
 			}
 
 			ResponseDryRun respDriverDemand = null;
-			if (respAccRsv.EngineTorqueDemandTotal <= respAccRsv.EngineDynamicFullLoadTorque) {
+			if (respAccRsv.Engine.EngineTorqueDemandTotal <= respAccRsv.Engine.EngineDynamicFullLoadTorque) {
 				respDriverDemand = DriverDemandResponse(gradient, driverAccelerationAvg);
 				
 				var fc = PowertrainConfig.EngineData.Fuels.First().ConsumptionMap.GetFuelConsumption(
-					respDriverDemand.EngineTorqueDemandTotal.LimitTo(
-						PowertrainConfig.EngineData.FullLoadCurves[0].DragLoadStationaryTorque(respAccRsv.EngineSpeed),
-						PowertrainConfig.EngineData.FullLoadCurves[0].FullLoadStationaryTorque(respAccRsv.EngineSpeed)),
-					respAccRsv.EngineSpeed);
+					respDriverDemand.Engine.EngineTorqueDemandTotal.LimitTo(
+						PowertrainConfig.EngineData.FullLoadCurves[0].DragLoadStationaryTorque(respAccRsv.Engine.EngineSpeed),
+						PowertrainConfig.EngineData.FullLoadCurves[0].FullLoadStationaryTorque(respAccRsv.Engine.EngineSpeed)),
+					respAccRsv.Engine.EngineSpeed);
 				retVal = new GearRating(
 					GearRatingCase.A,
-					(fc.Value.ConvertToGrammPerHour().Value / VectoMath.Max(respDriverDemand.AxlegearPowerRequest, 1.SI<Watt>())).Value() *
+					(fc.Value.ConvertToGrammPerHour().Value / VectoMath.Max(respDriverDemand.Axlegear.AxlegearPowerRequest, 1.SI<Watt>())).Value() *
 					1e3,
 					engineSpeedHighThreshold);
 			} else {
 				retVal = new GearRating(
-					GearRatingCase.B, (respAccRsv.EnginePowerRequest - respAccRsv.DynamicFullLoadPower).Value(),
+					GearRatingCase.B, (respAccRsv.Engine.EnginePowerRequest - respAccRsv.Engine.DynamicFullLoadPower).Value(),
 					engineSpeedHighThreshold);
 			}
 
@@ -514,8 +514,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					var nextGear = (uint)i;
 					TestContainerGbx.Gear = nextGear;
 					var init = TestContainer.VehiclePort.Initialize(predictedVelocity, gradient);
-					if (init.EngineSpeed > GetEngineSpeedLimitLow(false) &&
-						init.EngineSpeed < upperEngineSpeedLimit) {
+					if (init.Engine.EngineSpeed > GetEngineSpeedLimitLow(false) &&
+						init.Engine.EngineSpeed < upperEngineSpeedLimit) {
 						_nextGear = nextGear;
 						return true;
 					}
@@ -529,8 +529,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					var nextGear = (uint)i;
 					TestContainerGbx.Gear = nextGear;
 					var init = TestContainer.VehiclePort.Initialize(predictedVelocity, gradient);
-					if (init.EngineSpeed > GetEngineSpeedLimitLow(false) &&
-						init.EngineSpeed < upperEngineSpeedLimit) {
+					if (init.Engine.EngineSpeed > GetEngineSpeedLimitLow(false) &&
+						init.Engine.EngineSpeed < upperEngineSpeedLimit) {
 						_nextGear = nextGear;
 						return true;
 					}
@@ -651,8 +651,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			MeterPerSecond velocityAfterGearshift, Radian estimatedGradient, PerSecond engineSpeedLowThreshold)
 		{
 			// get total 'transmission ratio' of powertrain
-			var engineSpeed = responseDriverDemand.EngineSpeed;
-			var vehicleSpeed = responseDriverDemand.VehicleSpeed;
+			var engineSpeed = responseDriverDemand.Engine.EngineSpeed;
+			var vehicleSpeed = responseDriverDemand.Vehicle.VehicleSpeed;
 			var ratio = (vehicleSpeed / engineSpeed).Cast<Meter>();
 
 			var estimatedEngineSpeed = velocityAfterGearshift / ratio;
@@ -661,19 +661,19 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			}
 
 			var averageAccelerationTorque = AverageAccelerationTorqueLookup.Interpolate(
-				responseDriverDemand.EngineSpeed, responseDriverDemand.EngineTorqueDemand);
+				responseDriverDemand.Engine.EngineSpeed, responseDriverDemand.Engine.EngineTorqueDemand);
 
 			TestContainerGbx.Gear = gear;
 			var initResponse = TestContainer.VehiclePort.Initialize(vehicleSpeed, estimatedGradient);
-			var delta = initResponse.EngineTorqueDemand - averageAccelerationTorque;
+			var delta = initResponse.Engine.EngineTorqueDemand - averageAccelerationTorque;
 			var acceleration = SearchAlgorithm.Search(
 				0.SI<MeterPerSquareSecond>(), delta, 0.1.SI<MeterPerSquareSecond>(),
-				getYValue: r => { return (r as AbstractResponse).EngineTorqueDemand - averageAccelerationTorque; },
+				getYValue: r => { return (r as AbstractResponse).Engine.EngineTorqueDemand - averageAccelerationTorque; },
 				evaluateFunction: a => {
 					return TestContainer.VehiclePort.Request(
 						0.SI<Second>(), Constants.SimulationSettings.TargetTimeInterval, a, estimatedGradient, true);
 				},
-				criterion: r => { return ((r as AbstractResponse).EngineTorqueDemand - averageAccelerationTorque).Value(); }
+				criterion: r => { return ((r as AbstractResponse).Engine.EngineTorqueDemand - averageAccelerationTorque).Value(); }
 			);
 
 			var engineAcceleration = (acceleration / ratio).Cast<PerSquareSecond>();

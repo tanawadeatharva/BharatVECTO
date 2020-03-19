@@ -29,42 +29,98 @@
 *   Martin Rexeis, rexeis@ivt.tugraz.at, IVT, Graz University of Technology
 */
 
+using System.Dynamic;
 using TUGraz.VectoCommon.Utils;
 
 namespace TUGraz.VectoCommon.Models
 {
+	public class DriverResponse
+	{
+		public MeterPerSquareSecond Acceleration { get; set; }
+		public OperatingPoint OperatingPoint { get; set; }
+	}
+
+	public abstract class AbstractComponentResponse
+	{
+		public Watt PowerRequest { get; set; }
+	}
+
+	public class EngineResponse : AbstractComponentResponse
+	{
+		public PerSecond EngineSpeed { get; set; }
+
+		public NewtonMeter EngineTorqueDemand { get; set; }
+		public NewtonMeter EngineTorqueDemandTotal { get; set; }
+		public NewtonMeter EngineDynamicFullLoadTorque { get; set; }
+
+		public NewtonMeter EngineStationaryFullLoadTorque { get; set; }
+
+		public Watt DynamicFullLoadPower { get; set; }
+		public Watt DragPower { get; set; }
+
+		public Watt AuxiliariesPowerDemand { get; set; }
+	}
+
+	
+
+	public class ClutchResponse : AbstractComponentResponse { }
+
+	public class GearboxResponse : AbstractComponentResponse { }
+
+	public class AxlegearResponse : AbstractComponentResponse
+	{
+		public NewtonMeter CardanTorque { get; set; }
+	}
+
+	public class AngledriveResponse : AbstractComponentResponse { }
+
+	public class WheelsResponse : AbstractComponentResponse { }
+
+	public class VehicleResponse
+	{
+		public MeterPerSecond VehicleSpeed { get; set; }
+	}
+
+	public class BrakesResponse
+	{
+		public Watt BrakePower { get; set; }
+	}
+
+	public class ElectricMotorResponse
+	{
+		public Watt ElectricMotorPowerMech { get; set; }
+	}
+
 	/// <summary>
 	/// The Interface for a Response. Carries over result data to higher components.
 	/// </summary>
 	public interface IResponse
 	{
+		object Source { get; }
+
 		Second AbsTime { get; set; }
 		Meter SimulationDistance { get; set; }
 		Second SimulationInterval { get; set; }
-		MeterPerSquareSecond Acceleration { get; set; }
-		PerSecond EngineSpeed { get; set; }
-		OperatingPoint OperatingPoint { get; set; }
-		object Source { get; set; }
 
-		Watt EnginePowerRequest { get; set; }
-		Watt ClutchPowerRequest { get; set; }
-		Watt GearboxPowerRequest { get; set; }
-		Watt AxlegearPowerRequest { get; set; }
-		Watt WheelsPowerRequest { get; set; }
-		
-		//Watt VehiclePowerRequest { get; set; }
-		Watt BrakePower { get; set; }
-		Watt AngledrivePowerRequest { get; set; }
+		DriverResponse Driver { get; }
 
-		Watt AuxiliariesPowerDemand { get; set; }
+		EngineResponse Engine { get; }
 
-		NewtonMeter EngineTorqueDemand { get; set; }
-		NewtonMeter EngineTorqueDemandTotal { get; set; }
-		NewtonMeter EngineDynamicFullLoadTorque { get; set; }
-		MeterPerSecond VehicleSpeed { get; set; }
-		NewtonMeter CardanTorque { get; set; }
+		ClutchResponse Clutch { get; }
 
-		Watt ElectricMotorPowerMech { get; set; }
+		GearboxResponse Gearbox { get; }
+
+		AxlegearResponse Axlegear { get; }
+
+		AngledriveResponse Angledrive { get; }
+
+		WheelsResponse Wheels { get; }
+
+		VehicleResponse Vehicle { get; }
+
+		BrakesResponse Brakes { get; }
+
+		ElectricMotorResponse ElectricMotor { get; }
 
 		IElectricSystemResponse ElectricSystem { get; set; }
 	}

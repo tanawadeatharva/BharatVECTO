@@ -205,11 +205,14 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					throw new UnexpectedResponseException("AT-Gearbox.Initialize", r);
 				});
 
-			return new ResponseDryRun {
-				Source = this,
-				EngineSpeed = response.EngineSpeed,
-				EnginePowerRequest = response.EnginePowerRequest,
-				GearboxPowerRequest = outTorque * outAngularVelocity,
+			return new ResponseDryRun(this) {
+				Engine = {
+					EngineSpeed = response.Engine.EngineSpeed,
+					EnginePowerRequest = response.Engine.EnginePowerRequest,
+				},
+				Gearbox = {
+					GearboxPowerRequest = outTorque * outAngularVelocity,
+				}
 			};
 		}
 
@@ -248,11 +251,12 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					continue;
 				}
 				if (ConsiderShiftLosses(_strategy.NextGear, outTorque) && !RequestAfterGearshift) {
-					retVal = new ResponseFailTimeInterval {
-						Source = this,
+					retVal = new ResponseFailTimeInterval(this) {
 						DeltaT = ModelData.PowershiftShiftTime,
-						GearboxPowerRequest =
-							outTorque * (PreviousState.OutAngularVelocity + outAngularVelocity) / 2.0
+						Gearbox = {
+							GearboxPowerRequest =
+								outTorque * (PreviousState.OutAngularVelocity + outAngularVelocity) / 2.0
+						}
 					};
 					RequestAfterGearshift = true;
 					LastShift = absTime;
@@ -263,7 +267,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				}
 			} while (loop && ++count < 2);
 
-			retVal.GearboxPowerRequest = outTorque * (PreviousState.OutAngularVelocity + outAngularVelocity) / 2.0;
+			retVal.Gearbox.GearboxPowerRequest = outTorque * (PreviousState.OutAngularVelocity + outAngularVelocity) / 2.0;
 			return retVal;
 		}
 
@@ -347,7 +351,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			if (!dryRun && retVal is ResponseSuccess && _strategy != null &&
 				_strategy.ShiftRequired(absTime, dt, outTorque, outAngularVelocity, inTorque, inAngularVelocity, Gear,
 					LastShift, retVal)) {
-				retVal = new ResponseGearShift { Source = this };
+				retVal = new ResponseGearShift(this);
 				//RequestAfterGearshift = false;
 			}
 
@@ -360,35 +364,38 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			var avgAngularVelocity = (PreviousState.OutAngularVelocity + outAngularVelocity) / 2.0;
 			if (dryRun) {
 				// if gearbox is disengaged the 0[W]-line is the limit for drag and full load.
-				return new ResponseDryRun {
-					Source = this,
-					GearboxPowerRequest = outTorque * avgAngularVelocity,
+				return new ResponseDryRun(this) {
+					Gearbox = {
+						GearboxPowerRequest = outTorque * avgAngularVelocity,
+					},
 					DeltaDragLoad = outTorque * avgAngularVelocity,
 					DeltaFullLoad = outTorque * avgAngularVelocity,
 				};
 			}
 			if ((outTorque * avgAngularVelocity).IsGreater(0.SI<Watt>(),
 				Constants.SimulationSettings.LineSearchTolerance)) {
-				return new ResponseOverload {
-					Source = this,
+				return new ResponseOverload(this) {
 					Delta = outTorque * avgAngularVelocity,
-					GearboxPowerRequest = outTorque * avgAngularVelocity
+					Gearbox = {
+						GearboxPowerRequest = outTorque * avgAngularVelocity
+					}
 				};
 			}
 
 			if ((outTorque * avgAngularVelocity).IsSmaller(0.SI<Watt>(),
 				Constants.SimulationSettings.LineSearchTolerance)) {
-				return new ResponseUnderload {
-					Source = this,
+				return new ResponseUnderload(this) {
 					Delta = outTorque * avgAngularVelocity,
-					GearboxPowerRequest = outTorque * avgAngularVelocity
+					Gearbox = {
+						GearboxPowerRequest = outTorque * avgAngularVelocity
+					}
 				};
 			}
 
 			Log.Debug("Invoking IdleController...");
 
 			var retval = IdleController.Request(absTime, dt, 0.SI<NewtonMeter>(), null);
-			retval.ClutchPowerRequest = 0.SI<Watt>();
+			retval.Clutch.ClutchPowerRequest = 0.SI<Watt>();
 
 			// no dry-run - update state
 			var effectiveRatio = ModelData.Gears[Gear].Ratio;
@@ -403,7 +410,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				Extrapolated = false,
 				Value = 0.SI<NewtonMeter>()
 			};
-			TorqueConverter.Locked(DataBus.VehicleStopped ? 0.SI<NewtonMeter>() : CurrentState.InTorque, retval.EngineSpeed,
+			TorqueConverter.Locked(DataBus.VehicleStopped ? 0.SI<NewtonMeter>() : CurrentState.InTorque, retval.Engine.EngineSpeed,
 				CurrentState.InTorque,
 				outAngularVelocity * effectiveRatio);
 

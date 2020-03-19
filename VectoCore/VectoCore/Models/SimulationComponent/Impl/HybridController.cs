@@ -1,10 +1,16 @@
-﻿using TUGraz.VectoCommon.Utils;
+﻿using TUGraz.VectoCommon.Models;
+using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Models.Connector.Ports;
+using TUGraz.VectoCore.Models.Simulation;
+using TUGraz.VectoCore.OutputData;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 {
-	public class HybridController : IElectricMotorControl, IPowerTrainComponent
+	public class HybridController : StatefulProviderComponent<HybridController.HybridControllerState, ITnOutPort, ITnInPort, ITnOutPort>, IPowerTrainComponent, ITnInPort, ITnOutPort, IElectricMotorControl
 	{
+		public HybridController(IVehicleContainer container) : base(container) { }
+
+
 		public NewtonMeter MechanicalAssistPower(Second absTime, Second dt, NewtonMeter outTorque, PerSecond prevOutAngularVelocity,
 			PerSecond currOutAngularVelocity, bool dryRun)
 		{
@@ -21,14 +27,26 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			throw new System.NotImplementedException();
 		}
 
-		public ITnInPort InPort()
+
+		
+		protected override void DoWriteModalResults(Second time, Second simulationInterval, IModalDataContainer container)
 		{
-			throw new System.NotImplementedException();
+			
+		}	
+		
+		public class HybridControllerState { }
+
+		public IResponse Request(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity, bool dryRun = false)
+		{
+			return NextComponent.Request(absTime, dt, outTorque, outAngularVelocity);
 		}
 
-		public ITnOutPort OutPort()
+		public IResponse Initialize(NewtonMeter outTorque, PerSecond outAngularVelocity)
 		{
-			throw new System.NotImplementedException();
+
+			return NextComponent.Initialize(outTorque, outAngularVelocity);
 		}
 	}
+
+
 }
