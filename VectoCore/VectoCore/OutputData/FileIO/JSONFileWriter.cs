@@ -111,7 +111,7 @@ public class JSONFileWriter : IOutputFileWriter
 		if ((eng.WHRType & WHRType.ElectricalOutput) != 0) {
 			whrCF.Add("Electrical", GetWhr(eng.EngineModes.First().WasteHeatRecoveryDataElectrical));
 		}
-		if ((eng.WHRType & WHRType.MechanicalOutputICE) != 0) {
+		if ((eng.WHRType & WHRType.MechanicalOutputDrivetrain) != 0) {
 			whrCF.Add("Mechanical", GetWhr(eng.EngineModes.First().WasteHeatRecoveryDataMechanical));
 		}
 
@@ -315,6 +315,7 @@ public class JSONFileWriter : IOutputFileWriter
 		body["EngineStopStart"] = vehicle.ADAS.EngineStopStart;
 		body["EcoRoll"] = vehicle.ADAS.EcoRoll.ToString();
 		body["PredictiveCruiseControl"] = vehicle.ADAS.PredictiveCruiseControl.ToString();
+		body["ATEcoRollReleaseLockupClutch"] = vehicle.ADAS.ATEcoRollReleaseLockupClutch.HasValue ? vehicle.ADAS.ATEcoRollReleaseLockupClutch.Value : false;
 
 		if (airdrag.AirDragArea != null)
 			body["CdA"] = airdrag.AirDragArea.Value();
@@ -356,6 +357,12 @@ public class JSONFileWriter : IOutputFileWriter
 		body.Add(
 			"GearboxFile",
 			GetRelativePath(input.JobInputData.Vehicle.Components.GearboxInputData.DataSource.SourceFile, basePath));
+
+		if (!job.SavedInDeclarationMode) {
+			body.Add("TCU", GetRelativePath(input.DriverInputData.GearshiftInputData.Source, basePath));
+			
+		}
+		body.Add("ShiftStrategy", input.JobInputData.ShiftStrategy);
 
 		var aux = job.Vehicle.Components.AuxiliaryInputData;
 
@@ -400,9 +407,18 @@ public class JSONFileWriter : IOutputFileWriter
 			body.Add("EngineStopStartMaxOffTimespan", driver.EngineStopStartData.MaxEngineOffTimespan.Value());
 			body.Add("EngineStopStartUtilityFactor", driver.EngineStopStartData.UtilityFactor);
 
-			body.Add("EcoRollMinSpeed", driver.EcoRollData.MinSpeed);
-			body.Add("EcoRollActivationDelay", driver.EcoRollData.ActivationDelay);
-			body.Add("EcoRollUnderspeedThreshold", driver.EcoRollData.UnderspeedThreshold);
+			body.Add("EcoRollMinSpeed", driver.EcoRollData.MinSpeed.AsKmph);
+			body.Add("EcoRollActivationDelay", driver.EcoRollData.ActivationDelay.Value());
+			body.Add("EcoRollUnderspeedThreshold", driver.EcoRollData.UnderspeedThreshold.AsKmph);
+
+			body.Add("EcoRollMaxAcceleration", driver.EcoRollData.AccelerationUpperLimit.Value());
+			body.Add("PCCEnableSpeed", driver.PCCData.PCCEnabledSpeed.AsKmph);
+			body.Add("PCCMinSpeed", driver.PCCData.MinSpeed.AsKmph);
+			body.Add("PCCUnderspeed", driver.PCCData.Underspeed.AsKmph);
+			body.Add("PCCOverSpeed", driver.PCCData.OverspeedUseCase3.AsKmph);
+			body.Add("PCCPreviewDistanceUC1", driver.PCCData.PreviewDistanceUseCase1.Value());
+			body.Add("PCCPreviewDistanceUC2", driver.PCCData.PreviewDistanceUseCase2.Value());
+
 		}
 
 		// body.Add("StartStop", New Dictionary(Of String, Object) From {
