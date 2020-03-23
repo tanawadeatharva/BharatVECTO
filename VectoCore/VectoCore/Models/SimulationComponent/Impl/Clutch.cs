@@ -33,6 +33,7 @@ using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.Models.Connector.Ports;
+using TUGraz.VectoCore.Models.Connector.Ports.Impl;
 using TUGraz.VectoCore.Models.Simulation;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.DataBus;
@@ -96,12 +97,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		{
 			firstInitialize = false;
 			if (!DataBus.ClutchClosed(absTime) && !dryRun) {
-				Log.Debug("Invoking IdleController...");
-				var retval = IdleController.Request(absTime, dt, outTorque, null, dryRun);
-				retval.Clutch.PowerRequest = 0.SI<Watt>();
-				CurrentState.SetState(0.SI<NewtonMeter>(), retval.Engine.EngineSpeed, outTorque, outAngularVelocity);
-				CurrentState.ClutchLoss = 0.SI<Watt>();
-				return retval;
+				return HandleClutchOpen(absTime, dt, outTorque, outAngularVelocity, dryRun);
 			}
 
 			if (IdleController != null) {
@@ -112,6 +108,47 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				Formulas.TorqueToPower(outTorque, outAngularVelocity));
 			
 			return HandleClutchClosed(absTime, dt, outTorque, outAngularVelocity, dryRun);
+		}
+
+		private IResponse HandleClutchOpen(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity,
+			bool dryRun)
+		{
+			var avgOutAngularVelocity = (PreviousState.OutAngularVelocity + outAngularVelocity) / 2.0;
+			if (dryRun)
+			{
+				var delta = outTorque * avgOutAngularVelocity;
+				return new ResponseDryRun(this)
+				{
+					Gearbox = { PowerRequest = delta },
+					DeltaDragLoad = delta,
+					DeltaFullLoad = delta,
+					Clutch = { PowerRequest = delta}
+				};
+			}
+			if ((outTorque * avgOutAngularVelocity).IsGreater(0.SI<Watt>(), Constants.SimulationSettings.LineSearchTolerance))
+			{
+				return new ResponseOverload(this)
+				{
+					Delta = outTorque * avgOutAngularVelocity,
+					Clutch = {PowerRequest = outTorque * avgOutAngularVelocity}
+				};
+			}
+
+			if ((outTorque * avgOutAngularVelocity).IsSmaller(0.SI<Watt>(), Constants.SimulationSettings.LineSearchTolerance))
+			{
+				return new ResponseUnderload(this)
+				{
+					Delta = outTorque * avgOutAngularVelocity,
+					Clutch = { PowerRequest = outTorque * avgOutAngularVelocity}
+				};
+			}
+
+			Log.Debug("Invoking IdleController...");
+			var retval = IdleController.Request(absTime, dt, outTorque, null, dryRun);
+			retval.Clutch.PowerRequest = 0.SI<Watt>();
+			CurrentState.SetState(0.SI<NewtonMeter>(), retval.Engine.EngineSpeed, outTorque, outAngularVelocity);
+			CurrentState.ClutchLoss = 0.SI<Watt>();
+			return retval;
 		}
 
 		protected virtual IResponse HandleClutchClosed(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity, bool dryRun) 

@@ -16,7 +16,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent
 
 		#region Overrides of Clutch
 
-
 		public override IResponse Initialize(NewtonMeter outTorque, PerSecond outAngularVelocity)
 		{
 			if (ClutchOpen)
