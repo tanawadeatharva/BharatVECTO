@@ -43,8 +43,8 @@ using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 {
-	public class Gearbox : AbstractGearbox<GearboxState>
-	{
+	public class Gearbox : AbstractGearbox<GearboxState>, IHybridControlledGearbox
+	{ 
 		/// <summary>
 		/// The shift strategy.
 		/// </summary>
@@ -61,6 +61,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		protected internal bool Disengaged = true;
 
 		protected internal GearInfo _nextGear;
+		private Second _overrideDisengage;
 
 		public Second LastUpshift { get; protected internal set; }
 
@@ -71,11 +72,13 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			get { return _strategy?.NextGear ?? _nextGear; }
 		}
 
-		public override bool ClutchClosed(Second absTime)
+		public override bool GearEngaged(Second absTime)
 		{
-			return !DisengageGearbox && EngageTime.IsSmallerOrEqual(absTime, ModelData.TractionInterruption / 20);
+			return !DisengageGearbox && (_overrideDisengage == null || !_overrideDisengage.IsEqual(absTime)) &&
+					EngageTime.IsSmallerOrEqual(absTime, ModelData.TractionInterruption / 20);
 		}
 
+		// controlled by driver (PCC / EcoRoll)
 		public override bool DisengageGearbox { get; set; }
 
 		public Gearbox(IVehicleContainer container, IShiftStrategy strategy, VectoRunData runData) : base(container, runData)
@@ -153,17 +156,17 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			Gear = oldGear;
 			return new ResponseDryRun(this) {
 				Engine = {
-					EnginePowerRequest = response.Engine.EnginePowerRequest,
+					PowerRequest = response.Engine.PowerRequest,
 					EngineSpeed = response.Engine.EngineSpeed,
 					DynamicFullLoadPower = response.Engine.DynamicFullLoadPower,
 				},
 				Clutch = {
-					ClutchPowerRequest = response.Clutch.ClutchPowerRequest,
+					PowerRequest = response.Clutch.PowerRequest,
 				},
 				Gearbox = {
-					GearboxPowerRequest = outTorque * outAngularVelocity,
+					PowerRequest = outTorque * outAngularVelocity,
 				},
-				DeltaFullLoad = response.Engine.EnginePowerRequest - fullLoad
+				DeltaFullLoad = response.Engine.PowerRequest - fullLoad
 			};
 		}
 
@@ -194,9 +197,18 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				EngageTime = absTime + dt;
 			}
 
-			if (ClutchClosed(absTime) && Disengaged && !outAngularVelocity.IsEqual(0)) {
+			if (GearEngaged(absTime) && Disengaged && !outAngularVelocity.IsEqual(0)) {
 				ReEngageGear(absTime, dt, outTorque, outAngularVelocity);
 				Log.Debug("Gearbox engaged gear {0}", Gear);
+			}
+			if (_overrideDisengage != null && (!_strategy?.CheckGearshiftRequired ?? false ) && !dryRun) {
+				var changeGear = _strategy?.ShiftRequired(absTime, dt, outTorque, outAngularVelocity,
+					outTorque / ModelData.Gears[Gear].Ratio, outAngularVelocity * ModelData.Gears[Gear].Ratio, Gear,
+					EngageTime, null) ?? false;
+				if (changeGear)
+				{
+					ReEngageGear(absTime, dt, outTorque, outAngularVelocity);
+				}
 			}
 
 			var gear = Disengaged ? NextGear.Gear : Gear;
@@ -232,7 +244,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				return RequestGearDisengaged(absTime, dt, outTorque, outAngularVelocity, inTorque, dryRun);
 			}
 
-			return ClutchClosed(absTime)
+			return GearEngaged(absTime)
 				? RequestGearEngaged(absTime, dt, outTorque, outAngularVelocity, inTorque, inTorqueLossResult, inertiaTorqueLossOut, dryRun)
 				: RequestGearDisengaged(absTime, dt, outTorque, outAngularVelocity, inTorque, dryRun);
 		}
@@ -270,7 +282,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				var delta = inTorque * avgInAngularVelocity;
 				return new ResponseDryRun(this) {
 					Gearbox = {
-						GearboxPowerRequest = delta,
+						PowerRequest = delta,
 					},
 					DeltaDragLoad = delta,
 					DeltaFullLoad = delta,
@@ -284,7 +296,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				return new ResponseFailTimeInterval(this) {
 					DeltaT = EngageTime - absTime,
 					Gearbox = {
-						GearboxPowerRequest = outTorque * (PreviousState.OutAngularVelocity + outAngularVelocity) / 2.0
+						PowerRequest = outTorque * (PreviousState.OutAngularVelocity + outAngularVelocity) / 2.0
 					}
 				};
 			}
@@ -300,7 +312,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				return new ResponseOverload(this) {
 					Delta = inTorque * avgInAngularVelocity,
 					Gearbox = {
-						GearboxPowerRequest = inTorque * avgInAngularVelocity
+						PowerRequest = inTorque * avgInAngularVelocity
 					}
 				};
 			}
@@ -309,7 +321,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				return new ResponseUnderload(this) {
 					Delta = inTorque * avgInAngularVelocity,
 					Gearbox = {
-						GearboxPowerRequest = inTorque * avgInAngularVelocity
+						PowerRequest = inTorque * avgInAngularVelocity
 					}
 				};
 			}
@@ -328,7 +340,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			//CurrentState.InAngularVelocity = response.EngineSpeed;
 
-			response.Gearbox.GearboxPowerRequest = outTorque * avgAngularVelocity;
+			response.Gearbox.PowerRequest = outTorque * avgAngularVelocity;
 
 			return response;
 		}
@@ -354,7 +366,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			
 			if (dryRun) {
 				var dryRunResponse = NextComponent.Request(absTime, dt, inTorque, inAngularVelocity, true);
-				dryRunResponse.Gearbox.GearboxPowerRequest = outTorque * (PreviousState.OutAngularVelocity + outAngularVelocity) / 2.0;
+				dryRunResponse.Gearbox.PowerRequest = outTorque * (PreviousState.OutAngularVelocity + outAngularVelocity) / 2.0;
 				return dryRunResponse;
 			}
 
@@ -366,6 +378,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					response.Engine.EngineSpeed, Gear, EngageTime, response) ?? false;
 
 				if (shiftRequired) {
+					if (_overrideDisengage != null)
+					{
+						EngageTime = absTime;
+						return RequestGearEngaged(absTime, dt, outTorque, outAngularVelocity, inTorque, inTorqueLossResult, inertiaTorqueLossOut, dryRun);
+					}
 					EngageTime = absTime + ModelData.TractionInterruption;
 
 					Log.Debug("Gearbox is shifting. absTime: {0}, dt: {1}, interuptionTime: {2}, out: ({3}, {4}), in: ({5}, {6})",
@@ -379,14 +396,14 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					return new ResponseGearShift(this) {
 						SimulationInterval = ModelData.TractionInterruption,
 						Gearbox = {
-							GearboxPowerRequest =
+							PowerRequest =
 								outTorque * (PreviousState.OutAngularVelocity + outAngularVelocity) / 2.0,
 						},
 						Engine = {
 							EngineSpeed = response.Engine.EngineSpeed,
 							EngineTorqueDemand = response.Engine.EngineTorqueDemand,
 							EngineTorqueDemandTotal = response.Engine.EngineTorqueDemandTotal,
-							EnginePowerRequest = response.Engine.EnginePowerRequest
+							PowerRequest = response.Engine.PowerRequest
 						}
 					};
 				}
@@ -406,7 +423,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			// end critical section
 
 
-			response.Gearbox.GearboxPowerRequest = outTorque * (PreviousState.OutAngularVelocity + CurrentState.OutAngularVelocity) / 2.0;
+			response.Gearbox.PowerRequest = outTorque * (PreviousState.OutAngularVelocity + CurrentState.OutAngularVelocity) / 2.0;
 
 			return response;
 		}
@@ -464,7 +481,20 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				Disengaged = true;
 				EngageTime = -double.MaxValue.SI<Second>();
 			}
+			if (GearEngaged(DataBus.AbsTime))
+			{
+				_overrideDisengage = null;
+			}
 			base.DoCommitSimulationStep();
+		}
+
+		public bool SwitchToNeutral
+		{
+			set
+			{
+				_overrideDisengage = value ? DataBus.AbsTime : null;
+				Disengaged = value;
+			}
 		}
 	}
 }

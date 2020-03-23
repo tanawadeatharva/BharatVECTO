@@ -39,7 +39,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			if (NextComponent == null) {
 				return new ResponseSuccess(this) {
 					Engine = {
-						EnginePowerRequest = outTorque * outAngularVelocity,
+						PowerRequest = outTorque * outAngularVelocity,
 						EngineSpeed = outAngularVelocity
 					}
 				};
@@ -175,7 +175,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 						ElectricMotorPowerMech = (inTorque - outTorque) * avgSpeed,
 					},
 					Engine = {
-						EnginePowerRequest = 0.SI<Watt>(),
+						PowerRequest = 0.SI<Watt>(),
 						EngineSpeed = outAngularVelocity
 					},
 				};

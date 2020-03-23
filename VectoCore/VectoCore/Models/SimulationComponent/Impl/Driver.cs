@@ -744,7 +744,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					var nextResp = NextComponent.Request(absTime, operatingPoint.SimulationInterval,
 						operatingPoint.Acceleration,
 						gradient, true);
-					deltaPower = nextResp.Gearbox.GearboxPowerRequest;
+					deltaPower = nextResp.Gearbox.PowerRequest;
 				}).
 				Case<ResponseEngineSpeedTooHigh>(r => {
 					IterationStatistics.Increment(this, "SearchBrakingPower");
@@ -752,10 +752,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					var nextResp = NextComponent.Request(absTime, operatingPoint.SimulationInterval,
 						operatingPoint.Acceleration,
 						gradient, true);
-					deltaPower = nextResp.Gearbox.GearboxPowerRequest;
+					deltaPower = nextResp.Gearbox.PowerRequest;
 				}).
 				Case<ResponseUnderload>(r =>
-					deltaPower = DataBus.ClutchClosed(absTime) ? r.Delta : r.Gearbox.GearboxPowerRequest).
+					deltaPower = DataBus.ClutchClosed(absTime) ? r.Delta : r.Gearbox.PowerRequest).
 				Default(
 					r => {
 						throw new UnexpectedResponseException("cannot use response for searching braking power!", r);
@@ -766,7 +766,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					deltaPower.Abs() * (DataBus.GearboxType.AutomaticTransmission() ? 0.5 : 1),
 					getYValue: result => {
 						var response = (ResponseDryRun)result;
-						return DataBus.ClutchClosed(absTime) ? response.DeltaDragLoad : response.Gearbox.GearboxPowerRequest;
+						return DataBus.ClutchClosed(absTime) ? response.DeltaDragLoad : response.Gearbox.PowerRequest;
 					},
 					evaluateFunction: x => {
 						DataBus.BrakePower = x;
@@ -782,7 +782,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 						var response = (ResponseDryRun)result;
 						var delta = DataBus.ClutchClosed(absTime)
 							? response.DeltaDragLoad
-							: response.Gearbox.GearboxPowerRequest;
+							: response.Gearbox.PowerRequest;
 						return delta.Value();
 					},
 					forceLineSearch: DataBus.GearboxType.AutomaticTransmission() && !DataBus.TCLocked);
@@ -816,7 +816,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 						if (searchEngineSpeed) {
 							return r.DeltaEngineSpeed * 1.SI<NewtonMeter>();
 						}
-						return actionRoll ? r.Gearbox.GearboxPowerRequest : (coastingOrRoll ? r.DeltaDragLoad : r.DeltaFullLoad);
+						return actionRoll ? r.Gearbox.PowerRequest : (coastingOrRoll ? r.DeltaDragLoad : r.DeltaFullLoad);
 					},
 					evaluateFunction:
 						acc => {
@@ -852,7 +852,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 							return r.DeltaEngineSpeed.Value();
 						}
 						delta = actionRoll
-							? r.Gearbox.GearboxPowerRequest
+							? r.Gearbox.PowerRequest
 							: (coastingOrRoll ? r.DeltaDragLoad : r.DeltaFullLoad);
 						return delta.Value();
 					},
@@ -881,9 +881,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			Watt origDelta = null;
 			if (actionRoll) {
 				initialResponse.Switch().
-					Case<ResponseDryRun>(r => origDelta = r.Gearbox.GearboxPowerRequest).
+					Case<ResponseDryRun>(r => origDelta = r.Gearbox.PowerRequest).
 					Case<ResponseOverload>(r => origDelta = r.Delta).
-					Case<ResponseFailTimeInterval>(r => origDelta = r.Gearbox.GearboxPowerRequest).
+					Case<ResponseFailTimeInterval>(r => origDelta = r.Gearbox.PowerRequest).
 					Default(r => {
 						throw new UnexpectedResponseException("SearchOperatingPoint: Unknown response type.", r);
 					});

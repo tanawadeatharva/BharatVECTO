@@ -221,7 +221,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					DeltaEngineSpeed = avgEngineSpeed - engineSpeedLimit,
 					Engine = {
 						EngineSpeed = angularVelocity,
-						EnginePowerRequest = torqueOut * avgEngineSpeed,
+						PowerRequest = torqueOut * avgEngineSpeed,
 						DynamicFullLoadPower = dynamicFullLoadPower,
 						EngineTorqueDemand = torqueOut,
 						EngineTorqueDemandTotal = totalTorqueDemand,
@@ -268,7 +268,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					Delta = deltaFull * avgEngineSpeed,
 					Engine = {
 						EngineSpeed = angularVelocity,
-						EnginePowerRequest = totalTorqueDemand * avgEngineSpeed,
+						PowerRequest = totalTorqueDemand * avgEngineSpeed,
 						DynamicFullLoadPower = dynamicFullLoadPower,
 						EngineTorqueDemand = torqueOut,
 						EngineTorqueDemandTotal = totalTorqueDemand,
@@ -287,7 +287,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					AbsTime = absTime,
 					Delta = deltaDrag * avgEngineSpeed,
 					Engine = {
-						EnginePowerRequest = totalTorqueDemand * avgEngineSpeed,
+						PowerRequest = totalTorqueDemand * avgEngineSpeed,
 						DynamicFullLoadPower = dynamicFullLoadPower,
 						EngineTorqueDemand = torqueOut,
 						EngineTorqueDemandTotal = totalTorqueDemand,
@@ -304,7 +304,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			return new ResponseSuccess(this) {
 				Engine = {
-					EnginePowerRequest = totalTorqueDemand * avgEngineSpeed,
+					PowerRequest = totalTorqueDemand * avgEngineSpeed,
 					EngineTorqueDemand = torqueOut,
 					EngineTorqueDemandTotal = totalTorqueDemand,
 					EngineStationaryFullLoadTorque = stationaryFullLoadTorque,
@@ -348,7 +348,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			return new ResponseSuccess(this) {
 				Engine = {
-					EnginePowerRequest = PreviousState.EnginePower,
+					PowerRequest = PreviousState.EnginePower,
 					DynamicFullLoadPower = PreviousState.DynamicFullLoadTorque * PreviousState.EngineSpeed,
 					EngineSpeed = outAngularVelocity,
 					EngineTorqueDemand = outTorque,

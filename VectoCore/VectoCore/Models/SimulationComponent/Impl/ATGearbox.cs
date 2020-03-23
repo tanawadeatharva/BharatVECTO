@@ -118,7 +118,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		#endregion
 
-		public override bool ClutchClosed(Second absTime)
+		public override bool GearEngaged(Second absTime)
 		{
 			return absTime.IsGreater(DataBus.AbsTime) ||
 					!(CurrentState.Disengaged || (DataBus.DriverBehavior == DrivingBehavior.Halted || (DisengageGearbox && !ModelData.ATEcoRollReleaseLockupClutch)));
@@ -208,10 +208,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			return new ResponseDryRun(this) {
 				Engine = {
 					EngineSpeed = response.Engine.EngineSpeed,
-					EnginePowerRequest = response.Engine.EnginePowerRequest,
+					PowerRequest = response.Engine.PowerRequest,
 				},
 				Gearbox = {
-					GearboxPowerRequest = outTorque * outAngularVelocity,
+					PowerRequest = outTorque * outAngularVelocity,
 				}
 			};
 		}
@@ -254,7 +254,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					retVal = new ResponseFailTimeInterval(this) {
 						DeltaT = ModelData.PowershiftShiftTime,
 						Gearbox = {
-							GearboxPowerRequest =
+							PowerRequest =
 								outTorque * (PreviousState.OutAngularVelocity + outAngularVelocity) / 2.0
 						}
 					};
@@ -267,7 +267,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				}
 			} while (loop && ++count < 2);
 
-			retVal.Gearbox.GearboxPowerRequest = outTorque * (PreviousState.OutAngularVelocity + outAngularVelocity) / 2.0;
+			retVal.Gearbox.PowerRequest = outTorque * (PreviousState.OutAngularVelocity + outAngularVelocity) / 2.0;
 			return retVal;
 		}
 
@@ -366,7 +366,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				// if gearbox is disengaged the 0[W]-line is the limit for drag and full load.
 				return new ResponseDryRun(this) {
 					Gearbox = {
-						GearboxPowerRequest = outTorque * avgAngularVelocity,
+						PowerRequest = outTorque * avgAngularVelocity,
 					},
 					DeltaDragLoad = outTorque * avgAngularVelocity,
 					DeltaFullLoad = outTorque * avgAngularVelocity,
@@ -377,7 +377,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				return new ResponseOverload(this) {
 					Delta = outTorque * avgAngularVelocity,
 					Gearbox = {
-						GearboxPowerRequest = outTorque * avgAngularVelocity
+						PowerRequest = outTorque * avgAngularVelocity
 					}
 				};
 			}
@@ -387,7 +387,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				return new ResponseUnderload(this) {
 					Delta = outTorque * avgAngularVelocity,
 					Gearbox = {
-						GearboxPowerRequest = outTorque * avgAngularVelocity
+						PowerRequest = outTorque * avgAngularVelocity
 					}
 				};
 			}
@@ -395,7 +395,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			Log.Debug("Invoking IdleController...");
 
 			var retval = IdleController.Request(absTime, dt, 0.SI<NewtonMeter>(), null);
-			retval.Clutch.ClutchPowerRequest = 0.SI<Watt>();
+			retval.Clutch.PowerRequest = 0.SI<Watt>();
 
 			// no dry-run - update state
 			var effectiveRatio = ModelData.Gears[Gear].Ratio;

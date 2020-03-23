@@ -145,7 +145,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		}
 
 
-		public override bool ShiftRequired(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity, NewtonMeter inTorque, PerSecond inAngularVelocity, uint gear, Second lastShiftTime, IResponse response)
+		protected override bool DoCheckShiftRequired(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity, NewtonMeter inTorque, PerSecond inAngularVelocity, uint gear, Second lastShiftTime, IResponse response)
 		{
 			var cardanDemand = DataBus.CurrentAxleDemand;
 			var currentCardanPower = cardanDemand.Item1 * cardanDemand.Item2;
@@ -374,12 +374,12 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					respAccRsv.Engine.EngineSpeed);
 				retVal = new GearRating(
 					GearRatingCase.A,
-					(fc.Value.ConvertToGrammPerHour().Value / VectoMath.Max(respDriverDemand.Axlegear.AxlegearPowerRequest, 1.SI<Watt>())).Value() *
+					(fc.Value.ConvertToGrammPerHour().Value / VectoMath.Max(respDriverDemand.Axlegear.PowerRequest, 1.SI<Watt>())).Value() *
 					1e3,
 					engineSpeedHighThreshold);
 			} else {
 				retVal = new GearRating(
-					GearRatingCase.B, (respAccRsv.Engine.EnginePowerRequest - respAccRsv.Engine.DynamicFullLoadPower).Value(),
+					GearRatingCase.B, (respAccRsv.Engine.PowerRequest - respAccRsv.Engine.DynamicFullLoadPower).Value(),
 					engineSpeedHighThreshold);
 			}
 

@@ -288,11 +288,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 				//var response = RequestDryRunWithGear(absTime, dt, vehicleSpeedPostShift, DataBus.DriverAcceleration, next);
 
-				if (!response.Engine.EnginePowerRequest.IsSmaller(pNextGearMax)) {
+				if (!response.Engine.PowerRequest.IsSmaller(pNextGearMax)) {
 					continue;
 				}
 
-				var inTorque = response.Engine.EnginePowerRequest / inAngularVelocity;
+				var inTorque = response.Engine.PowerRequest / inAngularVelocity;
 
 				// if next gear supplied enough power reserve: take it
 				// otherwise take
@@ -300,8 +300,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					continue;
 				}
 
-				var fullLoadPower = response.Engine.EnginePowerRequest - response.DeltaFullLoad;
-				var reserve = 1 - response.Engine.EnginePowerRequest / fullLoadPower;
+				var fullLoadPower = response.Engine.PowerRequest - response.DeltaFullLoad;
+				var reserve = 1 - response.Engine.PowerRequest / fullLoadPower;
 
 				if (reserve < ModelData.TorqueReserve) {
 					var accelerationFactor = outAngularVelocity * ModelData.Gears[currentGear].Ratio < fld[0].NTq98hSpeed
@@ -319,8 +319,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					response = RequestDryRunWithGear(absTime, dt, reducedTorque, outAngularVelocity, next);
 
 					//response = RequestDryRunWithGear(absTime, dt, vehicleSpeedPostShift, DataBus.DriverAcceleration * accelerationFactor, next);
-					fullLoadPower = response.Engine.EnginePowerRequest - response.DeltaFullLoad;
-					reserve = 1 - response.Engine.EnginePowerRequest / fullLoadPower;
+					fullLoadPower = response.Engine.PowerRequest - response.DeltaFullLoad;
+					reserve = 1 - response.Engine.PowerRequest / fullLoadPower;
 					if (reserve < ModelData.TorqueReserve) {
 						continue;
 					}
@@ -412,7 +412,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				var response = RequestDryRunWithGear(absTime, dt, outTorque, outAngularVelocity, next);
 
 				var inAngularVelocity = ModelData.Gears[next.Gear].Ratio * outAngularVelocity;
-				var inTorque = response.Engine.EnginePowerRequest / inAngularVelocity;
+				var inTorque = response.Engine.PowerRequest / inAngularVelocity;
 
 				if (!IsAboveUpShiftCurve(next.Gear, inTorque, inAngularVelocity, next.TorqueConverterLocked.Value)) {
 					if (double.IsNaN(fcCurrent)) {

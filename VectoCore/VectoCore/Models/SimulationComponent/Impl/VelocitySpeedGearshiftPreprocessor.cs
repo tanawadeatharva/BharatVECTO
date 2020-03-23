@@ -133,14 +133,14 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			var acceleration = 0.SI<MeterPerSquareSecond>();
 			var absTime = 0.SI<Second>();
 			var initialResponse = vehicle.Request(absTime, simulationInterval, acceleration, gradient);
-			var delta = initialResponse.Gearbox.GearboxPowerRequest;
+			var delta = initialResponse.Gearbox.PowerRequest;
 			try {
 				var time = absTime;
 				acceleration = SearchAlgorithm.Search(
 					acceleration, delta, Constants.SimulationSettings.OperatingPointInitialSearchIntervalAccelerating,
 					getYValue: response => {
 						var r = (ResponseDryRun)response;
-						return r.Gearbox.GearboxPowerRequest;
+						return r.Gearbox.PowerRequest;
 					},
 					evaluateFunction: acc => {
 						var response = vehicle.Request(time, simulationInterval, acc, gradient, true);
@@ -149,7 +149,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					},
 					criterion: response => {
 						var r = (ResponseDryRun)response;
-						return r.Gearbox.GearboxPowerRequest.Value() * 100;
+						return r.Gearbox.PowerRequest.Value() * 100;
 					},
 					abortCriterion: (response, cnt) => {
 						var r = (ResponseDryRun)response;

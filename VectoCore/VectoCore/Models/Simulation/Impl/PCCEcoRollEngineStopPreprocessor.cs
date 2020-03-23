@@ -118,19 +118,19 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			var absTime = 0.SI<Second>();
 			var gradient = 0.SI<Radian>();
 			var initialResponse = vehicle.Request(absTime, simulationInterval, acceleration, gradient);
-			var delta = initialResponse.Gearbox.GearboxPowerRequest;
+			var delta = initialResponse.Gearbox.PowerRequest;
 
 			try {
 				gradient = SearchAlgorithm.Search(
 					gradient, delta, 0.1.SI<Radian>(),
 					getYValue: response => {
 						var r = (ResponseDryRun)response;
-						return r.Gearbox.GearboxPowerRequest;
+						return r.Gearbox.PowerRequest;
 					},
 					evaluateFunction: grad => { return vehicle.Request(absTime, simulationInterval, acceleration, grad, true); },
 					criterion: response => {
 						var r = (ResponseDryRun)response;
-						return r.Gearbox.GearboxPowerRequest.Value();
+						return r.Gearbox.PowerRequest.Value();
 					}
 				);
 			} catch (VectoSearchAbortedException) {

@@ -73,7 +73,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl {
 		{
 			var gradientMax = VectoMath.InclinationToAngle(1);
 			var responseMax = vehicle.Initialize(vehicleSpeed, gradientMax);
-			var deltaMax = responseMax.Engine.EnginePowerRequest / responseMax.Engine.EngineSpeed - maxTorque;
+			var deltaMax = responseMax.Engine.PowerRequest / responseMax.Engine.EngineSpeed - maxTorque;
 			if (deltaMax.IsSmaller(0)) {
 				return gradientMax;
 			}
@@ -81,13 +81,13 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl {
 			var gradient = VectoMath.InclinationToAngle(0);
 			var response = vehicle.Initialize(vehicleSpeed, gradient);
 
-			var delta = response.Engine.EnginePowerRequest / response.Engine.EngineSpeed - maxTorque;
+			var delta = response.Engine.PowerRequest / response.Engine.EngineSpeed - maxTorque;
 			gradient = SearchAlgorithm.Search(
 				gradient, delta, VectoMath.InclinationToAngle(1),
 				getYValue: r => {
 					var rs = r as ResponseSuccess;
 					if (rs != null) {
-						return rs.Engine.EnginePowerRequest / rs.Engine.EngineSpeed - maxTorque;
+						return rs.Engine.PowerRequest / rs.Engine.EngineSpeed - maxTorque;
 					}
 
 					return 0.SI<NewtonMeter>();
@@ -98,7 +98,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl {
 				criterion: r => {
 					var rs = r as ResponseSuccess;
 					if (rs != null) {
-						return (rs.Engine.EnginePowerRequest / rs.Engine.EngineSpeed - maxTorque).Value();
+						return (rs.Engine.PowerRequest / rs.Engine.EngineSpeed - maxTorque).Value();
 					}
 					return 0;
 				}

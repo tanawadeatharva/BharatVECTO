@@ -125,7 +125,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			PreviousState.InertiaTorqueLossOut = 0.SI<NewtonMeter>();
 			PreviousState.Gear = Gear;
 
-			response.Gearbox.GearboxPowerRequest = inTorque * inAngularVelocity;
+			response.Gearbox.PowerRequest = inTorque * inAngularVelocity;
 			return response;
 		}
 
@@ -167,7 +167,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				? RequestDisengaged(absTime, dt, outTorque, outAngularVelocity, dryRun)
 				: RequestEngaged(absTime, dt, outTorque, outAngularVelocity, dryRun);
 
-			retVal.Gearbox.GearboxPowerRequest = outTorque * (PreviousState.OutAngularVelocity + outAngularVelocity) / 2;
+			retVal.Gearbox.PowerRequest = outTorque * (PreviousState.OutAngularVelocity + outAngularVelocity) / 2;
 			return retVal;
 		}
 
@@ -235,7 +235,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			}
 			if (dryRun) {
 				var dryRunResponse = HandleDryRunRequest(absTime, dt, torqueConverterLocked, inTorque, inAngularVelocity);
-				dryRunResponse.Gearbox.GearboxPowerRequest = outTorque * avgOutAngularVelocity;
+				dryRunResponse.Gearbox.PowerRequest = outTorque * avgOutAngularVelocity;
 				return dryRunResponse;
 			}
 
@@ -257,7 +257,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					CurrentState.InAngularVelocity);
 			}
 			var response = NextComponent.Request(absTime, dt, inTorque, inAngularVelocity);
-			response.Gearbox.GearboxPowerRequest = outTorque * avgOutAngularVelocity;
+			response.Gearbox.PowerRequest = outTorque * avgOutAngularVelocity;
 			return response;
 		}
 
@@ -313,7 +313,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				// if gearbox is disengaged the 0-line is the limit for drag and full load
 				return new ResponseDryRun(this)				{
 					Gearbox = {
-						GearboxPowerRequest = outTorque * avgOutAngularVelocity,
+						PowerRequest = outTorque * avgOutAngularVelocity,
 					},
 					DeltaDragLoad = outTorque * avgOutAngularVelocity,
 					DeltaFullLoad = outTorque * avgOutAngularVelocity,
@@ -325,7 +325,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				return new ResponseOverload(this) {
 					Delta = outTorque * avgOutAngularVelocity,
 					Gearbox = {
-						GearboxPowerRequest = outTorque * avgOutAngularVelocity
+						PowerRequest = outTorque * avgOutAngularVelocity
 					}
 				};
 			}
@@ -334,7 +334,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				return new ResponseUnderload(this) {
 					Delta = outTorque * avgOutAngularVelocity,
 					Gearbox = {
-						GearboxPowerRequest = outTorque * avgOutAngularVelocity
+						PowerRequest = outTorque * avgOutAngularVelocity
 					}
 				};
 			}
@@ -360,7 +360,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 						disengagedResponse.Engine.EngineSpeed);
 				}
 			}
-			disengagedResponse.Gearbox.GearboxPowerRequest = outTorque * avgOutAngularVelocity;
+			disengagedResponse.Gearbox.PowerRequest = outTorque * avgOutAngularVelocity;
 			CurrentState.SetState(0.SI<NewtonMeter>(), disengagedResponse.Engine.EngineSpeed, 0.SI<NewtonMeter>(), outAngularVelocity);
 			CurrentState.Gear = Gear;
 
@@ -499,7 +499,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			}
 		}
 
-		public override bool ClutchClosed(Second absTime)
+		public override bool GearEngaged(Second absTime)
 		{
 			return (DataBus.DriverBehavior == DrivingBehavior.Braking
 						? DataBus.CycleData.LeftSample.Gear
@@ -526,7 +526,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			public override IGearbox Gearbox { get; set; }
 
-			public override bool ShiftRequired(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity, NewtonMeter inTorque, PerSecond inAngularVelocity, uint gear, Second lastShiftTime, IResponse response)
+			protected override bool DoCheckShiftRequired(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity, NewtonMeter inTorque, PerSecond inAngularVelocity, uint gear, Second lastShiftTime, IResponse response)
 			{
 				return false;
 			}

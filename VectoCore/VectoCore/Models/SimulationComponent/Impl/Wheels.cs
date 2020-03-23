@@ -82,7 +82,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			var retVal = NextComponent.Request(absTime, dt, CurrentState.TorqueIn, CurrentState.AngularVelocity,
 				dryRun);
 
-			retVal.Wheels.WheelsPowerRequest = CurrentState.TorqueIn * avgAngularSpeed;
+			retVal.Wheels.PowerRequest = CurrentState.TorqueIn * avgAngularSpeed;
 			return retVal;
 		}
 

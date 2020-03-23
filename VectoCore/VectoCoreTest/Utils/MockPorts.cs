@@ -60,15 +60,15 @@ namespace TUGraz.VectoCore.Tests.Utils
 			if (dryRun) {
 				return new ResponseDryRun(this) {
 					Gearbox = {
-						GearboxPowerRequest = outTorque * outAngularVelocity,
+						PowerRequest = outTorque * outAngularVelocity,
 					},
 					Engine = {
-						EnginePowerRequest = outTorque * outAngularVelocity,
+						PowerRequest = outTorque * outAngularVelocity,
 						EngineSpeed = outAngularVelocity,
 						DynamicFullLoadPower = (outTorque + 2300.SI<NewtonMeter>()) * outAngularVelocity,
 					},
 					Clutch = {
-						ClutchPowerRequest = outTorque * outAngularVelocity,
+						PowerRequest = outTorque * outAngularVelocity,
 					},
 					DeltaFullLoad = (outTorque - 2300.SI<NewtonMeter>()) * outAngularVelocity,
 					DeltaDragLoad = (outTorque - -100.SI<NewtonMeter>()) * outAngularVelocity
@@ -77,14 +77,14 @@ namespace TUGraz.VectoCore.Tests.Utils
 
 			return new ResponseSuccess(this) {
 				Gearbox = {
-					GearboxPowerRequest = outTorque * outAngularVelocity,
+					PowerRequest = outTorque * outAngularVelocity,
 				},
 				Engine = {
-					EnginePowerRequest = outTorque * outAngularVelocity,
+					PowerRequest = outTorque * outAngularVelocity,
 					EngineSpeed = outAngularVelocity,
 				},
 				Clutch = {
-					ClutchPowerRequest = outTorque * outAngularVelocity,
+					PowerRequest = outTorque * outAngularVelocity,
 				},
 			};
 		}
@@ -93,10 +93,10 @@ namespace TUGraz.VectoCore.Tests.Utils
 		{
 			return new ResponseSuccess(this) {
 				Clutch = {
-					ClutchPowerRequest = outTorque * (outAngularVelocity ?? 0.SI<PerSecond>()),
+					PowerRequest = outTorque * (outAngularVelocity ?? 0.SI<PerSecond>()),
 				},
 				Engine = {
-					EnginePowerRequest = outTorque * (outAngularVelocity ?? 0.SI<PerSecond>()),
+					PowerRequest = outTorque * (outAngularVelocity ?? 0.SI<PerSecond>()),
 					EngineSpeed = outAngularVelocity,
 				}
 			};

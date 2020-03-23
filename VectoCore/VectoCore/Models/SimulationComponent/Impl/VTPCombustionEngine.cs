@@ -70,7 +70,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			return new ResponseSuccess(this) {
 				Engine = {
-					EnginePowerRequest = PreviousState.EnginePower,
+					PowerRequest = PreviousState.EnginePower,
 					EngineSpeed = outAngularVelocity
 				}
 			};
@@ -115,7 +115,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					DeltaDragLoad = deltaDrag * avgEngineSpeed,
 					DeltaEngineSpeed = 0.RPMtoRad(),
 					Engine = {
-						EnginePowerRequest = torqueOut * avgEngineSpeed,
+						PowerRequest = torqueOut * avgEngineSpeed,
 						DynamicFullLoadPower = fullLoadTorque * avgEngineSpeed,
 						DragPower = fullDragTorque * avgEngineSpeed,
 						EngineSpeed = angularVelocity,
@@ -158,7 +158,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					AbsTime = absTime,
 					Delta = deltaFull * avgEngineSpeed,
 					Engine = {
-						EnginePowerRequest = totalTorqueDemand * avgEngineSpeed,
+						PowerRequest = totalTorqueDemand * avgEngineSpeed,
 						DynamicFullLoadPower = fullLoadTorque * avgEngineSpeed,
 						DragPower = CurrentState.FullDragTorque * avgEngineSpeed,
 						EngineSpeed = angularVelocity,
@@ -174,7 +174,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					AbsTime = absTime,
 					Delta = deltaDrag * avgEngineSpeed,
 					Engine = {
-						EnginePowerRequest = totalTorqueDemand * avgEngineSpeed,
+						PowerRequest = totalTorqueDemand * avgEngineSpeed,
 						DynamicFullLoadPower = fullLoadTorque * avgEngineSpeed,
 						DragPower = CurrentState.FullDragTorque * avgEngineSpeed,
 						EngineSpeed = angularVelocity,
@@ -187,7 +187,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			return new ResponseSuccess(this) {
 				Engine = {
-					EnginePowerRequest = totalTorqueDemand * avgEngineSpeed,
+					PowerRequest = totalTorqueDemand * avgEngineSpeed,
 					DynamicFullLoadPower = fullLoadTorque * avgEngineSpeed,
 					DragPower = CurrentState.FullDragTorque * avgEngineSpeed,
 					EngineSpeed = angularVelocity,

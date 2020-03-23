@@ -177,7 +177,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					Engine = {
 					EngineTorqueDemand = inTorque,
 					EngineSpeed = engineResponse.Engine.EngineSpeed,
-					EnginePowerRequest = engineResponse.Engine.EnginePowerRequest
+					PowerRequest = engineResponse.Engine.PowerRequest
 					}
 				};
 			}
@@ -209,7 +209,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					EngineTorqueDemand = inTorque,
 					EngineSpeed = dryOperatingPointMax?.InAngularVelocity ??
 								dryOperatingPointMin?.InAngularVelocity ?? 0.RPMtoRad(),
-					EnginePowerRequest = engineResponse.Engine.EnginePowerRequest
+					PowerRequest = engineResponse.Engine.PowerRequest
 				}
 			};
 		}

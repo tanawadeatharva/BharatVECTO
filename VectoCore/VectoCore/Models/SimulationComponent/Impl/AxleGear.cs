@@ -46,7 +46,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		public override IResponse Initialize(NewtonMeter outTorque, PerSecond outAngularVelocity)
 		{
 			var retVal = base.Initialize(outTorque, outAngularVelocity);
-			retVal.Axlegear.AxlegearPowerRequest = outTorque * outAngularVelocity;
+			retVal.Axlegear.PowerRequest = outTorque * outAngularVelocity;
 			retVal.Axlegear.CardanTorque = PreviousState.InTorque;
 			return retVal;
 		}
@@ -56,7 +56,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			bool dryRun = false)
 		{
 			var retVal = base.Request(absTime, dt, outTorque, outAngularVelocity, dryRun);
-			retVal.Axlegear.AxlegearPowerRequest = outTorque * (PreviousState.OutAngularVelocity + CurrentState.OutAngularVelocity) / 2.0;
+			retVal.Axlegear.PowerRequest = outTorque * (PreviousState.OutAngularVelocity + CurrentState.OutAngularVelocity) / 2.0;
 			retVal.Axlegear.CardanTorque = CurrentState.InTorque;
 			return retVal;
 		}
