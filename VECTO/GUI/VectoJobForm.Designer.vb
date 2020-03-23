@@ -66,6 +66,8 @@ Partial Class VectoJobForm
         Me.ButtonMAP = New System.Windows.Forms.Button()
         Me.TabControl1 = New System.Windows.Forms.TabControl()
         Me.TabPgDriver = New System.Windows.Forms.TabPage()
+        Me.GroupBox3 = New System.Windows.Forms.GroupBox()
+        Me.cbGearshiftStrategy = New System.Windows.Forms.ComboBox()
         Me.GrVACC = New System.Windows.Forms.GroupBox()
         Me.Label15 = New System.Windows.Forms.Label()
         Me.TbDesMaxFile = New System.Windows.Forms.TextBox()
@@ -178,6 +180,7 @@ Partial Class VectoJobForm
         CType(Me.picAuxInfo,System.ComponentModel.ISupportInitialize).BeginInit
         Me.TabControl1.SuspendLayout
         Me.TabPgDriver.SuspendLayout
+        Me.GroupBox3.SuspendLayout
         Me.GrVACC.SuspendLayout
         Me.GrLAC.SuspendLayout
         Me.pnLookAheadCoasting.SuspendLayout
@@ -193,26 +196,6 @@ Partial Class VectoJobForm
         Me.CmOpenFile.SuspendLayout
         CType(Me.PicVehicle,System.ComponentModel.ISupportInitialize).BeginInit
         CType(Me.PicBox,System.ComponentModel.ISupportInitialize).BeginInit
-        Me.GroupBox3 = New System.Windows.Forms.GroupBox()
-        Me.cbGearshiftStrategy = New System.Windows.Forms.ComboBox()
-        Me.TabPgGen.SuspendLayout
-        Me.GrCycles.SuspendLayout
-        Me.GrAux.SuspendLayout
-        CType(Me.picAuxInfo,System.ComponentModel.ISupportInitialize).BeginInit
-        Me.TabControl1.SuspendLayout
-        Me.TabPgDriver.SuspendLayout
-        Me.GrVACC.SuspendLayout
-        Me.GrLAC.SuspendLayout
-        Me.pnLookAheadCoasting.SuspendLayout
-        Me.GroupBox1.SuspendLayout
-        Me.PnEcoRoll.SuspendLayout
-        Me.StatusStrip1.SuspendLayout
-        Me.ToolStrip1.SuspendLayout
-        CType(Me.PictureBox1,System.ComponentModel.ISupportInitialize).BeginInit
-        Me.CmOpenFile.SuspendLayout
-        CType(Me.PicVehicle,System.ComponentModel.ISupportInitialize).BeginInit
-        CType(Me.PicBox,System.ComponentModel.ISupportInitialize).BeginInit
-        Me.GroupBox3.SuspendLayout
         Me.SuspendLayout
         '
         'TabPgGen
@@ -639,6 +622,24 @@ Partial Class VectoJobForm
         Me.TabPgDriver.Text = "Driver Model"
         Me.TabPgDriver.UseVisualStyleBackColor = true
         '
+        'GroupBox3
+        '
+        Me.GroupBox3.Controls.Add(Me.cbGearshiftStrategy)
+        Me.GroupBox3.Location = New System.Drawing.Point(9, 347)
+        Me.GroupBox3.Name = "GroupBox3"
+        Me.GroupBox3.Size = New System.Drawing.Size(514, 50)
+        Me.GroupBox3.TabIndex = 4
+        Me.GroupBox3.TabStop = false
+        Me.GroupBox3.Text = "Gearshift Strategy"
+        '
+        'cbGearshiftStrategy
+        '
+        Me.cbGearshiftStrategy.FormattingEnabled = true
+        Me.cbGearshiftStrategy.Location = New System.Drawing.Point(6, 19)
+        Me.cbGearshiftStrategy.Name = "cbGearshiftStrategy"
+        Me.cbGearshiftStrategy.Size = New System.Drawing.Size(270, 21)
+        Me.cbGearshiftStrategy.TabIndex = 0
+        '
         'GrVACC
         '
         Me.GrVACC.Controls.Add(Me.Label15)
@@ -985,7 +986,7 @@ Partial Class VectoJobForm
         Me.TabPgADAS.Controls.Add(Me.gbEngineStopStart)
         Me.TabPgADAS.Location = New System.Drawing.Point(4, 22)
         Me.TabPgADAS.Name = "TabPgADAS"
-        Me.TabPgADAS.Size = New System.Drawing.Size(527, 487)
+        Me.TabPgADAS.Size = New System.Drawing.Size(527, 512)
         Me.TabPgADAS.TabIndex = 8
         Me.TabPgADAS.Text = "ADAS Parameters"
         Me.TabPgADAS.UseVisualStyleBackColor = true
@@ -1631,24 +1632,6 @@ Partial Class VectoJobForm
         Me.lblEngineCharacteristics.Size = New System.Drawing.Size(0, 13)
         Me.lblEngineCharacteristics.TabIndex = 37
         '
-        'GroupBox3
-        '
-        Me.GroupBox3.Controls.Add(Me.cbGearshiftStrategy)
-        Me.GroupBox3.Location = New System.Drawing.Point(9, 347)
-        Me.GroupBox3.Name = "GroupBox3"
-        Me.GroupBox3.Size = New System.Drawing.Size(514, 50)
-        Me.GroupBox3.TabIndex = 4
-        Me.GroupBox3.TabStop = false
-        Me.GroupBox3.Text = "Gearshift Strategy"
-        '
-        'cbGearshiftStrategy
-        '
-        Me.cbGearshiftStrategy.FormattingEnabled = true
-        Me.cbGearshiftStrategy.Location = New System.Drawing.Point(6, 19)
-        Me.cbGearshiftStrategy.Name = "cbGearshiftStrategy"
-        Me.cbGearshiftStrategy.Size = New System.Drawing.Size(270, 21)
-        Me.cbGearshiftStrategy.TabIndex = 0
-        '
         'VectoJobForm
         '
         Me.AcceptButton = Me.ButOK
@@ -1687,6 +1670,7 @@ Partial Class VectoJobForm
         CType(Me.picAuxInfo,System.ComponentModel.ISupportInitialize).EndInit
         Me.TabControl1.ResumeLayout(false)
         Me.TabPgDriver.ResumeLayout(false)
+        Me.GroupBox3.ResumeLayout(false)
         Me.GrVACC.ResumeLayout(false)
         Me.GrVACC.PerformLayout
         Me.GrLAC.ResumeLayout(false)
