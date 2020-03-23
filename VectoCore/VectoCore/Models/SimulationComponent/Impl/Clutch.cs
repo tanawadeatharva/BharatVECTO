@@ -45,8 +45,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 	public class Clutch : StatefulProviderComponent<Clutch.ClutchState, ITnOutPort, ITnInPort, ITnOutPort>, IClutch,
 		ITnOutPort, ITnInPort
 	{
-		private readonly PerSecond _idleSpeed;
-		private readonly PerSecond _ratedSpeed;
+		protected readonly PerSecond _idleSpeed;
+		protected readonly PerSecond _ratedSpeed;
 
 		private bool firstInitialize = true;
 
@@ -60,7 +60,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			}
 		}
 
-		private readonly SI _clutchSpeedSlippingFactor;
+		protected readonly SI _clutchSpeedSlippingFactor;
 		private IIdleController _idleController;
 
 		public Clutch(IVehicleContainer container, CombustionEngineData engineData) : base(container)
@@ -71,7 +71,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 										(_idleSpeed + Constants.SimulationSettings.ClutchClosingSpeedNorm * (_ratedSpeed - _idleSpeed));
 		}
 
-		public IResponse Initialize(NewtonMeter outTorque, PerSecond outAngularVelocity)
+		public virtual IResponse Initialize(NewtonMeter outTorque, PerSecond outAngularVelocity)
 		{
 			NewtonMeter torqueIn;
 			PerSecond engineSpeedIn;
@@ -87,33 +87,39 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			//}
 
 			var retVal = NextComponent.Initialize(torqueIn, engineSpeedIn);
-			retVal.Clutch.ClutchPowerRequest = outTorque * outAngularVelocity;
+			retVal.Clutch.PowerRequest = outTorque * outAngularVelocity;
 			return retVal;
 		}
 
-		public IResponse Request(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity,
+		public virtual IResponse Request(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity,
 			bool dryRun = false)
 		{
 			firstInitialize = false;
-			var startClutch = DataBus.VehicleStopped || !PreviousState.ClutchLoss.IsEqual(0);
 			if (!DataBus.ClutchClosed(absTime) && !dryRun) {
 				Log.Debug("Invoking IdleController...");
 				var retval = IdleController.Request(absTime, dt, outTorque, null, dryRun);
-				retval.Clutch.ClutchPowerRequest = 0.SI<Watt>();
+				retval.Clutch.PowerRequest = 0.SI<Watt>();
 				CurrentState.SetState(0.SI<NewtonMeter>(), retval.Engine.EngineSpeed, outTorque, outAngularVelocity);
 				CurrentState.ClutchLoss = 0.SI<Watt>();
 				return retval;
 			}
+
 			if (IdleController != null) {
 				IdleController.Reset();
 			}
 
 			Log.Debug("from Wheels: torque: {0}, angularVelocity: {1}, power {2}", outTorque, outAngularVelocity,
 				Formulas.TorqueToPower(outTorque, outAngularVelocity));
+			
+			return HandleClutchClosed(absTime, dt, outTorque, outAngularVelocity, dryRun);
+		}
 
+		protected virtual IResponse HandleClutchClosed(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity, bool dryRun) 
+		{
 			NewtonMeter torqueIn;
 			PerSecond angularVelocityIn;
 
+			var startClutch = DataBus.VehicleStopped || !PreviousState.ClutchLoss.IsEqual(0);
 			var slippingClutchWhenDriving = (DataBus.Gear <= 2 && DataBus.DriverBehavior != DrivingBehavior.Braking);
 			var slippingClutchDuringBraking = DataBus.Gear == 1 && DataBus.DriverBehavior == DrivingBehavior.Braking && outTorque > 0 && DataBus.BrakePower.IsEqual(0);
 			//var slippingClutchWhenDriving = (DataBus.Gear == 1 && outTorque > 0);
@@ -137,12 +143,12 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				CurrentState.SetState(torqueIn, angularVelocityIn, outTorque, outAngularVelocity);
 				CurrentState.ClutchLoss = torqueIn * avgInAngularVelocity - outTorque * avgOutAngularVelocity;
 			}
-			retVal.Clutch.ClutchPowerRequest = outTorque *
+			retVal.Clutch.PowerRequest = outTorque *
 										((PreviousState.OutAngularVelocity ?? 0.SI<PerSecond>()) + CurrentState.OutAngularVelocity) / 2.0;
 			return retVal;
 		}
 
-		private void AddClutchLoss(NewtonMeter torque, PerSecond angularVelocity, bool allowSlipping, out NewtonMeter torqueIn,
+		protected virtual void AddClutchLoss(NewtonMeter torque, PerSecond angularVelocity, bool allowSlipping, out NewtonMeter torqueIn,
 			out PerSecond angularVelocityIn)
 		{
 			if (DataBus.DriverBehavior == DrivingBehavior.Halted) {
@@ -173,6 +179,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				container[ModalResultField.P_clutch_loss] = CurrentState.InTorque * avgInAngularVelocity -
 															CurrentState.OutTorque * avgOutAngularVelocity;
 			}
+		}
+
+		public virtual bool ClutchClosed(Second absTime)
+		{
+			return DataBus.GearEngaged(absTime);
 		}
 
 		public class ClutchState : SimpleComponentState

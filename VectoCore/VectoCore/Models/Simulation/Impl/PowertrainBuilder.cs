@@ -43,12 +43,15 @@ using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.SimulationComponent;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Impl;
+using TUGraz.VectoCore.Models.SimulationComponent.Strategies;
 using TUGraz.VectoCore.OutputData;
 using TUGraz.VectoCore.Utils;
 using ElectricSystem = TUGraz.VectoCore.Models.SimulationComponent.ElectricSystem;
 using Wheels = TUGraz.VectoCore.Models.SimulationComponent.Impl.Wheels;
-
-using StrategyCreator = System.Func<TUGraz.VectoCore.Models.Simulation.Data.VectoRunData, TUGraz.VectoCore.Models.Simulation.IVehicleContainer, TUGraz.VectoCore.Models.SimulationComponent.Impl.BaseShiftStrategy>;
+using StrategyCreator =
+	System.Func<TUGraz.VectoCore.Models.Simulation.Data.VectoRunData,
+		TUGraz.VectoCore.Models.Simulation.IVehicleContainer,
+		TUGraz.VectoCore.Models.SimulationComponent.Impl.BaseShiftStrategy>;
 using GbxTypeList = System.Collections.Generic.List<TUGraz.VectoCommon.Models.GearboxType>;
 
 namespace TUGraz.VectoCore.Models.Simulation.Impl
@@ -61,24 +64,38 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 		private readonly IModalDataContainer _modData;
 		private readonly WriteSumData _sumWriter;
 
-		private static List<Tuple<GbxTypeList, string, string, StrategyCreator>> ShiftStrategies = new List<Tuple<GbxTypeList, string, string, StrategyCreator>>
-		{
-			Tuple.Create<GbxTypeList, string, string ,StrategyCreator>(new GbxTypeList {GearboxType.MT}, typeof(MTShiftStrategy).FullName, MTShiftStrategy.Name, (r, c) => new MTShiftStrategy(r, c)),
-			Tuple.Create<GbxTypeList, string, string, StrategyCreator>( new GbxTypeList {GearboxType.AMT}, typeof(AMTShiftStrategy).FullName,AMTShiftStrategy.Name, (r, c) => new AMTShiftStrategy(r, c)),
-			Tuple.Create<GbxTypeList, string, string, StrategyCreator>( new GbxTypeList {GearboxType.AMT}, typeof(AMTShiftStrategyOptimized).FullName, AMTShiftStrategyOptimized.Name, (r, c) => new AMTShiftStrategyOptimized(r, c)),
-			Tuple.Create<GbxTypeList, string, string, StrategyCreator>( new GbxTypeList {GearboxType.AMT}, typeof(AMTShiftStrategyACEA).FullName, AMTShiftStrategyACEA.Name, (r, c) => new AMTShiftStrategyACEA(r, c)),
-			Tuple.Create<GbxTypeList, string, string, StrategyCreator>( new GbxTypeList {GearboxType.ATPowerSplit, GearboxType.ATSerial}, typeof(ATShiftStrategy).FullName, ATShiftStrategy.Name, (r, c) => new ATShiftStrategy(r, c)),
-			Tuple.Create<GbxTypeList, string, string, StrategyCreator>( new GbxTypeList {GearboxType.ATPowerSplit, GearboxType.ATSerial}, typeof(ATShiftStrategyVoith).FullName, ATShiftStrategyVoith.Name, (r, c) => new ATShiftStrategyVoith(r, c)),
-			Tuple.Create<GbxTypeList, string, string, StrategyCreator>( new GbxTypeList {GearboxType.ATPowerSplit, GearboxType.ATSerial}, typeof(ATShiftStrategyOptimized).FullName, ATShiftStrategyOptimized.Name, (r, c) => new ATShiftStrategyOptimized(r, c)),
-		};
+		private static List<Tuple<GbxTypeList, string, string, StrategyCreator>> ShiftStrategies =
+			new List<Tuple<GbxTypeList, string, string, StrategyCreator>> {
+				Tuple.Create<GbxTypeList, string, string, StrategyCreator>(new GbxTypeList { GearboxType.MT },
+					typeof(MTShiftStrategy).FullName, MTShiftStrategy.Name, (r, c) => new MTShiftStrategy(r, c)),
+				Tuple.Create<GbxTypeList, string, string, StrategyCreator>(new GbxTypeList { GearboxType.AMT },
+					typeof(AMTShiftStrategy).FullName, AMTShiftStrategy.Name, (r, c) => new AMTShiftStrategy(r, c)),
+				Tuple.Create<GbxTypeList, string, string, StrategyCreator>(new GbxTypeList { GearboxType.AMT },
+					typeof(AMTShiftStrategyOptimized).FullName, AMTShiftStrategyOptimized.Name,
+					(r, c) => new AMTShiftStrategyOptimized(r, c)),
+				Tuple.Create<GbxTypeList, string, string, StrategyCreator>(new GbxTypeList { GearboxType.AMT },
+					typeof(AMTShiftStrategyACEA).FullName, AMTShiftStrategyACEA.Name,
+					(r, c) => new AMTShiftStrategyACEA(r, c)),
+				Tuple.Create<GbxTypeList, string, string, StrategyCreator>(
+					new GbxTypeList { GearboxType.ATPowerSplit, GearboxType.ATSerial },
+					typeof(ATShiftStrategy).FullName, ATShiftStrategy.Name, (r, c) => new ATShiftStrategy(r, c)),
+				Tuple.Create<GbxTypeList, string, string, StrategyCreator>(
+					new GbxTypeList { GearboxType.ATPowerSplit, GearboxType.ATSerial },
+					typeof(ATShiftStrategyVoith).FullName, ATShiftStrategyVoith.Name,
+					(r, c) => new ATShiftStrategyVoith(r, c)),
+				Tuple.Create<GbxTypeList, string, string, StrategyCreator>(
+					new GbxTypeList { GearboxType.ATPowerSplit, GearboxType.ATSerial },
+					typeof(ATShiftStrategyOptimized).FullName, ATShiftStrategyOptimized.Name,
+					(r, c) => new ATShiftStrategyOptimized(r, c)),
+			};
 
-		
 
 		public PowertrainBuilder(IModalDataContainer modData, WriteSumData sumWriter = null)
 		{
 			if (modData == null) {
 				throw new VectoException("Modal Data Container can't be null");
 			}
+
 			_modData = modData;
 			_sumWriter = sumWriter;
 		}
@@ -99,7 +116,8 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 				case CycleType.DistanceBased:
 					return BuildFullPowertrain(data);
 				default:
-					throw new VectoException("Powertrain Builder cannot build Powertrain for CycleType: {0}", data.Cycle.CycleType);
+					throw new VectoException("Powertrain Builder cannot build Powertrain for CycleType: {0}",
+						data.Cycle.CycleType);
 			}
 		}
 
@@ -177,11 +195,10 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			//}
 
 			powertrain.AddComponent(engine, idleController);
-				//.AddAuxiliaries(container, data);
+			//.AddAuxiliaries(container, data);
 
 			return container;
 		}
-
 
 
 		private IVehicleContainer BuildMeasuredSpeed(VectoRunData data)
@@ -236,6 +253,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			if (data.GearboxData.Type.ManualTransmission()) {
 				powertrain = powertrain.AddComponent(new Clutch(container, data.EngineData));
 			}
+
 			powertrain.AddComponent(new StopStartCombustionEngine(container, data.EngineData))
 				.AddAuxiliaries(container, data);
 
@@ -246,26 +264,19 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 		private IVehicleContainer BuildFullPowertrain(VectoRunData data)
 		{
+			var isHybridVehicle = data.BatteryData != null && data.ElectricMachinesData != null &&
+								data.ElectricMachinesData.Count > 0;
+
+			return isHybridVehicle ? BuildFullPowertrainHybrid(data) : BuildFullPowertrainConventional(data);
+		}
+
+		private IVehicleContainer BuildFullPowertrainConventional(VectoRunData data)
+		{
 			if (data.Cycle.CycleType != CycleType.DistanceBased) {
 				throw new VectoException("CycleType must be DistanceBased");
 			}
 
 			var container = new VehicleContainer(data.ExecutionMode, _modData, _sumWriter) { RunData = data };
-
-			var isHybridVehicle = data.BatteryData != null && data.ElectricMachinesData != null &&
-								data.ElectricMachinesData.Count > 0;
-
-			ElectricSystem es = null;
-			HybridController ctl = null;
-
-			if (isHybridVehicle) {
-				var battery = new Battery(container, data.BatteryData);
-				battery.Initialize(data.BatteryData.InitialSoC);
-
-				es = new ElectricSystem(container);
-				es.Connect(battery);
-				ctl = new HybridController(container);
-			}
 
 			// DistanceBasedDrivingCycle --> driver --> vehicle --> wheels 
 			// --> axleGear --> (retarder) --> gearBox --> (retarder) --> clutch --> engine <-- Aux
@@ -275,26 +286,12 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 				.AddComponent(new Vehicle(container, data.VehicleData, data.AirdragData))
 				.AddComponent(new Wheels(container, data.VehicleData.DynamicTyreRadius, data.VehicleData.WheelsInertia))
 				.AddComponent(new Brakes(container))
-				.AddComponent(isHybridVehicle ? ctl : null)
-				.AddComponent(isHybridVehicle
-					? GetElectricMachine(PowertrainPosition.HybridP4, data.ElectricMachinesData, container, es, ctl)
-					: null)
 				.AddComponent(new AxleGear(container, data.AxleGearData))
-				.AddComponent(isHybridVehicle
-					? GetElectricMachine(PowertrainPosition.HybridP3, data.ElectricMachinesData, container, es, ctl)
-					: null)
 				.AddComponent(data.AngledriveData != null ? new Angledrive(container, data.AngledriveData) : null)
-				.AddComponent(GetGearbox(container, data), data.Retarder, container)
-				.AddComponent(isHybridVehicle
-					? GetElectricMachine(PowertrainPosition.HybridP2, data.ElectricMachinesData, container, es, ctl)
-					: null);
+				.AddComponent(GetGearbox(container, data), data.Retarder, container);
 			if (data.GearboxData.Type.ManualTransmission()) {
 				powertrain = powertrain.AddComponent(new Clutch(container, data.EngineData));
 			}
-
-			powertrain = powertrain.AddComponent(isHybridVehicle
-				? GetElectricMachine(PowertrainPosition.HybridP1, data.ElectricMachinesData, container, es, ctl)
-				: null);
 
 			var engine = new StopStartCombustionEngine(container, data.EngineData);
 			var idleController = GetIdleController(data.PTO, engine, container);
@@ -308,7 +305,65 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			return container;
 		}
 
-		private IElectricMotor GetElectricMachine(PowertrainPosition pos, IList<Tuple<PowertrainPosition, ElectricMotorData>> electricMachinesData, VehicleContainer container, IElectricSystem es, HybridController ctl)
+
+		private IVehicleContainer BuildFullPowertrainHybrid(VectoRunData data)
+		{
+			if (data.Cycle.CycleType != CycleType.DistanceBased) {
+				throw new VectoException("CycleType must be DistanceBased");
+			}
+
+			var container = new VehicleContainer(data.ExecutionMode, _modData, _sumWriter) { RunData = data };
+
+			var battery = new Battery(container, data.BatteryData);
+			battery.Initialize(data.BatteryData.InitialSoC);
+
+			var es = new ElectricSystem(container);
+			es.Connect(battery);
+			
+			var gearbox = GetGearbox(container, data);
+			var gbx = gearbox as IHybridControlledGearbox;
+			if (gbx == null) {
+				throw new VectoException("Gearbox can not be used for parallel hybrid");
+			}
+				 
+			var strategy = new HybridStrategy();
+			var clutch = data.GearboxData.Type.AutomaticTransmission() ? null : new SwitchableClutch(container, data.EngineData);
+
+			var ctl = new HybridController(container, strategy, es, gbx, clutch);
+			
+			var engine = new StopStartCombustionEngine(container, data.EngineData);
+			var idleController = GetIdleController(data.PTO, engine, container);
+
+			// DistanceBasedDrivingCycle --> driver --> vehicle --> wheels 
+			// --> axleGear --> (retarder) --> gearBox --> (retarder) --> clutch --> engine <-- Aux
+			var cycle = new DistanceBasedDrivingCycle(container, data.Cycle);
+			cycle
+				.AddComponent(new Driver(container, data.DriverData, new DefaultDriverStrategy(container)))
+				.AddComponent(new Vehicle(container, data.VehicleData, data.AirdragData))
+				.AddComponent(new Wheels(container, data.VehicleData.DynamicTyreRadius, data.VehicleData.WheelsInertia))
+				.AddComponent(new Brakes(container))
+				.AddComponent(ctl)
+				.AddComponent(GetElectricMachine(PowertrainPosition.HybridP4, data.ElectricMachinesData, container, es, ctl))
+				.AddComponent(new AxleGear(container, data.AxleGearData))
+				.AddComponent(GetElectricMachine(PowertrainPosition.HybridP3, data.ElectricMachinesData, container, es, ctl))
+				.AddComponent(data.AngledriveData != null ? new Angledrive(container, data.AngledriveData) : null)
+				.AddComponent(gearbox, data.Retarder, container)
+				.AddComponent(GetElectricMachine(PowertrainPosition.HybridP2, data.ElectricMachinesData, container, es, ctl))
+				.AddComponent(clutch)
+				.AddComponent(GetElectricMachine(PowertrainPosition.HybridP1, data.ElectricMachinesData, container, es, ctl))
+				.AddComponent(engine, idleController)
+				.AddAuxiliaries(container, data);
+
+			cycle.IdleController = idleController as IdleControllerSwitcher;
+
+			_modData.HasTorqueConverter = data.GearboxData.Type.AutomaticTransmission();
+
+			return container;
+		}
+
+		private IElectricMotor GetElectricMachine(PowertrainPosition pos,
+			IList<Tuple<PowertrainPosition, ElectricMotorData>> electricMachinesData, VehicleContainer container,
+			IElectricSystem es, HybridController ctl)
 		{
 			var motorData = electricMachinesData.FirstOrDefault(x => x.Item1 == pos);
 			if (motorData == null) {
@@ -361,11 +416,9 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			//cycle.IdleController = idleController as IdleControllerSwitcher;
 
 			powertrain.AddComponent(engine, idleController)
-					.AddAuxiliaries(container, data);
-
+				.AddAuxiliaries(container, data);
 		}
 
-		
 
 		private DrivingCycleData GetMeasuredSpeedDummnCycle()
 		{
@@ -377,12 +430,14 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			foreach (var entry in entries) {
 				writer.WriteLine(entry);
 			}
+
 			writer.Flush();
 			cycleData.Seek(0, SeekOrigin.Begin);
 			return DrivingCycleDataReader.ReadFromStream(cycleData, CycleType.MeasuredSpeed, "DummyCycle", false);
 		}
 
-		private static IIdleController GetIdleController(PTOData pto, ICombustionEngine engine, IVehicleContainer container)
+		private static IIdleController GetIdleController(PTOData pto, ICombustionEngine engine,
+			IVehicleContainer container)
 		{
 			var controller = engine.IdleController;
 
@@ -422,6 +477,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 					default:
 						throw new ArgumentOutOfRangeException("AuxiliaryDemandType", auxData.DemandType.ToString());
 				}
+
 				container.ModalData?.AddAuxiliary(id);
 			}
 
@@ -436,23 +492,26 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 				container.ModalData?.AddAuxiliary(Constants.Auxiliaries.IDs.PTOConsumer,
 					Constants.Auxiliaries.PowerPrefix + Constants.Auxiliaries.IDs.PTOConsumer);
 			}
+
 			return aux;
 		}
 
 		private EngineAuxiliary CreateSpeedDependentAuxiliaries(VectoRunData data, IVehicleContainer container)
 		{
 			var aux = new EngineAuxiliary(container);
- 
+
 			var auxData = data.Aux.ToArray();
-			AddSwitchingAux(aux,container.ModalData,Constants.Auxiliaries.IDs.HeatingVentilationAirCondition, auxData);
-			AddSwitchingAux(aux,container.ModalData,Constants.Auxiliaries.IDs.SteeringPump, auxData);
-			AddSwitchingAux(aux,container.ModalData,Constants.Auxiliaries.IDs.ElectricSystem, auxData);
+			AddSwitchingAux(aux, container.ModalData, Constants.Auxiliaries.IDs.HeatingVentilationAirCondition,
+				auxData);
+			AddSwitchingAux(aux, container.ModalData, Constants.Auxiliaries.IDs.SteeringPump, auxData);
+			AddSwitchingAux(aux, container.ModalData, Constants.Auxiliaries.IDs.ElectricSystem, auxData);
 			AddSwitchingAux(aux, container.ModalData, Constants.Auxiliaries.IDs.PneumaticSystem, auxData);
-			
+
 			return aux;
 		}
 
-		private void AddSwitchingAux(EngineAuxiliary aux, IModalDataContainer modData, string auxId, VectoRunData.AuxData[] auxData)
+		private void AddSwitchingAux(EngineAuxiliary aux, IModalDataContainer modData, string auxId,
+			VectoRunData.AuxData[] auxData)
 		{
 			var urban = auxData.First(x => x.ID == auxId && x.MissionType == MissionType.UrbanDelivery);
 			var rural = auxData.First(x => x.ID == auxId && x.MissionType == MissionType.RegionalDelivery);
@@ -462,9 +521,11 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 				if (entry.VehicleTargetSpeed >= Constants.SimulationSettings.HighwaySpeedThreshold) {
 					return motorway.PowerDemand;
 				}
+
 				if (entry.VehicleTargetSpeed >= Constants.SimulationSettings.RuralSpeedThreshold) {
 					return rural.PowerDemand;
 				}
+
 				return urban.PowerDemand;
 			});
 			modData.AddAuxiliary(auxId);
@@ -492,12 +553,13 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			if (string.IsNullOrWhiteSpace(shiftStrategy)) {
 				shiftStrategy = DeclarationData.GearboxTCU.DefaultShiftStrategy;
 			}
+
 			if (string.IsNullOrWhiteSpace(shiftStrategy)) {
 				switch (runData.GearboxData.Type) {
 					case GearboxType.AMT:
 						runData.ShiftStrategy = AMTShiftStrategyOptimized.Name;
 						return new AMTShiftStrategyOptimized(runData, container);
-						//return new AMTShiftStrategy(runData, container);
+					//return new AMTShiftStrategy(runData, container);
 					case GearboxType.MT:
 						runData.ShiftStrategy = MTShiftStrategy.Name;
 						return new MTShiftStrategy(runData, container);
@@ -505,16 +567,20 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 					case GearboxType.ATSerial:
 						runData.ShiftStrategy = ATShiftStrategyOptimized.Name;
 						return new ATShiftStrategyOptimized(runData, container);
-						//return new ATShiftStrategy(runData, container);
+					//return new ATShiftStrategy(runData, container);
 					default:
-						throw new ArgumentOutOfRangeException("GearboxType", string.Format("Unknown Gearbox Type {0}", runData.GearboxData.Type.ToString()));
+						throw new ArgumentOutOfRangeException("GearboxType",
+							string.Format("Unknown Gearbox Type {0}", runData.GearboxData.Type.ToString()));
 				}
-
 			}
 
-			var selected = ShiftStrategies.FirstOrDefault(x => x.Item1.Contains(runData.GearboxData.Type) && x.Item2.Equals(shiftStrategy, StringComparison.InvariantCultureIgnoreCase));
+			var selected = ShiftStrategies.FirstOrDefault(x =>
+				x.Item1.Contains(runData.GearboxData.Type) &&
+				x.Item2.Equals(shiftStrategy, StringComparison.InvariantCultureIgnoreCase));
 			if (selected == null) {
-				throw new ArgumentOutOfRangeException("ShiftStrategy", string.Format("Unknown Shiftstrategy {0} for Gearbox Type {1}", shiftStrategy, runData.GearboxData.Type.ToString()));
+				throw new ArgumentOutOfRangeException("ShiftStrategy",
+					string.Format("Unknown Shiftstrategy {0} for Gearbox Type {1}", shiftStrategy,
+						runData.GearboxData.Type.ToString()));
 			}
 
 			runData.ShiftStrategy = selected.Item3;
@@ -523,7 +589,9 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 		private static IGearbox GetSimpleGearbox(IVehicleContainer container, VectoRunData runData)
 		{
-			return runData.GearboxData.Type.AutomaticTransmission() ? (IGearbox) new ATGearbox(container, null, runData)  : new Gearbox(container, null, runData);
+			return runData.GearboxData.Type.AutomaticTransmission()
+				? (IGearbox)new ATGearbox(container, null, runData)
+				: new Gearbox(container, null, runData);
 		}
 
 
@@ -532,7 +600,9 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			if (!type.HasValue) {
 				return new List<Tuple<string, string>>();
 			}
-			return ShiftStrategies.Where(x => x.Item1.Contains(type.Value)).Select(x => Tuple.Create(x.Item2, x.Item3)).ToList();
+
+			return ShiftStrategies.Where(x => x.Item1.Contains(type.Value)).Select(x => Tuple.Create(x.Item2, x.Item3))
+				.ToList();
 		}
 	}
 }

@@ -104,7 +104,7 @@ namespace TUGraz.VectoCore.Tests.FileIO
 		}
 
 		[TestCase()]
-		public void TestCreatePowertrain()
+		public void TestCreateHybridPowertrain()
 		{
 			var inputProvider = JSONInputDataFactory.ReadJsonJob(@"TestData\Hybrids\GenericVehicle_Group2_P2\Class2_RigidTruck_ParHyb_ENG.vecto");
 

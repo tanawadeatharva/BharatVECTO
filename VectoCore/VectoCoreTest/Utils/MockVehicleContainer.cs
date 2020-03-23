@@ -249,6 +249,10 @@ namespace TUGraz.VectoCore.Tests.Utils
 		#region Implementation of IGearboxControl
 
 		public bool DisengageGearbox { get; set; }
+		public bool GearEngaged(Second absTime)
+		{
+			return ClutchClosed(absTime);
+		}
 
 		#endregion
 

@@ -62,7 +62,9 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 		private string _filename;
 		private IAxlesDeclarationInputData _axleWheelsDecl;
 		private IAxlesEngineeringInputData _axleWheelsEng;
-		
+		private IBatteryPackEngineeringInputData Battery;
+		private IElectricMotorEngineeringInputData ElectricMotor;
+
 
 		public JSONComponentInputData(string filename, IJSONVehicleComponents job, bool tolerateMissing = false)
 		{
@@ -101,7 +103,9 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 				.If<IPTOTransmissionInputData>(c => PTOTransmission = c)
 				.If<IGearshiftEngineeringInputData>(c => GearshiftData = c)
 				.If<IAxlesDeclarationInputData>(c => _axleWheelsDecl = c)
-				.If<IAxlesEngineeringInputData>(c => _axleWheelsEng = c);
+				.If<IAxlesEngineeringInputData>(c => _axleWheelsEng = c)
+				.If<IBatteryPackEngineeringInputData>(c => Battery = c)
+				.If<IElectricMotorEngineeringInputData>(c => { ElectricMotor = c; });
 			;
 			_filename = filename;
 		}
@@ -234,7 +238,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			get { return _axleWheelsDecl; }
 		}
 
-		public IElectricStorageEngineeringInputData ElectricStorage { get { return VehicleData.Components.ElectricStorage; } }
+		public IElectricStorageEngineeringInputData ElectricStorage { get { return VehicleData?.Components?.ElectricStorage; } }
 		public IElectricMachinesEngineeringInputData ElectricMachines { get {
 			return VehicleData.Components.ElectricMachines;
 		} }

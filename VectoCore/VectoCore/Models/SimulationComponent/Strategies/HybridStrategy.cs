@@ -1,6 +1,6 @@
 ﻿namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 {
-	public class HybridStrategy
+	public class HybridStrategy : IHybridControlStrategy
 	{
 		
 	}

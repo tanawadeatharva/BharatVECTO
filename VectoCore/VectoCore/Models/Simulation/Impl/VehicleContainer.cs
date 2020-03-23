@@ -518,6 +518,11 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			set { GearboxCtl.DisengageGearbox = value; }
 		}
 
+		public bool GearEngaged(Second absTime)
+		{
+			return Gearbox.GearEngaged(absTime);
+		}
+
 		#endregion
 	}
 }

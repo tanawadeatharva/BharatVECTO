@@ -54,7 +54,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			DataBus = dataBus;
 		}
 
-		public virtual bool ShiftRequired(Second absTime, Second dt, NewtonMeter outTorque,
+		public  bool ShiftRequired(Second absTime, Second dt, NewtonMeter outTorque,
 			PerSecond outAngularVelocity, NewtonMeter inTorque, PerSecond inAngularVelocity, uint gear,
 			Second lastShiftTime, IResponse response)
 		{
@@ -64,7 +64,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			return retVal;
 		}
 
-		public abstract bool DoCheckShiftRequired(Second absTime, Second dt, NewtonMeter outTorque,
+		protected abstract bool DoCheckShiftRequired(Second absTime, Second dt, NewtonMeter outTorque,
 			PerSecond outAngularVelocity, NewtonMeter inTorque, PerSecond inAngularVelocity, uint gear,
 			Second lastShiftTime, IResponse response);
 

@@ -8,7 +8,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 {
 	public class HybridController : StatefulProviderComponent<HybridController.HybridControllerState, ITnOutPort, ITnInPort, ITnOutPort>, IPowerTrainComponent, ITnInPort, ITnOutPort, IElectricMotorControl
 	{
-		public HybridController(IVehicleContainer container) : base(container) { }
+		public HybridController(IVehicleContainer container, IHybridControlStrategy strategy, IElectricSystem es, IHybridControlledGearbox gbx, SwitchableClutch clutch) : base(container) { }
 
 
 		public NewtonMeter MechanicalAssistPower(Second absTime, Second dt, NewtonMeter outTorque, PerSecond prevOutAngularVelocity,

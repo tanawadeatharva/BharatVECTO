@@ -103,7 +103,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 	public class JSONElectricMotors : IElectricMachinesEngineeringInputData {
 		private readonly IList<ElectricMachineEntry<IElectricMotorEngineeringInputData>> _entries;
 
-		public JSONElectricMotors(List<ElectricMachineEntry<IElectricMotorEngineeringInputData>> entries)
+		public JSONElectricMotors(IList<ElectricMachineEntry<IElectricMotorEngineeringInputData>> entries)
 		{
 			_entries = entries;
 		}
@@ -111,7 +111,6 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 		IList<ElectricMachineEntry<IElectricMotorDeclarationInputData>> IElectricMachinesDeclarationInputData.Entries
 		{
 			get { return _entries.Cast<ElectricMachineEntry<IElectricMotorDeclarationInputData>>().ToList(); }
-			//get { return null; }
 		}
 
 		public virtual IList<ElectricMachineEntry<IElectricMotorEngineeringInputData>> Entries

@@ -132,6 +132,11 @@ namespace TUGraz.VectoCore.Tests.Utils
 
 		protected override void DoCommitSimulationStep() {}
 
+		public bool GearEngaged(Second absTime)
+		{
+			return _clutchClosed;
+		}
+
 		public bool ClutchClosed(Second absTime)
 		{
 			return _clutchClosed;
