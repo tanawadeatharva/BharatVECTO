@@ -309,7 +309,7 @@ namespace TUGraz.VectoCore.OutputData
 
 			WriteFuelconsumptionEntries(modData, row, vehicleLoading, cargoVolume, passengerCount, runData);
 
-			if (runData.Mission.MissionType == MissionType.VerificationTest) {
+			if (runData.Mission?.MissionType == MissionType.VerificationTest) {
 				var fuelsWhtc = runData.EngineData.Fuels.Select(
 											fuel => modData.TimeIntegral<Kilogram>(modData.GetColumnName(fuel.FuelData, ModalResultField.FCWHTCc)) /
 													modData.TimeIntegral<Kilogram>(modData.GetColumnName(fuel.FuelData, ModalResultField.FCMap)))
