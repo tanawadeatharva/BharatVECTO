@@ -29,15 +29,15 @@ namespace TUGraz.VectoCore.Tests.FileIO
 		{
 			var inputProvider = JSONInputDataFactory.ReadBatteryData(@"TestData\Hybrids\Battery\GenericBattery.vbat", false);
 
-			Assert.AreEqual(14.SI(Unit.SI.Ampere.Hour), inputProvider.Capacity);
+			Assert.AreEqual(7.5.SI(Unit.SI.Ampere.Hour), inputProvider.Capacity);
 			
 			var soc = inputProvider.Voltage;
 			Assert.AreEqual("0", soc.Rows[0][BatterySOCReader.Fields.StateOfCharge]);
 			Assert.AreEqual("590", soc.Rows[0][BatterySOCReader.Fields.BatteryVoltage]);
 
-			Assert.AreEqual(20, inputProvider.MinSOC);
-			Assert.AreEqual(80, inputProvider.MaxSOC);
-			Assert.AreEqual(5, inputProvider.MaxCurrentFactor);
+			Assert.AreEqual(0.20, inputProvider.MinSOC);
+			Assert.AreEqual(0.80, inputProvider.MaxSOC);
+			Assert.AreEqual(50, inputProvider.MaxCurrentFactor);
 
 			var socMap = BatterySOCReader.Create(soc);
 

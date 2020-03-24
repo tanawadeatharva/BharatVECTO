@@ -50,7 +50,9 @@ namespace TUGraz.VectoCore.Tests.Utils
 	/// </summary>
 	internal class MockModalDataContainer : IModalDataContainer
 	{
-		protected Dictionary<IFuelProperties, Dictionary<ModalResultField, DataColumn>> FuelColumns = new Dictionary<IFuelProperties, Dictionary<ModalResultField, DataColumn>>();
+		protected Dictionary<IFuelProperties, Dictionary<ModalResultField, DataColumn>> FuelColumns =
+			new Dictionary<IFuelProperties, Dictionary<ModalResultField, DataColumn>>();
+
 		private Second _duration;
 		private Meter _distance;
 
@@ -62,12 +64,14 @@ namespace TUGraz.VectoCore.Tests.Utils
 				if (ModalDataContainer.FuelConsumptionSignals.Contains(value)) {
 					continue;
 				}
+
 				var col = new DataColumn(value.GetName(), value.GetAttribute().DataType) { Caption = value.GetCaption() };
 				col.ExtendedProperties[ModalResults.ExtendedPropertyNames.Decimals] = value.GetAttribute().Decimals;
 				col.ExtendedProperties[ModalResults.ExtendedPropertyNames.OutputFactor] = value.GetAttribute().OutputFactor;
 				col.ExtendedProperties[ModalResults.ExtendedPropertyNames.ShowUnit] = value.GetAttribute().ShowUnit;
 				Data.Columns.Add(col);
 			}
+
 			CurrentRow = Data.NewRow();
 			Auxiliaries = new Dictionary<string, DataColumn>();
 
@@ -80,9 +84,12 @@ namespace TUGraz.VectoCore.Tests.Utils
 				if (FuelColumns.ContainsKey(entry)) {
 					throw new VectoException("Fuel {0} already added!", entry.FuelType.GetLabel());
 				}
+
 				FuelColumns[entry] = new Dictionary<ModalResultField, DataColumn>();
 				foreach (var fcCol in ModalDataContainer.FuelConsumptionSignals) {
-					var col = Data.Columns.Add(fuels.Count == 1 ? fcCol.GetName() : string.Format("{0}_{1}", fcCol.GetName(), entry.FuelType.GetLabel()), typeof(SI));
+					var col = Data.Columns.Add(
+						fuels.Count == 1 ? fcCol.GetName() : string.Format("{0}_{1}", fcCol.GetName(), entry.FuelType.GetLabel()),
+						typeof(SI));
 					col.ExtendedProperties[ModalResults.ExtendedPropertyNames.Decimals] =
 						fcCol.GetAttribute().Decimals;
 					col.ExtendedProperties[ModalResults.ExtendedPropertyNames.OutputFactor] =
@@ -122,8 +129,8 @@ namespace TUGraz.VectoCore.Tests.Utils
 
 		public object this[ModalResultField key, PowertrainPosition pos]
 		{
-			get => throw new NotImplementedException();
-			set => throw new NotImplementedException();
+			get { throw new NotImplementedException(); }
+			set { throw new NotImplementedException(); }
 		}
 
 		public object this[string auxId]
