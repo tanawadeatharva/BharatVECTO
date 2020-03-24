@@ -618,9 +618,21 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				_idleStart = null;
 			}
 
-			public virtual IResponse Request(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity,
+			public virtual IResponse Request(
+				Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity,
 				bool dryRun = false)
 			{
+				if (outAngularVelocity != null) {
+					throw new VectoException("IdleController can only handle idle requests, i.e. angularVelocity == null!");
+				}
+				if (!outTorque.IsEqual(0, 1e-3)) {
+					throw new VectoException("Torque has to be 0 for idle requests!");
+				}
+
+				return DoHandleRequest(absTime, dt, outTorque, outAngularVelocity);
+			}
+
+			protected virtual IResponse DoHandleRequest(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity) { 
 				if (!_dataBus.VehicleStopped && _dataBus.Gear != 0 &&_dataBus.Gear != _dataBus.NextGear.Gear  &&
 					_dataBus.NextGear.Gear != 0) {
 					return RequestDoubleClutch(absTime, dt, outTorque, outAngularVelocity);
@@ -630,18 +642,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			private IResponse RequestDoubleClutch(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity)
 			{
-				if (outAngularVelocity != null) {
-					throw new VectoException("IdleController can only handle idle requests, i.e. angularVelocity == null!");
-				}
-				if (!outTorque.IsEqual(0)) {
-					throw new VectoException("Torque has to be 0 for idle requests!");
-				}
 				if (_idleStart == null) {
 					_idleStart = absTime;
 					_engineTargetSpeed = _engine.PreviousState.EngineSpeed / _dataBus.GetGearData(_dataBus.Gear).Ratio *
 										_dataBus.GetGearData(_dataBus.NextGear.Gear).Ratio;
 				}
-
 
 				var velocitySlope = (_dataBus.TractionInterruption - (absTime - _idleStart)).IsEqual(0)
 					? 0.SI<PerSquareSecond>()
@@ -692,12 +697,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			protected IResponse RequestIdling(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity)
 			{
-				if (outAngularVelocity != null) {
-					throw new VectoException("IdleController can only handle idle requests, i.e. angularVelocity == null!");
-				}
-				if (!outTorque.IsEqual(0)) {
-					throw new VectoException("Torque has to be 0 for idle requests!");
-				}
 				if (_idleStart == null) {
 					_idleStart = absTime;
 					_lastEnginePower = _engine.PreviousState.EnginePower;
@@ -755,10 +754,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			{
 			}
 
-			public override IResponse Request(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity,
-				bool dryRun = false)
+			protected override IResponse DoHandleRequest(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity)
 			{
-				
 				return RequestIdling(absTime, dt, outTorque, outAngularVelocity);
 			}
 		}
