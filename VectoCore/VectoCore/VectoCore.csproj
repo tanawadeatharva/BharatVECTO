@@ -384,10 +384,12 @@
     <Compile Include="Models\SimulationComponent\IHybridControlledGearbox.cs" />
     <Compile Include="Models\SimulationComponent\IHybridControlStrategy.cs" />
     <Compile Include="Models\SimulationComponent\Impl\Battery.cs" />
+    <Compile Include="Models\SimulationComponent\Impl\ElectricAuxiliary.cs" />
     <Compile Include="Models\SimulationComponent\Impl\ElectricMotor.cs" />
     <Compile Include="Models\SimulationComponent\Impl\HybridController.cs" />
     <Compile Include="Models\SimulationComponent\IHybridController.cs" />
     <Compile Include="Models\SimulationComponent\Impl\StopStartCombustionEngine.cs" />
+    <Compile Include="Models\SimulationComponent\Strategies\DelegateParallelHybridStrategy.cs" />
     <Compile Include="Models\SimulationComponent\Strategies\HybridStrategy.cs" />
     <Compile Include="Models\SimulationComponent\SwitchableClutch.cs" />
     <Compile Include="Models\Simulation\DataBus\IBatteryInfo.cs" />

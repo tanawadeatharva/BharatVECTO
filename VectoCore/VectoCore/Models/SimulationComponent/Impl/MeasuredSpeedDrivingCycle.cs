@@ -358,6 +358,14 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		}
 
 		public Radian RoadGradient { get { return CycleIterator.LeftSample.RoadGradient; } }
+		public MeterPerSecond TargetSpeed
+		{
+			get { return CycleIterator.LeftSample.VehicleTargetSpeed; }
+		}
+		public Second StopTime
+		{
+			get { return CycleIterator.LeftSample.StoppingTime; }
+		}
 
 		public Meter CycleStartDistance
 		{

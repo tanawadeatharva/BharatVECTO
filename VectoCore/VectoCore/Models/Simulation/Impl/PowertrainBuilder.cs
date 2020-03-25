@@ -320,7 +320,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			var es = new ElectricSystem(container);
 			es.Connect(battery);
 
-			var strategy = new HybridStrategy();
+			var strategy = new HybridStrategy(data);
 			var clutch = data.GearboxData.Type.AutomaticTransmission() ? null : new SwitchableClutch(container, data.EngineData);
 
 			var ctl = new HybridController(container, strategy, es, clutch);

@@ -409,6 +409,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			}
 		}
 
+		public Second StopTime
+		{
+			get { return CycleIntervalIterator.LeftSample.StoppingTime; }
+		}
+
 		public Meter CycleStartDistance { get; internal set; }
 
 		public IReadOnlyList<DrivingCycleData.DrivingCycleEntry> LookAhead(Meter lookaheadDistance)
@@ -522,6 +527,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		}
 
 		public Radian RoadGradient { get { return CurrentState.Gradient; } }
+		public MeterPerSecond TargetSpeed
+		{
+			get { return CurrentState.VehicleTargetSpeed; }
+		}
 
 
 		public sealed class DrivingCycleState

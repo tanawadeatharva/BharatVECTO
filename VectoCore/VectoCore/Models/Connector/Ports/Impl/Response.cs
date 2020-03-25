@@ -57,6 +57,10 @@ namespace TUGraz.VectoCore.Models.Connector.Ports.Impl
 			ElectricMotor = new ElectricMotorResponse();
 		}
 
+		public Second AbsTime { get; set; }
+		public Second SimulationInterval { get; set; }
+		public Meter SimulationDistance { get; set; }
+
 		public DriverResponse Driver { get; }
 
 		public EngineResponse Engine { get; }
@@ -74,10 +78,6 @@ namespace TUGraz.VectoCore.Models.Connector.Ports.Impl
 		public ElectricMotorResponse ElectricMotor { get; }
 
 		public object Source { get; }
-
-		public Second AbsTime { get; set; }
-		public Second SimulationInterval { get; set; }
-		public Meter SimulationDistance { get; set; }
 
 		public IElectricSystemResponse ElectricSystem { get; set; }
 

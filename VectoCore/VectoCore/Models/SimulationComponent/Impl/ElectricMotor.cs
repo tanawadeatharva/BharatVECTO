@@ -16,8 +16,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 {
 	public class ElectricMotor : StatefulProviderComponent<ElectricMotorState, ITnOutPort, ITnInPort, ITnOutPort>, IPowerTrainComponent, IElectricMotor, ITnOutPort, ITnInPort
 	{
-		public PowertrainPosition MotorId { get; }
 
+		protected IElectricSystem ElectricPower;
 		protected IElectricMotorControl Control;
 		protected ElectricMotorData ModelData;
 
@@ -25,10 +25,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		{
 			Control = control;
 			ModelData = data;
-			MotorId = position;
+			Position = position;
 		}
 
-		protected IElectricSystem ElectricPower;
+		public PowertrainPosition Position { get; }
 
 		public IResponse Initialize(NewtonMeter outTorque, PerSecond outAngularVelocity)
 		{
@@ -86,7 +86,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				return retVal;
 			}
 
-			var eMotorTorque = Control.MechanicalAssistPower(absTime, dt, inTorque, PreviousState.OutAngularVelocity, outAngularVelocity, dryRun);
+			var eMotorTorque = Control.MechanicalAssistPower(absTime, dt, inTorque, PreviousState.OutAngularVelocity, outAngularVelocity, Position, dryRun);
 			if (eMotorTorque.IsEqual(0, 1e-3))
 			{
 				var batteryResponse = ElectricPower.Request(absTime, dt, 0.SI<Watt>(), dryRun);
@@ -209,19 +209,19 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		protected override void DoWriteModalResults(Second time, Second simulationInterval, IModalDataContainer container)
 		{
 			var avgSpeed = (PreviousState.OutAngularVelocity + CurrentState.OutAngularVelocity) / 2;
-			container[ModalResultField.n_electricMotor_, MotorId] = avgSpeed;
-			container[ModalResultField.T_electricMotor_, MotorId] = CurrentState.InTorque - CurrentState.OutTorque;
-			container[ModalResultField.T_electricMotor_full_, MotorId] = CurrentState.DriveMax;
-			container[ModalResultField.T_electricMotor_drag_, MotorId] = CurrentState.DragMax;
-			container[ModalResultField.P_electricMotor_mech_, MotorId] = (CurrentState.InTorque - CurrentState.OutTorque) * avgSpeed;
-			container[ModalResultField.P_electricMotor_out_, MotorId] = CurrentState.OutTorque * avgSpeed;
-			container[ModalResultField.P_electricMotor_in_, MotorId] = CurrentState.InTorque * avgSpeed;
-			container[ModalResultField.P_electricMotor_el_, MotorId] = CurrentState.ElectricPowerToBattery;
-			container[ModalResultField.P_electricMotor_brake_, MotorId] = CurrentState.ElectricBrakePower;
-			container[ModalResultField.P_electricMotor_drag_max_, MotorId] = CurrentState.DragMax * avgSpeed;
-			container[ModalResultField.P_electricMotor_drive_max_, MotorId] = CurrentState.DriveMax * avgSpeed;
-			container[ModalResultField.P_electricMotorLoss_, MotorId] = (CurrentState.InTorque - CurrentState.OutTorque) * avgSpeed - (CurrentState.ElectricPowerToBattery + CurrentState.ElectricBrakePower);
-			container[ModalResultField.P_electricMotorInertiaLoss_, MotorId] = CurrentState.InertiaTorqueLoss * avgSpeed;
+			container[ModalResultField.n_electricMotor_, Position] = avgSpeed;
+			container[ModalResultField.T_electricMotor_, Position] = CurrentState.InTorque - CurrentState.OutTorque;
+			container[ModalResultField.T_electricMotor_full_, Position] = CurrentState.DriveMax;
+			container[ModalResultField.T_electricMotor_drag_, Position] = CurrentState.DragMax;
+			container[ModalResultField.P_electricMotor_mech_, Position] = (CurrentState.InTorque - CurrentState.OutTorque) * avgSpeed;
+			container[ModalResultField.P_electricMotor_out_, Position] = CurrentState.OutTorque * avgSpeed;
+			container[ModalResultField.P_electricMotor_in_, Position] = CurrentState.InTorque * avgSpeed;
+			container[ModalResultField.P_electricMotor_el_, Position] = CurrentState.ElectricPowerToBattery;
+			container[ModalResultField.P_electricMotor_brake_, Position] = CurrentState.ElectricBrakePower;
+			container[ModalResultField.P_electricMotor_drag_max_, Position] = CurrentState.DragMax * avgSpeed;
+			container[ModalResultField.P_electricMotor_drive_max_, Position] = CurrentState.DriveMax * avgSpeed;
+			container[ModalResultField.P_electricMotorLoss_, Position] = (CurrentState.InTorque - CurrentState.OutTorque) * avgSpeed - (CurrentState.ElectricPowerToBattery + CurrentState.ElectricBrakePower);
+			container[ModalResultField.P_electricMotorInertiaLoss_, Position] = CurrentState.InertiaTorqueLoss * avgSpeed;
 		}
 
 		public NewtonMeter ElectricDragTorque(PerSecond electricMotorSpeed, Second dt, DrivingBehavior drivingBehavior)

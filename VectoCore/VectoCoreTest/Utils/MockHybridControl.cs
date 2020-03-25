@@ -1,4 +1,5 @@
-﻿using TUGraz.VectoCommon.Utils;
+﻿using TUGraz.VectoCommon.InputData;
+using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Models.SimulationComponent;
 
 namespace TUGraz.VectoCore.Tests.Utils {
@@ -6,7 +7,8 @@ namespace TUGraz.VectoCore.Tests.Utils {
 	{
 		public NewtonMeter ElectricShare { get; set; }
 
-		public NewtonMeter MechanicalAssistPower(Second absTime, Second dt, NewtonMeter outTorque, PerSecond prevOutAngularVelocity, PerSecond curOutAngularVelocity, bool dryRun)
+		public NewtonMeter MechanicalAssistPower(Second absTime, Second dt, NewtonMeter outTorque,
+			PerSecond prevOutAngularVelocity, PerSecond curOutAngularVelocity, PowertrainPosition position, bool dryRun)
 		{
 			return ElectricShare;
 		}

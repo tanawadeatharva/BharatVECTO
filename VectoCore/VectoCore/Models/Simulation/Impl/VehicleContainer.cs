@@ -34,6 +34,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using TUGraz.VectoCommon.Exceptions;
+using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.InputData.Reader.Impl;
@@ -63,6 +64,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 		internal IBrakes Brakes;
 		internal IWheelsInfo Wheels;
 		internal IDriverInfo Driver;
+		internal IHybridController HybridController;
 
 		internal IMileageCounter MilageCounter;
 
@@ -78,6 +80,9 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 		internal readonly IList<ISimulationPreprocessor> Preprocessors = new List<ISimulationPreprocessor>();
 
+		internal readonly Dictionary<PowertrainPosition, IElectricMotorInfo> ElectricMotors =
+			new Dictionary<PowertrainPosition, IElectricMotorInfo>();
+
 		#region IGearCockpit
 
 		public GearboxType GearboxType
@@ -89,21 +94,25 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 		{
 			[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design",
 				"CA1065:DoNotRaiseExceptionsInUnexpectedLocations")]
-			get {
+			get
+			{
 				if (Gearbox == null) {
 					return 0; // throw new VectoException("no gearbox available!");
 				}
+
 				return Gearbox.Gear;
 			}
 		}
 
 		public bool TCLocked
 		{
-			get {
+			get
+			{
 				if (Gearbox == null) {
 					return true;
 				}
-				return  Gearbox.TCLocked;
+
+				return Gearbox.TCLocked;
 			}
 		}
 
@@ -111,10 +120,12 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 		{
 			[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design",
 				"CA1065:DoNotRaiseExceptionsInUnexpectedLocations")]
-			get {
+			get
+			{
 				if (Gearbox == null) {
 					throw new VectoException("No Gearbox available. StartSpeed unkown");
 				}
+
 				return Gearbox.StartSpeed;
 			}
 		}
@@ -123,10 +134,12 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 		{
 			[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design",
 				"CA1065:DoNotRaiseExceptionsInUnexpectedLocations")]
-			get {
+			get
+			{
 				if (Gearbox == null) {
 					throw new VectoException("No Gearbox available. StartAcceleration unknown.");
 				}
+
 				return Gearbox.StartAcceleration;
 			}
 		}
@@ -169,10 +182,12 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 		{
 			[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design",
 				"CA1065:DoNotRaiseExceptionsInUnexpectedLocations")]
-			get {
+			get
+			{
 				if (Engine == null) {
 					throw new VectoException("no engine available!");
 				}
+
 				return Engine.EngineSpeed;
 			}
 		}
@@ -294,14 +309,14 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 				.If<IEngineInfo>(c => {
 					Engine = c;
 					commitPriority = 2;
+					HasCombustionEngine = true;
 				})
-				.If<IEngineControl>(c => {
-						EngineCtl = c;
-					})
+				.If<IEngineControl>(c => { EngineCtl = c; })
 				.If<IDriverInfo>(c => Driver = c)
 				.If<IGearboxInfo>(c => {
 					Gearbox = c;
 					commitPriority = 4;
+					HasGearbox = true;
 				})
 				.If<IGearboxControl>(c => GearboxCtl = c)
 				.If<IAxlegearInfo>(c => Axlegear = c)
@@ -319,11 +334,22 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 					commitPriority = 6;
 				})
 				.If<PTOCycleController>(c => { commitPriority = 99; })
-				.If<VTPCycle>(_ => { commitPriority = 0; });
+				.If<VTPCycle>(_ => { commitPriority = 0; })
+				.If<IElectricMotorInfo>(c => {
+					if (ElectricMotors.ContainsKey(c.Position)) {
+						throw new VectoException("There is already an electric machine at position {0}", c.Position);
+					}
+
+					ElectricMotors[c.Position] = c;
+					HasElectricMotor = true;
+				})
+				.If<IHybridController>(c => { HybridController = c; })
+				;
 
 			_components.Add(Tuple.Create(commitPriority, component));
 			_components = _components.OrderBy(x => x.Item1).Reverse().ToList();
 		}
+
 
 		public void CommitSimulationStep(Second time, Second simulationInterval)
 		{
@@ -354,7 +380,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			DrivingCycle?.FinishSimulation();
 		}
 
-		
+
 		public void FinishSimulation()
 		{
 			throw new NotImplementedException();
@@ -386,10 +412,12 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 		public Meter Distance
 		{
-			get {
-				if (RunData == null || (RunData.SimulationType & SimulationType.DistanceCycle) == 0 ) {
+			get
+			{
+				if (RunData == null || (RunData.SimulationType & SimulationType.DistanceCycle) == 0) {
 					return 0.SI<Meter>();
 				}
+
 				if (MilageCounter != null) {
 					return MilageCounter.Distance;
 				}
@@ -398,6 +426,12 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 				return 0.SI<Meter>();
 			}
 		}
+
+		public bool HasElectricMotor { get; private set; }
+
+		public bool HasCombustionEngine { get; private set; }
+
+		public bool HasGearbox { get; private set; }
 
 		public IReadOnlyList<DrivingCycleData.DrivingCycleEntry> LookAhead(Meter lookaheadDistance)
 		{
@@ -422,6 +456,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 				Log.Warn("No Clutch in VehicleContainer. ClutchClosed set to constant true!");
 				return true;
 			}
+
 			return Clutch.ClutchClosed(absTime);
 		}
 
@@ -450,6 +485,16 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			get { return DrivingCycle.RoadGradient; }
 		}
 
+		public MeterPerSecond TargetSpeed
+		{
+			get { return DrivingCycle.TargetSpeed; }
+		}
+
+		public Second StopTime
+		{
+			get { return DrivingCycle.StopTime; }
+		}
+
 		public SpeedChangeEntry LastTargetspeedChange
 		{
 			get { return DrivingCycle.LastTargetspeedChange; }
@@ -462,7 +507,6 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 		public VectoRunData RunData { get; set; }
 		public ExecutionMode ExecutionMode { get; }
-
 
 
 		public CycleData CycleData

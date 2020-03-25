@@ -206,7 +206,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			if (!dryRun) {
 				CurrentState.PowerDemands = powerDemands;
 			}
-			return powerDemands.Sum(kv => kv.Value);
+			return powerDemands.Sum(kv => kv.Value) ?? 0.SI<Watt>();
 		}
 
 		protected override void DoWriteModalResults(Second time, Second simulationInterval, IModalDataContainer container)

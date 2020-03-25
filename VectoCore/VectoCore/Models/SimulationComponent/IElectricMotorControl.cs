@@ -1,4 +1,5 @@
-﻿using TUGraz.VectoCommon.Utils;
+﻿using TUGraz.VectoCommon.InputData;
+using TUGraz.VectoCommon.Utils;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent
 {
@@ -12,13 +13,14 @@ namespace TUGraz.VectoCore.Models.SimulationComponent
 		/// <param name="absTime"></param>
 		/// <param name="dt"></param>
 		/// <param name="outTorque"></param>
-		/// <param name="currOutAngularVelocity"></param>
-		/// <param name="dryRun"></param>
 		/// <param name="prevOutAngularVelocity"></param>
+		/// <param name="currOutAngularVelocity"></param>
+		/// <param name="position"></param>
+		/// <param name="dryRun"></param>
 		/// <returns></returns>
-		NewtonMeter MechanicalAssistPower(
-			Second absTime, Second dt, NewtonMeter outTorque, PerSecond prevOutAngularVelocity, PerSecond currOutAngularVelocity,
-			bool dryRun);
+		NewtonMeter MechanicalAssistPower(Second absTime, Second dt, NewtonMeter outTorque,
+			PerSecond prevOutAngularVelocity, PerSecond currOutAngularVelocity,
+			PowertrainPosition position, bool dryRun);
 
 		/// <summary>
 		/// required for electric-only powertrain (i.e., serial hybrids) 

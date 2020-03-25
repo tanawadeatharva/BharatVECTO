@@ -29,23 +29,41 @@
 *   Martin Rexeis, rexeis@ivt.tugraz.at, IVT, Graz University of Technology
 */
 
+using System.Diagnostics;
 using System.Dynamic;
+using System.Linq;
 using TUGraz.VectoCommon.Utils;
 
 namespace TUGraz.VectoCommon.Models
 {
-	public class DriverResponse
+	public abstract class AbstractComponentResponse
 	{
-		public MeterPerSquareSecond Acceleration { get; set; }
-		public OperatingPoint OperatingPoint { get; set; }
+		public Watt PowerRequest { get; set; }
+
+		public override string ToString()
+		{
+			var t = GetType();
+			return string.Format("{0}{{{1}}}", t.Name,
+				string.Join(", ", t.GetProperties().Select(p => string.Format("{0}: {1}", p.Name, p.GetValue(this)))));
+		}
 	}
 
-	public abstract class AbstractComponentResponse
+	public abstract class AbstractPowertrainComponentResponse : AbstractComponentResponse
 	{
 		public Watt PowerRequest { get; set; }
 	}
 
-	public class EngineResponse : AbstractComponentResponse
+
+	public class DriverResponse : AbstractComponentResponse
+	{
+		public MeterPerSquareSecond Acceleration { get; set; }
+		public OperatingPoint OperatingPoint { get; set; }
+
+	}
+
+	[DebuggerDisplay("n_ice: {EngineSpeed.AsRPM}; T_out: {EngineTorqueDemand}; T_ice: {EngineTorqueDemandTotal}; T_full_dyn: {EngineDynamicFullLoadTorque}; P_full_dyn: {DynamicFullLoadPower}; P_drag: {DragPower}; P_aux: {AuxiliariesPowerDemand}")]
+
+	public class EngineResponse : AbstractPowertrainComponentResponse
 	{
 		public PerSecond EngineSpeed { get; set; }
 
@@ -61,32 +79,43 @@ namespace TUGraz.VectoCommon.Models
 		public Watt AuxiliariesPowerDemand { get; set; }
 	}
 
-	
 
-	public class ClutchResponse : AbstractComponentResponse { }
 
-	public class GearboxResponse : AbstractComponentResponse { }
+	[DebuggerDisplay("P_out: {PowerRequest}")]
+	public class ClutchResponse : AbstractPowertrainComponentResponse { }
 
-	public class AxlegearResponse : AbstractComponentResponse
+	[DebuggerDisplay("P_out: {PowerRequest}")]
+	public class GearboxResponse : AbstractPowertrainComponentResponse { }
+
+	[DebuggerDisplay("P_out: {PowerRequest}; T_card: {CardanTorque}")]
+	public class AxlegearResponse : AbstractPowertrainComponentResponse
 	{
 		public NewtonMeter CardanTorque { get; set; }
 	}
 
-	public class AngledriveResponse : AbstractComponentResponse { }
+	[DebuggerDisplay("P_out: {PowerRequest}")]
+	public class AngledriveResponse : AbstractPowertrainComponentResponse { }
 
-	public class WheelsResponse : AbstractComponentResponse { }
+	[DebuggerDisplay("P_out: {PowerRequest}")]
+	public class WheelsResponse : AbstractPowertrainComponentResponse { }
 
-	public class VehicleResponse
+	[DebuggerDisplay("v_veh: {VehicleSpeed}")]
+
+	public class VehicleResponse : AbstractComponentResponse
 	{
 		public MeterPerSecond VehicleSpeed { get; set; }
 	}
 
-	public class BrakesResponse
+	[DebuggerDisplay("P_brake: {BrakePower}")]
+
+	public class BrakesResponse : AbstractComponentResponse
 	{
 		public Watt BrakePower { get; set; }
 	}
 
-	public class ElectricMotorResponse
+	[DebuggerDisplay("P_em_mech: {ElectricMotorPowerMech}")]
+
+	public class ElectricMotorResponse : AbstractComponentResponse
 	{
 		public Watt ElectricMotorPowerMech { get; set; }
 	}

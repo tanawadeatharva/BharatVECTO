@@ -29,6 +29,8 @@
 *   Martin Rexeis, rexeis@ivt.tugraz.at, IVT, Graz University of Technology
 */
 
+using System;
+using System.Collections.Generic;
 using System.Linq;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
@@ -42,6 +44,7 @@ using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox;
 using TUGraz.VectoCore.Tests.FileIO;
 using TUGraz.VECTO;
+using TUGraz.VectoCore.InputData.Reader.ComponentData;
 
 namespace TUGraz.VectoCore.Tests.Utils
 {
@@ -173,6 +176,24 @@ namespace TUGraz.VectoCore.Tests.Utils
 
 			var dao = new EngineeringDataAdapter();
 			return dao.CreateDriverData(engineeringJob.DriverInputData);
+		}
+
+		public static List<Tuple<PowertrainPosition, ElectricMotorData>> CreateElectricMotorData(string file, PowertrainPosition pos)
+		{
+			var inputData = JSONInputDataFactory.ReadElectricMotorData(file, false);
+			return new EngineeringDataAdapter().CreateElectricMachines(new MockElectricMachinesInputData() {
+				Entries = new[] {
+					new ElectricMachineEntry<IElectricMotorEngineeringInputData>()
+						{ Count = 1, ElectricMachine = inputData, Position = pos }
+				}
+			});
+		}
+	
+
+		public static BatteryData CreateBatteryData(string file, double initialSoC, int cnt = 1)
+		{
+			var inputData = JSONInputDataFactory.ReadBatteryData(file, false);
+			return new EngineeringDataAdapter().CreateBatteryData(new MockBatteryInputData() {Count = cnt, BatteryPack = inputData}, initialSoC);
 		}
 	}
 }

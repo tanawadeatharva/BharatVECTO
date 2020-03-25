@@ -316,6 +316,8 @@ namespace TUGraz.VectoCore.Configuration
 			public static readonly MeterPerSecond HighwaySpeedThreshold = 70.KMPHtoMeterPerSecond();
 			public static readonly MeterPerSecond RuralSpeedThreshold = 50.KMPHtoMeterPerSecond();
 
+			public static readonly Second ThresholdStandstillOff = 10.SI<Second>();
+
 			public static class CrosswindCorrection
 			{
 				public const int MinVehicleSpeed = 60; // km/h

@@ -162,6 +162,8 @@ namespace TUGraz.VectoCore.Tests.Utils
 
 		public Watt BrakePower { get; set; }
 		public Radian RoadGradient { get; set; }
+		public MeterPerSecond TargetSpeed { get; set; }
+		public Second StopTime { get; set; }
 		public Meter CycleStartDistance { get; set; }
 
 		public IReadOnlyList<DrivingCycleData.DrivingCycleEntry> LookAhead(Meter lookaheadDistance)
