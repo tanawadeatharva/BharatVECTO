@@ -386,6 +386,7 @@
     <Compile Include="Models\SimulationComponent\Impl\Battery.cs" />
     <Compile Include="Models\SimulationComponent\Impl\ElectricMotor.cs" />
     <Compile Include="Models\SimulationComponent\Impl\HybridController.cs" />
+    <Compile Include="Models\SimulationComponent\IHybridController.cs" />
     <Compile Include="Models\SimulationComponent\Impl\StopStartCombustionEngine.cs" />
     <Compile Include="Models\SimulationComponent\Strategies\HybridStrategy.cs" />
     <Compile Include="Models\SimulationComponent\SwitchableClutch.cs" />

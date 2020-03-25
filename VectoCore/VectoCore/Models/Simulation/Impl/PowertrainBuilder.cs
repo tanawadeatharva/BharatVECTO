@@ -319,17 +319,19 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 			var es = new ElectricSystem(container);
 			es.Connect(battery);
-			
-			var gearbox = GetGearbox(container, data);
+
+			var strategy = new HybridStrategy();
+			var clutch = data.GearboxData.Type.AutomaticTransmission() ? null : new SwitchableClutch(container, data.EngineData);
+
+			var ctl = new HybridController(container, strategy, es, clutch);
+
+			var gearbox = GetGearbox(container, data, ctl.ShiftStrategy);
 			var gbx = gearbox as IHybridControlledGearbox;
 			if (gbx == null) {
 				throw new VectoException("Gearbox can not be used for parallel hybrid");
 			}
-				 
-			var strategy = new HybridStrategy();
-			var clutch = data.GearboxData.Type.AutomaticTransmission() ? null : new SwitchableClutch(container, data.EngineData);
 
-			var ctl = new HybridController(container, strategy, es, gbx, clutch);
+			
 			
 			var engine = new StopStartCombustionEngine(container, data.EngineData);
 			var idleController = GetIdleController(data.PTO, engine, container);
@@ -361,9 +363,11 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			return container;
 		}
 
+		
+
 		private IElectricMotor GetElectricMachine(PowertrainPosition pos,
 			IList<Tuple<PowertrainPosition, ElectricMotorData>> electricMachinesData, VehicleContainer container,
-			IElectricSystem es, HybridController ctl)
+			IElectricSystem es, IHybridController ctl)
 		{
 			var motorData = electricMachinesData.FirstOrDefault(x => x.Item1 == pos);
 			if (motorData == null) {
@@ -371,7 +375,8 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			}
 
 			container.ModData.AddElectricMotor(pos);
-			var motor = new ElectricMotor(container, motorData.Item2, ctl, pos);
+			ctl.AddElectricMotor(pos);
+			var motor = new ElectricMotor(container, motorData.Item2, ctl.ElectricMotorControl(pos), pos);
 			motor.Connect(es);
 			return motor;
 		}
@@ -535,7 +540,13 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 		private static IGearbox GetGearbox(IVehicleContainer container, VectoRunData runData)
 		{
 			var strategy = GetShiftStrategy(runData, container);
-			switch (runData.GearboxData.Type) {
+			return GetGearbox(container, runData, strategy);
+		}
+
+		private static IGearbox GetGearbox(IVehicleContainer container, VectoRunData runData, IShiftStrategy strategy)
+		{
+			switch (runData.GearboxData.Type)
+			{
 				case GearboxType.AMT:
 				case GearboxType.MT:
 					return new Gearbox(container, strategy, runData);
