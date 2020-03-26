@@ -63,7 +63,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			bool dryRun = false)
 		{
 			CurrentState.StrategyResponse = Strategy.Request(absTime, dt, outTorque, outAngularVelocity, dryRun);
-			return NextComponent.Request(absTime, dt, outTorque, outAngularVelocity);
+			return NextComponent.Request(absTime, dt, outTorque, outAngularVelocity, dryRun);
 		}
 
 		public IResponse Initialize(NewtonMeter outTorque, PerSecond outAngularVelocity)
@@ -72,6 +72,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			return NextComponent.Initialize(outTorque, outAngularVelocity);
 		}
 
+		protected override void DoCommitSimulationStep()
+		{
+			base.DoCommitSimulationStep();
+			Strategy.CommitSimulationStep();
+		}
 
 		protected override void DoWriteModalResults(Second time, Second simulationInterval,
 			IModalDataContainer container) { }

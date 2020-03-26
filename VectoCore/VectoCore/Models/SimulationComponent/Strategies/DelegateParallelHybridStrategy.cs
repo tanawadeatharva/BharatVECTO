@@ -10,6 +10,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 		public Func<NewtonMeter, PerSecond, HybridStrategyResponse> InitializeFunc { get; set; }
 		public Func<Second, Second, NewtonMeter, PerSecond, bool, HybridStrategyResponse> RequestFunc { get; set; }
 
+		public Action CommitFunc { get; set; }
+
 		public HybridStrategyResponse Request(Second absTime, Second dt, NewtonMeter outTorque,
 			PerSecond outAngularVelocity, bool dryRun)
 		{
@@ -20,6 +22,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 			PerSecond outAngularVelocity)
 		{
 			return InitializeFunc(outTorque, outAngularVelocity);
+		}
+
+		public void CommitSimulationStep()
+		{
+			CommitFunc();
 		}
 	}
 }

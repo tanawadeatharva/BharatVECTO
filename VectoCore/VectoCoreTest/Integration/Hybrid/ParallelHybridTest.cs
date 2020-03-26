@@ -52,7 +52,11 @@ namespace TUGraz.VectoCore.Tests.Integration.Hybrid
 				@"   0,   0, 0,    3
 				   700, {0}, 0,    0", vmax);
 			var cycle = SimpleDrivingCycles.CreateCycleData(cycleData);
+			RunHybridSimulation(vmax, initialSoC, electricTorque, cycle);
+		}
 
+		public void RunHybridSimulation(double vmax, double initialSoC, double electricTorque, DrivingCycleData cycle) 
+		{
 			const bool largeMotor = true;
 			var run = CreateEngineeringRun(
 				cycle, string.Format("SimpleParallelHybrid_acc_{0}_{2}-{1}.vmod", vmax, initialSoC, electricTorque), initialSoC,
@@ -65,21 +69,49 @@ namespace TUGraz.VectoCore.Tests.Integration.Hybrid
 
 			var modData = ((ModalDataContainer)((VehicleContainer)run.GetContainer()).ModData).Data;
 
-			strategy.RequestFunc = (a, b, c, d, e) => new HybridStrategyResponse {
-				MechanicalAssistPower = new Dictionary<PowertrainPosition, NewtonMeter>()
-					{ { PowertrainPosition.HybridP2, 0.SI<NewtonMeter>() } },
-				ShiftRequired = run.GetContainer().EngineSpeed > 1600.RPMtoRad() || run.GetContainer().EngineSpeed < 680.RPMtoRad(),
-				NextGear = (uint)(run.GetContainer().Gear + (run.GetContainer().EngineSpeed > 1600.RPMtoRad() ?  1 : (run.GetContainer().EngineSpeed < 680.RPMtoRad() ? -1 : 0)))
+			var nextState = new StrategyState();
+			var currentState = new StrategyState();
+			strategy.RequestFunc = (absTime, b, c, d, dryRun) => {
+				var shiftAllowed =  absTime > currentState.lastGearShift + 2.SI<Second>();
+				var triggerGearshift = shiftAllowed && ( run.GetContainer().EngineSpeed > 1600.RPMtoRad() ||
+										run.GetContainer().EngineSpeed < 625.RPMtoRad());
+				//var nextGear = run.GetContainer().Gear;
+				if (!dryRun && triggerGearshift) {
+					nextState.lastGearShift = absTime;
+					nextState.nextGear = (uint)(run.GetContainer().Gear + (run.GetContainer().EngineSpeed > 1600.RPMtoRad()
+						? 1
+						: (run.GetContainer().EngineSpeed < 625.RPMtoRad() ? -1 : 0)));
+				}
+				return new HybridStrategyResponse {
+					MechanicalAssistPower = new Dictionary<PowertrainPosition, NewtonMeter>()
+						{ { PowertrainPosition.HybridP2, 0.SI<NewtonMeter>() } },
+					ShiftRequired = triggerGearshift,
+					NextGear = nextState.nextGear
+				};
 			};
 			strategy.InitializeFunc = (a, b) => new HybridStrategyResponse {
 				MechanicalAssistPower = new Dictionary<PowertrainPosition, NewtonMeter>()
 					{ { PowertrainPosition.HybridP2, 0.SI<NewtonMeter>() } }
+			};
+			strategy.CommitFunc = () => {
+				currentState = nextState;
+				nextState = new StrategyState() {
+					lastGearShift = currentState.lastGearShift,
+					nextGear = currentState.nextGear,
+				};
 			};
 
 			run.Run();
 			Assert.IsTrue(run.FinishedWithoutErrors);
 
 			Assert.IsTrue(modData.Rows.Count > 0);
+		}
+
+		public class StrategyState
+		{
+			public Second lastGearShift = -double.MaxValue.SI<Second>();
+			public Second requestTstmp = -double.MaxValue.SI<Second>();
+			public uint nextGear = 0u;
 		}
 
 		// =================================================

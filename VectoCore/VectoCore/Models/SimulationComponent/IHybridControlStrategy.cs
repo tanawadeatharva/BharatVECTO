@@ -16,5 +16,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent
 	{
 		HybridStrategyResponse Request(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity, bool dryRun);
 		HybridStrategyResponse Initialize(NewtonMeter outTorque, PerSecond outAngularVelocity);
+		void CommitSimulationStep();
 	}
 }

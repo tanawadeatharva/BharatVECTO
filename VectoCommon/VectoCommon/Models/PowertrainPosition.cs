@@ -18,5 +18,10 @@ namespace TUGraz.VectoCommon.InputData {
 		{
 			return (Prefix + pos).ParseEnum<PowertrainPosition>();
 		}
+
+		public static string GetName(this PowertrainPosition pos)
+		{
+			return pos.ToString().Replace(Prefix, "");
+		}
 	}
 }

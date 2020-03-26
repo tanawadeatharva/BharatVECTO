@@ -25,6 +25,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 			return new HybridStrategyResponse()
 				{ MechanicalAssistPower = new Dictionary<PowertrainPosition, NewtonMeter>() };
 		}
+
+		public void CommitSimulationStep()
+		{
+			
+		}
 	}
 
 	
