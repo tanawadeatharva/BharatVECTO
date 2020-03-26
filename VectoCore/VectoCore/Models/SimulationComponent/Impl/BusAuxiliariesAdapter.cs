@@ -142,7 +142,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			Auxiliaries.CycleStep(CurrentState.dt);
 
 			var essUtilityFactor = 1.0;
-			if (!DataBus.IgnitionOn) {
+			if (!DataBus.CombustionEngineOn) {
 				essUtilityFactor = 1 - EngineStopStartUtilityFactor;
 			}
 

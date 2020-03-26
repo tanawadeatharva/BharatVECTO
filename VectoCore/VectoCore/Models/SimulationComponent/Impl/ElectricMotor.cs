@@ -26,6 +26,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			Control = control;
 			ModelData = data;
 			Position = position;
+			container.AddComponent(this); // We have to do this again because in the base class the position is unknown!
 		}
 
 		public PowertrainPosition Position { get; }
@@ -44,7 +45,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					}
 				};
 			}
-			if (!DataBus.IgnitionOn)
+			if (!DataBus.CombustionEngineOn)
 			{
 				PreviousState.InTorque = 0.SI<NewtonMeter>();
 				PreviousState.InAngularVelocity = outAngularVelocity;

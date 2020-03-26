@@ -33,6 +33,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			_electricMotorCtl = new Dictionary<PowertrainPosition, ElectricMotorController>();
 			_shiftStrategy = new HybridCtlShiftStrategy(this, container);
 			_hybridStrategy = strategy;
+			ElectricSystem = es;
 		}
 
 		public IHybridControlStrategy Strategy
@@ -40,13 +41,15 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			get { return _hybridStrategy; }
 		}
 
-		public virtual void AddElectricMotor(PowertrainPosition pos)
+		public IElectricSystem ElectricSystem { get; }
+
+		public virtual void AddElectricMotor(PowertrainPosition pos, ElectricMotorData motorData)
 		{
 			if (_electricMotorCtl.ContainsKey(pos)) {
 				throw new VectoException("Electric motor already registered as position {0}", pos);
 			}
 
-			_electricMotorCtl[pos] = new ElectricMotorController(this);
+			_electricMotorCtl[pos] = new ElectricMotorController(this, motorData);
 		}
 
 		public virtual IElectricMotorControl ElectricMotorControl(PowertrainPosition pos)
@@ -63,6 +66,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			bool dryRun = false)
 		{
 			CurrentState.StrategyResponse = Strategy.Request(absTime, dt, outTorque, outAngularVelocity, dryRun);
+			Gearbox.SwitchToNeutral = CurrentState.StrategyResponse.GearboxInNeutral;
+			Engine.CombustionEngineOn = CurrentState.StrategyResponse.CombustionEngineOn;
+
 			return NextComponent.Request(absTime, dt, outTorque, outAngularVelocity, dryRun);
 		}
 
@@ -97,6 +103,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			get { return CurrentState.StrategyResponse.ShiftRequired; }
 		}
 
+		public IHybridControlledGearbox Gearbox { protected get; set; }
+		public ICombustionEngine Engine { protected get; set; }
+
 		///=======================================================================================
 		public class HybridControllerState
 		{
@@ -107,10 +116,12 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		public class ElectricMotorController : IElectricMotorControl
 		{
 			protected HybridController _controller;
+			protected ElectricMotorData ElectricMotorData;
 
-			public ElectricMotorController(HybridController hybridController)
+			public ElectricMotorController(HybridController hybridController, ElectricMotorData motorData)
 			{
 				_controller = hybridController;
+				ElectricMotorData = motorData;
 			}
 
 			public NewtonMeter MechanicalAssistPower(Second absTime, Second dt, NewtonMeter outTorque,
@@ -123,12 +134,21 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			public NewtonMeter MaxDriveTorque(PerSecond avgSpeed, Second dt)
 			{
-				throw new System.NotImplementedException();
+				var driveTorque = ElectricMotorData.FullLoadCurve.FullLoadDriveTorque(avgSpeed);
+				var drivePowerElectric = ElectricMotorData.EfficiencyMap.LookupElectricPower(avgSpeed, driveTorque).ElectricalPower;
+				if (drivePowerElectric >= _controller.ElectricSystem.MaxDischargePower(dt))
+				{
+					return driveTorque;
+				}
+
+				drivePowerElectric = _controller.ElectricSystem.MaxDischargePower(dt);
+				driveTorque = ElectricMotorData.EfficiencyMap.SearchMechanicalPower(drivePowerElectric, avgSpeed).Torque;
+				return driveTorque;
 			}
 
 			public NewtonMeter MaxDragTorque(PerSecond avgSpeed, Second dt)
 			{
-				throw new System.NotImplementedException();
+				return 0.SI<NewtonMeter>();
 			}
 		}
 

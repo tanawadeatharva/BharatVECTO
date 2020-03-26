@@ -29,12 +29,11 @@ namespace TUGraz.VectoCore.Tests.Integration.Hybrid
 	[TestFixture]
 	public class ParallelHybridTest
 	{
-
 		public const string MotorFile = @"TestData\Hybrids\ElectricMotor\GenericEMotor.vem";
 		public const string BatFile = @"TestData\Hybrids\Battery\GenericBattery.vbat";
 
 		public const string AccelerationFile = @"TestData\Components\Truck.vacc";
-		public const string MotorFile240kW = @"TestData\Hybrid\ElectricMotor\GenericEMotor240kW.vem";
+		public const string MotorFile240kW = @"TestData\Hybrids\ElectricMotor\GenericEMotor240kW.vem";
 
 		public const string GearboxIndirectLoss = @"TestData\Components\Indirect Gear.vtlm";
 		public const string GearboxDirectLoss = @"TestData\Components\Direct Gear.vtlm";
@@ -45,21 +44,23 @@ namespace TUGraz.VectoCore.Tests.Integration.Hybrid
 			Directory.SetCurrentDirectory(TestContext.CurrentContext.TestDirectory);
 		}
 
-		[TestCase(30, 0.8, 500)]
+		[TestCase(30, 0.8, 200),
+		TestCase(30, 0.3, 200),
+		TestCase(30, 0.8, -200),
+		TestCase(30, 0.8, 0),
+		]
 		public void P2HybridDirveOff_ElectricAndICE(double vmax, double initialSoC, double electricTorque)
 		{
 			var cycleData = string.Format(
 				@"   0,   0, 0,    3
 				   700, {0}, 0,    0", vmax);
 			var cycle = SimpleDrivingCycles.CreateCycleData(cycleData);
-			RunHybridSimulation(vmax, initialSoC, electricTorque, cycle);
-		}
 
-		public void RunHybridSimulation(double vmax, double initialSoC, double electricTorque, DrivingCycleData cycle) 
-		{
 			const bool largeMotor = true;
+			var electricTq = electricTorque.SI<NewtonMeter>();
 			var run = CreateEngineeringRun(
-				cycle, string.Format("SimpleParallelHybrid_acc_{0}_{2}-{1}.vmod", vmax, initialSoC, electricTorque), initialSoC,
+				cycle, string.Format("SimpleParallelHybrid_acc_{0}_{2}-{1}.vmod", vmax, initialSoC, electricTq.Value()),
+				initialSoC,
 				new DelegateParallelHybridStrategy(), PowertrainPosition.HybridP2);
 
 			var hybridController = (HybridController)((VehicleContainer)run.GetContainer()).HybridController;
@@ -71,25 +72,37 @@ namespace TUGraz.VectoCore.Tests.Integration.Hybrid
 
 			var nextState = new StrategyState();
 			var currentState = new StrategyState();
+
 			strategy.RequestFunc = (absTime, b, c, d, dryRun) => {
-				var shiftAllowed =  absTime > currentState.lastGearShift + 2.SI<Second>();
-				var triggerGearshift = shiftAllowed && ( run.GetContainer().EngineSpeed > 1600.RPMtoRad() ||
-										run.GetContainer().EngineSpeed < 625.RPMtoRad());
+				var shiftAllowed = absTime > currentState.lastGearShift + 2.SI<Second>();
+				var dBus = run.GetContainer();
+				var triggerGearshift = shiftAllowed && (dBus.EngineSpeed > 1600.RPMtoRad() ||
+														dBus.EngineSpeed < 625.RPMtoRad());
 				//var nextGear = run.GetContainer().Gear;
 				if (!dryRun && triggerGearshift) {
 					nextState.lastGearShift = absTime;
-					nextState.nextGear = (uint)(run.GetContainer().Gear + (run.GetContainer().EngineSpeed > 1600.RPMtoRad()
+					nextState.nextGear = (uint)(dBus.Gear + (dBus.EngineSpeed > 1600.RPMtoRad()
 						? 1
-						: (run.GetContainer().EngineSpeed < 625.RPMtoRad() ? -1 : 0)));
+						: (dBus.EngineSpeed < 625.RPMtoRad() ? -1 : 0)));
 				}
+
+				var assistTorque = electricTq;
+				if (electricTorque < 0 && dBus.VehicleSpeed > dBus.TargetSpeed - 3.KMPHtoMeterPerSecond()) {
+					assistTorque = 0.SI<NewtonMeter>();
+				}
+
 				return new HybridStrategyResponse {
+					GearboxInNeutral = false,
+					CombustionEngineOn = true,
 					MechanicalAssistPower = new Dictionary<PowertrainPosition, NewtonMeter>()
-						{ { PowertrainPosition.HybridP2, 0.SI<NewtonMeter>() } },
+						{ { PowertrainPosition.HybridP2, assistTorque } },
 					ShiftRequired = triggerGearshift,
-					NextGear = nextState.nextGear
+					NextGear = nextState.nextGear,
 				};
 			};
 			strategy.InitializeFunc = (a, b) => new HybridStrategyResponse {
+				GearboxInNeutral = false,
+				CombustionEngineOn = true,
 				MechanicalAssistPower = new Dictionary<PowertrainPosition, NewtonMeter>()
 					{ { PowertrainPosition.HybridP2, 0.SI<NewtonMeter>() } }
 			};
@@ -107,6 +120,72 @@ namespace TUGraz.VectoCore.Tests.Integration.Hybrid
 			Assert.IsTrue(modData.Rows.Count > 0);
 		}
 
+		[TestCase(30, 0.7)]
+		public void P2HybridDriveOff_ElectricOnly(double vmax, double initialSoC)
+		{
+			var cycleData = string.Format(
+				@"   0,   0, 0,    3
+				   700, {0}, 0,    0", vmax);
+			var cycle = SimpleDrivingCycles.CreateCycleData(cycleData);
+
+			const bool largeMotor = true;
+
+			const PowertrainPosition pos = PowertrainPosition.HybridP2;
+			var run = CreateEngineeringRun(
+				cycle, string.Format("SimpleParallelHybrid_ICE-off-acc_{0}-{1}.vmod", vmax, initialSoC), initialSoC,
+				new DelegateParallelHybridStrategy(), pos, largeMotor: true);
+
+			var hybridController = (HybridController)((VehicleContainer)run.GetContainer()).HybridController;
+			Assert.NotNull(hybridController);
+			var strategy = (DelegateParallelHybridStrategy)hybridController.Strategy;
+			Assert.NotNull(strategy);
+
+			var modData = ((ModalDataContainer)((VehicleContainer)run.GetContainer()).ModData).Data;
+
+			var nextState = new StrategyState();
+			var currentState = new StrategyState();
+
+			strategy.RequestFunc = (absTime, dt, outTorque, outSpeed, dryRun) => {
+				var dBus = run.GetContainer();
+				var rpm = dBus.ElectricMotor(pos).ElectricMotorSpeed;
+				var minTorque = -hybridController.ElectricMotorControl(pos).MaxDragTorque(rpm, dt);
+				var maxTorque = -hybridController.ElectricMotorControl(pos).MaxDriveTorque(rpm, dt);
+				return new HybridStrategyResponse() {
+					MechanicalAssistPower = new Dictionary<PowertrainPosition, NewtonMeter>() {
+						{ PowertrainPosition.HybridP2, -outTorque.LimitTo(minTorque, maxTorque) }
+					},
+					GearboxInNeutral = true,
+					CombustionEngineOn = false,
+				};
+			};
+			strategy.InitializeFunc = (outTorque, outSpeed) => {
+				var dBus = run.GetContainer();
+				var rpm = dBus.ElectricMotor(pos).ElectricMotorSpeed;
+				var minTorque = -hybridController.ElectricMotorControl(pos).MaxDragTorque(rpm, 0.5.SI<Second>());
+				var maxTorque = -hybridController.ElectricMotorControl(pos).MaxDriveTorque(rpm, 0.5.SI<Second>());
+				return new HybridStrategyResponse {
+					MechanicalAssistPower = new Dictionary<PowertrainPosition, NewtonMeter>()
+						{ { PowertrainPosition.HybridP2, -outTorque.LimitTo(minTorque, maxTorque) } },
+					GearboxInNeutral = true,
+					CombustionEngineOn = false,
+				};
+			};
+			strategy.CommitFunc = () => {
+				currentState = nextState;
+				nextState = new StrategyState()
+				{
+					lastGearShift = currentState.lastGearShift,
+					nextGear = currentState.nextGear,
+				};
+			};
+
+			run.Run();
+			Assert.IsTrue(run.FinishedWithoutErrors);
+
+			Assert.IsTrue(modData.Rows.Count > 0);
+		}
+
+
 		public class StrategyState
 		{
 			public Second lastGearShift = -double.MaxValue.SI<Second>();
@@ -116,25 +195,29 @@ namespace TUGraz.VectoCore.Tests.Integration.Hybrid
 
 		// =================================================
 
-		public static VectoRun CreateEngineeringRun(DrivingCycleData cycleData, string modFileName, double initialSoc, IHybridControlStrategy hybridStrategy, PowertrainPosition pos, bool largeMotor = false, SummaryDataContainer sumData = null, double pAuxEl = 0)
+		public static VectoRun CreateEngineeringRun(DrivingCycleData cycleData, string modFileName, double initialSoc,
+			IHybridControlStrategy hybridStrategy, PowertrainPosition pos, bool largeMotor = false,
+			SummaryDataContainer sumData = null, double pAuxEl = 0)
 		{
 			var container = CreateParallelHybridPowerTrain(
-				cycleData, Path.GetFileNameWithoutExtension(modFileName), initialSoc, largeMotor, sumData, hybridStrategy, pAuxEl, pos);
+				cycleData, Path.GetFileNameWithoutExtension(modFileName), initialSoc, largeMotor, sumData,
+				hybridStrategy, pAuxEl, pos);
 			return new DistanceRun(container);
 		}
 
-		public static VehicleContainer CreateParallelHybridPowerTrain(DrivingCycleData cycleData, string modFileName, double initialBatCharge, bool largeMotor, SummaryDataContainer sumData, IHybridControlStrategy hybridStrategy, double pAuxEl, PowertrainPosition pos)
+		public static VehicleContainer CreateParallelHybridPowerTrain(DrivingCycleData cycleData, string modFileName,
+			double initialBatCharge, bool largeMotor, SummaryDataContainer sumData,
+			IHybridControlStrategy hybridStrategy, double pAuxEl, PowertrainPosition pos)
 		{
 			//var strategySettings = GetHybridStrategyParameters(largeMotor);
 
 			//strategySettings.StrategyName = "SimpleParallelHybridStrategy";
 
 			var fileWriter = new FileOutputWriter(modFileName);
-			var modDataFilter = new IModalDataFilter[] {}; //new IModalDataFilter[] { new ActualModalDataFilter(), };
+			var modDataFilter = new IModalDataFilter[] { }; //new IModalDataFilter[] { new ActualModalDataFilter(), };
 			var modData = new ModalDataContainer(
-				modFileName, new IFuelProperties[] {FuelData.Diesel}, fileWriter, 
-				filters: modDataFilter)
-			{
+				modFileName, new IFuelProperties[] { FuelData.Diesel }, fileWriter,
+				filters: modDataFilter) {
 				WriteModalResults = true,
 			};
 
@@ -145,15 +228,15 @@ namespace TUGraz.VectoCore.Tests.Integration.Hybrid
 			var airdragData = CreateAirdragData();
 			var driverData = CreateDriverData(AccelerationFile, true);
 
-			var electricMotorData = MockSimulationDataFactory.CreateElectricMotorData(largeMotor ? MotorFile240kW : MotorFile, pos);
+			var electricMotorData =
+				MockSimulationDataFactory.CreateElectricMotorData(largeMotor ? MotorFile240kW : MotorFile, pos);
 
 			var batteryData = MockSimulationDataFactory.CreateBatteryData(BatFile, initialBatCharge);
 
 			var engineData = MockSimulationDataFactory.CreateEngineDataFromFile(
-				Truck40tPowerTrain.EngineFile, gearboxData.Gears.Count);
+				 Truck40tPowerTrain.EngineFile, gearboxData.Gears.Count);
 
-			var runData = new VectoRunData()
-			{
+			var runData = new VectoRunData() {
 				//PowertrainConfiguration = PowertrainConfiguration.ParallelHybrid,
 				JobRunId = 0,
 				DriverData = driverData,
@@ -185,9 +268,11 @@ namespace TUGraz.VectoCore.Tests.Integration.Hybrid
 
 			var gearbox = new Gearbox(container, ctl.ShiftStrategy, runData);
 			//var hybridStrategy = new DelegateParallelHybridStrategy();
+			ctl.Gearbox = gearbox;
 
 			var engine = new StopStartCombustionEngine(container, runData.EngineData);
 			var idleController = engine.IdleController;
+			ctl.Engine = engine;
 
 			var cycle = new DistanceBasedDrivingCycle(container, cycleData);
 
@@ -198,17 +283,22 @@ namespace TUGraz.VectoCore.Tests.Integration.Hybrid
 			cycle
 				.AddComponent(new Driver(container, runData.DriverData, new DefaultDriverStrategy(container)))
 				.AddComponent(new Vehicle(container, runData.VehicleData, runData.AirdragData))
-				.AddComponent(new Wheels(container, runData.VehicleData.DynamicTyreRadius, runData.VehicleData.WheelsInertia))
+				.AddComponent(new Wheels(container, runData.VehicleData.DynamicTyreRadius,
+					runData.VehicleData.WheelsInertia))
 				.AddComponent(new Brakes(container))
 				.AddComponent(ctl)
-				.AddComponent(GetElectricMachine(PowertrainPosition.HybridP4, runData.ElectricMachinesData, container, es, ctl))
+				.AddComponent(GetElectricMachine(PowertrainPosition.HybridP4, runData.ElectricMachinesData, container,
+					es, ctl))
 				.AddComponent(new AxleGear(container, runData.AxleGearData))
-				.AddComponent(GetElectricMachine(PowertrainPosition.HybridP3, runData.ElectricMachinesData, container, es, ctl))
+				.AddComponent(GetElectricMachine(PowertrainPosition.HybridP3, runData.ElectricMachinesData, container,
+					es, ctl))
 				.AddComponent(runData.AngledriveData != null ? new Angledrive(container, runData.AngledriveData) : null)
 				.AddComponent(gearbox, runData.Retarder, container)
-				.AddComponent(GetElectricMachine(PowertrainPosition.HybridP2, runData.ElectricMachinesData, container, es, ctl))
+				.AddComponent(GetElectricMachine(PowertrainPosition.HybridP2, runData.ElectricMachinesData, container,
+					es, ctl))
 				.AddComponent(clutch)
-				.AddComponent(GetElectricMachine(PowertrainPosition.HybridP1, runData.ElectricMachinesData, container, es, ctl))
+				.AddComponent(GetElectricMachine(PowertrainPosition.HybridP1, runData.ElectricMachinesData, container,
+					es, ctl))
 				.AddComponent(engine, idleController)
 				.AddAuxiliaries(container, runData);
 
@@ -220,13 +310,12 @@ namespace TUGraz.VectoCore.Tests.Integration.Hybrid
 			IElectricSystem es, IHybridController ctl)
 		{
 			var motorData = electricMachinesData.FirstOrDefault(x => x.Item1 == pos);
-			if (motorData == null)
-			{
+			if (motorData == null) {
 				return null;
 			}
 
 			container.ModData.AddElectricMotor(pos);
-			ctl.AddElectricMotor(pos);
+			ctl.AddElectricMotor(pos, motorData.Item2);
 			var motor = new ElectricMotor(container, motorData.Item2, ctl.ElectricMotorControl(pos), pos);
 			motor.Connect(es);
 			return motor;
@@ -236,12 +325,10 @@ namespace TUGraz.VectoCore.Tests.Integration.Hybrid
 		{
 			var ratios = new[] { 14.93, 11.64, 9.02, 7.04, 5.64, 4.4, 3.39, 2.65, 2.05, 1.6, 1.28, 1.0 };
 
-			return new GearboxData
-			{
+			return new GearboxData {
 				Gears = ratios.Select(
 					(ratio, i) => Tuple.Create(
-						(uint)i, new GearData
-						{
+						(uint)i, new GearData {
 							//MaxTorque = 2300.SI<NewtonMeter>(),
 							LossMap =
 								TransmissionLossMapReader.ReadFromFile(
@@ -266,10 +353,8 @@ namespace TUGraz.VectoCore.Tests.Integration.Hybrid
 		private static AxleGearData CreateAxleGearData()
 		{
 			var ratio = 2.59;
-			return new AxleGearData
-			{
-				AxleGear = new GearData
-				{
+			return new AxleGearData {
+				AxleGear = new GearData {
 					Ratio = ratio,
 					LossMap = TransmissionLossMapReader.Create(0.95, ratio, "Axlegear"),
 				}
@@ -294,8 +379,7 @@ namespace TUGraz.VectoCore.Tests.Integration.Hybrid
 					TyreTestLoad = 30436.SI<Newton>()
 				},
 			};
-			return new VehicleData
-			{
+			return new VehicleData {
 				AirDensity = DeclarationData.AirDensity,
 				AxleConfiguration = AxleConfiguration.AxleConfig_4x2,
 				CurbMass = 11500.SI<Kilogram>(),
@@ -308,8 +392,7 @@ namespace TUGraz.VectoCore.Tests.Integration.Hybrid
 
 		private static AirdragData CreateAirdragData()
 		{
-			return new AirdragData()
-			{
+			return new AirdragData() {
 				CrossWindCorrectionCurve =
 					new CrosswindCorrectionCdxALookup(
 						3.2634.SI<SquareMeter>(),
@@ -320,11 +403,9 @@ namespace TUGraz.VectoCore.Tests.Integration.Hybrid
 
 		private static DriverData CreateDriverData(string accelerationFile, bool overspeed = false)
 		{
-			return new DriverData
-			{
+			return new DriverData {
 				AccelerationCurve = AccelerationCurveReader.ReadFromFile(accelerationFile),
-				LookAheadCoasting = new DriverData.LACData
-				{
+				LookAheadCoasting = new DriverData.LACData {
 					Enabled = true,
 					MinSpeed = 50.KMPHtoMeterPerSecond(),
 
@@ -335,7 +416,7 @@ namespace TUGraz.VectoCore.Tests.Integration.Hybrid
 				OverSpeed = new DriverData.OverSpeedData() {
 					Enabled = true,
 					MinSpeed = 50.KMPHtoMeterPerSecond(),
-						OverSpeed = 5.KMPHtoMeterPerSecond()
+					OverSpeed = 5.KMPHtoMeterPerSecond()
 				},
 				EngineStopStart = new DriverData.EngineStopStartData() {
 					EngineOffStandStillActivationDelay = DeclarationData.Driver.EngineStopStart.ActivationDelay,

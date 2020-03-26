@@ -29,6 +29,7 @@
 *   Martin Rexeis, rexeis@ivt.tugraz.at, IVT, Graz University of Technology
 */
 
+using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Models.SimulationComponent;
@@ -44,7 +45,9 @@ namespace TUGraz.VectoCore.Models.Simulation.DataBus
 		ExecutionMode ExecutionMode { get; }
 
 		Second AbsTime { get; set; }
-		
+
+		IElectricMotorInfo ElectricMotor(PowertrainPosition pos);
+
 	}
 
 }

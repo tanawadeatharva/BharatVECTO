@@ -300,6 +300,10 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 
 		public virtual Second AbsTime { get; set; }
+		public IElectricMotorInfo ElectricMotor(PowertrainPosition pos)
+		{
+			return ElectricMotors[pos];
+		}
 
 		public void AddComponent(VectoSimulationComponent component)
 		{
@@ -336,8 +340,12 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 				.If<PTOCycleController>(c => { commitPriority = 99; })
 				.If<VTPCycle>(_ => { commitPriority = 0; })
 				.If<IElectricMotorInfo>(c => {
+					if (c.Position == PowertrainPosition.HybridPositionNotSet) {
+						return;
+					}
 					if (ElectricMotors.ContainsKey(c.Position)) {
-						throw new VectoException("There is already an electric machine at position {0}", c.Position);
+						throw new VectoException("There is already an electric machine at position {0}",
+							c.Position);
 					}
 
 					ElectricMotors[c.Position] = c;
@@ -546,10 +554,10 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 		#region Implementation of IEngineControl
 
-		public bool IgnitionOn
+		public bool CombustionEngineOn
 		{
-			get { return EngineCtl.IgnitionOn; }
-			set { EngineCtl.IgnitionOn = value; }
+			get { return EngineCtl.CombustionEngineOn; }
+			set { EngineCtl.CombustionEngineOn = value; }
 		}
 
 		#endregion

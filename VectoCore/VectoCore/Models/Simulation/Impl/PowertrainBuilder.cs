@@ -331,10 +331,11 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 				throw new VectoException("Gearbox can not be used for parallel hybrid");
 			}
 
-			
-			
 			var engine = new StopStartCombustionEngine(container, data.EngineData);
 			var idleController = GetIdleController(data.PTO, engine, container);
+
+			ctl.Gearbox = gbx;
+			ctl.Engine = engine;
 
 			// DistanceBasedDrivingCycle --> driver --> vehicle --> wheels 
 			// --> axleGear --> (retarder) --> gearBox --> (retarder) --> clutch --> engine <-- Aux
@@ -375,7 +376,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			}
 
 			container.ModData.AddElectricMotor(pos);
-			ctl.AddElectricMotor(pos);
+			ctl.AddElectricMotor(pos, motorData.Item2);
 			var motor = new ElectricMotor(container, motorData.Item2, ctl.ElectricMotorControl(pos), pos);
 			motor.Connect(es);
 			return motor;

@@ -124,7 +124,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			CurrentState.SetState(inTorque, operatingPoint.InAngularVelocity, outTorque, outAngularVelocity);
 			CurrentState.OperatingPoint = operatingPoint;
-			CurrentState.IgnitionOn = DataBus.IgnitionOn;
+			CurrentState.IgnitionOn = DataBus.CombustionEngineOn;
 
 			var retVal = NextComponent.Request(absTime, dt, inTorque, operatingPoint.InAngularVelocity);
 
@@ -417,7 +417,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			PerSecond outAngularVelocity)
 		{
 			CurrentState.SetState(inTorque, inAngularVelocity, outTorque, outAngularVelocity);
-			CurrentState.IgnitionOn = DataBus.IgnitionOn;
+			CurrentState.IgnitionOn = DataBus.CombustionEngineOn;
 		}
 
 		public class TorqueConverterComponentState : SimpleComponentState

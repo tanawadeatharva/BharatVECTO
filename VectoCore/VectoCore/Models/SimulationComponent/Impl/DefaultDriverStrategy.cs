@@ -203,7 +203,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			if (EcoRollState.State != EcoRollStates.EcoRollOn && PCCState != PCCStates.UseCase1 &&
 				PCCState != PCCStates.UseCase2) {
 				EngineOffTimestamp = null;
-				Driver.DataBus.IgnitionOn = true;
+				Driver.DataBus.CombustionEngineOn = true;
 			}
 
 			if (CurrentDrivingMode == DrivingMode.DrivingModeBrake) {
@@ -294,7 +294,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 							break;
 						case EcoRollType.WithEngineStop:
 							(dataBus as IGearboxControl).DisengageGearbox = true;
-							dataBus.IgnitionOn = false;
+							dataBus.CombustionEngineOn = false;
 							break;
 						default: throw new ArgumentOutOfRangeException();
 					}
@@ -304,7 +304,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				case PCCStates.WithinSegment:
 				case PCCStates.PCCinterrupt:
 					(dataBus as IGearboxControl).DisengageGearbox = false;
-					dataBus.IgnitionOn = true;
+					dataBus.CombustionEngineOn = true;
 					break;
 				default: throw new ArgumentOutOfRangeException();
 			}
@@ -468,19 +468,19 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				case EcoRollStates.EcoRollOn:
 					(dBus as IGearboxControl).DisengageGearbox = true;
 					if (ADAS.EcoRoll == EcoRollType.WithEngineStop) {
-						dBus.IgnitionOn = false;
+						dBus.CombustionEngineOn = false;
 					}
 					return;
 				case EcoRollStates.EcoRollOff:
 					(dBus as IGearboxControl).DisengageGearbox = false;
 					if (ADAS.EcoRoll == EcoRollType.WithEngineStop) {
-						dBus.IgnitionOn = true;
+						dBus.CombustionEngineOn = true;
 					}
 					return;
 			}
 
 			EngineOffTimestamp = null;
-			dBus.IgnitionOn = true;
+			dBus.CombustionEngineOn = true;
 		}
 
 
@@ -499,12 +499,12 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				Driver.DriverData.EngineStopStart.EngineOffStandStillActivationDelay)) {
 				if (EngineOffTimestamp == null) {
 					EngineOffTimestamp = absTime;
-					Driver.DataBus.IgnitionOn = false;
+					Driver.DataBus.CombustionEngineOn = false;
 				}
 			}
 			if (EngineOffTimestamp != null &&
 				(absTime - EngineOffTimestamp).IsGreaterOrEqual(Driver.DriverData.EngineStopStart.MaxEngineOffTimespan)) {
-				Driver.DataBus.IgnitionOn = true;
+				Driver.DataBus.CombustionEngineOn = true;
 			}
 		}
 

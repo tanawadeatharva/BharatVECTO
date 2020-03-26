@@ -31,6 +31,7 @@
 
 using System;
 using System.Collections.Generic;
+using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Models.Connector.Ports;
@@ -79,6 +80,10 @@ namespace TUGraz.VectoCore.Tests.Utils
 		}
 
 		public Second AbsTime { get; set; }
+		public IElectricMotorInfo ElectricMotor(PowertrainPosition pos)
+		{
+			return null;
+		}
 
 		public Watt GearboxLoss()
 		{
@@ -244,7 +249,7 @@ namespace TUGraz.VectoCore.Tests.Utils
 
 		#region Implementation of IEngineControl
 
-		public bool IgnitionOn { get; set; }
+		public bool CombustionEngineOn { get; set; }
 
 		#endregion
 

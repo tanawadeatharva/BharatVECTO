@@ -19,7 +19,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl {
 			IVehicleContainer container, CombustionEngineData modelData, bool pt1Disabled = false) : base(
 			container, modelData, pt1Disabled)
 		{
-			IgnitionOn = true;
+			CombustionEngineOn = true;
 			EngineStopStartUtilityFactor = container.RunData.DriverData.EngineStopStart.UtilityFactor;
 
 			var engineRampUpEnergy = Formulas.InertiaPower(modelData.IdleSpeed, 0.RPMtoRad(), modelData.Inertia, modelData.EngineStartTime) * modelData.EngineStartTime;
@@ -29,13 +29,13 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl {
 			EngineStartEnergy = (engineRampUpEnergy + engineDragEnergy) * EngineStopStartUtilityFactor / DeclarationData.AlternaterEfficiency / DeclarationData.AlternaterEfficiency;
 		}
 
-		public override bool IgnitionOn { get; set; }
+		public override bool CombustionEngineOn { get; set; }
 
 		#region Overrides of CombustionEngine
 
 		public override IResponse Request(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity, bool dryRun)
 		{
-			return IgnitionOn ? base.Request(absTime, dt, outTorque, outAngularVelocity, dryRun) : HandleEngineOffRequest(absTime, dt, outTorque, outAngularVelocity, dryRun);
+			return CombustionEngineOn ? base.Request(absTime, dt, outTorque, outAngularVelocity, dryRun) : HandleEngineOffRequest(absTime, dt, outTorque, outAngularVelocity, dryRun);
 		}
 
 		#endregion
@@ -83,7 +83,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl {
 
 		protected override void DoWriteModalResults(Second time, Second simulationInterval, IModalDataContainer container)
 		{
-			if (IgnitionOn) {
+			if (CombustionEngineOn) {
 				base.DoWriteModalResults(time, simulationInterval, container);
 				var engineStart = !PreviousState.IgnitionOn && CurrentState.IgnitionOn;
 				container[ModalResultField.P_ice_start] = engineStart ? EngineStartEnergy / CurrentState.dt : 0.SI<Watt>();

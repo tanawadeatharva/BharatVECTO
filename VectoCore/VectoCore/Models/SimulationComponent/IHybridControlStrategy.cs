@@ -10,6 +10,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent
 		public Dictionary<PowertrainPosition, NewtonMeter> MechanicalAssistPower;
 		public bool ShiftRequired { get; set; }
 		public uint NextGear { get; set; }
+		public bool GearboxInNeutral { get; set; }
+		public bool CombustionEngineOn { get; set; }
 	}
 
 	public interface IHybridControlStrategy

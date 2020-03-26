@@ -206,7 +206,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 
 		#region Implementation of IEngineControl
 
-		public bool IgnitionOn { get; set; }
+		public bool CombustionEngineOn { get; set; }
 
 		#endregion
 	}
