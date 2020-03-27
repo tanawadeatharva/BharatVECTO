@@ -244,7 +244,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			};
 		}
 
-		public virtual double CalculateAlternatorEfficiency(IList<IAlternatorDeclarationInputData> alternators)
+		protected internal virtual double CalculateAlternatorEfficiency(IList<IAlternatorDeclarationInputData> alternators)
 		{
 			var sum = 0.0;
 			foreach (var entry in alternators)
@@ -337,7 +337,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			};
 		}
 
-		public virtual ICompressorMap GetCompressorMap(string compressorSize, string clutchType)
+		protected internal virtual ICompressorMap GetCompressorMap(string compressorSize, string clutchType)
 		{
 			var resource = "";
 			switch (compressorSize)

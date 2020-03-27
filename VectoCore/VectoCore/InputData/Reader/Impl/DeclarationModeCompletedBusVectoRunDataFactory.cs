@@ -45,7 +45,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 
 		protected IAlternatorMap _alternatorMap;
 		protected ICompressorMap _compressorMap;
-
+		protected IPneumaticsConsumersDemand _consumersDeclarationData;
 
 		protected CombustionEngineData _combustionEngineData;
 
@@ -157,6 +157,8 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 			_compressorMap = DataAdapterPrimary.GetCompressorMap(primaryBusAuxiliaries.PneumaticSupply.CompressorSize,
 				primaryBusAuxiliaries.PneumaticSupply.Clutch);
 
+			var retarderType = ((XMLDeclarationPrimaryVehicleBusDataProviderV01)primaryVehicle).RetarderType;
+			_consumersDeclarationData = DataAdapterPrimary.CreatePneumaticAuxConfig(retarderType);
 		}
 
 		protected virtual IEnumerable<VectoRunData> GetNextRun()
@@ -282,7 +284,9 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 					primaryBusAuxiliaries, completedVehicle, mission, _alternatorMap),
 
 				PneumaticUserInputsConfig = DataAdapterCompleted.CreatePneumaticUserInputsConfig(
-					primaryBusAuxiliaries, completedVehicle, _compressorMap)
+					primaryBusAuxiliaries, completedVehicle, _compressorMap),
+
+				PneumaticAuxillariesConfig = _consumersDeclarationData
 			};
 			
 			simulationRunData.BusAuxiliaries = auxiliaryConfig;
@@ -361,7 +365,9 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 					primaryVehicle, _alternatorMap, mission),
 
 				PneumaticUserInputsConfig = DataAdapterPrimary.CreatePneumaticUserInputsConfig(
-					primaryBusAuxiliaries, _compressorMap)
+					primaryBusAuxiliaries, _compressorMap),
+
+				PneumaticAuxillariesConfig = _consumersDeclarationData
 			};
 
 			simulationRunData.BusAuxiliaries = auxiliaryConfig;

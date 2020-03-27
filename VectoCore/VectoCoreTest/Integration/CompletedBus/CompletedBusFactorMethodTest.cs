@@ -119,6 +119,7 @@ namespace TUGraz.VectoCore.Tests.Integration.CompletedBus
 				AssertAuxiliaryData(relatedRuns[i]);
 				AssertElectricalUserInputConfig(relatedRuns[i]);
 				AssertPneumaticUserInputsConfig(relatedRuns[i]);
+				AssertPneumaticConsumerDemand(relatedRuns[i]);
 			}
 
 		}
@@ -583,9 +584,44 @@ namespace TUGraz.VectoCore.Tests.Integration.CompletedBus
 			Assert.AreEqual(ConsumerTechnology.Pneumatically, genericPneumaticUI.Doors);
 			Assert.AreEqual(ConsumerTechnology.Pneumatically, specificPneumaticUI.Doors);
 		}
-		
+
 		#endregion
 
+		#region Pneumatic Consumer Demand Asserts
+
+		private void AssertPneumaticConsumerDemand(RelatedRun relatedRun)
+		{
+			var genericConsumer = relatedRun.VectoRunDataGenericBody.BusAuxiliaries.PneumaticAuxillariesConfig;
+			var specificConsumer = relatedRun.VectoRunDataSpezificBody.BusAuxiliaries.PneumaticAuxillariesConfig;
+			
+			Assert.AreEqual(Constants.BusAuxiliaries.PneumaticConsumersDemands.AdBlueInjection, genericConsumer.AdBlueInjection);
+			Assert.AreEqual( genericConsumer.AdBlueInjection, specificConsumer.AdBlueInjection);
+			Assert.AreEqual(Constants.BusAuxiliaries.PneumaticConsumersDemands.AirControlledSuspension, genericConsumer.AirControlledSuspension);
+			Assert.AreEqual(genericConsumer.AirControlledSuspension, specificConsumer.AirControlledSuspension);
+			Assert.AreEqual(Constants.BusAuxiliaries.PneumaticConsumersDemands.BrakingWithRetarder, genericConsumer.Braking);
+			Assert.AreEqual(genericConsumer.Braking, specificConsumer.Braking);
+			Assert.AreEqual(Constants.BusAuxiliaries.PneumaticConsumersDemands.BreakingAndKneeling, genericConsumer.BreakingWithKneeling);
+			Assert.AreEqual(genericConsumer.BreakingWithKneeling, specificConsumer.BreakingWithKneeling);
+			Assert.AreEqual(Constants.BusAuxiliaries.PneumaticConsumersDemands.DeadVolBlowOuts, genericConsumer.DeadVolBlowOuts);
+			Assert.AreEqual(genericConsumer.DeadVolBlowOuts, specificConsumer.DeadVolBlowOuts);
+			Assert.AreEqual(Constants.BusAuxiliaries.PneumaticConsumersDemands.DeadVolume, genericConsumer.DeadVolume);
+			Assert.AreEqual(genericConsumer.DeadVolume, specificConsumer.DeadVolume);
+			Assert.AreEqual(Constants.BusAuxiliaries.PneumaticConsumersDemands.NonSmartRegenFractionTotalAirDemand,
+				genericConsumer.NonSmartRegenFractionTotalAirDemand);
+			Assert.AreEqual(genericConsumer.NonSmartRegenFractionTotalAirDemand, specificConsumer.NonSmartRegenFractionTotalAirDemand);
+			Assert.AreEqual(Constants.BusAuxiliaries.PneumaticConsumersDemands.SmartRegenFractionTotalAirDemand,
+				genericConsumer.SmartRegenFractionTotalAirDemand);
+			Assert.AreEqual(genericConsumer.SmartRegenFractionTotalAirDemand, specificConsumer.SmartRegenFractionTotalAirDemand);
+			Assert.AreEqual(Constants.BusAuxiliaries.PneumaticConsumersDemands.OverrunUtilisationForCompressionFraction,
+				genericConsumer.OverrunUtilisationForCompressionFraction);
+			Assert.AreEqual(genericConsumer.OverrunUtilisationForCompressionFraction, specificConsumer.OverrunUtilisationForCompressionFraction);
+			Assert.AreEqual(Constants.BusAuxiliaries.PneumaticConsumersDemands.DoorOpening, genericConsumer.DoorOpening);
+			Assert.AreEqual(genericConsumer.DoorOpening, specificConsumer.DoorOpening);
+			Assert.AreEqual(Constants.BusAuxiliaries.PneumaticConsumersDemands.StopBrakeActuation, genericConsumer.StopBrakeActuation);
+			Assert.AreEqual(genericConsumer.StopBrakeActuation, specificConsumer.StopBrakeActuation);
+		}
+
+		#endregion
 
 
 		private CrosswindCorrectionCdxALookup GetCrosswindCorrection(string crossWindCorrectionParams,

@@ -274,7 +274,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			return whr;
 		}
 
-		public static NewtonMeter VehMaxTorque(
+		protected internal static NewtonMeter VehMaxTorque(
 			ITransmissionInputData gear, int numGears,
 			Dictionary<int, ITorqueLimitInputData> limits,
 			NewtonMeter maxEngineTorque)
@@ -290,7 +290,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			return null;
 		}
 
-		public static NewtonMeter GbxMaxTorque(
+		protected internal static NewtonMeter GbxMaxTorque(
 			ITransmissionInputData gear, int numGears, NewtonMeter maxEngineTorque
 		)
 		{
