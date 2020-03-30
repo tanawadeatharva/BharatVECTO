@@ -192,6 +192,28 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			
 			return SelectBenefitForFloorType(mission.BusParameter.FloorType, onVehicle); 
 		}
+		
+		public void SetSSMInputs(SSMInputs ssmInputs, Mission mission)
+		{
+			var coolingPower = CalculateMaxCoolingPower(mission);
+			var busParams = mission.BusParameter;
+
+			ssmInputs.NumberOfPassengers = mission.RefLoad.Value();
+			ssmInputs.HVACMaxCoolingPower = coolingPower.Item1 + coolingPower.Item2;
+			ssmInputs.COP = DeclarationData.BusAuxiliaries.CalculateCOP(
+				coolingPower.Item1, ACCompressorType.None, coolingPower.Item2, busParams.HVACCompressorType,
+				busParams.FloorType);
+
+			ssmInputs.VentilationOnDuringHeating = true;
+			ssmInputs.VentilationWhenBothHeatingAndACInactive = true;
+			ssmInputs.VentilationDuringAC = true;
+
+			ssmInputs.FuelFiredHeaterPower = busParams.HVACAuxHeaterPower;
+			ssmInputs.FuelEnergyToHeatToCoolant = Constants.BusAuxiliaries.Heater.FuelEnergyToHeatToCoolant;
+			ssmInputs.CoolantHeatTransferredToAirCabinHeater =
+				Constants.BusAuxiliaries.Heater.CoolantHeatTransferredToAirCabinHeater;
+		}
+
 
 		public override AirdragData CreateAirdragData(IAirdragDeclarationInputData airdragInputData, Mission mission,
 			Segment segment)

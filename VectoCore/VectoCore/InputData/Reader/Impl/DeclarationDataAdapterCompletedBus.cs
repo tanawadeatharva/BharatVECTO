@@ -214,6 +214,53 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 			return dataAdapterPrimary.SelectBenefitForFloorType(floortype, onVehicle);
 		}
 
+		public void SetSSMInputs(SSMInputs ssmInputs, Mission mission, KeyValuePair<LoadingType, Kilogram> loading,
+			IVehicleDeclarationInputData completedVehicle)
+		{
+			var coolingPower = CalculateMaxCoolingPower(completedVehicle, mission.MissionType);
+
+			var busAux = completedVehicle.Components.BusAuxiliaries.HVACAux;
+			var floorType = GetFloorType(completedVehicle.VehicleCode);
+
+			ssmInputs.NumberOfPassengers = GetLoading(completedVehicle, mission, loading).Value();
+			ssmInputs.HVACMaxCoolingPower = coolingPower.Item1 + coolingPower.Item2;
+			ssmInputs.COP = DeclarationData.BusAuxiliaries.CalculateCOP(
+				coolingPower.Item1, busAux.CompressorTypeDriver, coolingPower.Item2, busAux.CompressorTypePassenger,
+				floorType);
+
+			ssmInputs.VentilationOnDuringHeating = true;
+			ssmInputs.VentilationWhenBothHeatingAndACInactive = true;
+			ssmInputs.VentilationDuringAC = true;
+
+			ssmInputs.FuelFiredHeaterPower =  busAux.AuxHeaterPower;
+			ssmInputs.FuelEnergyToHeatToCoolant = Constants.BusAuxiliaries.Heater.FuelEnergyToHeatToCoolant;
+			ssmInputs.CoolantHeatTransferredToAirCabinHeater =
+				Constants.BusAuxiliaries.Heater.CoolantHeatTransferredToAirCabinHeater;
+		}
+
+		private Tuple<Watt, Watt> CalculateMaxCoolingPower(IVehicleDeclarationInputData completedVehicle,
+			MissionType missionType)
+		{
+			var isDoubleDecker = VehicleCodeHelper.IsDoubleDeckBus(completedVehicle.VehicleCode);
+			var floorType = GetFloorType(completedVehicle.VehicleCode);
+			var hvacConfiguration = completedVehicle.Components.BusAuxiliaries.HVACAux.SystemConfiguration;
+			
+			var length = DeclarationData.BusAuxiliaries.CalculateInternalLength(
+			 	completedVehicle.Length ,isDoubleDecker, floorType, 
+				completedVehicle.NumberOfPassengersLowerDeck);
+			var height = DeclarationData.BusAuxiliaries.CalculateInternalHeight(floorType, isDoubleDecker, completedVehicle.Height);
+			var volume = length * height * completedVehicle.Width;
+
+			var driver = DeclarationData.BusAuxiliaries.HVACMaxCoolingPower.DriverMaxCoolingPower(
+			 	hvacConfiguration, missionType);
+			var passenger = DeclarationData.BusAuxiliaries.HVACMaxCoolingPower.PassengerMaxCoolingPower(
+				hvacConfiguration, missionType, volume);
+
+			return Tuple.Create(driver, passenger);
+		}
+
+
+
 
 		#region Avarage Current Demand Calculation
 
@@ -301,10 +348,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 		}
 
 		#endregion
-
-
-
-
+		
 		#region Vehicle Data Getter
 
 		private List<Axle> GetAxles(IList<IAxleDeclarationInputData> axleWheels, double[] axlesDistribution)
@@ -364,5 +408,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 		}
 
 		#endregion
+
+
 	}
 }
