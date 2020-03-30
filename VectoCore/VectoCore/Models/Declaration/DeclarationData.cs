@@ -541,6 +541,14 @@ namespace TUGraz.VectoCore.Models.Declaration
 					Constants.BusAuxiliaries.SteadyStateModel.MaxPossibleBenefitFromTechnologyList;
 			}
 
+			public static void SetEnvironmentalConditions(SSMInputs input)
+			{
+				input.DefaultConditions = new EnvironmentalConditionMapEntry(
+					Constants.BusAuxiliaries.SteadyStateModel.DefaultTemperature,
+					Constants.BusAuxiliaries.SteadyStateModel.DefaultSolar, 1.0);
+				input.EnvironmentalConditionsMap = DeclarationData.BusAuxiliaries.DefaultEnvironmentalConditions;
+			}
+			
 			#endregion
 		}
 

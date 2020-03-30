@@ -297,6 +297,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 				primaryBusAuxiliaries, DataAdapterPrimary);
 
 			DeclarationData.FactorMethodBus.SetBoundaryConditions(ssmInputs);
+			DeclarationData.FactorMethodBus.SetEnvironmentalConditions(ssmInputs);
 
 			auxiliaryConfig.SSMInputs = ssmInputs;
 
@@ -388,6 +389,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 			ssmInputs.Technologies = DataAdapterPrimary.CreateTechnologyBenefits(mission, primaryVehicle);
 
 			DeclarationData.FactorMethodBus.SetBoundaryConditions(ssmInputs);
+			DeclarationData.FactorMethodBus.SetEnvironmentalConditions(ssmInputs);
 
 			auxiliaryConfig.SSMInputs = ssmInputs;
 

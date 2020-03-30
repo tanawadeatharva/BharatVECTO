@@ -13,7 +13,6 @@ using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.InputData.FileIO.JSON;
-using TUGraz.VectoCore.InputData.Reader.ComponentData;
 using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.Impl;
@@ -122,6 +121,7 @@ namespace TUGraz.VectoCore.Tests.Integration.CompletedBus
 				AssertSSMBusParameters(relatedRuns[i], i);
 				AssertTechnologyBenefits(relatedRuns[i]);
 				AssertBoundaryConditions(relatedRuns[i]);
+				AssertEnvironmentalConditions(relatedRuns[i]);
 			}
 
 		}
@@ -704,6 +704,26 @@ namespace TUGraz.VectoCore.Tests.Integration.CompletedBus
 		}
 
 		#endregion
+
+		#region Environmental Conditions Asserts
+
+		private void AssertEnvironmentalConditions(RelatedRun relatedRun)
+		{
+			var genericEnv = relatedRun.VectoRunDataGenericBody.BusAuxiliaries.SSMInputs.EnvironmentalConditions;
+			var specificEnv = relatedRun.VectoRunDataSpezificBody.BusAuxiliaries.SSMInputs.EnvironmentalConditions;
+
+			Assert.AreEqual(Constants.BusAuxiliaries.SteadyStateModel.DefaultSolar, genericEnv.DefaultConditions.Solar);
+			Assert.AreEqual(genericEnv.DefaultConditions.Solar, specificEnv.DefaultConditions.Solar);
+			Assert.AreEqual(Constants.BusAuxiliaries.SteadyStateModel.DefaultTemperature, genericEnv.DefaultConditions.Temperature);
+			Assert.AreEqual(genericEnv.DefaultConditions.Temperature, specificEnv.DefaultConditions.Temperature);
+			Assert.AreEqual(1.0, genericEnv.DefaultConditions.Weighting);
+			Assert.AreEqual(genericEnv.DefaultConditions.Weighting, specificEnv.DefaultConditions.Weighting);
+			Assert.AreEqual(DeclarationData.BusAuxiliaries.DefaultEnvironmentalConditions, genericEnv.EnvironmentalConditionsMap);
+			Assert.AreEqual(genericEnv.EnvironmentalConditionsMap, specificEnv.EnvironmentalConditionsMap);
+		}
+		
+		#endregion
+		
 
 		private CrosswindCorrectionCdxALookup GetCrosswindCorrection(string crossWindCorrectionParams,
 			SquareMeter aerodynamicDragArea, Meter vehicleHeight)
