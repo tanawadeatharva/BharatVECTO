@@ -229,10 +229,27 @@
 					<xs:element name="Fan">
 						<xs:complexType>
 							<xs:sequence>
-								<xs:element name="Technology" type="v1.0:AuxFanTechnologyType">
+								<xs:element name="Technology">
 									<xs:annotation>
 										<xs:documentation>P181</xs:documentation>
 									</xs:annotation>
+									<xs:simpleType>
+										<xs:restriction base="xs:string">
+											<xs:enumeration value="Crankshaft mounted - Electronically controlled visco clutch"/>
+											<xs:enumeration value="Crankshaft mounted - Bimetallic controlled visco clutch"/>
+											<xs:enumeration value="Crankshaft mounted - Discrete step clutch 2 stages"/>
+											<xs:enumeration value="Crankshaft mounted - Discrete step clutch 3 stages"/>
+											<xs:enumeration value="Crankshaft mounted - On/off clutch"/>
+											<xs:enumeration value="Belt driven or driven via transm. - Electronically controlled visco clutch"/>
+											<xs:enumeration value="Belt driven or driven via transm. - Bimetallic controlled visco clutch"/>
+											<xs:enumeration value="Belt driven or driven via transm. - Discrete step clutch 2 stages"/>
+											<xs:enumeration value="Belt driven or driven via transm. - Discrete step clutch 3 stages"/>
+											<xs:enumeration value="Belt driven or driven via transm. - On/off clutch"/>
+											<xs:enumeration value="Hydraulic driven - Variable displacement pump"/>
+											<xs:enumeration value="Hydraulic driven - Constant displacement pump"/>
+											<xs:enumeration value="Electrically driven - Electronically controlled"/>
+										</xs:restriction>
+									</xs:simpleType>
 								</xs:element>
 							</xs:sequence>
 						</xs:complexType>
