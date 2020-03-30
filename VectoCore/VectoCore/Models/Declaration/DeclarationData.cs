@@ -528,6 +528,20 @@ namespace TUGraz.VectoCore.Models.Declaration
 
 			#endregion
 
+			# region SSMInputs Methods 
+
+			public static void SetBoundaryConditions(SSMInputs input)
+			{
+				input.GFactor = Constants.BusAuxiliaries.SteadyStateModel.GFactor;
+				input.HeatingBoundaryTemperature = Constants.BusAuxiliaries.SteadyStateModel.HeatingBoundaryTemperature;
+				input.CoolingBoundaryTemperature = Constants.BusAuxiliaries.SteadyStateModel.CoolingBoundaryTemperature;
+				input.SpecificVentilationPower = Constants.BusAuxiliaries.SteadyStateModel.SpecificVentilationPower;
+				input.AuxHeaterEfficiency = Constants.BusAuxiliaries.SteadyStateModel.AuxHeaterEfficiency;
+				input.MaxPossibleBenefitFromTechnologyList =
+					Constants.BusAuxiliaries.SteadyStateModel.MaxPossibleBenefitFromTechnologyList;
+			}
+
+			#endregion
 		}
 
 

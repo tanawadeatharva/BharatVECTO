@@ -121,6 +121,7 @@ namespace TUGraz.VectoCore.Tests.Integration.CompletedBus
 				AssertPneumaticConsumerDemand(relatedRuns[i]);
 				AssertSSMBusParameters(relatedRuns[i], i);
 				AssertTechnologyBenefits(relatedRuns[i]);
+				AssertBoundaryConditions(relatedRuns[i]);
 			}
 
 		}
@@ -667,10 +668,42 @@ namespace TUGraz.VectoCore.Tests.Integration.CompletedBus
 			Assert.AreEqual(0.08, specificTechnolgyBenefit.VHValueVariation);
 			Assert.AreEqual(0.04, specificTechnolgyBenefit.VVValueVariation);
 		}
-		
-		
+
 		#endregion
 
+		#region Boundary Conditions Asserts
+
+		private void AssertBoundaryConditions(RelatedRun relatedRun)
+		{
+			var genericBound = relatedRun.VectoRunDataGenericBody.BusAuxiliaries.SSMInputs.BoundaryConditions;
+			var specificBound = relatedRun.VectoRunDataGenericBody.BusAuxiliaries.SSMInputs.BoundaryConditions;
+		
+			Assert.AreEqual(Constants.BusAuxiliaries.SteadyStateModel.GFactor, genericBound.GFactor);
+			Assert.AreEqual(genericBound.GFactor, specificBound.GFactor);
+
+			Assert.AreEqual(Constants.BusAuxiliaries.SteadyStateModel.HeatingBoundaryTemperature,
+				genericBound.HeatingBoundaryTemperature);
+			Assert.AreEqual(genericBound.HeatingBoundaryTemperature, specificBound.HeatingBoundaryTemperature);
+
+			Assert.AreEqual(Constants.BusAuxiliaries.SteadyStateModel.CoolingBoundaryTemperature, 
+				genericBound.CoolingBoundaryTemperature);
+			Assert.AreEqual(genericBound.CoolingBoundaryTemperature, specificBound.CoolingBoundaryTemperature);
+
+			Assert.AreEqual(Constants.BusAuxiliaries.SteadyStateModel.SpecificVentilationPower, 
+				genericBound.SpecificVentilationPower);
+			Assert.AreEqual(genericBound.SpecificVentilationPower, specificBound.SpecificVentilationPower);
+
+			Assert.AreEqual(Constants.BusAuxiliaries.SteadyStateModel.AuxHeaterEfficiency,
+				genericBound.AuxHeaterEfficiency);
+			Assert.AreEqual(genericBound.AuxHeaterEfficiency, specificBound.AuxHeaterEfficiency);
+
+			Assert.AreEqual(Constants.BusAuxiliaries.SteadyStateModel.MaxPossibleBenefitFromTechnologyList,
+				genericBound.MaxPossibleBenefitFromTechnologyList);
+			Assert.AreEqual(genericBound.MaxPossibleBenefitFromTechnologyList, 
+				specificBound.MaxPossibleBenefitFromTechnologyList);
+		}
+
+		#endregion
 
 		private CrosswindCorrectionCdxALookup GetCrosswindCorrection(string crossWindCorrectionParams,
 			SquareMeter aerodynamicDragArea, Meter vehicleHeight)
