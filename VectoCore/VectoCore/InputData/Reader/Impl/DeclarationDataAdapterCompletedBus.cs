@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using TUGraz.VectoCommon.BusAuxiliaries;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
@@ -12,6 +13,7 @@ using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter;
 using TUGraz.VectoCore.Models.BusAuxiliaries;
 using TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.Electrics;
+using TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.HVAC;
 using TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.Pneumatics;
 using TUGraz.VectoCore.Models.BusAuxiliaries.Interfaces.DownstreamModules.Electrics;
 
@@ -136,22 +138,29 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 
 		}
 
-
-
-		public PneumaticUserInputsConfig SetPneumaticUserInputsConfig(PneumaticUserInputsConfig pneumaticUserInputsConfig,
-			IVehicleDeclarationInputData completedVehicle)
+		public void SetSSMBusParameters(SSMInputs ssmInputs, IVehicleDeclarationInputData completedVehicle, Mission mission,
+			KeyValuePair<LoadingType, Kilogram> loading)
 		{
+			var busAuxiliaries = completedVehicle.Components.BusAuxiliaries;
+			var isDoubleDecker = completedVehicle.VehicleCode.IsDoubleDeckBus();
+			var floorType = GetFloorType(completedVehicle.VehicleCode);
 
-			pneumaticUserInputsConfig.KneelingHeight = VectoMath.Max(0.SI<Meter>(), 
-				completedVehicle.EntranceHeight - Constants.BusParameters.EntranceHeight);
-			pneumaticUserInputsConfig.Doors =
-				completedVehicle.Components.BusAuxiliaries.PneumaticConsumers.DoorDriveTechnology;
+			var hvacBusLength = busAuxiliaries.HVACAux.SystemConfiguration == BusHVACSystemConfiguration.Configuration2
+				? 2 * Constants.BusParameters.DriverCompartmentLength
+				: completedVehicle.Length;
 
-			return pneumaticUserInputsConfig;
+			var hvacBusHeight = DeclarationData.BusAuxiliaries.CalculateInternalHeight(GetFloorType(completedVehicle.VehicleCode),
+				isDoubleDecker, completedVehicle.Height);
+
+			ssmInputs.NumberOfPassengers = GetLoading(completedVehicle, mission, loading).Value();
+			ssmInputs.BusFloorType = floorType;
+			
+			ssmInputs.BusWindowSurface = DeclarationData.BusAuxiliaries.WindowHeight(isDoubleDecker) * hvacBusLength +
+										DeclarationData.BusAuxiliaries.FrontAndRearWindowArea(isDoubleDecker);
+			ssmInputs.BusSurfaceArea = 2 * (hvacBusLength * completedVehicle.Width + hvacBusLength *
+											completedVehicle.Height + completedVehicle.Width * completedVehicle.Height);
+			ssmInputs.BusVolume = hvacBusLength * completedVehicle.Width * hvacBusHeight;
 		}
-
-
-
 
 		public IEnumerable<VectoRunData.AuxData> CreateAuxiliaryData(
 			IAuxiliariesDeclarationInputData auxiliaryInputData, IBusAuxiliariesDeclarationData mergedBusAux,

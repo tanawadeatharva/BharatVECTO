@@ -105,10 +105,9 @@ namespace TUGraz.VectoCore.Tests.Integration.CompletedBus
 
 			SetRelatedVehicleParts(runs);
 
-			var index = 0;
 			for (int i = 0; i < relatedRuns.Count; i++)
 			{
-				AssertVehicleData(relatedRuns[i], ref index);
+				AssertVehicleData(relatedRuns[i],i);
 				AssertAirdragData(relatedRuns[i]);
 				AssertEngineData(relatedRuns[i]);
 				AssertGearbox(relatedRuns[i]);
@@ -120,13 +119,14 @@ namespace TUGraz.VectoCore.Tests.Integration.CompletedBus
 				AssertElectricalUserInputConfig(relatedRuns[i]);
 				AssertPneumaticUserInputsConfig(relatedRuns[i]);
 				AssertPneumaticConsumerDemand(relatedRuns[i]);
+				AssertSSMBusParameters(relatedRuns[i], i);
 			}
 
 		}
 
 		#region Vehicle Data Asserts
 
-		private void AssertVehicleData(RelatedRun relatedRun, ref int index)
+		private void AssertVehicleData(RelatedRun relatedRun, int currentIndex)
 		{
 			var genericVehicleData = relatedRun.VectoRunDataGenericBody.VehicleData;
 			var specificVehicleData = relatedRun.VectoRunDataSpezificBody.VehicleData;
@@ -140,7 +140,7 @@ namespace TUGraz.VectoCore.Tests.Integration.CompletedBus
 			Assert.AreEqual(0, genericVehicleData.BodyAndTrailerMass.Value());
 			Assert.AreEqual(genericVehicleData.BodyAndTrailerMass, specificVehicleData.BodyAndTrailerMass);
 
-			AssertLoading(genericVehicleData.Loading, specificVehicleData.Loading, ref index);
+			AssertLoading(genericVehicleData.Loading, specificVehicleData.Loading, currentIndex);
 
 			Assert.AreEqual(0.4992, genericVehicleData.DynamicTyreRadius.Value(), 1e-0);
 			Assert.AreEqual(genericVehicleData.DynamicTyreRadius, specificVehicleData.DynamicTyreRadius);
@@ -150,28 +150,27 @@ namespace TUGraz.VectoCore.Tests.Integration.CompletedBus
 			AssertAxles(genericVehicleData.AxleData, specificVehicleData.AxleData);
 		}
 
-		private void AssertLoading(Kilogram genericLoading, Kilogram specificLoading, ref int index)
+		private void AssertLoading(Kilogram genericLoading, Kilogram specificLoading, int index)
 		{
 			switch (index)
 			{
 				case 0:
-					Assert.AreEqual(5051.2950, genericLoading.Value(), 1e-0);
-					Assert.AreEqual(2309.4738, specificLoading.Value(), 1e-0);//lowLoading
+					Assert.AreEqual(5051.2950, genericLoading.Value(), 1e-4);
+					Assert.AreEqual(2309.4738, specificLoading.Value(), 1e-4);
 					break;
 				case 1:
-					Assert.AreEqual(5051.2950, genericLoading.Value(), 1e-0);
+					Assert.AreEqual(5051.2950, genericLoading.Value(), 1e-4);
 					Assert.AreEqual(2130, specificLoading.Value(), 1e-0);
 					break;
 				case 2:
-					Assert.AreEqual(3367.53, genericLoading.Value(), 1e-0);
-					Assert.AreEqual(1539.6492, specificLoading.Value(), 1e-0);
+					Assert.AreEqual(3367.53, genericLoading.Value(), 1e-2);
+					Assert.AreEqual(1539.6492, specificLoading.Value(), 1e-4);
 					break;
 				case 3:
-					Assert.AreEqual(3367.53, genericLoading.Value(), 1e-0);
+					Assert.AreEqual(3367.53, genericLoading.Value(), 1e-2);
 					Assert.AreEqual(2130.0, specificLoading.Value(), 1e-0);
 					break;
 			}
-			index++;
 		}
 
 		private void AssertADASData(VehicleData.ADASData genericAdasData, VehicleData.ADASData specificAdasData)
@@ -624,6 +623,31 @@ namespace TUGraz.VectoCore.Tests.Integration.CompletedBus
 		#endregion
 
 
+		#region SSMBusParameters Asserts
+
+		private void AssertSSMBusParameters(RelatedRun relatedRun, int currentIndex)
+		{
+			var genericBusParam = relatedRun.VectoRunDataGenericBody.BusAuxiliaries.SSMInputs.BusParameters;
+			var specificBusParam = relatedRun.VectoRunDataSpezificBody.BusAuxiliaries.SSMInputs.BusParameters;
+			
+			AssertLoading(genericBusParam.NumberOfPassengers.SI<Kilogram>(), 
+				specificBusParam.NumberOfPassengers.SI<Kilogram>(), currentIndex);
+			
+			Assert.AreEqual(FloorType.HighFloor, genericBusParam.BusFloorType);
+			Assert.AreEqual(FloorType.HighFloor, specificBusParam.BusFloorType);
+
+			Assert.AreEqual(34.2500, genericBusParam.BusWindowSurface.Value());
+			Assert.AreEqual(37.5750, specificBusParam.BusWindowSurface.Value());
+
+			Assert.AreEqual(150.1200, genericBusParam.BusSurfaceArea.Value());
+			Assert.AreEqual(146.6130, specificBusParam.BusSurfaceArea.Value());
+
+			Assert.AreEqual(48.1950, genericBusParam.BusVolume.Value());
+			Assert.AreEqual(54.2997, specificBusParam.BusVolume.Value());
+		}
+
+		#endregion
+		
 		private CrosswindCorrectionCdxALookup GetCrosswindCorrection(string crossWindCorrectionParams,
 			SquareMeter aerodynamicDragArea, Meter vehicleHeight)
 		{

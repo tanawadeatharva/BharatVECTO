@@ -136,6 +136,28 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			return pneumaticUI;
 		}
 
+		public void SetSSMBusParameters(SSMInputs ssmInputs, Mission mission)
+		{
+			var busParams = mission.BusParameter;
+
+			var hvacBusLength = busParams.HVACConfiguration == BusHVACSystemConfiguration.Configuration2
+				? 2 * Constants.BusParameters.DriverCompartmentLength
+				: busParams.VehicleLength;
+
+			var hvacBusHeight = DeclarationData.BusAuxiliaries.CalculateInternalHeight(busParams.FloorType,
+				busParams.DoubleDecker, busParams.BodyHeight);
+
+			ssmInputs.NumberOfPassengers = mission.RefLoad.Value();
+			ssmInputs.BusFloorType = busParams.FloorType;
+
+			ssmInputs.BusWindowSurface = DeclarationData.BusAuxiliaries.WindowHeight(busParams.DoubleDecker) * hvacBusLength +
+						DeclarationData.BusAuxiliaries.FrontAndRearWindowArea(busParams.DoubleDecker);
+			ssmInputs.BusSurfaceArea = 2 * (hvacBusLength * busParams.VehicleWidth + hvacBusLength *
+											busParams.BodyHeight + busParams.VehicleWidth * busParams.BodyHeight);
+			ssmInputs.BusVolume = hvacBusLength * busParams.VehicleWidth * hvacBusHeight;
+		}
+
+
 
 		public override AirdragData CreateAirdragData(IAirdragDeclarationInputData airdragInputData, Mission mission,
 			Segment segment)
