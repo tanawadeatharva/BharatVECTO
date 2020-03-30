@@ -157,7 +157,41 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			ssmInputs.BusVolume = hvacBusLength * busParams.VehicleWidth * hvacBusHeight;
 		}
 
+		public TechnologyBenefits CreateTechnologyBenefits(Mission mission, IVehicleDeclarationInputData primaryVehicle)
+		{
+			var onVehicle = new List<SSMTechnology>();
+			var primaryBusAux = primaryVehicle.Components.BusAuxiliaries;
 
+			foreach (var item in DeclarationData.BusAuxiliaries.SSMTechnologyList)
+			{
+				if ("Double-glazing".Equals(item.BenefitName, StringComparison.InvariantCultureIgnoreCase) &&
+					(mission?.BusParameter?.HVACDoubleGlasing ?? false)){
+					onVehicle.Add(item);
+				}
+				if ("Heat pump systems".Equals(item.BenefitName, StringComparison.InvariantCultureIgnoreCase) &&
+					(mission?.BusParameter?.HVACHeatpump ?? false)){
+					onVehicle.Add(item);
+				}
+				if ("Adjustable auxiliary heater".Equals(item.BenefitName, StringComparison.InvariantCultureIgnoreCase) &&
+					(mission?.BusParameter?.HVACAdjustableAuxHeater ?? false)){
+					onVehicle.Add(item);
+				}
+				if ("Separate air distribution ducts".Equals(item.BenefitName, StringComparison.InvariantCultureIgnoreCase) &&
+					(mission?.BusParameter?.HVACSeparateAirDistributionDucts ?? false)){
+					onVehicle.Add(item);
+				}
+				if ("Adjustable coolant thermostat".Equals(item.BenefitName, StringComparison.InvariantCultureIgnoreCase) &&
+					(primaryBusAux?.HVACAux.AdjustableCoolantThermostat ?? false)){
+					onVehicle.Add(item);
+				}
+				if ("Engine waste gas heat exchanger".Equals(item.BenefitName, StringComparison.InvariantCultureIgnoreCase) &&
+					(primaryBusAux?.HVACAux.EngineWasteGasHeatExchanger ?? false)){
+					onVehicle.Add(item);
+				}
+			}
+			
+			return SelectBenefitForFloorType(mission.BusParameter.FloorType, onVehicle); 
+		}
 
 		public override AirdragData CreateAirdragData(IAirdragDeclarationInputData airdragInputData, Mission mission,
 			Segment segment)
@@ -479,7 +513,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			return SelectBenefitForFloorType(floorType, onVehicle);
 		}
 
-		protected virtual TechnologyBenefits SelectBenefitForFloorType(FloorType floorType, List<SSMTechnology> onVehicle)
+		protected internal virtual TechnologyBenefits SelectBenefitForFloorType(FloorType floorType, List<SSMTechnology> onVehicle)
 		{
 			var retVal = new TechnologyBenefits();
 

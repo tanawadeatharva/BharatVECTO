@@ -288,13 +288,13 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 					primaryBusAuxiliaries, completedVehicle, _compressorMap),
 
 				PneumaticAuxillariesConfig = _consumersDeclarationData
-
-
-				
 			};
 
 			var ssmInputs = new SSMInputs(null);
 			DataAdapterCompleted.SetSSMBusParameters(ssmInputs, completedVehicle, mission, loading);
+
+			ssmInputs.Technologies = DataAdapterCompleted.CreateTechnologyBenefits(completedVehicle, 
+				primaryBusAuxiliaries, DataAdapterPrimary); 
 
 
 			auxiliaryConfig.SSMInputs = ssmInputs;
@@ -383,12 +383,13 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 
 			var ssmInputs = new SSMInputs(null);
 			DataAdapterPrimary.SetSSMBusParameters(ssmInputs, mission);
+	
+			ssmInputs.Technologies = DataAdapterPrimary.CreateTechnologyBenefits(mission, primaryVehicle); 
 
 
 			auxiliaryConfig.SSMInputs = ssmInputs;
 
 			simulationRunData.BusAuxiliaries = auxiliaryConfig;
-
 
 			simulationRunData.Cycle = new DrivingCycleProxy(cycle, mission.MissionType.ToString());
 

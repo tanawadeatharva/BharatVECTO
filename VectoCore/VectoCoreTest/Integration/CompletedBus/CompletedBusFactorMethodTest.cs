@@ -120,6 +120,7 @@ namespace TUGraz.VectoCore.Tests.Integration.CompletedBus
 				AssertPneumaticUserInputsConfig(relatedRuns[i]);
 				AssertPneumaticConsumerDemand(relatedRuns[i]);
 				AssertSSMBusParameters(relatedRuns[i], i);
+				AssertTechnologyBenefits(relatedRuns[i]);
 			}
 
 		}
@@ -621,8 +622,7 @@ namespace TUGraz.VectoCore.Tests.Integration.CompletedBus
 		}
 
 		#endregion
-
-
+		
 		#region SSMBusParameters Asserts
 
 		private void AssertSSMBusParameters(RelatedRun relatedRun, int currentIndex)
@@ -647,7 +647,31 @@ namespace TUGraz.VectoCore.Tests.Integration.CompletedBus
 		}
 
 		#endregion
+
+		#region Technolgy Benefits Asserts
+
+		private void AssertTechnologyBenefits(RelatedRun relatedRun)
+		{
+			var genericTechnolgyBenefit = relatedRun.VectoRunDataGenericBody.BusAuxiliaries.SSMInputs.Technologies;
+			var specificTechnolgyBenefit = relatedRun.VectoRunDataSpezificBody.BusAuxiliaries.SSMInputs.Technologies;
+
+			Assert.AreEqual(0.08, genericTechnolgyBenefit.CValueVariation);
+			Assert.AreEqual(0.06, genericTechnolgyBenefit.HValueVariation);
+			Assert.AreEqual(0.08, genericTechnolgyBenefit.VCValueVariation);
+			Assert.AreEqual(0.06, genericTechnolgyBenefit.VHValueVariation);
+			Assert.AreEqual(0.04, genericTechnolgyBenefit.VVValueVariation);
+
+			Assert.AreEqual(0.08, specificTechnolgyBenefit.CValueVariation);
+			Assert.AreEqual(0.08, specificTechnolgyBenefit.HValueVariation);
+			Assert.AreEqual(0.08, specificTechnolgyBenefit.VCValueVariation);
+			Assert.AreEqual(0.08, specificTechnolgyBenefit.VHValueVariation);
+			Assert.AreEqual(0.04, specificTechnolgyBenefit.VVValueVariation);
+		}
 		
+		
+		#endregion
+
+
 		private CrosswindCorrectionCdxALookup GetCrosswindCorrection(string crossWindCorrectionParams,
 			SquareMeter aerodynamicDragArea, Meter vehicleHeight)
 		{

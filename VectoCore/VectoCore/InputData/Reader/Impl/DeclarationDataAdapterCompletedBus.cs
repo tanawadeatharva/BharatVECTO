@@ -169,6 +169,52 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 			throw new System.NotImplementedException();
 		}
 
+
+		public TechnologyBenefits CreateTechnologyBenefits(IVehicleDeclarationInputData completedVehicle,
+			IBusAuxiliariesDeclarationData primaryBusAux, DeclarationDataAdapterPrimaryBus dataAdapterPrimary)
+		{
+			var onVehicle = new List<SSMTechnology>();
+			var completedBuxAux = completedVehicle.Components.BusAuxiliaries;
+			var floortype = GetFloorType(completedVehicle.VehicleCode);
+
+			foreach (var item in DeclarationData.BusAuxiliaries.SSMTechnologyList)
+			{
+				if ("Double-glazing".Equals(item.BenefitName, StringComparison.InvariantCultureIgnoreCase) &&
+					(completedBuxAux?.HVACAux.DoubleGlasing ?? false))
+				{
+					onVehicle.Add(item);
+				}
+				if ("Heat pump systems".Equals(item.BenefitName, StringComparison.InvariantCultureIgnoreCase) &&
+					(completedBuxAux?.HVACAux.HeatPump ?? false))
+				{
+					onVehicle.Add(item);
+				}
+				if ("Adjustable auxiliary heater".Equals(item.BenefitName, StringComparison.InvariantCultureIgnoreCase) &&
+					(completedBuxAux?.HVACAux.AdjustableAuxiliaryHeater ?? false))
+				{
+					onVehicle.Add(item);
+				}
+				if ("Separate air distribution ducts".Equals(item.BenefitName, StringComparison.InvariantCultureIgnoreCase) &&
+					(completedBuxAux?.HVACAux.SeparateAirDistributionDucts ?? false))
+				{
+					onVehicle.Add(item);
+				}
+				if ("Adjustable coolant thermostat".Equals(item.BenefitName, StringComparison.InvariantCultureIgnoreCase) &&
+					(primaryBusAux?.HVACAux.AdjustableCoolantThermostat ?? false))
+				{
+					onVehicle.Add(item);
+				}
+				if ("Engine waste gas heat exchanger".Equals(item.BenefitName, StringComparison.InvariantCultureIgnoreCase) &&
+					(primaryBusAux?.HVACAux.EngineWasteGasHeatExchanger ?? false))
+				{
+					onVehicle.Add(item);
+				}
+			}
+
+			return dataAdapterPrimary.SelectBenefitForFloorType(floortype, onVehicle);
+		}
+
+
 		#region Avarage Current Demand Calculation
 
 
