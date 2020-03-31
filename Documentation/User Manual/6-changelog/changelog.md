@@ -2,6 +2,11 @@
 
 **VECTO 3.3.6**
 
+***Build 1916 (2020-03-31) OFFICIAL RELEASE***
+
+- Bugfixes
+    * [VECTO-1250] - Error creating new gearbox file from scratch
+
 ***Build 1898 (2020-03-13) RELEASE CANDIDATE***
 
 - Improvement
