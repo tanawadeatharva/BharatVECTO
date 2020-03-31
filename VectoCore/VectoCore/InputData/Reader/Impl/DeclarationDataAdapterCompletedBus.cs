@@ -24,8 +24,6 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 {
 	public class DeclarationDataAdapterCompletedBus
 	{
-		//Specific
-
 		public DriverData CreateDriverData(Segment segment, IVehicleDeclarationInputData primaryVehicle)
 		{
 			var lookAheadData = new DriverData.LACData
@@ -112,22 +110,6 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 			return airdragData;
 		}
 		
-		public CombustionEngineData CreateEngineData()
-		{
-			throw new System.NotImplementedException();
-		}
-
-
-		public RetarderData CreateRetarderData(IRetarderInputData retarderInputData)
-		{
-			throw new System.NotImplementedException();
-		}
-
-		public ShiftStrategyParameters CreateGearshiftData(GearboxData gearboxData, double axleRatio, PerSecond idleSpeed)
-		{
-			throw new System.NotImplementedException();
-		}
-
 		public VehicleData CreateVehicleData(IVehicleDeclarationInputData pifVehicle,
 			IVehicleDeclarationInputData completedVehicle, Mission mission, KeyValuePair<LoadingType, Kilogram> loading)
 		{
@@ -216,13 +198,6 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 			ssmInputs.BusSurfaceArea = 2 * (hvacBusLength * completedVehicle.Width + hvacBusLength *
 											completedVehicle.Height + completedVehicle.Width * completedVehicle.Height);
 			ssmInputs.BusVolume = hvacBusLength * completedVehicle.Width * hvacBusHeight;
-		}
-
-		public IEnumerable<VectoRunData.AuxData> CreateAuxiliaryData(
-			IAuxiliariesDeclarationInputData auxiliaryInputData, IBusAuxiliariesDeclarationData mergedBusAux,
-			MissionType mission, VehicleClass vehicleClass, Meter vehicleLength)
-		{
-			throw new System.NotImplementedException();
 		}
 
 

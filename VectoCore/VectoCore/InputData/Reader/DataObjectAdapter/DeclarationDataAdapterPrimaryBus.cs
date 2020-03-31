@@ -23,7 +23,6 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 {
 	public class DeclarationDataAdapterPrimaryBus : DeclarationDataAdapterHeavyLorry
 	{
-		//Generic
 		#region Overrides of DeclarationDataAdapterTruck
 
 		public DriverData CreateDriverData(Segment segment, IVehicleDeclarationInputData primaryVehicle)

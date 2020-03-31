@@ -241,8 +241,6 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 				}
 			}
 
-			var completedSegment = GetCompletedSegment(completedVehicle, primaryVehicle.AxleConfiguration);
-
 
 			//var mergedBusAux = new CombinedBusAuxiliaries(
 			//	primaryVehicle.Components.BusAuxiliaries, completedVehicle.Components.BusAuxiliaries);
@@ -278,23 +276,24 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 			//	mission, InputDataProvider.JobInputData.Vehicle, simulationRunData);
 			//return simulationRunData;
 
-			var simulationRunData = new VectoRunData();
-			simulationRunData.Loading = loading.Key;
-			simulationRunData.VehicleData = DataAdapterCompleted.CreateVehicleData(primaryVehicle, completedVehicle, mission, loading);
-			simulationRunData.AirdragData = DataAdapterCompleted.CreateAirdragData(completedVehicle, mission);
-			simulationRunData.EngineData = _combustionEngineData;
-			simulationRunData.GearboxData = _gearboxData;
-			simulationRunData.AxleGearData = _axlegearData;
-			simulationRunData.AngledriveData = _angledriveData;
-			simulationRunData.GearshiftParameters = _gearshiftData;
-
+			var completedSegment = GetCompletedSegment(completedVehicle, primaryVehicle.AxleConfiguration);
 			var primaryBusAuxiliaries = primaryVehicle.Components.BusAuxiliaries;
+
+			var simulationRunData = new VectoRunData {
+
+				Loading = loading.Key,
+				VehicleData = DataAdapterCompleted.CreateVehicleData(primaryVehicle, completedVehicle, mission, loading),
+				AirdragData = DataAdapterCompleted.CreateAirdragData(completedVehicle, mission),
+				EngineData = _combustionEngineData,
+				GearboxData = _gearboxData,
+				AxleGearData = _axlegearData,
+				AngledriveData = _angledriveData,
+				GearshiftParameters = _gearshiftData,
+				Aux = DataAdapterPrimary.CreateAuxiliaryData(primaryVehicle.Components.AuxiliaryInputData,
+				primaryBusAuxiliaries, mission.MissionType, completedSegment.VehicleClass,
+				completedVehicle.Length)
+			};
 			
-			simulationRunData.Aux = DataAdapterPrimary.CreateAuxiliaryData(primaryVehicle.Components.AuxiliaryInputData,
-				primaryBusAuxiliaries, mission.MissionType, completedSegment.VehicleClass, 
-				completedVehicle.Length);
-
-
 			var auxiliaryConfig = new AuxiliaryConfig {
 				ElectricalUserInputsConfig = DataAdapterCompleted.CreateElectricsUserInputsConfig(
 					primaryBusAuxiliaries, completedVehicle, mission, _alternatorMap),
@@ -304,23 +303,12 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 
 				PneumaticAuxillariesConfig = _consumersDeclarationData
 			};
+			
+			auxiliaryConfig.SSMInputs = GetCompletedSSMInput(mission, completedVehicle, primaryBusAuxiliaries, loading);
 
-			var ssmInputs = new SSMInputs(null);
-			DataAdapterCompleted.SetSSMBusParameters(ssmInputs, completedVehicle, mission, loading);
-
-			ssmInputs.Technologies = DataAdapterCompleted.CreateTechnologyBenefits(completedVehicle, 
-				primaryBusAuxiliaries, DataAdapterPrimary);
-
-			DeclarationData.FactorMethodBus.SetBoundaryConditions(ssmInputs);
-			DeclarationData.FactorMethodBus.SetEnvironmentalConditions(ssmInputs);
-
-			DataAdapterCompleted.SetSSMInputs(ssmInputs, mission, loading, completedVehicle);
-
-			auxiliaryConfig.SSMInputs = ssmInputs;
+			simulationRunData.BusAuxiliaries = auxiliaryConfig;
 
 			simulationRunData.Retarder = _retarderData;
-			
-			simulationRunData.BusAuxiliaries = auxiliaryConfig;
 			
 			simulationRunData.DriverData = DataAdapterCompleted.CreateDriverData(completedSegment, primaryVehicle);
 			
@@ -328,6 +316,24 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 			
 			return simulationRunData;
 		}
+
+		private SSMInputs GetCompletedSSMInput(Mission mission, IVehicleDeclarationInputData completedVehicle,
+			IBusAuxiliariesDeclarationData primaryBusAux, KeyValuePair<LoadingType, Kilogram> loading)
+		{
+			var ssmInputs = new SSMInputs(null);
+			DataAdapterCompleted.SetSSMBusParameters(ssmInputs, completedVehicle, mission, loading);
+
+			ssmInputs.Technologies = DataAdapterCompleted.CreateTechnologyBenefits(completedVehicle,
+				primaryBusAux, DataAdapterPrimary);
+
+			DeclarationData.FactorMethodBus.SetBoundaryConditions(ssmInputs);
+			DeclarationData.FactorMethodBus.SetEnvironmentalConditions(ssmInputs);
+
+			DataAdapterCompleted.SetSSMInputs(ssmInputs, mission, loading, completedVehicle);
+
+			return ssmInputs;
+		}
+
 
 
 		protected VectoRunData CreateVectoRunDataGeneric(
@@ -343,8 +349,6 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 					CyclesCache.Add(mission.MissionType, cycle);
 				}
 			}
-			var primarySegment = GetPrimarySegment(primaryVehicle);
-
 
 			//var simulationRunData = new VectoRunData {
 			//	Loading = loading.Key,
@@ -377,22 +381,23 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 			//	mission, InputDataProvider.JobInputData.Vehicle, simulationRunData);
 			//return simulationRunData;
 
-			var simulationRunData = new VectoRunData();
-			simulationRunData.Loading = loading.Key;
-			simulationRunData.VehicleData = DataAdapterPrimary.CreateVehicleData(primaryVehicle, mission, loading);
-			simulationRunData.AirdragData = DataAdapterPrimary.CreateAirdragData(null, mission, new Segment());
-			simulationRunData.EngineData = _combustionEngineData;
-			simulationRunData.GearboxData = _gearboxData;
-			simulationRunData.AxleGearData = _axlegearData;
-			simulationRunData.AngledriveData = _angledriveData;
-			simulationRunData.GearshiftParameters = _gearshiftData;
-			
+			var primarySegment = GetPrimarySegment(primaryVehicle);
 			var primaryBusAuxiliaries = primaryVehicle.Components.BusAuxiliaries;
 
-			simulationRunData.Aux = DataAdapterPrimary.CreateAuxiliaryData(primaryVehicle.Components.AuxiliaryInputData,
-				primaryBusAuxiliaries, mission.MissionType, primarySegment.VehicleClass,
-				completedVehicle.Length);
-
+			var simulationRunData = new VectoRunData {
+				Loading = loading.Key,
+				VehicleData = DataAdapterPrimary.CreateVehicleData(primaryVehicle, mission, loading),
+				AirdragData = DataAdapterPrimary.CreateAirdragData(null, mission, new Segment()),
+				EngineData = _combustionEngineData,
+				GearboxData = _gearboxData,
+				AxleGearData = _axlegearData,
+				AngledriveData = _angledriveData,
+				GearshiftParameters = _gearshiftData,
+				Aux = DataAdapterPrimary.CreateAuxiliaryData(primaryVehicle.Components.AuxiliaryInputData,
+					primaryBusAuxiliaries, mission.MissionType, primarySegment.VehicleClass,
+					completedVehicle.Length)
+			};
+			
 			var auxiliaryConfig = new AuxiliaryConfig {
 				ElectricalUserInputsConfig = DataAdapterPrimary.CreateElectricalUserInputsConfig(
 					primaryVehicle, _alternatorMap, mission),
@@ -403,17 +408,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 				PneumaticAuxillariesConfig = _consumersDeclarationData
 			};
 
-			var ssmInputs = new SSMInputs(null);
-			DataAdapterPrimary.SetSSMBusParameters(ssmInputs, mission);
-	
-			ssmInputs.Technologies = DataAdapterPrimary.CreateTechnologyBenefits(mission, primaryVehicle);
-
-			DeclarationData.FactorMethodBus.SetBoundaryConditions(ssmInputs);
-			DeclarationData.FactorMethodBus.SetEnvironmentalConditions(ssmInputs);
-
-			DataAdapterPrimary.SetSSMInputs(ssmInputs, mission);
-
-			auxiliaryConfig.SSMInputs = ssmInputs;
+			auxiliaryConfig.SSMInputs = GetPrimaryVehicleSSMInput(mission, primaryVehicle);
 
 			simulationRunData.BusAuxiliaries = auxiliaryConfig;
 
@@ -423,9 +418,25 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 
 			simulationRunData.Cycle = new DrivingCycleProxy(cycle, mission.MissionType.ToString());
 
-
 			return simulationRunData;
 
+		}
+
+
+		private SSMInputs GetPrimaryVehicleSSMInput(Mission mission, IVehicleDeclarationInputData primaryVehicle)
+		{
+			var ssmInputs = new SSMInputs(null);
+
+			DataAdapterPrimary.SetSSMBusParameters(ssmInputs, mission);
+
+			ssmInputs.Technologies = DataAdapterPrimary.CreateTechnologyBenefits(mission, primaryVehicle);
+
+			DeclarationData.FactorMethodBus.SetBoundaryConditions(ssmInputs);
+			DeclarationData.FactorMethodBus.SetEnvironmentalConditions(ssmInputs);
+
+			DataAdapterPrimary.SetSSMInputs(ssmInputs, mission);
+
+			return ssmInputs;
 		}
 	}
 }
