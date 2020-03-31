@@ -19,6 +19,7 @@ using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.OutputData.FileIO;
 using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter;
+using TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.HVAC;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Engine;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox;
 using TUGraz.VectoCore.Utils;
@@ -122,6 +123,7 @@ namespace TUGraz.VectoCore.Tests.Integration.CompletedBus
 				AssertTechnologyBenefits(relatedRuns[i]);
 				AssertBoundaryConditions(relatedRuns[i]);
 				AssertEnvironmentalConditions(relatedRuns[i]);
+				AssertSSMInputs(relatedRuns[i], i);
 			}
 
 		}
@@ -721,9 +723,80 @@ namespace TUGraz.VectoCore.Tests.Integration.CompletedBus
 			Assert.AreEqual(DeclarationData.BusAuxiliaries.DefaultEnvironmentalConditions, genericEnv.EnvironmentalConditionsMap);
 			Assert.AreEqual(genericEnv.EnvironmentalConditionsMap, specificEnv.EnvironmentalConditionsMap);
 		}
-		
+
 		#endregion
-		
+
+		#region SSMInputs Asserts
+
+		private void AssertSSMInputs(RelatedRun relatedRun, int currentIndex)
+		{
+			var genericSSMInput = (SSMInputs) relatedRun.VectoRunDataGenericBody.BusAuxiliaries.SSMInputs;
+			var specificSSMInput = (SSMInputs)relatedRun.VectoRunDataSpezificBody.BusAuxiliaries.SSMInputs;
+
+			AssertLoading(genericSSMInput.NumberOfPassengers.SI<Kilogram>(),
+				specificSSMInput.NumberOfPassengers.SI<Kilogram>(), currentIndex);
+
+			AssertHVACMaxCoolingPower(genericSSMInput.HVACMaxCoolingPower.Value(),
+				specificSSMInput.HVACMaxCoolingPower.Value(), currentIndex);
+
+			AssertCOP(genericSSMInput.COP, specificSSMInput.COP, currentIndex);
+
+			Assert.AreEqual(true, genericSSMInput.VentilationOnDuringHeating);
+			Assert.AreEqual(true, specificSSMInput.VentilationOnDuringHeating);
+			Assert.AreEqual(true, genericSSMInput.VentilationWhenBothHeatingAndACInactive);
+			Assert.AreEqual(true, specificSSMInput.VentilationWhenBothHeatingAndACInactive);
+			Assert.AreEqual(true, genericSSMInput.VentilationDuringAC);
+			Assert.AreEqual(true, specificSSMInput.VentilationDuringAC);
+
+			Assert.AreEqual(30000, genericSSMInput.FuelFiredHeaterPower.Value());
+			Assert.AreEqual(0, specificSSMInput.FuelFiredHeaterPower.Value());
+
+			Assert.AreEqual(Constants.BusAuxiliaries.Heater.FuelEnergyToHeatToCoolant,
+				genericSSMInput.FuelEnergyToHeatToCoolant);
+			Assert.AreEqual(genericSSMInput.FuelEnergyToHeatToCoolant, specificSSMInput.FuelEnergyToHeatToCoolant);
+
+			Assert.AreEqual(Constants.BusAuxiliaries.Heater.CoolantHeatTransferredToAirCabinHeater,
+				genericSSMInput.CoolantHeatTransferredToAirCabinHeater);
+			Assert.AreEqual(genericSSMInput.CoolantHeatTransferredToAirCabinHeater,
+				specificSSMInput.CoolantHeatTransferredToAirCabinHeater);
+		}
+
+
+		private void AssertHVACMaxCoolingPower(double genericValue,double specificValue, int currentIndex)
+		{
+			switch (currentIndex) {
+				case 0:
+				case 1://Interurban
+					Assert.AreEqual(28302.3750, genericValue);
+					Assert.AreEqual(33507.3425, specificValue);
+					break;
+				case 2:
+				case 3://Coach
+					Assert.AreEqual(42260.875, genericValue);
+					Assert.AreEqual(48797.2525, specificValue);
+					break;
+			}
+		}
+
+		private void AssertCOP(double genericValue, double specificValue, int currentIndex)
+		{
+			switch (currentIndex)
+			{
+				case 0:
+				case 1://Interurban
+					Assert.AreEqual(3.5, genericValue);
+					Assert.AreEqual(3.559554528, specificValue, 1e-9);
+					break;
+				case 2:
+				case 3://Coach
+					Assert.AreEqual(3.5, genericValue);
+					Assert.AreEqual(3.564261972, specificValue, 1e-9);
+					break;
+			}
+		}
+
+		#endregion
+
 
 		private CrosswindCorrectionCdxALookup GetCrosswindCorrection(string crossWindCorrectionParams,
 			SquareMeter aerodynamicDragArea, Meter vehicleHeight)
