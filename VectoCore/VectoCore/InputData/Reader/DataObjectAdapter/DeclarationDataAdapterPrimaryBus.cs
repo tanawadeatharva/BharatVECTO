@@ -226,7 +226,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			switch (clutchType) {
 				case "visco": dragCurveFactorClutch = Constants.BusAuxiliaries.PneumaticUserConfig.ViscoClutchDragCurveFactor;
 					break;
-				case "mechically": dragCurveFactorClutch = Constants.BusAuxiliaries.PneumaticUserConfig.MechanicClutchDragCurveFactor;
+				case "mechanically": dragCurveFactorClutch = Constants.BusAuxiliaries.PneumaticUserConfig.MechanicClutchDragCurveFactor;
 					break;
 			}
 
