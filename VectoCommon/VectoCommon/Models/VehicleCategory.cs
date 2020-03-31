@@ -104,12 +104,8 @@ namespace TUGraz.VectoCommon.Models
 				case VehicleCategory.RigidTruck:
 				case VehicleCategory.Tractor:
 					return true;
-				case VehicleCategory.CityBus:
-				case VehicleCategory.InterurbanBus:
-				case VehicleCategory.Coach:
-					return false;
 				default:
-					throw new ArgumentOutOfRangeException("VehicleCategory", category, null);
+					return false;
 			}
 		}
 	}
