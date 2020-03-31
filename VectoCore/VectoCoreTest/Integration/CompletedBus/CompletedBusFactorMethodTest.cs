@@ -125,6 +125,7 @@ namespace TUGraz.VectoCore.Tests.Integration.CompletedBus
 				AssertEnvironmentalConditions(relatedRuns[i]);
 				AssertSSMInputs(relatedRuns[i], i);
 				AssertRetarder(relatedRuns[i]);
+				AssertDriverData(relatedRuns[i]);
 			}
 
 		}
@@ -810,6 +811,42 @@ namespace TUGraz.VectoCore.Tests.Integration.CompletedBus
 		}
 
 		#endregion
+
+		#region  Driver Data Asserts
+
+		private void AssertDriverData(RelatedRun relatedRun)
+		{
+			var genericDriver = relatedRun.VectoRunDataGenericBody.DriverData;
+			var specificDriver = relatedRun.VectoRunDataGenericBody.DriverData;
+
+			Assert.IsNotNull(genericDriver.AccelerationCurve);
+			Assert.IsNotNull(specificDriver.AccelerationCurve);
+			Assert.AreEqual(genericDriver.AccelerationCurve, specificDriver.AccelerationCurve);
+
+			Assert.AreEqual(DeclarationData.Driver.LookAhead.Enabled, genericDriver.LookAheadCoasting.Enabled);
+			Assert.AreEqual(DeclarationData.Driver.LookAhead.MinimumSpeed, genericDriver.LookAheadCoasting.MinSpeed);
+			Assert.IsNotNull(genericDriver.LookAheadCoasting.LookAheadDecisionFactor);
+			Assert.AreEqual(DeclarationData.Driver.LookAhead.LookAheadDistanceFactor,
+				genericDriver.LookAheadCoasting.LookAheadDistanceFactor);
+			Assert.AreEqual(genericDriver.LookAheadCoasting, specificDriver.LookAheadCoasting);
+
+			Assert.AreEqual(true, genericDriver.OverSpeed.Enabled);
+			Assert.AreEqual(DeclarationData.Driver.OverSpeed.MinSpeed, genericDriver.OverSpeed.MinSpeed);
+			Assert.AreEqual(DeclarationData.Driver.OverSpeed.AllowedOverSpeed, genericDriver.OverSpeed.OverSpeed);
+			Assert.AreEqual(genericDriver.OverSpeed, specificDriver.OverSpeed);
+
+			Assert.IsNull(genericDriver.EngineStopStart);
+			Assert.IsNull(genericDriver.EcoRoll);
+			Assert.IsNull(genericDriver.PCC);
+
+			Assert.IsNull(specificDriver.EngineStopStart);
+			Assert.IsNull(specificDriver.EcoRoll);
+			Assert.IsNull(specificDriver.PCC);
+		}
+		
+		#endregion
+
+
 		private CrosswindCorrectionCdxALookup GetCrosswindCorrection(string crossWindCorrectionParams,
 			SquareMeter aerodynamicDragArea, Meter vehicleHeight)
 		{

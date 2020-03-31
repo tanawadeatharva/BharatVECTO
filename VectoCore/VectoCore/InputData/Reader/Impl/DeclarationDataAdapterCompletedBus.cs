@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using TUGraz.VectoCommon.BusAuxiliaries;
 using TUGraz.VectoCommon.Exceptions;
@@ -7,6 +8,7 @@ using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Configuration;
+using TUGraz.VectoCore.InputData.Reader.ComponentData;
 using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
@@ -16,6 +18,7 @@ using TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.Electrics;
 using TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.HVAC;
 using TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.Pneumatics;
 using TUGraz.VectoCore.Models.BusAuxiliaries.Interfaces.DownstreamModules.Electrics;
+using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.InputData.Reader.Impl
 {
@@ -23,9 +26,62 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 	{
 		//Specific
 
-		public DriverData CreateDriverData()
+		public DriverData CreateDriverData(Segment segment, IVehicleDeclarationInputData primaryVehicle)
 		{
-			throw new System.NotImplementedException();
+			var lookAheadData = new DriverData.LACData
+			{
+				Enabled = DeclarationData.Driver.LookAhead.Enabled,
+				//Deceleration = DeclarationData.Driver.LookAhead.Deceleration,
+				MinSpeed = DeclarationData.Driver.LookAhead.MinimumSpeed,
+				LookAheadDecisionFactor = new LACDecisionFactor(),
+				LookAheadDistanceFactor = DeclarationData.Driver.LookAhead.LookAheadDistanceFactor
+			};
+
+			var overspeedData = new DriverData.OverSpeedData
+			{
+				Enabled = true,
+				MinSpeed = DeclarationData.Driver.OverSpeed.MinSpeed,
+				OverSpeed = DeclarationData.Driver.OverSpeed.AllowedOverSpeed,
+			};
+
+			var driver = new DriverData
+			{
+				AccelerationCurve = AccelerationCurveReader.ReadFromStream(segment.AccelerationFile),
+				LookAheadCoasting = lookAheadData,
+				OverSpeed = overspeedData,
+				EngineStopStart = primaryVehicle.ADAS.EngineStopStart
+					? new DriverData.EngineStopStartData
+					{
+						EngineOffStandStillActivationDelay = DeclarationData.Driver.EngineStopStart.ActivationDelay,
+						MaxEngineOffTimespan = DeclarationData.Driver.EngineStopStart.MaxEngineOffTimespan,
+						UtilityFactor = DeclarationData.Driver.EngineStopStart.UtilityFactor
+					}
+					: null,
+				EcoRoll = primaryVehicle.ADAS.EcoRoll != EcoRollType.None
+					? new DriverData.EcoRollData
+					{
+						UnderspeedThreshold = DeclarationData.Driver.EcoRoll.UnderspeedThreshold,
+						MinSpeed = DeclarationData.Driver.EcoRoll.MinSpeed,
+						ActivationPhaseDuration = DeclarationData.Driver.EcoRoll.ActivationDelay,
+						AccelerationLowerLimit = DeclarationData.Driver.EcoRoll.AccelerationLowerLimit,
+						AccelerationUpperLimit = DeclarationData.Driver.EcoRoll.AccelerationUpperLimit
+					}
+					: null,
+				PCC = primaryVehicle.ADAS.PredictiveCruiseControl != PredictiveCruiseControlType.None
+					? new DriverData.PCCData
+					{
+						PCCEnableSpeed = DeclarationData.Driver.PCC.PCCEnableSpeed,
+						MinSpeed = DeclarationData.Driver.PCC.MinSpeed,
+						PreviewDistanceUseCase1 = DeclarationData.Driver.PCC.PreviewDistanceUseCase1,
+						PreviewDistanceUseCase2 = DeclarationData.Driver.PCC.PreviewDistanceUseCase2,
+						UnderSpeed = DeclarationData.Driver.PCC.Underspeed,
+						OverspeedUseCase3 = DeclarationData.Driver.PCC.OverspeedUseCase3
+					}
+					: null
+			};
+
+
+			return driver;
 		}
 
 		public AirdragData CreateAirdragData(IVehicleDeclarationInputData completedVehicle, Mission mission)

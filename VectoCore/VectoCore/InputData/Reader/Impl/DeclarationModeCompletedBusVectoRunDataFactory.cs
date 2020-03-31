@@ -42,7 +42,6 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 		protected AngledriveData _angledriveData;
 		protected GearboxData _gearboxData;
 		protected RetarderData _retarderData;
-		protected PTOData _ptoTransmissionData;
 
 		protected IAlternatorMap _alternatorMap;
 		protected ICompressorMap _compressorMap;
@@ -50,10 +49,9 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 
 		protected CombustionEngineData _combustionEngineData;
 
-		protected PTOData _municipalPtoTransmissionData;
-
 		//protected Exception InitException;
 		protected ShiftStrategyParameters _gearshiftData;
+
 
 		protected IDeclarationDataAdapter DataAdapter { get; }
 
@@ -101,10 +99,8 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 				return;
 			}
 			 
-			
+			_segment = GetCompletedSegment(vehicle, primaryVehicle.AxleConfiguration);
 
-
-			_segment = GetSegment(vehicle, primaryVehicle.AxleConfiguration);
 			//_driverdata = DataAdapterCompleted.CreateDriverData();
 			//_driverdata.AccelerationCurve = AccelerationCurveReader.ReadFromStream(_segment.AccelerationFile);
 			////var tempVehicle = DataAdapter.CreateVehicleData(
@@ -163,6 +159,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 
 			_retarderData =
 				DeclarationData.FactorMethodBus.CreateRetarderData(primaryVehicle.Components.RetarderInputData);
+		
 		}
 
 		protected virtual IEnumerable<VectoRunData> GetNextRun()
@@ -185,9 +182,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 						yield return simulationRunData;
 					}
 
-					var primarySegment = DeclarationData.PrimaryBusSegments.Lookup(
-						primaryVehicle.VehicleCategory, primaryVehicle.AxleConfiguration, primaryVehicle.Articulated,
-						primaryVehicle.FloorType, completedVehicle.VehicleCode.IsDoubleDeckBus());
+					var primarySegment = GetPrimarySegment(primaryVehicle);
 					var primaryMission = primarySegment.Missions.Where(
 						m => {
 							return m.BusParameter.DoubleDecker == completedVehicle.VehicleCode.IsDoubleDeckBus() &&
@@ -199,7 +194,19 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 			}
 		}
 
-		protected virtual Segment GetSegment(IVehicleDeclarationInputData vehicle, AxleConfiguration axleConfiguration)
+		protected virtual Segment GetPrimarySegment(IVehicleDeclarationInputData primaryVehicle)
+		{
+			var completedVehicle = InputDataProvider.JobInputData.Vehicle;
+
+			var primarySegment = DeclarationData.PrimaryBusSegments.Lookup(
+				primaryVehicle.VehicleCategory, primaryVehicle.AxleConfiguration, primaryVehicle.Articulated,
+				primaryVehicle.FloorType, completedVehicle.VehicleCode.IsDoubleDeckBus());
+
+			return primarySegment;
+		}
+
+
+		protected virtual Segment GetCompletedSegment(IVehicleDeclarationInputData vehicle, AxleConfiguration axleConfiguration)
 		{
 			if (vehicle.VehicleCategory != VehicleCategory.HeavyBusCompletedVehicle) {
 				throw new VectoException(
@@ -207,7 +214,8 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 			}
 
 			var segment = DeclarationData.CompletedBusSegments.Lookup(
-				axleConfiguration.NumAxles(), vehicle.VehicleCode, vehicle.RegisteredClass, vehicle.NumberOfPassengersLowerDeck, vehicle.Height, vehicle.FloorType == FloorType.LowFloor);
+				axleConfiguration.NumAxles(), vehicle.VehicleCode, vehicle.RegisteredClass, vehicle.NumberOfPassengersLowerDeck,
+				vehicle.Height, vehicle.FloorType == FloorType.LowFloor);
 			if (!segment.Found) {
 				throw new VectoException(
 					"no segment found for vehicle configruation: vehicle category: {0}, axle configuration: {1}, articulated: {2}, primary",
@@ -232,6 +240,10 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 					CyclesCache.Add(mission.MissionType, cycle);
 				}
 			}
+
+			var completedSegment = GetCompletedSegment(completedVehicle, primaryVehicle.AxleConfiguration);
+
+
 			//var mergedBusAux = new CombinedBusAuxiliaries(
 			//	primaryVehicle.Components.BusAuxiliaries, completedVehicle.Components.BusAuxiliaries);
 
@@ -279,7 +291,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 			var primaryBusAuxiliaries = primaryVehicle.Components.BusAuxiliaries;
 			
 			simulationRunData.Aux = DataAdapterPrimary.CreateAuxiliaryData(primaryVehicle.Components.AuxiliaryInputData,
-				primaryBusAuxiliaries, mission.MissionType, _segment.VehicleClass, 
+				primaryBusAuxiliaries, mission.MissionType, completedSegment.VehicleClass, 
 				completedVehicle.Length);
 
 
@@ -307,15 +319,13 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 			auxiliaryConfig.SSMInputs = ssmInputs;
 
 			simulationRunData.Retarder = _retarderData;
-
-			simulationRunData.BusAuxiliaries = auxiliaryConfig;
-
-
-			simulationRunData.Cycle = new DrivingCycleProxy(cycle, mission.MissionType.ToString());
-
 			
-
-
+			simulationRunData.BusAuxiliaries = auxiliaryConfig;
+			
+			simulationRunData.DriverData = DataAdapterCompleted.CreateDriverData(completedSegment, primaryVehicle);
+			
+			simulationRunData.Cycle = new DrivingCycleProxy(cycle, mission.MissionType.ToString());
+			
 			return simulationRunData;
 		}
 
@@ -333,6 +343,9 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 					CyclesCache.Add(mission.MissionType, cycle);
 				}
 			}
+			var primarySegment = GetPrimarySegment(primaryVehicle);
+
+
 			//var simulationRunData = new VectoRunData {
 			//	Loading = loading.Key,
 			//	VehicleData = DataAdapterPrimary.CreateVehicleData(primaryVehicle, mission, loading),
@@ -377,7 +390,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 			var primaryBusAuxiliaries = primaryVehicle.Components.BusAuxiliaries;
 
 			simulationRunData.Aux = DataAdapterPrimary.CreateAuxiliaryData(primaryVehicle.Components.AuxiliaryInputData,
-				primaryBusAuxiliaries, mission.MissionType, _segment.VehicleClass,
+				primaryBusAuxiliaries, mission.MissionType, primarySegment.VehicleClass,
 				completedVehicle.Length);
 
 			var auxiliaryConfig = new AuxiliaryConfig {
@@ -405,6 +418,8 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 			simulationRunData.BusAuxiliaries = auxiliaryConfig;
 
 			simulationRunData.Retarder = _retarderData;
+			
+			simulationRunData.DriverData = DataAdapterPrimary.CreateDriverData(primarySegment, primaryVehicle);
 
 			simulationRunData.Cycle = new DrivingCycleProxy(cycle, mission.MissionType.ToString());
 
