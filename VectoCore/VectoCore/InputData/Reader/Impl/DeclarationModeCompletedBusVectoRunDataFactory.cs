@@ -160,6 +160,9 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 
 			var retarderType = ((XMLDeclarationPrimaryVehicleBusDataProviderV01)primaryVehicle).RetarderType;
 			_consumersDeclarationData = DataAdapterPrimary.CreatePneumaticAuxConfig(retarderType);
+
+			_retarderData =
+				DeclarationData.FactorMethodBus.CreateRetarderData(primaryVehicle.Components.RetarderInputData);
 		}
 
 		protected virtual IEnumerable<VectoRunData> GetNextRun()
@@ -303,6 +306,8 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 
 			auxiliaryConfig.SSMInputs = ssmInputs;
 
+			simulationRunData.Retarder = _retarderData;
+
 			simulationRunData.BusAuxiliaries = auxiliaryConfig;
 
 
@@ -398,6 +403,8 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 			auxiliaryConfig.SSMInputs = ssmInputs;
 
 			simulationRunData.BusAuxiliaries = auxiliaryConfig;
+
+			simulationRunData.Retarder = _retarderData;
 
 			simulationRunData.Cycle = new DrivingCycleProxy(cycle, mission.MissionType.ToString());
 

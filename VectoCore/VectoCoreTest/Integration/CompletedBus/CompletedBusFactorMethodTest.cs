@@ -124,6 +124,7 @@ namespace TUGraz.VectoCore.Tests.Integration.CompletedBus
 				AssertBoundaryConditions(relatedRuns[i]);
 				AssertEnvironmentalConditions(relatedRuns[i]);
 				AssertSSMInputs(relatedRuns[i], i);
+				AssertRetarder(relatedRuns[i]);
 			}
 
 		}
@@ -797,7 +798,18 @@ namespace TUGraz.VectoCore.Tests.Integration.CompletedBus
 
 		#endregion
 
+		#region Retarder Asserts
 
+		private void AssertRetarder(RelatedRun relatedRun)
+		{
+			var genericRetarder = relatedRun.VectoRunDataGenericBody.Retarder;
+			var specificRetarder = relatedRun.VectoRunDataSpezificBody.Retarder;
+
+			Assert.IsNull(genericRetarder);
+			Assert.IsNull(specificRetarder);
+		}
+
+		#endregion
 		private CrosswindCorrectionCdxALookup GetCrosswindCorrection(string crossWindCorrectionParams,
 			SquareMeter aerodynamicDragArea, Meter vehicleHeight)
 		{
