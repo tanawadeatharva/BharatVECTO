@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Linq;
 using TUGraz.VectoCommon.BusAuxiliaries;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
@@ -9,22 +7,20 @@ using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.InputData.Reader.ComponentData;
-using TUGraz.VectoCore.Models.Declaration;
-using TUGraz.VectoCore.Models.Simulation.Data;
-using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter;
-using TUGraz.VectoCore.Models.BusAuxiliaries;
 using TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.Electrics;
 using TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.HVAC;
 using TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.Pneumatics;
 using TUGraz.VectoCore.Models.BusAuxiliaries.Interfaces.DownstreamModules.Electrics;
+using TUGraz.VectoCore.Models.Declaration;
+using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.InputData.Reader.Impl
 {
 	public class DeclarationDataAdapterCompletedBus
 	{
-		public DriverData CreateDriverData(Segment segment, IVehicleDeclarationInputData primaryVehicle)
+		public DriverData CreateDriverData(Segment segment)
 		{
 			var lookAheadData = new DriverData.LACData
 			{
@@ -47,26 +43,21 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 				AccelerationCurve = AccelerationCurveReader.ReadFromStream(segment.AccelerationFile),
 				LookAheadCoasting = lookAheadData,
 				OverSpeed = overspeedData,
-				EngineStopStart = primaryVehicle.ADAS.EngineStopStart
-					? new DriverData.EngineStopStartData
+				EngineStopStart =  new DriverData.EngineStopStartData
 					{
 						EngineOffStandStillActivationDelay = DeclarationData.Driver.EngineStopStart.ActivationDelay,
 						MaxEngineOffTimespan = DeclarationData.Driver.EngineStopStart.MaxEngineOffTimespan,
 						UtilityFactor = DeclarationData.Driver.EngineStopStart.UtilityFactor
-					}
-					: null,
-				EcoRoll = primaryVehicle.ADAS.EcoRoll != EcoRollType.None
-					? new DriverData.EcoRollData
+					},
+				EcoRoll =  new DriverData.EcoRollData
 					{
 						UnderspeedThreshold = DeclarationData.Driver.EcoRoll.UnderspeedThreshold,
 						MinSpeed = DeclarationData.Driver.EcoRoll.MinSpeed,
 						ActivationPhaseDuration = DeclarationData.Driver.EcoRoll.ActivationDelay,
 						AccelerationLowerLimit = DeclarationData.Driver.EcoRoll.AccelerationLowerLimit,
 						AccelerationUpperLimit = DeclarationData.Driver.EcoRoll.AccelerationUpperLimit
-					}
-					: null,
-				PCC = primaryVehicle.ADAS.PredictiveCruiseControl != PredictiveCruiseControlType.None
-					? new DriverData.PCCData
+					},
+				PCC = new DriverData.PCCData
 					{
 						PCCEnableSpeed = DeclarationData.Driver.PCC.PCCEnableSpeed,
 						MinSpeed = DeclarationData.Driver.PCC.MinSpeed,
@@ -75,7 +66,6 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 						UnderSpeed = DeclarationData.Driver.PCC.Underspeed,
 						OverspeedUseCase3 = DeclarationData.Driver.PCC.OverspeedUseCase3
 					}
-					: null
 			};
 
 

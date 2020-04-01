@@ -312,11 +312,17 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 		public virtual GearboxData CreateGearboxData(IVehicleDeclarationInputData inputData, VectoRunData runData,
 			IShiftPolygonCalculator shiftPolygonCalc)
 		{
-			var gearbox = inputData.Components.GearboxInputData;
-
-			if (!gearbox.SavedInDeclarationMode) {
+			if (!inputData.Components.GearboxInputData.SavedInDeclarationMode) {
 				WarnDeclarationMode("GearboxData");
 			}
+			return DoCreateGearboxData(inputData, runData, shiftPolygonCalc);
+		}
+
+		public static GearboxData DoCreateGearboxData(IVehicleDeclarationInputData inputData, VectoRunData runData,
+			IShiftPolygonCalculator shiftPolygonCalc)
+		{ 
+			var gearbox = inputData.Components.GearboxInputData;
+
 			var adas = inputData.ADAS;
 			var torqueConverter = inputData.Components.TorqueConverterInputData;
 
@@ -354,9 +360,10 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 
 			var gears = new Dictionary<uint, GearData>();
 			var tcShiftPolygon = DeclarationData.TorqueConverter.ComputeShiftPolygon(engine.FullLoadCurves[0]);
+			var vehicleCategory = inputData.VehicleCategory;
 			for (uint i = 0; i < gearsInput.Count; i++) {
 				var gear = gearsInput[(int)i];
-				var lossMap = CreateGearLossMap(gear, i, false);
+				var lossMap = CreateGearLossMap(gear, i, false, vehicleCategory);
 
 				var shiftPolygon = shiftPolygonCalc != null
 					? shiftPolygonCalc.ComputeDeclarationShiftPolygon(
@@ -394,12 +401,25 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			if (retVal.Type.AutomaticTransmission()) {
 				var ratio = double.IsNaN(retVal.Gears[1].Ratio) ? 1 : retVal.Gears[1].TorqueConverterRatio / retVal.Gears[1].Ratio;
 				retVal.PowershiftShiftTime = DeclarationData.Gearbox.PowershiftShiftTime;
-				retVal.TorqueConverterData = TorqueConverterDataReader.Create(
-					torqueConverter.TCData,
-					DeclarationData.TorqueConverter.ReferenceRPM, DeclarationData.TorqueConverter.MaxInputSpeed,
-					ExecutionMode.Declaration, ratio,
-					DeclarationData.TorqueConverter.CLUpshiftMinAcceleration,
-					DeclarationData.TorqueConverter.CCUpshiftMinAcceleration);
+				// TODO MQ 20200401 maybe vehiclecategory heavybuscompleted is not correct here.
+				if (vehicleCategory == VehicleCategory.HeavyBusCompletedVehicle) {
+					var fileStream = RessourceHelper.ReadStream(DeclarationData.FactorMethodBus.GenericTorqueConvert);
+					retVal.TorqueConverterData = TorqueConverterDataReader.ReadFromStream(fileStream,
+						DeclarationData.TorqueConverter.ReferenceRPM,
+						DeclarationData.TorqueConverter.MaxInputSpeed,
+						ExecutionMode.Declaration,
+						ratio,
+						DeclarationData.TorqueConverter.CLUpshiftMinAcceleration,
+						DeclarationData.TorqueConverter.CCUpshiftMinAcceleration);
+				} else {
+					retVal.TorqueConverterData = TorqueConverterDataReader.Create(
+						torqueConverter.TCData,
+						DeclarationData.TorqueConverter.ReferenceRPM, DeclarationData.TorqueConverter.MaxInputSpeed,
+						ExecutionMode.Declaration, ratio,
+						DeclarationData.TorqueConverter.CLUpshiftMinAcceleration,
+						DeclarationData.TorqueConverter.CCUpshiftMinAcceleration);
+				}
+
 				retVal.TorqueConverterData.ModelName = torqueConverter.Model;
 				retVal.TorqueConverterData.DigestValueInput = torqueConverter.DigestValue?.DigestValue;
 				retVal.TorqueConverterData.CertificationMethod = torqueConverter.CertificationMethod;
