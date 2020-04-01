@@ -142,8 +142,10 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 			_combustionEngineData = DeclarationData.FactorMethodBus.CreateBusEngineData(primaryVehicle);
 
 			_axlegearData = DeclarationData.FactorMethodBus.CreateAxlegearData(primaryVehicle.Components.AxleGearInputData);
-			_angledriveData =
-				DeclarationData.FactorMethodBus.CreateAngledriveData(primaryVehicle.Components.AngledriveInputData);
+
+			_angledriveData = DeclarationData.FactorMethodBus.CreateAngledriveData(
+								primaryVehicle.Components.AngledriveInputData,
+								primaryVehicle.Components.AxleGearInputData.Ratio);
 			
 			_gearboxData = DeclarationData.FactorMethodBus.CreateGearboxData(primaryVehicle,
 				new VectoRunData() { EngineData = _combustionEngineData, AxleGearData = _axlegearData, VehicleData = _tmpVehicleData},
