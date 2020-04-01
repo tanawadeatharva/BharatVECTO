@@ -160,8 +160,13 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 			var k = (leftEntry.Value.Deceleration - rightEntry.Value.Deceleration) / (leftEntry.Key - rightEntry.Key);
 			var d = leftEntry.Value.Deceleration - k * leftEntry.Key;
 			if (v2 > v1) {
+				if (leftEntry.Value.Acceleration.IsEqual(rightEntry.Value.Acceleration)) {
+					var acceleration =  leftEntry.Value.Acceleration;
+					return ((v2 - v1) * (v2 - v1) / 2.0 / acceleration + v1 * (v2 - v1) / acceleration).Cast<Meter>();
+				}
 				k = (leftEntry.Value.Acceleration - rightEntry.Value.Acceleration) / (leftEntry.Key - rightEntry.Key);
 				d = leftEntry.Value.Acceleration - k * leftEntry.Key;
+				
 			}
 			var m = v1 + d / k;
 			var b = -d / k;
