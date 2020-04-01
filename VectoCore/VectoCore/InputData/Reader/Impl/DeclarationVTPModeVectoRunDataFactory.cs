@@ -200,7 +200,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 			var drivingCycle = DrivingCycleDataReader.ReadFromDataTable(vtpCycle.CycleData, vtpCycle.Name, false);
 
 			// Loading is not relevant as we use P_wheel
-			var vtpRunData = CreateVectoRunData(Segment, Segment.Missions.First(), 0.SI<Kilogram>());
+			var vtpRunData = CreateVectoRunData(Segment, Segment.Missions.First(), Tuple.Create<Kilogram, double?>( 0.SI<Kilogram>(), null));
 			vtpRunData.Cycle = new DrivingCycleProxy(drivingCycle, vtpCycle.Name);
 			vtpRunData.Aux = AuxVTP;
 			vtpRunData.FanData = GetFanData();
@@ -239,7 +239,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 					DeclarationData.VTPMode.RunInThreshold;
 		}
 
-		protected VectoRunData CreateVectoRunData(Segment segment, Mission mission, Kilogram loading)
+		protected VectoRunData CreateVectoRunData(Segment segment, Mission mission, Tuple<Kilogram, double?> loading)
 		{
 			return new VectoRunData {
 				JobName = JobInputData.Vehicle.VIN,
@@ -250,7 +250,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 				AngledriveData = AngledriveData,
 				VehicleData = Dao.CreateVehicleData(
 					JobInputData.Vehicle, mission,
-					new KeyValuePair<LoadingType, Kilogram>(LoadingType.ReferenceLoad, loading)),
+					new KeyValuePair<LoadingType, Tuple<Kilogram, double?>>(LoadingType.ReferenceLoad, loading)),
 				AirdragData = AirdragData,
 				DriverData = null,
 				BusAuxiliaries = null,

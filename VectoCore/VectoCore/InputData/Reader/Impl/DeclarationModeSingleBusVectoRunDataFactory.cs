@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
@@ -28,7 +29,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl {
 		protected override IDeclarationDataAdapter DataAdapter { get { return _dao; } }
 
 
-		protected override VectoRunData CreateVectoRunData(IVehicleDeclarationInputData vehicle, int modeIdx, Mission mission, KeyValuePair<LoadingType, Kilogram> loading)
+		protected override VectoRunData CreateVectoRunData(IVehicleDeclarationInputData vehicle, int modeIdx, Mission mission, KeyValuePair<LoadingType, Tuple<Kilogram, double?>> loading)
 		{
 			var doubleDecker = _singleBusInputData.CompletedVehicle.NuberOfPassengersUpperDeck > 0;
 			if (mission.BusParameter.DoubleDecker != doubleDecker) {

@@ -287,7 +287,7 @@ namespace TUGraz.VectoCore.OutputData
 				cargoVolume = runData.VehicleData.CargoVolume;
 				vehicleLoading = runData.VehicleData.Loading;
 				gearCount = (uint)runData.GearboxData.Gears.Count;
-				passengerCount = runData.BusAuxiliaries?.SSMInputs.NumberOfPassengers;
+				passengerCount = runData.VehicleData.PassengerCount;
 			}
 
 			row[Fields.VEHICLE_FUEL_TYPE] = string.Join(", ", modData.FuelData.Select(x => x.GetLabel()));
@@ -684,7 +684,7 @@ namespace TUGraz.VectoCore.OutputData
 
 			if (runData.BusAuxiliaries != null) {
 				// subtract driver!
-				row[Fields.PassengerCount] = runData.BusAuxiliaries.SSMInputs.NumberOfPassengers - 1;
+				row[Fields.PassengerCount] = runData.VehicleData.PassengerCount;
 			}
 
 			row[Fields.TCU_MODEL] = runData.ShiftStrategy;
