@@ -164,7 +164,8 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 				ModelName = data.Model,
 				Date = data.Date,
 				CertificationMethod = data.CertificationMethod,
-				CertificationNumber = data.CertificationNumber,
+				CertificationNumber = data.CertificationMethod != CertificationMethod.StandardValues ? 
+					data.CertificationNumber : "",
 				DigestValueInput = data.DigestValue != null ? data.DigestValue.DigestValue : "",
 				Type = data.Type
 			};
