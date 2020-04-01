@@ -34,6 +34,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.IO;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using Newtonsoft.Json.Linq;
 using TUGraz.VectoCommon.BusAuxiliaries;
 using TUGraz.VectoCommon.Exceptions;
@@ -47,6 +48,8 @@ using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter;
 using TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.Electrics;
 using TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.HVAC;
 using TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.Pneumatics;
+using TUGraz.VectoCore.Models.Simulation.Data;
+using TUGraz.VectoCore.Models.SimulationComponent;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Engine;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox;
@@ -149,7 +152,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 			private static string GenericEngineCM_Normed_PI =
 				$"{DeclarationDataResourcePrefix}.GenericBusData.EngineConsumptionMap_PI_Normed.vmap";
 			
-			private static string GenericTorqueConvert =
+			public static string GenericTorqueConvert =
 				$"{DeclarationDataResourcePrefix}.GenericBusData.GenericTorqueConverter.csv";
 			#endregion
 
@@ -167,13 +170,13 @@ namespace TUGraz.VectoCore.Models.Declaration
 				{
 					[0] = FullLoadCurveReader.Create(enginePif.EngineModes.First().FullLoadCurve, true)
 				};
-				engine.FullLoadCurves = fullLoadCurves;
+				// TODO: MQ 20200401 add full-load curves per gear, limited by max torque (gbx or vehicle)
+				//   see DeclarationDataAdapterHeavyLorry ln 235ff.
 
+				engine.FullLoadCurves = fullLoadCurves;
 
 				engine.IdleSpeed = enginePif.EngineModes[0].IdleSpeed;
 				engine.Displacement = enginePif.Displacement;
-
-				//engine.Fuels ?!?!?
 
 				var fuel = GetCombustionEngineFuelData(enginePif.EngineModes.First().Fuels.First().FuelType,
 					pifVehicle.DualFuelVehicle);
@@ -233,6 +236,8 @@ namespace TUGraz.VectoCore.Models.Declaration
 
 			private static DataTable DenormalizeData(string ressourceId)
 			{
+				// TODO: use vehicle specific values. n_idle  from PIF, nRated calculated from
+				// full-load curve (fullLoadCurves[0].RatedSpeed), m_rated => max torque (fullLoadCurves[0].MaxTorque)
 				var nIdle = 600.0;
 				var nRated = 1800.0;
 				var mRated = 1750.0;
@@ -315,6 +320,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 					Constants.GenericLossMapSettings.OutputTorqueEnd
 				};
 
+				// TODO: MQ 20200401  I_axl from PIF
 				var td0 = Constants.GenericLossMapSettings.T0 +
 						Constants.GenericLossMapSettings.IAxl *
 						Constants.GenericLossMapSettings.T1;
@@ -376,6 +382,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 				inputLossMap.Columns.Add(TransmissionLossMapReader.Fields.InputTorque);
 				inputLossMap.Columns.Add(TransmissionLossMapReader.Fields.TorqeLoss);
 
+				// TODO: MQ 20200401 use axlegear ratio from PIF
 				var iAxle = Constants.GenericLossMapSettings.IAxl;
 
 				foreach (DataRow row in outputLossMap.Rows) {
@@ -393,16 +400,19 @@ namespace TUGraz.VectoCore.Models.Declaration
 				return inputLossMap;
 			}
 
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			private static double GetInputSpeed(double outputSpeed, double iAxle)
 			{
 				return outputSpeed * iAxle;
 			}
 
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			private static double GetInputTorque(double outputTorque, double outputLoss, double iAxle)
 			{
 				return (outputTorque + outputLoss) / iAxle;
 			}
 
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			private static double GetInputTorqueLoss(double outputLoss, double iAxle)
 			{
 				return outputLoss / iAxle;
@@ -465,67 +475,23 @@ namespace TUGraz.VectoCore.Models.Declaration
 
 			#region Create Gearbox Data
 
-			public static GearboxData CreateGearboxData(IVehicleDeclarationInputData pifVehicle, NewtonMeter fullLoadMaxTorque)
+			public static GearboxData CreateGearboxData(IVehicleDeclarationInputData pifVehicle, VectoRunData runData,
+				IShiftPolygonCalculator shiftPolygonCalc)
 			{
-				var gearbox = new GearboxData
-				{
-					Inertia = 0.SI<KilogramSquareMeter>(),
-					TractionInterruption =
-						GearBoxTypeHelper.TractionInterruption(pifVehicle.Components.GearboxInputData.Type),
-					Gears = GetGearData(pifVehicle.Components.GearboxInputData,
-						pifVehicle.TorqueLimits.ToDictionary(e => e.Gear), fullLoadMaxTorque)
-				};
+				return DeclarationDataAdapterHeavyLorry.DoCreateGearboxData(pifVehicle, runData, shiftPolygonCalc);
+				//var gearbox = new GearboxData
+				//{
+				//	Inertia = 0.SI<KilogramSquareMeter>(),
+				//	TractionInterruption =
+				//		GearBoxTypeHelper.TractionInterruption(pifVehicle.Components.GearboxInputData.Type),
+				//	Gears = GetGearData(pifVehicle.Components.GearboxInputData,
+				//		pifVehicle.TorqueLimits.ToDictionary(e => e.Gear), fullLoadMaxTorque)
+				//};
 
-				return gearbox;
+				//return gearbox;
 			}
 
-			private static Dictionary<uint, GearData> GetGearData(IGearboxDeclarationInputData gearboxData,
-				Dictionary<int, ITorqueLimitInputData> torqueLimits, NewtonMeter fullLoadMaxTorque)
-			{
-				var gearData = new Dictionary<uint, GearData>();
-				var numberOfGears = gearboxData.Gears.Count;
-				var currentGearNumber = (uint)1;
-
-				foreach (var gear in gearboxData.Gears)
-				{
-					var maxTorque = VectoMath.Min(
-						DeclarationDataAdapterHeavyLorry.GbxMaxTorque(gear, numberOfGears, fullLoadMaxTorque),
-						DeclarationDataAdapterHeavyLorry.VehMaxTorque(gear, numberOfGears, torqueLimits, fullLoadMaxTorque));
-
-					var currentGear = new GearData
-					{
-						Ratio = gear.Ratio,
-						LossMap = gear.Ratio.IsEqual(1)
-							? TransmissionLossMapReader.Create(0.98, gear.Ratio, $"Gear {currentGearNumber}")
-							: TransmissionLossMapReader.Create(0.96, gear.Ratio, $"Gear {currentGearNumber}"),
-						MaxSpeed = gear.MaxInputSpeed,
-						MaxTorque = maxTorque
-					};
-
-					gearData.Add(currentGearNumber, currentGear);
-					currentGearNumber++;
-				}
-
-				return gearData;
-			}
-
-			#endregion
-
-			#region Create Torque Converter Data
-
-			public static TorqueConverterData CreateTorqueConverterData(GearboxData gearboxData)
-			{
-				var firstRatio = gearboxData.Gears.Values.First().Ratio;
-				var fileStream = RessourceHelper.ReadStream(GenericTorqueConvert);
-
-				return TorqueConverterDataReader.ReadFromStream(fileStream,
-					1000.RPMtoRad(),
-					TorqueConverter.MaxInputSpeed,
-					ExecutionMode.Declaration,
-					gearboxData.Type == GearboxType.ATSerial ? 1 : 1 / firstRatio,
-					Gearbox.UpshiftMinAcceleration, Gearbox.UpshiftMinAcceleration);
-			}
-
+			
 			#endregion
 
 			# region SSMInputs Methods 

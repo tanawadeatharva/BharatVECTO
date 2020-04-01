@@ -155,7 +155,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			return retVal;
 		}
 
-		internal GearboxData SetCommonGearboxData(IGearboxDeclarationInputData data)
+		internal static GearboxData SetCommonGearboxData(IGearboxDeclarationInputData data)
 		{
 			return new GearboxData {
 				InputData = data,
@@ -170,8 +170,14 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			};
 		}
 
-		protected TransmissionLossMap CreateGearLossMap(ITransmissionInputData gear, uint i, bool useEfficiencyFallback)
+		protected static TransmissionLossMap CreateGearLossMap(ITransmissionInputData gear, uint i, bool useEfficiencyFallback, VehicleCategory vehicleCategory )
 		{
+			// TODO MQ 20200401 maybe vehiclecategory heavybuscompleted is not correct here.
+			if (vehicleCategory == VehicleCategory.HeavyBusCompletedVehicle) {
+				return gear.Ratio.IsEqual(1)
+					? TransmissionLossMapReader.Create(0.98, gear.Ratio, $"Gear {i + 1}")
+					: TransmissionLossMapReader.Create(0.96, gear.Ratio, $"Gear {i + 1}");
+			}
 			if (gear.LossMap != null) {
 				return TransmissionLossMapReader.Create(gear.LossMap, gear.Ratio, string.Format("Gear {0}", i + 1), true);
 			}
