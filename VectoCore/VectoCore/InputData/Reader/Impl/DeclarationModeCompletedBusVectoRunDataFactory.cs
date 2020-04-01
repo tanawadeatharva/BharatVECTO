@@ -36,6 +36,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 
 
 		protected Segment _segment;
+		
 		protected DriverData _driverdata;
 		protected AirdragData _airdragData;
 		protected AxleGearData _axlegearData;
@@ -51,6 +52,8 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 
 		//protected Exception InitException;
 		protected ShiftStrategyParameters _gearshiftData;
+
+		private VehicleData _tmpVehicleData;
 
 
 		protected IDeclarationDataAdapter DataAdapter { get; }
@@ -130,6 +133,11 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 
 			//_municipalPtoTransmissionData = null;
 
+			_tmpVehicleData = new VehicleData {
+				DynamicTyreRadius = DeclarationData.FactorMethodBus.GetDynamicTyreRadius(primaryVehicle),
+				VehicleCategory = VehicleCategory.GenericBusVehicle
+			};
+
 
 			_combustionEngineData = DeclarationData.FactorMethodBus.CreateBusEngineData(primaryVehicle);
 
@@ -137,7 +145,8 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 			_angledriveData =
 				DeclarationData.FactorMethodBus.CreateAngledriveData(primaryVehicle.Components.AngledriveInputData);
 			
-			_gearboxData = DeclarationData.FactorMethodBus.CreateGearboxData(primaryVehicle, new VectoRunData() { EngineData = _combustionEngineData, AxleGearData = _axlegearData, VehicleData =  },
+			_gearboxData = DeclarationData.FactorMethodBus.CreateGearboxData(primaryVehicle,
+				new VectoRunData() { EngineData = _combustionEngineData, AxleGearData = _axlegearData, VehicleData = _tmpVehicleData},
 				null);
 
 			_gearshiftData = DataAdapterPrimary.CreateGearshiftData(
@@ -283,7 +292,8 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 			var simulationRunData = new VectoRunData {
 
 				Loading = loading.Key,
-				VehicleData = DataAdapterCompleted.CreateVehicleData(primaryVehicle, completedVehicle, mission, loading),
+				VehicleData = DataAdapterCompleted.CreateVehicleData(primaryVehicle, completedVehicle, 
+					mission, loading, _tmpVehicleData.DynamicTyreRadius),
 				AirdragData = DataAdapterCompleted.CreateAirdragData(completedVehicle, mission),
 				EngineData = _combustionEngineData,
 				GearboxData = _gearboxData,
@@ -388,7 +398,8 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 
 			var simulationRunData = new VectoRunData {
 				Loading = loading.Key,
-				VehicleData = DataAdapterPrimary.CreateVehicleData(primaryVehicle, mission, loading),
+				VehicleData = DataAdapterPrimary.CreateVehicleData(primaryVehicle, mission, loading,
+					_tmpVehicleData.DynamicTyreRadius),
 				AirdragData = DataAdapterPrimary.CreateAirdragData(null, mission, new Segment()),
 				EngineData = _combustionEngineData,
 				GearboxData = _gearboxData,

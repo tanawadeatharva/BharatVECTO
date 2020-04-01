@@ -43,7 +43,8 @@ namespace TUGraz.VectoCommon.Models
 		//InterurbanBus,
 		Coach,
 		HeavyBusPrimaryVehicle,
-		HeavyBusCompletedVehicle
+		HeavyBusCompletedVehicle,
+		GenericBusVehicle
 	}
 
 	public static class VehicleCategoryHelper
@@ -129,6 +130,7 @@ namespace TUGraz.VectoCommon.Models
 				case VehicleCategory.Coach:
 				case VehicleCategory.HeavyBusPrimaryVehicle:
 				case VehicleCategory.HeavyBusCompletedVehicle:
+				case VehicleCategory.GenericBusVehicle:
 					return false;
 				default:
 					throw new ArgumentOutOfRangeException("VehicleCategory", category, null);
@@ -141,7 +143,8 @@ namespace TUGraz.VectoCommon.Models
 				case VehicleCategory.Coach:
 				case VehicleCategory.CityBus:
 				case VehicleCategory.HeavyBusPrimaryVehicle:
-				case VehicleCategory.HeavyBusCompletedVehicle: return true;
+				case VehicleCategory.HeavyBusCompletedVehicle:
+				case VehicleCategory.GenericBusVehicle: return true;
 				default: return false;
 			}
 		}

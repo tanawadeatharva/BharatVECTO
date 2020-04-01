@@ -77,12 +77,13 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 		}
 
 
-		public override VehicleData CreateVehicleData(IVehicleDeclarationInputData pifVehicle, Mission mission, KeyValuePair<LoadingType, Kilogram> loading)
+		public VehicleData CreateVehicleData(IVehicleDeclarationInputData pifVehicle, Mission mission,
+			KeyValuePair<LoadingType, Kilogram> loading, Meter dynamicTyreRadius)
 		{
 			var vehicleData = new VehicleData
 			{
 				AxleData = GetAxles(pifVehicle.Components.AxleWheels.AxlesDeclaration, mission.AxleWeightDistribution),
-				DynamicTyreRadius = GetDynamicTyreRadius(pifVehicle.Components.AxleWheels.AxlesDeclaration),
+				DynamicTyreRadius = dynamicTyreRadius,
 				AxleConfiguration = pifVehicle.AxleConfiguration,
 				CurbMass = mission.CurbMass,
 				BodyAndTrailerMass = 0.SI<Kilogram>(),
@@ -121,23 +122,6 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 
 			return axles;
 		}
-
-		private Meter GetDynamicTyreRadius(IList<IAxleDeclarationInputData> axleWheels)
-		{
-			Meter dynamicTyreRadius = null;
-
-			for (int i = 0; i < axleWheels.Count; i++)
-			{
-				if (axleWheels[i].AxleType == AxleType.VehicleDriven)
-				{
-					dynamicTyreRadius = DeclarationData.Wheels.Lookup(axleWheels[i].Tyre.Dimension.RemoveWhitespace()).DynamicTyreRadius;
-					break;
-				}
-			}
-
-			return dynamicTyreRadius;
-		}
-
 
 		public ElectricsUserInputsConfig CreateElectricalUserInputsConfig(IVehicleDeclarationInputData primaryVehicle,
 			IAlternatorMap alternatorMap, Mission mission)

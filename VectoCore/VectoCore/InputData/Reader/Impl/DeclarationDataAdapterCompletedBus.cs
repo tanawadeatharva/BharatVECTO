@@ -101,7 +101,8 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 		}
 		
 		public VehicleData CreateVehicleData(IVehicleDeclarationInputData pifVehicle,
-			IVehicleDeclarationInputData completedVehicle, Mission mission, KeyValuePair<LoadingType, Kilogram> loading)
+			IVehicleDeclarationInputData completedVehicle, Mission mission, 
+			KeyValuePair<LoadingType, Kilogram> loading, Meter dynamicTyreRadius)
 		{
 			var vehicleData = new VehicleData
 			{
@@ -110,7 +111,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 				BodyAndTrailerMass = 0.SI<Kilogram>(),
 				Loading = GetLoading(completedVehicle, mission, loading),
 				GrossVehicleMass = completedVehicle.GrossVehicleMassRating,
-				DynamicTyreRadius = GetDynamicTyreRadius(pifVehicle.Components.AxleWheels.AxlesDeclaration),
+				DynamicTyreRadius = dynamicTyreRadius,
 				AxleData = GetAxles(pifVehicle.Components.AxleWheels.AxlesDeclaration, mission.AxleWeightDistribution)
 			};
 
@@ -392,23 +393,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 
 			return axles;
 		}
-
-		private Meter GetDynamicTyreRadius(IList<IAxleDeclarationInputData> axleWheels)
-		{
-			Meter dynamicTyreRadius = null;
-
-			for (int i = 0; i < axleWheels.Count; i++)
-			{
-				if (axleWheels[i].AxleType == AxleType.VehicleDriven)
-				{
-					dynamicTyreRadius = DeclarationData.Wheels.Lookup(axleWheels[i].Tyre.Dimension.RemoveWhitespace()).DynamicTyreRadius;
-					break;
-				}
-			}
-
-			return dynamicTyreRadius;
-		}
-
+		
 		private Kilogram GetLoading(IVehicleDeclarationInputData completedVehicle, Mission mission, KeyValuePair<LoadingType, Kilogram> loading)
 		{
 			var busFloorArea = DeclarationData.BusAuxiliaries.CalculateBusFloorSurfaceArea(completedVehicle.Length,

@@ -582,8 +582,30 @@ namespace TUGraz.VectoCore.Models.Declaration
 
 				return losses;
 			}
-			
+
 			#endregion
+
+			#region Common Getters
+
+			public static Meter GetDynamicTyreRadius(IVehicleDeclarationInputData primaryVehicle)
+			{
+				var axleWheels = primaryVehicle.Components.AxleWheels.AxlesDeclaration;
+				Meter dynamicTyreRadius = null;
+
+				for (int i = 0; i < axleWheels.Count; i++)
+				{
+					if (axleWheels[i].AxleType == AxleType.VehicleDriven)
+					{
+						dynamicTyreRadius = DeclarationData.Wheels.Lookup(axleWheels[i].Tyre.Dimension.RemoveWhitespace()).DynamicTyreRadius;
+						break;
+					}
+				}
+
+				return dynamicTyreRadius;
+			}
+
+			#endregion
+
 		}
 
 
