@@ -444,7 +444,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 								(result.FuelConsumptionFinal[fuel.FuelType] * fuel.LowerHeatingValueVecto /
 								result.Distance.ConvertToKiloMeter() / result.CargoVolume / 1e6).Value().ToMinSignificantDigits(3, 1)));
 					}
-					if (result.PassengerCount.HasValue && result.PassengerCount.Value > 0) {
+					if (result.PassengerCount.HasValue) {
 						fcResult.Add(
 							new XElement(
 								tns + XMLNames.Report_Results_FuelConsumption,
@@ -508,7 +508,14 @@ namespace TUGraz.VectoCore.OutputData.XML
 						new XAttribute(XMLNames.Report_Results_Unit_Attr, "g/m³-km"),
 						(result.CO2Total.ConvertToGramm() / result.Distance.ConvertToKiloMeter() / result.CargoVolume).Value()
 																													.ToMinSignificantDigits(3, 1)));
-
+			if (result.PassengerCount.HasValue && result.PassengerCount.Value > 0) {
+				retVal.Add(
+					new XElement(
+						tns + XMLNames.Report_Results_CO2,
+						new XAttribute(XMLNames.Report_Results_Unit_Attr, "g/p-km"),
+						(result.CO2Total.ConvertToGramm() / result.Distance.ConvertToKiloMeter() / result.PassengerCount.Value)
+																													.ToMinSignificantDigits(3, 1)));
+			}
 			return retVal;
 		}
 	}
