@@ -2,6 +2,7 @@
 using System.Xml;
 using System.Xml.Linq;
 using TUGraz.VectoCommon.InputData;
+using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Interfaces;
 using TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader;
 using TUGraz.VectoCore.Utils;
@@ -234,7 +235,9 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 	// ---------------------------------------------------------------------------------------
 
 
-	public class XMLDeclarationComponentsPrimaryVehicleBusDataProviderV01 : XMLDeclarationComponentsDataProviderV10, IXMLVehicleComponentsDeclaration
+	public class XMLDeclarationComponentsPrimaryVehicleBusDataProviderV01 : XMLDeclarationComponentsDataProviderV10, IXMLVehicleComponentsDeclaration,
+		IRetarderInputData
+		
 	{
 		public new static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_PRIMARY_BUS_VEHICLE_URI_V01;
 
@@ -244,13 +247,14 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 		private IBusAuxiliariesDeclarationData _busAuxiliaries;
 
-		
-		public XMLDeclarationComponentsPrimaryVehicleBusDataProviderV01(IXMLDeclarationVehicleData vehicle, XmlNode componentNode,
-			string sourceFile) : base(vehicle, componentNode, sourceFile) { }
+
+		public XMLDeclarationComponentsPrimaryVehicleBusDataProviderV01(IXMLDeclarationVehicleData vehicle,
+			XmlNode componentNode, string sourceFile) : base(vehicle, componentNode, sourceFile) { }
+
 
 		IRetarderInputData IVehicleComponentsDeclaration.RetarderInputData
 		{
-			get { return null; }
+			get { return this; }
 		}
 
 		ITorqueConverterDeclarationInputData IVehicleComponentsDeclaration.TorqueConverterInputData
@@ -277,5 +281,13 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		{
 			get { return NAMESPACE_URI; }
 		}
+
+		#region IRetarderInputData Interface Implementation
+
+		public RetarderType Type { get{ return _vehicle.RetarderType; }}
+		public double Ratio { get { return _vehicle.RetarderRatio; }}
+		public TableData LossMap { get; }
+
+		#endregion
 	}
 }

@@ -61,9 +61,9 @@ namespace TUGraz.VectoCore.Tests.XML
 			Assert.AreEqual(false, vehicle.Articulated);
 			Assert.AreEqual(25000, vehicle.GrossVehicleMassRating.Value());
 			Assert.AreEqual(600, vehicle.EngineIdleSpeed.Value());
-			Assert.AreEqual("Transmission Output Retarder", ((XMLDeclarationPrimaryVehicleBusDataProviderV01)vehicle).RetarderType.ToXMLFormat());
-			Assert.AreEqual(1.000, ((XMLDeclarationPrimaryVehicleBusDataProviderV01)vehicle).RetarderRatio);
-			Assert.AreEqual("None", ((XMLDeclarationPrimaryVehicleBusDataProviderV01)vehicle).AngledriveType.ToXMLFormat());
+			Assert.AreEqual("Transmission Output Retarder", vehicle.Components.RetarderInputData.Type.ToXMLFormat());
+			Assert.AreEqual(1.000, vehicle.Components.RetarderInputData.Ratio);
+			Assert.AreEqual("None", vehicle.Components.AngledriveInputData.Type.ToXMLFormat());
 			Assert.IsFalse(vehicle.ZeroEmissionVehicle);
 
 			Assert.IsFalse(vehicle.ADAS.EngineStopStart);
@@ -89,7 +89,7 @@ namespace TUGraz.VectoCore.Tests.XML
 
 			TestAngledrive(components.AngledriveInputData);
 
-			Assert.IsNull(components.RetarderInputData);
+			TestRetarderInputData(components.RetarderInputData);
 
 			TestAxlegear(components.AxleGearInputData);
 
@@ -199,6 +199,14 @@ namespace TUGraz.VectoCore.Tests.XML
 			Assert.That(() => angeldrive.Efficiency, Throws.TypeOf<VectoException>());
 		}
 
+		private void TestRetarderInputData(IRetarderInputData retarder)
+		{
+			Assert.IsNotNull(retarder);
+			Assert.IsNull(retarder.LossMap);
+			Assert.AreEqual("Transmission Output Retarder", retarder.Type.ToXMLFormat());
+			Assert.AreEqual(1.000, retarder.Ratio);
+		}
+		
 		private void TestAxlegear(IAxleGearInputData axelGear)
 		{
 			Assert.AreEqual("Generic Gearbox Manufacturer", axelGear.Manufacturer);
