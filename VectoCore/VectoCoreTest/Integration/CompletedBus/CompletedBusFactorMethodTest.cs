@@ -806,8 +806,13 @@ namespace TUGraz.VectoCore.Tests.Integration.CompletedBus
 			var genericRetarder = relatedRun.VectoRunDataGenericBody.Retarder;
 			var specificRetarder = relatedRun.VectoRunDataSpezificBody.Retarder;
 
-			Assert.IsNull(genericRetarder);
-			Assert.IsNull(specificRetarder);
+			Assert.AreEqual(1, genericRetarder.Ratio);
+			Assert.AreEqual( genericRetarder.Ratio, specificRetarder.Ratio);
+
+			Assert.AreEqual(RetarderType.TransmissionOutputRetarder, genericRetarder.Type);
+			Assert.AreEqual(genericRetarder.Type, specificRetarder.Type);
+
+			Assert.AreEqual(genericRetarder.LossMap, specificRetarder.LossMap);
 		}
 
 		#endregion
@@ -835,17 +840,42 @@ namespace TUGraz.VectoCore.Tests.Integration.CompletedBus
 			Assert.AreEqual(DeclarationData.Driver.OverSpeed.AllowedOverSpeed, genericDriver.OverSpeed.OverSpeed);
 			Assert.AreEqual(genericDriver.OverSpeed, specificDriver.OverSpeed);
 
-			Assert.IsNull(genericDriver.EngineStopStart);
-			Assert.IsNull(genericDriver.EcoRoll);
-			Assert.IsNull(genericDriver.PCC);
+			AssertStopStartData(genericDriver.EngineStopStart);
+			AssertEcoRoll(genericDriver.EcoRoll);
+			AssertPccData(genericDriver.PCC);
 
-			Assert.IsNull(specificDriver.EngineStopStart);
-			Assert.IsNull(specificDriver.EcoRoll);
-			Assert.IsNull(specificDriver.PCC);
+			AssertStopStartData(specificDriver.EngineStopStart);
+			AssertEcoRoll(specificDriver.EcoRoll);
+			AssertPccData(specificDriver.PCC);
 		}
-		
-		#endregion
 
+		private void AssertStopStartData(DriverData.EngineStopStartData engineStopStart)
+		{
+			Assert.AreEqual(DeclarationData.Driver.EngineStopStart.ActivationDelay, engineStopStart.EngineOffStandStillActivationDelay);
+			Assert.AreEqual(DeclarationData.Driver.EngineStopStart.MaxEngineOffTimespan, engineStopStart.MaxEngineOffTimespan);
+			Assert.AreEqual(DeclarationData.Driver.EngineStopStart.UtilityFactor, engineStopStart.UtilityFactor);
+		}
+
+		private void AssertEcoRoll(DriverData.EcoRollData ecoRoll)
+		{
+			Assert.AreEqual(DeclarationData.Driver.EcoRoll.UnderspeedThreshold, ecoRoll.UnderspeedThreshold);
+			Assert.AreEqual(DeclarationData.Driver.EcoRoll.MinSpeed, ecoRoll.MinSpeed);
+			Assert.AreEqual(DeclarationData.Driver.EcoRoll.ActivationDelay, ecoRoll.ActivationPhaseDuration);
+			Assert.AreEqual(DeclarationData.Driver.EcoRoll.AccelerationLowerLimit, ecoRoll.AccelerationLowerLimit);
+			Assert.AreEqual(DeclarationData.Driver.EcoRoll.AccelerationUpperLimit, ecoRoll.AccelerationUpperLimit);
+		}
+
+		private void AssertPccData(DriverData.PCCData pccData)
+		{
+			Assert.AreEqual(DeclarationData.Driver.PCC.PCCEnableSpeed, pccData.PCCEnableSpeed);
+			Assert.AreEqual(DeclarationData.Driver.PCC.MinSpeed, pccData.MinSpeed);
+			Assert.AreEqual(DeclarationData.Driver.PCC.PreviewDistanceUseCase1, pccData.PreviewDistanceUseCase1);
+			Assert.AreEqual(DeclarationData.Driver.PCC.PreviewDistanceUseCase2, pccData.PreviewDistanceUseCase2);
+			Assert.AreEqual(DeclarationData.Driver.PCC.Underspeed, pccData.UnderSpeed);
+			Assert.AreEqual(DeclarationData.Driver.PCC.OverspeedUseCase3, pccData.OverspeedUseCase3);
+		}
+
+		#endregion
 
 		private CrosswindCorrectionCdxALookup GetCrosswindCorrection(string crossWindCorrectionParams,
 			SquareMeter aerodynamicDragArea, Meter vehicleHeight)

@@ -532,8 +532,6 @@ namespace TUGraz.VectoCore.Models.Declaration
 
 			private static RetarderLossMap GenerateGenericLossMap(double stepUpRatio)
 			{
-				var factorGeneric = 0.5; 
-
 				var retarderSpeeds = new double [] {
 					0, 200 , 400, 600, 900, 1200,
 					1600, 2000, 2500, 3000, 3500, 4000,
@@ -550,7 +548,8 @@ namespace TUGraz.VectoCore.Models.Declaration
 				for (int i = 0; i < genericRetarderLosses.Length; i++) {
 					var newRow = torqueLoss.NewRow();
 					newRow[RetarderLossMapReader.Fields.RetarderSpeed] = retarderSpeeds[i];
-					newRow[RetarderLossMapReader.Fields.TorqueLoss] = genericRetarderLosses[i] * factorGeneric;
+					newRow[RetarderLossMapReader.Fields.TorqueLoss] = genericRetarderLosses[i] * 
+						Constants.GenericLossMapSettings.RetarderGenericFactor;
 					torqueLoss.Rows.Add(newRow);
 				}
 
@@ -598,6 +597,62 @@ namespace TUGraz.VectoCore.Models.Declaration
 				}
 
 				return dynamicTyreRadius;
+			}
+
+			#endregion
+
+			#region Create Driver Data
+
+			public static DriverData CreateDriverData(Segment completedSegment)
+			{
+				var lookAheadData = new DriverData.LACData
+				{
+					Enabled = Driver.LookAhead.Enabled,
+					//Deceleration = DeclarationData.Driver.LookAhead.Deceleration,
+					MinSpeed = Driver.LookAhead.MinimumSpeed,
+					LookAheadDecisionFactor = new LACDecisionFactor(),
+					LookAheadDistanceFactor = Driver.LookAhead.LookAheadDistanceFactor
+				};
+
+				var overspeedData = new DriverData.OverSpeedData
+				{
+					Enabled = true,
+					MinSpeed = Driver.OverSpeed.MinSpeed,
+					OverSpeed = Driver.OverSpeed.AllowedOverSpeed,
+				};
+
+				var driver = new DriverData
+				{
+					AccelerationCurve = AccelerationCurveReader.ReadFromStream(completedSegment.AccelerationFile),
+					LookAheadCoasting = lookAheadData,
+					OverSpeed = overspeedData,
+					EngineStopStart = new DriverData.EngineStopStartData
+					{
+						EngineOffStandStillActivationDelay = Driver.EngineStopStart.ActivationDelay,
+						MaxEngineOffTimespan = Driver.EngineStopStart.MaxEngineOffTimespan,
+						UtilityFactor = Driver.EngineStopStart.UtilityFactor
+					},
+					EcoRoll = new DriverData.EcoRollData
+					{
+						UnderspeedThreshold = Driver.EcoRoll.UnderspeedThreshold,
+						MinSpeed = Driver.EcoRoll.MinSpeed,
+						ActivationPhaseDuration = Driver.EcoRoll.ActivationDelay,
+						AccelerationLowerLimit = Driver.EcoRoll.AccelerationLowerLimit,
+						AccelerationUpperLimit = Driver.EcoRoll.AccelerationUpperLimit
+					},
+					PCC = new DriverData.PCCData
+					{
+						PCCEnableSpeed = Driver.PCC.PCCEnableSpeed,
+						MinSpeed = Driver.PCC.MinSpeed,
+						PreviewDistanceUseCase1 = Driver.PCC.PreviewDistanceUseCase1,
+						PreviewDistanceUseCase2 = Driver.PCC.PreviewDistanceUseCase2,
+						UnderSpeed = Driver.PCC.Underspeed,
+						OverspeedUseCase3 = Driver.PCC.OverspeedUseCase3
+					}
+				};
+
+
+				return driver;
 			}
 
 			#endregion
