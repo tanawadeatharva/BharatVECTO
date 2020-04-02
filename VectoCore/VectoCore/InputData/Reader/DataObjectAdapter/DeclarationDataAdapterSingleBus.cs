@@ -114,7 +114,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			IVehicleDeclarationInputData vehicleData, Mission mission)
 		{
 			var retVal = base.GetPneumaticUserConfig(vehicleData, mission);
-			retVal.Doors = CompletedVehicle.Components.BusAuxiliaries.PneumaticConsumers.DoorDriveTechnology;
+			retVal.Doors = CompletedVehicle.DoorDriveTechnology;
 			retVal.KneelingHeight = VectoMath.Max(0.SI<Meter>(), CompletedVehicle.EntranceHeight - Constants.BusParameters.EntranceHeight);
 			return retVal;
 		}

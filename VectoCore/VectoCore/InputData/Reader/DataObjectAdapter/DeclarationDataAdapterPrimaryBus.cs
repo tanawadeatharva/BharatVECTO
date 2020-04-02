@@ -102,7 +102,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 				SmartElectrical = busAux.ElectricSupply.SmartElectrics,
 				AverageCurrentDemandInclBaseLoad = currentDemand.Item1,
 				AverageCurrentDemandWithoutBaseLoad = currentDemand.Item2,
-				AlternatorMap = new SimpleAlternator(CalculateAlternatorEfficiency(busAux.ElectricSupply.Alternators)),
+				AlternatorMap = new SimpleAlternator(CalculateAlternatorEfficiency(busAux.ElectricSupply.Alternators)) {Technologies = busAux.ElectricSupply.Alternators.Select(x => x.Technology).ToList()},
 				PowerNetVoltage = Constants.BusAuxiliaries.ElectricSystem.PowernetVoltage,
 				StoredEnergyEfficiency = Constants.BusAuxiliaries.ElectricSystem.StoredEnergyEfficiency,
 				ResultCardIdle = new DummyResultCard(),
@@ -231,7 +231,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			}
 
 			return CompressorMapReader.ReadStream(
-				RessourceHelper.ReadStream(DeclarationData.DeclarationDataResourcePrefix + ".VAUXBus." + resource), dragCurveFactorClutch);
+				RessourceHelper.ReadStream(DeclarationData.DeclarationDataResourcePrefix + ".VAUXBus." + resource), dragCurveFactorClutch, $"{compressorSize} - {clutchType}");
 		}
 
 		public virtual ISSMInputs CreateSSMModelParameters(IBusAuxiliariesDeclarationData busAuxInputData, Mission mission, IFuelProperties heatingFuel, LoadingType loadingType)
@@ -284,6 +284,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 
 				HVACMaxCoolingPower = coolingPower.Item1 + coolingPower.Item2,
 				HVACCompressorType = busParams.HVACCompressorType, // use passenger compartment
+				HVACTechnology = string.Format("{0} ({1})", busParams.HVACConfiguration.GetName(), string.Join(", ", new[] {busParams.HVACCompressorType.GetName(), ACCompressorType.None.GetName()})),
 				COP = DeclarationData.BusAuxiliaries.CalculateCOP(
 					coolingPower.Item1, ACCompressorType.None, coolingPower.Item2, busParams.HVACCompressorType,
 					busParams.FloorType),

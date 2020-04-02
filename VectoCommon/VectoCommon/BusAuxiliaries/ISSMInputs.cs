@@ -22,6 +22,8 @@ namespace TUGraz.VectoCommon.BusAuxiliaries
 		IVentilation Ventilation { get; }
 
 		IAuxHeater AuxHeater { get; }
+
+		string HVACTechnology { get; }
 		string Source { get; }
 	}
 
@@ -128,8 +130,13 @@ namespace TUGraz.VectoCommon.BusAuxiliaries
 				case ACCompressorType.TwoStage: return "2-stage";
 				case ACCompressorType.ThreeStage: return "3-stage";
 				case ACCompressorType.FourStage: return "4-stage";
-				default: return type.ToString();
+				default: return type.ToString().ToLowerInvariant();
 			}
+		}
+
+		public static string GetName(this ACCompressorType type)
+		{
+			return type.ToString();
 		}
 
 		public static bool IsElectrical(this ACCompressorType type)
