@@ -845,6 +845,7 @@ Public Class MockEngineeringVehicle
     Public ReadOnly Property Length As Meter Implements IVehicleDeclarationInputData.Length
     Public ReadOnly Property Width As Meter Implements IVehicleDeclarationInputData.Width
     Public ReadOnly Property EntranceHeight As Meter Implements IVehicleDeclarationInputData.EntranceHeight
+    Public ReadOnly Property DoorDriveTechnology As ConsumerTechnology Implements IVehicleDeclarationInputData.DoorDriveTechnology
     Public Property Components As IVehicleComponentsDeclaration Implements IVehicleDeclarationInputData.Components
     Public ReadOnly Property XMLSource As XmlNode Implements IVehicleDeclarationInputData.XMLSource
 

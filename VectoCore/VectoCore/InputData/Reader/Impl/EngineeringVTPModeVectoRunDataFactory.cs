@@ -29,6 +29,7 @@
 *   Martin Rexeis, rexeis@ivt.tugraz.at, IVT, Graz University of Technology
 */
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using TUGraz.VectoCommon.InputData;
@@ -59,7 +60,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 				cycle => {
 					var drivingCycle = DrivingCycleDataReader.ReadFromDataTable(cycle.CycleData, cycle.Name, false);
 					// loading is not relevant as we use P_wheel
-					var runData = CreateVectoRunData(Segment, Segment.Missions.First(), 0.SI<Kilogram>());
+					var runData = CreateVectoRunData(Segment, Segment.Missions.First(), new Tuple<Kilogram, double?>(0.SI<Kilogram>(), null));
 					runData.Cycle = new DrivingCycleProxy(drivingCycle, cycle.Name);
 					runData.Aux = AuxVTP;
 					runData.FanData = GetFanData();

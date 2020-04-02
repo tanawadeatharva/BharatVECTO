@@ -52,6 +52,8 @@ namespace TUGraz.VectoCommon.BusAuxiliaries
 		// Returns Average Power Demand Per Compressor Unit FlowRate
 		JoulePerNormLiter GetAveragePowerDemandPerCompressorUnitFlowRate();
 
+		string Technology { get; }
+
 		string Source { get; }
 	}
 

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
@@ -112,7 +113,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl {
 
 		protected abstract Segment GetSegment(IVehicleDeclarationInputData vehicle);
 
-		protected abstract VectoRunData CreateVectoRunData(IVehicleDeclarationInputData vehicle, int modeIdx, Mission mission, KeyValuePair<LoadingType, Kilogram> loading);
+		protected abstract VectoRunData CreateVectoRunData(IVehicleDeclarationInputData vehicle, int modeIdx, Mission mission, KeyValuePair<LoadingType, Tuple<Kilogram, double?>> loading);
 
 		protected virtual void InitializeReport()
 		{
@@ -120,7 +121,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl {
 			List<List<FuelData.Entry>> fuels;
 			var vehicle = InputDataProvider.JobInputData.Vehicle;
 			if (vehicle.ExemptedVehicle) {
-				powertrainConfig = CreateVectoRunData(vehicle, 0, null, new KeyValuePair<LoadingType, Kilogram>());
+				powertrainConfig = CreateVectoRunData(vehicle, 0, null, new KeyValuePair<LoadingType, Tuple<Kilogram, double?>>());
 				fuels = new List<List<FuelData.Entry>>();
 			} else {
 				powertrainConfig = _segment.Missions.Select(

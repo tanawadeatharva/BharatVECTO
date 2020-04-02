@@ -287,7 +287,7 @@ namespace TUGraz.VectoCore.OutputData
 				cargoVolume = runData.VehicleData.CargoVolume;
 				vehicleLoading = runData.VehicleData.Loading;
 				gearCount = (uint)runData.GearboxData.Gears.Count;
-				passengerCount = runData.BusAuxiliaries?.SSMInputs.NumberOfPassengers;
+				passengerCount = runData.VehicleData.PassengerCount;
 			}
 
 			row[Fields.VEHICLE_FUEL_TYPE] = string.Join(", ", modData.FuelData.Select(x => x.GetLabel()));
@@ -684,7 +684,7 @@ namespace TUGraz.VectoCore.OutputData
 
 			if (runData.BusAuxiliaries != null) {
 				// subtract driver!
-				row[Fields.PassengerCount] = runData.BusAuxiliaries.SSMInputs.NumberOfPassengers - 1;
+				row[Fields.PassengerCount] = runData.VehicleData.PassengerCount;
 			}
 
 			row[Fields.TCU_MODEL] = runData.ShiftStrategy;
@@ -700,7 +700,7 @@ namespace TUGraz.VectoCore.OutputData
 
 			WriteAxlegearData(runData.AxleGearData, row);
 
-			WriteAuxTechnologies(runData.Aux, row);
+			WriteAuxTechnologies(runData.Aux, runData.BusAuxiliaries, row);
 
 			WriteAxleWheelsData(runData.VehicleData.AxleData, row);
 
@@ -804,7 +804,7 @@ namespace TUGraz.VectoCore.OutputData
 				: data.CertificationNumber;
 		}
 
-		private void WriteAuxTechnologies(IEnumerable<VectoRunData.AuxData> auxData, DataRow row)
+		private void WriteAuxTechnologies(IEnumerable<VectoRunData.AuxData> auxData, IAuxiliaryConfig busAux, DataRow row)
 		{
 			foreach (var aux in auxData) {
 				if (aux.ID == Constants.Auxiliaries.IDs.PTOConsumer || aux.ID == Constants.Auxiliaries.IDs.PTOTransmission) {
@@ -822,6 +822,14 @@ namespace TUGraz.VectoCore.OutputData
 
 				row[colName] = aux.Technology == null ? "" : string.Join("; ", aux.Technology);
 			}
+
+			if (busAux == null) {
+				return;
+			}
+
+			row[string.Format(Fields.AUX_TECH_FORMAT, Constants.Auxiliaries.IDs.HeatingVentilationAirCondition)] = busAux.SSMInputs.HVACTechnology;
+			row[string.Format(Fields.AUX_TECH_FORMAT, Constants.Auxiliaries.IDs.ElectricSystem)] = string.Join("/", busAux.ElectricalUserInputsConfig.AlternatorMap.Technologies);
+			row[string.Format(Fields.AUX_TECH_FORMAT, Constants.Auxiliaries.IDs.PneumaticSystem)] = busAux.PneumaticUserInputsConfig.CompressorMap.Technology;
 		}
 
 		private static void WriteAngledriveData(AngledriveData data, DataRow row)

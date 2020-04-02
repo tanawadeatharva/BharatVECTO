@@ -233,7 +233,13 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.Electric
 			return GetValue(rpm, currentDemand);
 		}
 
-		
+		public IList<string> Technologies
+		{
+			get {
+				return new List<string>();
+			}
+		}
+
 
 		// Public Events
 		public event AuxiliaryEventEventHandler AuxiliaryEvent;

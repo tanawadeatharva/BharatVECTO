@@ -23,6 +23,8 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.Electric
 			return _efficiency;
 		}
 
+		public IList<string> Technologies { get; set; }
+
 		public string Source { get { return null; } }
 
 		#endregion

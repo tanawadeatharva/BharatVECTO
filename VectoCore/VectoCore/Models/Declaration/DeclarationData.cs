@@ -304,6 +304,9 @@ namespace TUGraz.VectoCore.Models.Declaration
 				if (coolingPwrDriver.IsGreater(0) && comprTypeDriver == ACCompressorType.None) {
 					comprTypeDriver = comprTypePass;
 				}
+				if (coolingPwrDriver.IsEqual(0) && coolingPwrPass.IsEqual(0)) {
+					return 1.0;
+				}
 				return (coolingPwrDriver * comprTypeDriver.COP(floorType) + coolingPwrPass * comprTypePass.COP(floorType)) /
 						(coolingPwrDriver + coolingPwrPass);
 			}

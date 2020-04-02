@@ -47,7 +47,7 @@
 			<Auxiliaries>
 				<Data xsi:type="CompletedVehicleAuxiliaryDataDeclarationType">
 					<ElectricSystem>
-						<AlternatorTechnology ratio="1.000">default</AlternatorTechnology>
+						<AlternatorTechnology>default</AlternatorTechnology>
 						<LEDLights>
 							<Dayrunninglights>false</Dayrunninglights>
 							<Headlights>false</Headlights>
@@ -56,9 +56,6 @@
 							<Interiorlights>false</Interiorlights>
 						</LEDLights>
 					</ElectricSystem>
-					<PneumaticSystem>
-						<DoorDriveTechnology>pneumatic</DoorDriveTechnology>
-					</PneumaticSystem>
 					<HVAC>
 						<SystemConfiguration>7</SystemConfiguration>
 						<CompressorType>

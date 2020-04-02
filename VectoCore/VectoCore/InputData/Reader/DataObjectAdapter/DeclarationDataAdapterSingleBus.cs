@@ -19,7 +19,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 	{
 		#region Implementation of IDeclarationDataAdapter
 
-		public override VehicleData CreateVehicleData(IVehicleDeclarationInputData vehicle, Mission mission, KeyValuePair<LoadingType, Kilogram> loading)
+		public override VehicleData CreateVehicleData(IVehicleDeclarationInputData vehicle, Mission mission, KeyValuePair<LoadingType, Tuple<Kilogram, double?>> loading)
 		{
 			var busFloorArea = DeclarationData.BusAuxiliaries.CalculateBusFloorSurfaceArea(CompletedVehicle.Length,
 																							CompletedVehicle.Width);
@@ -30,12 +30,12 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 				throw new VectoException("Unhandled loading type: {0}", loading.Key);
 			}
 
-			var payload =
-			(loading.Key == LoadingType.ReferenceLoad
+			var passengerCountCalc = loading.Key == LoadingType.ReferenceLoad
 				? VectoMath.Min(passengerCountRef, passengerCountDecl)
-				: passengerCountRef * mission.MissionType.GetLowLoadFactorBus()) * mission.MissionType.GetAveragePassengerMass();
+				: passengerCountRef * mission.MissionType.GetLowLoadFactorBus();
+			var payload = passengerCountCalc  * mission.MissionType.GetAveragePassengerMass();
 
-			var retVal = base.CreateNonExemptedVehicleData(vehicle, mission, payload);
+			var retVal = base.CreateNonExemptedVehicleData(vehicle, mission, payload, passengerCountCalc);
 			retVal.CurbMass = CompletedVehicle.CurbMassChassis;
 			return retVal;
 		}
@@ -114,7 +114,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			IVehicleDeclarationInputData vehicleData, Mission mission)
 		{
 			var retVal = base.GetPneumaticUserConfig(vehicleData, mission);
-			retVal.Doors = CompletedVehicle.Components.BusAuxiliaries.PneumaticConsumers.DoorDriveTechnology;
+			retVal.Doors = CompletedVehicle.DoorDriveTechnology;
 			retVal.KneelingHeight = VectoMath.Max(0.SI<Meter>(), CompletedVehicle.EntranceHeight - Constants.BusParameters.EntranceHeight);
 			return retVal;
 		}

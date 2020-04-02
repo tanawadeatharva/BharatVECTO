@@ -322,6 +322,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 			get { return null; }
 		}
 
+		public virtual ConsumerTechnology DoorDriveTechnology { get { return ConsumerTechnology.Unknown; } }
+
 		public virtual IVehicleComponentsDeclaration Components
 		{
 			get { return _components ?? (_components = ComponentReader.ComponentInputData); }
@@ -858,9 +860,9 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 			get { return GetDouble(XMLNames.Bus_EntranceHeight).SI<Meter>(); }
 		}
 
-		public virtual string DoorDriveTechnology
+		public override ConsumerTechnology DoorDriveTechnology
 		{
-			get { return GetString(XMLNames.BusAux_PneumaticSystem_DoorDriveTechnology); }
+			get { return ConsumerTechnologyHelper.Parse(GetString(XMLNames.BusAux_PneumaticSystem_DoorDriveTechnology)); }
 		}
 
 
@@ -997,6 +999,11 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		public IXMLComponentReader ComponentReader { get; set; }
 
 		public Meter EntranceHeight { get; }
+
+		public virtual ConsumerTechnology DoorDriveTechnology
+		{
+			get { return ConsumerTechnology.Unknown; }
+		}
 
 		public IVehicleComponentsDeclaration Components
 		{

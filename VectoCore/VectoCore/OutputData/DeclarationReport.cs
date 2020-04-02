@@ -79,7 +79,7 @@ namespace TUGraz.VectoCore.OutputData
 		Kilogram TotalVehicleWeight { get; set; }
 		CubicMeter CargoVolume { get; set; }
 
-		double PassengerCount { get; set; }
+		double? PassengerCount { get; set; }
 		VehicleClass VehicleClass { get; set; }
 
 		void SetResultData(VectoRunData runData, IModalDataContainer data, double weightingFactor);
@@ -199,8 +199,7 @@ namespace TUGraz.VectoCore.OutputData
 				entry.CargoVolume = runData.VehicleData.CargoVolume;
 				entry.VehicleClass = runData.VehicleData.VehicleClass;
 
-				// subtract driver!
-				entry.PassengerCount = (runData.BusAuxiliaries?.SSMInputs.NumberOfPassengers ?? 0) - 1;
+				entry.PassengerCount = runData.VehicleData.PassengerCount;
 				Results.Add(entry);
 				DoStoreResult(entry, runData, modData);
 			}

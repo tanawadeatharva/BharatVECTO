@@ -14,14 +14,14 @@ namespace TUGraz.VectoCore.InputData.Reader.ComponentData
 	{
 		public static readonly string[] Header = new[] { Fields.RPM, Fields.FlowRate, Fields.PowerOn, Fields.PowerOff };
 
-		public static ICompressorMap ReadFile(string filename, double dragCurveFactorClutch)
+		public static ICompressorMap ReadFile(string filename, double dragCurveFactorClutch, string technology)
 		{
-			return new CompressorMap(Create(VectoCSVFile.Read(filename), dragCurveFactorClutch), Path.GetFullPath(filename));
+			return new CompressorMap(Create(VectoCSVFile.Read(filename), dragCurveFactorClutch), technology, Path.GetFullPath(filename));
 		}
 
-		public static ICompressorMap ReadStream(Stream stream, double dragCurveFactorClutch, string source = null)
+		public static ICompressorMap ReadStream(Stream stream, double dragCurveFactorClutch, string technology, string source = null)
 		{
-			return new CompressorMap(Create(VectoCSVFile.ReadStream(stream), dragCurveFactorClutch), source);
+			return new CompressorMap(Create(VectoCSVFile.ReadStream(stream), dragCurveFactorClutch), technology, source);
 		}
 
 		public static IList<CompressorMapValues> Create(DataTable data, double dragCurveFactorClutch)

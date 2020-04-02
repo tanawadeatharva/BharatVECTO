@@ -196,8 +196,6 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 						ConsumerTechnology.Unknown;
 			}
 		}
-		public virtual ConsumerTechnology DoorDriveTechnology { get { return ConsumerTechnology.Unknown; } }
-
 		
 		#endregion
 
@@ -373,6 +371,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 		}
 
 		public virtual Meter EntranceHeight { get { return null; } }
+		public virtual ConsumerTechnology DoorDriveTechnology { get { return ConsumerTechnology.Unknown; } }
 
 		IVehicleComponentsEngineering IVehicleEngineeringInputData.Components
 		{
