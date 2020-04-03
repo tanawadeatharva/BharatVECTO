@@ -320,6 +320,11 @@
     <Compile Include="Models\BusAuxiliaries\DownstreamModules\Impl\HVAC\SSMRun.cs" />
     <Compile Include="Models\BusAuxiliaries\DownstreamModules\Impl\HVAC\SSMTOOL.cs" />
     <Compile Include="Models\Declaration\CompletedBusSegments.cs" />
+    <Compile Include="Models\Declaration\GenericBusAngledriveData.cs" />
+    <Compile Include="Models\Declaration\GenericBusAxelgearData.cs" />
+    <Compile Include="Models\Declaration\GenericBusDriverData.cs" />
+    <Compile Include="Models\Declaration\GenericBusEngineData.cs" />
+    <Compile Include="Models\Declaration\GenericBusRetarderData.cs" />
     <Compile Include="Models\Declaration\SSMTechnology.cs" />
     <Compile Include="Models\BusAuxiliaries\DownstreamModules\Impl\M06Impl.cs" />
     <Compile Include="Models\BusAuxiliaries\DownstreamModules\Impl\M07Impl.cs" />

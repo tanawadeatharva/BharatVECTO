@@ -147,11 +147,13 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 			_angledriveData = DeclarationData.FactorMethodBus.CreateAngledriveData(
 								primaryVehicle.Components.AngledriveInputData,
 								primaryVehicle.Components.AxleGearInputData.Ratio);
+			
 
 			_gearboxData = DeclarationData.FactorMethodBus.CreateGearboxData(primaryVehicle,
 				new VectoRunData() { EngineData = _combustionEngineData, AxleGearData = _axlegearData, VehicleData = _tmpVehicleData },
 				null);
 
+	
 			_gearshiftData = DataAdapterPrimary.CreateGearshiftData(
 				_gearboxData, _axlegearData.AxleGear.Ratio * (_angledriveData?.Angledrive.Ratio ?? 1.0), _combustionEngineData.IdleSpeed);
 
@@ -171,7 +173,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 			_retarderData =
 				DeclarationData.FactorMethodBus.CreateRetarderData(primaryVehicle.Components.RetarderInputData);
 
-			_driverData = DeclarationData.FactorMethodBus.CreateDriverData(_segment);
+			_driverData = new GenericBusDriverData().CreateGenericBusDriverData(_segment);
 		}
 
 		protected virtual IEnumerable<VectoRunData> GetNextRun()
