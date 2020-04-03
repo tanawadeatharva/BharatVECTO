@@ -58,7 +58,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 					DemandType = AuxiliaryDemandType.Constant,
 					Technology = new List<string>() { busAuxData.FanTechnology },
 					ID = Constants.Auxiliaries.IDs.Fan,
-					PowerDemand = DeclarationData.Fan.Lookup(hdvClass, mission, busAuxData.FanTechnology).PowerDemand
+					PowerDemand = DeclarationData.Fan.LookupMechanicalPowerDemand(hdvClass, mission, busAuxData.FanTechnology)
 				});
 			retVal.Add(
 				new VectoRunData.AuxData() {
@@ -80,7 +80,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 
 			var retVal = new AuxiliaryConfig {
 				InputData = vehicleData.Components.BusAuxiliaries,
-				ElectricalUserInputsConfig = GetElectricalUserConfig(mission, vehicleData, actuations),
+				ElectricalUserInputsConfig = GetElectricalUserConfig(mission, vehicleData, actuations, runData.VehicleData.VehicleClass),
 				PneumaticUserInputsConfig = GetPneumaticUserConfig(vehicleData, mission),
 				PneumaticAuxillariesConfig = CreatePneumaticAuxConfig(runData.Retarder.Type),
 				Actuations = actuations,
@@ -93,9 +93,9 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 		}
 
 		protected virtual ElectricsUserInputsConfig GetElectricalUserConfig(
-			Mission mission, IVehicleDeclarationInputData vehicleData, IActuations actuations)
+			Mission mission, IVehicleDeclarationInputData vehicleData, IActuations actuations, VehicleClass vehicleClass)
 		{
-			var currentDemand = CalculateAverageCurrent(mission, vehicleData, actuations);
+			var currentDemand = CalculateAverageCurrent(mission, vehicleData, actuations, vehicleClass);
 			var busAux = vehicleData.Components.BusAuxiliaries;
 
 			return new ElectricsUserInputsConfig() {
@@ -125,7 +125,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 		}
 
 		protected virtual Tuple<Ampere, Ampere> CalculateAverageCurrent(
-			Mission mission, IVehicleDeclarationInputData vehicleData, IActuations actuations)
+			Mission mission, IVehicleDeclarationInputData vehicleData, IActuations actuations, VehicleClass vehicleClass)
 		{
 			var avgInclBase = 0.SI<Ampere>();
 			var avgWithoutBase = 0.SI<Ampere>();
@@ -155,10 +155,12 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 
 
 			var spPower = DeclarationData.SteeringPumpBus.LookupElectricalPowerDemand(
-				mission.MissionType, vehicleData.Components.BusAuxiliaries.SteeringPumpTechnology, vehicleData.Length ?? mission.BusParameter.VehicleLength);
+				mission.MissionType, busAux.SteeringPumpTechnology, vehicleData.Length ?? mission.BusParameter.VehicleLength);
 
-			avgInclBase += spPower / Constants.BusAuxiliaries.ElectricSystem.PowernetVoltage;
-			avgWithoutBase += spPower / Constants.BusAuxiliaries.ElectricSystem.PowernetVoltage;
+			var fanPower = DeclarationData.Fan.LookupElectricalPowerDemand(vehicleClass, mission.MissionType, busAux.FanTechnology);
+
+			avgInclBase += (spPower + fanPower) / Constants.BusAuxiliaries.ElectricSystem.PowernetVoltage;
+			avgWithoutBase += (spPower + fanPower) / Constants.BusAuxiliaries.ElectricSystem.PowernetVoltage;
 			
 
 			return Tuple.Create(avgInclBase, avgWithoutBase);

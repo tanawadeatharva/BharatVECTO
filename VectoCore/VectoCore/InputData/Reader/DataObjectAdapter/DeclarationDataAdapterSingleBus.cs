@@ -91,9 +91,9 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 		}
 
 		protected override ElectricsUserInputsConfig GetElectricalUserConfig(
-			Mission mission, IVehicleDeclarationInputData vehicleData, IActuations actuations)
+			Mission mission, IVehicleDeclarationInputData vehicleData, IActuations actuations, VehicleClass vehicleClass)
 		{
-			var currentDemand = CalculateAverageCurrent(mission, vehicleData, actuations);
+			var currentDemand = CalculateAverageCurrent(mission, vehicleData, actuations, vehicleClass);
 			var busAux = vehicleData.Components.BusAuxiliaries;
 
 			return new ElectricsUserInputsConfig() {

@@ -491,7 +491,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 				mission = mission.GetNonEMSMissionType();
 				switch (auxType) {
 					case AuxiliaryType.Fan:
-						aux.PowerDemand = DeclarationData.Fan.Lookup(hvdClass, mission, auxData.Technology.FirstOrDefault()).PowerDemand;
+						aux.PowerDemand = DeclarationData.Fan.LookupPowerDemand(hvdClass, mission, auxData.Technology.FirstOrDefault());
 						aux.ID = Constants.Auxiliaries.IDs.Fan;
 						break;
 					case AuxiliaryType.SteeringPump:
