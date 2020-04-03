@@ -9,6 +9,7 @@
          (although namespace prefixes are considered part of the signature for the purpose of hashing VECTO data
          it does not provide additional semantics because the file has to validate against a XSD schema anyways 
          and may cause troubles when re-creating the VECTO data from database systems)
+	  - ignore xsi:type attributes
       - normalize the whitespaces of all attribute values and text nodes
          leading and trailing whitespaces are removed
          multiple whitespaces are replaced by a single whitespace
@@ -23,6 +24,7 @@
 			<xsl:apply-templates select="@*|node()"/>
 		</xsl:element>
 	</xsl:template>
+	<xsl:template match="@xsi:type"/>
 	<xsl:template match="@*">
 		<xsl:attribute name="{name()}"><xsl:value-of select="normalize-space(.)"/></xsl:attribute>
 	</xsl:template>
