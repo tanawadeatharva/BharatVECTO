@@ -155,8 +155,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 			public static string GenericTorqueConvert =
 				$"{DeclarationDataResourcePrefix}.GenericBusData.GenericTorqueConverter.csv";
 			#endregion
-
-
+			
 			#region Create Engine Data
 
 			public static CombustionEngineData CreateBusEngineData(IVehicleDeclarationInputData pifVehicle)
@@ -166,22 +165,26 @@ namespace TUGraz.VectoCore.Models.Declaration
 
 				var engine = new CombustionEngineData();
 
-				var fullLoadCurves = new Dictionary<uint, EngineFullLoadCurve>
+				var limits = pifVehicle.TorqueLimits.ToDictionary(e => e.Gear);
+				var numGears = gearbox.Gears.Count;
+				var fullLoadCurves = new Dictionary<uint, EngineFullLoadCurve>(numGears + 1);
+				fullLoadCurves[0] = FullLoadCurveReader.Create(enginePif.EngineModes.First().FullLoadCurve, true);
+				fullLoadCurves[0].EngineData = engine;
+
+				foreach (var gear in gearbox.Gears)
 				{
-					[0] = FullLoadCurveReader.Create(enginePif.EngineModes.First().FullLoadCurve, true)
-				};
-				// TODO: MQ 20200401 add full-load curves per gear, limited by max torque (gbx or vehicle)
-				//   see DeclarationDataAdapterHeavyLorry ln 235ff.
+					var maxTorque = VectoMath.Min(
+						DeclarationDataAdapterHeavyLorry.GbxMaxTorque(gear, numGears, fullLoadCurves[0].MaxTorque),
+						DeclarationDataAdapterHeavyLorry.VehMaxTorque(gear, numGears, limits, fullLoadCurves[0].MaxTorque));
+					fullLoadCurves[(uint)gear.Gear] = AbstractSimulationDataAdapter.IntersectFullLoadCurves(fullLoadCurves[0], maxTorque);
+				}
 
 				engine.FullLoadCurves = fullLoadCurves;
-
 				engine.IdleSpeed = enginePif.EngineModes[0].IdleSpeed;
 				engine.Displacement = enginePif.Displacement;
 
-				var fuel = GetCombustionEngineFuelData(enginePif.EngineModes.First().Fuels.First().FuelType,
-					pifVehicle.DualFuelVehicle);
-
-
+				var fuel = GetCombustionEngineFuelData(pifVehicle, fullLoadCurves[0]);
+				
 				engine.WHRType = WHRType.None;
 
 				engine.Fuels = new List<CombustionEngineFuelData> { fuel };
@@ -191,34 +194,48 @@ namespace TUGraz.VectoCore.Models.Declaration
 			}
 
 
-			private static CombustionEngineFuelData GetCombustionEngineFuelData(FuelType fuelType, bool isDualFuel)
+			private static string GetEngineRessourceId(IVehicleDeclarationInputData vehiclePif)
 			{
-				var ressourceId = string.Empty;
-
+				var fuelType = vehiclePif.Components.EngineInputData.EngineModes.First().Fuels.First().FuelType;
+				var isDualFuel = vehiclePif.DualFuelVehicle;
+				
 				if (isDualFuel)
+					return GenericEngineCM_Normed_CI;
+
+				switch (fuelType)
 				{
-					ressourceId = GenericEngineCM_Normed_CI;
+					case FuelType.DieselCI:
+					case FuelType.EthanolCI:
+					case FuelType.NGCI:
+						return GenericEngineCM_Normed_CI;
+					default:
+						return GenericEngineCM_Normed_PI;
 				}
-				else
-				{
-					switch (fuelType)
-					{
-						case FuelType.DieselCI:
-						case FuelType.EthanolCI:
-						case FuelType.NGCI:
-							ressourceId = GenericEngineCM_Normed_CI;
-							break;
-						case FuelType.EthanolPI:
-						case FuelType.LPGPI:
-						case FuelType.PetrolPI:
-						case FuelType.NGPI:
-							ressourceId = GenericEngineCM_Normed_PI;
-							break;
-					}
+			}
+
+
+			private static CombustionEngineFuelData GetCombustionEngineFuelData(IVehicleDeclarationInputData vehiclePif,
+				EngineFullLoadCurve fullLoadCurve)
+			{
+				var ressourceId = GetEngineRessourceId(vehiclePif);
+
+				var nIdle = vehiclePif.Components.EngineInputData.RatedSpeedDeclared.AsRPM;
+				var nRated = fullLoadCurve.RatedSpeed.Value();
+				var mRated = fullLoadCurve.MaxTorque.Value();
+				
+				var denormalizedData = DenormalizeData(ressourceId, nIdle, nRated, mRated);
+				
+				var engineSpeed = denormalizedData.AsEnumerable().Select(r => 
+					r.Field<string>(FuelConsumptionMapReader.Fields.EngineSpeed).ToDouble()).ToArray();
+
+				var clusterResult = new MeanShiftClustering().FindClusters(engineSpeed, 1);
+				
+				for (int i = 0; i < clusterResult.Length; i++) {
+					var currentTorque = fullLoadCurve.DragLoadStationaryTorque(clusterResult[i].RPMtoRad()).Value();
+					SetDragLoadFuelConsumption(denormalizedData, clusterResult[i], currentTorque);
 				}
-				//ToDo ConsumptionMap
-				//var denormalizedData = DenormalizeData(ressourceId);
-				//var fcMap = FuelConsumptionMapReader.Create(denormalizedData);
+				
+				var fcMap = FuelConsumptionMapReader.Create(denormalizedData);
 
 				var fuel = new CombustionEngineFuelData
 				{
@@ -227,21 +244,34 @@ namespace TUGraz.VectoCore.Models.Declaration
 					WHTCMotorway = 1,
 					ColdHotCorrectionFactor = 1,
 					CorrectionFactorRegPer = 1,
-					//ConsumptionMap = fcMap
+					ConsumptionMap = fcMap
 				};
 
 				return fuel;
 
 			}
 
-			private static DataTable DenormalizeData(string ressourceId)
+			private static void SetDragLoadFuelConsumption(DataTable currentDataTable, double engineSpeed, double torque)
 			{
-				// TODO: use vehicle specific values. n_idle  from PIF, nRated calculated from
-				// full-load curve (fullLoadCurves[0].RatedSpeed), m_rated => max torque (fullLoadCurves[0].MaxTorque)
-				var nIdle = 600.0;
-				var nRated = 1800.0;
-				var mRated = 1750.0;
+				for (int i = 0; i < currentDataTable.Rows.Count; i++) {
+					var currentRowSpeed = currentDataTable.Rows[i]
+						[FuelConsumptionMapReader.Fields.EngineSpeed].ToString().ToDouble();
 
+					if (currentRowSpeed.IsEqual(engineSpeed)) {
+						var newRow = currentDataTable.NewRow();
+						newRow[FuelConsumptionMapReader.Fields.EngineSpeed] = engineSpeed;
+						newRow[FuelConsumptionMapReader.Fields.Torque] = torque;
+						newRow[FuelConsumptionMapReader.Fields.FuelConsumption] = 0;
+						currentDataTable.Rows.InsertAt(newRow, i);
+						break;
+					}
+				}
+			}
+
+
+
+			private static DataTable DenormalizeData(string ressourceId, double nIdle, double nRated, double mRated)
+			{
 				var normedData = VectoCSVFile.ReadStream(RessourceHelper.ReadStream(ressourceId), source: ressourceId);
 
 				var result = new DataTable();
@@ -475,16 +505,6 @@ namespace TUGraz.VectoCore.Models.Declaration
 				IShiftPolygonCalculator shiftPolygonCalc)
 			{
 				return DeclarationDataAdapterHeavyLorry.DoCreateGearboxData(pifVehicle, runData, shiftPolygonCalc);
-				//var gearbox = new GearboxData
-				//{
-				//	Inertia = 0.SI<KilogramSquareMeter>(),
-				//	TractionInterruption =
-				//		GearBoxTypeHelper.TractionInterruption(pifVehicle.Components.GearboxInputData.Type),
-				//	Gears = GetGearData(pifVehicle.Components.GearboxInputData,
-				//		pifVehicle.TorqueLimits.ToDictionary(e => e.Gear), fullLoadMaxTorque)
-				//};
-
-				//return gearbox;
 			}
 
 			

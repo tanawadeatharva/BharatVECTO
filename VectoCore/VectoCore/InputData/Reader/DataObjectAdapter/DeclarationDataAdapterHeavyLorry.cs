@@ -422,10 +422,12 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 						DeclarationData.TorqueConverter.CCUpshiftMinAcceleration);
 				}
 
-				retVal.TorqueConverterData.ModelName = torqueConverter.Model;
-				retVal.TorqueConverterData.DigestValueInput = torqueConverter.DigestValue?.DigestValue;
-				retVal.TorqueConverterData.CertificationMethod = torqueConverter.CertificationMethod;
-				retVal.TorqueConverterData.CertificationNumber = torqueConverter.CertificationNumber;
+				if (torqueConverter != null) {
+					retVal.TorqueConverterData.ModelName = torqueConverter.Model;
+					retVal.TorqueConverterData.DigestValueInput = torqueConverter.DigestValue?.DigestValue;
+					retVal.TorqueConverterData.CertificationMethod = torqueConverter.CertificationMethod;
+					retVal.TorqueConverterData.CertificationNumber = torqueConverter.CertificationNumber;
+				}
 			}
 
 			return retVal;

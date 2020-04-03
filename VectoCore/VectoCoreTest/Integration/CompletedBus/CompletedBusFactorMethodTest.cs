@@ -275,7 +275,7 @@ namespace TUGraz.VectoCore.Tests.Integration.CompletedBus
 			var genericEngine = relatedRun.VectoRunDataGenericBody.EngineData;
 			var specificEngine = relatedRun.VectoRunDataSpezificBody.EngineData;
 
-			Assert.AreEqual(1, genericEngine.FullLoadCurves.Count);
+			Assert.AreEqual(7, genericEngine.FullLoadCurves.Count);
 			AssertFullLoadAndDragCurve(genericEngine.FullLoadCurves[0].FullLoadEntries);
 			AssertFullLoadAndDragCurve(specificEngine.FullLoadCurves[0].FullLoadEntries);
 
