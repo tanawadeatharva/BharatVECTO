@@ -153,6 +153,14 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 				}
 			}
 
+
+			var spPower = DeclarationData.SteeringPumpBus.LookupElectricalPowerDemand(
+				mission.MissionType, vehicleData.Components.BusAuxiliaries.SteeringPumpTechnology, vehicleData.Length ?? mission.BusParameter.VehicleLength);
+
+			avgInclBase += spPower / Constants.BusAuxiliaries.ElectricSystem.PowernetVoltage;
+			avgWithoutBase += spPower / Constants.BusAuxiliaries.ElectricSystem.PowernetVoltage;
+			
+
 			return Tuple.Create(avgInclBase, avgWithoutBase);
 		}
 
