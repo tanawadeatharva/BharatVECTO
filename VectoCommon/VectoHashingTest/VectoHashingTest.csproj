@@ -111,6 +111,9 @@
     <Content Include="Testdata\XML\Validation\vecto_engine_invalid.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="Testdata\XML\Validation\vecto_engine_valid-typeAttr.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="Testdata\XML\Validation\vecto_engine_valid.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
