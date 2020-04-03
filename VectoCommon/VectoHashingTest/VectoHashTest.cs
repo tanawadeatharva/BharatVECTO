@@ -514,5 +514,13 @@ namespace VectoHashingTest
 			Assert.AreEqual("1.0", version);
 
 		}
+
+		[TestCase(@"Testdata\XML\Validation\vecto_engine_valid.xml"),
+		TestCase(@"Testdata\XML\Validation\vecto_engine_valid-typeAttr.xml")]
+		public void TestIgnoreTypeAttribute(string file)
+		{
+			var h = VectoHash.Load(file);
+			Assert.IsTrue(h.ValidateHash());
+		}
 	}
 }
