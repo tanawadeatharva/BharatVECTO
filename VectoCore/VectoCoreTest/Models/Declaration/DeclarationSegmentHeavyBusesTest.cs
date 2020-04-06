@@ -144,7 +144,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 				height: 3.15,
 				curbMass: 10000,
 				refLoad: 4301.748,
-				lowLoad: 860.3496,
+				lowLoad: 860.3496 * 2,
 				axleWeightDistribution: new[] { 0.375, 0.625 }
 			);
 			AssertMission(
@@ -156,7 +156,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 				height: 3.15,
 				curbMass: 10000,
 				refLoad: 2737.476,
-				lowLoad: 547.4952,
+				lowLoad: 547.4952 * 2,
 				axleWeightDistribution: new[] { 0.375, 0.625 }
 			);
 
@@ -169,7 +169,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 					height: 3.7,
 					curbMass: 10000,
 					refLoad: 5051.295,
-					lowLoad: 1010.259,
+					lowLoad: 1010.259 * 2,
 					axleWeightDistribution: new[] { 0.375, 0.625 }
 				);
 			AssertMission(
@@ -181,7 +181,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 				height: 3.7,
 				curbMass: 10000,
 				refLoad: 3367.53,
-				lowLoad: 673.506,
+				lowLoad: 673.506 * 2,
 				axleWeightDistribution: new[] { 0.375, 0.625 }
 			);
 
@@ -245,7 +245,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 				height: 3.15,
 				curbMass: 12000,
 				refLoad: 5018.706,
-				lowLoad: 1003.7412,
+				lowLoad: 1003.7412 * 2,
 				axleWeightDistribution: new[] { 0.273, 0.454, 0.273 }
 			);
 			AssertMission(
@@ -257,7 +257,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 				height: 3.15,
 				curbMass: 12000,
 				refLoad: 3193.722,
-				lowLoad: 638.7444,
+				lowLoad: 638.7444 * 2,
 				axleWeightDistribution: new[] { 0.273, 0.454, 0.273 }
 			);
 
@@ -270,7 +270,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 					height: 3.7,
 					curbMass: 12000,
 					refLoad: 6952.32,
-					lowLoad: 1390.464,
+					lowLoad: 1390.464 * 2,
 					axleWeightDistribution: new[] { 0.273, 0.454, 0.273 }
 				);
 			AssertMission(
@@ -282,7 +282,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 				height: 3.7,
 				curbMass: 12000,
 				refLoad: 4634.88,
-				lowLoad: 926.976,
+				lowLoad: 926.976 * 2,
 				axleWeightDistribution: new[] { 0.273, 0.454, 0.273 }
 			);
 
@@ -346,7 +346,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 				height: 3.15,
 				curbMass: 12000,
 				refLoad: 6771.27,
-				lowLoad: 1354.254,
+				lowLoad: 1354.254 * 2,
 				axleWeightDistribution: new[] { 0.243, 0.352, 0.405 }
 			);
 			AssertMission(
@@ -358,7 +358,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 				height: 3.15,
 				curbMass: 12000,
 				refLoad: 4308.99,
-				lowLoad: 861.798,
+				lowLoad: 861.798 * 2,
 				axleWeightDistribution: new[] { 0.243, 0.352, 0.405 }
 			);
 
@@ -371,7 +371,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 					height: 3.7,
 					curbMass: 12000,
 					refLoad: 9233.55,
-					lowLoad: 1846.71,
+					lowLoad: 1846.71 * 2,
 					axleWeightDistribution: new[] { 0.243, 0.352, 0.405 }
 				);
 			AssertMission(
@@ -383,7 +383,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 				height: 3.7,
 				curbMass: 12000,
 				refLoad: 6155.7,
-				lowLoad: 1231.14,
+				lowLoad: 1231.14 * 2,
 				axleWeightDistribution: new[] { 0.243, 0.352, 0.405 }
 			);
 
@@ -447,7 +447,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 				height: 3.15,
 				curbMass: 14000,
 				refLoad: 5496.6780,
-				lowLoad: 1099.3356,
+				lowLoad: 1099.3356 * 2,
 				axleWeightDistribution: new[] { 0.214, 0.214, 0.358, 0.214 }
 			);
 			AssertMission(
@@ -459,7 +459,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 				height: 3.15,
 				curbMass: 14000,
 				refLoad: 3497.886,
-				lowLoad: 699.5772,
+				lowLoad: 699.5772 * 2,
 				axleWeightDistribution: new[] { 0.214, 0.214, 0.358, 0.214 }
 			);
 
@@ -472,7 +472,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 					height: 3.7,
 					curbMass: 14000,
 					refLoad: 7495.47,
-					lowLoad: 1499.094,
+					lowLoad: 1499.094 * 2,
 					axleWeightDistribution: new[] { 0.214, 0.214, 0.358, 0.214 }
 				);
 			AssertMission(
@@ -484,7 +484,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 				height: 3.7,
 				curbMass: 14000,
 				refLoad: 4996.98,
-				lowLoad: 999.396,
+				lowLoad: 999.396 * 2,
 				axleWeightDistribution: new[] { 0.214, 0.214, 0.358, 0.214 }
 			);
 
@@ -548,7 +548,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 				height: 3.15,
 				curbMass: 14000,
 				refLoad: 7886.538,
-				lowLoad: 1577.3076,
+				lowLoad: 1577.3076 * 2,
 				axleWeightDistribution: new[] { 0.200, 0.282, 0.324, 0.194 }
 			);
 			AssertMission(
@@ -560,7 +560,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 				height: 3.15,
 				curbMass: 14000,
 				refLoad: 5018.706,
-				lowLoad: 1003.7412,
+				lowLoad: 1003.7412 * 2,
 				axleWeightDistribution: new[] { 0.200, 0.282, 0.324, 0.194 }
 			);
 
@@ -573,7 +573,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 					height: 3.7,
 					curbMass: 14000,
 					refLoad: 10754.37,
-					lowLoad: 2150.874,
+					lowLoad: 2150.874 * 2,
 					axleWeightDistribution: new[] { 0.200, 0.282, 0.324, 0.194 }
 				);
 			AssertMission(
@@ -585,7 +585,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 				height: 3.7,
 				curbMass: 14000,
 				refLoad: 7169.58,
-				lowLoad: 1433.916,
+				lowLoad: 1433.916 * 2,
 				axleWeightDistribution: new[] { 0.200, 0.282, 0.324, 0.194 }
 			);
 
