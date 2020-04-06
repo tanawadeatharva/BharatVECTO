@@ -1671,6 +1671,11 @@ namespace TUGraz.VectoCommon.Utils
 			get { return GetUnitString(_units); }
 		}
 
+		public virtual double TheValue
+		{
+			get { return Val; }
+		}
+
 		private string ToString(string format)
 		{
 			if (string.IsNullOrEmpty(format)) {

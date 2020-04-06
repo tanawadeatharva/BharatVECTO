@@ -10,6 +10,7 @@
 // See the LICENSE.txt for the specific language governing permissions and limitations.
 
 using System.Xml.Linq;
+using Newtonsoft.Json;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Models.BusAuxiliaries;
@@ -17,6 +18,7 @@ using TUGraz.VectoCore.Models.BusAuxiliaries;
 namespace TUGraz.VectoCommon.BusAuxiliaries {
 	public interface IAuxiliaryConfig
 	{
+		[JsonIgnore]
 		IBusAuxiliariesDeclarationData InputData { get; }
 
 		// Electrical

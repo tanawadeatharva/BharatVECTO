@@ -92,6 +92,11 @@ namespace TUGraz.VectoCore.Models.Declaration
 				throw new VectoException(string.Format(ErrorMessage, key));
 			}
 		}
+
+		public Dictionary<TKey, TValue> Entries
+		{
+			get { return Data; }
+		}
 	}
 
 	public abstract class LookupData<TKey1, TKey2, TValue> : LookupData where TValue : struct

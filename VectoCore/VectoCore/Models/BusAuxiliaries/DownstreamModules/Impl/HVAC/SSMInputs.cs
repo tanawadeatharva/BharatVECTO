@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using Newtonsoft.Json;
 using TUGraz.VectoCommon.BusAuxiliaries;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Configuration;
@@ -153,31 +154,37 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.HVAC
 
 		#region Implementation of ISSMInputs
 
+		[JsonIgnore]
 		public ISSMBusParameters BusParameters
 		{
 			get { return this; }
 		}
 
+		[JsonIgnore]
 		public ISSMBoundaryConditions BoundaryConditions
 		{
 			get { return this; }
 		}
 
+		[JsonIgnore]
 		public IEnvironmentalConditions EnvironmentalConditions
 		{
 			get { return this; }
 		}
 
+		[JsonIgnore]
 		public IACSystem ACSystem
 		{
 			get { return this; }
 		}
 
+		[JsonIgnore]
 		public IVentilation Ventilation
 		{
 			get { return this; }
 		}
 
+		[JsonIgnore]
 		public IAuxHeater AuxHeater
 		{
 			get { return this; }

@@ -35,6 +35,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Diagnostics;
 using System.Linq;
 using System.Runtime.Serialization;
+using Newtonsoft.Json;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
@@ -101,6 +102,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 		public Second PowershiftShiftTime { get; internal set; }
 
 		public bool ATEcoRollReleaseLockupClutch { get; internal set; }
+
+		[JsonIgnore]
 		public IGearboxDeclarationInputData InputData { get; internal set; }
 
 
