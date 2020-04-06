@@ -164,7 +164,8 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 				ModelName = data.Model,
 				Date = data.Date,
 				CertificationMethod = data.CertificationMethod,
-				CertificationNumber = data.CertificationNumber,
+				CertificationNumber = data.CertificationMethod != CertificationMethod.StandardValues ? 
+					data.CertificationNumber : "",
 				DigestValueInput = data.DigestValue != null ? data.DigestValue.DigestValue : "",
 				Type = data.Type
 			};
@@ -172,8 +173,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 
 		protected static TransmissionLossMap CreateGearLossMap(ITransmissionInputData gear, uint i, bool useEfficiencyFallback, VehicleCategory vehicleCategory )
 		{
-			// TODO MQ 20200401 maybe vehiclecategory heavybuscompleted is not correct here.
-			if (vehicleCategory == VehicleCategory.HeavyBusCompletedVehicle) {
+			if (vehicleCategory == VehicleCategory.GenericBusVehicle) {
 				return gear.Ratio.IsEqual(1)
 					? TransmissionLossMapReader.Create(0.98, gear.Ratio, $"Gear {i + 1}")
 					: TransmissionLossMapReader.Create(0.96, gear.Ratio, $"Gear {i + 1}");

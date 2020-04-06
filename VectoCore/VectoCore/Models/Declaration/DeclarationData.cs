@@ -82,6 +82,10 @@ namespace TUGraz.VectoCore.Models.Declaration
 		public static readonly ElectricSystem ElectricSystem = new ElectricSystem();
 		public static readonly Fan Fan = new Fan();
 
+		public static readonly GenericBusEngineData GenericBusEngineData = new GenericBusEngineData();
+		public static readonly GenericBusAxelgearData GenericBusAxelgearData = new GenericBusAxelgearData();
+		public static readonly GenericBusAngledriveData GenericBusAngledriveData = new GenericBusAngledriveData();
+		public static readonly GenericBusRetarderData GenericBusRetarderData = new GenericBusRetarderData();
 
 		public static readonly HeatingVentilationAirConditioning HeatingVentilationAirConditioning =
 			new HeatingVentilationAirConditioning();
@@ -146,331 +150,38 @@ namespace TUGraz.VectoCore.Models.Declaration
 		public static class FactorMethodBus
 		{
 			#region Constans
-			private static string GenericEngineCM_Normed_CI =
-				$"{DeclarationDataResourcePrefix}.GenericBusData.EngineConsumptionMap_CI_Normed.vmap";
 
-			private static string GenericEngineCM_Normed_PI =
-				$"{DeclarationDataResourcePrefix}.GenericBusData.EngineConsumptionMap_PI_Normed.vmap";
-			
 			public static string GenericTorqueConvert =
 				$"{DeclarationDataResourcePrefix}.GenericBusData.GenericTorqueConverter.csv";
+			
 			#endregion
-
-
+			
 			#region Create Engine Data
 
 			public static CombustionEngineData CreateBusEngineData(IVehicleDeclarationInputData pifVehicle)
 			{
-				var enginePif = pifVehicle.Components.EngineInputData;
-				var gearbox = pifVehicle.Components.GearboxInputData;
-
-				var engine = new CombustionEngineData();
-
-				var fullLoadCurves = new Dictionary<uint, EngineFullLoadCurve>
-				{
-					[0] = FullLoadCurveReader.Create(enginePif.EngineModes.First().FullLoadCurve, true)
-				};
-				// TODO: MQ 20200401 add full-load curves per gear, limited by max torque (gbx or vehicle)
-				//   see DeclarationDataAdapterHeavyLorry ln 235ff.
-
-				engine.FullLoadCurves = fullLoadCurves;
-
-				engine.IdleSpeed = enginePif.EngineModes[0].IdleSpeed;
-				engine.Displacement = enginePif.Displacement;
-
-				var fuel = GetCombustionEngineFuelData(enginePif.EngineModes.First().Fuels.First().FuelType,
-					pifVehicle.DualFuelVehicle);
-
-
-				engine.WHRType = WHRType.None;
-
-				engine.Fuels = new List<CombustionEngineFuelData> { fuel };
-
-				engine.Inertia = Engine.EngineInertia(engine.Displacement, gearbox.Type);
-				return engine;
-			}
-
-
-			private static CombustionEngineFuelData GetCombustionEngineFuelData(FuelType fuelType, bool isDualFuel)
-			{
-				var ressourceId = string.Empty;
-
-				if (isDualFuel)
-				{
-					ressourceId = GenericEngineCM_Normed_CI;
-				}
-				else
-				{
-					switch (fuelType)
-					{
-						case FuelType.DieselCI:
-						case FuelType.EthanolCI:
-						case FuelType.NGCI:
-							ressourceId = GenericEngineCM_Normed_CI;
-							break;
-						case FuelType.EthanolPI:
-						case FuelType.LPGPI:
-						case FuelType.PetrolPI:
-						case FuelType.NGPI:
-							ressourceId = GenericEngineCM_Normed_PI;
-							break;
-					}
-				}
-				//ToDo ConsumptionMap
-				//var denormalizedData = DenormalizeData(ressourceId);
-				//var fcMap = FuelConsumptionMapReader.Create(denormalizedData);
-
-				var fuel = new CombustionEngineFuelData
-				{
-					WHTCUrban = 1,
-					WHTCRural = 1,
-					WHTCMotorway = 1,
-					ColdHotCorrectionFactor = 1,
-					CorrectionFactorRegPer = 1,
-					//ConsumptionMap = fcMap
-				};
-
-				return fuel;
-
-			}
-
-			private static DataTable DenormalizeData(string ressourceId)
-			{
-				// TODO: use vehicle specific values. n_idle  from PIF, nRated calculated from
-				// full-load curve (fullLoadCurves[0].RatedSpeed), m_rated => max torque (fullLoadCurves[0].MaxTorque)
-				var nIdle = 600.0;
-				var nRated = 1800.0;
-				var mRated = 1750.0;
-
-				var normedData = VectoCSVFile.ReadStream(RessourceHelper.ReadStream(ressourceId), source: ressourceId);
-
-				var result = new DataTable();
-				result.Columns.Add(FuelConsumptionMapReader.Fields.EngineSpeed);
-				result.Columns.Add(FuelConsumptionMapReader.Fields.Torque);
-				result.Columns.Add(FuelConsumptionMapReader.Fields.FuelConsumption);
-
-				foreach (DataRow row in normedData.Rows)
-				{
-					var engineSpeed = DenormalizeEngineSpeed((string)row[FuelConsumptionMapReader.Fields.EngineSpeed],
-						nIdle, nRated);
-					var torque = DenormalizeTorque((string)row[FuelConsumptionMapReader.Fields.Torque], mRated);
-					var fc = DenormalizeFC((string)row[FuelConsumptionMapReader.Fields.FuelConsumption], mRated);
-
-					var newRow = result.NewRow();
-					newRow[FuelConsumptionMapReader.Fields.EngineSpeed] = engineSpeed;
-					newRow[FuelConsumptionMapReader.Fields.Torque] = torque;
-					newRow[FuelConsumptionMapReader.Fields.FuelConsumption] = fc;
-					result.Rows.Add(newRow);
-				}
-
-				return result;
-			}
-
-			private static double DenormalizeFC(string fc, double mRated)
-			{
-				return fc.ToDouble() * mRated;
-			}
-
-			private static double DenormalizeTorque(string torque, double mRated)
-			{
-				return torque.ToDouble() * mRated;
-			}
-
-			private static double DenormalizeEngineSpeed(string engineSpeed, double nIdle, double nRated)
-			{
-				return engineSpeed.ToDouble() * (nRated - nIdle) + nIdle;
+				return GenericBusEngineData.CreateGenericBusEngineData(pifVehicle);
 			}
 			
 			#endregion
 
 			#region Create Axlegear Data
+
 			public static AxleGearData CreateAxlegearData(IAxleGearInputData axlegearData)
 			{
-				var axleGear = new AxleGearData
-				{
-					LineType = axlegearData.LineType,
-					InputData = axlegearData
-				};
-
-				var outputLossMap = CreateAxlegearOutputLossMap();
-				var inputLossMap = CalculateAxleInputLossMap(outputLossMap);
-
-				var transmissionData = new TransmissionData
-				{
-					Ratio = axlegearData.Ratio,
-					LossMap = TransmissionLossMapReader.Create(inputLossMap, axlegearData.Ratio, "Axlegear")
-				};
-					
-				axleGear.AxleGear = transmissionData;
-
-				return axleGear;
-			}
-			
-			private static DataTable CreateAxlegearOutputLossMap()
-			{
-				var lossMap = new DataTable();
-				lossMap.Columns.Add("output speed");
-				lossMap.Columns.Add("output torque");
-				lossMap.Columns.Add("output torque loss");
-				
-				var torques = new [] {
-					Constants.GenericLossMapSettings.OutputTorqueEnd * -1.0,
-					Constants.GenericLossMapSettings.OutputTorqueStart *-1.0,
-					Constants.GenericLossMapSettings.OutputTorqueStart,
-					Constants.GenericLossMapSettings.OutputTorqueEnd
-				};
-
-				// TODO: MQ 20200401  I_axl from PIF
-				var td0 = Constants.GenericLossMapSettings.T0 +
-						Constants.GenericLossMapSettings.IAxl *
-						Constants.GenericLossMapSettings.T1;
-
-				var td0_ = td0 * 0.5;
-				var td150_ = td0 * 0.5;
-				var td_n = Constants.GenericLossMapSettings.Td_n;
-				var efficiency = Constants.GenericLossMapSettings.Efficiency;
-
-				var torqueIndex = 0;
-
-				for (int i = 0; i < 12; i++) {
-					var speed = 0.0;
-					double calculationSpeed;
-					double torque;
-	
-					if (i % 4 == 0)
-						torqueIndex = 0;
-
-					if (i < 4) 
-						speed = 0.0;
-					else if (i >= 4 && i < 8)
-						speed = Constants.GenericLossMapSettings.OutputSpeedStart;
-					else if (i >= 8 && i < 12)
-						speed = Constants.GenericLossMapSettings.OutputSpeedEnd;
-					
-					calculationSpeed = speed.Equals(0.0) 
-						? Constants.GenericLossMapSettings.OutputSpeedStart 
-						: speed;
-
-					torque = torques[torqueIndex++];
-
-					var newRow = lossMap.NewRow();
-					newRow[lossMap.Columns[0]] = speed;
-					newRow[lossMap.Columns[1]] = torque;
-					newRow[lossMap.Columns[2]] =
-						CalculateOutputTorqueLoss(td0_, td150_, td_n, calculationSpeed, torque, efficiency);
-
-					lossMap.Rows.Add(newRow);
-				}
-				
-				return lossMap;
-			}
-
-			private static double CalculateOutputTorqueLoss(double td0_, double td150_, double td_n, 
-				double outputspeed, double ouputTorque, double efficiency)
-			{
-				if (ouputTorque < 0)
-					ouputTorque = ouputTorque * -1.0;
-				
-				return td0_+ td150_ * outputspeed/td_n + ouputTorque/ efficiency - ouputTorque;
-			}
-
-			private static DataTable CalculateAxleInputLossMap(DataTable outputLossMap)
-			{
-				var inputLossMap = new DataTable();
-
-				inputLossMap.Columns.Add(TransmissionLossMapReader.Fields.InputSpeed);
-				inputLossMap.Columns.Add(TransmissionLossMapReader.Fields.InputTorque);
-				inputLossMap.Columns.Add(TransmissionLossMapReader.Fields.TorqeLoss);
-
-				// TODO: MQ 20200401 use axlegear ratio from PIF
-				var iAxle = Constants.GenericLossMapSettings.IAxl;
-
-				foreach (DataRow row in outputLossMap.Rows) {
-					var outputSpeed = row[0].ToString().ToDouble();
-					var outputTorque = row[1].ToString().ToDouble();
-					var outputLoss = row[2].ToString().ToDouble();
-
-					var newRow = inputLossMap.NewRow();
-					newRow[0] = GetInputSpeed(outputSpeed, iAxle);
-					newRow[1] = GetInputTorque(outputTorque, outputLoss, iAxle);
-					newRow[2] = GetInputTorqueLoss(outputLoss, iAxle);
-					inputLossMap.Rows.Add(newRow);
-				}
-
-				return inputLossMap;
-			}
-
-			[MethodImpl(MethodImplOptions.AggressiveInlining)]
-			private static double GetInputSpeed(double outputSpeed, double iAxle)
-			{
-				return outputSpeed * iAxle;
-			}
-
-			[MethodImpl(MethodImplOptions.AggressiveInlining)]
-			private static double GetInputTorque(double outputTorque, double outputLoss, double iAxle)
-			{
-				return (outputTorque + outputLoss) / iAxle;
-			}
-
-			[MethodImpl(MethodImplOptions.AggressiveInlining)]
-			private static double GetInputTorqueLoss(double outputLoss, double iAxle)
-			{
-				return outputLoss / iAxle;
+				return GenericBusAxelgearData.CreateGenericBusAxlegearData(axlegearData);
 			}
 
 			#endregion
 
 			#region Create Angledrive Data
 
-			public static AngledriveData CreateAngledriveData(IAngledriveInputData angledriveInputData)
+			public static AngledriveData CreateAngledriveData(IAngledriveInputData angledriveInputData, double axleRatio)
 			{
-				if (angledriveInputData.DataSource.SourceFile == null)
-					return null;
-
-				var angledriveData = new AngledriveData
-				{
-					Type = angledriveInputData.Type,
-					InputData = angledriveInputData
-				};
-
-				var axleGearOutputLossMap = CreateAxlegearOutputLossMap();
-				var axleGearInputLossMap = CalculateAxleInputLossMap(axleGearOutputLossMap);
-
-				var transmissionAngleDrive = new TransmissionData
-				{
-					Ratio = angledriveInputData.Ratio,
-					LossMap = GetAngleDriveLossMap(axleGearInputLossMap, angledriveInputData.Ratio)
-				};
-				
-
-				angledriveData.Angledrive = transmissionAngleDrive;
-
-				return angledriveData;
+				return GenericBusAngledriveData.CreateGenericBusAngledriveData(angledriveInputData, axleRatio,
+					GenericBusAxelgearData.AxleGearInputLossMap);
 			}
-
-			private static TransmissionLossMap GetAngleDriveLossMap(DataTable axleGearInputTable, double ratio)
-			{
-				var angleDriveLossMap = new DataTable();
-				angleDriveLossMap.Columns.Add(TransmissionLossMapReader.Fields.InputSpeed);
-				angleDriveLossMap.Columns.Add(TransmissionLossMapReader.Fields.InputTorque);
-				angleDriveLossMap.Columns.Add(TransmissionLossMapReader.Fields.TorqeLoss);
-
-				var angleDriveFactor = Constants.GenericLossMapSettings.FactorAngleDrive;
-				foreach (DataRow row in axleGearInputTable.Rows) {
-					var inputSpeed = row[0].ToString().ToDouble();
-					var inputTorque = row[1].ToString().ToDouble();
-					var inputTorqueLoss = row[2].ToString().ToDouble() * angleDriveFactor;
-
-					var newRow = angleDriveLossMap.NewRow();
-					newRow[0] = inputSpeed;
-					newRow[1] = inputTorque;
-					newRow[2] = inputTorqueLoss;
-					angleDriveLossMap.Rows.Add(newRow);
-				}
-
-				return TransmissionLossMapReader.Create(angleDriveFactor, ratio, "AngleDrive");
-			}
-
+			
 			#endregion
 
 			#region Create Gearbox Data
@@ -479,16 +190,6 @@ namespace TUGraz.VectoCore.Models.Declaration
 				IShiftPolygonCalculator shiftPolygonCalc)
 			{
 				return DeclarationDataAdapterHeavyLorry.DoCreateGearboxData(pifVehicle, runData, shiftPolygonCalc);
-				//var gearbox = new GearboxData
-				//{
-				//	Inertia = 0.SI<KilogramSquareMeter>(),
-				//	TractionInterruption =
-				//		GearBoxTypeHelper.TractionInterruption(pifVehicle.Components.GearboxInputData.Type),
-				//	Gears = GetGearData(pifVehicle.Components.GearboxInputData,
-				//		pifVehicle.TorqueLimits.ToDictionary(e => e.Gear), fullLoadMaxTorque)
-				//};
-
-				//return gearbox;
 			}
 
 			
@@ -521,69 +222,32 @@ namespace TUGraz.VectoCore.Models.Declaration
 
 			public static RetarderData CreateRetarderData(IRetarderInputData retarderInput)
 			{
-				if (retarderInput == null)
-					return null;
-
-				var retarder = new RetarderData
-				{
-					Ratio = retarderInput.Ratio,
-					Type = retarderInput.Type,
-					LossMap = GenerateGenericLossMap(retarderInput.Ratio)
-				};
-
-				return retarder;
+				 return GenericBusRetarderData.CreateGenericBusRetarderData(retarderInput);
 			}
 
-			private static RetarderLossMap GenerateGenericLossMap(double stepUpRatio)
-			{
-				var factorGeneric = 0.5; 
-
-				var retarderSpeeds = new double [] {
-					0, 200 , 400, 600, 900, 1200,
-					1600, 2000, 2500, 3000, 3500, 4000,
-					4500, 5000
-				};
-
-				var genericRetarderLosses = GetHydrodynamicRetardersLoss(retarderSpeeds, stepUpRatio);
-				//var genericRetarderLosses = GetMagneticRetarderLoss(retarderSpeeds, stepUpRatio);
-
-				var torqueLoss = new DataTable();
-				torqueLoss.Columns.Add(RetarderLossMapReader.Fields.RetarderSpeed);
-				torqueLoss.Columns.Add(RetarderLossMapReader.Fields.TorqueLoss);
-				
-				for (int i = 0; i < genericRetarderLosses.Length; i++) {
-					var newRow = torqueLoss.NewRow();
-					newRow[RetarderLossMapReader.Fields.RetarderSpeed] = retarderSpeeds[i];
-					newRow[RetarderLossMapReader.Fields.TorqueLoss] = genericRetarderLosses[i] * factorGeneric;
-					torqueLoss.Rows.Add(newRow);
-				}
-
-				return RetarderLossMapReader.Create(torqueLoss);
-			}
-			
-			private static double[] GetHydrodynamicRetardersLoss(double[] retarderSpeeds, double stepUpRatio)
-			{
-				var losses = new double[retarderSpeeds.Length];
-
-				for (int i = 0; i < retarderSpeeds.Length; i++) {
-					losses[i] = 10.0 / stepUpRatio + 2.0 / Math.Pow(stepUpRatio, 3) * Math.Pow(retarderSpeeds[i] / 1000.0, 2);
-				}
-
-				return losses;
-			}
-
-			private static double[] GetMagneticRetarderLoss(double[] retarderSpeeds, double stepUpRatio)
-			{
-				var losses = new double[retarderSpeeds.Length];
-
-				for (int i = 0; i < retarderSpeeds.Length; i++) {
-					losses[i] = 15.0 / stepUpRatio + 2.0 / Math.Pow(stepUpRatio, 4) * Math.Pow(retarderSpeeds[i] / 1000.0, 3);
-				}
-
-				return losses;
-			}
-			
 			#endregion
+
+			#region Common Getters
+
+			public static Meter GetDynamicTyreRadius(IVehicleDeclarationInputData primaryVehicle)
+			{
+				var axleWheels = primaryVehicle.Components.AxleWheels.AxlesDeclaration;
+				Meter dynamicTyreRadius = null;
+
+				for (int i = 0; i < axleWheels.Count; i++)
+				{
+					if (axleWheels[i].AxleType == AxleType.VehicleDriven)
+					{
+						dynamicTyreRadius = DeclarationData.Wheels.Lookup(axleWheels[i].Tyre.Dimension.RemoveWhitespace()).DynamicTyreRadius;
+						break;
+					}
+				}
+
+				return dynamicTyreRadius;
+			}
+
+			#endregion
+
 		}
 
 

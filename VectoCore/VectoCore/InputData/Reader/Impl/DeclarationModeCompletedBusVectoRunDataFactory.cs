@@ -36,6 +36,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 
 
 		protected Segment _segment;
+		
 		protected DriverData _driverdata;
 		protected AirdragData _airdragData;
 		protected AxleGearData _axlegearData;
@@ -51,6 +52,9 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 
 		//protected Exception InitException;
 		protected ShiftStrategyParameters _gearshiftData;
+
+		private VehicleData _tmpVehicleData;
+		private DriverData _driverData;
 
 
 		protected IDeclarationDataAdapter DataAdapter { get; }
@@ -130,16 +134,26 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 
 			//_municipalPtoTransmissionData = null;
 
+			_tmpVehicleData = new VehicleData {
+				DynamicTyreRadius = DeclarationData.FactorMethodBus.GetDynamicTyreRadius(primaryVehicle),
+				VehicleCategory = VehicleCategory.GenericBusVehicle
+			};
+
 
 			_combustionEngineData = DeclarationData.FactorMethodBus.CreateBusEngineData(primaryVehicle);
 
 			_axlegearData = DeclarationData.FactorMethodBus.CreateAxlegearData(primaryVehicle.Components.AxleGearInputData);
-			_angledriveData =
-				DeclarationData.FactorMethodBus.CreateAngledriveData(primaryVehicle.Components.AngledriveInputData);
+
+			_angledriveData = DeclarationData.FactorMethodBus.CreateAngledriveData(
+								primaryVehicle.Components.AngledriveInputData,
+								primaryVehicle.Components.AxleGearInputData.Ratio);
 			
-			_gearboxData = DeclarationData.FactorMethodBus.CreateGearboxData(primaryVehicle, new VectoRunData() { EngineData = _combustionEngineData, AxleGearData = _axlegearData, VehicleData =  },
+
+			_gearboxData = DeclarationData.FactorMethodBus.CreateGearboxData(primaryVehicle,
+				new VectoRunData() { EngineData = _combustionEngineData, AxleGearData = _axlegearData, VehicleData = _tmpVehicleData },
 				null);
 
+	
 			_gearshiftData = DataAdapterPrimary.CreateGearshiftData(
 				_gearboxData, _axlegearData.AxleGear.Ratio * (_angledriveData?.Angledrive.Ratio ?? 1.0), _combustionEngineData.IdleSpeed);
 
@@ -158,7 +172,8 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 
 			_retarderData =
 				DeclarationData.FactorMethodBus.CreateRetarderData(primaryVehicle.Components.RetarderInputData);
-		
+
+			_driverData = new GenericBusDriverData().CreateGenericBusDriverData(_segment);
 		}
 
 		protected virtual IEnumerable<VectoRunData> GetNextRun()
@@ -275,15 +290,13 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 			//	mission, InputDataProvider.JobInputData.Vehicle, simulationRunData);
 			//return simulationRunData;
 
-
-			// TODO MQ completedSegment == _segment?
-			var completedSegment = GetCompletedSegment(completedVehicle, primaryVehicle.AxleConfiguration);
 			var primaryBusAuxiliaries = primaryVehicle.Components.BusAuxiliaries;
 
 			var simulationRunData = new VectoRunData {
 
 				Loading = loading.Key,
-				VehicleData = DataAdapterCompleted.CreateVehicleData(primaryVehicle, completedVehicle, mission, loading),
+				VehicleData = DataAdapterCompleted.CreateVehicleData(primaryVehicle, completedVehicle, 
+					mission, loading, _tmpVehicleData.DynamicTyreRadius),
 				AirdragData = DataAdapterCompleted.CreateAirdragData(completedVehicle, mission),
 				EngineData = _combustionEngineData,
 				GearboxData = _gearboxData,
@@ -291,7 +304,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 				AngledriveData = _angledriveData,
 				GearshiftParameters = _gearshiftData,
 				Aux = DataAdapterPrimary.CreateAuxiliaryData(primaryVehicle.Components.AuxiliaryInputData,
-				primaryBusAuxiliaries, mission.MissionType, completedSegment.VehicleClass,
+				primaryBusAuxiliaries, mission.MissionType, _segment.VehicleClass,
 				completedVehicle.Length)
 			};
 			
@@ -310,9 +323,8 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 			simulationRunData.BusAuxiliaries = auxiliaryConfig;
 
 			simulationRunData.Retarder = _retarderData;
-			
-			// todo MQ 20200401: move driver data to initialize method and set member.
-			simulationRunData.DriverData = DataAdapterCompleted.CreateDriverData(completedSegment);
+
+			simulationRunData.DriverData = _driverData;
 			
 			simulationRunData.Cycle = new DrivingCycleProxy(cycle, mission.MissionType.ToString());
 			
@@ -388,7 +400,8 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 
 			var simulationRunData = new VectoRunData {
 				Loading = loading.Key,
-				VehicleData = DataAdapterPrimary.CreateVehicleData(primaryVehicle, mission, loading),
+				VehicleData = DataAdapterPrimary.CreateVehicleData(primaryVehicle, mission, loading,
+					_tmpVehicleData.DynamicTyreRadius),
 				AirdragData = DataAdapterPrimary.CreateAirdragData(null, mission, new Segment()),
 				EngineData = _combustionEngineData,
 				GearboxData = _gearboxData,
@@ -416,8 +429,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 
 			simulationRunData.Retarder = _retarderData;
 			
-			// todo: use driver data from initialize method
-			simulationRunData.DriverData = DataAdapterPrimary.CreateDriverData(primarySegment, primaryVehicle);
+			simulationRunData.DriverData = _driverData;
 
 			simulationRunData.Cycle = new DrivingCycleProxy(cycle, mission.MissionType.ToString());
 

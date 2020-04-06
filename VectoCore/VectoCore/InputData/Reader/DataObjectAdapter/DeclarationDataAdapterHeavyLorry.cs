@@ -360,7 +360,9 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 
 			var gears = new Dictionary<uint, GearData>();
 			var tcShiftPolygon = DeclarationData.TorqueConverter.ComputeShiftPolygon(engine.FullLoadCurves[0]);
-			var vehicleCategory = inputData.VehicleCategory;
+			var vehicleCategory = runData.VehicleData.VehicleCategory == VehicleCategory.GenericBusVehicle
+				? VehicleCategory.GenericBusVehicle
+				: inputData.VehicleCategory;
 			for (uint i = 0; i < gearsInput.Count; i++) {
 				var gear = gearsInput[(int)i];
 				var lossMap = CreateGearLossMap(gear, i, false, vehicleCategory);
@@ -401,8 +403,8 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			if (retVal.Type.AutomaticTransmission()) {
 				var ratio = double.IsNaN(retVal.Gears[1].Ratio) ? 1 : retVal.Gears[1].TorqueConverterRatio / retVal.Gears[1].Ratio;
 				retVal.PowershiftShiftTime = DeclarationData.Gearbox.PowershiftShiftTime;
-				// TODO MQ 20200401 maybe vehiclecategory heavybuscompleted is not correct here.
-				if (vehicleCategory == VehicleCategory.HeavyBusCompletedVehicle) {
+
+				if (vehicleCategory == VehicleCategory.GenericBusVehicle) {
 					var fileStream = RessourceHelper.ReadStream(DeclarationData.FactorMethodBus.GenericTorqueConvert);
 					retVal.TorqueConverterData = TorqueConverterDataReader.ReadFromStream(fileStream,
 						DeclarationData.TorqueConverter.ReferenceRPM,
@@ -420,10 +422,12 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 						DeclarationData.TorqueConverter.CCUpshiftMinAcceleration);
 				}
 
-				retVal.TorqueConverterData.ModelName = torqueConverter.Model;
-				retVal.TorqueConverterData.DigestValueInput = torqueConverter.DigestValue?.DigestValue;
-				retVal.TorqueConverterData.CertificationMethod = torqueConverter.CertificationMethod;
-				retVal.TorqueConverterData.CertificationNumber = torqueConverter.CertificationNumber;
+				if (torqueConverter != null) {
+					retVal.TorqueConverterData.ModelName = torqueConverter.Model;
+					retVal.TorqueConverterData.DigestValueInput = torqueConverter.DigestValue?.DigestValue;
+					retVal.TorqueConverterData.CertificationMethod = torqueConverter.CertificationMethod;
+					retVal.TorqueConverterData.CertificationNumber = torqueConverter.CertificationNumber;
+				}
 			}
 
 			return retVal;
