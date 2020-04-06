@@ -20,6 +20,7 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries
 {
 	public class AuxiliaryConfig : IAuxiliaryConfig
 	{
+		[JsonIgnore]
 		public IBusAuxiliariesDeclarationData InputData { get; internal set; }
 
 		// Electrical

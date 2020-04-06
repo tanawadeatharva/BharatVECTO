@@ -99,6 +99,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 		public string ModFileSuffix { get; internal set; }
 
 		[ValidateObject]
+		[JsonIgnore]
 		public IDeclarationReport Report { get; internal set; }
 
 		[Required, ValidateObject]

@@ -35,6 +35,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Xml;
 using System.Xml.Linq;
+using Newtonsoft.Json;
 using TUGraz.VectoCommon.BusAuxiliaries;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
@@ -239,9 +240,12 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 			public bool EngineStopStart { get; internal set; }
 			public EcoRollType EcoRoll { get; internal set; }
 			public PredictiveCruiseControlType PredictiveCruiseControl { get; internal set; }
+
+			[JsonIgnore]
 			public IAdvancedDriverAssistantSystemDeclarationInputData InputData { get; internal set; }
 		}
 
+		[JsonIgnore]
 		public IVehicleDeclarationInputData InputData { get; internal set; }
 
 

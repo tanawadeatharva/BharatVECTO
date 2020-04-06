@@ -18,7 +18,7 @@ using TUGraz.VectoCore.Models.BusAuxiliaries;
 namespace TUGraz.VectoCommon.BusAuxiliaries {
 	public interface IAuxiliaryConfig
 	{
-		[JsonIgnore]
+		
 		IBusAuxiliariesDeclarationData InputData { get; }
 
 		// Electrical

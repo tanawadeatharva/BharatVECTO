@@ -1666,14 +1666,14 @@ namespace TUGraz.VectoCommon.Utils
 			return ToString(null);
 		}
 
-		public virtual string UnitString
-		{
-			get { return GetUnitString(_units); }
-		}
 
 		public virtual double TheValue
 		{
 			get { return Val; }
+		}
+		public virtual string UnitString
+		{
+			get { return GetUnitString(_units); }
 		}
 
 		private string ToString(string format)
