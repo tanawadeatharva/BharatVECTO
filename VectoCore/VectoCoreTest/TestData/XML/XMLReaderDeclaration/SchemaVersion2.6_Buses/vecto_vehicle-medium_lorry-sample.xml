@@ -9,9 +9,9 @@ urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.1 E:\QUAM\Workspace\VECTO_DEV_
 		<Date>2017-09-26T15:33:45.0798047Z</Date>
 		<LegislativeClass>N3</LegislativeClass>
 		<VehicleCategory>Tractor</VehicleCategory>
-		<AxleConfiguration>4x2</AxleConfiguration>
-		<CurbMassChassis>8229</CurbMassChassis>
-		<TechnicalPermissibleMaximumLadenMass>40000</TechnicalPermissibleMaximumLadenMass>
+		<AxleConfiguration>4x2F</AxleConfiguration>
+		<CurbMassChassis>4229</CurbMassChassis>
+		<TechnicalPermissibleMaximumLadenMass>7000</TechnicalPermissibleMaximumLadenMass>
 		<IdlingSpeed>100</IdlingSpeed>
 		<RetarderType>Transmission Output Retarder</RetarderType>
 		<RetarderRatio>1.000</RetarderRatio>
