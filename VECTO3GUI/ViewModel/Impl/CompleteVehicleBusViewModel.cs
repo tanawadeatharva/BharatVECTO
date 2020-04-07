@@ -166,7 +166,7 @@ namespace VECTO3GUI.ViewModel.Impl
 			CurbMassChassis = vehicle.CurbMassChassis;
 			TechnicalPermissibleMaximumLadenMass = vehicle.GrossVehicleMassRating;
 			NumberOfPassengersLowerDeck = vehicle.NumberOfPassengersLowerDeck;
-			NumberOfPassengersUpperDeck = vehicle.NuberOfPassengersUpperDeck;
+			NumberOfPassengersUpperDeck = vehicle.NumberOfPassengersUpperDeck;
 			FloorType = vehicle.FloorType;
 			HeightIntegratedBody = vehicle.Height;
 			VehicleLength = vehicle.Length;

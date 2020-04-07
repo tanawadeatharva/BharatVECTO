@@ -419,7 +419,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 		}
 
 		public RegistrationClass RegisteredClass { get { return RegistrationClass.unknown; } }
-		public int NuberOfPassengersUpperDeck { get { return 0; } }
+		public int NumberOfPassengersUpperDeck { get { return 0; } }
 		public int NumberOfPassengersLowerDeck { get { return 0; } }
 		public VehicleCode VehicleCode { get { return VehicleCode.NOT_APPLICABLE; } }
 		public FloorType FloorType { get { return VehicleData.FloorType; } }

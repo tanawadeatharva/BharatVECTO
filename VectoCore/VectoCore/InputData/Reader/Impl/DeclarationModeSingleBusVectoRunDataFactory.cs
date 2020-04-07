@@ -30,7 +30,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl {
 
 		protected override VectoRunData CreateVectoRunData(IVehicleDeclarationInputData vehicle, int modeIdx, Mission mission, KeyValuePair<LoadingType, Kilogram> loading)
 		{
-			var doubleDecker = _singleBusInputData.CompletedVehicle.NuberOfPassengersUpperDeck > 0;
+			var doubleDecker = _singleBusInputData.CompletedVehicle.NumberOfPassengersUpperDeck > 0;
 			if (mission.BusParameter.DoubleDecker != doubleDecker) {
 				return null;
 			}

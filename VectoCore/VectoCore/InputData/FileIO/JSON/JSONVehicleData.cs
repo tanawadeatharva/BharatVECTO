@@ -593,7 +593,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			get { return RegistrationClass.unknown; }
 		}
 
-		public virtual int NuberOfPassengersUpperDeck
+		public virtual int NumberOfPassengersUpperDeck
 		{
 			get { return 0; }
 		}

@@ -278,7 +278,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 			get { return RegistrationClass.unknown; }
 		}
 
-		public virtual int NuberOfPassengersUpperDeck
+		public virtual int NumberOfPassengersUpperDeck
 		{
 			get { return 0; }
 		}
@@ -821,7 +821,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 			}
 		}
 
-		public override int NuberOfPassengersUpperDeck
+		public override int NumberOfPassengersUpperDeck
 		{
 			get {
 				var node = GetNode(XMLNames.Bus_UpperDeck);
@@ -1015,7 +1015,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		public string Identifier { get; }
 		public bool ExemptedVehicle { get; }
 		public LegislativeClass LegislativeClass { get; }
-		public int NuberOfPassengersUpperDeck { get; }
+		public int NumberOfPassengersUpperDeck { get; }
 		public int NumberOfPassengersLowerDeck { get; }
 		public Kilogram CurbMassChassis { get; }
 		public bool VocationalVehicle { get; }

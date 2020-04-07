@@ -24,23 +24,34 @@ namespace TUGraz.VectoCore.Models.Declaration
 		private static string GenericEngineCM_Normed_PI =
 			$"{DeclarationData.DeclarationDataResourcePrefix}.GenericBusData.EngineConsumptionMap_PI_Normed.vmap";
 
+		private static GenericBusEngineData _instance;
+
+		public static GenericBusEngineData Instance
+		{
+			get { return _instance ?? (_instance = new GenericBusEngineData()); }
+		}
+
 		#endregion
 
-		public CombustionEngineData CreateGenericBusEngineData(IVehicleDeclarationInputData pifVehicle)
+		protected GenericBusEngineData()
 		{
-			var enginePif = pifVehicle.Components.EngineInputData;
-			var gearbox = pifVehicle.Components.GearboxInputData;
+			
+		}
+
+		public CombustionEngineData CreateGenericBusEngineData(IVehicleDeclarationInputData primaryVehicle)
+		{
+			var engineData = primaryVehicle.Components.EngineInputData;
+			var gearbox = primaryVehicle.Components.GearboxInputData;
 
 			var engine = new CombustionEngineData();
 
-			var limits = pifVehicle.TorqueLimits.ToDictionary(e => e.Gear);
+			var limits = primaryVehicle.TorqueLimits.ToDictionary(e => e.Gear);
 			var numGears = gearbox.Gears.Count;
 			var fullLoadCurves = new Dictionary<uint, EngineFullLoadCurve>(numGears + 1);
-			fullLoadCurves[0] = FullLoadCurveReader.Create(enginePif.EngineModes.First().FullLoadCurve, true);
+			fullLoadCurves[0] = FullLoadCurveReader.Create(engineData.EngineModes.First().FullLoadCurve, true);
 			fullLoadCurves[0].EngineData = engine;
 
-			foreach (var gear in gearbox.Gears)
-			{
+			foreach (var gear in gearbox.Gears) {
 				var maxTorque = VectoMath.Min(
 					DeclarationDataAdapterHeavyLorry.GbxMaxTorque(gear, numGears, fullLoadCurves[0].MaxTorque),
 					DeclarationDataAdapterHeavyLorry.VehMaxTorque(gear, numGears, limits, fullLoadCurves[0].MaxTorque));
@@ -48,16 +59,17 @@ namespace TUGraz.VectoCore.Models.Declaration
 			}
 
 			engine.FullLoadCurves = fullLoadCurves;
-			engine.IdleSpeed = enginePif.EngineModes[0].IdleSpeed;
-			engine.Displacement = enginePif.Displacement;
+			engine.IdleSpeed = engineData.EngineModes[0].IdleSpeed;
+			engine.Displacement = engineData.Displacement;
 
-			var fuel = GetCombustionEngineFuelData(pifVehicle, fullLoadCurves[0]);
+			var fuel = GetCombustionEngineFuelData(primaryVehicle, fullLoadCurves[0]);
 			
 			engine.WHRType = WHRType.None;
 
 			engine.Fuels = new List<CombustionEngineFuelData> { fuel };
 
 			engine.Inertia = DeclarationData.Engine.EngineInertia(engine.Displacement, gearbox.Type);
+			engine.EngineStartTime = DeclarationData.Engine.DefaultEngineStartTime;
 			return engine;
 		}
 
@@ -88,19 +100,23 @@ namespace TUGraz.VectoCore.Models.Declaration
 			var ressourceId = GetEngineRessourceId(vehiclePif);
 
 			var nIdle = vehiclePif.Components.EngineInputData.RatedSpeedDeclared.AsRPM;
-			var nRated = fullLoadCurve.RatedSpeed.Value();
-			var mRated = fullLoadCurve.MaxTorque.Value();
+			var ratedSpeed = fullLoadCurve.RatedSpeed.Value();
+			var maxTorque = fullLoadCurve.MaxTorque.Value();
 			
-			var denormalizedData = DenormalizeData(ressourceId, nIdle, nRated, mRated);
+			var denormalizedData = DenormalizeData(ressourceId, nIdle, ratedSpeed, maxTorque);
 			
 			var engineSpeed = denormalizedData.AsEnumerable().Select(r => 
 				r.Field<string>(FuelConsumptionMapReader.Fields.EngineSpeed).ToDouble()).ToArray();
 
 			var clusterResult = new MeanShiftClustering().FindClusters(engineSpeed, 1);
-			
-			for (int i = 0; i < clusterResult.Length; i++) {
-				var currentTorque = fullLoadCurve.DragLoadStationaryTorque(clusterResult[i].RPMtoRad()).Value();
-				SetDragLoadFuelConsumption(denormalizedData, clusterResult[i], currentTorque);
+
+			foreach (var entry in clusterResult) {
+				var dragTorque = fullLoadCurve.DragLoadStationaryTorque(entry.RPMtoRad()).Value();
+				var newRow = denormalizedData.NewRow();
+				newRow[FuelConsumptionMapReader.Fields.EngineSpeed] = entry;
+				newRow[FuelConsumptionMapReader.Fields.Torque] = dragTorque;
+				newRow[FuelConsumptionMapReader.Fields.FuelConsumption] = 0;
+				denormalizedData.Rows.Add(newRow);
 			}
 			
 			var fcMap = FuelConsumptionMapReader.Create(denormalizedData);
@@ -118,38 +134,22 @@ namespace TUGraz.VectoCore.Models.Declaration
 			return fuel;
 		}
 
-		private void SetDragLoadFuelConsumption(DataTable currentDataTable, double engineSpeed, double torque)
-		{
-			for (int i = 0; i < currentDataTable.Rows.Count; i++) {
-				var currentRowSpeed = currentDataTable.Rows[i]
-					[FuelConsumptionMapReader.Fields.EngineSpeed].ToString().ToDouble();
-
-				if (currentRowSpeed.IsEqual(engineSpeed)) {
-					var newRow = currentDataTable.NewRow();
-					newRow[FuelConsumptionMapReader.Fields.EngineSpeed] = engineSpeed;
-					newRow[FuelConsumptionMapReader.Fields.Torque] = torque;
-					newRow[FuelConsumptionMapReader.Fields.FuelConsumption] = 0;
-					currentDataTable.Rows.InsertAt(newRow, i);
-					break;
-				}
-			}
-		}
 		
-		private DataTable DenormalizeData(string ressourceId, double nIdle, double nRated, double mRated)
+		private DataTable DenormalizeData(string ressourceId, double nIdle, double ratedSpeed, double maxTorque)
 		{
-			var normedData = VectoCSVFile.ReadStream(RessourceHelper.ReadStream(ressourceId), source: ressourceId);
+			var normalized = VectoCSVFile.ReadStream(RessourceHelper.ReadStream(ressourceId), source: ressourceId);
 
 			var result = new DataTable();
 			result.Columns.Add(FuelConsumptionMapReader.Fields.EngineSpeed);
 			result.Columns.Add(FuelConsumptionMapReader.Fields.Torque);
 			result.Columns.Add(FuelConsumptionMapReader.Fields.FuelConsumption);
 
-			foreach (DataRow row in normedData.Rows)
+			foreach (DataRow row in normalized.Rows)
 			{
 				var engineSpeed = DenormalizeEngineSpeed((string)row[FuelConsumptionMapReader.Fields.EngineSpeed],
-					nIdle, nRated);
-				var torque = DenormalizeTorque((string)row[FuelConsumptionMapReader.Fields.Torque], mRated);
-				var fc = DenormalizeFC((string)row[FuelConsumptionMapReader.Fields.FuelConsumption], mRated);
+					nIdle, ratedSpeed);
+				var torque = DenormalizeTorque((string)row[FuelConsumptionMapReader.Fields.Torque], maxTorque);
+				var fc = DenormalizeFC((string)row[FuelConsumptionMapReader.Fields.FuelConsumption], maxTorque);
 
 				var newRow = result.NewRow();
 				newRow[FuelConsumptionMapReader.Fields.EngineSpeed] = engineSpeed;

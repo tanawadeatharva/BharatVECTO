@@ -292,7 +292,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 			var retVal = WrapComponent(
 				XMLNames.Component_Engine, "EngineDataPIFType",
 				GetCommonDescription(engineData),
-				new XElement(tns + XMLNames.Engine_Displacement, engineData.Displacement.ConvertToCubicDeziMeter().ToXMLFormat(0)),
+				new XElement(tns + XMLNames.Engine_Displacement, engineData.Displacement.ConvertToCubicCentiMeter().ToXMLFormat(0)),
 				new XElement(tns + XMLNames.Engine_RatedSpeed, engineData.RatedSpeedDeclared.AsRPM.ToXMLFormat(0)),
 				new XElement(tns + XMLNames.Engine_RatedPower, engineData.RatedPowerDeclared.ToXMLFormat(0)),
 				new XElement(tns + XMLNames.Engine_MaxTorque, engineData.InputData.MaxTorqueDeclared.ToXMLFormat(0)),

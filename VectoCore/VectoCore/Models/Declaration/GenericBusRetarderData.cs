@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Data;
+using System.ServiceModel;
 using TUGraz.VectoCommon.InputData;
+using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.InputData.Reader.ComponentData;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
@@ -9,10 +11,20 @@ namespace TUGraz.VectoCore.Models.Declaration
 {
 	public class GenericBusRetarderData
 	{
+		private static GenericBusRetarderData _instance;
+
+		public static GenericBusRetarderData Instance
+		{
+			get { return _instance ?? (_instance = new GenericBusRetarderData()); }
+		}
+
+		protected GenericBusRetarderData() { }
+
 		public RetarderData CreateGenericBusRetarderData(IRetarderInputData retarderInput)
 		{
-			if (retarderInput == null)
-				return null;
+			if (retarderInput == null) {
+				return new  RetarderData {Type =RetarderType.None};
+			}
 
 			var retarder = new RetarderData
 			{

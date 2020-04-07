@@ -34,7 +34,7 @@
             <CertificationNumber>e12*0815/8051*2017/05E0000*00</CertificationNumber>
             <Date>2017-02-15T11:00:00Z</Date>
             <AppVersion>VectoEngine x.y</AppVersion>
-            <Displacement>8</Displacement>
+            <Displacement>7700</Displacement>
             <RatedSpeed>2200</RatedSpeed>
             <RatedPower>220000</RatedPower>
             <MaxEngineTorque>1100</MaxEngineTorque>

@@ -15,7 +15,7 @@ using TUGraz.VectoCore.Models.SimulationComponent.Data;
 
 namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 {
-	public class DeclarationDataAdapterSingleBus : DeclarationDataAdapterPrimaryBus
+	public class DeclarationDataAdapterSingleBus : DeclarationDataAdapterCompletedBusGeneric
 	{
 		#region Implementation of IDeclarationDataAdapter
 
@@ -24,7 +24,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			var busFloorArea = DeclarationData.BusAuxiliaries.CalculateBusFloorSurfaceArea(CompletedVehicle.Length,
 																							CompletedVehicle.Width);
 			var passengerCountRef = busFloorArea * mission.BusParameter.PassengerDensity;
-			var passengerCountDecl = CompletedVehicle.NuberOfPassengersUpperDeck + CompletedVehicle.NumberOfPassengersLowerDeck;
+			var passengerCountDecl = CompletedVehicle.NumberOfPassengersUpperDeck + CompletedVehicle.NumberOfPassengersLowerDeck;
 			//var refLoad = passengerCount * mission.MissionType.GetAveragePassengerMass();
 			if (loading.Key != LoadingType.ReferenceLoad && loading.Key != LoadingType.LowLoading) {
 				throw new VectoException("Unhandled loading type: {0}", loading.Key);
@@ -71,7 +71,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 
 		#region Overrides of DeclarationDataAdapterPrimaryBus
 
-		protected internal override double CalculateAlternatorEfficiency(IList<IAlternatorDeclarationInputData> alternators)
+		protected override double CalculateAlternatorEfficiency(IList<IAlternatorDeclarationInputData> alternators)
 		{
 			var sum = 0.0;
 			foreach (var entry in alternators) {
@@ -98,16 +98,13 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			}
 		}
 
-		protected override double GetNumberOfElectricalConsumersInVehicle(string nbr, Mission mission)
-		{
-			if ("f_IntLight(L_CoC)".Equals(nbr, StringComparison.InvariantCultureIgnoreCase)) {
-				return DeclarationData.BusAuxiliaries.CalculateLengthInteriorLights(
-										CompletedVehicle.Length, IsDoubleDecker, CompletedVehicle.FloorType, 
-										CompletedVehicle.NumberOfPassengersLowerDeck)
-									.Value();
-			}
 
-			return nbr.ToDouble();
+		protected override double CalculateLengthDependentElectricalConsumers(Mission mission, IVehicleDeclarationInputData vehicleData)
+		{
+			return DeclarationData.BusAuxiliaries.CalculateLengthInteriorLights(
+									CompletedVehicle.Length, IsDoubleDecker, CompletedVehicle.FloorType,
+									CompletedVehicle.NumberOfPassengersLowerDeck)
+								.Value();
 		}
 
 		protected override PneumaticUserInputsConfig GetPneumaticUserConfig(
@@ -135,7 +132,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 
 			var hvacBusheight = DeclarationData.BusAuxiliaries.CalculateInternalHeight(CompletedVehicle.FloorType, 
 				IsDoubleDecker, CompletedVehicle.Height);
-			var coolingPower = CalculateMaxCoolingPower(mission);
+			var coolingPower = CalculateMaxCoolingPower(CompletedVehicle, mission);
 
 			retVal.BusFloorType = CompletedVehicle.FloorType;
 			retVal.Technologies = GetSSMTechnologyBenefits(busAuxInputData, CompletedVehicle.FloorType);
@@ -151,7 +148,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			(DeclarationData.BusAuxiliaries.CalculateBusFloorSurfaceArea(hvacBusLength, correctedBusWidth) *
 			mission.BusParameter.PassengerDensity *
 			(loading == LoadingType.LowLoading ? mission.MissionType.GetLowLoadFactorBus() : 1.0)).LimitTo(
-				0, CompletedVehicle.NuberOfPassengersUpperDeck + CompletedVehicle.NumberOfPassengersLowerDeck) + 1; // add driver for 'heat input'
+				0, CompletedVehicle.NumberOfPassengersUpperDeck + CompletedVehicle.NumberOfPassengersLowerDeck) + 1; // add driver for 'heat input'
 			retVal.VentilationRate = DeclarationData.BusAuxiliaries.VentilationRate(busAux.HVACAux.SystemConfiguration, false);
 			retVal.VentilationRateHeating = DeclarationData.BusAuxiliaries.VentilationRate(busAux.HVACAux.SystemConfiguration, true);
 
@@ -164,17 +161,17 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			return retVal;
 		}
 
-		protected override Tuple<Watt, Watt> CalculateMaxCoolingPower(Mission mission)
+		protected override Tuple<Watt, Watt> CalculateMaxCoolingPower(IVehicleDeclarationInputData vehicle, Mission mission)
 		{
 			
 			var length = DeclarationData.BusAuxiliaries.CalculateInternalLength(
-				CompletedVehicle.Length, IsDoubleDecker, CompletedVehicle.FloorType,
-				CompletedVehicle.NumberOfPassengersLowerDeck);
-			var height = DeclarationData.BusAuxiliaries.CalculateInternalHeight(CompletedVehicle.FloorType,
-																				IsDoubleDecker, CompletedVehicle.Height);
-			var volume = length * height * DeclarationData.BusAuxiliaries.CorrectedBusWidth(CompletedVehicle.Width);
+				vehicle.Length, IsDoubleDecker, vehicle.FloorType,
+				vehicle.NumberOfPassengersLowerDeck);
+			var height = DeclarationData.BusAuxiliaries.CalculateInternalHeight(vehicle.FloorType,
+																				IsDoubleDecker, vehicle.Height);
+			var volume = length * height * DeclarationData.BusAuxiliaries.CorrectedBusWidth(vehicle.Width);
 
-			var hvacConfiguration = CompletedVehicle.Components.BusAuxiliaries.HVACAux.SystemConfiguration;
+			var hvacConfiguration = vehicle.Components.BusAuxiliaries.HVACAux.SystemConfiguration;
 
 			var driver = DeclarationData.BusAuxiliaries.HVACMaxCoolingPower.DriverMaxCoolingPower(
 				hvacConfiguration, mission.MissionType);
@@ -223,6 +220,6 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 
 		#endregion
 
-		protected bool IsDoubleDecker { get { return CompletedVehicle.NuberOfPassengersUpperDeck > 0; } }
+		protected bool IsDoubleDecker { get { return CompletedVehicle.NumberOfPassengersUpperDeck > 0; } }
 	}
 }

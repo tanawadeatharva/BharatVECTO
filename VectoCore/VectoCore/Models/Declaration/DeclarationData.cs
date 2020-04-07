@@ -82,8 +82,6 @@ namespace TUGraz.VectoCore.Models.Declaration
 		public static readonly ElectricSystem ElectricSystem = new ElectricSystem();
 		public static readonly Fan Fan = new Fan();
 
-		public static readonly GenericBusEngineData GenericBusEngineData = new GenericBusEngineData();
-		public static readonly GenericBusAxelgearData GenericBusAxelgearData = new GenericBusAxelgearData();
 		public static readonly GenericBusAngledriveData GenericBusAngledriveData = new GenericBusAngledriveData();
 		public static readonly GenericBusRetarderData GenericBusRetarderData = new GenericBusRetarderData();
 
@@ -153,100 +151,9 @@ namespace TUGraz.VectoCore.Models.Declaration
 
 			public static string GenericTorqueConvert =
 				$"{DeclarationDataResourcePrefix}.GenericBusData.GenericTorqueConverter.csv";
-			
-			#endregion
-			
-			#region Create Engine Data
-
-			public static CombustionEngineData CreateBusEngineData(IVehicleDeclarationInputData pifVehicle)
-			{
-				return GenericBusEngineData.CreateGenericBusEngineData(pifVehicle);
-			}
-			
-			#endregion
-
-			#region Create Axlegear Data
-
-			public static AxleGearData CreateAxlegearData(IAxleGearInputData axlegearData)
-			{
-				return GenericBusAxelgearData.CreateGenericBusAxlegearData(axlegearData);
-			}
 
 			#endregion
 
-			#region Create Angledrive Data
-
-			public static AngledriveData CreateAngledriveData(IAngledriveInputData angledriveInputData, double axleRatio)
-			{
-				return GenericBusAngledriveData.CreateGenericBusAngledriveData(angledriveInputData, axleRatio,
-					GenericBusAxelgearData.AxleGearInputLossMap);
-			}
-			
-			#endregion
-
-			#region Create Gearbox Data
-
-			public static GearboxData CreateGearboxData(IVehicleDeclarationInputData pifVehicle, VectoRunData runData,
-				IShiftPolygonCalculator shiftPolygonCalc)
-			{
-				return DeclarationDataAdapterHeavyLorry.DoCreateGearboxData(pifVehicle, runData, shiftPolygonCalc);
-			}
-
-			
-			#endregion
-
-			# region SSMInputs Methods 
-
-			public static void SetBoundaryConditions(SSMInputs input)
-			{
-				input.GFactor = Constants.BusAuxiliaries.SteadyStateModel.GFactor;
-				input.HeatingBoundaryTemperature = Constants.BusAuxiliaries.SteadyStateModel.HeatingBoundaryTemperature;
-				input.CoolingBoundaryTemperature = Constants.BusAuxiliaries.SteadyStateModel.CoolingBoundaryTemperature;
-				input.SpecificVentilationPower = Constants.BusAuxiliaries.SteadyStateModel.SpecificVentilationPower;
-				input.AuxHeaterEfficiency = Constants.BusAuxiliaries.SteadyStateModel.AuxHeaterEfficiency;
-				input.MaxPossibleBenefitFromTechnologyList =
-					Constants.BusAuxiliaries.SteadyStateModel.MaxPossibleBenefitFromTechnologyList;
-			}
-
-			public static void SetEnvironmentalConditions(SSMInputs input)
-			{
-				input.DefaultConditions = new EnvironmentalConditionMapEntry(
-					Constants.BusAuxiliaries.SteadyStateModel.DefaultTemperature,
-					Constants.BusAuxiliaries.SteadyStateModel.DefaultSolar, 1.0);
-				input.EnvironmentalConditionsMap = DeclarationData.BusAuxiliaries.DefaultEnvironmentalConditions;
-			}
-
-			#endregion
-
-			#region Create Retarder
-
-			public static RetarderData CreateRetarderData(IRetarderInputData retarderInput)
-			{
-				 return GenericBusRetarderData.CreateGenericBusRetarderData(retarderInput);
-			}
-
-			#endregion
-
-			#region Common Getters
-
-			public static Meter GetDynamicTyreRadius(IVehicleDeclarationInputData primaryVehicle)
-			{
-				var axleWheels = primaryVehicle.Components.AxleWheels.AxlesDeclaration;
-				Meter dynamicTyreRadius = null;
-
-				for (int i = 0; i < axleWheels.Count; i++)
-				{
-					if (axleWheels[i].AxleType == AxleType.VehicleDriven)
-					{
-						dynamicTyreRadius = DeclarationData.Wheels.Lookup(axleWheels[i].Tyre.Dimension.RemoveWhitespace()).DynamicTyreRadius;
-						break;
-					}
-				}
-
-				return dynamicTyreRadius;
-			}
-
-			#endregion
 
 		}
 

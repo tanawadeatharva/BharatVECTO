@@ -165,7 +165,7 @@ namespace TUGraz.VectoCommon.InputData
 
 		RegistrationClass RegisteredClass { get; }
 
-		int NuberOfPassengersUpperDeck { get; }
+		int NumberOfPassengersUpperDeck { get; }
 
 		int NumberOfPassengersLowerDeck { get; }
 
