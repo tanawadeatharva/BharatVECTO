@@ -77,28 +77,28 @@
               <Gear number="1">
                 <Ratio>3.364</Ratio>
                 <MaxTorque>1900</MaxTorque>
-                <MaxSpeed>262</MaxSpeed>
+                <MaxSpeed>2500</MaxSpeed>
               </Gear>
               <Gear number="2">
                 <Ratio>1.909</Ratio>
                 <MaxTorque>1900</MaxTorque>
-                <MaxSpeed>262</MaxSpeed>
+                <MaxSpeed>2500</MaxSpeed>
               </Gear>
               <Gear number="3">
                 <Ratio>1.421</Ratio>
-                <MaxSpeed>262</MaxSpeed>
+                <MaxSpeed>2500</MaxSpeed>
               </Gear>
               <Gear number="4">
                 <Ratio>1.000</Ratio>
-                <MaxSpeed>262</MaxSpeed>
+                <MaxSpeed>2500</MaxSpeed>
               </Gear>
               <Gear number="5">
                 <Ratio>0.720</Ratio>
-                <MaxSpeed>262</MaxSpeed>
+                <MaxSpeed>2500</MaxSpeed>
               </Gear>
               <Gear number="6">
                 <Ratio>0.615</Ratio>
-                <MaxSpeed>262</MaxSpeed>
+                <MaxSpeed>2500</MaxSpeed>
               </Gear>
             </Gears>
           </Data>

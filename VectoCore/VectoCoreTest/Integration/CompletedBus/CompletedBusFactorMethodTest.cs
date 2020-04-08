@@ -913,50 +913,57 @@ namespace TUGraz.VectoCore.Tests.Integration.CompletedBus
 		}
 
 
-		[TestCase(JobFile),
-		 TestCase(@"TestData\XML\XMLReaderDeclaration\vecto_vehicle-sample.xml")]
-		public void PrintModelParameters(string jobFile)
+		[TestCase()]
+		public void PrintModelParameters()
+		{
+			var gearboxData =  new GearboxData() {
+				Manufacturer = "Manufacturer",
+				Type = GearboxType.AMT
+			};
+			var str = JsonConvert.SerializeObject(gearboxData, Formatting.Indented);
+		}
+
+		[TestCase(JobFile, 0)]
+		public void PrintModelParametersCompletedBus(string jobFile, int pairIdx)
+		{
+			var runs = GetVectoRunDatas(jobFile);
+
+			SetRelatedVehicleParts(runs);
+			var pair = relatedRuns[pairIdx];
+
+			File.WriteAllText($"{pair.VectoRunDataGenericBody.JobName}_{pair.VectoRunDataGenericBody.ModFileSuffix}.json", JsonConvert.SerializeObject(pair.VectoRunDataGenericBody, Formatting.Indented));
+
+			File.WriteAllText($"{pair.VectoRunDataSpezificBody.JobName}_{pair.VectoRunDataSpezificBody.ModFileSuffix}.json", JsonConvert.SerializeObject(pair.VectoRunDataSpezificBody, Formatting.Indented));
+		}
+
+
+		[TestCase(@"TestData\Integration\Buses\FactorMethod\primary_heavyBus group41_nonSmart.xml", 12)]
+		public void PrintModelParametersPrimaryBus(string jobFile, int runIdx)
+		{
+			var runs = GetVectoRunDatas(jobFile);
+
+			SetRelatedVehicleParts(runs);
+			var run = runs[runIdx];
+
+			File.WriteAllText($"{run.JobName}_{run.ModFileSuffix}.json", JsonConvert.SerializeObject(run, Formatting.Indented));
+		}
+
+		private List<VectoRunData> GetVectoRunDatas(string jobFile)
 		{
 			var writer = new FileOutputWriter(Path.Combine(Path.GetDirectoryName(JobFile), Path.GetFileName(JobFile)));
-			var inputData = Path.GetExtension(jobFile).Equals(".xml") ? xmlInputReader.CreateDeclaration(jobFile) : JSONInputDataFactory.ReadJsonJob(jobFile);
+			var inputData = Path.GetExtension(jobFile).Equals(".xml")
+				? xmlInputReader.CreateDeclaration(jobFile)
+				: JSONInputDataFactory.ReadJsonJob(jobFile);
 
 			var factory = new SimulatorFactory(ExecutionMode.Declaration, inputData, writer) {
 				WriteModalResults = true,
+
 				//ActualModalData = true,
 				Validate = false
 			};
-			//var sumContainer = new SummaryDataContainer(writer);
-			//var jobContainer = new JobContainer(sumContainer);
-
 
 			var runs = factory.DataReader.NextRun().ToList();
-			//Assert.IsTrue(runs.Count == 8 || runs.Count == 12);
-			
-			SetRelatedVehicleParts(runs);
-			var pair = relatedRuns.First();
-
-			//var json = JToken.FromObject(pair.VectoRunDataGenericBody);
-			File.WriteAllText($"{pair.VectoRunDataGenericBody.JobName}_{pair.VectoRunDataGenericBody.ModFileSuffix}_Generic.json", JsonConvert.SerializeObject(pair.VectoRunDataGenericBody, Formatting.Indented));
-
-			//Console.WriteLine("Generic Body");
-			//PrintVectoRunData(pair.VectoRunDataGenericBody);
-			//Console.WriteLine("========================");
-			//Console.WriteLine("Specific Body");
-			//PrintVectoRunData(pair.VectoRunDataSpezificBody);
-		}
-
-		private void PrintVectoRunData(VectoRunData runData)
-		{
-			const BindingFlags flags =
-				BindingFlags.Instance | BindingFlags.Static | BindingFlags.NonPublic | BindingFlags.Public |
-				BindingFlags.FlattenHierarchy;
-			var properties = runData.GetType().GetProperties(flags);
-			foreach (var p in properties)
-			{
-
-				var val = p.GetValue(runData);
-					
-			}
+			return runs;
 		}
 	}
 }

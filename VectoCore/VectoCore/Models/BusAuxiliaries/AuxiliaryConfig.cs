@@ -37,6 +37,7 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries
 		public IActuations Actuations { get; internal set; }
 
 
+		[JsonIgnore]
 		public IVehicleData VehicleData { get; internal set; }
 
 		//public IFuelConsumptionMap FuelMap { get; internal set; }

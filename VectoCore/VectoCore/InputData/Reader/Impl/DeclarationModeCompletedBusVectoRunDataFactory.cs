@@ -81,7 +81,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 		{
 			Initialize();
 			if (Report != null) {
-				//InitializeReport();
+				InitializeReport();
 			}
 
 			return GetNextRun();
@@ -107,8 +107,9 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 			 
 			_segmentCompletedBus = GetCompletedSegment(CompletedVehicle, PrimaryVehicle.AxleConfiguration);
 
-			var tmpVehicleData = DataAdapterGeneric.CreateVehicleData(CompletedVehicle, _segmentCompletedBus.Missions.First(),
+			var tmpVehicleData = DataAdapterSpecific.CreateVehicleData(PrimaryVehicle, CompletedVehicle, _segmentCompletedBus.Missions.First(),
 																_segmentCompletedBus.Missions.First().Loadings.First());
+			tmpVehicleData.VehicleCategory = VehicleCategory.GenericBusVehicle;
 
 			_combustionEngineData = DataAdapterGeneric.CreateEngineData(PrimaryVehicle);
 
@@ -153,7 +154,9 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 							return m.BusParameter.DoubleDecker == CompletedVehicle.VehicleCode.IsDoubleDeckerBus() &&
 									m.MissionType == mission.MissionType;
 						}).First();
-					simulationRunData = CreateVectoRunDataGeneric(primaryMission, loading, primarySegment);
+					simulationRunData = CreateVectoRunDataGeneric(
+						primaryMission, new KeyValuePair<LoadingType, Kilogram>(loading.Key, primaryMission.Loadings[loading.Key]),
+						primarySegment);
 					yield return simulationRunData;
 				}
 			}
@@ -227,7 +230,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 				Mission = mission,
 				InputDataHash = InputDataProvider.XMLHash,
 				SimulationType = SimulationType.DistanceCycle,
-				
+				VehicleDesignSpeed = _segmentCompletedBus.DesignSpeed,
 				GearshiftParameters = _gearshiftData,
 			};
 			simulationRunData.EngineData.FuelMode = 0;
@@ -260,51 +263,29 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 				GearboxData = _gearboxData,
 				AxleGearData = _axlegearData,
 				AngledriveData = _angledriveData,
-				GearshiftParameters = _gearshiftData,
 				Aux = DataAdapterGeneric.CreateAuxiliaryData(PrimaryVehicle.Components.AuxiliaryInputData,
 					primaryBusAuxiliaries, mission.MissionType, primarySegment.VehicleClass,
-					CompletedVehicle.Length)
+					mission.BusParameter.VehicleLength),
+				Cycle = new DrivingCycleProxy(cycle, mission.MissionType.ToString()),
+				Retarder = _retarderData,
+				DriverData = _driverData,
+				ExecutionMode = ExecutionMode.Declaration,
+				JobName = InputDataProvider.JobInputData.JobName,
+				ModFileSuffix = "_" + _segmentCompletedBus.VehicleClass.GetClassNumber() + "-Generic_" + loading.Key.ToString(),
+				Report = Report,
+				Mission = mission,
+				InputDataHash = InputDataProvider.XMLHash,
+				SimulationType = SimulationType.DistanceCycle,
+				VehicleDesignSpeed = _segmentCompletedBus.DesignSpeed,
+				GearshiftParameters = _gearshiftData,
 			};
-			
-			var auxiliaryConfig = new AuxiliaryConfig {
-				ElectricalUserInputsConfig = DataAdapterGeneric.CreateElectricalUserInputsConfig(
-					PrimaryVehicle, _alternatorMap, mission),
-
-				PneumaticUserInputsConfig = DataAdapterGeneric.CreatePneumaticUserInputsConfig(
-					primaryBusAuxiliaries, _compressorMap),
-
-				PneumaticAuxillariesConfig = _consumersDeclarationData
-			};
-
-			auxiliaryConfig.SSMInputs = GetPrimaryVehicleSSMInput(mission, PrimaryVehicle);
-
-			simulationRunData.BusAuxiliaries = auxiliaryConfig;
-
-			simulationRunData.Retarder = _retarderData;
-			
-			simulationRunData.DriverData = _driverData;
-
-			simulationRunData.Cycle = new DrivingCycleProxy(cycle, mission.MissionType.ToString());
+			simulationRunData.EngineData.FuelMode = 0;
+			simulationRunData.VehicleData.VehicleClass = _segmentCompletedBus.VehicleClass;
+			simulationRunData.BusAuxiliaries =
+				DataAdapterGeneric.CreateBusAuxiliariesData(mission, PrimaryVehicle, simulationRunData);
 
 			return simulationRunData;
-
 		}
 
-
-		private SSMInputs GetPrimaryVehicleSSMInput(Mission mission, IVehicleDeclarationInputData primaryVehicle)
-		{
-			var ssmInputs = new SSMInputs(null);
-
-			DataAdapterGeneric.SetSSMBusParameters(ssmInputs, mission);
-
-			ssmInputs.Technologies = DataAdapterGeneric.CreateTechnologyBenefits(mission, primaryVehicle);
-
-			DeclarationData.FactorMethodBus.SetBoundaryConditions(ssmInputs);
-			DeclarationData.FactorMethodBus.SetEnvironmentalConditions(ssmInputs);
-
-			DataAdapterGeneric.SetSSMInputs(ssmInputs, mission);
-
-			return ssmInputs;
-		}
 	}
 }

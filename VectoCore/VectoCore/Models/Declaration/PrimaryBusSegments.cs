@@ -114,7 +114,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 						MaxLoad = null,
 						LowLoad = refLoad * missionType.GetLowLoadFactorBus(),
 						RefLoad = refLoad,
-						VehicleHeight = 0.SI<Meter>(), //row.ParseDouble("height").SI<Meter>(),
+						VehicleHeight = row.ParseDouble("bodyheight").SI<Meter>() + 0.3.SI<Meter>(), //row.ParseDouble("height").SI<Meter>(),
 						TotalCargoVolume = 0.SI<CubicMeter>(),
 						DefaultCDxA = row.ParseDouble("cdxastandard").SI<SquareMeter>(),
 						BusParameter = new BusParameters() {

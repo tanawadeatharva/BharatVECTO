@@ -97,6 +97,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 						row.Field<string>(".vaccfile")),
 				Missions = CreateMissions(rows), 
 				VehicleClass = VehicleClassHelper.Parse("CB" + row.Field<string>("vehicleparametergroup")),
+				DesignSpeed = row.ParseDouble("designspeed").KMPHtoMeterPerSecond(),
 			};
 
 			return segment;
@@ -121,17 +122,20 @@ namespace TUGraz.VectoCore.Models.Declaration
 					var mission = new Mission {
 						MissionType = missionType,
 						CrossWindCorrectionParameters = row.Field<string>("crosswindcorrection"),
-						MinLoad = null,
-						MaxLoad = null,
-						RefLoad = 100.SI<Kilogram>(), // dummy value to trigger simulation with ref load
-						LowLoad = 10.SI<Kilogram>(), // dummy value to trigger simulation with low load
-						AxleWeightDistribution = GetAxleWeightDistribution(row),
-						DefaultCDxA = row.ParseDouble("cdxastandard").SI<SquareMeter>(),
 						CycleFile =
 							RessourceHelper.ReadStream(
 								DeclarationData.DeclarationDataResourcePrefix + ".MissionCycles." +
 								missionType.ToString().Replace("EMS", "") +
 								Constants.FileExtensions.CycleFile),
+						AxleWeightDistribution = GetAxleWeightDistribution(row),
+						BodyCurbWeight = 0.SI<Kilogram>(),
+						Trailer = new List<MissionTrailer>(),
+						MinLoad = null,
+						MaxLoad = null,
+						LowLoad = 10.SI<Kilogram>(), // dummy value to trigger simulation with low load
+						RefLoad = 100.SI<Kilogram>(), // dummy value to trigger simulation with ref load
+						TotalCargoVolume = 0.SI<CubicMeter>(),
+						DefaultCDxA = row.ParseDouble("cdxastandard").SI<SquareMeter>(),						
 						BusParameter = new BusParameters {
 							PassengerDensity = row.ParseDouble(missionType.ToString()).SI<PerSquareMeter>(),
 							AirDragMeasurementAllowed = row.ParseBoolean("airdragmeasurement"),

@@ -12,7 +12,7 @@ using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.OutputData;
 
 namespace TUGraz.VectoCore.Models.Simulation.Impl {
-	internal class DeclarationModeSingleBusVectoRunDataFactory : DeclarationModeBusVectoRunDataFactory
+	internal class DeclarationModeSingleBusVectoRunDataFactory : DeclarationModePrimaryBusVectoRunDataFactory
 	{
 		protected new DeclarationDataAdapterSingleBus _dao = new DeclarationDataAdapterSingleBus();
 		private ISingleBusInputDataProvider _singleBusInputData;

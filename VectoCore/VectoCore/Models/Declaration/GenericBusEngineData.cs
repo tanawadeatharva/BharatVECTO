@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using TUGraz.VectoCommon.BusAuxiliaries;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
@@ -43,9 +44,18 @@ namespace TUGraz.VectoCore.Models.Declaration
 			var engineData = primaryVehicle.Components.EngineInputData;
 			var gearbox = primaryVehicle.Components.GearboxInputData;
 
-			var engine = new CombustionEngineData();
+			var engine = new CombustionEngineData {
+				IdleSpeed = engineData.EngineModes[0].IdleSpeed,
+				Displacement = engineData.Displacement,
+				WHRType = WHRType.None,
+				Inertia = DeclarationData.Engine.EngineInertia(engineData.Displacement, gearbox.Type),
+				EngineStartTime = DeclarationData.Engine.DefaultEngineStartTime,
+				RatedPowerDeclared = engineData.RatedPowerDeclared,
+				RatedSpeedDeclared = engineData.RatedSpeedDeclared,
+				MaxTorqueDeclared = engineData.MaxTorqueDeclared,
+			};
 
-			var limits = primaryVehicle.TorqueLimits.ToDictionary(e => e.Gear);
+		var limits = primaryVehicle.TorqueLimits.ToDictionary(e => e.Gear);
 			var numGears = gearbox.Gears.Count;
 			var fullLoadCurves = new Dictionary<uint, EngineFullLoadCurve>(numGears + 1);
 			fullLoadCurves[0] = FullLoadCurveReader.Create(engineData.EngineModes.First().FullLoadCurve, true);
@@ -59,25 +69,23 @@ namespace TUGraz.VectoCore.Models.Declaration
 			}
 
 			engine.FullLoadCurves = fullLoadCurves;
-			engine.IdleSpeed = engineData.EngineModes[0].IdleSpeed;
-			engine.Displacement = engineData.Displacement;
-
-			var fuel = GetCombustionEngineFuelData(primaryVehicle, fullLoadCurves[0]);
 			
-			engine.WHRType = WHRType.None;
+
+			var fuel = GetCombustionEngineFuelData(primaryVehicle.Components.EngineInputData.EngineModes.First(), fullLoadCurves[0]);
+			
+			
 
 			engine.Fuels = new List<CombustionEngineFuelData> { fuel };
 
-			engine.Inertia = DeclarationData.Engine.EngineInertia(engine.Displacement, gearbox.Type);
-			engine.EngineStartTime = DeclarationData.Engine.DefaultEngineStartTime;
+			
 			return engine;
 		}
 
 
-		private string GetEngineRessourceId(IVehicleDeclarationInputData vehiclePif)
+		private string GetEngineRessourceId(IEngineModeDeclarationInputData engineMode)
 		{
-			var fuelType = vehiclePif.Components.EngineInputData.EngineModes.First().Fuels.First().FuelType;
-			var isDualFuel = vehiclePif.DualFuelVehicle;
+			var fuelType = engineMode.Fuels.First().FuelType;
+			var isDualFuel = engineMode.Fuels.Count > 1;
 			
 			if (isDualFuel)
 				return GenericEngineCM_Normed_CI;
@@ -93,14 +101,32 @@ namespace TUGraz.VectoCore.Models.Declaration
 			}
 		}
 
+		private IFuelProperties GetFuelData(IEngineModeDeclarationInputData engineMode)
+		{
+			var fuelType = engineMode.Fuels.First().FuelType;
+			var isDualFuel = engineMode.Fuels.Count > 1;
 
-		private CombustionEngineFuelData GetCombustionEngineFuelData(IVehicleDeclarationInputData vehiclePif,
+			if (isDualFuel)
+				return FuelData.Diesel;
+
+			switch (fuelType) {
+				case FuelType.DieselCI:
+				case FuelType.EthanolCI:
+				case FuelType.NGCI:
+					return FuelData.Diesel;
+				default:
+					return FuelData.Instance().Lookup(FuelType.NGPI, TankSystem.Compressed);
+			}
+		}
+
+
+		private CombustionEngineFuelData GetCombustionEngineFuelData(IEngineModeDeclarationInputData engineMode,
 			EngineFullLoadCurve fullLoadCurve)
 		{
-			var ressourceId = GetEngineRessourceId(vehiclePif);
+			var ressourceId = GetEngineRessourceId(engineMode);
 
-			var nIdle = vehiclePif.Components.EngineInputData.RatedSpeedDeclared.AsRPM;
-			var ratedSpeed = fullLoadCurve.RatedSpeed.Value();
+			var nIdle = engineMode.IdleSpeed.AsRPM;
+			var ratedSpeed = fullLoadCurve.RatedSpeed.AsRPM;
 			var maxTorque = fullLoadCurve.MaxTorque.Value();
 			
 			var denormalizedData = DenormalizeData(ressourceId, nIdle, ratedSpeed, maxTorque);
@@ -117,9 +143,16 @@ namespace TUGraz.VectoCore.Models.Declaration
 				newRow[FuelConsumptionMapReader.Fields.Torque] = dragTorque;
 				newRow[FuelConsumptionMapReader.Fields.FuelConsumption] = 0;
 				denormalizedData.Rows.Add(newRow);
+				var newRow2 = denormalizedData.NewRow();
+				newRow2[FuelConsumptionMapReader.Fields.EngineSpeed] = entry;
+				newRow2[FuelConsumptionMapReader.Fields.Torque] = dragTorque - 100;
+				newRow2[FuelConsumptionMapReader.Fields.FuelConsumption] = 0;
+				denormalizedData.Rows.Add(newRow2);
 			}
-			
-			var fcMap = FuelConsumptionMapReader.Create(denormalizedData);
+
+			;
+			var fcMap = FuelConsumptionMapReader.Create(denormalizedData.AsEnumerable().OrderBy(r => r.Field<string>(FuelConsumptionMapReader.Fields.EngineSpeed).ToDouble())
+																		.ThenBy(r => r.Field<string>(FuelConsumptionMapReader.Fields.Torque).ToDouble()).CopyToDataTable());
 
 			var fuel = new CombustionEngineFuelData
 			{
@@ -128,13 +161,16 @@ namespace TUGraz.VectoCore.Models.Declaration
 				WHTCMotorway = 1,
 				ColdHotCorrectionFactor = 1,
 				CorrectionFactorRegPer = 1,
-				ConsumptionMap = fcMap
+				ConsumptionMap = fcMap,
+				FuelData = GetFuelData(engineMode)
 			};
 
 			return fuel;
 		}
 
 		
+
+
 		private DataTable DenormalizeData(string ressourceId, double nIdle, double ratedSpeed, double maxTorque)
 		{
 			var normalized = VectoCSVFile.ReadStream(RessourceHelper.ReadStream(ressourceId), source: ressourceId);
@@ -144,8 +180,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 			result.Columns.Add(FuelConsumptionMapReader.Fields.Torque);
 			result.Columns.Add(FuelConsumptionMapReader.Fields.FuelConsumption);
 
-			foreach (DataRow row in normalized.Rows)
-			{
+			foreach (DataRow row in normalized.Rows) {
 				var engineSpeed = DenormalizeEngineSpeed((string)row[FuelConsumptionMapReader.Fields.EngineSpeed],
 					nIdle, ratedSpeed);
 				var torque = DenormalizeTorque((string)row[FuelConsumptionMapReader.Fields.Torque], maxTorque);

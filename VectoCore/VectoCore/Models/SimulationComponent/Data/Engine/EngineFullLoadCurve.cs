@@ -97,9 +97,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Engine
 			return PT1Data.Lookup(angularVelocity);
 		}
 
-		public List<FullLoadCurveEntry> FullLoadCurve
+		public string[] FullLoadCurve
 		{
-			get { return FullLoadEntries; }
+			get { return FullLoadEntries.Select(x => $"{x.EngineSpeed.AsRPM} [rpm], {x.TorqueFullLoad}, {x.TorqueDrag}").ToArray(); }
 		}
 		
 		/// <summary>

@@ -82,9 +82,6 @@ namespace TUGraz.VectoCore.Models.Declaration
 		public static readonly ElectricSystem ElectricSystem = new ElectricSystem();
 		public static readonly Fan Fan = new Fan();
 
-		public static readonly GenericBusAngledriveData GenericBusAngledriveData = new GenericBusAngledriveData();
-		public static readonly GenericBusRetarderData GenericBusRetarderData = new GenericBusRetarderData();
-
 		public static readonly HeatingVentilationAirConditioning HeatingVentilationAirConditioning =
 			new HeatingVentilationAirConditioning();
 
@@ -147,12 +144,12 @@ namespace TUGraz.VectoCore.Models.Declaration
 
 		public static class FactorMethodBus
 		{
-			#region Constans
-
 			public static string GenericTorqueConvert =
 				$"{DeclarationDataResourcePrefix}.GenericBusData.GenericTorqueConverter.csv";
 
-			#endregion
+			public const double GearEfficiencyDirectGear = 0.98;
+
+			public const double GearEfficiencyIndirectGear = 0.96;
 
 
 		}

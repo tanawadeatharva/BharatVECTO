@@ -37,6 +37,7 @@ using System.Globalization;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
+using Newtonsoft.Json;
 using TUGraz.VectoCommon.Exceptions;
 
 // ReSharper disable ClassNeverInstantiated.Global
@@ -1667,10 +1668,12 @@ namespace TUGraz.VectoCommon.Utils
 		}
 
 
-		public virtual double TheValue
+		public virtual string SerializedValue
 		{
-			get { return Val; }
+			get { return ToString(); }
 		}
+
+		[JsonIgnore]
 		public virtual string UnitString
 		{
 			get { return GetUnitString(_units); }

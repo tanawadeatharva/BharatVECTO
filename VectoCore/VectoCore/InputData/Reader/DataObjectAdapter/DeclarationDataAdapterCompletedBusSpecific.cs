@@ -21,47 +21,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 	public class DeclarationDataAdapterCompletedBusSpecific : DeclarationDataAdapterCompletedBusGeneric
 	{
 
-		public AirdragData CreateAirdragData(IVehicleDeclarationInputData completedVehicle, Mission mission)
-		{
-			var airdragData = new AirdragData
-			{
-				CrossWindCorrectionMode = CrossWindCorrectionMode.DeclarationModeCorrection
-				
-			};
-
-			var airDrag = completedVehicle.Components.AirdragInputData;
-			SquareMeter aerodynamicDragArea;
-			if (!mission.BusParameter.AirDragMeasurementAllowed ||
-				completedVehicle.Components.AirdragInputData?.AirDragArea == null) {
-				aerodynamicDragArea = mission.DefaultCDxA;
-				airdragData.Manufacturer =Constants.NOT_AVailABLE;
-				airdragData.ModelName = Constants.NOT_AVailABLE;
-				airdragData.CertificationMethod = CertificationMethod.StandardValues;
-				airdragData.CertificationNumber = Constants.NOT_AVailABLE;
-				airdragData.DigestValueInput = "";
-			} else {
-				aerodynamicDragArea = completedVehicle.Components.AirdragInputData.AirDragArea;
-				airdragData.Manufacturer = airDrag.Manufacturer;
-				airdragData.ModelName = airDrag.Model;
-				airdragData.CertificationMethod = airDrag.CertificationMethod;
-				airdragData.CertificationNumber = airDrag.CertificationNumber;
-				airdragData.DigestValueInput = airDrag.DigestValue?.DigestValue ?? "";
-			}
-
-			var vehicleHeight = completedVehicle.Height + mission.BusParameter.DeltaHeight;
-
-			airdragData.CrossWindCorrectionCurve = new CrosswindCorrectionCdxALookup(
-				aerodynamicDragArea,
-					DeclarationDataAdapterHeavyLorry.GetDeclarationAirResistanceCurve(
-						mission.CrossWindCorrectionParameters,
-						aerodynamicDragArea,
-						vehicleHeight),
-						CrossWindCorrectionMode.DeclarationModeCorrection);
-
-			airdragData.DeclaredAirdragArea = aerodynamicDragArea;
-
-			return airdragData;
-		}
+		
 		
 		public VehicleData CreateVehicleData(IVehicleDeclarationInputData primaryVehicle,
 			IVehicleDeclarationInputData completedVehicle, Mission mission, 
@@ -88,19 +48,44 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			return vehicleData;
 		}
 
+		public AirdragData CreateAirdragData(IVehicleDeclarationInputData completedVehicle, Mission mission)
+		{
+
+			if (!mission.BusParameter.AirDragMeasurementAllowed ||
+				completedVehicle.Components.AirdragInputData?.AirDragArea == null) {
+				return DefaultAirdragData(mission);
+			}
+
+			var retVal = SetCommonAirdragData(completedVehicle.Components.AirdragInputData);
+			var aerodynamicDragArea = completedVehicle.Components.AirdragInputData.AirDragArea;
+
+			retVal.DeclaredAirdragArea = aerodynamicDragArea;
+			retVal.CrossWindCorrectionCurve = new CrosswindCorrectionCdxALookup(
+				aerodynamicDragArea,
+				GetDeclarationAirResistanceCurve(
+					mission.CrossWindCorrectionParameters,
+					aerodynamicDragArea,
+					completedVehicle.Height + mission.BusParameter.DeltaHeight),
+				CrossWindCorrectionMode.DeclarationModeCorrection);
+
+			return retVal;
+		}
+
 		public IAuxiliaryConfig CreateBusAuxiliariesData(Mission mission, IVehicleDeclarationInputData primaryVehicle, IVehicleDeclarationInputData completedVehicle, VectoRunData runData)
 		{
 			var actuations = DeclarationData.BusAuxiliaries.ActuationsMap.Lookup(runData.Mission.MissionType);
 			var primaryBusAuxiliaries = primaryVehicle.Components.BusAuxiliaries;
 
 			return new AuxiliaryConfig {
+				InputData = completedVehicle.Components.BusAuxiliaries,
 				ElectricalUserInputsConfig = CreateElectricsUserInputsConfig(
 					primaryBusAuxiliaries, completedVehicle, mission, actuations),
 				PneumaticUserInputsConfig = CreatePneumaticUserInputsConfig(
 					primaryBusAuxiliaries, completedVehicle),
-
 				PneumaticAuxillariesConfig = CreatePneumaticAuxConfig(runData.Retarder.Type),
-				SSMInputs = GetCompletedSSMInput(mission, completedVehicle, primaryBusAuxiliaries, runData.Loading)
+				Actuations = actuations,
+				SSMInputs = GetCompletedSSMInput(mission, completedVehicle, primaryBusAuxiliaries, runData.Loading),
+				VehicleData = runData.VehicleData
 			};
 		}
 
@@ -109,17 +94,20 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 		{
 			var currentDemand = CalculateAverageCurrent(mission, completedVehicle, actuations);
 
-			return new ElectricsUserInputsConfig {
-				SmartElectrical = primaryBusAuxiliaries.ElectricSupply.SmartElectrics,
-				MaxAlternatorPower = primaryBusAuxiliaries.ElectricSupply.MaxAlternatorPower,
-				ElectricStorageCapacity = primaryBusAuxiliaries.ElectricSupply.ElectricStorageCapacity,
-				AlternatorMap = new SimpleAlternator(CalculateAlternatorEfficiency(primaryBusAuxiliaries.ElectricSupply.Alternators.Concat(completedVehicle.Components.BusAuxiliaries.ElectricSupply.Alternators).ToList())),
-				AlternatorGearEfficiency = Constants.BusAuxiliaries.ElectricSystem.AlternatorGearEfficiency,
-				AverageCurrentDemandInclBaseLoad = currentDemand.Item1,
-				AverageCurrentDemandWithoutBaseLoad = currentDemand.Item2,
-				DoorActuationTimeSecond = Constants.BusAuxiliaries.ElectricalConsumers.DoorActuationTimeSecond,
-			};
+			var retVal = GetDefaultElectricalUserConfig();
+
+
+			retVal.SmartElectrical = primaryBusAuxiliaries.ElectricSupply.SmartElectrics;
+			retVal.AverageCurrentDemandInclBaseLoad = currentDemand.Item1;
+			retVal.AverageCurrentDemandWithoutBaseLoad = currentDemand.Item2;
+			retVal.AlternatorMap = new SimpleAlternator(
+				CalculateAlternatorEfficiency(
+					primaryBusAuxiliaries.ElectricSupply.Alternators
+										.Concat(completedVehicle.Components.BusAuxiliaries.ElectricSupply.Alternators).ToList()));
+			retVal.MaxAlternatorPower = primaryBusAuxiliaries.ElectricSupply.MaxAlternatorPower;
+			retVal.ElectricStorageCapacity = primaryBusAuxiliaries.ElectricSupply.ElectricStorageCapacity ?? 0.SI<WattSecond>();
 			
+			return retVal;
 		}
 
 		protected PneumaticUserInputsConfig CreatePneumaticUserInputsConfig(IBusAuxiliariesDeclarationData primaryBusAuxiliaries,
@@ -176,6 +164,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			ssmInputs.VentilationRateHeating = DeclarationData.BusAuxiliaries.VentilationRate(hvacConfiguration, true);
 
 			ssmInputs.HVACMaxCoolingPower = coolingPower.Item1 + coolingPower.Item2;
+			ssmInputs.HVACCompressorType = busAux.CompressorTypePassenger; // use passenger compartment
 			ssmInputs.COP = DeclarationData.BusAuxiliaries.CalculateCOP(
 				coolingPower.Item1, busAux.CompressorTypeDriver, coolingPower.Item2, busAux.CompressorTypePassenger,
 				floorType);

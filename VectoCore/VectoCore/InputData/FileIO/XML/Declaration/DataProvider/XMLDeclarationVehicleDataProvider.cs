@@ -646,8 +646,13 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 			SourceType = DataSourceType.XMLEmbedded;
 		}
 
-		
+
 		#region Overrides of XMLDeclarationVehicleDataProviderV10
+
+		public override bool SleeperCab
+		{
+			get { return false; }
+		}
 
 		public override IAdvancedDriverAssistantSystemDeclarationInputData ADAS
 		{

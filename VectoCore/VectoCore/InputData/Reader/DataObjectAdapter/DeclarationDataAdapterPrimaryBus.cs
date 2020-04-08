@@ -91,19 +91,28 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			var currentDemand = CalculateAverageCurrent(mission, vehicleData, actuations);
 			var busAux = vehicleData.Components.BusAuxiliaries;
 
+			var retVal = GetDefaultElectricalUserConfig();
+
+			retVal.SmartElectrical = busAux.ElectricSupply.SmartElectrics;
+			retVal.AverageCurrentDemandInclBaseLoad = currentDemand.Item1;
+			retVal.AverageCurrentDemandWithoutBaseLoad = currentDemand.Item2;
+			retVal.AlternatorMap = new SimpleAlternator(CalculateAlternatorEfficiency(busAux.ElectricSupply.Alternators));
+			retVal.MaxAlternatorPower = busAux.ElectricSupply.MaxAlternatorPower;
+			retVal.ElectricStorageCapacity = busAux.ElectricSupply.ElectricStorageCapacity ?? 0.SI<WattSecond>();
+			
+			return retVal;
+		}
+
+		protected virtual ElectricsUserInputsConfig GetDefaultElectricalUserConfig()
+		{
 			return new ElectricsUserInputsConfig() {
-				SmartElectrical = busAux.ElectricSupply.SmartElectrics,
-				AverageCurrentDemandInclBaseLoad = currentDemand.Item1,
-				AverageCurrentDemandWithoutBaseLoad = currentDemand.Item2,
-				AlternatorMap = new SimpleAlternator(CalculateAlternatorEfficiency(busAux.ElectricSupply.Alternators)),
 				PowerNetVoltage = Constants.BusAuxiliaries.ElectricSystem.PowernetVoltage,
 				StoredEnergyEfficiency = Constants.BusAuxiliaries.ElectricSystem.StoredEnergyEfficiency,
 				ResultCardIdle = new DummyResultCard(),
 				ResultCardOverrun = new DummyResultCard(),
 				ResultCardTraction = new DummyResultCard(),
 				AlternatorGearEfficiency = Constants.BusAuxiliaries.ElectricSystem.AlternatorGearEfficiency,
-				MaxAlternatorPower = busAux.ElectricSupply.MaxAlternatorPower,
-				ElectricStorageCapacity = busAux.ElectricSupply.ElectricStorageCapacity ?? 0.SI<WattSecond>()
+				DoorActuationTimeSecond = Constants.BusAuxiliaries.ElectricalConsumers.DoorActuationTimeSecond,
 			};
 		}
 

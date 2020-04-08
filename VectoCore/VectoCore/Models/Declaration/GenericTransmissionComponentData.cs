@@ -28,10 +28,10 @@ namespace TUGraz.VectoCore.Models.Declaration
 		//public DataTable AxleGearInputLossMap { get; private set; }
 
 		public GearboxData CreateGearboxData(
-			IVehicleDeclarationInputData pifVehicle, VectoRunData runData,
+			IVehicleDeclarationInputData primaryVehicle, VectoRunData runData,
 			IShiftPolygonCalculator shiftPolygonCalc)
 		{
-			return DeclarationDataAdapterHeavyLorry.DoCreateGearboxData(pifVehicle, runData, shiftPolygonCalc);
+			return DeclarationDataAdapterHeavyLorry.DoCreateGearboxData(primaryVehicle, runData, shiftPolygonCalc);
 		}
 
 		public AxleGearData CreateGenericBusAxlegearData(IAxleGearInputData axlegearData)

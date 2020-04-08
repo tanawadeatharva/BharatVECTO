@@ -47,7 +47,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 	/// Class for Gearbox Data. Gears can be accessed via Gears-Dictionary and range from 1 upwards.
 	/// </summary>
 	/// <remarks>The Axle Gear has its own Property "AxleGearData" and is *not included* in the Gears-Dictionary.</remarks>
-	[DataContract, CustomValidation(typeof(GearboxData), "ValidateGearboxData")]
+	[CustomValidation(typeof(GearboxData), "ValidateGearboxData")]
 	[DebuggerDisplay("GearboxData({Type}, #Gears: {Gears.Count}, ...)")]
 	public class GearboxData : SimulationComponentData
 	{

@@ -12,11 +12,11 @@ using TUGraz.VectoCore.OutputData;
 
 namespace TUGraz.VectoCore.InputData.Reader.Impl
 {
-	public class DeclarationModeBusVectoRunDataFactory : AbstractDeclarationVectoRunDataFactory
+	public class DeclarationModePrimaryBusVectoRunDataFactory : AbstractDeclarationVectoRunDataFactory
 	{
 		protected DeclarationDataAdapterPrimaryBus _dao = new DeclarationDataAdapterPrimaryBus();
 
-		public DeclarationModeBusVectoRunDataFactory(IDeclarationInputDataProvider dataProvider, IDeclarationReport report) :
+		public DeclarationModePrimaryBusVectoRunDataFactory(IDeclarationInputDataProvider dataProvider, IDeclarationReport report) :
 			base(dataProvider, report) { }
 
 		#region Overrides of AbstractDeclarationVectoRunDataFactory

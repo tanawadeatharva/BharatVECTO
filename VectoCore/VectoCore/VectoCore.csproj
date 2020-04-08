@@ -296,7 +296,7 @@
     <Compile Include="InputData\Reader\DataObjectAdapter\DeclarationDataAdapterCompletedBusGeneric.cs" />
     <Compile Include="InputData\Reader\DataObjectAdapter\IDeclarationDataAdapter.cs" />
     <Compile Include="InputData\Reader\Impl\AbstractDeclarationVectoRunDataFactory.cs" />
-    <Compile Include="InputData\Reader\Impl\DeclarationModeBusVectoRunDataFactory.cs" />
+    <Compile Include="InputData\Reader\Impl\DeclarationModePrimaryBusVectoRunDataFactory.cs" />
     <Compile Include="Models\BusAuxiliaries\Actuations.cs" />
     <Compile Include="Models\BusAuxiliaries\BusAuxiliaries.cs" />
     <Compile Include="Models\BusAuxiliaries\AuxiliaryConfig.cs" />

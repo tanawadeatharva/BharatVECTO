@@ -3450,6 +3450,9 @@
     <Content Include="TestData\Integration\ADAS\Group9_AT_PCCEcoRoll.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="TestData\Integration\Buses\FactorMethod\primary_heavyBus group41_nonSmart.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="TestData\Integration\Buses\FactorMethod\primary_heavyBus group41_PIF.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

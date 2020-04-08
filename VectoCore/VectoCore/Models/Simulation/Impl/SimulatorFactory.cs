@@ -114,7 +114,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 						report.PrimaryResults = declDataProvider.PrimaryVehicleData;
 						return;
 					case VehicleCategory.HeavyBusPrimaryVehicle:
-						DataReader = new DeclarationModeBusVectoRunDataFactory(declDataProvider, report);
+						DataReader = new DeclarationModePrimaryBusVectoRunDataFactory(declDataProvider, report);
 						return;
 				}
 			}

@@ -75,6 +75,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 		public AngledriveData AngledriveData { get; internal set; }
 
 		[Required, ValidateObject]
+		[JsonIgnore]
 		public IDrivingCycleData Cycle { get; internal set; }
 
 		[ValidateObject]
@@ -106,6 +107,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 		public LoadingType Loading { get; internal set; }
 
 		[ValidateObject]
+		[JsonIgnore]
 		public Mission Mission { get; internal set; }
 
 		[JsonIgnore]

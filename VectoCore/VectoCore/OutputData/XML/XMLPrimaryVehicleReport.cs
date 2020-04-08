@@ -256,7 +256,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 									? new XElement(tns + XMLNames.Gearbox_Gears_MaxTorque, x.Value.MaxTorque.ToXMLFormat(0))
 									: null,
 								x.Value.MaxSpeed != null
-									? new XElement(tns + XMLNames.Gearbox_Gear_MaxSpeed, x.Value.MaxSpeed.ToXMLFormat(0))
+									? new XElement(tns + XMLNames.Gearbox_Gear_MaxSpeed, x.Value.MaxSpeed.AsRPM.ToXMLFormat(0))
 									: null)))
 			);
 			return retVal;
