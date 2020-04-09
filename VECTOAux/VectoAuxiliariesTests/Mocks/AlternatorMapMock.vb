@@ -21,6 +21,12 @@ Namespace Mocks
 			Return 0.0
 		End Function
 
+        Public ReadOnly Property Technologies As IList(Of String) Implements IAlternatorMap.Technologies
+        get
+                Return New List(Of string)
+        End Get
+        End Property
+
         public ReadOnly property Source As String Implements IAlternatorMap.Source
         get
             Return ""

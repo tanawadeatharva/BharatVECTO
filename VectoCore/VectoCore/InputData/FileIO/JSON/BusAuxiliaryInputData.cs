@@ -152,7 +152,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			pneumaticUserInputsConfig.CompressorGearRatio = puData.GetEx<double>("CompressorGearRatio");
 			var file = puData.GetEx<string>("CompressorMap");
 			if (!string.IsNullOrWhiteSpace(file)) {
-				pneumaticUserInputsConfig.CompressorMap = CompressorMapReader.ReadFile(Path.Combine(baseDir, file), 1.0);
+				pneumaticUserInputsConfig.CompressorMap = CompressorMapReader.ReadFile(Path.Combine(baseDir, file), 1.0, "");
 			}
 			pneumaticUserInputsConfig.Doors = ConsumerTechnologyHelper.Parse(puData.GetEx<string>("Doors"));
 			pneumaticUserInputsConfig.KneelingHeight =

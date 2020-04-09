@@ -147,7 +147,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 				height: 3.15,
 				curbMass: 10000,
 				refLoad: 4301.748,
-				lowLoad: 1720.6992,
+				lowLoad: 860.3496 * 2,
 				axleWeightDistribution: new[] { 0.375, 0.625 },
 				expVehicleEquipment: GetExpectedVehicleEquipment(2, 2, 0.5, 0.5)
 			);
@@ -160,7 +160,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 				height: 3.15,
 				curbMass: 10000,
 				refLoad: 2737.476,
-				lowLoad: 1094.9904,
+				lowLoad: 547.4952 * 2,
 				axleWeightDistribution: new[] { 0.375, 0.625 },
 				expVehicleEquipment: GetExpectedVehicleEquipment(2, 2, 0.5, 0.5)
 			);
@@ -174,7 +174,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 					height: 3.7,
 					curbMass: 10000,
 					refLoad: 5051.295,
-					lowLoad: 2020.518,
+					lowLoad: 1010.259 * 2,
 					axleWeightDistribution: new[] { 0.375, 0.625 },
 					expVehicleEquipment: GetExpectedVehicleEquipment(1, 2, 1, 1)
 				);
@@ -187,7 +187,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 				height: 3.7,
 				curbMass: 10000,
 				refLoad: 3367.53,
-				lowLoad: 1347.012,
+				lowLoad: 673.506 * 2,
 				axleWeightDistribution: new[] { 0.375, 0.625 },
 				expVehicleEquipment: GetExpectedVehicleEquipment(1, 2, 1, 1)
 			);
@@ -254,7 +254,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 				height: 3.15,
 				curbMass: 12000,
 				refLoad: 5018.706,
-				lowLoad: 2007.4824,
+				lowLoad: 1003.7412 * 2,
 				axleWeightDistribution: new[] { 0.273, 0.454, 0.273 },
 				expVehicleEquipment: GetExpectedVehicleEquipment(2, 2, 0.5, 0.5)
 			);
@@ -267,7 +267,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 				height: 3.15,
 				curbMass: 12000,
 				refLoad: 3193.722,
-				lowLoad: 1277.4888,
+				lowLoad: 638.7444 * 2,
 				axleWeightDistribution: new[] { 0.273, 0.454, 0.273 },
 				expVehicleEquipment: GetExpectedVehicleEquipment(2, 2, 0.5, 0.5)
 			);
@@ -281,7 +281,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 					height: 3.7,
 					curbMass: 12000,
 					refLoad: 6952.32,
-					lowLoad: 2780.928,
+					lowLoad: 1390.464 * 2,
 					axleWeightDistribution: new[] { 0.273, 0.454, 0.273 },
 					expVehicleEquipment: GetExpectedVehicleEquipment(1, 4, 1, 1.5)
 				);
@@ -294,7 +294,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 				height: 3.7,
 				curbMass: 12000,
 				refLoad: 4634.88,
-				lowLoad: 1853.952,
+				lowLoad: 926.976 * 2,
 				axleWeightDistribution: new[] { 0.273, 0.454, 0.273 },
 				expVehicleEquipment: GetExpectedVehicleEquipment(1, 4, 1, 1.5)
 			);
@@ -361,7 +361,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 				height: 3.15,
 				curbMass: 12000,
 				refLoad: 6771.27,
-				lowLoad: 2708.508,
+				lowLoad: 1354.254 * 2,
 				axleWeightDistribution: new[] { 0.243, 0.352, 0.405 },
 				expVehicleEquipment: GetExpectedVehicleEquipment(null, null, null, null)
 			);
@@ -374,7 +374,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 				height: 3.15,
 				curbMass: 12000,
 				refLoad: 4308.99,
-				lowLoad: 1723.596,
+				lowLoad: 861.798 * 2,
 				axleWeightDistribution: new[] { 0.243, 0.352, 0.405 },
 				expVehicleEquipment: GetExpectedVehicleEquipment(null, null, null, null)
 			);
@@ -387,7 +387,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 					height: 3.7,
 					curbMass: 12000,
 					refLoad: 9233.55,
-					lowLoad: 3693.42,
+					lowLoad: 1846.71 * 2,
 					axleWeightDistribution: new[] { 0.243, 0.352, 0.405 },
 					expVehicleEquipment: GetExpectedVehicleEquipment(null, null, null, null)
 			);
@@ -400,7 +400,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 				height: 3.7,
 				curbMass: 12000,
 				refLoad: 6155.7,
-				lowLoad: 2462.28,
+				lowLoad: 1231.14 * 2,
 				axleWeightDistribution: new[] { 0.243, 0.352, 0.405 },
 				expVehicleEquipment: GetExpectedVehicleEquipment(null, null, null, null)
 			);
@@ -467,7 +467,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 				height: 3.15,
 				curbMass: 14000,
 				refLoad: 5496.6780,
-				lowLoad: 2198.6712,
+				lowLoad: 1099.3356 * 2,
 				axleWeightDistribution: new[] { 0.214, 0.214, 0.358, 0.214 },
 				expVehicleEquipment: GetExpectedVehicleEquipment(null, null, null, null)
 			);
@@ -480,7 +480,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 				height: 3.15,
 				curbMass: 14000,
 				refLoad: 3497.886,
-				lowLoad: 1399.1544,
+				lowLoad: 699.5772 * 2,
 				axleWeightDistribution: new[] { 0.214, 0.214, 0.358, 0.214 },
 				expVehicleEquipment: GetExpectedVehicleEquipment(null, null, null, null)
 			);
@@ -494,7 +494,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 					height: 3.7,
 					curbMass: 14000,
 					refLoad: 7495.47,
-					lowLoad: 2998.188,
+					lowLoad: 1499.094 * 2,
 					axleWeightDistribution: new[] { 0.214, 0.214, 0.358, 0.214 },
 					expVehicleEquipment: GetExpectedVehicleEquipment(null, null, null, null)
 				);
@@ -507,7 +507,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 				height: 3.7,
 				curbMass: 14000,
 				refLoad: 4996.98,
-				lowLoad: 1998.792,
+				lowLoad: 999.396 * 2,
 				axleWeightDistribution: new[] { 0.214, 0.214, 0.358, 0.214 },
 				expVehicleEquipment: GetExpectedVehicleEquipment(null, null, null, null)
 			);
@@ -574,7 +574,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 				height: 3.15,
 				curbMass: 14000,
 				refLoad: 7886.538,
-				lowLoad: 3154.6152,
+				lowLoad: 1577.3076 * 2,
 				axleWeightDistribution: new[] { 0.200, 0.282, 0.324, 0.194 },
 				expVehicleEquipment: GetExpectedVehicleEquipment(null, null, null, null)
 			);
@@ -587,7 +587,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 				height: 3.15,
 				curbMass: 14000,
 				refLoad: 5018.706,
-				lowLoad: 2007.4824,
+				lowLoad: 1003.7412 * 2,
 				axleWeightDistribution: new[] { 0.200, 0.282, 0.324, 0.194 },
 				expVehicleEquipment: GetExpectedVehicleEquipment(null, null, null, null)
 			);
@@ -601,7 +601,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 					height: 3.7,
 					curbMass: 14000,
 					refLoad: 10754.37,
-					lowLoad: 4301.748,
+					lowLoad: 2150.874 * 2,
 					axleWeightDistribution: new[] { 0.200, 0.282, 0.324, 0.194 },
 					expVehicleEquipment: GetExpectedVehicleEquipment(null, null, null, null)
 				);
@@ -614,7 +614,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 				height: 3.7,
 				curbMass: 14000,
 				refLoad: 7169.58,
-				lowLoad: 2867.832,
+				lowLoad: 1433.916 * 2,
 				axleWeightDistribution: new[] { 0.200, 0.282, 0.324, 0.194 },
 				expVehicleEquipment: GetExpectedVehicleEquipment(null, null, null, null)
 			);

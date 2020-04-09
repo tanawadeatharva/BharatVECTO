@@ -125,6 +125,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 		SIRange(0, 60000, emsMission: true)]
 		public Kilogram Loading { get; internal set; }
 
+		public double? PassengerCount { get; internal set; }
+
+
 		[SIRange(0, 500)]
 		public CubicMeter CargoVolume { get; internal set; }
 

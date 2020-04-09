@@ -182,6 +182,8 @@ namespace TUGraz.VectoCommon.InputData
 
 		Meter EntranceHeight { get; }
 
+		ConsumerTechnology DoorDriveTechnology { get; }
+
 		// components
 
 		IVehicleComponentsDeclaration Components { get; }
@@ -736,7 +738,6 @@ namespace TUGraz.VectoCommon.InputData
 	{
 		ConsumerTechnology AirsuspensionControl { get; }
 		ConsumerTechnology AdBlueDosing { get; }
-		ConsumerTechnology DoorDriveTechnology { get; }
 	}
 
 	public interface IHVACBusAuxiliariesDeclarationData

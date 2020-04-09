@@ -52,11 +52,13 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.Pneumati
 		/// 		''' Creates a new instance of the CompressorMap class
 		/// 		''' </summary>
 		/// <param name="entries"></param>
+		/// <param name="technology"></param>
 		/// <param name="source"></param>
 		/// ''' <remarks></remarks>
-		public CompressorMap(IList<CompressorMapValues> entries, string source)
+		public CompressorMap(IList<CompressorMapValues> entries, string technology, string source)
 		{
 			Source = source;
+			Technology = technology;
 			Entries = entries;
 			var powerDividedByFlowRateSum = 0.0.SI<JoulePerNormLiter>();
 			foreach (var entry in Entries) {
@@ -66,6 +68,8 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.Pneumati
 
 			_averagePowerDemandPerCompressorUnitFlowRateLitresperSec = (powerDividedByFlowRateSum / Entries.Count);
 		}
+
+		public string Technology { get; }
 
 		public string Source { get; }
 

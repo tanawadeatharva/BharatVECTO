@@ -68,6 +68,14 @@ namespace TUGraz.VectoCore.Models.Declaration
 		public Kilogram RefLoad { get; internal set; }
 		public Kilogram MaxLoad { get; internal set; }
 
+		public double? PassengersMinLoad { get; internal set; }
+
+		public double? PassengersLowLoad { get; internal set; }
+
+		public double? PassengersRefLoad { get; internal set; }
+
+		public double? PassengersMaxLoad { get; internal set; }
+
 		public Kilogram MaxPayload { get; internal set; }
 
 		public Meter VehicleHeight { get; internal set; }
@@ -76,16 +84,16 @@ namespace TUGraz.VectoCore.Models.Declaration
 
 		public CubicMeter TotalCargoVolume { get; internal set; }
 		
-		public Dictionary<LoadingType, Kilogram> Loadings
+		public Dictionary<LoadingType, Tuple<Kilogram, double?>> Loadings
 		{
 			get {
-				return new Dictionary<LoadingType, Kilogram>
+				return new Dictionary<LoadingType, Tuple<Kilogram, double?>>
 				{
-					{LoadingType.EmptyLoading, MinLoad },
-					{ LoadingType.LowLoading, LowLoad },
-					{ LoadingType.ReferenceLoad, RefLoad },
-					{LoadingType.FullLoading, MaxLoad }
-				}.Where(x => x.Value != null).ToDictionary(x => x.Key, x => x.Value);
+					{LoadingType.EmptyLoading, Tuple.Create(MinLoad, PassengersMinLoad) },
+					{ LoadingType.LowLoading, Tuple.Create(LowLoad, PassengersLowLoad) },
+					{ LoadingType.ReferenceLoad, Tuple.Create(RefLoad, PassengersRefLoad) },
+					{LoadingType.FullLoading, Tuple.Create(MaxLoad, PassengersMaxLoad) }
+				}.Where(x => x.Value.Item1 != null).ToDictionary(x => x.Key, x => x.Value);
 			}
 		}
 		

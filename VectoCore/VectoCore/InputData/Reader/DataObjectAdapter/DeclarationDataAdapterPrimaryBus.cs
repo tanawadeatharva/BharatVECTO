@@ -24,7 +24,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 	
 		#region Overrides of DeclarationDataAdapterTruck
 
-		public override VehicleData CreateVehicleData(IVehicleDeclarationInputData data, Mission mission, KeyValuePair<LoadingType, Kilogram> loading)
+		public override VehicleData CreateVehicleData(IVehicleDeclarationInputData data, Mission mission, KeyValuePair<LoadingType, Tuple<Kilogram, double?>> loading)
 		{
 			var retVal = base.CreateVehicleData(data, mission, loading);
 			retVal.CurbMass = mission.CurbMass;
@@ -51,7 +51,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 					DemandType = AuxiliaryDemandType.Constant,
 					Technology = new List<string>() { busAuxData.FanTechnology },
 					ID = Constants.Auxiliaries.IDs.Fan,
-					PowerDemand = DeclarationData.Fan.Lookup(hdvClass, mission, busAuxData.FanTechnology).PowerDemand
+					PowerDemand = DeclarationData.Fan.LookupMechanicalPowerDemand(hdvClass, mission, busAuxData.FanTechnology)
 				});
 			retVal.Add(
 				new VectoRunData.AuxData() {
@@ -73,7 +73,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 
 			var retVal = new AuxiliaryConfig {
 				InputData = vehicleData.Components.BusAuxiliaries,
-				ElectricalUserInputsConfig = GetElectricalUserConfig(mission, vehicleData, actuations),
+				ElectricalUserInputsConfig = GetElectricalUserConfig(mission, vehicleData, actuations, runData.VehicleData.VehicleClass),
 				PneumaticUserInputsConfig = GetPneumaticUserConfig(vehicleData, mission),
 				PneumaticAuxillariesConfig = CreatePneumaticAuxConfig(runData.Retarder.Type),
 				Actuations = actuations,
@@ -86,7 +86,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 		}
 
 		protected virtual ElectricsUserInputsConfig GetElectricalUserConfig(
-			Mission mission, IVehicleDeclarationInputData vehicleData, IActuations actuations)
+			Mission mission, IVehicleDeclarationInputData vehicleData, IActuations actuations, VehicleClass vehicleClass)
 		{
 			var currentDemand = GetElectricConsumers(mission, vehicleData, actuations);
 			var busAux = vehicleData.Components.BusAuxiliaries;
@@ -169,6 +169,9 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			}
 
 			return 0;
+			avgWithoutBase += (spPower + fanPower) / Constants.BusAuxiliaries.ElectricSystem.PowernetVoltage;
+			
+
 		}
 
 
@@ -247,12 +250,12 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			switch (clutchType) {
 				case "visco": dragCurveFactorClutch = Constants.BusAuxiliaries.PneumaticUserConfig.ViscoClutchDragCurveFactor;
 					break;
-				case "mechically": dragCurveFactorClutch = Constants.BusAuxiliaries.PneumaticUserConfig.MechanicClutchDragCurveFactor;
+				case "mechanically": dragCurveFactorClutch = Constants.BusAuxiliaries.PneumaticUserConfig.MechanicClutchDragCurveFactor;
 					break;
 			}
 
 			return CompressorMapReader.ReadStream(
-				RessourceHelper.ReadStream(DeclarationData.DeclarationDataResourcePrefix + ".VAUXBus." + resource), dragCurveFactorClutch);
+				RessourceHelper.ReadStream(DeclarationData.DeclarationDataResourcePrefix + ".VAUXBus." + resource), dragCurveFactorClutch, $"{compressorSize} - {clutchType}");
 		}
 
 		public SSMInputs GetDefaulSSMInputs(IFuelProperties heatingFuel)
@@ -314,6 +317,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			retVal.HVACMaxCoolingPower = coolingPower.Item1 + coolingPower.Item2;
 			retVal.HVACCompressorType = busParams.HVACCompressorType; // use passenger compartment
 			retVal.COP = DeclarationData.BusAuxiliaries.CalculateCOP(
+				HVACTechnology = string.Format("{0} ({1})", busParams.HVACConfiguration.GetName(), string.Join(", ", new[] {busParams.HVACCompressorType.GetName(), ACCompressorType.None.GetName()})),
 				coolingPower.Item1, ACCompressorType.None, coolingPower.Item2, busParams.HVACCompressorType,
 				busParams.FloorType);
 			

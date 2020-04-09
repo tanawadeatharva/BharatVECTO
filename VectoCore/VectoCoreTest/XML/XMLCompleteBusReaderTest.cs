@@ -63,7 +63,7 @@ namespace TUGraz.VectoCore.Tests.XML
 			Assert.AreEqual(11.830, vehicle.Length.Value());
 			Assert.AreEqual(2.550, vehicle.Width.Value());
 			Assert.AreEqual(0.120, vehicle.EntranceHeight.Value());
-			Assert.AreEqual(ConsumerTechnology.Pneumatically, ((XMLDeclarationCompletedBusDataProviderV26)vehicle).DoorDriveTechnology);
+			Assert.AreEqual(ConsumerTechnology.Pneumatically, vehicle.DoorDriveTechnology);
 	
 			var components = inputDataProvider.JobInputData.Vehicle.Components;
 			Assert.IsNotNull(components);

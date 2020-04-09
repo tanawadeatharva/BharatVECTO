@@ -51,5 +51,14 @@ namespace TUGraz.VectoCommon.BusAuxiliaries {
 					return BusHVACSystemConfiguration.Unknown.ToString();
 			}
 		}
+
+		public static string GetName(this BusHVACSystemConfiguration auxCfg)
+		{
+			if (auxCfg == BusHVACSystemConfiguration.Unknown) {
+				return "unknonwn";
+			}
+
+			return auxCfg.ToString().Replace(Prefix, "");
+		}
 	}
 }
