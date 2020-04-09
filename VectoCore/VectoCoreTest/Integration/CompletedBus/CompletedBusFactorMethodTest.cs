@@ -37,6 +37,10 @@ namespace TUGraz.VectoCore.Tests.Integration.CompletedBus
 	{
 		const string JobFile_Group41 = @"TestData\Integration\Buses\FactorMethod\CompletedBus_41-32b.vecto";
 		const string JobFile_Group42 = @"TestData\Integration\Buses\FactorMethod\CompletedBus_42-33b.vecto";
+
+		const string JobFilePrimary41 = @"TestData\Integration\Buses\FactorMethod\primary_heavyBus group41_nonSmart.xml";
+		const string JobFilePrimary42 = @"ETestData\Integration\Buses\FactorMethod\primary_heavyBus group42_SmartPS.xml";
+
 		protected IXMLInputDataReader xmlInputReader;
 
 		class RelatedRun
@@ -920,7 +924,7 @@ namespace TUGraz.VectoCore.Tests.Integration.CompletedBus
 		 TestCase(JobFile_Group42, 1, TestName = "PrintVectoRunData CompletedBus Group 42/33b HU/RL")]
 		public void PrintModelParametersCompletedBus(string jobFile, int pairIdx)
 		{
-			var runs = GetVectoRunDatas(jobFile);
+			var runs = GetVectoRunData(jobFile);
 
 			SetRelatedVehicleParts(runs);
 			var pair = relatedRuns[pairIdx];
@@ -935,7 +939,7 @@ namespace TUGraz.VectoCore.Tests.Integration.CompletedBus
 		TestCase(@"TestData\Integration\Buses\FactorMethod\primary_heavyBus group42_SmartPS.xml", 1, TestName = "PrintVectoRunData PrimaryBus Group42 SD HU RL")]
 		public void PrintModelParametersPrimaryBus(string jobFile, int runIdx)
 		{
-			var runs = GetVectoRunDatas(jobFile);
+			var runs = GetVectoRunData(jobFile);
 
 			SetRelatedVehicleParts(runs);
 			var run = runs[runIdx];
@@ -945,7 +949,7 @@ namespace TUGraz.VectoCore.Tests.Integration.CompletedBus
 
 
 
-		private List<VectoRunData> GetVectoRunDatas(string jobFile)
+		private List<VectoRunData> GetVectoRunData(string jobFile)
 		{
 			var writer = new FileOutputWriter(Path.Combine(Path.GetDirectoryName(JobFile_Group41), Path.GetFileName(JobFile_Group41)));
 			var inputData = Path.GetExtension(jobFile).Equals(".xml")
@@ -964,7 +968,9 @@ namespace TUGraz.VectoCore.Tests.Integration.CompletedBus
 		}
 
 		[TestCase(JobFile_Group41, TestName = "RunCompletedBusSimulation Group41/32b"),
-		TestCase(JobFile_Group42, TestName = "RunCompletedBusSimulation Group42/33b"),]
+		TestCase(JobFile_Group42, TestName = "RunCompletedBusSimulation Group42/33b"),
+		TestCase(JobFilePrimary41, TestName = "RunPrimaryBusSimulation Group41"),
+			TestCase(JobFilePrimary42, TestName = "RunPrimaryBusSimulation Group42")]
 		public void TestRunCompletedBusSimulation(string jobName)
 		{
 			var relativeJobPath = jobName;

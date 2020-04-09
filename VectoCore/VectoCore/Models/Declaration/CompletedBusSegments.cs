@@ -134,6 +134,8 @@ namespace TUGraz.VectoCore.Models.Declaration
 						MaxLoad = null,
 						LowLoad = 10.SI<Kilogram>(), // dummy value to trigger simulation with low load
 						RefLoad = 100.SI<Kilogram>(), // dummy value to trigger simulation with ref load
+						PassengersLowLoad = 1,  // dummy value
+						PassengersRefLoad = 10, // dummy value
 						TotalCargoVolume = 0.SI<CubicMeter>(),
 						DefaultCDxA = row.ParseDouble("cdxastandard").SI<SquareMeter>(),						
 						BusParameter = new BusParameters {

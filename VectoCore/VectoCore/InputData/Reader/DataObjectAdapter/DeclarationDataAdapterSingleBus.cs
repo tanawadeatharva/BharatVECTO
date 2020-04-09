@@ -93,13 +93,12 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 		protected override ElectricsUserInputsConfig GetElectricalUserConfig(
 			Mission mission, IVehicleDeclarationInputData vehicleData, IActuations actuations, VehicleClass vehicleClass)
 		{
-			var currentDemand = CalculateAverageCurrent(mission, vehicleData, actuations, vehicleClass);
+			var currentDemand = GetElectricConsumers(mission, vehicleData, actuations);
 			var busAux = vehicleData.Components.BusAuxiliaries;
 
 			return new ElectricsUserInputsConfig() {
 				SmartElectrical = busAux.ElectricSupply.SmartElectrics,
-				AverageCurrentDemandInclBaseLoad = currentDemand.Item1,
-				AverageCurrentDemandWithoutBaseLoad = currentDemand.Item2,
+				ElectricalConsumers = currentDemand,
 				AlternatorMap =
 					new SimpleAlternator(
 						CalculateAlternatorEfficiency(
@@ -265,7 +264,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 
 		protected bool IsDoubleDecker
 		{
-			get { return CompletedVehicle.NuberOfPassengersUpperDeck > 0; }
+			get { return CompletedVehicle.NumberOfPassengersUpperDeck > 0; }
 		}
 	}
 }

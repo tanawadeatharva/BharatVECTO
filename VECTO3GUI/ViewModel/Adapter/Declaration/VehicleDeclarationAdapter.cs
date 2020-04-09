@@ -117,6 +117,7 @@ namespace VECTO3GUI.ViewModel.Adapter.Declaration
 		public Meter Length { get; }
 		public Meter Width { get; }
 		public Meter EntranceHeight { get; }
+		public ConsumerTechnology DoorDriveTechnology { get; }
 
 		public IAirdragDeclarationInputData AirdragInputData { get {
 			return GetComponentViewModel<IAirdragViewModel>(Component.Airdrag)?.ModelData;

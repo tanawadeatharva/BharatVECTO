@@ -25,7 +25,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 		
 		public VehicleData CreateVehicleData(IVehicleDeclarationInputData primaryVehicle,
 			IVehicleDeclarationInputData completedVehicle, Mission mission, 
-			KeyValuePair<LoadingType, Kilogram> loading)
+			KeyValuePair<LoadingType, Tuple<Kilogram, double?>> loading)
 		{
 			var passengers = GetNumberOfPassengers(
 				mission, completedVehicle.Length, completedVehicle.Width,
@@ -42,6 +42,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			vehicleData.CurbMass = completedVehicle.CurbMassChassis;
 
 			vehicleData.Loading = passengers * mission.MissionType.GetAveragePassengerMass();
+			vehicleData.PassengerCount = passengers;
 			vehicleData.GrossVehicleMass = completedVehicle.GrossVehicleMassRating;
 			vehicleData.DigestValueInput = completedVehicle.DigestValue?.DigestValue ?? "";
 			
@@ -109,7 +110,11 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			retVal.AlternatorMap = new SimpleAlternator(
 				CalculateAlternatorEfficiency(
 					primaryBusAuxiliaries.ElectricSupply.Alternators
-										.Concat(completedVehicle.Components.BusAuxiliaries.ElectricSupply.Alternators).ToList()));
+										.Concat(completedVehicle.Components.BusAuxiliaries.ElectricSupply.Alternators).ToList())) {
+				Technologies = primaryBusAuxiliaries.ElectricSupply.Alternators
+													.Concat(completedVehicle.Components.BusAuxiliaries.ElectricSupply.Alternators).Select(x => x.Technology)
+													.ToList()
+			};
 			retVal.MaxAlternatorPower = primaryBusAuxiliaries.ElectricSupply.MaxAlternatorPower;
 			retVal.ElectricStorageCapacity = primaryBusAuxiliaries.ElectricSupply.ElectricStorageCapacity ?? 0.SI<WattSecond>();
 			
@@ -129,7 +134,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 					completedVehicle.EntranceHeight - Constants.BusParameters.EntranceHeight),
 				AirSuspensionControl = primaryBusAuxiliaries.PneumaticConsumers.AirsuspensionControl,
 				AdBlueDosing = primaryBusAuxiliaries.PneumaticConsumers.AdBlueDosing,
-				Doors = completedVehicle.Components.BusAuxiliaries.PneumaticConsumers.DoorDriveTechnology
+				Doors = completedVehicle.DoorDriveTechnology
 			};
 		}
 
@@ -150,7 +155,6 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			var busAux = completedVehicle.Components.BusAuxiliaries.HVACAux;
 			var floorType = completedVehicle.VehicleCode.GetFloorType();
 
-
 			var ssmInputs =GetDefaulSSMInputs(FuelData.Diesel);
 			
 			ssmInputs.BusFloorType = completedVehicle.VehicleCode.GetFloorType();
@@ -165,12 +169,15 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			ssmInputs.UValue = DeclarationData.BusAuxiliaries.UValue(completedVehicle.VehicleCode.GetFloorType());
 			ssmInputs.NumberOfPassengers = GetNumberOfPassengers(
 				mission, hvacBusLength, hvacBusWidth,
-				completedVehicle.NumberOfPassengersLowerDeck + completedVehicle.NumberOfPassengersUpperDeck, loadingType);
+				completedVehicle.NumberOfPassengersLowerDeck + completedVehicle.NumberOfPassengersUpperDeck, loadingType) + 1; // add driver for 'heat input'
 			ssmInputs.VentilationRate = DeclarationData.BusAuxiliaries.VentilationRate(hvacConfiguration, false);
 			ssmInputs.VentilationRateHeating = DeclarationData.BusAuxiliaries.VentilationRate(hvacConfiguration, true);
 
 			ssmInputs.HVACMaxCoolingPower = coolingPower.Item1 + coolingPower.Item2;
 			ssmInputs.HVACCompressorType = busAux.CompressorTypePassenger; // use passenger compartment
+			ssmInputs.HVACTechnology = string.Format(
+				"{0} ({1})", busAux.SystemConfiguration.GetName(),
+				string.Join(", ", new[] { busAux.CompressorTypePassenger.GetName(), busAux.CompressorTypeDriver.GetName() })); ;
 			ssmInputs.COP = DeclarationData.BusAuxiliaries.CalculateCOP(
 				coolingPower.Item1, busAux.CompressorTypeDriver, coolingPower.Item2, busAux.CompressorTypePassenger,
 				floorType);

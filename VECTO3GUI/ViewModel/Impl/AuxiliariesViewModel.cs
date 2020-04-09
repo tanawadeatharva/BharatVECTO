@@ -296,7 +296,7 @@ namespace VECTO3GUI.ViewModel.Impl
 			BrakelightsLED = busAux.ElectricConsumers.BrakelightsLED;
 			InteriorLightsLED = busAux.ElectricConsumers.InteriorLightsLED;
 			
-			DoorDriveTechnology = busAux.PneumaticConsumers.DoorDriveTechnology;
+			//DoorDriveTechnology = busAux.PneumaticConsumers.DoorDriveTechnology;
 
 			SystemConfiguration = busAux.HVACAux.SystemConfiguration;
 			CompressorTypeDriver = busAux.HVACAux.CompressorTypeDriver;

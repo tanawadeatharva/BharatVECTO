@@ -165,7 +165,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 									m.MissionType == mission.MissionType;
 						}).First();
 					simulationRunData = CreateVectoRunDataGeneric(
-						primaryMission, new KeyValuePair<LoadingType, Kilogram>(loading.Key, primaryMission.Loadings[loading.Key]),
+						primaryMission, new KeyValuePair<LoadingType, Tuple<Kilogram, double?>>(loading.Key, primaryMission.Loadings[loading.Key]),
 						primarySegment);
 					yield return simulationRunData;
 				}
@@ -205,7 +205,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 		}
 
 
-		protected VectoRunData CreateVectoRunDataSpecific(Mission mission, KeyValuePair<LoadingType, Kilogram> loading)
+		protected VectoRunData CreateVectoRunDataSpecific(Mission mission, KeyValuePair<LoadingType, Tuple<Kilogram, double?>> loading)
 		{
 			DrivingCycleData cycle;
 			lock (CyclesCacheLock) {
@@ -251,7 +251,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 		}
 
 		
-		protected VectoRunData CreateVectoRunDataGeneric(Mission mission, KeyValuePair<LoadingType, Kilogram> loading, Segment primarySegment)
+		protected VectoRunData CreateVectoRunDataGeneric(Mission mission, KeyValuePair<LoadingType, Tuple<Kilogram, double?>> loading, Segment primarySegment)
 		{
 			DrivingCycleData cycle;
 			lock (CyclesCacheLock) {

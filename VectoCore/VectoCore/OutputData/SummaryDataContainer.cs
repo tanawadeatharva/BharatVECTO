@@ -491,7 +491,7 @@ namespace TUGraz.VectoCore.OutputData
 						if (passengers != null) {
 							// subtract driver!
 							row[FcCol(Fields.FCFINAL_LiterPer100PassengerKM, suffix)] =
-								(fcVolumePerMeter / (passengers.Value - 1)).ConvertToLiterPer100Kilometer();
+								(fcVolumePerMeter / passengers.Value).ConvertToLiterPer100Kilometer();
 						}
 					}
 

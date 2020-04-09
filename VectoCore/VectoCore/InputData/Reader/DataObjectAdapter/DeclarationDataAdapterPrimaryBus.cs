@@ -95,7 +95,9 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 
 			retVal.SmartElectrical = busAux.ElectricSupply.SmartElectrics;
 			retVal.ElectricalConsumers = currentDemand;
-			retVal.AlternatorMap = new SimpleAlternator(CalculateAlternatorEfficiency(busAux.ElectricSupply.Alternators));
+			retVal.AlternatorMap = new SimpleAlternator(CalculateAlternatorEfficiency(busAux.ElectricSupply.Alternators)) {
+				Technologies = busAux.ElectricSupply.Alternators.Select(x => x.Technology).ToList()
+			};
 			retVal.MaxAlternatorPower = busAux.ElectricSupply.MaxAlternatorPower;
 			retVal.ElectricStorageCapacity = busAux.ElectricSupply.ElectricStorageCapacity ?? 0.SI<WattSecond>();
 			
@@ -133,7 +135,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 				(actuations.ParkBrakeAndDoors * Constants.BusAuxiliaries.ElectricalConsumers.DoorActuationTimeSecond) /
 				actuations.CycleTime;
 			var busAux = vehicleData.Components.BusAuxiliaries;
-			var electricDoors = vehicleData.Components.BusAuxiliaries.PneumaticConsumers.DoorDriveTechnology == ConsumerTechnology.Electrically;
+			var electricDoors = vehicleData.DoorDriveTechnology == ConsumerTechnology.Electrically;
 			
 			foreach (var consumer in DeclarationData.BusAuxiliaries.DefaultElectricConsumerList.Items) {
 
@@ -169,9 +171,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			}
 
 			return 0;
-			avgWithoutBase += (spPower + fanPower) / Constants.BusAuxiliaries.ElectricSystem.PowernetVoltage;
 			
-
 		}
 
 
@@ -180,7 +180,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			switch (consumerName) {
 				case "Day running lights LED bonus":
 				case "Position lights LED bonus":
-				case "Brake lights LED bonus": return false;
+				case "Brake lights LED bonus": // return false;
 				case "Interior lights LED bonus":
 				case "Headlights LED bonus": return true;
 				default: return false;
@@ -317,9 +317,12 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			retVal.HVACMaxCoolingPower = coolingPower.Item1 + coolingPower.Item2;
 			retVal.HVACCompressorType = busParams.HVACCompressorType; // use passenger compartment
 			retVal.COP = DeclarationData.BusAuxiliaries.CalculateCOP(
-				HVACTechnology = string.Format("{0} ({1})", busParams.HVACConfiguration.GetName(), string.Join(", ", new[] {busParams.HVACCompressorType.GetName(), ACCompressorType.None.GetName()})),
+			
 				coolingPower.Item1, ACCompressorType.None, coolingPower.Item2, busParams.HVACCompressorType,
 				busParams.FloorType);
+			retVal.HVACTechnology = string.Format(
+				"{0} ({1})", busParams.HVACConfiguration.GetName(),
+				string.Join(", ", new[] { busParams.HVACCompressorType.GetName(), ACCompressorType.None.GetName() }));
 			
 			//SetHVACParameters(retVal, vehicleData, mission);
 
