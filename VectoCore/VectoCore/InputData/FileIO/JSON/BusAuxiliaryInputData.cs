@@ -72,10 +72,10 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			electricalUserInputsConfig.DoorActuationTimeSecond = elData.GetEx<double>("DoorActuationTimeSecond").SI<Second>();
 
 
-			electricalUserInputsConfig.AverageCurrentDemandInclBaseLoad = elData["ElectricalConsumers"]
-				.GetEx<double>("AverageCurrentDemandInclBaseLoad").SI<Ampere>();
-			electricalUserInputsConfig.AverageCurrentDemandWithoutBaseLoad = elData["ElectricalConsumers"]
-				.GetEx<double>("AverageCurrentDemandWithoutBaseLoad").SI<Ampere>();
+			//electricalUserInputsConfig.AverageCurrentDemandInclBaseLoad = elData["ElectricalConsumers"]
+			//	.GetEx<double>("AverageCurrentDemandInclBaseLoad").SI<Ampere>();
+			//electricalUserInputsConfig.AverageCurrentDemandWithoutBaseLoad = elData["ElectricalConsumers"]
+				//.GetEx<double>("AverageCurrentDemandWithoutBaseLoad").SI<Ampere>();
 
 			// PowerNetVoltage
 			electricalUserInputsConfig.PowerNetVoltage = elData.GetEx<double>("PowerNetVoltage").SI<Volt>();

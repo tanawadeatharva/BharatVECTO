@@ -26,6 +26,7 @@ using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter;
 using TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.HVAC;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Engine;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox;
+using TUGraz.VectoCore.OutputData;
 using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Tests.Integration.CompletedBus
@@ -34,7 +35,8 @@ namespace TUGraz.VectoCore.Tests.Integration.CompletedBus
 	[TestFixture()]
 	public class CompletedBusFactorMethodTest
 	{
-		const string JobFile = @"TestData\Integration\Buses\FactorMethod\CompletedBus.vecto";
+		const string JobFile_Group41 = @"TestData\Integration\Buses\FactorMethod\CompletedBus_41-32b.vecto";
+		const string JobFile_Group42 = @"TestData\Integration\Buses\FactorMethod\CompletedBus_42-33b.vecto";
 		protected IXMLInputDataReader xmlInputReader;
 
 		class RelatedRun
@@ -94,8 +96,8 @@ namespace TUGraz.VectoCore.Tests.Integration.CompletedBus
 		[TestCase()]
 		public void TestCompletedBus()
 		{
-			var writer = new FileOutputWriter(Path.Combine(Path.GetDirectoryName(JobFile), Path.GetFileName(JobFile)));
-			var inputData = JSONInputDataFactory.ReadJsonJob(JobFile);
+			var writer = new FileOutputWriter(Path.Combine(Path.GetDirectoryName(JobFile_Group41), Path.GetFileName(JobFile_Group41)));
+			var inputData = JSONInputDataFactory.ReadJsonJob(JobFile_Group41);
 
 			var factory = new SimulatorFactory(ExecutionMode.Declaration, inputData, writer)
 			{
@@ -913,17 +915,9 @@ namespace TUGraz.VectoCore.Tests.Integration.CompletedBus
 		}
 
 
-		[TestCase()]
-		public void PrintModelParameters()
-		{
-			var gearboxData =  new GearboxData() {
-				Manufacturer = "Manufacturer",
-				Type = GearboxType.AMT
-			};
-			var str = JsonConvert.SerializeObject(gearboxData, Formatting.Indented);
-		}
-
-		[TestCase(JobFile, 0)]
+		
+		[TestCase(JobFile_Group41, 0, TestName = "PrintVectoRunData CompletedBus Group 41/32b CO/LL"),
+		 TestCase(JobFile_Group42, 1, TestName = "PrintVectoRunData CompletedBus Group 42/33b HU/RL")]
 		public void PrintModelParametersCompletedBus(string jobFile, int pairIdx)
 		{
 			var runs = GetVectoRunDatas(jobFile);
@@ -931,13 +925,14 @@ namespace TUGraz.VectoCore.Tests.Integration.CompletedBus
 			SetRelatedVehicleParts(runs);
 			var pair = relatedRuns[pairIdx];
 
-			File.WriteAllText($"{pair.VectoRunDataGenericBody.JobName}_{pair.VectoRunDataGenericBody.ModFileSuffix}.json", JsonConvert.SerializeObject(pair.VectoRunDataGenericBody, Formatting.Indented));
+			File.WriteAllText($"{pair.VectoRunDataGenericBody.JobName}_{pair.VectoRunDataGenericBody.Cycle.Name}{pair.VectoRunDataGenericBody.ModFileSuffix}.json", JsonConvert.SerializeObject(pair.VectoRunDataGenericBody, Formatting.Indented));
 
-			File.WriteAllText($"{pair.VectoRunDataSpezificBody.JobName}_{pair.VectoRunDataSpezificBody.ModFileSuffix}.json", JsonConvert.SerializeObject(pair.VectoRunDataSpezificBody, Formatting.Indented));
+			File.WriteAllText($"{pair.VectoRunDataSpezificBody.JobName}_{pair.VectoRunDataGenericBody.Cycle.Name}{pair.VectoRunDataSpezificBody.ModFileSuffix}.json", JsonConvert.SerializeObject(pair.VectoRunDataSpezificBody, Formatting.Indented));
 		}
 
 
-		[TestCase(@"TestData\Integration\Buses\FactorMethod\primary_heavyBus group41_nonSmart.xml", 12)]
+		[TestCase(@"TestData\Integration\Buses\FactorMethod\primary_heavyBus group41_nonSmart.xml", 12, TestName = "PrintVectoRunData PrimaryBus Group41 SD CO LL"),
+		TestCase(@"TestData\Integration\Buses\FactorMethod\primary_heavyBus group42_SmartPS.xml", 1, TestName = "PrintVectoRunData PrimaryBus Group42 SD HU RL")]
 		public void PrintModelParametersPrimaryBus(string jobFile, int runIdx)
 		{
 			var runs = GetVectoRunDatas(jobFile);
@@ -945,12 +940,14 @@ namespace TUGraz.VectoCore.Tests.Integration.CompletedBus
 			SetRelatedVehicleParts(runs);
 			var run = runs[runIdx];
 
-			File.WriteAllText($"{run.JobName}_{run.ModFileSuffix}.json", JsonConvert.SerializeObject(run, Formatting.Indented));
+			File.WriteAllText($"{run.JobName}_{run.Cycle.Name}{run.ModFileSuffix}.json", JsonConvert.SerializeObject(run, Formatting.Indented));
 		}
+
+
 
 		private List<VectoRunData> GetVectoRunDatas(string jobFile)
 		{
-			var writer = new FileOutputWriter(Path.Combine(Path.GetDirectoryName(JobFile), Path.GetFileName(JobFile)));
+			var writer = new FileOutputWriter(Path.Combine(Path.GetDirectoryName(JobFile_Group41), Path.GetFileName(JobFile_Group41)));
 			var inputData = Path.GetExtension(jobFile).Equals(".xml")
 				? xmlInputReader.CreateDeclaration(jobFile)
 				: JSONInputDataFactory.ReadJsonJob(jobFile);
@@ -964,6 +961,37 @@ namespace TUGraz.VectoCore.Tests.Integration.CompletedBus
 
 			var runs = factory.DataReader.NextRun().ToList();
 			return runs;
+		}
+
+		[TestCase(JobFile_Group41, TestName = "RunCompletedBusSimulation Group41/32b"),
+		TestCase(JobFile_Group42, TestName = "RunCompletedBusSimulation Group42/33b"),]
+		public void TestRunCompletedBusSimulation(string jobName)
+		{
+			var relativeJobPath = jobName;
+			var writer = new FileOutputWriter(relativeJobPath);
+			var inputData = Path.GetExtension(relativeJobPath) == ".xml"
+				? xmlInputReader.CreateDeclaration(relativeJobPath)
+				: JSONInputDataFactory.ReadJsonJob(relativeJobPath);
+			var factory = new SimulatorFactory(ExecutionMode.Declaration, inputData, writer) {
+				WriteModalResults = true,
+				//ActualModalData = true,
+				Validate = false
+			};
+			var jobContainer = new JobContainer(new SummaryDataContainer(writer));
+
+			//var runs = factory.SimulationRuns().ToArray();
+			//var runIdx = 0;
+			//runs[runIdx].Run();
+
+			//Assert.IsTrue(runs[runIdx].FinishedWithoutErrors);
+
+			jobContainer.AddRuns(factory);
+
+			jobContainer.Execute();
+			jobContainer.WaitFinished();
+			var progress = jobContainer.GetProgress();
+			Assert.IsTrue(progress.All(r => r.Value.Success), string.Concat<Exception>(progress.Select(r => r.Value.Error)));
+			Assert.IsTrue(jobContainer.Runs.All(r => r.Success), String.Concat<Exception>(jobContainer.Runs.Select(r => r.ExecException)));
 		}
 	}
 }

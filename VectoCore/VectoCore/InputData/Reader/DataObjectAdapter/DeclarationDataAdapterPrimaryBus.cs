@@ -88,14 +88,13 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 		protected virtual ElectricsUserInputsConfig GetElectricalUserConfig(
 			Mission mission, IVehicleDeclarationInputData vehicleData, IActuations actuations)
 		{
-			var currentDemand = CalculateAverageCurrent(mission, vehicleData, actuations);
+			var currentDemand = GetElectricConsumers(mission, vehicleData, actuations);
 			var busAux = vehicleData.Components.BusAuxiliaries;
 
 			var retVal = GetDefaultElectricalUserConfig();
 
 			retVal.SmartElectrical = busAux.ElectricSupply.SmartElectrics;
-			retVal.AverageCurrentDemandInclBaseLoad = currentDemand.Item1;
-			retVal.AverageCurrentDemandWithoutBaseLoad = currentDemand.Item2;
+			retVal.ElectricalConsumers = currentDemand;
 			retVal.AlternatorMap = new SimpleAlternator(CalculateAlternatorEfficiency(busAux.ElectricSupply.Alternators));
 			retVal.MaxAlternatorPower = busAux.ElectricSupply.MaxAlternatorPower;
 			retVal.ElectricStorageCapacity = busAux.ElectricSupply.ElectricStorageCapacity ?? 0.SI<WattSecond>();
@@ -126,19 +125,24 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			return sum / alternators.Count;
 		}
 
-		protected virtual Tuple<Ampere, Ampere> CalculateAverageCurrent(Mission mission, IVehicleDeclarationInputData vehicleData,
+		protected virtual Dictionary<string, Tuple<bool, Ampere>> GetElectricConsumers(Mission mission, IVehicleDeclarationInputData vehicleData,
 			IActuations actuations)
 		{
-			var avgInclBase = 0.SI<Ampere>();
-			var avgWithoutBase = 0.SI<Ampere>();
+			var retVal = new Dictionary<string, Tuple<bool, Ampere>>();
 			var doorDutyCycleFraction =
 				(actuations.ParkBrakeAndDoors * Constants.BusAuxiliaries.ElectricalConsumers.DoorActuationTimeSecond) /
 				actuations.CycleTime;
 			var busAux = vehicleData.Components.BusAuxiliaries;
-			var electricDoors = false;
+			var electricDoors = vehicleData.Components.BusAuxiliaries.PneumaticConsumers.DoorDriveTechnology == ConsumerTechnology.Electrically;
 			
 			foreach (var consumer in DeclarationData.BusAuxiliaries.DefaultElectricConsumerList.Items) {
-				var nbr = GetNumberOfElectricalConsumersInVehicle(consumer.NumberInActualVehicle, mission, vehicleData);
+
+				var applied = consumer.DefaultConsumer || consumer.Bonus 
+					? 1.0 
+					: GetNumberOfElectricalConsumersForMission(mission, consumer);
+				var nbr = consumer.DefaultConsumer
+					? GetNumberOfElectricalConsumersInVehicle(consumer.NumberInActualVehicle, mission, vehicleData)
+					: 1.0;
 
 				var dutyCycle = electricDoors && consumer.ConsumerName.Equals(
 									Constants.BusAuxiliaries.ElectricalConsumers.DoorsPerVehicleConsumer,
@@ -146,21 +150,27 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 					? doorDutyCycleFraction
 					: consumer.PhaseIdleTractionOn;
 
-				var current = consumer.NominalCurrent(mission.MissionType) * dutyCycle * nbr;
+				var current = applied * consumer.NominalCurrent(mission.MissionType) * dutyCycle * nbr;
 				if (consumer.Bonus && !VehicleHasElectricalConsumer(consumer.ConsumerName, busAux)) {
 					current = 0.SI<Ampere>();
 				}
 
-				avgInclBase += current;
-				if (!consumer.BaseVehicle) {
-					avgWithoutBase += current;
-				}
+				retVal[consumer.ConsumerName] = Tuple.Create(consumer.BaseVehicle, current);
+				
 			}
 
-			return Tuple.Create(avgInclBase, avgWithoutBase);
+			return retVal;
 		}
 
-	
+		private double GetNumberOfElectricalConsumersForMission(Mission mission, ElectricalConsumer consumer)
+		{
+			if (mission.BusParameter.ElectricalConsumers.ContainsKey(consumer.ConsumerName)) {
+				return mission.BusParameter.ElectricalConsumers[consumer.ConsumerName];
+			}
+
+			return 0;
+		}
+
 
 		protected virtual bool VehicleHasElectricalConsumer(string consumerName, IBusAuxiliariesDeclarationData busAux)
 		{

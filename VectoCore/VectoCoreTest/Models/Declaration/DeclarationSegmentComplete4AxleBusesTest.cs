@@ -1,4 +1,5 @@
-﻿using NUnit.Framework;
+﻿using System.Collections.Generic;
+using NUnit.Framework;
 using TUGraz.VectoCommon.BusAuxiliaries;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
@@ -77,7 +78,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 				);
 
 				AssertVehicleEquipment(externalDisplays: 3, internalDisplays: 3, fridge: 0, kitchenStandard: 0,
-					vehicleEquipment: mission.BusParameter.VehicleEquipment);
+					vehicleEquipment: mission.BusParameter.ElectricalConsumers);
 			}
 		}
 
@@ -109,7 +110,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 				);
 
 				AssertVehicleEquipment(externalDisplays: 3, internalDisplays: 3, fridge: 0, kitchenStandard: 0,
-					vehicleEquipment: mission.BusParameter.VehicleEquipment);
+					vehicleEquipment: mission.BusParameter.ElectricalConsumers);
 			}
 		}
 
@@ -157,12 +158,12 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 
 
 		private void AssertVehicleEquipment(double externalDisplays, double internalDisplays, double fridge,
-			double kitchenStandard, VehicleEquipment vehicleEquipment)
+			double kitchenStandard, Dictionary<string, double> vehicleEquipment)
 		{
-			Assert.AreEqual(externalDisplays, vehicleEquipment.ExternalDisplays);
-			Assert.AreEqual(internalDisplays, vehicleEquipment.InternalDisplays);
-			Assert.AreEqual(fridge, vehicleEquipment.Fridge);
-			Assert.AreEqual(kitchenStandard, vehicleEquipment.KitchenStandard);
+			Assert.AreEqual(externalDisplays, vehicleEquipment["External displays"]);
+			Assert.AreEqual(internalDisplays, vehicleEquipment["Internal displays"]);
+			Assert.AreEqual(fridge, vehicleEquipment["Fridge"]);
+			Assert.AreEqual(kitchenStandard, vehicleEquipment["Kitchen Standard"]);
 		}
 
 		#endregion

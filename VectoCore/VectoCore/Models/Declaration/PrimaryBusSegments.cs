@@ -19,7 +19,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 
 		protected override string ResourceId
 		{
-			get { return DeclarationData.DeclarationDataResourcePrefix + ".HeavyBusSegmentationTable.csv"; }
+			get { return DeclarationData.DeclarationDataResourcePrefix + ".PrimaryBusSegmentationTable.csv"; }
 		}
 
 		protected override string ErrorMessage
@@ -134,7 +134,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 							HVACHeatpump = row.ParseBoolean("hvacheatpump"),
 							HVACAdjustableAuxHeater = row.ParseBoolean("hvacadjustableauxiliaryheater"),
 							HVACSeparateAirDistributionDucts = row.ParseBoolean("hvacseparateairdistributionducts"),
-							VehicleEquipment = GetVehicleEquipment(row)
+							ElectricalConsumers = GetVehicleEquipment(row)
 						}
 					};
 					missions.Add(mission);
@@ -165,31 +165,18 @@ namespace TUGraz.VectoCore.Models.Declaration
 			return axleDistribution.Split('/').ToDouble().Select(x => x / 100.0).ToArray();
 		}
 		
-		private VehicleEquipment GetVehicleEquipment(DataRow row)
+		private Dictionary<string, double> GetVehicleEquipment(DataRow row)
 		{
-			var externalDisplays = row.Field<string>("externaldisplays") == string.Empty
-				? (double?)null
-				: row.ParseDouble("externaldisplays");
+			var retVal = new Dictionary<string, double>();
+			foreach (var electricalConsumer in DeclarationData.BusAuxiliaries.DefaultElectricConsumerList.Items) {
+				if (electricalConsumer.Bonus || electricalConsumer.DefaultConsumer) {
+					continue;
+				}
+				var caption = "es_" + electricalConsumer.ConsumerName.ToLowerInvariant().Replace(" ", "");
+				retVal[electricalConsumer.ConsumerName] = row.ParseDoubleOrGetDefault(caption);
+			}
 
-			var internalDisplays = row.Field<string>("internaldisplays") == string.Empty
-				? (double?)null
-				: row.ParseDouble("internaldisplays");
-
-			var fridge = row.Field<string>("fridge") == string.Empty
-				? (double?)null
-				: row.ParseDouble("fridge");
-
-			var kitchenStandard = row.Field<string>("kitchenStandard") == string.Empty
-				? (double?)null
-				: row.ParseDouble("kitchenStandard");
-
-			return new VehicleEquipment
-			{
-				ExternalDisplays = externalDisplays,
-				InternalDisplays = internalDisplays,
-				Fridge = fridge,
-				KitchenStandard = kitchenStandard
-			};
+			return retVal;
 		}
 	}
 }

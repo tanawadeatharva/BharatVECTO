@@ -50,10 +50,17 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 
 		public AirdragData CreateAirdragData(IVehicleDeclarationInputData completedVehicle, Mission mission)
 		{
-
 			if (!mission.BusParameter.AirDragMeasurementAllowed ||
 				completedVehicle.Components.AirdragInputData?.AirDragArea == null) {
-				return DefaultAirdragData(mission);
+				return new AirdragData() {
+					CertificationMethod = CertificationMethod.StandardValues,
+					DeclaredAirdragArea = mission.DefaultCDxA,
+					CrossWindCorrectionCurve = new CrosswindCorrectionCdxALookup(
+						mission.DefaultCDxA,
+						GetDeclarationAirResistanceCurve(
+							mission.CrossWindCorrectionParameters, mission.DefaultCDxA, completedVehicle.Height + mission.BusParameter.DeltaHeight),
+						CrossWindCorrectionMode.DeclarationModeCorrection)
+				};
 			}
 
 			var retVal = SetCommonAirdragData(completedVehicle.Components.AirdragInputData);
@@ -92,14 +99,13 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 		protected ElectricsUserInputsConfig CreateElectricsUserInputsConfig(IBusAuxiliariesDeclarationData primaryBusAuxiliaries,
 			IVehicleDeclarationInputData completedVehicle, Mission mission, IActuations actuations)
 		{
-			var currentDemand = CalculateAverageCurrent(mission, completedVehicle, actuations);
+			var currentDemand = GetElectricConsumers(mission, completedVehicle, actuations);
 
 			var retVal = GetDefaultElectricalUserConfig();
 
 
 			retVal.SmartElectrical = primaryBusAuxiliaries.ElectricSupply.SmartElectrics;
-			retVal.AverageCurrentDemandInclBaseLoad = currentDemand.Item1;
-			retVal.AverageCurrentDemandWithoutBaseLoad = currentDemand.Item2;
+			retVal.ElectricalConsumers = currentDemand;
 			retVal.AlternatorMap = new SimpleAlternator(
 				CalculateAlternatorEfficiency(
 					primaryBusAuxiliaries.ElectricSupply.Alternators

@@ -9,6 +9,10 @@
 // 
 // See the LICENSE.txt for the specific language governing permissions and limitations.
 
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using Newtonsoft.Json;
 using TUGraz.VectoCommon.BusAuxiliaries;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Models.BusAuxiliaries.Interfaces.DownstreamModules.Electrics;
@@ -30,9 +34,20 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.Electric
 
 		public bool SmartElectrical { get; set; }
 
-		public Ampere AverageCurrentDemandInclBaseLoad { get; set; }
-		
-		public Ampere AverageCurrentDemandWithoutBaseLoad { get; set; }
+		[JsonIgnore]
+		public Dictionary<string, Tuple<bool, Ampere>> ElectricalConsumers { get; set; }
+
+		public string[] ElectricalConsumersSerialized
+		{
+			get { return ElectricalConsumers.Select(x => $"{x.Key}: {x.Value.Item2}  ({x.Value.Item1})").ToArray(); }
+		}
+
+		public Ampere AverageCurrentDemandInclBaseLoad { get { return ElectricalConsumers.Select(x => x.Value.Item2).Sum().Cast<Ampere>(); }  }
+
+		public Ampere AverageCurrentDemandWithoutBaseLoad { get {
+			return ElectricalConsumers.Where(x => !x.Value.Item1).Select(x => x.Value.Item2).Sum().Cast<Ampere>();
+		}  }
+
 		public Watt MaxAlternatorPower { get; set; }
 		public WattSecond ElectricStorageCapacity { get; set; }
 	}

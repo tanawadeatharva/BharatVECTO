@@ -36,9 +36,10 @@ namespace TUGraz.VectoCore.InputData.Reader.ComponentData
 			var retVal = new List<ElectricalConsumer>();
 			foreach (DataRow row in data.Rows) {
 				var consumer = new ElectricalConsumer() {
-					Category =row.Field<string>(Fields.Category),
+					Category = row.Field<string>(Fields.Category),
 					ConsumerName = row.Field<string>(Fields.Consumer),
 					BaseVehicle = row.ParseBoolean(Fields.BaseVehicle),
+					DefaultConsumer = row.ParseBoolean(Fields.DefaultConsumer),
 					Bonus = row.ParseBoolean(Fields.Bonus),
 					PhaseIdleTractionOn = row.ParseDouble(Fields.PhaseIdle),
 					NumberInActualVehicle = row.Field<string>(Fields.NuminVehicle)
@@ -64,6 +65,7 @@ namespace TUGraz.VectoCore.InputData.Reader.ComponentData
 			public const string Category = "Category";
 			public const string Consumer = "Consumer";
 			public const string BaseVehicle = "Base Vehicle";
+			public const string DefaultConsumer = "Default Consumer";
 			public const string Bonus = "Bonus";
 			//public const string NominalAmps = "Nominal Amps";
 			public const string PhaseIdle = "PhaseIdle";

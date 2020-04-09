@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using NUnit.Framework;
 using TUGraz.VectoCommon.BusAuxiliaries;
 using TUGraz.VectoCommon.Models;
@@ -623,7 +624,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 
 		private void AssertMission(
 			Mission m, MissionType missionType, double cdxA, double length, double width, double height, double curbMass,
-			double refLoad, double lowLoad, double[] axleWeightDistribution, VehicleEquipment expVehicleEquipment)
+			double refLoad, double lowLoad, double[] axleWeightDistribution, Dictionary<string, double> expVehicleEquipment)
 		{
 			Assert.AreEqual(missionType, m.MissionType);
 			Assert.AreEqual(cdxA, m.DefaultCDxA.Value(), 1e-9);
@@ -639,22 +640,30 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 					string.Join(",", m.AxleWeightDistribution));
 			}
 
-			Assert.AreEqual(expVehicleEquipment.ExternalDisplays, m.BusParameter.VehicleEquipment.ExternalDisplays);
-			Assert.AreEqual(expVehicleEquipment.InternalDisplays, m.BusParameter.VehicleEquipment.InternalDisplays);
-			Assert.AreEqual(expVehicleEquipment.Fridge, m.BusParameter.VehicleEquipment.Fridge);
-			Assert.AreEqual(expVehicleEquipment.KitchenStandard, m.BusParameter.VehicleEquipment.KitchenStandard);
+			foreach (var entry in expVehicleEquipment) {
+				Assert.AreEqual(entry.Value, m.BusParameter.ElectricalConsumers[entry.Key]);
+			}
+			
 		}
 
-		private VehicleEquipment GetExpectedVehicleEquipment(double? externalDisplays, double? internalDisplays, double? fridge,
+		private Dictionary<string, double> GetExpectedVehicleEquipment(double? externalDisplays, double? internalDisplays, double? fridge,
 			double? kitchenStandard)
 		{
-			return new VehicleEquipment
-			{
-				ExternalDisplays = externalDisplays,
-				InternalDisplays = internalDisplays,
-				Fridge = fridge,
-				KitchenStandard = kitchenStandard
+			var retVal = new Dictionary<string, double>();
+
+			if (externalDisplays.HasValue) {
+				retVal["External displays"] = externalDisplays.Value;
+			}
+			if (internalDisplays.HasValue) {
+				retVal["Internal displays"] = internalDisplays.Value;
+			}
+			if (fridge.HasValue) {
+				retVal["Fridge"] = fridge.Value;
+			}
+			if (kitchenStandard.HasValue) {
+				retVal["Kitchen Standard"] = kitchenStandard.Value;
 			};
+			return retVal;
 		}
 	}
 }

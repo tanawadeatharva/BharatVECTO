@@ -869,7 +869,7 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <EmbeddedResource Include="Resources\Declaration\Buses\DefaultActuationsMap.apac" />
-    <EmbeddedResource Include="Resources\Declaration\HeavyBusSegmentationTable.csv" />
+    <EmbeddedResource Include="Resources\Declaration\PrimaryBusSegmentationTable.csv" />
     <EmbeddedResource Include="Resources\Declaration\VACC\Bus.vacc" />
     <EmbeddedResource Include="Resources\XSD\VectoDeclarationDefinitions.2.6_Buses.xsd">
       <SubType>Designer</SubType>

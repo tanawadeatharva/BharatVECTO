@@ -18,7 +18,9 @@ using TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.Pneumatics;
 using TUGraz.VectoCore.Models.BusAuxiliaries.Interfaces.DownstreamModules.Electrics;
 using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation.Data;
+using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
+using TUGraz.VectoCore.Models.SimulationComponent.Impl;
 using TUGraz.VectoCore.OutputData;
 
 
@@ -116,10 +118,18 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 			_axlegearData = GenericTransmissionComponentData.Instance.CreateGenericBusAxlegearData(PrimaryVehicle.Components.AxleGearInputData);
 
 			_angledriveData = GenericTransmissionComponentData.Instance.CreateGenericBusAngledriveData(PrimaryVehicle.Components.AngledriveInputData);
+
+			var tmpRunData = new VectoRunData() {
+				ShiftStrategy = InputDataProvider.JobInputData.ShiftStrategy,
+				GearboxData = new GearboxData() {
+					Type = PrimaryVehicle.Components.GearboxInputData.Type,
+				}
+			};
+			var tmpStrategy = PowertrainBuilder.GetShiftStrategy(tmpRunData, new SimplePowertrainContainer(tmpRunData));
 			
 			_gearboxData = GenericTransmissionComponentData.Instance.CreateGearboxData(PrimaryVehicle,
 				new VectoRunData() { EngineData = _combustionEngineData, AxleGearData = _axlegearData, VehicleData = tmpVehicleData },
-				null);
+				tmpStrategy);
 
 			_gearshiftData = DataAdapterGeneric.CreateGearshiftData(
 				_gearboxData, _axlegearData.AxleGear.Ratio * (_angledriveData?.Angledrive.Ratio ?? 1.0), _combustionEngineData.IdleSpeed);

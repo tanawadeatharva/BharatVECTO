@@ -355,8 +355,9 @@ namespace TUGraz.VectoCore.Configuration
 		{
 			public const double OutputSpeedStart = 50;
 			public const double OutputSpeedEnd = 5000;
+
 			public const double OutputTorqueStart = 250;
-			public const double OutputTorqueEnd = 10000;
+			public const double OutputTorqueEnd = 500000;
 
 			public const double Efficiency = 0.98;
 

@@ -140,18 +140,11 @@ namespace TUGraz.VectoCore.Models.Declaration
 		
 		public bool AirDragMeasurementAllowed { get; internal set; }
 
-		public VehicleEquipment VehicleEquipment { get; internal set; }
+		public Dictionary<string, double> ElectricalConsumers { get; internal set; }
 
 		public Meter DeltaHeight { get; internal set; }
 	}
 
-	public class VehicleEquipment
-	{
-		public double? ExternalDisplays { get; internal set; }
-		public double? InternalDisplays { get; internal set; }
-		public double? Fridge { get; internal set; }
-		public double? KitchenStandard { get; internal set; }
-	}
 	
 	public class MissionTrailer
 	{

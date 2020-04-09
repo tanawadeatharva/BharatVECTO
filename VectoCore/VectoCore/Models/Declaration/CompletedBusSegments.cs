@@ -139,7 +139,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 						BusParameter = new BusParameters {
 							PassengerDensity = row.ParseDouble(missionType.ToString()).SI<PerSquareMeter>(),
 							AirDragMeasurementAllowed = row.ParseBoolean("airdragmeasurement"),
-							VehicleEquipment = GetVehicleEquipment(row),
+							ElectricalConsumers = GetVehicleEquipment(row),
 							DoubleDecker =  VehicleCodeHelper.Parse(row.Field<string>("vehiclecode")).IsDoubleDeckerBus(),
 							DeltaHeight = row.ParseDouble("deltaheight").SI<Meter>()
 						}
@@ -163,30 +163,18 @@ namespace TUGraz.VectoCore.Models.Declaration
 		}
 
 
-		private VehicleEquipment GetVehicleEquipment(DataRow row)
+		private Dictionary<string, double> GetVehicleEquipment(DataRow row)
 		{
-			var externalDisplays = row.Field<string>("externaldisplays") == string.Empty
-				? (double?)null
-				: row.ParseDouble("externaldisplays");
+			var retVal = new Dictionary<string, double>();
+			foreach (var electricalConsumer in DeclarationData.BusAuxiliaries.DefaultElectricConsumerList.Items) {
+				if (electricalConsumer.Bonus || electricalConsumer.DefaultConsumer) {
+					continue;
+				}
+				var caption = "es_" + electricalConsumer.ConsumerName.ToLowerInvariant().Replace(" ", "");
+				retVal[electricalConsumer.ConsumerName] = row.ParseDoubleOrGetDefault(caption);
+			}
 
-			var internalDisplays = row.Field<string>("internaldisplays") == string.Empty
-				? (double?)null
-				: row.ParseDouble("internaldisplays");
-
-			var fridge = row.Field<string>("fridge") == string.Empty
-				? (double?)null
-				: row.ParseDouble("fridge");
-
-			var kitchenStandard = row.Field<string>("kitchenStandard") == string.Empty
-				? (double?)null
-				: row.ParseDouble("kitchenStandard");
-
-			return new VehicleEquipment {
-				ExternalDisplays = externalDisplays,
-				InternalDisplays = internalDisplays,
-				Fridge = fridge,
-				KitchenStandard = kitchenStandard
-			};
+			return retVal;
 		}
 	}
 }
