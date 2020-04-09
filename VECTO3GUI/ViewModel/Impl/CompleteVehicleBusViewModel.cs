@@ -155,6 +155,9 @@ namespace VECTO3GUI.ViewModel.Impl
 
 		private void SetVehicleData(IVehicleDeclarationInputData vehicle)
 		{
+			if (vehicle == null)
+				return;
+
 			Manufacturer = vehicle.Manufacturer;
 			ManufacturerAddress = vehicle.ManufacturerAddress;
 			Model = vehicle.Model;

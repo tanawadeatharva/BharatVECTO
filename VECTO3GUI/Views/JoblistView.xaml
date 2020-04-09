@@ -7,16 +7,64 @@
              xmlns:helper="clr-namespace:VECTO3GUI.Helper"
              xmlns:impl="clr-namespace:VECTO3GUI.ViewModel.Impl"
              xmlns:interfaces="clr-namespace:VECTO3GUI.ViewModel.Interfaces"
+             xmlns:views="clr-namespace:VECTO3GUI.Views"
+             xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
              mc:Ignorable="d" 
-             d:DesignHeight="300" d:DesignWidth="600">
+             d:DesignHeight="300" d:DesignWidth="600"
+             d:DataContext="{d:DesignInstance Type=impl:JoblistViewModel, IsDesignTimeCreatable=False}">
+
+
+
     <d:JoblistView.DataContext>
         <x:Type Type="interfaces:IJoblistViewModel"/>
     </d:JoblistView.DataContext>
-    <UserControl.Resources>
+    
+    <!--<UserControl.Resources>
         <helper:JobEntrySelectedConverter x:Key="JobEntrySelectedConverter" />
+    </UserControl.Resources>-->
+
+
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="30"/>
+            <ColumnDefinition/>
+            <ColumnDefinition Width="80"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="30"/>
+            <RowDefinition/>
+            <RowDefinition Height="30"/>
+        </Grid.RowDefinitions>
+
+
+        <Grid Grid.Row="1" Grid.Column="1" Margin="10">
+            <DataGrid ItemsSource="{Binding Jobs}" mah:ControlsHelper.ContentCharacterCasing="Normal" 
+                      SelectedValue="{Binding DataContext.SelectedJobEntry, RelativeSource={RelativeSource AncestorType=views:JoblistView}}"
+                      Style="{DynamicResource AzureDataGrid}" BorderThickness="1" CanUserAddRows="False" AutoGenerateColumns="False" SelectionUnit="FullRow" 
+                      IsReadOnly="True" HeadersVisibility="All"  RowHeaderWidth="5" ColumnWidth="*" >
+                
+                
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="File Path" Binding="{Binding Filename}" MinWidth="150"/>
+                </DataGrid.Columns>
+            </DataGrid>
+        </Grid>
         
-    </UserControl.Resources>
-    <Grid Margin="0,0,10,0">
+        <Grid Grid.Row="1" Grid.Column="2" Margin="0,0,10,0">
+            <StackPanel Orientation="Vertical" Margin="0,30,0,0">
+                <Button Margin="0,5,0,0" Command="{Binding EditJob}" Content="Edit" mah:ControlsHelper.ContentCharacterCasing="Normal"/>
+                <Button Margin="0,5,0,0" Command="{Binding CreateNewJob}" Content="New File" mah:ControlsHelper.ContentCharacterCasing="Normal" />
+                <Button Margin="0,5,0,0" Command="{Binding RemoveJob}" Content="Remove File" mah:ControlsHelper.ContentCharacterCasing="Normal" />
+            </StackPanel>
+
+        </Grid>
+    </Grid>
+
+
+
+
+
+    <!--<Grid Margin="0,0,10,0">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*"/>
             <ColumnDefinition Width="70"/>
@@ -40,11 +88,11 @@
         </ListView>
         <StackPanel Grid.Column="1">
             <Button Margin="0,20,0,0" Command="{Binding EditJob}" CommandParameter="{Binding ElementName=Joblisting, Path=SelectedItem}">Edit</Button>
-            <Button Margin="0,15,0,0" Command="{Binding AddJob}">Add</Button>
+            <Button Margin="0,15,0,0" Command="{Binding AddJob}">New File</Button>
             <Button Margin="0,5,0,0" Command="{Binding RemoveJob}" CommandParameter="{Binding ElementName=Joblisting, Path=SelectedItem}">Remove</Button>
-            <Button Margin="0,5,0,0" Command="{Binding MoveJobUp}">Up</Button>
-            <Button Margin="0,5,0,0" Command="{Binding MoveJobDown}">Down</Button>
-            <Button Margin="0,20,0,0" Command="{Binding StartSimulation}">Start</Button>
+            --><!--<Button Margin="0,5,0,0" Command="{Binding MoveJobUp}">Up</Button>-->
+            <!--<Button Margin="0,5,0,0" Command="{Binding MoveJobDown}">Down</Button>-->
+            <!--<Button Margin="0,20,0,0" Command="{Binding StartSimulation}">Start</Button>--><!--
         </StackPanel>
-    </Grid>
+    </Grid>-->
 </UserControl>

@@ -12,24 +12,22 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
-using MahApps.Metro.Controls;
 using VECTO3GUI.ViewModel.Interfaces;
 
-namespace VECTO3GUI
+namespace VECTO3GUI.Views
 {
 	/// <summary>
-	/// Interaction logic for MainWindow.xaml
+	/// Interaction logic for JoblistTabView.xaml
 	/// </summary>
-	public partial class MainWindow : MetroWindow
+	public partial class JoblistTabView : UserControl
 	{
-
-		public MainWindow()
+		public JoblistTabView()
 		{
 			InitializeComponent();
-
 		}
 
-		public MainWindow(IMainWindowViewModel viewModel)
+
+		public JoblistTabView(IJobEditViewModel viewModel)
 		{
 			InitializeComponent();
 			DataContext = viewModel;

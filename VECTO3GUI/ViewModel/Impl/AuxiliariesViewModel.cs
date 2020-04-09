@@ -217,7 +217,7 @@ namespace VECTO3GUI.ViewModel.Impl
 			//			.If<IDeclarationInputDataProvider>(d => SetValues(d.JobInputData.Vehicle.Components.AuxiliaryInputData()))
 			//			.If<IEngineeringInputDataProvider>(e => SetValues(e.JobInputData.Vehicle.Components.AuxiliaryInputData()));
 
-			if (inputData.JobInputData.Vehicle.Components.BusAuxiliaries != null)
+			if (inputData?.JobInputData?.Vehicle?.Components?.BusAuxiliaries != null)
 				SetValues(inputData.JobInputData.Vehicle.Components.BusAuxiliaries);
 			
 			ConnectAxleViewModel();

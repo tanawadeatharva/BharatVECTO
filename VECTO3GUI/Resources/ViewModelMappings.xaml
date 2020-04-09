@@ -9,9 +9,18 @@
     <DataTemplate DataType="{x:Type impl:JoblistViewModel}">
         <views:JoblistView />
     </DataTemplate>
+
     <DataTemplate DataType="{x:Type impl:DeclarationJobViewModel}">
         <views:JobEditView/>
     </DataTemplate>
+
+
+
+
+
+   
+
+
     <DataTemplate DataType="{x:Type impl:EngineOnlyJobViewModel}">
         <views:JobEditView/>
     </DataTemplate>
@@ -26,9 +35,22 @@
         <views:JobEditView/>
     </DataTemplate>
 
-    <DataTemplate DataType="{x:Type impl:CompleteVehicleBusJobViewModel}">
+    <!--<DataTemplate DataType="{x:Type impl:CompleteVehicleBusJobViewModel}">
         <views:JobEditView/>
+    </DataTemplate>-->
+    
+<!--some test-->
+
+
+    <DataTemplate DataType="{x:Type impl:CompleteVehicleBusJobViewModel}">
+        <views:JoblistTabView/>
     </DataTemplate>
+
+
+<!--end test-->
+
+
+
 
     <DataTemplate DataType="{x:Type impl:PrimaryVehicleBusViewModel}">
         <declaration:PrimaryVehicleBusView/>

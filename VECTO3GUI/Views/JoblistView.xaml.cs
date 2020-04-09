@@ -29,21 +29,21 @@ namespace VECTO3GUI.Views
 			InitializeComponent();
 		}
 
-		public JoblistView(IJoblistViewModel viewModel)
-		{
-			InitializeComponent();
-			DataContext = viewModel;
-		}
+		//public JoblistView(IJoblistViewModel viewModel)
+		//{
+		//	InitializeComponent();
+		//	DataContext = viewModel;
+		//}
 
-		private void Joblisting_MouseDoubleClick(object sender, MouseButtonEventArgs e)
-		{
-			var listView = (ListView)sender;
-			if (listView.SelectedItems.Count == 0) {
-				return;
-			}
+		//private void Joblisting_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+		//{
+		//	var listView = (ListView)sender;
+		//	if (listView.SelectedItems.Count == 0) {
+		//		return;
+		//	}
 
-			var model = (IJoblistViewModel)DataContext;
-			model.EditJob.Execute(listView.SelectedItem);
-		}
+		//	var model = (IJoblistViewModel)DataContext;
+		//	model.EditJob.Execute(listView.SelectedItem);
+		//}
 	}
 }
