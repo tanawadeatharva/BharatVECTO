@@ -655,7 +655,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			}
 
 			var retVal = SetCommonAirdragData(airdragInputData);
-
+			retVal.CrossWindCorrectionMode = CrossWindCorrectionMode.DeclarationModeCorrection;
 			retVal.DeclaredAirdragArea = mission.MissionType == MissionType.Construction
 				? mission.DefaultCDxA
 				: airdragInputData.AirDragArea;
@@ -677,6 +677,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 
 			return new AirdragData() {
 				CertificationMethod = CertificationMethod.StandardValues,
+				CrossWindCorrectionMode = CrossWindCorrectionMode.DeclarationModeCorrection,
 				DeclaredAirdragArea = mission.DefaultCDxA,
 				CrossWindCorrectionCurve = new CrosswindCorrectionCdxALookup(
 					aerodynamicDragArea,

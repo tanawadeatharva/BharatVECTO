@@ -48,6 +48,9 @@ namespace TUGraz.VectoCore.Models.Declaration
 		
 		public Watt LookupPowerDemand(VehicleClass vehicleClass, MissionType mission, string technology)
 		{
+			if (string.IsNullOrWhiteSpace(technology)) {
+				technology = "Crankshaft mounted - Electronically controlled visco clutch";
+			}
 			if (!GetTechnologies().Contains(technology)) {
 				throw new VectoException($"Auxiliary Lookup Error: Unknown Fan technology: '{technology}'");
 			}
@@ -119,10 +122,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 
         public override AuxDemandEntry Lookup(MissionType mission, string technology, bool electrical)
         {
-			if (string.IsNullOrWhiteSpace(technology))
-            {
-                technology = "Crankshaft mounted - Electronically controlled visco clutch";
-            }
+			
 			var lookup = Tuple.Create(mission, technology, electrical);
 			if (Data.ContainsKey(lookup)) {
 				return Data[lookup];

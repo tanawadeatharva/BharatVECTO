@@ -42,10 +42,10 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.Electric
 			get { return ElectricalConsumers.Select(x => $"{x.Key}: {x.Value.Item2}  ({x.Value.Item1})").ToArray(); }
 		}
 
-		public Ampere AverageCurrentDemandInclBaseLoad { get { return ElectricalConsumers.Select(x => x.Value.Item2).Sum().Cast<Ampere>(); }  }
+		public Ampere AverageCurrentDemandInclBaseLoad { get { return ElectricalConsumers?.Select(x => x.Value.Item2).Sum().Cast<Ampere>() ?? 0.SI<Ampere>(); }  }
 
 		public Ampere AverageCurrentDemandWithoutBaseLoad { get {
-			return ElectricalConsumers.Where(x => !x.Value.Item1).Select(x => x.Value.Item2).Sum().Cast<Ampere>();
+			return ElectricalConsumers?.Where(x => !x.Value.Item1).Select(x => x.Value.Item2).Sum().Cast<Ampere>() ?? 0.SI<Ampere>();
 		}  }
 
 		public Watt MaxAlternatorPower { get; set; }

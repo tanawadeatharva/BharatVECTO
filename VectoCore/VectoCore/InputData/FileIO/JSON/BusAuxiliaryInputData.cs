@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using Newtonsoft.Json.Linq;
@@ -71,11 +72,17 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			// DoorActuationTimeSecond
 			electricalUserInputsConfig.DoorActuationTimeSecond = elData.GetEx<double>("DoorActuationTimeSecond").SI<Second>();
 
+			var averageCurrentDemandInclBaseLoad = elData["ElectricalConsumers"]
+				.GetEx<double>("AverageCurrentDemandInclBaseLoad").SI<Ampere>();
+			var averageCurrentDemandWithoutBaseLoad = elData["ElectricalConsumers"]
+				.GetEx<double>("AverageCurrentDemandWithoutBaseLoad").SI<Ampere>();
 
-			//electricalUserInputsConfig.AverageCurrentDemandInclBaseLoad = elData["ElectricalConsumers"]
-			//	.GetEx<double>("AverageCurrentDemandInclBaseLoad").SI<Ampere>();
-			//electricalUserInputsConfig.AverageCurrentDemandWithoutBaseLoad = elData["ElectricalConsumers"]
-				//.GetEx<double>("AverageCurrentDemandWithoutBaseLoad").SI<Ampere>();
+			electricalUserInputsConfig.ElectricalConsumers = new Dictionary<string, Tuple<bool, Ampere>>();
+			electricalUserInputsConfig.ElectricalConsumers["BaseLoad"] =
+				Tuple.Create(true, averageCurrentDemandInclBaseLoad - averageCurrentDemandWithoutBaseLoad);
+
+			electricalUserInputsConfig.ElectricalConsumers["Consumers"] =
+				Tuple.Create(false, averageCurrentDemandWithoutBaseLoad);
 
 			// PowerNetVoltage
 			electricalUserInputsConfig.PowerNetVoltage = elData.GetEx<double>("PowerNetVoltage").SI<Volt>();

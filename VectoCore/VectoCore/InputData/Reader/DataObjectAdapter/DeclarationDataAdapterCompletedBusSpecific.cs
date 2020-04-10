@@ -65,6 +65,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			}
 
 			var retVal = SetCommonAirdragData(completedVehicle.Components.AirdragInputData);
+			retVal.CrossWindCorrectionMode = CrossWindCorrectionMode.DeclarationModeCorrection;
 			var aerodynamicDragArea = completedVehicle.Components.AirdragInputData.AirDragArea;
 
 			retVal.DeclaredAirdragArea = aerodynamicDragArea;
