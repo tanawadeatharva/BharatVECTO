@@ -45,7 +45,7 @@ namespace TUGraz.VectoCore.OutputData.FileIO
 	{
 		private readonly string _jobFile;
 
-		private string BasePath
+		public string BasePath
 		{
 			get { return Path.GetDirectoryName(_jobFile); }
 		}
