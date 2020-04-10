@@ -13,6 +13,7 @@ namespace VECTO3GUI.ViewModel.Impl
 		private SquareMeter _declaredCdxA;
 		private bool _useStandardValues;
 		private string _appVersion;
+		private IAirdragDeclarationInputData _airdragData;
 
 		#region Implementation of IAirdragViewModel
 
@@ -73,6 +74,21 @@ namespace VECTO3GUI.ViewModel.Impl
 			Date = airdrag.Date;
 			AppVersion = airdrag.AppVersion;
 			DeclaredCdxA = airdrag.AirDragArea;
+		}
+
+		public override bool AnyDataChanges()
+		{
+			if(_airdragData == null)
+				return base.AnyDataChanges();
+
+			var changed = _airdragData.Model != Model ||
+					_airdragData.Manufacturer != Manufacturer ||
+					_airdragData.CertificationNumber != CertificationNumber ||
+					_airdragData.Date != Date ||
+					_airdragData.AppVersion != AppVersion ||
+					_airdragData.AirDragArea != DeclaredCdxA;
+
+			return changed;
 		}
 	}
 }

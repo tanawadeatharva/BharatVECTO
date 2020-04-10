@@ -22,6 +22,8 @@ using VECTO3GUI.ViewModel.Interfaces;
 using System.Xml;
 using System.Xml.Linq;
 using TUGraz.VectoCommon.Resources;
+using VECTO3GUI.Helper;
+using VECTO3GUI.Views;
 
 
 namespace VECTO3GUI.ViewModel.Impl
@@ -42,6 +44,7 @@ namespace VECTO3GUI.ViewModel.Impl
 		private ICommand _newJobCommand;
 		private ICommand _editJobCommand;
 		private ICommand _removeJobCommand;
+		private ICommand _addJobCommand;
 		
 
 		#endregion
@@ -109,8 +112,13 @@ namespace VECTO3GUI.ViewModel.Impl
 			try
 			{
 				var jobEditView = ReadJob(entry.Filename); //Kernel.Get<IJobEditViewModel>();
-				var wnd = new Window { Content = jobEditView };
-				wnd.Show();
+				if(jobEditView == null)
+					return;
+
+
+				var window = OutputWindowHelper.CreateOutputWindow(Kernel, jobEditView);
+				window.Show();
+
 			}
 			catch (Exception e)
 			{
@@ -136,7 +144,22 @@ namespace VECTO3GUI.ViewModel.Impl
 
 
 
-		public ICommand AddJob { get { return new RelayCommand(() => {}, () => false); } }
+		public ICommand AddJob { get { return _addJobCommand ?? new RelayCommand(DoAddJob); } }
+
+		private void DoAddJob()
+		{
+			var filePath =  FileDialogHelper.ShowSelectFilesDialog(false, @"F:\VECTO\VECTO\bin");
+			if (filePath != null) {
+				_jobs.Add(new JobEntry()
+				{
+					Filename = filePath.First(),
+					Selected = false,
+					Sorting = _jobs.Count
+				});
+			}
+		}
+
+
 		public ICommand MoveJobUp { get { return new RelayCommand(() => {}, () => false); } }
 		public ICommand MoveJobDown { get { return new RelayCommand(() => {}, () => false); } }
 		public ICommand StartSimulation { get { return new RelayCommand(() => {}, () => false); } }

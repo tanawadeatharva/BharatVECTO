@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -11,20 +10,17 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
 using System.Windows.Shapes;
-using VECTO3GUI.ViewModel;
-using VECTO3GUI.ViewModel.Impl;
-using VECTO3GUI.ViewModel.Interfaces;
+using MahApps.Metro.Controls;
 
 namespace VECTO3GUI.Views
 {
 	/// <summary>
-	/// Interaction logic for HomeView.xaml
+	/// Interaction logic for OutputWindow.xaml
 	/// </summary>
-	public partial class JoblistView : UserControl
+	public partial class OutputWindow : MetroWindow
 	{
-		public JoblistView()
+		public OutputWindow()
 		{
 			InitializeComponent();
 		}

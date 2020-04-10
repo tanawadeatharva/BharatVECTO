@@ -15,5 +15,7 @@ namespace VECTO3GUI.ViewModel.Interfaces {
 		IComponentViewModel ParentViewModel { get; set; }
 
 		IComponentViewModel GetComponentViewModel(Component component);
+
+		bool AnyDataChanges();
 	}
 }

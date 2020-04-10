@@ -13,16 +13,9 @@
              d:DesignHeight="300" d:DesignWidth="600"
              d:DataContext="{d:DesignInstance Type=impl:JoblistViewModel, IsDesignTimeCreatable=False}">
 
-
-
     <d:JoblistView.DataContext>
         <x:Type Type="interfaces:IJoblistViewModel"/>
     </d:JoblistView.DataContext>
-    
-    <!--<UserControl.Resources>
-        <helper:JobEntrySelectedConverter x:Key="JobEntrySelectedConverter" />
-    </UserControl.Resources>-->
-
 
     <Grid>
         <Grid.ColumnDefinitions>
@@ -36,25 +29,39 @@
             <RowDefinition Height="30"/>
         </Grid.RowDefinitions>
 
-
         <Grid Grid.Row="1" Grid.Column="1" Margin="10">
-            <DataGrid ItemsSource="{Binding Jobs}" mah:ControlsHelper.ContentCharacterCasing="Normal" 
+            <DataGrid ItemsSource="{Binding Jobs}" 
                       SelectedValue="{Binding DataContext.SelectedJobEntry, RelativeSource={RelativeSource AncestorType=views:JoblistView}}"
                       Style="{DynamicResource AzureDataGrid}" BorderThickness="1" CanUserAddRows="False" AutoGenerateColumns="False" SelectionUnit="FullRow" 
                       IsReadOnly="True" HeadersVisibility="All"  RowHeaderWidth="5" ColumnWidth="*" >
-                
-                
+
+
+                <DataGrid.Resources>
+                    <ContextMenu x:Key="RowMenu">
+                        <MenuItem Header="Remove" Command="{Binding DataContext.RemoveJob, RelativeSource={RelativeSource AncestorType=views:JoblistView}}"/>
+                        <MenuItem Header="Edit" Command="{Binding DataContext.EditJob, RelativeSource={RelativeSource AncestorType=views:JoblistView}}"/>
+                        <MenuItem Header="Add File" Command="{Binding DataContext.AddJob, RelativeSource={RelativeSource AncestorType=views:JoblistView}}"/>
+                    </ContextMenu>
+                </DataGrid.Resources>
+
                 <DataGrid.Columns>
-                    <DataGridTextColumn Header="File Path" Binding="{Binding Filename}" MinWidth="150"/>
+                    <DataGridTextColumn Header="File Path" Binding="{Binding Filename}">
+                        <DataGridTextColumn.CellStyle>
+                            <Style TargetType= "{x:Type DataGridCell}" BasedOn="{StaticResource MetroDataGridCell}" >
+                                <Setter Property="ContextMenu" Value="{StaticResource RowMenu}"/>
+                            </Style>
+                        </DataGridTextColumn.CellStyle>
+                    </DataGridTextColumn>
                 </DataGrid.Columns>
+
             </DataGrid>
         </Grid>
-        
+
         <Grid Grid.Row="1" Grid.Column="2" Margin="0,0,10,0">
             <StackPanel Orientation="Vertical" Margin="0,30,0,0">
-                <Button Margin="0,5,0,0" Command="{Binding EditJob}" Content="Edit" mah:ControlsHelper.ContentCharacterCasing="Normal"/>
-                <Button Margin="0,5,0,0" Command="{Binding CreateNewJob}" Content="New File" mah:ControlsHelper.ContentCharacterCasing="Normal" />
-                <Button Margin="0,5,0,0" Command="{Binding RemoveJob}" Content="Remove File" mah:ControlsHelper.ContentCharacterCasing="Normal" />
+                <Button Margin="0,5,0,0" Command="{Binding EditJob}" Content="Edit" />
+                <Button Margin="0,5,0,0" Command="{Binding CreateNewJob}" Content="New File"  />
+                <Button Margin="0,5,0,0" Command="{Binding RemoveJob}" Content="Remove File"  />
             </StackPanel>
 
         </Grid>
@@ -64,35 +71,5 @@
 
 
 
-    <!--<Grid Margin="0,0,10,0">
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="*"/>
-            <ColumnDefinition Width="70"/>
-        </Grid.ColumnDefinitions>
-        <ListView x:Name="Joblisting" Height="156" Margin="10,10,10,0" VerticalAlignment="Top" Grid.Column="0"
-            ItemsSource="{Binding Jobs}" MouseDoubleClick="Joblisting_MouseDoubleClick">
-            <ListView.View>
-                <GridView>
-                    <GridViewColumn Width="30">
-                        <GridViewColumn.CellTemplate>
-                            <DataTemplate DataType="impl:JobEntry">
-                                <StackPanel Orientation="Horizontal">
-                                    <CheckBox IsChecked="{Binding Path=Selected}"/>
-                                </StackPanel>
-                            </DataTemplate>
-                        </GridViewColumn.CellTemplate>
-                    </GridViewColumn>
-                    <GridViewColumn Header="Filepath" Width="auto" DisplayMemberBinding="{Binding Filename}"/>
-                </GridView>
-            </ListView.View>
-        </ListView>
-        <StackPanel Grid.Column="1">
-            <Button Margin="0,20,0,0" Command="{Binding EditJob}" CommandParameter="{Binding ElementName=Joblisting, Path=SelectedItem}">Edit</Button>
-            <Button Margin="0,15,0,0" Command="{Binding AddJob}">New File</Button>
-            <Button Margin="0,5,0,0" Command="{Binding RemoveJob}" CommandParameter="{Binding ElementName=Joblisting, Path=SelectedItem}">Remove</Button>
-            --><!--<Button Margin="0,5,0,0" Command="{Binding MoveJobUp}">Up</Button>-->
-            <!--<Button Margin="0,5,0,0" Command="{Binding MoveJobDown}">Down</Button>-->
-            <!--<Button Margin="0,20,0,0" Command="{Binding StartSimulation}">Start</Button>--><!--
-        </StackPanel>
-    </Grid>-->
+
 </UserControl>

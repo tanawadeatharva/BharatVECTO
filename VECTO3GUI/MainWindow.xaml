@@ -8,7 +8,7 @@
         xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
         xmlns:impl="clr-namespace:VECTO3GUI.ViewModel.Impl"
         mc:Ignorable="d"
-        Title="VECTO 3" Height="515.36" Width="972.48" 
+        Title="VECTO 3" Height="515.36" Width="972.48" WindowStartupLocation="CenterScreen"
         d:DataContext="{d:DesignInstance Type=impl:MainWindowViewModel, IsDesignTimeCreatable=False}">
 
     <Grid>

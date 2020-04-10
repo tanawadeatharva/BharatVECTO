@@ -19,6 +19,8 @@ namespace VECTO3GUI.ViewModel.Impl
 
 		#region Members
 
+		private IVehicleDeclarationInputData _vehicle;
+
 		private string _manufacturer;
 		private string _manufacturerAddress;
 		private string _model;
@@ -142,14 +144,14 @@ namespace VECTO3GUI.ViewModel.Impl
 
 		#endregion
 
-
-
+		
 		#region Set XML Data
 
 		protected override void InputDataChanged()
 		{
 			var inputData = JobViewModel.InputDataProvider as IDeclarationInputDataProvider;
-			SetVehicleData(inputData?.JobInputData.Vehicle);
+			_vehicle = inputData?.JobInputData.Vehicle;
+			SetVehicleData(_vehicle);
 			SetAllowedEntries();
 		}
 
@@ -196,5 +198,32 @@ namespace VECTO3GUI.ViewModel.Impl
 		
 		#endregion
 
+		public override bool AnyDataChanges()
+		{
+			if(_vehicle == null)
+				return base.AnyDataChanges();
+
+			var changed = _vehicle.Manufacturer != Manufacturer ||
+			 _vehicle.ManufacturerAddress != ManufacturerAddress ||
+			 _vehicle.Model != Model ||
+			 _vehicle.VIN != VIN ||
+			 _vehicle.Date != Date ||
+			 _vehicle.LegislativeClass != LegislativeClass ||
+			 _vehicle.RegisteredClass != RegisteredClass ||
+			 _vehicle.VehicleCode != VehicleCode ||
+			 _vehicle.CurbMassChassis != CurbMassChassis ||
+			 _vehicle.GrossVehicleMassRating != TechnicalPermissibleMaximumLadenMass ||
+			 _vehicle.NumberOfPassengersLowerDeck != NumberOfPassengersLowerDeck ||
+			 _vehicle.NuberOfPassengersUpperDeck != NumberOfPassengersUpperDeck ||
+			 _vehicle.FloorType != FloorType ||
+			 _vehicle.Height != HeightIntegratedBody ||
+			 _vehicle.Length != VehicleLength ||
+			 _vehicle.Width != VehicleWidth ||
+			 _vehicle.EntranceHeight != EntranceHeight||
+			 ((XMLDeclarationCompletedBusDataProviderV26)_vehicle).DoorDriveTechnology != DoorDriveTechnology;
+
+			return changed;
+		}
 	}
+
 }

@@ -13,6 +13,8 @@ namespace VECTO3GUI.Helper
 {
 	public static class FileDialogHelper
 	{
+		private const string XMLFilter = "XML Files (*.xml)|*.xml|All Files (*.*)|*.*";
+
 
 		public static string[] ShowSelectFilesDialog(bool multiselect, string initialDirectory = null)
 		{
@@ -20,6 +22,7 @@ namespace VECTO3GUI.Helper
 			{
 				openFileDialog.InitialDirectory = initialDirectory;
 				openFileDialog.Multiselect = multiselect;
+				openFileDialog.Filter = XMLFilter;
 				var result = openFileDialog.ShowDialog();
 
 				if (result == DialogResult.OK)

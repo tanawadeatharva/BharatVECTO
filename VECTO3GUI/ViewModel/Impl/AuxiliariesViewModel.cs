@@ -32,6 +32,7 @@ namespace VECTO3GUI.ViewModel.Impl
 		private string _hvacTechnology;
 		private readonly ObservableCollection<SteeringPumpEntry> _steeringPumpTechnologies = new ObservableCollection<SteeringPumpEntry>();
 		private IAxlesViewModel axlesViewModel;
+		private IBusAuxiliariesDeclarationData _busAuxiliaries;
 
 		private ObservableCollection<string> _alternatorTechnologies;
 		private bool _dayRunningLightsLED;
@@ -217,9 +218,11 @@ namespace VECTO3GUI.ViewModel.Impl
 			//			.If<IDeclarationInputDataProvider>(d => SetValues(d.JobInputData.Vehicle.Components.AuxiliaryInputData()))
 			//			.If<IEngineeringInputDataProvider>(e => SetValues(e.JobInputData.Vehicle.Components.AuxiliaryInputData()));
 
-			if (inputData?.JobInputData?.Vehicle?.Components?.BusAuxiliaries != null)
+			if (inputData?.JobInputData?.Vehicle?.Components?.BusAuxiliaries != null) {
 				SetValues(inputData.JobInputData.Vehicle.Components.BusAuxiliaries);
-			
+				_busAuxiliaries = inputData.JobInputData.Vehicle.Components.BusAuxiliaries;
+			}
+
 			ConnectAxleViewModel();
 		}
 
@@ -284,7 +287,7 @@ namespace VECTO3GUI.ViewModel.Impl
 		{
 			if (!busAux.ElectricSupply.Alternators.IsNullOrEmpty()) {
 				AlternatorTechnologies = new ObservableCollection<string>();
-
+				
 				for (int i = 0; i < busAux.ElectricSupply.Alternators.Count; i++) {
 					AlternatorTechnologies.Add(busAux.ElectricSupply.Alternators[i].Technology);
 				}
@@ -322,6 +325,37 @@ namespace VECTO3GUI.ViewModel.Impl
 
 			AllowedConsumerTechnologies = Enum.GetValues(typeof(ConsumerTechnology)).Cast<ConsumerTechnology>()
 				.Select(sc => AllowedEntry.Create(sc, sc.GetLabel())).ToArray();
+		}
+
+		public override bool AnyDataChanges()
+		{
+			if(_busAuxiliaries == null)
+				return base.AnyDataChanges();
+
+			bool changed;
+
+			if (!_busAuxiliaries.ElectricSupply.Alternators.IsNullOrEmpty()) {
+				//ToDo
+				//Changed Event?!
+			}
+
+
+			changed = _busAuxiliaries.ElectricConsumers.DayrunninglightsLED != DayrunninglightsLED ||
+					_busAuxiliaries.ElectricConsumers.HeadlightsLED != HeadlightsLED ||
+					_busAuxiliaries.ElectricConsumers.PositionlightsLED != PositionlightsLED ||
+					_busAuxiliaries.ElectricConsumers.BrakelightsLED != BrakelightsLED ||
+					_busAuxiliaries.ElectricConsumers.InteriorLightsLED != InteriorLightsLED ||
+					_busAuxiliaries.PneumaticConsumers.DoorDriveTechnology != DoorDriveTechnology ||
+					_busAuxiliaries.HVACAux.SystemConfiguration != SystemConfiguration ||
+					_busAuxiliaries.HVACAux.CompressorTypeDriver != CompressorTypeDriver ||
+					_busAuxiliaries.HVACAux.CompressorTypePassenger != CompressorTypePassenger ||
+					_busAuxiliaries.HVACAux.AuxHeaterPower != AuxHeaterPower ||
+					_busAuxiliaries.HVACAux.DoubleGlasing != DoubleGlasing ||
+					_busAuxiliaries.HVACAux.HeatPump != HeatPump ||
+					_busAuxiliaries.HVACAux.AdjustableAuxiliaryHeater != AdjustableAuxiliaryHeater ||
+					_busAuxiliaries.HVACAux.SeparateAirDistributionDucts != SeparateAirDistributionDucts;
+
+			return changed;
 		}
 	}
 }
