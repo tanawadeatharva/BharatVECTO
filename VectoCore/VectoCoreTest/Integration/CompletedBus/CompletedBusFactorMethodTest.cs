@@ -39,7 +39,7 @@ namespace TUGraz.VectoCore.Tests.Integration.CompletedBus
 		const string JobFile_Group42 = @"TestData\Integration\Buses\FactorMethod\CompletedBus_42-33b.vecto";
 
 		const string JobFilePrimary41 = @"TestData\Integration\Buses\FactorMethod\primary_heavyBus group41_nonSmart.xml";
-		const string JobFilePrimary42 = @"ETestData\Integration\Buses\FactorMethod\primary_heavyBus group42_SmartPS.xml";
+		const string JobFilePrimary42 = @"TestData\Integration\Buses\FactorMethod\primary_heavyBus group42_SmartPS.xml";
 
 		protected IXMLInputDataReader xmlInputReader;
 
