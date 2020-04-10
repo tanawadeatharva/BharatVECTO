@@ -319,7 +319,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			return DoCreateGearboxData(inputData, runData, shiftPolygonCalc);
 		}
 
-		public static GearboxData DoCreateGearboxData(IVehicleDeclarationInputData inputData, VectoRunData runData,
+		public virtual GearboxData DoCreateGearboxData(IVehicleDeclarationInputData inputData, VectoRunData runData,
 			IShiftPolygonCalculator shiftPolygonCalc)
 		{ 
 			var gearbox = inputData.Components.GearboxInputData;
@@ -405,24 +405,8 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 				var ratio = double.IsNaN(retVal.Gears[1].Ratio) ? 1 : retVal.Gears[1].TorqueConverterRatio / retVal.Gears[1].Ratio;
 				retVal.PowershiftShiftTime = DeclarationData.Gearbox.PowershiftShiftTime;
 
-				if (vehicleCategory == VehicleCategory.GenericBusVehicle) {
-					var fileStream = RessourceHelper.ReadStream(DeclarationData.FactorMethodBus.GenericTorqueConvert);
-					retVal.TorqueConverterData = TorqueConverterDataReader.ReadFromStream(fileStream,
-						DeclarationData.TorqueConverter.ReferenceRPM,
-						DeclarationData.TorqueConverter.MaxInputSpeed,
-						ExecutionMode.Declaration,
-						ratio,
-						DeclarationData.TorqueConverter.CLUpshiftMinAcceleration,
-						DeclarationData.TorqueConverter.CCUpshiftMinAcceleration);
-				} else {
-					retVal.TorqueConverterData = TorqueConverterDataReader.Create(
-						torqueConverter.TCData,
-						DeclarationData.TorqueConverter.ReferenceRPM, DeclarationData.TorqueConverter.MaxInputSpeed,
-						ExecutionMode.Declaration, ratio,
-						DeclarationData.TorqueConverter.CLUpshiftMinAcceleration,
-						DeclarationData.TorqueConverter.CCUpshiftMinAcceleration);
-				}
-
+				retVal.TorqueConverterData = CreateTorqueConverterData(torqueConverter, ratio, engine);
+				
 				if (torqueConverter != null) {
 					retVal.TorqueConverterData.ModelName = torqueConverter.Model;
 					retVal.TorqueConverterData.DigestValueInput = torqueConverter.DigestValue?.DigestValue;
@@ -434,7 +418,17 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			return retVal;
 		}
 
-		private static void CreateATGearData(
+		protected virtual TorqueConverterData CreateTorqueConverterData(ITorqueConverterDeclarationInputData torqueConverter, double ratio, CombustionEngineData componentsEngineInputData)
+		{
+			return TorqueConverterDataReader.Create(
+				torqueConverter.TCData,
+				DeclarationData.TorqueConverter.ReferenceRPM, DeclarationData.TorqueConverter.MaxInputSpeed,
+				ExecutionMode.Declaration, ratio,
+				DeclarationData.TorqueConverter.CLUpshiftMinAcceleration,
+				DeclarationData.TorqueConverter.CCUpshiftMinAcceleration);
+		}
+
+		protected virtual void CreateATGearData(
 			IGearboxDeclarationInputData gearbox, uint i, GearData gearData,
 			ShiftPolygon tcShiftPolygon, double gearDifferenceRatio, Dictionary<uint, GearData> gears,
 			VehicleCategory vehicleCategory)

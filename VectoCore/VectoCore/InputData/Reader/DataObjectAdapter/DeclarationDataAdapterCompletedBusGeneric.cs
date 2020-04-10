@@ -17,17 +17,70 @@ using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.SimulationComponent;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
+using TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox;
 using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 {
 	public class DeclarationDataAdapterCompletedBusGeneric : DeclarationDataAdapterPrimaryBus
 	{
-		internal CombustionEngineData CreateEngineData(IVehicleDeclarationInputData primaryVehicle)
+		private readonly GenericTransmissionComponentData _genericPowertrainData = new GenericTransmissionComponentData();
+		private readonly GenericBusRetarderData _genericRetarderData = new GenericBusRetarderData();
+		private readonly GenericTorqueConverterData _genericTorqueConverterData = new GenericTorqueConverterData();
+
+		public const double GearEfficiencyDirectGear = 0.98;
+		public const double GearEfficiencyIndirectGear = 0.96;
+
+
+		
+
+		// The model parameters for the completed bus with generic power train and generic body is basically the same as the primary bus
+		// only powertrain components are different
+
+		
+		public CombustionEngineData CreateEngineData(IVehicleDeclarationInputData primaryVehicle)
 		{
 			return GenericBusEngineData.Instance.CreateGenericBusEngineData(primaryVehicle);
 		}
 
+		#region Overrides of DeclarationDataAdapterHeavyLorry
 
+		public override AxleGearData CreateAxleGearData(IAxleGearInputData axlegearData)
+		{
+			return _genericPowertrainData.CreateGenericBusAxlegearData(axlegearData);
+		}
+
+		public override AngledriveData CreateAngledriveData(IAngledriveInputData data)
+		{
+			return _genericPowertrainData.CreateGenericBusAngledriveData(data);
+		}
+
+
+		public override RetarderData CreateRetarderData(IRetarderInputData retarder)
+		{
+			return _genericRetarderData.CreateGenericBusRetarderData(retarder);
+		}
+
+		#endregion
+
+		#region Overrides of AbstractSimulationDataAdapter
+
+		protected override TransmissionLossMap CreateGearLossMap(
+			ITransmissionInputData gear, uint i, bool useEfficiencyFallback, VehicleCategory vehicleCategory)
+		{
+			return TransmissionLossMapReader.Create(
+				gear.Ratio.IsEqual(1) ? GearEfficiencyDirectGear :GearEfficiencyIndirectGear, gear.Ratio, $"Gear {i + 1}");
+		}
+
+		#endregion
+
+		#region Overrides of DeclarationDataAdapterHeavyLorry
+
+		protected override TorqueConverterData CreateTorqueConverterData(ITorqueConverterDeclarationInputData torqueConverter, double ratio, CombustionEngineData engineData)
+		{
+			return _genericTorqueConverterData.CreateTorqueConverterData(ratio, engineData);
+		}
+
+		#endregion
 	}
 }

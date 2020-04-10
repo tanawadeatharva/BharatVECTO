@@ -115,10 +115,10 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 
 			_combustionEngineData = DataAdapterGeneric.CreateEngineData(PrimaryVehicle);
 
-			_axlegearData = GenericTransmissionComponentData.Instance.CreateGenericBusAxlegearData(PrimaryVehicle.Components.AxleGearInputData);
+			_axlegearData = DataAdapterGeneric.CreateAxleGearData(PrimaryVehicle.Components.AxleGearInputData);
 
-			_angledriveData = GenericTransmissionComponentData.Instance.CreateGenericBusAngledriveData(PrimaryVehicle.Components.AngledriveInputData);
-
+			_angledriveData = DataAdapterGeneric.CreateAngledriveData(PrimaryVehicle.Components.AngledriveInputData);
+			
 			var tmpRunData = new VectoRunData() {
 				ShiftStrategy = InputDataProvider.JobInputData.ShiftStrategy,
 				GearboxData = new GearboxData() {
@@ -127,14 +127,14 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 			};
 			var tmpStrategy = PowertrainBuilder.GetShiftStrategy(tmpRunData, new SimplePowertrainContainer(tmpRunData));
 			
-			_gearboxData = GenericTransmissionComponentData.Instance.CreateGearboxData(PrimaryVehicle,
-				new VectoRunData() { EngineData = _combustionEngineData, AxleGearData = _axlegearData, VehicleData = tmpVehicleData },
+			_gearboxData = DataAdapterGeneric.CreateGearboxData(PrimaryVehicle, new VectoRunData() { EngineData = _combustionEngineData, AxleGearData = _axlegearData, VehicleData = tmpVehicleData },
 				tmpStrategy);
 
 			_gearshiftData = DataAdapterGeneric.CreateGearshiftData(
 				_gearboxData, _axlegearData.AxleGear.Ratio * (_angledriveData?.Angledrive.Ratio ?? 1.0), _combustionEngineData.IdleSpeed);
 
-			_retarderData = GenericBusRetarderData.Instance.CreateGenericBusRetarderData(PrimaryVehicle.Components.RetarderInputData);
+			_retarderData = DataAdapterGeneric.CreateRetarderData(PrimaryVehicle.Components.RetarderInputData);
+				
 
 			_driverData = DataAdapterGeneric.CreateDriverData();
 			_driverData.AccelerationCurve = AccelerationCurveReader.ReadFromStream(_segmentCompletedBus.AccelerationFile);

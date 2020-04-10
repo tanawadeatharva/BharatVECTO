@@ -321,10 +321,10 @@
     <Compile Include="Models\BusAuxiliaries\DownstreamModules\Impl\HVAC\SSMRun.cs" />
     <Compile Include="Models\BusAuxiliaries\DownstreamModules\Impl\HVAC\SSMTOOL.cs" />
     <Compile Include="Models\Declaration\CompletedBusSegments.cs" />
-    <Compile Include="Models\Declaration\GenericTransmissionComponentData.cs" />
-    <Compile Include="Models\Declaration\GenericBusDriverData.cs" />
-    <Compile Include="Models\Declaration\GenericBusEngineData.cs" />
-    <Compile Include="Models\Declaration\GenericBusRetarderData.cs" />
+    <Compile Include="Models\GenericModelData\GenericTorqueConverterData.cs" />
+    <Compile Include="Models\GenericModelData\GenericTransmissionComponentData.cs" />
+    <Compile Include="Models\GenericModelData\GenericBusEngineData.cs" />
+    <Compile Include="Models\GenericModelData\GenericBusRetarderData.cs" />
     <Compile Include="Models\Declaration\SSMTechnology.cs" />
     <Compile Include="Models\BusAuxiliaries\DownstreamModules\Impl\M06Impl.cs" />
     <Compile Include="Models\BusAuxiliaries\DownstreamModules\Impl\M07Impl.cs" />
@@ -903,7 +903,6 @@
     <EmbeddedResource Include="Resources\Declaration\CompletedBusSegmentationTable.csv" />
     <EmbeddedResource Include="Resources\Declaration\GenericBusData\EngineConsumptionMap_CI_Normed.vmap" />
     <EmbeddedResource Include="Resources\Declaration\GenericBusData\EngineConsumptionMap_PI_Normed.vmap" />
-    <EmbeddedResource Include="Resources\Declaration\GenericBusData\GenericTorqueConverter.csv" />
     <None Include="Resources\Declaration\VAUXBus\SP-AxleFactor.csv" />
     <None Include="Resources\Declaration\VAUXBus\SP-Axles_Bus.csv" />
     <None Include="Resources\Declaration\VAUXBus\SP-Factors_Bus.csv" />

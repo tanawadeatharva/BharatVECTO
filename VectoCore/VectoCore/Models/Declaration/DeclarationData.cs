@@ -137,26 +137,8 @@ namespace TUGraz.VectoCore.Models.Declaration
 						grossVehicleWeight - curbWeight).Value() / 100, 0) * 100).SI<Kilogram>();
 		}
 
-		public static int PoweredAxle()
-		{
-			return 1;
-		}
-
-		public static class FactorMethodBus
-		{
-			public static string GenericTorqueConvert =
-				$"{DeclarationDataResourcePrefix}.GenericBusData.GenericTorqueConverter.csv";
-
-			public const double GearEfficiencyDirectGear = 0.98;
-
-			public const double GearEfficiencyIndirectGear = 0.96;
-
-
-		}
-
-
-
-
+		
+		
 
 		public static class BusAuxiliaries
 		{

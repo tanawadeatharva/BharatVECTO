@@ -172,13 +172,8 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			};
 		}
 
-		protected static TransmissionLossMap CreateGearLossMap(ITransmissionInputData gear, uint i, bool useEfficiencyFallback, VehicleCategory vehicleCategory )
+		protected virtual TransmissionLossMap CreateGearLossMap(ITransmissionInputData gear, uint i, bool useEfficiencyFallback, VehicleCategory vehicleCategory )
 		{
-			if (vehicleCategory == VehicleCategory.GenericBusVehicle) {
-				return gear.Ratio.IsEqual(1)
-					? TransmissionLossMapReader.Create(DeclarationData.FactorMethodBus.GearEfficiencyDirectGear, gear.Ratio, $"Gear {i + 1}")
-					: TransmissionLossMapReader.Create(DeclarationData.FactorMethodBus.GearEfficiencyIndirectGear, gear.Ratio, $"Gear {i + 1}");
-			}
 			if (gear.LossMap != null) {
 				return TransmissionLossMapReader.Create(gear.LossMap, gear.Ratio, string.Format("Gear {0}", i + 1), true);
 			}

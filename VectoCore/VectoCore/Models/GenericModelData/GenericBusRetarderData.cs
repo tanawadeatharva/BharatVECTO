@@ -11,14 +11,6 @@ namespace TUGraz.VectoCore.Models.Declaration
 {
 	public class GenericBusRetarderData
 	{
-		private static GenericBusRetarderData _instance;
-
-		public static GenericBusRetarderData Instance
-		{
-			get { return _instance ?? (_instance = new GenericBusRetarderData()); }
-		}
-
-		protected GenericBusRetarderData() { }
 
 		public RetarderData CreateGenericBusRetarderData(IRetarderInputData retarderInput)
 		{

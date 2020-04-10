@@ -21,8 +21,6 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 	public class DeclarationDataAdapterCompletedBusSpecific : DeclarationDataAdapterCompletedBusGeneric
 	{
 
-		
-		
 		public VehicleData CreateVehicleData(IVehicleDeclarationInputData primaryVehicle,
 			IVehicleDeclarationInputData completedVehicle, Mission mission, 
 			KeyValuePair<LoadingType, Tuple<Kilogram, double?>> loading)

@@ -16,23 +16,13 @@ namespace TUGraz.VectoCore.Models.Declaration
 {
 	public class GenericTransmissionComponentData
 	{
-		private static GenericTransmissionComponentData _instance;
-
-		public static GenericTransmissionComponentData Instance
-		{
-			get { return _instance ?? (_instance = new GenericTransmissionComponentData()); }
-		}
-
-		protected GenericTransmissionComponentData () { }
-
-		//public DataTable AxleGearInputLossMap { get; private set; }
-
-		public GearboxData CreateGearboxData(
-			IVehicleDeclarationInputData primaryVehicle, VectoRunData runData,
-			IShiftPolygonCalculator shiftPolygonCalc)
-		{
-			return DeclarationDataAdapterHeavyLorry.DoCreateGearboxData(primaryVehicle, runData, shiftPolygonCalc);
-		}
+		
+		//public GearboxData CreateGearboxData(
+		//	IVehicleDeclarationInputData primaryVehicle, VectoRunData runData,
+		//	IShiftPolygonCalculator shiftPolygonCalc)
+		//{
+		//	return DeclarationDataAdapterHeavyLorry.DoCreateGearboxData(primaryVehicle, runData, shiftPolygonCalc);
+		//}
 
 		public AxleGearData CreateGenericBusAxlegearData(IAxleGearInputData axlegearData)
 		{
