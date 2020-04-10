@@ -96,7 +96,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 						DeclarationData.DeclarationDataResourcePrefix + ".VACC." +
 						row.Field<string>(".vaccfile")),
 				Missions = CreateMissions(rows), 
-				VehicleClass = VehicleClassHelper.Parse("CB" + row.Field<string>("vehicleparametergroup")),
+				VehicleClass = VehicleClassHelper.Parse( row.Field<string>("hdvgroup")),
 				DesignSpeed = row.ParseDouble("designspeed").KMPHtoMeterPerSecond(),
 			};
 
