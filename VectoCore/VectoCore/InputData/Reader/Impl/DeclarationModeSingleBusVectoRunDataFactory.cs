@@ -1,8 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using TUGraz.VectoCommon.BusAuxiliaries;
+using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
+using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.InputData;
 using TUGraz.VectoCore.InputData.Reader.ComponentData;
 using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter;
@@ -25,6 +28,36 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl {
 		}
 
 		#region Implementation of IVectoRunDataFactory
+
+		#region Overrides of DeclarationModePrimaryBusVectoRunDataFactory
+
+		protected override Segment GetSegment(IVehicleDeclarationInputData vehicle)
+		{
+			//if (vehicle.VehicleCategory != VehicleCategory.HeavyBusCompletedVehicle) {
+			//	throw new VectoException(
+			//		"Invalid vehicle category for bus factory! {0}", vehicle.VehicleCategory.GetCategoryName());
+			//}
+
+			var completedVehicle = _singleBusInputData.CompletedVehicle;
+
+			var segment = DeclarationData.CompletedBusSegments.Lookup(
+				_singleBusInputData.PrimaryVehicle.AxleConfiguration.NumAxles(), completedVehicle.VehicleCode, completedVehicle.RegisteredClass, completedVehicle.NumberOfPassengersLowerDeck,
+				completedVehicle.Height, completedVehicle.FloorType == FloorType.LowFloor);
+			if (!segment.Found) {
+				throw new VectoException(
+					"no segment found for vehicle configruation: vehicle category: {0}, axle configuration: {1}, articulated: {2}, primary",
+					vehicle.VehicleCategory, _singleBusInputData.PrimaryVehicle.AxleConfiguration,
+					vehicle.Articulated);
+			}
+			foreach (var mission in segment.Missions) {
+				mission.VehicleHeight = completedVehicle.Height + mission.BusParameter.DeltaHeight;
+				mission.BusParameter.VehicleLength = completedVehicle.Length;
+			}
+
+			return segment;
+		}
+
+		#endregion
 
 		protected override IDeclarationDataAdapter DataAdapter { get { return _dao; } }
 
@@ -51,7 +84,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl {
 			var simulationRunData = new VectoRunData {
 				Loading = loading.Key,
 				VehicleData = DataAdapter.CreateVehicleData(vehicle, mission, loading),
-				AirdragData = _dao.CreateAirdragData(_singleBusInputData.CompletedVehicle.Components.AirdragInputData, mission, new Segment()),
+				AirdragData = _dao.CreateAirdragData(_singleBusInputData.CompletedVehicle, mission),
 				EngineData = DataAdapter.CreateEngineData(InputDataProvider.JobInputData.Vehicle, engineMode, mission),
 				GearboxData = _gearboxData,
 				AxleGearData = _axlegearData,
@@ -63,17 +96,18 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl {
 				DriverData = _driverdata,
 				ExecutionMode = ExecutionMode.Declaration,
 				JobName = InputDataProvider.JobInputData.JobName,
-				ModFileSuffix = (engineModes.Count > 1 ? string.Format("_EngineMode{0}_", modeIdx) : "") + "_" + mission.BusParameter.BusGroup.GetClassNumber() + "_" + loading.Key.ToString(),
+				ModFileSuffix = (engineModes.Count > 1 ? string.Format("_EngineMode{0}_", modeIdx) : "") + "_" + mission.BusParameter.BusGroup.GetClassNumber() + "-Single_" + loading.Key.ToString(),
 				Report = Report,
 				Mission = mission,
 				InputDataHash = InputDataProvider.XMLHash,
 				SimulationType = SimulationType.DistanceCycle,
 				GearshiftParameters = _gearshiftData,
-				ShiftStrategy = InputDataProvider.JobInputData.ShiftStrategy
+				VehicleDesignSpeed = _segment.DesignSpeed,
+				//ShiftStrategy = InputDataProvider.JobInputData.ShiftStrategy
 			};
 			simulationRunData.EngineData.FuelMode = modeIdx;
 			simulationRunData.VehicleData.VehicleClass = _segment.VehicleClass;
-			simulationRunData.BusAuxiliaries = _dao.CreateBusAuxiliariesData(mission, _singleBusInputData.PrimaryVehicle, simulationRunData);
+			simulationRunData.BusAuxiliaries = _dao.CreateBusAuxiliariesData(mission, _singleBusInputData.PrimaryVehicle, _singleBusInputData.CompletedVehicle, simulationRunData);
 			return simulationRunData;
 		}
 	}
