@@ -381,7 +381,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 						tns + XMLNames.Report_ResultEntry_SimulationParameters,
 						new XElement(
 							tns + XMLNames.Report_ResultEntry_TotalVehicleMass,
-							XMLHelper.ValueAsUnit(resultEntry.Payload, XMLNames.Unit_kg, 0)),
+							XMLHelper.ValueAsUnit(resultEntry.TotalVehicleMass, XMLNames.Unit_kg, 2)),
 						new XElement(
 							tns + XMLNames.Report_Result_Payload, XMLHelper.ValueAsUnit(resultEntry.Payload, XMLNames.Unit_kg, 2)),
 						new XElement(

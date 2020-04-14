@@ -76,7 +76,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 
 			public Kilogram Payload { get; set; }
 
-			public Kilogram TotalVehicleWeight { get; set; }
+			public Kilogram TotalVehicleMass { get; set; }
 
 			public CubicMeter CargoVolume { get; set; }
 

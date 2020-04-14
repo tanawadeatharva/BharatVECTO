@@ -78,7 +78,7 @@ namespace TUGraz.VectoCore.OutputData
 		int FuelMode { get; set; }
 		IList<IFuelProperties> FuelData { get; set; }
 		Kilogram Payload { get; set; }
-		Kilogram TotalVehicleWeight { get; set; }
+		Kilogram TotalVehicleMass { get; set; }
 		CubicMeter CargoVolume { get; set; }
 
 		double? PassengerCount { get; set; }
@@ -158,7 +158,7 @@ namespace TUGraz.VectoCore.OutputData
 					FuelMode = fuelMode,
 					FuelData = runData.EngineData.Fuels.Select(x => x.FuelData).ToList(),
 					Payload = runData.VehicleData.Loading,
-					TotalVehicleWeight = runData.VehicleData.TotalVehicleMass,
+					TotalVehicleMass = runData.VehicleData.TotalVehicleMass,
 					CargoVolume = runData.VehicleData.CargoVolume,
 					VehicleClass = runData.Mission?.BusParameter?.BusGroup ?? runData.VehicleData.VehicleClass,
 					//runData.VehicleData.VehicleClass,
