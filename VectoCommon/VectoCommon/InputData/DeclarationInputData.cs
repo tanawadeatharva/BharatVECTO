@@ -775,18 +775,21 @@ namespace TUGraz.VectoCommon.InputData
 	{
 		string ResultStatus { get; }
 
-		string VehicleGroup { get; }
+		VehicleClass VehicleGroup { get; }
 
-		string Mission { get; }
+		MissionType Mission { get; }
 
 		ISimulationParameter SimulationParameter { get; }
+
+		Dictionary<FuelType, JoulePerMeter> EnergyConsumption { get; }
+
 	}
 
 	public interface ISimulationParameter
 	{
 		Kilogram TotalVehicleMass { get; }
 		Kilogram Payload { get; }
-		int PassengerCount { get; }
+		double PassengerCount { get; }
 		string FuelMode { get; }
 	}
 

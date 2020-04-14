@@ -59,6 +59,11 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 		private readonly ExecutionMode _mode;
 		private bool _engineOnlyMode;
 
+		public SimulatorFactory(ExecutionMode mode, IInputDataProvider dataProvider, IOutputDataWriter writer) : this(mode, dataProvider, writer, null, null, true)
+		{
+			
+		}
+
 		public SimulatorFactory(ExecutionMode mode, IInputDataProvider dataProvider, IOutputDataWriter writer,
 			IDeclarationReport declarationReport = null, IVTPReport vtpReport = null, bool validate = true)
 		{
@@ -99,25 +104,28 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 			if (dataProvider is ISingleBusInputDataProvider) {
 				var singleBus = dataProvider as ISingleBusInputDataProvider;
-				var report = declarationReport ?? new XMLDeclarationReport(ModWriter, false);
+				var report = declarationReport ?? new XMLDeclarationReport(ModWriter);
 				DataReader = new DeclarationModeSingleBusVectoRunDataFactory(singleBus, report);
 				return;
 			}
 			if (dataProvider is IDeclarationInputDataProvider) {
 				var declDataProvider = dataProvider as IDeclarationInputDataProvider;
-				var report = declarationReport ?? new XMLDeclarationReport(ModWriter, declDataProvider.JobInputData.Vehicle.VehicleCategory == VehicleCategory.HeavyBusPrimaryVehicle);
 				if (declDataProvider.JobInputData.Vehicle.VehicleCategory.IsTruck()) {
+					var report = declarationReport ?? new XMLDeclarationReport(ModWriter);
 					DataReader = new DeclarationModeTruckVectoRunDataFactory(declDataProvider, report);
 					return;
 				}
 
 				switch (declDataProvider.JobInputData.Vehicle.VehicleCategory) {
 					case VehicleCategory.HeavyBusCompletedVehicle:
-						DataReader = new DeclarationModeCompletedBusVectoRunDataFactory(declDataProvider, report);
-						report.PrimaryResults = declDataProvider.PrimaryVehicleData;
+						var reportCompleted = declarationReport ?? new XMLDeclarationReportCompletedVehicle(ModWriter, declDataProvider.JobInputData.Vehicle.VehicleCategory == VehicleCategory.HeavyBusPrimaryVehicle) {
+							PrimaryResults = declDataProvider.PrimaryVehicleData,
+						};
+						DataReader = new DeclarationModeCompletedBusVectoRunDataFactory(declDataProvider, reportCompleted);
 						return;
 					case VehicleCategory.HeavyBusPrimaryVehicle:
-						DataReader = new DeclarationModePrimaryBusVectoRunDataFactory(declDataProvider, report);
+						var reportPrimary = declarationReport ?? new XMLDeclarationReportPrimaryVehicle(ModWriter, declDataProvider.JobInputData.Vehicle.VehicleCategory == VehicleCategory.HeavyBusPrimaryVehicle);
+						DataReader = new DeclarationModePrimaryBusVectoRunDataFactory(declDataProvider, reportPrimary);
 						return;
 				}
 			}

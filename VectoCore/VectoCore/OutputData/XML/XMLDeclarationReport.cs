@@ -34,10 +34,10 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Data;
 using System.Linq;
+using System.Xml;
 using System.Xml.Linq;
 using System.Xml.XPath;
 using TUGraz.VectoCommon.BusAuxiliaries;
-using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Resources;
 using TUGraz.VectoCommon.Utils;
@@ -49,23 +49,16 @@ namespace TUGraz.VectoCore.OutputData.XML
 {
 	public class XMLDeclarationReport : DeclarationReport<XMLDeclarationReport.ResultEntry>
 	{
-		private IXMLManufacturerReport _manufacturerReport;
-		private XMLCustomerReport _customerReport;
-		private XMLMonitoringReport _monitoringReport;
+		protected IXMLManufacturerReport ManufacturerRpt;
 
-		private XMLPrimaryVehicleReport _primaryReport;
-
+		protected XMLCustomerReport CustomerRpt;
+		
 
 		private IDictionary<Tuple<MissionType, LoadingType>, double> _weightingFactors;
 
-		public XMLDeclarationReport(IReportWriter writer = null, bool writePIF = false) : base(writer)
+		public XMLDeclarationReport(IReportWriter writer) : base(writer)
 		{
-			//_manufacturerReport = new XMLManufacturerReport();
-			//_customerReport = new XMLCustomerReport();
-			//_monitoringReport = new XMLMonitoringReport(_manufacturerReport);
-			//if (writePIF) {
-			//	_primaryReport = new XMLPrimaryVehicleReport();
-			//}
+			
 		}
 
 		public class ResultEntry : IResultEntry
@@ -247,24 +240,19 @@ namespace TUGraz.VectoCore.OutputData.XML
 
 		
 
-		public XDocument FullReport
+		public virtual XDocument FullReport
 		{
-			get { return _manufacturerReport.Report; }
+			get { return ManufacturerRpt.Report; }
 		}
 
-		public XDocument CustomerReport
+		public virtual XDocument CustomerReport
 		{
-			get { return _customerReport.Report; }
+			get { return CustomerRpt.Report; }
 		}
 
-		public XDocument MonitoringReport
+		public virtual XDocument PrimaryVehicleReport
 		{
-			get { return _monitoringReport.Report; }
-		}
-
-		public XDocument PrimaryVehicleReport
-		{
-			get { return _primaryReport?.Report; }
+			get { return null; }
 		}
 
 
@@ -274,39 +262,28 @@ namespace TUGraz.VectoCore.OutputData.XML
 			entry.SetResultData(runData, modData, factor);
 		}
 
-		protected internal override void DoWriteReport()
+		protected override void WriteResult(ResultEntry result)
 		{
-			foreach (var result in OrderedResults) {
-				_manufacturerReport.WriteResult(result);
-				_customerReport.WriteResult(result);
-				if (_primaryReport != null) {
-					_primaryReport.WriteResult(result);
-				} 
-			}
-
-			//foreach (var fuelMode in Missions.OrderBy(f => f.Key)) {
-			//	foreach (var result in fuelMode.Value.OrderBy(m => m.Key)) {
-			//		_manufacturerReport.WriteResult(result.Value);
-			//		_customerReport.WriteResult(result.Value);
-			//	}
-			//}
-
-			_manufacturerReport.GenerateReport();
-			var fullReportHash = GetSignature(_manufacturerReport.Report);
-			_customerReport.GenerateReport(fullReportHash);
-			_primaryReport?.GenerateReport(fullReportHash);
-
-			if (Writer != null) {
-				Writer.WriteReport(ReportType.DeclarationReportCustomerXML, _customerReport.Report);
-				Writer.WriteReport(ReportType.DeclarationReportManufacturerXML, _manufacturerReport.Report);
-				//Writer.WriteReport(ReportType.DeclarationReportMonitoringXML, _monitoringReport.Report);
-				if (_primaryReport != null) {
-					Writer.WriteReport(ReportType.DeclarationReportPrimaryVehicleXML, _primaryReport.Report);
-				}
-			}
+			ManufacturerRpt.WriteResult(result);
+			CustomerRpt.WriteResult(result);
 		}
 
-		private XElement GetSignature(XDocument report)
+		protected override void GenerateReports()
+		{
+			ManufacturerRpt.GenerateReport();
+			var fullReportHash = GetSignature(ManufacturerRpt.Report);
+			CustomerRpt.GenerateReport(fullReportHash);
+		}
+
+
+		protected override void OutputReports()
+		{
+			Writer.WriteReport(ReportType.DeclarationReportCustomerXML, CustomerRpt.Report);
+			Writer.WriteReport(ReportType.DeclarationReportManufacturerXML, ManufacturerRpt.Report);
+		}
+
+
+		protected XElement GetSignature(XDocument report)
 		{
 			return report.XPathSelectElement("/*[local-name()='VectoOutput']/*[local-name()='Signature']/*");
 		}
@@ -325,27 +302,18 @@ namespace TUGraz.VectoCore.OutputData.XML
 
 			InstantiateReports(modelData);
 
-			_manufacturerReport.Initialize(modelData, fuelModes);
-			_customerReport.Initialize(modelData, fuelModes);
-			_primaryReport?.Initialize(modelData, fuelModes);
-			_monitoringReport.Initialize(modelData);
+			ManufacturerRpt.Initialize(modelData, fuelModes);
+			CustomerRpt.Initialize(modelData, fuelModes);
 		}
 
-		private void InstantiateReports(VectoRunData modelData)
+		protected virtual void InstantiateReports(VectoRunData modelData)
 		{
 			if (modelData.Exempted) {
-				_manufacturerReport = new XMLManufacturerReportExemptedTruck();
+				ManufacturerRpt = new XMLManufacturerReportExemptedTruck();
 			} else {
-				if (modelData.VehicleData.VehicleCategory == VehicleCategory.HeavyBusPrimaryVehicle) {
-					_manufacturerReport = new XMLManufacturerReportPrimaryBus();
-					_primaryReport = new XMLPrimaryVehicleReport();
-				} else {
-					_manufacturerReport = new XMLManufacturerReportTruck();
-				}
+				ManufacturerRpt = new XMLManufacturerReportTruck();
 			}
-			_customerReport = new XMLCustomerReport();
-			_monitoringReport = new XMLMonitoringReport(_manufacturerReport);
-
+			CustomerRpt = new XMLCustomerReport();
 		}
 
 		private static IDictionary<Tuple<MissionType, LoadingType>, double> ZeroWeighting

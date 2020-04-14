@@ -112,6 +112,7 @@
     <Compile Include="Models\RetarderType.cs" />
     <Compile Include="Models\SimulationType.cs" />
     <Compile Include="Models\VehicleCategory.cs" />
+    <Compile Include="Models\VehicleClass.cs" />
     <Compile Include="Models\VehicleCode.cs" />
     <Compile Include="Models\WHRType.cs" />
     <Compile Include="OutputData\IOutputFileWriter.cs" />

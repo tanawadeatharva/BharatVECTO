@@ -171,7 +171,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 				);
 		}
 
-		public void WriteResult(XMLDeclarationReport.ResultEntry resultEntry)
+		public virtual void WriteResult(XMLDeclarationReport.ResultEntry resultEntry)
 		{
 			//foreach (var resultEntry in entry.ResultEntry) {
 				_allSuccess &= resultEntry.Status == VectoRun.Status.Success;

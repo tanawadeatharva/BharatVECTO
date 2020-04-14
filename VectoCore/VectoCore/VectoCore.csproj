@@ -421,6 +421,9 @@
     <Compile Include="OutputData\XML\Engineering\XMLEngineeringWriter.cs" />
     <Compile Include="OutputData\XML\Engineering\XMLEngineeringWriterInjectModule.cs" />
     <Compile Include="OutputData\XML\Engineering\XMLWriterMapping.cs" />
+    <Compile Include="OutputData\XML\XMLCustomerReportCompletedBus.cs" />
+    <Compile Include="OutputData\XML\XMLDeclarationReportCompletedVehicle.cs" />
+    <Compile Include="OutputData\XML\XMLDeclarationReportPrimaryVehicle.cs" />
     <Compile Include="OutputData\XML\XMLManufacturerReportExemptedTruck.cs" />
     <Compile Include="OutputData\XML\XMLManufacturerReportPrimaryBus.cs" />
     <Compile Include="OutputData\XML\XMLPrimaryVehicleReport.cs" />
@@ -545,7 +548,6 @@
     <Compile Include="Models\Declaration\TruckSegments.cs" />
     <Compile Include="Models\Declaration\StandardBodies.cs" />
     <Compile Include="Models\Declaration\SteeringPump.cs" />
-    <Compile Include="Models\Declaration\VehicleClass.cs" />
     <Compile Include="Models\Declaration\Wheels.cs" />
     <Compile Include="Models\Declaration\WHTCCorrection.cs" />
     <Compile Include="Models\SimulationComponent\Data\CrosswindCorrectionCdxALookup.cs" />

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Globalization;
 using System.Windows.Data;
+using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCore.Models.Declaration;
 
 namespace VECTO3GUI.Helper

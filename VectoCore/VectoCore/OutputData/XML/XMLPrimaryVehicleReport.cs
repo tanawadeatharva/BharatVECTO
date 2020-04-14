@@ -383,7 +383,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 							tns + XMLNames.Report_ResultEntry_TotalVehicleMass,
 							XMLHelper.ValueAsUnit(resultEntry.Payload, XMLNames.Unit_kg, 0)),
 						new XElement(
-							tns + XMLNames.Report_Result_Payload, XMLHelper.ValueAsUnit(resultEntry.Payload, XMLNames.Unit_kg, 0)),
+							tns + XMLNames.Report_Result_Payload, XMLHelper.ValueAsUnit(resultEntry.Payload, XMLNames.Unit_kg, 2)),
 						new XElement(
 							tns + XMLNames.Report_ResultEntry_PassengerCount,
 							resultEntry.PassengerCount),
@@ -425,7 +425,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 						new XAttribute(XMLNames.Report_Results_Unit_Attr, "MJ/km"),
 						(result.FuelConsumptionFinal[fuel.FuelType] * fuel.LowerHeatingValueVecto /
 						result.Distance.ConvertToKiloMeter() / 1e6)
-						.Value().ToMinSignificantDigits(3, 1)));
+						.Value().ToMinSignificantDigits(3, 3)));
 				retVal.Add(fcResult);
 			}
 
