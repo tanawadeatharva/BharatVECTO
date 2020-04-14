@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Utils;
@@ -8,11 +10,14 @@ namespace VECTO3GUI.ViewModel.Impl
 {
 	public class AirdragViewModel : AbstractComponentViewModel, IAirdragViewModel
 	{
-		private SquareMeter _cdxA0;
-		private SquareMeter _transferredCdxA;
+		private string _manufacturer;
+		private string _model;
+		private string _certificationNumber;
+		private DateTime? _date;
 		private SquareMeter _declaredCdxA;
 		private bool _useStandardValues;
 		private string _appVersion;
+		
 		private IAirdragDeclarationInputData _airdragData;
 
 		#region Implementation of IAirdragViewModel
@@ -27,28 +32,93 @@ namespace VECTO3GUI.ViewModel.Impl
 			set { SetProperty(ref _useStandardValues, value); }
 		}
 
-		public SquareMeter CdxA_0
+		public SquareMeter CdxA_0 { get; set; }
+		public SquareMeter TransferredCdxA { get; set; }
+
+		public override string Manufacturer
 		{
-			get { return _cdxA0; }
-			set { SetProperty(ref _cdxA0, value); }
+			get { return _manufacturer; }
+			set
+			{
+				if (SetProperty(ref _manufacturer, value)) {
+					var changed = _airdragData != null
+								? _airdragData.Manufacturer != value
+								: value != default(string);
+					SetChangedProperty(changed);
+				}
+			}
 		}
 
-		public SquareMeter TransferredCdxA
+		public override string Model
 		{
-			get { return _transferredCdxA; }
-			set { SetProperty(ref _transferredCdxA, value); }
+			get { return _model; }
+			set
+			{
+				if (SetProperty(ref _model, value)) {
+					var changed = _airdragData != null
+								? _airdragData.Model != value
+								: value != default(string);
+					SetChangedProperty(changed);
+				}
+			}
+		}
+
+		public override string CertificationNumber
+		{
+			get { return _certificationNumber; }
+			set
+			{
+				if (SetProperty(ref _certificationNumber, value)) {
+					var changed = _airdragData != null
+								? _airdragData.CertificationNumber != value
+								: value != default(string);
+					SetChangedProperty(changed);
+				}
+			}
+		}
+
+		public override DateTime? Date
+		{
+			get { return _date; }
+			set
+			{
+				if (SetProperty(ref _date, value)) {
+					var changed = _airdragData != null
+							? _airdragData.Date != value
+							: value != default(DateTime?);
+					SetChangedProperty(changed);
+				}
+			}
 		}
 
 		public SquareMeter DeclaredCdxA
 		{
 			get { return _declaredCdxA; }
-			set { SetProperty(ref _declaredCdxA, value); }
+			set
+			{
+				if (SetProperty(ref _declaredCdxA, value)) {
+					var changed = _airdragData.AirDragArea != null
+								? _airdragData.AirDragArea != value
+								: value != default(SquareMeter);
+					if (changed)
+						SetAirdragArea();
+					SetChangedProperty(changed);
+				}
+			}
 		}
 
 		public string AppVersion
 		{
 			get { return _appVersion; }
-			set { SetProperty(ref _appVersion, value); }
+			set
+			{
+				if (SetProperty(ref _appVersion, value)) {
+					var changed = _airdragData.AppVersion != null
+						? _airdragData.AppVersion != value
+						: value != default(string);
+					SetChangedProperty(changed);
+				}
+			}
 		}
 
 
@@ -56,12 +126,12 @@ namespace VECTO3GUI.ViewModel.Impl
 
 		protected override void InputDataChanged()
 		{
-			JobViewModel.InputDataProvider.Switch()
-						.If<IDeclarationInputDataProvider>(d => SetValues(d.JobInputData.Vehicle.Components.AirdragInputData))
-						.If<IEngineeringInputDataProvider>(e => SetValues(e.JobInputData.Vehicle.Components.AirdragInputData));
+			var inputData = JobViewModel.InputDataProvider as IDeclarationInputDataProvider;
+			_airdragData = inputData?.JobInputData.Vehicle.Components.AirdragInputData;
+			SetAirdragValues(_airdragData);
 		}
 
-		private void SetValues(IAirdragDeclarationInputData airdrag)
+		private void SetAirdragValues(IAirdragDeclarationInputData airdrag)
 		{
 			UseMeasuredValues = airdrag != null;
 			if (airdrag == null) {
@@ -73,22 +143,20 @@ namespace VECTO3GUI.ViewModel.Impl
 			CertificationNumber = airdrag.CertificationNumber;
 			Date = airdrag.Date;
 			AppVersion = airdrag.AppVersion;
-			DeclaredCdxA = airdrag.AirDragArea;
+			SetAirdragArea();
 		}
 
+		private void SetAirdragArea()
+		{
+			DeclaredCdxA = _airdragData.AirDragArea;
+			CdxA_0 = DeclaredCdxA;
+			TransferredCdxA = DeclaredCdxA;
+		}
+
+		
 		public override bool AnyDataChanges()
 		{
-			if(_airdragData == null)
-				return base.AnyDataChanges();
-
-			var changed = _airdragData.Model != Model ||
-					_airdragData.Manufacturer != Manufacturer ||
-					_airdragData.CertificationNumber != CertificationNumber ||
-					_airdragData.Date != Date ||
-					_airdragData.AppVersion != AppVersion ||
-					_airdragData.AirDragArea != DeclaredCdxA;
-
-			return changed;
+			return _changedInput.Count > 0;
 		}
 	}
 }

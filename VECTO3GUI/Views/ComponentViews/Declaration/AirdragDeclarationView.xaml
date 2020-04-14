@@ -20,28 +20,25 @@
                     Caption="Use Measured Values" CaptionWidthGroup="lblWidth"
                     Value="{Binding UseMeasuredValues}" UnitWidthGroup="unitWidth"/>
 
-            <customControls:CommonDeclarationComponentData 
-                    Model="{Binding Model}"
-                    Manufacturer="{Binding Manufacturer}"
-                    Date="{Binding Date}"
-                    CertificationNumber="{Binding CertificationNumber}"
-                    IsEnabled="{Binding UseMeasuredValues}"/>
+            <customControls:VectoParameterControl
+                Caption="Manufacturer" Unit="" CaptionWidthGroup="vehicleLbl" UnitWidthGroup="unitWidth"
+                Value="{Binding Manufacturer}" />
+
+            <customControls:VectoParameterControl
+                Caption="Model" Unit="" CaptionWidthGroup="vehicleLbl" UnitWidthGroup="unitWidth"
+                Value="{Binding Model}" />
+
+            <customControls:VectoParameterControl
+                Caption="Date" Unit="" CaptionWidthGroup="vehicleLbl" UnitWidthGroup="unitWidth"
+                Value="{Binding Date}" />
+
+            <customControls:VectoParameterControl
+                Caption="Certification Number" Unit="" CaptionWidthGroup="vehicleLbl" UnitWidthGroup="unitWidth"
+                Value="{Binding CertificationNumber}" />
 
             <customControls:VectoParameterControl
                     Caption="App Version" Unit="" CaptionWidthGroup="vehicleLbl" UnitWidthGroup="unitWidth"
                     Value="{Binding AppVersion}" />
-
-            <customControls:VectoParameterControl 
-                    Caption="Cd x A 0" CaptionWidthGroup="lblWidth"
-                    Unit="{helper:SIUnit CdxA_0}" UnitWidthGroup="unitWidth"
-                    Value="{Binding CdxA_0, Converter={helper:SIValueConverter}, ConverterParameter=int}" 
-                    IsEnabled="{Binding UseMeasuredValues}"/>
-
-            <customControls:VectoParameterControl 
-                    Caption="Transferred Cd x A 0" CaptionWidthGroup="lblWidth"
-                    Unit="{helper:SIUnit TransferredCdxA}" UnitWidthGroup="unitWidth"
-                    Value="{Binding TransferredCdxA, Converter={helper:SIValueConverter}, ConverterParameter=double}" 
-                    IsEnabled="{Binding UseMeasuredValues}"/>
 
             <customControls:VectoParameterControl 
                     Caption="DeclaredCd x A 0" CaptionWidthGroup="lblWidth"
