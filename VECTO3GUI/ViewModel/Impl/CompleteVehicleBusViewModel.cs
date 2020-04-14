@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection.Emit;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using TUGraz.VectoCommon.BusAuxiliaries;
@@ -39,7 +40,10 @@ namespace VECTO3GUI.ViewModel.Impl
 		private Meter _vehicleWidth;
 		private Meter _entranceHeight;
 		private ConsumerTechnology _doorDriveTechnology;
-		
+
+		private HashSet<string> _changedInput;
+
+
 		#endregion
 
 
@@ -48,93 +52,236 @@ namespace VECTO3GUI.ViewModel.Impl
 		public string Manufacturer
 		{
 			get { return _manufacturer; }
-			set { SetProperty(ref _manufacturer, value); }
+			set
+			{
+				if (SetProperty(ref _manufacturer, value)) {
+					var changed = _vehicle != null
+								? _vehicle.Manufacturer != value
+								: value != default(string);
+					SetChangedProperty(changed);
+				}
+			}
 		}
 		public string ManufacturerAddress
 		{
 			get { return _manufacturerAddress; }
-			set { SetProperty(ref _manufacturerAddress, value); }
+			set
+			{
+				if (SetProperty(ref _manufacturerAddress, value)) {
+					var changed = _vehicle != null
+								? _vehicle.ManufacturerAddress != value
+								: value != default(string);
+					SetChangedProperty(changed);
+				}
+			}
 		}
 		public string Model
 		{
 			get { return _model; }
-			set { SetProperty(ref _model, value); }
+			set
+			{
+				if (SetProperty(ref _model, value)) {
+					var changed = _vehicle != null
+								? _vehicle.Model != value
+								: value != default(string);
+					SetChangedProperty(changed);
+				}
+			}
 		}
 		public string VIN
 		{
 			get { return _vin; }
-			set { SetProperty(ref _vin, value); }
+			set
+			{
+				if (SetProperty(ref _vin, value)) {
+					var changed = _vehicle != null
+								? _vehicle.VIN != value
+								: value != default(string);
+					SetChangedProperty(changed);
+				}
+			}
 		}
 		public DateTime Date
 		{
 			get { return _date; }
-			set { SetProperty(ref _date, value); }
+			set
+			{
+				if (SetProperty(ref _date, value)) {
+					var changed = _vehicle != null
+								? _vehicle.Date != value
+								: value != default(DateTime);
+					SetChangedProperty(changed);
+				}
+			}
 		}
 		public LegislativeClass LegislativeClass
 		{
 			get { return _legislativeClass; }
-			set { SetProperty(ref _legislativeClass, value); }
+			set
+			{
+				if (SetProperty(ref _legislativeClass, value)) {
+					var changed = _vehicle != null
+								? _vehicle.LegislativeClass != value
+								: value != default(LegislativeClass);
+					SetChangedProperty(changed);
+				}
+			}
 		}
 		public RegistrationClass RegisteredClass
 		{
 			get { return _registeredClass; }
-			set { SetProperty(ref _registeredClass, value); }
+			set
+			{
+				if (SetProperty(ref _registeredClass, value)) {
+					var changed = _vehicle != null
+								? _vehicle.RegisteredClass != value
+								: value != default(RegistrationClass);
+					SetChangedProperty(changed);
+				}
+			}
 		}
 		public VehicleCode VehicleCode
 		{
 			get { return _vehicleCode; }
-			set { SetProperty(ref _vehicleCode, value); }
+			set {
+				if (SetProperty(ref _vehicleCode, value)) {
+					var changed = _vehicle != null
+								? _vehicle.VehicleCode != value
+								: value != default(VehicleCode);
+					SetChangedProperty(changed);
+				}
+			}
 		}
 		public Kilogram CurbMassChassis
 		{
 			get { return _curbMassChassis; }
-			set { SetProperty(ref _curbMassChassis, value); }
+			set
+			{
+				if (SetProperty(ref _curbMassChassis, value)) {
+					var changed = _vehicle != null
+								? _vehicle.CurbMassChassis != value
+								: value != default(Kilogram);
+					SetChangedProperty(changed);
+				}
+			}
 		}
 		public Kilogram TechnicalPermissibleMaximumLadenMass
 		{
 			get { return _technicalPermissibleMaximumLadenMass; }
-			set { SetProperty(ref _technicalPermissibleMaximumLadenMass, value); }
+			set
+			{
+				if (SetProperty(ref _technicalPermissibleMaximumLadenMass, value)) {
+					var changed = _vehicle != null
+								? _vehicle.GrossVehicleMassRating != value
+								: value != default(Kilogram);
+					SetChangedProperty(changed);
+				}
+			}
 		}
 		public int NumberOfPassengersLowerDeck
 		{
 			get { return _numberOfPassengersLowerDeck; }
-			set { SetProperty(ref _numberOfPassengersLowerDeck, value); }
+			set
+			{
+				if (SetProperty(ref _numberOfPassengersLowerDeck, value)) {
+					var changed = _vehicle != null
+								? _vehicle.NumberOfPassengersLowerDeck != value
+								: value != default(int);
+					SetChangedProperty(changed);
+				}
+			}
 		}
 		public int NumberOfPassengersUpperDeck
 		{
 			get { return _numberOfPassengersUpperDeck; }
-			set { SetProperty(ref _numberOfPassengersUpperDeck, value); }
+			set
+			{
+				if (SetProperty(ref _numberOfPassengersUpperDeck, value)) {
+					var changed = _vehicle != null
+								? _vehicle.NuberOfPassengersUpperDeck != value
+								: value != default(int);
+					SetChangedProperty(changed);	
+				}
+			}
 		}
 		public FloorType FloorType
 		{
-			get { return _floorType;}
-			set { SetProperty(ref _floorType, value); }
+			get { return _floorType; }
+			set
+			{
+				if (SetProperty(ref _floorType, value)) {
+					var changed = _vehicle != null
+								? _vehicle.FloorType != value
+								: value != default(FloorType);
+					SetChangedProperty(changed);
+				}
+			}
 		}
 		public Meter HeightIntegratedBody
 		{
-			get { return _heightIntegratedBody;}
-			set { SetProperty(ref _heightIntegratedBody, value); }
+			get { return _heightIntegratedBody; }
+			set
+			{
+				if (SetProperty(ref _heightIntegratedBody, value)) {
+					var changed = _vehicle != null
+								? _vehicle.Height != value
+								: value != default(Meter);
+					SetChangedProperty(changed);
+				}
+			}
 		}
 
 		public Meter VehicleLength
 		{
-			get { return _vehicleLength;}
-			set { SetProperty(ref _vehicleLength, value); }
+			get { return _vehicleLength; }
+			set
+			{
+				if (SetProperty(ref _vehicleLength, value)) {
+					var changed = _vehicle != null
+								? _vehicle.Length != value
+								: value != default(Meter);
+					SetChangedProperty(changed);
+				}
+			}
 		}
 		public Meter VehicleWidth
 		{
-			get { return _vehicleWidth;}
-			set { SetProperty(ref _vehicleWidth, value); }
+			get { return _vehicleWidth; }
+			set
+			{
+				if (SetProperty(ref _vehicleWidth, value)) {
+					var changed = _vehicle != null
+								? _vehicle.Width != value
+								: value != default(Meter);
+					SetChangedProperty(changed);
+				}
+			}
 		}
 		public Meter EntranceHeight
 		{
-			get { return _entranceHeight;}
-			set { SetProperty(ref _entranceHeight, value); }
+			get { return _entranceHeight; }
+			set
+			{
+				if (SetProperty(ref _entranceHeight, value)) {
+					var changed = _vehicle != null
+								? _vehicle.EntranceHeight != value
+								: value != default(Meter);
+					SetChangedProperty(changed);
+				}
+			}
 		}
 		public ConsumerTechnology DoorDriveTechnology
 		{
-			get { return _doorDriveTechnology;}
-			set { SetProperty(ref _doorDriveTechnology, value); }
+			get { return _doorDriveTechnology; }
+			set
+			{
+				if (SetProperty(ref _doorDriveTechnology, value)) {
+					var changed = _vehicle != null
+						? ((XMLDeclarationCompletedBusDataProviderV26)_vehicle).DoorDriveTechnology != value
+						: value != default(ConsumerTechnology);
+					SetChangedProperty(changed);
+				}
+			}
 		}
 
 		public AllowedEntry<LegislativeClass>[] AllowedLegislativeClasses { get; private set; }
@@ -144,13 +291,14 @@ namespace VECTO3GUI.ViewModel.Impl
 
 		#endregion
 
-		
+
 		#region Set XML Data
 
 		protected override void InputDataChanged()
 		{
 			var inputData = JobViewModel.InputDataProvider as IDeclarationInputDataProvider;
 			_vehicle = inputData?.JobInputData.Vehicle;
+			_changedInput = new HashSet<string>();
 			SetVehicleData(_vehicle);
 			SetAllowedEntries();
 		}
@@ -195,34 +343,24 @@ namespace VECTO3GUI.ViewModel.Impl
 			AllowedConsumerTechnologies = Enum.GetValues(typeof(ConsumerTechnology)).Cast<ConsumerTechnology>()
 				.Select(sc => AllowedEntry.Create(sc, sc.GetLabel())).ToArray();
 		}
-		
+
 		#endregion
+
+		private void SetChangedProperty(bool changed, [CallerMemberName] string propertyName = "")
+		{
+			if (!changed) {
+				if (_changedInput.Contains(propertyName))
+					_changedInput.Remove(propertyName);
+			} else {
+				if (!_changedInput.Contains(propertyName))
+					_changedInput.Add(propertyName);
+			} 
+		}
+
 
 		public override bool AnyDataChanges()
 		{
-			if(_vehicle == null)
-				return base.AnyDataChanges();
-
-			var changed = _vehicle.Manufacturer != Manufacturer ||
-			 _vehicle.ManufacturerAddress != ManufacturerAddress ||
-			 _vehicle.Model != Model ||
-			 _vehicle.VIN != VIN ||
-			 _vehicle.Date != Date ||
-			 _vehicle.LegislativeClass != LegislativeClass ||
-			 _vehicle.RegisteredClass != RegisteredClass ||
-			 _vehicle.VehicleCode != VehicleCode ||
-			 _vehicle.CurbMassChassis != CurbMassChassis ||
-			 _vehicle.GrossVehicleMassRating != TechnicalPermissibleMaximumLadenMass ||
-			 _vehicle.NumberOfPassengersLowerDeck != NumberOfPassengersLowerDeck ||
-			 _vehicle.NuberOfPassengersUpperDeck != NumberOfPassengersUpperDeck ||
-			 _vehicle.FloorType != FloorType ||
-			 _vehicle.Height != HeightIntegratedBody ||
-			 _vehicle.Length != VehicleLength ||
-			 _vehicle.Width != VehicleWidth ||
-			 _vehicle.EntranceHeight != EntranceHeight||
-			 ((XMLDeclarationCompletedBusDataProviderV26)_vehicle).DoorDriveTechnology != DoorDriveTechnology;
-
-			return changed;
+			return _changedInput.Count > 0;
 		}
 	}
 

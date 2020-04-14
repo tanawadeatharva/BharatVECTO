@@ -15,31 +15,54 @@
         <x:Type Type="interfaces:IJobEditViewModel"/>
     </d:JoblistTabView.DataContext>-->
 
-    <TabControl ItemsSource="{Binding Components}" x:Name="ComponentsTab" SelectedIndex="0">
 
-        <i:Interaction.Triggers>
-            <i:EventTrigger EventName="SelectionChanged">
-                <i:InvokeCommandAction 
-                    Command="{Binding EditComponent}" 
-                    CommandParameter="{Binding ElementName=ComponentsTab, Path=SelectedItem}">
-                </i:InvokeCommandAction>
-            </i:EventTrigger>
-        </i:Interaction.Triggers>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="30"/>
+            <RowDefinition/>
+            <RowDefinition Height="30"/>
+        </Grid.RowDefinitions>
 
-        <TabControl.ItemTemplate>
-            <DataTemplate>
-                <TextBlock Text="{Binding}"/>
-            </DataTemplate>
-        </TabControl.ItemTemplate>
 
-        <TabControl.ContentTemplate>
-            <DataTemplate>
-                <ScrollViewer  DockPanel.Dock="Top">
-                    <ContentControl Content="{Binding DataContext.CurrentComponent, 
-                        RelativeSource={RelativeSource AncestorType=local:JoblistTabView}}" MinHeight="100"/>
-                </ScrollViewer>
-            </DataTemplate>
-        </TabControl.ContentTemplate>
+        <Grid Grid.Row="1">
 
-    </TabControl>
+            <TabControl ItemsSource="{Binding Components}" x:Name="ComponentsTab" SelectedIndex="0">
+
+                <i:Interaction.Triggers>
+                    <i:EventTrigger EventName="SelectionChanged">
+                        <i:InvokeCommandAction 
+                            Command="{Binding EditComponent}" 
+                            CommandParameter="{Binding ElementName=ComponentsTab, Path=SelectedItem}">
+                        </i:InvokeCommandAction>
+                    </i:EventTrigger>
+                </i:Interaction.Triggers>
+
+                <TabControl.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock Text="{Binding}"/>
+                    </DataTemplate>
+                </TabControl.ItemTemplate>
+
+                <TabControl.ContentTemplate>
+                    <DataTemplate>
+                        <ScrollViewer  DockPanel.Dock="Top">
+                            <ContentControl Content="{Binding DataContext.CurrentComponent, 
+                                RelativeSource={RelativeSource AncestorType=local:JoblistTabView}}" MinHeight="100"/>
+                        </ScrollViewer>
+                    </DataTemplate>
+                </TabControl.ContentTemplate>
+
+            </TabControl>
+        </Grid>
+
+        <Grid Grid.Row="2">
+
+            <Grid>
+                <Button Content="Save Changes" HorizontalAlignment="Right"
+                        Command="{Binding SaveComponent}" CommandParameter="{Binding ElementName=ComponentsTab, Path=SelectedItem}"/>
+                <Button Content="Reset" HorizontalAlignment="Left"
+                        Command="{Binding ResetComponent}" CommandParameter="{Binding ElementName=ComponentsTab, Path=SelectedItem}"/>
+            </Grid>
+        </Grid>
+    </Grid>
 </UserControl>

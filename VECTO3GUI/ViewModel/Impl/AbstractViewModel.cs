@@ -16,7 +16,7 @@ namespace VECTO3GUI.ViewModel.Impl
 
 		private readonly ObservableCollection<Component> _components = new ObservableCollection<Component>();
 
-		private readonly Dictionary<Component, IComponentViewModel> _subModels = new Dictionary<Component, IComponentViewModel>();
+		protected readonly Dictionary<Component, IComponentViewModel> _subModels = new Dictionary<Component, IComponentViewModel>();
 
 		
 		public IJobEditViewModel JobViewModel
@@ -66,7 +66,7 @@ namespace VECTO3GUI.ViewModel.Impl
 
 		public virtual bool AnyDataChanges()
 		{
-			return true;
+			return false;
 		}
 
 

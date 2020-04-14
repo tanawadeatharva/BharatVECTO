@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Input;
 using Ninject;
 using TUGraz.VectoCommon.InputData;
 using VECTO3GUI.ViewModel.Interfaces;
@@ -12,6 +13,14 @@ namespace VECTO3GUI.ViewModel.Impl
 {
 	public class CompleteVehicleBusJobViewModel : AbstractJobViewModel, IJobEditViewModel
 	{
+
+		#region Commands
+
+		private ICommand _saveComponentCommand;
+		private ICommand _resetComponentCommand;
+
+		#endregion
+
 
 		public CompleteVehicleBusJobViewModel(IKernel kernel, IDeclarationInputDataProvider inputData)
 		{
@@ -24,12 +33,60 @@ namespace VECTO3GUI.ViewModel.Impl
 			CurrentComponent = GetComponentViewModel(Component.CompleteBusVehicle);
 		}
 
-
-
+	
 		protected override void DoSaveJob()
 		{
 			throw new NotImplementedException();
 		}
+
+		public ICommand SaveComponent
+		{
+			get { return _saveComponentCommand ?? new RelayCommand<Component>(DoSaveComponent, CanSaveComponent); }
+		}
+
+		private bool CanSaveComponent(Component component)
+		{
+			return ComponentsChanged(component);
+		}
+
+		private void DoSaveComponent(Component component)
+		{
+
+		}
+
+
+		public ICommand ResetComponent
+		{
+			get { return _resetComponentCommand ?? new RelayCommand<Component>(DoResetComponent, CanResetComponent); }
+		}
+
+
+		private bool CanResetComponent(Component component)
+		{
+			return ComponentsChanged(component);
+		}
+
+		private void DoResetComponent(Component component)
+		{
+
+		}
+
+		
+		private bool ComponentsChanged(Component component)
+		{
+			switch (component) {
+				case Component.CompleteBusVehicle :
+					return _subModels[Component.CompleteBusVehicle].AnyDataChanges();
+				case Component.Airdrag :
+					return _subModels[Component.Airdrag].AnyDataChanges();
+				case Component.Auxiliaries:
+					return _subModels[Component.Auxiliaries].AnyDataChanges();
+				default:
+					return false;
+			}
+
+		}
+
 
 		public string JobFile { get; }
 		public IInputDataProvider InputDataProvider { get; set; }
