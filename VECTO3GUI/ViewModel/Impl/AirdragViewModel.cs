@@ -35,7 +35,7 @@ namespace VECTO3GUI.ViewModel.Impl
 		public SquareMeter CdxA_0 { get; set; }
 		public SquareMeter TransferredCdxA { get; set; }
 
-		public override string Manufacturer
+		public string Manufacturer
 		{
 			get { return _manufacturer; }
 			set
@@ -49,7 +49,7 @@ namespace VECTO3GUI.ViewModel.Impl
 			}
 		}
 
-		public override string Model
+		public string Model
 		{
 			get { return _model; }
 			set
@@ -63,7 +63,7 @@ namespace VECTO3GUI.ViewModel.Impl
 			}
 		}
 
-		public override string CertificationNumber
+		public string CertificationNumber
 		{
 			get { return _certificationNumber; }
 			set
@@ -77,8 +77,8 @@ namespace VECTO3GUI.ViewModel.Impl
 			}
 		}
 
-		public override DateTime? Date
-		{
+		public DateTime? Date
+		{ 
 			get { return _date; }
 			set
 			{

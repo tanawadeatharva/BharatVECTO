@@ -10,12 +10,47 @@ using VECTO3GUI.Util;
 using VECTO3GUI.ViewModel.Adapter.Declaration;
 using VECTO3GUI.ViewModel.Interfaces;
 
-namespace VECTO3GUI.ViewModel.Impl {
+namespace VECTO3GUI.ViewModel.Impl
+{
 	public class AngledriveViewModel : AbstractComponentViewModel, IAngledriveViewModel
 	{
 		private CertificationMethod _certificationMethod;
 		private readonly ObservableCollection<GearLossMapEntry> _lossMap = new ObservableCollection<GearLossMapEntry>();
 		private double _ratio;
+
+		private string _manufacturer;
+		private string _model;
+		private string _certificationNumber;
+		private DateTime? _date;
+
+		#region Implementation of ICommonComponentParameters
+
+		public virtual string Manufacturer
+		{
+			get { return _manufacturer; }
+			set { SetProperty(ref _manufacturer, value); }
+		}
+
+		public virtual string Model
+		{
+			get { return _model; }
+			set { SetProperty(ref _model, value); }
+		}
+
+		public virtual string CertificationNumber
+		{
+			get { return _certificationNumber; }
+			set { SetProperty(ref _certificationNumber, value); }
+		}
+
+		public virtual DateTime? Date
+		{
+			get { return _date; }
+			set { SetProperty(ref _date, value); }
+		}
+
+		#endregion
+
 
 		#region Implementation of IAngledriveViewModel
 

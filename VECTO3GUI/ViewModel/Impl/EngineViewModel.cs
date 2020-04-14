@@ -17,6 +17,10 @@ namespace VECTO3GUI.ViewModel.Impl
 {
 	public class EngineViewModel : AbstractComponentViewModel, IEngineViewModel
 	{
+		private string _manufacturer;
+		private string _model;
+		private string _certificationNumber;
+		private DateTime? _date;
 		private CubicMeter _displacement;
 		private PerSecond _idlingSpeed;
 		private PerSecond _ratedSpeed;
@@ -36,6 +40,36 @@ namespace VECTO3GUI.ViewModel.Impl
 			FCMap = new ObservableCollection<FuelConsumptionEntry>();
 			FullLoadCurve = new ObservableCollection<FullLoadEntry>();
 		}
+
+		#region Implementation of ICommonComponentParameters
+
+		public virtual string Manufacturer
+		{
+			get { return _manufacturer; }
+			set { SetProperty(ref _manufacturer, value); }
+		}
+
+		public virtual string Model
+		{
+			get { return _model; }
+			set { SetProperty(ref _model, value); }
+		}
+
+		public virtual string CertificationNumber
+		{
+			get { return _certificationNumber; }
+			set { SetProperty(ref _certificationNumber, value); }
+		}
+
+		public virtual DateTime? Date
+		{
+			get { return _date; }
+			set { SetProperty(ref _date, value); }
+		}
+
+		#endregion
+
+
 
 		#region Implementation of IEditComponentEngineViewModel
 
@@ -113,7 +147,8 @@ namespace VECTO3GUI.ViewModel.Impl
 
 		public AllowedEntry<FuelType>[] AllowedFuelTypes
 		{
-			get {
+			get
+			{
 				var types = //DeclarationMode ? :
 					Enum.GetValues(typeof(FuelType)).Cast<FuelType>();
 				return types.Select(ft => AllowedEntry.Create(ft, ft.GetLabel())).ToArray();
@@ -142,8 +177,10 @@ namespace VECTO3GUI.ViewModel.Impl
 		{
 			JobViewModel.InputDataProvider.Switch()
 						.If<IDeclarationInputDataProvider>(
-							d => {
-								if (d.JobInputData.SavedInDeclarationMode) {
+							d =>
+							{
+								if (d.JobInputData.SavedInDeclarationMode)
+								{
 									// there are input data provider implementing both interfaces...
 									LoadValues(d.JobInputData.Vehicle.Components.EngineInputData);
 								}

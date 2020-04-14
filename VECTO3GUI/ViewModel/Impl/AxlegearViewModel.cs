@@ -10,7 +10,8 @@ using VECTO3GUI.Util;
 using VECTO3GUI.ViewModel.Adapter.Declaration;
 using VECTO3GUI.ViewModel.Interfaces;
 
-namespace VECTO3GUI.ViewModel.Impl {
+namespace VECTO3GUI.ViewModel.Impl
+{
 	public class AxlegearViewModel : AbstractComponentViewModel, IAxlegearViewModel
 	{
 		private double _ratio;
@@ -18,6 +19,38 @@ namespace VECTO3GUI.ViewModel.Impl {
 		private readonly ObservableCollection<GearLossMapEntry> _lossMap = new ObservableCollection<GearLossMapEntry>();
 		private CertificationMethod _certificationMethod;
 
+		private string _manufacturer;
+		private string _model;
+		private string _certificationNumber;
+		private DateTime? _date;
+
+		#region Implementation of ICommonComponentParameters
+
+		public virtual string Manufacturer
+		{
+			get { return _manufacturer; }
+			set { SetProperty(ref _manufacturer, value); }
+		}
+
+		public virtual string Model
+		{
+			get { return _model; }
+			set { SetProperty(ref _model, value); }
+		}
+
+		public virtual string CertificationNumber
+		{
+			get { return _certificationNumber; }
+			set { SetProperty(ref _certificationNumber, value); }
+		}
+
+		public virtual DateTime? Date
+		{
+			get { return _date; }
+			set { SetProperty(ref _date, value); }
+		}
+
+		#endregion
 		#region Implementation of IEditComponentAxlegearViewModel
 
 		public IAxleGearInputData ModelData { get { return AdapterFactory.AxlegearDeclarationAdapter(this); } }
@@ -47,12 +80,13 @@ namespace VECTO3GUI.ViewModel.Impl {
 		public AxleLineType LineType
 		{
 			get { return _lineType; }
-			set {SetProperty(ref _lineType, value); }
+			set { SetProperty(ref _lineType, value); }
 		}
 
 		public AllowedEntry<AxleLineType>[] AllowedLineTypes
 		{
-			get {
+			get
+			{
 				//ToDo
 				return null;
 				//return Enum.GetValues(typeof(AxleLineType)).Cast<AxleLineType>().Select(x => AllowedEntry.Create(x, x.GetLabel()))
