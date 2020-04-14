@@ -377,11 +377,7 @@ namespace TUGraz.VectoCore.OutputData
 				workBusAuxPSCorr = (kAir * deltaAir).Cast<WattSecond>();
 
 				var workBusAuxES = modData.EnergyBusAuxESConsumed() - modData.EnergyBusAuxESGenerated();
-				var workBatterySOC = runData.BusAuxiliaries.ElectricalUserInputsConfig.SmartElectrical
-					? modData.DeltaSOCBusAuxBattery() * runData.BusAuxiliaries.ElectricalUserInputsConfig.ElectricStorageCapacity
-					: 0.SI<WattSecond>();
-
-				workBusAuxESMech = (workBusAuxES + workBatterySOC) /
+				workBusAuxESMech = workBusAuxES  /
 										runData.BusAuxiliaries.ElectricalUserInputsConfig.AlternatorMap.GetEfficiency(0.RPMtoRad(), 0.SI<Ampere>()) /
 										runData.BusAuxiliaries.ElectricalUserInputsConfig.AlternatorGearEfficiency;
 
