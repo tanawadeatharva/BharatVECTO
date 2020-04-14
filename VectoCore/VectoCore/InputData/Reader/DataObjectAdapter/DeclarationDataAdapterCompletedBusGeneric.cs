@@ -72,6 +72,13 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 				gear.Ratio.IsEqual(1) ? GearEfficiencyDirectGear :GearEfficiencyIndirectGear, gear.Ratio, $"Gear {i + 1}");
 		}
 
+		protected override void CretateTCFirstGearATPowerSplit(GearData gearData, uint i, ShiftPolygon shiftPolygon)
+		{
+			gearData.TorqueConverterRatio = 1;
+			gearData.TorqueConverterGearLossMap = TransmissionLossMapReader.Create(GearEfficiencyIndirectGear, 1, string.Format("TCGear {0}", i + 1));
+			gearData.TorqueConverterShiftPolygon = shiftPolygon;
+		}
+
 		#endregion
 
 		#region Overrides of DeclarationDataAdapterHeavyLorry
