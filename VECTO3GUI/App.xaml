@@ -45,6 +45,7 @@
 
 
                 <ResourceDictionary Source="Resources/GlobalStyles.xaml"/>
+                <ResourceDictionary Source="Resources/StringResources.xaml"/>
 
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>

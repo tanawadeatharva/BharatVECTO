@@ -9,5 +9,27 @@
 
     <Style TargetType="{x:Type Button}" BasedOn="{StaticResource MetroButton}">
         <Setter Property="mah:ControlsHelper.ContentCharacterCasing" Value="Normal"/>
+        <Setter Property="VerticalAlignment" Value="Center"/>
     </Style>
+
+    <Style TargetType="TabControl" BasedOn="{StaticResource MetroTabControl}">
+        <!-- <Setter Property="BorderThickness" Value="0,1,0,0"/> -->
+        <!-- <Setter Property="BorderBrush" Value="Black"/> -->
+        <!-- <Setter Property="ClipToBounds" Value="True"></Setter> -->
+    </Style>
+
+    <Style TargetType="TabItem" BasedOn="{StaticResource MetroTabItem}" >
+        <Setter Property="ClipToBounds" Value="True"/>
+        <Setter Property="BorderThickness" Value="0,0,0,4"/>
+        <Setter Property="BorderBrush" Value="Gray"/>
+        <Setter Property="Margin" Value="1"/>
+
+        <Style.Triggers>
+            <Trigger Property="IsSelected" Value="True">
+                <Setter Property="BorderBrush" Value="Black"/>
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+
+
 </ResourceDictionary>
