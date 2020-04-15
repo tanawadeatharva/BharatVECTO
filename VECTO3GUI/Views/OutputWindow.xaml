@@ -7,9 +7,23 @@
         xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
         xmlns:impl="clr-namespace:VECTO3GUI.ViewModel.Impl"
         xmlns:interfaces="clr-namespace:VECTO3GUI.ViewModel.Interfaces"
+        xmlns:converters="http://metro.mahapps.com/winfx/xaml/shared"
         mc:Ignorable="d"
-        Title="OutputWindow" Height="450" Width="800" WindowStartupLocation="CenterScreen"
+        Title="{Binding WindowTitle}"  Height="450" Width="800" WindowStartupLocation="CenterScreen" TitleCharacterCasing="Normal" 
         d:DataContext="{d:DesignInstance Type=impl:OutputWindowViewModel, IsDesignTimeCreatable=False}">
+
+    <mah:MetroWindow.TitleTemplate>
+        <DataTemplate>
+            <TextBlock Text="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=Content}"
+                       VerticalAlignment="Center"
+                       HorizontalAlignment="Left"
+                       Margin="12,0,0,0"
+                       FontWeight="Bold" 
+                       FontSize="12"
+                       FontFamily="{DynamicResource HeaderFontFamily}"/>
+        </DataTemplate>
+    </mah:MetroWindow.TitleTemplate>
+
 
     <Grid VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
         <ContentControl Content="{Binding ViewModel}" />

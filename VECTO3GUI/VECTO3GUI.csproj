@@ -42,6 +42,9 @@
     <Reference Include="ControlzEx, Version=3.0.2.4, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\ControlzEx.3.0.2.4\lib\net45\ControlzEx.dll</HintPath>
     </Reference>
+    <Reference Include="ICSharpCode.AvalonEdit, Version=6.0.1.278, Culture=neutral, PublicKeyToken=9cc39be672370310, processorArchitecture=MSIL">
+      <HintPath>..\packages\AvalonEdit.6.0.1\lib\net45\ICSharpCode.AvalonEdit.dll</HintPath>
+    </Reference>
     <Reference Include="MahApps.Metro, Version=1.6.5.1, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\MahApps.Metro.1.6.5\lib\net45\MahApps.Metro.dll</HintPath>
     </Reference>
@@ -154,6 +157,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Helper\AvalonEditBehaviour.cs" />
     <Compile Include="Helper\ComponentTitleConverter.cs" />
     <Compile Include="Helper\FileDialogHelper.cs" />
     <Compile Include="Helper\OutputWindowHelper.cs" />
@@ -208,6 +212,7 @@
     <Compile Include="ViewModel\Impl\TyreViewModel.cs" />
     <Compile Include="ViewModel\Impl\ValidatingViewModel.cs" />
     <Compile Include="ViewModel\Impl\VehicleViewModel.cs" />
+    <Compile Include="ViewModel\Impl\XMLViewModel.cs" />
     <Compile Include="ViewModel\Interfaces\FuelConsumptionEntry.cs" />
     <Compile Include="ViewModel\Interfaces\FullLoadEntry.cs" />
     <Compile Include="ViewModel\Interfaces\Gear.cs" />
@@ -354,6 +359,9 @@
     </Compile>
     <Compile Include="Views\OutputWindow.xaml.cs">
       <DependentUpon>OutputWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\XMLView.xaml.cs">
+      <DependentUpon>XMLView.xaml</DependentUpon>
     </Compile>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -538,6 +546,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Views\OutputWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\XMLView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

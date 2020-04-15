@@ -26,5 +26,23 @@ namespace VECTO3GUI.Helper
 
 			return window;
 		}
+
+
+		public static OutputWindow CreateOutputWindow(IKernel kernel, object viewModel,
+			string windowName, double width = default(double), double height = default(double))
+		{
+			var window = new OutputWindow
+			{
+				DataContext = new OutputWindowViewModel(kernel, viewModel, windowName)
+			};
+
+			if (Math.Abs(width - default(double)) > 0)
+				window.Width = width;
+			if (Math.Abs(height - default(double)) > 0)
+				window.Height = height;
+
+			return window;
+		}
+
 	}
 }

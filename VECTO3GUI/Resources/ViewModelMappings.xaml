@@ -15,7 +15,9 @@
     </DataTemplate>
 
 
-
+    <DataTemplate DataType="{x:Type impl:XMLViewModel}">
+        <views:XMLView/>
+    </DataTemplate>
 
 
    

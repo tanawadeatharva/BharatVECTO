@@ -45,6 +45,7 @@ namespace VECTO3GUI.ViewModel.Impl
 		private ICommand _editJobCommand;
 		private ICommand _removeJobCommand;
 		private ICommand _addJobCommand;
+		private ICommand _openJobCommand;
 		
 
 		#endregion
@@ -143,12 +144,28 @@ namespace VECTO3GUI.ViewModel.Impl
 		}
 
 
+		public ICommand OpenJob
+		{
+			get { return _openJobCommand ?? new RelayCommand(DoOpenJobCommand); }
+		}
+
+		private void DoOpenJobCommand()
+		{
+			if(SelectedJobEntry == null)
+				return;
+
+			var xmlViewModel = new XMLViewModel(SelectedJobEntry.Filename);
+			var window = OutputWindowHelper.CreateOutputWindow(Kernel, xmlViewModel, xmlViewModel.FileName);
+			window.Show();
+
+		}
+
 
 		public ICommand AddJob { get { return _addJobCommand ?? new RelayCommand(DoAddJob); } }
 
 		private void DoAddJob()
 		{
-			var filePath =  FileDialogHelper.ShowSelectFilesDialog(false, @"F:\VECTO\VECTO\bin");
+			var filePath = FileDialogHelper.ShowSelectFilesDialog(false, @"F:\VECTO\VECTO\bin");
 			if (filePath != null) {
 				_jobs.Add(new JobEntry()
 				{
@@ -207,8 +224,7 @@ namespace VECTO3GUI.ViewModel.Impl
 			return doc.Root?.Name.LocalName;
 		}
 
-		//ToDo FJ
-		//Start from here!!
+
 		private IJobEditViewModel CreateCompleteBusVehicleViewModel(IInputDataProvider inputDataProvider)
 		{
 			var dataProvider = inputDataProvider as IDeclarationInputDataProvider;
