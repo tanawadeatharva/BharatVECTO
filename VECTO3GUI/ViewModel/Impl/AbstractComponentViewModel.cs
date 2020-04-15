@@ -24,7 +24,7 @@ namespace VECTO3GUI.ViewModel.Impl
 			}
 		}
 
-		public override bool AnyDataChanges()
+		public override bool IsComponentDataChanged()
 		{
 			return _changedInput.Count > 0;
 		}

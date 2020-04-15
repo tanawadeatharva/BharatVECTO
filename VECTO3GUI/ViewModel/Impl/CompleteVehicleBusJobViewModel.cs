@@ -68,7 +68,18 @@ namespace VECTO3GUI.ViewModel.Impl
 
 		private void DoResetComponent(Component component)
 		{
-
+			switch (component)
+			{
+				case Component.CompleteBusVehicle:
+					_subModels[Component.CompleteBusVehicle].ResetComponentData();
+					break;
+				case Component.Airdrag:
+					_subModels[Component.Airdrag].ResetComponentData();
+					break;
+				case Component.Auxiliaries:
+					_subModels[Component.Auxiliaries].ResetComponentData();
+					break;
+			}
 		}
 
 		
@@ -76,15 +87,14 @@ namespace VECTO3GUI.ViewModel.Impl
 		{
 			switch (component) {
 				case Component.CompleteBusVehicle :
-					return _subModels[Component.CompleteBusVehicle].AnyDataChanges();
+					return _subModels[Component.CompleteBusVehicle].IsComponentDataChanged();
 				case Component.Airdrag :
-					return _subModels[Component.Airdrag].AnyDataChanges();
+					return _subModels[Component.Airdrag].IsComponentDataChanged();
 				case Component.Auxiliaries:
-					return _subModels[Component.Auxiliaries].AnyDataChanges();
+					return _subModels[Component.Auxiliaries].IsComponentDataChanged();
 				default:
 					return false;
 			}
-
 		}
 
 

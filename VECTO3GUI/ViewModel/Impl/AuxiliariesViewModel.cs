@@ -471,9 +471,14 @@ namespace VECTO3GUI.ViewModel.Impl
 				.Select(sc => AllowedEntry.Create(sc, sc.GetLabel())).ToArray();
 		}
 
-		public override bool AnyDataChanges()
+		public override bool IsComponentDataChanged()
 		{
 			return _changedInput.Count > 0;
+		}
+
+		public override void ResetComponentData()
+		{
+			SetValues(_busAuxiliaries);
 		}
 	}
 }

@@ -15,9 +15,8 @@ using VECTO3GUI.ViewModel.Interfaces;
 
 namespace VECTO3GUI.ViewModel.Impl
 {
-	public class CompleteVehicleBusViewModel : AbstractViewModel, ICompleteVehicleBusViewModel
+	public class CompleteVehicleBusViewModel : AbstractComponentViewModel, ICompleteVehicleBusViewModel
 	{
-
 		#region Members
 
 		private IVehicleDeclarationInputData _vehicle;
@@ -41,12 +40,9 @@ namespace VECTO3GUI.ViewModel.Impl
 		private Meter _entranceHeight;
 		private ConsumerTechnology _doorDriveTechnology;
 
-		private HashSet<string> _changedInput;
-
 
 		#endregion
-
-
+		
 		#region ICompleteVehicleBusViewModel
 
 		public string Manufacturer
@@ -299,11 +295,11 @@ namespace VECTO3GUI.ViewModel.Impl
 			var inputData = JobViewModel.InputDataProvider as IDeclarationInputDataProvider;
 			_vehicle = inputData?.JobInputData.Vehicle;
 			_changedInput = new HashSet<string>();
-			SetVehicleData(_vehicle);
+			SetVehicleValues(_vehicle);
 			SetAllowedEntries();
 		}
 
-		private void SetVehicleData(IVehicleDeclarationInputData vehicle)
+		private void SetVehicleValues(IVehicleDeclarationInputData vehicle)
 		{
 			if (vehicle == null)
 				return;
@@ -346,21 +342,14 @@ namespace VECTO3GUI.ViewModel.Impl
 
 		#endregion
 
-		private void SetChangedProperty(bool changed, [CallerMemberName] string propertyName = "")
-		{
-			if (!changed) {
-				if (_changedInput.Contains(propertyName))
-					_changedInput.Remove(propertyName);
-			} else {
-				if (!_changedInput.Contains(propertyName))
-					_changedInput.Add(propertyName);
-			} 
-		}
-
-
-		public override bool AnyDataChanges()
+		public override bool IsComponentDataChanged()
 		{
 			return _changedInput.Count > 0;
+		}
+
+		public override void ResetComponentData()
+		{
+			SetVehicleValues(_vehicle);
 		}
 	}
 

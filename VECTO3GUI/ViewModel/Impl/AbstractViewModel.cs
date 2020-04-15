@@ -64,11 +64,12 @@ namespace VECTO3GUI.ViewModel.Impl
 			return null;
 		}
 
-		public virtual bool AnyDataChanges()
+		public virtual bool IsComponentDataChanged()
 		{
 			return false;
 		}
 
+		public virtual void ResetComponentData() {}
 
 		#region Submodule Handling
 		protected IEnumerable<Component> GetSubmodels()

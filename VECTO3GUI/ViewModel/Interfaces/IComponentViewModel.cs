@@ -16,6 +16,10 @@ namespace VECTO3GUI.ViewModel.Interfaces {
 
 		IComponentViewModel GetComponentViewModel(Component component);
 
-		bool AnyDataChanges();
+		bool IsComponentDataChanged();
+
+		void ResetComponentData();
+
+
 	}
 }

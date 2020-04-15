@@ -152,11 +152,15 @@ namespace VECTO3GUI.ViewModel.Impl
 			CdxA_0 = DeclaredCdxA;
 			TransferredCdxA = DeclaredCdxA;
 		}
-
 		
-		public override bool AnyDataChanges()
+		public override bool IsComponentDataChanged()
 		{
 			return _changedInput.Count > 0;
+		}
+
+		public override void ResetComponentData()
+		{
+			SetAirdragValues(_airdragData);
 		}
 	}
 }
