@@ -30,7 +30,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 				completedVehicle.NumberOfPassengersLowerDeck + completedVehicle.NumberOfPassengersUpperDeck, loading.Key);
 
 			var vehicleData = base.CreateVehicleData(primaryVehicle, mission, loading);
-
+			vehicleData.InputData = completedVehicle;
 			vehicleData.VIN = completedVehicle.VIN;
 			vehicleData.LegislativeClass = completedVehicle.LegislativeClass;
 			vehicleData.VehicleCategory = VehicleCategory.HeavyBusCompletedVehicle;
@@ -43,7 +43,11 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			vehicleData.PassengerCount = passengers;
 			vehicleData.GrossVehicleMass = completedVehicle.GrossVehicleMassRating;
 			vehicleData.DigestValueInput = completedVehicle.DigestValue?.DigestValue ?? "";
-			
+
+			vehicleData.RegisteredClass = completedVehicle.RegisteredClass;
+
+			vehicleData.VehicleCode = completedVehicle.VehicleCode;
+
 			return vehicleData;
 		}
 

@@ -8,6 +8,7 @@ namespace TUGraz.VectoCommon.Models
 {
 	public enum RegistrationClass
 	{
+		unknown,
 		I,
 		I_II,
 		II,
@@ -15,7 +16,7 @@ namespace TUGraz.VectoCommon.Models
 		III,
 		A,
 		B,
-		unknown
+		
 	}
 	
 	public static class RegistrationClassHelper
@@ -30,6 +31,11 @@ namespace TUGraz.VectoCommon.Models
 				default:
 					return self.ToString();
 			}
+		}
+
+		public static string ToXMLFormat(this RegistrationClass self)
+		{
+			return self.GetLabel();
 		}
 
 		public static RegistrationClass[] Parse(string registrationClasses)

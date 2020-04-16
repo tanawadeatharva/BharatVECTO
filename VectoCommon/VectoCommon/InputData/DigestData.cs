@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Xml;
 using System.Xml.Linq;
 using System.Xml.XPath;
@@ -76,5 +77,16 @@ namespace TUGraz.VectoCommon.InputData {
 		public string[] CanonicalizationMethods { get; }
 		public string DigestMethod { get; }
 
+		public XElement ToXML(XNamespace di)
+		{
+			return new XElement(di + "Reference",
+				new XAttribute("URI", Reference),
+				new XElement(di + "Transforms", 
+				CanonicalizationMethods.Select(x => new XElement(di + "Transform", new XAttribute("Algorithm", x)))
+				),
+				new XElement(di + "DigestMethod", new XAttribute("Algorithm",  DigestMethod)),
+				new XElement(di + "DigestValue", DigestValue)
+				);
+		}
 	}
 }

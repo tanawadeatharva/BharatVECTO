@@ -273,5 +273,14 @@ namespace TUGraz.VectoCore.Utils
 			var namesp = node.SchemaInfo.SchemaType.QualifiedName.Namespace;
 			return namesp.Split(':').Last(x => x.StartsWith(versionPrefix)).Replace(versionPrefix, string.Empty).ToDouble();
 		}
+
+		public static XElement CreateDummySig(XNamespace di)
+		{
+			return new XElement(di + XMLNames.DI_Signature_Reference,
+								new XElement(di + XMLNames.DI_Signature_Reference_DigestMethod,
+											new XAttribute(XMLNames.DI_Signature_Algorithm_Attr, "null")),
+								new XElement(di + XMLNames.DI_Signature_Reference_DigestValue, "NOT AVAILABLE")
+			);
+		}
 	}
 }

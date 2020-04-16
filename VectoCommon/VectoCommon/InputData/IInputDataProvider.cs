@@ -62,15 +62,19 @@ namespace TUGraz.VectoCommon.InputData
 	{
 		IVehicleDeclarationInputData Vehicle { get; }
 
-		DigestData ResultDataHash { get; }
+		DigestData ManufacturerRecordHash { get; }
+
+		DigestData PrimaryVehicleInputDataHash { get; }
 
 		IResultsInputData ResultsInputData { get; }
 
 		IApplicationInformation ApplicationInformation { get; }
 
-		DigestData ManufacturerHash { get; }
+		//DigestData ManufacturerHash { get; }
 
 		IResult GetResult(VehicleClass vehicleClass, MissionType mission, string fuelMode, Kilogram payload);
+
+		XElement XMLHash { get; }
 	}
 
 	public interface ISingleBusInputDataProvider : IDeclarationInputDataProvider

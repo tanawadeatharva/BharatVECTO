@@ -72,7 +72,8 @@ namespace TUGraz.VectoCore.OutputData.XML
 						RootNS + XMLNames.Report_DataWrap,
 						new XAttribute(xsi + "type", "PrimaryVehicleHeavyBusDataType"),
 						VehiclePart,
-						new XElement(tns + XMLNames.Report_ResultData_Signature, resultSignature),
+						InputDataIntegrity,
+						new XElement(tns + "ManufacturerRecordSignature", resultSignature),
 						results,
 						GetApplicationInfo())
 				)
@@ -127,6 +128,9 @@ namespace TUGraz.VectoCore.OutputData.XML
 				GetTorqueLimits(modelData),
 				VehicleComponents(modelData, fuelModes)
 			);
+
+			InputDataIntegrity = new XElement(tns + XMLNames.Report_InputDataSignature,
+											modelData.InputDataHash == null ? XMLHelper.CreateDummySig(di) : new XElement(modelData.InputDataHash));
 		}
 
 		private XElement GetADAS(VehicleData.ADASData adasData)

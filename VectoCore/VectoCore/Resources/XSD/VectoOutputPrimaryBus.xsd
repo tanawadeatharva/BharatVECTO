@@ -253,7 +253,8 @@
 			<xs:extension base="out:AbstractPrimaryVehicleDataPIFType">
 				<xs:sequence>
 					<xs:element name="Vehicle" type="AbstractVehiclePIFType"/>
-					<xs:element name="ResultDataSignature" type="v1.0:SignatureType"/>
+					<xs:element name="InputDataSignature" type="v1.0:SignatureType"/>
+					<xs:element name="ManufacturerRecordSignature" type="v1.0:SignatureType"/>
 					<xs:element name="Results" type="ResultsPIFType"/>
 					<xs:element name="ApplicationInformation" type="ApplicationInformationPIFType"/>
 				</xs:sequence>

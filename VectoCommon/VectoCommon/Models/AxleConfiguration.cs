@@ -84,6 +84,11 @@ namespace TUGraz.VectoCommon.Models
 			return self.ToString().Replace(Prefix, "");
 		}
 
+		public static string ToXMLFormat(this AxleConfiguration self)
+		{
+			return self.GetName();
+		}
+
 		public static AxleConfiguration Parse(string typeString)
 		{
 			return (Prefix + typeString).ParseEnum<AxleConfiguration>();

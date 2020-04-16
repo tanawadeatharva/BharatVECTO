@@ -140,10 +140,34 @@
 						</xs:complexType>
 					</xs:element>
 					<xs:element name="LowEntry" type="xs:boolean"/>
-					<xs:element name="HeightIntegratedBody" type="v1.0:Double3"/>
-					<xs:element name="VehicleLength" type="v1.0:Double3"/>
-					<xs:element name="VehicleWidth" type="v1.0:Double3"/>
-					<xs:element name="EntranceHeight" type="v1.0:Double3"/>
+					<xs:element name="HeightIntegratedBody">
+						<xs:simpleType>
+							<xs:restriction base="v1.0:Double3">
+								<xs:minExclusive value="0.000"/>
+							</xs:restriction>
+						</xs:simpleType>
+					</xs:element>
+					<xs:element name="VehicleLength">
+						<xs:simpleType>
+							<xs:restriction base="v1.0:Double3">
+								<xs:minExclusive value="0.000"/>
+							</xs:restriction>
+						</xs:simpleType>
+					</xs:element>
+					<xs:element name="VehicleWidth">
+						<xs:simpleType>
+							<xs:restriction base="v1.0:Double3">
+								<xs:minExclusive value="0.000"/>
+							</xs:restriction>
+						</xs:simpleType>
+					</xs:element>
+					<xs:element name="EntranceHeight">
+						<xs:simpleType>
+							<xs:restriction base="v1.0:Double3">
+								<xs:minExclusive value="0.000"/>
+							</xs:restriction>
+						</xs:simpleType>
+					</xs:element>
 					<xs:element name="DoorDriveTechnology" type="v2.6:DoorDriveTechnologyType"/>
 					<xs:element name="Components" type="v2.6:AbstractCompletedVehicleComponentsDeclarationType"/>
 				</xs:sequence>

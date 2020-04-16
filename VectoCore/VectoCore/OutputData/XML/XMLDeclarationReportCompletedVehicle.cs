@@ -18,7 +18,7 @@ namespace TUGraz.VectoCore.OutputData.XML {
 		protected override void InstantiateReports(VectoRunData modelData)
 		{
 			ManufacturerRpt = new XMLManufacturerReportCompletedBus() {
-				PrimaryVehicle = PrimaryResults.Vehicle
+				PrimaryVehicleRecordFile = PrimaryResults
 			};
 			CustomerRpt = new XMLCustomerReportCompletedBus();
 		}

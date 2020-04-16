@@ -102,13 +102,13 @@ namespace TUGraz.VectoCore.Tests.XML
 
 			TestHVAC(components.BusAuxiliaries.HVACAux);
 
-			TestResultDataSignature(inputDataProvider.ResultDataHash);
+			TestResultDataSignature(inputDataProvider.ManufacturerRecordHash);
 
 			TestResultData(inputDataProvider.ResultsInputData);
 
 			TestApplicationInformation(inputDataProvider.ApplicationInformation);
 
-			TestSignature(inputDataProvider.ManufacturerHash);
+			//TestSignature(inputDataProvider.ManufacturerHash);
 		}
 
 		

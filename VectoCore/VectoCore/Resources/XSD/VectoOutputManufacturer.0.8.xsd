@@ -1205,4 +1205,105 @@
 			<xs:minLength value="1"/>
 		</xs:restriction>
 	</xs:simpleType>
+	<xs:complexType name="VehicleCompletedBusType">
+		<xs:complexContent>
+			<xs:extension base="AbstractVehicleType">
+				<xs:sequence>
+					<xs:element name="PrimaryVehicle" type="PrimaryVehicleType"/>
+					<xs:element name="CompletedVehicle">
+						<xs:complexType>
+							<xs:sequence>
+								<xs:element name="Model" type="vdecdef:ModelType"/>
+								<xs:element name="Manufacturer" type="vdecdef:ManufacturerType"/>
+								<xs:element name="ManufacturerAddress" type="vdecdef:ManufacturerAddressType"/>
+								<xs:element name="VIN" type="vdecdef:VINType"/>
+								<xs:element name="VehicleCategory" type="vdecdef:LegislativeClassDeclarationType"/>
+								<xs:element name="VehicleGroup" type="xs:string"/>
+								<xs:element name="RegisteredClass" type="xs:string"/>
+								<xs:element name="VehicleCode" type="xs:string"/>
+								<xs:element name="CurbMassChassis" type="vdecdef:VehicleCurbMassChassisType"/>
+								<xs:element name="TechnicalPermissibleMaximumLadenMass" type="vdecdef:VehicleGrossVehicleMassType"/>
+								<xs:element name="VocationalVehcle" type="BooleanNotApplicableType"/>
+								<xs:element name="ZeroEmissionVehicle" type="xs:boolean"/>
+								<xs:element name="HybridElectricHDV" type="xs:boolean"/>
+								<xs:element name="DualFuelVehicle" type="xs:boolean"/>
+								<xs:element name="SleeperCab" type="BooleanNotApplicableType"/>
+								<xs:element name="RegisteredPassengers">
+									<xs:complexType>
+										<xs:sequence>
+											<xs:element name="LowerDeck">
+												<xs:simpleType>
+													<xs:restriction base="xs:int">
+														<xs:minInclusive value="0"/>
+													</xs:restriction>
+												</xs:simpleType>
+											</xs:element>
+											<xs:element name="UpperDeck">
+												<xs:simpleType>
+													<xs:restriction base="xs:int">
+														<xs:minInclusive value="0"/>
+													</xs:restriction>
+												</xs:simpleType>
+											</xs:element>
+										</xs:sequence>
+									</xs:complexType>
+								</xs:element>
+								<xs:element name="LowEntry" type="xs:boolean"/>
+								<xs:element name="HeightIntegratedBody">
+									<xs:simpleType>
+										<xs:restriction base="vdecdef:Double3">
+											<xs:minExclusive value="0.000"/>
+										</xs:restriction>
+									</xs:simpleType>
+								</xs:element>
+								<xs:element name="VehicleLength">
+									<xs:simpleType>
+										<xs:restriction base="vdecdef:Double3">
+											<xs:minExclusive value="0.000"/>
+										</xs:restriction>
+									</xs:simpleType>
+								</xs:element>
+								<xs:element name="VehicleWidth">
+									<xs:simpleType>
+										<xs:restriction base="vdecdef:Double3">
+											<xs:minExclusive value="0.000"/>
+										</xs:restriction>
+									</xs:simpleType>
+								</xs:element>
+								<xs:element name="DoorDriveTechnology" type="xs:string"/>
+								<xs:element name="Components" type="AbstractComponentsType"/>
+							</xs:sequence>
+						</xs:complexType>
+					</xs:element>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="PrimaryVehicleType">
+		<xs:sequence>
+			<xs:element name="Manufacturer" type="vdecdef:ManufacturerType"/>
+			<xs:element name="ManufacturerAddress" type="vdecdef:ManufacturerAddressType"/>
+			<xs:element name="AxleConfiguration" type="xs:string"/>
+			<xs:element name="InputDataSignature" type="vdecdef:SignatureType"/>
+			<xs:element name="ManufacturerRecordSignature" type="vdecdef:SignatureType"/>
+			<xs:element name="VehicleInformationSignature" type="vdecdef:SignatureType"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:simpleType name="BooleanNotApplicableType">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="true"/>
+			<xs:enumeration value="false"/>
+			<xs:enumeration value="not applicable"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="ComponentsCompletedBusType">
+		<xs:complexContent>
+			<xs:extension base="AbstractComponentsType">
+				<xs:sequence>
+					<xs:element name="AirDrag" type="AirdragType"/>
+					<xs:element name="Auxiliaries" type="v2.6:AbstractCompletedVehicleAuxiliaryDataDeclarationType"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
 </xs:schema>

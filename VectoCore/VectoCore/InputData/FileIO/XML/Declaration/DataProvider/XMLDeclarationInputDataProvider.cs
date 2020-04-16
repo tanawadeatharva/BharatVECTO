@@ -135,6 +135,9 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration
 		{
 			Document = xmlDoc;
 			SourceType = DataSourceType.XMLFile;
+
+			var h = VectoHash.Load(xmlDoc);
+			XMLHash = h.ComputeXmlHash();
 		}
 
 
@@ -145,19 +148,19 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration
 			get { return _vehicle ?? (_vehicle = Reader.JobData.Vehicle); }
 		}
 
-		public DigestData ResultDataHash
+		public DigestData PrimaryVehicleInputDataHash
 		{
-			get { return Reader.GetDigestData(GetNode(XMLNames.Tag_ResultDataSignatureNode)); }
+			get { return Reader.GetDigestData(GetNode("InputDataSignature")); }
+		}
+
+		public DigestData ManufacturerRecordHash
+		{
+			get { return Reader.GetDigestData(GetNode("ManufacturerRecordSignature")); }
 		}
 
 		public IApplicationInformation ApplicationInformation
 		{
 			get { return _applicationInformation ?? (_applicationInformation = Reader.ApplicationInformation); }
-		}
-
-		public DigestData ManufacturerHash
-		{
-			get { return Reader.GetDigestData(Document.LastChild.LastChild); }
 		}
 
 		public IResult GetResult(VehicleClass vehicleClass, MissionType mission, string fuelMode, Kilogram payload)
@@ -167,6 +170,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration
 					(x.SimulationParameter.Payload - payload).IsEqual(0, 1) && x.Mission == mission &&
 					x.SimulationParameter.FuelMode.Equals(fuelMode, StringComparison.InvariantCultureIgnoreCase));
 		}
+
+		public XElement XMLHash { get; }
 
 		public IResultsInputData ResultsInputData
 		{

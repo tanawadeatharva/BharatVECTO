@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <pif:VectoOutputPrimaryVehicle xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="urn:tugraz:ivt:VectoAPI:DeclarationOutput:PrimaryVehicleInformation:HeavyBus:v0.1" xmlns:pif="urn:tugraz:ivt:VectoAPI:DeclarationOutput:PrimaryVehicleInformation" xmlns:di="http://www.w3.org/2000/09/xmldsig#" xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:DeclarationOutput:PrimaryVehicleInformation https://webgate.ec.europa.eu/CITnet/svn/VECTO/trunk/Share/XML/XSD//DEV/VectoOutputPrimaryVehicleInformation.xsd">
-  <pif:Data xsi:type="PrimaryVehicleHeavyBusDataType" id="PIF-b1f9a6097ed74a6b82de">
+  <pif:Data xsi:type="PrimaryVehicleHeavyBusDataType" id="PIF-1a5c4fd556f14ec8ac23">
     <Vehicle xsi:type="VehiclePIFType">
       <ManufacturerPrimaryVehicle>Generic Truck Manufacturer</ManufacturerPrimaryVehicle>
       <ManufacturerAddressPrimaryVehicle>Street, ZIP City</ManufacturerAddressPrimaryVehicle>
@@ -127,8 +127,8 @@
         </Transmission>
         <Axlegear>
           <Data xsi:type="AxlegearDataPIFType">
-            <Manufacturer>Generic Gearbox Manufacturer Primary</Manufacturer>
-            <Model>Generic 40t Long Haul Truck AxleGear</Model>
+            <Manufacturer>Generic Gearbox Manufacturer</Manufacturer>
+            <Model>Generic 40t Long Haul Truck AxleGear Primary</Model>
             <CertificationMethod>Standard values</CertificationMethod>
             <Date>2017-01-11T11:00:00Z</Date>
             <AppVersion>3.0.1</AppVersion>
@@ -254,16 +254,28 @@
         </Auxiliaries>
       </Components>
     </Vehicle>
-    <ResultDataSignature>
-      <di:Reference URI="#RESULT-f61bd2ce3c3341eb8048">
+    <InputDataSignature>
+      
+        <di:Reference URI="#VEH-PrimaryBus_SmartPS">
+          <di:Transforms>
+            <di:Transform Algorithm="urn:vecto:xml:2017:canonicalization" />
+            <di:Transform Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#" />
+          </di:Transforms>
+          <di:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256" />
+          <di:DigestValue>KyEUoR+pb/fnqRuLFC53Ft+RhDf+ABAdd1xxsMwH7io=</di:DigestValue>
+        </di:Reference>
+      
+    </InputDataSignature>
+    <ManufacturerRecordSignature>
+      <di:Reference URI="#RESULT-bfe32d82bc964c108ed0">
         <di:Transforms>
           <di:Transform Algorithm="urn:vecto:xml:2017:canonicalization" />
           <di:Transform Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#" />
         </di:Transforms>
         <di:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256" />
-        <di:DigestValue>heugWRk0GnYtGPjosKwy3WhcNUMVeLC6nTE69GzCYnY=</di:DigestValue>
+        <di:DigestValue>1g9GT522b4FZfr8XwSCNBMfrdcP9F6MoZHxRWugnOzs=</di:DigestValue>
       </di:Reference>
-    </ResultDataSignature>
+    </ManufacturerRecordSignature>
     <Results>
       <Status>success</Status>
       <Result status="success">
@@ -548,18 +560,18 @@
       </Result>
     </Results>
     <ApplicationInformation>
-      <SimulationToolVersion>0.6.0.1884-DEV !!NOT FOR CERTIFICATION!!</SimulationToolVersion>
-      <Date>2020-04-16T05:38:26.8930564Z</Date>
+      <SimulationToolVersion>0.6.1.1932-DEV !!NOT FOR CERTIFICATION!!</SimulationToolVersion>
+      <Date>2020-04-16T12:23:52.6883135Z</Date>
     </ApplicationInformation>
   </pif:Data>
   <pif:Signature>
-    <di:Reference URI="#PIF-b1f9a6097ed74a6b82de">
+    <di:Reference URI="#PIF-1a5c4fd556f14ec8ac23">
       <di:Transforms>
         <di:Transform Algorithm="urn:vecto:xml:2017:canonicalization" />
         <di:Transform Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#" />
       </di:Transforms>
       <di:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256" />
-      <di:DigestValue>igtEc9rHHfZ+4xt2XsbxYnD7yW0qLkrVe/UJL/bMZ5U=</di:DigestValue>
+      <di:DigestValue>b3547elwo1lTvTbxKYq/b7VwOEygVUcPt9E/kpjkMcY=</di:DigestValue>
     </di:Reference>
   </pif:Signature>
 </pif:VectoOutputPrimaryVehicle>

@@ -113,7 +113,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 					);
 			}
 			InputDataIntegrity = new XElement(tns + XMLNames.Report_InputDataSignature,
-				modelData.InputDataHash == null ? CreateDummySig() : new XElement(modelData.InputDataHash));
+				modelData.InputDataHash == null ? XMLHelper.CreateDummySig(di) : new XElement(modelData.InputDataHash));
 		}
 
 		private object[] ExemptedData(VectoRunData modelData)
@@ -162,14 +162,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 
 		}
 
-		private XElement CreateDummySig()
-		{
-			return new XElement(di + XMLNames.DI_Signature_Reference,
-				new XElement(di + XMLNames.DI_Signature_Reference_DigestMethod,
-					new XAttribute(XMLNames.DI_Signature_Algorithm_Attr, "null")),
-				new XElement(di + XMLNames.DI_Signature_Reference_DigestValue, "NOT AVAILABLE")
-				);
-		}
+		
 
 		public virtual void WriteResult(XMLDeclarationReport.ResultEntry resultEntry)
 		{
