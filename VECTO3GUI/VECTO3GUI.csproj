@@ -162,6 +162,10 @@
     <Compile Include="Helper\FileDialogHelper.cs" />
     <Compile Include="Helper\OutputWindowHelper.cs" />
     <Compile Include="Model\InterfacesImpl.cs" />
+    <Compile Include="Model\SettingsModel.cs" />
+    <Compile Include="Model\TempDataObject\AirdragComponentData.cs" />
+    <Compile Include="Model\TempDataObject\AuxiliariesBusComponentData.cs" />
+    <Compile Include="Model\TempDataObject\VehicleBusComponentData.cs" />
     <Compile Include="Util\AllowedEntry.cs" />
     <Compile Include="Util\Component.cs" />
     <Compile Include="Util\RelayCommand.cs" />
@@ -208,6 +212,7 @@
     <Compile Include="ViewModel\Impl\PrimaryVehicleBusJobViewModel.cs" />
     <Compile Include="ViewModel\Impl\PrimaryVehicleBusViewModel.cs" />
     <Compile Include="ViewModel\Impl\RetarderViewModel.cs" />
+    <Compile Include="ViewModel\Impl\SettingsViewModel.cs" />
     <Compile Include="ViewModel\Impl\TorqueConverterViewModel.cs" />
     <Compile Include="ViewModel\Impl\TyreViewModel.cs" />
     <Compile Include="ViewModel\Impl\ValidatingViewModel.cs" />
@@ -217,13 +222,16 @@
     <Compile Include="ViewModel\Interfaces\FullLoadEntry.cs" />
     <Compile Include="ViewModel\Interfaces\Gear.cs" />
     <Compile Include="ViewModel\Interfaces\GearLossMapEntry.cs" />
+    <Compile Include="ViewModel\Interfaces\IAirdrag.cs" />
     <Compile Include="ViewModel\Interfaces\IAirdragViewModel.cs" />
     <Compile Include="ViewModel\Interfaces\IAngledriveViewModel.cs" />
+    <Compile Include="ViewModel\Interfaces\IAuxiliariesBus.cs" />
     <Compile Include="ViewModel\Interfaces\IAuxiliariesViewModel.cs" />
     <Compile Include="ViewModel\Interfaces\IAxlegearViewModel.cs" />
     <Compile Include="ViewModel\Interfaces\IAxlesViewModel.cs" />
     <Compile Include="ViewModel\Interfaces\IAxleViewModel.cs" />
     <Compile Include="ViewModel\Interfaces\ICommonComponentParameters.cs" />
+    <Compile Include="ViewModel\Interfaces\ICompleteVehicleBus.cs" />
     <Compile Include="ViewModel\Interfaces\ICompleteVehicleBusViewModel.cs" />
     <Compile Include="ViewModel\Interfaces\IComponentViewModel.cs" />
     <Compile Include="ViewModel\Interfaces\ICyclesViewModel.cs" />
@@ -359,6 +367,9 @@
     </Compile>
     <Compile Include="Views\OutputWindow.xaml.cs">
       <DependentUpon>OutputWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\SettingsView.xaml.cs">
+      <DependentUpon>SettingsView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\XMLView.xaml.cs">
       <DependentUpon>XMLView.xaml</DependentUpon>
@@ -549,6 +560,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Views\SettingsView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\XMLView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -558,20 +573,11 @@
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Properties\Resources.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Resources.resx</DependentUpon>
-    </Compile>
     <Compile Include="Properties\Settings.Designer.cs">
       <AutoGen>True</AutoGen>
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
-    <EmbeddedResource Include="Properties\Resources.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>

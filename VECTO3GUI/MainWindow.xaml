@@ -23,17 +23,20 @@
 
                 <Menu IsMainMenu="True" Style="{DynamicResource MetroMenu}">
                     <MenuItem Header="File">
-                        <MenuItem Header="New" Style="{DynamicResource MetroMenuItem}" Margin="0"/>
-                        <MenuItem Header="Edit" Style="{DynamicResource MetroMenuItem}" Margin="0" Command="{Binding CurrentViewModel.EditJob}"/>
+                        <MenuItem Header="New" Style="{DynamicResource MetroMenuItem}" Margin="0"
+                                  Command="{Binding CurrentViewModel.CreateNewJob}"/>
+                        <MenuItem Header="Edit" Style="{DynamicResource MetroMenuItem}" Margin="0" 
+                                  Command="{Binding CurrentViewModel.EditJob}"/>
                         <Separator HorizontalAlignment="Stretch" Background="Gray"/>
-                        <MenuItem Header="Open" Command="{Binding CurrentViewModel.CreateNewJob}"/>
+                        <MenuItem Header="Open" Command="{Binding CurrentViewModel.AddJob}"/>
                         <MenuItem Header="Open Folder"/>
                         <Separator HorizontalAlignment="Stretch" Background="Gray"/>
                         <MenuItem Header="Exit"/>
                     </MenuItem>
 
                     <MenuItem Header="Settings">
-                        <!--<MenuItem Header="New"/>-->
+                        <MenuItem Header="Default Settings"
+                                  Command="{Binding CurrentViewModel.OpenSettings}"/>
                     </MenuItem>
 
                     <MenuItem Header="Help">

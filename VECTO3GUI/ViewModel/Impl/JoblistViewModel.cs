@@ -35,7 +35,7 @@ namespace VECTO3GUI.ViewModel.Impl
 		protected readonly ObservableCollection<JobEntry> _jobs = new ObservableCollection<JobEntry>();
 
 		private JobEntry _selectedJobEntry;
-		
+
 		#endregion
 
 
@@ -44,9 +44,11 @@ namespace VECTO3GUI.ViewModel.Impl
 		private ICommand _newJobCommand;
 		private ICommand _editJobCommand;
 		private ICommand _removeJobCommand;
+		private ICommand _removeAllJobCommand;
 		private ICommand _addJobCommand;
 		private ICommand _openJobCommand;
-		
+		private ICommand _openSettingsCommand;
+
 
 		#endregion
 
@@ -91,8 +93,16 @@ namespace VECTO3GUI.ViewModel.Impl
 
 
 		#region Implementation IJoblistViewModel
-		
-		public ICommand RemoveJob { get { return _removeJobCommand ?? new RelayCommand(DoRemoveJob, CanRemoveJob); } }
+
+		public ICommand RemoveJob
+		{
+			get
+			{
+				return _removeJobCommand ??
+						(_removeJobCommand = new RelayCommand(DoRemoveJob, CanRemoveJob));
+			}
+		}
+
 
 		private void DoRemoveJob()
 		{
@@ -100,12 +110,35 @@ namespace VECTO3GUI.ViewModel.Impl
 			SelectedJobEntry = null;
 		}
 
+		public ICommand RemoveAllJobs
+		{
+			get
+			{
+				return _removeAllJobCommand ??
+						(_removeAllJobCommand = new RelayCommand(DoRemoveAllJobs));
+			}
+		}
+
+		private void DoRemoveAllJobs()
+		{
+			_jobs.Clear();
+			SelectedJobEntry = null;
+		}
+
+
 		private bool CanRemoveJob()
 		{
 			return SelectedJobEntry != null;
 		}
 
-		public ICommand EditJob { get { return _editJobCommand ?? new RelayCommand(DoEditJob, CanEditJob); } }
+		public ICommand EditJob
+		{
+			get
+			{
+				return _editJobCommand ??
+						(_editJobCommand = new RelayCommand(DoEditJob, CanEditJob));
+			}
+		}
 
 		private void DoEditJob()
 		{
@@ -113,13 +146,11 @@ namespace VECTO3GUI.ViewModel.Impl
 			try
 			{
 				var jobEditView = ReadJob(entry.Filename); //Kernel.Get<IJobEditViewModel>();
-				if(jobEditView == null)
+				if (jobEditView == null)
 					return;
-
 
 				var window = OutputWindowHelper.CreateOutputWindow(Kernel, jobEditView);
 				window.Show();
-
 			}
 			catch (Exception e)
 			{
@@ -134,24 +165,35 @@ namespace VECTO3GUI.ViewModel.Impl
 			return SelectedJobEntry != null;
 		}
 
-		public ICommand CreateNewJob { get { return _newJobCommand ?? new RelayCommand(DoNewJobCommand); } }
+		public ICommand CreateNewJob
+		{
+			get
+			{
+				return _newJobCommand ??
+						(_newJobCommand = new RelayCommand(DoNewJobCommand));
+			}
+		}
 
 		private void DoNewJobCommand()
 		{
 			var jobEditView = new CompleteVehicleBusJobViewModel(Kernel, null);
-			var wnd = new Window { Content = jobEditView };
-			wnd.Show();
+			var window = OutputWindowHelper.CreateOutputWindow(Kernel, jobEditView, "New File");
+			window.Show();
 		}
 
 
 		public ICommand OpenJob
 		{
-			get { return _openJobCommand ?? new RelayCommand(DoOpenJobCommand); }
+			get
+			{
+				return _openJobCommand ??
+						(_openJobCommand = new RelayCommand(DoOpenJobCommand));
+			}
 		}
 
 		private void DoOpenJobCommand()
 		{
-			if(SelectedJobEntry == null)
+			if (SelectedJobEntry == null)
 				return;
 
 			var xmlViewModel = new XMLViewModel(SelectedJobEntry.Filename);
@@ -161,12 +203,20 @@ namespace VECTO3GUI.ViewModel.Impl
 		}
 
 
-		public ICommand AddJob { get { return _addJobCommand ?? new RelayCommand(DoAddJob); } }
+		public ICommand AddJob
+		{
+			get
+			{
+				return _addJobCommand ??
+						(_addJobCommand = new RelayCommand(DoAddJob));
+			}
+		}
 
 		private void DoAddJob()
 		{
 			var filePath = FileDialogHelper.ShowSelectFilesDialog(false, @"F:\VECTO\VECTO\bin");
-			if (filePath != null) {
+			if (filePath != null)
+			{
 				_jobs.Add(new JobEntry()
 				{
 					Filename = filePath.First(),
@@ -176,16 +226,33 @@ namespace VECTO3GUI.ViewModel.Impl
 			}
 		}
 
+		public ICommand OpenSettings
+		{
+			get
+			{
+				return _openSettingsCommand ??
+					  (_openSettingsCommand = new RelayCommand(DoOpenSettingsCommand));
+			}
+		}
 
-		public ICommand MoveJobUp { get { return new RelayCommand(() => {}, () => false); } }
-		public ICommand MoveJobDown { get { return new RelayCommand(() => {}, () => false); } }
-		public ICommand StartSimulation { get { return new RelayCommand(() => {}, () => false); } }
-		public ICommand JobEntrySetActive { get { return new RelayCommand(() => {}, () => false); } }
+		private void DoOpenSettingsCommand()
+		{
+			var viewModel = new SettingsViewModel();
+			var window = OutputWindowHelper.CreateOutputWindow(Kernel, viewModel, "Settings", 440, 200,
+				ResizeMode.NoResize);
+			window.ShowDialog();
+		}
+
+
+		public ICommand MoveJobUp { get { return new RelayCommand(() => { }, () => false); } }
+		public ICommand MoveJobDown { get { return new RelayCommand(() => { }, () => false); } }
+		public ICommand StartSimulation { get { return new RelayCommand(() => { }, () => false); } }
+		public ICommand JobEntrySetActive { get { return new RelayCommand(() => { }, () => false); } }
 
 
 		#endregion
 
-		
+
 		private IJobEditViewModel ReadJob(string jobFile)
 		{
 			if (jobFile == null)

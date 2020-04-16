@@ -41,7 +41,8 @@ namespace VECTO3GUI.ViewModel.Impl
 
 		public ICommand SaveComponent
 		{
-			get { return _saveComponentCommand ?? new RelayCommand<Component>(DoSaveComponent, CanSaveComponent); }
+			get { return _saveComponentCommand ??
+						(_saveComponentCommand = new RelayCommand<Component>(DoSaveComponent, CanSaveComponent)); }
 		}
 
 		private bool CanSaveComponent(Component component)
@@ -57,7 +58,8 @@ namespace VECTO3GUI.ViewModel.Impl
 
 		public ICommand ResetComponent
 		{
-			get { return _resetComponentCommand ?? new RelayCommand<Component>(DoResetComponent, CanResetComponent); }
+			get { return _resetComponentCommand ??
+						(_resetComponentCommand = new RelayCommand<Component>(DoResetComponent, CanResetComponent)); }
 		}
 
 

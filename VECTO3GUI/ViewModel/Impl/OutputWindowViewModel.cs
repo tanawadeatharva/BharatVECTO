@@ -1,4 +1,5 @@
-﻿using Ninject;
+﻿using System.Windows;
+using Ninject;
 
 namespace VECTO3GUI.ViewModel.Impl
 {
@@ -6,7 +7,7 @@ namespace VECTO3GUI.ViewModel.Impl
 	{
 		private object _viewModel;
 		private string _windowTitle;
-		
+	
 		
 		public object ViewModel
 		{
@@ -25,6 +26,7 @@ namespace VECTO3GUI.ViewModel.Impl
 		{
 			Kernel = kernel;
 			ViewModel = viewModel;
+			WindowTitle = string.Empty;
 		}
 
 		public OutputWindowViewModel(IKernel kernel, object viewModel, string windowTitle)

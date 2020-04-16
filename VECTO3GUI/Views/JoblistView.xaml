@@ -38,12 +38,22 @@
 
                 <DataGrid.Resources>
                     <ContextMenu x:Key="RowMenu">
-                        <MenuItem Header="Remove" Command="{Binding DataContext.RemoveJob, RelativeSource={RelativeSource AncestorType=views:JoblistView}}"/>
+                        <MenuItem Header="View File" Command="{Binding DataContext.OpenJob, RelativeSource={RelativeSource AncestorType=views:JoblistView}}"/>
                         <MenuItem Header="Edit File" Command="{Binding DataContext.EditJob, RelativeSource={RelativeSource AncestorType=views:JoblistView}}"/>
-                        <MenuItem Header="Add File" Command="{Binding DataContext.AddJob, RelativeSource={RelativeSource AncestorType=views:JoblistView}}"/>
-                        <MenuItem Header="Open File" Command="{Binding DataContext.OpenJob, RelativeSource={RelativeSource AncestorType=views:JoblistView}}"/>
+                        <Separator HorizontalAlignment="Stretch" Background="Gray"/>
+                        <MenuItem Header="Remove File" Command="{Binding DataContext.RemoveJob, RelativeSource={RelativeSource AncestorType=views:JoblistView}}"/>
                     </ContextMenu>
                 </DataGrid.Resources>
+
+                <DataGrid.ContextMenu>
+                    <ContextMenu>
+                        <MenuItem Header="Add File" Command="{Binding AddJob}"/>
+                        <MenuItem Header="New File" Command="{Binding CreateNewJob}"/>
+                        <Separator HorizontalAlignment="Stretch" Background="Gray"/>
+                        <MenuItem Header="Remove All" Command="{Binding RemoveAllJobs}"/>
+                    </ContextMenu>
+                </DataGrid.ContextMenu>
+
 
                 <DataGrid.Columns>
                     <DataGridTextColumn Header="File Path" Binding="{Binding Filename}">
@@ -60,7 +70,7 @@
 
         <Grid Grid.Row="1" Grid.Column="2" Margin="0,0,10,0">
             <StackPanel Orientation="Vertical" Margin="0,30,0,0">
-                <Button Margin="0,5,0,0" Command="{Binding EditJob}" Content="Edit" />
+                <Button Margin="0,5,0,0" Command="{Binding EditJob}" Content="Edit File" />
                 <Button Margin="0,5,0,0" Command="{Binding CreateNewJob}" Content="New File"  />
                 <Button Margin="0,5,0,0" Command="{Binding RemoveJob}" Content="Remove File"  />
             </StackPanel>

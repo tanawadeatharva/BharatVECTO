@@ -32,4 +32,15 @@
     </Style>
 
 
+    <Style TargetType="TextBlock" BasedOn="{StaticResource MetroTextBlock}">
+        <Setter Property="VerticalAlignment" Value="Center"/>
+    </Style>
+
+    <Style TargetType="TextBox" BasedOn="{StaticResource MetroTextBox}">
+        <Setter Property="VerticalAlignment" Value="Center"/>
+    </Style>
+
+
+    
+
 </ResourceDictionary>

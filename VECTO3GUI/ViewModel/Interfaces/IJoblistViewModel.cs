@@ -9,6 +9,7 @@ namespace VECTO3GUI.ViewModel.Interfaces
 		ObservableCollection<JobEntry> Jobs { get; }
 		ICommand AddJob { get; }
 		ICommand RemoveJob { get; }
+		ICommand RemoveAllJobs { get; }
 		ICommand MoveJobUp { get; }
 		ICommand MoveJobDown { get; }
 		ICommand StartSimulation { get; }
@@ -16,6 +17,7 @@ namespace VECTO3GUI.ViewModel.Interfaces
 		ICommand JobEntrySetActive { get; }
 		ICommand CreateNewJob { get; }
 		ICommand OpenJob { get; }
+		ICommand OpenSettings { get; }
 
 	}
 }

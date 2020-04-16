@@ -3,13 +3,8 @@ using TUGraz.VectoCommon.Utils;
 
 namespace VECTO3GUI.ViewModel.Interfaces
 {
-	public interface IAirdragViewModel : IComponentViewModel, ICommonComponentParameters
+	public interface IAirdragViewModel : IAirdrag, IComponentViewModel
 	{
 		IAirdragDeclarationInputData ModelData { get; }
-
-		bool UseMeasuredValues { get; set; }
-		SquareMeter CdxA_0 { get; set; }
-		SquareMeter TransferredCdxA { get; set; }
-		SquareMeter DeclaredCdxA { get; set; }
 	}
 }

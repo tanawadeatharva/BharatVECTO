@@ -19,7 +19,9 @@
         <views:XMLView/>
     </DataTemplate>
 
-
+    <DataTemplate DataType="{x:Type impl:SettingsViewModel}">
+        <views:SettingsView/>
+    </DataTemplate>
    
 
 
