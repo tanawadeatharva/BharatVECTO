@@ -29,11 +29,15 @@
 *   Martin Rexeis, rexeis@ivt.tugraz.at, IVT, Graz University of Technology
 */
 
+using System;
+using System.Linq;
 using System.Xml;
 using System.Xml.Linq;
 using Castle.Components.DictionaryAdapter.Xml;
 using TUGraz.VectoCommon.InputData;
+using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Resources;
+using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.InputData.FileIO.XML.Common;
 using TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Interfaces;
 using TUGraz.VectoCore.Utils;
@@ -154,6 +158,14 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration
 		public DigestData ManufacturerHash
 		{
 			get { return Reader.GetDigestData(Document.LastChild.LastChild); }
+		}
+
+		public IResult GetResult(VehicleClass vehicleClass, MissionType mission, string fuelMode, Kilogram payload)
+		{
+			return ResultsInputData.Results.FirstOrDefault(
+				x => x.VehicleGroup == vehicleClass &&
+					(x.SimulationParameter.Payload - payload).IsEqual(0, 1) && x.Mission == mission &&
+					x.SimulationParameter.FuelMode.Equals(fuelMode, StringComparison.InvariantCultureIgnoreCase));
 		}
 
 		public IResultsInputData ResultsInputData

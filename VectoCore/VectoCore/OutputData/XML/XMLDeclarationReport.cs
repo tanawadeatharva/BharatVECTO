@@ -38,6 +38,7 @@ using System.Xml;
 using System.Xml.Linq;
 using System.Xml.XPath;
 using TUGraz.VectoCommon.BusAuxiliaries;
+using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Resources;
 using TUGraz.VectoCommon.Utils;
@@ -123,6 +124,9 @@ namespace TUGraz.VectoCore.OutputData.XML
 
 			public double WeightingFactor { get; set; }
 
+			// used for factor method
+			public IResult PrimaryResult { get; set; }
+
 
 			public virtual void SetResultData(VectoRunData runData, IModalDataContainer data, double weightingFactor)
 			{
@@ -206,6 +210,8 @@ namespace TUGraz.VectoCore.OutputData.XML
 				AverageAxlegearEfficiency = eAxlOut / eAxlIn;
 
 				WeightingFactor = weightingFactor;
+
+				PrimaryResult = runData.PrimaryResult;
 			}
 
 			private static WattSecond WorkWHRCorrection(IModalDataContainer data)

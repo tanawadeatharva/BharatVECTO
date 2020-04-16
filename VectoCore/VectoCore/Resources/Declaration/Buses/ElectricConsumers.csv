@@ -7,7 +7,7 @@ Vehicle basic equipment   , Interior lights per meter              , 0          
 Vehicle basic equipment   , Interior lights LED bonus              , 0            , 0                , 1     , -0.4        , -0.4  , -0.4     , -0.4       , -0.4  , 0.7       , f_IntLight(L_CoC) , per meter vehicle length
 Customer specific equipm. , External displays                      , 0            , 0                , 0     , 2.7         , 2.7   , 2.7      , 2.7        , 2.7   , 1.0       , 2.0               ,
 Customer specific equipm. , Internal displays                      , 0            , 0                , 0     , 1.1         , 1.1   , 1.1      , 1.1        , 1.1   , 1.0       , 1.0               ,
-Customer specific equipm. , Citybus customer specific value (EBSF) , 0            , 0                , 0     , 9.3         , 9.3   , 9.3      , 0.0        , 0.0   , 1.0       , 1.0               ,
+Customer specific equipm. , Citybus customer specific value (EBSF) , 0            , 1                , 0     , 9.3         , 9.3   , 9.3      , 0.0        , 0.0   , 1.0       , 1.0               ,
 Lights                    , Exterior lights (bulb)                 , 1            , 1                , 0     , 7.4         , 7.4   , 7.4      , 7.4        , 7.4   , 1.0       , 1.0               ,
 Lights                    , Day running lights LED bonus           , 0            , 0                , 1     , -0.7        , -0.7  , -0.7     , -0.7       , -0.7  , 1.0       , 1.0               ,
 Lights                    , Position lights LED bonus              , 0            , 0                , 1     , -1.2        , -1.2  , -1.2     , -1.2       , -1.2  , 1.0       , 1.0               ,

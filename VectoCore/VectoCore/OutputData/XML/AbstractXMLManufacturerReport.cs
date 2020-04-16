@@ -34,7 +34,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 		protected XElement Results;
 		protected XElement InputDataIntegrity;
 
-		private bool _allSuccess = true;
+		protected bool _allSuccess = true;
 
 		protected XNamespace xsi = XNamespace.Get("http://www.w3.org/2001/XMLSchema-instance");
 		protected XNamespace tns = "urn:tugraz:ivt:VectoAPI:DeclarationOutput:v0.8";

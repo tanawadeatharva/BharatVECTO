@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCore.Models.Declaration;
@@ -16,7 +17,9 @@ namespace TUGraz.VectoCore.OutputData.XML {
 
 		protected override void InstantiateReports(VectoRunData modelData)
 		{
-			ManufacturerRpt = new XMLManufacturerReportCompletedBus();
+			ManufacturerRpt = new XMLManufacturerReportCompletedBus() {
+				PrimaryVehicle = PrimaryResults.Vehicle
+			};
 			CustomerRpt = new XMLCustomerReportCompletedBus();
 		}
 
@@ -29,7 +32,12 @@ namespace TUGraz.VectoCore.OutputData.XML {
 
 				var genericResult = Results.First(x => x.VehicleClass.IsPrimaryBus() && x.FuelMode == specificResult.FuelMode &&
 						x.Mission == specificResult.Mission && x.LoadingType == specificResult.LoadingType);
-				var primaryResult = SelectPrimaryResult(genericResult);
+				var primaryResult = genericResult.PrimaryResult ?? specificResult.PrimaryResult;
+				if (primaryResult == null) {
+					throw new VectoException(
+						"no primary result entry set for simulation run vehicle class: {0}, mission: {1}, payload: {2}",
+						genericResult.VehicleClass, genericResult.Mission, genericResult.Payload);
+				}
 
 				(ManufacturerRpt as XMLManufacturerReportCompletedBus).WriteResult(genericResult, specificResult, primaryResult);
 				(CustomerRpt as XMLCustomerReportCompletedBus).WriteResult(genericResult, specificResult, primaryResult);
@@ -40,19 +48,6 @@ namespace TUGraz.VectoCore.OutputData.XML {
 			if (Writer != null) {
 				OutputReports();
 			}
-		}
-
-		private IResult SelectPrimaryResult(ResultEntry genericResult)
-		{
-			var isDualModeEngine = Results.Select(x => x.FuelMode).Distinct().Count() > 1;
-			var fuelMode = "single fuel mode";
-			if (isDualModeEngine && genericResult.FuelMode > 0) {
-				fuelMode = "dual fuel mode";
-			}
-			return PrimaryResults.ResultsInputData.Results.First(
-				x => x.VehicleGroup == genericResult.VehicleClass &&
-					(x.SimulationParameter.Payload - genericResult.Payload).IsEqual(0, 1) && x.Mission == genericResult.Mission &&
-					x.SimulationParameter.FuelMode.Equals(fuelMode, StringComparison.InvariantCultureIgnoreCase));
 		}
 	}
 }

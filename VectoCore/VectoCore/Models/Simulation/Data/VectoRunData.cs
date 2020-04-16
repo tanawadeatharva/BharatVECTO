@@ -36,6 +36,7 @@ using System.Xml.Linq;
 using Newtonsoft.Json;
 using TUGraz.VectoCommon.BusAuxiliaries;
 using TUGraz.VectoCommon.Exceptions;
+using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Configuration;
@@ -126,6 +127,9 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 
 		public string ShiftStrategy { get; set; }
 		public MeterPerSecond VehicleDesignSpeed { get; internal set; }
+
+		// only used for factor method
+		public IResult PrimaryResult { get; set; }
 
 		public class AuxData
 		{

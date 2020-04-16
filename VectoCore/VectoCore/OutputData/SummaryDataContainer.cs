@@ -369,8 +369,8 @@ namespace TUGraz.VectoCore.OutputData
 			var workBusAuxESMech = 0.SI<WattSecond>();
 			if (runData.BusAuxiliaries != null) {
 				var workBusAuxPSCompOff = modData.EnergyPneumaticCompressorPowerOff();
-				var workBusAuxPSCompOn = modData.EnergyPneumaticCompressorOn();
-				var airBusAuxPSON = modData.AirGenerated();
+				var workBusAuxPSCompOn = modData.EnergyPneumaticCompressorAlwaysOn();
+				var airBusAuxPSON = modData.AirGeneratedAlwaysOn();
 				var deltaAir = modData.AirConsumed() - modData.AirGenerated();
 
 				var kAir = (workBusAuxPSCompOn - workBusAuxPSCompOff) / (airBusAuxPSON - 0.SI<NormLiter>());
@@ -380,6 +380,7 @@ namespace TUGraz.VectoCore.OutputData
 				workBusAuxESMech = workBusAuxES  /
 										runData.BusAuxiliaries.ElectricalUserInputsConfig.AlternatorMap.GetEfficiency(0.RPMtoRad(), 0.SI<Ampere>()) /
 										runData.BusAuxiliaries.ElectricalUserInputsConfig.AlternatorGearEfficiency;
+
 
 			}
 			row[Fields.E_BusAux_PS_corr] = workBusAuxPSCorr.ConvertToKiloWattHour();

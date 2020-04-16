@@ -824,6 +824,11 @@ namespace TUGraz.VectoCommon.Utils
 		private JoulePerMeter(double val) : base(val, Units) { }
 
 		public override string UnitString { get { return "J/m"; } }
+
+		public static KilogramPerMeter operator /(JoulePerMeter jpm, JoulePerKilogramm jpkg)
+		{
+			return SIBase<KilogramPerMeter>.Create(jpm.Val / jpkg.Value());
+		}
 	}
 
 	/// <summary>

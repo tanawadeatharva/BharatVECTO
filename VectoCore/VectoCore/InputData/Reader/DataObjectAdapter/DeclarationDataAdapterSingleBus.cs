@@ -77,6 +77,15 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			return retVal;
 		}
 
+		#region Overrides of DeclarationDataAdapterCompletedBusGeneric
+
+		public override RetarderData CreateRetarderData(IRetarderInputData retarder)
+		{
+			return SetCommonRetarderData(retarder);
+		}
+
+		#endregion
+
 		public ISingleBusInputDataProvider SingleBusInputData { get; set; }
 
 		protected IVehicleDeclarationInputData CompletedVehicle

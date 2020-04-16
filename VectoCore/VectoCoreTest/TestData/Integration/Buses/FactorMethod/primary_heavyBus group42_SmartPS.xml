@@ -3,7 +3,7 @@
 	<v2.0:Vehicle id="VEH-PrimaryBus_SmartPS" xsi:type="PrimaryVehicleDeclarationType" xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:DEV:v2.6">
 		<Manufacturer>Generic Truck Manufacturer</Manufacturer>
 		<ManufacturerAddress>Street, ZIP City</ManufacturerAddress>
-		<Model>Generic Model</Model>
+		<Model>Generic Model Primary</Model>
 		<VIN>VEH-1234567890_SmartPS</VIN>
 		<Date>2017-02-15T11:00:00Z</Date>
 		<VehicleCategory>Bus</VehicleCategory>
@@ -29,8 +29,8 @@
 		<Components xsi:type="PrimaryVehicleComponentsDeclarationType">
 			<v2.6:Engine xsi:type="v2.0:EngineComponentDeclarationType" xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0">
 				<v2.0:Data id="ENG-gooZah3D" xsi:type="v2.1:EngineDataDeclarationType" xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.1">
-					<Manufacturer>Generic Engine Manufacturer</Manufacturer>
-					<Model>Bus 6x2</Model>
+					<Manufacturer>Generic Engine Manufacturer Primary</Manufacturer>
+					<Model>Bus 6x2 Engine</Model>
 					<CertificationNumber>e12*0815/8051*2017/05E0000*00</CertificationNumber>
 					<Date>2017-02-15T11:00:00Z</Date>
 					<AppVersion>VectoEngine x.y</AppVersion>
@@ -194,8 +194,8 @@
 			</v2.6:Engine>
 			<v2.6:Gearbox xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0" xsi:type="GearboxComponentDeclarationType">
 				<Data id="gbx-vi2Oak2N" xsi:type="GearboxDataDeclarationType">
-					<Manufacturer>Generic Gearbox Manufacturer</Manufacturer>
-					<Model>Generic 40t Long Haul Truck Gearbox</Model>
+					<Manufacturer>Generic Gearbox Manufacturer Primary</Manufacturer>
+					<Model>Generic 40t Long Haul Truck Gearbox Primary</Model>
 					<CertificationNumber>e12*0815/8051*2017/05E0000*00</CertificationNumber>
 					<Date>2017-01-11T11:00:00Z</Date>
 					<AppVersion>3.0.1</AppVersion>
@@ -2728,7 +2728,7 @@
 			<v2.6:Axlegear xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0" xsi:type="AxlegearComponentDeclarationType">
 				<Data id="AXL-EC3ohnoh" xsi:type="AxlegearDataDeclarationType">
 					<Manufacturer>Generic Gearbox Manufacturer</Manufacturer>
-					<Model>Generic 40t Long Haul Truck AxleGear</Model>
+					<Model>Generic 40t Long Haul Truck AxleGear Primary</Model>
 					<CertificationNumber>e12*0815/8051*2017/05E0000*00</CertificationNumber>
 					<Date>2017-01-11T11:00:00Z</Date>
 					<AppVersion>3.0.1</AppVersion>

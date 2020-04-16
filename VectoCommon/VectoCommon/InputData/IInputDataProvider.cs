@@ -30,6 +30,8 @@
 */
 
 using System.Xml.Linq;
+using TUGraz.VectoCommon.Models;
+using TUGraz.VectoCommon.Utils;
 
 namespace TUGraz.VectoCommon.InputData
 {
@@ -67,6 +69,8 @@ namespace TUGraz.VectoCommon.InputData
 		IApplicationInformation ApplicationInformation { get; }
 
 		DigestData ManufacturerHash { get; }
+
+		IResult GetResult(VehicleClass vehicleClass, MissionType mission, string fuelMode, Kilogram payload);
 	}
 
 	public interface ISingleBusInputDataProvider : IDeclarationInputDataProvider

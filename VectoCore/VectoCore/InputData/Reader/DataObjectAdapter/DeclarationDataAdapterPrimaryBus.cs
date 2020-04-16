@@ -21,8 +21,15 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 {
 	public class DeclarationDataAdapterPrimaryBus : DeclarationDataAdapterHeavyLorry
 	{
-	
-		#region Overrides of DeclarationDataAdapterTruck
+		#region Overrides of DeclarationDataAdapterHeavyLorry
+
+		public override DriverData CreateDriverData()
+		{
+			var retVal = base.CreateDriverData();
+			retVal.LookAheadCoasting.Enabled = false;
+			return retVal;
+		}
+
 
 		public override VehicleData CreateVehicleData(IVehicleDeclarationInputData data, Mission mission, KeyValuePair<LoadingType, Tuple<Kilogram, double?>> loading)
 		{

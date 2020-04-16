@@ -1014,6 +1014,7 @@ namespace TUGraz.VectoCore.Tests.Integration.CompletedBus
 		TestCase(JobFilePrimary42, TestName = "RunPrimaryBusSimulation Group42"),
 		TestCase(@"TestData\Integration\Buses\FactorMethod\SingleBus_41-32b.vecto", TestName = "RunSingleBusSimulation Group 41/32b"),
 		TestCase(@"TestData\Integration\Buses\FactorMethod\SingleBus_42-33b.vecto", TestName = "RunSingleBusSimulation Group 42/33b"),
+		TestCase(@"TestData\Integration\Buses\FactorMethod\SingleBus_41-32b_AT-P.vecto", TestName = "RunSingleBusSimulation Group 41/32b AT-P"),
 		]
 		public void TestRunCompletedBusSimulation(string jobName)
 		{

@@ -307,6 +307,9 @@
     <None Include="TestData\Integration\Buses\FactorMethod\CompletedBus_42-33b.vecto">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Include="TestData\Integration\Buses\FactorMethod\SingleBus_41-32b_AT-P.vecto">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="TestData\Integration\Buses\FactorMethod\SingleBus_42-33b.vecto">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>

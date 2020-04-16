@@ -4,6 +4,7 @@ using System.Data;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using TUGraz.VectoCommon.BusAuxiliaries;
+using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
@@ -39,13 +40,18 @@ namespace TUGraz.VectoCore.Models.Declaration
 			
 		}
 
-		public CombustionEngineData CreateGenericBusEngineData(IVehicleDeclarationInputData primaryVehicle)
+		public CombustionEngineData CreateGenericBusEngineData(IVehicleDeclarationInputData primaryVehicle, int modeIdx)
 		{
+			if (modeIdx >= primaryVehicle.Components.EngineInputData.EngineModes.Count) {
+				throw new VectoException(
+					"requested engine mode {0}, only {1} modes in engine of primary vehicle available!", modeIdx,
+					primaryVehicle.Components.EngineInputData.EngineModes.Count);
+			}
 			var engineData = primaryVehicle.Components.EngineInputData;
 			var gearbox = primaryVehicle.Components.GearboxInputData;
 
 			var engine = new CombustionEngineData {
-				IdleSpeed = engineData.EngineModes[0].IdleSpeed,
+				IdleSpeed = engineData.EngineModes[modeIdx].IdleSpeed,
 				Displacement = engineData.Displacement,
 				WHRType = WHRType.None,
 				Inertia = DeclarationData.Engine.EngineInertia(engineData.Displacement, gearbox.Type),
@@ -55,10 +61,10 @@ namespace TUGraz.VectoCore.Models.Declaration
 				MaxTorqueDeclared = engineData.MaxTorqueDeclared,
 			};
 
-		var limits = primaryVehicle.TorqueLimits.ToDictionary(e => e.Gear);
+			var limits = primaryVehicle.TorqueLimits.ToDictionary(e => e.Gear);
 			var numGears = gearbox.Gears.Count;
 			var fullLoadCurves = new Dictionary<uint, EngineFullLoadCurve>(numGears + 1);
-			fullLoadCurves[0] = FullLoadCurveReader.Create(engineData.EngineModes.First().FullLoadCurve, true);
+			fullLoadCurves[0] = FullLoadCurveReader.Create(engineData.EngineModes[modeIdx].FullLoadCurve, true);
 			fullLoadCurves[0].EngineData = engine;
 
 			foreach (var gear in gearbox.Gears) {
@@ -71,7 +77,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 			engine.FullLoadCurves = fullLoadCurves;
 			
 
-			var fuel = GetCombustionEngineFuelData(primaryVehicle.Components.EngineInputData.EngineModes.First(), fullLoadCurves[0]);
+			var fuel = GetCombustionEngineFuelData(primaryVehicle.Components.EngineInputData.EngineModes[modeIdx], fullLoadCurves[0]);
 			
 			
 

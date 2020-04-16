@@ -48,7 +48,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 		protected ICompressorMap _compressorMap;
 		//protected IPneumaticsConsumersDemand _consumersDeclarationData;
 
-		protected CombustionEngineData _combustionEngineData;
+		//protected CombustionEngineData _combustionEngineData;
 
 		//protected Exception InitException;
 		protected ShiftStrategyParameters _gearshiftData;
@@ -93,7 +93,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 		{
 			var powertrainConfig = _segmentCompletedBus.Missions.Select(
 														mission => CreateVectoRunDataSpecific(
-															 mission, mission.Loadings.First()))
+															 mission, mission.Loadings.First(), 0))
 													.FirstOrDefault(x => x != null);
 			
 			Report.InitializeReport(powertrainConfig, new List<List<FuelData.Entry>>());
@@ -113,7 +113,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 																_segmentCompletedBus.Missions.First().Loadings.First());
 			tmpVehicleData.VehicleCategory = VehicleCategory.GenericBusVehicle;
 
-			_combustionEngineData = DataAdapterGeneric.CreateEngineData(PrimaryVehicle);
+			var combustionEngineData = DataAdapterGeneric.CreateEngineData(PrimaryVehicle, 0);
 
 			_axlegearData = DataAdapterGeneric.CreateAxleGearData(PrimaryVehicle.Components.AxleGearInputData);
 
@@ -127,11 +127,11 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 			};
 			var tmpStrategy = PowertrainBuilder.GetShiftStrategy(tmpRunData, new SimplePowertrainContainer(tmpRunData));
 			
-			_gearboxData = DataAdapterGeneric.CreateGearboxData(PrimaryVehicle, new VectoRunData() { EngineData = _combustionEngineData, AxleGearData = _axlegearData, VehicleData = tmpVehicleData },
+			_gearboxData = DataAdapterGeneric.CreateGearboxData(PrimaryVehicle, new VectoRunData() { EngineData = combustionEngineData, AxleGearData = _axlegearData, VehicleData = tmpVehicleData },
 				tmpStrategy);
 
 			_gearshiftData = DataAdapterGeneric.CreateGearshiftData(
-				_gearboxData, _axlegearData.AxleGear.Ratio * (_angledriveData?.Angledrive.Ratio ?? 1.0), _combustionEngineData.IdleSpeed);
+				_gearboxData, _axlegearData.AxleGear.Ratio * (_angledriveData?.Angledrive.Ratio ?? 1.0), combustionEngineData.IdleSpeed);
 
 			_retarderData = DataAdapterGeneric.CreateRetarderData(PrimaryVehicle.Components.RetarderInputData);
 				
@@ -151,23 +151,53 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 
 		private IEnumerable<VectoRunData> VectoRunDataHeavyBusCompleted()
 		{
-			foreach (var mission in _segmentCompletedBus.Missions) {
-				foreach (var loading in mission.Loadings) {
-					var simulationRunData = CreateVectoRunDataSpecific(mission, loading);
-					if (simulationRunData != null) {
+			var engineModes = InputDataProvider.PrimaryVehicleData.Vehicle.Components.EngineInputData.EngineModes;
+
+			for (var modeIdx = 0; modeIdx < engineModes.Count; modeIdx++) {
+				var fuelMode = "single fuel mode";
+				if (engineModes[modeIdx].Fuels.Count > 1) {
+					fuelMode = "dual fuel mode";
+				}
+				foreach (var mission in _segmentCompletedBus.Missions) {
+					foreach (var loading in mission.Loadings) {
+						var simulationRunData = CreateVectoRunDataSpecific(mission, loading, modeIdx);
+						if (simulationRunData != null) {
+							yield return simulationRunData;
+						}
+
+						var primarySegment = GetPrimarySegment(PrimaryVehicle);
+						var primaryMission = primarySegment.Missions.Where(
+							m => {
+								return m.BusParameter.DoubleDecker == CompletedVehicle.VehicleCode.IsDoubleDeckerBus() &&
+										m.MissionType == mission.MissionType;
+							}).First();
+						simulationRunData = CreateVectoRunDataGeneric(
+							primaryMission,
+							new KeyValuePair<LoadingType, Tuple<Kilogram, double?>>(loading.Key, primaryMission.Loadings[loading.Key]),
+							primarySegment, modeIdx);
+
+
+						var primaryResult = InputDataProvider.PrimaryVehicleData.GetResult(
+							simulationRunData.Mission.BusParameter.BusGroup, simulationRunData.Mission.MissionType, fuelMode,
+							simulationRunData.VehicleData.Loading);
+						if (primaryResult == null) {
+							throw new VectoException(
+								"Failed to find results in PrimaryVehicleReport for vehicle group: {0},  mission: {1}, fuel mode: '{2}', payload: {3}. Make sure PIF and completed vehicle data match!",
+								simulationRunData.Mission.BusParameter.BusGroup, simulationRunData.Mission.MissionType, fuelMode,
+								simulationRunData.VehicleData.Loading);
+						}
+
+						if (primaryResult.ResultStatus != "success") {
+							throw new VectoException(
+								"Simulation results in PrimaryVehicleReport for vehicle group: {0},  mission: {1}, fuel mode: '{2}', payload: {3} not finished successfully.",
+								simulationRunData.Mission.BusParameter.BusGroup, simulationRunData.Mission.MissionType, fuelMode,
+								simulationRunData.VehicleData.Loading);
+						}
+
+						simulationRunData.PrimaryResult = primaryResult;
+
 						yield return simulationRunData;
 					}
-
-					var primarySegment = GetPrimarySegment(PrimaryVehicle);
-					var primaryMission = primarySegment.Missions.Where(
-						m => {
-							return m.BusParameter.DoubleDecker == CompletedVehicle.VehicleCode.IsDoubleDeckerBus() &&
-									m.MissionType == mission.MissionType;
-						}).First();
-					simulationRunData = CreateVectoRunDataGeneric(
-						primaryMission, new KeyValuePair<LoadingType, Tuple<Kilogram, double?>>(loading.Key, primaryMission.Loadings[loading.Key]),
-						primarySegment);
-					yield return simulationRunData;
 				}
 			}
 		}
@@ -205,7 +235,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 		}
 
 
-		protected VectoRunData CreateVectoRunDataSpecific(Mission mission, KeyValuePair<LoadingType, Tuple<Kilogram, double?>> loading)
+		protected VectoRunData CreateVectoRunDataSpecific(Mission mission, KeyValuePair<LoadingType, Tuple<Kilogram, double?>> loading, int modeIdx)
 		{
 			DrivingCycleData cycle;
 			lock (CyclesCacheLock) {
@@ -224,7 +254,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 				VehicleData = DataAdapterSpecific.CreateVehicleData(PrimaryVehicle, CompletedVehicle, 
 					mission, loading),
 				AirdragData = DataAdapterSpecific.CreateAirdragData(CompletedVehicle, mission),
-				EngineData = _combustionEngineData,
+				EngineData = DataAdapterSpecific.CreateEngineData(PrimaryVehicle, modeIdx),
 				GearboxData = _gearboxData,
 				AxleGearData = _axlegearData,
 				AngledriveData = _angledriveData,
@@ -251,7 +281,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 		}
 
 		
-		protected VectoRunData CreateVectoRunDataGeneric(Mission mission, KeyValuePair<LoadingType, Tuple<Kilogram, double?>> loading, Segment primarySegment)
+		protected VectoRunData CreateVectoRunDataGeneric(Mission mission, KeyValuePair<LoadingType, Tuple<Kilogram, double?>> loading, Segment primarySegment, int modeIdx)
 		{
 			DrivingCycleData cycle;
 			lock (CyclesCacheLock) {
@@ -269,7 +299,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 				Loading = loading.Key,
 				VehicleData = DataAdapterGeneric.CreateVehicleData(PrimaryVehicle, mission, loading),
 				AirdragData = DataAdapterGeneric.CreateAirdragData(null, mission, new Segment()),
-				EngineData = _combustionEngineData,
+				EngineData = DataAdapterGeneric.CreateEngineData(PrimaryVehicle, modeIdx),
 				GearboxData = _gearboxData,
 				AxleGearData = _axlegearData,
 				AngledriveData = _angledriveData,

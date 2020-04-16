@@ -236,6 +236,11 @@ namespace TUGraz.VectoCommon.Utils
 		{
 			return new ConvertedSI(nlps.Value() * 60.0, "Nl/min");
 		}
+
+		public static ConvertedSI ConvertToMegaJouleperKilometer(this JoulePerMeter jpm)
+		{
+			return new ConvertedSI(jpm.Value() * 1e-3, "MJ/km");
+		}
 	}
 }
 
