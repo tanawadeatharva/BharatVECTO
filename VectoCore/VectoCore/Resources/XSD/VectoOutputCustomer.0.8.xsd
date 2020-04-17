@@ -320,7 +320,7 @@
 															</xs:simpleContent>
 														</xs:complexType>
 													</xs:element>
-													<xs:element name="AveragePassengerCount" type="xs:double"/>
+													<xs:element name="AveragePassengerCount" type="xs:double" minOccurs="0"/>
 												</xs:sequence>
 											</xs:complexType>
 										</xs:element>
@@ -520,16 +520,24 @@
 							<xs:documentation>P046 / II.1.2.9  // arithmetic average of RRC over all truck tires</xs:documentation>
 						</xs:annotation>
 					</xs:element>
-					<xs:element name="AverageFuelEfficiencyLabelMotorVehicleTyres">
+					<xs:element name="FuelEfficiencyLabelMotorVehicleTyre" maxOccurs="4">
 						<xs:annotation>
 							<xs:documentation>II.1.2.10  // classification of AverageRRCMotorVehicleTyres according to 1222/2009 C3 tyres </xs:documentation>
 						</xs:annotation>
-						<xs:simpleType>
-							<xs:restriction base="xs:string">
-								<xs:minLength value="1"/>
-								<xs:maxLength value="1"/>
-							</xs:restriction>
-						</xs:simpleType>
+						<xs:complexType>
+							<xs:simpleContent>
+								<xs:extension base="xs:string">
+									<xs:attribute name="axleNbr" use="required">
+										<xs:simpleType>
+											<xs:restriction base="xs:int">
+												<xs:minInclusive value="1"/>
+												<xs:maxInclusive value="4"/>
+											</xs:restriction>
+										</xs:simpleType>
+									</xs:attribute>
+								</xs:extension>
+							</xs:simpleContent>
+						</xs:complexType>
 					</xs:element>
 					<xs:element name="InputDataSignature" type="vdecdef:SignatureType"/>
 				</xs:sequence>

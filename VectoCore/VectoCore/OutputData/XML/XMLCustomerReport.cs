@@ -69,6 +69,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 		protected KilogramPerMeter _weightedCo2 = 0.SI<KilogramPerMeter>();
 
 		protected Kilogram _weightedPayload = 0.SI<Kilogram>();
+		private double _passengerCount;
 
 
 		public XMLCustomerReport()
@@ -174,45 +175,58 @@ namespace TUGraz.VectoCore.OutputData.XML
 		public virtual void WriteResult(XMLDeclarationReport.ResultEntry resultEntry)
 		{
 			//foreach (var resultEntry in entry.ResultEntry) {
-				_allSuccess &= resultEntry.Status == VectoRun.Status.Success;
-				if (resultEntry.Status == VectoRun.Status.Success) {
-					_weightedPayload += resultEntry.Payload * resultEntry.WeightingFactor;
-					_weightedCo2 += resultEntry.CO2Total / resultEntry.Distance * resultEntry.WeightingFactor;
-				}
-				Results.Add(new XElement(tns + XMLNames.Report_Result_Result,
-					new XAttribute(XMLNames.Report_Result_Status_Attr,
-						resultEntry.Status == VectoRun.Status.Success ? "success" : "error"),
-					new XElement(tns + XMLNames.Report_Result_Mission, resultEntry.Mission.ToXMLFormat()),
-					GetResults(resultEntry)));
-			//}
+			_allSuccess &= resultEntry.Status == VectoRun.Status.Success;
+			if (resultEntry.Status == VectoRun.Status.Success) {
+				_weightedPayload += resultEntry.Payload * resultEntry.WeightingFactor;
+				_weightedCo2 += resultEntry.CO2Total / resultEntry.Distance * resultEntry.WeightingFactor;
+				_passengerCount += (resultEntry.PassengerCount ?? 0) * resultEntry.WeightingFactor;
+			}
+			Results.Add(resultEntry.Status == VectoRun.Status.Success ? GetSuccessResult(resultEntry) : GetErrorResult(resultEntry));
 		}
 
-		private object[] GetResults(XMLDeclarationReport.ResultEntry resultEntry)
+		private XElement GetErrorResult(XMLDeclarationReport.ResultEntry resultEntry)
 		{
+			var content = new object[] { };
 			switch (resultEntry.Status) {
 				case VectoRun.Status.Pending:
 				case VectoRun.Status.Running:
-					return null; // should not happen!
-				case VectoRun.Status.Success:
-					return GetSuccessResultEntry(resultEntry);
+					content = null; // should not happen!
+					break;
 				case VectoRun.Status.Canceled:
 				case VectoRun.Status.Aborted:
-					return new object[] {
+					content =  new object[] {
 						new XElement(tns + "Error", resultEntry.Error)
 					};
+					break;
 				default:
 					throw new ArgumentOutOfRangeException();
 			}
+
+			return new XElement(tns + XMLNames.Report_Result_Result,
+				new XAttribute(XMLNames.Report_Result_Status_Attr, "error"),
+				new XAttribute(xsi + "type", "ResultErrorType"),
+				new XElement(tns + XMLNames.Report_Result_Mission, resultEntry.Mission.ToXMLFormat()),
+				content);
 		}
 
-		private object[] GetSuccessResultEntry(XMLDeclarationReport.ResultEntry result)
+		private XElement GetSuccessResult(XMLDeclarationReport.ResultEntry result)
 		{
-			return new object[] {
-				new XElement(tns + XMLNames.Report_Result_Payload, XMLHelper.ValueAsUnit(result.Payload, XMLNames.Unit_kg, 0)),
-				new XElement(tns + XMLNames.Report_Result_FuelMode, result.FuelData.Count > 1 ? XMLNames.Report_Result_FuelMode_Val_Dual : XMLNames.Report_Result_FuelMode_Val_Single),
+			return new XElement(
+				tns + XMLNames.Report_Result_Result,
+				new XAttribute(XMLNames.Report_Result_Status_Attr, "success"),
+				new XAttribute(xsi + "type", "ResultSuccessType"),
+				new XElement(tns + XMLNames.Report_Result_Mission, result.Mission.ToXMLFormat()),
+				new XElement(tns + XMLNames.Report_ResultEntry_TotalVehicleMass,
+					XMLHelper.ValueAsUnit(result.TotalVehicleMass, XMLNames.Unit_kg)),
+				new XElement(tns + XMLNames.Report_ResultEntry_Payload, XMLHelper.ValueAsUnit(result.Payload, XMLNames.Unit_kg)),
+				result.PassengerCount.HasValue && result.PassengerCount.Value > 0
+					? new XElement(tns + "PassengerCount", result.PassengerCount.Value.ToMinSignificantDigits(3, 1))
+					: null,
+				new XElement(tns + XMLNames.Report_Result_FuelMode,
+					result.FuelData.Count > 1 ? XMLNames.Report_Result_FuelMode_Val_Dual : XMLNames.Report_Result_FuelMode_Val_Single),
 				new XElement(tns + XMLNames.Report_Results_AverageSpeed, XMLHelper.ValueAsUnit(result.AverageSpeed, XMLNames.Unit_kmph, 1)),
 				XMLDeclarationReport.GetResults(result, tns, false).Cast<object>().ToArray()
-			};
+			);
 		}
 
 		private XElement GetApplicationInfo()
@@ -244,7 +258,8 @@ namespace TUGraz.VectoCore.OutputData.XML
 					new XElement(tns + XMLNames.Report_AveragePayload,
 						new XAttribute(XMLNames.Report_Results_Unit_Attr, XMLNames.Unit_t),
 						_weightedPayload.ConvertToTon().ToXMLFormat(3)
-					)
+					),
+					_passengerCount > 0 ? new XElement(tns + "AveragePAssengerCount", _passengerCount.ToMinSignificantDigits(2)) : null
 				)
 				: null;
 			results.Add(summary);

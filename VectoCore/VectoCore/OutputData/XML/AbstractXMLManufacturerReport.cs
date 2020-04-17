@@ -110,93 +110,105 @@ namespace TUGraz.VectoCore.OutputData.XML
 		public virtual void WriteResult(XMLDeclarationReport.ResultEntry resultEntry)
 		{
 			_allSuccess &= resultEntry.Status == VectoRun.Status.Success;
-				Results.Add(
-					new XElement(
-						tns + XMLNames.Report_Result_Result,
-						new XAttribute(
-							XMLNames.Report_Result_Status_Attr,
-							resultEntry.Status == VectoRun.Status.Success ? "success" : "error"),
-						new XElement(tns + XMLNames.Report_Result_Mission, resultEntry.Mission.ToXMLFormat()),
-						GetResults(resultEntry)));
-			
+			Results.Add(
+				resultEntry.Status == VectoRun.Status.Success ? GetSuccessResult(resultEntry) : GetErrorResult(resultEntry));
 		}
 
-		protected virtual object[] GetResults( XMLDeclarationReport.ResultEntry resultEntry)
+		protected virtual XElement GetErrorResult( XMLDeclarationReport.ResultEntry resultEntry)
 		{
+			var content = new object[] {};
 			switch (resultEntry.Status) {
 				case VectoRun.Status.Pending:
 				case VectoRun.Status.Running:
-					return new object[] {
+					content = new object[] {
 						GetSimulationParameters(resultEntry),
 						new XElement(
 							tns + XMLNames.Report_Results_Error,
 							string.Format("Simulation not finished! Status: {0}", resultEntry.Status)),
 						new XElement(tns + XMLNames.Report_Results_ErrorDetails, ""),
 					}; // should not happen!
-				case VectoRun.Status.Success: return GetSuccessResultEntry(resultEntry);
+					break;
 				case VectoRun.Status.Canceled:
 				case VectoRun.Status.Aborted:
-					return new object[] {
+					content =  new object[] {
 						GetSimulationParameters(resultEntry),
 						new XElement(tns + XMLNames.Report_Results_Error, resultEntry.Error),
 						new XElement(tns + XMLNames.Report_Results_ErrorDetails, resultEntry.StackTrace),
 					};
+					break;
 				default: throw new ArgumentOutOfRangeException();
 			}
+
+			return new XElement(
+				tns + XMLNames.Report_Result_Result,
+				new XAttribute(
+					XMLNames.Report_Result_Status_Attr, "error"),
+				new XAttribute(xsi + "type", "ResultErrorType"),
+				new XElement(tns + XMLNames.Report_Result_Mission, resultEntry.Mission.ToXMLFormat()),
+				content);
 		}
 
-		protected virtual object[] GetSuccessResultEntry(XMLDeclarationReport.ResultEntry result)
+		protected virtual XElement GetSuccessResult(XMLDeclarationReport.ResultEntry result)
 		{
-			return new object[] {
+			return new XElement(
+				tns + XMLNames.Report_Result_Result,
+				new XAttribute(
+					XMLNames.Report_Result_Status_Attr, "success"),
+				new XAttribute(xsi + "type", "ResultSuccessType"),
+				new XElement(tns + XMLNames.Report_Result_Mission, result.Mission.ToXMLFormat()), 
 				new XElement(
 					tns + XMLNames.Report_ResultEntry_Distance, new XAttribute(XMLNames.Report_Results_Unit_Attr, XMLNames.Unit_km),
 					result.Distance.ConvertToKiloMeter().ToXMLFormat(3)),
 				GetSimulationParameters(result),
-				new XElement(
-					tns + XMLNames.Report_ResultEntry_VehiclePerformance,
-					new XElement(
-						tns + XMLNames.Report_ResultEntry_AverageSpeed,
-						XMLHelper.ValueAsUnit(result.AverageSpeed, XMLNames.Unit_kmph, 1)),
-					new XElement(
-						tns + XMLNames.Report_ResultEntry_AvgDrivingSpeed,
-						XMLHelper.ValueAsUnit(result.AverageDrivingSpeed, XMLNames.Unit_kmph, 1)),
-					new XElement(
-						tns + XMLNames.Report_ResultEntry_MinSpeed, XMLHelper.ValueAsUnit(result.MinSpeed, XMLNames.Unit_kmph, 1)),
-					new XElement(
-						tns + XMLNames.Report_ResultEntry_MaxSpeed, XMLHelper.ValueAsUnit(result.MaxSpeed, XMLNames.Unit_kmph, 1)),
-					new XElement(
-						tns + XMLNames.Report_ResultEntry_MaxDeceleration,
-						XMLHelper.ValueAsUnit(result.MaxDeceleration, XMLNames.Unit_mps2, 2)),
-					new XElement(
-						tns + XMLNames.Report_ResultEntry_MaxAcceleration,
-						XMLHelper.ValueAsUnit(result.MaxAcceleration, XMLNames.Unit_mps2, 2)),
-					new XElement(
-						tns + XMLNames.Report_ResultEntry_FullLoadDrivingtimePercentage,
-						result.FullLoadPercentage.ToXMLFormat(2)),
-					new XElement(tns + XMLNames.Report_ResultEntry_GearshiftCount, result.GearshiftCount.ToXMLFormat(0)),
-					new XElement(
-						tns + XMLNames.Report_ResultEntry_EngineSpeedDriving,
-						new XElement(
-							tns + XMLNames.Report_ResultEntry_EngineSpeedDriving_Min,
-							XMLHelper.ValueAsUnit(result.EngineSpeedDrivingMin, XMLNames.Unit_RPM, 1)),
-						new XElement(
-							tns + XMLNames.Report_ResultEntry_EngineSpeedDriving_Avg,
-							XMLHelper.ValueAsUnit(result.EngineSpeedDrivingAvg, XMLNames.Unit_RPM, 1)),
-						new XElement(
-							tns + XMLNames.Report_ResultEntry_EngineSpeedDriving_Max,
-							XMLHelper.ValueAsUnit(result.EngineSpeedDrivingMax, XMLNames.Unit_RPM, 1))
-					),
-					new XElement(
-						tns + XMLNames.Report_Results_AverageGearboxEfficiency,
-						XMLHelper.ValueAsUnit(result.AverageGearboxEfficiency, XMLNames.UnitPercent, 2)),
-					new XElement(
-						tns + XMLNames.Report_Results_AverageAxlegearEfficiency,
-						XMLHelper.ValueAsUnit(result.AverageAxlegearEfficiency, XMLNames.UnitPercent, 2))
-				),
-
+				GetVehiclePerformance(result),
 				//FC
 				XMLDeclarationReport.GetResults(result, tns, true).Cast<object>().ToArray()
-			};
+			);
+		}
+
+		private XElement GetVehiclePerformance(XMLDeclarationReport.ResultEntry result)
+		{
+			return new XElement(
+				tns + XMLNames.Report_ResultEntry_VehiclePerformance,
+				new XElement(
+					tns + XMLNames.Report_ResultEntry_AverageSpeed,
+					XMLHelper.ValueAsUnit(result.AverageSpeed, XMLNames.Unit_kmph, 1)),
+				new XElement(
+					tns + XMLNames.Report_ResultEntry_AvgDrivingSpeed,
+					XMLHelper.ValueAsUnit(result.AverageDrivingSpeed, XMLNames.Unit_kmph, 1)),
+				new XElement(
+					tns + XMLNames.Report_ResultEntry_MinSpeed, XMLHelper.ValueAsUnit(result.MinSpeed, XMLNames.Unit_kmph, 1)),
+				new XElement(
+					tns + XMLNames.Report_ResultEntry_MaxSpeed, XMLHelper.ValueAsUnit(result.MaxSpeed, XMLNames.Unit_kmph, 1)),
+				new XElement(
+					tns + XMLNames.Report_ResultEntry_MaxDeceleration,
+					XMLHelper.ValueAsUnit(result.MaxDeceleration, XMLNames.Unit_mps2, 2)),
+				new XElement(
+					tns + XMLNames.Report_ResultEntry_MaxAcceleration,
+					XMLHelper.ValueAsUnit(result.MaxAcceleration, XMLNames.Unit_mps2, 2)),
+				new XElement(
+					tns + XMLNames.Report_ResultEntry_FullLoadDrivingtimePercentage,
+					result.FullLoadPercentage.ToXMLFormat(2)),
+				new XElement(tns + XMLNames.Report_ResultEntry_GearshiftCount, result.GearshiftCount.ToXMLFormat(0)),
+				new XElement(
+					tns + XMLNames.Report_ResultEntry_EngineSpeedDriving,
+					new XElement(
+						tns + XMLNames.Report_ResultEntry_EngineSpeedDriving_Min,
+						XMLHelper.ValueAsUnit(result.EngineSpeedDrivingMin, XMLNames.Unit_RPM, 1)),
+					new XElement(
+						tns + XMLNames.Report_ResultEntry_EngineSpeedDriving_Avg,
+						XMLHelper.ValueAsUnit(result.EngineSpeedDrivingAvg, XMLNames.Unit_RPM, 1)),
+					new XElement(
+						tns + XMLNames.Report_ResultEntry_EngineSpeedDriving_Max,
+						XMLHelper.ValueAsUnit(result.EngineSpeedDrivingMax, XMLNames.Unit_RPM, 1))
+				),
+				new XElement(
+					tns + XMLNames.Report_Results_AverageGearboxEfficiency,
+					XMLHelper.ValueAsUnit(result.AverageGearboxEfficiency, XMLNames.UnitPercent, 2)),
+				new XElement(
+					tns + XMLNames.Report_Results_AverageAxlegearEfficiency,
+					XMLHelper.ValueAsUnit(result.AverageAxlegearEfficiency, XMLNames.UnitPercent, 2))
+			);
 		}
 
 		protected virtual XElement GetSimulationParameters(XMLDeclarationReport.ResultEntry result)
