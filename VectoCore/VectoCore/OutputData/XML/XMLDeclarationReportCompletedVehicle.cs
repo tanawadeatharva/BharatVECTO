@@ -11,16 +11,18 @@ namespace TUGraz.VectoCore.OutputData.XML {
 	{
 		public XMLDeclarationReportCompletedVehicle(IReportWriter writer, bool writePIF = false) : base(writer) { }
 
-		public IPrimaryVehicleInformationInputDataProvider PrimaryResults { get; set; }
+		public IPrimaryVehicleInformationInputDataProvider PrimaryVehicleReportInputData { get; set; }
 
 		#region Overrides of XMLDeclarationReport
 
 		protected override void InstantiateReports(VectoRunData modelData)
 		{
 			ManufacturerRpt = new XMLManufacturerReportCompletedBus() {
-				PrimaryVehicleRecordFile = PrimaryResults
+				PrimaryVehicleRecordFile = PrimaryVehicleReportInputData
 			};
-			CustomerRpt = new XMLCustomerReportCompletedBus();
+			CustomerRpt = new XMLCustomerReportCompletedBus() {
+				PrimaryVehicleRecordFile = PrimaryVehicleReportInputData
+			};
 		}
 
 		#endregion

@@ -119,7 +119,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 				switch (declDataProvider.JobInputData.Vehicle.VehicleCategory) {
 					case VehicleCategory.HeavyBusCompletedVehicle:
 						var reportCompleted = declarationReport ?? new XMLDeclarationReportCompletedVehicle(ModWriter, declDataProvider.JobInputData.Vehicle.VehicleCategory == VehicleCategory.HeavyBusPrimaryVehicle) {
-							PrimaryResults = declDataProvider.PrimaryVehicleData,
+							PrimaryVehicleReportInputData = declDataProvider.PrimaryVehicleData,
 						};
 						DataReader = new DeclarationModeCompletedBusVectoRunDataFactory(declDataProvider, reportCompleted);
 						return;

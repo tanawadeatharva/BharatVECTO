@@ -423,6 +423,8 @@ namespace TUGraz.VectoCommon.InputData
 		/// cf. VECTO Input Parameters.xlsx
 		/// </summary>
 		Newton TyreTestLoad { get; }
+
+		string FuelEfficiencyClass { get; }
 	}
 
 	public interface IGearboxDeclarationInputData : IComponentInputData

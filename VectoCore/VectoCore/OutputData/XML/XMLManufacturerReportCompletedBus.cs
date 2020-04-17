@@ -37,13 +37,13 @@ namespace TUGraz.VectoCore.OutputData.XML {
 					new XElement(tns + XMLNames.Component_Manufacturer, modelData.VehicleData.Manufacturer),
 					new XElement(tns + XMLNames.Component_ManufacturerAddress, modelData.VehicleData.ManufacturerAddress),
 					new XElement(tns + XMLNames.Vehicle_VIN, modelData.VehicleData.VIN),
-					new XElement(tns + XMLNames.Vehicle_VehicleCategory, modelData.VehicleData.VehicleCategory.ToXMLFormat()),
+					new XElement(tns + XMLNames.Vehicle_VehicleCategory, modelData.VehicleData.LegislativeClass.ToXMLFormat()),
 					new XElement(tns + XMLNames.Report_Vehicle_VehicleGroup, modelData.VehicleData.VehicleClass.GetClassNumber()),
 					new XElement(tns + XMLNames.Vehicle_RegisteredClass, modelData.VehicleData.RegisteredClass.ToXMLFormat()),
 					new XElement(tns + XMLNames.Vehicle_VehicleCode, modelData.VehicleData.VehicleCode.ToXMLFormat()),
 					new XElement(tns + XMLNames.Vehicle_CurbMassChassis, XMLHelper.ValueAsUnit(modelData.VehicleData.CurbMass, XMLNames.Unit_kg)),
 					new XElement(tns + XMLNames.TPMLM,
-								XMLHelper.ValueAsUnit(modelData.VehicleData.GrossVehicleMass, XMLNames.Unit_t, 1)),
+								XMLHelper.ValueAsUnit(modelData.VehicleData.GrossVehicleMass, XMLNames.Unit_t, 2)),
 					new XElement(tns + XMLNames.Vehicle_VocationalVehicle, modelData.VehicleData.ZeroEmissionVehicle),
 					new XElement(tns + XMLNames.Vehicle_ZeroEmissionVehicle, modelData.VehicleData.ZeroEmissionVehicle),
 					new XElement(tns + XMLNames.Vehicle_HybridElectricHDV, modelData.VehicleData.HybridElectricHDV),
@@ -60,11 +60,10 @@ namespace TUGraz.VectoCore.OutputData.XML {
 					new XElement(tns + XMLNames.Bus_VehicleWidth, modelData.VehicleData.InputData.Width.ToXMLFormat(3)),
 					new XElement(tns + XMLNames.BusAux_PneumaticSystem_DoorDriveTechnology, modelData.VehicleData.InputData.DoorDriveTechnology.ToXMLFormat()),
 					
-					VehicleComponents(modelData, fuelModes)
+					VehicleComponents(modelData, fuelModes),
+					GetInputDataSignature(modelData)
 				)
 			);
-
-			InputDataIntegrity = GetInputDataSignature(modelData);
 		}
 
 		private XElement GetPrimaryVehicleInformation()
@@ -86,21 +85,18 @@ namespace TUGraz.VectoCore.OutputData.XML {
 			_allSuccess &= genericResult.Status == VectoRun.Status.Success;
 			_allSuccess &= specificResult.Status == VectoRun.Status.Success;
 			Results.Add(
-				new XElement(
-					tns + XMLNames.Report_Result_Result,
-					new XAttribute(
-						XMLNames.Report_Result_Status_Attr,
-						genericResult.Status == VectoRun.Status.Success && specificResult.Status == VectoRun.Status.Success ? "success" : "error"),
-					new XElement(tns + XMLNames.Report_Result_Mission, genericResult.Mission.ToXMLFormat()),
-					GetResults(genericResult, specificResult, primaryResult)));
+				genericResult.Status == VectoRun.Status.Success && specificResult.Status == VectoRun.Status.Success
+					? GetSuccessResultEntry(genericResult, specificResult, primaryResult)
+					: GetErrorResultEntry(genericResult, specificResult, primaryResult));
 		}
 
-		private object GetResults(XMLDeclarationReport.ResultEntry genericResult, XMLDeclarationReport.ResultEntry specificResult, IResult primaryResult)
+		private XElement GetErrorResultEntry(XMLDeclarationReport.ResultEntry genericResult, XMLDeclarationReport.ResultEntry specificResult, IResult primaryResult)
 		{
+
+			object[] content = null;
 			if (genericResult.Status == VectoRun.Status.Pending || genericResult.Status == VectoRun.Status.Running ||
 				specificResult.Status == VectoRun.Status.Pending || specificResult.Status == VectoRun.Status.Running) {
-				return new object[] {
-					GetSimulationParameters(specificResult),
+				content =  new object[] {
 					new XElement(
 						tns + XMLNames.Report_Results_Error,
 						string.Format("Simulation not finished! Status: {0} / {1}", genericResult.Status, specificResult.Status)),
@@ -109,72 +105,105 @@ namespace TUGraz.VectoCore.OutputData.XML {
 			}
 
 			if (genericResult.Status == VectoRun.Status.Canceled || genericResult.Status == VectoRun.Status.Aborted || specificResult.Status == VectoRun.Status.Canceled || specificResult.Status == VectoRun.Status.Aborted) {
-				return new object[] {
-					GetSimulationParameters(specificResult),
+				content = new object[] {
 					new XElement(tns + XMLNames.Report_Results_Error, genericResult.Error ?? "" + Environment.NewLine +  specificResult.Error ?? ""),
 					new XElement(tns + XMLNames.Report_Results_ErrorDetails, genericResult.StackTrace ?? "" + Environment.NewLine + specificResult.StackTrace ?? ""),
 				};
 			}
 
-			if (genericResult.Status == VectoRun.Status.Success && specificResult.Status == VectoRun.Status.Success) {
-				return GetSuccessResultEntry(genericResult, specificResult, primaryResult);
-			}
-			throw new ArgumentOutOfRangeException();
+			return new XElement(
+				tns + XMLNames.Report_Result_Result,
+				new XAttribute(XMLNames.Report_Result_Status_Attr, "error"),
+				new XAttribute(xsi + "type", "ResultErrorType"),
+				new XElement(tns + XMLNames.Report_Result_Mission, genericResult.Mission.ToXMLFormat()),
+				GetSimulationParameters(specificResult),
+				content);
 		}
 
-		private object GetSuccessResultEntry(XMLDeclarationReport.ResultEntry genericResult, XMLDeclarationReport.ResultEntry specificResult, IResult primaryResult)
+		private XElement GetSuccessResultEntry(XMLDeclarationReport.ResultEntry genericResult, XMLDeclarationReport.ResultEntry specificResult, IResult primaryResult)
 		{
-			return new object[] {
-				new XElement(
-					tns + XMLNames.Report_ResultEntry_Distance, new XAttribute(XMLNames.Report_Results_Unit_Attr, XMLNames.Unit_km),
-					specificResult.Distance.ConvertToKiloMeter().ToXMLFormat(3)),
+			return new XElement(
+				tns + XMLNames.Report_Result_Result,
+				new XAttribute(XMLNames.Report_Result_Status_Attr, "success"),
+				new XAttribute(xsi + "type", "ResultCompletedVehicleSuccessType"),
+				new XElement(tns + XMLNames.Report_Result_Mission, genericResult.Mission.ToXMLFormat()),
+				new XElement(tns + XMLNames.Report_ResultEntry_Distance, XMLHelper.ValueAsUnit(specificResult.Distance, XMLNames.Unit_km, 3)),
+				GetSimulationParametersPrimaryVehicle(primaryResult),
 				GetSimulationParameters(specificResult),
-				new XElement(
-					tns + XMLNames.Report_ResultEntry_VehiclePerformance,
-					new XElement(
-						tns + XMLNames.Report_ResultEntry_AverageSpeed,
-						XMLHelper.ValueAsUnit(specificResult.AverageSpeed, XMLNames.Unit_kmph, 1)),
-					new XElement(
-						tns + XMLNames.Report_ResultEntry_AvgDrivingSpeed,
-						XMLHelper.ValueAsUnit(specificResult.AverageDrivingSpeed, XMLNames.Unit_kmph, 1)),
-					new XElement(
-						tns + XMLNames.Report_ResultEntry_MinSpeed, XMLHelper.ValueAsUnit(specificResult.MinSpeed, XMLNames.Unit_kmph, 1)),
-					new XElement(
-						tns + XMLNames.Report_ResultEntry_MaxSpeed, XMLHelper.ValueAsUnit(specificResult.MaxSpeed, XMLNames.Unit_kmph, 1)),
-					new XElement(
-						tns + XMLNames.Report_ResultEntry_MaxDeceleration,
-						XMLHelper.ValueAsUnit(specificResult.MaxDeceleration, XMLNames.Unit_mps2, 2)),
-					new XElement(
-						tns + XMLNames.Report_ResultEntry_MaxAcceleration,
-						XMLHelper.ValueAsUnit(specificResult.MaxAcceleration, XMLNames.Unit_mps2, 2)),
-					new XElement(
-						tns + XMLNames.Report_ResultEntry_FullLoadDrivingtimePercentage,
-						specificResult.FullLoadPercentage.ToXMLFormat(2)),
-					new XElement(tns + XMLNames.Report_ResultEntry_GearshiftCount, specificResult.GearshiftCount.ToXMLFormat(0)),
-					new XElement(
-						tns + XMLNames.Report_ResultEntry_EngineSpeedDriving,
-						new XElement(
-							tns + XMLNames.Report_ResultEntry_EngineSpeedDriving_Min,
-							XMLHelper.ValueAsUnit(specificResult.EngineSpeedDrivingMin, XMLNames.Unit_RPM, 1)),
-						new XElement(
-							tns + XMLNames.Report_ResultEntry_EngineSpeedDriving_Avg,
-							XMLHelper.ValueAsUnit(specificResult.EngineSpeedDrivingAvg, XMLNames.Unit_RPM, 1)),
-						new XElement(
-							tns + XMLNames.Report_ResultEntry_EngineSpeedDriving_Max,
-							XMLHelper.ValueAsUnit(specificResult.EngineSpeedDrivingMax, XMLNames.Unit_RPM, 1))
-					),
-					new XElement(
-						tns + XMLNames.Report_Results_AverageGearboxEfficiency,
-						XMLHelper.ValueAsUnit(specificResult.AverageGearboxEfficiency, XMLNames.UnitPercent, 2)),
-					new XElement(
-						tns + XMLNames.Report_Results_AverageAxlegearEfficiency,
-						XMLHelper.ValueAsUnit(specificResult.AverageAxlegearEfficiency, XMLNames.UnitPercent, 2))
-				),
-
-				//FC
+				GetVehiclePerformanceResults(specificResult),
 				GetFuelConsumptionResults(genericResult, specificResult, primaryResult)
-			};
+			);
 
+		}
+
+		private XElement GetVehiclePerformanceResults(XMLDeclarationReport.ResultEntry specificResult)
+		{
+			return new XElement(
+				tns + XMLNames.Report_ResultEntry_VehiclePerformance,
+				new XElement(
+					tns + XMLNames.Report_ResultEntry_AverageSpeed,
+					XMLHelper.ValueAsUnit(specificResult.AverageSpeed, XMLNames.Unit_kmph, 1)),
+				new XElement(
+					tns + XMLNames.Report_ResultEntry_AvgDrivingSpeed,
+					XMLHelper.ValueAsUnit(specificResult.AverageDrivingSpeed, XMLNames.Unit_kmph, 1)),
+				new XElement(
+					tns + XMLNames.Report_ResultEntry_MinSpeed, XMLHelper.ValueAsUnit(specificResult.MinSpeed, XMLNames.Unit_kmph, 1)),
+				new XElement(
+					tns + XMLNames.Report_ResultEntry_MaxSpeed, XMLHelper.ValueAsUnit(specificResult.MaxSpeed, XMLNames.Unit_kmph, 1)),
+				new XElement(
+					tns + XMLNames.Report_ResultEntry_MaxDeceleration,
+					XMLHelper.ValueAsUnit(specificResult.MaxDeceleration, XMLNames.Unit_mps2, 2)),
+				new XElement(
+					tns + XMLNames.Report_ResultEntry_MaxAcceleration,
+					XMLHelper.ValueAsUnit(specificResult.MaxAcceleration, XMLNames.Unit_mps2, 2)),
+				new XElement(
+					tns + XMLNames.Report_ResultEntry_FullLoadDrivingtimePercentage,
+					specificResult.FullLoadPercentage.ToXMLFormat(2)),
+				new XElement(tns + XMLNames.Report_ResultEntry_GearshiftCount, specificResult.GearshiftCount.ToXMLFormat(0)),
+				new XElement(
+					tns + XMLNames.Report_ResultEntry_EngineSpeedDriving,
+					new XElement(
+						tns + XMLNames.Report_ResultEntry_EngineSpeedDriving_Min,
+						XMLHelper.ValueAsUnit(specificResult.EngineSpeedDrivingMin, XMLNames.Unit_RPM, 1)),
+					new XElement(
+						tns + XMLNames.Report_ResultEntry_EngineSpeedDriving_Avg,
+						XMLHelper.ValueAsUnit(specificResult.EngineSpeedDrivingAvg, XMLNames.Unit_RPM, 1)),
+					new XElement(
+						tns + XMLNames.Report_ResultEntry_EngineSpeedDriving_Max,
+						XMLHelper.ValueAsUnit(specificResult.EngineSpeedDrivingMax, XMLNames.Unit_RPM, 1))
+				),
+				new XElement(
+					tns + XMLNames.Report_Results_AverageGearboxEfficiency,
+					XMLHelper.ValueAsUnit(specificResult.AverageGearboxEfficiency, XMLNames.UnitPercent, 2)),
+				new XElement(
+					tns + XMLNames.Report_Results_AverageAxlegearEfficiency,
+					XMLHelper.ValueAsUnit(specificResult.AverageAxlegearEfficiency, XMLNames.UnitPercent, 2))
+			);
+		}
+
+		private XElement GetSimulationParametersPrimaryVehicle(IResult primaryResult)
+		{
+			return new XElement(
+				tns + "SimulationParametersPrimaryVehicle",
+				new XElement(
+					tns + XMLNames.Report_ResultEntry_TotalVehicleMass,
+					XMLHelper.ValueAsUnit(primaryResult.SimulationParameter.TotalVehicleMass, XMLNames.Unit_kg)),
+				new XElement(tns + XMLNames.Report_ResultEntry_Payload, XMLHelper.ValueAsUnit(primaryResult.SimulationParameter.Payload, XMLNames.Unit_kg)),
+				new XElement(tns + "PassengerCount", primaryResult.SimulationParameter.PassengerCount.ToMinSignificantDigits(3, 1)),
+				new XElement(tns + XMLNames.Report_Result_FuelMode, primaryResult.SimulationParameter.FuelMode)
+			);
+		}
+
+		protected override XElement GetSimulationParameters(XMLDeclarationReport.ResultEntry result)
+		{
+			return new XElement(
+				tns + "SimulationParametersCompletedVehicle",
+				new XElement(
+					tns + XMLNames.Report_ResultEntry_TotalVehicleMass,
+					XMLHelper.ValueAsUnit(result.TotalVehicleMass, XMLNames.Unit_kg)),
+				new XElement(tns + XMLNames.Report_ResultEntry_Payload, XMLHelper.ValueAsUnit(result.Payload, XMLNames.Unit_kg)),
+				result.PassengerCount.HasValue && result.PassengerCount.Value > 0 ? new XElement(tns + "PassengerCount", result.PassengerCount.Value.ToMinSignificantDigits(3, 1)) : null
+			);
 		}
 
 		private XElement[] GetFuelConsumptionResults(XMLDeclarationReport.ResultEntry genericResult, XMLDeclarationReport.ResultEntry specificResult, IResult primaryResult)
@@ -183,7 +212,7 @@ namespace TUGraz.VectoCore.OutputData.XML {
 			var retVal = new List<XElement>();
 
 			var co2Sum = 0.SI<KilogramPerMeter>();
-
+			retVal.Add(new XElement(tns + "FuelConsumptionFactor", factor.ToMinSignificantDigits(4)));
 			foreach (var entry in primaryResult.EnergyConsumption) {
 				var fcEnergy = entry.Value * factor;  // J/m
 				var fuelData = FuelData.Instance().Lookup(entry.Key);
@@ -305,94 +334,7 @@ namespace TUGraz.VectoCore.OutputData.XML {
 			);
 		}
 
-		//protected override XElement GetEngineDescription(CombustionEngineData engineData, List<List<FuelData.Entry>> fuelModes)
-		//{
-		//	return new XElement(
-		//		tns + XMLNames.Component_Engine,
-		//		GetCommonDescription(PrimaryVehicle.Components.EngineInputData),
-		//		new XElement(
-		//			tns + XMLNames.Engine_RatedPower, XMLHelper.ValueAsUnit(engineData.RatedPowerDeclared, XMLNames.Unit_kW)),
-		//		new XElement(tns + XMLNames.Engine_IdlingSpeed, XMLHelper.ValueAsUnit(engineData.IdleSpeed, XMLNames.Unit_RPM)),
-		//		new XElement(
-		//			tns + XMLNames.Engine_RatedSpeed, XMLHelper.ValueAsUnit(engineData.RatedSpeedDeclared, XMLNames.Unit_RPM)),
-		//		new XElement(
-		//			tns + XMLNames.Engine_Displacement, XMLHelper.ValueAsUnit(engineData.Displacement, XMLNames.Unit_ltr, 1)),
-		//		new XElement(tns + XMLNames.Engine_WHRType, engineData.WHRType.ToXMLFormat()),
-		//		PrimaryVehicle.Components.EngineInputData.EngineModes.Select(
-		//			x => new XElement(
-		//				tns + XMLNames.Report_Engine_FuelMode,
-		//				x.Fuels.Select(f => new XElement(tns + XMLNames.Engine_FuelType, f.FuelType.ToXMLFormat()))))
-		//	);
-		//}
-
-		//protected override XElement GetGearboxDescription(GearboxData gearboxData)
-		//{
-		//	return new XElement(
-		//		tns + XMLNames.Component_Gearbox,
-		//		GetCommonDescription(PrimaryVehicle.Components.GearboxInputData),
-		//		new XElement(tns + XMLNames.Gearbox_TransmissionType, gearboxData.Type.ToXMLFormat()),
-		//		new XElement(tns + XMLNames.Report_GetGearbox_GearsCount, gearboxData.Gears.Count),
-		//		new XElement(
-		//			tns + XMLNames.Report_Gearbox_TransmissionRatioFinalGear,
-		//			gearboxData.Gears[gearboxData.Gears.Keys.Max()].Ratio.ToXMLFormat(3))
-		//	);
-		//}
-
-		//protected override XElement GetGearboxDescription(GearboxData gearboxData, AxleGearData axlegearData)
-		//{
-		//	return new XElement(
-		//		tns + XMLNames.Component_Gearbox,
-		//		GetCommonDescription(PrimaryVehicle.Components.GearboxInputData),
-		//		new XElement(tns + XMLNames.Gearbox_TransmissionType, gearboxData.Type.ToXMLFormat()),
-		//		new XElement(tns + XMLNames.Report_GetGearbox_GearsCount, gearboxData.Gears.Count),
-		//		new XElement(tns + XMLNames.Gearbox_AxlegearRatio, axlegearData.AxleGear.Ratio.ToXMLFormat(3)),
-		//		new XElement(
-		//			tns + XMLNames.Report_Gearbox_TransmissionRatioFinalGear,
-		//			gearboxData.Gears[gearboxData.Gears.Keys.Max()].Ratio.ToXMLFormat(3))
-		//	);
-		//}
-
-
-		//protected override XElement GetTorqueConverterDescription(TorqueConverterData torqueConverterData)
-		//{
-		//	if (torqueConverterData == null) {
-		//		return null;
-		//	}
-
-		//	return new XElement(
-		//		tns + XMLNames.Component_TorqueConverter,
-		//		GetCommonDescription(PrimaryVehicle.Components.TorqueConverterInputData));
-		//}
-
-		//protected override XElement GetRetarderDescription(RetarderData retarder)
-		//{
-		//	return new XElement(
-		//		tns + XMLNames.Component_Retarder,
-		//		new XElement(tns + XMLNames.Vehicle_RetarderType, retarder.Type.ToXMLFormat())
-		//		//retarder.Type.IsDedicatedComponent() ? GetCommonDescription(PrimaryVehicle.Components.RetarderInputData) : null
-		//		);
-		//}
-
-		//protected override XElement GetAngledriveDescription(AngledriveData angledriveData)
-		//{
-		//	if (angledriveData == null) {
-		//		return null;
-		//	}
-
-		//	return new XElement(
-		//		tns + XMLNames.Component_Angledrive,
-		//		GetCommonDescription(PrimaryVehicle.Components.AngledriveInputData),
-		//		new XElement(tns + XMLNames.AngleDrive_Ratio, angledriveData.Angledrive.Ratio.ToXMLFormat(3)));
-		//}
-
-		//protected override XElement GetAxlegearDescription(AxleGearData axleGearData)
-		//{
-		//	return new XElement(
-		//		tns + XMLNames.Component_Axlegear,
-		//		GetCommonDescription(PrimaryVehicle.Components.AxleGearInputData),
-		//		new XElement(tns + XMLNames.Axlegear_LineType, axleGearData.LineType.ToXMLFormat()),
-		//		new XElement(tns + XMLNames.Axlegear_Ratio, axleGearData.AxleGear.Ratio.ToXMLFormat(3)));
-		//}
+		
 
 		protected override XElement GetAirDragDescription(AirdragData airdragData)
 		{
@@ -428,26 +370,7 @@ namespace TUGraz.VectoCore.OutputData.XML {
 			);
 		}
 
-		//protected virtual object[] GetCommonDescription(IEngineDeclarationInputData data)
-		//{
-		//	return new object[] {
-		//		new XElement(tns + XMLNames.Component_Model, data.Model),
-		//		new XElement(tns + XMLNames.Report_Component_CertificationNumber, data.CertificationNumber),
-		//		new XElement(tns + XMLNames.DI_Signature_Reference_DigestValue, data.DigestValue.DigestValue)
-		//	};
-		//}
-
-		//protected virtual object[] GetCommonDescription(IComponentInputData data)
-		//{
-		//	return new object[] {
-		//		new XElement(tns + XMLNames.Component_Model, data.Model),
-		//		new XElement(tns + XMLNames.Report_Component_CertificationMethod, data.CertificationMethod.ToXMLFormat()),
-		//		data.CertificationMethod == CertificationMethod.StandardValues
-		//			? null
-		//			: new XElement(tns + XMLNames.Report_Component_CertificationNumber, data.CertificationNumber),
-		//		new XElement(tns + XMLNames.DI_Signature_Reference_DigestValue, data.DigestValue.DigestValue)
-		//	};
-		//}
+		
 		#endregion
 
 		public override void WriteResult(XMLDeclarationReport.ResultEntry resultEntry)

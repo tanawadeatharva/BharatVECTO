@@ -155,6 +155,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 					TwinTyres = axleInput.TwinTyres,
 					RollResistanceCoefficient = axleInput.Tyre.RollResistanceCoefficient,
 					TyreTestLoad = axleInput.Tyre.TyreTestLoad,
+					FuelEfficiencyClass = axleInput.Tyre.FuelEfficiencyClass,
 					Inertia = DeclarationData.Wheels.Lookup(axleInput.Tyre.Dimension.RemoveWhitespace()).Inertia,
 					CertificationNumber = axleInput.Tyre.CertificationNumber,
 					DigestValueInput = axleInput.Tyre.DigestValue == null ? "" : axleInput.Tyre.DigestValue.DigestValue,
@@ -171,6 +172,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 							TwinTyres = DeclarationData.Trailer.TwinTyres,
 							RollResistanceCoefficient = DeclarationData.Trailer.RollResistanceCoefficient,
 							TyreTestLoad = DeclarationData.Trailer.TyreTestLoad.SI<Newton>(),
+							FuelEfficiencyClass = DeclarationData.Trailer.FuelEfficiencyClass,
 							Inertia = trailerWheel.Inertia,
 							WheelsDimension = trailerWheel.WheelType
 						}));

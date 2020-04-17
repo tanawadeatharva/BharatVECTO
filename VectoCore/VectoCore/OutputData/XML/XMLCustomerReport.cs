@@ -64,11 +64,11 @@ namespace TUGraz.VectoCore.OutputData.XML
 		protected readonly XNamespace di = XNamespace.Get("http://www.w3.org/2000/09/xmldsig#");
 		protected readonly XNamespace xsi = XNamespace.Get("http://www.w3.org/2001/XMLSchema-instance");
 
-		private bool _allSuccess = true;
+		protected bool _allSuccess = true;
 
-		private KilogramPerMeter _weightedCo2 = 0.SI<KilogramPerMeter>();
+		protected KilogramPerMeter _weightedCo2 = 0.SI<KilogramPerMeter>();
 
-		private Kilogram _weightedPayload = 0.SI<Kilogram>();
+		protected Kilogram _weightedPayload = 0.SI<Kilogram>();
 
 
 		public XMLCustomerReport()
@@ -78,7 +78,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 			Results = new XElement(tns + XMLNames.Report_Results);
 		}
 
-		public void Initialize(VectoRunData modelData, List<List<FuelData.Entry>> fuelModes)
+		public virtual void Initialize(VectoRunData modelData, List<List<FuelData.Entry>> fuelModes)
 		{
 			var exempted = modelData.Exempted;
 			VehiclePart.Add(
@@ -124,7 +124,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 			};
 		}
 
-		private XElement GetADAS(VehicleData.ADASData adasData)
+		protected XElement GetADAS(VehicleData.ADASData adasData)
 		{
 			return new XElement(tns + XMLNames.Vehicle_ADAS,
 								new XElement(tns + XMLNames.Vehicle_ADAS_EngineStopStart, adasData.EngineStopStart),
@@ -134,7 +134,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 			);
 		}
 
-		private XElement[] ComponentData(VectoRunData modelData, List<List<FuelData.Entry>> fuelModes)
+		protected virtual XElement[] ComponentData(VectoRunData modelData, List<List<FuelData.Entry>> fuelModes)
 		{
 			return new[] {
 				new XElement(
@@ -143,8 +143,10 @@ namespace TUGraz.VectoCore.OutputData.XML
 				new XElement(
 					tns + XMLNames.Report_Vehicle_EngineDisplacement,
 					XMLHelper.ValueAsUnit(modelData.EngineData.Displacement, XMLNames.Unit_ltr, 1)),
-				new XElement(tns + XMLNames.Report_Vehicle_FuelTypes,  
-					fuelModes.SelectMany(x => x.Select(f =>  f.FuelType.ToXMLFormat())).Distinct().Select(x => new XElement(tns + XMLNames.Engine_FuelType, x))
+				new XElement(
+					tns + XMLNames.Report_Vehicle_FuelTypes,
+					fuelModes.SelectMany(x => x.Select(f => f.FuelType.ToXMLFormat())).Distinct()
+							.Select(x => new XElement(tns + XMLNames.Engine_FuelType, x))
 				),
 				new XElement(
 					tns + XMLNames.Report_Vehicle_TransmissionCertificationMethod,
@@ -155,10 +157,15 @@ namespace TUGraz.VectoCore.OutputData.XML
 				new XElement(tns + XMLNames.Report_Vehicle_AxleRatio, modelData.AxleGearData.AxleGear.Ratio.ToXMLFormat(3)),
 				new XElement(
 					tns + XMLNames.Report_Vehicle_AverageRRC, modelData.VehicleData.AverageRollingResistanceTruck.ToXMLFormat(4)),
-				new XElement(
-					tns + XMLNames.Report_Vehicle_AverageRRCLabel,
-					DeclarationData.Wheels.TyreClass.Lookup(modelData.VehicleData.AverageRollingResistanceTruck))
-			};
+
+				//new XElement(
+				//	tns + XMLNames.Report_Vehicle_AverageRRCLabel,
+				//	DeclarationData.Wheels.TyreClass.Lookup(modelData.VehicleData.AverageRollingResistanceTruck))
+			}.Concat(
+				modelData.VehicleData.AxleData.Where(x => x.AxleType != AxleType.Trailer).Select(
+					(x, idx) => new XElement(tns + "FuelEfficiencyLabelMotorVehicleTyre",
+					new XAttribute("axleNbr", idx+1),
+					x.FuelEfficiencyClass))).ToArray();
 
 		}
 

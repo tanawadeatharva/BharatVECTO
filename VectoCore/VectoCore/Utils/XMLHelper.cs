@@ -134,6 +134,16 @@ namespace TUGraz.VectoCore.Utils
 			throw new NotImplementedException(string.Format("unknown unit '{0}'", unit));
 		}
 
+		public static object[] ValueAsUnit(Meter m, string unit, uint? decimals)
+		{
+			switch (unit) {
+				case "m": return GetValueAsUnit(m.Value(), unit, decimals);
+				case "km": return GetValueAsUnit(m.ConvertToKiloMeter(), unit, decimals);
+			}
+
+			throw new NotImplementedException(string.Format("unknown unit '{0}'", unit));
+		}
+
 		public static object[] ValueAsUnit(double value, string unit, uint? decimals)
 		{
 			switch (unit) {
