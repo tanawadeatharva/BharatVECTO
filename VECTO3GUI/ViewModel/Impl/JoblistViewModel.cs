@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;
@@ -22,7 +23,9 @@ using VECTO3GUI.ViewModel.Interfaces;
 using System.Xml;
 using System.Xml.Linq;
 using TUGraz.VectoCommon.Resources;
+using TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider;
 using VECTO3GUI.Helper;
+using VECTO3GUI.Model;
 using VECTO3GUI.Views;
 
 
@@ -33,6 +36,7 @@ namespace VECTO3GUI.ViewModel.Impl
 		#region Members
 
 		protected readonly ObservableCollection<JobEntry> _jobs = new ObservableCollection<JobEntry>();
+		private readonly SettingsModel _settings;
 
 		private JobEntry _selectedJobEntry;
 
@@ -71,15 +75,21 @@ namespace VECTO3GUI.ViewModel.Impl
 
 		public JoblistViewModel()
 		{
-			AddJobEntry(@"~\..\..\..\..\VectoCore\VectoCoreTest\TestData\XML\XMLReaderDeclaration\SchemaVersion2.6_Buses\PIF-heavyBus-sample.xml");
-			AddJobEntry(@"~\..\..\..\..\VectoCore\VectoCoreTest\TestData\XML\XMLReaderDeclaration\SchemaVersion2.6_Buses\vecto_vehicle-completed_heavyBus-sample.xml");
+			//			AddJobEntry(@"~\..\..\..\..\VectoCore\VectoCoreTest\TestData\XML\XMLReaderDeclaration\SchemaVersion2.6_Buses\PIF-heavyBus-sample.xml");
+			//			AddJobEntry(@"~\..\..\..\..\VectoCore\VectoCoreTest\TestData\XML\XMLReaderDeclaration\SchemaVersion2.6_Buses\vecto_vehicle-completed_heavyBus-sample.xml");
 
-			//AddJobEntry(@"~\..\..\..\..\Generic Vehicles\Declaration Mode\Class5_Tractor_4x2\Class5_Tractor_DECL.xml");
-			//AddJobEntry(@"~\..\..\..\..\Generic Vehicles\Declaration Mode\Class5_Tractor_4x2\Class5_Tractor_DECL.xml");
-			//AddJobEntry("DummyEntry");
-			//AddJobEntry(@"~\..\..\..\..\Generic Vehicles\Declaration Mode\Class5_Tractor_4x2\Class5_Tractor_ENG.vecto");
-			//AddJobEntry(@"~\..\..\..\..\Generic Vehicles\Engineering Mode\EngineOnly\EngineOnly.vecto");
+			_settings = new SettingsModel();
+			SetJobEntries();
 		}
+
+		private void SetJobEntries()
+		{
+			var xmlFiles = Directory.GetFiles(_settings.XmlFilePathFolder, "*.xml");
+			for (int i = 0; i < xmlFiles.Length; i++) {
+				AddJobEntry(xmlFiles[i]);
+			}
+		}
+
 
 		private void AddJobEntry(string jobFile)
 		{
@@ -214,7 +224,7 @@ namespace VECTO3GUI.ViewModel.Impl
 
 		private void DoAddJob()
 		{
-			var filePath = FileDialogHelper.ShowSelectFilesDialog(false, @"F:\VECTO\VECTO\bin");
+			var filePath = FileDialogHelper.ShowSelectFilesDialog(false, _settings.XmlFilePathFolder);
 			if (filePath != null)
 			{
 				_jobs.Add(new JobEntry()
@@ -267,22 +277,19 @@ namespace VECTO3GUI.ViewModel.Impl
 
 				using (var reader = XmlReader.Create(jobFile))
 				{
-
 					if (localName == XMLNames.VectoPrimaryVehicleReport)
-					{
 						return CreatePrimaryBusVehicleViewModel(xmlInputReader.Create(reader));
-					}
+					
 					if (localName == XMLNames.VectoInputDeclaration)
 					{
-						return CreateCompleteBusVehicleViewModel(xmlInputReader.CreateDeclaration(reader));
+						var readerResult = xmlInputReader.Create(reader) as IDeclarationInputDataProvider;
+						if(readerResult?.JobInputData.Vehicle is XMLDeclarationCompletedBusDataProviderV26)
+							return CreateCompleteBusVehicleViewModel(readerResult);
 					}
 				}
 			}
 
 			return null;
-
-
-
 		}
 
 		private string GetLocalName(string jobFilePath)
@@ -292,9 +299,8 @@ namespace VECTO3GUI.ViewModel.Impl
 		}
 
 
-		private IJobEditViewModel CreateCompleteBusVehicleViewModel(IInputDataProvider inputDataProvider)
+		private IJobEditViewModel CreateCompleteBusVehicleViewModel(IDeclarationInputDataProvider dataProvider)
 		{
-			var dataProvider = inputDataProvider as IDeclarationInputDataProvider;
 			return dataProvider == null ? null : new CompleteVehicleBusJobViewModel(Kernel, dataProvider);
 		}
 
@@ -304,10 +310,6 @@ namespace VECTO3GUI.ViewModel.Impl
 			var dataProvider = inputData as IPrimaryVehicleInformationInputDataProvider;
 			return dataProvider == null ? null : new PrimaryVehicleBusJobViewModel(Kernel, dataProvider);
 		}
-
-
-
-
 	}
 
 
