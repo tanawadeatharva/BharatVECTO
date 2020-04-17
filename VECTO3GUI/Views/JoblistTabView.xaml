@@ -4,10 +4,8 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:VECTO3GUI.Views"
-             xmlns:interfaces="clr-namespace:VECTO3GUI.ViewModel.Interfaces"
              xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
-             xmlns:impl="clr-namespace:VECTO3GUI.ViewModel.Impl"
-             xmlns:helper="clr-namespace:VECTO3GUI.Helper"
+             xmlns:converter="clr-namespace:VECTO3GUI.Helper.Converter"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
 
@@ -19,51 +17,78 @@
 
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="30"/>
+            <RowDefinition Height="50"/>
             <RowDefinition/>
-            <RowDefinition Height="30"/>
+            <RowDefinition Height="36"/>
         </Grid.RowDefinitions>
 
+        <Grid Grid.Row="0">
+            <StackPanel Orientation="Vertical">
+                <Menu>
+                    <MenuItem Header="File">
+                        <MenuItem Header="Save"/>
+                        <MenuItem Header="Save to"/>
+                        <Separator HorizontalAlignment="Stretch" Background="Gray"/>
+                        <MenuItem Header="Exit"/>
+                    </MenuItem>
+                </Menu>
+                <Separator HorizontalAlignment="Stretch" Background="Gray"/>
+            </StackPanel>
+
+        </Grid>
 
         <Grid Grid.Row="1">
 
-            <TabControl TabStripPlacement="Top" ItemsSource="{Binding Components}" x:Name="ComponentsTab" SelectedIndex="0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="15"/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
 
-                <i:Interaction.Triggers>
-                    <i:EventTrigger EventName="SelectionChanged">
-                        <i:InvokeCommandAction 
+            <Grid Grid.Column="1">
+
+                <TabControl TabStripPlacement="Top" ItemsSource="{Binding Components}" x:Name="ComponentsTab" SelectedIndex="0">
+
+                    <i:Interaction.Triggers>
+                        <i:EventTrigger EventName="SelectionChanged">
+                            <i:InvokeCommandAction 
                             Command="{Binding EditComponent}" 
                             CommandParameter="{Binding ElementName=ComponentsTab, Path=SelectedItem}">
-                        </i:InvokeCommandAction>
-                    </i:EventTrigger>
-                </i:Interaction.Triggers>
+                            </i:InvokeCommandAction>
+                        </i:EventTrigger>
+                    </i:Interaction.Triggers>
 
-                <TabControl.ItemTemplate>
-                    <DataTemplate>
-                        <TextBlock Text="{Binding Converter={helper:ComponentTitleConverter}}" />
-                    </DataTemplate>
-                </TabControl.ItemTemplate>
+                    <TabControl.ItemTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding Converter={converter:ComponentTitleConverter}}" />
+                        </DataTemplate>
+                    </TabControl.ItemTemplate>
 
-                <TabControl.ContentTemplate>
-                    <DataTemplate>
-                        <ScrollViewer  DockPanel.Dock="Top">
-                            <ContentControl Content="{Binding DataContext.CurrentComponent, 
+                    <TabControl.ContentTemplate>
+                        <DataTemplate>
+                            <ScrollViewer  DockPanel.Dock="Top">
+                                <ContentControl Content="{Binding DataContext.CurrentComponent, 
                                 RelativeSource={RelativeSource AncestorType=local:JoblistTabView}}" Margin="0,20,0,10"/>
-                        </ScrollViewer>
-                    </DataTemplate>
-                </TabControl.ContentTemplate>
+                            </ScrollViewer>
+                        </DataTemplate>
+                    </TabControl.ContentTemplate>
 
-            </TabControl>
+                </TabControl>
+
+            </Grid>
         </Grid>
 
         <Grid Grid.Row="2">
 
-            <Grid>
-                <Button Content="Save Changes" HorizontalAlignment="Right"
-                        Command="{Binding SaveComponent}" CommandParameter="{Binding ElementName=ComponentsTab, Path=SelectedItem}"/>
-                <Button Content="Reset" HorizontalAlignment="Left"
-                        Command="{Binding ResetComponent}" CommandParameter="{Binding ElementName=ComponentsTab, Path=SelectedItem}"/>
-            </Grid>
+            <StackPanel Orientation="Vertical" VerticalAlignment="Center">
+                <Separator HorizontalAlignment="Stretch" Background="Gray"/>
+                <Grid>
+                    <Button Content="{Binding ElementName=ComponentsTab, Path=SelectedItem, Converter={converter:SaveButtonLabelConverter}}" 
+                            HorizontalAlignment="Right" Margin="0,0,15,0" 
+                            Command="{Binding SaveComponent}" CommandParameter="{Binding ElementName=ComponentsTab, Path=SelectedItem}"/>
+                    <Button Content="Reset" HorizontalAlignment="Left" Margin="15,0,0,0" 
+                            Command="{Binding ResetComponent}" CommandParameter="{Binding ElementName=ComponentsTab, Path=SelectedItem}"/>
+                </Grid>
+            </StackPanel>
         </Grid>
     </Grid>
 </UserControl>

@@ -158,9 +158,10 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Helper\AvalonEditBehaviour.cs" />
-    <Compile Include="Helper\ComponentTitleConverter.cs" />
+    <Compile Include="Helper\Converter\ComponentTitleConverter.cs" />
     <Compile Include="Helper\FileDialogHelper.cs" />
     <Compile Include="Helper\OutputWindowHelper.cs" />
+    <Compile Include="Helper\Converter\SaveButtonLabelConverter.cs" />
     <Compile Include="Model\InterfacesImpl.cs" />
     <Compile Include="Model\SettingsModel.cs" />
     <Compile Include="Model\TempDataObject\AirdragComponentData.cs" />
@@ -382,12 +383,12 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Helper\BaseConverter.cs" />
+    <Compile Include="Helper\Converter\BaseConverter.cs" />
     <Compile Include="Helper\DataContextBaseExtension.cs" />
-    <Compile Include="Helper\JobEntrySelectedConverter.cs" />
+    <Compile Include="Helper\Converter\JobEntrySelectedConverter.cs" />
     <Compile Include="Helper\SIUnit.cs" />
-    <Compile Include="Helper\SIValueConverter.cs" />
-    <Compile Include="Helper\VehicleClassConverter.cs" />
+    <Compile Include="Helper\Converter\SIValueConverter.cs" />
+    <Compile Include="Helper\Converter\VehicleClassConverter.cs" />
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>

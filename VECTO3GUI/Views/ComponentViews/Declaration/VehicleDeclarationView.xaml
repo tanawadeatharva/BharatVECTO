@@ -8,6 +8,7 @@
              xmlns:customControls="clr-namespace:VECTO3GUI.Views.CustomControls"
              xmlns:interfaces="clr-namespace:VECTO3GUI.ViewModel.Interfaces"
              xmlns:impl="clr-namespace:VECTO3GUI.ViewModel.Impl"
+             xmlns:converter="clr-namespace:VECTO3GUI.Helper.Converter"
              mc:Ignorable="d"
              d:DesignHeight="800" d:DesignWidth="800">
     <d:VehicleDeclarationView.DataContext>
@@ -57,20 +58,20 @@
                                                       UnitWidthGroup="unitWidth"
                                                       Caption="Gross Vehicle Mass"
                                                       Unit="{helper:SIUnit GrossVehicleMass}"
-                                                      Value="{Binding GrossVehicleMass, Converter={helper:SIValueConverter}, ConverterParameter=int}" />
+                                                      Value="{Binding GrossVehicleMass, Converter={converter:SIValueConverter}, ConverterParameter=int}" />
                 <customControls:VectoParameterControl ValueAlign="center" CaptionWidthGroup="vehicleLbl"
                                                       UnitWidthGroup="unitWidth"
                                                       Caption="HDV Group"
-                                                      Value="{Binding VehicleClass, Converter={helper:VehicleClassConverter}}" IsEnabled="False" />
+                                                      Value="{Binding VehicleClass, Converter={converter:VehicleClassConverter}}" IsEnabled="False" />
                 <customControls:VectoParameterControl ValueAlign="right" CaptionWidthGroup="vehicleLbl"
                                                       UnitWidthGroup="unitWidth"
                                                       Caption="Curb Mass Chassis"
                                                       Unit="{helper:SIUnit CurbMassChassis}"
-                                                      Value="{Binding CurbMassChassis, Converter={helper:SIValueConverter}, ConverterParameter=int}" />
+                                                      Value="{Binding CurbMassChassis, Converter={converter:SIValueConverter}, ConverterParameter=int}" />
                 <customControls:VectoParameterControl
                     Caption="Engine Idling Speed" Unit="rpm" ValueAlign="right" CaptionWidthGroup="vehicleLbl"
                     UnitWidthGroup="unitWidth"
-                    Value="{Binding IdlingSpeed, Converter={helper:SIValueConverter}, ConverterParameter=AsRPM|int}" />
+                    Value="{Binding IdlingSpeed, Converter={converter:SIValueConverter}, ConverterParameter=AsRPM|int}" />
 
 
             </StackPanel>
@@ -123,7 +124,7 @@
                                     <DataTemplate DataType="interfaces:TorqueEntry">
                                         <DockPanel>
                                             <TextBlock DockPanel.Dock="Right" Text="{helper:SIUnit MaxTorque}" Margin="5,0,0,0"/>
-                                            <TextBox DockPanel.Dock="Right" Margin="20,0,0,0" Text="{Binding MaxTorque, Converter={helper:SIValueConverter}, ConverterParameter=int, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True, NotifyOnValidationError=True}" BorderThickness="0" Background="Transparent" TextAlignment="Right"/>
+                                            <TextBox DockPanel.Dock="Right" Margin="20,0,0,0" Text="{Binding MaxTorque, Converter={converter:SIValueConverter}, ConverterParameter=int, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True, NotifyOnValidationError=True}" BorderThickness="0" Background="Transparent" TextAlignment="Right"/>
                                         </DockPanel>   
                                     </DataTemplate>
                                 </GridViewColumn.CellTemplate>

@@ -7,7 +7,7 @@ using TUGraz.VectoCommon.Utils;
 using Expression = System.Linq.Expressions.Expression;
 using SIUtils = VECTO3GUI.Util.SIUtils;
 
-namespace VECTO3GUI.Helper
+namespace VECTO3GUI.Helper.Converter
 {
 	public class SIValueConverter : BaseConverter, IValueConverter
 	{

@@ -15,6 +15,7 @@ using VECTO3GUI.Util;
 using VECTO3GUI.ViewModel.Adapter;
 using VECTO3GUI.ViewModel.Interfaces;
 using VECTO3GUI.Model;
+using VECTO3GUI.Model.TempDataObject;
 using Component = VECTO3GUI.Util.Component;
 
 namespace VECTO3GUI.ViewModel.Impl
@@ -47,6 +48,7 @@ namespace VECTO3GUI.ViewModel.Impl
 		private bool _adjustableAuxiliaryHeater;
 		private bool _separateAirDistributionDucts;
 
+		private AuxiliariesBusComponentData _componentData;
 		#endregion
 
 
@@ -480,6 +482,15 @@ namespace VECTO3GUI.ViewModel.Impl
 		public override void ResetComponentData()
 		{
 			SetValues(_busAuxiliaries);
+		}
+
+		public override object SaveComponentData()
+		{
+			if(_componentData == null)
+				_componentData = new AuxiliariesBusComponentData(this);
+			else
+				_componentData.UpdateCurrentValues(this);
+			return _componentData;
 		}
 	}
 }

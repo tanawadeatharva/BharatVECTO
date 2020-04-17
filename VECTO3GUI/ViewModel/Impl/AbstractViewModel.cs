@@ -5,6 +5,7 @@ using System.ComponentModel;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
 using TUGraz.VectoCommon.InputData;
+using VECTO3GUI.Model.TempDataObject;
 using VECTO3GUI.ViewModel.Interfaces;
 using Component = VECTO3GUI.Util.Component;
 
@@ -70,6 +71,11 @@ namespace VECTO3GUI.ViewModel.Impl
 		}
 
 		public virtual void ResetComponentData() {}
+
+		public virtual object SaveComponentData()
+		{
+			return null;
+		}
 
 		#region Submodule Handling
 		protected IEnumerable<Component> GetSubmodels()

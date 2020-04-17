@@ -6,6 +6,7 @@
              xmlns:interfaces="clr-namespace:VECTO3GUI.ViewModel.Interfaces"
              xmlns:customControls="clr-namespace:VECTO3GUI.Views.CustomControls"
              xmlns:helper="clr-namespace:VECTO3GUI.Helper"
+             xmlns:converter="clr-namespace:VECTO3GUI.Helper.Converter"
              mc:Ignorable="d" 
              d:DesignHeight="800" d:DesignWidth="800">
     <d:EditCyclesView.DataContext>
@@ -86,7 +87,7 @@
 
                     <customControls:VectoParameterControl
                             Caption="Height Integrated Body" Unit="{helper:SIUnit AuxHeaterPower}" CaptionWidthGroup="lblWidth" UnitWidthGroup="unitWidth"
-                            Value="{Binding AuxHeaterPower, Converter={helper:SIValueConverter}, ConverterParameter=double}" />
+                            Value="{Binding AuxHeaterPower, Converter={converter:SIValueConverter}, ConverterParameter=double}" />
 
                     <customControls:CheckboxParameter
                             Caption="Double Glasing" CaptionWidthGroup="lblWidth"

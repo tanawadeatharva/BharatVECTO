@@ -7,6 +7,7 @@
              xmlns:interfaces="clr-namespace:VECTO3GUI.ViewModel.Interfaces"
              xmlns:customControls="clr-namespace:VECTO3GUI.Views.CustomControls"
              xmlns:helper="clr-namespace:VECTO3GUI.Helper"
+             xmlns:converter="clr-namespace:VECTO3GUI.Helper.Converter"
              mc:Ignorable="d" 
              d:DesignHeight="500" d:DesignWidth="500">
     <d:EngineDeclarationView.DataContext>
@@ -20,12 +21,12 @@
             CertificationNumber="{Binding CertificationNumber}" />
         <customControls:VectoParameterControl
             Caption="Displacement" CaptionWidthGroup="lblWidth"
-            Value="{Binding Displacement, Converter={helper:SIValueConverter}, ConverterParameter=AsCubicCentimeter|int}" 
+            Value="{Binding Displacement, Converter={converter:SIValueConverter}, ConverterParameter=AsCubicCentimeter|int}" 
             ValueAlign="right"
             Unit="cm³" UnitWidthGroup="unitWidth"/>
         <customControls:VectoParameterControl
             Caption="Idling Speed" CaptionWidthGroup="lblWidth"
-            Value="{Binding IdlingSpeed, Converter={helper:SIValueConverter}, ConverterParameter=AsRPM|int}"
+            Value="{Binding IdlingSpeed, Converter={converter:SIValueConverter}, ConverterParameter=AsRPM|int}"
             ValueAlign="right"
             Unit="rpm" UnitWidthGroup="unitWidth"/>
         <customControls:VectoParameterControl

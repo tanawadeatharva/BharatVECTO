@@ -1,5 +1,6 @@
 using System.Collections.ObjectModel;
 using TUGraz.VectoCommon.InputData;
+using VECTO3GUI.Model.TempDataObject;
 using VECTO3GUI.Util;
 using VECTO3GUI.ViewModel.Impl;
 
@@ -19,6 +20,7 @@ namespace VECTO3GUI.ViewModel.Interfaces {
 		bool IsComponentDataChanged();
 
 		void ResetComponentData();
+		object SaveComponentData();
 
 
 	}

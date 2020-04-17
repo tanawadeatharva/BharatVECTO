@@ -71,13 +71,9 @@ namespace VECTO3GUI.ViewModel.Impl
 
 		#endregion
 
-
-
+		
 		public JoblistViewModel()
 		{
-			//			AddJobEntry(@"~\..\..\..\..\VectoCore\VectoCoreTest\TestData\XML\XMLReaderDeclaration\SchemaVersion2.6_Buses\PIF-heavyBus-sample.xml");
-			//			AddJobEntry(@"~\..\..\..\..\VectoCore\VectoCoreTest\TestData\XML\XMLReaderDeclaration\SchemaVersion2.6_Buses\vecto_vehicle-completed_heavyBus-sample.xml");
-
 			_settings = new SettingsModel();
 			SetJobEntries();
 		}

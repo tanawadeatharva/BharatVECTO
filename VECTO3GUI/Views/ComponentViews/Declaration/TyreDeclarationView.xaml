@@ -6,6 +6,7 @@
              xmlns:interfaces="clr-namespace:VECTO3GUI.ViewModel.Interfaces"
              xmlns:customControls="clr-namespace:VECTO3GUI.Views.CustomControls"
              xmlns:helper="clr-namespace:VECTO3GUI.Helper"
+             xmlns:converter="clr-namespace:VECTO3GUI.Helper.Converter"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
     <d:TyreDeclarationView.DataContext>
@@ -31,7 +32,7 @@
         <customControls:VectoParameterControl
             Caption="Fz ISO" CaptionWidthGroup="lblWidth"
             Unit="{helper:SIUnit FzISO}" UnitWidthGroup="unitWidth"
-            Value="{Binding FzISO, Converter={helper:SIValueConverter}}"
+            Value="{Binding FzISO, Converter={converter:SIValueConverter}}"
             />
     </StackPanel>
 </UserControl>

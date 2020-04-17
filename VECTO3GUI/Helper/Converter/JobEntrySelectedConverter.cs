@@ -3,7 +3,7 @@ using System.Globalization;
 using System.Windows.Controls;
 using System.Windows.Data;
 
-namespace VECTO3GUI.Helper
+namespace VECTO3GUI.Helper.Converter
 {
 	public class JobEntrySelectedConverter : IValueConverter
 	{

@@ -6,6 +6,7 @@
              xmlns:interfaces="clr-namespace:VECTO3GUI.ViewModel.Interfaces"
              xmlns:customControls="clr-namespace:VECTO3GUI.Views.CustomControls"
              xmlns:helper="clr-namespace:VECTO3GUI.Helper"
+             xmlns:converter="clr-namespace:VECTO3GUI.Helper.Converter"
              mc:Ignorable="d" 
              d:DesignHeight="800" d:DesignWidth="800">
 
@@ -43,7 +44,7 @@
             <customControls:VectoParameterControl 
                     Caption="DeclaredCd x A 0" CaptionWidthGroup="lblWidth"
                     Unit="{helper:SIUnit DeclaredCdxA}" UnitWidthGroup="unitWidth"
-                    Value="{Binding DeclaredCdxA, Converter={helper:SIValueConverter}, ConverterParameter=double}" 
+                    Value="{Binding DeclaredCdxA, Converter={converter:SIValueConverter}, ConverterParameter=double}" 
                     IsEnabled="{Binding UseMeasuredValues}"/>
 
         </StackPanel>

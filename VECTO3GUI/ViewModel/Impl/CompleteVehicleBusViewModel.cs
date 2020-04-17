@@ -10,6 +10,7 @@ using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider;
+using VECTO3GUI.Model.TempDataObject;
 using VECTO3GUI.Util;
 using VECTO3GUI.ViewModel.Interfaces;
 
@@ -20,6 +21,7 @@ namespace VECTO3GUI.ViewModel.Impl
 		#region Members
 
 		private IVehicleDeclarationInputData _vehicle;
+		private VehicleBusComponentData _componentData;
 
 		private string _manufacturer;
 		private string _manufacturerAddress;
@@ -341,6 +343,17 @@ namespace VECTO3GUI.ViewModel.Impl
 		}
 
 		#endregion
+
+		public override object SaveComponentData()
+		{
+			if(_componentData == null)
+				_componentData = new VehicleBusComponentData(this);
+			else
+				_componentData.UpdateCurrentValues(this);
+
+			return _componentData;
+		}
+
 
 		public override bool IsComponentDataChanged()
 		{

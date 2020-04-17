@@ -6,6 +6,7 @@
              xmlns:interfaces="clr-namespace:VECTO3GUI.ViewModel.Interfaces"
              xmlns:customControls="clr-namespace:VECTO3GUI.Views.CustomControls"
              xmlns:helper="clr-namespace:VECTO3GUI.Helper"
+             xmlns:converter="clr-namespace:VECTO3GUI.Helper.Converter"
              mc:Ignorable="d" 
              d:DesignHeight="800" d:DesignWidth="800">
 <d:AngledriveDeclarationView.DataContext>
@@ -42,7 +43,7 @@
                             <DataTemplate DataType="interfaces:GearLossMapEntry">
                                 <DockPanel>
                                     <TextBlock DockPanel.Dock="Right" Text="rpm"/>
-                                    <TextBox DockPanel.Dock="Right" Text="{Binding InputSpeed, Converter={helper:SIValueConverter}, ConverterParameter=AsRPM|double2, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True, NotifyOnValidationError=True}" BorderThickness="0" Background="Transparent" TextAlignment="Right"/>
+                                    <TextBox DockPanel.Dock="Right" Text="{Binding InputSpeed, Converter={converter:SIValueConverter}, ConverterParameter=AsRPM|double2, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True, NotifyOnValidationError=True}" BorderThickness="0" Background="Transparent" TextAlignment="Right"/>
                                 </DockPanel>
                             </DataTemplate>
                         </GridViewColumn.CellTemplate>
@@ -53,7 +54,7 @@
                             <DataTemplate DataType="interfaces:GearLossMapEntry">
                                 <DockPanel>
                                     <TextBlock DockPanel.Dock="Right" Text="Nm"/>
-                                    <TextBox DockPanel.Dock="Right" Text="{Binding InputTorque, Converter={helper:SIValueConverter}, ConverterParameter=double2, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True, NotifyOnValidationError=True}" BorderThickness="0" Background="Transparent" TextAlignment="Right"/>
+                                    <TextBox DockPanel.Dock="Right" Text="{Binding InputTorque, Converter={converter:SIValueConverter}, ConverterParameter=double2, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True, NotifyOnValidationError=True}" BorderThickness="0" Background="Transparent" TextAlignment="Right"/>
                                 </DockPanel>
                             </DataTemplate>
                         </GridViewColumn.CellTemplate>
@@ -64,7 +65,7 @@
                             <DataTemplate DataType="interfaces:GearLossMapEntry">
                                 <DockPanel>
                                     <TextBlock DockPanel.Dock="Right" Text="Nm"/>
-                                    <TextBox DockPanel.Dock="Right" Text="{Binding TorqueLoss, Converter={helper:SIValueConverter}, ConverterParameter=double2, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True, NotifyOnValidationError=True}" BorderThickness="0" Background="Transparent" TextAlignment="Right"/>
+                                    <TextBox DockPanel.Dock="Right" Text="{Binding TorqueLoss, Converter={converter:SIValueConverter}, ConverterParameter=double2, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True, NotifyOnValidationError=True}" BorderThickness="0" Background="Transparent" TextAlignment="Right"/>
                                 </DockPanel>
                             </DataTemplate>
                         </GridViewColumn.CellTemplate>

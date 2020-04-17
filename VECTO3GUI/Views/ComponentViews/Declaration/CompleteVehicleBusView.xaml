@@ -7,6 +7,7 @@
              xmlns:interfaces="clr-namespace:VECTO3GUI.ViewModel.Interfaces"
              xmlns:customControls="clr-namespace:VECTO3GUI.Views.CustomControls"
              xmlns:helper="clr-namespace:VECTO3GUI.Helper"
+             xmlns:converter="clr-namespace:VECTO3GUI.Helper.Converter"
              mc:Ignorable="d" 
              d:DesignHeight="500" d:DesignWidth="500">
 
@@ -49,11 +50,11 @@
 
                 <customControls:VectoParameterControl
                     Caption="Curb Mass Chassis" Unit="{helper:SIUnit CurbMassChassis}" CaptionWidthGroup="vehicleLbl" UnitWidthGroup="unitWidth"
-                    Value="{Binding CurbMassChassis, Converter={helper:SIValueConverter}, ConverterParameter=int}" />
+                    Value="{Binding CurbMassChassis, Converter={converter:SIValueConverter}, ConverterParameter=int}" />
 
                 <customControls:VectoParameterControl
                     Caption="Permissible Maximum Laden Mass" Unit="{helper:SIUnit TechnicalPermissibleMaximumLadenMass}" CaptionWidthGroup="vehicleLbl" UnitWidthGroup="unitWidth"
-                    Value="{Binding TechnicalPermissibleMaximumLadenMass, Converter={helper:SIValueConverter}, ConverterParameter=int}" />
+                    Value="{Binding TechnicalPermissibleMaximumLadenMass, Converter={converter:SIValueConverter}, ConverterParameter=int}" />
 
                 <customControls:VectoParameterControl
                     Caption="Passengers Lower Deck" Unit="" CaptionWidthGroup="vehicleLbl" UnitWidthGroup="unitWidth"
@@ -71,19 +72,19 @@
 
                 <customControls:VectoParameterControl
                     Caption="Height Integrated Body" Unit="{helper:SIUnit HeightIntegratedBody}" CaptionWidthGroup="vehicleLbl" UnitWidthGroup="unitWidth"
-                    Value="{Binding HeightIntegratedBody, Converter={helper:SIValueConverter}, ConverterParameter=double}" />
+                    Value="{Binding HeightIntegratedBody, Converter={converter:SIValueConverter}, ConverterParameter=double}" />
 
                 <customControls:VectoParameterControl
                     Caption="Vehicle Length" Unit="{helper:SIUnit VehicleLength}" CaptionWidthGroup="vehicleLbl" UnitWidthGroup="unitWidth"
-                    Value="{Binding VehicleLength, Converter={helper:SIValueConverter}, ConverterParameter=double}" />
+                    Value="{Binding VehicleLength, Converter={converter:SIValueConverter}, ConverterParameter=double}" />
 
                 <customControls:VectoParameterControl
                     Caption="Vehicle Width" Unit="{helper:SIUnit VehicleWidth}" CaptionWidthGroup="vehicleLbl" UnitWidthGroup="unitWidth"
-                    Value="{Binding VehicleWidth, Converter={helper:SIValueConverter}, ConverterParameter=double}" />
+                    Value="{Binding VehicleWidth, Converter={converter:SIValueConverter}, ConverterParameter=double}" />
 
                 <customControls:VectoParameterControl
                     Caption="Entrance Height" Unit="{helper:SIUnit EntranceHeight}" CaptionWidthGroup="vehicleLbl" UnitWidthGroup="unitWidth"
-                    Value="{Binding EntranceHeight, Converter={helper:SIValueConverter}, ConverterParameter=double}" />
+                    Value="{Binding EntranceHeight, Converter={converter:SIValueConverter}, ConverterParameter=double}" />
 
 
                 <customControls:ComboParameter

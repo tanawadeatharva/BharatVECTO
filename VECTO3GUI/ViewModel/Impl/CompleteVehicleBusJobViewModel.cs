@@ -6,6 +6,8 @@ using System.Threading.Tasks;
 using System.Windows.Input;
 using Ninject;
 using TUGraz.VectoCommon.InputData;
+using TUGraz.VectoCore.Models.SimulationComponent.Impl;
+using VECTO3GUI.Model.TempDataObject;
 using VECTO3GUI.ViewModel.Interfaces;
 using VECTO3GUI.Util;
 
@@ -13,14 +15,21 @@ namespace VECTO3GUI.ViewModel.Impl
 {
 	public class CompleteVehicleBusJobViewModel : AbstractJobViewModel, IJobEditViewModel
 	{
-
-		#region Commands
-
+		#region Members
+		
 		private ICommand _saveComponentCommand;
 		private ICommand _resetComponentCommand;
+		private ICommand _saveJobCommand;
+		private ICommand _saveJobToCommand;
+		private ICommand _exitCommand;
 
 		#endregion
 
+		#region Properties
+
+		public Dictionary<Component, object> CompleteVehicleBusData { get; private set; }
+
+		#endregion
 
 		public CompleteVehicleBusJobViewModel(IKernel kernel, IDeclarationInputDataProvider inputData)
 		{
@@ -33,10 +42,26 @@ namespace VECTO3GUI.ViewModel.Impl
 			CurrentComponent = GetComponentViewModel(Component.CompleteBusVehicle);
 		}
 
-	
+
+		#region Commands
+
+		
+
+
+		public ICommand SaveJobCommand
+		{
+			get {
+				return _saveJobCommand ??
+						(_saveJobCommand = new RelayCommand(DoSaveJob));}
+		}
+		
 		protected override void DoSaveJob()
 		{
-			throw new NotImplementedException();
+			CompleteVehicleBusData = new Dictionary<Component, object> {
+				{ Component.CompleteBusVehicle, _subModels[Component.CompleteBusVehicle].SaveComponentData()},
+				{ Component.Airdrag, _subModels[Component.Airdrag].SaveComponentData()},
+				{ Component.Auxiliaries, _subModels[Component.Auxiliaries].SaveComponentData()}
+			};
 		}
 
 		public ICommand SaveComponent
@@ -52,7 +77,17 @@ namespace VECTO3GUI.ViewModel.Impl
 
 		private void DoSaveComponent(Component component)
 		{
-
+			switch (component) {
+				case Component.CompleteBusVehicle:
+					_subModels[Component.CompleteBusVehicle].SaveComponentData();
+					break;
+				case Component.Airdrag:
+					_subModels[Component.Airdrag].SaveComponentData();
+					break;
+				case Component.Auxiliaries:
+					_subModels[Component.Auxiliaries].SaveComponentData();
+					break;
+			}
 		}
 
 
@@ -84,7 +119,9 @@ namespace VECTO3GUI.ViewModel.Impl
 			}
 		}
 
-		
+		#endregion
+
+
 		private bool ComponentsChanged(Component component)
 		{
 			switch (component) {

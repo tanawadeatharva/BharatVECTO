@@ -44,9 +44,7 @@ namespace VECTO3GUI.ViewModel.Impl
 		protected virtual void DoEditComponent(Component component)
 		{
 			var nextView = GetComponentViewModel(component);
-
 			CurrentComponent = nextView ?? Kernel.Get<INoneViewModel>();
-
 		}
 
 		protected void CreateComponentModel(Component component)

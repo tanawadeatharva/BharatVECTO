@@ -3,7 +3,7 @@ using System.Globalization;
 using System.Windows.Data;
 using TUGraz.VectoCore.Models.Declaration;
 
-namespace VECTO3GUI.Helper
+namespace VECTO3GUI.Helper.Converter
 {
 	public class VehicleClassConverter : BaseConverter, IValueConverter
 	{
