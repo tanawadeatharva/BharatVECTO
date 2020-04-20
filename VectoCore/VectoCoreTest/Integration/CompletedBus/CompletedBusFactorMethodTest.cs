@@ -877,7 +877,7 @@ namespace TUGraz.VectoCore.Tests.Integration.CompletedBus
 			Assert.IsNotNull(specificDriver.AccelerationCurve);
 			Assert.AreEqual(genericDriver.AccelerationCurve, specificDriver.AccelerationCurve);
 
-			Assert.AreEqual(DeclarationData.Driver.LookAhead.Enabled, genericDriver.LookAheadCoasting.Enabled);
+			Assert.AreEqual(false, genericDriver.LookAheadCoasting.Enabled);
 			Assert.AreEqual(DeclarationData.Driver.LookAhead.MinimumSpeed, genericDriver.LookAheadCoasting.MinSpeed);
 			Assert.IsNotNull(genericDriver.LookAheadCoasting.LookAheadDecisionFactor);
 			Assert.AreEqual(DeclarationData.Driver.LookAhead.LookAheadDistanceFactor,

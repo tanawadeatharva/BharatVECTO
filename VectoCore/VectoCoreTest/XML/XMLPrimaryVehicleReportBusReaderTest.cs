@@ -312,29 +312,29 @@ namespace TUGraz.VectoCore.Tests.XML
 
 			var result = resultsInputData.Results[0];
 			Assert.AreEqual("success", result.ResultStatus);
-			Assert.AreEqual("P31SD", result.VehicleGroup);
-			Assert.AreEqual("Regional Delivery", result.Mission);
+			Assert.AreEqual(VehicleClass.ClassP31SD, result.VehicleGroup);
+			Assert.AreEqual(MissionType.RegionalDelivery, result.Mission);
 
 			TestSimulationParameter(8810, 920, 20, "single fuel mode", result.SimulationParameter);
 
 			result = resultsInputData.Results[1];
 			Assert.AreEqual("success", result.ResultStatus);
-			Assert.AreEqual("P31SD", result.VehicleGroup);
-			Assert.AreEqual("Regional Delivery", result.Mission);
+			Assert.AreEqual(VehicleClass.ClassP31SD, result.VehicleGroup);
+			Assert.AreEqual(MissionType.RegionalDelivery, result.Mission);
 
 			TestSimulationParameter(12490, 4600, 80, "single fuel mode", result.SimulationParameter);
 
 			result = resultsInputData.Results[2];
 			Assert.AreEqual("success", result.ResultStatus);
-			Assert.AreEqual("P31DD", result.VehicleGroup);
-			Assert.AreEqual("Urban Delivery", result.Mission);
+			Assert.AreEqual(VehicleClass.ClassP31DD, result.VehicleGroup);
+			Assert.AreEqual(MissionType.UrbanDelivery, result.Mission);
 
 			TestSimulationParameter(8810, 920, 20, "single fuel mode", result.SimulationParameter);
 
 			result = resultsInputData.Results[3];
 			Assert.AreEqual("success", result.ResultStatus);
-			Assert.AreEqual("P31DD", result.VehicleGroup);
-			Assert.AreEqual("Urban Delivery", result.Mission);
+			Assert.AreEqual(VehicleClass.ClassP31DD, result.VehicleGroup);
+			Assert.AreEqual(MissionType.UrbanDelivery, result.Mission);
 
 			TestSimulationParameter(12490, 4600, 80, "single fuel mode", result.SimulationParameter);
 		}
