@@ -95,7 +95,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 		protected virtual ElectricsUserInputsConfig GetElectricalUserConfig(
 			Mission mission, IVehicleDeclarationInputData vehicleData, IActuations actuations, VehicleClass vehicleClass)
 		{
-			var currentDemand = GetElectricConsumers(mission, vehicleData, actuations);
+			var currentDemand = GetElectricConsumers(mission, vehicleData, actuations, vehicleClass);
 			var busAux = vehicleData.Components.BusAuxiliaries;
 
 			var retVal = GetDefaultElectricalUserConfig();
@@ -134,10 +134,9 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			return sum / alternators.Count;
 		}
 
-		protected virtual Dictionary<string, Tuple<bool, Ampere>> GetElectricConsumers(Mission mission, IVehicleDeclarationInputData vehicleData,
-			IActuations actuations)
+		protected virtual Dictionary<string, ElectricConsumerEntry> GetElectricConsumers(Mission mission, IVehicleDeclarationInputData vehicleData, IActuations actuations, VehicleClass vehicleClass)
 		{
-			var retVal = new Dictionary<string, Tuple<bool, Ampere>>();
+			var retVal = new Dictionary<string, ElectricConsumerEntry>();
 			var doorDutyCycleFraction =
 				(actuations.ParkBrakeAndDoors * Constants.BusAuxiliaries.ElectricalConsumers.DoorActuationTimeSecond) /
 				actuations.CycleTime;
@@ -164,9 +163,30 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 					current = 0.SI<Ampere>();
 				}
 
-				retVal[consumer.ConsumerName] = Tuple.Create(consumer.BaseVehicle, current);
+				retVal[consumer.ConsumerName] = new ElectricConsumerEntry {
+					BaseVehicle = consumer.BaseVehicle,
+					Current = current
+				};
 				
 			}
+
+			var spPower = DeclarationData.SteeringPumpBus.LookupElectricalPowerDemand(
+				mission.MissionType, busAux.SteeringPumpTechnology,
+				vehicleData.Length ?? mission.BusParameter.VehicleLength);
+			retVal[Constants.Auxiliaries.IDs.SteeringPump] = new ElectricConsumerEntry {
+				ActiveDuringEngineStopStandstill = false,
+				BaseVehicle = false,
+				Current = spPower / Constants.BusAuxiliaries.ElectricSystem.PowernetVoltage
+			};
+			
+			var fanPower = DeclarationData.Fan.LookupElectricalPowerDemand(
+				vehicleClass, mission.MissionType, busAux.FanTechnology);
+			retVal[Constants.Auxiliaries.IDs.Fan] = new ElectricConsumerEntry {
+				ActiveDuringEngineStopStandstill = false,
+				ActiveDuringEngineStopDriving = false,
+				BaseVehicle = false,
+				Current = fanPower / Constants.BusAuxiliaries.ElectricSystem.PowernetVoltage
+			};
 
 			return retVal;
 		}
@@ -426,5 +446,21 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 				StopBrakeActuation = Constants.BusAuxiliaries.PneumaticConsumersDemands.StopBrakeActuation,
 			};
 		}
+	}
+
+	public class ElectricConsumerEntry {
+
+		public ElectricConsumerEntry()
+		{
+			ActiveDuringEngineStopStandstill = true;
+			ActiveDuringEngineStopDriving = true;
+		}
+
+		public bool ActiveDuringEngineStopDriving { get; set; }
+
+		public bool ActiveDuringEngineStopStandstill { get; set; }
+
+		public bool BaseVehicle { get; set; }
+		public Ampere Current { get; set; }
 	}
 }

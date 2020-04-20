@@ -553,19 +553,19 @@ namespace TUGraz.VectoCore.Tests.Integration.CompletedBus
 			switch (idx) {
 				case 0:
 				case 1:		
-					Assert.AreEqual(50.1950, genericElectric.AverageCurrentDemandInclBaseLoad.Value(), 1e-3);
-					Assert.AreEqual(17.795, genericElectric.AverageCurrentDemandWithoutBaseLoad.Value(), 1e-3);
+					Assert.AreEqual(50.1950, genericElectric.AverageCurrentDemandInclBaseLoad(false, false).Value(), 1e-3);
+					Assert.AreEqual(17.795, genericElectric.AverageCurrentDemandWithoutBaseLoad(false, false).Value(), 1e-3);
 
-					Assert.AreEqual(54.981, specificElectric.AverageCurrentDemandInclBaseLoad.Value(), 1e-3);
-					Assert.AreEqual(22.581, specificElectric.AverageCurrentDemandWithoutBaseLoad.Value(), 1e-3);
+					Assert.AreEqual(54.981, specificElectric.AverageCurrentDemandInclBaseLoad(false, false).Value(), 1e-3);
+					Assert.AreEqual(22.581, specificElectric.AverageCurrentDemandWithoutBaseLoad(false, false).Value(), 1e-3);
 					break;
 				case 2:
 				case 3:
-					Assert.AreEqual(54.235, genericElectric.AverageCurrentDemandInclBaseLoad.Value(), 1e-3);
-					Assert.AreEqual(21.835, genericElectric.AverageCurrentDemandWithoutBaseLoad.Value(), 1e-3);
+					Assert.AreEqual(54.235, genericElectric.AverageCurrentDemandInclBaseLoad(false, false).Value(), 1e-3);
+					Assert.AreEqual(21.835, genericElectric.AverageCurrentDemandWithoutBaseLoad(false, false).Value(), 1e-3);
 
-					Assert.AreEqual(59.0091, specificElectric.AverageCurrentDemandInclBaseLoad.Value(), 1e-3);
-					Assert.AreEqual(26.6091, specificElectric.AverageCurrentDemandWithoutBaseLoad.Value(), 1e-3);
+					Assert.AreEqual(59.0091, specificElectric.AverageCurrentDemandInclBaseLoad(false, false).Value(), 1e-3);
+					Assert.AreEqual(26.6091, specificElectric.AverageCurrentDemandWithoutBaseLoad(false, false).Value(), 1e-3);
 					break;
 
 			}
@@ -977,6 +977,7 @@ namespace TUGraz.VectoCore.Tests.Integration.CompletedBus
 		TestCase(@"TestData\Integration\Buses\FactorMethod\SingleBus_41-32b.vecto", 0, TestName = "PrintVectoRunData SingleBus Group 41/32b CO/LL"),
 		TestCase(@"TestData\Integration\Buses\FactorMethod\SingleBus_42-33b.vecto", 1, TestName = "PrintVectoRunData SingleBus Group 42/33b HU/RL"),
 		TestCase(@"TestData\Integration\Buses\FactorMethod\primary_heavyBus group41_nonSmart_AT-P.xml", 12, TestName = "PrintVectoRunData PrimaryBus Group41 AT-P SD CO/LL"),
+		TestCase(@"TestData\Integration\Buses\vecto_vehicle-primary_heavyBus_ESS_electricFanSTP.xml", 13, TestName = "PrintVectoRunData electric STP/Fan ESS IU/RL"),
 			]
 		public void PrintModelParametersPrimaryBus(string jobFile, int runIdx)
 		{
@@ -1043,6 +1044,37 @@ namespace TUGraz.VectoCore.Tests.Integration.CompletedBus
 			var progress = jobContainer.GetProgress();
 			Assert.IsTrue(progress.All(r => r.Value.Success), string.Concat<Exception>(progress.Select(r => r.Value.Error)));
 			Assert.IsTrue(jobContainer.Runs.All(r => r.Success), String.Concat<Exception>(jobContainer.Runs.Select(r => r.ExecException)));
+		}
+
+		[TestCase(@"TestData\Integration\Buses\vecto_vehicle-primary_heavyBus_ESS_electricFanSTP.xml", 13, TestName = "RunBusSimulation electric STP/Fan ESS IU/RL"),
+		TestCase(@"TestData\Integration\Buses\vecto_vehicle-primary_heavyBus_ESS_electricFanSTP.xml", 17, TestName = "RunBusSimulation electric STP/Fan ESS CO/RL"),]
+		public void TestRunPrimaryBusSimulation_ESS(string jobName, int runIdx)
+		{
+			var relativeJobPath = jobName;
+			var writer = new FileOutputWriter(relativeJobPath);
+			var inputData = Path.GetExtension(relativeJobPath) == ".xml"
+				? xmlInputReader.CreateDeclaration(relativeJobPath)
+				: JSONInputDataFactory.ReadJsonJob(relativeJobPath);
+			var factory = new SimulatorFactory(ExecutionMode.Declaration, inputData, writer) {
+				WriteModalResults = true,
+				//ActualModalData = true,
+				Validate = false
+			};
+			var jobContainer = new JobContainer(new SummaryDataContainer(writer));
+
+			var runs = factory.SimulationRuns().ToArray();
+			
+			runs[runIdx].Run();
+
+			Assert.IsTrue(runs[runIdx].FinishedWithoutErrors);
+
+			//jobContainer.AddRuns(factory);
+
+			//jobContainer.Execute();
+			//jobContainer.WaitFinished();
+			//var progress = jobContainer.GetProgress();
+			//Assert.IsTrue(progress.All(r => r.Value.Success), string.Concat<Exception>(progress.Select(r => r.Value.Error)));
+			//Assert.IsTrue(jobContainer.Runs.All(r => r.Success), String.Concat<Exception>(jobContainer.Runs.Select(r => r.ExecException)));
 		}
 	}
 }

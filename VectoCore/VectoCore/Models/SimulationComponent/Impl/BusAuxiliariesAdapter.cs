@@ -211,6 +211,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			signals.Idle = DataBus.VehicleStopped;
 			signals.InNeutral = DataBus.Gear == 0;
 
+			signals.EngineStopped = !DataBus.IgnitionOn;
+			signals.VehicleStopped = DataBus.VehicleStopped;
+
 			return Auxiliaries.AuxiliaryPowerAtCrankWatts + signals.PreExistingAuxPower;
 		}
 

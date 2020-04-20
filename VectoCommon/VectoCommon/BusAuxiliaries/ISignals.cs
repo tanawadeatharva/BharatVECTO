@@ -163,5 +163,6 @@ namespace TUGraz.VectoCommon.BusAuxiliaries {
 
 		Second SimulationInterval { get; set; }
 		Watt ExcessiveDragPower { get; set; }
+		bool VehicleStopped { get; set; }
 	}
 }

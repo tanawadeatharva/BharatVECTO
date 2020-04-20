@@ -90,7 +90,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			return new AuxiliaryConfig {
 				InputData = completedVehicle.Components.BusAuxiliaries,
 				ElectricalUserInputsConfig = CreateElectricsUserInputsConfig(
-					primaryBusAuxiliaries, completedVehicle, mission, actuations),
+					primaryBusAuxiliaries, completedVehicle, mission, actuations, runData.VehicleData.VehicleClass),
 				PneumaticUserInputsConfig = CreatePneumaticUserInputsConfig(
 					primaryBusAuxiliaries, completedVehicle),
 				PneumaticAuxillariesConfig = CreatePneumaticAuxConfig(runData.Retarder.Type),
@@ -101,9 +101,9 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 		}
 
 		protected ElectricsUserInputsConfig CreateElectricsUserInputsConfig(IBusAuxiliariesDeclarationData primaryBusAuxiliaries,
-			IVehicleDeclarationInputData completedVehicle, Mission mission, IActuations actuations)
+			IVehicleDeclarationInputData completedVehicle, Mission mission, IActuations actuations, VehicleClass vehicleClass)
 		{
-			var currentDemand = GetElectricConsumers(mission, completedVehicle, actuations);
+			var currentDemand = GetElectricConsumers(mission, completedVehicle, actuations, vehicleClass);
 
 			var retVal = GetDefaultElectricalUserConfig();
 

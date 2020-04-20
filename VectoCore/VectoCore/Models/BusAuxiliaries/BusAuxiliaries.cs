@@ -48,7 +48,7 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries
 		// Classes which compose the model.
 		private IM0_NonSmart_AlternatorsSetEfficiency M0;
 
-		private IM0_5_SmartAlternatorSetEfficiency M0_5;
+		//private IM0_5_SmartAlternatorSetEfficiency M0_5;
 		private IM1_AverageHVACLoadDemand M1;
 		private IM2_AverageElectricalLoadDemand M2;
 		private IM3_AveragePneumaticLoadDemand M3;
@@ -106,15 +106,15 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries
 
 			M0 = new M00Impl(auxConfig.ElectricalUserInputsConfig, Signals, ssmTool.ElectricalWAdjusted);
 
-			M0_5 = new M0_5Impl(
-				M0, auxConfig.ElectricalUserInputsConfig, Signals);
+			//M0_5 = new M0_5Impl(
+			//	M0, auxConfig.ElectricalUserInputsConfig, Signals);
 
 			M1 = new M01Impl(
 				M0, auxConfig.ElectricalUserInputsConfig.AlternatorGearEfficiency,
 				auxConfig.PneumaticUserInputsConfig.CompressorGearEfficiency, ssmTool.ElectricalWAdjusted,
 				ssmTool.MechanicalWBaseAdjusted);
 
-			M2 = new M02Impl(M0, auxConfig.ElectricalUserInputsConfig);
+			M2 = new M02Impl(M0, auxConfig.ElectricalUserInputsConfig, Signals);
 
 			M3 = new M03Impl(auxConfig, compressorMap, auxCfg.Actuations, Signals);
 
@@ -297,7 +297,7 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries
 
 		public void ResetCalculations()
 		{
-			var modules = new List<IAbstractModule>() { M0, M0_5, M1, M2, M3, M4, M5, M6, M7, M8 };
+			var modules = new List<IAbstractModule>() { M0, M1, M2, M3, M4, M5, M6, M7, M8 };
 			foreach (var moduel in modules)
 				moduel.ResetCalculations();
 		}

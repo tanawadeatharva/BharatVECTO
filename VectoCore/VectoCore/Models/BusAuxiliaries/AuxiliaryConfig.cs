@@ -66,15 +66,15 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries
 				return false;
 			}
 
-			if (ElectricalUserInputsConfig.AverageCurrentDemandInclBaseLoad !=
-				other.ElectricalUserInputsConfig.AverageCurrentDemandInclBaseLoad) {
-				return false;
-			}
+			//if (ElectricalUserInputsConfig.AverageCurrentDemandInclBaseLoad !=
+			//	other.ElectricalUserInputsConfig.AverageCurrentDemandInclBaseLoad) {
+			//	return false;
+			//}
 
-			if (ElectricalUserInputsConfig.AverageCurrentDemandWithoutBaseLoad !=
-				other.ElectricalUserInputsConfig.AverageCurrentDemandWithoutBaseLoad) {
-				return false;
-			}
+			//if (ElectricalUserInputsConfig.AverageCurrentDemandWithoutBaseLoad !=
+			//	other.ElectricalUserInputsConfig.AverageCurrentDemandWithoutBaseLoad) {
+			//	return false;
+			//}
 
 			// PowerNetVoltage
 			if (ElectricalUserInputsConfig.PowerNetVoltage != other.ElectricalUserInputsConfig.PowerNetVoltage) {

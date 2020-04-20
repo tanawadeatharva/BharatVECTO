@@ -42,9 +42,13 @@ namespace TUGraz.VectoCommon.BusAuxiliaries
 		/// 	<remarks></remarks>
 		double AlternatorGearEfficiency { get;  }
 
-		Ampere AverageCurrentDemandInclBaseLoad { get; }
+		Ampere AverageCurrentDemandInclBaseLoad(bool engineOff, bool vehicleStopped);
 
-		Ampere AverageCurrentDemandWithoutBaseLoad { get; }
+		Ampere AverageCurrentDemandWithoutBaseLoad(bool engineOff, bool vehicleStopped);
+
+		//Ampere AverageCurrentDemandInclBaseLoad { get; }
+
+		//Ampere AverageCurrentDemandWithoutBaseLoad { get; }
 
 		/// <summary>
 		/// 	Door Actuation Time In Seconds ( Time Taken to Open/Close the door )
