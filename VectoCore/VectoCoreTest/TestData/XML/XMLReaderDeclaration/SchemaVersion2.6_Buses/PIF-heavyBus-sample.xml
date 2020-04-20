@@ -245,7 +245,7 @@ xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:PrimaryVehicleInformation E:\QUAM\Wo
 				</Auxiliaries>
 			</Components>
 		</Vehicle>
-		<ResultDataSignature>
+		<InputDataSignature>
 			<di:Reference URI="#MRF-VEH-1234567890">
 				<di:Transforms>
 					<di:Transform Algorithm="urn:vecto:xml:2017:canonicalization"/>
@@ -254,7 +254,17 @@ xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:PrimaryVehicleInformation E:\QUAM\Wo
 				<di:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"/>
 				<di:DigestValue>4TkUGQTX8tevHOU9Cj9uyCFuI/aqcEYlo/gyVjVQmv0=</di:DigestValue>
 			</di:Reference>
-		</ResultDataSignature>
+		</InputDataSignature>
+				<ManufacturerRecordSignature>
+			<di:Reference URI="#MRF-VEH-1234567890">
+				<di:Transforms>
+					<di:Transform Algorithm="urn:vecto:xml:2017:canonicalization"/>
+					<di:Transform Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#"/>
+				</di:Transforms>
+				<di:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"/>
+				<di:DigestValue>4TkUGQTX8tevHOU9Cj9uyCFuI/aqcEYlo/gyVjVQmv0=</di:DigestValue>
+			</di:Reference>
+		</ManufacturerRecordSignature>
 		<Results>
 			<Status>success</Status>
 			<Result status="success">
