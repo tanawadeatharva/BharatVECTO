@@ -6,9 +6,9 @@
 		<Model>Sample Bus Model</Model>
 		<VIN>VEH-1234567890</VIN>
 		<Date>2020-01-09T11:00:00Z</Date>
-		<LegislativeClass>N2</LegislativeClass>
+		<LegislativeClass>M3</LegislativeClass>
 		<RegisteredClass>II+III</RegisteredClass>
-		<VehicleCode>CD</VehicleCode>
+		<VehicleCode>CA</VehicleCode>
 		<CurbMassChassis>8300</CurbMassChassis>
 		<TechnicalPermissibleMaximumLadenMass>15400</TechnicalPermissibleMaximumLadenMass>
 		<RegisteredPassengers>
