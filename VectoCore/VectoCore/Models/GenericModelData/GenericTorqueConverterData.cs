@@ -63,30 +63,30 @@ namespace TUGraz.VectoCore.Models.Declaration
 
 			// stall point
 			var stallPt = retVal.NewRow();
-			stallPt[colSpeedRatio] = speedRatioStallPt * ratio;
-			stallPt[colTqRatio] = torqueRatioStallPt / speedRAtioOverrunPt / ratio;
-			stallPt[colRefTq] = refTorqueStallPt;
+			stallPt[colSpeedRatio] = Math.Round(speedRatioStallPt * ratio, 4, MidpointRounding.AwayFromZero);
+			stallPt[colTqRatio] = Math.Round(torqueRatioStallPt / speedRAtioOverrunPt / ratio, 2, MidpointRounding.AwayFromZero);
+			stallPt[colRefTq] = Math.Round(refTorqueStallPt;
 			retVal.Rows.Add(stallPt);
 
 			// intermediate point
 			var intermediatePt = retVal.NewRow();
-			intermediatePt[colSpeedRatio] = speedRatioIntermediatePt * ratio;
-			intermediatePt[colTqRatio] = torqueRatioIntermediatePt / ratio;
-			intermediatePt[colRefTq] = refTorqueStallPt * refTorqueIntermediatePtFactor;
+			intermediatePt[colSpeedRatio] = Math.Round(speedRatioIntermediatePt * ratio, 4, MidpointRounding.AwayFromZero);
+			intermediatePt[colTqRatio] = Math.Round(torqueRatioIntermediatePt / ratio, 2, MidpointRounding.AwayFromZero);
+			intermediatePt[colRefTq] = Math.Round(refTorqueStallPt * refTorqueIntermediatePtFactor, 2, MidpointRounding.AwayFromZero);
 			retVal.Rows.Add(intermediatePt);
 
 			//coupling point
 			var couplingPt = retVal.NewRow();
-			couplingPt[colSpeedRatio] = speedRatioCouplingPt * speedRAtioOverrunPt * ratio;
-			couplingPt[colTqRatio] = torqueRatioCouplingPt / speedRAtioOverrunPt / ratio;
-			couplingPt[colRefTq] = refTorqueStallPt * refTorqueCouplingPtFactor;
+			couplingPt[colSpeedRatio] = Math.Round(speedRatioCouplingPt * speedRAtioOverrunPt * ratio, 4, MidpointRounding.AwayFromZero);
+			couplingPt[colTqRatio] = Math.Round(torqueRatioCouplingPt / speedRAtioOverrunPt / ratio, 2, MidpointRounding.AwayFromZero);
+			couplingPt[colRefTq] = Math.Round(refTorqueStallPt * refTorqueCouplingPtFactor, 2, MidpointRounding.AwayFromZero);
 			retVal.Rows.Add(couplingPt);
 
 			// overrun point
 			var overrunPt = retVal.NewRow();
-			overrunPt[colSpeedRatio] = speedRAtioOverrunPt * ratio;
-			overrunPt[colTqRatio] = torqueRatioOverrunPt / speedRAtioOverrunPt / ratio;
-			overrunPt[colRefTq] = refTorqueStallPt * refTorqueOverrunPtFactor;
+			overrunPt[colSpeedRatio] = Math.Round(speedRAtioOverrunPt * ratio, 4, MidpointRounding.AwayFromZero);
+			overrunPt[colTqRatio] = Math.Round(torqueRatioOverrunPt / speedRAtioOverrunPt / ratio, 2, MidpointRounding.AwayFromZero);
+			overrunPt[colRefTq] = Math.Round(refTorqueStallPt * refTorqueOverrunPtFactor, 2, MidpointRounding.AwayFromZero);
 			retVal.Rows.Add(overrunPt);
 
 			return retVal;
