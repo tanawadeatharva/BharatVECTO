@@ -45,9 +45,10 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl {
 				completedVehicle.Height, completedVehicle.FloorType == FloorType.LowFloor);
 			if (!segment.Found) {
 				throw new VectoException(
-					"no segment found for vehicle configruation: vehicle category: {0}, axle configuration: {1}, articulated: {2}, primary",
+					"no segment found for vehicle configruation: vehicle category: {0}, axle configuration: {1}, articulated: {2}, vehicle code: {3}, registered class: {4}, passengersLowerDeck: {5}, height: {6}, lowfloor: {7}. completed",
 					vehicle.VehicleCategory, _singleBusInputData.PrimaryVehicle.AxleConfiguration,
-					vehicle.Articulated);
+					vehicle.Articulated, completedVehicle.VehicleCode, completedVehicle.RegisteredClass.GetLabel(), completedVehicle.NumberOfPassengersLowerDeck,
+					completedVehicle.Height, completedVehicle.FloorType == FloorType.LowFloor);
 			}
 			foreach (var mission in segment.Missions) {
 				mission.VehicleHeight = completedVehicle.Height + mission.BusParameter.DeltaHeight;
