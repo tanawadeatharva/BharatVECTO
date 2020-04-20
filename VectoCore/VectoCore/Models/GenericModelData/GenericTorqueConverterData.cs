@@ -65,7 +65,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 			var stallPt = retVal.NewRow();
 			stallPt[colSpeedRatio] = Math.Round(speedRatioStallPt * ratio, 4, MidpointRounding.AwayFromZero);
 			stallPt[colTqRatio] = Math.Round(torqueRatioStallPt / speedRAtioOverrunPt / ratio, 2, MidpointRounding.AwayFromZero);
-			stallPt[colRefTq] = Math.Round(refTorqueStallPt;
+			stallPt[colRefTq] = Math.Round(refTorqueStallPt, 2, MidpointRounding.AwayFromZero);
 			retVal.Rows.Add(stallPt);
 
 			// intermediate point
