@@ -7,6 +7,7 @@
              xmlns:customControls="clr-namespace:VECTO3GUI.Views.CustomControls"
              xmlns:helper="clr-namespace:VECTO3GUI.Helper"
              xmlns:converter="clr-namespace:VECTO3GUI.Helper.Converter"
+             xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
              mc:Ignorable="d" 
              d:DesignHeight="800" d:DesignWidth="800">
 
@@ -28,6 +29,12 @@
             <customControls:VectoParameterControl
                 Caption="Model" Unit="" CaptionWidthGroup="vehicleLbl" UnitWidthGroup="unitWidth"
                 Value="{Binding Model}" />
+
+            <!-- <mah:DateTimePicker  -->
+            <!--     SelectedDate="{Binding Date}"  -->
+            <!--     Culture="en-In" -->
+            <!--     SelectedTimeFormat="Short"  -->
+            <!--     SelectedDateFormat="Short"/> -->
 
             <customControls:VectoParameterControl
                 Caption="Date" Unit="" CaptionWidthGroup="vehicleLbl" UnitWidthGroup="unitWidth"

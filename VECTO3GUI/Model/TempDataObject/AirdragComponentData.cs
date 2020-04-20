@@ -8,10 +8,10 @@ using VECTO3GUI.ViewModel.Interfaces;
 
 namespace VECTO3GUI.Model.TempDataObject
 {
-	public class AirdragComponentData : IAirdrag
+	public class AirdragComponentData : IAirdrag, ITempDataObject<IAirdragViewModel>
 	{
-		#region Members
-		
+		#region IAirdrag Interface
+
 		public string Manufacturer { get; set; }
 		public string Model { get; set; }
 		public string CertificationNumber { get; set; }
@@ -24,6 +24,13 @@ namespace VECTO3GUI.Model.TempDataObject
 
 		#endregion
 
+
+		public AirdragComponentData(IAirdragViewModel viewModel , bool defaultValues)
+		{
+			if(defaultValues)
+				ClearValues(viewModel);
+		}
+
 		public AirdragComponentData(IAirdragViewModel airdrag)
 		{
 			SetValues(airdrag);
@@ -34,16 +41,40 @@ namespace VECTO3GUI.Model.TempDataObject
 			SetValues(airdrag);
 		}
 
-		private void SetValues(IAirdragViewModel airdrag)
+		public void ResetToComponentValues(IAirdragViewModel viewModel)
 		{
-			Model = airdrag.Model;
-			Manufacturer = airdrag.Manufacturer;
-			CertificationNumber = airdrag.CertificationNumber;
-			Date = airdrag.Date;
-			AppVersion = airdrag.AppVersion;
-			DeclaredCdxA = airdrag.DeclaredCdxA;
-			CdxA_0 = airdrag.CdxA_0;
-			TransferredCdxA = airdrag.TransferredCdxA;
+			viewModel.Model = Model;
+			viewModel.Manufacturer = Manufacturer;
+			viewModel.CertificationNumber = CertificationNumber;
+			viewModel.Date = Date;
+			viewModel.AppVersion = AppVersion;
+			viewModel.DeclaredCdxA = DeclaredCdxA;
+			viewModel.CdxA_0 = CdxA_0;
+			viewModel.TransferredCdxA = TransferredCdxA;
+		}
+
+		public void ClearValues(IAirdragViewModel viewModel)
+		{
+			viewModel.Model = default(string);
+			viewModel.Manufacturer = default(string);
+			viewModel.CertificationNumber = default(string);
+			viewModel.Date = default(DateTime?);
+			viewModel.AppVersion = default(string);
+			viewModel.DeclaredCdxA = default(SquareMeter);
+			viewModel.CdxA_0 = default(SquareMeter);
+			viewModel.TransferredCdxA = default(SquareMeter);
+		}
+
+		private void SetValues(IAirdragViewModel viewModel)
+		{
+			Model = viewModel.Model;
+			Manufacturer = viewModel.Manufacturer;
+			CertificationNumber = viewModel.CertificationNumber;
+			Date = viewModel.Date;
+			AppVersion = viewModel.AppVersion;
+			DeclaredCdxA = viewModel.DeclaredCdxA;
+			CdxA_0 = viewModel.CdxA_0;
+			TransferredCdxA = viewModel.TransferredCdxA;
 		}
 	}
 }

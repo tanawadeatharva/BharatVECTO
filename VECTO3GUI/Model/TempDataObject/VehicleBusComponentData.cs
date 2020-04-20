@@ -12,10 +12,10 @@ using VECTO3GUI.ViewModel.Interfaces;
 
 namespace VECTO3GUI.Model.TempDataObject
 {
-	public class VehicleBusComponentData : ICompleteVehicleBus
+	public class VehicleBusComponentData : ICompleteVehicleBus, ITempDataObject<ICompleteVehicleBusViewModel>
 	{
-		#region Properties
-		
+		#region ICompleteVehicleBus Interface
+
 		public string Manufacturer { get; set; }
 		public string ManufacturerAddress { get; set; }
 		public string Model { get; set; }
@@ -37,16 +37,66 @@ namespace VECTO3GUI.Model.TempDataObject
 
 		#endregion
 
-
-		public VehicleBusComponentData(ICompleteVehicleBusViewModel vehicleBus)
+		public VehicleBusComponentData(ICompleteVehicleBusViewModel viewModel, bool defaultValues)
 		{
-			SetCurrentValues(vehicleBus);
+			if(defaultValues)
+				ClearValues(viewModel);
 		}
 
-		public void UpdateCurrentValues(ICompleteVehicleBusViewModel vehicleBus)
+		public VehicleBusComponentData(ICompleteVehicleBusViewModel viewModel)
 		{
-			SetCurrentValues(vehicleBus);
+			SetCurrentValues(viewModel);
 		}
+
+		public void UpdateCurrentValues(ICompleteVehicleBusViewModel viewModel)
+		{
+			SetCurrentValues(viewModel);
+		}
+
+		public void ResetToComponentValues(ICompleteVehicleBusViewModel viewModel)
+		{
+			viewModel.Manufacturer = Manufacturer;
+			viewModel.ManufacturerAddress = ManufacturerAddress;
+			viewModel.Model = Model;
+			viewModel.VIN = VIN;
+			viewModel.Date = Date;
+			viewModel.LegislativeClass = LegislativeClass;
+			viewModel.RegisteredClass = RegisteredClass;
+			viewModel.VehicleCode = VehicleCode;
+			viewModel.CurbMassChassis = CurbMassChassis;
+			viewModel.TechnicalPermissibleMaximumLadenMass = TechnicalPermissibleMaximumLadenMass;
+			viewModel.NumberOfPassengersLowerDeck = NumberOfPassengersLowerDeck;
+			viewModel.NumberOfPassengersUpperDeck = NumberOfPassengersUpperDeck;
+			viewModel.FloorType = FloorType;
+			viewModel.HeightIntegratedBody = HeightIntegratedBody;
+			viewModel.VehicleLength = VehicleLength;
+			viewModel.VehicleWidth = VehicleWidth;
+			viewModel.EntranceHeight = EntranceHeight;
+			viewModel.DoorDriveTechnology = DoorDriveTechnology;
+		}
+
+		public void ClearValues(ICompleteVehicleBusViewModel viewModel)
+		{
+			viewModel.Manufacturer = default(string);
+			viewModel.ManufacturerAddress = default(string);
+			viewModel.Model = default(string);
+			viewModel.VIN = default(string);
+			viewModel.Date = default(DateTime);
+			viewModel.LegislativeClass = default(LegislativeClass);
+			viewModel.RegisteredClass = default(RegistrationClass);
+			viewModel.VehicleCode = default(VehicleCode);
+			viewModel.CurbMassChassis = default(Kilogram);
+			viewModel.TechnicalPermissibleMaximumLadenMass = default(Kilogram);
+			viewModel.NumberOfPassengersLowerDeck = default(int);
+			viewModel.NumberOfPassengersUpperDeck = default(int);
+			viewModel.FloorType = default(FloorType);
+			viewModel.HeightIntegratedBody = default(Meter);
+			viewModel.VehicleLength = default(Meter);
+			viewModel.VehicleWidth = default(Meter);
+			viewModel.EntranceHeight = default(Meter);
+			viewModel.DoorDriveTechnology = default(ConsumerTechnology);
+		}
+
 		
 		private void SetCurrentValues(ICompleteVehicleBusViewModel vehicleBus)
 		{

@@ -10,9 +10,9 @@ using VECTO3GUI.ViewModel.Interfaces;
 
 namespace VECTO3GUI.Model.TempDataObject
 {
-	public class AuxiliariesBusComponentData: IAuxiliariesBus
+	public class AuxiliariesBusComponentData: IAuxiliariesBus, ITempDataObject<IAuxiliariesViewModel>
 	{
-		#region Properties
+		#region IAuxiliariesBus Interface
 
 		public ObservableCollection<string> AlternatorTechnologies { get; set; }
 		public bool DayrunninglightsLED { get; set; }
@@ -32,16 +32,60 @@ namespace VECTO3GUI.Model.TempDataObject
 
 		#endregion
 
-		public AuxiliariesBusComponentData(IAuxiliariesViewModel auxiliaries)
+		public AuxiliariesBusComponentData(IAuxiliariesViewModel viewModel, bool defaultValues)
 		{
-			SetValues(auxiliaries);
+			if (defaultValues)
+				ClearValues(viewModel);
 		}
 
-		public void UpdateCurrentValues(IAuxiliariesViewModel auxiliaries)
+		public AuxiliariesBusComponentData(IAuxiliariesViewModel viewModel)
 		{
-			SetValues(auxiliaries);
+			SetValues(viewModel);
 		}
 
+		public void UpdateCurrentValues(IAuxiliariesViewModel viewModel)
+		{
+			SetValues(viewModel);
+		}
+
+		public void ResetToComponentValues(IAuxiliariesViewModel viewModel)
+		{
+			viewModel.AlternatorTechnologies = AlternatorTechnologies;
+			viewModel.DayrunninglightsLED = DayrunninglightsLED;
+			viewModel.HeadlightsLED = HeadlightsLED;
+			viewModel.PositionlightsLED = PositionlightsLED;
+			viewModel.BrakelightsLED = BrakelightsLED;
+			viewModel.InteriorLightsLED = InteriorLightsLED;
+			viewModel.DoorDriveTechnology = DoorDriveTechnology;
+			viewModel.SystemConfiguration = SystemConfiguration;
+			viewModel.CompressorTypeDriver = CompressorTypeDriver;
+			viewModel.CompressorTypePassenger = CompressorTypePassenger;
+			viewModel.AuxHeaterPower = AuxHeaterPower;
+			viewModel.DoubleGlasing = DoubleGlasing;
+			viewModel.HeatPump = HeatPump;
+			viewModel.AdjustableAuxiliaryHeater = AdjustableAuxiliaryHeater;
+			viewModel.SeparateAirDistributionDucts = SeparateAirDistributionDucts;
+		}
+
+		public void ClearValues(IAuxiliariesViewModel viewModel)
+		{
+			viewModel.AlternatorTechnologies = default(ObservableCollection<string>);
+			viewModel.DayrunninglightsLED = default(bool);
+			viewModel.HeadlightsLED = default(bool);
+			viewModel.PositionlightsLED = default(bool);
+			viewModel.BrakelightsLED = default(bool);
+			viewModel.InteriorLightsLED = default(bool);
+			viewModel.DoorDriveTechnology = default(ConsumerTechnology);
+			viewModel.SystemConfiguration = default(BusHVACSystemConfiguration);
+			viewModel.CompressorTypeDriver = default(ACCompressorType);
+			viewModel.CompressorTypePassenger = default(ACCompressorType);
+			viewModel.AuxHeaterPower = default(Watt);
+			viewModel.DoubleGlasing = default(bool);
+			viewModel.HeatPump = default(bool);
+			viewModel.AdjustableAuxiliaryHeater = default(bool);
+			viewModel.SeparateAirDistributionDucts = default(bool);
+		}
+		
 		private void SetValues(IAuxiliariesViewModel auxiliaries)
 		{
 			AlternatorTechnologies = new ObservableCollection<string>(auxiliaries.AlternatorTechnologies);
@@ -50,9 +94,7 @@ namespace VECTO3GUI.Model.TempDataObject
 			PositionlightsLED = auxiliaries.PositionlightsLED;
 			BrakelightsLED = auxiliaries.BrakelightsLED;
 			InteriorLightsLED = auxiliaries.InteriorLightsLED;
-
 			DoorDriveTechnology = auxiliaries.DoorDriveTechnology;
-
 			SystemConfiguration = auxiliaries.SystemConfiguration;
 			CompressorTypeDriver = auxiliaries.CompressorTypeDriver;
 			CompressorTypePassenger = auxiliaries.CompressorTypePassenger;

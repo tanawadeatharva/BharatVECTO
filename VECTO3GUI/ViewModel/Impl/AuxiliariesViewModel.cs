@@ -84,7 +84,7 @@ namespace VECTO3GUI.ViewModel.Impl
 			{
 				if (axlesViewModel == null)
 				{
-					ConnectAxleViewModel();
+					//ConnectAxleViewModel();
 				}
 
 				return _steeringPumpTechnologies;
@@ -138,13 +138,9 @@ namespace VECTO3GUI.ViewModel.Impl
 			get { return _dayRunningLightsLED; }
 			set
 			{
-				if (SetProperty(ref _dayRunningLightsLED, value))
-				{
-					var changed = true;
-					if (_busAuxiliaries?.ElectricConsumers != null)
-						changed = _busAuxiliaries.ElectricConsumers.DayrunninglightsLED != value;
-					SetChangedProperty(changed);
-				}
+				if (!SetProperty(ref _dayRunningLightsLED, value))
+					return;
+				IsDataChanged(_dayRunningLightsLED, _componentData);
 			}
 		}
 		public bool HeadlightsLED
@@ -152,13 +148,10 @@ namespace VECTO3GUI.ViewModel.Impl
 			get { return _headlightyLED; }
 			set
 			{
-				if (SetProperty(ref _headlightyLED, value))
-				{
-					var changed = true;
-					if (_busAuxiliaries?.ElectricConsumers != null)
-						changed = _busAuxiliaries.ElectricConsumers.HeadlightsLED != value;
-					SetChangedProperty(changed);
-				}
+				if (!SetProperty(ref _headlightyLED, value))
+					return;
+
+				IsDataChanged(_headlightyLED, _componentData);
 			}
 		}
 		public bool PositionlightsLED
@@ -166,13 +159,9 @@ namespace VECTO3GUI.ViewModel.Impl
 			get { return _positionlightsLED; }
 			set
 			{
-				if (SetProperty(ref _positionlightsLED, value))
-				{
-					var changed = true;
-					if (_busAuxiliaries?.ElectricConsumers != null)
-						changed = _busAuxiliaries.ElectricConsumers.PositionlightsLED != value;
-					SetChangedProperty(changed);
-				}
+				if (!SetProperty(ref _positionlightsLED, value))
+					return;
+				IsDataChanged(_positionlightsLED, _componentData);
 			}
 		}
 		public bool BrakelightsLED
@@ -180,13 +169,9 @@ namespace VECTO3GUI.ViewModel.Impl
 			get { return _breaklightsLED; }
 			set
 			{
-				if (SetProperty(ref _breaklightsLED, value))
-				{
-					var changed = true;
-					if (_busAuxiliaries?.ElectricConsumers != null)
-						changed = _busAuxiliaries.ElectricConsumers.BrakelightsLED != value;
-					SetChangedProperty(changed);
-				}
+				if (!SetProperty(ref _breaklightsLED, value))
+					return;
+				IsDataChanged(_breaklightsLED, _componentData);
 			}
 		}
 		public bool InteriorLightsLED
@@ -194,148 +179,100 @@ namespace VECTO3GUI.ViewModel.Impl
 			get { return _interiorLightsLED; }
 			set
 			{
-				if (SetProperty(ref _interiorLightsLED, value))
-				{
-					var changed = true;
-					if (_busAuxiliaries?.ElectricConsumers != null)
-						changed = _busAuxiliaries.ElectricConsumers.InteriorLightsLED != value;
-					SetChangedProperty(changed);
-				}
+				if (!SetProperty(ref _interiorLightsLED, value))
+					return;
+				IsDataChanged(_interiorLightsLED, _componentData);
 			}
 		}
-
 		public ConsumerTechnology DoorDriveTechnology
 		{
 			get { return _doorDriveTechnology; }
 			set
 			{
-				if (SetProperty(ref _doorDriveTechnology, value))
-				{
-					var changed = _busAuxiliaries?.PneumaticConsumers != null
-						? _busAuxiliaries.PneumaticConsumers.DoorDriveTechnology != value
-						: value != default(ConsumerTechnology);
-					SetChangedProperty(changed);
-				}
+				if (!SetProperty(ref _doorDriveTechnology, value))
+					return;
+				IsDataChanged(_doorDriveTechnology, _componentData);
 			}
 		}
-
 		public BusHVACSystemConfiguration SystemConfiguration
 		{
 			get { return _systemConfiguration; }
 			set
 			{
-				if (SetProperty(ref _systemConfiguration, value))
-				{
-					var changed = _busAuxiliaries?.HVACAux != null
-								? _busAuxiliaries.HVACAux.SystemConfiguration != value
-								: value != default(BusHVACSystemConfiguration);
-					SetChangedProperty(changed);
-				}
+				if (!SetProperty(ref _systemConfiguration, value))
+					return;
+
+				IsDataChanged(_systemConfiguration, _componentData);
 			}
 		}
-
 		public ACCompressorType CompressorTypeDriver
 		{
 			get { return _compressorTypeDriver; }
 			set
 			{
-				if (SetProperty(ref _compressorTypeDriver, value))
-				{
-					var changed = _busAuxiliaries?.HVACAux != null
-								? _busAuxiliaries.HVACAux.CompressorTypeDriver != value
-								: value != default(ACCompressorType);
-					SetChangedProperty(changed);
-				}
+				if (!SetProperty(ref _compressorTypeDriver, value))
+					return;
+				IsDataChanged(_compressorTypeDriver, _componentData);
 			}
 		}
-
 		public ACCompressorType CompressorTypePassenger
 		{
 			get { return _compressorTypePassenger; }
 			set
 			{
-				if (SetProperty(ref _compressorTypePassenger, value))
-				{
-					var changed = _busAuxiliaries?.HVACAux != null
-								? _busAuxiliaries.HVACAux.CompressorTypePassenger != value
-								: value != default(ACCompressorType);
-					SetChangedProperty(changed);
-				}
+				if (!SetProperty(ref _compressorTypePassenger, value))
+					return;
+				IsDataChanged(_compressorTypePassenger, _componentData);
 			}
 		}
-
 		public Watt AuxHeaterPower
 		{
 			get { return _auxHeaterPower; }
 			set
 			{
-				if (SetProperty(ref _auxHeaterPower, value))
-				{
-					var changed = _busAuxiliaries?.HVACAux != null
-								? _busAuxiliaries.HVACAux.AuxHeaterPower != value
-								: value != default(Watt);
-					SetChangedProperty(changed);
-				}
+				if (!SetProperty(ref _auxHeaterPower, value))
+					return;
+				IsDataChanged(_auxHeaterPower, _componentData);
 			}
 		}
-
 		public bool DoubleGlasing
 		{
 			get { return _doubleGlasing; }
 			set
 			{
-				if (SetProperty(ref _doubleGlasing, value))
-				{
-					var changed = true;
-					if (_busAuxiliaries?.HVACAux != null)
-						changed = _busAuxiliaries.HVACAux.DoubleGlasing != value;
-					SetChangedProperty(changed);
-				}
+				if (!SetProperty(ref _doubleGlasing, value))
+					return;
+				IsDataChanged(_doubleGlasing, _componentData);
 			}
 		}
-
 		public bool HeatPump
 		{
 			get { return _heatPump; }
 			set
 			{
-				if (SetProperty(ref _heatPump, value))
-				{
-					var changed = true;
-					if (_busAuxiliaries?.HVACAux != null)
-						changed = _busAuxiliaries.HVACAux.HeatPump != value;
-					SetChangedProperty(changed);
-				}
+				if (!SetProperty(ref _heatPump, value))
+					return;
+				IsDataChanged(_heatPump, _componentData);
 			}
 		}
-
 		public bool AdjustableAuxiliaryHeater
 		{
 			get { return _adjustableAuxiliaryHeater; }
 			set
 			{
-				if (SetProperty(ref _adjustableAuxiliaryHeater, value))
-				{
-					var changed = true;
-					if (_busAuxiliaries?.HVACAux != null)
-						changed = _busAuxiliaries.HVACAux.AdjustableAuxiliaryHeater != value;
-					SetChangedProperty(changed);
-				}
+				if (!SetProperty(ref _adjustableAuxiliaryHeater, value))
+					return;
+				IsDataChanged(_adjustableAuxiliaryHeater, _componentData);
 			}
 		}
-
 		public bool SeparateAirDistributionDucts
 		{
 			get { return _separateAirDistributionDucts; }
 			set
 			{
-				if (SetProperty(ref _separateAirDistributionDucts, value))
-				{
-					var changed = true;
-					if (_busAuxiliaries?.HVACAux != null)
-						changed = _busAuxiliaries.HVACAux.SeparateAirDistributionDucts != value;
-					SetChangedProperty(changed);
-				}
+				if (!SetProperty(ref _separateAirDistributionDucts, value))
+					return;
+				IsDataChanged(_adjustableAuxiliaryHeater, _componentData);
 			}
 		}
 
@@ -359,77 +296,22 @@ namespace VECTO3GUI.ViewModel.Impl
 			//			.If<IDeclarationInputDataProvider>(d => SetValues(d.JobInputData.Vehicle.Components.AuxiliaryInputData()))
 			//			.If<IEngineeringInputDataProvider>(e => SetValues(e.JobInputData.Vehicle.Components.AuxiliaryInputData()));
 
-			if (inputData?.JobInputData?.Vehicle?.Components?.BusAuxiliaries != null)
-			{
-				_busAuxiliaries = inputData.JobInputData.Vehicle.Components.BusAuxiliaries;
-				SetValues(_busAuxiliaries);
-			} else {
-				SetAllowedValues();
-			}
-
-
-			ConnectAxleViewModel();
+			_busAuxiliaries = inputData?.JobInputData.Vehicle.Components.BusAuxiliaries;
+			SetBusAuxiliaryValues(_busAuxiliaries);
+			SetAllowedValues();
+			
+			//ConnectAxleViewModel();
 		}
 
-		private void ConnectAxleViewModel()
-		{
-			var axlesVm = ParentViewModel.GetComponentViewModel(Component.Axles);
 
-			if (axlesVm == null)
+		private void SetBusAuxiliaryValues(IBusAuxiliariesDeclarationData busAux)
+		{
+			if (busAux == null)
 			{
+				_componentData = new AuxiliariesBusComponentData(this, true);
 				return;
 			}
 
-			axlesViewModel = axlesVm as IAxlesViewModel;
-			(axlesViewModel as AxlesViewModel).PropertyChanged += UpdateSteeringPump;
-			DoUpdateSteeringPumpTechnologies();
-		}
-
-		private void UpdateSteeringPump(object sender, PropertyChangedEventArgs e)
-		{
-			if (e.PropertyName == "NumSteeredAxles")
-			{
-				DoUpdateSteeringPumpTechnologies();
-			}
-		}
-
-		private void DoUpdateSteeringPumpTechnologies()
-		{
-			if (axlesViewModel == null)
-			{
-				return;
-			}
-
-			while (_steeringPumpTechnologies.Count > axlesViewModel.NumSteeredAxles)
-			{
-				_steeringPumpTechnologies.RemoveAt(_steeringPumpTechnologies.Count - 1);
-			}
-			while (_steeringPumpTechnologies.Count < axlesViewModel.NumSteeredAxles)
-			{
-				_steeringPumpTechnologies.Add(new SteeringPumpEntry(_steeringPumpTechnologies.Count + 1, AllowedSteeringPumpTechnologies.First().Label));
-			}
-		}
-
-		private void SetValues(IAuxiliariesEngineeringInputData aux)
-		{
-			throw new NotImplementedException();
-		}
-
-		private void SetValues(IAuxiliariesDeclarationInputData aux)
-		{
-			FanTechnology = aux.Auxiliaries.First(x => x.Type == AuxiliaryType.Fan).Technology.FirstOrDefault();
-			ElectricSystemTechnology = aux.Auxiliaries.First(x => x.Type == AuxiliaryType.ElectricSystem).Technology.FirstOrDefault();
-			HVACTechnology = aux.Auxiliaries.First(x => x.Type == AuxiliaryType.HVAC).Technology.FirstOrDefault();
-			PneumaticSystemTechnology = aux.Auxiliaries.First(x => x.Type == AuxiliaryType.PneumaticSystem).Technology.FirstOrDefault();
-			SteeringPumpTechnologies.Clear();
-			foreach (var tech in aux.Auxiliaries.First(x => x.Type == AuxiliaryType.SteeringPump).Technology)
-			{
-				SteeringPumpTechnologies.Add(new SteeringPumpEntry(SteeringPumpTechnologies.Count + 1, tech));
-			}
-		}
-
-		private void SetValues(IBusAuxiliariesDeclarationData busAux)
-		{
 			if (!busAux.ElectricSupply.Alternators.IsNullOrEmpty())
 			{
 				AlternatorTechnologies = new ObservableCollection<string>();
@@ -445,9 +327,7 @@ namespace VECTO3GUI.ViewModel.Impl
 			PositionlightsLED = busAux.ElectricConsumers.PositionlightsLED;
 			BrakelightsLED = busAux.ElectricConsumers.BrakelightsLED;
 			InteriorLightsLED = busAux.ElectricConsumers.InteriorLightsLED;
-
 			DoorDriveTechnology = busAux.PneumaticConsumers.DoorDriveTechnology;
-
 			SystemConfiguration = busAux.HVACAux.SystemConfiguration;
 			CompressorTypeDriver = busAux.HVACAux.CompressorTypeDriver;
 			CompressorTypePassenger = busAux.HVACAux.CompressorTypePassenger;
@@ -457,7 +337,8 @@ namespace VECTO3GUI.ViewModel.Impl
 			AdjustableAuxiliaryHeater = busAux.HVACAux.AdjustableAuxiliaryHeater;
 			SeparateAirDistributionDucts = busAux.HVACAux.SeparateAirDistributionDucts;
 
-			SetAllowedValues();
+			_componentData = new AuxiliariesBusComponentData(this);
+			ClearChangedProperties();
 		}
 
 		private void SetAllowedValues()
@@ -474,23 +355,79 @@ namespace VECTO3GUI.ViewModel.Impl
 				.Select(sc => AllowedEntry.Create(sc, sc.GetLabel())).ToArray();
 		}
 
-		public override bool IsComponentDataChanged()
-		{
-			return _changedInput.Count > 0;
-		}
-
 		public override void ResetComponentData()
 		{
-			SetValues(_busAuxiliaries);
+			_componentData.ResetToComponentValues(this);
 		}
 
 		public override object SaveComponentData()
 		{
-			if(_componentData == null)
-				_componentData = new AuxiliariesBusComponentData(this);
-			else
-				_componentData.UpdateCurrentValues(this);
+			_componentData.UpdateCurrentValues(this);
+			ClearChangedProperties();
 			return _componentData;
 		}
+
+
+
+		#region Legacy 
+
+		//private void ConnectAxleViewModel()
+		//{
+		//	var axlesVm = ParentViewModel.GetComponentViewModel(Component.Axles);
+
+		//	if (axlesVm == null)
+		//	{
+		//		return;
+		//	}
+
+		//	axlesViewModel = axlesVm as IAxlesViewModel;
+		//	(axlesViewModel as AxlesViewModel).PropertyChanged += UpdateSteeringPump;
+		//	DoUpdateSteeringPumpTechnologies();
+		//}
+
+		//private void UpdateSteeringPump(object sender, PropertyChangedEventArgs e)
+		//{
+		//	if (e.PropertyName == "NumSteeredAxles")
+		//	{
+		//		DoUpdateSteeringPumpTechnologies();
+		//	}
+		//}
+
+		//private void DoUpdateSteeringPumpTechnologies()
+		//{
+		//	if (axlesViewModel == null)
+		//	{
+		//		return;
+		//	}
+
+		//	while (_steeringPumpTechnologies.Count > axlesViewModel.NumSteeredAxles)
+		//	{
+		//		_steeringPumpTechnologies.RemoveAt(_steeringPumpTechnologies.Count - 1);
+		//	}
+		//	while (_steeringPumpTechnologies.Count < axlesViewModel.NumSteeredAxles)
+		//	{
+		//		_steeringPumpTechnologies.Add(new SteeringPumpEntry(_steeringPumpTechnologies.Count + 1, AllowedSteeringPumpTechnologies.First().Label));
+		//	}
+		//}
+
+
+		//private void SetValues(IAuxiliariesDeclarationInputData aux)
+		//{
+		//	FanTechnology = aux.Auxiliaries.First(x => x.Type == AuxiliaryType.Fan).Technology.FirstOrDefault();
+		//	ElectricSystemTechnology = aux.Auxiliaries.First(x => x.Type == AuxiliaryType.ElectricSystem).Technology.FirstOrDefault();
+		//	HVACTechnology = aux.Auxiliaries.First(x => x.Type == AuxiliaryType.HVAC).Technology.FirstOrDefault();
+		//	PneumaticSystemTechnology = aux.Auxiliaries.First(x => x.Type == AuxiliaryType.PneumaticSystem).Technology.FirstOrDefault();
+		//	SteeringPumpTechnologies.Clear();
+		//	foreach (var tech in aux.Auxiliaries.First(x => x.Type == AuxiliaryType.SteeringPump).Technology)
+		//	{
+		//		SteeringPumpTechnologies.Add(new SteeringPumpEntry(SteeringPumpTechnologies.Count + 1, tech));
+		//	}
+		//}
+
+
+		#endregion
+
+
+
 	}
 }

@@ -8,7 +8,8 @@ namespace VECTO3GUI.ViewModel.Impl
 {
 	public abstract class AbstractComponentViewModel : AbstractViewModel
 	{
-		protected HashSet<string> _changedInput = new HashSet<string>();
+		private HashSet<string> _changedInput = new HashSet<string>();
+		protected bool UnsavedChanges ;
 
 		[Inject] public IAdapterFactory AdapterFactory { set; protected get; }
 
@@ -17,16 +18,40 @@ namespace VECTO3GUI.ViewModel.Impl
 			if (!changed) {
 				if (_changedInput.Contains(propertyName))
 					_changedInput.Remove(propertyName);
-			}
-			else {
+			} else {
 				if (!_changedInput.Contains(propertyName))
 					_changedInput.Add(propertyName);
 			}
+
+			UnsavedChanges = _changedInput.Count > 0;
 		}
 
+		protected void IsDataChanged<T>(T inputValue, object componentData, [CallerMemberName] string propertyName = null)
+		{
+			if (propertyName == null)
+				return;
+
+			if (componentData != null)
+			{
+				var currentValue = (T)componentData.GetType().GetProperty(propertyName)?.GetValue(componentData);
+				UnsavedChanges = !EqualityComparer<T>.Default.Equals(currentValue, inputValue);
+			}
+
+			else
+				UnsavedChanges = !EqualityComparer<T>.Default.Equals(inputValue, default(T));
+
+			SetChangedProperty(UnsavedChanges, propertyName);
+		}
+
+		protected void ClearChangedProperties()
+		{
+			UnsavedChanges = false;
+			_changedInput.Clear();
+		}
+		
 		public override bool IsComponentDataChanged()
 		{
-			return _changedInput.Count > 0;
+			return UnsavedChanges || _changedInput.Count > 0;
 		}
 	}
 }

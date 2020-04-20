@@ -44,7 +44,7 @@ namespace VECTO3GUI.ViewModel.Impl
 
 
 		#endregion
-		
+
 		#region ICompleteVehicleBusViewModel
 
 		public string Manufacturer
@@ -52,12 +52,9 @@ namespace VECTO3GUI.ViewModel.Impl
 			get { return _manufacturer; }
 			set
 			{
-				if (SetProperty(ref _manufacturer, value)) {
-					var changed = _vehicle != null
-								? _vehicle.Manufacturer != value
-								: value != default(string);
-					SetChangedProperty(changed);
-				}
+				if (!SetProperty(ref _manufacturer, value))
+					return;
+				IsDataChanged(_manufacturer, _componentData);
 			}
 		}
 		public string ManufacturerAddress
@@ -65,12 +62,9 @@ namespace VECTO3GUI.ViewModel.Impl
 			get { return _manufacturerAddress; }
 			set
 			{
-				if (SetProperty(ref _manufacturerAddress, value)) {
-					var changed = _vehicle != null
-								? _vehicle.ManufacturerAddress != value
-								: value != default(string);
-					SetChangedProperty(changed);
-				}
+				if (!SetProperty(ref _manufacturerAddress, value))
+					return;
+				IsDataChanged(_manufacturerAddress, _componentData);
 			}
 		}
 		public string Model
@@ -78,12 +72,10 @@ namespace VECTO3GUI.ViewModel.Impl
 			get { return _model; }
 			set
 			{
-				if (SetProperty(ref _model, value)) {
-					var changed = _vehicle != null
-								? _vehicle.Model != value
-								: value != default(string);
-					SetChangedProperty(changed);
-				}
+				if (!SetProperty(ref _model, value))
+					return;
+
+				IsDataChanged(_model, _componentData);
 			}
 		}
 		public string VIN
@@ -91,12 +83,9 @@ namespace VECTO3GUI.ViewModel.Impl
 			get { return _vin; }
 			set
 			{
-				if (SetProperty(ref _vin, value)) {
-					var changed = _vehicle != null
-								? _vehicle.VIN != value
-								: value != default(string);
-					SetChangedProperty(changed);
-				}
+				if (!SetProperty(ref _vin, value))
+					return;
+				IsDataChanged(_vin, _componentData);
 			}
 		}
 		public DateTime Date
@@ -104,12 +93,9 @@ namespace VECTO3GUI.ViewModel.Impl
 			get { return _date; }
 			set
 			{
-				if (SetProperty(ref _date, value)) {
-					var changed = _vehicle != null
-								? _vehicle.Date != value
-								: value != default(DateTime);
-					SetChangedProperty(changed);
-				}
+				if (!SetProperty(ref _date, value))
+					return;
+				IsDataChanged(_date, _componentData);
 			}
 		}
 		public LegislativeClass LegislativeClass
@@ -117,12 +103,9 @@ namespace VECTO3GUI.ViewModel.Impl
 			get { return _legislativeClass; }
 			set
 			{
-				if (SetProperty(ref _legislativeClass, value)) {
-					var changed = _vehicle != null
-								? _vehicle.LegislativeClass != value
-								: value != default(LegislativeClass);
-					SetChangedProperty(changed);
-				}
+				if (!SetProperty(ref _legislativeClass, value))
+					return;
+				IsDataChanged(_legislativeClass, _componentData);
 			}
 		}
 		public RegistrationClass RegisteredClass
@@ -130,24 +113,19 @@ namespace VECTO3GUI.ViewModel.Impl
 			get { return _registeredClass; }
 			set
 			{
-				if (SetProperty(ref _registeredClass, value)) {
-					var changed = _vehicle != null
-								? _vehicle.RegisteredClass != value
-								: value != default(RegistrationClass);
-					SetChangedProperty(changed);
-				}
+				if (!SetProperty(ref _registeredClass, value))
+					return;
+				IsDataChanged(_registeredClass, _componentData);
 			}
 		}
 		public VehicleCode VehicleCode
 		{
 			get { return _vehicleCode; }
-			set {
-				if (SetProperty(ref _vehicleCode, value)) {
-					var changed = _vehicle != null
-								? _vehicle.VehicleCode != value
-								: value != default(VehicleCode);
-					SetChangedProperty(changed);
-				}
+			set
+			{
+				if (!SetProperty(ref _vehicleCode, value))
+					return;
+				IsDataChanged(_vehicleCode, _componentData);
 			}
 		}
 		public Kilogram CurbMassChassis
@@ -155,12 +133,9 @@ namespace VECTO3GUI.ViewModel.Impl
 			get { return _curbMassChassis; }
 			set
 			{
-				if (SetProperty(ref _curbMassChassis, value)) {
-					var changed = _vehicle != null
-								? _vehicle.CurbMassChassis != value
-								: value != default(Kilogram);
-					SetChangedProperty(changed);
-				}
+				if (!SetProperty(ref _curbMassChassis, value))
+					return;
+				IsDataChanged(_curbMassChassis, _componentData);
 			}
 		}
 		public Kilogram TechnicalPermissibleMaximumLadenMass
@@ -168,12 +143,9 @@ namespace VECTO3GUI.ViewModel.Impl
 			get { return _technicalPermissibleMaximumLadenMass; }
 			set
 			{
-				if (SetProperty(ref _technicalPermissibleMaximumLadenMass, value)) {
-					var changed = _vehicle != null
-								? _vehicle.GrossVehicleMassRating != value
-								: value != default(Kilogram);
-					SetChangedProperty(changed);
-				}
+				if (!SetProperty(ref _technicalPermissibleMaximumLadenMass, value))
+					return;
+				IsDataChanged(_technicalPermissibleMaximumLadenMass, _componentData);
 			}
 		}
 		public int NumberOfPassengersLowerDeck
@@ -181,12 +153,9 @@ namespace VECTO3GUI.ViewModel.Impl
 			get { return _numberOfPassengersLowerDeck; }
 			set
 			{
-				if (SetProperty(ref _numberOfPassengersLowerDeck, value)) {
-					var changed = _vehicle != null
-								? _vehicle.NumberOfPassengersLowerDeck != value
-								: value != default(int);
-					SetChangedProperty(changed);
-				}
+				if (!SetProperty(ref _numberOfPassengersLowerDeck, value))
+					return;
+				IsDataChanged(_numberOfPassengersLowerDeck, _componentData);
 			}
 		}
 		public int NumberOfPassengersUpperDeck
@@ -194,12 +163,9 @@ namespace VECTO3GUI.ViewModel.Impl
 			get { return _numberOfPassengersUpperDeck; }
 			set
 			{
-				if (SetProperty(ref _numberOfPassengersUpperDeck, value)) {
-					var changed = _vehicle != null
-								? _vehicle.NuberOfPassengersUpperDeck != value
-								: value != default(int);
-					SetChangedProperty(changed);	
-				}
+				if (!SetProperty(ref _numberOfPassengersUpperDeck, value))
+					return;
+				IsDataChanged(_numberOfPassengersUpperDeck, _componentData);
 			}
 		}
 		public FloorType FloorType
@@ -207,12 +173,9 @@ namespace VECTO3GUI.ViewModel.Impl
 			get { return _floorType; }
 			set
 			{
-				if (SetProperty(ref _floorType, value)) {
-					var changed = _vehicle != null
-								? _vehicle.FloorType != value
-								: value != default(FloorType);
-					SetChangedProperty(changed);
-				}
+				if (!SetProperty(ref _floorType, value))
+					return;
+				IsDataChanged(_floorType, _componentData);
 			}
 		}
 		public Meter HeightIntegratedBody
@@ -220,26 +183,19 @@ namespace VECTO3GUI.ViewModel.Impl
 			get { return _heightIntegratedBody; }
 			set
 			{
-				if (SetProperty(ref _heightIntegratedBody, value)) {
-					var changed = _vehicle != null
-								? _vehicle.Height != value
-								: value != default(Meter);
-					SetChangedProperty(changed);
-				}
+				if (!SetProperty(ref _heightIntegratedBody, value))
+					return;
+				IsDataChanged(_heightIntegratedBody, _componentData);
 			}
 		}
-
 		public Meter VehicleLength
 		{
 			get { return _vehicleLength; }
 			set
 			{
-				if (SetProperty(ref _vehicleLength, value)) {
-					var changed = _vehicle != null
-								? _vehicle.Length != value
-								: value != default(Meter);
-					SetChangedProperty(changed);
-				}
+				if (!SetProperty(ref _vehicleLength, value))
+					return;
+				IsDataChanged(_vehicleLength, _componentData);
 			}
 		}
 		public Meter VehicleWidth
@@ -247,12 +203,9 @@ namespace VECTO3GUI.ViewModel.Impl
 			get { return _vehicleWidth; }
 			set
 			{
-				if (SetProperty(ref _vehicleWidth, value)) {
-					var changed = _vehicle != null
-								? _vehicle.Width != value
-								: value != default(Meter);
-					SetChangedProperty(changed);
-				}
+				if (!SetProperty(ref _vehicleWidth, value))
+					return;
+				IsDataChanged(_vehicleWidth, _componentData);
 			}
 		}
 		public Meter EntranceHeight
@@ -260,12 +213,9 @@ namespace VECTO3GUI.ViewModel.Impl
 			get { return _entranceHeight; }
 			set
 			{
-				if (SetProperty(ref _entranceHeight, value)) {
-					var changed = _vehicle != null
-								? _vehicle.EntranceHeight != value
-								: value != default(Meter);
-					SetChangedProperty(changed);
-				}
+				if (!SetProperty(ref _entranceHeight, value))
+					return;
+				IsDataChanged(_entranceHeight, _componentData);
 			}
 		}
 		public ConsumerTechnology DoorDriveTechnology
@@ -273,12 +223,10 @@ namespace VECTO3GUI.ViewModel.Impl
 			get { return _doorDriveTechnology; }
 			set
 			{
-				if (SetProperty(ref _doorDriveTechnology, value)) {
-					var changed = _vehicle != null
-						? ((XMLDeclarationCompletedBusDataProviderV26)_vehicle).DoorDriveTechnology != value
-						: value != default(ConsumerTechnology);
-					SetChangedProperty(changed);
-				}
+				if (!SetProperty(ref _doorDriveTechnology, value))
+					return;
+
+				IsDataChanged(_doorDriveTechnology, _componentData);
 			}
 		}
 
@@ -296,7 +244,6 @@ namespace VECTO3GUI.ViewModel.Impl
 		{
 			var inputData = JobViewModel.InputDataProvider as IDeclarationInputDataProvider;
 			_vehicle = inputData?.JobInputData.Vehicle;
-			_changedInput = new HashSet<string>();
 			SetVehicleValues(_vehicle);
 			SetAllowedEntries();
 		}
@@ -304,7 +251,10 @@ namespace VECTO3GUI.ViewModel.Impl
 		private void SetVehicleValues(IVehicleDeclarationInputData vehicle)
 		{
 			if (vehicle == null)
+			{
+				_componentData = new VehicleBusComponentData(this, true);
 				return;
+			}
 
 			Manufacturer = vehicle.Manufacturer;
 			ManufacturerAddress = vehicle.ManufacturerAddress;
@@ -324,6 +274,9 @@ namespace VECTO3GUI.ViewModel.Impl
 			VehicleWidth = vehicle.Width;
 			EntranceHeight = vehicle.EntranceHeight;
 			DoorDriveTechnology = ((XMLDeclarationCompletedBusDataProviderV26)vehicle).DoorDriveTechnology;
+
+			_componentData = new VehicleBusComponentData(this);
+			ClearChangedProperties();
 		}
 
 		private void SetAllowedEntries()
@@ -344,25 +297,16 @@ namespace VECTO3GUI.ViewModel.Impl
 
 		#endregion
 
-		public override object SaveComponentData()
-		{
-			if(_componentData == null)
-				_componentData = new VehicleBusComponentData(this);
-			else
-				_componentData.UpdateCurrentValues(this);
-
-			return _componentData;
-		}
-
-
-		public override bool IsComponentDataChanged()
-		{
-			return _changedInput.Count > 0;
-		}
-
 		public override void ResetComponentData()
 		{
-			SetVehicleValues(_vehicle);
+			_componentData.ResetToComponentValues(this);
+		}
+
+		public override object SaveComponentData()
+		{
+			_componentData.UpdateCurrentValues(this);
+			ClearChangedProperties();
+			return _componentData;
 		}
 	}
 

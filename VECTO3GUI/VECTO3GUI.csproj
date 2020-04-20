@@ -159,6 +159,7 @@
     </ApplicationDefinition>
     <Compile Include="Helper\AvalonEditBehaviour.cs" />
     <Compile Include="Helper\Converter\ComponentTitleConverter.cs" />
+    <Compile Include="Helper\Extension.cs" />
     <Compile Include="Helper\FileDialogHelper.cs" />
     <Compile Include="Helper\OutputWindowHelper.cs" />
     <Compile Include="Helper\Converter\SaveButtonLabelConverter.cs" />
@@ -166,6 +167,7 @@
     <Compile Include="Model\SettingsModel.cs" />
     <Compile Include="Model\TempDataObject\AirdragComponentData.cs" />
     <Compile Include="Model\TempDataObject\AuxiliariesBusComponentData.cs" />
+    <Compile Include="Model\TempDataObject\ITempDataObject.cs" />
     <Compile Include="Model\TempDataObject\VehicleBusComponentData.cs" />
     <Compile Include="Util\AllowedEntry.cs" />
     <Compile Include="Util\Component.cs" />
