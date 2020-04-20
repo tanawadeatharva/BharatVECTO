@@ -119,6 +119,7 @@ Partial Class MainForm
         Me.OpenInGraphWindowToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.ShowInFolderToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.ToolTip1 = New System.Windows.Forms.ToolTip(Me.components)
+        Me.cbSaveVectoRunData = New System.Windows.Forms.CheckBox()
         Me.StatusBAR.SuspendLayout
         Me.TabControl1.SuspendLayout
         Me.TabPageGEN.SuspendLayout
@@ -418,6 +419,7 @@ Partial Class MainForm
         '
         'GroupBox3
         '
+        Me.GroupBox3.Controls.Add(Me.cbSaveVectoRunData)
         Me.GroupBox3.Controls.Add(Me.cbActVmod)
         Me.GroupBox3.Controls.Add(Me.cbValidateRunData)
         Me.GroupBox3.Location = New System.Drawing.Point(3, 177)
@@ -429,9 +431,9 @@ Partial Class MainForm
         '
         'cbActVmod
         '
-        Me.cbActVmod.Location = New System.Drawing.Point(6, 41)
+        Me.cbActVmod.Location = New System.Drawing.Point(6, 34)
         Me.cbActVmod.Name = "cbActVmod"
-        Me.cbActVmod.Size = New System.Drawing.Size(161, 63)
+        Me.cbActVmod.Size = New System.Drawing.Size(167, 52)
         Me.cbActVmod.TabIndex = 18
         Me.cbActVmod.Text = "Output values in vmod at beginning and end of simulation interval (EXPERT!)"
         Me.cbActVmod.UseVisualStyleBackColor = true
@@ -853,6 +855,16 @@ Partial Class MainForm
         Me.ShowInFolderToolStripMenuItem.Size = New System.Drawing.Size(173, 22)
         Me.ShowInFolderToolStripMenuItem.Text = "Show in Folder"
         '
+        'cbSaveVectoRunData
+        '
+        Me.cbSaveVectoRunData.AutoSize = true
+        Me.cbSaveVectoRunData.Location = New System.Drawing.Point(7, 86)
+        Me.cbSaveVectoRunData.Name = "cbSaveVectoRunData"
+        Me.cbSaveVectoRunData.Size = New System.Drawing.Size(166, 17)
+        Me.cbSaveVectoRunData.TabIndex = 19
+        Me.cbSaveVectoRunData.Text = "Export ModelData (EXPERT!)"
+        Me.cbSaveVectoRunData.UseVisualStyleBackColor = true
+        '
         'MainForm
         '
         Me.AcceptButton = Me.btStartV3
@@ -989,4 +1001,5 @@ End Sub
     Friend WithEvents GroupBox4 As GroupBox
     Friend WithEvents tbOutputFolder As TextBox
     Friend WithEvents BtTCfileBrowse As Button
+    Friend WithEvents cbSaveVectoRunData As CheckBox
 End Class
