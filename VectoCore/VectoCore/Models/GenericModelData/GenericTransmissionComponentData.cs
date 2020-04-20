@@ -6,13 +6,10 @@ using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.InputData.Reader.ComponentData;
-using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter;
-using TUGraz.VectoCore.Models.Simulation.Data;
-using TUGraz.VectoCore.Models.SimulationComponent;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox;
 
-namespace TUGraz.VectoCore.Models.Declaration
+namespace TUGraz.VectoCore.Models.GenericModelData
 {
 	public class GenericTransmissionComponentData
 	{
@@ -35,7 +32,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 			var ratio = axlegearData.Ratio;
 
 			var outputLossMap = CreateAxlegearOutputLossMap(ratio);
-			var axleGearInputLossMap = CalculateAxleInputLossMap(outputLossMap, ratio, 1.0);
+			var axleGearInputLossMap = CalculateTransmissionLossMapInput(outputLossMap, ratio, 1.0);
 
 			var transmissionData = new TransmissionData
 			{
@@ -59,7 +56,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 			};
 
 			var outputLossMap = CreateAxlegearOutputLossMap(angledriveData.Ratio);
-			var axleGearInputLossMap = CalculateAxleInputLossMap(outputLossMap, angledriveData.Ratio, Constants.GenericLossMapSettings.FactorAngleDrive);
+			var axleGearInputLossMap = CalculateTransmissionLossMapInput(outputLossMap, angledriveData.Ratio, Constants.GenericLossMapSettings.FactorAngleDrive);
 
 			var transmissionData = new TransmissionData {
 				Ratio = angledriveData.Ratio,
@@ -126,7 +123,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 			return td0_ + td150_ * outputspeed / td_n + ouputTorque / efficiency - ouputTorque;
 		}
 
-		private DataTable CalculateAxleInputLossMap(DataTable outputLossMap, double axleRatio, double lossCorrectionFactor)
+		private DataTable CalculateTransmissionLossMapInput(DataTable outputLossMap, double axleRatio, double lossCorrectionFactor)
 		{
 			var inputLossMap = new DataTable();
 
@@ -141,9 +138,9 @@ namespace TUGraz.VectoCore.Models.Declaration
 				var outputLoss = row[2].ToString().ToDouble();
 
 				var newRow = inputLossMap.NewRow();
-				newRow[0] = GetInputSpeed(outputSpeed, axleRatio);
-				newRow[1] = GetInputTorque(outputTorque, outputLoss, axleRatio);
-				newRow[2] = GetInputTorqueLoss(outputLoss, axleRatio, lossCorrectionFactor);
+				newRow[0] = Math.Round(GetInputSpeed(outputSpeed, axleRatio), 2, MidpointRounding.AwayFromZero);
+				newRow[1] = Math.Round(GetInputTorque(outputTorque, outputLoss, axleRatio), 2, MidpointRounding.AwayFromZero);
+				newRow[2] = Math.Round(GetInputTorqueLoss(outputLoss, axleRatio, lossCorrectionFactor), 2, MidpointRounding.AwayFromZero);
 				inputLossMap.Rows.Add(newRow);
 			}
 

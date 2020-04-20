@@ -151,13 +151,13 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox
 		[DebuggerDisplay("GearLossMapEntry({InputSpeed}, {InputTorque}, {TorqueLoss})")]
 		public class GearLossMapEntry
 		{
-			[Required, SIRange(0, 10000 * Constants.RPMToRad)]
+			[Required, SIRange(0, 1000000 * Constants.RPMToRad)]
 			public PerSecond InputSpeed { get; private set; }
 
 			//[Required, SIRange(-100000, 100000)]
 			public NewtonMeter InputTorque { get; private set; }
 
-			[Required, SIRange(0, 100000)]
+			[Required, SIRange(0, 1000000)]
 			public NewtonMeter TorqueLoss { get; private set; }
 
 			public GearLossMapEntry(PerSecond inputSpeed, NewtonMeter inputTorque, NewtonMeter torqueLoss)

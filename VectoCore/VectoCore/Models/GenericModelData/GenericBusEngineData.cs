@@ -193,9 +193,9 @@ namespace TUGraz.VectoCore.Models.Declaration
 				var fc = DenormalizeFC((string)row[FuelConsumptionMapReader.Fields.FuelConsumption], maxTorque);
 
 				var newRow = result.NewRow();
-				newRow[FuelConsumptionMapReader.Fields.EngineSpeed] = engineSpeed;
-				newRow[FuelConsumptionMapReader.Fields.Torque] = torque;
-				newRow[FuelConsumptionMapReader.Fields.FuelConsumption] = fc;
+				newRow[FuelConsumptionMapReader.Fields.EngineSpeed] = Math.Round(engineSpeed,2, MidpointRounding.AwayFromZero);
+				newRow[FuelConsumptionMapReader.Fields.Torque] = Math.Round(torque, 2, MidpointRounding.AwayFromZero);
+				newRow[FuelConsumptionMapReader.Fields.FuelConsumption] = Math.Round(fc, 2, MidpointRounding.AwayFromZero);
 				result.Rows.Add(newRow);
 			}
 
