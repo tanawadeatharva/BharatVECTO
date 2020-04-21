@@ -9,7 +9,7 @@
              xmlns:helper="clr-namespace:VECTO3GUI.Helper"
              xmlns:converter="clr-namespace:VECTO3GUI.Helper.Converter"
              mc:Ignorable="d" 
-             d:DesignHeight="500" d:DesignWidth="500">
+             d:DesignHeight="800" d:DesignWidth="500">
 
     <d:PrimaryVehicleBusView.DataContext>
         <x:Type Type="interfaces:ICompleteVehicleBusViewModel" />
@@ -27,8 +27,8 @@
             <RowDefinition/>
         </Grid.RowDefinitions>
 
-        <GroupBox Header="Vehicle Data" Grid.Row="1" Grid.Column="1" Width="420" HorizontalAlignment="Left">
-            <StackPanel Orientation="Vertical" Width="400" HorizontalAlignment="Left" Grid.IsSharedSizeScope="True">
+        <GroupBox Header="Vehicle Data" Grid.Row="1" Grid.Column="1" Width="420" Height="650" HorizontalAlignment="Left" VerticalAlignment="Top">
+            <StackPanel Orientation="Vertical" Width="400" HorizontalAlignment="Left" Grid.IsSharedSizeScope="True" VerticalAlignment="Center">
                 <StackPanel Orientation="Vertical" DockPanel.Dock="Top" Grid.IsSharedSizeScope="True">
 
                     <customControls:VectoParameterControl
@@ -50,9 +50,16 @@
                         Value="{Binding LegislativeClass}"
                         AllowedValues="{Binding AllowedLegislativeClasses}" />
 
-                    <customControls:VectoParameterControl
+                    <!--<customControls:VectoParameterControl
                         Caption="Registered Class" Unit="" CaptionWidthGroup="vehicleLbl" UnitWidthGroup="unitWidth"
-                        Value="{Binding RegisteredClass}" />
+                        Value="{Binding RegisteredClass}"/>-->
+
+                    <customControls:ComboParameter
+                        Caption="Vehicle Code"
+                        CaptionWidthGroup="vehicleLbl" UnitWidthGroup="unitWidth"
+                        Value="{Binding RegisteredClass}"
+                        AllowedValues="{Binding AllowedRegisteredClasses}" />
+
 
                     <customControls:ComboParameter
                         Caption="Vehicle Code"

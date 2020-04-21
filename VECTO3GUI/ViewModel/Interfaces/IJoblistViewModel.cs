@@ -7,6 +7,8 @@ namespace VECTO3GUI.ViewModel.Interfaces
 	public interface IJoblistViewModel : IMainView
 	{
 		ObservableCollection<JobEntry> Jobs { get; }
+		ObservableCollection<MessageEntry> Messages { get; }
+		ICommand AddBusJob { get; }
 		ICommand AddJob { get; }
 		ICommand RemoveJob { get; }
 		ICommand RemoveAllJobs { get; }

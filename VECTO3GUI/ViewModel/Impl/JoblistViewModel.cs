@@ -21,6 +21,7 @@ using VECTO3GUI.Util;
 using VECTO3GUI.ViewModel.Interfaces;
 using System.Xml;
 using System.Xml.Linq;
+using Microsoft.WindowsAPICodePack.Shell.PropertySystem;
 using TUGraz.VectoCommon.Resources;
 using TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider;
 using VECTO3GUI.Helper;
@@ -35,6 +36,7 @@ namespace VECTO3GUI.ViewModel.Impl
 		#region Members
 
 		protected readonly ObservableCollection<JobEntry> _jobs = new ObservableCollection<JobEntry>();
+		protected readonly ObservableCollection<MessageEntry> _messages = new ObservableCollection<MessageEntry>();
 		private readonly SettingsModel _settings;
 
 		private JobEntry _selectedJobEntry;
@@ -53,6 +55,7 @@ namespace VECTO3GUI.ViewModel.Impl
 		private ICommand _openSettingsCommand;
 		private ICommand _exitCommand;
 		private ICommand _exitMainCommand;
+		private ICommand _addBusJobCommand;
 
 		#endregion
 
@@ -67,6 +70,11 @@ namespace VECTO3GUI.ViewModel.Impl
 		public ObservableCollection<JobEntry> Jobs
 		{
 			get { return _jobs; }
+		}
+
+		public ObservableCollection<MessageEntry> Messages
+		{
+			get { return _messages; }
 		}
 
 		#endregion
@@ -205,8 +213,7 @@ namespace VECTO3GUI.ViewModel.Impl
 		{
 			get
 			{
-				return _addJobCommand ??
-						(_addJobCommand = new RelayCommand(DoAddJob));
+				return _addJobCommand ?? (_addJobCommand = new RelayCommand(DoAddJob));
 			}
 		}
 		private void DoAddJob()
@@ -251,6 +258,22 @@ namespace VECTO3GUI.ViewModel.Impl
 		private void DoCloseMainCommand(Window window)
 		{
 			window?.Close();
+		}
+
+		public ICommand AddBusJob
+		{
+			get
+			{
+				return _addBusJobCommand ??
+						(_addBusJobCommand = new RelayCommand(DoAddBusJobCommand));
+			}
+		}
+
+		private void DoAddBusJobCommand()
+		{
+			var viewModel = new BusJobViewModel();
+			var window = OutputWindowHelper.CreateOutputWindow(Kernel, viewModel, "Create Bus Job");
+			window.ShowDialog();
 		}
 
 
@@ -301,6 +324,11 @@ namespace VECTO3GUI.ViewModel.Impl
 
 		private IJobEditViewModel CreateCompleteBusVehicleViewModel(IDeclarationInputDataProvider dataProvider)
 		{
+			
+			
+			_messages.Add(new MessageEntry {
+				Message = "Edit File"
+			});
 			return dataProvider == null ? null : new CompleteVehicleBusJobViewModel(Kernel, dataProvider);
 		}
 

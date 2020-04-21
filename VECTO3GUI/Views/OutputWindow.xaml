@@ -26,7 +26,18 @@
 
 
     <Grid VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
+        <Grid.RowDefinitions>
+            <RowDefinition/>
+            <RowDefinition Height="10"/>
+        </Grid.RowDefinitions>
+
+        <Grid Grid.Row="0">
         <ContentControl Content="{Binding ViewModel}" />
+        </Grid>
+
+        <Grid Grid.Row="1">
+            <StatusBar/>
+        </Grid>
     </Grid>
 
 </mah:MetroWindow>

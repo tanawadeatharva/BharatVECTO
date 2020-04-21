@@ -201,6 +201,7 @@
     <Compile Include="ViewModel\Impl\AxlegearViewModel.cs" />
     <Compile Include="ViewModel\Impl\AxlesViewModel.cs" />
     <Compile Include="ViewModel\Impl\AxleViewModel.cs" />
+    <Compile Include="ViewModel\Impl\BusJobViewModel.cs" />
     <Compile Include="ViewModel\Impl\CompleteVehicleBusJobViewModel.cs" />
     <Compile Include="ViewModel\Impl\CompleteVehicleBusViewModel.cs" />
     <Compile Include="ViewModel\Impl\CyclesViewModel.cs" />
@@ -211,6 +212,7 @@
     <Compile Include="ViewModel\Impl\JobEntry.cs" />
     <Compile Include="ViewModel\Impl\JoblistViewModel.cs" />
     <Compile Include="ViewModel\Impl\MainWindowViewModel.cs" />
+    <Compile Include="ViewModel\Impl\MessageEntry.cs" />
     <Compile Include="ViewModel\Impl\NoneViewModel.cs" />
     <Compile Include="ViewModel\Impl\ObservableObject.cs" />
     <Compile Include="ViewModel\Impl\OutputWindowViewModel.cs" />
@@ -256,6 +258,9 @@
     <Compile Include="ViewModel\Interfaces\SteeringPumpEntry.cs" />
     <Compile Include="ViewModel\Interfaces\TorqueConverterCharacteristics.cs" />
     <Compile Include="ViewModel\Interfaces\TorqueEntry.cs" />
+    <Compile Include="Views\BusJobView.xaml.cs">
+      <DependentUpon>BusJobView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\ComponentViews\Declaration\AirdragDeclarationView.xaml.cs">
       <DependentUpon>AirdragDeclarationView.xaml</DependentUpon>
     </Compile>
@@ -408,6 +413,10 @@
     <Page Include="Resources\ViewModelMappings.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\BusJobView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\ComponentViews\Declaration\AirdragDeclarationView.xaml">
       <Generator>MSBuild:Compile</Generator>

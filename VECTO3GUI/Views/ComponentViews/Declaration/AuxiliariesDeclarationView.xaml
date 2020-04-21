@@ -50,7 +50,7 @@
 
             
                 <DataGrid x:Name="AlternatorDataGrid" AutoGenerateColumns="False" ColumnWidth="*" IsReadOnly="False"  CanUserAddRows="False" VerticalAlignment="Top"
-                          HeadersVisibility="All" RowHeaderWidth="10"  Height="150" Margin="0,10,0,0"
+                          HeadersVisibility="All" RowHeaderWidth="10"  Height="150" Margin="0,10,0,0" BorderThickness="1"
                           ItemsSource="{Binding AlternatorTechnologies}">
 
                     <DataGrid.Resources>

@@ -26,6 +26,7 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="30"/>
             <RowDefinition/>
+            <RowDefinition/>
             <RowDefinition Height="30"/>
         </Grid.RowDefinitions>
 
@@ -73,12 +74,27 @@
 
         <Grid Grid.Row="1" Grid.Column="2" Margin="0,0,10,0">
             <StackPanel Orientation="Vertical" Margin="0,30,0,0">
+                <Button Margin="0,5,0,0" Command="{Binding AddBusJob}" Content="Add Bus Job"/>
                 <Button Margin="0,5,0,0" Command="{Binding EditJob}" Content="Edit File" />
                 <Button Margin="0,5,0,0" Command="{Binding CreateNewJob}" Content="New File"  />
                 <Button Margin="0,5,0,0" Command="{Binding RemoveJob}" Content="Remove File"  />
             </StackPanel>
+        </Grid>
+        
+        <Grid Grid.Row="2" Grid.ColumnSpan="3" Margin="10,20,20,10">
+            <DataGrid ItemsSource="{Binding Messages}" BorderThickness="1" CanUserAddRows="False" AutoGenerateColumns="False" SelectionUnit="FullRow" 
+                      IsReadOnly="True" HeadersVisibility="All"  RowHeaderWidth="5">
+                
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="Message" Binding="{Binding Message}" Width="*" />
+                    <DataGridTextColumn Header="Time" Binding="{Binding Time}" Width="130" />
+                    <DataGridTextColumn Header="Source" Binding="{Binding Source}" Width="150" />
+                </DataGrid.Columns>
+
+            </DataGrid>
 
         </Grid>
+
     </Grid>
 
 

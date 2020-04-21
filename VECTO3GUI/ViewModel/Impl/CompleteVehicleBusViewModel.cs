@@ -234,6 +234,7 @@ namespace VECTO3GUI.ViewModel.Impl
 		public AllowedEntry<VehicleCode>[] AllowedVehicleCodes { get; private set; }
 		public AllowedEntry<FloorType>[] AllowedFloorTypes { get; private set; }
 		public AllowedEntry<ConsumerTechnology>[] AllowedConsumerTechnologies { get; private set; }
+		public AllowedEntry<RegistrationClass>[] AllowedRegisteredClasses { get; private set; }
 
 		#endregion
 
@@ -288,11 +289,19 @@ namespace VECTO3GUI.ViewModel.Impl
 			AllowedVehicleCodes = Enum.GetValues(typeof(VehicleCode)).Cast<VehicleCode>()
 				.Select(vc => AllowedEntry.Create(vc, vc.GetLabel())).ToArray();
 
-			AllowedFloorTypes = Enum.GetValues(typeof(FloorType)).Cast<FloorType>()
-				.Select(ft => AllowedEntry.Create(ft, ft.GetLabel())).ToArray();
+			var highFloor = AllowedEntry.Create(FloorType.HighFloor, FloorType.HighFloor.GetLabel());
+			var lowFloor = AllowedEntry.Create(FloorType.LowFloor, FloorType.LowFloor.GetLabel());
+			AllowedFloorTypes = new []{ highFloor, lowFloor };
 
 			AllowedConsumerTechnologies = Enum.GetValues(typeof(ConsumerTechnology)).Cast<ConsumerTechnology>()
 				.Select(sc => AllowedEntry.Create(sc, sc.GetLabel())).ToArray();
+
+			AllowedRegisteredClasses = Enum.GetValues(typeof(RegistrationClass)).Cast<RegistrationClass>()
+				.Select(vc => AllowedEntry.Create(vc, vc.GetLabel())).ToArray();
+
+			AllowedRegisteredClasses =
+				AllowedRegisteredClasses.Where(val => val.Value != RegistrationClass.unknown).ToArray();
+
 		}
 
 		#endregion
