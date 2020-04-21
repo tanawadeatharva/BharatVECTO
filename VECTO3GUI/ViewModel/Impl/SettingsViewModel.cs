@@ -79,15 +79,14 @@ namespace VECTO3GUI.ViewModel.Impl
 			get
 			{
 				return _cancelCommand ??
-					  (_cancelCommand = new RelayCommand<object>(DoCancelCommand));
+					  (_cancelCommand = new RelayCommand<Window>(DoCancelCommand));
 			}
 		}
 
 
-		private void DoCancelCommand(object obj)
+		private void DoCancelCommand(Window window)
 		{
-			var convert = obj as Window;
-			convert?.Close();
+			window?.Close();
 		}
 
 		public ICommand ResetCommand

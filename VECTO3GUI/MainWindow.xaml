@@ -31,7 +31,8 @@
                         <MenuItem Header="Open" Command="{Binding CurrentViewModel.AddJob}"/>
                         <MenuItem Header="Open Folder"/>
                         <Separator HorizontalAlignment="Stretch" Background="Gray"/>
-                        <MenuItem Header="Exit"/>
+                        <MenuItem Header="Exit" Command="{Binding CurrentViewModel.ExitMainCommand}"
+                                  CommandParameter="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Window}}}"/>
                     </MenuItem>
 
                     <MenuItem Header="Settings">
@@ -53,13 +54,12 @@
         </Grid>
 
         <Grid Grid.Row="1">
-            <ContentControl x:Name="bu" Content="{Binding CurrentViewModel}" />
+            <ContentControl Content="{Binding CurrentViewModel}" />
         </Grid>
 
 
         <Grid Grid.Row="2">
             <StatusBar/>
-
         </Grid>
 
 

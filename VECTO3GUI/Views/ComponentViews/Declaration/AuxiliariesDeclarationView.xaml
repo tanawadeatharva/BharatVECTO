@@ -7,66 +7,116 @@
              xmlns:customControls="clr-namespace:VECTO3GUI.Views.CustomControls"
              xmlns:helper="clr-namespace:VECTO3GUI.Helper"
              xmlns:converter="clr-namespace:VECTO3GUI.Helper.Converter"
+             xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
+             xmlns:views="clr-namespace:VECTO3GUI.Views"
+             xmlns:local="clr-namespace:VECTO3GUI.Views.ComponentViews.Declaration"
              mc:Ignorable="d" 
              d:DesignHeight="800" d:DesignWidth="800">
+
     <d:EditCyclesView.DataContext>
         <x:Type Type="interfaces:IAuxiliariesViewModel"/>
     </d:EditCyclesView.DataContext>
 
 
     <Grid>
-        <StackPanel Orientation="Vertical" Width="400" HorizontalAlignment="Left"  Grid.IsSharedSizeScope="True">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="10"/>
+            <ColumnDefinition Width="450"/>
+        </Grid.ColumnDefinitions>
 
-            <GroupBox Header="Electric Systems">
-                <StackPanel Orientation="Vertical">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="10"/>
+            <RowDefinition Height="200"/>
+            <RowDefinition Height="200"/>
+            <RowDefinition Height="320"/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
 
-                    <DataGrid AutoGenerateColumns="False" ColumnWidth="*" IsReadOnly="False" CanUserAddRows="False" VerticalAlignment="Top"
-                          HeadersVisibility="All" RowHeaderWidth="30" ItemsSource="{Binding AlternatorTechnologies}">
 
-                        <DataGrid.Columns>
-                            <DataGridTextColumn Header="Technology" Binding="{Binding }" />
-                        </DataGrid.Columns>
+        <GroupBox Header="Alternators Technology" Grid.Row="1" Grid.Column="1" Width="450" HorizontalAlignment="Left">
+            <StackPanel Orientation="Vertical" Width="400" HorizontalAlignment="Center"  Grid.IsSharedSizeScope="True">
 
-                    </DataGrid>
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
 
-                    <customControls:CheckboxParameter
+                    <Button Content="Add" HorizontalAlignment="Left" Grid.Column="0" Width="100" Margin="0,5,0,0"
+                            Command="{Binding AddAlternatorCommand}"/>
+                    <Button Content="Remove All" HorizontalAlignment="Right" Grid.Column="1" Width="100" Margin="0,5,0,0"
+                            Command="{Binding RemoveAllAlternatorCommand}"/>
+                </Grid>
+
+            
+                <DataGrid x:Name="AlternatorDataGrid" AutoGenerateColumns="False" ColumnWidth="*" IsReadOnly="False"  CanUserAddRows="False" VerticalAlignment="Top"
+                          HeadersVisibility="All" RowHeaderWidth="10"  Height="150" Margin="0,10,0,0"
+                          ItemsSource="{Binding AlternatorTechnologies}">
+
+                    <DataGrid.Resources>
+                        <DataTemplate x:Key="EntryDeleteControl">
+                            <StackPanel Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Center">
+                                <Button Width="100" Content="Remove" 
+                                        Command="{Binding DataContext.RemoveAlternatorCommand, 
+                                        RelativeSource={RelativeSource AncestorType=local:AuxiliariesDeclarationView}}"
+                                        CommandParameter="{Binding ElementName=AlternatorDataGrid, Path=SelectedIndex}">
+                                </Button>
+                            </StackPanel>
+                        </DataTemplate>
+                        
+                        <DataTemplate x:Key="AtlernatorText">
+                            <TextBox  Text="{Binding}" />
+
+                        </DataTemplate>
+
+                    </DataGrid.Resources>
+
+                    <DataGrid.Columns>
+                        <!--<DataGridTemplateColumn Header="Technology" CellTemplate="{StaticResource AtlernatorText}" Width="110" />-->
+                        <DataGridTextColumn Header="Alternator Technology" Binding="{Binding }" />
+                        <DataGridTemplateColumn CellTemplate="{StaticResource EntryDeleteControl}" Width="110" />
+                    </DataGrid.Columns>
+
+                </DataGrid>
+            
+            </StackPanel>
+        </GroupBox>
+
+        <GroupBox Header="Electric Systems" Grid.Row="2" Grid.Column="1" Margin="0,10,0,0" Width="450" HorizontalAlignment="Left">
+            
+            <StackPanel Orientation="Vertical" Width="400" HorizontalAlignment="Left"  Grid.IsSharedSizeScope="True" VerticalAlignment="Center" >
+
+                <customControls:CheckboxParameter
                             Caption="Dayrunniglights LED" CaptionWidthGroup="lblWidth"
                             Unit="" UnitWidthGroup="unitWidth"
                             Value="{Binding DayrunninglightsLED}"/>
 
-                    <customControls:CheckboxParameter
+                <customControls:CheckboxParameter
                             Caption="Headlights LED" CaptionWidthGroup="lblWidth"
                             Unit="" UnitWidthGroup="unitWidth"
                             Value="{Binding HeadlightsLED}"/>
 
-                    <customControls:CheckboxParameter
+                <customControls:CheckboxParameter
                             Caption="Positionlights LED" CaptionWidthGroup="lblWidth"
                             Unit="" UnitWidthGroup="unitWidth"
                             Value="{Binding PositionlightsLED}"/>
 
-                    <customControls:CheckboxParameter
+                <customControls:CheckboxParameter
                             Caption="Brakelights LED" CaptionWidthGroup="lblWidth"
                             Unit="" UnitWidthGroup="unitWidth"
                             Value="{Binding BrakelightsLED}"/>
 
-                    <customControls:CheckboxParameter
+                <customControls:CheckboxParameter
                             Caption="Interiorlights LED" CaptionWidthGroup="lblWidth"
                             Unit="" UnitWidthGroup="unitWidth"
                             Value="{Binding InteriorLightsLED}"/>
 
-                </StackPanel>
-            </GroupBox>
+            </StackPanel>
+        </GroupBox>
 
-            <GroupBox Header="Pneumatic System">
-                <customControls:ComboParameter 
-                        Caption="DoorDriveTechnology" CaptionWidthGroup="lblWidth"
-                        UnitWidthGroup="unitWidth"
-                        Value="{Binding DoorDriveTechnology}"
-                        AllowedValues="{Binding AllowedConsumerTechnologies}" />
-            </GroupBox>
 
-            <GroupBox Header="HVAC">
-                <StackPanel>
+        <GroupBox Header="HVAC" Grid.Row="3" Grid.Column="1" Margin="0,10,0,0" Width="450" HorizontalAlignment="Left">
+            <StackPanel Orientation="Vertical" Width="400" HorizontalAlignment="Left"  Grid.IsSharedSizeScope="True" VerticalAlignment="Center" >
                     <customControls:ComboParameter
                             Caption="System Configuration"
                             CaptionWidthGroup="lblWidth" UnitWidthGroup="unitWidth"
@@ -111,41 +161,5 @@
                 </StackPanel>
             </GroupBox>
 
-
-
-            <!--<customControls:ComboParameter 
-            Caption="Fan Technology" CaptionWidthGroup="lblWidth"
-            Value="{Binding FanTechnology}"
-            AllowedValues="{Binding AllowedFanTechnologies}" />
-        <DockPanel Margin="0,5">
-            <TextBlock Margin="10,0" DockPanel.Dock="Top">Steering Pump Technologies</TextBlock>
-            <ItemsControl DockPanel.Dock="Bottom" ItemsSource="{Binding SteeringPumpTechnologies}" Name="SteeringPumps">
-                <ItemsControl.ItemTemplate>
-                    <DataTemplate DataType="interfaces:SteeringPumpEntry">
-                        <StackPanel>
-                            <customControls:ComboParameter 
-                            Caption="{Binding SteeredAxle, StringFormat='{}{0}. Axle' }" CaptionWidthGroup="lblWidth"
-                            Value="{Binding SteeringPumpTechnology}"
-                            AllowedValues="{Binding Path=DataContext.AllowedSteeringPumpTechnologies, ElementName=SteeringPumps}"/>
-
-                        </StackPanel>
-                    </DataTemplate>
-                </ItemsControl.ItemTemplate>
-            </ItemsControl>
-        </DockPanel>
-        <customControls:ComboParameter 
-            Caption="Electric System Technology" CaptionWidthGroup="lblWidth"
-            Value="{Binding ElectricSystemTechnology}"
-            AllowedValues="{Binding AllowedElectricSystemTechnologies}" />
-        <customControls:ComboParameter 
-            Caption="Pneumatic System Technology" CaptionWidthGroup="lblWidth"
-            Value="{Binding PneumaticSystemTechnology}"
-            AllowedValues="{Binding AllowedPneumaticSystemTechnologies}" />
-        <customControls:ComboParameter 
-            Caption="HVAC Technology" CaptionWidthGroup="lblWidth"
-            Value="{Binding HVACTechnology}"
-            AllowedValues="{Binding AllowedHVACTechnologies}" />-->
-
-        </StackPanel>
     </Grid>
 </UserControl>

@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Windows.Input;
 using TUGraz.VectoCommon.BusAuxiliaries;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Utils;
@@ -25,8 +26,18 @@ namespace VECTO3GUI.ViewModel.Interfaces {
 		string HVACTechnology { get; set; }
 		AllowedEntry<string>[] AllowedHVACTechnologies { get; }
 
+		#region Commands
+
+		ICommand RemoveAlternatorCommand { get; }
+		ICommand RemoveAllAlternatorCommand { get; }
+		ICommand AddAlternatorCommand { get; }
+
+
+		#endregion
+
+
 		#region Bus Auxiliaries
-		
+
 		AllowedEntry<BusHVACSystemConfiguration>[] AllowedSystemConfigurations { get; }
 		AllowedEntry<ACCompressorType>[] AllowedDriverACCompressorTypes { get; }
 		AllowedEntry<ACCompressorType>[] AllowedPassengerACCompressorTypes { get; }

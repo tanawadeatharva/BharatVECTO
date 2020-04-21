@@ -4,6 +4,7 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
 using System.Windows.Documents;
+using System.Windows.Input;
 using Castle.Core.Internal;
 using Ninject;
 using TUGraz.VectoCommon.BusAuxiliaries;
@@ -38,7 +39,6 @@ namespace VECTO3GUI.ViewModel.Impl
 		private bool _positionlightsLED;
 		private bool _breaklightsLED;
 		private bool _interiorLightsLED;
-		private ConsumerTechnology _doorDriveTechnology;
 		private BusHVACSystemConfiguration _systemConfiguration;
 		private ACCompressorType _compressorTypeDriver;
 		private ACCompressorType _compressorTypePassenger;
@@ -49,11 +49,15 @@ namespace VECTO3GUI.ViewModel.Impl
 		private bool _separateAirDistributionDucts;
 
 		private AuxiliariesBusComponentData _componentData;
+		private ICommand _removeAlternatorCommand;
+		private ICommand _removeAllAlternatorCommand;
+		private ICommand _addAlternatorCommand;
+
 		#endregion
 
 
 		#region Implementation of IAuxiliariesViewModel
-
+		
 		public IAuxiliariesDeclarationInputData ModelData { get { return AdapterFactory.AuxiliariesDeclarationAdapter(this); } }
 
 		public string PneumaticSystemTechnology
@@ -122,6 +126,8 @@ namespace VECTO3GUI.ViewModel.Impl
 			}
 		}
 
+
+
 		#endregion
 
 
@@ -184,16 +190,7 @@ namespace VECTO3GUI.ViewModel.Impl
 				IsDataChanged(_interiorLightsLED, _componentData);
 			}
 		}
-		public ConsumerTechnology DoorDriveTechnology
-		{
-			get { return _doorDriveTechnology; }
-			set
-			{
-				if (!SetProperty(ref _doorDriveTechnology, value))
-					return;
-				IsDataChanged(_doorDriveTechnology, _componentData);
-			}
-		}
+
 		public BusHVACSystemConfiguration SystemConfiguration
 		{
 			get { return _systemConfiguration; }
@@ -276,6 +273,7 @@ namespace VECTO3GUI.ViewModel.Impl
 			}
 		}
 
+		
 		public AllowedEntry<BusHVACSystemConfiguration>[] AllowedSystemConfigurations { get; private set; }
 		public AllowedEntry<ACCompressorType>[] AllowedDriverACCompressorTypes { get; private set; }
 		public AllowedEntry<ACCompressorType>[] AllowedPassengerACCompressorTypes { get; private set; }
@@ -299,7 +297,7 @@ namespace VECTO3GUI.ViewModel.Impl
 			_busAuxiliaries = inputData?.JobInputData.Vehicle.Components.BusAuxiliaries;
 			SetBusAuxiliaryValues(_busAuxiliaries);
 			SetAllowedValues();
-			
+
 			//ConnectAxleViewModel();
 		}
 
@@ -320,6 +318,9 @@ namespace VECTO3GUI.ViewModel.Impl
 				{
 					AlternatorTechnologies.Add(busAux.ElectricSupply.Alternators[i].Technology);
 				}
+
+				AlternatorTechnologies.Add("blu");
+				AlternatorTechnologies.Add("bla");
 			}
 
 			DayrunninglightsLED = busAux.ElectricConsumers.DayrunninglightsLED;
@@ -327,7 +328,6 @@ namespace VECTO3GUI.ViewModel.Impl
 			PositionlightsLED = busAux.ElectricConsumers.PositionlightsLED;
 			BrakelightsLED = busAux.ElectricConsumers.BrakelightsLED;
 			InteriorLightsLED = busAux.ElectricConsumers.InteriorLightsLED;
-			DoorDriveTechnology = busAux.PneumaticConsumers.DoorDriveTechnology;
 			SystemConfiguration = busAux.HVACAux.SystemConfiguration;
 			CompressorTypeDriver = busAux.HVACAux.CompressorTypeDriver;
 			CompressorTypePassenger = busAux.HVACAux.CompressorTypePassenger;
@@ -366,6 +366,60 @@ namespace VECTO3GUI.ViewModel.Impl
 			ClearChangedProperties();
 			return _componentData;
 		}
+
+		#region Commands
+
+		public ICommand RemoveAlternatorCommand
+		{
+			get
+			{
+				return _removeAlternatorCommand ??
+						(_removeAlternatorCommand = new RelayCommand<int>(DoRemoveAlternator));
+			}
+		}
+		private void DoRemoveAlternator(int index)
+		{
+			AlternatorTechnologies?.RemoveAt(index);
+		}
+
+
+		public ICommand RemoveAllAlternatorCommand
+		{
+			get
+			{
+				return _removeAllAlternatorCommand ??
+						(_removeAllAlternatorCommand = new RelayCommand(DoRemoveAllAlternators));
+			}
+		}
+
+		private void DoRemoveAllAlternators()
+		{
+			AlternatorTechnologies?.Clear();
+			OnPropertyChanged(nameof(AlternatorTechnologies));
+		}
+
+		public ICommand AddAlternatorCommand
+		{
+			get
+			{
+				return _addAlternatorCommand ??
+						(_addAlternatorCommand = new RelayCommand(DoAddAlternator, CanAddAlternator));
+			}
+		}
+
+		private bool CanAddAlternator()
+		{
+			return false;
+		}
+
+		private void DoAddAlternator()
+		{
+			AlternatorTechnologies?.Add(string.Empty);
+			OnPropertyChanged(nameof(AlternatorTechnologies));
+
+		}
+
+		#endregion
 
 
 

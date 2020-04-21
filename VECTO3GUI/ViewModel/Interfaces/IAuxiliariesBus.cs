@@ -22,8 +22,6 @@ namespace VECTO3GUI.ViewModel.Interfaces
 
 		#endregion
 
-		ConsumerTechnology DoorDriveTechnology { get; set; }
-
 		#region Havac
 
 		BusHVACSystemConfiguration SystemConfiguration { get; set; }

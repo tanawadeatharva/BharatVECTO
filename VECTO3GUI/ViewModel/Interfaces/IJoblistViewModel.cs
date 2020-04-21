@@ -18,6 +18,6 @@ namespace VECTO3GUI.ViewModel.Interfaces
 		ICommand CreateNewJob { get; }
 		ICommand OpenJob { get; }
 		ICommand OpenSettings { get; }
-
+		ICommand ExitMainCommand { get; }
 	}
 }

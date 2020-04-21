@@ -20,7 +20,6 @@ namespace VECTO3GUI.Model.TempDataObject
 		public bool PositionlightsLED { get; set; }
 		public bool BrakelightsLED { get; set; }
 		public bool InteriorLightsLED { get; set; }
-		public ConsumerTechnology DoorDriveTechnology { get; set; }
 		public BusHVACSystemConfiguration SystemConfiguration { get; set; }
 		public ACCompressorType CompressorTypeDriver { get; set; }
 		public ACCompressorType CompressorTypePassenger { get; set; }
@@ -56,7 +55,6 @@ namespace VECTO3GUI.Model.TempDataObject
 			viewModel.PositionlightsLED = PositionlightsLED;
 			viewModel.BrakelightsLED = BrakelightsLED;
 			viewModel.InteriorLightsLED = InteriorLightsLED;
-			viewModel.DoorDriveTechnology = DoorDriveTechnology;
 			viewModel.SystemConfiguration = SystemConfiguration;
 			viewModel.CompressorTypeDriver = CompressorTypeDriver;
 			viewModel.CompressorTypePassenger = CompressorTypePassenger;
@@ -75,7 +73,6 @@ namespace VECTO3GUI.Model.TempDataObject
 			viewModel.PositionlightsLED = default(bool);
 			viewModel.BrakelightsLED = default(bool);
 			viewModel.InteriorLightsLED = default(bool);
-			viewModel.DoorDriveTechnology = default(ConsumerTechnology);
 			viewModel.SystemConfiguration = default(BusHVACSystemConfiguration);
 			viewModel.CompressorTypeDriver = default(ACCompressorType);
 			viewModel.CompressorTypePassenger = default(ACCompressorType);
@@ -94,7 +91,6 @@ namespace VECTO3GUI.Model.TempDataObject
 			PositionlightsLED = auxiliaries.PositionlightsLED;
 			BrakelightsLED = auxiliaries.BrakelightsLED;
 			InteriorLightsLED = auxiliaries.InteriorLightsLED;
-			DoorDriveTechnology = auxiliaries.DoorDriveTechnology;
 			SystemConfiguration = auxiliaries.SystemConfiguration;
 			CompressorTypeDriver = auxiliaries.CompressorTypeDriver;
 			CompressorTypePassenger = auxiliaries.CompressorTypePassenger;

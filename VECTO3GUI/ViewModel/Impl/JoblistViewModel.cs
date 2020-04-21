@@ -3,7 +3,6 @@ using System.Collections;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
-using System.Reflection;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;
@@ -52,7 +51,8 @@ namespace VECTO3GUI.ViewModel.Impl
 		private ICommand _addJobCommand;
 		private ICommand _openJobCommand;
 		private ICommand _openSettingsCommand;
-
+		private ICommand _exitCommand;
+		private ICommand _exitMainCommand;
 
 		#endregion
 
@@ -86,7 +86,6 @@ namespace VECTO3GUI.ViewModel.Impl
 			}
 		}
 
-
 		private void AddJobEntry(string jobFile)
 		{
 			_jobs.Add(new JobEntry()
@@ -108,13 +107,16 @@ namespace VECTO3GUI.ViewModel.Impl
 						(_removeJobCommand = new RelayCommand(DoRemoveJob, CanRemoveJob));
 			}
 		}
-
-
 		private void DoRemoveJob()
 		{
 			_jobs.Remove(SelectedJobEntry);
 			SelectedJobEntry = null;
 		}
+		private bool CanRemoveJob()
+		{
+			return SelectedJobEntry != null;
+		}
+
 
 		public ICommand RemoveAllJobs
 		{
@@ -124,18 +126,12 @@ namespace VECTO3GUI.ViewModel.Impl
 						(_removeAllJobCommand = new RelayCommand(DoRemoveAllJobs));
 			}
 		}
-
 		private void DoRemoveAllJobs()
 		{
 			_jobs.Clear();
 			SelectedJobEntry = null;
 		}
-
-
-		private bool CanRemoveJob()
-		{
-			return SelectedJobEntry != null;
-		}
+		
 
 		public ICommand EditJob
 		{
@@ -145,7 +141,6 @@ namespace VECTO3GUI.ViewModel.Impl
 						(_editJobCommand = new RelayCommand(DoEditJob, CanEditJob));
 			}
 		}
-
 		private void DoEditJob()
 		{
 			var entry = SelectedJobEntry;
@@ -165,11 +160,11 @@ namespace VECTO3GUI.ViewModel.Impl
 					MessageBoxButton.OK);
 			}
 		}
-
 		private bool CanEditJob()
 		{
 			return SelectedJobEntry != null;
 		}
+
 
 		public ICommand CreateNewJob
 		{
@@ -179,7 +174,6 @@ namespace VECTO3GUI.ViewModel.Impl
 						(_newJobCommand = new RelayCommand(DoNewJobCommand));
 			}
 		}
-
 		private void DoNewJobCommand()
 		{
 			var jobEditView = new CompleteVehicleBusJobViewModel(Kernel, null);
@@ -196,7 +190,6 @@ namespace VECTO3GUI.ViewModel.Impl
 						(_openJobCommand = new RelayCommand(DoOpenJobCommand));
 			}
 		}
-
 		private void DoOpenJobCommand()
 		{
 			if (SelectedJobEntry == null)
@@ -205,7 +198,6 @@ namespace VECTO3GUI.ViewModel.Impl
 			var xmlViewModel = new XMLViewModel(SelectedJobEntry.Filename);
 			var window = OutputWindowHelper.CreateOutputWindow(Kernel, xmlViewModel, xmlViewModel.FileName);
 			window.Show();
-
 		}
 
 
@@ -217,7 +209,6 @@ namespace VECTO3GUI.ViewModel.Impl
 						(_addJobCommand = new RelayCommand(DoAddJob));
 			}
 		}
-
 		private void DoAddJob()
 		{
 			var filePath = FileDialogHelper.ShowSelectFilesDialog(false, _settings.XmlFilePathFolder);
@@ -232,6 +223,7 @@ namespace VECTO3GUI.ViewModel.Impl
 			}
 		}
 
+
 		public ICommand OpenSettings
 		{
 			get
@@ -240,13 +232,25 @@ namespace VECTO3GUI.ViewModel.Impl
 					  (_openSettingsCommand = new RelayCommand(DoOpenSettingsCommand));
 			}
 		}
-
 		private void DoOpenSettingsCommand()
 		{
 			var viewModel = new SettingsViewModel();
 			var window = OutputWindowHelper.CreateOutputWindow(Kernel, viewModel, "Settings", 440, 200,
 				ResizeMode.NoResize);
 			window.ShowDialog();
+		}
+
+		public ICommand ExitMainCommand
+		{
+			get
+			{
+				return _exitMainCommand ??
+						(_exitMainCommand = new RelayCommand<Window>(DoCloseMainCommand));
+			}
+		}
+		private void DoCloseMainCommand(Window window)
+		{
+			window?.Close();
 		}
 
 

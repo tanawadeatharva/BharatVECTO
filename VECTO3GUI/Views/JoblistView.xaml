@@ -29,12 +29,14 @@
             <RowDefinition Height="30"/>
         </Grid.RowDefinitions>
 
+
+
         <Grid Grid.Row="1" Grid.Column="1" Margin="10">
+ 
             <DataGrid ItemsSource="{Binding Jobs}" 
                       SelectedValue="{Binding DataContext.SelectedJobEntry, RelativeSource={RelativeSource AncestorType=views:JoblistView}}"
                       Style="{DynamicResource AzureDataGrid}" BorderThickness="1" CanUserAddRows="False" AutoGenerateColumns="False" SelectionUnit="FullRow" 
-                      IsReadOnly="True" HeadersVisibility="All"  RowHeaderWidth="5" ColumnWidth="*" >
-
+                      IsReadOnly="True" HeadersVisibility="All"  RowHeaderWidth="5" >
 
                 <DataGrid.Resources>
                     <ContextMenu x:Key="RowMenu">
@@ -54,18 +56,19 @@
                     </ContextMenu>
                 </DataGrid.ContextMenu>
 
-
                 <DataGrid.Columns>
-                    <DataGridTextColumn Header="File Path" Binding="{Binding Filename}">
+                    <DataGridTextColumn Header="File Path" Binding="{Binding Filename}" >
                         <DataGridTextColumn.CellStyle>
                             <Style TargetType= "{x:Type DataGridCell}" BasedOn="{StaticResource MetroDataGridCell}" >
                                 <Setter Property="ContextMenu" Value="{StaticResource RowMenu}"/>
+                                <Setter Property="HorizontalAlignment" Value="Stretch"></Setter>
                             </Style>
                         </DataGridTextColumn.CellStyle>
                     </DataGridTextColumn>
                 </DataGrid.Columns>
 
             </DataGrid>
+
         </Grid>
 
         <Grid Grid.Row="1" Grid.Column="2" Margin="0,0,10,0">
