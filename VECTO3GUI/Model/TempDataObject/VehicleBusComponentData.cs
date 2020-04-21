@@ -104,7 +104,7 @@ namespace VECTO3GUI.Model.TempDataObject
 			ManufacturerAddress = vehicleBus.ManufacturerAddress;
 			Model = vehicleBus.Model;
 			VIN = vehicleBus.VIN;
-			Date = vehicleBus.Date;
+			Date = DateTime.UtcNow;//Set DateTime UTC of current save
 			LegislativeClass = vehicleBus.LegislativeClass;
 			RegisteredClass = vehicleBus.RegisteredClass;
 			VehicleCode = vehicleBus.VehicleCode;
