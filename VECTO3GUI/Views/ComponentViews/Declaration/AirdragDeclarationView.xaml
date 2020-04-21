@@ -6,8 +6,8 @@
              xmlns:interfaces="clr-namespace:VECTO3GUI.ViewModel.Interfaces"
              xmlns:customControls="clr-namespace:VECTO3GUI.Views.CustomControls"
              xmlns:helper="clr-namespace:VECTO3GUI.Helper"
+             xmlns:impl="clr-namespace:VECTO3GUI.ViewModel.Impl"
              xmlns:converter="clr-namespace:VECTO3GUI.Helper.Converter"
-             xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
              mc:Ignorable="d" 
              d:DesignHeight="800" d:DesignWidth="800">
 
@@ -16,44 +16,80 @@
     </d:AirdragDeclarationView.DataContext>
 
     <Grid>
-        <StackPanel Orientation="Vertical" Width="400" HorizontalAlignment="Left" Grid.IsSharedSizeScope="True">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="10"/>
+            <RowDefinition Height="150"/>
+            <RowDefinition />
+        </Grid.RowDefinitions>
 
-            <customControls:CheckboxParameter
-                    Caption="Use Measured Values" CaptionWidthGroup="lblWidth"
-                    Value="{Binding UseMeasuredValues}" UnitWidthGroup="unitWidth"/>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="10"/>
+            <ColumnDefinition />
+        </Grid.ColumnDefinitions>
 
-            <customControls:VectoParameterControl
-                Caption="Manufacturer" Unit="" CaptionWidthGroup="vehicleLbl" UnitWidthGroup="unitWidth"
-                Value="{Binding Manufacturer}" />
+        <GroupBox Header="Aridrag Configuration" Grid.Row="1" Grid.Column="1" Width="500" HorizontalAlignment="Left" VerticalAlignment="Top">
 
-            <customControls:VectoParameterControl
-                Caption="Model" Unit="" CaptionWidthGroup="vehicleLbl" UnitWidthGroup="unitWidth"
-                Value="{Binding Model}" />
+            <StackPanel Orientation="Vertical">
+                <RadioButton GroupName="AirdragConfig" Margin="5"
+                             Content="{Binding Source={x:Static impl:AirdragConfig.WithoutAirdrag}, Converter={converter:EnumConverter}}"
+                             Command="{Binding AirdragConfigCommand}" CommandParameter="{Binding Source={x:Static impl:AirdragConfig.WithoutAirdrag}}"/>
+                
+                <RadioButton GroupName="AirdragConfig" Margin="5"
+                             Content="{Binding Source={x:Static impl:AirdragConfig.UseMeasurementData}, Converter={converter:EnumConverter}}"
+                             Command="{Binding AirdragConfigCommand}" CommandParameter="{ Binding Source={x:Static impl:AirdragConfig.UseMeasurementData}}"
+                             IsChecked="{Binding IsEditable}"/>
 
-            <!-- <mah:DateTimePicker  -->
-            <!--     SelectedDate="{Binding Date}"  -->
-            <!--     Culture="en-In" -->
-            <!--     SelectedTimeFormat="Short"  -->
-            <!--     SelectedDateFormat="Short"/> -->
+                <StackPanel Orientation="Horizontal" Margin="30,10,10,10">
+                    <Label Content="Load Component File:"/>
+                    <Button Content="Load File" Width="80" Margin="10,0,0,0"
+                            Command="{Binding LoadFileCommand}"/>
+                </StackPanel>
 
-            <customControls:VectoParameterControl
-                Caption="Date" Unit="" CaptionWidthGroup="vehicleLbl" UnitWidthGroup="unitWidth"
-                Value="{Binding Date}" />
+            </StackPanel>
 
-            <customControls:VectoParameterControl
-                Caption="Certification Number" Unit="" CaptionWidthGroup="vehicleLbl" UnitWidthGroup="unitWidth"
-                Value="{Binding CertificationNumber}" />
 
-            <customControls:VectoParameterControl
+        </GroupBox>
+
+        <GroupBox Header="Aridrag Data"  Width="500" HorizontalAlignment="Left" Grid.Row="2" Grid.Column="1" Height="250" VerticalAlignment="Top"
+                  Visibility="{Binding IsEditable, Converter={converter:BoolVisibilityConverter}}">
+
+
+            <StackPanel Orientation="Vertical" Width="450" HorizontalAlignment="Left" Grid.IsSharedSizeScope="True">
+
+                <customControls:VectoParameterControl 
+                    Caption="Manufacturer" Unit="" CaptionWidthGroup="vehicleLbl" UnitWidthGroup="unitWidth"
+                    Value="{Binding Manufacturer}" IsEnabled="{Binding IsEditable}" />
+
+                <customControls:VectoParameterControl
+                    Caption="Model" Unit="" CaptionWidthGroup="vehicleLbl" UnitWidthGroup="unitWidth"
+                    Value="{Binding Model}" IsEnabled="{Binding IsEditable}" />
+
+                <!-- <mah:DateTimePicker  -->
+                <!--     SelectedDate="{Binding Date}"  -->
+                <!--     Culture="en-In" -->
+                <!--     SelectedTimeFormat="Short"  -->
+                <!--     SelectedDateFormat="Short"/> -->
+
+                <customControls:VectoParameterControl
+                    Caption="Date" Unit="" CaptionWidthGroup="vehicleLbl" UnitWidthGroup="unitWidth"
+                    Value="{Binding Date}" IsEnabled="{Binding IsEditable}"/>
+
+                <customControls:VectoParameterControl
+                    Caption="Certification Number" Unit="" CaptionWidthGroup="vehicleLbl" UnitWidthGroup="unitWidth"
+                    Value="{Binding CertificationNumber}" IsEnabled="{Binding IsEditable}" />
+
+                <customControls:VectoParameterControl
                     Caption="App Version" Unit="" CaptionWidthGroup="vehicleLbl" UnitWidthGroup="unitWidth"
-                    Value="{Binding AppVersion}" />
+                    Value="{Binding AppVersion}" IsEnabled="{Binding IsEditable}" />
 
-            <customControls:VectoParameterControl 
+                <customControls:VectoParameterControl 
                     Caption="DeclaredCd x A 0" CaptionWidthGroup="lblWidth"
                     Unit="{helper:SIUnit DeclaredCdxA}" UnitWidthGroup="unitWidth"
                     Value="{Binding DeclaredCdxA, Converter={converter:SIValueConverter}, ConverterParameter=double}" 
-                    IsEnabled="{Binding UseMeasuredValues}"/>
+                    IsEnabled="{Binding IsEditable}"/>
 
-        </StackPanel>
+            </StackPanel>
+
+        </GroupBox>
     </Grid>
 </UserControl>

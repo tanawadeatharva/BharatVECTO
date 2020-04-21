@@ -1,14 +1,57 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Runtime.CompilerServices;
+using System.Linq;
+using System.Windows.Forms;
+using System.Windows.Input;
+using System.Xml;
+using Ninject;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Utils;
+using TUGraz.VectoCore.InputData.FileIO.XML;
+using TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader;
 using TUGraz.VectoCore.Utils;
+using VECTO3GUI.Helper;
 using VECTO3GUI.Model.TempDataObject;
+using VECTO3GUI.Util;
 using VECTO3GUI.ViewModel.Interfaces;
 
 namespace VECTO3GUI.ViewModel.Impl
 {
+	public enum AirdragConfig
+	{
+		WithoutAirdrag,
+		UseMeasurementData,
+		Unknown
+	}
+
+	public static class AirdragConfigHelper
+	{
+		public static string GetLabel(this AirdragConfig airdrag)
+		{
+			switch (airdrag)
+			{
+				case AirdragConfig.WithoutAirdrag:
+					return "Without Airdrag";
+				case AirdragConfig.UseMeasurementData:
+					return "Use Measurement Data";
+			}
+			return string.Empty;
+		}
+
+		public static AirdragConfig GetAirdragConfig(string name)
+		{
+			switch (name)
+			{
+				case "Without Airdrag":
+					return AirdragConfig.WithoutAirdrag;
+				case "Use Measurement Data":
+					return AirdragConfig.UseMeasurementData;
+			}
+			return AirdragConfig.Unknown;
+		}
+	}
+
+
 	public class AirdragViewModel : AbstractComponentViewModel, IAirdragViewModel
 	{
 		private string _manufacturer;
@@ -21,6 +64,11 @@ namespace VECTO3GUI.ViewModel.Impl
 
 		private IAirdragDeclarationInputData _airdragData;
 		private AirdragComponentData _componentData;
+		private bool _isEditable;
+		
+		private ICommand _airdragConfig;
+		private ICommand _loadFileCommand;
+
 
 		#region Implementation of IAirdragViewModel
 
@@ -110,17 +158,26 @@ namespace VECTO3GUI.ViewModel.Impl
 
 		#endregion
 
+		public bool IsEditable
+		{
+			get { return _isEditable; }
+			set { SetProperty(ref _isEditable, value); }
+		}
+
+
 		protected override void InputDataChanged()
 		{
 			var inputData = JobViewModel.InputDataProvider as IDeclarationInputDataProvider;
 			_airdragData = inputData?.JobInputData.Vehicle.Components.AirdragInputData;
 			SetAirdragValues(_airdragData);
+			IsEditable = true;
 		}
 
 		private void SetAirdragValues(IAirdragDeclarationInputData airdrag)
 		{
 			UseMeasuredValues = airdrag != null;
-			if (airdrag == null) {
+			if (airdrag == null)
+			{
 				_componentData = new AirdragComponentData(this, true);
 				return;
 			}
@@ -135,6 +192,44 @@ namespace VECTO3GUI.ViewModel.Impl
 			_componentData = new AirdragComponentData(this);
 			ClearChangedProperties();
 		}
+
+		#region Commands
+
+		public ICommand AirdragConfigCommand
+		{
+			get
+			{
+				return _airdragConfig ?? (_airdragConfig = new RelayCommand<AirdragConfig>(DoAirdragConfig));
+			}
+		}
+
+		private void DoAirdragConfig(AirdragConfig config)
+		{
+			IsEditable = config == AirdragConfig.UseMeasurementData;
+		}
+
+
+		public ICommand LoadFileCommand
+		{
+			get
+			{
+				return _loadFileCommand ?? (_loadFileCommand = new RelayCommand(DoLoadFile, CanLoadFile));
+			}
+		}
+
+		private bool CanLoadFile()
+		{
+			return IsEditable;
+		}
+
+		private void DoLoadFile()
+		{
+			var filePath = FileDialogHelper.ShowSelectFilesDialog(false)?.FirstOrDefault();
+			ReadSelectedXml(null);
+		}
+		#endregion
+
+
 
 		private void SetAirdragArea(IAirdragDeclarationInputData airdrag)
 		{
@@ -153,6 +248,12 @@ namespace VECTO3GUI.ViewModel.Impl
 			_componentData.UpdateCurrentValues(this);
 			ClearChangedProperties();
 			return _componentData;
+		}
+
+		private void ReadSelectedXml(string filePath)
+		{
+			if (filePath == null)
+				return;
 		}
 	}
 }
