@@ -274,7 +274,7 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries
 		}
 
 
-		public void CycleStep(Second seconds)
+		public void CycleStep(Second seconds, double essFactor)
 		{
 			try {
 				//M9.CycleStep(seconds);
@@ -282,11 +282,11 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries
 				//M11.CycleStep(seconds);
 				if (auxConfig.ElectricalUserInputsConfig.SmartElectrical) {
 					var generatedElPower =
-						(auxConfig.ElectricalUserInputsConfig.SmartElectrical && auxConfig.PneumaticUserInputsConfig.SmartAirCompression
+						(auxConfig.PneumaticUserInputsConfig.SmartAirCompression
 							? M7.SmartElectricalAndPneumaticAuxAltPowerGenAtCrank
 							: M7.SmartElectricalOnlyAuxAltPowerGenAtCrank) * M0.AlternatorsEfficiency *
 						auxConfig.ElectricalUserInputsConfig.AlternatorGearEfficiency;
-					ElectricStorage.Request(generatedElPower - ElectricPowerConsumerSum, seconds);
+					ElectricStorage.Request((generatedElPower - ElectricPowerConsumerSum) * essFactor, seconds);
 				}
 				Signals.CurrentCycleTimeInSeconds += seconds.Value();
 			} catch (Exception ex) {
