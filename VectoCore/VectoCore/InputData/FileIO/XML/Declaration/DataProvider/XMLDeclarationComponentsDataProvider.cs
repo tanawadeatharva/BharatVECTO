@@ -257,11 +257,6 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 			get { return this; }
 		}
 
-		ITorqueConverterDeclarationInputData IVehicleComponentsDeclaration.TorqueConverterInputData
-		{
-			get { return null; }
-		}
-		
 		IAirdragDeclarationInputData IVehicleComponentsDeclaration.AirdragInputData
 		{
 			get { return null; }

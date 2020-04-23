@@ -85,7 +85,7 @@ namespace TUGraz.VectoCore.Tests.XML
 
 			TestTransmissionDataPIFType(components.GearboxInputData);
 
-			Assert.IsNull(components.TorqueConverterInputData);
+			TestTorqueConverterDataPIFType(components.TorqueConverterInputData);
 
 			TestAngledrive(components.AngledriveInputData);
 
@@ -182,6 +182,22 @@ namespace TUGraz.VectoCore.Tests.XML
 			Assert.IsTrue(CheckGearEntry(1.600, null, 2000, 10, gears, ref currentGearEntry));
 			Assert.IsTrue(CheckGearEntry(1.280, null, 2000, 11, gears, ref currentGearEntry));
 			Assert.IsTrue(CheckGearEntry(1.000, null, null, 12, gears, ref currentGearEntry));
+		}
+
+		private void TestTorqueConverterDataPIFType(ITorqueConverterDeclarationInputData tcData)
+		{
+			Assert.NotNull(tcData);
+			Assert.AreEqual("Some Manufacturer", tcData.Manufacturer);
+			Assert.AreEqual("Some Model", tcData.Model);
+
+			Assert.AreEqual(0, tcData.TCData.Rows[0][TorqueConverterDataReader.Fields.SpeedRatio].ToString().ToDouble());
+			Assert.AreEqual(4.5, tcData.TCData.Rows[0][TorqueConverterDataReader.Fields.TorqueRatio].ToString().ToDouble());
+			Assert.AreEqual(700, tcData.TCData.Rows[0][TorqueConverterDataReader.Fields.CharacteristicTorque].ToString().ToDouble());
+
+			Assert.AreEqual(0.4, tcData.TCData.Rows[4][TorqueConverterDataReader.Fields.SpeedRatio].ToString().ToDouble());
+			Assert.AreEqual(1.6, tcData.TCData.Rows[4][TorqueConverterDataReader.Fields.TorqueRatio].ToString().ToDouble());
+			Assert.AreEqual(350, tcData.TCData.Rows[4][TorqueConverterDataReader.Fields.CharacteristicTorque].ToString().ToDouble());
+
 		}
 
 		private void TestAngledrive(IAngledriveInputData angeldrive)

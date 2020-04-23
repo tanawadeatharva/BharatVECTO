@@ -50,7 +50,11 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.NinjectModules
 
 			Bind<IXMLGearData>().To<XMLPrimaryVehicleBusTransmissionDataV01>()
 				.Named(XMLPrimaryVehicleBusTransmissionDataV01.QUALIFIED_XSD_TYPE);
-			
+
+			Bind<IXMLTorqueConverterDeclarationInputData>()
+				.To<XMLDeclarationTorqueConverterDataProviderPIF01>()
+				.Named(XMLDeclarationTorqueConverterDataProviderPIF01.QUALIFIED_XSD_TYPE);
+
 			Bind<IXMLAngledriveInputData>().To<XMLDeclarationPrimaryVehicleBusAngledriveDataProviderV01>()
 				.Named(XMLDeclarationPrimaryVehicleBusAngledriveDataProviderV01.QUALIFIED_XSD_TYPE);
 
