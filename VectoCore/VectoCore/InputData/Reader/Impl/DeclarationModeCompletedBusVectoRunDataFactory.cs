@@ -248,8 +248,6 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 				}
 			}
 			
-			
-
 			var simulationRunData = new VectoRunData {
 				Loading = loading.Key,
 				VehicleData = DataAdapterSpecific.CreateVehicleData(PrimaryVehicle, CompletedVehicle, 

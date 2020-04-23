@@ -136,17 +136,28 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 
 		protected virtual Dictionary<string, ElectricConsumerEntry> GetElectricConsumers(Mission mission, IVehicleDeclarationInputData vehicleData, IActuations actuations, VehicleClass vehicleClass)
 		{
+			var retVal = GetDefaultElectricConsumers(mission, vehicleData, actuations);
+
+			foreach (var entry in GetElectricAuxConsumers(mission, vehicleData, vehicleClass, vehicleData.Components.BusAuxiliaries)) {
+				retVal[entry.Key] = entry.Value;
+			}
+
+			return retVal;
+		}
+
+		protected virtual Dictionary<string, ElectricConsumerEntry> GetDefaultElectricConsumers(
+			Mission mission, IVehicleDeclarationInputData vehicleData, IActuations actuations)
+		{
 			var retVal = new Dictionary<string, ElectricConsumerEntry>();
 			var doorDutyCycleFraction =
 				(actuations.ParkBrakeAndDoors * Constants.BusAuxiliaries.ElectricalConsumers.DoorActuationTimeSecond) /
 				actuations.CycleTime;
 			var busAux = vehicleData.Components.BusAuxiliaries;
 			var electricDoors = vehicleData.DoorDriveTechnology == ConsumerTechnology.Electrically;
-			
-			foreach (var consumer in DeclarationData.BusAuxiliaries.DefaultElectricConsumerList.Items) {
 
-				var applied = consumer.DefaultConsumer || consumer.Bonus 
-					? 1.0 
+			foreach (var consumer in DeclarationData.BusAuxiliaries.DefaultElectricConsumerList.Items) {
+				var applied = consumer.DefaultConsumer || consumer.Bonus
+					? 1.0
 					: GetNumberOfElectricalConsumersForMission(mission, consumer);
 				var nbr = consumer.DefaultConsumer
 					? GetNumberOfElectricalConsumersInVehicle(consumer.NumberInActualVehicle, mission, vehicleData)
@@ -167,26 +178,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 					BaseVehicle = consumer.BaseVehicle,
 					Current = current
 				};
-				
 			}
-
-			var spPower = DeclarationData.SteeringPumpBus.LookupElectricalPowerDemand(
-				mission.MissionType, busAux.SteeringPumpTechnology,
-				vehicleData.Length ?? mission.BusParameter.VehicleLength);
-			retVal[Constants.Auxiliaries.IDs.SteeringPump] = new ElectricConsumerEntry {
-				ActiveDuringEngineStopStandstill = false,
-				BaseVehicle = false,
-				Current = spPower / Constants.BusAuxiliaries.ElectricSystem.PowernetVoltage
-			};
-			
-			var fanPower = DeclarationData.Fan.LookupElectricalPowerDemand(
-				vehicleClass, mission.MissionType, busAux.FanTechnology);
-			retVal[Constants.Auxiliaries.IDs.Fan] = new ElectricConsumerEntry {
-				ActiveDuringEngineStopStandstill = false,
-				ActiveDuringEngineStopDriving = false,
-				BaseVehicle = false,
-				Current = fanPower / Constants.BusAuxiliaries.ElectricSystem.PowernetVoltage
-			};
 
 			return retVal;
 		}
@@ -201,6 +193,28 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			
 		}
 
+		protected virtual Dictionary<string, ElectricConsumerEntry> GetElectricAuxConsumers(Mission mission, IVehicleDeclarationInputData vehicleData, VehicleClass vehicleClass, IBusAuxiliariesDeclarationData busAux)
+		{
+			var retVal = new Dictionary<string, ElectricConsumerEntry>();
+			var spPower = DeclarationData.SteeringPumpBus.LookupElectricalPowerDemand(
+				mission.MissionType, busAux.SteeringPumpTechnology,
+				vehicleData.Length ?? mission.BusParameter.VehicleLength);
+			retVal[Constants.Auxiliaries.IDs.SteeringPump] = new ElectricConsumerEntry {
+				ActiveDuringEngineStopStandstill = false,
+				BaseVehicle = false,
+				Current = spPower / Constants.BusAuxiliaries.ElectricSystem.PowernetVoltage
+			};
+
+			var fanPower = DeclarationData.Fan.LookupElectricalPowerDemand(
+				vehicleClass, mission.MissionType, busAux.FanTechnology);
+			retVal[Constants.Auxiliaries.IDs.Fan] = new ElectricConsumerEntry {
+				ActiveDuringEngineStopStandstill = false,
+				ActiveDuringEngineStopDriving = false,
+				BaseVehicle = false,
+				Current = fanPower / Constants.BusAuxiliaries.ElectricSystem.PowernetVoltage
+			};
+			return retVal;
+		}
 
 		protected virtual bool VehicleHasElectricalConsumer(string consumerName, IBusAuxiliariesDeclarationData busAux)
 		{
