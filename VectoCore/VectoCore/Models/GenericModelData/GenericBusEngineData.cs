@@ -26,6 +26,9 @@ namespace TUGraz.VectoCore.Models.Declaration
 		private static string GenericEngineCM_Normed_PI =
 			$"{DeclarationData.DeclarationDataResourcePrefix}.GenericBusData.EngineConsumptionMap_PI_Normed.vmap";
 
+		private static readonly double[] DieselCIFactors = { 1.05, 1.02, 1.0, 1.005, 1.0 };
+		private static readonly double[] PIFactors = { 1.05, 1.02, 1.0, 1.005, 1.0 };
+
 		private static GenericBusEngineData _instance;
 
 		public static GenericBusEngineData Instance
@@ -88,43 +91,40 @@ namespace TUGraz.VectoCore.Models.Declaration
 		}
 
 
-		private string GetEngineRessourceId(IEngineModeDeclarationInputData engineMode)
-		{
-			var fuelType = engineMode.Fuels.First().FuelType;
-			var isDualFuel = engineMode.Fuels.Count > 1;
-			
-			if (isDualFuel)
-				return GenericEngineCM_Normed_CI;
-
-			switch (fuelType)
-			{
-				case FuelType.DieselCI:
-				case FuelType.EthanolCI:
-				case FuelType.NGCI:
-					return GenericEngineCM_Normed_CI;
-				default:
-					return GenericEngineCM_Normed_PI;
-			}
-		}
-
-		private IFuelProperties GetFuelData(IEngineModeDeclarationInputData engineMode)
+		private bool UseDieselFuel(IEngineModeDeclarationInputData engineMode)
 		{
 			var fuelType = engineMode.Fuels.First().FuelType;
 			var isDualFuel = engineMode.Fuels.Count > 1;
 
 			if (isDualFuel)
-				return FuelData.Diesel;
+				return true;
 
 			switch (fuelType) {
 				case FuelType.DieselCI:
 				case FuelType.EthanolCI:
 				case FuelType.NGCI:
-					return FuelData.Diesel;
+					return true;
 				default:
-					return FuelData.Instance().Lookup(FuelType.NGPI, TankSystem.Compressed);
+					return false;
 			}
 		}
 
+		private string GetEngineRessourceId(IEngineModeDeclarationInputData engineMode)
+		{
+			return UseDieselFuel(engineMode) ? GenericEngineCM_Normed_CI : GenericEngineCM_Normed_PI;
+		}
+
+		private IFuelProperties GetFuelData(IEngineModeDeclarationInputData engineMode)
+		{
+			return UseDieselFuel(engineMode)
+				? FuelData.Diesel
+				: FuelData.Instance().Lookup(FuelType.NGPI, TankSystem.Compressed);
+		}
+
+		private double[] GetEngineCorrectionFactors(IEngineModeDeclarationInputData engineMode)
+		{
+			return UseDieselFuel(engineMode) ? DieselCIFactors : PIFactors;
+		}
 
 		private CombustionEngineFuelData GetCombustionEngineFuelData(IEngineModeDeclarationInputData engineMode,
 			EngineFullLoadCurve fullLoadCurve)
@@ -159,17 +159,19 @@ namespace TUGraz.VectoCore.Models.Declaration
 			;
 			var fcMap = FuelConsumptionMapReader.Create(denormalizedData.AsEnumerable().OrderBy(r => r.Field<string>(FuelConsumptionMapReader.Fields.EngineSpeed).ToDouble())
 																		.ThenBy(r => r.Field<string>(FuelConsumptionMapReader.Fields.Torque).ToDouble()).CopyToDataTable());
+			var engineCF = GetEngineCorrectionFactors(engineMode);
 
 			var fuel = new CombustionEngineFuelData
 			{
-				WHTCUrban = 1,
-				WHTCRural = 1,
-				WHTCMotorway = 1,
-				ColdHotCorrectionFactor = 1,
-				CorrectionFactorRegPer = 1,
+				WHTCUrban = engineCF[0],
+				WHTCRural = engineCF[1],
+				WHTCMotorway = engineCF[2],
+				ColdHotCorrectionFactor = engineCF[3],
+				CorrectionFactorRegPer = engineCF[4],
 				ConsumptionMap = fcMap,
 				FuelData = GetFuelData(engineMode)
 			};
+
 
 			return fuel;
 		}
