@@ -80,7 +80,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 			engine.FullLoadCurves = fullLoadCurves;
 			
 
-			var fuel = GetCombustionEngineFuelData(primaryVehicle.Components.EngineInputData.EngineModes[modeIdx], fullLoadCurves[0], idleSpeed);
+			var fuel = GetCombustionEngineFuelData(primaryVehicle.Components.EngineInputData.EngineModes[modeIdx], fullLoadCurves[0]);
 			
 			
 
@@ -127,11 +127,11 @@ namespace TUGraz.VectoCore.Models.Declaration
 		}
 
 		private CombustionEngineFuelData GetCombustionEngineFuelData(IEngineModeDeclarationInputData engineMode,
-			EngineFullLoadCurve fullLoadCurve, PerSecond idleSpeed)
+			EngineFullLoadCurve fullLoadCurve)
 		{
 			var ressourceId = GetEngineRessourceId(engineMode);
 
-			var nIdle = idleSpeed.AsRPM;
+			var nIdle = engineMode.IdleSpeed.AsRPM;
 			var ratedSpeed = fullLoadCurve.RatedSpeed.AsRPM;
 			var maxTorque = fullLoadCurve.MaxTorque.Value();
 			
