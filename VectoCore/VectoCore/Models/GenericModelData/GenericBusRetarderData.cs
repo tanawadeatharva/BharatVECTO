@@ -14,8 +14,8 @@ namespace TUGraz.VectoCore.Models.Declaration
 
 		public RetarderData CreateGenericBusRetarderData(IRetarderInputData retarderInput)
 		{
-			if (retarderInput == null) {
-				return new  RetarderData {Type =RetarderType.None};
+			if (retarderInput == null || !retarderInput.Type.IsDedicatedComponent()) {
+				return new  RetarderData {Type = retarderInput?.Type ?? RetarderType.None};
 			}
 
 			var retarder = new RetarderData
@@ -46,9 +46,9 @@ namespace TUGraz.VectoCore.Models.Declaration
 			for (int i = 0; i < genericRetarderLosses.Length; i++)
 			{
 				var newRow = torqueLoss.NewRow();
-				newRow[RetarderLossMapReader.Fields.RetarderSpeed] = retarderSpeeds[i];
-				newRow[RetarderLossMapReader.Fields.TorqueLoss] = genericRetarderLosses[i] *
-					Constants.GenericLossMapSettings.RetarderGenericFactor;
+				newRow[RetarderLossMapReader.Fields.RetarderSpeed] = Math.Round(retarderSpeeds[i], 2, MidpointRounding.AwayFromZero);
+				newRow[RetarderLossMapReader.Fields.TorqueLoss] = Math.Round(genericRetarderLosses[i] *
+					Constants.GenericLossMapSettings.RetarderGenericFactor, 2, MidpointRounding.AwayFromZero);
 				torqueLoss.Rows.Add(newRow);
 			}
 
