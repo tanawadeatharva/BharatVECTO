@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using Ninject;
 using TUGraz.VectoCommon.InputData;
 using VECTO3GUI.Util;
@@ -25,6 +26,16 @@ namespace VECTO3GUI.ViewModel.Impl
 
 
 		protected override void DoSaveJob()
+		{
+			throw new NotImplementedException();
+		}
+
+		protected override void DoCloseJob(Window window)
+		{
+			throw new NotImplementedException();
+		}
+
+		protected override void DoSaveToJob()
 		{
 			throw new NotImplementedException();
 		}

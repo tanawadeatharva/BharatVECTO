@@ -387,6 +387,7 @@
     <Compile Include="OutputData\FileIO\BusAuxWriter.cs" />
     <Compile Include="OutputData\FileIO\JSONFileWriter.cs" />
     <Compile Include="OutputData\XML\AbstractXMLManufacturerReport.cs" />
+    <Compile Include="OutputData\XML\DeclarationJobs\XMLCompletedBusWriter.cs" />
     <Compile Include="OutputData\XML\Engineering\Factory\EngineeringWriterFactory.cs" />
     <Compile Include="OutputData\XML\Engineering\Factory\IEngineeringWriterInjectFactory.cs" />
     <Compile Include="OutputData\XML\Engineering\Interfaces\IXMLEngineeringComponentWriter.cs" />
@@ -942,9 +943,7 @@
       <Name>VectoHashing</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="OutputData\XML\DeclarationJobs\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

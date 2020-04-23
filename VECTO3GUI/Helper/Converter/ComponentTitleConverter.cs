@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Data;
 using VECTO3GUI.Util;
@@ -15,7 +16,7 @@ namespace VECTO3GUI.Helper.Converter
 		{
 			if (value is Component) {
 				var component = (Component)value;
-				return component.GetLabel();
+				return Regex.Replace(component.GetLabel(), "(\\B[A-Z])", " $1"); ;
 			}
 
 			return value;

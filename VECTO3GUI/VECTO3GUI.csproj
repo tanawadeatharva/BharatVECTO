@@ -178,6 +178,7 @@
     <Compile Include="Util\TableDataConverter.cs" />
     <Compile Include="Util\VectoParameterAttribute.cs" />
     <Compile Include="Util\ViewModelFactory.cs" />
+    <Compile Include="Util\XML\XMLCompletedBus.cs" />
     <Compile Include="ViewModel\Adapter\Declaration\AbstractDeclarationAdapter.cs" />
     <Compile Include="ViewModel\Adapter\Declaration\AirdragDeclarationAdapter.cs" />
     <Compile Include="ViewModel\Adapter\Declaration\AngledriveDeclarationAdapter.cs" />

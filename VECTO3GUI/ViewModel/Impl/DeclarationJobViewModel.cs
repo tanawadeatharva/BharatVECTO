@@ -65,7 +65,17 @@ namespace VECTO3GUI.ViewModel.Impl
 			var tmp = writer.GenerateVectoJob(ModelData);
 		}
 
-		
+		protected override void DoCloseJob(Window window)
+		{
+			throw new NotImplementedException();
+		}
+
+		protected override void DoSaveToJob()
+		{
+			throw new NotImplementedException();
+		}
+
+
 		public IInputDataProvider InputDataProvider
 		{
 			get { return _inputData; }

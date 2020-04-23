@@ -13,6 +13,10 @@ namespace VECTO3GUI.ViewModel.Impl
 	{
 		protected bool IsDeclarationMode;
 		private IComponentViewModel _currentComponent;
+		private ICommand _saveJobCommand;
+		private ICommand _closeJobCommand;
+		private ICommand _saveToJobCommand;
+
 
 		public override bool DeclarationMode
 		{
@@ -27,19 +31,32 @@ namespace VECTO3GUI.ViewModel.Impl
 			}
 		}
 
-		public ICommand SaveJob { get { return new RelayCommand(DoSaveJob); } }
+		public ICommand SaveJob
+		{
+			get { return _saveJobCommand ?? (_saveJobCommand =  new RelayCommand(DoSaveJob)); }
+		}
 
 		protected abstract void DoSaveJob();
 
-		public ICommand CloseJob { get { return new RelayCommand<UserControl>(DoCloseJob);} }
-
-		protected virtual void DoCloseJob(UserControl ctl)
+		public ICommand CloseJob
 		{
-			Window.GetWindow(ctl).Close();
+			get { return _closeJobCommand ?? (_closeJobCommand = new RelayCommand<Window>(DoCloseJob));}
 		}
 
+		protected abstract void DoCloseJob(Window window);
 
-		public ICommand EditComponent { get { return new RelayCommand<Component>(DoEditComponent); } }
+
+		public ICommand SaveToJob
+		{
+			get { return _saveToJobCommand ?? (_saveToJobCommand = new RelayCommand(DoSaveToJob)); }
+		}
+
+		protected abstract void DoSaveToJob();
+
+		public ICommand EditComponent
+		{
+			get { return new RelayCommand<Component>(DoEditComponent); }
+		}
 
 		protected virtual void DoEditComponent(Component component)
 		{

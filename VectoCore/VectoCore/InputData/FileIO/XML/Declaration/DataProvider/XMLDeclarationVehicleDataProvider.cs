@@ -644,6 +644,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 			IXMLDeclarationJobInputData jobData, XmlNode xmlNode, string sourceFile) : base(jobData, xmlNode, sourceFile)
 		{
 			SourceType = DataSourceType.XMLEmbedded;
+			
 		}
 
 		
@@ -810,7 +811,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 		public override TankSystem? TankSystem
 		{
-			get { return GetString(XMLNames.Vehicle_NgTankSystem).ParseEnum<TankSystem>(); }
+			get { return GetNode(XMLNames.Vehicle_NgTankSystem, required: false)?.ToString().ParseEnum<TankSystem>(); }
 		}
 
 		public override int NumberOfPassengersLowerDeck
@@ -854,6 +855,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 		#endregion
 
+		
 		public override FloorType FloorType
 		{
 			get { return GetBool(XMLNames.Bus_LowEntry) ? FloorType.LowFloor : FloorType.HighFloor; }

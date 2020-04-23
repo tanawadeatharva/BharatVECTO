@@ -155,6 +155,7 @@ namespace VECTO3GUI.ViewModel.Impl
 			}
 		}
 
+		public DigestData DigestValue { get; set; }
 
 		#endregion
 
@@ -188,6 +189,7 @@ namespace VECTO3GUI.ViewModel.Impl
 			Date = airdrag.Date;
 			AppVersion = airdrag.AppVersion;
 			SetAirdragArea(airdrag);
+			DigestValue = airdrag.DigestValue;
 
 			_componentData = new AirdragComponentData(this);
 			ClearChangedProperties();

@@ -1,6 +1,9 @@
-﻿using System.Windows.Input;
+﻿using System.Windows;
+using System.Windows.Input;
 using Ninject;
+using TUGraz.VectoCommon.BusAuxiliaries;
 using TUGraz.VectoCommon.InputData;
+using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCore.Utils;
 using VECTO3GUI.Util;
 using VECTO3GUI.ViewModel.Interfaces;
@@ -48,6 +51,16 @@ namespace VECTO3GUI.ViewModel.Impl
 		#region Overrides of AbstractJobViewModel
 
 		protected override void DoSaveJob()
+		{
+			throw new System.NotImplementedException();
+		}
+
+		protected override void DoCloseJob(Window window)
+		{
+			throw new System.NotImplementedException();
+		}
+
+		protected override void DoSaveToJob()
 		{
 			throw new System.NotImplementedException();
 		}

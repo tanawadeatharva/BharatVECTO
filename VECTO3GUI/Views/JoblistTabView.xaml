@@ -26,10 +26,11 @@
             <StackPanel Orientation="Vertical">
                 <Menu>
                     <MenuItem Header="File">
-                        <MenuItem Header="Save"/>
-                        <MenuItem Header="Save to"/>
+                        <MenuItem Header="Save" Command="{Binding SaveJob}"/>
+                        <MenuItem Header="Save to" Command="{Binding SaveToJob}"/>
                         <Separator HorizontalAlignment="Stretch" Background="Gray"/>
-                        <MenuItem Header="Exit"/>
+                        <MenuItem Header="Exit" Command="{Binding CloseJob}" 
+                                  CommandParameter="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Window}}}"/>
                     </MenuItem>
                 </Menu>
                 <Separator HorizontalAlignment="Stretch" Background="Gray"/>

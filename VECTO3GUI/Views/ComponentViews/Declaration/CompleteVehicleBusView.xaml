@@ -27,7 +27,7 @@
             <RowDefinition/>
         </Grid.RowDefinitions>
 
-        <GroupBox Header="Vehicle Data" Grid.Row="1" Grid.Column="1" Width="420" Height="650" HorizontalAlignment="Left" VerticalAlignment="Top">
+        <GroupBox Header="Vehicle Data" Grid.Row="1" Grid.Column="1" Width="420" Height="680" HorizontalAlignment="Left" VerticalAlignment="Top">
             <StackPanel Orientation="Vertical" Width="400" HorizontalAlignment="Left" Grid.IsSharedSizeScope="True" VerticalAlignment="Center">
                 <StackPanel Orientation="Vertical" DockPanel.Dock="Top" Grid.IsSharedSizeScope="True">
 
@@ -55,7 +55,7 @@
                         Value="{Binding RegisteredClass}"/>-->
 
                     <customControls:ComboParameter
-                        Caption="Vehicle Code"
+                        Caption="Registered Class"
                         CaptionWidthGroup="vehicleLbl" UnitWidthGroup="unitWidth"
                         Value="{Binding RegisteredClass}"
                         AllowedValues="{Binding AllowedRegisteredClasses}" />
@@ -75,6 +75,12 @@
                         Caption="Permissible Maximum Laden Mass" Unit="{helper:SIUnit TechnicalPermissibleMaximumLadenMass}" CaptionWidthGroup="vehicleLbl" UnitWidthGroup="unitWidth"
                         Value="{Binding TechnicalPermissibleMaximumLadenMass, Converter={converter:SIValueConverter}, ConverterParameter=int}" />
 
+                    <customControls:ComboParameter
+                        Caption="Tank System"
+                        CaptionWidthGroup="vehicleLbl" UnitWidthGroup="unitWidth"
+                        Value="{Binding NgTankSystem}"
+                        AllowedValues="{Binding AllowedTankSystems}" />
+
                     <customControls:VectoParameterControl
                         Caption="Passengers Lower Deck" Unit="" CaptionWidthGroup="vehicleLbl" UnitWidthGroup="unitWidth"
                         Value="{Binding NumberOfPassengersLowerDeck}" />
@@ -83,11 +89,11 @@
                         Caption="Passengers Upper Deck" Unit="" CaptionWidthGroup="vehicleLbl" UnitWidthGroup="unitWidth"
                         Value="{Binding NumberOfPassengersUpperDeck}" />
 
-                    <customControls:ComboParameter
-                        Caption="Floor Type"
-                        CaptionWidthGroup="vehicleLbl" UnitWidthGroup="unitWidth"
-                        Value="{Binding FloorType}"
-                        AllowedValues="{Binding AllowedFloorTypes}" />
+                    <customControls:CheckboxParameter
+                        Caption="Low Entry" CaptionWidthGroup="vehicleLbl"
+                        Unit="" UnitWidthGroup="unitWidth"
+                        Value="{Binding LowEntry}"/>
+
 
                     <customControls:VectoParameterControl
                         Caption="Height Integrated Body" Unit="{helper:SIUnit HeightIntegratedBody}" CaptionWidthGroup="vehicleLbl" UnitWidthGroup="unitWidth"

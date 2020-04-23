@@ -33,9 +33,10 @@ namespace VECTO3GUI.ViewModel.Impl
 		private VehicleCode _vehicleCode;
 		private Kilogram _curbMassChassis;
 		private Kilogram _technicalPermissibleMaximumLadenMass;
+		private TankSystem? _ngTankSystem;
 		private int _numberOfPassengersLowerDeck;
 		private int _numberOfPassengersUpperDeck;
-		private FloorType _floorType;
+		private bool _lowEntry;
 		private Meter _heightIntegratedBody;
 		private Meter _vehicleLength;
 		private Meter _vehicleWidth;
@@ -148,6 +149,16 @@ namespace VECTO3GUI.ViewModel.Impl
 				IsDataChanged(_technicalPermissibleMaximumLadenMass, _componentData);
 			}
 		}
+		public TankSystem? NgTankSystem
+		{
+			get { return _ngTankSystem; }
+			set
+			{
+				if (!SetProperty(ref _ngTankSystem, value))
+					return;
+				IsDataChanged(_ngTankSystem, _componentData);
+			}
+		}
 		public int NumberOfPassengersLowerDeck
 		{
 			get { return _numberOfPassengersLowerDeck; }
@@ -168,16 +179,18 @@ namespace VECTO3GUI.ViewModel.Impl
 				IsDataChanged(_numberOfPassengersUpperDeck, _componentData);
 			}
 		}
-		public FloorType FloorType
+
+		public bool LowEntry
 		{
-			get { return _floorType; }
+			get { return _lowEntry; }
 			set
 			{
-				if (!SetProperty(ref _floorType, value))
+				if (!SetProperty(ref _lowEntry, value)) 
 					return;
-				IsDataChanged(_floorType, _componentData);
+				IsDataChanged(_lowEntry, _componentData);
 			}
 		}
+
 		public Meter HeightIntegratedBody
 		{
 			get { return _heightIntegratedBody; }
@@ -232,9 +245,9 @@ namespace VECTO3GUI.ViewModel.Impl
 
 		public AllowedEntry<LegislativeClass>[] AllowedLegislativeClasses { get; private set; }
 		public AllowedEntry<VehicleCode>[] AllowedVehicleCodes { get; private set; }
-		public AllowedEntry<FloorType>[] AllowedFloorTypes { get; private set; }
 		public AllowedEntry<ConsumerTechnology>[] AllowedConsumerTechnologies { get; private set; }
 		public AllowedEntry<RegistrationClass>[] AllowedRegisteredClasses { get; private set; }
+		public AllowedEntry<TankSystem>[] AllowedTankSystems { get; private set; }
 
 		#endregion
 
@@ -267,9 +280,10 @@ namespace VECTO3GUI.ViewModel.Impl
 			VehicleCode = vehicle.VehicleCode;
 			CurbMassChassis = vehicle.CurbMassChassis;
 			TechnicalPermissibleMaximumLadenMass = vehicle.GrossVehicleMassRating;
+			NgTankSystem = vehicle.TankSystem;
 			NumberOfPassengersLowerDeck = vehicle.NumberOfPassengersLowerDeck;
 			NumberOfPassengersUpperDeck = vehicle.NuberOfPassengersUpperDeck;
-			FloorType = vehicle.FloorType;
+			LowEntry = vehicle.FloorType == FloorType.LowFloor; 
 			HeightIntegratedBody = vehicle.Height;
 			VehicleLength = vehicle.Length;
 			VehicleWidth = vehicle.Width;
@@ -289,19 +303,21 @@ namespace VECTO3GUI.ViewModel.Impl
 			AllowedVehicleCodes = Enum.GetValues(typeof(VehicleCode)).Cast<VehicleCode>()
 				.Select(vc => AllowedEntry.Create(vc, vc.GetLabel())).ToArray();
 
-			var highFloor = AllowedEntry.Create(FloorType.HighFloor, FloorType.HighFloor.GetLabel());
-			var lowFloor = AllowedEntry.Create(FloorType.LowFloor, FloorType.LowFloor.GetLabel());
-			AllowedFloorTypes = new []{ highFloor, lowFloor };
-
 			AllowedConsumerTechnologies = Enum.GetValues(typeof(ConsumerTechnology)).Cast<ConsumerTechnology>()
 				.Select(sc => AllowedEntry.Create(sc, sc.GetLabel())).ToArray();
 
 			AllowedRegisteredClasses = Enum.GetValues(typeof(RegistrationClass)).Cast<RegistrationClass>()
 				.Select(vc => AllowedEntry.Create(vc, vc.GetLabel())).ToArray();
+			
+			var tankSystems = Enum.GetValues(typeof(TankSystem)).Cast<TankSystem>().ToArray();
+			var tank = new AllowedEntry<TankSystem> [tankSystems.Length+1];
 
-			AllowedRegisteredClasses =
-				AllowedRegisteredClasses.Where(val => val.Value != RegistrationClass.unknown).ToArray();
+			tank[0] = AllowedEntry.Create(TankSystem.Compressed, null);
+			for (int i = 1; i < tankSystems.Length + 1; i++) {
+				tank[i] = AllowedEntry.Create(tankSystems[i-1], tankSystems[i-1].ToString());
+			}
 
+			AllowedTankSystems = tank;
 		}
 
 		#endregion

@@ -1,4 +1,6 @@
-﻿namespace VECTO3GUI.Util {
+﻿using TUGraz.VectoCommon.Resources;
+
+namespace VECTO3GUI.Util {
 	public enum Component
 	{
 		Vehicle = 1,
@@ -27,28 +29,28 @@
 				case Component.Vehicle:
 				case Component.PrimaryBusVehicle:
 				case Component.CompleteBusVehicle:
-					return nameof(Component.Vehicle);
+					return XMLNames.Component_Vehicle;
 				case Component.Engine:
-					return nameof(Component.Engine);
+					return XMLNames.Component_Engine;
 				case Component.Gearbox:
-					return nameof(Component.Gearbox);
+					return XMLNames.Component_Gearbox;
 				case Component.TorqueConverter:
-					return "Torque Converter";
+					return XMLNames.Component_TorqueConverter;
 				case Component.Retarder:
-					return "Retarder";
+					return XMLNames.Component_Retarder;
 				case Component.Angledrive:
-					return "Angle Drive";
+					return XMLNames.Component_Angledrive;
 				case Component.Axlegear:
-					return "Axle Gear";
+					return XMLNames.Component_Axlegear;
 				case Component.PTO:
-					return "Power Take Off";
+					return XMLNames.Vehicle_PTO;
 				case Component.Airdrag:
-					return "Air Drag";
+					return XMLNames.Component_AirDrag;
 				case Component.Axles:
-					return "Axle";
+					return XMLNames.AxleWheels_Axles_Axle;
 				case Component.Auxiliaries:
 				case Component.BusAuxiliaries:
-					return "Auxiliary";
+					return XMLNames.Component_Auxiliaries;
 				case Component.Cycle:
 					return nameof(Component.Cycle);
 			}

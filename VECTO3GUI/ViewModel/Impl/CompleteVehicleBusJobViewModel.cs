@@ -3,13 +3,16 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Input;
 using Ninject;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCore.Models.SimulationComponent.Impl;
+using TUGraz.VectoCore.OutputData.XML.DeclarationJobs;
 using VECTO3GUI.Model.TempDataObject;
 using VECTO3GUI.ViewModel.Interfaces;
 using VECTO3GUI.Util;
+using VECTO3GUI.Util.XML;
 
 namespace VECTO3GUI.ViewModel.Impl
 {
@@ -19,9 +22,6 @@ namespace VECTO3GUI.ViewModel.Impl
 		
 		private ICommand _saveComponentCommand;
 		private ICommand _resetComponentCommand;
-		private ICommand _saveJobCommand;
-		private ICommand _saveJobToCommand;
-		private ICommand _exitCommand;
 
 		#endregion
 
@@ -48,12 +48,7 @@ namespace VECTO3GUI.ViewModel.Impl
 		
 
 
-		public ICommand SaveJobCommand
-		{
-			get {
-				return _saveJobCommand ??
-						(_saveJobCommand = new RelayCommand(DoSaveJob));}
-		}
+
 		
 		protected override void DoSaveJob()
 		{
@@ -62,6 +57,23 @@ namespace VECTO3GUI.ViewModel.Impl
 				{ Component.Airdrag, _subModels[Component.Airdrag].SaveComponentData()},
 				{ Component.Auxiliaries, _subModels[Component.Auxiliaries].SaveComponentData()}
 			};
+
+
+			//var completedXml = new XMLCompletedBus();
+			//var xmlDoc =  completedXml.GenerateCompletedBusDocument(CompleteVehicleBusData);
+
+			//var writer = new XMLCompletedBusWriter();
+			//writer.WriteCompletedBusXml(filePath, xmlDoc);
+		}
+
+		protected override void DoCloseJob(Window window)
+		{
+			window?.Close();
+		}
+
+		protected override void DoSaveToJob()
+		{
+			
 		}
 
 		public ICommand SaveComponent

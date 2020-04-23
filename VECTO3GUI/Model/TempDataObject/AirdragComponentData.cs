@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Utils;
 using VECTO3GUI.ViewModel.Interfaces;
 
@@ -21,6 +22,8 @@ namespace VECTO3GUI.Model.TempDataObject
 		public SquareMeter TransferredCdxA { get; set; }
 		public SquareMeter DeclaredCdxA { get; set; }
 		public string AppVersion { get; set; }
+
+		public DigestData DigestValue { get; set; }
 
 		#endregion
 
@@ -51,6 +54,7 @@ namespace VECTO3GUI.Model.TempDataObject
 			viewModel.DeclaredCdxA = DeclaredCdxA;
 			viewModel.CdxA_0 = CdxA_0;
 			viewModel.TransferredCdxA = TransferredCdxA;
+			viewModel.DigestValue = DigestValue;
 		}
 
 		public void ClearValues(IAirdragViewModel viewModel)
@@ -63,6 +67,7 @@ namespace VECTO3GUI.Model.TempDataObject
 			viewModel.DeclaredCdxA = default(SquareMeter);
 			viewModel.CdxA_0 = default(SquareMeter);
 			viewModel.TransferredCdxA = default(SquareMeter);
+			viewModel.DigestValue = default(DigestData);
 		}
 
 		private void SetValues(IAirdragViewModel viewModel)
@@ -75,6 +80,7 @@ namespace VECTO3GUI.Model.TempDataObject
 			DeclaredCdxA = viewModel.DeclaredCdxA;
 			CdxA_0 = viewModel.CdxA_0;
 			TransferredCdxA = viewModel.TransferredCdxA;
+			DigestValue = viewModel.DigestValue;
 		}
 	}
 }

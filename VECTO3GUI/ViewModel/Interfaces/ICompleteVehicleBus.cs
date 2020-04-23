@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using TUGraz.VectoCommon.BusAuxiliaries;
+using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 
@@ -21,9 +22,10 @@ namespace VECTO3GUI.ViewModel.Interfaces
 		VehicleCode VehicleCode { get; set; }
 		Kilogram CurbMassChassis { get; set; }
 		Kilogram TechnicalPermissibleMaximumLadenMass { get; set; }
+		TankSystem? NgTankSystem { get; set; }
 		int NumberOfPassengersLowerDeck { get; set; }
 		int NumberOfPassengersUpperDeck { get; set; }
-		FloorType FloorType { get; set; }
+		bool LowEntry { get; set; }
 		Meter HeightIntegratedBody { get; set; }
 		Meter VehicleLength { get; set; }
 		Meter VehicleWidth { get; set; }

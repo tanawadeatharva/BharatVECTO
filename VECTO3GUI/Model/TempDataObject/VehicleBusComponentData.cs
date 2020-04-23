@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using TUGraz.VectoCommon.BusAuxiliaries;
+using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using VECTO3GUI.ViewModel.Impl;
@@ -26,9 +27,10 @@ namespace VECTO3GUI.Model.TempDataObject
 		public VehicleCode VehicleCode { get; set; }
 		public Kilogram CurbMassChassis { get; set; }
 		public Kilogram TechnicalPermissibleMaximumLadenMass { get; set; }
+		public TankSystem? NgTankSystem { get; set; }
 		public int NumberOfPassengersLowerDeck { get; set; }
 		public int NumberOfPassengersUpperDeck { get; set; }
-		public FloorType FloorType { get; set; }
+		public bool LowEntry { get; set; }
 		public Meter HeightIntegratedBody { get; set; }
 		public Meter VehicleLength { get; set; }
 		public Meter VehicleWidth { get; set; }
@@ -65,9 +67,10 @@ namespace VECTO3GUI.Model.TempDataObject
 			viewModel.VehicleCode = VehicleCode;
 			viewModel.CurbMassChassis = CurbMassChassis;
 			viewModel.TechnicalPermissibleMaximumLadenMass = TechnicalPermissibleMaximumLadenMass;
+			viewModel.NgTankSystem = NgTankSystem;
 			viewModel.NumberOfPassengersLowerDeck = NumberOfPassengersLowerDeck;
 			viewModel.NumberOfPassengersUpperDeck = NumberOfPassengersUpperDeck;
-			viewModel.FloorType = FloorType;
+			viewModel.LowEntry = LowEntry;
 			viewModel.HeightIntegratedBody = HeightIntegratedBody;
 			viewModel.VehicleLength = VehicleLength;
 			viewModel.VehicleWidth = VehicleWidth;
@@ -87,9 +90,10 @@ namespace VECTO3GUI.Model.TempDataObject
 			viewModel.VehicleCode = default(VehicleCode);
 			viewModel.CurbMassChassis = default(Kilogram);
 			viewModel.TechnicalPermissibleMaximumLadenMass = default(Kilogram);
+			viewModel.NgTankSystem = default(TankSystem);
 			viewModel.NumberOfPassengersLowerDeck = default(int);
 			viewModel.NumberOfPassengersUpperDeck = default(int);
-			viewModel.FloorType = default(FloorType);
+			viewModel.LowEntry = LowEntry;
 			viewModel.HeightIntegratedBody = default(Meter);
 			viewModel.VehicleLength = default(Meter);
 			viewModel.VehicleWidth = default(Meter);
@@ -110,9 +114,10 @@ namespace VECTO3GUI.Model.TempDataObject
 			VehicleCode = vehicleBus.VehicleCode;
 			CurbMassChassis = vehicleBus.CurbMassChassis;
 			TechnicalPermissibleMaximumLadenMass = vehicleBus.TechnicalPermissibleMaximumLadenMass;
+			NgTankSystem = vehicleBus.NgTankSystem ;
 			NumberOfPassengersLowerDeck = vehicleBus.NumberOfPassengersLowerDeck;
 			NumberOfPassengersUpperDeck = vehicleBus.NumberOfPassengersUpperDeck;
-			FloorType = vehicleBus.FloorType;
+			LowEntry = vehicleBus.LowEntry;
 			HeightIntegratedBody = vehicleBus.HeightIntegratedBody;
 			VehicleLength = vehicleBus.VehicleLength;
 			VehicleWidth = vehicleBus.VehicleWidth;

@@ -51,5 +51,33 @@ namespace TUGraz.VectoCommon.BusAuxiliaries {
 					return BusHVACSystemConfiguration.Unknown.ToString();
 			}
 		}
+
+		public static string GetXmlFormat(this BusHVACSystemConfiguration havacConfiguration)
+		{
+			switch (havacConfiguration)
+			{
+				case BusHVACSystemConfiguration.Configuration1:
+					return "1";
+				case BusHVACSystemConfiguration.Configuration2:
+					return "2";
+				case BusHVACSystemConfiguration.Configuration3:
+					return "3";
+				case BusHVACSystemConfiguration.Configuration4:
+					return "4";
+				case BusHVACSystemConfiguration.Configuration5:
+					return "5";
+				case BusHVACSystemConfiguration.Configuration6:
+					return "6";
+				case BusHVACSystemConfiguration.Configuration7:
+					return "7";
+				case BusHVACSystemConfiguration.Configuration8:
+					return "8";
+				case BusHVACSystemConfiguration.Configuration9:
+					return "9";
+				default:
+					return "0";
+			}
+		}
+
 	}
 }
