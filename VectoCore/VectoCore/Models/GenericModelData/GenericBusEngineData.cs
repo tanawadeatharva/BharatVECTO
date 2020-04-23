@@ -52,9 +52,9 @@ namespace TUGraz.VectoCore.Models.Declaration
 			}
 			var engineData = primaryVehicle.Components.EngineInputData;
 			var gearbox = primaryVehicle.Components.GearboxInputData;
-
+			var idleSpeed = VectoMath.Max(engineData.EngineModes[modeIdx].IdleSpeed, primaryVehicle.EngineIdleSpeed);
 			var engine = new CombustionEngineData {
-				IdleSpeed = engineData.EngineModes[modeIdx].IdleSpeed,
+				IdleSpeed = idleSpeed,
 				Displacement = engineData.Displacement,
 				WHRType = WHRType.None,
 				Inertia = DeclarationData.Engine.EngineInertia(engineData.Displacement, gearbox.Type),
@@ -80,7 +80,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 			engine.FullLoadCurves = fullLoadCurves;
 			
 
-			var fuel = GetCombustionEngineFuelData(primaryVehicle.Components.EngineInputData.EngineModes[modeIdx], fullLoadCurves[0]);
+			var fuel = GetCombustionEngineFuelData(primaryVehicle.Components.EngineInputData.EngineModes[modeIdx], fullLoadCurves[0], idleSpeed);
 			
 			
 
@@ -127,11 +127,11 @@ namespace TUGraz.VectoCore.Models.Declaration
 		}
 
 		private CombustionEngineFuelData GetCombustionEngineFuelData(IEngineModeDeclarationInputData engineMode,
-			EngineFullLoadCurve fullLoadCurve)
+			EngineFullLoadCurve fullLoadCurve, PerSecond idleSpeed)
 		{
 			var ressourceId = GetEngineRessourceId(engineMode);
 
-			var nIdle = engineMode.IdleSpeed.AsRPM;
+			var nIdle = idleSpeed.AsRPM;
 			var ratedSpeed = fullLoadCurve.RatedSpeed.AsRPM;
 			var maxTorque = fullLoadCurve.MaxTorque.Value();
 			
