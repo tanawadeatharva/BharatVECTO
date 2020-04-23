@@ -86,9 +86,19 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 
 		protected override TorqueConverterData CreateTorqueConverterData(ITorqueConverterDeclarationInputData torqueConverter, double ratio, CombustionEngineData engineData)
 		{
+			if (torqueConverter != null) {
+				return TorqueConverterDataReader.Create(
+					torqueConverter.TCData,
+					DeclarationData.TorqueConverter.ReferenceRPM, DeclarationData.TorqueConverter.MaxInputSpeed,
+					ExecutionMode.Engineering, ratio,
+					DeclarationData.TorqueConverter.CLUpshiftMinAcceleration,
+					DeclarationData.TorqueConverter.CCUpshiftMinAcceleration);
+			}
 			return _genericTorqueConverterData.CreateTorqueConverterData(ratio, engineData);
 		}
 
 		#endregion
+
+		
 	}
 }
