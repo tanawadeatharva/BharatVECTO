@@ -67,7 +67,7 @@ namespace TUGraz.VectoCore.OutputData.XML {
 				ComponentData(
 					modelData,
 					PrimaryVehicleRecordFile.ResultsInputData.Results
-											.Select(x => x.EnergyConsumption.Keys.Select(f => FuelData.Instance().Lookup(f)).ToList()).Distinct()
+											.Select(x => x.EnergyConsumption.Keys.Select(f => FuelData.Instance().Lookup(f, modelData.VehicleData.InputData.TankSystem)).ToList()).Distinct()
 											.ToList())
 			);
 			

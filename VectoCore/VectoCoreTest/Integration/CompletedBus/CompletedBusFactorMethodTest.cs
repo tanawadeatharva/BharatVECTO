@@ -958,7 +958,8 @@ namespace TUGraz.VectoCore.Tests.Integration.CompletedBus
 		
 		[TestCase(JobFile_Group41, 0, TestName = "PrintVectoRunData CompletedBus Group 41/32b CO/LL"),
 		 TestCase(JobFile_Group42, 1, TestName = "PrintVectoRunData CompletedBus Group 42/33b HU/RL"),
-		TestCase(@"TestData\Integration\Buses\FactorMethod\CompletedBus_41-32b_AT-P.vecto", 0, TestName = "PrintVectoRunData CompletedBus Group 41/32b AT-P CO/LL"),]
+		TestCase(@"TestData\Integration\Buses\FactorMethod\CompletedBus_41-32b_AT-P.vecto", 0, TestName = "PrintVectoRunData CompletedBus Group 41/32b AT-P CO/LL"),
+		TestCase(@"TestData\Integration\Buses\FactorMethod\CompletedBus_41-32b_ES-AUX.vecto", 0, TestName = "PrintVectoRunData CompletedBus Group 41/32b ES-Aux CO/LL"),]
 		public void PrintModelParametersCompletedBus(string jobFile, int pairIdx)
 		{
 			var runs = GetVectoRunData(jobFile);
@@ -977,7 +978,7 @@ namespace TUGraz.VectoCore.Tests.Integration.CompletedBus
 		TestCase(@"TestData\Integration\Buses\FactorMethod\SingleBus_41-32b.vecto", 0, TestName = "PrintVectoRunData SingleBus Group 41/32b CO/LL"),
 		TestCase(@"TestData\Integration\Buses\FactorMethod\SingleBus_42-33b.vecto", 1, TestName = "PrintVectoRunData SingleBus Group 42/33b HU/RL"),
 		TestCase(@"TestData\Integration\Buses\FactorMethod\primary_heavyBus group41_nonSmart_AT-P.xml", 12, TestName = "PrintVectoRunData PrimaryBus Group41 AT-P SD CO/LL"),
-		TestCase(@"TestData\Integration\Buses\vecto_vehicle-primary_heavyBus_ESS_electricFanSTP.xml", 13, TestName = "PrintVectoRunData electric STP/Fan ESS IU/RL"),
+		TestCase(@"TestData\Integration\Buses\FactorMethod\vecto_vehicle-primary_heavyBus_ESS_electricFanSTP.xml", 13, TestName = "PrintVectoRunData electric STP/Fan ESS IU/RL"),
 			]
 		public void PrintModelParametersPrimaryBus(string jobFile, int runIdx)
 		{
