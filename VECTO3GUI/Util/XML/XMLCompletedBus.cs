@@ -4,6 +4,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml;
 using System.Xml.Linq;
 using Castle.Core.Internal;
 using TUGraz.IVT.VectoXML.Writer;
@@ -84,7 +85,7 @@ namespace VECTO3GUI.Util.XML
 					new XElement(_v26 + XMLNames.Component_ManufacturerAddress, vehicleData?.ManufacturerAddress),
 					new XElement(_v26 + XMLNames.Component_Model, vehicleData.Model),
 					new XElement(_v26 + XMLNames.Vehicle_VIN, vehicleData.VIN),
-					new XElement(_v26 + XMLNames.Component_Date, vehicleData.Date.ToString("s") + "Z"),
+					new XElement(_v26 + XMLNames.Component_Date, XmlConvert.ToString(DateTime.Now, XmlDateTimeSerializationMode.Utc)),
 					new XElement(_v26 + XMLNames.Vehicle_LegislativeClass, vehicleData.LegislativeClass.GetLabel()),
 					new XElement(_v26 + XMLNames.Vehicle_RegisteredClass, vehicleData.RegisteredClass.GetLabel()),
 					new XElement(_v26 + XMLNames.Vehicle_VehicleCode, vehicleData.VehicleCode.GetLabel()),
