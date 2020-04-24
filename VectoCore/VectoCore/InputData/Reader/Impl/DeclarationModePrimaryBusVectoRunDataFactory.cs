@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
@@ -12,11 +13,11 @@ using TUGraz.VectoCore.OutputData;
 
 namespace TUGraz.VectoCore.InputData.Reader.Impl
 {
-	public class DeclarationModeBusVectoRunDataFactory : AbstractDeclarationVectoRunDataFactory
+	public class DeclarationModePrimaryBusVectoRunDataFactory : AbstractDeclarationVectoRunDataFactory
 	{
 		protected DeclarationDataAdapterPrimaryBus _dao = new DeclarationDataAdapterPrimaryBus();
 
-		public DeclarationModeBusVectoRunDataFactory(IDeclarationInputDataProvider dataProvider, IDeclarationReport report) :
+		public DeclarationModePrimaryBusVectoRunDataFactory(IDeclarationInputDataProvider dataProvider, IDeclarationReport report) :
 			base(dataProvider, report) { }
 
 		#region Overrides of AbstractDeclarationVectoRunDataFactory
@@ -77,7 +78,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 
 
 		protected override VectoRunData CreateVectoRunData(
-			IVehicleDeclarationInputData vehicle, int modeIdx, Mission mission, KeyValuePair<LoadingType, Kilogram> loading)
+			IVehicleDeclarationInputData vehicle, int modeIdx, Mission mission, KeyValuePair<LoadingType, Tuple<Kilogram, double?>> loading)
 		{
 			var engine = vehicle.Components.EngineInputData;
 			var engineModes = engine.EngineModes;

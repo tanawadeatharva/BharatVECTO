@@ -251,6 +251,10 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 		public Meter Length { get { return VehicleData.Length; } }
 		public Meter Width { get { return VehicleData.Width; } }
 		public Meter EntranceHeight { get { return null; } }
+		public ConsumerTechnology DoorDriveTechnology
+		{
+			get { return VehicleData.DoorDriveTechnology; }
+		}
 
 		IVehicleComponentsEngineering IVehicleEngineeringInputData.Components
 		{
@@ -419,7 +423,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 		}
 
 		public RegistrationClass RegisteredClass { get { return RegistrationClass.unknown; } }
-		public int NuberOfPassengersUpperDeck { get { return 0; } }
+		public int NumberOfPassengersUpperDeck { get { return 0; } }
 		public int NumberOfPassengersLowerDeck { get { return 0; } }
 		public VehicleCode VehicleCode { get { return VehicleCode.NOT_APPLICABLE; } }
 		public FloorType FloorType { get { return VehicleData.FloorType; } }

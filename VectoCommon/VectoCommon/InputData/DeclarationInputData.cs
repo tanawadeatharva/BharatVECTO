@@ -165,7 +165,7 @@ namespace TUGraz.VectoCommon.InputData
 
 		RegistrationClass RegisteredClass { get; }
 
-		int NuberOfPassengersUpperDeck { get; }
+		int NumberOfPassengersUpperDeck { get; }
 
 		int NumberOfPassengersLowerDeck { get; }
 
@@ -181,6 +181,8 @@ namespace TUGraz.VectoCommon.InputData
 		Meter Width { get; }
 
 		Meter EntranceHeight { get; }
+
+		ConsumerTechnology DoorDriveTechnology { get; }
 
 		// components
 
@@ -421,6 +423,8 @@ namespace TUGraz.VectoCommon.InputData
 		/// cf. VECTO Input Parameters.xlsx
 		/// </summary>
 		Newton TyreTestLoad { get; }
+
+		string FuelEfficiencyClass { get; }
 	}
 
 	public interface IGearboxDeclarationInputData : IComponentInputData
@@ -736,7 +740,6 @@ namespace TUGraz.VectoCommon.InputData
 	{
 		ConsumerTechnology AirsuspensionControl { get; }
 		ConsumerTechnology AdBlueDosing { get; }
-		ConsumerTechnology DoorDriveTechnology { get; }
 	}
 
 	public interface IHVACBusAuxiliariesDeclarationData
@@ -774,18 +777,21 @@ namespace TUGraz.VectoCommon.InputData
 	{
 		string ResultStatus { get; }
 
-		string VehicleGroup { get; }
+		VehicleClass VehicleGroup { get; }
 
-		string Mission { get; }
+		MissionType Mission { get; }
 
 		ISimulationParameter SimulationParameter { get; }
+
+		Dictionary<FuelType, JoulePerMeter> EnergyConsumption { get; }
+
 	}
 
 	public interface ISimulationParameter
 	{
 		Kilogram TotalVehicleMass { get; }
 		Kilogram Payload { get; }
-		int PassengerCount { get; }
+		double PassengerCount { get; }
 		string FuelMode { get; }
 	}
 

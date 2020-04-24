@@ -30,6 +30,7 @@ namespace VECTO3GUI.ViewModel.Impl {
 		public string Dimension { get { return ViewModel.Dimension; } }
 		public double RollResistanceCoefficient { get { return ViewModel.RollingResistanceCoefficient; } }
 		public Newton TyreTestLoad { get { return ViewModel.FzISO; } }
+		public string FuelEfficiencyClass { get; }
 
 		#endregion
 	}

@@ -179,6 +179,21 @@ namespace TUGraz.VectoCore.OutputData.XML
 			}
 		}
 
+		protected override void OutputReports()
+		{
+			throw new NotImplementedException();
+		}
+
+		protected override void GenerateReports()
+		{
+			throw new NotImplementedException();
+		}
+
+		protected override void WriteResult(ResultEntry result)
+		{
+			throw new NotImplementedException();
+		}
+
 		private void GenerateResults()
 		{
 			//var vtpResult = Missions.First().Value.FirstOrDefault(x => x.Key == MissionType.VerificationTest).Value.ResultEntry

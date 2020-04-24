@@ -4,6 +4,6 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.Interfaces.DownstreamModules.El
 	public interface ISimpleBattery {
 		double SOC { get; }
 		WattSecond Capacity { get; }
-		void Request(Watt watt, Second seconds);
+		void Request(WattSecond energy);
 	}
 }

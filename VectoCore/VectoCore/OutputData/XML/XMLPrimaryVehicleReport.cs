@@ -72,7 +72,8 @@ namespace TUGraz.VectoCore.OutputData.XML
 						RootNS + XMLNames.Report_DataWrap,
 						new XAttribute(xsi + "type", "PrimaryVehicleHeavyBusDataType"),
 						VehiclePart,
-						new XElement(tns + XMLNames.Report_ResultData_Signature, resultSignature),
+						InputDataIntegrity,
+						new XElement(tns + "ManufacturerRecordSignature", resultSignature),
 						results,
 						GetApplicationInfo())
 				)
@@ -127,6 +128,9 @@ namespace TUGraz.VectoCore.OutputData.XML
 				GetTorqueLimits(modelData),
 				VehicleComponents(modelData, fuelModes)
 			);
+
+			InputDataIntegrity = new XElement(tns + XMLNames.Report_InputDataSignature,
+											modelData.InputDataHash == null ? XMLHelper.CreateDummySig(di) : new XElement(modelData.InputDataHash));
 		}
 
 		private XElement GetADAS(VehicleData.ADASData adasData)
@@ -256,7 +260,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 									? new XElement(tns + XMLNames.Gearbox_Gears_MaxTorque, x.Value.MaxTorque.ToXMLFormat(0))
 									: null,
 								x.Value.MaxSpeed != null
-									? new XElement(tns + XMLNames.Gearbox_Gear_MaxSpeed, x.Value.MaxSpeed.ToXMLFormat(0))
+									? new XElement(tns + XMLNames.Gearbox_Gear_MaxSpeed, x.Value.MaxSpeed.AsRPM.ToXMLFormat(0))
 									: null)))
 			);
 			return retVal;
@@ -292,7 +296,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 			var retVal = WrapComponent(
 				XMLNames.Component_Engine, "EngineDataPIFType",
 				GetCommonDescription(engineData),
-				new XElement(tns + XMLNames.Engine_Displacement, engineData.Displacement.ConvertToCubicDeziMeter().ToXMLFormat(0)),
+				new XElement(tns + XMLNames.Engine_Displacement, engineData.Displacement.ConvertToCubicCentiMeter().ToXMLFormat(0)),
 				new XElement(tns + XMLNames.Engine_RatedSpeed, engineData.RatedSpeedDeclared.AsRPM.ToXMLFormat(0)),
 				new XElement(tns + XMLNames.Engine_RatedPower, engineData.RatedPowerDeclared.ToXMLFormat(0)),
 				new XElement(tns + XMLNames.Engine_MaxTorque, engineData.InputData.MaxTorqueDeclared.ToXMLFormat(0)),
@@ -381,12 +385,12 @@ namespace TUGraz.VectoCore.OutputData.XML
 						tns + XMLNames.Report_ResultEntry_SimulationParameters,
 						new XElement(
 							tns + XMLNames.Report_ResultEntry_TotalVehicleMass,
-							XMLHelper.ValueAsUnit(resultEntry.Payload, XMLNames.Unit_kg, 0)),
+							XMLHelper.ValueAsUnit(resultEntry.TotalVehicleMass, XMLNames.Unit_kg, 2)),
 						new XElement(
-							tns + XMLNames.Report_Result_Payload, XMLHelper.ValueAsUnit(resultEntry.Payload, XMLNames.Unit_kg, 0)),
+							tns + XMLNames.Report_Result_Payload, XMLHelper.ValueAsUnit(resultEntry.Payload, XMLNames.Unit_kg, 2)),
 						new XElement(
 							tns + XMLNames.Report_ResultEntry_PassengerCount,
-							resultEntry.PassengerCount),
+							resultEntry.PassengerCount?.ToXMLFormat(2) ?? "NaN"),
 						new XElement(
 							tns + XMLNames.Report_Result_FuelMode,
 							resultEntry.FuelData.Count > 1
@@ -425,7 +429,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 						new XAttribute(XMLNames.Report_Results_Unit_Attr, "MJ/km"),
 						(result.FuelConsumptionFinal[fuel.FuelType] * fuel.LowerHeatingValueVecto /
 						result.Distance.ConvertToKiloMeter() / 1e6)
-						.Value().ToMinSignificantDigits(3, 1)));
+						.Value().ToMinSignificantDigits(5, 5)));
 				retVal.Add(fcResult);
 			}
 

@@ -86,6 +86,7 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.Electric
 
 		public double PhaseIdleTractionOn { get; set; }
 		public bool Bonus { get; set; }
+		public bool DefaultConsumer { get; set; }
 
 		//public Volt PowerNetVoltage
 		//{

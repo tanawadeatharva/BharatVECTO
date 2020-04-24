@@ -282,7 +282,7 @@ namespace VECTO3GUI.ViewModel.Impl
 			TechnicalPermissibleMaximumLadenMass = vehicle.GrossVehicleMassRating;
 			NgTankSystem = vehicle.TankSystem;
 			NumberOfPassengersLowerDeck = vehicle.NumberOfPassengersLowerDeck;
-			NumberOfPassengersUpperDeck = vehicle.NuberOfPassengersUpperDeck;
+			NumberOfPassengersUpperDeck = vehicle.NumberOfPassengersUpperDeck;
 			LowEntry = vehicle.FloorType == FloorType.LowFloor; 
 			HeightIntegratedBody = vehicle.Height;
 			VehicleLength = vehicle.Length;

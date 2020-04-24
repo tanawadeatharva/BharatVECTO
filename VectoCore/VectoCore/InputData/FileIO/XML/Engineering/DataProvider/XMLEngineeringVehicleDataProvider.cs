@@ -165,7 +165,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering.DataProvider
 		}
 
 		public virtual RegistrationClass RegisteredClass { get { return RegistrationClass.unknown;} }
-		public virtual int NuberOfPassengersUpperDeck { get { return 0; } }
+		public virtual int NumberOfPassengersUpperDeck { get { return 0; } }
 		public virtual int NumberOfPassengersLowerDeck { get { return 0; } }
 		public virtual VehicleCode VehicleCode { get { return VehicleCode.NOT_APPLICABLE; } }
 		public virtual FloorType FloorType { get { return FloorType.Unknown; } }
@@ -174,6 +174,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering.DataProvider
 
 		public virtual Meter Width { get { return null; } }
 		public virtual Meter EntranceHeight { get { return null; } }
+		public ConsumerTechnology DoorDriveTechnology { get { return ConsumerTechnology.Unknown; } }
 
 		IVehicleComponentsDeclaration IVehicleDeclarationInputData.Components
 		{

@@ -38,7 +38,6 @@ using TUGraz.VectoCore.Models.BusAuxiliaries.Interfaces;
 using TUGraz.VectoCore.Models.Simulation;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.DataBus;
-using TUGraz.VectoCore.Models.SimulationComponent.Data.Engine;
 using TUGraz.VectoCore.OutputData;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
@@ -55,6 +54,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		private double EngineStopStartUtilityFactor;
 		private bool SmartElectricSystem;
+		private IAuxiliaryConfig AuxCfg;
 
 		//private readonly FuelConsumptionAdapter _fcMapAdapter;
 
@@ -68,7 +68,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			PreviousState = new BusAuxState { AngularSpeed = container.EngineIdleSpeed };
 
 			AdditionalAux = additionalAux;
-
+			AuxCfg = auxiliaryConfig;
 			DataBus = container;
 
 			var tmpAux = new BusAuxiliaries.BusAuxiliaries(container.ModalData);
@@ -107,6 +107,12 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		{
 			CurrentState.AngularSpeed = angularSpeed;
 			CurrentState.dt = dt;
+
+			var signals = Auxiliaries.Signals;
+			// trick bus auxiliaries that ice is on - all auxiliaries are considered. ESS is corrected in post-processing
+			signals.EngineStopped = false; 
+			signals.VehicleStopped = false; 
+
 			CurrentState.PowerDemand = GetBusAuxPowerDemand(absTime, dt, torquePowerTrain, torqueEngine, angularSpeed, dryRun);
 
 			var avgAngularSpeed = (CurrentState.AngularSpeed + PreviousState.AngularSpeed) / 2.0;
@@ -115,7 +121,23 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		public Watt PowerDemandEngineOn(Second time, Second simulationInterval, PerSecond engineSpeed)
 		{
-			return GetBusAuxPowerDemand(time, simulationInterval, 0.SI<NewtonMeter>(), 0.SI<NewtonMeter>(), engineSpeed, true);
+			var signals = Auxiliaries.Signals;
+			signals.EngineStopped = false; 
+			signals.VehicleStopped = false;
+			var retVal =  GetBusAuxPowerDemand(time, simulationInterval, 0.SI<NewtonMeter>(), 0.SI<NewtonMeter>(), engineSpeed, true);
+
+			if (!SmartElectricSystem) {
+				return retVal;
+			}
+
+			var batteryPwr = Auxiliaries.BatterySOC * AuxCfg.ElectricalUserInputsConfig.ElectricStorageCapacity / simulationInterval;
+			var esSum = Auxiliaries.ElectricPowerConsumerSum;
+			//if (batteryPwr < esSum) {
+				retVal += (esSum ) / AuxCfg.ElectricalUserInputsConfig.AlternatorGearEfficiency /
+						AuxCfg.ElectricalUserInputsConfig.AlternatorMap.GetEfficiency(0.RPMtoRad(), 0.SI<Ampere>());
+			//}
+
+			return retVal;
 		}
 
 		public Watt PowerDemandEngineOff(Second absTime, Second dt)
@@ -124,39 +146,70 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			AdditionalAux = null;
 			CurrentState.AngularSpeed = DataBus.EngineIdleSpeed;
 			CurrentState.dt = dt;
+
+			var signals = Auxiliaries.Signals;
+
+			// set internal state of power demand as if ICE is on - multiplied by (1-ESS_UF) 
+			signals.EngineStopped = false;
+			signals.VehicleStopped = false;
+
 			var busAuxPowerDemand  = GetBusAuxPowerDemand(
 				absTime, dt, 0.SI<NewtonMeter>(), 0.SI<NewtonMeter>(), DataBus.EngineIdleSpeed);
 			AdditionalAux = conventionalAux;
 
 			CurrentState.PowerDemand = ((AdditionalAux?.PowerDemandEngineOn(absTime, dt, DataBus.EngineIdleSpeed) ?? 0.SI<Watt>()) +
 										busAuxPowerDemand) * (1 - EngineStopStartUtilityFactor);
+			//CurrentState.ESPowerGeneratedICE_On = Auxiliaries.ElectricPowerGenerated;
+			//CurrentState.ESPowerMech = Auxiliaries.ElectricPowerDemandMech;
+			// 
+			signals.EngineStopped = !DataBus.IgnitionOn;
+			signals.VehicleStopped = DataBus.VehicleStopped;
 
-			return EngineStopStartUtilityFactor * busAuxPowerDemand + AdditionalAux?.PowerDemandEngineOff(absTime, dt);
+			busAuxPowerDemand = GetBusAuxPowerDemand(
+				absTime, dt, 0.SI<NewtonMeter>(), 0.SI<NewtonMeter>(), DataBus.EngineIdleSpeed);
+			AdditionalAux = conventionalAux;
+
+			return EngineStopStartUtilityFactor * (busAuxPowerDemand + AdditionalAux?.PowerDemandEngineOff(absTime, dt));
 		}
 
 
-		protected internal virtual void DoWriteModalResults(IModalDataContainer container)
+		protected internal virtual void DoWriteModalResults(Second absTime, Second dt, IModalDataContainer container)
 		{
-			
-			// cycleStep has to be called here and not in DoCommit, write is called before Commit!
-			Auxiliaries.CycleStep(CurrentState.dt);
-
 			var essUtilityFactor = 1.0;
 			if (!DataBus.IgnitionOn) {
 				essUtilityFactor = 1 - EngineStopStartUtilityFactor;
 			}
 
+			//var signals = Auxiliaries.Signals;
+			//signals.EngineStopped = !DataBus.IgnitionOn;
+			//signals.VehicleStopped = DataBus.VehicleStopped;
+
+			// cycleStep has to be called here and not in DoCommit, write is called before Commit!
+			var oldSOC = Auxiliaries.BatterySOC;
+			Auxiliaries.CycleStep(CurrentState.dt, EngineStopStartUtilityFactor);
+			var newSOC = Auxiliaries.BatterySOC;
+
 			//CurrentState.TotalFuelConsumption = Auxiliaries.TotalFuel;
 			container[ModalResultField.P_aux] = CurrentState.PowerDemand;
 
-			container[ModalResultField.P_busAux_ES_HVAC] = Auxiliaries.HVACElectricalPowerConsumer;
-			container[ModalResultField.P_busAux_ES_other] = Auxiliaries.ElectricPowerConsumer;
-			container[ModalResultField.P_busAux_ES_consumer_sum] = Auxiliaries.ElectricPowerConsumerSum;
+			container[ModalResultField.P_busAux_ES_HVAC] = essUtilityFactor * Auxiliaries.HVACElectricalPowerConsumer;
+			container[ModalResultField.P_busAux_ES_other] = essUtilityFactor * Auxiliaries.ElectricPowerConsumer;
+			container[ModalResultField.P_busAux_ES_consumer_sum] = essUtilityFactor * Auxiliaries.ElectricPowerConsumerSum;
 			container[ModalResultField.P_busAux_ES_sum_mech] = essUtilityFactor * Auxiliaries.ElectricPowerDemandMech;
 			container[ModalResultField.P_busAux_ES_generated] = essUtilityFactor * Auxiliaries.ElectricPowerGenerated;
 
 			if (SmartElectricSystem) {
 				container[ModalResultField.BatterySOC] = Auxiliaries.BatterySOC * 100.0;
+
+				container[ModalResultField.P_busAux_ES_generated] = essUtilityFactor * Auxiliaries.ElectricPowerConsumerSum;
+				container[ModalResultField.P_busAux_ES_sum_mech] = essUtilityFactor * Auxiliaries.ElectricPowerConsumerSum /
+																	AuxCfg.ElectricalUserInputsConfig.AlternatorGearEfficiency /
+																	AuxCfg.ElectricalUserInputsConfig.AlternatorMap.GetEfficiency(0.RPMtoRad(), 0.SI<Ampere>());
+				
+				var batteryPwr = (oldSOC - newSOC) * AuxCfg.ElectricalUserInputsConfig.ElectricStorageCapacity / dt;
+				if (batteryPwr.IsSmaller(Auxiliaries.ElectricPowerConsumerSum * EngineStopStartUtilityFactor)) {
+					// add to P_aux_ES
+				}
 			}
 
 			container[ModalResultField.Nl_busAux_PS_consumer] = Auxiliaries.PSDemandConsumer;
@@ -167,7 +220,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			container[ModalResultField.P_busAux_PS_generated_alwaysOn] = essUtilityFactor * Auxiliaries.PSPowerCompressorAlwaysOn;
 			container[ModalResultField.P_busAux_PS_generated_dragOnly] = essUtilityFactor * Auxiliaries.PSPowerCompressorDragOnly;
 
-			container[ModalResultField.P_busAux_HVACmech_consumer] = Auxiliaries.HVACMechanicalPowerConsumer;
+			container[ModalResultField.P_busAux_HVACmech_consumer] = essUtilityFactor * Auxiliaries.HVACMechanicalPowerConsumer;
 			container[ModalResultField.P_busAux_HVACmech_gen] = essUtilityFactor *  Auxiliaries.HVACMechanicalPowerGenerated;
 		}
 
@@ -211,19 +264,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			signals.Idle = DataBus.VehicleStopped;
 			signals.InNeutral = DataBus.Gear == 0;
 
+			
+
 			return Auxiliaries.AuxiliaryPowerAtCrankWatts + signals.PreExistingAuxPower;
-		}
-
-		protected class FuelConsumptionAdapter : IFuelConsumptionMap
-		{
-			protected internal FuelConsumptionMap FcMap;
-
-			public bool AllowExtrapolation { get; set; }
-
-			public KilogramPerSecond GetFuelConsumptionValue(NewtonMeter torque, PerSecond angularVelocity)
-			{
-				return FcMap.GetFuelConsumption(torque, angularVelocity, AllowExtrapolation).Value;
-			}
 		}
 
 		public class BusAuxState

@@ -2,7 +2,10 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Runtime.InteropServices.WindowsRuntime;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using Ninject;
 using Ninject.Planning.Bindings.Resolvers;
 using NUnit.Framework;
@@ -13,6 +16,7 @@ using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.InputData.FileIO.JSON;
+using TUGraz.VectoCore.InputData.FileIO.XML;
 using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.Impl;
@@ -22,6 +26,7 @@ using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter;
 using TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.HVAC;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Engine;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox;
+using TUGraz.VectoCore.OutputData;
 using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Tests.Integration.CompletedBus
@@ -30,6 +35,14 @@ namespace TUGraz.VectoCore.Tests.Integration.CompletedBus
 	[TestFixture()]
 	public class CompletedBusFactorMethodTest
 	{
+		const string JobFile_Group41 = @"TestData\Integration\Buses\FactorMethod\CompletedBus_41-32b.vecto";
+		const string JobFile_Group42 = @"TestData\Integration\Buses\FactorMethod\CompletedBus_42-33b.vecto";
+
+		const string JobFilePrimary41 = @"TestData\Integration\Buses\FactorMethod\primary_heavyBus group41_nonSmart.xml";
+		const string JobFilePrimary42 = @"TestData\Integration\Buses\FactorMethod\primary_heavyBus group42_SmartPS.xml";
+
+		protected IXMLInputDataReader xmlInputReader;
+
 		class RelatedRun
 		{
 			public VectoRunData VectoRunDataSpezificBody { get; set; }
@@ -49,6 +62,8 @@ namespace TUGraz.VectoCore.Tests.Integration.CompletedBus
 
 			relatedRuns = new List<RelatedRun>();
 
+			var kernel = new StandardKernel(new VectoNinjectModule());
+			xmlInputReader = kernel.Get<IXMLInputDataReader>();
 			//SetBusSegments();
 		}
 
@@ -85,10 +100,8 @@ namespace TUGraz.VectoCore.Tests.Integration.CompletedBus
 		[TestCase()]
 		public void TestCompletedBus()
 		{
-			var relativeJobPath = @"TestData\Integration\Buses\FactorMethod\CompletedBus.vecto";
-
-			var writer = new FileOutputWriter(Path.Combine(Path.GetDirectoryName(relativeJobPath), Path.GetFileName(relativeJobPath)));
-			var inputData = JSONInputDataFactory.ReadJsonJob(relativeJobPath);
+			var writer = new FileOutputWriter(Path.Combine(Path.GetDirectoryName(JobFile_Group41), Path.GetFileName(JobFile_Group41)));
+			var inputData = JSONInputDataFactory.ReadJsonJob(JobFile_Group41);
 
 			var factory = new SimulatorFactory(ExecutionMode.Declaration, inputData, writer)
 			{
@@ -116,7 +129,7 @@ namespace TUGraz.VectoCore.Tests.Integration.CompletedBus
 				AssertAngledriveData(relatedRuns[i]);
 				AssertAngledriveData(relatedRuns[i]);
 				AssertAuxiliaryData(relatedRuns[i]);
-				AssertElectricalUserInputConfig(relatedRuns[i]);
+				AssertElectricalUserInputConfig(relatedRuns[i], i);
 				AssertPneumaticUserInputsConfig(relatedRuns[i]);
 				AssertPneumaticConsumerDemand(relatedRuns[i]);
 				AssertSSMBusParameters(relatedRuns[i], i);
@@ -158,22 +171,23 @@ namespace TUGraz.VectoCore.Tests.Integration.CompletedBus
 
 		private void AssertLoading(Kilogram genericLoading, Kilogram specificLoading, int index)
 		{
-			switch (index)
-			{
+			switch (index) {
+				// generic loading values shall match expected values of primary vehicle for IU and CO cycle
+				// see TestPrimaryBusGroup41Test
 				case 0:
-					Assert.AreEqual(5051.2950, genericLoading.Value(), 1e-4);
-					Assert.AreEqual(2309.4738, specificLoading.Value(), 1e-4);
+					Assert.AreEqual(1720.6992, genericLoading.Value(), 1e-4);
+					Assert.AreEqual(1693.6141, specificLoading.Value(), 1e-4);
 					break;
 				case 1:
-					Assert.AreEqual(5051.2950, genericLoading.Value(), 1e-4);
+					Assert.AreEqual(4301.748, genericLoading.Value(), 1e-4);
 					Assert.AreEqual(2130, specificLoading.Value(), 1e-0);
 					break;
 				case 2:
-					Assert.AreEqual(3367.53, genericLoading.Value(), 1e-2);
-					Assert.AreEqual(1539.6492, specificLoading.Value(), 1e-4);
+					Assert.AreEqual(1094.9904, genericLoading.Value(), 1e-2);
+					Assert.AreEqual(1077.7544, specificLoading.Value(), 1e-4);
 					break;
 				case 3:
-					Assert.AreEqual(3367.53, genericLoading.Value(), 1e-2);
+					Assert.AreEqual(2737.476, genericLoading.Value(), 1e-2);
 					Assert.AreEqual(2130.0, specificLoading.Value(), 1e-0);
 					break;
 			}
@@ -231,10 +245,10 @@ namespace TUGraz.VectoCore.Tests.Integration.CompletedBus
 			var genericAirdragData = relatedRun.VectoRunDataGenericBody.AirdragData;
 			var specificAirdragData = relatedRun.VectoRunDataSpezificBody.AirdragData;
 
-			var genericDragArea = 5.2.SI<SquareMeter>();
+			var genericDragArea = 4.6.SI<SquareMeter>();
 			var specificDragArea = 6.34.SI<SquareMeter>();
 
-			var genericVehicleHeight = 3.7.SI<Meter>();
+			var genericVehicleHeight = 3.45.SI<Meter>();
 			var specificVehicleHeight = 3.0.SI<Meter>() + 0.30.SI<Meter>();
 
 			var genericCrosswind = GetCrosswindCorrection("CoachBus", genericDragArea, genericVehicleHeight);
@@ -282,7 +296,7 @@ namespace TUGraz.VectoCore.Tests.Integration.CompletedBus
 			Assert.AreEqual(700 * Constants.RPMToRad, genericEngine.IdleSpeed.Value(), 1e-9);
 			Assert.AreEqual(genericEngine.IdleSpeed, specificEngine.IdleSpeed);
 
-			Assert.AreEqual(8.SI<CubicMeter>().Value() * 1E-6, genericEngine.Displacement.Value());
+			Assert.AreEqual(7700.SI(Unit.SI.Cubic.Centi.Meter).Value(), genericEngine.Displacement.Value());
 			Assert.AreEqual(genericEngine.Displacement, specificEngine.Displacement);
 
 			Assert.AreEqual(
@@ -371,12 +385,12 @@ namespace TUGraz.VectoCore.Tests.Integration.CompletedBus
 
 		private void AssertGears(IList<GearData> gears)
 		{
-			AssertGear(3.364, 1900.SI<NewtonMeter>(), 262, gears[0]);
-			AssertGear(1.909, 1900.SI<NewtonMeter>(), 262, gears[1]);
-			AssertGear(1.421, null, 262, gears[2]);
-			AssertGear(1.000, null, 262, gears[3]);
-			AssertGear(0.720, null, 262, gears[4]);
-			AssertGear(0.615, null, 262, gears[5]);
+			AssertGear(3.364, 1900.SI<NewtonMeter>(), 2500, gears[0]);
+			AssertGear(1.909, 1900.SI<NewtonMeter>(), 2500, gears[1]);
+			AssertGear(1.421, null, 2500, gears[2]);
+			AssertGear(1.000, null, 2500, gears[3]);
+			AssertGear(0.720, null, 2500, gears[4]);
+			AssertGear(0.615, null, 2500, gears[5]);
 		}
 
 		private void AssertGear(double ratio, NewtonMeter maxTorque, double maxSpeed, GearData gear)
@@ -451,18 +465,18 @@ namespace TUGraz.VectoCore.Tests.Integration.CompletedBus
 		{
 			Assert.AreEqual(12, lossMap._entries.Count);
 
-			AssertLossmapEntry(0, -1491.6797, 46.7818, lossMap._entries[0]);
+			AssertLossmapEntry(0, -75337.8336, 1585.2433, lossMap._entries[0]);
 			AssertLossmapEntry(0, -22.2920, 16.1695, lossMap._entries[1]);
 			AssertLossmapEntry(0, 54.6311, 16.1695, lossMap._entries[2]);
-			AssertLossmapEntry(0, 1585.2433, 46.7818, lossMap._entries[3]);
-			AssertLossmapEntry(325, -1491.6797, 46.7818, lossMap._entries[4]);
+			AssertLossmapEntry(0, 78508.3203, 1585.2433, lossMap._entries[3]);
+			AssertLossmapEntry(325, -75337.8336, 1585.2433, lossMap._entries[4]);
 			AssertLossmapEntry(325, -22.2920, 16.1695, lossMap._entries[5]);
 			AssertLossmapEntry(325, 54.6311, 16.1695, lossMap._entries[6]);
-			AssertLossmapEntry(325, 1585.2433, 46.7818, lossMap._entries[7]);
-			AssertLossmapEntry(32500, -1110.9105, 427.5510, lossMap._entries[8]);
+			AssertLossmapEntry(325, 78508.3203, 1585.2433, lossMap._entries[7]);
+			AssertLossmapEntry(32500, -74957.0644, 1966.0126, lossMap._entries[8]);
 			AssertLossmapEntry(32500, 358.4772, 396.9388, lossMap._entries[9]);
 			AssertLossmapEntry(32500, 435.4003, 396.9388, lossMap._entries[10]);
-			AssertLossmapEntry(32500, 1966.0126, 427.5510, lossMap._entries[11]);
+			AssertLossmapEntry(32500, 78889.0895, 1966.0126, lossMap._entries[11]);
 
 		}
 
@@ -509,7 +523,7 @@ namespace TUGraz.VectoCore.Tests.Integration.CompletedBus
 
 		#region Bus Auxiliary Electrical UserInput Config Asserts
 
-		private void AssertElectricalUserInputConfig(RelatedRun relatedRun)
+		private void AssertElectricalUserInputConfig(RelatedRun relatedRun, int idx)
 		{
 			var genericElectric = 
 				relatedRun.VectoRunDataGenericBody.BusAuxiliaries.ElectricalUserInputsConfig;
@@ -522,11 +536,13 @@ namespace TUGraz.VectoCore.Tests.Integration.CompletedBus
 			Assert.AreEqual(null, genericElectric.MaxAlternatorPower);
 			Assert.AreEqual(genericElectric.MaxAlternatorPower, specificElectric.MaxAlternatorPower);
 
-			Assert.AreEqual(null, genericElectric.ElectricStorageCapacity);
+			Assert.AreEqual(0.SI<WattSecond>(), genericElectric.ElectricStorageCapacity);
 			Assert.AreEqual(genericElectric.ElectricStorageCapacity, specificElectric.ElectricStorageCapacity);
 
 			Assert.AreEqual(0.7 ,genericElectric.AlternatorMap.GetEfficiency(0.RPMtoRad(),0.0.SI<Ampere>()));
-			Assert.AreEqual(genericElectric.AlternatorMap, specificElectric.AlternatorMap); 
+			Assert.AreEqual(
+				genericElectric.AlternatorMap.GetEfficiency(1000.RPMtoRad(), 100.SI<Ampere>()),
+				specificElectric.AlternatorMap.GetEfficiency(1000.RPMtoRad(), 100.SI<Ampere>())); 
 
 			Assert.AreEqual(Constants.BusAuxiliaries.ElectricSystem.AlternatorGearEfficiency, genericElectric.AlternatorGearEfficiency);
 			Assert.AreEqual(genericElectric.AlternatorGearEfficiency, specificElectric.AlternatorGearEfficiency);
@@ -534,21 +550,27 @@ namespace TUGraz.VectoCore.Tests.Integration.CompletedBus
 			Assert.AreEqual(Constants.BusAuxiliaries.ElectricalConsumers.DoorActuationTimeSecond, genericElectric.DoorActuationTimeSecond);
 			Assert.AreEqual(genericElectric.DoorActuationTimeSecond, specificElectric.DoorActuationTimeSecond);
 
-			//ToDo Test AverageCurrentDemandInclBaseLoad & AverageCurrentDemandWithoutBaseLoad
-			//Assert.AreEqual(0, genericElectric.AverageCurrentDemandInclBaseLoad);
-			//Assert.AreEqual(0, genericElectric.AverageCurrentDemandWithoutBaseLoad);
+			switch (idx) {
+				case 0:
+				case 1:		
+					Assert.AreEqual(50.1950, genericElectric.AverageCurrentDemandInclBaseLoad(false, false).Value(), 1e-3);
+					Assert.AreEqual(17.795, genericElectric.AverageCurrentDemandWithoutBaseLoad(false, false).Value(), 1e-3);
 
-			//Assert.AreEqual(0, specificElectric.AverageCurrentDemandInclBaseLoad);
-			//Assert.AreEqual(0, specificElectric.AverageCurrentDemandWithoutBaseLoad);
+					Assert.AreEqual(54.981, specificElectric.AverageCurrentDemandInclBaseLoad(false, false).Value(), 1e-3);
+					Assert.AreEqual(22.581, specificElectric.AverageCurrentDemandWithoutBaseLoad(false, false).Value(), 1e-3);
+					break;
+				case 2:
+				case 3:
+					Assert.AreEqual(54.235, genericElectric.AverageCurrentDemandInclBaseLoad(false, false).Value(), 1e-3);
+					Assert.AreEqual(21.835, genericElectric.AverageCurrentDemandWithoutBaseLoad(false, false).Value(), 1e-3);
 
-			Assert.AreEqual(null, genericElectric.ResultCardIdle);
-			Assert.AreEqual( genericElectric.ResultCardIdle, specificElectric.ResultCardIdle);
+					Assert.AreEqual(59.0091, specificElectric.AverageCurrentDemandInclBaseLoad(false, false).Value(), 1e-3);
+					Assert.AreEqual(26.6091, specificElectric.AverageCurrentDemandWithoutBaseLoad(false, false).Value(), 1e-3);
+					break;
 
-			Assert.AreEqual(null, genericElectric.ResultCardTraction);
-			Assert.AreEqual(genericElectric.ResultCardTraction, specificElectric.ResultCardTraction);
+			}
 
-			Assert.AreEqual(null, genericElectric.ResultCardOverrun);
-			Assert.AreEqual(genericElectric.ResultCardOverrun, specificElectric.ResultCardOverrun);
+
 		}
 
 
@@ -563,7 +585,10 @@ namespace TUGraz.VectoCore.Tests.Integration.CompletedBus
 			var specificPneumaticUI = relatedRun.VectoRunDataSpezificBody.BusAuxiliaries.PneumaticUserInputsConfig;
 
 			Assert.IsNotNull(genericPneumaticUI.CompressorMap);
-			Assert.AreEqual(genericPneumaticUI.CompressorMap, specificPneumaticUI.CompressorMap);
+			Assert.AreEqual(genericPneumaticUI.CompressorMap.Technology, specificPneumaticUI.CompressorMap.Technology);
+			Assert.AreEqual(
+				genericPneumaticUI.CompressorMap.GetAveragePowerDemandPerCompressorUnitFlowRate().Value(),
+				specificPneumaticUI.CompressorMap.GetAveragePowerDemandPerCompressorUnitFlowRate().Value());
 
 			Assert.AreEqual(Constants.BusAuxiliaries.PneumaticUserConfig.CompressorGearEfficiency, genericPneumaticUI.CompressorGearEfficiency);
 			Assert.AreEqual(genericPneumaticUI.CompressorGearEfficiency, specificPneumaticUI.CompressorGearEfficiency);
@@ -577,7 +602,7 @@ namespace TUGraz.VectoCore.Tests.Integration.CompletedBus
 			Assert.AreEqual(false, genericPneumaticUI.SmartRegeneration);
 			Assert.AreEqual(genericPneumaticUI.SmartRegeneration, specificPneumaticUI.SmartRegeneration);
 
-			Assert.AreEqual(Constants.BusAuxiliaries.PneumaticUserConfig.DefaultKneelingHeight, genericPneumaticUI.KneelingHeight);
+			Assert.AreEqual(VectoMath.Max(0.SI<Meter>(), 0.120.SI<Meter>() - Constants.BusParameters.EntranceHeight), genericPneumaticUI.KneelingHeight);
 			Assert.AreEqual(VectoMath.Max(0.SI<Meter>(), 0.120.SI<Meter>() - Constants.BusParameters.EntranceHeight), specificPneumaticUI.KneelingHeight);
 
 			Assert.AreEqual(ConsumerTechnology.Electrically, genericPneumaticUI.AirSuspensionControl);
@@ -635,20 +660,44 @@ namespace TUGraz.VectoCore.Tests.Integration.CompletedBus
 			var genericBusParam = relatedRun.VectoRunDataGenericBody.BusAuxiliaries.SSMInputs.BusParameters;
 			var specificBusParam = relatedRun.VectoRunDataSpezificBody.BusAuxiliaries.SSMInputs.BusParameters;
 			
-			AssertLoading(genericBusParam.NumberOfPassengers.SI<Kilogram>(), 
-				specificBusParam.NumberOfPassengers.SI<Kilogram>(), currentIndex);
+			AssertPassengerCount(genericBusParam.NumberOfPassengers, 
+				specificBusParam.NumberOfPassengers, currentIndex);
 			
 			Assert.AreEqual(FloorType.HighFloor, genericBusParam.BusFloorType);
 			Assert.AreEqual(FloorType.HighFloor, specificBusParam.BusFloorType);
 
-			Assert.AreEqual(34.2500, genericBusParam.BusWindowSurface.Value());
-			Assert.AreEqual(37.5750, specificBusParam.BusWindowSurface.Value());
+			Assert.AreEqual(23.00, genericBusParam.BusWindowSurface.Value(), 1e-3);
+			Assert.AreEqual(22.745, specificBusParam.BusWindowSurface.Value(), 1e-3);
 
-			Assert.AreEqual(150.1200, genericBusParam.BusSurfaceArea.Value());
-			Assert.AreEqual(146.6130, specificBusParam.BusSurfaceArea.Value());
+			Assert.AreEqual(152.865, genericBusParam.BusSurfaceArea.Value(), 1e-3);
+			Assert.AreEqual(146.6130, specificBusParam.BusSurfaceArea.Value(), 1e-3);
 
-			Assert.AreEqual(48.1950, genericBusParam.BusVolume.Value());
-			Assert.AreEqual(54.2997, specificBusParam.BusVolume.Value());
+			Assert.AreEqual(81.09, genericBusParam.BusVolume.Value(), 1e-3);
+			Assert.AreEqual(75.4162, specificBusParam.BusVolume.Value(), 1e-3);
+		}
+
+		private void AssertPassengerCount(double genericLoading, double specificLoading, int index)
+		{
+			switch (index) {
+				// generic loading values shall match expected values of primary vehicle for IU and CO cycle
+				// see TestPrimaryBusGroup41Test
+				case 0:
+					Assert.AreEqual(25.2352, genericLoading, 1e-4);
+					Assert.AreEqual(24.8537, specificLoading, 1e-4);
+					break;
+				case 1:
+					Assert.AreEqual(61.588, genericLoading, 1e-4);
+					Assert.AreEqual(31, specificLoading, 1e-0);
+					break;
+				case 2:
+					Assert.AreEqual(16.4224, genericLoading, 1e-2);
+					Assert.AreEqual(16.1796, specificLoading, 1e-4);
+					break;
+				case 3:
+					Assert.AreEqual(39.556, genericLoading, 1e-2);
+					Assert.AreEqual(31, specificLoading, 1e-0);
+					break;
+			}
 		}
 
 		#endregion
@@ -660,11 +709,11 @@ namespace TUGraz.VectoCore.Tests.Integration.CompletedBus
 			var genericTechnolgyBenefit = relatedRun.VectoRunDataGenericBody.BusAuxiliaries.SSMInputs.Technologies;
 			var specificTechnolgyBenefit = relatedRun.VectoRunDataSpezificBody.BusAuxiliaries.SSMInputs.Technologies;
 
-			Assert.AreEqual(0.08, genericTechnolgyBenefit.CValueVariation);
-			Assert.AreEqual(0.06, genericTechnolgyBenefit.HValueVariation);
-			Assert.AreEqual(0.08, genericTechnolgyBenefit.VCValueVariation);
-			Assert.AreEqual(0.06, genericTechnolgyBenefit.VHValueVariation);
-			Assert.AreEqual(0.04, genericTechnolgyBenefit.VVValueVariation);
+			Assert.AreEqual(0.0, genericTechnolgyBenefit.CValueVariation);
+			Assert.AreEqual(0.02, genericTechnolgyBenefit.HValueVariation);
+			Assert.AreEqual(0.0, genericTechnolgyBenefit.VCValueVariation);
+			Assert.AreEqual(0.02, genericTechnolgyBenefit.VHValueVariation);
+			Assert.AreEqual(0.0, genericTechnolgyBenefit.VVValueVariation);
 
 			Assert.AreEqual(0.08, specificTechnolgyBenefit.CValueVariation);
 			Assert.AreEqual(0.08, specificTechnolgyBenefit.HValueVariation);
@@ -735,8 +784,8 @@ namespace TUGraz.VectoCore.Tests.Integration.CompletedBus
 			var genericSSMInput = (SSMInputs) relatedRun.VectoRunDataGenericBody.BusAuxiliaries.SSMInputs;
 			var specificSSMInput = (SSMInputs)relatedRun.VectoRunDataSpezificBody.BusAuxiliaries.SSMInputs;
 
-			AssertLoading(genericSSMInput.NumberOfPassengers.SI<Kilogram>(),
-				specificSSMInput.NumberOfPassengers.SI<Kilogram>(), currentIndex);
+			AssertPassengerCount(genericSSMInput.NumberOfPassengers,
+				specificSSMInput.NumberOfPassengers, currentIndex);
 
 			AssertHVACMaxCoolingPower(genericSSMInput.HVACMaxCoolingPower.Value(),
 				specificSSMInput.HVACMaxCoolingPower.Value(), currentIndex);
@@ -769,13 +818,13 @@ namespace TUGraz.VectoCore.Tests.Integration.CompletedBus
 			switch (currentIndex) {
 				case 0:
 				case 1://Interurban
-					Assert.AreEqual(28302.3750, genericValue);
-					Assert.AreEqual(33507.3425, specificValue);
+					Assert.AreEqual(31381.5, genericValue, 1e-3);
+					Assert.AreEqual(31395.6875, specificValue, 1e-3);
 					break;
 				case 2:
 				case 3://Coach
-					Assert.AreEqual(42260.875, genericValue);
-					Assert.AreEqual(48797.2525, specificValue);
+					Assert.AreEqual(47099.5, genericValue, 1e-3);
+					Assert.AreEqual(45478.9375, specificValue, 1e-3);
 					break;
 			}
 		}
@@ -787,12 +836,12 @@ namespace TUGraz.VectoCore.Tests.Integration.CompletedBus
 				case 0:
 				case 1://Interurban
 					Assert.AreEqual(3.5, genericValue);
-					Assert.AreEqual(3.559554528, specificValue, 1e-9);
+					Assert.AreEqual(3.55885197, specificValue, 1e-6);
 					break;
 				case 2:
 				case 3://Coach
 					Assert.AreEqual(3.5, genericValue);
-					Assert.AreEqual(3.564261972, specificValue, 1e-9);
+					Assert.AreEqual(3.5638433, specificValue, 1e-6);
 					break;
 			}
 		}
@@ -828,7 +877,7 @@ namespace TUGraz.VectoCore.Tests.Integration.CompletedBus
 			Assert.IsNotNull(specificDriver.AccelerationCurve);
 			Assert.AreEqual(genericDriver.AccelerationCurve, specificDriver.AccelerationCurve);
 
-			Assert.AreEqual(DeclarationData.Driver.LookAhead.Enabled, genericDriver.LookAheadCoasting.Enabled);
+			Assert.AreEqual(false, genericDriver.LookAheadCoasting.Enabled);
 			Assert.AreEqual(DeclarationData.Driver.LookAhead.MinimumSpeed, genericDriver.LookAheadCoasting.MinSpeed);
 			Assert.IsNotNull(genericDriver.LookAheadCoasting.LookAheadDecisionFactor);
 			Assert.AreEqual(DeclarationData.Driver.LookAhead.LookAheadDistanceFactor,
@@ -903,6 +952,130 @@ namespace TUGraz.VectoCore.Tests.Integration.CompletedBus
 				relatedRuns.Add(relatedRun);
 				i++;
 			}
+		}
+
+
+		
+		[TestCase(JobFile_Group41, 0, TestName = "PrintVectoRunData CompletedBus Group 41/32b CO/LL"),
+		 TestCase(JobFile_Group42, 1, TestName = "PrintVectoRunData CompletedBus Group 42/33b HU/RL"),
+		TestCase(@"TestData\Integration\Buses\FactorMethod\CompletedBus_41-32b_AT-P.vecto", 0, TestName = "PrintVectoRunData CompletedBus Group 41/32b AT-P CO/LL"),
+		TestCase(@"TestData\Integration\Buses\FactorMethod\CompletedBus_41-32b_ES-AUX.vecto", 0, TestName = "PrintVectoRunData CompletedBus Group 41/32b ES-Aux CO/LL"),]
+		public void PrintModelParametersCompletedBus(string jobFile, int pairIdx)
+		{
+			var runs = GetVectoRunData(jobFile);
+
+			SetRelatedVehicleParts(runs);
+			var pair = relatedRuns[pairIdx];
+
+			File.WriteAllText($"{pair.VectoRunDataGenericBody.JobName}_{pair.VectoRunDataGenericBody.Cycle.Name}{pair.VectoRunDataGenericBody.ModFileSuffix}.json", JsonConvert.SerializeObject(pair.VectoRunDataGenericBody, Formatting.Indented));
+
+			File.WriteAllText($"{pair.VectoRunDataSpezificBody.JobName}_{pair.VectoRunDataGenericBody.Cycle.Name}{pair.VectoRunDataSpezificBody.ModFileSuffix}.json", JsonConvert.SerializeObject(pair.VectoRunDataSpezificBody, Formatting.Indented));
+		}
+
+
+		[TestCase(@"TestData\Integration\Buses\FactorMethod\primary_heavyBus group41_nonSmart.xml", 12, TestName = "PrintVectoRunData PrimaryBus Group41 SD CO/LL"),
+		TestCase(@"TestData\Integration\Buses\FactorMethod\primary_heavyBus group42_SmartPS.xml", 1, TestName = "PrintVectoRunData PrimaryBus Group42 SD HU/RL"),
+		TestCase(@"TestData\Integration\Buses\FactorMethod\SingleBus_41-32b.vecto", 0, TestName = "PrintVectoRunData SingleBus Group 41/32b CO/LL"),
+		TestCase(@"TestData\Integration\Buses\FactorMethod\SingleBus_42-33b.vecto", 1, TestName = "PrintVectoRunData SingleBus Group 42/33b HU/RL"),
+		TestCase(@"TestData\Integration\Buses\FactorMethod\primary_heavyBus group41_nonSmart_AT-P.xml", 12, TestName = "PrintVectoRunData PrimaryBus Group41 AT-P SD CO/LL"),
+		TestCase(@"TestData\Integration\Buses\FactorMethod\vecto_vehicle-primary_heavyBus_ESS_electricFanSTP.xml", 13, TestName = "PrintVectoRunData electric STP/Fan ESS IU/RL"),
+			]
+		public void PrintModelParametersPrimaryBus(string jobFile, int runIdx)
+		{
+			var runs = GetVectoRunData(jobFile);
+
+			SetRelatedVehicleParts(runs);
+			var run = runs[runIdx];
+
+			File.WriteAllText($"{run.JobName}_{run.Cycle.Name}{run.ModFileSuffix}.json", JsonConvert.SerializeObject(run, Formatting.Indented));
+		}
+
+
+
+		private List<VectoRunData> GetVectoRunData(string jobFile)
+		{
+			var writer = new FileOutputWriter(Path.Combine(Path.GetDirectoryName(JobFile_Group41), Path.GetFileName(JobFile_Group41)));
+			var inputData = Path.GetExtension(jobFile).Equals(".xml")
+				? xmlInputReader.CreateDeclaration(jobFile)
+				: JSONInputDataFactory.ReadJsonJob(jobFile);
+
+			var factory = new SimulatorFactory(ExecutionMode.Declaration, inputData, writer) {
+				WriteModalResults = true,
+
+				//ActualModalData = true,
+				Validate = false
+			};
+
+			var runs = factory.DataReader.NextRun().ToList();
+			return runs;
+		}
+
+		[TestCase(JobFile_Group41, TestName = "RunCompletedBusSimulation Group41/32b"),
+		TestCase(JobFile_Group42, TestName = "RunCompletedBusSimulation Group42/33b"),
+		TestCase(JobFilePrimary41, TestName = "RunPrimaryBusSimulation Group41"),
+		TestCase(JobFilePrimary42, TestName = "RunPrimaryBusSimulation Group42"),
+		TestCase(@"TestData\Integration\Buses\FactorMethod\SingleBus_41-32b.vecto", TestName = "RunSingleBusSimulation Group 41/32b"),
+		TestCase(@"TestData\Integration\Buses\FactorMethod\SingleBus_42-33b.vecto", TestName = "RunSingleBusSimulation Group 42/33b"),
+		TestCase(@"TestData\Integration\Buses\FactorMethod\SingleBus_41-32b_AT-P.vecto", TestName = "RunSingleBusSimulation Group 41/32b AT-P"),
+		]
+		public void TestRunCompletedBusSimulation(string jobName)
+		{
+			var relativeJobPath = jobName;
+			var writer = new FileOutputWriter(relativeJobPath);
+			var inputData = Path.GetExtension(relativeJobPath) == ".xml"
+				? xmlInputReader.CreateDeclaration(relativeJobPath)
+				: JSONInputDataFactory.ReadJsonJob(relativeJobPath);
+			var factory = new SimulatorFactory(ExecutionMode.Declaration, inputData, writer) {
+				WriteModalResults = true,
+				//ActualModalData = true,
+				Validate = false
+			};
+			var jobContainer = new JobContainer(new SummaryDataContainer(writer));
+
+			//var runs = factory.SimulationRuns().ToArray();
+			//var runIdx = 0;
+			//runs[runIdx].Run();
+
+			//Assert.IsTrue(runs[runIdx].FinishedWithoutErrors);
+
+			jobContainer.AddRuns(factory);
+
+			jobContainer.Execute();
+			jobContainer.WaitFinished();
+			var progress = jobContainer.GetProgress();
+			Assert.IsTrue(progress.All(r => r.Value.Success), string.Concat<Exception>(progress.Select(r => r.Value.Error)));
+			Assert.IsTrue(jobContainer.Runs.All(r => r.Success), String.Concat<Exception>(jobContainer.Runs.Select(r => r.ExecException)));
+		}
+
+		[TestCase(@"TestData\Integration\Buses\vecto_vehicle-primary_heavyBus_ESS_electricFanSTP.xml", 13, TestName = "RunBusSimulation electric STP/Fan ESS IU/RL"),
+		TestCase(@"TestData\Integration\Buses\vecto_vehicle-primary_heavyBus_ESS_electricFanSTP.xml", 17, TestName = "RunBusSimulation electric STP/Fan ESS CO/RL"),]
+		public void TestRunPrimaryBusSimulation_ESS(string jobName, int runIdx)
+		{
+			var relativeJobPath = jobName;
+			var writer = new FileOutputWriter(relativeJobPath);
+			var inputData = Path.GetExtension(relativeJobPath) == ".xml"
+				? xmlInputReader.CreateDeclaration(relativeJobPath)
+				: JSONInputDataFactory.ReadJsonJob(relativeJobPath);
+			var factory = new SimulatorFactory(ExecutionMode.Declaration, inputData, writer) {
+				WriteModalResults = true,
+				//ActualModalData = true,
+				Validate = false
+			};
+			var jobContainer = new JobContainer(new SummaryDataContainer(writer));
+
+			var runs = factory.SimulationRuns().ToArray();
+			
+			runs[runIdx].Run();
+
+			Assert.IsTrue(runs[runIdx].FinishedWithoutErrors);
+
+			//jobContainer.AddRuns(factory);
+
+			//jobContainer.Execute();
+			//jobContainer.WaitFinished();
+			//var progress = jobContainer.GetProgress();
+			//Assert.IsTrue(progress.All(r => r.Value.Success), string.Concat<Exception>(progress.Select(r => r.Value.Error)));
+			//Assert.IsTrue(jobContainer.Runs.All(r => r.Success), String.Concat<Exception>(jobContainer.Runs.Select(r => r.ExecException)));
 		}
 	}
 }

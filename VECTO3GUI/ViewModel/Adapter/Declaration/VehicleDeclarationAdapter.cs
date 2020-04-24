@@ -108,7 +108,7 @@ namespace VECTO3GUI.ViewModel.Adapter.Declaration
 		public Watt MaxNetPower1 { get; }
 		public Watt MaxNetPower2 { get; }
 		public RegistrationClass RegisteredClass { get; }
-		public int NuberOfPassengersUpperDeck { get; }
+		public int NumberOfPassengersUpperDeck { get; }
 		public int NumberOfPassengersLowerDeck { get; }
 		public VehicleCode VehicleCode { get; }
 		public FloorType FloorType { get; }
@@ -117,6 +117,7 @@ namespace VECTO3GUI.ViewModel.Adapter.Declaration
 		public Meter Length { get; }
 		public Meter Width { get; }
 		public Meter EntranceHeight { get; }
+		public ConsumerTechnology DoorDriveTechnology { get; }
 
 		public IAirdragDeclarationInputData AirdragInputData { get {
 			return GetComponentViewModel<IAirdragViewModel>(Component.Airdrag)?.ModelData;

@@ -87,7 +87,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 			//}
 
 			if (InputDataProvider.JobInputData.Vehicle.ExemptedVehicle) {
-				yield return CreateVectoRunData(InputDataProvider.JobInputData.Vehicle, 0, null, new KeyValuePair<LoadingType, Kilogram>());
+				yield return CreateVectoRunData(InputDataProvider.JobInputData.Vehicle, 0, null, new KeyValuePair<LoadingType, Tuple<Kilogram, double?>>());
 			} else {
 				foreach (var vectoRunData in VectoRunDataTruckNonExempted()) {
 					yield return vectoRunData;
@@ -121,14 +121,14 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 
 
 		protected override VectoRunData CreateVectoRunData(
-			IVehicleDeclarationInputData vehicle, int modeIdx, Mission mission, KeyValuePair<LoadingType, Kilogram> loading)
+			IVehicleDeclarationInputData vehicle, int modeIdx, Mission mission, KeyValuePair<LoadingType, Tuple<Kilogram, double?>> loading)
 		{
 			if (InputDataProvider.JobInputData.Vehicle.ExemptedVehicle) {
 				return new VectoRunData {
 					Exempted = true,
 					Report = Report,
 					Mission = new Mission() { MissionType = MissionType.ExemptedMission },
-					VehicleData = DataAdapter.CreateVehicleData(InputDataProvider.JobInputData.Vehicle, null, new KeyValuePair<LoadingType, Kilogram>(LoadingType.ReferenceLoad, 0.SI<Kilogram>())),
+					VehicleData = DataAdapter.CreateVehicleData(InputDataProvider.JobInputData.Vehicle, null, new KeyValuePair<LoadingType, Tuple<Kilogram, double?>>(LoadingType.ReferenceLoad, Tuple.Create<Kilogram, double?>(0.SI<Kilogram>(), null))),
 					InputDataHash = InputDataProvider.XMLHash
 				};
 			}

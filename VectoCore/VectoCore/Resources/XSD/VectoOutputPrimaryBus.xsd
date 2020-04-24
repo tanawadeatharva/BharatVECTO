@@ -11,6 +11,7 @@
 	<xs:complexType name="AbstractAngledriveDataPIFType" abstract="true"/>
 	<xs:complexType name="AbstractAxlegearDataPIFType" abstract="true"/>
 	<xs:complexType name="AbstractEngineDataPIFType" abstract="true"/>
+	<xs:complexType name="AbstractTorqueConverterDataPIFType" abstract="true"/>
 	<xs:complexType name="AbstractTransmissionDataPIFType" abstract="true"/>
 	<xs:complexType name="AbstractTransmissionGearsPIFType" abstract="true"/>
 	<xs:complexType name="AbstractVehicleComponentsPIFType" abstract="true"/>
@@ -253,7 +254,8 @@
 			<xs:extension base="out:AbstractPrimaryVehicleDataPIFType">
 				<xs:sequence>
 					<xs:element name="Vehicle" type="AbstractVehiclePIFType"/>
-					<xs:element name="ResultDataSignature" type="v1.0:SignatureType"/>
+					<xs:element name="InputDataSignature" type="v1.0:SignatureType"/>
+					<xs:element name="ManufacturerRecordSignature" type="v1.0:SignatureType"/>
 					<xs:element name="Results" type="ResultsPIFType"/>
 					<xs:element name="ApplicationInformation" type="ApplicationInformationPIFType"/>
 				</xs:sequence>
@@ -353,6 +355,56 @@
 			</xs:element>
 		</xs:sequence>
 	</xs:complexType>
+	<xs:complexType name="TorqueConverterDataPIFType">
+		<xs:complexContent>
+			<xs:extension base="AbstractTorqueConverterDataPIFType">
+				<xs:sequence>
+					<xs:element name="Manufacturer" type="v1.0:ManufacturerType">
+						<xs:annotation>
+							<xs:documentation>P205</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="Model" type="v1.0:ModelType">
+						<xs:annotation>
+							<xs:documentation>P206</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="CertificationMethod" type="v1.0:TorqueConverterCertificationOptionType">
+						<xs:annotation>
+							<xs:documentation>P254 - [-]</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="CertificationNumber" type="v1.0:CertificationNumberType" minOccurs="0">
+						<xs:annotation>
+							<xs:documentation>P262</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="Date" type="v1.0:DateTimeWithTimezone">
+						<xs:annotation>
+							<xs:documentation>P208</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="AppVersion" type="v1.0:AppVersionType">
+						<xs:annotation>
+							<xs:documentation>P209</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="Characteristics">
+						<xs:complexType>
+							<xs:sequence>
+								<xs:element name="Entry" type="v1.0:TorqueConverterCharacteristicsEntryType" minOccurs="2" maxOccurs="unbounded"/>
+							</xs:sequence>
+						</xs:complexType>
+					</xs:element>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="TorqueConverterPIFType">
+		<xs:sequence>
+			<xs:element name="Data" type="AbstractTorqueConverterDataPIFType"/>
+		</xs:sequence>
+	</xs:complexType>
 	<xs:complexType name="TransmissionComponentPIFType">
 		<xs:sequence>
 			<xs:element name="Data" type="AbstractTransmissionDataPIFType"/>
@@ -429,6 +481,7 @@
 				<xs:sequence>
 					<xs:element name="Engine" type="EngineComponentPIFType"/>
 					<xs:element name="Transmission" type="TransmissionComponentPIFType"/>
+					<xs:element name="TorqueConverter" type="TorqueConverterPIFType" minOccurs="0"/>
 					<xs:element name="Angledrive" type="AngledrivePIFType" minOccurs="0"/>
 					<xs:element name="Axlegear" type="AxlegearPIFType"/>
 					<xs:element name="AxleWheels" type="v2.0:AbstractAxleWheelsComponentDeclarationType"/>

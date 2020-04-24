@@ -9,6 +9,16 @@
 	<xs:import namespace="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions" schemaLocation="VectoDeclarationDefinitions.xsd"/>
 	<xs:import namespace="urn:tugraz:ivt:VectoAPI:DeclarationOutputDefinitions" schemaLocation="VectoOutputDefinitions.xsd"/>
 	<xs:complexType name="AbstractComponentsType" abstract="true"/>
+	<xs:complexType name="AbstractResultType" abstract="true">
+		<xs:attribute name="status" use="required">
+			<xs:simpleType>
+				<xs:restriction base="xs:string">
+					<xs:enumeration value="success"/>
+					<xs:enumeration value="error"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
+	</xs:complexType>
 	<xs:complexType name="AbstractVehicleType" abstract="true"/>
 	<xs:complexType name="ADASType">
 		<xs:sequence>
@@ -209,12 +219,32 @@
 			</xs:extension>
 		</xs:simpleContent>
 	</xs:complexType>
+	<xs:complexType name="CompletedVehiclePrimaryVehicleInformationType">
+		<xs:sequence>
+			<xs:element name="Manufacturer" type="vdecdef:ManufacturerType"/>
+			<xs:element name="ManufacturerAddress" type="vdecdef:ManufacturerAddressType"/>
+			<xs:element name="AxleConfiguration" type="xs:string"/>
+			<xs:element name="InputDataSignature" type="vdecdef:SignatureType"/>
+			<xs:element name="ManufacturerRecordSignature" type="vdecdef:SignatureType"/>
+			<xs:element name="VehicleInformationSignature" type="vdecdef:SignatureType"/>
+		</xs:sequence>
+	</xs:complexType>
 	<xs:complexType name="ComponentDescriptionType">
 		<xs:sequence>
 			<xs:element name="Model" type="vdecdef:ModelType"/>
 			<xs:element name="CertificationNumber" type="vdecdef:CertificationNumberType"/>
 			<xs:element name="DigestValue" type="xs:token"/>
 		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="ComponentsCompletedBusType">
+		<xs:complexContent>
+			<xs:extension base="AbstractComponentsType">
+				<xs:sequence>
+					<xs:element name="AirDrag" type="AirdragType"/>
+					<xs:element name="Auxiliaries" type="v2.6:AbstractCompletedVehicleAuxiliaryDataDeclarationType"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
 	</xs:complexType>
 	<xs:complexType name="ComponentsPrimaryBusType">
 		<xs:complexContent>
@@ -232,6 +262,22 @@
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
+	<xs:complexType name="ComponentsTruckFWDType">
+		<xs:complexContent>
+			<xs:extension base="AbstractComponentsType">
+				<xs:sequence>
+					<xs:element name="Engine" type="EngineType"/>
+					<xs:element name="Gearbox" type="GearboxFWDType"/>
+					<xs:element name="TorqueConverter" type="TorqueconverterType" minOccurs="0"/>
+					<xs:element name="Retarder" type="RetarderType"/>
+					<xs:element name="Angledrive" type="AngledriveType" minOccurs="0"/>
+					<xs:element name="AirDrag" type="AirdragType"/>
+					<xs:element name="AxleWheels" type="AxleWheelsType"/>
+					<xs:element name="Auxiliaries" type="AuxiliariesTruckType"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
 	<xs:complexType name="ComponentsTruckType">
 		<xs:complexContent>
 			<xs:extension base="AbstractComponentsType">
@@ -242,22 +288,6 @@
 					<xs:element name="Retarder" type="RetarderType"/>
 					<xs:element name="Angledrive" type="AngledriveType" minOccurs="0"/>
 					<xs:element name="Axlegear" type="AxlegearType"/>
-					<xs:element name="AirDrag" type="AirdragType"/>
-					<xs:element name="AxleWheels" type="AxleWheelsType"/>
-					<xs:element name="Auxiliaries" type="AuxiliariesTruckType"/>
-				</xs:sequence>
-			</xs:extension>
-		</xs:complexContent>
-	</xs:complexType>
-	<xs:complexType name="ComponentsTruckFWDType">
-		<xs:complexContent>
-			<xs:extension base="AbstractComponentsType">
-				<xs:sequence>
-					<xs:element name="Engine" type="EngineType"/>
-					<xs:element name="Gearbox" type="GearboxFWDType"/>
-					<xs:element name="TorqueConverter" type="TorqueconverterType" minOccurs="0"/>
-					<xs:element name="Retarder" type="RetarderType"/>
-					<xs:element name="Angledrive" type="AngledriveType" minOccurs="0"/>
 					<xs:element name="AirDrag" type="AirdragType"/>
 					<xs:element name="AxleWheels" type="AxleWheelsType"/>
 					<xs:element name="Auxiliaries" type="AuxiliariesTruckType"/>
@@ -382,50 +412,6 @@
 			</xs:extension>
 		</xs:simpleContent>
 	</xs:complexType>
-	<xs:complexType name="GearboxType">
-		<xs:sequence>
-			<xs:element name="Model" type="vdecdef:ModelType">
-				<xs:annotation>
-					<xs:documentation>P205 / I.1.3.1</xs:documentation>
-				</xs:annotation>
-			</xs:element>
-			<xs:element name="CertificationMethod" type="vdecdef:GearboxCertificationOptionType">
-				<xs:annotation>
-					<xs:documentation>P154 / I.1.3.3 / #26</xs:documentation>
-				</xs:annotation>
-			</xs:element>
-			<xs:element name="CertificationNumber" type="vdecdef:CertificationNumberType" minOccurs="0">
-				<xs:annotation>
-					<xs:documentation>P262 / I.1.3.2 / #4</xs:documentation>
-				</xs:annotation>
-			</xs:element>
-			<xs:element name="DigestValue" type="xs:token">
-				<xs:annotation>
-					<xs:documentation>? / I.1.3.9</xs:documentation>
-				</xs:annotation>
-			</xs:element>
-			<xs:element name="TransmissionType" type="vdecdef:GearboxTransmissionTypeType">
-				<xs:annotation>
-					<xs:documentation>P076 / I.1.3.4 / #27</xs:documentation>
-				</xs:annotation>
-			</xs:element>
-			<xs:element name="GearsCount">
-				<xs:annotation>
-					<xs:documentation>P199 / I.1.3.5 / #28</xs:documentation>
-				</xs:annotation>
-				<xs:simpleType>
-					<xs:restriction base="xs:int">
-						<xs:minInclusive value="1"/>
-					</xs:restriction>
-				</xs:simpleType>
-			</xs:element>
-			<xs:element name="TransmissionRatioFinalGear" type="vdecdef:GearboxGearRatioType">
-				<xs:annotation>
-					<xs:documentation>P078 / I.1.3.6 / #29</xs:documentation>
-				</xs:annotation>
-			</xs:element>
-		</xs:sequence>
-	</xs:complexType>
 	<xs:complexType name="GearboxFWDType">
 		<xs:sequence>
 			<xs:element name="Model" type="vdecdef:ModelType">
@@ -471,15 +457,157 @@
 			</xs:element>
 		</xs:sequence>
 	</xs:complexType>
-	<xs:complexType name="ResultType">
+	<xs:complexType name="GearboxType">
 		<xs:sequence>
-			<xs:element name="Mission" type="MissionTypeType">
+			<xs:element name="Model" type="vdecdef:ModelType">
 				<xs:annotation>
-					<xs:documentation>I.2.1.1 / #56</xs:documentation>
+					<xs:documentation>P205 / I.1.3.1</xs:documentation>
 				</xs:annotation>
 			</xs:element>
-			<xs:choice>
+			<xs:element name="CertificationMethod" type="vdecdef:GearboxCertificationOptionType">
+				<xs:annotation>
+					<xs:documentation>P154 / I.1.3.3 / #26</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="CertificationNumber" type="vdecdef:CertificationNumberType" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>P262 / I.1.3.2 / #4</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="DigestValue" type="xs:token">
+				<xs:annotation>
+					<xs:documentation>? / I.1.3.9</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="TransmissionType" type="vdecdef:GearboxTransmissionTypeType">
+				<xs:annotation>
+					<xs:documentation>P076 / I.1.3.4 / #27</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="GearsCount">
+				<xs:annotation>
+					<xs:documentation>P199 / I.1.3.5 / #28</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:int">
+						<xs:minInclusive value="1"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="TransmissionRatioFinalGear" type="vdecdef:GearboxGearRatioType">
+				<xs:annotation>
+					<xs:documentation>P078 / I.1.3.6 / #29</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="ResultCompletedVehicleSuccessType">
+		<xs:complexContent>
+			<xs:extension base="AbstractResultType">
 				<xs:sequence>
+					<xs:element name="Mission" type="MissionTypeType">
+						<xs:annotation>
+							<xs:documentation>I.2.1.1 / #56</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="Distance">
+						<xs:annotation>
+							<xs:documentation>I.2.2.8 / #67</xs:documentation>
+						</xs:annotation>
+						<xs:complexType>
+							<xs:simpleContent>
+								<xs:extension base="xs:double">
+									<xs:attribute name="unit" type="DistanceUnitType" use="required"/>
+								</xs:extension>
+							</xs:simpleContent>
+						</xs:complexType>
+					</xs:element>
+					<xs:element name="SimulationParametersPrimaryVehicle" type="SimulationParametersType"/>
+					<xs:element name="SimulationParametersCompletedVehicle">
+						<xs:complexType>
+							<xs:sequence>
+								<xs:element name="TotalVehicleMass">
+									<xs:annotation>
+										<xs:documentation>I.2.1.4 / #59</xs:documentation>
+									</xs:annotation>
+									<xs:complexType>
+										<xs:simpleContent>
+											<xs:extension base="xs:double">
+												<xs:attribute name="unit" type="MassUnitType" use="required"/>
+											</xs:extension>
+										</xs:simpleContent>
+									</xs:complexType>
+								</xs:element>
+								<xs:element name="Payload">
+									<xs:annotation>
+										<xs:documentation>I.2.1.2 / #57</xs:documentation>
+									</xs:annotation>
+									<xs:complexType>
+										<xs:simpleContent>
+											<xs:extension base="xs:double">
+												<xs:attribute name="unit" type="MassUnitType" use="required"/>
+											</xs:extension>
+										</xs:simpleContent>
+									</xs:complexType>
+								</xs:element>
+								<xs:element name="PassengerCount" type="xs:double" minOccurs="0"/>
+							</xs:sequence>
+						</xs:complexType>
+					</xs:element>
+					<xs:element name="VehiclePerformance" type="VehiclePerformanceType"/>
+					<xs:element name="FuelConsumptionFactor">
+						<xs:simpleType>
+							<xs:restriction base="vdecdef:Double4">
+								<xs:minExclusive value="0.0000"/>
+							</xs:restriction>
+						</xs:simpleType>
+					</xs:element>
+					<xs:element name="Fuel" maxOccurs="unbounded">
+						<xs:complexType>
+							<xs:sequence>
+								<xs:element name="FuelConsumption" type="FuelConsumptionType" maxOccurs="unbounded">
+									<xs:annotation>
+										<xs:documentation>I.2.3.1 - I.2.3.12 / #69</xs:documentation>
+									</xs:annotation>
+								</xs:element>
+							</xs:sequence>
+							<xs:attribute name="type" type="xs:string" use="required"/>
+						</xs:complexType>
+					</xs:element>
+					<xs:element name="CO2" type="CO2Type" maxOccurs="unbounded">
+						<xs:annotation>
+							<xs:documentation>I.2.3.13 - I.2.3.16 / #68</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="ResultErrorType">
+		<xs:complexContent>
+			<xs:extension base="AbstractResultType">
+				<xs:sequence>
+					<xs:element name="Mission" type="MissionTypeType">
+						<xs:annotation>
+							<xs:documentation>I.2.1.1 / #56</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="SimulationParameters" type="SimulationParametersType"/>
+					<xs:element name="Error" type="xs:string"/>
+					<xs:element name="ErrorDetails" type="xs:string"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="ResultSuccessType">
+		<xs:complexContent>
+			<xs:extension base="AbstractResultType">
+				<xs:sequence>
+					<xs:element name="Mission" type="MissionTypeType">
+						<xs:annotation>
+							<xs:documentation>I.2.1.1 / #56</xs:documentation>
+						</xs:annotation>
+					</xs:element>
 					<xs:element name="Distance">
 						<xs:annotation>
 							<xs:documentation>I.2.2.8 / #67</xs:documentation>
@@ -512,21 +640,8 @@
 						</xs:annotation>
 					</xs:element>
 				</xs:sequence>
-				<xs:sequence>
-					<xs:element name="SimulationParameters" type="SimulationParametersType"/>
-					<xs:element name="Error" type="xs:string"/>
-					<xs:element name="ErrorDetails" type="xs:string"/>
-				</xs:sequence>
-			</xs:choice>
-		</xs:sequence>
-		<xs:attribute name="status" use="required">
-			<xs:simpleType>
-				<xs:restriction base="xs:string">
-					<xs:enumeration value="success"/>
-					<xs:enumeration value="error"/>
-				</xs:restriction>
-			</xs:simpleType>
-		</xs:attribute>
+			</xs:extension>
+		</xs:complexContent>
 	</xs:complexType>
 	<xs:complexType name="RetarderType">
 		<xs:sequence>
@@ -679,7 +794,7 @@
 								</xs:element>
 								<xs:choice>
 									<xs:sequence>
-										<xs:element name="Result" type="ResultType" maxOccurs="unbounded"/>
+										<xs:element name="Result" type="AbstractResultType" maxOccurs="unbounded"/>
 									</xs:sequence>
 									<xs:element name="ExemptedVehicle">
 										<xs:complexType/>
@@ -706,6 +821,97 @@
 					</xs:element>
 				</xs:sequence>
 				<xs:attribute name="id" type="xs:NCName" use="required"/>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="VehicleCompletedBusType">
+		<xs:complexContent>
+			<xs:extension base="AbstractVehicleType">
+				<xs:sequence>
+					<xs:element name="PrimaryVehicle" type="CompletedVehiclePrimaryVehicleInformationType"/>
+					<xs:element name="CompletedVehicle">
+						<xs:complexType>
+							<xs:sequence>
+								<xs:element name="Model" type="vdecdef:ModelType"/>
+								<xs:element name="Manufacturer" type="vdecdef:ManufacturerType"/>
+								<xs:element name="ManufacturerAddress" type="vdecdef:ManufacturerAddressType"/>
+								<xs:element name="VIN" type="vdecdef:VINType"/>
+								<xs:element name="VehicleCategory" type="xs:string"/>
+								<xs:element name="VehicleGroup" type="xs:string"/>
+								<xs:element name="RegisteredClass" type="xs:string"/>
+								<xs:element name="VehicleCode" type="xs:string"/>
+								<xs:element name="CurbMassChassis">
+									<xs:complexType>
+										<xs:simpleContent>
+											<xs:extension base="vdecdef:VehicleCurbMassChassisType">
+												<xs:attribute name="unit" type="MassUnitType" use="required"/>
+											</xs:extension>
+										</xs:simpleContent>
+									</xs:complexType>
+								</xs:element>
+								<xs:element name="TechnicalPermissibleMaximumLadenMass">
+									<xs:complexType>
+										<xs:simpleContent>
+											<xs:extension base="vdecdef:Double2">
+												<xs:attribute name="unit" type="MassUnitType" use="required"/>
+											</xs:extension>
+										</xs:simpleContent>
+									</xs:complexType>
+								</xs:element>
+								<xs:element name="VocationalVehicle" type="BooleanNotApplicableType"/>
+								<xs:element name="ZeroEmissionVehicle" type="xs:boolean"/>
+								<xs:element name="HybridElectricHDV" type="xs:boolean"/>
+								<xs:element name="DualFuelVehicle" type="xs:boolean"/>
+								<xs:element name="SleeperCab" type="BooleanNotApplicableType"/>
+								<xs:element name="RegisteredPassengers">
+									<xs:complexType>
+										<xs:sequence>
+											<xs:element name="LowerDeck">
+												<xs:simpleType>
+													<xs:restriction base="xs:int">
+														<xs:minInclusive value="0"/>
+													</xs:restriction>
+												</xs:simpleType>
+											</xs:element>
+											<xs:element name="UpperDeck">
+												<xs:simpleType>
+													<xs:restriction base="xs:int">
+														<xs:minInclusive value="0"/>
+													</xs:restriction>
+												</xs:simpleType>
+											</xs:element>
+										</xs:sequence>
+									</xs:complexType>
+								</xs:element>
+								<xs:element name="LowEntry" type="xs:boolean"/>
+								<xs:element name="HeightIntegratedBody">
+									<xs:simpleType>
+										<xs:restriction base="vdecdef:Double3">
+											<xs:minExclusive value="0.000"/>
+										</xs:restriction>
+									</xs:simpleType>
+								</xs:element>
+								<xs:element name="VehicleLength">
+									<xs:simpleType>
+										<xs:restriction base="vdecdef:Double3">
+											<xs:minExclusive value="0.000"/>
+										</xs:restriction>
+									</xs:simpleType>
+								</xs:element>
+								<xs:element name="VehicleWidth">
+									<xs:simpleType>
+										<xs:restriction base="vdecdef:Double3">
+											<xs:minExclusive value="0.000"/>
+										</xs:restriction>
+									</xs:simpleType>
+								</xs:element>
+								<xs:element name="DoorDriveTechnology" type="xs:string"/>
+								<xs:element name="Components" type="AbstractComponentsType"/>
+								<xs:element name="InputDataSignature" type="vdecdef:SignatureType"/>
+							</xs:sequence>
+						</xs:complexType>
+					</xs:element>
+				</xs:sequence>
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
@@ -1137,6 +1343,13 @@
 	<xs:simpleType name="AngularVelocityUnitType">
 		<xs:restriction base="xs:string">
 			<xs:enumeration value="rpm"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="BooleanNotApplicableType">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="true"/>
+			<xs:enumeration value="false"/>
+			<xs:enumeration value="not applicable"/>
 		</xs:restriction>
 	</xs:simpleType>
 	<xs:simpleType name="CO2UnitType">

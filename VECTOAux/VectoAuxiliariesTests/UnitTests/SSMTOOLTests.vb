@@ -90,7 +90,7 @@ Namespace UnitTests
 
             Dim auxInput as IBusAuxiliariesDeclarationData = nothing
 
-            Dim dao = New DeclarationDataAdapterPrimaryBus()
+            Dim dao = New DeclarationDataAdapterCompletedBusGeneric()
             Dim target As ISSMInputs = dao.CreateSSMModelParameters(auxInput, mission, FuelData.Diesel, LoadingType.ReferenceLoad)
 
             If section = "BusParameterisation" Then
@@ -597,7 +597,7 @@ Namespace UnitTests
 
             Dim auxInput as IBusAuxiliariesDeclarationData = nothing
 
-            Dim dao = New DeclarationDataAdapterPrimaryBus()
+            Dim dao = New DeclarationDataAdapterCompletedBusGeneric()
             Dim target As SSMTOOL = New SSMTOOL(dao.CreateSSMModelParameters(auxInput, mission,
                                                                              FuelData.Diesel, LoadingType.ReferenceLoad))
 

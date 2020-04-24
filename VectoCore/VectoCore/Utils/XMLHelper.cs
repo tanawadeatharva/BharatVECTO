@@ -134,6 +134,16 @@ namespace TUGraz.VectoCore.Utils
 			throw new NotImplementedException(string.Format("unknown unit '{0}'", unit));
 		}
 
+		public static object[] ValueAsUnit(Meter m, string unit, uint? decimals)
+		{
+			switch (unit) {
+				case "m": return GetValueAsUnit(m.Value(), unit, decimals);
+				case "km": return GetValueAsUnit(m.ConvertToKiloMeter(), unit, decimals);
+			}
+
+			throw new NotImplementedException(string.Format("unknown unit '{0}'", unit));
+		}
+
 		public static object[] ValueAsUnit(double value, string unit, uint? decimals)
 		{
 			switch (unit) {
@@ -272,6 +282,15 @@ namespace TUGraz.VectoCore.Utils
 			const string versionPrefix = "v";
 			var namesp = node.SchemaInfo.SchemaType.QualifiedName.Namespace;
 			return namesp.Split(':').Last(x => x.StartsWith(versionPrefix)).Replace(versionPrefix, string.Empty).ToDouble();
+		}
+
+		public static XElement CreateDummySig(XNamespace di)
+		{
+			return new XElement(di + XMLNames.DI_Signature_Reference,
+								new XElement(di + XMLNames.DI_Signature_Reference_DigestMethod,
+											new XAttribute(XMLNames.DI_Signature_Algorithm_Attr, "null")),
+								new XElement(di + XMLNames.DI_Signature_Reference_DigestValue, "NOT AVAILABLE")
+			);
 		}
 	}
 }

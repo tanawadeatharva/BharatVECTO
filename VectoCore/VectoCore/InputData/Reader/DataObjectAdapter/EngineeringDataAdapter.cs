@@ -78,6 +78,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 					RollResistanceCoefficient = axle.Tyre.RollResistanceCoefficient,
 					AxleWeightShare = axle.AxleWeightShare,
 					TyreTestLoad = axle.Tyre.TyreTestLoad,
+					FuelEfficiencyClass = axle.Tyre.FuelEfficiencyClass,
 					AxleType = axle.AxleType,
 
 					//Wheels = axle.WheelsStr
@@ -355,7 +356,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			return retVal;
 		}
 
-		private static void CreateATGearData(
+		protected virtual void CreateATGearData(
 			IGearboxEngineeringInputData gearbox, uint i, GearData gearData,
 			ShiftPolygon tcShiftPolygon, double gearDifferenceRatio, Dictionary<uint, GearData> gears,
 			VehicleCategory vehicleCategory)

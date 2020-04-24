@@ -1,4 +1,6 @@
-﻿namespace TUGraz.VectoCommon.Models {
+﻿using TUGraz.VectoCommon.BusAuxiliaries;
+
+namespace TUGraz.VectoCommon.Models {
 	public enum VehicleCode
 	{
 		NOT_APPLICABLE,
@@ -57,7 +59,7 @@
 			return self.ToString();
 		}
 
-		public static bool IsDoubleDeckBus(this VehicleCode self)
+		public static bool IsDoubleDeckerBus(this VehicleCode self)
 		{
 			switch (self) {
 				case VehicleCode.CF:
@@ -74,6 +76,19 @@
 					return false;
 				default:
 					return false;
+			}
+		}
+
+		public static FloorType GetFloorType(this VehicleCode vehicleCode)
+		{
+			switch (vehicleCode) {
+				case VehicleCode.CA:
+				case VehicleCode.CB:
+				case VehicleCode.CC:
+				case VehicleCode.CD:
+					return FloorType.HighFloor;
+				default:
+					return FloorType.LowFloor;
 			}
 		}
 

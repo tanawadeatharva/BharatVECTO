@@ -38,9 +38,10 @@ namespace TUGraz.VectoCommon.Models
 	[SuppressMessage("ReSharper", "InconsistentNaming")]
 	public enum AxleConfiguration
 	{
+		AxleConfig_Undefined,
 		AxleConfig_4x2,
-        AxleConfig_4x2F,
-        AxleConfig_4x4,
+		AxleConfig_4x2F,
+		AxleConfig_4x4,
 		AxleConfig_6x2,
 		AxleConfig_6x4,
 		AxleConfig_6x6,
@@ -48,7 +49,6 @@ namespace TUGraz.VectoCommon.Models
 		AxleConfig_8x4,
 		AxleConfig_8x6,
 		AxleConfig_8x8,
-		AxleConfig_Undefined,
 	}
 
 	public enum AxleType
@@ -82,6 +82,11 @@ namespace TUGraz.VectoCommon.Models
 		public static string GetName(this AxleConfiguration self)
 		{
 			return self.ToString().Replace(Prefix, "");
+		}
+
+		public static string ToXMLFormat(this AxleConfiguration self)
+		{
+			return self.GetName();
 		}
 
 		public static AxleConfiguration Parse(string typeString)

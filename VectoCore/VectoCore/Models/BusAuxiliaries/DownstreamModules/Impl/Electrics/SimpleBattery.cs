@@ -1,9 +1,10 @@
-﻿using TUGraz.VectoCommon.Utils;
+﻿using TUGraz.VectoCommon.Models;
+using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Models.BusAuxiliaries.Interfaces.DownstreamModules.Electrics;
 
 namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.Electrics
 {
-	public class SimpleBattery : ISimpleBattery
+	public class SimpleBattery : LoggingObject, ISimpleBattery
 	{
 		public SimpleBattery(WattSecond capacity, double soc = 0.9)
 		{
@@ -18,9 +19,17 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.Electric
 
 		#endregion
 
-		public void Request(Watt watt, Second seconds)
+		public void Request(WattSecond energy)
 		{
-			SOC += watt * seconds / Capacity;
+			SOC += energy / Capacity;
+			if (SOC > 1) {
+				Log.Warn("SOC > 1!");
+				SOC = 1;
+			}
+			if (SOC < 0) {
+				Log.Warn("SOC < 0!");
+				SOC = 0;
+			}
 		}
 	}
 }

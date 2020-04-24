@@ -2,17 +2,24 @@
 using System.Data;
 using System.Runtime.CompilerServices;
 using TUGraz.VectoCommon.InputData;
+using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.InputData.Reader.ComponentData;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox;
 
-namespace TUGraz.VectoCore.Models.Declaration
+namespace TUGraz.VectoCore.Models.GenericModelData
 {
-	public class GenericBusAxelgearData
+	public class GenericTransmissionComponentData
 	{
-		public DataTable AxleGearInputLossMap { get; private set; }
+		
+		//public GearboxData CreateGearboxData(
+		//	IVehicleDeclarationInputData primaryVehicle, VectoRunData runData,
+		//	IShiftPolygonCalculator shiftPolygonCalc)
+		//{
+		//	return DeclarationDataAdapterHeavyLorry.DoCreateGearboxData(primaryVehicle, runData, shiftPolygonCalc);
+		//}
 
 		public AxleGearData CreateGenericBusAxlegearData(IAxleGearInputData axlegearData)
 		{
@@ -25,15 +32,38 @@ namespace TUGraz.VectoCore.Models.Declaration
 			var ratio = axlegearData.Ratio;
 
 			var outputLossMap = CreateAxlegearOutputLossMap(ratio);
-			AxleGearInputLossMap = CalculateAxleInputLossMap(outputLossMap, ratio);
+			var axleGearInputLossMap = CalculateTransmissionLossMapInput(outputLossMap, ratio, 1.0);
 
 			var transmissionData = new TransmissionData
 			{
 				Ratio = axlegearData.Ratio,
-				LossMap = TransmissionLossMapReader.Create(AxleGearInputLossMap, ratio, "Axlegear")
+				LossMap = TransmissionLossMapReader.Create(axleGearInputLossMap, ratio, "Axlegear")
 			};
 
 			axleGear.AxleGear = transmissionData;
+
+			return axleGear;
+		}
+
+		public AngledriveData CreateGenericBusAngledriveData(IAngledriveInputData angledriveData)
+		{
+			if (angledriveData == null || angledriveData.Type == AngledriveType.None || angledriveData.Type == AngledriveType.LossesIncludedInGearbox) {
+				return null;
+			}
+
+			var axleGear = new AngledriveData() {
+				InputData = angledriveData
+			};
+
+			var outputLossMap = CreateAxlegearOutputLossMap(angledriveData.Ratio);
+			var axleGearInputLossMap = CalculateTransmissionLossMapInput(outputLossMap, angledriveData.Ratio, Constants.GenericLossMapSettings.FactorAngleDrive);
+
+			var transmissionData = new TransmissionData {
+				Ratio = angledriveData.Ratio,
+				LossMap = TransmissionLossMapReader.Create(axleGearInputLossMap, angledriveData.Ratio, "Angledrive")
+			};
+
+			axleGear.Angledrive = transmissionData;
 
 			return axleGear;
 		}
@@ -47,14 +77,11 @@ namespace TUGraz.VectoCore.Models.Declaration
 					Constants.GenericLossMapSettings.OutputTorqueEnd
 				};
 
-			var outStart = Constants.GenericLossMapSettings.OutputSpeedStart;
-			var outEnd = Constants.GenericLossMapSettings.OutputSpeedEnd;
-
 			var outputSpeeds = new[] {
-					0, 0, 0, 0,
-					outStart, outStart,outStart, outStart,
-					outEnd, outEnd, outEnd, outEnd
-				};
+				0,
+				Constants.GenericLossMapSettings.OutputSpeedStart,
+				Constants.GenericLossMapSettings.OutputSpeedEnd
+			};
 
 			var td0 = Constants.GenericLossMapSettings.T0 +
 					  axleRatio * Constants.GenericLossMapSettings.T1;
@@ -64,33 +91,24 @@ namespace TUGraz.VectoCore.Models.Declaration
 			var td_n = Constants.GenericLossMapSettings.Td_n;
 			var efficiency = Constants.GenericLossMapSettings.Efficiency;
 
-			var torqueIndex = 0;
-
-
 			var lossMap = new DataTable();
 			lossMap.Columns.Add("output speed");
 			lossMap.Columns.Add("output torque");
 			lossMap.Columns.Add("output torque loss");
 
-			for (int i = 0; i < 12; i++)
-			{
-				if (i % 4 == 0)
-					torqueIndex = 0;
+			foreach (var outputSpeed in outputSpeeds) {
+				foreach (var torque in torques) {
+					var calculationSpeed = outputSpeed.IsEqual(0)
+						? Constants.GenericLossMapSettings.OutputSpeedStart
+						: outputSpeed;
+					
+					var newRow = lossMap.NewRow();
+					newRow[lossMap.Columns[0]] = outputSpeed;
+					newRow[lossMap.Columns[1]] = torque;
+					newRow[lossMap.Columns[2]] = CalculateOutputTorqueLoss(td0_, td150_, td_n, calculationSpeed, torque, efficiency);
 
-				var calculationSpeed = outputSpeeds[i].IsEqual(0)
-					? outputSpeeds[4]
-					: outputSpeeds[i];
-
-				var torque = torques[torqueIndex++];
-
-				var newRow = lossMap.NewRow();
-				newRow[lossMap.Columns[0]] = outputSpeeds[i];
-				newRow[lossMap.Columns[1]] = torque;
-				newRow[lossMap.Columns[2]] =
-					CalculateOutputTorqueLoss(td0_, td150_, td_n, calculationSpeed, torque, efficiency);
-
-				lossMap.Rows.Add(newRow);
-
+					lossMap.Rows.Add(newRow);
+				}
 			}
 
 			return lossMap;
@@ -105,7 +123,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 			return td0_ + td150_ * outputspeed / td_n + ouputTorque / efficiency - ouputTorque;
 		}
 
-		private DataTable CalculateAxleInputLossMap(DataTable outputLossMap, double axleRatio)
+		private DataTable CalculateTransmissionLossMapInput(DataTable outputLossMap, double axleRatio, double lossCorrectionFactor)
 		{
 			var inputLossMap = new DataTable();
 
@@ -120,9 +138,9 @@ namespace TUGraz.VectoCore.Models.Declaration
 				var outputLoss = row[2].ToString().ToDouble();
 
 				var newRow = inputLossMap.NewRow();
-				newRow[0] = GetInputSpeed(outputSpeed, axleRatio);
-				newRow[1] = GetInputTorque(outputTorque, outputLoss, axleRatio);
-				newRow[2] = GetInputTorqueLoss(outputLoss, axleRatio);
+				newRow[0] = Math.Round(GetInputSpeed(outputSpeed, axleRatio), 2, MidpointRounding.AwayFromZero);
+				newRow[1] = Math.Round(GetInputTorque(outputTorque, outputLoss, axleRatio), 2, MidpointRounding.AwayFromZero);
+				newRow[2] = Math.Round(GetInputTorqueLoss(outputLoss, axleRatio, lossCorrectionFactor), 2, MidpointRounding.AwayFromZero);
 				inputLossMap.Rows.Add(newRow);
 			}
 
@@ -142,9 +160,9 @@ namespace TUGraz.VectoCore.Models.Declaration
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		private double GetInputTorqueLoss(double outputLoss, double iAxle)
+		private double GetInputTorqueLoss(double outputLoss, double iAxle, double lossCorrectionFactor)
 		{
-			return outputLoss / iAxle;
+			return outputLoss / iAxle * lossCorrectionFactor;
 		}
 	}
 }

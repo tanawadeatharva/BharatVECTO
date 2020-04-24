@@ -25,58 +25,31 @@ namespace TUGraz.VectoCommon.BusAuxiliaries {
 			return (Prefix + text).ParseEnum<BusHVACSystemConfiguration>();
 		}
 
-		public static string GetLabel(this BusHVACSystemConfiguration havacConfiguration)
+		public static string GetLabel(this BusHVACSystemConfiguration hvacConfiguration)
 		{
-			switch (havacConfiguration) {
-
-				case BusHVACSystemConfiguration.Configuration1:
-					return $"{Prefix} 1";
-				case BusHVACSystemConfiguration.Configuration2:
-					return $"{Prefix} 2";
-				case BusHVACSystemConfiguration.Configuration3:
-					return $"{Prefix} 3";
-				case BusHVACSystemConfiguration.Configuration4:
-					return $"{Prefix} 4";
-				case BusHVACSystemConfiguration.Configuration5:
-					return $"{Prefix} 5";
-				case BusHVACSystemConfiguration.Configuration6:
-					return $"{Prefix} 6";
-				case BusHVACSystemConfiguration.Configuration7:
-					return $"{Prefix} 7";
-				case BusHVACSystemConfiguration.Configuration8:
-					return $"{Prefix} 8";
-				case BusHVACSystemConfiguration.Configuration9:
-					return $"{Prefix} 9";
-				default: 
+			if (hvacConfiguration == BusHVACSystemConfiguration.Unknown) { 
 					return BusHVACSystemConfiguration.Unknown.ToString();
 			}
+
+			return Prefix + " " + hvacConfiguration.ToString().Replace(Prefix, "");
 		}
 
-		public static string GetXmlFormat(this BusHVACSystemConfiguration havacConfiguration)
+		public static string GetName(this BusHVACSystemConfiguration hvacConfig)
 		{
-			switch (havacConfiguration)
-			{
-				case BusHVACSystemConfiguration.Configuration1:
-					return "1";
-				case BusHVACSystemConfiguration.Configuration2:
-					return "2";
-				case BusHVACSystemConfiguration.Configuration3:
-					return "3";
-				case BusHVACSystemConfiguration.Configuration4:
-					return "4";
-				case BusHVACSystemConfiguration.Configuration5:
-					return "5";
-				case BusHVACSystemConfiguration.Configuration6:
-					return "6";
-				case BusHVACSystemConfiguration.Configuration7:
-					return "7";
-				case BusHVACSystemConfiguration.Configuration8:
-					return "8";
-				case BusHVACSystemConfiguration.Configuration9:
-					return "9";
-				default:
-					return "0";
+			if (hvacConfig == BusHVACSystemConfiguration.Unknown) {
+				return "Unknown";
 			}
+
+			return hvacConfig.ToString().Replace(Prefix, "");
+		}
+
+		public static string GetXmlFormat(this BusHVACSystemConfiguration hvacConfiguration)
+		{
+			if (hvacConfiguration == BusHVACSystemConfiguration.Unknown) {
+				return "0";
+			}
+
+			return GetName(hvacConfiguration);
 		}
 
 	}

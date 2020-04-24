@@ -18,7 +18,9 @@ using TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.Pneumatics;
 using TUGraz.VectoCore.Models.BusAuxiliaries.Interfaces.DownstreamModules.Electrics;
 using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation.Data;
+using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
+using TUGraz.VectoCore.Models.SimulationComponent.Impl;
 using TUGraz.VectoCore.OutputData;
 
 
@@ -35,10 +37,8 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 		protected IDeclarationReport Report;
 
 
-		protected Segment _segment;
+		protected Segment _segmentCompletedBus;
 		
-		protected DriverData _driverdata;
-		protected AirdragData _airdragData;
 		protected AxleGearData _axlegearData;
 		protected AngledriveData _angledriveData;
 		protected GearboxData _gearboxData;
@@ -46,23 +46,21 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 
 		protected IAlternatorMap _alternatorMap;
 		protected ICompressorMap _compressorMap;
-		protected IPneumaticsConsumersDemand _consumersDeclarationData;
+		//protected IPneumaticsConsumersDemand _consumersDeclarationData;
 
-		protected CombustionEngineData _combustionEngineData;
+		//protected CombustionEngineData _combustionEngineData;
 
 		//protected Exception InitException;
 		protected ShiftStrategyParameters _gearshiftData;
 
-		private VehicleData _tmpVehicleData;
+		//private VehicleData _tmpVehicleData;
 		private DriverData _driverData;
 
 
-		protected IDeclarationDataAdapter DataAdapter { get; }
+		
+		protected DeclarationDataAdapterCompletedBusSpecific DataAdapterSpecific = new DeclarationDataAdapterCompletedBusSpecific();
 
-
-		protected DeclarationDataAdapterCompletedBus DataAdapterCompleted = new DeclarationDataAdapterCompletedBus();
-
-		protected DeclarationDataAdapterPrimaryBus DataAdapterPrimary = new DeclarationDataAdapterPrimaryBus();
+		protected DeclarationDataAdapterCompletedBusGeneric DataAdapterGeneric = new DeclarationDataAdapterCompletedBusGeneric();
 
 		public DeclarationModeCompletedBusVectoRunDataFactory(
 			IDeclarationInputDataProvider dataProvider, IDeclarationReport report)
@@ -71,11 +69,21 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 			Report = report;
 		}
 
+		protected IVehicleDeclarationInputData PrimaryVehicle
+		{
+			get { return InputDataProvider.PrimaryVehicleData.Vehicle; }
+		}
+
+		protected IVehicleDeclarationInputData CompletedVehicle
+		{
+			get { return InputDataProvider.JobInputData.Vehicle; }
+		}
+
 		public IEnumerable<VectoRunData> NextRun()
 		{
 			Initialize();
 			if (Report != null) {
-				//InitializeReport();
+				InitializeReport();
 			}
 
 			return GetNextRun();
@@ -83,11 +91,9 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 
 		protected virtual void InitializeReport()
 		{
-			var vehicle = InputDataProvider.JobInputData.Vehicle;
-
-			var powertrainConfig = _segment.Missions.Select(
+			var powertrainConfig = _segmentCompletedBus.Missions.Select(
 														mission => CreateVectoRunDataSpecific(
-															vehicle, InputDataProvider.PrimaryVehicleData.Vehicle, mission, mission.Loadings.First()))
+															 mission, mission.Loadings.First(), 0))
 													.FirstOrDefault(x => x != null);
 			
 			Report.InitializeReport(powertrainConfig, new List<List<FuelData.Entry>>());
@@ -97,83 +103,41 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 
 		protected virtual void Initialize()
 		{
-			var vehicle = InputDataProvider.JobInputData.Vehicle;
-			var primaryVehicle = InputDataProvider.PrimaryVehicleData.Vehicle;
-			if (vehicle.ExemptedVehicle) {
+			if (CompletedVehicle.ExemptedVehicle || PrimaryVehicle.ExemptedVehicle) {
 				return;
 			}
 			 
-			_segment = GetCompletedSegment(vehicle, primaryVehicle.AxleConfiguration);
+			_segmentCompletedBus = GetCompletedSegment(CompletedVehicle, PrimaryVehicle.AxleConfiguration);
 
-			//_driverdata = DataAdapterCompleted.CreateDriverData();
-			//_driverdata.AccelerationCurve = AccelerationCurveReader.ReadFromStream(_segment.AccelerationFile);
-			////var tempVehicle = DataAdapter.CreateVehicleData(
-			////	vehicle, _segment.Missions.First(),
-			////	_segment.Missions.First().Loadings.First());
-			//_airdragData = DataAdapterCompleted.CreateAirdragData(
-			//	vehicle.Components.AirdragInputData,
-			//	_segment.Missions.First(), _segment);
+			var tmpVehicleData = DataAdapterSpecific.CreateVehicleData(PrimaryVehicle, CompletedVehicle, _segmentCompletedBus.Missions.First(),
+																_segmentCompletedBus.Missions.First().Loadings.First());
+			tmpVehicleData.VehicleCategory = VehicleCategory.GenericBusVehicle;
 
-			//_axlegearData = DeclarationData.FactorMethodBus.CreateAxlegearData(primaryVehicle.Components.AxleGearInputData);
+			var combustionEngineData = DataAdapterGeneric.CreateEngineData(PrimaryVehicle, 0);
 
-			//_angledriveData = null;
-			//var tmpRunData = new VectoRunData() {
-			//	ShiftStrategy = InputDataProvider.JobInputData.ShiftStrategy,
-			//	GearboxData = new GearboxData() {
-			//		Type = vehicle.Components.GearboxInputData.Type,
-			//	}
-			//};
+			_axlegearData = DataAdapterGeneric.CreateAxleGearData(PrimaryVehicle.Components.AxleGearInputData);
 
-			////var tmpStrategy = PowertrainBuilder.GetShiftStrategy(tmpRunData, new SimplePowertrainContainer(tmpRunData));
-			//var tmpEngine = DeclarationData.FactorMethodBus.CreateBusEngineData(primaryVehicle.Components.EngineInputData);
-			//_gearboxData = DeclarationData.FactorMethodBus.CreateGearboxData(primaryVehicle.Components.GearboxInputData);
-
-			//_retarderData = DataAdapterCompleted.CreateRetarderData(vehicle.Components.RetarderInputData);
-
-			//_ptoTransmissionData = null;
-
-			//_municipalPtoTransmissionData = null;
-
-			_tmpVehicleData = new VehicleData {
-				DynamicTyreRadius = DeclarationData.FactorMethodBus.GetDynamicTyreRadius(primaryVehicle),
-				VehicleCategory = VehicleCategory.GenericBusVehicle
-			};
-
-
-			_combustionEngineData = DeclarationData.FactorMethodBus.CreateBusEngineData(primaryVehicle);
-
-			_axlegearData = DeclarationData.FactorMethodBus.CreateAxlegearData(primaryVehicle.Components.AxleGearInputData);
-
-			_angledriveData = DeclarationData.FactorMethodBus.CreateAngledriveData(
-								primaryVehicle.Components.AngledriveInputData,
-								primaryVehicle.Components.AxleGearInputData.Ratio);
+			_angledriveData = DataAdapterGeneric.CreateAngledriveData(PrimaryVehicle.Components.AngledriveInputData);
 			
+			var tmpRunData = new VectoRunData() {
+				ShiftStrategy = InputDataProvider.JobInputData.ShiftStrategy,
+				GearboxData = new GearboxData() {
+					Type = PrimaryVehicle.Components.GearboxInputData.Type,
+				}
+			};
+			var tmpStrategy = PowertrainBuilder.GetShiftStrategy(tmpRunData, new SimplePowertrainContainer(tmpRunData));
+			
+			_gearboxData = DataAdapterGeneric.CreateGearboxData(PrimaryVehicle, new VectoRunData() { EngineData = combustionEngineData, AxleGearData = _axlegearData, VehicleData = tmpVehicleData },
+				tmpStrategy);
 
-			_gearboxData = DeclarationData.FactorMethodBus.CreateGearboxData(primaryVehicle,
-				new VectoRunData() { EngineData = _combustionEngineData, AxleGearData = _axlegearData, VehicleData = _tmpVehicleData },
-				null);
+			_gearshiftData = DataAdapterGeneric.CreateGearshiftData(
+				_gearboxData, _axlegearData.AxleGear.Ratio * (_angledriveData?.Angledrive.Ratio ?? 1.0), combustionEngineData.IdleSpeed);
 
-	
-			_gearshiftData = DataAdapterPrimary.CreateGearshiftData(
-				_gearboxData, _axlegearData.AxleGear.Ratio * (_angledriveData?.Angledrive.Ratio ?? 1.0), _combustionEngineData.IdleSpeed);
+			_retarderData = DataAdapterGeneric.CreateRetarderData(PrimaryVehicle.Components.RetarderInputData);
+				
 
-
-			var primaryBusAuxiliaries = primaryVehicle.Components.BusAuxiliaries;
-
-			_alternatorMap = new SimpleAlternator(
-				DataAdapterPrimary.CalculateAlternatorEfficiency(primaryBusAuxiliaries.ElectricSupply.Alternators
-					.Concat(vehicle.Components.BusAuxiliaries.ElectricSupply.Alternators).ToList()));
-
-			_compressorMap = DataAdapterPrimary.GetCompressorMap(primaryBusAuxiliaries.PneumaticSupply.CompressorSize,
-				primaryBusAuxiliaries.PneumaticSupply.Clutch);
-
-			var retarderType = primaryVehicle.Components.RetarderInputData.Type;
-			_consumersDeclarationData = DataAdapterPrimary.CreatePneumaticAuxConfig(retarderType);
-
-			_retarderData =
-				DeclarationData.FactorMethodBus.CreateRetarderData(primaryVehicle.Components.RetarderInputData);
-
-			_driverData = new GenericBusDriverData().CreateGenericBusDriverData(_segment);
+			_driverData = DataAdapterGeneric.CreateDriverData();
+			_driverData.AccelerationCurve = AccelerationCurveReader.ReadFromStream(_segmentCompletedBus.AccelerationFile);
 		}
 
 		protected virtual IEnumerable<VectoRunData> GetNextRun()
@@ -187,23 +151,53 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 
 		private IEnumerable<VectoRunData> VectoRunDataHeavyBusCompleted()
 		{
-			var completedVehicle = InputDataProvider.JobInputData.Vehicle;
-			var primaryVehicle = InputDataProvider.PrimaryVehicleData.Vehicle;
-			foreach (var mission in _segment.Missions) {
-				foreach (var loading in mission.Loadings) {
-					var simulationRunData = CreateVectoRunDataSpecific(primaryVehicle, completedVehicle, mission, loading);
-					if (simulationRunData != null) {
+			var engineModes = InputDataProvider.PrimaryVehicleData.Vehicle.Components.EngineInputData.EngineModes;
+
+			for (var modeIdx = 0; modeIdx < engineModes.Count; modeIdx++) {
+				var fuelMode = "single fuel mode";
+				if (engineModes[modeIdx].Fuels.Count > 1) {
+					fuelMode = "dual fuel mode";
+				}
+				foreach (var mission in _segmentCompletedBus.Missions) {
+					foreach (var loading in mission.Loadings) {
+						var simulationRunData = CreateVectoRunDataSpecific(mission, loading, modeIdx);
+						if (simulationRunData != null) {
+							yield return simulationRunData;
+						}
+
+						var primarySegment = GetPrimarySegment(PrimaryVehicle);
+						var primaryMission = primarySegment.Missions.Where(
+							m => {
+								return m.BusParameter.DoubleDecker == CompletedVehicle.VehicleCode.IsDoubleDeckerBus() &&
+										m.MissionType == mission.MissionType;
+							}).First();
+						simulationRunData = CreateVectoRunDataGeneric(
+							primaryMission,
+							new KeyValuePair<LoadingType, Tuple<Kilogram, double?>>(loading.Key, primaryMission.Loadings[loading.Key]),
+							primarySegment, modeIdx);
+
+
+						var primaryResult = InputDataProvider.PrimaryVehicleData.GetResult(
+							simulationRunData.Mission.BusParameter.BusGroup, simulationRunData.Mission.MissionType, fuelMode,
+							simulationRunData.VehicleData.Loading);
+						if (primaryResult == null) {
+							throw new VectoException(
+								"Failed to find results in PrimaryVehicleReport for vehicle group: {0},  mission: {1}, fuel mode: '{2}', payload: {3}. Make sure PIF and completed vehicle data match!",
+								simulationRunData.Mission.BusParameter.BusGroup, simulationRunData.Mission.MissionType, fuelMode,
+								simulationRunData.VehicleData.Loading);
+						}
+
+						if (primaryResult.ResultStatus != "success") {
+							throw new VectoException(
+								"Simulation results in PrimaryVehicleReport for vehicle group: {0},  mission: {1}, fuel mode: '{2}', payload: {3} not finished successfully.",
+								simulationRunData.Mission.BusParameter.BusGroup, simulationRunData.Mission.MissionType, fuelMode,
+								simulationRunData.VehicleData.Loading);
+						}
+
+						simulationRunData.PrimaryResult = primaryResult;
+
 						yield return simulationRunData;
 					}
-
-					var primarySegment = GetPrimarySegment(primaryVehicle);
-					var primaryMission = primarySegment.Missions.Where(
-						m => {
-							return m.BusParameter.DoubleDecker == completedVehicle.VehicleCode.IsDoubleDeckBus() &&
-									m.MissionType == mission.MissionType;
-						}).First();
-					simulationRunData = CreateVectoRunDataGeneric(primaryVehicle, completedVehicle, primaryMission, loading);
-					yield return simulationRunData;
 				}
 			}
 		}
@@ -214,7 +208,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 
 			var primarySegment = DeclarationData.PrimaryBusSegments.Lookup(
 				primaryVehicle.VehicleCategory, primaryVehicle.AxleConfiguration, primaryVehicle.Articulated,
-				primaryVehicle.FloorType, completedVehicle.VehicleCode.IsDoubleDeckBus());
+				primaryVehicle.FloorType, completedVehicle.VehicleCode.IsDoubleDeckerBus());
 
 			return primarySegment;
 		}
@@ -232,18 +226,17 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 				vehicle.Height, vehicle.FloorType == FloorType.LowFloor);
 			if (!segment.Found) {
 				throw new VectoException(
-					"no segment found for vehicle configruation: vehicle category: {0}, axle configuration: {1}, articulated: {2}, primary",
+					"no segment found for vehicle configruation: vehicle category: {0}, axle configuration: {1}, articulated: {2}, vehicle code: {3}, registered class: {4}, passengersLowerDeck: {5}, height: {6}, lowfloor: {7}. completed",
 					vehicle.VehicleCategory, axleConfiguration,
-					vehicle.Articulated);
+					vehicle.Articulated, vehicle.VehicleCode, vehicle.RegisteredClass.GetLabel(), vehicle.NumberOfPassengersLowerDeck,
+					vehicle.Height, vehicle.FloorType == FloorType.LowFloor);
 			}
 
 			return segment;
 		}
 
 
-		protected VectoRunData CreateVectoRunDataSpecific(
-			IVehicleDeclarationInputData primaryVehicle, IVehicleDeclarationInputData completedVehicle,
-			Mission mission, KeyValuePair<LoadingType, Kilogram> loading)
+		protected VectoRunData CreateVectoRunDataSpecific(Mission mission, KeyValuePair<LoadingType, Tuple<Kilogram, double?>> loading, int modeIdx)
 		{
 			DrivingCycleData cycle;
 			lock (CyclesCacheLock) {
@@ -254,105 +247,40 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 					CyclesCache.Add(mission.MissionType, cycle);
 				}
 			}
-
-
-			//var mergedBusAux = new CombinedBusAuxiliaries(
-			//	primaryVehicle.Components.BusAuxiliaries, completedVehicle.Components.BusAuxiliaries);
-
-			//var simulationRunData = new VectoRunData {
-			//	Loading = loading.Key,
-			//	VehicleData = DataAdapterCompleted.CreateVehicleData(primaryVehicle, mission, loading),
-			//	AirdragData = DataAdapterCompleted.CreateAirdragData(null, mission, new Segment()),
-			//  EngineData = DeclarationData.FactorMethodBus.CreateBusEngineData(primaryVehicle.Components.EngineInputData), 
-			//	GearboxData = _gearboxData,
-			//	AxleGearData = _axlegearData,
-			//	AngledriveData = _angledriveData,
-			//	Aux = DataAdapterCompleted.CreateAuxiliaryData(
-			//		primaryVehicle.Components.AuxiliaryInputData,
-			//		mergedBusAux, mission.MissionType, _segment.VehicleClass,
-			//		primaryVehicle.Length ?? mission.BusParameter.VehicleLength),
-			//	Cycle = new DrivingCycleProxy(cycle, mission.MissionType.ToString()),
-			//	Retarder = _retarderData,
-			//	DriverData = _driverdata,
-			//	ExecutionMode = ExecutionMode.Declaration,
-			//	JobName = InputDataProvider.JobInputData.JobName,
-			//	ModFileSuffix = "_specific_" + mission.BusParameter.BusGroup.GetClassNumber() + "_" + loading.Key.ToString(),
-			//	Report = Report,
-			//	Mission = mission,
-			//	InputDataHash = InputDataProvider.XMLHash,
-			//	SimulationType = SimulationType.DistanceCycle,
-			//	GearshiftParameters = _gearshiftData,
-			//	ShiftStrategy = InputDataProvider.JobInputData.ShiftStrategy
-			//};
-			//simulationRunData.EngineData.FuelMode = 0;
-			//simulationRunData.VehicleData.VehicleClass = _segment.VehicleClass;
-			//simulationRunData.BusAuxiliaries = DataAdapterPrimary.CreateBusAuxiliariesData(
-			//	mission, InputDataProvider.JobInputData.Vehicle, simulationRunData);
-			//return simulationRunData;
-
-			var primaryBusAuxiliaries = primaryVehicle.Components.BusAuxiliaries;
-
+			
 			var simulationRunData = new VectoRunData {
-
 				Loading = loading.Key,
-				VehicleData = DataAdapterCompleted.CreateVehicleData(primaryVehicle, completedVehicle, 
-					mission, loading, _tmpVehicleData.DynamicTyreRadius),
-				AirdragData = DataAdapterCompleted.CreateAirdragData(completedVehicle, mission),
-				EngineData = _combustionEngineData,
+				VehicleData = DataAdapterSpecific.CreateVehicleData(PrimaryVehicle, CompletedVehicle, 
+					mission, loading),
+				AirdragData = DataAdapterSpecific.CreateAirdragData(CompletedVehicle, mission),
+				EngineData = DataAdapterSpecific.CreateEngineData(PrimaryVehicle, modeIdx),
 				GearboxData = _gearboxData,
 				AxleGearData = _axlegearData,
 				AngledriveData = _angledriveData,
+				Aux = DataAdapterSpecific.CreateAuxiliaryData(PrimaryVehicle.Components.AuxiliaryInputData,
+					PrimaryVehicle.Components.BusAuxiliaries, mission.MissionType, _segmentCompletedBus.VehicleClass, CompletedVehicle.Length),
+				Cycle = new DrivingCycleProxy(cycle, mission.MissionType.ToString()),
+				Retarder = _retarderData,
+				DriverData = _driverData,
+				ExecutionMode = ExecutionMode.Declaration,
+				JobName = InputDataProvider.JobInputData.JobName,
+				ModFileSuffix = "_" + _segmentCompletedBus.VehicleClass.GetClassNumber() + "-Specific_" + loading.Key.ToString(),
+				Report = Report,
+				Mission = mission,
+				InputDataHash = InputDataProvider.XMLHash,
+				SimulationType = SimulationType.DistanceCycle,
+				VehicleDesignSpeed = _segmentCompletedBus.DesignSpeed,
 				GearshiftParameters = _gearshiftData,
-				Aux = DataAdapterPrimary.CreateAuxiliaryData(primaryVehicle.Components.AuxiliaryInputData,
-				primaryBusAuxiliaries, mission.MissionType, _segment.VehicleClass,
-				completedVehicle.Length)
 			};
-			
-			var auxiliaryConfig = new AuxiliaryConfig {
-				ElectricalUserInputsConfig = DataAdapterCompleted.CreateElectricsUserInputsConfig(
-					primaryBusAuxiliaries, completedVehicle, mission, _alternatorMap),
-
-				PneumaticUserInputsConfig = DataAdapterCompleted.CreatePneumaticUserInputsConfig(
-					primaryBusAuxiliaries, completedVehicle, _compressorMap),
-
-				PneumaticAuxillariesConfig = _consumersDeclarationData
-			};
-			
-			auxiliaryConfig.SSMInputs = GetCompletedSSMInput(mission, completedVehicle, primaryBusAuxiliaries, loading);
-
-			simulationRunData.BusAuxiliaries = auxiliaryConfig;
-
-			simulationRunData.Retarder = _retarderData;
-
-			simulationRunData.DriverData = _driverData;
-			
-			simulationRunData.Cycle = new DrivingCycleProxy(cycle, mission.MissionType.ToString());
+			simulationRunData.EngineData.FuelMode = 0;
+			simulationRunData.VehicleData.VehicleClass = _segmentCompletedBus.VehicleClass;
+			simulationRunData.BusAuxiliaries = DataAdapterSpecific.CreateBusAuxiliariesData(mission, PrimaryVehicle, CompletedVehicle, simulationRunData);
 			
 			return simulationRunData;
 		}
 
-		private SSMInputs GetCompletedSSMInput(Mission mission, IVehicleDeclarationInputData completedVehicle,
-			IBusAuxiliariesDeclarationData primaryBusAux, KeyValuePair<LoadingType, Kilogram> loading)
-		{
-			var ssmInputs = new SSMInputs(null);
-			DataAdapterCompleted.SetSSMBusParameters(ssmInputs, completedVehicle, mission, loading);
-
-			ssmInputs.Technologies = DataAdapterCompleted.CreateTechnologyBenefits(completedVehicle,
-				primaryBusAux, DataAdapterPrimary);
-
-			DeclarationData.FactorMethodBus.SetBoundaryConditions(ssmInputs);
-			DeclarationData.FactorMethodBus.SetEnvironmentalConditions(ssmInputs);
-
-			DataAdapterCompleted.SetSSMInputs(ssmInputs, mission, loading, completedVehicle);
-
-			return ssmInputs;
-		}
-
-
-
-		protected VectoRunData CreateVectoRunDataGeneric(
-			IVehicleDeclarationInputData primaryVehicle, IVehicleDeclarationInputData completedVehicle,
-			Mission mission, KeyValuePair<LoadingType, Kilogram> loading)
+		
+		protected VectoRunData CreateVectoRunDataGeneric(Mission mission, KeyValuePair<LoadingType, Tuple<Kilogram, double?>> loading, Segment primarySegment, int modeIdx)
 		{
 			DrivingCycleData cycle;
 			lock (CyclesCacheLock) {
@@ -364,94 +292,39 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 				}
 			}
 
-			//var simulationRunData = new VectoRunData {
-			//	Loading = loading.Key,
-			//	VehicleData = DataAdapterPrimary.CreateVehicleData(primaryVehicle, mission, loading),
-			//	AirdragData = DataAdapterPrimary.CreateAirdragData(null, mission, new Segment()),
-			//	EngineData = DeclarationData.FactorMethodBus.CreateBusEngineData(primaryVehicle.Components.EngineInputData),
-			//	GearboxData = _gearboxData,
-			//	AxleGearData = _axlegearData,
-			//	AngledriveData = _angledriveData,
-			//	Aux = DataAdapterPrimary.CreateAuxiliaryData(
-			//		primaryVehicle.Components.AuxiliaryInputData,
-			//		completedVehicle.Components.BusAuxiliaries, mission.MissionType, _segment.VehicleClass,
-			//		primaryVehicle.Length ?? mission.BusParameter.VehicleLength),
-			//	Cycle = new DrivingCycleProxy(cycle, mission.MissionType.ToString()),
-			//	Retarder = _retarderData,
-			//	DriverData = _driverdata,
-			//	ExecutionMode = ExecutionMode.Declaration,
-			//	JobName = InputDataProvider.JobInputData.JobName,
-			//	ModFileSuffix = "_generic_" + mission.BusParameter.BusGroup.GetClassNumber() + "_" + loading.Key.ToString(),
-			//	Report = Report,
-			//	Mission = mission,
-			//	InputDataHash = InputDataProvider.XMLHash,
-			//	SimulationType = SimulationType.DistanceCycle,
-			//	GearshiftParameters = _gearshiftData,
-			//	ShiftStrategy = InputDataProvider.JobInputData.ShiftStrategy
-			//};
-			//simulationRunData.EngineData.FuelMode = 0;
-			//simulationRunData.VehicleData.VehicleClass = _segment.VehicleClass;
-			//simulationRunData.BusAuxiliaries = DataAdapterPrimary.CreateBusAuxiliariesData(
-			//	mission, InputDataProvider.JobInputData.Vehicle, simulationRunData);
-			//return simulationRunData;
-
-			var primarySegment = GetPrimarySegment(primaryVehicle);
-			var primaryBusAuxiliaries = primaryVehicle.Components.BusAuxiliaries;
+			var primaryBusAuxiliaries = PrimaryVehicle.Components.BusAuxiliaries;
 
 			var simulationRunData = new VectoRunData {
 				Loading = loading.Key,
-				VehicleData = DataAdapterPrimary.CreateVehicleData(primaryVehicle, mission, loading,
-					_tmpVehicleData.DynamicTyreRadius),
-				AirdragData = DataAdapterPrimary.CreateAirdragData(null, mission, new Segment()),
-				EngineData = _combustionEngineData,
+				VehicleData = DataAdapterGeneric.CreateVehicleData(PrimaryVehicle, mission, loading),
+				AirdragData = DataAdapterGeneric.CreateAirdragData(null, mission, new Segment()),
+				EngineData = DataAdapterGeneric.CreateEngineData(PrimaryVehicle, modeIdx),
 				GearboxData = _gearboxData,
 				AxleGearData = _axlegearData,
 				AngledriveData = _angledriveData,
-				GearshiftParameters = _gearshiftData,
-				Aux = DataAdapterPrimary.CreateAuxiliaryData(primaryVehicle.Components.AuxiliaryInputData,
+				Aux = DataAdapterGeneric.CreateAuxiliaryData(PrimaryVehicle.Components.AuxiliaryInputData,
 					primaryBusAuxiliaries, mission.MissionType, primarySegment.VehicleClass,
-					completedVehicle.Length)
+					mission.BusParameter.VehicleLength),
+				Cycle = new DrivingCycleProxy(cycle, mission.MissionType.ToString()),
+				Retarder = _retarderData,
+				DriverData = _driverData,
+				ExecutionMode = ExecutionMode.Declaration,
+				JobName = InputDataProvider.JobInputData.JobName,
+				ModFileSuffix = "_" + _segmentCompletedBus.VehicleClass.GetClassNumber() + "-Generic_" + loading.Key.ToString(),
+				Report = Report,
+				Mission = mission,
+				InputDataHash = InputDataProvider.XMLHash,
+				SimulationType = SimulationType.DistanceCycle,
+				VehicleDesignSpeed = _segmentCompletedBus.DesignSpeed,
+				GearshiftParameters = _gearshiftData,
 			};
-			
-			var auxiliaryConfig = new AuxiliaryConfig {
-				ElectricalUserInputsConfig = DataAdapterPrimary.CreateElectricalUserInputsConfig(
-					primaryVehicle, _alternatorMap, mission),
-
-				PneumaticUserInputsConfig = DataAdapterPrimary.CreatePneumaticUserInputsConfig(
-					primaryBusAuxiliaries, _compressorMap),
-
-				PneumaticAuxillariesConfig = _consumersDeclarationData
-			};
-
-			auxiliaryConfig.SSMInputs = GetPrimaryVehicleSSMInput(mission, primaryVehicle);
-
-			simulationRunData.BusAuxiliaries = auxiliaryConfig;
-
-			simulationRunData.Retarder = _retarderData;
-			
-			simulationRunData.DriverData = _driverData;
-
-			simulationRunData.Cycle = new DrivingCycleProxy(cycle, mission.MissionType.ToString());
+			simulationRunData.EngineData.FuelMode = 0;
+			simulationRunData.VehicleData.VehicleClass = _segmentCompletedBus.VehicleClass;
+			simulationRunData.BusAuxiliaries =
+				DataAdapterGeneric.CreateBusAuxiliariesData(mission, PrimaryVehicle, simulationRunData);
 
 			return simulationRunData;
-
 		}
 
-
-		private SSMInputs GetPrimaryVehicleSSMInput(Mission mission, IVehicleDeclarationInputData primaryVehicle)
-		{
-			var ssmInputs = new SSMInputs(null);
-
-			DataAdapterPrimary.SetSSMBusParameters(ssmInputs, mission);
-
-			ssmInputs.Technologies = DataAdapterPrimary.CreateTechnologyBenefits(mission, primaryVehicle);
-
-			DeclarationData.FactorMethodBus.SetBoundaryConditions(ssmInputs);
-			DeclarationData.FactorMethodBus.SetEnvironmentalConditions(ssmInputs);
-
-			DataAdapterPrimary.SetSSMInputs(ssmInputs, mission);
-
-			return ssmInputs;
-		}
 	}
 }

@@ -33,8 +33,10 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Xml.Linq;
+using Newtonsoft.Json;
 using TUGraz.VectoCommon.BusAuxiliaries;
 using TUGraz.VectoCommon.Exceptions;
+using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Configuration;
@@ -74,6 +76,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 		public AngledriveData AngledriveData { get; internal set; }
 
 		[Required, ValidateObject]
+		[JsonIgnore]
 		public IDrivingCycleData Cycle { get; internal set; }
 
 		[ValidateObject]
@@ -98,14 +101,17 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 		public string ModFileSuffix { get; internal set; }
 
 		[ValidateObject]
+		[JsonIgnore]
 		public IDeclarationReport Report { get; internal set; }
 
 		[Required, ValidateObject]
 		public LoadingType Loading { get; internal set; }
 
 		[ValidateObject]
+		[JsonIgnore]
 		public Mission Mission { get; internal set; }
 
+		[JsonIgnore]
 		public XElement InputDataHash { get; internal set; }
 
 		public int JobRunId { get; internal set; }
@@ -121,6 +127,9 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 
 		public string ShiftStrategy { get; set; }
 		public MeterPerSecond VehicleDesignSpeed { get; internal set; }
+
+		// only used for factor method
+		public IResult PrimaryResult { get; set; }
 
 		public class AuxData
 		{

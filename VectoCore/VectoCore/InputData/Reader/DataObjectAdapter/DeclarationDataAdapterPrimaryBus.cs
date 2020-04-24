@@ -12,10 +12,8 @@ using TUGraz.VectoCore.Models.BusAuxiliaries;
 using TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.Electrics;
 using TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.HVAC;
 using TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.Pneumatics;
-using TUGraz.VectoCore.Models.BusAuxiliaries.Interfaces.DownstreamModules.Electrics;
 using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation.Data;
-using TUGraz.VectoCore.Models.SimulationComponent;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Utils;
 
@@ -23,191 +21,22 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 {
 	public class DeclarationDataAdapterPrimaryBus : DeclarationDataAdapterHeavyLorry
 	{
-		#region Overrides of DeclarationDataAdapterTruck
+		#region Overrides of DeclarationDataAdapterHeavyLorry
 
-		public VehicleData CreateVehicleData(IVehicleDeclarationInputData pifVehicle, Mission mission,
-			KeyValuePair<LoadingType, Kilogram> loading, Meter dynamicTyreRadius)
+		public override DriverData CreateDriverData()
 		{
-			var vehicleData = new VehicleData
-			{
-				AxleData = GetAxles(pifVehicle.Components.AxleWheels.AxlesDeclaration, mission.AxleWeightDistribution),
-				DynamicTyreRadius = dynamicTyreRadius,
-				AxleConfiguration = pifVehicle.AxleConfiguration,
-				CurbMass = mission.CurbMass,
-				BodyAndTrailerMass = 0.SI<Kilogram>(),
-				Loading = mission.RefLoad
-			};
-			
-			var adas = new VehicleData.ADASData
-			{
-				EngineStopStart = pifVehicle.ADAS.EngineStopStart,
-				EcoRoll = pifVehicle.ADAS.EcoRoll,
-				PredictiveCruiseControl = pifVehicle.ADAS.PredictiveCruiseControl
-			};
-			
-			vehicleData.ADAS = adas;
-
-			return vehicleData;
-		}
-
-		private List<Axle> GetAxles(IList<IAxleDeclarationInputData> axleWheels, double[] axlesDistribution)
-		{
-			var axles = new List<Axle>();
-			for (int i = 0; i < axleWheels.Count; i++)
-			{
-				var axle = new Axle
-				{
-					WheelsDimension = axleWheels[i].Tyre.Dimension,
-					Inertia = DeclarationData.Wheels
-						.Lookup(axleWheels[i].Tyre.Dimension.RemoveWhitespace()).Inertia,
-					TyreTestLoad = axleWheels[i].Tyre.TyreTestLoad,
-					AxleWeightShare = axlesDistribution[i],
-					TwinTyres = axleWheels[i].TwinTyres,
-					AxleType = axleWheels[i].AxleType
-				};
-				axles.Add(axle);
-			}
-
-			return axles;
-		}
-
-		public ElectricsUserInputsConfig CreateElectricalUserInputsConfig(IVehicleDeclarationInputData primaryVehicle,
-			IAlternatorMap alternatorMap, Mission mission)
-		{
-			var primaryBusAuxiliaries = primaryVehicle.Components.BusAuxiliaries;
-
-			var actions = DeclarationData.BusAuxiliaries.ActuationsMap.Lookup(mission.MissionType);
-			var currentDemand = CalculateAverageCurrent(mission, primaryVehicle, actions);
-
-			var electricsUI = new ElectricsUserInputsConfig {
-				SmartElectrical = primaryBusAuxiliaries.ElectricSupply.SmartElectrics,
-				MaxAlternatorPower = primaryBusAuxiliaries.ElectricSupply.MaxAlternatorPower,
-				ElectricStorageCapacity = primaryBusAuxiliaries.ElectricSupply.ElectricStorageCapacity,
-				AlternatorMap = alternatorMap,
-				AlternatorGearEfficiency = Constants.BusAuxiliaries.ElectricSystem.AlternatorGearEfficiency,
-				AverageCurrentDemandInclBaseLoad = currentDemand.Item1,
-				AverageCurrentDemandWithoutBaseLoad = currentDemand.Item2,
-				DoorActuationTimeSecond = Constants.BusAuxiliaries.ElectricalConsumers.DoorActuationTimeSecond
-			};
-
-			return electricsUI;
-		}
-		
-		public PneumaticUserInputsConfig CreatePneumaticUserInputsConfig(IBusAuxiliariesDeclarationData primaryBusAuxiliaries,
-			ICompressorMap compressorMap)
-		{
-			var pneumaticUI = new PneumaticUserInputsConfig {
-				CompressorMap = compressorMap,
-				CompressorGearEfficiency = Constants.BusAuxiliaries.PneumaticUserConfig.CompressorGearEfficiency,
-				CompressorGearRatio = primaryBusAuxiliaries.PneumaticSupply.Ratio,
-				SmartAirCompression = primaryBusAuxiliaries.PneumaticSupply.SmartAirCompression,
-				SmartRegeneration = primaryBusAuxiliaries.PneumaticSupply.SmartRegeneration,
-				KneelingHeight =Constants.BusAuxiliaries.PneumaticUserConfig.DefaultKneelingHeight,
-				AirSuspensionControl = primaryBusAuxiliaries.PneumaticConsumers.AirsuspensionControl,
-				AdBlueDosing = primaryBusAuxiliaries.PneumaticConsumers.AdBlueDosing,
-				Doors = ConsumerTechnology.Pneumatically
-			};
-
-			return pneumaticUI;
-		}
-
-		public void SetSSMBusParameters(SSMInputs ssmInputs, Mission mission)
-		{
-			var busParams = mission.BusParameter;
-
-			var hvacBusLength = busParams.HVACConfiguration == BusHVACSystemConfiguration.Configuration2
-				? 2 * Constants.BusParameters.DriverCompartmentLength
-				: busParams.VehicleLength;
-
-			var hvacBusHeight = DeclarationData.BusAuxiliaries.CalculateInternalHeight(busParams.FloorType,
-				busParams.DoubleDecker, busParams.BodyHeight);
-
-			ssmInputs.NumberOfPassengers = mission.RefLoad.Value();
-			ssmInputs.BusFloorType = busParams.FloorType;
-
-			ssmInputs.BusWindowSurface = DeclarationData.BusAuxiliaries.WindowHeight(busParams.DoubleDecker) * hvacBusLength +
-						DeclarationData.BusAuxiliaries.FrontAndRearWindowArea(busParams.DoubleDecker);
-			ssmInputs.BusSurfaceArea = 2 * (hvacBusLength * busParams.VehicleWidth + hvacBusLength *
-											busParams.BodyHeight + busParams.VehicleWidth * busParams.BodyHeight);
-			ssmInputs.BusVolume = hvacBusLength * busParams.VehicleWidth * hvacBusHeight;
-		}
-
-		public TechnologyBenefits CreateTechnologyBenefits(Mission mission, IVehicleDeclarationInputData primaryVehicle)
-		{
-			var onVehicle = new List<SSMTechnology>();
-			var primaryBusAux = primaryVehicle.Components.BusAuxiliaries;
-
-			foreach (var item in DeclarationData.BusAuxiliaries.SSMTechnologyList)
-			{
-				if ("Double-glazing".Equals(item.BenefitName, StringComparison.InvariantCultureIgnoreCase) &&
-					(mission?.BusParameter?.HVACDoubleGlasing ?? false)){
-					onVehicle.Add(item);
-				}
-				if ("Heat pump systems".Equals(item.BenefitName, StringComparison.InvariantCultureIgnoreCase) &&
-					(mission?.BusParameter?.HVACHeatpump ?? false)){
-					onVehicle.Add(item);
-				}
-				if ("Adjustable auxiliary heater".Equals(item.BenefitName, StringComparison.InvariantCultureIgnoreCase) &&
-					(mission?.BusParameter?.HVACAdjustableAuxHeater ?? false)){
-					onVehicle.Add(item);
-				}
-				if ("Separate air distribution ducts".Equals(item.BenefitName, StringComparison.InvariantCultureIgnoreCase) &&
-					(mission?.BusParameter?.HVACSeparateAirDistributionDucts ?? false)){
-					onVehicle.Add(item);
-				}
-				if ("Adjustable coolant thermostat".Equals(item.BenefitName, StringComparison.InvariantCultureIgnoreCase) &&
-					(primaryBusAux?.HVACAux.AdjustableCoolantThermostat ?? false)){
-					onVehicle.Add(item);
-				}
-				if ("Engine waste gas heat exchanger".Equals(item.BenefitName, StringComparison.InvariantCultureIgnoreCase) &&
-					(primaryBusAux?.HVACAux.EngineWasteGasHeatExchanger ?? false)){
-					onVehicle.Add(item);
-				}
-			}
-			
-			return SelectBenefitForFloorType(mission.BusParameter.FloorType, onVehicle); 
-		}
-		
-		public void SetSSMInputs(SSMInputs ssmInputs, Mission mission)
-		{
-			var coolingPower = CalculateMaxCoolingPower(mission);
-			var busParams = mission.BusParameter;
-
-			ssmInputs.NumberOfPassengers = mission.RefLoad.Value();
-			ssmInputs.HVACMaxCoolingPower = coolingPower.Item1 + coolingPower.Item2;
-			ssmInputs.COP = DeclarationData.BusAuxiliaries.CalculateCOP(
-				coolingPower.Item1, ACCompressorType.None, coolingPower.Item2, busParams.HVACCompressorType,
-				busParams.FloorType);
-
-			ssmInputs.VentilationOnDuringHeating = true;
-			ssmInputs.VentilationWhenBothHeatingAndACInactive = true;
-			ssmInputs.VentilationDuringAC = true;
-
-			ssmInputs.FuelFiredHeaterPower = busParams.HVACAuxHeaterPower;
-			ssmInputs.FuelEnergyToHeatToCoolant = Constants.BusAuxiliaries.Heater.FuelEnergyToHeatToCoolant;
-			ssmInputs.CoolantHeatTransferredToAirCabinHeater =
-				Constants.BusAuxiliaries.Heater.CoolantHeatTransferredToAirCabinHeater;
+			var retVal = base.CreateDriverData();
+			retVal.LookAheadCoasting.Enabled = false;
+			return retVal;
 		}
 
 
-		public override AirdragData CreateAirdragData(IAirdragDeclarationInputData airdragInputData, Mission mission,
-			Segment segment)
+		public override VehicleData CreateVehicleData(IVehicleDeclarationInputData data, Mission mission, KeyValuePair<LoadingType, Tuple<Kilogram, double?>> loading)
 		{
-			var aerodynamicDragArea = mission.DefaultCDxA;
-
-			var airdragData = new AirdragData
-			{
-				CrossWindCorrectionMode = CrossWindCorrectionMode.DeclarationModeCorrection,
-				CrossWindCorrectionCurve = new CrosswindCorrectionCdxALookup(
-					aerodynamicDragArea,
-					GetDeclarationAirResistanceCurve(mission.CrossWindCorrectionParameters, aerodynamicDragArea, mission.BusParameter.BodyHeight),
-					CrossWindCorrectionMode.DeclarationModeCorrection),
-				DeclaredAirdragArea = aerodynamicDragArea
-			};
-
-			return airdragData;
+			var retVal = base.CreateVehicleData(data, mission, loading);
+			retVal.CurbMass = mission.CurbMass;
+			return retVal;
 		}
-
 
 		public override PTOData CreatePTOTransmissionData(IPTOTransmissionInputData pto)
 		{
@@ -218,24 +47,21 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			IAuxiliariesDeclarationInputData auxInputData, IBusAuxiliariesDeclarationData busAuxData, MissionType mission,
 			VehicleClass hdvClass, Meter vehicleLength)
 		{
-			if (auxInputData != null)
-			{
+			if (auxInputData != null) {
 				throw new VectoException("Only BusAuxiliaries can be provided as input!");
 			}
 
 			var retVal = new List<VectoRunData.AuxData>();
 
 			retVal.Add(
-				new VectoRunData.AuxData()
-				{
+				new VectoRunData.AuxData() {
 					DemandType = AuxiliaryDemandType.Constant,
 					Technology = new List<string>() { busAuxData.FanTechnology },
 					ID = Constants.Auxiliaries.IDs.Fan,
-					PowerDemand = DeclarationData.Fan.Lookup(hdvClass, mission, busAuxData.FanTechnology).PowerDemand
+					PowerDemand = DeclarationData.Fan.LookupMechanicalPowerDemand(hdvClass, mission, busAuxData.FanTechnology)
 				});
 			retVal.Add(
-				new VectoRunData.AuxData()
-				{
+				new VectoRunData.AuxData() {
 					DemandType = AuxiliaryDemandType.Constant,
 					Technology = busAuxData.SteeringPumpTechnology,
 					ID = Constants.Auxiliaries.IDs.SteeringPump,
@@ -245,21 +71,16 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			return retVal;
 		}
 
-
 		#endregion
-
-
-		#region Overrides
 
 		public virtual IAuxiliaryConfig CreateBusAuxiliariesData(
 			Mission mission, IVehicleDeclarationInputData vehicleData, VectoRunData runData)
 		{
 			var actuations = DeclarationData.BusAuxiliaries.ActuationsMap.Lookup(runData.Mission.MissionType);
 
-			var retVal = new AuxiliaryConfig
-			{
+			var retVal = new AuxiliaryConfig {
 				InputData = vehicleData.Components.BusAuxiliaries,
-				ElectricalUserInputsConfig = GetElectricalUserConfig(mission, vehicleData, actuations),
+				ElectricalUserInputsConfig = GetElectricalUserConfig(mission, vehicleData, actuations, runData.VehicleData.VehicleClass),
 				PneumaticUserInputsConfig = GetPneumaticUserConfig(vehicleData, mission),
 				PneumaticAuxillariesConfig = CreatePneumaticAuxConfig(runData.Retarder.Type),
 				Actuations = actuations,
@@ -272,98 +93,156 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 		}
 
 		protected virtual ElectricsUserInputsConfig GetElectricalUserConfig(
-			Mission mission, IVehicleDeclarationInputData vehicleData, IActuations actuations)
+			Mission mission, IVehicleDeclarationInputData vehicleData, IActuations actuations, VehicleClass vehicleClass)
 		{
-			var currentDemand = CalculateAverageCurrent(mission, vehicleData, actuations);
+			var currentDemand = GetElectricConsumers(mission, vehicleData, actuations, vehicleClass);
 			var busAux = vehicleData.Components.BusAuxiliaries;
 
-			return new ElectricsUserInputsConfig()
-			{
-				SmartElectrical = busAux.ElectricSupply.SmartElectrics,
-				AverageCurrentDemandInclBaseLoad = currentDemand.Item1,
-				AverageCurrentDemandWithoutBaseLoad = currentDemand.Item2,
-				AlternatorMap = new SimpleAlternator(CalculateAlternatorEfficiency(busAux.ElectricSupply.Alternators)),
+			var retVal = GetDefaultElectricalUserConfig();
+
+			retVal.SmartElectrical = busAux.ElectricSupply.SmartElectrics;
+			retVal.ElectricalConsumers = currentDemand;
+			retVal.AlternatorMap = new SimpleAlternator(CalculateAlternatorEfficiency(busAux.ElectricSupply.Alternators)) {
+				Technologies = busAux.ElectricSupply.Alternators.Select(x => x.Technology).ToList()
+			};
+			retVal.MaxAlternatorPower = busAux.ElectricSupply.MaxAlternatorPower;
+			retVal.ElectricStorageCapacity = busAux.ElectricSupply.ElectricStorageCapacity ?? 0.SI<WattSecond>();
+			
+			return retVal;
+		}
+
+		protected virtual ElectricsUserInputsConfig GetDefaultElectricalUserConfig()
+		{
+			return new ElectricsUserInputsConfig() {
 				PowerNetVoltage = Constants.BusAuxiliaries.ElectricSystem.PowernetVoltage,
 				StoredEnergyEfficiency = Constants.BusAuxiliaries.ElectricSystem.StoredEnergyEfficiency,
 				ResultCardIdle = new DummyResultCard(),
 				ResultCardOverrun = new DummyResultCard(),
 				ResultCardTraction = new DummyResultCard(),
 				AlternatorGearEfficiency = Constants.BusAuxiliaries.ElectricSystem.AlternatorGearEfficiency,
-				MaxAlternatorPower = busAux.ElectricSupply.MaxAlternatorPower,
-				ElectricStorageCapacity = busAux.ElectricSupply.ElectricStorageCapacity ?? 0.SI<WattSecond>()
+				DoorActuationTimeSecond = Constants.BusAuxiliaries.ElectricalConsumers.DoorActuationTimeSecond,
 			};
 		}
 
-		protected internal virtual double CalculateAlternatorEfficiency(IList<IAlternatorDeclarationInputData> alternators)
+		protected virtual double CalculateAlternatorEfficiency(IList<IAlternatorDeclarationInputData> alternators)
 		{
 			var sum = 0.0;
-			foreach (var entry in alternators)
-			{
+			foreach (var entry in alternators) {
 				sum += DeclarationData.BusAuxiliaries.AlternatorTechnologies.Lookup(entry.Technology);
 			}
 
 			return sum / alternators.Count;
 		}
 
-		protected virtual Tuple<Ampere, Ampere> CalculateAverageCurrent(
+		protected virtual Dictionary<string, ElectricConsumerEntry> GetElectricConsumers(Mission mission, IVehicleDeclarationInputData vehicleData, IActuations actuations, VehicleClass vehicleClass)
+		{
+			var retVal = GetDefaultElectricConsumers(mission, vehicleData, actuations);
+
+			foreach (var entry in GetElectricAuxConsumers(mission, vehicleData, vehicleClass, vehicleData.Components.BusAuxiliaries)) {
+				retVal[entry.Key] = entry.Value;
+			}
+
+			return retVal;
+		}
+
+		protected virtual Dictionary<string, ElectricConsumerEntry> GetDefaultElectricConsumers(
 			Mission mission, IVehicleDeclarationInputData vehicleData, IActuations actuations)
 		{
-			var avgInclBase = 0.SI<Ampere>();
-			var avgWithoutBase = 0.SI<Ampere>();
+			var retVal = new Dictionary<string, ElectricConsumerEntry>();
 			var doorDutyCycleFraction =
 				(actuations.ParkBrakeAndDoors * Constants.BusAuxiliaries.ElectricalConsumers.DoorActuationTimeSecond) /
 				actuations.CycleTime;
 			var busAux = vehicleData.Components.BusAuxiliaries;
-			var electricDoors = false;
-			foreach (var consumer in DeclarationData.BusAuxiliaries.DefaultElectricConsumerList.Items)
-			{
-				var nbr = GetNumberOfElectricalConsumersInVehicle(consumer.NumberInActualVehicle, mission);
+			var electricDoors = vehicleData.DoorDriveTechnology == ConsumerTechnology.Electrically;
+
+			foreach (var consumer in DeclarationData.BusAuxiliaries.DefaultElectricConsumerList.Items) {
+				var applied = consumer.DefaultConsumer || consumer.Bonus
+					? 1.0
+					: GetNumberOfElectricalConsumersForMission(mission, consumer);
+				var nbr = consumer.DefaultConsumer
+					? GetNumberOfElectricalConsumersInVehicle(consumer.NumberInActualVehicle, mission, vehicleData)
+					: 1.0;
+
 				var dutyCycle = electricDoors && consumer.ConsumerName.Equals(
 									Constants.BusAuxiliaries.ElectricalConsumers.DoorsPerVehicleConsumer,
 									StringComparison.CurrentCultureIgnoreCase)
 					? doorDutyCycleFraction
 					: consumer.PhaseIdleTractionOn;
 
-				var current = consumer.NominalCurrent(mission.MissionType) * dutyCycle * nbr;
-				if (consumer.Bonus && !VehicleHasElectricalConsumer(consumer.ConsumerName, busAux))
-				{
+				var current = applied * consumer.NominalCurrent(mission.MissionType) * dutyCycle * nbr;
+				if (consumer.Bonus && !VehicleHasElectricalConsumer(consumer.ConsumerName, busAux)) {
 					current = 0.SI<Ampere>();
 				}
 
-				avgInclBase += current;
-				if (!consumer.BaseVehicle)
-				{
-					avgWithoutBase += current;
-				}
+				retVal[consumer.ConsumerName] = new ElectricConsumerEntry {
+					BaseVehicle = consumer.BaseVehicle,
+					Current = current
+				};
 			}
 
-			return Tuple.Create(avgInclBase, avgWithoutBase);
+			return retVal;
+		}
+
+		private double GetNumberOfElectricalConsumersForMission(Mission mission, ElectricalConsumer consumer)
+		{
+			if (mission.BusParameter.ElectricalConsumers.ContainsKey(consumer.ConsumerName)) {
+				return mission.BusParameter.ElectricalConsumers[consumer.ConsumerName];
+			}
+
+			return 0;
+			
+		}
+
+		protected virtual Dictionary<string, ElectricConsumerEntry> GetElectricAuxConsumers(Mission mission, IVehicleDeclarationInputData vehicleData, VehicleClass vehicleClass, IBusAuxiliariesDeclarationData busAux)
+		{
+			var retVal = new Dictionary<string, ElectricConsumerEntry>();
+			var spPower = DeclarationData.SteeringPumpBus.LookupElectricalPowerDemand(
+				mission.MissionType, busAux.SteeringPumpTechnology,
+				vehicleData.Length ?? mission.BusParameter.VehicleLength);
+			retVal[Constants.Auxiliaries.IDs.SteeringPump] = new ElectricConsumerEntry {
+				ActiveDuringEngineStopStandstill = false,
+				BaseVehicle = false,
+				Current = spPower / Constants.BusAuxiliaries.ElectricSystem.PowernetVoltage
+			};
+
+			var fanPower = DeclarationData.Fan.LookupElectricalPowerDemand(
+				vehicleClass, mission.MissionType, busAux.FanTechnology);
+			retVal[Constants.Auxiliaries.IDs.Fan] = new ElectricConsumerEntry {
+				ActiveDuringEngineStopStandstill = false,
+				ActiveDuringEngineStopDriving = false,
+				BaseVehicle = false,
+				Current = fanPower / Constants.BusAuxiliaries.ElectricSystem.PowernetVoltage
+			};
+			return retVal;
 		}
 
 		protected virtual bool VehicleHasElectricalConsumer(string consumerName, IBusAuxiliariesDeclarationData busAux)
 		{
-			switch (consumerName)
-			{
+			switch (consumerName) {
 				case "Day running lights LED bonus":
 				case "Position lights LED bonus":
-				case "Brake lights LED bonus": return false;
+				case "Brake lights LED bonus": // return false;
 				case "Interior lights LED bonus":
 				case "Headlights LED bonus": return true;
 				default: return false;
 			}
 		}
 
-		protected virtual double GetNumberOfElectricalConsumersInVehicle(string nbr, Mission mission)
+		protected virtual double GetNumberOfElectricalConsumersInVehicle(string nbr, Mission mission, IVehicleDeclarationInputData vehicleData)
 		{
-			if ("f_IntLight(L_CoC)".Equals(nbr, StringComparison.InvariantCultureIgnoreCase))
-			{
-				var busParams = mission.BusParameter;
-				return DeclarationData.BusAuxiliaries.CalculateLengthInteriorLights(
-										busParams.VehicleLength, busParams.DoubleDecker, busParams.FloorType, busParams.NumberPassengersLowerDeck)
-									.Value();
+			if ("f_IntLight(L_CoC)".Equals(nbr, StringComparison.InvariantCultureIgnoreCase)) {
+				return CalculateLengthDependentElectricalConsumers(mission, vehicleData);
 			}
 
 			return nbr.ToDouble();
+		}
+
+		protected virtual double CalculateLengthDependentElectricalConsumers(Mission mission, IVehicleDeclarationInputData vehicleData)
+		{
+			var busParams = mission.BusParameter;
+			return DeclarationData.BusAuxiliaries.CalculateLengthInteriorLights(
+									busParams.VehicleLength, busParams.DoubleDecker, busParams.FloorType, busParams.NumberPassengersLowerDeck)
+								.Value();
 		}
 
 		protected virtual PneumaticUserInputsConfig GetPneumaticUserConfig(IVehicleDeclarationInputData vehicleData, Mission mission)
@@ -371,8 +250,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			var busAux = vehicleData.Components.BusAuxiliaries;
 
 			//throw new NotImplementedException();
-			return new PneumaticUserInputsConfig()
-			{
+			return new PneumaticUserInputsConfig() {
 				KneelingHeight = mission.BusParameter.FloorType == FloorType.LowFloor
 					? Constants.BusAuxiliaries.PneumaticUserConfig.DefaultKneelingHeight
 					: 0.SI<Meter>(),
@@ -387,11 +265,10 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			};
 		}
 
-		protected internal virtual ICompressorMap GetCompressorMap(string compressorSize, string clutchType)
+		protected virtual ICompressorMap GetCompressorMap(string compressorSize, string clutchType)
 		{
 			var resource = "";
-			switch (compressorSize)
-			{
+			switch (compressorSize) {
 				case "Small":
 					resource = "DEFAULT_1-Cylinder_1-Stage_393ccm.acmp";
 					break;
@@ -407,37 +284,24 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 				case "Large Supply 2-stage":
 					resource = "DEFAULT_3-Cylinder_2-Stage_598ccm.acmp";
 					break;
-				default: throw new ArgumentException(string.Format("unkown compressor size {0}", compressorSize));
+				default: throw new ArgumentException(string.Format("unkown compressor size {0}"), compressorSize);
 			}
 
 			var dragCurveFactorClutch = 1.0;
-			switch (clutchType)
-			{
-				case "visco":
-					dragCurveFactorClutch = Constants.BusAuxiliaries.PneumaticUserConfig.ViscoClutchDragCurveFactor;
+			switch (clutchType) {
+				case "visco": dragCurveFactorClutch = Constants.BusAuxiliaries.PneumaticUserConfig.ViscoClutchDragCurveFactor;
 					break;
-				case "mechically":
-					dragCurveFactorClutch = Constants.BusAuxiliaries.PneumaticUserConfig.MechanicClutchDragCurveFactor;
+				case "mechanically": dragCurveFactorClutch = Constants.BusAuxiliaries.PneumaticUserConfig.MechanicClutchDragCurveFactor;
 					break;
 			}
 
 			return CompressorMapReader.ReadStream(
-				RessourceHelper.ReadStream(DeclarationData.DeclarationDataResourcePrefix + ".VAUXBus." + resource), dragCurveFactorClutch);
+				RessourceHelper.ReadStream(DeclarationData.DeclarationDataResourcePrefix + ".VAUXBus." + resource), dragCurveFactorClutch, $"{compressorSize} - {clutchType}");
 		}
 
-		public virtual ISSMInputs CreateSSMModelParameters(IBusAuxiliariesDeclarationData busAuxInputData, Mission mission, IFuelProperties heatingFuel, LoadingType loadingType)
+		public SSMInputs GetDefaulSSMInputs(IFuelProperties heatingFuel)
 		{
-			var busParams = mission.BusParameter;
-
-			var hvacBusLength = busParams.HVACConfiguration == BusHVACSystemConfiguration.Configuration2
-				? 2 * Constants.BusParameters.DriverCompartmentLength
-				: busParams.VehicleLength;
-			var hvacBusheight = DeclarationData.BusAuxiliaries.CalculateInternalHeight(mission.BusParameter.FloorType, mission.BusParameter.DoubleDecker, busParams.BodyHeight);
-			var coolingPower = CalculateMaxCoolingPower(mission);
-			var retVal = new SSMInputs(null, heatingFuel)
-			{
-				BusFloorType = busParams.FloorType,
-				Technologies = GetSSMTechnologyBenefits(busAuxInputData, mission.BusParameter.FloorType),
+			return new SSMInputs(null, heatingFuel) {
 				DefaultConditions = new EnvironmentalConditionMapEntry(
 					Constants.BusAuxiliaries.SteadyStateModel.DefaultTemperature,
 					Constants.BusAuxiliaries.SteadyStateModel.DefaultSolar,
@@ -449,7 +313,6 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 				SpecificVentilationPower = Constants.BusAuxiliaries.SteadyStateModel.SpecificVentilationPower,
 
 				AuxHeaterEfficiency = Constants.BusAuxiliaries.SteadyStateModel.AuxHeaterEfficiency,
-				FuelFiredHeaterPower = busParams.HVACAuxHeaterPower,
 				FuelEnergyToHeatToCoolant = Constants.BusAuxiliaries.Heater.FuelEnergyToHeatToCoolant,
 				CoolantHeatTransferredToAirCabinHeater = Constants.BusAuxiliaries.Heater.CoolantHeatTransferredToAirCabinHeater,
 				GFactor = Constants.BusAuxiliaries.SteadyStateModel.GFactor,
@@ -460,46 +323,65 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 
 				MaxPossibleBenefitFromTechnologyList =
 					Constants.BusAuxiliaries.SteadyStateModel.MaxPossibleBenefitFromTechnologyList,
-
-				BusWindowSurface = DeclarationData.BusAuxiliaries.WindowHeight(busParams.DoubleDecker) * hvacBusLength +
-									DeclarationData.BusAuxiliaries.FrontAndRearWindowArea(busParams.DoubleDecker),
-				BusSurfaceArea = 2 * (hvacBusLength * busParams.VehicleWidth + hvacBusLength * busParams.BodyHeight +
-									busParams.VehicleWidth * busParams.BodyHeight),
-				BusVolume = hvacBusLength * busParams.VehicleWidth * hvacBusheight,
-
-				UValue = DeclarationData.BusAuxiliaries.UValue(busParams.FloorType),
-				NumberOfPassengers =
-					DeclarationData.BusAuxiliaries.CalculateBusFloorSurfaceArea(hvacBusLength, busParams.VehicleWidth) *
-					busParams.PassengerDensity * (loadingType == LoadingType.LowLoading ? mission.MissionType.GetLowLoadFactorBus() : 1.0) + 1, // add driver for 'heat input'
-				VentilationRate = DeclarationData.BusAuxiliaries.VentilationRate(busParams.HVACConfiguration, false),
-				VentilationRateHeating = DeclarationData.BusAuxiliaries.VentilationRate(busParams.HVACConfiguration, true),
-
-				HVACMaxCoolingPower = coolingPower.Item1 + coolingPower.Item2,
-				HVACCompressorType = busParams.HVACCompressorType, // use passenger compartment
-				COP = DeclarationData.BusAuxiliaries.CalculateCOP(
-					coolingPower.Item1, ACCompressorType.None, coolingPower.Item2, busParams.HVACCompressorType,
-					busParams.FloorType),
 			};
+		}
 
+		public virtual ISSMInputs CreateSSMModelParameters(IBusAuxiliariesDeclarationData busAuxInputData, Mission mission, IFuelProperties heatingFuel, LoadingType loadingType)
+		{
+			var busParams = mission.BusParameter;
+
+			var hvacBusLength = busParams.HVACConfiguration == BusHVACSystemConfiguration.Configuration2
+				? 2 * Constants.BusParameters.DriverCompartmentLength
+				: busParams.VehicleLength;
+			var hvacBusheight = DeclarationData.BusAuxiliaries.CalculateInternalHeight(mission.BusParameter.FloorType, mission.BusParameter.DoubleDecker, busParams.BodyHeight);
+			var coolingPower = CalculateMaxCoolingPower(null, mission);
+
+			var retVal = GetDefaulSSMInputs(heatingFuel);
+			retVal.BusFloorType = busParams.FloorType;
+			retVal.Technologies = GetSSMTechnologyBenefits(busAuxInputData, mission.BusParameter.FloorType);
+
+			retVal.FuelFiredHeaterPower = busParams.HVACAuxHeaterPower;
+			retVal.BusWindowSurface = DeclarationData.BusAuxiliaries.WindowHeight(busParams.DoubleDecker) * hvacBusLength +
+									DeclarationData.BusAuxiliaries.FrontAndRearWindowArea(busParams.DoubleDecker);
+			retVal.BusSurfaceArea = 2 * (hvacBusLength * busParams.VehicleWidth + hvacBusLength * busParams.BodyHeight +
+										busParams.VehicleWidth * busParams.BodyHeight);
+			retVal.BusVolume = hvacBusLength * busParams.VehicleWidth * hvacBusheight;
+
+			retVal.UValue = DeclarationData.BusAuxiliaries.UValue(busParams.FloorType);
+			retVal.NumberOfPassengers =
+				DeclarationData.BusAuxiliaries.CalculateBusFloorSurfaceArea(hvacBusLength, busParams.VehicleWidth) *
+				busParams.PassengerDensity *
+				(loadingType == LoadingType.LowLoading ? mission.MissionType.GetLowLoadFactorBus() : 1.0) + 1; // add driver for 'heat input'
+			retVal.VentilationRate = DeclarationData.BusAuxiliaries.VentilationRate(busParams.HVACConfiguration, false);
+			retVal.VentilationRateHeating = DeclarationData.BusAuxiliaries.VentilationRate(busParams.HVACConfiguration, true);
+
+			retVal.HVACMaxCoolingPower = coolingPower.Item1 + coolingPower.Item2;
+			retVal.HVACCompressorType = busParams.HVACCompressorType; // use passenger compartment
+			retVal.COP = DeclarationData.BusAuxiliaries.CalculateCOP(
+			
+				coolingPower.Item1, ACCompressorType.None, coolingPower.Item2, busParams.HVACCompressorType,
+				busParams.FloorType);
+			retVal.HVACTechnology = string.Format(
+				"{0} ({1})", busParams.HVACConfiguration.GetName(),
+				string.Join(", ", new[] { busParams.HVACCompressorType.GetName(), ACCompressorType.None.GetName() }));
+			
 			//SetHVACParameters(retVal, vehicleData, mission);
 
 			return retVal;
 		}
 
+
 		protected virtual TechnologyBenefits GetSSMTechnologyBenefits(IBusAuxiliariesDeclarationData inputData, FloorType floorType)
 		{
 			var onVehicle = new List<SSMTechnology>();
-			foreach (var item in DeclarationData.BusAuxiliaries.SSMTechnologyList)
-			{
+			foreach (var item in DeclarationData.BusAuxiliaries.SSMTechnologyList) {
 				if ("Adjustable coolant thermostat".Equals(item.BenefitName, StringComparison.InvariantCultureIgnoreCase) &&
-					(inputData?.HVACAux.AdjustableCoolantThermostat ?? false))
-				{
+					(inputData?.HVACAux.AdjustableCoolantThermostat ?? false)) {
 					onVehicle.Add(item);
 				}
 
 				if ("Engine waste gas heat exchanger".Equals(item.BenefitName, StringComparison.InvariantCultureIgnoreCase) &&
-					(inputData?.HVACAux.EngineWasteGasHeatExchanger ?? false))
-				{
+					(inputData?.HVACAux.EngineWasteGasHeatExchanger ?? false)) {
 					onVehicle.Add(item);
 				}
 			}
@@ -507,12 +389,11 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			return SelectBenefitForFloorType(floorType, onVehicle);
 		}
 
-		protected internal virtual TechnologyBenefits SelectBenefitForFloorType(FloorType floorType, List<SSMTechnology> onVehicle)
+		protected virtual TechnologyBenefits SelectBenefitForFloorType(FloorType floorType, List<SSMTechnology> onVehicle)
 		{
 			var retVal = new TechnologyBenefits();
 
-			switch (floorType)
-			{
+			switch (floorType) {
 				case FloorType.LowFloor:
 					retVal.CValueVariation = onVehicle.Sum(x => x.LowFloorC);
 					retVal.HValueVariation = onVehicle.Sum(x => x.LowFloorH);
@@ -540,7 +421,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 		}
 
 
-		protected virtual Tuple<Watt, Watt> CalculateMaxCoolingPower(Mission mission)
+		protected virtual Tuple<Watt, Watt> CalculateMaxCoolingPower(IVehicleDeclarationInputData vehicleData, Mission mission)
 		{
 			var busParams = mission.BusParameter;
 
@@ -560,8 +441,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 
 		protected internal virtual IPneumaticsConsumersDemand CreatePneumaticAuxConfig(RetarderType retarderType)
 		{
-			return new PneumaticsConsumersDemand()
-			{
+			return new PneumaticsConsumersDemand() {
 				AdBlueInjection = Constants.BusAuxiliaries.PneumaticConsumersDemands.AdBlueInjection,
 				AirControlledSuspension = Constants.BusAuxiliaries.PneumaticConsumersDemands.AirControlledSuspension,
 				Braking = retarderType == RetarderType.None
@@ -580,7 +460,21 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 				StopBrakeActuation = Constants.BusAuxiliaries.PneumaticConsumersDemands.StopBrakeActuation,
 			};
 		}
-		#endregion
+	}
 
+	public class ElectricConsumerEntry {
+
+		public ElectricConsumerEntry()
+		{
+			ActiveDuringEngineStopStandstill = true;
+			ActiveDuringEngineStopDriving = true;
+		}
+
+		public bool ActiveDuringEngineStopDriving { get; set; }
+
+		public bool ActiveDuringEngineStopStandstill { get; set; }
+
+		public bool BaseVehicle { get; set; }
+		public Ampere Current { get; set; }
 	}
 }

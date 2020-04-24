@@ -63,6 +63,13 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.Electric
 			return alternatorMapValues;
 		}
 
+		public IList<string> Technologies
+		{
+			get {
+				return new List<string>();
+			}
+		}
+
 		protected void Initialise(IList<ICombinedAlternatorMapRow> map)
 		{
 

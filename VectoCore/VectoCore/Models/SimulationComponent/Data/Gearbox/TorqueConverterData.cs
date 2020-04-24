@@ -56,6 +56,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox
 		[Required, SIRange(0, double.MaxValue)]
 		public PerSecond TorqueConverterSpeedLimit { get; protected internal set; }
 
+		public string[] CharacteristicCurve
+		{
+			get { return TorqueConverterEntries.Select(x => $"{x.SpeedRatio}, {x.TorqueRatio}, {x.Torque}").ToArray(); }
+		}
+
 		internal double RequiredSpeedRatio; // only used for validation!
 
 		protected internal TorqueConverterData(IEnumerable<TorqueConverterEntry> torqueConverterEntries,

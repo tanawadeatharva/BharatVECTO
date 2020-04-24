@@ -27,6 +27,12 @@ Namespace Mocks
             Return 0.01.SI(Unit.SI.Watt.Per.Liter.Per.Hour).Cast (Of JoulePerNormLiter)
         End Function
 
+        Public ReadOnly Property Technology As String Implements ICompressorMap.Technology
+        get
+                Return ""
+        End Get
+        End Property
+
         Public readonly property Source As String Implements ICompressorMap.Source
             get
                 return ""

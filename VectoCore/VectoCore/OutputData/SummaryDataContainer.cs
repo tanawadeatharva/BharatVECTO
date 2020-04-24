@@ -180,7 +180,9 @@ namespace TUGraz.VectoCore.OutputData
 					Fields.E_AXL_LOSS, Fields.E_BRAKE, Fields.E_VEHICLE_INERTIA, Fields.E_WHEEL, Fields.E_AIR, Fields.E_ROLL, Fields.E_GRAD,
 					Fields.AirConsumed, Fields.AirGenerated, Fields.E_PS_CompressorOff, Fields.E_PS_CompressorOn,
 					Fields.E_BusAux_ES_consumed, Fields.E_BusAux_ES_generated, Fields.Delta_E_BusAux_Battery,
-					Fields.E_BusAux_PS_corr, Fields.E_BusAux_ES_mech_corr, Fields.E_BusAux_AuxHeater,
+					Fields.E_BusAux_PS_corr, Fields.E_BusAux_ES_mech_corr,
+					Fields.E_BusAux_HVAC_Mech, Fields.E_BusAux_HVAC_El,
+					Fields.E_BusAux_AuxHeater,
 					Fields.E_WHR_EL, Fields.E_WHR_MECH, Fields.E_AUX_ESS_MECH, Fields.E_ICE_START, Fields.NUM_ICE_STARTS, Fields.ACC,
 					Fields.ACC_POS, Fields.ACC_NEG, Fields.ACC_TIMESHARE, Fields.DEC_TIMESHARE, Fields.CRUISE_TIMESHARE,
 					Fields.MAX_SPEED, Fields.MAX_ACCELERATION, Fields.MAX_DECELERATION, Fields.AVG_ENGINE_SPEED,
@@ -287,7 +289,7 @@ namespace TUGraz.VectoCore.OutputData
 				cargoVolume = runData.VehicleData.CargoVolume;
 				vehicleLoading = runData.VehicleData.Loading;
 				gearCount = (uint)runData.GearboxData.Gears.Count;
-				passengerCount = runData.BusAuxiliaries?.SSMInputs.NumberOfPassengers;
+				passengerCount = runData.VehicleData.PassengerCount;
 			}
 
 			row[Fields.VEHICLE_FUEL_TYPE] = string.Join(", ", modData.FuelData.Select(x => x.GetLabel()));
@@ -321,7 +323,7 @@ namespace TUGraz.VectoCore.OutputData
 
 			row[Fields.P_FCMAP_POS] = modData.TotalPowerEnginePositiveAverage().ConvertToKiloWatt();
 
-			WriteAuxiliaries(modData, row);
+			WriteAuxiliaries(modData, row, runData.BusAuxiliaries != null);
 
 			WriteWorkEntries(modData, row, runData);
 
@@ -367,21 +369,18 @@ namespace TUGraz.VectoCore.OutputData
 			var workBusAuxESMech = 0.SI<WattSecond>();
 			if (runData.BusAuxiliaries != null) {
 				var workBusAuxPSCompOff = modData.EnergyPneumaticCompressorPowerOff();
-				var workBusAuxPSCompOn = modData.EnergyPneumaticCompressorOn();
-				var airBusAuxPSON = modData.AirGenerated();
+				var workBusAuxPSCompOn = modData.EnergyPneumaticCompressorAlwaysOn();
+				var airBusAuxPSON = modData.AirGeneratedAlwaysOn();
 				var deltaAir = modData.AirConsumed() - modData.AirGenerated();
 
 				var kAir = (workBusAuxPSCompOn - workBusAuxPSCompOff) / (airBusAuxPSON - 0.SI<NormLiter>());
 				workBusAuxPSCorr = (kAir * deltaAir).Cast<WattSecond>();
 
 				var workBusAuxES = modData.EnergyBusAuxESConsumed() - modData.EnergyBusAuxESGenerated();
-				var workBatterySOC = runData.BusAuxiliaries.ElectricalUserInputsConfig.SmartElectrical
-					? modData.DeltaSOCBusAuxBattery() * runData.BusAuxiliaries.ElectricalUserInputsConfig.ElectricStorageCapacity
-					: 0.SI<WattSecond>();
-
-				workBusAuxESMech = (workBusAuxES + workBatterySOC) /
+				workBusAuxESMech = workBusAuxES  /
 										runData.BusAuxiliaries.ElectricalUserInputsConfig.AlternatorMap.GetEfficiency(0.RPMtoRad(), 0.SI<Ampere>()) /
 										runData.BusAuxiliaries.ElectricalUserInputsConfig.AlternatorGearEfficiency;
+
 
 			}
 			row[Fields.E_BusAux_PS_corr] = workBusAuxPSCorr.ConvertToKiloWattHour();
@@ -489,7 +488,7 @@ namespace TUGraz.VectoCore.OutputData
 						if (passengers != null) {
 							// subtract driver!
 							row[FcCol(Fields.FCFINAL_LiterPer100PassengerKM, suffix)] =
-								(fcVolumePerMeter / (passengers.Value - 1)).ConvertToLiterPer100Kilometer();
+								(fcVolumePerMeter / passengers.Value).ConvertToLiterPer100Kilometer();
 						}
 					}
 
@@ -520,7 +519,7 @@ namespace TUGraz.VectoCore.OutputData
 			return string.Format(col, suffix);
 		}
 
-		private void WriteAuxiliaries(IModalDataContainer modData, DataRow row)
+		private void WriteAuxiliaries(IModalDataContainer modData, DataRow row, bool writeBusAux)
 		{
 			foreach (var aux in modData.Auxiliaries) {
 				string colName;
@@ -538,6 +537,11 @@ namespace TUGraz.VectoCore.OutputData
 				}
 
 				row[colName] = modData.AuxiliaryWork(aux.Value).ConvertToKiloWattHour();
+			}
+
+			if (writeBusAux) {
+				row[Fields.E_BusAux_HVAC_Mech] = modData.TimeIntegral<WattSecond>(ModalResultField.P_busAux_HVACmech_consumer).ConvertToKiloWattHour();
+				row[Fields.E_BusAux_HVAC_El] = modData.TimeIntegral<WattSecond>(ModalResultField.P_busAux_ES_HVAC).ConvertToKiloWattHour();
 			}
 		}
 
@@ -684,7 +688,7 @@ namespace TUGraz.VectoCore.OutputData
 
 			if (runData.BusAuxiliaries != null) {
 				// subtract driver!
-				row[Fields.PassengerCount] = runData.BusAuxiliaries.SSMInputs.NumberOfPassengers - 1;
+				row[Fields.PassengerCount] = runData.VehicleData.PassengerCount;
 			}
 
 			row[Fields.TCU_MODEL] = runData.ShiftStrategy;
@@ -700,7 +704,7 @@ namespace TUGraz.VectoCore.OutputData
 
 			WriteAxlegearData(runData.AxleGearData, row);
 
-			WriteAuxTechnologies(runData.Aux, row);
+			WriteAuxTechnologies(runData.Aux, runData.BusAuxiliaries, row);
 
 			WriteAxleWheelsData(runData.VehicleData.AxleData, row);
 
@@ -804,7 +808,7 @@ namespace TUGraz.VectoCore.OutputData
 				: data.CertificationNumber;
 		}
 
-		private void WriteAuxTechnologies(IEnumerable<VectoRunData.AuxData> auxData, DataRow row)
+		private void WriteAuxTechnologies(IEnumerable<VectoRunData.AuxData> auxData, IAuxiliaryConfig busAux, DataRow row)
 		{
 			foreach (var aux in auxData) {
 				if (aux.ID == Constants.Auxiliaries.IDs.PTOConsumer || aux.ID == Constants.Auxiliaries.IDs.PTOTransmission) {
@@ -822,6 +826,14 @@ namespace TUGraz.VectoCore.OutputData
 
 				row[colName] = aux.Technology == null ? "" : string.Join("; ", aux.Technology);
 			}
+
+			if (busAux == null) {
+				return;
+			}
+
+			row[string.Format(Fields.AUX_TECH_FORMAT, Constants.Auxiliaries.IDs.HeatingVentilationAirCondition)] = busAux.SSMInputs.HVACTechnology;
+			row[string.Format(Fields.AUX_TECH_FORMAT, Constants.Auxiliaries.IDs.ElectricSystem)] = string.Join("/", busAux.ElectricalUserInputsConfig.AlternatorMap.Technologies);
+			row[string.Format(Fields.AUX_TECH_FORMAT, Constants.Auxiliaries.IDs.PneumaticSystem)] = busAux.PneumaticUserInputsConfig.CompressorMap.Technology;
 		}
 
 		private static void WriteAngledriveData(AngledriveData data, DataRow row)
@@ -1077,6 +1089,8 @@ namespace TUGraz.VectoCore.OutputData
 			public const string E_BusAux_ES_consumed = "E_BusAux_ES_consumed [kWh]";
 			public const string Delta_E_BusAux_Battery = "ΔE_BusAux_Bat [kWh]";
 
+			public const string E_BusAux_HVAC_Mech = "E_BusAux_HVAC_mech [kWh]";
+			public const string E_BusAux_HVAC_El = "E_BusAux_HVAC_el [kWh]";
 
 			public const string SPECIFIC_FC = "Specific FC [g/kWh] wheel pos.";
 

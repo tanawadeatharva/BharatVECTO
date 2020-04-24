@@ -51,12 +51,15 @@ namespace TUGraz.VectoCore.Models.Declaration
 		[Required, SIRange(500, 100000)]
 		public Newton TyreTestLoad { get; internal set; }
 
+		public string FuelEfficiencyClass { get; internal set; }
+
 		[Required, SIRange(0, 1, ExecutionMode.Engineering), SIRange(double.MinValue, 1, ExecutionMode.Declaration)]
 		public double AxleWeightShare { get; internal set; }
 
 		public bool TwinTyres { get; internal set; }
 
 		public AxleType AxleType { get; internal set; }
+		
 
 		public static ValidationResult ValidateAxleData(Axle axle, ValidationContext validationContext)
 		{

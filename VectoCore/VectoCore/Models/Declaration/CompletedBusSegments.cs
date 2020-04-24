@@ -96,7 +96,8 @@ namespace TUGraz.VectoCore.Models.Declaration
 						DeclarationData.DeclarationDataResourcePrefix + ".VACC." +
 						row.Field<string>(".vaccfile")),
 				Missions = CreateMissions(rows), 
-				VehicleClass = VehicleClassHelper.Parse("CB" + row.Field<string>("vehicleparametergroup")),
+				VehicleClass = VehicleClassHelper.Parse( row.Field<string>("hdvgroup")),
+				DesignSpeed = row.ParseDouble("designspeed").KMPHtoMeterPerSecond(),
 			};
 
 			return segment;
@@ -121,22 +122,28 @@ namespace TUGraz.VectoCore.Models.Declaration
 					var mission = new Mission {
 						MissionType = missionType,
 						CrossWindCorrectionParameters = row.Field<string>("crosswindcorrection"),
-						MinLoad = null,
-						MaxLoad = null,
-						RefLoad = 100.SI<Kilogram>(), // dummy value to trigger simulation with ref load
-						LowLoad = 10.SI<Kilogram>(), // dummy value to trigger simulation with low load
-						AxleWeightDistribution = GetAxleWeightDistribution(row),
-						DefaultCDxA = row.ParseDouble("cdxastandard").SI<SquareMeter>(),
 						CycleFile =
 							RessourceHelper.ReadStream(
 								DeclarationData.DeclarationDataResourcePrefix + ".MissionCycles." +
 								missionType.ToString().Replace("EMS", "") +
 								Constants.FileExtensions.CycleFile),
+						AxleWeightDistribution = GetAxleWeightDistribution(row),
+						BodyCurbWeight = 0.SI<Kilogram>(),
+						Trailer = new List<MissionTrailer>(),
+						MinLoad = null,
+						MaxLoad = null,
+						LowLoad = 10.SI<Kilogram>(), // dummy value to trigger simulation with low load
+						RefLoad = 100.SI<Kilogram>(), // dummy value to trigger simulation with ref load
+						PassengersLowLoad = 1,  // dummy value
+						PassengersRefLoad = 10, // dummy value
+						TotalCargoVolume = 0.SI<CubicMeter>(),
+						DefaultCDxA = row.ParseDouble("cdxastandard").SI<SquareMeter>(),						
 						BusParameter = new BusParameters {
+							BusGroup = VehicleClassHelper.Parse(row.Field<string>("hdvgroup")),
 							PassengerDensity = row.ParseDouble(missionType.ToString()).SI<PerSquareMeter>(),
 							AirDragMeasurementAllowed = row.ParseBoolean("airdragmeasurement"),
-							VehicleEquipment = GetVehicleEquipment(row),
-							DoubleDecker =  VehicleCodeHelper.Parse(row.Field<string>("vehiclecode")).IsDoubleDeckBus(),
+							ElectricalConsumers = GetVehicleEquipment(row),
+							DoubleDecker =  VehicleCodeHelper.Parse(row.Field<string>("vehiclecode")).IsDoubleDeckerBus(),
 							DeltaHeight = row.ParseDouble("deltaheight").SI<Meter>()
 						}
 					};
@@ -159,30 +166,18 @@ namespace TUGraz.VectoCore.Models.Declaration
 		}
 
 
-		private VehicleEquipment GetVehicleEquipment(DataRow row)
+		private Dictionary<string, double> GetVehicleEquipment(DataRow row)
 		{
-			var externalDisplays = row.Field<string>("externaldisplays") == string.Empty
-				? (double?)null
-				: row.ParseDouble("externaldisplays");
+			var retVal = new Dictionary<string, double>();
+			foreach (var electricalConsumer in DeclarationData.BusAuxiliaries.DefaultElectricConsumerList.Items) {
+				if (electricalConsumer.Bonus || electricalConsumer.DefaultConsumer) {
+					continue;
+				}
+				var caption = "es_" + electricalConsumer.ConsumerName.ToLowerInvariant().Replace(" ", "");
+				retVal[electricalConsumer.ConsumerName] = row.ParseDoubleOrGetDefault(caption);
+			}
 
-			var internalDisplays = row.Field<string>("internaldisplays") == string.Empty
-				? (double?)null
-				: row.ParseDouble("internaldisplays");
-
-			var fridge = row.Field<string>("fridge") == string.Empty
-				? (double?)null
-				: row.ParseDouble("fridge");
-
-			var kitchenStandard = row.Field<string>("kitchenStandard") == string.Empty
-				? (double?)null
-				: row.ParseDouble("kitchenStandard");
-
-			return new VehicleEquipment {
-				ExternalDisplays = externalDisplays,
-				InternalDisplays = internalDisplays,
-				Fridge = fridge,
-				KitchenStandard = kitchenStandard
-			};
+			return retVal;
 		}
 	}
 }

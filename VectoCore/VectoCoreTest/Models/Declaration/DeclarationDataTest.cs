@@ -391,8 +391,8 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
             {
                 if (expected[i] == 0)
                     continue;
-                var lookup = DeclarationData.Fan.Lookup(vehicleClass, _missions[i], technology);
-                Assert.AreEqual(expected[i], lookup.PowerDemand.Value(), Tolerance);
+                var lookup = DeclarationData.Fan.LookupPowerDemand(vehicleClass, _missions[i], technology);
+                Assert.AreEqual(expected[i], lookup.Value(), Tolerance);
             }
         }
 
@@ -402,7 +402,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
         ]
         public void AuxFanTechError(VehicleClass vehicleClass, string technology, MissionType missionType)
         {
-            AssertHelper.Exception<VectoException>(() => DeclarationData.Fan.Lookup(vehicleClass, missionType, technology));
+            AssertHelper.Exception<VectoException>(() => DeclarationData.Fan.LookupPowerDemand(vehicleClass, missionType, technology));
         }
 
         [TestCase(VehicleClass.ClassML2r, new[] { 200, 150, 150, -1, -1 }),

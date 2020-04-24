@@ -66,7 +66,7 @@ Namespace UnitTests
 			'Get Consumers.
 
 
-			Return New M02Impl(m0, auxConfig.ElectricalUserInputsConfig)
+			Return New M02Impl(m0, auxConfig.ElectricalUserInputsConfig, signals)
 		End Function
 
 #End Region

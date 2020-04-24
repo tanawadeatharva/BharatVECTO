@@ -374,11 +374,6 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 			get { return null; }
 		}
 		
-		public override ITorqueConverterDeclarationInputData TorqueConverterInputData
-		{
-			get { return null; }
-		}
-		
 		public override IAirdragDeclarationInputData AirdragInputData
 		{
 			get { return null; }

@@ -46,7 +46,7 @@ namespace TUGraz.VectoCore.Tests.Utils {
 		public Watt MaxNetPower1 { get; }
 		public Watt MaxNetPower2 { get; }
 		public RegistrationClass RegisteredClass { get; set; }
-		public int NuberOfPassengersUpperDeck { get; set; }
+		public int NumberOfPassengersUpperDeck { get; set; }
 		public int NumberOfPassengersLowerDeck { get; set; }
 		public VehicleCode VehicleCode { get; set; }
 		public FloorType FloorType { get; }
@@ -55,6 +55,7 @@ namespace TUGraz.VectoCore.Tests.Utils {
 		public Meter Length { get; set; }
 		public Meter Width { get; set; }
 		public Meter EntranceHeight { get; }
+		public ConsumerTechnology DoorDriveTechnology { get; }
 		public IVehicleComponentsDeclaration Components { get { return this; } }
 		public XmlNode XMLSource { get; }
 
@@ -106,9 +107,10 @@ namespace TUGraz.VectoCore.Tests.Utils {
 		public Meter Length { get; set; }
 		public Meter Width { get; set; }
 		public Meter EntranceHeight { get; }
+		public ConsumerTechnology DoorDriveTechnology { get; }
 		public Watt MaxNetPower2 { get; }
 		public RegistrationClass RegisteredClass { get; set; }
-		public int NuberOfPassengersUpperDeck { get; set; }
+		public int NumberOfPassengersUpperDeck { get; set; }
 		public int NumberOfPassengersLowerDeck { get; set; }
 		public VehicleCode VehicleCode { get; set; }
 		public FloorType FloorType { get; }

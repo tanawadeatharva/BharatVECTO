@@ -64,5 +64,10 @@ namespace TUGraz.VectoCommon.BusAuxiliaries
 					return ConsumerTechnology.Unknown.ToString();
 			}
 		}
+
+		public static string ToXMLFormat(this ConsumerTechnology technology)
+		{
+			return technology.GetLabel().ToLowerInvariant();
+		}
 	}
 }

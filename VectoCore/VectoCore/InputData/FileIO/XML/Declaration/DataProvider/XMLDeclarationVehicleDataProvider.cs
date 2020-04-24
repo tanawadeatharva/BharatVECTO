@@ -278,7 +278,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 			get { return RegistrationClass.unknown; }
 		}
 
-		public virtual int NuberOfPassengersUpperDeck
+		public virtual int NumberOfPassengersUpperDeck
 		{
 			get { return 0; }
 		}
@@ -322,6 +322,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		{
 			get { return null; }
 		}
+
+		public virtual ConsumerTechnology DoorDriveTechnology { get { return ConsumerTechnology.Unknown; } }
 
 		public virtual IVehicleComponentsDeclaration Components
 		{
@@ -647,8 +649,13 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 			
 		}
 
-		
+
 		#region Overrides of XMLDeclarationVehicleDataProviderV10
+
+		public override bool SleeperCab
+		{
+			get { return false; }
+		}
 
 		public override IAdvancedDriverAssistantSystemDeclarationInputData ADAS
 		{
@@ -811,7 +818,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 		public override TankSystem? TankSystem
 		{
-			get { return GetNode(XMLNames.Vehicle_NgTankSystem, required: false)?.ToString().ParseEnum<TankSystem>(); }
+			get { return ElementExists(XMLNames.Vehicle_NgTankSystem) ? GetString(XMLNames.Vehicle_NgTankSystem).ParseEnum<TankSystem>() : (TankSystem?)null; }
 		}
 
 		public override int NumberOfPassengersLowerDeck
@@ -822,7 +829,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 			}
 		}
 
-		public override int NuberOfPassengersUpperDeck
+		public override int NumberOfPassengersUpperDeck
 		{
 			get {
 				var node = GetNode(XMLNames.Bus_UpperDeck);
@@ -866,7 +873,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 			get { return GetDouble(XMLNames.Bus_EntranceHeight).SI<Meter>(); }
 		}
 
-		public virtual ConsumerTechnology DoorDriveTechnology
+		public override ConsumerTechnology DoorDriveTechnology
 		{
 			get { return ConsumerTechnologyHelper.Parse(GetString(XMLNames.BusAux_PneumaticSystem_DoorDriveTechnology)); }
 		}
@@ -1006,6 +1013,11 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 		public Meter EntranceHeight { get; }
 
+		public virtual ConsumerTechnology DoorDriveTechnology
+		{
+			get { return ConsumerTechnology.Unknown; }
+		}
+
 		public IVehicleComponentsDeclaration Components
 		{
 			get { return _components ?? (_components = ComponentReader.ComponentInputData); }
@@ -1017,7 +1029,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		public string Identifier { get; }
 		public bool ExemptedVehicle { get; }
 		public LegislativeClass LegislativeClass { get; }
-		public int NuberOfPassengersUpperDeck { get; }
+		public int NumberOfPassengersUpperDeck { get; }
 		public int NumberOfPassengersLowerDeck { get; }
 		public Kilogram CurbMassChassis { get; }
 		public bool VocationalVehicle { get; }

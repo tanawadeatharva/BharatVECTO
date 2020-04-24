@@ -276,9 +276,10 @@
     <Compile Include="InputData\FileIO\XML\Declaration\IXMLDeclarationInputDataReader.cs" />
     <Compile Include="InputData\FileIO\XML\IXMLInputDataReader.cs" />
     <Compile Include="InputData\FileIO\XML\XMLInputDataNinjectModule.cs" />
+    <Compile Include="InputData\Reader\DataObjectAdapter\DeclarationDataAdapterPrimaryBus.cs" />
     <Compile Include="InputData\Reader\DataObjectAdapter\DeclarationDataAdapterSingleBus.cs" />
     <Compile Include="InputData\Reader\Impl\CombinedBusAuxiliaries.cs" />
-    <Compile Include="InputData\Reader\Impl\DeclarationDataAdapterCompletedBus.cs" />
+    <Compile Include="InputData\Reader\DataObjectAdapter\DeclarationDataAdapterCompletedBusSpecific.cs" />
     <Compile Include="InputData\Reader\Impl\DeclarationModeCompletedBusVectoRunDataFactory.cs" />
     <Compile Include="Models\BusAuxiliaries\DownstreamModules\Impl\Electrics\SimpleBattery.cs" />
     <Compile Include="Models\BusAuxiliaries\Interfaces\DownstreamModules\Electrics\ISimpleBattery.cs" />
@@ -292,10 +293,10 @@
     <Compile Include="InputData\Reader\ComponentData\EnvironmentalContidionsMapReader.cs" />
     <Compile Include="InputData\Reader\ComponentData\SSMTechnologiesReader.cs" />
     <Compile Include="InputData\Reader\ComponentData\ActuationsMapReader.cs" />
-    <Compile Include="InputData\Reader\DataObjectAdapter\DeclarationDataAdapterPrimaryBus.cs" />
+    <Compile Include="InputData\Reader\DataObjectAdapter\DeclarationDataAdapterCompletedBusGeneric.cs" />
     <Compile Include="InputData\Reader\DataObjectAdapter\IDeclarationDataAdapter.cs" />
     <Compile Include="InputData\Reader\Impl\AbstractDeclarationVectoRunDataFactory.cs" />
-    <Compile Include="InputData\Reader\Impl\DeclarationModeBusVectoRunDataFactory.cs" />
+    <Compile Include="InputData\Reader\Impl\DeclarationModePrimaryBusVectoRunDataFactory.cs" />
     <Compile Include="Models\BusAuxiliaries\Actuations.cs" />
     <Compile Include="Models\BusAuxiliaries\BusAuxiliaries.cs" />
     <Compile Include="Models\BusAuxiliaries\AuxiliaryConfig.cs" />
@@ -320,11 +321,10 @@
     <Compile Include="Models\BusAuxiliaries\DownstreamModules\Impl\HVAC\SSMRun.cs" />
     <Compile Include="Models\BusAuxiliaries\DownstreamModules\Impl\HVAC\SSMTOOL.cs" />
     <Compile Include="Models\Declaration\CompletedBusSegments.cs" />
-    <Compile Include="Models\Declaration\GenericBusAngledriveData.cs" />
-    <Compile Include="Models\Declaration\GenericBusAxelgearData.cs" />
-    <Compile Include="Models\Declaration\GenericBusDriverData.cs" />
-    <Compile Include="Models\Declaration\GenericBusEngineData.cs" />
-    <Compile Include="Models\Declaration\GenericBusRetarderData.cs" />
+    <Compile Include="Models\GenericModelData\GenericTorqueConverterData.cs" />
+    <Compile Include="Models\GenericModelData\GenericTransmissionComponentData.cs" />
+    <Compile Include="Models\GenericModelData\GenericBusEngineData.cs" />
+    <Compile Include="Models\GenericModelData\GenericBusRetarderData.cs" />
     <Compile Include="Models\Declaration\SSMTechnology.cs" />
     <Compile Include="Models\BusAuxiliaries\DownstreamModules\Impl\M06Impl.cs" />
     <Compile Include="Models\BusAuxiliaries\DownstreamModules\Impl\M07Impl.cs" />
@@ -422,6 +422,10 @@
     <Compile Include="OutputData\XML\Engineering\XMLEngineeringWriter.cs" />
     <Compile Include="OutputData\XML\Engineering\XMLEngineeringWriterInjectModule.cs" />
     <Compile Include="OutputData\XML\Engineering\XMLWriterMapping.cs" />
+    <Compile Include="OutputData\XML\XMLCustomerReportCompletedBus.cs" />
+    <Compile Include="OutputData\XML\XMLDeclarationReportCompletedVehicle.cs" />
+    <Compile Include="OutputData\XML\XMLDeclarationReportPrimaryVehicle.cs" />
+    <Compile Include="OutputData\XML\XMLManufacturerReportCompletedBus.cs" />
     <Compile Include="OutputData\XML\XMLManufacturerReportExemptedTruck.cs" />
     <Compile Include="OutputData\XML\XMLManufacturerReportPrimaryBus.cs" />
     <Compile Include="OutputData\XML\XMLPrimaryVehicleReport.cs" />
@@ -546,7 +550,6 @@
     <Compile Include="Models\Declaration\TruckSegments.cs" />
     <Compile Include="Models\Declaration\StandardBodies.cs" />
     <Compile Include="Models\Declaration\SteeringPump.cs" />
-    <Compile Include="Models\Declaration\VehicleClass.cs" />
     <Compile Include="Models\Declaration\Wheels.cs" />
     <Compile Include="Models\Declaration\WHTCCorrection.cs" />
     <Compile Include="Models\SimulationComponent\Data\CrosswindCorrectionCdxALookup.cs" />
@@ -870,7 +873,7 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <EmbeddedResource Include="Resources\Declaration\Buses\DefaultActuationsMap.apac" />
-    <EmbeddedResource Include="Resources\Declaration\HeavyBusSegmentationTable.csv" />
+    <EmbeddedResource Include="Resources\Declaration\PrimaryBusSegmentationTable.csv" />
     <EmbeddedResource Include="Resources\Declaration\VACC\Bus.vacc" />
     <EmbeddedResource Include="Resources\XSD\VectoDeclarationDefinitions.2.6_Buses.xsd">
       <SubType>Designer</SubType>
@@ -904,7 +907,6 @@
     <EmbeddedResource Include="Resources\Declaration\CompletedBusSegmentationTable.csv" />
     <EmbeddedResource Include="Resources\Declaration\GenericBusData\EngineConsumptionMap_CI_Normed.vmap" />
     <EmbeddedResource Include="Resources\Declaration\GenericBusData\EngineConsumptionMap_PI_Normed.vmap" />
-    <EmbeddedResource Include="Resources\Declaration\GenericBusData\GenericTorqueConverter.csv" />
     <None Include="Resources\Declaration\VAUXBus\SP-AxleFactor.csv" />
     <None Include="Resources\Declaration\VAUXBus\SP-Axles_Bus.csv" />
     <None Include="Resources\Declaration\VAUXBus\SP-Factors_Bus.csv" />

@@ -93,12 +93,21 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 				//ActualModalData = true,
 				Validate = false
 			};
-			var jobContainer = new JobContainer(new MockSumWriter());
+			
+			var jobContainer = new JobContainer(new SummaryDataContainer(writer));
+		
+			//var runs = factory.SimulationRuns().ToArray();
 
-			var runs = factory.SimulationRuns().ToArray();
-			jobContainer.AddRun(runs[runIdx]);
-			runs[runIdx].Run();
-			Assert.IsTrue(runs[runIdx].FinishedWithoutErrors);
+			jobContainer.AddRuns(factory);
+
+			jobContainer.Execute();
+			jobContainer.WaitFinished();
+
+			Assert.IsTrue(jobContainer.AllCompleted);
+			Assert.IsTrue(jobContainer.GetProgress().All(x => x.Value.Success));
+			//jobContainer.AddRun(runs[runIdx]);
+			//runs[runIdx].Run();
+			//Assert.IsTrue(runs[runIdx].FinishedWithoutErrors);
 		}
 	}
 }

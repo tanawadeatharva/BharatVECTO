@@ -129,14 +129,6 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 			}
 		}
 
-		public virtual ConsumerTechnology DoorDriveTechnology
-		{
-			get {
-				return ConsumerTechnologyHelper.Parse(
-					GetString(new[] { XMLNames.BusAux_PneumaticSystem, XMLNames.BusAux_PneumaticSystem_DoorDriveTechnology }));
-			}
-		}
-
 		#endregion
 
 		#region Implementation of IPneumaticSupplyDeclarationData

@@ -34,6 +34,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Diagnostics;
 using System.Linq;
+using Newtonsoft.Json;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Configuration;
@@ -70,7 +71,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Engine
 
 		private SortedList<PerSecond, int> _quickLookup;
 
-		[Required] internal readonly LookupData<PerSecond, PT1.PT1Result> PT1Data;
+		[Required] public readonly LookupData<PerSecond, PT1.PT1Result> PT1Data;
 
 		internal EngineFullLoadCurve(List<FullLoadCurveEntry> entries, LookupData<PerSecond, PT1.PT1Result> pt1Data)
 		{
@@ -88,6 +89,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Engine
 			return Formulas.TorqueToPower(DragLoadStationaryTorque(angularVelocity), angularVelocity);
 		}
 
+		[JsonIgnore]
 		public CombustionEngineData EngineData { get; internal set; }
 
 		public PT1.PT1Result PT1(PerSecond angularVelocity)
@@ -95,6 +97,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Engine
 			return PT1Data.Lookup(angularVelocity);
 		}
 
+		public string[] FullLoadCurve
+		{
+			get { return FullLoadEntries.Select(x => $"{x.EngineSpeed.AsRPM} [rpm], {x.TorqueFullLoad}, {x.TorqueDrag}").ToArray(); }
+		}
+		
 		/// <summary>
 		/// Get the rated speed from the given full-load curve (i.e. speed with max. power)
 		/// </summary>
@@ -497,7 +504,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Engine
 		#endregion
 
 		[DebuggerDisplay("n: {EngineSpeed}, fullTorque: {TorqueFullLoad}, dragTorque: {TorqueDrag}")]
-		internal class FullLoadCurveEntry
+		public class FullLoadCurveEntry
 		{
 			[Required, SIRange(0, 5000 * Constants.RPMToRad)]
 			public PerSecond EngineSpeed { get; set; }
