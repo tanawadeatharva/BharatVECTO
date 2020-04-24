@@ -286,7 +286,11 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries
 							? M7.SmartElectricalAndPneumaticAuxAltPowerGenAtCrank
 							: M7.SmartElectricalOnlyAuxAltPowerGenAtCrank) * M0.AlternatorsEfficiency *
 						auxConfig.ElectricalUserInputsConfig.AlternatorGearEfficiency;
-					ElectricStorage.Request((generatedElPower - ElectricPowerConsumerSum) * essFactor, seconds);
+					var energy = (generatedElPower - ElectricPowerConsumerSum) * essFactor * seconds;
+					var maxCharge = (ElectricStorage.SOC - 1) * ElectricStorage.Capacity;
+					var maxDischarge = ElectricStorage.SOC * ElectricStorage.Capacity;
+					var batEnergy = energy.LimitTo(maxCharge, maxDischarge);
+					ElectricStorage.Request(batEnergy);
 				}
 				Signals.CurrentCycleTimeInSeconds += seconds.Value();
 			} catch (Exception ex) {

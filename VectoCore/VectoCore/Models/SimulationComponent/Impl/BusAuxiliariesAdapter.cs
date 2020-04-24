@@ -54,6 +54,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		private double EngineStopStartUtilityFactor;
 		private bool SmartElectricSystem;
+		private IAuxiliaryConfig AuxCfg;
 
 		//private readonly FuelConsumptionAdapter _fcMapAdapter;
 
@@ -67,7 +68,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			PreviousState = new BusAuxState { AngularSpeed = container.EngineIdleSpeed };
 
 			AdditionalAux = additionalAux;
-
+			AuxCfg = auxiliaryConfig;
 			DataBus = container;
 
 			var tmpAux = new BusAuxiliaries.BusAuxiliaries(container.ModalData);
@@ -123,7 +124,20 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			var signals = Auxiliaries.Signals;
 			signals.EngineStopped = false; 
 			signals.VehicleStopped = false;
-			return GetBusAuxPowerDemand(time, simulationInterval, 0.SI<NewtonMeter>(), 0.SI<NewtonMeter>(), engineSpeed, true);
+			var retVal =  GetBusAuxPowerDemand(time, simulationInterval, 0.SI<NewtonMeter>(), 0.SI<NewtonMeter>(), engineSpeed, true);
+
+			if (!SmartElectricSystem) {
+				return retVal;
+			}
+
+			var batteryPwr = Auxiliaries.BatterySOC * AuxCfg.ElectricalUserInputsConfig.ElectricStorageCapacity / simulationInterval;
+			var esSum = Auxiliaries.ElectricPowerConsumerSum;
+			//if (batteryPwr < esSum) {
+				retVal += (esSum ) / AuxCfg.ElectricalUserInputsConfig.AlternatorGearEfficiency /
+						AuxCfg.ElectricalUserInputsConfig.AlternatorMap.GetEfficiency(0.RPMtoRad(), 0.SI<Ampere>());
+			//}
+
+			return retVal;
 		}
 
 		public Watt PowerDemandEngineOff(Second absTime, Second dt)
@@ -145,7 +159,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			CurrentState.PowerDemand = ((AdditionalAux?.PowerDemandEngineOn(absTime, dt, DataBus.EngineIdleSpeed) ?? 0.SI<Watt>()) +
 										busAuxPowerDemand) * (1 - EngineStopStartUtilityFactor);
-
+			//CurrentState.ESPowerGeneratedICE_On = Auxiliaries.ElectricPowerGenerated;
+			//CurrentState.ESPowerMech = Auxiliaries.ElectricPowerDemandMech;
 			// 
 			signals.EngineStopped = !DataBus.IgnitionOn;
 			signals.VehicleStopped = DataBus.VehicleStopped;
@@ -158,15 +173,21 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		}
 
 
-		protected internal virtual void DoWriteModalResults(IModalDataContainer container)
+		protected internal virtual void DoWriteModalResults(Second absTime, Second dt, IModalDataContainer container)
 		{
 			var essUtilityFactor = 1.0;
 			if (!DataBus.IgnitionOn) {
 				essUtilityFactor = 1 - EngineStopStartUtilityFactor;
 			}
 
+			//var signals = Auxiliaries.Signals;
+			//signals.EngineStopped = !DataBus.IgnitionOn;
+			//signals.VehicleStopped = DataBus.VehicleStopped;
+
 			// cycleStep has to be called here and not in DoCommit, write is called before Commit!
-			Auxiliaries.CycleStep(CurrentState.dt, essUtilityFactor);
+			var oldSOC = Auxiliaries.BatterySOC;
+			Auxiliaries.CycleStep(CurrentState.dt, EngineStopStartUtilityFactor);
+			var newSOC = Auxiliaries.BatterySOC;
 
 			//CurrentState.TotalFuelConsumption = Auxiliaries.TotalFuel;
 			container[ModalResultField.P_aux] = CurrentState.PowerDemand;
@@ -179,6 +200,16 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			if (SmartElectricSystem) {
 				container[ModalResultField.BatterySOC] = Auxiliaries.BatterySOC * 100.0;
+
+				container[ModalResultField.P_busAux_ES_generated] = essUtilityFactor * Auxiliaries.ElectricPowerConsumerSum;
+				container[ModalResultField.P_busAux_ES_sum_mech] = essUtilityFactor * Auxiliaries.ElectricPowerConsumerSum /
+																	AuxCfg.ElectricalUserInputsConfig.AlternatorGearEfficiency /
+																	AuxCfg.ElectricalUserInputsConfig.AlternatorMap.GetEfficiency(0.RPMtoRad(), 0.SI<Ampere>());
+				
+				var batteryPwr = (oldSOC - newSOC) * AuxCfg.ElectricalUserInputsConfig.ElectricStorageCapacity / dt;
+				if (batteryPwr.IsSmaller(Auxiliaries.ElectricPowerConsumerSum * EngineStopStartUtilityFactor)) {
+					// add to P_aux_ES
+				}
 			}
 
 			container[ModalResultField.Nl_busAux_PS_consumer] = Auxiliaries.PSDemandConsumer;

@@ -817,7 +817,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 		public override TankSystem? TankSystem
 		{
-			get { return GetString(XMLNames.Vehicle_NgTankSystem).ParseEnum<TankSystem>(); }
+			get { return ElementExists(XMLNames.Vehicle_NgTankSystem) ? GetString(XMLNames.Vehicle_NgTankSystem).ParseEnum<TankSystem>() : (TankSystem?)null; }
 		}
 
 		public override int NumberOfPassengersLowerDeck
