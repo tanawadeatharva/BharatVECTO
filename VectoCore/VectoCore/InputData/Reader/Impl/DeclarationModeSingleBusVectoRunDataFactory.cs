@@ -84,7 +84,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl {
 			}
 			var simulationRunData = new VectoRunData {
 				Loading = loading.Key,
-				VehicleData = DataAdapter.CreateVehicleData(vehicle, mission, loading),
+				VehicleData = DataAdapter.CreateVehicleData(vehicle, _segment, mission, loading),
 				AirdragData = _dao.CreateAirdragData(_singleBusInputData.CompletedVehicle, mission),
 				EngineData = DataAdapter.CreateEngineData(InputDataProvider.JobInputData.Vehicle, engineMode, mission),
 				GearboxData = _gearboxData,

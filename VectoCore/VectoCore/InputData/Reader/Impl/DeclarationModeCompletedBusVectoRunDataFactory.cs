@@ -109,7 +109,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 			 
 			_segmentCompletedBus = GetCompletedSegment(CompletedVehicle, PrimaryVehicle.AxleConfiguration);
 
-			var tmpVehicleData = DataAdapterSpecific.CreateVehicleData(PrimaryVehicle, CompletedVehicle, _segmentCompletedBus.Missions.First(),
+			var tmpVehicleData = DataAdapterSpecific.CreateVehicleData(PrimaryVehicle, CompletedVehicle, _segmentCompletedBus, _segmentCompletedBus.Missions.First(),
 																_segmentCompletedBus.Missions.First().Loadings.First());
 			tmpVehicleData.VehicleCategory = VehicleCategory.GenericBusVehicle;
 
@@ -250,7 +250,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 			
 			var simulationRunData = new VectoRunData {
 				Loading = loading.Key,
-				VehicleData = DataAdapterSpecific.CreateVehicleData(PrimaryVehicle, CompletedVehicle, 
+				VehicleData = DataAdapterSpecific.CreateVehicleData(PrimaryVehicle, CompletedVehicle, _segmentCompletedBus, 
 					mission, loading),
 				AirdragData = DataAdapterSpecific.CreateAirdragData(CompletedVehicle, mission),
 				EngineData = DataAdapterSpecific.CreateEngineData(PrimaryVehicle, modeIdx),
@@ -296,7 +296,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 
 			var simulationRunData = new VectoRunData {
 				Loading = loading.Key,
-				VehicleData = DataAdapterGeneric.CreateVehicleData(PrimaryVehicle, mission, loading),
+				VehicleData = DataAdapterGeneric.CreateVehicleData(PrimaryVehicle, primarySegment, mission, loading),
 				AirdragData = DataAdapterGeneric.CreateAirdragData(null, mission, new Segment()),
 				EngineData = DataAdapterGeneric.CreateEngineData(PrimaryVehicle, modeIdx),
 				GearboxData = _gearboxData,

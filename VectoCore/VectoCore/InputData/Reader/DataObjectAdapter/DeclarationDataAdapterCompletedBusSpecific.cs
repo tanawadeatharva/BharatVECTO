@@ -22,14 +22,14 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 	{
 
 		public VehicleData CreateVehicleData(IVehicleDeclarationInputData primaryVehicle,
-			IVehicleDeclarationInputData completedVehicle, Mission mission, 
+			IVehicleDeclarationInputData completedVehicle, Segment segment, Mission mission, 
 			KeyValuePair<LoadingType, Tuple<Kilogram, double?>> loading)
 		{
 			var passengers = GetNumberOfPassengers(
 				mission, completedVehicle.Length, completedVehicle.Width,
 				completedVehicle.NumberOfPassengersLowerDeck + completedVehicle.NumberOfPassengersUpperDeck, loading.Key);
 
-			var vehicleData = base.CreateVehicleData(primaryVehicle, mission, loading);
+			var vehicleData = base.CreateVehicleData(primaryVehicle, segment, mission, loading);
 			vehicleData.InputData = completedVehicle;
 			vehicleData.VIN = completedVehicle.VIN;
 			vehicleData.LegislativeClass = completedVehicle.LegislativeClass;

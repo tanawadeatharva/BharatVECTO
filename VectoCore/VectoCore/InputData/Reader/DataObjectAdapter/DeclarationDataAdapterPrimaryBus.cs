@@ -31,9 +31,9 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 		}
 
 
-		public override VehicleData CreateVehicleData(IVehicleDeclarationInputData data, Mission mission, KeyValuePair<LoadingType, Tuple<Kilogram, double?>> loading)
+		public override VehicleData CreateVehicleData(IVehicleDeclarationInputData data, Segment segment, Mission mission, KeyValuePair<LoadingType, Tuple<Kilogram, double?>> loading)
 		{
-			var retVal = base.CreateVehicleData(data, mission, loading);
+			var retVal = base.CreateVehicleData(data, segment, mission, loading);
 			retVal.CurbMass = mission.CurbMass;
 			return retVal;
 		}

@@ -24,8 +24,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 	{
 		#region Implementation of IDeclarationDataAdapter
 
-		public override VehicleData CreateVehicleData(
-			IVehicleDeclarationInputData vehicle, Mission mission, KeyValuePair<LoadingType, Tuple<Kilogram, double?>> loading)
+		public override VehicleData CreateVehicleData(IVehicleDeclarationInputData vehicle, Segment segment, Mission mission, KeyValuePair<LoadingType, Tuple<Kilogram, double?>> loading)
 		{
 			var busFloorArea = DeclarationData.BusAuxiliaries.CalculateBusFloorSurfaceArea(
 				CompletedVehicle.Length,
@@ -43,7 +42,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 				: passengerCountRef * mission.MissionType.GetLowLoadFactorBus();
 			var payload = passengerCountCalc * mission.MissionType.GetAveragePassengerMass();
 
-			var retVal = CreateNonExemptedVehicleData(vehicle, mission, payload, passengerCountCalc);
+			var retVal = CreateNonExemptedVehicleData(vehicle, segment, mission, payload, passengerCountCalc);
 			retVal.CurbMass = CompletedVehicle.CurbMassChassis;
 			return retVal;
 		}

@@ -78,7 +78,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl {
 			_segment = GetSegment(vehicle);
 			_driverdata = DataAdapter.CreateDriverData();
 			_driverdata.AccelerationCurve = AccelerationCurveReader.ReadFromStream(_segment.AccelerationFile);
-			var tempVehicle = DataAdapter.CreateVehicleData(vehicle, _segment.Missions.First(),
+			var tempVehicle = DataAdapter.CreateVehicleData(vehicle, _segment, _segment.Missions.First(),
 													_segment.Missions.First().Loadings.First());
 			_airdragData = DataAdapter.CreateAirdragData(vehicle.Components.AirdragInputData,
 												_segment.Missions.First(), _segment);
