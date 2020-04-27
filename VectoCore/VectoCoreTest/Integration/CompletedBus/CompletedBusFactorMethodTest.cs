@@ -153,7 +153,7 @@ namespace TUGraz.VectoCore.Tests.Integration.CompletedBus
 			Assert.AreEqual(AxleConfiguration.AxleConfig_4x2, genericVehicleData.AxleConfiguration);
 			Assert.AreEqual(genericVehicleData.AxleConfiguration, specificVehicleData.AxleConfiguration);
 
-			Assert.AreEqual(10000, genericVehicleData.CurbMass.Value());
+			Assert.AreEqual(13150, genericVehicleData.CurbMass.Value());
 			Assert.AreEqual(8300, specificVehicleData.CurbMass.Value());
 
 			Assert.AreEqual(0, genericVehicleData.BodyAndTrailerMass.Value());
@@ -175,8 +175,8 @@ namespace TUGraz.VectoCore.Tests.Integration.CompletedBus
 				// generic loading values shall match expected values of primary vehicle for IU and CO cycle
 				// see TestPrimaryBusGroup41Test
 				case 0:
-					Assert.AreEqual(1720.6992, genericLoading.Value(), 1e-4);
-					Assert.AreEqual(1693.6141, specificLoading.Value(), 1e-4);
+					Assert.AreEqual(1075.437, genericLoading.Value(), 1e-4);
+					Assert.AreEqual(1058.5088, specificLoading.Value(), 1e-4);
 					break;
 				case 1:
 					Assert.AreEqual(4301.748, genericLoading.Value(), 1e-4);
@@ -350,9 +350,9 @@ namespace TUGraz.VectoCore.Tests.Integration.CompletedBus
 		private void AssertFuel(CombustionEngineFuelData fuel)
 		{
 			Assert.AreEqual(1, fuel.WHTCMotorway);
-			Assert.AreEqual(1, fuel.WHTCRural);
-			Assert.AreEqual(1, fuel.WHTCUrban);
-			Assert.AreEqual(1, fuel.ColdHotCorrectionFactor);
+			Assert.AreEqual(1.02, fuel.WHTCRural);
+			Assert.AreEqual(1.05, fuel.WHTCUrban);
+			Assert.AreEqual(1.005, fuel.ColdHotCorrectionFactor);
 			Assert.AreEqual(1, fuel.CorrectionFactorRegPer);
 
 			//fuel.ConsumptionMap ???
@@ -465,18 +465,18 @@ namespace TUGraz.VectoCore.Tests.Integration.CompletedBus
 		{
 			Assert.AreEqual(12, lossMap._entries.Count);
 
-			AssertLossmapEntry(0, -75337.8336, 1585.2433, lossMap._entries[0]);
-			AssertLossmapEntry(0, -22.2920, 16.1695, lossMap._entries[1]);
-			AssertLossmapEntry(0, 54.6311, 16.1695, lossMap._entries[2]);
-			AssertLossmapEntry(0, 78508.3203, 1585.2433, lossMap._entries[3]);
-			AssertLossmapEntry(325, -75337.8336, 1585.2433, lossMap._entries[4]);
-			AssertLossmapEntry(325, -22.2920, 16.1695, lossMap._entries[5]);
-			AssertLossmapEntry(325, 54.6311, 16.1695, lossMap._entries[6]);
-			AssertLossmapEntry(325, 78508.3203, 1585.2433, lossMap._entries[7]);
-			AssertLossmapEntry(32500, -74957.0644, 1966.0126, lossMap._entries[8]);
-			AssertLossmapEntry(32500, 358.4772, 396.9388, lossMap._entries[9]);
-			AssertLossmapEntry(32500, 435.4003, 396.9388, lossMap._entries[10]);
-			AssertLossmapEntry(32500, 78889.0895, 1966.0126, lossMap._entries[11]);
+			AssertLossmapEntry(0, -75337.83, 1585.24, lossMap._entries[0]);
+			AssertLossmapEntry(0, -22.29, 16.17, lossMap._entries[1]);
+			AssertLossmapEntry(0, 54.63, 16.17, lossMap._entries[2]);
+			AssertLossmapEntry(0, 78508.32, 1585.24, lossMap._entries[3]);
+			AssertLossmapEntry(325, -75337.83, 1585.24, lossMap._entries[4]);
+			AssertLossmapEntry(325, -22.29, 16.17, lossMap._entries[5]);
+			AssertLossmapEntry(325, 54.63, 16.17, lossMap._entries[6]);
+			AssertLossmapEntry(325, 78508.32, 1585.24, lossMap._entries[7]);
+			AssertLossmapEntry(32500, -74957.06, 1966.01, lossMap._entries[8]);
+			AssertLossmapEntry(32500, 358.48, 396.94, lossMap._entries[9]);
+			AssertLossmapEntry(32500, 435.40, 396.94, lossMap._entries[10]);
+			AssertLossmapEntry(32500, 78889.09, 1966.01, lossMap._entries[11]);
 
 		}
 
@@ -602,7 +602,7 @@ namespace TUGraz.VectoCore.Tests.Integration.CompletedBus
 			Assert.AreEqual(false, genericPneumaticUI.SmartRegeneration);
 			Assert.AreEqual(genericPneumaticUI.SmartRegeneration, specificPneumaticUI.SmartRegeneration);
 
-			Assert.AreEqual(VectoMath.Max(0.SI<Meter>(), 0.120.SI<Meter>() - Constants.BusParameters.EntranceHeight), genericPneumaticUI.KneelingHeight);
+			Assert.AreEqual(VectoMath.Max(0.07.SI<Meter>(), 0.120.SI<Meter>() - Constants.BusParameters.EntranceHeight), genericPneumaticUI.KneelingHeight);
 			Assert.AreEqual(VectoMath.Max(0.SI<Meter>(), 0.120.SI<Meter>() - Constants.BusParameters.EntranceHeight), specificPneumaticUI.KneelingHeight);
 
 			Assert.AreEqual(ConsumerTechnology.Electrically, genericPneumaticUI.AirSuspensionControl);
@@ -682,8 +682,8 @@ namespace TUGraz.VectoCore.Tests.Integration.CompletedBus
 				// generic loading values shall match expected values of primary vehicle for IU and CO cycle
 				// see TestPrimaryBusGroup41Test
 				case 0:
-					Assert.AreEqual(25.2352, genericLoading, 1e-4);
-					Assert.AreEqual(24.8537, specificLoading, 1e-4);
+					Assert.AreEqual(16.147, genericLoading, 1e-4);
+					Assert.AreEqual(15.908575, specificLoading, 1e-4);
 					break;
 				case 1:
 					Assert.AreEqual(61.588, genericLoading, 1e-4);
