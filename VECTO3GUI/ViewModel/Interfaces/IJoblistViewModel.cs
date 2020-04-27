@@ -1,12 +1,13 @@
 ﻿using System.Collections.ObjectModel;
 using System.Windows.Input;
+using VECTO3GUI.Helper;
 using VECTO3GUI.ViewModel.Impl;
 
 namespace VECTO3GUI.ViewModel.Interfaces
 {
 	public interface IJoblistViewModel : IMainView
 	{
-		ObservableCollection<JobEntry> Jobs { get; }
+		ObservableCollectionEx<JobEntry> Jobs { get; }
 		ObservableCollection<MessageEntry> Messages { get; }
 		ICommand AddBusJob { get; }
 		ICommand AddJob { get; }

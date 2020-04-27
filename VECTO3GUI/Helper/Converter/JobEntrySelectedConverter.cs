@@ -11,8 +11,9 @@ namespace VECTO3GUI.Helper.Converter
 
 		public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
 		{
-			var jobEntry = (ViewModel.Impl.JobEntry)((ListViewItem)value)?.Content;
-			return jobEntry != null && jobEntry.Selected;
+			//var jobEntry = (ViewModel.Impl.JobEntry)((ListViewItem)value)?.Content;
+			//return jobEntry != null && jobEntry.Selected;
+			return value;
 		}
 
 		public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)

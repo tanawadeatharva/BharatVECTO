@@ -1,27 +1,20 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.ObjectModel;
+using System.Collections.Specialized;
+using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Documents;
 using System.Windows.Input;
 using Ninject;
-using Ninject.Parameters;
-using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCore.Configuration;
-using TUGraz.VectoCore.InputData.FileIO.JSON;
 using TUGraz.VectoCore.InputData.FileIO.XML;
-using TUGraz.VectoCore.InputData.FileIO.XML.Declaration;
-using TUGraz.VectoCore.InputData.FileIO.XML.Engineering;
-using TUGraz.VectoCore.Utils;
 using VECTO3GUI.Util;
 using VECTO3GUI.ViewModel.Interfaces;
 using System.Xml;
 using System.Xml.Linq;
-using Microsoft.WindowsAPICodePack.Shell.PropertySystem;
 using TUGraz.VectoCommon.Resources;
 using TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider;
 using VECTO3GUI.Helper;
@@ -35,11 +28,12 @@ namespace VECTO3GUI.ViewModel.Impl
 	{
 		#region Members
 
-		protected readonly ObservableCollection<JobEntry> _jobs = new ObservableCollection<JobEntry>();
+		protected ObservableCollectionEx<JobEntry> _jobs;
 		protected readonly ObservableCollection<MessageEntry> _messages = new ObservableCollection<MessageEntry>();
 		private readonly SettingsModel _settings;
 
 		private JobEntry _selectedJobEntry;
+		private JobListModel _jobListModel;
 
 		#endregion
 
@@ -67,9 +61,10 @@ namespace VECTO3GUI.ViewModel.Impl
 			set { SetProperty(ref _selectedJobEntry, value); }
 		}
 
-		public ObservableCollection<JobEntry> Jobs
+		public ObservableCollectionEx<JobEntry> Jobs
 		{
 			get { return _jobs; }
+			set { SetProperty(ref _jobs, value); }
 		}
 
 		public ObservableCollection<MessageEntry> Messages
@@ -88,23 +83,27 @@ namespace VECTO3GUI.ViewModel.Impl
 
 		private void SetJobEntries()
 		{
-			var xmlFiles = Directory.GetFiles(_settings.XmlFilePathFolder, "*.xml");
-			for (int i = 0; i < xmlFiles.Length; i++) {
-				AddJobEntry(xmlFiles[i]);
+			_jobListModel = new JobListModel();
+			_jobs = new ObservableCollectionEx<JobEntry>(_jobListModel.GetJobEntries());
+			_jobs.CollectionChanged += JobsCollectionChanged;
+			_jobs.CollectionItemChanged += JobItemChanged;
+		}
+
+		private void JobItemChanged(object sender, PropertyChangedEventArgs e)
+		{
+			_jobListModel.SaveJobList(_jobs);
+		}
+
+		private void JobsCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+		{
+			switch (e.Action) {
+				case NotifyCollectionChangedAction.Add:
+				case NotifyCollectionChangedAction.Remove:
+					_jobListModel.SaveJobList(_jobs);
+					break;
 			}
 		}
-
-		private void AddJobEntry(string jobFile)
-		{
-			_jobs.Add(new JobEntry()
-			{
-				FirstFilePath = jobFile,
-				Selected = false,
-				Sorting = _jobs.Count
-			});
-		}
-
-
+		
 		#region Implementation IJoblistViewModel
 
 		public ICommand RemoveJob
