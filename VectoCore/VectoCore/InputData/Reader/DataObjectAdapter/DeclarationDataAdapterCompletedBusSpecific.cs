@@ -183,8 +183,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 				? 2 * Constants.BusParameters.DriverCompartmentLength
 				: completedVehicle.Length;
 
-			var hvacBusHeight = DeclarationData.BusAuxiliaries.CalculateInternalHeight(completedVehicle.VehicleCode.GetFloorType(),
-																						isDoubleDecker, completedVehicle.Height);
+			var hvacBusHeight = DeclarationData.BusAuxiliaries.CalculateInternalHeight(completedVehicle.VehicleCode, completedVehicle.Height);
 			var hvacBusWidth = DeclarationData.BusAuxiliaries.CorrectedBusWidth(completedVehicle.Width);
 			var coolingPower = CalculateMaxCoolingPower(completedVehicle, mission);
 
@@ -270,14 +269,12 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 		protected override Tuple<Watt, Watt> CalculateMaxCoolingPower(IVehicleDeclarationInputData completedVehicle,
 			Mission mission)
 		{
-			var isDoubleDecker = completedVehicle.VehicleCode.IsDoubleDeckerBus();
-			var floorType = completedVehicle.VehicleCode.GetFloorType();
 			var hvacConfiguration = completedVehicle.Components.BusAuxiliaries.HVACAux.SystemConfiguration;
 			
 			var length = DeclarationData.BusAuxiliaries.CalculateInternalLength(
-			 	completedVehicle.Length ,isDoubleDecker, floorType, 
+			 	completedVehicle.Length , completedVehicle.VehicleCode, 
 				completedVehicle.NumberOfPassengersLowerDeck);
-			var height = DeclarationData.BusAuxiliaries.CalculateInternalHeight(floorType, isDoubleDecker, completedVehicle.Height);
+			var height = DeclarationData.BusAuxiliaries.CalculateInternalHeight(completedVehicle.VehicleCode, completedVehicle.Height);
 			var volume = length * height * completedVehicle.Width;
 
 			var driver = DeclarationData.BusAuxiliaries.HVACMaxCoolingPower.DriverMaxCoolingPower(
@@ -314,7 +311,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 		{
 			var busParams = mission.BusParameter;
 			return DeclarationData.BusAuxiliaries.CalculateLengthInteriorLights(
-									vehicleData.Length, vehicleData.VehicleCode.IsDoubleDeckerBus(), vehicleData.VehicleCode.GetFloorType(), busParams.NumberPassengersLowerDeck)
+									vehicleData.Length, vehicleData.VehicleCode, busParams.NumberPassengersLowerDeck)
 								.Value();
 		}
 

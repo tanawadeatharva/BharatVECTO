@@ -128,7 +128,9 @@ namespace TUGraz.VectoCore.Models.Declaration
 							NumberPassengersUpperDeck = row.ParseDouble("passengersupperdeck"),
 							PassengerDensity = passengerDensity,
 							DoubleDecker = row.ParseBoolean("doubledecker"),
-							FloorType = GetFloorType(row.Field<string>("floortype")),
+							LowEntry = GetLowEntry(row.Field<string>("lowentry")),
+							EntranceHeight =  row.ParseDouble("entranceheight").SI(Unit.SI.Milli.Meter).Cast<Meter>(),
+							VehicleCode = row.Field<string>("vehiclecode").ParseEnum<VehicleCode>(),
 							HVACConfiguration = BusHVACSystemConfigurationHelper.Parse(row.Field<string>("hvacsystemconfiguration")),
 							HVACAuxHeaterPower = row.ParseDouble("hvacauxheater").SI(Unit.SI.Kilo.Watt).Cast<Watt>(),
 							HVACCompressorType = ACCompressorTypeExtensions.ParseEnum(row.Field<string>("hvaccompressortype")),
@@ -146,14 +148,15 @@ namespace TUGraz.VectoCore.Models.Declaration
 			return missions.ToArray();
 		}
 
-		private FloorType GetFloorType(string field)
+		private bool? GetLowEntry(string field)
 		{
 			switch (field) {
-				case "high": return FloorType.HighFloor;
-				case "low": return FloorType.LowFloor;
-				case "semilowfloor":
-				case "semilow": return FloorType.SemiLowFloor;
-				default: return FloorType.Unknown;
+				case "-": return null;
+				case "0": return false;
+				case "1": return true;
+				//case "semilowfloor":
+				//case "semilow": return FloorType.SemiLowFloor;
+				default: return null;
 			}
 		}
 

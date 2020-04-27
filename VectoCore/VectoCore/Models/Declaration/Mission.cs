@@ -115,7 +115,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 
 		public bool DoubleDecker { get; internal set; }
 
-		public FloorType FloorType { get; internal set; }
+		public bool? LowEntry { get; internal set; }
 
 		// #### HVAC Model Parameters
 
@@ -151,6 +151,8 @@ namespace TUGraz.VectoCore.Models.Declaration
 		public Dictionary<string, double> ElectricalConsumers { get; internal set; }
 
 		public Meter DeltaHeight { get; internal set; }
+		public Meter EntranceHeight { get; set; }
+		public VehicleCode VehicleCode { get; set; }
 	}
 
 	

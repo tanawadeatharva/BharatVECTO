@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <pif:VectoOutputPrimaryVehicle xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="urn:tugraz:ivt:VectoAPI:DeclarationOutput:PrimaryVehicleInformation:HeavyBus:v0.1" xmlns:pif="urn:tugraz:ivt:VectoAPI:DeclarationOutput:PrimaryVehicleInformation" xmlns:di="http://www.w3.org/2000/09/xmldsig#" xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:DeclarationOutput:PrimaryVehicleInformation https://webgate.ec.europa.eu/CITnet/svn/VECTO/trunk/Share/XML/XSD//DEV/VectoOutputPrimaryVehicleInformation.xsd">
-  <pif:Data xsi:type="PrimaryVehicleHeavyBusDataType" id="PIF-1e0e376f9424423ab5bc">
+  <pif:Data xsi:type="PrimaryVehicleHeavyBusDataType" id="PIF-ee3fb48489044a79a1ed">
     <Vehicle xsi:type="VehiclePIFType">
       <ManufacturerPrimaryVehicle>Generic Truck Manufacturer</ManufacturerPrimaryVehicle>
       <ManufacturerAddressPrimaryVehicle>Street, ZIP City</ManufacturerAddressPrimaryVehicle>
@@ -59,7 +59,7 @@
                 <Entry engineSpeed="2100.00" maxTorque="1100.00" dragTorque="-320.00" />
               </FullLoadAndDragCurve>
               <Fuels>
-                <FuelType>Diesel CI</FuelType>
+                <FuelType>NG CI</FuelType>
               </Fuels>
             </Mode>
           </Data>
@@ -236,13 +236,13 @@
       </di:Reference>
     </InputDataSignature>
     <ManufacturerRecordSignature>
-      <di:Reference URI="#RESULT-110cacb92a4e4d209e97">
+      <di:Reference URI="#RESULT-54f0b68e380a4fa3abe0">
         <di:Transforms>
           <di:Transform Algorithm="urn:vecto:xml:2017:canonicalization" />
           <di:Transform Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#" />
         </di:Transforms>
         <di:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256" />
-        <di:DigestValue>B4//vERuSq39BSoxMVAPbY2di8NYaYOqHUkOWYJ1BxQ=</di:DigestValue>
+        <di:DigestValue>f+tMDAgSLYwGqTWDD34xLNT8wHyy/8E9frPGKdSKEX0=</di:DigestValue>
       </di:Reference>
     </ManufacturerRecordSignature>
     <Results>
@@ -251,296 +251,296 @@
         <VehicleGroup>P31SD</VehicleGroup>
         <Mission>Heavy Urban</Mission>
         <SimulationParameters>
-          <TotalVehicleMass unit="kg">11123.63</TotalVehicleMass>
+          <TotalVehicleMass unit="kg">13098.63</TotalVehicleMass>
           <Payload unit="kg">1123.63</Payload>
           <PassengerCount>16.52</PassengerCount>
           <FuelMode>single fuel mode</FuelMode>
         </SimulationParameters>
-        <Fuel type="Diesel CI">
-          <EnergyConsumption unit="MJ/km">17.53611</EnergyConsumption>
+        <Fuel type="NG CI">
+          <EnergyConsumption unit="MJ/km">18.84546</EnergyConsumption>
         </Fuel>
-        <CO2 unit="g/km">982.8</CO2>
+        <CO2 unit="g/km">1056.1</CO2>
       </Result>
       <Result status="success">
         <VehicleGroup>P31SD</VehicleGroup>
         <Mission>Heavy Urban</Mission>
         <SimulationParameters>
-          <TotalVehicleMass unit="kg">15618.16</TotalVehicleMass>
+          <TotalVehicleMass unit="kg">17593.16</TotalVehicleMass>
           <Payload unit="kg">5618.16</Payload>
           <PassengerCount>82.62</PassengerCount>
           <FuelMode>single fuel mode</FuelMode>
         </SimulationParameters>
-        <Fuel type="Diesel CI">
-          <EnergyConsumption unit="MJ/km">21.12671</EnergyConsumption>
+        <Fuel type="NG CI">
+          <EnergyConsumption unit="MJ/km">22.54566</EnergyConsumption>
         </Fuel>
-        <CO2 unit="g/km">1184.0</CO2>
+        <CO2 unit="g/km">1263.5</CO2>
       </Result>
       <Result status="success">
         <VehicleGroup>P31SD</VehicleGroup>
         <Mission>Urban</Mission>
         <SimulationParameters>
-          <TotalVehicleMass unit="kg">11123.63</TotalVehicleMass>
+          <TotalVehicleMass unit="kg">13098.63</TotalVehicleMass>
           <Payload unit="kg">1123.63</Payload>
           <PassengerCount>16.52</PassengerCount>
           <FuelMode>single fuel mode</FuelMode>
         </SimulationParameters>
-        <Fuel type="Diesel CI">
-          <EnergyConsumption unit="MJ/km">14.01515</EnergyConsumption>
+        <Fuel type="NG CI">
+          <EnergyConsumption unit="MJ/km">15.14071</EnergyConsumption>
         </Fuel>
-        <CO2 unit="g/km">785.4</CO2>
+        <CO2 unit="g/km">848.5</CO2>
       </Result>
       <Result status="success">
         <VehicleGroup>P31SD</VehicleGroup>
         <Mission>Urban</Mission>
         <SimulationParameters>
-          <TotalVehicleMass unit="kg">15618.16</TotalVehicleMass>
+          <TotalVehicleMass unit="kg">17593.16</TotalVehicleMass>
           <Payload unit="kg">5618.16</Payload>
           <PassengerCount>82.62</PassengerCount>
           <FuelMode>single fuel mode</FuelMode>
         </SimulationParameters>
-        <Fuel type="Diesel CI">
-          <EnergyConsumption unit="MJ/km">17.01467</EnergyConsumption>
+        <Fuel type="NG CI">
+          <EnergyConsumption unit="MJ/km">18.22196</EnergyConsumption>
         </Fuel>
-        <CO2 unit="g/km">953.5</CO2>
+        <CO2 unit="g/km">1021.2</CO2>
       </Result>
       <Result status="success">
         <VehicleGroup>P31SD</VehicleGroup>
         <Mission>Suburban</Mission>
         <SimulationParameters>
-          <TotalVehicleMass unit="kg">11123.63</TotalVehicleMass>
+          <TotalVehicleMass unit="kg">13098.63</TotalVehicleMass>
           <Payload unit="kg">1123.63</Payload>
           <PassengerCount>16.52</PassengerCount>
           <FuelMode>single fuel mode</FuelMode>
         </SimulationParameters>
-        <Fuel type="Diesel CI">
-          <EnergyConsumption unit="MJ/km">12.21061</EnergyConsumption>
+        <Fuel type="NG CI">
+          <EnergyConsumption unit="MJ/km">13.37478</EnergyConsumption>
         </Fuel>
-        <CO2 unit="g/km">684.3</CO2>
+        <CO2 unit="g/km">749.5</CO2>
       </Result>
       <Result status="success">
         <VehicleGroup>P31SD</VehicleGroup>
         <Mission>Suburban</Mission>
         <SimulationParameters>
-          <TotalVehicleMass unit="kg">15618.16</TotalVehicleMass>
+          <TotalVehicleMass unit="kg">17593.16</TotalVehicleMass>
           <Payload unit="kg">5618.16</Payload>
           <PassengerCount>82.62</PassengerCount>
           <FuelMode>single fuel mode</FuelMode>
         </SimulationParameters>
-        <Fuel type="Diesel CI">
-          <EnergyConsumption unit="MJ/km">15.10177</EnergyConsumption>
+        <Fuel type="NG CI">
+          <EnergyConsumption unit="MJ/km">16.31513</EnergyConsumption>
         </Fuel>
-        <CO2 unit="g/km">846.3</CO2>
+        <CO2 unit="g/km">914.3</CO2>
       </Result>
       <Result status="success">
         <VehicleGroup>P31DD</VehicleGroup>
         <Mission>Heavy Urban</Mission>
         <SimulationParameters>
-          <TotalVehicleMass unit="kg">11193.34</TotalVehicleMass>
+          <TotalVehicleMass unit="kg">13543.34</TotalVehicleMass>
           <Payload unit="kg">1193.34</Payload>
           <PassengerCount>17.55</PassengerCount>
           <FuelMode>single fuel mode</FuelMode>
         </SimulationParameters>
-        <Fuel type="Diesel CI">
-          <EnergyConsumption unit="MJ/km">17.68650</EnergyConsumption>
+        <Fuel type="NG CI">
+          <EnergyConsumption unit="MJ/km">19.24449</EnergyConsumption>
         </Fuel>
-        <CO2 unit="g/km">991.2</CO2>
+        <CO2 unit="g/km">1078.5</CO2>
       </Result>
       <Result status="success">
         <VehicleGroup>P31DD</VehicleGroup>
         <Mission>Heavy Urban</Mission>
         <SimulationParameters>
-          <TotalVehicleMass unit="kg">15966.69</TotalVehicleMass>
+          <TotalVehicleMass unit="kg">18316.69</TotalVehicleMass>
           <Payload unit="kg">5966.69</Payload>
           <PassengerCount>87.75</PassengerCount>
           <FuelMode>single fuel mode</FuelMode>
         </SimulationParameters>
-        <Fuel type="Diesel CI">
-          <EnergyConsumption unit="MJ/km">21.43298</EnergyConsumption>
+        <Fuel type="NG CI">
+          <EnergyConsumption unit="MJ/km">23.17053</EnergyConsumption>
         </Fuel>
-        <CO2 unit="g/km">1201.1</CO2>
+        <CO2 unit="g/km">1298.5</CO2>
       </Result>
       <Result status="success">
         <VehicleGroup>P31DD</VehicleGroup>
         <Mission>Urban</Mission>
         <SimulationParameters>
-          <TotalVehicleMass unit="kg">11193.34</TotalVehicleMass>
+          <TotalVehicleMass unit="kg">13543.34</TotalVehicleMass>
           <Payload unit="kg">1193.34</Payload>
           <PassengerCount>17.55</PassengerCount>
           <FuelMode>single fuel mode</FuelMode>
         </SimulationParameters>
-        <Fuel type="Diesel CI">
-          <EnergyConsumption unit="MJ/km">14.19064</EnergyConsumption>
+        <Fuel type="NG CI">
+          <EnergyConsumption unit="MJ/km">15.55164</EnergyConsumption>
         </Fuel>
-        <CO2 unit="g/km">795.3</CO2>
+        <CO2 unit="g/km">871.5</CO2>
       </Result>
       <Result status="success">
         <VehicleGroup>P31DD</VehicleGroup>
         <Mission>Urban</Mission>
         <SimulationParameters>
-          <TotalVehicleMass unit="kg">15966.69</TotalVehicleMass>
+          <TotalVehicleMass unit="kg">18316.69</TotalVehicleMass>
           <Payload unit="kg">5966.69</Payload>
           <PassengerCount>87.75</PassengerCount>
           <FuelMode>single fuel mode</FuelMode>
         </SimulationParameters>
-        <Fuel type="Diesel CI">
-          <EnergyConsumption unit="MJ/km">17.34295</EnergyConsumption>
+        <Fuel type="NG CI">
+          <EnergyConsumption unit="MJ/km">18.79571</EnergyConsumption>
         </Fuel>
-        <CO2 unit="g/km">971.9</CO2>
+        <CO2 unit="g/km">1053.3</CO2>
       </Result>
       <Result status="success">
         <VehicleGroup>P31DD</VehicleGroup>
         <Mission>Suburban</Mission>
         <SimulationParameters>
-          <TotalVehicleMass unit="kg">11193.34</TotalVehicleMass>
+          <TotalVehicleMass unit="kg">13543.34</TotalVehicleMass>
           <Payload unit="kg">1193.34</Payload>
           <PassengerCount>17.55</PassengerCount>
           <FuelMode>single fuel mode</FuelMode>
         </SimulationParameters>
-        <Fuel type="Diesel CI">
-          <EnergyConsumption unit="MJ/km">12.44190</EnergyConsumption>
+        <Fuel type="NG CI">
+          <EnergyConsumption unit="MJ/km">13.83562</EnergyConsumption>
         </Fuel>
-        <CO2 unit="g/km">697.3</CO2>
+        <CO2 unit="g/km">775.4</CO2>
       </Result>
       <Result status="success">
         <VehicleGroup>P31DD</VehicleGroup>
         <Mission>Suburban</Mission>
         <SimulationParameters>
-          <TotalVehicleMass unit="kg">15966.69</TotalVehicleMass>
+          <TotalVehicleMass unit="kg">18316.69</TotalVehicleMass>
           <Payload unit="kg">5966.69</Payload>
           <PassengerCount>87.75</PassengerCount>
           <FuelMode>single fuel mode</FuelMode>
         </SimulationParameters>
-        <Fuel type="Diesel CI">
-          <EnergyConsumption unit="MJ/km">15.44072</EnergyConsumption>
+        <Fuel type="NG CI">
+          <EnergyConsumption unit="MJ/km">16.93966</EnergyConsumption>
         </Fuel>
-        <CO2 unit="g/km">865.3</CO2>
+        <CO2 unit="g/km">949.3</CO2>
       </Result>
       <Result status="success">
         <VehicleGroup>P32SD</VehicleGroup>
         <Mission>Interurban</Mission>
         <SimulationParameters>
-          <TotalVehicleMass unit="kg">11720.70</TotalVehicleMass>
-          <Payload unit="kg">1720.70</Payload>
-          <PassengerCount>24.24</PassengerCount>
+          <TotalVehicleMass unit="kg">14225.44</TotalVehicleMass>
+          <Payload unit="kg">1075.44</Payload>
+          <PassengerCount>15.15</PassengerCount>
           <FuelMode>single fuel mode</FuelMode>
         </SimulationParameters>
-        <Fuel type="Diesel CI">
-          <EnergyConsumption unit="MJ/km">10.49355</EnergyConsumption>
+        <Fuel type="NG CI">
+          <EnergyConsumption unit="MJ/km">11.65585</EnergyConsumption>
         </Fuel>
-        <CO2 unit="g/km">588.1</CO2>
+        <CO2 unit="g/km">653.2</CO2>
       </Result>
       <Result status="success">
         <VehicleGroup>P32SD</VehicleGroup>
         <Mission>Interurban</Mission>
         <SimulationParameters>
-          <TotalVehicleMass unit="kg">14301.75</TotalVehicleMass>
+          <TotalVehicleMass unit="kg">17451.75</TotalVehicleMass>
           <Payload unit="kg">4301.75</Payload>
           <PassengerCount>60.59</PassengerCount>
           <FuelMode>single fuel mode</FuelMode>
         </SimulationParameters>
-        <Fuel type="Diesel CI">
-          <EnergyConsumption unit="MJ/km">11.79622</EnergyConsumption>
+        <Fuel type="NG CI">
+          <EnergyConsumption unit="MJ/km">13.34146</EnergyConsumption>
         </Fuel>
-        <CO2 unit="g/km">661.1</CO2>
+        <CO2 unit="g/km">747.7</CO2>
       </Result>
       <Result status="success">
         <VehicleGroup>P32SD</VehicleGroup>
         <Mission>Coach</Mission>
         <SimulationParameters>
-          <TotalVehicleMass unit="kg">11094.99</TotalVehicleMass>
+          <TotalVehicleMass unit="kg">14244.99</TotalVehicleMass>
           <Payload unit="kg">1094.99</Payload>
           <PassengerCount>15.42</PassengerCount>
           <FuelMode>single fuel mode</FuelMode>
         </SimulationParameters>
-        <Fuel type="Diesel CI">
-          <EnergyConsumption unit="MJ/km">8.69707</EnergyConsumption>
+        <Fuel type="NG CI">
+          <EnergyConsumption unit="MJ/km">9.47120</EnergyConsumption>
         </Fuel>
-        <CO2 unit="g/km">487.4</CO2>
+        <CO2 unit="g/km">530.8</CO2>
       </Result>
       <Result status="success">
         <VehicleGroup>P32SD</VehicleGroup>
         <Mission>Coach</Mission>
         <SimulationParameters>
-          <TotalVehicleMass unit="kg">12737.48</TotalVehicleMass>
+          <TotalVehicleMass unit="kg">15887.48</TotalVehicleMass>
           <Payload unit="kg">2737.48</Payload>
           <PassengerCount>38.56</PassengerCount>
           <FuelMode>single fuel mode</FuelMode>
         </SimulationParameters>
-        <Fuel type="Diesel CI">
-          <EnergyConsumption unit="MJ/km">9.12793</EnergyConsumption>
+        <Fuel type="NG CI">
+          <EnergyConsumption unit="MJ/km">9.91693</EnergyConsumption>
         </Fuel>
-        <CO2 unit="g/km">511.5</CO2>
+        <CO2 unit="g/km">555.8</CO2>
       </Result>
       <Result status="success">
         <VehicleGroup>P32DD</VehicleGroup>
         <Mission>Interurban</Mission>
         <SimulationParameters>
-          <TotalVehicleMass unit="kg">12020.52</TotalVehicleMass>
-          <Payload unit="kg">2020.52</Payload>
-          <PassengerCount>28.46</PassengerCount>
+          <TotalVehicleMass unit="kg">14662.82</TotalVehicleMass>
+          <Payload unit="kg">1262.82</Payload>
+          <PassengerCount>17.79</PassengerCount>
           <FuelMode>single fuel mode</FuelMode>
         </SimulationParameters>
-        <Fuel type="Diesel CI">
-          <EnergyConsumption unit="MJ/km">10.74975</EnergyConsumption>
+        <Fuel type="NG CI">
+          <EnergyConsumption unit="MJ/km">11.98595</EnergyConsumption>
         </Fuel>
-        <CO2 unit="g/km">602.4</CO2>
+        <CO2 unit="g/km">671.7</CO2>
       </Result>
       <Result status="success">
         <VehicleGroup>P32DD</VehicleGroup>
         <Mission>Interurban</Mission>
         <SimulationParameters>
-          <TotalVehicleMass unit="kg">15051.30</TotalVehicleMass>
+          <TotalVehicleMass unit="kg">18451.30</TotalVehicleMass>
           <Payload unit="kg">5051.30</Payload>
           <PassengerCount>71.15</PassengerCount>
           <FuelMode>single fuel mode</FuelMode>
         </SimulationParameters>
-        <Fuel type="Diesel CI">
-          <EnergyConsumption unit="MJ/km">12.27697</EnergyConsumption>
+        <Fuel type="NG CI">
+          <EnergyConsumption unit="MJ/km">13.94106</EnergyConsumption>
         </Fuel>
-        <CO2 unit="g/km">688.0</CO2>
+        <CO2 unit="g/km">781.3</CO2>
       </Result>
       <Result status="success">
         <VehicleGroup>P32DD</VehicleGroup>
         <Mission>Coach</Mission>
         <SimulationParameters>
-          <TotalVehicleMass unit="kg">11347.01</TotalVehicleMass>
+          <TotalVehicleMass unit="kg">14747.01</TotalVehicleMass>
           <Payload unit="kg">1347.01</Payload>
           <PassengerCount>18.97</PassengerCount>
           <FuelMode>single fuel mode</FuelMode>
         </SimulationParameters>
-        <Fuel type="Diesel CI">
-          <EnergyConsumption unit="MJ/km">9.15481</EnergyConsumption>
+        <Fuel type="NG CI">
+          <EnergyConsumption unit="MJ/km">9.98110</EnergyConsumption>
         </Fuel>
-        <CO2 unit="g/km">513.1</CO2>
+        <CO2 unit="g/km">559.4</CO2>
       </Result>
       <Result status="success">
         <VehicleGroup>P32DD</VehicleGroup>
         <Mission>Coach</Mission>
         <SimulationParameters>
-          <TotalVehicleMass unit="kg">13367.53</TotalVehicleMass>
+          <TotalVehicleMass unit="kg">16767.53</TotalVehicleMass>
           <Payload unit="kg">3367.53</Payload>
           <PassengerCount>47.43</PassengerCount>
           <FuelMode>single fuel mode</FuelMode>
         </SimulationParameters>
-        <Fuel type="Diesel CI">
-          <EnergyConsumption unit="MJ/km">9.66609</EnergyConsumption>
+        <Fuel type="NG CI">
+          <EnergyConsumption unit="MJ/km">10.51592</EnergyConsumption>
         </Fuel>
-        <CO2 unit="g/km">541.7</CO2>
+        <CO2 unit="g/km">589.3</CO2>
       </Result>
     </Results>
     <ApplicationInformation>
       <SimulationToolVersion>0.6.1.1932-DEV !!NOT FOR CERTIFICATION!!</SimulationToolVersion>
-      <Date>2020-04-23T09:45:30.2810805Z</Date>
+      <Date>2020-04-27T15:40:40.3451077Z</Date>
     </ApplicationInformation>
   </pif:Data>
   <pif:Signature>
-    <di:Reference URI="#PIF-1e0e376f9424423ab5bc">
+    <di:Reference URI="#PIF-ee3fb48489044a79a1ed">
       <di:Transforms>
         <di:Transform Algorithm="urn:vecto:xml:2017:canonicalization" />
         <di:Transform Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#" />
       </di:Transforms>
       <di:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256" />
-      <di:DigestValue>7x4wcaqGj3oUEA2beYZ9PCeIPXLH34thrXeTaYgruKc=</di:DigestValue>
+      <di:DigestValue>+FxZ1z90Juhoj0n67kA6amYCq4x8g/q81lomEk0LK2k=</di:DigestValue>
     </di:Reference>
   </pif:Signature>
 </pif:VectoOutputPrimaryVehicle>

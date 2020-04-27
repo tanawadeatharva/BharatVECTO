@@ -19,35 +19,6 @@ namespace TUGraz.VectoCommon.Models {
 
 	public static class VehicleCodeHelper
 	{
-		public static VehicleCode Parse(string vehicleCode)
-		{
-			switch (vehicleCode)
-			{
-				case "CA":
-					return VehicleCode.CA;
-				case "CB":
-					return VehicleCode.CB;
-				case "CC":
-					return VehicleCode.CC;
-				case "CD":
-					return VehicleCode.CD;
-				case "CE":
-					return VehicleCode.CE;
-				case "CF":
-					return VehicleCode.CF;
-				case "CG":
-					return VehicleCode.CG;
-				case "CH":
-					return VehicleCode.CH;
-				case "CI":
-					return VehicleCode.CI;
-				case "CJ":
-					return VehicleCode.CJ;
-				default:
-					return VehicleCode.NOT_APPLICABLE;
-			}
-		}
-		
 
 		public static string GetLabel(this VehicleCode self)
 		{

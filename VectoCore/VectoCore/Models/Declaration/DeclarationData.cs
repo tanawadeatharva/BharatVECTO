@@ -241,42 +241,42 @@ namespace TUGraz.VectoCore.Models.Declaration
 			}
 			 
 
-			public static Meter CalculateInternalLength(Meter vehicleLength, bool doubleDecker, FloorType floorType, double numPassLowFloor)
+			public static Meter CalculateInternalLength(Meter vehicleLength, VehicleCode vehicleCode, double numPassLowFloor)
 				{
-				if (floorType == FloorType.LowFloor) {
-					return doubleDecker ? 2 * vehicleLength : vehicleLength;
+				if (vehicleCode.GetFloorType()  == FloorType.LowFloor) {
+					return vehicleCode.IsDoubleDeckerBus() ? 2 * vehicleLength : vehicleLength;
 				}
 
-				if (floorType == FloorType.HighFloor) {
-					if (doubleDecker) {
+				if (vehicleCode.GetFloorType() == FloorType.HighFloor) {
+					if (vehicleCode.IsDoubleDeckerBus()) {
 						return numPassLowFloor > 6 ? 1.5 * vehicleLength : vehicleLength + 2.4.SI<Meter>();
 					}
 
 					return vehicleLength;
 				}
-				throw new VectoException("Internal Length for floorType {0} {1} not defined", floorType.ToString(), doubleDecker ? "DD" : "SD");
+				throw new VectoException("Internal Length for floorType {0} {1} not defined", vehicleCode.GetFloorType().ToString(), vehicleCode.IsDoubleDeckerBus() ? "DD" : "SD");
 			}
 
 			public static Meter CalculateLengthInteriorLights(
-				Meter vehicleLength, bool doubleDecker, FloorType floorType, double numPassLowFloor)
+				Meter vehicleLength, VehicleCode vehicleCode, double numPassLowFloor)
 			{
-				return CalculateInternalLength(vehicleLength, doubleDecker, floorType, numPassLowFloor);
+				return CalculateInternalLength(vehicleLength, vehicleCode, numPassLowFloor);
 			}
 
-			public static Meter CalculateInternalHeight(FloorType floorType, bool doubleDecker, Meter vehicleHeight)
+			public static Meter CalculateInternalHeight(VehicleCode vehicleCode, Meter vehicleHeight)
 			{
-				if (doubleDecker) {
+				if (vehicleCode.IsDoubleDeckerBus()) {
 					return Constants.BusParameters.InternalHeightDoubleDecker;
 				}
 
-				switch (floorType) {
+				switch (vehicleCode.GetFloorType()) {
 					case FloorType.LowFloor:
 						return vehicleHeight;
 					case FloorType.HighFloor:
 						return vehicleHeight - Constants.BusParameters.HeightLuggageCompartment;
 				}
 
-				throw new VectoException("Internal height for vehicle floor type '{0}' {1} not defined", floorType.ToString(), doubleDecker ? "double decker" : "single decker");
+				throw new VectoException("Internal height for vehicle floor type '{0}' {1} not defined", vehicleCode.GetFloorType().ToString(), vehicleCode.IsDoubleDeckerBus() ? "double decker" : "single decker");
 			}
 
 			public static Meter WindowHeight(bool doubleDecker)

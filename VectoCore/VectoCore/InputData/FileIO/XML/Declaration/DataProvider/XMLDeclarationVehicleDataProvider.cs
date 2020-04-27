@@ -955,7 +955,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		//IdlingSpeed
 		public PerSecond EngineIdleSpeed
 		{
-			get { return GetDouble(XMLNames.Engine_IdlingSpeed).SI<PerSecond>(); }
+			get { return GetDouble(XMLNames.Engine_IdlingSpeed).RPMtoRad(); }
 		}
 
 		public RetarderType RetarderType

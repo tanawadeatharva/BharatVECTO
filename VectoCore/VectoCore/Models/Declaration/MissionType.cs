@@ -135,7 +135,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 				case MissionType.HeavyUrban:
 				case MissionType.Urban:
 				case MissionType.Suburban: return 0.2;
-				case MissionType.Interurban: 
+				case MissionType.Interurban: return 0.25;
 				case MissionType.Coach: return 0.4;
 				default: return 0.1;
 			}

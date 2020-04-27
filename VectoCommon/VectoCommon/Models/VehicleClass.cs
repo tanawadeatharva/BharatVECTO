@@ -61,6 +61,16 @@ namespace TUGraz.VectoCommon.Models
 		Class15,
 		Class16,
 		Class17,
+
+
+		// primary bus super groups
+		ClassP31_32,
+		ClassP33_34,
+		ClassP35_36,
+		ClassP37_38,
+		ClassP39_40,
+
+		// primary bus specific groups
 		ClassP31SD,
 		ClassP31DD,
 		ClassP32SD,
@@ -81,67 +91,63 @@ namespace TUGraz.VectoCommon.Models
 		ClassP39DD,
 		ClassP40SD,
 		ClassP40DD,
-		ClassPB41,
-		ClassPB42,
-		ClassPB43,
-		ClassPB44,
-		ClassPB45,
+		
+		// completed bus groups
+		Class31a,
+		Class31b,
+		Class31c,
+		Class31d,
+		Class31e,
+		Class32a,
+		Class32b,
+		Class32c,
+		Class32d,
+		Class32e,
+		Class32f,
 
-		ClassCB31a,
-		ClassCB31b,
-		ClassCB31c,
-		ClassCB31d,
-		ClassCB31e,
-		ClassCB32a,
-		ClassCB32b,
-		ClassCB32c,
-		ClassCB32d,
-		ClassCB32e,
-		ClassCB32f,
+		Class33a,
+		Class33b,
+		Class33c,
+		Class33d,
+		Class33e,
+		Class34a,
+		Class34b,
+		Class34c,
+		Class34d,
+		Class34e,
+		Class34f,
 
-		ClassCB33a,
-		ClassCB33b,
-		ClassCB33c,
-		ClassCB33d,
-		ClassCB33e,
-		ClassCB34a,
-		ClassCB34b,
-		ClassCB34c,
-		ClassCB34d,
-		ClassCB34e,
-		ClassCB34f,
+		Class35a,
+		Class35b,
+		Class35c,
+		Class36a,
+		Class36b,
+		Class36c,
+		Class36d,
+		Class36e,
+		Class36f,
 
-		ClassCB35a,
-		ClassCB35b,
-		ClassCB35c,
-		ClassCB36a,
-		ClassCB36b,
-		ClassCB36c,
-		ClassCB36d,
-		ClassCB36e,
-		ClassCB36f,
+		Class37a,
+		Class37b,
+		Class37c,
+		Class37d,
+		Class37e,
+		Class38a,
+		Class38b,
+		Class38c,
+		Class38d,
+		Class38e,
+		Class38f,
 
-		ClassCB37a,
-		ClassCB37b,
-		ClassCB37c,
-		ClassCB37d,
-		ClassCB37e,
-		ClassCB38a,
-		ClassCB38b,
-		ClassCB38c,
-		ClassCB38d,
-		ClassCB38e,
-		ClassCB38f,
-
-		ClassCB39a,
-		ClassCB39b,
-		ClassCB39c,
-		ClassCB40a,
-		ClassCB40b,
-		ClassCB40c,
-		ClassCB40d,
-		ClassCB40e,
-		ClassCB40f,
+		Class39a,
+		Class39b,
+		Class39c,
+		Class40a,
+		Class40b,
+		Class40c,
+		Class40d,
+		Class40e,
+		Class40f,
 	}
 
 	public static class VehicleClassHelper
@@ -196,11 +202,11 @@ namespace TUGraz.VectoCommon.Models
 				case VehicleClass.ClassP39DD:
 				case VehicleClass.ClassP40SD:
 				case VehicleClass.ClassP40DD:
-				case VehicleClass.ClassPB41:
-				case VehicleClass.ClassPB42:
-				case VehicleClass.ClassPB43:
-				case VehicleClass.ClassPB44:
-				case VehicleClass.ClassPB45: return true;
+				case VehicleClass.ClassP31_32:
+				case VehicleClass.ClassP33_34:
+				case VehicleClass.ClassP35_36:
+				case VehicleClass.ClassP37_38:
+				case VehicleClass.ClassP39_40: return true;
 				default: return false;
 
 			}
@@ -209,57 +215,57 @@ namespace TUGraz.VectoCommon.Models
 		public static bool IsCompletedBus(this VehicleClass vehicleClass)
 		{
 			switch (vehicleClass) {
-					case VehicleClass.ClassCB31a:
-					case VehicleClass.ClassCB31b:
-					case VehicleClass.ClassCB31c:
-					case VehicleClass.ClassCB31d:
-					case VehicleClass.ClassCB31e:
-					case VehicleClass.ClassCB32a:
-					case VehicleClass.ClassCB32b:
-					case VehicleClass.ClassCB32c:
-					case VehicleClass.ClassCB32d:
-					case VehicleClass.ClassCB32e:
-					case VehicleClass.ClassCB32f:
-					case VehicleClass.ClassCB33a:
-					case VehicleClass.ClassCB33b:
-					case VehicleClass.ClassCB33c:
-					case VehicleClass.ClassCB33d:
-					case VehicleClass.ClassCB33e:
-					case VehicleClass.ClassCB34a:
-					case VehicleClass.ClassCB34b:
-					case VehicleClass.ClassCB34c:
-					case VehicleClass.ClassCB34d:
-					case VehicleClass.ClassCB34e:
-					case VehicleClass.ClassCB34f:
-					case VehicleClass.ClassCB35a:
-					case VehicleClass.ClassCB35b:
-					case VehicleClass.ClassCB35c:
-					case VehicleClass.ClassCB36a:
-					case VehicleClass.ClassCB36b:
-					case VehicleClass.ClassCB36c:
-					case VehicleClass.ClassCB36d:
-					case VehicleClass.ClassCB36e:
-					case VehicleClass.ClassCB36f:
-					case VehicleClass.ClassCB37a:
-					case VehicleClass.ClassCB37b:
-					case VehicleClass.ClassCB37c:
-					case VehicleClass.ClassCB37d:
-					case VehicleClass.ClassCB37e:
-					case VehicleClass.ClassCB38a:
-					case VehicleClass.ClassCB38b:
-					case VehicleClass.ClassCB38c:
-					case VehicleClass.ClassCB38d:
-					case VehicleClass.ClassCB38e:
-					case VehicleClass.ClassCB38f:
-					case VehicleClass.ClassCB39a:
-					case VehicleClass.ClassCB39b:
-					case VehicleClass.ClassCB39c:
-					case VehicleClass.ClassCB40a:
-					case VehicleClass.ClassCB40b:
-					case VehicleClass.ClassCB40c:
-					case VehicleClass.ClassCB40d:
-					case VehicleClass.ClassCB40e:
-				case VehicleClass.ClassCB40f: return true;
+					case VehicleClass.Class31a:
+					case VehicleClass.Class31b:
+					case VehicleClass.Class31c:
+					case VehicleClass.Class31d:
+					case VehicleClass.Class31e:
+					case VehicleClass.Class32a:
+					case VehicleClass.Class32b:
+					case VehicleClass.Class32c:
+					case VehicleClass.Class32d:
+					case VehicleClass.Class32e:
+					case VehicleClass.Class32f:
+					case VehicleClass.Class33a:
+					case VehicleClass.Class33b:
+					case VehicleClass.Class33c:
+					case VehicleClass.Class33d:
+					case VehicleClass.Class33e:
+					case VehicleClass.Class34a:
+					case VehicleClass.Class34b:
+					case VehicleClass.Class34c:
+					case VehicleClass.Class34d:
+					case VehicleClass.Class34e:
+					case VehicleClass.Class34f:
+					case VehicleClass.Class35a:
+					case VehicleClass.Class35b:
+					case VehicleClass.Class35c:
+					case VehicleClass.Class36a:
+					case VehicleClass.Class36b:
+					case VehicleClass.Class36c:
+					case VehicleClass.Class36d:
+					case VehicleClass.Class36e:
+					case VehicleClass.Class36f:
+					case VehicleClass.Class37a:
+					case VehicleClass.Class37b:
+					case VehicleClass.Class37c:
+					case VehicleClass.Class37d:
+					case VehicleClass.Class37e:
+					case VehicleClass.Class38a:
+					case VehicleClass.Class38b:
+					case VehicleClass.Class38c:
+					case VehicleClass.Class38d:
+					case VehicleClass.Class38e:
+					case VehicleClass.Class38f:
+					case VehicleClass.Class39a:
+					case VehicleClass.Class39b:
+					case VehicleClass.Class39c:
+					case VehicleClass.Class40a:
+					case VehicleClass.Class40b:
+					case VehicleClass.Class40c:
+					case VehicleClass.Class40d:
+					case VehicleClass.Class40e:
+				case VehicleClass.Class40f: return true;
 				default: return false;
 			}
 		}

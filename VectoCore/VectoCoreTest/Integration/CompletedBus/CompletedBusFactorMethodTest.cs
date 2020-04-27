@@ -1013,6 +1013,8 @@ namespace TUGraz.VectoCore.Tests.Integration.CompletedBus
 		[TestCase(JobFile_Group41, TestName = "RunCompletedBusSimulation Group41/32b"),
 		TestCase(JobFile_Group42, TestName = "RunCompletedBusSimulation Group42/33b"),
 		TestCase(JobFilePrimary41, TestName = "RunPrimaryBusSimulation Group41"),
+		TestCase(@"TestData\Integration\Buses\FactorMethod\primary_heavyBus group41_nonSmart_AT-P.xml", TestName = "RunPrimaryBusSimulation Group41 AT-P"),
+		TestCase(@"TestData\Integration\Buses\FactorMethod\vecto_vehicle-primary_heavyBus_ESS_electricFanSTP.xml", TestName = "RunPrimaryBusSimulation Group41 ES-AUX"),
 		TestCase(JobFilePrimary42, TestName = "RunPrimaryBusSimulation Group42"),
 		TestCase(@"TestData\Integration\Buses\FactorMethod\SingleBus_41-32b.vecto", TestName = "RunSingleBusSimulation Group 41/32b"),
 		TestCase(@"TestData\Integration\Buses\FactorMethod\SingleBus_42-33b.vecto", TestName = "RunSingleBusSimulation Group 42/33b"),
@@ -1048,7 +1050,12 @@ namespace TUGraz.VectoCore.Tests.Integration.CompletedBus
 		}
 
 		[TestCase(@"TestData\Integration\Buses\vecto_vehicle-primary_heavyBus_ESS_electricFanSTP.xml", 13, TestName = "RunBusSimulation electric STP/Fan ESS IU/RL"),
-		TestCase(@"TestData\Integration\Buses\vecto_vehicle-primary_heavyBus_ESS_electricFanSTP.xml", 17, TestName = "RunBusSimulation electric STP/Fan ESS CO/RL"),]
+		TestCase(@"TestData\Integration\Buses\vecto_vehicle-primary_heavyBus_ESS_electricFanSTP.xml", 17, TestName = "RunBusSimulation electric STP/Fan ESS CO/RL"),
+		
+		TestCase(@"E:\QUAM\tmp\ESS_Tests\primary_heavyBus group 42_ConvAux_ESS_SmartPS.xml", 10, TestName = "RunBusSimulation ESS P33DD SU/LL ConvAux SmartPS"),
+		TestCase(@"E:\QUAM\tmp\ESS_Tests\primary_heavyBus group 42_ESS_SmartPS.xml", 10, TestName = "RunBusSimulation ESS P33DD SU/LL ES Aux SmartPS"),
+		TestCase(@"E:\QUAM\tmp\ESS_Tests\primary_heavyBus group 42_ESS_SmartPS_SmartES.xml", 10, TestName = "RunBusSimulation ESS P33DD SU/LL ES Aux SmartPS SmartES"),
+			]
 		public void TestRunPrimaryBusSimulation_ESS(string jobName, int runIdx)
 		{
 			var relativeJobPath = jobName;
@@ -1065,6 +1072,36 @@ namespace TUGraz.VectoCore.Tests.Integration.CompletedBus
 
 			var runs = factory.SimulationRuns().ToArray();
 			
+			runs[runIdx].Run();
+
+			Assert.IsTrue(runs[runIdx].FinishedWithoutErrors);
+
+			//jobContainer.AddRuns(factory);
+
+			//jobContainer.Execute();
+			//jobContainer.WaitFinished();
+			//var progress = jobContainer.GetProgress();
+			//Assert.IsTrue(progress.All(r => r.Value.Success), string.Concat<Exception>(progress.Select(r => r.Value.Error)));
+			//Assert.IsTrue(jobContainer.Runs.All(r => r.Success), String.Concat<Exception>(jobContainer.Runs.Select(r => r.ExecException)));
+		}
+
+		[TestCase(@"E:\QUAM\tmp\primary_heavyBus group 42_SmartPS_spec engine map.xml", 0),]
+		public void TestRunPrimaryBusSimulationSngle(string jobName, int runIdx)
+		{
+			var relativeJobPath = jobName;
+			var writer = new FileOutputWriter(relativeJobPath);
+			var inputData = Path.GetExtension(relativeJobPath) == ".xml"
+				? xmlInputReader.CreateDeclaration(relativeJobPath)
+				: JSONInputDataFactory.ReadJsonJob(relativeJobPath);
+			var factory = new SimulatorFactory(ExecutionMode.Declaration, inputData, writer) {
+				WriteModalResults = true,
+				//ActualModalData = true,
+				Validate = false
+			};
+			var jobContainer = new JobContainer(new SummaryDataContainer(writer));
+
+			var runs = factory.SimulationRuns().ToArray();
+
 			runs[runIdx].Run();
 
 			Assert.IsTrue(runs[runIdx].FinishedWithoutErrors);
