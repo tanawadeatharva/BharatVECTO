@@ -123,6 +123,9 @@
     <Reference Include="Microsoft.WindowsAPICodePack.Shell, Version=1.1.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\WindowsAPICodePack-Shell.1.1.1\lib\Microsoft.WindowsAPICodePack.Shell.dll</HintPath>
     </Reference>
+    <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.12.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="Ninject, Version=3.3.4.0, Culture=neutral, PublicKeyToken=c7192dc5380945e7, processorArchitecture=MSIL">
       <HintPath>..\packages\Ninject.3.3.4\lib\net45\Ninject.dll</HintPath>
       <Private>True</Private>
@@ -165,6 +168,7 @@
     <Compile Include="Helper\FileDialogHelper.cs" />
     <Compile Include="Helper\OutputWindowHelper.cs" />
     <Compile Include="Helper\Converter\SaveButtonLabelConverter.cs" />
+    <Compile Include="Helper\SerializeHelper.cs" />
     <Compile Include="Helper\ViewModelBase.cs" />
     <Compile Include="Model\InterfacesImpl.cs" />
     <Compile Include="Model\SettingsModel.cs" />

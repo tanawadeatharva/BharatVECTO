@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -8,7 +7,6 @@ using System.Windows;
 using System.Windows.Input;
 using System.Xml;
 using Castle.Core.Internal;
-using Microsoft.WindowsAPICodePack.Shell;
 using Ninject;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCore.InputData.FileIO.XML;
@@ -73,6 +71,8 @@ namespace VECTO3GUI.ViewModel.Impl
 		#endregion
 
 		#region Properties
+
+		public  JobEntry SavedJobEntry { get; private set; }
 
 		public string FirstFilePath
 		{
@@ -169,18 +169,38 @@ namespace VECTO3GUI.ViewModel.Impl
 
 		public ICommand SaveCommand
 		{
-			get { return _saveCommand ?? (_saveCommand = new RelayCommand(DoSaveCommand, CanSaveCommand)); }
+			get { return _saveCommand ?? (_saveCommand = new RelayCommand<Window>(DoSaveCommand, CanSaveCommand)); }
 		}
-		private bool CanSaveCommand()
+		private bool CanSaveCommand(Window window)
 		{
 			return !HasErrors && !FirstFilePath.IsNullOrEmpty() && !SecondFilePath.IsNullOrEmpty();
 		}
-		private void DoSaveCommand()
+		private void DoSaveCommand(Window window)
 		{
-			
+			SaveJob(window);
 		}
 
 		#endregion
+
+		private void SaveJob(Window window)
+		{
+			var jobFilePath = FileDialogHelper.SaveJobFileToDialog(Settings.XmlFilePathFolder);
+			if (jobFilePath != null) {
+
+				var job = new JobEntry {
+					JobEntryFilePath = jobFilePath,
+					FirstFilePath = FirstFilePath,
+					SecondFilePath = SecondFilePath,
+					JobType = JobType
+				};
+
+				SerializeHelper.SerializeToFile(jobFilePath, job);
+				SavedJobEntry = job;
+				DoCancelCommand(window);
+			}
+		}
+
+
 
 		private string OpenFileSelector(JobFileType jobFileType, string textPropertyName)
 		{

@@ -14,6 +14,7 @@ namespace VECTO3GUI.Helper
 	public static class FileDialogHelper
 	{
 		private const string XMLFilter = "XML Files (*.xml)|*.xml|All Files (*.*)|*.*";
+		private const string JobFilter = "Job Files (*.vectojob|*.vectojob|All Files (*.*)|*.*";
 
 
 		public static string[] ShowSelectFilesDialog(bool multiselect, string initialDirectory = null)
@@ -52,6 +53,16 @@ namespace VECTO3GUI.Helper
 			return null;
 		}
 
+		public static string SaveJobFileToDialog(string initialDirectory = null)
+		{
+			var saveFileDialog = new SaveFileDialog {
+				Filter =  JobFilter
+			};
 
+			if (initialDirectory != null)
+				saveFileDialog.InitialDirectory = initialDirectory;
+
+			return saveFileDialog.ShowDialog() == true ? saveFileDialog.FileName : null;
+		}
 	}
 }

@@ -92,7 +92,8 @@
 
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
                 <Button Content="Save" HorizontalAlignment="Right"  Margin="5,0,0,0" VerticalAlignment="Center" Width="70"
-                        Command="{Binding SaveCommand}"/>
+                        Command="{Binding SaveCommand}"
+                        CommandParameter="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Window}}}"/>
                 <Button Content="Cancel" HorizontalAlignment="Right" Margin="5,0,10,0" Width="70"
                         Command="{Binding CancelCommand}"
                         CommandParameter="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Window}}}"/>
