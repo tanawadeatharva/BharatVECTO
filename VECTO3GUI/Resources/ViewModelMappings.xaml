@@ -23,7 +23,9 @@
         <views:SettingsView/>
     </DataTemplate>
    
-
+    <DataTemplate DataType="{x:Type impl:AbstractBusJobViewModel}">
+        <views:BusJobView/>
+    </DataTemplate>
 
     <DataTemplate DataType="{x:Type impl:EngineOnlyJobViewModel}">
         <views:JobEditView/>

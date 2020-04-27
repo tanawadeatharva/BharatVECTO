@@ -8,7 +8,7 @@
         xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
         xmlns:impl="clr-namespace:VECTO3GUI.ViewModel.Impl"
         mc:Ignorable="d"
-        Title="VECTO 3" Height="515.36" Width="972.48" WindowStartupLocation="CenterScreen"
+        Title="{Binding Version}" Height="515.36" Width="972.48" WindowStartupLocation="CenterScreen"
         d:DataContext="{d:DesignInstance Type=impl:MainWindowViewModel, IsDesignTimeCreatable=False}">
 
     <Grid>
@@ -35,10 +35,19 @@
                                   CommandParameter="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Window}}}"/>
                     </MenuItem>
 
-                    <MenuItem Header="Settings">
+
+
+                    <MenuItem Header="Tools">
+                        <MenuItem Header="Single Bus Job"
+                                  Command="{Binding CurrentViewModel.AddBusJob}" CommandParameter="{Binding Source={x:Static impl:JobType.SingleBusJob}}"/>
+                        <MenuItem Header="Completed Bus Job"
+                                  Command="{Binding CurrentViewModel.AddBusJob}" CommandParameter="{Binding Source={x:Static impl:JobType.CompletedBusJob}}"/>
+                        <MenuItem Header="New Completed XML"/>
+                        <Separator HorizontalAlignment="Stretch" Background="Gray"/>
                         <MenuItem Header="Default Settings"
                                   Command="{Binding CurrentViewModel.OpenSettings}"/>
                     </MenuItem>
+
 
                     <MenuItem Header="Help">
                         <MenuItem Header="User Manual"/>

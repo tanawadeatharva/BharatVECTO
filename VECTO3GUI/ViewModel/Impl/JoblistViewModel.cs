@@ -265,14 +265,23 @@ namespace VECTO3GUI.ViewModel.Impl
 			get
 			{
 				return _addBusJobCommand ??
-						(_addBusJobCommand = new RelayCommand(DoAddBusJobCommand));
+						(_addBusJobCommand = new RelayCommand<JobType>(DoAddBusJobCommand));
 			}
 		}
-
-		private void DoAddBusJobCommand()
+		private void DoAddBusJobCommand(JobType jobtype)
 		{
-			var viewModel = new BusJobViewModel();
-			var window = OutputWindowHelper.CreateOutputWindow(Kernel, viewModel, "Create Bus Job");
+			object viewModel = null;
+
+			switch (jobtype) {
+				case JobType.SingleBusJob:
+					viewModel = new SingleBusJobViewModel(Kernel, jobtype);
+					break;
+				case JobType.CompletedBusJob:
+					viewModel = new CompletedBusJobViewModel(Kernel, jobtype);
+					break;
+			}
+			
+			var window = OutputWindowHelper.CreateOutputWindow(Kernel,  viewModel, $"Create {jobtype.GetLabel()}", 460, 200, ResizeMode.NoResize);
 			window.ShowDialog();
 		}
 

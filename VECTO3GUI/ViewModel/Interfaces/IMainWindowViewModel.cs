@@ -3,5 +3,6 @@
 	public interface IMainWindowViewModel
 	{
 		IMainView CurrentViewModel { get; }
+		string Version { get; }
 	}
 }

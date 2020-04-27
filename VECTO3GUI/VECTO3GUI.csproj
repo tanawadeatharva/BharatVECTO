@@ -165,6 +165,7 @@
     <Compile Include="Helper\FileDialogHelper.cs" />
     <Compile Include="Helper\OutputWindowHelper.cs" />
     <Compile Include="Helper\Converter\SaveButtonLabelConverter.cs" />
+    <Compile Include="Helper\ViewModelBase.cs" />
     <Compile Include="Model\InterfacesImpl.cs" />
     <Compile Include="Model\SettingsModel.cs" />
     <Compile Include="Model\TempDataObject\AirdragComponentData.cs" />
@@ -193,6 +194,7 @@
     <Compile Include="ViewModel\Adapter\Declaration\TyreDeclarationAdapter.cs" />
     <Compile Include="ViewModel\Adapter\Declaration\VehicleDeclarationAdapter.cs" />
     <Compile Include="ViewModel\Adapter\IAdapterFactory.cs" />
+    <Compile Include="ViewModel\Impl\AbstractBusJobViewModel.cs" />
     <Compile Include="ViewModel\Impl\AbstractComponentViewModel.cs" />
     <Compile Include="ViewModel\Impl\AbstractJobViewModel.cs" />
     <Compile Include="ViewModel\Impl\AbstractViewModel.cs" />
@@ -202,7 +204,7 @@
     <Compile Include="ViewModel\Impl\AxlegearViewModel.cs" />
     <Compile Include="ViewModel\Impl\AxlesViewModel.cs" />
     <Compile Include="ViewModel\Impl\AxleViewModel.cs" />
-    <Compile Include="ViewModel\Impl\BusJobViewModel.cs" />
+    <Compile Include="ViewModel\Impl\CompletedBusJobViewModel.cs" />
     <Compile Include="ViewModel\Impl\CompleteVehicleBusJobViewModel.cs" />
     <Compile Include="ViewModel\Impl\CompleteVehicleBusViewModel.cs" />
     <Compile Include="ViewModel\Impl\CyclesViewModel.cs" />
@@ -221,6 +223,7 @@
     <Compile Include="ViewModel\Impl\PrimaryVehicleBusViewModel.cs" />
     <Compile Include="ViewModel\Impl\RetarderViewModel.cs" />
     <Compile Include="ViewModel\Impl\SettingsViewModel.cs" />
+    <Compile Include="ViewModel\Impl\SingleBusJobViewModel.cs" />
     <Compile Include="ViewModel\Impl\TorqueConverterViewModel.cs" />
     <Compile Include="ViewModel\Impl\TyreViewModel.cs" />
     <Compile Include="ViewModel\Impl\ValidatingViewModel.cs" />
@@ -238,6 +241,7 @@
     <Compile Include="ViewModel\Interfaces\IAxlegearViewModel.cs" />
     <Compile Include="ViewModel\Interfaces\IAxlesViewModel.cs" />
     <Compile Include="ViewModel\Interfaces\IAxleViewModel.cs" />
+    <Compile Include="ViewModel\Interfaces\IBusJobViewModel.cs" />
     <Compile Include="ViewModel\Interfaces\ICommonComponentParameters.cs" />
     <Compile Include="ViewModel\Interfaces\ICompleteVehicleBus.cs" />
     <Compile Include="ViewModel\Interfaces\ICompleteVehicleBusViewModel.cs" />
