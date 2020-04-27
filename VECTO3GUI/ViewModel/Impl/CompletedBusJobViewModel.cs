@@ -11,6 +11,16 @@ namespace VECTO3GUI.ViewModel.Impl
 	{
 		public CompletedBusJobViewModel(IKernel kernel, JobType jobType):base(kernel, jobType)
 		{
+			SetFirstFileLabel();
+		}
+
+		public CompletedBusJobViewModel(IKernel kernel, JobEntry jobEntry) : base(kernel, jobEntry)
+		{
+			SetFirstFileLabel();
+		}
+
+		protected sealed override void SetFirstFileLabel()
+		{
 			FirstLabelText = $"Select {JobFileType.PIFBusFile.GetLable()}";
 		}
 	}

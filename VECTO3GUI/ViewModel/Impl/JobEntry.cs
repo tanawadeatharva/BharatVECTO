@@ -72,8 +72,7 @@ namespace VECTO3GUI.ViewModel.Impl
 				_jobType = _jobTypeName.Parse();
 			}
 		}
-
-		[JsonIgnore]
+		
 		public bool Selected
 		{
 			get { return _selected; }
@@ -90,7 +89,6 @@ namespace VECTO3GUI.ViewModel.Impl
 			get { return _firstFilePath; }
 			set { SetProperty(ref _firstFilePath, value); }
 		}
-
 		public string SecondFilePath
 		{
 			get { return _secondFilePath; }

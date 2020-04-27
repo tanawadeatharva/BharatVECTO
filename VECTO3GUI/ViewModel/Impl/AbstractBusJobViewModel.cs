@@ -64,9 +64,11 @@ namespace VECTO3GUI.ViewModel.Impl
 		private ICommand _cancelCommand;
 		private ICommand _saveCommand;
 
-		protected readonly SettingsModel Settings;
+		protected SettingsModel Settings { get; private set; }
 
 		protected JobType JobType;
+		private readonly bool _editJob;
+		private JobEntry _currentJobEntry;
 
 		#endregion
 
@@ -111,14 +113,28 @@ namespace VECTO3GUI.ViewModel.Impl
 
 		#endregion
 
-		public AbstractBusJobViewModel(IKernel kernel, JobType jobType)
+		protected AbstractBusJobViewModel(IKernel kernel, JobType jobType)
+		{
+			Init(kernel, jobType);
+			_editJob = false;
+		}
+
+		protected AbstractBusJobViewModel(IKernel kernel, JobEntry jobEntry)
+		{
+			Init(kernel, jobEntry.JobType);
+			SetJobEntryData(jobEntry);
+			_currentJobEntry = jobEntry;
+			_editJob = true;
+		}
+
+		private void Init(IKernel kernel,  JobType jobType)
 		{
 			SecondLabelText = $"Select {JobFileType.CompletedBusFile.GetLable()}";
 			Settings = new SettingsModel();
 			SetFileTypes(jobType);
 			Kernel = kernel;
 		}
-
+		
 		private void SetFileTypes(JobType jobType)
 		{
 			JobType = jobType;
@@ -129,6 +145,14 @@ namespace VECTO3GUI.ViewModel.Impl
 
 			_secondFileType = JobFileType.CompletedBusFile;
 		}
+
+		private void SetJobEntryData(JobEntry jobEntry)
+		{
+			FirstFilePath = jobEntry.FirstFilePath;
+			SecondFilePath = jobEntry.FirstFilePath;
+		}
+
+		protected abstract void SetFirstFileLabel();
 
 		#region Commands
 
@@ -164,7 +188,7 @@ namespace VECTO3GUI.ViewModel.Impl
 		}
 		private void DoCancelCommand(Window window)
 		{
-			window?.Close();
+			window.Close();
 		}
 
 		public ICommand SaveCommand
@@ -177,7 +201,11 @@ namespace VECTO3GUI.ViewModel.Impl
 		}
 		private void DoSaveCommand(Window window)
 		{
-			SaveJob(window);
+			window.DialogResult = true;
+			if (!_editJob) 
+				SaveJob(window);
+			else 
+				UpdateJobData();
 		}
 
 		#endregion
@@ -200,6 +228,12 @@ namespace VECTO3GUI.ViewModel.Impl
 			}
 		}
 
+		private void UpdateJobData()
+		{
+			_currentJobEntry.FirstFilePath = FirstFilePath;
+			_currentJobEntry.SecondFilePath = SecondFilePath;
+		}
+		
 
 
 		private string OpenFileSelector(JobFileType jobFileType, string textPropertyName)

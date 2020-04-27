@@ -145,32 +145,25 @@ namespace VECTO3GUI.ViewModel.Impl
 			get
 			{
 				return _editJobCommand ??
-						(_editJobCommand = new RelayCommand(DoEditJob, CanEditJob));
+						(_editJobCommand = new RelayCommand<JobEntry>(DoEditJob, CanEditJob));
 			}
 		}
-		private void DoEditJob()
-		{
-			var entry = SelectedJobEntry;
-			try
-			{
-				var jobEditView = ReadJob(entry.FirstFilePath); //Kernel.Get<IJobEditViewModel>();
-				if (jobEditView == null)
-					return;
 
-				var window = OutputWindowHelper.CreateOutputWindow(Kernel, jobEditView);
-				window.Show();
-			}
-			catch (Exception e)
-			{
-				MessageBox.Show(
-					"Failed to read selected job: " + Environment.NewLine + Environment.NewLine + e.Message, "Failed reading Job",
-					MessageBoxButton.OK);
-			}
-		}
-		private bool CanEditJob()
+		private bool CanEditJob(JobEntry jobEntry)
 		{
-			return SelectedJobEntry != null;
+			return jobEntry != null;
 		}
+
+		private void DoEditJob(JobEntry jobEntry)
+		{
+			var viewModel = GetBusJobViewModel(jobEntry.JobType, jobEntry);
+			var window = CreateBusJobOutputWindow(viewModel, jobEntry.JobType);
+			if(window.ShowDialog() != true)
+				ResetBusJobEntries();
+			else
+				_jobListModel.SaveJobList(_jobs);
+		}
+
 
 
 		public ICommand CreateNewJob
@@ -244,6 +237,7 @@ namespace VECTO3GUI.ViewModel.Impl
 			var window = OutputWindowHelper.CreateOutputWindow(Kernel, viewModel, "Settings", 440, 200,
 				ResizeMode.NoResize);
 			window.ShowDialog();
+
 		}
 
 		public ICommand ExitMainCommand
@@ -267,25 +261,12 @@ namespace VECTO3GUI.ViewModel.Impl
 						(_addBusJobCommand = new RelayCommand<JobType>(DoAddBusJobCommand));
 			}
 		}
-		private void DoAddBusJobCommand(JobType jobtype)
+		private void DoAddBusJobCommand(JobType jobType)
 		{
-			object viewModel = null;
-
-			switch (jobtype) {
-				case JobType.SingleBusJob:
-					viewModel = new SingleBusJobViewModel(Kernel, jobtype);
-					break;
-				case JobType.CompletedBusJob:
-					viewModel = new CompletedBusJobViewModel(Kernel, jobtype);
-					break;
-			}
-			
-			var window = OutputWindowHelper.CreateOutputWindow(Kernel, viewModel, $"Create {jobtype.GetLabel()}",
-				460, 200, ResizeMode.NoResize);
-			window.ShowDialog();
-
-
-			AddBusJobEntry(((IBusJobViewModel)viewModel)?.SavedJobEntry);
+			var viewModel = GetBusJobViewModel(jobType);
+			var window = CreateBusJobOutputWindow(viewModel, jobType);
+			if(window.ShowDialog() == true)
+				AddBusJobEntry(((IBusJobViewModel)viewModel)?.SavedJobEntry);
 		}
 
 
@@ -298,64 +279,99 @@ namespace VECTO3GUI.ViewModel.Impl
 		#endregion
 
 
+
+
+		private object GetBusJobViewModel(JobType jobType, JobEntry jobEntry = null)
+		{
+			var currentJobType = jobEntry?.JobType ?? jobType;
+
+			object viewModel = null;
+
+			switch (currentJobType)
+			{
+				case JobType.SingleBusJob:
+					viewModel = jobEntry == null
+						? new SingleBusJobViewModel(Kernel, jobType)
+						: new SingleBusJobViewModel(Kernel, jobEntry);
+					break;
+				case JobType.CompletedBusJob:
+					viewModel = jobEntry == null
+						? new CompletedBusJobViewModel(Kernel, jobType)
+						: new CompletedBusJobViewModel(Kernel, jobEntry);
+					break;
+			}
+
+			return viewModel;
+		}
+
+		private OutputWindow CreateBusJobOutputWindow(object viewModel, JobType jobType)
+		{
+			return OutputWindowHelper.CreateOutputWindow(Kernel, viewModel, $"Create {jobType.GetLabel()}",
+				460, 200, ResizeMode.NoResize);
+		}
+
 		private void AddBusJobEntry(JobEntry jobEntry)
 		{
 			if (jobEntry == null)
 				return;
-
 			_jobs.Add(jobEntry);
 		}
-		
-		private IJobEditViewModel ReadJob(string jobFile)
+
+		private void ResetBusJobEntries()
 		{
-			if (jobFile == null)
-				return null;
-
-			var ext = Path.GetExtension(jobFile);
-			if (ext == Constants.FileExtensions.VectoXMLDeclarationFile)
-			{
-
-				var localName = GetLocalName(jobFile);
-				var xmlInputReader = Kernel.Get<IXMLInputDataReader>();
-
-				using (var reader = XmlReader.Create(jobFile))
-				{
-					if (localName == XMLNames.VectoPrimaryVehicleReport)
-						return CreatePrimaryBusVehicleViewModel(xmlInputReader.Create(reader));
-					
-					if (localName == XMLNames.VectoInputDeclaration)
-					{
-						var readerResult = xmlInputReader.Create(reader) as IDeclarationInputDataProvider;
-						if(readerResult?.JobInputData.Vehicle is XMLDeclarationCompletedBusDataProviderV26)
-							return CreateCompleteBusVehicleViewModel(readerResult);
-					}
-				}
-			}
-
-			return null;
+			SetJobEntries();
 		}
 
-		private string GetLocalName(string jobFilePath)
-		{
-			var doc = XDocument.Load(jobFilePath);
-			return doc.Root?.Name.LocalName;
-		}
+		//private IJobEditViewModel ReadJob(string jobFile)
+		//{
+		//	if (jobFile == null)
+		//		return null;
+
+		//	var ext = Path.GetExtension(jobFile);
+		//	if (ext == Constants.FileExtensions.VectoXMLDeclarationFile)
+		//	{
+
+		//		var localName = GetLocalName(jobFile);
+		//		var xmlInputReader = Kernel.Get<IXMLInputDataReader>();
+
+		//		using (var reader = XmlReader.Create(jobFile))
+		//		{
+		//			if (localName == XMLNames.VectoPrimaryVehicleReport)
+		//				return CreatePrimaryBusVehicleViewModel(xmlInputReader.Create(reader));
+
+		//			if (localName == XMLNames.VectoInputDeclaration)
+		//			{
+		//				var readerResult = xmlInputReader.Create(reader) as IDeclarationInputDataProvider;
+		//				if(readerResult?.JobInputData.Vehicle is XMLDeclarationCompletedBusDataProviderV26)
+		//					return CreateCompleteBusVehicleViewModel(readerResult);
+		//			}
+		//		}
+		//	}
+
+		//	return null;
+		//}
+
+		//private string GetLocalName(string jobFilePath)
+		//{
+		//	var doc = XDocument.Load(jobFilePath);
+		//	return doc.Root?.Name.LocalName;
+		//}
 
 
-		private IJobEditViewModel CreateCompleteBusVehicleViewModel(IDeclarationInputDataProvider dataProvider)
-		{
-			_messages.Add(new MessageEntry {
-				Message = "Edit File"
-			});
-			return dataProvider == null ? null : new CompleteVehicleBusJobViewModel(Kernel, dataProvider);
-		}
+		//private IJobEditViewModel CreateCompleteBusVehicleViewModel(IDeclarationInputDataProvider dataProvider)
+		//{
+		//	_messages.Add(new MessageEntry {
+		//		Message = "Edit File"
+		//	});
+		//	return dataProvider == null ? null : new CompleteVehicleBusJobViewModel(Kernel, dataProvider);
+		//}
 
 
-		private IJobEditViewModel CreatePrimaryBusVehicleViewModel(IInputDataProvider inputData)
-		{
-			var dataProvider = inputData as IPrimaryVehicleInformationInputDataProvider;
-			return dataProvider == null ? null : new PrimaryVehicleBusJobViewModel(Kernel, dataProvider);
-		}
+		//private IJobEditViewModel CreatePrimaryBusVehicleViewModel(IInputDataProvider inputData)
+		//{
+		//	var dataProvider = inputData as IPrimaryVehicleInformationInputDataProvider;
+		//	return dataProvider == null ? null : new PrimaryVehicleBusJobViewModel(Kernel, dataProvider);
+		//}
 	}
 
 

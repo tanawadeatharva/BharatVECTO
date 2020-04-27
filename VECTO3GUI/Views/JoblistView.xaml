@@ -43,7 +43,7 @@
 
         <Grid Grid.Row="1" Grid.Column="1" Margin="10">
  
-            <DataGrid ItemsSource="{Binding Jobs}" 
+            <DataGrid x:Name="JobList" ItemsSource="{Binding Jobs}" 
                       SelectedValue="{Binding DataContext.SelectedJobEntry, RelativeSource={RelativeSource AncestorType=views:JoblistView}}"
                       Style="{DynamicResource AzureDataGrid}" BorderThickness="1" CanUserAddRows="False" AutoGenerateColumns="False" SelectionUnit="FullRow" 
                       IsReadOnly="False" HeadersVisibility="All"  RowHeaderWidth="5" >
@@ -84,10 +84,15 @@
 
         <Grid Grid.Row="1" Grid.Column="2" Margin="0,0,10,0">
             <StackPanel Orientation="Vertical" Margin="0,30,0,0">
-                <Button Margin="0,5,0,0" Command="{Binding AddBusJob}" Content="Add Bus Job"/>
+                <Button Margin="0,5,0,0" Content="Edit Job" 
+                        Command="{Binding EditJob}"
+                        CommandParameter="{Binding ElementName=JobList, Path=SelectedItem}"/>
+
+
+                <!--<Button Margin="0,5,0,0" Command="{Binding AddBusJob}" Content="Add Bus Job"/>
                 <Button Margin="0,5,0,0" Command="{Binding EditJob}" Content="Edit File" />
                 <Button Margin="0,5,0,0" Command="{Binding CreateNewJob}" Content="New File"  />
-                <Button Margin="0,5,0,0" Command="{Binding RemoveJob}" Content="Remove File"  />
+                <Button Margin="0,5,0,0" Command="{Binding RemoveJob}" Content="Remove File"  />-->
             </StackPanel>
         </Grid>
         
