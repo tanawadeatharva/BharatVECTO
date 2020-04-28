@@ -55,7 +55,8 @@ namespace TUGraz.VectoCore.Tests.XML
 			Assert.IsTrue(vehicle.VehicleCode == VehicleCode.CD);
 			Assert.AreEqual(8300, vehicle.CurbMassChassis.Value());
 			Assert.AreEqual(15400, vehicle.GrossVehicleMassRating.Value());//TechnicalPermissibleMaximumLadenMass ?!?
-			Assert.That(() => vehicle.TankSystem, Throws.InstanceOf<VectoException>());
+			//Assert.That(() => vehicle.TankSystem, Throws.InstanceOf<VectoException>());
+			Assert.IsNull(vehicle.TankSystem);
 			Assert.AreEqual(50, vehicle.NumberOfPassengersLowerDeck);
 			Assert.AreEqual(0, vehicle.NumberOfPassengersUpperDeck);
 			Assert.AreEqual(FloorType.LowFloor, vehicle.FloorType);
