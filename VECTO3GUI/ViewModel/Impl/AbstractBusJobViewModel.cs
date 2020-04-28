@@ -68,13 +68,12 @@ namespace VECTO3GUI.ViewModel.Impl
 
 		protected JobType JobType;
 		private readonly bool _editJob;
-		private JobEntry _currentJobEntry;
 
 		#endregion
 
 		#region Properties
 
-		public  JobEntry SavedJobEntry { get; private set; }
+		public JobEntry SavedJobEntry { get; private set; }
 
 		public string FirstFilePath
 		{
@@ -123,7 +122,7 @@ namespace VECTO3GUI.ViewModel.Impl
 		{
 			Init(kernel, jobEntry.JobType);
 			SetJobEntryData(jobEntry);
-			_currentJobEntry = jobEntry;
+			SavedJobEntry = jobEntry;
 			_editJob = true;
 		}
 
@@ -230,11 +229,10 @@ namespace VECTO3GUI.ViewModel.Impl
 
 		private void UpdateJobData()
 		{
-			_currentJobEntry.FirstFilePath = FirstFilePath;
-			_currentJobEntry.SecondFilePath = SecondFilePath;
+			SavedJobEntry.FirstFilePath = FirstFilePath;
+			SavedJobEntry.SecondFilePath = SecondFilePath;
 		}
 		
-
 
 		private string OpenFileSelector(JobFileType jobFileType, string textPropertyName)
 		{

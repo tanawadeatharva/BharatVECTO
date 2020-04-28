@@ -8,15 +8,8 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Input;
 using Ninject;
-using TUGraz.VectoCommon.InputData;
-using TUGraz.VectoCore.Configuration;
-using TUGraz.VectoCore.InputData.FileIO.XML;
 using VECTO3GUI.Util;
 using VECTO3GUI.ViewModel.Interfaces;
-using System.Xml;
-using System.Xml.Linq;
-using TUGraz.VectoCommon.Resources;
-using TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider;
 using VECTO3GUI.Helper;
 using VECTO3GUI.Model;
 using VECTO3GUI.Views;
@@ -91,7 +84,8 @@ namespace VECTO3GUI.ViewModel.Impl
 
 		private void JobItemChanged(object sender, PropertyChangedEventArgs e)
 		{
-			_jobListModel.SaveJobList(_jobs);
+			if(e.PropertyName == "Selected" && sender is JobEntry )
+				UpdateJobEntry((JobEntry) sender);
 		}
 
 		private void JobsCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
@@ -159,9 +153,9 @@ namespace VECTO3GUI.ViewModel.Impl
 			var viewModel = GetBusJobViewModel(jobEntry.JobType, jobEntry);
 			var window = CreateBusJobOutputWindow(viewModel, jobEntry.JobType);
 			if(window.ShowDialog() != true)
-				ResetBusJobEntries();
+			  ResetBusJobEntries(jobEntry);
 			else
-				_jobListModel.SaveJobList(_jobs);
+				UpdateJobEntry(((IBusJobViewModel)viewModel).SavedJobEntry);
 		}
 
 
@@ -317,11 +311,15 @@ namespace VECTO3GUI.ViewModel.Impl
 			_jobs.Add(jobEntry);
 		}
 
-		private void ResetBusJobEntries()
+		private void ResetBusJobEntries(JobEntry jobEntry)
 		{
-			SetJobEntries();
+		   SerializeHelper.DeserializeToObject<JobEntry>(jobEntry.JobEntryFilePath);
 		}
 
+		private void UpdateJobEntry(JobEntry jobEntry)
+		{
+			SerializeHelper.SerializeToFile(jobEntry.JobEntryFilePath, jobEntry);
+		}
 		//private IJobEditViewModel ReadJob(string jobFile)
 		//{
 		//	if (jobFile == null)
