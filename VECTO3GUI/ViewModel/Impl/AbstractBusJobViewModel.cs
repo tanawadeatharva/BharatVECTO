@@ -236,7 +236,7 @@ namespace VECTO3GUI.ViewModel.Impl
 
 		private string OpenFileSelector(JobFileType jobFileType, string textPropertyName)
 		{
-			var dialogResult = FileDialogHelper.ShowSelectFilesDialog(false, Settings.XmlFilePathFolder);
+			var dialogResult = FileDialogHelper.ShowSelectFilesDialog(false, FileDialogHelper.XMLFilter, Settings.XmlFilePathFolder);
 			if (dialogResult == null)
 				return null;
 

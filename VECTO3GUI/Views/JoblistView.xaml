@@ -3,12 +3,9 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             xmlns:viewModel="clr-namespace:VECTO3GUI.ViewModel"
-             xmlns:helper="clr-namespace:VECTO3GUI.Helper"
              xmlns:impl="clr-namespace:VECTO3GUI.ViewModel.Impl"
              xmlns:interfaces="clr-namespace:VECTO3GUI.ViewModel.Interfaces"
              xmlns:views="clr-namespace:VECTO3GUI.Views"
-             xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
              xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="600"
@@ -33,12 +30,33 @@
 
 
         <Grid Grid.Row="1" Grid.Column="0">
-            <Button VerticalAlignment="Top" Margin="10,40,0,0">
-                <StackPanel Orientation="Horizontal">
-                    <iconPacks:PackIconModern Width="20" Height="15" Kind="ControlPlay" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="Green"/>
-                    <TextBlock Text="Start " />
+
+            <StackPanel Orientation="Vertical">
+                <Button VerticalAlignment="Top" Margin="10,10,0,0">
+                    <StackPanel Orientation="Horizontal">
+                        <iconPacks:PackIconModern Width="20" Height="15" Kind="ControlPlay" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="Green"/>
+                        <TextBlock Text="Start " />
+                    </StackPanel>
+                </Button>
+
+                <StackPanel Orientation="Vertical" HorizontalAlignment="Right" Margin="0,10,0,0">
+                    <Button Width="25" 
+                            Command="{Binding MoveJobUp}"
+                            CommandParameter="{Binding ElementName=JobList, Path=SelectedItem}">
+                        <StackPanel Orientation="Horizontal">
+                            <iconPacks:PackIconModern Width="15" Height="15" Kind="ArrowUp" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="Green"/>
+                        </StackPanel>
+                    </Button>
+
+                    <Button Width="25" Margin="0,5,0,0"
+                            Command="{Binding MoveJobDown}"
+                            CommandParameter="{Binding ElementName=JobList, Path=SelectedItem}">
+                        <StackPanel Orientation="Horizontal">
+                            <iconPacks:PackIconModern Width="15" Height="15" Kind="ArrowDown" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="Green"/>
+                        </StackPanel>
+                    </Button>
                 </StackPanel>
-            </Button>
+            </StackPanel>
         </Grid>
 
         <Grid Grid.Row="1" Grid.Column="1" Margin="10">
@@ -50,17 +68,47 @@
 
                 <DataGrid.Resources>
                     <ContextMenu x:Key="RowMenu">
-                        <MenuItem Header="View File" Command="{Binding DataContext.OpenJob, RelativeSource={RelativeSource AncestorType=views:JoblistView}}"/>
-                        <MenuItem Header="Edit File" Command="{Binding DataContext.EditJob, RelativeSource={RelativeSource AncestorType=views:JoblistView}}"/>
+                        <MenuItem Header="{Binding DataContext.FirstContextMenu, RelativeSource={RelativeSource AncestorType=views:JoblistView}}" 
+                                  Command="{Binding DataContext.OpenJob, RelativeSource={RelativeSource AncestorType=views:JoblistView}}"
+                                  CommandParameter="{Binding Source={x:Static impl:JobFileType.PrimaryBusFile}}"/>
+                        <MenuItem Header="View Completed Bus File" 
+                                  Command="{Binding DataContext.OpenJob, RelativeSource={RelativeSource AncestorType=views:JoblistView}}"
+                                  CommandParameter="{Binding Source={x:Static impl:JobFileType.CompletedBusFile}}"/>
+
                         <Separator HorizontalAlignment="Stretch" Background="Gray"/>
-                        <MenuItem Header="Remove File" Command="{Binding DataContext.RemoveJob, RelativeSource={RelativeSource AncestorType=views:JoblistView}}"/>
+
+                        <MenuItem Header="Edit Job" 
+                                  Command="{Binding DataContext.EditJob, RelativeSource={RelativeSource AncestorType=views:JoblistView}}"
+                                  CommandParameter="{Binding DataContext.SelectedJobEntry, RelativeSource={RelativeSource AncestorType=views:JoblistView}}"/>
+                        <MenuItem Header="Edit Completed File" 
+                                  Command="{Binding DataContext.EditCompletedFile, RelativeSource={RelativeSource AncestorType=views:JoblistView}}"
+                                  CommandParameter="{Binding DataContext.SelectedJobEntry, RelativeSource={RelativeSource AncestorType=views:JoblistView}}"/>
+
+                        <Separator HorizontalAlignment="Stretch" Background="Gray"/>
+
+                        <MenuItem Header="Show In Folder"
+                                  Command="{Binding DataContext.OpenInFolder, RelativeSource={RelativeSource AncestorType=views:JoblistView}}"
+                                  CommandParameter="{Binding DataContext.SelectedJobEntry, RelativeSource={RelativeSource AncestorType=views:JoblistView}}"/>
+
+                        <Separator HorizontalAlignment="Stretch" Background="Gray"/>
+
+                        <MenuItem Header="Remove Job" 
+                                  Command="{Binding DataContext.RemoveJob, RelativeSource={RelativeSource AncestorType=views:JoblistView}}"
+                                  CommandParameter="{Binding DataContext.SelectedJobEntry, RelativeSource={RelativeSource AncestorType=views:JoblistView}}"/>
                     </ContextMenu>
                 </DataGrid.Resources>
 
                 <DataGrid.ContextMenu>
                     <ContextMenu>
-                        <MenuItem Header="Add File" Command="{Binding AddJob}"/>
-                        <MenuItem Header="New File" Command="{Binding CreateNewJob}"/>
+                        <MenuItem Header="Add Job" Command="{Binding AddJob}"
+                                  CommandParameter="{Binding ElementName=JobList, Path=SelectedItem}"/>
+                        <Separator HorizontalAlignment="Stretch" Background="Gray"/>
+                        <MenuItem Header="Create Single Bus Job"
+                                  Command="{Binding AddBusJob}" CommandParameter="{Binding Source={x:Static impl:JobType.SingleBusJob}}"/>
+                        <MenuItem Header="Create Completed Bus Job"
+                                  Command="{Binding AddBusJob}" CommandParameter="{Binding Source={x:Static impl:JobType.CompletedBusJob}}"/>
+                        <MenuItem Header="Create Completed XML"
+                                  Command="{Binding CreateNewJob}"/>
                         <Separator HorizontalAlignment="Stretch" Background="Gray"/>
                         <MenuItem Header="Remove All" Command="{Binding RemoveAllJobs}"/>
                     </ContextMenu>
@@ -83,24 +131,25 @@
         </Grid>
 
         <Grid Grid.Row="1" Grid.Column="2" Margin="0,0,10,0">
-            <StackPanel Orientation="Vertical" Margin="0,30,0,0">
-                <Button Margin="0,5,0,0" Content="Edit Job" Width="110"
+            <StackPanel Orientation="Vertical" Margin="0,30,0,0" Width="105">
+                <Button Margin="0,5,0,0" Content="Add Job" 
+                        Command="{Binding AddJob}"/>
+
+                <Button Margin="0,5,0,0" Content="Edit Job"
                         Command="{Binding EditJob}"
                         CommandParameter="{Binding ElementName=JobList, Path=SelectedItem}"/>
 
-                <Button Margin="0,5,0,0" Content="Edit Completed File" Width="110" 
-                        Command="{Binding EditCompletedFile}"
-                        CommandParameter="{Binding ElementName=JobList, Path=SelectedItem}" />
-                
+                <Button Margin="0,5,0,0"  Content="Remove Job"  
+                        Command="{Binding RemoveJob}" 
+                        CommandParameter="{Binding ElementName=JobList, Path=SelectedItem}"/>
 
-                <!--<Button Margin="0,5,0,0" Command="{Binding AddBusJob}" Content="Add Bus Job"/>
-                <Button Margin="0,5,0,0" Command="{Binding EditJob}" Content="Edit File" />
-                <Button Margin="0,5,0,0" Command="{Binding CreateNewJob}" Content="New File"  />
-                <Button Margin="0,5,0,0" Command="{Binding RemoveJob}" Content="Remove File"  />-->
+                <Button Margin="0,5,0,0" Content="Edit Completed File" 
+                        Command="{Binding EditCompletedFile}"
+                        CommandParameter="{Binding ElementName=JobList, Path=SelectedItem}"/>
             </StackPanel>
         </Grid>
         
-        <Grid Grid.Row="2" Grid.ColumnSpan="3" Margin="10,20,20,10">
+        <Grid Grid.Row="2" Grid.ColumnSpan="3" Grid.Column="0" Margin="10,20,20,10">
             <DataGrid ItemsSource="{Binding Messages}" BorderThickness="1" CanUserAddRows="False" AutoGenerateColumns="False" SelectionUnit="FullRow" 
                       IsReadOnly="True" HeadersVisibility="All"  RowHeaderWidth="5">
                 

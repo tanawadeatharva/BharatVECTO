@@ -53,7 +53,7 @@ namespace VECTO3GUI.Model
 		
 		private void SetJobList(IList<JobEntry> jobEntries)
 		{
-			if (jobEntries.IsNullOrEmpty())
+			if (jobEntries == null)
 				return;
 
 			JobList = new List<JobListEntry>();

@@ -13,17 +13,25 @@ namespace VECTO3GUI.Helper
 {
 	public static class FileDialogHelper
 	{
-		private const string XMLFilter = "XML Files (*.xml)|*.xml|All Files (*.*)|*.*";
-		private const string JobFilter = "Job Files (*.vectojob|*.vectojob|All Files (*.*)|*.*";
+		public const string XMLFilter = "XML Files (*.xml)|*.xml|All Files (*.*)|*.*";
+		public const string JobFilter = "Job Files (*.vectojob|*.vectojob|All Files (*.*)|*.*";
 
 
-		public static string[] ShowSelectFilesDialog(bool multiselect, string initialDirectory = null)
+
+
+
+		public static string[] ShowSelectFilesDialog(bool multiselect)
+		{
+			return ShowSelectFilesDialog(multiselect, XMLFilter);
+		}
+		
+		public static string[] ShowSelectFilesDialog(bool multiselect, string filter = XMLFilter, string initialDirectory = null)
 		{
 			using (var openFileDialog = new OpenFileDialog())
 			{
 				openFileDialog.InitialDirectory = initialDirectory;
 				openFileDialog.Multiselect = multiselect;
-				openFileDialog.Filter = XMLFilter;
+				openFileDialog.Filter = filter;
 				var result = openFileDialog.ShowDialog();
 
 				if (result == DialogResult.OK)
