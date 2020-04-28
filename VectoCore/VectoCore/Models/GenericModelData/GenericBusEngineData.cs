@@ -43,7 +43,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 			
 		}
 
-		public CombustionEngineData CreateGenericBusEngineData(IVehicleDeclarationInputData primaryVehicle, int modeIdx)
+		public CombustionEngineData CreateGenericBusEngineData(IVehicleDeclarationInputData primaryVehicle, int modeIdx, Mission mission)
 		{
 			if (modeIdx >= primaryVehicle.Components.EngineInputData.EngineModes.Count) {
 				throw new VectoException(
@@ -80,7 +80,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 			engine.FullLoadCurves = fullLoadCurves;
 			
 
-			var fuel = GetCombustionEngineFuelData(primaryVehicle.Components.EngineInputData.EngineModes[modeIdx], fullLoadCurves[0]);
+			var fuel = GetCombustionEngineFuelData(primaryVehicle.Components.EngineInputData.EngineModes[modeIdx], fullLoadCurves[0], mission);
 			
 			
 
@@ -126,8 +126,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 			return UseDieselFuel(engineMode) ? DieselCIFactors : PIFactors;
 		}
 
-		private CombustionEngineFuelData GetCombustionEngineFuelData(IEngineModeDeclarationInputData engineMode,
-			EngineFullLoadCurve fullLoadCurve)
+		private CombustionEngineFuelData GetCombustionEngineFuelData(IEngineModeDeclarationInputData engineMode, EngineFullLoadCurve fullLoadCurve, Mission mission)
 		{
 			var ressourceId = GetEngineRessourceId(engineMode);
 
@@ -171,7 +170,9 @@ namespace TUGraz.VectoCore.Models.Declaration
 				ConsumptionMap = fcMap,
 				FuelData = GetFuelData(engineMode)
 			};
-
+			fuel.FuelConsumptionCorrectionFactor = DeclarationData.WHTCCorrection.Lookup(
+														mission.MissionType.GetNonEMSMissionType(), fuel.WHTCRural, fuel.WHTCUrban,
+														fuel.WHTCMotorway) * fuel.ColdHotCorrectionFactor * fuel.CorrectionFactorRegPer;
 
 			return fuel;
 		}
