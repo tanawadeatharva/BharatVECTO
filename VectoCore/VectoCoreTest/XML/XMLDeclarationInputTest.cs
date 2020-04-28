@@ -1089,5 +1089,24 @@ namespace TUGraz.VectoCore.Tests.XML
 					techInput, aux);
 			}
 		}
+
+		[TestCase(@"TestData\XML\XMLReaderDeclaration\SchemaVersion2.3\vecto_vehicle-fullElectricSP.xml")]
+		public void TestReadingNewSteeringPumpTechnologies(string file)
+		{
+			var reader = XmlReader.Create(file);
+
+			var inputDataProvider = xmlInputReader.CreateDeclaration(reader);
+			var vehicle = inputDataProvider.JobInputData.Vehicle;
+
+			var steeringPump = vehicle.Components.AuxiliaryInputData.Auxiliaries.Where(x => x.Type == AuxiliaryType.SteeringPump)
+									.FirstOrDefault();
+			Assert.NotNull(steeringPump);
+
+			Assert.AreEqual("Full electric steering gear", steeringPump.Technology[0]);
+			Assert.AreEqual("Electric driven pump", steeringPump.Technology[1]);
+
+			Assert.AreEqual(
+				616.2, DeclarationData.SteeringPump.Lookup(MissionType.LongHaul, VehicleClass.Class5, steeringPump.Technology).Value());
+		}
 	}
 }

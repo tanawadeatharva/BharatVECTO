@@ -3278,6 +3278,7 @@
 					</Fan>
 					<SteeringPump>
 						<Technology>Full electric steering gear</Technology>
+						<Technology>Electric driven pump</Technology>
 					</SteeringPump>
 					<ElectricSystem>
 						<Technology>Standard technology - LED headlights, all</Technology>
