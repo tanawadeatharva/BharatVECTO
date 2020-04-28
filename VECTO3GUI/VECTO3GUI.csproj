@@ -171,6 +171,8 @@
     <Compile Include="Helper\Converter\SaveButtonLabelConverter.cs" />
     <Compile Include="Helper\SerializeHelper.cs" />
     <Compile Include="Helper\ViewModelBase.cs" />
+    <Compile Include="Helper\XmlComponentReaderHelper.cs" />
+    <Compile Include="Helper\XmlReaderHelper.cs" />
     <Compile Include="Model\InterfacesImpl.cs" />
     <Compile Include="Model\JobListModel.cs" />
     <Compile Include="Model\SettingsModel.cs" />
@@ -623,7 +625,9 @@
       <Name>VectoCore</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Resource Include="Resources\AirdragLoadTestFile.xml" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

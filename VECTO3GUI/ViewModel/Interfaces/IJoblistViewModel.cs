@@ -17,6 +17,7 @@ namespace VECTO3GUI.ViewModel.Interfaces
 		ICommand MoveJobDown { get; }
 		ICommand StartSimulation { get; }
 		ICommand EditJob { get; }
+		ICommand EditCompletedFile { get; }
 		ICommand JobEntrySetActive { get; }
 		ICommand CreateNewJob { get; }
 		ICommand OpenJob { get; }

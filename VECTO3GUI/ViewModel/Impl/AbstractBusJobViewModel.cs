@@ -148,7 +148,7 @@ namespace VECTO3GUI.ViewModel.Impl
 		private void SetJobEntryData(JobEntry jobEntry)
 		{
 			FirstFilePath = jobEntry.FirstFilePath;
-			SecondFilePath = jobEntry.FirstFilePath;
+			SecondFilePath = jobEntry.SecondFilePath;
 		}
 
 		protected abstract void SetFirstFileLabel();

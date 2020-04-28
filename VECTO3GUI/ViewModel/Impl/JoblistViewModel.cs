@@ -7,7 +7,10 @@ using System.IO;
 using System.Linq;
 using System.Windows;
 using System.Windows.Input;
+using System.Xml;
 using Ninject;
+using TUGraz.VectoCommon.InputData;
+using TUGraz.VectoCore.InputData.FileIO.XML;
 using VECTO3GUI.Util;
 using VECTO3GUI.ViewModel.Interfaces;
 using VECTO3GUI.Helper;
@@ -43,6 +46,7 @@ namespace VECTO3GUI.ViewModel.Impl
 		private ICommand _exitCommand;
 		private ICommand _exitMainCommand;
 		private ICommand _addBusJobCommand;
+		private ICommand _editCompletedFileCommand;
 
 		#endregion
 
@@ -143,6 +147,31 @@ namespace VECTO3GUI.ViewModel.Impl
 			}
 		}
 
+		public ICommand EditCompletedFile
+		{
+			get
+			{
+				return _editCompletedFileCommand ??
+						(_editCompletedFileCommand =
+							new RelayCommand<JobEntry>(DoEditCompletedFile, CanEditCompletdFile));
+			}
+		}
+
+		private bool CanEditCompletdFile(JobEntry jobEntry)
+		{
+			return jobEntry != null;
+		}
+
+		private void DoEditCompletedFile(JobEntry jobEntry)
+		{
+			var viewModel = ReadCompletedXmlFile(jobEntry);
+			if (viewModel == null)
+				return;
+
+			var window = OutputWindowHelper.CreateOutputWindow(Kernel, viewModel);
+			window.Show();
+		}
+
 		private bool CanEditJob(JobEntry jobEntry)
 		{
 			return jobEntry != null;
@@ -231,7 +260,6 @@ namespace VECTO3GUI.ViewModel.Impl
 			var window = OutputWindowHelper.CreateOutputWindow(Kernel, viewModel, "Settings", 440, 200,
 				ResizeMode.NoResize);
 			window.ShowDialog();
-
 		}
 
 		public ICommand ExitMainCommand
@@ -271,10 +299,7 @@ namespace VECTO3GUI.ViewModel.Impl
 
 
 		#endregion
-
-
-
-
+		
 		private object GetBusJobViewModel(JobType jobType, JobEntry jobEntry = null)
 		{
 			var currentJobType = jobEntry?.JobType ?? jobType;
@@ -320,6 +345,25 @@ namespace VECTO3GUI.ViewModel.Impl
 		{
 			SerializeHelper.SerializeToFile(jobEntry.JobEntryFilePath, jobEntry);
 		}
+
+		private IJobEditViewModel ReadCompletedXmlFile(JobEntry jobEntry)
+		{
+			var xmlInputReader = Kernel.Get<IXMLInputDataReader>();
+			using (var reader = XmlReader.Create(jobEntry.SecondFilePath)) {
+				var readerResult = xmlInputReader.Create(reader) as IDeclarationInputDataProvider;
+				return CreateCompleteBusVehicleViewModel(readerResult);
+			}
+		}
+
+		private IJobEditViewModel CreateCompleteBusVehicleViewModel(IDeclarationInputDataProvider dataProvider)
+		{
+			_messages.Add(new MessageEntry
+			{
+				Message = "Edit File"
+			});
+			return dataProvider == null ? null : new CompleteVehicleBusJobViewModel(Kernel, dataProvider);
+		}
+
 		//private IJobEditViewModel ReadJob(string jobFile)
 		//{
 		//	if (jobFile == null)

@@ -32,12 +32,13 @@
             <StackPanel Orientation="Vertical">
                 <RadioButton GroupName="AirdragConfig" Margin="5"
                              Content="{Binding Source={x:Static impl:AirdragConfig.WithoutAirdrag}, Converter={converter:EnumConverter}}"
-                             Command="{Binding AirdragConfigCommand}" CommandParameter="{Binding Source={x:Static impl:AirdragConfig.WithoutAirdrag}}"/>
+                             Command="{Binding AirdragConfigCommand}" CommandParameter="{Binding Source={x:Static impl:AirdragConfig.WithoutAirdrag}}"
+                             IsChecked="{Binding NoAirdragData}"/>
                 
                 <RadioButton GroupName="AirdragConfig" Margin="5"
                              Content="{Binding Source={x:Static impl:AirdragConfig.UseMeasurementData}, Converter={converter:EnumConverter}}"
                              Command="{Binding AirdragConfigCommand}" CommandParameter="{ Binding Source={x:Static impl:AirdragConfig.UseMeasurementData}}"
-                             IsChecked="{Binding IsEditable}"/>
+                             IsChecked="{Binding UseMeasurementData}"/>
 
                 <StackPanel Orientation="Horizontal" Margin="30,10,10,10">
                     <Label Content="Load Component File:"/>
@@ -51,18 +52,18 @@
         </GroupBox>
 
         <GroupBox Header="Aridrag Data"  Width="500" HorizontalAlignment="Left" Grid.Row="2" Grid.Column="1" Height="250" VerticalAlignment="Top"
-                  Visibility="{Binding IsEditable, Converter={converter:BoolVisibilityConverter}}">
+                  Visibility="{Binding UseMeasurementData, Converter={converter:BoolVisibilityConverter}}">
 
 
             <StackPanel Orientation="Vertical" Width="450" HorizontalAlignment="Left" Grid.IsSharedSizeScope="True">
 
                 <customControls:VectoParameterControl 
                     Caption="Manufacturer" Unit="" CaptionWidthGroup="vehicleLbl" UnitWidthGroup="unitWidth"
-                    Value="{Binding Manufacturer}" IsEnabled="{Binding IsEditable}" />
+                    Value="{Binding Manufacturer}" IsEnabled="{Binding IsEditable, UpdateSourceTrigger=PropertyChanged}" />
 
                 <customControls:VectoParameterControl
                     Caption="Model" Unit="" CaptionWidthGroup="vehicleLbl" UnitWidthGroup="unitWidth"
-                    Value="{Binding Model}" IsEnabled="{Binding IsEditable}" />
+                    Value="{Binding Model}" IsEnabled="{Binding IsEditable, UpdateSourceTrigger=PropertyChanged}" />
 
                 <!-- <mah:DateTimePicker  -->
                 <!--     SelectedDate="{Binding Date}"  -->

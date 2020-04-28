@@ -22,7 +22,7 @@
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="80"/>
             <ColumnDefinition/>
-            <ColumnDefinition Width="80"/>
+            <ColumnDefinition Width="150"/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="30"/>
@@ -84,10 +84,14 @@
 
         <Grid Grid.Row="1" Grid.Column="2" Margin="0,0,10,0">
             <StackPanel Orientation="Vertical" Margin="0,30,0,0">
-                <Button Margin="0,5,0,0" Content="Edit Job" 
+                <Button Margin="0,5,0,0" Content="Edit Job" Width="110"
                         Command="{Binding EditJob}"
                         CommandParameter="{Binding ElementName=JobList, Path=SelectedItem}"/>
 
+                <Button Margin="0,5,0,0" Content="Edit Completed File" Width="110" 
+                        Command="{Binding EditCompletedFile}"
+                        CommandParameter="{Binding ElementName=JobList, Path=SelectedItem}" />
+                
 
                 <!--<Button Margin="0,5,0,0" Command="{Binding AddBusJob}" Content="Add Bus Job"/>
                 <Button Margin="0,5,0,0" Command="{Binding EditJob}" Content="Edit File" />

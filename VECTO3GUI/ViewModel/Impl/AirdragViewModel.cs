@@ -1,15 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Windows.Forms;
 using System.Windows.Input;
-using System.Xml;
+using Castle.Core.Internal;
 using Ninject;
+using TUGraz.VectoCommon.Hashing;
 using TUGraz.VectoCommon.InputData;
+using TUGraz.VectoCommon.Resources;
 using TUGraz.VectoCommon.Utils;
-using TUGraz.VectoCore.InputData.FileIO.XML;
-using TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader;
-using TUGraz.VectoCore.Utils;
 using VECTO3GUI.Helper;
 using VECTO3GUI.Model.TempDataObject;
 using VECTO3GUI.Util;
@@ -65,7 +63,10 @@ namespace VECTO3GUI.ViewModel.Impl
 		private IAirdragDeclarationInputData _airdragData;
 		private AirdragComponentData _componentData;
 		private bool _isEditable;
-		
+		private bool _useMeasurementData;
+		private bool _noAirdragData;
+
+
 		private ICommand _airdragConfig;
 		private ICommand _loadFileCommand;
 
@@ -126,7 +127,6 @@ namespace VECTO3GUI.ViewModel.Impl
 			{
 				if (!SetProperty(ref _date, value))
 					return;
-
 				IsDataChanged(_date, _componentData);
 			}
 		}
@@ -138,9 +138,7 @@ namespace VECTO3GUI.ViewModel.Impl
 			{
 				if (!SetProperty(ref _declaredCdxA, value))
 					return;
-
 				IsDataChanged(_declaredCdxA, _componentData);
-				SetAirdragArea(_airdragData);
 			}
 		}
 
@@ -165,13 +163,27 @@ namespace VECTO3GUI.ViewModel.Impl
 			set { SetProperty(ref _isEditable, value); }
 		}
 
+		public bool UseMeasurementData
+		{
+			get { return _useMeasurementData; }
+			set { SetProperty(ref _useMeasurementData, value); }
+		}
+
+		public bool NoAirdragData
+		{
+			get { return _noAirdragData; }
+			set { SetProperty(ref _noAirdragData, value); }
+		}
+
 
 		protected override void InputDataChanged()
 		{
 			var inputData = JobViewModel.InputDataProvider as IDeclarationInputDataProvider;
 			_airdragData = inputData?.JobInputData.Vehicle.Components.AirdragInputData;
 			SetAirdragValues(_airdragData);
-			IsEditable = true;
+			UseMeasurementData = _airdragData != null;
+			NoAirdragData = !UseMeasurementData;
+			IsEditable = false;
 		}
 
 		private void SetAirdragValues(IAirdragDeclarationInputData airdrag)
@@ -188,7 +200,9 @@ namespace VECTO3GUI.ViewModel.Impl
 			CertificationNumber = airdrag.CertificationNumber;
 			Date = airdrag.Date;
 			AppVersion = airdrag.AppVersion;
-			SetAirdragArea(airdrag);
+			DeclaredCdxA = airdrag.AirDragArea;
+			CdxA_0 = DeclaredCdxA;
+			TransferredCdxA = DeclaredCdxA;
 			DigestValue = airdrag.DigestValue;
 
 			_componentData = new AirdragComponentData(this);
@@ -207,7 +221,7 @@ namespace VECTO3GUI.ViewModel.Impl
 
 		private void DoAirdragConfig(AirdragConfig config)
 		{
-			IsEditable = config == AirdragConfig.UseMeasurementData;
+			
 		}
 
 
@@ -221,24 +235,16 @@ namespace VECTO3GUI.ViewModel.Impl
 
 		private bool CanLoadFile()
 		{
-			return IsEditable;
+			return UseMeasurementData;
 		}
 
 		private void DoLoadFile()
 		{
 			var filePath = FileDialogHelper.ShowSelectFilesDialog(false)?.FirstOrDefault();
-			ReadSelectedXml(null);
+			ReadSelectedXml(filePath);
 		}
 		#endregion
 
-
-
-		private void SetAirdragArea(IAirdragDeclarationInputData airdrag)
-		{
-			DeclaredCdxA = airdrag.AirDragArea;
-			CdxA_0 = DeclaredCdxA;
-			TransferredCdxA = DeclaredCdxA;
-		}
 
 		public override void ResetComponentData()
 		{
@@ -254,8 +260,34 @@ namespace VECTO3GUI.ViewModel.Impl
 
 		private void ReadSelectedXml(string filePath)
 		{
-			if (filePath == null)
+			if (filePath.IsNullOrEmpty())
 				return;
+			
+			var xmlDocument = XmlReaderHelper.ReadXmlDocument(filePath);
+			var nodes = XmlReaderHelper.GetComponentNodes(xmlDocument,
+				XMLNames.VectoInputDeclaration, VectoComponents.Airdrag.XMLElementName());
+
+			if(nodes.IsNullOrEmpty())
+				return;
+
+			var compReader = new XmlComponentReaderHelper(nodes[0].ParentNode);
+			SetLoadedAirdragData(compReader.GetAirdragComponentData());
+		}
+
+		private void SetLoadedAirdragData(AirdragComponentData airdrag)
+		{
+			if (airdrag == null)
+				return;
+
+			Model = airdrag.Model;
+			Manufacturer = airdrag.Manufacturer;
+			CertificationNumber = airdrag.CertificationNumber;
+			Date = airdrag.Date;
+			AppVersion = airdrag.AppVersion;
+			DeclaredCdxA = airdrag.DeclaredCdxA;
+			CdxA_0 = airdrag.CdxA_0;
+			TransferredCdxA = airdrag.TransferredCdxA;
+			DigestValue = airdrag.DigestValue;
 		}
 	}
 }

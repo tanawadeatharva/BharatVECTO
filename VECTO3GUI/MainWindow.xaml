@@ -7,6 +7,7 @@
         xmlns:interfaces="clr-namespace:VECTO3GUI.ViewModel.Interfaces"
         xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
         xmlns:impl="clr-namespace:VECTO3GUI.ViewModel.Impl"
+        xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
         mc:Ignorable="d"
         Title="{Binding Version}" Height="515.36" Width="972.48" WindowStartupLocation="CenterScreen"
         d:DataContext="{d:DesignInstance Type=impl:MainWindowViewModel, IsDesignTimeCreatable=False}">
@@ -22,7 +23,7 @@
             <StackPanel Orientation="Vertical">
 
                 <Menu IsMainMenu="True" Style="{DynamicResource MetroMenu}">
-                    <MenuItem Header="File">
+                    <MenuItem Header="File" VerticalAlignment="Center">
                         <MenuItem Header="New" Style="{DynamicResource MetroMenuItem}" Margin="0"
                                   Command="{Binding CurrentViewModel.CreateNewJob}"/>
                         <MenuItem Header="Edit" Style="{DynamicResource MetroMenuItem}" Margin="0" 
@@ -37,7 +38,10 @@
 
 
 
-                    <MenuItem Header="Tools">
+                    <MenuItem Header="Tools" VerticalAlignment="Center">
+                        <!--<MenuItem.Icon>
+                            <iconPacks:PackIconModern Width="15" Height="15" Kind="Tools" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="Green" />
+                        </MenuItem.Icon>-->
                         <MenuItem Header="Single Bus Job"
                                   Command="{Binding CurrentViewModel.AddBusJob}" CommandParameter="{Binding Source={x:Static impl:JobType.SingleBusJob}}"/>
                         <MenuItem Header="Completed Bus Job"
@@ -49,7 +53,7 @@
                     </MenuItem>
 
 
-                    <MenuItem Header="Help">
+                    <MenuItem Header="Help" VerticalAlignment="Center">
                         <MenuItem Header="User Manual"/>
                         <MenuItem Header="About Vecto"/>
                         <MenuItem Header="Relase Notes"/>
