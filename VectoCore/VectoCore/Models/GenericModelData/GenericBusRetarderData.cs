@@ -15,7 +15,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 		public RetarderData CreateGenericBusRetarderData(IRetarderInputData retarderInput)
 		{
 			if (retarderInput == null || !retarderInput.Type.IsDedicatedComponent()) {
-				return new  RetarderData {Type = retarderInput?.Type ?? RetarderType.None};
+				return new  RetarderData {Type = retarderInput?.Type ?? RetarderType.None, Ratio = 1.0};
 			}
 
 			var retarder = new RetarderData
