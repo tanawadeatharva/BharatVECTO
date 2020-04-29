@@ -25,7 +25,7 @@ namespace VECTO3GUI.ViewModel.Impl
 		}
 
 
-		protected override void DoSaveJob()
+		protected override void DoSaveJob(Window window)
 		{
 			throw new NotImplementedException();
 		}
@@ -35,7 +35,7 @@ namespace VECTO3GUI.ViewModel.Impl
 			throw new NotImplementedException();
 		}
 
-		protected override void DoSaveToJob()
+		protected override void DoSaveToJob(Window window)
 		{
 			throw new NotImplementedException();
 		}

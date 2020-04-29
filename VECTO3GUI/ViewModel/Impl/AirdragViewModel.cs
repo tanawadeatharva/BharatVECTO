@@ -263,8 +263,8 @@ namespace VECTO3GUI.ViewModel.Impl
 			if (filePath.IsNullOrEmpty())
 				return;
 			
-			var xmlDocument = XmlReaderHelper.ReadXmlDocument(filePath);
-			var nodes = XmlReaderHelper.GetComponentNodes(xmlDocument,
+			var xmlDocument = XmlHelper.ReadXmlDocument(filePath);
+			var nodes = XmlHelper.GetComponentNodes(xmlDocument,
 				XMLNames.VectoInputDeclaration, VectoComponents.Airdrag.XMLElementName());
 
 			if(nodes.IsNullOrEmpty())

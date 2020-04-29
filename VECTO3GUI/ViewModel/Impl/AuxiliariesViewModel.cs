@@ -273,7 +273,9 @@ namespace VECTO3GUI.ViewModel.Impl
 			}
 		}
 
-		
+		public ConsumerTechnology DoorDriveTechnology { get; set; }
+
+
 		public AllowedEntry<BusHVACSystemConfiguration>[] AllowedSystemConfigurations { get; private set; }
 		public AllowedEntry<ACCompressorType>[] AllowedDriverACCompressorTypes { get; private set; }
 		public AllowedEntry<ACCompressorType>[] AllowedPassengerACCompressorTypes { get; private set; }
@@ -319,8 +321,8 @@ namespace VECTO3GUI.ViewModel.Impl
 					AlternatorTechnologies.Add(busAux.ElectricSupply.Alternators[i].Technology);
 				}
 
-				AlternatorTechnologies.Add("blu");
-				AlternatorTechnologies.Add("bla");
+				//AlternatorTechnologies.Add("blu");
+				//AlternatorTechnologies.Add("bla");
 			}
 
 			DayrunninglightsLED = busAux.ElectricConsumers.DayrunninglightsLED;
@@ -336,6 +338,7 @@ namespace VECTO3GUI.ViewModel.Impl
 			HeatPump = busAux.HVACAux.HeatPump;
 			AdjustableAuxiliaryHeater = busAux.HVACAux.AdjustableAuxiliaryHeater;
 			SeparateAirDistributionDucts = busAux.HVACAux.SeparateAirDistributionDucts;
+			DoorDriveTechnology = ConsumerTechnology.Pneumatically;
 
 			_componentData = new AuxiliariesBusComponentData(this);
 			ClearChangedProperties();

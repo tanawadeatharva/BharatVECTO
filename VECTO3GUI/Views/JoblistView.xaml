@@ -100,8 +100,7 @@
 
                 <DataGrid.ContextMenu>
                     <ContextMenu>
-                        <MenuItem Header="Add Job" Command="{Binding AddJob}"
-                                  CommandParameter="{Binding ElementName=JobList, Path=SelectedItem}"/>
+                        <MenuItem Header="Add Job" Command="{Binding AddJob}"/>
                         <Separator HorizontalAlignment="Stretch" Background="Gray"/>
                         <MenuItem Header="Create Single Bus Job"
                                   Command="{Binding AddBusJob}" CommandParameter="{Binding Source={x:Static impl:JobType.SingleBusJob}}"/>

@@ -130,7 +130,7 @@ namespace VECTO3GUI.Util.XML
 				new XAttribute("xmlns", _v20),
 				
 				new XElement(_v20 + XMLNames.ComponentDataWrapper, 
-					new XAttribute(XMLNames.Component_ID_Attr, airdrag.DigestValue.Reference),
+					new XAttribute(XMLNames.Component_ID_Attr, airdrag.DigestValue.Reference.Replace("#","")),
 					new XAttribute(_xsi + "type", XMLDeclarationAirdragDataProviderV10.XSD_TYPE), // "AirDragDataDeclarationType"
 					
 					new XElement(_v20 + XMLNames.Component_Manufacturer, airdrag.Manufacturer),
@@ -172,14 +172,16 @@ namespace VECTO3GUI.Util.XML
 								new XElement(_v26 + XMLNames.Bus_Positionlights, auxBus?.PositionlightsLED),
 								new XElement(_v26 + XMLNames.Bus_Brakelights, auxBus?.BrakelightsLED),
 								new XElement(_v26 + XMLNames.Bus_Interiorlights, auxBus?.InteriorLightsLED))),
+						//----> ToDo remove if xsd gets changed <---
 							new XElement(_v26 + XMLNames.BusAux_PneumaticSystem,
-								new XElement(_v26 + XMLNames.BusAux_PneumaticSystem_DoorDriveTechnology)),
+								new XElement(_v26 + XMLNames.BusAux_PneumaticSystem_DoorDriveTechnology, auxBus?.DoorDriveTechnology.GetLabel().ToLower())),
+						//------------------------------------------
 							new XElement(_v26 + "HVAC",
 								new XElement(_v26 + XMLNames.Bus_SystemConfiguration, auxBus?.SystemConfiguration.GetXmlFormat()),
 								new XElement(_v26 + XMLNames.Bus_CompressorType,
 									new XElement(_v26 + XMLNames.Bus_DriverAC, auxBus?.CompressorTypeDriver.GetLabel()),
 									new XElement(_v26 + XMLNames.Bus_PassengerAC, auxBus?.CompressorTypePassenger.GetLabel())),
-								new XElement(_v26 + XMLNames.Bus_AuxiliaryHeaterPower, auxBus?.AuxHeaterPower.ToXMLFormat()),
+								new XElement(_v26 + XMLNames.Bus_AuxiliaryHeaterPower, Convert.ToInt32(auxBus?.AuxHeaterPower.Value())), 
 								new XElement(_v26 + XMLNames.Bus_DoubleGlasing, auxBus?.DoubleGlasing),
 								new XElement(_v26 + XMLNames.Bus_HeatPump, auxBus?.HeatPump),
 								new XElement(_v26 + XMLNames.Bus_AdjustableAuxiliaryHeater, auxBus?.AdjustableAuxiliaryHeater), 

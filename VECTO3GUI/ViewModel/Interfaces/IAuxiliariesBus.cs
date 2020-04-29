@@ -34,5 +34,7 @@ namespace VECTO3GUI.ViewModel.Interfaces
 		bool SeparateAirDistributionDucts { get; set; }
 
 		#endregion
+		ConsumerTechnology DoorDriveTechnology { get; set; }
+
 	}
 }

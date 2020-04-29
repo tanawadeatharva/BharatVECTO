@@ -50,7 +50,7 @@ namespace VECTO3GUI.ViewModel.Impl
 
 		#region Overrides of AbstractJobViewModel
 
-		protected override void DoSaveJob()
+		protected override void DoSaveJob(Window window)
 		{
 			throw new System.NotImplementedException();
 		}
@@ -60,7 +60,7 @@ namespace VECTO3GUI.ViewModel.Impl
 			throw new System.NotImplementedException();
 		}
 
-		protected override void DoSaveToJob()
+		protected override void DoSaveToJob(Window window)
 		{
 			throw new System.NotImplementedException();
 		}
