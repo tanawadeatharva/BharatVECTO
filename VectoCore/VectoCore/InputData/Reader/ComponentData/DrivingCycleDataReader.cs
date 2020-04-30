@@ -345,6 +345,7 @@ namespace TUGraz.VectoCore.InputData.Reader.ComponentData
 			public const string TorqueConverterActive = "tc_active";
 			public const string PTOActive = "PTO";
 			public const string Highway = "HW";
+			public const string VTPPSCompressorActive = "ps_comp_active";
 		}
 
 		#region DataParser
@@ -759,6 +760,7 @@ namespace TUGraz.VectoCore.InputData.Reader.ComponentData
 						FanSpeed = row.ParseDouble(Fields.FanSpeed).RPMtoRad(),
 						Gear = (uint)row.ParseDoubleOrGetDefault(Fields.Gear),
 						VTPFuelconsumption = fc,
+						VTPPSCompressorActive = row.ParseBooleanOrGetDefault(Fields.VTPPSCompressorActive) ?? false,
 						//row.ParseDoubleOrGetDefault(Fields.FuelConsumption).SI(Unit.SI.Gramm.Per.Hour).Cast<KilogramPerSecond>(),
 						TorqueConverterActive = row.ParseBooleanOrGetDefault(Fields.TorqueConverterActive),
 						TorqueWheelLeft = tqLeft,
@@ -795,6 +797,7 @@ namespace TUGraz.VectoCore.InputData.Reader.ComponentData
 					Fields.WheelTorqueRight,
 					Fields.Gear,
 					Fields.TorqueConverterActive,
+					Fields.VTPPSCompressorActive,
 					//Fields.FuelConsumption
 				}.Concat(EnumHelper.GetValues<FuelType>().Select(x => "fc_" + x.ToXMLFormat()));
 

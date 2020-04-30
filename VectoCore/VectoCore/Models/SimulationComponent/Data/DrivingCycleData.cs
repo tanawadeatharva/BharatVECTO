@@ -258,6 +258,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 
 			public PerSecond WheelSpeedRight;
 
+			public bool VTPPSCompressorActive;
+
 		}
 	}
 }

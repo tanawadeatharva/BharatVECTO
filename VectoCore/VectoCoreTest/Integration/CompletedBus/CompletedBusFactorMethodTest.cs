@@ -80,9 +80,8 @@ namespace TUGraz.VectoCore.Tests.Integration.CompletedBus
 			var axleConfiguration = AxleConfiguration.AxleConfig_4x2;
 			var floorType = FloorType.HighFloor;
 			var articulated = false;
-			var doubleDecker = true;
 
-			primarySegment = DeclarationData.PrimaryBusSegments.Lookup(category, axleConfiguration, articulated, floorType, doubleDecker);
+			primarySegment = DeclarationData.PrimaryBusSegments.Lookup(category, axleConfiguration, articulated, floorType);
 		}
 
 		private void CompletedBusSegment()

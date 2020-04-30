@@ -204,11 +204,9 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 
 		protected virtual Segment GetPrimarySegment(IVehicleDeclarationInputData primaryVehicle)
 		{
-			var completedVehicle = InputDataProvider.JobInputData.Vehicle;
-
 			var primarySegment = DeclarationData.PrimaryBusSegments.Lookup(
 				primaryVehicle.VehicleCategory, primaryVehicle.AxleConfiguration, primaryVehicle.Articulated,
-				primaryVehicle.FloorType, completedVehicle.VehicleCode.IsDoubleDeckerBus());
+				primaryVehicle.FloorType);
 
 			return primarySegment;
 		}

@@ -83,7 +83,9 @@ namespace TUGraz.VectoCore.Tests.Integration.VTP
 		[Category("Integration")]
 		[TestCase(@"TestData\Integration\VTPMode\GenericVehicle\class_5_generic vehicle_DECL.vecto"),
 		TestCase(@"TestData\Integration\VTPMode\MediumLorry\VTP_MediumLorry.vecto", TestName = "RunVTPMediumLorry_Declaration"),
-		TestCase(@"TestData\Integration\VTPMode\DualFuelVehicle\VTP_DualFuel.vecto", TestName = "RunVTPDualFuel_Declaration")]
+		TestCase(@"TestData\Integration\VTPMode\DualFuelVehicle\VTP_DualFuel.vecto", TestName = "RunVTPDualFuel_Declaration"),
+		TestCase(@"TestData\Integration\VTPMode\HeavyBus\VTP_PrimaryBus.vecto", TestName = "RunVTPHeavyPrimaryBus")	
+			]
 		public void RunVTP_Declaration(string jobFile)
 		{
 			var fileWriter = new FileOutputWriter(jobFile);

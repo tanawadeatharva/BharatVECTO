@@ -46,81 +46,21 @@ using TUGraz.VectoCore.OutputData;
 
 namespace TUGraz.VectoCore.InputData.Reader.Impl
 {
-
-	internal class DeclarationVTPModeVectoRunDataFactoryHeavyBusPrimary : IVectoRunDataFactory
+	internal class DeclarationVTPModeVectoRunDataFactoryLorries : AbstractVTPModeVectoRunDataFactory
 	{
-		
-	}
-	internal class DeclarationVTPModeVectoRunDataFactoryLorries : IVectoRunDataFactory
-	{
-		protected IVTPDeclarationJobInputData JobInputData;
-		protected DriverData Driverdata;
-		protected AirdragData AirdragData;
-		protected CombustionEngineData EngineData;
-		protected AxleGearData AxlegearData;
-		protected AngledriveData AngledriveData;
-		protected GearboxData GearboxData;
-		protected RetarderData RetarderData;
-		protected PTOData PTOTransmissionData;
-		protected List<VectoRunData.AuxData> AuxVTP;
-		protected Segment Segment;
-		protected DeclarationDataAdapterHeavyLorry Dao;
-		protected Exception InitException;
+		private DeclarationDataAdapterHeavyLorry _dao;
 
-		public IVTPReport Report;
-		protected ShiftStrategyParameters GearshiftData;
+		public DeclarationVTPModeVectoRunDataFactoryLorries(IVTPDeclarationInputDataProvider ivtpProvider, IVTPReport report) : base(
+			ivtpProvider.JobInputData, report)
+		{ }
 
-		public DeclarationVTPModeVectoRunDataFactoryLorries(IVTPDeclarationInputDataProvider ivtpProvider, IVTPReport report) : this(
-			ivtpProvider.JobInputData, report) { }
+		protected DeclarationVTPModeVectoRunDataFactoryLorries(IVTPDeclarationJobInputData job, IVTPReport report) : base(job, report)
+		{ }
 
-		protected DeclarationVTPModeVectoRunDataFactoryLorries(IVTPDeclarationJobInputData job, IVTPReport report)
+		protected override IDeclarationDataAdapter Dao { get { return _dao ?? (_dao = new DeclarationDataAdapterHeavyLorry()); } }
+
+		protected override void Initialize()
 		{
-			JobInputData = job;
-			Report = report;
-			try {
-				Initialize();
-				if (Report != null) {
-					InitializeReport();
-				}
-			} catch (Exception e) {
-				InitException = e;
-			}
-		}
-
-		private void InitializeReport()
-		{
-			var powertrainConfig = new VectoRunData() {
-				VehicleData =
-					Dao.CreateVehicleData(
-						JobInputData.Vehicle, Segment, Segment.Missions.First(),
-						Segment.Missions.First().Loadings.First()),
-				AirdragData = AirdragData,
-				EngineData = EngineData,
-				GearboxData = GearboxData,
-				AxleGearData = AxlegearData,
-				Retarder = RetarderData,
-				Aux =
-					Dao.CreateAuxiliaryData(
-						JobInputData.Vehicle.Components.AuxiliaryInputData,
-						JobInputData.Vehicle.Components.BusAuxiliaries,
-						Segment.Missions.First().MissionType,
-						Segment.VehicleClass, JobInputData.Vehicle.Length),
-			};
-			powertrainConfig.VehicleData.VehicleClass = Segment.VehicleClass;
-			Report.InputDataHash = JobInputData.VectoJobHash;
-			Report.ManufacturerRecord = JobInputData.ManufacturerReportInputData;
-			Report.ManufacturerRecordHash = JobInputData.VectoManufacturerReportHash;
-			var fuels = JobInputData.Vehicle.Components.EngineInputData.EngineModes.Select(
-										x => x.Fuels.Select(f => DeclarationData.FuelData.Lookup(f.FuelType, JobInputData.Vehicle.TankSystem))
-											.ToList())
-									.ToList();
-			Report.InitializeReport(powertrainConfig, fuels);
-		}
-
-
-		protected void Initialize()
-		{
-			Dao = new DeclarationDataAdapterHeavyLorry();
 			var vehicle = JobInputData.Vehicle;
 			Segment = DeclarationData.TruckSegments.Lookup(
 				vehicle.VehicleCategory,
@@ -163,106 +103,13 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 			AuxVTP = CreateVTPAuxData(vehicle);
 		}
 
-		#region Implementation of IVectoRunDataFactory
-
-		public virtual IEnumerable<VectoRunData> NextRun()
+		protected override IEnumerable<VectoRunData.AuxData> GetAuxiliaryData(MissionType missionType)
 		{
-			if (InitException != null) {
-				throw InitException;
-			}
-
-			// simulate the LongHaul cycle with RefLoad
-			var vtpMission = Segment.VehicleClass.IsMediumLorry() 
-				? DeclarationData.VTPMode.SelectedMissionMediumLorry
-				: DeclarationData.VTPMode.SelectedMissionHeavyLorry;
-			var mission = Segment.Missions.FirstOrDefault(m => m.MissionType == vtpMission);
-			if (mission == null) {
-				throw new VectoException("Mission {0} not found in segmentation matrix", DeclarationData.VTPMode.SelectedMissionHeavyLorry);
-			}
-
-			var loading = mission.Loadings.FirstOrDefault(l => l.Key == DeclarationData.VTPMode.SelectedLoading);
-			var runData = CreateVectoRunData(Segment, mission, loading.Value);
-			runData.ModFileSuffix = loading.Key.ToString();
-			var cycle = DrivingCycleDataReader.ReadFromStream(mission.CycleFile, CycleType.DistanceBased, "", false);
-			runData.Cycle = new DrivingCycleProxy(cycle, mission.MissionType.ToString());
-			runData.DriverData = Driverdata;
-			runData.Aux = Dao.CreateAuxiliaryData(
-				JobInputData.Vehicle.Components.AuxiliaryInputData, JobInputData.Vehicle.Components.BusAuxiliaries, mission.MissionType, Segment.VehicleClass, JobInputData.Vehicle.Length);
-			runData.ExecutionMode = ExecutionMode.Declaration;
-			runData.SimulationType = SimulationType.DistanceCycle;
-			runData.Mission = mission;
-			runData.Loading = loading.Key;
-			runData.VehicleData.VehicleClass = Segment.VehicleClass;
-			runData.VehicleData.LegislativeClass = JobInputData.Vehicle.LegislativeClass;
-			yield return runData;
-
-			// simulate the Measured cycle
-			var vtpCycle = JobInputData.Cycles.FirstOrDefault();
-			if (vtpCycle == null) {
-				throw new VectoException("no VTP-Cycle provided!");
-			}
-
-			var drivingCycle = DrivingCycleDataReader.ReadFromDataTable(vtpCycle.CycleData, vtpCycle.Name, false);
-
-			// Loading is not relevant as we use P_wheel
-			var vtpRunData = CreateVectoRunData(Segment, Segment.Missions.First(), Tuple.Create<Kilogram, double?>( 0.SI<Kilogram>(), null));
-			vtpRunData.Cycle = new DrivingCycleProxy(drivingCycle, vtpCycle.Name);
-			vtpRunData.Aux = AuxVTP;
-			vtpRunData.FanData = GetFanData();
-			vtpRunData.ExecutionMode = ExecutionMode.Declaration;
-			vtpRunData.SimulationType = SimulationType.VerificationTest;
-			vtpRunData.Mission = new Mission() {
-				MissionType = MissionType.VerificationTest
-			};
-			vtpRunData.VehicleData.VehicleClass = Segment.VehicleClass;
-			vtpRunData.VehicleData.LegislativeClass = JobInputData.Vehicle.LegislativeClass;
-
-			//var ncvStd = DeclarationData.FuelData.Lookup(JobInputData.Vehicle.Components.EngineInputData.FuelType).LowerHeatingValueVecto;
-			//var ncvCorrection = ncvStd / JobInputData.NetCalorificValueTestFuel;
-			var mileageCorrection = GetMileagecorrectionFactor(JobInputData.Mileage);
-			vtpRunData.VTPData = new VTPData() {
-				CorrectionFactor = mileageCorrection,
-			};
-			yield return vtpRunData;
-		}
-
-		protected virtual AuxFanData GetFanData()
-		{
-			return new AuxFanData() {
-				FanCoefficients = DeclarationData.VTPMode.FanParameters,
-				FanDiameter = JobInputData.FanDiameter,
-			};
-		}
-
-		private double GetMileagecorrectionFactor(Meter mileage)
-		{
-			if (mileage > DeclarationData.VTPMode.RunInThreshold) {
-				return 1;
-			}
-
-			return DeclarationData.VTPMode.EvolutionCoefficient + (1 - DeclarationData.VTPMode.EvolutionCoefficient) * mileage /
-					DeclarationData.VTPMode.RunInThreshold;
-		}
-
-		protected VectoRunData CreateVectoRunData(Segment segment, Mission mission, Tuple<Kilogram, double?> loading)
-		{
-			return new VectoRunData {
-				JobName = JobInputData.Vehicle.VIN,
-				EngineData = EngineData,
-				GearboxData = GearboxData,
-				GearshiftParameters = GearshiftData,
-				AxleGearData = AxlegearData,
-				AngledriveData = AngledriveData,
-				VehicleData = Dao.CreateVehicleData(
-					JobInputData.Vehicle, segment, mission,
-					new KeyValuePair<LoadingType, Tuple<Kilogram, double?>>(LoadingType.ReferenceLoad, loading)),
-				AirdragData = AirdragData,
-				DriverData = null,
-				BusAuxiliaries = null,
-				Retarder = RetarderData,
-				PTO = PTOTransmissionData,
-				Report = Report,
-			};
+			return Dao.CreateAuxiliaryData(
+				JobInputData.Vehicle.Components.AuxiliaryInputData,
+				JobInputData.Vehicle.Components.BusAuxiliaries,
+				missionType,
+				Segment.VehicleClass, JobInputData.Vehicle.Length);
 		}
 
 		protected virtual List<VectoRunData.AuxData> CreateVTPAuxData(IVehicleDeclarationInputData vehicle)
@@ -302,6 +149,65 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 			return aux;
 		}
 
-		#endregion
+		public override IEnumerable<VectoRunData> NextRun()
+		{
+			if (InitException != null) {
+				throw InitException;
+			}
+
+			// simulate the LongHaul cycle with RefLoad
+			var vtpMission = Segment.VehicleClass.IsMediumLorry()
+				? DeclarationData.VTPMode.SelectedMissionMediumLorry
+				: DeclarationData.VTPMode.SelectedMissionHeavyLorry;
+			var mission = Segment.Missions.FirstOrDefault(m => m.MissionType == vtpMission);
+			if (mission == null) {
+				throw new VectoException("Mission {0} not found in segmentation matrix", DeclarationData.VTPMode.SelectedMissionHeavyLorry);
+			}
+
+			var loading = mission.Loadings.FirstOrDefault(l => l.Key == DeclarationData.VTPMode.SelectedLoading);
+			var runData = CreateVectoRunData(Segment, mission, loading.Value);
+			runData.ModFileSuffix = loading.Key.ToString();
+			var cycle = DrivingCycleDataReader.ReadFromStream(mission.CycleFile, CycleType.DistanceBased, "", false);
+			runData.Cycle = new DrivingCycleProxy(cycle, mission.MissionType.ToString());
+			runData.DriverData = Driverdata;
+			runData.Aux = GetAuxiliaryData(mission.MissionType);
+			
+			runData.ExecutionMode = ExecutionMode.Declaration;
+			runData.SimulationType = SimulationType.DistanceCycle;
+			runData.Mission = mission;
+			runData.Loading = loading.Key;
+			runData.VehicleData.VehicleClass = Segment.VehicleClass;
+			runData.VehicleData.LegislativeClass = JobInputData.Vehicle.LegislativeClass;
+			yield return runData;
+
+			// simulate the Measured cycle
+			var vtpCycle = JobInputData.Cycles.FirstOrDefault();
+			if (vtpCycle == null) {
+				throw new VectoException("no VTP-Cycle provided!");
+			}
+
+			var drivingCycle = DrivingCycleDataReader.ReadFromDataTable(vtpCycle.CycleData, vtpCycle.Name, false);
+
+			// Loading is not relevant as we use P_wheel
+			var vtpRunData = CreateVectoRunData(Segment, Segment.Missions.First(), Tuple.Create<Kilogram, double?>(0.SI<Kilogram>(), null));
+			vtpRunData.Cycle = new DrivingCycleProxy(drivingCycle, vtpCycle.Name);
+			vtpRunData.Aux = AuxVTP;
+			vtpRunData.FanData = GetFanData();
+			vtpRunData.ExecutionMode = ExecutionMode.Declaration;
+			vtpRunData.SimulationType = SimulationType.VerificationTest;
+			vtpRunData.Mission = new Mission() {
+				MissionType = MissionType.VerificationTest
+			};
+			vtpRunData.VehicleData.VehicleClass = Segment.VehicleClass;
+			vtpRunData.VehicleData.LegislativeClass = JobInputData.Vehicle.LegislativeClass;
+
+			//var ncvStd = DeclarationData.FuelData.Lookup(JobInputData.Vehicle.Components.EngineInputData.FuelType).LowerHeatingValueVecto;
+			//var ncvCorrection = ncvStd / JobInputData.NetCalorificValueTestFuel;
+			var mileageCorrection = GetMileagecorrectionFactor(JobInputData.Mileage);
+			vtpRunData.VTPData = new VTPData() {
+				CorrectionFactor = mileageCorrection,
+			};
+			yield return vtpRunData;
+		}
 	}
 }

@@ -62,7 +62,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 
 		protected override Segment GetSegment(IVehicleDeclarationInputData vehicle)
 		{
-			if (!vehicle.VehicleCategory.IsTruck()) {
+			if (!vehicle.VehicleCategory.IsLorry()) {
 				throw new VectoException("Invalid vehicle category for truck factory! {0}", vehicle.VehicleCategory.GetCategoryName());
 			}
 			var segment = DeclarationData.TruckSegments.Lookup(

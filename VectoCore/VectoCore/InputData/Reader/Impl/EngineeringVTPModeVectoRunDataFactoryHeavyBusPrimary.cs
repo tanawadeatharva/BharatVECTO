@@ -1,0 +1,35 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using TUGraz.VectoCommon.InputData;
+using TUGraz.VectoCommon.Models;
+using TUGraz.VectoCommon.Utils;
+using TUGraz.VectoCore.InputData.Reader.ComponentData;
+using TUGraz.VectoCore.Models.Simulation.Data;
+using TUGraz.VectoCore.OutputData;
+
+namespace TUGraz.VectoCore.InputData.Reader.Impl {
+	internal class EngineeringVTPModeVectoRunDataFactoryHeavyBusPrimary : DeclarationVTPModeVectoRunDataFactoryHeavyBusPrimary
+	{
+		public EngineeringVTPModeVectoRunDataFactoryHeavyBusPrimary(IVTPEngineeringInputDataProvider ivtpProvider) : base(ivtpProvider.JobInputData, null) { }
+
+		public override IEnumerable<VectoRunData> NextRun()
+		{
+			if (InitException != null) {
+				throw InitException;
+			}
+			return JobInputData.Cycles.Select(
+				cycle => {
+					var drivingCycle = DrivingCycleDataReader.ReadFromDataTable(cycle.CycleData, cycle.Name, false);
+					// loading is not relevant as we use P_wheel
+					var runData = CreateVectoRunData(Segment, Segment.Missions.First(), new Tuple<Kilogram, double?>(0.SI<Kilogram>(), null));
+					runData.Cycle = new DrivingCycleProxy(drivingCycle, cycle.Name);
+					runData.Aux = AuxVTP;
+					runData.FanData = GetFanData();
+					runData.ExecutionMode = ExecutionMode.Engineering;
+					runData.SimulationType = SimulationType.VerificationTest;
+					return runData;
+				});
+		}
+	}
+}
