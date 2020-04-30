@@ -8,6 +8,7 @@
              xmlns:customControls="clr-namespace:VECTO3GUI.Views.CustomControls"
              xmlns:helper="clr-namespace:VECTO3GUI.Helper"
              xmlns:converter="clr-namespace:VECTO3GUI.Helper.Converter"
+             xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
              mc:Ignorable="d" 
              d:DesignHeight="800" d:DesignWidth="500">
 
@@ -33,16 +34,19 @@
 
                     <customControls:VectoParameterControl
                         Caption="Manufacturer" Unit="" CaptionWidthGroup="vehicleLbl" UnitWidthGroup="unitWidth"
-                        Value="{Binding Manufacturer}" />
+                        Value="{Binding Manufacturer}" >
+                    </customControls:VectoParameterControl>
+
                     <customControls:VectoParameterControl
                         Caption="Manufacturer Address" Unit="" CaptionWidthGroup="vehicleLbl" UnitWidthGroup="unitWidth"
                         Value="{Binding ManufacturerAddress}" />
                     <customControls:VectoParameterControl
                         Caption="VIN" Unit="" CaptionWidthGroup="vehicleLbl" UnitWidthGroup="unitWidth"
                         Value="{Binding VIN}" />
-                    <customControls:VectoParameterControl
+
+                    <!--<customControls:VectoParameterControl
                         Caption="Date" Unit="" CaptionWidthGroup="vehicleLbl" UnitWidthGroup="unitWidth"
-                        Value="{Binding Date}" />
+                        Value="{Binding Date}" />-->
 
                     <customControls:ComboParameter
                         Caption="Legislative Class"

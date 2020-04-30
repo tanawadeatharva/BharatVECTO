@@ -28,6 +28,7 @@ namespace VECTO3GUI.Model.TempDataObject
 		public bool HeatPump { get; set; }
 		public bool AdjustableAuxiliaryHeater { get; set; }
 		public bool SeparateAirDistributionDucts { get; set; }
+		public ConsumerTechnology DoorDriveTechnology { get; set; }
 
 		#endregion
 
@@ -63,6 +64,7 @@ namespace VECTO3GUI.Model.TempDataObject
 			viewModel.HeatPump = HeatPump;
 			viewModel.AdjustableAuxiliaryHeater = AdjustableAuxiliaryHeater;
 			viewModel.SeparateAirDistributionDucts = SeparateAirDistributionDucts;
+			viewModel.DoorDriveTechnology = viewModel.DoorDriveTechnology;
 		}
 
 		public void ClearValues(IAuxiliariesViewModel viewModel)
@@ -81,6 +83,7 @@ namespace VECTO3GUI.Model.TempDataObject
 			viewModel.HeatPump = default(bool);
 			viewModel.AdjustableAuxiliaryHeater = default(bool);
 			viewModel.SeparateAirDistributionDucts = default(bool);
+			viewModel.DoorDriveTechnology = ConsumerTechnology.Pneumatically;
 		}
 		
 		private void SetValues(IAuxiliariesViewModel auxiliaries)
@@ -99,6 +102,7 @@ namespace VECTO3GUI.Model.TempDataObject
 			HeatPump = auxiliaries.HeatPump;
 			AdjustableAuxiliaryHeater = auxiliaries.AdjustableAuxiliaryHeater;
 			SeparateAirDistributionDucts = auxiliaries.SeparateAirDistributionDucts;
+			DoorDriveTechnology = auxiliaries.DoorDriveTechnology;
 		}
 
 	}

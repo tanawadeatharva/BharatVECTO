@@ -27,6 +27,7 @@ namespace VECTO3GUI.Model.TempDataObject
 
 		#endregion
 
+		public AirdragComponentData(){}
 
 		public AirdragComponentData(IAirdragViewModel viewModel , bool defaultValues)
 		{

@@ -19,7 +19,7 @@ namespace VECTO3GUI.Helper
 		}
 		
 		public static OutputWindow CreateOutputWindow(IKernel kernel, object viewModel,
-			string windowName,double width = default(double), double height = default(double),
+			string windowName, double width = default(double), double height = default(double),
 			ResizeMode resizeMode = ResizeMode.CanResize)
 		{
 			var window = CreateWindow(kernel, viewModel, windowName, width, height);

@@ -8,6 +8,8 @@
         xmlns:impl="clr-namespace:VECTO3GUI.ViewModel.Impl"
         xmlns:interfaces="clr-namespace:VECTO3GUI.ViewModel.Interfaces"
         xmlns:converters="http://metro.mahapps.com/winfx/xaml/shared"
+        xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+        xmlns:helper="clr-namespace:VECTO3GUI.Helper"
         mc:Ignorable="d"
         Title="{Binding WindowTitle}"  Height="450" Width="800" WindowStartupLocation="CenterScreen" TitleCharacterCasing="Normal" 
         d:DataContext="{d:DesignInstance Type=impl:OutputWindowViewModel, IsDesignTimeCreatable=False}">
@@ -32,12 +34,18 @@
         </Grid.RowDefinitions>
 
         <Grid Grid.Row="0">
-        <ContentControl Content="{Binding ViewModel}" />
+            <ContentControl Content="{Binding ViewModel}" />
         </Grid>
 
         <Grid Grid.Row="1">
             <StatusBar/>
         </Grid>
     </Grid>
+
+    <i:Interaction.Triggers>
+        <i:EventTrigger EventName="Closing">
+            <helper:EventCommandExecuter Command="{Binding Path=ViewModel.CloseWindowCommand, Mode=OneTime}"/>
+        </i:EventTrigger>
+    </i:Interaction.Triggers>
 
 </mah:MetroWindow>

@@ -13,16 +13,21 @@ namespace VECTO3GUI.Helper
 {
 	public static class FileDialogHelper
 	{
-		private const string XMLFilter = "XML Files (*.xml)|*.xml|All Files (*.*)|*.*";
+		public const string XMLFilter = "XML Files (*.xml)|*.xml|All Files (*.*)|*.*";
+		public const string JobFilter = "Job Files (*.vectojob|*.vectojob|All Files (*.*)|*.*";
 
-
-		public static string[] ShowSelectFilesDialog(bool multiselect, string initialDirectory = null)
+		public static string[] ShowSelectFilesDialog(bool multiselect)
+		{
+			return ShowSelectFilesDialog(multiselect, XMLFilter);
+		}
+		
+		public static string[] ShowSelectFilesDialog(bool multiselect, string filter = XMLFilter, string initialDirectory = null)
 		{
 			using (var openFileDialog = new OpenFileDialog())
 			{
 				openFileDialog.InitialDirectory = initialDirectory;
 				openFileDialog.Multiselect = multiselect;
-				openFileDialog.Filter = XMLFilter;
+				openFileDialog.Filter = filter;
 				var result = openFileDialog.ShowDialog();
 
 				if (result == DialogResult.OK)
@@ -33,8 +38,7 @@ namespace VECTO3GUI.Helper
 
 			return null;
 		}
-
-
+		
 		public static string ShowSelectDirectoryDialog(string initialDirectory = null)
 		{
 			using (var dialog = new CommonOpenFileDialog())
@@ -52,6 +56,27 @@ namespace VECTO3GUI.Helper
 			return null;
 		}
 
+		public static string SaveXmlFileToDialog(string initialDirectory = null)
+		{
+			return SaveToDialog(initialDirectory, XMLFilter);
+		}
 
+		public static string SaveJobFileToDialog(string initialDirectory = null)
+		{
+			return SaveToDialog(initialDirectory, JobFilter);
+		}
+
+		private static string SaveToDialog(string initialDirectory, string filter)
+		{
+			var saveFileDialog = new SaveFileDialog
+			{
+				Filter = filter
+			};
+
+			if (initialDirectory != null)
+				saveFileDialog.InitialDirectory = initialDirectory;
+
+			return saveFileDialog.ShowDialog() == true ? saveFileDialog.FileName : null;
+		}
 	}
 }

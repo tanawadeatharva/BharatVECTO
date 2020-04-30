@@ -5,21 +5,25 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
+using MahApps.Metro.Controls.Dialogs;
 using Ninject;
 using TUGraz.VectoCommon.InputData;
-using TUGraz.VectoCore.Models.SimulationComponent.Impl;
 using TUGraz.VectoCore.OutputData.XML.DeclarationJobs;
-using VECTO3GUI.Model.TempDataObject;
+using VECTO3GUI.Helper;
 using VECTO3GUI.ViewModel.Interfaces;
 using VECTO3GUI.Util;
 using VECTO3GUI.Util.XML;
+
 
 namespace VECTO3GUI.ViewModel.Impl
 {
 	public class CompleteVehicleBusJobViewModel : AbstractJobViewModel, IJobEditViewModel
 	{
 		#region Members
-		
+
+		private readonly XMLCompletedBus _xmlCompletedBus;
+		private readonly XMLCompletedBusWriter _xmlCompletedBusWriter;
+
 		private ICommand _saveComponentCommand;
 		private ICommand _resetComponentCommand;
 
@@ -35,45 +39,69 @@ namespace VECTO3GUI.ViewModel.Impl
 		{
 			Kernel = kernel;
 			InputDataProvider = inputData;
+			IsNewJob = inputData == null;
 			JobViewModel = this;
 			CreateComponentModel(Component.CompleteBusVehicle);
 			CreateComponentModel(Component.Airdrag);
 			CreateComponentModel(Component.Auxiliaries);
 			CurrentComponent = GetComponentViewModel(Component.CompleteBusVehicle);
+
+			SetXmlFilePath(inputData?.JobInputData.Vehicle.XMLSource.BaseURI);
+
+			_xmlCompletedBus = new XMLCompletedBus();
+			_xmlCompletedBusWriter = new XMLCompletedBusWriter();
 		}
 
 
 		#region Commands
 
-		
-
-
-
-		
-		protected override void DoSaveJob()
+		protected override bool CanSaveJob(Window window)
 		{
-			CompleteVehicleBusData = new Dictionary<Component, object> {
-				{ Component.CompleteBusVehicle, _subModels[Component.CompleteBusVehicle].SaveComponentData()},
-				{ Component.Airdrag, _subModels[Component.Airdrag].SaveComponentData()},
-				{ Component.Auxiliaries, _subModels[Component.Auxiliaries].SaveComponentData()}
+			return !IsNewJob;
+		}
+		protected override void DoSaveJob(Window window)
+		{
+			var dialogSettings = new MetroDialogSettings()
+			{
+				AffirmativeButtonText = "Yes",
+				NegativeButtonText = "Cancel",
+				AnimateShow = true,
+				AnimateHide = true
 			};
+			
+			var dialogResult = MetroDialogHelper.GetModalDialogBox(this, "Save",
+				"The existing file will be overwritten, do you want to continue?", 
+				MessageDialogStyle.AffirmativeAndNegative, dialogSettings);
+			
+			if (dialogResult == MessageDialogResult.Affirmative) {
+				SetCurrentDataToSave();
+				var xDoc = _xmlCompletedBus.GenerateCompletedBusDocument(CompleteVehicleBusData);
 
-
-			//var completedXml = new XMLCompletedBus();
-			//var xmlDoc =  completedXml.GenerateCompletedBusDocument(CompleteVehicleBusData);
-
-			//var writer = new XMLCompletedBusWriter();
-			//writer.WriteCompletedBusXml(filePath, xmlDoc);
+				if (XmlHelper.ValidateXDocument(xDoc)) {
+					_xmlCompletedBusWriter.WriteCompletedBusXml(XmlFilePath, xDoc);
+					CloseWindow(window);
+				}
+			}
 		}
 
 		protected override void DoCloseJob(Window window)
 		{
-			window?.Close();
+			if (CloseWindowDialog()) {
+				CloseWindow(window);
+			}
 		}
 
-		protected override void DoSaveToJob()
+		protected override void DoSaveToJob(Window window)
 		{
-			
+			var filePath = FileDialogHelper.SaveXmlFileToDialog(SettingsModel.XmlFilePathFolder);
+
+			SetCurrentDataToSave();
+			var xDocument = _xmlCompletedBus.GenerateCompletedBusDocument(CompleteVehicleBusData);
+
+			if (XmlHelper.ValidateXDocument(xDocument)) {
+				_xmlCompletedBusWriter.WriteCompletedBusXml(filePath, xDocument);
+				CloseWindow(window);
+			}
 		}
 
 		public ICommand SaveComponent
@@ -108,14 +136,10 @@ namespace VECTO3GUI.ViewModel.Impl
 			get { return _resetComponentCommand ??
 						(_resetComponentCommand = new RelayCommand<Component>(DoResetComponent, CanResetComponent)); }
 		}
-
-
 		private bool CanResetComponent(Component component)
 		{
 			return ComponentsChanged(component);
-		}
-
-		private void DoResetComponent(Component component)
+		}private void DoResetComponent(Component component)
 		{
 			switch (component)
 			{
@@ -133,7 +157,15 @@ namespace VECTO3GUI.ViewModel.Impl
 
 		#endregion
 
-
+		private void SetCurrentDataToSave()
+		{
+			CompleteVehicleBusData = new Dictionary<Component, object> {
+				{ Component.CompleteBusVehicle, _subModels[Component.CompleteBusVehicle].SaveComponentData()},
+				{ Component.Airdrag, _subModels[Component.Airdrag].SaveComponentData()},
+				{ Component.Auxiliaries, _subModels[Component.Auxiliaries].SaveComponentData()}
+			};
+		}
+		
 		private bool ComponentsChanged(Component component)
 		{
 			switch (component) {
@@ -146,6 +178,12 @@ namespace VECTO3GUI.ViewModel.Impl
 				default:
 					return false;
 			}
+		}
+
+		private void CloseWindow(Window window)
+		{
+			WindowAlreadyClosed = true;
+			window?.Close();
 		}
 
 
