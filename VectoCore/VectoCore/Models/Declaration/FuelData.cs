@@ -96,10 +96,9 @@ namespace TUGraz.VectoCore.Models.Declaration
 						row.Field<string>(0).ParseEnum<FuelType>(),
 						string.IsNullOrWhiteSpace(tankSystem) ? (TankSystem?)null : tankSystem.ParseEnum<TankSystem>(),
 						string.IsNullOrWhiteSpace(density) ? null : density.ToDouble(0).SI<KilogramPerCubicMeter>(),
-						row.ParseDouble("co2perfuelweight"),
+						row.ParseDouble("co2perfuelweight"), row.ParseDouble("co2perfuelweightVTP"),
 						row.ParseDouble("ncv_stdvecto").SI(Unit.SI.Kilo.Joule.Per.Kilo.Gramm).Cast<JoulePerKilogramm>(),
-						row.ParseDouble("ncv_stdengine").SI(Unit.SI.Kilo.Joule.Per.Kilo.Gramm).Cast<JoulePerKilogramm>()
-					));
+						row.ParseDouble("ncv_stdengine").SI(Unit.SI.Kilo.Joule.Per.Kilo.Gramm).Cast<JoulePerKilogramm>()));
 			}
 		}
 
@@ -141,14 +140,13 @@ namespace TUGraz.VectoCore.Models.Declaration
 
 			#endregion
 
-			public Entry(
-				FuelType type, TankSystem? tankSystem, KilogramPerCubicMeter density, double weight,
-				JoulePerKilogramm heatingValueVecto, JoulePerKilogramm heatingValueAnnex)
+			public Entry(FuelType type, TankSystem? tankSystem, KilogramPerCubicMeter density, double weightCO2, double weightCO2VTP, JoulePerKilogramm heatingValueVecto, JoulePerKilogramm heatingValueAnnex)
 			{
 				FuelType = type;
 				TankSystem = tankSystem;
 				FuelDensity = density;
-				CO2PerFuelWeight = weight;
+				CO2PerFuelWeight = weightCO2;
+				CO2PerFuelWeightVTP = weightCO2VTP;
 				LowerHeatingValueVecto = heatingValueVecto;
 				LowerHeatingValueVectoEngine = heatingValueAnnex;
 			}
@@ -161,6 +159,8 @@ namespace TUGraz.VectoCore.Models.Declaration
 			public KilogramPerCubicMeter FuelDensity { get; }
 
 			public double CO2PerFuelWeight { get; }
+
+			public double CO2PerFuelWeightVTP { get; }
 
 			public JoulePerKilogramm LowerHeatingValueVecto { get; }
 

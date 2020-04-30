@@ -85,10 +85,8 @@ Public Class Utils
     public Shared Function GetAuxTestConfig(Optional retarder As boolean = true) as AuxiliaryConfig
 
         dim vehicleData = GetDefaultVehicleData()
-        Dim heatingFuel As FuelData.Entry = New FuelData.Entry(FuelType.DieselCI, Nothing, Nothing, 1,
-                                                               11.8.SI(Unit.SI.Kilo.Watt.Hour.Per.kilo.Gramm).Cast _
-                                                                  (Of JoulePerKilogramm),
-                                                               11.8.SI(Unit.SI.Kilo.Watt.Hour.Per.kilo.Gramm).Cast _
+        Dim heatingFuel As FuelData.Entry = New FuelData.Entry(FuelType.DieselCI, Nothing, Nothing, 1, 1, 11.8.SI(Unit.SI.Kilo.Watt.Hour.Per.kilo.Gramm).Cast _
+                                                                  (Of JoulePerKilogramm), 11.8.SI(Unit.SI.Kilo.Watt.Hour.Per.kilo.Gramm).Cast _
                                                                   (Of JoulePerKilogramm))
 
         Dim techBenefits = New TechnologyBenefits

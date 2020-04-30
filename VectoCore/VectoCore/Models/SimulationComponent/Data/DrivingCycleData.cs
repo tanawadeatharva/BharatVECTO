@@ -173,7 +173,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 				get { return (Math.Tan(RoadGradient.Value()) * 100).SI<Scalar>(); }
 			}
 
-			public KilogramPerSecond Fuelconsumption;
+			public Dictionary<FuelType, KilogramPerSecond> VTPFuelconsumption;
 
 			/// <summary>
 			/// relative altitude of the driving cycle over distance

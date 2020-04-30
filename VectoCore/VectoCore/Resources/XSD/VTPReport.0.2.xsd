@@ -273,7 +273,7 @@
 					<xs:documentation>P061</xs:documentation>
 				</xs:annotation>
 			</xs:element>
-			<xs:element name="FuelType" type="vdecdef:FuelTypeType">
+			<xs:element name="FuelType" type="vdecdef:FuelTypeType" maxOccurs="unbounded">
 				<xs:annotation>
 					<xs:documentation>P193</xs:documentation>
 				</xs:annotation>
@@ -310,6 +310,13 @@
 				</xs:complexType>
 			</xs:element>
 		</xs:sequence>
+		<xs:attribute name="fuelType" use="required">
+			<xs:simpleType>
+				<xs:restriction base="xs:string">
+					<xs:minLength value="1"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
 	</xs:complexType>
 	<xs:complexType name="GearboxFWDType">
 		<xs:sequence>
@@ -420,9 +427,9 @@
 					</xs:simpleContent>
 				</xs:complexType>
 			</xs:element>
-			<xs:element name="FuelConsumption" type="FuelConsumptionResultType"/>
+			<xs:element name="FuelConsumption" type="FuelConsumptionResultType" maxOccurs="unbounded"/>
 			<xs:element name="CO2" type="CO2ResultType"/>
-			<xs:element name="VTRatio" type="xs:double"/>
+			<xs:element name="C_VTP" type="xs:double"/>
 			<xs:element name="Warnings" minOccurs="0">
 				<xs:complexType>
 					<xs:sequence>
