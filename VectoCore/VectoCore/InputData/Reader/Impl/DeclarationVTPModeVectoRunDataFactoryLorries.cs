@@ -46,7 +46,12 @@ using TUGraz.VectoCore.OutputData;
 
 namespace TUGraz.VectoCore.InputData.Reader.Impl
 {
-	internal class DeclarationVTPModeVectoRunDataFactory : IVectoRunDataFactory
+
+	internal class DeclarationVTPModeVectoRunDataFactoryHeavyBusPrimary : IVectoRunDataFactory
+	{
+		
+	}
+	internal class DeclarationVTPModeVectoRunDataFactoryLorries : IVectoRunDataFactory
 	{
 		protected IVTPDeclarationJobInputData JobInputData;
 		protected DriverData Driverdata;
@@ -65,10 +70,10 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 		public IVTPReport Report;
 		protected ShiftStrategyParameters GearshiftData;
 
-		public DeclarationVTPModeVectoRunDataFactory(IVTPDeclarationInputDataProvider ivtpProvider, IVTPReport report) : this(
+		public DeclarationVTPModeVectoRunDataFactoryLorries(IVTPDeclarationInputDataProvider ivtpProvider, IVTPReport report) : this(
 			ivtpProvider.JobInputData, report) { }
 
-		protected DeclarationVTPModeVectoRunDataFactory(IVTPDeclarationJobInputData job, IVTPReport report)
+		protected DeclarationVTPModeVectoRunDataFactoryLorries(IVTPDeclarationJobInputData job, IVTPReport report)
 		{
 			JobInputData = job;
 			Report = report;

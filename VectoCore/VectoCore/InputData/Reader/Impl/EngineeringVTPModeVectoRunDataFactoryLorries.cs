@@ -41,12 +41,12 @@ using TUGraz.VectoCore.Models.Simulation.Data;
 
 namespace TUGraz.VectoCore.InputData.Reader.Impl
 {
-	internal class EngineeringVTPModeVectoRunDataFactory : DeclarationVTPModeVectoRunDataFactory
+	internal class EngineeringVTPModeVectoRunDataFactoryLorries : DeclarationVTPModeVectoRunDataFactoryLorries
 	{
 		
 		private EngineeringDataAdapter _engineeringDao = new EngineeringDataAdapter();
 
-		public EngineeringVTPModeVectoRunDataFactory(IVTPEngineeringInputDataProvider ivtpProvider) : base(ivtpProvider.JobInputData, null)
+		public EngineeringVTPModeVectoRunDataFactoryLorries(IVTPEngineeringInputDataProvider ivtpProvider) : base(ivtpProvider.JobInputData, null)
 		{
 			
 		}

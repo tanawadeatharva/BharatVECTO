@@ -98,7 +98,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			if (dataProvider is IVTPDeclarationInputDataProvider) {
 				var vtpProvider = dataProvider as IVTPDeclarationInputDataProvider;
 				var report = vtpReport ?? new XMLVTPReport(ModWriter);
-				DataReader = new DeclarationVTPModeVectoRunDataFactory(vtpProvider, report);
+				DataReader = new DeclarationVTPModeVectoRunDataFactoryLorries(vtpProvider, report);
 				return;
 			}
 
@@ -136,7 +136,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 		{
 			if (dataProvider is IVTPEngineeringInputDataProvider) {
 				var vtpProvider = dataProvider as IVTPEngineeringInputDataProvider;
-				DataReader = new EngineeringVTPModeVectoRunDataFactory(vtpProvider);
+				DataReader = new EngineeringVTPModeVectoRunDataFactoryLorries(vtpProvider);
 				return;
 			}
 			if (dataProvider is IEngineeringInputDataProvider) {
