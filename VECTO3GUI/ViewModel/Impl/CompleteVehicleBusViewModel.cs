@@ -247,7 +247,7 @@ namespace VECTO3GUI.ViewModel.Impl
 		public AllowedEntry<VehicleCode>[] AllowedVehicleCodes { get; private set; }
 		public AllowedEntry<ConsumerTechnology>[] AllowedConsumerTechnologies { get; private set; }
 		public AllowedEntry<RegistrationClass>[] AllowedRegisteredClasses { get; private set; }
-		public AllowedEntry<TankSystem>[] AllowedTankSystems { get; private set; }
+		public AllowedEntry<TankSystem?>[] AllowedTankSystems { get; private set; }
 
 		#endregion
 
@@ -310,11 +310,12 @@ namespace VECTO3GUI.ViewModel.Impl
 				.Select(vc => AllowedEntry.Create(vc, vc.GetLabel())).ToArray();
 			
 			var tankSystems = Enum.GetValues(typeof(TankSystem)).Cast<TankSystem>().ToArray();
-			var tank = new AllowedEntry<TankSystem> [tankSystems.Length+1];
+			var tank = new AllowedEntry<TankSystem?> [tankSystems.Length+1];
 
-			tank[0] = AllowedEntry.Create(TankSystem.Compressed, null);
+			tank[0] = AllowedEntry.Create((TankSystem?)null, null);
 			for (int i = 1; i < tankSystems.Length + 1; i++) {
-				tank[i] = AllowedEntry.Create(tankSystems[i-1], tankSystems[i-1].ToString());
+
+				tank[i] = AllowedEntry.Create<TankSystem?>(tankSystems[i-1], tankSystems[i-1].ToString());
 			}
 
 			AllowedTankSystems = tank;

@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using TUGraz.VectoCommon.BusAuxiliaries;
 using TUGraz.VectoCommon.Utils;
+using VECTO3GUI.Helper;
 using VECTO3GUI.ViewModel.Interfaces;
 
 namespace VECTO3GUI.Model.TempDataObject
@@ -14,7 +14,8 @@ namespace VECTO3GUI.Model.TempDataObject
 	{
 		#region IAuxiliariesBus Interface
 
-		public ObservableCollection<string> AlternatorTechnologies { get; set; }
+		public ObservableCollectionEx<AlternatorTechnologyModel> AlternatorTechnologies { get; set; }
+		public List<AlternatorTechnologyModel> OriginAlternatorTechnologies { get; private set; }
 		public bool DayrunninglightsLED { get; set; }
 		public bool HeadlightsLED { get; set; }
 		public bool PositionlightsLED { get; set; }
@@ -50,7 +51,7 @@ namespace VECTO3GUI.Model.TempDataObject
 
 		public void ResetToComponentValues(IAuxiliariesViewModel viewModel)
 		{
-			viewModel.AlternatorTechnologies = AlternatorTechnologies;
+			viewModel.AlternatorTechnologies = GetAlternatorTechnology();
 			viewModel.DayrunninglightsLED = DayrunninglightsLED;
 			viewModel.HeadlightsLED = HeadlightsLED;
 			viewModel.PositionlightsLED = PositionlightsLED;
@@ -67,9 +68,19 @@ namespace VECTO3GUI.Model.TempDataObject
 			viewModel.DoorDriveTechnology = viewModel.DoorDriveTechnology;
 		}
 
+		private ObservableCollectionEx<AlternatorTechnologyModel> GetAlternatorTechnology()
+		{
+			var res = new ObservableCollectionEx<AlternatorTechnologyModel>();
+			for (int i = 0; i < OriginAlternatorTechnologies.Count; i++) {
+				res.Add(new AlternatorTechnologyModel{AlternatorTechnology = OriginAlternatorTechnologies[i].AlternatorTechnology});
+			}
+
+			return res;
+		}
+		
 		public void ClearValues(IAuxiliariesViewModel viewModel)
 		{
-			viewModel.AlternatorTechnologies = default(ObservableCollection<string>);
+			viewModel.AlternatorTechnologies = default(ObservableCollectionEx<AlternatorTechnologyModel>);
 			viewModel.DayrunninglightsLED = default(bool);
 			viewModel.HeadlightsLED = default(bool);
 			viewModel.PositionlightsLED = default(bool);
@@ -88,7 +99,8 @@ namespace VECTO3GUI.Model.TempDataObject
 		
 		private void SetValues(IAuxiliariesViewModel auxiliaries)
 		{
-			AlternatorTechnologies = new ObservableCollection<string>(auxiliaries.AlternatorTechnologies);
+			OriginAlternatorTechnologies = GetOriginAlternatorTechnologies(auxiliaries);
+			AlternatorTechnologies = GetAlternatorTechnology();
 			DayrunninglightsLED = auxiliaries.DayrunninglightsLED;
 			HeadlightsLED = auxiliaries.HeadlightsLED;
 			PositionlightsLED = auxiliaries.PositionlightsLED;
@@ -105,5 +117,18 @@ namespace VECTO3GUI.Model.TempDataObject
 			DoorDriveTechnology = auxiliaries.DoorDriveTechnology;
 		}
 
+		private List<AlternatorTechnologyModel> GetOriginAlternatorTechnologies(IAuxiliariesViewModel auxiliaries)
+		{
+			if (auxiliaries.AlternatorTechnologies == null)
+				return null;
+
+			var result = new List<AlternatorTechnologyModel>();
+			for (int i = 0; i < auxiliaries.AlternatorTechnologies.Count; i++) {
+				result.Add(new AlternatorTechnologyModel {
+					AlternatorTechnology =  auxiliaries.AlternatorTechnologies[i].AlternatorTechnology
+				});
+			}
+			return result;
+		}
 	}
 }

@@ -49,32 +49,35 @@
                 </Grid>
 
             
-                <DataGrid x:Name="AlternatorDataGrid" AutoGenerateColumns="False" ColumnWidth="*" IsReadOnly="False"  CanUserAddRows="False" VerticalAlignment="Top"
-                          HeadersVisibility="All" RowHeaderWidth="10"  Height="150" Margin="0,10,0,0" BorderThickness="1"
+                <DataGrid x:Name="AlternatorDataGrid" AutoGenerateColumns="False" ColumnWidth="*" IsReadOnly="False" CanUserAddRows="False" VerticalAlignment="Top"
+                          HeadersVisibility="All" RowHeaderWidth="10"  Height="120" Margin="0,10,0,0" BorderThickness="1"
                           ItemsSource="{Binding AlternatorTechnologies}">
 
                     <DataGrid.Resources>
                         <DataTemplate x:Key="EntryDeleteControl">
                             <StackPanel Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Center">
-                                <Button Width="100" Content="Remove" 
+                                <Button Width="30" 
                                         Command="{Binding DataContext.RemoveAlternatorCommand, 
                                         RelativeSource={RelativeSource AncestorType=local:AuxiliariesDeclarationView}}"
                                         CommandParameter="{Binding ElementName=AlternatorDataGrid, Path=SelectedIndex}">
+                                    <iconPacks:PackIconModern  Width="30" Height="15" Kind="Delete" HorizontalAlignment="Center" VerticalAlignment="Center"/>
                                 </Button>
                             </StackPanel>
                         </DataTemplate>
-                        
-                        <DataTemplate x:Key="AtlernatorText">
-                            <TextBox  Text="{Binding}" />
 
+                        <DataTemplate x:Key="AlternatorTechCombobox">
+                            <ComboBox DisplayMemberPath="Label" SelectedValuePath="Value"
+                                    ItemsSource="{Binding DataContext.AllowedAlternatorTechnology,  
+                                    RelativeSource={RelativeSource AncestorType=local:AuxiliariesDeclarationView}}"
+                                    SelectedValue="{Binding AlternatorTechnology, UpdateSourceTrigger=PropertyChanged}">
+                            </ComboBox>
                         </DataTemplate>
 
                     </DataGrid.Resources>
 
                     <DataGrid.Columns>
-                        <!--<DataGridTemplateColumn Header="Technology" CellTemplate="{StaticResource AtlernatorText}" Width="110" />-->
-                        <DataGridTextColumn Header="Alternator Technology" Binding="{Binding }" />
-                        <DataGridTemplateColumn CellTemplate="{StaticResource EntryDeleteControl}" Width="110" />
+                        <DataGridTemplateColumn Header="Alternator Technology" CellTemplate="{StaticResource AlternatorTechCombobox}"/>
+                        <DataGridTemplateColumn CellTemplate="{StaticResource EntryDeleteControl}" Width="40" />
                     </DataGrid.Columns>
 
                 </DataGrid>

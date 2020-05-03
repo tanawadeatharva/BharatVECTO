@@ -117,6 +117,7 @@
     <Reference Include="Microsoft.Expression.Interactions, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Windows.Interactivity.WPF.2.0.20525\lib\net40\Microsoft.Expression.Interactions.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.VisualStudio.QualityTools.UnitTestFramework, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
     <Reference Include="Microsoft.WindowsAPICodePack, Version=1.1.2.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\WindowsAPICodePack-Core.1.1.2\lib\Microsoft.WindowsAPICodePack.dll</HintPath>
     </Reference>
@@ -176,7 +177,7 @@
     <Compile Include="Helper\ViewModelBase.cs" />
     <Compile Include="Helper\XmlComponentReaderHelper.cs" />
     <Compile Include="Helper\XmlHelper.cs" />
-    <Compile Include="Model\InterfacesImpl.cs" />
+    <Compile Include="Model\AlternatorTechnologyModel.cs" />
     <Compile Include="Model\JobListModel.cs" />
     <Compile Include="Model\SettingsModel.cs" />
     <Compile Include="Model\TempDataObject\AirdragComponentData.cs" />
