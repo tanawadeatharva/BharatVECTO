@@ -127,6 +127,9 @@ namespace VECTO3GUI.Util.XML
 		
 		private XElement GetAirdrag(IAirdrag airdrag)
 		{
+			if (airdrag.NoAirdragData)
+				return null;
+
 			return new XElement(_v26 + XMLNames.Component_AirDrag, 
 				new XAttribute("xmlns", _v20),
 				

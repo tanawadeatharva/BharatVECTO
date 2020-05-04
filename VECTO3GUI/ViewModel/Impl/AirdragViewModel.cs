@@ -155,6 +155,18 @@ namespace VECTO3GUI.ViewModel.Impl
 
 		public DigestData DigestValue { get; set; }
 
+
+		public bool NoAirdragData
+		{
+			get { return _noAirdragData; }
+			set
+			{
+				SetProperty(ref _noAirdragData, value);
+				IsDataChanged(_noAirdragData, _componentData);
+				UseMeasurementData = !_noAirdragData;
+			}
+		}
+
 		#endregion
 
 		public bool IsEditable
@@ -169,13 +181,7 @@ namespace VECTO3GUI.ViewModel.Impl
 			set { SetProperty(ref _useMeasurementData, value); }
 		}
 
-		public bool NoAirdragData
-		{
-			get { return _noAirdragData; }
-			set { SetProperty(ref _noAirdragData, value); }
-		}
-
-
+		
 		protected override void InputDataChanged()
 		{
 			var inputData = JobViewModel.InputDataProvider as IDeclarationInputDataProvider;
@@ -221,7 +227,14 @@ namespace VECTO3GUI.ViewModel.Impl
 
 		private void DoAirdragConfig(AirdragConfig config)
 		{
-			
+			switch (config) {
+				case AirdragConfig.WithoutAirdrag:
+					NoAirdragData = true;
+					break;
+				case AirdragConfig.UseMeasurementData:
+					NoAirdragData = false;
+					break;
+			}
 		}
 
 
