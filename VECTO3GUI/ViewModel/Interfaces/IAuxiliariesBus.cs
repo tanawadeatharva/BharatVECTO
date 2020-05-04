@@ -6,6 +6,8 @@ using System.Text;
 using System.Threading.Tasks;
 using TUGraz.VectoCommon.BusAuxiliaries;
 using TUGraz.VectoCommon.Utils;
+using VECTO3GUI.Helper;
+using VECTO3GUI.Model;
 
 namespace VECTO3GUI.ViewModel.Interfaces
 {
@@ -13,7 +15,7 @@ namespace VECTO3GUI.ViewModel.Interfaces
 	{
 		#region Electric System
 
-		ObservableCollection<string> AlternatorTechnologies { get; set; }
+		ObservableCollectionEx<AlternatorTechnologyModel> AlternatorTechnologies { get; set; }
 		bool DayrunninglightsLED { get; set; }
 		bool HeadlightsLED { get; set; }
 		bool PositionlightsLED { get; set; }

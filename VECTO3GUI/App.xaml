@@ -10,7 +10,7 @@
                         <Setter Property="Focusable" Value="False"/>
                     </Style>
                     <Style TargetType="{x:Type TextBox}">
-                        <Setter Property="Validation.ErrorTemplate">
+                        <!--<Setter Property="Validation.ErrorTemplate">
                             <Setter.Value>
                                 <ControlTemplate>
                                     <DockPanel>
@@ -30,7 +30,7 @@
                             <Trigger Property="Validation.HasError" Value="true">
                                 <Setter Property="ToolTip" Value="{Binding RelativeSource={x:Static RelativeSource.Self}, Path=(Validation.Errors)[0].ErrorContent}"/>
                             </Trigger>
-                        </Style.Triggers>
+                        </Style.Triggers>-->
                     </Style>
                 </ResourceDictionary>
 

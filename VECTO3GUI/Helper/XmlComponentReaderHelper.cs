@@ -33,5 +33,15 @@ namespace VECTO3GUI.Helper
 				DigestValue = new DigestData(GetNode(XMLNames.DI_Signature))
 			};
 		}
+
+		public SquareMeter ReadTransferredCdxA()
+		{
+			return GetDouble("TransferredCdxA").SI<SquareMeter>();
+		}
+
+		public SquareMeter ReadCdxA_0()
+		{
+			return GetDouble("CdxA_0").SI<SquareMeter>();
+		}
 	}
 }

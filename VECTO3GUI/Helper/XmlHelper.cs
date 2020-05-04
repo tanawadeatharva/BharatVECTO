@@ -53,5 +53,13 @@ namespace VECTO3GUI.Helper
 			var validator = new XMLValidator(xmlDocument, null, XMLValidator.CallBackExceptionOnError);
 			return validator.ValidateXML(documentType.Value); ;
 		}
+
+		public static string GetXmlAbsoluteFilePath(string baseUri)
+		{
+			if (baseUri == null)
+				return null;
+
+			return new Uri(baseUri).AbsolutePath;
+		}
 	}
 }

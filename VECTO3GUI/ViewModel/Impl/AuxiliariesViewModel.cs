@@ -1,26 +1,27 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Linq;
-using System.Windows.Documents;
 using System.Windows.Input;
 using Castle.Core.Internal;
-using Ninject;
 using TUGraz.VectoCommon.BusAuxiliaries;
 using TUGraz.VectoCommon.InputData;
-using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Models.Declaration;
+using VECTO3GUI.Helper;
 using VECTO3GUI.Util;
-using VECTO3GUI.ViewModel.Adapter;
 using VECTO3GUI.ViewModel.Interfaces;
 using VECTO3GUI.Model;
 using VECTO3GUI.Model.TempDataObject;
-using Component = VECTO3GUI.Util.Component;
+
 
 namespace VECTO3GUI.ViewModel.Impl
 {
+
+
+
 	public class AuxiliariesViewModel : AbstractComponentViewModel, IAuxiliariesViewModel
 	{
 		#region Members
@@ -33,7 +34,8 @@ namespace VECTO3GUI.ViewModel.Impl
 		private IAxlesViewModel axlesViewModel;
 		private IBusAuxiliariesDeclarationData _busAuxiliaries;
 
-		private ObservableCollection<string> _alternatorTechnologies;
+	
+		private ObservableCollectionEx<AlternatorTechnologyModel> _alternatorTechnologies;
 		private bool _dayRunningLightsLED;
 		private bool _headlightyLED;
 		private bool _positionlightsLED;
@@ -57,7 +59,7 @@ namespace VECTO3GUI.ViewModel.Impl
 
 
 		#region Implementation of IAuxiliariesViewModel
-		
+
 		public IAuxiliariesDeclarationInputData ModelData { get { return AdapterFactory.AuxiliariesDeclarationAdapter(this); } }
 
 		public string PneumaticSystemTechnology
@@ -131,9 +133,10 @@ namespace VECTO3GUI.ViewModel.Impl
 		#endregion
 
 
+
 		#region Implementation of IBusAuxiliaries
 
-		public ObservableCollection<string> AlternatorTechnologies
+		public ObservableCollectionEx<AlternatorTechnologyModel> AlternatorTechnologies
 		{
 			get { return _alternatorTechnologies; }
 			set { SetProperty(ref _alternatorTechnologies, value); }
@@ -149,6 +152,7 @@ namespace VECTO3GUI.ViewModel.Impl
 				IsDataChanged(_dayRunningLightsLED, _componentData);
 			}
 		}
+
 		public bool HeadlightsLED
 		{
 			get { return _headlightyLED; }
@@ -160,6 +164,7 @@ namespace VECTO3GUI.ViewModel.Impl
 				IsDataChanged(_headlightyLED, _componentData);
 			}
 		}
+
 		public bool PositionlightsLED
 		{
 			get { return _positionlightsLED; }
@@ -170,6 +175,7 @@ namespace VECTO3GUI.ViewModel.Impl
 				IsDataChanged(_positionlightsLED, _componentData);
 			}
 		}
+
 		public bool BrakelightsLED
 		{
 			get { return _breaklightsLED; }
@@ -180,6 +186,7 @@ namespace VECTO3GUI.ViewModel.Impl
 				IsDataChanged(_breaklightsLED, _componentData);
 			}
 		}
+
 		public bool InteriorLightsLED
 		{
 			get { return _interiorLightsLED; }
@@ -202,6 +209,7 @@ namespace VECTO3GUI.ViewModel.Impl
 				IsDataChanged(_systemConfiguration, _componentData);
 			}
 		}
+
 		public ACCompressorType CompressorTypeDriver
 		{
 			get { return _compressorTypeDriver; }
@@ -212,6 +220,7 @@ namespace VECTO3GUI.ViewModel.Impl
 				IsDataChanged(_compressorTypeDriver, _componentData);
 			}
 		}
+
 		public ACCompressorType CompressorTypePassenger
 		{
 			get { return _compressorTypePassenger; }
@@ -232,6 +241,7 @@ namespace VECTO3GUI.ViewModel.Impl
 				IsDataChanged(_auxHeaterPower, _componentData);
 			}
 		}
+
 		public bool DoubleGlasing
 		{
 			get { return _doubleGlasing; }
@@ -242,6 +252,7 @@ namespace VECTO3GUI.ViewModel.Impl
 				IsDataChanged(_doubleGlasing, _componentData);
 			}
 		}
+
 		public bool HeatPump
 		{
 			get { return _heatPump; }
@@ -252,6 +263,7 @@ namespace VECTO3GUI.ViewModel.Impl
 				IsDataChanged(_heatPump, _componentData);
 			}
 		}
+
 		public bool AdjustableAuxiliaryHeater
 		{
 			get { return _adjustableAuxiliaryHeater; }
@@ -262,6 +274,7 @@ namespace VECTO3GUI.ViewModel.Impl
 				IsDataChanged(_adjustableAuxiliaryHeater, _componentData);
 			}
 		}
+
 		public bool SeparateAirDistributionDucts
 		{
 			get { return _separateAirDistributionDucts; }
@@ -279,9 +292,7 @@ namespace VECTO3GUI.ViewModel.Impl
 		public AllowedEntry<BusHVACSystemConfiguration>[] AllowedSystemConfigurations { get; private set; }
 		public AllowedEntry<ACCompressorType>[] AllowedDriverACCompressorTypes { get; private set; }
 		public AllowedEntry<ACCompressorType>[] AllowedPassengerACCompressorTypes { get; private set; }
-		public AllowedEntry<ConsumerTechnology>[] AllowedConsumerTechnologies { get; private set; }
-
-
+		public AllowedEntry<AlternatorTechnology>[] AllowedAlternatorTechnology { get; private set; }
 		#endregion
 
 
@@ -314,15 +325,18 @@ namespace VECTO3GUI.ViewModel.Impl
 
 			if (!busAux.ElectricSupply.Alternators.IsNullOrEmpty())
 			{
-				AlternatorTechnologies = new ObservableCollection<string>();
+				AlternatorTechnologies = new ObservableCollectionEx<AlternatorTechnologyModel>();
+
+				AlternatorTechnologies.CollectionChanged += AlternatorTechnologiesOnCollectionChanged;
+				AlternatorTechnologies.CollectionItemChanged += AlternatorTechnologiesOnCollectionItemChanged;
 
 				for (int i = 0; i < busAux.ElectricSupply.Alternators.Count; i++)
 				{
-					AlternatorTechnologies.Add(busAux.ElectricSupply.Alternators[i].Technology);
+					AlternatorTechnologies.Add(new AlternatorTechnologyModel
+					{
+						AlternatorTechnology = AlternatorTechnologyHelper.Parse(busAux.ElectricSupply.Alternators[i].Technology)
+					});
 				}
-
-				//AlternatorTechnologies.Add("blu");
-				//AlternatorTechnologies.Add("bla");
 			}
 
 			DayrunninglightsLED = busAux.ElectricConsumers.DayrunninglightsLED;
@@ -344,6 +358,39 @@ namespace VECTO3GUI.ViewModel.Impl
 			ClearChangedProperties();
 		}
 
+		private void AlternatorTechnologiesOnCollectionItemChanged(object sender, PropertyChangedEventArgs e)
+		{
+			if (e.PropertyName != "AlternatorTechnology")
+				return;
+
+			var changed = IsAlternatorTechnologyChanged();
+			SetChangedProperty(changed, nameof(AlternatorTechnologies));
+		}
+
+		private void AlternatorTechnologiesOnCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+		{
+			var changed = IsAlternatorTechnologyChanged();
+			SetChangedProperty(changed, nameof(AlternatorTechnologies));
+		}
+
+		private bool IsAlternatorTechnologyChanged()
+		{
+			if (AlternatorTechnologies == null || _componentData?.OriginAlternatorTechnologies == null)
+				return true;
+
+			if (AlternatorTechnologies.Count != _componentData.OriginAlternatorTechnologies.Count)
+				return true;
+
+			for (int i = 0; i < AlternatorTechnologies.Count; i++)
+			{
+				if (AlternatorTechnologies[i].AlternatorTechnology !=
+					_componentData.OriginAlternatorTechnologies[i].AlternatorTechnology)
+					return true;
+			}
+
+			return false;
+		}
+
 		private void SetAllowedValues()
 		{
 			AllowedSystemConfigurations = Enum.GetValues(typeof(BusHVACSystemConfiguration)).Cast<BusHVACSystemConfiguration>()
@@ -354,13 +401,18 @@ namespace VECTO3GUI.ViewModel.Impl
 
 			AllowedPassengerACCompressorTypes = AllowedDriverACCompressorTypes;
 
-			AllowedConsumerTechnologies = Enum.GetValues(typeof(ConsumerTechnology)).Cast<ConsumerTechnology>()
+			AllowedAlternatorTechnology = Enum.GetValues(typeof(AlternatorTechnology)).Cast<AlternatorTechnology>()
 				.Select(sc => AllowedEntry.Create(sc, sc.GetLabel())).ToArray();
 		}
 
 		public override void ResetComponentData()
 		{
 			_componentData.ResetToComponentValues(this);
+			AlternatorTechnologies.CollectionChanged += AlternatorTechnologiesOnCollectionChanged;
+			AlternatorTechnologies.CollectionItemChanged += AlternatorTechnologiesOnCollectionItemChanged;
+
+			var changed = IsAlternatorTechnologyChanged();
+			SetChangedProperty(changed, nameof(AlternatorTechnologies));
 		}
 
 		public override object SaveComponentData()
@@ -406,20 +458,16 @@ namespace VECTO3GUI.ViewModel.Impl
 			get
 			{
 				return _addAlternatorCommand ??
-						(_addAlternatorCommand = new RelayCommand(DoAddAlternator, CanAddAlternator));
+						(_addAlternatorCommand = new RelayCommand(DoAddAlternator));
 			}
-		}
-
-		private bool CanAddAlternator()
-		{
-			return false;
 		}
 
 		private void DoAddAlternator()
 		{
-			AlternatorTechnologies?.Add(string.Empty);
-			OnPropertyChanged(nameof(AlternatorTechnologies));
-
+			AlternatorTechnologies.Add(new AlternatorTechnologyModel
+			{
+				AlternatorTechnology = AlternatorTechnology.Empty
+			});
 		}
 
 		#endregion

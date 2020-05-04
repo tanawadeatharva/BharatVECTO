@@ -12,6 +12,7 @@ using TUGraz.VectoCommon.BusAuxiliaries;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Resources;
 using TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider;
+using VECTO3GUI.Model;
 using VECTO3GUI.ViewModel.Interfaces;
 
 
@@ -126,6 +127,9 @@ namespace VECTO3GUI.Util.XML
 		
 		private XElement GetAirdrag(IAirdrag airdrag)
 		{
+			if (airdrag.NoAirdragData)
+				return null;
+
 			return new XElement(_v26 + XMLNames.Component_AirDrag, 
 				new XAttribute("xmlns", _v20),
 				
@@ -191,18 +195,23 @@ namespace VECTO3GUI.Util.XML
 			);
 		}
 		
-		private XElement[] GetAlternatorTechnology(IList<string> alternatorTechnologies)
+		private XElement[] GetAlternatorTechnology(IList<AlternatorTechnologyModel> alternatorTechnologies)
 		{
 			if (alternatorTechnologies.IsNullOrEmpty())
 				return null;
 
-			var result = new XElement[alternatorTechnologies.Count];
+			var result = new List<XElement>();
 
 			for (int i = 0; i < alternatorTechnologies.Count; i++) {
-				result [i] = new XElement(_v26 + XMLNames.BusAux_ElectricSystem_AlternatorTechnology, alternatorTechnologies[i]);	
+
+				if(alternatorTechnologies[i].AlternatorTechnology == AlternatorTechnology.Empty)
+					continue;
+				
+				result.Add(new XElement(_v26 + XMLNames.BusAux_ElectricSystem_AlternatorTechnology, 
+					alternatorTechnologies[i].AlternatorTechnology.GetLabel()));	
 			}
 
-			return result;
+			return result.Count > 0 ? result.ToArray() : null;
 		}
 	}
 }

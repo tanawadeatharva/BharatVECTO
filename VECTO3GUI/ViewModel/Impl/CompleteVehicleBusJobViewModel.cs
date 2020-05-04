@@ -94,6 +94,8 @@ namespace VECTO3GUI.ViewModel.Impl
 		protected override void DoSaveToJob(Window window)
 		{
 			var filePath = FileDialogHelper.SaveXmlFileToDialog(SettingsModel.XmlFilePathFolder);
+			if(filePath == null)
+				return;
 
 			SetCurrentDataToSave();
 			var xDocument = _xmlCompletedBus.GenerateCompletedBusDocument(CompleteVehicleBusData);

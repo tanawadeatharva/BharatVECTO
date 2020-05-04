@@ -335,6 +335,22 @@ namespace TUGraz.VectoCommon.InputData
 		Compressed
 	}
 
+	public static class TankSystemHelper
+	{
+		public static TankSystem? Parse(string parse)
+		{
+			switch (parse) {
+				case nameof(TankSystem.Liquefied):
+					return TankSystem.Liquefied;
+				case nameof(TankSystem.Compressed):
+					return TankSystem.Compressed;
+				default:
+					return null;
+			}
+		}
+	}
+
+
 	public interface IAirdragDeclarationInputData : IComponentInputData
 	{
 		/// <summary>

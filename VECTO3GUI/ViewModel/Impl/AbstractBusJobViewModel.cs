@@ -126,14 +126,14 @@ namespace VECTO3GUI.ViewModel.Impl
 			_editJob = true;
 		}
 
-		private void Init(IKernel kernel,  JobType jobType)
+		private void Init(IKernel kernel, JobType jobType)
 		{
 			SecondLabelText = $"Select {JobFileType.CompletedBusFile.GetLable()}";
 			Settings = new SettingsModel();
 			SetFileTypes(jobType);
 			Kernel = kernel;
 		}
-		
+
 		private void SetFileTypes(JobType jobType)
 		{
 			JobType = jobType;
@@ -180,7 +180,7 @@ namespace VECTO3GUI.ViewModel.Impl
 		{
 			SecondFilePath = OpenFileSelector(jobFileType, nameof(SecondFilePath));
 		}
-		
+
 		public ICommand CancelCommand
 		{
 			get { return _cancelCommand ?? (_cancelCommand = new RelayCommand<Window>(DoCancelCommand)); }
@@ -201,9 +201,9 @@ namespace VECTO3GUI.ViewModel.Impl
 		private void DoSaveCommand(Window window)
 		{
 			window.DialogResult = true;
-			if (!_editJob) 
+			if (!_editJob)
 				SaveJob(window);
-			else 
+			else
 				UpdateJobData();
 		}
 
@@ -212,19 +212,21 @@ namespace VECTO3GUI.ViewModel.Impl
 		private void SaveJob(Window window)
 		{
 			var jobFilePath = FileDialogHelper.SaveJobFileToDialog(Settings.XmlFilePathFolder);
-			if (jobFilePath != null) {
+			if (jobFilePath == null)
+				return;
 
-				var job = new JobEntry {
-					JobEntryFilePath = jobFilePath,
-					FirstFilePath = FirstFilePath,
-					SecondFilePath = SecondFilePath,
-					JobType = JobType
-				};
+			var job = new JobEntry
+			{
+				JobEntryFilePath = jobFilePath,
+				FirstFilePath = FirstFilePath,
+				SecondFilePath = SecondFilePath,
+				JobType = JobType
+			};
 
-				SerializeHelper.SerializeToFile(jobFilePath, job);
-				SavedJobEntry = job;
-				DoCancelCommand(window);
-			}
+			SerializeHelper.SerializeToFile(jobFilePath, job);
+			SavedJobEntry = job;
+			DoCancelCommand(window);
+
 		}
 
 		private void UpdateJobData()
@@ -232,7 +234,7 @@ namespace VECTO3GUI.ViewModel.Impl
 			SavedJobEntry.FirstFilePath = FirstFilePath;
 			SavedJobEntry.SecondFilePath = SecondFilePath;
 		}
-		
+
 
 		private string OpenFileSelector(JobFileType jobFileType, string textPropertyName)
 		{
