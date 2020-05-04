@@ -196,29 +196,6 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl {
 				throw InitException;
 			}
 
-			// simulate the VTP reference cycle with RefLoad
-			var vtpMission = JobInputData.Vehicle.VehicleCode.GetFloorType() == FloorType.LowFloor
-				? DeclarationData.VTPMode.SelectedMissionLowFloorBus
-				: DeclarationData.VTPMode.SelectedMissionHighFloorBus;
-			var mission = Segment.Missions.FirstOrDefault(m => m.MissionType == vtpMission);
-			if (mission == null) {
-				throw new VectoException("Mission {0} not found in segmentation matrix", DeclarationData.VTPMode.SelectedMissionHeavyLorry);
-			}
-			var loading = mission.Loadings.FirstOrDefault(l => l.Key == DeclarationData.VTPMode.SelectedLoading);
-			var runData = CreateVectoRunData(Segment, mission, loading.Value);
-			runData.ModFileSuffix = loading.Key.ToString();
-			var cycle = DrivingCycleDataReader.ReadFromStream(mission.CycleFile, CycleType.DistanceBased, "", false);
-			runData.Cycle = new DrivingCycleProxy(cycle, mission.MissionType.ToString());
-			runData.DriverData = Driverdata;
-			runData.Aux = GetAuxiliaryData(mission.MissionType);
-
-			runData.ExecutionMode = ExecutionMode.Declaration;
-			runData.SimulationType = SimulationType.DistanceCycle;
-			runData.Mission = mission;
-			runData.Loading = loading.Key;
-			runData.VehicleData.VehicleClass = Segment.VehicleClass;
-			runData.VehicleData.LegislativeClass = JobInputData.Vehicle.LegislativeClass;
-			//yield return runData;
 
 			// simulate the Measured cycle
 			var vtpCycle = JobInputData.Cycles.FirstOrDefault();
