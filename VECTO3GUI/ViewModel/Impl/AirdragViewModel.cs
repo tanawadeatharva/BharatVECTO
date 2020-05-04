@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Input;
+using System.Xml;
 using Castle.Core.Internal;
 using Ninject;
 using TUGraz.VectoCommon.Hashing;
@@ -65,7 +66,7 @@ namespace VECTO3GUI.ViewModel.Impl
 		private bool _isEditable;
 		private bool _useMeasurementData;
 		private bool _noAirdragData;
-
+		private string _xmlFilePath;
 
 		private ICommand _airdragConfig;
 		private ICommand _loadFileCommand;
@@ -186,6 +187,9 @@ namespace VECTO3GUI.ViewModel.Impl
 		{
 			var inputData = JobViewModel.InputDataProvider as IDeclarationInputDataProvider;
 			_airdragData = inputData?.JobInputData.Vehicle.Components.AirdragInputData;
+			var xmlUri = inputData?.JobInputData.Vehicle.XMLSource.BaseURI;
+			_xmlFilePath = XmlHelper.GetXmlAbsoluteFilePath(xmlUri);
+
 			SetAirdragValues(_airdragData);
 			UseMeasurementData = _airdragData.AirDragArea != null;
 			NoAirdragData = !UseMeasurementData;
@@ -207,13 +211,21 @@ namespace VECTO3GUI.ViewModel.Impl
 			Date = airdrag.Date;
 			AppVersion = airdrag.AppVersion;
 			DeclaredCdxA = airdrag.AirDragArea;
-			CdxA_0 = DeclaredCdxA;
-			TransferredCdxA = DeclaredCdxA;
 			DigestValue = airdrag.DigestValue;
+			ReadAdditionalAirdragValues();
 
 			_componentData = new AirdragComponentData(this);
 			ClearChangedProperties();
 		}
+
+		private void ReadAdditionalAirdragValues()
+		{
+			var xmlNodes = GetXmlNodes(_xmlFilePath);
+			var compReader = new XmlComponentReaderHelper(xmlNodes[0].ParentNode);
+			CdxA_0 = compReader.ReadCdxA_0();
+			TransferredCdxA = compReader.ReadTransferredCdxA();
+		}
+
 
 		#region Commands
 
@@ -273,18 +285,22 @@ namespace VECTO3GUI.ViewModel.Impl
 
 		private void ReadSelectedXml(string filePath)
 		{
-			if (filePath.IsNullOrEmpty())
-				return;
-			
-			var xmlDocument = XmlHelper.ReadXmlDocument(filePath);
-			var nodes = XmlHelper.GetComponentNodes(xmlDocument,
-				XMLNames.VectoInputDeclaration, VectoComponents.Airdrag.XMLElementName());
-
-			if(nodes.IsNullOrEmpty())
+			var xmlNodes = GetXmlNodes(filePath);
+			if (xmlNodes.IsNullOrEmpty())
 				return;
 
-			var compReader = new XmlComponentReaderHelper(nodes[0].ParentNode);
+			var compReader = new XmlComponentReaderHelper(xmlNodes[0].ParentNode);
 			SetLoadedAirdragData(compReader.GetAirdragComponentData());
+		}
+
+		private XmlNodeList GetXmlNodes(string filePath)
+		{
+			if (filePath.IsNullOrEmpty())
+				return null;
+
+			var xmlDocument = XmlHelper.ReadXmlDocument(filePath);
+			return XmlHelper.GetComponentNodes(xmlDocument,
+				XMLNames.VectoInputDeclaration, VectoComponents.Airdrag.XMLElementName());
 		}
 
 		private void SetLoadedAirdragData(AirdragComponentData airdrag)

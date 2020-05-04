@@ -121,11 +121,7 @@ namespace VECTO3GUI.ViewModel.Impl
 
 		protected void SetXmlFilePath(string baseUri)
 		{
-			if (baseUri == null)
-				return;
-
-			var uri = new Uri(baseUri);
-			XmlFilePath = uri.AbsolutePath;
+			XmlFilePath = XmlHelper.GetXmlAbsoluteFilePath(baseUri);
 		}
 
 		protected bool CloseWindowDialog()
