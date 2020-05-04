@@ -187,15 +187,15 @@ namespace VECTO3GUI.ViewModel.Impl
 			var inputData = JobViewModel.InputDataProvider as IDeclarationInputDataProvider;
 			_airdragData = inputData?.JobInputData.Vehicle.Components.AirdragInputData;
 			SetAirdragValues(_airdragData);
-			UseMeasurementData = _airdragData != null;
+			UseMeasurementData = _airdragData.AirDragArea != null;
 			NoAirdragData = !UseMeasurementData;
 			IsEditable = false;
 		}
 
 		private void SetAirdragValues(IAirdragDeclarationInputData airdrag)
 		{
-			UseMeasuredValues = airdrag != null;
-			if (airdrag == null)
+			UseMeasuredValues = airdrag.AirDragArea != null;
+			if (airdrag.AirDragArea == null)
 			{
 				_componentData = new AirdragComponentData(this, true);
 				return;
