@@ -556,7 +556,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
             TestCase(MissionType.RegionalDelivery, VehicleClass.Class2, 204, "Variable displacement elec. controlled", null,
                 null,
                 null),
-            TestCase(MissionType.RegionalDelivery, VehicleClass.Class2, 92.8571, "Electric", null, null, null),
+            TestCase(MissionType.RegionalDelivery, VehicleClass.Class2, 132.6714, "Electric", null, null, null),
             TestCase(MissionType.RegionalDelivery, VehicleClass.Class2, 665, "Fixed displacement", "Fixed displacement", null,
                 null),
             TestCase(MissionType.RegionalDelivery, VehicleClass.Class2, 1295, "Fixed displacement", "Fixed displacement",
