@@ -929,7 +929,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 				var entry = new Result {
 					ResultStatus = node.Attributes.GetNamedItem("status").InnerText,
 					Mission = node.SelectSingleNode("./*[local-name()='Mission']").InnerText.ParseEnum<MissionType>(),
-					SimulationParameter = GetSimulationParameter(node.SelectSingleNode("//*[local-name()='SimulationParametersCompletedVehicle']")),
+					SimulationParameter = GetSimulationParameter(node.SelectSingleNode("//*[local-name() = 'SimulationParameters' or local-name() = 'SimulationParametersCompletedVehicle']")),
 					EnergyConsumption = node.SelectSingleNode("//*[local-name()='Fuel' and FuelConsumption/@unit='MJ/km']")?
 											.Cast<XmlNode>().Select(
 												x => new KeyValuePair<FuelType, JoulePerMeter>(
@@ -951,9 +951,9 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 		private ISimulationParameter GetSimulationParameter(XmlNode node)
 		{
 			return new SimulationParameter {
-				TotalVehicleMass = node.SelectSingleNode($"./*[local-name()='{XMLNames.Report_ResultEntry_TotalVehicleMass}']").InnerText.ToDouble().SI<Kilogram>(),
-				Payload = node.SelectSingleNode($"./*[local-name()='{XMLNames.Report_Result_Payload}']").InnerText.ToDouble().SI<Kilogram>(),
-				PassengerCount = node.SelectSingleNode($"./*[local-name()='{XMLNames.Bus_PassengerCount}']").InnerText.ToDouble(),
+				TotalVehicleMass = (node.SelectSingleNode($"./*[local-name()='{XMLNames.Report_ResultEntry_TotalVehicleMass}']")?.InnerText.ToDouble() ?? 0).SI<Kilogram>(),
+				Payload = (node.SelectSingleNode($"./*[local-name()='{XMLNames.Report_Result_Payload}']")?.InnerText.ToDouble() ?? 0).SI<Kilogram>(),
+				PassengerCount = node.SelectSingleNode($"./*[local-name()='{XMLNames.Bus_PassengerCount}']")?.InnerText.ToDouble() ?? 0,
 				FuelMode = "" //node.SelectSingleNode($"./*[local-name()='{XMLNames.Report_Result_FuelMode}']").InnerText
 			};
 		}

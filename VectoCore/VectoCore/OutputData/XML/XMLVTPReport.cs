@@ -51,6 +51,7 @@ using TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox;
 using TUGraz.VectoCore.Utils;
 using TUGraz.VectoHashing;
 using NLog;
+using TUGraz.VectoCommon.BusAuxiliaries;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCore.Models.SimulationComponent.Impl;
 using LogManager = NLog.LogManager;
@@ -76,6 +77,9 @@ namespace TUGraz.VectoCore.OutputData.XML
 
 		private static List<string> LogList = new List<string>();
 		private LoggingRule cycleChecksRule;
+
+		protected VehicleClass VehicleClass = VehicleClass.Unknown;
+		protected VehicleCode VehicleCode = VehicleCode.NOT_APPLICABLE;
 
 		//protected XNamespace di;
 		//private bool allSuccess = true;
@@ -216,11 +220,21 @@ namespace TUGraz.VectoCore.OutputData.XML
 				throw new VectoException("no vtp result found for generating vtp report");
 			}
 
-			var selectedMission = vtpResult.VehicleClass.IsMediumLorry()
-				? DeclarationData.VTPMode.SelectedMissionMediumLorry
-				: DeclarationData.VTPMode.SelectedMissionHeavyLorry;
+			var selectedMission = VehicleClass.IsBus()
+				? (VehicleCode.GetFloorType() == FloorType.LowFloor
+					? DeclarationData.VTPMode.SelectedMissionLowFloorBus
+					: DeclarationData.VTPMode.SelectedMissionHighFloorBus)
+				: (vtpResult.VehicleClass.IsMediumLorry()
+					? DeclarationData.VTPMode.SelectedMissionMediumLorry
+					: DeclarationData.VTPMode.SelectedMissionHeavyLorry);
 			const LoadingType selectedLoading = DeclarationData.VTPMode.SelectedLoading;
-			var result = Results.OrderBy(x => x.FuelMode).FirstOrDefault(x => x.Mission == selectedMission && x.LoadingType == selectedLoading);
+			//var result = Results.OrderBy(x => x.FuelMode).FirstOrDefault(x => x.Mission == selectedMission && x.LoadingType == selectedLoading);
+
+
+			var result = ManufacturerRecord.Results.Results.Where(x => x.Mission == selectedMission)
+											.MaxBy(x => x.SimulationParameter.Payload);
+			var key = VehicleClass.IsBus() ? "g/p-km" : "g/t-km";
+			var declaredCO2 = result.CO2[key];
 
 			if (result == null) {
 				throw new VectoException("no corresponding simulation result found for generating vtp report");
@@ -232,9 +246,9 @@ namespace TUGraz.VectoCore.OutputData.XML
 			var fuels = DeclarationData.FuelData;
 			var cVtp = vtpFcMeasuredCorr.Sum(e => e.Value * fuels.Lookup(e.Key, vtpResult.TankSystem).CO2PerFuelWeightVTP) / vtpFcSimulated.Sum(e => e.Value * fuels.Lookup(e.Key, vtpResult.TankSystem).CO2PerFuelWeightVTP);
 
-			var declaredCO2 =
-				result.FuelConsumptionFinal.Sum(x => x.Value * fuels.Lookup(x.Key, vtpResult.TankSystem).CO2PerFuelWeightVTP) /
-				result.Distance / result.Payload;
+			//var declaredCO2 =
+			//	result.FuelConsumptionFinal.Sum(x => x.Value * fuels.Lookup(x.Key, vtpResult.TankSystem).CO2PerFuelWeightVTP) /
+			//	result.Distance / result.Payload;
 			var verifiedCO2 = declaredCO2 * cVtp.Value();
 
 			ResultsPart.Add(
@@ -273,12 +287,12 @@ namespace TUGraz.VectoCore.OutputData.XML
 						string.Format("{0}, {1}", selectedMission.ToXMLFormat(), selectedLoading.ToString())
 					),
 					new XElement(
-						tns + "Declared", new XAttribute(XMLNames.Report_Results_Unit_Attr, "g/t-km"),
-						declaredCO2.ConvertToGrammPerTonKilometer().ToMinSignificantDigits(3, 1)
+						tns + "Declared", new XAttribute(XMLNames.Report_Results_Unit_Attr, key),
+						declaredCO2.ToMinSignificantDigits(3, 1)
 					),
 					new XElement(
-						tns + "Verified", new XAttribute(XMLNames.Report_Results_Unit_Attr, "g/t-km"),
-						verifiedCO2.ConvertToGrammPerTonKilometer().ToMinSignificantDigits(3, 1)
+						tns + "Verified", new XAttribute(XMLNames.Report_Results_Unit_Attr, key),
+						verifiedCO2.ToMinSignificantDigits(3, 1)
 					)
 				),
 				new XElement(tns + "C_VTP", cVtp.ToXMLFormat(4)));
@@ -324,6 +338,10 @@ namespace TUGraz.VectoCore.OutputData.XML
 
 		public override void InitializeReport(VectoRunData modelData, List<List<FuelData.Entry>> fuelModes)
 		{
+			VehicleClass = modelData.VehicleData.VehicleClass;
+			if (VehicleClass.IsBus()) {
+				VehicleCode = modelData.VehicleData.VehicleCode;
+			}
 			GeneralPart.Add(
 				new XElement(tns + XMLNames.Component_Manufacturer, modelData.VehicleData.Manufacturer),
 				new XElement(tns + XMLNames.Component_ManufacturerAddress, modelData.VehicleData.ManufacturerAddress));
@@ -660,6 +678,9 @@ namespace TUGraz.VectoCore.OutputData.XML
 			};
 			var retVal = new XElement(tns + XMLNames.Component_Auxiliaries);
 			foreach (var auxId in auxList) {
+				if (!auxData.ContainsKey(auxId.Key())) {
+					continue;
+				}
 				foreach (var entry in auxData[auxId.Key()].Technology) {
 					retVal.Add(new XElement(tns + GetTagName(auxId), entry));
 				}

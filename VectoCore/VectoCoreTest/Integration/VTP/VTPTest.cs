@@ -136,7 +136,7 @@ namespace TUGraz.VectoCore.Tests.Integration.VTP
 
 			jobContainer.AddRuns(runsFactory);
 
-			Assert.AreEqual(2, jobContainer.Runs.Count);
+			Assert.AreEqual(1, jobContainer.Runs.Count);
 			var i = 0;
 			jobContainer.Runs[i].Run.Run();
 			Assert.IsTrue(jobContainer.Runs[i].Run.FinishedWithoutErrors);
