@@ -254,7 +254,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 				KneelingHeight = VectoMath.Max(0.SI<Meter>(), mission.BusParameter.EntranceHeight - Constants.BusParameters.EntranceHeight),
 				CompressorGearEfficiency = Constants.BusAuxiliaries.PneumaticUserConfig.CompressorGearEfficiency,
 				CompressorGearRatio = busAux.PneumaticSupply.Ratio,
-				CompressorMap = GetCompressorMap(busAux.PneumaticSupply.CompressorSize, busAux.PneumaticSupply.Clutch),
+				CompressorMap = DeclarationData.BusAuxiliaries.GetCompressorMap(busAux.PneumaticSupply.CompressorSize, busAux.PneumaticSupply.Clutch),
 				SmartAirCompression = busAux.PneumaticSupply.SmartAirCompression,
 				SmartRegeneration = busAux.PneumaticSupply.SmartRegeneration,
 				AdBlueDosing = busAux.PneumaticConsumers.AdBlueDosing,
@@ -263,39 +263,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			};
 		}
 
-		protected virtual ICompressorMap GetCompressorMap(string compressorSize, string clutchType)
-		{
-			var resource = "";
-			switch (compressorSize) {
-				case "Small":
-					resource = "DEFAULT_1-Cylinder_1-Stage_393ccm.acmp";
-					break;
-				case "Medium Supply 1-stage":
-					resource = "DEFAULT_1-Cylinder_1-Stage_393ccm.acmp";
-					break;
-				case "Medium Supply 2-stage":
-					resource = "DEFAULT_2-Cylinder_1-Stage_650ccm.acmp";
-					break;
-				case "Large Supply 1-stage":
-					resource = "DEFAULT_2-Cylinder_2-Stage_398ccm.acmp";
-					break;
-				case "Large Supply 2-stage":
-					resource = "DEFAULT_3-Cylinder_2-Stage_598ccm.acmp";
-					break;
-				default: throw new ArgumentException(string.Format("unkown compressor size {0}"), compressorSize);
-			}
-
-			var dragCurveFactorClutch = 1.0;
-			switch (clutchType) {
-				case "visco": dragCurveFactorClutch = Constants.BusAuxiliaries.PneumaticUserConfig.ViscoClutchDragCurveFactor;
-					break;
-				case "mechanically": dragCurveFactorClutch = Constants.BusAuxiliaries.PneumaticUserConfig.MechanicClutchDragCurveFactor;
-					break;
-			}
-
-			return CompressorMapReader.ReadStream(
-				RessourceHelper.ReadStream(DeclarationData.DeclarationDataResourcePrefix + ".VAUXBus." + resource), dragCurveFactorClutch, $"{compressorSize} - {clutchType}");
-		}
+		
 
 		public SSMInputs GetDefaulSSMInputs(IFuelProperties heatingFuel)
 		{

@@ -161,7 +161,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			IVehicleDeclarationInputData completedVehicle)
 		{
 			return new PneumaticUserInputsConfig {
-				CompressorMap = GetCompressorMap(primaryBusAuxiliaries.PneumaticSupply.CompressorSize, primaryBusAuxiliaries.PneumaticSupply.Clutch),
+				CompressorMap = DeclarationData.BusAuxiliaries.GetCompressorMap(primaryBusAuxiliaries.PneumaticSupply.CompressorSize, primaryBusAuxiliaries.PneumaticSupply.Clutch),
 				CompressorGearEfficiency = Constants.BusAuxiliaries.PneumaticUserConfig.CompressorGearEfficiency,
 				CompressorGearRatio = primaryBusAuxiliaries.PneumaticSupply.Ratio,
 				SmartAirCompression = primaryBusAuxiliaries.PneumaticSupply.SmartAirCompression,

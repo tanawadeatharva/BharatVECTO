@@ -226,8 +226,7 @@ namespace TUGraz.VectoCore.OutputData
 
 				var probablyEmptyCols = new[] { Fields.E_WHEEL, Fields.SPECIFIC_FC }.Select(x => x.Contains("{") ? x.Substring(0, x.IndexOf("{")) : x).ToArray();
 				var removeCandidates =
-					view.Columns.Cast<DataColumn>().Where(column => column.ColumnName.StartsWith(Fields.INTERNAL_PREFIX) || 
-					probablyEmptyCols.Any(x => column.ColumnName.StartsWith(x))).ToList();
+					view.Columns.Cast<DataColumn>().Where(column => probablyEmptyCols.Any(x => column.ColumnName.StartsWith(x))).ToList();
 				var toRemove = new List<string>();
 				foreach (var column in removeCandidates) {
 					//var column = view.Columns[colName];
@@ -235,6 +234,9 @@ namespace TUGraz.VectoCore.OutputData
 						toRemove.Add(column.ColumnName);
 					}
 				}
+
+				toRemove = toRemove.Concat(
+					view.Columns.Cast<DataColumn>().Where(column => column.ColumnName.StartsWith(Fields.INTERNAL_PREFIX)).Select(x => x.ColumnName)).ToList();
 
 				foreach (var dataColumn in toRemove) {
 					view.Columns.Remove(dataColumn);

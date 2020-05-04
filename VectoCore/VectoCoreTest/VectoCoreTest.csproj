@@ -2537,10 +2537,16 @@
     <None Include="TestData\Integration\VTPMode\GenericVehicle\VTP_rural_2Hz.vdri">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Include="TestData\Integration\VTPMode\HeavyBus\CompletedBus_34f.vecto">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="TestData\Integration\VTPMode\HeavyBus\VTP Testzyklus_Bus.xlsx">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="TestData\Integration\VTPMode\HeavyBus\vtp_cycle_2Hz_Bus.vdri">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Integration\VTPMode\HeavyBus\VTP_PrimaryBus_ENG.vecto">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="TestData\Integration\VTPMode\HeavyBus\VTP_PrimaryBus.vecto">
@@ -3610,10 +3616,16 @@
     <Content Include="TestData\Integration\VTPMode\GenericVehicle\Tractor_4x2_vehicle-class-5_Generic vehicle.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="TestData\Integration\VTPMode\HeavyBus\CompletedBus_34f.RSLT_MANUFACTURER.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="TestData\Integration\VTPMode\HeavyBus\primary_heavyBus group 42_non_Smart.RSLT_MANUFACTURER.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="TestData\Integration\VTPMode\HeavyBus\primary_heavyBus group 42_non_Smart.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="TestData\Integration\VTPMode\HeavyBus\vecto_vehicle-completed_heavyBus_34f.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="TestData\Integration\VTPMode\MediumLorry\vecto_vehicle-medium_lorry_4x2F.RSLT_MANUFACTURER.xml">

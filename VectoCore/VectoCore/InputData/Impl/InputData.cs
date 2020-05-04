@@ -220,6 +220,7 @@ namespace TUGraz.VectoCore.InputData.Impl
 		public MissionType Mission { get; internal set; }
 		public ISimulationParameter SimulationParameter { get; internal set; }
 		public Dictionary<FuelType, JoulePerMeter> EnergyConsumption { get; set; }
+		public Dictionary<string, double> CO2 { get; set; }
 	}
 
 	public class SimulationParameter : ISimulationParameter

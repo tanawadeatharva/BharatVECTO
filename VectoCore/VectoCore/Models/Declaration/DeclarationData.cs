@@ -163,6 +163,42 @@ namespace TUGraz.VectoCore.Models.Declaration
 			//	}
 			//}
 
+			public static ICompressorMap GetCompressorMap(string compressorSize, string clutchType)
+			{
+				var resource = "";
+				switch (compressorSize) {
+					case "Small":
+						resource = "DEFAULT_1-Cylinder_1-Stage_393ccm.acmp";
+						break;
+					case "Medium Supply 1-stage":
+						resource = "DEFAULT_1-Cylinder_1-Stage_393ccm.acmp";
+						break;
+					case "Medium Supply 2-stage":
+						resource = "DEFAULT_2-Cylinder_1-Stage_650ccm.acmp";
+						break;
+					case "Large Supply 1-stage":
+						resource = "DEFAULT_2-Cylinder_2-Stage_398ccm.acmp";
+						break;
+					case "Large Supply 2-stage":
+						resource = "DEFAULT_3-Cylinder_2-Stage_598ccm.acmp";
+						break;
+					default: throw new ArgumentException(string.Format("unkown compressor size {0}"), compressorSize);
+				}
+
+				var dragCurveFactorClutch = 1.0;
+				switch (clutchType) {
+					case "visco":
+						dragCurveFactorClutch = Constants.BusAuxiliaries.PneumaticUserConfig.ViscoClutchDragCurveFactor;
+						break;
+					case "mechanically":
+						dragCurveFactorClutch = Constants.BusAuxiliaries.PneumaticUserConfig.MechanicClutchDragCurveFactor;
+						break;
+				}
+
+				return CompressorMapReader.ReadStream(
+					RessourceHelper.ReadStream(DeclarationData.DeclarationDataResourcePrefix + ".VAUXBus." + resource), dragCurveFactorClutch, $"{compressorSize} - {clutchType}");
+			}
+
 			public static BusAlternatorTechnologies AlternatorTechnologies = new BusAlternatorTechnologies();
 			private static HVACCoolingPower hvacMaxCoolingPower;
 
@@ -989,7 +1025,8 @@ namespace TUGraz.VectoCore.Models.Declaration
 			public const MissionType SelectedMissionHeavyLorry = MissionType.LongHaul;
 			public const MissionType SelectedMissionMediumLorry = MissionType.RegionalDelivery;
 
-			public const MissionType SelectedMissionHeavyBus = MissionType.Coach;
+			public const MissionType SelectedMissionLowFloorBus = MissionType.Urban;
+			public const MissionType SelectedMissionHighFloorBus = MissionType.Coach;
 
 			public const LoadingType SelectedLoading = LoadingType.ReferenceLoad;
 

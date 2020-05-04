@@ -192,7 +192,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 			var vtpRunData = CreateVectoRunData(Segment, Segment.Missions.First(), Tuple.Create<Kilogram, double?>(0.SI<Kilogram>(), null));
 			vtpRunData.Cycle = new DrivingCycleProxy(drivingCycle, vtpCycle.Name);
 			vtpRunData.Aux = AuxVTP;
-			vtpRunData.FanData = GetFanData();
+			vtpRunData.FanDataVTP = GetFanData();
 			vtpRunData.ExecutionMode = ExecutionMode.Declaration;
 			vtpRunData.SimulationType = SimulationType.VerificationTest;
 			vtpRunData.Mission = new Mission() {

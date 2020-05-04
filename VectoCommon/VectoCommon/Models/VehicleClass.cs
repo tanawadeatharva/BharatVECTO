@@ -179,6 +179,11 @@ namespace TUGraz.VectoCommon.Models
 			}
 		}
 
+		public static bool IsBus(this VehicleClass vehicleClass)
+		{
+			return vehicleClass.IsPrimaryBus() || vehicleClass.IsCompletedBus();
+		}
+
 		public static bool IsPrimaryBus(this VehicleClass vehicleClass)
 		{
 			switch (vehicleClass) {

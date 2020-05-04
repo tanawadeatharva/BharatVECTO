@@ -345,7 +345,7 @@ namespace TUGraz.VectoCore.InputData.Reader.ComponentData
 			public const string TorqueConverterActive = "tc_active";
 			public const string PTOActive = "PTO";
 			public const string Highway = "HW";
-			public const string VTPPSCompressorActive = "ps_comp_active";
+			public const string VTPPSCompressorActive = "PS_comp_active";
 		}
 
 		#region DataParser

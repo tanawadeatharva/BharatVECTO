@@ -25,11 +25,19 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl {
 					var runData = CreateVectoRunData(Segment, Segment.Missions.First(), new Tuple<Kilogram, double?>(0.SI<Kilogram>(), null));
 					runData.Cycle = new DrivingCycleProxy(drivingCycle, cycle.Name);
 					runData.Aux = AuxVTP;
-					runData.FanData = GetFanData();
+					runData.FanDataVTP = GetFanData();
 					runData.ExecutionMode = ExecutionMode.Engineering;
 					runData.SimulationType = SimulationType.VerificationTest;
 					return runData;
 				});
+		}
+
+		protected override AuxFanData GetFanData()
+		{
+			return new AuxFanData() {
+				FanCoefficients = JobInputData.FanPowerCoefficents.ToArray(),
+				FanDiameter = JobInputData.FanDiameter,
+			};
 		}
 	}
 }

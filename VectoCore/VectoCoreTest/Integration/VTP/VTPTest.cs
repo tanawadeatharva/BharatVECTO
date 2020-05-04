@@ -52,7 +52,8 @@ namespace TUGraz.VectoCore.Tests.Integration.VTP
 		}
 
 		[TestCase(@"TestData\Integration\VTPMode\GenericVehicle\class_5_generic vehicle.vecto"),
-		 TestCase(@"TestData\Integration\VTPMode\GenericVehicle\class_5_generic vehicle_noGear.vecto")]
+		 TestCase(@"TestData\Integration\VTPMode\GenericVehicle\class_5_generic vehicle_noGear.vecto"),
+		 TestCase(@"TestData\Integration\VTPMode\HeavyBus\VTP_PrimaryBus_ENG.vecto", TestName = "RunVTPHeavyPrimaryBus Engineering")]
 		public void RunVTP(string jobFile)
 		{
 			var fileWriter = new FileOutputWriter(jobFile);
@@ -101,7 +102,7 @@ namespace TUGraz.VectoCore.Tests.Integration.VTP
 
 			jobContainer.AddRuns(runsFactory);
 
-			Assert.AreEqual(2, jobContainer.Runs.Count);
+			Assert.AreEqual(1, jobContainer.Runs.Count);
 			//var i = 0;
 			//jobContainer.Runs[i].Run.Run();
 			//Assert.IsTrue(jobContainer.Runs[i].Run.FinishedWithoutErrors);

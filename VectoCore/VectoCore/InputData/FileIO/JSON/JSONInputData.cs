@@ -721,6 +721,10 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 		private IDictionary<VectoComponents, IList<string>> _componentDigests = null;
 		private DigestData _jobDigest = null;
 		private IXMLInputDataReader _inputReader;
+		private IResultsInputData _manufacturerResults;
+		private Meter _vehicleLenght;
+		private VehicleClass _vehicleClass;
+		private VehicleCode _vehicleCode;
 
 		public JSONVTPInputDataV4(JObject data, string filename, bool tolerateMissing = false) : base(
 			data, filename, tolerateMissing)
@@ -766,6 +770,16 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 		string IManufacturerReport.Source
 		{
 			get { return Body["ManufacturerRecord"].Value<string>(); }
+		}
+
+		public IResultsInputData Results
+		{
+			get {
+				if (_manufacturerResults == null) {
+					ReadManufacturerReport();
+				}
+				return _manufacturerResults;
+			}
 		}
 
 		public IList<ICycleData> Cycles
@@ -833,6 +847,36 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			}
 		}
 
+		public Meter VehicleLength
+		{
+			get {
+				if (_vehicleLenght == null) {
+					ReadManufacturerReport();
+				}
+				return _vehicleLenght;
+			}
+		}
+
+		public VehicleClass VehicleClass
+		{
+			get {
+				if (_vehicleClass == VehicleClass.Unknown) {
+					ReadManufacturerReport();
+				}
+				return _vehicleClass;
+			}
+		}
+
+		public VehicleCode VehicleCode
+		{
+			get {
+				if (_vehicleCode == VehicleCode.NOT_APPLICABLE) {
+					ReadManufacturerReport();
+				}
+				return _vehicleCode;
+			}
+		}
+
 		#endregion
 
 		private void ReadManufacturerReport()
@@ -864,7 +908,62 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			} catch (Exception) {
 				_jobDigest = new DigestData("", new string[] { }, "", "");
 			}
+
+			_manufacturerResults = new ManufacturerResults(xmlDoc.SelectSingleNode("//*[local-name() = 'Results']"));
+			_vehicleLenght = xmlDoc.SelectSingleNode("//*[local-name() = 'VehicleLength']").InnerText.ToDouble().SI<Meter>();
+			_vehicleClass = VehicleClassHelper.Parse(xmlDoc.SelectSingleNode("//*[local-name() = 'VehicleGroup']").InnerText);
+			_vehicleCode = xmlDoc.SelectSingleNode("//*[local-name() = 'VehicleCode']").InnerText.ParseEnum<VehicleCode>();
 		}
+	}
+
+	internal class ManufacturerResults : IResultsInputData
+	{
+		private XmlNode ResultNode;
+
+		public ManufacturerResults(XmlNode resultsNode)
+		{
+			ResultNode = resultsNode;
+			Status = ResultNode.SelectSingleNode("./*[local-name() = 'Status']").InnerText;
+			Results = new List<IResult>();
+			foreach (XmlNode node in ResultNode.SelectNodes("./*[local-name() = 'Result' and @status='success']")) {
+				var entry = new Result {
+					ResultStatus = node.Attributes.GetNamedItem("status").InnerText,
+					Mission = node.SelectSingleNode("./*[local-name()='Mission']").InnerText.ParseEnum<MissionType>(),
+					SimulationParameter = GetSimulationParameter(node.SelectSingleNode("//*[local-name()='SimulationParametersCompletedVehicle']")),
+					EnergyConsumption = node.SelectSingleNode("//*[local-name()='Fuel' and FuelConsumption/@unit='MJ/km']")?
+											.Cast<XmlNode>().Select(
+												x => new KeyValuePair<FuelType, JoulePerMeter>(
+													x.Attributes.GetNamedItem(XMLNames.Report_Results_Fuel_Type_Attr).InnerText.ParseEnum<FuelType>(),
+													x.SelectSingleNode(
+														string.Format("./*[local-name()='{0}' and @unit='MJ/km']", XMLNames.Report_Result_EnergyConsumption))
+													?.InnerText
+													.ToDouble().SI(Unit.SI.Mega.Joule.Per.Kilo.Meter).Cast<JoulePerMeter>()))
+											.ToDictionary(x => x.Key, x => x.Value),
+					CO2 = node.SelectNodes("./*[local-name()='CO2' and @unit]").Cast<XmlNode>().Select(
+								x => new KeyValuePair<string, double>(x.Attributes.GetNamedItem("unit").InnerText, x.InnerText.ToDouble()))
+							.ToDictionary(x => x.Key, x => x.Value)
+
+				};
+				Results.Add(entry);
+			}
+		}
+
+		private ISimulationParameter GetSimulationParameter(XmlNode node)
+		{
+			return new SimulationParameter {
+				TotalVehicleMass = node.SelectSingleNode($"./*[local-name()='{XMLNames.Report_ResultEntry_TotalVehicleMass}']").InnerText.ToDouble().SI<Kilogram>(),
+				Payload = node.SelectSingleNode($"./*[local-name()='{XMLNames.Report_Result_Payload}']").InnerText.ToDouble().SI<Kilogram>(),
+				PassengerCount = node.SelectSingleNode($"./*[local-name()='{XMLNames.Bus_PassengerCount}']").InnerText.ToDouble(),
+				FuelMode = "" //node.SelectSingleNode($"./*[local-name()='{XMLNames.Report_Result_FuelMode}']").InnerText
+			};
+		}
+
+		#region Implementation of IResultsInputData
+
+		public string Status { get; }
+		public IList<IResult> Results { get; }
+
+		#endregion
 	}
 
 

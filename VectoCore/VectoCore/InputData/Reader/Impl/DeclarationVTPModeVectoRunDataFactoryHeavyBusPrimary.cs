@@ -1,13 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using TUGraz.VectoCommon.BusAuxiliaries;
+using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
+using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.InputData.Reader.ComponentData;
 using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter;
 using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation.Data;
+using TUGraz.VectoCore.Models.SimulationComponent.Data;
+using TUGraz.VectoCore.Models.SimulationComponent.Impl;
 using TUGraz.VectoCore.OutputData;
 
 namespace TUGraz.VectoCore.InputData.Reader.Impl {
@@ -31,16 +36,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl {
 		} }
 
 
-		protected override IEnumerable<VectoRunData.AuxData> GetAuxiliaryData(MissionType missionType)
-		{
-			// TODO MQ: length?
-			return Dao.CreateAuxiliaryData(
-				JobInputData.Vehicle.Components.AuxiliaryInputData,
-				JobInputData.Vehicle.Components.BusAuxiliaries,
-				missionType,
-				Segment.VehicleClass, 10.SI<Meter>());
-
-		}
+		
 
 		#endregion
 
@@ -55,8 +51,12 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl {
 			var tempVehicle = Dao.CreateVehicleData(
 				vehicle, Segment, Segment.Missions.First(),
 				Segment.Missions.First().Loadings.First());
+			tempVehicle.VehicleClass = JobInputData.ManufacturerReportInputData.VehicleClass;
+			tempVehicle.VehicleCode = JobInputData.ManufacturerReportInputData.VehicleCode;
 
-			var vtpMission = DeclarationData.VTPMode.SelectedMissionHeavyBus;
+			var vtpMission = tempVehicle.VehicleCode.GetFloorType() == FloorType.LowFloor
+				? DeclarationData.VTPMode.SelectedMissionLowFloorBus
+				: DeclarationData.VTPMode.SelectedMissionHighFloorBus;
 			AirdragData = Dao.CreateAirdragData(
 				vehicle.Components.AirdragInputData,
 				Segment.Missions.First(), Segment);
@@ -82,22 +82,175 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl {
 			AuxVTP = CreateVTPAuxData(vehicle);
 		}
 
-		protected virtual List<VectoRunData.AuxData> CreateVTPAuxData(IVehicleDeclarationInputData vehicle)
+		protected override void InitializeReport()
 		{
-			return new List<VectoRunData.AuxData>();
+			var vehicle = JobInputData.Vehicle;
+			var tempVehicle = Dao.CreateVehicleData(
+				vehicle, Segment, Segment.Missions.First(),
+				Segment.Missions.First().Loadings.First());
+			tempVehicle.VehicleClass = JobInputData.ManufacturerReportInputData.VehicleClass;
+			tempVehicle.VehicleCode = JobInputData.ManufacturerReportInputData.VehicleCode;
+			var powertrainConfig = new VectoRunData() {
+				VehicleData = tempVehicle,
+				AirdragData = AirdragData,
+				EngineData = EngineData,
+				GearboxData = GearboxData,
+				AxleGearData = AxlegearData,
+				Retarder = RetarderData,
+				Aux = GetAuxiliaryData(Segment.Missions.First().MissionType),
+			};
+			//powertrainConfig.VehicleData.VehicleClass = Segment.VehicleClass;
+			Report.InputDataHash = JobInputData.VectoJobHash;
+			Report.ManufacturerRecord = JobInputData.ManufacturerReportInputData;
+			Report.ManufacturerRecordHash = JobInputData.VectoManufacturerReportHash;
+			var fuels = JobInputData.Vehicle.Components.EngineInputData.EngineModes.Select(
+										x => x.Fuels.Select(f => DeclarationData.FuelData.Lookup(f.FuelType, JobInputData.Vehicle.TankSystem))
+											.ToList())
+									.ToList();
+			Report.InitializeReport(powertrainConfig, fuels);
 		}
 
-		public override IEnumerable<VectoRunData> NextRun()
+		protected virtual List<VectoRunData.AuxData> CreateVTPAuxData(IVehicleDeclarationInputData vehicle)
 		{
-			throw new NotImplementedException();
+			// used to fill VECTO RunData for VTP mission.
+			
+			var retVal =  new List<VectoRunData.AuxData>();
+
+			var electricEfficiency =
+				Constants.BusAuxiliaries.ElectricSystem.AlternatorGearEfficiency *
+				DeclarationData.BusAuxiliaries.AlternatorTechnologies.Lookup("default");
+
+			// TODO: vehicle length from MRF
+
+			var spPowerDemand = DeclarationData.SteeringPumpBus.LookupMechanicalPowerDemand(
+									MissionType.VerificationTest, JobInputData.Vehicle.Components.BusAuxiliaries.SteeringPumpTechnology,
+									JobInputData.ManufacturerReportInputData.VehicleLength)
+								+
+								DeclarationData.SteeringPumpBus.LookupElectricalPowerDemand(
+									MissionType.VerificationTest, JobInputData.Vehicle.Components.BusAuxiliaries.SteeringPumpTechnology,
+									JobInputData.ManufacturerReportInputData.VehicleLength) / electricEfficiency;
+
+			retVal.Add(
+				new VectoRunData.AuxData() {
+					DemandType = AuxiliaryDemandType.Constant,
+					Technology = JobInputData.Vehicle.Components.BusAuxiliaries.SteeringPumpTechnology,
+					ID = Constants.Auxiliaries.IDs.SteeringPump,
+					PowerDemand = spPowerDemand
+				});
+
+			retVal.Add(
+				new VectoRunData.AuxData() {
+					DemandType = AuxiliaryDemandType.Constant,
+					Technology = new List<string>() { "default"},
+					ID = Constants.Auxiliaries.IDs.ElectricSystem,
+					PowerDemand = Constants.BusAuxiliaries.ElectricSystem.PowernetVoltage * 32.4.SI<Ampere>() / electricEfficiency
+				});
+			retVal.Add(new VectoRunData.AuxData() {
+				DemandType = AuxiliaryDemandType.Constant,
+				Technology = new List<string>() { "default"},
+				ID = Constants.Auxiliaries.IDs.HeatingVentilationAirCondition,
+				PowerDemand = 350.SI<Watt>()
+			});
+
+			var busAux = vehicle.Components.BusAuxiliaries;
+			var psCompressor = DeclarationData.BusAuxiliaries.GetCompressorMap(busAux.PneumaticSupply.CompressorSize, busAux.PneumaticSupply.Clutch);
+			retVal.Add(new VectoRunData.AuxData() {
+				DemandType = AuxiliaryDemandType.Direct,
+				Technology = new List<string>() { busAux.PneumaticSupply.CompressorSize + " / " + busAux.PneumaticSupply.Clutch},
+				ID = Constants.Auxiliaries.IDs.PneumaticSystem,
+				PowerDemandFunc = cycleEntry => {
+					var cmp = psCompressor.Interpolate(cycleEntry.EngineSpeed * busAux.PneumaticSupply.Ratio);
+					return cycleEntry.VTPPSCompressorActive ? cmp.PowerOn : cmp.PowerOff;
+				}
+			});
+
+			var fanData = GetFanData();
+			var engineFan = new EngineFanAuxiliary(fanData.FanCoefficients, fanData.FanDiameter);
+			retVal.Add( new VectoRunData.AuxData() {
+				DemandType = AuxiliaryDemandType.Direct,
+				Technology = new List<string>() { "default"},
+				ID = Constants.Auxiliaries.IDs.Fan,
+				PowerDemandFunc = cycleEntry => engineFan.PowerDemand(cycleEntry.FanSpeed)
+			});
+			
+			return retVal;
+		}
+
+		protected override IEnumerable<VectoRunData.AuxData> GetAuxiliaryData(MissionType missionType)
+		{
+			// used for initializing XML report,
+			return AuxVTP;
 		}
 
 		protected override AuxFanData GetFanData()
 		{
 			return new AuxFanData() {
-				FanCoefficients = JobInputData.FanPowerCoefficents.ToArray(),
+				FanCoefficients = DeclarationData.VTPMode.FanParameters,
 				FanDiameter = JobInputData.FanDiameter,
 			};
 		}
+
+		public override IEnumerable<VectoRunData> NextRun()
+		{
+			if (InitException != null) {
+				throw InitException;
+			}
+
+			// simulate the VTP reference cycle with RefLoad
+			var vtpMission = JobInputData.Vehicle.VehicleCode.GetFloorType() == FloorType.LowFloor
+				? DeclarationData.VTPMode.SelectedMissionLowFloorBus
+				: DeclarationData.VTPMode.SelectedMissionHighFloorBus;
+			var mission = Segment.Missions.FirstOrDefault(m => m.MissionType == vtpMission);
+			if (mission == null) {
+				throw new VectoException("Mission {0} not found in segmentation matrix", DeclarationData.VTPMode.SelectedMissionHeavyLorry);
+			}
+			var loading = mission.Loadings.FirstOrDefault(l => l.Key == DeclarationData.VTPMode.SelectedLoading);
+			var runData = CreateVectoRunData(Segment, mission, loading.Value);
+			runData.ModFileSuffix = loading.Key.ToString();
+			var cycle = DrivingCycleDataReader.ReadFromStream(mission.CycleFile, CycleType.DistanceBased, "", false);
+			runData.Cycle = new DrivingCycleProxy(cycle, mission.MissionType.ToString());
+			runData.DriverData = Driverdata;
+			runData.Aux = GetAuxiliaryData(mission.MissionType);
+
+			runData.ExecutionMode = ExecutionMode.Declaration;
+			runData.SimulationType = SimulationType.DistanceCycle;
+			runData.Mission = mission;
+			runData.Loading = loading.Key;
+			runData.VehicleData.VehicleClass = Segment.VehicleClass;
+			runData.VehicleData.LegislativeClass = JobInputData.Vehicle.LegislativeClass;
+			//yield return runData;
+
+			// simulate the Measured cycle
+			var vtpCycle = JobInputData.Cycles.FirstOrDefault();
+			if (vtpCycle == null) {
+				throw new VectoException("no VTP-Cycle provided!");
+			}
+
+			var drivingCycle = DrivingCycleDataReader.ReadFromDataTable(vtpCycle.CycleData, vtpCycle.Name, false);
+
+			// Loading is not relevant as we use P_wheel
+			var vtpRunData = CreateVectoRunData(Segment, Segment.Missions.First(), Tuple.Create<Kilogram, double?>(0.SI<Kilogram>(), null));
+			vtpRunData.Cycle = new DrivingCycleProxy(drivingCycle, vtpCycle.Name);
+			vtpRunData.Aux = AuxVTP;
+			vtpRunData.FanDataVTP = GetFanData();
+			vtpRunData.ExecutionMode = ExecutionMode.Declaration;
+			vtpRunData.SimulationType = SimulationType.VerificationTest;
+			vtpRunData.Mission = new Mission() {
+				MissionType = MissionType.VerificationTest
+			};
+			vtpRunData.VehicleData.VehicleClass = JobInputData.ManufacturerReportInputData.VehicleClass; //Segment.VehicleClass;
+			vtpRunData.VehicleData.VehicleCode = JobInputData.ManufacturerReportInputData.VehicleCode;
+			vtpRunData.VehicleData.LegislativeClass = JobInputData.Vehicle.LegislativeClass;
+
+			//var ncvStd = DeclarationData.FuelData.Lookup(JobInputData.Vehicle.Components.EngineInputData.FuelType).LowerHeatingValueVecto;
+			//var ncvCorrection = ncvStd / JobInputData.NetCalorificValueTestFuel;
+			var mileageCorrection = GetMileagecorrectionFactor(JobInputData.Mileage);
+			vtpRunData.VTPData = new VTPData() {
+				CorrectionFactor = mileageCorrection,
+			};
+			yield return vtpRunData;
+		}
+
+		
 	}
 }

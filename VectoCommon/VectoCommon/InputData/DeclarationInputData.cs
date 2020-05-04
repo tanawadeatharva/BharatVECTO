@@ -784,7 +784,7 @@ namespace TUGraz.VectoCommon.InputData
 		ISimulationParameter SimulationParameter { get; }
 
 		Dictionary<FuelType, JoulePerMeter> EnergyConsumption { get; }
-
+		Dictionary<string, double> CO2 { get; }
 	}
 
 	public interface ISimulationParameter
