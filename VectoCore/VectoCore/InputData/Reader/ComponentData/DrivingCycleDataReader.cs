@@ -806,7 +806,7 @@ namespace TUGraz.VectoCore.InputData.Reader.ComponentData
 				var valid =  CheckColumns(header, allowedCols, requiredCols, throwExceptions, allowAux) &&
 					   CheckComboColumns(header, new[] { Fields.AirSpeedRelativeToVehicle, Fields.WindYawAngle }, throwExceptions);
 
-				valid &= header.Cast<DataColumn>().Any(x => x.ColumnName.StartsWith("fc_"));
+				//valid &= header.Cast<DataColumn>().Any(x => x.ColumnName.StartsWith("fc_"));
 
 				return valid;
 			}
