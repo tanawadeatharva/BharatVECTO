@@ -31,8 +31,11 @@
 
 using System.IO;
 using System.Xml;
+using System.Xml.Linq;
+using System.Xml.XPath;
 using NUnit.Framework;
 using TUGraz.VectoCommon.Models;
+using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.InputData.FileIO.JSON;
 using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.OutputData;
@@ -116,6 +119,11 @@ namespace TUGraz.VectoCore.Tests.Integration.VTP
 			var validator = new XMLValidator(XmlReader.Create(vtpReport));
 			validator.ValidateXML(XmlDocumentType.VTPReport);
 			Assert.IsNull(validator.ValidationError);
+
+			var vtpXml = XDocument.Load(vtpReport);
+
+			Assert.AreEqual(14.2, vtpXml.Document?.XPathSelectElement("//*[local-name()='Declared']")?.Value.ToDouble(), 1e-1);
+			Assert.AreEqual(1.1323, vtpXml.Document?.XPathSelectElement("//*[local-name()='C_VTP']")?.Value.ToDouble(), 1e-4);
 		}
 
 		[Category("LongRunning")]
