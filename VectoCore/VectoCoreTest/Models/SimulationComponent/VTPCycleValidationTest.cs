@@ -339,7 +339,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 
 		}
 
-		[TestCase(), Ignore("FC-Checks disabled (dual fuel")]
+		[TestCase()]
 		public void TestFuelConsumptionLowOK()
 		{
 			SetupLogging();
@@ -368,7 +368,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 
 		}
 
-		[TestCase()]
+		[TestCase(), Ignore("FC-Checks disabled (dual fuel")]
 		public void TestFuelConsumptionTooHigh()
 		{
 			SetupLogging();
