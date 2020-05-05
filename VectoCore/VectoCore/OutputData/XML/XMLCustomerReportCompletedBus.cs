@@ -217,24 +217,24 @@ namespace TUGraz.VectoCore.OutputData.XML {
 			retVal.Add(
 				new XElement(
 					tns + XMLNames.Report_Results_CO2, new XAttribute(XMLNames.Report_Results_Unit_Attr, "g/km"),
-					co2Sum.ConvertToGrammPerKiloMeter().ToMinSignificantDigits(3, 1)));
+					co2Sum.ConvertToGrammPerKiloMeter().ToMinSignificantDigits(3, 2)));
 			retVal.Add(
 				new XElement(
 					tns + XMLNames.Report_Results_CO2,
 					new XAttribute(XMLNames.Report_Results_Unit_Attr, "g/t-km"),
-					(co2Sum.ConvertToGrammPerKiloMeter() / specificResult.Payload.ConvertToTon()).ToMinSignificantDigits(3, 1)));
+					(co2Sum.ConvertToGrammPerKiloMeter() / specificResult.Payload.ConvertToTon()).ToMinSignificantDigits(3, 2)));
 			if (specificResult.CargoVolume > 0)
 				retVal.Add(
 					new XElement(
 						tns + XMLNames.Report_Results_CO2,
 						new XAttribute(XMLNames.Report_Results_Unit_Attr, "g/m³-km"),
-						(co2Sum.ConvertToGrammPerKiloMeter() / specificResult.CargoVolume).Value().ToMinSignificantDigits(3, 1)));
+						(co2Sum.ConvertToGrammPerKiloMeter() / specificResult.CargoVolume).Value().ToMinSignificantDigits(3, 2)));
 			if (specificResult.PassengerCount.HasValue && specificResult.PassengerCount.Value > 0) {
 				retVal.Add(
 					new XElement(
 						tns + XMLNames.Report_Results_CO2,
 						new XAttribute(XMLNames.Report_Results_Unit_Attr, "g/p-km"),
-						(co2Sum.ConvertToGrammPerKiloMeter() / specificResult.PassengerCount.Value).ToMinSignificantDigits(3, 1)));
+						(co2Sum.ConvertToGrammPerKiloMeter() / specificResult.PassengerCount.Value).ToMinSignificantDigits(3, 2)));
 			}
 
 			_weightedPayload += specificResult.Payload * specificResult.WeightingFactor;
