@@ -17,7 +17,6 @@ namespace VECTO3GUI.ViewModel.Interfaces
 		string FirstLabelText { get;  }
 		string SecondLabelText { get;  }
 		JobEntry SavedJobEntry { get; }
-
 		ICommand SelectFirstFileCommand { get; }
 		ICommand SelectSecondFileCommand { get; }
 		ICommand CancelCommand { get; }

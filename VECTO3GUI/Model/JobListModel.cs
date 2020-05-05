@@ -7,7 +7,6 @@ using VECTO3GUI.ViewModel.Impl;
 
 namespace VECTO3GUI.Model
 {
-
 	public class JobListEntry
 	{
 		public bool IsSelected { get; set; }
@@ -43,8 +42,7 @@ namespace VECTO3GUI.Model
 				jobList = SerializeHelper.DeserializeToObject<List<JobListEntry>>(_jobListFilePath);
 			JobList = jobList;
 		}
-
-
+		
 		public void SaveJobList(IList<JobEntry> jobEntries)
 		{
 			SetJobList(jobEntries);
@@ -58,7 +56,8 @@ namespace VECTO3GUI.Model
 
 			JobList = new List<JobListEntry>();
 
-			for (int i = 0; i < jobEntries.Count; i++) {
+			for (int i = 0; i < jobEntries.Count; i++)
+			{
 				JobList.Add
 				(
 					new JobListEntry
@@ -69,7 +68,7 @@ namespace VECTO3GUI.Model
 				);
 			}
 		}
-
+		
 		public IList<JobEntry> GetJobEntries()
 		{
 			var jobEntries = new List<JobEntry>();
@@ -78,9 +77,12 @@ namespace VECTO3GUI.Model
 				return jobEntries;
 
 			for (int i = 0; i < JobList.Count; i++) {
-				var jobEntry = SerializeHelper.DeserializeToObject<JobEntry>(JobList[i].JobFilePath);
-				if(jobEntry != null)
+				var jobEntry = SerializeHelper.DeserializeToObject<JobEntry>(JobList[i].JobFilePath); 
+				if (jobEntry != null) {
+					jobEntry.JobEntryFilePath = JobList[i].JobFilePath;
+					jobEntry.Selected = JobList[i].IsSelected;
 					jobEntries.Add(jobEntry);
+				}
 			}
 
 			return jobEntries;

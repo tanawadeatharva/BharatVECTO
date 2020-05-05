@@ -120,7 +120,7 @@ namespace VECTO3GUI.ViewModel.Impl
 
 		protected AbstractBusJobViewModel(IKernel kernel, JobEntry jobEntry)
 		{
-			Init(kernel, jobEntry.JobType);
+			Init(kernel, jobEntry.Header.JobType);
 			SetJobEntryData(jobEntry);
 			SavedJobEntry = jobEntry;
 			_editJob = true;
@@ -147,8 +147,10 @@ namespace VECTO3GUI.ViewModel.Impl
 
 		private void SetJobEntryData(JobEntry jobEntry)
 		{
-			FirstFilePath = jobEntry.FirstFilePath;
-			SecondFilePath = jobEntry.SecondFilePath;
+			FirstFilePath = jobEntry.Header.JobType == JobType.SingleBusJob
+				? jobEntry.Body.PrimaryVehicle
+				: jobEntry.Body.PrimaryVehicleResults;
+			SecondFilePath = jobEntry.Body.CompletedVehicle;
 		}
 
 		protected abstract void SetFirstFileLabel();
@@ -209,6 +211,7 @@ namespace VECTO3GUI.ViewModel.Impl
 
 		#endregion
 
+
 		private void SaveJob(Window window)
 		{
 			var jobFilePath = FileDialogHelper.SaveJobFileToDialog(Settings.XmlFilePathFolder);
@@ -218,10 +221,24 @@ namespace VECTO3GUI.ViewModel.Impl
 			var job = new JobEntry
 			{
 				JobEntryFilePath = jobFilePath,
-				FirstFilePath = FirstFilePath,
-				SecondFilePath = SecondFilePath,
-				JobType = JobType
+
+				Header = new JobHeader {
+					JobType = JobType,
+					FileVersion = JobType.GetJobTypeNumberByJobType(),
+					AppVersion = "unknown",
+					CreatedBy = "unknown",
+					Date = DateTime.UtcNow
+				}
 			};
+
+			var jobBody = new JobBody {
+				CompletedVehicle = SecondFilePath
+			};
+			jobBody.PrimaryVehicle = JobType.SingleBusJob == JobType ? FirstFilePath : null; 
+			jobBody.PrimaryVehicleResults = JobType.CompletedBusJob == JobType ? FirstFilePath : null;
+
+			job.Body = jobBody;
+
 
 			SerializeHelper.SerializeToFile(jobFilePath, job);
 			SavedJobEntry = job;
@@ -231,8 +248,8 @@ namespace VECTO3GUI.ViewModel.Impl
 
 		private void UpdateJobData()
 		{
-			SavedJobEntry.FirstFilePath = FirstFilePath;
-			SavedJobEntry.SecondFilePath = SecondFilePath;
+			SavedJobEntry.Body.PrimaryVehicle = FirstFilePath;
+			SavedJobEntry.Body.CompletedVehicle = SecondFilePath;
 		}
 
 

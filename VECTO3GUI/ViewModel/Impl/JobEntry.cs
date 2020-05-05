@@ -1,6 +1,7 @@
 using System;
 using Newtonsoft.Json;
 
+
 namespace VECTO3GUI.ViewModel.Impl
 {
 	public enum JobType
@@ -14,7 +15,6 @@ namespace VECTO3GUI.ViewModel.Impl
 	{
 		private const string SingleBusJobLabel = "Single Bus Job";
 		private const string CompletedBusJobLabel = "Completed Bus Job";
-
 
 		public static string GetLabel(this JobType jobType)
 		{
@@ -37,62 +37,131 @@ namespace VECTO3GUI.ViewModel.Impl
 				return JobType.CompletedBusJob;
 			return JobType.Unknown;
 		}
+
+		public static JobType GetJobTypeByFileVersion(int fileVersion)
+		{
+			if (fileVersion == JobHeader.SingleBusFileVersion)
+				return JobType.SingleBusJob;
+			if (fileVersion == JobHeader.CompletedBusFileVersion)
+				return JobType.CompletedBusJob;
+			return JobType.Unknown;
+		}
+
+		public static int GetJobTypeNumberByJobType(this JobType jobType)
+		{
+			if (jobType == JobType.CompletedBusJob)
+				return JobHeader.CompletedBusFileVersion;
+			if (jobType == JobType.SingleBusJob)
+				return JobHeader.SingleBusFileVersion;
+			return 0;
+		}
 	}
 
-	[JsonObject(ItemNullValueHandling = NullValueHandling.Ignore)]
 	public class JobEntry : ObservableObject
 	{
-		private JobType _jobType;
-		private string _jobTypeName;
+		private JobHeader _header;
+		private JobBody _body;
 		private bool _selected;
 		private string _jobEntryFilePath;
-		private string _firstFilePath;
-		private string _secondFilePath;
 
 		[JsonIgnore]
-		public int Sorting;
-
-		[JsonIgnore]
-		public JobType JobType
-		{
-			get { return _jobType;}
-			set
-			{
-				_jobType = value;
-				_jobTypeName = _jobType.GetLabel();
-			}
-		}
-
-		public string JobTypeName
-		{
-			get { return _jobTypeName; }
-			set
-			{
-				_jobTypeName = value;
-				_jobType = _jobTypeName.Parse();
-			}
-		}
-		
 		public bool Selected
 		{
 			get { return _selected; }
 			set { SetProperty(ref _selected, value); }
 		}
 
+		[JsonIgnore]
 		public string JobEntryFilePath
 		{
 			get { return _jobEntryFilePath; }
 			set { SetProperty(ref _jobEntryFilePath, value); }
 		}
-		public string FirstFilePath
+		
+		public JobHeader Header
 		{
-			get { return _firstFilePath; }
-			set { SetProperty(ref _firstFilePath, value); }
+			get { return _header; }
+			set { SetProperty(ref _header, value); }
 		}
-		public string SecondFilePath
+		public JobBody Body
 		{
-			get { return _secondFilePath; }
-			set { SetProperty(ref _secondFilePath, value); }
+			get { return _body; }
+			set { SetProperty(ref _body, value); }
+		}
+	}
+
+
+	public class JobHeader : ObservableObject
+	{
+		public const int SingleBusFileVersion = 6;
+		public const int CompletedBusFileVersion = 7;
+
+		private JobType _jobType;
+		private string _createdBy;
+		private DateTime _dateTime;
+		private string _appVersion;
+		private int _fileVersion;
+	
+		[JsonIgnore]
+		public JobType JobType
+		{
+			get { return _jobType; }
+			set { SetProperty(ref _jobType, value); }
+		}
+		
+		public string CreatedBy
+		{
+			get { return _createdBy; }
+			set { SetProperty(ref _createdBy, value); }
+		}
+
+		public DateTime Date
+		{
+			get { return _dateTime; }
+			set { SetProperty(ref _dateTime, value); }
+		}
+
+		public string AppVersion
+		{
+			get { return _appVersion; }
+			set { SetProperty(ref _appVersion, value); }
+		}
+
+		public int FileVersion
+		{
+			get { return _fileVersion; }
+			set
+			{
+				SetProperty(ref _fileVersion, value);
+				JobType = JobTypeHelper.GetJobTypeByFileVersion(_fileVersion);
+			}
+		}
+	}
+	
+
+	[JsonObject(ItemNullValueHandling = NullValueHandling.Ignore)]
+	public class JobBody : ObservableObject
+	{
+		private string _completedVehicle;
+		private string _primaryVehicle;
+		private string _primaryVehicleResults;
+
+		public string CompletedVehicle
+		{
+			get { return _completedVehicle; }
+			set { SetProperty(ref _completedVehicle, value); }
+		}
+
+		public string PrimaryVehicle
+		{
+			get { return _primaryVehicle; }
+			set { SetProperty(ref _primaryVehicle, value); }
+		}
+
+		public string PrimaryVehicleResults
+		{
+			get { return _primaryVehicleResults; }
+			set { SetProperty(ref _primaryVehicleResults, value); }
 		}
 	}
 }

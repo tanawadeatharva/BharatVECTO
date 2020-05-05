@@ -59,13 +59,14 @@ namespace VECTO3GUI.ViewModel.Impl
 			set
 			{
 				SetProperty(ref _selectedJobEntry, value);
-				if (_selectedJobEntry != null) {
-					var firstJobTyp = _selectedJobEntry.JobType == JobType.SingleBusJob
+				if (_selectedJobEntry != null)
+				{
+					var firstJobTyp = _selectedJobEntry.Header.JobType == JobType.SingleBusJob
 						? JobFileType.PrimaryBusFile
 						: JobFileType.PIFBusFile;
 					FirstContextMenu = $"View {firstJobTyp.GetLable()}";
-				} 
-			}	
+				}
+			}
 		}
 
 		public ObservableCollectionEx<JobEntry> Jobs
@@ -73,6 +74,8 @@ namespace VECTO3GUI.ViewModel.Impl
 			get { return _jobs; }
 			set { SetProperty(ref _jobs, value); }
 		}
+
+
 
 		public ObservableCollection<MessageEntry> Messages
 		{
@@ -104,7 +107,7 @@ namespace VECTO3GUI.ViewModel.Impl
 		private void JobItemChanged(object sender, PropertyChangedEventArgs e)
 		{
 			if (e.PropertyName == "Selected" && sender is JobEntry)
-				UpdateJobEntry((JobEntry)sender);
+				UpdateJobListEntry((JobEntry)sender);
 		}
 
 		private void JobsCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
@@ -138,7 +141,7 @@ namespace VECTO3GUI.ViewModel.Impl
 			return jobEntry != null;
 		}
 
-
+		
 		public ICommand RemoveAllJobs
 		{
 			get
@@ -166,14 +169,13 @@ namespace VECTO3GUI.ViewModel.Impl
 		}
 		private void DoEditJob(JobEntry jobEntry)
 		{
-			var viewModel = GetBusJobViewModel(jobEntry.JobType, jobEntry);
-			var window = CreateBusJobOutputWindow(viewModel, jobEntry.JobType);
+			var viewModel = GetBusJobViewModel(jobEntry.Header.JobType, jobEntry);
+			var window = CreateBusJobOutputWindow(viewModel, jobEntry.Header.JobType);
 			if (window.ShowDialog() != true)
 				ResetBusJobEntries(jobEntry);
 			else
 				UpdateJobEntry(((IBusJobViewModel)viewModel).SavedJobEntry);
 		}
-
 
 		public ICommand EditCompletedFile
 		{
@@ -197,6 +199,7 @@ namespace VECTO3GUI.ViewModel.Impl
 			var window = OutputWindowHelper.CreateOutputWindow(Kernel, viewModel);
 			window.Show();
 		}
+
 
 
 		public ICommand CreateNewJob
@@ -231,10 +234,10 @@ namespace VECTO3GUI.ViewModel.Impl
 			switch (jobFileType) {
 				case JobFileType.PIFBusFile:
 				case JobFileType.PrimaryBusFile:
-					xmlViewModel = new XMLViewModel(SelectedJobEntry.FirstFilePath);
+					xmlViewModel = new XMLViewModel(SelectedJobEntry.Body.PrimaryVehicle);
 					break;
 				case JobFileType.CompletedBusFile:
-					xmlViewModel = new XMLViewModel(SelectedJobEntry.SecondFilePath);
+					xmlViewModel = new XMLViewModel(SelectedJobEntry.Body.CompletedVehicle);
 					break;
 			}
 			var window = OutputWindowHelper.CreateOutputWindow(Kernel, xmlViewModel, xmlViewModel.FileName);
@@ -256,6 +259,7 @@ namespace VECTO3GUI.ViewModel.Impl
 				return;
 
 			var jobEntry = SerializeHelper.DeserializeToObject<JobEntry>(filePath.First());
+			jobEntry.JobEntryFilePath = filePath.First();
 			_jobs.Add(jobEntry);
 		}
 
@@ -317,8 +321,7 @@ namespace VECTO3GUI.ViewModel.Impl
 			if (index - 1 >= 0)
 				_jobs.Move(index, index - 1);
 		}
-
-
+		
 		public ICommand MoveJobDown
 		{
 			get { return _moveJobDownCommand ?? (_moveJobDownCommand = new RelayCommand<JobEntry>(DoMoveJobDownCommand)); }
@@ -331,37 +334,40 @@ namespace VECTO3GUI.ViewModel.Impl
 			if (index + 1 < _jobs.Count)
 				_jobs.Move(index, index + 1);
 		}
+		
 
 		public ICommand StartSimulation
 		{
 			get { return _startSimulationCommand ?? (_startSimulationCommand = new RelayCommand(DoStartSimulationCommand)); }
 		}
-
 		private void DoStartSimulationCommand()
 		{
 
 		}
 
+
 		public ICommand OpenInFolder
 		{
 			get { return _openInFolderCommand ?? (_openInFolderCommand = new RelayCommand<JobEntry>(DoOpenInFolderCommand)); }
 		}
-
 		private void DoOpenInFolderCommand(JobEntry jobEntry)
 		{
-			if (jobEntry != null) {
+			if (jobEntry != null)
+			{
 				var dirPath = Path.GetDirectoryName(jobEntry.JobEntryFilePath);
-				if (Directory.Exists(dirPath)) {
+				if (Directory.Exists(dirPath))
+				{
 					Process.Start("explorer.exe", dirPath);
 				}
 			}
 		}
+		
 
 		#endregion
 
 		private object GetBusJobViewModel(JobType jobType, JobEntry jobEntry = null)
 		{
-			var currentJobType = jobEntry?.JobType ?? jobType;
+			var currentJobType = jobEntry?.Header.JobType ?? jobType;
 
 			object viewModel = null;
 
@@ -387,7 +393,7 @@ namespace VECTO3GUI.ViewModel.Impl
 			return OutputWindowHelper.CreateOutputWindow(Kernel, viewModel, $"Create {jobType.GetLabel()}",
 				460, 200, ResizeMode.NoResize);
 		}
-
+		
 		private void AddBusJobEntry(JobEntry jobEntry)
 		{
 			if (jobEntry == null)
@@ -405,16 +411,28 @@ namespace VECTO3GUI.ViewModel.Impl
 			SerializeHelper.SerializeToFile(jobEntry.JobEntryFilePath, jobEntry);
 		}
 
+		private void UpdateJobListEntry(JobEntry jobEntry)
+		{
+			for (int i = 0; i < Jobs.Count; i++)
+			{
+				if (Jobs[i].JobEntryFilePath == jobEntry.JobEntryFilePath)
+				{
+					Jobs[i].Selected = jobEntry.Selected;
+				}
+			}
+			_jobListModel.SaveJobList(_jobs);
+		}
+		
 		private IJobEditViewModel ReadCompletedXmlFile(JobEntry jobEntry)
 		{
 			var xmlInputReader = Kernel.Get<IXMLInputDataReader>();
-			using (var reader = XmlReader.Create(jobEntry.SecondFilePath))
+			using (var reader = XmlReader.Create(jobEntry.Body.CompletedVehicle))
 			{
 				var readerResult = xmlInputReader.Create(reader) as IDeclarationInputDataProvider;
 				return CreateCompleteBusVehicleViewModel(readerResult);
 			}
 		}
-
+		
 		private IJobEditViewModel CreateCompleteBusVehicleViewModel(IDeclarationInputDataProvider dataProvider)
 		{
 			_messages.Add(new MessageEntry

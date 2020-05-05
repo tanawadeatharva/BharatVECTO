@@ -18,7 +18,7 @@ namespace VECTO3GUI.ViewModel.Impl
 		{
 			SetFirstFileLabel();
 		}
-
+		
 		protected sealed override void SetFirstFileLabel()
 		{
 			FirstLabelText = $"Select {JobFileType.PIFBusFile.GetLable()}";
