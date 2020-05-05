@@ -929,8 +929,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 				var entry = new Result {
 					ResultStatus = node.Attributes.GetNamedItem("status").InnerText,
 					Mission = node.SelectSingleNode("./*[local-name()='Mission']").InnerText.ParseEnum<MissionType>(),
-					SimulationParameter = GetSimulationParameter(node.SelectSingleNode("//*[local-name() = 'SimulationParameters' or local-name() = 'SimulationParametersCompletedVehicle']")),
-					EnergyConsumption = node.SelectSingleNode("//*[local-name()='Fuel' and FuelConsumption/@unit='MJ/km']")?
+					SimulationParameter = GetSimulationParameter(node.SelectSingleNode("./*[local-name() = 'SimulationParameters' or local-name() = 'SimulationParametersCompletedVehicle']")),
+					EnergyConsumption = node.SelectSingleNode("./*[local-name()='Fuel' and FuelConsumption/@unit='MJ/km']")?
 											.Cast<XmlNode>().Select(
 												x => new KeyValuePair<FuelType, JoulePerMeter>(
 													x.Attributes.GetNamedItem(XMLNames.Report_Results_Fuel_Type_Attr).InnerText.ParseEnum<FuelType>(),
