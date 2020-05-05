@@ -42,7 +42,7 @@ namespace VECTO3GUI.ViewModel.Interfaces {
 		AllowedEntry<BusHVACSystemConfiguration>[] AllowedSystemConfigurations { get; }
 		AllowedEntry<ACCompressorType>[] AllowedDriverACCompressorTypes { get; }
 		AllowedEntry<ACCompressorType>[] AllowedPassengerACCompressorTypes { get; }
-		AllowedEntry<AlternatorTechnology>[] AllowedAlternatorTechnology { get;  }
+		AllowedEntry<string>[] AllowedAlternatorTechnology { get;  }
 
 		#endregion
 	}

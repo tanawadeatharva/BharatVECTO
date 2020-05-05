@@ -8,40 +8,40 @@ using VECTO3GUI.ViewModel.Impl;
 
 namespace VECTO3GUI.Model
 {
-	public enum AlternatorTechnology
-	{
-		Empty,
-		Default
-	}
-	
-	public static class AlternatorTechnologyHelper 
-	{
-		public static string GetLabel(this AlternatorTechnology technology)
-		{
-			switch (technology) {
-				case AlternatorTechnology.Default:
-					return nameof(AlternatorTechnology.Default).ToLower();
-				default:
-					return string.Empty;
-			}
-		}
+	//public enum AlternatorTechnology
+	//{
+	//	Empty,
+	//	Default
+	//}
 
-		public static AlternatorTechnology Parse(string technologyName)
-		{
-			switch (technologyName.ToLower()) {
-				case "default":
-					return AlternatorTechnology.Default;
-				default:
-					return AlternatorTechnology.Empty;
-			}
-		}
-	}
-	
+	//public static class AlternatorTechnologyHelper 
+	//{
+	//	public static string GetLabel(this AlternatorTechnology technology)
+	//	{
+	//		switch (technology) {
+	//			case AlternatorTechnology.Default:
+	//				return nameof(AlternatorTechnology.Default).ToLower();
+	//			default:
+	//				return string.Empty;
+	//		}
+	//	}
+
+	//	public static AlternatorTechnology Parse(string technologyName)
+	//	{
+	//		switch (technologyName.ToLower()) {
+	//			case "default":
+	//				return AlternatorTechnology.Default;
+	//			default:
+	//				return AlternatorTechnology.Empty;
+	//		}
+	//	}
+	//}
+
 	public class AlternatorTechnologyModel : ObservableObject
 	{
-		public AlternatorTechnology _alternatorTechnology;
+		public string _alternatorTechnology;
 
-		public AlternatorTechnology AlternatorTechnology
+		public string AlternatorTechnology
 		{
 			get { return _alternatorTechnology; }
 			set { SetProperty(ref _alternatorTechnology, value); }

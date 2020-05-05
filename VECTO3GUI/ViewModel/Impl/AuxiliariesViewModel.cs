@@ -35,7 +35,7 @@ namespace VECTO3GUI.ViewModel.Impl
 		private IBusAuxiliariesDeclarationData _busAuxiliaries;
 
 	
-		private ObservableCollectionEx<AlternatorTechnologyModel> _alternatorTechnologies;
+		private ObservableCollectionEx<AlternatorTechnologyModel> _alternatorTechnologies = new ObservableCollectionEx<AlternatorTechnologyModel>();
 		private bool _dayRunningLightsLED;
 		private bool _headlightyLED;
 		private bool _positionlightsLED;
@@ -139,7 +139,7 @@ namespace VECTO3GUI.ViewModel.Impl
 		public ObservableCollectionEx<AlternatorTechnologyModel> AlternatorTechnologies
 		{
 			get { return _alternatorTechnologies; }
-			set { SetProperty(ref _alternatorTechnologies, value); }
+			//set { SetProperty(ref _alternatorTechnologies, value); }
 		}
 
 		public bool DayrunninglightsLED
@@ -292,7 +292,7 @@ namespace VECTO3GUI.ViewModel.Impl
 		public AllowedEntry<BusHVACSystemConfiguration>[] AllowedSystemConfigurations { get; private set; }
 		public AllowedEntry<ACCompressorType>[] AllowedDriverACCompressorTypes { get; private set; }
 		public AllowedEntry<ACCompressorType>[] AllowedPassengerACCompressorTypes { get; private set; }
-		public AllowedEntry<AlternatorTechnology>[] AllowedAlternatorTechnology { get; private set; }
+		public AllowedEntry<string>[] AllowedAlternatorTechnology { get; private set; }
 		#endregion
 
 
@@ -325,17 +325,14 @@ namespace VECTO3GUI.ViewModel.Impl
 
 			if (!busAux.ElectricSupply.Alternators.IsNullOrEmpty())
 			{
-				AlternatorTechnologies = new ObservableCollectionEx<AlternatorTechnologyModel>();
+				AlternatorTechnologies.Clear(); // = new ObservableCollectionEx<AlternatorTechnologyModel>();
 
 				AlternatorTechnologies.CollectionChanged += AlternatorTechnologiesOnCollectionChanged;
 				AlternatorTechnologies.CollectionItemChanged += AlternatorTechnologiesOnCollectionItemChanged;
 
 				for (int i = 0; i < busAux.ElectricSupply.Alternators.Count; i++)
 				{
-					AlternatorTechnologies.Add(new AlternatorTechnologyModel
-					{
-						AlternatorTechnology = AlternatorTechnologyHelper.Parse(busAux.ElectricSupply.Alternators[i].Technology)
-					});
+					AlternatorTechnologies.Add(new AlternatorTechnologyModel(){ AlternatorTechnology = busAux.ElectricSupply.Alternators[i].Technology });
 				}
 			}
 
@@ -393,16 +390,18 @@ namespace VECTO3GUI.ViewModel.Impl
 
 		private void SetAllowedValues()
 		{
-			AllowedSystemConfigurations = Enum.GetValues(typeof(BusHVACSystemConfiguration)).Cast<BusHVACSystemConfiguration>()
+			AllowedSystemConfigurations = EnumHelper.GetValues<BusHVACSystemConfiguration>()
+				.Where(x => x != BusHVACSystemConfiguration.Unknown)
 				.Select(sc => AllowedEntry.Create(sc, sc.GetLabel())).ToArray();
 
-			AllowedDriverACCompressorTypes = Enum.GetValues(typeof(ACCompressorType)).Cast<ACCompressorType>()
+			AllowedDriverACCompressorTypes = EnumHelper.GetValues<ACCompressorType>()
+				.Where(x => x != ACCompressorType.Unknown)
 				.Select(acc => AllowedEntry.Create(acc, acc.GetLabel())).ToArray();
 
 			AllowedPassengerACCompressorTypes = AllowedDriverACCompressorTypes;
 
-			AllowedAlternatorTechnology = Enum.GetValues(typeof(AlternatorTechnology)).Cast<AlternatorTechnology>()
-				.Select(sc => AllowedEntry.Create(sc, sc.GetLabel())).ToArray();
+			AllowedAlternatorTechnology = DeclarationData.BusAuxiliaries.AlternatorTechnologies.Entries.Keys
+														.Select(x => AllowedEntry.Create(x, x)).ToArray();
 		}
 
 		public override void ResetComponentData()
@@ -434,7 +433,7 @@ namespace VECTO3GUI.ViewModel.Impl
 		}
 		private void DoRemoveAlternator(int index)
 		{
-			AlternatorTechnologies?.RemoveAt(index);
+			AlternatorTechnologies.RemoveAt(index);
 		}
 
 
@@ -449,7 +448,7 @@ namespace VECTO3GUI.ViewModel.Impl
 
 		private void DoRemoveAllAlternators()
 		{
-			AlternatorTechnologies?.Clear();
+			AlternatorTechnologies.Clear();
 			OnPropertyChanged(nameof(AlternatorTechnologies));
 		}
 
@@ -466,7 +465,7 @@ namespace VECTO3GUI.ViewModel.Impl
 		{
 			AlternatorTechnologies.Add(new AlternatorTechnologyModel
 			{
-				AlternatorTechnology = AlternatorTechnology.Empty
+				AlternatorTechnology = string.Empty
 			});
 		}
 

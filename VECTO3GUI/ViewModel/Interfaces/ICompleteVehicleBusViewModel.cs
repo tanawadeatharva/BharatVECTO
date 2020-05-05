@@ -11,7 +11,7 @@ namespace VECTO3GUI.ViewModel.Interfaces
 	{
 		AllowedEntry<LegislativeClass>[] AllowedLegislativeClasses { get; }
 		AllowedEntry<VehicleCode>[] AllowedVehicleCodes { get; }
-		AllowedEntry<ConsumerTechnology>[] AllowedConsumerTechnologies { get; }
+		AllowedEntry<ConsumerTechnology>[] AllowedDoorDriveTechnologies { get; }
 		AllowedEntry<RegistrationClass>[] AllowedRegisteredClasses { get; }
 		AllowedEntry<TankSystem?>[] AllowedTankSystems { get; }
 	}

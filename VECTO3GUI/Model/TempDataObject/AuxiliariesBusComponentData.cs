@@ -12,9 +12,12 @@ namespace VECTO3GUI.Model.TempDataObject
 {
 	public class AuxiliariesBusComponentData: IAuxiliariesBus, ITempDataObject<IAuxiliariesViewModel>
 	{
+		protected const int NotSelected = -1;
+
+
 		#region IAuxiliariesBus Interface
 
-		public ObservableCollectionEx<AlternatorTechnologyModel> AlternatorTechnologies { get; set; }
+		public ObservableCollectionEx<AlternatorTechnologyModel> AlternatorTechnologies { get; }
 		public List<AlternatorTechnologyModel> OriginAlternatorTechnologies { get; private set; }
 		public bool DayrunninglightsLED { get; set; }
 		public bool HeadlightsLED { get; set; }
@@ -35,6 +38,7 @@ namespace VECTO3GUI.Model.TempDataObject
 
 		public AuxiliariesBusComponentData(IAuxiliariesViewModel viewModel, bool defaultValues)
 		{
+			AlternatorTechnologies = new ObservableCollectionEx<AlternatorTechnologyModel>();
 			if (defaultValues)
 				ClearValues(viewModel);
 		}
@@ -51,7 +55,7 @@ namespace VECTO3GUI.Model.TempDataObject
 
 		public void ResetToComponentValues(IAuxiliariesViewModel viewModel)
 		{
-			viewModel.AlternatorTechnologies = GetAlternatorTechnology();
+			SetAlternatorTechnology(viewModel.AlternatorTechnologies);
 			viewModel.DayrunninglightsLED = DayrunninglightsLED;
 			viewModel.HeadlightsLED = HeadlightsLED;
 			viewModel.PositionlightsLED = PositionlightsLED;
@@ -65,42 +69,42 @@ namespace VECTO3GUI.Model.TempDataObject
 			viewModel.HeatPump = HeatPump;
 			viewModel.AdjustableAuxiliaryHeater = AdjustableAuxiliaryHeater;
 			viewModel.SeparateAirDistributionDucts = SeparateAirDistributionDucts;
-			viewModel.DoorDriveTechnology = viewModel.DoorDriveTechnology;
+	
 		}
 
-		private ObservableCollectionEx<AlternatorTechnologyModel> GetAlternatorTechnology()
+		private void SetAlternatorTechnology(ObservableCollectionEx<AlternatorTechnologyModel> res)
 		{
-			var res = new ObservableCollectionEx<AlternatorTechnologyModel>();
+			//var res = new ObservableCollectionEx<AlternatorTechnologyModel>();
+			res.Clear();
 			for (int i = 0; i < OriginAlternatorTechnologies.Count; i++) {
 				res.Add(new AlternatorTechnologyModel{AlternatorTechnology = OriginAlternatorTechnologies[i].AlternatorTechnology});
 			}
 
-			return res;
+			//return res;
 		}
 		
 		public void ClearValues(IAuxiliariesViewModel viewModel)
 		{
-			viewModel.AlternatorTechnologies = default(ObservableCollectionEx<AlternatorTechnologyModel>);
+			viewModel.AlternatorTechnologies.Clear(); // = default(ObservableCollectionEx<AlternatorTechnologyModel>);
 			viewModel.DayrunninglightsLED = default(bool);
 			viewModel.HeadlightsLED = default(bool);
 			viewModel.PositionlightsLED = default(bool);
 			viewModel.BrakelightsLED = default(bool);
 			viewModel.InteriorLightsLED = default(bool);
-			viewModel.SystemConfiguration = default(BusHVACSystemConfiguration);
-			viewModel.CompressorTypeDriver = default(ACCompressorType);
-			viewModel.CompressorTypePassenger = default(ACCompressorType);
+			viewModel.SystemConfiguration = (BusHVACSystemConfiguration)NotSelected;
+			viewModel.CompressorTypeDriver = (ACCompressorType)NotSelected;
+			viewModel.CompressorTypePassenger = (ACCompressorType)NotSelected;
 			viewModel.AuxHeaterPower = default(Watt);
 			viewModel.DoubleGlasing = default(bool);
 			viewModel.HeatPump = default(bool);
 			viewModel.AdjustableAuxiliaryHeater = default(bool);
 			viewModel.SeparateAirDistributionDucts = default(bool);
-			viewModel.DoorDriveTechnology = ConsumerTechnology.Pneumatically;
 		}
 		
 		private void SetValues(IAuxiliariesViewModel auxiliaries)
 		{
 			OriginAlternatorTechnologies = GetOriginAlternatorTechnologies(auxiliaries);
-			AlternatorTechnologies = GetAlternatorTechnology();
+			SetAlternatorTechnology(AlternatorTechnologies);
 			DayrunninglightsLED = auxiliaries.DayrunninglightsLED;
 			HeadlightsLED = auxiliaries.HeadlightsLED;
 			PositionlightsLED = auxiliaries.PositionlightsLED;
@@ -114,7 +118,7 @@ namespace VECTO3GUI.Model.TempDataObject
 			HeatPump = auxiliaries.HeatPump;
 			AdjustableAuxiliaryHeater = auxiliaries.AdjustableAuxiliaryHeater;
 			SeparateAirDistributionDucts = auxiliaries.SeparateAirDistributionDucts;
-			DoorDriveTechnology = auxiliaries.DoorDriveTechnology;
+			
 		}
 
 		private List<AlternatorTechnologyModel> GetOriginAlternatorTechnologies(IAuxiliariesViewModel auxiliaries)

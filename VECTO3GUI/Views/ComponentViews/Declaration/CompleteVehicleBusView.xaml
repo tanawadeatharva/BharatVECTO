@@ -120,7 +120,7 @@
                             Caption="Door Drive Technology"
                             CaptionWidthGroup="vehicleLbl" UnitWidthGroup="unitWidth"
                             Value="{Binding DoorDriveTechnology}"
-                            AllowedValues="{Binding AllowedConsumerTechnologies}" />
+                            AllowedValues="{Binding AllowedDoorDriveTechnologies}" />
 
                 </StackPanel>
             </StackPanel>

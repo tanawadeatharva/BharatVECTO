@@ -76,9 +76,9 @@ namespace VECTO3GUI.Util.XML
 			var vehicleData = (ICompleteVehicleBus)inputData[Component.CompleteBusVehicle];
 
 
-
+			var id = "CB-" + Guid.NewGuid().ToString("n").Substring(0, 20);
 			return new XElement(_v20 + XMLNames.Component_Vehicle,
-					new XAttribute(XMLNames.Component_ID_Attr, vehicleData.VIN),
+					new XAttribute(XMLNames.Component_ID_Attr, id),
 					new XAttribute(_xsi + "type", XMLDeclarationCompletedBusDataProviderV26.XSD_TYPE),// "CompletedVehicleDeclarationType"
 					new XAttribute("xmlns", _v26),
 
@@ -176,10 +176,6 @@ namespace VECTO3GUI.Util.XML
 								new XElement(_v26 + XMLNames.Bus_Positionlights, auxBus?.PositionlightsLED),
 								new XElement(_v26 + XMLNames.Bus_Brakelights, auxBus?.BrakelightsLED),
 								new XElement(_v26 + XMLNames.Bus_Interiorlights, auxBus?.InteriorLightsLED))),
-						//----> ToDo remove if xsd gets changed <---
-							new XElement(_v26 + XMLNames.BusAux_PneumaticSystem,
-								new XElement(_v26 + XMLNames.BusAux_PneumaticSystem_DoorDriveTechnology, auxBus?.DoorDriveTechnology.GetLabel().ToLower())),
-						//------------------------------------------
 							new XElement(_v26 + "HVAC",
 								new XElement(_v26 + XMLNames.Bus_SystemConfiguration, auxBus?.SystemConfiguration.GetXmlFormat()),
 								new XElement(_v26 + XMLNames.Bus_CompressorType,
@@ -204,11 +200,11 @@ namespace VECTO3GUI.Util.XML
 
 			for (int i = 0; i < alternatorTechnologies.Count; i++) {
 
-				if(alternatorTechnologies[i].AlternatorTechnology == AlternatorTechnology.Empty)
+				if(string.IsNullOrWhiteSpace(alternatorTechnologies[i].AlternatorTechnology))
 					continue;
 				
 				result.Add(new XElement(_v26 + XMLNames.BusAux_ElectricSystem_AlternatorTechnology, 
-					alternatorTechnologies[i].AlternatorTechnology.GetLabel()));	
+					alternatorTechnologies[i].AlternatorTechnology));	
 			}
 
 			return result.Count > 0 ? result.ToArray() : null;

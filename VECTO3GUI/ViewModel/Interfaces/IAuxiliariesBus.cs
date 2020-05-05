@@ -15,7 +15,7 @@ namespace VECTO3GUI.ViewModel.Interfaces
 	{
 		#region Electric System
 
-		ObservableCollectionEx<AlternatorTechnologyModel> AlternatorTechnologies { get; set; }
+		ObservableCollectionEx<AlternatorTechnologyModel> AlternatorTechnologies { get; /*set; */ }
 		bool DayrunninglightsLED { get; set; }
 		bool HeadlightsLED { get; set; }
 		bool PositionlightsLED { get; set; }
@@ -36,7 +36,7 @@ namespace VECTO3GUI.ViewModel.Interfaces
 		bool SeparateAirDistributionDucts { get; set; }
 
 		#endregion
-		ConsumerTechnology DoorDriveTechnology { get; set; }
+
 
 	}
 }

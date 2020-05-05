@@ -15,6 +15,8 @@ namespace VECTO3GUI.Model.TempDataObject
 {
 	public class VehicleBusComponentData : ICompleteVehicleBus, ITempDataObject<ICompleteVehicleBusViewModel>
 	{
+		protected const int NotSelected = -1;
+
 		#region ICompleteVehicleBus Interface
 
 		public string Manufacturer { get; set; }
@@ -85,12 +87,12 @@ namespace VECTO3GUI.Model.TempDataObject
 			viewModel.Model = default(string);
 			viewModel.VIN = default(string);
 			viewModel.Date = default(DateTime);
-			viewModel.LegislativeClass = default(LegislativeClass);
-			viewModel.RegisteredClass = default(RegistrationClass);
-			viewModel.VehicleCode = default(VehicleCode);
+			viewModel.LegislativeClass = (LegislativeClass)NotSelected;
+			viewModel.RegisteredClass = (RegistrationClass)NotSelected;
+			viewModel.VehicleCode = (VehicleCode)NotSelected;
 			viewModel.CurbMassChassis = default(Kilogram);
 			viewModel.TechnicalPermissibleMaximumLadenMass = default(Kilogram);
-			viewModel.NgTankSystem = default(TankSystem);
+			viewModel.NgTankSystem = (TankSystem)NotSelected;
 			viewModel.NumberOfPassengersLowerDeck = default(int);
 			viewModel.NumberOfPassengersUpperDeck = default(int);
 			viewModel.LowEntry = LowEntry;
@@ -98,7 +100,7 @@ namespace VECTO3GUI.Model.TempDataObject
 			viewModel.VehicleLength = default(Meter);
 			viewModel.VehicleWidth = default(Meter);
 			viewModel.EntranceHeight = default(Meter);
-			viewModel.DoorDriveTechnology = default(ConsumerTechnology);
+			viewModel.DoorDriveTechnology = (ConsumerTechnology)NotSelected;
 		}
 
 		

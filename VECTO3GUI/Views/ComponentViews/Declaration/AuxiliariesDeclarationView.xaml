@@ -139,7 +139,7 @@
                             AllowedValues="{Binding AllowedPassengerACCompressorTypes}" />
 
                     <customControls:VectoParameterControl
-                            Caption="Height Integrated Body" Unit="{helper:SIUnit AuxHeaterPower}" CaptionWidthGroup="lblWidth" UnitWidthGroup="unitWidth"
+                            Caption="Aux Heater Power" Unit="{helper:SIUnit AuxHeaterPower}" CaptionWidthGroup="lblWidth" UnitWidthGroup="unitWidth"
                             Value="{Binding AuxHeaterPower, Converter={converter:SIValueConverter}, ConverterParameter=double}" />
 
                     <customControls:CheckboxParameter

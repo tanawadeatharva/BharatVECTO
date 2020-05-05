@@ -245,7 +245,7 @@ namespace VECTO3GUI.ViewModel.Impl
 
 		public AllowedEntry<LegislativeClass>[] AllowedLegislativeClasses { get; private set; }
 		public AllowedEntry<VehicleCode>[] AllowedVehicleCodes { get; private set; }
-		public AllowedEntry<ConsumerTechnology>[] AllowedConsumerTechnologies { get; private set; }
+		public AllowedEntry<ConsumerTechnology>[] AllowedDoorDriveTechnologies { get; private set; }
 		public AllowedEntry<RegistrationClass>[] AllowedRegisteredClasses { get; private set; }
 		public AllowedEntry<TankSystem?>[] AllowedTankSystems { get; private set; }
 
@@ -297,28 +297,20 @@ namespace VECTO3GUI.ViewModel.Impl
 		private void SetAllowedEntries()
 		{
 
-			AllowedLegislativeClasses = Enum.GetValues(typeof(LegislativeClass)).Cast<LegislativeClass>()
+			AllowedLegislativeClasses = new [] {LegislativeClass.M3} 
 				.Select(lc => AllowedEntry.Create(lc, lc.GetLabel())).ToArray();
 
-			AllowedVehicleCodes = Enum.GetValues(typeof(VehicleCode)).Cast<VehicleCode>()
+			AllowedVehicleCodes = EnumHelper.GetValues<VehicleCode>().Where(x => x != VehicleCode.NOT_APPLICABLE)
 				.Select(vc => AllowedEntry.Create(vc, vc.GetLabel())).ToArray();
 
-			AllowedConsumerTechnologies = Enum.GetValues(typeof(ConsumerTechnology)).Cast<ConsumerTechnology>()
+			AllowedDoorDriveTechnologies = new [] {ConsumerTechnology.Pneumatically, ConsumerTechnology.Electrically}
 				.Select(sc => AllowedEntry.Create(sc, sc.GetLabel())).ToArray();
 
-			AllowedRegisteredClasses = Enum.GetValues(typeof(RegistrationClass)).Cast<RegistrationClass>()
+			AllowedRegisteredClasses = EnumHelper.GetValues<RegistrationClass>().Where(x => x != RegistrationClass.unknown)
 				.Select(vc => AllowedEntry.Create(vc, vc.GetLabel())).ToArray();
 			
-			var tankSystems = Enum.GetValues(typeof(TankSystem)).Cast<TankSystem>().ToArray();
-			var tank = new AllowedEntry<TankSystem?> [tankSystems.Length+1];
-
-			tank[0] = AllowedEntry.Create((TankSystem?)null, null);
-			for (int i = 1; i < tankSystems.Length + 1; i++) {
-
-				tank[i] = AllowedEntry.Create<TankSystem?>(tankSystems[i-1], tankSystems[i-1].ToString());
-			}
-
-			AllowedTankSystems = tank;
+			AllowedTankSystems = new[] { AllowedEntry.Create((TankSystem?)null, "Not applicable") }
+				.Concat(EnumHelper.GetValues<TankSystem>().Select(x => AllowedEntry.Create((TankSystem?)x, x.ToString()))).ToArray();
 		}
 
 		#endregion

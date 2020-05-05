@@ -18,7 +18,7 @@ namespace VECTO3GUI.ViewModel.Impl
 {
 	public enum AirdragConfig
 	{
-		WithoutAirdrag,
+		UseDefaultAirdragData,
 		UseMeasurementData,
 		Unknown
 	}
@@ -29,10 +29,10 @@ namespace VECTO3GUI.ViewModel.Impl
 		{
 			switch (airdrag)
 			{
-				case AirdragConfig.WithoutAirdrag:
-					return "Without Airdrag";
+				case AirdragConfig.UseDefaultAirdragData:
+					return "Use default airdrag data";
 				case AirdragConfig.UseMeasurementData:
-					return "Use Measurement Data";
+					return "Use airdrag component data";
 			}
 			return string.Empty;
 		}
@@ -41,9 +41,9 @@ namespace VECTO3GUI.ViewModel.Impl
 		{
 			switch (name)
 			{
-				case "Without Airdrag":
-					return AirdragConfig.WithoutAirdrag;
-				case "Use Measurement Data":
+				case "Use default airdrag data":
+					return AirdragConfig.UseDefaultAirdragData;
+				case "Use airdrag component data":
 					return AirdragConfig.UseMeasurementData;
 			}
 			return AirdragConfig.Unknown;
@@ -191,15 +191,15 @@ namespace VECTO3GUI.ViewModel.Impl
 			_xmlFilePath = XmlHelper.GetXmlAbsoluteFilePath(xmlUri);
 
 			SetAirdragValues(_airdragData);
-			UseMeasurementData = _airdragData.AirDragArea != null;
+			UseMeasurementData = _airdragData?.AirDragArea != null;
 			NoAirdragData = !UseMeasurementData;
 			IsEditable = false;
 		}
 
 		private void SetAirdragValues(IAirdragDeclarationInputData airdrag)
 		{
-			UseMeasuredValues = airdrag.AirDragArea != null;
-			if (airdrag.AirDragArea == null)
+			UseMeasuredValues = airdrag?.AirDragArea != null;
+			if (airdrag?.AirDragArea == null)
 			{
 				_componentData = new AirdragComponentData(this, true);
 				return;
@@ -240,7 +240,7 @@ namespace VECTO3GUI.ViewModel.Impl
 		private void DoAirdragConfig(AirdragConfig config)
 		{
 			switch (config) {
-				case AirdragConfig.WithoutAirdrag:
+				case AirdragConfig.UseDefaultAirdragData:
 					NoAirdragData = true;
 					break;
 				case AirdragConfig.UseMeasurementData:

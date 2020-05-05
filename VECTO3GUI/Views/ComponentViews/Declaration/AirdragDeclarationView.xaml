@@ -31,8 +31,8 @@
 
             <StackPanel Orientation="Vertical">
                 <RadioButton GroupName="AirdragConfig" Margin="5"
-                             Content="{Binding Source={x:Static impl:AirdragConfig.WithoutAirdrag}, Converter={converter:EnumConverter}}"
-                             Command="{Binding AirdragConfigCommand}" CommandParameter="{Binding Source={x:Static impl:AirdragConfig.WithoutAirdrag}}"
+                             Content="{Binding Source={x:Static impl:AirdragConfig.UseDefaultAirdragData}, Converter={converter:EnumConverter}}"
+                             Command="{Binding AirdragConfigCommand}" CommandParameter="{Binding Source={x:Static impl:AirdragConfig.UseDefaultAirdragData}}"
                              IsChecked="{Binding NoAirdragData}"/>
                 
                 <RadioButton GroupName="AirdragConfig" Margin="5"
