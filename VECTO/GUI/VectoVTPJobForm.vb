@@ -254,6 +254,10 @@ Public Class VectoVTPJobForm
     Private Sub PopulateAuxiliaryList(auxInput As IAuxiliariesDeclarationInputData)
 
         LvAux.Items.Clear()
+        If auxInput is Nothing Then
+            Return
+        End If
+        
         Dim entry As IAuxiliaryDeclarationInputData
         For Each entry In auxInput.Auxiliaries
             'If entry.AuxiliaryType = AuxiliaryDemandType.Constant Then Continue For
