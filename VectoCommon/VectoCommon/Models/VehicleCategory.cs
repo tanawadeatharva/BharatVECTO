@@ -118,7 +118,7 @@ namespace TUGraz.VectoCommon.Models
 			}
 		}
 
-		public static bool IsTruck(this VehicleCategory category)
+		public static bool IsLorry(this VehicleCategory category)
 		{
 			switch (category) {
                 case VehicleCategory.Van:

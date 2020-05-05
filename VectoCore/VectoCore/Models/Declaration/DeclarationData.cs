@@ -163,6 +163,42 @@ namespace TUGraz.VectoCore.Models.Declaration
 			//	}
 			//}
 
+			public static ICompressorMap GetCompressorMap(string compressorSize, string clutchType)
+			{
+				var resource = "";
+				switch (compressorSize) {
+					case "Small":
+						resource = "DEFAULT_1-Cylinder_1-Stage_393ccm.acmp";
+						break;
+					case "Medium Supply 1-stage":
+						resource = "DEFAULT_1-Cylinder_1-Stage_393ccm.acmp";
+						break;
+					case "Medium Supply 2-stage":
+						resource = "DEFAULT_2-Cylinder_1-Stage_650ccm.acmp";
+						break;
+					case "Large Supply 1-stage":
+						resource = "DEFAULT_2-Cylinder_2-Stage_398ccm.acmp";
+						break;
+					case "Large Supply 2-stage":
+						resource = "DEFAULT_3-Cylinder_2-Stage_598ccm.acmp";
+						break;
+					default: throw new ArgumentException(string.Format("unkown compressor size {0}"), compressorSize);
+				}
+
+				var dragCurveFactorClutch = 1.0;
+				switch (clutchType) {
+					case "visco":
+						dragCurveFactorClutch = Constants.BusAuxiliaries.PneumaticUserConfig.ViscoClutchDragCurveFactor;
+						break;
+					case "mechanically":
+						dragCurveFactorClutch = Constants.BusAuxiliaries.PneumaticUserConfig.MechanicClutchDragCurveFactor;
+						break;
+				}
+
+				return CompressorMapReader.ReadStream(
+					RessourceHelper.ReadStream(DeclarationData.DeclarationDataResourcePrefix + ".VAUXBus." + resource), dragCurveFactorClutch, $"{compressorSize} - {clutchType}");
+			}
+
 			public static BusAlternatorTechnologies AlternatorTechnologies = new BusAlternatorTechnologies();
 			private static HVACCoolingPower hvacMaxCoolingPower;
 
@@ -241,42 +277,42 @@ namespace TUGraz.VectoCore.Models.Declaration
 			}
 			 
 
-			public static Meter CalculateInternalLength(Meter vehicleLength, bool doubleDecker, FloorType floorType, double numPassLowFloor)
+			public static Meter CalculateInternalLength(Meter vehicleLength, VehicleCode vehicleCode, double numPassLowFloor)
 				{
-				if (floorType == FloorType.LowFloor) {
-					return doubleDecker ? 2 * vehicleLength : vehicleLength;
+				if (vehicleCode.GetFloorType()  == FloorType.LowFloor) {
+					return vehicleCode.IsDoubleDeckerBus() ? 2 * vehicleLength : vehicleLength;
 				}
 
-				if (floorType == FloorType.HighFloor) {
-					if (doubleDecker) {
+				if (vehicleCode.GetFloorType() == FloorType.HighFloor) {
+					if (vehicleCode.IsDoubleDeckerBus()) {
 						return numPassLowFloor > 6 ? 1.5 * vehicleLength : vehicleLength + 2.4.SI<Meter>();
 					}
 
 					return vehicleLength;
 				}
-				throw new VectoException("Internal Length for floorType {0} {1} not defined", floorType.ToString(), doubleDecker ? "DD" : "SD");
+				throw new VectoException("Internal Length for floorType {0} {1} not defined", vehicleCode.GetFloorType().ToString(), vehicleCode.IsDoubleDeckerBus() ? "DD" : "SD");
 			}
 
 			public static Meter CalculateLengthInteriorLights(
-				Meter vehicleLength, bool doubleDecker, FloorType floorType, double numPassLowFloor)
+				Meter vehicleLength, VehicleCode vehicleCode, double numPassLowFloor)
 			{
-				return CalculateInternalLength(vehicleLength, doubleDecker, floorType, numPassLowFloor);
+				return CalculateInternalLength(vehicleLength, vehicleCode, numPassLowFloor);
 			}
 
-			public static Meter CalculateInternalHeight(FloorType floorType, bool doubleDecker, Meter vehicleHeight)
+			public static Meter CalculateInternalHeight(VehicleCode vehicleCode, Meter vehicleHeight)
 			{
-				if (doubleDecker) {
+				if (vehicleCode.IsDoubleDeckerBus()) {
 					return Constants.BusParameters.InternalHeightDoubleDecker;
 				}
 
-				switch (floorType) {
+				switch (vehicleCode.GetFloorType()) {
 					case FloorType.LowFloor:
 						return vehicleHeight;
 					case FloorType.HighFloor:
 						return vehicleHeight - Constants.BusParameters.HeightLuggageCompartment;
 				}
 
-				throw new VectoException("Internal height for vehicle floor type '{0}' {1} not defined", floorType.ToString(), doubleDecker ? "double decker" : "single decker");
+				throw new VectoException("Internal height for vehicle floor type '{0}' {1} not defined", vehicleCode.GetFloorType().ToString(), vehicleCode.IsDoubleDeckerBus() ? "double decker" : "single decker");
 			}
 
 			public static Meter WindowHeight(bool doubleDecker)
@@ -539,7 +575,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 			//public static readonly PerSecond TorqueConverterSpeedLimit = 1600.RPMtoRad();
 			public static double TorqueConverterSecondGearThreshold(VehicleCategory category)
 			{
-				return category.IsTruck() ? 1.8 : 1.85;
+				return category.IsLorry() ? 1.8 : 1.85;
 			}
 
 			public static readonly Second PowershiftShiftTime = 0.8.SI<Second>();
@@ -988,6 +1024,10 @@ namespace TUGraz.VectoCore.Models.Declaration
 
 			public const MissionType SelectedMissionHeavyLorry = MissionType.LongHaul;
 			public const MissionType SelectedMissionMediumLorry = MissionType.RegionalDelivery;
+
+			public const MissionType SelectedMissionLowFloorBus = MissionType.Urban;
+			public const MissionType SelectedMissionHighFloorBus = MissionType.Coach;
+
 			public const LoadingType SelectedLoading = LoadingType.ReferenceLoad;
 
 			// verification of input data

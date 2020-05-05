@@ -80,9 +80,8 @@ namespace TUGraz.VectoCore.Tests.Integration.CompletedBus
 			var axleConfiguration = AxleConfiguration.AxleConfig_4x2;
 			var floorType = FloorType.HighFloor;
 			var articulated = false;
-			var doubleDecker = true;
 
-			primarySegment = DeclarationData.PrimaryBusSegments.Lookup(category, axleConfiguration, articulated, floorType, doubleDecker);
+			primarySegment = DeclarationData.PrimaryBusSegments.Lookup(category, axleConfiguration, articulated, floorType);
 		}
 
 		private void CompletedBusSegment()
@@ -153,7 +152,7 @@ namespace TUGraz.VectoCore.Tests.Integration.CompletedBus
 			Assert.AreEqual(AxleConfiguration.AxleConfig_4x2, genericVehicleData.AxleConfiguration);
 			Assert.AreEqual(genericVehicleData.AxleConfiguration, specificVehicleData.AxleConfiguration);
 
-			Assert.AreEqual(10000, genericVehicleData.CurbMass.Value());
+			Assert.AreEqual(13150, genericVehicleData.CurbMass.Value());
 			Assert.AreEqual(8300, specificVehicleData.CurbMass.Value());
 
 			Assert.AreEqual(0, genericVehicleData.BodyAndTrailerMass.Value());
@@ -175,8 +174,8 @@ namespace TUGraz.VectoCore.Tests.Integration.CompletedBus
 				// generic loading values shall match expected values of primary vehicle for IU and CO cycle
 				// see TestPrimaryBusGroup41Test
 				case 0:
-					Assert.AreEqual(1720.6992, genericLoading.Value(), 1e-4);
-					Assert.AreEqual(1693.6141, specificLoading.Value(), 1e-4);
+					Assert.AreEqual(1075.437, genericLoading.Value(), 1e-4);
+					Assert.AreEqual(1058.5088, specificLoading.Value(), 1e-4);
 					break;
 				case 1:
 					Assert.AreEqual(4301.748, genericLoading.Value(), 1e-4);
@@ -350,9 +349,9 @@ namespace TUGraz.VectoCore.Tests.Integration.CompletedBus
 		private void AssertFuel(CombustionEngineFuelData fuel)
 		{
 			Assert.AreEqual(1, fuel.WHTCMotorway);
-			Assert.AreEqual(1, fuel.WHTCRural);
-			Assert.AreEqual(1, fuel.WHTCUrban);
-			Assert.AreEqual(1, fuel.ColdHotCorrectionFactor);
+			Assert.AreEqual(1.02, fuel.WHTCRural);
+			Assert.AreEqual(1.05, fuel.WHTCUrban);
+			Assert.AreEqual(1.005, fuel.ColdHotCorrectionFactor);
 			Assert.AreEqual(1, fuel.CorrectionFactorRegPer);
 
 			//fuel.ConsumptionMap ???
@@ -465,18 +464,18 @@ namespace TUGraz.VectoCore.Tests.Integration.CompletedBus
 		{
 			Assert.AreEqual(12, lossMap._entries.Count);
 
-			AssertLossmapEntry(0, -75337.8336, 1585.2433, lossMap._entries[0]);
-			AssertLossmapEntry(0, -22.2920, 16.1695, lossMap._entries[1]);
-			AssertLossmapEntry(0, 54.6311, 16.1695, lossMap._entries[2]);
-			AssertLossmapEntry(0, 78508.3203, 1585.2433, lossMap._entries[3]);
-			AssertLossmapEntry(325, -75337.8336, 1585.2433, lossMap._entries[4]);
-			AssertLossmapEntry(325, -22.2920, 16.1695, lossMap._entries[5]);
-			AssertLossmapEntry(325, 54.6311, 16.1695, lossMap._entries[6]);
-			AssertLossmapEntry(325, 78508.3203, 1585.2433, lossMap._entries[7]);
-			AssertLossmapEntry(32500, -74957.0644, 1966.0126, lossMap._entries[8]);
-			AssertLossmapEntry(32500, 358.4772, 396.9388, lossMap._entries[9]);
-			AssertLossmapEntry(32500, 435.4003, 396.9388, lossMap._entries[10]);
-			AssertLossmapEntry(32500, 78889.0895, 1966.0126, lossMap._entries[11]);
+			AssertLossmapEntry(0, -75337.83, 1585.24, lossMap._entries[0]);
+			AssertLossmapEntry(0, -22.29, 16.17, lossMap._entries[1]);
+			AssertLossmapEntry(0, 54.63, 16.17, lossMap._entries[2]);
+			AssertLossmapEntry(0, 78508.32, 1585.24, lossMap._entries[3]);
+			AssertLossmapEntry(325, -75337.83, 1585.24, lossMap._entries[4]);
+			AssertLossmapEntry(325, -22.29, 16.17, lossMap._entries[5]);
+			AssertLossmapEntry(325, 54.63, 16.17, lossMap._entries[6]);
+			AssertLossmapEntry(325, 78508.32, 1585.24, lossMap._entries[7]);
+			AssertLossmapEntry(32500, -74957.06, 1966.01, lossMap._entries[8]);
+			AssertLossmapEntry(32500, 358.48, 396.94, lossMap._entries[9]);
+			AssertLossmapEntry(32500, 435.40, 396.94, lossMap._entries[10]);
+			AssertLossmapEntry(32500, 78889.09, 1966.01, lossMap._entries[11]);
 
 		}
 
@@ -602,7 +601,7 @@ namespace TUGraz.VectoCore.Tests.Integration.CompletedBus
 			Assert.AreEqual(false, genericPneumaticUI.SmartRegeneration);
 			Assert.AreEqual(genericPneumaticUI.SmartRegeneration, specificPneumaticUI.SmartRegeneration);
 
-			Assert.AreEqual(VectoMath.Max(0.SI<Meter>(), 0.120.SI<Meter>() - Constants.BusParameters.EntranceHeight), genericPneumaticUI.KneelingHeight);
+			Assert.AreEqual(VectoMath.Max(0.07.SI<Meter>(), 0.120.SI<Meter>() - Constants.BusParameters.EntranceHeight), genericPneumaticUI.KneelingHeight);
 			Assert.AreEqual(VectoMath.Max(0.SI<Meter>(), 0.120.SI<Meter>() - Constants.BusParameters.EntranceHeight), specificPneumaticUI.KneelingHeight);
 
 			Assert.AreEqual(ConsumerTechnology.Electrically, genericPneumaticUI.AirSuspensionControl);
@@ -682,8 +681,8 @@ namespace TUGraz.VectoCore.Tests.Integration.CompletedBus
 				// generic loading values shall match expected values of primary vehicle for IU and CO cycle
 				// see TestPrimaryBusGroup41Test
 				case 0:
-					Assert.AreEqual(25.2352, genericLoading, 1e-4);
-					Assert.AreEqual(24.8537, specificLoading, 1e-4);
+					Assert.AreEqual(16.147, genericLoading, 1e-4);
+					Assert.AreEqual(15.908575, specificLoading, 1e-4);
 					break;
 				case 1:
 					Assert.AreEqual(61.588, genericLoading, 1e-4);
@@ -1013,6 +1012,8 @@ namespace TUGraz.VectoCore.Tests.Integration.CompletedBus
 		[TestCase(JobFile_Group41, TestName = "RunCompletedBusSimulation Group41/32b"),
 		TestCase(JobFile_Group42, TestName = "RunCompletedBusSimulation Group42/33b"),
 		TestCase(JobFilePrimary41, TestName = "RunPrimaryBusSimulation Group41"),
+		TestCase(@"TestData\Integration\Buses\FactorMethod\primary_heavyBus group41_nonSmart_AT-P.xml", TestName = "RunPrimaryBusSimulation Group41 AT-P"),
+		TestCase(@"TestData\Integration\Buses\FactorMethod\vecto_vehicle-primary_heavyBus_ESS_electricFanSTP.xml", TestName = "RunPrimaryBusSimulation Group41 ES-AUX"),
 		TestCase(JobFilePrimary42, TestName = "RunPrimaryBusSimulation Group42"),
 		TestCase(@"TestData\Integration\Buses\FactorMethod\SingleBus_41-32b.vecto", TestName = "RunSingleBusSimulation Group 41/32b"),
 		TestCase(@"TestData\Integration\Buses\FactorMethod\SingleBus_42-33b.vecto", TestName = "RunSingleBusSimulation Group 42/33b"),
@@ -1047,8 +1048,13 @@ namespace TUGraz.VectoCore.Tests.Integration.CompletedBus
 			Assert.IsTrue(jobContainer.Runs.All(r => r.Success), String.Concat<Exception>(jobContainer.Runs.Select(r => r.ExecException)));
 		}
 
-		[TestCase(@"TestData\Integration\Buses\vecto_vehicle-primary_heavyBus_ESS_electricFanSTP.xml", 13, TestName = "RunBusSimulation electric STP/Fan ESS IU/RL"),
-		TestCase(@"TestData\Integration\Buses\vecto_vehicle-primary_heavyBus_ESS_electricFanSTP.xml", 17, TestName = "RunBusSimulation electric STP/Fan ESS CO/RL"),]
+		[TestCase(@"TestData\Integration\Buses\FactorMethod\vecto_vehicle-primary_heavyBus_ESS_electricFanSTP.xml", 13, TestName = "RunBusSimulation electric STP/Fan ESS IU/RL"),
+		TestCase(@"TestData\Integration\Buses\FactorMethod\vecto_vehicle-primary_heavyBus_ESS_electricFanSTP.xml", 17, TestName = "RunBusSimulation electric STP/Fan ESS CO/RL"),
+		
+		TestCase(@"E:\QUAM\tmp\ESS_Tests\primary_heavyBus group 42_ConvAux_ESS_SmartPS.xml", 10, TestName = "RunBusSimulation ESS P33DD SU/LL ConvAux SmartPS"),
+		TestCase(@"E:\QUAM\tmp\ESS_Tests\primary_heavyBus group 42_ESS_SmartPS.xml", 10, TestName = "RunBusSimulation ESS P33DD SU/LL ES Aux SmartPS"),
+		TestCase(@"E:\QUAM\tmp\ESS_Tests\primary_heavyBus group 42_ESS_SmartPS_SmartES.xml", 10, TestName = "RunBusSimulation ESS P33DD SU/LL ES Aux SmartPS SmartES"),
+			]
 		public void TestRunPrimaryBusSimulation_ESS(string jobName, int runIdx)
 		{
 			var relativeJobPath = jobName;
@@ -1065,6 +1071,36 @@ namespace TUGraz.VectoCore.Tests.Integration.CompletedBus
 
 			var runs = factory.SimulationRuns().ToArray();
 			
+			runs[runIdx].Run();
+
+			Assert.IsTrue(runs[runIdx].FinishedWithoutErrors);
+
+			//jobContainer.AddRuns(factory);
+
+			//jobContainer.Execute();
+			//jobContainer.WaitFinished();
+			//var progress = jobContainer.GetProgress();
+			//Assert.IsTrue(progress.All(r => r.Value.Success), string.Concat<Exception>(progress.Select(r => r.Value.Error)));
+			//Assert.IsTrue(jobContainer.Runs.All(r => r.Success), String.Concat<Exception>(jobContainer.Runs.Select(r => r.ExecException)));
+		}
+
+		[TestCase(@"E:\QUAM\tmp\primary_heavyBus group 42_SmartPS_spec engine map.xml", 0),]
+		public void TestRunPrimaryBusSimulationSngle(string jobName, int runIdx)
+		{
+			var relativeJobPath = jobName;
+			var writer = new FileOutputWriter(relativeJobPath);
+			var inputData = Path.GetExtension(relativeJobPath) == ".xml"
+				? xmlInputReader.CreateDeclaration(relativeJobPath)
+				: JSONInputDataFactory.ReadJsonJob(relativeJobPath);
+			var factory = new SimulatorFactory(ExecutionMode.Declaration, inputData, writer) {
+				WriteModalResults = true,
+				//ActualModalData = true,
+				Validate = false
+			};
+			var jobContainer = new JobContainer(new SummaryDataContainer(writer));
+
+			var runs = factory.SimulationRuns().ToArray();
+
 			runs[runIdx].Run();
 
 			Assert.IsTrue(runs[runIdx].FinishedWithoutErrors);

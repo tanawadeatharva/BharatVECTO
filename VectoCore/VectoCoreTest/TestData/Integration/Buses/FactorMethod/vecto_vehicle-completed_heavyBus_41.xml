@@ -11,6 +11,7 @@
 		<VehicleCode>CA</VehicleCode>
 		<CurbMassChassis>8300</CurbMassChassis>
 		<TechnicalPermissibleMaximumLadenMass>18000</TechnicalPermissibleMaximumLadenMass>
+    <NgTankSystem>Compressed</NgTankSystem>
 		<RegisteredPassengers>
 			<LowerDeck>30</LowerDeck>
 			<UpperDeck>0</UpperDeck>

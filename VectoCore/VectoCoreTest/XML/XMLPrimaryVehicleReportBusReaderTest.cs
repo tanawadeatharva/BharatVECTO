@@ -60,7 +60,7 @@ namespace TUGraz.VectoCore.Tests.XML
 			Assert.IsTrue(AxleConfiguration.AxleConfig_4x2 == vehicle.AxleConfiguration);
 			Assert.AreEqual(false, vehicle.Articulated);
 			Assert.AreEqual(25000, vehicle.GrossVehicleMassRating.Value());
-			Assert.AreEqual(600, vehicle.EngineIdleSpeed.Value());
+			Assert.AreEqual(600, vehicle.EngineIdleSpeed.AsRPM);
 			Assert.AreEqual("Transmission Output Retarder", vehicle.Components.RetarderInputData.Type.ToXMLFormat());
 			Assert.AreEqual(1.000, vehicle.Components.RetarderInputData.Ratio);
 			Assert.AreEqual("None", vehicle.Components.AngledriveInputData.Type.ToXMLFormat());

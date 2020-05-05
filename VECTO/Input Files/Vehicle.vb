@@ -113,7 +113,7 @@ Public Class Vehicle
 				Dim doa As DeclarationDataAdapterHeavyLorry = New DeclarationDataAdapterHeavyLorry()
 				Dim segment As Segment = DeclarationData.TruckSegments.Lookup(vehicle.VehicleCategory, vehicle.AxleConfiguration,
 																		vehicle.GrossVehicleMassRating, vehicle.CurbMassChassis, false)
-				vehicleData = doa.CreateVehicleData(vehicle, segment.Missions.First(),
+				vehicleData = doa.CreateVehicleData(vehicle, segment, segment.Missions.First(),
 													segment.Missions.First().Loadings.First())
 				airdragData = doa.CreateAirdragData(vehicle, segment.Missions.First(), segment)
 				retarderData = doa.CreateRetarderData(vehicle)

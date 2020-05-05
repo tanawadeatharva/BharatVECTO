@@ -54,30 +54,55 @@
 	</xs:complexType>
 	<xs:complexType name="AuxiliariesType">
 		<xs:sequence>
-			<xs:element name="FanTechnology" type="vdecdef:AuxFanTechnologyType">
+			<xs:element name="FanTechnology">
 				<xs:annotation>
 					<xs:documentation>P181</xs:documentation>
 				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:minLength value="1"/>
+					</xs:restriction>
+				</xs:simpleType>
 			</xs:element>
-			<xs:element name="SteeringPumpTechnology" type="vdecdef:AuxSPTechnologyType" maxOccurs="4">
+			<xs:element name="SteeringPumpTechnology" maxOccurs="4">
 				<xs:annotation>
 					<xs:documentation>P182</xs:documentation>
 				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:minLength value="1"/>
+					</xs:restriction>
+				</xs:simpleType>
 			</xs:element>
-			<xs:element name="ElectricSystemTechnology" type="vdecdef:AuxESTechnologyType">
+			<xs:element name="ElectricSystemTechnology">
 				<xs:annotation>
 					<xs:documentation>P183</xs:documentation>
 				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:minLength value="1"/>
+					</xs:restriction>
+				</xs:simpleType>
 			</xs:element>
-			<xs:element name="PneumaticSystemTechnology" type="vdecdef:AuxPSTechnologyType">
+			<xs:element name="PneumaticSystemTechnology">
 				<xs:annotation>
 					<xs:documentation>P184</xs:documentation>
 				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:minLength value="1"/>
+					</xs:restriction>
+				</xs:simpleType>
 			</xs:element>
-			<xs:element name="HVACTechnology" type="vdecdef:AuxHVACTechnologyType">
+			<xs:element name="HVACTechnology">
 				<xs:annotation>
 					<xs:documentation>P185</xs:documentation>
 				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:minLength value="1"/>
+					</xs:restriction>
+				</xs:simpleType>
 			</xs:element>
 		</xs:sequence>
 	</xs:complexType>
@@ -273,7 +298,7 @@
 					<xs:documentation>P061</xs:documentation>
 				</xs:annotation>
 			</xs:element>
-			<xs:element name="FuelType" type="vdecdef:FuelTypeType">
+			<xs:element name="FuelType" type="vdecdef:FuelTypeType" maxOccurs="unbounded">
 				<xs:annotation>
 					<xs:documentation>P193</xs:documentation>
 				</xs:annotation>
@@ -310,6 +335,13 @@
 				</xs:complexType>
 			</xs:element>
 		</xs:sequence>
+		<xs:attribute name="fuelType" use="required">
+			<xs:simpleType>
+				<xs:restriction base="xs:string">
+					<xs:minLength value="1"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
 	</xs:complexType>
 	<xs:complexType name="GearboxFWDType">
 		<xs:sequence>
@@ -420,9 +452,9 @@
 					</xs:simpleContent>
 				</xs:complexType>
 			</xs:element>
-			<xs:element name="FuelConsumption" type="FuelConsumptionResultType"/>
+			<xs:element name="FuelConsumption" type="FuelConsumptionResultType" maxOccurs="unbounded"/>
 			<xs:element name="CO2" type="CO2ResultType"/>
-			<xs:element name="VTRatio" type="xs:double"/>
+			<xs:element name="C_VTP" type="xs:double"/>
 			<xs:element name="Warnings" minOccurs="0">
 				<xs:complexType>
 					<xs:sequence>
@@ -491,10 +523,15 @@
 							<xs:documentation>P238</xs:documentation>
 						</xs:annotation>
 					</xs:element>
-					<xs:element name="LegislativeClass" type="vdecdef:LegislativeClassDeclarationType">
+					<xs:element name="LegislativeClass">
 						<xs:annotation>
 							<xs:documentation>P251</xs:documentation>
 						</xs:annotation>
+						<xs:simpleType>
+							<xs:restriction base="xs:string">
+								<xs:minLength value="1"/>
+							</xs:restriction>
+						</xs:simpleType>
 					</xs:element>
 					<xs:element name="VehicleGroup" type="VehicleGroupType">
 						<xs:annotation>
@@ -573,6 +610,7 @@
 	<xs:simpleType name="CO2UnitType">
 		<xs:restriction base="xs:token">
 			<xs:enumeration value="g/t-km"/>
+			<xs:enumeration value="g/p-km"/>
 		</xs:restriction>
 	</xs:simpleType>
 	<xs:simpleType name="DataIntegrityStatusType">

@@ -39,9 +39,9 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 		// only powertrain components are different
 
 		
-		public CombustionEngineData CreateEngineData(IVehicleDeclarationInputData primaryVehicle, int modeIdx)
+		public CombustionEngineData CreateEngineData(IVehicleDeclarationInputData primaryVehicle, int modeIdx, Mission mission)
 		{
-			return GenericBusEngineData.Instance.CreateGenericBusEngineData(primaryVehicle, modeIdx);
+			return GenericBusEngineData.Instance.CreateGenericBusEngineData(primaryVehicle, modeIdx, mission);
 		}
 
 		#region Overrides of DeclarationDataAdapterHeavyLorry

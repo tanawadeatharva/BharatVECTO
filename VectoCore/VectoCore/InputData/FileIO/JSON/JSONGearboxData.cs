@@ -86,6 +86,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 				return null;
 			}
 		}
+
+		public override double AxlegearRatio { get { return Ratio; } }
 	}
 
 	/// <summary>
@@ -250,7 +252,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 		}
 
 		public bool DifferentialIncluded { get { return false; } }
-		public double AxlegearRatio { get { return double.NaN; } }
+		public virtual double AxlegearRatio { get { return double.NaN; } }
 
 		private TransmissionInputData CreateTorqueConverterGear(int gearNr, JToken gear, JToken nextGear)
 		{

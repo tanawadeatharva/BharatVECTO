@@ -2501,6 +2501,12 @@
     <None Include="TestData\Integration\TotalMassExceededInMU\Gear_9.vtlm">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Include="TestData\Integration\VTPMode\DualFuelVehicle\vtp_cycle_2Hz.vdri">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Integration\VTPMode\DualFuelVehicle\VTP_DualFuel.vecto">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="TestData\Integration\VTPMode\GenericVehicle\class_5_generic vehicle_DECL.vecto">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
@@ -2529,6 +2535,21 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="TestData\Integration\VTPMode\GenericVehicle\VTP_rural_2Hz.vdri">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Integration\VTPMode\HeavyBus\CompletedBus_34f.vecto">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Integration\VTPMode\HeavyBus\VTP Testzyklus_Bus.xlsx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Integration\VTPMode\HeavyBus\vtp_cycle_2Hz_Bus.vdri">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Integration\VTPMode\HeavyBus\VTP_PrimaryBus_ENG.vecto">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Integration\VTPMode\HeavyBus\VTP_PrimaryBus.vecto">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="TestData\Integration\VTPMode\MediumLorry\VTP Testzyklus.vdri">
@@ -3574,6 +3595,9 @@
     <Content Include="TestData\Integration\ShiftStrategyV2\SampleVehicles\Tractor_6x4_vehicle-class-12_EURO6_2018.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="TestData\Integration\VTPMode\DualFuelVehicle\vehicle_sampleSingleModeDualFuel.RSLT_MANUFACTURER.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="TestData\Integration\VTPMode\GenericVehicle\CityBus_AT_Ser.RSLT_MANUFACTURER.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -3590,6 +3614,18 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="TestData\Integration\VTPMode\GenericVehicle\Tractor_4x2_vehicle-class-5_Generic vehicle.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="TestData\Integration\VTPMode\HeavyBus\CompletedBus_34f.RSLT_MANUFACTURER.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="TestData\Integration\VTPMode\HeavyBus\primary_heavyBus group 42_non_Smart.RSLT_MANUFACTURER.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="TestData\Integration\VTPMode\HeavyBus\primary_heavyBus group 42_non_Smart.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="TestData\Integration\VTPMode\HeavyBus\vecto_vehicle-completed_heavyBus_34f.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="TestData\Integration\VTPMode\MediumLorry\vecto_vehicle-medium_lorry_4x2F.RSLT_MANUFACTURER.xml">
@@ -3724,7 +3760,13 @@
     <Content Include="TestData\XML\XMLReaderDeclaration\SchemaVersion2.3\engineSample_WHR.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="TestData\XML\XMLReaderDeclaration\SchemaVersion2.3\vecto_vehicle-fullElectricSP.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="TestData\XML\XMLReaderDeclaration\SchemaVersion2.3\vehicle_sampleDualModeDualFuel_WHR.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="TestData\XML\XMLReaderDeclaration\SchemaVersion2.3\vehicle_sampleSingleModeDualFuel.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="TestData\XML\XMLReaderDeclaration\SchemaVersion2.3\vehicle_sampleSingleModeSingleFuel_WHR.xml">
@@ -3733,7 +3775,7 @@
     <Content Include="TestData\XML\XMLReaderDeclaration\SchemaVersion2.3\vehicle_sampleSingleModeDualFuel_WHR.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="TestData\XML\XMLReaderDeclaration\SchemaVersion2.3\vehicle_sampleSingleModeDualFuel.xml">
+    <Content Include="TestData\Integration\VTPMode\DualFuelVehicle\vehicle_sampleSingleModeDualFuel.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="TestData\XML\XMLReaderDeclaration\SchemaVersion2.3\vehicle_sampleDualModeDualFuel.xml">

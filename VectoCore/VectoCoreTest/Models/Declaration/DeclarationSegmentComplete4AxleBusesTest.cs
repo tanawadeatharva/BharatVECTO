@@ -20,27 +20,27 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 		}
 
 		[
-			TestCase(AxleConfiguration.AxleConfig_8x2, VehicleCode.CE, RegistrationClass.I, 0, 0, false, VehicleClass.ClassCB37a, 3),
-			TestCase(AxleConfiguration.AxleConfig_8x2, VehicleCode.CE, RegistrationClass.II, 0, 0, true, VehicleClass.ClassCB37b, 3),
-			TestCase(AxleConfiguration.AxleConfig_8x2, VehicleCode.CF, RegistrationClass.A, 0, 0, false, VehicleClass.ClassCB37c, 3),
-			TestCase(AxleConfiguration.AxleConfig_8x2, VehicleCode.CI, RegistrationClass.B, 0, 0, false, VehicleClass.ClassCB37d, 3),
-			TestCase(AxleConfiguration.AxleConfig_8x2, VehicleCode.CJ, RegistrationClass.A, 0, 0, false, VehicleClass.ClassCB37e, 3),
-			TestCase(AxleConfiguration.AxleConfig_8x2, VehicleCode.CA, RegistrationClass.II, 0, 0, false, VehicleClass.ClassCB38a, 2),
-			TestCase(AxleConfiguration.AxleConfig_8x2, VehicleCode.CA, RegistrationClass.II_III, 0, 3.1, false, VehicleClass.ClassCB38b, 2),
-			TestCase(AxleConfiguration.AxleConfig_8x2, VehicleCode.CA, RegistrationClass.II_III, 0, 3.1001, false, VehicleClass.ClassCB38c, 2),
-			TestCase(AxleConfiguration.AxleConfig_8x2, VehicleCode.CA, RegistrationClass.III, 0, 0, false, VehicleClass.ClassCB38d, 2),
-			TestCase(AxleConfiguration.AxleConfig_8x2, VehicleCode.CB, RegistrationClass.B, 5, 0, false, VehicleClass.ClassCB38e, 2),
-			TestCase(AxleConfiguration.AxleConfig_8x2, VehicleCode.CB, RegistrationClass.II, 8, 0, false, VehicleClass.ClassCB38f, 2),
+			TestCase(AxleConfiguration.AxleConfig_8x2, VehicleCode.CE, RegistrationClass.I, 0, 0, false, VehicleClass.Class37a, 3),
+			TestCase(AxleConfiguration.AxleConfig_8x2, VehicleCode.CE, RegistrationClass.II, 0, 0, true, VehicleClass.Class37b, 3),
+			TestCase(AxleConfiguration.AxleConfig_8x2, VehicleCode.CF, RegistrationClass.A, 0, 0, false, VehicleClass.Class37c, 3),
+			TestCase(AxleConfiguration.AxleConfig_8x2, VehicleCode.CI, RegistrationClass.B, 0, 0, false, VehicleClass.Class37d, 3),
+			TestCase(AxleConfiguration.AxleConfig_8x2, VehicleCode.CJ, RegistrationClass.A, 0, 0, false, VehicleClass.Class37e, 3),
+			TestCase(AxleConfiguration.AxleConfig_8x2, VehicleCode.CA, RegistrationClass.II, 0, 0, false, VehicleClass.Class38a, 2),
+			TestCase(AxleConfiguration.AxleConfig_8x2, VehicleCode.CA, RegistrationClass.II_III, 0, 3.1, false, VehicleClass.Class38b, 2),
+			TestCase(AxleConfiguration.AxleConfig_8x2, VehicleCode.CA, RegistrationClass.II_III, 0, 3.1001, false, VehicleClass.Class38c, 2),
+			TestCase(AxleConfiguration.AxleConfig_8x2, VehicleCode.CA, RegistrationClass.III, 0, 0, false, VehicleClass.Class38d, 2),
+			TestCase(AxleConfiguration.AxleConfig_8x2, VehicleCode.CB, RegistrationClass.B, 5, 0, false, VehicleClass.Class38e, 2),
+			TestCase(AxleConfiguration.AxleConfig_8x2, VehicleCode.CB, RegistrationClass.II, 8, 0, false, VehicleClass.Class38f, 2),
 												  
-			TestCase(AxleConfiguration.AxleConfig_8x2, VehicleCode.CG, RegistrationClass.I, 0, 0, false, VehicleClass.ClassCB39a, 3),
-			TestCase(AxleConfiguration.AxleConfig_8x2, VehicleCode.CG, RegistrationClass.II, 0, 0, true, VehicleClass.ClassCB39b, 3),
-			TestCase(AxleConfiguration.AxleConfig_8x2, VehicleCode.CH, RegistrationClass.A, 0, 0, false, VehicleClass.ClassCB39c, 3),
-			TestCase(AxleConfiguration.AxleConfig_8x2, VehicleCode.CC, RegistrationClass.II, 0, 0, false, VehicleClass.ClassCB40a, 2),
-			TestCase(AxleConfiguration.AxleConfig_8x2, VehicleCode.CC, RegistrationClass.II_III, 0, 3.1, true, VehicleClass.ClassCB40b, 2),
-			TestCase(AxleConfiguration.AxleConfig_8x2, VehicleCode.CC, RegistrationClass.II_III, 0, 3.1001, false, VehicleClass.ClassCB40c, 2),
-			TestCase(AxleConfiguration.AxleConfig_8x2, VehicleCode.CC, RegistrationClass.B, 0, 0, false, VehicleClass.ClassCB40d, 2),
-			TestCase(AxleConfiguration.AxleConfig_8x2, VehicleCode.CD, RegistrationClass.III, 5, 0, false, VehicleClass.ClassCB40e, 2),
-			TestCase(AxleConfiguration.AxleConfig_8x2, VehicleCode.CD, RegistrationClass.II, 10, 0, false, VehicleClass.ClassCB40f, 2)
+			TestCase(AxleConfiguration.AxleConfig_8x2, VehicleCode.CG, RegistrationClass.I, 0, 0, false, VehicleClass.Class39a, 3),
+			TestCase(AxleConfiguration.AxleConfig_8x2, VehicleCode.CG, RegistrationClass.II, 0, 0, true, VehicleClass.Class39b, 3),
+			TestCase(AxleConfiguration.AxleConfig_8x2, VehicleCode.CH, RegistrationClass.A, 0, 0, false, VehicleClass.Class39c, 3),
+			TestCase(AxleConfiguration.AxleConfig_8x2, VehicleCode.CC, RegistrationClass.II, 0, 0, false, VehicleClass.Class40a, 2),
+			TestCase(AxleConfiguration.AxleConfig_8x2, VehicleCode.CC, RegistrationClass.II_III, 0, 3.1, true, VehicleClass.Class40b, 2),
+			TestCase(AxleConfiguration.AxleConfig_8x2, VehicleCode.CC, RegistrationClass.II_III, 0, 3.1001, false, VehicleClass.Class40c, 2),
+			TestCase(AxleConfiguration.AxleConfig_8x2, VehicleCode.CC, RegistrationClass.B, 0, 0, false, VehicleClass.Class40d, 2),
+			TestCase(AxleConfiguration.AxleConfig_8x2, VehicleCode.CD, RegistrationClass.III, 5, 0, false, VehicleClass.Class40e, 2),
+			TestCase(AxleConfiguration.AxleConfig_8x2, VehicleCode.CD, RegistrationClass.II, 10, 0, false, VehicleClass.Class40f, 2)
 		]
 		public void SegmentLookupTest(AxleConfiguration axleConfig, VehicleCode vehicleCode, RegistrationClass registrationClass, int passengersLowerDeck,
 			double bodyHeight, bool lowEntry, VehicleClass vehicleParameterGroup, int numberOfMissions)
@@ -52,7 +52,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 		}
 
 
-		[TestCase(AxleConfiguration.AxleConfig_8x2, VehicleCode.CG, RegistrationClass.I, 0, 0, false, VehicleClass.ClassCB39a, 3)]
+		[TestCase(AxleConfiguration.AxleConfig_8x2, VehicleCode.CG, RegistrationClass.I, 0, 0, false, VehicleClass.Class39a, 3)]
 		public void TestComplete4AxlesCompleteBus39A(AxleConfiguration axleConfig, VehicleCode vehicleCode, RegistrationClass registrationClass,
 			int passengersLowerDeck, double bodyHeight, bool lowEntry, VehicleClass vehicleParameterGroup, int numberOfMissions)
 		{
@@ -83,7 +83,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 		}
 
 
-		[TestCase(AxleConfiguration.AxleConfig_8x2, VehicleCode.CG, RegistrationClass.II, 0, 0, true, VehicleClass.ClassCB39b, 3)]
+		[TestCase(AxleConfiguration.AxleConfig_8x2, VehicleCode.CG, RegistrationClass.II, 0, 0, true, VehicleClass.Class39b, 3)]
 		public void TestComplete4AxlesCompleteBus39B(AxleConfiguration axleConfig, VehicleCode vehicleCode, RegistrationClass registrationClass,
 			int passengersLowerDeck, double bodyHeight, bool lowEntry, VehicleClass vehicleParameterGroup, int numberOfMissions)
 		{

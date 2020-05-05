@@ -29,6 +29,7 @@
 *   Martin Rexeis, rexeis@ivt.tugraz.at, IVT, Graz University of Technology
 */
 
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -116,7 +117,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 
 		public int JobRunId { get; internal set; }
 
-		public AuxFanData FanData { get; internal set; }
+		public AuxFanData FanDataVTP { get; internal set; }
 
 		public SimulationType SimulationType { get; set; }
 
@@ -139,6 +140,8 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 			public IList<string> Technology;
 
 			[SIRange(0, 100 * Constants.Kilo)] public Watt PowerDemand;
+
+			public Func<DrivingCycleData.DrivingCycleEntry, Watt> PowerDemandFunc;
 
 			[Required] public AuxiliaryDemandType DemandType;
 

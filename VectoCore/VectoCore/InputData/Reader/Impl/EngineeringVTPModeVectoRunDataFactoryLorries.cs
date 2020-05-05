@@ -41,12 +41,12 @@ using TUGraz.VectoCore.Models.Simulation.Data;
 
 namespace TUGraz.VectoCore.InputData.Reader.Impl
 {
-	internal class EngineeringVTPModeVectoRunDataFactory : DeclarationVTPModeVectoRunDataFactory
+	internal class EngineeringVTPModeVectoRunDataFactoryLorries : DeclarationVTPModeVectoRunDataFactoryLorries
 	{
 		
 		private EngineeringDataAdapter _engineeringDao = new EngineeringDataAdapter();
 
-		public EngineeringVTPModeVectoRunDataFactory(IVTPEngineeringInputDataProvider ivtpProvider) : base(ivtpProvider.JobInputData, null)
+		public EngineeringVTPModeVectoRunDataFactoryLorries(IVTPEngineeringInputDataProvider ivtpProvider) : base(ivtpProvider.JobInputData, null)
 		{
 			
 		}
@@ -63,7 +63,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 					var runData = CreateVectoRunData(Segment, Segment.Missions.First(), new Tuple<Kilogram, double?>(0.SI<Kilogram>(), null));
 					runData.Cycle = new DrivingCycleProxy(drivingCycle, cycle.Name);
 					runData.Aux = AuxVTP;
-					runData.FanData = GetFanData();
+					runData.FanDataVTP = GetFanData();
 					runData.ExecutionMode = ExecutionMode.Engineering;
 					runData.SimulationType = SimulationType.VerificationTest;
 					return runData;

@@ -345,6 +345,7 @@ namespace TUGraz.VectoCore.InputData.Reader.ComponentData
 			public const string TorqueConverterActive = "tc_active";
 			public const string PTOActive = "PTO";
 			public const string Highway = "HW";
+			public const string VTPPSCompressorActive = "PS_comp_active";
 		}
 
 		#region DataParser
@@ -737,11 +738,19 @@ namespace TUGraz.VectoCore.InputData.Reader.ComponentData
 			{
 				ValidateHeader(table.Columns);
 
+				var fuels = table.Columns.Cast<DataColumn>().Where(x => x.ColumnName.StartsWith("fc_"))
+								.Select(x => x.ColumnName.Replace("fc_", "").ParseEnum<FuelType>()).ToArray();
+
 				var entries = table.Rows.Cast<DataRow>().Select(row => {
 					var tqLeft = row.ParseDouble(Fields.WheelTorqueLeft).SI<NewtonMeter>();
 					var tqRight = row.ParseDouble(Fields.WheelTorqueRight).SI<NewtonMeter>();
 					var speedLeft = row.ParseDouble(Fields.WheelSpeedLeft).RPMtoRad();
 					var speedRight = row.ParseDouble(Fields.WheelSpeedRight).RPMtoRad();
+					var fc = new Dictionary<FuelType, KilogramPerSecond>();
+					foreach (var fuelType in fuels) {
+						fc[fuelType] = row.ParseDoubleOrGetDefault("fc_" + fuelType.ToXMLFormat()).SI(Unit.SI.Gramm.Per.Hour)
+										.Cast<KilogramPerSecond>();
+					}
 					return new DrivingCycleData.DrivingCycleEntry {
 						Time = row.ParseDouble(Fields.Time).SI<Second>(),
 						VehicleTargetSpeed = row.ParseDouble(Fields.VehicleSpeed).KMPHtoMeterPerSecond(),
@@ -750,7 +759,9 @@ namespace TUGraz.VectoCore.InputData.Reader.ComponentData
 						EngineSpeed = row.ParseDouble(Fields.EngineSpeedSuffix).RPMtoRad(),
 						FanSpeed = row.ParseDouble(Fields.FanSpeed).RPMtoRad(),
 						Gear = (uint)row.ParseDoubleOrGetDefault(Fields.Gear),
-						Fuelconsumption = row.ParseDoubleOrGetDefault(Fields.FuelConsumption).SI(Unit.SI.Gramm.Per.Hour).Cast<KilogramPerSecond>(),
+						VTPFuelconsumption = fc,
+						VTPPSCompressorActive = row.ParseBooleanOrGetDefault(Fields.VTPPSCompressorActive) ?? false,
+						//row.ParseDoubleOrGetDefault(Fields.FuelConsumption).SI(Unit.SI.Gramm.Per.Hour).Cast<KilogramPerSecond>(),
 						TorqueConverterActive = row.ParseBooleanOrGetDefault(Fields.TorqueConverterActive),
 						TorqueWheelLeft = tqLeft,
 						TorqueWheelRight = tqRight,
@@ -786,13 +797,18 @@ namespace TUGraz.VectoCore.InputData.Reader.ComponentData
 					Fields.WheelTorqueRight,
 					Fields.Gear,
 					Fields.TorqueConverterActive,
-					Fields.FuelConsumption
-				};
+					Fields.VTPPSCompressorActive,
+					//Fields.FuelConsumption
+				}.Concat(EnumHelper.GetValues<FuelType>().Select(x => "fc_" + x.ToXMLFormat()));
 
 				const bool allowAux = true;
 
-				return CheckColumns(header, allowedCols, requiredCols, throwExceptions, allowAux) &&
+				var valid =  CheckColumns(header, allowedCols, requiredCols, throwExceptions, allowAux) &&
 					   CheckComboColumns(header, new[] { Fields.AirSpeedRelativeToVehicle, Fields.WindYawAngle }, throwExceptions);
+
+				//valid &= header.Cast<DataColumn>().Any(x => x.ColumnName.StartsWith("fc_"));
+
+				return valid;
 			}
 		}
 

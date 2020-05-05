@@ -278,9 +278,12 @@
     <Compile Include="InputData\FileIO\XML\XMLInputDataNinjectModule.cs" />
     <Compile Include="InputData\Reader\DataObjectAdapter\DeclarationDataAdapterPrimaryBus.cs" />
     <Compile Include="InputData\Reader\DataObjectAdapter\DeclarationDataAdapterSingleBus.cs" />
+    <Compile Include="InputData\Reader\Impl\AbstractVTPModeVectoRunDataFactory.cs" />
     <Compile Include="InputData\Reader\Impl\CombinedBusAuxiliaries.cs" />
     <Compile Include="InputData\Reader\DataObjectAdapter\DeclarationDataAdapterCompletedBusSpecific.cs" />
     <Compile Include="InputData\Reader\Impl\DeclarationModeCompletedBusVectoRunDataFactory.cs" />
+    <Compile Include="InputData\Reader\Impl\DeclarationVTPModeVectoRunDataFactoryHeavyBusPrimary.cs" />
+    <Compile Include="InputData\Reader\Impl\EngineeringVTPModeVectoRunDataFactoryHeavyBusPrimary.cs" />
     <Compile Include="Models\BusAuxiliaries\DownstreamModules\Impl\Electrics\SimpleBattery.cs" />
     <Compile Include="Models\BusAuxiliaries\Interfaces\DownstreamModules\Electrics\ISimpleBattery.cs" />
     <Compile Include="Models\BusAuxiliaries\DownstreamModules\Impl\Electrics\M05Impl_P0.cs" />
@@ -454,7 +457,7 @@
     <Compile Include="InputData\Reader\ComponentData\DrivingCycleDataReader.cs" />
     <Compile Include="InputData\Reader\ComponentData\FullLoadCurveReader.cs" />
     <Compile Include="InputData\Reader\Impl\DeclarationModeHeavyLorryVectoRunDataFactory.cs" />
-    <Compile Include="InputData\Reader\Impl\DeclarationVTPModeVectoRunDataFactory.cs" />
+    <Compile Include="InputData\Reader\Impl\DeclarationVTPModeVectoRunDataFactoryLorries.cs" />
     <Compile Include="InputData\Reader\Impl\DrivingCycleProxy.cs" />
     <Compile Include="InputData\Reader\Impl\EngineeringModeVectoRunDataFactory.cs" />
     <Compile Include="InputData\Reader\Impl\EngineOnlyVectoRunDataFactory.cs" />
@@ -521,7 +524,7 @@
     <Compile Include="Models\SimulationComponent\Impl\IdleControllerSwitcher.cs" />
     <Compile Include="Models\SimulationComponent\Impl\VTPGearbox.cs" />
     <Compile Include="Models\Simulation\Data\ModalResultField.cs" />
-    <Compile Include="InputData\Reader\Impl\EngineeringVTPModeVectoRunDataFactory.cs" />
+    <Compile Include="InputData\Reader\Impl\EngineeringVTPModeVectoRunDataFactoryLorries.cs" />
     <Compile Include="Models\SimulationComponent\Impl\VTPCycle.cs" />
     <Compile Include="Models\Simulation\Data\ShiftStrategyParameters.cs" />
     <Compile Include="Models\Simulation\Impl\ExemptedRun.cs" />

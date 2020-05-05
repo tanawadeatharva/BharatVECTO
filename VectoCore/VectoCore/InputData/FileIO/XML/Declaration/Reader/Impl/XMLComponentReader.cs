@@ -318,6 +318,23 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 
 	// ---------------------------------------------------------------------------------------
 
+	public class XMLAuxiliaryReaderV23 : XMLComponentReaderV20
+	{
+		public new static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V23;
+
+		public new const string AUX_READER_TYPE = "AuxiliariesDataDeclarationType";
+
+		public new static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, AUX_READER_TYPE);
+		
+
+		public XMLAuxiliaryReaderV23(IXMLDeclarationVehicleData vehicle, XmlNode componentsNode) : base(
+			vehicle, componentsNode)
+		{ }
+	}
+
+
+	// ---------------------------------------------------------------------------------------
+
 	public class XMLComponentReaderV26 : XMLComponentReaderV20
 	{
 		public new static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V26;

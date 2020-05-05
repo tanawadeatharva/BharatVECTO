@@ -62,7 +62,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 
 		protected override Segment GetSegment(IVehicleDeclarationInputData vehicle)
 		{
-			if (!vehicle.VehicleCategory.IsTruck()) {
+			if (!vehicle.VehicleCategory.IsLorry()) {
 				throw new VectoException("Invalid vehicle category for truck factory! {0}", vehicle.VehicleCategory.GetCategoryName());
 			}
 			var segment = DeclarationData.TruckSegments.Lookup(
@@ -128,7 +128,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 					Exempted = true,
 					Report = Report,
 					Mission = new Mission() { MissionType = MissionType.ExemptedMission },
-					VehicleData = DataAdapter.CreateVehicleData(InputDataProvider.JobInputData.Vehicle, null, new KeyValuePair<LoadingType, Tuple<Kilogram, double?>>(LoadingType.ReferenceLoad, Tuple.Create<Kilogram, double?>(0.SI<Kilogram>(), null))),
+					VehicleData = DataAdapter.CreateVehicleData(InputDataProvider.JobInputData.Vehicle, new Segment(), null, new KeyValuePair<LoadingType, Tuple<Kilogram, double?>>(LoadingType.ReferenceLoad, Tuple.Create<Kilogram, double?>(0.SI<Kilogram>(), null))),
 					InputDataHash = InputDataProvider.XMLHash
 				};
 			}
@@ -147,7 +147,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 			}
 			var simulationRunData = new VectoRunData {
 				Loading = loading.Key,
-				VehicleData = DataAdapter.CreateVehicleData(vehicle, mission, loading),
+				VehicleData = DataAdapter.CreateVehicleData(vehicle, _segment, mission, loading),
 				VehicleDesignSpeed = _segment.DesignSpeed,
 				AirdragData = DataAdapter.CreateAirdragData(vehicle.Components.AirdragInputData, mission, _segment),
 				EngineData = DataAdapter.CreateEngineData(InputDataProvider.JobInputData.Vehicle, engineMode, mission), // _engineData.Copy(), // a copy is necessary because every run has a different correction factor!

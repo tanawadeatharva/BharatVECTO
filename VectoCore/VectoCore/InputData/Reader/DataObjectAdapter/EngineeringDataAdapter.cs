@@ -130,7 +130,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 					var airDragArea = airdragData.AirDragArea ??
 									DeclarationData.TruckSegments.LookupCdA(
 										data.VehicleCategory, data.AxleConfiguration, data.GrossVehicleMassRating, false);
-					var height = data.Height ?? (data.VehicleCategory.IsTruck()
+					var height = data.Height ?? (data.VehicleCategory.IsLorry()
 									? DeclarationData.TruckSegments.LookupHeight(
 										data.VehicleCategory, data.AxleConfiguration,
 										data.GrossVehicleMassRating, false)

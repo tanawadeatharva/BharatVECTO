@@ -101,17 +101,17 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			return retVal;
 		}
 
-		public virtual VehicleData CreateVehicleData(IVehicleDeclarationInputData data, Mission mission, KeyValuePair<LoadingType, Tuple<Kilogram, double?>> loading)
+		public virtual VehicleData CreateVehicleData(IVehicleDeclarationInputData data, Segment segment, Mission mission, KeyValuePair<LoadingType, Tuple<Kilogram, double?>> loading)
 		{
 			if (!data.SavedInDeclarationMode) {
 				WarnDeclarationMode("VehicleData");
 			}
 			return data.ExemptedVehicle
 				? CreateExemptedVehicleData(data)
-				: CreateNonExemptedVehicleData(data, mission, loading.Value.Item1, loading.Value.Item2);
+				: CreateNonExemptedVehicleData(data, segment, mission, loading.Value.Item1, loading.Value.Item2);
 		}
 
-		protected virtual VehicleData CreateNonExemptedVehicleData(IVehicleDeclarationInputData data, Mission mission, Kilogram loading, double? passengerCount)
+		protected virtual VehicleData CreateNonExemptedVehicleData(IVehicleDeclarationInputData data, Segment segment, Mission mission, Kilogram loading, double? passengerCount)
 		{
 			var retVal = SetCommonVehicleData(data);
 			retVal.LegislativeClass = data.LegislativeClass;
@@ -121,7 +121,8 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			retVal.ManufacturerAddress = data.ManufacturerAddress;
 //			retVal.LegislativeClass = data.LegislativeClass;
 			retVal.ZeroEmissionVehicle = data.ZeroEmissionVehicle;
-			retVal.SleeperCab = data.SleeperCab;
+			retVal.VehicleClass = segment.VehicleClass;
+			retVal.SleeperCab = retVal.VehicleClass.IsMediumLorry() ? false : data.SleeperCab;
 			retVal.TrailerGrossVehicleMass = mission.Trailer.Sum(t => t.TrailerGrossVehicleWeight).DefaultIfNull(0);
 
 			retVal.BodyAndTrailerMass =

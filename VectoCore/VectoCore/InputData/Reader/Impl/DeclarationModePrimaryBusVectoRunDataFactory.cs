@@ -46,7 +46,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 			}
 
 			var segment = DeclarationData.PrimaryBusSegments.Lookup(
-				vehicle.VehicleCategory, vehicle.AxleConfiguration, vehicle.Articulated, vehicle.FloorType, false);
+				vehicle.VehicleCategory, vehicle.AxleConfiguration, vehicle.Articulated, vehicle.FloorType);
 			if (!segment.Found) {
 				throw new VectoException(
 					"no segment found for vehicle configruation: vehicle category: {0}, axle configuration: {1}, articulated: {2}, primary",
@@ -94,7 +94,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 			}
 			var simulationRunData = new VectoRunData {
 				Loading = loading.Key,
-				VehicleData = DataAdapter.CreateVehicleData(vehicle, mission, loading),
+				VehicleData = DataAdapter.CreateVehicleData(vehicle, _segment, mission, loading),
 				VehicleDesignSpeed = _segment.DesignSpeed,
 				AirdragData = _dao.CreateAirdragData(null, mission, new Segment()),
 				EngineData = DataAdapter.CreateEngineData(InputDataProvider.JobInputData.Vehicle, engineMode, mission),

@@ -19,6 +19,69 @@
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
+	<xs:complexType name="AuxiliariesDataDeclarationType">
+		<xs:complexContent>
+			<xs:extension base="v2.0:AbstractAuxiliaryDataDeclarationType">
+				<xs:sequence>
+					<xs:element name="Fan">
+						<xs:complexType>
+							<xs:sequence>
+								<xs:element name="Technology" type="v1.0:AuxFanTechnologyType">
+									<xs:annotation>
+										<xs:documentation>P181</xs:documentation>
+									</xs:annotation>
+								</xs:element>
+							</xs:sequence>
+						</xs:complexType>
+					</xs:element>
+					<xs:element name="SteeringPump">
+						<xs:complexType>
+							<xs:sequence>
+								<xs:element name="Technology" type="v2.3:AuxSPTechnologyType" maxOccurs="4">
+									<xs:annotation>
+										<xs:documentation>P182</xs:documentation>
+									</xs:annotation>
+								</xs:element>
+							</xs:sequence>
+						</xs:complexType>
+					</xs:element>
+					<xs:element name="ElectricSystem">
+						<xs:complexType>
+							<xs:sequence>
+								<xs:element name="Technology" type="v1.0:AuxESTechnologyType">
+									<xs:annotation>
+										<xs:documentation>P183</xs:documentation>
+									</xs:annotation>
+								</xs:element>
+							</xs:sequence>
+						</xs:complexType>
+					</xs:element>
+					<xs:element name="PneumaticSystem">
+						<xs:complexType>
+							<xs:sequence>
+								<xs:element name="Technology" type="v1.0:AuxPSTechnologyType">
+									<xs:annotation>
+										<xs:documentation>P184</xs:documentation>
+									</xs:annotation>
+								</xs:element>
+							</xs:sequence>
+						</xs:complexType>
+					</xs:element>
+					<xs:element name="HVAC">
+						<xs:complexType>
+							<xs:sequence>
+								<xs:element name="Technology" type="v1.0:AuxHVACTechnologyType">
+									<xs:annotation>
+										<xs:documentation>P185</xs:documentation>
+									</xs:annotation>
+								</xs:element>
+							</xs:sequence>
+						</xs:complexType>
+					</xs:element>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
 	<xs:complexType name="EngineDataDeclarationType">
 		<xs:complexContent>
 			<xs:extension base="v1.0:AbstractCombustionEngineDataDeclarationType">
@@ -212,6 +275,7 @@
 						</xs:annotation>
 						<xs:simpleType>
 							<xs:restriction base="xs:string">
+								<xs:minLength value="1"/>
 								<xs:enumeration value="C1"/>
 								<xs:enumeration value="C2"/>
 								<xs:enumeration value="C3"/>
@@ -296,6 +360,28 @@
 			<xs:element name="ElectricalOutput" type="xs:boolean"/>
 		</xs:sequence>
 	</xs:complexType>
+	<xs:simpleType name="AuxSPTechnologyType">
+		<xs:annotation>
+			<xs:documentation>P182</xs:documentation>
+			<xs:appinfo>
+				<vectoParam:description>
+					<vectoParam:parameterId component="Vehicle/Auxiliaries">182</vectoParam:parameterId>
+					<vectoParam:comment>Multiple entires allowed, one per steered axle</vectoParam:comment>
+					<vectoParam:unit>-</vectoParam:unit>
+				</vectoParam:description>
+			</xs:appinfo>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="Fixed displacement"/>
+			<xs:enumeration value="Fixed displacement with elec. control"/>
+			<xs:enumeration value="Dual displacement with mech. control"/>
+			<xs:enumeration value="Dual displacement with elec. control"/>
+			<xs:enumeration value="Variable displacement mech. controlled"/>
+			<xs:enumeration value="Variable displacement elec. controlled"/>
+			<xs:enumeration value="Electric driven pump"/>
+			<xs:enumeration value="Full electric steering gear"/>
+		</xs:restriction>
+	</xs:simpleType>
 	<xs:simpleType name="TyreDimensionType">
 		<xs:annotation>
 			<xs:appinfo>

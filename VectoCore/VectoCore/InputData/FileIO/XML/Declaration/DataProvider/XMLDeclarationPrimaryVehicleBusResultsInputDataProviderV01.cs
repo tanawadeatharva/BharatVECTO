@@ -78,7 +78,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 				Mission = mission,
 				VehicleGroup = VehicleClassHelper.Parse(vehicleGroup),
 				SimulationParameter = simulationParams,
-				EnergyConsumption = energyConsumption
+				EnergyConsumption = energyConsumption,
+				CO2 = new Dictionary<string, double>()
 			};
 		}
 

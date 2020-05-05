@@ -51,7 +51,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 			var rows = _segmentTable.AsEnumerable().Where(
 				r => {
 					var currentNumberOfAxles = r.Field<string>("numaxles").ToInt(0);
-					var currentVehicleCode =  VehicleCodeHelper.Parse(r.Field<string>("vehiclecode"));
+					var currentVehicleCode =  r.Field<string>("vehiclecode").ParseEnum<VehicleCode>();
 					var registrationClasses = RegistrationClassHelper.Parse(r.Field<string>("registrationclasses"));
 
 					return  currentNumberOfAxles == numberOfAxles 
@@ -143,7 +143,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 							PassengerDensity = row.ParseDouble(missionType.ToString()).SI<PerSquareMeter>(),
 							AirDragMeasurementAllowed = row.ParseBoolean("airdragmeasurement"),
 							ElectricalConsumers = GetVehicleEquipment(row),
-							DoubleDecker =  VehicleCodeHelper.Parse(row.Field<string>("vehiclecode")).IsDoubleDeckerBus(),
+							DoubleDecker =  row.Field<string>("vehiclecode").ParseEnum<VehicleCode>().IsDoubleDeckerBus(),
 							DeltaHeight = row.ParseDouble("deltaheight").SI<Meter>()
 						}
 					};

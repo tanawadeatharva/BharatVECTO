@@ -98,7 +98,12 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			if (dataProvider is IVTPDeclarationInputDataProvider) {
 				var vtpProvider = dataProvider as IVTPDeclarationInputDataProvider;
 				var report = vtpReport ?? new XMLVTPReport(ModWriter);
-				DataReader = new DeclarationVTPModeVectoRunDataFactory(vtpProvider, report);
+				if (vtpProvider.JobInputData.Vehicle.VehicleCategory.IsLorry()) {
+					DataReader = new DeclarationVTPModeVectoRunDataFactoryLorries(vtpProvider, report);
+				}
+				if (vtpProvider.JobInputData.Vehicle.VehicleCategory.IsBus()) {
+					DataReader = new DeclarationVTPModeVectoRunDataFactoryHeavyBusPrimary(vtpProvider, report);
+				}
 				return;
 			}
 
@@ -110,7 +115,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			}
 			if (dataProvider is IDeclarationInputDataProvider) {
 				var declDataProvider = dataProvider as IDeclarationInputDataProvider;
-				if (declDataProvider.JobInputData.Vehicle.VehicleCategory.IsTruck()) {
+				if (declDataProvider.JobInputData.Vehicle.VehicleCategory.IsLorry()) {
 					var report = declarationReport ?? new XMLDeclarationReport(ModWriter);
 					DataReader = new DeclarationModeTruckVectoRunDataFactory(declDataProvider, report);
 					return;
@@ -136,7 +141,12 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 		{
 			if (dataProvider is IVTPEngineeringInputDataProvider) {
 				var vtpProvider = dataProvider as IVTPEngineeringInputDataProvider;
-				DataReader = new EngineeringVTPModeVectoRunDataFactory(vtpProvider);
+				if (vtpProvider.JobInputData.Vehicle.VehicleCategory.IsLorry()) {
+					DataReader = new EngineeringVTPModeVectoRunDataFactoryLorries(vtpProvider);
+				}
+				if (vtpProvider.JobInputData.Vehicle.VehicleCategory.IsBus()) {
+					DataReader = new EngineeringVTPModeVectoRunDataFactoryHeavyBusPrimary(vtpProvider);
+				}
 				return;
 			}
 			if (dataProvider is IEngineeringInputDataProvider) {

@@ -962,7 +962,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		//IdlingSpeed
 		public PerSecond EngineIdleSpeed
 		{
-			get { return GetDouble(XMLNames.Engine_IdlingSpeed).SI<PerSecond>(); }
+			get { return GetDouble(XMLNames.Engine_IdlingSpeed).RPMtoRad(); }
 		}
 
 		public RetarderType RetarderType
@@ -1048,7 +1048,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		public RegistrationClass RegisteredClass { get; }
 		public VehicleCode VehicleCode { get; }
 		public FloorType FloorType { get; }
-		public bool Articulated { get; }
+		public bool Articulated { get { return GetBool(XMLNames.Vehicle_Articulated); } }
 		public Meter Height { get; }
 		public Meter Length { get; }
 		public Meter Width { get; }

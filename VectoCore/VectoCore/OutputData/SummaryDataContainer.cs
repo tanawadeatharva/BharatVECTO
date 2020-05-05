@@ -66,7 +66,8 @@ namespace TUGraz.VectoCore.OutputData
 			Fields.FC_AUXHTR_H, Fields.FC_AUXHTR_KM,
 			Fields.FC_AUXHTR_H_CORR, Fields.FC_AUXHTR_KM_CORR,
 			Fields.FCFINAL_H, Fields.FCFINAL_KM, Fields.FCFINAL_LITERPER100KM, Fields.FCFINAL_LITERPER100TKM,
-			Fields.FCFINAL_LiterPer100M3KM, Fields.FCFINAL_LiterPer100PassengerKM, Fields.K_VEHLINE
+			Fields.FCFINAL_LiterPer100M3KM, Fields.FCFINAL_LiterPer100PassengerKM,
+			Fields.SPECIFIC_FC, Fields.K_VEHLINE
 		};
 
 		// ReSharper restore InconsistentNaming
@@ -174,7 +175,7 @@ namespace TUGraz.VectoCore.OutputData
 			
 			Table.Columns.AddRange(
 				new[] {
-					Fields.SPECIFIC_FC, Fields.CO2_KM, Fields.CO2_TKM, Fields.CO2_M3KM, Fields.CO2_PKM, Fields.P_WHEEL_POS, Fields.P_FCMAP_POS,
+					Fields.CO2_KM, Fields.CO2_TKM, Fields.CO2_M3KM, Fields.CO2_PKM, Fields.P_WHEEL_POS, Fields.P_FCMAP_POS,
 					Fields.E_FCMAP_POS, Fields.E_FCMAP_NEG, Fields.E_POWERTRAIN_INERTIA, Fields.E_AUX, Fields.E_CLUTCH_LOSS,
 					Fields.E_TC_LOSS, Fields.E_SHIFT_LOSS, Fields.E_GBX_LOSS, Fields.E_RET_LOSS, Fields.E_ANGLE_LOSS,
 					Fields.E_AXL_LOSS, Fields.E_BRAKE, Fields.E_VEHICLE_INERTIA, Fields.E_WHEEL, Fields.E_AIR, Fields.E_ROLL, Fields.E_GRAD,
@@ -222,14 +223,21 @@ namespace TUGraz.VectoCore.OutputData
 		{
 			if (_sumWriter != null) {
 				var view = new DataView(Table, "", Fields.SORT, DataViewRowState.CurrentRows).ToTable();
-				var toRemove =
-					view.Columns.Cast<DataColumn>().Where(column => column.ColumnName.StartsWith(Fields.INTERNAL_PREFIX)).ToList();
-				foreach (var colName in new[] { Fields.E_WHEEL, Fields.SPECIFIC_FC }) {
-					var column = view.Columns[colName];
+
+				var probablyEmptyCols = new[] { Fields.E_WHEEL, Fields.SPECIFIC_FC }.Select(x => x.Contains("{") ? x.Substring(0, x.IndexOf("{")) : x).ToArray();
+				var removeCandidates =
+					view.Columns.Cast<DataColumn>().Where(column => probablyEmptyCols.Any(x => column.ColumnName.StartsWith(x))).ToList();
+				var toRemove = new List<string>();
+				foreach (var column in removeCandidates) {
+					//var column = view.Columns[colName];
 					if (view.AsEnumerable().All(dr => dr.IsNull(column))) {
-						toRemove.Add(column);
+						toRemove.Add(column.ColumnName);
 					}
 				}
+
+				toRemove = toRemove.Concat(
+					view.Columns.Cast<DataColumn>().Where(column => column.ColumnName.StartsWith(Fields.INTERNAL_PREFIX)).Select(x => x.ColumnName)).ToList();
+
 				foreach (var dataColumn in toRemove) {
 					view.Columns.Remove(dataColumn);
 				}
@@ -495,12 +503,13 @@ namespace TUGraz.VectoCore.OutputData
 					kilogramCO2PerMeter += fcFinal * fuel.CO2PerFuelWeight / distance;
 				}
 
+				if (vtpCycle) {
+					row[FcCol(Fields.SPECIFIC_FC, suffix)] = (modData.TotalFuelConsumption(ModalResultField.FCFinal, fuel) / modData.WorkWheelsPos())
+						.ConvertToGramPerKiloWattHour();
+				}
 			}
 
-			if (vtpCycle) {
-				row[Fields.SPECIFIC_FC] = (modData.TimeIntegral<Kilogram>(ModalResultField.FCFinal) / modData.WorkWheelsPos())
-					.ConvertToGramPerKiloWattHour();
-			}
+			
 
 			row[Fields.CO2_KM] = kilogramCO2PerMeter.ConvertToGrammPerKiloMeter();
 			if (vehicleLoading != null && !vehicleLoading.IsEqual(0)) {
@@ -1092,7 +1101,7 @@ namespace TUGraz.VectoCore.OutputData
 			public const string E_BusAux_HVAC_Mech = "E_BusAux_HVAC_mech [kWh]";
 			public const string E_BusAux_HVAC_El = "E_BusAux_HVAC_el [kWh]";
 
-			public const string SPECIFIC_FC = "Specific FC [g/kWh] wheel pos.";
+			public const string SPECIFIC_FC = "Specific FC{0} [g/kWh] wheel pos.";
 
 			public const string ACC = "a [m/s^2]";
 			public const string ACC_POS = "a_pos [m/s^2]";

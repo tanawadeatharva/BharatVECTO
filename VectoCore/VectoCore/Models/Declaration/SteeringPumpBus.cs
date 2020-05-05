@@ -88,7 +88,7 @@ namespace TUGraz.VectoCore.Models.Declaration {
 			protected override void ParseData(DataTable table)
 			{
 				var missionTypes = Enum.GetValues(typeof(MissionType)).Cast<MissionType>().Where(
-					m => m.IsDeclarationMission() && m != MissionType.ExemptedMission &&
+					m => ((m.IsDeclarationMission() && m != MissionType.ExemptedMission) || m == MissionType.VerificationTest) &&
 						table.Columns.Contains("tubing-" + m.ToString())).ToList();
 
 				foreach (DataRow row in table.Rows) {
