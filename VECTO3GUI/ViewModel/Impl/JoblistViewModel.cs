@@ -48,6 +48,7 @@ namespace VECTO3GUI.ViewModel.Impl
 		private ICommand _moveJobDownCommand;
 		private ICommand _startSimulationCommand;
 		private ICommand _openInFolderCommand;
+		private ICommand _doubleClickCommand;
 
 		#endregion
 
@@ -124,6 +125,19 @@ namespace VECTO3GUI.ViewModel.Impl
 		}
 
 		#region Commands
+
+
+		public ICommand DoubleClickCommand
+		{
+			get { return _doubleClickCommand ?? (_doubleClickCommand = new RelayCommand<JobEntry>(DoDoubleClick)); }
+		}
+		private void DoDoubleClick(JobEntry jobEntry)
+		{
+			if (!CanEditCompletdFile(jobEntry))
+				return;
+			DoEditJob(jobEntry);
+		}
+
 
 		public ICommand RemoveJob
 		{

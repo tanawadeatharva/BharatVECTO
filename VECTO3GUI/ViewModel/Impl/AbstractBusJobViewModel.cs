@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -23,7 +23,7 @@ namespace VECTO3GUI.ViewModel.Impl
 	{
 		CompletedBusFile,
 		PrimaryBusFile,
-		PIFBusFile
+		PIFBusFile,
 	}
 
 	public static class JobFileTypeHelper
@@ -67,6 +67,7 @@ namespace VECTO3GUI.ViewModel.Impl
 		protected SettingsModel Settings { get; private set; }
 
 		protected JobType JobType;
+		protected JobEntry JobEntry;
 		private readonly bool _editJob;
 
 		#endregion
@@ -147,6 +148,8 @@ namespace VECTO3GUI.ViewModel.Impl
 
 		private void SetJobEntryData(JobEntry jobEntry)
 		{
+			JobEntry = jobEntry;
+
 			FirstFilePath = jobEntry.Header.JobType == JobType.SingleBusJob
 				? jobEntry.Body.PrimaryVehicle
 				: jobEntry.Body.PrimaryVehicleResults;
@@ -167,7 +170,7 @@ namespace VECTO3GUI.ViewModel.Impl
 		}
 		private void DoSelectFirstFileCommand(JobFileType jobFileType)
 		{
-			FirstFilePath = OpenFileSelector(jobFileType, nameof(FirstFilePath));
+			FirstFilePath = OpenFileSelector(jobFileType, nameof(FirstFilePath), FirstFilePath);
 		}
 
 		public ICommand SelectSecondFileCommand
@@ -180,7 +183,7 @@ namespace VECTO3GUI.ViewModel.Impl
 		}
 		private void DoSelectSecondFileCommand(JobFileType jobFileType)
 		{
-			SecondFilePath = OpenFileSelector(jobFileType, nameof(SecondFilePath));
+			SecondFilePath = OpenFileSelector(jobFileType, nameof(SecondFilePath), SecondFilePath);
 		}
 
 		public ICommand CancelCommand
@@ -253,23 +256,46 @@ namespace VECTO3GUI.ViewModel.Impl
 		}
 
 
-		private string OpenFileSelector(JobFileType jobFileType, string textPropertyName)
+		private string OpenFileSelector(JobFileType jobFileType, string textPropertyName, string filePath)
 		{
-			var dialogResult = FileDialogHelper.ShowSelectFilesDialog(false, FileDialogHelper.XMLFilter, Settings.XmlFilePathFolder);
-			if (dialogResult == null)
-				return null;
+			var folderPath = GetFolderPath(filePath);
 
-			var filePath = dialogResult.FirstOrDefault();
-			var validationResult = IsValideXml(jobFileType, filePath);
+			var dialogResult = FileDialogHelper.ShowSelectFilesDialog(false, FileDialogHelper.XMLFilter, folderPath);
+			if (dialogResult != null) {
 
-			if (!validationResult)
-				AddPropertyError(textPropertyName, $"Selected XML-File is not a valid {jobFileType.GetLable()}!");
-			else
-				RemovePropertyError(textPropertyName);
+				filePath = dialogResult.FirstOrDefault();
+				var validationResult = IsValideXml(jobFileType, filePath);
 
-			return !validationResult ? null : filePath;
+				if (!validationResult)
+					AddPropertyError(textPropertyName, $"Selected XML-File is not a valid {jobFileType.GetLable()}!");
+				else
+					RemovePropertyError(textPropertyName);
+
+				return !validationResult ? null : filePath;
+			}
+			
+			return filePath;
 		}
 
+		private string GetFolderPath(string filePath)
+		{
+			if (!_editJob || filePath.IsNullOrEmpty())
+				return Settings.XmlFilePathFolder;
+			
+			if (IsFileName(filePath)) {
+				return !JobEntry.JobEntryFilePath.IsNullOrEmpty()
+					? Path.GetDirectoryName(JobEntry.JobEntryFilePath)
+					: Path.GetDirectoryName(Settings.XmlFilePathFolder);
+			}
+
+			return filePath;
+		}
+		
+		private bool IsFileName( string filePath)
+		{
+			return !Directory.Exists(filePath);
+		}
+		
 		private bool IsValideXml(JobFileType jobFileType, string filePath)
 		{
 			if (filePath.IsNullOrEmpty())

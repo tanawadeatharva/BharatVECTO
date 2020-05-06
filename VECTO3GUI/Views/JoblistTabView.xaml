@@ -34,7 +34,7 @@
                                   CommandParameter="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Window}}}"/>
                         <MenuItem Header="Save to" Command="{Binding SaveToJob}"/>
                         <Separator HorizontalAlignment="Stretch" Background="Gray"/>
-                        <MenuItem Header="Exit" 
+                        <MenuItem Header="Close" 
                                   Command="{Binding CloseJob}" 
                                   CommandParameter="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Window}}}"/>
                     </MenuItem>

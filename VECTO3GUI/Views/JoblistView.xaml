@@ -64,7 +64,16 @@
             <DataGrid x:Name="JobList" ItemsSource="{Binding Jobs}" 
                       SelectedValue="{Binding DataContext.SelectedJobEntry, RelativeSource={RelativeSource AncestorType=views:JoblistView}}"
                       Style="{DynamicResource AzureDataGrid}" BorderThickness="1" CanUserAddRows="False" AutoGenerateColumns="False" SelectionUnit="FullRow" 
-                      IsReadOnly="False" HeadersVisibility="All"  RowHeaderWidth="5" >
+                      IsReadOnly="False" HeadersVisibility="All"  RowHeaderWidth="5" IsSynchronizedWithCurrentItem="True" >
+
+                <DataGrid.InputBindings>
+                    <MouseBinding
+                        MouseAction="LeftDoubleClick"
+                        Command="{Binding DoubleClickCommand}"
+                        CommandParameter="{Binding Jobs/}"/>
+                </DataGrid.InputBindings>
+
+
 
                 <DataGrid.Resources>
                     <ContextMenu x:Key="RowMenu">

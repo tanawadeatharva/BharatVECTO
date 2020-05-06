@@ -23,5 +23,7 @@ namespace VECTO3GUI.ViewModel.Interfaces
 		ICommand OpenSettings { get; }
 		ICommand ExitMainCommand { get; }
 		ICommand OpenInFolder { get; }
+		ICommand DoubleClickCommand { get; }
+
 	}
 }
