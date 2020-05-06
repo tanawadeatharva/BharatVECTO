@@ -9,6 +9,7 @@ namespace VECTO3GUI.Model
 {
 	public class JobListEntry
 	{
+		public string JobTypeName { get; set; }
 		public bool IsSelected { get; set; }
 		public string JobFilePath { get; set; }
 	}
@@ -30,7 +31,8 @@ namespace VECTO3GUI.Model
 
 		private void SetConfigFolder()
 		{
-			if (!Directory.Exists($"./{ConfigFolderName}")) {
+			if (!Directory.Exists($"./{ConfigFolderName}"))
+			{
 				Directory.CreateDirectory($"{ConfigFolderName}");
 			}
 		}
@@ -42,13 +44,13 @@ namespace VECTO3GUI.Model
 				jobList = SerializeHelper.DeserializeToObject<List<JobListEntry>>(_jobListFilePath);
 			JobList = jobList;
 		}
-		
+
 		public void SaveJobList(IList<JobEntry> jobEntries)
 		{
 			SetJobList(jobEntries);
 			SerializeHelper.SerializeToFile(_jobListFilePath, JobList);
 		}
-		
+
 		private void SetJobList(IList<JobEntry> jobEntries)
 		{
 			if (jobEntries == null)
@@ -62,13 +64,14 @@ namespace VECTO3GUI.Model
 				(
 					new JobListEntry
 					{
+						JobTypeName = jobEntries[i].Header.JobType.GetLabel(),
 						IsSelected = jobEntries[i].Selected,
 						JobFilePath = jobEntries[i].JobEntryFilePath
 					}
 				);
 			}
 		}
-		
+
 		public IList<JobEntry> GetJobEntries()
 		{
 			var jobEntries = new List<JobEntry>();
@@ -76,15 +79,32 @@ namespace VECTO3GUI.Model
 			if (JobList.IsNullOrEmpty())
 				return jobEntries;
 
-			for (int i = 0; i < JobList.Count; i++) {
-				var jobEntry = SerializeHelper.DeserializeToObject<JobEntry>(JobList[i].JobFilePath); 
+			for (int i = 0; i < JobList.Count; i++)
+			{
+				var jobType = JobTypeHelper.Parse(JobList[i].JobTypeName);
+				JobEntry jobEntry;
+
+				if (jobType == JobType.CompletedBusJob || jobType == JobType.SingleBusJob)
+				{
+					jobEntry = SerializeHelper.DeserializeToObject<JobEntry>(JobList[i].JobFilePath);
+				}
+				else
+				{
+					jobEntry = new JobEntry
+					{
+						Header = new JobHeader { JobType = jobType},
+						Body = new JobBody {
+							CompletedVehicle = JobType.CompletedXml == jobType ? JobList[i].JobFilePath : null
+						}
+					};
+				}
+				
 				if (jobEntry != null) {
 					jobEntry.JobEntryFilePath = JobList[i].JobFilePath;
 					jobEntry.Selected = JobList[i].IsSelected;
 					jobEntries.Add(jobEntry);
 				}
 			}
-
 			return jobEntries;
 		}
 	}

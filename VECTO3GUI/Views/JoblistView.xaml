@@ -7,8 +7,9 @@
              xmlns:interfaces="clr-namespace:VECTO3GUI.ViewModel.Interfaces"
              xmlns:views="clr-namespace:VECTO3GUI.Views"
              xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
+             xmlns:converter="clr-namespace:VECTO3GUI.Helper.Converter"
              mc:Ignorable="d" 
-             d:DesignHeight="300" d:DesignWidth="600"
+             d:DesignHeight="400" d:DesignWidth="600"
              d:DataContext="{d:DesignInstance Type=impl:JoblistViewModel, IsDesignTimeCreatable=False}">
 
     <d:JoblistView.DataContext>
@@ -79,10 +80,14 @@
                     <ContextMenu x:Key="RowMenu">
                         <MenuItem Header="{Binding DataContext.FirstContextMenu, RelativeSource={RelativeSource AncestorType=views:JoblistView}}" 
                                   Command="{Binding DataContext.OpenJob, RelativeSource={RelativeSource AncestorType=views:JoblistView}}"
-                                  CommandParameter="{Binding Source={x:Static impl:JobFileType.PrimaryBusFile}}"/>
+                                  CommandParameter="{Binding Source={x:Static impl:JobFileType.PrimaryBusFile}}" 
+                                  Visibility="{Binding DataContext.VisibilityFirstView, Converter={converter:BoolVisibilityConverter},
+                                  RelativeSource={RelativeSource AncestorType=views:JoblistView}}"/>
                         <MenuItem Header="View Completed Bus File" 
                                   Command="{Binding DataContext.OpenJob, RelativeSource={RelativeSource AncestorType=views:JoblistView}}"
-                                  CommandParameter="{Binding Source={x:Static impl:JobFileType.CompletedBusFile}}"/>
+                                  CommandParameter="{Binding Source={x:Static impl:JobFileType.CompletedBusFile}}"
+                                  Visibility="{Binding DataContext.VisibilitySecView, Converter={converter:BoolVisibilityConverter}, 
+                                  RelativeSource={RelativeSource AncestorType=views:JoblistView}}"/>
 
                         <Separator HorizontalAlignment="Stretch" Background="Gray"/>
 
@@ -140,7 +145,7 @@
 
         <Grid Grid.Row="1" Grid.Column="2" Margin="0,0,10,0">
             <StackPanel Orientation="Vertical" Margin="0,30,0,0" Width="105">
-                <Button Margin="0,5,0,0" Content="Add Job" 
+                <Button Margin="0,5,0,0" Content="Add File" 
                         Command="{Binding AddJob}"/>
 
                 <Button Margin="0,5,0,0" Content="Edit Job"

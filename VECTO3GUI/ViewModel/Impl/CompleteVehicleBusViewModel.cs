@@ -288,7 +288,7 @@ namespace VECTO3GUI.ViewModel.Impl
 			VehicleLength = vehicle.Length;
 			VehicleWidth = vehicle.Width;
 			EntranceHeight = vehicle.EntranceHeight;
-			DoorDriveTechnology = ((XMLDeclarationCompletedBusDataProviderV26)vehicle).DoorDriveTechnology;
+			DoorDriveTechnology = vehicle.DoorDriveTechnology;
 
 			_componentData = new VehicleBusComponentData(this);
 			ClearChangedProperties();

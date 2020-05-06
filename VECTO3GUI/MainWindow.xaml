@@ -26,7 +26,7 @@
                 <Menu IsMainMenu="True" Style="{DynamicResource MetroMenu}">
                     <MenuItem Header="File" VerticalAlignment="Center">
 
-                        <MenuItem Header="Add Job" Command="{Binding CurrentViewModel.AddJob}"/>
+                        <MenuItem Header="Add File" Command="{Binding CurrentViewModel.AddJob}"/>
                         <MenuItem Header="Edit Job" 
                                   Command="{Binding CurrentViewModel.EditJob}"
                                   CommandParameter="{Binding CurrentViewModel.SelectedJobEntry}"/>

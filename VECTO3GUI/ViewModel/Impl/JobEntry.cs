@@ -1,4 +1,5 @@
 using System;
+using System.IO;
 using Newtonsoft.Json;
 
 
@@ -8,6 +9,7 @@ namespace VECTO3GUI.ViewModel.Impl
 	{
 		SingleBusJob,
 		CompletedBusJob,
+		CompletedXml,
 		Unknown
 	}
 
@@ -15,6 +17,7 @@ namespace VECTO3GUI.ViewModel.Impl
 	{
 		private const string SingleBusJobLabel = "Single Bus Job";
 		private const string CompletedBusJobLabel = "Completed Bus Job";
+		private const string CompletedXmlLabel = "Completed Bus XML";
 
 		public static string GetLabel(this JobType jobType)
 		{
@@ -24,8 +27,10 @@ namespace VECTO3GUI.ViewModel.Impl
 					return SingleBusJobLabel;
 				case JobType.CompletedBusJob:
 					return CompletedBusJobLabel;
+				case JobType.CompletedXml:
+					return CompletedXmlLabel;
 				default:
-					return string.Empty;
+					return nameof(JobType.Unknown);
 			}
 		}
 
@@ -35,6 +40,9 @@ namespace VECTO3GUI.ViewModel.Impl
 				return JobType.SingleBusJob;
 			if (CompletedBusJobLabel == jobTypeName)
 				return JobType.CompletedBusJob;
+			if (CompletedXmlLabel == jobTypeName)
+				return JobType.CompletedXml;
+
 			return JobType.Unknown;
 		}
 
@@ -87,6 +95,20 @@ namespace VECTO3GUI.ViewModel.Impl
 		{
 			get { return _body; }
 			set { SetProperty(ref _body, value); }
+		}
+
+		public string GetAbsoluteFilePath(string propertyFilePath)
+		{
+			if (IsFileName(propertyFilePath)) {
+				var folderPath = Path.GetDirectoryName(JobEntryFilePath);
+				return Path.Combine(folderPath, propertyFilePath);
+			}
+			return propertyFilePath;
+		}
+
+		private bool IsFileName(string filePath)
+		{
+			return !Directory.Exists(filePath) && !File.Exists(filePath);
 		}
 	}
 

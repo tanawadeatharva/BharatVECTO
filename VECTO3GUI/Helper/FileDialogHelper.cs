@@ -13,6 +13,9 @@ namespace VECTO3GUI.Helper
 {
 	public static class FileDialogHelper
 	{
+		public const string XMLExtension = ".xml";
+		public const string JobFileExtension = ".vecto";
+
 		public const string XMLFilter = "XML Files (*.xml)|*.xml|All Files (*.*)|*.*";
 		public const string JobFilter = "Vecto Files (*.vecto|*.vecto|All Files (*.*)|*.*";
 
