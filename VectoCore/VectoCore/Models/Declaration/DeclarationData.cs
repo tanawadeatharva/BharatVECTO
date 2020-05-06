@@ -626,7 +626,10 @@ namespace TUGraz.VectoCore.Models.Declaration
 					throw new VectoException("ComputeShiftPolygon needs at least 2 gears. {0} gears given.", gears.Count);
 				}
 
-				var p2 = new Point(engine.IdleSpeed.Value() * 1.1, 0);
+				var clutchClosingSpeed = (engine.FullLoadCurves[0].RatedSpeed - engine.IdleSpeed) *
+									Constants.SimulationSettings.ClutchClosingSpeedNorm + engine.IdleSpeed;
+
+				var p2 = new Point(Math.Min((clutchClosingSpeed - 10.RPMtoRad()).Value(), engine.IdleSpeed.Value() * 1.1), 0);
 				var p3 = new Point(fullLoadCurve.NTq99lSpeed.Value(), 0);
 				var p5 = new Point(fullLoadCurve.NP98hSpeed.Value(), fullLoadCurve.MaxTorque.Value() * 1.1);
 
