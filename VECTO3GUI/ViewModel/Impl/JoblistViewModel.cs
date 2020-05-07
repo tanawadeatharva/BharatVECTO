@@ -1,24 +1,37 @@
 ﻿using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Threading;
 using System.Windows;
+using System.Windows.Forms;
 using System.Windows.Input;
 using System.Xml;
+using System.Xml.Linq;
 using Castle.Core.Internal;
 using Ninject;
 using TUGraz.VectoCommon.InputData;
+using TUGraz.VectoCommon.Models;
+using TUGraz.VectoCommon.Resources;
+using TUGraz.VectoCore;
+using TUGraz.VectoCore.Configuration;
+using TUGraz.VectoCore.InputData.FileIO.JSON;
 using TUGraz.VectoCore.InputData.FileIO.XML;
 using TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider;
+using TUGraz.VectoCore.Models.Simulation.Impl;
+using TUGraz.VectoCore.OutputData;
+using TUGraz.VectoCore.OutputData.FileIO;
 using VECTO3GUI.Util;
 using VECTO3GUI.ViewModel.Interfaces;
 using VECTO3GUI.Helper;
 using VECTO3GUI.Model;
 using VECTO3GUI.Views;
+using MessageBox = System.Windows.MessageBox;
 
 
 namespace VECTO3GUI.ViewModel.Impl
@@ -52,6 +65,8 @@ namespace VECTO3GUI.ViewModel.Impl
 		private ICommand _startSimulationCommand;
 		private ICommand _openInFolderCommand;
 		private ICommand _doubleClickCommand;
+		private ICommand _runSimulationCommand;
+		private BackgroundWorker SimulationWorker;
 
 		#endregion
 
@@ -106,6 +121,14 @@ namespace VECTO3GUI.ViewModel.Impl
 		{
 			_settings = new SettingsModel();
 			SetJobEntries();
+
+			SimulationWorker = new BackgroundWorker();
+			SimulationWorker.DoWork += RunVectoSimulation;
+			SimulationWorker.ProgressChanged += VectoSimulationProgressChanged;
+			SimulationWorker.RunWorkerCompleted += VectoSimulationCompleted;
+			SimulationWorker.WorkerReportsProgress = true;
+			SimulationWorker.WorkerSupportsCancellation = true;
+
 		}
 
 		private void SetJobEntries()
@@ -140,10 +163,18 @@ namespace VECTO3GUI.ViewModel.Impl
 		#region Commands
 
 
+		
+
+		public ICommand RunSimulation
+		{
+			get { return _runSimulationCommand ?? (_runSimulationCommand = new RelayCommand(DoRunSimulation, CanRunSimulation)); }
+		}
+
 		public ICommand DoubleClickCommand
 		{
 			get { return _doubleClickCommand ?? (_doubleClickCommand = new RelayCommand<JobEntry>(DoDoubleClick)); }
 		}
+
 		private void DoDoubleClick(JobEntry jobEntry)
 		{
 			if (jobEntry == null || !IsJobFile(jobEntry.JobEntryFilePath))
@@ -597,5 +628,284 @@ namespace VECTO3GUI.ViewModel.Impl
 			
 			FirstContextMenu = $"View {contextMenuText}";
 		}
+
+		#region RunVECTOSimulation
+
+		private bool CanRunSimulation()
+		{
+			return !SimulationWorker.IsBusy;
+		}
+
+		private void DoRunSimulation()
+		{
+			if (!SimulationWorker.IsBusy) {
+				// change button to stop button
+				Messages.Clear();
+				SimulationWorker.RunWorkerAsync();
+			}
+		}
+
+		private void RunVectoSimulation(object theSender, DoWorkEventArgs e)
+		{
+			var sender = theSender as BackgroundWorker;
+			if (sender == null) {
+				return;
+			}
+
+			var jobs = Jobs.Where(x => x.Selected).ToArray();
+			if (jobs.Length == 0) {
+				sender.ReportProgress(100, new VectoSimulationProgress() {Target = VectoSimulationProgress.Targets.Message, Message = "No jobs selected for simulation"});
+				return;
+			}
+			var sumFileWriter = new FileOutputWriter(Path.GetDirectoryName(jobs.First().JobEntryFilePath));
+			var sumContainer = new SummaryDataContainer(sumFileWriter);
+			var jobContainer = new JobContainer(sumContainer);
+
+			var mode = ExecutionMode.Declaration;
+
+			var fileWriters = new Dictionary<int, FileOutputWriter>();
+			var finishedRuns = new List<int>();
+
+			
+			var kernel = new StandardKernel(new VectoNinjectModule());
+			var xmlReader = kernel.Get<IXMLInputDataReader>();
+
+			foreach (var jobEntry in jobs) {
+				try {
+					var fullFileName = Path.GetFullPath(jobEntry.JobEntryFilePath);
+					if (!File.Exists(fullFileName)) {
+						sender.ReportProgress(
+							0, new VectoSimulationProgress() {
+								Target = VectoSimulationProgress.Targets.Message,
+								Message =
+									$"File {jobEntry.JobEntryFilePath} not found!"
+							});
+						continue;
+					}
+
+					sender.ReportProgress(
+						0,
+						new VectoSimulationProgress() {
+							Target = VectoSimulationProgress.Targets.Message,
+							Message = $"Reading file {Path.GetFileName(fullFileName)}"
+						});
+					var extension = Path.GetExtension(jobEntry.JobEntryFilePath);
+					IInputDataProvider input = null;
+					switch (extension) {
+						case Constants.FileExtensions.VectoJobFile:
+							input = JSONInputDataFactory.ReadJsonJob(fullFileName);
+							var tmp = input as IDeclarationInputDataProvider;
+							mode = tmp?.JobInputData.SavedInDeclarationMode ?? false ? ExecutionMode.Declaration : ExecutionMode.Engineering;
+							break;
+						case ".xml":
+							var xdoc = XDocument.Load(fullFileName);
+							var rootNode = xdoc.Root?.Name.LocalName ?? "";
+							if (XMLNames.VectoInputEngineering.Equals(rootNode, StringComparison.InvariantCultureIgnoreCase)) {
+								input = xmlReader.CreateEngineering(fullFileName);
+							} else if (XMLNames.VectoInputDeclaration.Equals(rootNode, StringComparison.InvariantCultureIgnoreCase)) {
+								using (var reader = XmlReader.Create(fullFileName)) {
+									input = xmlReader.CreateDeclaration(reader);
+								}
+								mode = ExecutionMode.Engineering;
+							}
+							break;
+					}
+
+					if (input == null) {
+						sender.ReportProgress(
+							0,
+							new VectoSimulationProgress() {
+								Target = VectoSimulationProgress.Targets.Message,
+								Message = $"No input provider for job {Path.GetFileName(fullFileName)}"
+							});
+						continue;
+					}
+
+					var fileWriter = new FileOutputWriter(Path.GetDirectoryName(fullFileName));
+					var runsFactory = new SimulatorFactory(mode, input, fileWriter);
+					foreach (var runId in jobContainer.AddRuns(runsFactory)) {
+						fileWriters.Add(runId, fileWriter);
+					}
+
+					sender.ReportProgress(
+						0,
+						new VectoSimulationProgress() {
+							Target = VectoSimulationProgress.Targets.Message,
+							Message = $"Finished reading data for job {Path.GetFileName(fullFileName)}"
+						});
+				} catch (Exception ex) {
+					MessageBox.Show(
+						$"ERROR running job {Path.GetFileName(jobEntry.JobEntryFilePath)}: {ex.Message}", "Error", MessageBoxButton.OK,
+						MessageBoxImage.Exclamation);
+					sender.ReportProgress(0, new VectoSimulationProgress() {Target = VectoSimulationProgress.Targets.Message, Message = ex.Message});
+				}
+			}
+
+			foreach (var cycle in jobContainer.GetCycleTypes()) {
+				sender.ReportProgress(0, new VectoSimulationProgress() {Target = VectoSimulationProgress.Targets.Message, Message = $"Detected cycle {cycle.Name}: {cycle.CycleType}"});
+			}
+
+			sender.ReportProgress(0, new VectoSimulationProgress() {Target = VectoSimulationProgress.Targets.Message, Message = $"Starting simulation ({jobs.Length} jobs, {jobContainer.GetProgress().Count} runs)"});
+
+			var start = Stopwatch.StartNew();
+
+			jobContainer.Execute(true);
+
+			while (!jobContainer.AllCompleted) {
+				if (sender.CancellationPending) {
+					jobContainer.Cancel();
+					return;
+				}
+
+				var progress = jobContainer.GetProgress();
+				var sumProgress = progress.Sum(x => x.Value.Progress);
+				var duration = start.Elapsed.TotalSeconds;
+
+				sender.ReportProgress(
+					Convert.ToInt32(sumProgress * 100.0 / progress.Count), new VectoSimulationProgress() {
+						Target = VectoSimulationProgress.Targets.Status,
+						Message = string.Format(
+							"Duration: {0:F1}s, Curernt Progress: {1:P} ({2})", duration, sumProgress / progress.Count,
+							string.Join(", ", progress.Select(x => string.Format("{0,4:P}", x.Value.Progress))))
+					});
+				var justFinished = progress.Where(x => x.Value.Done & !finishedRuns.Contains(x.Key))
+											.ToDictionary(x => x.Key, x => x.Value);
+				PrintRuns(justFinished, fileWriters);
+				finishedRuns.AddRange(justFinished.Select(x => x.Key));
+				Thread.Sleep(100);
+			}
+			start.Stop();
+
+			var remainingRuns = jobContainer.GetProgress().Where(x => x.Value.Done && !finishedRuns.Contains(x.Key))
+											.ToDictionary(x => x.Key, x => x.Value);
+			PrintRuns(remainingRuns, fileWriters);
+
+			finishedRuns.Clear();
+			fileWriters.Clear();
+
+			foreach (var progressEntry in jobContainer.GetProgress()) {
+				sender.ReportProgress(100, new VectoSimulationProgress() {
+					Target = VectoSimulationProgress.Targets.Message, Message = 
+						string.Format("{0,-60} {1,8:P} {2,10:F2}s - {3}",
+									$"{progressEntry.Value.RunName} {progressEntry.Value.CycleName} {progressEntry.Value.RunSuffix}",
+						progressEntry.Value.Progress,
+						progressEntry.Value.ExecTime / 1000.0,
+						progressEntry.Value.Success ? "Success" : "Aborted")
+				});
+				if (!progressEntry.Value.Success) {
+					sender.ReportProgress(
+						100,
+						new VectoSimulationProgress() {
+							Target = VectoSimulationProgress.Targets.Message,
+							Message = progressEntry.Value.Error.Message
+						}
+					);
+				}
+			}
+
+			foreach (var jobEntry in jobs) {
+				var w = new FileOutputWriter(Path.GetFullPath(jobEntry.JobEntryFilePath));
+				foreach (var entry in new Dictionary<string, string>() { {w.XMLFullReportName,  "XML ManufacturereReport"}, {w.XMLCustomerReportName, "XML Customer Report"}, { w.XMLVTPReportName, "VTP Report"}, {w.XMLPrimaryVehicleReportName, "Primary Vehicle Information File"}  }) {
+					if (File.Exists(entry.Key)) {
+						sender.ReportProgress(
+							100,
+							new VectoSimulationProgress() {
+								Target = VectoSimulationProgress.Targets.Message,
+								Message = string.Format(
+									"{2} for '{0}' written to {1}", Path.GetFileName(jobEntry.JobEntryFilePath), entry.Key, entry.Value),
+								Link = "<XML>" + entry.Key
+							});
+					}	
+				}
+			}
+
+			if (File.Exists(sumFileWriter.SumFileName)) {
+				sender.ReportProgress(100, new VectoSimulationProgress() {
+					Target = VectoSimulationProgress.Targets.Message,
+					Message = string.Format("Sum file written to {0}", sumFileWriter.SumFileName),
+					Link = "<CSV>" + sumFileWriter.SumFileName
+				});
+			}
+
+			sender.ReportProgress(100, new VectoSimulationProgress() {
+				Target = VectoSimulationProgress.Targets.Message,
+				Message = string.Format("Simulation finished in {0:F1}s", start.Elapsed.TotalSeconds)
+			});
+		}
+
+		private void PrintRuns(Dictionary<int, JobContainer.ProgressEntry> progress, Dictionary<int, FileOutputWriter> fileWriters)
+		{
+			foreach (var p in progress) {
+				var modFilename = fileWriters[p.Key].GetModDataFileName(p.Value.RunName, p.Value.CycleName, p.Value.RunSuffix);
+				var runName = string.Format("{0} {1} {2}", p.Value.RunName, p.Value.CycleName, p.Value.RunSuffix);
+
+				if (p.Value.Error != null) {
+					SimulationWorker.ReportProgress(0, new VectoSimulationProgress() {
+						Target = VectoSimulationProgress.Targets.Message,
+						Message = string.Format("Finished Run {0} with ERROR: {1}", runName,
+												p.Value.Error.Message),
+						Link = "<CSV>" + modFilename
+					});
+				} else {
+					SimulationWorker.ReportProgress(0, new VectoSimulationProgress() {
+						Target = VectoSimulationProgress.Targets.Message,
+						Message = string.Format("Finished run {0} successfully.", runName)
+					});
+				}
+				if (File.Exists(modFilename)) {
+					SimulationWorker.ReportProgress(0, new VectoSimulationProgress() {
+						Target = VectoSimulationProgress.Targets.Message,
+						Message = string.Format("Run {0}: Modal results written to {1}", runName, modFilename),
+						Link = "<CSV>" + modFilename
+					});
+				}
+			}
+		}
+
+
+		private void VectoSimulationCompleted(object sender, RunWorkerCompletedEventArgs e)
+		{
+			// TODO!
+		}
+
+		private void VectoSimulationProgressChanged(object sender, ProgressChangedEventArgs e)
+		{
+			var progress = e.UserState as VectoSimulationProgress;
+			if (progress == null) {
+				return;
+			}
+
+			switch (progress.Target) {
+				case VectoSimulationProgress.Targets.Message:
+					//if (progress.Link == null) {
+						Messages.Add(new MessageEntry() {Message = progress.Message});
+					//}
+					break;
+				case VectoSimulationProgress.Targets.Status: break;
+				default: throw new ArgumentOutOfRangeException();
+			}
+		}
+
+
+		public class VectoSimulationProgress
+		{
+			public enum Targets
+			{
+				Message,
+				Status
+			}
+
+			public string Message { get; set; }
+
+			public Targets Target { get; set; }
+
+			public string Link { get; set; }
+		}
+
+
+#endregion
+
 	}
+
+
 }

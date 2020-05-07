@@ -958,7 +958,7 @@ namespace TUGraz.VectoCore.Tests.Integration.CompletedBus
 		[TestCase(JobFile_Group41, 0, TestName = "PrintVectoRunData CompletedBus Group 41/32b CO/LL"),
 		 TestCase(JobFile_Group42, 1, TestName = "PrintVectoRunData CompletedBus Group 42/33b HU/RL"),
 		TestCase(@"TestData\Integration\Buses\FactorMethod\CompletedBus_41-32b_AT-P.vecto", 0, TestName = "PrintVectoRunData CompletedBus Group 41/32b AT-P CO/LL"),
-		TestCase(@"TestData\Integration\Buses\FactorMethod\CompletedBus_41-32b_ES-AUX.vecto", 0, TestName = "PrintVectoRunData CompletedBus Group 41/32b ES-Aux CO/LL"),
+		TestCase(@"TestData\Integration\Buses\FactorMethod\CompletedBus_41-32b_ES-AUX.vecto", 0, TestName = "PrintVectoRunData CompletedBus Group 41/32b ES-Aux CO/LL"),]
 		public void PrintModelParametersCompletedBus(string jobFile, int pairIdx)
 		{
 			var runs = GetVectoRunData(jobFile);
