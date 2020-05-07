@@ -3516,6 +3516,9 @@
     <Content Include="TestData\Integration\Buses\FactorMethod\vecto_vehicle-primary_heavyBus_ESS_electricFanSTP.RSLT_PIF.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="TestData\Integration\Buses\primary_heavyBus group P39_40_nonSmart_ESS.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="TestData\Integration\Buses\vecto_vehicle-completed_heavyBus.xml">
       <SubType>Designer</SubType>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>

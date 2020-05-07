@@ -958,7 +958,7 @@ namespace TUGraz.VectoCore.Tests.Integration.CompletedBus
 		[TestCase(JobFile_Group41, 0, TestName = "PrintVectoRunData CompletedBus Group 41/32b CO/LL"),
 		 TestCase(JobFile_Group42, 1, TestName = "PrintVectoRunData CompletedBus Group 42/33b HU/RL"),
 		TestCase(@"TestData\Integration\Buses\FactorMethod\CompletedBus_41-32b_AT-P.vecto", 0, TestName = "PrintVectoRunData CompletedBus Group 41/32b AT-P CO/LL"),
-		TestCase(@"TestData\Integration\Buses\FactorMethod\CompletedBus_41-32b_ES-AUX.vecto", 0, TestName = "PrintVectoRunData CompletedBus Group 41/32b ES-Aux CO/LL"),]
+		TestCase(@"TestData\Integration\Buses\FactorMethod\CompletedBus_41-32b_ES-AUX.vecto", 0, TestName = "PrintVectoRunData CompletedBus Group 41/32b ES-Aux CO/LL"),
 		public void PrintModelParametersCompletedBus(string jobFile, int pairIdx)
 		{
 			var runs = GetVectoRunData(jobFile);
@@ -1050,7 +1050,14 @@ namespace TUGraz.VectoCore.Tests.Integration.CompletedBus
 
 		[TestCase(@"TestData\Integration\Buses\FactorMethod\vecto_vehicle-primary_heavyBus_ESS_electricFanSTP.xml", 13, TestName = "RunBusSimulation electric STP/Fan ESS IU/RL"),
 		TestCase(@"TestData\Integration\Buses\FactorMethod\vecto_vehicle-primary_heavyBus_ESS_electricFanSTP.xml", 17, TestName = "RunBusSimulation electric STP/Fan ESS CO/RL"),
+
+		TestCase(@"TestData\Integration\Buses\primary_heavyBus group P39_40_nonSmart_ESS.xml", 3, TestName = "RunBusSimulation Grp 39/40 P39SD U/RL"),
+		TestCase(@"TestData\Integration\Buses\primary_heavyBus group P39_40_nonSmart_ESS.xml", 7, TestName = "RunBusSimulation Grp 39/40 P39DD HU/RL"),
+		TestCase(@"TestData\Integration\Buses\primary_heavyBus group P39_40_nonSmart_ESS.xml", 9, TestName = "RunBusSimulation Grp 39/40 P39DD U/RL"),
+		TestCase(@"TestData\Integration\Buses\primary_heavyBus group P39_40_nonSmart_ESS.xml", 19, TestName = "RunBusSimulation Grp 39/40 P40DD CO/RL"),
 		
+			TestCase(@"TestData\Integration\Buses\primary_heavyBus group P39_40_nonSmart_ESS.xml", 18, TestName = "RunBusSimulation Grp 39/40 P40DD CO/LL"),
+
 		TestCase(@"E:\QUAM\tmp\ESS_Tests\primary_heavyBus group 42_ConvAux_ESS_SmartPS.xml", 10, TestName = "RunBusSimulation ESS P33DD SU/LL ConvAux SmartPS"),
 		TestCase(@"E:\QUAM\tmp\ESS_Tests\primary_heavyBus group 42_ESS_SmartPS.xml", 10, TestName = "RunBusSimulation ESS P33DD SU/LL ES Aux SmartPS"),
 		TestCase(@"E:\QUAM\tmp\ESS_Tests\primary_heavyBus group 42_ESS_SmartPS_SmartES.xml", 10, TestName = "RunBusSimulation ESS P33DD SU/LL ES Aux SmartPS SmartES"),
