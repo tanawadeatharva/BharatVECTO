@@ -18,8 +18,10 @@ namespace VECTO3GUI.ViewModel.Interfaces
 		IComponentViewModel CurrentComponent { get; }
 
 		ICommand SaveJob { get; }
-		ICommand SaveToJob { get; }
+		ICommand SaveAsJob { get; }
 		ICommand CloseJob { get; }
+		ICommand ValidateInput { get; }
+		ICommand ValidationErrors { get; }
 
 	}
 }

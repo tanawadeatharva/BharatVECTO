@@ -48,7 +48,7 @@
                             Command="{Binding RemoveAllAlternatorCommand}"/>
                 </Grid>
 
-            
+
                 <DataGrid x:Name="AlternatorDataGrid" AutoGenerateColumns="False" ColumnWidth="*" IsReadOnly="False" CanUserAddRows="False" VerticalAlignment="Top"
                           HeadersVisibility="All" RowHeaderWidth="10"  Height="120" Margin="0,10,0,0" BorderThickness="1"
                           ItemsSource="{Binding AlternatorTechnologies}">
@@ -81,12 +81,12 @@
                     </DataGrid.Columns>
 
                 </DataGrid>
-            
+
             </StackPanel>
         </GroupBox>
 
         <GroupBox Header="Electric Systems" Grid.Row="2" Grid.Column="1" Margin="0,10,0,0" Width="450" HorizontalAlignment="Left">
-            
+
             <StackPanel Orientation="Vertical" Width="400" HorizontalAlignment="Left"  Grid.IsSharedSizeScope="True" VerticalAlignment="Center" >
 
                 <customControls:CheckboxParameter
@@ -120,49 +120,114 @@
 
         <GroupBox Header="HVAC" Grid.Row="3" Grid.Column="1" Margin="0,10,0,0" Width="450" HorizontalAlignment="Left">
             <StackPanel Orientation="Vertical" Width="400" HorizontalAlignment="Left"  Grid.IsSharedSizeScope="True" VerticalAlignment="Center" >
-                    <customControls:ComboParameter
+
+                <Grid Margin="5">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition SharedSizeGroup="lblWidth"/>
+                        <ColumnDefinition />
+                        <ColumnDefinition SharedSizeGroup="unitWidth"/>
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Grid.Row="0" Grid.Column="0" Text="System Configuration" Margin="0,0,10,0"/>
+                    <ComboBox Grid.Column="1" 
+                              Margin="20,0,0,0"
+                              ItemsSource="{Binding AllowedSystemConfigurations}"
+                              SelectedValue="{Binding SystemConfiguration, Mode=TwoWay ,ValidatesOnDataErrors=True, NotifyOnValidationError=True, UpdateSourceTrigger=PropertyChanged}"
+                              SelectedValuePath="Value"
+                              DisplayMemberPath="Label"
+                              IsEditable="True"
+                              IsReadOnly="True"
+                              Text="Select..."/>
+                </Grid>
+                <!--<customControls:ComboParameter
                             Caption="System Configuration"
                             CaptionWidthGroup="lblWidth" UnitWidthGroup="unitWidth"
                             Value="{Binding SystemConfiguration}"
-                            AllowedValues="{Binding AllowedSystemConfigurations}" />
+                            AllowedValues="{Binding AllowedSystemConfigurations}" />-->
 
-                    <customControls:ComboParameter
+                <Grid Margin="5">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition SharedSizeGroup="lblWidth"/>
+                        <ColumnDefinition />
+                        <ColumnDefinition SharedSizeGroup="unitWidth"/>
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Grid.Row="0" Grid.Column="0" Text="Compressor Type Driver" Margin="0,0,10,0"/>
+                    <ComboBox Grid.Column="1" 
+                              Margin="20,0,0,0"
+                              ItemsSource="{Binding AllowedDriverACCompressorTypes}"
+                              SelectedValue="{Binding CompressorTypeDriver, Mode=TwoWay ,ValidatesOnDataErrors=True, NotifyOnValidationError=True, UpdateSourceTrigger=PropertyChanged}"
+                              SelectedValuePath="Value"
+                              DisplayMemberPath="Label"
+                              IsEditable="True"
+                              IsReadOnly="True"
+                              Text="Select..."/>
+                </Grid>
+                <!--<customControls:ComboParameter
                             Caption="Compressor Type Driver"
                             CaptionWidthGroup="lblWidth" UnitWidthGroup="unitWidth"
                             Value="{Binding CompressorTypeDriver}"
-                            AllowedValues="{Binding AllowedDriverACCompressorTypes}" />
+                            AllowedValues="{Binding AllowedDriverACCompressorTypes}" />-->
 
-                    <customControls:ComboParameter
+                <Grid Margin="5">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition SharedSizeGroup="lblWidth"/>
+                        <ColumnDefinition />
+                        <ColumnDefinition SharedSizeGroup="unitWidth"/>
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Grid.Row="0" Grid.Column="0" Text="Compressor Type Passenger" Margin="0,0,10,0"/>
+                    <ComboBox Grid.Column="1" 
+                              Margin="20,0,0,0"
+                              ItemsSource="{Binding AllowedPassengerACCompressorTypes}"
+                              SelectedValue="{Binding CompressorTypePassenger, Mode=TwoWay ,ValidatesOnDataErrors=True, NotifyOnValidationError=True, UpdateSourceTrigger=PropertyChanged}"
+                              SelectedValuePath="Value"
+                              DisplayMemberPath="Label"
+                              IsEditable="True"
+                              IsReadOnly="True"
+                              Text="Select..."/>
+                </Grid>
+                <!--<customControls:ComboParameter
                             Caption="Compressor Type Passenger"
                             CaptionWidthGroup="lblWidth" UnitWidthGroup="unitWidth"
                             Value="{Binding CompressorTypePassenger}"
-                            AllowedValues="{Binding AllowedPassengerACCompressorTypes}" />
+                            AllowedValues="{Binding AllowedPassengerACCompressorTypes}" />-->
 
-                    <customControls:VectoParameterControl
+                <Grid Margin="5">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition SharedSizeGroup="lblWidth"/>
+                        <ColumnDefinition />
+                        <ColumnDefinition SharedSizeGroup="unitWidth"/>
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Grid.Column="0" Text="Aux Heater Power" Margin="0,0,10,0"/>
+                    <TextBox Grid.Column="1" Margin="20,0,0,0" 
+                             Text="{Binding AuxHeaterPower, Converter={converter:SIValueConverter}, ConverterParameter=double,
+                                    Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True, NotifyOnValidationError=True}"/>
+
+                    <TextBlock Grid.Row="0" Grid.Column="2" Text="{helper:SIUnit AuxHeaterPower}" Margin="5,0,5,0"/>
+                </Grid>
+                <!--<customControls:VectoParameterControl
                             Caption="Aux Heater Power" Unit="{helper:SIUnit AuxHeaterPower}" CaptionWidthGroup="lblWidth" UnitWidthGroup="unitWidth"
-                            Value="{Binding AuxHeaterPower, Converter={converter:SIValueConverter}, ConverterParameter=double}" />
+                            Value="{Binding AuxHeaterPower, Converter={converter:SIValueConverter}, ConverterParameter=double}" />-->
 
-                    <customControls:CheckboxParameter
+                <customControls:CheckboxParameter
                             Caption="Double Glasing" CaptionWidthGroup="lblWidth"
                             Unit="" UnitWidthGroup="unitWidth"
                             Value="{Binding DoubleGlasing}"/>
 
-                    <customControls:CheckboxParameter
+                <customControls:CheckboxParameter
                             Caption="Heat Pump" CaptionWidthGroup="lblWidth"
                             Unit="" UnitWidthGroup="unitWidth"
                             Value="{Binding HeatPump}"/>
 
-                    <customControls:CheckboxParameter
+                <customControls:CheckboxParameter
                             Caption="Adjustable Auxiliary Heater" CaptionWidthGroup="lblWidth"
                             Unit="" UnitWidthGroup="unitWidth"
                             Value="{Binding AdjustableAuxiliaryHeater}"/>
 
-                    <customControls:CheckboxParameter
+                <customControls:CheckboxParameter
                             Caption="Separate Air Distribution Ducts" CaptionWidthGroup="lblWidth"
                             Unit="" UnitWidthGroup="unitWidth"
                             Value="{Binding SeparateAirDistributionDucts}"/>
-                </StackPanel>
-            </GroupBox>
+            </StackPanel>
+        </GroupBox>
 
     </Grid>
 </UserControl>

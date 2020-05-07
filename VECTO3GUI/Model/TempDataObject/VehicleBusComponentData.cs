@@ -7,8 +7,8 @@ using System.Threading.Tasks;
 using TUGraz.VectoCommon.BusAuxiliaries;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
+using TUGraz.VectoCommon.Resources;
 using TUGraz.VectoCommon.Utils;
-using VECTO3GUI.ViewModel.Impl;
 using VECTO3GUI.ViewModel.Interfaces;
 
 namespace VECTO3GUI.Model.TempDataObject
@@ -38,6 +38,7 @@ namespace VECTO3GUI.Model.TempDataObject
 		public Meter VehicleWidth { get; set; }
 		public Meter EntranceHeight { get; set; }
 		public ConsumerTechnology DoorDriveTechnology { get; set; }
+		public Dictionary<string, string> XmlNamesToPropertyMapping { get;  private set; }
 
 		#endregion
 
@@ -45,6 +46,7 @@ namespace VECTO3GUI.Model.TempDataObject
 		{
 			if(defaultValues)
 				ClearValues(viewModel);
+			SetXmlNamesToPropertyMapping();
 		}
 
 		public VehicleBusComponentData(ICompleteVehicleBusViewModel viewModel)
@@ -126,6 +128,32 @@ namespace VECTO3GUI.Model.TempDataObject
 			EntranceHeight = vehicleBus.EntranceHeight;
 			DoorDriveTechnology = vehicleBus.DoorDriveTechnology;
 		}
+
+		private void SetXmlNamesToPropertyMapping()
+		{
+			XmlNamesToPropertyMapping = new Dictionary<string, string> {
+				{XMLNames.Component_Manufacturer, nameof(Manufacturer)},
+				{XMLNames.Component_ManufacturerAddress, nameof(ManufacturerAddress)},
+				{XMLNames.Component_Model, nameof(Model)},
+				{XMLNames.Vehicle_VIN, nameof(VIN)},
+				{XMLNames.Component_Date, nameof(Date)},
+				{XMLNames.Vehicle_LegislativeClass, nameof(LegislativeClass)},
+				{XMLNames.Vehicle_RegisteredClass, nameof(RegisteredClass)},
+				{XMLNames.Vehicle_VehicleCode, nameof(VehicleCode)},
+				{XMLNames.Vehicle_CurbMassChassis, nameof(CurbMassChassis)},
+				{XMLNames.TPMLM, nameof(TechnicalPermissibleMaximumLadenMass)},
+				{XMLNames.Vehicle_NgTankSystem, nameof(NgTankSystem)},
+				{XMLNames.Bus_LowerDeck, nameof(NumberOfPassengersLowerDeck)},
+				{XMLNames.Bus_UpperDeck, nameof(NumberOfPassengersUpperDeck)},
+				{XMLNames.Bus_LowEntry, nameof(LowEntry)},
+				{XMLNames.Bus_HeighIntegratedBody, nameof(HeightIntegratedBody)},
+				{XMLNames.Bus_VehicleLength, nameof(VehicleLength)},
+				{XMLNames.Bus_VehicleWidth, nameof(VehicleWidth)},
+				{XMLNames.Bus_EntranceHeight, nameof(EntranceHeight)},
+				{XMLNames.BusAux_PneumaticSystem_DoorDriveTechnology, nameof(DoorDriveTechnology)}
+			};
+		}
+
 
 	}
 }

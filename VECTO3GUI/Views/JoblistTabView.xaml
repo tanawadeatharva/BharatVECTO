@@ -32,11 +32,18 @@
                         <MenuItem Header="Save" 
                                   Command="{Binding SaveJob}"
                                   CommandParameter="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Window}}}"/>
-                        <MenuItem Header="Save to" Command="{Binding SaveToJob}"/>
+                        <MenuItem Header="Save As..." Command="{Binding SaveAsJob}"/>
                         <Separator HorizontalAlignment="Stretch" Background="Gray"/>
                         <MenuItem Header="Close" 
                                   Command="{Binding CloseJob}" 
                                   CommandParameter="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Window}}}"/>
+                    </MenuItem>
+
+                    <MenuItem Header="Input Validation">
+                        <MenuItem Header="Validate"
+                                  Command="{Binding ValidateInput}"/>
+                        <MenuItem Header="Validation Errors"
+                                  Command="{Binding ValidationErrors}"/>
                     </MenuItem>
                 </Menu>
                 <Separator HorizontalAlignment="Stretch" Background="Gray"/>
@@ -73,8 +80,13 @@
                     <TabControl.ContentTemplate>
                         <DataTemplate>
                             <ScrollViewer  DockPanel.Dock="Top">
-                                <ContentControl Content="{Binding DataContext.CurrentComponent, 
-                                RelativeSource={RelativeSource AncestorType=local:JoblistTabView}}" Margin="0,20,0,10"/>
+                                <AdornerDecorator>
+                                    <Grid>
+                                        <ContentControl Content="{Binding DataContext.CurrentComponent, 
+                                            RelativeSource={RelativeSource AncestorType=local:JoblistTabView}}" Margin="0,20,0,10"/>
+                                    </Grid>
+                                </AdornerDecorator>
+
                             </ScrollViewer>
                         </DataTemplate>
                     </TabControl.ContentTemplate>
@@ -89,10 +101,25 @@
             <StackPanel Orientation="Vertical" VerticalAlignment="Center">
                 <Separator HorizontalAlignment="Stretch" Background="Gray"/>
                 <Grid>
-                    <Button Content="{Binding ElementName=ComponentsTab, Path=SelectedItem, Converter={converter:SaveButtonLabelConverter}}" 
-                            HorizontalAlignment="Right" Margin="0,0,15,0" 
-                            Command="{Binding SaveComponent}" CommandParameter="{Binding ElementName=ComponentsTab, Path=SelectedItem}"/>
-                    <Button Content="Reset" HorizontalAlignment="Left" Margin="15,0,0,0" 
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,0,15,0">
+                        <Button HorizontalAlignment="Right" MinWidth="80" Margin="0,0,10,0"
+                                Content="Save As..." Visibility="{Binding SaveAsButtonVisible, Converter={converter:BoolVisibilityConverter}}"
+                                Command="{Binding SaveAsJob}"
+                                CommandParameter="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Window}}}"/>
+
+                        <Button HorizontalAlignment="Right" MinWidth="80" Margin="0,0,10,0"
+                                Content="Save" Visibility="{Binding SaveButtonVisibility, Converter={converter:BoolVisibilityConverter}}"
+                                Command="{Binding SaveJob}" 
+                                CommandParameter="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Window}}}"/>
+
+                        <Button HorizontalAlignment="Right" MinWidth="140" 
+                                Content="{Binding ElementName=ComponentsTab, Path=SelectedItem, 
+                                Converter={converter:SaveButtonLabelConverter}, ConverterParameter='Commit'}" 
+                                Command="{Binding CommitComponent}" CommandParameter="{Binding ElementName=ComponentsTab, Path=SelectedItem}"/>
+                    </StackPanel>
+
+
+                    <Button Content="Reset" HorizontalAlignment="Left" Margin="15,0,0,0"  MinWidth="80"
                             Command="{Binding ResetComponent}" CommandParameter="{Binding ElementName=ComponentsTab, Path=SelectedItem}"/>
                 </Grid>
             </StackPanel>

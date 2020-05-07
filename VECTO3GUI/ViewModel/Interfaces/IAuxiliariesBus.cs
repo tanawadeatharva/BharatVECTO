@@ -37,6 +37,6 @@ namespace VECTO3GUI.ViewModel.Interfaces
 
 		#endregion
 
-
+		Dictionary<string, string> XmlNamesToPropertyMapping { get; }
 	}
 }

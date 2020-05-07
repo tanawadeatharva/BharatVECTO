@@ -36,5 +36,7 @@ namespace VECTO3GUI.ViewModel.Interfaces
 		ConsumerTechnology DoorDriveTechnology { get; set; }
 		
 		#endregion
+
+		Dictionary<string,string> XmlNamesToPropertyMapping { get; }
 	}
 }

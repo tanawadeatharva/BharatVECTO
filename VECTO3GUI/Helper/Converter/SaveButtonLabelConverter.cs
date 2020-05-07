@@ -13,10 +13,19 @@ namespace VECTO3GUI.Helper.Converter
 	{
 		public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
 		{
+			var param = parameter as string;
+			if (param == null)
+				return value;
+
+
 			if (value is Component)
 			{
 				var component = (Component)value;
-				return $"Save {component.GetLabel()} Changes";
+
+				if (param == "Save") 
+					return $"{param} {component.GetLabel()}";
+				if (param == "Commit")
+					return $"{param} {component.GetLabel()} changes";
 			}
 
 			return value;
