@@ -28,6 +28,10 @@ namespace TUGraz.VectoCore.Tests.XML
 		private const string vehilcePIFExample =
 			"TestData/XML/XMLReaderDeclaration/SchemaVersion2.6_Buses/PIF-heavyBus-sample.xml";
 
+		private const string vehiclePIFExampleWithErrors =
+				@"TestData\XML\XMLReaderDeclaration\SchemaVersion2.6_Buses\primary_heavyBus group P39_40_nonSmart_ESS.RSLT_PIF.xml"
+			;
+
 		protected IXMLInputDataReader xmlInputReader;
 		private IKernel _kernel;
 
@@ -39,6 +43,19 @@ namespace TUGraz.VectoCore.Tests.XML
 
 			_kernel = new StandardKernel(new VectoNinjectModule());
 			xmlInputReader = _kernel.Get<IXMLInputDataReader>();
+		}
+
+
+		[TestCase]
+		public void TestReadPIFReportWithErrors()
+		{
+			var reader = XmlReader.Create(vehiclePIFExampleWithErrors);
+			var inputDataProvider = xmlInputReader.Create(reader) as IPrimaryVehicleInformationInputDataProvider;
+
+			Assert.AreEqual("error", inputDataProvider.ResultsInputData.Status);
+			Assert.AreEqual(20, inputDataProvider.ResultsInputData.Results.Count);
+
+			Assert.AreEqual("error", inputDataProvider.ResultsInputData.Results[19].ResultStatus);
 		}
 
 

@@ -409,7 +409,8 @@ namespace TUGraz.VectoCore.OutputData.XML
 				case VectoRun.Status.Canceled:
 				case VectoRun.Status.Aborted:
 					return new object[] {
-						new XElement(tns + "Error", resultEntry.Error)
+						new XElement(tns + "Error", resultEntry.Error),
+						new XElement(tns + "ErrorDetails", resultEntry.StackTrace), 
 					};
 				default: throw new ArgumentOutOfRangeException();
 			}
