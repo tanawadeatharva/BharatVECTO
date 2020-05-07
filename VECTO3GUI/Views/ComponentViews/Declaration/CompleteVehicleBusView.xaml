@@ -80,7 +80,7 @@
                         Value="{Binding TechnicalPermissibleMaximumLadenMass, Converter={converter:SIValueConverter}, ConverterParameter=int}" />
 
                     <customControls:ComboParameter
-                        Caption="Tank System"
+                        Caption="NG Tank System"
                         CaptionWidthGroup="vehicleLbl" UnitWidthGroup="unitWidth"
                         Value="{Binding NgTankSystem}"
                         AllowedValues="{Binding AllowedTankSystems}" />

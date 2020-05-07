@@ -30,7 +30,7 @@ namespace VECTO3GUI.ViewModel.Impl
 			switch (airdrag)
 			{
 				case AirdragConfig.UseDefaultAirdragData:
-					return "Use default airdrag data";
+					return "Use standard or generic values";
 				case AirdragConfig.UseMeasurementData:
 					return "Use airdrag component data";
 			}
