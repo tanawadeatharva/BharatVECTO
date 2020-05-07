@@ -1,15 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection.Emit;
-using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
+using Castle.Core.Internal;
 using TUGraz.VectoCommon.BusAuxiliaries;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
-using TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider;
 using VECTO3GUI.Model.TempDataObject;
 using VECTO3GUI.Util;
 using VECTO3GUI.ViewModel.Interfaces;
@@ -243,6 +239,8 @@ namespace VECTO3GUI.ViewModel.Impl
 			}
 		}
 
+		public Dictionary<string, string> XmlNamesToPropertyMapping { get; private set; }
+
 		public AllowedEntry<LegislativeClass>[] AllowedLegislativeClasses { get; private set; }
 		public AllowedEntry<VehicleCode>[] AllowedVehicleCodes { get; private set; }
 		public AllowedEntry<ConsumerTechnology>[] AllowedDoorDriveTechnologies { get; private set; }
@@ -260,6 +258,8 @@ namespace VECTO3GUI.ViewModel.Impl
 			_vehicle = inputData?.JobInputData.Vehicle;
 			SetVehicleValues(_vehicle);
 			SetAllowedEntries();
+			XmlNamesToPropertyMapping = _componentData.XmlNamesToPropertyMapping;
+
 		}
 
 		private void SetVehicleValues(IVehicleDeclarationInputData vehicle)
@@ -320,11 +320,25 @@ namespace VECTO3GUI.ViewModel.Impl
 			_componentData.ResetToComponentValues(this);
 		}
 
-		public override object SaveComponentData()
+		public override object CommitComponentData()
 		{
 			_componentData.UpdateCurrentValues(this);
 			ClearChangedProperties();
 			return _componentData;
+		}
+
+		public override void ShowValidationError(Dictionary<string, string> errors)
+		{
+			if (errors.IsNullOrEmpty())
+				return;
+
+			foreach (var error in errors) {
+
+				string propertyName;
+				if (XmlNamesToPropertyMapping.TryGetValue(error.Key, out propertyName)) {
+					AddPropertyError(propertyName, error.Value);
+				}
+			}
 		}
 	}
 

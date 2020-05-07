@@ -174,6 +174,8 @@
     <Compile Include="Helper\Converter\SaveButtonLabelConverter.cs" />
     <Compile Include="Helper\SerializeHelper.cs" />
     <Compile Include="Helper\TextBoxInputRegExBehaviour.cs" />
+    <Compile Include="Helper\Validation\IntegerValidatorConfig.cs" />
+    <Compile Include="Helper\Validation\IntegerValidator.cs" />
     <Compile Include="Helper\ViewModelBase.cs" />
     <Compile Include="Helper\XmlComponentReaderHelper.cs" />
     <Compile Include="Helper\XmlHelper.cs" />
@@ -374,6 +376,9 @@
     <Compile Include="Views\CustomControls\CommonDeclarationComponentData.xaml.cs">
       <DependentUpon>CommonDeclarationComponentData.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\CustomControls\IntegerVectoParameterControl.xaml.cs">
+      <DependentUpon>IntegerVectoParameterControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\CustomControls\VectoParameterControl.xaml.cs">
       <DependentUpon>VectoParameterControl.xaml</DependentUpon>
     </Compile>
@@ -563,6 +568,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Page Include="Views\CustomControls\IntegerVectoParameterControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\CustomControls\VectoParameterControl.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -630,8 +639,11 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Resources\AirdragLoadTestFile.xml" />
+    <Resource Include="Resources\AirdragLoadTestFile.xml">
+      <SubType>Designer</SubType>
+    </Resource>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

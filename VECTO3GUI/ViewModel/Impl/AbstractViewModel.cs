@@ -72,9 +72,13 @@ namespace VECTO3GUI.ViewModel.Impl
 
 		public virtual void ResetComponentData() {}
 
-		public virtual object SaveComponentData()
+		public virtual object CommitComponentData()
 		{
 			return null;
+		}
+
+		public virtual void ShowValidationError(Dictionary<string, string> errors)
+		{
 		}
 
 		#region Submodule Handling

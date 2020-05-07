@@ -82,32 +82,32 @@ namespace VECTO3GUI.Util.XML
 					new XAttribute(_xsi + "type", XMLDeclarationCompletedBusDataProviderV26.XSD_TYPE),// "CompletedVehicleDeclarationType"
 					new XAttribute("xmlns", _v26),
 
-					new XElement(_v26 + XMLNames.Component_Manufacturer, vehicleData.Manufacturer),
+					new XElement(_v26 + XMLNames.Component_Manufacturer, vehicleData?.Manufacturer),
 					new XElement(_v26 + XMLNames.Component_ManufacturerAddress, vehicleData?.ManufacturerAddress),
-					new XElement(_v26 + XMLNames.Component_Model, vehicleData.Model),
-					new XElement(_v26 + XMLNames.Vehicle_VIN, vehicleData.VIN),
+					new XElement(_v26 + XMLNames.Component_Model, vehicleData?.Model),
+					new XElement(_v26 + XMLNames.Vehicle_VIN, vehicleData?.VIN),
 					new XElement(_v26 + XMLNames.Component_Date, XmlConvert.ToString(DateTime.Now, XmlDateTimeSerializationMode.Utc)),
-					new XElement(_v26 + XMLNames.Vehicle_LegislativeClass, vehicleData.LegislativeClass.GetLabel()),
-					new XElement(_v26 + XMLNames.Vehicle_RegisteredClass, vehicleData.RegisteredClass.GetLabel()),
-					new XElement(_v26 + XMLNames.Vehicle_VehicleCode, vehicleData.VehicleCode.GetLabel()),
-					new XElement(_v26 + XMLNames.Vehicle_CurbMassChassis, vehicleData.CurbMassChassis.ToXMLFormat(0)),
-					new XElement(_v26 + XMLNames.TPMLM, vehicleData.TechnicalPermissibleMaximumLadenMass.ToXMLFormat(0)),
-					vehicleData.NgTankSystem == null ? null : new XElement(_v26 + XMLNames.Vehicle_NgTankSystem, vehicleData.NgTankSystem),
+					new XElement(_v26 + XMLNames.Vehicle_LegislativeClass, vehicleData?.LegislativeClass.GetLabel()),
+					new XElement(_v26 + XMLNames.Vehicle_RegisteredClass, vehicleData?.RegisteredClass.GetLabel()),
+					new XElement(_v26 + XMLNames.Vehicle_VehicleCode, vehicleData?.VehicleCode.GetLabel()),
+					new XElement(_v26 + XMLNames.Vehicle_CurbMassChassis, vehicleData?.CurbMassChassis?.ToXMLFormat(0)),
+					new XElement(_v26 + XMLNames.TPMLM, vehicleData?.TechnicalPermissibleMaximumLadenMass?.ToXMLFormat(0)),
+					vehicleData?.NgTankSystem == null ? null : new XElement(_v26 + XMLNames.Vehicle_NgTankSystem, vehicleData?.NgTankSystem),
 					new XElement(_v26 + "RegisteredPassengers",
-						new XElement(_v26 + XMLNames.Bus_LowerDeck, vehicleData.NumberOfPassengersLowerDeck),
-						new XElement(_v26 + XMLNames.Bus_UpperDeck, vehicleData.NumberOfPassengersUpperDeck)
+						new XElement(_v26 + XMLNames.Bus_LowerDeck, vehicleData?.NumberOfPassengersLowerDeck),
+						new XElement(_v26 + XMLNames.Bus_UpperDeck, vehicleData?.NumberOfPassengersUpperDeck)
 					),
-					new XElement(_v26 + XMLNames.Bus_LowEntry, vehicleData.LowEntry),
-					new XElement(_v26 + XMLNames.Bus_HeighIntegratedBody, vehicleData.HeightIntegratedBody.ToXMLFormat(3)),
-					new XElement(_v26 + XMLNames.Bus_VehicleLength, vehicleData.VehicleLength.ToXMLFormat(3)),
-					new XElement(_v26 + XMLNames.Bus_VehicleWidth, vehicleData.VehicleWidth.ToXMLFormat(3)),
-					new XElement(_v26 + XMLNames.Bus_EntranceHeight, vehicleData.EntranceHeight.ToXMLFormat(3)),
-					new XElement(_v26 + XMLNames.BusAux_PneumaticSystem_DoorDriveTechnology, vehicleData.DoorDriveTechnology.GetLabel().ToLower()),
+					new XElement(_v26 + XMLNames.Bus_LowEntry, vehicleData?.LowEntry),
+					new XElement(_v26 + XMLNames.Bus_HeighIntegratedBody, vehicleData?.HeightIntegratedBody?.ToXMLFormat(3)),
+					new XElement(_v26 + XMLNames.Bus_VehicleLength, vehicleData?.VehicleLength?.ToXMLFormat(3)),
+					new XElement(_v26 + XMLNames.Bus_VehicleWidth, vehicleData?.VehicleWidth?.ToXMLFormat(3)),
+					new XElement(_v26 + XMLNames.Bus_EntranceHeight, vehicleData?.EntranceHeight?.ToXMLFormat(3)),
+					new XElement(_v26 + XMLNames.BusAux_PneumaticSystem_DoorDriveTechnology, vehicleData?.DoorDriveTechnology.GetLabel()?.ToLower()),
 
-					new XElement(_v26 + XMLNames.Vehicle_Components,
-							new XAttribute(_xsi + "type", XMLDeclarationCompleteBusComponentsDataProviderV26.XSD_TYPE),//"CompletedVehicleComponentsDeclarationType"
-							GetComponentXElements(inputData)
-						)
+			new XElement(_v26 + XMLNames.Vehicle_Components,
+					new XAttribute(_xsi + "type", XMLDeclarationCompleteBusComponentsDataProviderV26.XSD_TYPE),//"CompletedVehicleComponentsDeclarationType"
+					GetComponentXElements(inputData)
+			)
 			);
 		}
 
@@ -134,30 +134,30 @@ namespace VECTO3GUI.Util.XML
 				new XAttribute("xmlns", _v20),
 				
 				new XElement(_v20 + XMLNames.ComponentDataWrapper, 
-					new XAttribute(XMLNames.Component_ID_Attr, airdrag.DigestValue.Reference.Replace("#","")),
+					new XAttribute(XMLNames.Component_ID_Attr, airdrag?.DigestValue.Reference.Replace("#","")),
 					new XAttribute(_xsi + "type", XMLDeclarationAirdragDataProviderV10.XSD_TYPE), // "AirDragDataDeclarationType"
 					
-					new XElement(_v20 + XMLNames.Component_Manufacturer, airdrag.Manufacturer),
-					new XElement(_v20 + XMLNames.Component_Model, airdrag.Model),
-					new XElement(_v20 + XMLNames.Component_CertificationNumber, airdrag.CertificationNumber),
-					new XElement(_v20 + XMLNames.Component_Date, airdrag.Date),
-					new XElement(_v20 + XMLNames.Component_AppVersion, airdrag.AppVersion),
-					new XElement(_v20 + "CdxA_0", airdrag.CdxA_0.ToXMLFormat()),
-					new XElement(_v20 + "TransferredCdxA", airdrag.TransferredCdxA.ToXMLFormat()),
-					new XElement(_v20 + XMLNames.AirDrag_DeclaredCdxA, airdrag.DeclaredCdxA.ToXMLFormat())),
+					new XElement(_v20 + XMLNames.Component_Manufacturer, airdrag?.Manufacturer),
+					new XElement(_v20 + XMLNames.Component_Model, airdrag?.Model),
+					new XElement(_v20 + XMLNames.Component_CertificationNumber, airdrag?.CertificationNumber),
+					new XElement(_v20 + XMLNames.Component_Date, airdrag?.Date),
+					new XElement(_v20 + XMLNames.Component_AppVersion, airdrag?.AppVersion),
+					new XElement(_v20 + "CdxA_0", airdrag?.CdxA_0.ToXMLFormat()),
+					new XElement(_v20 + "TransferredCdxA", airdrag?.TransferredCdxA.ToXMLFormat()),
+					new XElement(_v20 + XMLNames.AirDrag_DeclaredCdxA, airdrag?.DeclaredCdxA.ToXMLFormat())),
 				
 				new XElement(_v20 + XMLNames.DI_Signature,
 					new XElement(_di +XMLNames.DI_Signature_Reference,
-						new XAttribute(XMLNames.DI_Signature_Reference_URI_Attr, airdrag.DigestValue.Reference),
+						new XAttribute(XMLNames.DI_Signature_Reference_URI_Attr, airdrag?.DigestValue.Reference),
 						new XElement(_di + XMLNames.DI_Signature_Reference_Transforms,
 							new XElement(_di + XMLNames.DI_Signature_Reference_Transforms_Transform, 
-								new XAttribute(XMLNames.DI_Signature_Algorithm_Attr, airdrag.DigestValue.CanonicalizationMethods[0])),
+								new XAttribute(XMLNames.DI_Signature_Algorithm_Attr, airdrag?.DigestValue.CanonicalizationMethods[0])),
 							new XElement(_di + XMLNames.DI_Signature_Reference_Transforms_Transform,
-								new XAttribute(XMLNames.DI_Signature_Algorithm_Attr, airdrag.DigestValue.CanonicalizationMethods[1]))
+								new XAttribute(XMLNames.DI_Signature_Algorithm_Attr, airdrag?.DigestValue.CanonicalizationMethods[1]))
 						),
 						new XElement(_di + XMLNames.DI_Signature_Reference_DigestMethod,
-							new XAttribute(XMLNames.DI_Signature_Algorithm_Attr, airdrag.DigestValue.DigestMethod)),
-						new XElement(_di + XMLNames.DI_Signature_Reference_DigestValue, airdrag.DigestValue.DigestValue))
+							new XAttribute(XMLNames.DI_Signature_Algorithm_Attr, airdrag?.DigestValue.DigestMethod)),
+						new XElement(_di + XMLNames.DI_Signature_Reference_DigestValue, airdrag?.DigestValue.DigestValue))
 						)
 				);
 		}
@@ -181,7 +181,7 @@ namespace VECTO3GUI.Util.XML
 								new XElement(_v26 + XMLNames.Bus_CompressorType,
 									new XElement(_v26 + XMLNames.Bus_DriverAC, auxBus?.CompressorTypeDriver.GetLabel()),
 									new XElement(_v26 + XMLNames.Bus_PassengerAC, auxBus?.CompressorTypePassenger.GetLabel())),
-								new XElement(_v26 + XMLNames.Bus_AuxiliaryHeaterPower, Convert.ToInt32(auxBus?.AuxHeaterPower.Value())), 
+								new XElement(_v26 + XMLNames.Bus_AuxiliaryHeaterPower, Convert.ToInt32(auxBus?.AuxHeaterPower?.Value())), 
 								new XElement(_v26 + XMLNames.Bus_DoubleGlasing, auxBus?.DoubleGlasing),
 								new XElement(_v26 + XMLNames.Bus_HeatPump, auxBus?.HeatPump),
 								new XElement(_v26 + XMLNames.Bus_AdjustableAuxiliaryHeater, auxBus?.AdjustableAuxiliaryHeater), 

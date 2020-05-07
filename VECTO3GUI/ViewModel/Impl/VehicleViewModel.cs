@@ -16,7 +16,6 @@ using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Utils;
 using VECTO3GUI.Util;
 using VECTO3GUI.ViewModel.Adapter;
-using VECTO3GUI.ViewModel.Adapter.Declaration;
 using VECTO3GUI.ViewModel.Interfaces;
 using Component = VECTO3GUI.Util.Component;
 
@@ -172,7 +171,7 @@ namespace VECTO3GUI.ViewModel.Impl
 		{
 			get { return _manufacturer; }
 			set {
-				ValidateProperty(value);
+				//ValidateProperty(value);
 				SetProperty(ref _manufacturer, value);
 			}
 		}

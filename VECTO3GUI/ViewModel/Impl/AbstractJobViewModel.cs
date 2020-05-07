@@ -22,7 +22,7 @@ namespace VECTO3GUI.ViewModel.Impl
 		private IComponentViewModel _currentComponent;
 		private ICommand _saveJobCommand;
 		private ICommand _closeJobCommand;
-		private ICommand _saveToJobCommand;
+		private ICommand _saveAsJobCommand;
 
 
 		protected string XmlFilePath { get; private set; }
@@ -69,15 +69,15 @@ namespace VECTO3GUI.ViewModel.Impl
 		protected abstract void DoCloseJob(Window window);
 
 
-		public ICommand SaveToJob
+		public ICommand SaveAsJob
 		{
-			get { return _saveToJobCommand ?? (_saveToJobCommand = new RelayCommand<Window>(DoSaveToJob, CanSaveToJob)); }
+			get { return _saveAsJobCommand ?? (_saveAsJobCommand = new RelayCommand<Window>(DoSaveAsJob, CanSaveAsJob)); }
 		}
-		protected virtual bool CanSaveToJob(Window window)
+		protected virtual bool CanSaveAsJob(Window window)
 		{
 			return true;
 		}
-		protected abstract void DoSaveToJob(Window window);
+		protected abstract void DoSaveAsJob(Window window);
 
 
 		public ICommand EditComponent

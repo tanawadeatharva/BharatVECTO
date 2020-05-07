@@ -45,7 +45,10 @@ namespace VECTO3GUI.ViewModel.Impl
 					);
 			}
 		}
-		
+
+		public ICommand ValidateInput { get; }
+		public ICommand ValidationErrors { get; }
+
 		#endregion
 
 		#region Overrides of AbstractJobViewModel
@@ -60,7 +63,7 @@ namespace VECTO3GUI.ViewModel.Impl
 			throw new System.NotImplementedException();
 		}
 
-		protected override void DoSaveToJob(Window window)
+		protected override void DoSaveAsJob(Window window)
 		{
 			throw new System.NotImplementedException();
 		}

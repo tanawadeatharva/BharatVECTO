@@ -70,7 +70,7 @@ namespace VECTO3GUI.ViewModel.Impl
 			throw new NotImplementedException();
 		}
 
-		protected override void DoSaveToJob(Window window)
+		protected override void DoSaveAsJob(Window window)
 		{
 			throw new NotImplementedException();
 		}
@@ -90,6 +90,7 @@ namespace VECTO3GUI.ViewModel.Impl
 			}
 		}
 
-		
+		public ICommand ValidateInput { get; }
+		public ICommand ValidationErrors { get; }
 	}
 }

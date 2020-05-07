@@ -5,14 +5,18 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
+using System.Xml;
+using System.Xml.Schema;
 using MahApps.Metro.Controls.Dialogs;
 using Ninject;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCore.OutputData.XML.DeclarationJobs;
+using TUGraz.VectoCore.Utils;
 using VECTO3GUI.Helper;
 using VECTO3GUI.ViewModel.Interfaces;
 using VECTO3GUI.Util;
 using VECTO3GUI.Util.XML;
+using Component = VECTO3GUI.Util.Component;
 
 
 namespace VECTO3GUI.ViewModel.Impl
@@ -24,8 +28,15 @@ namespace VECTO3GUI.ViewModel.Impl
 		private readonly XMLCompletedBus _xmlCompletedBus;
 		private readonly XMLCompletedBusWriter _xmlCompletedBusWriter;
 
-		private ICommand _saveComponentCommand;
 		private ICommand _resetComponentCommand;
+		private ICommand _commitComponentCommand;
+
+		private bool _saveAsButtonVisible;
+		private bool _saveButtonVisibility;
+
+		private Dictionary<string, string> _errors;
+		private ICommand _validateInputCommand;
+		private ICommand _validationErrorsCommand;
 
 		#endregion
 
@@ -33,6 +44,17 @@ namespace VECTO3GUI.ViewModel.Impl
 
 		public Dictionary<Component, object> CompleteVehicleBusData { get; private set; }
 
+		public bool SaveAsButtonVisible
+		{
+			get { return _saveAsButtonVisible; }
+			set { SetProperty(ref _saveAsButtonVisible, value); }
+		}
+
+		public bool SaveButtonVisibility
+		{
+			get { return _saveButtonVisibility; }
+			set { SetProperty(ref _saveButtonVisibility, value); }
+		}
 		#endregion
 
 		public CompleteVehicleBusJobViewModel(IKernel kernel, IDeclarationInputDataProvider inputData)
@@ -50,9 +72,18 @@ namespace VECTO3GUI.ViewModel.Impl
 
 			_xmlCompletedBus = new XMLCompletedBus();
 			_xmlCompletedBusWriter = new XMLCompletedBusWriter();
+
+			SetVisibilityOfSaveButtons();
+
+			_errors = new Dictionary<string, string>();
 		}
 
-
+		private void SetVisibilityOfSaveButtons()
+		{
+			SaveAsButtonVisible = IsNewJob;
+			SaveButtonVisibility = !IsNewJob;
+		}
+		
 		#region Commands
 
 		protected override bool CanSaveJob(Window window)
@@ -77,12 +108,17 @@ namespace VECTO3GUI.ViewModel.Impl
 				SetCurrentDataToSave();
 				var xDoc = _xmlCompletedBus.GenerateCompletedBusDocument(CompleteVehicleBusData);
 
-				if (XmlHelper.ValidateXDocument(xDoc)) {
+				if (XmlHelper.ValidateXDocument(xDoc, null, ValidationErrorAction)) {
 					_xmlCompletedBusWriter.WriteCompletedBusXml(XmlFilePath, xDoc);
 					CloseWindow(window);
 				}
+
 			}
 		}
+
+
+
+
 
 		protected override void DoCloseJob(Window window)
 		{
@@ -91,7 +127,7 @@ namespace VECTO3GUI.ViewModel.Impl
 			}
 		}
 
-		protected override void DoSaveToJob(Window window)
+		protected override void DoSaveAsJob(Window window)
 		{
 			var filePath = FileDialogHelper.SaveXmlFileToDialog(SettingsModel.XmlFilePathFolder);
 			if(filePath == null)
@@ -100,38 +136,41 @@ namespace VECTO3GUI.ViewModel.Impl
 			SetCurrentDataToSave();
 			var xDocument = _xmlCompletedBus.GenerateCompletedBusDocument(CompleteVehicleBusData);
 
-			if (XmlHelper.ValidateXDocument(xDocument)) {
+			if (XmlHelper.ValidateXDocument(xDocument, null, ValidationErrorAction)) {
 				_xmlCompletedBusWriter.WriteCompletedBusXml(filePath, xDocument);
 				CloseWindow(window);
 			}
 		}
 
-		public ICommand SaveComponent
+		public ICommand CommitComponent
 		{
-			get { return _saveComponentCommand ??
-						(_saveComponentCommand = new RelayCommand<Component>(DoSaveComponent, CanSaveComponent)); }
+			get
+			{
+				return _commitComponentCommand ??
+						(_commitComponentCommand = new RelayCommand<Component>(DoCommitComponent, CanCommitComponent));
+			}
 		}
 
-		private bool CanSaveComponent(Component component)
+		private bool CanCommitComponent(Component component)
 		{
 			return ComponentsChanged(component);
 		}
 
-		private void DoSaveComponent(Component component)
+		private void DoCommitComponent(Component component)
 		{
-			switch (component) {
+			switch (component)
+			{
 				case Component.CompleteBusVehicle:
-					_subModels[Component.CompleteBusVehicle].SaveComponentData();
+					_subModels[Component.CompleteBusVehicle].CommitComponentData();
 					break;
 				case Component.Airdrag:
-					_subModels[Component.Airdrag].SaveComponentData();
+					_subModels[Component.Airdrag].CommitComponentData();
 					break;
 				case Component.Auxiliaries:
-					_subModels[Component.Auxiliaries].SaveComponentData();
+					_subModels[Component.Auxiliaries].CommitComponentData();
 					break;
 			}
 		}
-
 
 		public ICommand ResetComponent
 		{
@@ -162,9 +201,9 @@ namespace VECTO3GUI.ViewModel.Impl
 		private void SetCurrentDataToSave()
 		{
 			CompleteVehicleBusData = new Dictionary<Component, object> {
-				{ Component.CompleteBusVehicle, _subModels[Component.CompleteBusVehicle].SaveComponentData()},
-				{ Component.Airdrag, _subModels[Component.Airdrag].SaveComponentData()},
-				{ Component.Auxiliaries, _subModels[Component.Auxiliaries].SaveComponentData()}
+				{ Component.CompleteBusVehicle, _subModels[Component.CompleteBusVehicle].CommitComponentData()},
+				{ Component.Airdrag, _subModels[Component.Airdrag].CommitComponentData()},
+				{ Component.Auxiliaries, _subModels[Component.Auxiliaries].CommitComponentData()}
 			};
 		}
 		
@@ -188,8 +227,59 @@ namespace VECTO3GUI.ViewModel.Impl
 			window?.Close();
 		}
 
+		public ICommand ValidateInput
+		{
+			get { return _validateInputCommand ?? (_validateInputCommand = new RelayCommand(DoValidateInput)); }
+		}
 
+		private void DoValidateInput()
+		{
+			_errors = new Dictionary<string, string>();
+
+			SetCurrentDataToSave();
+			var xDoc = _xmlCompletedBus.GenerateCompletedBusDocument(CompleteVehicleBusData);
+
+			if (XmlHelper.ValidateXDocument(xDoc, null, ValidationErrorAction))
+			{
+				_xmlCompletedBusWriter.WriteCompletedBusXml(XmlFilePath, xDoc);
+			}
+		}
+
+		public ICommand ValidationErrors
+		{
+			get
+			{
+				return _validationErrorsCommand ?? (_validationErrorsCommand = new RelayCommand(DoValidationErrors));
+			}
+		}
+
+		private void DoValidationErrors()
+		{
+			var completedBusViewModel = _subModels[Component.CompleteBusVehicle] as CompleteVehicleBusViewModel;
+			var auxiliaryViewModel = _subModels[Component.Auxiliaries] as AuxiliariesViewModel;
+			
+			completedBusViewModel?.ShowValidationError(_errors);
+			auxiliaryViewModel?.ShowValidationError(_errors);
+		}
+
+
+		private void ValidationErrorAction(XmlSeverityType arg1, ValidationEvent arg2)
+		{
+			var xmlException = arg2?.ValidationEventArgs?.Exception as XmlSchemaValidationException;
+			if (xmlException != null)
+			{
+				var message = xmlException.InnerException;
+				var sourceObject = xmlException.SourceObject as XmlElement;
+				var localName = sourceObject?.LocalName;
+
+				if (sourceObject != null)
+					_errors.Add(localName, message?.Message);
+			}
+		}
+		
 		public string JobFile { get; }
 		public IInputDataProvider InputDataProvider { get; set; }
+
+
 	}
 }
