@@ -288,11 +288,11 @@ namespace TUGraz.VectoCore.OutputData.XML
 					),
 					new XElement(
 						tns + "Declared", new XAttribute(XMLNames.Report_Results_Unit_Attr, key),
-						declaredCO2.ToMinSignificantDigits(3, 1)
+						declaredCO2.ToMinSignificantDigits(3, 2)
 					),
 					new XElement(
 						tns + "Verified", new XAttribute(XMLNames.Report_Results_Unit_Attr, key),
-						verifiedCO2.ToMinSignificantDigits(3, 1)
+						verifiedCO2.ToMinSignificantDigits(3, 2)
 					)
 				),
 				new XElement(tns + "C_VTP", cVtp.ToXMLFormat(4)));

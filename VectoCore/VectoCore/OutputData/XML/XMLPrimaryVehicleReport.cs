@@ -436,7 +436,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 			retVal.Add(
 				new XElement(
 					tns + XMLNames.Report_Results_CO2, new XAttribute(XMLNames.Report_Results_Unit_Attr, "g/km"),
-					(result.CO2Total.ConvertToGramm() / result.Distance.ConvertToKiloMeter()).ToMinSignificantDigits(3, 1)));
+					(result.CO2Total.ConvertToGramm() / result.Distance.ConvertToKiloMeter()).ToMinSignificantDigits(3, 2)));
 
 			return retVal.Cast<object>().ToArray();
 		}

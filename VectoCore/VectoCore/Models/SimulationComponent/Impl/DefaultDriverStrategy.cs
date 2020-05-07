@@ -952,8 +952,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 						});
 				}).Case<ResponseOverload>(
 				r => {
-					third = Driver.DrivingActionCoast(absTime, ds, velocityWithOverspeed, gradient);
-					debug.Add(new { action = "second:Overload -> Coast", third });
+					if (DataBus.VehicleSpeed.IsGreater(0)) {
+						third = Driver.DrivingActionCoast(absTime, ds, velocityWithOverspeed, gradient);
+						debug.Add(new { action = "second:Overload -> Coast", third });
+					}
 				});
 
 			return third;
@@ -1197,6 +1199,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 						response.Switch().Case<ResponseOverload>(
 							r1 => {
 								Log.Info("Brake -> Overload -> 2nd Brake -> Overload -> Trying accelerate action");
+								var gear = DataBus.Gear;
 								response = Driver.DrivingActionAccelerate(
 									absTime, ds, DriverStrategy.BrakeTrigger.NextTargetSpeed, gradient);
 								response.Switch().Case<ResponseGearShift>(
@@ -1204,7 +1207,14 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 										Log.Info(
 											"Brake -> Overload -> 2nd Brake -> Accelerate -> Got GearShift response, performing roll action");
 										response = Driver.DrivingActionRoll(absTime, ds, DriverStrategy.BrakeTrigger.NextTargetSpeed, gradient);
-									});
+									})
+									.Case<ResponseUnderload>(
+											rs => {
+												if (gear != DataBus.Gear) {
+													// AT Gearbox switched gears, shift losses are no longer applied, try once more...
+													response = Driver.DrivingActionAccelerate(absTime, ds, DriverStrategy.BrakeTrigger.NextTargetSpeed, gradient);
+												}
+											});
 							});
 					}
 				}).Case<ResponseGearShift>(
