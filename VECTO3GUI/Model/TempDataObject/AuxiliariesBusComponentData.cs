@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using TUGraz.VectoCommon.BusAuxiliaries;
+using TUGraz.VectoCommon.Resources;
 using TUGraz.VectoCommon.Utils;
 using VECTO3GUI.Helper;
 using VECTO3GUI.ViewModel.Interfaces;
@@ -32,7 +33,7 @@ namespace VECTO3GUI.Model.TempDataObject
 		public bool HeatPump { get; set; }
 		public bool AdjustableAuxiliaryHeater { get; set; }
 		public bool SeparateAirDistributionDucts { get; set; }
-		public ConsumerTechnology DoorDriveTechnology { get; set; }
+		public Dictionary<string, string> XmlNamesToPropertyMapping { get; private set; }
 
 		#endregion
 
@@ -41,11 +42,14 @@ namespace VECTO3GUI.Model.TempDataObject
 			AlternatorTechnologies = new ObservableCollectionEx<AlternatorTechnologyModel>();
 			if (defaultValues)
 				ClearValues(viewModel);
+			SetXmlNamesToPropertyMapping();
 		}
 
 		public AuxiliariesBusComponentData(IAuxiliariesViewModel viewModel)
 		{
+			AlternatorTechnologies = new ObservableCollectionEx<AlternatorTechnologyModel>();
 			SetValues(viewModel);
+			SetXmlNamesToPropertyMapping();
 		}
 
 		public void UpdateCurrentValues(IAuxiliariesViewModel viewModel)
@@ -74,6 +78,8 @@ namespace VECTO3GUI.Model.TempDataObject
 
 		private void SetAlternatorTechnology(ObservableCollectionEx<AlternatorTechnologyModel> res)
 		{
+			if (OriginAlternatorTechnologies == null)
+				return;
 			//var res = new ObservableCollectionEx<AlternatorTechnologyModel>();
 			res.Clear();
 			for (int i = 0; i < OriginAlternatorTechnologies.Count; i++) {
@@ -133,6 +139,26 @@ namespace VECTO3GUI.Model.TempDataObject
 				});
 			}
 			return result;
+		}
+		
+		private void SetXmlNamesToPropertyMapping()
+		{
+			XmlNamesToPropertyMapping = new Dictionary<string, string> {
+				{XMLNames.BusAux_ElectricSystem, nameof(AlternatorTechnologies)},
+				{XMLNames.Bus_Dayrunninglights, nameof(DayrunninglightsLED)},
+				{XMLNames.Bus_Headlights, nameof(HeadlightsLED)},
+				{XMLNames.Bus_Positionlights, nameof(PositionlightsLED)},
+				{XMLNames.Bus_Brakelights, nameof(BrakelightsLED)},
+				{XMLNames.Bus_Interiorlights, nameof(InteriorLightsLED)},
+				{XMLNames.Bus_SystemConfiguration, nameof(SystemConfiguration)},
+				{XMLNames.Bus_DriverAC, nameof(CompressorTypeDriver)},
+				{XMLNames.Bus_PassengerAC, nameof(CompressorTypePassenger)},
+				{XMLNames.Bus_AuxiliaryHeaterPower, nameof(AuxHeaterPower)},
+				{XMLNames.Bus_DoubleGlasing, nameof(DoubleGlasing)},
+				{XMLNames.Bus_HeatPump, nameof(HeatPump)},
+				{XMLNames.Bus_AdjustableAuxiliaryHeater, nameof(AdjustableAuxiliaryHeater)},
+				{XMLNames.Bus_SeparateAirDistributionDucts, nameof(SeparateAirDistributionDucts)},
+			};
 		}
 	}
 }

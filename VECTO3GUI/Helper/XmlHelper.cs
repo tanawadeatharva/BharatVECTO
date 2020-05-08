@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.Linq;
+using System.Xml.Schema;
 using Castle.Core.Internal;
 using Microsoft.WindowsAPICodePack.Shell.PropertySystem;
 using TUGraz.VectoCommon.Exceptions;
@@ -38,7 +39,8 @@ namespace VECTO3GUI.Helper
 			return xmlDocument.SelectNodes($"//*[local-name()='{parentNode}']//*[local-name()='{nodeName}']");
 		}
 
-		public static bool ValidateXDocument(XDocument xDocument)
+		public static bool ValidateXDocument(XDocument xDocument, Action<bool> resultAction = null,
+			Action<XmlSeverityType, ValidationEvent> validationErrorAction = null)
 		{
 			var xmlDocument = xDocument.ToXmlDocument();
 			if (xmlDocument == null)
@@ -50,7 +52,7 @@ namespace VECTO3GUI.Helper
 				throw new VectoException("unknown xml file! {0}", xmlDocument.DocumentElement.LocalName);
 			}
 
-			var validator = new XMLValidator(xmlDocument, null, XMLValidator.CallBackExceptionOnError);
+			var validator = new XMLValidator(xmlDocument, resultAction, validationErrorAction);
 			return validator.ValidateXML(documentType.Value); ;
 		}
 

@@ -276,7 +276,7 @@ namespace VECTO3GUI.ViewModel.Impl
 			_componentData.ResetToComponentValues(this);
 		}
 
-		public override object SaveComponentData()
+		public override object CommitComponentData()
 		{
 			_componentData.UpdateCurrentValues(this);
 			ClearChangedProperties();

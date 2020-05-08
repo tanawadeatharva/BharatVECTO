@@ -139,7 +139,7 @@ namespace VECTO3GUI.ViewModel.Impl
 		public ObservableCollectionEx<AlternatorTechnologyModel> AlternatorTechnologies
 		{
 			get { return _alternatorTechnologies; }
-			//set { SetProperty(ref _alternatorTechnologies, value); }
+			set { SetProperty(ref _alternatorTechnologies, value); }
 		}
 
 		public bool DayrunninglightsLED
@@ -286,6 +286,8 @@ namespace VECTO3GUI.ViewModel.Impl
 			}
 		}
 
+		public Dictionary<string, string> XmlNamesToPropertyMapping { get; private set; }
+
 		public ConsumerTechnology DoorDriveTechnology { get; set; }
 
 
@@ -311,6 +313,7 @@ namespace VECTO3GUI.ViewModel.Impl
 			SetBusAuxiliaryValues(_busAuxiliaries);
 			SetAllowedValues();
 
+			XmlNamesToPropertyMapping = _componentData.XmlNamesToPropertyMapping;
 			//ConnectAxleViewModel();
 		}
 
@@ -325,6 +328,7 @@ namespace VECTO3GUI.ViewModel.Impl
 
 			if (!busAux.ElectricSupply.Alternators.IsNullOrEmpty())
 			{
+
 				AlternatorTechnologies.Clear(); // = new ObservableCollectionEx<AlternatorTechnologyModel>();
 
 				AlternatorTechnologies.CollectionChanged += AlternatorTechnologiesOnCollectionChanged;
@@ -414,12 +418,28 @@ namespace VECTO3GUI.ViewModel.Impl
 			SetChangedProperty(changed, nameof(AlternatorTechnologies));
 		}
 
-		public override object SaveComponentData()
+		public override object CommitComponentData()
 		{
 			_componentData.UpdateCurrentValues(this);
 			ClearChangedProperties();
 			return _componentData;
 		}
+		public override void ShowValidationError(Dictionary<string, string> errors)
+		{
+			if (errors.IsNullOrEmpty())
+				return;
+
+			foreach (var error in errors)
+			{
+				string propertyName;
+				if (XmlNamesToPropertyMapping.TryGetValue(error.Key, out propertyName))
+				{
+					AddPropertyError(propertyName, error.Value);
+				}
+			}
+		}
+
+
 
 		#region Commands
 
@@ -463,6 +483,12 @@ namespace VECTO3GUI.ViewModel.Impl
 
 		private void DoAddAlternator()
 		{
+			if (AlternatorTechnologies == null) {
+				AlternatorTechnologies = new ObservableCollectionEx<AlternatorTechnologyModel>();
+				AlternatorTechnologies.CollectionChanged += AlternatorTechnologiesOnCollectionChanged;
+				AlternatorTechnologies.CollectionItemChanged += AlternatorTechnologiesOnCollectionItemChanged;
+			}
+
 			AlternatorTechnologies.Add(new AlternatorTechnologyModel
 			{
 				AlternatorTechnology = string.Empty

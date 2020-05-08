@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Input;
 using Ninject;
 using TUGraz.VectoCommon.InputData;
 using VECTO3GUI.Util;
@@ -35,7 +36,7 @@ namespace VECTO3GUI.ViewModel.Impl
 			throw new NotImplementedException();
 		}
 
-		protected override void DoSaveToJob(Window window)
+		protected override void DoSaveAsJob(Window window)
 		{
 			throw new NotImplementedException();
 		}
@@ -45,5 +46,7 @@ namespace VECTO3GUI.ViewModel.Impl
 			get { return string.Empty; }
 		}
 		public IInputDataProvider InputDataProvider { get; set; }
+		public ICommand ValidateInput { get; }
+		public ICommand ValidationErrors { get; }
 	}
 }
