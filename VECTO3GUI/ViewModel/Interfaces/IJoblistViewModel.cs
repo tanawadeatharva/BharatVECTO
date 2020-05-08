@@ -25,5 +25,8 @@ namespace VECTO3GUI.ViewModel.Interfaces
 		ICommand OpenInFolder { get; }
 		ICommand DoubleClickCommand { get; }
 		ICommand RunSimulation { get; }
+		ICommand StopSimulation { get; }
+		bool CanRunSimulation { get; }
+		bool CanStopSimulation { get; }
 	}
 }

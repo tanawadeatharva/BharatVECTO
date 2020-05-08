@@ -6,6 +6,7 @@ using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
+using System.IO.Pipes;
 using System.Linq;
 using System.Threading;
 using System.Windows;
@@ -15,6 +16,8 @@ using System.Xml;
 using System.Xml.Linq;
 using Castle.Core.Internal;
 using Ninject;
+using NLog;
+using NLog.Targets;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Resources;
@@ -31,6 +34,7 @@ using VECTO3GUI.ViewModel.Interfaces;
 using VECTO3GUI.Helper;
 using VECTO3GUI.Model;
 using VECTO3GUI.Views;
+using LogManager = TUGraz.VectoCommon.Models.LogManager;
 using MessageBox = System.Windows.MessageBox;
 
 
@@ -67,6 +71,11 @@ namespace VECTO3GUI.ViewModel.Impl
 		private ICommand _doubleClickCommand;
 		private ICommand _runSimulationCommand;
 		private BackgroundWorker SimulationWorker;
+		private string _status;
+		private double _progress;
+		private ICommand _stopSimulationCommand;
+		private bool _canRunSimulation = true;
+		private bool _canStopSimulation = false;
 
 		#endregion
 
@@ -114,6 +123,18 @@ namespace VECTO3GUI.ViewModel.Impl
 			set { SetProperty(ref _visibilitySecView, value); }
 		}
 
+		public string Status
+		{
+			get { return _status; }
+			set { SetProperty(ref _status, value); }
+		}
+
+		public double Progress
+		{
+			get { return _progress; }
+			set { SetProperty(ref _progress, value); }
+		}
+
 		#endregion
 
 
@@ -129,6 +150,32 @@ namespace VECTO3GUI.ViewModel.Impl
 			SimulationWorker.WorkerReportsProgress = true;
 			SimulationWorker.WorkerSupportsCancellation = true;
 
+			var target = new MethodCallTarget("VectoGuiTarget", (evtInfo, obj) => LogMethod(evtInfo, obj));
+			NLog.Config.SimpleConfigurator.ConfigureForTargetLogging(target);
+		}
+
+		private void LogMethod(LogEventInfo evtInfo, object[] objects)
+		{
+			if (!SimulationWorker.IsBusy || SimulationWorker.CancellationPending) {
+				return;
+			}
+
+			//if (evtInfo.Level == LogLevel.Warn) {
+			//	SimulationWorker.ReportProgress(
+			//		0,
+			//		new VectoSimulationProgress() {
+			//			Type = VectoSimulationProgress.MsgType.LogWarning,
+			//			Message = evtInfo.FormattedMessage
+			//		});
+			//} else
+			if (evtInfo.Level == LogLevel.Error || evtInfo.Level == LogLevel.Fatal) {
+				SimulationWorker.ReportProgress(
+					0,
+					new VectoSimulationProgress() {
+						Type = VectoSimulationProgress.MsgType.LogError,
+						Message = evtInfo.FormattedMessage
+					});
+			}
 		}
 
 		private void SetJobEntries()
@@ -167,7 +214,26 @@ namespace VECTO3GUI.ViewModel.Impl
 
 		public ICommand RunSimulation
 		{
-			get { return _runSimulationCommand ?? (_runSimulationCommand = new RelayCommand(DoRunSimulation, CanRunSimulation)); }
+			get { return _runSimulationCommand ?? (_runSimulationCommand = new RelayCommand(DoRunSimulation, CanRunSimulationCmd)); }
+		}
+
+		public ICommand StopSimulation
+		{
+			get {
+				return _stopSimulationCommand ?? (_stopSimulationCommand = new RelayCommand(DoStopSimulation, CanStopSimulationCmd));
+			}
+		}
+
+		public bool CanRunSimulation
+		{
+			get { return _canRunSimulation; }
+			set { SetProperty(ref _canRunSimulation, value); }
+		}
+
+		public bool CanStopSimulation
+		{
+			get { return _canStopSimulation; }
+			set { SetProperty(ref _canStopSimulation, value); }
 		}
 
 		public ICommand DoubleClickCommand
@@ -633,7 +699,7 @@ namespace VECTO3GUI.ViewModel.Impl
 
 		#region RunVECTOSimulation
 
-		private bool CanRunSimulation()
+		private bool CanRunSimulationCmd()
 		{
 			return !SimulationWorker.IsBusy;
 		}
@@ -647,6 +713,18 @@ namespace VECTO3GUI.ViewModel.Impl
 			}
 		}
 
+		private bool CanStopSimulationCmd()
+		{
+			return SimulationWorker.IsBusy;
+		}
+
+		private void DoStopSimulation()
+		{
+			SimulationWorker.CancelAsync();
+		}
+
+		
+
 		private void RunVectoSimulation(object theSender, DoWorkEventArgs e)
 		{
 			var sender = theSender as BackgroundWorker;
@@ -654,9 +732,12 @@ namespace VECTO3GUI.ViewModel.Impl
 				return;
 			}
 
+			CanRunSimulation = false;
+			CanStopSimulation = true;
+
 			var jobs = Jobs.Where(x => x.Selected).ToArray();
 			if (jobs.Length == 0) {
-				sender.ReportProgress(100, new VectoSimulationProgress() {Target = VectoSimulationProgress.Targets.Message, Message = "No jobs selected for simulation"});
+				sender.ReportProgress(100, new VectoSimulationProgress() {Type = VectoSimulationProgress.MsgType.StatusMessage, Message = "No jobs selected for simulation"});
 				return;
 			}
 			var sumFileWriter = new FileOutputWriter(Path.GetDirectoryName(jobs.First().JobEntryFilePath));
@@ -678,7 +759,7 @@ namespace VECTO3GUI.ViewModel.Impl
 					if (!File.Exists(fullFileName)) {
 						sender.ReportProgress(
 							0, new VectoSimulationProgress() {
-								Target = VectoSimulationProgress.Targets.Message,
+								Type = VectoSimulationProgress.MsgType.StatusMessage,
 								Message =
 									$"File {jobEntry.JobEntryFilePath} not found!"
 							});
@@ -688,7 +769,7 @@ namespace VECTO3GUI.ViewModel.Impl
 					sender.ReportProgress(
 						0,
 						new VectoSimulationProgress() {
-							Target = VectoSimulationProgress.Targets.Message,
+							Type = VectoSimulationProgress.MsgType.StatusMessage,
 							Message = $"Reading file {Path.GetFileName(fullFileName)}"
 						});
 					var extension = Path.GetExtension(jobEntry.JobEntryFilePath);
@@ -717,7 +798,7 @@ namespace VECTO3GUI.ViewModel.Impl
 						sender.ReportProgress(
 							0,
 							new VectoSimulationProgress() {
-								Target = VectoSimulationProgress.Targets.Message,
+								Type = VectoSimulationProgress.MsgType.StatusMessage,
 								Message = $"No input provider for job {Path.GetFileName(fullFileName)}"
 							});
 						continue;
@@ -732,22 +813,22 @@ namespace VECTO3GUI.ViewModel.Impl
 					sender.ReportProgress(
 						0,
 						new VectoSimulationProgress() {
-							Target = VectoSimulationProgress.Targets.Message,
+							Type = VectoSimulationProgress.MsgType.StatusMessage,
 							Message = $"Finished reading data for job {Path.GetFileName(fullFileName)}"
 						});
 				} catch (Exception ex) {
 					MessageBox.Show(
 						$"ERROR running job {Path.GetFileName(jobEntry.JobEntryFilePath)}: {ex.Message}", "Error", MessageBoxButton.OK,
 						MessageBoxImage.Exclamation);
-					sender.ReportProgress(0, new VectoSimulationProgress() {Target = VectoSimulationProgress.Targets.Message, Message = ex.Message});
+					sender.ReportProgress(0, new VectoSimulationProgress() {Type = VectoSimulationProgress.MsgType.StatusMessage, Message = ex.Message});
 				}
 			}
 
 			foreach (var cycle in jobContainer.GetCycleTypes()) {
-				sender.ReportProgress(0, new VectoSimulationProgress() {Target = VectoSimulationProgress.Targets.Message, Message = $"Detected cycle {cycle.Name}: {cycle.CycleType}"});
+				sender.ReportProgress(0, new VectoSimulationProgress() {Type = VectoSimulationProgress.MsgType.StatusMessage, Message = $"Detected cycle {cycle.Name}: {cycle.CycleType}"});
 			}
 
-			sender.ReportProgress(0, new VectoSimulationProgress() {Target = VectoSimulationProgress.Targets.Message, Message = $"Starting simulation ({jobs.Length} jobs, {jobContainer.GetProgress().Count} runs)"});
+			sender.ReportProgress(0, new VectoSimulationProgress() {Type = VectoSimulationProgress.MsgType.StatusMessage, Message = $"Starting simulation ({jobs.Length} jobs, {jobContainer.GetProgress().Count} runs)"});
 
 			var start = Stopwatch.StartNew();
 
@@ -765,7 +846,7 @@ namespace VECTO3GUI.ViewModel.Impl
 
 				sender.ReportProgress(
 					Convert.ToInt32(sumProgress * 100.0 / progress.Count), new VectoSimulationProgress() {
-						Target = VectoSimulationProgress.Targets.Status,
+						Type = VectoSimulationProgress.MsgType.Progress,
 						Message = string.Format(
 							"Duration: {0:F1}s, Curernt Progress: {1:P} ({2})", duration, sumProgress / progress.Count,
 							string.Join(", ", progress.Select(x => string.Format("{0,4:P}", x.Value.Progress))))
@@ -787,7 +868,7 @@ namespace VECTO3GUI.ViewModel.Impl
 
 			foreach (var progressEntry in jobContainer.GetProgress()) {
 				sender.ReportProgress(100, new VectoSimulationProgress() {
-					Target = VectoSimulationProgress.Targets.Message, Message = 
+					Type = VectoSimulationProgress.MsgType.StatusMessage, Message = 
 						string.Format("{0,-60} {1,8:P} {2,10:F2}s - {3}",
 									$"{progressEntry.Value.RunName} {progressEntry.Value.CycleName} {progressEntry.Value.RunSuffix}",
 						progressEntry.Value.Progress,
@@ -798,7 +879,7 @@ namespace VECTO3GUI.ViewModel.Impl
 					sender.ReportProgress(
 						100,
 						new VectoSimulationProgress() {
-							Target = VectoSimulationProgress.Targets.Message,
+							Type = VectoSimulationProgress.MsgType.StatusMessage,
 							Message = progressEntry.Value.Error.Message
 						}
 					);
@@ -812,7 +893,7 @@ namespace VECTO3GUI.ViewModel.Impl
 						sender.ReportProgress(
 							100,
 							new VectoSimulationProgress() {
-								Target = VectoSimulationProgress.Targets.Message,
+								Type = VectoSimulationProgress.MsgType.StatusMessage,
 								Message = string.Format(
 									"{2} for '{0}' written to {1}", Path.GetFileName(jobEntry.JobEntryFilePath), entry.Key, entry.Value),
 								Link = "<XML>" + entry.Key
@@ -823,14 +904,14 @@ namespace VECTO3GUI.ViewModel.Impl
 
 			if (File.Exists(sumFileWriter.SumFileName)) {
 				sender.ReportProgress(100, new VectoSimulationProgress() {
-					Target = VectoSimulationProgress.Targets.Message,
+					Type = VectoSimulationProgress.MsgType.StatusMessage,
 					Message = string.Format("Sum file written to {0}", sumFileWriter.SumFileName),
 					Link = "<CSV>" + sumFileWriter.SumFileName
 				});
 			}
 
 			sender.ReportProgress(100, new VectoSimulationProgress() {
-				Target = VectoSimulationProgress.Targets.Message,
+				Type = VectoSimulationProgress.MsgType.StatusMessage,
 				Message = string.Format("Simulation finished in {0:F1}s", start.Elapsed.TotalSeconds)
 			});
 		}
@@ -843,20 +924,20 @@ namespace VECTO3GUI.ViewModel.Impl
 
 				if (p.Value.Error != null) {
 					SimulationWorker.ReportProgress(0, new VectoSimulationProgress() {
-						Target = VectoSimulationProgress.Targets.Message,
+						Type = VectoSimulationProgress.MsgType.StatusMessage,
 						Message = string.Format("Finished Run {0} with ERROR: {1}", runName,
 												p.Value.Error.Message),
 						Link = "<CSV>" + modFilename
 					});
 				} else {
 					SimulationWorker.ReportProgress(0, new VectoSimulationProgress() {
-						Target = VectoSimulationProgress.Targets.Message,
+						Type = VectoSimulationProgress.MsgType.StatusMessage,
 						Message = string.Format("Finished run {0} successfully.", runName)
 					});
 				}
 				if (File.Exists(modFilename)) {
 					SimulationWorker.ReportProgress(0, new VectoSimulationProgress() {
-						Target = VectoSimulationProgress.Targets.Message,
+						Type = VectoSimulationProgress.MsgType.StatusMessage,
 						Message = string.Format("Run {0}: Modal results written to {1}", runName, modFilename),
 						Link = "<CSV>" + modFilename
 					});
@@ -867,7 +948,10 @@ namespace VECTO3GUI.ViewModel.Impl
 
 		private void VectoSimulationCompleted(object sender, RunWorkerCompletedEventArgs e)
 		{
-			// TODO!
+			Progress = 0;
+			Status = "";
+			CanRunSimulation = true;
+			CanStopSimulation = false;
 		}
 
 		private void VectoSimulationProgressChanged(object sender, ProgressChangedEventArgs e)
@@ -877,13 +961,21 @@ namespace VECTO3GUI.ViewModel.Impl
 				return;
 			}
 
-			switch (progress.Target) {
-				case VectoSimulationProgress.Targets.Message:
+			switch (progress.Type) {
+				case VectoSimulationProgress.MsgType.LogError:
+				case VectoSimulationProgress.MsgType.LogWarning:
+				case VectoSimulationProgress.MsgType.InfoMessage:
+				case VectoSimulationProgress.MsgType.StatusMessage: {
 					//if (progress.Link == null) {
-						Messages.Add(new MessageEntry() {Message = progress.Message});
+					Messages.Add(new MessageEntry() { Message = progress.Message, Type = progress.Type.ToMessageType() });
+
 					//}
 					break;
-				case VectoSimulationProgress.Targets.Status: break;
+				}
+				case VectoSimulationProgress.MsgType.Progress:
+					Progress = e.ProgressPercentage;
+					Status = progress.Message;
+					break;
 				default: throw new ArgumentOutOfRangeException();
 			}
 		}
@@ -891,23 +983,40 @@ namespace VECTO3GUI.ViewModel.Impl
 
 		public class VectoSimulationProgress
 		{
-			public enum Targets
+			public enum MsgType
 			{
-				Message,
-				Status
+				StatusMessage,
+				InfoMessage,
+				Progress,
+				LogError,
+				LogWarning,
+				
 			}
 
 			public string Message { get; set; }
 
-			public Targets Target { get; set; }
+			public MsgType Type { get; set; }
 
 			public string Link { get; set; }
 		}
 
-
+		
 #endregion
 
 	}
-
+	public static class MsgTypeExtensions
+	{
+		public static MessageType ToMessageType(this JoblistViewModel.VectoSimulationProgress.MsgType mt)
+		{
+			switch (mt) {
+				case JoblistViewModel.VectoSimulationProgress.MsgType.StatusMessage: return MessageType.StatusMessage;
+				case JoblistViewModel.VectoSimulationProgress.MsgType.InfoMessage: return MessageType.InfoMessage;
+				case JoblistViewModel.VectoSimulationProgress.MsgType.Progress: return MessageType.StatusMessage;
+				case JoblistViewModel.VectoSimulationProgress.MsgType.LogError: return MessageType.ErrorMessage;
+				case JoblistViewModel.VectoSimulationProgress.MsgType.LogWarning: return MessageType.WarningMessage;
+				default: throw new ArgumentOutOfRangeException(nameof(mt), mt, null);
+			}
+		}
+	}
 
 }

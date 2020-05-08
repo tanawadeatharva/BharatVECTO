@@ -8,6 +8,7 @@
              xmlns:views="clr-namespace:VECTO3GUI.Views"
              xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
              xmlns:converter="clr-namespace:VECTO3GUI.Helper.Converter"
+             xmlns:vecto3Gui="clr-namespace:VECTO3GUI"
              mc:Ignorable="d" 
              d:DesignHeight="400" d:DesignWidth="600"
              d:DataContext="{d:DesignInstance Type=impl:JoblistViewModel, IsDesignTimeCreatable=False}">
@@ -34,10 +35,17 @@
 
             <StackPanel Orientation="Vertical">
                 <Button VerticalAlignment="Top" Margin="10,10,0,0"
-                        Command="{Binding RunSimulation}">
+                        Command="{Binding RunSimulation}" Visibility="{Binding CanRunSimulation, Converter={converter:BoolVisibilityConverter}}">
                     <StackPanel Orientation="Horizontal">
                         <iconPacks:PackIconModern Width="20" Height="15" Kind="ControlPlay" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="Green"/>
-                        <TextBlock Text="Start " />
+                        <TextBlock Text="Start" Margin="5,0,0,0" />
+                    </StackPanel>
+                </Button>
+                <Button VerticalAlignment="Top" Margin="10,10,0,0"
+                        Command="{Binding StopSimulation}" Visibility="{Binding CanStopSimulation, Converter={converter:BoolVisibilityConverter}}">
+                    <StackPanel Orientation="Horizontal">
+                        <iconPacks:PackIconModern Width="20" Height="15" Kind="ControlStop" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="Red"/>
+                        <TextBlock Text="Stop" Margin="5,0,0,0" />
                     </StackPanel>
                 </Button>
 
@@ -165,14 +173,52 @@
         
         <Grid Grid.Row="2" Grid.ColumnSpan="3" Grid.Column="0" Margin="10,20,20,10">
             <DataGrid ItemsSource="{Binding Messages}" BorderThickness="1" CanUserAddRows="False" AutoGenerateColumns="False" SelectionUnit="FullRow" 
-                      IsReadOnly="True" HeadersVisibility="All"  RowHeaderWidth="5">
+                      IsReadOnly="True" HeadersVisibility="All"  RowHeaderWidth="5" RowHeight="5" Name="MessageList">
                 
                 <DataGrid.Columns>
                     <DataGridTextColumn Header="Message" Binding="{Binding Message}" Width="*" />
-                    <DataGridTextColumn Header="Time" Binding="{Binding Time}" Width="130" />
-                    <DataGridTextColumn Header="Source" Binding="{Binding Source}" Width="150" />
+                    <!--<DataGridTextColumn Header="Time" Binding="{Binding Time}" Width="130" />-->
+                    <!--<DataGridTextColumn Header="Source" Binding="{Binding Source}" Width="150" />-->
                 </DataGrid.Columns>
-
+                <DataGrid.RowStyle>
+                    <Style TargetType="DataGridRow">
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding Type}" Value="{x:Static impl:MessageType.StatusMessage}">
+                                <Setter Property="Background" Value="AliceBlue"/>
+                            </DataTrigger>
+                            <DataTrigger Binding="{Binding Type}" Value="{x:Static impl:MessageType.InfoMessage}">
+                                <Setter Property="Background" Value="LemonChiffon"/>
+                            </DataTrigger>
+                            <DataTrigger Binding="{Binding Type}" Value="{x:Static impl:MessageType.ErrorMessage}">
+                                <Setter Property="Background" Value="Red"/>
+                            </DataTrigger>
+                            <DataTrigger Binding="{Binding Type}" Value="{x:Static impl:MessageType.WarningMessage}">
+                                <Setter Property="Background" Value="Gold"/>
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </DataGrid.RowStyle>
+                <DataGrid.CellStyle>
+                    <Style TargetType="DataGridCell">
+                        <Setter Property="FontFamily" Value="Courier New"/>
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding Type}" Value="{x:Static impl:MessageType.StatusMessage}">
+                                <Setter Property="Foreground" Value="Black"/>
+                            </DataTrigger>
+                            <DataTrigger Binding="{Binding Type}" Value="{x:Static impl:MessageType.InfoMessage}">
+                                <Setter Property="Foreground" Value="DimGray"/>
+                            </DataTrigger>
+                            <DataTrigger Binding="{Binding Type}" Value="{x:Static impl:MessageType.ErrorMessage}">
+                                <Setter Property="Foreground" Value="White"/>
+                                <Setter Property="FontWeight" Value="Bold"/>
+                            </DataTrigger>
+                            <DataTrigger Binding="{Binding Type}" Value="{x:Static impl:MessageType.WarningMessage}">
+                                <Setter Property="Foreground" Value="Black"/>
+                                <Setter Property="FontWeight" Value="Bold"/>
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </DataGrid.CellStyle>
             </DataGrid>
         </Grid>
 

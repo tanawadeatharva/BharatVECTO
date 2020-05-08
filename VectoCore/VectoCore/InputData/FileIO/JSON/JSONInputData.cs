@@ -89,12 +89,12 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			get { return _sourceFile; }
 		}
 
-		public bool SavedInDeclarationMode
+		public virtual bool SavedInDeclarationMode
 		{
 			get { return Body.GetEx(JsonKeys.SavedInDeclMode).Value<bool>(); }
 		}
 
-		public string AppVersion { get { return "VECTO-JSON"; } }
+		public virtual string AppVersion { get { return "VECTO-JSON"; } }
 
 		internal string BasePath
 		{
@@ -1098,6 +1098,12 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 		}
 
+		#region Overrides of JSONFile
+
+		public override bool SavedInDeclarationMode { get { return true; } }
+
+		#endregion
+
 		#region Implementation of ISingleBusInputDataProvider
 
 		public IVehicleDeclarationInputData PrimaryVehicle { get; }
@@ -1152,6 +1158,12 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 		//	return ;
 		//}
+
+		#region Overrides of JSONFile
+
+		public override bool SavedInDeclarationMode { get { return true; } }
+
+		#endregion
 
 		#region Implementation of IDeclarationInputDataProvider
 

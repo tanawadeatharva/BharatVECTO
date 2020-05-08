@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Collections.Specialized;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -27,6 +28,16 @@ namespace VECTO3GUI.Views
 		public JoblistView()
 		{
 			InitializeComponent();
+			((INotifyCollectionChanged)MessageList.Items).CollectionChanged += AutoScroll;
+		}
+
+		private void AutoScroll(object sender, NotifyCollectionChangedEventArgs e)
+		{
+			if (MessageList.Items.Count > 0) {
+				var border = VisualTreeHelper.GetChild(MessageList, 0) as Decorator;
+				var scroll = border?.Child as ScrollViewer;
+				scroll?.ScrollToEnd();
+			}
 		}
 	}
 }

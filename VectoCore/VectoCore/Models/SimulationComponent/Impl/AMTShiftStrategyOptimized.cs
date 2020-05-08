@@ -205,7 +205,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				var fcCurRes = fuel.ConsumptionMap.GetFuelConsumption(tqCurrent, engineSpeed, true);
 				if (fcCurRes.Extrapolated) {
 					Log.Warn(
-						"EffShift Strategy: Extrapolation of fuel consumption for current gear!n: {1}, Tq: {2}",
+						"EffShift Strategy: Extrapolation of fuel consumption for current gear!n: {0}, Tq: {1}",
 						engineSpeed, tqCurrent);
 				}
 				fcCurrent += fcCurRes.Value.Value() * fuel.FuelData.LowerHeatingValueVecto.Value();
