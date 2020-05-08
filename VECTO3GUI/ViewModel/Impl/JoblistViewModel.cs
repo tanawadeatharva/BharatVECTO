@@ -335,11 +335,13 @@ namespace VECTO3GUI.ViewModel.Impl
 			{
 				var jobEntry = SerializeHelper.DeserializeToObject<JobEntry>(filePath.First());
 				jobEntry.JobEntryFilePath = filePath.First();
+				jobEntry.Selected = true;
 				_jobs.Add(jobEntry);
 			}
 			else if(IsXmlFile(filePath.First()))
 			{
 				var jobEntry = GetAdditionalJobEntry(filePath.First());
+				jobEntry.Selected = true;
 				_jobs.Add(jobEntry);
 			}
 		}

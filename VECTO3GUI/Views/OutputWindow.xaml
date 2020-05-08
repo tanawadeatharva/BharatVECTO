@@ -11,7 +11,7 @@
         xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
         xmlns:helper="clr-namespace:VECTO3GUI.Helper"
         mc:Ignorable="d"
-        Title="{Binding WindowTitle}"  Height="450" Width="800" WindowStartupLocation="CenterScreen" TitleCharacterCasing="Normal" 
+        Title="{Binding WindowTitle}" Icon="../Resources/Icon2.ico" Height="450" Width="800" WindowStartupLocation="CenterScreen" TitleCharacterCasing="Normal" 
         d:DataContext="{d:DesignInstance Type=impl:OutputWindowViewModel, IsDesignTimeCreatable=False}">
 
     <mah:MetroWindow.TitleTemplate>

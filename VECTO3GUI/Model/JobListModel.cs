@@ -17,7 +17,7 @@ namespace VECTO3GUI.Model
 	public class JobListModel
 	{
 		private const string ConfigFolderName = "Config";
-		private const string JobListFileName = "JobList.txt";
+		private const string JobListFileName = "JobList.json";
 
 		private string _jobListFilePath = Path.Combine(".", ConfigFolderName, JobListFileName);
 

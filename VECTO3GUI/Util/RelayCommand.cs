@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
+using System.Windows;
 using System.Windows.Input;
 
 namespace VECTO3GUI.Util
@@ -72,7 +73,11 @@ namespace VECTO3GUI.Util
 
 		public void Execute(object parameter)
 		{
-			_execute((T)parameter);
+			try {
+				_execute((T)parameter);
+			} catch (Exception e) {
+				MessageBox.Show(e.Message, "Exception", MessageBoxButton.OK, MessageBoxImage.Error);
+			}
 		}
 
 		#endregion
