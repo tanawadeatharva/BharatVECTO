@@ -21,7 +21,8 @@ namespace VECTO3GUI.ViewModel.Interfaces
 		ICommand SaveAsJob { get; }
 		ICommand CloseJob { get; }
 		ICommand ValidateInput { get; }
-		ICommand ValidationErrors { get; }
+		ICommand ShowValidationErrors { get; }
+		ICommand RemoveValidationErrors { get; }
 
 	}
 }

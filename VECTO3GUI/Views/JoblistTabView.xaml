@@ -42,8 +42,10 @@
                     <MenuItem Header="Input Validation">
                         <MenuItem Header="Validate"
                                   Command="{Binding ValidateInput}"/>
-                        <MenuItem Header="Validation Errors"
-                                  Command="{Binding ValidationErrors}"/>
+                        <MenuItem Header="Show Validation Errors"
+                                  Command="{Binding ShowValidationErrors}"/>
+                        <MenuItem Header="Remove Validation Errors"
+                                  Command="{Binding RemoveValidationErrors}"/>
                     </MenuItem>
                 </Menu>
                 <Separator HorizontalAlignment="Stretch" Background="Gray"/>

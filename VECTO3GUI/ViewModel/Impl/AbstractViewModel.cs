@@ -77,9 +77,14 @@ namespace VECTO3GUI.ViewModel.Impl
 			return null;
 		}
 
-		public virtual void ShowValidationError(Dictionary<string, string> errors)
+		public virtual void ShowValidationErrors(Dictionary<string, string> errors)
 		{
 		}
+
+		public virtual void RemoveValidationErrors(Dictionary<string, string> errors)
+		{
+		}
+
 
 		#region Submodule Handling
 		protected IEnumerable<Component> GetSubmodels()

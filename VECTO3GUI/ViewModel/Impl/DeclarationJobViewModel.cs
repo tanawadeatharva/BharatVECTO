@@ -91,6 +91,7 @@ namespace VECTO3GUI.ViewModel.Impl
 		}
 
 		public ICommand ValidateInput { get; }
-		public ICommand ValidationErrors { get; }
+		public ICommand ShowValidationErrors { get; }
+		public ICommand RemoveValidationErrors { get; }
 	}
 }
