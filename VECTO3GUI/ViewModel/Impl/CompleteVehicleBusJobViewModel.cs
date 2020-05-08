@@ -7,6 +7,7 @@ using System.Windows;
 using System.Windows.Input;
 using System.Xml;
 using System.Xml.Schema;
+using Castle.Core.Internal;
 using MahApps.Metro.Controls.Dialogs;
 using Ninject;
 using TUGraz.VectoCommon.InputData;
@@ -37,6 +38,9 @@ namespace VECTO3GUI.ViewModel.Impl
 		private Dictionary<string, string> _errors;
 		private ICommand _validateInputCommand;
 		private ICommand _validationErrorsCommand;
+		private ICommand _removeValidationErrorsCommand;
+
+		private bool _validationErrorsDisplayed;
 
 		#endregion
 
@@ -83,7 +87,7 @@ namespace VECTO3GUI.ViewModel.Impl
 			SaveAsButtonVisible = IsNewJob;
 			SaveButtonVisibility = !IsNewJob;
 		}
-		
+
 		#region Commands
 
 		protected override bool CanSaveJob(Window window)
@@ -92,19 +96,20 @@ namespace VECTO3GUI.ViewModel.Impl
 		}
 		protected override void DoSaveJob(Window window)
 		{
-			var dialogSettings = new MetroDialogSettings()
+			var dialogSettings = new MetroDialogSettings
 			{
 				AffirmativeButtonText = "Yes",
 				NegativeButtonText = "Cancel",
 				AnimateShow = true,
 				AnimateHide = true
 			};
-			
+
 			var dialogResult = MetroDialogHelper.GetModalDialogBox(this, "Save",
-				"The existing file will be overwritten, do you want to continue?", 
+				"The existing file will be overwritten, do you want to continue?",
 				MessageDialogStyle.AffirmativeAndNegative, dialogSettings);
-			
-			if (dialogResult == MessageDialogResult.Affirmative) {
+
+			if (dialogResult == MessageDialogResult.Affirmative)
+			{
 				SetCurrentDataToSave();
 				var xDoc = _xmlCompletedBus.GenerateCompletedBusDocument(CompleteVehicleBusData);
 
@@ -112,17 +117,15 @@ namespace VECTO3GUI.ViewModel.Impl
 					_xmlCompletedBusWriter.WriteCompletedBusXml(XmlFilePath, xDoc);
 					CloseWindow(window);
 				}
-
+				ValidationResultDialogWindow(false);
 			}
 		}
 
 
-
-
-
 		protected override void DoCloseJob(Window window)
 		{
-			if (CloseWindowDialog()) {
+			if (CloseWindowDialog())
+			{
 				CloseWindow(window);
 			}
 		}
@@ -130,16 +133,18 @@ namespace VECTO3GUI.ViewModel.Impl
 		protected override void DoSaveAsJob(Window window)
 		{
 			var filePath = FileDialogHelper.SaveXmlFileToDialog(SettingsModel.XmlFilePathFolder);
-			if(filePath == null)
+			if (filePath == null)
 				return;
 
 			SetCurrentDataToSave();
 			var xDocument = _xmlCompletedBus.GenerateCompletedBusDocument(CompleteVehicleBusData);
 
-			if (XmlHelper.ValidateXDocument(xDocument, null, ValidationErrorAction)) {
+			if (XmlHelper.ValidateXDocument(xDocument, null, ValidationErrorAction))
+			{
 				_xmlCompletedBusWriter.WriteCompletedBusXml(filePath, xDocument);
 				CloseWindow(window);
 			}
+			ValidationResultDialogWindow(false);
 		}
 
 		public ICommand CommitComponent
@@ -174,13 +179,17 @@ namespace VECTO3GUI.ViewModel.Impl
 
 		public ICommand ResetComponent
 		{
-			get { return _resetComponentCommand ??
-						(_resetComponentCommand = new RelayCommand<Component>(DoResetComponent, CanResetComponent)); }
+			get
+			{
+				return _resetComponentCommand ??
+					  (_resetComponentCommand = new RelayCommand<Component>(DoResetComponent, CanResetComponent));
+			}
 		}
 		private bool CanResetComponent(Component component)
 		{
 			return ComponentsChanged(component);
-		}private void DoResetComponent(Component component)
+		}
+		private void DoResetComponent(Component component)
 		{
 			switch (component)
 			{
@@ -196,6 +205,23 @@ namespace VECTO3GUI.ViewModel.Impl
 			}
 		}
 
+		public ICommand RemoveValidationErrors
+		{
+			get
+			{
+				return _removeValidationErrorsCommand ??
+						(_removeValidationErrorsCommand = new RelayCommand(DoRemoveValidationErrors, CanRemoveValidationErrors));
+			}
+		}
+		private bool CanRemoveValidationErrors()
+		{
+			return _validationErrorsDisplayed && !_errors.IsNullOrEmpty();
+		}
+		private void DoRemoveValidationErrors()
+		{
+			ClearValidationErrors();
+		}
+
 		#endregion
 
 		private void SetCurrentDataToSave()
@@ -206,13 +232,14 @@ namespace VECTO3GUI.ViewModel.Impl
 				{ Component.Auxiliaries, _subModels[Component.Auxiliaries].CommitComponentData()}
 			};
 		}
-		
+
 		private bool ComponentsChanged(Component component)
 		{
-			switch (component) {
-				case Component.CompleteBusVehicle :
+			switch (component)
+			{
+				case Component.CompleteBusVehicle:
 					return _subModels[Component.CompleteBusVehicle].IsComponentDataChanged();
-				case Component.Airdrag :
+				case Component.Airdrag:
 					return _subModels[Component.Airdrag].IsComponentDataChanged();
 				case Component.Auxiliaries:
 					return _subModels[Component.Auxiliaries].IsComponentDataChanged();
@@ -234,32 +261,42 @@ namespace VECTO3GUI.ViewModel.Impl
 
 		private void DoValidateInput()
 		{
+			ClearValidationErrors();
+
 			_errors = new Dictionary<string, string>();
 
 			SetCurrentDataToSave();
 			var xDoc = _xmlCompletedBus.GenerateCompletedBusDocument(CompleteVehicleBusData);
 
-			if (XmlHelper.ValidateXDocument(xDoc, null, ValidationErrorAction))
-			{
-				_xmlCompletedBusWriter.WriteCompletedBusXml(XmlFilePath, xDoc);
+			if (XmlHelper.ValidateXDocument(xDoc, null, ValidationErrorAction)) {
+				ValidationResultDialogWindow(true);
+			} else {
+				ValidationResultDialogWindow(false);
 			}
 		}
 
-		public ICommand ValidationErrors
+		public ICommand ShowValidationErrors
 		{
 			get
 			{
-				return _validationErrorsCommand ?? (_validationErrorsCommand = new RelayCommand(DoValidationErrors));
+				return _validationErrorsCommand ?? (_validationErrorsCommand = new RelayCommand(DoShowValidationErrors, CanShowValidationErrors));
 			}
 		}
-
-		private void DoValidationErrors()
+		private bool CanShowValidationErrors()
 		{
+			return !_validationErrorsDisplayed && !_errors.IsNullOrEmpty();
+		}
+		private void DoShowValidationErrors()
+		{
+			ClearValidationErrors();
+
 			var completedBusViewModel = _subModels[Component.CompleteBusVehicle] as CompleteVehicleBusViewModel;
 			var auxiliaryViewModel = _subModels[Component.Auxiliaries] as AuxiliariesViewModel;
-			
-			completedBusViewModel?.ShowValidationError(_errors);
-			auxiliaryViewModel?.ShowValidationError(_errors);
+
+			completedBusViewModel?.ShowValidationErrors(_errors);
+			auxiliaryViewModel?.ShowValidationErrors(_errors);
+
+			_validationErrorsDisplayed = true;
 		}
 
 
@@ -276,7 +313,34 @@ namespace VECTO3GUI.ViewModel.Impl
 					_errors.Add(localName, message?.Message);
 			}
 		}
-		
+
+		private void ClearValidationErrors()
+		{
+			if (_errors.IsNullOrEmpty())
+				return;
+
+
+			var completedBusViewModel = _subModels[Component.CompleteBusVehicle] as CompleteVehicleBusViewModel;
+			var auxiliaryViewModel = _subModels[Component.Auxiliaries] as AuxiliariesViewModel;
+
+			completedBusViewModel?.RemoveValidationErrors(_errors);
+			auxiliaryViewModel?.RemoveValidationErrors(_errors);
+
+			_validationErrorsDisplayed = false;
+		}
+
+		private void ValidationResultDialogWindow(bool validationResult)
+		{
+			if (validationResult) { 
+				MetroDialogHelper.GetModalDialogBox(this, "Input Validation",
+					"No validation errors were found, the entered data is valid!", MessageDialogStyle.Affirmative);
+			} else {
+				MetroDialogHelper.GetModalDialogBox(this, "Input Validation",
+					"There are some input validation errors, the data must be valid for saving!", MessageDialogStyle.Affirmative);
+			}
+		}
+
+
 		public string JobFile { get; }
 		public IInputDataProvider InputDataProvider { get; set; }
 

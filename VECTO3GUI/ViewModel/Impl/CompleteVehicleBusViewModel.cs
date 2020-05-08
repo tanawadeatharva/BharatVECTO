@@ -181,7 +181,7 @@ namespace VECTO3GUI.ViewModel.Impl
 			get { return _lowEntry; }
 			set
 			{
-				if (!SetProperty(ref _lowEntry, value)) 
+				if (!SetProperty(ref _lowEntry, value))
 					return;
 				IsDataChanged(_lowEntry, _componentData);
 			}
@@ -283,7 +283,7 @@ namespace VECTO3GUI.ViewModel.Impl
 			NgTankSystem = vehicle.TankSystem;
 			NumberOfPassengersLowerDeck = vehicle.NumberOfPassengersLowerDeck;
 			NumberOfPassengersUpperDeck = vehicle.NumberOfPassengersUpperDeck;
-			LowEntry = vehicle.FloorType == FloorType.LowFloor; 
+			LowEntry = vehicle.FloorType == FloorType.LowFloor;
 			HeightIntegratedBody = vehicle.Height;
 			VehicleLength = vehicle.Length;
 			VehicleWidth = vehicle.Width;
@@ -297,18 +297,18 @@ namespace VECTO3GUI.ViewModel.Impl
 		private void SetAllowedEntries()
 		{
 
-			AllowedLegislativeClasses = new [] {LegislativeClass.M3} 
+			AllowedLegislativeClasses = new[] { LegislativeClass.M3 }
 				.Select(lc => AllowedEntry.Create(lc, lc.GetLabel())).ToArray();
 
 			AllowedVehicleCodes = EnumHelper.GetValues<VehicleCode>().Where(x => x != VehicleCode.NOT_APPLICABLE)
 				.Select(vc => AllowedEntry.Create(vc, vc.GetLabel())).ToArray();
 
-			AllowedDoorDriveTechnologies = new [] {ConsumerTechnology.Pneumatically, ConsumerTechnology.Electrically}
+			AllowedDoorDriveTechnologies = new[] { ConsumerTechnology.Pneumatically, ConsumerTechnology.Electrically }
 				.Select(sc => AllowedEntry.Create(sc, sc.GetLabel())).ToArray();
 
 			AllowedRegisteredClasses = EnumHelper.GetValues<RegistrationClass>().Where(x => x != RegistrationClass.unknown)
 				.Select(vc => AllowedEntry.Create(vc, vc.GetLabel())).ToArray();
-			
+
 			AllowedTankSystems = new[] { AllowedEntry.Create((TankSystem?)null, "Not applicable") }
 				.Concat(EnumHelper.GetValues<TankSystem>().Select(x => AllowedEntry.Create((TankSystem?)x, x.ToString()))).ToArray();
 		}
@@ -327,19 +327,32 @@ namespace VECTO3GUI.ViewModel.Impl
 			return _componentData;
 		}
 
-		public override void ShowValidationError(Dictionary<string, string> errors)
+		public override void ShowValidationErrors(Dictionary<string, string> errors)
 		{
 			if (errors.IsNullOrEmpty())
 				return;
 
-			foreach (var error in errors) {
-
+			foreach (var error in errors)
+			{
 				string propertyName;
-				if (XmlNamesToPropertyMapping.TryGetValue(error.Key, out propertyName)) {
+				if (XmlNamesToPropertyMapping.TryGetValue(error.Key, out propertyName))
 					AddPropertyError(propertyName, error.Value);
-				}
 			}
 		}
+
+		public override void RemoveValidationErrors(Dictionary<string, string> errors)
+		{
+			if (errors.IsNullOrEmpty())
+				return;
+
+			foreach (var error in errors)
+			{
+				string propertyName;
+				if (XmlNamesToPropertyMapping.TryGetValue(error.Key, out propertyName))
+					RemovePropertyError(propertyName);
+			}
+		}
+
 	}
 
 }

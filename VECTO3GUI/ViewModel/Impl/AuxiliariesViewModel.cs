@@ -424,7 +424,7 @@ namespace VECTO3GUI.ViewModel.Impl
 			ClearChangedProperties();
 			return _componentData;
 		}
-		public override void ShowValidationError(Dictionary<string, string> errors)
+		public override void ShowValidationErrors(Dictionary<string, string> errors)
 		{
 			if (errors.IsNullOrEmpty())
 				return;
@@ -433,13 +433,22 @@ namespace VECTO3GUI.ViewModel.Impl
 			{
 				string propertyName;
 				if (XmlNamesToPropertyMapping.TryGetValue(error.Key, out propertyName))
-				{
 					AddPropertyError(propertyName, error.Value);
-				}
 			}
 		}
+		public override void RemoveValidationErrors(Dictionary<string, string> errors)
+		{
+			if (errors.IsNullOrEmpty())
+				return;
 
-
+			foreach (var error in errors)
+			{
+				string propertyName;
+				if (XmlNamesToPropertyMapping.TryGetValue(error.Key, out propertyName))
+					RemovePropertyError(propertyName);
+			}
+		}
+		
 
 		#region Commands
 

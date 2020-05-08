@@ -21,7 +21,8 @@ namespace VECTO3GUI.ViewModel.Interfaces {
 		void ResetComponentData();
 		object CommitComponentData();
 
-		void ShowValidationError(Dictionary<string, string> errors);
+		void ShowValidationErrors(Dictionary<string, string> errors);
+		void RemoveValidationErrors(Dictionary<string, string> errors);
 
 
 	}
