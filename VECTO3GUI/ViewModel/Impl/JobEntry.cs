@@ -161,7 +161,7 @@ namespace VECTO3GUI.ViewModel.Impl
 	}
 	
 
-	[JsonObject(ItemNullValueHandling = NullValueHandling.Ignore)]
+	//[JsonObject(ItemNullValueHandling = NullValueHandling.Ignore)]
 	public class JobBody : ObservableObject
 	{
 		private string _completedVehicle;
