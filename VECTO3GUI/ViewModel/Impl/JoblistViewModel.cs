@@ -76,6 +76,13 @@ namespace VECTO3GUI.ViewModel.Impl
 		private ICommand _stopSimulationCommand;
 		private bool _canRunSimulation = true;
 		private bool _canStopSimulation = false;
+		private bool _writeModData;
+		private bool _writeModData1Hz;
+		private bool _validateData;
+		private bool _writeActualModData;
+		private string _outputDirectory;
+		private ICommand _browseOutputDirectory;
+		private bool _writeModelData;
 
 		#endregion
 
@@ -235,6 +242,57 @@ namespace VECTO3GUI.ViewModel.Impl
 			get { return _canStopSimulation; }
 			set { SetProperty(ref _canStopSimulation, value); }
 		}
+
+		public bool WriteModData
+		{
+			get { return _writeModData; }
+			set { SetProperty(ref _writeModData, value); }
+		}
+
+		public bool WriteModData1Hz
+		{
+			get { return _writeModData1Hz; }
+			set { SetProperty(ref _writeModData1Hz,value); }
+		}
+
+		public bool ValidateData
+		{
+			get { return _validateData; }
+			set { SetProperty(ref _validateData, value); }
+		}
+
+		public bool WriteActualModData
+		{
+			get { return _writeActualModData; }
+			set { SetProperty(ref _writeActualModData, value); }
+		}
+
+		public string OutputDirectory
+		{
+			get { return _outputDirectory; }
+			set { SetProperty(ref _outputDirectory, value); }
+		}
+
+		public ICommand BrowseOutputDirectory
+		{
+			get { return _browseOutputDirectory ?? (_browseOutputDirectory = new RelayCommand(DoBrowseOutputDirectory)); }
+		}
+
+		public bool WriteModelData
+		{
+			get { return _writeModelData; }
+			set { SetProperty(ref _writeModelData, value); }
+		}
+
+		private void DoBrowseOutputDirectory()
+		{
+			var filePath = FileDialogHelper.ShowSelectFilesDialog(false, FileDialogHelper.JobFilter);
+			if (filePath.IsNullOrEmpty())
+				return;
+
+			OutputDirectory = filePath[0];
+		}
+
 
 		public ICommand DoubleClickCommand
 		{
@@ -820,8 +878,14 @@ namespace VECTO3GUI.ViewModel.Impl
 						continue;
 					}
 
-					var fileWriter = new FileOutputWriter(Path.GetDirectoryName(fullFileName));
-					var runsFactory = new SimulatorFactory(mode, input, fileWriter);
+					var fileWriter = new FileOutputWriter(GetOutputDirectory(fullFileName));
+					var runsFactory = new SimulatorFactory(mode, input, fileWriter) {
+						WriteModalResults = WriteModData,
+						ModalResults1Hz = WriteModData1Hz,
+						Validate = ValidateData,
+						ActualModalData = WriteActualModData,
+						SerializeVectoRunData = WriteModelData
+					};
 					foreach (var runId in jobContainer.AddRuns(runsFactory)) {
 						fileWriters.Add(runId, fileWriter);
 					}
@@ -903,7 +967,7 @@ namespace VECTO3GUI.ViewModel.Impl
 			}
 
 			foreach (var jobEntry in jobs) {
-				var w = new FileOutputWriter(Path.GetFullPath(jobEntry.JobEntryFilePath));
+				var w = new FileOutputWriter(GetOutputDirectory(jobEntry.JobEntryFilePath));
 				foreach (var entry in new Dictionary<string, string>() { {w.XMLFullReportName,  "XML ManufacturereReport"}, {w.XMLCustomerReportName, "XML Customer Report"}, { w.XMLVTPReportName, "VTP Report"}, {w.XMLPrimaryVehicleReportName, "Primary Vehicle Information File"}  }) {
 					if (File.Exists(entry.Key)) {
 						sender.ReportProgress(
@@ -930,6 +994,23 @@ namespace VECTO3GUI.ViewModel.Impl
 				Type = VectoSimulationProgress.MsgType.StatusMessage,
 				Message = string.Format("Simulation finished in {0:F1}s", start.Elapsed.TotalSeconds)
 			});
+		}
+
+		private string GetOutputDirectory(string jobFilePath)
+		{
+			var outFile = jobFilePath;
+			if (!string.IsNullOrWhiteSpace(OutputDirectory)) {
+				if (Path.IsPathRooted(OutputDirectory)) {
+					outFile = Path.Combine(OutputDirectory, Path.GetFileName(jobFilePath) ?? "");
+				} else {
+					outFile = Path.Combine(Path.GetDirectoryName(jobFilePath) ?? "", OutputDirectory, Path.GetFileName(jobFilePath) ?? "");
+				}
+				if (!Directory.Exists(Path.GetDirectoryName(outFile))) {
+					Directory.CreateDirectory(Path.GetDirectoryName(outFile));
+				}
+			}
+
+			return outFile;
 		}
 
 		private void PrintRuns(Dictionary<int, JobContainer.ProgressEntry> progress, Dictionary<int, FileOutputWriter> fileWriters)

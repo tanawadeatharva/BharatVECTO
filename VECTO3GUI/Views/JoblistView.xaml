@@ -16,163 +16,214 @@
     <d:JoblistView.DataContext>
         <x:Type Type="interfaces:IJoblistViewModel"/>
     </d:JoblistView.DataContext>
-
+    
     <Grid>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="80"/>
-            <ColumnDefinition/>
-            <ColumnDefinition Width="150"/>
-        </Grid.ColumnDefinitions>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="30"/>
-            <RowDefinition/>
-            <RowDefinition/>
-            <RowDefinition Height="30"/>
+       <Grid.RowDefinitions>
+            <RowDefinition Height="*" MinHeight="270"/>
+            <RowDefinition Height="5"/>
+            <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
+        <TabControl Grid.Row="0" Grid.Column="0">
+            <TabItem Header="JobFiles" >
+                <Grid Margin="0,10,0,0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="80"/>
+                        <ColumnDefinition/>
+                        <ColumnDefinition Width="150"/>
+                    </Grid.ColumnDefinitions>
+                    
+                    <Grid Grid.Row="0" Grid.Column="0">
 
-        <Grid Grid.Row="1" Grid.Column="0">
-
-            <StackPanel Orientation="Vertical">
-                <Button VerticalAlignment="Top" Margin="10,10,0,0"
+                        <StackPanel Orientation="Vertical">
+                            <Button VerticalAlignment="Top" Margin="10,10,0,0"
                         Command="{Binding RunSimulation}" Visibility="{Binding CanRunSimulation, Converter={converter:BoolVisibilityConverter}}">
-                    <StackPanel Orientation="Horizontal">
-                        <iconPacks:PackIconModern Width="20" Height="15" Kind="ControlPlay" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="Green"/>
-                        <TextBlock Text="Start" Margin="5,0,0,0" />
-                    </StackPanel>
-                </Button>
-                <Button VerticalAlignment="Top" Margin="10,10,0,0"
+                                <StackPanel Orientation="Horizontal">
+                                    <iconPacks:PackIconModern Width="20" Height="15" Kind="ControlPlay" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="Green"/>
+                                    <TextBlock Text="Start" Margin="5,0,0,0" />
+                                </StackPanel>
+                            </Button>
+                            <Button VerticalAlignment="Top" Margin="10,10,0,0"
                         Command="{Binding StopSimulation}" Visibility="{Binding CanStopSimulation, Converter={converter:BoolVisibilityConverter}}">
-                    <StackPanel Orientation="Horizontal">
-                        <iconPacks:PackIconModern Width="20" Height="15" Kind="ControlStop" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="Red"/>
-                        <TextBlock Text="Stop" Margin="5,0,0,0" />
-                    </StackPanel>
-                </Button>
+                                <StackPanel Orientation="Horizontal">
+                                    <iconPacks:PackIconModern Width="20" Height="15" Kind="ControlStop" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="Red"/>
+                                    <TextBlock Text="Stop" Margin="5,0,0,0" />
+                                </StackPanel>
+                            </Button>
 
-                <StackPanel Orientation="Vertical" HorizontalAlignment="Right" Margin="0,10,0,0">
-                    <Button Width="25" 
+                            <StackPanel Orientation="Vertical" HorizontalAlignment="Right" Margin="0,10,0,0">
+                                <Button Width="25" 
                             Command="{Binding MoveJobUp}"
                             CommandParameter="{Binding ElementName=JobList, Path=SelectedItem}">
-                        <StackPanel Orientation="Horizontal">
-                            <iconPacks:PackIconModern Width="15" Height="15" Kind="ArrowUp" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="Green"/>
-                        </StackPanel>
-                    </Button>
+                                    <StackPanel Orientation="Horizontal">
+                                        <iconPacks:PackIconModern Width="15" Height="15" Kind="ArrowUp" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="Green"/>
+                                    </StackPanel>
+                                </Button>
 
-                    <Button Width="25" Margin="0,5,0,0"
+                                <Button Width="25" Margin="0,5,0,0"
                             Command="{Binding MoveJobDown}"
                             CommandParameter="{Binding ElementName=JobList, Path=SelectedItem}">
-                        <StackPanel Orientation="Horizontal">
-                            <iconPacks:PackIconModern Width="15" Height="15" Kind="ArrowDown" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="Green"/>
+                                    <StackPanel Orientation="Horizontal">
+                                        <iconPacks:PackIconModern Width="15" Height="15" Kind="ArrowDown" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="Green"/>
+                                    </StackPanel>
+                                </Button>
+                            </StackPanel>
                         </StackPanel>
-                    </Button>
-                </StackPanel>
-            </StackPanel>
-        </Grid>
+                    </Grid>
 
-        <Grid Grid.Row="1" Grid.Column="1" Margin="10">
- 
-            <DataGrid x:Name="JobList" ItemsSource="{Binding Jobs}" 
+                    <Grid Grid.Row="0" Grid.Column="1" Margin="10">
+
+                        <DataGrid x:Name="JobList" ItemsSource="{Binding Jobs}" 
                       SelectedValue="{Binding DataContext.SelectedJobEntry, RelativeSource={RelativeSource AncestorType=views:JoblistView}}"
                       Style="{DynamicResource AzureDataGrid}" BorderThickness="1" CanUserAddRows="False" AutoGenerateColumns="False" SelectionUnit="FullRow" 
                       IsReadOnly="False" HeadersVisibility="All"  RowHeaderWidth="5" IsSynchronizedWithCurrentItem="True" 
                       Drop="JobList_OnDrop" AllowDrop="True">
 
-                <DataGrid.InputBindings>
-                    <MouseBinding
+                            <DataGrid.InputBindings>
+                                <MouseBinding
                         MouseAction="LeftDoubleClick"
                         Command="{Binding DoubleClickCommand}"
                         CommandParameter="{Binding Jobs/}"/>
-                </DataGrid.InputBindings>
+                            </DataGrid.InputBindings>
 
 
 
-                <DataGrid.Resources>
-                    <ContextMenu x:Key="RowMenu">
-                        <MenuItem Header="{Binding DataContext.FirstContextMenu, RelativeSource={RelativeSource AncestorType=views:JoblistView}}" 
+                            <DataGrid.Resources>
+                                <ContextMenu x:Key="RowMenu">
+                                    <MenuItem Header="{Binding DataContext.FirstContextMenu, RelativeSource={RelativeSource AncestorType=views:JoblistView}}" 
                                   Command="{Binding DataContext.OpenJob, RelativeSource={RelativeSource AncestorType=views:JoblistView}}"
                                   CommandParameter="{Binding Source={x:Static impl:JobFileType.PrimaryBusFile}}" 
                                   Visibility="{Binding DataContext.VisibilityFirstView, Converter={converter:BoolVisibilityConverter},
                                   RelativeSource={RelativeSource AncestorType=views:JoblistView}}"/>
-                        <MenuItem Header="View Completed Bus File" 
+                                    <MenuItem Header="View Completed Bus File" 
                                   Command="{Binding DataContext.OpenJob, RelativeSource={RelativeSource AncestorType=views:JoblistView}}"
                                   CommandParameter="{Binding Source={x:Static impl:JobFileType.CompletedBusFile}}"
                                   Visibility="{Binding DataContext.VisibilitySecView, Converter={converter:BoolVisibilityConverter}, 
                                   RelativeSource={RelativeSource AncestorType=views:JoblistView}}"/>
 
-                        <Separator HorizontalAlignment="Stretch" Background="Gray"/>
+                                    <Separator HorizontalAlignment="Stretch" Background="Gray"/>
 
-                        <MenuItem Header="Edit Job" 
+                                    <MenuItem Header="Edit Job" 
                                   Command="{Binding DataContext.EditJob, RelativeSource={RelativeSource AncestorType=views:JoblistView}}"
                                   CommandParameter="{Binding DataContext.SelectedJobEntry, RelativeSource={RelativeSource AncestorType=views:JoblistView}}"/>
-                        <MenuItem Header="Edit Completed File" 
+                                    <MenuItem Header="Edit Completed File" 
                                   Command="{Binding DataContext.EditCompletedFile, RelativeSource={RelativeSource AncestorType=views:JoblistView}}"
                                   CommandParameter="{Binding DataContext.SelectedJobEntry, RelativeSource={RelativeSource AncestorType=views:JoblistView}}"/>
 
-                        <Separator HorizontalAlignment="Stretch" Background="Gray"/>
+                                    <Separator HorizontalAlignment="Stretch" Background="Gray"/>
 
-                        <MenuItem Header="Show In Folder"
+                                    <MenuItem Header="Show In Folder"
                                   Command="{Binding DataContext.OpenInFolder, RelativeSource={RelativeSource AncestorType=views:JoblistView}}"
                                   CommandParameter="{Binding DataContext.SelectedJobEntry, RelativeSource={RelativeSource AncestorType=views:JoblistView}}"/>
 
-                        <Separator HorizontalAlignment="Stretch" Background="Gray"/>
+                                    <Separator HorizontalAlignment="Stretch" Background="Gray"/>
 
-                        <MenuItem Header="Remove Job" 
+                                    <MenuItem Header="Remove Job" 
                                   Command="{Binding DataContext.RemoveJob, RelativeSource={RelativeSource AncestorType=views:JoblistView}}"
                                   CommandParameter="{Binding DataContext.SelectedJobEntry, RelativeSource={RelativeSource AncestorType=views:JoblistView}}"/>
-                    </ContextMenu>
-                </DataGrid.Resources>
+                                </ContextMenu>
+                            </DataGrid.Resources>
 
-                <DataGrid.ContextMenu>
-                    <ContextMenu>
-                        <MenuItem Header="Add Job" Command="{Binding AddJob}"/>
-                        <Separator HorizontalAlignment="Stretch" Background="Gray"/>
-                        <MenuItem Header="Create Single Bus Job"
+                            <DataGrid.ContextMenu>
+                                <ContextMenu>
+                                    <MenuItem Header="Add Job" Command="{Binding AddJob}"/>
+                                    <Separator HorizontalAlignment="Stretch" Background="Gray"/>
+                                    <MenuItem Header="Create Single Bus Job"
                                   Command="{Binding AddBusJob}" CommandParameter="{Binding Source={x:Static impl:JobType.SingleBusJob}}"/>
-                        <MenuItem Header="Create Completed Bus Job"
+                                    <MenuItem Header="Create Completed Bus Job"
                                   Command="{Binding AddBusJob}" CommandParameter="{Binding Source={x:Static impl:JobType.CompletedBusJob}}"/>
-                        <MenuItem Header="Create Completed XML"
+                                    <MenuItem Header="Create Completed XML"
                                   Command="{Binding CreateNewJob}"/>
-                        <Separator HorizontalAlignment="Stretch" Background="Gray"/>
-                        <MenuItem Header="Remove All" Command="{Binding RemoveAllJobs}"/>
-                    </ContextMenu>
-                </DataGrid.ContextMenu>
+                                    <Separator HorizontalAlignment="Stretch" Background="Gray"/>
+                                    <MenuItem Header="Remove All" Command="{Binding RemoveAllJobs}"/>
+                                </ContextMenu>
+                            </DataGrid.ContextMenu>
 
-                <DataGrid.Columns>
-                    <DataGridCheckBoxColumn Binding="{Binding Selected, UpdateSourceTrigger=PropertyChanged}" />
-                    <DataGridTextColumn Header="File Path" Binding="{Binding JobEntryFilePath}" IsReadOnly="True">
-                        <DataGridTextColumn.CellStyle>
-                            <Style TargetType= "{x:Type DataGridCell}" BasedOn="{StaticResource MetroDataGridCell}" >
-                                <Setter Property="ContextMenu" Value="{StaticResource RowMenu}"/>
-                                <Setter Property="HorizontalAlignment" Value="Stretch"/>
-                            </Style>
-                        </DataGridTextColumn.CellStyle>
-                    </DataGridTextColumn>
-                </DataGrid.Columns>
+                            <DataGrid.Columns>
+                                <DataGridCheckBoxColumn Binding="{Binding Selected, UpdateSourceTrigger=PropertyChanged}" />
+                                <DataGridTextColumn Header="File Path" Binding="{Binding JobEntryFilePath}" IsReadOnly="True">
+                                    <DataGridTextColumn.CellStyle>
+                                        <Style TargetType= "{x:Type DataGridCell}" BasedOn="{StaticResource MetroDataGridCell}" >
+                                            <Setter Property="ContextMenu" Value="{StaticResource RowMenu}"/>
+                                            <Setter Property="HorizontalAlignment" Value="Stretch"/>
+                                        </Style>
+                                    </DataGridTextColumn.CellStyle>
+                                </DataGridTextColumn>
+                            </DataGrid.Columns>
 
-            </DataGrid>
+                        </DataGrid>
 
-        </Grid>
+                    </Grid>
 
-        <Grid Grid.Row="1" Grid.Column="2" Margin="0,0,10,0">
-            <StackPanel Orientation="Vertical" Margin="0,30,0,0" Width="105">
-                <Button Margin="0,5,0,0" Content="Add File" 
+                    <Grid Grid.Row="0" Grid.Column="2" Margin="0,0,10,0">
+                        <StackPanel Orientation="Vertical" Margin="0,30,0,0" Width="105">
+                            <Button Margin="0,5,0,0" Content="Add File" 
                         Command="{Binding AddJob}"/>
 
-                <Button Margin="0,5,0,0" Content="Edit Job"
+                            <Button Margin="0,5,0,0" Content="Edit Job"
                         Command="{Binding EditJob}"
                         CommandParameter="{Binding ElementName=JobList, Path=SelectedItem}"/>
 
-                <Button Margin="0,5,0,0"  Content="Remove Job"  
+                            <Button Margin="0,5,0,0"  Content="Remove Job"  
                         Command="{Binding RemoveJob}" 
                         CommandParameter="{Binding ElementName=JobList, Path=SelectedItem}"/>
 
-                <Button Margin="0,5,0,0" Content="Edit Completed File" 
+                            <Button Margin="0,5,0,0" Content="Edit Completed File" 
                         Command="{Binding EditCompletedFile}"
                         CommandParameter="{Binding ElementName=JobList, Path=SelectedItem}"/>
-            </StackPanel>
-        </Grid>
+                        </StackPanel>
+                    </Grid>
+                </Grid>
+            </TabItem>
+            <TabItem Header="Options">
+                <StackPanel Orientation="Horizontal" Margin="5,10,5,5">
+                    <StackPanel Orientation="Vertical">
+                        <GroupBox Header="Output">
+                            <StackPanel Orientation="Vertical">
+                                <CheckBox Margin="0,0,0,3" IsChecked="{Binding WriteModData}">Write modal results</CheckBox>
+                                <CheckBox Margin="0,0,0,3" IsChecked="{Binding WriteModData1Hz}">Modal results in 1Hz</CheckBox>
+                            </StackPanel>
+                        </GroupBox>
+                        <GroupBox Header="Misc" Margin="0 5,0,0">
+                            <StackPanel Orientation="Vertical">
+                                <CheckBox Margin="0,0,0,3" IsChecked="{Binding ValidateData}">Validate data</CheckBox>
+                                <CheckBox Margin="0,0,0,3" IsChecked="{Binding WriteActualModData}">
+                                    <TextBlock>
+                                        <Run> Output values in vmod at</Run><LineBreak/>
+                                        <Run>beginning and end of</Run><LineBreak/>
+                                        <Run>simulation interval</Run><LineBreak/>
+                                        <Run>(EXPERT!)</Run>
+                                    </TextBlock>
+                                </CheckBox>
+                            </StackPanel>
+                        </GroupBox>
+                    </StackPanel>
+                    <StackPanel Orientation="Vertical" Margin="5,0,0,0">
+                        <GroupBox Header ="Output Directory">
+                            <StackPanel Orientation="Horizontal">
+                                <TextBox Width="200" Text="{Binding OutputDirectory}"/>
+                                <Button Width="25" Command="{Binding BrowseOutputDirectory}" Margin="5,0,0,0">
+                                    <StackPanel Orientation="Horizontal">
+                                        <iconPacks:PackIconModern Width="15" Height="15" Kind="FolderOpen" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                                    </StackPanel>
+                                </Button>
+                                
+                            </StackPanel>
+                        </GroupBox>
+                        <GroupBox Header="Simulation Data" Margin =" 0,5,0,0">
+                            <StackPanel Orientation="Vertical">
+                                <CheckBox IsChecked="{Binding WriteModelData}" Margin="0,0,0,3">Write internal model data (EXPERT!)</CheckBox>
+                            </StackPanel>
+                        </GroupBox>
+                    </StackPanel>
+                </StackPanel>
+               
+            </TabItem>
+        </TabControl>
+    
+        <GridSplitter Grid.Row="1" Height="5" HorizontalAlignment="Stretch"/>
         
-        <Grid Grid.Row="2" Grid.ColumnSpan="3" Grid.Column="0" Margin="10,20,20,10">
+        <Grid Grid.Row="2" Grid.Column="0" Margin="10,10,10,10">
             <DataGrid ItemsSource="{Binding Messages}" BorderThickness="1" CanUserAddRows="False" AutoGenerateColumns="False" SelectionUnit="FullRow" 
                       IsReadOnly="True" HeadersVisibility="All"  RowHeaderWidth="5" RowHeight="5" Name="MessageList">
                 
@@ -222,6 +273,7 @@
                 </DataGrid.CellStyle>
             </DataGrid>
         </Grid>
+        
 
     </Grid>
 </UserControl>

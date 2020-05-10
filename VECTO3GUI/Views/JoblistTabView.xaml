@@ -7,7 +7,7 @@
              xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
              xmlns:converter="clr-namespace:VECTO3GUI.Helper.Converter"
              mc:Ignorable="d" 
-             d:DesignHeight="800" d:DesignWidth="500"
+             d:DesignHeight="500" d:DesignWidth="500"
              xmlns:Dialog="clr-namespace:MahApps.Metro.Controls.Dialogs;assembly=MahApps.Metro"
              xmlns:interfaces="clr-namespace:VECTO3GUI.ViewModel.Interfaces"
              Dialog:DialogParticipation.Register="{Binding}">

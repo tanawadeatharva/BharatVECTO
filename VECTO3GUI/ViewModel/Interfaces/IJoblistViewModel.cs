@@ -29,5 +29,12 @@ namespace VECTO3GUI.ViewModel.Interfaces
 		ICommand StopSimulation { get; }
 		bool CanRunSimulation { get; }
 		bool CanStopSimulation { get; }
+		bool WriteModData { get; set; }
+		bool WriteModData1Hz { get; set; }
+		bool ValidateData { get; set; }
+		bool WriteActualModData { get; set; }
+		string OutputDirectory { get; set; }
+		ICommand BrowseOutputDirectory { get; }
+		bool WriteModelData { get; set; }
 	}
 }
