@@ -27,6 +27,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		public static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
 
 		private XmlNode _resultsNode;
+		private IList<IResult> _results;
 
 		public XMLDeclarationPrimaryVehicleBusResultsInputDataProviderV01(XmlNode resultsNode) : base(resultsNode)
 		{
@@ -39,7 +40,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 		public IList<IResult> Results
 		{
-			get { return ReadResults(); }
+			get { return _results ?? (_results =  ReadResults()); }
 		}
 		
 

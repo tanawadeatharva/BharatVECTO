@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <pif:VectoOutputPrimaryVehicle xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="urn:tugraz:ivt:VectoAPI:DeclarationOutput:PrimaryVehicleInformation:HeavyBus:v0.1" xmlns:pif="urn:tugraz:ivt:VectoAPI:DeclarationOutput:PrimaryVehicleInformation" xmlns:di="http://www.w3.org/2000/09/xmldsig#" xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:DeclarationOutput:PrimaryVehicleInformation https://webgate.ec.europa.eu/CITnet/svn/VECTO/trunk/Share/XML/XSD//DEV/VectoOutputPrimaryVehicleInformation.xsd">
   <pif:Data xsi:type="PrimaryVehicleHeavyBusDataType" id="PIF-4547e7655ef846a59ce4">
     <Vehicle xsi:type="VehiclePIFType">
@@ -486,7 +486,7 @@
         </Fuel>
         <CO2 unit="g/km">695.0</CO2>
       </Result>
-      <Result status="success">
+      <Result status="error">
         <VehicleGroup>P34SD</VehicleGroup>
         <Mission>Coach</Mission>
         <SimulationParameters>
@@ -495,12 +495,16 @@
           <PassengerCount>44.98</PassengerCount>
           <FuelMode>single fuel mode</FuelMode>
         </SimulationParameters>
-        <Fuel type="Diesel CI">
+        <!-- Test using PIF where not all results are present 
+         <Fuel type="Diesel CI">
           <EnergyConsumption unit="MJ/km">9.96560</EnergyConsumption>
         </Fuel>
         <CO2 unit="g/km">730.5</CO2>
+       -->
+        <Error>20 (Coach _P40DD_ReferenceLoad) - absTime: 7535.2269 [s], distance: 130338.3598 [m], dt: 0.6304 [s], v: 0.0141 [m/s], Gear: 1 | DrivingActionAccelerate: Failed to find operating point</Error>
+        <ErrorDetails>String</ErrorDetails>
       </Result>
-      <Result status="success">
+      <Result status="error">
         <VehicleGroup>P34DD</VehicleGroup>
         <Mission>Interurban</Mission>
         <SimulationParameters>
@@ -509,12 +513,16 @@
           <PassengerCount>24.48</PassengerCount>
           <FuelMode>single fuel mode</FuelMode>
         </SimulationParameters>
+        <!-- Test using PIF where not all results are present 
         <Fuel type="Diesel CI">
           <EnergyConsumption unit="MJ/km">14.24030</EnergyConsumption>
         </Fuel>
         <CO2 unit="g/km">1043.8</CO2>
+        -->
+        <Error>20 (Coach _P40DD_ReferenceLoad) - absTime: 7535.2269 [s], distance: 130338.3598 [m], dt: 0.6304 [s], v: 0.0141 [m/s], Gear: 1 | DrivingActionAccelerate: Failed to find operating point</Error>
+        <ErrorDetails>String</ErrorDetails>
       </Result>
-      <Result status="success">
+      <Result status="error">
         <VehicleGroup>P34DD</VehicleGroup>
         <Mission>Interurban</Mission>
         <SimulationParameters>
@@ -523,12 +531,16 @@
           <PassengerCount>97.92</PassengerCount>
           <FuelMode>single fuel mode</FuelMode>
         </SimulationParameters>
+        <!-- Test using PIF where not all results are present 
         <Fuel type="Diesel CI">
           <EnergyConsumption unit="MJ/km">16.77091</EnergyConsumption>
         </Fuel>
         <CO2 unit="g/km">1229.3</CO2>
+        -->
+        <Error>20 (Coach _P40DD_ReferenceLoad) - absTime: 7535.2269 [s], distance: 130338.3598 [m], dt: 0.6304 [s], v: 0.0141 [m/s], Gear: 1 | DrivingActionAccelerate: Failed to find operating point</Error>
+        <ErrorDetails>String</ErrorDetails>
       </Result>
-      <Result status="success">
+      <Result status="error">
         <VehicleGroup>P34DD</VehicleGroup>
         <Mission>Coach</Mission>
         <SimulationParameters>
@@ -551,10 +563,14 @@
           <PassengerCount>65.28</PassengerCount>
           <FuelMode>single fuel mode</FuelMode>
         </SimulationParameters>
+        <!-- Test using PIF where not all results are present 
         <Fuel type="Diesel CI">
           <EnergyConsumption unit="MJ/km">11.34890</EnergyConsumption>
         </Fuel>
         <CO2 unit="g/km">831.9</CO2>
+        -->
+        <Error>20 (Coach _P40DD_ReferenceLoad) - absTime: 7535.2269 [s], distance: 130338.3598 [m], dt: 0.6304 [s], v: 0.0141 [m/s], Gear: 1 | DrivingActionAccelerate: Failed to find operating point</Error>
+        <ErrorDetails>String</ErrorDetails>
       </Result>
     </Results>
     <ApplicationInformation>

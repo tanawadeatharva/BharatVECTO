@@ -180,7 +180,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 						var primaryResult = InputDataProvider.PrimaryVehicleData.GetResult(
 							simulationRunData.Mission.BusParameter.BusGroup, simulationRunData.Mission.MissionType, fuelMode,
 							simulationRunData.VehicleData.Loading);
-						if (primaryResult == null) {
+						if (primaryResult == null || !primaryResult.ResultStatus.Equals("success")) {
 							throw new VectoException(
 								"Failed to find results in PrimaryVehicleReport for vehicle group: {0},  mission: {1}, fuel mode: '{2}', payload: {3}. Make sure PIF and completed vehicle data match!",
 								simulationRunData.Mission.BusParameter.BusGroup, simulationRunData.Mission.MissionType, fuelMode,

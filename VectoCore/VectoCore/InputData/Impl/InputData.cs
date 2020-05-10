@@ -31,6 +31,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using TUGraz.VectoCommon.BusAuxiliaries;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
@@ -213,6 +214,7 @@ namespace TUGraz.VectoCore.InputData.Impl
 		public IList<IResult> Results { get; internal set; }
 	}
 	
+	[DebuggerDisplay("{ResultStatus} | {VehicleGroup} {Mission}")]
 	public class Result : IResult
 	{
 		public string ResultStatus { get; internal set; }

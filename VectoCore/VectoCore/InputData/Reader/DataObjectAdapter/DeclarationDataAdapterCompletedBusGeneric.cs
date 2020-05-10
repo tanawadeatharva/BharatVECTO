@@ -76,7 +76,8 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 		protected override void CretateTCFirstGearATPowerSplit(GearData gearData, uint i, ShiftPolygon shiftPolygon)
 		{
 			gearData.TorqueConverterRatio = 1;
-			gearData.TorqueConverterGearLossMap = TransmissionLossMapReader.Create(GearEfficiencyIndirectGear, 1, string.Format("TCGear {0}", i + 1));
+			//gearData.TorqueConverterGearLossMap = TransmissionLossMapReader.Create(GearEfficiencyIndirectGear, 1, string.Format("TCGear {0}", i + 1));
+			gearData.TorqueConverterGearLossMap = TransmissionLossMapReader.Create(1.0, 1, string.Format("TCGear {0}", i + 1));
 			gearData.TorqueConverterShiftPolygon = shiftPolygon;
 		}
 
