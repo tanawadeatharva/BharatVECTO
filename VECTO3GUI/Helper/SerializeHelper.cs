@@ -19,7 +19,8 @@ namespace VECTO3GUI.Helper
 
 			var settings = new JsonSerializerSettings {
 				Formatting = Formatting.Indented,
-				DateFormatString = DATE_FORMAT
+				DateFormatString = DATE_FORMAT,
+				NullValueHandling = NullValueHandling.Ignore
 			};
 			
 			if (resolver != null)
@@ -36,7 +37,7 @@ namespace VECTO3GUI.Helper
 
 			using (var file = File.OpenText(filePath)) {
 				var serializer = new JsonSerializer();
-				serializer.DateFormatString = DATE_FORMAT;
+				serializer.DateFormatString = DATE_FORMAT; 
 
 				if (resolver != null)
 					serializer.ContractResolver = resolver;

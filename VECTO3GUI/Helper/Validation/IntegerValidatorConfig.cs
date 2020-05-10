@@ -43,23 +43,6 @@ namespace VECTO3GUI.Helper.Validation
 				integerValidator.Validator.MaxValue = (int)e.NewValue;
 		}
 
-		public bool ValidateInput
-		{
-			get { return (bool)GetValue(ValidateInputProperty); }
-			set { SetValue(ValidateInputProperty, value); }
-		}
-
-		public static readonly DependencyProperty ValidateInputProperty = DependencyProperty.Register(
-			nameof(ValidateInput), typeof(bool), typeof(IntegerValidatorConfig), new FrameworkPropertyMetadata(ValidateInputPropertyChangedCallback));
-
-		private static void ValidateInputPropertyChangedCallback(DependencyObject d, DependencyPropertyChangedEventArgs e)
-		{
-			var integerValidator = (IntegerValidatorConfig)d;
-			if (integerValidator.Validator != null)
-				integerValidator.Validator.ValidateInput = (bool)e.NewValue;
-		}
-
-
 		private IntegerValidator Validator { get; set; }
 
 		public void SetValidator(IntegerValidator validator)

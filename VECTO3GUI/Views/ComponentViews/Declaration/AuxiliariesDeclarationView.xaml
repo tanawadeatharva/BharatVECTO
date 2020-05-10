@@ -10,6 +10,7 @@
              xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
              xmlns:views="clr-namespace:VECTO3GUI.Views"
              xmlns:local="clr-namespace:VECTO3GUI.Views.ComponentViews.Declaration"
+             xmlns:validation="clr-namespace:VECTO3GUI.Helper.Validation"
              mc:Ignorable="d" 
              d:DesignHeight="800" d:DesignWidth="800">
 
@@ -197,10 +198,21 @@
                         <ColumnDefinition SharedSizeGroup="unitWidth"/>
                     </Grid.ColumnDefinitions>
                     <TextBlock Grid.Column="0" Text="Aux Heater Power" Margin="0,0,10,0"/>
-                    <TextBox Grid.Column="1" Margin="20,0,0,0" 
-                             Text="{Binding AuxHeaterPower, Converter={converter:SIValueConverter}, ConverterParameter=double,
-                                    Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True, NotifyOnValidationError=True}"/>
 
+                    <TextBox Grid.Column="1" Margin="20,0,0,0">
+                        <TextBox.Resources>
+                            <validation:IntegerValidatorConfig x:Key="IntValidator" MinValue="0" />
+                        </TextBox.Resources>
+                        <TextBox.Text>
+                            <Binding ValidatesOnDataErrors="True" NotifyOnValidationError="True" Path="AuxHeaterPower"
+                                     Converter="{converter:SIValueConverter}" ConverterParameter="int" UpdateSourceTrigger="PropertyChanged">
+
+                                <Binding.ValidationRules>
+                                    <validation:IntegerValidator ValidatorConfig="{StaticResource IntValidator}"/>
+                                </Binding.ValidationRules>
+                            </Binding>
+                        </TextBox.Text>
+                    </TextBox>
                     <TextBlock Grid.Row="0" Grid.Column="2" Text="{helper:SIUnit AuxHeaterPower}" Margin="5,0,5,0"/>
                 </Grid>
                 <!--<customControls:VectoParameterControl
