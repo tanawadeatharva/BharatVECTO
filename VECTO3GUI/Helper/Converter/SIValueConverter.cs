@@ -22,7 +22,8 @@ namespace VECTO3GUI.Helper.Converter
 				return DependencyProperty.UnsetValue;
 			}
 			if (!(value is SI)) {
-				throw new Exception("Can only convert SI types!");
+				return DependencyProperty.UnsetValue;
+				//throw new Exception("Can only convert SI types!");
 			}
 
 			var siValue = value as SI;

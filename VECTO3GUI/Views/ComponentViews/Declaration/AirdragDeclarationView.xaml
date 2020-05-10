@@ -84,7 +84,7 @@
                     Value="{Binding AppVersion}" IsEnabled="{Binding IsEditable}" />
 
                 <customControls:VectoParameterControl 
-                    Caption="DeclaredCd x A 0" CaptionWidthGroup="lblWidth"
+                    Caption="DeclaredCd x A 0" CaptionWidthGroup="vehicleLbl"
                     Unit="{helper:SIUnit DeclaredCdxA}" UnitWidthGroup="unitWidth"
                     Value="{Binding DeclaredCdxA, Converter={converter:SIValueConverter}, ConverterParameter=double}" 
                     IsEnabled="{Binding IsEditable}"/>

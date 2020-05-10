@@ -186,6 +186,8 @@
     <Compile Include="Helper\Converter\SaveButtonLabelConverter.cs" />
     <Compile Include="Helper\SerializeHelper.cs" />
     <Compile Include="Helper\TextBoxInputRegExBehaviour.cs" />
+    <Compile Include="Helper\Validation\DoubleValidator.cs" />
+    <Compile Include="Helper\Validation\DoubleValidatorConfig.cs" />
     <Compile Include="Helper\Validation\IntegerValidatorConfig.cs" />
     <Compile Include="Helper\Validation\IntegerValidator.cs" />
     <Compile Include="Helper\ViewModelBase.cs" />
