@@ -11,6 +11,7 @@ namespace VECTO3GUI.ViewModel.Interfaces
 		ObservableCollection<MessageEntry> Messages { get; }
 		ICommand AddBusJob { get; }
 		ICommand AddJob { get; }
+		void HandleFileOpen(string filename);
 		ICommand RemoveJob { get; }
 		ICommand RemoveAllJobs { get; }
 		ICommand MoveJobUp { get; }

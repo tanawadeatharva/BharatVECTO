@@ -397,20 +397,36 @@ namespace VECTO3GUI.ViewModel.Impl
 			if (filePath.IsNullOrEmpty() || !IsNewJobFile(filePath.First()))
 				return;
 
-			if (IsJobFile(filePath.First()))
-			{
-				var jobEntry = SerializeHelper.DeserializeToObject<JobEntry>(filePath.First());
-				jobEntry.JobEntryFilePath = filePath.First();
-				jobEntry.Selected = true;
-				_jobs.Add(jobEntry);
-			}
-			else if(IsXmlFile(filePath.First()))
-			{
-				var jobEntry = GetAdditionalJobEntry(filePath.First());
-				jobEntry.Selected = true;
-				_jobs.Add(jobEntry);
-			}
+			HandleFileOpen(filePath.First());
 		}
+
+		public void HandleFileOpen(string filePath)
+		{
+			JobEntry jobEntry = null;
+			if (IsJobFile(filePath)) {
+				jobEntry = SerializeHelper.DeserializeToObject<JobEntry>(filePath);
+				jobEntry.JobEntryFilePath = filePath;
+				jobEntry.Selected = true;
+				//_jobs.Add(jobEntry);
+			} else if (IsXmlFile(filePath)) {
+				jobEntry = GetAdditionalJobEntry(filePath);
+				jobEntry.Selected = true;
+				//_jobs.Add(jobEntry);
+			}
+			if (jobEntry == null) {
+				return;
+			}
+
+			var newJob = Path.GetFullPath(jobEntry.JobEntryFilePath);
+			var existing = _jobs.Where(x => Path.GetFullPath(x.JobEntryFilePath).Equals(newJob, StringComparison.InvariantCultureIgnoreCase)).ToArray();
+			if (existing.Length == 0) {
+				_jobs.Add(jobEntry);
+				return;
+			}
+
+			SelectedJobEntry = existing.First();
+		}
+
 		private bool IsJobFile(string filePath)
 		{
 			var extension = Path.GetExtension(filePath)?.ToLower();

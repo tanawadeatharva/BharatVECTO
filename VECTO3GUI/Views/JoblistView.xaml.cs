@@ -33,10 +33,28 @@ namespace VECTO3GUI.Views
 
 		private void AutoScroll(object sender, NotifyCollectionChangedEventArgs e)
 		{
-			if (MessageList.Items.Count > 0) {
-				var border = VisualTreeHelper.GetChild(MessageList, 0) as Decorator;
-				var scroll = border?.Child as ScrollViewer;
-				scroll?.ScrollToEnd();
+			if (MessageList.Items.Count <= 0) {
+				return;
+			}
+
+			var border = VisualTreeHelper.GetChild(MessageList, 0) as Decorator;
+			var scroll = border?.Child as ScrollViewer;
+			scroll?.ScrollToEnd();
+		}
+
+		private void JobList_OnDrop(object sender, DragEventArgs e)
+		{
+			if (!e.Data.GetDataPresent(DataFormats.FileDrop)) {
+				return;
+			}
+
+			var files = (string[])e.Data.GetData(DataFormats.FileDrop);
+			if (files == null) {
+				return;
+			}
+			var vm = (IJoblistViewModel)DataContext;
+			foreach (var file in files) {
+				vm.HandleFileOpen(file);
 			}
 		}
 	}

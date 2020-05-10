@@ -74,7 +74,8 @@
             <DataGrid x:Name="JobList" ItemsSource="{Binding Jobs}" 
                       SelectedValue="{Binding DataContext.SelectedJobEntry, RelativeSource={RelativeSource AncestorType=views:JoblistView}}"
                       Style="{DynamicResource AzureDataGrid}" BorderThickness="1" CanUserAddRows="False" AutoGenerateColumns="False" SelectionUnit="FullRow" 
-                      IsReadOnly="False" HeadersVisibility="All"  RowHeaderWidth="5" IsSynchronizedWithCurrentItem="True" >
+                      IsReadOnly="False" HeadersVisibility="All"  RowHeaderWidth="5" IsSynchronizedWithCurrentItem="True" 
+                      Drop="JobList_OnDrop" AllowDrop="True">
 
                 <DataGrid.InputBindings>
                     <MouseBinding

@@ -17,7 +17,7 @@ namespace VECTO3GUI.Helper
 		public const string JobFileExtension = ".vecto";
 
 		public const string XMLFilter = "XML Files (*.xml)|*.xml|All Files (*.*)|*.*";
-		public const string JobFilter = "Vecto Files (*.vecto|*.vecto|All Files (*.*)|*.*";
+		public const string JobFilter = "Vecto Files (*.vecto)|*.vecto|All Files (*.*)|*.*";
 
 		public static string[] ShowSelectFilesDialog(bool multiselect)
 		{
