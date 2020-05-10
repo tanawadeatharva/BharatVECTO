@@ -21,7 +21,7 @@
         <TextBlock Grid.Row="0" Grid.Column="0" Margin="0,0,10,0" Text="{Binding Caption}"  />
         <TextBox Grid.Row="0" Grid.Column="1" Margin="20,0,0,0" TextAlignment="{Binding ValueAlign}"  x:Name="txtName" >
             <TextBox.Resources>
-                <validation:IntegerValidatorConfig x:Key="IntValidator" MinValue="{Binding MinValue}" MaxValue="{Binding MaxValue}" ValidateInput="{Binding ValidateInput}"/>
+                <validation:IntegerValidatorConfig x:Key="IntValidator" MinValue="{Binding MinValue}" MaxValue="{Binding MaxValue}"/>
             </TextBox.Resources>
             <!--http://geekswithblogs.net/NewThingsILearned/archive/2008/01/15/binding-to-an-attached-property.aspx-->
             <TextBox.Text >
