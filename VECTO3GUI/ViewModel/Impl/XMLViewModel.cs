@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Input;
 using ICSharpCode.AvalonEdit.Highlighting;
 using ICSharpCode.AvalonEdit.Utils;
 
@@ -74,6 +75,11 @@ namespace VECTO3GUI.ViewModel.Impl
 			using (var fileStream = new FileStream(_filePath, FileMode.Open, FileAccess.Read, FileShare.Read)) {
 				TextContent =  FileReader.ReadFileContent(fileStream, Encoding.UTF8);
 			}
+		}
+
+		public ICommand CloseWindowCommand
+		{
+			get { return null; }
 		}
 	}
 }
