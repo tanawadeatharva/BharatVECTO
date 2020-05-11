@@ -9,7 +9,7 @@
 		<VehicleCategory>Bus</VehicleCategory>
 		<AxleConfiguration>6x2</AxleConfiguration>
     <Articulated>true</Articulated>
-		<TechnicalPermissibleMaximumLadenMass>25000</TechnicalPermissibleMaximumLadenMass>
+		<TechnicalPermissibleMaximumLadenMass>32000</TechnicalPermissibleMaximumLadenMass>
 		<IdlingSpeed>600</IdlingSpeed>
 		<RetarderType>Transmission Output Retarder</RetarderType>
 		<RetarderRatio>1.000</RetarderRatio>

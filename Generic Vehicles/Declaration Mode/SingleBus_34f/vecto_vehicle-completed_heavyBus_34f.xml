@@ -8,18 +8,18 @@
 		<Date>2020-01-09T11:00:00Z</Date>
 		<LegislativeClass>M3</LegislativeClass>
 		<RegisteredClass>II+III</RegisteredClass>
-		<VehicleCode>CD</VehicleCode>
-		<CurbMassChassis>8300</CurbMassChassis>
-		<TechnicalPermissibleMaximumLadenMass>18000</TechnicalPermissibleMaximumLadenMass>
+		<VehicleCode>CB</VehicleCode>
+		<CurbMassChassis>19400</CurbMassChassis>
+		<TechnicalPermissibleMaximumLadenMass>25000</TechnicalPermissibleMaximumLadenMass>
 		<RegisteredPassengers>
-			<LowerDeck>30</LowerDeck>
-			<UpperDeck>0</UpperDeck>
+			<LowerDeck>16</LowerDeck>
+			<UpperDeck>56</UpperDeck>
 		</RegisteredPassengers>
 		<LowEntry>true</LowEntry>
-		<HeightIntegratedBody>3.000</HeightIntegratedBody>
-		<VehicleLength>11.830</VehicleLength>
+		<HeightIntegratedBody>4.000</HeightIntegratedBody>
+		<VehicleLength>13.890</VehicleLength>
 		<VehicleWidth>2.550</VehicleWidth>
-		<EntranceHeight>0.120</EntranceHeight>
+		<EntranceHeight>0.300</EntranceHeight>
 		<DoorDriveTechnology>pneumatic</DoorDriveTechnology>
 		<Components xsi:type="CompletedVehicleComponentsDeclarationType">
 			<v2.6:AirDrag xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0">
@@ -29,9 +29,9 @@
 					<CertificationNumber>e12*0815/8051*2017/05E0000*00</CertificationNumber>
 					<Date>2017-03-24T15:00:00Z</Date>
 					<AppVersion>Vecto AirDrag x.y</AppVersion>
-					<CdxA_0>6.31</CdxA_0>
-					<TransferredCdxA>6.32</TransferredCdxA>
-					<DeclaredCdxA>6.34</DeclaredCdxA>
+					<CdxA_0>5.20</CdxA_0>
+					<TransferredCdxA>5.20</TransferredCdxA>
+					<DeclaredCdxA>5.20</DeclaredCdxA>
 				</Data>
 				<Signature>
 					<di:Reference URI="#CabinX23h">
@@ -49,20 +49,20 @@
 					<ElectricSystem>
 						<AlternatorTechnology>default</AlternatorTechnology>
 						<LEDLights>
-							<Dayrunninglights>false</Dayrunninglights>
-							<Headlights>false</Headlights>
-							<Positionlights>false</Positionlights>
-							<Brakelights>false</Brakelights>
-							<Interiorlights>false</Interiorlights>
+							<Dayrunninglights>true</Dayrunninglights>
+							<Headlights>true</Headlights>
+							<Positionlights>true</Positionlights>
+							<Brakelights>true</Brakelights>
+							<Interiorlights>true</Interiorlights>
 						</LEDLights>
 					</ElectricSystem>
 					<HVAC>
-						<SystemConfiguration>7</SystemConfiguration>
+						<SystemConfiguration>6</SystemConfiguration>
 						<CompressorType>
-							<DriverAC>2-stage</DriverAC>
-							<PassengerAC>4-stage</PassengerAC>
+							<DriverAC>none</DriverAC>
+							<PassengerAC>2-stage</PassengerAC>
 						</CompressorType>
-						<AuxiliaryHeaterPower>0</AuxiliaryHeaterPower>
+						<AuxiliaryHeaterPower>30000</AuxiliaryHeaterPower>
 						<DoubleGlasing>true</DoubleGlasing>
 						<HeatPump>false</HeatPump>
 						<AdjustableAuxiliaryHeater>true</AdjustableAuxiliaryHeater>

@@ -1,7 +1,7 @@
 {
   "Header": {
     "CreatedBy": "",
-    "Date": "2020-02-26T12:55:36.7360880Z",
+    "Date": "2020-05-08T11:20:12.0085685Z",
     "AppVersion": "3",
     "FileVersion": 4
   },
@@ -9,7 +9,7 @@
     "SavedInDeclMode": true,
     "DeclarationVehicle": "vecto_vehicle-medium_lorry_4x2F.xml",
     "ManufacturerRecord": "vecto_vehicle-medium_lorry_4x2F.RSLT_MANUFACTURER.xml",
-    "Mileage": 0.0,
+    "Mileage": 15000.0,
     "FanPowerCoefficients": [
       7.32,
       1200.0,
@@ -17,7 +17,7 @@
     ],
     "FanDiameter": 0.3,
     "Cycles": [
-      "VTP Testzyklus.vdri"
+      "VTP VECTO Format 2Hz.vdri"
     ]
   }
 }

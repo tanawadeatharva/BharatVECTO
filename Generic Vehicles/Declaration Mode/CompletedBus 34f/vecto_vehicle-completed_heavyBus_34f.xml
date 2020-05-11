@@ -59,7 +59,7 @@
 					<HVAC>
 						<SystemConfiguration>6</SystemConfiguration>
 						<CompressorType>
-							<DriverAC>2-stage</DriverAC>
+							<DriverAC>none</DriverAC>
 							<PassengerAC>2-stage</PassengerAC>
 						</CompressorType>
 						<AuxiliaryHeaterPower>30000</AuxiliaryHeaterPower>

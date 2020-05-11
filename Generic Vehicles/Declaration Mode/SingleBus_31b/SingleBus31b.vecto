@@ -6,7 +6,7 @@
 	"FileVersion": 6
   },
   "Body": {
-	"PrimaryVehicle":  "primary_heavyBus group41_nonSmart.xml",
-	"CompletedVehicle": "vecto_vehicle-completed_heavyBus_41.xml"
+	"PrimaryVehicle":  "primary_heavyBus group_P31_32_Smart_ES.xml",
+	"CompletedVehicle": "vecto_vehicle-completed_heavyBus_31b.xml"
   }
 }
