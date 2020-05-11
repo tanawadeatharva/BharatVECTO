@@ -70,6 +70,11 @@ namespace VECTO3GUI.ViewModel.Impl
 			Process.Start(JRCPic);
 		}
 
+		public ICommand CloseWindowCommand
+		{
+			get { return null; }
+		}
+
 		#endregion
 
 

@@ -212,6 +212,11 @@ namespace VECTO3GUI.ViewModel.Impl
 				UpdateJobData();
 		}
 
+		public ICommand CloseWindowCommand
+		{
+			get { return null; }
+		}
+
 		#endregion
 
 
