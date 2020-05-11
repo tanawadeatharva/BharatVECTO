@@ -33,6 +33,7 @@ namespace VECTO3GUI
 		{
 			InitializeComponent();
 			DataContext = viewModel;
+			Closing += viewModel.CurrentViewModel.Closing;
 		}
 	}
 }

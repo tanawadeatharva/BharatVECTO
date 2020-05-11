@@ -11,7 +11,8 @@
              xmlns:vecto3Gui="clr-namespace:VECTO3GUI"
              mc:Ignorable="d" 
              d:DesignHeight="400" d:DesignWidth="600"
-             d:DataContext="{d:DesignInstance Type=impl:JoblistViewModel, IsDesignTimeCreatable=False}">
+             d:DataContext="{d:DesignInstance Type=impl:JoblistViewModel, IsDesignTimeCreatable=False}"
+             >
 
     <d:JoblistView.DataContext>
         <x:Type Type="interfaces:IJoblistViewModel"/>

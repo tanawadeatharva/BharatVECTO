@@ -15,6 +15,8 @@ using System.Windows.Input;
 using System.Xml;
 using System.Xml.Linq;
 using Castle.Core.Internal;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using Ninject;
 using NLog;
 using NLog.Targets;
@@ -42,6 +44,8 @@ namespace VECTO3GUI.ViewModel.Impl
 {
 	public class JoblistViewModel : ObservableObject, IJoblistViewModel
 	{
+		protected const string SETTINGS_FILE = "Config/Settings3.json";
+
 		#region Members
 
 		protected ObservableCollectionEx<JobEntry> _jobs;
@@ -148,6 +152,7 @@ namespace VECTO3GUI.ViewModel.Impl
 		public JoblistViewModel()
 		{
 			_settings = new SettingsModel();
+			LoadOptions();
 			SetJobEntries();
 
 			SimulationWorker = new BackgroundWorker();
@@ -159,6 +164,45 @@ namespace VECTO3GUI.ViewModel.Impl
 
 			var target = new MethodCallTarget("VectoGuiTarget", (evtInfo, obj) => LogMethod(evtInfo, obj));
 			NLog.Config.SimpleConfigurator.ConfigureForTargetLogging(target);
+		}
+
+		private void LoadOptions()
+		{
+			if (!File.Exists(SETTINGS_FILE)) {
+				WriteModData = true;
+				ValidateData = true;
+				return;
+			}
+			using (var reader = File.OpenText(SETTINGS_FILE)) {
+				var content = JToken.ReadFrom(new JsonTextReader(reader));
+				var body = content["Body"];
+				if (body == null) {
+					return;
+				}
+
+				WriteModData = body.GetValueOrDefault<bool>("WriteModData") ?? true;
+				ValidateData = body.GetValueOrDefault<bool>("ValidateRunData") ?? true;
+				WriteModData1Hz = body.GetValueOrDefault<bool>("WriteModData1Hz") ?? false;
+				WriteActualModData = body.GetValueOrDefault<bool>("WriteActualModData") ?? false;
+				OutputDirectory = body["OutputDirectory"] == null ? "" : body["OutputDirectory"].Value<string>();
+			}
+		}
+
+		private void SaveOptions()
+		{
+			var header = new Dictionary<string, object>();
+			header.Add("Date", DateTime.Now.ToUniversalTime().ToString("o"));
+			header.Add("AppVersion", "4");
+			header.Add("FileVersion", "4");
+
+			var body = new Dictionary<string, object>();
+			body.Add("WriteModData", WriteModData);
+			body.Add("ValidateRunData", ValidateData);
+			body.Add("WriteModData1Hz", WriteModData1Hz);
+			body.Add("WriteActualModData", WriteActualModData);
+			body.Add("OutputDirectory", OutputDirectory);
+
+			JSONFileWriter.WriteFile(new Dictionary<string, object>() { { "Header", header }, { "Body", body } }, SETTINGS_FILE);
 		}
 
 		private void LogMethod(LogEventInfo evtInfo, object[] objects)
@@ -596,7 +640,6 @@ namespace VECTO3GUI.ViewModel.Impl
 			}
 		}
 
-
 		#endregion
 
 		private object GetBusJobViewModel(JobType jobType, JobEntry jobEntry = null)
@@ -801,6 +844,7 @@ namespace VECTO3GUI.ViewModel.Impl
 
 		private void RunVectoSimulation(object theSender, DoWorkEventArgs e)
 		{
+			SaveOptions();
 			var sender = theSender as BackgroundWorker;
 			if (sender == null) {
 				return;
@@ -1100,6 +1144,14 @@ namespace VECTO3GUI.ViewModel.Impl
 		
 #endregion
 
+		#region Implementation of IMainView
+
+		public void Closing(object sender, CancelEventArgs e)
+		{
+			SaveOptions();
+		}
+
+		#endregion
 	}
 	public static class MsgTypeExtensions
 	{
