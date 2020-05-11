@@ -92,36 +92,36 @@
                             <DataGrid.Resources>
                                 <ContextMenu x:Key="RowMenu">
                                     <MenuItem Header="{Binding DataContext.FirstContextMenu, RelativeSource={RelativeSource AncestorType=views:JoblistView}}" 
-                                  Command="{Binding DataContext.OpenJob, RelativeSource={RelativeSource AncestorType=views:JoblistView}}"
-                                  CommandParameter="{Binding Source={x:Static impl:JobFileType.PrimaryBusFile}}" 
-                                  Visibility="{Binding DataContext.VisibilityFirstView, Converter={converter:BoolVisibilityConverter},
-                                  RelativeSource={RelativeSource AncestorType=views:JoblistView}}"/>
+                                              Command="{Binding DataContext.OpenJob, RelativeSource={RelativeSource AncestorType=views:JoblistView}}"
+                                              CommandParameter="{Binding Source={x:Static impl:JobFileType.PrimaryBusFile}}" 
+                                              Visibility="{Binding DataContext.VisibilityFirstView, Converter={converter:BoolVisibilityConverter},
+                                              RelativeSource={RelativeSource AncestorType=views:JoblistView}}"/>
                                     <MenuItem Header="View Completed Bus File" 
-                                  Command="{Binding DataContext.OpenJob, RelativeSource={RelativeSource AncestorType=views:JoblistView}}"
-                                  CommandParameter="{Binding Source={x:Static impl:JobFileType.CompletedBusFile}}"
-                                  Visibility="{Binding DataContext.VisibilitySecView, Converter={converter:BoolVisibilityConverter}, 
-                                  RelativeSource={RelativeSource AncestorType=views:JoblistView}}"/>
+                                              Command="{Binding DataContext.OpenJob, RelativeSource={RelativeSource AncestorType=views:JoblistView}}"
+                                              CommandParameter="{Binding Source={x:Static impl:JobFileType.CompletedBusFile}}"
+                                              Visibility="{Binding DataContext.VisibilitySecView, Converter={converter:BoolVisibilityConverter}, 
+                                              RelativeSource={RelativeSource AncestorType=views:JoblistView}}"/>
 
                                     <Separator HorizontalAlignment="Stretch" Background="Gray"/>
 
                                     <MenuItem Header="Edit Job" 
-                                  Command="{Binding DataContext.EditJob, RelativeSource={RelativeSource AncestorType=views:JoblistView}}"
-                                  CommandParameter="{Binding DataContext.SelectedJobEntry, RelativeSource={RelativeSource AncestorType=views:JoblistView}}"/>
+                                              Command="{Binding DataContext.EditJob, RelativeSource={RelativeSource AncestorType=views:JoblistView}}"
+                                              CommandParameter="{Binding DataContext.SelectedJobEntry, RelativeSource={RelativeSource AncestorType=views:JoblistView}}"/>
                                     <MenuItem Header="Edit Completed File" 
-                                  Command="{Binding DataContext.EditCompletedFile, RelativeSource={RelativeSource AncestorType=views:JoblistView}}"
-                                  CommandParameter="{Binding DataContext.SelectedJobEntry, RelativeSource={RelativeSource AncestorType=views:JoblistView}}"/>
+                                              Command="{Binding DataContext.EditCompletedFile, RelativeSource={RelativeSource AncestorType=views:JoblistView}}"
+                                              CommandParameter="{Binding DataContext.SelectedJobEntry, RelativeSource={RelativeSource AncestorType=views:JoblistView}}"/>
 
                                     <Separator HorizontalAlignment="Stretch" Background="Gray"/>
 
                                     <MenuItem Header="Show In Folder"
-                                  Command="{Binding DataContext.OpenInFolder, RelativeSource={RelativeSource AncestorType=views:JoblistView}}"
-                                  CommandParameter="{Binding DataContext.SelectedJobEntry, RelativeSource={RelativeSource AncestorType=views:JoblistView}}"/>
+                                              Command="{Binding DataContext.OpenInFolder, RelativeSource={RelativeSource AncestorType=views:JoblistView}}"
+                                              CommandParameter="{Binding DataContext.SelectedJobEntry, RelativeSource={RelativeSource AncestorType=views:JoblistView}}"/>
 
                                     <Separator HorizontalAlignment="Stretch" Background="Gray"/>
 
                                     <MenuItem Header="Remove Job" 
-                                  Command="{Binding DataContext.RemoveJob, RelativeSource={RelativeSource AncestorType=views:JoblistView}}"
-                                  CommandParameter="{Binding DataContext.SelectedJobEntry, RelativeSource={RelativeSource AncestorType=views:JoblistView}}"/>
+                                              Command="{Binding DataContext.RemoveJob, RelativeSource={RelativeSource AncestorType=views:JoblistView}}"
+                                              CommandParameter="{Binding DataContext.SelectedJobEntry, RelativeSource={RelativeSource AncestorType=views:JoblistView}}"/>
                                 </ContextMenu>
                             </DataGrid.Resources>
 
@@ -130,11 +130,11 @@
                                     <MenuItem Header="Add Job" Command="{Binding AddJob}"/>
                                     <Separator HorizontalAlignment="Stretch" Background="Gray"/>
                                     <MenuItem Header="Create Single Bus Job"
-                                  Command="{Binding AddBusJob}" CommandParameter="{Binding Source={x:Static impl:JobType.SingleBusJob}}"/>
+                                              Command="{Binding AddBusJob}" CommandParameter="{Binding Source={x:Static impl:JobType.SingleBusJob}}"/>
                                     <MenuItem Header="Create Completed Bus Job"
-                                  Command="{Binding AddBusJob}" CommandParameter="{Binding Source={x:Static impl:JobType.CompletedBusJob}}"/>
+                                              Command="{Binding AddBusJob}" CommandParameter="{Binding Source={x:Static impl:JobType.CompletedBusJob}}"/>
                                     <MenuItem Header="Create Completed XML"
-                                  Command="{Binding CreateNewJob}"/>
+                                              Command="{Binding CreateNewJob}"/>
                                     <Separator HorizontalAlignment="Stretch" Background="Gray"/>
                                     <MenuItem Header="Remove All" Command="{Binding RemoveAllJobs}"/>
                                 </ContextMenu>

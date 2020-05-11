@@ -147,6 +147,7 @@
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
     <Reference Include="System.IO.Compression" />
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.ServiceModel" />
@@ -227,6 +228,7 @@
     <Compile Include="ViewModel\Adapter\Declaration\TyreDeclarationAdapter.cs" />
     <Compile Include="ViewModel\Adapter\Declaration\VehicleDeclarationAdapter.cs" />
     <Compile Include="ViewModel\Adapter\IAdapterFactory.cs" />
+    <Compile Include="ViewModel\Impl\AboutViewModel.cs" />
     <Compile Include="ViewModel\Impl\AbstractBusJobViewModel.cs" />
     <Compile Include="ViewModel\Impl\AbstractComponentViewModel.cs" />
     <Compile Include="ViewModel\Impl\AbstractJobViewModel.cs" />
@@ -296,6 +298,9 @@
     <Compile Include="ViewModel\Interfaces\SteeringPumpEntry.cs" />
     <Compile Include="ViewModel\Interfaces\TorqueConverterCharacteristics.cs" />
     <Compile Include="ViewModel\Interfaces\TorqueEntry.cs" />
+    <Compile Include="Views\AboutView.xaml.cs">
+      <DependentUpon>AboutView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\BusJobView.xaml.cs">
       <DependentUpon>BusJobView.xaml</DependentUpon>
     </Compile>
@@ -435,7 +440,6 @@
     </Compile>
     <Compile Include="Helper\Converter\BaseConverter.cs" />
     <Compile Include="Helper\DataContextBaseExtension.cs" />
-    <Compile Include="Helper\Converter\JobEntrySelectedConverter.cs" />
     <Compile Include="Helper\SIUnit.cs" />
     <Compile Include="Helper\Converter\SIValueConverter.cs" />
     <Compile Include="Helper\Converter\VehicleClassConverter.cs" />
@@ -454,6 +458,10 @@
     <Page Include="Resources\ViewModelMappings.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\AboutView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\BusJobView.xaml">
       <SubType>Designer</SubType>
@@ -673,6 +681,12 @@
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\VECTO-About.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\JRC-About.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

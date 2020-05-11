@@ -16,7 +16,6 @@ namespace VECTO3GUI.ViewModel.Interfaces
 		ICommand RemoveAllJobs { get; }
 		ICommand MoveJobUp { get; }
 		ICommand MoveJobDown { get; }
-		ICommand StartSimulation { get; }
 		ICommand EditJob { get; }
 		ICommand EditCompletedFile { get; }
 		ICommand CreateNewJob { get; }
@@ -36,5 +35,6 @@ namespace VECTO3GUI.ViewModel.Interfaces
 		string OutputDirectory { get; set; }
 		ICommand BrowseOutputDirectory { get; }
 		bool WriteModelData { get; set; }
+		ICommand AboutViewCommand { get; }
 	}
 }

@@ -67,6 +67,8 @@ namespace VECTO3GUI.ViewModel.Impl
 
 	public class JobEntry : ObservableObject
 	{
+		public const string APP_VERSION = "VECTO3GUI";
+
 		private JobHeader _header;
 		private JobBody _body;
 		private bool _selected;

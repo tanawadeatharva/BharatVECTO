@@ -6,11 +6,9 @@ using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
-using System.IO.Pipes;
 using System.Linq;
 using System.Threading;
 using System.Windows;
-using System.Windows.Forms;
 using System.Windows.Input;
 using System.Xml;
 using System.Xml.Linq;
@@ -70,7 +68,6 @@ namespace VECTO3GUI.ViewModel.Impl
 		private ICommand _editCompletedFileCommand;
 		private ICommand _moveJobUpCommand;
 		private ICommand _moveJobDownCommand;
-		private ICommand _startSimulationCommand;
 		private ICommand _openInFolderCommand;
 		private ICommand _doubleClickCommand;
 		private ICommand _runSimulationCommand;
@@ -87,6 +84,7 @@ namespace VECTO3GUI.ViewModel.Impl
 		private string _outputDirectory;
 		private ICommand _browseOutputDirectory;
 		private bool _writeModelData;
+		private ICommand _aboutViewCommand;
 
 		#endregion
 
@@ -327,7 +325,7 @@ namespace VECTO3GUI.ViewModel.Impl
 			get { return _writeModelData; }
 			set { SetProperty(ref _writeModelData, value); }
 		}
-
+		
 		private void DoBrowseOutputDirectory()
 		{
 			var filePath = FileDialogHelper.ShowSelectFilesDialog(false, FileDialogHelper.JobFilter);
@@ -409,10 +407,10 @@ namespace VECTO3GUI.ViewModel.Impl
 			{
 				return _editCompletedFileCommand ??
 						(_editCompletedFileCommand =
-							new RelayCommand<JobEntry>(DoEditCompletedFile, CanEditCompletdFile));
+							new RelayCommand<JobEntry>(DoEditCompletedFile, CanEditCompletedFile));
 			}
 		}
-		private bool CanEditCompletdFile(JobEntry jobEntry)
+		private bool CanEditCompletedFile(JobEntry jobEntry)
 		{
 			return jobEntry != null && 
 					(IsJobEntry(jobEntry) || jobEntry.Header.JobType == JobType.CompletedXml);
@@ -468,9 +466,10 @@ namespace VECTO3GUI.ViewModel.Impl
 					{
 						xmlViewModel = new XMLViewModel(SelectedJobEntry.JobEntryFilePath);
 					}
-					else if (IsJobFile(_selectedJobEntry.JobEntryFilePath))
-						xmlViewModel = new XMLViewModel(
-							SelectedJobEntry.GetAbsoluteFilePath(SelectedJobEntry.Body.PrimaryVehicle));
+					else if (IsJobFile(_selectedJobEntry.JobEntryFilePath)) {
+						var filePath = SelectedJobEntry.Body.PrimaryVehicle ?? SelectedJobEntry.Body.PrimaryVehicleResults;
+						xmlViewModel = new XMLViewModel(SelectedJobEntry.GetAbsoluteFilePath(filePath));
+					}
 					break;
 				case JobFileType.CompletedBusFile:
 					xmlViewModel = new XMLViewModel(
@@ -613,17 +612,6 @@ namespace VECTO3GUI.ViewModel.Impl
 				_jobs.Move(index, index + 1);
 		}
 
-
-		public ICommand StartSimulation
-		{
-			get { return _startSimulationCommand ?? (_startSimulationCommand = new RelayCommand(DoStartSimulationCommand)); }
-		}
-		private void DoStartSimulationCommand()
-		{
-
-		}
-
-
 		public ICommand OpenInFolder
 		{
 			get { return _openInFolderCommand ?? (_openInFolderCommand = new RelayCommand<JobEntry>(DoOpenInFolderCommand)); }
@@ -638,6 +626,19 @@ namespace VECTO3GUI.ViewModel.Impl
 					Process.Start("explorer.exe", dirPath);
 				}
 			}
+		}
+
+		public ICommand AboutViewCommand
+		{
+			get { return _aboutViewCommand ?? (_aboutViewCommand = new RelayCommand(DoAboutViewCommand)); }
+		}
+		private void DoAboutViewCommand()
+		{
+
+			var viewModel  = new AboutViewModel();
+
+			var window = OutputWindowHelper.CreateOutputWindow(Kernel, viewModel, "About VECTO", 507, 395, ResizeMode.NoResize);
+			window.Show();
 		}
 
 		#endregion
