@@ -17,16 +17,17 @@ namespace VECTO3GUI.Model.TempDataObject
 		public string Model { get; set; }
 		public string CertificationNumber { get; set; }
 		public DateTime? Date { get; set; }
-		public bool NoAirdragData { get; set; }
 		public bool UseMeasuredValues { get; set; }
 		public SquareMeter CdxA_0 { get; set; }
 		public SquareMeter TransferredCdxA { get; set; }
 		public SquareMeter DeclaredCdxA { get; set; }
 		public string AppVersion { get; set; }
-
 		public DigestData DigestValue { get; set; }
+		public bool NoAirdragData { get; set; }
+		public bool UseMeasurementData { get; set; }
 
 		#endregion
+		
 
 		public AirdragComponentData(){}
 
@@ -34,6 +35,8 @@ namespace VECTO3GUI.Model.TempDataObject
 		{
 			if(defaultValues)
 				ClearValues(viewModel);
+			UseMeasurementData = viewModel.UseMeasurementData;
+			NoAirdragData = viewModel.NoAirdragData;
 		}
 
 		public AirdragComponentData(IAirdragViewModel airdrag)
@@ -48,6 +51,7 @@ namespace VECTO3GUI.Model.TempDataObject
 
 		public void ResetToComponentValues(IAirdragViewModel viewModel)
 		{
+			viewModel.UseMeasurementData = UseMeasurementData;
 			viewModel.NoAirdragData = NoAirdragData;
 			viewModel.Model = Model;
 			viewModel.Manufacturer = Manufacturer;
@@ -75,6 +79,7 @@ namespace VECTO3GUI.Model.TempDataObject
 
 		private void SetValues(IAirdragViewModel viewModel)
 		{
+			UseMeasurementData = viewModel.UseMeasurementData;
 			NoAirdragData = viewModel.NoAirdragData;
 			Model = viewModel.Model;
 			Manufacturer = viewModel.Manufacturer;
