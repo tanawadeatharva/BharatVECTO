@@ -11,6 +11,7 @@ namespace VECTO3GUI.ViewModel.Interfaces
 	public interface IAirdrag : ICommonComponentParameters
 	{
 		bool NoAirdragData { get; set; }
+		bool UseMeasurementData { get; set; }
 		bool UseMeasuredValues { get; set; }
 		SquareMeter CdxA_0 { get; set; }
 		SquareMeter TransferredCdxA { get; set; }

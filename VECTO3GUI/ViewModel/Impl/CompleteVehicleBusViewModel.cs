@@ -234,7 +234,6 @@ namespace VECTO3GUI.ViewModel.Impl
 			{
 				if (!SetProperty(ref _doorDriveTechnology, value))
 					return;
-
 				IsDataChanged(_doorDriveTechnology, _componentData);
 			}
 		}
@@ -267,30 +266,31 @@ namespace VECTO3GUI.ViewModel.Impl
 			if (vehicle == null)
 			{
 				_componentData = new VehicleBusComponentData(this, true);
-				return;
+			}
+			else
+			{
+				Manufacturer = vehicle.Manufacturer;
+				ManufacturerAddress = vehicle.ManufacturerAddress;
+				Model = vehicle.Model;
+				VIN = vehicle.VIN;
+				Date = vehicle.Date;
+				LegislativeClass = vehicle.LegislativeClass;
+				RegisteredClass = vehicle.RegisteredClass;
+				VehicleCode = vehicle.VehicleCode;
+				CurbMassChassis = vehicle.CurbMassChassis;
+				TechnicalPermissibleMaximumLadenMass = vehicle.GrossVehicleMassRating;
+				NgTankSystem = vehicle.TankSystem;
+				NumberOfPassengersLowerDeck = vehicle.NumberOfPassengersLowerDeck;
+				NumberOfPassengersUpperDeck = vehicle.NumberOfPassengersUpperDeck;
+				LowEntry = vehicle.FloorType == FloorType.LowFloor;
+				HeightIntegratedBody = vehicle.Height;
+				VehicleLength = vehicle.Length;
+				VehicleWidth = vehicle.Width;
+				EntranceHeight = vehicle.EntranceHeight;
+				DoorDriveTechnology = vehicle.DoorDriveTechnology;
+				_componentData = new VehicleBusComponentData(this);
 			}
 
-			Manufacturer = vehicle.Manufacturer;
-			ManufacturerAddress = vehicle.ManufacturerAddress;
-			Model = vehicle.Model;
-			VIN = vehicle.VIN;
-			Date = vehicle.Date;
-			LegislativeClass = vehicle.LegislativeClass;
-			RegisteredClass = vehicle.RegisteredClass;
-			VehicleCode = vehicle.VehicleCode;
-			CurbMassChassis = vehicle.CurbMassChassis;
-			TechnicalPermissibleMaximumLadenMass = vehicle.GrossVehicleMassRating;
-			NgTankSystem = vehicle.TankSystem;
-			NumberOfPassengersLowerDeck = vehicle.NumberOfPassengersLowerDeck;
-			NumberOfPassengersUpperDeck = vehicle.NumberOfPassengersUpperDeck;
-			LowEntry = vehicle.FloorType == FloorType.LowFloor;
-			HeightIntegratedBody = vehicle.Height;
-			VehicleLength = vehicle.Length;
-			VehicleWidth = vehicle.Width;
-			EntranceHeight = vehicle.EntranceHeight;
-			DoorDriveTechnology = vehicle.DoorDriveTechnology;
-
-			_componentData = new VehicleBusComponentData(this);
 			ClearChangedProperties();
 		}
 

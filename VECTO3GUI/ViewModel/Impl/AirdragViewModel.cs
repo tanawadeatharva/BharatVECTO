@@ -148,7 +148,7 @@ namespace VECTO3GUI.ViewModel.Impl
 			get { return _appVersion; }
 			set
 			{
-				if (SetProperty(ref _appVersion, value))
+				if (!SetProperty(ref _appVersion, value))
 					return;
 				IsDataChanged(_appVersion, _componentData);
 			}
@@ -162,9 +162,9 @@ namespace VECTO3GUI.ViewModel.Impl
 			get { return _noAirdragData; }
 			set
 			{
-				SetProperty(ref _noAirdragData, value);
+				if(!SetProperty(ref _noAirdragData, value))
+					return;
 				IsDataChanged(_noAirdragData, _componentData);
-				UseMeasurementData = !_noAirdragData;
 			}
 		}
 
@@ -179,10 +179,15 @@ namespace VECTO3GUI.ViewModel.Impl
 		public bool UseMeasurementData
 		{
 			get { return _useMeasurementData; }
-			set { SetProperty(ref _useMeasurementData, value); }
+			set
+			{
+				if (!SetProperty(ref _useMeasurementData, value))
+					return;
+				IsDataChanged(_useMeasurementData, _componentData);
+			}
 		}
 
-		
+
 		protected override void InputDataChanged()
 		{
 			var inputData = JobViewModel.InputDataProvider as IDeclarationInputDataProvider;
@@ -191,30 +196,33 @@ namespace VECTO3GUI.ViewModel.Impl
 			_xmlFilePath = XmlHelper.GetXmlAbsoluteFilePath(xmlUri);
 
 			SetAirdragValues(_airdragData);
-			UseMeasurementData = _airdragData?.AirDragArea != null;
-			NoAirdragData = !UseMeasurementData;
 			IsEditable = false;
 		}
 
 		private void SetAirdragValues(IAirdragDeclarationInputData airdrag)
 		{
 			UseMeasuredValues = airdrag?.AirDragArea != null;
+			UseMeasurementData = _airdragData?.AirDragArea != null;
+			NoAirdragData = !UseMeasurementData;
+
 			if (airdrag?.AirDragArea == null)
 			{
 				_componentData = new AirdragComponentData(this, true);
-				return;
+			}
+			else
+			{
+				Model = airdrag.Model;
+				Manufacturer = airdrag.Manufacturer;
+				CertificationNumber = airdrag.CertificationNumber;
+				Date = airdrag.Date;
+				AppVersion = airdrag.AppVersion;
+				DeclaredCdxA = airdrag.AirDragArea;
+				DigestValue = airdrag.DigestValue;
+				ReadAdditionalAirdragValues();
+
+				_componentData = new AirdragComponentData(this);
 			}
 
-			Model = airdrag.Model;
-			Manufacturer = airdrag.Manufacturer;
-			CertificationNumber = airdrag.CertificationNumber;
-			Date = airdrag.Date;
-			AppVersion = airdrag.AppVersion;
-			DeclaredCdxA = airdrag.AirDragArea;
-			DigestValue = airdrag.DigestValue;
-			ReadAdditionalAirdragValues();
-
-			_componentData = new AirdragComponentData(this);
 			ClearChangedProperties();
 		}
 
@@ -239,7 +247,8 @@ namespace VECTO3GUI.ViewModel.Impl
 
 		private void DoAirdragConfig(AirdragConfig config)
 		{
-			switch (config) {
+			switch (config)
+			{
 				case AirdragConfig.UseDefaultAirdragData:
 					NoAirdragData = true;
 					break;
