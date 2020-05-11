@@ -8,9 +8,6 @@ namespace VECTO3GUI.ViewModel.Interfaces
 	{
 		IAirdragDeclarationInputData ModelData { get; }
 		bool IsEditable { get; }
-
-		bool UseMeasurementData { get; }
-
 		ICommand LoadFileCommand { get; }
 		ICommand AirdragConfigCommand { get; }
 

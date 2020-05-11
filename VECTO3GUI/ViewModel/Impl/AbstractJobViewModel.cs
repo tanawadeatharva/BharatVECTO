@@ -23,8 +23,19 @@ namespace VECTO3GUI.ViewModel.Impl
 		private ICommand _saveJobCommand;
 		private ICommand _closeJobCommand;
 		private ICommand _saveAsJobCommand;
+		private Component _selectedComponent;
 
-
+		public Component SelectedComponent
+		{
+			get { return _selectedComponent; }
+			set
+			{
+				if (SetProperty(ref _selectedComponent, value)) {
+					DoEditComponent(_selectedComponent);
+				}
+			}
+		}
+		
 		protected string XmlFilePath { get; private set; }
 
 		protected bool IsNewJob { get; set; }
@@ -87,6 +98,17 @@ namespace VECTO3GUI.ViewModel.Impl
 		protected virtual void DoEditComponent(Component component)
 		{
 			var nextView = GetComponentViewModel(component);
+
+			if (CurrentComponent is AuxiliariesViewModel) {
+				var convert = CurrentComponent as AuxiliariesViewModel;
+				convert?.CacheAlternatorTechnologies();
+			}
+
+			if (nextView is AuxiliariesViewModel) {
+				var convert = nextView as AuxiliariesViewModel;
+				convert.LoadCachedAlternatorTechnologies();
+			}
+
 			CurrentComponent = nextView ?? Kernel.Get<INoneViewModel>();
 		}
 

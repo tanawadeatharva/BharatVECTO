@@ -42,6 +42,8 @@ namespace VECTO3GUI.Model.TempDataObject
 			AlternatorTechnologies = new ObservableCollectionEx<AlternatorTechnologyModel>();
 			if (defaultValues)
 				ClearValues(viewModel);
+
+			OriginAlternatorTechnologies = new List<AlternatorTechnologyModel>();
 			SetXmlNamesToPropertyMapping();
 		}
 
@@ -73,25 +75,22 @@ namespace VECTO3GUI.Model.TempDataObject
 			viewModel.HeatPump = HeatPump;
 			viewModel.AdjustableAuxiliaryHeater = AdjustableAuxiliaryHeater;
 			viewModel.SeparateAirDistributionDucts = SeparateAirDistributionDucts;
-	
 		}
 
 		private void SetAlternatorTechnology(ObservableCollectionEx<AlternatorTechnologyModel> res)
 		{
 			if (OriginAlternatorTechnologies == null)
 				return;
-			//var res = new ObservableCollectionEx<AlternatorTechnologyModel>();
+
 			res.Clear();
 			for (int i = 0; i < OriginAlternatorTechnologies.Count; i++) {
 				res.Add(new AlternatorTechnologyModel{AlternatorTechnology = OriginAlternatorTechnologies[i].AlternatorTechnology});
 			}
-
-			//return res;
 		}
 		
 		public void ClearValues(IAuxiliariesViewModel viewModel)
 		{
-			viewModel.AlternatorTechnologies.Clear(); // = default(ObservableCollectionEx<AlternatorTechnologyModel>);
+			viewModel.AlternatorTechnologies.Clear(); 
 			viewModel.DayrunninglightsLED = default(bool);
 			viewModel.HeadlightsLED = default(bool);
 			viewModel.PositionlightsLED = default(bool);
@@ -124,7 +123,6 @@ namespace VECTO3GUI.Model.TempDataObject
 			HeatPump = auxiliaries.HeatPump;
 			AdjustableAuxiliaryHeater = auxiliaries.AdjustableAuxiliaryHeater;
 			SeparateAirDistributionDucts = auxiliaries.SeparateAirDistributionDucts;
-			
 		}
 
 		private List<AlternatorTechnologyModel> GetOriginAlternatorTechnologies(IAuxiliariesViewModel auxiliaries)

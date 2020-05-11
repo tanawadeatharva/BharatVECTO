@@ -62,16 +62,7 @@
 
             <Grid Grid.Column="1">
 
-                <TabControl TabStripPlacement="Top" ItemsSource="{Binding Components}" x:Name="ComponentsTab" SelectedIndex="0">
-
-                    <i:Interaction.Triggers>
-                        <i:EventTrigger EventName="SelectionChanged">
-                            <i:InvokeCommandAction 
-                            Command="{Binding EditComponent}" 
-                            CommandParameter="{Binding ElementName=ComponentsTab, Path=SelectedItem}">
-                            </i:InvokeCommandAction>
-                        </i:EventTrigger>
-                    </i:Interaction.Triggers>
+                <TabControl TabStripPlacement="Top" ItemsSource="{Binding Components}" x:Name="ComponentsTab" SelectedIndex="0" SelectedItem="{Binding SelectedComponent}">
 
                     <TabControl.ItemTemplate>
                         <DataTemplate>

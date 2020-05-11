@@ -116,8 +116,9 @@ namespace VECTO3GUI.ViewModel.Impl
 				if (XmlHelper.ValidateXDocument(xDoc, null, ValidationErrorAction)) {
 					_xmlCompletedBusWriter.WriteCompletedBusXml(XmlFilePath, xDoc);
 					CloseWindow(window);
+				} else {
+					ValidationResultDialogWindow(false);
 				}
-				ValidationResultDialogWindow(false);
 			}
 		}
 
@@ -143,8 +144,9 @@ namespace VECTO3GUI.ViewModel.Impl
 			{
 				_xmlCompletedBusWriter.WriteCompletedBusXml(filePath, xDocument);
 				CloseWindow(window);
+			} else {
+				ValidationResultDialogWindow(false);
 			}
-			ValidationResultDialogWindow(false);
 		}
 
 		public ICommand CommitComponent

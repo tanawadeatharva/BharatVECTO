@@ -15,6 +15,7 @@ namespace VECTO3GUI.ViewModel.Interfaces
 		bool DeclarationMode { get; }
 		ObservableCollection<Component> Components { get; }
 		ICommand EditComponent { get; }
+		Component SelectedComponent { get; }
 		IComponentViewModel CurrentComponent { get; }
 
 		ICommand SaveJob { get; }

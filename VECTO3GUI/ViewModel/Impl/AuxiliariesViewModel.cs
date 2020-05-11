@@ -19,9 +19,6 @@ using VECTO3GUI.Model.TempDataObject;
 
 namespace VECTO3GUI.ViewModel.Impl
 {
-
-
-
 	public class AuxiliariesViewModel : AbstractComponentViewModel, IAuxiliariesViewModel
 	{
 		#region Members
@@ -34,7 +31,7 @@ namespace VECTO3GUI.ViewModel.Impl
 		private IAxlesViewModel axlesViewModel;
 		private IBusAuxiliariesDeclarationData _busAuxiliaries;
 
-	
+
 		private ObservableCollectionEx<AlternatorTechnologyModel> _alternatorTechnologies = new ObservableCollectionEx<AlternatorTechnologyModel>();
 		private bool _dayRunningLightsLED;
 		private bool _headlightyLED;
@@ -288,15 +285,17 @@ namespace VECTO3GUI.ViewModel.Impl
 
 		public Dictionary<string, string> XmlNamesToPropertyMapping { get; private set; }
 
-		public ConsumerTechnology DoorDriveTechnology { get; set; }
-
+		
 
 		public AllowedEntry<BusHVACSystemConfiguration>[] AllowedSystemConfigurations { get; private set; }
 		public AllowedEntry<ACCompressorType>[] AllowedDriverACCompressorTypes { get; private set; }
 		public AllowedEntry<ACCompressorType>[] AllowedPassengerACCompressorTypes { get; private set; }
 		public AllowedEntry<string>[] AllowedAlternatorTechnology { get; private set; }
+
+
 		#endregion
 
+		private List<AlternatorTechnologyModel> _cachedAlternators { get; set; }
 
 		protected override void InputDataChanged()
 		{
@@ -323,39 +322,41 @@ namespace VECTO3GUI.ViewModel.Impl
 			if (busAux == null)
 			{
 				_componentData = new AuxiliariesBusComponentData(this, true);
-				return;
-			}
-
-			if (!busAux.ElectricSupply.Alternators.IsNullOrEmpty())
-			{
-
-				AlternatorTechnologies.Clear(); // = new ObservableCollectionEx<AlternatorTechnologyModel>();
-
 				AlternatorTechnologies.CollectionChanged += AlternatorTechnologiesOnCollectionChanged;
 				AlternatorTechnologies.CollectionItemChanged += AlternatorTechnologiesOnCollectionItemChanged;
-
-				for (int i = 0; i < busAux.ElectricSupply.Alternators.Count; i++)
+			}
+			else
+			{
+				if (!busAux.ElectricSupply.Alternators.IsNullOrEmpty())
 				{
-					AlternatorTechnologies.Add(new AlternatorTechnologyModel(){ AlternatorTechnology = busAux.ElectricSupply.Alternators[i].Technology });
+					AlternatorTechnologies.Clear();
+
+					AlternatorTechnologies.CollectionChanged += AlternatorTechnologiesOnCollectionChanged;
+					AlternatorTechnologies.CollectionItemChanged += AlternatorTechnologiesOnCollectionItemChanged;
+
+					for (int i = 0; i < busAux.ElectricSupply.Alternators.Count; i++)
+					{
+						AlternatorTechnologies.Add(new AlternatorTechnologyModel() { AlternatorTechnology = busAux.ElectricSupply.Alternators[i].Technology });
+					}
 				}
+
+				DayrunninglightsLED = busAux.ElectricConsumers.DayrunninglightsLED;
+				HeadlightsLED = busAux.ElectricConsumers.HeadlightsLED;
+				PositionlightsLED = busAux.ElectricConsumers.PositionlightsLED;
+				BrakelightsLED = busAux.ElectricConsumers.BrakelightsLED;
+				InteriorLightsLED = busAux.ElectricConsumers.InteriorLightsLED;
+				SystemConfiguration = busAux.HVACAux.SystemConfiguration;
+				CompressorTypeDriver = busAux.HVACAux.CompressorTypeDriver;
+				CompressorTypePassenger = busAux.HVACAux.CompressorTypePassenger;
+				AuxHeaterPower = busAux.HVACAux.AuxHeaterPower;
+				DoubleGlasing = busAux.HVACAux.DoubleGlasing;
+				HeatPump = busAux.HVACAux.HeatPump;
+				AdjustableAuxiliaryHeater = busAux.HVACAux.AdjustableAuxiliaryHeater;
+				SeparateAirDistributionDucts = busAux.HVACAux.SeparateAirDistributionDucts;
+	
+				_componentData = new AuxiliariesBusComponentData(this);
 			}
 
-			DayrunninglightsLED = busAux.ElectricConsumers.DayrunninglightsLED;
-			HeadlightsLED = busAux.ElectricConsumers.HeadlightsLED;
-			PositionlightsLED = busAux.ElectricConsumers.PositionlightsLED;
-			BrakelightsLED = busAux.ElectricConsumers.BrakelightsLED;
-			InteriorLightsLED = busAux.ElectricConsumers.InteriorLightsLED;
-			SystemConfiguration = busAux.HVACAux.SystemConfiguration;
-			CompressorTypeDriver = busAux.HVACAux.CompressorTypeDriver;
-			CompressorTypePassenger = busAux.HVACAux.CompressorTypePassenger;
-			AuxHeaterPower = busAux.HVACAux.AuxHeaterPower;
-			DoubleGlasing = busAux.HVACAux.DoubleGlasing;
-			HeatPump = busAux.HVACAux.HeatPump;
-			AdjustableAuxiliaryHeater = busAux.HVACAux.AdjustableAuxiliaryHeater;
-			SeparateAirDistributionDucts = busAux.HVACAux.SeparateAirDistributionDucts;
-			DoorDriveTechnology = ConsumerTechnology.Pneumatically;
-
-			_componentData = new AuxiliariesBusComponentData(this);
 			ClearChangedProperties();
 		}
 
@@ -418,6 +419,31 @@ namespace VECTO3GUI.ViewModel.Impl
 			SetChangedProperty(changed, nameof(AlternatorTechnologies));
 		}
 
+		public void CacheAlternatorTechnologies()
+		{
+			if (_componentData != null)
+			{
+				_cachedAlternators = new List<AlternatorTechnologyModel>();
+				for (int i = 0; i < AlternatorTechnologies.Count; i++)
+				{
+					_cachedAlternators.Add(new AlternatorTechnologyModel { AlternatorTechnology = AlternatorTechnologies[i].AlternatorTechnology });
+				}
+			}
+		}
+
+		public void LoadCachedAlternatorTechnologies()
+		{
+			if (_componentData != null && _cachedAlternators != null)
+			{
+				AlternatorTechnologies.Clear();
+				for (int i = 0; i < _cachedAlternators.Count; i++)
+				{
+					AlternatorTechnologies.Add(new AlternatorTechnologyModel { AlternatorTechnology = _cachedAlternators[i].AlternatorTechnology });
+				}
+			}
+		}
+
+
 		public override object CommitComponentData()
 		{
 			_componentData.UpdateCurrentValues(this);
@@ -448,7 +474,7 @@ namespace VECTO3GUI.ViewModel.Impl
 					RemovePropertyError(propertyName);
 			}
 		}
-		
+
 
 		#region Commands
 
@@ -492,15 +518,9 @@ namespace VECTO3GUI.ViewModel.Impl
 
 		private void DoAddAlternator()
 		{
-			if (AlternatorTechnologies == null) {
-				AlternatorTechnologies = new ObservableCollectionEx<AlternatorTechnologyModel>();
-				AlternatorTechnologies.CollectionChanged += AlternatorTechnologiesOnCollectionChanged;
-				AlternatorTechnologies.CollectionItemChanged += AlternatorTechnologiesOnCollectionItemChanged;
-			}
-
 			AlternatorTechnologies.Add(new AlternatorTechnologyModel
 			{
-				AlternatorTechnology = string.Empty
+				AlternatorTechnology = null
 			});
 		}
 
