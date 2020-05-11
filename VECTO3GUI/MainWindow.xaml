@@ -57,7 +57,8 @@
 
 
                     <MenuItem Header="Help" VerticalAlignment="Center">
-                        <MenuItem Header="About Vecto"/>
+                        <MenuItem Header="About Vecto" 
+                                  Command="{Binding CurrentViewModel.AboutViewCommand}"/>
                     </MenuItem>
                 </Menu>
 
