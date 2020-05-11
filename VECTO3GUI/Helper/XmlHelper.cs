@@ -61,7 +61,7 @@ namespace VECTO3GUI.Helper
 			if (baseUri == null)
 				return null;
 
-			return new Uri(baseUri).AbsolutePath;
+			return Uri.UnescapeDataString(new Uri(baseUri).AbsolutePath);
 		}
 	}
 }
