@@ -201,7 +201,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			if (SmartElectricSystem) {
 				container[ModalResultField.BatterySOC] = Auxiliaries.BatterySOC * 100.0;
 
-				container[ModalResultField.P_busAux_ES_generated] = essUtilityFactor * Auxiliaries.ElectricPowerConsumerSum;
+
+				container[ModalResultField.P_busAux_ES_generated] = essUtilityFactor * (DataBus.VehicleStopped ? Auxiliaries.ElectricPowerConsumerSum : Auxiliaries.ElectricPowerGenerated);
 				container[ModalResultField.P_busAux_ES_sum_mech] = essUtilityFactor * Auxiliaries.ElectricPowerConsumerSum /
 																	AuxCfg.ElectricalUserInputsConfig.AlternatorGearEfficiency /
 																	AuxCfg.ElectricalUserInputsConfig.AlternatorMap.GetEfficiency(0.RPMtoRad(), 0.SI<Ampere>());

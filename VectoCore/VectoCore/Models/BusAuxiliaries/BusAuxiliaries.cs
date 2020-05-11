@@ -289,7 +289,7 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries
 					var energy = (generatedElPower - ElectricPowerConsumerSum) * essFactor * seconds;
 					var maxCharge = (ElectricStorage.SOC - 1) * ElectricStorage.Capacity;
 					var maxDischarge = ElectricStorage.SOC * ElectricStorage.Capacity;
-					var batEnergy = energy.LimitTo(maxCharge, maxDischarge);
+					var batEnergy = energy.LimitTo(-maxDischarge, -maxCharge);
 					ElectricStorage.Request(batEnergy);
 				}
 				Signals.CurrentCycleTimeInSeconds += seconds.Value();
