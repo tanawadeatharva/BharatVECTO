@@ -228,8 +228,8 @@ namespace VECTO3GUI.ViewModel.Impl
 				Header = new JobHeader {
 					JobType = JobType,
 					FileVersion = JobType.GetJobTypeNumberByJobType(),
-					AppVersion = "unknown",
-					CreatedBy = "unknown",
+					AppVersion = JobEntry.APP_VERSION,
+					CreatedBy = Environment.UserName,
 					Date = DateTime.UtcNow
 				}
 			};

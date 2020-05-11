@@ -41,6 +41,11 @@
         <views:JobEditView/>
     </DataTemplate>
 
+    <DataTemplate DataType="{x:Type impl:AboutViewModel}">
+        <views:AboutView/>
+    </DataTemplate>
+
+
     <!--<DataTemplate DataType="{x:Type impl:CompleteVehicleBusJobViewModel}">
         <views:JobEditView/>
     </DataTemplate>-->
