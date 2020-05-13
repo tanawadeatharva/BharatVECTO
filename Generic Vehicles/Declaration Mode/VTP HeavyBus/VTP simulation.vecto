@@ -8,7 +8,7 @@
   "Body": {
     "SavedInDeclMode": true,
     "DeclarationVehicle": "primary_heavyBus group P33_34_non_Smart.xml",
-    "ManufacturerRecord": "CompletedBus_33c.RSLT_MANUFACTURER.xml",
+    "ManufacturerRecord": "CompletedBus_33c.MRF.xml",
     "Mileage": 30000.0,
     "FanPowerCoefficients": [
       7.32,
