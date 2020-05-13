@@ -7,6 +7,6 @@
 	},
 	"Body": {
 		"CompletedVehicle": "vecto_vehicle-completed_heavyBus_31b.xml",
-		"PrimaryVehicleResults":  "primary_heavyBus group_P31_32_Smart_ES.RSLT_PIF.xml"
+		"PrimaryVehicleResults":  "primary_heavyBus group_P31_32_Smart_ES.PIF.xml"
 	}
 }
