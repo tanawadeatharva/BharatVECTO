@@ -85,12 +85,12 @@ namespace TUGraz.VectoCore.Tests.Integration.VTP
 
 		[Category("LongRunning")]
 		[Category("Integration")]
-		[TestCase(@"TestData\Integration\VTPMode\GenericVehicle\class_5_generic vehicle_DECL.vecto"),
-		TestCase(@"TestData\Integration\VTPMode\MediumLorry\VTP_MediumLorry.vecto", TestName = "RunVTPMediumLorry_Declaration"),
-		TestCase(@"TestData\Integration\VTPMode\DualFuelVehicle\VTP_DualFuel.vecto", TestName = "RunVTPDualFuel_Declaration"),
-		TestCase(@"TestData\Integration\VTPMode\HeavyBus\VTP_PrimaryBus.vecto", TestName = "RunVTPHeavyPrimaryBus")	
+		[TestCase(@"TestData\Integration\VTPMode\GenericVehicle\class_5_generic vehicle_DECL.vecto", 45.6, 0.8972, TestName = "RunVTPHeavyLorry_Declaration"),
+		TestCase(@"TestData\Integration\VTPMode\MediumLorry\VTP_MediumLorry.vecto", 400.0, 1.06, TestName = "RunVTPMediumLorry_Declaration"),
+		TestCase(@"TestData\Integration\VTPMode\DualFuelVehicle\VTP_DualFuel.vecto", 43.5, 1.018, TestName = "RunVTPDualFuel_Declaration"),
+		TestCase(@"TestData\Integration\VTPMode\HeavyBus\VTP_PrimaryBus.vecto", 14.2, 1.1323, TestName = "RunVTPHeavyPrimaryBus")	
 			]
-		public void RunVTP_Declaration(string jobFile)
+		public void RunVTP_Declaration(string jobFile, double expectedDeclaredCO2, double expectedCVTP)
 		{
 			var fileWriter = new FileOutputWriter(jobFile);
 			var sumWriter = new SummaryDataContainer(fileWriter);
@@ -122,8 +122,8 @@ namespace TUGraz.VectoCore.Tests.Integration.VTP
 
 			var vtpXml = XDocument.Load(vtpReport);
 
-			Assert.AreEqual(14.2, vtpXml.Document?.XPathSelectElement("//*[local-name()='Declared']")?.Value.ToDouble(), 1e-1);
-			Assert.AreEqual(1.1323, vtpXml.Document?.XPathSelectElement("//*[local-name()='C_VTP']")?.Value.ToDouble(), 1e-4);
+			Assert.AreEqual(expectedDeclaredCO2, vtpXml.Document?.XPathSelectElement("//*[local-name()='Declared']")?.Value.ToDouble(), 1e-1);
+			Assert.AreEqual(expectedCVTP, vtpXml.Document?.XPathSelectElement("//*[local-name()='C_VTP']")?.Value.ToDouble(), 1e-4);
 		}
 
 		[Category("LongRunning")]
