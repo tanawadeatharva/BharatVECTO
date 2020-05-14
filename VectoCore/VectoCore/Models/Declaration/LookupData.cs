@@ -65,12 +65,14 @@ namespace TUGraz.VectoCore.Models.Declaration
 //#if USE_EXTENAL_DECLARATION_DATA
 			var tmp = resourceId.Replace(DeclarationData.DeclarationDataResourcePrefix + ".", "");
 			var parts = tmp.Split('.');
-			return
-				VectoCSVFile.Read(Path.Combine("Declaration", string.Join(".", parts[parts.Length - 2], parts[parts.Length - 1])
-					));
-//#else
-//			return VectoCSVFile.ReadStream(RessourceHelper.ReadStream(resourceId), source: resourceId);
-//#endif
+			var fileName = Path.Combine("Declaration", string.Join(".", parts[parts.Length - 2], parts[parts.Length - 1]));
+			if (File.Exists(fileName)) {
+				return VectoCSVFile.Read(fileName);
+			}
+
+			//#else
+			return VectoCSVFile.ReadStream(RessourceHelper.ReadStream(resourceId), source: resourceId);
+			//#endif
 		}
 
 		protected static void NormalizeTable(DataTable table)
