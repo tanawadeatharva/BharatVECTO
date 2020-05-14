@@ -551,9 +551,20 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				return retVal;
 			}
 
-			operatingPoint = SearchBrakingPower(absTime, operatingPoint.SimulationDistance, gradient,
-				operatingPoint.Acceleration, response);
-
+			var engaged = (DataBus as IGearboxInfo).DisengageGearbox;
+			try {
+				operatingPoint = SearchBrakingPower(
+					absTime, operatingPoint.SimulationDistance, gradient,
+					operatingPoint.Acceleration, response);
+			} catch (VectoSearchAbortedException vsa) {
+				Log.Warn("Search braking power aborted {0}", vsa);
+				if (DataBus.GearboxType.AutomaticTransmission()) {
+					(DataBus as IGearboxControl).DisengageGearbox = true;
+					operatingPoint = SearchBrakingPower(
+						absTime, operatingPoint.SimulationDistance, gradient,
+						operatingPoint.Acceleration, response);
+				}
+			}
 			if (!ds.IsEqual(operatingPoint.SimulationDistance, 1E-15.SI<Meter>())) {
 				Log.Info(
 					"SearchOperatingPoint Braking reduced the max. distance: {0} -> {1}. Issue new request from driving cycle!",
@@ -648,7 +659,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			retVal.SimulationInterval = operatingPoint.SimulationInterval;
 			retVal.SimulationDistance = ds;
 			retVal.OperatingPoint = operatingPoint;
-			
+
+			if (DataBus.GearboxType.AutomaticTransmission() && engaged != (DataBus as IGearboxInfo).DisengageGearbox) {
+				(DataBus as IGearboxControl).DisengageGearbox = engaged;
+			}
 			return retVal;
 		}
 
@@ -793,6 +807,17 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 							? response.DeltaDragLoad
 							: response.GearboxPowerRequest;
 						return delta.Value();
+					},
+					abortCriterion: (result, i) => {
+						if (i < 7) {
+							return false;
+						}
+						var response = (ResponseDryRun)result;
+						if (response == null) {
+							return false;
+						}
+
+						return DataBus.GearboxType.AutomaticTransmission() && response.DeltaDragLoad.Value().IsSmallerOrEqual(-double.MaxValue / 20);
 					},
 					forceLineSearch: DataBus.GearboxType.AutomaticTransmission() && !DataBus.TCLocked);
 

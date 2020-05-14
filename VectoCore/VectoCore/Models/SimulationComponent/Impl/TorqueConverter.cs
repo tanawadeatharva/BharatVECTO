@@ -310,7 +310,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			var maxSpeed = VectoMath.Min(ModelData.TorqueConverterSpeedLimit, DataBus.EngineN95hSpeed);
 			for (var n = DataBus.EngineIdleSpeed;
 				n <= maxSpeed;
-				n += maxSpeed / 20) {
+				n += maxSpeed / 100) {
 				var tcOp = ModelData.FindOperatingPoint(n, outAngularVelocity);
 				var inTorque = CalculateAverageInTorque(tcOp);
 				var res = (ResponseDryRun)NextComponent.Request(absTime, dt, inTorque, tcOp.InAngularVelocity, true);
