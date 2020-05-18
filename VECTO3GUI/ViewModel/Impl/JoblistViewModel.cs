@@ -412,7 +412,7 @@ namespace VECTO3GUI.ViewModel.Impl
 		}
 		private bool CanEditCompletedFile(JobEntry jobEntry)
 		{
-			return jobEntry != null && 
+			return jobEntry != null && !jobEntry.Missing &&
 					(IsJobEntry(jobEntry) || jobEntry.Header.JobType == JobType.CompletedXml);
 
 		}
@@ -777,8 +777,8 @@ namespace VECTO3GUI.ViewModel.Impl
 
 		private bool IsJobEntry(JobEntry jobEntry)
 		{
-			return jobEntry.Header.JobType == JobType.CompletedBusJob ||
-					jobEntry.Header.JobType == JobType.SingleBusJob;
+			return !jobEntry.Missing && (jobEntry.Header.JobType == JobType.CompletedBusJob ||
+					jobEntry.Header.JobType == JobType.SingleBusJob);
 		}
 
 		private bool IsXmlFile(string filePath)

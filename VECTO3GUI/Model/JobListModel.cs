@@ -61,7 +61,11 @@ namespace VECTO3GUI.Model
 			for (int i = 0; i < jobEntries.Count; i++)
 			{
 				JobList.Add
-				(
+				(	jobEntries[i].Missing ? new JobListEntry() {
+							JobFilePath = jobEntries[i].JobEntryFilePath,
+							IsSelected = false,
+							JobTypeName = JobType.Unknown.GetLabel(),
+						}: 
 					new JobListEntry
 					{
 						JobTypeName = jobEntries[i].Header.JobType.GetLabel(),
@@ -81,6 +85,13 @@ namespace VECTO3GUI.Model
 
 			for (int i = 0; i < JobList.Count; i++)
 			{
+				if (!File.Exists(JobList[i].JobFilePath)) {
+					jobEntries.Add(new JobEntry() {
+						JobEntryFilePath = JobList[i].JobFilePath,
+						Missing = true
+					});
+					continue;
+				}
 				var jobType = JobTypeHelper.Parse(JobList[i].JobTypeName);
 				JobEntry jobEntry;
 

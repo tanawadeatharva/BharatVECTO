@@ -73,11 +73,12 @@ namespace VECTO3GUI.ViewModel.Impl
 		private JobBody _body;
 		private bool _selected;
 		private string _jobEntryFilePath;
+		private bool _missing;
 
 		[JsonIgnore]
 		public bool Selected
 		{
-			get { return _selected; }
+			get { return !Missing && _selected; }
 			set { SetProperty(ref _selected, value); }
 		}
 
@@ -97,6 +98,12 @@ namespace VECTO3GUI.ViewModel.Impl
 		{
 			get { return _body; }
 			set { SetProperty(ref _body, value); }
+		}
+
+		public bool Missing
+		{
+			get { return _missing; }
+			set { SetProperty(ref _missing, value); }
 		}
 
 		public string GetAbsoluteFilePath(string propertyFilePath)

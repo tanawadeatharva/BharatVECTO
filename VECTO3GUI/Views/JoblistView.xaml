@@ -152,6 +152,15 @@
                                 </DataGridTextColumn>
                             </DataGrid.Columns>
 
+                            <DataGrid.CellStyle>
+                                <Style TargetType="DataGridCell">
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding Missing}" Value="True">
+                                            <Setter Property="Foreground" Value="Red"/>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </DataGrid.CellStyle>
                         </DataGrid>
 
                     </Grid>
