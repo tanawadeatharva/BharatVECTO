@@ -63,5 +63,6 @@ namespace TUGraz.VectoCommon.Models
 		NewtonMeter EngineDynamicFullLoadTorque { get; set; }
 		MeterPerSecond VehicleSpeed { get; set; }
 		NewtonMeter CardanTorque { get; set; }
+		PerSecond GearboxInputSpeed { get; set; }
 	}
 }

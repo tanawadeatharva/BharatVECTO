@@ -100,9 +100,23 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			return ModelData.FullLoadCurves[DataBus.Gear].FullLoadStationaryTorque(angularSpeed) * angularSpeed;
 		}
 
+		public Watt EngineDynamicFullLoadPower(PerSecond avgEngineSpeed, Second dt)
+		{
+			return ComputeFullLoadPower(
+				avgEngineSpeed, ModelData.FullLoadCurves[DataBus.Gear].FullLoadStationaryTorque(avgEngineSpeed), dt, true);
+		}
+
 		public Watt EngineDragPower(PerSecond angularSpeed)
 		{
 			return ModelData.FullLoadCurves[DataBus.Gear].DragLoadStationaryPower(angularSpeed);
+		}
+
+		public Watt EngineAuxDemand(PerSecond avgEngineSpeed, Second dt)
+		{
+			return EngineAux == null
+				? 0.SI<Watt>()
+				: EngineAux.TorqueDemand(
+					0.SI<Second>(), dt, 0.SI<NewtonMeter>(), avgEngineSpeed, true) * avgEngineSpeed;
 		}
 
 		public PerSecond EngineIdleSpeed
@@ -194,8 +208,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			var auxTorqueDemand = EngineAux == null
 				? 0.SI<NewtonMeter>()
-				: EngineAux.TorqueDemand(absTime, dt, torqueOut,
-					torqueOut + inertiaTorqueLoss, angularVelocity, dryRun);
+				: EngineAux.TorqueDemand(absTime, dt, torqueOut, angularVelocity, dryRun);
 			// compute the torque the engine has to provide. powertrain + aux + its own inertia
 			var totalTorqueDemand = torqueOut + auxTorqueDemand + inertiaTorqueLoss;
 

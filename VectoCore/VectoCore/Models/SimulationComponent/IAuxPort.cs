@@ -47,8 +47,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent
 	{
 		NewtonMeter Initialize(NewtonMeter torque, PerSecond angularSpeed);
 
-		NewtonMeter TorqueDemand(Second absTime, Second dt, NewtonMeter torquePowerTrain, NewtonMeter torqueEngine,
-			PerSecond angularSpeed, bool dryRun = false);
+		NewtonMeter TorqueDemand(Second absTime, Second dt, NewtonMeter torquePowerTrain, PerSecond angularSpeed, bool dryRun = false);
 
 		Watt PowerDemandEngineOn(Second time, Second simulationInterval, PerSecond engineSpeed);
 

@@ -71,8 +71,12 @@ namespace TUGraz.VectoCore.Models.Connector.Ports.Impl
 
 		public NewtonMeter CardanTorque { get; set; }
 
+		public PerSecond GearboxInputSpeed { get; set; }
+
 
 		public TorqueConverterOperatingPoint TorqueConverterOperatingPoint { get; set; }
+
+		public NewtonMeter TorqueConverterTorqueDemand { get; set; }
 
 		public override string ToString()
 		{
@@ -132,7 +136,6 @@ namespace TUGraz.VectoCore.Models.Connector.Ports.Impl
 
 	public class ResponseDryRun : AbstractResponse
 	{
-		
 		public Watt DeltaFullLoad { get; set; }
 		public Watt DeltaDragLoad { get; set; }
 		public PerSecond DeltaEngineSpeed { get; set; }

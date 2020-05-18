@@ -136,12 +136,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		/// <param name="absTime"></param>
 		/// <param name="dt"></param>
 		/// <param name="torquePowerTrain"></param>
-		/// <param name="torqueEngine"></param>
 		/// <param name="angularSpeed"></param>
 		/// <param name="dryRun"></param>
 		/// <returns></returns>
-		public NewtonMeter TorqueDemand(Second absTime, Second dt, NewtonMeter torquePowerTrain, NewtonMeter torqueEngine,
-			PerSecond angularSpeed, bool dryRun = false)
+		public NewtonMeter TorqueDemand(Second absTime, Second dt, NewtonMeter torquePowerTrain, PerSecond angularSpeed, bool dryRun = false)
 		{
 			var avgAngularSpeed = PreviousState.AngularSpeed != null
 				? (angularSpeed + PreviousState.AngularSpeed) / 2.0

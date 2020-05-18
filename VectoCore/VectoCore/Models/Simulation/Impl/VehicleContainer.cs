@@ -187,9 +187,19 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			return Engine.EngineStationaryFullPower(angularSpeed);
 		}
 
+		public Watt EngineDynamicFullLoadPower(PerSecond avgEngineSpeed, Second dt)
+		{
+			return Engine.EngineDynamicFullLoadPower(avgEngineSpeed, dt);
+		}
+
 		public Watt EngineDragPower(PerSecond angularSpeed)
 		{
 			return Engine.EngineDragPower(angularSpeed);
+		}
+
+		public Watt EngineAuxDemand(PerSecond avgEngineSpeed, Second dt)
+		{
+			return Engine.EngineAuxDemand(avgEngineSpeed, dt);
 		}
 
 		public PerSecond EngineIdleSpeed
@@ -286,6 +296,8 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 		public virtual Second AbsTime { get; set; }
 
+		public ITorqueConverterControl TorqueConverter { get; private set; }
+
 		public void AddComponent(VectoSimulationComponent component)
 		{
 			var commitPriority = 0;
@@ -304,6 +316,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 					commitPriority = 4;
 				})
 				.If<IGearboxControl>(c => GearboxCtl = c)
+				.If<ITorqueConverterControl>(c => TorqueConverter = c)
 				.If<IAxlegearInfo>(c => Axlegear = c)
 				.If<IWheelsInfo>(c => Wheels = c)
 				.If<IVehicleInfo>(c => {

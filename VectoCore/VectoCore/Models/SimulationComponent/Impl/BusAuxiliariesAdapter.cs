@@ -96,14 +96,12 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			if (AdditionalAux != null) {
 				AdditionalAux.Initialize(torque, angularSpeed);
 			}
-			PreviousState.PowerDemand = GetBusAuxPowerDemand(0.SI<Second>(), 1.SI<Second>(), torque, torque, angularSpeed);
+			PreviousState.PowerDemand = GetBusAuxPowerDemand(0.SI<Second>(), 1.SI<Second>(), torque, angularSpeed);
 			return PreviousState.PowerDemand / angularSpeed;
 		}
 
 
-		public NewtonMeter TorqueDemand(
-			Second absTime, Second dt, NewtonMeter torquePowerTrain, NewtonMeter torqueEngine,
-			PerSecond angularSpeed, bool dryRun = false)
+		public NewtonMeter TorqueDemand(Second absTime, Second dt, NewtonMeter torquePowerTrain, PerSecond angularSpeed, bool dryRun = false)
 		{
 			CurrentState.AngularSpeed = angularSpeed;
 			CurrentState.dt = dt;
@@ -113,7 +111,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			signals.EngineStopped = false; 
 			signals.VehicleStopped = false; 
 
-			CurrentState.PowerDemand = GetBusAuxPowerDemand(absTime, dt, torquePowerTrain, torqueEngine, angularSpeed, dryRun);
+			CurrentState.PowerDemand = GetBusAuxPowerDemand(absTime, dt, torquePowerTrain, angularSpeed, dryRun);
 
 			var avgAngularSpeed = (CurrentState.AngularSpeed + PreviousState.AngularSpeed) / 2.0;
 			return CurrentState.PowerDemand / avgAngularSpeed;
@@ -124,7 +122,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			var signals = Auxiliaries.Signals;
 			signals.EngineStopped = false; 
 			signals.VehicleStopped = false;
-			var retVal =  GetBusAuxPowerDemand(time, simulationInterval, 0.SI<NewtonMeter>(), 0.SI<NewtonMeter>(), engineSpeed, true);
+			var retVal =  GetBusAuxPowerDemand(time, simulationInterval, 0.SI<NewtonMeter>(), engineSpeed, true);
 
 			if (!SmartElectricSystem) {
 				return retVal;
@@ -154,7 +152,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			signals.VehicleStopped = false;
 
 			var busAuxPowerDemand  = GetBusAuxPowerDemand(
-				absTime, dt, 0.SI<NewtonMeter>(), 0.SI<NewtonMeter>(), DataBus.EngineIdleSpeed);
+				absTime, dt, 0.SI<NewtonMeter>(), DataBus.EngineIdleSpeed);
 			AdditionalAux = conventionalAux;
 
 			CurrentState.PowerDemand = ((AdditionalAux?.PowerDemandEngineOn(absTime, dt, DataBus.EngineIdleSpeed) ?? 0.SI<Watt>()) +
@@ -166,7 +164,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			signals.VehicleStopped = DataBus.VehicleStopped;
 
 			busAuxPowerDemand = GetBusAuxPowerDemand(
-				absTime, dt, 0.SI<NewtonMeter>(), 0.SI<NewtonMeter>(), DataBus.EngineIdleSpeed);
+				absTime, dt, 0.SI<NewtonMeter>(), DataBus.EngineIdleSpeed);
 			AdditionalAux = conventionalAux;
 
 			return EngineStopStartUtilityFactor * (busAuxPowerDemand + AdditionalAux?.PowerDemandEngineOff(absTime, dt));
@@ -231,9 +229,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			CurrentState = new BusAuxState();
 		}
 
-		protected virtual Watt GetBusAuxPowerDemand(
-			Second absTime, Second dt, NewtonMeter torquePowerTrain, NewtonMeter torqueEngine,
-			PerSecond angularSpeed, bool dryRun = false)
+		protected virtual Watt GetBusAuxPowerDemand(Second absTime, Second dt, NewtonMeter torquePowerTrain, PerSecond angularSpeed, bool dryRun = false)
 		{
 			Auxiliaries.ResetCalculations();
 
@@ -248,7 +244,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 
 			signals.PreExistingAuxPower = AdditionalAux != null
-				? AdditionalAux.TorqueDemand(absTime, dt, torquePowerTrain, torqueEngine, angularSpeed, dryRun) * avgAngularSpeed
+				? AdditionalAux.TorqueDemand(absTime, dt, torquePowerTrain, angularSpeed, dryRun) * avgAngularSpeed
 				: 0.SI<Watt>();
 
 			var drivetrainPower = torquePowerTrain * avgAngularSpeed;
