@@ -200,7 +200,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 		protected internal override void DoWriteReport()
 		{
 			var sumWeightinFactors = Missions.Values.Sum(x => x.ResultEntry.Values.Sum(y => y.WeightingFactor));
-			if (!sumWeightinFactors.IsEqual(0) || !sumWeightinFactors.IsEqual(1)) {
+			if (!sumWeightinFactors.IsEqual(0) && !sumWeightinFactors.IsEqual(1)) {
 				throw new VectoException("Mission Profile Weighting factors do not sum up to 1!");
 			}
 			foreach (var result in Missions.OrderBy(m => m.Key)) {
