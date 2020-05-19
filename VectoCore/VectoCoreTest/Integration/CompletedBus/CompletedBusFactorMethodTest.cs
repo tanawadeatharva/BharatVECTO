@@ -941,6 +941,7 @@ namespace TUGraz.VectoCore.Tests.Integration.CompletedBus
 
 		private void SetRelatedVehicleParts(List<VectoRunData> runs)
 		{
+			relatedRuns.Clear();
 			for (int i = 0; i < runs.Count; i++)
 			{
 				var relatedRun = new RelatedRun
