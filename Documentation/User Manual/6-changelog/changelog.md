@@ -1,5 +1,14 @@
 #Changelog
 
+**VECTO 3.3.7**
+
+*** Build 1964 (2020-05-18) OFFICIAL RELEASE***
+
+- Bugfixes
+    * [VECTO-1254] - Hashing method does not ignore certain XML attributes
+    * [VECTO-1259] - Mission profile weighting factors for vehicles of group 16 are not correct
+
+
 **VECTO 3.3.6**
 
 ***Build 1916 (2020-03-31) OFFICIAL RELEASE***
