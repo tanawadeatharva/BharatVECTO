@@ -91,9 +91,9 @@ Public Class VectoVTPJob
         Try
             Dim writer As JSONFileWriter = JSONFileWriter.Instance
             if Cfg.DeclMode Then
-                writer.SaveJob(CType(Me, IVTPDeclarationInputDataProvider), _sFilePath)
+                writer.SaveJob(CType(Me, IVTPDeclarationInputDataProvider), _sFilePath, Cfg.DeclMode)
             else
-                writer.SaveJob(CType(Me, IVTPEngineeringInputDataProvider), _sFilePath)
+                writer.SaveJob(CType(Me, IVTPEngineeringInputDataProvider), _sFilePath, Cfg.DeclMode)
             End If
         Catch ex As Exception
             MsgBox("Failed to save Job file: " + ex.Message)
@@ -224,8 +224,13 @@ Public Class VectoVTPJob
     End Get
     End Property
 
+    Public ReadOnly Property Results As IResultsInputData Implements IManufacturerReport.Results
+
     Public ReadOnly Property ComponentDigests As IDictionary(Of VectoComponents,IList(Of String)) Implements IManufacturerReport.ComponentDigests
     Public ReadOnly Property JobDigest As DigestData Implements IManufacturerReport.JobDigest
+    Public ReadOnly Property VehicleLength As Meter Implements IManufacturerReport.VehicleLength
+    Public ReadOnly Property VehicleClass As VehicleClass Implements IManufacturerReport.VehicleClass
+    Public ReadOnly Property VehicleCode As VehicleCode Implements IManufacturerReport.VehicleCode
 
     Public ReadOnly Property DataSource As DataSource Implements IInputDataProvider.DataSource
         Get

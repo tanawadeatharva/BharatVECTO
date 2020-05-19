@@ -2,7 +2,6 @@
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Configuration;
-using TUGraz.VectoCore.Models.SimulationComponent.Data.Engine;
 using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.InputData.Reader.ComponentData
@@ -14,6 +13,11 @@ namespace TUGraz.VectoCore.InputData.Reader.ComponentData
 		public WHRPowerMap(DelaunayMap whrMap)
 		{
 			WHRMap = whrMap;
+		}
+
+		public string Name
+		{
+			get { return WHRMap.Name; }
 		}
 
 		public class Entry

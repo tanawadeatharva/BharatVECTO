@@ -115,7 +115,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 			public virtual FuelType FuelType
 			{
 				get {
-					var value = GetString(XMLNames.Engine_FuelType);
+					var value = GetString(XMLNames.Engine_FuelType).Replace(" ","");
 					if ("LPG".Equals(value, StringComparison.InvariantCultureIgnoreCase)) {
 						return FuelType.LPGPI;
 					}
@@ -261,13 +261,13 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		{
 			get {
 				var retVal = WHRType.None;
-				if (XmlConvert.ToBoolean(GetString("MechanicalOutputICE"))) {
+				if (XmlConvert.ToBoolean(GetString(XMLNames.Engine_WHR_MechanicalOutputICE))) {
 					retVal |= WHRType.MechanicalOutputICE;
 				}
-				if (XmlConvert.ToBoolean(GetString("MechanicalOutputDrivetrain"))) {
+				if (XmlConvert.ToBoolean(GetString(XMLNames.Engine_WHR_MechanicalOutputIDrivetrain))) {
 					retVal |= WHRType.MechanicalOutputDrivetrain;
 				}
-				if (XmlConvert.ToBoolean(GetString("ElectricalOutput"))) {
+				if (XmlConvert.ToBoolean(GetString(XMLNames.Engine_WHR_ElectricalOutput))) {
 					retVal |= WHRType.ElectricalOutput;
 				}
 
@@ -300,9 +300,9 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 					return WHRData ?? (WHRData = ReadWHRData(
 								GetNodes(
 									new[] {
-										XMLNames.Engine_FuelModes_Fuel, XMLNames.Engine_WHRCorrectionFactors,
+										XMLNames.Engine_WHRCorrectionFactors,
 										XMLNames.Engine_WHRCorrectionFactors_Electrical
-									}),
+									}, GetNode(XMLNames.Engine_FuelModes_Fuel)),
 								XMLNames.Engine_FuelConsumptionMap_WHRElPower_Attr)
 							);
 				}
@@ -314,9 +314,9 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 					return WHRData ?? (WHRData = ReadWHRData(
 								GetNodes(
 									new[] {
-										XMLNames.Engine_FuelModes_Fuel, XMLNames.Engine_WHRCorrectionFactors,
+										XMLNames.Engine_WHRCorrectionFactors,
 										XMLNames.Engine_WHRCorrectionFactors_Mechanical
-									}),
+									}, GetNode(XMLNames.Engine_FuelModes_Fuel)),
 								XMLNames.Engine_FuelConsumptionMap_WHRMechPower_Attr));
 				}
 			}
@@ -327,25 +327,26 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 			{
 				var whrPwrNodes = GetNodes(
 						new[] {
-							XMLNames.Engine_FuelModes_Fuel, XMLNames.Engine_FuelConsumptionMap, XMLNames.Engine_FuelConsumptionMap_Entry
-						})
-					.Cast<XmlNode>().All(x => x.Attributes?[fcMapAttr] == null);
-				if (correctionFactorNodes.Count == 0) {
-					if (whrPwrNodes) {
-						Warn("WHR correction factors provided but no {0} power defined - ignoring WHR.", fcMapAttr);
+							XMLNames.Engine_FuelConsumptionMap, XMLNames.Engine_FuelConsumptionMap_Entry
+						}, GetNode(XMLNames.Engine_FuelModes_Fuel))
+					.Cast<XmlNode>().All(x => x.Attributes?[fcMapAttr] != null);
+				if (correctionFactorNodes.Count > 0) {
+					if (!whrPwrNodes) {
+						throw new VectoXMLException("WHR correction factors provided but {0} missing for some entries.", fcMapAttr);
+
 					}
-					return new XMLDeclarationWHRData();
+					//return new XMLDeclarationWHRData();
 				}
 
 				if (correctionFactorNodes.Count > 1) {
-					throw new VectoException("WHRData (correction factors) can only be defined for one fuel!");
+					throw new VectoXMLException("WHRData (correction factors) can only be defined for one fuel!");
 				}
 
 				if (whrPwrNodes) {
 					if (correctionFactorNodes.Count == 0) {
-						Warn("WHR electric power provided but no correction factors found - ignoring WHR.");
+						throw new VectoXMLException("WHR electric power provided but no correction factors found.");
 					}
-					return new XMLDeclarationWHRData();
+					//return new XMLDeclarationWHRData();
 				}
 
 				var fuelNodes = GetNodes(XMLNames.Engine_FuelModes_Fuel);
@@ -465,6 +466,36 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 			}
 
 			#endregion
+		}
+	}
+
+	// ---------------------------------------------------------------------------------------
+
+	public class XMLDeclarationPrimaryVehicleBusEngineDataProviderV01 : XMLDeclarationEngineDataProviderV23
+	{
+
+		public new static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_PRIMARY_BUS_VEHICLE_URI_V01;
+
+		public new const string XSD_TYPE = "EngineDataPIFType";
+
+		public new static readonly string QUALIFIED_XSD_TYPE =
+			XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
+
+		public XMLDeclarationPrimaryVehicleBusEngineDataProviderV01(IXMLDeclarationVehicleData vehicle, XmlNode componentNode,
+			string sourceFile) : base(vehicle, componentNode, sourceFile) { }
+		
+		public override IList<IEngineModeDeclarationInputData> EngineModes
+		{
+			get
+			{
+				return _engineModes ??
+						(_engineModes = new List<IEngineModeDeclarationInputData>() { new XMLSingleFuelEngineMode(BaseNode) });
+			}
+		}
+
+		protected override XNamespace SchemaNamespace
+		{
+			get { return NAMESPACE_URI; }
 		}
 	}
 }

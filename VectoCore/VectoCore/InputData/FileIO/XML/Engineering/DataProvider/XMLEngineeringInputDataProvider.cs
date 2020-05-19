@@ -5,7 +5,6 @@ using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Resources;
 using TUGraz.VectoCore.InputData.FileIO.XML.Common;
-using TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider;
 using TUGraz.VectoCore.InputData.FileIO.XML.Engineering.Interfaces;
 using TUGraz.VectoCore.Utils;
 
@@ -53,6 +52,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering.DataProvider
 		{
 			get { return DriverData ?? (DriverData = Reader.DriverModel); }
 		}
+
+		//public virtual IGearshiftEngineeringInputData GearshiftInputData { get { return DriverInputData.GearshiftInputData; } }
 
 		#endregion
 

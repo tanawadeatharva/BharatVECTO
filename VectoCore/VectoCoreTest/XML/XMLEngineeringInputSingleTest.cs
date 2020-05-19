@@ -40,12 +40,9 @@ using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Resources;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Configuration;
-using TUGraz.VectoCore.InputData.FileIO.XML.Engineering;
-using TUGraz.VectoCore.InputData.Reader;
 using TUGraz.VectoCore.InputData.Reader.ComponentData;
 using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation.Impl;
-using TUGraz.VectoCore.Models.SimulationComponent.Data.Engine;
 using TUGraz.VectoCore.OutputData;
 using TUGraz.VectoCore.OutputData.FileIO;
 using TUGraz.VectoCore.Tests.Utils;
@@ -107,7 +104,7 @@ namespace TUGraz.VectoCore.Tests.XML
 			Assert.AreEqual("560.00", fcMapTable.Rows[0][0]);
 			var fcMap = FuelConsumptionMapReader.Create(fcMapTable);
 			Assert.AreEqual(1256.SI(Unit.SI.Gramm.Per.Hour).Value(), 
-				fcMap.GetFuelConsumption(0.SI<NewtonMeter>(), 560.RPMtoRad()).Value.Value());
+				fcMap.GetFuelConsumption(0.SI<NewtonMeter>(), 560.RPMtoRad(), false).Value.Value());
 
 			var fldTable = engineDataProvider.EngineModes.First().FullLoadCurve;
 			Assert.AreEqual(10, fldTable.Rows.Count);
@@ -435,12 +432,12 @@ namespace TUGraz.VectoCore.Tests.XML
 			Assert.AreEqual(DeclarationData.Gearbox.UpshiftAfterDownshiftDelay.Value(),
 				shiftStrategy.UpshiftAfterDownshiftDelay.Value(), 1e-6);
 
-			Assert.AreEqual(DeclarationData.Gearbox.TorqueReserve, shiftStrategy.TorqueReserve, 1e-6);
+			Assert.AreEqual(DeclarationData.GearboxTCU.TorqueReserve, shiftStrategy.TorqueReserve, 1e-6);
 			Assert.AreEqual(DeclarationData.Gearbox.MinTimeBetweenGearshifts.Value(),
 				shiftStrategy.MinTimeBetweenGearshift.Value(), 1e-6);
-			Assert.AreEqual(DeclarationData.Gearbox.StartSpeed.Value(), shiftStrategy.StartSpeed.Value(), 1e-6);
-			Assert.AreEqual(DeclarationData.Gearbox.StartAcceleration.Value(), shiftStrategy.StartAcceleration.Value(), 1e-6);
-			Assert.AreEqual(DeclarationData.Gearbox.TorqueReserveStart, shiftStrategy.StartTorqueReserve, 1e-6);
+			Assert.AreEqual(DeclarationData.GearboxTCU.StartSpeed.Value(), shiftStrategy.StartSpeed.Value(), 1e-6);
+			Assert.AreEqual(DeclarationData.GearboxTCU.StartAcceleration.Value(), shiftStrategy.StartAcceleration.Value(), 1e-6);
+			Assert.AreEqual(DeclarationData.GearboxTCU.TorqueReserveStart, shiftStrategy.StartTorqueReserve, 1e-6);
 
 			AssertHelper.AreRelativeEqual(Constants.DefaultPowerShiftTime, gearboxData.PowershiftShiftTime);
 
@@ -561,8 +558,8 @@ namespace TUGraz.VectoCore.Tests.XML
 
 			var overspeed = driverDataProvider.OverSpeedData;
 			Assert.IsTrue(overspeed.Enabled);
-			Assert.AreEqual(50, overspeed.MinSpeed.AsKmph, 1e-6);
-			Assert.AreEqual(5, overspeed.OverSpeed.AsKmph, 1e-6);
+			Assert.AreEqual(52, overspeed.MinSpeed.AsKmph, 1e-6);
+			Assert.AreEqual(2.6, overspeed.OverSpeed.AsKmph, 1e-6);
 
 			var driverAcc = driverDataProvider.AccelerationCurve.AccelerationCurve;
 			Assert.AreEqual(2, driverAcc.Rows.Count);
@@ -583,7 +580,7 @@ namespace TUGraz.VectoCore.Tests.XML
 			Assert.AreEqual(0.211, shiftStrategy.StartAcceleration.Value(), 1e-6);
 			Assert.AreEqual(0.212, shiftStrategy.StartTorqueReserve, 1e-6);
 
-			Assert.AreEqual(0.811, gearboxData.PowershiftShiftTime.Value(), 1e-6);
+			//Assert.AreEqual(0.811, gearboxData.PowershiftShiftTime.Value(), 1e-6); // only available for AT gearboxes
 
 			var tcShiftStrategy = inputDataProvider.DriverInputData.GearshiftInputData;
 			
@@ -693,6 +690,7 @@ namespace TUGraz.VectoCore.Tests.XML
 			//angledrivelosses.ReplaceSelf(new XElement(XMLNames.AngleDrive_Efficiency, "0.9124").ToString());
 			aux.InnerXml =
 				new XElement(XMLNames.Auxiliaries_Auxiliary, new XAttribute(XMLNames.Auxiliaries_Auxiliary_ID_Attr, "const"),
+					new XAttribute(XNamespace.Get("http://www.w3.org/2001/XMLSchema-instance") + "type", "AuxiliaryEntryEngineeringType"),
 					new XElement(XMLNames.Auxiliaries_Auxiliary_ConstantAuxLoad, "5000")).ToString();
 
 			//var modified = XmlReader.Create(new StringReader(nav.OuterXml));
@@ -894,6 +892,33 @@ namespace TUGraz.VectoCore.Tests.XML
 			Assert.AreEqual("Generic Eninge", inputDataProvider.JobInputData.Vehicle.Components.EngineInputData.Model);
 			Assert.AreEqual(1.0, inputDataProvider.JobInputData.Vehicle.Components.EngineInputData.EngineModes.First().Fuels.First().WHTCEngineering, 1e-6);
 
+		}
+
+
+		[TestCase]
+		public void TestXMLInputEngineeringVersion1_0_DriverModelParameters()
+		{
+			var inputDataProvider = XMLInputReader.CreateEngineering(EngineeringSampleFile_10_Full);
+
+			Assert.NotNull(inputDataProvider);
+
+			var ecoRollData = inputDataProvider.DriverInputData.EcoRollData;
+			Assert.AreEqual(2.34, ecoRollData.ActivationDelay.Value());
+			Assert.AreEqual(50.56, ecoRollData.MinSpeed.AsKmph);
+			Assert.AreEqual(5.75, ecoRollData.UnderspeedThreshold.AsKmph);
+
+			var pccData = inputDataProvider.DriverInputData.PCCData;
+			Assert.AreEqual(80.76, pccData.PCCEnabledSpeed.AsKmph);
+			Assert.AreEqual(50.43, pccData.MinSpeed.AsKmph);
+			Assert.AreEqual(8.32, pccData.Underspeed.AsKmph);
+			Assert.AreEqual(5.74, pccData.OverspeedUseCase3.AsKmph);
+			Assert.AreEqual(1500.73, pccData.PreviewDistanceUseCase1.Value());
+			Assert.AreEqual(1000.24, pccData.PreviewDistanceUseCase2.Value());
+
+			var essData = inputDataProvider.DriverInputData.EngineStopStartData;
+			Assert.AreEqual(2.01, essData.ActivationDelay.Value());
+			Assert.AreEqual(120.23, essData.MaxEngineOffTimespan.Value());
+			Assert.AreEqual(0.834, essData.UtilityFactor);
 		}
 
 

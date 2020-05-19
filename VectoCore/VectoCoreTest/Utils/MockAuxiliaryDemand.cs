@@ -34,7 +34,6 @@ using System.Linq;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Models.Simulation;
 using TUGraz.VectoCore.Models.Simulation.Data;
-using TUGraz.VectoCore.Models.Simulation.DataBus;
 using TUGraz.VectoCore.Models.SimulationComponent;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.OutputData;
@@ -90,7 +89,7 @@ namespace TUGraz.VectoCore.Tests.Utils
 
 		public Radian RoadGradient { get { return 0.SI<Radian>(); } }
 
-		protected override void DoWriteModalResults(IModalDataContainer container)
+		protected override void DoWriteModalResults(Second time, Second simulationInterval, IModalDataContainer container)
 		{
 			container[ModalResultField.dist] = 0.SI<Meter>();
 			container[ModalResultField.v_targ] = 0.KMPHtoMeterPerSecond();
@@ -118,6 +117,8 @@ namespace TUGraz.VectoCore.Tests.Utils
 		{
 			return new List<DrivingCycleData.DrivingCycleEntry>();
 		}
+
+		public SpeedChangeEntry LastTargetspeedChange { get; set; }
 
 		public void FinishSimulation() {}
 	}

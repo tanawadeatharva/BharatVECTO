@@ -53,6 +53,7 @@ namespace TUGraz.VectoCore.Utils
 				case "VectoInputDeclaration": return XmlDocumentType.DeclarationJobData;
 				case "VectoInputEngineering": return XmlDocumentType.EngineeringJobData;
 				case "VectoComponentEngineering": return XmlDocumentType.EngineeringComponentData;
+				case "VectoOutputPrimaryVehicle": return XmlDocumentType.PrimaryVehicleBusOutputData;
 			}
 
 			return null;
@@ -128,6 +129,16 @@ namespace TUGraz.VectoCore.Utils
 		{
 			switch (unit) {
 				case "m/s²": return GetValueAsUnit(acc.Value(), unit, decimals);
+			}
+
+			throw new NotImplementedException(string.Format("unknown unit '{0}'", unit));
+		}
+
+		public static object[] ValueAsUnit(Meter m, string unit, uint? decimals)
+		{
+			switch (unit) {
+				case "m": return GetValueAsUnit(m.Value(), unit, decimals);
+				case "km": return GetValueAsUnit(m.ConvertToKiloMeter(), unit, decimals);
 			}
 
 			throw new NotImplementedException(string.Format("unknown unit '{0}'", unit));
@@ -264,6 +275,22 @@ namespace TUGraz.VectoCore.Utils
 		public static string GetXsdType(XmlSchemaType schemaInfoSchemaType)
 		{
 			return string.Join(":", schemaInfoSchemaType.QualifiedName.Namespace, schemaInfoSchemaType.QualifiedName.Name);
+		}
+
+		public static double GetVersion(XmlNode node)
+		{
+			const string versionPrefix = "v";
+			var namesp = node.SchemaInfo.SchemaType.QualifiedName.Namespace;
+			return namesp.Split(':').Last(x => x.StartsWith(versionPrefix)).Replace(versionPrefix, string.Empty).ToDouble();
+		}
+
+		public static XElement CreateDummySig(XNamespace di)
+		{
+			return new XElement(di + XMLNames.DI_Signature_Reference,
+								new XElement(di + XMLNames.DI_Signature_Reference_DigestMethod,
+											new XAttribute(XMLNames.DI_Signature_Algorithm_Attr, "null")),
+								new XElement(di + XMLNames.DI_Signature_Reference_DigestValue, "NOT AVAILABLE")
+			);
 		}
 	}
 }

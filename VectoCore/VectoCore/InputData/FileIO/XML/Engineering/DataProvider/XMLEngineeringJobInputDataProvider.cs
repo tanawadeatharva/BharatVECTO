@@ -5,7 +5,6 @@ using System.Xml.Linq;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Resources;
 using TUGraz.VectoCore.InputData.FileIO.XML.Common;
-using TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider;
 using TUGraz.VectoCore.InputData.FileIO.XML.Engineering.Interfaces;
 using TUGraz.VectoCore.Utils;
 
@@ -49,6 +48,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering.DataProvider
 		{
 			get { return _engineOnly ?? (_engineOnly = Reader.CreateEngineOnly); }
 		}
+
+		public string ShiftStrategy { get { return null; } }
 
 		public virtual bool EngineOnlyMode { get; }
 

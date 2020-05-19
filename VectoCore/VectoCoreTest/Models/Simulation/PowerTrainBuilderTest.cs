@@ -80,8 +80,9 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 			var writer = new MockModalDataContainer();
 			var builder = new PowertrainBuilder(writer);
 
-			var powerTrain = builder.Build(runData);
+			var powerTrain = builder.Build(runData) as VehicleContainer;
 
+			Assert.NotNull(powerTrain);
 			Assert.IsInstanceOf<IVehicleContainer>(powerTrain);
 			Assert.AreEqual(componentCount, powerTrain.SimulationComponents().Count);
 
@@ -101,7 +102,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 			if (provider == null) {
 				throw new VectoException("Failed to cast to Declaration InputDataProvider");
 			}
-			var reader = new DeclarationModeVectoRunDataFactory(provider, null);
+			var reader = new DeclarationModeTruckVectoRunDataFactory(provider, null);
 
 			if (!shouldFail) {
 				var runData = reader.NextRun().First();
@@ -109,8 +110,9 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 				var writer = new MockModalDataContainer();
 				var builder = new PowertrainBuilder(writer);
 
-				var powerTrain = builder.Build(runData);
+				var powerTrain = builder.Build(runData) as VehicleContainer;
 
+				Assert.NotNull(powerTrain);
 				Assert.IsInstanceOf<IVehicleContainer>(powerTrain);
 				Assert.AreEqual(componentCount, powerTrain.SimulationComponents().Count);
 

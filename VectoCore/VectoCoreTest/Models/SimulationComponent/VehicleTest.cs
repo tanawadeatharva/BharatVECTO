@@ -107,7 +107,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			var vehicleData = MockSimulationDataFactory.CreateVehicleDataFromFile(VehicleDataFileTruck);
 			var airdragData = MockSimulationDataFactory.CreateAirdragDataFromFile(VehicleDataFileTruck);
 			airdragData.CrossWindCorrectionCurve = new CrosswindCorrectionCdxALookup(6.46.SI<SquareMeter>(),
-				DeclarationDataAdapter.GetDeclarationAirResistanceCurve("TractorSemitrailer",
+				DeclarationDataAdapterHeavyLorry.GetDeclarationAirResistanceCurve("TractorSemitrailer",
 					6.46.SI<SquareMeter>(), height.SI<Meter>()), CrossWindCorrectionMode.DeclarationModeCorrection);
 			var vehicle = new Vehicle(container, vehicleData,airdragData);
 
@@ -131,7 +131,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			var vehicleData = MockSimulationDataFactory.CreateVehicleDataFromFile(VehicleDataFileTruck);
 			var airdragData = MockSimulationDataFactory.CreateAirdragDataFromFile(VehicleDataFileTruck);
 			airdragData.CrossWindCorrectionCurve = new CrosswindCorrectionCdxALookup(6.2985.SI<SquareMeter>(),
-				DeclarationDataAdapter.GetDeclarationAirResistanceCurve("TractorSemitrailer",
+				DeclarationDataAdapterHeavyLorry.GetDeclarationAirResistanceCurve("TractorSemitrailer",
 					6.2985.SI<SquareMeter>(), 3.SI<Meter>()), CrossWindCorrectionMode.DeclarationModeCorrection);
 
 			var vehicle = new Vehicle(container, vehicleData,airdragData);
@@ -147,12 +147,12 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			var dt = 0.5.SI<Second>();
 
 			vehicle.Request(absTime, dt, 0.SI<MeterPerSquareSecond>(), 0.SI<Radian>());
-			vehicle.CommitSimulationStep(writer);
+			vehicle.CommitSimulationStep(absTime, dt, writer);
 
 			Assert.AreEqual(45956.3024, ((SI)writer[ModalResultField.P_air]).Value(), 0.1);
 
 			vehicle.Request(absTime, dt, 1.SI<MeterPerSquareSecond>(), 0.SI<Radian>());
-			vehicle.CommitSimulationStep(writer);
+			vehicle.CommitSimulationStep(absTime, dt, writer);
 			Assert.AreEqual(47448.0989, ((SI)writer[ModalResultField.P_air]).Value(), 0.1);
 		}
 

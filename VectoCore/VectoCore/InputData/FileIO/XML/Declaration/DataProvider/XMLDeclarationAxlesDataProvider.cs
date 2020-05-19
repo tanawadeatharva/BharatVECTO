@@ -64,6 +64,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 			}
 		}
 
+		public XmlNode XMLSource { get { return BaseNode; } }
+
 		#endregion
 
 		#region Implementation of IXMLResource

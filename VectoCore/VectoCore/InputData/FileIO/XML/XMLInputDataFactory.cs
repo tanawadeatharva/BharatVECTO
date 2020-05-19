@@ -21,12 +21,16 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML
 
 		public IInputDataProvider Create(string filename)
 		{
-			return ReadXmlDoc(XmlReader.Create(filename), filename);
+			using (var reader = XmlReader.Create(filename)) {
+				return ReadXmlDoc(reader, filename);
+			}
 		}
 
 		public IInputDataProvider Create(Stream inputData)
 		{
-			return ReadXmlDoc(XmlReader.Create(inputData), null);
+			using (var reader = XmlReader.Create(inputData)) {
+				return ReadXmlDoc(reader, null);
+			}
 		}
 
 		public IInputDataProvider Create(XmlReader inputData)
@@ -36,13 +40,17 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML
 
 		public IEngineeringInputDataProvider CreateEngineering(string filename)
 		{
-			return DoCreateEngineering(XmlReader.Create(filename), filename);
+			using (var reader = XmlReader.Create(filename)) {
+				return DoCreateEngineering(reader, filename);
+			}
 		}
 
 
 		public IEngineeringInputDataProvider CreateEngineering(Stream inputData)
 		{
-			return DoCreateEngineering(XmlReader.Create(inputData), null);
+			using (var reader = XmlReader.Create(inputData)) {
+				return DoCreateEngineering(reader, null);
+			}
 		}
 
 		public IEngineeringInputDataProvider CreateEngineering(XmlReader inputData)
@@ -53,7 +61,9 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML
 
 		public IDeclarationInputDataProvider CreateDeclaration(string filename)
 		{
-			return DoCreateDeclaration(XmlReader.Create(filename), filename);
+			using (var reader = XmlReader.Create(filename)) {
+				return DoCreateDeclaration(reader, filename);
+			}
 		}
 
 		public IDeclarationInputDataProvider CreateDeclaration(XmlReader inputData)
@@ -95,11 +105,15 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML
 				throw new VectoException("unknown xml file! {0}", xmlDoc.DocumentElement.LocalName);
 			}
 
+
+
 			new XMLValidator(xmlDoc, null, XMLValidator.CallBackExceptionOnError).ValidateXML(documentType.Value);
 
-			switch (documentType.Value) {
+			switch (documentType.Value)
+			{
 				case XmlDocumentType.DeclarationJobData: return ReadDeclarationJob(xmlDoc, source);
 				case XmlDocumentType.EngineeringJobData: return ReadEngineeringJob(xmlDoc, source);
+				case XmlDocumentType.PrimaryVehicleBusOutputData: return ReadPrimaryVehicleDeclarationJob(xmlDoc, source);
 				case XmlDocumentType.EngineeringComponentData:
 				case XmlDocumentType.DeclarationComponentData:
 				case XmlDocumentType.ManufacturerReport:
@@ -129,5 +143,20 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML
 				throw new VectoException("Failed to read Declaration job version {0}", e, versionNumber);
 			}
 		}
+
+		private IPrimaryVehicleInformationInputDataProvider ReadPrimaryVehicleDeclarationJob(XmlDocument xmlDoc, string source)
+		{
+			var versionNumber = XMLHelper.GetXsdType(xmlDoc.DocumentElement?.SchemaInfo.SchemaType);
+			try {
+				var input = DeclarationFactory.CreatePrimaryVehicleBusInputProvider(versionNumber, xmlDoc, source);
+				input.Reader = DeclarationFactory.CreatePrimaryVehicleBusInputReader(versionNumber, input, xmlDoc.DocumentElement);
+				return input;
+			}
+			catch (Exception e) {
+				throw new VectoException("Failed to read Declaration job version {0}", e, versionNumber);
+			}
+		}
+
+
 	}
 }

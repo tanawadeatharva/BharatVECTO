@@ -201,6 +201,27 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ApplicationEvents.vb" />
+    <Compile Include="BusAuxiliaries\UI\frmAuxiliaryConfig.Designer.vb">
+      <DependentUpon>frmAuxiliaryConfig.vb</DependentUpon>
+    </Compile>
+    <Compile Include="BusAuxiliaries\UI\frmAuxiliaryConfig.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="BusAuxiliaries\UI\frmCombinedAlternators.Designer.vb">
+      <DependentUpon>frmCombinedAlternators.vb</DependentUpon>
+    </Compile>
+    <Compile Include="BusAuxiliaries\UI\frmCombinedAlternators.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="BusAuxiliaries\UI\frmHVACTool.Designer.vb">
+      <DependentUpon>frmHVACTool.vb</DependentUpon>
+    </Compile>
+    <Compile Include="BusAuxiliaries\UI\frmHVACTool.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="BusAuxiliaries\Util\DeleteCell.vb" />
+    <Compile Include="BusAuxiliaries\Util\DeleteColumn.vb" />
+    <Compile Include="BusAuxiliaries\Util\SIConvert.vb" />
     <Compile Include="GUI\VectoVTPJobForm.Designer.vb">
       <DependentUpon>VectoVTPJobForm.vb</DependentUpon>
     </Compile>
@@ -292,6 +313,8 @@
     <Compile Include="File Browser\FileBrowserFavoritesDialog.vb">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="Input Files\MockComponents.vb" />
+    <Compile Include="Input Files\MockVehicleInputData.vb" />
     <Compile Include="Input Files\VectoEPTPJob.vb" />
     <Compile Include="Input Files\VectoJob.vb" />
     <Compile Include="Input Files\Vehicle.vb" />
@@ -308,7 +331,6 @@
     <Compile Include="GUI\VectoJobForm.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="OutputData\JSONFileWriter.vb" />
     <Compile Include="VECTO_Global.vb" />
     <Compile Include="VECTO_Types.vb" />
     <Compile Include="GUI\GUI_Subs.vb" />
@@ -356,6 +378,15 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="BusAuxiliaries\UI\frmAuxiliaryConfig.resx">
+      <DependentUpon>frmAuxiliaryConfig.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="BusAuxiliaries\UI\frmCombinedAlternators.resx">
+      <DependentUpon>frmCombinedAlternators.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="BusAuxiliaries\UI\frmHVACTool.resx">
+      <DependentUpon>frmHVACTool.vb</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="File Browser\FileBrowserDialog.resx">
       <DependentUpon>FileBrowserDialog.vb</DependentUpon>
       <SubType>Designer</SubType>
@@ -520,20 +551,6 @@
     <WCFMetadata Include="Service References\" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\VectoCommon\AdvancedAuxiliaryInterfaces\AdvancedAuxiliaryInterfaces.vbproj">
-      <Project>{b4b9bd2f-fd8f-4bb8-82fa-e2154d2c7fbd}</Project>
-      <Name>AdvancedAuxiliaryInterfaces</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\VectoCommon\VectoCommon\VectoCommon.csproj">
-      <Project>{79a066ad-69a9-4223-90f6-6ed5d2d084f4}</Project>
-      <Name>VectoCommon</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\VectoCore\VectoCore\VectoCore.csproj">
-      <Project>{cd36938a-add9-4c65-96da-b397cdeea90a}</Project>
-      <Name>VectoCore</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
     <Content Include="Libraries\vectolic.dll" />
     <None Include="Resources\Up.bmp" />
     <None Include="Resources\up-directory.png" />
@@ -548,6 +565,7 @@
     <EmbeddedResource Include="Resources\6x2r.png" />
     <EmbeddedResource Include="Resources\6x2rt.png" />
     <EmbeddedResource Include="Resources\6x2tt.png" />
+    <None Include="Resources\Delete.png" />
     <Content Include="Resources\F_ENG.ico" />
     <Content Include="Resources\F_GBX.ico" />
     <Content Include="Resources\F_VECTO.ico" />
@@ -559,7 +577,16 @@
     <Content Include="Resources\up.ico" />
     <Content Include="Resources\up.png" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <ProjectReference Include="..\VectoCommon\VectoCommon\VectoCommon.csproj">
+      <Project>{79A066AD-69A9-4223-90F6-6ED5D2D084F4}</Project>
+      <Name>VectoCommon</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\VectoCore\VectoCore\VectoCore.csproj">
+      <Project>{CD36938A-ADD9-4C65-96DA-B397CDEEA90A}</Project>
+      <Name>VectoCore</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.VisualBasic.targets" />
   <PropertyGroup>
     <PostBuildEvent>

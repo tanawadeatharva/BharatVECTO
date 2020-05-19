@@ -41,7 +41,6 @@ using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Resources;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.InputData.FileIO.XML.Common;
-using TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider;
 using TUGraz.VectoCore.InputData.FileIO.XML.Engineering.Interfaces;
 using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Utils;
@@ -314,6 +313,24 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering.DataProvider
 			return GetNodes(XMLNames.Engine_FuelModes)
 							.Cast<XmlNode>().Select(x => new XMLDualFuelEngineMode(x, DataSource)).Cast<IEngineModeEngineeringInputData>().ToList();
 			
+		}
+
+		public override WHRType WHRType
+		{
+			get {
+				var retVal = WHRType.None;
+				if (XmlConvert.ToBoolean(GetString("MechanicalOutputICE"))) {
+					retVal |= WHRType.MechanicalOutputICE;
+				}
+				if (XmlConvert.ToBoolean(GetString("MechanicalOutputDrivetrain"))) {
+					retVal |= WHRType.MechanicalOutputDrivetrain;
+				}
+				if (XmlConvert.ToBoolean(GetString("ElectricalOutput"))) {
+					retVal |= WHRType.ElectricalOutput;
+				}
+
+				return retVal;
+			}
 		}
 
 		#endregion

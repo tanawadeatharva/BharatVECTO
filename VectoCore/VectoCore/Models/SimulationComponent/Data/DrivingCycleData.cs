@@ -34,6 +34,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Diagnostics;
 using System.Linq;
+using Newtonsoft.Json;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 
@@ -72,6 +73,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 	{
 		internal DrivingCycleData() {}
 
+		[JsonIgnore]
 		public List<DrivingCycleEntry> Entries { get; internal set; }
 
 		public string Name { get; internal set; }
@@ -171,12 +173,17 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 				get { return (Math.Tan(RoadGradient.Value()) * 100).SI<Scalar>(); }
 			}
 
-			public KilogramPerSecond Fuelconsumption;
+			public Dictionary<FuelType, KilogramPerSecond> VTPFuelconsumption;
 
 			/// <summary>
 			/// relative altitude of the driving cycle over distance
 			/// </summary>
 			public Meter Altitude;
+
+			/// <summary>
+			/// this section of the cycle is considered to be highway driving (used for PCC atm)
+			/// </summary>
+			public bool Highway;
 
 			/// <summary>
 			/// Required for distance-based cycles. Not used in time based cycles. "stop" defines the time the vehicle spends in stop phases.
@@ -250,6 +257,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 			public PerSecond WheelSpeedLeft;
 
 			public PerSecond WheelSpeedRight;
+
+			public bool VTPPSCompressorActive;
 
 		}
 	}

@@ -33,7 +33,7 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
-using System.Net.NetworkInformation;
+using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Utils;
 
@@ -41,7 +41,17 @@ namespace TUGraz.VectoCore.Models.Declaration
 {
 	public enum WeightingGroup
 	{
-		Group4UD = 1,
+		GroupML2r = 1,
+		GroupML2van,
+		GroupML3r,
+		GroupML3van,
+		GroupML4r,
+		GroupML4van,
+		Group1s,
+		Group1,
+		Group2,
+		Group3,
+        Group4UD,
 		Group4RD,
 		Group4LH,
 		Group5RD,
@@ -50,6 +60,11 @@ namespace TUGraz.VectoCore.Models.Declaration
 		Group9LH,
 		Group10RD,
 		Group10LH,
+
+		Group11,
+		Group12,
+		Group16,
+
 		Unknown
 	}
 

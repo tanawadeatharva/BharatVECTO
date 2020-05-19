@@ -3,7 +3,7 @@ The FC map is used to interpolate the base fuel consumption before corrections 
 
 
 - Filetype: .vmap
-- Header: **engine speed [rpm], torque [Nm], fuel consumption [g/h]**, *whr power \[W\]* (required only if an electric WHR system is used)
+- Header: **engine speed [rpm], torque [Nm], fuel consumption [g/h]**, *whr power electrical \[W\]*, *whr power mechanical \[W\]* (required only if an electric or mechanical WHR system is used)
 - Requires at least 3 data entries
 - The map must cover the full engine range between full load and motoring curve.
 

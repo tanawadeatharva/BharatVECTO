@@ -1,5 +1,7 @@
-﻿Imports TUGraz.VectoCommon.Utils
-Imports VectoAuxiliaries.Electrics
+﻿
+Imports TUGraz.VectoCommon.Utils
+Imports TUGraz.VectoCore.Models.BusAuxiliaries.Interfaces
+Imports TUGraz.VectoCore.Models.BusAuxiliaries.Interfaces.DownstreamModules.Electrics
 
 Namespace Mocks
 
@@ -14,23 +16,24 @@ Namespace Mocks
 			failing = isFailing
 		End Sub
 
-		Public Function Initialise() As Boolean Implements IAlternatorMap.Initialise
-			If failing Then
-				Throw New ArgumentException
-			Else
-				Return True
-			End If
+
+		Public Function GetEfficiency(rpm1 As PerSecond, amps1 As Ampere) As double Implements IAlternatorMap.GetEfficiency
+			Return 0.0
 		End Function
 
-		Public Function GetEfficiency(rpm1 As Double, amps1 As Ampere) As AlternatorMapValues Implements IAlternatorMap.GetEfficiency
-			Return New AlternatorMapValues()
-		End Function
+        Public ReadOnly Property Technologies As IList(Of String) Implements IAlternatorMap.Technologies
+        get
+                Return New List(Of string)
+        End Get
+        End Property
 
+        public ReadOnly property Source As String Implements IAlternatorMap.Source
+        get
+            Return ""
+                End Get
+        End Property
 
-		Public Event AuxiliaryEvent(ByRef sender As Object, message As String, messageType As VectoAuxiliaries.AdvancedAuxiliaryMessageType) Implements VectoAuxiliaries.IAuxiliaryEvent.AuxiliaryEvent
-
-
-
+		'Public Event IAuxiliaryEvent_AuxiliaryEvent As AuxiliaryEventEventHandler Implements IAuxiliaryEvent.AuxiliaryEvent
 	End Class
 
 End Namespace

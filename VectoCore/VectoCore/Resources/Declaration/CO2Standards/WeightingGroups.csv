@@ -1,4 +1,24 @@
-﻿Vehicle Group , Cabin Type , Engine Rated Power Min [kw] , Engine Rated Power Max [kW] , Weighting Group
+Vehicle Group , Cabin Type , Engine Rated Power Min [kw] , Engine Rated Power Max [kW] , Weighting Group
+ML2r          , DayCab     , 0                           , 999999                      , ML2r
+ML2r          , SleeperCab , 0                           , 999999                      , ML2r
+ML2van        , DayCab     , 0                           , 999999                      , ML2van
+ML2van        , SleeperCab , 0                           , 999999                      , ML2van
+ML3r          , DayCab     , 0                           , 999999                      , ML3r
+ML3r          , SleeperCab , 0                           , 999999                      , ML3r
+ML3van        , DayCab     , 0                           , 999999                      , ML3van
+ML3van        , SleeperCab , 0                           , 999999                      , ML3van
+ML4r          , DayCab     , 0                           , 999999                      , ML4r
+ML4r          , SleeperCab , 0                           , 999999                      , ML4r
+ML4van        , DayCab     , 0                           , 999999                      , ML4van
+ML4van        , SleeperCab , 0                           , 999999                      , ML4van
+1s            , DayCab     , 0                           , 999999                      , 1s
+1s            , SleeperCab , 0                           , 999999                      , 1s
+1             , DayCab     , 0                           , 999999                      , 1
+1             , SleeperCab , 0                           , 999999                      , 1
+2             , DayCab     , 0                           , 999999                      , 2
+2             , SleeperCab , 0                           , 999999                      , 2
+3             , DayCab     , 0                           , 999999                      , 3
+3             , SleeperCab , 0                           , 999999                      , 3
 4             , DayCab     , 0                           , 170                         , 4-UD
 4             , SleeperCab , 0                           , 170                         , 4-UD
 4             , DayCab     , 170                         , 999999                      , 4-RD
@@ -11,3 +31,9 @@
 9             , SleeperCab , 0                           , 999999                      , 9-LH
 10            , DayCab     , 0                           , 999999                      , 10-RD
 10            , SleeperCab , 0                           , 999999                      , 10-LH
+11            , DayCab     , 0                           , 999999                      , 11
+11            , SleeperCab , 0                           , 999999                      , 11
+12            , DayCab     , 0                           , 999999                      , 12
+12            , SleeperCab , 0                           , 999999                      , 12
+16            , DayCab     , 0                           , 999999                      , 16
+16            , SleeperCab , 0                           , 999999                      , 16

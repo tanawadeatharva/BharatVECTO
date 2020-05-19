@@ -2,7 +2,7 @@
 
 
 
-![](pics/GBX-Editor.PNG)
+![](pics/GearboxForm.png)
 
 
 ###Description

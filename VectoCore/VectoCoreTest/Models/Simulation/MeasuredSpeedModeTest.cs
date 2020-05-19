@@ -38,7 +38,6 @@ using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.InputData.FileIO.JSON;
-using TUGraz.VectoCore.InputData.Reader;
 using TUGraz.VectoCore.InputData.Reader.ComponentData;
 using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation.Data;
@@ -239,8 +238,8 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 				VehicleData =
 					new VehicleData {
 						VehicleCategory = VehicleCategory.RigidTruck,
-						GrossVehicleWeight = 12000.SI<Kilogram>(),
-						CurbWeight = 3400.SI<Kilogram>(),
+						GrossVehicleMass = 12000.SI<Kilogram>(),
+						CurbMass = 3400.SI<Kilogram>(),
 						DynamicTyreRadius = 0.5.SI<Meter>(),
 						AxleData =
 							new List<Axle> {

@@ -30,19 +30,19 @@
 */
 
 using System;
-using System.IO;
+using System.Linq;
 using System.Xml;
 using System.Xml.Linq;
-using System.Xml.Schema;
-using System.Xml.XPath;
-using TUGraz.VectoCommon.Exceptions;
+using Castle.Components.DictionaryAdapter.Xml;
 using TUGraz.VectoCommon.InputData;
+using TUGraz.VectoCommon.Models;
+using TUGraz.VectoCommon.Resources;
+using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.InputData.FileIO.XML.Common;
-using TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider;
 using TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Interfaces;
 using TUGraz.VectoCore.Utils;
 using TUGraz.VectoHashing;
-using XmlDocumentType = TUGraz.VectoCore.Utils.XmlDocumentType;
+using XmlDocumentType = System.Xml.XmlDocumentType;
 
 namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration
 {
@@ -91,6 +91,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration
 			get { return JobData ?? (JobData = Reader.JobData); }
 		}
 
+		public virtual IPrimaryVehicleInformationInputDataProvider PrimaryVehicleData { get { return null; } }
+
 
 		public virtual XElement XMLHash { get; private set; }
 	}
@@ -107,6 +109,121 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration
 
 		public XMLDeclarationInputDataProviderV20(XmlDocument xmlDoc, string fileName) : base(xmlDoc, fileName) { }
 
+
+	}
+
+
+	// ---------------------------------------------------------------------------------------
+
+	public class XMLPrimaryVehicleBusInputDataV01 : AbstractXMLResource, IXMLPrimaryVehicleBusInputData
+	{
+		public static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_PRIMARY_BUS_VEHICLE_NAMESPACE;
+
+		public const string XSD_TYPE = "PrimaryVehicleHeavyBusType";
+
+		public static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
+		
+		protected readonly XmlDocument Document;
+		protected IDeclarationJobInputData JobData;
+
+		private IVehicleDeclarationInputData _vehicle;
+		private IApplicationInformation _applicationInformation;
+		private IResultsInputData _resultsInputData;
+		
+
+		public XMLPrimaryVehicleBusInputDataV01(XmlDocument xmlDoc, string fileName) : base(xmlDoc, fileName)
+		{
+			Document = xmlDoc;
+			SourceType = DataSourceType.XMLFile;
+
+			var h = VectoHash.Load(xmlDoc);
+			XMLHash = h.ComputeXmlHash();
+		}
+
+
+		#region IPrimaryVehicleInputDataProvider interface
+
+		public IVehicleDeclarationInputData Vehicle
+		{
+			get { return _vehicle ?? (_vehicle = Reader.JobData.Vehicle); }
+		}
+
+		public DigestData PrimaryVehicleInputDataHash
+		{
+			get { return Reader.GetDigestData(GetNode("InputDataSignature")); }
+		}
+
+		public DigestData ManufacturerRecordHash
+		{
+			get { return Reader.GetDigestData(GetNode("ManufacturerRecordSignature")); }
+		}
+
+		public IApplicationInformation ApplicationInformation
+		{
+			get { return _applicationInformation ?? (_applicationInformation = Reader.ApplicationInformation); }
+		}
+
+		public IResult GetResult(VehicleClass vehicleClass, MissionType mission, string fuelMode, Kilogram payload)
+		{
+			return ResultsInputData.Results.FirstOrDefault(
+				x => x.VehicleGroup == vehicleClass &&
+					(x.SimulationParameter.Payload - payload).IsEqual(0, 1) && x.Mission == mission &&
+					x.SimulationParameter.FuelMode.Equals(fuelMode, StringComparison.InvariantCultureIgnoreCase));
+		}
+
+		public XElement XMLHash { get; }
+
+		public IResultsInputData ResultsInputData
+		{
+			get { return _resultsInputData ?? (_resultsInputData = Reader.ResultsInputData); }
+		}
+
+		#endregion
+
+
+
+		#region IXMLPrimaryVehicleBusInputData interface 
+
+		public IXMLDeclarationPrimaryVehicleBusInputDataReader Reader { protected get; set; }
+
+		public XmlNode ResultsNode
+		{
+			get { return GetNode(XMLNames.Report_Results); }
+		}
+
+		public XmlNode ApplicationInformationNode
+		{
+			get { return GetNode(XMLNames.Tag_ApplicationInformation); }
+		}
+
+		#endregion
+
+
+		#region AbstractXMLResource class
+
+		protected override XNamespace SchemaNamespace
+		{
+			get { return NAMESPACE_URI; }
+		}
+
+		public override DataSource DataSource
+		{
+			get { return new DataSource { SourceFile = SourceFile, SourceVersion = "", SourceType = SourceType }; }
+		}
+
+		protected override DataSourceType SourceType { get; }
+
+		#endregion
+
+		public virtual IDeclarationJobInputData JobInputData
+		{
+			get { return JobData ?? (JobData = Reader.JobData); }
+		}
 		
 	}
+
+
+
+
+
 }

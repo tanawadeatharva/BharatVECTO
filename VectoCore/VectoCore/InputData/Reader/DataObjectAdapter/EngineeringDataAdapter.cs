@@ -32,17 +32,22 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using TUGraz.VectoCommon.BusAuxiliaries;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.InputData.Reader.ComponentData;
+using TUGraz.VectoCore.InputData.Reader.ShiftStrategy;
 using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation.Data;
+using TUGraz.VectoCore.Models.SimulationComponent;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Engine;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox;
+using TUGraz.VectoCore.Utils;
+using TUGraz.VectoCore.Models.SimulationComponent.Impl;
 
 namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 {
@@ -55,10 +60,10 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			}
 			var retVal = SetCommonVehicleData(data);
 			retVal.AxleConfiguration = data.AxleConfiguration;
-			retVal.BodyAndTrailerWeight = data.CurbMassExtra;
+			retVal.BodyAndTrailerMass = data.CurbMassExtra;
 
 			//retVal.CurbWeight += data.CurbMassExtra;
-			retVal.TrailerGrossVehicleWeight = 0.SI<Kilogram>();
+			retVal.TrailerGrossVehicleMass = 0.SI<Kilogram>();
 			retVal.Loading = data.Loading;
 			retVal.DynamicTyreRadius = data.DynamicTyreRadius;
 			retVal.ADAS = CreateADAS(data.ADAS);
@@ -73,6 +78,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 					RollResistanceCoefficient = axle.Tyre.RollResistanceCoefficient,
 					AxleWeightShare = axle.AxleWeightShare,
 					TyreTestLoad = axle.Tyre.TyreTestLoad,
+					FuelEfficiencyClass = axle.Tyre.FuelEfficiencyClass,
 					AxleType = axle.AxleType,
 
 					//Wheels = axle.WheelsStr
@@ -89,9 +95,9 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 					PredictiveCruiseControl = PredictiveCruiseControlType.None
 				}: 
 				new VehicleData.ADASData {
-				EngineStopStart = adas.EngineStopStart,
-				EcoRoll = adas.EcoRoll,
-				PredictiveCruiseControl = adas.PredictiveCruiseControl
+					EngineStopStart = adas.EngineStopStart,
+					EcoRoll = adas.EcoRoll,
+					PredictiveCruiseControl = adas.PredictiveCruiseControl
 			};
 		}
 
@@ -122,14 +128,16 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 					break;
 				case CrossWindCorrectionMode.DeclarationModeCorrection:
 					var airDragArea = airdragData.AirDragArea ??
-									DeclarationData.Segments.LookupCdA(
+									DeclarationData.TruckSegments.LookupCdA(
 										data.VehicleCategory, data.AxleConfiguration, data.GrossVehicleMassRating, false);
-					var height = data.Height ?? DeclarationData.Segments.LookupHeight(
-									data.VehicleCategory, data.AxleConfiguration,
-									data.GrossVehicleMassRating, false);
+					var height = data.Height ?? (data.VehicleCategory.IsLorry()
+									? DeclarationData.TruckSegments.LookupHeight(
+										data.VehicleCategory, data.AxleConfiguration,
+										data.GrossVehicleMassRating, false)
+									: 4.SI<Meter>());
 					retVal.CrossWindCorrectionCurve = new CrosswindCorrectionCdxALookup(
 						airDragArea,
-						DeclarationDataAdapter.GetDeclarationAirResistanceCurve(
+						DeclarationDataAdapterHeavyLorry.GetDeclarationAirResistanceCurve(
 							GetAirdragParameterSet(
 								data.VehicleCategory, data.AxleConfiguration, data.Components.AxleWheels.AxlesEngineering.Count), airDragArea,
 							height),
@@ -144,11 +152,14 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 
 		private string GetAirdragParameterSet(VehicleCategory vehicleCategory, AxleConfiguration axles, int numAxles)
 		{
+			//TODO: check if is i
 			switch (vehicleCategory) {
+				case VehicleCategory.Van:
+					return "MediumLorriesVan";
 				case VehicleCategory.RigidTruck: return numAxles > axles.NumAxles() ? "RigidTrailer" : "RigidSolo";
 				case VehicleCategory.Tractor: return "TractorSemitrailer";
 				case VehicleCategory.CityBus:
-				case VehicleCategory.InterurbanBus:
+				//case VehicleCategory.InterurbanBus:
 				case VehicleCategory.Coach: return "CoachBus";
 				default: throw new ArgumentOutOfRangeException("vehicleCategory", vehicleCategory, null);
 			}
@@ -201,6 +212,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 
 			retVal.FullLoadCurves = fullLoadCurves;
 
+				
 			retVal.WHRType = engine.WHRType;
 			if ((retVal.WHRType & WHRType.ElectricalOutput) != 0) {
 				retVal.ElectricalWHR = CreateWHRData(
@@ -258,16 +270,33 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 		}
 
 
-		internal GearboxData CreateGearboxData(
-			IGearboxEngineeringInputData gearbox, CombustionEngineData engineData, IGearshiftEngineeringInputData gearshiftData,
-			double axlegearRatio, Meter dynamicTyreRadius, VehicleCategory vehicleCategory,
-			ITorqueConverterEngineeringInputData torqueConverter)
+		internal GearboxData CreateGearboxData(IEngineeringInputDataProvider inputData, VectoRunData runData, IShiftPolygonCalculator shiftPolygonCalc)
+			//IGearboxEngineeringInputData gearbox, CombustionEngineData engineData, IGearshiftEngineeringInputData gearshiftData,
+			//double axlegearRatio, Meter dynamicTyreRadius, VehicleCategory vehicleCategory,
+			//ITorqueConverterEngineeringInputData torqueConverter, IShiftPolygonCalculator shiftPolygonCalc, IAdvancedDriverAssistantSystemDeclarationInputData adas)
 		{
+			var vehicle = inputData.JobInputData.Vehicle;
+			var gearbox = vehicle.Components.GearboxInputData;
+			var torqueConverter = vehicle.Components.TorqueConverterInputData;
+
+			var adas = vehicle.ADAS;
+			var gearshiftData = inputData.DriverInputData.GearshiftInputData;
+
+			var engineData = runData.EngineData;
+			var axlegearRatio = runData.AxleGearData.AxleGear.Ratio;
+			var dynamicTyreRadius = runData.VehicleData.DynamicTyreRadius;
+			var vehicleCategory = runData.VehicleData.VehicleCategory;
+
 			if (gearbox.SavedInDeclarationMode) {
 				WarnEngineeringMode("GearboxData");
 			}
 
 			var retVal = SetCommonGearboxData(gearbox);
+
+			if (adas != null && adas.EcoRoll != EcoRollType.None && retVal.Type.AutomaticTransmission() && !adas.ATEcoRollReleaseLockupClutch.HasValue) {
+				throw new VectoException("Parameter ATEcoRollReleaseLockupClutch required for AT gearbox");
+			}
+			retVal.ATEcoRollReleaseLockupClutch = adas != null && adas.EcoRoll != EcoRollType.None && retVal.Type.AutomaticTransmission() ? adas.ATEcoRollReleaseLockupClutch.Value : false;
 
 			//var gears = gearbox.Gears;
 			if (gearbox.Gears.Count < 2) {
@@ -289,14 +318,19 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			}
 			for (uint i = 0; i < gearbox.Gears.Count; i++) {
 				var gear = gearbox.Gears[(int)i];
-				var lossMap = CreateGearLossMap(gear, i, true);
+				var lossMap = CreateGearLossMap(gear, i, true, VehicleCategory.Unknown);
 
 				var shiftPolygon = gear.ShiftPolygon != null && gear.ShiftPolygon.SourceType != DataSourceType.Missing
 					? ShiftPolygonReader.Create(gear.ShiftPolygon)
-					: DeclarationData.Gearbox.ComputeShiftPolygon(
-						gearbox.Type, (int)i, engineData.FullLoadCurves[i + 1], gearbox.Gears,
-						engineData,
-						axlegearRatio, dynamicTyreRadius);
+					: shiftPolygonCalc != null
+						? shiftPolygonCalc.ComputeDeclarationShiftPolygon(
+							gearbox.Type, (int)i, engineData.FullLoadCurves[i + 1], gearbox.Gears,
+							engineData,
+							axlegearRatio, dynamicTyreRadius)
+						: DeclarationData.Gearbox.ComputeShiftPolygon(
+							gearbox.Type, (int)i, engineData.FullLoadCurves[i + 1], gearbox.Gears,
+							engineData,
+							axlegearRatio, dynamicTyreRadius);
 				var gearData = new GearData {
 					ShiftPolygon = shiftPolygon,
 					MaxSpeed = gear.MaxInputSpeed,
@@ -322,7 +356,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			return retVal;
 		}
 
-		private static void CreateATGearData(
+		protected virtual void CreateATGearData(
 			IGearboxEngineeringInputData gearbox, uint i, GearData gearData,
 			ShiftPolygon tcShiftPolygon, double gearDifferenceRatio, Dictionary<uint, GearData> gears,
 			VehicleCategory vehicleCategory)
@@ -469,7 +503,15 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 					MinSpeed = driver.EcoRollData?.MinSpeed ?? DeclarationData.Driver.EcoRoll.MinSpeed,
 					ActivationPhaseDuration = driver.EcoRollData?.ActivationDelay ?? DeclarationData.Driver.EcoRoll.ActivationDelay,
 					AccelerationLowerLimit = DeclarationData.Driver.EcoRoll.AccelerationLowerLimit,
-					AccelerationUpperLimit = 0.15.SI<MeterPerSquareSecond>(), // DeclarationData.Driver.EcoRoll.AccelerationUpperLimit,
+					AccelerationUpperLimit = driver.EcoRollData?.AccelerationUpperLimit ?? DeclarationData.Driver.EcoRoll.AccelerationUpperLimit,
+				},
+				PCC = new DriverData.PCCData() {
+					PCCEnableSpeed = driver.PCCData?.PCCEnabledSpeed ?? DeclarationData.Driver.PCC.PCCEnableSpeed,
+					MinSpeed = driver.PCCData?.MinSpeed ?? DeclarationData.Driver.PCC.MinSpeed,
+					PreviewDistanceUseCase1 = driver.PCCData?.PreviewDistanceUseCase1 ?? DeclarationData.Driver.PCC.PreviewDistanceUseCase1,
+					PreviewDistanceUseCase2 = driver.PCCData?.PreviewDistanceUseCase2 ?? DeclarationData.Driver.PCC.PreviewDistanceUseCase2,
+					UnderSpeed = driver.PCCData?.Underspeed ?? DeclarationData.Driver.PCC.Underspeed,
+					OverspeedUseCase3 = driver.PCCData?.OverspeedUseCase3 ?? DeclarationData.Driver.PCC.OverspeedUseCase3
 				}
 			};
 			return retVal;
@@ -497,13 +539,82 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			return null;
 		}
 
-		public AdvancedAuxData CreateAdvancedAuxData(IAuxiliariesEngineeringInputData auxInputData)
+		public IAuxiliaryConfig CreateAdvancedAuxData(IAuxiliariesEngineeringInputData auxInputData)
 		{
-			return new AdvancedAuxData() {
-				AdvancedAuxiliaryFilePath = auxInputData.AdvancedAuxiliaryFilePath,
-				AuxiliaryAssembly = auxInputData.AuxiliaryAssembly,
-				AuxiliaryVersion = auxInputData.AuxiliaryVersion
+			return null;
+		}
+
+		public ShiftStrategyParameters CreateGearshiftData(GearboxType gbxType, IGearshiftEngineeringInputData gsInputData, double axleRatio, PerSecond engineIdlingSpeed)
+		{
+			if (gsInputData == null) {
+				return null;
+			}
+
+			var retVal = new ShiftStrategyParameters {
+				StartVelocity = gsInputData.StartSpeed ?? DeclarationData.GearboxTCU.StartSpeed,
+				StartAcceleration = gsInputData.StartAcceleration ?? DeclarationData.GearboxTCU.StartAcceleration,
+				GearResidenceTime = gsInputData.GearResidenceTime ?? DeclarationData.GearboxTCU.GearResidenceTime,
+				DnT99L_highMin1 = gsInputData.DnT99LHMin1 ?? DeclarationData.GearboxTCU.DnT99L_highMin1,
+				DnT99L_highMin2 = gsInputData.DnT99LHMin2 ?? DeclarationData.GearboxTCU.DnT99L_highMin2,
+				AllowedGearRangeUp = gsInputData.AllowedGearRangeUp ?? DeclarationData.GearboxTCU.AllowedGearRangeUp,
+				AllowedGearRangeDown = gsInputData.AllowedGearRangeDown ?? DeclarationData.GearboxTCU.AllowedGearRangeDown,
+				LookBackInterval = gsInputData.LookBackInterval ?? DeclarationData.GearboxTCU.LookBackInterval,
+				DriverAccelerationLookBackInterval = gsInputData.DriverAccelerationLookBackInterval ?? DeclarationData.GearboxTCU.DriverAccelerationLookBackInterval,
+				DriverAccelerationThresholdLow = gsInputData.DriverAccelerationThresholdLow ?? DeclarationData.GearboxTCU.DriverAccelerationThresholdLow,
+				AverageCardanPowerThresholdPropulsion = gsInputData.AvgCardanPowerThresholdPropulsion ??
+														DeclarationData.GearboxTCU.AverageCardanPowerThresholdPropulsion,
+				CurrentCardanPowerThresholdPropulsion = gsInputData.CurrCardanPowerThresholdPropulsion ??
+														DeclarationData.GearboxTCU.CurrentCardanPowerThresholdPropulsion,
+				TargetSpeedDeviationFactor = gsInputData.TargetSpeedDeviationFactor ?? DeclarationData.GearboxTCU.TargetSpeedDeviationFactor,
+				EngineSpeedHighDriveOffFactor = gsInputData.EngineSpeedHighDriveOffFactor ?? DeclarationData.GearboxTCU.EngineSpeedHighDriveOffFactor,
+				AccelerationReserveLookup = AccelerationReserveLookupReader.Create(gsInputData.AccelerationReserveLookup) ??
+											AccelerationReserveLookupReader.ReadFromStream(
+												RessourceHelper.ReadStream(
+													DeclarationData.DeclarationDataResourcePrefix + ".GearshiftParameters.AccelerationReserveLookup.csv")),
+				ShareTorque99L = ShareTorque99lLookupReader.Create(gsInputData.ShareTorque99L) ??
+								ShareTorque99lLookupReader.ReadFromStream(
+									RessourceHelper.ReadStream(
+										DeclarationData.DeclarationDataResourcePrefix + ".GearshiftParameters.ShareTq99L.csv")
+								),
+				PredictionDurationLookup = PredictionDurationLookupReader.Create(gsInputData.PredictionDurationLookup) ??
+											PredictionDurationLookupReader.ReadFromStream(
+												RessourceHelper.ReadStream(
+													DeclarationData.DeclarationDataResourcePrefix + ".GearshiftParameters.PredictionTimeLookup.csv")
+											),
+				ShareIdleLow = ShareIdleLowReader.Create(gsInputData.ShareIdleLow) ?? ShareIdleLowReader.ReadFromStream(
+									RessourceHelper.ReadStream(
+										DeclarationData.DeclarationDataResourcePrefix + ".GearshiftParameters.ShareIdleLow.csv")
+								),
+				ShareEngineHigh = EngineSpeedHighLookupReader.Create(gsInputData.ShareEngineHigh) ??
+								EngineSpeedHighLookupReader.ReadFromStream(
+									RessourceHelper.ReadStream(
+										DeclarationData.DeclarationDataResourcePrefix + ".GearshiftParameters.ShareEngineSpeedHigh.csv")
+								),
+				//---------------
+				RatingFactorCurrentGear = gsInputData.RatingFactorCurrentGear ?? (gbxType.AutomaticTransmission()
+											? DeclarationData.GearboxTCU.RatingFactorCurrentGearAT
+											: DeclarationData.GearboxTCU.RatingFactorCurrentGear),
+
+				RatioEarlyUpshiftFC = (gsInputData.RatioEarlyUpshiftFC ?? DeclarationData.GearboxTCU.RatioEarlyUpshiftFC) / axleRatio,
+				RatioEarlyDownshiftFC = (gsInputData.RatioEarlyDownshiftFC ?? DeclarationData.GearboxTCU.RatioEarlyDownshiftFC) / axleRatio,
+				AllowedGearRangeFC = gsInputData.AllowedGearRangeFC ?? (gbxType.AutomaticTransmission() ? DeclarationData.GearboxTCU.AllowedGearRangeFCAT : DeclarationData.GearboxTCU.AllowedGearRangeFCAMT),
+				VelocityDropFactor = gsInputData.VeloictyDropFactor ?? DeclarationData.GearboxTCU.VelocityDropFactor,
+				AccelerationFactor = gsInputData.AccelerationFactor ?? DeclarationData.GearboxTCU.AccelerationFactor,
+				MinEngineSpeedPostUpshift = gsInputData.MinEngineSpeedPostUpshift ?? DeclarationData.GearboxTCU.MinEngineSpeedPostUpshift,
+				ATLookAheadTime = gsInputData.ATLookAheadTime ?? DeclarationData.GearboxTCU.ATLookAheadTime,
+
+				LoadStageThresoldsDown = gsInputData.LoadStageThresholdsDown?.ToArray() ?? DeclarationData.GearboxTCU.LoadStageThresoldsDown,
+				LoadStageThresoldsUp = gsInputData.LoadStageThresholdsUp?.ToArray() ?? DeclarationData.GearboxTCU.LoadStageThresholdsUp,
+				ShiftSpeedsTCToLocked = (gsInputData.ShiftSpeedsTCToLocked ?? DeclarationData.GearboxTCU.ShiftSpeedsTCToLocked).Select(x => x.Select(y => y + engineIdlingSpeed.AsRPM).ToArray()).ToArray(),
+
+				// voith gs parameters
+
+				GearshiftLines = gsInputData.LoadStageShiftLines,
+
+				LoadstageThresholds = gsInputData.LoadStageThresholdsUp != null && gsInputData.LoadStageThresholdsDown != null ? gsInputData.LoadStageThresholdsUp.Zip(gsInputData.LoadStageThresholdsDown, Tuple.Create) : null
 			};
+
+			return retVal;
 		}
 	}
 }

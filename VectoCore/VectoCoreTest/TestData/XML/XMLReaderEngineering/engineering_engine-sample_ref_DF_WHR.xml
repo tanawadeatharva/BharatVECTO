@@ -7,7 +7,7 @@
 	xmlns:vdecdef="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v1.0"  
 	xmlns:vecomp="urn:tugraz:ivt:VectoAPI:EngineeringComponent"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
-	xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:EngineeringComponent https://webgate.ec.europa.eu/CITnet/svn/VECTO/trunk/Share/XML/XSD/VectoEngineeringComponent.xsd"
+	xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:EngineeringComponent E:\QUAM\Workspace\VECTO_DEV_ADAS\VectoCore\VectoCore\Resources\XSD/VectoEngineeringComponent.xsd"
 	xsi:type="VectoComponentEngineeringType">
 	<Engine>
 		<ve1.0:Data id="ENG-gooZah3D" xsi:type="ve1.1:EngineDataEngineeringType" xmlns="urn:tugraz:ivt:VectoAPI:EngineeringDefinitions:v1.1">
@@ -17,7 +17,11 @@
 			<ve1.0:AppVersion>XMLSpy</ve1.0:AppVersion>
 			<Displacement>12730</Displacement>
 			<Inertia>0.77</Inertia>
-			<WHRType>electrical only</WHRType>
+			<WHRType>
+						<MechanicalOutputICE>false</MechanicalOutputICE>
+						<MechanicalOutputDrivetrain>false</MechanicalOutputDrivetrain>
+						<ElectricalOutput>true</ElectricalOutput>
+					</WHRType>
 			<Mode>
 				<IdlingSpeed>560</IdlingSpeed>
 				<FullLoadAndDragCurve>
@@ -27,10 +31,12 @@
 					<FuelType>NG CI</FuelType>
 					<FCCorrection>1.004</FCCorrection>
 					<WasteHeatRecovery>
-						<WHRCorrection>1.02</WHRCorrection>
-						<WHRMap>
+						<Electrical>
+							<WHRCorrection>1.02</WHRCorrection>
+							<WHRMap>
 							<Resource type="csv" file="engine_WHR.vmap"/>
 						</WHRMap>
+						</Electrical>
 					</WasteHeatRecovery>
 					<FuelConsumptionMap>
 						<Resource type="csv" file="engine.vmap"/>

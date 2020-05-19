@@ -52,6 +52,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 		internal VehicleData SetCommonVehicleData(IVehicleDeclarationInputData data)
 		{
 			var retVal = new VehicleData {
+				InputData = data,
 				SavedInDeclarationMode = data.SavedInDeclarationMode,
 				Manufacturer = data.Manufacturer,
 				ModelName = data.Model,
@@ -59,8 +60,8 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 				//CertificationNumber = data.CertificationNumber,
 				DigestValueInput = data.DigestValue != null ? data.DigestValue.DigestValue : "",
 				VehicleCategory = data.VehicleCategory,
-				CurbWeight = data.CurbMassChassis,
-				GrossVehicleWeight = data.GrossVehicleMassRating,
+				CurbMass = data.CurbMassChassis,
+				GrossVehicleMass = data.GrossVehicleMassRating,
 				AirDensity = Physics.AirDensity,
 			};
 
@@ -72,7 +73,8 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			return new VehicleData.ADASData {
 				EngineStopStart = adas.EngineStopStart,
 				EcoRoll = adas.EcoRoll,
-				PredictiveCruiseControl = adas.PredictiveCruiseControl
+				PredictiveCruiseControl = adas.PredictiveCruiseControl,
+				InputData = adas
 			};
 		}
 
@@ -133,6 +135,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 		internal CombustionEngineData SetCommonCombustionEngineData(IEngineDeclarationInputData data, TankSystem? tankSystem)
 		{
 			var retVal = new CombustionEngineData {
+				InputData = data,
 				SavedInDeclarationMode = data.SavedInDeclarationMode,
 				Manufacturer = data.Manufacturer,
 				ModelName = data.Model,
@@ -153,21 +156,23 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			return retVal;
 		}
 
-		internal GearboxData SetCommonGearboxData(IGearboxDeclarationInputData data)
+		internal static GearboxData SetCommonGearboxData(IGearboxDeclarationInputData data)
 		{
 			return new GearboxData {
+				InputData = data,
 				SavedInDeclarationMode = data.SavedInDeclarationMode,
 				Manufacturer = data.Manufacturer,
 				ModelName = data.Model,
 				Date = data.Date,
 				CertificationMethod = data.CertificationMethod,
-				CertificationNumber = data.CertificationNumber,
+				CertificationNumber = data.CertificationMethod != CertificationMethod.StandardValues ? 
+					data.CertificationNumber : "",
 				DigestValueInput = data.DigestValue != null ? data.DigestValue.DigestValue : "",
 				Type = data.Type
 			};
 		}
 
-		protected TransmissionLossMap CreateGearLossMap(ITransmissionInputData gear, uint i, bool useEfficiencyFallback)
+		protected virtual TransmissionLossMap CreateGearLossMap(ITransmissionInputData gear, uint i, bool useEfficiencyFallback, VehicleCategory vehicleCategory )
 		{
 			if (gear.LossMap != null) {
 				return TransmissionLossMapReader.Create(gear.LossMap, gear.Ratio, string.Format("Gear {0}", i + 1), true);
@@ -194,7 +199,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			gearData.TorqueConverterShiftPolygon = shiftPolygon;
 		}
 
-		protected static void CretateTCFirstGearATPowerSplit(GearData gearData, uint i, ShiftPolygon shiftPolygon)
+		protected virtual void CretateTCFirstGearATPowerSplit(GearData gearData, uint i, ShiftPolygon shiftPolygon)
 		{
 			gearData.TorqueConverterRatio = 1;
 			gearData.TorqueConverterGearLossMap = TransmissionLossMapReader.Create(1, 1, string.Format("TCGear {0}", i + 1));
@@ -222,6 +227,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 		internal AxleGearData SetCommonAxleGearData(IAxleGearInputData data)
 		{
 			return new AxleGearData {
+				InputData = data,
 				SavedInDeclarationMode = data.SavedInDeclarationMode,
 				Manufacturer = data.Manufacturer,
 				ModelName = data.Model,
@@ -251,6 +257,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 						return null;
 					case AngledriveType.SeparateAngledrive:
 						var angledriveData = new AngledriveData {
+							InputData = data,
 							SavedInDeclarationMode = data.SavedInDeclarationMode,
 							Manufacturer = data.Manufacturer,
 							ModelName = data.Model,

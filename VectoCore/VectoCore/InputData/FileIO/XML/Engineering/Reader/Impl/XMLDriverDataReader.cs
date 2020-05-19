@@ -54,7 +54,16 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering.Reader.Impl {
 			get {
 				return CreateData(
 					XMLNames.DriverModel_EcoRoll,
-					(version, node) => version == null ? null : Factory.CreateEcoRolltData(version, DriverData, node), false);
+					(version, node) => version == null ? null : Factory.CreateEcoRollData(version, DriverData, node), false);
+			}
+		}
+
+		public IPCCEngineeringInputData PCCData
+		{
+			get {
+				return CreateData(
+					"PCCParameters",
+					(version, node) => version == null ? null : Factory.CreatePCCData(version, DriverData, node), false);
 			}
 		}
 

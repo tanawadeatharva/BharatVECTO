@@ -1,4 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Xml;
+using TUGraz.VectoCommon.BusAuxiliaries;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
@@ -12,7 +15,8 @@ namespace TUGraz.VectoCore.Tests.Utils {
 		public bool SavedInDeclarationMode { get; }
 		public string Manufacturer { get; }
 		public string Model { get; }
-		public string Date { get; }
+		public DateTime Date { get; }
+		public string AppVersion { get { return "Mock-Class"; } }
 		public CertificationMethod CertificationMethod { get; }
 		public string CertificationNumber { get; }
 		public DigestData DigestValue { get; }
@@ -41,7 +45,19 @@ namespace TUGraz.VectoCore.Tests.Utils {
 		public bool DualFuelVehicle { get; }
 		public Watt MaxNetPower1 { get; }
 		public Watt MaxNetPower2 { get; }
+		public RegistrationClass RegisteredClass { get; set; }
+		public int NumberOfPassengersUpperDeck { get; set; }
+		public int NumberOfPassengersLowerDeck { get; set; }
+		public VehicleCode VehicleCode { get; set; }
+		public FloorType FloorType { get; }
+		public bool Articulated { get; }
+		public Meter Height { get; set; }
+		public Meter Length { get; set; }
+		public Meter Width { get; set; }
+		public Meter EntranceHeight { get; }
+		public ConsumerTechnology DoorDriveTechnology { get; }
 		public IVehicleComponentsDeclaration Components { get { return this; } }
+		public XmlNode XMLSource { get; }
 
 		#endregion
 
@@ -57,6 +73,7 @@ namespace TUGraz.VectoCore.Tests.Utils {
 		public IRetarderInputData RetarderInputData { get; set; }
 		public IPTOTransmissionInputData PTOTransmissionInputData { get; set; }
 		public IAxlesDeclarationInputData AxleWheels { get; set; }
+		public IBusAuxiliariesDeclarationData BusAuxiliaries { get; set; }
 
 		#endregion
 	}
@@ -72,7 +89,8 @@ namespace TUGraz.VectoCore.Tests.Utils {
 		public bool SavedInDeclarationMode { get; }
 		public string Manufacturer { get; }
 		public string Model { get; }
-		public string Date { get; }
+		public DateTime Date { get; }
+		public string AppVersion { get { return "Mock-Class"; } }
 		public CertificationMethod CertificationMethod { get; }
 		public string CertificationNumber { get; }
 		public DigestData DigestValue { get; }
@@ -84,13 +102,25 @@ namespace TUGraz.VectoCore.Tests.Utils {
 		public Kilogram CurbMassExtra { get; }
 		public Kilogram Loading { get; }
 		public Meter DynamicTyreRadius { get; }
+		public bool Articulated { get; }
 		public Meter Height { get; }
+		public Meter Length { get; set; }
+		public Meter Width { get; set; }
+		public Meter EntranceHeight { get; }
+		public ConsumerTechnology DoorDriveTechnology { get; }
 		public Watt MaxNetPower2 { get; }
+		public RegistrationClass RegisteredClass { get; set; }
+		public int NumberOfPassengersUpperDeck { get; set; }
+		public int NumberOfPassengersLowerDeck { get; set; }
+		public VehicleCode VehicleCode { get; set; }
+		public FloorType FloorType { get; }
 
 		IVehicleComponentsDeclaration IVehicleDeclarationInputData.Components
 		{
 			get { return _components; }
 		}
+
+		public XmlNode XMLSource { get; }
 
 		public IVehicleComponentsEngineering Components { get { return this; } }
 		public string Identifier { get; }

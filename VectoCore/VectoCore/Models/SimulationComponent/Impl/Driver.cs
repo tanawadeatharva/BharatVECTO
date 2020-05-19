@@ -39,7 +39,8 @@ using TUGraz.VectoCore.Models.Connector.Ports.Impl;
 using TUGraz.VectoCore.Models.Simulation;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.DataBus;
-using TUGraz.VectoCore.Models.SimulationComponent.Data;
+using TUGraz.VectoCore.Models.Simulation.Impl;
+using TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox;
 using TUGraz.VectoCore.OutputData;
 using TUGraz.VectoCore.Utils;
 using DriverData = TUGraz.VectoCore.Models.SimulationComponent.Data.DriverData;
@@ -61,8 +62,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		public DriverData DriverData { get; protected set; }
 
 		protected readonly IDriverStrategy DriverStrategy;
-		
-		public DrivingAction DrivingAction { get; private set; }
+		protected readonly bool smartBusAux;
+
+		public DrivingAction DrivingAction { get; protected internal set; }
 
 		public Driver(IVehicleContainer container, DriverData driverData, IDriverStrategy strategy) : base(container)
 		{
@@ -70,6 +72,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			DriverStrategy = strategy;
 			strategy.Driver = this;
 			DriverAcceleration = 0.SI<MeterPerSquareSecond>();
+			var busAux = container.RunData.BusAuxiliaries;
+			smartBusAux = busAux != null && (busAux.PneumaticUserInputsConfig.SmartAirCompression ||
+											busAux.ElectricalUserInputsConfig.SmartElectrical);
 		}
 
 
@@ -418,14 +423,25 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			OperatingPoint searchedOperatingPoint;
 			try {
-				searchedOperatingPoint = SearchOperatingPoint(absTime, requestedOperatingPoint.SimulationDistance,
+				searchedOperatingPoint = SearchOperatingPoint(
+					absTime, requestedOperatingPoint.SimulationDistance,
 					gradient,
 					requestedOperatingPoint.Acceleration, initialResponse, coastingOrRoll: true);
 			} catch (VectoEngineSpeedTooLowException) {
 				// in case of an exception during search the engine-speed got too low - gear disengaged --> try again with disengaged gear.
-				searchedOperatingPoint = SearchOperatingPoint(absTime, requestedOperatingPoint.SimulationDistance,
+				searchedOperatingPoint = SearchOperatingPoint(
+					absTime, requestedOperatingPoint.SimulationDistance,
 					gradient,
 					requestedOperatingPoint.Acceleration, initialResponse, coastingOrRoll: true);
+			}
+
+			if (searchedOperatingPoint == null && DataBus.GearboxType.AutomaticTransmission()) {
+				// we end up here if no valid operating point for the engine and torque converter can be found.
+				// a likely reason is that the torque converter opereating point 'jumps' between two different operating points
+				// or that no valid operating point can be found by reverse calcualtion. This method is a kind of fal-back
+				// solution where a torque converter operating point is searched by forward calculation first and then the remaining
+				// powertrain is adjusted to this operating point.
+				searchedOperatingPoint = SetTCOperatingPointATGbxCoastOrRoll(absTime, gradient, requestedOperatingPoint, initialResponse as ResponseDryRun);
 			}
 
 			if (!ds.IsEqual(searchedOperatingPoint.SimulationDistance)) {
@@ -492,6 +508,148 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			return response;
 		}
 
+		// Fallback solution for calculating operating point with TC in semi-forward way.
+		private OperatingPoint SetTCOperatingPointATGbxCoastOrRoll(Second absTime, Radian gradient, OperatingPoint operatingPoint, ResponseDryRun dryRunResp)
+		{
+			var tc = DataBus.TorqueConverter;
+			if (tc == null) {
+				throw new VectoException("NO TorqueConverter Available!");
+			}
+			
+			if (dryRunResp == null) {
+				throw new VectoException("dry-run response expected!");
+			}
+
+
+			// first attempt: set TC to an input speed slightly above idle speed
+			// calculate TC opPt using n_in and n_out, estimate ICE max and drag torque.
+			// if ICE torque is within valid range, search an acceleration that results in the required 
+			// out-torque at the torque converter
+			var engineSpeed = DataBus.EngineIdleSpeed * 1.01;
+			var tcOp = EstimateTCOpPoint(operatingPoint, dryRunResp, engineSpeed, tc);
+			
+			if (tcOp.Item1.Item2.IsBetween(tcOp.Item2, tcOp.Item3)) {
+				if (!dryRunResp.TorqueConverterOperatingPoint.OutTorque.IsEqual(tcOp.Item1.Item1.OutTorque)) {
+					tc.SetOperatingPoint = tcOp.Item1.Item1;
+				}
+				try {
+					var acceleration = SearchAccelerationFixedTC(absTime, gradient, operatingPoint, tcOp.Item1, dryRunResp);
+					return ComputeTimeInterval(acceleration, operatingPoint.SimulationDistance);
+				} catch (Exception e) {
+					Log.Error(e, "Failed to find acceleration for tc operating point! absTime: {0}", absTime);
+					throw;
+				}
+			}
+
+
+			// Attempt 2: search for an input speed (ICE speed) so that a valid operating point for 
+			// the torque converter and the engine are found. Estimate max torque, drag torque. calculate delta
+			// based on over-/underload of torque and too high or too low engine speed
+			PerSecond nextICESpeed;
+			try {
+				nextICESpeed = SearchAlgorithm.Search(
+					engineSpeed, GetTCDelta(tcOp.Item1, tcOp.Item2, tcOp.Item3), engineSpeed * 0.1,
+					getYValue: tOp => {
+						var t = (Tuple<Tuple<TorqueConverterOperatingPoint, NewtonMeter>, NewtonMeter, NewtonMeter>)tOp;
+						return GetTCDelta(t.Item1, t.Item2, t.Item3);
+					},
+					evaluateFunction: engSpeed => { return EstimateTCOpPoint(operatingPoint, dryRunResp, engSpeed, tc); },
+					criterion: tOp => {
+						var t = (Tuple<Tuple<TorqueConverterOperatingPoint, NewtonMeter>, NewtonMeter, NewtonMeter>)tOp;
+						return GetTCDelta(t.Item1, t.Item2, t.Item3).Value();
+					});
+			} catch (Exception e) {
+				Log.Error(e, "Failed to find engine speed for valid torque converter operating point! absTime: {0}", absTime);
+				throw;
+			}
+
+			// a suitable engine sped was found - search acceleration to match TC out-torque
+			try {
+				tcOp = EstimateTCOpPoint(operatingPoint, dryRunResp, nextICESpeed, tc);
+				tc.SetOperatingPoint = tcOp.Item1.Item1;
+
+				var acceleration = SearchAccelerationFixedTC(absTime, gradient, operatingPoint, tcOp.Item1, dryRunResp);
+
+				return ComputeTimeInterval(acceleration, operatingPoint.SimulationDistance);
+			} catch (Exception e) {
+				Log.Error(e, "Failed to find acceleration for tc operating point! absTime: {0}", absTime);
+				throw;
+			}
+
+			//return null;
+		}
+
+		// estimate a torque converter operating point via forward calculation for a certain engine speed. 
+		// furthermore, estimates the max/min torque at ICE out-shaft including estimates for ICE inertia & aux torque
+		private Tuple<Tuple<TorqueConverterOperatingPoint, NewtonMeter>, NewtonMeter, NewtonMeter> EstimateTCOpPoint(
+			OperatingPoint operatingPoint, IResponse response, PerSecond engSpeed, ITorqueConverterControl tc)
+		{
+			var avgICDSpeed = (DataBus.EngineSpeed + engSpeed) / 2.0;
+			var drTq = (DataBus.EngineDragPower(avgICDSpeed)) / avgICDSpeed;
+			var maxTq = DataBus.EngineDynamicFullLoadPower(avgICDSpeed, operatingPoint.SimulationInterval) /
+						avgICDSpeed;
+			var inTq = Formulas.InertiaPower(
+							engSpeed, DataBus.EngineSpeed,
+							(DataBus as VehicleContainer)?.RunData.EngineData.Inertia ?? 0.SI<KilogramSquareMeter>(),
+							operatingPoint.SimulationInterval) / avgICDSpeed;
+			var auxTq = DataBus.EngineAuxDemand(avgICDSpeed, operatingPoint.SimulationInterval) / avgICDSpeed;
+
+			return Tuple.Create(
+				tc.CalculateOperatingPoint(engSpeed, response.GearboxInputSpeed), drTq - inTq - auxTq, maxTq - inTq - auxTq);
+		}
+
+
+		// Search vehicle acceleration to match the torque converter out-torque for a fixed TC opPt
+		private MeterPerSquareSecond SearchAccelerationFixedTC(
+			Second absTime, Radian gradient, OperatingPoint operatingPoint, Tuple<TorqueConverterOperatingPoint, NewtonMeter> tcOp, ResponseDryRun dryRun)
+		{
+			var acceleration = SearchAlgorithm.Search(
+				operatingPoint.Acceleration, tcOp.Item1.OutTorque - dryRun.TorqueConverterTorqueDemand,
+				Constants.SimulationSettings.OperatingPointInitialSearchIntervalAccelerating,
+				getYValue: resp => {
+					var r = (ResponseDryRun)resp;
+					return tcOp.Item1.OutTorque - r.TorqueConverterTorqueDemand;
+				},
+				evaluateFunction:
+				acc => {
+					var tmp = ComputeTimeInterval(acc, operatingPoint.SimulationDistance);
+					if (tmp.SimulationInterval.IsEqual(0.SI<Second>(), 1e-9.SI<Second>())) {
+						throw new VectoSearchAbortedException(
+							"next TimeInterval is 0. a: {0}, v: {1}, dt: {2}", acc,
+							DataBus.VehicleSpeed, tmp.SimulationInterval);
+					}
+
+					DriverAcceleration = acc;
+					var tmpResponse = NextComponent.Request(absTime, tmp.SimulationInterval, acc, gradient, true);
+					tmpResponse.OperatingPoint = tmp;
+					return tmpResponse;
+				},
+				criterion: resp => {
+					var r = (ResponseDryRun)resp;
+
+					return (tcOp.Item1.OutTorque - r.TorqueConverterTorqueDemand).Value();
+				}
+			);
+			return acceleration;
+		}
+
+		private NewtonMeter GetTCDelta(Tuple<TorqueConverterOperatingPoint, NewtonMeter> tqOp, NewtonMeter dragTorque, NewtonMeter maxTorque)
+		{
+			var deltaSpeed = VectoMath.Min(0.RPMtoRad(), tqOp.Item1.InAngularVelocity - DataBus.EngineIdleSpeed) +
+							VectoMath.Max(0.RPMtoRad(), tqOp.Item1.InAngularVelocity - DataBus.EngineRatedSpeed);
+			var tqDiff =  0.SI<NewtonMeter>();
+			if (tqOp.Item2.IsSmaller(dragTorque)) {
+				tqDiff = tqOp.Item2 - dragTorque;
+				
+			}
+
+			if (tqOp.Item2.IsGreater(maxTorque)) {
+				tqDiff =  tqOp.Item2 - maxTorque;
+			}
+			return ((tqDiff.Value() * tqDiff.Value()) + (deltaSpeed.Value() * deltaSpeed.Value())).SI<NewtonMeter>();
+			
+		}
+
 		public IResponse DrivingActionBrake(Second absTime, Meter ds, MeterPerSecond nextTargetSpeed, Radian gradient, IResponse previousResponse = null, Meter targetDistance = null, DrivingAction? overrideAction = null)
 		{
 			DrivingAction = overrideAction ?? DrivingAction.Brake;
@@ -510,9 +668,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				operatingPoint;
 
 			DriverAcceleration = operatingPoint.Acceleration;
-			var response = previousResponse ??
-							NextComponent.Request(absTime, operatingPoint.SimulationInterval, operatingPoint.Acceleration,
-								gradient);
+			var response = !smartBusAux && previousResponse != null
+				? previousResponse
+				: NextComponent.Request(
+					absTime, operatingPoint.SimulationInterval, operatingPoint.Acceleration,
+					gradient);
 
 			var point = operatingPoint;
 			response.Switch().
@@ -546,9 +706,17 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				return retVal;
 			}
 
-			operatingPoint = SearchBrakingPower(absTime, operatingPoint.SimulationDistance, gradient,
-				operatingPoint.Acceleration, response);
-
+			var engaged = (DataBus as IGearboxInfo).DisengageGearbox;
+			try {
+				operatingPoint = SearchBrakingPower(
+					absTime, operatingPoint.SimulationDistance, gradient,
+					operatingPoint.Acceleration, response);
+			} catch (VectoSearchAbortedException vsa) {
+				Log.Warn("Search braking power aborted {0}", vsa);
+				if (DataBus.GearboxType.AutomaticTransmission()) {
+					operatingPoint = SetTCOperatingPointATGbxBraking(absTime, gradient, operatingPoint, response);
+				}
+			}
 			if (!ds.IsEqual(operatingPoint.SimulationDistance, 1E-15.SI<Meter>())) {
 				Log.Info(
 					"SearchOperatingPoint Braking reduced the max. distance: {0} -> {1}. Issue new request from driving cycle!",
@@ -643,8 +811,42 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			retVal.SimulationInterval = operatingPoint.SimulationInterval;
 			retVal.SimulationDistance = ds;
 			retVal.OperatingPoint = operatingPoint;
-			
+
+			if (DataBus.GearboxType.AutomaticTransmission() && engaged != (DataBus as IGearboxInfo).DisengageGearbox) {
+				(DataBus as IGearboxControl).DisengageGearbox = engaged;
+			}
 			return retVal;
+		}
+
+		private OperatingPoint SetTCOperatingPointATGbxBraking(
+			Second absTime, Radian gradient, OperatingPoint operatingPoint, IResponse response)
+		{
+			var tc = DataBus.TorqueConverter;
+			if (tc == null) {
+				throw new VectoException("NO TorqueConverter Available!");
+			}
+
+			var avgEngineSpeed = (DataBus.EngineSpeed + DataBus.EngineIdleSpeed) / 2.0;
+			var dragTorque = (DataBus.EngineDragPower(avgEngineSpeed)) / avgEngineSpeed;
+			var maxTorque = DataBus.EngineDynamicFullLoadPower(avgEngineSpeed, operatingPoint.SimulationInterval) / avgEngineSpeed;
+			var inertiaTq = Formulas.InertiaPower(
+								DataBus.EngineIdleSpeed, DataBus.EngineSpeed,
+								(DataBus as VehicleContainer)?.RunData.EngineData.Inertia ?? 0.SI<KilogramSquareMeter>(),
+								operatingPoint.SimulationInterval) / avgEngineSpeed;
+			var auxTqDemand = DataBus.EngineAuxDemand(avgEngineSpeed, operatingPoint.SimulationInterval) / avgEngineSpeed;
+			//var maxTorque = DataBus.e
+			var tcOp = tc.CalculateOperatingPoint(DataBus.EngineIdleSpeed * 1.01, response.GearboxInputSpeed);
+
+			if (!tcOp.Item2.IsBetween(dragTorque - inertiaTq - auxTqDemand, maxTorque - inertiaTq - auxTqDemand)) {
+
+				(DataBus as IGearboxControl).DisengageGearbox = true;
+				operatingPoint = SearchBrakingPower(
+					absTime, operatingPoint.SimulationDistance, gradient,
+					operatingPoint.Acceleration, response);
+				return operatingPoint;
+			}
+
+			return null;
 		}
 
 		private OperatingPoint AdaptDecelerationToTargetDistance(Meter ds, MeterPerSecond nextTargetSpeed,
@@ -789,6 +991,17 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 							: response.GearboxPowerRequest;
 						return delta.Value();
 					},
+					abortCriterion: (result, i) => {
+						if (i < 7) {
+							return false;
+						}
+						var response = (ResponseDryRun)result;
+						if (response == null) {
+							return false;
+						}
+
+						return DataBus.GearboxType.AutomaticTransmission() && response.DeltaDragLoad.Value().IsSmallerOrEqual(-double.MaxValue / 20);
+					},
 					forceLineSearch: DataBus.GearboxType.AutomaticTransmission() && !DataBus.TCLocked);
 
 				return operatingPoint;
@@ -813,6 +1026,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			var delta = origDelta;
 			try {
+				var nanCount = 0;
 				retVal.Acceleration = SearchAlgorithm.Search(acceleration, delta,
 					Constants.SimulationSettings.OperatingPointInitialSearchIntervalAccelerating,
 					getYValue: response => {
@@ -863,6 +1077,13 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					abortCriterion:
 						(response, cnt) => {
 							var r = (ResponseDryRun)response;
+							if (DataBus.GearboxType.AutomaticTransmission() &&
+								r.DeltaDragLoad.Value().IsSmallerOrEqual(-double.MaxValue / 20)) {
+								nanCount++;
+							}
+							if (nanCount > 10) {
+								return true;
+							}
 							return r != null && !actionRoll && !ds.IsEqual(r.OperatingPoint.SimulationDistance);
 						});
 				return ComputeTimeInterval(retVal.Acceleration, retVal.SimulationDistance);
@@ -965,7 +1186,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		/// <returns></returns>
 		public Meter ComputeDecelerationDistance(MeterPerSecond targetSpeed)
 		{
-			return DriverData.AccelerationCurve.ComputeAccelerationDistance(DataBus.VehicleSpeed, targetSpeed);
+			return DriverData.AccelerationCurve.ComputeDecelerationDistance(DataBus.VehicleSpeed, targetSpeed);
 		}
 
 		/// <summary>
@@ -1015,7 +1236,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			return retVal;
 		}
 
-		protected override void DoWriteModalResults(IModalDataContainer container)
+		protected override void DoWriteModalResults(Second time, Second simulationInterval, IModalDataContainer container)
 		{
 			container[ModalResultField.acc] = CurrentState.Acceleration;
 			container.SetDataValue("DriverAction", (int)DrivingAction);
@@ -1026,7 +1247,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		
 		protected override void DoCommitSimulationStep()
 		{
-			if (!(CurrentState.Response is ResponseSuccess)) {
+			if (CurrentState.Response != null && !(CurrentState.Response is ResponseSuccess)) {
 				throw new VectoSimulationException("Previous request did not succeed!");
 			}
 			CurrentState.Response = null;

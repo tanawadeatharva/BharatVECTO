@@ -146,7 +146,27 @@
 		</LookAheadCoasting>
 		<Overspeed xsi:type="ve1.0:OverspeedEngineeringType">
 			<Enabled>false</Enabled>
+			<MinSpeed>50</MinSpeed>
+			<AllowedOverspeed>2.5</AllowedOverspeed>
 		</Overspeed>
+		<EngineStopStartParameters xsi:type="EngineStartStopParametersEngineeringType">
+			<ActivationDelay>2.01</ActivationDelay>
+			<MaxEngineOffTime>120.23</MaxEngineOffTime>
+			<UtilityFactor>0.834</UtilityFactor>
+		</EngineStopStartParameters>
+		<EcoRoll xsi:type="EcoRollEngineeringType">
+			<ActivationDelay>2.34</ActivationDelay>			
+			<MinSpeed>50.56</MinSpeed>
+			<Underspeed>5.75</Underspeed>
+		</EcoRoll>
+		<PCCParameters xsi:type="PCCParametersType">
+			<EnablingSpeed>80.76</EnablingSpeed>
+			<MinSpeed>50.43</MinSpeed>
+			<AllowedUnderspeed>8.32</AllowedUnderspeed>
+			<AllowedOverspeed>5.74</AllowedOverspeed>
+			<PreviewDistanceUseCase1>1500.73</PreviewDistanceUseCase1>
+			<PreviewDistanceUseCase2>1000.24</PreviewDistanceUseCase2>
+		</PCCParameters>
 	</DriverModel>
 	<MissionCycles>
 		<Cycle type="csv" file="Construction"/>

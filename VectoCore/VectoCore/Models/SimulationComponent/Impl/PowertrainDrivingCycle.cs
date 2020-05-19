@@ -167,7 +167,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		#region VectoSimulationComponent
 
-		protected override void DoWriteModalResults(IModalDataContainer container) {}
+		protected override void DoWriteModalResults(Second time, Second simulationInterval, IModalDataContainer container) {}
 
 		protected override void DoCommitSimulationStep()
 		{
@@ -229,6 +229,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			return retVal;
 		}
+
+		public SpeedChangeEntry LastTargetspeedChange { get { return null; } }
 
 		public void FinishSimulation()
 		{

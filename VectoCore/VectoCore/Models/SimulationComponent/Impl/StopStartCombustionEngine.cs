@@ -50,11 +50,12 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl {
 
 			if (!dryRun) {
 				//EngineAux.TorqueDemand(absTime, dt, 0.SI<NewtonMeter>(), 0.SI<NewtonMeter>(), ModelData.IdleSpeed);
-				CurrentState.AuxPowerEngineOff = EngineAux.PowerDemandEngineOff();
+				CurrentState.AuxPowerEngineOff = EngineAux.PowerDemandEngineOff(absTime, dt);
 			} else {
 				return new ResponseDryRun {
 					DeltaFullLoad = 0.SI<Watt>(),
 					DeltaDragLoad = 0.SI<Watt>(),
+					EngineTorqueDemandTotal = 0.SI<NewtonMeter>(),
 					DeltaEngineSpeed = 0.RPMtoRad(),
 					EnginePowerRequest = 0.SI<Watt>(),
 					DynamicFullLoadPower = 0.SI<Watt>(),
@@ -68,6 +69,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl {
 			return new ResponseSuccess() {
 				EnginePowerRequest = 0.SI<Watt>(),
 				DynamicFullLoadPower = 0.SI<Watt>(),
+				EngineTorqueDemandTotal = 0.SI<NewtonMeter>(),
 				DragPower = 0.SI<Watt>(),
 				AuxiliariesPowerDemand = 0.SI<Watt>(),
 				EngineSpeed = 0.RPMtoRad(),
@@ -77,41 +79,42 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl {
 
 		#region Overrides of CombustionEngine
 
-		protected override void DoWriteModalResults(IModalDataContainer container)
+		protected override void DoWriteModalResults(Second time, Second simulationInterval, IModalDataContainer container)
 		{
 			if (IgnitionOn) {
-				base.DoWriteModalResults(container);
+				base.DoWriteModalResults(time, simulationInterval, container);
 				var engineStart = !PreviousState.IgnitionOn && CurrentState.IgnitionOn;
 				container[ModalResultField.P_ice_start] = engineStart ? EngineStartEnergy / CurrentState.dt : 0.SI<Watt>();
 				container[ModalResultField.P_aux_ice_off] = 0.SI<Watt>();
 			} else {
 				container[ModalResultField.P_ice_start] = 0.SI<Watt>();
-				DoWriteEngineOffResults(container);
+				DoWriteEngineOffResults(time, simulationInterval, container);
 			}
 
 		}
 
 		#endregion
 
-		protected virtual void DoWriteEngineOffResults(IModalDataContainer container)
+		protected virtual void DoWriteEngineOffResults(Second time, Second simulationInterval, IModalDataContainer container)
 		{
-			container[ModalResultField.P_eng_fcmap] = 0.SI<Watt>();
-			container[ModalResultField.P_eng_out] = 0.SI<Watt>();
-			container[ModalResultField.P_eng_inertia] = 0.SI<Watt>();
+			container[ModalResultField.P_ice_fcmap] = 0.SI<Watt>();
+			container[ModalResultField.P_ice_out] = 0.SI<Watt>();
+			container[ModalResultField.P_ice_inertia] = 0.SI<Watt>();
 
-			container[ModalResultField.n_eng_avg] = 0.RPMtoRad();
-			container[ModalResultField.T_eng_fcmap] = 0.SI<NewtonMeter>();
+			container[ModalResultField.n_ice_avg] = 0.RPMtoRad();
+			container[ModalResultField.T_ice_fcmap] = 0.SI<NewtonMeter>();
 
-			container[ModalResultField.P_eng_full] = 0.SI<Watt>();
-			container[ModalResultField.P_eng_full_stat] = 0.SI<Watt>();
-			container[ModalResultField.P_eng_drag] = 0.SI<Watt>();
-			container[ModalResultField.Tq_full] = 0.SI<NewtonMeter>();
-			container[ModalResultField.Tq_drag] = 0.SI<NewtonMeter>();
+			container[ModalResultField.P_ice_full] = 0.SI<Watt>();
+			container[ModalResultField.P_ice_full_stat] = 0.SI<Watt>();
+			container[ModalResultField.P_ice_drag] = 0.SI<Watt>();
+			container[ModalResultField.T_ice_full] = 0.SI<NewtonMeter>();
+			container[ModalResultField.T_ice_drag] = 0.SI<NewtonMeter>();
 
-			container[ModalResultField.IgnitionOn] = CurrentState.IgnitionOn;
+			container[ModalResultField.ICEOn] = CurrentState.IgnitionOn;
 			container[ModalResultField.P_aux_ice_off] = (CurrentState.AuxPowerEngineOff ?? 0.SI<Watt>());
 
-			var auxDemand = EngineAux.PowerDemandEngineOn(ModelData.IdleSpeed) / ModelData.IdleSpeed;
+
+			var auxDemand = EngineAux.PowerDemandEngineOn(time, simulationInterval, ModelData.IdleSpeed) / ModelData.IdleSpeed;
 
 			WriteWHRPower(container, ModelData.IdleSpeed, auxDemand);
 
@@ -120,30 +123,43 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl {
 				var fcNCVcorr = fc * fuel.FuelData.HeatingValueCorrection; // TODO: wird fcNCVcorr
 
 				var fcWHTC = fcNCVcorr * WHTCCorrectionFactor(fuel.FuelData);
-				var fcAAUX = fcWHTC;
+				//var fcAAUX = fcWHTC;
 				var advancedAux = EngineAux as BusAuxiliariesAdapter;
 				if (advancedAux != null) {
-					throw new VectoException("Engine Stop/Start with advanced auxiliaries not supported!");
-
-					//advancedAux.DoWriteModalResults(container);
+					//throw new VectoException("Engine Stop/Start with advanced auxiliaries not supported!");
+					advancedAux.DoWriteModalResults(time, simulationInterval, container);
 					//fcAAUX = advancedAux.AAuxFuelConsumption;
 				}
 
 				
 				var result = fuel.ConsumptionMap.GetFuelConsumption(auxDemand, ModelData.IdleSpeed);
 
-				var fcESS = result.Value * (1 - EngineStopStartUtilityFactor);
+				var fcESS = result.Value * (1 - EngineStopStartUtilityFactor) * fuel.FuelData.HeatingValueCorrection * WHTCCorrectionFactor(fuel.FuelData);
 				var fcFinal = fcESS;
 
 				container[ModalResultField.FCMap, fuel.FuelData] = fc;
 				container[ModalResultField.FCNCVc, fuel.FuelData] = fcNCVcorr;
 				container[ModalResultField.FCWHTCc, fuel.FuelData] = fcWHTC;
-				container[ModalResultField.FCAAUX, fuel.FuelData] = fcAAUX;
-				container[ModalResultField.FCEngineStopStart, fuel.FuelData] = fcESS;
+				//container[ModalResultField.FCAAUX, fuel.FuelData] = fcAAUX;
+				container[ModalResultField.FCICEStopStart, fuel.FuelData] = fcESS;
 				container[ModalResultField.FCFinal, fuel.FuelData] = fcFinal;
 			}
 		}
 
-		
+		protected override void WriteWHRPower(IModalDataContainer container, PerSecond engineSpeed, NewtonMeter engineTorque)
+		{
+			var pWHRelMap = 0.SI<Watt>();
+			var pWHRelCorr = 0.SI<Watt>();
+			var pWHRmechMap = 0.SI<Watt>();
+			var pWHRmechCorr = 0.SI<Watt>();
+			GetWHRPower(ModelData.ElectricalWHR, engineSpeed, engineTorque, ref pWHRelMap, ref pWHRelCorr);
+			GetWHRPower(ModelData.MechanicalWHR, engineSpeed, engineTorque, ref pWHRmechMap, ref pWHRmechCorr);
+
+			container[ModalResultField.P_WHR_el_map] = (1 - EngineStopStartUtilityFactor) * pWHRelMap;
+			container[ModalResultField.P_WHR_el_corr] = (1 - EngineStopStartUtilityFactor) * pWHRelCorr;
+
+			container[ModalResultField.P_WHR_mech_map] = (1 - EngineStopStartUtilityFactor) * pWHRmechMap;
+			container[ModalResultField.P_WHR_mech_corr] = (1 - EngineStopStartUtilityFactor) * pWHRmechCorr;
+		}
 	}
 }

@@ -31,17 +31,18 @@
 
 using System;
 using System.Linq;
+using TUGraz.VectoCommon.BusAuxiliaries;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Configuration;
-using TUGraz.VectoCore.InputData.Reader.ComponentData;
 using TUGraz.VectoCore.Models.Connector.Ports;
 using TUGraz.VectoCore.Models.Connector.Ports.Impl;
 using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.DataBus;
+using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.OutputData;
 using TUGraz.VectoCore.Utils;
@@ -99,9 +100,23 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			return ModelData.FullLoadCurves[DataBus.Gear].FullLoadStationaryTorque(angularSpeed) * angularSpeed;
 		}
 
+		public Watt EngineDynamicFullLoadPower(PerSecond avgEngineSpeed, Second dt)
+		{
+			return ComputeFullLoadPower(
+				avgEngineSpeed, ModelData.FullLoadCurves[DataBus.Gear].FullLoadStationaryTorque(avgEngineSpeed), dt, true);
+		}
+
 		public Watt EngineDragPower(PerSecond angularSpeed)
 		{
 			return ModelData.FullLoadCurves[DataBus.Gear].DragLoadStationaryPower(angularSpeed);
+		}
+
+		public Watt EngineAuxDemand(PerSecond avgEngineSpeed, Second dt)
+		{
+			return EngineAux == null
+				? 0.SI<Watt>()
+				: EngineAux.TorqueDemand(
+					0.SI<Second>(), dt, 0.SI<NewtonMeter>(), avgEngineSpeed, true) * avgEngineSpeed;
 		}
 
 		public PerSecond EngineIdleSpeed
@@ -183,7 +198,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			}
 
 			var fullDragTorque = ModelData.FullLoadCurves[DataBus.Gear].DragLoadStationaryTorque(avgEngineSpeed);
-			var dynamicFullLoadPower = ComputeFullLoadPower(avgEngineSpeed, dt, dryRun);
+			var stationaryFullLoadTorque = ModelData.FullLoadCurves[DataBus.Gear].FullLoadStationaryTorque(avgEngineSpeed);
+			var dynamicFullLoadPower = ComputeFullLoadPower(avgEngineSpeed, stationaryFullLoadTorque, dt, dryRun);
 
 			var dynamicFullLoadTorque = dynamicFullLoadPower / avgEngineSpeed;
 			var inertiaTorqueLoss =
@@ -192,8 +208,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			var auxTorqueDemand = EngineAux == null
 				? 0.SI<NewtonMeter>()
-				: EngineAux.TorqueDemand(absTime, dt, torqueOut,
-					torqueOut + inertiaTorqueLoss, angularVelocity, dryRun);
+				: EngineAux.TorqueDemand(absTime, dt, torqueOut, angularVelocity, dryRun);
 			// compute the torque the engine has to provide. powertrain + aux + its own inertia
 			var totalTorqueDemand = torqueOut + auxTorqueDemand + inertiaTorqueLoss;
 
@@ -218,6 +233,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					DeltaEngineSpeed = avgEngineSpeed - engineSpeedLimit,
 					EnginePowerRequest = torqueOut * avgEngineSpeed,
 					DynamicFullLoadPower = dynamicFullLoadPower,
+					EngineTorqueDemand = torqueOut,
+					EngineTorqueDemandTotal = totalTorqueDemand,
+					EngineDynamicFullLoadTorque = dynamicFullLoadTorque,
+					EngineStationaryFullLoadTorque = stationaryFullLoadTorque,
 					DragPower = fullDragTorque * avgEngineSpeed,
 					AuxiliariesPowerDemand = auxTorqueDemand * avgEngineSpeed,
 					EngineSpeed = angularVelocity,
@@ -230,6 +249,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			CurrentState.FullDragTorque = fullDragTorque;
 			CurrentState.DynamicFullLoadTorque = dynamicFullLoadTorque;
 			CurrentState.InertiaTorqueLoss = inertiaTorqueLoss;
+			CurrentState.StationaryFullLoadTorque = stationaryFullLoadTorque;
 
 			if ((deltaFull * avgEngineSpeed).IsGreater(0.SI<Watt>(), Constants.SimulationSettings.LineSearchTolerance) &&
 				(deltaDrag * avgEngineSpeed).IsSmaller(0.SI<Watt>(), Constants.SimulationSettings.LineSearchTolerance)) {
@@ -259,6 +279,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					Delta = deltaFull * avgEngineSpeed,
 					EnginePowerRequest = totalTorqueDemand * avgEngineSpeed,
 					DynamicFullLoadPower = dynamicFullLoadPower,
+					EngineTorqueDemand = torqueOut,
+					EngineTorqueDemandTotal = totalTorqueDemand,
+					EngineStationaryFullLoadTorque = stationaryFullLoadTorque,
+					EngineDynamicFullLoadTorque = dynamicFullLoadTorque,
 					DragPower = CurrentState.FullDragTorque * avgEngineSpeed,
 					Source = this,
 					AuxiliariesPowerDemand = auxTorqueDemand * avgEngineSpeed,
@@ -274,6 +298,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					Delta = deltaDrag * avgEngineSpeed,
 					EnginePowerRequest = totalTorqueDemand * avgEngineSpeed,
 					DynamicFullLoadPower = dynamicFullLoadPower,
+					EngineTorqueDemand = torqueOut,
+					EngineTorqueDemandTotal = totalTorqueDemand,
+					EngineStationaryFullLoadTorque = stationaryFullLoadTorque,
+					EngineDynamicFullLoadTorque = dynamicFullLoadTorque,
 					DragPower = CurrentState.FullDragTorque * avgEngineSpeed,
 					Source = this,
 					AuxiliariesPowerDemand = auxTorqueDemand * avgEngineSpeed,
@@ -285,6 +313,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			return new ResponseSuccess {
 				EnginePowerRequest = totalTorqueDemand * avgEngineSpeed,
+				EngineTorqueDemand = torqueOut,
+				EngineTorqueDemandTotal = totalTorqueDemand,
+				EngineStationaryFullLoadTorque = stationaryFullLoadTorque,
+				EngineDynamicFullLoadTorque = dynamicFullLoadTorque,
 				DynamicFullLoadPower = dynamicFullLoadPower,
 				DragPower = CurrentState.FullDragTorque * avgEngineSpeed,
 				AuxiliariesPowerDemand = auxTorqueDemand * avgEngineSpeed,
@@ -325,7 +357,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			return new ResponseSuccess {
 				Source = this,
 				EnginePowerRequest = PreviousState.EnginePower,
-				EngineSpeed = outAngularVelocity
+				DynamicFullLoadPower = PreviousState.DynamicFullLoadTorque * PreviousState.EngineSpeed,
+				EngineSpeed = outAngularVelocity,
+				EngineTorqueDemand = outTorque,
+				EngineTorqueDemandTotal = outTorque + auxDemand
 			};
 		}
 
@@ -350,7 +385,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		#region VectoSimulationComponent
 
-		protected override void DoWriteModalResults(IModalDataContainer container)
+		protected override void DoWriteModalResults(Second time, Second simulationInterval, IModalDataContainer container)
 		{
 			ValidatePowerDemand(CurrentState.EngineTorque, CurrentState.DynamicFullLoadTorque, CurrentState.FullDragTorque);
 
@@ -359,21 +394,21 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				DataBus.ExecutionMode == ExecutionMode.Engineering ? 20.RPMtoRad() : 1e-3.RPMtoRad())) {
 				Log.Warn("EngineSpeed below idling speed! n_eng_avg: {0}, n_idle: {1}", avgEngineSpeed.AsRPM, EngineIdleSpeed.AsRPM);
 			}
-			container[ModalResultField.P_eng_fcmap] = CurrentState.EngineTorque * avgEngineSpeed;
-			container[ModalResultField.P_eng_out] = container[ModalResultField.P_eng_out] is DBNull
+			container[ModalResultField.P_ice_fcmap] = CurrentState.EngineTorque * avgEngineSpeed;
+			container[ModalResultField.P_ice_out] = container[ModalResultField.P_ice_out] is DBNull
 				? CurrentState.EngineTorqueOut * avgEngineSpeed
-				: container[ModalResultField.P_eng_out];
-			container[ModalResultField.P_eng_inertia] = CurrentState.InertiaTorqueLoss * avgEngineSpeed;
+				: container[ModalResultField.P_ice_out];
+			container[ModalResultField.P_ice_inertia] = CurrentState.InertiaTorqueLoss * avgEngineSpeed;
 
-			container[ModalResultField.n_eng_avg] = avgEngineSpeed;
-			container[ModalResultField.T_eng_fcmap] = CurrentState.EngineTorque;
+			container[ModalResultField.n_ice_avg] = avgEngineSpeed;
+			container[ModalResultField.T_ice_fcmap] = CurrentState.EngineTorque;
 
-			container[ModalResultField.P_eng_full] = CurrentState.DynamicFullLoadTorque * avgEngineSpeed;
-			container[ModalResultField.P_eng_full_stat] = CurrentState.StationaryFullLoadTorque * avgEngineSpeed;
-			container[ModalResultField.P_eng_drag] = CurrentState.FullDragTorque * avgEngineSpeed;
-			container[ModalResultField.Tq_full] = CurrentState.DynamicFullLoadTorque;
-			container[ModalResultField.Tq_drag] = CurrentState.FullDragTorque;
-			container[ModalResultField.IgnitionOn] = CurrentState.IgnitionOn;
+			container[ModalResultField.P_ice_full] = CurrentState.DynamicFullLoadTorque * avgEngineSpeed;
+			container[ModalResultField.P_ice_full_stat] = CurrentState.StationaryFullLoadTorque * avgEngineSpeed;
+			container[ModalResultField.P_ice_drag] = CurrentState.FullDragTorque * avgEngineSpeed;
+			container[ModalResultField.T_ice_full] = CurrentState.DynamicFullLoadTorque;
+			container[ModalResultField.T_ice_drag] = CurrentState.FullDragTorque;
+			container[ModalResultField.ICEOn] = CurrentState.IgnitionOn;
 
 			WriteWHRPower(container, avgEngineSpeed, CurrentState.EngineTorque);
 
@@ -381,10 +416,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				var result = fuel.ConsumptionMap.GetFuelConsumption(
 					CurrentState.EngineTorque, avgEngineSpeed,
 					DataBus.ExecutionMode != ExecutionMode.Declaration);
+				var fuelData = fuel.FuelData;
 				if (DataBus.ExecutionMode != ExecutionMode.Declaration && result.Extrapolated) {
 					Log.Warn(
 						"FuelConsumptionMap for fuel {2} was extrapolated: range for FC-Map is not sufficient: n: {0}, torque: {1}",
-						avgEngineSpeed.Value(), CurrentState.EngineTorque.Value(), fuel.FuelData.FuelType.GetLabel());
+						avgEngineSpeed.Value(), CurrentState.EngineTorque.Value(), fuelData.FuelType.GetLabel());
 				}
 				var pt1 = ModelData.FullLoadCurves[DataBus.Gear].PT1(avgEngineSpeed);
 				if (DataBus.ExecutionMode == ExecutionMode.Declaration && pt1.Extrapolated) {
@@ -394,22 +430,22 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				}
 
 				var fc = result.Value;
-				var fcNCVcorr = fc * fuel.FuelData.HeatingValueCorrection; // TODO: wird fcNCVcorr
+				var fcNCVcorr = fc * fuelData.HeatingValueCorrection; // TODO: wird fcNCVcorr
 
 				var fcWHTC = fcNCVcorr * WHTCCorrectionFactor(fuel.FuelData);
-				var fcAAUX = fcWHTC;
+				//var fcAAUX = fcWHTC;
 				var advancedAux = EngineAux as BusAuxiliariesAdapter;
 				if (advancedAux != null) {
-					advancedAux.DoWriteModalResults(container);
-					fcAAUX = advancedAux.AAuxFuelConsumption;
+					advancedAux.DoWriteModalResults(time, simulationInterval ,container);
+					//fcAAUX = advancedAux.AAuxFuelConsumption;
 				}
-				var fcFinal = fcAAUX;
+				var fcFinal = fcWHTC; // fcAAUX;
 
-				container[ModalResultField.FCMap, fuel.FuelData] = fc;
+				container[ModalResultField.FCMap, fuelData] = fc;
 				container[ModalResultField.FCNCVc, fuel.FuelData] = fcNCVcorr;
 				container[ModalResultField.FCWHTCc, fuel.FuelData] = fcWHTC;
-				container[ModalResultField.FCAAUX, fuel.FuelData] = fcAAUX;
-				container[ModalResultField.FCEngineStopStart, fuel.FuelData] = fcFinal;
+				//container[ModalResultField.FCAAUX, fuel.FuelData] = fcAAUX;
+				container[ModalResultField.FCICEStopStart, fuel.FuelData] = fcFinal;
 				container[ModalResultField.FCFinal, fuel.FuelData] = fcFinal;
 			}
 		}
@@ -430,24 +466,26 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			container[ModalResultField.P_WHR_mech_corr] = pWHRmechCorr;
 		}
 
-		protected virtual void GetWHRPower(WHRData whr, PerSecond engineSpeed, NewtonMeter engineTorque, ref Watt pWHRelMap, ref Watt pWHRelCorr)
+		protected virtual void GetWHRPower(WHRData whr, PerSecond engineSpeed, NewtonMeter engineTorque, ref Watt pWHRMap, ref Watt pWHRCorr)
 		{
-			if (whr != null) {
-				var whrPwrEl = whr.WHRMap.GetWHRPower(
-					engineTorque, engineSpeed, DataBus.ExecutionMode != ExecutionMode.Declaration);
-				if (DataBus.ExecutionMode != ExecutionMode.Declaration && whrPwrEl.Extrapolated) {
-					Log.Warn(
-						"Electric WHR power was extrapolated: range for WHR-Map is not sufficient: n: {0}, torque: {1}",
-						engineSpeed.Value(), engineTorque.Value());
-				}
-				if (whrPwrEl.GeneratedPower != null) {
-					pWHRelMap = whrPwrEl.GeneratedPower;
-					pWHRelCorr = pWHRelMap * whr.WHRCorrectionFactor;
-				}
+			if (whr == null) {
+				return;
+			}
+
+			var whrPwr = whr.WHRMap.GetWHRPower(
+				engineTorque, engineSpeed, DataBus.ExecutionMode != ExecutionMode.Declaration);
+			if (DataBus.ExecutionMode != ExecutionMode.Declaration && whrPwr.Extrapolated) {
+				Log.Warn(
+					"WHR power was extrapolated in {2}: range for WHR-Map is not sufficient: n: {0}, torque: {1}",
+					engineSpeed.Value(), engineTorque.Value(), whr.WHRMap.Name);
+			}
+			if (whrPwr.GeneratedPower != null) {
+				pWHRMap = whrPwr.GeneratedPower;
+				pWHRCorr = pWHRMap * whr.WHRCorrectionFactor;
 			}
 		}
 
-		protected virtual double WHTCCorrectionFactor(FuelData.Entry fuel)
+		protected virtual double WHTCCorrectionFactor(IFuelProperties fuel)
 		{
 			return ModelData.Fuels.First(x=> x.FuelData.FuelType == fuel.FuelType).FuelConsumptionCorrectionFactor; 
 		}
@@ -467,25 +505,24 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		/// <summary>
 		///     computes full load power from gear [-], angularVelocity [rad/s] and dt [s].
 		/// </summary>
-		protected Watt ComputeFullLoadPower(PerSecond angularVelocity, Second dt, bool dryRun)
+		protected Watt ComputeFullLoadPower(PerSecond avgAngularVelocity, NewtonMeter stationaryFullLoadTorque, Second dt, bool dryRun)
 		{
 			if (dt <= 0) {
 				throw new VectoException("ComputeFullLoadPower cannot compute for simulation interval length 0.");
 			}
 
-			var tStatFull = ModelData.FullLoadCurves[DataBus.Gear].FullLoadStationaryTorque(angularVelocity);
-			var stationaryFullLoadPower = tStatFull * angularVelocity;
-			if (!dryRun) {
-				CurrentState.StationaryFullLoadTorque = tStatFull;
-			}
+			
+			var stationaryFullLoadPower = stationaryFullLoadTorque * avgAngularVelocity;
 			Watt dynFullPowerCalculated;
+
+			
 
 			// disable pt1 behaviour if PT1Disabled is true, or if the previous enginepower is greater than the current stationary fullload power (in this case the pt1 calculation fails)
 			if (PT1Disabled || PreviousState.EnginePower.IsGreaterOrEqual(stationaryFullLoadPower)) {
 				dynFullPowerCalculated = stationaryFullLoadPower;
 			} else {
 				try {
-					var pt1 = ModelData.FullLoadCurves[DataBus.Gear].PT1(angularVelocity).Value.Value();
+					var pt1 = ModelData.FullLoadCurves[DataBus.Gear].PT1(avgAngularVelocity).Value.Value();
 					var powerRatio = (PreviousState.EnginePower / stationaryFullLoadPower).Value();
 					var tStarPrev = pt1 * Math.Log(1.0 / (1 - powerRatio), Math.E).SI<Second>();
 					var tStar = tStarPrev + PreviousState.dt;
@@ -512,6 +549,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			if (dynFullPowerCalculated < 0) {
 				return 0.SI<Watt>();
+			}
+			var atGbx = (DataBus as VehicleContainer)?.Gearbox as ATGearbox;
+			if (atGbx != null && atGbx.ShiftToLocked && PreviousState.EngineTorque.IsGreater(0)) {
+
+				return VectoMath.Min(PreviousState.EngineTorque * avgAngularVelocity, dynFullPowerCalculated);
 			}
 			return dynFullPowerCalculated;
 		}
@@ -586,7 +628,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			public virtual IResponse Request(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity,
 				bool dryRun = false)
 			{
-				if (!_dataBus.VehicleStopped && _dataBus.Gear != _dataBus.NextGear.Gear && _dataBus.Gear != 0 &&
+				if (!_dataBus.VehicleStopped && _dataBus.Gear != 0 &&_dataBus.Gear != _dataBus.NextGear.Gear  &&
 					_dataBus.NextGear.Gear != 0) {
 					return RequestDoubleClutch(absTime, dt, outTorque, outAngularVelocity);
 				}

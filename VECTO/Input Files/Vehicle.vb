@@ -14,7 +14,9 @@ Imports System.Collections.Generic
 Imports System.ComponentModel.DataAnnotations
 Imports System.IO
 Imports System.Linq
+Imports System.Xml
 Imports TUGraz.VECTO.Input_Files
+Imports TUGraz.VectoCommon.BusAuxiliaries
 Imports TUGraz.VectoCommon.InputData
 Imports TUGraz.VectoCommon.Models
 Imports TUGraz.VectoCommon.Utils
@@ -108,11 +110,11 @@ Public Class Vehicle
 
 		Try
 			If mode = ExecutionMode.Declaration Then
-				Dim doa As DeclarationDataAdapter = New DeclarationDataAdapter()
-				Dim segment As Segment = DeclarationData.Segments.Lookup(vehicle.VehicleCategory, vehicle.AxleConfiguration,
+				Dim doa As DeclarationDataAdapterHeavyLorry = New DeclarationDataAdapterHeavyLorry()
+				Dim segment As Segment = DeclarationData.TruckSegments.Lookup(vehicle.VehicleCategory, vehicle.AxleConfiguration,
 																		vehicle.GrossVehicleMassRating, vehicle.CurbMassChassis, false)
-				vehicleData = doa.CreateVehicleData(vehicle, segment.Missions.First(),
-													segment.Missions.First().Loadings.First().Value)
+				vehicleData = doa.CreateVehicleData(vehicle, segment, segment.Missions.First(),
+													segment.Missions.First().Loadings.First())
 				airdragData = doa.CreateAirdragData(vehicle, segment.Missions.First(), segment)
 				retarderData = doa.CreateRetarderData(vehicle)
 				angledriveData = doa.CreateAngledriveData(vehicle)
@@ -224,7 +226,7 @@ Public Class Vehicle
 
 		Try
 			Dim writer As JSONFileWriter = JSONFileWriter.Instance
-			writer.SaveVehicle(Me, Me, Me, Me, Me, _filePath)
+			writer.SaveVehicle(Me, Me, Me, Me, Me, _filePath, Cfg.DeclMode)
 		Catch ex As Exception
 			MsgBox("Failed to save Vehicle file: " + ex.Message)
 			Return False
@@ -284,13 +286,19 @@ Public Class Vehicle
 	End Property
 
 
-	Public ReadOnly Property [Date] As String Implements IComponentInputData.[Date]
+	Public ReadOnly Property [Date] As DateTime Implements IComponentInputData.[Date]
 		Get
-			Return Now.ToUniversalTime().ToString("o")
+			Return Now.ToUniversalTime()
 		End Get
 	End Property
 
-	Public ReadOnly Property CertificationMethod As CertificationMethod Implements IComponentInputData.CertificationMethod
+    Public ReadOnly Property AppVersion As String Implements IComponentInputData.AppVersion
+        get
+            Return "VECTO-GUI"
+        End Get
+    End Property
+
+    Public ReadOnly Property CertificationMethod As CertificationMethod Implements IComponentInputData.CertificationMethod
 		Get
 			Return CertificationMethod.NotCertified
 		End Get
@@ -406,13 +414,22 @@ Public Class Vehicle
 		End Get
 	End Property
 
-	Public ReadOnly Property Height As Meter Implements IVehicleEngineeringInputData.Height
+    Public ReadOnly Property IVehicleDeclarationInputData_Height As Meter Implements IVehicleDeclarationInputData.Height
+
+    Public ReadOnly Property Articulated As Boolean Implements IVehicleDeclarationInputData.Articulated
+
+    Public ReadOnly Property Height As Meter Implements IVehicleEngineeringInputData.Height
 		Get
 			Return VehicleHeight.SI(Of Meter)()
 		End Get
 	End Property
 
-	Public ReadOnly Property IVehicleEngineeringInputData_Components As IVehicleComponentsEngineering Implements IVehicleEngineeringInputData.Components
+    Public ReadOnly Property Length As Meter Implements IVehicleDeclarationInputData.Length
+    Public ReadOnly Property Width As Meter Implements IVehicleDeclarationInputData.Width
+    Public ReadOnly Property EntranceHeight As Meter Implements IVehicleDeclarationInputData.EntranceHeight
+    Public ReadOnly Property DoorDriveTechnology As ConsumerTechnology Implements IVehicleDeclarationInputData.DoorDriveTechnology
+
+    Public ReadOnly Property IVehicleEngineeringInputData_Components As IVehicleComponentsEngineering Implements IVehicleEngineeringInputData.Components
 	get
 			Return me
 	End Get
@@ -680,7 +697,9 @@ Public Class Vehicle
 	End Get
 	End Property
 
-	Public ReadOnly Property VocationalVehicle As Boolean Implements IVehicleDeclarationInputData.VocationalVehicle
+    Public ReadOnly Property BusAuxiliaries As IBusAuxiliariesDeclarationData Implements IVehicleComponentsDeclaration.BusAuxiliaries
+
+    Public ReadOnly Property VocationalVehicle As Boolean Implements IVehicleDeclarationInputData.VocationalVehicle
 	get
 			Return DeclarationData.Vehicle.VocationalVehicleDefault
 	End Get
@@ -740,13 +759,21 @@ Public Class Vehicle
 	End Get
 	End Property
 
-	Public ReadOnly Property Components As IVehicleComponentsDeclaration Implements IVehicleDeclarationInputData.Components
+    Public ReadOnly Property RegisteredClass As RegistrationClass Implements IVehicleDeclarationInputData.RegisteredClass
+    Public ReadOnly Property NumberOfPassengersUpperDeck As Integer Implements IVehicleDeclarationInputData.NumberOfPassengersUpperDeck
+    Public ReadOnly Property NumberOfPassengersLowerDeck As Integer Implements IVehicleDeclarationInputData.NumberOfPassengersLowerDeck
+    Public ReadOnly Property VehicleCode As VehicleCode Implements IVehicleDeclarationInputData.VehicleCode
+    Public ReadOnly Property FloorType As FloorType Implements IVehicleDeclarationInputData.FloorType
+
+    Public ReadOnly Property Components As IVehicleComponentsDeclaration Implements IVehicleDeclarationInputData.Components
 	get
 			Return Me
 	End Get
 	End Property
 
-	Public ReadOnly Property EngineStopStart As Boolean Implements IAdvancedDriverAssistantSystemDeclarationInputData.EngineStopStart
+    Public ReadOnly Property IVehicleDeclarationInputData_XMLSource As XmlNode Implements IVehicleDeclarationInputData.XMLSource
+
+    Public ReadOnly Property EngineStopStart As Boolean Implements IAdvancedDriverAssistantSystemDeclarationInputData.EngineStopStart
 	get
 			return EngineStop
 	End Get
@@ -765,6 +792,14 @@ Public Class Vehicle
 	End Get
 	End Property
 
+    Public ReadOnly Property ATEcoRollReleaseLockupClutch As Boolean? Implements IAdvancedDriverAssistantSystemDeclarationInputData.ATEcoRollReleaseLockupClutch
+    get
+            Return EcoRollReleaseLockupClutch
+    End Get
+    End Property
+
+    Public ReadOnly Property XMLSource As XmlNode Implements IAdvancedDriverAssistantSystemDeclarationInputData.XMLSource
+
     Public ReadOnly Property IAdvancedDriverAssistantSystemsEngineering_DataSource As DataSource Implements IAdvancedDriverAssistantSystemsEngineering.DataSource
         get
             Return New DataSource() With {.SourceType = DataSourceType.JSONFile}
@@ -778,5 +813,7 @@ Public Class Vehicle
 	End Get
 	End Property
 
-    
+    Public Property EcoRollReleaseLockupClutch As Boolean
+
+    Public ReadOnly Property IAxlesDeclarationInputData_XMLSource As XmlNode Implements IAxlesDeclarationInputData.XMLSource
 End Class

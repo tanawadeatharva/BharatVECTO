@@ -1,20 +1,22 @@
 ﻿Imports System.Collections.Generic
-Imports VectoAuxiliaries
 Imports System.IO
 Imports System.Linq
 Imports System.Runtime.Remoting
+Imports TUGraz.VectoCore.Models.BusAuxiliaries
+Imports TUGraz.VectoCore.Models.BusAuxiliaries.Interfaces
+Imports VectoAuxiliaries
 
 Module AdvancedAuxiliariesModule
-	Public WithEvents AdvancedAuxModel As IAdvancedAuxiliaries
+	'Public WithEvents AdvancedAuxModel As IBusAuxiliaries
 
 	Dim _returnList As Dictionary(Of String, AdvancedAuxiliary) = Nothing
 
-	Public Sub AAEventAuxiliaryEvent(ByRef sender As Object, ByVal message As String,
-									ByVal messageType As AdvancedAuxiliaryMessageType) Handles AdvancedAuxModel.AuxiliaryEvent
+	'Public Sub AAEventAuxiliaryEvent(ByRef sender As Object, ByVal message As String,
+	'								ByVal messageType As AdvancedAuxiliaryMessageType) Handles AdvancedAuxModel.AuxiliaryEvent
 
 
-		WorkerMsg(CType(messageType, MessageType), message, "Advanced Auxiliaries")
-	End Sub
+	'	WorkerMsg(CType(messageType, MessageType), message, "Advanced Auxiliaries")
+	'End Sub
 
 	'AA-TB
 
@@ -31,8 +33,8 @@ Module AdvancedAuxiliariesModule
 		End If
 
 		_returnList = New Dictionary(Of String, AdvancedAuxiliary)
-		Dim o As ObjectHandle
-		Dim iAdvancedAux As IAdvancedAuxiliaries
+		'Dim o As ObjectHandle
+		Dim busAux As BusAuxiliaries
 
 
 		'Create Default
@@ -40,34 +42,34 @@ Module AdvancedAuxiliariesModule
 		_returnList.Add(classicAux.AssemblyName, classicAux)
 
 
-		Try
-			Dim fileEntries As String() = Directory.GetFiles(GetAAUXSourceDirectory)
-			' Process the list of files found in the directory. 
-			Dim fileName As String
+		'Try
+		'	Dim fileEntries As String() = Directory.GetFiles(GetAAUXSourceDirectory)
+		'	' Process the list of files found in the directory. 
+		'	Dim fileName As String
 
-			For Each fileName In fileEntries
+		'	For Each fileName In fileEntries
 
-				If fileName.Contains("Auxiliaries.dll") Then
+		'		If fileName.Contains("Auxiliaries.dll") Then
 
-					'Get filenamewith
-					Dim fileNameWoPath As String = GetFilenameWithoutPath(fileName, True)
-					Dim fileNameWoExtentsion As String = GetFilenameWithoutPath(fileName, False)
+		'			'Get filenamewith
+		'			Dim fileNameWoPath As String = GetFilenameWithoutPath(fileName, True)
+		'			Dim fileNameWoExtentsion As String = GetFilenameWithoutPath(fileName, False)
 
-					o = Activator.CreateInstance(fileNameWoExtentsion, "VectoAuxiliaries.AdvancedAuxiliaries")
+		'			o = Activator.CreateInstance(fileNameWoExtentsion, "VectoAuxiliaries.AdvancedAuxiliaries")
 
-					iAdvancedAux = DirectCast(o.Unwrap, IAdvancedAuxiliaries)
+					busAux = new BusAuxiliaries(Nothing)
 
-					Dim advancedAuxiliary As AdvancedAuxiliary = New AdvancedAuxiliary(iAdvancedAux.AuxiliaryName,
-																						iAdvancedAux.AuxiliaryVersion,
-																						fileNameWoPath, fileNameWoExtentsion)
+					Dim advancedAuxiliary As AdvancedAuxiliary = New AdvancedAuxiliary(busAux.AuxiliaryName,
+																						busAux.AuxiliaryVersion,
+																						"BUSAUX", "BusAuxiliaries")
 					_returnList.Add(advancedAuxiliary.AuxiliaryVersion, advancedAuxiliary)
-				End If
+		'		End If
 
-			Next fileName
+		'	Next fileName
 
-		Catch ex As Exception
-			MessageBox.Show("Unable to obtain Advanced Auxiliary Assemblies")
-		End Try
+		'Catch ex As Exception
+		'	MessageBox.Show("Unable to obtain Advanced Auxiliary Assemblies")
+		'End Try
 
 
 		Return _returnList
@@ -86,7 +88,7 @@ Module AdvancedAuxiliariesModule
 
 		Dim auxList As Dictionary(Of String, AdvancedAuxiliary) = DiscoverAdvancedAuxiliaries()
 		Dim o As ObjectHandle
-		Dim iAdvancedAux As IAdvancedAuxiliaries
+		Dim busAux As BusAuxiliaries
 		Dim result As Boolean
 
 		Dim chosenAssembly As KeyValuePair(Of String, AdvancedAuxiliary) =
@@ -97,10 +99,10 @@ Module AdvancedAuxiliariesModule
 		'Open Assembly and invoke the configuration using the paths supplied.
 
 		Try
-			o = Activator.CreateInstance(chosenAssembly.Value.AssemblyName, "VectoAuxiliaries.AdvancedAuxiliaries")
-			iAdvancedAux = DirectCast(o.Unwrap, IAdvancedAuxiliaries)
+			'o = Activator.CreateInstance(chosenAssembly.Value.AssemblyName, "VectoAuxiliaries.AdvancedAuxiliaries")
+			busAux = New BusAuxiliaries(Nothing) ' DirectCast(o.Unwrap, IAdvancedAuxiliaries)
 
-			iAdvancedAux.Configure(filePath, vectoFilePath)
+			Configure(filePath, vectoFilePath)
 
 		Catch ex As Exception
 
@@ -110,6 +112,31 @@ Module AdvancedAuxiliariesModule
 
 		Return result
 	End Function
+
+    Function Configure(filePath As String, vectoFilePath As String) As Boolean
+        Try
+
+            Dim frmAuxiliaryConfig As New frmAuxiliaryConfig(filePath, vectoFilePath)
+
+            frmAuxiliaryConfig.Show()
+
+            If frmAuxiliaryConfig.DialogResult <> DialogResult.OK Then
+
+                Return True
+
+            Else
+
+                Return False
+
+            End If
+
+
+        Catch ex As Exception
+
+            Return False
+
+        End Try
+    End Function
 
 
 	''' <summary>
@@ -146,8 +173,7 @@ Module AdvancedAuxiliariesModule
 									ByRef message As String) As Boolean
 
 		Dim auxList As Dictionary(Of String, AdvancedAuxiliary) = DiscoverAdvancedAuxiliaries()
-		Dim o As ObjectHandle
-		Dim iAdvancedAux As IAdvancedAuxiliaries
+		Dim busAux as BusAuxiliaries
 		Dim result As Boolean
 
 
@@ -159,10 +185,10 @@ Module AdvancedAuxiliariesModule
 
 		'Open Assembly and invoke the validation using the paths supplied.
 		Try
-			o = Activator.CreateInstance(chosenAssembly.Value.AssemblyName, "VectoAuxiliaries.AdvancedAuxiliaries")
-			iAdvancedAux = DirectCast(o.Unwrap, IAdvancedAuxiliaries)
+			'o = Activator.CreateInstance(chosenAssembly.Value.AssemblyName, "VectoAuxiliaries.AdvancedAuxiliaries")
+			busAux = New BusAuxiliaries(Nothing)  ' DirectCast(o.Unwrap, IAdvancedAuxiliaries)
 
-			result = iAdvancedAux.ValidateAAUXFile(absoluteAAuxPath, message)
+			'result = busAux.ValidateAAUXFile(absoluteAAuxPath, message)
 
 		Catch ex As Exception
 

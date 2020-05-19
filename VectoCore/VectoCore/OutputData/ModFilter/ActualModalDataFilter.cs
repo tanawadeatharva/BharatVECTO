@@ -47,7 +47,7 @@ namespace TUGraz.VectoCore.OutputData.ModFilter
 
 			var init = data.Rows[0];
 			var v_act = init.Field<MeterPerSecond>(ModalResultField.v_act.GetName());
-			var n_engine = init.Field<PerSecond>(ModalResultField.n_eng_avg.GetName());
+			var n_engine = init.Field<PerSecond>(ModalResultField.n_ice_avg.GetName());
 			var dist = init.Field<Meter>(ModalResultField.dist.GetName());
 			var n_gbx_out = init.Field<PerSecond>(ModalResultField.n_gbx_out_avg.GetName());
 
@@ -80,31 +80,31 @@ namespace TUGraz.VectoCore.OutputData.ModFilter
 				dist = current.Field<Meter>(ModalResultField.dist.GetName());
 				end[ModalResultField.dist.GetName()] = dist;
 
-				start[ModalResultField.n_eng_avg.GetName()] = n_engine;
-				n_engine = 2 * current.Field<PerSecond>(ModalResultField.n_eng_avg.GetName()) - n_engine;
-				end[ModalResultField.n_eng_avg.GetName()] = n_engine;
+				start[ModalResultField.n_ice_avg.GetName()] = n_engine;
+				n_engine = 2 * current.Field<PerSecond>(ModalResultField.n_ice_avg.GetName()) - n_engine;
+				end[ModalResultField.n_ice_avg.GetName()] = n_engine;
 
 				start[ModalResultField.n_gbx_out_avg.GetName()] = n_gbx_out;
 				n_gbx_out = 2 * current.Field<PerSecond>(ModalResultField.n_gbx_out_avg.GetName()) - n_gbx_out;
 				end[ModalResultField.n_gbx_out_avg.GetName()] = n_gbx_out;
 
 				SetConstantValues(current, start, end,
-					ModalResultField.T_eng_fcmap,
-					ModalResultField.Tq_full,
-					ModalResultField.Tq_drag,
+					ModalResultField.T_ice_fcmap,
+					ModalResultField.T_ice_full,
+					ModalResultField.T_ice_drag,
 					ModalResultField.T_gbx_out
 					);
 
 				SetConstantValues(current, start, end,
-					ModalResultField.P_eng_full,
-					ModalResultField.P_eng_full_stat,
-					ModalResultField.P_eng_out,
-					ModalResultField.P_eng_drag,
-					ModalResultField.P_eng_fcmap,
+					ModalResultField.P_ice_full,
+					ModalResultField.P_ice_full_stat,
+					ModalResultField.P_ice_out,
+					ModalResultField.P_ice_drag,
+					ModalResultField.P_ice_fcmap,
 					ModalResultField.P_clutch_out,
 					ModalResultField.P_clutch_loss,
 					ModalResultField.P_aux,
-					ModalResultField.P_eng_inertia,
+					ModalResultField.P_ice_inertia,
 					ModalResultField.P_gbx_in,
 					ModalResultField.P_gbx_inertia,
 					ModalResultField.P_gbx_loss,
@@ -128,7 +128,7 @@ namespace TUGraz.VectoCore.OutputData.ModFilter
 				SetConstantValues(current, start, end,
 					ModalResultField.FCMap,
 					ModalResultField.FCNCVc,
-					ModalResultField.FCAAUX,
+					//ModalResultField.FCAAUX,
 					ModalResultField.FCWHTCc,
 					ModalResultField.FCFinal);
 

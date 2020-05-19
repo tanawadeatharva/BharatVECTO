@@ -1,6 +1,8 @@
-﻿using System.Xml;
+﻿using System;
+using System.Xml;
 using System.Xml.Linq;
 using TUGraz.VectoCommon.InputData;
+using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Interfaces;
 using TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader;
 using TUGraz.VectoCore.Utils;
@@ -89,6 +91,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 			get { return _axleWheels ?? (_axleWheels = ComponentReader.AxlesDeclarationInputData); }
 		}
 
+		public virtual IBusAuxiliariesDeclarationData BusAuxiliaries { get { return null; } }
+
 		#endregion
 
 		#region Implementation of IXMLVehicleComponentsDeclaration
@@ -128,5 +132,157 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		{
 			get { return NAMESPACE_URI; }
 		}
+	}
+
+	// ---------------------------------------------------------------------------------------
+
+	public class XMLDeclarationPrimaryBusComponentsDataProviderV26 : XMLDeclarationComponentsDataProviderV10, IXMLVehicleComponentsDeclaration
+	{
+		public new static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V26;
+
+		public new const string XSD_TYPE = "PrimaryVehicleComponentsDeclarationType";
+
+		public new static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
+
+		private IBusAuxiliariesDeclarationData _busAuxiliaries;
+
+		public XMLDeclarationPrimaryBusComponentsDataProviderV26(
+			IXMLDeclarationVehicleData vehicle, XmlNode componentNode, string sourceFile) : base(
+			vehicle, componentNode, sourceFile)
+		{ }
+
+
+		IAuxiliariesDeclarationInputData IVehicleComponentsDeclaration.AuxiliaryInputData
+		{
+			get { return null; }
+		}
+
+		public override IBusAuxiliariesDeclarationData BusAuxiliaries { get { return _busAuxiliaries ?? (_busAuxiliaries = ComponentReader.BusAuxiliariesInputData); } }
+
+		protected override XNamespace SchemaNamespace
+		{
+			get { return NAMESPACE_URI; }
+		}
+	}
+
+	// ---------------------------------------------------------------------------------------
+
+	public class XMLDeclarationComponentsDataProviderNoAxlegearV26 : XMLDeclarationComponentsDataProviderV10
+	{
+		public new static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V20;
+
+		public new const string XSD_TYPE = "VehicleComponentsNoAxlegearType";
+
+		public new static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
+
+		public XMLDeclarationComponentsDataProviderNoAxlegearV26(
+			IXMLDeclarationVehicleData vehicle, XmlNode componentNode, string sourceFile) : base(
+			vehicle, componentNode, sourceFile)
+		{ }
+
+		#region Overrides of XMLDeclarationComponentsDataProviderV10
+
+		public override IAxleGearInputData AxleGearInputData { get {
+			return null;
+				//throw new NotSupportedException("No Axlegeardata available"); 
+			} }
+
+		#endregion
+
+		protected override XNamespace SchemaNamespace
+		{
+			get { return NAMESPACE_URI; }
+		}
+	}
+
+	// ---------------------------------------------------------------------------------------
+
+
+	public class XMLDeclarationCompleteBusComponentsDataProviderV26 : XMLDeclarationComponentsDataProviderV10, IXMLVehicleComponentsDeclaration
+	{
+		public new static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V26;
+
+		public new const string XSD_TYPE = "CompletedVehicleComponentsDeclarationType";
+
+		public new static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
+
+		private IBusAuxiliariesDeclarationData _busAuxiliaries;
+
+		public XMLDeclarationCompleteBusComponentsDataProviderV26(
+			IXMLDeclarationVehicleData vehicle, XmlNode componentNode, string sourceFile) : base(
+			vehicle, componentNode, sourceFile)
+		{ }
+
+		IGearboxDeclarationInputData IVehicleComponentsDeclaration.GearboxInputData
+		{
+			get { return null; }
+		}
+		
+		IAuxiliariesDeclarationInputData IVehicleComponentsDeclaration.AuxiliaryInputData
+		{
+			get { return null; }
+		}
+
+		public override IBusAuxiliariesDeclarationData BusAuxiliaries { get { return _busAuxiliaries ?? (_busAuxiliaries = ComponentReader.BusAuxiliariesInputData); } }
+
+		protected override XNamespace SchemaNamespace
+		{
+			get { return NAMESPACE_URI; }
+		}
+	}
+
+
+	// ---------------------------------------------------------------------------------------
+
+
+	public class XMLDeclarationComponentsPrimaryVehicleBusDataProviderV01 : XMLDeclarationComponentsDataProviderV10, IXMLVehicleComponentsDeclaration,
+		IRetarderInputData
+		
+	{
+		public new static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_PRIMARY_BUS_VEHICLE_URI_V01;
+
+		public new const string XSD_TYPE = "VehicleComponentsPIFType";
+
+		public new static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
+
+		private IBusAuxiliariesDeclarationData _busAuxiliaries;
+
+
+		public XMLDeclarationComponentsPrimaryVehicleBusDataProviderV01(IXMLDeclarationVehicleData vehicle,
+			XmlNode componentNode, string sourceFile) : base(vehicle, componentNode, sourceFile) { }
+
+
+		IRetarderInputData IVehicleComponentsDeclaration.RetarderInputData
+		{
+			get { return this; }
+		}
+
+		IAirdragDeclarationInputData IVehicleComponentsDeclaration.AirdragInputData
+		{
+			get { return null; }
+		}
+		
+		IAuxiliariesDeclarationInputData IVehicleComponentsDeclaration.AuxiliaryInputData
+		{
+			get { return null; }
+		}
+
+		public override IBusAuxiliariesDeclarationData BusAuxiliaries
+		{
+			get { return _busAuxiliaries ?? (_busAuxiliaries = ComponentReader.BusAuxiliariesInputData); }
+		}
+
+		protected override XNamespace SchemaNamespace
+		{
+			get { return NAMESPACE_URI; }
+		}
+
+		#region IRetarderInputData Interface Implementation
+
+		public RetarderType Type { get{ return _vehicle.RetarderType; }}
+		public double Ratio { get { return _vehicle.RetarderRatio; }}
+		public TableData LossMap { get; }
+
+		#endregion
 	}
 }

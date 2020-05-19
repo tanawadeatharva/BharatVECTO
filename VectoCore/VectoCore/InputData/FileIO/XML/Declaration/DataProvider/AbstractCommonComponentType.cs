@@ -1,11 +1,11 @@
-using System.Collections.Generic;
+using System;
 using System.Xml;
+using System.Xml.Linq;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Resources;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.InputData.FileIO.XML.Common;
-using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider {
 	public abstract class AbstractCommonComponentType : AbstractXMLResource
@@ -27,9 +27,14 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider {
 			get { return GetString(XMLNames.Component_Model); }
 		}
 
-		public virtual string Date
+		public virtual DateTime Date
 		{
-			get { return GetString(XMLNames.Component_Date); }
+			get { return XmlConvert.ToDateTime(GetString(XMLNames.Component_Date), XmlDateTimeSerializationMode.Utc); }
+		}
+
+		public virtual string AppVersion
+		{
+			get { return GetString(XMLNames.Component_AppVersion); }
 		}
 
 		public virtual CertificationMethod CertificationMethod
@@ -49,5 +54,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider {
 		{
 			get { return new DigestData(GetNode(XMLNames.DI_Signature, required:false)); }
 		}
+
+		public virtual XmlNode XMLSource { get { return BaseNode; } }
 	}
 }

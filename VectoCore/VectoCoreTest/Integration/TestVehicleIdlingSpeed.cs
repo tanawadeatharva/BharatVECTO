@@ -36,7 +36,6 @@ using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Resources;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Configuration;
-using TUGraz.VectoCore.InputData.FileIO.XML.Declaration;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.OutputData;
@@ -102,7 +101,7 @@ namespace TUGraz.VectoCore.Tests.Integration
 			run.Run.Run();
 
 			modContainer.Data = modData;
-			Assert.IsTrue(modContainer.Min<PerSecond>(ModalResultField.n_eng_avg).IsGreaterOrEqual(VehicleEngineIdleSpeed));
+			Assert.IsTrue(modContainer.Min<PerSecond>(ModalResultField.n_ice_avg).IsGreaterOrEqual(VehicleEngineIdleSpeed));
 
 
 			//jobContainer.Execute();

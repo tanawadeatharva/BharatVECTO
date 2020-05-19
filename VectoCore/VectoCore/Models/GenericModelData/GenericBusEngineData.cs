@@ -1,0 +1,227 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Data;
+using System.Linq;
+using System.Runtime.CompilerServices;
+using TUGraz.VectoCommon.BusAuxiliaries;
+using TUGraz.VectoCommon.Exceptions;
+using TUGraz.VectoCommon.InputData;
+using TUGraz.VectoCommon.Models;
+using TUGraz.VectoCommon.Utils;
+using TUGraz.VectoCore.InputData.Reader.ComponentData;
+using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter;
+using TUGraz.VectoCore.Models.SimulationComponent.Data;
+using TUGraz.VectoCore.Models.SimulationComponent.Data.Engine;
+using TUGraz.VectoCore.Utils;
+
+namespace TUGraz.VectoCore.Models.Declaration
+{
+	public class GenericBusEngineData
+	{
+		#region Constans
+
+		private static string GenericEngineCM_Normed_CI =
+			$"{DeclarationData.DeclarationDataResourcePrefix}.GenericBusData.EngineConsumptionMap_CI_Normed.vmap";
+
+		private static string GenericEngineCM_Normed_PI =
+			$"{DeclarationData.DeclarationDataResourcePrefix}.GenericBusData.EngineConsumptionMap_PI_Normed.vmap";
+
+		private static readonly double[] DieselCIFactors = { 1.05, 1.02, 1.0, 1.005, 1.0 };
+		private static readonly double[] PIFactors = { 1.05, 1.02, 1.0, 1.005, 1.0 };
+
+		private static GenericBusEngineData _instance;
+
+		public static GenericBusEngineData Instance
+		{
+			get { return _instance ?? (_instance = new GenericBusEngineData()); }
+		}
+
+		#endregion
+
+		protected GenericBusEngineData()
+		{
+			
+		}
+
+		public CombustionEngineData CreateGenericBusEngineData(IVehicleDeclarationInputData primaryVehicle, int modeIdx, Mission mission)
+		{
+			if (modeIdx >= primaryVehicle.Components.EngineInputData.EngineModes.Count) {
+				throw new VectoException(
+					"requested engine mode {0}, only {1} modes in engine of primary vehicle available!", modeIdx,
+					primaryVehicle.Components.EngineInputData.EngineModes.Count);
+			}
+			var engineData = primaryVehicle.Components.EngineInputData;
+			var gearbox = primaryVehicle.Components.GearboxInputData;
+			var idleSpeed = VectoMath.Max(engineData.EngineModes[modeIdx].IdleSpeed, primaryVehicle.EngineIdleSpeed);
+			var engine = new CombustionEngineData {
+				IdleSpeed = idleSpeed,
+				Displacement = engineData.Displacement,
+				WHRType = WHRType.None,
+				Inertia = DeclarationData.Engine.EngineInertia(engineData.Displacement, gearbox.Type),
+				EngineStartTime = DeclarationData.Engine.DefaultEngineStartTime,
+				RatedPowerDeclared = engineData.RatedPowerDeclared,
+				RatedSpeedDeclared = engineData.RatedSpeedDeclared,
+				MaxTorqueDeclared = engineData.MaxTorqueDeclared,
+			};
+
+			var limits = primaryVehicle.TorqueLimits.ToDictionary(e => e.Gear);
+			var numGears = gearbox.Gears.Count;
+			var fullLoadCurves = new Dictionary<uint, EngineFullLoadCurve>(numGears + 1);
+			fullLoadCurves[0] = FullLoadCurveReader.Create(engineData.EngineModes[modeIdx].FullLoadCurve, true);
+			fullLoadCurves[0].EngineData = engine;
+
+			foreach (var gear in gearbox.Gears) {
+				var maxTorque = VectoMath.Min(
+					DeclarationDataAdapterHeavyLorry.GbxMaxTorque(gear, numGears, fullLoadCurves[0].MaxTorque),
+					DeclarationDataAdapterHeavyLorry.VehMaxTorque(gear, numGears, limits, fullLoadCurves[0].MaxTorque));
+				fullLoadCurves[(uint)gear.Gear] = AbstractSimulationDataAdapter.IntersectFullLoadCurves(fullLoadCurves[0], maxTorque);
+			}
+
+			engine.FullLoadCurves = fullLoadCurves;
+			
+
+			var fuel = GetCombustionEngineFuelData(primaryVehicle.Components.EngineInputData.EngineModes[modeIdx], fullLoadCurves[0], mission);
+			
+			
+
+			engine.Fuels = new List<CombustionEngineFuelData> { fuel };
+
+			
+			return engine;
+		}
+
+
+		private bool UseDieselFuel(IEngineModeDeclarationInputData engineMode)
+		{
+			var fuelType = engineMode.Fuels.First().FuelType;
+			var isDualFuel = engineMode.Fuels.Count > 1;
+
+			if (isDualFuel)
+				return true;
+
+			switch (fuelType) {
+				case FuelType.DieselCI:
+				case FuelType.EthanolCI:
+				case FuelType.NGCI:
+					return true;
+				default:
+					return false;
+			}
+		}
+
+		private string GetEngineRessourceId(IEngineModeDeclarationInputData engineMode)
+		{
+			return UseDieselFuel(engineMode) ? GenericEngineCM_Normed_CI : GenericEngineCM_Normed_PI;
+		}
+
+		private IFuelProperties GetFuelData(IEngineModeDeclarationInputData engineMode)
+		{
+			return UseDieselFuel(engineMode)
+				? FuelData.Diesel
+				: FuelData.Instance().Lookup(FuelType.NGPI, TankSystem.Compressed);
+		}
+
+		private double[] GetEngineCorrectionFactors(IEngineModeDeclarationInputData engineMode)
+		{
+			return UseDieselFuel(engineMode) ? DieselCIFactors : PIFactors;
+		}
+
+		private CombustionEngineFuelData GetCombustionEngineFuelData(IEngineModeDeclarationInputData engineMode, EngineFullLoadCurve fullLoadCurve, Mission mission)
+		{
+			var ressourceId = GetEngineRessourceId(engineMode);
+
+			var nIdle = engineMode.IdleSpeed.AsRPM;
+			var ratedSpeed = fullLoadCurve.RatedSpeed.AsRPM;
+			var maxTorque = fullLoadCurve.MaxTorque.Value();
+			
+			var denormalizedData = DenormalizeData(ressourceId, nIdle, ratedSpeed, maxTorque);
+			
+			var engineSpeed = denormalizedData.AsEnumerable().Select(r => 
+				r.Field<string>(FuelConsumptionMapReader.Fields.EngineSpeed).ToDouble()).ToArray();
+
+			var clusterResult = new MeanShiftClustering().FindClusters(engineSpeed, 1);
+
+			foreach (var entry in clusterResult) {
+				var dragTorque = fullLoadCurve.DragLoadStationaryTorque(entry.RPMtoRad()).Value();
+				var newRow = denormalizedData.NewRow();
+				newRow[FuelConsumptionMapReader.Fields.EngineSpeed] = Math.Round(entry, 2, MidpointRounding.AwayFromZero);
+				newRow[FuelConsumptionMapReader.Fields.Torque] =  Math.Round(dragTorque, 2, MidpointRounding.AwayFromZero);
+				newRow[FuelConsumptionMapReader.Fields.FuelConsumption] = 0;
+				denormalizedData.Rows.Add(newRow);
+				var newRow2 = denormalizedData.NewRow();
+				newRow2[FuelConsumptionMapReader.Fields.EngineSpeed] = Math.Round(entry, 2, MidpointRounding.AwayFromZero);
+				newRow2[FuelConsumptionMapReader.Fields.Torque] = Math.Round(dragTorque - 100, 2, MidpointRounding.AwayFromZero);
+				newRow2[FuelConsumptionMapReader.Fields.FuelConsumption] = 0;
+				denormalizedData.Rows.Add(newRow2);
+			}
+
+			;
+			var fcMap = FuelConsumptionMapReader.Create(denormalizedData.AsEnumerable().OrderBy(r => r.Field<string>(FuelConsumptionMapReader.Fields.EngineSpeed).ToDouble())
+																		.ThenBy(r => r.Field<string>(FuelConsumptionMapReader.Fields.Torque).ToDouble()).CopyToDataTable());
+			var engineCF = GetEngineCorrectionFactors(engineMode);
+
+			var fuel = new CombustionEngineFuelData
+			{
+				WHTCUrban = engineCF[0],
+				WHTCRural = engineCF[1],
+				WHTCMotorway = engineCF[2],
+				ColdHotCorrectionFactor = engineCF[3],
+				CorrectionFactorRegPer = engineCF[4],
+				ConsumptionMap = fcMap,
+				FuelData = GetFuelData(engineMode)
+			};
+			fuel.FuelConsumptionCorrectionFactor = DeclarationData.WHTCCorrection.Lookup(
+														mission.MissionType.GetNonEMSMissionType(), fuel.WHTCRural, fuel.WHTCUrban,
+														fuel.WHTCMotorway) * fuel.ColdHotCorrectionFactor * fuel.CorrectionFactorRegPer;
+
+			return fuel;
+		}
+
+		
+
+
+		private DataTable DenormalizeData(string ressourceId, double nIdle, double ratedSpeed, double maxTorque)
+		{
+			var normalized = VectoCSVFile.ReadStream(RessourceHelper.ReadStream(ressourceId), source: ressourceId);
+
+			var result = new DataTable();
+			result.Columns.Add(FuelConsumptionMapReader.Fields.EngineSpeed);
+			result.Columns.Add(FuelConsumptionMapReader.Fields.Torque);
+			result.Columns.Add(FuelConsumptionMapReader.Fields.FuelConsumption);
+
+			foreach (DataRow row in normalized.Rows) {
+				var engineSpeed = DenormalizeEngineSpeed((string)row[FuelConsumptionMapReader.Fields.EngineSpeed],
+					nIdle, ratedSpeed);
+				var torque = DenormalizeTorque((string)row[FuelConsumptionMapReader.Fields.Torque], maxTorque);
+				var fc = DenormalizeFC((string)row[FuelConsumptionMapReader.Fields.FuelConsumption], maxTorque);
+
+				var newRow = result.NewRow();
+				newRow[FuelConsumptionMapReader.Fields.EngineSpeed] = Math.Round(engineSpeed,2, MidpointRounding.AwayFromZero);
+				newRow[FuelConsumptionMapReader.Fields.Torque] = Math.Round(torque, 2, MidpointRounding.AwayFromZero);
+				newRow[FuelConsumptionMapReader.Fields.FuelConsumption] = Math.Round(fc, 2, MidpointRounding.AwayFromZero);
+				result.Rows.Add(newRow);
+			}
+
+			return result;
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		private double DenormalizeFC(string fc, double mRated)
+		{
+			return fc.ToDouble() * mRated;
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		private double DenormalizeTorque(string torque, double mRated)
+		{
+			return torque.ToDouble() * mRated;
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		private double DenormalizeEngineSpeed(string engineSpeed, double nIdle, double nRated)
+		{
+			return engineSpeed.ToDouble() * (nRated - nIdle) + nIdle;
+		}
+
+	}
+}

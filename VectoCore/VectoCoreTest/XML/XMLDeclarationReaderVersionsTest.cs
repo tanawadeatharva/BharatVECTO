@@ -1,17 +1,15 @@
-﻿using System.Collections.Generic;
-using System.IO;
+﻿using System.IO;
 using System.Linq;
 using System.Xml;
 using Ninject;
 using NUnit.Framework;
 using TUGraz.VectoCommon.Models;
+using TUGraz.VectoCore.InputData.FileIO.JSON;
 using TUGraz.VectoCore.InputData.FileIO.XML;
 using TUGraz.VectoCore.Models.Simulation;
 using TUGraz.VectoCore.Models.Simulation.Impl;
-using TUGraz.VectoCore.OutputData;
 using TUGraz.VectoCore.OutputData.FileIO;
-using TUGraz.VectoCore.Utils;
-using XmlDocumentType = System.Xml.XmlDocumentType;
+using TUGraz.VectoCore.Tests.Models.Simulation;
 
 namespace TUGraz.VectoCore.Tests.XML
 {
@@ -85,6 +83,30 @@ namespace TUGraz.VectoCore.Tests.XML
 			var dataProvider = xmlInputReader.CreateDeclaration(XmlReader.Create(filename));
 			Assert.AreEqual("235/60 R17C", dataProvider.JobInputData.Vehicle.Components.AxleWheels.AxlesDeclaration[1].Tyre.Dimension);
 
+		}
+
+		
+		[TestCase()]
+		public void CreateRunDataMediumLorry()
+		{
+			var runIdx = 0;
+			var jobFile = @"TestData\XML\XMLReaderDeclaration\SchemaVersion2.6_Buses\vecto_vehicle-medium_lorry-sample.xml";
+
+			var writer = new FileOutputWriter(jobFile);
+			var inputData = xmlInputReader.CreateDeclaration(jobFile);
+			
+			var factory = new SimulatorFactory(ExecutionMode.Declaration, inputData, writer) {
+				WriteModalResults = true,
+				//ActualModalData = true,
+				Validate = false
+			};
+			var jobContainer = new JobContainer(new MockSumWriter());
+
+			var runs = factory.SimulationRuns().ToArray();
+			//jobContainer.AddRun(runs[runIdx]);
+			runs[runIdx].Run();
+
+			Assert.IsTrue(runs[runIdx].FinishedWithoutErrors);
 		}
 
 

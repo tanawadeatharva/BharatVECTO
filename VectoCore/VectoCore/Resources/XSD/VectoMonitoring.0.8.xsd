@@ -6,7 +6,7 @@
 	<xs:element name="VectoMonitoring">
 		<xs:complexType>
 			<xs:sequence>
-				<xs:element name="ManufacturerRecord" type="common:AbstractVectoOutputManufacturerType"/>
+				<xs:element name="ManufacturerRecord" type="mrf:VectoOutputManufacturerType"/>
 				<xs:element name="AdditionalData">
 					<xs:complexType>
 						<xs:sequence>

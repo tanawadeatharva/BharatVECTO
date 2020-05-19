@@ -50,7 +50,7 @@ Namespace My
 			ReadInstallMode()
 
 			MyConfPath = path.Combine(MyAppPath, CONFIG_FOLDER)
-            MyLogPath = ""
+			MyLogPath = ""
 			if (InstallModeInstalled) Then
 				MyConfPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), APP_DATA_VENDOR_PATH, VectoSimulationCore.VersionNumber, CONFIG_FOLDER)
 				MyLogPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), APP_DATA_VENDOR_PATH, VectoSimulationCore.VersionNumber)

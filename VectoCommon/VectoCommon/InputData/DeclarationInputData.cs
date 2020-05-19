@@ -32,11 +32,14 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Net.NetworkInformation;
+using System.Xml;
+using System.Xml.Linq;
+using TUGraz.VectoCommon.BusAuxiliaries;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Models.Declaration;
+
 
 namespace TUGraz.VectoCommon.InputData
 {
@@ -47,19 +50,23 @@ namespace TUGraz.VectoCommon.InputData
 		IVehicleDeclarationInputData Vehicle { get; }
 
 		string JobName { get; }
+
+		string ShiftStrategy { get; }
 	}
 
 	public interface IComponentInputData
 	{
 		DataSource DataSource { get; }
-		
+
 		bool SavedInDeclarationMode { get; }
 
 		string Manufacturer { get; }
 
 		string Model { get; }
 
-		string Date { get; }
+		DateTime Date { get; }
+
+		String AppVersion { get; }
 
 		CertificationMethod CertificationMethod { get; }
 
@@ -156,15 +163,35 @@ namespace TUGraz.VectoCommon.InputData
 
 		Watt MaxNetPower2 { get; }
 
+		RegistrationClass RegisteredClass { get; }
+
+		int NumberOfPassengersUpperDeck { get; }
+
+		int NumberOfPassengersLowerDeck { get; }
+
+		VehicleCode VehicleCode { get; }
+		FloorType FloorType { get; }
+
+		bool Articulated { get; }
+
+		Meter Height { get; }
+
+		Meter Length { get; }
+
+		Meter Width { get; }
+
+		Meter EntranceHeight { get; }
+
+		ConsumerTechnology DoorDriveTechnology { get; }
+
 		// components
 
 		IVehicleComponentsDeclaration Components { get; }
-
+		XmlNode XMLSource { get; }
 	}
 
 	public interface IVehicleComponentsDeclaration
-	{ 
-
+	{
 		IAirdragDeclarationInputData AirdragInputData { get; }
 
 		IGearboxDeclarationInputData GearboxInputData { get; }
@@ -185,6 +212,7 @@ namespace TUGraz.VectoCommon.InputData
 
 		IAxlesDeclarationInputData AxleWheels { get; }
 
+		IBusAuxiliariesDeclarationData BusAuxiliaries { get; }
 	}
 
 	public interface IAxlesDeclarationInputData
@@ -195,6 +223,8 @@ namespace TUGraz.VectoCommon.InputData
 		/// cf. VECTO Input Parameters.xlsx
 		/// </summary>
 		IList<IAxleDeclarationInputData> AxlesDeclaration { get; }
+
+		XmlNode XMLSource { get; }
 	}
 
 	public interface IAdvancedDriverAssistantSystemDeclarationInputData
@@ -204,13 +234,16 @@ namespace TUGraz.VectoCommon.InputData
 		EcoRollType EcoRoll { get; }
 
 		PredictiveCruiseControlType PredictiveCruiseControl { get; }
+
+		bool? ATEcoRollReleaseLockupClutch { get; }
+		XmlNode XMLSource { get; }
 	}
 
 	public enum PredictiveCruiseControlType
 	{
 		None,
 		Option_1_2,
-		Option_1_2_3	
+		Option_1_2_3
 	}
 
 	public static class PredictiveCruiseControlTypeHelper
@@ -224,12 +257,13 @@ namespace TUGraz.VectoCommon.InputData
 			if (PredictiveCruiseControlType.None.ToString().Equals(value, StringComparison.InvariantCultureIgnoreCase)) {
 				return PredictiveCruiseControlType.None;
 			}
+
 			return (Prefix + value.Replace(SeparatorXML, SeparatorEnum)).ParseEnum<PredictiveCruiseControlType>();
 		}
 
 		public static string ToXMLFormat(this PredictiveCruiseControlType pcc)
 		{
-			return pcc.ToString().Replace(Prefix, "").Replace(SeparatorEnum, SeparatorXML);
+			return pcc.ToString().ToLowerInvariant().Replace(Prefix, "").Replace(SeparatorEnum, SeparatorXML);
 		}
 
 		public static string GetName(this PredictiveCruiseControlType pcc)
@@ -300,6 +334,22 @@ namespace TUGraz.VectoCommon.InputData
 		Liquefied,
 		Compressed
 	}
+
+	public static class TankSystemHelper
+	{
+		public static TankSystem? Parse(string parse)
+		{
+			switch (parse) {
+				case nameof(TankSystem.Liquefied):
+					return TankSystem.Liquefied;
+				case nameof(TankSystem.Compressed):
+					return TankSystem.Compressed;
+				default:
+					return null;
+			}
+		}
+	}
+
 
 	public interface IAirdragDeclarationInputData : IComponentInputData
 	{
@@ -389,6 +439,8 @@ namespace TUGraz.VectoCommon.InputData
 		/// cf. VECTO Input Parameters.xlsx
 		/// </summary>
 		Newton TyreTestLoad { get; }
+
+		string FuelEfficiencyClass { get; }
 	}
 
 	public interface IGearboxDeclarationInputData : IComponentInputData
@@ -405,6 +457,8 @@ namespace TUGraz.VectoCommon.InputData
 		/// </summary>
 		IList<ITransmissionInputData> Gears { get; }
 
+		bool DifferentialIncluded { get; }
+		double AxlegearRatio { get; }
 	}
 
 
@@ -491,7 +545,7 @@ namespace TUGraz.VectoCommon.InputData
 		/// cf. VECTO Input Parameters.xlsx
 		/// </summary>
 		CubicMeter Displacement { get; }
-		
+
 		Watt RatedPowerDeclared { get; }
 
 		PerSecond RatedSpeedDeclared { get; }
@@ -500,7 +554,7 @@ namespace TUGraz.VectoCommon.InputData
 
 		IList<IEngineModeDeclarationInputData> EngineModes { get; }
 
-		WHRType WHRType{ get; }
+		WHRType WHRType { get; }
 	}
 
 	public interface IEngineModeDeclarationInputData
@@ -523,13 +577,12 @@ namespace TUGraz.VectoCommon.InputData
 		IWHRData WasteHeatRecoveryDataElectrical { get; }
 
 		IWHRData WasteHeatRecoveryDataMechanical { get; }
-
 	}
 
 	public interface IWHRData
 	{
 		double UrbanCorrectionFactor { get; }
-		
+
 		double RuralCorrectionFactor { get; }
 
 		double MotorwayCorrectionFactor { get; }
@@ -541,12 +594,10 @@ namespace TUGraz.VectoCommon.InputData
 		double EngineeringCorrectionFactor { get; }
 
 		TableData GeneratedPower { get; }
-
 	}
 
 	public interface IEngineFuelDelcarationInputData
 	{
-
 		FuelType FuelType { get; }
 
 		/// <summary>
@@ -581,7 +632,6 @@ namespace TUGraz.VectoCommon.InputData
 		/// engine speed in rpm, torque in NM, fuel consumption in g/h
 		/// </summary>
 		TableData FuelConsumptionMap { get; }
-
 	}
 
 
@@ -637,5 +687,134 @@ namespace TUGraz.VectoCommon.InputData
 		int Gear { get; }
 
 		NewtonMeter MaxTorque { get; }
+	}
+
+	public interface IBusAuxiliariesDeclarationData
+	{
+		XmlNode XMLSource { get; }
+
+		string FanTechnology { get; }
+
+		IList<string> SteeringPumpTechnology { get; }
+
+		IElectricSupplyDeclarationData ElectricSupply { get; }
+
+		IElectricConsumersDeclarationData ElectricConsumers { get; }
+
+		IPneumaticSupplyDeclarationData PneumaticSupply { get; }
+
+		IPneumaticConsumersDeclarationData PneumaticConsumers { get; }
+
+		IHVACBusAuxiliariesDeclarationData HVACAux { get; }
+	}
+
+	public interface IElectricSupplyDeclarationData
+	{
+		IList<IAlternatorDeclarationInputData> Alternators { get; }
+
+		bool SmartElectrics { get; }
+
+		Watt MaxAlternatorPower { get; }
+
+		WattSecond ElectricStorageCapacity { get; }
+	}
+
+	public interface IElectricConsumersDeclarationData
+	{
+		bool InteriorLightsLED { get; }
+
+		bool DayrunninglightsLED { get; }
+
+		bool PositionlightsLED { get; }
+
+		bool HeadlightsLED { get; }
+
+		bool BrakelightsLED { get; }
+	}
+
+	public interface IAlternatorDeclarationInputData
+	{
+		string Technology { get; }
+
+		//double Ratio { get; }
+	}
+
+
+	public interface IPneumaticSupplyDeclarationData
+	{
+		string Clutch { get; }
+		double Ratio { get; }
+
+		string CompressorSize { get; }
+
+		bool SmartAirCompression { get; }
+
+		bool SmartRegeneration { get; }
+	}
+
+	public interface IPneumaticConsumersDeclarationData
+	{
+		ConsumerTechnology AirsuspensionControl { get; }
+		ConsumerTechnology AdBlueDosing { get; }
+	}
+
+	public interface IHVACBusAuxiliariesDeclarationData
+	{
+		BusHVACSystemConfiguration SystemConfiguration { get; }
+
+		ACCompressorType CompressorTypeDriver { get; }
+		ACCompressorType CompressorTypePassenger { get; }
+
+		Watt AuxHeaterPower { get; }
+
+		bool DoubleGlasing { get; }
+
+		bool HeatPump { get; }
+
+		bool AdjustableCoolantThermostat { get; }
+
+		bool AdjustableAuxiliaryHeater { get; }
+
+		bool EngineWasteGasHeatExchanger { get; }
+
+		bool SeparateAirDistributionDucts { get; }
+	}
+
+
+	public interface IResultsInputData
+	{
+		string Status { get; }
+
+		IList<IResult> Results { get; }
+	}
+
+
+	public interface IResult
+	{
+		string ResultStatus { get; }
+
+		VehicleClass VehicleGroup { get; }
+
+		MissionType Mission { get; }
+
+		ISimulationParameter SimulationParameter { get; }
+
+		Dictionary<FuelType, JoulePerMeter> EnergyConsumption { get; }
+		Dictionary<string, double> CO2 { get; }
+	}
+
+	public interface ISimulationParameter
+	{
+		Kilogram TotalVehicleMass { get; }
+		Kilogram Payload { get; }
+		double PassengerCount { get; }
+		string FuelMode { get; }
+	}
+
+
+	public interface IApplicationInformation
+	{
+		string SimulationToolVersion { get; }
+		DateTime Date { get; }
 	}
 }

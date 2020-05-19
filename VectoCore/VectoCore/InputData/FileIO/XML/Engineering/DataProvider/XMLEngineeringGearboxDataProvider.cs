@@ -39,7 +39,6 @@ using TUGraz.VectoCommon.Resources;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.InputData.FileIO.XML.Common;
-using TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider;
 using TUGraz.VectoCore.InputData.FileIO.XML.Engineering.Interfaces;
 using TUGraz.VectoCore.Utils;
 
@@ -104,6 +103,9 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering.DataProvider
 				return retVal;
 			}
 		}
+
+		public virtual bool DifferentialIncluded { get { return false; } }
+		public virtual double AxlegearRatio { get { return double.NaN; } }
 
 
 		public IXMLGearboxReader Reader { protected get; set; }

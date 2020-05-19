@@ -29,6 +29,7 @@
 *   Martin Rexeis, rexeis@ivt.tugraz.at, IVT, Graz University of Technology
 */
 
+using System;
 using NUnit.Framework;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -38,7 +39,6 @@ using System.Linq;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
-using TUGraz.VectoCore.InputData.Reader;
 using TUGraz.VectoCore.InputData.Reader.ComponentData;
 using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter;
 using TUGraz.VectoCore.Models.Declaration;
@@ -169,7 +169,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 				WHTCRural = 1.1,
 				WHTCUrban = 1.1
 			};
-			var dao = new DeclarationDataAdapter();
+			var dao = new DeclarationDataAdapterHeavyLorry();
 
 			var dummyGearbox = new DummyGearboxData() {
 				Type = GearboxType.AMT,
@@ -193,12 +193,12 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 			var vehicleData = new VehicleData {
 				AxleConfiguration = AxleConfiguration.AxleConfig_4x2,
 				AirDensity = DeclarationData.AirDensity,
-				CurbWeight = 7500.SI<Kilogram>(),
+				CurbMass = 7500.SI<Kilogram>(),
 				DynamicTyreRadius = 0.5.SI<Meter>(),
 				//CurbWeigthExtra = 0.SI<Kilogram>(),
 				Loading = 12000.SI<Kilogram>(),
-				GrossVehicleWeight = 16000.SI<Kilogram>(),
-				TrailerGrossVehicleWeight = 0.SI<Kilogram>(),
+				GrossVehicleMass = 16000.SI<Kilogram>(),
+				TrailerGrossVehicleMass = 0.SI<Kilogram>(),
 				AxleData = new List<Axle> {
 					new Axle {
 						AxleType = AxleType.VehicleNonDriven,
@@ -255,12 +255,12 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 			var vehicleData = new VehicleData {
 				AxleConfiguration = AxleConfiguration.AxleConfig_4x2,
 				AirDensity = DeclarationData.AirDensity,
-				CurbWeight = 7500.SI<Kilogram>(),
+				CurbMass = 7500.SI<Kilogram>(),
 				DynamicTyreRadius = 0.5.SI<Meter>(),
 				//CurbWeigthExtra = 0.SI<Kilogram>(),
 				Loading = 12000.SI<Kilogram>(),
-				GrossVehicleWeight = 16000.SI<Kilogram>(),
-				TrailerGrossVehicleWeight = 0.SI<Kilogram>(),
+				GrossVehicleMass = 16000.SI<Kilogram>(),
+				TrailerGrossVehicleMass = 0.SI<Kilogram>(),
 				AxleData = new List<Axle> {
 					new Axle {
 						AxleType = AxleType.VehicleNonDriven,
@@ -633,7 +633,8 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 		public string Manufacturer { get; set; }
 		public string Model { get; set; }
 		public string Creator { get; set; }
-		public string Date { get; set; }
+		public DateTime Date { get; set; }
+		public string AppVersion { get; set; }
 		public string TechnicalReportId { get; set; }
 
 		public CertificationMethod CertificationMethod
@@ -645,6 +646,8 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 		public DigestData DigestValue { get; set; }
 		public GearboxType Type { get; set; }
 		public IList<ITransmissionInputData> Gears { get; set; }
+		public bool DifferentialIncluded { get; }
+		public double AxlegearRatio { get; }
 
 		public KilogramSquareMeter Inertia { get; set; }
 		public Second TractionInterruption { get; set; }

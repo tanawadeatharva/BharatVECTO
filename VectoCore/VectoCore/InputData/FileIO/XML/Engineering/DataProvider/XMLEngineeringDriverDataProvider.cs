@@ -1,12 +1,8 @@
 using System.Xml;
 using System.Xml.Linq;
 using TUGraz.VectoCommon.InputData;
-using TUGraz.VectoCommon.Resources;
-using TUGraz.VectoCommon.Utils;
-using TUGraz.VectoCore.InputData.FileIO.XML.Common;
 using TUGraz.VectoCore.InputData.FileIO.XML.Engineering.Interfaces;
 using TUGraz.VectoCore.InputData.FileIO.XML.Engineering.Reader;
-using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering.DataProvider
@@ -59,6 +55,11 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering.DataProvider
 			get { return null; }
 		}
 
+		public virtual IPCCEngineeringInputData PCCData
+		{
+			get { return null; }
+		}
+
 		public virtual IOverSpeedEngineeringInputData OverSpeedData
 		{
 			get { return _overspeed ?? (_overspeed = Reader.OverspeedData); }
@@ -88,6 +89,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering.DataProvider
 
 		protected IEcoRollEngineeringInputData _ecoRollData;
 
+		protected IPCCEngineeringInputData _pccData;
+
 
 		public XMLEngineeringDriverDataProviderV10(
 			IXMLEngineeringInputData inputData, XmlNode driverDataNode, string fsBasePath) : base(
@@ -109,41 +112,12 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering.DataProvider
 			get { return _ecoRollData ?? (_ecoRollData = Reader.EcoRollData); }
 		}
 
+		
+		public override IPCCEngineeringInputData PCCData
+		{
+			get { return _pccData ?? (_pccData = Reader.PCCData); }
+		}
 	}
 
-	internal class XMLEngineStopStartDriverDataV10 : AbstractXMLType, IXMLEngineStopStartDriverData
-	{
-		public static readonly XNamespace NAMESPACE_URI = XMLDefinitions.ENGINEERING_DEFINITONS_NAMESPACE_V10;
-
-		public const string XSD_TYPE = "EngineStartStopParametersEngineeringType";
-
-		public static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI, XSD_TYPE);
-
-		public XMLEngineStopStartDriverDataV10(IXMLEngineeringDriverData driverData, XmlNode node) : base(node) { }
-
-		#region Implementation of IXMLEngineStopStartDriverData
-
-		public Second ActivationDelay
-		{
-			get {
-				return GetDouble("ActivationDelay", DeclarationData.Driver.EngineStopStart.ActivationDelay.Value()).SI<Second>();
-			}
-		}
-
-		public Second MaxEngineOffTimespan
-		{
-			get {
-				return GetDouble(
-					"MaxEngineStopStartTimespan",
-					DeclarationData.Driver.EngineStopStart.MaxEngineOffTimespan.Value()).SI<Second>();
-			}
-		}
-
-		public double UtilityFactor
-		{
-			get { return GetDouble("UtilityFactor"); }	
-		}
-
-		#endregion
-	}
+	
 }

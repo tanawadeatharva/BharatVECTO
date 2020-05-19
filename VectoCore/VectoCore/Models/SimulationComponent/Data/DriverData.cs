@@ -31,7 +31,6 @@
 
 using System;
 using System.ComponentModel.DataAnnotations;
-using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.Models.Declaration;
@@ -49,6 +48,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 		[Required, ValidateObject] public EngineStopStartData EngineStopStart;
 
 		[Required, ValidateObject] public EcoRollData EcoRoll;
+
+		public PCCData PCC;
 
 		public static bool ParseDriverMode(string mode)
 		{
@@ -114,6 +115,21 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 
 			[Required, Range(0.0, 1.0)] public double UtilityFactor;
 
+		}
+
+		public class PCCData
+		{
+			public MeterPerSecond MinSpeed;
+
+			public Meter PreviewDistanceUseCase1;
+
+			public Meter PreviewDistanceUseCase2;
+
+			public MeterPerSecond UnderSpeed;
+
+			public MeterPerSecond PCCEnableSpeed;
+
+			public MeterPerSecond OverspeedUseCase3;
 		}
 	}
 }

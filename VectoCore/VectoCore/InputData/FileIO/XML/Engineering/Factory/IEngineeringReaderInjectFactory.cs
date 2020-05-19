@@ -78,8 +78,9 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering.Factory
 		IXMLAxlesReader CreateAxlesReader(string version, IXMLEngineeringVehicleData vehicle, XmlNode componentsNode);
 		IXMLGearboxReader CreateGearboxReader(string version, IXMLEngineeringVehicleData vehicle, XmlNode componentsNode);
 
-		IXMLEngineStopStartDriverData CreateEngineStopStartData(string version, IXMLEngineeringDriverData driverData, XmlNode node);
-		IXMLEngineeringEngineStopStartData CreateStopStartData(string version, IXMLEngineeringDriverData driverData, XmlNode node);
-		IEcoRollEngineeringInputData CreateEcoRolltData(string version, IXMLEngineeringDriverData driverData, XmlNode node);
+		IXMLEngineeringEngineStopStartData CreateEngineStopStartData(string version, IXMLEngineeringDriverData driverData, XmlNode node);
+		IXMLEngineeringEcoRollData CreateEcoRollData(string version, IXMLEngineeringDriverData driverData, XmlNode node);
+
+		IXMLEngineeringPCCInputData CreatePCCData(string version, IXMLEngineeringDriverData driverData, XmlNode node);
 	}
 }

@@ -29,11 +29,15 @@
 *   Martin Rexeis, rexeis@ivt.tugraz.at, IVT, Graz University of Technology
 */
 
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Xml.Linq;
+using Newtonsoft.Json;
+using TUGraz.VectoCommon.BusAuxiliaries;
 using TUGraz.VectoCommon.Exceptions;
+using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Configuration;
@@ -73,12 +77,13 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 		public AngledriveData AngledriveData { get; internal set; }
 
 		[Required, ValidateObject]
+		[JsonIgnore]
 		public IDrivingCycleData Cycle { get; internal set; }
 
 		[ValidateObject]
 		public IEnumerable<AuxData> Aux { get; internal set; }
 
-		public AdvancedAuxData AdvancedAux { get; internal set; }
+		public IAuxiliaryConfig BusAuxiliaries { get; internal set; }
 
 		[ValidateObject]
 		public RetarderData Retarder { get; internal set; }
@@ -97,25 +102,35 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 		public string ModFileSuffix { get; internal set; }
 
 		[ValidateObject]
+		[JsonIgnore]
 		public IDeclarationReport Report { get; internal set; }
 
 		[Required, ValidateObject]
 		public LoadingType Loading { get; internal set; }
 
 		[ValidateObject]
+		[JsonIgnore]
 		public Mission Mission { get; internal set; }
 
+		[JsonIgnore]
 		public XElement InputDataHash { get; internal set; }
 
 		public int JobRunId { get; internal set; }
 
-		public AuxFanData FanData { get; internal set; }
+		public AuxFanData FanDataVTP { get; internal set; }
 
 		public SimulationType SimulationType { get; set; }
 
 		public VTPData VTPData { get; set; }
 
+		public ShiftStrategyParameters GearshiftParameters { get; set; }
 		public bool Exempted { get; set; }
+
+		public string ShiftStrategy { get; set; }
+		public MeterPerSecond VehicleDesignSpeed { get; internal set; }
+
+		// only used for factor method
+		public IResult PrimaryResult { get; set; }
 
 		public class AuxData
 		{
@@ -125,6 +140,8 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 			public IList<string> Technology;
 
 			[SIRange(0, 100 * Constants.Kilo)] public Watt PowerDemand;
+
+			public Func<DrivingCycleData.DrivingCycleEntry, Watt> PowerDemandFunc;
 
 			[Required] public AuxiliaryDemandType DemandType;
 
@@ -157,7 +174,6 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 		private static ValidationResult CheckPowertrainLossMapsSize(VectoRunData runData, GearboxData gearboxData,
 			CombustionEngineData engineData)
 		{
-			var maxSpeed = 95.KMPHtoMeterPerSecond();
 			var axleGearData = runData.AxleGearData;
 			var angledriveData = runData.AngledriveData;
 			var hasAngleDrive = angledriveData != null && angledriveData.Angledrive != null;
@@ -167,6 +183,11 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 			var axlegearRatio = axleGearData != null ? axleGearData.AxleGear.Ratio : 1.0;
 			var dynamicTyreRadius = runData.VehicleData != null ? runData.VehicleData.DynamicTyreRadius : 0.0.SI<Meter>();
 
+			var vehicleMaxSpeed = runData.EngineData.FullLoadCurves[0].N95hSpeed /
+								runData.GearboxData.Gears[runData.GearboxData.Gears.Keys.Max()].Ratio / axlegearRatio /
+								angledriveRatio * dynamicTyreRadius;
+			var maxSpeed = VectoMath.Min(vehicleMaxSpeed, (runData.VehicleDesignSpeed ?? 90.KMPHtoMeterPerSecond()) + (runData.DriverData?.OverSpeed?.OverSpeed ?? 0.KMPHtoMeterPerSecond()));
+
 			if (gearboxData.Gears.Count + 1 != engineData.FullLoadCurves.Count) {
 				return
 					new ValidationResult(
@@ -175,9 +196,10 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 			}
 
 			foreach (var gear in gearboxData.Gears) {
+				var maxEngineSpeed = VectoMath.Min(engineData.FullLoadCurves[gear.Key].RatedSpeed, gear.Value.MaxSpeed);
 				for (var angularVelocity = engineData.IdleSpeed;
-					angularVelocity < engineData.FullLoadCurves[gear.Key].RatedSpeed;
-					angularVelocity += 2.0 / 3.0 * (engineData.FullLoadCurves[gear.Key].RatedSpeed - engineData.IdleSpeed) / 10.0) {
+					angularVelocity < maxEngineSpeed;
+					angularVelocity += 2.0 / 3.0 * (maxEngineSpeed - engineData.IdleSpeed) / 10.0) {
 					if (!gear.Value.HasLockedGear) {
 						continue;
 					}

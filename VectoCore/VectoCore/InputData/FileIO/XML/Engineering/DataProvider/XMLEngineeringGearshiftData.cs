@@ -1,9 +1,10 @@
-﻿using System.Xml;
+﻿using System.Collections.Generic;
+using System.Xml;
 using System.Xml.Linq;
+using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Resources;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.InputData.FileIO.XML.Common;
-using TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider;
 using TUGraz.VectoCore.InputData.FileIO.XML.Engineering.Interfaces;
 using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Utils;
@@ -39,7 +40,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering.DataProvider
 		{
 			get {
 				return GetNode(XMLNames.DriverModel_ShiftStrategyParameters_TorqueReserve, required: false)?.InnerText.ToDouble() ??
-						DeclarationData.Gearbox.TorqueReserve;
+						DeclarationData.GearboxTCU.TorqueReserve;
 			}
 		}
 
@@ -47,7 +48,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering.DataProvider
 		{
 			get {
 				return GetNode(XMLNames.DriverModel_ShiftStrategyParameters_StartSpeed, required: false)
-							?.InnerText.ToDouble().SI<MeterPerSecond>() ?? DeclarationData.Gearbox.StartSpeed;
+							?.InnerText.ToDouble().SI<MeterPerSecond>() ?? DeclarationData.GearboxTCU.StartSpeed;
 			}
 		}
 
@@ -55,7 +56,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering.DataProvider
 		{
 			get {
 				return GetNode(XMLNames.DriverModel_ShiftStrategyParameters_StartAcceleration, required: false)
-							?.InnerText.ToDouble().SI<MeterPerSquareSecond>() ?? DeclarationData.Gearbox.StartAcceleration;
+							?.InnerText.ToDouble().SI<MeterPerSquareSecond>() ?? DeclarationData.GearboxTCU.StartAcceleration;
 			}
 		}
 
@@ -64,7 +65,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering.DataProvider
 			get {
 				return GetNode(XMLNames.DriverModel_ShiftStrategyParameters_StartTorqueReserve, required: false)
 							?.InnerText.ToDouble() ??
-						DeclarationData.Gearbox.TorqueReserveStart;
+						DeclarationData.GearboxTCU.TorqueReserveStart;
 			}
 		}
 
@@ -92,6 +93,44 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering.DataProvider
 							?.InnerText.ToDouble().SI<MeterPerSquareSecond>() ?? DeclarationData.Gearbox.UpshiftMinAcceleration;
 			}
 		}
+
+		public virtual Second GearResidenceTime { get { return null; } }
+		public virtual double? DnT99LHMin1 { get { return null; } }
+		public virtual double? DnT99LHMin2 { get { return null; } }
+		public virtual int? AllowedGearRangeUp { get { return null; } }
+		public virtual int? AllowedGearRangeDown { get { return null; } }
+		public virtual Second LookBackInterval { get { return null; } }
+		public virtual Watt AvgCardanPowerThresholdPropulsion { get { return null; } }
+		public virtual Watt CurrCardanPowerThresholdPropulsion { get { return null; } }
+		public virtual double? TargetSpeedDeviationFactor { get { return null; } }
+		public virtual double? EngineSpeedHighDriveOffFactor { get { return null; } }
+		public virtual double? RatingFactorCurrentGear { get { return null; } }
+		public virtual TableData AccelerationReserveLookup { get { return null; } }
+		public virtual TableData ShareTorque99L { get { return null; } }
+		public virtual TableData PredictionDurationLookup { get { return null; } }
+		public virtual TableData ShareIdleLow { get { return null; } }
+		public virtual TableData ShareEngineHigh { get { return null; } }
+		public virtual string Source { get { return null; } }
+		public virtual Second DriverAccelerationLookBackInterval { get { return null; } }
+		public virtual MeterPerSquareSecond DriverAccelerationThresholdLow { get { return null; } }
+		public virtual double? RatioEarlyUpshiftFC { get { return null; } }
+		public virtual double? RatioEarlyDownshiftFC { get { return null; } }
+		public int? AllowedGearRangeFC { get { return null; } }
+
+		public double? VeloictyDropFactor { get { return null; } }
+
+		public PerSecond MinEngineSpeedPostUpshift { get { return null; } }
+		public Second ATLookAheadTime { get { return null; } }
+		public double[][] ShiftSpeedsTCToLocked { get { return null; } }
+
+		public double? AccelerationFactor
+		{
+			get { return null; }
+		}
+
+		public virtual TableData LoadStageShiftLines { get { return null; } }
+		public virtual IList<double> LoadStageThresholdsUp { get { return null; } }
+		public virtual IList<double> LoadStageThresholdsDown { get { return null; } }
 
 		public virtual Second PowershiftShiftTime
 		{

@@ -44,7 +44,6 @@ using TUGraz.VectoCommon.Resources;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.InputData.FileIO.XML;
-using TUGraz.VectoCore.InputData.FileIO.XML.Declaration;
 using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.OutputData;
 using TUGraz.VectoCore.OutputData.FileIO;
@@ -71,10 +70,10 @@ namespace TUGraz.VectoCore.Tests.Integration.Declaration
 
 
 		[
-		 TestCase(Class5NG, 2, TankSystem.Liquefied, 253.8, 703.0, TestName = "Class5 LNG 2"),
-		 TestCase(Class5NG, 2, TankSystem.Compressed, 259.6, 698.3, TestName = "Class5 CNG 2"),
-		TestCase(Class5NG, 6, TankSystem.Liquefied, 253.2, 701.3, TestName = "Class5 LNG 6"),
-		TestCase(Class5NG, 6, TankSystem.Compressed, 259.0, 696.7, TestName = "Class5 CNG 6"),
+		 TestCase(Class5NG, 2, TankSystem.Liquefied, 253.8, 703.2, TestName = "Class5 LNG 2"),
+		 TestCase(Class5NG, 2, TankSystem.Compressed, 259.7, 698.6 , TestName = "Class5 CNG 2"),
+		TestCase(Class5NG, 6, TankSystem.Liquefied, 253.1, 701.4, TestName = "Class5 LNG 6"),
+		TestCase(Class5NG, 6, TankSystem.Compressed, 259.0, 696.8, TestName = "Class5 CNG 6"),
 			]
 		public void NaturalGasTankSystemTest(string filename, int runIdx, TankSystem tankSystem, double expectedFc, double expectedCo2)
 		{
@@ -97,7 +96,7 @@ namespace TUGraz.VectoCore.Tests.Integration.Declaration
 			tankSystemNode.SetValue(tankSystem.ToString());
 			var modified = XmlReader.Create(new StringReader(nav.OuterXml));
 
-			var writer = new MockDeclarationWriter(filename);
+			var writer = new FileOutputWriter(filename); // new MockDeclarationWriter(filename);
 			var inputData = xmlInputReader.CreateDeclaration(modified);
 			var factory = new SimulatorFactory(ExecutionMode.Declaration, inputData, writer) {
 				WriteModalResults = true,
@@ -109,7 +108,7 @@ namespace TUGraz.VectoCore.Tests.Integration.Declaration
 
 			jobContainer.Execute();
 			jobContainer.WaitFinished();
-			var manufacturerReport = writer.GetReport(ReportType.DeclarationReportManufacturerXML);
+			var manufacturerReport = XDocument.Load(XmlReader.Create(writer.XMLFullReportName)); // writer.GetReport(ReportType.DeclarationReportManufacturerXML);
 
 			var fuelTypeResultNodes = manufacturerReport.XPathSelectElements("//*[local-name()='Results']//*[local-name()='FuelType']");
 			foreach (var node in fuelTypeResultNodes) {

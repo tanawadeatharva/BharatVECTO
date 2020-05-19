@@ -29,10 +29,14 @@
 *   Martin Rexeis, rexeis@ivt.tugraz.at, IVT, Graz University of Technology
 */
 
+using System;
 using System.Collections.Generic;
+using System.Diagnostics;
+using TUGraz.VectoCommon.BusAuxiliaries;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
+using TUGraz.VectoCore.Models.Declaration;
 
 namespace TUGraz.VectoCore.InputData.Impl
 {
@@ -131,7 +135,8 @@ namespace TUGraz.VectoCore.InputData.Impl
 
 		public string Model { get; internal set; }
 
-		public string Date { get; internal set; }
+		public DateTime Date { get; internal set; }
+		public string AppVersion { get; internal set; }
 
 		public CertificationMethod CertificationMethod { get; internal set; }
 
@@ -144,10 +149,11 @@ namespace TUGraz.VectoCore.InputData.Impl
 		public double RollResistanceCoefficient { get; internal set; }
 
 		public Newton TyreTestLoad { get; internal set; }
+		public string FuelEfficiencyClass { get; internal set; }
 
 		public KilogramSquareMeter Inertia { get; internal set; }
 
-		public Meter DynamicTyreRadius { get; }
+		public Meter DynamicTyreRadius { get; internal set; }
 	}
 
 	public class AuxiliaryDataInputData : IAuxiliaryEngineeringInputData, IAuxiliaryDeclarationInputData
@@ -183,5 +189,53 @@ namespace TUGraz.VectoCore.InputData.Impl
 	{
 		public int Gear { get; internal set; }
 		public NewtonMeter MaxTorque { get; internal set; }
+	}
+
+	public class AlternatorInputData : IAlternatorDeclarationInputData
+	{
+		public AlternatorInputData(string technology)
+		{
+			Technology = technology;
+			
+		}
+
+		#region Implementation of IAlternatorDeclarationInputData
+
+		public virtual string Technology { get; }
+		
+		#endregion
+	}
+
+	
+	public class ResultInputData : IResultsInputData
+	{
+		public string Status { get; internal set; }
+
+		public IList<IResult> Results { get; internal set; }
+	}
+	
+	[DebuggerDisplay("{ResultStatus} | {VehicleGroup} {Mission}")]
+	public class Result : IResult
+	{
+		public string ResultStatus { get; internal set; }
+		public VehicleClass VehicleGroup { get; internal set; }
+		public MissionType Mission { get; internal set; }
+		public ISimulationParameter SimulationParameter { get; internal set; }
+		public Dictionary<FuelType, JoulePerMeter> EnergyConsumption { get; set; }
+		public Dictionary<string, double> CO2 { get; set; }
+	}
+
+	public class SimulationParameter : ISimulationParameter
+	{
+		public Kilogram TotalVehicleMass { get; internal set; }
+		public Kilogram Payload { get; internal set; }
+		public double PassengerCount { get; internal set; }
+		public string FuelMode { get; internal set; }
+	}
+
+	public class ApplicationInformation : IApplicationInformation
+	{
+		public string SimulationToolVersion { get; internal set; }
+		public DateTime Date { get; internal set; }
 	}
 }

@@ -96,6 +96,7 @@ For missions with a trailer predefined wheels and load-shares are added by Vecto
 
 Doubleclick entries to edit existing axle configurations.
 
+![](pics/VehicleForm_Powertrain.png)
 
 ###Retarder Losses
 
@@ -131,13 +132,19 @@ Three settings can be set:
 - PTO Consumer Loss Map (.vptol): Here the [PTO Idle Loss Map](#pto-idle-consumption-map-.vptoi) of the pto consumer can be defined (adds power demand when the pto cycle is not active).
 - PTO Cycle (.vptoc): Defines the [PTO Cycle](#pto-cycle-.vptoc) which is used when the pto-cycle is activated (when the PTO-Flag in the driving cycle is set).
 
-<div class="declaration">
+###Torque Limits
+
+![](pics/VehicleForm_TorqueLimits.png)
+
+In case that the gearbox' maximum torque is lower than the engine's maximum torque or to model certain features like Top-Torque (where in the highest gear more torque is available) it is possible to limit the engine's maximum torque depending on the engaged gear. This can be entered in the torque limits tab.
 
 ###ADAS
 
-On the ADAS tab, the options for advanced driver assistant systems can be selected. This is only supported in declaration mode. Depending on the mission cycle, vehicle group, and payload a certain benefit is applied to the calcualated fuel consumption. See [ADAS: Overspeed](#driver-overspeed) and [ADAS Technologies](#vehicle-adas-technologies)
+![](pics/VehicleForm_ADAS.png))
 
-</div>
+On the ADAS tab, the options for advanced driver assistant systems can be selected.  See [ADAS: Overspeed](#driver-overspeed) and [ADAS Technologies](#vehicle-adas-technologies)
+
+
 
 ###Controls
 

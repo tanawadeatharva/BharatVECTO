@@ -81,7 +81,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			return NextComponent.Request(absTime, dt, CurrentState.InTorque, CurrentState.InAngularVelocity, dryRun);
 		}
 
-		protected override void DoWriteModalResults(IModalDataContainer container)
+		protected override void DoWriteModalResults(Second time, Second simulationInterval, IModalDataContainer container)
 		{
 			var avgAngularSpeed = (PreviousState.InAngularVelocity + CurrentState.InAngularVelocity) / 2.0;
 			container[ModalResultField.P_ret_loss] = (CurrentState.InTorque - CurrentState.OutTorque) * avgAngularSpeed;
@@ -90,15 +90,15 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		protected override void DoCommitSimulationStep()
 		{
-			var avgAngularSpeed = (PreviousState.InAngularVelocity + CurrentState.InAngularVelocity) / 2.0;
+			var avgAngularSpeed = (PreviousState.InAngularVelocity + CurrentState.InAngularVelocity) / 2.0 * _ratio;
 			if (!avgAngularSpeed.IsBetween(_lossMap.MinSpeed, _lossMap.MaxSpeed)) {
 				Log.Warn(
 					"Retarder LossMap data was extrapolated: range for loss map is not sufficient: n:{0} (min:{1}, max:{2}), ratio:{3}",
-					CurrentState.OutAngularVelocity.AsRPM, _lossMap.MinSpeed.AsRPM, _lossMap.MaxSpeed.AsRPM, _ratio);
+					avgAngularSpeed.AsRPM, _lossMap.MinSpeed.AsRPM, _lossMap.MaxSpeed.AsRPM, _ratio);
 				if (DataBus.ExecutionMode == ExecutionMode.Declaration) {
 					throw new VectoException(
 						"Retarder LossMap data was extrapolated in Declaration mode: range for loss map is not sufficient: n:{0} (min:{1}, max:{2}), ratio:{3}",
-						CurrentState.OutAngularVelocity.AsRPM, _lossMap.MinSpeed.AsRPM, _lossMap.MaxSpeed.AsRPM, _ratio);
+						avgAngularSpeed.AsRPM, _lossMap.MinSpeed.AsRPM, _lossMap.MaxSpeed.AsRPM, _ratio);
 				}
 			}
 			base.DoCommitSimulationStep();

@@ -1,0 +1,32 @@
+﻿using System.Collections.Generic;
+using TUGraz.VectoCommon.InputData;
+using TUGraz.VectoCommon.Utils;
+using TUGraz.VectoCore.Models.BusAuxiliaries.Interfaces.DownstreamModules.Electrics;
+
+namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.Electrics
+{
+	public class SimpleAlternator : IAlternatorMap
+	{
+		protected double _efficiency;
+
+		
+
+		public SimpleAlternator(double efficiency)
+		{
+			_efficiency = efficiency;
+		}
+
+		#region Implementation of IAlternatorMap
+
+		public double GetEfficiency(PerSecond rpm, Ampere currentDemand)
+		{
+			return _efficiency;
+		}
+
+		public IList<string> Technologies { get; set; }
+
+		public string Source { get { return null; } }
+
+		#endregion
+	}
+}

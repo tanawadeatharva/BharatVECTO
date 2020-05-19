@@ -1,4 +1,4 @@
-﻿engine speed [1/min],torque [Nm],fuel consumption [g/h], whr power
+﻿engine speed [1/min],torque [Nm],fuel consumption [g/h], whr power electric
 560,-149,0,200
 560,0,1256,200
 560,200,3197,200

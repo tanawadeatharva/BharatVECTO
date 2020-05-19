@@ -30,7 +30,6 @@
 */
 
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
@@ -41,7 +40,6 @@ using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.OutputData;
-using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 {
@@ -108,9 +106,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			
 			foreach (var entry in Data.Entries.Pairwise()) {
 				var dt = entry.Item2.Time - entry.Item1.Time;
-				var fc = entry.Item1.Fuelconsumption * dt;
+				//var fc = entry.Item1.VTPFuelconsumption * dt;
 				var eWheel = entry.Item1.PWheel > 0 ? entry.Item1.PWheel * dt : 0.SI<WattSecond>();
-				window[idx % count] = new {FC= fc, EWheel = eWheel};
+				//window[idx % count] = new {FC= fc, EWheel = eWheel};
 				sumFC += window[idx % count].FC;
 				sumFC -= window[(idx + 1) % count].FC;
 				sumEWheel += window[idx % count].EWheel;
@@ -180,7 +178,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			var wheelStartTorque =
 				(RunData.VehicleData.VehicleCategory == VehicleCategory.Tractor
 					? 40000.SI<Kilogram>()
-					: RunData.VehicleData.GrossVehicleWeight) * RunData.GearboxData.StartAcceleration *
+					: RunData.VehicleData.GrossVehicleMass) * RunData.GearboxData.StartAcceleration *
 				RunData.VehicleData.DynamicTyreRadius;
 			var wheelStartSpeed = RunData.GearboxData.StartSpeed / RunData.VehicleData.DynamicTyreRadius;
 			CycleIterator.LeftSample.WheelAngularVelocity = wheelStartSpeed;
@@ -326,9 +324,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			AdvanceState();
 		}
 
-		protected override void DoWriteModalResults(IModalDataContainer container)
+		protected override void DoWriteModalResults(Second time, Second simulationInterval, IModalDataContainer container)
 		{
-			base.DoWriteModalResults(container);
+			base.DoWriteModalResults(time, simulationInterval, container);
 			container[ModalResultField.P_wheel_in] = CurrentState.InTorque * CurrentState.InAngularVelocity;
 			container[ModalResultField.v_act] = CycleIterator.LeftSample.VehicleTargetSpeed;
 		}

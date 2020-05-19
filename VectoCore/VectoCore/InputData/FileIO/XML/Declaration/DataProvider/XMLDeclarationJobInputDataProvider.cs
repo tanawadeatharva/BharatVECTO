@@ -55,6 +55,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 			get { return Vehicle.Identifier; }
 		}
 
+		public virtual string ShiftStrategy { get { return null; } }
+
 		#endregion
 
 		#region Implementation of IXMLDeclarationJobInputData
@@ -83,4 +85,61 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 			get { return NAMESPACE_URI; }
 		}
 	}
+
+	// ---------------------------------------------------------------------------------------
+
+	public class XMLDeclarationPrimaryVehicleBusJobInputDataProviderV01 : AbstractXMLResource, IXMLPrimaryVehicleBusJobInputData
+	{
+
+		public static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_PRIMARY_BUS_VEHICLE_URI_V01;
+
+		public const string XSD_TYPE = "PrimaryVehicleHeavyBusDataType";
+
+		public static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
+
+
+		protected IVehicleDeclarationInputData _vehicle;
+
+
+		public XMLDeclarationPrimaryVehicleBusJobInputDataProviderV01(XmlNode node, IXMLPrimaryVehicleBusInputData inputProvider,
+			string fileName) : base(node, fileName)
+		{
+			InputData = inputProvider;
+		}
+
+		protected override XNamespace SchemaNamespace
+		{
+			get { return NAMESPACE_URI; }
+		}
+
+		public string ShiftStrategy
+		{
+			get { return null; }
+		}
+
+		public bool SavedInDeclarationMode
+		{
+			get { return true; }
+		}
+
+		public string JobName
+		{
+			get { return Vehicle.Identifier; }
+		}
+		
+		protected override DataSourceType SourceType
+		{
+			get { return DataSourceType.XMLFile; }
+		}
+
+		public IVehicleDeclarationInputData Vehicle
+		{
+			get { return _vehicle ?? (_vehicle = Reader.CreateVehicle); }
+		}
+
+		public IXMLJobDataReader Reader { protected get; set; }
+		public IXMLPrimaryVehicleBusInputData InputData { get; }
+	}
+
+
 }

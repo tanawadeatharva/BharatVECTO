@@ -31,12 +31,17 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Runtime.InteropServices;
+using System.Windows.Forms.VisualStyles;
 using System.Xml;
 using System.Xml.Linq;
+using TUGraz.VectoCommon.BusAuxiliaries;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Resources;
 using TUGraz.VectoCommon.Utils;
+using TUGraz.VectoCore.InputData.FileIO.XML.Common;
 using TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Interfaces;
 using TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader;
 using TUGraz.VectoCore.InputData.Impl;
@@ -86,6 +91,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 				if (ExemptedVehicle) {
 					return null;
 				}
+
 				return _ptoNode ?? (_ptoNode = GetNode(XMLNames.Vehicle_PTO) as XmlElement);
 			}
 		}
@@ -267,6 +273,58 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 			}
 		}
 
+		public virtual RegistrationClass RegisteredClass
+		{
+			get { return RegistrationClass.unknown; }
+		}
+
+		public virtual int NumberOfPassengersUpperDeck
+		{
+			get { return 0; }
+		}
+
+		public virtual int NumberOfPassengersLowerDeck
+		{
+			get { return 0; }
+		}
+
+		public virtual VehicleCode VehicleCode
+		{
+			get { return VehicleCode.NOT_APPLICABLE; }
+		}
+
+		public virtual FloorType FloorType
+		{
+			get { return FloorType.Unknown; }
+		}
+
+		public virtual bool Articulated
+		{
+			get { return false; }
+		}
+
+		public virtual Meter Height
+		{
+			get { return null; }
+		}
+
+		public virtual Meter Length
+		{
+			get { return null; }
+		}
+
+		public virtual Meter Width
+		{
+			get { return null; }
+		}
+
+		public virtual Meter EntranceHeight
+		{
+			get { return null; }
+		}
+
+		public virtual ConsumerTechnology DoorDriveTechnology { get { return ConsumerTechnology.Unknown; } }
+
 		public virtual IVehicleComponentsDeclaration Components
 		{
 			get { return _components ?? (_components = ComponentReader.ComponentInputData); }
@@ -375,6 +433,16 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 				get { return PredictiveCruiseControlType.None; }
 			}
 
+			public bool? ATEcoRollReleaseLockupClutch
+			{
+				get { return null; }
+			}
+
+			public XmlNode XMLSource
+			{
+				get { return null; }
+			}
+
 			#endregion
 		}
 	}
@@ -398,6 +466,10 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		public XMLDeclarationVehicleDataProviderV21(IXMLDeclarationJobInputData jobData, XmlNode xmlNode, string sourceFile) :
 			base(jobData, xmlNode, sourceFile) { }
 
+		#region Overrides of XMLDeclarationVehicleDataProviderV10
+
+		#endregion
+
 		public override VehicleCategory VehicleCategory
 		{
 			get {
@@ -415,6 +487,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 			get { return NAMESPACE_URI; }
 		}
 	}
+
+	// ---------------------------------------------------------------------------------------
 
 	public class XMLDeclarationExemptedVehicleDataProviderV22 : XMLDeclarationVehicleDataProviderV20
 	{
@@ -554,5 +628,470 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		}
 
 		#endregion
+	}
+
+	// ---------------------------------------------------------------------------------------
+
+
+	public class XMLDeclarationPrimaryBusVehicleDataProviderV26 : XMLDeclarationVehicleDataProviderV20
+	{
+		public new static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V26;
+
+		public new const string XSD_TYPE = "PrimaryVehicleDeclarationType";
+
+		public new static readonly string QUALIFIED_XSD_TYPE =
+			XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
+
+		public XMLDeclarationPrimaryBusVehicleDataProviderV26(
+			IXMLDeclarationJobInputData jobData, XmlNode xmlNode, string sourceFile) : base(jobData, xmlNode, sourceFile)
+		{
+			SourceType = DataSourceType.XMLEmbedded;
+			
+		}
+
+
+		#region Overrides of XMLDeclarationVehicleDataProviderV10
+
+		public override bool SleeperCab
+		{
+			get { return false; }
+		}
+
+		public override IAdvancedDriverAssistantSystemDeclarationInputData ADAS
+		{
+			get { return ADASReader.ADASInputData; }
+		}
+
+		public override XmlElement PTONode
+		{
+			get { return null; }
+		}
+
+		#region Overrides of XMLDeclarationVehicleDataProviderV10
+
+		public override LegislativeClass LegislativeClass
+		{
+			get { return LegislativeClass.M3; }
+		}
+
+		#endregion
+
+		public override IPTOTransmissionInputData PTOTransmissionInputData
+		{
+			get { return null; }
+		}
+
+		public override VehicleCategory VehicleCategory
+		{
+			get { return VehicleCategory.HeavyBusPrimaryVehicle; }
+		}
+
+		public override bool Articulated
+		{
+			get { return GetBool(XMLNames.Vehicle_Articulated); }
+		}
+
+		public override Kilogram CurbMassChassis
+		{
+			get { return null; }
+		}
+
+		public override Kilogram GrossVehicleMassRating
+		{
+			get { return GetDouble(XMLNames.Vehicle_TPMLM).SI<Kilogram>(); }
+		}
+
+		public override Meter EntranceHeight
+		{
+			get { return null; }
+		}
+
+		#endregion
+
+		#region Overrides of AbstractXMLResource
+
+		protected override XNamespace SchemaNamespace
+		{
+			get { return NAMESPACE_URI; }
+		}
+
+		protected override DataSourceType SourceType { get; }
+
+		#endregion
+	}
+
+	public class XMLDeclarationMediumLorryVehicleDataProviderV26 : XMLDeclarationVehicleDataProviderV21
+	{
+		public new static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V26;
+
+		public new const string XSD_TYPE = "VehicleMediumLorryDeclarationType";
+
+		public new static readonly string QUALIFIED_XSD_TYPE =
+			XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
+
+		public XMLDeclarationMediumLorryVehicleDataProviderV26(
+			IXMLDeclarationJobInputData jobData, XmlNode xmlNode, string sourceFile) : base(jobData, xmlNode, sourceFile) { }
+
+		#region Overrides of XMLDeclarationVehicleDataProviderV10
+
+		public override bool SleeperCab
+		{
+			get { return false; }
+		}
+
+		public override bool VocationalVehicle
+		{
+			get { return false; }
+		}
+
+		public override IPTOTransmissionInputData PTOTransmissionInputData
+		{
+			get { return null; }
+		}
+
+		public override XmlElement PTONode
+		{
+			get { return null; }
+		}
+
+		#region Overrides of XMLDeclarationVehicleDataProviderV10
+
+		public override Kilogram GrossVehicleMassRating
+		{
+			get { return GetDouble(XMLNames.Vehicle_TPMLM).SI<Kilogram>(); }
+		}
+
+		#endregion
+
+		#endregion
+
+		#region Overrides of AbstractXMLResource
+
+		protected override XNamespace SchemaNamespace
+		{
+			get { return NAMESPACE_URI; }
+		}
+
+		protected override DataSourceType SourceType { get; }
+
+		#endregion
+	}
+
+	public class XMLDeclarationCompletedBusDataProviderV26 : XMLDeclarationVehicleDataProviderV20
+	{
+		public new static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V26;
+
+		public new const string XSD_TYPE = "CompletedVehicleDeclarationType";
+
+		public new static readonly string QUALIFIED_XSD_TYPE =
+			XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
+
+		public XMLDeclarationCompletedBusDataProviderV26(
+			IXMLDeclarationJobInputData jobData, XmlNode xmlNode, string sourceFile) : base(jobData, xmlNode, sourceFile)
+		{
+			SourceType = DataSourceType.XMLEmbedded;
+		}
+
+
+		#region Overrides of XMLDeclarationVehicleDataProviderV10
+
+		public override VehicleCategory VehicleCategory
+		{
+			get { return VehicleCategory.HeavyBusCompletedVehicle; }
+		}
+
+		public override RegistrationClass RegisteredClass
+		{
+			get { return RegistrationClassHelper.Parse(GetString(XMLNames.Vehicle_RegisteredClass)).First(); }
+		}
+
+		public override VehicleCode VehicleCode
+		{
+			get { return GetString(XMLNames.Vehicle_VehicleCode).ParseEnum<VehicleCode>(); }
+		}
+
+		//TechnicalPermissibleMaximumLadenMass
+		public override Kilogram GrossVehicleMassRating
+		{
+			get { return GetDouble(XMLNames.TPMLM).SI<Kilogram>(); }
+		}
+
+		public override TankSystem? TankSystem
+		{
+			get
+			{
+				return ElementExists(XMLNames.Vehicle_NgTankSystem)
+						? EnumHelper.ParseEnum<TankSystem>(GetString(XMLNames.Vehicle_NgTankSystem))
+						: (TankSystem?)null;
+			}
+		}
+
+		public override int NumberOfPassengersLowerDeck
+		{
+			get {
+				var node = GetNode(XMLNames.Bus_LowerDeck);
+				return XmlConvert.ToInt32(node.InnerText);
+			}
+		}
+
+		public override int NumberOfPassengersUpperDeck
+		{
+			get {
+				var node = GetNode(XMLNames.Bus_UpperDeck);
+				return XmlConvert.ToInt32(node.InnerText);
+			}
+		}
+
+		//HeightIntegratedBody
+		public override Meter Height
+		{
+			get { return GetDouble(XMLNames.Bus_HeighIntegratedBody).SI<Meter>(); }
+		}
+
+		//VehicleLength
+		public override Meter Length
+		{
+			get { return GetDouble(XMLNames.Bus_VehicleLength).SI<Meter>(); }
+		}
+
+		//VehicleWidth
+		public override Meter Width
+		{
+			get { return GetDouble(XMLNames.Bus_VehicleWidth).SI<Meter>(); }
+		}
+
+		public override XmlElement PTONode
+		{
+			get { return null; }
+		}
+
+		#endregion
+
+		
+		public override FloorType FloorType
+		{
+			get { return GetBool(XMLNames.Bus_LowEntry) ? FloorType.LowFloor : FloorType.HighFloor; }
+		}
+
+		public override Meter EntranceHeight
+		{
+			get { return GetDouble(XMLNames.Bus_EntranceHeight).SI<Meter>(); }
+		}
+
+		public override ConsumerTechnology DoorDriveTechnology
+		{
+			get { return ConsumerTechnologyHelper.Parse(GetString(XMLNames.BusAux_PneumaticSystem_DoorDriveTechnology)); }
+		}
+		
+
+		#region Overrides of AbstractXMLResource
+
+		protected override XNamespace SchemaNamespace
+		{
+			get { return NAMESPACE_URI; }
+		}
+
+		protected override DataSourceType SourceType { get; }
+
+		#endregion
+	}
+
+
+	// ---------------------------------------------------------------------------------------
+
+	public class XMLDeclarationPrimaryVehicleBusDataProviderV01 : AbstractCommonComponentType, IXMLDeclarationVehicleData
+	{
+		public static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_PRIMARY_BUS_VEHICLE_URI_V01;
+
+		public const string XSD_TYPE = "VehiclePIFType";
+
+		public static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
+
+		protected IXMLPrimaryVehicleBusJobInputData BusJobData;
+		private XmlElement _adasNode;
+		private IAdvancedDriverAssistantSystemDeclarationInputData _adas;
+		private XmlElement _componentNode;
+		private IVehicleComponentsDeclaration _components;
+
+
+		public XMLDeclarationPrimaryVehicleBusDataProviderV01(
+			IXMLPrimaryVehicleBusJobInputData busJobData, XmlNode xmlNode, string sourceFile)
+			: base(xmlNode, sourceFile)
+		{
+			BusJobData = busJobData;
+		}
+
+		#region Overrides of AbstractCommonComponentType
+
+		public override string Manufacturer
+		{
+			get { return GetString(XMLNames.ManufacturerPrimaryVehicle); }
+		}
+
+		public string ManufacturerAddress
+		{
+			get { return GetString(XMLNames.ManufacturerAddressPrimaryVehicle); }
+		}
+
+		#endregion
+
+
+		#region IXMLDeclarationVehicleData interface
+
+		public string VIN
+		{
+			get { return GetString(XMLNames.Vehicle_VIN); }
+		}
+
+		public VehicleCategory VehicleCategory
+		{
+			get { return VehicleCategoryHelper.Parse(GetString(XMLNames.Vehicle_VehicleCategory)); }
+		}
+
+		public AxleConfiguration AxleConfiguration
+		{
+			get { return AxleConfigurationHelper.Parse(GetString(XMLNames.Vehicle_AxleConfiguration)); }
+		}
+
+		//TechnicalPermissibleMaximumLadenMass
+		public Kilogram GrossVehicleMassRating
+		{
+			get { return GetDouble(XMLNames.TPMLM).SI<Kilogram>(); }
+		}
+
+		//IdlingSpeed
+		public PerSecond EngineIdleSpeed
+		{
+			get { return GetDouble(XMLNames.Engine_IdlingSpeed).RPMtoRad(); }
+		}
+
+		public RetarderType RetarderType
+		{
+			get { return GetString(XMLNames.Vehicle_RetarderType).ParseEnum<RetarderType>(); }
+		}
+
+		public double RetarderRatio
+		{
+			get { return GetDouble(XMLNames.Vehicle_RetarderRatio); }
+		}
+
+		public AngledriveType AngledriveType
+		{
+			get { return GetString(XMLNames.Vehicle_AngledriveType).ParseEnum<AngledriveType>(); }
+		}
+
+		public bool ZeroEmissionVehicle
+		{
+			get { return GetBool(XMLNames.Vehicle_ZeroEmissionVehicle); }
+		}
+
+		public XmlElement ADASNode
+		{
+			get { return _adasNode ?? (_adasNode = GetNode(XMLNames.Vehicle_ADAS, required: false) as XmlElement); }
+		}
+
+		public IXMLADASReader ADASReader { get; set; }
+
+		public IAdvancedDriverAssistantSystemDeclarationInputData ADAS
+		{
+			get { return _adas ?? (_adas = ADASReader.ADASInputData); }
+		}
+
+
+		public IList<ITorqueLimitInputData> TorqueLimits
+		{
+			get { return ReadTorqueLimits(); }
+		}
+
+		public XmlElement ComponentNode
+		{
+			get {
+				if (ExemptedVehicle) {
+					return null;
+				}
+
+				return _componentNode ?? (_componentNode = GetNode(XMLNames.Vehicle_Components) as XmlElement);
+			}
+		}
+
+		public IXMLComponentReader ComponentReader { get; set; }
+
+		public Meter EntranceHeight { get; }
+
+		public virtual ConsumerTechnology DoorDriveTechnology
+		{
+			get { return ConsumerTechnology.Unknown; }
+		}
+
+		public IVehicleComponentsDeclaration Components
+		{
+			get { return _components ?? (_components = ComponentReader.ComponentInputData); }
+		}
+
+
+		#region  Non seeded Properties
+
+		public string Identifier { get; }
+		public bool ExemptedVehicle { get; }
+		public LegislativeClass LegislativeClass { get; }
+		public int NumberOfPassengersUpperDeck { get; }
+		public int NumberOfPassengersLowerDeck { get; }
+		public Kilogram CurbMassChassis { get; }
+		public bool VocationalVehicle { get; }
+		public bool SleeperCab { get; }
+		public TankSystem? TankSystem { get; }
+
+		public bool HybridElectricHDV { get; }
+		public bool DualFuelVehicle { get; }
+		public Watt MaxNetPower1 { get; }
+		public Watt MaxNetPower2 { get; }
+		public RegistrationClass RegisteredClass { get; }
+		public VehicleCode VehicleCode { get; }
+		public FloorType FloorType { get; }
+		public bool Articulated { get { return GetBool(XMLNames.Vehicle_Articulated); } }
+		public Meter Height { get; }
+		public Meter Length { get; }
+		public Meter Width { get; }
+
+		public XmlElement PTONode { get; }
+		public IXMLPTOReader PTOReader { get; set; }
+		public IPTOTransmissionInputData PTOTransmissionInputData { get; }
+
+		#endregion
+
+		#endregion
+
+		#region Overrides of AbstractXMLResource
+
+		protected override XNamespace SchemaNamespace
+		{
+			get { return NAMESPACE_URI; }
+		}
+
+		protected override DataSourceType SourceType
+		{
+			get { return DataSourceType.XMLFile; }
+		}
+
+		#endregion
+
+
+		private IList<ITorqueLimitInputData> ReadTorqueLimits()
+		{
+			var torqueLimits = new List<ITorqueLimitInputData>();
+			var limits = GetNodes(new[] { XMLNames.Vehicle_TorqueLimits, XMLNames.Vehicle_TorqueLimits_Entry });
+			foreach (XmlNode current in limits) {
+				if (current.Attributes != null) {
+					torqueLimits.Add(
+						new TorqueLimitInputData() {
+							Gear = GetAttribute(current, XMLNames.Vehicle_TorqueLimits_Entry_Gear_Attr).ToInt(),
+							MaxTorque = GetAttribute(current, XMLNames.Vehicle_TorqueLimits_Entry_MaxTorque_Attr)
+								.ToDouble().SI<NewtonMeter>()
+						});
+				}
+			}
+
+			return torqueLimits;
+		}
 	}
 }

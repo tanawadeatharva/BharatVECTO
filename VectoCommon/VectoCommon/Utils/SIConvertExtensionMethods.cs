@@ -197,6 +197,17 @@ namespace TUGraz.VectoCommon.Utils
 		{
 			return new ConvertedSI(value.AsRPM, "rpm");
 		}
+
+		public static ConvertedSI ConvertToPerHour(this PerSecond value)
+		{
+			return new ConvertedSI(value.Value() * SecondsPerHour, "1/h");
+		}
+
+		public static ConvertedSI ConvertToWattHourPerCubicMeter(this JoulePerCubicMeter value)
+		{
+			return new ConvertedSI(value.Value() / SecondsPerHour, "Wh/m^3");
+		}
+
 		public static ConvertedSI ConvertToCubicDeziMeter(this CubicMeter value)
 		{
 			return new ConvertedSI(value.Value() * 10 * 10 * 10, "dm^3");
@@ -211,9 +222,24 @@ namespace TUGraz.VectoCommon.Utils
 			return new ConvertedSI(value.Value() / Kilo / Kilo, "MJ/kg");
 		}
 
+		public static ConvertedSI ConvertToKiloWattHourPerKilogramm(this JoulePerKilogramm value)
+		{
+			return new ConvertedSI(value.Value() / SecondsPerHour / Kilo, "kWh/kg");
+		}
+
 		public static ConvertedSI ConvertToMinutes(this Second sec)
 		{
 			return new ConvertedSI(sec.Value() / 60.0, "min");
+		}
+
+		public static ConvertedSI ConvertToNlPerMin(this NormLiterPerSecond nlps)
+		{
+			return new ConvertedSI(nlps.Value() * 60.0, "Nl/min");
+		}
+
+		public static ConvertedSI ConvertToMegaJouleperKilometer(this JoulePerMeter jpm)
+		{
+			return new ConvertedSI(jpm.Value() * 1e-3, "MJ/km");
 		}
 	}
 }

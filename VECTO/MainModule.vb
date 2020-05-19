@@ -14,9 +14,11 @@ Imports System.Reflection
 Imports System.Runtime.Remoting
 Imports TUGraz.VectoCommon
 Imports TUGraz.VectoCommon.InputData
+Imports TUGraz.VectoCommon.Models
 Imports TUGraz.VectoCommon.OutputData
 Imports TUGraz.VectoCommon.Utils
 Imports TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
+Imports TUGraz.VectoCore.Models.Declaration
 Imports TUGraz.VectoCore.Models.SimulationComponent.Data
 Imports TUGraz.VectoCore.Models.SimulationComponent.Data.Engine
 Imports VectoAuxiliaries
@@ -40,26 +42,45 @@ Module MainModule
 		Return retVal
 	End Function
 
-	Public Function ConvPicPath(hdVclass As Integer, isLongHaul As Boolean) As Bitmap
-		Select Case hdVclass
-			Case 1, 2, 3, 6, 7
-				Return My.Resources._4x2r
-			Case 4
-				If isLongHaul Then Return My.Resources._4x2rt
-				Return My.Resources._4x2r
-			Case 5, 8
-				Return My.Resources._4x2tt
-			Case 9, 11, 13
-				If isLongHaul Then Return My.Resources._6x2rt
-				Return My.Resources._6x2r
-			Case 10, 12, 14
-				Return My.Resources._6x2tt
-			Case Else
-				Return My.Resources.Undef
-		End Select
-	End Function
+    Public Function ConvPicPath(hdVclass As VehicleClass, isLongHaul As Boolean) As Bitmap
 
-	Public Function GetRelativePath(filePath As String, basePath As String) As String
+        Select Case hdVclass
+            Case VehicleClass.ClassML2r,
+                 VehicleClass.ClassML2van,
+                 VehicleClass.ClassML3r,
+                 VehicleClass.ClassML3van,
+                 VehicleClass.ClassML4r,
+                 VehicleClass.ClassML4van,
+                 VehicleClass.Class1s
+                Return My.Resources.Undef
+
+            Case VehicleClass.Class1,
+                 VehicleClass.Class2,
+                 VehicleClass.Class3,
+                VehicleClass.Class6,
+                VehicleClass.Class7
+                Return My.Resources._4x2r
+            Case VehicleClass.Class4
+                If isLongHaul Then Return My.Resources._4x2rt
+                Return My.Resources._4x2r
+            Case VehicleClass.Class5,
+                 VehicleClass.Class8
+                Return My.Resources._4x2tt
+            Case VehicleClass.Class9,
+                 VehicleClass.Class11,
+                 VehicleClass.Class13
+                If isLongHaul Then Return My.Resources._6x2rt
+                Return My.Resources._6x2r
+            Case VehicleClass.Class10,
+                 VehicleClass.Class12,
+                 VehicleClass.Class14
+                Return My.Resources._6x2tt
+            Case Else
+                Return My.Resources.Undef
+        End Select
+    End Function
+
+    Public Function GetRelativePath(filePath As String, basePath As String) As String
 		If (String.IsNullOrEmpty(filePath)) then
 			Return ""
 		End If

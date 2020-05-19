@@ -34,7 +34,6 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Security.Cryptography.X509Certificates;
 using System.Xml;
 using System.Xml.Linq;
 using TUGraz.VectoCommon.Hashing;
@@ -257,7 +256,7 @@ namespace TUGraz.VectoHashing
 				node.Attributes.Append(attr);
 			}
 
-			query = component == VectoComponents.VectoCustomerInformation || component == VectoComponents.VectoOutput
+			query = component.IsReport()
 				? string.Format("*/*[local-name()='Data']/*[local-name()='ApplicationInformation']/*[local-name()='Date']")
 				: string.Format("*/*[local-name()='{0}']/*/*[local-name()='Date']", component.XMLElementName());
 			var dateNode = Document.SelectSingleNode(query);
@@ -302,6 +301,9 @@ namespace TUGraz.VectoHashing
 			}
 			if (Document.DocumentElement.LocalName.Equals("VectoCustomerInformation")) {
 				return VectoComponents.VectoCustomerInformation;
+			}
+			if (Document.DocumentElement.LocalName.Equals("VectoOutputPrimaryVehicle")) {
+				return VectoComponents.VectoPrimaryVehicleInformation;
 			}
 			throw new Exception("unknown document structure! neither input data nor output data format");
 		}

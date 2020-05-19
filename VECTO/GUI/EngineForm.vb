@@ -106,7 +106,7 @@ Public Class EngineForm
 		Dim jobFile As String = VectoJobForm.VectoFile
 		If Not jobFile Is Nothing AndAlso File.Exists(jobFile) Then
 
-			Dim inputData As IEngineeringInputDataProvider = TryCast(JSONInputDataFactory.ReadJsonJob(jobFile), 
+			Dim inputData As IEngineeringInputDataProvider = TryCast(JSONInputDataFactory.ReadJsonJob(jobFile, true), 
 																	 IEngineeringInputDataProvider)
 			If (not inputData Is Nothing) Then
 				Dim gbx as IGearboxDeclarationInputData = inputData.JobInputData.Vehicle.Components.GearboxInputData
@@ -242,7 +242,7 @@ Public Class EngineForm
 
 		Dim basePath As String = Path.GetDirectoryName(file)
 		TbName.Text = engine.Model
-		TbDispl.Text = (engine.Displacement*1000*1000).ToGUIFormat()
+		TbDispl.Text = (engine.Displacement.Value() * 1000.0 * 1000).ToGUIFormat()
 		TbInertia.Text = engine.Inertia.ToGUIFormat()
 		
 
@@ -409,8 +409,8 @@ Public Class EngineForm
 		engine.maxTorqueInput = tbMaxTorque.Text.ToDouble(0).SI (Of NewtonMeter)()
 
 		If Not engine.SaveFile Then
-			MsgBox("Cannot safe to " & file, MsgBoxStyle.Critical)
-			Return False
+            MsgBox("Cannot save to " & file, MsgBoxStyle.Critical)
+            Return False
 		End If
 
 		If AutoSendTo Then

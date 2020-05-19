@@ -37,7 +37,6 @@ using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.InputData.FileIO.JSON;
-using TUGraz.VectoCore.InputData.Reader;
 using TUGraz.VectoCore.InputData.Reader.ComponentData;
 using TUGraz.VectoCore.Models.Connector.Ports.Impl;
 using TUGraz.VectoCore.Models.Declaration;
@@ -81,7 +80,7 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 			var fileWriter = new FileOutputWriter("Coach_FullPowertrain_SimpleGearbox");
 			var modData = new ModalDataContainer("Coach_FullPowertrain_SimpleGearbox", new[] { FuelData.Diesel }, fileWriter);
 			var container = new VehicleContainer(ExecutionMode.Engineering, modData);
-			container.RunData = new VectoRunData() { SimulationType = SimulationType.DistanceCycle };
+			
 
 			var gearboxData = CreateSimpleGearboxData();
 			var engineData = MockSimulationDataFactory.CreateEngineDataFromFile(EngineFile, gearboxData.Gears.Count);
@@ -99,10 +98,12 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 				AxleGearData = axleGearData,
 				GearboxData = gearboxData,
 				VehicleData = vehicleData,
-				AirdragData = airDragData
+				AirdragData = airDragData,
+				SimulationType = SimulationType.DistanceCycle
 			};
+			container.RunData = runData;
 
-			cycle.AddComponent(new Driver(container, driverData, new DefaultDriverStrategy()))
+			cycle.AddComponent(new Driver(container, driverData, new DefaultDriverStrategy(container)))
 				.AddComponent(new Vehicle(container, vehicleData, airDragData))
 				.AddComponent(new Wheels(container, vehicleData.DynamicTyreRadius, vehicleData.WheelsInertia))
 				.AddComponent(new Brakes(container))
@@ -148,8 +149,7 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 			var fileWriter = new FileOutputWriter("Coach_FullPowertrain");
 			var modData = new ModalDataContainer("Coach_FullPowertrain", new[] { FuelData.Diesel }, fileWriter);
 			var container = new VehicleContainer(ExecutionMode.Engineering, modData);
-			container.RunData = new VectoRunData() {SimulationType = SimulationType.DistanceCycle };
-
+			
 			var gearboxData = CreateGearboxData();
 			var engineData = MockSimulationDataFactory.CreateEngineDataFromFile(EngineFile, gearboxData.Gears.Count);
 			var cycleData = DrivingCycleDataReader.ReadFromFile(CoachCycleFile, CycleType.DistanceBased, false);
@@ -165,11 +165,14 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 				VehicleData = vehicleData,
 				AxleGearData = axleGearData,
 				GearboxData = gearboxData,
-				AirdragData = airDragData
+				AirdragData = airDragData,
+				SimulationType = SimulationType.DistanceCycle
 			};
 
+			container.RunData = runData;
+
 			var cyclePort = cycle.OutPort();
-			cycle.AddComponent(new Driver(container, driverData, new DefaultDriverStrategy()))
+			cycle.AddComponent(new Driver(container, driverData, new DefaultDriverStrategy(container)))
 				.AddComponent(new Vehicle(container, vehicleData, airDragData))
 				.AddComponent(new Wheels(container, vehicleData.DynamicTyreRadius, vehicleData.WheelsInertia))
 				.AddComponent(new Brakes(container))
@@ -245,10 +248,11 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 				GearboxData = gearboxData,
 				AirdragData = airDragData
 			};
+			container.RunData = runData;
 
 			var cycle = new DistanceBasedDrivingCycle(container, cycleData);
 			var cyclePort = cycle.OutPort();
-			cycle.AddComponent(new Driver(container, driverData, new DefaultDriverStrategy()))
+			cycle.AddComponent(new Driver(container, driverData, new DefaultDriverStrategy(container)))
 				.AddComponent(new Vehicle(container, vehicleData, airDragData))
 				.AddComponent(new Wheels(container, vehicleData.DynamicTyreRadius, vehicleData.WheelsInertia))
 				.AddComponent(new Brakes(container))
@@ -416,9 +420,10 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 				}
 			};
 			return new VehicleData {
+				VehicleCategory = VehicleCategory.RigidTruck,
 				AxleConfiguration = AxleConfiguration.AxleConfig_6x2,
 				AirDensity = DeclarationData.AirDensity,
-				CurbWeight = 15700.SI<Kilogram>(),
+				CurbMass = 15700.SI<Kilogram>(),
 				Loading = loading,
 				DynamicTyreRadius = 0.52.SI<Meter>(),
 				AxleData = axles,

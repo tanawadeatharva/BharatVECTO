@@ -31,6 +31,9 @@
 
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using Newtonsoft.Json;
+using TUGraz.VectoCommon.BusAuxiliaries;
+using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Configuration;
@@ -56,8 +59,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 		public KilogramSquareMeter Inertia { get; internal set; }
 
 		[Required, ValidateObject]
-		public Dictionary<uint, EngineFullLoadCurve> FullLoadCurves { get; internal set; }
 		
+		public Dictionary<uint, EngineFullLoadCurve> FullLoadCurves { get; internal set; }
+
 		public PerSecond RatedSpeedDeclared { get; internal set; }
 
 		public Watt RatedPowerDeclared { get; internal set; }
@@ -70,6 +74,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 
 		[Required, ValidateObject]
 		public List<CombustionEngineFuelData> Fuels { get; internal set; }
+
+		[JsonIgnore]
+		public IEngineDeclarationInputData InputData { get; set; }
 
 		public WHRData ElectricalWHR;
 
@@ -132,6 +139,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 		[Required, ValidateObject]
 		public FuelConsumptionMap ConsumptionMap { get; internal set; }
 
-		public FuelData.Entry FuelData { get; internal set; }
+		public IFuelProperties FuelData { get; internal set; }
 	}
 }

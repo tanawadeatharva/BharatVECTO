@@ -36,14 +36,12 @@ using System.Xml;
 using System.Xml.XPath;
 using Ninject;
 using NUnit.Framework;
-using NUnit.Framework.Internal;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Resources;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.InputData.FileIO.XML;
-using TUGraz.VectoCore.InputData.FileIO.XML.Declaration;
 using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.OutputData.FileIO;
 using TUGraz.VectoCore.Tests.Models.Simulation;
@@ -117,8 +115,8 @@ namespace TUGraz.VectoCore.Tests.Integration
 			var val2 = new XMLValidator(XmlReader.Create(customerFile));
 			Assert.IsTrue(val2.ValidateXML(XmlDocumentType.CustomerReport), val2.ValidationError);
 
-			var val3 = new XMLValidator(XmlReader.Create(monitoringFile));
-			Assert.IsTrue(val3.ValidateXML(XmlDocumentType.MonitoringReport), val3.ValidationError);
+			//var val3 = new XMLValidator(XmlReader.Create(monitoringFile));
+			//Assert.IsTrue(val3.ValidateXML(XmlDocumentType.MonitoringReport), val3.ValidationError);
 
 		}
 

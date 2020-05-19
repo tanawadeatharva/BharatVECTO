@@ -44,5 +44,8 @@ namespace TUGraz.VectoCore.Models.Simulation.DataBus
 		ExecutionMode ExecutionMode { get; }
 
 		Second AbsTime { get; set; }
+
+		ITorqueConverterControl TorqueConverter { get; }
 	}
+
 }

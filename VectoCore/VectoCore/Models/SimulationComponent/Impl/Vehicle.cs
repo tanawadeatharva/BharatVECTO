@@ -84,13 +84,13 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 												+ PreviousState.AirDragResistance
 												+ PreviousState.SlopeResistance;
 
-			return NextComponent.Initialize(PreviousState.VehicleTractionForce, vehicleSpeed);
+			return NextComponent?.Initialize(PreviousState.VehicleTractionForce, vehicleSpeed);
 		}
 
 		public IResponse Initialize(MeterPerSecond vehicleSpeed, Radian roadGradient, MeterPerSquareSecond startAcceleration)
 		{
 			//CurrentState.Velocity = vehicleSpeed + startAcceleration * Constants.SimulationSettings.TargetTimeInterval;
-			var vehicleAccelerationForce = DriverAcceleration(startAcceleration)
+			var vehicleAccelerationForce = AccelerationForce(startAcceleration)
 											+ RollingResistance(roadGradient)
 											+
 											AirDragResistance(vehicleSpeed,
@@ -114,7 +114,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			}
 			CurrentState.Distance = PreviousState.Distance + PreviousState.Velocity * dt + acceleration * dt * dt / 2;
 
-			CurrentState.DriverAcceleration = DriverAcceleration(acceleration);
+			CurrentState.DriverAcceleration = AccelerationForce(acceleration);
 			CurrentState.RollingResistance = (PreviousState.Velocity + CurrentState.Velocity).IsEqual(0, 1e-9) ? 0.SI<Newton>() : RollingResistance(gradient);
 			try {
 				CurrentState.AirDragResistance = AirDragResistance(PreviousState.Velocity, CurrentState.Velocity);
@@ -134,10 +134,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			var retval = NextComponent.Request(absTime, dt, CurrentState.VehicleTractionForce,
 				CurrentState.Velocity, dryRun);
+			retval.VehicleSpeed = CurrentState.Velocity;
 			return retval;
 		}
 
-		protected override void DoWriteModalResults(IModalDataContainer container)
+		protected override void DoWriteModalResults(Second time, Second simulationInterval, IModalDataContainer container)
 		{
 			var averageVelocity = (PreviousState.Velocity + CurrentState.Velocity) / 2.0;
 
@@ -163,7 +164,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		public Newton RollingResistance(Radian gradient)
 		{
-			var weight = ModelData.TotalVehicleWeight;
+			var weight = ModelData.TotalVehicleMass;
 			var gravity = Physics.GravityAccelleration;
 			var rollCoefficient = ModelData.TotalRollResistanceCoefficient;
 
@@ -172,16 +173,16 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			return retVal;
 		}
 
-		protected internal Newton DriverAcceleration(MeterPerSquareSecond accelleration)
+		protected internal Newton AccelerationForce(MeterPerSquareSecond accelleration)
 		{
-			var retVal = ModelData.TotalVehicleWeight * accelleration;
+			var retVal = ModelData.TotalVehicleMass * accelleration;
 			Log.Debug("DriverAcceleration: {0}", retVal);
 			return retVal;
 		}
 
 		public Newton SlopeResistance(Radian gradient)
 		{
-			var retVal = ModelData.TotalVehicleWeight * Physics.GravityAccelleration * Math.Sin(gradient.Value());
+			var retVal = ModelData.TotalVehicleMass * Physics.GravityAccelleration * Math.Sin(gradient.Value());
 			Log.Debug("SlopeResistance: {0}", retVal);
 			return retVal;
 		}
@@ -222,7 +223,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		public Kilogram VehicleMass
 		{
-			get { return ModelData.TotalCurbWeight; }
+			get { return ModelData.TotalCurbMass; }
 		}
 
 		public Kilogram VehicleLoading
@@ -232,7 +233,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		public Kilogram TotalMass
 		{
-			get { return ModelData.TotalVehicleWeight; }
+			get { return ModelData.TotalVehicleMass; }
 		}
 
 		public CubicMeter CargoVolume

@@ -22,6 +22,7 @@ Imports TUGraz.VectoCommon.Utils
 Imports TUGraz.VectoCore.InputData.FileIO.JSON
 Imports TUGraz.VectoCore.InputData.Reader.ComponentData
 Imports TUGraz.VectoCore.Models.Declaration
+Imports TUGraz.VectoCore.Models.Simulation.Impl
 Imports TUGraz.VectoCore.Models.SimulationComponent.Data.Engine
 Imports TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox
 
@@ -87,10 +88,17 @@ Public Class VectoJobForm
 		ButAuxRem.Enabled = Not Cfg.DeclMode
 		PnEcoRoll.Enabled = Not Cfg.DeclMode
 
+		gbEcoRoll.Enabled = not Cfg.DeclMode
+		gbEngineStopStart.Enabled = not cfg.DeclMode
+		gbPCC.Enabled = Not Cfg.DeclMode
+
 		_changed = False
 		'AA-TB
 		PopulateAdvancedAuxiliaries()
 
+		cbGearshiftStrategy.DataSource = PowertrainBuilder.GetRegisteredShiftStrategies(Nothing).Select(Function(entry) New With {.Value = entry.Item1, .Label = entry.Item2}).ToList()
+		cbGearshiftStrategy.DisplayMember = "Label"
+		cbGearshiftStrategy.ValueMember = "Value"
 		'Attempt to select that found in Config
 	End Sub
 
@@ -439,6 +447,11 @@ Public Class VectoJobForm
 		TbVEH.Text = GetRelativePath(inputData.JobInputData.Vehicle.DataSource.SourceFile, _basePath)
 		TbENG.Text = GetRelativePath(inputData.JobInputData.Vehicle.Components.EngineInputData.DataSource.SourceFile, _basePath)
 		TbGBX.Text = GetRelativePath(inputData.JobInputData.Vehicle.Components.GearboxInputData.DataSource.SourceFile, _basePath)
+		if (inputData.DriverInputData.GearshiftInputData Is Nothing) Then
+			TbShiftStrategyParams.Text = ""
+			else
+				TbShiftStrategyParams.Text = GetRelativePath(inputData.DriverInputData.GearshiftInputData.Source, _basePath)
+		End If
 
 		'Start/Stop
 		Dim driver As IDriverEngineeringInputData = inputData.DriverInputData
@@ -498,6 +511,10 @@ Public Class VectoJobForm
 
 		End If
 
+		BtnShiftStrategyParams.Enabled = Not Cfg.DeclMode
+		TbShiftStrategyParams.Enabled = not Cfg.DeclMode
+		BtnShiftParamsForm.Enabled = not cfg.DeclMode
+
 		Try
 			Dim sb As ICycleData
 			For Each sb In vectoJob.Cycles
@@ -532,10 +549,31 @@ Public Class VectoJobForm
 		End If
 
 		tbEngineStopStartActivationDelay.Text =  If(driver.EngineStopStartData?.ActivationDelay?.ToGUIFormat(), DeclarationData.Driver.EngineStopStart.ActivationDelay.ToGUIFormat())
-        tbMaxEngineOffTimespan.Text = If(driver.EngineStopStartData?.MaxEngineOffTimespan?.ToGUIFormat(), DeclarationData.Driver.EngineStopStart.MaxEngineOffTimespan.ToGUIFormat())
-        tbEssUtility.Text = If(driver.EngineStopStartData?.UtilityFactor.ToGUIFormat(), DeclarationData.Driver.EngineStopStart.UtilityFactor.ToGUIFormat())
+		tbMaxEngineOffTimespan.Text = If(driver.EngineStopStartData?.MaxEngineOffTimespan?.ToGUIFormat(), DeclarationData.Driver.EngineStopStart.MaxEngineOffTimespan.ToGUIFormat())
+		tbEssUtility.Text = If(driver.EngineStopStartData?.UtilityFactor.ToGUIFormat(), DeclarationData.Driver.EngineStopStart.UtilityFactor.ToGUIFormat())
+
+		tbEcoRollActivationDelay.Text = if(driver.EcoRollData?.ActivationDelay?.ToGUIFormat(), DeclarationData.Driver.EcoRoll.ActivationDelay.ToGUIFormat())
+		tbEcoRollMinSpeed.Text = if(driver.EcoRollData?.MinSpeed?.AsKmph().ToGUIFormat(), DeclarationData.Driver.EcoRoll.MinSpeed.AsKmph().ToGUIFormat())
+		tbEcoRollUnderspeed.Text = if(driver.EcoRollData?.UnderspeedThreshold?.AsKmph().ToGUIFormat(), DeclarationData.Driver.EcoRoll.UnderspeedThreshold.AsKmph().ToGUIFormat())
+		tbEcoRollMaxAcc.Text = If (driver.EcoRollData?.AccelerationUpperLimit?.ToGUIFormat(), DeclarationData.Driver.EcoRoll.AccelerationUpperLimit.ToGUIFormat())
+
+		tbPCCUnderspeed.Text = if(driver.PCCData?.Underspeed?.AsKmph().ToGUIFormat(), DeclarationData.Driver.PCC.Underspeed.AsKmph().ToGUIFormat())
+		tbPCCOverspeed.Text = If(driver.PCCData?.OverspeedUseCase3?.AsKmph().ToGUIFormat(), DeclarationData.Driver.PCC.OverspeedUseCase3.AsKmph().ToGUIFormat())
+		tbPCCEnableSpeed.Text = if(driver.PCCData?.PCCEnabledSpeed?.AsKmph().ToGUIFormat(), DeclarationData.Driver.PCC.PCCEnableSpeed.AsKmph().ToGUIFormat())
+		tbPCCMinSpeed.Text = if(driver.PCCData?.MinSpeed?.AsKmph().ToGUIFormat(), DeclarationData.Driver.PCC.MinSpeed.AsKmph().ToGUIFormat())
+		tbPCCPreviewUseCase1.Text = If(driver.PCCData?.PreviewDistanceUseCase1?.ToGUIFormat(), DeclarationData.Driver.PCC.PreviewDistanceUseCase1.ToGUIFormat())
+		tbPCCPreviewUseCase2.Text = if(driver.PCCData?.PreviewDistanceUseCase2?.ToGUIFormat(), DeclarationData.Driver.PCC.PreviewDistanceUseCase2.ToGUIFormat())
 
 		'-------------------------------------------------------------
+
+		cbGearshiftStrategy.DataSource = PowertrainBuilder.GetRegisteredShiftStrategies(inputData.JobInputData.Vehicle.Components.GearboxInputData.Type) _
+			.Concat({ Tuple.Create("", "Not specified - use default")}) _
+			.Select(Function(entry) New With {.Value = entry.Item1, .Label = entry.Item2}).ToList()
+		cbGearshiftStrategy.DisplayMember = "Label"
+		cbGearshiftStrategy.ValueMember = "Value"
+		if (not inputData.JobInputData.ShiftStrategy is Nothing) then
+			cbGearshiftStrategy.SelectedValue = inputData.JobInputData.ShiftStrategy
+		end if
 
 		DeclInit()
 
@@ -608,7 +646,8 @@ Public Class VectoJobForm
 		Next
 
 		vectoJob.PathGbx = TbGBX.Text
-
+		vectoJob.PathShiftParams = TbShiftStrategyParams.Text
+		vectoJob.ShiftStrategy = cbGearshiftStrategy.SelectedValue?.ToString()
 
 		'a_DesMax
 		vectoJob.DesMaxFile = TbDesMaxFile.Text
@@ -650,14 +689,27 @@ Public Class VectoJobForm
 		vectoJob.LacDfTargetSpeedFile = tbLacDfTargetSpeedFile.Text
 		vectoJob.LacDfVelocityDropFile = tbLacDfVelocityDropFile.Text
 
-        vectoJob.EngineStopStartActivationThreshold = tbEngineStopStartActivationDelay.text.ToDouble(0)
-        vectoJob.EngineOffTimeLimit = tbMaxEngineOffTimespan.Text.ToDouble(0)
-        vectoJob.EngineStStUtilityFactor = tbEssUtility.Text.ToDouble(0)
+		vectoJob.EngineStopStartActivationThreshold = tbEngineStopStartActivationDelay.text.ToDouble(0)
+		vectoJob.EngineOffTimeLimit = tbMaxEngineOffTimespan.Text.ToDouble(0)
+		vectoJob.EngineStStUtilityFactor = tbEssUtility.Text.ToDouble(0)
+
+		vectoJob.EcoRollActivationDelay = tbEcoRollActivationDelay.Text.ToDouble(0)
+		vectoJob.EcoRollMinSpeed = tbEcoRollMinSpeed.Text.ToDouble(0)
+		vectoJob.EcoRollUnderspeedThreshold = tbEcoRollUnderspeed.Text.ToDouble(0)
+		vectojob.EcoRollMaxAcceleration = tbEcoRollMaxAcc.Text.ToDouble(0)
+
+		vectoJob.PCCEnableSpeedVal = tbPCCEnableSpeed.Text.ToDouble(0)
+		vectoJob.PCCMinSpeed = tbPCCMinSpeed.Text.ToDouble(0)
+		vectoJob.PCCUnderspeed = tbPCCUnderspeed.Text.ToDouble(0)
+		vectoJob.PCCOverspeedUseCase3 = tbPCCOverspeed.Text.ToDouble(0)
+		vectoJob.PCCPrevewiDistance1 = tbPCCPreviewUseCase1.Text.ToDouble(0)
+		vectoJob.PCCPreviewDistance2 = tbPCCPreviewUseCase2.Text.ToDouble(0)
+
 		'------------------------------------------------------------
 
 		'SAVE
 		If Not vectoJob.SaveFile Then
-			MsgBox("Cannot safe to " & file, MsgBoxStyle.Critical)
+			MsgBox("Cannot save to " & file, MsgBoxStyle.Critical)
 			Return False
 		End If
 
@@ -1280,20 +1332,20 @@ lbDlog:
 		s.Name = "Map"
 		
 
-        If (engine.EngineModes.First().Fuels.Count > 1) then
-            Dim fcMap2 As FuelConsumptionMap = FuelConsumptionMapReader.Create(engine.EngineModes.First().Fuels(1).FuelConsumptionMap)
+		If (engine.EngineModes.First().Fuels.Count > 1) then
+			Dim fcMap2 As FuelConsumptionMap = FuelConsumptionMapReader.Create(engine.EngineModes.First().Fuels(1).FuelConsumptionMap)
 
-            Dim s2 As Series = New Series
-            s2.Points.DataBindXY(fcMap2.Entries.Select(Function(x) x.EngineSpeed.AsRPM).ToArray(),
-                                fcMap2.Entries.Select(Function(x) x.Torque.Value()).ToArray())
-            s2.ChartType = SeriesChartType.Point
-            s2.MarkerSize = 3
-            s2.Color = Color.Green
-            s2.Name = "Map 2"
-            chart.Series.Add(s2)
-        End If
+			Dim s2 As Series = New Series
+			s2.Points.DataBindXY(fcMap2.Entries.Select(Function(x) x.EngineSpeed.AsRPM).ToArray(),
+								fcMap2.Entries.Select(Function(x) x.Torque.Value()).ToArray())
+			s2.ChartType = SeriesChartType.Point
+			s2.MarkerSize = 3
+			s2.Color = Color.Green
+			s2.Name = "Map 2"
+			chart.Series.Add(s2)
+		End If
 
-	    chart.Series.Add(s)
+		chart.Series.Add(s)
 
 		Dim engineCharacteristics As String =
 				String.Format("Max. Torque: {0:F0} Nm; Max. Power: {1:F1} kW; n_rated: {2:F0} rpm; n_95h: {3:F0} rpm",
@@ -1303,7 +1355,7 @@ lbDlog:
 	End Sub
 
 	Private Sub UpdateVehiclePic()
-		Dim HDVclass As String
+		Dim HDVclass As VehicleClass = VehicleClass.Unknown
 
 		Dim vehicle As IVehicleEngineeringInputData = Nothing
 
@@ -1324,14 +1376,12 @@ lbDlog:
 
 		Dim s0 As Segment = Nothing
 		Try
-			s0 = DeclarationData.Segments.Lookup(vehicle.VehicleCategory, vehicle.AxleConfiguration, maxMass, 0.SI(Of Kilogram),
+			s0 = DeclarationData.TruckSegments.Lookup(vehicle.VehicleCategory, vehicle.AxleConfiguration, maxMass, 0.SI(Of Kilogram),
 												False)
 		Catch
 		End Try
-		If Not s0.Found Then
-			HDVclass = "-"
-		Else
-			HDVclass = s0.VehicleClass.GetClassNumber()
+		If s0.Found Then
+			HDVclass = s0.VehicleClass
 
 			If Cfg.DeclMode Then
 				LvCycles.Items.Clear()
@@ -1343,7 +1393,7 @@ lbDlog:
 
 		End If
 
-		PicVehicle.Image = ConvPicPath(If(Not s0.Found, -1, HDVclass.ToInt()), False) _
+		PicVehicle.Image = ConvPicPath(HDVclass, False) _
 		'Image.FromFile(cDeclaration.ConvPicPath(HDVclass, False))
 
 		TbHVCclass.Text = String.Format("HDV Group {0}", HDVclass)
@@ -1526,6 +1576,18 @@ lbDlog:
 
 	Private Sub LvAux_SelectedIndexChanged(sender As Object, e As EventArgs) Handles LvAux.SelectedIndexChanged
 	End Sub
+
+	Private Sub BtnShiftStrategyParams_Click(sender As Object, e As EventArgs) Handles BtnShiftStrategyParams.Click
+		If TCUFileBrowser.OpenDialog(FileRepl(TbShiftStrategyParams.Text, GetPath(VectoFile))) Then
+			TbShiftStrategyParams.Text = GetFilenameWithoutDirectory(TCUFileBrowser.Files(0), GetPath(VectoFile))
+		End If
+	End Sub
+
+	
+	Private Sub Label44_Click(sender As Object, e As EventArgs) Handles Label44.Click
+
+	End Sub
+
 End Class
 
 

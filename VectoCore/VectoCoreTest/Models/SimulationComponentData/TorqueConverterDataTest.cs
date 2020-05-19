@@ -31,23 +31,13 @@
 
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
-using NLog.Targets;
 using NUnit.Framework;
-using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
-using TUGraz.VectoCore.Configuration;
-using TUGraz.VectoCore.InputData.FileIO.JSON;
 using TUGraz.VectoCore.InputData.Reader.ComponentData;
-using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter;
-using TUGraz.VectoCore.Models.Connector.Ports.Impl;
-using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox;
-using TUGraz.VectoCore.Models.SimulationComponent.Impl;
 using TUGraz.VectoCore.Tests.Utils;
-using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 {
@@ -95,9 +85,9 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 
 			// check appended data
 			
-			Assert.AreEqual(0.959, tqData.TorqueConverterEntries[19].TorqueRatio, 1e-9);
-			Assert.AreEqual(-2290, tqData.TorqueConverterEntries[19].Torque.Value(), 1e-9);
-			Assert.AreEqual(5, tqData.TorqueConverterEntries[19].SpeedRatio, 1e-9);
+			Assert.AreEqual(0.9, tqData.TorqueConverterEntries.Last().TorqueRatio, 1e-9);
+			Assert.AreEqual(-1511.2, tqData.TorqueConverterEntries.Last().Torque.Value(), 1e-9);
+			Assert.AreEqual(5, tqData.TorqueConverterEntries.Last().SpeedRatio, 1e-9);
 		}
 
 		[Test]
@@ -143,9 +133,9 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 
 			// check appended data
 			
-			Assert.AreEqual(0.959 / ratio, tqData.TorqueConverterEntries[18].TorqueRatio, 1e-9);
-			Assert.AreEqual(-2290, tqData.TorqueConverterEntries[18].Torque.Value(), 1e-9);
-			Assert.AreEqual(5 * ratio, tqData.TorqueConverterEntries[18].SpeedRatio, 1e-9);
+			Assert.AreEqual(0.9 / ratio, tqData.TorqueConverterEntries.Last().TorqueRatio, 1e-9);
+			Assert.AreEqual(-1511.2, tqData.TorqueConverterEntries.Last().Torque.Value(), 1e-9);
+			Assert.AreEqual(5 * ratio, tqData.TorqueConverterEntries.Last().SpeedRatio, 1e-9);
 		}
 
 		[Test]
@@ -178,13 +168,13 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 			Assert.AreEqual(0.9, tqData.TorqueConverterEntries[9].SpeedRatio, 1e-9);
 
 			// check appended data
-			Assert.AreEqual(0.999, tqData.TorqueConverterEntries[10].TorqueRatio, 1e-9);
+			Assert.AreEqual(0.95 * 0.99, tqData.TorqueConverterEntries[10].TorqueRatio, 1e-9);
 			Assert.AreEqual(0, tqData.TorqueConverterEntries[10].Torque.Value(), 1e-9);
 			Assert.AreEqual(1, tqData.TorqueConverterEntries[10].SpeedRatio, 1e-9);
 
-			Assert.AreEqual(0.959, tqData.TorqueConverterEntries[50].TorqueRatio, 1e-9);
-			Assert.AreEqual(-2290, tqData.TorqueConverterEntries[50].Torque.Value(), 1e-9);
-			Assert.AreEqual(5, tqData.TorqueConverterEntries[50].SpeedRatio, 1e-9);
+			Assert.AreEqual(0.9, tqData.TorqueConverterEntries.Last().TorqueRatio, 1e-9);
+			Assert.AreEqual(-1511.2, tqData.TorqueConverterEntries.Last().Torque.Value(), 1e-9);
+			Assert.AreEqual(5, tqData.TorqueConverterEntries.Last().SpeedRatio, 1e-9);
 		}
 
 		[Test]
@@ -249,7 +239,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 		TestCase(190, 30, 164.3260, 892.7507),
 		TestCase(190, 50, 209.6016, 1465.6611),
 		TestCase(190, 70, 246.4829, 2036.7399),
-		TestCase(530.517, 1.930, 59.0758, 35.8217),
+		TestCase(530.517, 1.930, 59.1582, 36.7119),
 		]
 		public void TestTorqueConverterOperatingPoint(double nOut, double Pout, double nInExpected, double tqInExpected)
 		{

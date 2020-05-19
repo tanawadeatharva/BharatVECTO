@@ -41,12 +41,9 @@ using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Resources;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Configuration;
-using TUGraz.VectoCore.InputData.FileIO.XML.Declaration;
-using TUGraz.VectoCore.InputData.Reader;
 using TUGraz.VectoCore.InputData.Reader.ComponentData;
 using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation.Impl;
-using TUGraz.VectoCore.Models.SimulationComponent.Data.Engine;
 using TUGraz.VectoCore.OutputData;
 using TUGraz.VectoCore.OutputData.FileIO;
 using TUGraz.VectoCore.Tests.Utils;
@@ -107,7 +104,7 @@ namespace TUGraz.VectoCore.Tests.XML
 			Assert.AreEqual("560.00", fcMapTable.Rows[0][0]);
 			var fcMap = FuelConsumptionMapReader.Create(fcMapTable);
 			Assert.AreEqual(1256.SI(Unit.SI.Gramm.Per.Hour).Value(),
-				fcMap.GetFuelConsumption(0.SI<NewtonMeter>(), 560.RPMtoRad()).Value.Value());
+				fcMap.GetFuelConsumption(0.SI<NewtonMeter>(), 560.RPMtoRad(), false).Value.Value());
 
 			var fldTable = engineDataProvider.EngineModes.First().FullLoadCurve;
 			Assert.AreEqual(10, fldTable.Rows.Count);
@@ -644,7 +641,7 @@ namespace TUGraz.VectoCore.Tests.XML
 		public void TestVehicleCategoryTypes()
 		{
 			var vehicleCategories = GetEnumOptions("VehicleCategoryDeclarationType", "1.0");
-			var allowedCategories = DeclarationData.Segments.GetVehicleCategories();
+			var allowedCategories = DeclarationData.TruckSegments.GetVehicleCategories();
 			foreach (var vehicleCategory in vehicleCategories) {
 				if (vehicleCategory.Equals("Rigid Truck")) {
 					continue; // Rigid Truck has been renamed to Rigid Lorry. The XML contains this entry for backward compatibility (separate testcase)
@@ -835,7 +832,7 @@ namespace TUGraz.VectoCore.Tests.XML
 
 				var gbxType = inputDataProvider.JobInputData.Vehicle.Components.GearboxInputData.Type;
 				Assert.AreEqual(gearboxType, gbxType.ToXMLFormat());
-				Assert.IsTrue(DeclarationDataAdapter.SupportedGearboxTypes.Contains(gbxType));
+				Assert.IsTrue(DeclarationDataAdapterHeavyLorry.SupportedGearboxTypes.Contains(gbxType));
 			}
 		}
 
@@ -1091,6 +1088,25 @@ namespace TUGraz.VectoCore.Tests.XML
 				Assert.IsTrue(auxLookup.GetTechnologies().Contains(techInput), "technology '{0}' for aux type '{1}' not known!",
 					techInput, aux);
 			}
+		}
+
+		[TestCase(@"TestData\XML\XMLReaderDeclaration\SchemaVersion2.3\vecto_vehicle-fullElectricSP.xml")]
+		public void TestReadingNewSteeringPumpTechnologies(string file)
+		{
+			var reader = XmlReader.Create(file);
+
+			var inputDataProvider = xmlInputReader.CreateDeclaration(reader);
+			var vehicle = inputDataProvider.JobInputData.Vehicle;
+
+			var steeringPump = vehicle.Components.AuxiliaryInputData.Auxiliaries.Where(x => x.Type == AuxiliaryType.SteeringPump)
+									.FirstOrDefault();
+			Assert.NotNull(steeringPump);
+
+			Assert.AreEqual("Full electric steering gear", steeringPump.Technology[0]);
+			Assert.AreEqual("Electric driven pump", steeringPump.Technology[1]);
+
+			Assert.AreEqual(
+				616.2, DeclarationData.SteeringPump.Lookup(MissionType.LongHaul, VehicleClass.Class5, steeringPump.Technology).Value());
 		}
 	}
 }

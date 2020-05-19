@@ -29,20 +29,29 @@
 *   Martin Rexeis, rexeis@ivt.tugraz.at, IVT, Graz University of Technology
 */
 
+using System.Collections.Generic;
 using NUnit.Framework;
 using System.IO;
+using System.Linq;
+using TUGraz.VectoCommon.Exceptions;
+using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
-using TUGraz.VectoCore.Configuration;
+using TUGraz.VectoCore.InputData.FileIO.JSON;
+using TUGraz.VectoCore.InputData.Impl;
+using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter;
 using TUGraz.VectoCore.Models.Connector.Ports.Impl;
+using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
+using TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox;
 using TUGraz.VectoCore.Models.SimulationComponent.Impl;
 using TUGraz.VectoCore.OutputData;
 using TUGraz.VectoCore.OutputData.FileIO;
 using TUGraz.VectoCore.Tests.Integration;
 using TUGraz.VectoCore.Tests.Utils;
+using TUGraz.VECTO;
 
 namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 {
@@ -52,14 +61,16 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 		public const string EngineDataFile = @"TestData\Components\AT_GBX\Engine.veng";
 		public const string GearboxDataFile = @"TestData\Components\AT_GBX\GearboxSerial.vgbx";
 
+		public const string GearboxData8SpdFile = @"TestData\Components\AT_GBX\GearboxSerial8Spd.vgbx";
 
-        [OneTimeSetUp]
-        public void RunBeforeAnyTests()
-        {
-            Directory.SetCurrentDirectory(TestContext.CurrentContext.TestDirectory);
-        }
 
-        [Test,
+		[OneTimeSetUp]
+		public void RunBeforeAnyTests()
+		{
+			Directory.SetCurrentDirectory(TestContext.CurrentContext.TestDirectory);
+		}
+
+		[Test,
 		TestCase(0, 100, 1),
 		TestCase(0, 200, 1),
 		TestCase(5, 100, 1),
@@ -81,8 +92,11 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			var vehicleContainer = new MockVehicleContainer(); //(ExecutionMode.Engineering);
 			var engineData = MockSimulationDataFactory.CreateEngineDataFromFile(EngineDataFile, gearboxData.Gears.Count);
 			vehicleContainer.Engine = new CombustionEngine(vehicleContainer, engineData);
-			var runData = new VectoRunData() { GearboxData = gearboxData, EngineData = new CombustionEngineData() {Inertia = 0.SI<KilogramSquareMeter>()} };
-			var gearbox = new ATGearbox(vehicleContainer, new ATShiftStrategy(gearboxData, vehicleContainer), runData);
+			var runData = new VectoRunData() {
+				GearboxData = gearboxData,
+				EngineData = new CombustionEngineData() { Inertia = 0.SI<KilogramSquareMeter>() }
+			};
+			var gearbox = new ATGearbox(vehicleContainer, new ATShiftStrategy(runData, vehicleContainer), runData);
 
 			vehicleContainer.VehicleSpeed = vehicleSpeed.KMPHtoMeterPerSecond();
 
@@ -107,7 +121,8 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 								20,  8, 0,    0
 							   200,  0, 0,    2";
 			var cycle = SimpleDrivingCycles.CreateCycleData(cycleData);
-			var run = ATPowerTrain.CreateEngineeringRun(cycle, gbxType,
+			var run = ATPowerTrain.CreateEngineeringRun(
+				cycle, gbxType,
 				string.Format("AT_Vehicle_Drive-TC-{0}.vmod", gbxType == GearboxType.ATSerial ? "ser" : "ps"));
 
 			run.Run();
@@ -122,7 +137,8 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			var cycleData = @"  0,  0, 0,    2
 							  500, 40, 0,    0";
 			var cycle = SimpleDrivingCycles.CreateCycleData(cycleData);
-			var run = ATPowerTrain.CreateEngineeringRun(cycle, gbxType,
+			var run = ATPowerTrain.CreateEngineeringRun(
+				cycle, gbxType,
 				string.Format("AT_Vehicle_Drive-TC_shiftup-{0}.vmod", gbxType == GearboxType.ATSerial ? "ser" : "ps"));
 
 			run.Run();
@@ -137,7 +153,8 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			var cycleData = @"  0, 70, 0,    0
 							  500,  0, 0,    2";
 			var cycle = SimpleDrivingCycles.CreateCycleData(cycleData);
-			var run = ATPowerTrain.CreateEngineeringRun(cycle, gbxType,
+			var run = ATPowerTrain.CreateEngineeringRun(
+				cycle, gbxType,
 				string.Format("AT_Vehicle_Drive-TC_shiftdown-{0}.vmod", gbxType == GearboxType.ATSerial ? "ser" : "ps"));
 
 			run.Run();
@@ -160,18 +177,119 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 		{
 			Assert.IsTrue(gbxType.AutomaticTransmission());
 			var cycle = SimpleDrivingCycles.ReadDeclarationCycle(cycleName);
-			var run = ATPowerTrain.CreateEngineeringRun(cycle, gbxType,
+			var run = ATPowerTrain.CreateEngineeringRun(
+				cycle, gbxType,
 				string.Format("AT_Vehicle_Drive-TC_{0}-{1}.vmod", cycleName, gbxType == GearboxType.ATSerial ? "ser" : "ps"));
 
 			var sumWriter =
 				new SummaryDataContainer(
-					new FileOutputWriter(string.Format("AT_Vehicle_Drive-TC_{0}-{1}", cycleName,
-						gbxType == GearboxType.ATSerial ? "ser" : "ps")));
+					new FileOutputWriter(
+						string.Format(
+							"AT_Vehicle_Drive-TC_{0}-{1}", cycleName,
+							gbxType == GearboxType.ATSerial ? "ser" : "ps")));
 			((VehicleContainer)run.GetContainer()).WriteSumData = (modData) =>
 				sumWriter.Write(run.GetContainer().ModalData, 0, 0, run.GetContainer().RunData);
 			run.Run();
 			sumWriter.Finish();
 			Assert.IsTrue(run.FinishedWithoutErrors);
+		}
+
+
+		[TestCase()]
+		public void TestATGearboxLastGearDisabled()
+		{
+			var limits = new List<ITorqueLimitInputData>() {
+				new TorqueLimitInputData() {
+					Gear = 8,
+					MaxTorque = 0.SI<NewtonMeter>()
+				}
+			};
+
+			var gbx = GetATGearbox(GearboxData8SpdFile, limits);
+			Assert.AreEqual(7, gbx.Gears.Count);
+		}
+
+		[TestCase()]
+		public void TestATGearboxLastButOneGearDisabled()
+		{
+			var limits = new List<ITorqueLimitInputData>() {
+				new TorqueLimitInputData() {
+					Gear = 7,
+					MaxTorque = 0.SI<NewtonMeter>()
+				}
+			};
+
+			AssertHelper.Exception<VectoException>(
+				() => {
+					var gbx = GetATGearbox(GearboxData8SpdFile, limits);
+				}, "Only the last 1 or 2 gears can be disabled. Disabling gear 7 for a 8-speed gearbox is not allowed.");
+			
+		}
+
+		[TestCase()]
+		public void TestATGearboxLastTwoGearsDisabled()
+		{
+			var limits = new List<ITorqueLimitInputData>() {
+				new TorqueLimitInputData() {
+					Gear = 7,
+					MaxTorque = 0.SI<NewtonMeter>()
+				},
+				new TorqueLimitInputData() {
+					Gear = 8,
+					MaxTorque = 0.SI<NewtonMeter>()
+				}
+			};
+
+			var gbx = GetATGearbox(GearboxData8SpdFile, limits);
+			Assert.AreEqual(6, gbx.Gears.Count);
+		}
+
+		[TestCase()]
+		public void TestATGearboxFirstGearDisabled()
+		{
+			var limits = new List<ITorqueLimitInputData>() {
+				new TorqueLimitInputData() {
+					Gear = 1,
+					MaxTorque = 0.SI<NewtonMeter>()
+				},
+				
+			};
+
+			var gbx = GetATGearbox(GearboxData8SpdFile, limits);
+			Assert.AreEqual(8, gbx.Gears.Count);
+		}
+
+		public GearboxData GetATGearbox(string gbxFile, IList<ITorqueLimitInputData> torqueLimits)
+		{
+			var gearboxInput = JSONInputDataFactory.ReadGearbox(gbxFile);
+			var engineInput = JSONInputDataFactory.ReadEngine(EngineDataFile);
+
+			var dao = new DeclarationDataAdapterHeavyLorry();
+			var vehicleInput = new MockDeclarationVehicleInputData() {
+				EngineInputData = engineInput,
+				GearboxInputData = gearboxInput
+			};
+			var mission = new Mission() {
+				MissionType = MissionType.LongHaul
+			};
+			var engineData = dao.CreateEngineData(
+				vehicleInput, engineInput.EngineModes.First(),
+				mission); //(engineInput, null, gearboxInput, new List<ITorqueLimitInputData>());
+			return dao.CreateGearboxData(
+				new MockVehicleInputData() {
+					Components = new MockComponents() {
+						GearboxInputData = gearboxInput,
+						TorqueConverterInputData = (ITorqueConverterDeclarationInputData)gearboxInput,
+					},
+					TorqueLimits = torqueLimits
+				}, new VectoRunData() {
+					EngineData = engineData,
+					AxleGearData = new AxleGearData() {
+						AxleGear = new TransmissionData() { Ratio = ((IAxleGearInputData)gearboxInput).Ratio },
+					},
+					VehicleData =
+						new VehicleData() { VehicleCategory = VehicleCategory.RigidTruck, DynamicTyreRadius = 0.5.SI<Meter>() }
+				}, null);
 		}
 	}
 }

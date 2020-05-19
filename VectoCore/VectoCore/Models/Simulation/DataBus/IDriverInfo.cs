@@ -50,5 +50,8 @@ namespace TUGraz.VectoCore.Models.Simulation.DataBus
 		DrivingAction DrivingAction { get; }
 
 		MeterPerSquareSecond DriverAcceleration { get; }
+
+		
 	}
+
 }

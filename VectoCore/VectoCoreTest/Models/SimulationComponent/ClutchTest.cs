@@ -171,7 +171,17 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			throw new System.NotImplementedException();
 		}
 
+		public Watt EngineDynamicFullLoadPower(PerSecond avgEngineSpeed, Second dt)
+		{
+			throw new System.NotImplementedException();
+		}
+
 		public Watt EngineDragPower(PerSecond angularSpeed)
+		{
+			throw new System.NotImplementedException();
+		}
+
+		public Watt EngineAuxDemand(PerSecond avgEngineSpeed, Second dt)
 		{
 			throw new System.NotImplementedException();
 		}
@@ -181,24 +191,24 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 		public PerSecond EngineN95hSpeed { get; set; }
 		public PerSecond EngineN80hSpeed { get; set; }
 
-		protected override void DoWriteModalResults(IModalDataContainer container)
+		protected override void DoWriteModalResults(Second time, Second simulationInterval, IModalDataContainer container)
 		{
-			container[ModalResultField.P_eng_fcmap] = 0.SI<Watt>();
-			container[ModalResultField.P_eng_out] = 0.SI<Watt>();
-			container[ModalResultField.P_eng_inertia] = 0.SI<Watt>();
+			container[ModalResultField.P_ice_fcmap] = 0.SI<Watt>();
+			container[ModalResultField.P_ice_out] = 0.SI<Watt>();
+			container[ModalResultField.P_ice_inertia] = 0.SI<Watt>();
 
-			container[ModalResultField.n_eng_avg] = 0.SI<PerSecond>();
-			container[ModalResultField.T_eng_fcmap] = 0.SI<NewtonMeter>();
+			container[ModalResultField.n_ice_avg] = 0.SI<PerSecond>();
+			container[ModalResultField.T_ice_fcmap] = 0.SI<NewtonMeter>();
 
-			container[ModalResultField.P_eng_full] = 0.SI<Watt>();
-			container[ModalResultField.P_eng_drag] = 0.SI<Watt>();
-			container[ModalResultField.Tq_full] = 0.SI<NewtonMeter>();
-			container[ModalResultField.Tq_drag] = 0.SI<NewtonMeter>();
+			container[ModalResultField.P_ice_full] = 0.SI<Watt>();
+			container[ModalResultField.P_ice_drag] = 0.SI<Watt>();
+			container[ModalResultField.T_ice_full] = 0.SI<NewtonMeter>();
+			container[ModalResultField.T_ice_drag] = 0.SI<NewtonMeter>();
 
 			container[ModalResultField.FCMap] = 0.SI<KilogramPerSecond>();
 			container[ModalResultField.FCNCVc] = 0.SI<KilogramPerSecond>();
 			container[ModalResultField.FCWHTCc] = 0.SI<KilogramPerSecond>();
-			container[ModalResultField.FCAAUX] = 0.SI<KilogramPerSecond>();
+			//container[ModalResultField.FCAAUX] = 0.SI<KilogramPerSecond>();
 			container[ModalResultField.FCFinal] = 0.SI<KilogramPerSecond>();
 		}
 

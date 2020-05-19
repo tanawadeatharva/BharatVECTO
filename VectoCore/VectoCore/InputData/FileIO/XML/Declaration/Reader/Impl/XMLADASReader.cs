@@ -97,4 +97,24 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 			get { return NAMESPACE_URI; }
 		}
 	}
+
+	// ---------------------------------------------------------------------------------------
+
+	public class XMLADASReaderV23 : XMLADASReaderV21
+	{
+		public new static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V23;
+
+		public new const string XSD_TYPE = "AdvancedDriverAssistantSystemsType";
+
+		public new static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
+
+		public XMLADASReaderV23(IXMLDeclarationVehicleData vehicle, XmlNode vehicleNode) : base(
+			vehicle, vehicleNode)
+		{ }
+
+		public override XNamespace SchemaNamespace
+		{
+			get { return NAMESPACE_URI; }
+		}
+	}
 }

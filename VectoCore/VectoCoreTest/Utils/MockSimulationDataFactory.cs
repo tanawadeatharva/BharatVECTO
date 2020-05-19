@@ -29,7 +29,6 @@
 *   Martin Rexeis, rexeis@ivt.tugraz.at, IVT, Graz University of Technology
 */
 
-using System.Collections.Generic;
 using System.Linq;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
@@ -38,7 +37,11 @@ using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.InputData.FileIO.JSON;
 using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter;
 using TUGraz.VectoCore.Models.Declaration;
+using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
+using TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox;
+using TUGraz.VectoCore.Tests.FileIO;
+using TUGraz.VECTO;
 
 namespace TUGraz.VectoCore.Tests.Utils
 {
@@ -51,23 +54,37 @@ namespace TUGraz.VectoCore.Tests.Utils
 		/// <param name="engineFile"></param>
 		/// <param name="declarationMode"></param>
 		/// <returns>GearboxData instance</returns>
-		public static GearboxData CreateGearboxDataFromFile(string gearBoxFile, string engineFile, bool declarationMode = true)
+		public static GearboxData CreateGearboxDataFromFile(
+			string gearBoxFile, string engineFile, bool declarationMode = true)
 		{
 			var gearboxInput = JSONInputDataFactory.ReadGearbox(gearBoxFile);
 			var engineInput = JSONInputDataFactory.ReadEngine(engineFile);
 			if (declarationMode) {
-				var dao = new DeclarationDataAdapter();
+				var dao = new DeclarationDataAdapterHeavyLorry();
 				var vehicleInput = new MockDeclarationVehicleInputData() {
 					EngineInputData = engineInput,
 					GearboxInputData = gearboxInput
-
 				};
 				var mission = new Mission() {
 					MissionType = MissionType.LongHaul
 				};
-				var engineData = dao.CreateEngineData(vehicleInput, engineInput.EngineModes.First(), mission);//(engineInput, null, gearboxInput, new List<ITorqueLimitInputData>());
-				return dao.CreateGearboxData(gearboxInput, engineData, ((IAxleGearInputData)gearboxInput).Ratio, 0.5.SI<Meter>(),
-					VehicleCategory.RigidTruck, (ITorqueConverterDeclarationInputData)gearboxInput);
+				var engineData = dao.CreateEngineData(
+					vehicleInput, engineInput.EngineModes.First(),
+					mission); //(engineInput, null, gearboxInput, new List<ITorqueLimitInputData>());
+				return dao.CreateGearboxData(
+					new MockVehicleInputData() {
+						Components = new MockComponents() {
+							GearboxInputData = gearboxInput,
+							TorqueConverterInputData = (ITorqueConverterDeclarationInputData)gearboxInput
+						}
+					}, new VectoRunData() {
+						EngineData = engineData,
+						AxleGearData = new AxleGearData() {
+							AxleGear = new TransmissionData() { Ratio = ((IAxleGearInputData)gearboxInput).Ratio },
+						},
+						VehicleData =
+							new VehicleData() { VehicleCategory = VehicleCategory.RigidTruck, DynamicTyreRadius = 0.5.SI<Meter>() }
+					}, null);
 			} else {
 				var dao = new EngineeringDataAdapter();
 				var runData = new MockEngineeringVehicleInputData() {
@@ -76,16 +93,36 @@ namespace TUGraz.VectoCore.Tests.Utils
 					TorqueConverterInputData = (ITorqueConverterEngineeringInputData)gearboxInput
 				};
 				var engineData = dao.CreateEngineData(runData, engineInput.EngineModes.First());
-				return dao.CreateGearboxData(gearboxInput, engineData, (IGearshiftEngineeringInputData)gearboxInput, 
-					((IAxleGearInputData)gearboxInput).Ratio, 0.5.SI<Meter>(),
-					VehicleCategory.RigidTruck, (ITorqueConverterEngineeringInputData)gearboxInput);
+				return dao.CreateGearboxData(
+					new MockEngineeringInputProvider() {
+						DriverInputData = new MockDriverTestInputData() {
+							GearshiftInputData = (IGearshiftEngineeringInputData)gearboxInput
+						},
+						JobInputData = new MockJobTestInputData() {
+							Vehicle = new MockEngineeringVehicleInputData() {
+								GearboxInputData = gearboxInput,
+								TorqueConverterInputData = (ITorqueConverterEngineeringInputData)gearboxInput,
+							}
+						}
+					}, new VectoRunData() {
+						EngineData = engineData,
+						VehicleData = new VehicleData() {
+							VehicleCategory = VehicleCategory.RigidTruck,
+							DynamicTyreRadius = 0.5.SI<Meter>()
+						},
+						AxleGearData = new AxleGearData() { AxleGear = new TransmissionData() { Ratio = 2.1 } }
+					}, null);
+
+				//gearboxInput, engineData, (IGearshiftEngineeringInputData)gearboxInput,
+				//((IAxleGearInputData)gearboxInput).Ratio, 0.5.SI<Meter>(),
+				//VehicleCategory.RigidTruck, (ITorqueConverterEngineeringInputData)gearboxInput, null, null);
 			}
 		}
 
 		public static AxleGearData CreateAxleGearDataFromFile(string axleGearFile, bool declarationMode = true)
 		{
 			if (declarationMode) {
-				var dao = new DeclarationDataAdapter();
+				var dao = new DeclarationDataAdapterHeavyLorry();
 				var axleGearInput = JSONInputDataFactory.ReadGearbox(axleGearFile);
 				return dao.CreateAxleGearData((IAxleGearInputData)axleGearInput);
 			} else {
@@ -106,6 +143,7 @@ namespace TUGraz.VectoCore.Tests.Utils
 			for (uint i = 1; i <= numGears; i++) {
 				engineData.FullLoadCurves[i] = engineData.FullLoadCurves[0];
 			}
+
 			return engineData;
 		}
 
@@ -132,6 +170,7 @@ namespace TUGraz.VectoCore.Tests.Utils
 			if (engineeringJob == null) {
 				throw new VectoException("Failed to cas to Engineering InputDataProvider");
 			}
+
 			var dao = new EngineeringDataAdapter();
 			return dao.CreateDriverData(engineeringJob.DriverInputData);
 		}

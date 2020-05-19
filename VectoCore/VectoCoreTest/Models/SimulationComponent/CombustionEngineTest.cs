@@ -31,7 +31,6 @@
 
 using System.Collections.Generic;
 using System.Data;
-using System.Diagnostics;
 using System.Linq;
 using NUnit.Framework;
 using TUGraz.VectoCommon.Models;
@@ -45,9 +44,6 @@ using TUGraz.VectoCore.Models.SimulationComponent.Impl;
 using TUGraz.VectoCore.Tests.Utils;
 using TUGraz.VectoCore.Utils;
 using System.IO;
-using TUGraz.VectoCommon.InputData;
-using TUGraz.VectoCore.InputData.FileIO.JSON;
-using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter;
 
 // ReSharper disable UnusedVariable
 // ReSharper disable NotAccessedVariable
@@ -121,7 +117,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			port.Initialize(torque, engineSpeed);
 			for (var i = 0; i < 21; i++) {
 				port.Request(absTime, dt, torque, engineSpeed);
-				engine.CommitSimulationStep(dataWriter);
+				engine.CommitSimulationStep(absTime, dt, dataWriter);
 				if (i > 0) {
 					dataWriter.CommitSimulationStep(absTime, dt);
 				}
@@ -130,9 +126,9 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 
 			engineSpeed = 644.4445.RPMtoRad();
 			port.Request(absTime, dt, Formulas.PowerToTorque(2329.973.SI<Watt>(), engineSpeed), engineSpeed);
-			engine.CommitSimulationStep(dataWriter);
+			engine.CommitSimulationStep(absTime, dt, dataWriter);
 
-			AssertHelper.AreRelativeEqual(1152.40304, ((SI)dataWriter[ModalResultField.P_eng_inertia]).Value());
+			AssertHelper.AreRelativeEqual(1152.40304, ((SI)dataWriter[ModalResultField.P_ice_inertia]).Value());
 
 			dataWriter.CommitSimulationStep(absTime, dt);
 			absTime += dt;
@@ -140,24 +136,24 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			var power = new[] { 569.3641, 4264.177 };
 			for (var i = 0; i < 2; i++) {
 				port.Request(absTime, dt, Formulas.PowerToTorque(power[i].SI<Watt>(), engineSpeed), engineSpeed);
-				engine.CommitSimulationStep(dataWriter);
+				engine.CommitSimulationStep(absTime, dt, dataWriter);
 				dataWriter.CommitSimulationStep(absTime, dt);
 				absTime += dt;
 			}
 
 			engineSpeed = 869.7512.RPMtoRad();
 			port.Request(absTime, dt, Formulas.PowerToTorque(7984.56.SI<Watt>(), engineSpeed), engineSpeed);
-			engine.CommitSimulationStep(dataWriter);
+			engine.CommitSimulationStep(absTime, dt, dataWriter);
 
-			Assert.AreEqual(7108.32, ((SI)dataWriter[ModalResultField.P_eng_inertia]).Value(), 0.001);
+			Assert.AreEqual(7108.32, ((SI)dataWriter[ModalResultField.P_ice_inertia]).Value(), 0.001);
 			dataWriter.CommitSimulationStep(absTime, dt);
 			absTime += dt;
 
 			engineSpeed = 644.4445.RPMtoRad();
 			port.Request(absTime, dt, Formulas.PowerToTorque(1351.656.SI<Watt>(), engineSpeed), engineSpeed);
-			engine.CommitSimulationStep(dataWriter);
+			engine.CommitSimulationStep(absTime, dt, dataWriter);
 
-			Assert.AreEqual(-7108.32, ((SI)dataWriter[ModalResultField.P_eng_inertia]).Value(), 0.001);
+			Assert.AreEqual(-7108.32, ((SI)dataWriter[ModalResultField.P_ice_inertia]).Value(), 0.001);
 			dataWriter.CommitSimulationStep(absTime, dt);
 
 			VectoCSVFile.Write(@"test1.csv", dataWriter.Data, true);
@@ -194,7 +190,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			requestPort.Initialize(Formulas.PowerToTorque(idlePower, angularSpeed), angularSpeed);
 			for (; t < 2; t += dt) {
 				requestPort.Request(t, dt, Formulas.PowerToTorque(idlePower, angularSpeed), angularSpeed);
-				engine.CommitSimulationStep(modalData);
+				engine.CommitSimulationStep(t, dt, modalData);
 			}
 
 			var i = 0;
@@ -210,9 +206,9 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 				requestPort.Request(t, dt, Formulas.PowerToTorque(engineLoadPower, angularSpeed), angularSpeed);
 				modalData[ModalResultField.time] = t;
 				modalData[ModalResultField.simulationInterval] = dt;
-				engine.CommitSimulationStep(modalData);
+				engine.CommitSimulationStep(t, dt, modalData);
 				Assert.AreEqual(expectedResults.Rows[i].ParseDouble(0), t.Value(), 0.001, "Time");
-				Assert.AreEqual(expectedResults.Rows[i].ParseDouble(1), ((SI)modalData[ModalResultField.P_eng_full]).Value(), 0.1,
+				Assert.AreEqual(expectedResults.Rows[i].ParseDouble(1), ((SI)modalData[ModalResultField.P_ice_full]).Value(), 0.1,
 					string.Format("Load in timestep {0}", t));
 				modalData.CommitSimulationStep();
 			}
@@ -251,7 +247,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			requestPort.Initialize(Formulas.PowerToTorque(idlePower, angularSpeed), angularSpeed);
 			for (; t < 2; t += dt) {
 				requestPort.Request(t, dt, Formulas.PowerToTorque(idlePower, angularSpeed), angularSpeed);
-				engine.CommitSimulationStep(modalData);
+				engine.CommitSimulationStep(t, dt, modalData);
 			}
 
 			var i = 0;
@@ -267,9 +263,9 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 				requestPort.Request(t, dt, Formulas.PowerToTorque(engineLoadPower, angularSpeed), angularSpeed);
 				modalData[ModalResultField.time] = t;
 				modalData[ModalResultField.simulationInterval] = dt;
-				engine.CommitSimulationStep(modalData);
+				engine.CommitSimulationStep(t, dt, modalData);
 				Assert.AreEqual(expectedResults.Rows[i].ParseDouble(0), t.Value(), 0.001, "Time");
-				Assert.AreEqual(expectedResults.Rows[i].ParseDouble(1), ((SI)modalData[ModalResultField.P_eng_full]).Value(), 0.1,
+				Assert.AreEqual(expectedResults.Rows[i].ParseDouble(1), ((SI)modalData[ModalResultField.P_ice_full]).Value(), 0.1,
 					string.Format("Load in timestep {0}", t));
 				modalData.CommitSimulationStep();
 			}
@@ -323,10 +319,10 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 
 			container.CommitSimulationStep(absTime, dt);
 			var row = dataWriter.Data.Rows.Cast<DataRow>().Last();
-			Assert.AreEqual(100530.96491487339.SI<Watt>().Value(), ((SI)row[ModalResultField.P_eng_out.GetName()]).Value());
-			Assert.AreEqual(105530.96491487339.SI<Watt>().Value(), ((SI)row[ModalResultField.P_eng_fcmap.GetName()]).Value());
+			Assert.AreEqual(100530.96491487339.SI<Watt>().Value(), ((SI)row[ModalResultField.P_ice_out.GetName()]).Value());
+			Assert.AreEqual(105530.96491487339.SI<Watt>().Value(), ((SI)row[ModalResultField.P_ice_fcmap.GetName()]).Value());
 			Assert.AreEqual(5000.SI<Watt>(), row[ModalResultField.P_aux.GetName()]);
-			Assert.AreEqual(800.RPMtoRad(), row[ModalResultField.n_eng_avg.GetName()]);
+			Assert.AreEqual(800.RPMtoRad(), row[ModalResultField.n_ice_avg.GetName()]);
 
 			absTime += dt;
 
@@ -341,9 +337,9 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			container.CommitSimulationStep(absTime, dt);
 			row = dataWriter.Data.Rows.Cast<DataRow>().Last();
 
-			Assert.AreEqual(0.SI<Watt>(), row[ModalResultField.P_eng_out.GetName()]);
+			Assert.AreEqual(0.SI<Watt>(), row[ModalResultField.P_ice_out.GetName()]);
 			Assert.AreEqual(5000.SI<Watt>(), row[ModalResultField.P_aux.GetName()]);
-			Assert.AreEqual(680.RPMtoRad(), row[ModalResultField.n_eng_avg.GetName()]);
+			Assert.AreEqual(680.RPMtoRad(), row[ModalResultField.n_ice_avg.GetName()]);
 		}
 
 		[TestCase]

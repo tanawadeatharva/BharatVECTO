@@ -33,7 +33,6 @@ using System;
 using System.IO;
 using System.Reflection;
 using System.Security.Cryptography.Xml;
-using System.Text;
 using System.Xml;
 
 namespace TUGraz.VectoHashing

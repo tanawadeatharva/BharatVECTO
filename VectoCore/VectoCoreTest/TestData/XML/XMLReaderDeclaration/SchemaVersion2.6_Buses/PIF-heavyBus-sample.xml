@@ -1,0 +1,370 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tns:VectoOutputPrimaryVehicle xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="urn:tugraz:ivt:VectoAPI:DeclarationOutput:PrimaryVehicleInformation" xmlns:tns="urn:tugraz:ivt:VectoAPI:DeclarationOutput:PrimaryVehicleInformation" xmlns:v2.6="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:DEV:v2.6" xmlns:v2.3="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:DEV:v2.3" xmlns:v2.1="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.1" xmlns:v2.0="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0" xmlns:pif="urn:tugraz:ivt:VectoAPI:PrimaryVehicleInformation" xmlns:pbus="urn:tugraz:ivt:VectoAPI:DeclarationOutput:PrimaryVehicleInformation:HeavyBus:v0.1" xmlns:di="http://www.w3.org/2000/09/xmldsig#" xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:DeclarationOutput:PrimaryVehicleInformation E:\QUAM\Workspace\VECTO_DEV_Buses\VectoCore\VectoCore\Resources\XSD/VectoOutputPrimaryVehicleInformation.xsd urn:tugraz:ivt:VectoAPI:DeclarationOutput:PrimaryVehicleInformation:HeavyBus:v0.1 E:\QUAM\Workspace\VECTO_DEV_Buses\VectoCore\VectoCore\Resources\XSD/VectoOutputPrimaryBus.xsd urn:tugraz:ivt:VectoAPI:DeclarationDefinitions E:\QUAM\Workspace\VECTO_DEV_Buses\VectoCore\VectoCore\Resources\XSD/VectoDeclarationDefinitions.xsd urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.1 E:\QUAM\Workspace\VECTO_DEV_Buses\VectoCore\VectoCore\Resources\XSD/VectoDeclarationDefinitions.2.1.xsd">
+	<!-- 
+xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:PrimaryVehicleInformation E:\QUAM\Workspace\VECTO_DEV_Buses\VectoCore\VectoCore\Resources\XSD/VectoOutputPrimaryVehicleInformation.xsd urn:tugraz:ivt:VectoAPI:DeclarationOutput:PrimaryVehicleInformation:HeavyBus:v0.1 E:\QUAM\Workspace\VECTO_DEV_Buses\VectoCore\VectoCore\Resources\XSD/VectoOutputPrimaryBus.xsd"
+-->
+	<tns:Data id="PIFHB-VEH-1234567890" xsi:type="pbus:PrimaryVehicleHeavyBusDataType" xmlns="urn:tugraz:ivt:VectoAPI:DeclarationOutput:PrimaryVehicleInformation:HeavyBus:v0.1">
+		<Vehicle xsi:type="VehiclePIFType">
+			<ManufacturerPrimaryVehicle>Generic Truck Manufacturer</ManufacturerPrimaryVehicle>
+			<ManufacturerAddressPrimaryVehicle>Street, ZIP City</ManufacturerAddressPrimaryVehicle>
+			<Model>Generic Model</Model>
+			<VIN>VEH-1234567890</VIN>
+			<Date>2017-02-15T11:00:00Z</Date>
+			<VehicleCategory>Bus</VehicleCategory>
+			<AxleConfiguration>4x2</AxleConfiguration>
+			<Articulated>false</Articulated>
+			<TechnicalPermissibleMaximumLadenMass>25000</TechnicalPermissibleMaximumLadenMass>
+			<IdlingSpeed>600</IdlingSpeed>
+			<RetarderType>Transmission Output Retarder</RetarderType>
+			<RetarderRatio>1.000</RetarderRatio>
+			<AngledriveType>None</AngledriveType>
+			<ZeroEmissionVehicle>false</ZeroEmissionVehicle>
+			<pbus:ADAS xsi:type="v2.1:AdvancedDriverAssistantSystemsType" xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.1">
+				<EngineStopStart>false</EngineStopStart>
+				<EcoRollWithoutEngineStop>false</EcoRollWithoutEngineStop>
+				<EcoRollWithEngineStop>false</EcoRollWithEngineStop>
+				<PredictiveCruiseControl>none</PredictiveCruiseControl>
+			</pbus:ADAS>
+			<pbus:TorqueLimits xsi:type="TorqueLimitsType" xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0">
+				<Entry gear="6" maxTorque="1800"/>
+				<Entry gear="1" maxTorque="2500"/>
+				<Entry gear="12" maxTorque="1900"/>
+			</pbus:TorqueLimits>
+			<Components xsi:type="VehicleComponentsPIFType">
+				<Engine>
+					<Data xsi:type="EngineDataPIFType">
+						<Manufacturer>Generic Engine Manufacturer</Manufacturer>
+						<Model>Generic 40t Long Haul Truck Engine</Model>
+						<CertificationNumber>e12*0815/8051*2017/05E0000*00</CertificationNumber>
+						<Date>2017-02-15T11:00:00Z</Date>
+						<AppVersion>VectoEngine x.y</AppVersion>
+						<Displacement>12730</Displacement>
+						<RatedSpeed>2200</RatedSpeed>
+						<RatedPower>380000</RatedPower>
+						<MaxEngineTorque>2400</MaxEngineTorque>
+						<WHRType>
+							<v2.3:MechanicalOutputICE>false</v2.3:MechanicalOutputICE>
+							<v2.3:MechanicalOutputDrivetrain>false</v2.3:MechanicalOutputDrivetrain>
+							<v2.3:ElectricalOutput>false</v2.3:ElectricalOutput>
+						</WHRType>
+						<Mode>
+							<IdlingSpeed>560</IdlingSpeed>
+							<FullLoadAndDragCurve>
+								<Entry engineSpeed="560.00" maxTorque="1180.00" dragTorque="-149.00"/>
+								<Entry engineSpeed="600.00" maxTorque="1282.00" dragTorque="-148.00"/>
+								<Entry engineSpeed="800.00" maxTorque="1791.00" dragTorque="-149.00"/>
+								<Entry engineSpeed="1000.00" maxTorque="2300.00" dragTorque="-160.00"/>
+								<Entry engineSpeed="1200.00" maxTorque="2300.00" dragTorque="-179.00"/>
+								<Entry engineSpeed="1400.00" maxTorque="2300.00" dragTorque="-203.00"/>
+								<Entry engineSpeed="1600.00" maxTorque="2079.00" dragTorque="-235.00"/>
+								<Entry engineSpeed="1800.00" maxTorque="1857.00" dragTorque="-264.00"/>
+								<Entry engineSpeed="2000.00" maxTorque="1352.00" dragTorque="-301.00"/>
+								<Entry engineSpeed="2100.00" maxTorque="1100.00" dragTorque="-320.00"/>
+							</FullLoadAndDragCurve>
+							<Fuels>
+								<FuelType>Diesel CI</FuelType>
+							</Fuels>
+						</Mode>
+					</Data>
+				</Engine>
+				<Transmission>
+					<Data xsi:type="pbus:TransmissionDataPIFType">
+						<Manufacturer>Generic Gearbox Manufacturer</Manufacturer>
+						<Model>Generic 40t Long Haul Truck Gearbox</Model>
+						<MainCertificationMethod>Standard values</MainCertificationMethod>
+						<CertificationNumber>e12*0815/8051*2017/05E0000*00</CertificationNumber>
+						<Date>2017-01-11T11:00:00Z</Date>
+						<AppVersion>3.0.1</AppVersion>
+						<TransmissionType>AMT</TransmissionType>
+						<Gears xsi:type="TransmissionGearsPIFType">
+							<Gear number="1">
+								<Ratio>14.930</Ratio>
+								<MaxTorque>1900</MaxTorque>
+								<MaxSpeed>2000</MaxSpeed>
+							</Gear>
+							<Gear number="2">
+								<Ratio>11.640</Ratio>
+								<MaxTorque>1900</MaxTorque>
+								<MaxSpeed>2000</MaxSpeed>
+							</Gear>
+							<Gear number="3">
+								<Ratio>9.020</Ratio>
+								<MaxSpeed>2000</MaxSpeed>
+							</Gear>
+							<Gear number="4">
+								<Ratio>7.040</Ratio>
+								<MaxSpeed>2000</MaxSpeed>
+							</Gear>
+							<Gear number="5">
+								<Ratio>5.640</Ratio>
+								<MaxSpeed>2000</MaxSpeed>
+							</Gear>
+							<Gear number="6">
+								<Ratio>4.400</Ratio>
+								<MaxSpeed>2000</MaxSpeed>
+							</Gear>
+							<Gear number="7">
+								<Ratio>3.390</Ratio>
+								<MaxSpeed>2000</MaxSpeed>
+							</Gear>
+							<Gear number="8">
+								<Ratio>2.650</Ratio>
+								<MaxSpeed>2000</MaxSpeed>
+							</Gear>
+							<Gear number="9">
+								<Ratio>2.050</Ratio>
+								<MaxSpeed>2000</MaxSpeed>
+							</Gear>
+							<Gear number="10">
+								<Ratio>1.600</Ratio>
+								<MaxSpeed>2000</MaxSpeed>
+							</Gear>
+							<Gear number="11">
+								<Ratio>1.280</Ratio>
+								<MaxSpeed>2000</MaxSpeed>
+							</Gear>
+							<Gear number="12">
+								<Ratio>1.000</Ratio>
+							</Gear>
+						</Gears>
+					</Data>
+				</Transmission>
+        <TorqueConverter>
+          <Data xsi:type="TorqueConverterDataPIFType">
+            <Manufacturer>Some Manufacturer</Manufacturer>
+            <Model>Some Model</Model>
+            <CertificationMethod>Standard values</CertificationMethod>
+            <CertificationNumber>e12*0815/8051*2017/05E0000*00</CertificationNumber>
+            <Date>2017-02-15T11:00:00Z</Date>
+            <AppVersion>TC CalcApp 123</AppVersion>
+            <Characteristics>
+              <Entry speedRatio="0.0000" torqueRatio="4.50" inputTorqueRef="700.00"/>
+                <Entry speedRatio="0.1000" torqueRatio="3.50" inputTorqueRef="640.00"/>
+                <Entry speedRatio="0.2000" torqueRatio="2.70" inputTorqueRef="560.00"/>
+                <Entry speedRatio="0.3000" torqueRatio="2.20" inputTorqueRef="460.00"/>
+                <Entry speedRatio="0.4000" torqueRatio="1.60" inputTorqueRef="350.00"/>
+                <Entry speedRatio="0.5000" torqueRatio="1.20" inputTorqueRef="250.00"/>
+                <Entry speedRatio="0.6000" torqueRatio="0.90" inputTorqueRef="160.00"/>
+                <Entry speedRatio="0.7400" torqueRatio="0.90" inputTorqueRef="1.00"/>
+                <Entry speedRatio="0.8100" torqueRatio="1.00" inputTorqueRef="-40.34"/>
+                <Entry speedRatio="0.9100" torqueRatio="1.00" inputTorqueRef="-80.34"/>
+                <Entry speedRatio="1.0200" torqueRatio="1.00" inputTorqueRef="-136.11"/>
+                <Entry speedRatio="1.1600" torqueRatio="1.00" inputTorqueRef="-216.52"/>
+                <Entry speedRatio="1.3600" torqueRatio="1.00" inputTorqueRef="-335.19"/>
+                <Entry speedRatio="1.6300" torqueRatio="1.00" inputTorqueRef="-528.77"/>
+                <Entry speedRatio="2.0400" torqueRatio="1.00" inputTorqueRef="-883.40"/>
+                <Entry speedRatio="3.2600" torqueRatio="1.00" inputTorqueRef="-2462.17"/>
+                <Entry speedRatio="8.1500" torqueRatio="1.00" inputTorqueRef="-16540.98"/>             
+            </Characteristics>
+          </Data>
+        </TorqueConverter>
+				<Angledrive>
+					<Data xsi:type="pbus:AngledriveDataPIFType">
+						<Manufacturer>Generic Gearbox Manufacturer</Manufacturer>
+						<Model>Generic 40t Long Haul Truck Gearbox</Model>
+						<CertificationMethod>Standard values</CertificationMethod>
+						<CertificationNumber>e12*0815/8051*2017/05E0000*00</CertificationNumber>
+						<Date>2017-01-11T11:00:00Z</Date>
+						<AppVersion>3.0.1</AppVersion>
+						<Ratio>2.345</Ratio>
+					</Data>
+				</Angledrive>
+				<!-- Retarder -->
+				<Axlegear>
+					<Data xsi:type="pbus:AxlegearDataPIFType">
+						<Manufacturer>Generic Gearbox Manufacturer</Manufacturer>
+						<Model>Generic 40t Long Haul Truck AxleGear</Model>
+						<CertificationMethod>Standard values</CertificationMethod>
+						<CertificationNumber>e12*0815/8051*2017/05E0000*00</CertificationNumber>
+						<Date>2017-01-11T11:00:00Z</Date>
+						<AppVersion>3.0.1</AppVersion>
+						<LineType>Single portal axle</LineType>
+						<Ratio>2.590</Ratio>
+					</Data>
+				</Axlegear>
+				<AxleWheels xsi:type="v2.0:AxleWheelsComponentDeclarationType">
+					<v2.0:Data xsi:type="v2.0:AxleWheelsDataDeclarationType" xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0">
+						<Axles>
+							<Axle axleNumber="1" xsi:type="AxleDataDeclarationType">
+								<AxleType>VehicleNonDriven</AxleType>
+								<TwinTyres>false</TwinTyres>
+								<Steered>true</Steered>
+								<Tyre>
+									<Data id="WHL-5432198760-315-70-R22.5" xsi:type="TyreDataDeclarationType">
+										<Manufacturer>Generic Wheels Manufacturer</Manufacturer>
+										<Model>Generic Wheel</Model>
+										<CertificationNumber>e12*0815/8051*2017/05E0000*00</CertificationNumber>
+										<Date>2017-01-11T14:00:00Z</Date>
+										<AppVersion>Tyre Generation App 1.0</AppVersion>
+										<Dimension>315/70 R22.5</Dimension>
+										<RRCDeclared>0.0055</RRCDeclared>
+										<FzISO>31300</FzISO>
+									</Data>
+									<Signature>
+										<di:Reference URI="#WHL-5432198760-315-70-R22.5">
+											<di:Transforms>
+												<di:Transform Algorithm="urn:vecto:xml:2017:canonicalization"/>
+												<di:Transform Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#"/>
+											</di:Transforms>
+											<di:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"/>
+											<di:DigestValue>4TkUGQTX8tevHOU9Cj9uyCFuI/aqcEYlo/gyVjVQmv0=</di:DigestValue>
+										</di:Reference>
+									</Signature>
+								</Tyre>
+							</Axle>
+							<Axle axleNumber="2" xsi:type="AxleDataDeclarationType">
+								<AxleType>VehicleDriven</AxleType>
+								<TwinTyres>true</TwinTyres>
+								<Steered>false</Steered>
+								<Tyre>
+									<Data id="WHL-5432198760-315-70-R22.5" xsi:type="TyreDataDeclarationType">
+										<Manufacturer>Generic Wheels Manufacturer</Manufacturer>
+										<Model>Generic Wheel</Model>
+										<CertificationNumber>e12*0815/8051*2017/05E0000*00</CertificationNumber>
+										<Date>2017-01-11T14:00:00Z</Date>
+										<AppVersion>Tyre Generation App 1.0</AppVersion>
+										<Dimension>315/70 R22.5</Dimension>
+										<RRCDeclared>0.0063</RRCDeclared>
+										<FzISO>31300</FzISO>
+									</Data>
+									<Signature>
+										<di:Reference URI="#WHL-5432198760-315-70-R22.5">
+											<di:Transforms>
+												<di:Transform Algorithm="urn:vecto:xml:2017:canonicalization"/>
+												<di:Transform Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#"/>
+											</di:Transforms>
+											<di:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"/>
+											<di:DigestValue>KljvtvGUUQ/L7MiLVAqU+bckL5PNDNNwdeLH9kUVrfM=</di:DigestValue>
+										</di:Reference>
+									</Signature>
+								</Tyre>
+							</Axle>
+						</Axles>
+					</v2.0:Data>
+				</AxleWheels>
+				<Auxiliaries>
+					<pbus:Data xsi:type="PrimaryVehicleAuxiliaryDataDeclarationType" xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:DEV:v2.6">
+						<Fan>
+							<Technology>Hydraulic driven - Constant displacement pump</Technology>
+						</Fan>
+						<SteeringPump>
+							<Technology axleNumber="1">Variable displacement elec. controlled</Technology>
+						</SteeringPump>
+						<ElectricSystem>
+							<AlternatorTechnology>default</AlternatorTechnology>
+							<SmartElectrics>false</SmartElectrics>
+							<MaxAlternatorPower>10000</MaxAlternatorPower>
+							<ElectricStorageCapacity>800</ElectricStorageCapacity>
+							</ElectricSystem>
+						<PneumaticSystem>
+							<SizeOfAirSupply>Small</SizeOfAirSupply>
+							<Clutch>none</Clutch>
+							<CompressorRatio>1.000</CompressorRatio>
+							<SmartCompressionSystem>false</SmartCompressionSystem>
+							<SmartRegenerationSystem>false</SmartRegenerationSystem>
+							<AirsuspensionControl>mechanically</AirsuspensionControl>
+							<AdBlueDosing>true</AdBlueDosing>
+						</PneumaticSystem>
+						<HVAC>
+							<AdjustableCoolantThermostat>true</AdjustableCoolantThermostat>
+							<EngineWasteGasHeatExchanger>true</EngineWasteGasHeatExchanger>
+						</HVAC>
+					</pbus:Data>
+				</Auxiliaries>
+			</Components>
+		</Vehicle>
+		<InputDataSignature>
+			<di:Reference URI="#MRF-VEH-1234567890">
+				<di:Transforms>
+					<di:Transform Algorithm="urn:vecto:xml:2017:canonicalization"/>
+					<di:Transform Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#"/>
+				</di:Transforms>
+				<di:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"/>
+				<di:DigestValue>4TkUGQTX8tevHOU9Cj9uyCFuI/aqcEYlo/gyVjVQmv0=</di:DigestValue>
+			</di:Reference>
+		</InputDataSignature>
+				<ManufacturerRecordSignature>
+			<di:Reference URI="#MRF-VEH-1234567890">
+				<di:Transforms>
+					<di:Transform Algorithm="urn:vecto:xml:2017:canonicalization"/>
+					<di:Transform Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#"/>
+				</di:Transforms>
+				<di:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"/>
+				<di:DigestValue>4TkUGQTX8tevHOU9Cj9uyCFuI/aqcEYlo/gyVjVQmv0=</di:DigestValue>
+			</di:Reference>
+		</ManufacturerRecordSignature>
+		<Results>
+			<Status>success</Status>
+			<Result status="success">
+				<VehicleGroup>P31SD</VehicleGroup>
+				<Mission>Regional Delivery</Mission>
+				<SimulationParameters>
+					<TotalVehicleMass unit="kg">8810</TotalVehicleMass>
+					<Payload unit="kg">920</Payload>
+					<PassengerCount>20</PassengerCount>
+					<FuelMode>single fuel mode</FuelMode>
+				</SimulationParameters>
+				<Fuel type="Diesel CI">
+					<EnergyConsumption unit="MJ/km">8.99</EnergyConsumption>
+				</Fuel>
+				<CO2 unit="g/km">658.9</CO2>
+			</Result>
+			<Result status="success">
+				<VehicleGroup>P31SD</VehicleGroup>
+				<Mission>Regional Delivery</Mission>
+				<SimulationParameters>
+					<TotalVehicleMass unit="kg">12490</TotalVehicleMass>
+					<Payload unit="kg">4600</Payload>
+					<PassengerCount>80</PassengerCount>
+					<FuelMode>single fuel mode</FuelMode>
+				</SimulationParameters>
+				<Fuel type="Diesel CI">
+					<EnergyConsumption unit="MJ/km">9.88</EnergyConsumption>
+				</Fuel>
+				<CO2 unit="g/km">724.4</CO2>
+			</Result>
+			<Result status="success">
+				<VehicleGroup>P31DD</VehicleGroup>
+				<Mission>Urban Delivery</Mission>
+				<SimulationParameters>
+					<TotalVehicleMass unit="kg">8810</TotalVehicleMass>
+					<Payload unit="kg">920</Payload>
+					<PassengerCount>20</PassengerCount>
+					<FuelMode>single fuel mode</FuelMode>
+				</SimulationParameters>
+				<Fuel type="Diesel CI">
+					<EnergyConsumption unit="MJ/km">10.4</EnergyConsumption>
+				</Fuel>
+				<CO2 unit="g/km">763.9</CO2>
+			</Result>
+			<Result status="success">
+				<VehicleGroup>P31DD</VehicleGroup>
+				<Mission>Urban Delivery</Mission>
+				<SimulationParameters>
+					<TotalVehicleMass unit="kg">12490</TotalVehicleMass>
+					<Payload unit="kg">4600</Payload>
+					<PassengerCount>80</PassengerCount>
+					<FuelMode>single fuel mode</FuelMode>
+				</SimulationParameters>
+				<Fuel type="Diesel CI">
+					<EnergyConsumption unit="MJ/km">12.7</EnergyConsumption>
+				</Fuel>
+				<CO2 unit="g/km">927.7</CO2>
+			</Result>
+		</Results>
+		<ApplicationInformation>
+			<SimulationToolVersion>Sample File Generator</SimulationToolVersion>
+			<Date>2017-01-01T00:00:00Z</Date>
+		</ApplicationInformation>
+	</tns:Data>
+	<Signature>
+		<di:Reference URI="#PIFHB-VEH-1234567890">
+			<di:Transforms>
+				<di:Transform Algorithm="urn:vecto:xml:2017:canonicalization"/>
+				<di:Transform Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#"/>
+			</di:Transforms>
+			<di:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"/>
+			<di:DigestValue>4TkUGQTX8tevHOU9Cj9uyCFuI/aqcEYlo/gyVjVQmv0=</di:DigestValue>
+		</di:Reference>
+	</Signature>
+</tns:VectoOutputPrimaryVehicle>

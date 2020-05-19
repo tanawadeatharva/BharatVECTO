@@ -29,6 +29,7 @@
 *   Martin Rexeis, rexeis@ivt.tugraz.at, IVT, Graz University of Technology
 */
 
+using System;
 using System.Linq;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
@@ -50,17 +51,32 @@ namespace TUGraz.VectoCore.Models.Connector.Ports.Impl
 		public Watt EnginePowerRequest { get; set; }
 		public Watt DynamicFullLoadPower { get; set; }
 		public Watt DragPower { get; set; }
+		public NewtonMeter EngineTorqueDemand { get; set; }
+		public NewtonMeter EngineTorqueDemandTotal { get; set; }
+
+		public NewtonMeter EngineStationaryFullLoadTorque { get; set; }
+
+		public NewtonMeter EngineDynamicFullLoadTorque { get; set; }
+		public MeterPerSecond VehicleSpeed { get; set; }
 
 		public Watt AngledrivePowerRequest { get; set; }
 		public Watt ClutchPowerRequest { get; set; }
 		public Watt GearboxPowerRequest { get; set; }
 		public Watt AxlegearPowerRequest { get; set; }
 		public Watt WheelsPowerRequest { get; set; }
-		public Watt VehiclePowerRequest { get; set; }
+		
+		//public Watt VehiclePowerRequest { get; set; }
 		public Watt BrakePower { get; set; }
 		public Watt AuxiliariesPowerDemand { get; set; }
 
+		public NewtonMeter CardanTorque { get; set; }
+
+		public PerSecond GearboxInputSpeed { get; set; }
+
+
 		public TorqueConverterOperatingPoint TorqueConverterOperatingPoint { get; set; }
+
+		public NewtonMeter TorqueConverterTorqueDemand { get; set; }
 
 		public override string ToString()
 		{
@@ -110,6 +126,7 @@ namespace TUGraz.VectoCore.Models.Connector.Ports.Impl
 	public class ResponseFailTimeInterval : AbstractResponse
 	{
 		public Second DeltaT { get; set; }
+
 	}
 
 	public class ResponseDrivingCycleDistanceExceeded : AbstractResponse
@@ -117,11 +134,12 @@ namespace TUGraz.VectoCore.Models.Connector.Ports.Impl
 		public Meter MaxDistance { get; set; }
 	}
 
-	internal class ResponseDryRun : AbstractResponse
+	public class ResponseDryRun : AbstractResponse
 	{
 		public Watt DeltaFullLoad { get; set; }
 		public Watt DeltaDragLoad { get; set; }
 		public PerSecond DeltaEngineSpeed { get; set; }
+
 	}
 
 	internal class ResponseGearShift : AbstractResponse

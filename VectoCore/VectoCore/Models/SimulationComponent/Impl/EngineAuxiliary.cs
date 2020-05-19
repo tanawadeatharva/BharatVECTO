@@ -136,12 +136,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		/// <param name="absTime"></param>
 		/// <param name="dt"></param>
 		/// <param name="torquePowerTrain"></param>
-		/// <param name="torqueEngine"></param>
 		/// <param name="angularSpeed"></param>
 		/// <param name="dryRun"></param>
 		/// <returns></returns>
-		public NewtonMeter TorqueDemand(Second absTime, Second dt, NewtonMeter torquePowerTrain, NewtonMeter torqueEngine,
-			PerSecond angularSpeed, bool dryRun = false)
+		public NewtonMeter TorqueDemand(Second absTime, Second dt, NewtonMeter torquePowerTrain, PerSecond angularSpeed, bool dryRun = false)
 		{
 			var avgAngularSpeed = PreviousState.AngularSpeed != null
 				? (angularSpeed + PreviousState.AngularSpeed) / 2.0
@@ -155,15 +153,15 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			return 0.SI<NewtonMeter>();
 		}
 
-		public Watt PowerDemandEngineOff()
+		public Watt PowerDemandEngineOff(Second absTime, Second dt)
 		{
-			if (!DataBus.VehicleStopped) {
-				return Auxiliaries.Sum(x => x.Value(0.RPMtoRad()));
-			}
 
 			var auxiliarieIgnoredDuringVehicleStop = new[] {
 				Constants.Auxiliaries.IDs.SteeringPump, Constants.Auxiliaries.IDs.Fan,
 				Constants.Auxiliaries.IDs.PTOConsumer, Constants.Auxiliaries.IDs.PTOTransmission
+			};
+			var auxiliarieIgnoredDuringDrive = new[] {
+				Constants.Auxiliaries.IDs.Fan,
 			};
 			var powerDemands = new Dictionary<string, Watt>(Auxiliaries.Count);
 			var engineOffDemand = 0.SI<Watt>();
@@ -174,14 +172,22 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					continue;
 				}
 
-				powerDemands[item.Key] = value *  (1-EngineStopStartUtilityFactor);
-				engineOffDemand += auxiliarieIgnoredDuringVehicleStop.Contains(item.Key) ? 0.SI<Watt>() : value *  EngineStopStartUtilityFactor;
+				powerDemands[item.Key] = value * (1-EngineStopStartUtilityFactor);
+				if (DataBus.VehicleStopped) {
+					engineOffDemand += auxiliarieIgnoredDuringVehicleStop.Contains(item.Key)
+						? 0.SI<Watt>()
+						: value * EngineStopStartUtilityFactor;
+				} else {
+					engineOffDemand += auxiliarieIgnoredDuringDrive.Contains(item.Key)
+						? 0.SI<Watt>()
+						: value * EngineStopStartUtilityFactor;
+				}
 			}
 			CurrentState.PowerDemands = powerDemands;
 			return engineOffDemand;  //powerDemands.Sum(kv => kv.Value); 
 		}
 
-		public Watt PowerDemandEngineOn(PerSecond engineSpeed)
+		public Watt PowerDemandEngineOn(Second time, Second simulationInterval, PerSecond engineSpeed)
 		{
 			return ComputePowerDemand(engineSpeed, true);
 		}
@@ -201,7 +207,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			return powerDemands.Sum(kv => kv.Value);
 		}
 
-		protected override void DoWriteModalResults(IModalDataContainer container)
+		protected override void DoWriteModalResults(Second time, Second simulationInterval, IModalDataContainer container)
 		{
 			var auxPowerDemand = 0.SI<Watt>();
 			if (CurrentState.PowerDemands != null) {

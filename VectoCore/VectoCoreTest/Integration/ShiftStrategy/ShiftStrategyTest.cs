@@ -31,11 +31,21 @@
 
 using System;
 using System.Globalization;
+using System.IO;
+using System.Linq;
 using NUnit.Framework;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
+using TUGraz.VectoCore.InputData.FileIO.JSON;
 using TUGraz.VectoCore.Models.Simulation.Data;
+using TUGraz.VectoCore.Models.Simulation.DataBus;
+using TUGraz.VectoCore.Models.Simulation.Impl;
+using TUGraz.VectoCore.Models.SimulationComponent.Impl;
+using TUGraz.VectoCore.OutputData.FileIO;
+using TUGraz.VectoCore.Tests.Models.Simulation;
 using TUGraz.VectoCore.Tests.Utils;
+using System.Collections.Generic;
+using TUGraz.VectoCore.Models.Connector.Ports.Impl;
 
 namespace TUGraz.VectoCore.Tests.Integration.ShiftStrategy
 {
@@ -45,6 +55,8 @@ namespace TUGraz.VectoCore.Tests.Integration.ShiftStrategy
 		[OneTimeSetUp]
 		public void DisableLogging()
 		{
+			Directory.SetCurrentDirectory(TestContext.CurrentContext.TestDirectory);
+
 			//LogManager.DisableLogging();
 #if TRACE
 			GraphWriter.Enable();
@@ -55,8 +67,8 @@ namespace TUGraz.VectoCore.Tests.Integration.ShiftStrategy
 			GraphWriter.Xfields = new[] { ModalResultField.dist };
 
 			GraphWriter.Yfields = new[] {
-				ModalResultField.v_act, ModalResultField.acc, ModalResultField.n_eng_avg, ModalResultField.Gear,
-				ModalResultField.P_eng_out, /*ModalResultField.T_eng_fcmap, */ ModalResultField.FCMap,
+				ModalResultField.v_act, ModalResultField.acc, ModalResultField.n_ice_avg, ModalResultField.Gear,
+				ModalResultField.P_ice_out, /*ModalResultField.T_eng_fcmap, */ ModalResultField.FCMap,
 			};
 			GraphWriter.PlotDrivingMode = true;
 			GraphWriter.Series1Label = "Vecto 3";
@@ -92,6 +104,69 @@ namespace TUGraz.VectoCore.Tests.Integration.ShiftStrategy
 			Assert.IsTrue(run.FinishedWithoutErrors);
 
 			GraphWriter.Write(modFile);
+		}
+
+		[TestCase()]
+		public void TestGearshiftTrigger()
+		{
+			var amtTestcase = @"E:\QUAM\tmp\AT_Vdrop\AMT_normal\MB_Citaro_G_MP156_ZF_Sort.vecto";
+			var atTestcase = @"E:\QUAM\tmp\AT_Vdrop\AT_normal\MB_Citaro_G_MP156_ZF_Sort.vecto";
+
+
+			var relativeJobPath = amtTestcase;
+			var writer = new FileOutputWriter(Path.Combine(Path.GetDirectoryName(relativeJobPath), "tmp", Path.GetFileName(relativeJobPath)));
+			var inputData =  JSONInputDataFactory.ReadJsonJob(relativeJobPath);
+			var factory = new SimulatorFactory(ExecutionMode.Engineering, inputData, writer) {
+				WriteModalResults = true,
+				//ActualModalData = true,
+				Validate = false
+			};
+			var jobContainer = new JobContainer(new MockSumWriter());
+			var runs = factory.SimulationRuns().ToArray();
+			var run = runs[0];
+
+			var container = run.GetContainer() as VehicleContainer;
+			var vehicle = container?.Vehicle as Vehicle;
+
+			Assert.NotNull(container);
+			Assert.NotNull(vehicle);
+
+			foreach (var preprocessor in container.Preprocessors) {
+				preprocessor.RunPreprocessing();
+			}
+
+			var decision = new List<Tuple<double, IResponse, ResponseDryRun>>();
+			for (var v = 15.0; v < 20; v += 0.1) {
+				vehicle.Initialize(v.KMPHtoMeterPerSecond(), 0.SI<Radian>());
+				container.AbsTime = 0.SI<Second>();
+				(container.Gearbox as Gearbox).Gear = 2;
+				//(container.Gearbox as ATGearbox)._strategy.NextGear.Gear = 0;
+				(container.Driver as Driver).DrivingAction = DrivingAction.Accelerate;
+				(container.Driver as Driver).DriverBehavior = DrivingBehavior.Accelerating;
+				var response = vehicle.Request(
+					0.SI<Second>(), 0.5.SI<Second>(), 0.5.SI<MeterPerSquareSecond>(), 0.SI<Radian>(), false);
+				decision.Add(Tuple.Create(v, response, ((container.Gearbox as Gearbox)._strategy as AMTShiftStrategyOptimized).minFCResponse));
+			}
+
+			foreach (var tuple in decision) {
+				var r = tuple.Item2;
+				var s = tuple.Item3;
+				var fc = r.EngineSpeed != null
+					? container.RunData.EngineData.Fuels.First().ConsumptionMap.GetFuelConsumption(r.EngineTorqueDemandTotal, r.EngineSpeed).Value
+								.ConvertToGrammPerHour().Value
+					: 0;
+				var fc2 = s?.EngineSpeed != null
+					? container.RunData.EngineData.Fuels.First().ConsumptionMap.GetFuelConsumption(s.EngineTorqueDemandTotal, s.EngineSpeed).Value
+								.ConvertToGrammPerHour().Value
+					: 0;
+				Console.WriteLine(
+					"{0}; {1}; {2}; {3}; {4}; {5}; {6}; {7}", tuple.Item1, tuple.Item2 is ResponseGearShift ? "1" : "0",
+					r.EngineSpeed?.AsRPM ?? 0,
+					r.EngineTorqueDemand?.Value() ?? 0, fc,
+					s?.EngineSpeed?.AsRPM ?? 0,
+					s?.EngineTorqueDemand?.Value() ?? 0, fc2
+					);
+			}
 		}
 	}
 }

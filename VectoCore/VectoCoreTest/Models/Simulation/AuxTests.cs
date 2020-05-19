@@ -37,7 +37,6 @@ using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.InputData;
 using TUGraz.VectoCore.InputData.FileIO.JSON;
 using TUGraz.VectoCore.InputData.Impl;
-using TUGraz.VectoCore.InputData.Reader;
 using TUGraz.VectoCore.InputData.Reader.ComponentData;
 using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation.Data;
@@ -91,7 +90,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 			var mission = MissionType.LongHaul;
 
 			aux.AddConstant("FAN",
-				DeclarationData.Fan.Lookup(MissionType.LongHaul, "Hydraulic driven - Constant displacement pump").PowerDemand);
+				DeclarationData.Fan.LookupPowerDemand(hdvClass,MissionType.LongHaul, "Hydraulic driven - Constant displacement pump"));
 			aux.AddConstant("PS", DeclarationData.PneumaticSystem.Lookup(mission, "Medium Supply 1-stage").PowerDemand);
 			aux.AddConstant("STP",
 				DeclarationData.SteeringPump.Lookup(MissionType.LongHaul, hdvClass,
@@ -109,11 +108,11 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 
 			aux.Initialize(torque, speed);
 			for (var i = 0; i < 11; i++) {
-				aux.TorqueDemand(t, dt, torque, torque, speed);
+				aux.TorqueDemand(t, dt, torque, speed);
 				modData[ModalResultField.dist] = i.SI<Meter>();
-				modData[ModalResultField.P_eng_out] = 0.SI<Watt>();
+				modData[ModalResultField.P_ice_out] = 0.SI<Watt>();
 				modData[ModalResultField.acc] = 0.SI<MeterPerSquareSecond>();
-				modData[ModalResultField.IgnitionOn] = false;
+				modData[ModalResultField.ICEOn] = false;
 				container.CommitSimulationStep(t, dt);
 				t += dt;
 			}
@@ -145,19 +144,19 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 			var t = 0.SI<Second>();
 
 			aux.Initialize(torque, speed);
-			var auxDemand = aux.TorqueDemand(t, t, torque, torque, speed);
+			var auxDemand = aux.TorqueDemand(t, t, torque, speed);
 			AssertHelper.AreRelativeEqual(constPower / speed, auxDemand);
 
 			speed = 2358.RPMtoRad();
 			torque = 1500.SI<NewtonMeter>();
 			aux.Initialize(torque, speed);
-			auxDemand = aux.TorqueDemand(t, t, torque, torque, speed);
+			auxDemand = aux.TorqueDemand(t, t, torque, speed);
 			AssertHelper.AreRelativeEqual(constPower / speed, auxDemand);
 
 			speed = 1500.RPMtoRad();
 			torque = 1500.SI<NewtonMeter>();
 			aux.Initialize(torque, speed);
-			auxDemand = aux.TorqueDemand(t, t, torque, torque, speed);
+			auxDemand = aux.TorqueDemand(t, t, torque, speed);
 			AssertHelper.AreRelativeEqual(constPower / speed, auxDemand);
 		}
 
@@ -183,10 +182,10 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 			var expected = new[] { 6100, 3100, 2300, 4500, 6100 };
 			foreach (var e in expected) {
 				aux.Initialize(torque, speed);
-				var auxDemand = aux.TorqueDemand(t, t, torque, torque, speed);
+				var auxDemand = aux.TorqueDemand(t, t, torque, speed);
 
 				AssertHelper.AreRelativeEqual((e.SI<Watt>() / speed).Value(), auxDemand.Value());
-				cycle.CommitSimulationStep(null);
+				cycle.CommitSimulationStep(t, t, null);
 			}
 		}
 
@@ -247,11 +246,11 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 
 			foreach (var e in expected) {
 				aux.Initialize(torque, speed);
-				var auxDemand = aux.TorqueDemand(t, t, torque, torque, speed);
+				var auxDemand = aux.TorqueDemand(t, t, torque, speed);
 
 				AssertHelper.AreRelativeEqual((e.SI<Watt>() / speed).Value(), auxDemand.Value());
 
-				cycle.CommitSimulationStep(null);
+				cycle.CommitSimulationStep(t, t, null);
 			}
 		}
 
@@ -308,11 +307,11 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 
 			foreach (var e in expected) {
 				aux.Initialize(torque, speed);
-				var auxDemand = aux.TorqueDemand(t, t, torque, torque, speed);
+				var auxDemand = aux.TorqueDemand(t, t, torque, speed);
 
 				AssertHelper.AreRelativeEqual((e.SI<Watt>() / speed).Value(), auxDemand);
 
-				cycle.CommitSimulationStep(null);
+				cycle.CommitSimulationStep(t, t, null);
 			}
 		}
 

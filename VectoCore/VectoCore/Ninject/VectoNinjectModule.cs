@@ -1,7 +1,5 @@
 ﻿using Ninject.Modules;
 using TUGraz.VectoCore.InputData.FileIO.XML;
-using TUGraz.VectoCore.InputData.FileIO.XML.Declaration;
-using TUGraz.VectoCore.InputData.FileIO.XML.Engineering;
 using TUGraz.VectoCore.Models.Simulation;
 using TUGraz.VectoCore.OutputData.XML;
 

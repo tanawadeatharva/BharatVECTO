@@ -29,8 +29,8 @@
 *   Martin Rexeis, rexeis@ivt.tugraz.at, IVT, Graz University of Technology
 */
 
+using System;
 using System.Collections.Generic;
-using System.Data;
 using System.Linq;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
@@ -49,7 +49,8 @@ namespace TUGraz.VectoCore.Tests.Utils
 		public string Manufacturer { get; set; }
 		public string Model { get; set; }
 		public string Creator { get; set; }
-		public string Date { get; set; }
+		public DateTime Date { get; set; }
+		public string AppVersion { get { return "Mock-Class"; } }
 		public string TechnicalReportId { get; set; }
 		public CertificationMethod CertificationMethod { get{return CertificationMethod.NotCertified;} }
 		public string CertificationNumber { get; set; }

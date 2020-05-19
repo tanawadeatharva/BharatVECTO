@@ -31,7 +31,6 @@
 
 using System;
 using System.Collections.ObjectModel;
-using System.ComponentModel;
 using System.IO;
 using System.Threading.Tasks;
 using System.Windows;
@@ -40,7 +39,6 @@ using System.Xml;
 using System.Xml.Schema;
 using HashingTool.Helper;
 using HashingTool.Util;
-using TUGraz.VectoCore.Utils;
 using XmlDocumentType = TUGraz.VectoCore.Utils.XmlDocumentType;
 
 namespace HashingTool.ViewModel.UserControl

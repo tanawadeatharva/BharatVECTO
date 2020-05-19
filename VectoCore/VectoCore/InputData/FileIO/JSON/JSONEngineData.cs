@@ -453,9 +453,9 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 		}
 
 
-		public virtual string Date
+		public virtual DateTime Date
 		{
-			get { return Constants.NOT_AVailABLE; }
+			get { return DateTime.MinValue; }
 		}
 
 		public virtual CertificationMethod CertificationMethod

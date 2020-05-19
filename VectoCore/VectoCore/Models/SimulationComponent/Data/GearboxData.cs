@@ -35,6 +35,8 @@ using System.ComponentModel.DataAnnotations;
 using System.Diagnostics;
 using System.Linq;
 using System.Runtime.Serialization;
+using Newtonsoft.Json;
+using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox;
@@ -45,7 +47,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 	/// Class for Gearbox Data. Gears can be accessed via Gears-Dictionary and range from 1 upwards.
 	/// </summary>
 	/// <remarks>The Axle Gear has its own Property "AxleGearData" and is *not included* in the Gears-Dictionary.</remarks>
-	[DataContract, CustomValidation(typeof(GearboxData), "ValidateGearboxData")]
+	[CustomValidation(typeof(GearboxData), "ValidateGearboxData")]
 	[DebuggerDisplay("GearboxData({Type}, #Gears: {Gears.Count}, ...)")]
 	public class GearboxData : SimulationComponentData
 	{
@@ -53,7 +55,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 
 		[Required, ValidateObject] public Dictionary<uint, GearData> Gears = new Dictionary<uint, GearData>();
 
-		public TorqueConverterData TorqueConverterData { get; internal set; }
+		public TorqueConverterData TorqueConverterData { get; internal set; } 
 
 		[Required, SIRange(0, 10)]
 		public KilogramSquareMeter Inertia { get; internal set; }
@@ -65,39 +67,45 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 		///	[%] (0-1) The torque reserve for shift strategy (early upshift, skipgears)
 		/// </summary>
 		[Required, Range(0, 0.5)]
-		public double TorqueReserve { get; internal set; }
+		public double TorqueReserve { get; internal set; } // todo: move to shift parameters
 
 		/// <summary>
 		/// Gets the minimum time between shifts.
 		/// </summary>
 		[Required, SIRange(0, 5)]
-		public Second ShiftTime { get; internal set; }
+		public Second ShiftTime { get; internal set; } // todo: move to shift parameters
 
 		/// <summary>
 		/// [%] (0-1) The starting torque reserve for finding the starting gear after standstill.
 		/// </summary>
 		[Required, Range(0, 0.5)]
-		public double StartTorqueReserve { get; internal set; }
+		public double StartTorqueReserve { get; internal set; } // todo: move to shift parameters
 
 		// MQ: TODO: move to Driver Data ?
 		[Required, SIRange(double.Epsilon, 5)]
-		public MeterPerSecond StartSpeed { get; internal set; }
+		public MeterPerSecond StartSpeed { get; internal set; } // todo: move to shift parameters
 
 		// MQ: TODO: move to Driver Data ?
 		[Required, SIRange(double.Epsilon, 2)]
-		public MeterPerSquareSecond StartAcceleration { get; internal set; }
+		public MeterPerSquareSecond StartAcceleration { get; internal set; } // todo: move to shift parameters
 
 		[Required, SIRange(0, double.MaxValue)]
-		public Second UpshiftAfterDownshiftDelay { get; internal set; }
+		public Second UpshiftAfterDownshiftDelay { get; internal set; } // todo: move to shift parameters
 
 		[Required, SIRange(0, double.MaxValue)]
-		public Second DownshiftAfterUpshiftDelay { get; internal set; }
+		public Second DownshiftAfterUpshiftDelay { get; internal set; } // todo: move to shift parameters
 
 		[Required, SIRange(0, double.MaxValue)]
-		public MeterPerSquareSecond UpshiftMinAcceleration { get; internal set; }
+		public MeterPerSquareSecond UpshiftMinAcceleration { get; internal set; } // todo: move to shift parameters
 
 		[SIRange(0.5, 1)]
 		public Second PowershiftShiftTime { get; internal set; }
+
+		public bool ATEcoRollReleaseLockupClutch { get; internal set; }
+
+		[JsonIgnore]
+		public IGearboxDeclarationInputData InputData { get; internal set; }
+
 
 		// ReSharper disable once UnusedMember.Global -- used via Validation
 		public static ValidationResult ValidateGearboxData(GearboxData gearboxData, ValidationContext validationContext)
