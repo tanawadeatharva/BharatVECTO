@@ -47,7 +47,9 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			vehicleData.RegisteredClass = completedVehicle.RegisteredClass;
 
 			vehicleData.VehicleCode = completedVehicle.VehicleCode;
-
+			if (vehicleData.TotalVehicleMass.IsGreater(vehicleData.GrossVehicleMass)) {
+				throw new VectoException("Total Vehicle Mass exceeds Gross Vehicle Mass for completed bus specific ({0}/{1})", vehicleData.TotalVehicleMass, vehicleData.GrossVehicleMass);
+			}
 			return vehicleData;
 		}
 

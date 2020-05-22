@@ -35,6 +35,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 		{
 			var retVal = base.CreateVehicleData(data, segment, mission, loading);
 			retVal.CurbMass = mission.CurbMass;
+			retVal.GrossVehicleMass = 40000.SI<Kilogram>();
 			return retVal;
 		}
 
@@ -297,8 +298,8 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			var busParams = mission.BusParameter;
 
 			var hvacBusLength = busParams.HVACConfiguration == BusHVACSystemConfiguration.Configuration2
-				? 2 * Constants.BusParameters.DriverCompartmentLength
-				: busParams.VehicleLength;
+				? 2 * Constants.BusParameters.DriverCompartmentLength // OK
+				: busParams.VehicleLength; // missing: correction length for low floor buses
 			var hvacBusheight = DeclarationData.BusAuxiliaries.CalculateInternalHeight(mission.BusParameter.VehicleCode, busParams.BodyHeight);
 			var coolingPower = CalculateMaxCoolingPower(null, mission);
 
