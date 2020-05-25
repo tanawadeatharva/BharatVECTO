@@ -131,10 +131,10 @@ namespace TUGraz.VectoCore.Models.Declaration
 			var ressourceId = GetEngineRessourceId(engineMode);
 
 			var nIdle = engineMode.IdleSpeed.AsRPM;
-			var ratedSpeed = fullLoadCurve.RatedSpeed.AsRPM;
-			var maxTorque = fullLoadCurve.MaxTorque.Value();
+			var n95h = fullLoadCurve.N95hSpeed.AsRPM;
+			var ratedPower = fullLoadCurve.MaxPower.Value();
 			
-			var denormalizedData = DenormalizeData(ressourceId, nIdle, ratedSpeed, maxTorque);
+			var denormalizedData = DenormalizeData(ressourceId, nIdle, n95h, ratedPower);
 			
 			var engineSpeed = denormalizedData.AsEnumerable().Select(r => 
 				r.Field<string>(FuelConsumptionMapReader.Fields.EngineSpeed).ToDouble()).ToArray();
@@ -180,7 +180,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 		
 
 
-		private DataTable DenormalizeData(string ressourceId, double nIdle, double ratedSpeed, double maxTorque)
+		private DataTable DenormalizeData(string ressourceId, PerSecond nIdle, PerSecond n95h, Watt ratedPower)
 		{
 			var normalized = VectoCSVFile.ReadStream(RessourceHelper.ReadStream(ressourceId), source: ressourceId);
 
@@ -190,37 +190,19 @@ namespace TUGraz.VectoCore.Models.Declaration
 			result.Columns.Add(FuelConsumptionMapReader.Fields.FuelConsumption);
 
 			foreach (DataRow row in normalized.Rows) {
-				var engineSpeed = DenormalizeEngineSpeed((string)row[FuelConsumptionMapReader.Fields.EngineSpeed],
-					nIdle, ratedSpeed);
-				var torque = DenormalizeTorque((string)row[FuelConsumptionMapReader.Fields.Torque], maxTorque);
-				var fc = DenormalizeFC((string)row[FuelConsumptionMapReader.Fields.FuelConsumption], maxTorque);
+				var engineSpeed = row.Field<double>("n_norm") * (n95h - nIdle) + nIdle;
+				var pwr = row.Field<double>("P_norm") * ratedPower;
+				var torque = pwr / engineSpeed;
+				var fc = row.Field<double>("FC_norm") * pwr;
 
 				var newRow = result.NewRow();
-				newRow[FuelConsumptionMapReader.Fields.EngineSpeed] = Math.Round(engineSpeed,2, MidpointRounding.AwayFromZero);
-				newRow[FuelConsumptionMapReader.Fields.Torque] = Math.Round(torque, 2, MidpointRounding.AwayFromZero);
+				newRow[FuelConsumptionMapReader.Fields.EngineSpeed] = Math.Round(engineSpeed.AsRPM,2, MidpointRounding.AwayFromZero);
+				newRow[FuelConsumptionMapReader.Fields.Torque] = Math.Round(torque.Value(), 2, MidpointRounding.AwayFromZero);
 				newRow[FuelConsumptionMapReader.Fields.FuelConsumption] = Math.Round(fc, 2, MidpointRounding.AwayFromZero);
 				result.Rows.Add(newRow);
 			}
 
 			return result;
-		}
-
-		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		private double DenormalizeFC(string fc, double mRated)
-		{
-			return fc.ToDouble() * mRated;
-		}
-
-		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		private double DenormalizeTorque(string torque, double mRated)
-		{
-			return torque.ToDouble() * mRated;
-		}
-
-		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		private double DenormalizeEngineSpeed(string engineSpeed, double nIdle, double nRated)
-		{
-			return engineSpeed.ToDouble() * (nRated - nIdle) + nIdle;
 		}
 
 	}
