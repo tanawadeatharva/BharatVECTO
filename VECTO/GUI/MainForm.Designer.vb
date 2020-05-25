@@ -59,10 +59,16 @@ Partial Class MainForm
         Me.ButtonGENadd = New System.Windows.Forms.Button()
         Me.TabPgOptions = New System.Windows.Forms.TabPage()
         Me.PanelOptAllg = New System.Windows.Forms.Panel()
+        Me.GroupBox5 = New System.Windows.Forms.GroupBox()
+        Me.Label4 = New System.Windows.Forms.Label()
+        Me.tbMinSpeedLAC = New System.Windows.Forms.TextBox()
+        Me.Label3 = New System.Windows.Forms.Label()
+        Me.Label2 = New System.Windows.Forms.Label()
         Me.GroupBox4 = New System.Windows.Forms.GroupBox()
         Me.BtTCfileBrowse = New System.Windows.Forms.Button()
         Me.tbOutputFolder = New System.Windows.Forms.TextBox()
         Me.GroupBox3 = New System.Windows.Forms.GroupBox()
+        Me.cbSaveVectoRunData = New System.Windows.Forms.CheckBox()
         Me.cbActVmod = New System.Windows.Forms.CheckBox()
         Me.cbValidateRunData = New System.Windows.Forms.CheckBox()
         Me.GroupBox2 = New System.Windows.Forms.GroupBox()
@@ -119,13 +125,14 @@ Partial Class MainForm
         Me.OpenInGraphWindowToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.ShowInFolderToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.ToolTip1 = New System.Windows.Forms.ToolTip(Me.components)
-        Me.cbSaveVectoRunData = New System.Windows.Forms.CheckBox()
+        Me.Label5 = New System.Windows.Forms.Label()
         Me.StatusBAR.SuspendLayout
         Me.TabControl1.SuspendLayout
         Me.TabPageGEN.SuspendLayout
         CType(Me.PictureBox1,System.ComponentModel.ISupportInitialize).BeginInit
         Me.TabPgOptions.SuspendLayout
         Me.PanelOptAllg.SuspendLayout
+        Me.GroupBox5.SuspendLayout
         Me.GroupBox4.SuspendLayout
         Me.GroupBox3.SuspendLayout
         Me.GroupBox2.SuspendLayout
@@ -380,6 +387,7 @@ Partial Class MainForm
         '
         'PanelOptAllg
         '
+        Me.PanelOptAllg.Controls.Add(Me.GroupBox5)
         Me.PanelOptAllg.Controls.Add(Me.GroupBox4)
         Me.PanelOptAllg.Controls.Add(Me.GroupBox3)
         Me.PanelOptAllg.Controls.Add(Me.GroupBox2)
@@ -388,6 +396,53 @@ Partial Class MainForm
         Me.PanelOptAllg.Name = "PanelOptAllg"
         Me.PanelOptAllg.Size = New System.Drawing.Size(1022, 290)
         Me.PanelOptAllg.TabIndex = 0
+        '
+        'GroupBox5
+        '
+        Me.GroupBox5.Controls.Add(Me.Label5)
+        Me.GroupBox5.Controls.Add(Me.Label4)
+        Me.GroupBox5.Controls.Add(Me.tbMinSpeedLAC)
+        Me.GroupBox5.Controls.Add(Me.Label3)
+        Me.GroupBox5.Controls.Add(Me.Label2)
+        Me.GroupBox5.Location = New System.Drawing.Point(183, 57)
+        Me.GroupBox5.Name = "GroupBox5"
+        Me.GroupBox5.Size = New System.Drawing.Size(260, 100)
+        Me.GroupBox5.TabIndex = 20
+        Me.GroupBox5.TabStop = false
+        Me.GroupBox5.Text = "Look-Ahead Coasting Override"
+        '
+        'Label4
+        '
+        Me.Label4.AutoSize = true
+        Me.Label4.Location = New System.Drawing.Point(10, 44)
+        Me.Label4.Name = "Label4"
+        Me.Label4.Size = New System.Drawing.Size(0, 13)
+        Me.Label4.TabIndex = 3
+        '
+        'tbMinSpeedLAC
+        '
+        Me.tbMinSpeedLAC.Location = New System.Drawing.Point(96, 17)
+        Me.tbMinSpeedLAC.Name = "tbMinSpeedLAC"
+        Me.tbMinSpeedLAC.Size = New System.Drawing.Size(56, 20)
+        Me.tbMinSpeedLAC.TabIndex = 2
+        '
+        'Label3
+        '
+        Me.Label3.AutoSize = true
+        Me.Label3.Location = New System.Drawing.Point(158, 20)
+        Me.Label3.Name = "Label3"
+        Me.Label3.Size = New System.Drawing.Size(38, 13)
+        Me.Label3.TabIndex = 1
+        Me.Label3.Text = "[km/h]"
+        '
+        'Label2
+        '
+        Me.Label2.AutoSize = true
+        Me.Label2.Location = New System.Drawing.Point(7, 20)
+        Me.Label2.Name = "Label2"
+        Me.Label2.Size = New System.Drawing.Size(64, 13)
+        Me.Label2.TabIndex = 0
+        Me.Label2.Text = "Min. Speed:"
         '
         'GroupBox4
         '
@@ -428,6 +483,16 @@ Partial Class MainForm
         Me.GroupBox3.TabIndex = 18
         Me.GroupBox3.TabStop = false
         Me.GroupBox3.Text = "Misc"
+        '
+        'cbSaveVectoRunData
+        '
+        Me.cbSaveVectoRunData.AutoSize = true
+        Me.cbSaveVectoRunData.Location = New System.Drawing.Point(7, 86)
+        Me.cbSaveVectoRunData.Name = "cbSaveVectoRunData"
+        Me.cbSaveVectoRunData.Size = New System.Drawing.Size(166, 17)
+        Me.cbSaveVectoRunData.TabIndex = 19
+        Me.cbSaveVectoRunData.Text = "Export ModelData (EXPERT!)"
+        Me.cbSaveVectoRunData.UseVisualStyleBackColor = true
         '
         'cbActVmod
         '
@@ -855,15 +920,15 @@ Partial Class MainForm
         Me.ShowInFolderToolStripMenuItem.Size = New System.Drawing.Size(173, 22)
         Me.ShowInFolderToolStripMenuItem.Text = "Show in Folder"
         '
-        'cbSaveVectoRunData
+        'Label5
         '
-        Me.cbSaveVectoRunData.AutoSize = true
-        Me.cbSaveVectoRunData.Location = New System.Drawing.Point(7, 86)
-        Me.cbSaveVectoRunData.Name = "cbSaveVectoRunData"
-        Me.cbSaveVectoRunData.Size = New System.Drawing.Size(166, 17)
-        Me.cbSaveVectoRunData.TabIndex = 19
-        Me.cbSaveVectoRunData.Text = "Export ModelData (EXPERT!)"
-        Me.cbSaveVectoRunData.UseVisualStyleBackColor = true
+        Me.Label5.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, CType(0,Byte))
+        Me.Label5.Location = New System.Drawing.Point(7, 48)
+        Me.Label5.Name = "Label5"
+        Me.Label5.Size = New System.Drawing.Size(247, 36)
+        Me.Label5.TabIndex = 4
+        Me.Label5.Text = "Overrides Look-Ahead Coasting in declaration mode. Leave empty to use default beh"& _ 
+    "aviour."
         '
         'MainForm
         '
@@ -887,6 +952,8 @@ Partial Class MainForm
         CType(Me.PictureBox1,System.ComponentModel.ISupportInitialize).EndInit
         Me.TabPgOptions.ResumeLayout(false)
         Me.PanelOptAllg.ResumeLayout(false)
+        Me.GroupBox5.ResumeLayout(false)
+        Me.GroupBox5.PerformLayout
         Me.GroupBox4.ResumeLayout(false)
         Me.GroupBox4.PerformLayout
         Me.GroupBox3.ResumeLayout(false)
@@ -1002,4 +1069,10 @@ End Sub
     Friend WithEvents tbOutputFolder As TextBox
     Friend WithEvents BtTCfileBrowse As Button
     Friend WithEvents cbSaveVectoRunData As CheckBox
+    Friend WithEvents GroupBox5 As GroupBox
+    Friend WithEvents Label4 As Label
+    Friend WithEvents tbMinSpeedLAC As TextBox
+    Friend WithEvents Label3 As Label
+    Friend WithEvents Label2 As Label
+    Friend WithEvents Label5 As Label
 End Class
