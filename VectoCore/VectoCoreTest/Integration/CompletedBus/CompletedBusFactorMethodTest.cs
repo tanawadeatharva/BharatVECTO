@@ -78,10 +78,10 @@ namespace TUGraz.VectoCore.Tests.Integration.CompletedBus
 		{
 			var category = VehicleCategory.HeavyBusPrimaryVehicle;
 			var axleConfiguration = AxleConfiguration.AxleConfig_4x2;
-			var floorType = FloorType.HighFloor;
+			//var floorType = FloorType.HighFloor;
 			var articulated = false;
 
-			primarySegment = DeclarationData.PrimaryBusSegments.Lookup(category, axleConfiguration, articulated, floorType);
+			primarySegment = DeclarationData.PrimaryBusSegments.Lookup(category, axleConfiguration, articulated);
 		}
 
 		private void CompletedBusSegment()

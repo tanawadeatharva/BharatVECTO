@@ -10,7 +10,7 @@ using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.Declaration
 {
-	public sealed class PrimaryBusSegments : LookupData<VehicleCategory, AxleConfiguration, bool, FloorType, Segment>
+	public sealed class PrimaryBusSegments : LookupData<VehicleCategory, AxleConfiguration, bool, Segment>
 	{
 		private DataTable _segmentTable;
 
@@ -36,7 +36,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 		}
 
 		public override Segment Lookup(
-			VehicleCategory vehicleCategory, AxleConfiguration axleConfiguration, bool articulated, FloorType entrance)
+			VehicleCategory vehicleCategory, AxleConfiguration axleConfiguration, bool articulated)
 		{
 			return LookupPrimaryVehicle(vehicleCategory, axleConfiguration, articulated);
 		}

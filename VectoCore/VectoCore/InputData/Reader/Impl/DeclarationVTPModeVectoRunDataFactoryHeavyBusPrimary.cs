@@ -44,7 +44,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl {
 		{
 			var vehicle = JobInputData.Vehicle;
 			Segment = DeclarationData.PrimaryBusSegments.Lookup(
-				vehicle.VehicleCategory, vehicle.AxleConfiguration, vehicle.Articulated, vehicle.FloorType);
+				vehicle.VehicleCategory, vehicle.AxleConfiguration, vehicle.Articulated);
 
 			Driverdata = Dao.CreateDriverData();
 			Driverdata.AccelerationCurve = AccelerationCurveReader.ReadFromStream(Segment.AccelerationFile);
