@@ -60,7 +60,7 @@ namespace TUGraz.VectoCore.OutputData.XML {
 
 		protected override void OutputReports()
 		{
-			base.OutputReports();
+			Writer.WriteReport(ReportType.DeclarationReportManufacturerXML, ManufacturerRpt.Report);
 			Writer.WriteReport(ReportType.DeclarationReportPrimaryVehicleXML, _primaryReport.Report);
 		}
 
