@@ -367,7 +367,7 @@ namespace TUGraz.VectoCore.Configuration
 
 			public const double FactorAngleDrive = 0.75;
 
-			public const double RetarderGenericFactor = 0.5;
+			public const double RetarderGenericFactor = 1;
 		}
 	}
 }
