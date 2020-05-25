@@ -168,7 +168,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering.DataProvider
 		public virtual int NumberOfPassengersUpperDeck { get { return 0; } }
 		public virtual int NumberOfPassengersLowerDeck { get { return 0; } }
 		public virtual VehicleCode VehicleCode { get { return VehicleCode.NOT_APPLICABLE; } }
-		public virtual FloorType FloorType { get { return FloorType.Unknown; } }
+		public virtual bool LowEntry { get { return false; } }
 		public virtual bool Articulated { get { return false; } }
 		
 

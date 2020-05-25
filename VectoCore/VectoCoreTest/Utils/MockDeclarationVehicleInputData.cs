@@ -49,7 +49,7 @@ namespace TUGraz.VectoCore.Tests.Utils {
 		public int NumberOfPassengersUpperDeck { get; set; }
 		public int NumberOfPassengersLowerDeck { get; set; }
 		public VehicleCode VehicleCode { get; set; }
-		public FloorType FloorType { get; }
+		public bool LowEntry { get; }
 		public bool Articulated { get; }
 		public Meter Height { get; set; }
 		public Meter Length { get; set; }
@@ -113,7 +113,7 @@ namespace TUGraz.VectoCore.Tests.Utils {
 		public int NumberOfPassengersUpperDeck { get; set; }
 		public int NumberOfPassengersLowerDeck { get; set; }
 		public VehicleCode VehicleCode { get; set; }
-		public FloorType FloorType { get; }
+		public bool LowEntry { get; }
 
 		IVehicleComponentsDeclaration IVehicleDeclarationInputData.Components
 		{
