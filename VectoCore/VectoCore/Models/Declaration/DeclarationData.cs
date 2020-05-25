@@ -357,6 +357,19 @@ namespace TUGraz.VectoCore.Models.Declaration
 				return (coolingPwrDriver * comprTypeDriver.COP(floorType) + coolingPwrPass * comprTypePass.COP(floorType)) /
 						(coolingPwrDriver + coolingPwrPass);
 			}
+
+			public static Meter CorrectionLengthDrivetrainVolume(VehicleCode vehicleCode, bool lowEntry, int numAxles, bool articulated)
+			{
+				if ((vehicleCode == VehicleCode.CE || vehicleCode == VehicleCode.CG) && !lowEntry) {
+					switch (numAxles) {
+						case 2: return 1.0.SI<Meter>();
+						case 3: return articulated ? 1.0.SI<Meter>() : 1.25.SI<Meter>();
+						case 4: return 1.25.SI<Meter>();
+						default: throw new VectoException("invalid number of axles {0}", numAxles);
+					}
+				}
+				return 0.SI<Meter>();
+			}
 		}
 
 		public static class Driver

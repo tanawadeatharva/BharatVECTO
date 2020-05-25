@@ -297,26 +297,28 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 		{
 			var busParams = mission.BusParameter;
 
-			var hvacBusLength = busParams.HVACConfiguration == BusHVACSystemConfiguration.Configuration2
+			var isDoubleDecker = busParams.VehicleCode.IsDoubleDeckerBus();
+			var internalLength = busParams.HVACConfiguration == BusHVACSystemConfiguration.Configuration2
 				? 2 * Constants.BusParameters.DriverCompartmentLength // OK
-				: busParams.VehicleLength; // missing: correction length for low floor buses
-			var hvacBusheight = DeclarationData.BusAuxiliaries.CalculateInternalHeight(mission.BusParameter.VehicleCode, RegistrationClass.II, busParams.BodyHeight);
-			var coolingPower = CalculateMaxCoolingPower(null, mission);
+				: DeclarationData.BusAuxiliaries.CalculateInternalLength(busParams.VehicleLength, 
+				busParams.VehicleCode, 10); // missing: correction length for low floor buses
+			var internalHeight = DeclarationData.BusAuxiliaries.CalculateInternalHeight(mission.BusParameter.VehicleCode, RegistrationClass.II, busParams.BodyHeight);
+			var coolingPower = CalculateMaxCoolingPower(null, null, mission);
 
 			var retVal = GetDefaulSSMInputs(heatingFuel);
 			retVal.BusFloorType = busParams.VehicleCode.GetFloorType();
 			retVal.Technologies = GetSSMTechnologyBenefits(busAuxInputData, mission.BusParameter.VehicleCode.GetFloorType());
 
 			retVal.FuelFiredHeaterPower = busParams.HVACAuxHeaterPower;
-			retVal.BusWindowSurface = DeclarationData.BusAuxiliaries.WindowHeight(busParams.DoubleDecker) * hvacBusLength +
+			retVal.BusWindowSurface = DeclarationData.BusAuxiliaries.WindowHeight(busParams.DoubleDecker) * internalLength +
 									DeclarationData.BusAuxiliaries.FrontAndRearWindowArea(busParams.DoubleDecker);
-			retVal.BusSurfaceArea = 2 * (hvacBusLength * busParams.VehicleWidth + hvacBusLength * busParams.BodyHeight +
-										busParams.VehicleWidth * busParams.BodyHeight);
-			retVal.BusVolume = hvacBusLength * busParams.VehicleWidth * hvacBusheight;
+			retVal.BusSurfaceArea = 2 * (internalLength * busParams.VehicleWidth + internalLength * internalHeight +
+										(isDoubleDecker ? 2.0 : 1.0) * busParams.VehicleWidth * busParams.BodyHeight);
+			retVal.BusVolume = internalLength * busParams.VehicleWidth * internalHeight;
 
 			retVal.UValue = DeclarationData.BusAuxiliaries.UValue(busParams.VehicleCode.GetFloorType());
 			retVal.NumberOfPassengers =
-				DeclarationData.BusAuxiliaries.CalculateBusFloorSurfaceArea(hvacBusLength, busParams.VehicleWidth) *
+				DeclarationData.BusAuxiliaries.CalculateBusFloorSurfaceArea(internalLength, busParams.VehicleWidth) *
 				busParams.PassengerDensity *
 				(loadingType == LoadingType.LowLoading ? mission.MissionType.GetLowLoadFactorBus() : 1.0) + 1; // add driver for 'heat input'
 			retVal.VentilationRate = DeclarationData.BusAuxiliaries.VentilationRate(busParams.HVACConfiguration, false);
@@ -388,7 +390,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 		}
 
 
-		protected virtual Tuple<Watt, Watt> CalculateMaxCoolingPower(IVehicleDeclarationInputData vehicleData, Mission mission)
+		protected virtual Tuple<Watt, Watt> CalculateMaxCoolingPower(IVehicleDeclarationInputData vehicleData, IVehicleDeclarationInputData primaryVehicle, Mission mission)
 		{
 			var busParams = mission.BusParameter;
 
