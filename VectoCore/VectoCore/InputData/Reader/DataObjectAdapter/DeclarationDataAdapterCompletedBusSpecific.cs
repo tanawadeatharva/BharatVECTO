@@ -182,10 +182,10 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			var isDoubleDecker = completedVehicle.VehicleCode.IsDoubleDeckerBus();
 			var hvacConfiguration = completedVehicle.Components.BusAuxiliaries.HVACAux.SystemConfiguration;
 			var hvacBusLength = hvacConfiguration == BusHVACSystemConfiguration.Configuration2
-				? 2 * Constants.BusParameters.DriverCompartmentLength
-				: completedVehicle.Length;
-
-			var hvacBusHeight = DeclarationData.BusAuxiliaries.CalculateInternalHeight(completedVehicle.VehicleCode, completedVehicle.Height);
+				? 2 * Constants.BusParameters.DriverCompartmentLength // OK
+				: completedVehicle.Length; 
+				
+			var hvacBusHeight = DeclarationData.BusAuxiliaries.CalculateInternalHeight(completedVehicle.VehicleCode, completedVehicle.RegisteredClass, completedVehicle.Height);
 			var hvacBusWidth = DeclarationData.BusAuxiliaries.CorrectedBusWidth(completedVehicle.Width);
 			var coolingPower = CalculateMaxCoolingPower(completedVehicle, mission);
 
@@ -276,7 +276,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			var length = DeclarationData.BusAuxiliaries.CalculateInternalLength(
 			 	completedVehicle.Length , completedVehicle.VehicleCode, 
 				completedVehicle.NumberOfPassengersLowerDeck);
-			var height = DeclarationData.BusAuxiliaries.CalculateInternalHeight(completedVehicle.VehicleCode, completedVehicle.Height);
+			var height = DeclarationData.BusAuxiliaries.CalculateInternalHeight(completedVehicle.VehicleCode, completedVehicle.RegisteredClass, completedVehicle.Height);
 			var volume = length * height * completedVehicle.Width;
 
 			var driver = DeclarationData.BusAuxiliaries.HVACMaxCoolingPower.DriverMaxCoolingPower(

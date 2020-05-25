@@ -300,7 +300,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			var hvacBusLength = busParams.HVACConfiguration == BusHVACSystemConfiguration.Configuration2
 				? 2 * Constants.BusParameters.DriverCompartmentLength // OK
 				: busParams.VehicleLength; // missing: correction length for low floor buses
-			var hvacBusheight = DeclarationData.BusAuxiliaries.CalculateInternalHeight(mission.BusParameter.VehicleCode, busParams.BodyHeight);
+			var hvacBusheight = DeclarationData.BusAuxiliaries.CalculateInternalHeight(mission.BusParameter.VehicleCode, RegistrationClass.II, busParams.BodyHeight);
 			var coolingPower = CalculateMaxCoolingPower(null, mission);
 
 			var retVal = GetDefaulSSMInputs(heatingFuel);
@@ -395,7 +395,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			var length = DeclarationData.BusAuxiliaries.CalculateInternalLength(
 				busParams.VehicleLength, busParams.VehicleCode,
 				busParams.NumberPassengersLowerDeck);
-			var height = DeclarationData.BusAuxiliaries.CalculateInternalHeight(busParams.VehicleCode, busParams.BodyHeight);
+			var height = DeclarationData.BusAuxiliaries.CalculateInternalHeight(busParams.VehicleCode, RegistrationClass.II, busParams.BodyHeight);
 			var volume = length * height * busParams.VehicleWidth;
 
 			var driver = DeclarationData.BusAuxiliaries.HVACMaxCoolingPower.DriverMaxCoolingPower(
