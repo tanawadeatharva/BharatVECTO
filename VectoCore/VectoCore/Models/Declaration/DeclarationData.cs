@@ -256,6 +256,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 					case BusHVACSystemConfiguration.Configuration7: 
 					case BusHVACSystemConfiguration.Configuration8: 
 					case BusHVACSystemConfiguration.Configuration9:
+					case BusHVACSystemConfiguration.Configuration10:
 						return heating
 							? Constants.BusAuxiliaries.SteadyStateModel.HighVentilationHeating
 							: Constants.BusAuxiliaries.SteadyStateModel.HighVentilation;

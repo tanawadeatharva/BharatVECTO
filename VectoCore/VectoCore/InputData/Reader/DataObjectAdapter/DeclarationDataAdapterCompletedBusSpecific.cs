@@ -181,6 +181,15 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 		{
 			var isDoubleDecker = completedVehicle.VehicleCode.IsDoubleDeckerBus();
 			var hvacConfiguration = completedVehicle.Components.BusAuxiliaries.HVACAux.SystemConfiguration;
+			var busAux = completedVehicle.Components.BusAuxiliaries.HVACAux;
+
+			if (hvacConfiguration.RequiresDriverAC() && (busAux.CompressorTypeDriver == ACCompressorType.None || busAux.CompressorTypeDriver == ACCompressorType.Unknown)) {
+				throw new VectoException("HVAC System Configuration {0} requires DriverAC Technology", hvacConfiguration);
+			}
+
+			if (hvacConfiguration.RequiresPassengerAC() && (busAux.CompressorTypePassenger == ACCompressorType.None || busAux.CompressorTypePassenger == ACCompressorType.Unknown)) {
+				throw new VectoException("HVAC System Configuration {0} requires PassengerAC Technology", hvacConfiguration);
+			}
 
 			var internalLength = hvacConfiguration == BusHVACSystemConfiguration.Configuration2
 				? 2 * Constants.BusParameters.DriverCompartmentLength // OK
@@ -196,7 +205,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 
 			var coolingPower = CalculateMaxCoolingPower(completedVehicle, primaryVehicle, mission);
 
-			var busAux = completedVehicle.Components.BusAuxiliaries.HVACAux;
+			
 			var floorType = completedVehicle.VehicleCode.GetFloorType();
 
 			var ssmInputs =GetDefaulSSMInputs(FuelData.Diesel);
