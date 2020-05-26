@@ -60,6 +60,7 @@ Partial Class MainForm
         Me.TabPgOptions = New System.Windows.Forms.TabPage()
         Me.PanelOptAllg = New System.Windows.Forms.Panel()
         Me.GroupBox5 = New System.Windows.Forms.GroupBox()
+        Me.Label5 = New System.Windows.Forms.Label()
         Me.Label4 = New System.Windows.Forms.Label()
         Me.tbMinSpeedLAC = New System.Windows.Forms.TextBox()
         Me.Label3 = New System.Windows.Forms.Label()
@@ -125,7 +126,6 @@ Partial Class MainForm
         Me.OpenInGraphWindowToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.ShowInFolderToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.ToolTip1 = New System.Windows.Forms.ToolTip(Me.components)
-        Me.Label5 = New System.Windows.Forms.Label()
         Me.StatusBAR.SuspendLayout
         Me.TabControl1.SuspendLayout
         Me.TabPageGEN.SuspendLayout
@@ -410,6 +410,16 @@ Partial Class MainForm
         Me.GroupBox5.TabIndex = 20
         Me.GroupBox5.TabStop = false
         Me.GroupBox5.Text = "Look-Ahead Coasting Override"
+        '
+        'Label5
+        '
+        Me.Label5.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, CType(0,Byte))
+        Me.Label5.Location = New System.Drawing.Point(7, 48)
+        Me.Label5.Name = "Label5"
+        Me.Label5.Size = New System.Drawing.Size(247, 36)
+        Me.Label5.TabIndex = 4
+        Me.Label5.Text = "Overrides Look-Ahead Coasting in declaration mode. Leave empty to use default beh"& _ 
+    "aviour."
         '
         'Label4
         '
@@ -919,16 +929,6 @@ Partial Class MainForm
         Me.ShowInFolderToolStripMenuItem.Name = "ShowInFolderToolStripMenuItem"
         Me.ShowInFolderToolStripMenuItem.Size = New System.Drawing.Size(173, 22)
         Me.ShowInFolderToolStripMenuItem.Text = "Show in Folder"
-        '
-        'Label5
-        '
-        Me.Label5.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, CType(0,Byte))
-        Me.Label5.Location = New System.Drawing.Point(7, 48)
-        Me.Label5.Name = "Label5"
-        Me.Label5.Size = New System.Drawing.Size(247, 36)
-        Me.Label5.TabIndex = 4
-        Me.Label5.Text = "Overrides Look-Ahead Coasting in declaration mode. Leave empty to use default beh"& _ 
-    "aviour."
         '
         'MainForm
         '

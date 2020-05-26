@@ -83,7 +83,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			ITransmissionInputData gear, uint i, bool useEfficiencyFallback, VehicleCategory vehicleCategory)
 		{
 			return TransmissionLossMapReader.Create(
-				gear.Ratio.IsEqual(1) ? GearEfficiencyDirectGear :GearEfficiencyIndirectGear, gear.Ratio, $"Gear {i + 1}");
+				gear.Ratio.IsEqual(1) ? GearEfficiencyDirectGear : GearEfficiencyIndirectGear, gear.Ratio, $"Gear {i + 1}");
 		}
 
 		protected override void CretateTCFirstGearATPowerSplit(GearData gearData, uint i, ShiftPolygon shiftPolygon)

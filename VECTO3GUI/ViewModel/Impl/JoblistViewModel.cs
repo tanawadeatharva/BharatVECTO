@@ -21,12 +21,14 @@ using NLog.Targets;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Resources;
+using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore;
 using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.InputData.FileIO.JSON;
 using TUGraz.VectoCore.InputData.FileIO.XML;
 using TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider;
 using TUGraz.VectoCore.Models.Simulation.Impl;
+using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.OutputData;
 using TUGraz.VectoCore.OutputData.FileIO;
 using VECTO3GUI.Util;
@@ -85,6 +87,7 @@ namespace VECTO3GUI.ViewModel.Impl
 		private ICommand _browseOutputDirectory;
 		private bool _writeModelData;
 		private ICommand _aboutViewCommand;
+		private string _lookAheadMinSpeedOverride;
 
 		#endregion
 
@@ -142,6 +145,12 @@ namespace VECTO3GUI.ViewModel.Impl
 		{
 			get { return _progress; }
 			set { SetProperty(ref _progress, value); }
+		}
+
+		public string LookAheadMinSpeedOverride
+		{
+			get { return _lookAheadMinSpeedOverride; }
+			set { SetProperty(ref _lookAheadMinSpeedOverride, value); }
 		}
 
 		#endregion
@@ -935,6 +944,15 @@ namespace VECTO3GUI.ViewModel.Impl
 						fileWriters.Add(runId, fileWriter);
 					}
 
+					// TODO MQ-20200525: Remove the following loop in production (or after evaluation of LAC!!
+					if (!string.IsNullOrWhiteSpace(LookAheadMinSpeedOverride)) {
+						foreach (var run in jobContainer.Runs) {
+							var tmpDriver = ((VectoRun)run.Run).GetContainer().RunData.DriverData;
+							tmpDriver.LookAheadCoasting.Enabled = true;
+							tmpDriver.LookAheadCoasting.MinSpeed = LookAheadMinSpeedOverride.ToDouble().KMPHtoMeterPerSecond();
+						}
+					}
+
 					sender.ReportProgress(
 						0,
 						new VectoSimulationProgress() {
@@ -945,7 +963,8 @@ namespace VECTO3GUI.ViewModel.Impl
 					MessageBox.Show(
 						$"ERROR running job {Path.GetFileName(jobEntry.JobEntryFilePath)}: {ex.Message}", "Error", MessageBoxButton.OK,
 						MessageBoxImage.Exclamation);
-					sender.ReportProgress(0, new VectoSimulationProgress() {Type = VectoSimulationProgress.MsgType.StatusMessage, Message = ex.Message});
+					sender.ReportProgress(
+						0, new VectoSimulationProgress() { Type = VectoSimulationProgress.MsgType.StatusMessage, Message = ex.Message });
 				}
 			}
 
