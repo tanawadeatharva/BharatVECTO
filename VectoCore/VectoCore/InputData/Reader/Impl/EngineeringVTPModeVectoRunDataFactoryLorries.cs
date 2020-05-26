@@ -37,6 +37,7 @@ using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.InputData.Reader.ComponentData;
 using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter;
+using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation.Data;
 
 namespace TUGraz.VectoCore.InputData.Reader.Impl
@@ -66,6 +67,9 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 					runData.FanDataVTP = GetFanData();
 					runData.ExecutionMode = ExecutionMode.Engineering;
 					runData.SimulationType = SimulationType.VerificationTest;
+					runData.Mission = new Mission() {
+						MissionType = MissionType.VerificationTest
+					};
 					return runData;
 				});
 		}
