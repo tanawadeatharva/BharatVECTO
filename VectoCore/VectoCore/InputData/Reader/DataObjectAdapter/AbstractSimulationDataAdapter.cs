@@ -172,7 +172,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			};
 		}
 
-		protected virtual TransmissionLossMap CreateGearLossMap(ITransmissionInputData gear, uint i, bool useEfficiencyFallback, VehicleCategory vehicleCategory )
+		protected virtual TransmissionLossMap CreateGearLossMap(ITransmissionInputData gear, uint i, bool useEfficiencyFallback, VehicleCategory vehicleCategory, GearboxType gearboxType)
 		{
 			if (gear.LossMap != null) {
 				return TransmissionLossMapReader.Create(gear.LossMap, gear.Ratio, string.Format("Gear {0}", i + 1), true);

@@ -318,7 +318,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			}
 			for (uint i = 0; i < gearbox.Gears.Count; i++) {
 				var gear = gearbox.Gears[(int)i];
-				var lossMap = CreateGearLossMap(gear, i, true, VehicleCategory.Unknown);
+				var lossMap = CreateGearLossMap(gear, i, true, VehicleCategory.Unknown, gearbox.Type);
 
 				var shiftPolygon = gear.ShiftPolygon != null && gear.ShiftPolygon.SourceType != DataSourceType.Missing
 					? ShiftPolygonReader.Create(gear.ShiftPolygon)

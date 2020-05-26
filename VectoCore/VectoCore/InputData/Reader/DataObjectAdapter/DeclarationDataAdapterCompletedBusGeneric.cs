@@ -1,25 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using TUGraz.VectoCommon.BusAuxiliaries;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
-using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.InputData.Reader.ComponentData;
-using TUGraz.VectoCore.Models.BusAuxiliaries;
-using TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.Electrics;
-using TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.HVAC;
-using TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.Pneumatics;
-using TUGraz.VectoCore.Models.BusAuxiliaries.Interfaces.DownstreamModules.Electrics;
 using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.GenericModelData;
-using TUGraz.VectoCore.Models.Simulation.Data;
-using TUGraz.VectoCore.Models.SimulationComponent;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox;
-using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 {
@@ -31,6 +20,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 
 		public const double GearEfficiencyDirectGear = 0.98;
 		public const double GearEfficiencyIndirectGear = 0.96;
+		public const double GearEfficiencyAT = 0.925;
 
 
 		#region Overrides of DeclarationDataAdapterPrimaryBus
@@ -79,9 +69,11 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 
 		#region Overrides of AbstractSimulationDataAdapter
 
-		protected override TransmissionLossMap CreateGearLossMap(
-			ITransmissionInputData gear, uint i, bool useEfficiencyFallback, VehicleCategory vehicleCategory)
+		protected override TransmissionLossMap CreateGearLossMap(ITransmissionInputData gear, uint i, bool useEfficiencyFallback, VehicleCategory vehicleCategory, GearboxType gearboxType)
 		{
+			if (gearboxType.AutomaticTransmission()) {
+				return TransmissionLossMapReader.Create(GearEfficiencyAT, gear.Ratio, $"Gear {i + 1}");
+			}
 			return TransmissionLossMapReader.Create(
 				gear.Ratio.IsEqual(1) ? GearEfficiencyDirectGear : GearEfficiencyIndirectGear, gear.Ratio, $"Gear {i + 1}");
 		}
