@@ -67,7 +67,8 @@ namespace TUGraz.VectoCore.OutputData
 		};
 
 		private readonly Dictionary<String, SI> _timeIntegrals = new Dictionary<string, SI>();
-		private readonly Dictionary<FuelType, KilogramPerWattSecond> _vehicleLine = new Dictionary<FuelType, KilogramPerWattSecond>();
+		private readonly Dictionary<FuelType, KilogramPerWattSecond> _engLine = new Dictionary<FuelType, KilogramPerWattSecond>();
+		private readonly Dictionary<FuelType, KilogramPerWattSecond> _vehLine = new Dictionary<FuelType, KilogramPerWattSecond>();
 
 		public int JobRunId { get; }
 		public string RunName { get; }
@@ -166,10 +167,10 @@ namespace TUGraz.VectoCore.OutputData
 
 		public Func<Second, Joule, Joule> AuxHeaterDemandCalc { get; set; }
 
-		public KilogramPerWattSecond VehicleLineCorrectionFactor(IFuelProperties fuel)
+		public KilogramPerWattSecond EngineLineCorrectionFactor(IFuelProperties fuel)
 		{
-			if (_vehicleLine.ContainsKey(fuel.FuelType)) {
-				return _vehicleLine[fuel.FuelType];
+			if (_engLine.ContainsKey(fuel.FuelType)) {
+				return _engLine[fuel.FuelType];
 			}
 
 			double k, d, r;
@@ -181,9 +182,29 @@ namespace TUGraz.VectoCore.OutputData
 							x.Field<SI>(GetColumnName(fuel, ModalResultField.FCFinal)).Value())
 						: null).Where(x => x != null && x.Y > 0),
 				out k, out d, out r);
-			_vehicleLine[fuel.FuelType] = k.SI<KilogramPerWattSecond>();
+			_engLine[fuel.FuelType] = k.SI<KilogramPerWattSecond>();
 
-			return _vehicleLine[fuel.FuelType];
+			return _engLine[fuel.FuelType];
+		}
+
+		public KilogramPerWattSecond VehicleLineSlope(IFuelProperties fuel)
+		{
+			if (_vehLine.ContainsKey(fuel.FuelType)) {
+				return _vehLine[fuel.FuelType];
+			}
+
+			double k, d, r;
+			VectoMath.LeastSquaresFitting(
+				GetValues(
+						row => row.Field<bool>(ModalResultField.ICEOn.GetName())
+							? new Point(
+								row.Field<SI>(ModalResultField.P_wheel_in.GetName()).Value(),
+								row.Field<SI>(GetColumnName(fuel, ModalResultField.FCFinal)).Value())
+							: null)
+					.Where(x => x != null && x.Y > 0), out k, out d, out r);
+
+			_vehLine[fuel.FuelType] = k.SI<KilogramPerWattSecond>();
+			return _vehLine[fuel.FuelType];
 		}
 
 		public void CalculateAggregateValues()
@@ -195,7 +216,7 @@ namespace TUGraz.VectoCore.OutputData
 			}
 
 			foreach (var fuel in FuelColumns.Keys) {
-				VehicleLineCorrectionFactor(fuel);
+				EngineLineCorrectionFactor(fuel);
 				TimeIntegral<Kilogram>(GetColumnName(fuel, ModalResultField.FCMap));
 				TimeIntegral<Kilogram>(GetColumnName(fuel, ModalResultField.FCNCVc));
 				TimeIntegral<Kilogram>(GetColumnName(fuel, ModalResultField.FCWHTCc));
