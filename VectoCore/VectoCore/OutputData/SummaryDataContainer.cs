@@ -444,7 +444,10 @@ namespace TUGraz.VectoCore.OutputData
 				
 				row[FcCol(Fields.K_ENGLINE, suffix)] = correction.ConvertToGramPerKiloWattHour();
 
-				row[FcCol(Fields.K_VEHLINE, suffix)] = modData.VehicleLineSlope(fuel).ConvertToGramPerKiloWattHour();
+				var vehLine = modData.VehicleLineSlope(fuel);
+				if (vehLine != null) {
+					row[FcCol(Fields.K_VEHLINE, suffix)] = vehLine.ConvertToGramPerKiloWattHour();
+				}
 
 				var fcEssCorr = fcModSum + correction * workESS;
 				row[FcCol(Fields.FCESS_H_CORR, suffix)] = duration != null ? (fcEssCorr / duration).ConvertToGrammPerHour() : null;

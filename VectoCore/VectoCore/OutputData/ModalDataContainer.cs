@@ -193,18 +193,22 @@ namespace TUGraz.VectoCore.OutputData
 				return _vehLine[fuel.FuelType];
 			}
 
-			double k, d, r;
-			VectoMath.LeastSquaresFitting(
-				GetValues(
-						row => row.Field<bool>(ModalResultField.ICEOn.GetName())
-							? new Point(
-								row.Field<SI>(ModalResultField.P_wheel_in.GetName()).Value(),
-								row.Field<SI>(GetColumnName(fuel, ModalResultField.FCFinal)).Value())
-							: null)
-					.Where(x => x != null && x.X > 0 && x.Y > 0), out k, out d, out r);
+			if (Data.AsEnumerable().Any(r => r.Field<SI>(ModalResultField.P_wheel_in.GetName()) != null)) {
+				double k, d, r;
+				VectoMath.LeastSquaresFitting(
+					GetValues(
+							row => row.Field<bool>(ModalResultField.ICEOn.GetName())
+								? new Point(
+									row.Field<SI>(ModalResultField.P_wheel_in.GetName()).Value(),
+									row.Field<SI>(GetColumnName(fuel, ModalResultField.FCFinal)).Value())
+								: null)
+						.Where(x => x != null && x.X > 0 && x.Y > 0), out k, out d, out r);
 
-			_vehLine[fuel.FuelType] = k.SI<KilogramPerWattSecond>();
-			return _vehLine[fuel.FuelType];
+				_vehLine[fuel.FuelType] = k.SI<KilogramPerWattSecond>();
+				return _vehLine[fuel.FuelType];
+			}
+
+			return null;
 		}
 
 		public void CalculateAggregateValues()
