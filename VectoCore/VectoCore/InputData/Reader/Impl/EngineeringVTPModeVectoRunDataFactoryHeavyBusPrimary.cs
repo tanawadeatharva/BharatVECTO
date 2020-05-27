@@ -12,7 +12,11 @@ using TUGraz.VectoCore.OutputData;
 namespace TUGraz.VectoCore.InputData.Reader.Impl {
 	internal class EngineeringVTPModeVectoRunDataFactoryHeavyBusPrimary : DeclarationVTPModeVectoRunDataFactoryHeavyBusPrimary
 	{
-		public EngineeringVTPModeVectoRunDataFactoryHeavyBusPrimary(IVTPEngineeringInputDataProvider ivtpProvider) : base(ivtpProvider.JobInputData, null) { }
+		public EngineeringVTPModeVectoRunDataFactoryHeavyBusPrimary(IVTPEngineeringInputDataProvider ivtpProvider) : base(
+			ivtpProvider.JobInputData, null)
+		{
+			throw new Exception("VTP Simulation in engineering mode for heavy buses not supported");
+		}
 
 		public override IEnumerable<VectoRunData> NextRun()
 		{

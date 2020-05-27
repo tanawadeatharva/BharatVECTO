@@ -185,7 +185,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl {
 		protected override AuxFanData GetFanData()
 		{
 			return new AuxFanData() {
-				FanCoefficients = DeclarationData.VTPMode.FanParameters,
+				FanCoefficients = DeclarationData.VTPMode.FanParameters.Concat(JobInputData.FanPowerCoefficents.Skip(3).Take(1)).ToArray() ,
 				FanDiameter = JobInputData.FanDiameter,
 			};
 		}
