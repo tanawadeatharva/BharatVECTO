@@ -385,6 +385,11 @@ namespace TUGraz.VectoCore.OutputData
 			return data.TimeIntegral<WattSecond>(ModalResultField.P_busAux_PS_generated_alwaysOn);
 		}
 
+		public static WattSecond EnergyBusAuxESGeneratedMech(this IModalDataContainer data)
+		{
+			return data.TimeIntegral<WattSecond>(ModalResultField.P_busAux_ES_sum_mech);
+		}
+
 		public static WattSecond EnergyBusAuxESGenerated(this IModalDataContainer data)
 		{
 			return data.TimeIntegral<WattSecond>(ModalResultField.P_busAux_ES_generated);
