@@ -139,7 +139,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 			AssertMission(
 				segment.Missions[6],
 				missionType: MissionType.Interurban,
-				cdxA: 4.6,
+				cdxA: 3.45,
 				length: 12,
 				width: 2.55,
 				height: 3.15,
@@ -152,7 +152,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 			AssertMission(
 				segment.Missions[7],
 				missionType: MissionType.Coach,
-				cdxA: 4.6,
+				cdxA: 3.45,
 				length: 12,
 				width: 2.55,
 				height: 3.15,
@@ -166,7 +166,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 			AssertMission(
 					segment.Missions[8],
 					missionType: MissionType.Interurban,
-					cdxA: 5.2,
+					cdxA: 3.9,
 					length: 10.5,
 					width: 2.55,
 					height: 3.7,
@@ -179,7 +179,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 			AssertMission(
 				segment.Missions[9],
 				missionType: MissionType.Coach,
-				cdxA: 5.2,
+				cdxA: 3.9,
 				length: 10.5,
 				width: 2.55,
 				height: 3.7,
@@ -244,7 +244,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 			AssertMission(
 				segment.Missions[6],
 				missionType: MissionType.Interurban,
-				cdxA: 4.7,
+				cdxA: 3.53,
 				length: 13.8,
 				width: 2.55,
 				height: 3.15,
@@ -257,7 +257,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 			AssertMission(
 				segment.Missions[7],
 				missionType: MissionType.Coach,
-				cdxA: 4.7,
+				cdxA: 3.53,
 				length: 13.8,
 				width: 2.55,
 				height: 3.15,
@@ -271,7 +271,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 			AssertMission(
 					segment.Missions[8],
 					missionType: MissionType.Interurban,
-					cdxA: 5.3,
+					cdxA: 3.98,
 					length: 14,
 					width: 2.55,
 					height: 3.7,
@@ -284,7 +284,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 			AssertMission(
 				segment.Missions[9],
 				missionType: MissionType.Coach,
-				cdxA: 5.3,
+				cdxA: 3.98,
 				length: 14,
 				width: 2.55,
 				height: 3.7,
@@ -349,7 +349,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 			AssertMission(
 				segment.Missions[6],
 				missionType: MissionType.Interurban,
-				cdxA: 4.8,
+				cdxA: 3.6,
 				length: 18.2,
 				width: 2.55,
 				height: 3.15,
@@ -362,7 +362,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 			AssertMission(
 				segment.Missions[7],
 				missionType: MissionType.Coach,
-				cdxA: 4.8,
+				cdxA: 3.6,
 				length: 18.2,
 				width: 2.55,
 				height: 3.15,
@@ -375,7 +375,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 			AssertMission(
 					segment.Missions[8],
 					missionType: MissionType.Interurban,
-					cdxA: 5.4,
+					cdxA: 4.05,
 					length: 18.2,
 					width: 2.55,
 					height: 3.7,
@@ -388,7 +388,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 			AssertMission(
 				segment.Missions[9],
 				missionType: MissionType.Coach,
-				cdxA: 5.4,
+				cdxA: 4.05,
 				length: 18.2,
 				width: 2.55,
 				height: 3.7,
@@ -453,7 +453,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 			AssertMission(
 				segment.Missions[6],
 				missionType: MissionType.Interurban,
-				cdxA: 4.8,
+				cdxA: 3.6,
 				length: 15,
 				width: 2.55,
 				height: 3.15,
@@ -466,7 +466,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 			AssertMission(
 				segment.Missions[7],
 				missionType: MissionType.Coach,
-				cdxA: 4.8,
+				cdxA: 3.6,
 				length: 15,
 				width: 2.55,
 				height: 3.15,
@@ -480,7 +480,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 			AssertMission(
 					segment.Missions[8],
 					missionType: MissionType.Interurban,
-					cdxA: 5.4,
+					cdxA: 4.05,
 					length: 15,
 					width: 2.55,
 					height: 3.7,
@@ -493,7 +493,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 			AssertMission(
 				segment.Missions[9],
 				missionType: MissionType.Coach,
-				cdxA: 5.4,
+				cdxA: 4.05,
 				length: 15,
 				width: 2.55,
 				height: 3.7,
@@ -558,7 +558,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 			AssertMission(
 				segment.Missions[6],
 				missionType: MissionType.Interurban,
-				cdxA: 4.9,
+				cdxA: 3.68,
 				length: 21,
 				width: 2.55,
 				height: 3.15,
@@ -571,7 +571,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 			AssertMission(
 				segment.Missions[7],
 				missionType: MissionType.Coach,
-				cdxA: 4.9,
+				cdxA: 3.68,
 				length: 21,
 				width: 2.55,
 				height: 3.15,
@@ -585,7 +585,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 			AssertMission(
 					segment.Missions[8],
 					missionType: MissionType.Interurban,
-					cdxA: 5.5,
+					cdxA: 4.13,
 					length: 21,
 					width: 2.55,
 					height: 3.7,
@@ -598,7 +598,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 			AssertMission(
 				segment.Missions[9],
 				missionType: MissionType.Coach,
-				cdxA: 5.5,
+				cdxA: 4.13,
 				length: 21,
 				width: 2.55,
 				height: 3.7,
