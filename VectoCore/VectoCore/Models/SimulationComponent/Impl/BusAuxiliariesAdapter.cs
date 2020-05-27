@@ -184,7 +184,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			// cycleStep has to be called here and not in DoCommit, write is called before Commit!
 			var oldSOC = Auxiliaries.BatterySOC;
-			Auxiliaries.CycleStep(CurrentState.dt, EngineStopStartUtilityFactor);
+			Auxiliaries.CycleStep(CurrentState.dt, DataBus.IgnitionOn ? 1.0 : EngineStopStartUtilityFactor);
 			var newSOC = Auxiliaries.BatterySOC;
 
 			//CurrentState.TotalFuelConsumption = Auxiliaries.TotalFuel;
@@ -197,15 +197,15 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			container[ModalResultField.P_busAux_ES_generated] = essUtilityFactor * Auxiliaries.ElectricPowerGenerated;
 
 			if (SmartElectricSystem) {
+				var batteryPwr = (oldSOC - newSOC) * AuxCfg.ElectricalUserInputsConfig.ElectricStorageCapacity / dt;
+
 				container[ModalResultField.BatterySOC] = Auxiliaries.BatterySOC * 100.0;
-
-
-				container[ModalResultField.P_busAux_ES_generated] = essUtilityFactor * (DataBus.VehicleStopped ? Auxiliaries.ElectricPowerConsumerSum : Auxiliaries.ElectricPowerGenerated);
-				container[ModalResultField.P_busAux_ES_sum_mech] = essUtilityFactor * Auxiliaries.ElectricPowerConsumerSum /
+				
+				container[ModalResultField.P_busAux_ES_generated] = essUtilityFactor * (DataBus.VehicleStopped && !DataBus.IgnitionOn ? Auxiliaries.ElectricPowerConsumerSum : Auxiliaries.ElectricPowerGenerated);
+				container[ModalResultField.P_busAux_ES_sum_mech] = essUtilityFactor * (Auxiliaries.ElectricPowerConsumerSum - batteryPwr) /
 																	AuxCfg.ElectricalUserInputsConfig.AlternatorGearEfficiency /
 																	AuxCfg.ElectricalUserInputsConfig.AlternatorMap.GetEfficiency(0.RPMtoRad(), 0.SI<Ampere>());
 				
-				var batteryPwr = (oldSOC - newSOC) * AuxCfg.ElectricalUserInputsConfig.ElectricStorageCapacity / dt;
 				if (batteryPwr.IsSmaller(Auxiliaries.ElectricPowerConsumerSum * EngineStopStartUtilityFactor)) {
 					// add to P_aux_ES
 				}
