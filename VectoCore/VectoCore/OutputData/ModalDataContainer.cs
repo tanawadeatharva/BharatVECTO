@@ -201,7 +201,7 @@ namespace TUGraz.VectoCore.OutputData
 								row.Field<SI>(ModalResultField.P_wheel_in.GetName()).Value(),
 								row.Field<SI>(GetColumnName(fuel, ModalResultField.FCFinal)).Value())
 							: null)
-					.Where(x => x != null && x.Y > 0), out k, out d, out r);
+					.Where(x => x != null && x.X > 0 && x.Y > 0), out k, out d, out r);
 
 			_vehLine[fuel.FuelType] = k.SI<KilogramPerWattSecond>();
 			return _vehLine[fuel.FuelType];
@@ -217,6 +217,7 @@ namespace TUGraz.VectoCore.OutputData
 
 			foreach (var fuel in FuelColumns.Keys) {
 				EngineLineCorrectionFactor(fuel);
+				VehicleLineSlope(fuel);
 				TimeIntegral<Kilogram>(GetColumnName(fuel, ModalResultField.FCMap));
 				TimeIntegral<Kilogram>(GetColumnName(fuel, ModalResultField.FCNCVc));
 				TimeIntegral<Kilogram>(GetColumnName(fuel, ModalResultField.FCWHTCc));
