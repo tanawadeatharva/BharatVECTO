@@ -913,11 +913,12 @@ namespace VECTO3GUI.ViewModel.Impl
 							var rootNode = xdoc.Root?.Name.LocalName ?? "";
 							if (XMLNames.VectoInputEngineering.Equals(rootNode, StringComparison.InvariantCultureIgnoreCase)) {
 								input = xmlReader.CreateEngineering(fullFileName);
+								mode = ExecutionMode.Engineering;
 							} else if (XMLNames.VectoInputDeclaration.Equals(rootNode, StringComparison.InvariantCultureIgnoreCase)) {
 								using (var reader = XmlReader.Create(fullFileName)) {
 									input = xmlReader.CreateDeclaration(reader);
 								}
-								mode = ExecutionMode.Engineering;
+								mode = ExecutionMode.Declaration;
 							}
 							break;
 					}
