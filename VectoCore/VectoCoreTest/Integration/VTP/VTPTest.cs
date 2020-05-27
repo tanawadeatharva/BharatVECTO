@@ -88,7 +88,7 @@ namespace TUGraz.VectoCore.Tests.Integration.VTP
 		[TestCase(@"TestData\Integration\VTPMode\GenericVehicle\class_5_generic vehicle_DECL.vecto", 45.6, 0.8972, TestName = "RunVTPHeavyLorry_Declaration"),
 		TestCase(@"TestData\Integration\VTPMode\MediumLorry\VTP_MediumLorry.vecto", 400.0, 1.06, TestName = "RunVTPMediumLorry_Declaration"),
 		TestCase(@"TestData\Integration\VTPMode\DualFuelVehicle\VTP_DualFuel.vecto", 43.5, 1.018, TestName = "RunVTPDualFuel_Declaration"),
-		TestCase(@"TestData\Integration\VTPMode\HeavyBus\VTP_PrimaryBus.vecto", 14.2, 1.1323, TestName = "RunVTPHeavyPrimaryBus")	
+		TestCase(@"TestData\Integration\VTPMode\HeavyBus\VTP_PrimaryBus.vecto", 14.2, 1.1413, TestName = "RunVTPHeavyPrimaryBus")	
 			]
 		public void RunVTP_Declaration(string jobFile, double expectedDeclaredCO2, double expectedCVTP)
 		{
