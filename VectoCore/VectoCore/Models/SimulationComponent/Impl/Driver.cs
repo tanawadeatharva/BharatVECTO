@@ -541,6 +541,22 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				}
 			}
 
+			// try again without changing the engine speed to 'spare' inertia torque
+			engineSpeed = DataBus.EngineSpeed;
+			tcOp = EstimateTCOpPoint(operatingPoint, dryRunResp, engineSpeed, tc);
+
+			if (tcOp.Item1.Item2.IsBetween(tcOp.Item2, tcOp.Item3)) {
+				if (!dryRunResp.TorqueConverterOperatingPoint.OutTorque.IsEqual(tcOp.Item1.Item1.OutTorque)) {
+					tc.SetOperatingPoint = tcOp.Item1.Item1;
+				}
+				try {
+					var acceleration = SearchAccelerationFixedTC(absTime, gradient, operatingPoint, tcOp.Item1, dryRunResp);
+					return ComputeTimeInterval(acceleration, operatingPoint.SimulationDistance);
+				} catch (Exception e) {
+					Log.Error(e, "Failed to find acceleration for tc operating point! absTime: {0}", absTime);
+					throw;
+				}
+			}
 
 			// Attempt 2: search for an input speed (ICE speed) so that a valid operating point for 
 			// the torque converter and the engine are found. Estimate max torque, drag torque. calculate delta
@@ -560,7 +576,17 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					});
 			} catch (Exception e) {
 				Log.Error(e, "Failed to find engine speed for valid torque converter operating point! absTime: {0}", absTime);
-				throw;
+				
+				// if no engine speed can be found that results in an operating point on the TC curve, set the TC in-torque to the maximum
+				// available from the engine. reverse-calc TC-in-torque from average engine torque 
+				var tcInPwrPrev = (DataBus.EngineSpeed + tcOp.Item1.Item1.InAngularVelocity) * tcOp.Item1.Item2 -
+								(tcOp.Item1.Item1.InAngularVelocity * tcOp.Item1.Item1.InTorque);
+				tcOp.Item1.Item1.InTorque = (2 * tcOp.Item3 * tcOp.Item1.Item1.InAngularVelocity - tcInPwrPrev) /
+											tcOp.Item1.Item1.InAngularVelocity;
+				tc.SetOperatingPoint = tcOp.Item1.Item1;
+				var acceleration = SearchAccelerationFixedTC(absTime, gradient, operatingPoint, tcOp.Item1, dryRunResp);
+
+				return ComputeTimeInterval(acceleration, operatingPoint.SimulationDistance);
 			}
 
 			// a suitable engine sped was found - search acceleration to match TC out-torque
