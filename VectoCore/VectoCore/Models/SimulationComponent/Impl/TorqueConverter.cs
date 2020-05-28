@@ -363,7 +363,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					operatingPoint.InAngularVelocity);
 			}
 
-			var maxInputSpeed = VectoMath.Min(ModelData.TorqueConverterSpeedLimit, DataBus.EngineN95hSpeed);
+			var maxInputSpeed = VectoMath.Min(VectoMath.Min(ModelData.TorqueConverterSpeedLimit, DataBus.EngineN95hSpeed), DataBus.GetGearData(DataBus.Gear).MaxSpeed);
 			if (operatingPoint.InAngularVelocity.IsGreater(maxInputSpeed)) {
 				operatingPoint = ModelData.FindOperatingPoint(maxInputSpeed, outAngularVelocity);
 			}
