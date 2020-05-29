@@ -36,7 +36,7 @@
 					<Displacement>7700</Displacement>
 					<IdlingSpeed>700</IdlingSpeed>
 					<RatedSpeed>2200</RatedSpeed>
-					<RatedPower>220000</RatedPower>
+					<RatedPower>200000</RatedPower>
 					<MaxEngineTorque>1100</MaxEngineTorque>
 					<WHTCUrban>1.0600</WHTCUrban>
 					<WHTCRural>1.0300</WHTCRural>

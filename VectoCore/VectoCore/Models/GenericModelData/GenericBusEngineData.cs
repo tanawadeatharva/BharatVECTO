@@ -188,9 +188,9 @@ namespace TUGraz.VectoCore.Models.Declaration
 
 			foreach (DataRow row in normalized.Rows) {
 				var engineSpeed = row.ParseDouble("n_norm") * (n95h - nIdle) + nIdle;
-				var pwr = row.ParseDouble("P_norm") * ratedPower;
+				var pwr = row.ParseDouble("P_norm") * ratedPower / 1000;
 				var torque = pwr / engineSpeed;
-				var fc = (row.ParseDouble("FC_norm").SI(Unit.SI.Gramm.Per.Hour.Kilo.Watt) * pwr).Cast<KilogramPerSecond>();
+				var fc = (row.ParseDouble("FC_norm") * ratedPower.Value() / 1000).SI(Unit.SI.Gramm.Per.Hour) .Cast<KilogramPerSecond>();
 
 				var newRow = result.NewRow();
 				newRow[FuelConsumptionMapReader.Fields.EngineSpeed] = Math.Round(engineSpeed.AsRPM,2, MidpointRounding.AwayFromZero);
