@@ -50,8 +50,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 		#endregion
 
 
-		protected override TransmissionLossMap CreateGearLossMap(
-			ITransmissionInputData gear, uint i, bool useEfficiencyFallback, VehicleCategory vehicleCategory)
+		protected override TransmissionLossMap CreateGearLossMap(ITransmissionInputData gear, uint i, bool useEfficiencyFallback, VehicleCategory vehicleCategory, GearboxType gearboxType)
 		{
 			return TransmissionLossMapReader.Create(gear.LossMap, gear.Ratio, string.Format("Gear {0}", i + 1), true);
 		}

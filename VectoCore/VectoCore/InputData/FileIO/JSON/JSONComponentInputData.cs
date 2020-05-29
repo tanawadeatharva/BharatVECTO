@@ -426,7 +426,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 		public int NumberOfPassengersUpperDeck { get { return 0; } }
 		public int NumberOfPassengersLowerDeck { get { return 0; } }
 		public VehicleCode VehicleCode { get { return VehicleCode.NOT_APPLICABLE; } }
-		public FloorType FloorType { get { return VehicleData.FloorType; } }
+		public bool LowEntry { get { return VehicleData.LowEntry; } }
 
 		IVehicleComponentsDeclaration IVehicleDeclarationInputData.Components
 		{

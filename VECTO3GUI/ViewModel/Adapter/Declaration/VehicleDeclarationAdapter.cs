@@ -111,7 +111,7 @@ namespace VECTO3GUI.ViewModel.Adapter.Declaration
 		public int NumberOfPassengersUpperDeck { get; }
 		public int NumberOfPassengersLowerDeck { get; }
 		public VehicleCode VehicleCode { get; }
-		public FloorType FloorType { get; }
+		public bool LowEntry { get; }
 		public bool Articulated { get; }
 		public Meter Height { get; }
 		public Meter Length { get; }

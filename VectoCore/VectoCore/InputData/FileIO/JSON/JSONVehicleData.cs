@@ -607,7 +607,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			get { return VehicleCode.NOT_APPLICABLE; }
 		}
 
-		public virtual FloorType FloorType { get { return FloorType.Unknown; } }
+		public virtual bool LowEntry { get { return false; } }
 
 		IVehicleComponentsDeclaration IVehicleDeclarationInputData.Components
 		{

@@ -105,7 +105,7 @@ namespace TUGraz.VectoCore.Configuration
 			{
 				public static readonly Volt PowernetVoltage = 28.3.SI<Volt>();
 
-				public const double AlternatorGearEfficiency = 0.92;
+				public const double AlternatorGearEfficiency = 1;
 
 				public const double StoredEnergyEfficiency = 0.935;
 			}
@@ -367,7 +367,7 @@ namespace TUGraz.VectoCore.Configuration
 
 			public const double FactorAngleDrive = 0.75;
 
-			public const double RetarderGenericFactor = 0.5;
+			public const double RetarderGenericFactor = 1;
 		}
 	}
 }

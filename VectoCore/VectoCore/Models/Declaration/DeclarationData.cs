@@ -256,6 +256,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 					case BusHVACSystemConfiguration.Configuration7: 
 					case BusHVACSystemConfiguration.Configuration8: 
 					case BusHVACSystemConfiguration.Configuration9:
+					case BusHVACSystemConfiguration.Configuration10:
 						return heating
 							? Constants.BusAuxiliaries.SteadyStateModel.HighVentilationHeating
 							: Constants.BusAuxiliaries.SteadyStateModel.HighVentilation;
@@ -299,7 +300,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 				return CalculateInternalLength(vehicleLength, vehicleCode, numPassLowFloor);
 			}
 
-			public static Meter CalculateInternalHeight(VehicleCode vehicleCode, Meter vehicleHeight)
+			public static Meter CalculateInternalHeight(VehicleCode vehicleCode, RegistrationClass registrationClass, Meter bodyHeight)
 			{
 				if (vehicleCode.IsDoubleDeckerBus()) {
 					return Constants.BusParameters.InternalHeightDoubleDecker;
@@ -307,11 +308,15 @@ namespace TUGraz.VectoCore.Models.Declaration
 
 				switch (vehicleCode.GetFloorType()) {
 					case FloorType.LowFloor:
-						return vehicleHeight;
+						return bodyHeight;
 					case FloorType.HighFloor:
-						return vehicleHeight - Constants.BusParameters.HeightLuggageCompartment;
+						if ((registrationClass == RegistrationClass.II_III && bodyHeight > 3.1.SI<Meter>()) || 
+							registrationClass == RegistrationClass.III || registrationClass == RegistrationClass.B) {
+							return Constants.BusParameters.InternalHeightDoubleDecker;
+						}
+						return bodyHeight - Constants.BusParameters.HeightLuggageCompartment;
 				}
-
+				
 				throw new VectoException("Internal height for vehicle floor type '{0}' {1} not defined", vehicleCode.GetFloorType().ToString(), vehicleCode.IsDoubleDeckerBus() ? "double decker" : "single decker");
 			}
 
@@ -352,6 +357,19 @@ namespace TUGraz.VectoCore.Models.Declaration
 				}
 				return (coolingPwrDriver * comprTypeDriver.COP(floorType) + coolingPwrPass * comprTypePass.COP(floorType)) /
 						(coolingPwrDriver + coolingPwrPass);
+			}
+
+			public static Meter CorrectionLengthDrivetrainVolume(VehicleCode vehicleCode, bool lowEntry, int numAxles, bool articulated)
+			{
+				if ((vehicleCode == VehicleCode.CE || vehicleCode == VehicleCode.CG) && !lowEntry) {
+					switch (numAxles) {
+						case 2: return 1.0.SI<Meter>();
+						case 3: return articulated ? 1.0.SI<Meter>() : 1.25.SI<Meter>();
+						case 4: return 1.25.SI<Meter>();
+						default: throw new VectoException("invalid number of axles {0}", numAxles);
+					}
+				}
+				return 0.SI<Meter>();
 			}
 		}
 

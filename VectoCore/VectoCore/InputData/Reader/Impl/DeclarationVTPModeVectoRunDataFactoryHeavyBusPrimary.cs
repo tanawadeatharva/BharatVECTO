@@ -44,7 +44,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl {
 		{
 			var vehicle = JobInputData.Vehicle;
 			Segment = DeclarationData.PrimaryBusSegments.Lookup(
-				vehicle.VehicleCategory, vehicle.AxleConfiguration, vehicle.Articulated, vehicle.FloorType);
+				vehicle.VehicleCategory, vehicle.AxleConfiguration, vehicle.Articulated);
 
 			Driverdata = Dao.CreateDriverData();
 			Driverdata.AccelerationCurve = AccelerationCurveReader.ReadFromStream(Segment.AccelerationFile);
@@ -185,7 +185,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl {
 		protected override AuxFanData GetFanData()
 		{
 			return new AuxFanData() {
-				FanCoefficients = DeclarationData.VTPMode.FanParameters,
+				FanCoefficients = DeclarationData.VTPMode.FanParameters.Concat(JobInputData.FanPowerCoefficents.Skip(3).Take(1)).ToArray() ,
 				FanDiameter = JobInputData.FanDiameter,
 			};
 		}

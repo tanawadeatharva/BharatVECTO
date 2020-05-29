@@ -5,13 +5,18 @@ using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.InputData.Reader.ComponentData;
+using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.OutputData;
 
 namespace TUGraz.VectoCore.InputData.Reader.Impl {
 	internal class EngineeringVTPModeVectoRunDataFactoryHeavyBusPrimary : DeclarationVTPModeVectoRunDataFactoryHeavyBusPrimary
 	{
-		public EngineeringVTPModeVectoRunDataFactoryHeavyBusPrimary(IVTPEngineeringInputDataProvider ivtpProvider) : base(ivtpProvider.JobInputData, null) { }
+		public EngineeringVTPModeVectoRunDataFactoryHeavyBusPrimary(IVTPEngineeringInputDataProvider ivtpProvider) : base(
+			ivtpProvider.JobInputData, null)
+		{
+			throw new Exception("VTP Simulation in engineering mode for heavy buses not supported");
+		}
 
 		public override IEnumerable<VectoRunData> NextRun()
 		{
@@ -28,6 +33,9 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl {
 					runData.FanDataVTP = GetFanData();
 					runData.ExecutionMode = ExecutionMode.Engineering;
 					runData.SimulationType = SimulationType.VerificationTest;
+					runData.Mission = new Mission() {
+						MissionType = MissionType.VerificationTest
+					};
 					return runData;
 				});
 		}

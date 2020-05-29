@@ -78,10 +78,10 @@ namespace TUGraz.VectoCore.Tests.Integration.CompletedBus
 		{
 			var category = VehicleCategory.HeavyBusPrimaryVehicle;
 			var axleConfiguration = AxleConfiguration.AxleConfig_4x2;
-			var floorType = FloorType.HighFloor;
+			//var floorType = FloorType.HighFloor;
 			var articulated = false;
 
-			primarySegment = DeclarationData.PrimaryBusSegments.Lookup(category, axleConfiguration, articulated, floorType);
+			primarySegment = DeclarationData.PrimaryBusSegments.Lookup(category, axleConfiguration, articulated);
 		}
 
 		private void CompletedBusSegment()
@@ -174,11 +174,11 @@ namespace TUGraz.VectoCore.Tests.Integration.CompletedBus
 				// generic loading values shall match expected values of primary vehicle for IU and CO cycle
 				// see TestPrimaryBusGroup41Test
 				case 0:
-					Assert.AreEqual(1075.437, genericLoading.Value(), 1e-4);
+					Assert.AreEqual(879.903, genericLoading.Value(), 1e-4);
 					Assert.AreEqual(1058.5088, specificLoading.Value(), 1e-4);
 					break;
 				case 1:
-					Assert.AreEqual(4301.748, genericLoading.Value(), 1e-4);
+					Assert.AreEqual(3519.612, genericLoading.Value(), 1e-4);
 					Assert.AreEqual(2130, specificLoading.Value(), 1e-0);
 					break;
 				case 2:
@@ -244,7 +244,7 @@ namespace TUGraz.VectoCore.Tests.Integration.CompletedBus
 			var genericAirdragData = relatedRun.VectoRunDataGenericBody.AirdragData;
 			var specificAirdragData = relatedRun.VectoRunDataSpezificBody.AirdragData;
 
-			var genericDragArea = 4.6.SI<SquareMeter>();
+			var genericDragArea = 3.45.SI<SquareMeter>();
 			var specificDragArea = 6.34.SI<SquareMeter>();
 
 			var genericVehicleHeight = 3.45.SI<Meter>();
@@ -269,13 +269,13 @@ namespace TUGraz.VectoCore.Tests.Integration.CompletedBus
 			Assert.AreEqual(CrossWindCorrectionMode.DeclarationModeCorrection, genericAirdragData.CrossWindCorrectionMode);
 			Assert.AreEqual(genericAirdragData.CrossWindCorrectionMode, specificAirdragData.CrossWindCorrectionMode);
 
-			Assert.AreEqual(genericValueExpected, currentGenericValue);
-			Assert.AreEqual(expectedSpecificValue, currentSpecificValue);
-
 			Assert.AreEqual(genericDragArea, genericAirdragData.DeclaredAirdragArea);
 			Assert.AreEqual(genericDragArea, genericAirdragData.CrossWindCorrectionCurve.AirDragArea);
 			Assert.AreEqual(specificDragArea, specificAirdragData.DeclaredAirdragArea);
 			Assert.AreEqual(specificDragArea, specificAirdragData.CrossWindCorrectionCurve.AirDragArea);
+
+			Assert.AreEqual(genericValueExpected, currentGenericValue);
+			Assert.AreEqual(expectedSpecificValue, currentSpecificValue);
 		}
 
 
@@ -552,11 +552,11 @@ namespace TUGraz.VectoCore.Tests.Integration.CompletedBus
 			switch (idx) {
 				case 0:
 				case 1:		
-					Assert.AreEqual(50.1950, genericElectric.AverageCurrentDemandInclBaseLoad(false, false).Value(), 1e-3);
-					Assert.AreEqual(17.795, genericElectric.AverageCurrentDemandWithoutBaseLoad(false, false).Value(), 1e-3);
+					Assert.AreEqual(49.395, genericElectric.AverageCurrentDemandInclBaseLoad(false, false).Value(), 1e-3);
+					Assert.AreEqual(16.995, genericElectric.AverageCurrentDemandWithoutBaseLoad(false, false).Value(), 1e-3);
 
-					Assert.AreEqual(54.981, specificElectric.AverageCurrentDemandInclBaseLoad(false, false).Value(), 1e-3);
-					Assert.AreEqual(22.581, specificElectric.AverageCurrentDemandWithoutBaseLoad(false, false).Value(), 1e-3);
+					Assert.AreEqual(54.181, specificElectric.AverageCurrentDemandInclBaseLoad(false, false).Value(), 1e-3);
+					Assert.AreEqual(21.781, specificElectric.AverageCurrentDemandWithoutBaseLoad(false, false).Value(), 1e-3);
 					break;
 				case 2:
 				case 3:
@@ -668,8 +668,8 @@ namespace TUGraz.VectoCore.Tests.Integration.CompletedBus
 			Assert.AreEqual(23.00, genericBusParam.BusWindowSurface.Value(), 1e-3);
 			Assert.AreEqual(22.745, specificBusParam.BusWindowSurface.Value(), 1e-3);
 
-			Assert.AreEqual(152.865, genericBusParam.BusSurfaceArea.Value(), 1e-3);
-			Assert.AreEqual(146.6130, specificBusParam.BusSurfaceArea.Value(), 1e-3);
+			Assert.AreEqual(140.865, genericBusParam.BusSurfaceArea.Value(), 1e-3);
+			Assert.AreEqual(134.783, specificBusParam.BusSurfaceArea.Value(), 1e-3);
 
 			Assert.AreEqual(81.09, genericBusParam.BusVolume.Value(), 1e-3);
 			Assert.AreEqual(75.4162, specificBusParam.BusVolume.Value(), 1e-3);
@@ -681,11 +681,11 @@ namespace TUGraz.VectoCore.Tests.Integration.CompletedBus
 				// generic loading values shall match expected values of primary vehicle for IU and CO cycle
 				// see TestPrimaryBusGroup41Test
 				case 0:
-					Assert.AreEqual(16.147, genericLoading, 1e-4);
+					Assert.AreEqual(13.393, genericLoading, 1e-4);
 					Assert.AreEqual(15.908575, specificLoading, 1e-4);
 					break;
 				case 1:
-					Assert.AreEqual(61.588, genericLoading, 1e-4);
+					Assert.AreEqual(50.572, genericLoading, 1e-4);
 					Assert.AreEqual(31, specificLoading, 1e-0);
 					break;
 				case 2:
@@ -818,12 +818,12 @@ namespace TUGraz.VectoCore.Tests.Integration.CompletedBus
 				case 0:
 				case 1://Interurban
 					Assert.AreEqual(31381.5, genericValue, 1e-3);
-					Assert.AreEqual(31395.6875, specificValue, 1e-3);
+					Assert.AreEqual(28718.1875, specificValue, 1e-3);
 					break;
 				case 2:
 				case 3://Coach
 					Assert.AreEqual(47099.5, genericValue, 1e-3);
-					Assert.AreEqual(45478.9375, specificValue, 1e-3);
+					Assert.AreEqual(41271.4375, specificValue, 1e-3);
 					break;
 			}
 		}
@@ -835,12 +835,12 @@ namespace TUGraz.VectoCore.Tests.Integration.CompletedBus
 				case 0:
 				case 1://Interurban
 					Assert.AreEqual(3.5, genericValue);
-					Assert.AreEqual(3.55885197, specificValue, 1e-6);
+					Assert.AreEqual(3.55781260, specificValue, 1e-6);
 					break;
 				case 2:
 				case 3://Coach
 					Assert.AreEqual(3.5, genericValue);
-					Assert.AreEqual(3.5638433, specificValue, 1e-6);
+					Assert.AreEqual(3.5632156, specificValue, 1e-6);
 					break;
 			}
 		}

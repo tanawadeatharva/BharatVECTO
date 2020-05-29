@@ -20,7 +20,7 @@ namespace TUGraz.VectoCore.OutputData.XML {
 				new XElement(tns + XMLNames.Vehicle_VIN, modelData.VehicleData.VIN),
 				new XElement(
 					tns + XMLNames.Vehicle_GrossVehicleMass,
-					XMLHelper.ValueAsUnit(modelData.VehicleData.GrossVehicleMass, XMLNames.Unit_t, 1)),
+					XMLHelper.ValueAsUnit(modelData.VehicleData.InputData.GrossVehicleMassRating, XMLNames.Unit_t, 1)),
 				new XElement(
 					tns + XMLNames.Vehicle_CurbMassChassis, XMLHelper.ValueAsUnit(modelData.VehicleData.CurbMass, XMLNames.Unit_kg)),
 				new XElement(tns + XMLNames.Vehicle_ZeroEmissionVehicle, modelData.VehicleData.ZeroEmissionVehicle),

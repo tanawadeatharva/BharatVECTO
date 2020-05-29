@@ -37,7 +37,7 @@ namespace TUGraz.VectoCore.Models.Declaration {
 				var powerDemandTubing = (Constants.BusParameters.Auxiliaries.SteeringPump.TubingLoss * 2 *
 										(vehicleLength - Constants.BusParameters.Auxiliaries.SteeringPump.LengthBonus) *
 										Constants.BusParameters.Auxiliaries.SteeringPump.VolumeFlow).Cast<Watt>();
-				var tubingFactor = techLookup.TubingFactor;
+				var tubingFactor = i == 0 ? techLookup.TubingFactor : 0;
 				var axleFactor = techLookup.AxleFactor;
 
 				powerDemand += baseDemand * axleFactor + powerDemandTubing * tubingFactor;

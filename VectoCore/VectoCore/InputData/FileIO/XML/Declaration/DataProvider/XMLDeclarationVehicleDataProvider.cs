@@ -293,9 +293,9 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 			get { return VehicleCode.NOT_APPLICABLE; }
 		}
 
-		public virtual FloorType FloorType
+		public virtual bool LowEntry
 		{
-			get { return FloorType.Unknown; }
+			get { return false; }
 		}
 
 		public virtual bool Articulated
@@ -868,9 +868,9 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		#endregion
 
 		
-		public override FloorType FloorType
+		public override bool LowEntry
 		{
-			get { return GetBool(XMLNames.Bus_LowEntry) ? FloorType.LowFloor : FloorType.HighFloor; }
+			get { return GetBool(XMLNames.Bus_LowEntry); }
 		}
 
 		public override Meter EntranceHeight
@@ -1047,7 +1047,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		public Watt MaxNetPower2 { get; }
 		public RegistrationClass RegisteredClass { get; }
 		public VehicleCode VehicleCode { get; }
-		public FloorType FloorType { get; }
+		public bool LowEntry { get; }
 		public bool Articulated { get { return GetBool(XMLNames.Vehicle_Articulated); } }
 		public Meter Height { get; }
 		public Meter Length { get; }

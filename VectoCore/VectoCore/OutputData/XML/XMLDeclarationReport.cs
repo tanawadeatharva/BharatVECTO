@@ -185,7 +185,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 
 					var correction = 0.SI<KilogramPerWattSecond>();
 					if (!(workWHR + workESS + workBusAuxCorr).IsEqual(0)) {
-						correction = data.VehicleLineCorrectionFactor(entry);
+						correction = data.EngineLineCorrectionFactor(entry);
 					}
 					var fcAuxHtr = 0.SI<Kilogram>();
 					if (firstFuel) {
