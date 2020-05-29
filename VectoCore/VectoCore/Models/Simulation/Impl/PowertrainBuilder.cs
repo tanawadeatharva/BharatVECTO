@@ -213,7 +213,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 		private void AddVTPTruckAuxiliaries(VectoRunData data, VehicleContainer container, VTPCombustionEngine engine)
 		{
 			var aux = CreateSpeedDependentAuxiliaries(data, container);
-			var engineFan = new EngineFanAuxiliary(data.FanDataVTP.FanCoefficients, data.FanDataVTP.FanDiameter);
+			var engineFan = new EngineFanAuxiliary(data.FanDataVTP.FanCoefficients.Take(3).ToArray(), data.FanDataVTP.FanDiameter);
 			aux.AddCycle(Constants.Auxiliaries.IDs.Fan, cycleEntry => engineFan.PowerDemand(cycleEntry.FanSpeed));
 			container.ModalData.AddAuxiliary(Constants.Auxiliaries.IDs.Fan);
 

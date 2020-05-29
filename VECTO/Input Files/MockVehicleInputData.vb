@@ -43,7 +43,7 @@ Public Class MockVehicleInputData
     Public ReadOnly Property NumberOfPassengersUpperDeck As Integer Implements IVehicleDeclarationInputData.NumberOfPassengersUpperDeck
     Public ReadOnly Property NumberOfPassengersLowerDeck As Integer Implements IVehicleDeclarationInputData.NumberOfPassengersLowerDeck
     Public ReadOnly Property VehicleCode As VehicleCode Implements IVehicleDeclarationInputData.VehicleCode
-    Public ReadOnly Property FloorType As FloorType Implements IVehicleDeclarationInputData.FloorType
+    Public ReadOnly Property LowEntry As Boolean Implements IVehicleDeclarationInputData.LowEntry
     Public ReadOnly Property Articulated As Boolean Implements IVehicleDeclarationInputData.Articulated
     Public ReadOnly Property Height As Meter Implements IVehicleDeclarationInputData.Height
     Public ReadOnly Property Length As Meter Implements IVehicleDeclarationInputData.Length

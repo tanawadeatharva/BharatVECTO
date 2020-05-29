@@ -282,7 +282,7 @@ namespace VECTO3GUI.ViewModel.Impl
 				NgTankSystem = vehicle.TankSystem;
 				NumberOfPassengersLowerDeck = vehicle.NumberOfPassengersLowerDeck;
 				NumberOfPassengersUpperDeck = vehicle.NumberOfPassengersUpperDeck;
-				LowEntry = vehicle.FloorType == FloorType.LowFloor;
+				LowEntry = vehicle.LowEntry;
 				HeightIntegratedBody = vehicle.Height;
 				VehicleLength = vehicle.Length;
 				VehicleWidth = vehicle.Width;

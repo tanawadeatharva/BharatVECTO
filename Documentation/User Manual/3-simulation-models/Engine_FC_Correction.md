@@ -4,7 +4,7 @@ The final fuel consumption is corrected in a post-processing to reflect systems 
 
 ###Engine Stop/Start Correction
 
-As the energy demand of auxiliaries is modeled as an average power demand over the whole simulated cycle, the energy demand of certain auxiliaries during engine-off periods needs to be compensated during engine-on periods. This is done using the [Vehicle-Line approach](##vehicle-line-approach). The energy demand of the auxiliaries that shall be active also during engine-off periods as well as the energy demand for starting the engine is accumulated (see [Engine Stop/Start](#advanced-driver-assistant-systems-engine-stopstart), [Eco-Roll with Engine Stop/Start](#advanced-driver-assistant-systems-eco-roll), and [PCC with Eco-Roll and Engine Stop/Start](#advanced-driver-assistant-systems-predictive-cruise-control)) during the simulation. The final fuel consumption is corrected for this "missing" energy
+As the energy demand of auxiliaries is modeled as an average power demand over the whole simulated cycle, the energy demand of certain auxiliaries during engine-off periods needs to be compensated during engine-on periods. This is done using the [Engine-Line approach](##engine-line-approach). The energy demand of the auxiliaries that shall be active also during engine-off periods as well as the energy demand for starting the engine is accumulated (see [Engine Stop/Start](#advanced-driver-assistant-systems-engine-stopstart), [Eco-Roll with Engine Stop/Start](#advanced-driver-assistant-systems-eco-roll), and [PCC with Eco-Roll and Engine Stop/Start](#advanced-driver-assistant-systems-predictive-cruise-control)) during the simulation. The final fuel consumption is corrected for this "missing" energy
 
 ###Bus Auxiliaries Correction
 
@@ -37,9 +37,9 @@ $\overline{P}_\textrm{ice,waste heat} = E_\textrm{ice, waste heat} / t_\textrm{c
 
 $E_{auxHeater} = P_\textrm{HVACSSM,auxHtr}(\overline{P}_\textrm{ice,waste heat}) * t_\textrm{cycle}$
 
-###Vehicle-Line Approach
+###Engine-Line Approach
 
-The total fuel consumption is corrected in a post-processing step according to the *vehline* approach. Therefore, for every engine operating point where the engine is switched on and has a positive fuel consumption the fuel consumption is plotted over the engine power. The slope (k) of the linear regression of the fuel consumption is used to compute the additional fuel that is needed for the energy demand during engine-off periods and engine starts.
+The total fuel consumption is corrected in a post-processing step according to the *engine-line* approach. Therefore, for every engine operating point where the engine is switched on and has a positive fuel consumption the fuel consumption is plotted over the engine power. The slope (k) of the linear regression of the fuel consumption is used to compute the additional fuel that is needed for the energy demand during engine-off periods and engine starts.
 
 ![](pics/FC_Correction.PNG)
 

@@ -117,8 +117,9 @@ namespace TUGraz.VectoCore.OutputData
 
 		Func<Second, Joule, Joule> AuxHeaterDemandCalc { get; set; }
 
-		KilogramPerWattSecond VehicleLineCorrectionFactor(IFuelProperties fuel);
+		KilogramPerWattSecond EngineLineCorrectionFactor(IFuelProperties fuel);
 		void CalculateAggregateValues();
+		KilogramPerWattSecond VehicleLineSlope(IFuelProperties fuel);
 	}
 
 	public static class ModalDataContainerExtensions
@@ -332,7 +333,13 @@ namespace TUGraz.VectoCore.OutputData
 			return data.WorkWheelsPos() / data.Duration;
 		}
 
+		public static Watt PowerWheel(this IModalDataContainer data)
+		{
+			return data.TimeIntegral<WattSecond>(ModalResultField.P_wheel_in) / data.Duration;
+		}
+
 		
+
 		public static KilogramPerSecond FuelConsumptionPerSecond(this IModalDataContainer data, ModalResultField mrf, IFuelProperties fuelData)
 		{
 			return data.TimeIntegral<Kilogram>(data.GetColumnName(fuelData, mrf)) / data.Duration;
@@ -378,6 +385,11 @@ namespace TUGraz.VectoCore.OutputData
 			return data.TimeIntegral<WattSecond>(ModalResultField.P_busAux_PS_generated_alwaysOn);
 		}
 
+		public static WattSecond EnergyBusAuxESGeneratedMech(this IModalDataContainer data)
+		{
+			return data.TimeIntegral<WattSecond>(ModalResultField.P_busAux_ES_sum_mech);
+		}
+
 		public static WattSecond EnergyBusAuxESGenerated(this IModalDataContainer data)
 		{
 			return data.TimeIntegral<WattSecond>(ModalResultField.P_busAux_ES_generated);
@@ -403,13 +415,30 @@ namespace TUGraz.VectoCore.OutputData
 		
 		public static Watt TotalPowerEnginePositiveAverage(this IModalDataContainer data)
 		{
-			var simulationIntervals = data.GetValues<Second>(ModalResultField.simulationInterval);
-			var values = data.GetValues<Watt>(ModalResultField.P_ice_fcmap)
-				.Zip(simulationIntervals, (value, dt) => new { Dt = dt, Value = value * dt })
+			//var simulationIntervals = data.GetValues<Second>(ModalResultField.simulationInterval);
+			var values = data.GetValues(x => new {
+					Value = x.Field<Watt>(ModalResultField.P_ice_fcmap.GetName()).DefaultIfNull(0) * x.Field<Second>(ModalResultField.simulationInterval.GetName())
+				})
+				//.GetValues<Watt>(ModalResultField.P_ice_fcmap)
+				//.Zip(simulationIntervals, (value, dt) => new { Dt = dt, Value = value * dt })
 				.Where(v => v.Value > 0).ToList();
 			if (values.Any()) {
 				return values.Sum(v => v.Value) / data.Duration;
 			}
+			return 0.SI<Watt>();
+		}
+
+		public static Watt TotalPowerEngineAverage(this IModalDataContainer data)
+		{
+			var values = data.GetValues(
+				x => new {
+					Value = x.Field<Watt>(ModalResultField.P_ice_fcmap.GetName()).DefaultIfNull(0) *
+							x.Field<Second>(ModalResultField.simulationInterval.GetName())
+				}).ToList();
+			if (values.Any()) {
+				return values.Sum(v => v.Value) / data.Duration;
+			}
+
 			return 0.SI<Watt>();
 		}
 

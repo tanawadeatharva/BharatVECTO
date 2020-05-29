@@ -13,72 +13,72 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 	{
 		[
 			TestCase(
-				VehicleCategory.HeavyBusPrimaryVehicle, AxleConfiguration.AxleConfig_4x2, FloorType.LowFloor, false, false,
+				VehicleCategory.HeavyBusPrimaryVehicle, AxleConfiguration.AxleConfig_4x2, true, false, false,
 				VehicleClass.ClassP31_32),
 			TestCase(
-				VehicleCategory.HeavyBusPrimaryVehicle, AxleConfiguration.AxleConfig_4x2, FloorType.HighFloor, true, false,
+				VehicleCategory.HeavyBusPrimaryVehicle, AxleConfiguration.AxleConfig_4x2, false, true, false,
 				VehicleClass.ClassP31_32),
 			TestCase(
-				VehicleCategory.HeavyBusPrimaryVehicle, AxleConfiguration.AxleConfig_4x2, FloorType.LowFloor, false, true,
+				VehicleCategory.HeavyBusPrimaryVehicle, AxleConfiguration.AxleConfig_4x2, true, false, true,
 				VehicleClass.ClassP31_32),
 			TestCase(
-				VehicleCategory.HeavyBusPrimaryVehicle, AxleConfiguration.AxleConfig_4x2, FloorType.HighFloor, true, true,
+				VehicleCategory.HeavyBusPrimaryVehicle, AxleConfiguration.AxleConfig_4x2, false, true, true,
 				VehicleClass.ClassP31_32),
 			TestCase(
-				VehicleCategory.HeavyBusPrimaryVehicle, AxleConfiguration.AxleConfig_6x2, FloorType.LowFloor, false, false,
+				VehicleCategory.HeavyBusPrimaryVehicle, AxleConfiguration.AxleConfig_6x2, true, false, false,
 				VehicleClass.ClassP33_34),
 			TestCase(
-				VehicleCategory.HeavyBusPrimaryVehicle, AxleConfiguration.AxleConfig_6x2, FloorType.HighFloor, true, false,
+				VehicleCategory.HeavyBusPrimaryVehicle, AxleConfiguration.AxleConfig_6x2, false, true, false,
 				VehicleClass.ClassP33_34),
 			TestCase(
-				VehicleCategory.HeavyBusPrimaryVehicle, AxleConfiguration.AxleConfig_6x4, FloorType.LowFloor, false, false,
+				VehicleCategory.HeavyBusPrimaryVehicle, AxleConfiguration.AxleConfig_6x4, true, false, false,
 				VehicleClass.ClassP33_34),
 			TestCase(
-				VehicleCategory.HeavyBusPrimaryVehicle, AxleConfiguration.AxleConfig_6x4, FloorType.HighFloor, true, false,
+				VehicleCategory.HeavyBusPrimaryVehicle, AxleConfiguration.AxleConfig_6x4, false, true, false,
 				VehicleClass.ClassP33_34),
 			TestCase(
-				VehicleCategory.HeavyBusPrimaryVehicle, AxleConfiguration.AxleConfig_6x2, FloorType.LowFloor, false, true,
+				VehicleCategory.HeavyBusPrimaryVehicle, AxleConfiguration.AxleConfig_6x2, true, false, true,
 				VehicleClass.ClassP35_36),
 			TestCase(
-				VehicleCategory.HeavyBusPrimaryVehicle, AxleConfiguration.AxleConfig_6x2, FloorType.HighFloor, true, true,
+				VehicleCategory.HeavyBusPrimaryVehicle, AxleConfiguration.AxleConfig_6x2, false, true, true,
 				VehicleClass.ClassP35_36),
 			TestCase(
-				VehicleCategory.HeavyBusPrimaryVehicle, AxleConfiguration.AxleConfig_6x4, FloorType.LowFloor, false, true,
+				VehicleCategory.HeavyBusPrimaryVehicle, AxleConfiguration.AxleConfig_6x4, true, false, true,
 				VehicleClass.ClassP35_36),
 			TestCase(
-				VehicleCategory.HeavyBusPrimaryVehicle, AxleConfiguration.AxleConfig_6x4, FloorType.HighFloor, true, true,
+				VehicleCategory.HeavyBusPrimaryVehicle, AxleConfiguration.AxleConfig_6x4, false, true, true,
 				VehicleClass.ClassP35_36),
 			TestCase(
-				VehicleCategory.HeavyBusPrimaryVehicle, AxleConfiguration.AxleConfig_8x2, FloorType.LowFloor, false, false,
+				VehicleCategory.HeavyBusPrimaryVehicle, AxleConfiguration.AxleConfig_8x2, true, false, false,
 				VehicleClass.ClassP37_38),
 			TestCase(
-				VehicleCategory.HeavyBusPrimaryVehicle, AxleConfiguration.AxleConfig_8x2, FloorType.HighFloor, true, false,
+				VehicleCategory.HeavyBusPrimaryVehicle, AxleConfiguration.AxleConfig_8x2, false, true, false,
 				VehicleClass.ClassP37_38),
 			TestCase(
-				VehicleCategory.HeavyBusPrimaryVehicle, AxleConfiguration.AxleConfig_8x4, FloorType.LowFloor, false, false,
+				VehicleCategory.HeavyBusPrimaryVehicle, AxleConfiguration.AxleConfig_8x4, true, false, false,
 				VehicleClass.ClassP37_38),
 			TestCase(
-				VehicleCategory.HeavyBusPrimaryVehicle, AxleConfiguration.AxleConfig_8x4, FloorType.HighFloor, true, false,
+				VehicleCategory.HeavyBusPrimaryVehicle, AxleConfiguration.AxleConfig_8x4, false, true, false,
 				VehicleClass.ClassP37_38),
 			TestCase(
-				VehicleCategory.HeavyBusPrimaryVehicle, AxleConfiguration.AxleConfig_8x2, FloorType.LowFloor, false, true,
+				VehicleCategory.HeavyBusPrimaryVehicle, AxleConfiguration.AxleConfig_8x2, true, false, true,
 				VehicleClass.ClassP39_40),
 			TestCase(
-				VehicleCategory.HeavyBusPrimaryVehicle, AxleConfiguration.AxleConfig_8x2, FloorType.HighFloor, true, true,
+				VehicleCategory.HeavyBusPrimaryVehicle, AxleConfiguration.AxleConfig_8x2, false, true, true,
 				VehicleClass.ClassP39_40),
 			TestCase(
-				VehicleCategory.HeavyBusPrimaryVehicle, AxleConfiguration.AxleConfig_8x4, FloorType.LowFloor, false, true,
+				VehicleCategory.HeavyBusPrimaryVehicle, AxleConfiguration.AxleConfig_8x4, true, false, true,
 				VehicleClass.ClassP39_40),
 			TestCase(
-				VehicleCategory.HeavyBusPrimaryVehicle, AxleConfiguration.AxleConfig_8x4, FloorType.HighFloor, true, true,
+				VehicleCategory.HeavyBusPrimaryVehicle, AxleConfiguration.AxleConfig_8x4, false, true, true,
 				VehicleClass.ClassP39_40),
 		]
 		public void SegmentLookupTest(
-			VehicleCategory category, AxleConfiguration axleConfiguration, FloorType floorType, bool doubleDecker,
+			VehicleCategory category, AxleConfiguration axleConfiguration, bool floorType, bool doubleDecker,
 			bool articulated, VehicleClass expectedClass)
 		{
 			var segment = DeclarationData.PrimaryBusSegments.Lookup(
-				category, axleConfiguration, articulated, floorType);
+				category, axleConfiguration, articulated);
 
 			Assert.AreEqual(10, segment.Missions.Length);
 			Assert.AreEqual(expectedClass, segment.VehicleClass);
@@ -92,11 +92,10 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 				VehicleCategory = VehicleCategory.HeavyBusPrimaryVehicle,
 				AxleConfiguration = AxleConfiguration.AxleConfig_4x2,
 				Articulated = false,
-				FloorType = FloorType.LowFloor,
 				DoubleDecker = false
 			};
 			var segment = DeclarationData.PrimaryBusSegments.Lookup(
-				vehicleData.VehicleCategory, vehicleData.AxleConfiguration, vehicleData.Articulated, vehicleData.FloorType);
+				vehicleData.VehicleCategory, vehicleData.AxleConfiguration, vehicleData.Articulated);
 
 			Assert.AreEqual(10, segment.Missions.Length);
 			Assert.AreEqual(VehicleClass.ClassP31_32, segment.VehicleClass);
@@ -140,20 +139,20 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 			AssertMission(
 				segment.Missions[6],
 				missionType: MissionType.Interurban,
-				cdxA: 4.6,
+				cdxA: 3.45,
 				length: 12,
 				width: 2.55,
 				height: 3.15,
 				curbMass: 13150,
-				refLoad: 4301.748,
-				lowLoad: 1075.437,
+				refLoad: 3519.612,
+				lowLoad: 879.903,
 				axleWeightDistribution: new[] { 0.375, 0.625 },
 				expVehicleEquipment: GetExpectedVehicleEquipment(2, 2, 0.5, 0.5)
 			);
 			AssertMission(
 				segment.Missions[7],
 				missionType: MissionType.Coach,
-				cdxA: 4.6,
+				cdxA: 3.45,
 				length: 12,
 				width: 2.55,
 				height: 3.15,
@@ -167,20 +166,20 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 			AssertMission(
 					segment.Missions[8],
 					missionType: MissionType.Interurban,
-					cdxA: 5.2,
+					cdxA: 3.9,
 					length: 10.5,
 					width: 2.55,
 					height: 3.7,
 					curbMass: 13400,
-					refLoad: 5051.295,
-					lowLoad: 1262.82375,
+					refLoad: 4209.4125,
+					lowLoad: 1052.353125,
 					axleWeightDistribution: new[] { 0.375, 0.625 },
 					expVehicleEquipment: GetExpectedVehicleEquipment(1, 2, 1, 1)
 				);
 			AssertMission(
 				segment.Missions[9],
 				missionType: MissionType.Coach,
-				cdxA: 5.2,
+				cdxA: 3.9,
 				length: 10.5,
 				width: 2.55,
 				height: 3.7,
@@ -200,11 +199,10 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 				VehicleCategory = VehicleCategory.HeavyBusPrimaryVehicle,
 				AxleConfiguration = AxleConfiguration.AxleConfig_6x2,
 				Articulated = false,
-				FloorType = FloorType.LowFloor,
 				DoubleDecker = false
 			};
 			var segment = DeclarationData.PrimaryBusSegments.Lookup(
-				vehicleData.VehicleCategory, vehicleData.AxleConfiguration, vehicleData.Articulated, vehicleData.FloorType);
+				vehicleData.VehicleCategory, vehicleData.AxleConfiguration, vehicleData.Articulated);
 
 			Assert.AreEqual(10, segment.Missions.Length);
 			Assert.AreEqual(VehicleClass.ClassP33_34, segment.VehicleClass);
@@ -246,20 +244,20 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 			AssertMission(
 				segment.Missions[6],
 				missionType: MissionType.Interurban,
-				cdxA: 4.7,
+				cdxA: 3.53,
 				length: 13.8,
 				width: 2.55,
 				height: 3.15,
 				curbMass: 15213,
-				refLoad: 5018.706,
-				lowLoad: 1254.6765,
+				refLoad: 4106.214,
+				lowLoad: 1026.5535,
 				axleWeightDistribution: new[] { 0.273, 0.454, 0.273 },
 				expVehicleEquipment: GetExpectedVehicleEquipment(2, 2, 0.5, 0.5)
 			);
 			AssertMission(
 				segment.Missions[7],
 				missionType: MissionType.Coach,
-				cdxA: 4.7,
+				cdxA: 3.53,
 				length: 13.8,
 				width: 2.55,
 				height: 3.15,
@@ -273,20 +271,20 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 			AssertMission(
 					segment.Missions[8],
 					missionType: MissionType.Interurban,
-					cdxA: 5.3,
+					cdxA: 3.98,
 					length: 14,
 					width: 2.55,
 					height: 3.7,
 					curbMass: 17850,
-					refLoad: 6952.32,
-					lowLoad: 1738.08,
+					refLoad: 5793.6,
+					lowLoad: 1448.4,
 					axleWeightDistribution: new[] { 0.273, 0.454, 0.273 },
 					expVehicleEquipment: GetExpectedVehicleEquipment(1, 4, 1, 1.5)
 				);
 			AssertMission(
 				segment.Missions[9],
 				missionType: MissionType.Coach,
-				cdxA: 5.3,
+				cdxA: 3.98,
 				length: 14,
 				width: 2.55,
 				height: 3.7,
@@ -306,11 +304,10 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 				VehicleCategory = VehicleCategory.HeavyBusPrimaryVehicle,
 				AxleConfiguration = AxleConfiguration.AxleConfig_6x2,
 				Articulated = true,
-				FloorType = FloorType.LowFloor,
 				DoubleDecker = false
 			};
 			var segment = DeclarationData.PrimaryBusSegments.Lookup(
-				vehicleData.VehicleCategory, vehicleData.AxleConfiguration, vehicleData.Articulated, vehicleData.FloorType);
+				vehicleData.VehicleCategory, vehicleData.AxleConfiguration, vehicleData.Articulated);
 
 			Assert.AreEqual(10, segment.Missions.Length);
 			Assert.AreEqual(VehicleClass.ClassP35_36, segment.VehicleClass);
@@ -352,20 +349,20 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 			AssertMission(
 				segment.Missions[6],
 				missionType: MissionType.Interurban,
-				cdxA: 4.8,
+				cdxA: 3.6,
 				length: 18.2,
 				width: 2.55,
 				height: 3.15,
 				curbMass: 19267,
-				refLoad: 6771.27,
-				lowLoad: 1692.8175,
+				refLoad: 5540.130,
+				lowLoad: 1385.0325,
 				axleWeightDistribution: new[] { 0.243, 0.352, 0.405 },
 				expVehicleEquipment: GetExpectedVehicleEquipment(null, null, null, null)
 			);
 			AssertMission(
 				segment.Missions[7],
 				missionType: MissionType.Coach,
-				cdxA: 4.8,
+				cdxA: 3.6,
 				length: 18.2,
 				width: 2.55,
 				height: 3.15,
@@ -378,20 +375,20 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 			AssertMission(
 					segment.Missions[8],
 					missionType: MissionType.Interurban,
-					cdxA: 5.4,
+					cdxA: 4.05,
 					length: 18.2,
 					width: 2.55,
 					height: 3.7,
 					curbMass: 21375,
-					refLoad: 9233.55,
-					lowLoad: 2308.3875,
+					refLoad: 7694.625,
+					lowLoad: 1923.65625,
 					axleWeightDistribution: new[] { 0.243, 0.352, 0.405 },
 					expVehicleEquipment: GetExpectedVehicleEquipment(null, null, null, null)
 			);
 			AssertMission(
 				segment.Missions[9],
 				missionType: MissionType.Coach,
-				cdxA: 5.4,
+				cdxA: 4.05,
 				length: 18.2,
 				width: 2.55,
 				height: 3.7,
@@ -411,11 +408,10 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 				VehicleCategory = VehicleCategory.HeavyBusPrimaryVehicle,
 				AxleConfiguration = AxleConfiguration.AxleConfig_8x2,
 				Articulated = false,
-				FloorType = FloorType.LowFloor,
 				DoubleDecker = false
 			};
 			var segment = DeclarationData.PrimaryBusSegments.Lookup(
-				vehicleData.VehicleCategory, vehicleData.AxleConfiguration, vehicleData.Articulated, vehicleData.FloorType);
+				vehicleData.VehicleCategory, vehicleData.AxleConfiguration, vehicleData.Articulated);
 
 			Assert.AreEqual(10, segment.Missions.Length);
 			Assert.AreEqual(VehicleClass.ClassP37_38, segment.VehicleClass);
@@ -457,20 +453,20 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 			AssertMission(
 				segment.Missions[6],
 				missionType: MissionType.Interurban,
-				cdxA: 4.8,
+				cdxA: 3.6,
 				length: 15,
 				width: 2.55,
 				height: 3.15,
 				curbMass: 17500,
-				refLoad: 5496.6780,
-				lowLoad: 1374.16950,
+				refLoad: 4497.282,
+				lowLoad: 1124.3205,
 				axleWeightDistribution: new[] { 0.214, 0.214, 0.358, 0.214 },
 				expVehicleEquipment: GetExpectedVehicleEquipment(null, null, null, null)
 			);
 			AssertMission(
 				segment.Missions[7],
 				missionType: MissionType.Coach,
-				cdxA: 4.8,
+				cdxA: 3.6,
 				length: 15,
 				width: 2.55,
 				height: 3.15,
@@ -484,20 +480,20 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 			AssertMission(
 					segment.Missions[8],
 					missionType: MissionType.Interurban,
-					cdxA: 5.4,
+					cdxA: 4.05,
 					length: 15,
 					width: 2.55,
 					height: 3.7,
 					curbMass: 21200,
-					refLoad: 7495.47,
-					lowLoad: 1873.86750,
+					refLoad: 6246.225,
+					lowLoad: 1561.55625,
 					axleWeightDistribution: new[] { 0.214, 0.214, 0.358, 0.214 },
 					expVehicleEquipment: GetExpectedVehicleEquipment(null, null, null, null)
 				);
 			AssertMission(
 				segment.Missions[9],
 				missionType: MissionType.Coach,
-				cdxA: 5.4,
+				cdxA: 4.05,
 				length: 15,
 				width: 2.55,
 				height: 3.7,
@@ -517,11 +513,10 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 				VehicleCategory = VehicleCategory.HeavyBusPrimaryVehicle,
 				AxleConfiguration = AxleConfiguration.AxleConfig_8x2,
 				Articulated = true,
-				FloorType = FloorType.LowFloor,
 				DoubleDecker = false
 			};
 			var segment = DeclarationData.PrimaryBusSegments.Lookup(
-				vehicleData.VehicleCategory, vehicleData.AxleConfiguration, vehicleData.Articulated, vehicleData.FloorType);
+				vehicleData.VehicleCategory, vehicleData.AxleConfiguration, vehicleData.Articulated);
 
 			Assert.AreEqual(10, segment.Missions.Length);
 			Assert.AreEqual(VehicleClass.ClassP39_40, segment.VehicleClass);
@@ -563,20 +558,20 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 			AssertMission(
 				segment.Missions[6],
 				missionType: MissionType.Interurban,
-				cdxA: 4.9,
+				cdxA: 3.68,
 				length: 21,
 				width: 2.55,
 				height: 3.15,
 				curbMass: 20950,
-				refLoad: 7886.538,
-				lowLoad: 1971.6345,
+				refLoad: 6452.622,
+				lowLoad: 1613.1555,
 				axleWeightDistribution: new[] { 0.200, 0.282, 0.324, 0.194 },
 				expVehicleEquipment: GetExpectedVehicleEquipment(null, null, null, null)
 			);
 			AssertMission(
 				segment.Missions[7],
 				missionType: MissionType.Coach,
-				cdxA: 4.9,
+				cdxA: 3.68,
 				length: 21,
 				width: 2.55,
 				height: 3.15,
@@ -590,20 +585,20 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 			AssertMission(
 					segment.Missions[8],
 					missionType: MissionType.Interurban,
-					cdxA: 5.5,
+					cdxA: 4.13,
 					length: 21,
 					width: 2.55,
 					height: 3.7,
 					curbMass: 24600,
-					refLoad: 10754.37,
-					lowLoad: 2688.5925,
+					refLoad: 8961.975,
+					lowLoad: 2240.49375,
 					axleWeightDistribution: new[] { 0.200, 0.282, 0.324, 0.194 },
 					expVehicleEquipment: GetExpectedVehicleEquipment(null, null, null, null)
 				);
 			AssertMission(
 				segment.Missions[9],
 				missionType: MissionType.Coach,
-				cdxA: 5.5,
+				cdxA: 4.13,
 				length: 21,
 				width: 2.55,
 				height: 3.7,
@@ -659,6 +654,52 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 				retVal["Kitchen Standard"] = kitchenStandard.Value;
 			};
 			return retVal;
+		}
+
+		[TestCase(VehicleCode.CE, RegistrationClass.I, 2.134, 2.134),
+		TestCase(VehicleCode.CE, RegistrationClass.II, 2.134, 2.134),
+		TestCase(VehicleCode.CE, RegistrationClass.I_II, 2.134, 2.134),
+		TestCase(VehicleCode.CE, RegistrationClass.A, 2.134, 2.134),
+
+		TestCase(VehicleCode.CF, RegistrationClass.I, 2.134, 1.8),
+		TestCase(VehicleCode.CF, RegistrationClass.II, 2.134, 1.8),
+		TestCase(VehicleCode.CF, RegistrationClass.I_II, 2.134, 1.8),
+		TestCase(VehicleCode.CF, RegistrationClass.A, 2.134, 1.8),
+
+		TestCase(VehicleCode.CI, RegistrationClass.I, 2.134, 2.134),
+		TestCase(VehicleCode.CI, RegistrationClass.II, 2.134, 2.134),
+		TestCase(VehicleCode.CI, RegistrationClass.I_II, 2.134, 2.134),
+		TestCase(VehicleCode.CI, RegistrationClass.A, 2.134, 2.134),
+		TestCase(VehicleCode.CI, RegistrationClass.II_III, 2.134, 2.134),
+		TestCase(VehicleCode.CI, RegistrationClass.III, 2.134, 2.134),
+		TestCase(VehicleCode.CI, RegistrationClass.B, 2.134, 2.134),
+
+		TestCase(VehicleCode.CJ, RegistrationClass.I, 2.134, 1.8),
+		TestCase(VehicleCode.CJ, RegistrationClass.II, 2.134, 1.8),
+		TestCase(VehicleCode.CJ, RegistrationClass.I_II, 2.134, 1.8),
+		TestCase(VehicleCode.CJ, RegistrationClass.A, 2.134, 1.8),
+		TestCase(VehicleCode.CJ, RegistrationClass.II_III, 2.134, 1.8),
+		TestCase(VehicleCode.CJ, RegistrationClass.III, 2.134, 1.8),
+		TestCase(VehicleCode.CJ, RegistrationClass.B, 2.134, 1.8),
+
+		TestCase(VehicleCode.CA, RegistrationClass.II, 2.134, 2.134 - 0.5),
+		TestCase(VehicleCode.CA, RegistrationClass.II_III, 2.134, 2.134 - 0.5),
+		TestCase(VehicleCode.CA, RegistrationClass.II_III, 3.134, 1.8),
+		TestCase(VehicleCode.CA, RegistrationClass.III, 2.134, 1.8),
+		TestCase(VehicleCode.CA, RegistrationClass.B, 2.134, 1.8),
+
+		TestCase(VehicleCode.CB, RegistrationClass.II, 2.134, 1.8),
+		TestCase(VehicleCode.CB, RegistrationClass.II_III, 2.134, 1.8),
+		TestCase(VehicleCode.CB, RegistrationClass.III, 2.134, 1.8),
+		TestCase(VehicleCode.CB, RegistrationClass.B, 2.134, 1.8),
+		]
+		public void TestInternalHeightCalculation(
+			VehicleCode vehicleCode, RegistrationClass regClass, double bodyHeight, double expectedInternalHeight)
+		{
+			var internalHeight =
+				DeclarationData.BusAuxiliaries.CalculateInternalHeight(vehicleCode, regClass, bodyHeight.SI<Meter>());
+
+			Assert.AreEqual(expectedInternalHeight, internalHeight.Value(), 1e-6);
 		}
 	}
 }

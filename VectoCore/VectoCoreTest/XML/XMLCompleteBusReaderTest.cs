@@ -59,7 +59,7 @@ namespace TUGraz.VectoCore.Tests.XML
 			Assert.IsNull(vehicle.TankSystem);
 			Assert.AreEqual(50, vehicle.NumberOfPassengersLowerDeck);
 			Assert.AreEqual(0, vehicle.NumberOfPassengersUpperDeck);
-			Assert.AreEqual(FloorType.LowFloor, vehicle.FloorType);
+			Assert.IsTrue(vehicle.LowEntry);
 			Assert.AreEqual(2.700, vehicle.Height.Value());
 			Assert.AreEqual(11.830, vehicle.Length.Value());
 			Assert.AreEqual(2.550, vehicle.Width.Value());

@@ -236,7 +236,7 @@ namespace TUGraz.VectoCore.Tests.Utils
 
 		public Func<Second, Joule, Joule> AuxHeaterDemandCalc { get; set; }
 
-		public KilogramPerWattSecond VehicleLineCorrectionFactor(IFuelProperties fuel)
+		public KilogramPerWattSecond EngineLineCorrectionFactor(IFuelProperties fuel)
 		{
 			return 0.SI<KilogramPerWattSecond>();
 		}
@@ -244,6 +244,11 @@ namespace TUGraz.VectoCore.Tests.Utils
 		public void CalculateAggregateValues()
 		{
 			
+		}
+
+		public KilogramPerWattSecond VehicleLineSlope(IFuelProperties fuel)
+		{
+			return 0.SI<KilogramPerWattSecond>();
 		}
 
 		public string RunName { get; set; }

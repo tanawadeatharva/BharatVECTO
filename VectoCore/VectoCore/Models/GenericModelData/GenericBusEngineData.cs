@@ -78,9 +78,10 @@ namespace TUGraz.VectoCore.Models.Declaration
 			}
 
 			engine.FullLoadCurves = fullLoadCurves;
-			
 
-			var fuel = GetCombustionEngineFuelData(primaryVehicle.Components.EngineInputData.EngineModes[modeIdx], fullLoadCurves[0], mission);
+			var engineMode = primaryVehicle.Components.EngineInputData.EngineModes[modeIdx];
+			var fuel = GetCombustionEngineFuelData(engineMode.Fuels,
+				VectoMath.Max(engineMode.IdleSpeed, primaryVehicle.EngineIdleSpeed), fullLoadCurves[0], mission);
 			
 			
 
@@ -91,10 +92,10 @@ namespace TUGraz.VectoCore.Models.Declaration
 		}
 
 
-		private bool UseDieselFuel(IEngineModeDeclarationInputData engineMode)
+		private bool UseDieselFuel(IList<IEngineFuelDelcarationInputData> fuels)
 		{
-			var fuelType = engineMode.Fuels.First().FuelType;
-			var isDualFuel = engineMode.Fuels.Count > 1;
+			var fuelType = fuels.First().FuelType;
+			var isDualFuel = fuels.Count > 1;
 
 			if (isDualFuel)
 				return true;
@@ -109,32 +110,28 @@ namespace TUGraz.VectoCore.Models.Declaration
 			}
 		}
 
-		private string GetEngineRessourceId(IEngineModeDeclarationInputData engineMode)
+		private string GetEngineRessourceId(IList<IEngineFuelDelcarationInputData> fuels)
 		{
-			return UseDieselFuel(engineMode) ? GenericEngineCM_Normed_CI : GenericEngineCM_Normed_PI;
+			return UseDieselFuel(fuels) ? GenericEngineCM_Normed_CI : GenericEngineCM_Normed_PI;
 		}
 
-		private IFuelProperties GetFuelData(IEngineModeDeclarationInputData engineMode)
+		private IFuelProperties GetFuelData(IList<IEngineFuelDelcarationInputData> fuels)
 		{
-			return UseDieselFuel(engineMode)
+			return UseDieselFuel(fuels)
 				? FuelData.Diesel
 				: FuelData.Instance().Lookup(FuelType.NGPI, TankSystem.Compressed);
 		}
 
-		private double[] GetEngineCorrectionFactors(IEngineModeDeclarationInputData engineMode)
+		private double[] GetEngineCorrectionFactors(IList<IEngineFuelDelcarationInputData> fuels)
 		{
-			return UseDieselFuel(engineMode) ? DieselCIFactors : PIFactors;
+			return UseDieselFuel(fuels) ? DieselCIFactors : PIFactors;
 		}
 
-		private CombustionEngineFuelData GetCombustionEngineFuelData(IEngineModeDeclarationInputData engineMode, EngineFullLoadCurve fullLoadCurve, Mission mission)
+		private CombustionEngineFuelData GetCombustionEngineFuelData(IList<IEngineFuelDelcarationInputData> fuels, PerSecond idleSpeed, EngineFullLoadCurve fullLoadCurve, Mission mission)
 		{
-			var ressourceId = GetEngineRessourceId(engineMode);
+			var ressourceId = GetEngineRessourceId(fuels);
 
-			var nIdle = engineMode.IdleSpeed.AsRPM;
-			var ratedSpeed = fullLoadCurve.RatedSpeed.AsRPM;
-			var maxTorque = fullLoadCurve.MaxTorque.Value();
-			
-			var denormalizedData = DenormalizeData(ressourceId, nIdle, ratedSpeed, maxTorque);
+			var denormalizedData = DenormalizeData(ressourceId, idleSpeed, fullLoadCurve.N95hSpeed, fullLoadCurve.MaxPower);
 			
 			var engineSpeed = denormalizedData.AsEnumerable().Select(r => 
 				r.Field<string>(FuelConsumptionMapReader.Fields.EngineSpeed).ToDouble()).ToArray();
@@ -158,7 +155,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 			;
 			var fcMap = FuelConsumptionMapReader.Create(denormalizedData.AsEnumerable().OrderBy(r => r.Field<string>(FuelConsumptionMapReader.Fields.EngineSpeed).ToDouble())
 																		.ThenBy(r => r.Field<string>(FuelConsumptionMapReader.Fields.Torque).ToDouble()).CopyToDataTable());
-			var engineCF = GetEngineCorrectionFactors(engineMode);
+			var engineCF = GetEngineCorrectionFactors(fuels);
 
 			var fuel = new CombustionEngineFuelData
 			{
@@ -168,7 +165,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 				ColdHotCorrectionFactor = engineCF[3],
 				CorrectionFactorRegPer = engineCF[4],
 				ConsumptionMap = fcMap,
-				FuelData = GetFuelData(engineMode)
+				FuelData = GetFuelData(fuels)
 			};
 			fuel.FuelConsumptionCorrectionFactor = DeclarationData.WHTCCorrection.Lookup(
 														mission.MissionType.GetNonEMSMissionType(), fuel.WHTCRural, fuel.WHTCUrban,
@@ -180,7 +177,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 		
 
 
-		private DataTable DenormalizeData(string ressourceId, double nIdle, double ratedSpeed, double maxTorque)
+		private DataTable DenormalizeData(string ressourceId, PerSecond nIdle, PerSecond n95h, Watt ratedPower)
 		{
 			var normalized = VectoCSVFile.ReadStream(RessourceHelper.ReadStream(ressourceId), source: ressourceId);
 
@@ -190,37 +187,19 @@ namespace TUGraz.VectoCore.Models.Declaration
 			result.Columns.Add(FuelConsumptionMapReader.Fields.FuelConsumption);
 
 			foreach (DataRow row in normalized.Rows) {
-				var engineSpeed = DenormalizeEngineSpeed((string)row[FuelConsumptionMapReader.Fields.EngineSpeed],
-					nIdle, ratedSpeed);
-				var torque = DenormalizeTorque((string)row[FuelConsumptionMapReader.Fields.Torque], maxTorque);
-				var fc = DenormalizeFC((string)row[FuelConsumptionMapReader.Fields.FuelConsumption], maxTorque);
+				var engineSpeed = row.ParseDouble("n_norm") * (n95h - nIdle) + nIdle;
+				var pwr = row.ParseDouble("P_norm") * ratedPower;
+				var torque = pwr / engineSpeed;
+				var fc = (row.ParseDouble("FC_norm") * ratedPower.Value() / 1000).SI(Unit.SI.Gramm.Per.Hour) .Cast<KilogramPerSecond>();
 
 				var newRow = result.NewRow();
-				newRow[FuelConsumptionMapReader.Fields.EngineSpeed] = Math.Round(engineSpeed,2, MidpointRounding.AwayFromZero);
-				newRow[FuelConsumptionMapReader.Fields.Torque] = Math.Round(torque, 2, MidpointRounding.AwayFromZero);
-				newRow[FuelConsumptionMapReader.Fields.FuelConsumption] = Math.Round(fc, 2, MidpointRounding.AwayFromZero);
+				newRow[FuelConsumptionMapReader.Fields.EngineSpeed] = Math.Round(engineSpeed.AsRPM,2, MidpointRounding.AwayFromZero);
+				newRow[FuelConsumptionMapReader.Fields.Torque] = Math.Round(torque.Value(), 2, MidpointRounding.AwayFromZero);
+				newRow[FuelConsumptionMapReader.Fields.FuelConsumption] = Math.Round(fc.ConvertToGrammPerHour().Value, 2, MidpointRounding.AwayFromZero);
 				result.Rows.Add(newRow);
 			}
 
 			return result;
-		}
-
-		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		private double DenormalizeFC(string fc, double mRated)
-		{
-			return fc.ToDouble() * mRated;
-		}
-
-		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		private double DenormalizeTorque(string torque, double mRated)
-		{
-			return torque.ToDouble() * mRated;
-		}
-
-		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		private double DenormalizeEngineSpeed(string engineSpeed, double nIdle, double nRated)
-		{
-			return engineSpeed.ToDouble() * (nRated - nIdle) + nIdle;
 		}
 
 	}

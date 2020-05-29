@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <tns:VectoInputDeclaration schemaVersion="2.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.1" xmlns:tns="urn:tugraz:ivt:VectoAPI:DeclarationInput:v2.0" xmlns:v2.6="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:DEV:v2.6" xmlns:v2.1="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.1" xmlns:v2.0="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0" xmlns:di="http://www.w3.org/2000/09/xmldsig#" xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:DeclarationJob https://webgate.ec.europa.eu/CITnet/svn/VECTO/trunk/Share/XML/XSD//DEV/VectoDeclarationJob.xsd">
 	<v2.0:Vehicle id="VEH-PrimaryBus_nonSmart-ESS" xsi:type="PrimaryVehicleDeclarationType" xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:DEV:v2.6">
-		<Manufacturer>Generic Truck Manufacturer</Manufacturer>
+		<Manufacturer>Generic Bus Manufacturer</Manufacturer>
 		<ManufacturerAddress>Street, ZIP City</ManufacturerAddress>
 		<Model>Generic Model</Model>
 		<VIN>VEH-1234567890_nonSmart-ESS</VIN>
@@ -233,7 +233,6 @@
 						<Gear number="1">
 							<Ratio>1.361</Ratio>
 							<MaxTorque>1900</MaxTorque>
-							<MaxSpeed>2000</MaxSpeed>
 							<TorqueLossMap>
 								<Entry inputSpeed='600.00' inputTorque='0.00' torqueLoss='48.00'/>
 								<Entry inputSpeed='600.00' inputTorque='200.00' torqueLoss='56.00'/>
@@ -366,7 +365,6 @@
 						<Gear number="2">
 							<Ratio>1.000</Ratio>
 							<MaxTorque>1900</MaxTorque>
-							<MaxSpeed>2000</MaxSpeed>
 							<TorqueLossMap>
 								<Entry inputSpeed='600.00' inputTorque='0.00' torqueLoss='48.00'/>
 								<Entry inputSpeed='600.00' inputTorque='200.00' torqueLoss='50.00'/>
@@ -498,7 +496,6 @@
 						</Gear>
 						<Gear number="3">
 							<Ratio>0.735</Ratio>
-							<MaxSpeed>2000</MaxSpeed>
 							<TorqueLossMap>
 								<Entry inputSpeed='600.00' inputTorque='0.00' torqueLoss='48.00'/>
 								<Entry inputSpeed='600.00' inputTorque='200.00' torqueLoss='56.00'/>
