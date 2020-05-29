@@ -188,7 +188,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 
 			foreach (DataRow row in normalized.Rows) {
 				var engineSpeed = row.ParseDouble("n_norm") * (n95h - nIdle) + nIdle;
-				var pwr = row.ParseDouble("P_norm") * ratedPower / 1000;
+				var pwr = row.ParseDouble("P_norm") * ratedPower;
 				var torque = pwr / engineSpeed;
 				var fc = (row.ParseDouble("FC_norm") * ratedPower.Value() / 1000).SI(Unit.SI.Gramm.Per.Hour) .Cast<KilogramPerSecond>();
 
