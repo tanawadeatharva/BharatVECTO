@@ -85,7 +85,11 @@ namespace TUGraz.VectoCommon.Models
 	public class ClutchResponse : AbstractPowertrainComponentResponse { }
 
 	[DebuggerDisplay("P_out: {PowerRequest}")]
-	public class GearboxResponse : AbstractPowertrainComponentResponse { }
+	public class GearboxResponse : AbstractPowertrainComponentResponse
+	{
+		public PerSecond GearboxInputSpeed { get; set; }
+
+	}
 
 	[DebuggerDisplay("P_out: {PowerRequest}; T_card: {CardanTorque}")]
 	public class AxlegearResponse : AbstractPowertrainComponentResponse
@@ -142,7 +146,6 @@ namespace TUGraz.VectoCommon.Models
 		AxlegearResponse Axlegear { get; }
 
 		AngledriveResponse Angledrive { get; }
-		PerSecond GearboxInputSpeed { get; set; }
 		WheelsResponse Wheels { get; }
 
 		VehicleResponse Vehicle { get; }

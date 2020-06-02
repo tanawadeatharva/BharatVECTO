@@ -616,7 +616,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			var auxTq = DataBus.EngineAuxDemand(avgICDSpeed, operatingPoint.SimulationInterval) / avgICDSpeed;
 
 			return Tuple.Create(
-				tc.CalculateOperatingPoint(engSpeed, response.GearboxInputSpeed), drTq - inTq - auxTq, maxTq - inTq - auxTq);
+				tc.CalculateOperatingPoint(engSpeed, response.Gearbox.GearboxInputSpeed), drTq - inTq - auxTq, maxTq - inTq - auxTq);
 		}
 
 
@@ -642,7 +642,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 					DriverAcceleration = acc;
 					var tmpResponse = NextComponent.Request(absTime, tmp.SimulationInterval, acc, gradient, true);
-					tmpResponse.OperatingPoint = tmp;
+					tmpResponse.Driver.OperatingPoint = tmp;
 					return tmpResponse;
 				},
 				criterion: resp => {
@@ -852,7 +852,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 								operatingPoint.SimulationInterval) / avgEngineSpeed;
 			var auxTqDemand = DataBus.EngineAuxDemand(avgEngineSpeed, operatingPoint.SimulationInterval) / avgEngineSpeed;
 			//var maxTorque = DataBus.e
-			var tcOp = tc.CalculateOperatingPoint(DataBus.EngineIdleSpeed * 1.01, response.GearboxInputSpeed);
+			var tcOp = tc.CalculateOperatingPoint(DataBus.EngineIdleSpeed * 1.01, response.Gearbox.GearboxInputSpeed);
 
 			if (!tcOp.Item2.IsBetween(dragTorque - inertiaTq - auxTqDemand, maxTorque - inertiaTq - auxTqDemand)) {
 
@@ -1101,7 +1101,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 							if (nanCount > 10) {
 								return true;
 							}
-							return r != null && !actionRoll && !ds.IsEqual(r.OperatingPoint.SimulationDistance);
+							return r != null && !actionRoll && !ds.IsEqual(r.Driver.OperatingPoint.SimulationDistance);
 						});
 				return ComputeTimeInterval(retVal.Acceleration, retVal.SimulationDistance);
 			} catch (VectoSearchAbortedException) {

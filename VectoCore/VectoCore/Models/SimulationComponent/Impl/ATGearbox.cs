@@ -345,7 +345,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				if (response is ResponseGearShift) {
 					//RequestAfterGearshift = false;
 				}
-				response.GearboxInputSpeed = inAngularVelocity;
+				response.Gearbox.GearboxInputSpeed = inAngularVelocity;
 
 				return response;
 			}
@@ -356,7 +356,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				retVal = new ResponseGearShift(this);
 				//RequestAfterGearshift = false;
 			}
-			retVal.GearboxInputSpeed = inAngularVelocity;
+			retVal.Gearbox.GearboxInputSpeed = inAngularVelocity;
 
 			return retVal;
 		}
