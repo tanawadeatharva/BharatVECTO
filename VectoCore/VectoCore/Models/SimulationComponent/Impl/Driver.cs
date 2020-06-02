@@ -726,7 +726,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				return retVal;
 			}
 
-			var engaged = (DataBus as IGearboxInfo).DisengageGearbox;
+			var engaged = DataBus.GearboxInfo.DisengageGearbox;
 			try {
 				operatingPoint = SearchBrakingPower(
 					absTime, operatingPoint.SimulationDistance, gradient,
@@ -829,8 +829,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			retVal.SimulationDistance = ds;
 			retVal.Driver.OperatingPoint = operatingPoint;
 
-			if (DataBus.GearboxInfo.GearboxType.AutomaticTransmission() && engaged != (DataBus as IGearboxInfo).DisengageGearbox) {
-				(DataBus as IGearboxControl).DisengageGearbox = engaged;
+			if (DataBus.GearboxInfo.GearboxType.AutomaticTransmission() && engaged != DataBus.GearboxInfo.DisengageGearbox) {
+				DataBus.GearboxCtl.DisengageGearbox = engaged;
 			}
 			return retVal;
 		}
@@ -856,7 +856,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			if (!tcOp.Item2.IsBetween(dragTorque - inertiaTq - auxTqDemand, maxTorque - inertiaTq - auxTqDemand)) {
 
-				(DataBus as IGearboxControl).DisengageGearbox = true;
+				DataBus.GearboxCtl.DisengageGearbox = true;
 				operatingPoint = SearchBrakingPower(
 					absTime, operatingPoint.SimulationDistance, gradient,
 					operatingPoint.Acceleration, response);

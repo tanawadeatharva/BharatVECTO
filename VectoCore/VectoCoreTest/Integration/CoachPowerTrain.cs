@@ -115,7 +115,7 @@ namespace TUGraz.VectoCore.Tests.Integration
 				.AddComponent(new Gearbox(container, new AMTShiftStrategy(runData, container), runData))
 				.AddComponent(clutch)
 				.AddComponent(engine);
-
+			
 			var aux = new EngineAuxiliary(container);
 			aux.AddConstant("ZERO", 0.SI<Watt>());
 			container.ModalData.AddAuxiliary("ZERO");

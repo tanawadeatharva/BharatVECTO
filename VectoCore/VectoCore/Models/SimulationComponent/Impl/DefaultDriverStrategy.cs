@@ -290,10 +290,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					switch (ADAS.EcoRoll) {
 						case EcoRollType.None: break;
 						case EcoRollType.WithoutEngineStop:
-							(dataBus as IGearboxControl).DisengageGearbox = true;
+							dataBus.GearboxCtl.DisengageGearbox = true;
 							break;
 						case EcoRollType.WithEngineStop:
-							(dataBus as IGearboxControl).DisengageGearbox = true;
+							dataBus.GearboxCtl.DisengageGearbox = true;
 							dataBus.EngineCtl.CombustionEngineOn = false;
 							break;
 						default: throw new ArgumentOutOfRangeException();
@@ -303,7 +303,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				case PCCStates.OutsideSegment:
 				case PCCStates.WithinSegment:
 				case PCCStates.PCCinterrupt:
-					(dataBus as IGearboxControl).DisengageGearbox = false;
+					dataBus.GearboxCtl.DisengageGearbox = false;
 					dataBus.EngineCtl.CombustionEngineOn = true;
 					break;
 				default: throw new ArgumentOutOfRangeException();
@@ -466,13 +466,13 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			switch (EcoRollState.State) {
 				case EcoRollStates.EcoRollOn:
-					(dBus as IGearboxControl).DisengageGearbox = true;
+					dBus.GearboxCtl.DisengageGearbox = true;
 					if (ADAS.EcoRoll == EcoRollType.WithEngineStop) {
 						dBus.EngineCtl.CombustionEngineOn = false;
 					}
 					return;
 				case EcoRollStates.EcoRollOff:
-					(dBus as IGearboxControl).DisengageGearbox = false;
+					dBus.GearboxCtl.DisengageGearbox = false;
 					if (ADAS.EcoRoll == EcoRollType.WithEngineStop) {
 						dBus.EngineCtl.CombustionEngineOn = true;
 					}
@@ -1000,7 +1000,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					debug.Add(new { action = "Coast:(Success & Acc<0) -> Accelerate", first });
 				}
 			} else {
-				if (DataBus.GearboxInfo.GearboxType.AutomaticTransmission() && (DataBus as IGearboxInfo).DisengageGearbox) {
+				if (DataBus.GearboxInfo.GearboxType.AutomaticTransmission() && DataBus.GearboxInfo.DisengageGearbox) {
 					first = Driver.DrivingActionCoast(absTime, ds, velocityWithOverspeed, gradient);
 				} else {
 					first = Driver.DrivingActionAccelerate(absTime, ds, targetVelocity, gradient);

@@ -428,6 +428,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			//}
 
 			var vehicle = new Vehicle(container, data.VehicleData, data.AirdragData);
+			//var dummyDriver = new Driver(container, data.DriverData, new DefaultDriverStrategy(container));
 			var powertrain = vehicle
 				.AddComponent(new Wheels(container, data.VehicleData.DynamicTyreRadius, data.VehicleData.WheelsInertia))
 				.AddComponent(new Brakes(container))
@@ -592,6 +593,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 					return new Gearbox(container, strategy, runData);
 				case GearboxType.ATPowerSplit:
 				case GearboxType.ATSerial:
+					new ATClutchInfo(container);
 					return new ATGearbox(container, strategy, runData);
 				default:
 					throw new ArgumentOutOfRangeException("Unknown Gearbox Type", runData.GearboxData.Type.ToString());
@@ -640,9 +642,11 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 		private static IGearbox GetSimpleGearbox(IVehicleContainer container, VectoRunData runData)
 		{
-			return runData.GearboxData.Type.AutomaticTransmission()
-				? (IGearbox)new ATGearbox(container, null, runData)
-				: new Gearbox(container, null, runData);
+			if (runData.GearboxData.Type.AutomaticTransmission()) {
+				new ATClutchInfo(container);
+				return new ATGearbox(container, null, runData);
+			}
+			return new Gearbox(container, null, runData);
 		}
 
 

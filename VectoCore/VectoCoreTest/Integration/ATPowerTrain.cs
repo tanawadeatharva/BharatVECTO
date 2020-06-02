@@ -120,6 +120,7 @@ namespace TUGraz.VectoCore.Tests.Integration
 				.AddComponent(new DummyRetarder(container))
 				.AddComponent(new ATGearbox(container, new ATShiftStrategy(runData, container), runData))
 				.AddComponent(engine);
+			new ATClutchInfo(container);
 
 			var aux = new EngineAuxiliary(container);
 			aux.AddConstant("ZERO", 0.SI<Watt>());

@@ -66,6 +66,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 
 			var absTime = 0.SI<Second>();
 			var ds = 1.SI<Meter>();
+			container.AbsTime = absTime;
 
 			retVal = container.Cycle.Request(absTime, ds);
 			container.CommitSimulationStep(absTime, retVal.SimulationInterval);
@@ -75,7 +76,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 
 			container.Cycle.Request(absTime, ds);
 			container.CommitSimulationStep(absTime, retVal.SimulationInterval);
-			Assert.AreEqual(4u, container.GearboxInfo);
+			Assert.AreEqual(4u, container.GearboxInfo.Gear);
 			AssertHelper.AreRelativeEqual(65.6890, container.EngineInfo.EngineSpeed);
 		}
 
@@ -90,13 +91,14 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			var container = Truck40tPowerTrain.CreatePowerTrain(cycle, "Gearbox_Initialize", 7500.0.SI<Kilogram>(),
 				19300.SI<Kilogram>());
 			var retVal = container.Cycle.Initialize();
-			Assert.AreEqual(4u, container.GearboxInfo);
+			Assert.AreEqual(4u, container.GearboxInfo.Gear);
 			Assert.IsInstanceOf<ResponseSuccess>(retVal);
 
 			AssertHelper.AreRelativeEqual(560.RPMtoRad(), container.EngineInfo.EngineSpeed);
 
 			var absTime = 0.SI<Second>();
 			var ds = 1.SI<Meter>();
+			container.AbsTime = absTime;
 
 			retVal = container.Cycle.Request(absTime, ds);
 			container.CommitSimulationStep(absTime, retVal.SimulationInterval);
@@ -121,13 +123,14 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			var container = Truck40tPowerTrain.CreatePowerTrain(cycle, "Gearbox_Initialize", 7500.0.SI<Kilogram>(),
 				19300.SI<Kilogram>());
 			var retVal = container.Cycle.Initialize();
-			Assert.AreEqual(12u, container.GearboxInfo);
+			Assert.AreEqual(12u, container.GearboxInfo.Gear);
 			Assert.IsInstanceOf<ResponseSuccess>(retVal);
 
 			AssertHelper.AreRelativeEqual(1195.996.RPMtoRad(), container.EngineInfo.EngineSpeed, toleranceFactor: 1e-3);
 
 			var absTime = 0.SI<Second>();
 			var ds = 1.SI<Meter>();
+			container.AbsTime = absTime;
 
 			retVal = container.Cycle.Request(absTime, ds);
 			container.CommitSimulationStep(absTime, retVal.SimulationInterval);

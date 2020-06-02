@@ -55,22 +55,22 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 		private List<Tuple<int, VectoSimulationComponent>> _components =
 			new List<Tuple<int, VectoSimulationComponent>>();
 
-		public  IEngineInfo EngineInfo { get; protected internal set; }
-		public IEngineControl EngineCtl { get; protected set; }
-		public IGearboxInfo GearboxInfo { get; protected set; }
-		public IGearboxControl GearboxCtl { get; protected set; }
-		public IAxlegearInfo AxlegearInfo { get; protected set; }
-		public IVehicleInfo VehicleInfo { get; protected set; }
-		public IBrakes Brakes { get; protected set; }
-		public IWheelsInfo WheelsInfo { get; protected set; }
-		public IDriverInfo DriverInfo { get; protected set; }
-		public IHybridController HybridController { get; protected set; }
+		public virtual IEngineInfo EngineInfo { get; protected internal set; }
+		public virtual IEngineControl EngineCtl { get; protected set; }
+		public virtual IGearboxInfo GearboxInfo { get; protected set; }
+		public virtual IGearboxControl GearboxCtl { get; protected set; }
+		public virtual IAxlegearInfo AxlegearInfo { get; protected set; }
+		public virtual IVehicleInfo VehicleInfo { get; protected set; }
+		public virtual IBrakes Brakes { get; protected set; }
+		public virtual IWheelsInfo WheelsInfo { get; protected set; }
+		public virtual IDriverInfo DriverInfo { get; protected set; }
+		public virtual IHybridController HybridController { get; protected set; }
 
-		public IMileageCounter MileageCounter { get; protected set; }
+		public virtual IMileageCounter MileageCounter { get; protected set; }
 
-		public IClutchInfo ClutchInfo { get; protected set; }
+		public virtual IClutchInfo ClutchInfo { get; protected set; }
 
-		public IDrivingCycleInfo DrivingCycleInfo { get; protected set; }
+		public virtual IDrivingCycleInfo DrivingCycleInfo { get; protected set; }
 
 		internal ISimulationOutPort Cycle;
 
@@ -94,12 +94,12 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 		#region IVehicleContainer
 
-		public IModalDataContainer ModalData
+		public virtual IModalDataContainer ModalData
 		{
 			get { return ModData; }
 		}
 
-		public ISimulationOutPort GetCycleOutPort()
+		public virtual ISimulationOutPort GetCycleOutPort()
 		{
 			return Cycle;
 		}
@@ -111,9 +111,9 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			return ElectricMotors[pos];
 		}
 
-		public ITorqueConverterControl TorqueConverterCtl { get; private set; }
+		public virtual ITorqueConverterControl TorqueConverterCtl { get; private set; }
 
-		public void AddComponent(VectoSimulationComponent component)
+		public virtual void AddComponent(VectoSimulationComponent component)
 		{
 			var commitPriority = 0;
 
@@ -168,7 +168,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 		}
 
 
-		public void CommitSimulationStep(Second time, Second simulationInterval)
+		public virtual void CommitSimulationStep(Second time, Second simulationInterval)
 		{
 			Log.Info("VehicleContainer committing simulation. time: {0}, dist: {1}, speed: {2}", time,
 				MileageCounter.Distance, VehicleInfo?.VehicleSpeed ?? 0.KMPHtoMeterPerSecond());
@@ -186,7 +186,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			}
 		}
 
-		public void FinishSimulationRun(Exception e = null)
+		public virtual void FinishSimulationRun(Exception e = null)
 		{
 			Log.Info("VehicleContainer finishing simulation.");
 			ModData?.Finish(RunStatus, e);
@@ -197,22 +197,22 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			DrivingCycleInfo?.FinishSimulation();
 		}
 
-		public IEnumerable<ISimulationPreprocessor> GetPreprocessingRuns
+		public virtual IEnumerable<ISimulationPreprocessor> GetPreprocessingRuns
 		{
 			get { return new ReadOnlyCollection<ISimulationPreprocessor>(Preprocessors); }
 		}
 
-		public void AddPreprocessor(ISimulationPreprocessor simulationPreprocessor)
+		public virtual void AddPreprocessor(ISimulationPreprocessor simulationPreprocessor)
 		{
 			Preprocessors.Add(simulationPreprocessor);
 		}
 
-		public void StartSimulationRun()
+		public virtual void StartSimulationRun()
 		{
 			ModData?.Reset();
 		}
 
-		public VectoRun.Status RunStatus { get; set; }
+		public virtual VectoRun.Status RunStatus { get; set; }
 
 		#endregion
 
@@ -221,15 +221,15 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			return new ReadOnlyCollection<VectoSimulationComponent>(_components.Select(x => x.Item2).ToList());
 		}
 
-		public bool HasElectricMotor { get; private set; }
+		public virtual bool HasElectricMotor { get; private set; }
 
-		public bool HasCombustionEngine { get; private set; }
+		public virtual bool HasCombustionEngine { get; private set; }
 
-		public bool HasGearbox { get; private set; }
+		public virtual bool HasGearbox { get; private set; }
 
 		
-		public VectoRunData RunData { get; set; }
-		public ExecutionMode ExecutionMode { get; }
+		public virtual VectoRunData RunData { get; set; }
+		public virtual ExecutionMode ExecutionMode { get; }
 
 
 		
