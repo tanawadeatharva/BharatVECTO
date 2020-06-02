@@ -101,11 +101,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					var brakingIntervalTooShort = NextDrivingAction.Action == DrivingBehavior.Braking &&
 												((NextDrivingAction.TriggerDistance - NextDrivingAction.ActionDistance) / Driver.DataBus.VehicleSpeed)
 												.IsSmaller(
-													Constants.SimulationSettings.LowerBoundTimeInterval / 20) && !Driver.DataBus.ClutchClosed(absTime);
+													Constants.SimulationSettings.LowerBoundTimeInterval / 2) && (Driver.DataBus.GearboxType.AutomaticTransmission() || !Driver.DataBus.ClutchClosed(absTime));
 					var brakingIntervalShort = NextDrivingAction.Action == DrivingBehavior.Braking &&
 												((NextDrivingAction.TriggerDistance - NextDrivingAction.ActionDistance) / Driver.DataBus.VehicleSpeed)
 												.IsSmaller(
-													Constants.SimulationSettings.LowerBoundTimeInterval / 2) && !Driver.DataBus.ClutchClosed(absTime);
+													Constants.SimulationSettings.LowerBoundTimeInterval / 2) && (Driver.DataBus.GearboxType.AutomaticTransmission() || !Driver.DataBus.ClutchClosed(absTime));
 					if (brakingIntervalShort && remainingDistance.IsEqual(ds)) {
 						return new ResponseDrivingCycleDistanceExceeded()
 						{
