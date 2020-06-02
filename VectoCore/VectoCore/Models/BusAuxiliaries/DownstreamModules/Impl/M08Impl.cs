@@ -40,7 +40,7 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl
 			var sw5 = _smartElectrics ? sw1 : sw2;
 			var sw6 = !_signals.EngineStopped;
 			var sum5 = _m1.AveragePowerDemandAtCrankFromHVACMechanicals + sw5;
-			var sum6 = sw6 ? sum5 : 0.SI<Watt>();
+			var sum6 = sum5; // sw6 ? sum5 : 0.SI<Watt>();
 
 			var sw3 = _smartPneumatics ? _m7.SmartElectricalAndPneumaticAuxAltPowerGenAtCrank :
 				_m7.SmartElectricalOnlyAuxAltPowerGenAtCrank;

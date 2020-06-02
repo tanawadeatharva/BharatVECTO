@@ -37,5 +37,6 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.Interfaces {
 		public Watt InternalEnginePower { get; set; }
 		public Second SimulationInterval { get; set; }
 		public Watt ExcessiveDragPower { get; set; }
+		public bool VehicleStopped { get; set; }
 	}
 }

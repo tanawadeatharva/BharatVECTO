@@ -164,14 +164,15 @@ namespace TUGraz.VectoCommon.InputData
 
 		Watt MaxNetPower2 { get; }
 
-		string RegisteredClass { get; }
+		RegistrationClass RegisteredClass { get; }
 
-		int NuberOfPassengersUpperDeck { get; }
+		int NumberOfPassengersUpperDeck { get; }
 
 		int NumberOfPassengersLowerDeck { get; }
 
 		VehicleCode VehicleCode { get; }
-		FloorType FloorType { get; }
+
+		bool LowEntry { get; }
 
 		bool Articulated { get; }
 
@@ -182,6 +183,8 @@ namespace TUGraz.VectoCommon.InputData
 		Meter Width { get; }
 
 		Meter EntranceHeight { get; }
+
+		ConsumerTechnology DoorDriveTechnology { get; }
 
 		// components
 
@@ -338,6 +341,22 @@ namespace TUGraz.VectoCommon.InputData
 		Compressed
 	}
 
+	public static class TankSystemHelper
+	{
+		public static TankSystem? Parse(string parse)
+		{
+			switch (parse) {
+				case nameof(TankSystem.Liquefied):
+					return TankSystem.Liquefied;
+				case nameof(TankSystem.Compressed):
+					return TankSystem.Compressed;
+				default:
+					return null;
+			}
+		}
+	}
+
+
 	public interface IAirdragDeclarationInputData : IComponentInputData
 	{
 		/// <summary>
@@ -426,6 +445,8 @@ namespace TUGraz.VectoCommon.InputData
 		/// cf. VECTO Input Parameters.xlsx
 		/// </summary>
 		Newton TyreTestLoad { get; }
+
+		string FuelEfficiencyClass { get; }
 	}
 
 	public interface IGearboxDeclarationInputData : IComponentInputData
@@ -788,7 +809,6 @@ namespace TUGraz.VectoCommon.InputData
 	{
 		ConsumerTechnology AirsuspensionControl { get; }
 		ConsumerTechnology AdBlueDosing { get; }
-		ConsumerTechnology DoorDriveTechnology { get; }
 	}
 
 	public interface IHVACBusAuxiliariesDeclarationData
@@ -826,18 +846,21 @@ namespace TUGraz.VectoCommon.InputData
 	{
 		string ResultStatus { get; }
 
-		string VehicleGroup { get; }
+		VehicleClass VehicleGroup { get; }
 
-		string Mission { get; }
+		MissionType Mission { get; }
 
 		ISimulationParameter SimulationParameter { get; }
+
+		Dictionary<FuelType, JoulePerMeter> EnergyConsumption { get; }
+		Dictionary<string, double> CO2 { get; }
 	}
 
 	public interface ISimulationParameter
 	{
 		Kilogram TotalVehicleMass { get; }
 		Kilogram Payload { get; }
-		int PassengerCount { get; }
+		double PassengerCount { get; }
 		string FuelMode { get; }
 	}
 

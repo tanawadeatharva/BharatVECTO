@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
@@ -77,7 +78,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl {
 			_segment = GetSegment(vehicle);
 			_driverdata = DataAdapter.CreateDriverData();
 			_driverdata.AccelerationCurve = AccelerationCurveReader.ReadFromStream(_segment.AccelerationFile);
-			var tempVehicle = DataAdapter.CreateVehicleData(vehicle, _segment.Missions.First(),
+			var tempVehicle = DataAdapter.CreateVehicleData(vehicle, _segment, _segment.Missions.First(),
 													_segment.Missions.First().Loadings.First());
 			_airdragData = DataAdapter.CreateAirdragData(vehicle.Components.AirdragInputData,
 												_segment.Missions.First(), _segment);
@@ -112,7 +113,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl {
 
 		protected abstract Segment GetSegment(IVehicleDeclarationInputData vehicle);
 
-		protected abstract VectoRunData CreateVectoRunData(IVehicleDeclarationInputData vehicle, int modeIdx, Mission mission, KeyValuePair<LoadingType, Kilogram> loading);
+		protected abstract VectoRunData CreateVectoRunData(IVehicleDeclarationInputData vehicle, int modeIdx, Mission mission, KeyValuePair<LoadingType, Tuple<Kilogram, double?>> loading);
 
 		protected virtual void InitializeReport()
 		{
@@ -120,7 +121,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl {
 			List<List<FuelData.Entry>> fuels;
 			var vehicle = InputDataProvider.JobInputData.Vehicle;
 			if (vehicle.ExemptedVehicle) {
-				powertrainConfig = CreateVectoRunData(vehicle, 0, null, new KeyValuePair<LoadingType, Kilogram>());
+				powertrainConfig = CreateVectoRunData(vehicle, 0, null, new KeyValuePair<LoadingType, Tuple<Kilogram, double?>>());
 				fuels = new List<List<FuelData.Entry>>();
 			} else {
 				powertrainConfig = _segment.Missions.Select(

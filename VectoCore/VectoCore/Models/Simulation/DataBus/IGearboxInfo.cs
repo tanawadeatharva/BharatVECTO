@@ -29,6 +29,7 @@
 *   Martin Rexeis, rexeis@ivt.tugraz.at, IVT, Graz University of Technology
 */
 
+using System;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Models.SimulationComponent;
@@ -77,5 +78,11 @@ namespace TUGraz.VectoCore.Models.Simulation.DataBus
 	public interface IGearboxControl
 	{
 		bool DisengageGearbox { set; }
+	}
+
+	public interface ITorqueConverterControl
+	{
+		Tuple<TorqueConverterOperatingPoint, NewtonMeter> CalculateOperatingPoint(PerSecond inSpeed, PerSecond outSpeed);
+		TorqueConverterOperatingPoint SetOperatingPoint { get; set; }
 	}
 }

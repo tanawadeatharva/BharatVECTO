@@ -55,7 +55,7 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.Electric
 			//'Assignments to private variables.
 			_m0 = m0;
 			_alternatorMap = alternatorMap;
-			_totalAverageDemandAmpsWithoutBaseLoad = electricConfig.AverageCurrentDemandWithoutBaseLoad;
+			_totalAverageDemandAmpsWithoutBaseLoad = electricConfig.AverageCurrentDemandWithoutBaseLoad(false, false);
 			_resultCardIdle = resultCardIdle;
 			_resultCardTraction = resultCardTraction;
 			_resultCardOverrun = resultCardOverrun;

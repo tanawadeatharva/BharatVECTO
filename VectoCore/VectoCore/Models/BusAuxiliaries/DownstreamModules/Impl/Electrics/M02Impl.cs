@@ -14,8 +14,11 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.Electric
 		private IM0_NonSmart_AlternatorsSetEfficiency _module0;
 		private double _alternatorPulleyEffiency;
 		private Ampere _totalAverageDemandAmpsIncludingBaseLoad;
+		private Ampere _totalAverageDemandAmpsEngineOffStandstill;
+		private Ampere _totalAverageDemandAmpsEngineOffDriving;
+		private ISignals _signals;
 
-		public M02Impl(IM0_NonSmart_AlternatorsSetEfficiency m0, IElectricsUserInputsConfig electricConfig)
+		public M02Impl(IM0_NonSmart_AlternatorsSetEfficiency m0, IElectricsUserInputsConfig electricConfig, ISignals signals)
 		{
 			var altPulleyEfficiency = electricConfig.AlternatorGearEfficiency;
 			var powerNetVoltage = electricConfig.PowerNetVoltage;
@@ -30,8 +33,12 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.Electric
 				throw new ArgumentException("Powernet Voltage out of known range.");
 			}
 
+			_signals = signals;
+
 			_powerNetVoltage = powerNetVoltage;
-			_totalAverageDemandAmpsIncludingBaseLoad = electricConfig.AverageCurrentDemandInclBaseLoad;
+			_totalAverageDemandAmpsIncludingBaseLoad = electricConfig.AverageCurrentDemandInclBaseLoad(false, false);
+			_totalAverageDemandAmpsEngineOffStandstill = electricConfig.AverageCurrentDemandInclBaseLoad(true, true);
+			_totalAverageDemandAmpsEngineOffDriving = electricConfig.AverageCurrentDemandInclBaseLoad(true, false);
 			_module0 = m0;
 			_alternatorPulleyEffiency = altPulleyEfficiency;
 		}
@@ -52,7 +59,15 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.Electric
 
 		public Watt AveragePowerDemandAtAlternatorFromElectrics
 		{
-			get { return _powerNetVoltage * _totalAverageDemandAmpsIncludingBaseLoad; }
+			get {
+				var current = _totalAverageDemandAmpsIncludingBaseLoad;
+				if (_signals.EngineStopped) {
+					current = _signals.VehicleStopped
+						? _totalAverageDemandAmpsEngineOffStandstill
+						: _totalAverageDemandAmpsEngineOffDriving;
+				}
+				return _powerNetVoltage * current;
+			}
 		}
 
 		#endregion

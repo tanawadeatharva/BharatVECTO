@@ -50,6 +50,8 @@ namespace TUGraz.VectoCore.Models.Simulation
 
 		}
 
+		public IPrimaryVehicleInformationInputDataProvider PrimaryResults { get; set; }
+
 		#endregion
 	}
 
@@ -71,6 +73,8 @@ namespace TUGraz.VectoCore.Models.Simulation
 		{
 
 		}
+
+		public IPrimaryVehicleInformationInputDataProvider PrimaryResults { get; set; }
 
 		#endregion
 

@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tns:VectoInputDeclaration schemaVersion="2.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.1" xmlns:tns="urn:tugraz:ivt:VectoAPI:DeclarationInput:v2.0" xmlns:v2.6="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:DEV:v2.6" xmlns:v2.1="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.1" xmlns:v2.0="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0" xmlns:di="http://www.w3.org/2000/09/xmldsig#" xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:DeclarationJob https://webgate.ec.europa.eu/CITnet/svn/VECTO/trunk/Share/XML/XSD//DEV/VectoDeclarationJob.xsd">
+	<v2.0:Vehicle id="VEH-1234567890" xsi:type="CompletedVehicleDeclarationType" xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:DEV:v2.6">
+		<Manufacturer>Some Manufacturer</Manufacturer>
+		<ManufacturerAddress>Infinite Loop 1</ManufacturerAddress>
+		<Model>Sample Bus Model</Model>
+		<VIN>VEH-1234567890</VIN>
+		<Date>2020-01-09T11:00:00Z</Date>
+		<LegislativeClass>M3</LegislativeClass>
+		<RegisteredClass>II+III</RegisteredClass>
+		<VehicleCode>CA</VehicleCode>
+		<CurbMassChassis>8300</CurbMassChassis>
+		<TechnicalPermissibleMaximumLadenMass>18000</TechnicalPermissibleMaximumLadenMass>
+    <NgTankSystem>Compressed</NgTankSystem>
+		<RegisteredPassengers>
+			<LowerDeck>30</LowerDeck>
+			<UpperDeck>0</UpperDeck>
+		</RegisteredPassengers>
+		<LowEntry>true</LowEntry>
+		<HeightIntegratedBody>3.000</HeightIntegratedBody>
+		<VehicleLength>11.830</VehicleLength>
+		<VehicleWidth>2.550</VehicleWidth>
+		<EntranceHeight>0.120</EntranceHeight>
+		<DoorDriveTechnology>pneumatic</DoorDriveTechnology>
+		<Components xsi:type="CompletedVehicleComponentsDeclarationType">
+			<v2.6:AirDrag xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0">
+				<Data id="CabinX23h" xsi:type="AirDragDataDeclarationType">
+					<Manufacturer>Generic Manufacturer</Manufacturer>
+					<Model>Generic Model</Model>
+					<CertificationNumber>e12*0815/8051*2017/05E0000*00</CertificationNumber>
+					<Date>2017-03-24T15:00:00Z</Date>
+					<AppVersion>Vecto AirDrag x.y</AppVersion>
+					<CdxA_0>6.31</CdxA_0>
+					<TransferredCdxA>6.32</TransferredCdxA>
+					<DeclaredCdxA>6.34</DeclaredCdxA>
+				</Data>
+				<Signature>
+					<di:Reference URI="#CabinX23h">
+						<di:Transforms>
+							<di:Transform Algorithm="urn:vecto:xml:2017:canonicalization"/>
+							<di:Transform Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#"/>
+						</di:Transforms>
+						<di:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"/>
+						<di:DigestValue>b9SHCfOoVrBxFQ8wwDK32OO+9bd85DuaUdgs6j/29N8=</di:DigestValue>
+					</di:Reference>
+				</Signature>
+			</v2.6:AirDrag>
+			<Auxiliaries>
+				<Data xsi:type="CompletedVehicleAuxiliaryDataDeclarationType">
+					<ElectricSystem>
+						<AlternatorTechnology>default</AlternatorTechnology>
+						<LEDLights>
+							<Dayrunninglights>false</Dayrunninglights>
+							<Headlights>false</Headlights>
+							<Positionlights>false</Positionlights>
+							<Brakelights>false</Brakelights>
+							<Interiorlights>false</Interiorlights>
+						</LEDLights>
+					</ElectricSystem>
+					<HVAC>
+						<SystemConfiguration>7</SystemConfiguration>
+						<CompressorType>
+							<DriverAC>2-stage</DriverAC>
+							<PassengerAC>4-stage</PassengerAC>
+						</CompressorType>
+						<AuxiliaryHeaterPower>0</AuxiliaryHeaterPower>
+						<DoubleGlasing>true</DoubleGlasing>
+						<HeatPump>false</HeatPump>
+						<AdjustableAuxiliaryHeater>true</AdjustableAuxiliaryHeater>
+						<SeparateAirDistributionDucts>true</SeparateAirDistributionDucts>
+					</HVAC>
+				</Data>
+			</Auxiliaries>
+		</Components>
+	</v2.0:Vehicle>
+</tns:VectoInputDeclaration>

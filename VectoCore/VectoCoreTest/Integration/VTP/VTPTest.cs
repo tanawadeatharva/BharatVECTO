@@ -31,8 +31,11 @@
 
 using System.IO;
 using System.Xml;
+using System.Xml.Linq;
+using System.Xml.XPath;
 using NUnit.Framework;
 using TUGraz.VectoCommon.Models;
+using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.InputData.FileIO.JSON;
 using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.OutputData;
@@ -52,7 +55,8 @@ namespace TUGraz.VectoCore.Tests.Integration.VTP
 		}
 
 		[TestCase(@"TestData\Integration\VTPMode\GenericVehicle\class_5_generic vehicle.vecto"),
-		 TestCase(@"TestData\Integration\VTPMode\GenericVehicle\class_5_generic vehicle_noGear.vecto")]
+		 TestCase(@"TestData\Integration\VTPMode\GenericVehicle\class_5_generic vehicle_noGear.vecto"),
+		 TestCase(@"TestData\Integration\VTPMode\HeavyBus\VTP_PrimaryBus_ENG.vecto", TestName = "RunVTPHeavyPrimaryBus Engineering")]
 		public void RunVTP(string jobFile)
 		{
 			var fileWriter = new FileOutputWriter(jobFile);
@@ -81,8 +85,12 @@ namespace TUGraz.VectoCore.Tests.Integration.VTP
 
 		[Category("LongRunning")]
 		[Category("Integration")]
-		[TestCase(@"TestData\Integration\VTPMode\GenericVehicle\class_5_generic vehicle_DECL.vecto")]
-		public void RunVTP_Declaration(string jobFile)
+		[TestCase(@"TestData\Integration\VTPMode\GenericVehicle\class_5_generic vehicle_DECL.vecto", 45.6, 0.8972, TestName = "RunVTPHeavyLorry_Declaration"),
+		TestCase(@"TestData\Integration\VTPMode\MediumLorry\VTP_MediumLorry.vecto", 400.0, 1.06, TestName = "RunVTPMediumLorry_Declaration"),
+		TestCase(@"TestData\Integration\VTPMode\DualFuelVehicle\VTP_DualFuel.vecto", 43.5, 1.018, TestName = "RunVTPDualFuel_Declaration"),
+		TestCase(@"TestData\Integration\VTPMode\HeavyBus\VTP_PrimaryBus.vecto", 14.2, 1.1413, TestName = "RunVTPHeavyPrimaryBus")	
+			]
+		public void RunVTP_Declaration(string jobFile, double expectedDeclaredCO2, double expectedCVTP)
 		{
 			var fileWriter = new FileOutputWriter(jobFile);
 			var sumWriter = new SummaryDataContainer(fileWriter);
@@ -97,7 +105,7 @@ namespace TUGraz.VectoCore.Tests.Integration.VTP
 
 			jobContainer.AddRuns(runsFactory);
 
-			Assert.AreEqual(2, jobContainer.Runs.Count);
+			Assert.AreEqual(1, jobContainer.Runs.Count);
 			//var i = 0;
 			//jobContainer.Runs[i].Run.Run();
 			//Assert.IsTrue(jobContainer.Runs[i].Run.FinishedWithoutErrors);
@@ -111,6 +119,11 @@ namespace TUGraz.VectoCore.Tests.Integration.VTP
 			var validator = new XMLValidator(XmlReader.Create(vtpReport));
 			validator.ValidateXML(XmlDocumentType.VTPReport);
 			Assert.IsNull(validator.ValidationError);
+
+			var vtpXml = XDocument.Load(vtpReport);
+
+			Assert.AreEqual(expectedDeclaredCO2, vtpXml.Document?.XPathSelectElement("//*[local-name()='Declared']")?.Value.ToDouble(), 1e-1);
+			Assert.AreEqual(expectedCVTP, vtpXml.Document?.XPathSelectElement("//*[local-name()='C_VTP']")?.Value.ToDouble(), 1e-4);
 		}
 
 		[Category("LongRunning")]
@@ -131,7 +144,7 @@ namespace TUGraz.VectoCore.Tests.Integration.VTP
 
 			jobContainer.AddRuns(runsFactory);
 
-			Assert.AreEqual(2, jobContainer.Runs.Count);
+			Assert.AreEqual(1, jobContainer.Runs.Count);
 			var i = 0;
 			jobContainer.Runs[i].Run.Run();
 			Assert.IsTrue(jobContainer.Runs[i].Run.FinishedWithoutErrors);
@@ -142,36 +155,7 @@ namespace TUGraz.VectoCore.Tests.Integration.VTP
 			Assert.AreEqual(true, jobContainer.AllCompleted);
 		}
 
-		[TestCase(@"TestData\Integration\VTPMode\MediumLorry\VTP_MediumLorry.vecto")]
-		public void RunVTPMediumLorry_Declaration(string jobFile)
-		{
-			var fileWriter = new FileOutputWriter(jobFile);
-			var sumWriter = new SummaryDataContainer(fileWriter);
-			var jobContainer = new JobContainer(sumWriter);
-			var dataProvider = JSONInputDataFactory.ReadJsonJob(jobFile);
-			var runsFactory = new SimulatorFactory(ExecutionMode.Declaration, dataProvider, fileWriter) {
-				ModalResults1Hz = false,
-				WriteModalResults = true,
-				ActualModalData = false,
-				Validate = false,
-			};
+		
 
-			jobContainer.AddRuns(runsFactory);
-
-			Assert.AreEqual(2, jobContainer.Runs.Count);
-			//var i = 0;
-			//jobContainer.Runs[i].Run.Run();
-			//Assert.IsTrue(jobContainer.Runs[i].Run.FinishedWithoutErrors);
-
-			jobContainer.Execute();
-			jobContainer.WaitFinished();
-
-			Assert.AreEqual(true, jobContainer.AllCompleted);
-
-			var vtpReport = fileWriter.XMLVTPReportName;
-			var validator = new XMLValidator(XmlReader.Create(vtpReport));
-			validator.ValidateXML(XmlDocumentType.VTPReport);
-			Assert.IsNull(validator.ValidationError);
-		}
 	}
 }

@@ -37,6 +37,7 @@ using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.InputData.Reader.ComponentData;
+using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Engine;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox;
@@ -155,7 +156,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			return retVal;
 		}
 
-		internal GearboxData SetCommonGearboxData(IGearboxDeclarationInputData data)
+		internal static GearboxData SetCommonGearboxData(IGearboxDeclarationInputData data)
 		{
 			return new GearboxData {
 				InputData = data,
@@ -164,13 +165,14 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 				ModelName = data.Model,
 				Date = data.Date,
 				CertificationMethod = data.CertificationMethod,
-				CertificationNumber = data.CertificationNumber,
+				CertificationNumber = data.CertificationMethod != CertificationMethod.StandardValues ? 
+					data.CertificationNumber : "",
 				DigestValueInput = data.DigestValue != null ? data.DigestValue.DigestValue : "",
 				Type = data.Type
 			};
 		}
 
-		protected TransmissionLossMap CreateGearLossMap(ITransmissionInputData gear, uint i, bool useEfficiencyFallback)
+		protected virtual TransmissionLossMap CreateGearLossMap(ITransmissionInputData gear, uint i, bool useEfficiencyFallback, VehicleCategory vehicleCategory, GearboxType gearboxType)
 		{
 			if (gear.LossMap != null) {
 				return TransmissionLossMapReader.Create(gear.LossMap, gear.Ratio, string.Format("Gear {0}", i + 1), true);
@@ -197,7 +199,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			gearData.TorqueConverterShiftPolygon = shiftPolygon;
 		}
 
-		protected static void CretateTCFirstGearATPowerSplit(GearData gearData, uint i, ShiftPolygon shiftPolygon)
+		protected virtual void CretateTCFirstGearATPowerSplit(GearData gearData, uint i, ShiftPolygon shiftPolygon)
 		{
 			gearData.TorqueConverterRatio = 1;
 			gearData.TorqueConverterGearLossMap = TransmissionLossMapReader.Create(1, 1, string.Format("TCGear {0}", i + 1));

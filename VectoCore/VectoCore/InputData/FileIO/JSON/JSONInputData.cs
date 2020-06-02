@@ -89,12 +89,12 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			get { return _sourceFile; }
 		}
 
-		public bool SavedInDeclarationMode
+		public virtual bool SavedInDeclarationMode
 		{
 			get { return Body.GetEx(JsonKeys.SavedInDeclMode).Value<bool>(); }
 		}
 
-		public string AppVersion { get { return "VECTO-JSON"; } }
+		public virtual string AppVersion { get { return "VECTO-JSON"; } }
 
 		internal string BasePath
 		{
@@ -276,6 +276,10 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 		public virtual IEngineeringJobInputData JobInputData
 		{
 			get { return this; }
+		}
+
+		public virtual IPrimaryVehicleInformationInputDataProvider PrimaryVehicleData {
+			get { return null; }
 		}
 
 		public XElement XMLHash
@@ -717,6 +721,10 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 		private IDictionary<VectoComponents, IList<string>> _componentDigests = null;
 		private DigestData _jobDigest = null;
 		private IXMLInputDataReader _inputReader;
+		private IResultsInputData _manufacturerResults;
+		private Meter _vehicleLenght;
+		private VehicleClass _vehicleClass;
+		private VehicleCode _vehicleCode;
 
 		public JSONVTPInputDataV4(JObject data, string filename, bool tolerateMissing = false) : base(
 			data, filename, tolerateMissing)
@@ -762,6 +770,16 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 		string IManufacturerReport.Source
 		{
 			get { return Body["ManufacturerRecord"].Value<string>(); }
+		}
+
+		public IResultsInputData Results
+		{
+			get {
+				if (_manufacturerResults == null) {
+					ReadManufacturerReport();
+				}
+				return _manufacturerResults;
+			}
 		}
 
 		public IList<ICycleData> Cycles
@@ -829,6 +847,36 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			}
 		}
 
+		public Meter VehicleLength
+		{
+			get {
+				if (_vehicleLenght == null) {
+					ReadManufacturerReport();
+				}
+				return _vehicleLenght;
+			}
+		}
+
+		public VehicleClass VehicleClass
+		{
+			get {
+				if (_vehicleClass == VehicleClass.Unknown) {
+					ReadManufacturerReport();
+				}
+				return _vehicleClass;
+			}
+		}
+
+		public VehicleCode VehicleCode
+		{
+			get {
+				if (_vehicleCode == VehicleCode.NOT_APPLICABLE) {
+					ReadManufacturerReport();
+				}
+				return _vehicleCode;
+			}
+		}
+
 		#endregion
 
 		private void ReadManufacturerReport()
@@ -860,7 +908,62 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			} catch (Exception) {
 				_jobDigest = new DigestData("", new string[] { }, "", "");
 			}
+
+			_manufacturerResults = new ManufacturerResults(xmlDoc.SelectSingleNode("//*[local-name() = 'Results']"));
+			_vehicleLenght = xmlDoc.SelectSingleNode("//*[local-name() = 'VehicleLength']").InnerText.ToDouble().SI<Meter>();
+			_vehicleClass = VehicleClassHelper.Parse(xmlDoc.SelectSingleNode("//*[local-name() = 'VehicleGroup']").InnerText);
+			_vehicleCode = xmlDoc.SelectSingleNode("//*[local-name() = 'VehicleCode']").InnerText.ParseEnum<VehicleCode>();
 		}
+	}
+
+	internal class ManufacturerResults : IResultsInputData
+	{
+		private XmlNode ResultNode;
+
+		public ManufacturerResults(XmlNode resultsNode)
+		{
+			ResultNode = resultsNode;
+			Status = ResultNode.SelectSingleNode("./*[local-name() = 'Status']").InnerText;
+			Results = new List<IResult>();
+			foreach (XmlNode node in ResultNode.SelectNodes("./*[local-name() = 'Result' and @status='success']")) {
+				var entry = new Result {
+					ResultStatus = node.Attributes.GetNamedItem("status").InnerText,
+					Mission = node.SelectSingleNode("./*[local-name()='Mission']").InnerText.ParseEnum<MissionType>(),
+					SimulationParameter = GetSimulationParameter(node.SelectSingleNode("./*[local-name() = 'SimulationParameters' or local-name() = 'SimulationParametersCompletedVehicle']")),
+					EnergyConsumption = node.SelectSingleNode("./*[local-name()='Fuel' and FuelConsumption/@unit='MJ/km']")?
+											.Cast<XmlNode>().Select(
+												x => new KeyValuePair<FuelType, JoulePerMeter>(
+													x.Attributes.GetNamedItem(XMLNames.Report_Results_Fuel_Type_Attr).InnerText.ParseEnum<FuelType>(),
+													x.SelectSingleNode(
+														string.Format("./*[local-name()='{0}' and @unit='MJ/km']", XMLNames.Report_Result_EnergyConsumption))
+													?.InnerText
+													.ToDouble().SI(Unit.SI.Mega.Joule.Per.Kilo.Meter).Cast<JoulePerMeter>()))
+											.ToDictionary(x => x.Key, x => x.Value),
+					CO2 = node.SelectNodes("./*[local-name()='CO2' and @unit]").Cast<XmlNode>().Select(
+								x => new KeyValuePair<string, double>(x.Attributes.GetNamedItem("unit").InnerText, x.InnerText.ToDouble()))
+							.ToDictionary(x => x.Key, x => x.Value)
+
+				};
+				Results.Add(entry);
+			}
+		}
+
+		private ISimulationParameter GetSimulationParameter(XmlNode node)
+		{
+			return new SimulationParameter {
+				TotalVehicleMass = (node.SelectSingleNode($"./*[local-name()='{XMLNames.Report_ResultEntry_TotalVehicleMass}']")?.InnerText.ToDouble() ?? 0).SI<Kilogram>(),
+				Payload = (node.SelectSingleNode($"./*[local-name()='{XMLNames.Report_Result_Payload}']")?.InnerText.ToDouble() ?? 0).SI<Kilogram>(),
+				PassengerCount = node.SelectSingleNode($"./*[local-name()='{XMLNames.Bus_PassengerCount}']")?.InnerText.ToDouble() ?? 0,
+				FuelMode = "" //node.SelectSingleNode($"./*[local-name()='{XMLNames.Report_Result_FuelMode}']").InnerText
+			};
+		}
+
+		#region Implementation of IResultsInputData
+
+		public string Status { get; }
+		public IList<IResult> Results { get; }
+
+		#endregion
 	}
 
 
@@ -995,6 +1098,12 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 		}
 
+		#region Overrides of JSONFile
+
+		public override bool SavedInDeclarationMode { get { return true; } }
+
+		#endregion
+
 		#region Implementation of ISingleBusInputDataProvider
 
 		public IVehicleDeclarationInputData PrimaryVehicle { get; }
@@ -1005,6 +1114,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 		#region Implementation of IDeclarationInputDataProvider
 
 		public IDeclarationJobInputData JobInputData { get { return this; } }
+		public virtual IPrimaryVehicleInformationInputDataProvider PrimaryVehicleData { get { return null; } }
 		public XElement XMLHash { get { return new XElement(XMLNames.DI_Signature); } }
 
 		#endregion
@@ -1012,6 +1122,60 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 		#region Implementation of IDeclarationJobInputData
 
 		public IVehicleDeclarationInputData Vehicle { get { return PrimaryVehicle; } }
+		public string JobName { get; }
+		public string ShiftStrategy { get { return ""; } }
+
+		#endregion
+	}
+
+
+	public class JSONInputDataComptededBusFactorMethodV7 : JSONFile, IDeclarationInputDataProvider, IDeclarationJobInputData
+	{
+		private readonly IXMLInputDataReader _xmlInputReader;
+
+		public JSONInputDataComptededBusFactorMethodV7(JObject data, string filename, bool tolerateMissing = false) : base(
+			data, filename, tolerateMissing)
+		{
+			var kernel = new StandardKernel(new VectoNinjectModule());
+			_xmlInputReader = kernel.Get<IXMLInputDataReader>();
+
+			var primaryInputData = Path.Combine(BasePath, Body.GetEx<string>("PrimaryVehicleResults"));
+			var completedInputData = Path.Combine(BasePath, Body.GetEx<string>("CompletedVehicle"));
+
+			//PrimaryVehicle = CreateReader(primaryInputData);
+
+			Vehicle = _xmlInputReader.CreateDeclaration(completedInputData).JobInputData.Vehicle;
+			PrimaryVehicleData = (_xmlInputReader.Create(primaryInputData) as IPrimaryVehicleInformationInputDataProvider);
+			JobName = Vehicle.VIN;
+		}
+
+
+		//private IDeclarationInputDataProvider CreateReader(string vehicleFileName)
+		//{
+		//	if (Path.GetExtension(vehicleFileName) != ".xml") {
+		//		throw new VectoException("unsupported vehicle file format {0}", vehicleFileName);
+		//	}
+
+		//	return ;
+		//}
+
+		#region Overrides of JSONFile
+
+		public override bool SavedInDeclarationMode { get { return true; } }
+
+		#endregion
+
+		#region Implementation of IDeclarationInputDataProvider
+
+		public IDeclarationJobInputData JobInputData { get { return this; } }
+		public IPrimaryVehicleInformationInputDataProvider PrimaryVehicleData { get; }
+		public XElement XMLHash { get; }
+
+		#endregion
+
+		#region Implementation of IDeclarationJobInputData
+
+		public IVehicleDeclarationInputData Vehicle { get; }
 		public string JobName { get; }
 		public string ShiftStrategy { get { return ""; } }
 

@@ -45,20 +45,6 @@
 							</xs:sequence>
 						</xs:complexType>
 					</xs:element>
-					<xs:element name="PneumaticSystem">
-						<xs:complexType>
-							<xs:sequence>
-								<xs:element name="DoorDriveTechnology">
-									<xs:simpleType>
-										<xs:restriction base="xs:string">
-											<xs:enumeration value="pneumatic"/>
-											<xs:enumeration value="electric"/>
-										</xs:restriction>
-									</xs:simpleType>
-								</xs:element>
-							</xs:sequence>
-						</xs:complexType>
-					</xs:element>
 					<xs:element name="HVAC">
 						<xs:complexType>
 							<xs:sequence>
@@ -66,7 +52,7 @@
 									<xs:simpleType>
 										<xs:restriction base="xs:int">
 											<xs:minInclusive value="1"/>
-											<xs:maxInclusive value="9"/>
+											<xs:maxInclusive value="10"/>
 										</xs:restriction>
 									</xs:simpleType>
 								</xs:element>
@@ -154,10 +140,34 @@
 						</xs:complexType>
 					</xs:element>
 					<xs:element name="LowEntry" type="xs:boolean"/>
-					<xs:element name="HeightIntegratedBody" type="v1.0:Double3"/>
-					<xs:element name="VehicleLength" type="v1.0:Double3"/>
-					<xs:element name="VehicleWidth" type="v1.0:Double3"/>
-					<xs:element name="EntranceHeight" type="v1.0:Double3"/>
+					<xs:element name="HeightIntegratedBody">
+						<xs:simpleType>
+							<xs:restriction base="v1.0:Double3">
+								<xs:minExclusive value="0.000"/>
+							</xs:restriction>
+						</xs:simpleType>
+					</xs:element>
+					<xs:element name="VehicleLength">
+						<xs:simpleType>
+							<xs:restriction base="v1.0:Double3">
+								<xs:minExclusive value="0.000"/>
+							</xs:restriction>
+						</xs:simpleType>
+					</xs:element>
+					<xs:element name="VehicleWidth">
+						<xs:simpleType>
+							<xs:restriction base="v1.0:Double3">
+								<xs:minExclusive value="0.000"/>
+							</xs:restriction>
+						</xs:simpleType>
+					</xs:element>
+					<xs:element name="EntranceHeight">
+						<xs:simpleType>
+							<xs:restriction base="v1.0:Double3">
+								<xs:minExclusive value="0.000"/>
+							</xs:restriction>
+						</xs:simpleType>
+					</xs:element>
 					<xs:element name="DoorDriveTechnology" type="v2.6:DoorDriveTechnologyType"/>
 					<xs:element name="Components" type="v2.6:AbstractCompletedVehicleComponentsDeclarationType"/>
 				</xs:sequence>
@@ -229,10 +239,27 @@
 					<xs:element name="Fan">
 						<xs:complexType>
 							<xs:sequence>
-								<xs:element name="Technology" type="v1.0:AuxFanTechnologyType">
+								<xs:element name="Technology">
 									<xs:annotation>
 										<xs:documentation>P181</xs:documentation>
 									</xs:annotation>
+									<xs:simpleType>
+										<xs:restriction base="xs:string">
+											<xs:enumeration value="Crankshaft mounted - Electronically controlled visco clutch"/>
+											<xs:enumeration value="Crankshaft mounted - Bimetallic controlled visco clutch"/>
+											<xs:enumeration value="Crankshaft mounted - Discrete step clutch 2 stages"/>
+											<xs:enumeration value="Crankshaft mounted - Discrete step clutch 3 stages"/>
+											<xs:enumeration value="Crankshaft mounted - On/off clutch"/>
+											<xs:enumeration value="Belt driven or driven via transm. - Electronically controlled visco clutch"/>
+											<xs:enumeration value="Belt driven or driven via transm. - Bimetallic controlled visco clutch"/>
+											<xs:enumeration value="Belt driven or driven via transm. - Discrete step clutch 2 stages"/>
+											<xs:enumeration value="Belt driven or driven via transm. - Discrete step clutch 3 stages"/>
+											<xs:enumeration value="Belt driven or driven via transm. - On/off clutch"/>
+											<xs:enumeration value="Hydraulic driven - Variable displacement pump"/>
+											<xs:enumeration value="Hydraulic driven - Constant displacement pump"/>
+											<xs:enumeration value="Electrically driven - Electronically controlled"/>
+										</xs:restriction>
+									</xs:simpleType>
 								</xs:element>
 							</xs:sequence>
 						</xs:complexType>

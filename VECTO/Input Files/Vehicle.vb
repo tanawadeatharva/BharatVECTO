@@ -113,7 +113,7 @@ Public Class Vehicle
 				Dim doa As DeclarationDataAdapterHeavyLorry = New DeclarationDataAdapterHeavyLorry()
 				Dim segment As Segment = DeclarationData.TruckSegments.Lookup(vehicle.VehicleCategory, vehicle.AxleConfiguration,
 																		vehicle.GrossVehicleMassRating, vehicle.CurbMassChassis, false)
-				vehicleData = doa.CreateVehicleData(vehicle, segment.Missions.First(),
+				vehicleData = doa.CreateVehicleData(vehicle, segment, segment.Missions.First(),
 													segment.Missions.First().Loadings.First())
 				airdragData = doa.CreateAirdragData(vehicle, segment.Missions.First(), segment)
 				retarderData = doa.CreateRetarderData(vehicle)
@@ -427,6 +427,7 @@ Public Class Vehicle
     Public ReadOnly Property Length As Meter Implements IVehicleDeclarationInputData.Length
     Public ReadOnly Property Width As Meter Implements IVehicleDeclarationInputData.Width
     Public ReadOnly Property EntranceHeight As Meter Implements IVehicleDeclarationInputData.EntranceHeight
+    Public ReadOnly Property DoorDriveTechnology As ConsumerTechnology Implements IVehicleDeclarationInputData.DoorDriveTechnology
 
     Public ReadOnly Property IVehicleEngineeringInputData_Components As IVehicleComponentsEngineering Implements IVehicleEngineeringInputData.Components
 	get
@@ -765,11 +766,11 @@ Public Class Vehicle
 	End Get
 	End Property
 
-    Public ReadOnly Property RegisteredClass As String Implements IVehicleDeclarationInputData.RegisteredClass
-    Public ReadOnly Property NuberOfPassengersUpperDeck As Integer Implements IVehicleDeclarationInputData.NuberOfPassengersUpperDeck
+    Public ReadOnly Property RegisteredClass As RegistrationClass Implements IVehicleDeclarationInputData.RegisteredClass
+    Public ReadOnly Property NumberOfPassengersUpperDeck As Integer Implements IVehicleDeclarationInputData.NumberOfPassengersUpperDeck
     Public ReadOnly Property NumberOfPassengersLowerDeck As Integer Implements IVehicleDeclarationInputData.NumberOfPassengersLowerDeck
     Public ReadOnly Property VehicleCode As VehicleCode Implements IVehicleDeclarationInputData.VehicleCode
-    Public ReadOnly Property FloorType As FloorType Implements IVehicleDeclarationInputData.FloorType
+    Public ReadOnly Property LowEntry As Boolean Implements IVehicleDeclarationInputData.LowEntry
 
     Public ReadOnly Property Components As IVehicleComponentsDeclaration Implements IVehicleDeclarationInputData.Components
 	get

@@ -42,7 +42,9 @@ namespace TUGraz.VectoCommon.Models
 		CityBus,
 		//InterurbanBus,
 		Coach,
-		HeavyBusPrimaryVehicle
+		HeavyBusPrimaryVehicle,
+		HeavyBusCompletedVehicle,
+		GenericBusVehicle
 	}
 
 	public static class VehicleCategoryHelper
@@ -64,6 +66,8 @@ namespace TUGraz.VectoCommon.Models
 				//	return "Coach";
 				case VehicleCategory.HeavyBusPrimaryVehicle:
 					return "Heavy Bus, Primary Vehicle";
+				case VehicleCategory.HeavyBusCompletedVehicle:
+					return "Heavy Bus, Completed Vehicle";
 				default:
 					return category.ToString();
 			}
@@ -86,6 +90,8 @@ namespace TUGraz.VectoCommon.Models
 				//	return "Coach";
 				case VehicleCategory.HeavyBusPrimaryVehicle:
 					return "Heavy Bus, Primary Vehicle";
+				case VehicleCategory.HeavyBusCompletedVehicle:
+					return "Heavy Bus, Completed Vehicle";
 				default:
 					return category.ToString();
 			}
@@ -105,25 +111,24 @@ namespace TUGraz.VectoCommon.Models
 					return "Rigid Lorry";
 				case VehicleCategory.HeavyBusPrimaryVehicle:
 					return "Bus";
+				case VehicleCategory.HeavyBusCompletedVehicle:
+					return "Bus";
 				default:
 					throw new ArgumentOutOfRangeException("vehicleCategory", vehicleCategory, null);
 			}
 		}
 
-		public static bool IsTruck(this VehicleCategory category)
+		public static bool IsLorry(this VehicleCategory category)
 		{
 			switch (category) {
                 case VehicleCategory.Van:
                 case VehicleCategory.RigidTruck:
 				case VehicleCategory.Tractor:
 					return true;
-				case VehicleCategory.CityBus:
-				//case VehicleCategory.InterurbanBus:
-				case VehicleCategory.Coach:
-				case VehicleCategory.HeavyBusPrimaryVehicle:
-					return false;
+				case VehicleCategory.HeavyBusCompletedVehicle:
+				case VehicleCategory.GenericBusVehicle:
 				default:
-					throw new ArgumentOutOfRangeException("VehicleCategory", category, null);
+					return false;
 			}
 		}
 
@@ -132,7 +137,9 @@ namespace TUGraz.VectoCommon.Models
 			switch (category) {
 				case VehicleCategory.Coach:
 				case VehicleCategory.CityBus:
-				case VehicleCategory.HeavyBusPrimaryVehicle: return true;
+				case VehicleCategory.HeavyBusPrimaryVehicle:
+				case VehicleCategory.HeavyBusCompletedVehicle:
+				case VehicleCategory.GenericBusVehicle: return true;
 				default: return false;
 			}
 		}

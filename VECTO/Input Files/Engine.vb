@@ -644,20 +644,21 @@ Public Class DummyVehicle
 	Public  Property DualFuelVehicle As Boolean Implements IVehicleDeclarationInputData.DualFuelVehicle
 	Public  Property MaxNetPower1 As Watt Implements IVehicleDeclarationInputData.MaxNetPower1
 	Public  Property MaxNetPower2 As Watt Implements IVehicleDeclarationInputData.MaxNetPower2
-    Public ReadOnly Property RegisteredClass As String Implements IVehicleDeclarationInputData.RegisteredClass
-    Public ReadOnly Property NuberOfPassengersUpperDeck As Integer Implements IVehicleDeclarationInputData.NuberOfPassengersUpperDeck
+    Public ReadOnly Property RegisteredClass As RegistrationClass Implements IVehicleDeclarationInputData.RegisteredClass
+    Public ReadOnly Property NumberOfPassengersUpperDeck As Integer Implements IVehicleDeclarationInputData.NumberOfPassengersUpperDeck
     Public ReadOnly Property NumberOfPassengersLowerDeck As Integer Implements IVehicleDeclarationInputData.NumberOfPassengersLowerDeck
     Public ReadOnly Property VehicleCode As VehicleCode Implements IVehicleDeclarationInputData.VehicleCode
     Public  Property CurbMassExtra As Kilogram Implements IVehicleEngineeringInputData.CurbMassExtra
     Public  Property Loading As Kilogram Implements IVehicleEngineeringInputData.Loading
     Public  Property DynamicTyreRadius As Meter Implements IVehicleEngineeringInputData.DynamicTyreRadius
     Public  Property Height As Meter Implements IVehicleEngineeringInputData.Height
-    Public ReadOnly Property FloorType As FloorType Implements IVehicleDeclarationInputData.FloorType
+    Public ReadOnly Property LowEntry As Boolean Implements IVehicleDeclarationInputData.LowEntry
     Public ReadOnly Property Articulated As Boolean Implements IVehicleDeclarationInputData.Articulated
     Public ReadOnly Property IVehicleDeclarationInputData_Height As Meter Implements IVehicleDeclarationInputData.Height
     Public ReadOnly Property Length As Meter Implements IVehicleDeclarationInputData.Length
     Public ReadOnly Property Width As Meter Implements IVehicleDeclarationInputData.Width
     Public ReadOnly Property EntranceHeight As Meter Implements IVehicleDeclarationInputData.EntranceHeight
+    Public ReadOnly Property DoorDriveTechnology As ConsumerTechnology Implements IVehicleDeclarationInputData.DoorDriveTechnology
 
     Public readonly Property Components As IVehicleComponentsDeclaration Implements IVehicleDeclarationInputData.Components
 	get

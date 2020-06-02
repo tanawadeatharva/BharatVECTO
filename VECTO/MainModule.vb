@@ -14,6 +14,7 @@ Imports System.Reflection
 Imports System.Runtime.Remoting
 Imports TUGraz.VectoCommon
 Imports TUGraz.VectoCommon.InputData
+Imports TUGraz.VectoCommon.Models
 Imports TUGraz.VectoCommon.OutputData
 Imports TUGraz.VectoCommon.Utils
 Imports TUGraz.VectoCore.InputData.Reader.DataObjectAdapter

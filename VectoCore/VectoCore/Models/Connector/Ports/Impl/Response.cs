@@ -81,8 +81,12 @@ namespace TUGraz.VectoCore.Models.Connector.Ports.Impl
 
 		public IElectricSystemResponse ElectricSystem { get; set; }
 
+		public PerSecond GearboxInputSpeed { get; set; }
+
 
 		public TorqueConverterOperatingPoint TorqueConverterOperatingPoint { get; set; }
+
+		public NewtonMeter TorqueConverterTorqueDemand { get; set; }
 
 		public override string ToString()
 		{

@@ -279,12 +279,19 @@
     <Compile Include="InputData\FileIO\XML\IXMLInputDataReader.cs" />
     <Compile Include="InputData\FileIO\XML\XMLInputDataNinjectModule.cs" />
     <Compile Include="InputData\Reader\ComponentData\ElectricMotorMapReader.cs" />
+    <Compile Include="InputData\Reader\DataObjectAdapter\DeclarationDataAdapterPrimaryBus.cs" />
     <Compile Include="InputData\Reader\ComponentData\ElectricFullLoadCurveReader.cs" />
     <Compile Include="Models\Connector\Ports\Impl\BatteryResponse.cs" />
     <Compile Include="Models\Connector\Ports\IBatteryPort.cs" />
     <Compile Include="Models\SimulationComponent\Data\Battery\BatteryData.cs" />
     <Compile Include="InputData\Reader\ComponentData\BatterySOCReader.cs" />
     <Compile Include="InputData\Reader\DataObjectAdapter\DeclarationDataAdapterSingleBus.cs" />
+    <Compile Include="InputData\Reader\Impl\AbstractVTPModeVectoRunDataFactory.cs" />
+    <Compile Include="InputData\Reader\Impl\CombinedBusAuxiliaries.cs" />
+    <Compile Include="InputData\Reader\DataObjectAdapter\DeclarationDataAdapterCompletedBusSpecific.cs" />
+    <Compile Include="InputData\Reader\Impl\DeclarationModeCompletedBusVectoRunDataFactory.cs" />
+    <Compile Include="InputData\Reader\Impl\DeclarationVTPModeVectoRunDataFactoryHeavyBusPrimary.cs" />
+    <Compile Include="InputData\Reader\Impl\EngineeringVTPModeVectoRunDataFactoryHeavyBusPrimary.cs" />
     <Compile Include="Models\BusAuxiliaries\DownstreamModules\Impl\Electrics\SimpleBattery.cs" />
     <Compile Include="Models\BusAuxiliaries\Interfaces\DownstreamModules\Electrics\ISimpleBattery.cs" />
     <Compile Include="Models\BusAuxiliaries\DownstreamModules\Impl\Electrics\M05Impl_P0.cs" />
@@ -297,10 +304,10 @@
     <Compile Include="InputData\Reader\ComponentData\EnvironmentalContidionsMapReader.cs" />
     <Compile Include="InputData\Reader\ComponentData\SSMTechnologiesReader.cs" />
     <Compile Include="InputData\Reader\ComponentData\ActuationsMapReader.cs" />
-    <Compile Include="InputData\Reader\DataObjectAdapter\DeclarationDataAdapterPrimaryBus.cs" />
+    <Compile Include="InputData\Reader\DataObjectAdapter\DeclarationDataAdapterCompletedBusGeneric.cs" />
     <Compile Include="InputData\Reader\DataObjectAdapter\IDeclarationDataAdapter.cs" />
     <Compile Include="InputData\Reader\Impl\AbstractDeclarationVectoRunDataFactory.cs" />
-    <Compile Include="InputData\Reader\Impl\DeclarationModeBusVectoRunDataFactory.cs" />
+    <Compile Include="InputData\Reader\Impl\DeclarationModePrimaryBusVectoRunDataFactory.cs" />
     <Compile Include="Models\BusAuxiliaries\Actuations.cs" />
     <Compile Include="Models\BusAuxiliaries\BusAuxiliaries.cs" />
     <Compile Include="Models\BusAuxiliaries\AuxiliaryConfig.cs" />
@@ -324,6 +331,11 @@
     <Compile Include="Models\BusAuxiliaries\DownstreamModules\Impl\HVAC\SSMInputs.cs" />
     <Compile Include="Models\BusAuxiliaries\DownstreamModules\Impl\HVAC\SSMRun.cs" />
     <Compile Include="Models\BusAuxiliaries\DownstreamModules\Impl\HVAC\SSMTOOL.cs" />
+    <Compile Include="Models\Declaration\CompletedBusSegments.cs" />
+    <Compile Include="Models\GenericModelData\GenericTorqueConverterData.cs" />
+    <Compile Include="Models\GenericModelData\GenericTransmissionComponentData.cs" />
+    <Compile Include="Models\GenericModelData\GenericBusEngineData.cs" />
+    <Compile Include="Models\GenericModelData\GenericBusRetarderData.cs" />
     <Compile Include="Models\Declaration\SSMTechnology.cs" />
     <Compile Include="Models\BusAuxiliaries\DownstreamModules\Impl\M06Impl.cs" />
     <Compile Include="Models\BusAuxiliaries\DownstreamModules\Impl\M07Impl.cs" />
@@ -369,7 +381,7 @@
     <Compile Include="Models\BusAuxiliaries\Interfaces\Signals.cs" />
     <Compile Include="Models\BusAuxiliaries\Util\FilePathUtils.cs" />
     <Compile Include="Models\Declaration\BusAlternatorTechnologies.cs" />
-    <Compile Include="Models\Declaration\BusSegments.cs" />
+    <Compile Include="Models\Declaration\PrimaryBusSegments.cs" />
     <Compile Include="Models\Declaration\HVACCoolingPower.cs" />
     <Compile Include="Models\Declaration\SteeringPumpBus.cs" />
     <Compile Include="Models\SimulationComponent\Data\ElectricMotor\EfficiencyMap.cs" />
@@ -405,6 +417,7 @@
     <Compile Include="OutputData\FileIO\BusAuxWriter.cs" />
     <Compile Include="OutputData\FileIO\JSONFileWriter.cs" />
     <Compile Include="OutputData\XML\AbstractXMLManufacturerReport.cs" />
+    <Compile Include="OutputData\XML\DeclarationJobs\XMLCompletedBusWriter.cs" />
     <Compile Include="OutputData\XML\Engineering\Factory\EngineeringWriterFactory.cs" />
     <Compile Include="OutputData\XML\Engineering\Factory\IEngineeringWriterInjectFactory.cs" />
     <Compile Include="OutputData\XML\Engineering\Interfaces\IXMLEngineeringComponentWriter.cs" />
@@ -439,6 +452,10 @@
     <Compile Include="OutputData\XML\Engineering\XMLEngineeringWriter.cs" />
     <Compile Include="OutputData\XML\Engineering\XMLEngineeringWriterInjectModule.cs" />
     <Compile Include="OutputData\XML\Engineering\XMLWriterMapping.cs" />
+    <Compile Include="OutputData\XML\XMLCustomerReportCompletedBus.cs" />
+    <Compile Include="OutputData\XML\XMLDeclarationReportCompletedVehicle.cs" />
+    <Compile Include="OutputData\XML\XMLDeclarationReportPrimaryVehicle.cs" />
+    <Compile Include="OutputData\XML\XMLManufacturerReportCompletedBus.cs" />
     <Compile Include="OutputData\XML\XMLManufacturerReportExemptedTruck.cs" />
     <Compile Include="OutputData\XML\XMLManufacturerReportPrimaryBus.cs" />
     <Compile Include="OutputData\XML\XMLPrimaryVehicleReport.cs" />
@@ -467,7 +484,7 @@
     <Compile Include="InputData\Reader\ComponentData\DrivingCycleDataReader.cs" />
     <Compile Include="InputData\Reader\ComponentData\FullLoadCurveReader.cs" />
     <Compile Include="InputData\Reader\Impl\DeclarationModeHeavyLorryVectoRunDataFactory.cs" />
-    <Compile Include="InputData\Reader\Impl\DeclarationVTPModeVectoRunDataFactory.cs" />
+    <Compile Include="InputData\Reader\Impl\DeclarationVTPModeVectoRunDataFactoryLorries.cs" />
     <Compile Include="InputData\Reader\Impl\DrivingCycleProxy.cs" />
     <Compile Include="InputData\Reader\Impl\EngineeringModeVectoRunDataFactory.cs" />
     <Compile Include="InputData\Reader\Impl\EngineOnlyVectoRunDataFactory.cs" />
@@ -534,7 +551,7 @@
     <Compile Include="Models\SimulationComponent\Impl\IdleControllerSwitcher.cs" />
     <Compile Include="Models\SimulationComponent\Impl\VTPGearbox.cs" />
     <Compile Include="Models\Simulation\Data\ModalResultField.cs" />
-    <Compile Include="InputData\Reader\Impl\EngineeringVTPModeVectoRunDataFactory.cs" />
+    <Compile Include="InputData\Reader\Impl\EngineeringVTPModeVectoRunDataFactoryLorries.cs" />
     <Compile Include="Models\SimulationComponent\Impl\VTPCycle.cs" />
     <Compile Include="Models\Simulation\Data\ShiftStrategyParameters.cs" />
     <Compile Include="Models\Simulation\Impl\ExemptedRun.cs" />
@@ -563,7 +580,6 @@
     <Compile Include="Models\Declaration\TruckSegments.cs" />
     <Compile Include="Models\Declaration\StandardBodies.cs" />
     <Compile Include="Models\Declaration\SteeringPump.cs" />
-    <Compile Include="Models\Declaration\VehicleClass.cs" />
     <Compile Include="Models\Declaration\Wheels.cs" />
     <Compile Include="Models\Declaration\WHTCCorrection.cs" />
     <Compile Include="Models\SimulationComponent\Data\CrosswindCorrectionCdxALookup.cs" />
@@ -887,13 +903,11 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <EmbeddedResource Include="Resources\Declaration\Buses\DefaultActuationsMap.apac" />
-    <EmbeddedResource Include="Resources\Declaration\HeavyBusSegmentationTable.csv" />
+    <EmbeddedResource Include="Resources\Declaration\PrimaryBusSegmentationTable.csv" />
     <EmbeddedResource Include="Resources\Declaration\VACC\Bus.vacc" />
     <EmbeddedResource Include="Resources\XSD\VectoDeclarationDefinitions.2.6_Buses.xsd">
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="Resources\Declaration\VAUXBus\SP-Axles_Bus.csv" />
-    <EmbeddedResource Include="Resources\Declaration\VAUXBus\SP-Factors_Bus.csv" />
     <EmbeddedResource Include="Resources\Declaration\VAUXBus\DEFAULT_1-Cylinder_1-Stage_393ccm.acmp" />
     <EmbeddedResource Include="Resources\Declaration\VAUXBus\DEFAULT_2-Cylinder_1-Stage_650ccm.acmp" />
     <EmbeddedResource Include="Resources\Declaration\VAUXBus\DEFAULT_2-Cylinder_2-Stage_398ccm.acmp" />
@@ -918,6 +932,12 @@
     <EmbeddedResource Include="Resources\XSD\VTPReport.xsd">
       <SubType>Designer</SubType>
     </EmbeddedResource>
+    <EmbeddedResource Include="Resources\Declaration\CompletedBusSegmentationTable.csv" />
+    <EmbeddedResource Include="Resources\Declaration\GenericBusData\EngineConsumptionMap_CI_Normed.vmap" />
+    <EmbeddedResource Include="Resources\Declaration\GenericBusData\EngineConsumptionMap_PI_Normed.vmap" />
+    <EmbeddedResource Include="Resources\Declaration\VAUXBus\SP-AxleFactor.csv" />
+    <EmbeddedResource Include="Resources\Declaration\VAUXBus\SP-Axles_Bus.csv" />
+    <EmbeddedResource Include="Resources\Declaration\VAUXBus\SP-Factors_Bus.csv" />
     <None Include="Utils\VectoVersionCore.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>VectoVersionCore.cs</LastGenOutput>
@@ -953,6 +973,7 @@
       <Name>VectoHashing</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

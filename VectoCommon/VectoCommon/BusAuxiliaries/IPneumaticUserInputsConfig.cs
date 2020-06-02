@@ -50,5 +50,24 @@ namespace TUGraz.VectoCommon.BusAuxiliaries
 					return ConsumerTechnology.Unknown;
 			}
 		}
+
+		public static string GetLabel(this ConsumerTechnology technology)
+		{
+			switch (technology) {
+				case ConsumerTechnology.Electrically:
+					return "Electric";
+				case ConsumerTechnology.Mechanically:
+					return "Mechanic";
+				case ConsumerTechnology.Pneumatically:
+					return "Pneumatic";
+				default:
+					return ConsumerTechnology.Unknown.ToString();
+			}
+		}
+
+		public static string ToXMLFormat(this ConsumerTechnology technology)
+		{
+			return technology.GetLabel().ToLowerInvariant();
+		}
 	}
 }

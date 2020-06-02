@@ -53,6 +53,7 @@ Imports TUGraz.VectoCore.InputData.FileIO.XML.Declaration
 Imports TUGraz.VectoCore.InputData.FileIO.XML.Engineering
 Imports TUGraz.VectoCore.Models.Simulation
 Imports TUGraz.VectoCore.Models.Declaration
+Imports TUGraz.VectoCore.Models.SimulationComponent.Data
 Imports TUGraz.VectoCore.OutputData
 Imports TUGraz.VectoCore.OutputData.FileIO
 Imports TUGraz.VectoCore.Utils
@@ -1001,12 +1002,22 @@ Imports TUGraz.VectoCore.Utils
                 runsFactory.ModalResults1Hz = Cfg.Mod1Hz
                 runsFactory.Validate = cbValidateRunData.Checked
                 runsFactory.ActualModalData = cbActVmod.Checked
+                runsFactory.SerializeVectoRunData = cbSaveVectoRunData.Checked
 
                 For Each runId As Integer In jobContainer.AddRuns(runsFactory)
                     fileWriters.Add(runId, fileWriter)
                 Next
 
+                ' TODO MQ-20200525: Remove the following loop in production (or after evaluation of LAC!!
+                If not string.IsNullOrWhiteSpace(tbMinSpeedLAC.Text) then
+                    for Each run as JobContainer.RunEntry In jobContainer.Runs
+                        dim tmpDriver as DriverData = CType(run.Run, VectoRun).GetContainer().RunData.DriverData
+                        tmpDriver.LookAheadCoasting.Enabled = True
+                        tmpDriver.LookAheadCoasting.MinSpeed = tbMinSpeedLAC.Text.ToDouble().KMPHtoMeterPerSecond()
+                    Next
+                end if
 
+                    
                 sender.ReportProgress(0,
                                       New VectoProgress _
                                          With {.Target = "ListBox",
@@ -2138,6 +2149,7 @@ Imports TUGraz.VectoCore.Utils
         tbOutputFolder.Text = Path.GetFullPath(filePath)
     End Sub
 
+    
 End Class
 
 

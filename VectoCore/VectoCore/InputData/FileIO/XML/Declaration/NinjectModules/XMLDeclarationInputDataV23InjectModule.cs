@@ -20,6 +20,15 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.NinjectModules
 
 			Bind<IXMLADASReader>()
 				.To<XMLADASReaderV23>().Named(XMLADASReaderV23.QUALIFIED_XSD_TYPE);
+
+
+			Bind<IXMLAuxiliariesDeclarationInputData>().To<XMLDeclarationAuxiliariesDataProviderV23>()
+														.Named(XMLDeclarationAuxiliariesDataProviderV23.QUALIFIED_XSD_TYPE);
+
+			Bind<IXMLAuxiliaryDeclarationInputData>().To<XMLAuxiliaryDeclarationDataProviderV23>()
+														.Named(XMLAuxiliaryDeclarationDataProviderV23.QUALIFIED_XSD_TYPE);
+
+			Bind<IXMLAuxiliaryReader>().To<XMLAuxiliaryReaderV23>().Named(XMLAuxiliaryReaderV23.QUALIFIED_XSD_TYPE);
 		}
 
 		#endregion

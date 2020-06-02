@@ -34,6 +34,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.IO;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using Newtonsoft.Json.Linq;
 using TUGraz.VectoCommon.BusAuxiliaries;
 using TUGraz.VectoCommon.Exceptions;
@@ -43,13 +44,17 @@ using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.InputData.FileIO.JSON;
 using TUGraz.VectoCore.InputData.Reader.ComponentData;
+using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter;
 using TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.Electrics;
 using TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.HVAC;
 using TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.Pneumatics;
+using TUGraz.VectoCore.Models.Simulation.Data;
+using TUGraz.VectoCore.Models.SimulationComponent;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Engine;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox;
 using TUGraz.VectoCore.Utils;
+
 
 namespace TUGraz.VectoCore.Models.Declaration
 {
@@ -69,13 +74,13 @@ namespace TUGraz.VectoCore.Models.Declaration
 		public static readonly Watt MinEnginePowerForEMS = 300e3.SI<Watt>();
 
 		public static readonly TruckSegments TruckSegments = new TruckSegments();
-		public static readonly BusSegments BusSegments = new BusSegments();
+		public static readonly PrimaryBusSegments PrimaryBusSegments = new PrimaryBusSegments();
+		public static readonly CompletedBusSegments CompletedBusSegments = new CompletedBusSegments();
 		public static readonly Wheels Wheels = new Wheels();
 		public static readonly PT1 PT1 = new PT1();
 		public static readonly FuelData FuelData = FuelData.Instance();
 		public static readonly ElectricSystem ElectricSystem = new ElectricSystem();
-		public static readonly Fan Fan=new Fan();
-				
+		public static readonly Fan Fan = new Fan();
 
 		public static readonly HeatingVentilationAirConditioning HeatingVentilationAirConditioning =
 			new HeatingVentilationAirConditioning();
@@ -106,10 +111,13 @@ namespace TUGraz.VectoCore.Models.Declaration
 		/// </summary>
 		public static Kilogram GetPayloadForGrossVehicleWeight(Kilogram grossVehicleWeight, string equationName)
 		{
-			if (equationName.ToLower().StartsWith("pc10")) {
+			if (equationName.ToLower().StartsWith("pc10"))
+			{
 				return Payloads.Lookup10Percent(grossVehicleWeight);
 			}
-			if (equationName.ToLower().StartsWith("pc75")) {
+
+			if (equationName.ToLower().StartsWith("pc75"))
+			{
 				return Payloads.Lookup75Percent(grossVehicleWeight);
 			}
 
@@ -119,19 +127,18 @@ namespace TUGraz.VectoCore.Models.Declaration
 		/// <summary>
 		/// Returns the payload for a trailer. This is 75% of (GVW-CurbWeight).
 		/// </summary>
-		public static Kilogram GetPayloadForTrailerWeight(Kilogram grossVehicleWeight, Kilogram curbWeight, bool lowLoading)
+		public static Kilogram GetPayloadForTrailerWeight(Kilogram grossVehicleWeight, Kilogram curbWeight,
+			bool lowLoading)
 		{
 			return
-			(Math.Round(
-				(Payloads.LookupTrailer(grossVehicleWeight, curbWeight) / (lowLoading ? 7.5 : 1)).LimitTo(
-					0.SI<Kilogram>(),
-					grossVehicleWeight - curbWeight).Value() / 100, 0) * 100).SI<Kilogram>();
+				(Math.Round(
+					(Payloads.LookupTrailer(grossVehicleWeight, curbWeight) / (lowLoading ? 7.5 : 1)).LimitTo(
+						0.SI<Kilogram>(),
+						grossVehicleWeight - curbWeight).Value() / 100, 0) * 100).SI<Kilogram>();
 		}
 
-		public static int PoweredAxle()
-		{
-			return 1;
-		}
+		
+		
 
 		public static class BusAuxiliaries
 		{
@@ -155,6 +162,42 @@ namespace TUGraz.VectoCore.Models.Declaration
 			//					DefaultEnvironmentalConditions));
 			//	}
 			//}
+
+			public static ICompressorMap GetCompressorMap(string compressorSize, string clutchType)
+			{
+				var resource = "";
+				switch (compressorSize) {
+					case "Small":
+						resource = "DEFAULT_1-Cylinder_1-Stage_393ccm.acmp";
+						break;
+					case "Medium Supply 1-stage":
+						resource = "DEFAULT_1-Cylinder_1-Stage_393ccm.acmp";
+						break;
+					case "Medium Supply 2-stage":
+						resource = "DEFAULT_2-Cylinder_1-Stage_650ccm.acmp";
+						break;
+					case "Large Supply 1-stage":
+						resource = "DEFAULT_2-Cylinder_2-Stage_398ccm.acmp";
+						break;
+					case "Large Supply 2-stage":
+						resource = "DEFAULT_3-Cylinder_2-Stage_598ccm.acmp";
+						break;
+					default: throw new ArgumentException(string.Format("unkown compressor size {0}"), compressorSize);
+				}
+
+				var dragCurveFactorClutch = 1.0;
+				switch (clutchType) {
+					case "visco":
+						dragCurveFactorClutch = Constants.BusAuxiliaries.PneumaticUserConfig.ViscoClutchDragCurveFactor;
+						break;
+					case "mechanically":
+						dragCurveFactorClutch = Constants.BusAuxiliaries.PneumaticUserConfig.MechanicClutchDragCurveFactor;
+						break;
+				}
+
+				return CompressorMapReader.ReadStream(
+					RessourceHelper.ReadStream(DeclarationData.DeclarationDataResourcePrefix + ".VAUXBus." + resource), dragCurveFactorClutch, $"{compressorSize} - {clutchType}");
+			}
 
 			public static BusAlternatorTechnologies AlternatorTechnologies = new BusAlternatorTechnologies();
 			private static HVACCoolingPower hvacMaxCoolingPower;
@@ -213,6 +256,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 					case BusHVACSystemConfiguration.Configuration7: 
 					case BusHVACSystemConfiguration.Configuration8: 
 					case BusHVACSystemConfiguration.Configuration9:
+					case BusHVACSystemConfiguration.Configuration10:
 						return heating
 							? Constants.BusAuxiliaries.SteadyStateModel.HighVentilationHeating
 							: Constants.BusAuxiliaries.SteadyStateModel.HighVentilation;
@@ -234,42 +278,46 @@ namespace TUGraz.VectoCore.Models.Declaration
 			}
 			 
 
-			public static Meter CalculateInternalLength(Meter vehicleLength, bool doubleDecker, FloorType floorType, double numPassLowFloor)
+			public static Meter CalculateInternalLength(Meter vehicleLength, VehicleCode vehicleCode, double numPassLowFloor)
 				{
-				if (floorType == FloorType.LowFloor) {
-					return doubleDecker ? 2 * vehicleLength : vehicleLength;
+				if (vehicleCode.GetFloorType()  == FloorType.LowFloor) {
+					return vehicleCode.IsDoubleDeckerBus() ? 2 * vehicleLength : vehicleLength;
 				}
 
-				if (floorType == FloorType.HighFloor) {
-					if (doubleDecker) {
+				if (vehicleCode.GetFloorType() == FloorType.HighFloor) {
+					if (vehicleCode.IsDoubleDeckerBus()) {
 						return numPassLowFloor > 6 ? 1.5 * vehicleLength : vehicleLength + 2.4.SI<Meter>();
 					}
 
 					return vehicleLength;
 				}
-				throw new VectoException("Internal Length for floorType {0} {1} not defined", floorType.ToString(), doubleDecker ? "DD" : "SD");
+				throw new VectoException("Internal Length for floorType {0} {1} not defined", vehicleCode.GetFloorType().ToString(), vehicleCode.IsDoubleDeckerBus() ? "DD" : "SD");
 			}
 
 			public static Meter CalculateLengthInteriorLights(
-				Meter vehicleLength, bool doubleDecker, FloorType floorType, double numPassLowFloor)
+				Meter vehicleLength, VehicleCode vehicleCode, double numPassLowFloor)
 			{
-				return CalculateInternalLength(vehicleLength, doubleDecker, floorType, numPassLowFloor);
+				return CalculateInternalLength(vehicleLength, vehicleCode, numPassLowFloor);
 			}
 
-			public static Meter CalculateInternalHeight(FloorType floorType, bool doubleDecker, Meter vehicleHeight)
+			public static Meter CalculateInternalHeight(VehicleCode vehicleCode, RegistrationClass registrationClass, Meter bodyHeight)
 			{
-				if (doubleDecker) {
+				if (vehicleCode.IsDoubleDeckerBus()) {
 					return Constants.BusParameters.InternalHeightDoubleDecker;
 				}
 
-				switch (floorType) {
+				switch (vehicleCode.GetFloorType()) {
 					case FloorType.LowFloor:
-						return vehicleHeight;
+						return bodyHeight;
 					case FloorType.HighFloor:
-						return vehicleHeight - Constants.BusParameters.HeightLuggageCompartment;
+						if ((registrationClass == RegistrationClass.II_III && bodyHeight > 3.1.SI<Meter>()) || 
+							registrationClass == RegistrationClass.III || registrationClass == RegistrationClass.B) {
+							return Constants.BusParameters.InternalHeightDoubleDecker;
+						}
+						return bodyHeight - Constants.BusParameters.HeightLuggageCompartment;
 				}
-
-				throw new VectoException("Internal height for vehicle floor type '{0}' {1} not defined", floorType.ToString(), doubleDecker ? "double decker" : "single decker");
+				
+				throw new VectoException("Internal height for vehicle floor type '{0}' {1} not defined", vehicleCode.GetFloorType().ToString(), vehicleCode.IsDoubleDeckerBus() ? "double decker" : "single decker");
 			}
 
 			public static Meter WindowHeight(bool doubleDecker)
@@ -304,8 +352,24 @@ namespace TUGraz.VectoCore.Models.Declaration
 				if (coolingPwrDriver.IsGreater(0) && comprTypeDriver == ACCompressorType.None) {
 					comprTypeDriver = comprTypePass;
 				}
+				if (coolingPwrDriver.IsEqual(0) && coolingPwrPass.IsEqual(0)) {
+					return 1.0;
+				}
 				return (coolingPwrDriver * comprTypeDriver.COP(floorType) + coolingPwrPass * comprTypePass.COP(floorType)) /
 						(coolingPwrDriver + coolingPwrPass);
+			}
+
+			public static Meter CorrectionLengthDrivetrainVolume(VehicleCode vehicleCode, bool lowEntry, int numAxles, bool articulated)
+			{
+				if ((vehicleCode == VehicleCode.CE || vehicleCode == VehicleCode.CG) && !lowEntry) {
+					switch (numAxles) {
+						case 2: return 1.0.SI<Meter>();
+						case 3: return articulated ? 1.0.SI<Meter>() : 1.25.SI<Meter>();
+						case 4: return 1.25.SI<Meter>();
+						default: throw new VectoException("invalid number of axles {0}", numAxles);
+					}
+				}
+				return 0.SI<Meter>();
 			}
 		}
 
@@ -357,7 +421,8 @@ namespace TUGraz.VectoCore.Models.Declaration
 
 		public static class Trailer
 		{
-			public static readonly double RollResistanceCoefficient = 0.0055;
+			public const double RollResistanceCoefficient = 0.0055;
+			public const string FuelEfficiencyClass = "X";
 			public const double TyreTestLoad = 37500;
 
 			public const bool TwinTyres = false;
@@ -448,53 +513,66 @@ namespace TUGraz.VectoCore.Models.Declaration
 			// TODO: MQ 2019-11-26 remove, once the parameters are fixed! make fields above read-only or const
 			static GearboxTCU()
 			{
-//#if RELEASE_CANDIDATE
+				//#if RELEASE_CANDIDATE
 				var expectedFile = @"Declaration\EffShiftParameters.vtcu";
-				if (!File.Exists(expectedFile)) {
+				if (!File.Exists(expectedFile))
+				{
 					return;
 				}
 
 				var tcuData = JSONInputDataFactory.ReadShiftParameters(expectedFile, true);
-				if (tcuData.RatingFactorCurrentGear.HasValue) {
+				if (tcuData.RatingFactorCurrentGear.HasValue)
+				{
 					RatingFactorCurrentGear = tcuData.RatingFactorCurrentGear.Value;
 					RatingFactorCurrentGearAT = tcuData.RatingFactorCurrentGear.Value;
 				}
-				if (tcuData.RatioEarlyDownshiftFC.HasValue) {
+				if (tcuData.RatioEarlyDownshiftFC.HasValue)
+				{
 					RatioEarlyDownshiftFC = tcuData.RatioEarlyDownshiftFC.Value;
 				}
-				if (tcuData.RatioEarlyUpshiftFC.HasValue) {
+				if (tcuData.RatioEarlyUpshiftFC.HasValue)
+				{
 					RatioEarlyUpshiftFC = tcuData.RatioEarlyUpshiftFC.Value;
 				}
-				if (tcuData.AllowedGearRangeFC.HasValue) {
+				if (tcuData.AllowedGearRangeFC.HasValue)
+				{
 					AllowedGearRangeFCAMT = tcuData.AllowedGearRangeFC.Value;
 					AllowedGearRangeFCAT = tcuData.AllowedGearRangeFC.Value;
 				}
-				if (tcuData.VeloictyDropFactor.HasValue) {
+				if (tcuData.VeloictyDropFactor.HasValue)
+				{
 					VelocityDropFactor = tcuData.VeloictyDropFactor.Value;
 				}
-				if (tcuData.AccelerationFactor.HasValue) {
+				if (tcuData.AccelerationFactor.HasValue)
+				{
 					AccelerationFactor = tcuData.AccelerationFactor.Value;
 				}
-				if (tcuData.ATLookAheadTime != null) {
+				if (tcuData.ATLookAheadTime != null)
+				{
 					ATLookAheadTime = tcuData.ATLookAheadTime;
 				}
-				if (tcuData.LoadStageThresholdsDown != null && LoadStageThresoldsDown.Length > 0) {
+				if (tcuData.LoadStageThresholdsDown != null && LoadStageThresoldsDown.Length > 0)
+				{
 					LoadStageThresoldsDown = tcuData.LoadStageThresholdsDown.ToArray();
 				}
-				if (tcuData.LoadStageThresholdsUp != null && LoadStageThresholdsUp.Length > 0) {
+				if (tcuData.LoadStageThresholdsUp != null && LoadStageThresholdsUp.Length > 0)
+				{
 					LoadStageThresholdsUp = tcuData.LoadStageThresholdsUp.ToArray();
 				}
-				if (tcuData.ShiftSpeedsTCToLocked != null && ShiftSpeedsTCToLocked.Length > 0) {
+				if (tcuData.ShiftSpeedsTCToLocked != null && ShiftSpeedsTCToLocked.Length > 0)
+				{
 					ShiftSpeedsTCToLocked = tcuData.ShiftSpeedsTCToLocked;
 				}
-				if (tcuData.MinEngineSpeedPostUpshift != null) {
+				if (tcuData.MinEngineSpeedPostUpshift != null)
+				{
 					MinEngineSpeedPostUpshift = tcuData.MinEngineSpeedPostUpshift;
 				}
 				var tmp = tcuData as JSONFile;
-				if (tmp != null && tmp.Body["ShiftStrategy"] != null) {
+				if (tmp != null && tmp.Body["ShiftStrategy"] != null)
+				{
 					DefaultShiftStrategy = tmp.Body["ShiftStrategy"].Value<string>();
 				}
-//#endif
+				//#endif
 			}
 		}
 
@@ -515,7 +593,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 			//public static readonly PerSecond TorqueConverterSpeedLimit = 1600.RPMtoRad();
 			public static double TorqueConverterSecondGearThreshold(VehicleCategory category)
 			{
-				return category.IsTruck() ? 1.8 : 1.85;
+				return category.IsLorry() ? 1.8 : 1.85;
 			}
 
 			public static readonly Second PowershiftShiftTime = 0.8.SI<Second>();
@@ -535,7 +613,8 @@ namespace TUGraz.VectoCore.Models.Declaration
 				GearboxType type, int gearIdx, EngineFullLoadCurve fullLoadCurve,
 				IList<ITransmissionInputData> gears, CombustionEngineData engine, double axlegearRatio, Meter dynamicTyreRadius)
 			{
-				switch (type) {
+				switch (type)
+				{
 					case GearboxType.AMT:
 
 					//return ComputeEfficiencyShiftPolygon(gearIdx, fullLoadCurve, gears, engine, axlegearRatio, dynamicTyreRadius);
@@ -560,17 +639,22 @@ namespace TUGraz.VectoCore.Models.Declaration
 				int gearIdx, EngineFullLoadCurve fullLoadCurve, IList<ITransmissionInputData> gears, CombustionEngineData engine,
 				double axlegearRatio, Meter dynamicTyreRadius)
 			{
-				if (gears.Count < 2) {
+				if (gears.Count < 2)
+				{
 					throw new VectoException("ComputeShiftPolygon needs at least 2 gears. {0} gears given.", gears.Count);
 				}
 
-				var p2 = new Point(engine.IdleSpeed.Value() * 1.1, 0);
+				var clutchClosingSpeed = (engine.FullLoadCurves[0].RatedSpeed - engine.IdleSpeed) *
+									Constants.SimulationSettings.ClutchClosingSpeedNorm + engine.IdleSpeed;
+
+				var p2 = new Point(Math.Min((clutchClosingSpeed - 10.RPMtoRad()).Value(), engine.IdleSpeed.Value() * 1.1), 0);
 				var p3 = new Point(fullLoadCurve.NTq99lSpeed.Value(), 0);
 				var p5 = new Point(fullLoadCurve.NP98hSpeed.Value(), fullLoadCurve.MaxTorque.Value() * 1.1);
 
 				var downShift = new List<ShiftPolygon.ShiftPolygonEntry>();
 
-				if (gearIdx > 0) {
+				if (gearIdx > 0)
+				{
 					var downShiftPoints = fullLoadCurve
 						.FullLoadEntries.Where(fldEntry => fldEntry.EngineSpeed >= p2.X && fldEntry.EngineSpeed <= p3.X)
 						.Select(
@@ -578,7 +662,8 @@ namespace TUGraz.VectoCore.Models.Declaration
 								new Point(fldEntry.EngineSpeed.Value(), fldEntry.TorqueFullLoad.Value() * ShiftPolygonEngineFldMargin))
 						.ToList();
 					downShift.Add(new ShiftPolygon.ShiftPolygonEntry(fullLoadCurve.MaxDragTorque * 1.1, p2.X.SI<PerSecond>()));
-					if (downShiftPoints.Count == 0) {
+					if (downShiftPoints.Count == 0)
+					{
 						// coarse grid points in FLD
 						downShift.Add(
 							new ShiftPolygon.ShiftPolygonEntry(
@@ -588,8 +673,11 @@ namespace TUGraz.VectoCore.Models.Declaration
 							new ShiftPolygon.ShiftPolygonEntry(
 								fullLoadCurve.FullLoadStationaryTorque(p3.X.SI<PerSecond>()) * ShiftPolygonEngineFldMargin,
 								p3.X.SI<PerSecond>()));
-					} else {
-						if (downShiftPoints.Min(x => x.X) > p2.X) {
+					}
+					else
+					{
+						if (downShiftPoints.Min(x => x.X) > p2.X)
+						{
 							downShift.Add(
 								new ShiftPolygon.ShiftPolygonEntry(
 									fullLoadCurve.FullLoadStationaryTorque(p2.X.SI<PerSecond>()) * ShiftPolygonEngineFldMargin,
@@ -600,7 +688,8 @@ namespace TUGraz.VectoCore.Models.Declaration
 							downShiftPoints.Select(
 								x => new ShiftPolygon.ShiftPolygonEntry(
 									x.Y.SI<NewtonMeter>() * ShiftPolygonEngineFldMargin, x.X.SI<PerSecond>())));
-						if (downShiftPoints.Max(x => x.X) < p3.X) {
+						if (downShiftPoints.Max(x => x.X) < p3.X)
+						{
 							downShift.Add(
 								new ShiftPolygon.ShiftPolygonEntry(
 									fullLoadCurve.FullLoadStationaryTorque(p3.X.SI<PerSecond>()) * ShiftPolygonEngineFldMargin,
@@ -610,7 +699,8 @@ namespace TUGraz.VectoCore.Models.Declaration
 					downShift.Add(new ShiftPolygon.ShiftPolygonEntry(fullLoadCurve.MaxTorque * 1.1, p3.X.SI<PerSecond>()));
 				}
 				var upShift = new List<ShiftPolygon.ShiftPolygonEntry>();
-				if (gearIdx >= gears.Count - 1) {
+				if (gearIdx >= gears.Count - 1)
+				{
 					return new ShiftPolygon(downShift, upShift);
 				}
 
@@ -624,7 +714,8 @@ namespace TUGraz.VectoCore.Models.Declaration
 				int gearIdx, EngineFullLoadCurve fullLoadCurve,
 				IList<ITransmissionInputData> gears, CombustionEngineData engine, double axlegearRatio, Meter dynamicTyreRadius)
 			{
-				if (gears.Count < 2) {
+				if (gears.Count < 2)
+				{
 					throw new VectoException("ComputeShiftPolygon needs at least 2 gears. {0} gears given.", gears.Count);
 				}
 
@@ -653,7 +744,8 @@ namespace TUGraz.VectoCore.Models.Declaration
 				var downshiftCorr = MoveDownshiftBelowFld(Edge.Create(p6, p3), fldMargin, 1.1 * fullLoadCurve.MaxTorque);
 
 				var downShift = new List<ShiftPolygon.ShiftPolygonEntry>();
-				if (gearIdx > 0) {
+				if (gearIdx > 0)
+				{
 					downShift =
 						new[] { p2, downshiftCorr.P1, downshiftCorr.P2 }.Select(
 																			point => new ShiftPolygon.ShiftPolygonEntry(point.Y.SI<NewtonMeter>(), point.X.SI<PerSecond>()))
@@ -662,7 +754,8 @@ namespace TUGraz.VectoCore.Models.Declaration
 					downShift[0].Torque = maxDragTorque;
 				}
 				var upShift = new List<ShiftPolygon.ShiftPolygonEntry>();
-				if (gearIdx >= gears.Count - 1) {
+				if (gearIdx >= gears.Count - 1)
+				{
 					return new ShiftPolygon(downShift, upShift);
 				}
 
@@ -679,7 +772,8 @@ namespace TUGraz.VectoCore.Models.Declaration
 				// ReSharper restore InconsistentNaming
 
 				var upShiftPts = IntersectTakeHigherShiftLine(new[] { p4, p7, p5 }, new[] { p2p, p6p, p3pExt });
-				if (gears[gearIdx].MaxInputSpeed != null) {
+				if (gears[gearIdx].MaxInputSpeed != null)
+				{
 					var maxSpeed = gears[gearIdx].MaxInputSpeed.Value();
 					upShiftPts = IntersectTakeLowerShiftLine(
 						upShiftPts,
@@ -749,12 +843,14 @@ namespace TUGraz.VectoCore.Models.Declaration
 
 				// line sweeping from max_X to 0: select point with lowest Y coordinate, abort if a point has Y = 0
 				var shiftPolygon = new List<Point>();
-				foreach (var xCoord in pointSet.Select(pt => pt.X).Distinct().OrderBy(x => x).Reverse()) {
+				foreach (var xCoord in pointSet.Select(pt => pt.X).Distinct().OrderBy(x => x).Reverse())
+				{
 					var coord = xCoord;
 					var xPoints = pointSet.Where(pt => pt.X.IsEqual(coord) && !pt.Y.IsEqual(0)).ToList();
 					shiftPolygon.Add(xPoints.MinBy(pt => pt.Y));
 					var tmp = pointSet.Where(pt => pt.X.IsEqual(coord)).Where(pt => pt.Y.IsEqual(0)).ToList();
-					if (!tmp.Any()) {
+					if (!tmp.Any())
+					{
 						continue;
 					}
 
@@ -764,13 +860,16 @@ namespace TUGraz.VectoCore.Models.Declaration
 
 				// find and remove colinear points
 				var toRemove = new List<Point>();
-				for (var i = 0; i < shiftPolygon.Count - 2; i++) {
+				for (var i = 0; i < shiftPolygon.Count - 2; i++)
+				{
 					var edge = new Edge(shiftPolygon[i], shiftPolygon[i + 2]);
-					if (edge.ContainsXY(shiftPolygon[i + 1])) {
+					if (edge.ContainsXY(shiftPolygon[i + 1]))
+					{
 						toRemove.Add(shiftPolygon[i + 1]);
 					}
 				}
-				foreach (var point in toRemove) {
+				foreach (var point in toRemove)
+				{
 					shiftPolygon.Remove(point);
 				}
 
@@ -781,7 +880,8 @@ namespace TUGraz.VectoCore.Models.Declaration
 			internal static Point[] IntersectTakeLowerShiftLine(Point[] upShiftPts, Point[] upperLimit)
 			{
 				var intersections = Intersect(upShiftPts, upperLimit);
-				if (!intersections.Any()) {
+				if (!intersections.Any())
+				{
 					return upShiftPts[0].X < upperLimit[0].X ? upShiftPts : upperLimit;
 				}
 
@@ -792,20 +892,24 @@ namespace TUGraz.VectoCore.Models.Declaration
 				pointSet.AddRange(ProjectPointsToLineSegments(upperLimit, upShiftPts, true));
 
 				var shiftPolygon = new List<Point>();
-				foreach (var yCoord in pointSet.Select(pt => pt.Y).Distinct().OrderBy(y => y).Reverse()) {
+				foreach (var yCoord in pointSet.Select(pt => pt.Y).Distinct().OrderBy(y => y).Reverse())
+				{
 					var yPoints = pointSet.Where(pt => pt.Y.IsEqual(yCoord)).ToList();
 					shiftPolygon.Add(yPoints.MinBy(pt => pt.X));
 				}
 
 				// find and remove colinear points
 				var toRemove = new List<Point>();
-				for (var i = 0; i < shiftPolygon.Count - 2; i++) {
+				for (var i = 0; i < shiftPolygon.Count - 2; i++)
+				{
 					var edge = new Edge(shiftPolygon[i], shiftPolygon[i + 2]);
-					if (edge.ContainsXY(shiftPolygon[i + 1])) {
+					if (edge.ContainsXY(shiftPolygon[i + 1]))
+					{
 						toRemove.Add(shiftPolygon[i + 1]);
 					}
 				}
-				foreach (var point in toRemove) {
+				foreach (var point in toRemove)
+				{
 					shiftPolygon.Remove(point);
 				}
 
@@ -819,11 +923,14 @@ namespace TUGraz.VectoCore.Models.Declaration
 
 				// compute all intersection points between both line segments
 				// ReSharper disable once LoopCanBeConvertedToQuery
-				foreach (var origLine in orig.Pairwise(Edge.Create)) {
+				foreach (var origLine in orig.Pairwise(Edge.Create))
+				{
 					// ReSharper disable once LoopCanBeConvertedToQuery
-					foreach (var transformedLine in transformedDownshift.Pairwise(Edge.Create)) {
+					foreach (var transformedLine in transformedDownshift.Pairwise(Edge.Create))
+					{
 						var isect = VectoMath.Intersect(origLine, transformedLine);
-						if (isect != null) {
+						if (isect != null)
+						{
 							intersections.Add(isect);
 						}
 					}
@@ -837,9 +944,12 @@ namespace TUGraz.VectoCore.Models.Declaration
 				bool projectToVertical = false)
 			{
 				var pointSet = new List<Point>();
-				foreach (var segment in lineSegments.Pairwise(Edge.Create)) {
-					if (segment.P1.X.IsEqual(segment.P2.X)) {
-						if (projectToVertical) {
+				foreach (var segment in lineSegments.Pairwise(Edge.Create))
+				{
+					if (segment.P1.X.IsEqual(segment.P2.X))
+					{
+						if (projectToVertical)
+						{
 							pointSet.AddRange(
 								points.Select(point => new Point(segment.P1.X, point.Y))
 									.Where(pt => pt.Y.IsBetween(segment.P1.Y, segment.P2.Y)));
@@ -906,7 +1016,8 @@ namespace TUGraz.VectoCore.Models.Declaration
 						Torque =  -4 * first.Torque
 					},
 				};
-				foreach (var torqueConverterEntry in characteristicTorque) {
+				foreach (var torqueConverterEntry in characteristicTorque)
+				{
 					torqueConverterEntry.SpeedRatio = torqueConverterEntry.SpeedRatio * ratio;
 					torqueConverterEntry.TorqueRatio = torqueConverterEntry.TorqueRatio / ratio;
 				}
@@ -934,6 +1045,10 @@ namespace TUGraz.VectoCore.Models.Declaration
 
 			public const MissionType SelectedMissionHeavyLorry = MissionType.LongHaul;
 			public const MissionType SelectedMissionMediumLorry = MissionType.RegionalDelivery;
+
+			public const MissionType SelectedMissionLowFloorBus = MissionType.Urban;
+			public const MissionType SelectedMissionHighFloorBus = MissionType.Coach;
+
 			public const LoadingType SelectedLoading = LoadingType.ReferenceLoad;
 
 			// verification of input data

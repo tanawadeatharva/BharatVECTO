@@ -105,7 +105,7 @@ namespace TUGraz.VectoCore.Configuration
 			{
 				public static readonly Volt PowernetVoltage = 28.3.SI<Volt>();
 
-				public const double AlternatorGearEfficiency = 0.92;
+				public const double AlternatorGearEfficiency = 1;
 
 				public const double StoredEnergyEfficiency = 0.935;
 			}
@@ -302,7 +302,7 @@ namespace TUGraz.VectoCore.Configuration
 			/// The initial search interval for the operating point search in the driver.
 			/// </summary>
 			public static readonly MeterPerSquareSecond OperatingPointInitialSearchIntervalAccelerating =
-				0.1.SI<MeterPerSquareSecond>();
+				0.09.SI<MeterPerSquareSecond>();
 
 			public static readonly PerSecond EngineIdlingSearchInterval = 10.SI<PerSecond>();
 
@@ -355,6 +355,25 @@ namespace TUGraz.VectoCore.Configuration
 			public const string VectoDeclarationInputNS = "urn:tugraz:ivt:VectoAPI:DeclarationInput:v" + XSDDeclarationVersion;
 
 			public const string VectoEngineeringInputNS = "urn:tugraz:ivt:VectoAPI:EngineeringInput:v" + XSDEngineeringVersion;
+		}
+
+		public static class GenericLossMapSettings
+		{
+			public const double OutputSpeedStart = 50;
+			public const double OutputSpeedEnd = 5000;
+
+			public const double OutputTorqueStart = 250;
+			public const double OutputTorqueEnd = 500000;
+
+			public const double Efficiency = 0.98;
+
+			public const double T0 = 52.5;
+			public const double T1 = 15;
+			public const double Td_n = 150;
+
+			public const double FactorAngleDrive = 0.75;
+
+			public const double RetarderGenericFactor = 1;
 		}
 	}
 }

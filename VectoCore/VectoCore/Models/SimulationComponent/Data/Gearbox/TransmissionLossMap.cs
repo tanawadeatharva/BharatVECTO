@@ -32,6 +32,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Diagnostics;
+using System.Linq;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
@@ -57,6 +58,13 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox
 		private readonly DelaunayMap _invertedLossMap;
 
 		public string GearName { get; private set; }
+
+
+
+		public string[] LossMapSerialized
+		{
+			get { return _entries.Select(x => $"{x.InputSpeed.AsRPM} [rpm], {x.InputTorque}, {x.TorqueLoss}").ToArray(); }
+		}
 
 		public TransmissionLossMap(IReadOnlyList<GearLossMapEntry> entries, double gearRatio, string gearName)
 		{
@@ -143,13 +151,13 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox
 		[DebuggerDisplay("GearLossMapEntry({InputSpeed}, {InputTorque}, {TorqueLoss})")]
 		public class GearLossMapEntry
 		{
-			[Required, SIRange(0, 10000 * Constants.RPMToRad)]
+			[Required, SIRange(0, 1000000 * Constants.RPMToRad)]
 			public PerSecond InputSpeed { get; private set; }
 
 			//[Required, SIRange(-100000, 100000)]
 			public NewtonMeter InputTorque { get; private set; }
 
-			[Required, SIRange(0, 100000)]
+			[Required, SIRange(0, 1000000)]
 			public NewtonMeter TorqueLoss { get; private set; }
 
 			public GearLossMapEntry(PerSecond inputSpeed, NewtonMeter inputTorque, NewtonMeter torqueLoss)

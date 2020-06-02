@@ -78,6 +78,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 					RollResistanceCoefficient = axle.Tyre.RollResistanceCoefficient,
 					AxleWeightShare = axle.AxleWeightShare,
 					TyreTestLoad = axle.Tyre.TyreTestLoad,
+					FuelEfficiencyClass = axle.Tyre.FuelEfficiencyClass,
 					AxleType = axle.AxleType,
 
 					//Wheels = axle.WheelsStr
@@ -129,7 +130,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 					var airDragArea = airdragData.AirDragArea ??
 									DeclarationData.TruckSegments.LookupCdA(
 										data.VehicleCategory, data.AxleConfiguration, data.GrossVehicleMassRating, false);
-					var height = data.Height ?? (data.VehicleCategory.IsTruck()
+					var height = data.Height ?? (data.VehicleCategory.IsLorry()
 									? DeclarationData.TruckSegments.LookupHeight(
 										data.VehicleCategory, data.AxleConfiguration,
 										data.GrossVehicleMassRating, false)
@@ -317,7 +318,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			}
 			for (uint i = 0; i < gearbox.Gears.Count; i++) {
 				var gear = gearbox.Gears[(int)i];
-				var lossMap = CreateGearLossMap(gear, i, true);
+				var lossMap = CreateGearLossMap(gear, i, true, VehicleCategory.Unknown, gearbox.Type);
 
 				var shiftPolygon = gear.ShiftPolygon != null && gear.ShiftPolygon.SourceType != DataSourceType.Missing
 					? ShiftPolygonReader.Create(gear.ShiftPolygon)
@@ -355,7 +356,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			return retVal;
 		}
 
-		private static void CreateATGearData(
+		protected virtual void CreateATGearData(
 			IGearboxEngineeringInputData gearbox, uint i, GearData gearData,
 			ShiftPolygon tcShiftPolygon, double gearDifferenceRatio, Dictionary<uint, GearData> gears,
 			VehicleCategory vehicleCategory)

@@ -50,6 +50,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		#endregion
 	}
 
+	// =============================
+
 	public class XMLAuxiliaryDeclarationDataProviderV20 : XMLAuxiliaryDeclarationDataProviderV10
 	{
 		public new static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V20;
@@ -60,5 +62,20 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 		public XMLAuxiliaryDeclarationDataProviderV20(XmlNode auxNode, IXMLDeclarationVehicleData vehicle) : base(
 			auxNode, vehicle) { }
+	}
+
+	// =============================
+
+	public class XMLAuxiliaryDeclarationDataProviderV23 : XMLAuxiliaryDeclarationDataProviderV10
+	{
+		public new static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V23;
+
+		public new const string XSD_TYPE = "AuxiliariesComponentDeclarationType";
+
+		public new static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
+
+		public XMLAuxiliaryDeclarationDataProviderV23(XmlNode auxNode, IXMLDeclarationVehicleData vehicle) : base(
+			auxNode, vehicle)
+		{ }
 	}
 }

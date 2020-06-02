@@ -54,6 +54,7 @@ namespace TUGraz.VectoCore.Tests.Utils
 		public List<VectoSimulationComponent> Components = new List<VectoSimulationComponent>();
 		private Watt _axlegearLoss = 0.SI<Watt>();
 		private bool _clutchClosed = true;
+		private ITorqueConverterControl _torqueConverter;
 
 		public IEngineInfo Engine { get; set; }
 
@@ -85,6 +86,11 @@ namespace TUGraz.VectoCore.Tests.Utils
 			return null;
 		}
 
+		public ITorqueConverterControl TorqueConverter
+		{
+			get { return _torqueConverter; }
+		}
+
 		public Watt GearboxLoss()
 		{
 			throw new System.NotImplementedException();
@@ -105,9 +111,19 @@ namespace TUGraz.VectoCore.Tests.Utils
 			return Engine.EngineStationaryFullPower(angularSpeed);
 		}
 
+		public Watt EngineDynamicFullLoadPower(PerSecond avgEngineSpeed, Second dt)
+		{
+			throw new NotImplementedException();
+		}
+
 		public Watt EngineDragPower(PerSecond angularSpeed)
 		{
 			return Engine.EngineStationaryFullPower(angularSpeed);
+		}
+
+		public Watt EngineAuxDemand(PerSecond avgEngineSpeed, Second dt)
+		{
+			throw new NotImplementedException();
 		}
 
 		public PerSecond EngineIdleSpeed

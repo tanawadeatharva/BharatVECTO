@@ -7,11 +7,13 @@ using System.Xml;
 using System.Xml.Linq;
 using Castle.Components.DictionaryAdapter.Xml;
 using TUGraz.VectoCommon.InputData;
+using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Resources;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.InputData.FileIO.XML.Common;
 using TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Interfaces;
 using TUGraz.VectoCore.InputData.Impl;
+using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
@@ -25,6 +27,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		public static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
 
 		private XmlNode _resultsNode;
+		private IList<IResult> _results;
 
 		public XMLDeclarationPrimaryVehicleBusResultsInputDataProviderV01(XmlNode resultsNode) : base(resultsNode)
 		{
@@ -37,7 +40,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 		public IList<IResult> Results
 		{
-			get { return ReadResults(); }
+			get { return _results ?? (_results =  ReadResults()); }
 		}
 		
 
@@ -60,15 +63,24 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		{
 			var resultStatus = GetAttribute(xmlNode, XMLNames.Result_Status);
 			var vehicleGroup = GetString(XMLNames.Report_Vehicle_VehicleGroup, xmlNode);
-			var mission = GetString(XMLNames.Report_Result_Mission, xmlNode);
+			var mission = GetString(XMLNames.Report_Result_Mission, xmlNode).ParseEnum<MissionType>();
 			var simulationNode = GetNode(XMLNames.Report_ResultEntry_SimulationParameters, xmlNode);
 			var simulationParams = GetSimulationParameter(simulationNode);
+
+			var energyConsumption = GetNodes(XMLNames.Report_Results_Fuel, xmlNode)
+				.Cast<XmlNode>().Select(x => new KeyValuePair<FuelType, JoulePerMeter>(
+											GetAttribute(x, XMLNames.Report_Results_Fuel_Type_Attr).ParseEnum<FuelType>(),
+											x.SelectSingleNode(
+												string.Format(".//*[local-name()='{0}' and @unit='MJ/km']", XMLNames.Report_Result_EnergyConsumption))?.InnerText
+													.ToDouble().SI(Unit.SI.Mega.Joule.Per.Kilo.Meter).Cast<JoulePerMeter>())).ToDictionary(x => x.Key, x => x.Value);
 
 			return new Result {
 				ResultStatus = resultStatus,
 				Mission = mission,
-				VehicleGroup = vehicleGroup,
-				SimulationParameter = simulationParams
+				VehicleGroup = VehicleClassHelper.Parse(vehicleGroup),
+				SimulationParameter = simulationParams,
+				EnergyConsumption = energyConsumption,
+				CO2 = new Dictionary<string, double>()
 			};
 		}
 
@@ -79,7 +91,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 			{
 				TotalVehicleMass = GetString(XMLNames.Report_ResultEntry_TotalVehicleMass, xmlNode).ToDouble().SI<Kilogram>(),
 				Payload = GetString(XMLNames.Report_Result_Payload, xmlNode).ToDouble().SI<Kilogram>(),
-				PassengerCount =  GetString(XMLNames.Bus_PassengerCount, xmlNode).ToInt(),
+				PassengerCount =  GetString(XMLNames.Bus_PassengerCount, xmlNode).ToDouble(),
 				FuelMode =  GetString(XMLNames.Report_Result_FuelMode, xmlNode)
 			};
 		}

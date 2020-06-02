@@ -85,10 +85,8 @@ Public Class Utils
     public Shared Function GetAuxTestConfig(Optional retarder As boolean = true) as AuxiliaryConfig
 
         dim vehicleData = GetDefaultVehicleData()
-        Dim heatingFuel As FuelData.Entry = New FuelData.Entry(FuelType.DieselCI, Nothing, Nothing, 1,
-                                                               11.8.SI(Unit.SI.Kilo.Watt.Hour.Per.kilo.Gramm).Cast _
-                                                                  (Of JoulePerKilogramm),
-                                                               11.8.SI(Unit.SI.Kilo.Watt.Hour.Per.kilo.Gramm).Cast _
+        Dim heatingFuel As FuelData.Entry = New FuelData.Entry(FuelType.DieselCI, Nothing, Nothing, 1, 1, 11.8.SI(Unit.SI.Kilo.Watt.Hour.Per.kilo.Gramm).Cast _
+                                                                  (Of JoulePerKilogramm), 11.8.SI(Unit.SI.Kilo.Watt.Hour.Per.kilo.Gramm).Cast _
                                                                   (Of JoulePerKilogramm))
 
         Dim techBenefits = New TechnologyBenefits
@@ -101,10 +99,10 @@ Public Class Utils
 
         Next
 
+        '.AverageCurrentDemandInclBaseLoad = 60.631777385159026.SI(Of Ampere),
+        '.AverageCurrentDemandWithoutBaseLoad = 35.631777385159026.SI(of Ampere), 
         Dim retval = New AuxiliaryConfig() With {
                 .ElectricalUserInputsConfig = New ElectricsUserInputsConfig() With {
-                .AverageCurrentDemandInclBaseLoad = 60.631777385159026.SI(Of Ampere),
-                .AverageCurrentDemandWithoutBaseLoad = 35.631777385159026.SI(of Ampere),
                 .ResultCardIdle = New DummyResultCard(), ' New ResultCard(New List(Of SmartResult)()),
                 .ResultCardTraction = New DummyResultCard(), 'New ResultCard(New List(Of SmartResult)()),
                 .ResultCardOverrun = New DummyResultCard(), 'New ResultCard(New List(Of SmartResult)()),

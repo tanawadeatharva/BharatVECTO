@@ -33,6 +33,7 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
+using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Utils;
@@ -45,11 +46,38 @@ namespace TUGraz.VectoCore.Models.Declaration
 		readonly FanMediumLorries fanMediumLorries=new FanMediumLorries();
 		readonly FanHeavyLorries fanHeavyLorries=new FanHeavyLorries();
 		
-		public AuxDemandEntry Lookup(VehicleClass vehicleClass, MissionType mission, string technology = null)
+		public Watt LookupPowerDemand(VehicleClass vehicleClass, MissionType mission, string technology)
 		{
-			return vehicleClass.IsMediumLorry() ? fanMediumLorries.Lookup(mission, technology) : fanHeavyLorries.Lookup(mission, technology);
+			if (string.IsNullOrWhiteSpace(technology)) {
+				technology = "Crankshaft mounted - Electronically controlled visco clutch";
+			}
+			if (!GetTechnologies().Contains(technology)) {
+				throw new VectoException($"Auxiliary Lookup Error: Unknown Fan technology: '{technology}'");
+			}
+			return vehicleClass.IsMediumLorry()
+				? fanMediumLorries.Lookup(mission, technology, false).PowerDemand + fanMediumLorries.Lookup(mission, technology, true).PowerDemand
+				: fanHeavyLorries.Lookup(mission, technology, false).PowerDemand + fanHeavyLorries.Lookup(mission, technology, true).PowerDemand;
 		}
 
+		public Watt LookupMechanicalPowerDemand(VehicleClass vehicleClass, MissionType mission, string technology)
+		{
+			if (!GetTechnologies().Contains(technology)) {
+				throw new VectoException($"Auxiliary Lookup Error: Unknown Fan technology: '{technology}'");
+			}
+			return (vehicleClass.IsMediumLorry()
+				? fanMediumLorries.Lookup(mission, technology, false)
+				: fanHeavyLorries.Lookup(mission, technology, false)).PowerDemand;
+		}
+
+		public Watt LookupElectricalPowerDemand(VehicleClass vehicleClass, MissionType mission, string technology)
+		{
+			if (!GetTechnologies().Contains(technology)) {
+				throw new VectoException($"Auxiliary Lookup Error: Unknown Fan technology: '{technology}'");
+			}
+			return (vehicleClass.IsMediumLorry()
+				? fanMediumLorries.Lookup(mission, technology, true)
+				: fanHeavyLorries.Lookup(mission, technology, true)).PowerDemand;
+		}
 
 		//protected override string ResourceId { get; }
 		public string[] FullyElectricTechnologies()
@@ -63,9 +91,9 @@ namespace TUGraz.VectoCore.Models.Declaration
         }
 	}
 
-	public abstract class AbstractFan : LookupData<MissionType, string, AuxDemandEntry>, IDeclarationAuxiliaryTable
+	public abstract class AbstractFan : LookupData<MissionType, string, bool, AuxDemandEntry>, IDeclarationAuxiliaryTable
     {
-        private readonly List<string> FullyElectricFanTechnologies = new List<string>();
+        //private readonly List<string> FullyElectricFanTechnologies = new List<string>();
 
         protected override string ErrorMessage
         {
@@ -78,15 +106,12 @@ namespace TUGraz.VectoCore.Models.Declaration
             {
                 var name = row.Field<string>("technology");
                 var electric = row.ParseBoolean("fullyelectric");
-                if (electric)
-                {
-                    FullyElectricFanTechnologies.Add(name);
-                }
+                
                 foreach (DataColumn col in table.Columns)
                 {
                     if (col.Caption != "technology" && col.Caption != "fullyelectric")
                     {
-                        Data[Tuple.Create(col.Caption.ParseEnum<MissionType>(), name)] = new AuxDemandEntry
+                        Data[Tuple.Create(col.Caption.ParseEnum<MissionType>(), name, electric)] = new AuxDemandEntry
                         {
                             PowerDemand = row.ParseDouble(col).SI<Watt>(),
                         };
@@ -95,21 +120,22 @@ namespace TUGraz.VectoCore.Models.Declaration
             }
         }
 
-        public override AuxDemandEntry Lookup(MissionType mission, string technology = null)
+        public override AuxDemandEntry Lookup(MissionType mission, string technology, bool electrical)
         {
-			if (string.IsNullOrWhiteSpace(technology))
-            {
-                technology = "Crankshaft mounted - Electronically controlled visco clutch";
-            }
-            return base.Lookup(mission, technology);
+			
+			var lookup = Tuple.Create(mission, technology, electrical);
+			if (Data.ContainsKey(lookup)) {
+				return Data[lookup];
+			}
+			return new AuxDemandEntry() { PowerDemand = 0.SI<Watt>()};
         }
 
 
 
         public string[] FullyElectricTechnologies()
-        {
-            return FullyElectricFanTechnologies.ToArray();
-        }
+		{
+			return Data.Keys.Where(x => x.Item3).Select(x => x.Item2).Distinct().ToArray();
+		}
 
         public string[] GetTechnologies()
         {

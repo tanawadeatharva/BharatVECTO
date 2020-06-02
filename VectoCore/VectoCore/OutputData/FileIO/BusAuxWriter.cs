@@ -64,8 +64,8 @@ namespace TUGraz.VectoCore.OutputData.FileIO
 			// Electrical Consumer list
 
 			elData["ElectricalConsumers"] = new Dictionary<string, object>() {
-				{"AverageCurrentDemandInclBaseLoad", electricalUserCfg.AverageCurrentDemandInclBaseLoad.Value() },
-				{"AverageCurrentDemandWithoutBaseLoad", electricalUserCfg.AverageCurrentDemandWithoutBaseLoad.Value() }
+				{"AverageCurrentDemandInclBaseLoad", electricalUserCfg.AverageCurrentDemandInclBaseLoad(false, false).Value() },
+				{"AverageCurrentDemandWithoutBaseLoad", electricalUserCfg.AverageCurrentDemandWithoutBaseLoad(false, false).Value() }
 			};
 
 			// PowerNetVoltage

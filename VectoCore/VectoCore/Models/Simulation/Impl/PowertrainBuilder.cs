@@ -181,12 +181,11 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 				.AddComponent(new Clutch(container, data.EngineData));
 			var engine = new VTPCombustionEngine(container, data.EngineData, pt1Disabled: true);
 
-			var aux = CreateSpeedDependentAuxiliaries(data, container);
-			var engineFan = new EngineFanAuxiliary(data.FanData.FanCoefficients, data.FanData.FanDiameter);
-			aux.AddCycle(Constants.Auxiliaries.IDs.Fan, cycleEntry => engineFan.PowerDemand(cycleEntry.FanSpeed));
-			container.ModalData.AddAuxiliary(Constants.Auxiliaries.IDs.Fan);
-
-			engine.Connect(aux.Port());
+			if (data.VehicleData.VehicleCategory.IsLorry()) {
+				AddVTPTruckAuxiliaries(data, container, engine);
+			} else if (data.VehicleData.VehicleCategory.IsBus()) {
+				AddVTPBusAuxiliaries(data, container, engine);
+			}
 
 			var idleController = new CombustionEngine.CombustionEngineNoDubleclutchIdleController(engine, container);
 			//if (data.PTO != null && data.PTO.PTOCycle != null) {
@@ -200,6 +199,46 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			return container;
 		}
 
+		private void AddVTPBusAuxiliaries(VectoRunData data, VehicleContainer container, VTPCombustionEngine engine)
+		{
+			var aux = new EngineAuxiliary(container);
+			foreach (var auxData in data.Aux) {
+				// id's in upper case
+				var id = auxData.ID.ToUpper();
+
+				switch (auxData.DemandType) {
+					case AuxiliaryDemandType.Constant:
+						aux.AddConstant(id, auxData.PowerDemand);
+						break;
+					case AuxiliaryDemandType.Direct:
+						if (auxData.PowerDemandFunc == null) {
+							aux.AddCycle(id);
+						} else {
+							aux.AddCycle(id, auxData.PowerDemandFunc);
+						}
+						break;
+					case AuxiliaryDemandType.Mapping:
+						aux.AddMapping(id, auxData.Data);
+						break;
+					default:
+						throw new ArgumentOutOfRangeException("AuxiliaryDemandType", auxData.DemandType.ToString());
+				}
+				container.ModalData?.AddAuxiliary(id);
+			}
+			
+
+			engine.Connect(aux.Port());
+		}
+
+		private void AddVTPTruckAuxiliaries(VectoRunData data, VehicleContainer container, VTPCombustionEngine engine)
+		{
+			var aux = CreateSpeedDependentAuxiliaries(data, container);
+			var engineFan = new EngineFanAuxiliary(data.FanDataVTP.FanCoefficients.Take(3).ToArray(), data.FanDataVTP.FanDiameter);
+			aux.AddCycle(Constants.Auxiliaries.IDs.Fan, cycleEntry => engineFan.PowerDemand(cycleEntry.FanSpeed));
+			container.ModalData.AddAuxiliary(Constants.Auxiliaries.IDs.Fan);
+
+			engine.Connect(aux.Port());
+		}
 
 		private IVehicleContainer BuildMeasuredSpeed(VectoRunData data)
 		{

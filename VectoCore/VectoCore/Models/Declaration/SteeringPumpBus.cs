@@ -37,7 +37,7 @@ namespace TUGraz.VectoCore.Models.Declaration {
 				var powerDemandTubing = (Constants.BusParameters.Auxiliaries.SteeringPump.TubingLoss * 2 *
 										(vehicleLength - Constants.BusParameters.Auxiliaries.SteeringPump.LengthBonus) *
 										Constants.BusParameters.Auxiliaries.SteeringPump.VolumeFlow).Cast<Watt>();
-				var tubingFactor = techLookup.TubingFactor;
+				var tubingFactor = i == 0 ? techLookup.TubingFactor : 0;
 				var axleFactor = techLookup.AxleFactor;
 
 				powerDemand += baseDemand * axleFactor + powerDemandTubing * tubingFactor;
@@ -88,7 +88,7 @@ namespace TUGraz.VectoCore.Models.Declaration {
 			protected override void ParseData(DataTable table)
 			{
 				var missionTypes = Enum.GetValues(typeof(MissionType)).Cast<MissionType>().Where(
-					m => m.IsDeclarationMission() && m != MissionType.ExemptedMission &&
+					m => ((m.IsDeclarationMission() && m != MissionType.ExemptedMission) || m == MissionType.VerificationTest) &&
 						table.Columns.Contains("tubing-" + m.ToString())).ToList();
 
 				foreach (DataRow row in table.Rows) {

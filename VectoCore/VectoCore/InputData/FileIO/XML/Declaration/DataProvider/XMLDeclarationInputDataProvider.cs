@@ -29,11 +29,15 @@
 *   Martin Rexeis, rexeis@ivt.tugraz.at, IVT, Graz University of Technology
 */
 
+using System;
+using System.Linq;
 using System.Xml;
 using System.Xml.Linq;
 using Castle.Components.DictionaryAdapter.Xml;
 using TUGraz.VectoCommon.InputData;
+using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Resources;
+using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.InputData.FileIO.XML.Common;
 using TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Interfaces;
 using TUGraz.VectoCore.Utils;
@@ -87,6 +91,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration
 			get { return JobData ?? (JobData = Reader.JobData); }
 		}
 
+		public virtual IPrimaryVehicleInformationInputDataProvider PrimaryVehicleData { get { return null; } }
+
 
 		public virtual XElement XMLHash { get; private set; }
 	}
@@ -129,6 +135,9 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration
 		{
 			Document = xmlDoc;
 			SourceType = DataSourceType.XMLFile;
+
+			var h = VectoHash.Load(xmlDoc);
+			XMLHash = h.ComputeXmlHash();
 		}
 
 
@@ -139,9 +148,14 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration
 			get { return _vehicle ?? (_vehicle = Reader.JobData.Vehicle); }
 		}
 
-		public DigestData ResultDataHash
+		public DigestData PrimaryVehicleInputDataHash
 		{
-			get { return Reader.GetDigestData(GetNode(XMLNames.Tag_ResultDataSignatureNode)); }
+			get { return Reader.GetDigestData(GetNode("InputDataSignature")); }
+		}
+
+		public DigestData ManufacturerRecordHash
+		{
+			get { return Reader.GetDigestData(GetNode("ManufacturerRecordSignature")); }
 		}
 
 		public IApplicationInformation ApplicationInformation
@@ -149,10 +163,15 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration
 			get { return _applicationInformation ?? (_applicationInformation = Reader.ApplicationInformation); }
 		}
 
-		public DigestData ManufacturerHash
+		public IResult GetResult(VehicleClass vehicleClass, MissionType mission, string fuelMode, Kilogram payload)
 		{
-			get { return Reader.GetDigestData(Document.LastChild.LastChild); }
+			return ResultsInputData.Results.FirstOrDefault(
+				x => x.VehicleGroup == vehicleClass &&
+					(x.SimulationParameter.Payload - payload).IsEqual(0, 1) && x.Mission == mission &&
+					x.SimulationParameter.FuelMode.Equals(fuelMode, StringComparison.InvariantCultureIgnoreCase));
 		}
+
+		public XElement XMLHash { get; }
 
 		public IResultsInputData ResultsInputData
 		{

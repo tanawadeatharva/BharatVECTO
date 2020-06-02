@@ -51,19 +51,20 @@ namespace TUGraz.VectoCore.Tests.XML
 			Assert.AreEqual("VEH-1234567890", vehicle.VIN);
 			Assert.AreEqual(DateTime.Parse("2020-01-09T11:00:00Z").ToUniversalTime(), vehicle.Date);
 			Assert.IsTrue(vehicle.LegislativeClass == LegislativeClass.N2);
-			Assert.AreEqual("II+III", vehicle.RegisteredClass);
+			Assert.AreEqual("II+III", vehicle.RegisteredClass.GetLabel());
 			Assert.IsTrue(vehicle.VehicleCode == VehicleCode.CD);
 			Assert.AreEqual(8300, vehicle.CurbMassChassis.Value());
 			Assert.AreEqual(15400, vehicle.GrossVehicleMassRating.Value());//TechnicalPermissibleMaximumLadenMass ?!?
-			Assert.That(() => vehicle.TankSystem, Throws.InstanceOf<VectoException>());
+			//Assert.That(() => vehicle.TankSystem, Throws.InstanceOf<VectoException>());
+			Assert.IsNull(vehicle.TankSystem);
 			Assert.AreEqual(50, vehicle.NumberOfPassengersLowerDeck);
-			Assert.AreEqual(0, vehicle.NuberOfPassengersUpperDeck);
-			Assert.AreEqual(FloorType.LowFloor, vehicle.FloorType);
+			Assert.AreEqual(0, vehicle.NumberOfPassengersUpperDeck);
+			Assert.IsTrue(vehicle.LowEntry);
 			Assert.AreEqual(2.700, vehicle.Height.Value());
 			Assert.AreEqual(11.830, vehicle.Length.Value());
 			Assert.AreEqual(2.550, vehicle.Width.Value());
-			Assert.AreEqual(0.120, ((XMLDeclarationCompletedBusDataProviderV26)vehicle).EntranceHeight.Value());
-			Assert.AreEqual("pneumatic", ((XMLDeclarationCompletedBusDataProviderV26)vehicle).DoorDriveTechnology);
+			Assert.AreEqual(0.120, vehicle.EntranceHeight.Value());
+			Assert.AreEqual(ConsumerTechnology.Pneumatically, vehicle.DoorDriveTechnology);
 	
 			var components = inputDataProvider.JobInputData.Vehicle.Components;
 			Assert.IsNotNull(components);
@@ -96,6 +97,8 @@ namespace TUGraz.VectoCore.Tests.XML
 			Assert.IsNotNull(electricSupl.Alternators);
 			Assert.AreEqual(1, electricSupl.Alternators.Count);
 			Assert.AreEqual("default", electricSupl.Alternators.First().Technology);
+
+			//Assert.AreEqual(ConsumerTechnology.Pneumatically, components.BusAuxiliaries.PneumaticConsumers.DoorDriveTechnology);
 
 			var havacAux = components.BusAuxiliaries.HVACAux;
 			Assert.IsNotNull(havacAux);

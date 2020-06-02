@@ -34,6 +34,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Xml.Linq;
+using Newtonsoft.Json;
 using TUGraz.VectoCommon.BusAuxiliaries;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
@@ -77,6 +78,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 		public AngledriveData AngledriveData { get; internal set; }
 
 		[Required, ValidateObject]
+		[JsonIgnore]
 		public IDrivingCycleData Cycle { get; internal set; }
 
 		[ValidateObject]
@@ -101,19 +103,22 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 		public string ModFileSuffix { get; internal set; }
 
 		[ValidateObject]
+		[JsonIgnore]
 		public IDeclarationReport Report { get; internal set; }
 
 		[Required, ValidateObject]
 		public LoadingType Loading { get; internal set; }
 
 		[ValidateObject]
+		[JsonIgnore]
 		public Mission Mission { get; internal set; }
 
+		[JsonIgnore]
 		public XElement InputDataHash { get; internal set; }
 
 		public int JobRunId { get; internal set; }
 
-		public AuxFanData FanData { get; internal set; }
+		public AuxFanData FanDataVTP { get; internal set; }
 
 		public List<Tuple<PowertrainPosition, ElectricMotorData>> ElectricMachinesData { get; internal set; }
 
@@ -129,6 +134,9 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 		public string ShiftStrategy { get; set; }
 		public MeterPerSecond VehicleDesignSpeed { get; internal set; }
 
+		// only used for factor method
+		public IResult PrimaryResult { get; set; }
+
 		public class AuxData
 		{
 			// ReSharper disable once InconsistentNaming
@@ -137,6 +145,8 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 			public IList<string> Technology;
 
 			[SIRange(0, 100 * Constants.Kilo)] public Watt PowerDemand;
+
+			public Func<DrivingCycleData.DrivingCycleEntry, Watt> PowerDemandFunc;
 
 			[Required] public AuxiliaryDemandType DemandType;
 

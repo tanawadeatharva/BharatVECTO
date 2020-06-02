@@ -212,6 +212,12 @@ Public Class VectoVTPJobForm
             tbC1.Text = DeclarationData.VTPMode.FanParameters(0).ToGUIFormat()
             tbC2.Text = DeclarationData.VTPMode.FanParameters(1).ToGUIFormat()
             tbC3.Text = DeclarationData.VTPMode.FanParameters(2).ToGUIFormat()
+            Dim coefficientsD As Double() = vectoJob.FanPowerCoefficents.ToArray()
+            If (coefficientsD.Length >= 4) then
+                tbC4.Text = coefficientsD(3).ToGUIFormat()
+            Else 
+                tbC4.Text = "1"
+            End If
         Else
             Dim coefficients As Double() = vectoJob.FanPowerCoefficents.ToArray()
             If (coefficients.Length >= 1) Then
@@ -222,6 +228,11 @@ Public Class VectoVTPJobForm
             End If
             If (coefficients.Length >= 3) Then
                 tbC3.Text = coefficients(2).ToGUIFormat()
+            End If
+            If (coefficients.Length >= 4) then
+                tbC4.Text = coefficients(3).ToGUIFormat()
+            Else 
+                tbC4.Text = "1"
             End If
         End If
         tbFanDiameter.Text = (vectoJob.FanDiameter.Value()*1000).ToGUIFormat()
@@ -254,6 +265,10 @@ Public Class VectoVTPJobForm
     Private Sub PopulateAuxiliaryList(auxInput As IAuxiliariesDeclarationInputData)
 
         LvAux.Items.Clear()
+        If auxInput is Nothing Then
+            Return
+        End If
+        
         Dim entry As IAuxiliaryDeclarationInputData
         For Each entry In auxInput.Auxiliaries
             'If entry.AuxiliaryType = AuxiliaryDemandType.Constant Then Continue For
@@ -300,7 +315,8 @@ Public Class VectoVTPJobForm
        vectoJob.FanCoefficients = New Double() { _
                                                     tbC1.Text.ToDouble(0),
                                                     tbC2.Text.ToDouble(0),
-                                                    tbC3.Text.ToDouble(0)
+                                                    tbC3.Text.ToDouble(0),
+                                                    tbC4.Text.ToDouble(0)
                                                 }
         vectoJob.FanDiameter = (tbFanDiameter.Text.ToDouble(0)/1000).SI (of Meter)
 
@@ -353,6 +369,7 @@ Public Class VectoVTPJobForm
         tbC1.Text = DeclarationData.VTPMode.FanParameters(0).ToGUIFormat()
         tbc2.Text = DeclarationData.VTPMode.FanParameters(1).ToGUIFormat()
         tbC3.Text = DeclarationData.VTPMode.FanParameters(2).ToGUIFormat()
+        tbC4.Text = "1"
     End Sub
 
 

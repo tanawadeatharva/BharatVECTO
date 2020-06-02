@@ -28,6 +28,10 @@ namespace TUGraz.VectoCore.Tests.XML
 		private const string vehilcePIFExample =
 			"TestData/XML/XMLReaderDeclaration/SchemaVersion2.6_Buses/PIF-heavyBus-sample.xml";
 
+		private const string vehiclePIFExampleWithErrors =
+				@"TestData\XML\XMLReaderDeclaration\SchemaVersion2.6_Buses\primary_heavyBus group P39_40_nonSmart_ESS.RSLT_PIF.xml"
+			;
+
 		protected IXMLInputDataReader xmlInputReader;
 		private IKernel _kernel;
 
@@ -43,11 +47,24 @@ namespace TUGraz.VectoCore.Tests.XML
 
 
 		[TestCase]
+		public void TestReadPIFReportWithErrors()
+		{
+			var reader = XmlReader.Create(vehiclePIFExampleWithErrors);
+			var inputDataProvider = xmlInputReader.Create(reader) as IPrimaryVehicleInformationInputDataProvider;
+
+			Assert.AreEqual("error", inputDataProvider.ResultsInputData.Status);
+			Assert.AreEqual(20, inputDataProvider.ResultsInputData.Results.Count);
+
+			Assert.AreEqual("error", inputDataProvider.ResultsInputData.Results[19].ResultStatus);
+		}
+
+
+		[TestCase]
 		public void TestPrimaryVehicleBusData()
 		{
 
 			var reader = XmlReader.Create(vehilcePIFExample);
-			var inputDataProvider = xmlInputReader.Create(reader) as IPrimaryVehicleInputDataProvider;
+			var inputDataProvider = xmlInputReader.Create(reader) as IPrimaryVehicleInformationInputDataProvider;
 
 			var vehicle = inputDataProvider.Vehicle;
 
@@ -58,12 +75,13 @@ namespace TUGraz.VectoCore.Tests.XML
 			Assert.AreEqual(DateTime.Parse("2017-02-15T11:00:00Z").ToUniversalTime(), vehicle.Date);
 			Assert.IsTrue(VehicleCategory.HeavyBusPrimaryVehicle == vehicle.VehicleCategory);
 			Assert.IsTrue(AxleConfiguration.AxleConfig_4x2 == vehicle.AxleConfiguration);
+			Assert.AreEqual(false, vehicle.Articulated);
 			Assert.AreEqual(25000, vehicle.GrossVehicleMassRating.Value());
-			Assert.AreEqual(600, vehicle.EngineIdleSpeed.Value());
-			Assert.AreEqual("Transmission Output Retarder", ((XMLDeclarationPrimaryVehicleBusDataProviderV01)vehicle).RetarderType.ToXMLFormat());
-			Assert.AreEqual(1.000, ((XMLDeclarationPrimaryVehicleBusDataProviderV01)vehicle).RetarderRatio);
-			Assert.AreEqual("None", ((XMLDeclarationPrimaryVehicleBusDataProviderV01)vehicle).AngledriveType.ToXMLFormat());
-			Assert.IsFalse(((XMLDeclarationPrimaryVehicleBusDataProviderV01)vehicle).ZeroEmissionVehicle);
+			Assert.AreEqual(600, vehicle.EngineIdleSpeed.AsRPM);
+			Assert.AreEqual("Transmission Output Retarder", vehicle.Components.RetarderInputData.Type.ToXMLFormat());
+			Assert.AreEqual(1.000, vehicle.Components.RetarderInputData.Ratio);
+			Assert.AreEqual("None", vehicle.Components.AngledriveInputData.Type.ToXMLFormat());
+			Assert.IsFalse(vehicle.ZeroEmissionVehicle);
 
 			Assert.IsFalse(vehicle.ADAS.EngineStopStart);
 			Assert.IsTrue(EcoRollType.None == vehicle.ADAS.EcoRoll);
@@ -84,11 +102,11 @@ namespace TUGraz.VectoCore.Tests.XML
 
 			TestTransmissionDataPIFType(components.GearboxInputData);
 
-			Assert.IsNull(components.TorqueConverterInputData);
+			TestTorqueConverterDataPIFType(components.TorqueConverterInputData);
 
 			TestAngledrive(components.AngledriveInputData);
 
-			Assert.IsNull(components.RetarderInputData);
+			TestRetarderInputData(components.RetarderInputData);
 
 			TestAxlegear(components.AxleGearInputData);
 
@@ -101,13 +119,13 @@ namespace TUGraz.VectoCore.Tests.XML
 
 			TestHVAC(components.BusAuxiliaries.HVACAux);
 
-			TestResultDataSignature(inputDataProvider.ResultDataHash);
+			TestResultDataSignature(inputDataProvider.ManufacturerRecordHash);
 
 			TestResultData(inputDataProvider.ResultsInputData);
 
 			TestApplicationInformation(inputDataProvider.ApplicationInformation);
 
-			TestSignature(inputDataProvider.ManufacturerHash);
+			//TestSignature(inputDataProvider.ManufacturerHash);
 		}
 
 		
@@ -183,6 +201,22 @@ namespace TUGraz.VectoCore.Tests.XML
 			Assert.IsTrue(CheckGearEntry(1.000, null, null, 12, gears, ref currentGearEntry));
 		}
 
+		private void TestTorqueConverterDataPIFType(ITorqueConverterDeclarationInputData tcData)
+		{
+			Assert.NotNull(tcData);
+			Assert.AreEqual("Some Manufacturer", tcData.Manufacturer);
+			Assert.AreEqual("Some Model", tcData.Model);
+
+			Assert.AreEqual(0, tcData.TCData.Rows[0][TorqueConverterDataReader.Fields.SpeedRatio].ToString().ToDouble());
+			Assert.AreEqual(4.5, tcData.TCData.Rows[0][TorqueConverterDataReader.Fields.TorqueRatio].ToString().ToDouble());
+			Assert.AreEqual(700, tcData.TCData.Rows[0][TorqueConverterDataReader.Fields.CharacteristicTorque].ToString().ToDouble());
+
+			Assert.AreEqual(0.4, tcData.TCData.Rows[4][TorqueConverterDataReader.Fields.SpeedRatio].ToString().ToDouble());
+			Assert.AreEqual(1.6, tcData.TCData.Rows[4][TorqueConverterDataReader.Fields.TorqueRatio].ToString().ToDouble());
+			Assert.AreEqual(350, tcData.TCData.Rows[4][TorqueConverterDataReader.Fields.CharacteristicTorque].ToString().ToDouble());
+
+		}
+
 		private void TestAngledrive(IAngledriveInputData angeldrive)
 		{
 			Assert.IsNotNull(angeldrive);
@@ -198,6 +232,14 @@ namespace TUGraz.VectoCore.Tests.XML
 			Assert.That(() => angeldrive.Efficiency, Throws.TypeOf<VectoException>());
 		}
 
+		private void TestRetarderInputData(IRetarderInputData retarder)
+		{
+			Assert.IsNotNull(retarder);
+			Assert.IsNull(retarder.LossMap);
+			Assert.AreEqual("Transmission Output Retarder", retarder.Type.ToXMLFormat());
+			Assert.AreEqual(1.000, retarder.Ratio);
+		}
+		
 		private void TestAxlegear(IAxleGearInputData axelGear)
 		{
 			Assert.AreEqual("Generic Gearbox Manufacturer", axelGear.Manufacturer);
@@ -303,29 +345,29 @@ namespace TUGraz.VectoCore.Tests.XML
 
 			var result = resultsInputData.Results[0];
 			Assert.AreEqual("success", result.ResultStatus);
-			Assert.AreEqual("P31SD", result.VehicleGroup);
-			Assert.AreEqual("Regional Delivery", result.Mission);
+			Assert.AreEqual(VehicleClass.ClassP31SD, result.VehicleGroup);
+			Assert.AreEqual(MissionType.RegionalDelivery, result.Mission);
 
 			TestSimulationParameter(8810, 920, 20, "single fuel mode", result.SimulationParameter);
 
 			result = resultsInputData.Results[1];
 			Assert.AreEqual("success", result.ResultStatus);
-			Assert.AreEqual("P31SD", result.VehicleGroup);
-			Assert.AreEqual("Regional Delivery", result.Mission);
+			Assert.AreEqual(VehicleClass.ClassP31SD, result.VehicleGroup);
+			Assert.AreEqual(MissionType.RegionalDelivery, result.Mission);
 
 			TestSimulationParameter(12490, 4600, 80, "single fuel mode", result.SimulationParameter);
 
 			result = resultsInputData.Results[2];
 			Assert.AreEqual("success", result.ResultStatus);
-			Assert.AreEqual("P31DD", result.VehicleGroup);
-			Assert.AreEqual("Urban Delivery", result.Mission);
+			Assert.AreEqual(VehicleClass.ClassP31DD, result.VehicleGroup);
+			Assert.AreEqual(MissionType.UrbanDelivery, result.Mission);
 
 			TestSimulationParameter(8810, 920, 20, "single fuel mode", result.SimulationParameter);
 
 			result = resultsInputData.Results[3];
 			Assert.AreEqual("success", result.ResultStatus);
-			Assert.AreEqual("P31DD", result.VehicleGroup);
-			Assert.AreEqual("Urban Delivery", result.Mission);
+			Assert.AreEqual(VehicleClass.ClassP31DD, result.VehicleGroup);
+			Assert.AreEqual(MissionType.UrbanDelivery, result.Mission);
 
 			TestSimulationParameter(12490, 4600, 80, "single fuel mode", result.SimulationParameter);
 		}

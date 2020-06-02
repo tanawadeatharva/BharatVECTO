@@ -47,6 +47,7 @@ namespace TUGraz.VectoCore.Models.Simulation.DataBus
 		Second AbsTime { get; set; }
 
 		IElectricMotorInfo ElectricMotor(PowertrainPosition pos);
+		ITorqueConverterControl TorqueConverter { get; }
 
 	}
 

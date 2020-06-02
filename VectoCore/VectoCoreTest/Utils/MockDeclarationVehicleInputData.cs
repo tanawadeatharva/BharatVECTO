@@ -45,16 +45,17 @@ namespace TUGraz.VectoCore.Tests.Utils {
 		public bool DualFuelVehicle { get; }
 		public Watt MaxNetPower1 { get; }
 		public Watt MaxNetPower2 { get; }
-		public string RegisteredClass { get; set; }
-		public int NuberOfPassengersUpperDeck { get; set; }
+		public RegistrationClass RegisteredClass { get; set; }
+		public int NumberOfPassengersUpperDeck { get; set; }
 		public int NumberOfPassengersLowerDeck { get; set; }
 		public VehicleCode VehicleCode { get; set; }
-		public FloorType FloorType { get; }
+		public bool LowEntry { get; }
 		public bool Articulated { get; }
 		public Meter Height { get; set; }
 		public Meter Length { get; set; }
 		public Meter Width { get; set; }
 		public Meter EntranceHeight { get; }
+		public ConsumerTechnology DoorDriveTechnology { get; }
 		public IVehicleComponentsDeclaration Components { get { return this; } }
 		public XmlNode XMLSource { get; }
 
@@ -108,12 +109,13 @@ namespace TUGraz.VectoCore.Tests.Utils {
 		public Meter Length { get; set; }
 		public Meter Width { get; set; }
 		public Meter EntranceHeight { get; }
+		public ConsumerTechnology DoorDriveTechnology { get; }
 		public Watt MaxNetPower2 { get; }
-		public string RegisteredClass { get; set; }
-		public int NuberOfPassengersUpperDeck { get; set; }
+		public RegistrationClass RegisteredClass { get; set; }
+		public int NumberOfPassengersUpperDeck { get; set; }
 		public int NumberOfPassengersLowerDeck { get; set; }
 		public VehicleCode VehicleCode { get; set; }
-		public FloorType FloorType { get; }
+		public bool LowEntry { get; }
 
 		IVehicleComponentsDeclaration IVehicleDeclarationInputData.Components
 		{

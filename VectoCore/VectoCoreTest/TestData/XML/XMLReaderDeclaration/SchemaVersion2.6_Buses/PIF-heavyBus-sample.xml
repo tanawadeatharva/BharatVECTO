@@ -129,7 +129,35 @@ xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:PrimaryVehicleInformation E:\QUAM\Wo
 						</Gears>
 					</Data>
 				</Transmission>
-				<!-- Torque Converter -->
+        <TorqueConverter>
+          <Data xsi:type="TorqueConverterDataPIFType">
+            <Manufacturer>Some Manufacturer</Manufacturer>
+            <Model>Some Model</Model>
+            <CertificationMethod>Standard values</CertificationMethod>
+            <CertificationNumber>e12*0815/8051*2017/05E0000*00</CertificationNumber>
+            <Date>2017-02-15T11:00:00Z</Date>
+            <AppVersion>TC CalcApp 123</AppVersion>
+            <Characteristics>
+              <Entry speedRatio="0.0000" torqueRatio="4.50" inputTorqueRef="700.00"/>
+                <Entry speedRatio="0.1000" torqueRatio="3.50" inputTorqueRef="640.00"/>
+                <Entry speedRatio="0.2000" torqueRatio="2.70" inputTorqueRef="560.00"/>
+                <Entry speedRatio="0.3000" torqueRatio="2.20" inputTorqueRef="460.00"/>
+                <Entry speedRatio="0.4000" torqueRatio="1.60" inputTorqueRef="350.00"/>
+                <Entry speedRatio="0.5000" torqueRatio="1.20" inputTorqueRef="250.00"/>
+                <Entry speedRatio="0.6000" torqueRatio="0.90" inputTorqueRef="160.00"/>
+                <Entry speedRatio="0.7400" torqueRatio="0.90" inputTorqueRef="1.00"/>
+                <Entry speedRatio="0.8100" torqueRatio="1.00" inputTorqueRef="-40.34"/>
+                <Entry speedRatio="0.9100" torqueRatio="1.00" inputTorqueRef="-80.34"/>
+                <Entry speedRatio="1.0200" torqueRatio="1.00" inputTorqueRef="-136.11"/>
+                <Entry speedRatio="1.1600" torqueRatio="1.00" inputTorqueRef="-216.52"/>
+                <Entry speedRatio="1.3600" torqueRatio="1.00" inputTorqueRef="-335.19"/>
+                <Entry speedRatio="1.6300" torqueRatio="1.00" inputTorqueRef="-528.77"/>
+                <Entry speedRatio="2.0400" torqueRatio="1.00" inputTorqueRef="-883.40"/>
+                <Entry speedRatio="3.2600" torqueRatio="1.00" inputTorqueRef="-2462.17"/>
+                <Entry speedRatio="8.1500" torqueRatio="1.00" inputTorqueRef="-16540.98"/>             
+            </Characteristics>
+          </Data>
+        </TorqueConverter>
 				<Angledrive>
 					<Data xsi:type="pbus:AngledriveDataPIFType">
 						<Manufacturer>Generic Gearbox Manufacturer</Manufacturer>
@@ -245,7 +273,7 @@ xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:PrimaryVehicleInformation E:\QUAM\Wo
 				</Auxiliaries>
 			</Components>
 		</Vehicle>
-		<ResultDataSignature>
+		<InputDataSignature>
 			<di:Reference URI="#MRF-VEH-1234567890">
 				<di:Transforms>
 					<di:Transform Algorithm="urn:vecto:xml:2017:canonicalization"/>
@@ -254,7 +282,17 @@ xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:PrimaryVehicleInformation E:\QUAM\Wo
 				<di:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"/>
 				<di:DigestValue>4TkUGQTX8tevHOU9Cj9uyCFuI/aqcEYlo/gyVjVQmv0=</di:DigestValue>
 			</di:Reference>
-		</ResultDataSignature>
+		</InputDataSignature>
+				<ManufacturerRecordSignature>
+			<di:Reference URI="#MRF-VEH-1234567890">
+				<di:Transforms>
+					<di:Transform Algorithm="urn:vecto:xml:2017:canonicalization"/>
+					<di:Transform Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#"/>
+				</di:Transforms>
+				<di:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"/>
+				<di:DigestValue>4TkUGQTX8tevHOU9Cj9uyCFuI/aqcEYlo/gyVjVQmv0=</di:DigestValue>
+			</di:Reference>
+		</ManufacturerRecordSignature>
 		<Results>
 			<Status>success</Status>
 			<Result status="success">

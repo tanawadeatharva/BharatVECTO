@@ -142,7 +142,7 @@ namespace TUGraz.VectoCommon.Models
 		AxlegearResponse Axlegear { get; }
 
 		AngledriveResponse Angledrive { get; }
-
+		PerSecond GearboxInputSpeed { get; set; }
 		WheelsResponse Wheels { get; }
 
 		VehicleResponse Vehicle { get; }

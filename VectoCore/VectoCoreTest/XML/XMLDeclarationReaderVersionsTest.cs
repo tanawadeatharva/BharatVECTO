@@ -90,7 +90,7 @@ namespace TUGraz.VectoCore.Tests.XML
 		public void CreateRunDataMediumLorry()
 		{
 			var runIdx = 0;
-			var jobFile = @"TestData\XML\XMLReaderDeclaration\SchemaVersion2.6_Buses\vecto_vehicle-medium_lorry.xml";
+			var jobFile = @"TestData\XML\XMLReaderDeclaration\SchemaVersion2.6_Buses\vecto_vehicle-medium_lorry-sample.xml";
 
 			var writer = new FileOutputWriter(jobFile);
 			var inputData = xmlInputReader.CreateDeclaration(jobFile);

@@ -55,7 +55,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 	{
 		public static List<string> LogList = new List<string>();
 
-		const string Header = "<t> [s],<v> [km/h],<n_eng> [rpm],<n_fan> [rpm],<tq_left> [Nm],<tq_right> [Nm],<n_wh_left> [rpm],<n_wh_right> [rpm],<fc> [g/h],<gear>";
+		const string Header = "<t> [s],<v> [km/h],<n_eng> [rpm],<n_fan> [rpm],<tq_left> [Nm],<tq_right> [Nm],<n_wh_left> [rpm],<n_wh_right> [rpm],<fc_Diesel CI> [g/h],<gear>";
 
 
 		[TestCase()]
@@ -309,7 +309,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			
 		}
 
-		[TestCase()]
+		[TestCase(), Ignore("FC-Checks disabled (dual fuel)")]
 		public void TestFuelConsumptionTooLow()
 		{
 			SetupLogging();
@@ -368,7 +368,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 
 		}
 
-		[TestCase()]
+		[TestCase(), Ignore("FC-Checks disabled (dual fuel")]
 		public void TestFuelConsumptionTooHigh()
 		{
 			SetupLogging();

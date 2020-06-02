@@ -20,6 +20,7 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries
 {
 	public class AuxiliaryConfig : IAuxiliaryConfig
 	{
+		[JsonIgnore]
 		public IBusAuxiliariesDeclarationData InputData { get; internal set; }
 
 		// Electrical
@@ -36,6 +37,7 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries
 		public IActuations Actuations { get; internal set; }
 
 
+		[JsonIgnore]
 		public IVehicleData VehicleData { get; internal set; }
 
 		//public IFuelConsumptionMap FuelMap { get; internal set; }
@@ -64,15 +66,15 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries
 				return false;
 			}
 
-			if (ElectricalUserInputsConfig.AverageCurrentDemandInclBaseLoad !=
-				other.ElectricalUserInputsConfig.AverageCurrentDemandInclBaseLoad) {
-				return false;
-			}
+			//if (ElectricalUserInputsConfig.AverageCurrentDemandInclBaseLoad !=
+			//	other.ElectricalUserInputsConfig.AverageCurrentDemandInclBaseLoad) {
+			//	return false;
+			//}
 
-			if (ElectricalUserInputsConfig.AverageCurrentDemandWithoutBaseLoad !=
-				other.ElectricalUserInputsConfig.AverageCurrentDemandWithoutBaseLoad) {
-				return false;
-			}
+			//if (ElectricalUserInputsConfig.AverageCurrentDemandWithoutBaseLoad !=
+			//	other.ElectricalUserInputsConfig.AverageCurrentDemandWithoutBaseLoad) {
+			//	return false;
+			//}
 
 			// PowerNetVoltage
 			if (ElectricalUserInputsConfig.PowerNetVoltage != other.ElectricalUserInputsConfig.PowerNetVoltage) {

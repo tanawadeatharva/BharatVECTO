@@ -1,10 +1,12 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using Newtonsoft.Json.Linq;
 using TUGraz.VectoCommon.BusAuxiliaries;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.InputData.Reader.ComponentData;
+using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter;
 using TUGraz.VectoCore.Models.BusAuxiliaries;
 using TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.Electrics;
 using TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.HVAC;
@@ -71,11 +73,20 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			// DoorActuationTimeSecond
 			electricalUserInputsConfig.DoorActuationTimeSecond = elData.GetEx<double>("DoorActuationTimeSecond").SI<Second>();
 
-
-			electricalUserInputsConfig.AverageCurrentDemandInclBaseLoad = elData["ElectricalConsumers"]
+			var averageCurrentDemandInclBaseLoad = elData["ElectricalConsumers"]
 				.GetEx<double>("AverageCurrentDemandInclBaseLoad").SI<Ampere>();
-			electricalUserInputsConfig.AverageCurrentDemandWithoutBaseLoad = elData["ElectricalConsumers"]
+			var averageCurrentDemandWithoutBaseLoad = elData["ElectricalConsumers"]
 				.GetEx<double>("AverageCurrentDemandWithoutBaseLoad").SI<Ampere>();
+
+			electricalUserInputsConfig.ElectricalConsumers = new Dictionary<string, ElectricConsumerEntry>();
+			electricalUserInputsConfig.ElectricalConsumers["BaseLoad"] = new ElectricConsumerEntry() { 
+				BaseVehicle = true,
+				Current = averageCurrentDemandInclBaseLoad - averageCurrentDemandWithoutBaseLoad };
+
+			electricalUserInputsConfig.ElectricalConsumers["Consumers"] = new ElectricConsumerEntry() {
+				BaseVehicle = false,
+				Current = averageCurrentDemandWithoutBaseLoad
+			};
 
 			// PowerNetVoltage
 			electricalUserInputsConfig.PowerNetVoltage = elData.GetEx<double>("PowerNetVoltage").SI<Volt>();
@@ -152,7 +163,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			pneumaticUserInputsConfig.CompressorGearRatio = puData.GetEx<double>("CompressorGearRatio");
 			var file = puData.GetEx<string>("CompressorMap");
 			if (!string.IsNullOrWhiteSpace(file)) {
-				pneumaticUserInputsConfig.CompressorMap = CompressorMapReader.ReadFile(Path.Combine(baseDir, file), 1.0);
+				pneumaticUserInputsConfig.CompressorMap = CompressorMapReader.ReadFile(Path.Combine(baseDir, file), 1.0, "");
 			}
 			pneumaticUserInputsConfig.Doors = ConsumerTechnologyHelper.Parse(puData.GetEx<string>("Doors"));
 			pneumaticUserInputsConfig.KneelingHeight =

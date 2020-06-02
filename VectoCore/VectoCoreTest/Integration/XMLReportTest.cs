@@ -183,8 +183,8 @@ namespace TUGraz.VectoCore.Tests.Integration
 			var cifValidator = GetValidator(xmlReport.CustomerReport);
 			cifValidator.ValidateXML(XmlDocumentType.DeclarationComponentData | XmlDocumentType.DeclarationJobData | XmlDocumentType.CustomerReport | XmlDocumentType.ManufacturerReport);
 
-			var monitoringValidator = GetValidator(xmlReport.MonitoringReport);
-			monitoringValidator.ValidateXML(XmlDocumentType.DeclarationComponentData | XmlDocumentType.DeclarationJobData | XmlDocumentType.CustomerReport | XmlDocumentType.ManufacturerReport);
+			//var monitoringValidator = GetValidator(xmlReport.MonitoringReport);
+			//monitoringValidator.ValidateXML(XmlDocumentType.DeclarationComponentData | XmlDocumentType.DeclarationJobData | XmlDocumentType.CustomerReport | XmlDocumentType.ManufacturerReport);
 		}
 
 		private static XMLValidator GetValidator(XDocument xmlReport)
