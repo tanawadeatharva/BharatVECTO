@@ -45,7 +45,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		internal void AddConstant(string auxId, Watt powerDemand, Watt powerdemandStandstill)
 		{
-			Add(auxId, () => DataBus.VehicleStopped && DataBus.StopTime.IsGreater(Constants.SimulationSettings.ThresholdStandstillOff) && DataBus.TargetSpeed.IsEqual(0) ? powerdemandStandstill : powerDemand);
+			Add(auxId, () => DataBus.VehicleInfo.VehicleStopped && DataBus.DrivingCycleInfo.StopTime.IsGreater(Constants.SimulationSettings.ThresholdStandstillOff) && DataBus.DrivingCycleInfo.TargetSpeed.IsEqual(0) ? powerdemandStandstill : powerDemand);
 		}
 	}
 }

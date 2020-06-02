@@ -121,7 +121,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		public override bool GearEngaged(Second absTime)
 		{
 			return absTime.IsGreater(DataBus.AbsTime) ||
-					!(CurrentState.Disengaged || (DataBus.DriverBehavior == DrivingBehavior.Halted || (DisengageGearbox && !ModelData.ATEcoRollReleaseLockupClutch)));
+					!(CurrentState.Disengaged || (DataBus.DriverInfo.DriverBehavior == DrivingBehavior.Halted || (DisengageGearbox && !ModelData.ATEcoRollReleaseLockupClutch)));
 		}
 
 		public override bool DisengageGearbox { get; set; }
@@ -140,7 +140,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				effectiveRatio = ModelData.Gears[Gear].TorqueConverterRatio;
 				effectiveLossMap = ModelData.Gears[Gear].TorqueConverterGearLossMap;
 			}
-			if (!DataBus.VehicleStopped) {
+			if (!DataBus.VehicleInfo.VehicleStopped) {
 				inAngularVelocity = outAngularVelocity * effectiveRatio;
 				var torqueLossResult = effectiveLossMap.GetTorqueLoss(outAngularVelocity, outTorque);
 				CurrentState.TorqueLossResult = torqueLossResult;
@@ -225,7 +225,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			_strategy?.Request(absTime, dt, outTorque, outAngularVelocity);
 
-			var driveOffSpeed = DataBus.VehicleStopped && outAngularVelocity > 0;
+			var driveOffSpeed = DataBus.VehicleInfo.VehicleStopped && outAngularVelocity > 0;
 			var driveOffTorque = CurrentState.Disengaged && outTorque.IsGreater(0, 1e-1);
 			if (!dryRun && (driveOffSpeed || driveOffTorque)) {
 				Gear = 1;
@@ -239,7 +239,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			var loop = false;
 			SetPowershiftLossEnergy(absTime, dt, outTorque, outAngularVelocity);
 			do {
-				if (CurrentState.Disengaged || (DataBus.DriverBehavior == DrivingBehavior.Halted) || (DisengageGearbox && !ModelData.ATEcoRollReleaseLockupClutch)) {
+				if (CurrentState.Disengaged || (DataBus.DriverInfo.DriverBehavior == DrivingBehavior.Halted) || (DisengageGearbox && !ModelData.ATEcoRollReleaseLockupClutch)) {
 					// only when vehicle is halted or close before halting or during eco-roll events
 					retVal = RequestDisengaged(absTime, dt, outTorque, outAngularVelocity, dryRun);
 				} else {
@@ -318,7 +318,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				var remainingShiftLossLime = ModelData.PowershiftShiftTime - (absTime - LastShift);
 				if (remainingShiftLossLime.IsGreater(0)) {
 					aliquotEnergyLoss = _powershiftLossEnergy * VectoMath.Min(1.0, VectoMath.Min(dt, remainingShiftLossLime) / ModelData.PowershiftShiftTime);
-					var avgEngineSpeed = (DataBus.EngineSpeed + outAngularVelocity * effectiveRatio) / 2;
+					var avgEngineSpeed = (DataBus.EngineInfo.EngineSpeed + outAngularVelocity * effectiveRatio) / 2;
 					powershiftLoss = aliquotEnergyLoss / dt / avgEngineSpeed;
 					inTorque += powershiftLoss;
 
@@ -413,7 +413,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				Extrapolated = false,
 				Value = 0.SI<NewtonMeter>()
 			};
-			TorqueConverter.Locked(DataBus.VehicleStopped ? 0.SI<NewtonMeter>() : CurrentState.InTorque, retval.Engine.EngineSpeed,
+			TorqueConverter.Locked(DataBus.VehicleInfo.VehicleStopped ? 0.SI<NewtonMeter>() : CurrentState.InTorque, retval.Engine.EngineSpeed,
 				CurrentState.InTorque,
 				outAngularVelocity * effectiveRatio);
 
@@ -426,7 +426,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			var avgInAngularSpeed = (PreviousState.InAngularVelocity + CurrentState.InAngularVelocity) / 2.0;
 			var avgOutAngularSpeed = (PreviousState.OutAngularVelocity + CurrentState.OutAngularVelocity) / 2.0;
 
-			container[ModalResultField.Gear] = CurrentState.Disengaged || DataBus.VehicleStopped ||
+			container[ModalResultField.Gear] = CurrentState.Disengaged || DataBus.VehicleInfo.VehicleStopped ||
 												(DisengageGearbox && !ModelData.ATEcoRollReleaseLockupClutch)
 				? 0
 				: Gear;
@@ -459,7 +459,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			}
 			RequestAfterGearshift = false;
 
-			if (DataBus.VehicleStopped) {
+			if (DataBus.VehicleInfo.VehicleStopped) {
 				CurrentState.Disengaged = true;
 			}
 

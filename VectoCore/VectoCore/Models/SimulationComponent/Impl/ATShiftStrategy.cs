@@ -91,7 +91,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		public override uint InitGear(Second absTime, Second dt, NewtonMeter torque, PerSecond outAngularVelocity)
 		{
-			if (DataBus.VehicleSpeed.IsEqual(0)) {
+			if (DataBus.VehicleInfo.VehicleSpeed.IsEqual(0)) {
 				// AT always starts in first gear and TC active!
 				_gearbox.TorqueConverterLocked = false;
 				_gearbox.Disengaged = true;
@@ -105,7 +105,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				}
 				var response = _gearbox.Initialize(gear, torqueConverterLocked, torque, outAngularVelocity);
 
-				if (response.Engine.EngineSpeed > DataBus.EngineRatedSpeed || response.Engine.EngineSpeed < DataBus.EngineIdleSpeed) {
+				if (response.Engine.EngineSpeed > DataBus.EngineInfo.EngineRatedSpeed || response.Engine.EngineSpeed < DataBus.EngineInfo.EngineIdleSpeed) {
 					continue;
 				}
 
@@ -154,10 +154,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			// DISENGAGE ------------------------------------------------------
 			// 1) _ -> 0: disengage before halting
-			var braking = DataBus.DriverBehavior == DrivingBehavior.Braking;
+			var braking = DataBus.DriverInfo.DriverBehavior == DrivingBehavior.Braking;
 			var torqueNegative = outTorque.IsSmaller(0);
 			var slowerThanDisengageSpeed =
-				DataBus.VehicleSpeed.IsSmaller(Constants.SimulationSettings.ATGearboxDisengageWhenHaltingSpeed);
+				DataBus.VehicleInfo.VehicleSpeed.IsSmaller(Constants.SimulationSettings.ATGearboxDisengageWhenHaltingSpeed);
 			var disengageBeforeHalting = braking && torqueNegative && slowerThanDisengageSpeed;
 
 			// 2) L -> 0: disengage if inAngularVelocity == 0
@@ -165,11 +165,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			// 3) 1C -> 0: disengange when negative T_out and positive T_in
 			var gear1C = gear == 1 && !_gearbox.TorqueConverterLocked;
-			var disengageTOutNegativeAndTInPositive = DataBus.DriverAcceleration <= 0 && gear1C && outTorque.IsSmaller(0) &&
+			var disengageTOutNegativeAndTInPositive = DataBus.DriverInfo.DriverAcceleration <= 0 && gear1C && outTorque.IsSmaller(0) &&
 													inTorque.IsGreater(0);
 
 			var disengageTCEngineSpeedLowerIdle = braking && torqueNegative && gear1C &&
-												inAngularVelocity.IsSmallerOrEqual(DataBus.EngineIdleSpeed);
+												inAngularVelocity.IsSmallerOrEqual(DataBus.EngineInfo.EngineIdleSpeed);
 
 			if (disengageBeforeHalting || disengageTCEngineSpeedLowerIdle || disengageAngularVelocityZero ||
 				disengageTOutNegativeAndTInPositive) {
@@ -203,14 +203,14 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			Second absTime, NewtonMeter outTorque, PerSecond outAngularVelocity, PerSecond inAngularVelocity, uint gear)
 		{
 			// Emergency Downshift: if lower than engine idle speed
-			if (inAngularVelocity.IsSmaller(DataBus.EngineIdleSpeed)) {
+			if (inAngularVelocity.IsSmaller(DataBus.EngineInfo.EngineIdleSpeed)) {
 				Log.Debug("engine speed would fall below idle speed - shift down");
 				Downshift(absTime, gear);
 				return true;
 			}
 
 			// Emergency Upshift: if higher than engine rated speed
-			if (inAngularVelocity.IsGreaterOrEqual(VectoMath.Min(ModelData.Gears[gear].MaxSpeed, DataBus.EngineN95hSpeed))) {
+			if (inAngularVelocity.IsGreaterOrEqual(VectoMath.Min(ModelData.Gears[gear].MaxSpeed, DataBus.EngineInfo.EngineN95hSpeed))) {
 				// check if upshift is possible
 				if (!ModelData.Gears.ContainsKey(gear + 1)) {
 					return false;
@@ -290,7 +290,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			// C -> C+1
 			var nextGear = ModelData.Gears[gear + 1];
 			var gearRatio = nextGear.TorqueConverterRatio / currentGear.TorqueConverterRatio;
-			var minEngineSpeed = VectoMath.Min(700.RPMtoRad(), gearRatio * (DataBus.EngineN80hSpeed - 150.RPMtoRad()));
+			var minEngineSpeed = VectoMath.Min(700.RPMtoRad(), gearRatio * (DataBus.EngineInfo.EngineN80hSpeed - 150.RPMtoRad()));
 
 			var nextGearboxInSpeed = outAngularVelocity * nextGear.TorqueConverterRatio;
 			var nextGearboxInTorque = outTorque / nextGear.TorqueConverterRatio;
@@ -301,10 +301,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				_gearbox.TorqueConverter.FindOperatingPoint(absTime, dt, nextGearboxInTorque, nextGearboxInSpeed);
 
 			var engineSpeedOverMin = tcOperatingPoint.InAngularVelocity.IsGreater(minEngineSpeed);
-			var avgSpeed = (DataBus.EngineSpeed + tcOperatingPoint.InAngularVelocity) / 2;
-			var engineMaxTorque = DataBus.EngineStationaryFullPower(avgSpeed) / avgSpeed;
+			var avgSpeed = (DataBus.EngineInfo.EngineSpeed + tcOperatingPoint.InAngularVelocity) / 2;
+			var engineMaxTorque = DataBus.EngineInfo.EngineStationaryFullPower(avgSpeed) / avgSpeed;
 			var engineInertiaTorque = Formulas.InertiaPower(
-										DataBus.EngineSpeed, tcOperatingPoint.InAngularVelocity, _gearbox.EngineInertia, dt) / avgSpeed;
+										DataBus.EngineInfo.EngineSpeed, tcOperatingPoint.InAngularVelocity, _gearbox.EngineInertia, dt) / avgSpeed;
 			var engineTorqueBelowMax =
 				tcOperatingPoint.InTorque.IsSmallerOrEqual(engineMaxTorque - engineInertiaTorque);
 
@@ -313,7 +313,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					outAngularVelocity, outTorque, inAngularVelocity, inTorque, gear, response); // EstimateAccelerationForGear(gear + 1, outAngularVelocity);
 			var minAcceleration = VectoMath.Min(
 				ModelData.TorqueConverterData.CCUpshiftMinAcceleration,
-				DataBus.DriverAcceleration);
+				DataBus.DriverInfo.DriverAcceleration);
 			var minAccelerationReachable = reachableAcceleration.IsGreaterOrEqual(minAcceleration);
 
 			if (engineSpeedOverMin && engineTorqueBelowMax && minAccelerationReachable) {
@@ -346,13 +346,13 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			var isAboveUpShift = IsAboveUpShiftCurve(gear, nextEngineTorque, nextEngineSpeed, _gearbox.TorqueConverterLocked);
 
 			var minAccelerationReachable = true;
-			if (!DataBus.VehicleSpeed.IsEqual(0)) {
+			if (!DataBus.VehicleInfo.VehicleSpeed.IsEqual(0)) {
 				var reachableAcceleration = EstimateAccelerationForGear(nextGear, outAngularVelocity);
 				var minAcceleration = _gearbox.TorqueConverterLocked
 					? ModelData.UpshiftMinAcceleration
 					: ModelData.TorqueConverterData.CLUpshiftMinAcceleration;
 				minAcceleration = VectoMath.Min(
-					minAcceleration, VectoMath.Max(0.SI<MeterPerSquareSecond>(), DataBus.DriverAcceleration));
+					minAcceleration, VectoMath.Max(0.SI<MeterPerSquareSecond>(), DataBus.DriverInfo.DriverAcceleration));
 				minAccelerationReachable = reachableAcceleration.IsGreaterOrEqual(minAcceleration);
 			}
 
@@ -415,9 +415,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				return true;
 			}
 
-			if (shiftTimeReached && DataBus.DrivingAction == DrivingAction.Accelerate) {
-				if (DataBus.VehicleSpeed < DataBus.CycleData.LeftSample.VehicleTargetSpeed - 10.KMPHtoMeterPerSecond() &&
-					DataBus.DriverAcceleration < 0.SI<MeterPerSquareSecond>()) {
+			if (shiftTimeReached && DataBus.DriverInfo.DrivingAction == DrivingAction.Accelerate) {
+				if (DataBus.VehicleInfo.VehicleSpeed < DataBus.DrivingCycleInfo.CycleData.LeftSample.VehicleTargetSpeed - 10.KMPHtoMeterPerSecond() &&
+					DataBus.DriverInfo.DriverAcceleration < 0.SI<MeterPerSquareSecond>()) {
 					var tmpResponseCurr = (ResponseDryRun)_gearbox.Request(absTime, dt, outTorque, outAngularVelocity, true);
 					if (_gearbox.Gear > 1 || _gearbox.Gear == 1 && _gearbox.TorqueConverterLocked) {
 						var tmpCurr = _nextGear.Clone();
@@ -429,7 +429,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 						_nextGear.SetState(tmpCurr);
 						SetGear(tmpGbxState);
 						if (tmpResponseDs.DeltaFullLoad - Formulas.InertiaPower(
-								tmpResponseDs.Engine.EngineSpeed, DataBus.EngineSpeed, EngineInertia, dt) < tmpResponseCurr.DeltaFullLoad) {
+								tmpResponseDs.Engine.EngineSpeed, DataBus.EngineInfo.EngineSpeed, EngineInertia, dt) < tmpResponseCurr.DeltaFullLoad) {
 							Downshift(absTime, gear);
 							return true;
 						}
@@ -497,17 +497,17 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		protected MeterPerSquareSecond EstimateAcceleration(
 			PerSecond gbxOutSpeed, NewtonMeter gbxOutTorque, PerSecond tcInSpeed, NewtonMeter tcInTorque, uint currentGear, IResponse response)
 		{
-			var vehicleSpeed = DataBus.VehicleSpeed;
+			var vehicleSpeed = DataBus.VehicleInfo.VehicleSpeed;
 			var avgSlope =
-			((DataBus.CycleLookAhead(Constants.SimulationSettings.GearboxLookaheadForAccelerationEstimation).Altitude -
-			DataBus.Altitude) / Constants.SimulationSettings.GearboxLookaheadForAccelerationEstimation).Value().SI<Radian>();
+			((DataBus.DrivingCycleInfo.CycleLookAhead(Constants.SimulationSettings.GearboxLookaheadForAccelerationEstimation).Altitude -
+			DataBus.DrivingCycleInfo.Altitude) / Constants.SimulationSettings.GearboxLookaheadForAccelerationEstimation).Value().SI<Radian>();
 
-			var airDragLoss = DataBus.AirDragResistance(vehicleSpeed, vehicleSpeed) * DataBus.VehicleSpeed;
-			var rollResistanceLoss = DataBus.RollingResistance(avgSlope) * DataBus.VehicleSpeed;
+			var airDragLoss = DataBus.VehicleInfo.AirDragResistance(vehicleSpeed, vehicleSpeed) * DataBus.VehicleInfo.VehicleSpeed;
+			var rollResistanceLoss = DataBus.VehicleInfo.RollingResistance(avgSlope) * DataBus.VehicleInfo.VehicleSpeed;
 
 			//DataBus.GearboxLoss();
-			var slopeLoss = DataBus.SlopeResistance(avgSlope) * DataBus.VehicleSpeed;
-			var axleLoss = DataBus.AxlegearLoss();
+			var slopeLoss = DataBus.VehicleInfo.SlopeResistance(avgSlope) * DataBus.VehicleInfo.VehicleSpeed;
+			var axleLoss = DataBus.AxlegearInfo.AxlegearLoss();
 
 			var tcLossesCurrentGear = tcInSpeed * tcInTorque - gbxOutSpeed * gbxOutTorque;
 
@@ -520,7 +520,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			var accelerationPower = gbxOutSpeed * gbxOutTorque - deltaTcLosses - axleLoss - airDragLoss - rollResistanceLoss - slopeLoss;
 
-			var acceleration = accelerationPower / DataBus.VehicleSpeed / (DataBus.TotalMass + DataBus.ReducedMassWheels);
+			var acceleration = accelerationPower / DataBus.VehicleInfo.VehicleSpeed / (DataBus.VehicleInfo.TotalMass + DataBus.WheelsInfo.ReducedMassWheels);
 
 			return acceleration.Cast<MeterPerSquareSecond>();
 		}

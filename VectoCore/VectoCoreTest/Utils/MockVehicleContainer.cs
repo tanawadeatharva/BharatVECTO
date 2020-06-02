@@ -47,7 +47,8 @@ using TUGraz.VectoCore.OutputData;
 
 namespace TUGraz.VectoCore.Tests.Utils
 {
-	public class MockVehicleContainer : IVehicleContainer
+		
+	public class MockVehicleContainer : IVehicleContainer, IEngineInfo, IEngineControl, IVehicleInfo, IClutchInfo, IBrakes, IAxlegearInfo, IWheelsInfo, IDriverInfo, IDrivingCycleInfo, IMileageCounter, IGearboxInfo, IGearboxControl
 	{
 		// only CycleData Lookup is set / accessed...
 
@@ -56,7 +57,47 @@ namespace TUGraz.VectoCore.Tests.Utils
 		private bool _clutchClosed = true;
 		private ITorqueConverterControl _torqueConverter;
 
-		public IEngineInfo Engine { get; set; }
+		public IAxlegearInfo AxlegearInfo
+		{
+			get { return this; }
+		}
+
+		public IEngineInfo EngineInfo { get; set; }
+
+		public IEngineControl EngineCtl
+		{
+			get { return this; }
+		}
+
+		public IVehicleInfo VehicleInfo
+		{
+			get { return this; }
+		}
+
+		public IClutchInfo ClutchInfo
+		{
+			get { return this; }
+		}
+
+		public IBrakes Brakes
+		{
+			get { return this; }
+		}
+
+		public IWheelsInfo WheelsInfo
+		{
+			get { return this; }
+		}
+
+		public IDriverInfo DriverInfo
+		{
+			get { return this; }
+		}
+
+		public IDrivingCycleInfo DrivingCycleInfo
+		{
+			get { return this; }
+		}
 
 		public GearboxType GearboxType { get; set; }
 
@@ -81,12 +122,28 @@ namespace TUGraz.VectoCore.Tests.Utils
 		}
 
 		public Second AbsTime { get; set; }
-		public IElectricMotorInfo ElectricMotor(PowertrainPosition pos)
+
+		public IMileageCounter MileageCounter
+		{
+			get { return this; }
+		}
+
+		public IGearboxInfo GearboxInfo
+		{
+			get { return this; }
+		}
+
+		public IGearboxControl GearboxCtl
+		{
+			get { return this; }
+		}
+
+		public IElectricMotorInfo ElectricMotorInfo(PowertrainPosition pos)
 		{
 			return null;
 		}
 
-		public ITorqueConverterControl TorqueConverter
+		public ITorqueConverterControl TorqueConverterCtl
 		{
 			get { return _torqueConverter; }
 		}
@@ -108,7 +165,7 @@ namespace TUGraz.VectoCore.Tests.Utils
 
 		public Watt EngineStationaryFullPower(PerSecond angularSpeed)
 		{
-			return Engine.EngineStationaryFullPower(angularSpeed);
+			return EngineInfo.EngineStationaryFullPower(angularSpeed);
 		}
 
 		public Watt EngineDynamicFullLoadPower(PerSecond avgEngineSpeed, Second dt)
@@ -118,7 +175,7 @@ namespace TUGraz.VectoCore.Tests.Utils
 
 		public Watt EngineDragPower(PerSecond angularSpeed)
 		{
-			return Engine.EngineStationaryFullPower(angularSpeed);
+			return EngineInfo.EngineStationaryFullPower(angularSpeed);
 		}
 
 		public Watt EngineAuxDemand(PerSecond avgEngineSpeed, Second dt)
@@ -128,22 +185,22 @@ namespace TUGraz.VectoCore.Tests.Utils
 
 		public PerSecond EngineIdleSpeed
 		{
-			get { return Engine.EngineIdleSpeed; }
+			get { return EngineInfo.EngineIdleSpeed; }
 		}
 
 		public PerSecond EngineRatedSpeed
 		{
-			get { return Engine.EngineRatedSpeed; }
+			get { return EngineInfo.EngineRatedSpeed; }
 		}
 
 		public PerSecond EngineN95hSpeed
 		{
-			get { return Engine.EngineN95hSpeed; }
+			get { return EngineInfo.EngineN95hSpeed; }
 		}
 
 		public PerSecond EngineN80hSpeed
 		{
-			get { return Engine.EngineN80hSpeed; }
+			get { return EngineInfo.EngineN80hSpeed; }
 		}
 
 		public MeterPerSecond VehicleSpeed { get; set; }

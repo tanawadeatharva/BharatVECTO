@@ -14,17 +14,17 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl {
 
 		public IDriverDemandOutPort VehiclePort
 		{
-			get { return (Vehicle as Vehicle)?.OutPort(); }
+			get { return (VehicleInfo as Vehicle)?.OutPort(); }
 		}
 
 		public ITnOutPort GearboxOutPort
 		{
-			get { return (Gearbox as IGearbox)?.OutPort(); }
+			get { return (GearboxInfo as IGearbox)?.OutPort(); }
 		}
 
 		public IGearbox GearboxCtlTest
 		{
-			get { return Gearbox as IGearbox; }
+			get { return GearboxInfo as IGearbox; }
 		}
 
 		public override Second AbsTime { get { return 0.SI<Second>(); } }

@@ -208,7 +208,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			public override uint InitGear(Second absTime, Second dt, NewtonMeter outTorque,
 				PerSecond outAngularVelocity)
 			{
-				if (DataBus.VehicleSpeed.IsEqual(0)) {
+				if (DataBus.VehicleInfo.VehicleSpeed.IsEqual(0)) {
 					return InitStartGear(outTorque, outAngularVelocity);
 				}
 
@@ -224,8 +224,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					if (!IsBelowDownShiftCurve(gear, inTorque, inAngularSpeed) &&
 						!IsAboveUpShiftCurve(gear, inTorque, inAngularSpeed) &&
 						reserve >= ModelData.StartTorqueReserve) {
-						if ((inAngularSpeed - DataBus.EngineIdleSpeed) /
-							(DataBus.EngineRatedSpeed - DataBus.EngineIdleSpeed) <
+						if ((inAngularSpeed - DataBus.EngineInfo.EngineIdleSpeed) /
+							(DataBus.EngineInfo.EngineRatedSpeed - DataBus.EngineInfo.EngineIdleSpeed) <
 							Constants.SimulationSettings.ClutchClosingSpeedNorm && gear > 1) {
 							gear--;
 						}
@@ -251,7 +251,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				for (var gear = MaxStartGear; gear > 1; gear--) {
 					var inAngularSpeed = outAngularVelocity * ModelData.Gears[gear].Ratio;
 
-					var ratedSpeed = DataBus.EngineRatedSpeed;
+					var ratedSpeed = DataBus.EngineInfo.EngineRatedSpeed;
 					if (inAngularSpeed > ratedSpeed || inAngularSpeed.IsEqual(0)) {
 						continue;
 					}
@@ -262,7 +262,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 						response.Engine.DynamicFullLoadPower; //EnginePowerRequest - response.DeltaFullLoad;
 					var reserve = 1 - response.Engine.PowerRequest / fullLoadPower;
 
-					if (response.Engine.EngineSpeed > DataBus.EngineIdleSpeed &&
+					if (response.Engine.EngineSpeed > DataBus.EngineInfo.EngineIdleSpeed &&
 						reserve >= ModelData.StartTorqueReserve) {
 						_nextGear = gear;
 						return gear;
@@ -276,7 +276,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			private bool SpeedTooLowForEngine(uint gear, PerSecond outAngularSpeed)
 			{
-				return (outAngularSpeed * ModelData.Gears[gear].Ratio).IsSmaller(DataBus.EngineIdleSpeed);
+				return (outAngularSpeed * ModelData.Gears[gear].Ratio).IsSmaller(DataBus.EngineInfo.EngineIdleSpeed);
 			}
 
 			private bool SpeedTooHighForEngine(uint gear, PerSecond outAngularSpeed)
@@ -284,7 +284,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				return
 					(outAngularSpeed * ModelData.Gears[gear].Ratio).IsGreaterOrEqual(VectoMath.Min(
 						ModelData.Gears[gear].MaxSpeed,
-						DataBus.EngineN95hSpeed));
+						DataBus.EngineInfo.EngineN95hSpeed));
 			}
 
 			public override uint Engage(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity)

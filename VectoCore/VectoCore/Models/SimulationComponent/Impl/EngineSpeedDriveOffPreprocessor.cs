@@ -22,13 +22,13 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl {
 
 		public void RunPreprocessing()
 		{
-			var vehicle = Container.Vehicle as Vehicle;
+			var vehicle = Container.VehicleInfo as Vehicle;
 
 			if (vehicle == null) {
 				throw new VectoException("no vehicle found...");
 			}
 
-			var gearbox = Container.Gearbox as Gearbox;
+			var gearbox = Container.GearboxInfo as Gearbox;
 			if (gearbox == null) {
 				throw new VectoException("no gearbox found...");
 			}

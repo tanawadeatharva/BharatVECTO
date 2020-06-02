@@ -112,7 +112,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		private bool SpeedTooLowForEngine(uint gear, PerSecond outAngularSpeed)
 		{
-			return (outAngularSpeed * ModelData.Gears[gear].Ratio).IsSmaller(DataBus.EngineIdleSpeed);
+			return (outAngularSpeed * ModelData.Gears[gear].Ratio).IsSmaller(DataBus.EngineInfo.EngineIdleSpeed);
 		}
 
 		private bool SpeedTooHighForEngine(uint gear, PerSecond outAngularSpeed)
@@ -121,7 +121,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				(outAngularSpeed * ModelData.Gears[gear].Ratio).IsGreaterOrEqual(
 					VectoMath.Min(
 						ModelData.Gears[gear].MaxSpeed,
-						DataBus.EngineN95hSpeed));
+						DataBus.EngineInfo.EngineN95hSpeed));
 		}
 
 		#region Overrides of BaseShiftStrategy
@@ -129,13 +129,13 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		public override void Request(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity)
 		{
 			// update own history
-			var velocity = DataBus.VehicleSpeed + DataBus.DriverAcceleration * dt / 2.0;
-			var cardanDemand = DataBus.CurrentAxleDemand;
+			var velocity = DataBus.VehicleInfo.VehicleSpeed + DataBus.DriverInfo.DriverAcceleration * dt / 2.0;
+			var cardanDemand = DataBus.AxlegearInfo.CurrentAxleDemand;
 			var currentCardanPower = cardanDemand.Item1 * cardanDemand.Item2;
 
 			UpdateHistoryBuffer(absTime, dt, currentCardanPower, velocity);
 
-			var currentVelocity = DataBus.VehicleSpeed;
+			var currentVelocity = DataBus.VehicleInfo.VehicleSpeed;
 			accRsv = CalcAccelerationReserve(currentVelocity, absTime + dt);
 
 			driverAccelerationAvg = GetAverageAcceleration(absTime + dt);
@@ -147,11 +147,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		protected override bool DoCheckShiftRequired(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity, NewtonMeter inTorque, PerSecond inAngularVelocity, uint gear, Second lastShiftTime, IResponse response)
 		{
-			var cardanDemand = DataBus.CurrentAxleDemand;
+			var cardanDemand = DataBus.AxlegearInfo.CurrentAxleDemand;
 			var currentCardanPower = cardanDemand.Item1 * cardanDemand.Item2;
 
 			// no shift when vehicle stands
-			if (DataBus.VehicleStopped) {
+			if (DataBus.VehicleInfo.VehicleStopped) {
 				return false;
 			}
 
@@ -174,7 +174,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			}
 
 			// TEST
-			var currentVelocity = DataBus.VehicleSpeed;
+			var currentVelocity = DataBus.VehicleInfo.VehicleSpeed;
 			accRsv = CalcAccelerationReserve(currentVelocity, absTime + dt);
 
 			var minimumShiftTimePassed = (lastShiftTime + ModelData.ShiftTime).IsSmallerOrEqual(absTime);
@@ -212,10 +212,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			PerSecond inAngularVelocity, uint gear, Second lastShiftTime)
 		{
 			var lookAheadDistance =
-				DataBus.VehicleSpeed * ModelData.TractionInterruption; //ShiftStrategyParameters.GearResidenceTime;
-			var roadGradient = DataBus.CycleLookAhead(lookAheadDistance).RoadGradient;
+				DataBus.VehicleInfo.VehicleSpeed * ModelData.TractionInterruption; //ShiftStrategyParameters.GearResidenceTime;
+			var roadGradient = DataBus.DrivingCycleInfo.CycleLookAhead(lookAheadDistance).RoadGradient;
 			
-			var currentVelocity = DataBus.VehicleSpeed;
+			var currentVelocity = DataBus.VehicleInfo.VehicleSpeed;
 			gradient = CalcGradientDuringGearshift(false, dt, currentVelocity);
 			var estimatedVelocityPostShift = VelocityDropData.Interpolate(currentVelocity, gradient);
 			var predictionVelocity = CalcPredictionVelocity(currentVelocity, estimatedVelocityPostShift);
@@ -435,17 +435,17 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				ShiftStrategyParameters.StartAcceleration / 2.0 * ShiftStrategyParameters.StartVelocity
 				: currentVelocity * dt / 2.0;
 			if (lookaheadMidShift.IsEqual(0)) {
-				return DataBus.RoadGradient;
+				return DataBus.DrivingCycleInfo.RoadGradient;
 			}
-			var currentAltitude = DataBus.Altitude;
-			var lookAheadPos = DataBus.CycleLookAhead(lookaheadMidShift);
+			var currentAltitude = DataBus.DrivingCycleInfo.Altitude;
+			var lookAheadPos = DataBus.DrivingCycleInfo.CycleLookAhead(lookaheadMidShift);
 			var gradient = VectoMath.InclinationToAngle((lookAheadPos.Altitude - currentAltitude) / lookaheadMidShift);
 			return lookAheadPos.RoadGradient;
 		}
 
 		private MeterPerSquareSecond CalcAccelerationReserve(MeterPerSecond currentVelocity, Second absTime)
 		{
-			var lastTargetspeedChange = DataBus.LastTargetspeedChange;
+			var lastTargetspeedChange = DataBus.DrivingCycleInfo.LastTargetspeedChange;
 			demandedSpeed = ComputeDemandedSpeed(lastTargetspeedChange, absTime);
 			var accRsvLow = ShiftStrategyParameters.AccelerationReserveLookup.LookupLow(currentVelocity);
 			var accRsvHigh = ShiftStrategyParameters.AccelerationReserveLookup.LookupHigh(currentVelocity);
@@ -465,7 +465,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			return VectoMath.Min(
 				PowertrainConfig.DriverData.AccelerationCurve.ComputeEndVelocityAccelerate(
 					lastTargetspeedChange.PreviousTargetSpeed, accelerationTime),
-				DataBus.CycleData.LeftSample.VehicleTargetSpeed);
+				DataBus.DrivingCycleInfo.CycleData.LeftSample.VehicleTargetSpeed);
 		}
 
 		private MeterPerSecond CalcPredictionVelocity(
@@ -499,10 +499,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			var upperEngineSpeedLimit = (PowertrainConfig.EngineData.FullLoadCurves[0].NTq99lSpeed +
 										PowertrainConfig.EngineData.FullLoadCurves[0].NTq99hSpeed) / 2.0;
 
-			var currentVelocity = DataBus.VehicleSpeed;
+			var currentVelocity = DataBus.VehicleInfo.VehicleSpeed;
 			var gradient = CalcGradientDuringGearshift(false, dt, currentVelocity);
 			var estimatedVelocityPostShift = VelocityDropData.Interpolate(currentVelocity, gradient);
-			var predictedVelocity = DataBus.DriverBehavior == DrivingBehavior.Braking
+			var predictedVelocity = DataBus.DriverInfo.DriverBehavior == DrivingBehavior.Braking
 				? currentVelocity + PowertrainConfig.DriverData.AccelerationCurve.Lookup(currentVelocity).Deceleration *
 				ModelData.TractionInterruption
 				: CalcPredictionVelocity(currentVelocity, estimatedVelocityPostShift);
@@ -568,7 +568,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			AccelerationBuffer[absTime] = new AccelerationEntry() {
 				dt = dt,
 				//Acceleration = VectoMath.Max(aDemanded, 0.SI<MeterPerSquareSecond>())
-				Acceleration = DataBus.DriverAcceleration
+				Acceleration = DataBus.DriverInfo.DriverAcceleration
 			};
 
 			var outdated = AccelerationBuffer
@@ -582,13 +582,13 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		public override uint InitGear(Second absTime, Second dt, NewtonMeter torque, PerSecond outAngularVelocity)
 		{
-			if (DataBus.VehicleSpeed.IsEqual(0)) {
+			if (DataBus.VehicleInfo.VehicleSpeed.IsEqual(0)) {
 				return InitStartGear(torque, outAngularVelocity);
 			}
 
 			for (var gear = (uint)ModelData.Gears.Count; gear > 1; gear--) {
 				var inAngularVelocity = outAngularVelocity * ModelData.Gears[gear].Ratio;
-				if (DataBus.EngineSpeed < inAngularVelocity && inAngularVelocity < DataBus.EngineRatedSpeed) {
+				if (DataBus.EngineInfo.EngineSpeed < inAngularVelocity && inAngularVelocity < DataBus.EngineInfo.EngineRatedSpeed) {
 					_nextGear = gear;
 					return gear;
 				}
@@ -601,7 +601,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		{
 			var maxStartGear = (int)Math.Round(ModelData.Gears.Count / 2.0, MidpointRounding.AwayFromZero);
 
-			var currentVelocity = DataBus.VehicleSpeed;
+			var currentVelocity = DataBus.VehicleInfo.VehicleSpeed;
 			var gradient = CalcGradientDuringGearshift(true, null, null);
 			var estimatedVelocityPostShift = VelocityDropData.Interpolate(currentVelocity, gradient);
 			var predictionVelocity = ShiftStrategyParameters.StartVelocity;
@@ -609,7 +609,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			var startGear = 1u;
 			var minRating = new GearRating(GearRatingCase.E, double.MaxValue, 0.RPMtoRad());
-			var roadGradient = DataBus.CycleData.LeftSample.RoadGradient; //CycleLookAhead(0.SI<Meter>()).RoadGradient;
+			var roadGradient = DataBus.DrivingCycleInfo.CycleData.LeftSample.RoadGradient; //CycleLookAhead(0.SI<Meter>()).RoadGradient;
 			GearRatings.Clear();
 			for (uint i = (uint)maxStartGear; i > 0; i--) {
 				var gradientBelowMaxGrad = roadGradient < MaxGradability.GradabilityLimitedTorque(i);
@@ -640,7 +640,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		{
 			var shareIdleLowMax = driveOff
 				? ShiftStrategyParameters.ShareIdleLow.MaxValue
-				: ShiftStrategyParameters.ShareIdleLow.Lookup(DataBus.VehicleSpeed);
+				: ShiftStrategyParameters.ShareIdleLow.Lookup(DataBus.VehicleInfo.VehicleSpeed);
 			return PowertrainConfig.EngineData.IdleSpeed + shareIdleLowMax *
 					(PowertrainConfig.EngineData.FullLoadCurves[0].NP99hSpeed - PowertrainConfig.EngineData.IdleSpeed);
 		}

@@ -91,7 +91,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			var gearboxData = MockSimulationDataFactory.CreateGearboxDataFromFile(GearboxDataFile, EngineDataFile, false);
 			var vehicleContainer = new MockVehicleContainer(); //(ExecutionMode.Engineering);
 			var engineData = MockSimulationDataFactory.CreateEngineDataFromFile(EngineDataFile, gearboxData.Gears.Count);
-			vehicleContainer.Engine = new CombustionEngine(vehicleContainer, engineData);
+			vehicleContainer.EngineInfo = new CombustionEngine(vehicleContainer, engineData);
 			var runData = new VectoRunData() {
 				GearboxData = gearboxData,
 				EngineData = new CombustionEngineData() { Inertia = 0.SI<KilogramSquareMeter>() }

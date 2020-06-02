@@ -52,13 +52,13 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		protected Entry[] IterateVehicleSpeedAndGradient()
 		{
 			var container = Container;
-			var vehicle = container?.Vehicle as Vehicle;
+			var vehicle = container?.VehicleInfo as Vehicle;
 
 			if (vehicle == null) {
 				throw new VectoException("no vehicle found...");
 			}
 
-			var gearbox = container.Gearbox as Gearbox;
+			var gearbox = container.GearboxInfo as Gearbox;
 			if (gearbox == null) {
 				throw new VectoException("no gearbox found...");
 			}

@@ -36,7 +36,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent
 				}
 				return response;
 			}
-			if (DataBus.CombustionEngineOn)
+			if (DataBus.EngineCtl.CombustionEngineOn)
 				return base.Initialize(outTorque, outAngularVelocity);
 			PreviousState.SetState(outTorque, outAngularVelocity, outTorque, outAngularVelocity);
 			return NextComponent.Initialize(outTorque, outAngularVelocity);
@@ -73,9 +73,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent
 				return response;
 			}
 
-			if (DataBus.CombustionEngineOn)
+			if (DataBus.EngineCtl.CombustionEngineOn)
 			{
-				if (DataBus.DriverBehavior == DrivingBehavior.Halted && !ClutchOpen)
+				if (DataBus.DriverInfo.DriverBehavior == DrivingBehavior.Halted && !ClutchOpen)
 				{
 					return HandleClutchClosed(absTime, dt, outTorque, outAngularVelocity, dryRun);
 				}

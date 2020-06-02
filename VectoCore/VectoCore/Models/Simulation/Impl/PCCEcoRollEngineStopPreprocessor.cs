@@ -33,18 +33,18 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 		public void RunPreprocessing()
 		{
-			var vehicle = Container?.Vehicle as Vehicle;
+			var vehicle = Container?.VehicleInfo as Vehicle;
 
 			if (vehicle == null) {
 				throw new VectoException("no vehicle found...");
 			}
 
-			var gearbox = Container.Gearbox as Gearbox;
+			var gearbox = Container.GearboxInfo as Gearbox;
 			if (gearbox != null) {
 				RunPreprocessingAMTGearbox(gearbox, vehicle);
 				return;
 			}
-			var atGearbox = Container.Gearbox as ATGearbox;
+			var atGearbox = Container.GearboxInfo as ATGearbox;
 			if (atGearbox != null) {
 				RunPreprocessingATGearbox(atGearbox, vehicle);
 				return;

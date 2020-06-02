@@ -97,18 +97,18 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		public Watt EngineStationaryFullPower(PerSecond angularSpeed)
 		{
-			return ModelData.FullLoadCurves[DataBus.Gear].FullLoadStationaryTorque(angularSpeed) * angularSpeed;
+			return ModelData.FullLoadCurves[DataBus.GearboxInfo.Gear].FullLoadStationaryTorque(angularSpeed) * angularSpeed;
 		}
 
 		public Watt EngineDynamicFullLoadPower(PerSecond avgEngineSpeed, Second dt)
 		{
 			return ComputeFullLoadPower(
-				avgEngineSpeed, ModelData.FullLoadCurves[DataBus.Gear].FullLoadStationaryTorque(avgEngineSpeed), dt, true);
+				avgEngineSpeed, ModelData.FullLoadCurves[DataBus.GearboxInfo.Gear].FullLoadStationaryTorque(avgEngineSpeed), dt, true);
 		}
 
 		public Watt EngineDragPower(PerSecond angularSpeed)
 		{
-			return ModelData.FullLoadCurves[DataBus.Gear].DragLoadStationaryPower(angularSpeed);
+			return ModelData.FullLoadCurves[DataBus.GearboxInfo.Gear].DragLoadStationaryPower(angularSpeed);
 		}
 
 		public Watt EngineAuxDemand(PerSecond avgEngineSpeed, Second dt)
@@ -198,8 +198,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				};
 			}
 
-			var fullDragTorque = ModelData.FullLoadCurves[DataBus.Gear].DragLoadStationaryTorque(avgEngineSpeed);
-			var stationaryFullLoadTorque = ModelData.FullLoadCurves[DataBus.Gear].FullLoadStationaryTorque(avgEngineSpeed);
+			var fullDragTorque = ModelData.FullLoadCurves[DataBus.GearboxInfo.Gear].DragLoadStationaryTorque(avgEngineSpeed);
+			var stationaryFullLoadTorque = ModelData.FullLoadCurves[DataBus.GearboxInfo.Gear].FullLoadStationaryTorque(avgEngineSpeed);
 			var dynamicFullLoadPower = ComputeFullLoadPower(avgEngineSpeed, stationaryFullLoadTorque, dt, dryRun);
 
 			var dynamicFullLoadTorque = dynamicFullLoadPower / avgEngineSpeed;
@@ -337,11 +337,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		protected virtual PerSecond GetEngineSpeedLimit(Second absTime)
 		{
-			if (DataBus.Gear == 0 || !DataBus.ClutchClosed(absTime) || !DataBus.TCLocked) {
+			if (DataBus.GearboxInfo.Gear == 0 || !DataBus.ClutchInfo.ClutchClosed(absTime) || !DataBus.GearboxInfo.TCLocked) {
 				return ModelData.FullLoadCurves[0].N95hSpeed;
 			}
 
-			return VectoMath.Min(DataBus.GetGearData(DataBus.Gear).MaxSpeed, ModelData.FullLoadCurves[0].N95hSpeed);
+			return VectoMath.Min(DataBus.GearboxInfo.GetGearData(DataBus.GearboxInfo.Gear).MaxSpeed, ModelData.FullLoadCurves[0].N95hSpeed);
 		}
 
 		public virtual IResponse Initialize(NewtonMeter outTorque, PerSecond outAngularVelocity)
@@ -354,8 +354,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				EngineSpeed = outAngularVelocity,
 				dt = 1.SI<Second>(),
 				InertiaTorqueLoss = 0.SI<NewtonMeter>(),
-				StationaryFullLoadTorque = ModelData.FullLoadCurves[DataBus.Gear].FullLoadStationaryTorque(outAngularVelocity),
-				FullDragTorque = ModelData.FullLoadCurves[DataBus.Gear].DragLoadStationaryTorque(outAngularVelocity),
+				StationaryFullLoadTorque = ModelData.FullLoadCurves[DataBus.GearboxInfo.Gear].FullLoadStationaryTorque(outAngularVelocity),
+				FullDragTorque = ModelData.FullLoadCurves[DataBus.GearboxInfo.Gear].DragLoadStationaryTorque(outAngularVelocity),
 				EngineTorque = outTorque + auxDemand,
 				EnginePower = (outTorque + auxDemand) * outAngularVelocity,
 			};
@@ -430,7 +430,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 						"FuelConsumptionMap for fuel {2} was extrapolated: range for FC-Map is not sufficient: n: {0}, torque: {1}",
 						avgEngineSpeed.Value(), CurrentState.EngineTorque.Value(), fuelData.FuelType.GetLabel());
 				}
-				var pt1 = ModelData.FullLoadCurves[DataBus.Gear].PT1(avgEngineSpeed);
+				var pt1 = ModelData.FullLoadCurves[DataBus.GearboxInfo.Gear].PT1(avgEngineSpeed);
 				if (DataBus.ExecutionMode == ExecutionMode.Declaration && pt1.Extrapolated) {
 					Log.Error(
 						"requested rpm below minimum rpm in pt1 - extrapolating. n_eng_avg: {0}",
@@ -530,7 +530,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				dynFullPowerCalculated = stationaryFullLoadPower;
 			} else {
 				try {
-					var pt1 = ModelData.FullLoadCurves[DataBus.Gear].PT1(avgAngularVelocity).Value.Value();
+					var pt1 = ModelData.FullLoadCurves[DataBus.GearboxInfo.Gear].PT1(avgAngularVelocity).Value.Value();
 					var powerRatio = (PreviousState.EnginePower / stationaryFullLoadPower).Value();
 					var tStarPrev = pt1 * Math.Log(1.0 / (1 - powerRatio), Math.E).SI<Second>();
 					var tStar = tStarPrev + PreviousState.dt;
@@ -558,7 +558,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			if (dynFullPowerCalculated < 0) {
 				return 0.SI<Watt>();
 			}
-			var atGbx = (DataBus as VehicleContainer)?.Gearbox as ATGearbox;
+			var atGbx = (DataBus as VehicleContainer)?.GearboxInfo as ATGearbox;
 			if (atGbx != null && atGbx.ShiftToLocked && PreviousState.EngineTorque.IsGreater(0)) {
 
 				return VectoMath.Min(PreviousState.EngineTorque * avgAngularVelocity, dynFullPowerCalculated);
@@ -648,8 +648,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			}
 
 			protected virtual IResponse DoHandleRequest(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity) { 
-				if (!_dataBus.VehicleStopped && _dataBus.Gear != 0 &&_dataBus.Gear != _dataBus.NextGear.Gear  &&
-					_dataBus.NextGear.Gear != 0) {
+				if (!_dataBus.VehicleInfo.VehicleStopped && _dataBus.GearboxInfo.Gear != 0 &&_dataBus.GearboxInfo.Gear != _dataBus.GearboxInfo.NextGear.Gear  &&
+					_dataBus.GearboxInfo.NextGear.Gear != 0) {
 					return RequestDoubleClutch(absTime, dt, outTorque, outAngularVelocity);
 				}
 				return RequestIdling(absTime, dt, outTorque, outAngularVelocity);
@@ -659,18 +659,18 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			{
 				if (_idleStart == null) {
 					_idleStart = absTime;
-					_engineTargetSpeed = _engine.PreviousState.EngineSpeed / _dataBus.GetGearData(_dataBus.Gear).Ratio *
-										_dataBus.GetGearData(_dataBus.NextGear.Gear).Ratio;
+					_engineTargetSpeed = _engine.PreviousState.EngineSpeed / _dataBus.GearboxInfo.GetGearData(_dataBus.GearboxInfo.Gear).Ratio *
+										_dataBus.GearboxInfo.GetGearData(_dataBus.GearboxInfo.NextGear.Gear).Ratio;
 				}
 
-				var velocitySlope = (_dataBus.TractionInterruption - (absTime - _idleStart)).IsEqual(0)
+				var velocitySlope = (_dataBus.GearboxInfo.TractionInterruption - (absTime - _idleStart)).IsEqual(0)
 					? 0.SI<PerSquareSecond>()
 					: (_engineTargetSpeed - _engine.PreviousState.EngineSpeed) /
-					(_dataBus.TractionInterruption - (absTime - _idleStart));
+					(_dataBus.GearboxInfo.TractionInterruption - (absTime - _idleStart));
 
 				var nextAngularSpeed = velocitySlope * dt + _engine.PreviousState.EngineSpeed;
 
-				var engineMaxSpeed = VectoMath.Min(_dataBus.GetGearData(_dataBus.NextGear.Gear).MaxSpeed,
+				var engineMaxSpeed = VectoMath.Min(_dataBus.GearboxInfo.GetGearData(_dataBus.GearboxInfo.NextGear.Gear).MaxSpeed,
 					_engine.ModelData.FullLoadCurves[0].N95hSpeed);
 				nextAngularSpeed = velocitySlope < 0
 					? VectoMath.Max(_engineTargetSpeed, nextAngularSpeed).LimitTo(_engine.EngineIdleSpeed, engineMaxSpeed)

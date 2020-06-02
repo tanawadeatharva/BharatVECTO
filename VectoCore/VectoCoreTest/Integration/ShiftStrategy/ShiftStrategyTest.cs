@@ -126,7 +126,7 @@ namespace TUGraz.VectoCore.Tests.Integration.ShiftStrategy
 			var run = runs[0];
 
 			var container = run.GetContainer() as VehicleContainer;
-			var vehicle = container?.Vehicle as Vehicle;
+			var vehicle = container?.VehicleInfo as Vehicle;
 
 			Assert.NotNull(container);
 			Assert.NotNull(vehicle);
@@ -139,13 +139,13 @@ namespace TUGraz.VectoCore.Tests.Integration.ShiftStrategy
 			for (var v = 15.0; v < 20; v += 0.1) {
 				vehicle.Initialize(v.KMPHtoMeterPerSecond(), 0.SI<Radian>());
 				container.AbsTime = 0.SI<Second>();
-				(container.Gearbox as Gearbox).Gear = 2;
+				(container.GearboxInfo as Gearbox).Gear = 2;
 				//(container.Gearbox as ATGearbox)._strategy.NextGear.Gear = 0;
-				(container.Driver as Driver).DrivingAction = DrivingAction.Accelerate;
-				(container.Driver as Driver).DriverBehavior = DrivingBehavior.Accelerating;
+				(container.DriverInfo as Driver).DrivingAction = DrivingAction.Accelerate;
+				(container.DriverInfo as Driver).DriverBehavior = DrivingBehavior.Accelerating;
 				var response = vehicle.Request(
 					0.SI<Second>(), 0.5.SI<Second>(), 0.5.SI<MeterPerSquareSecond>(), 0.SI<Radian>(), false);
-				decision.Add(Tuple.Create(v, response, ((container.Gearbox as Gearbox)._strategy as AMTShiftStrategyOptimized).minFCResponse));
+				decision.Add(Tuple.Create(v, response, ((container.GearboxInfo as Gearbox)._strategy as AMTShiftStrategyOptimized).minFCResponse));
 			}
 
 			foreach (var tuple in decision) {

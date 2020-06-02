@@ -45,7 +45,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					}
 				};
 			}
-			if (!DataBus.CombustionEngineOn)
+			if (!DataBus.EngineCtl.CombustionEngineOn)
 			{
 				PreviousState.InTorque = 0.SI<NewtonMeter>();
 				PreviousState.InAngularVelocity = outAngularVelocity;

@@ -128,9 +128,9 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 						container.CommitSimulationStep(absTime, r.SimulationInterval);
 						absTime += r.SimulationInterval;
 
-						ds = container.VehicleSpeed.IsEqual(0)
+						ds = container.VehicleInfo.VehicleSpeed.IsEqual(0)
 							? Constants.SimulationSettings.DriveOffDistance
-							: Constants.SimulationSettings.TargetTimeInterval * container.VehicleSpeed;
+							: Constants.SimulationSettings.TargetTimeInterval * container.VehicleInfo.VehicleSpeed;
 
 						if (cnt++ % 100 == 0) {
 							modData.Finish(VectoRun.Status.Success);
@@ -194,7 +194,7 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 
 			//gbx.Gear = 1;
 			var cnt = 0;
-			while (!(response is ResponseCycleFinished) && container.Distance < 17000) {
+			while (!(response is ResponseCycleFinished) && container.MileageCounter.Distance < 17000) {
 				Log.Info("Test New Request absTime: {0}, ds: {1}", absTime, ds);
 				try {
 					response = cyclePort.Request(absTime, ds);
@@ -212,9 +212,9 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 						container.CommitSimulationStep(absTime, r.SimulationInterval);
 						absTime += r.SimulationInterval;
 
-						ds = container.VehicleSpeed.IsEqual(0)
+						ds = container.VehicleInfo.VehicleSpeed.IsEqual(0)
 							? Constants.SimulationSettings.DriveOffDistance
-							: Constants.SimulationSettings.TargetTimeInterval * container.VehicleSpeed;
+							: Constants.SimulationSettings.TargetTimeInterval * container.VehicleInfo.VehicleSpeed;
 
 						if (cnt++ % 100 == 0) {
 							modData.Finish(VectoRun.Status.Success);
@@ -273,7 +273,7 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 
 			//container.Gear = 1;
 			var cnt = 0;
-			while (!(response is ResponseCycleFinished) && container.Distance < 17000) {
+			while (!(response is ResponseCycleFinished) && container.MileageCounter.Distance < 17000) {
 				Log.Info("Test New Request absTime: {0}, ds: {1}", absTime, ds);
 				try {
 					response = cyclePort.Request(absTime, ds);
@@ -291,9 +291,9 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 						container.CommitSimulationStep(absTime, r.SimulationInterval);
 						absTime += r.SimulationInterval;
 
-						ds = container.VehicleSpeed.IsEqual(0)
+						ds = container.VehicleInfo.VehicleSpeed.IsEqual(0)
 							? Constants.SimulationSettings.DriveOffDistance
-							: Constants.SimulationSettings.TargetTimeInterval * container.VehicleSpeed;
+							: Constants.SimulationSettings.TargetTimeInterval * container.VehicleInfo.VehicleSpeed;
 
 						if (cnt++ % 100 == 0) {
 							modData.Finish(VectoRun.Status.Success);

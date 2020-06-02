@@ -184,14 +184,14 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		{
 			var accPower = EstimateAccelerrationPower(outAngularVelocity, outTorque);
 
-			var _accMin = (accPower / DataBus.VehicleSpeed / (MaxMass + DataBus.ReducedMassWheels)).Cast<MeterPerSquareSecond>();
-			var _accMax = (accPower / DataBus.VehicleSpeed / (MinMass + DataBus.ReducedMassWheels)).Cast<MeterPerSquareSecond>();
+			var _accMin = (accPower / DataBus.VehicleInfo.VehicleSpeed / (MaxMass + DataBus.WheelsInfo.ReducedMassWheels)).Cast<MeterPerSquareSecond>();
+			var _accMax = (accPower / DataBus.VehicleInfo.VehicleSpeed / (MinMass + DataBus.WheelsInfo.ReducedMassWheels)).Cast<MeterPerSquareSecond>();
 
 			var engineLoadPercent = inTorque / response.Engine.EngineDynamicFullLoadTorque;
 			var _loadStage = GetLoadStage(engineLoadPercent);
 
 			var shiftSpeed = UpshiftLineTCLocked.LookupShiftSpeed(
-				_loadStage, DataBus.RoadGradient, DataBus.DriverAcceleration, _accMin, _accMax);
+				_loadStage, DataBus.DrivingCycleInfo.RoadGradient, DataBus.DriverInfo.DriverAcceleration, _accMin, _accMax);
 			var shiftSpeedGbxOut = shiftSpeed / ModelData.Gears[currentGear].Ratio;
 			if (outAngularVelocity > shiftSpeedGbxOut) {
 				Upshift(absTime, currentGear);
@@ -203,17 +203,17 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		protected Watt EstimateAccelerrationPower(PerSecond gbxOutSpeed, NewtonMeter gbxOutTorque)
 		{
-			var vehicleSpeed = DataBus.VehicleSpeed;
+			var vehicleSpeed = DataBus.VehicleInfo.VehicleSpeed;
 			var avgSlope =
-			((DataBus.CycleLookAhead(Constants.SimulationSettings.GearboxLookaheadForAccelerationEstimation).Altitude -
-			DataBus.Altitude) / Constants.SimulationSettings.GearboxLookaheadForAccelerationEstimation).Value().SI<Radian>();
+			((DataBus.DrivingCycleInfo.CycleLookAhead(Constants.SimulationSettings.GearboxLookaheadForAccelerationEstimation).Altitude -
+			DataBus.DrivingCycleInfo.Altitude) / Constants.SimulationSettings.GearboxLookaheadForAccelerationEstimation).Value().SI<Radian>();
 
-			var airDragLoss = DataBus.AirDragResistance(vehicleSpeed, vehicleSpeed) * DataBus.VehicleSpeed;
-			var rollResistanceLoss = DataBus.RollingResistance(avgSlope) * DataBus.VehicleSpeed;
+			var airDragLoss = DataBus.VehicleInfo.AirDragResistance(vehicleSpeed, vehicleSpeed) * DataBus.VehicleInfo.VehicleSpeed;
+			var rollResistanceLoss = DataBus.VehicleInfo.RollingResistance(avgSlope) * DataBus.VehicleInfo.VehicleSpeed;
 
 			//DataBus.GearboxLoss();
-			var slopeLoss = DataBus.SlopeResistance(avgSlope) * DataBus.VehicleSpeed;
-			var axleLoss = DataBus.AxlegearLoss();
+			var slopeLoss = DataBus.VehicleInfo.SlopeResistance(avgSlope) * DataBus.VehicleInfo.VehicleSpeed;
+			var axleLoss = DataBus.AxlegearInfo.AxlegearLoss();
 
 			return gbxOutSpeed * gbxOutTorque - axleLoss - airDragLoss - rollResistanceLoss - slopeLoss;
 		}
@@ -236,7 +236,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				return null;
 			}
 
-			if (DataBus.DriverAcceleration < 0) {
+			if (DataBus.DriverInfo.DriverAcceleration < 0) {
 				return null;
 			}
 			if (response1.Engine.EngineTorqueDemand.IsSmaller(DeclarationData.GearboxTCU.DragMarginFactor * fld[currentGear].DragLoadStationaryTorque(response1.Engine.EngineSpeed))) {
@@ -250,12 +250,12 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			var current = new GearshiftPosition(currentGear, _gearbox.TorqueConverterLocked);
 			var currentIdx = GearList.IndexOf(current);
 
-			var vDrop = DataBus.DriverAcceleration * shiftStrategyParameters.ATLookAheadTime;
-			var vehicleSpeedPostShift = (DataBus.VehicleSpeed + vDrop * shiftStrategyParameters.VelocityDropFactor).LimitTo(
-				0.KMPHtoMeterPerSecond(), DataBus.CycleData.LeftSample.VehicleTargetSpeed);
+			var vDrop = DataBus.DriverInfo.DriverAcceleration * shiftStrategyParameters.ATLookAheadTime;
+			var vehicleSpeedPostShift = (DataBus.VehicleInfo.VehicleSpeed + vDrop * shiftStrategyParameters.VelocityDropFactor).LimitTo(
+				0.KMPHtoMeterPerSecond(), DataBus.DrivingCycleInfo.CycleData.LeftSample.VehicleTargetSpeed);
 
 			var outAngularVelocityEst =
-				(outAngularVelocity * vehicleSpeedPostShift / (DataBus.VehicleSpeed + DataBus.DriverAcceleration * dt))
+				(outAngularVelocity * vehicleSpeedPostShift / (DataBus.VehicleInfo.VehicleSpeed + DataBus.DriverInfo.DriverAcceleration * dt))
 				.Cast<PerSecond>();
 			var outTorqueEst = outTorque * outAngularVelocity / outAngularVelocityEst;
 
@@ -276,13 +276,13 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				}
 
 				var inAngularVelocity = ModelData.Gears[next.Gear].Ratio * outAngularVelocity;
-				var totalTransmissionRatio = inAngularVelocity / (DataBus.VehicleSpeed + DataBus.DriverAcceleration * dt);
+				var totalTransmissionRatio = inAngularVelocity / (DataBus.VehicleInfo.VehicleSpeed + DataBus.DriverInfo.DriverAcceleration * dt);
 				var estimatedEngineSpeed = (vehicleSpeedPostShift * totalTransmissionRatio).Cast<PerSecond>();
 				if (estimatedEngineSpeed.IsSmaller(shiftStrategyParameters.MinEngineSpeedPostUpshift)) {
 					continue;
 				}
 
-				var pNextGearMax = DataBus.EngineStationaryFullPower(estimatedEngineSpeed);
+				var pNextGearMax = DataBus.EngineInfo.EngineStationaryFullPower(estimatedEngineSpeed);
 
 				var response = RequestDryRunWithGear(absTime, dt, outTorqueEst, outAngularVelocityEst, next);
 
@@ -313,7 +313,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 						continue;
 					}
 
-					var accelerationTorque = vehicleMass * DataBus.DriverAcceleration * DataBus.VehicleSpeed / outAngularVelocity;
+					var accelerationTorque = vehicleMass * DataBus.DriverInfo.DriverAcceleration * DataBus.VehicleInfo.VehicleSpeed / outAngularVelocity;
 					var reducedTorque = outTorque - accelerationTorque * (1 - accelerationFactor);
 
 					response = RequestDryRunWithGear(absTime, dt, reducedTorque, outAngularVelocity, next);
@@ -472,9 +472,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			TestContainerGbx.Gear = gear.Gear;
 			TestContainerGbx.TorqueConverterLocked = gear.TorqueConverterLocked.Value;
 
-			TestContainer.VehiclePort.Initialize(vehicleSpeed, DataBus.RoadGradient);
+			TestContainer.VehiclePort.Initialize(vehicleSpeed, DataBus.DrivingCycleInfo.RoadGradient);
 			var response = (ResponseDryRun)TestContainer.VehiclePort.Request(
-				0.SI<Second>(), dt, acceleration, DataBus.RoadGradient, true);
+				0.SI<Second>(), dt, acceleration, DataBus.DrivingCycleInfo.RoadGradient, true);
 			return response;
 		}
 

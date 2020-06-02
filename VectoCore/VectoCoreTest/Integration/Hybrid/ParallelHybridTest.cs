@@ -76,18 +76,18 @@ namespace TUGraz.VectoCore.Tests.Integration.Hybrid
 			strategy.RequestFunc = (absTime, b, c, d, dryRun) => {
 				var shiftAllowed = absTime > currentState.lastGearShift + 2.SI<Second>();
 				var dBus = run.GetContainer();
-				var triggerGearshift = shiftAllowed && (dBus.EngineSpeed > 1600.RPMtoRad() ||
-														dBus.EngineSpeed < 625.RPMtoRad());
+				var triggerGearshift = shiftAllowed && (dBus.EngineInfo.EngineSpeed > 1600.RPMtoRad() ||
+														dBus.EngineInfo.EngineSpeed < 625.RPMtoRad());
 				//var nextGear = run.GetContainer().Gear;
 				if (!dryRun && triggerGearshift) {
 					nextState.lastGearShift = absTime;
-					nextState.nextGear = (uint)(dBus.Gear + (dBus.EngineSpeed > 1600.RPMtoRad()
+					nextState.nextGear = (uint)(dBus.GearboxInfo.Gear + (dBus.EngineInfo.EngineSpeed > 1600.RPMtoRad()
 						? 1
-						: (dBus.EngineSpeed < 625.RPMtoRad() ? -1 : 0)));
+						: (dBus.EngineInfo.EngineSpeed < 625.RPMtoRad() ? -1 : 0)));
 				}
 
 				var assistTorque = electricTq;
-				if (electricTorque < 0 && dBus.VehicleSpeed > dBus.TargetSpeed - 3.KMPHtoMeterPerSecond()) {
+				if (electricTorque < 0 && dBus.VehicleInfo.VehicleSpeed > dBus.DrivingCycleInfo.TargetSpeed - 3.KMPHtoMeterPerSecond()) {
 					assistTorque = 0.SI<NewtonMeter>();
 				}
 
@@ -147,7 +147,7 @@ namespace TUGraz.VectoCore.Tests.Integration.Hybrid
 
 			strategy.RequestFunc = (absTime, dt, outTorque, outSpeed, dryRun) => {
 				var dBus = run.GetContainer();
-				var rpm = dBus.ElectricMotor(pos).ElectricMotorSpeed;
+				var rpm = dBus.ElectricMotorInfo(pos).ElectricMotorSpeed;
 				var minTorque = -hybridController.ElectricMotorControl(pos).MaxDragTorque(rpm, dt);
 				var maxTorque = -hybridController.ElectricMotorControl(pos).MaxDriveTorque(rpm, dt);
 				return new HybridStrategyResponse() {
@@ -160,7 +160,7 @@ namespace TUGraz.VectoCore.Tests.Integration.Hybrid
 			};
 			strategy.InitializeFunc = (outTorque, outSpeed) => {
 				var dBus = run.GetContainer();
-				var rpm = dBus.ElectricMotor(pos).ElectricMotorSpeed;
+				var rpm = dBus.ElectricMotorInfo(pos).ElectricMotorSpeed;
 				var minTorque = -hybridController.ElectricMotorControl(pos).MaxDragTorque(rpm, 0.5.SI<Second>());
 				var maxTorque = -hybridController.ElectricMotorControl(pos).MaxDriveTorque(rpm, 0.5.SI<Second>());
 				return new HybridStrategyResponse {
