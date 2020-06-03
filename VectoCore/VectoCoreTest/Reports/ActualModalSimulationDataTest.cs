@@ -29,6 +29,7 @@
 *   Martin Rexeis, rexeis@ivt.tugraz.at, IVT, Graz University of Technology
 */
 
+using System.IO;
 using NUnit.Framework;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCore.InputData.FileIO.JSON;
@@ -41,6 +42,11 @@ namespace TUGraz.VectoCore.Tests.Reports
 	[TestFixture]
 	public class ActualModalSimulationDataTest
 	{
+		[OneTimeSetUp]
+		public void RunBeforeAnyTests()
+		{
+			Directory.SetCurrentDirectory(TestContext.CurrentContext.TestDirectory);
+		}
 
 		[Category("LongRunning")]
 		[Test]

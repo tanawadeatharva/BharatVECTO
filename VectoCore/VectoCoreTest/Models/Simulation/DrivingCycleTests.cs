@@ -47,6 +47,12 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 	[TestFixture]
 	public class DrivingCycleTests
 	{
+		[OneTimeSetUp]
+		public void Init()
+		{
+			Directory.SetCurrentDirectory(TestContext.CurrentContext.TestDirectory);
+		}
+
 		[TestCase()]
 		public void TestEngineOnly()
 		{
@@ -56,6 +62,9 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 			var cycleData = DrivingCycleDataReader.ReadFromFile(@"TestData\Cycles\Coach Engine Only.vdri", CycleType.EngineOnly,
 				false);
 			var cycle = new PowertrainDrivingCycle(container, cycleData);
+			new EngineOnlyGearboxInfo(container);
+			new ZeroMileageCounter(container);
+			new DummyDriverInfo(container);
 
 			var outPort = new MockTnOutPort();
 			var inPort = cycle.InPort();
@@ -87,7 +96,9 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 			var cycleData = DrivingCycleDataReader.ReadFromFile(@"TestData\Cycles\Coach Engine Only Paux_var-dt.vdri",
 				CycleType.EngineOnly, false);
 			var cycle = new PowertrainDrivingCycle(container, cycleData);
-
+			new EngineOnlyGearboxInfo(container);
+			new ZeroMileageCounter(container);
+			new DummyDriverInfo(container);
 			var outPort = new MockTnOutPort();
 			var inPort = cycle.InPort();
 

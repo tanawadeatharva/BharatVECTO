@@ -83,7 +83,8 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 				(modalData) => sumWriter.Write(modalData, 0, 0, new MockRunData()));
 			var data = DrivingCycleDataReader.ReadFromFile(@"TestData\Cycles\LongHaul_short.vdri", CycleType.DistanceBased, false);
 			new MockDrivingCycle(container, data);
-
+			new ZeroMileageCounter(container);
+			new DummyDriverInfo(container);
 			var aux = new EngineAuxiliary(container);
 
 			var hdvClass = VehicleClass.Class5;

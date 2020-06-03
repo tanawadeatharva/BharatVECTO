@@ -216,7 +216,9 @@ namespace TUGraz.VectoCore.OutputData
 									row.Field<SI>(GetColumnName(fuel, ModalResultField.FCFinal)).Value())
 								: null)
 						.Where(x => x != null && x.X > 0 && x.Y > 0), out k, out d, out r);
-
+				if (double.IsInfinity(k) || double.IsNaN(k)) {
+					k = 0;
+				}
 				_vehLine[fuel.FuelType] = k.SI<KilogramPerWattSecond>();
 				return _vehLine[fuel.FuelType];
 			}

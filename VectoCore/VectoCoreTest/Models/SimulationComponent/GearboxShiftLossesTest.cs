@@ -89,7 +89,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			CombustionEngine engine;
 			var cycleDataStr = "0, 0, 0, 2\n100, 20, 0, 0\n1000, 50, 0, 0";
 			var container = CreateVehicle(cycleDataStr, preShiftRpm, out axleGear, out gbx, out engine);
-
+			new ATClutchInfo(container);
 			gbx.Gear = gear;
 
 			var absTime = 20.SI<Second>();
@@ -198,7 +198,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 
 			var container = new VehicleContainer(ExecutionMode.Engineering);
 			gearboxData.PowershiftShiftTime = 0.8.SI<Second>();
-
+			new ATClutchInfo(container);
 			
 			var cycleData = SimpleDrivingCycles.CreateCycleData(cycleDataStr);
 			var cycle = new MockDrivingCycle(container, cycleData);

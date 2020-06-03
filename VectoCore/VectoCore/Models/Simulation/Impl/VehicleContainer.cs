@@ -234,4 +234,49 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 		
 	}
+
+	public class ExemptedRunContainer : VehicleContainer
+	{
+		private IMileageCounter _mileageCounter;
+		private IVehicleInfo _vehicleInfo;
+
+		private IGearboxInfo _gearboxInfo;
+
+		public ExemptedRunContainer(
+			ExecutionMode executionMode, IModalDataContainer modData = null, WriteSumData writeSumData = null) : base(
+			executionMode, modData, writeSumData)
+		{
+			_mileageCounter = new ZeroMileageCounter(this);
+			_vehicleInfo = new DummyVehicleInfo(this);
+			_gearboxInfo = new EngineOnlyGearboxInfo(this);
+		}
+
+		#region Overrides of VehicleContainer
+
+		public override IMileageCounter MileageCounter
+		{
+			get { return _mileageCounter; }
+			
+		}
+
+		#endregion
+
+		#region Overrides of VehicleContainer
+
+		public override IVehicleInfo VehicleInfo
+		{
+			get { return _vehicleInfo; }
+		}
+
+		#endregion
+
+		#region Overrides of VehicleContainer
+
+		public override IGearboxInfo GearboxInfo
+		{
+			get { return _gearboxInfo; }
+		}
+
+		#endregion
+	}
 }

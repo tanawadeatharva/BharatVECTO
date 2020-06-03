@@ -38,9 +38,12 @@ using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.InputData.Reader.ComponentData;
 using TUGraz.VectoCore.Models.Connector.Ports.Impl;
+using TUGraz.VectoCore.Models.Simulation.DataBus;
 using TUGraz.VectoCore.Models.Simulation.Impl;
+using TUGraz.VectoCore.Models.SimulationComponent;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Impl;
+using TUGraz.VectoCore.OutputData;
 using TUGraz.VectoCore.Tests.Integration;
 using TUGraz.VectoCore.Tests.Utils;
 
@@ -76,7 +79,8 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			var cycle = new DistanceBasedDrivingCycle(container, cycleData);
 
 			var gbx = new MockGearbox(container);
-
+			new ZeroMileageCounter(container);
+			new DummyVehicleInfo(container);
 			var driver = new MockDriver(container);
 			cycle.InPort().Connect(driver.OutPort());
 
@@ -159,6 +163,8 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			var cycle = new DistanceBasedDrivingCycle(container, cycleData);
 
 			var gbx = new MockGearbox(container);
+			new ZeroMileageCounter(container);
+			new DummyVehicleInfo(container);
 
 			var driver = new MockDriver(container);
 			cycle.InPort().Connect(driver.OutPort());
@@ -267,5 +273,81 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 
 			Assert.IsTrue(run.FinishedWithoutErrors, "Cycle start witout stoptime FAILED");
 		}
+	}
+
+	public class DummyVehicleInfo : VectoSimulationComponent, IVehicleInfo
+	{
+		public DummyVehicleInfo(VehicleContainer container) : base(container)
+		{
+			
+		}
+
+		#region Overrides of VectoSimulationComponent
+
+		protected override void DoWriteModalResults(Second time, Second simulationInterval, IModalDataContainer container)
+		{
+			
+		}
+
+		protected override void DoCommitSimulationStep()
+		{
+			
+		}
+
+		#endregion
+
+		#region Implementation of IVehicleInfo
+
+		public MeterPerSecond VehicleSpeed
+		{
+			get { return 0.SI<MeterPerSecond>(); }
+		}
+
+		public bool VehicleStopped
+		{
+			get { throw new System.NotImplementedException(); }
+		}
+
+		public Kilogram VehicleMass
+		{
+			get { throw new System.NotImplementedException(); }
+		}
+
+		public Kilogram VehicleLoading
+		{
+			get { throw new System.NotImplementedException(); }
+		}
+
+		public Kilogram TotalMass
+		{
+			get { throw new System.NotImplementedException(); }
+		}
+
+		public CubicMeter CargoVolume
+		{
+			get { throw new System.NotImplementedException(); }
+		}
+
+		public Newton AirDragResistance(MeterPerSecond previousVelocity, MeterPerSecond nextVelocity)
+		{
+			throw new System.NotImplementedException();
+		}
+
+		public Newton RollingResistance(Radian gradient)
+		{
+			throw new System.NotImplementedException();
+		}
+
+		public Newton SlopeResistance(Radian gradient)
+		{
+			throw new System.NotImplementedException();
+		}
+
+		public MeterPerSecond MaxVehicleSpeed
+		{
+			get { throw new System.NotImplementedException(); }
+		}
+
+		#endregion
 	}
 }

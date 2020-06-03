@@ -36,12 +36,15 @@ using System.Linq;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
+using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.InputData.Reader.ComponentData;
 using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation.Data;
+using TUGraz.VectoCore.Models.Simulation.DataBus;
 using TUGraz.VectoCore.Models.SimulationComponent;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
+using TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox;
 using TUGraz.VectoCore.Models.SimulationComponent.Impl;
 using TUGraz.VectoCore.Models.SimulationComponent.Strategies;
 using TUGraz.VectoCore.OutputData;
@@ -134,6 +137,9 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			directAux.AddCycle(Constants.Auxiliaries.Cycle);
 			container.ModalData.AddAuxiliary(Constants.Auxiliaries.Cycle);
 			var engine = new EngineOnlyCombustionEngine(container, data.EngineData);
+			new EngineOnlyGearboxInfo(container);
+			new ZeroMileageCounter(container);
+			new DummyDriverInfo(container);
 			engine.Connect(directAux.Port());
 
 			cycle.InPort().Connect(engine.OutPort());
@@ -155,6 +161,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 				.AddComponent(data.AngledriveData != null ? new Angledrive(container, data.AngledriveData) : null)
 				.AddComponent(gearbox, data.Retarder, container)
 				.AddComponent(new Clutch(container, data.EngineData));
+			new ZeroMileageCounter(container);
 			var engine = new StopStartCombustionEngine(container, data.EngineData, pt1Disabled: true);
 			var idleController = GetIdleController(data.PTO, engine, container);
 
@@ -179,6 +186,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 				.AddComponent(data.AngledriveData != null ? new Angledrive(container, data.AngledriveData) : null)
 				.AddComponent(gearbox, data.Retarder, container)
 				.AddComponent(new Clutch(container, data.EngineData));
+			new ZeroMileageCounter(container);
 			var engine = new VTPCombustionEngine(container, data.EngineData, pt1Disabled: true);
 
 			if (data.VehicleData.VehicleCategory.IsLorry()) {
@@ -289,6 +297,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 				.AddComponent(new AxleGear(container, data.AxleGearData))
 				.AddComponent(data.AngledriveData != null ? new Angledrive(container, data.AngledriveData) : null)
 				.AddComponent(new CycleGearbox(container, data));
+			new ATClutchInfo(container);
 			if (data.GearboxData.Type.ManualTransmission()) {
 				powertrain = powertrain.AddComponent(new Clutch(container, data.EngineData));
 			}
@@ -660,4 +669,244 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 				.ToList();
 		}
 	}
+
+	internal class DummyDriverInfo : VectoSimulationComponent, IDriverInfo
+	{
+		public DummyDriverInfo(VehicleContainer container) : base(container)
+		{
+			
+		}
+
+		#region Overrides of VectoSimulationComponent
+
+		protected override void DoWriteModalResults(Second time, Second simulationInterval, IModalDataContainer container)
+		{
+			
+		}
+
+		protected override void DoCommitSimulationStep()
+		{
+			
+		}
+
+		#endregion
+
+		#region Implementation of IDriverInfo
+
+		public DrivingBehavior DriverBehavior
+		{
+			get { return DrivingBehavior.Accelerating; }
+		}
+
+		public DrivingAction DrivingAction
+		{
+			get { return DrivingAction.Accelerate; }
+		}
+
+		public MeterPerSquareSecond DriverAcceleration
+		{
+			get { return 0.SI<MeterPerSquareSecond>(); }
+		}
+
+		#endregion
+	}
+
+	internal class EngineOnlyGearboxInfo : VectoSimulationComponent, IGearboxInfo
+	{
+		public EngineOnlyGearboxInfo(VehicleContainer container) : base(container)
+		{
+			
+		}
+
+		#region Overrides of VectoSimulationComponent
+
+		protected override void DoWriteModalResults(Second time, Second simulationInterval, IModalDataContainer container)
+		{
+			
+		}
+
+		protected override void DoCommitSimulationStep()
+		{
+			
+		}
+
+		#endregion
+
+		#region Implementation of IGearboxInfo
+
+		public GearboxType GearboxType
+		{
+			get {return GearboxType.DrivingCycle; }
+		}
+
+		public uint Gear
+		{
+			get { return 0; }
+		}
+
+		public bool TCLocked
+		{
+			get { return true; }
+		}
+
+		public MeterPerSecond StartSpeed
+		{
+			get { throw new VectoException("No Gearbox available. StartSpeed unknown."); }
+		}
+
+		public MeterPerSquareSecond StartAcceleration
+		{
+			get { throw new VectoException("No Gearbox available. StartAcceleration unknown."); }
+		}
+
+		public Watt GearboxLoss()
+		{
+			throw new VectoException("No Gearbox available.");
+		}
+
+		public Second LastShift
+		{
+			get { throw new VectoException("No Gearbox available."); }
+		}
+
+		public GearData GetGearData(uint gear)
+		{
+			throw new VectoException("No Gearbox available.");
+		}
+
+		public GearInfo NextGear
+		{
+			get { throw new VectoException("No Gearbox available."); }
+		}
+
+		public Second TractionInterruption
+		{
+			get { throw new NotImplementedException(); }
+		}
+
+		public uint NumGears
+		{
+			get { throw new NotImplementedException(); }
+		}
+
+		public bool DisengageGearbox
+		{
+			get { throw new VectoException("No Gearbox available."); }
+		}
+
+		public bool GearEngaged(Second absTime)
+		{
+			throw new VectoException("No Gearbox available.");
+		}
+
+		#endregion
+	}
+
+	internal class ZeroMileageCounter : VectoSimulationComponent, IMileageCounter
+	{
+		public ZeroMileageCounter(VehicleContainer container) : base(container)
+		{
+			
+		}
+
+		#region Overrides of VectoSimulationComponent
+
+		protected override void DoWriteModalResults(Second time, Second simulationInterval, IModalDataContainer container)
+		{
+			
+		}
+
+		protected override void DoCommitSimulationStep()
+		{
+			
+		}
+
+		#endregion
+
+		#region Implementation of IMileageCounter
+
+		public Meter Distance
+		{
+			get { return 0.SI<Meter>(); }
+		}
+
+		#endregion
+	}
+
+	public class DummyVehicleInfo : VectoSimulationComponent, IVehicleInfo
+	{
+		public DummyVehicleInfo(VehicleContainer container) : base(container)
+		{
+
+		}
+
+		#region Overrides of VectoSimulationComponent
+
+		protected override void DoWriteModalResults(Second time, Second simulationInterval, IModalDataContainer container)
+		{
+
+		}
+
+		protected override void DoCommitSimulationStep()
+		{
+
+		}
+
+		#endregion
+
+		#region Implementation of IVehicleInfo
+
+		public MeterPerSecond VehicleSpeed
+		{
+			get { return 0.SI<MeterPerSecond>(); }
+		}
+
+		public bool VehicleStopped
+		{
+			get { throw new System.NotImplementedException(); }
+		}
+
+		public Kilogram VehicleMass
+		{
+			get { throw new System.NotImplementedException(); }
+		}
+
+		public Kilogram VehicleLoading
+		{
+			get { throw new System.NotImplementedException(); }
+		}
+
+		public Kilogram TotalMass
+		{
+			get { throw new System.NotImplementedException(); }
+		}
+
+		public CubicMeter CargoVolume
+		{
+			get { throw new System.NotImplementedException(); }
+		}
+
+		public Newton AirDragResistance(MeterPerSecond previousVelocity, MeterPerSecond nextVelocity)
+		{
+			throw new System.NotImplementedException();
+		}
+
+		public Newton RollingResistance(Radian gradient)
+		{
+			throw new System.NotImplementedException();
+		}
+
+		public Newton SlopeResistance(Radian gradient)
+		{
+			throw new System.NotImplementedException();
+		}
+
+		public MeterPerSecond MaxVehicleSpeed
+		{
+			get { throw new System.NotImplementedException(); }
+		}
+
+		#endregion
+	}
+
 }

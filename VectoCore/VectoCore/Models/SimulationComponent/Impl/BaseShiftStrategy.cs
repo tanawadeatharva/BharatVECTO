@@ -54,7 +54,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			DataBus = dataBus;
 		}
 
-		public  bool ShiftRequired(Second absTime, Second dt, NewtonMeter outTorque,
+		public virtual bool ShiftRequired(Second absTime, Second dt, NewtonMeter outTorque,
 			PerSecond outAngularVelocity, NewtonMeter inTorque, PerSecond inAngularVelocity, uint gear,
 			Second lastShiftTime, IResponse response)
 		{

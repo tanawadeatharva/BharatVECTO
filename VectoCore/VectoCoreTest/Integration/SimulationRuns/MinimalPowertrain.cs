@@ -49,6 +49,7 @@ using Wheels = TUGraz.VectoCore.Models.SimulationComponent.Impl.Wheels;
 using NUnit.Framework;
 using System.IO;
 using TUGraz.VectoCore.InputData.Reader.Impl;
+using TUGraz.VectoCore.Tests.Models.SimulationComponent;
 
 namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 {
@@ -98,7 +99,7 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 				.AddComponent(engine);
 
 			var gbx = new MockGearbox(container);
-
+			new DummyCycle(container);
 			var driverPort = driver.OutPort();
 
 			gbx.Gear = 1;

@@ -90,7 +90,9 @@ namespace TUGraz.VectoCore.Tests.Integration.EngineOnlyCycle
 
 			var engine = new EngineOnlyCombustionEngine(vehicle, engineData);
 			engine.Connect(aux);
-
+			new EngineOnlyGearboxInfo(vehicle);
+			new ZeroMileageCounter(vehicle);
+			new DummyDriverInfo(vehicle);
 			//aux.InPort().Connect(engine.OutPort());
 			var port = engine.OutPort();
 

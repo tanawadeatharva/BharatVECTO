@@ -200,7 +200,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			if (data.Report != null) {
 				data.Report.PrepareResult(data.Loading, data.Mission, data.EngineData?.FuelMode ?? 0, data);
 			}
-			return new ExemptedRun(new VehicleContainer(data.ExecutionMode) { RunData = data }, modData => {
+			return new ExemptedRun(new ExemptedRunContainer(data.ExecutionMode) { RunData = data }, modData => {
 				if (data.Report != null) {
 					data.Report.AddResult(data.Loading, data.Mission, data.EngineData?.FuelMode ?? 0, data, modData);
 				}
