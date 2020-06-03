@@ -99,10 +99,12 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 						0.SI<Meter>(), Constants.SimulationSettings.DriverActionDistanceTolerance);
 					var closeBeforeBraking = estimatedTimestep.IsSmaller(Constants.SimulationSettings.LowerBoundTimeInterval);
 					var brakingIntervalTooShort = NextDrivingAction.Action == DrivingBehavior.Braking &&
+												NextDrivingAction.ActionDistance.IsSmaller(currentDistance + ds) &&
 												((NextDrivingAction.TriggerDistance - NextDrivingAction.ActionDistance) / Driver.DataBus.VehicleSpeed)
 												.IsSmaller(
 													Constants.SimulationSettings.LowerBoundTimeInterval / 2) && (Driver.DataBus.GearboxType.AutomaticTransmission() || !Driver.DataBus.ClutchClosed(absTime));
 					var brakingIntervalShort = NextDrivingAction.Action == DrivingBehavior.Braking &&
+												NextDrivingAction.ActionDistance.IsSmaller(currentDistance + ds) &&
 												((NextDrivingAction.TriggerDistance - NextDrivingAction.ActionDistance) / Driver.DataBus.VehicleSpeed)
 												.IsSmaller(
 													Constants.SimulationSettings.LowerBoundTimeInterval / 2) && (Driver.DataBus.GearboxType.AutomaticTransmission() || !Driver.DataBus.ClutchClosed(absTime));
