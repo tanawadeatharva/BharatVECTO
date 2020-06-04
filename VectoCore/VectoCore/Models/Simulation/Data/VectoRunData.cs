@@ -146,6 +146,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 
 			[SIRange(0, 100 * Constants.Kilo)] public Watt PowerDemand;
 
+			[JsonIgnore]
 			public Func<DrivingCycleData.DrivingCycleEntry, Watt> PowerDemandFunc;
 
 			[Required] public AuxiliaryDemandType DemandType;

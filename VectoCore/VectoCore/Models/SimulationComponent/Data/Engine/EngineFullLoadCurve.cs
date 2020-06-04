@@ -55,7 +55,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Engine
 
 		private PerSecond _preferredSpeed;
 		private PerSecond _engineSpeedLo; // 55% of Pmax
-		private PerSecond _engineSpeedHi; // 70% of Pmax
+		//private PerSecond _engineSpeedHi; // 70% of Pmax
 		private PerSecond _n95hSpeed; // 95% of Pmax
 		private PerSecond _n80hSpeed; // 80% of Pmax
 
@@ -327,21 +327,21 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Engine
 			get { return _engineSpeedLo ?? (_engineSpeedLo = FindEngineSpeedForPower(0.55 * MaxPower).First()); }
 		}
 
-		public PerSecond HiSpeed
-		{
-			get {
-				if (_engineSpeedHi != null) {
-					return _engineSpeedHi;
-				}
-				_engineSpeedHi = FindEngineSpeedForPower(0.7 * MaxPower).Last();
-				if (_engineSpeedHi <= RatedSpeed) {
-					throw new VectoException(
-						"failed to compute n70h speed - must be higher than rated speed. rated speed: {0}, n70h speed: {1}", RatedSpeed,
-						_engineSpeedHi);
-				}
-				return _engineSpeedHi;
-			}
-		}
+		//public PerSecond HiSpeed
+		//{
+		//	get {
+		//		if (_engineSpeedHi != null) {
+		//			return _engineSpeedHi;
+		//		}
+		//		_engineSpeedHi = FindEngineSpeedForPower(0.7 * MaxPower).Last();
+		//		if (_engineSpeedHi <= RatedSpeed) {
+		//			throw new VectoException(
+		//				"failed to compute n70h speed - must be higher than rated speed. rated speed: {0}, n70h speed: {1}", RatedSpeed,
+		//				_engineSpeedHi);
+		//		}
+		//		return _engineSpeedHi;
+		//	}
+		//}
 
 		private void ComputePreferredSpeed()
 		{

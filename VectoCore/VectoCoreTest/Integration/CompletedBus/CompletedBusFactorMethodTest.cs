@@ -980,7 +980,7 @@ namespace TUGraz.VectoCore.Tests.Integration.CompletedBus
 		TestCase(@"TestData\Integration\Buses\FactorMethod\primary_heavyBus group41_nonSmart_AT-P.xml", 12, TestName = "PrintVectoRunData PrimaryBus Group41 AT-P SD CO/LL"),
 		TestCase(@"TestData\Integration\Buses\FactorMethod\vecto_vehicle-primary_heavyBus_ESS_electricFanSTP.xml", 13, TestName = "PrintVectoRunData electric STP/Fan ESS IU/RL"),
 			]
-		public void PrintModelParametersPrimaryBus(string jobFile, int runIdx)
+		public void PrintModelParameters(string jobFile, int runIdx)
 		{
 			var runs = GetVectoRunData(jobFile);
 
@@ -990,7 +990,20 @@ namespace TUGraz.VectoCore.Tests.Integration.CompletedBus
 			File.WriteAllText($"{run.JobName}_{run.Cycle.Name}{run.ModFileSuffix}.json", JsonConvert.SerializeObject(run, Formatting.Indented));
 		}
 
+		[TestCase(@"TestData\Integration\VTPMode\GenericVehicle\class_5_generic vehicle_DECL.vecto", 0, TestName = "PrintVectoRunData VTP HeavyTruck"),
+		TestCase(@"TestData\Integration\VTPMode\MediumLorry\VTP_MediumLorry.vecto", 0, TestName = "PrintVectoRunData VTP MediumLory"),
+		TestCase(@"TestData\Integration\VTPMode\HeavyBus\VTP_PrimaryBus.vecto", 0, TestName = "PrintVectoRunData VTP PrimaryBus"),
+		TestCase(@"TestData\Integration\VTPMode\DualFuelVehicle\VTP_DualFuel.vecto", 0, TestName = "PrintVectoRunData VTP DualFuel"),
+		]
+		public void PrintModelParametersVTP(string jobFile, int runIdx)
+		{
+			var runs = GetVectoRunData(jobFile);
 
+			//SetRelatedVehicleParts(runs);
+			var run = runs[runIdx];
+
+			File.WriteAllText($"{run.JobName}_{run.Cycle.Name}{run.ModFileSuffix}.json", JsonConvert.SerializeObject(run, Formatting.Indented));
+		}
 
 		private List<VectoRunData> GetVectoRunData(string jobFile)
 		{
