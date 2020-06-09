@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Utils;
+using TUGraz.VectoCore.Models.SimulationComponent.Impl;
 using TUGraz.VectoCore.Models.SimulationComponent.Strategies;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent
@@ -18,6 +19,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent
 	{
 		HybridStrategyResponse Request(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity, bool dryRun);
 		HybridStrategyResponse Initialize(NewtonMeter outTorque, PerSecond outAngularVelocity);
-		void CommitSimulationStep();
+		void CommitSimulationStep(Second time, Second simulationInterval);
+		IHybridController Controller { set; }
 	}
 }

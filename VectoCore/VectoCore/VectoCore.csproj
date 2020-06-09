@@ -384,6 +384,7 @@
     <Compile Include="Models\Declaration\PrimaryBusSegments.cs" />
     <Compile Include="Models\Declaration\HVACCoolingPower.cs" />
     <Compile Include="Models\Declaration\SteeringPumpBus.cs" />
+    <Compile Include="Models\SimulationComponent\Data\ElectricMotor\DragCurve.cs" />
     <Compile Include="Models\SimulationComponent\Data\ElectricMotor\EfficiencyMap.cs" />
     <Compile Include="Models\SimulationComponent\Data\ElectricMotor\ElectricFullLoadCurve.cs" />
     <Compile Include="Models\SimulationComponent\Data\ElectricMotor\ElectricMotorData.cs" />

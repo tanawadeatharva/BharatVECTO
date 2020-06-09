@@ -174,10 +174,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			IResponse response;
 			var responseCount = 0;
 			do {
-				response = NextComponent.Request(absTime, dt, acceleration, gradient);
+				response = NextComponent.Request(absTime, dt, acceleration, gradient, false);
 				debug.Add(response);
 				response.Switch()
-					.Case<ResponseGearShift>(() => response = NextComponent.Request(absTime, dt, acceleration, gradient))
+					.Case<ResponseGearShift>(() => response = NextComponent.Request(absTime, dt, acceleration, gradient, false))
 					.Case<ResponseUnderload>(r => {
 						response = HandleUnderload(absTime, dt, r, gradient, ref acceleration);
 					})
@@ -254,7 +254,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					criterion: y => ((ResponseDryRun)y).DeltaFullLoad.Value());
 			}
 
-			var response = NextComponent.Request(absTime, dt, acceleration, gradient);
+			var response = NextComponent.Request(absTime, dt, acceleration, gradient, false);
 			return response;
 		}
 
@@ -301,7 +301,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 						criterion: y => ((ResponseDryRun)y).DeltaFullLoad.Value());
 				}
 			}
-			response = NextComponent.Request(absTime, dt, acceleration, gradient);
+			response = NextComponent.Request(absTime, dt, acceleration, gradient, false);
 			return response;
 		}
 
@@ -315,7 +315,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			container[ModalResultField.acc] = CurrentState.Acceleration;
 		}
 
-		protected override void DoCommitSimulationStep()
+		protected override void DoCommitSimulationStep(Second time, Second simulationInterval)
 		{
 			if ((CycleIterator.RightSample == null) || AbsTime.IsGreaterOrEqual(CycleIterator.RightSample.Time)) {
 				CycleIterator.MoveNext();

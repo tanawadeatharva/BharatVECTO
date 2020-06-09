@@ -228,7 +228,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			var tq = torque.SI<NewtonMeter>();
 			var n = inAngularSpeed.RPMtoRad();
 			container.AbsTime = absTime;
-			var response = (ResponseSuccess)gearbox.OutPort().Request(absTime, dt, tq * ratio, n / ratio);
+			var response = (ResponseSuccess)gearbox.OutPort().Request(absTime, dt, tq * ratio, n / ratio, false);
 
 			Assert.IsFalse(gearbox.CurrentState.TorqueLossResult.Extrapolated);
 
@@ -308,7 +308,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			var tq = torque.SI<NewtonMeter>();
 			var n = inAngularSpeed.RPMtoRad();
 			container.AbsTime = absTime;
-			var response = (ResponseSuccess)gearbox.OutPort().Request(absTime, dt, tq * ratio, n / ratio);
+			var response = (ResponseSuccess)gearbox.OutPort().Request(absTime, dt, tq * ratio, n / ratio, false);
 
 			Assert.IsTrue( gearbox.CurrentState.TorqueLossResult.Extrapolated);
 			Assert.AreEqual(absTime, port.AbsTime);
@@ -345,7 +345,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			var n = inAngularSpeed.RPMtoRad();
 			container.AbsTime = absTime;
 
-			var response = (ResponseSuccess)gearbox.OutPort().Request(absTime, dt, t * ratio, n / ratio);
+			var response = (ResponseSuccess)gearbox.OutPort().Request(absTime, dt, t * ratio, n / ratio, false);
 
 			Assert.IsTrue(gearbox.CurrentState.TorqueLossResult.Extrapolated);
 
@@ -384,7 +384,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			var t = torque.SI<NewtonMeter>();
 			var n = inAngularSpeed.RPMtoRad();
 			container.AbsTime = absTime;
-			var response = (ResponseSuccess)gearbox.OutPort().Request(absTime, dt, t * ratio, n / ratio);
+			var response = (ResponseSuccess)gearbox.OutPort().Request(absTime, dt, t * ratio, n / ratio, false);
 
 			Assert.AreEqual(absTime, port.AbsTime);
 			Assert.AreEqual(dt, port.Dt);
@@ -424,7 +424,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			foreach (var exp in expected) {
 				var torque = exp.t.SI<NewtonMeter>() * ratio;
 				var angularVelocity = exp.n.RPMtoRad() / ratio;
-				var response = (ResponseSuccess)gearbox.OutPort().Request(0.SI<Second>(), 1.SI<Second>(), torque, angularVelocity);
+				var response = (ResponseSuccess)gearbox.OutPort().Request(0.SI<Second>(), 1.SI<Second>(), torque, angularVelocity, false);
 			}
 
 			var expectedCorrect = new[] {
@@ -438,7 +438,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 				var torque = exp.t.SI<NewtonMeter>() * ratio;
 				var angularVelocity = exp.n.RPMtoRad() / ratio;
 
-				var response = (ResponseSuccess)gearbox.OutPort().Request(0.SI<Second>(), 1.SI<Second>(), torque, angularVelocity);
+				var response = (ResponseSuccess)gearbox.OutPort().Request(0.SI<Second>(), 1.SI<Second>(), torque, angularVelocity, false);
 			}
 		}
 
@@ -489,7 +489,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 
 			gearbox.Gear = (uint)gear;
 			container.AbsTime = absTime;
-			var response = gearbox.OutPort().Request(absTime, dt, outTorque, angularVelocity);
+			var response = gearbox.OutPort().Request(absTime, dt, outTorque, angularVelocity, false);
 			Assert.IsTrue(response.GetType() == responseType);
 
 			AssertHelper.AreRelativeEqual(absTime, port.AbsTime);
@@ -539,11 +539,11 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 
 			gearbox.Gear = (uint)gear;
 			container.AbsTime = absTime;
-			var gearShiftResponse = gearbox.OutPort().Request(absTime, dt, torque, angularVelocity);
+			var gearShiftResponse = gearbox.OutPort().Request(absTime, dt, torque, angularVelocity, false);
 			Assert.IsTrue(gearShiftResponse.GetType() == responseType);
 
 			absTime += dt;
-			var successResponse = (ResponseSuccess)gearbox.OutPort().Request(absTime, dt, torque, angularVelocity);
+			var successResponse = (ResponseSuccess)gearbox.OutPort().Request(absTime, dt, torque, angularVelocity, false);
 			Assert.AreEqual((uint)newGear, container.GearboxInfo.Gear);
 		}
 
@@ -596,11 +596,11 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 
 			gearbox.Gear = (uint)gear;
 			container.AbsTime = absTime;
-			var response = gearbox.OutPort().Request(absTime, dt, torque, angularVelocity);
+			var response = gearbox.OutPort().Request(absTime, dt, torque, angularVelocity, false);
 			Assert.IsTrue(response.GetType() == responseType);
 
 			absTime += dt;
-			response = (ResponseSuccess)gearbox.OutPort().Request(absTime, dt, torque, angularVelocity);
+			response = (ResponseSuccess)gearbox.OutPort().Request(absTime, dt, torque, angularVelocity, false);
 			Assert.AreEqual((uint)newGear, gearbox.Gear);
 		}
 	}

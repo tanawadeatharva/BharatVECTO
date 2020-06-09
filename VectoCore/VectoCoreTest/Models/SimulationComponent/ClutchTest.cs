@@ -92,7 +92,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 
 			driver.DriverBehavior = drivingBehavior;
 
-			clutchOutPort.Request(0.SI<Second>(), 0.SI<Second>(), torque.SI<NewtonMeter>(), angularSpeed.SI<PerSecond>());
+			clutchOutPort.Request(0.SI<Second>(), 0.SI<Second>(), torque.SI<NewtonMeter>(), angularSpeed.SI<PerSecond>(), false);
 
 			Assert.AreEqual(expectedTorque, outPort.Torque.Value(), 0.001);
 			Assert.AreEqual(expectedEngineSpeed, outPort.AngularVelocity.Value(), 0.001);
@@ -142,7 +142,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 				var tq = mass * accel * rDyn / ratio;
 				var angularVelocity = (accel * dt / rDyn * ratio).Cast<PerSecond>();
 
-				clutchOutPort.Request(0.SI<Second>(), 0.SI<Second>(), tq, angularVelocity);
+				clutchOutPort.Request(0.SI<Second>(), 0.SI<Second>(), tq, angularVelocity, false);
 
 				var row = data.NewRow();
 				row["a"] = a;
@@ -212,7 +212,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			container[ModalResultField.FCFinal] = 0.SI<KilogramPerSecond>();
 		}
 
-		protected override void DoCommitSimulationStep() {}
+		protected override void DoCommitSimulationStep(Second time, Second simulationInterval) {}
 
 		#region Implementation of IEngineControl
 

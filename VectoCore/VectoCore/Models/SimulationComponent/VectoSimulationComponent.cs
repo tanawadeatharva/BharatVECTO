@@ -64,7 +64,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent
 			if (container != null) {
 				DoWriteModalResults(time, simulationInterval, container);
 			}
-			DoCommitSimulationStep();
+			DoCommitSimulationStep(time, simulationInterval);
 		}
 
 		protected abstract void DoWriteModalResults(Second time, Second simulationInterval,IModalDataContainer container);
@@ -74,7 +74,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent
 		/// Writes the moddata into the data writer.
 		/// Commits the internal state of the object if needed.
 		/// </summary>
-		protected abstract void DoCommitSimulationStep();
+		/// <param name="time"></param>
+		/// <param name="simulationInterval"></param>
+		protected abstract void DoCommitSimulationStep(Second time, Second simulationInterval);
 	}
 
 	public abstract class StatefulVectoSimulationComponent<TStateType> : VectoSimulationComponent where TStateType : new()
@@ -121,7 +123,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent
 			NextComponent = other;
 		}
 
-		protected override void DoCommitSimulationStep()
+		protected override void DoCommitSimulationStep(Second time, Second simulationInterval)
 		{
 			AdvanceState();
 		}

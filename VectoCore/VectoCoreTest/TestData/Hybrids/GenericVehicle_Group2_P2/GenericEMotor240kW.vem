@@ -10,6 +10,7 @@
 	"Model": "Generic Electric Motor",
 	"FullLoadCurve": "GenericEMotor240kW.vemp",
     "EfficiencyMap": "GenericMap240kW.vemo",
+    "DragCurve":  "GenericDrag.vemd", 
     "Inertia" :  0.15 
 	}
 }

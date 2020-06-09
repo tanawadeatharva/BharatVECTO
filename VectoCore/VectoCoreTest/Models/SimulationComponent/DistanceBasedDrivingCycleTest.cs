@@ -289,7 +289,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			
 		}
 
-		protected override void DoCommitSimulationStep()
+		protected override void DoCommitSimulationStep(Second time, Second simulationInterval)
 		{
 			
 		}

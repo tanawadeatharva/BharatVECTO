@@ -72,7 +72,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		}
 
 		public virtual IResponse Request(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity,
-			bool dryRun = false)
+			bool dryRun)
 		{
 			Log.Debug("request: torque: {0}, angularVelocity: {1}", outTorque, outAngularVelocity);
 
@@ -85,8 +85,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			}
 			var inTorque = outTorque / ModelData.Ratio + torqueLossResult.Value;
 
-			CurrentState.SetState(inTorque, inAngularVelocity, outTorque, outAngularVelocity);
-			CurrentState.TorqueLossResult = torqueLossResult;
+			if (!dryRun) {
+				CurrentState.SetState(inTorque, inAngularVelocity, outTorque, outAngularVelocity);
+				CurrentState.TorqueLossResult = torqueLossResult;
+			}
 
 			var retVal = NextComponent.Request(absTime, dt, inTorque, inAngularVelocity, dryRun);
 			return retVal;
@@ -104,7 +106,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			return NextComponent.Initialize(inTorque, inAngularVelocity);
 		}
 
-		protected override void DoCommitSimulationStep()
+		protected override void DoCommitSimulationStep(Second time, Second simulationInterval)
 		{
 			if (CurrentState.TorqueLossResult.Extrapolated) {
 				Log.Warn("{2} LossMap data was extrapolated: range for loss map is not sufficient: n_out:{0}, torque_out:{1}",

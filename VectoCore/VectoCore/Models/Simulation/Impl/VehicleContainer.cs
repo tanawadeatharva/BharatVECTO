@@ -116,7 +116,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 		public virtual void AddComponent(VectoSimulationComponent component)
 		{
 			var commitPriority = 0;
-
+			var ignoreComponent = false;
 			component.Switch()
 				.If<IEngineInfo>(c => {
 					EngineInfo = c;
@@ -150,6 +150,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 				.If<VTPCycle>(_ => { commitPriority = 0; })
 				.If<IElectricMotorInfo>(c => {
 					if (c.Position == PowertrainPosition.HybridPositionNotSet) {
+						ignoreComponent = true;
 						return;
 					}
 					if (ElectricMotors.ContainsKey(c.Position)) {
@@ -160,9 +161,11 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 					ElectricMotors[c.Position] = c;
 					HasElectricMotor = true;
 				})
-				.If<IHybridController>(c => { HybridController = c; })
-				;
+				.If<IHybridController>(c => { HybridController = c; });
 
+			if (ignoreComponent) {
+				return;
+			}
 			_components.Add(Tuple.Create(commitPriority, component));
 			_components = _components.OrderBy(x => x.Item1).Reverse().ToList();
 		}

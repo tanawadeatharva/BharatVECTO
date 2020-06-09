@@ -108,7 +108,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					PreviousState.InertiaTorqueLossOut) / ratio * PreviousState.InAngularVelocity;
 		}
 
-		public Second LastShift { get; protected set; }
+		public virtual Second LastShift { get; protected set; }
 
 		public GearData GetGearData(uint gear)
 		{

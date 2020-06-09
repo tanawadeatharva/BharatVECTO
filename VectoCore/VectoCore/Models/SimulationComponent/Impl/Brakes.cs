@@ -88,10 +88,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 													(PreviousState.InAngularVelocity + CurrentState.InAngularVelocity) / 2.0;
 		}
 
-		protected override void DoCommitSimulationStep()
+		protected override void DoCommitSimulationStep(Second time, Second simulationInterval)
 		{
 			BrakePower = 0.SI<Watt>();
-			base.DoCommitSimulationStep();
+			base.DoCommitSimulationStep(time, simulationInterval);
 		}
 	}
 }

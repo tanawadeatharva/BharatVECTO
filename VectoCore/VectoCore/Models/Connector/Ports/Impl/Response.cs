@@ -55,6 +55,7 @@ namespace TUGraz.VectoCore.Models.Connector.Ports.Impl
 			Vehicle = new VehicleResponse();
 			Brakes = new BrakesResponse();
 			ElectricMotor = new ElectricMotorResponse();
+			TorqueConverter = new TorqueConverterResponse();
 		}
 
 		public Second AbsTime { get; set; }
@@ -69,6 +70,8 @@ namespace TUGraz.VectoCore.Models.Connector.Ports.Impl
 
 		public GearboxResponse Gearbox { get; }
 
+		public TorqueConverterResponse TorqueConverter { get; }
+
 		public AxlegearResponse Axlegear { get; }
 
 		public AngledriveResponse Angledrive { get; }
@@ -81,13 +84,7 @@ namespace TUGraz.VectoCore.Models.Connector.Ports.Impl
 
 		public IElectricSystemResponse ElectricSystem { get; set; }
 
-		public PerSecond GearboxInputSpeed { get; set; }
-
-
-		public TorqueConverterOperatingPoint TorqueConverterOperatingPoint { get; set; }
-
-		public NewtonMeter TorqueConverterTorqueDemand { get; set; }
-
+		
 		public override string ToString()
 		{
 			var t = GetType();

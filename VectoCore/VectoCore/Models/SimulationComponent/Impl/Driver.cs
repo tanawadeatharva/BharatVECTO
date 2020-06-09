@@ -157,7 +157,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			DriverAcceleration = operatingPoint.Acceleration;
 			var response = previousResponse ??
 							NextComponent.Request(absTime, operatingPoint.SimulationInterval, operatingPoint.Acceleration,
-								gradient);
+								gradient, false);
 			response.Driver.Acceleration = operatingPoint.Acceleration;
 
 			response.Switch().
@@ -226,7 +226,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				DriverAcceleration = limitedOperatingPoint.Acceleration;
 				retVal = NextComponent.Request(absTime, limitedOperatingPoint.SimulationInterval,
 					limitedOperatingPoint.Acceleration,
-					gradient);
+					gradient, false);
 				if (retVal != null) {
 					retVal.Driver.Acceleration = limitedOperatingPoint.Acceleration;
 				}
@@ -246,7 +246,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 							}
 							DriverAcceleration = nextOperatingPoint.Acceleration;
 							retVal = NextComponent.Request(absTime, nextOperatingPoint.SimulationInterval,
-								nextOperatingPoint.Acceleration, gradient);
+								nextOperatingPoint.Acceleration, gradient, false);
 							retVal.Switch().Case<ResponseFailTimeInterval>(
 								rt => {
 									// occurs only with AT gearboxes - extend time interval after gearshift!
@@ -271,7 +271,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 										retVal);
 									DriverAcceleration = nextOperatingPoint.Acceleration;
 									retVal = NextComponent.Request(absTime, nextOperatingPoint.SimulationInterval,
-										nextOperatingPoint.Acceleration, gradient);
+										nextOperatingPoint.Acceleration, gradient, false);
 								} else {
 									Log.Info(
 										"Operating point with limited acceleration resulted in an overload! trying again with original acceleration {0}",
@@ -279,7 +279,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 									DriverAcceleration = nextOperatingPoint.Acceleration;
 									retVal = NextComponent.Request(absTime, nextOperatingPoint.SimulationInterval,
 										nextOperatingPoint.Acceleration,
-										gradient);
+										gradient, false);
 								}
 							}
 						}
@@ -294,7 +294,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 																				r);
 										DriverAcceleration = nextOperatingPoint.Acceleration;
 										retVal = NextComponent.Request(absTime, nextOperatingPoint.SimulationInterval,
-																		nextOperatingPoint.Acceleration, gradient);
+																		nextOperatingPoint.Acceleration, gradient, false);
 										retVal.Switch().Case<ResponseFailTimeInterval>(
 											rt => {
 												// occurs only with AT gearboxes - extend time interval after gearshift!
@@ -472,7 +472,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			DriverAcceleration = limitedOperatingPoint.Acceleration;
 			var response = NextComponent.Request(absTime, limitedOperatingPoint.SimulationInterval,
-				limitedOperatingPoint.Acceleration, gradient);
+				limitedOperatingPoint.Acceleration, gradient, false);
 
 			response.SimulationInterval = limitedOperatingPoint.SimulationInterval;
 			response.SimulationDistance = ds;
@@ -524,7 +524,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			var tcOp = EstimateTCOpPoint(operatingPoint, dryRunResp, engineSpeed, tc);
 			
 			if (tcOp.Item1.Item2.IsBetween(tcOp.Item2, tcOp.Item3)) {
-				if (!dryRunResp.TorqueConverterOperatingPoint.OutTorque.IsEqual(tcOp.Item1.Item1.OutTorque)) {
+				if (!dryRunResp.TorqueConverter.TorqueConverterOperatingPoint.OutTorque.IsEqual(tcOp.Item1.Item1.OutTorque)) {
 					tc.SetOperatingPoint = tcOp.Item1.Item1;
 				}
 				try {
@@ -541,7 +541,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			tcOp = EstimateTCOpPoint(operatingPoint, dryRunResp, engineSpeed, tc);
 
 			if (tcOp.Item1.Item2.IsBetween(tcOp.Item2, tcOp.Item3)) {
-				if (!dryRunResp.TorqueConverterOperatingPoint.OutTorque.IsEqual(tcOp.Item1.Item1.OutTorque)) {
+				if (!dryRunResp.TorqueConverter.TorqueConverterOperatingPoint.OutTorque.IsEqual(tcOp.Item1.Item1.OutTorque)) {
 					tc.SetOperatingPoint = tcOp.Item1.Item1;
 				}
 				try {
@@ -625,11 +625,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			Second absTime, Radian gradient, OperatingPoint operatingPoint, Tuple<TorqueConverterOperatingPoint, NewtonMeter> tcOp, ResponseDryRun dryRun)
 		{
 			var acceleration = SearchAlgorithm.Search(
-				operatingPoint.Acceleration, tcOp.Item1.OutTorque - dryRun.TorqueConverterTorqueDemand,
+				operatingPoint.Acceleration, tcOp.Item1.OutTorque - dryRun.TorqueConverter.TorqueConverterTorqueDemand,
 				Constants.SimulationSettings.OperatingPointInitialSearchIntervalAccelerating,
 				getYValue: resp => {
 					var r = (ResponseDryRun)resp;
-					return tcOp.Item1.OutTorque - r.TorqueConverterTorqueDemand;
+					return tcOp.Item1.OutTorque - r.TorqueConverter.TorqueConverterTorqueDemand;
 				},
 				evaluateFunction:
 				acc => {
@@ -648,7 +648,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				criterion: resp => {
 					var r = (ResponseDryRun)resp;
 
-					return (tcOp.Item1.OutTorque - r.TorqueConverterTorqueDemand).Value();
+					return (tcOp.Item1.OutTorque - r.TorqueConverter.TorqueConverterTorqueDemand).Value();
 				}
 			);
 			return acceleration;
@@ -693,7 +693,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				? previousResponse
 				: NextComponent.Request(
 					absTime, operatingPoint.SimulationInterval, operatingPoint.Acceleration,
-					gradient);
+					gradient, false);
 
 			var point = operatingPoint;
 			response.Switch().
@@ -762,7 +762,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			var gear = DataBus.GearboxInfo.Gear;
 			var tcLocked = DataBus.GearboxInfo.TCLocked;
 			retVal = NextComponent.Request(absTime, operatingPoint.SimulationInterval, operatingPoint.Acceleration,
-				gradient);
+				gradient, false);
 			var gearChanged = !(DataBus.GearboxInfo.Gear == gear && DataBus.GearboxInfo.TCLocked == tcLocked);
 			if (DataBus.GearboxInfo.GearboxType.AutomaticTransmission() && gearChanged && (retVal is ResponseOverload || retVal is ResponseUnderload)) {
 				Log.Debug("Gear changed after a valid operating point was found - braking is no longer applicable due to overload"); 
@@ -782,7 +782,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 							operatingPoint.Acceleration, response);
 						DriverAcceleration = operatingPoint.Acceleration;
 						retVal = NextComponent.Request(absTime, operatingPoint.SimulationInterval,
-							operatingPoint.Acceleration, gradient);
+							operatingPoint.Acceleration, gradient, false);
 					}
 				}).
 				Case<ResponseOverload>(r => {
@@ -794,7 +794,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 							
 							retVal = NextComponent.Request(
 								absTime, operatingPoint.SimulationInterval, operatingPoint.Acceleration,
-								gradient);
+								gradient, false);
 							if (retVal is ResponseSuccess) {
 								break;
 							}
@@ -808,7 +808,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 								operatingPoint = SearchOperatingPoint(absTime, ds, gradient, 0.SI<MeterPerSquareSecond>(), r);
 							}
 							retVal = NextComponent.Request(absTime, operatingPoint.SimulationInterval,
-								operatingPoint.Acceleration, gradient);
+								operatingPoint.Acceleration, gradient, false);
 						}
 					} else {
 						throw new UnexpectedResponseException(
@@ -1241,12 +1241,12 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			}
 
 			DriverAcceleration = 0.SI<MeterPerSquareSecond>();
-			var retVal = NextComponent.Request(absTime, dt, 0.SI<MeterPerSquareSecond>(), gradient);
+			var retVal = NextComponent.Request(absTime, dt, 0.SI<MeterPerSquareSecond>(), gradient, false);
 
 			retVal.Switch().
 				Case<ResponseGearShift>(r => {
 					DriverAcceleration = 0.SI<MeterPerSquareSecond>();
-					retVal = NextComponent.Request(absTime, dt, 0.SI<MeterPerSquareSecond>(), gradient);
+					retVal = NextComponent.Request(absTime, dt, 0.SI<MeterPerSquareSecond>(), gradient, false);
 				});
 			CurrentState.dt = dt;
 			CurrentState.Acceleration = 0.SI<MeterPerSquareSecond>();
@@ -1262,7 +1262,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		}
 
 		
-		protected override void DoCommitSimulationStep()
+		protected override void DoCommitSimulationStep(Second time, Second simulationInterval)
 		{
 			if (CurrentState.Response != null && !(CurrentState.Response is ResponseSuccess)) {
 				throw new VectoSimulationException("Previous request did not succeed!");

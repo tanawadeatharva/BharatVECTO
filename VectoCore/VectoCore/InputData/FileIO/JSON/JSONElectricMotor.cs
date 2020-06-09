@@ -36,6 +36,11 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON {
 			get { return ReadTableData(Body.GetEx<string>("FullLoadCurve"), "ElectricMotor FullLoadCurve"); }
 		}
 
+		public TableData DragCurve
+		{
+			get { return ReadTableData(Body.GetEx<string>("DragCurve"), "ElectricMotor DragCurve"); }
+		}
+
 		public TableData EfficiencyMap
 		{
 			get { return ReadTableData(Body.GetEx<string>("EfficiencyMap"), "ElectricMotor Map"); }

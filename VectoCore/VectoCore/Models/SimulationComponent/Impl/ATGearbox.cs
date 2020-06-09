@@ -255,7 +255,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 						DeltaT = ModelData.PowershiftShiftTime,
 						Gearbox = {
 							PowerRequest =
-								outTorque * (PreviousState.OutAngularVelocity + outAngularVelocity) / 2.0
+								outTorque * (PreviousState.OutAngularVelocity + outAngularVelocity) / 2.0,
+							Gear = Gear
 						}
 					};
 					RequestAfterGearshift = true;
@@ -268,6 +269,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			} while (loop && ++count < 2);
 
 			retVal.Gearbox.PowerRequest = outTorque * (PreviousState.OutAngularVelocity + outAngularVelocity) / 2.0;
+			retVal.Gearbox.Gear = Gear;
 			return retVal;
 		}
 
@@ -397,7 +399,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			Log.Debug("Invoking IdleController...");
 
-			var retval = IdleController.Request(absTime, dt, 0.SI<NewtonMeter>(), null);
+			var retval = IdleController.Request(absTime, dt, 0.SI<NewtonMeter>(), null, false);
 			retval.Clutch.PowerRequest = 0.SI<Watt>();
 
 			// no dry-run - update state
@@ -442,7 +444,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			_strategy?.WriteModalResults(container);
 		}
 
-		protected override void DoCommitSimulationStep()
+		protected override void DoCommitSimulationStep(Second time, Second simulationInterval)
 		{
 			if (!CurrentState.Disengaged && CurrentState.TorqueLossResult != null &&
 				CurrentState.TorqueLossResult.Extrapolated) {

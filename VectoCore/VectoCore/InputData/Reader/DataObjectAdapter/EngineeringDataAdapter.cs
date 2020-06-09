@@ -659,6 +659,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			}
 			return new ElectricMotorData() {
 				FullLoadCurve = ElectricFullLoadCurveReader.Create(motorData.FullLoadCurve),
+				DragCurve = ElectricMotorDragCurveReader.Create(motorData.DragCurve),
 				EfficiencyMap = ElectricMotorMapReader.Create(motorData.EfficiencyMap),
 				Inertia = motorData.Inertia
 			};

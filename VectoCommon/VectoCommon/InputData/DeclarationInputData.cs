@@ -33,8 +33,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Xml;
-using System.Xml.Linq;
-using NLog.Filters;
 using TUGraz.VectoCommon.BusAuxiliaries;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.Models;
@@ -692,6 +690,8 @@ namespace TUGraz.VectoCommon.InputData
 	{
 		TableData FullLoadCurve { get; }
 
+		TableData DragCurve { get; }
+		
 		TableData EfficiencyMap { get; }
 
 		KilogramSquareMeter Inertia { get; }

@@ -6,6 +6,7 @@ using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.Models.Connector.Ports;
+using TUGraz.VectoCore.Models.Connector.Ports.Impl;
 using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation;
 using TUGraz.VectoCore.Models.Simulation.DataBus;
@@ -24,8 +25,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		protected readonly Dictionary<PowertrainPosition, ElectricMotorController> _electricMotorCtl;
 		protected readonly HybridCtlShiftStrategy _shiftStrategy;
 		protected readonly IHybridControlStrategy _hybridStrategy;
+		private Dictionary<PowertrainPosition, NewtonMeter> _electricMotorTorque = new Dictionary<PowertrainPosition, NewtonMeter>();
 
-		
 
 		public HybridController(IVehicleContainer container, IHybridControlStrategy strategy, IElectricSystem es,
 			SwitchableClutch clutch) : base(container)
@@ -33,6 +34,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			_electricMotorCtl = new Dictionary<PowertrainPosition, ElectricMotorController>();
 			_shiftStrategy = new HybridCtlShiftStrategy(this, container);
 			_hybridStrategy = strategy;
+			strategy.Controller = this;
+			
 			ElectricSystem = es;
 		}
 
@@ -52,6 +55,21 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			_electricMotorCtl[pos] = new ElectricMotorController(this, motorData);
 		}
 
+		public ResponseDryRun RequestDryRun(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity, HybridStrategyResponse strategySettings)
+		{
+			ApplyStrategySettings(strategySettings);
+			var retVal = NextComponent.Request(absTime, dt, outTorque, outAngularVelocity, true);
+
+			return retVal as ResponseDryRun;
+		}
+
+		private void ApplyStrategySettings(HybridStrategyResponse strategySettings)
+		{
+			Gearbox.SwitchToNeutral = strategySettings.GearboxInNeutral;
+			Engine.CombustionEngineOn = strategySettings.CombustionEngineOn;
+			_electricMotorTorque = strategySettings.MechanicalAssistPower;
+		}
+
 		public virtual IElectricMotorControl ElectricMotorControl(PowertrainPosition pos)
 		{
 			return _electricMotorCtl[pos];
@@ -65,23 +83,25 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		public IResponse Request(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity,
 			bool dryRun = false)
 		{
-			CurrentState.StrategyResponse = Strategy.Request(absTime, dt, outTorque, outAngularVelocity, dryRun);
-			Gearbox.SwitchToNeutral = CurrentState.StrategyResponse.GearboxInNeutral;
-			Engine.CombustionEngineOn = CurrentState.StrategyResponse.CombustionEngineOn;
-
+			var strategySettings = Strategy.Request(absTime, dt, outTorque, outAngularVelocity, dryRun);
+			ApplyStrategySettings(strategySettings);
+			if (!dryRun) {
+				CurrentState.StrategyResponse = strategySettings;
+			}
 			return NextComponent.Request(absTime, dt, outTorque, outAngularVelocity, dryRun);
 		}
 
 		public IResponse Initialize(NewtonMeter outTorque, PerSecond outAngularVelocity)
 		{
-			CurrentState.StrategyResponse = Strategy.Initialize(outTorque, outAngularVelocity);
+			PreviousState.StrategyResponse = Strategy.Initialize(outTorque, outAngularVelocity);
+			_electricMotorTorque = PreviousState.StrategyResponse.MechanicalAssistPower;
 			return NextComponent.Initialize(outTorque, outAngularVelocity);
 		}
 
-		protected override void DoCommitSimulationStep()
+		protected override void DoCommitSimulationStep(Second time, Second simulationInterval)
 		{
-			base.DoCommitSimulationStep();
-			Strategy.CommitSimulationStep();
+			base.DoCommitSimulationStep(time, simulationInterval);
+			Strategy.CommitSimulationStep(time, simulationInterval);
 		}
 
 		protected override void DoWriteModalResults(Second time, Second simulationInterval,
@@ -90,7 +110,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		private NewtonMeter MechanicalAssistPower(PowertrainPosition pos, Second absTime, Second dt,
 			NewtonMeter outTorque, PerSecond prevOutAngularVelocity, PerSecond currOutAngularVelocity, bool dryRun)
 		{
-			return CurrentState.StrategyResponse.MechanicalAssistPower[pos];
+			return _electricMotorTorque[pos];
+
+			//return CurrentState.StrategyResponse.MechanicalAssistPower[pos];
 		}
 
 		public uint NextGear

@@ -30,6 +30,7 @@
 */
 
 using System.Collections.Generic;
+using System.Data;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 
@@ -376,7 +377,6 @@ namespace TUGraz.VectoCommon.InputData
 
 	public interface IElectricMotorEngineeringInputData : IElectricMotorDeclarationInputData
 	{
-		
 	}
 
 	public interface IElectricMachinesEngineeringInputData : IElectricMachinesDeclarationInputData

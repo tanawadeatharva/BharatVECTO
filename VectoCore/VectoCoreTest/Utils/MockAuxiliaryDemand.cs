@@ -99,7 +99,7 @@ namespace TUGraz.VectoCore.Tests.Utils
 			container[ModalResultField.altitude] = 0.SI<Meter>();
 		}
 
-		protected override void DoCommitSimulationStep()
+		protected override void DoCommitSimulationStep(Second time, Second simulationInterval)
 		{
 			_left.MoveNext();
 			_right.MoveNext();

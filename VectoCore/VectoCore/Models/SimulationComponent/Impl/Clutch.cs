@@ -96,7 +96,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			bool dryRun = false)
 		{
 			firstInitialize = false;
-			if (!DataBus.ClutchInfo.ClutchClosed(absTime) && !dryRun) {
+			if ((!DataBus.ClutchInfo.ClutchClosed(absTime) || !DataBus.GearboxInfo.GearEngaged(absTime)) && !dryRun) {
 				return HandleClutchOpen(absTime, dt, outTorque, outAngularVelocity, dryRun);
 			}
 

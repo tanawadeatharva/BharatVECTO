@@ -23,7 +23,7 @@ namespace TUGraz.VectoCore.Models.Connector.Ports.Impl
 		/// <param name="powerDemand"></param>
 		/// <param name="dryRun"></param>
 		/// <returns></returns>
-		IBatteryResponse Request(Second absTime, Second dt, Watt powerDemand, bool dryRun = false);
+		IBatteryResponse Request(Second absTime, Second dt, Watt powerDemand, bool dryRun);
 
 	}
 

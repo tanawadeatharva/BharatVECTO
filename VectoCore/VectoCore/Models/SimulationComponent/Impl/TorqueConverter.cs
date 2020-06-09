@@ -99,14 +99,14 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		public IResponse Request(
 			Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity,
-			bool dryRun = false)
+			bool dryRun)
 		{
 			var operatingPoint = FindOperatingPoint(absTime, dt, outTorque, outAngularVelocity);
 			var inTorque = CalculateAverageInTorque(operatingPoint);
 
 			if (dryRun) {
 				var retValD = HandleDryRun(absTime, dt, outTorque, outAngularVelocity, inTorque, operatingPoint);
-				retValD.TorqueConverterTorqueDemand = outTorque;
+				retValD.TorqueConverter.TorqueConverterTorqueDemand = outTorque;
 				return retValD;
 			}
 
@@ -118,9 +118,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 							(PreviousState.OutAngularVelocity + operatingPoint.OutAngularVelocity) / 2.0;
 				if (!delta.IsEqual(0, Constants.SimulationSettings.LineSearchTolerance)) {
 					return delta > 0
-						? new ResponseOverload(this) { Delta = delta, TorqueConverterOperatingPoint = operatingPoint }
+						? new ResponseOverload(this) { Delta = delta, TorqueConverter = {TorqueConverterOperatingPoint = operatingPoint }}
 						: (IResponse)
-						new ResponseUnderload(this) { Delta = delta, TorqueConverterOperatingPoint = operatingPoint };
+						new ResponseUnderload(this) { Delta = delta, TorqueConverter = { TorqueConverterOperatingPoint = operatingPoint }};
 				}
 			}
 
@@ -128,7 +128,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			CurrentState.OperatingPoint = operatingPoint;
 			CurrentState.IgnitionOn = DataBus.EngineCtl.CombustionEngineOn;
 
-			var retVal = NextComponent.Request(absTime, dt, inTorque, operatingPoint.InAngularVelocity);
+			var retVal = NextComponent.Request(absTime, dt, inTorque, operatingPoint.InAngularVelocity, false);
 			//retVal.TorqueConverterOperatingPoint = operatingPoint;
 			// check if shift is required
 			var ratio = Gearbox.GetGearData(Gearbox.Gear).TorqueConverterRatio;
@@ -175,7 +175,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					DeltaFullLoad = delta,
 					DeltaDragLoad = delta,
 					DeltaEngineSpeed = operatingPoint.InAngularVelocity - maxEngineSpeed,
-					TorqueConverterOperatingPoint = operatingPoint,
+					TorqueConverter = { TorqueConverterOperatingPoint = operatingPoint},
 					Engine = {
 					EngineTorqueDemand = inTorque,
 					EngineSpeed = engineResponse.Engine.EngineSpeed,
@@ -206,7 +206,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				DeltaFullLoad = 10 * deltaMax,
 				DeltaDragLoad = 10 * deltaMin,
 				DeltaEngineSpeed = dryOperatingPointMax.InAngularVelocity - maxEngineSpeed,
-				TorqueConverterOperatingPoint = dryOperatingPointMax,
+				TorqueConverter = { TorqueConverterOperatingPoint = dryOperatingPointMax},
 				Engine = {
 					EngineTorqueDemand = inTorque,
 					EngineSpeed = dryOperatingPointMax?.InAngularVelocity ??
@@ -415,7 +415,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			container[ModalResultField.P_TC_in] = CurrentState.InTorque * avgInVelocity;
 		}
 
-		protected override void DoCommitSimulationStep()
+		protected override void DoCommitSimulationStep(Second time, Second simulationInterval)
 		{
 			SetOperatingPoint = null;
 			AdvanceState();

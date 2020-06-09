@@ -10,5 +10,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 		public ElectricFullLoadCurve FullLoadCurve { get; internal set; }
 
 		public KilogramSquareMeter Inertia { get; internal set; }
+
+		public DragCurve DragCurve { get; internal set; }
 	}
 }

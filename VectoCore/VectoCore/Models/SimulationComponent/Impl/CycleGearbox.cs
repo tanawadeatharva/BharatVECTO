@@ -256,7 +256,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					CurrentState.InTorque, CurrentState.InAngularVelocity, CurrentState.InTorque,
 					CurrentState.InAngularVelocity);
 			}
-			var response = NextComponent.Request(absTime, dt, inTorque, inAngularVelocity);
+			var response = NextComponent.Request(absTime, dt, inTorque, inAngularVelocity, false);
 			response.Gearbox.PowerRequest = outTorque * avgOutAngularVelocity;
 			return response;
 		}
@@ -346,7 +346,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				disengagedResponse = NextGear.Gear > 0
 					? NextComponent.Request(
 						absTime, dt, 0.SI<NewtonMeter>(),
-						outAngularVelocity * ModelData.Gears[NextGear.Gear].Ratio)
+						outAngularVelocity * ModelData.Gears[NextGear.Gear].Ratio, false)
 					: EngineIdleRequest(absTime, dt);
 			}
 			if (TorqueConverter != null) {
@@ -369,7 +369,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		private IResponse EngineIdleRequest(Second absTime, Second dt)
 		{
-			var disengagedResponse = NextComponent.Request(absTime, dt, 0.SI<NewtonMeter>(), DataBus.EngineInfo.EngineIdleSpeed);
+			var disengagedResponse = NextComponent.Request(absTime, dt, 0.SI<NewtonMeter>(), DataBus.EngineInfo.EngineIdleSpeed, false);
 			if (disengagedResponse is ResponseSuccess) {
 				return disengagedResponse;
 			}
@@ -389,7 +389,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				}
 				motoringSpeed = motoringSpeed.LimitTo(DataBus.EngineInfo.EngineIdleSpeed, DataBus.EngineInfo.EngineSpeed);
 			}
-			disengagedResponse = NextComponent.Request(absTime, dt, 0.SI<NewtonMeter>(), motoringSpeed);
+			disengagedResponse = NextComponent.Request(absTime, dt, 0.SI<NewtonMeter>(), motoringSpeed, false);
 			return disengagedResponse;
 		}
 
@@ -417,7 +417,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			// torque converter fields are written by TorqueConverter (if present), called from Vehicle container 
 		}
 
-		protected override void DoCommitSimulationStep()
+		protected override void DoCommitSimulationStep(Second time, Second simulationInterval)
 		{
 			if (Gear != 0) {
 				if (CurrentState.TorqueLossResult != null && CurrentState.TorqueLossResult.Extrapolated) {
@@ -432,7 +432,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				}
 			}
 
-			base.DoCommitSimulationStep();
+			base.DoCommitSimulationStep(time, simulationInterval);
 		}
 
 		#region ICluchInfo

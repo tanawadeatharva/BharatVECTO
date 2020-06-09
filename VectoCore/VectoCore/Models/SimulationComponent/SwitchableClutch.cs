@@ -42,7 +42,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent
 			return NextComponent.Initialize(outTorque, outAngularVelocity);
 		}
 
-		public override IResponse Request(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity, bool dryRun = false)
+		public override IResponse Request(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity, bool dryRun)
 		{
 			var avgOutSpeed = (PreviousState.OutAngularVelocity + outAngularVelocity) / 2.0;
 			if (ClutchOpen)
@@ -57,7 +57,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent
 						Clutch = {PowerRequest = avgOutSpeed * outTorque }
 					};
 				}
-				var idleResponse = IdleController.Request(absTime, dt, 0.SI<NewtonMeter>(), null);
+				var idleResponse = IdleController.Request(absTime, dt, 0.SI<NewtonMeter>(), null, false);
 				CurrentState.SetState(0.SI<NewtonMeter>(), idleResponse.Engine.EngineSpeed, outTorque, outAngularVelocity);
 				IResponse response = new ResponseSuccess(this);
 				if ((outTorque * avgOutSpeed).IsGreater(0, Constants.SimulationSettings.LineSearchTolerance))

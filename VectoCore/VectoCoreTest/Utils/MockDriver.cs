@@ -55,7 +55,7 @@ namespace TUGraz.VectoCore.Tests.Utils
 
 		protected override void DoWriteModalResults(Second time, Second simulationInterval, IModalDataContainer container) {}
 
-		protected override void DoCommitSimulationStep() {}
+		protected override void DoCommitSimulationStep(Second time, Second simulationInterval) {}
 
 		public IDrivingCycleOutPort OutPort()
 		{

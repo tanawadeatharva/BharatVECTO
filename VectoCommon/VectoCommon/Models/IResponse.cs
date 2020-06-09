@@ -89,6 +89,15 @@ namespace TUGraz.VectoCommon.Models
 	{
 		public PerSecond GearboxInputSpeed { get; set; }
 
+		public uint Gear { get; set; }
+	}
+
+	public class TorqueConverterResponse : AbstractPowertrainComponentResponse
+	{
+		public TorqueConverterOperatingPoint TorqueConverterOperatingPoint { get; set; }
+
+		public NewtonMeter TorqueConverterTorqueDemand { get; set; }
+
 	}
 
 	[DebuggerDisplay("P_out: {PowerRequest}; T_card: {CardanTorque}")]
@@ -122,7 +131,14 @@ namespace TUGraz.VectoCommon.Models
 	public class ElectricMotorResponse : AbstractComponentResponse
 	{
 		public Watt ElectricMotorPowerMech { get; set; }
+
+		public NewtonMeter MaxDriveTorque { get; set; }
+
+		public NewtonMeter MaxRecuperationTorque { get; set; }
+
+		public PerSecond AngularVelocity { get; set; }
 	}
+
 
 	/// <summary>
 	/// The Interface for a Response. Carries over result data to higher components.
@@ -142,6 +158,8 @@ namespace TUGraz.VectoCommon.Models
 		ClutchResponse Clutch { get; }
 
 		GearboxResponse Gearbox { get; }
+
+		TorqueConverterResponse TorqueConverter { get; }
 
 		AxlegearResponse Axlegear { get; }
 

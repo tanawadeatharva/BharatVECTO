@@ -114,20 +114,20 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			IResponse response;
 			var responseCount = 0;
 			do {
-				response = NextComponent.Request(absTime, dt, CycleIterator.LeftSample.Torque, angularVelocity);
+				response = NextComponent.Request(absTime, dt, CycleIterator.LeftSample.Torque, angularVelocity, false);
 				CurrentState.InAngularVelocity = angularVelocity;
 				CurrentState.InTorque = CycleIterator.LeftSample.Torque;
 				debug.Add(response);
 				response.Switch()
 					.Case<ResponseGearShift>(
-						() => response = NextComponent.Request(absTime, dt, CurrentState.InTorque, angularVelocity))
+						() => response = NextComponent.Request(absTime, dt, CurrentState.InTorque, angularVelocity, false))
 					.Case<ResponseUnderload>(r => {
 						var torqueInterval = -r.Delta / (angularVelocity.IsEqual(0) ? 10.RPMtoRad() : angularVelocity);
 						var torque = SearchAlgorithm.Search(CycleIterator.LeftSample.Torque, r.Delta, torqueInterval,
 							getYValue: result => ((ResponseDryRun)result).DeltaDragLoad,
 							evaluateFunction: t => NextComponent.Request(absTime, dt, t, angularVelocity, true),
 							criterion: y => ((ResponseDryRun)y).DeltaDragLoad.Value());
-						response = NextComponent.Request(absTime, dt, torque, angularVelocity);
+						response = NextComponent.Request(absTime, dt, torque, angularVelocity, false);
 						CurrentState.InTorque = torque;
 					})
 					.Case<ResponseOverload>(r => {
@@ -136,7 +136,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 							getYValue: result => ((ResponseDryRun)result).DeltaFullLoad,
 							evaluateFunction: t => NextComponent.Request(absTime, dt, t, angularVelocity, true),
 							criterion: y => ((ResponseDryRun)y).DeltaFullLoad.Value());
-						response = NextComponent.Request(absTime, dt, torque, angularVelocity);
+						response = NextComponent.Request(absTime, dt, torque, angularVelocity, false);
 						CurrentState.InAngularVelocity = angularVelocity;
 						CurrentState.InTorque = torque;
 					})
@@ -174,7 +174,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		protected override void DoWriteModalResults(Second time, Second simulationInterval,
 			IModalDataContainer container) { }
 
-		protected override void DoCommitSimulationStep()
+		protected override void DoCommitSimulationStep(Second time, Second simulationInterval)
 		{
 			CycleIterator.MoveNext();
 			AdvanceState();

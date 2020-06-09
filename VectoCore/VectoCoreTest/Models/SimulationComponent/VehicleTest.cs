@@ -88,7 +88,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			var accell = -0.256231159.SI<MeterPerSquareSecond>();
 			var gradient = Math.Atan(0.00366547048).SI<Radian>();
 
-			requestPort.Request(absTime, dt, accell, gradient);
+			requestPort.Request(absTime, dt, accell, gradient, false);
 
 			Assert.AreEqual(-2332.5362, mockPort.Force.Value(), 0.0001);
 			Assert.AreEqual(16.954303841, mockPort.Velocity.Value(), 0.0001);
@@ -229,7 +229,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			
 		}
 
-		protected override void DoCommitSimulationStep()
+		protected override void DoCommitSimulationStep(Second time, Second simulationInterval)
 		{
 			
 		}

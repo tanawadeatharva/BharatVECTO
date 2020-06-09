@@ -130,7 +130,7 @@ namespace TUGraz.VectoCore.Tests.Utils
 			// nothing to write
 		}
 
-		protected override void DoCommitSimulationStep() {}
+		protected override void DoCommitSimulationStep(Second time, Second simulationInterval) {}
 
 		public bool GearEngaged(Second absTime)
 		{

@@ -9,7 +9,8 @@
 		"SavedInDeclMode": false,
 	"Model": "Generic Electric Motor",
 	"FullLoadCurve": "GenericEMotor.vemp",
-		"EfficiencyMap": "GenericMap.vemo",
+    "EfficiencyMap": "GenericMap.vemo",
+    "DragCurve":  "GenericDrag.vemd", 
 		"Inertia":  0.15
 	}
 }

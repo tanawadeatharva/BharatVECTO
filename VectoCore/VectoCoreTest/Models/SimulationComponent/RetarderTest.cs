@@ -73,7 +73,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 
 			// --------
 			outPort.Initialize(cardanTorque.SI<NewtonMeter>(), cardanSpeed.RPMtoRad());
-			outPort.Request(absTime, dt, cardanTorque.SI<NewtonMeter>(), cardanSpeed.RPMtoRad());
+			outPort.Request(absTime, dt, cardanTorque.SI<NewtonMeter>(), cardanSpeed.RPMtoRad(), false);
 
 			Assert.AreEqual(cardanSpeed.RPMtoRad().Value(), nextRequest.AngularVelocity.Value(), Delta);
 			Assert.AreEqual(cardanTorque + expectedRetarderLoss, nextRequest.Torque.Value(), Delta);
@@ -102,7 +102,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			var dt = 0.SI<Second>();
 			// --------
 			outPort.Initialize(50.SI<NewtonMeter>(), 650.RPMtoRad());
-			outPort.Request(absTime, dt, 50.SI<NewtonMeter>(), 1550.RPMtoRad());
+			outPort.Request(absTime, dt, 50.SI<NewtonMeter>(), 1550.RPMtoRad(), false);
 			retarder.CommitSimulationStep(absTime, dt, new MockModalDataContainer());
 			Assert.AreEqual(1550.RPMtoRad().Value(), nextRequest.AngularVelocity.Value(), Delta);
 
@@ -110,7 +110,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			Assert.AreEqual(50 + 12.42, nextRequest.Torque.Value(), Delta);
 
 			//VECTO-307: added an additional request after a commit
-			outPort.Request(absTime, dt, 50.SI<NewtonMeter>(), 450.RPMtoRad());
+			outPort.Request(absTime, dt, 50.SI<NewtonMeter>(), 450.RPMtoRad(), false);
 			Assert.AreEqual(450.RPMtoRad().Value(), nextRequest.AngularVelocity.Value(), Delta);
 			// avg: (1550+450)/2 = 1000 rpm => 12Nm
 			Assert.AreEqual(50 + 12, nextRequest.Torque.Value(), Delta);
@@ -135,7 +135,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			var dt = 0.SI<Second>();
 
 			outPort.Initialize(cardanTorque.SI<NewtonMeter>(), cardanSpeed.RPMtoRad());
-			outPort.Request(absTime, dt, cardanTorque.SI<NewtonMeter>(), cardanSpeed.RPMtoRad());
+			outPort.Request(absTime, dt, cardanTorque.SI<NewtonMeter>(), cardanSpeed.RPMtoRad(), false);
 
 			Assert.AreEqual(cardanSpeed.RPMtoRad().Value(), nextRequest.AngularVelocity.Value(), Delta);
 			Assert.AreEqual(cardanTorque + expectedRetarderLoss, nextRequest.Torque.Value(), Delta);
@@ -154,7 +154,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			var outPort = retarder.OutPort();
 
 			outPort.Initialize(50.SI<NewtonMeter>(), 2550.RPMtoRad());
-			outPort.Request(0.SI<Second>(), 0.SI<Second>(), 50.SI<NewtonMeter>(), 2550.RPMtoRad());
+			outPort.Request(0.SI<Second>(), 0.SI<Second>(), 50.SI<NewtonMeter>(), 2550.RPMtoRad(), false);
 			AssertHelper.Exception<VectoException>(() => retarder.CommitSimulationStep(0.SI<Second>(), 0.SI<Second>(), new MockModalDataContainer()),
 				"Retarder LossMap data was extrapolated in Declaration mode: range for loss map is not sufficient: n:5100 (min:0, max:2300), ratio:2");
 		}
@@ -187,7 +187,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 
 			// --------
 			outPort.Initialize(100.SI<NewtonMeter>(), 125.RPMtoRad());
-			outPort.Request(absTime, dt, 100.SI<NewtonMeter>(), 125.RPMtoRad());
+			outPort.Request(absTime, dt, 100.SI<NewtonMeter>(), 125.RPMtoRad(), false);
 
 			Assert.AreEqual(125.RPMtoRad().Value(), nextRequest.AngularVelocity.Value(), Delta);
 			Assert.AreEqual(100 + 20.26, nextRequest.Torque.Value(), Delta);

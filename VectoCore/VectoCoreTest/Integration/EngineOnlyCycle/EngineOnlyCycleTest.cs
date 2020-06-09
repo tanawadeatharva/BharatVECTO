@@ -109,7 +109,7 @@ namespace TUGraz.VectoCore.Tests.Integration.EngineOnlyCycle
 			port.Initialize(data.Entries.First().Torque, data.Entries.First().AngularVelocity);
 			foreach (var cycleEntry in data.Entries) {
 				// ReSharper disable once UnusedVariable
-				var response = (ResponseSuccess)port.Request(absTime, dt, cycleEntry.Torque, cycleEntry.AngularVelocity);
+				var response = (ResponseSuccess)port.Request(absTime, dt, cycleEntry.Torque, cycleEntry.AngularVelocity, false);
 				foreach (var sc in vehicle.SimulationComponents()) {
 					modData[ModalResultField.time] = absTime + dt / 2;
 					sc.CommitSimulationStep(absTime, dt, modData);
@@ -142,7 +142,7 @@ namespace TUGraz.VectoCore.Tests.Integration.EngineOnlyCycle
 			var power = 2329.973.SI<Watt>();
 
 			engine.OutPort().Initialize(power / angularVelocity, angularVelocity);
-			engine.OutPort().Request(absTime, dt, power / angularVelocity, angularVelocity);
+			engine.OutPort().Request(absTime, dt, power / angularVelocity, angularVelocity, false);
 
 			foreach (var sc in vehicleContainer.SimulationComponents()) {
 				sc.CommitSimulationStep(absTime, dt, dataWriter);

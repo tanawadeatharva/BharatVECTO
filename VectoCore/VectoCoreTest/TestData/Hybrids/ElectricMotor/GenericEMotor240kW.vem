@@ -8,7 +8,8 @@
 	"Body": {
 		"SavedInDeclMode": false,
 	"Model": "Generic Electric Motor",
-	"FullLoadCurve": "GenericEMotor240kW.vemp",
+    "FullLoadCurve": "GenericEMotor240kW.vemp",
+    "DragCurve":  "GenericDrag.vemd", 
 		"EfficiencyMap": "GenericMap240kW.vemo",
 		"Inertia" :  0.2 
 	}

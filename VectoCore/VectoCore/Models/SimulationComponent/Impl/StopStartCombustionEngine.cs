@@ -42,6 +42,14 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl {
 
 		protected virtual IResponse HandleEngineOffRequest(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity, bool dryRun)
 		{
+			if (!outTorque.IsEqual(0)) {
+				if (dryRun) {
+					return new ResponseOverload(this) {
+						Delta = outTorque * outAngularVelocity
+					};
+				}
+				throw new VectoSimulationException("Combustion engine cannot supply outtorque when switched off (T_out: {0})", outTorque);
+			}
 			CurrentState.IgnitionOn = false;
 			CurrentState.EngineSpeed = ModelData.IdleSpeed;
 			CurrentState.EngineTorque = 0.SI<NewtonMeter>();

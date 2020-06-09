@@ -65,7 +65,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent
 			container[ModalResultField.P_aux_el] = CurrentState.AuxPower;
 		}
 
-		protected override void DoCommitSimulationStep()
+		protected override void DoCommitSimulationStep(Second time, Second simulationInterval)
 		{
 			AdvanceState();
 		}
