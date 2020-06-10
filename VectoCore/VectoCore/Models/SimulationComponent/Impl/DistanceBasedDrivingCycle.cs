@@ -31,6 +31,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.Models;
@@ -58,6 +59,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		internal readonly DrivingCycleEnumerator CycleIntervalIterator;
 		private bool _intervalProlonged;
 		internal IdleControllerSwitcher IdleController;
+		private Meter CycleEndDistance;
+
 
 		private DrivingCycleData.DrivingCycleEntry Left
 		{
@@ -74,6 +77,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			Data = cycle;
 			CycleIntervalIterator = new DrivingCycleEnumerator(Data);
 			CycleStartDistance = Data.Entries.Count > 0 ? Data.Entries.First().Distance : 0.SI<Meter>();
+			CycleEndDistance = Data.Entries.Count > 0 ? Data.Entries.Last().Distance : 0.SI<Meter>();
 
 			var first = Data.Entries.First();
 			PreviousState = new DrivingCycleState {
@@ -139,6 +143,18 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				};
 				return CurrentState.Response;
 			}
+
+			if (DataBus.VehicleSpeed.IsGreater(0) && Right.Distance.IsSmaller(CycleEndDistance)) {
+				var distanceToSpeedChange = nextSpeedChange - PreviousState.Distance;
+				var estimatedTimeToSpeedChange = distanceToSpeedChange / DataBus.VehicleSpeed;
+				if (estimatedTimeToSpeedChange.IsSmaller(Constants.SimulationSettings.LowerBoundTimeInterval / 2) &&
+					DataBus.VehicleSpeed.IsSmaller(Left.VehicleTargetSpeed, 1.KMPHtoMeterPerSecond()) &&
+					DataBus.VehicleSpeed.IsSmaller(Right.VehicleTargetSpeed, 1.KMPHtoMeterPerSecond())) {
+					CurrentState.Response = DriveDistance(absTime, ds);
+					return CurrentState.Response;
+				}
+			}
+
 			// only drive until next sample point in cycle with speed change
 			Log.Debug("Limiting distance to next sample point {0}",
 				Right.Distance - PreviousState.Distance);
