@@ -50,7 +50,7 @@ namespace TUGraz.VectoCommon.Models
 
 	public abstract class AbstractPowertrainComponentResponse : AbstractComponentResponse
 	{
-		public Watt PowerRequest { get; set; }
+
 	}
 
 
@@ -137,6 +137,8 @@ namespace TUGraz.VectoCommon.Models
 		public NewtonMeter MaxRecuperationTorque { get; set; }
 
 		public PerSecond AngularVelocity { get; set; }
+
+		public SIBase<Watt> InertiaPowerDemand { get; set; }
 	}
 
 
@@ -188,6 +190,8 @@ namespace TUGraz.VectoCommon.Models
 		Watt BatteryPower { get; set; }
 
 		Watt BatteryLoss { get; set; }
+
+		double StateOfCharge { get; set; }
 
 		object Source { get; }
 	}

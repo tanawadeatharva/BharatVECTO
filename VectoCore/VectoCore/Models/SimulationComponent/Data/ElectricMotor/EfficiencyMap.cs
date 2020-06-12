@@ -81,5 +81,36 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data {
 			public Watt ElectricalPower;
 			public bool Extrapolated;
 		}
+
+		public NewtonMeter LookupTorque(Watt batPower, PerSecond avgSpeed, NewtonMeter maxEmTorque)
+		{
+			var elPowerMaxEM = LookupElectricPower(avgSpeed, maxEmTorque, true);
+			if (batPower < 0) {
+				if (!elPowerMaxEM.Extrapolated & elPowerMaxEM.ElectricalPower.IsGreaterOrEqual(batPower)) {
+					// the battery can provide more electric power than the EM  - no limitation here
+					return null;
+				}
+			} else {
+				if (!elPowerMaxEM.Extrapolated & elPowerMaxEM.ElectricalPower.IsSmallerOrEqual(batPower)) {
+					// the battery can provide more electric power than the EM  - no limitation here
+					return null;
+				}
+			}
+
+
+			var retVal = SearchAlgorithm.Search(
+				maxEmTorque, elPowerMaxEM.ElectricalPower, maxEmTorque * 0.1,
+				getYValue: x => {
+					var myX = (EfficiencyResult)x;
+					return myX.ElectricalPower - batPower;
+				},
+				evaluateFunction: x => LookupElectricPower(avgSpeed, x, true),
+				criterion: x => {
+					var myX = (EfficiencyResult)x;
+					return (myX.ElectricalPower - batPower).Value();
+				});
+
+			return retVal;
+		}
 	}
 }

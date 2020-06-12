@@ -72,6 +72,9 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 		public virtual IDrivingCycleInfo DrivingCycleInfo { get; protected set; }
 
+		public IBatteryInfo BatteryInfo { get; protected set; }
+
+
 		internal ISimulationOutPort Cycle;
 
 		internal IModalDataContainer ModData;
@@ -110,6 +113,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 		{
 			return ElectricMotors[pos];
 		}
+
 
 		public virtual ITorqueConverterControl TorqueConverterCtl { get; private set; }
 
@@ -161,7 +165,8 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 					ElectricMotors[c.Position] = c;
 					HasElectricMotor = true;
 				})
-				.If<IHybridController>(c => { HybridController = c; });
+				.If<IHybridController>(c => { HybridController = c; })
+				.If<IBatteryInfo>(c => BatteryInfo = c);
 
 			if (ignoreComponent) {
 				return;

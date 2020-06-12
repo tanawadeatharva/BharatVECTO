@@ -23,6 +23,8 @@ namespace TUGraz.VectoCore.Models.Connector.Ports.Impl
 
 		public Watt BatteryLoss { get; set; }
 
+		public double StateOfCharge { get; set; }
+
 		public object Source { get; }
 	}
 
@@ -30,6 +32,8 @@ namespace TUGraz.VectoCore.Models.Connector.Ports.Impl
 	public class BatteryResponseSuccess : AbstractBatteryResponse
 	{
 		public BatteryResponseSuccess(object source) : base(source) { }
+
+		
 	}
 
 	public class BatteryOverloadResponse : AbstractBatteryResponse

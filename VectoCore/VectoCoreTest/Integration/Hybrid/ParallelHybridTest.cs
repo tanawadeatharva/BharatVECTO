@@ -80,7 +80,9 @@ namespace TUGraz.VectoCore.Tests.Integration.Hybrid
 			Assert.IsTrue(modData.Rows.Count > 0);
 		}
 
-		[TestCase(30, 0.7)]
+		[TestCase(30, 0.7),
+		TestCase(30, 0.22)
+			]
 		public void P2HybridDriveOff_ElectricOnly(double vmax, double initialSoC)
 		{
 			var cycleData = string.Format(

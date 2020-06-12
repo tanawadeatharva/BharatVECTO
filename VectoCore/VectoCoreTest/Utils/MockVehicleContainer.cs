@@ -143,6 +143,11 @@ namespace TUGraz.VectoCore.Tests.Utils
 			return null;
 		}
 
+		public IBatteryInfo BatteryInfo
+		{
+			get { throw new NotImplementedException(); }
+		}
+
 		public ITorqueConverterControl TorqueConverterCtl
 		{
 			get { return _torqueConverter; }
