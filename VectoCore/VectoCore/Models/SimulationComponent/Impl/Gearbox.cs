@@ -60,6 +60,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		/// </summary>
 		protected internal bool Disengaged = true;
 
+		private bool postponeEngage;
+
 		public Second LastUpshift { get; protected internal set; }
 
 		public Second LastDownshift { get; protected internal set; }
@@ -71,7 +73,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		public override bool ClutchClosed(Second absTime)
 		{
-			return _engageTime.IsSmallerOrEqual(absTime, ModelData.TractionInterruption / 20);
+			return _engageTime.IsSmallerOrEqual(absTime, ModelData.TractionInterruption / 20) && !postponeEngage;
 		}
 
 		public Gearbox(IVehicleContainer container, IShiftStrategy strategy, VectoRunData runData) : base(container, runData)
@@ -181,9 +183,15 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				_engageTime = absTime + dt;
 			}
 
+			postponeEngage = false;
 			if (ClutchClosed(absTime) && Disengaged && !outAngularVelocity.IsEqual(0)) {
-				ReEngageGear(absTime, dt, outTorque, outAngularVelocity);
-				Log.Debug("Gearbox engaged gear {0}", Gear);
+				if (dt.IsSmaller(Constants.SimulationSettings.TargetTimeInterval / 10)) {
+					Log.Debug("postponing re-engage due to small simulation interval {0}", dt);
+					postponeEngage = true;
+				} else {
+					ReEngageGear(absTime, dt, outTorque, outAngularVelocity);
+					Log.Debug("Gearbox engaged gear {0}", Gear);
+				}
 			}
 
 			var gear = Disengaged ? NextGear.Gear : Gear;
@@ -420,6 +428,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		protected override void DoCommitSimulationStep()
 		{
+			postponeEngage = false;
 			if (!Disengaged) {
 				if (CurrentState.TorqueLossResult != null && CurrentState.TorqueLossResult.Extrapolated) {
 					Log.Warn(

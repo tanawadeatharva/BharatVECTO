@@ -492,8 +492,12 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			debug.Add(new { action = "ClutchOpen -> Roll", response });
 			response.Switch().Case<ResponseUnderload>(
 						r => {
-							response = Driver.DrivingActionBrake(absTime, ds, velocity, gradient, r);
-							debug.Add(new { action = "Roll:Underload -> Brake", response });
+							if (DataBus.ClutchClosed(absTime)) {
+								response = HandleRequestEngaged(absTime, ds, velocity, gradient, false, velocity, debug);
+							} else {
+								response = Driver.DrivingActionBrake(absTime, ds, velocity, gradient, r);
+								debug.Add(new { action = "Roll:Underload -> Brake", response });
+							}
 						})
 					.Case<ResponseSpeedLimitExceeded>(
 						() => {
