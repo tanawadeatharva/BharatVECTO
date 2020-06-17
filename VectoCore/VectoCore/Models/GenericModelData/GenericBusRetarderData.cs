@@ -3,6 +3,7 @@ using System.Data;
 using System.ServiceModel;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
+using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.InputData.Reader.ComponentData;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
@@ -46,9 +47,9 @@ namespace TUGraz.VectoCore.Models.Declaration
 			for (int i = 0; i < genericRetarderLosses.Length; i++)
 			{
 				var newRow = torqueLoss.NewRow();
-				newRow[RetarderLossMapReader.Fields.RetarderSpeed] = Math.Round(retarderSpeeds[i], 2, MidpointRounding.AwayFromZero);
+				newRow[RetarderLossMapReader.Fields.RetarderSpeed] = Math.Round(retarderSpeeds[i], 2, MidpointRounding.AwayFromZero).ToXMLFormat(2);
 				newRow[RetarderLossMapReader.Fields.TorqueLoss] = Math.Round(genericRetarderLosses[i] *
-					Constants.GenericLossMapSettings.RetarderGenericFactor, 2, MidpointRounding.AwayFromZero);
+					Constants.GenericLossMapSettings.RetarderGenericFactor, 2, MidpointRounding.AwayFromZero).ToXMLFormat();
 				torqueLoss.Rows.Add(newRow);
 			}
 

@@ -103,9 +103,9 @@ namespace TUGraz.VectoCore.Models.GenericModelData
 						: outputSpeed;
 					
 					var newRow = lossMap.NewRow();
-					newRow[lossMap.Columns[0]] = outputSpeed;
-					newRow[lossMap.Columns[1]] = torque;
-					newRow[lossMap.Columns[2]] = CalculateOutputTorqueLoss(td0_, td150_, td_n, calculationSpeed, torque, efficiency);
+					newRow[lossMap.Columns[0]] = outputSpeed.ToXMLFormat(2);
+					newRow[lossMap.Columns[1]] = torque.ToXMLFormat(2);
+					newRow[lossMap.Columns[2]] = CalculateOutputTorqueLoss(td0_, td150_, td_n, calculationSpeed, torque, efficiency).ToXMLFormat(2);
 
 					lossMap.Rows.Add(newRow);
 				}
@@ -138,9 +138,9 @@ namespace TUGraz.VectoCore.Models.GenericModelData
 				var outputLoss = row[2].ToString().ToDouble();
 
 				var newRow = inputLossMap.NewRow();
-				newRow[0] = Math.Round(GetInputSpeed(outputSpeed, axleRatio), 2, MidpointRounding.AwayFromZero);
-				newRow[1] = Math.Round(GetInputTorque(outputTorque, outputLoss, axleRatio), 2, MidpointRounding.AwayFromZero);
-				newRow[2] = Math.Round(GetInputTorqueLoss(outputLoss, axleRatio, lossCorrectionFactor), 2, MidpointRounding.AwayFromZero);
+				newRow[0] = Math.Round(GetInputSpeed(outputSpeed, axleRatio), 2, MidpointRounding.AwayFromZero).ToXMLFormat(2);
+				newRow[1] = Math.Round(GetInputTorque(outputTorque, outputLoss, axleRatio), 2, MidpointRounding.AwayFromZero).ToXMLFormat(2);
+				newRow[2] = Math.Round(GetInputTorqueLoss(outputLoss, axleRatio, lossCorrectionFactor), 2, MidpointRounding.AwayFromZero).ToXMLFormat(2);
 				inputLossMap.Rows.Add(newRow);
 			}
 
