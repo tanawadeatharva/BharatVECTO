@@ -193,9 +193,9 @@ namespace TUGraz.VectoCore.Models.Declaration
 				var fc = (row.ParseDouble("FC_norm") * ratedPower.Value() / 1000).SI(Unit.SI.Gramm.Per.Hour) .Cast<KilogramPerSecond>();
 
 				var newRow = result.NewRow();
-				newRow[FuelConsumptionMapReader.Fields.EngineSpeed] = Math.Round(engineSpeed.AsRPM,2, MidpointRounding.AwayFromZero);
-				newRow[FuelConsumptionMapReader.Fields.Torque] = Math.Round(torque.Value(), 2, MidpointRounding.AwayFromZero);
-				newRow[FuelConsumptionMapReader.Fields.FuelConsumption] = Math.Round(fc.ConvertToGrammPerHour().Value, 2, MidpointRounding.AwayFromZero);
+				newRow[FuelConsumptionMapReader.Fields.EngineSpeed] = Math.Round(engineSpeed.AsRPM,2, MidpointRounding.AwayFromZero).ToXMLFormat(2);
+				newRow[FuelConsumptionMapReader.Fields.Torque] = Math.Round(torque.Value(), 2, MidpointRounding.AwayFromZero).ToXMLFormat(2);
+				newRow[FuelConsumptionMapReader.Fields.FuelConsumption] = Math.Round(fc.ConvertToGrammPerHour().Value, 2, MidpointRounding.AwayFromZero).ToXMLFormat();
 				result.Rows.Add(newRow);
 			}
 
