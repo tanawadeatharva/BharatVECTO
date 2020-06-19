@@ -152,19 +152,19 @@ namespace TUGraz.VectoCore.Tests.Integration.ShiftStrategy
 				var r = tuple.Item2;
 				var s = tuple.Item3;
 				var fc = r.Engine.EngineSpeed != null
-					? container.RunData.EngineData.Fuels.First().ConsumptionMap.GetFuelConsumption(r.Engine.EngineTorqueDemandTotal, r.Engine.EngineSpeed).Value
+					? container.RunData.EngineData.Fuels.First().ConsumptionMap.GetFuelConsumption(r.Engine.TotalTorqueDemand, r.Engine.EngineSpeed).Value
 								.ConvertToGrammPerHour().Value
 					: 0;
 				var fc2 = s?.Engine.EngineSpeed != null
-					? container.RunData.EngineData.Fuels.First().ConsumptionMap.GetFuelConsumption(s.Engine.EngineTorqueDemandTotal, s.Engine.EngineSpeed).Value
+					? container.RunData.EngineData.Fuels.First().ConsumptionMap.GetFuelConsumption(s.Engine.TotalTorqueDemand, s.Engine.EngineSpeed).Value
 								.ConvertToGrammPerHour().Value
 					: 0;
 				Console.WriteLine(
 					"{0}; {1}; {2}; {3}; {4}; {5}; {6}; {7}", tuple.Item1, tuple.Item2 is ResponseGearShift ? "1" : "0",
 					r.Engine.EngineSpeed?.AsRPM ?? 0,
-					r.Engine.EngineTorqueDemand?.Value() ?? 0, fc,
+					r.Engine.TorqueOutDemand?.Value() ?? 0, fc,
 					s?.Engine.EngineSpeed?.AsRPM ?? 0,
-					s?.Engine.EngineTorqueDemand?.Value() ?? 0, fc2
+					s?.Engine.TorqueOutDemand?.Value() ?? 0, fc2
 					);
 			}
 		}

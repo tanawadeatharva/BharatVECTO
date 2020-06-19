@@ -22,22 +22,25 @@ namespace TUGraz.VectoCore.Models.SimulationComponent
 			PerSecond prevOutAngularVelocity, PerSecond currOutAngularVelocity,
 			PowertrainPosition position, bool dryRun);
 
-		/// <summary>
-		/// required for electric-only powertrain (i.e., serial hybrids) 
-		/// returns the maximum power the engine may provide (i.e., full-load)
-		/// </summary>
-		/// <param name="avgSpeed"></param>
-		/// <param name="dt"></param>
-		/// <returns>power at full drive, has to be less than 0! </returns>
-		NewtonMeter MaxDriveTorque(PerSecond avgSpeed, Second dt);
 
-		/// <summary>
-		/// required for electric-only powertrain (i.e., serial hybrids)
-		/// returns the maximum power the engine may apply during retardation (i.e., drag-load)
-		/// </summary>
-		/// <param name="avgSpeed"></param>
-		/// <param name="dt"></param>
-		/// <returns>power at full retardation (for current driving situation), has to be greater than 0!</returns>
-		NewtonMeter MaxDragTorque(PerSecond avgSpeed, Second dt);
+		// TODO: MQ 2020-0618 - still needed?
+
+		///// <summary>
+		///// required for electric-only powertrain (i.e., serial hybrids) 
+		///// returns the maximum power the engine may provide (i.e., full-load)
+		///// </summary>
+		///// <param name="avgSpeed"></param>
+		///// <param name="dt"></param>
+		///// <returns>power at full drive, has to be less than 0! </returns>
+		//NewtonMeter MaxDriveTorque(PerSecond avgSpeed, Second dt);
+
+		///// <summary>
+		///// required for electric-only powertrain (i.e., serial hybrids)
+		///// returns the maximum power the engine may apply during retardation (i.e., drag-load)
+		///// </summary>
+		///// <param name="avgSpeed"></param>
+		///// <param name="dt"></param>
+		///// <returns>power at full retardation (for current driving situation), has to be greater than 0!</returns>
+		//NewtonMeter MaxDragTorque(PerSecond avgSpeed, Second dt);
 	}
 }

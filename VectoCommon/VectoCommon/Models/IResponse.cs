@@ -61,20 +61,22 @@ namespace TUGraz.VectoCommon.Models
 
 	}
 
-	[DebuggerDisplay("n_ice: {EngineSpeed.AsRPM}; T_out: {EngineTorqueDemand}; T_ice: {EngineTorqueDemandTotal}; T_full_dyn: {EngineDynamicFullLoadTorque}; P_full_dyn: {DynamicFullLoadPower}; P_drag: {DragPower}; P_aux: {AuxiliariesPowerDemand}")]
+	[DebuggerDisplay("n_ice: {EngineSpeed.AsRPM}; T_out: {TorqueOutDemand}; T_ice: {TotalTorqueDemand}; T_full_dyn: {DynamicFullLoadTorque}; P_full_dyn: {DynamicFullLoadPower}; P_drag: {DragPower}; P_aux: {AuxiliariesPowerDemand}")]
 
 	public class EngineResponse : AbstractPowertrainComponentResponse
 	{
 		public PerSecond EngineSpeed { get; set; }
 
-		public NewtonMeter EngineTorqueDemand { get; set; }
-		public NewtonMeter EngineTorqueDemandTotal { get; set; }
-		public NewtonMeter EngineDynamicFullLoadTorque { get; set; }
+		public NewtonMeter TorqueOutDemand { get; set; }
+		public NewtonMeter TotalTorqueDemand { get; set; }
+		public NewtonMeter DynamicFullLoadTorque { get; set; }
 
-		public NewtonMeter EngineStationaryFullLoadTorque { get; set; }
+		public NewtonMeter StationaryFullLoadTorque { get; set; }
 
 		public Watt DynamicFullLoadPower { get; set; }
 		public Watt DragPower { get; set; }
+
+		public NewtonMeter DragTorque { get; set; }
 
 		public Watt AuxiliariesPowerDemand { get; set; }
 	}

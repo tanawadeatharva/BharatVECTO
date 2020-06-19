@@ -110,6 +110,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		public virtual Second LastShift { get; protected set; }
 
+		public abstract Second LastUpshift { get; protected internal set; }
+
+		public abstract Second LastDownshift { get; protected internal set; }
+
 		public GearData GetGearData(uint gear)
 		{
 			return ModelData.Gears[gear];

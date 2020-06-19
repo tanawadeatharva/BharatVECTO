@@ -5,7 +5,7 @@ using TUGraz.VectoCore.Models.Simulation.DataBus;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent
 {
-	public interface IElectricSystemInfo : IBatteryInfo
+	public interface IElectricSystemInfo 
 	{
 
 

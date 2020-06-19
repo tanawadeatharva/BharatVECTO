@@ -173,7 +173,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			_accMax = (accPower / DataBus.VehicleInfo.VehicleSpeed / (MinMass + DataBus.WheelsInfo.ReducedMassWheels)).Cast<MeterPerSquareSecond>();
 
 			//var engineLoadPercent = inTorque / FullLoadCurve.FullLoadStationaryTorque(inAngularVelocity);
-			var engineLoadPercent = inTorque / response.Engine.EngineDynamicFullLoadTorque;
+			var engineLoadPercent = inTorque / response.Engine.DynamicFullLoadTorque;
 			_loadStage = GetLoadStage(engineLoadPercent);
 
 			return base.ShiftRequired(

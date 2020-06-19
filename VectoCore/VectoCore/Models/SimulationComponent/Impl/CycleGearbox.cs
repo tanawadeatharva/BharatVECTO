@@ -437,6 +437,18 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		#region ICluchInfo
 
+		public override Second LastUpshift
+		{
+			get { throw new System.NotImplementedException(); }
+			protected internal set { throw new System.NotImplementedException(); }
+		}
+
+		public override Second LastDownshift
+		{
+			get { throw new System.NotImplementedException(); }
+			protected internal set { throw new System.NotImplementedException(); }
+		}
+
 		public override GearInfo NextGear
 		{
 			get {

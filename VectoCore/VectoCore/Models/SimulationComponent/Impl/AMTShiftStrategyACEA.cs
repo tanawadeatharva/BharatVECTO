@@ -364,11 +364,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			}
 
 			ResponseDryRun respDriverDemand = null;
-			if (respAccRsv.Engine.EngineTorqueDemandTotal <= respAccRsv.Engine.EngineDynamicFullLoadTorque) {
+			if (respAccRsv.Engine.TotalTorqueDemand <= respAccRsv.Engine.DynamicFullLoadTorque) {
 				respDriverDemand = DriverDemandResponse(gradient, driverAccelerationAvg);
 				
 				var fc = PowertrainConfig.EngineData.Fuels.First().ConsumptionMap.GetFuelConsumption(
-					respDriverDemand.Engine.EngineTorqueDemandTotal.LimitTo(
+					respDriverDemand.Engine.TotalTorqueDemand.LimitTo(
 						PowertrainConfig.EngineData.FullLoadCurves[0].DragLoadStationaryTorque(respAccRsv.Engine.EngineSpeed),
 						PowertrainConfig.EngineData.FullLoadCurves[0].FullLoadStationaryTorque(respAccRsv.Engine.EngineSpeed)),
 					respAccRsv.Engine.EngineSpeed);
@@ -661,19 +661,19 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			}
 
 			var averageAccelerationTorque = AverageAccelerationTorqueLookup.Interpolate(
-				responseDriverDemand.Engine.EngineSpeed, responseDriverDemand.Engine.EngineTorqueDemand);
+				responseDriverDemand.Engine.EngineSpeed, responseDriverDemand.Engine.TorqueOutDemand);
 
 			TestContainerGbx.Gear = gear;
 			var initResponse = TestContainer.VehiclePort.Initialize(vehicleSpeed, estimatedGradient);
-			var delta = initResponse.Engine.EngineTorqueDemand - averageAccelerationTorque;
+			var delta = initResponse.Engine.TorqueOutDemand - averageAccelerationTorque;
 			var acceleration = SearchAlgorithm.Search(
 				0.SI<MeterPerSquareSecond>(), delta, 0.1.SI<MeterPerSquareSecond>(),
-				getYValue: r => { return (r as AbstractResponse).Engine.EngineTorqueDemand - averageAccelerationTorque; },
+				getYValue: r => { return (r as AbstractResponse).Engine.TorqueOutDemand - averageAccelerationTorque; },
 				evaluateFunction: a => {
 					return TestContainer.VehiclePort.Request(
 						0.SI<Second>(), Constants.SimulationSettings.TargetTimeInterval, a, estimatedGradient, true);
 				},
-				criterion: r => { return ((r as AbstractResponse).Engine.EngineTorqueDemand - averageAccelerationTorque).Value(); }
+				criterion: r => { return ((r as AbstractResponse).Engine.TorqueOutDemand - averageAccelerationTorque).Value(); }
 			);
 
 			var engineAcceleration = (acceleration / ratio).Cast<PerSquareSecond>();

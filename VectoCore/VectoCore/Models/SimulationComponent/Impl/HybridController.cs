@@ -70,6 +70,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			_electricMotorTorque = strategySettings.MechanicalAssistPower;
 		}
 
+		SimpleComponentState IHybridController.PreviousState
+		{
+			get { return PreviousState; }
+		}
+
 		public virtual IElectricMotorControl ElectricMotorControl(PowertrainPosition pos)
 		{
 			return _electricMotorCtl[pos];
@@ -86,6 +91,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			var strategySettings = Strategy.Request(absTime, dt, outTorque, outAngularVelocity, dryRun);
 			ApplyStrategySettings(strategySettings);
 			if (!dryRun) {
+				CurrentState.SetState(outTorque, outAngularVelocity, outTorque, outAngularVelocity);
 				CurrentState.StrategyResponse = strategySettings;
 			}
 			return NextComponent.Request(absTime, dt, outTorque, outAngularVelocity, dryRun);
@@ -93,6 +99,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		public IResponse Initialize(NewtonMeter outTorque, PerSecond outAngularVelocity)
 		{
+			PreviousState.SetState(outTorque, outAngularVelocity, outTorque, outAngularVelocity);
 			PreviousState.StrategyResponse = Strategy.Initialize(outTorque, outAngularVelocity);
 			_electricMotorTorque = PreviousState.StrategyResponse.MechanicalAssistPower;
 			return NextComponent.Initialize(outTorque, outAngularVelocity);
@@ -104,8 +111,12 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			Strategy.CommitSimulationStep(time, simulationInterval);
 		}
 
-		protected override void DoWriteModalResults(Second time, Second simulationInterval,
-			IModalDataContainer container) { }
+		protected override void DoWriteModalResults(
+			Second time, Second simulationInterval,
+			IModalDataContainer container)
+		{
+			Strategy.WriteModalResults(time, simulationInterval, container);
+		}
 
 		private NewtonMeter MechanicalAssistPower(PowertrainPosition pos, Second absTime, Second dt,
 			NewtonMeter outTorque, PerSecond prevOutAngularVelocity, PerSecond currOutAngularVelocity, bool dryRun)
@@ -129,7 +140,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		public ICombustionEngine Engine { protected get; set; }
 
 		///=======================================================================================
-		public class HybridControllerState
+		public class HybridControllerState : SimpleComponentState
 		{
 			public HybridStrategyResponse StrategyResponse;
 		}
@@ -154,24 +165,24 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					currOutAngularVelocity, dryRun);
 			}
 
-			public NewtonMeter MaxDriveTorque(PerSecond avgSpeed, Second dt)
-			{
-				var driveTorque = ElectricMotorData.FullLoadCurve.FullLoadDriveTorque(avgSpeed);
-				var drivePowerElectric = ElectricMotorData.EfficiencyMap.LookupElectricPower(avgSpeed, driveTorque).ElectricalPower;
-				if (drivePowerElectric >= _controller.ElectricSystem.MaxDischargePower(dt))
-				{
-					return driveTorque;
-				}
+			//public NewtonMeter MaxDriveTorque(PerSecond avgSpeed, Second dt)
+			//{
+			//	var driveTorque = ElectricMotorData.FullLoadCurve.FullLoadDriveTorque(avgSpeed);
+			//	var drivePowerElectric = ElectricMotorData.EfficiencyMap.LookupElectricPower(avgSpeed, driveTorque).ElectricalPower;
+			//	if (drivePowerElectric >= _controller.ElectricSystem.MaxDischargePower(dt))
+			//	{
+			//		return driveTorque;
+			//	}
 
-				drivePowerElectric = _controller.ElectricSystem.MaxDischargePower(dt);
-				driveTorque = ElectricMotorData.EfficiencyMap.SearchMechanicalPower(drivePowerElectric, avgSpeed).Torque;
-				return driveTorque;
-			}
+			//	drivePowerElectric = _controller.ElectricSystem.MaxDischargePower(dt);
+			//	driveTorque = ElectricMotorData.EfficiencyMap.SearchMechanicalPower(drivePowerElectric, avgSpeed).Torque;
+			//	return driveTorque;
+			//}
 
-			public NewtonMeter MaxDragTorque(PerSecond avgSpeed, Second dt)
-			{
-				return 0.SI<NewtonMeter>();
-			}
+			//public NewtonMeter MaxDragTorque(PerSecond avgSpeed, Second dt)
+			//{
+			//	return 0.SI<NewtonMeter>();
+			//}
 		}
 
 

@@ -235,12 +235,13 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					Engine = {
 						EngineSpeed = angularVelocity,
 						PowerRequest = torqueOut * avgEngineSpeed,
+						TorqueOutDemand = torqueOut,
+						TotalTorqueDemand = totalTorqueDemand,
 						DynamicFullLoadPower = dynamicFullLoadPower,
-						EngineTorqueDemand = torqueOut,
-						EngineTorqueDemandTotal = totalTorqueDemand,
-						EngineDynamicFullLoadTorque = dynamicFullLoadTorque,
-						EngineStationaryFullLoadTorque = stationaryFullLoadTorque,
+						DynamicFullLoadTorque = dynamicFullLoadTorque,
+						StationaryFullLoadTorque = stationaryFullLoadTorque,
 						DragPower = fullDragTorque * avgEngineSpeed,
+						DragTorque = fullDragTorque,
 						AuxiliariesPowerDemand = auxTorqueDemand * avgEngineSpeed,
 					},
 				};
@@ -283,10 +284,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 						EngineSpeed = angularVelocity,
 						PowerRequest = totalTorqueDemand * avgEngineSpeed,
 						DynamicFullLoadPower = dynamicFullLoadPower,
-						EngineTorqueDemand = torqueOut,
-						EngineTorqueDemandTotal = totalTorqueDemand,
-						EngineStationaryFullLoadTorque = stationaryFullLoadTorque,
-						EngineDynamicFullLoadTorque = dynamicFullLoadTorque,
+						TorqueOutDemand = torqueOut,
+						TotalTorqueDemand = totalTorqueDemand,
+						StationaryFullLoadTorque = stationaryFullLoadTorque,
+						DynamicFullLoadTorque = dynamicFullLoadTorque,
 						DragPower = CurrentState.FullDragTorque * avgEngineSpeed,
 						AuxiliariesPowerDemand = auxTorqueDemand * avgEngineSpeed,
 					},
@@ -302,10 +303,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					Engine = {
 						PowerRequest = totalTorqueDemand * avgEngineSpeed,
 						DynamicFullLoadPower = dynamicFullLoadPower,
-						EngineTorqueDemand = torqueOut,
-						EngineTorqueDemandTotal = totalTorqueDemand,
-						EngineStationaryFullLoadTorque = stationaryFullLoadTorque,
-						EngineDynamicFullLoadTorque = dynamicFullLoadTorque,
+						TorqueOutDemand = torqueOut,
+						TotalTorqueDemand = totalTorqueDemand,
+						StationaryFullLoadTorque = stationaryFullLoadTorque,
+						DynamicFullLoadTorque = dynamicFullLoadTorque,
 						DragPower = CurrentState.FullDragTorque * avgEngineSpeed,
 						EngineSpeed = angularVelocity,
 						AuxiliariesPowerDemand = auxTorqueDemand * avgEngineSpeed,
@@ -318,10 +319,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			return new ResponseSuccess(this) {
 				Engine = {
 					PowerRequest = totalTorqueDemand * avgEngineSpeed,
-					EngineTorqueDemand = torqueOut,
-					EngineTorqueDemandTotal = totalTorqueDemand,
-					EngineStationaryFullLoadTorque = stationaryFullLoadTorque,
-					EngineDynamicFullLoadTorque = dynamicFullLoadTorque,
+					TorqueOutDemand = torqueOut,
+					TotalTorqueDemand = totalTorqueDemand,
+					StationaryFullLoadTorque = stationaryFullLoadTorque,
+					DynamicFullLoadTorque = dynamicFullLoadTorque,
 					DynamicFullLoadPower = dynamicFullLoadPower,
 					DragPower = CurrentState.FullDragTorque * avgEngineSpeed,
 					EngineSpeed = angularVelocity,
@@ -366,8 +367,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					PowerRequest = PreviousState.EnginePower,
 					DynamicFullLoadPower = PreviousState.DynamicFullLoadTorque * PreviousState.EngineSpeed,
 					EngineSpeed = outAngularVelocity,
-					EngineTorqueDemand = outTorque,
-					EngineTorqueDemandTotal = outTorque + auxDemand
+					TorqueOutDemand = outTorque,
+					TotalTorqueDemand = outTorque + auxDemand
 				}
 			};
 		}

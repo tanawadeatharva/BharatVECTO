@@ -60,6 +60,10 @@ namespace TUGraz.VectoCore.Models.Simulation.DataBus
 
 		Second LastShift { get; }
 
+		Second LastUpshift { get; }
+
+		Second LastDownshift { get; }
+
 		GearData GetGearData(uint gear);
 
 		/// <summary>

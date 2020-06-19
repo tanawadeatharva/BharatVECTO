@@ -401,6 +401,7 @@
     <Compile Include="Models\SimulationComponent\Impl\ElectricMotor.cs" />
     <Compile Include="Models\SimulationComponent\Impl\HybridController.cs" />
     <Compile Include="Models\SimulationComponent\IHybridController.cs" />
+    <Compile Include="Models\SimulationComponent\Impl\SimpleHybridController.cs" />
     <Compile Include="Models\SimulationComponent\Impl\StopStartCombustionEngine.cs" />
     <Compile Include="Models\SimulationComponent\Strategies\DelegateParallelHybridStrategy.cs" />
     <Compile Include="Models\SimulationComponent\Strategies\HybridStrategy.cs" />

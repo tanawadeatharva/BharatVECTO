@@ -503,7 +503,7 @@ namespace TUGraz.VectoCore.OutputData
 				}
 			}
 			//if (!_writeEngineOnly && WriteAdvancedAux) {
-				
+			dataColumns.AddRange(new [] {ModalResultField.HybridStrategyScore, ModalResultField.HybridStrategySolution}.Select(x => x.GetName()));	
 			//}
 			return dataColumns;
 		}

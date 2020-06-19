@@ -384,7 +384,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 			ctl.Gearbox = gbx;
 			ctl.Engine = engine;
-
+			
 			// DistanceBasedDrivingCycle --> driver --> vehicle --> wheels 
 			// --> axleGear --> (retarder) --> gearBox --> (retarder) --> clutch --> engine <-- Aux
 			var cycle = new DistanceBasedDrivingCycle(container, data.Cycle);
@@ -423,7 +423,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 				return null;
 			}
 
-			container.ModData.AddElectricMotor(pos);
+			container.ModData?.AddElectricMotor(pos);
 			ctl.AddElectricMotor(pos, motorData.Item2);
 			var motor = new ElectricMotor(container, motorData.Item2, ctl.ElectricMotorControl(pos), pos);
 			motor.Connect(es);
@@ -474,6 +474,70 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 				.AddAuxiliaries(container, data);
 		}
 
+		public void BuildSimpleHybridPowertrain(VectoRunData data, VehicleContainer container)
+		{
+			//if (data.Cycle.CycleType != CycleType.DistanceBased) {
+			//	throw new VectoException("CycleType must be DistanceBased");
+			//}
+
+			var battery = new Battery(container, data.BatteryData);
+			battery.Initialize(data.BatteryData.InitialSoC);
+
+			var es = new ElectricSystem(container);
+			es.Connect(battery);
+
+			var clutch = data.GearboxData.Type.ManualTransmission() ? new SwitchableClutch(container, data.EngineData) : null;
+
+			var gearbox = GetSimpleGearbox(container, data);
+			var gbx = gearbox as IHybridControlledGearbox;
+			if (gbx == null) {
+				throw new VectoException("Gearbox can not be used for parallel hybrid");
+			}
+			var engine = new CombustionEngine(container, data.EngineData);
+
+			var ctl = new SimpleHybridController(container, es, clutch);
+
+			ctl.Gearbox = gbx;
+			ctl.Engine = engine;
+
+			var vehicle = new Vehicle(container, data.VehicleData, data.AirdragData);
+			//var dummyDriver = new Driver(container, data.DriverData, new DefaultDriverStrategy(container));
+			var powertrain = vehicle
+				.AddComponent(new Wheels(container, data.VehicleData.DynamicTyreRadius, data.VehicleData.WheelsInertia))
+				.AddComponent(ctl)
+				.AddComponent(GetElectricMachine(PowertrainPosition.HybridP4, data.ElectricMachinesData, container, es, ctl))
+				.AddComponent(new AxleGear(container, data.AxleGearData))
+				.AddComponent(GetElectricMachine(PowertrainPosition.HybridP3, data.ElectricMachinesData, container, es, ctl))
+				.AddComponent(data.AngledriveData != null ? new Angledrive(container, data.AngledriveData) : null)
+				.AddComponent(gearbox, data.Retarder, container)
+				.AddComponent(GetElectricMachine(PowertrainPosition.HybridP2, data.ElectricMachinesData, container, es, ctl))
+				.AddComponent(clutch)
+				.AddComponent(GetElectricMachine(PowertrainPosition.HybridP1, data.ElectricMachinesData, container, es, ctl));
+			
+			// DistanceBasedDrivingCycle --> driver --> vehicle --> wheels 
+			// --> axleGear --> (retarder) --> gearBox --> (retarder) --> clutch --> engine <-- Aux
+
+			// TODO: MQ 2018-11-19: engineering mode needs AUX power from cycle, use face cycle...
+			//       should be a reference/proxy to the main driving cyle. but how to access it?
+			switch (data.Cycle.CycleType) {
+				case CycleType.DistanceBased:
+					container.AddComponent(new DistanceBasedDrivingCycle(container, data.Cycle));
+					break;
+				case CycleType.MeasuredSpeed:
+					var dummyData = GetMeasuredSpeedDummnCycle();
+					var msCycle = new MeasuredSpeedDrivingCycle(container, dummyData);
+					msCycle.AddComponent(vehicle);
+					break;
+				case CycleType.EngineOnly: break;
+				default: throw new VectoException("Wrong CycleType for SimplePowertrain");
+			}
+			
+			var idleController = GetIdleController(data.PTO, engine, container);
+			//cycle.IdleController = idleController as IdleControllerSwitcher;
+
+			powertrain.AddComponent(engine, idleController)
+				.AddAuxiliaries(container, data);
+		}
 
 		private DrivingCycleData GetMeasuredSpeedDummnCycle()
 		{
@@ -765,6 +829,16 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 		}
 
 		public Second LastShift
+		{
+			get { throw new VectoException("No Gearbox available."); }
+		}
+
+		public Second LastUpshift
+		{
+			get { throw new VectoException("No Gearbox available."); }
+		}
+
+		public Second LastDownshift
 		{
 			get { throw new VectoException("No Gearbox available."); }
 		}

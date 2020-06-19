@@ -3,6 +3,7 @@ using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Models.SimulationComponent.Impl;
 using TUGraz.VectoCore.Models.SimulationComponent.Strategies;
+using TUGraz.VectoCore.OutputData;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent
 {
@@ -21,5 +22,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent
 		HybridStrategyResponse Initialize(NewtonMeter outTorque, PerSecond outAngularVelocity);
 		void CommitSimulationStep(Second time, Second simulationInterval);
 		IHybridController Controller { set; }
+		void WriteModalResults(Second time, Second simulationInterval, IModalDataContainer container);
 	}
 }

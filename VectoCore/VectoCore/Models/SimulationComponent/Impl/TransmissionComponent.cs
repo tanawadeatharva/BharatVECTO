@@ -89,10 +89,12 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				CurrentState.SetState(inTorque, inAngularVelocity, outTorque, outAngularVelocity);
 				CurrentState.TorqueLossResult = torqueLossResult;
 			}
-
+			InTorque = inTorque;
 			var retVal = NextComponent.Request(absTime, dt, inTorque, inAngularVelocity, dryRun);
 			return retVal;
 		}
+
+		protected NewtonMeter InTorque { get; private set; }
 
 		public virtual IResponse Initialize(NewtonMeter outTorque, PerSecond outAngularVelocity)
 		{

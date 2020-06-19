@@ -514,7 +514,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			var nextTcOutSpeed = gbxOutSpeed * ModelData.Gears[currentGear + 1].TorqueConverterRatio;
 			
 			var tcNext = ModelData.TorqueConverterData.LookupOperatingPointOut(
-				nextTcOutSpeed, response.Engine.EngineSpeed, response.Engine.EngineTorqueDemand);
+				nextTcOutSpeed, response.Engine.EngineSpeed, response.Engine.TorqueOutDemand);
 			var tcLossesNextGear = tcNext.InAngularVelocity * tcNext.InTorque - tcNext.OutAngularVelocity * tcNext.OutTorque;
 			var deltaTcLosses = tcLossesNextGear - tcLossesCurrentGear;
 

@@ -56,8 +56,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			bool dryRun = false)
 		{
 			var retVal = base.Request(absTime, dt, outTorque, outAngularVelocity, dryRun);
-			retVal.Axlegear.PowerRequest = outTorque * (PreviousState.OutAngularVelocity + CurrentState.OutAngularVelocity) / 2.0;
-			retVal.Axlegear.CardanTorque = CurrentState.InTorque;
+			retVal.Axlegear.PowerRequest = outTorque * (PreviousState.OutAngularVelocity + outAngularVelocity) / 2.0;
+			retVal.Axlegear.CardanTorque = InTorque;
 			return retVal;
 		}
 

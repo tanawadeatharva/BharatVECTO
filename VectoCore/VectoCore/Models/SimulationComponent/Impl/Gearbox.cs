@@ -63,9 +63,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		protected internal GearInfo _nextGear;
 		private Second _overrideDisengage;
 
-		public Second LastUpshift { get; protected internal set; }
+		public override Second LastUpshift { get; protected internal set; }
 
-		public Second LastDownshift { get; protected internal set; }
+		public override Second LastDownshift { get; protected internal set; }
 
 		public override GearInfo NextGear
 		{
@@ -291,7 +291,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			if (dryRun) {
 				// if gearbox is disengaged the 0[W]-line is the limit for drag and full load.
 				var delta = inTorque * avgInAngularVelocity;
-				return new ResponseDryRun(this) {
+				var remainingPowerTrain = NextComponent.Request(absTime, dt, 0.SI<NewtonMeter>(), inAngularVelocity, true);
+				return new ResponseDryRun(this, remainingPowerTrain) {
 					Gearbox = {
 						PowerRequest = delta,
 						Gear = 0,
@@ -369,10 +370,12 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				dryRunResponse.Gearbox.PowerRequest =
 					outTorque * (PreviousState.OutAngularVelocity + outAngularVelocity) / 2.0;
 				dryRunResponse.Gearbox.Gear = Gear;
+				//dryRunResponse.Gearbox.GearboxInputSpeed = inAngularVelocity;
 				return dryRunResponse;
 			}
 
 			var response = NextComponent.Request(absTime, dt, inTorque, inAngularVelocity, false);
+			response.Gearbox.GearboxInputSpeed = inAngularVelocity;
 			var shiftAllowed = !inAngularVelocity.IsEqual(0) && !DataBus.VehicleInfo.VehicleSpeed.IsEqual(0);
 
 			if (response is ResponseSuccess && shiftAllowed) {
@@ -406,8 +409,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 						},
 						Engine = {
 							EngineSpeed = response.Engine.EngineSpeed,
-							EngineTorqueDemand = response.Engine.EngineTorqueDemand,
-							EngineTorqueDemandTotal = response.Engine.EngineTorqueDemandTotal,
+							TorqueOutDemand = response.Engine.TorqueOutDemand,
+							TotalTorqueDemand = response.Engine.TotalTorqueDemand,
 							PowerRequest = response.Engine.PowerRequest
 						}
 					};

@@ -49,20 +49,20 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl {
 
 					var grad = VectoMath.InclinationToAngle(1);
 					var max = TestContainer.VehiclePort.Initialize(vehicleSpeed, grad);
-					if ((max.Engine.EngineTorqueDemandTotal - maxTorque).IsGreater(0)) {
+					if ((max.Engine.TotalTorqueDemand - maxTorque).IsGreater(0)) {
 
 						var first = TestContainer.VehiclePort.Initialize(vehicleSpeed, 0.SI<Radian>());
-						var delta = first.Engine.EngineTorqueDemandTotal - maxTorque;
+						var delta = first.Engine.TotalTorqueDemand - maxTorque;
 						grad = SearchAlgorithm.Search(
 							0.SI<Radian>(), delta, 0.1.SI<Radian>(),
 							getYValue: r => {
-								return ((r as AbstractResponse).Engine.EngineTorqueDemandTotal - maxTorque);
+								return ((r as AbstractResponse).Engine.TotalTorqueDemand - maxTorque);
 							},
 							evaluateFunction: g => {
 								return TestContainer.VehiclePort.Initialize(vehicleSpeed, g);
 							},
 							criterion: r => {
-								return ((r as AbstractResponse).Engine.EngineTorqueDemandTotal - maxTorque).Value() / 1e5;
+								return ((r as AbstractResponse).Engine.TotalTorqueDemand - maxTorque).Value() / 1e5;
 							}
 						);
 						max = TestContainer.VehiclePort.Initialize(vehicleSpeed, grad);

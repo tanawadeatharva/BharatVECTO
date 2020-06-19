@@ -64,7 +64,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl {
 					DeltaFullLoad = 0.SI<Watt>(),
 					DeltaDragLoad = 0.SI<Watt>(),
 					Engine = {
-						EngineTorqueDemandTotal = 0.SI<NewtonMeter>(),
+						TotalTorqueDemand = 0.SI<NewtonMeter>(),
 						PowerRequest = 0.SI<Watt>(),
 						DynamicFullLoadPower = 0.SI<Watt>(),
 						DragPower = 0.SI<Watt>(),
@@ -79,7 +79,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl {
 				Engine = {
 					PowerRequest = 0.SI<Watt>(),
 					DynamicFullLoadPower = 0.SI<Watt>(),
-					EngineTorqueDemandTotal = 0.SI<NewtonMeter>(),
+					TotalTorqueDemand = 0.SI<NewtonMeter>(),
 					DragPower = 0.SI<Watt>(),
 					EngineSpeed = 0.RPMtoRad(),
 					AuxiliariesPowerDemand = 0.SI<Watt>(),

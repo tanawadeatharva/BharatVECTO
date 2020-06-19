@@ -93,6 +93,12 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			return retVal;
 		}
 
+		public virtual void Initialize(Watt clutchLoss)
+		{
+			PreviousState.ClutchLoss = clutchLoss;
+		}
+
+
 		public virtual IResponse Request(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity,
 			bool dryRun = false)
 		{
@@ -157,7 +163,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			NewtonMeter torqueIn;
 			PerSecond angularVelocityIn;
 
-			var startClutch = DataBus.VehicleInfo.VehicleStopped || !PreviousState.ClutchLoss.IsEqual(0) || (PreviousState.ClutchLoss.IsEqual(0) && outAngularVelocity.IsSmaller(DataBus.EngineInfo.EngineIdleSpeed));
+			var startClutch = DataBus.VehicleInfo.VehicleStopped || !PreviousState.ClutchLoss.IsEqual(0); // || (PreviousState.ClutchLoss.IsEqual(0) && outAngularVelocity.IsSmaller(DataBus.EngineInfo.EngineIdleSpeed));
 			var slippingClutchWhenDriving = (DataBus.GearboxInfo.Gear <= 2 && DataBus.DriverInfo.DriverBehavior != DrivingBehavior.Braking);
 			var slippingClutchDuringBraking = DataBus.GearboxInfo.Gear == 1 && DataBus.DriverInfo.DriverBehavior == DrivingBehavior.Braking && outTorque > 0 && DataBus.Brakes.BrakePower.IsEqual(0);
 			//var slippingClutchWhenDriving = (DataBus.Gear == 1 && outTorque > 0);
@@ -222,6 +228,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		public virtual bool ClutchClosed(Second absTime)
 		{
 			return DataBus.GearboxInfo.GearEngaged(absTime);
+		}
+
+		public Watt ClutchLosses
+		{
+			get { return PreviousState.ClutchLoss; }
 		}
 
 		public class ClutchState : SimpleComponentState

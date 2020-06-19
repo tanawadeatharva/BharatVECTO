@@ -177,7 +177,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					DeltaEngineSpeed = operatingPoint.InAngularVelocity - maxEngineSpeed,
 					TorqueConverter = { TorqueConverterOperatingPoint = operatingPoint},
 					Engine = {
-					EngineTorqueDemand = inTorque,
+					TorqueOutDemand = inTorque,
 					EngineSpeed = engineResponse.Engine.EngineSpeed,
 					PowerRequest = engineResponse.Engine.PowerRequest
 					}
@@ -208,7 +208,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				DeltaEngineSpeed = dryOperatingPointMax.InAngularVelocity - maxEngineSpeed,
 				TorqueConverter = { TorqueConverterOperatingPoint = dryOperatingPointMax},
 				Engine = {
-					EngineTorqueDemand = inTorque,
+					TorqueOutDemand = inTorque,
 					EngineSpeed = dryOperatingPointMax?.InAngularVelocity ??
 								dryOperatingPointMin?.InAngularVelocity ?? 0.RPMtoRad(),
 					PowerRequest = engineResponse.Engine.PowerRequest

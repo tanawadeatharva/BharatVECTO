@@ -56,6 +56,7 @@ namespace TUGraz.VectoCore.Tests.Utils
 		private Watt _axlegearLoss = 0.SI<Watt>();
 		private bool _clutchClosed = true;
 		private ITorqueConverterControl _torqueConverter;
+		private IGearboxInfo _gearboxInfoImplementation;
 
 		public IAxlegearInfo AxlegearInfo
 		{
@@ -159,6 +160,15 @@ namespace TUGraz.VectoCore.Tests.Utils
 		}
 
 		public Second LastShift { get;  set; }
+		public Second LastUpshift
+		{
+			get { return _gearboxInfoImplementation.LastUpshift; }
+		}
+
+		public Second LastDownshift
+		{
+			get { return _gearboxInfoImplementation.LastDownshift; }
+		}
 
 		public GearData GetGearData(uint gear)
 		{
@@ -241,6 +251,11 @@ namespace TUGraz.VectoCore.Tests.Utils
 		public bool ClutchClosed(Second absTime)
 		{
 			return _clutchClosed;
+		}
+
+		public Watt ClutchLosses
+		{
+			get { throw new NotImplementedException(); }
 		}
 
 		public Watt BrakePower { get; set; }

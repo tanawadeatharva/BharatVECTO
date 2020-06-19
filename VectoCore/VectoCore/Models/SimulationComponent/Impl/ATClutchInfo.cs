@@ -31,6 +31,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl {
 			return true;
 		}
 
+		public Watt ClutchLosses
+		{
+			get { return 0.SI<Watt>(); }
+		}
+
 		#endregion
 	}
 }

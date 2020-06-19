@@ -24,6 +24,8 @@ namespace TUGraz.VectoCore.InputData.Reader.ComponentData {
 		public Ampere MaxCurrent { get; internal set; }
 
 		public double InitialSoC { get; internal set; }
+
+		public double TargetSoC { get; internal set; }
 	}
 
 	public class SOCMap

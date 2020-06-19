@@ -134,7 +134,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				if (retVal.Source is ICombustionEngine) {
 					var success = retVal as ResponseSuccess;
 					var avgEngineSpeed = (success.Engine.EngineSpeed + Driver.DataBus.EngineInfo.EngineSpeed) / 2.0;
-					EcoRollState.AcceleratorPedalIdle = success.Engine.DragPower.IsEqual(success.Engine.EngineTorqueDemandTotal * avgEngineSpeed, 10.SI<Watt>());
+					EcoRollState.AcceleratorPedalIdle = success.Engine.DragPower.IsEqual(success.Engine.TotalTorqueDemand * avgEngineSpeed, 10.SI<Watt>());
 				} else {
 					EcoRollState.AcceleratorPedalIdle = false;
 				}

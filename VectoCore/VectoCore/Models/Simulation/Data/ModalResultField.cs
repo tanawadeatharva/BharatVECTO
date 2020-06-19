@@ -349,6 +349,10 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 
 		[ModalResultField(typeof(DrivingBehavior))] drivingBehavior,
 
+		[ModalResultField(typeof(double))] HybridStrategyScore,
+
+		[ModalResultField(typeof(double))]HybridStrategySolution,
+
 		//[ModalResultField(typeof(double), caption: "AA_NonSmartAlternatorsEfficiency [%]")] AA_NonSmartAlternatorsEfficiency,
 		//[ModalResultField(typeof(SI), caption: "AA_SmartIdleCurrent_Amps [A]")] AA_SmartIdleCurrent_Amps,
 		//[ModalResultField(typeof(double), caption: "AA_SmartIdleAlternatorsEfficiency [%]")] AA_SmartIdleAlternatorsEfficiency,
