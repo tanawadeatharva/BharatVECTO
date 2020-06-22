@@ -34,7 +34,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		public void Initialize(double initialSoC)
 		{
-			if (initialSoC < ModelData.MinSOC || initialSoC > ModelData.MaxSOC)
+			if (initialSoC.IsSmaller(ModelData.MinSOC) || initialSoC.IsGreater(ModelData.MaxSOC))
 			{
 				throw new VectoException("SoC must be between {0} and {1}", ModelData.MinSOC, ModelData.MaxSOC);
 			}

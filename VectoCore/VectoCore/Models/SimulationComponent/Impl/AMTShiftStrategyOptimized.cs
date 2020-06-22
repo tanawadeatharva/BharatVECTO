@@ -31,7 +31,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		private Kilogram vehicleMass;
 		protected internal ResponseDryRun minFCResponse;
 
-		public static readonly MeterPerSecond MIN_SPEED_AFTER_TRACTION_INTERRUPTION = 5.KMPHtoMeterPerSecond();
+		
 
 		public AMTShiftStrategyOptimized(VectoRunData runData, IVehicleContainer dataBus) : base(runData, dataBus)
 		{
@@ -91,7 +91,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			}
 
 			var estimatedVelocityPostShift = VelocityDropData.Interpolate(DataBus.VehicleInfo.VehicleSpeed, DataBus.DrivingCycleInfo.RoadGradient ?? 0.SI<Radian>());
-			if (!estimatedVelocityPostShift.IsGreater(MIN_SPEED_AFTER_TRACTION_INTERRUPTION)) {
+			if (!estimatedVelocityPostShift.IsGreater(DeclarationData.GearboxTCU.MIN_SPEED_AFTER_TRACTION_INTERRUPTION)) {
 				return currentGear;
 			}
 
@@ -234,7 +234,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			var fcCurrent = double.NaN;
 
 			var estimatedVelocityPostShift = VelocityDropData.Interpolate(DataBus.VehicleInfo.VehicleSpeed, DataBus.DrivingCycleInfo.RoadGradient ?? 0.SI<Radian>());
-			if (!estimatedVelocityPostShift.IsGreater(MIN_SPEED_AFTER_TRACTION_INTERRUPTION)) {
+			if (!estimatedVelocityPostShift.IsGreater(DeclarationData.GearboxTCU.MIN_SPEED_AFTER_TRACTION_INTERRUPTION)) {
 				return currentGear;
 			}
 
@@ -286,23 +286,23 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		#endregion
 
-		protected ResponseDryRun RequestDryRunWithGear(
-			Second absTime, Second dt, MeterPerSecond vehicleSpeed, MeterPerSquareSecond acceleration, uint tryNextGear)
-		{
-			LogEnabled = false;
-			TestContainerGbx.Disengaged = false;
-			TestContainerGbx.Gear = tryNextGear;
+		//protected ResponseDryRun RequestDryRunWithGear(
+		//	Second absTime, Second dt, MeterPerSecond vehicleSpeed, MeterPerSquareSecond acceleration, uint tryNextGear)
+		//{
+		//	LogEnabled = false;
+		//	TestContainerGbx.Disengaged = false;
+		//	TestContainerGbx.Gear = tryNextGear;
 
-			//TestContainer.GearboxOutPort.Initialize(outTorque, outAngularVelocity);
-			TestContainer.VehiclePort.Initialize(vehicleSpeed, DataBus.DrivingCycleInfo.RoadGradient);
-			var response = (ResponseDryRun)TestContainer.VehiclePort.Request(
-				0.SI<Second>(), dt, acceleration, DataBus.DrivingCycleInfo.RoadGradient, true);
+		//	//TestContainer.GearboxOutPort.Initialize(outTorque, outAngularVelocity);
+		//	TestContainer.VehiclePort.Initialize(vehicleSpeed, DataBus.DrivingCycleInfo.RoadGradient);
+		//	var response = (ResponseDryRun)TestContainer.VehiclePort.Request(
+		//		0.SI<Second>(), dt, acceleration, DataBus.DrivingCycleInfo.RoadGradient, true);
 
-			//var response = (ResponseDryRun)TestContainer.GearboxOutPort.Request(
-			//	0.SI<Second>(), dt, outTorque, outAngularVelocity, true);
-			LogEnabled = true;
-			return response;
-		}
+		//	//var response = (ResponseDryRun)TestContainer.GearboxOutPort.Request(
+		//	//	0.SI<Second>(), dt, outTorque, outAngularVelocity, true);
+		//	LogEnabled = true;
+		//	return response;
+		//}
 
 		protected override ResponseDryRun RequestDryRunWithGear(
 			Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity, uint tryNextGear)

@@ -39,6 +39,8 @@ using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.InputData.Reader.ComponentData;
+using TUGraz.VectoCore.Models.Connector.Ports;
+using TUGraz.VectoCore.Models.Connector.Ports.Impl;
 using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.DataBus;
@@ -493,7 +495,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			if (gbx == null) {
 				throw new VectoException("Gearbox can not be used for parallel hybrid");
 			}
-			var engine = new CombustionEngine(container, data.EngineData);
+			var engine = new StopStartCombustionEngine(container, data.EngineData);
 
 			var ctl = new SimpleHybridController(container, es, clutch);
 
@@ -501,9 +503,11 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			ctl.Engine = engine;
 
 			var vehicle = new Vehicle(container, data.VehicleData, data.AirdragData);
+			
 			//var dummyDriver = new Driver(container, data.DriverData, new DefaultDriverStrategy(container));
 			var powertrain = vehicle
-				.AddComponent(new Wheels(container, data.VehicleData.DynamicTyreRadius, data.VehicleData.WheelsInertia))
+				.AddComponent(
+					new Wheels(container, data.VehicleData.DynamicTyreRadius, data.VehicleData.WheelsInertia))
 				.AddComponent(ctl)
 				.AddComponent(GetElectricMachine(PowertrainPosition.HybridP4, data.ElectricMachinesData, container, es, ctl))
 				.AddComponent(new AxleGear(container, data.AxleGearData))
@@ -733,6 +737,22 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 				.ToList();
 		}
 	}
+
+	//public class DummyFvOutPort : IFvOutPort {
+	//	#region Implementation of IFvOutPort
+
+	//	public IResponse Request(Second absTime, Second dt, Newton force, MeterPerSecond velocity, bool dryRun)
+	//	{
+	//		return new ResponseSuccess(this);
+	//	}
+
+	//	public IResponse Initialize(Newton vehicleForce, MeterPerSecond vehicleSpeed)
+	//	{
+	//		return new ResponseSuccess(this);
+	//	}
+
+	//	#endregion
+	//}
 
 	internal class DummyDriverInfo : VectoSimulationComponent, IDriverInfo
 	{

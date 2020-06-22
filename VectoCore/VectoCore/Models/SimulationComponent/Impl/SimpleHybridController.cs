@@ -85,12 +85,12 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl {
 			_electricMotorCtl[pos] = new ElectricMotorController(this, motorData);
 		}
 
-		public ResponseDryRun RequestDryRun(
-			Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity,
-			HybridStrategyResponse strategySettings)
-		{
-			throw new System.NotImplementedException();
-		}
+		//public ResponseDryRun RequestDryRun(
+		//	Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity,
+		//	HybridStrategyResponse strategySettings)
+		//{
+		//	throw new System.NotImplementedException();
+		//}
 
 		#endregion
 

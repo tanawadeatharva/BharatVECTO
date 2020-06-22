@@ -127,7 +127,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			get { return true; }
 		}
 
-		internal ResponseDryRun Initialize(uint gear, NewtonMeter outTorque, PerSecond outAngularVelocity)
+		internal ResponseDryRun Initialize(Second absTime, uint gear, NewtonMeter outTorque, PerSecond outAngularVelocity)
 		{
 			var oldGear = Gear;
 			Gear = gear;
@@ -148,7 +148,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			var response =
 				(ResponseDryRun)
-				NextComponent.Request(0.SI<Second>(), Constants.SimulationSettings.TargetTimeInterval, inTorque,
+				NextComponent.Request(absTime, Constants.SimulationSettings.TargetTimeInterval, inTorque,
 					inAngularVelocity, true); //NextComponent.Initialize(inTorque, inAngularVelocity);
 			//response.Switch().
 			//	Case<ResponseSuccess>().

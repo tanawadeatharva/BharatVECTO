@@ -172,4 +172,13 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl {
 			container[ModalResultField.P_WHR_mech_corr] = (1 - EngineStopStartUtilityFactor) * pWHRmechCorr;
 		}
 	}
+
+	public class SimplePowerrtrainCombustionEngine : StopStartCombustionEngine
+	{
+		public SimplePowerrtrainCombustionEngine(
+			IVehicleContainer container, CombustionEngineData modelData, bool pt1Disabled = false) : base(
+			container, modelData, pt1Disabled) { }
+
+		public EngineState EnginePreviousState { get { return PreviousState; } }
+	}
 }

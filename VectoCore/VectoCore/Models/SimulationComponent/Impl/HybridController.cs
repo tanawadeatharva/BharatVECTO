@@ -55,13 +55,13 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			_electricMotorCtl[pos] = new ElectricMotorController(this, motorData);
 		}
 
-		public ResponseDryRun RequestDryRun(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity, HybridStrategyResponse strategySettings)
-		{
-			ApplyStrategySettings(strategySettings);
-			var retVal = NextComponent.Request(absTime, dt, outTorque, outAngularVelocity, true);
+		//public ResponseDryRun RequestDryRun(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity, HybridStrategyResponse strategySettings)
+		//{
+		//	ApplyStrategySettings(strategySettings);
+		//	var retVal = NextComponent.Request(absTime, dt, outTorque, outAngularVelocity, true);
 
-			return retVal as ResponseDryRun;
-		}
+		//	return retVal as ResponseDryRun;
+		//}
 
 		private void ApplyStrategySettings(HybridStrategyResponse strategySettings)
 		{
@@ -242,11 +242,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				PerSecond outAngularVelocity)
 			{
 				if (DataBus.VehicleInfo.VehicleSpeed.IsEqual(0)) {
-					return InitStartGear(outTorque, outAngularVelocity);
+					return InitStartGear(absTime, outTorque, outAngularVelocity);
 				}
 
 				for (var gear = (uint)ModelData.Gears.Count; gear > 1; gear--) {
-					var response = _gearbox.Initialize(gear, outTorque, outAngularVelocity);
+					var response = _gearbox.Initialize(absTime, gear, outTorque, outAngularVelocity);
 
 					var inAngularSpeed = outAngularVelocity * ModelData.Gears[gear].Ratio;
 					var fullLoadPower = response.Engine.PowerRequest - response.DeltaFullLoad;
@@ -279,7 +279,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				return 1;
 			}
 
-			protected uint InitStartGear(NewtonMeter outTorque, PerSecond outAngularVelocity)
+			protected uint InitStartGear(Second absTime, NewtonMeter outTorque, PerSecond outAngularVelocity)
 			{
 				for (var gear = MaxStartGear; gear > 1; gear--) {
 					var inAngularSpeed = outAngularVelocity * ModelData.Gears[gear].Ratio;
@@ -289,7 +289,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 						continue;
 					}
 
-					var response = _gearbox.Initialize(gear, outTorque, outAngularVelocity);
+					var response = _gearbox.Initialize(absTime, gear, outTorque, outAngularVelocity);
 
 					var fullLoadPower =
 						response.Engine.DynamicFullLoadPower; //EnginePowerRequest - response.DeltaFullLoad;

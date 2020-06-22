@@ -117,10 +117,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		public override uint InitGear(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity)
 		{
 			if (DataBus.VehicleInfo.VehicleSpeed.IsEqual(0)) {
-				return InitStartGear(outTorque, outAngularVelocity);
+				return InitStartGear(absTime, outTorque, outAngularVelocity);
 			}
 			for (var gear = (uint)ModelData.Gears.Count; gear > 1; gear--) {
-				var response = _gearbox.Initialize(gear, outTorque, outAngularVelocity);
+				var response = _gearbox.Initialize(absTime, gear, outTorque, outAngularVelocity);
 
 				var inAngularSpeed = outAngularVelocity * ModelData.Gears[gear].Ratio;
 				var fullLoadPower = response.Engine.PowerRequest - response.DeltaFullLoad;
@@ -150,7 +150,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			return 1;
 		}
 
-		private uint InitStartGear(NewtonMeter outTorque, PerSecond outAngularVelocity)
+		private uint InitStartGear(Second absTime, NewtonMeter outTorque, PerSecond outAngularVelocity)
 		{
 			for (var gear = MaxStartGear; gear > 1; gear--) {
 				var inAngularSpeed = outAngularVelocity * ModelData.Gears[gear].Ratio;
@@ -160,7 +160,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					continue;
 				}
 
-				var response = _gearbox.Initialize(gear, outTorque, outAngularVelocity);
+				var response = _gearbox.Initialize(absTime, gear, outTorque, outAngularVelocity);
 
 				var fullLoadPower = response.Engine.DynamicFullLoadPower; //EnginePowerRequest - response.DeltaFullLoad;
 				var reserve = 1 - response.Engine.PowerRequest / fullLoadPower;

@@ -82,7 +82,9 @@ namespace TUGraz.VectoCore.Tests.Integration.Hybrid
 		//	Assert.IsTrue(modData.Rows.Count > 0);
 		//}
 
-		[TestCase(30, 0.7, 0, TestName = "P2 Hybrid DriveOff 30km/h SoC: 0.7, level"),
+		[
+			TestCase(30, 0.7, 0, TestName = "P2 Hybrid DriveOff 30km/h SoC: 0.7, level"),
+			TestCase(80, 0.7, 0, TestName = "P2 Hybrid DriveOff 80km/h SoC: 0.7, level"),
 		TestCase(30, 0.22, 0, TestName = "P2 Hybrid DriveOff 30km/h SoC: 0.22, level")
 			]
 		public void P2HybridDriveOff(double vmax, double initialSoC, double slope)
@@ -109,6 +111,88 @@ namespace TUGraz.VectoCore.Tests.Integration.Hybrid
 			var currentState = new StrategyState();
 
 			
+
+			run.Run();
+			Assert.IsTrue(run.FinishedWithoutErrors);
+
+			Assert.IsTrue(modData.Rows.Count > 0);
+		}
+
+		[
+		TestCase(30, 0.7, 0, TestName = "P2 Hybrid ConstantSpeed 30km/h SoC: 0.7, level"),
+		TestCase(50, 0.7, 0, TestName = "P2 Hybrid ConstantSpeed 50km/h SoC: 0.7, level"),
+		TestCase(80, 0.7, 0, TestName = "P2 Hybrid ConstantSpeed 80km/h SoC: 0.7, level"),
+
+		TestCase(30, 0.2, 0, TestName = "P2 Hybrid ConstantSpeed 30km/h SoC: 0.2, level"),
+		TestCase(50, 0.2, 0, TestName = "P2 Hybrid ConstantSpeed 50km/h SoC: 0.2, level"),
+		TestCase(80, 0.2, 0, TestName = "P2 Hybrid ConstantSpeed 80km/h SoC: 0.2, level"),
+
+		TestCase(30, 0.5, 5, TestName = "P2 Hybrid ConstantSpeed 30km/h SoC: 0.5, UH 5%"),
+		TestCase(50, 0.5, 5, TestName = "P2 Hybrid ConstantSpeed 50km/h SoC: 0.5, UH 5%"),
+		TestCase(80, 0.5, 5, TestName = "P2 Hybrid ConstantSpeed 80km/h SoC: 0.5, UH 5%"),
+
+		TestCase(30, 0.5, -5, TestName = "P2 Hybrid ConstantSpeed 30km/h SoC: 0.5, DH 5%"),
+		TestCase(50, 0.5, -5, TestName = "P2 Hybrid ConstantSpeed 50km/h SoC: 0.5, DH 5%"),
+		TestCase(80, 0.5, -5, TestName = "P2 Hybrid ConstantSpeed 80km/h SoC: 0.5, DH 5%"),
+		]
+		public void P2HybridConstantSpeed(double vmax, double initialSoC, double slope)
+		{
+			var cycleData = string.Format(
+				@"   0, {0}, {1},    0
+				  5000, {0}, {1},    0", vmax, slope);
+			var cycle = SimpleDrivingCycles.CreateCycleData(cycleData);
+
+			const bool largeMotor = true;
+
+			const PowertrainPosition pos = PowertrainPosition.HybridP2;
+			var run = CreateEngineeringRun(
+				cycle, string.Format("SimpleParallelHybrid_constant_{0}-{1}_{2}.vmod", vmax, initialSoC, slope), initialSoC, pos, largeMotor: true);
+
+			var hybridController = (HybridController)((VehicleContainer)run.GetContainer()).HybridController;
+			Assert.NotNull(hybridController);
+			//var strategy = (DelegateParallelHybridStrategy)hybridController.Strategy;
+			//Assert.NotNull(strategy);
+
+			var modData = ((ModalDataContainer)((VehicleContainer)run.GetContainer()).ModData).Data;
+
+			var nextState = new StrategyState();
+			var currentState = new StrategyState();
+
+
+
+			run.Run();
+			Assert.IsTrue(run.FinishedWithoutErrors);
+
+			Assert.IsTrue(modData.Rows.Count > 0);
+		}
+
+		[
+			TestCase(80, 0, TestName = "Conventional DriveOff 80km/h  level"),
+		]
+		public void ConventionalVehicleDriveOff(double vmax, double slope)
+		{
+			var cycleData = string.Format(
+				@"   0,   0, {1},    3
+				   700, {0}, {1},    0", vmax, slope);
+			var cycle = SimpleDrivingCycles.CreateCycleData(cycleData);
+
+			//const bool largeMotor = true;
+
+			//const PowertrainPosition pos = PowertrainPosition.HybridP2;
+			var run = CreateConventionalEngineeringRun(
+				cycle, string.Format("ConventionalVehicle_acc_{0}_{1}.vmod", vmax, slope));
+
+			//var hybridController = (HybridController)((VehicleContainer)run.GetContainer()).HybridController;
+			//Assert.NotNull(hybridController);
+			//var strategy = (DelegateParallelHybridStrategy)hybridController.Strategy;
+			//Assert.NotNull(strategy);
+
+			var modData = ((ModalDataContainer)((VehicleContainer)run.GetContainer()).ModData).Data;
+
+			var nextState = new StrategyState();
+			var currentState = new StrategyState();
+
+
 
 			run.Run();
 			Assert.IsTrue(run.FinishedWithoutErrors);
@@ -167,6 +251,14 @@ namespace TUGraz.VectoCore.Tests.Integration.Hybrid
 		{
 			var container = CreateParallelHybridPowerTrain(
 				cycleData, Path.GetFileNameWithoutExtension(modFileName), initialSoc, largeMotor, sumData, pAuxEl, pos);
+			return new DistanceRun(container);
+		}
+
+		public static VectoRun CreateConventionalEngineeringRun(DrivingCycleData cycleData, string modFileName, 
+			SummaryDataContainer sumData = null, double pAuxEl = 0)
+		{
+			var container = CreateConventionalPowerTrain(
+				cycleData, Path.GetFileNameWithoutExtension(modFileName), sumData, pAuxEl);
 			return new DistanceRun(container);
 		}
 
@@ -272,6 +364,98 @@ namespace TUGraz.VectoCore.Tests.Integration.Hybrid
 				.AddComponent(clutch)
 				.AddComponent(GetElectricMachine(PowertrainPosition.HybridP1, runData.ElectricMachinesData, container,
 					es, ctl))
+				.AddComponent(engine, idleController)
+				.AddAuxiliaries(container, runData);
+
+			return container;
+		}
+
+
+		public static VehicleContainer CreateConventionalPowerTrain(DrivingCycleData cycleData, string modFileName,
+			SummaryDataContainer sumData, double pAuxEl)
+		{
+			//var strategySettings = GetHybridStrategyParameters(largeMotor);
+
+			//strategySettings.StrategyName = "SimpleParallelHybridStrategy";
+
+			var fileWriter = new FileOutputWriter(modFileName);
+			var modDataFilter = new IModalDataFilter[] { }; //new IModalDataFilter[] { new ActualModalDataFilter(), };
+			var modData = new ModalDataContainer(
+				modFileName, new IFuelProperties[] { FuelData.Diesel }, fileWriter,
+				filters: modDataFilter) {
+				WriteModalResults = true,
+			};
+
+			var gearboxData = CreateGearboxData();
+			var axleGearData = CreateAxleGearData();
+
+			var vehicleData = CreateVehicleData(3300.SI<Kilogram>());
+			var airdragData = CreateAirdragData();
+			var driverData = CreateDriverData(AccelerationFile, true);
+
+			var engineData = MockSimulationDataFactory.CreateEngineDataFromFile(
+				 Truck40tPowerTrain.EngineFile, gearboxData.Gears.Count);
+
+			foreach (var entry in gearboxData.Gears) {
+				entry.Value.ShiftPolygon = DeclarationData.Gearbox.ComputeEfficiencyShiftPolygon(
+					(int)entry.Key, engineData.FullLoadCurves[entry.Key], new TransmissionInputData().Repeat(gearboxData.Gears.Count + 1).Cast<ITransmissionInputData>().ToList(), engineData, axleGearData.AxleGear.Ratio,
+					vehicleData.DynamicTyreRadius);
+			}
+
+			var runData = new VectoRunData() {
+				//PowertrainConfiguration = PowertrainConfiguration.ParallelHybrid,
+				JobRunId = 0,
+				DriverData = driverData,
+				AxleGearData = axleGearData,
+				GearboxData = gearboxData,
+				VehicleData = vehicleData,
+				AirdragData = airdragData,
+				JobName = modFileName,
+				Cycle = cycleData,
+				Retarder = new RetarderData() { Type = RetarderType.None },
+				Aux = new List<VectoRunData.AuxData>(),
+				//ElectricMachinesData = electricMotorData,
+				EngineData = engineData,
+				//BatteryData = batteryData,
+				//HybridStrategy = strategySettings
+				GearshiftParameters = CreateGearshiftData(gearboxData, axleGearData.AxleGear.Ratio, engineData.IdleSpeed)
+			};
+			var container = new VehicleContainer(
+				ExecutionMode.Engineering, modData, x => { sumData?.Write(x, 1, 1, runData); });
+			container.RunData = runData;
+
+
+			var clutch = new SwitchableClutch(container, runData.EngineData);
+
+			var gbxStrategy = new AMTShiftStrategyOptimized(runData,container);
+			
+			var gearbox = new Gearbox(container, gbxStrategy, runData);
+
+			var engine = new StopStartCombustionEngine(container, runData.EngineData);
+			var idleController = engine.IdleController;
+			var cycle = new DistanceBasedDrivingCycle(container, cycleData);
+
+			var aux = new ElectricAuxiliary(container);
+			aux.AddConstant("P_aux_el", pAuxEl.SI<Watt>());
+			cycle
+				.AddComponent(new Driver(container, runData.DriverData, new DefaultDriverStrategy(container)))
+				.AddComponent(new Vehicle(container, runData.VehicleData, runData.AirdragData))
+				.AddComponent(new Wheels(container, runData.VehicleData.DynamicTyreRadius,
+					runData.VehicleData.WheelsInertia))
+				.AddComponent(new Brakes(container))
+				//.AddComponent(ctl)
+				//.AddComponent(GetElectricMachine(PowertrainPosition.HybridP4, runData.ElectricMachinesData, container,
+				//	es, ctl))
+				.AddComponent(new AxleGear(container, runData.AxleGearData))
+				//.AddComponent(GetElectricMachine(PowertrainPosition.HybridP3, runData.ElectricMachinesData, container,
+				//	es, ctl))
+				.AddComponent(runData.AngledriveData != null ? new Angledrive(container, runData.AngledriveData) : null)
+				.AddComponent(gearbox, runData.Retarder, container)
+				//.AddComponent(GetElectricMachine(PowertrainPosition.HybridP2, runData.ElectricMachinesData, container,
+				//	es, ctl))
+				.AddComponent(clutch)
+				//.AddComponent(GetElectricMachine(PowertrainPosition.HybridP1, runData.ElectricMachinesData, container,
+				//	es, ctl))
 				.AddComponent(engine, idleController)
 				.AddAuxiliaries(container, runData);
 
