@@ -57,6 +57,7 @@ namespace TUGraz.VectoCore.Models.Connector.Ports.Impl
 			ElectricMotor = new ElectricMotorResponse();
 			//ElectricSystem = new
 			TorqueConverter = new TorqueConverterResponse();
+			HybridController = new HybridControllerResponse();
 		}
 
 		public AbstractResponse(object source, IResponse subResponse)
@@ -74,6 +75,7 @@ namespace TUGraz.VectoCore.Models.Connector.Ports.Impl
 			ElectricMotor = subResponse.ElectricMotor;
 			ElectricSystem = subResponse.ElectricSystem;
 			TorqueConverter = subResponse.TorqueConverter;
+			HybridController = subResponse.HybridController;
 		}
 
 		public Second AbsTime { get; set; }
@@ -102,7 +104,9 @@ namespace TUGraz.VectoCore.Models.Connector.Ports.Impl
 
 		public IElectricSystemResponse ElectricSystem { get; set; }
 
-		
+		public HybridControllerResponse HybridController { get; set; }
+
+
 		public override string ToString()
 		{
 			var t = GetType();
@@ -181,6 +185,8 @@ namespace TUGraz.VectoCore.Models.Connector.Ports.Impl
 	internal class ResponseGearShift : AbstractResponse
 	{
 		public ResponseGearShift(object source) : base(source) { }
+
+		public ResponseGearShift(object source, IResponse subResponse) : base(source, subResponse) { }
 	}
 
 /*

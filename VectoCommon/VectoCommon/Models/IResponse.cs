@@ -177,6 +177,13 @@ namespace TUGraz.VectoCommon.Models
 		ElectricMotorResponse ElectricMotor { get; }
 
 		IElectricSystemResponse ElectricSystem { get; set; }
+
+		HybridControllerResponse HybridController { get; set; }
+	}
+
+	public class HybridControllerResponse
+	{
+		public HybridStrategyResponse StrategySettings { get; set; }
 	}
 
 	public interface IBatteryResponse

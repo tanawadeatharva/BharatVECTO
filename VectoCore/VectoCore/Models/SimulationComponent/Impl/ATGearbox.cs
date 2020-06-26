@@ -137,6 +137,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		}
 
 		public override bool DisengageGearbox { get; set; }
+		public override void TriggerGearshift(Second absTime, Second dt)
+		{
+			throw new System.NotImplementedException();
+		}
 
 		public override IResponse Initialize(NewtonMeter outTorque, PerSecond outAngularVelocity)
 		{

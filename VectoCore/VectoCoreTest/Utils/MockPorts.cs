@@ -153,6 +153,11 @@ namespace TUGraz.VectoCore.Tests.Utils
 
 		public PerSecond EngineN95hSpeed { get; set; }
 		public PerSecond EngineN80hSpeed { get; set; }
+
+		public bool EngineOn
+		{
+			get { throw new NotImplementedException(); }
+		}
 	}
 
 	public class MockDrivingCycleOutPort : LoggingObject, IDrivingCycleOutPort

@@ -83,7 +83,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent
 
 			}
 
-			var retVal = NextComponent.Request(absTime, dt, outTorque, outAngularVelocity, dryRun);
+			var inAngularVelocity = 0.RPMtoRad();
+			var retVal = NextComponent.Request(absTime, dt, outTorque, inAngularVelocity, dryRun);
 
 			//if (retVal is ResponseEngineSpeedTooLow)
 			//{

@@ -85,6 +85,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		#region IEngineCockpit
 
+		public virtual bool EngineOn
+		{
+			get { return PreviousState.EngineOn; }
+		}
+
 		public PerSecond EngineSpeed
 		{
 			get { return PreviousState.EngineSpeed; }
@@ -417,7 +422,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			container[ModalResultField.P_ice_drag] = CurrentState.FullDragTorque * avgEngineSpeed;
 			container[ModalResultField.T_ice_full] = CurrentState.DynamicFullLoadTorque;
 			container[ModalResultField.T_ice_drag] = CurrentState.FullDragTorque;
-			container[ModalResultField.ICEOn] = CurrentState.IgnitionOn;
+			container[ModalResultField.ICEOn] = CurrentState.EngineOn;
 
 			WriteWHRPower(container, avgEngineSpeed, CurrentState.EngineTorque);
 
@@ -577,7 +582,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		{
 			public EngineState()
 			{
-				IgnitionOn = true;
+				EngineOn = true;
 			}
 
 			// ReSharper disable once InconsistentNaming
@@ -599,7 +604,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			public NewtonMeter FullDragTorque { get; set; }
 
-			public bool IgnitionOn { get; set; }
+			public bool EngineOn { get; set; }
 
 			public Watt AuxPowerEngineOff { get; set; }
 		}

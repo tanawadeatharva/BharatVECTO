@@ -50,9 +50,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl {
 				}
 				throw new VectoSimulationException("Combustion engine cannot supply outtorque when switched off (T_out: {0})", outTorque);
 			}
-			CurrentState.IgnitionOn = false;
+			CurrentState.EngineOn = false;
 			CurrentState.EngineSpeed = ModelData.IdleSpeed;
 			CurrentState.EngineTorque = 0.SI<NewtonMeter>();
+			CurrentState.EngineTorqueOut = 0.SI<NewtonMeter>();
 			CurrentState.EnginePower = 0.SI<Watt>();
 			CurrentState.dt = dt;
 
@@ -93,7 +94,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl {
 		{
 			if (CombustionEngineOn) {
 				base.DoWriteModalResults(time, simulationInterval, container);
-				var engineStart = !PreviousState.IgnitionOn && CurrentState.IgnitionOn;
+				var engineStart = !PreviousState.EngineOn && CurrentState.EngineOn;
 				container[ModalResultField.P_ice_start] = engineStart ? EngineStartEnergy / CurrentState.dt : 0.SI<Watt>();
 				container[ModalResultField.P_aux_ice_off] = 0.SI<Watt>();
 			} else {
@@ -120,7 +121,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl {
 			container[ModalResultField.T_ice_full] = 0.SI<NewtonMeter>();
 			container[ModalResultField.T_ice_drag] = 0.SI<NewtonMeter>();
 
-			container[ModalResultField.ICEOn] = CurrentState.IgnitionOn;
+			container[ModalResultField.ICEOn] = CurrentState.EngineOn;
 			container[ModalResultField.P_aux_ice_off] = (CurrentState.AuxPowerEngineOff ?? 0.SI<Watt>());
 
 

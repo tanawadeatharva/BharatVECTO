@@ -29,6 +29,7 @@
 *   Martin Rexeis, rexeis@ivt.tugraz.at, IVT, Graz University of Technology
 */
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using TUGraz.VectoCommon.Exceptions;
@@ -522,6 +523,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		{
 			get { return false; }
 			set { throw new System.NotImplementedException(); }
+		}
+
+		public override void TriggerGearshift(Second absTime, Second dt)
+		{
+			throw new NotSupportedException();
 		}
 
 		#endregion

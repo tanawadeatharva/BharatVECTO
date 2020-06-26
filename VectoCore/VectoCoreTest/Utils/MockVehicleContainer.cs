@@ -218,6 +218,11 @@ namespace TUGraz.VectoCore.Tests.Utils
 			get { return EngineInfo.EngineN80hSpeed; }
 		}
 
+		public bool EngineOn
+		{
+			get { return EngineInfo.EngineOn; }
+		}
+
 		public MeterPerSecond VehicleSpeed { get; set; }
 		public Kilogram VehicleMass { get; set; }
 		public Kilogram VehicleLoading { get; set; }
@@ -349,6 +354,11 @@ namespace TUGraz.VectoCore.Tests.Utils
 		#region Implementation of IGearboxControl
 
 		public bool DisengageGearbox { get; set; }
+		public void TriggerGearshift(Second absTime, Second dt)
+		{
+			throw new NotImplementedException();
+		}
+
 		public bool GearEngaged(Second absTime)
 		{
 			return ClutchClosed(absTime);

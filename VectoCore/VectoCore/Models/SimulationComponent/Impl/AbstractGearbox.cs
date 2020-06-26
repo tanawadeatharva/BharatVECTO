@@ -168,6 +168,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		#region Implementation of IGearboxControl
 
 		public abstract bool DisengageGearbox { get; set; }
+		public abstract void TriggerGearshift(Second absTime, Second dt);
 
 		#endregion
 	}

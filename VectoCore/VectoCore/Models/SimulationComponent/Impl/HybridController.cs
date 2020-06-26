@@ -68,6 +68,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			Gearbox.SwitchToNeutral = strategySettings.GearboxInNeutral;
 			Engine.CombustionEngineOn = strategySettings.CombustionEngineOn;
 			_electricMotorTorque = strategySettings.MechanicalAssistPower;
+			if (strategySettings.ShiftRequired) {
+				_shiftStrategy.SetNextGear(strategySettings.NextGear);
+			}
 		}
 
 		SimpleComponentState IHybridController.PreviousState
@@ -94,7 +97,13 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				CurrentState.SetState(outTorque, outAngularVelocity, outTorque, outAngularVelocity);
 				CurrentState.StrategyResponse = strategySettings;
 			}
-			return NextComponent.Request(absTime, dt, outTorque, outAngularVelocity, dryRun);
+			if (!DataBus.EngineInfo.EngineOn && strategySettings.ShiftRequired) {
+				DataBus.GearboxCtl.TriggerGearshift(absTime, dt);
+				return new ResponseGearShift(this);
+			}
+			var retVal = NextComponent.Request(absTime, dt, outTorque, outAngularVelocity, dryRun);
+			retVal.HybridController.StrategySettings = strategySettings;
+			return retVal;
 		}
 
 		public IResponse Initialize(NewtonMeter outTorque, PerSecond outAngularVelocity)
@@ -281,6 +290,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			protected uint InitStartGear(Second absTime, NewtonMeter outTorque, PerSecond outAngularVelocity)
 			{
+				if (!DataBus.EngineCtl.CombustionEngineOn) {
+					return _nextGear;
+				}
+
 				for (var gear = MaxStartGear; gear > 1; gear--) {
 					var inAngularSpeed = outAngularVelocity * ModelData.Gears[gear].Ratio;
 
@@ -354,6 +367,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			public override GearInfo NextGear
 			{
 				get { return new GearInfo(_nextGear, false); }
+			}
+
+			public void SetNextGear(uint nextGear)
+			{
+				_nextGear = nextGear;
 			}
 		}
 

@@ -169,6 +169,9 @@ namespace TUGraz.VectoCore.Tests.Utils
 
 
 		public bool DisengageGearbox { get; set; }
-
+		public void TriggerGearshift(Second absTime, Second dt)
+		{
+			throw new NotImplementedException();
+		}
 	}
 }

@@ -200,10 +200,12 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				HandleEcoRoll(absTime, targetVelocity);
 			}
 
-			if (EcoRollState.State != EcoRollStates.EcoRollOn && PCCState != PCCStates.UseCase1 &&
-				PCCState != PCCStates.UseCase2) {
-				EngineOffTimestamp = null;
-				Driver.DataBus.EngineCtl.CombustionEngineOn = true;
+			if (ADAS.EcoRoll != EcoRollType.None) {
+				if (EcoRollState.State != EcoRollStates.EcoRollOn && PCCState != PCCStates.UseCase1 &&
+					PCCState != PCCStates.UseCase2) {
+					EngineOffTimestamp = null;
+					Driver.DataBus.EngineCtl.CombustionEngineOn = true;
+				}
 			}
 
 			if (CurrentDrivingMode == DrivingMode.DrivingModeBrake) {

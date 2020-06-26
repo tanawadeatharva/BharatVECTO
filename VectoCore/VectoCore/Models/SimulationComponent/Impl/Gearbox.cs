@@ -81,6 +81,14 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		// controlled by driver (PCC / EcoRoll)
 		public override bool DisengageGearbox { get; set; }
 
+		public override void TriggerGearshift(Second absTime, Second dt)
+		{
+			EngageTime = absTime + ModelData.TractionInterruption;
+			Disengaged = true;
+			_strategy.Disengage(absTime, dt, null, null);
+			Log.Info("Gearshift triggered - Gearbox disengaged");
+		}
+
 		public Gearbox(IVehicleContainer container, IShiftStrategy strategy, VectoRunData runData) : base(container,
 			runData)
 		{
@@ -147,7 +155,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			}
 
 			var response =
-				(ResponseDryRun)
 				NextComponent.Request(absTime, Constants.SimulationSettings.TargetTimeInterval, inTorque,
 					inAngularVelocity, true); //NextComponent.Initialize(inTorque, inAngularVelocity);
 			//response.Switch().
@@ -400,19 +407,14 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					_strategy.Disengage(absTime, dt, outTorque, outAngularVelocity);
 					Log.Info("Gearbox disengaged");
 
-					return new ResponseGearShift(this) {
+					return new ResponseGearShift(this, response) {
 						SimulationInterval = ModelData.TractionInterruption,
 						Gearbox = {
 							PowerRequest =
 								outTorque * (PreviousState.OutAngularVelocity + outAngularVelocity) / 2.0,
 							Gear = Gear
 						},
-						Engine = {
-							EngineSpeed = response.Engine.EngineSpeed,
-							TorqueOutDemand = response.Engine.TorqueOutDemand,
-							TotalTorqueDemand = response.Engine.TotalTorqueDemand,
-							PowerRequest = response.Engine.PowerRequest
-						}
+						
 					};
 				}
 			}
