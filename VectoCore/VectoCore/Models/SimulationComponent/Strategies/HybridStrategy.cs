@@ -174,7 +174,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 						CombustionEngineOn = DataBus.EngineInfo.EngineOn,
 						MechanicalAssistPower = ElectricMotorsOff
 					},
-					FuelCosts = double.NaN
+					FuelCosts = double.NaN,
+					ICEOff = !DataBus.EngineInfo.EngineOn,
 				});
 			}
 			if (DataBus.DriverInfo.DrivingAction == DrivingAction.Brake && eval.Count  == 0) {

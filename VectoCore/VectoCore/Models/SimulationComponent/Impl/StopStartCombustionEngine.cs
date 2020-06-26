@@ -44,11 +44,34 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl {
 		{
 			if (!outTorque.IsEqual(0)) {
 				if (dryRun) {
-					return new ResponseOverload(this) {
-						Delta = outTorque * outAngularVelocity
+					return new ResponseDryRun(this) {
+						DeltaFullLoad = outTorque * ModelData.IdleSpeed,
+						DeltaDragLoad = outTorque * ModelData.IdleSpeed,
+						Engine = {
+							TotalTorqueDemand = outTorque,
+							PowerRequest = outTorque * outAngularVelocity,
+							DynamicFullLoadPower = 0.SI<Watt>(),
+							DragPower = 0.SI<Watt>(),
+							EngineSpeed = 0.RPMtoRad(),
+							AuxiliariesPowerDemand = 0.SI<Watt>(),
+						},
+						DeltaEngineSpeed = 0.RPMtoRad(),
 					};
 				}
-				throw new VectoSimulationException("Combustion engine cannot supply outtorque when switched off (T_out: {0})", outTorque);
+
+				return new ResponseOverload(this) {
+					Delta = outTorque * outAngularVelocity,
+					Engine = {
+						TotalTorqueDemand = outTorque,
+						PowerRequest = outTorque * outAngularVelocity,
+						DynamicFullLoadPower = 0.SI<Watt>(),
+						DragPower = 0.SI<Watt>(),
+						EngineSpeed = 0.RPMtoRad(),
+						AuxiliariesPowerDemand = 0.SI<Watt>(),
+					},
+				};
+
+				//throw new VectoSimulationException("Combustion engine cannot supply outtorque when switched off (T_out: {0})", outTorque);
 			}
 			CurrentState.EngineOn = false;
 			CurrentState.EngineSpeed = ModelData.IdleSpeed;
