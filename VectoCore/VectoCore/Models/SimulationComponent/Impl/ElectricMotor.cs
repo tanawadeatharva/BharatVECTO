@@ -90,8 +90,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			var electricSystemResponse = ElectricPower.Request(absTime, dt, 0.SI<Watt>(), true);
 			var maxBatPower = electricSystemResponse.BatteryResponse.MaxBatteryLoadCharge;
 
-			var maxBatRecuperationTorque = ModelData.EfficiencyMap.LookupTorque(maxBatPower, avgSpeed, maxEmTorque);
-			var maxTorqueRecuperate = VectoMath.Max(maxEmTorque, maxBatRecuperationTorque);
+			var maxBatRecuperationTorque = maxBatPower.IsEqual(0) ? 0.SI<NewtonMeter>() : ModelData.EfficiencyMap.LookupTorque(maxBatPower, avgSpeed, maxEmTorque);
+			var maxTorqueRecuperate = VectoMath.Min(maxEmTorque, maxBatRecuperationTorque);
 			return maxTorqueRecuperate < 0 ? null : maxTorqueRecuperate;
 		}
 
@@ -101,7 +101,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			var electricSystemResponse = ElectricPower.Request(absTime, dt, 0.SI<Watt>(), true);
 			var maxBatPower = electricSystemResponse.BatteryResponse.MaxBatteryLoadDischarge;
 
-			var maxBatDriveTorque = ModelData.EfficiencyMap.LookupTorque(maxBatPower, avgSpeed, maxEmTorque);
+			var maxBatDriveTorque = maxBatPower.IsEqual(0) ? ModelData.DragCurve.Lookup(avgSpeed) : ModelData.EfficiencyMap.LookupTorque(maxBatPower, avgSpeed, maxEmTorque);
 			var maxTorqueDrive = VectoMath.Max(maxEmTorque, maxBatDriveTorque);
 			return maxTorqueDrive > 0 ? null : maxTorqueDrive;
 		}
@@ -167,13 +167,13 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				.LookupElectricPower(avgSpeed, eMotorTorque, DataBus.ExecutionMode != ExecutionMode.Declaration).ElectricalPower;
 
 			var electricSupplyResponse = ElectricPower.Request(absTime, dt, electricPower, dryRun);
-			if (!dryRun && !(electricSupplyResponse is ElectricSystemResponseSuccess) &&
-				electricPower > electricSupplyResponse.MaxPowerDrag) {
-				// can't charge all power into the battery - probably it's full
-				// dissipate remaining power
-				electricSupplyResponse = ElectricPower.Request(absTime, dt, electricSupplyResponse.MaxPowerDrag);
-				CurrentState.ElectricBrakePower = electricPower - electricSupplyResponse.MaxPowerDrag;
-			}
+			//if (!dryRun && !(electricSupplyResponse is ElectricSystemResponseSuccess) &&
+			//	electricPower > electricSupplyResponse.MaxPowerDrag) {
+			//	// can't charge all power into the battery - probably it's full
+			//	// dissipate remaining power
+			//	electricSupplyResponse = ElectricPower.Request(absTime, dt, electricSupplyResponse.MaxPowerDrag);
+			//	CurrentState.ElectricBrakePower = electricPower - electricSupplyResponse.MaxPowerDrag;
+			//}
 			if (!dryRun && !(electricSupplyResponse is ElectricSystemResponseSuccess)) {
 				throw new VectoException(
 						"Invalid operating point provided by strategy! SupportPower: {0}, req. electric Power: {1}, battery demand motor: {3}, max Power from Battery: {2}",
@@ -289,10 +289,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			container[ModalResultField.P_electricMotor_out_, Position] = CurrentState.OutTorque * avgSpeed;
 			container[ModalResultField.P_electricMotor_in_, Position] = CurrentState.InTorque * avgSpeed;
 			container[ModalResultField.P_electricMotor_el_, Position] = CurrentState.ElectricPowerToBattery;
-			container[ModalResultField.P_electricMotor_brake_, Position] = CurrentState.ElectricBrakePower;
+			//container[ModalResultField.P_electricMotor_brake_, Position] = CurrentState.ElectricBrakePower;
 			container[ModalResultField.P_electricMotor_drag_max_, Position] = (CurrentState.DragMax ?? 0.SI<NewtonMeter>()) * avgSpeed;
 			container[ModalResultField.P_electricMotor_drive_max_, Position] = (CurrentState.DriveMax ?? 0.SI<NewtonMeter>()) * avgSpeed;
-			container[ModalResultField.P_electricMotorLoss_, Position] = (CurrentState.InTorque - CurrentState.OutTorque) * avgSpeed - (CurrentState.ElectricPowerToBattery + CurrentState.ElectricBrakePower);
+			container[ModalResultField.P_electricMotorLoss_, Position] = (CurrentState.InTorque - CurrentState.OutTorque) * avgSpeed - (CurrentState.ElectricPowerToBattery);
 			container[ModalResultField.P_electricMotorInertiaLoss_, Position] = CurrentState.InertiaTorqueLoss * avgSpeed;
 		}
 
@@ -319,7 +319,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		public NewtonMeter DriveMax;
 		public NewtonMeter DragMax;
 		public Watt ElectricPowerToBattery;
-		public Watt ElectricBrakePower = 0.SI<Watt>();
+		//public Watt ElectricBrakePower = 0.SI<Watt>();
 		public NewtonMeter InertiaTorqueLoss;
 	}
 }

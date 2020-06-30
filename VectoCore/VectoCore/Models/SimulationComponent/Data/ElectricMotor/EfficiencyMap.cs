@@ -97,7 +97,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data {
 				}
 			}
 
-
+			if (batPower.IsEqual(0, 1e-3)) {
+				return null;
+			}
 			var retVal = SearchAlgorithm.Search(
 				maxEmTorque, elPowerMaxEM.ElectricalPower, maxEmTorque * 0.1,
 				getYValue: x => {

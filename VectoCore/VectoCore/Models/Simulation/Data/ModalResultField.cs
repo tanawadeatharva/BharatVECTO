@@ -388,9 +388,14 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 		[ModalResultField(typeof(SI), caption: "P_em-{0}_el [kW]", outputFactor: 1e-3)] P_electricMotor_el_,
 		[ModalResultField(typeof(SI), caption: "P_em-{0}_drag_max_ [kW]", outputFactor: 1e-3)] P_electricMotor_drag_max_,
 		[ModalResultField(typeof(SI), caption: "P_em-{0}_drive_max [kW]", outputFactor: 1e-3)] P_electricMotor_drive_max_,
-		[ModalResultField(typeof(SI), caption: "P_em-{0}_brake [kW]", outputFactor: 1e-3)] P_electricMotor_brake_,
+		//[ModalResultField(typeof(SI), caption: "P_em-{0}_brake [kW]", outputFactor: 1e-3)] P_electricMotor_brake_,
 		[ModalResultField(typeof(SI), caption: "P_em-{0}_loss [kW]", outputFactor: 1e-3)] P_electricMotorLoss_,
 		[ModalResultField(typeof(SI), caption: "P_em-{0}_inertia_loss [kW]", outputFactor: 1e-3)] P_electricMotorInertiaLoss_,
+
+		// only for graphDrawing Testcase
+		[ModalResultField(typeof(SI), caption: "P_em-P2_mech [kW]", outputFactor: 1e-3)]
+		P_electricMotor_mech_P2,
+		// -->
 
 		[ModalResultField(typeof(SI), caption: "P_bat_T [kW]", outputFactor: 1e-3)] P_battery_terminal,
 		[ModalResultField(typeof(SI), caption: "P_bat_int [kW]", outputFactor: 1e-3)] P_battery_int,

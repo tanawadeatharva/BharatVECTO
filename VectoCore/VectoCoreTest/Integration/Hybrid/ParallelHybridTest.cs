@@ -44,8 +44,27 @@ namespace TUGraz.VectoCore.Tests.Integration.Hybrid
 		public void RunBeforeAnyTests()
 		{
 			Directory.SetCurrentDirectory(TestContext.CurrentContext.TestDirectory);
+
+			InitGraphWriter();
 		}
 
+
+		private void InitGraphWriter()
+		{
+			//#if TRACE
+			GraphWriter.Enable();
+			//#else
+			//GraphWriter.Disable();
+			//#endif
+			GraphWriter.Xfields = new[] { ModalResultField.dist };
+
+			GraphWriter.Yfields = new[] {
+				ModalResultField.v_act, ModalResultField.altitude, ModalResultField.acc, ModalResultField.Gear,
+				ModalResultField.P_ice_out, ModalResultField.P_electricMotor_mech_P2 , ModalResultField.BatterySOC, ModalResultField.FCMap
+			};
+			GraphWriter.Series1Label = "Hybrid P2";
+			GraphWriter.PlotIgnitionState = true;
+		}
 		//[TestCase(30, 0.8, 200),
 		//TestCase(30, 0.3, 200),
 		//TestCase(30, 0.8, -200),
@@ -74,7 +93,7 @@ namespace TUGraz.VectoCore.Tests.Integration.Hybrid
 		//	var nextState = new StrategyState();
 		//	var currentState = new StrategyState();
 
-			
+
 
 		//	run.Run();
 		//	Assert.IsTrue(run.FinishedWithoutErrors);
@@ -96,9 +115,10 @@ namespace TUGraz.VectoCore.Tests.Integration.Hybrid
 
 			const bool largeMotor = true;
 
+			var modFilename = string.Format("SimpleParallelHybrid_acc_{0}-{1}_{2}.vmod", vmax, initialSoC, slope);
 			const PowertrainPosition pos = PowertrainPosition.HybridP2;
 			var run = CreateEngineeringRun(
-				cycle, string.Format("SimpleParallelHybrid_acc_{0}-{1}_{2}.vmod", vmax, initialSoC, slope), initialSoC, pos, largeMotor: true);
+				cycle, modFilename, initialSoC, pos, largeMotor: true);
 
 			var hybridController = (HybridController)((VehicleContainer)run.GetContainer()).HybridController;
 			Assert.NotNull(hybridController);
@@ -116,6 +136,7 @@ namespace TUGraz.VectoCore.Tests.Integration.Hybrid
 			Assert.IsTrue(run.FinishedWithoutErrors);
 
 			Assert.IsTrue(modData.Rows.Count > 0);
+			GraphWriter.Write(modFilename);
 		}
 
 		[
@@ -144,9 +165,10 @@ namespace TUGraz.VectoCore.Tests.Integration.Hybrid
 
 			const bool largeMotor = true;
 
+			var modFilename = string.Format("SimpleParallelHybrid_constant_{0}-{1}_{2}.vmod", vmax, initialSoC, slope);
 			const PowertrainPosition pos = PowertrainPosition.HybridP2;
 			var run = CreateEngineeringRun(
-				cycle, string.Format("SimpleParallelHybrid_constant_{0}-{1}_{2}.vmod", vmax, initialSoC, slope), initialSoC, pos, largeMotor: true);
+				cycle, modFilename, initialSoC, pos, largeMotor: true);
 
 			var hybridController = (HybridController)((VehicleContainer)run.GetContainer()).HybridController;
 			Assert.NotNull(hybridController);
@@ -164,6 +186,7 @@ namespace TUGraz.VectoCore.Tests.Integration.Hybrid
 			Assert.IsTrue(run.FinishedWithoutErrors);
 
 			Assert.IsTrue(modData.Rows.Count > 0);
+			GraphWriter.Write(modFilename);
 		}
 
 		[
@@ -215,9 +238,10 @@ namespace TUGraz.VectoCore.Tests.Integration.Hybrid
 
 			const bool largeMotor = true;
 
+			var modFilename = string.Format("SimpleParallelHybrid_stop_{0}-{1}_{2}.vmod", vmax, initialSoC, slope);
 			const PowertrainPosition pos = PowertrainPosition.HybridP2;
 			var run = CreateEngineeringRun(
-				cycle, string.Format("SimpleParallelHybrid_stop_{0}-{1}_{2}.vmod", vmax, initialSoC, slope), initialSoC, pos, largeMotor: true);
+				cycle, modFilename, initialSoC, pos, largeMotor: true);
 
 			var hybridController = (HybridController)((VehicleContainer)run.GetContainer()).HybridController;
 			Assert.NotNull(hybridController);
@@ -235,6 +259,7 @@ namespace TUGraz.VectoCore.Tests.Integration.Hybrid
 			Assert.IsTrue(run.FinishedWithoutErrors);
 
 			Assert.IsTrue(modData.Rows.Count > 0);
+			GraphWriter.Write(modFilename);
 		}
 
 		public class StrategyState

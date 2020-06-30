@@ -33,6 +33,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 		public IDrivingCycleInfo DrivingCycle;
 
 		public StopStartCombustionEngine CombustionEngine;
+		public ElectricMotor ElectricMotorP2;
 
 		public TestPowertrain(SimplePowertrainContainer container, IDataBus realContainer)
 		{
@@ -42,6 +43,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 			Battery = Container.BatteryInfo as Battery;
 			Clutch = Container.ClutchInfo as Clutch;
 			CombustionEngine = Container.EngineInfo as StopStartCombustionEngine;
+			ElectricMotorP2 = container.ElectricMotors[PowertrainPosition.HybridP2] as ElectricMotor;
 			if (Gearbox == null) {
 				throw new VectoException("Unknown gearboxtype in TestContainer: {0}", Container.GearboxCtl.GetType().FullName);
 			}
@@ -239,7 +241,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 		//private Second lastShiftTime;
 		
 
-		private TestPowertrain TestPoweretrain;
+		private TestPowertrain TestPowertrain;
 
 		protected readonly VelocityRollingLookup VelocityDropData;
 
@@ -280,7 +282,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 			var testContainer = new SimplePowertrainContainer(runData);
 			builder.BuildSimpleHybridPowertrain(runData, testContainer);
 
-			TestPoweretrain = new TestPowertrain(testContainer, DataBus);
+			TestPowertrain = new TestPowertrain(testContainer, DataBus);
 			
 			// register pre-processors
 			var maxG = runData.Cycle.Entries.Max(x => Math.Abs(x.RoadGradientPercent.Value())) + 1;
@@ -351,7 +353,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 					Gear = 0 ,
 				});
 			}
-			if (DataBus.DriverInfo.DrivingAction == DrivingAction.Brake && (eval.Count  == 0 || eval.All(x => double.IsNaN(x.Score)))) {
+			if (DataBus.DriverInfo.DrivingAction == DrivingAction.Brake && (eval.Count  == 0 /*|| eval.All(x => double.IsNaN(x.Score))*/)) {
 				eval.Add(MaxRecuperationSetting(absTime, dt, outTorque, outAngularVelocity));
 			}
 			//if (DataBus.DriverInfo.DrivingAction == DrivingAction.Accelerate && eval.Count > 0 && eval.All(x => double.IsNaN(x.Score))) {
@@ -364,7 +366,19 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 
 			var best = eval.Where(x => !double.IsNaN(x.Score)).OrderBy(x => x.Score).FirstOrDefault(); // ?? eval.FirstOrDefault();
 			if (best == null) {
-				best = eval.FirstOrDefault();
+				best = eval.FirstOrDefault(x => !DataBus.EngineCtl.CombustionEngineOn || !x.IgnoreReason.InvalidEngineSpeed()); // ?? eval.FirstOrDefault();
+				if (best == null /*&& dryRun*/) {
+					var emEngaged = (!ElectricMotorCanPropellDuringTractionInterruption || (DataBus.GearboxInfo.GearEngaged(absTime) && eval.First().Response.Gearbox.Gear != 0));
+					if (DataBus.DriverInfo.DrivingAction == DrivingAction.Accelerate && emEngaged) {
+						best = eval.MinBy(x => x.Setting.MechanicalAssistPower.Sum(e => e.Value ?? 0.SI<NewtonMeter>()));
+					}
+					if (DataBus.DriverInfo.DrivingAction == DrivingAction.Brake && emEngaged) {
+						best = eval.MaxBy(x => x.Setting.MechanicalAssistPower.Sum(e => e.Value ?? 0.SI<NewtonMeter>()));
+					}
+				}
+				if (best == null) {
+					best = eval.FirstOrDefault();
+				}
 				var allOverload = eval.All(
 					x => (x.IgnoreReason & HybridConfigurationIgnoreReason.EngineTorqueDemandTooHigh) != 0);
 				var allUnderload = eval.All(
@@ -576,12 +590,12 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 
 		private ResponseDryRun RequestDryRun(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity, uint nextGear, HybridStrategyResponse cfg)
 		{
-			TestPoweretrain.Gearbox.Gear = PreviousState.GearboxEngaged ? DataBus.GearboxInfo.Gear : Controller.ShiftStrategy.NextGear.Gear;
-			TestPoweretrain.Container.VehiclePort.Initialize(DataBus.VehicleInfo.VehicleSpeed, DataBus.DrivingCycleInfo.RoadGradient ?? 0.SI<Radian>());
-			TestPoweretrain.HybridController.ApplyStrategySettings(cfg);
-			TestPoweretrain.HybridController.Initialize(Controller.PreviousState.OutTorque, Controller.PreviousState.OutAngularVelocity);
-			TestPoweretrain.Clutch.Initialize(DataBus.ClutchInfo.ClutchLosses);
-			TestPoweretrain.Battery.Initialize(DataBus.BatteryInfo.StateOfCharge);
+			TestPowertrain.Gearbox.Gear = PreviousState.GearboxEngaged ? DataBus.GearboxInfo.Gear : Controller.ShiftStrategy.NextGear.Gear;
+			TestPowertrain.Container.VehiclePort.Initialize(DataBus.VehicleInfo.VehicleSpeed, DataBus.DrivingCycleInfo.RoadGradient ?? 0.SI<Radian>());
+			TestPowertrain.HybridController.ApplyStrategySettings(cfg);
+			TestPowertrain.HybridController.Initialize(Controller.PreviousState.OutTorque, Controller.PreviousState.OutAngularVelocity);
+			TestPowertrain.Clutch.Initialize(DataBus.ClutchInfo.ClutchLosses);
+			TestPowertrain.Battery.Initialize(DataBus.BatteryInfo.StateOfCharge);
 
 			//TestPoweretrain.CombustionEngine.PreviousState.EngineOn = (DataBus.EngineInfo as CombustionEngine).PreviousState.EngineOn;
 			//TestPoweretrain.CombustionEngine.PreviousState.EnginePower = (DataBus.EngineInfo as CombustionEngine).PreviousState.EnginePower;
@@ -608,19 +622,23 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 
 				var vDrop = DataBus.VehicleInfo.VehicleSpeed - estimatedVelocityPostShift;
 				var vehicleSpeedPostShift = DataBus.VehicleInfo.VehicleSpeed - vDrop * ModelData.GearshiftParameters.VelocityDropFactor;
-				TestPoweretrain.Gearbox.Gear = nextGear;
-				TestPoweretrain.Container.VehiclePort.Initialize(
+				TestPowertrain.Gearbox.Gear = nextGear;
+				TestPowertrain.Container.VehiclePort.Initialize(
 					vehicleSpeedPostShift, DataBus.DrivingCycleInfo.RoadGradient ?? 0.SI<Radian>());
 			}
 
-			TestPoweretrain.CombustionEngine.PreviousState.EngineOn = (DataBus.EngineInfo as CombustionEngine).PreviousState.EngineOn;
-			TestPoweretrain.CombustionEngine.PreviousState.EnginePower = (DataBus.EngineInfo as CombustionEngine).PreviousState.EnginePower;
-			TestPoweretrain.CombustionEngine.PreviousState.dt = (DataBus.EngineInfo as CombustionEngine).PreviousState.dt;
-			TestPoweretrain.CombustionEngine.PreviousState.EngineSpeed = (DataBus.EngineInfo as CombustionEngine).PreviousState.EngineSpeed;
-			TestPoweretrain.CombustionEngine.PreviousState.EngineTorque = (DataBus.EngineInfo as CombustionEngine).PreviousState.EngineTorque;
-			TestPoweretrain.CombustionEngine.PreviousState.EngineTorqueOut = (DataBus.EngineInfo as CombustionEngine).PreviousState.EngineTorqueOut;
-			TestPoweretrain.CombustionEngine.PreviousState.DynamicFullLoadTorque = (DataBus.EngineInfo as CombustionEngine).PreviousState.DynamicFullLoadTorque;
+			TestPowertrain.CombustionEngine.PreviousState.EngineOn = (DataBus.EngineInfo as CombustionEngine).PreviousState.EngineOn;
+			TestPowertrain.CombustionEngine.PreviousState.EnginePower = (DataBus.EngineInfo as CombustionEngine).PreviousState.EnginePower;
+			TestPowertrain.CombustionEngine.PreviousState.dt = (DataBus.EngineInfo as CombustionEngine).PreviousState.dt;
+			TestPowertrain.CombustionEngine.PreviousState.EngineSpeed = (DataBus.EngineInfo as CombustionEngine).PreviousState.EngineSpeed;
+			TestPowertrain.CombustionEngine.PreviousState.EngineTorque = (DataBus.EngineInfo as CombustionEngine).PreviousState.EngineTorque;
+			TestPowertrain.CombustionEngine.PreviousState.EngineTorqueOut = (DataBus.EngineInfo as CombustionEngine).PreviousState.EngineTorqueOut;
+			TestPowertrain.CombustionEngine.PreviousState.DynamicFullLoadTorque = (DataBus.EngineInfo as CombustionEngine).PreviousState.DynamicFullLoadTorque;
 
+			if (nextGear != DataBus.GearboxInfo.Gear && TestPowertrain.ElectricMotorP2 != null) {
+				TestPowertrain.ElectricMotorP2.PreviousState.OutAngularVelocity =
+					DataBus.ElectricMotorInfo(PowertrainPosition.HybridP2).ElectricMotorSpeed;
+			}
 			// AMT EffShift: estimatedVelocityPostShift < MIN_SPEED => no shift
 
 			// AMT EffShift: engine torqueOut close to dragCurve => no shift
@@ -630,7 +648,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 			// initialize with new vehicle speed
 			// set gear
 
-			var retVal = TestPoweretrain.HybridController.NextComponent.Request(absTime, dt, outTorque, outAngularVelocity, true);
+			var retVal = TestPowertrain.HybridController.NextComponent.Request(absTime, dt, outTorque, outAngularVelocity, true);
 
 			//if (nextGear != DataBus.GearboxInfo.Gear) {
 			//	if (retVal.Engine.TorqueOutDemand.IsSmaller(DeclarationData.GearboxTCU.DragMarginFactor * retVal.Engine.DragTorque)) {
@@ -916,10 +934,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 
 		public static bool InvalidEngineSpeed(this HybridStrategy.HybridConfigurationIgnoreReason x)
 		{
-			return x == HybridStrategy.HybridConfigurationIgnoreReason.EngineSpeedTooLow ||
-					x == HybridStrategy.HybridConfigurationIgnoreReason.EngineSpeedTooHigh ||
-					x == HybridStrategy.HybridConfigurationIgnoreReason.EngineSpeedBelowDownshift ||
-					x == HybridStrategy.HybridConfigurationIgnoreReason.EngineSpeedAboveUpshift;
+			return (x & (HybridStrategy.HybridConfigurationIgnoreReason.EngineSpeedTooLow |
+					HybridStrategy.HybridConfigurationIgnoreReason.EngineSpeedTooHigh |
+					HybridStrategy.HybridConfigurationIgnoreReason.EngineSpeedBelowDownshift |
+					 HybridStrategy.HybridConfigurationIgnoreReason.EngineSpeedAboveUpshift)) != 0;
 		}
 	}
 }
