@@ -210,7 +210,7 @@ namespace TUGraz.VectoCore.Tests.Integration.Hybrid
 			//var dst =
 			var cycleData = string.Format(
 				@"   0, {0}, {1},    0
-				   100,   0, {1},    3", vmax, slope);
+				   200,   0, {1},    3", vmax, slope);
 			var cycle = SimpleDrivingCycles.CreateCycleData(cycleData);
 
 			const bool largeMotor = true;

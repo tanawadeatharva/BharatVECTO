@@ -68,9 +68,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			Gearbox.SwitchToNeutral = strategySettings.GearboxInNeutral;
 			Engine.CombustionEngineOn = strategySettings.CombustionEngineOn;
 			_electricMotorTorque = strategySettings.MechanicalAssistPower;
-			if (strategySettings.ShiftRequired) {
-				_shiftStrategy.SetNextGear(strategySettings.NextGear);
-			}
+			//if (strategySettings.ShiftRequired) {
+			//	_shiftStrategy.SetNextGear(strategySettings.NextGear);
+			//}
 		}
 
 		SimpleComponentState IHybridController.PreviousState
@@ -97,8 +97,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				CurrentState.SetState(outTorque, outAngularVelocity, outTorque, outAngularVelocity);
 				CurrentState.StrategyResponse = strategySettings;
 			}
-			if (!DataBus.EngineInfo.EngineOn && strategySettings.ShiftRequired) {
+			if (!dryRun && /*!DataBus.EngineInfo.EngineOn &&*/ strategySettings.ShiftRequired) {
 				DataBus.GearboxCtl.TriggerGearshift(absTime, dt);
+				_shiftStrategy.SetNextGear(strategySettings.NextGear);
 				return new ResponseGearShift(this);
 			}
 			var retVal = NextComponent.Request(absTime, dt, outTorque, outAngularVelocity, dryRun);
@@ -202,7 +203,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 
 			protected readonly uint MaxStartGear;
-			protected uint _nextGear;
+			protected uint _nextGear { get; set; }
 
 			public HybridCtlShiftStrategy(HybridController hybridController, IVehicleContainer container) : base(
 				container.RunData.GearboxData, container)
@@ -335,12 +336,14 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			public override uint Engage(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity)
 			{
-				while (_nextGear > 1 && SpeedTooLowForEngine(_nextGear, outAngularVelocity)) {
-					_nextGear--;
-				}
+				if (DataBus.EngineCtl.CombustionEngineOn) {
+					while (_nextGear > 1 && SpeedTooLowForEngine(_nextGear, outAngularVelocity)) {
+						_nextGear--;
+					}
 
-				while (_nextGear < ModelData.Gears.Count && SpeedTooHighForEngine(_nextGear, outAngularVelocity)) {
-					_nextGear++;
+					while (_nextGear < ModelData.Gears.Count && SpeedTooHighForEngine(_nextGear, outAngularVelocity)) {
+						_nextGear++;
+					}
 				}
 
 				return _nextGear;

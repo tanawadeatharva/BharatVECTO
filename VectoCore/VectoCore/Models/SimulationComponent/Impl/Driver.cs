@@ -978,7 +978,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					deltaPower = nextResp.Gearbox.PowerRequest;
 				}).
 				Case<ResponseUnderload>(r =>
-					deltaPower = DataBus.ClutchInfo.ClutchClosed(absTime) ? r.Delta : r.Gearbox.PowerRequest).
+					deltaPower = DataBus.ClutchInfo.ClutchClosed(absTime) && DataBus.GearboxInfo.GearEngaged(absTime) ? r.Delta : r.Gearbox.PowerRequest).
 				Default(
 					r => {
 						throw new UnexpectedResponseException("cannot use response for searching braking power!", r);
@@ -989,7 +989,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					deltaPower.Abs() * (DataBus.GearboxInfo.GearboxType.AutomaticTransmission() ? 0.5 : 1),
 					getYValue: result => {
 						var response = (ResponseDryRun)result;
-						return DataBus.ClutchInfo.ClutchClosed(absTime) ? response.DeltaDragLoad : response.Gearbox.PowerRequest;
+						return DataBus.ClutchInfo.ClutchClosed(absTime) && DataBus.GearboxInfo.GearEngaged(absTime) ? response.DeltaDragLoad : response.Gearbox.PowerRequest;
 					},
 					evaluateFunction: x => {
 						DataBus.Brakes.BrakePower = x;
@@ -1003,7 +1003,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					},
 					criterion: result => {
 						var response = (ResponseDryRun)result;
-						var delta = DataBus.ClutchInfo.ClutchClosed(absTime)
+						var delta = DataBus.ClutchInfo.ClutchClosed(absTime) && DataBus.GearboxInfo.GearEngaged(absTime)
 							? response.DeltaDragLoad
 							: response.Gearbox.PowerRequest;
 						return delta.Value();
