@@ -1,4 +1,5 @@
-﻿using TUGraz.VectoCommon.Utils;
+﻿using System.Linq;
+using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Data {
@@ -57,6 +58,14 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data {
 				Speed = angularSpeed,
 				Torque = torque
 			};
+		}
+
+		public string[] SerializedEntries
+		{
+			get { return _efficiencyMapMech2El.Entries.Select(
+												entry => $"{entry.Y.SI<PerSecond>().AsRPM} [rpm], {entry.X.SI<NewtonMeter>()}, {entry.Z.SI<Watt>()}")
+											.ToArray();
+			}
 		}
 
 

@@ -88,7 +88,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		{
 			var maxEmTorque = ModelData.FullLoadCurve.FullGenerationTorque(avgSpeed);
 			var electricSystemResponse = ElectricPower.Request(absTime, dt, 0.SI<Watt>(), true);
-			var maxBatPower = electricSystemResponse.BatteryResponse.MaxBatteryLoadCharge;
+			var maxBatPower = electricSystemResponse.MaxPowerDrag;
 
 			var maxBatRecuperationTorque = maxBatPower.IsEqual(0) ? 0.SI<NewtonMeter>() : ModelData.EfficiencyMap.LookupTorque(maxBatPower, avgSpeed, maxEmTorque);
 			var maxTorqueRecuperate = VectoMath.Min(maxEmTorque, maxBatRecuperationTorque);
@@ -99,7 +99,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		{
 			var maxEmTorque = ModelData.FullLoadCurve.FullLoadDriveTorque(avgSpeed);
 			var electricSystemResponse = ElectricPower.Request(absTime, dt, 0.SI<Watt>(), true);
-			var maxBatPower = electricSystemResponse.BatteryResponse.MaxBatteryLoadDischarge;
+			var maxBatPower = electricSystemResponse.MaxPowerDrive;
 
 			var maxBatDriveTorque = maxBatPower.IsEqual(0) ? ModelData.DragCurve.Lookup(avgSpeed) : ModelData.EfficiencyMap.LookupTorque(maxBatPower, avgSpeed, maxEmTorque);
 			var maxTorqueDrive = VectoMath.Max(maxEmTorque, maxBatDriveTorque);
@@ -135,6 +135,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				}
 				var electricSystemResponse = ElectricPower.Request(absTime, dt, 0.SI<Watt>(), dryRun);
 				if (!dryRun) {
+					if (!(electricSystemResponse is ElectricSystemResponseSuccess)) {
+						throw new VectoException("unexpected response from electric system: {0}", electricSystemResponse);
+					}
 					SetState(inTorque, outAngularVelocity);
 				}
 				var retVal = NextComponent.Request(absTime, dt, outTorque, outAngularVelocity, dryRun);

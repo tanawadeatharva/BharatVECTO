@@ -62,5 +62,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data {
 			public NewtonMeter FullGenerationTorque { get; set; }
 		}
 
+		public string[] SerializedEntries
+		{
+			get { return FullLoadEntries.Select(x => $"{x.MotorSpeed.AsRPM} {x.FullDriveTorque} {x.FullGenerationTorque}").ToArray(); }
+		}
+
+
 	}
 }

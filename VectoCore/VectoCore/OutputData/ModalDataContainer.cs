@@ -443,7 +443,8 @@ namespace TUGraz.VectoCore.OutputData
 			}
 			dataColumns.AddRange(
 				new[] {
-					ModalResultField.P_aux_mech
+					ModalResultField.P_aux_mech,
+					ModalResultField.P_aux_el
 				}.Select(x => x.GetName()));
 
 			if (!_writeEngineOnly) {

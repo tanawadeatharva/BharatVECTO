@@ -47,5 +47,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data {
 
 			
 		}
+
+		public string[] SerializedEntries
+		{
+			get { return Entries.Select(x => $"{x.MotorSpeed.AsRPM} {x.DragTorque}").ToArray(); }
+		}
 	}
 }

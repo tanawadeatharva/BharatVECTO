@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using Newtonsoft.Json;
 using NUnit.Framework;
 using TUGraz.VectoCommon.BusAuxiliaries;
 using TUGraz.VectoCommon.InputData;
@@ -140,23 +141,26 @@ namespace TUGraz.VectoCore.Tests.Integration.Hybrid
 		}
 
 		[
-		TestCase(30, 0.7, 0, TestName = "P2 Hybrid ConstantSpeed 30km/h SoC: 0.7, level"),
-		TestCase(50, 0.7, 0, TestName = "P2 Hybrid ConstantSpeed 50km/h SoC: 0.7, level"),
-		TestCase(80, 0.7, 0, TestName = "P2 Hybrid ConstantSpeed 80km/h SoC: 0.7, level"),
+		TestCase(30, 0.7, 0, 0, TestName = "P2 Hybrid ConstantSpeed 30km/h SoC: 0.7, level"),
+		TestCase(50, 0.7, 0, 0, TestName = "P2 Hybrid ConstantSpeed 50km/h SoC: 0.7, level"),
+		TestCase(80, 0.7, 0, 0, TestName = "P2 Hybrid ConstantSpeed 80km/h SoC: 0.7, level"),
 
-		TestCase(30, 0.2, 0, TestName = "P2 Hybrid ConstantSpeed 30km/h SoC: 0.2, level"),
-		TestCase(50, 0.2, 0, TestName = "P2 Hybrid ConstantSpeed 50km/h SoC: 0.2, level"),
+		TestCase(30, 0.2, 0, 0, TestName = "P2 Hybrid ConstantSpeed 30km/h SoC: 0.2, level"),
+		TestCase(50, 0.2, 0, 0, TestName = "P2 Hybrid ConstantSpeed 50km/h SoC: 0.2, level"),
 		TestCase(80, 0.2, 0, TestName = "P2 Hybrid ConstantSpeed 80km/h SoC: 0.2, level"),
 
-		TestCase(30, 0.5, 5, TestName = "P2 Hybrid ConstantSpeed 30km/h SoC: 0.5, UH 5%"),
-		TestCase(50, 0.5, 5, TestName = "P2 Hybrid ConstantSpeed 50km/h SoC: 0.5, UH 5%"),
-		TestCase(80, 0.5, 5, TestName = "P2 Hybrid ConstantSpeed 80km/h SoC: 0.5, UH 5%"),
+		TestCase(30, 0.5, 5, 0, TestName = "P2 Hybrid ConstantSpeed 30km/h SoC: 0.5, UH 5%"),
+		TestCase(50, 0.5, 5, 0, TestName = "P2 Hybrid ConstantSpeed 50km/h SoC: 0.5, UH 5%"),
+		TestCase(80, 0.5, 5, 0, TestName = "P2 Hybrid ConstantSpeed 80km/h SoC: 0.5, UH 5%"),
 
-		TestCase(30, 0.5, -5, TestName = "P2 Hybrid ConstantSpeed 30km/h SoC: 0.5, DH 5%"),
-		TestCase(50, 0.5, -5, TestName = "P2 Hybrid ConstantSpeed 50km/h SoC: 0.5, DH 5%"),
-		TestCase(80, 0.5, -5, TestName = "P2 Hybrid ConstantSpeed 80km/h SoC: 0.5, DH 5%"),
+		TestCase(30, 0.5, -5, 0, TestName = "P2 Hybrid ConstantSpeed 30km/h SoC: 0.5, DH 5%"),
+		TestCase(50, 0.5, -5, 0, TestName = "P2 Hybrid ConstantSpeed 50km/h SoC: 0.5, DH 5%"),
+		TestCase(80, 0.5, -5, 0, TestName = "P2 Hybrid ConstantSpeed 80km/h SoC: 0.5, DH 5%"),
+
+		TestCase(30, 0.2, 0, 1000, TestName = "P2 Hybrid ConstantSpeed 30km/h SoC: 0.2, level P_auxEl: 1kW"),
+			TestCase(30, 0.2, 0, 5000, TestName = "P2 Hybrid ConstantSpeed 30km/h SoC: 0.2, level P_auxEl: 5kW"),
 		]
-		public void P2HybridConstantSpeed(double vmax, double initialSoC, double slope)
+		public void P2HybridConstantSpeed(double vmax, double initialSoC, double slope, double  pAuxEl)
 		{
 			var cycleData = string.Format(
 				@"   0, {0}, {1},    0
@@ -165,22 +169,20 @@ namespace TUGraz.VectoCore.Tests.Integration.Hybrid
 
 			const bool largeMotor = true;
 
-			var modFilename = string.Format("SimpleParallelHybrid_constant_{0}-{1}_{2}.vmod", vmax, initialSoC, slope);
+			var modFilename = string.Format("SimpleParallelHybrid_constant_{0}-{1}_{2}_{3}.vmod", vmax, initialSoC, slope, pAuxEl);
 			const PowertrainPosition pos = PowertrainPosition.HybridP2;
 			var run = CreateEngineeringRun(
-				cycle, modFilename, initialSoC, pos, largeMotor: true);
+				cycle, modFilename, initialSoC, pos, largeMotor: true, pAuxEl: pAuxEl);
 
 			var hybridController = (HybridController)((VehicleContainer)run.GetContainer()).HybridController;
 			Assert.NotNull(hybridController);
-			//var strategy = (DelegateParallelHybridStrategy)hybridController.Strategy;
-			//Assert.NotNull(strategy);
-
+			
 			var modData = ((ModalDataContainer)((VehicleContainer)run.GetContainer()).ModData).Data;
 
-			var nextState = new StrategyState();
-			var currentState = new StrategyState();
-
-
+			var data = run.GetContainer().RunData;
+			File.WriteAllText(
+				$"{modFilename}.json",
+				JsonConvert.SerializeObject(data, Formatting.Indented));
 
 			run.Run();
 			Assert.IsTrue(run.FinishedWithoutErrors);
