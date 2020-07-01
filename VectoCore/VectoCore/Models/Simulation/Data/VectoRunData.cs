@@ -45,6 +45,7 @@ using TUGraz.VectoCore.InputData.Reader.ComponentData;
 using TUGraz.VectoCore.InputData.Reader.Impl;
 using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
+using TUGraz.VectoCore.Models.SimulationComponent.Data.Battery;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox;
 using TUGraz.VectoCore.OutputData;
 using DriverData = TUGraz.VectoCore.Models.SimulationComponent.Data.DriverData;
@@ -136,6 +137,10 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 
 		// only used for factor method
 		public IResult PrimaryResult { get; set; }
+
+		public HybridStrategyParameters HybridStrategyParameters { get; internal set; }
+
+		public Watt ElectricAuxDemand { get; internal set; }
 
 		public class AuxData
 		{

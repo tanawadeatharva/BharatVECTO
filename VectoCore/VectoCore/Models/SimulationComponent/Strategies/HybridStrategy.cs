@@ -43,7 +43,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 			Battery = Container.BatteryInfo as Battery;
 			Clutch = Container.ClutchInfo as Clutch;
 			CombustionEngine = Container.EngineInfo as StopStartCombustionEngine;
-			ElectricMotorP2 = container.ElectricMotors[PowertrainPosition.HybridP2] as ElectricMotor;
+			ElectricMotorP2 = container.ElectricMotors.ContainsKey(PowertrainPosition.HybridP2)
+				? container.ElectricMotors[PowertrainPosition.HybridP2] as ElectricMotor
+				: null;
 			if (Gearbox == null) {
 				throw new VectoException("Unknown gearboxtype in TestContainer: {0}", Container.GearboxCtl.GetType().FullName);
 			}
@@ -251,12 +253,18 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 		private double IceRampUpCosts;
 		private double IceIdlingCosts;
 
+		protected HybridStrategyParameters StrategyParameters;
+
 		public HybridStrategy(VectoRunData runData, IVehicleContainer vehicleContainer)
 		{
 			DataBus = vehicleContainer;
 			ModelData = runData;
 			if (ModelData.ElectricMachinesData.Select(x => x.Item1).Distinct().Count() > 1) {
 				throw new VectoException("More than one electric motors are currently not supported");
+			}
+			StrategyParameters = ModelData.HybridStrategyParameters;
+			if (StrategyParameters == null) {
+				throw new VectoException("Model parameters for hybrid strategy required!");
 			}
 
 			ElectricMotorsOff = ModelData.ElectricMachinesData
@@ -489,7 +497,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 			var maxU = allowIceOff
 				? -1.0
 				: Math.Min((maxEmTorque) / emTqReq, -1.0);
-			if (firstResponse.ElectricMotor.MaxDriveTorque != null && (!ElectricMotorCanPropellDuringTractionInterruption && firstResponse.Gearbox.Gear != 0)) {
+			if (firstResponse.ElectricMotor.MaxDriveTorque != null && (ElectricMotorCanPropellDuringTractionInterruption || firstResponse.Gearbox.Gear != 0)) {
 				for (var u = 0.0; u >= maxU; u -= stepSize * (u < -4 ? 10 : (u < -2 ? 5 : 1))) {
 					var emTorque = emTqReq.Abs() * u;
 					if (!emTorque.IsBetween(
@@ -515,7 +523,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 			}
 			
 			// iterate over 'EM recuperates' up to max available recuperation potential
-			if (firstResponse.ElectricMotor.MaxRecuperationTorque != null && (!ElectricMotorCanPropellDuringTractionInterruption && firstResponse.Gearbox.Gear != 0)) {
+			if (firstResponse.ElectricMotor.MaxRecuperationTorque != null && (ElectricMotorCanPropellDuringTractionInterruption || firstResponse.Gearbox.Gear != 0)) {
 				for (var u = stepSize; u <= 1.0; u += stepSize) {
 					var emTorque = firstResponse.ElectricMotor.MaxRecuperationTorque * u;
 					if (!(emTorque).IsBetween(
@@ -650,10 +658,12 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 							* x.FuelData.LowerHeatingValueVecto * dt).Value());
 				}
 			}
-			tmp.BatCosts = -(resp.ElectricSystem.ConsumerPower * dt).Value();
-			tmp.SoCPenalty = 1 - Math.Pow((DataBus.BatteryInfo.StateOfCharge - ModelData.BatteryData.TargetSoC) / (0.5 * (ModelData.BatteryData.MaxSOC - ModelData.BatteryData.MinSOC)), 5);
+			tmp.BatCosts = -(resp.ElectricSystem.BatteryPowerDemand * dt).Value();
+			var maxSoC = Math.Min(ModelData.BatteryData.MaxSOC, StrategyParameters.MaxSoC);
+			var minSoC = Math.Max(ModelData.BatteryData.MinSOC, StrategyParameters.MinSoC);
+			tmp.SoCPenalty = 1 - Math.Pow((DataBus.BatteryInfo.StateOfCharge - StrategyParameters.TargetSoC) / (0.5 * (maxSoC - minSoC)), 5);
 
-			tmp.EqualityFactor = 2.5;
+			tmp.EqualityFactor = StrategyParameters.EquivalenceFactor;
 			tmp.GearshiftPenalty = resp.Gearbox.Gear != 0 && resp.Gearbox.Gear != DataBus.GearboxInfo.Gear
 				? ModelData.GearshiftParameters.RatingFactorCurrentGear
 				: 1;
@@ -726,7 +736,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 
 		public void WriteModalResults(Second time, Second simulationInterval, IModalDataContainer container)
 		{
-			container[ModalResultField.HybridStrategyScore] = CurrentState.Solution?.Score ?? 0;
+			container[ModalResultField.HybridStrategyScore] = (CurrentState.Solution?.Score ?? 0)/1e3;
 			container[ModalResultField.HybridStrategySolution] = CurrentState.Solution?.U ?? -100;
 
 			if (CurrentState.Evaluations != null) {

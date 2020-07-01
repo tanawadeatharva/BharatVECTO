@@ -49,6 +49,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent
 			response.AbsTime = absTime;
 			response.SimulationInterval = dt;
 			response.BatteryResponse = batResponse;
+			response.BatteryPowerDemand = totalPowerDemand;
 			response.ConsumerPower = powerDemand;
 			response.AuxPower = auxDemand;
 			response.ChargingPower = chargePower;

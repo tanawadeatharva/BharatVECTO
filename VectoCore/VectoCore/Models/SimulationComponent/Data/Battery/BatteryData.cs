@@ -3,7 +3,7 @@ using System.Linq;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.Utils;
 
-namespace TUGraz.VectoCore.InputData.Reader.ComponentData {
+namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Battery {
 
 	public class BatteryData
 	{
@@ -25,7 +25,7 @@ namespace TUGraz.VectoCore.InputData.Reader.ComponentData {
 
 		public double InitialSoC { get; internal set; }
 
-		public double TargetSoC { get; internal set; }
+		//public double TargetSoC { get; internal set; }
 	}
 
 	public class SOCMap

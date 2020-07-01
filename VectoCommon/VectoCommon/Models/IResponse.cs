@@ -219,6 +219,8 @@ namespace TUGraz.VectoCommon.Models
 
 		Watt MaxPowerDrag { get; }
 
+		Watt BatteryPowerDemand { get; set; }
+
 		object Source { get; }
 	}
 }

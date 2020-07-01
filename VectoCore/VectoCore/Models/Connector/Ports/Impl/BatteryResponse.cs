@@ -92,6 +92,8 @@ namespace TUGraz.VectoCore.Models.Connector.Ports.Impl
 			}
 		}
 
+		public Watt BatteryPowerDemand { get; set; }
+
 		public object Source { get; }
 
 		public override string ToString()

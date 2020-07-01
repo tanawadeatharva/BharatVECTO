@@ -45,6 +45,7 @@ using TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox;
 using TUGraz.VectoCore.Tests.FileIO;
 using TUGraz.VECTO;
 using TUGraz.VectoCore.InputData.Reader.ComponentData;
+using TUGraz.VectoCore.Models.SimulationComponent.Data.Battery;
 
 namespace TUGraz.VectoCore.Tests.Utils
 {

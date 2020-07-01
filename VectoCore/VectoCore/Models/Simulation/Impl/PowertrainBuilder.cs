@@ -369,7 +369,11 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 			var es = new ElectricSystem(container);
 			es.Connect(battery);
-
+			
+			var aux = new ElectricAuxiliary(container);
+			aux.AddConstant("P_aux_el", data.ElectricAuxDemand ?? 0.SI<Watt>());
+			es.Connect(aux);
+			
 			var strategy = new HybridStrategy(data, container);
 			var clutch = data.GearboxData.Type.AutomaticTransmission() ? null : new SwitchableClutch(container, data.EngineData);
 
@@ -487,7 +491,10 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 			var es = new ElectricSystem(container);
 			es.Connect(battery);
-
+			var aux = new ElectricAuxiliary(container);
+			aux.AddConstant("P_aux_el", data.ElectricAuxDemand ?? 0.SI<Watt>());
+			es.Connect(aux);
+			
 			var clutch = data.GearboxData.Type.ManualTransmission() ? new SwitchableClutch(container, data.EngineData) : null;
 
 			var gearbox = GetSimpleGearbox(container, data);
