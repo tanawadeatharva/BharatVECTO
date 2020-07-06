@@ -54,15 +54,15 @@ namespace TUGraz.VectoCore.Tests.Integration.Hybrid
 		private void InitGraphWriter()
 		{
 			//#if TRACE
-			//GraphWriter.Enable();
+			GraphWriter.Enable();
 			//#else
-			GraphWriter.Disable();
+			//GraphWriter.Disable();
 			//#endif
 			GraphWriter.Xfields = new[] { ModalResultField.dist };
 
 			GraphWriter.Yfields = new[] {
 				ModalResultField.v_act, ModalResultField.altitude, ModalResultField.acc, ModalResultField.Gear,
-				ModalResultField.P_ice_out, ModalResultField.P_electricMotor_mech_P2 , ModalResultField.BatterySOC, ModalResultField.FCMap
+				ModalResultField.P_ice_out, ModalResultField.P_electricMotor_mech_P3 , ModalResultField.BatterySOC, ModalResultField.FCMap
 			};
 			GraphWriter.Series1Label = "Hybrid P2";
 			GraphWriter.PlotIgnitionState = true;

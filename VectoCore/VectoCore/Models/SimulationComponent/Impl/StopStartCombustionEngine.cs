@@ -60,7 +60,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl {
 				}
 
 				return new ResponseOverload(this) {
-					Delta = outTorque * outAngularVelocity,
+					Delta = outTorque * ModelData.IdleSpeed,
 					Engine = {
 						TotalTorqueDemand = outTorque,
 						PowerRequest = outTorque * outAngularVelocity,

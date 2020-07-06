@@ -298,10 +298,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			if (dryRun) {
 				// if gearbox is disengaged the 0[W]-line is the limit for drag and full load.
 				var delta = inTorque * avgInAngularVelocity;
-				var remainingPowerTrain = NextComponent.Request(absTime, dt, 0.SI<NewtonMeter>(), inAngularVelocity, true);
+				var remainingPowerTrain = NextComponent.Request(absTime, dt, inTorque, inAngularVelocity, true);
 				return new ResponseDryRun(this, remainingPowerTrain) {
 					Gearbox = {
-						PowerRequest = delta,
+						PowerRequest =  delta,
 						Gear = 0,
 					},
 					DeltaDragLoad = delta,

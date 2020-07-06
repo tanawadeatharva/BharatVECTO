@@ -28,6 +28,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 
 		public class StrategyState
 		{
+			public PerSecond AngularVelocity { get; set; }
 			public HybridStrategyResponse Response { get; set; }
 			public List<HybridResultEntry> Evaluations;
 			public HybridResultEntry Solution { get; set; }
@@ -134,9 +135,33 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 			var currentGear = PreviousState.GearboxEngaged ? DataBus.GearboxInfo.Gear : Controller.ShiftStrategy.NextGear.Gear;
 
 			if (!dryRun && DryRunAction.HasValue && DryRunAction == DataBus.DriverInfo.DrivingAction && DryRunResult != null) {
-				return CreateResponse(DryRunResult, currentGear);
+				var response = CreateResponse(DryRunResult, currentGear);
+
+				CurrentState.Solution = DryRunResult;
+				CurrentState.AngularVelocity = outAngularVelocity;
+				CurrentState.Evaluations = null;
+				CurrentState.GearboxEngaged = DataBus.GearboxInfo.GearEngaged(absTime);
+				if (!DataBus.EngineCtl.CombustionEngineOn && !DryRunResult.ICEOff && !response.ShiftRequired) {
+					CurrentState.ICEStartTStmp = absTime;
+				}
+				
+				return response;
 			}
-			
+
+			if (dryRun && DataBus.DriverInfo.DrivingAction == DrivingAction.Brake) {
+				var tmp = MaxRecuperationSetting(absTime, dt, outTorque, outAngularVelocity);
+				var outTorqueWithoutBraking =
+					outTorque + 2 * DataBus.Brakes.BrakePower / (PreviousState.AngularVelocity + outAngularVelocity);
+				var maxRecuperationResponse = RequestDryRun(absTime, dt, outTorqueWithoutBraking, outAngularVelocity, currentGear, tmp.Setting);
+				if (maxRecuperationResponse.DeltaDragLoad.IsSmaller(0)) {
+					DryRunAction = DataBus.DriverInfo.DrivingAction;
+					DryRunResult = tmp;
+					var brakeRetVal = CreateResponse(tmp, currentGear);
+					DebugData.Add(new { Best = tmp, RetVal = brakeRetVal, DryRun = dryRun });
+					return brakeRetVal;
+				}
+			}
+
 			var responseEmOff =
 				new HybridResultEntry {
 					U = double.NaN,
@@ -219,6 +244,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 			CurrentState.Response = dryRun ? null : retVal;
 			if (!dryRun) {
 				CurrentState.Solution = best;
+				CurrentState.AngularVelocity = outAngularVelocity;
 				CurrentState.Evaluations = eval;
 				CurrentState.GearboxEngaged = DataBus.GearboxInfo.GearEngaged(absTime);
 				if (!DataBus.EngineCtl.CombustionEngineOn && !best.ICEOff && !retVal.ShiftRequired) {
@@ -637,6 +663,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 				retVal.MechanicalAssistPower[em.Item1] = null;
 			}
 
+			PreviousState.AngularVelocity = outAngularVelocity;
 			return retVal;
 		}
 
