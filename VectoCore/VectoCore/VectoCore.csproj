@@ -406,6 +406,7 @@
     <Compile Include="Models\SimulationComponent\Impl\StopStartCombustionEngine.cs" />
     <Compile Include="Models\SimulationComponent\Strategies\DelegateParallelHybridStrategy.cs" />
     <Compile Include="Models\SimulationComponent\Strategies\HybridStrategy.cs" />
+    <Compile Include="Models\SimulationComponent\Strategies\TestPowertrain.cs" />
     <Compile Include="Models\SimulationComponent\SwitchableClutch.cs" />
     <Compile Include="Models\Simulation\DataBus\IBatteryInfo.cs" />
     <Compile Include="Models\Simulation\DataBus\IElectricMotorInfo.cs" />

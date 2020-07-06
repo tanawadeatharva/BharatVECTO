@@ -295,6 +295,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 						DynamicFullLoadTorque = dynamicFullLoadTorque,
 						DragPower = CurrentState.FullDragTorque * avgEngineSpeed,
 						AuxiliariesPowerDemand = auxTorqueDemand * avgEngineSpeed,
+						DragTorque = fullDragTorque,
 					},
 				};
 			}
@@ -315,6 +316,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 						DragPower = CurrentState.FullDragTorque * avgEngineSpeed,
 						EngineSpeed = angularVelocity,
 						AuxiliariesPowerDemand = auxTorqueDemand * avgEngineSpeed,
+						DragTorque = fullDragTorque,
 					},
 				};
 			}
@@ -332,6 +334,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					DragPower = CurrentState.FullDragTorque * avgEngineSpeed,
 					EngineSpeed = angularVelocity,
 					AuxiliariesPowerDemand = auxTorqueDemand * avgEngineSpeed,
+					DragTorque = fullDragTorque,
 				},
 			};
 		}

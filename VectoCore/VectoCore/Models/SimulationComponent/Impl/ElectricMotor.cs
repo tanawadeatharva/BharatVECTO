@@ -162,7 +162,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			//	return retVal;
 			//}
 
-			if (!eMotorTorque.IsBetween(maxDriveTorque ?? 0.SI<NewtonMeter>(), maxRecuperationTorque ?? 0.SI<NewtonMeter>())) {
+			if (!dryRun && !eMotorTorque.IsBetween(maxDriveTorque ?? 0.SI<NewtonMeter>(), maxRecuperationTorque ?? 0.SI<NewtonMeter>())) {
 				throw new VectoException("Invalid operating point provided by strategy! SupportPower: {0}, max Power: {1}, min Power: {2}", eMotorTorque, maxDriveTorque, maxRecuperationTorque);
 			}
 
