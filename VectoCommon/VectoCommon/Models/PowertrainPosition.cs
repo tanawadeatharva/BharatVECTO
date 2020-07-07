@@ -8,7 +8,11 @@ namespace TUGraz.VectoCommon.InputData {
 		HybridP1,
 		HybridP2,
 		HybridP3,
-		HybridP4
+		HybridP4,
+
+		BatteryElectricB4,
+		BatteryElectricB3,
+		BatteryElectricB2,
 	}
 
 	public static class PowertrainPositionHelper

@@ -756,26 +756,7 @@ namespace TUGraz.VectoCore.Tests.Integration.Hybrid
 				RatingFactorCurrentGear = gbx.Type.AutomaticTransmission()
 					? DeclarationData.GearboxTCU.RatingFactorCurrentGearAT
 					: DeclarationData.GearboxTCU.RatingFactorCurrentGear,
-				//AccelerationReserveLookup = AccelerationReserveLookupReader.ReadFromStream(
-				//	RessourceHelper.ReadStream(
-				//		DeclarationData.DeclarationDataResourcePrefix + ".GearshiftParameters.AccelerationReserveLookup.csv")),
-				//ShareTorque99L = ShareTorque99lLookupReader.ReadFromStream(
-				//	RessourceHelper.ReadStream(
-				//		DeclarationData.DeclarationDataResourcePrefix + ".GearshiftParameters.ShareTq99L.csv")
-				//),
-				//PredictionDurationLookup = PredictionDurationLookupReader.ReadFromStream(
-				//	RessourceHelper.ReadStream(
-				//		DeclarationData.DeclarationDataResourcePrefix + ".GearshiftParameters.PredictionTimeLookup.csv")
-				//),
-				//ShareIdleLow = ShareIdleLowReader.ReadFromStream(
-				//	RessourceHelper.ReadStream(
-				//		DeclarationData.DeclarationDataResourcePrefix + ".GearshiftParameters.ShareIdleLow.csv")
-				//),
-				//ShareEngineHigh = EngineSpeedHighLookupReader.ReadFromStream(
-				//	RessourceHelper.ReadStream(
-				//		DeclarationData.DeclarationDataResourcePrefix + ".GearshiftParameters.ShareEngineSpeedHigh.csv")
-				//),
-
+				
 				//--------------------
 				RatioEarlyUpshiftFC = DeclarationData.GearboxTCU.RatioEarlyUpshiftFC / axleRatio,
 				RatioEarlyDownshiftFC = DeclarationData.GearboxTCU.RatioEarlyDownshiftFC / axleRatio,

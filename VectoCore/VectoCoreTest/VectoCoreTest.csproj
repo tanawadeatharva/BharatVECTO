@@ -100,6 +100,7 @@
     <Compile Include="GraphProgram.cs" />
     <Compile Include="Integration\ADAS\ADASTests.cs" />
     <Compile Include="Integration\ATPowerTrain.cs" />
+    <Compile Include="Integration\BatteryElectric\BatteryElectricTest.cs" />
     <Compile Include="Integration\BusAuxiliaries\AuxDemandTest.cs" />
     <Compile Include="Integration\BusAuxiliaries\BusAdapterTest.cs" />
     <Compile Include="Integration\BusAuxiliaries\AAuxTests.cs" />
