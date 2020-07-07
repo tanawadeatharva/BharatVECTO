@@ -36,6 +36,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 			public bool GearboxEngaged;
 
 			public Second ICEStartTStmp { get; set; }
+
+			public Second GearshiftTriggerTstmp { get; set; }
 		}
 
 		private VectoRunData ModelData;
@@ -235,8 +237,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 				}
 			}
 
-			
-
 			var retVal = CreateResponse(best, currentGear);
 			if (!DataBus.EngineInfo.EngineOn && !best.ICEOff && retVal.ShiftRequired) {
 				CurrentState.ICEStartTStmp = absTime + dt;
@@ -254,6 +254,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 			if (dryRun) {
 				DryRunAction = DataBus.DriverInfo.DrivingAction;
 				DryRunResult = best;
+			}
+
+			if (retVal.ShiftRequired) {
+				CurrentState.GearshiftTriggerTstmp = absTime;
 			}
 
 			DebugData.Add(new { Evaluations = eval, Best = best, RetVal = retVal, DryRun = dryRun });
@@ -294,8 +298,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 
 		private List<HybridResultEntry> FindSolution(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity, bool dryRun)
 		{
-			var allowICEOff = PreviousState.ICEStartTStmp == null ||
-							PreviousState.ICEStartTStmp.IsSmaller(absTime + MIN_ICE_ON_TIME);
+			var duringTractionInterruption = (PreviousState.GearshiftTriggerTstmp + ModelData.GearboxData.TractionInterruption).IsGreaterOrEqual(absTime);
+			var allowICEOff = (PreviousState.ICEStartTStmp == null ||
+							PreviousState.ICEStartTStmp.IsSmaller(absTime + MIN_ICE_ON_TIME)) && !duringTractionInterruption;
 
 			var emPos = ModelData.ElectricMachinesData.First().Item1;
 			var responses = new List<HybridResultEntry>();
@@ -664,6 +669,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 			}
 
 			PreviousState.AngularVelocity = outAngularVelocity;
+			PreviousState.GearshiftTriggerTstmp = -double.MaxValue.SI<Second>();
+			CurrentState.GearshiftTriggerTstmp = -double.MaxValue.SI<Second>();
 			return retVal;
 		}
 
@@ -672,6 +679,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 			PreviousState = CurrentState;
 			CurrentState = new StrategyState();
 			CurrentState.ICEStartTStmp = PreviousState.ICEStartTStmp;
+			CurrentState.GearshiftTriggerTstmp = PreviousState.GearshiftTriggerTstmp;
 			DebugData = new DebugData();
 			DryRunAction = null;
 			DryRunResult = null;
