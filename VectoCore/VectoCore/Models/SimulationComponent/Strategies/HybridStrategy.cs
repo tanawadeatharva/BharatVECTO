@@ -229,7 +229,12 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 				}
 				if ((DataBus.DriverInfo.DrivingAction == DrivingAction.Accelerate || DataBus.DriverInfo.DrivingAction == DrivingAction.Brake) && allUnderload) {
 					if (ElectricMotorCanPropellDuringTractionInterruption || DataBus.GearboxInfo.GearEngaged(absTime)) {
-						best = eval.MaxBy(x => x.Setting.MechanicalAssistPower.Sum(e => e.Value ?? 0.SI<NewtonMeter>()));
+						var filtered = eval.Where(x => !x.IgnoreReason.InvalidEngineSpeed()).OrderBy(x => currentGear - x.Gear).ToArray();
+						if (!filtered.Any()) {
+							filtered = eval.OrderBy(x => currentGear - x.Gear).ToArray();
+						}
+						best = filtered.MaxBy(
+							x => x.Setting.MechanicalAssistPower.Sum(e => e.Value ?? 0.SI<NewtonMeter>()));
 					}
 				}
 				if (DataBus.DriverInfo.DrivingAction == DrivingAction.Brake && dryRun) {
