@@ -33,6 +33,7 @@ namespace TUGraz.VectoCore.Tests.Integration.Hybrid
 	[TestFixture]
 	public class ParallelHybridTest
 	{
+		private ModalResultField[] Yfields;
 		public const string MotorFile = @"TestData\Hybrids\ElectricMotor\GenericEMotor.vem";
 		public const string BatFile = @"TestData\Hybrids\Battery\GenericBattery.vbat";
 
@@ -60,7 +61,7 @@ namespace TUGraz.VectoCore.Tests.Integration.Hybrid
 			//#endif
 			GraphWriter.Xfields = new[] { ModalResultField.dist };
 
-			GraphWriter.Yfields = new[] {
+			Yfields = new[] {
 				ModalResultField.v_act, ModalResultField.altitude, ModalResultField.acc, ModalResultField.Gear,
 				ModalResultField.P_ice_out, ModalResultField.BatterySOC, ModalResultField.FCMap
 			};
@@ -76,7 +77,7 @@ namespace TUGraz.VectoCore.Tests.Integration.Hybrid
 			]
 		public void P2HybridDriveOff(double vmax, double initialSoC, double slope)
 		{
-			GraphWriter.Yfields = GraphWriter.Yfields.Concat(new[] { ModalResultField.P_electricMotor_mech_P2 }).ToArray();
+			GraphWriter.Yfields = Yfields.Concat(new[] { ModalResultField.P_electricMotor_mech_P2 }).ToArray();
 			var cycleData = string.Format(
 				@"   0,   0, {1},    3
 				   700, {0}, {1},    0", vmax, slope);
@@ -123,7 +124,7 @@ namespace TUGraz.VectoCore.Tests.Integration.Hybrid
 		]
 		public void P2HybridConstantSpeed(double vmax, double initialSoC, double slope, double  pAuxEl)
 		{
-			GraphWriter.Yfields = GraphWriter.Yfields.Concat(new[] { ModalResultField.P_electricMotor_mech_P2 }).ToArray();
+			GraphWriter.Yfields = Yfields.Concat(new[] { ModalResultField.P_electricMotor_mech_P2 }).ToArray();
 
 			var cycleData = string.Format(
 				@"   0, {0}, {1},    0
@@ -166,7 +167,7 @@ namespace TUGraz.VectoCore.Tests.Integration.Hybrid
 		]
 		public void P2HybriDriveCycle(string declarationMission, double payload, double initialSoC, double pAuxEl)
 		{
-			GraphWriter.Yfields = GraphWriter.Yfields.Concat(new[] { ModalResultField.P_electricMotor_mech_P2 }).ToArray();
+			GraphWriter.Yfields = Yfields.Concat(new[] { ModalResultField.P_electricMotor_mech_P2 }).ToArray();
 
 			var cycleData = RessourceHelper.ReadStream(
 				DeclarationData.DeclarationDataResourcePrefix + ".MissionCycles." +
@@ -234,7 +235,7 @@ namespace TUGraz.VectoCore.Tests.Integration.Hybrid
 		]
 		public void P2HybridBrakeStandstill(double vmax, double initialSoC, double slope)
 		{
-			GraphWriter.Yfields = GraphWriter.Yfields.Concat(new[] { ModalResultField.P_electricMotor_mech_P2 }).ToArray();
+			GraphWriter.Yfields = Yfields.Concat(new[] { ModalResultField.P_electricMotor_mech_P2 }).ToArray();
 
 			//var dst =
 			var cycleData = string.Format(
@@ -288,7 +289,7 @@ namespace TUGraz.VectoCore.Tests.Integration.Hybrid
 		]
 		public void P3HybridConstantSpeed(double vmax, double initialSoC, double slope, double pAuxEl)
 		{
-			GraphWriter.Yfields = GraphWriter.Yfields.Concat(new[] { ModalResultField.P_electricMotor_mech_P3 }).ToArray();
+			GraphWriter.Yfields = Yfields.Concat(new[] { ModalResultField.P_electricMotor_mech_P3 }).ToArray();
 
 			var cycleData = string.Format(
 				@"   0, {0}, {1},    0
@@ -326,7 +327,7 @@ namespace TUGraz.VectoCore.Tests.Integration.Hybrid
 		]
 		public void P3HybridDriveOff(double vmax, double initialSoC, double slope)
 		{
-			GraphWriter.Yfields = GraphWriter.Yfields.Concat(new[] { ModalResultField.P_electricMotor_mech_P3 }).ToArray();
+			GraphWriter.Yfields = Yfields.Concat(new[] { ModalResultField.P_electricMotor_mech_P3 }).ToArray();
 
 			var cycleData = string.Format(
 				@"   0,   0, {1},    3
@@ -358,7 +359,7 @@ namespace TUGraz.VectoCore.Tests.Integration.Hybrid
 		]
 		public void P3HybridBrakeStandstill(double vmax, double initialSoC, double slope)
 		{
-			GraphWriter.Yfields = GraphWriter.Yfields.Concat(new[] { ModalResultField.P_electricMotor_mech_P3 }).ToArray();
+			GraphWriter.Yfields = Yfields.Concat(new[] { ModalResultField.P_electricMotor_mech_P3 }).ToArray();
 
 			//var dst =
 			var cycleData = string.Format(
@@ -411,7 +412,7 @@ namespace TUGraz.VectoCore.Tests.Integration.Hybrid
 		]
 		public void P4HybridConstantSpeed(double vmax, double initialSoC, double slope, double pAuxEl)
 		{
-			GraphWriter.Yfields = GraphWriter.Yfields.Concat(new[] { ModalResultField.P_electricMotor_mech_P4 }).ToArray();
+			GraphWriter.Yfields = Yfields.Concat(new[] { ModalResultField.P_electricMotor_mech_P4 }).ToArray();
 
 			var cycleData = string.Format(
 				@"   0, {0}, {1},    0
@@ -449,7 +450,7 @@ namespace TUGraz.VectoCore.Tests.Integration.Hybrid
 		]
 		public void P4HybridDriveOff(double vmax, double initialSoC, double slope)
 		{
-			GraphWriter.Yfields = GraphWriter.Yfields.Concat(new[] { ModalResultField.P_electricMotor_mech_P4 }).ToArray();
+			GraphWriter.Yfields = Yfields.Concat(new[] { ModalResultField.P_electricMotor_mech_P4 }).ToArray();
 
 			var cycleData = string.Format(
 				@"   0,   0, {1},    3
@@ -481,7 +482,7 @@ namespace TUGraz.VectoCore.Tests.Integration.Hybrid
 		]
 		public void P4HybridBrakeStandstill(double vmax, double initialSoC, double slope)
 		{
-			GraphWriter.Yfields = GraphWriter.Yfields.Concat(new[] { ModalResultField.P_electricMotor_mech_P4 }).ToArray();
+			GraphWriter.Yfields = Yfields.Concat(new[] { ModalResultField.P_electricMotor_mech_P4 }).ToArray();
 
 			//var dst =
 			var cycleData = string.Format(
