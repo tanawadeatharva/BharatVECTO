@@ -397,6 +397,8 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 		P_electricMotor_mech_P2,
 		[ModalResultField(typeof(SI), caption: "P_em-P3_mech [kW]", outputFactor: 1e-3)]
 		P_electricMotor_mech_P3,
+		[ModalResultField(typeof(SI), caption: "P_em-P4_mech [kW]", outputFactor: 1e-3)]
+		P_electricMotor_mech_P4,
 		// -->
 
 		[ModalResultField(typeof(SI), caption: "P_bat_T [kW]", outputFactor: 1e-3)] P_battery_terminal,
