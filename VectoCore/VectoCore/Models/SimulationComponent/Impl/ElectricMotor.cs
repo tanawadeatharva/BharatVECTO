@@ -123,10 +123,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			}
 
 			if (ElectricPower == null) {
-				var retVal = ForwardRequest(absTime, dt, inTorque, inTorque, outAngularVelocity, dryRun);
+				var retVal = ForwardRequest(absTime, dt, inTorque, inTorque, outAngularVelocity, null, dryRun);
 				return retVal;
 			}
-			var eMotorTorque = Control.MechanicalAssistPower(absTime, dt, inTorque, PreviousState.OutAngularVelocity, outAngularVelocity, Position, dryRun);
+			var eMotorTorque = Control.MechanicalAssistPower(absTime, dt, inTorque, PreviousState.OutAngularVelocity, outAngularVelocity,  maxDriveTorque, maxRecuperationTorque, Position, dryRun);
 
 			if (Position == PowertrainPosition.HybridP2 && !DataBus.GearboxInfo.GearEngaged(absTime)/* && !DataBus.ClutchInfo.ClutchClosed(absTime)*/) {
 				// electric motor is between gearbox and clutch, but no gear is engaged...
@@ -184,7 +184,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 						eMotorTorque < 0 ? electricSupplyResponse.MaxPowerDrive : electricSupplyResponse.MaxPowerDrag, electricSupplyResponse.ConsumerPower);
 			}
 
-			var response = ForwardRequest(absTime, dt, inTorque, inTorque + eMotorTorque, outAngularVelocity, dryRun);
+			var response = ForwardRequest(absTime, dt, inTorque, inTorque + eMotorTorque, outAngularVelocity, electricSupplyResponse, dryRun);
 
 			response.ElectricSystem = electricSupplyResponse;
 			response.ElectricMotor.InertiaPowerDemand = inertiaTorqueLoss * avgSpeed;
@@ -202,20 +202,22 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				SetState(inTorque, outAngularVelocity);
 			}
 			var electricSystemResponse = ElectricPower.Request(absTime, dt, 0.SI<Watt>(), dryRun);
-			
-			var retVal = NextComponent.Request(absTime, dt, inTorque, outAngularVelocity, dryRun);
+
+			var retVal = NextComponent == null
+				? RequestElectricMotorOnly(absTime, dt, outTorque, inTorque, outAngularVelocity, dryRun, avgSpeed, electricSystemResponse)
+				: NextComponent.Request(absTime, dt, inTorque, outAngularVelocity, dryRun);
 			retVal.ElectricMotor.ElectricMotorPowerMech = (inTorque - outTorque) * avgSpeed;
 			retVal.ElectricSystem = electricSystemResponse;
 			return retVal;
 		}
 
 		public IResponse ForwardRequest(Second absTime, Second dt, NewtonMeter outTorque, NewtonMeter inTorque, PerSecond outAngularVelocity,
-			bool dryRun = false)
+		 IElectricSystemResponse electricSystemResponse, bool dryRun = false)
 		{
 			var avgSpeed = (PreviousState.OutAngularVelocity + outAngularVelocity) / 2;
 			if (NextComponent == null)
 			{
-				return RequestElectricMotorOnly(absTime, dt, outTorque, inTorque, outAngularVelocity, dryRun, avgSpeed);
+				return RequestElectricMotorOnly(absTime, dt, outTorque, inTorque, outAngularVelocity, dryRun, avgSpeed, electricSystemResponse);
 			}
 
 			if (!dryRun) {
@@ -226,7 +228,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			return retVal;
 		}
 
-		private IResponse RequestElectricMotorOnly(Second absTime, Second dt, NewtonMeter outTorque, NewtonMeter inTorque, PerSecond outAngularVelocity, bool dryRun, PerSecond avgSpeed)
+		private IResponse RequestElectricMotorOnly(Second absTime, Second dt, NewtonMeter outTorque, NewtonMeter inTorque, PerSecond outAngularVelocity, bool dryRun, PerSecond avgSpeed, IElectricSystemResponse electricSystemResponse)
 		{
 			var remainingPower = inTorque * avgSpeed;
 			if (dryRun)
@@ -239,12 +241,15 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					EngineSpeed = avgSpeed,
 					},
 					DeltaFullLoad = remainingPower, //powerDemand + driveTorque * avgSpeed,
-					DeltaDragLoad = powerDemand + dragTorque * avgSpeed,
+					DeltaDragLoad = remainingPower, // powerDemand + dragTorque * avgSpeed,
 				};
 			}
 
 			if ((inTorque * avgSpeed).IsEqual(0, Constants.SimulationSettings.LineSearchTolerance)) {
 				SetState(inTorque, outAngularVelocity);
+				if (electricSystemResponse.MaxPowerDrive.IsGreaterOrEqual(0)) {
+					return new ResponseBatteryEmpty(this);
+				}
 				return new ResponseSuccess(this) {
 					ElectricMotor = {
 						ElectricMotorPowerMech = (inTorque - outTorque) * avgSpeed,

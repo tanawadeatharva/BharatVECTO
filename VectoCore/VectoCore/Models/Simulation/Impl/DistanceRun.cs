@@ -71,12 +71,17 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 						FinishedWithoutErrors = true;
 						Log.Info("========= Driving Cycle Finished");
 					}).
+					Case<ResponseBatteryEmpty>(
+							r => {
+								FinishedWithoutErrors = true;
+								Log.Info("========= REESS empty");
+							}).
 					Default(r => { throw new VectoException("DistanceRun got an unexpected response: {0}", r); });
 				if (loopCount++ > Constants.SimulationSettings.MaximumIterationCountForSimulationStep) {
 					throw new VectoSimulationException("Maximum iteration count for a single simulation interval reached! Aborting!");
 				}
 				debug.Add(new {Response = response});
-			} while (!(response is ResponseSuccess || response is ResponseCycleFinished));
+			} while (!(response is ResponseSuccess || response is ResponseCycleFinished || response is ResponseBatteryEmpty));
 
 			IterationStatistics.Increment(this, "Distance", Container.MileageCounter.Distance.Value());
 			IterationStatistics.Increment(this, "Time", AbsTime.Value());

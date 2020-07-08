@@ -50,7 +50,7 @@ using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.Simulation.Impl
 {
-	public class VehicleContainer : LoggingObject, IVehicleContainer
+	public class VehicleContainer : LoggingObject, IVehicleContainer, IPowertainInfo
 	{
 		private List<Tuple<int, VectoSimulationComponent>> _components =
 			new List<Tuple<int, VectoSimulationComponent>>();
@@ -116,6 +116,11 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 
 		public virtual ITorqueConverterControl TorqueConverterCtl { get; private set; }
+
+		public IPowertainInfo PowertrainInfo
+		{
+			get { return this; }
+		}
 
 		public virtual void AddComponent(VectoSimulationComponent component)
 		{

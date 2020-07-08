@@ -18,9 +18,19 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl {
 
 		public NewtonMeter MechanicalAssistPower(
 			Second absTime, Second dt, NewtonMeter outTorque, PerSecond prevOutAngularVelocity, PerSecond currOutAngularVelocity,
+			NewtonMeter maxDriveTorque, NewtonMeter maxRecuperationTorque,
 			PowertrainPosition position, bool dryRun)
 		{
-			throw new System.NotImplementedException();
+			if (DataBus.DriverInfo.DrivingAction == DrivingAction.Coast ||
+				DataBus.DriverInfo.DrivingAction == DrivingAction.Roll) {
+				return null;
+			}
+
+			if (maxDriveTorque == null) {
+				return null;
+			}
+
+			return (-outTorque).LimitTo(maxDriveTorque, maxRecuperationTorque);
 		}
 
 		#endregion

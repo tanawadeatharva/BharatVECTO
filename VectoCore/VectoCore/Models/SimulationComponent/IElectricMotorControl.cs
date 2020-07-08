@@ -15,11 +15,14 @@ namespace TUGraz.VectoCore.Models.SimulationComponent
 		/// <param name="outTorque"></param>
 		/// <param name="prevOutAngularVelocity"></param>
 		/// <param name="currOutAngularVelocity"></param>
+		/// <param name="maxRecuperationTorque"></param>
 		/// <param name="position"></param>
 		/// <param name="dryRun"></param>
+		/// <param name="maxDriveTorque"></param>
 		/// <returns></returns>
 		NewtonMeter MechanicalAssistPower(Second absTime, Second dt, NewtonMeter outTorque,
 			PerSecond prevOutAngularVelocity, PerSecond currOutAngularVelocity,
+			NewtonMeter maxDriveTorque, NewtonMeter maxRecuperationTorque,
 			PowertrainPosition position, bool dryRun);
 
 

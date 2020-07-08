@@ -317,7 +317,9 @@ namespace TUGraz.VectoCore.OutputData
 
 			row[Fields.ALTITUDE_DELTA] = (ConvertedSI)modData.AltitudeDelta();
 
-			WriteFuelconsumptionEntries(modData, row, vehicleLoading, cargoVolume, passengerCount, runData);
+			if (modData.HasCombustionEngine) {
+				WriteFuelconsumptionEntries(modData, row, vehicleLoading, cargoVolume, passengerCount, runData);
+			}
 
 			if (runData.Mission?.MissionType == MissionType.VerificationTest) {
 				var fuelsWhtc = runData.EngineData.Fuels.Select(
@@ -329,9 +331,11 @@ namespace TUGraz.VectoCore.OutputData
 
 			row[Fields.P_WHEEL_POS] = modData.PowerWheelPositive().ConvertToKiloWatt();
 			row[Fields.P_WHEEL] = modData.PowerWheel().ConvertToKiloWatt();
-			
-			row[Fields.P_FCMAP_POS] = modData.TotalPowerEnginePositiveAverage().ConvertToKiloWatt();
-			row[Fields.P_FCMAP] = modData.TotalPowerEngineAverage().ConvertToKiloWatt();
+
+			if (modData.HasCombustionEngine) {
+				row[Fields.P_FCMAP_POS] = modData.TotalPowerEnginePositiveAverage().ConvertToKiloWatt();
+				row[Fields.P_FCMAP] = modData.TotalPowerEngineAverage().ConvertToKiloWatt();
+			}
 
 			WriteAuxiliaries(modData, row, runData.BusAuxiliaries != null);
 

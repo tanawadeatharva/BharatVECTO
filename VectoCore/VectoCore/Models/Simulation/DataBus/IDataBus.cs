@@ -77,6 +77,13 @@ namespace TUGraz.VectoCore.Models.Simulation.DataBus
 		IBatteryInfo BatteryInfo { get; }
 
 		ITorqueConverterControl TorqueConverterCtl { get; }
+		IPowertainInfo PowertrainInfo { get; }
 	}
 
+	public interface IPowertainInfo
+	{
+		bool HasCombustionEngine { get; }
+
+		//PowertrainArchitecture A
+	}
 }

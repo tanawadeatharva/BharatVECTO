@@ -124,6 +124,7 @@ namespace TUGraz.VectoCore.OutputData
 		void CalculateAggregateValues();
 		void AddElectricMotor(PowertrainPosition pos);
 		KilogramPerWattSecond VehicleLineSlope(IFuelProperties fuel);
+		bool HasCombustionEngine { get; }
 	}
 
 	public static class ModalDataContainerExtensions

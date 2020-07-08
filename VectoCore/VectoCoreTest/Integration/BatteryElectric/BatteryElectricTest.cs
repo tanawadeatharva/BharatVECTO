@@ -12,6 +12,7 @@ using TUGraz.VectoCore.InputData.Impl;
 using TUGraz.VectoCore.InputData.Reader.ComponentData;
 using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation.Data;
+using TUGraz.VectoCore.Models.Simulation.DataBus;
 using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.Models.SimulationComponent;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
@@ -64,7 +65,7 @@ namespace TUGraz.VectoCore.Tests.Integration.BatteryElectric
 
 			Yfields = new[] {
 				ModalResultField.v_act, ModalResultField.altitude, ModalResultField.acc, ModalResultField.Gear,
-				ModalResultField.P_ice_out, ModalResultField.BatterySOC, ModalResultField.FCMap
+				ModalResultField.BatterySOC,
 			};
 			GraphWriter.Series1Label = "Hybrid";
 			GraphWriter.PlotIgnitionState = true;
@@ -72,13 +73,64 @@ namespace TUGraz.VectoCore.Tests.Integration.BatteryElectric
 
 
 		[
-			TestCase(30, 0.7, 0, TestName = "B4 Hybrid DriveOff 30km/h SoC: 0.7, level"),
-			TestCase(80, 0.7, 0, TestName = "B4 Hybrid DriveOff 80km/h SoC: 0.7, level"),
-			TestCase(30, 0.25, 0, TestName = "B4 Hybrid DriveOff 30km/h SoC: 0.25, level")
+			TestCase(30, 0.7, 0, 0, TestName = "B4 BEV ConstantSpeed 30km/h SoC: 0.7, level"),
+			TestCase(50, 0.7, 0, 0, TestName = "B4 BEV ConstantSpeed 50km/h SoC: 0.7, level"),
+			TestCase(80, 0.7, 0, 0, TestName = "B4 BEV ConstantSpeed 80km/h SoC: 0.7, level"),
+
+			TestCase(30, 0.25, 0, 0, TestName = "B4 BEV ConstantSpeed 30km/h SoC: 0.25, level"),
+			TestCase(50, 0.25, 0, 0, TestName = "B4 BEV ConstantSpeed 50km/h SoC: 0.25, level"),
+			TestCase(80, 0.25, 0, 0, TestName = "B4 BEV ConstantSpeed 80km/h SoC: 0.25, level"),
+
+			TestCase(30, 0.5, 5, 0, TestName = "B4 BEV ConstantSpeed 30km/h SoC: 0.5, UH 5%"),
+			TestCase(50, 0.5, 5, 0, TestName = "B4 BEV ConstantSpeed 50km/h SoC: 0.5, UH 5%"),
+			TestCase(80, 0.5, 5, 0, TestName = "B4 BEV ConstantSpeed 80km/h SoC: 0.5, UH 5%"),
+
+			TestCase(30, 0.5, -5, 0, TestName = "B4 BEV ConstantSpeed 30km/h SoC: 0.5, DH 5%"),
+			TestCase(50, 0.5, -5, 0, TestName = "B4 BEV ConstantSpeed 50km/h SoC: 0.5, DH 5%"),
+			TestCase(80, 0.5, -5, 0, TestName = "B4 BEV ConstantSpeed 80km/h SoC: 0.5, DH 5%"),
+
+			TestCase(30, 0.25, 0, 1000, TestName = "B4 BEV ConstantSpeed 30km/h SoC: 0.25, level P_auxEl: 1kW"),
+			TestCase(30, 0.25, 0, 5000, TestName = "B4 BEV ConstantSpeed 30km/h SoC: 0.25, level P_auxEl: 5kW"),
 		]
-		public void B4HybridDriveOff(double vmax, double initialSoC, double slope)
+		public void B4BEVConstantSpeed(double vmax, double initialSoC, double slope, double pAuxEl)
 		{
-			GraphWriter.Yfields = Yfields.Concat(new[] { ModalResultField.P_electricMotor_mech_P2 }).ToArray();
+			GraphWriter.Yfields = Yfields.Concat(new[] { ModalResultField.P_electricMotor_mech_B4 }).ToArray();
+
+			var cycleData = string.Format(
+				@"   0, {0}, {1},    0
+				  7000, {0}, {1},    0", vmax, slope);
+			var cycle = SimpleDrivingCycles.CreateCycleData(cycleData);
+
+			const bool largeMotor = true;
+
+			var modFilename = string.Format("SimpleBatteryElectric-B4_constant_{0}-{1}_{2}_{3}.vmod", vmax, initialSoC, slope, pAuxEl);
+			const PowertrainPosition pos = PowertrainPosition.BatteryElectricB4;
+			var run = CreateEngineeringRun(
+				cycle, modFilename, initialSoC, pos, largeMotor: true, pAuxEl: pAuxEl);
+
+			var modData = ((ModalDataContainer)((VehicleContainer)run.GetContainer()).ModData).Data;
+
+			var data = run.GetContainer().RunData;
+			//File.WriteAllText(
+			//	$"{modFilename}.json",
+			//	JsonConvert.SerializeObject(data, Formatting.Indented));
+
+			run.Run();
+			Assert.IsTrue(run.FinishedWithoutErrors);
+
+			Assert.IsTrue(modData.Rows.Count > 0);
+			GraphWriter.Write(modFilename);
+		}
+
+
+		[
+			TestCase(30, 0.7, 0, TestName = "B4 BEV DriveOff 30km/h SoC: 0.7, level"),
+			TestCase(80, 0.7, 0, TestName = "B4 BEV DriveOff 80km/h SoC: 0.7, level"),
+			TestCase(30, 0.25, 0, TestName = "B4 BEV DriveOff 30km/h SoC: 0.25, level")
+		]
+		public void B4BEVDriveOff(double vmax, double initialSoC, double slope)
+		{
+			GraphWriter.Yfields = Yfields.Concat(new[] { ModalResultField.P_electricMotor_mech_B4 }).ToArray();
 			var cycleData = string.Format(
 				@"   0,   0, {1},    3
 				   700, {0}, {1},    0", vmax, slope);
@@ -90,9 +142,6 @@ namespace TUGraz.VectoCore.Tests.Integration.BatteryElectric
 			const PowertrainPosition pos = PowertrainPosition.BatteryElectricB4;
 			var run = CreateEngineeringRun(
 				cycle, modFilename, initialSoC, pos, largeMotor: true);
-
-			var hybridController = (HybridController)((VehicleContainer)run.GetContainer()).HybridController;
-			Assert.NotNull(hybridController);
 
 			var modData = ((ModalDataContainer)((VehicleContainer)run.GetContainer()).ModData).Data;
 
@@ -124,6 +173,7 @@ namespace TUGraz.VectoCore.Tests.Integration.BatteryElectric
 				modFileName, new IFuelProperties[] { FuelData.Diesel }, fileWriter,
 				filters: modDataFilter) {
 				WriteModalResults = true,
+				HasCombustionEngine = false,
 			};
 
 			var gearboxData = CreateGearboxData();
@@ -201,6 +251,8 @@ namespace TUGraz.VectoCore.Tests.Integration.BatteryElectric
 				case PowertrainPosition.BatteryElectricB4:
 					powertrain.AddComponent(
 						GetElectricMachine(PowertrainPosition.BatteryElectricB4, runData.ElectricMachinesData, container, es, ctl));
+					new MockGearboxInfo(container);
+					new ATClutchInfo(container);
 					break;
 				case PowertrainPosition.BatteryElectricB3:
 					powertrain.AddComponent(new AxleGear(container, runData.AxleGearData))
@@ -378,5 +430,100 @@ namespace TUGraz.VectoCore.Tests.Integration.BatteryElectric
 
 			return retVal;
 		}
+	}
+
+	public class MockGearboxInfo : VectoSimulationComponent, IGearboxInfo
+	{
+		public MockGearboxInfo(VehicleContainer container) : base(container)
+		{
+			
+		}
+
+		#region Overrides of VectoSimulationComponent
+
+		protected override void DoWriteModalResults(Second time, Second simulationInterval, IModalDataContainer container) { }
+
+		protected override void DoCommitSimulationStep(Second time, Second simulationInterval) { }
+
+		#endregion
+
+		#region Implementation of IGearboxInfo
+
+		public GearboxType GearboxType
+		{
+			get { return GearboxType.AMT; }
+		}
+
+		public uint Gear
+		{
+			get { return 1; }
+		}
+
+		public bool TCLocked
+		{
+			get { return true; }
+		}
+
+		public MeterPerSecond StartSpeed
+		{
+			get { return DeclarationData.GearboxTCU.StartSpeed; }
+		}
+
+		public MeterPerSquareSecond StartAcceleration
+		{
+			get { return DeclarationData.GearboxTCU.StartAcceleration; }
+		}
+
+		public Watt GearboxLoss()
+		{
+			return 0.SI<Watt>();
+		}
+
+		public Second LastShift
+		{
+			get { return -double.MaxValue.SI<Second>(); }
+		}
+
+		public Second LastUpshift
+		{
+			get { return -double.MaxValue.SI<Second>(); }
+		}
+
+		public Second LastDownshift
+		{
+			get { return -double.MaxValue.SI<Second>(); }
+		}
+
+		public GearData GetGearData(uint gear)
+		{
+			throw new NotImplementedException();
+		}
+
+		public GearInfo NextGear
+		{
+			get { throw new NotImplementedException(); }
+		}
+
+		public Second TractionInterruption
+		{
+			get { return 0.SI<Second>(); }
+		}
+
+		public uint NumGears
+		{
+			get { return 1; }
+		}
+
+		public bool DisengageGearbox
+		{
+			get { return false; }
+		}
+
+		public bool GearEngaged(Second absTime)
+		{
+			return true;
+		}
+
+		#endregion
 	}
 }

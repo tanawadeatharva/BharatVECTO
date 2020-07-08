@@ -322,6 +322,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 						};
 					}).
 					Case<ResponseSuccess>(() => operatingPoint = limitedOperatingPoint).
+					Case<ResponseBatteryEmpty>(() => { }).
 					Default(
 						r => {
 							throw new UnexpectedResponseException(

@@ -149,6 +149,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl {
 
 			public NewtonMeter MechanicalAssistPower(
 				Second absTime, Second dt, NewtonMeter outTorque, PerSecond prevOutAngularVelocity, PerSecond currOutAngularVelocity,
+				NewtonMeter maxDriveTorque, NewtonMeter maxRecuperationTorque,
 				PowertrainPosition position, bool dryRun)
 			{
 				return _controller.MechanicalAssistPower(position, absTime, dt, outTorque, prevOutAngularVelocity,

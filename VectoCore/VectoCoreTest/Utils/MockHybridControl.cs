@@ -8,7 +8,9 @@ namespace TUGraz.VectoCore.Tests.Utils {
 		public NewtonMeter ElectricShare { get; set; }
 
 		public NewtonMeter MechanicalAssistPower(Second absTime, Second dt, NewtonMeter outTorque,
-			PerSecond prevOutAngularVelocity, PerSecond curOutAngularVelocity, PowertrainPosition position, bool dryRun)
+			PerSecond prevOutAngularVelocity, PerSecond curOutAngularVelocity,
+			NewtonMeter maxDriveTorque, NewtonMeter maxRecuperationTorque,
+			PowertrainPosition position, bool dryRun)
 		{
 			return ElectricShare;
 		}

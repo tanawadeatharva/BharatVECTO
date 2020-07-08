@@ -48,7 +48,7 @@ using TUGraz.VectoCore.OutputData;
 namespace TUGraz.VectoCore.Tests.Utils
 {
 		
-	public class MockVehicleContainer : IVehicleContainer, IEngineInfo, IEngineControl, IVehicleInfo, IClutchInfo, IBrakes, IAxlegearInfo, IWheelsInfo, IDriverInfo, IDrivingCycleInfo, IMileageCounter, IGearboxInfo, IGearboxControl
+	public class MockVehicleContainer : IVehicleContainer, IEngineInfo, IEngineControl, IVehicleInfo, IClutchInfo, IBrakes, IAxlegearInfo, IWheelsInfo, IDriverInfo, IDrivingCycleInfo, IMileageCounter, IGearboxInfo, IGearboxControl, IPowertainInfo
 	{
 		// only CycleData Lookup is set / accessed...
 
@@ -152,6 +152,11 @@ namespace TUGraz.VectoCore.Tests.Utils
 		public ITorqueConverterControl TorqueConverterCtl
 		{
 			get { return _torqueConverter; }
+		}
+
+		public IPowertainInfo PowertrainInfo
+		{
+			get { return this; }
 		}
 
 		public Watt GearboxLoss()
@@ -372,6 +377,14 @@ namespace TUGraz.VectoCore.Tests.Utils
 			throw new NotImplementedException();
 		}
 
-		
+
+		#region Implementation of IPowertainInfo
+
+		public bool HasCombustionEngine
+		{
+			get { throw new NotImplementedException(); }
+		}
+
+		#endregion
 	}
 }

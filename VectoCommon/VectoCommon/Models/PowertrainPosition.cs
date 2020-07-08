@@ -1,4 +1,6 @@
-﻿using TUGraz.VectoCommon.Utils;
+﻿using System;
+using TUGraz.VectoCommon.Exceptions;
+using TUGraz.VectoCommon.Utils;
 
 namespace TUGraz.VectoCommon.InputData {
 	public enum PowertrainPosition
@@ -17,16 +19,24 @@ namespace TUGraz.VectoCommon.InputData {
 
 	public static class PowertrainPositionHelper
 	{
-		public const string Prefix = "Hybrid";
+		public const string HybridPrefix = "Hybrid";
+		public const string BatteryElectriPrefix = "BatteryElectric";
 
 		public static PowertrainPosition Parse(string pos)
 		{
-			return (Prefix + pos).ParseEnum<PowertrainPosition>();
+			if (pos.StartsWith("P",StringComparison.InvariantCultureIgnoreCase)) {
+				return (HybridPrefix + pos).ParseEnum<PowertrainPosition>();
+			}
+
+			if (pos.StartsWith("B", StringComparison.InvariantCultureIgnoreCase)) {
+				return (BatteryElectriPrefix + pos).ParseEnum<PowertrainPosition>();
+			}
+			throw new VectoException("invalid powertrain position {0}", pos);
 		}
 
 		public static string GetName(this PowertrainPosition pos)
 		{
-			return pos.ToString().Replace(Prefix, "");
+			return pos.ToString().Replace(HybridPrefix, "").Replace(BatteryElectriPrefix, "");
 		}
 	}
 }

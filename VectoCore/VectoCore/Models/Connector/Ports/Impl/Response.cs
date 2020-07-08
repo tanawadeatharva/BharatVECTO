@@ -129,6 +129,11 @@ namespace TUGraz.VectoCore.Models.Connector.Ports.Impl
 		public ResponseSuccess(object source) : base(source) { }
 	}
 
+	public class ResponseBatteryEmpty : AbstractResponse
+	{
+		public ResponseBatteryEmpty(object source) : base(source) { }
+	}
+
 	/// <summary>
 	/// Response when the request resulted in an engine or gearbox overload. 
 	/// </summary>

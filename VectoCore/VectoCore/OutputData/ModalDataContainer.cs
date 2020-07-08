@@ -123,6 +123,7 @@ namespace TUGraz.VectoCore.OutputData
 			Action<ModalDataContainer> addReportResult, bool writeEngineOnly, params IModalDataFilter[] filters)
 		{
 			HasTorqueConverter = false;
+			HasCombustionEngine = true;
 			RunName = runName;
 			CycleName = cycleName;
 			RunSuffix = runSuffix;
@@ -226,6 +227,8 @@ namespace TUGraz.VectoCore.OutputData
 			return null;
 		}
 
+		public bool HasCombustionEngine { get; set; }
+
 		public void CalculateAggregateValues()
 		{
 			var duration = Duration;
@@ -234,22 +237,26 @@ namespace TUGraz.VectoCore.OutputData
 				var speed = distance / duration;
 			}
 
-			foreach (var fuel in FuelColumns.Keys) {
-				EngineLineCorrectionFactor(fuel);
-				VehicleLineSlope(fuel);
-				TimeIntegral<Kilogram>(GetColumnName(fuel, ModalResultField.FCMap));
-				TimeIntegral<Kilogram>(GetColumnName(fuel, ModalResultField.FCNCVc));
-				TimeIntegral<Kilogram>(GetColumnName(fuel, ModalResultField.FCWHTCc));
-				//TimeIntegral<Kilogram>(GetColumnName(fuel, ModalResultField.FCAAUX));
-				TimeIntegral<Kilogram>(GetColumnName(fuel, ModalResultField.FCMap));
-				TimeIntegral<Kilogram>(GetColumnName(fuel, ModalResultField.FCICEStopStart));
-				TimeIntegral<Kilogram>(GetColumnName(fuel, ModalResultField.FCFinal));
-				
+			if (HasCombustionEngine) {
+				foreach (var fuel in FuelColumns.Keys) {
+					EngineLineCorrectionFactor(fuel);
+					VehicleLineSlope(fuel);
+					TimeIntegral<Kilogram>(GetColumnName(fuel, ModalResultField.FCMap));
+					TimeIntegral<Kilogram>(GetColumnName(fuel, ModalResultField.FCNCVc));
+					TimeIntegral<Kilogram>(GetColumnName(fuel, ModalResultField.FCWHTCc));
+
+					//TimeIntegral<Kilogram>(GetColumnName(fuel, ModalResultField.FCAAUX));
+					TimeIntegral<Kilogram>(GetColumnName(fuel, ModalResultField.FCMap));
+					TimeIntegral<Kilogram>(GetColumnName(fuel, ModalResultField.FCICEStopStart));
+					TimeIntegral<Kilogram>(GetColumnName(fuel, ModalResultField.FCFinal));
+
+				}
+
+				TimeIntegral<WattSecond>(ModalResultField.P_WHR_el_corr);
+				TimeIntegral<WattSecond>(ModalResultField.P_WHR_mech_corr);
+				TimeIntegral<WattSecond>(ModalResultField.P_aux_ice_off);
+				TimeIntegral<WattSecond>(ModalResultField.P_ice_start);
 			}
-			TimeIntegral<WattSecond>(ModalResultField.P_WHR_el_corr);
-			TimeIntegral<WattSecond>(ModalResultField.P_WHR_mech_corr);
-			TimeIntegral<WattSecond>(ModalResultField.P_aux_ice_off);
-			TimeIntegral<WattSecond>(ModalResultField.P_ice_start);
 
 			TimeIntegral<WattSecond>(ModalResultField.P_clutch_loss);
 			TimeIntegral<WattSecond>(ModalResultField.P_gbx_shift_loss);
