@@ -174,25 +174,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				return _controller.MechanicalAssistPower(position, absTime, dt, outTorque, prevOutAngularVelocity,
 					currOutAngularVelocity, dryRun);
 			}
-
-			//public NewtonMeter MaxDriveTorque(PerSecond avgSpeed, Second dt)
-			//{
-			//	var driveTorque = ElectricMotorData.FullLoadCurve.FullLoadDriveTorque(avgSpeed);
-			//	var drivePowerElectric = ElectricMotorData.EfficiencyMap.LookupElectricPower(avgSpeed, driveTorque).ElectricalPower;
-			//	if (drivePowerElectric >= _controller.ElectricSystem.MaxDischargePower(dt))
-			//	{
-			//		return driveTorque;
-			//	}
-
-			//	drivePowerElectric = _controller.ElectricSystem.MaxDischargePower(dt);
-			//	driveTorque = ElectricMotorData.EfficiencyMap.SearchMechanicalPower(drivePowerElectric, avgSpeed).Torque;
-			//	return driveTorque;
-			//}
-
-			//public NewtonMeter MaxDragTorque(PerSecond avgSpeed, Second dt)
-			//{
-			//	return 0.SI<NewtonMeter>();
-			//}
 		}
 
 

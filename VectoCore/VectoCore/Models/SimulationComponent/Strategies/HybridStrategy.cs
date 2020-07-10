@@ -153,7 +153,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 			if (dryRun && DataBus.DriverInfo.DrivingAction == DrivingAction.Brake) {
 				var tmp = MaxRecuperationSetting(absTime, dt, outTorque, outAngularVelocity);
 				var outTorqueWithoutBraking =
-					outTorque + 2 * DataBus.Brakes.BrakePower / (PreviousState.AngularVelocity + outAngularVelocity);
+					outTorque - 2 * DataBus.Brakes.BrakePower / (PreviousState.AngularVelocity + outAngularVelocity);
 				var maxRecuperationResponse = RequestDryRun(absTime, dt, outTorqueWithoutBraking, outAngularVelocity, currentGear, tmp.Setting);
 				if (maxRecuperationResponse.DeltaDragLoad.IsSmaller(0)) {
 					DryRunAction = DataBus.DriverInfo.DrivingAction;
@@ -202,45 +202,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 				eval.Add(MaxRecuperationSetting(absTime, dt, outTorque, outAngularVelocity));
 			}
 			
-			var best = eval.Where(x => !double.IsNaN(x.Score)).OrderBy(x => x.Score).FirstOrDefault();
-			if (best == null) {
-				best = eval.FirstOrDefault(x => !DataBus.EngineCtl.CombustionEngineOn || !x.IgnoreReason.InvalidEngineSpeed());
-				if (best == null /*&& dryRun*/) {
-					var emEngaged = (!ElectricMotorCanPropellDuringTractionInterruption || (DataBus.GearboxInfo.GearEngaged(absTime) && eval.First().Response.Gearbox.Gear != 0));
-					if (DataBus.DriverInfo.DrivingAction == DrivingAction.Accelerate && emEngaged) {
-						best = eval.MinBy(x => x.Setting.MechanicalAssistPower.Sum(e => e.Value ?? 0.SI<NewtonMeter>()));
-					}
-					if (DataBus.DriverInfo.DrivingAction == DrivingAction.Brake && emEngaged) {
-						best = eval.MaxBy(x => x.Setting.MechanicalAssistPower.Sum(e => e.Value ?? 0.SI<NewtonMeter>()));
-					}
-				}
-				if (best == null) {
-					best = eval.FirstOrDefault();
-				}
-				var allOverload = eval.All(
-					x => (x.IgnoreReason & HybridConfigurationIgnoreReason.EngineTorqueDemandTooHigh) != 0);
-				var allUnderload = eval.All(
-					x => (x.IgnoreReason & HybridConfigurationIgnoreReason.EngineTorqueDemandTooLow) != 0);
-				if (DataBus.DriverInfo.DrivingAction == DrivingAction.Accelerate && allOverload) {
-					if (ElectricMotorCanPropellDuringTractionInterruption || DataBus.GearboxInfo.GearEngaged(absTime)) {
-						// overload, EM can support - use solution with max EM power
-						best = eval.MinBy(x => x.Setting.MechanicalAssistPower.Sum(e => e.Value ?? 0.SI<NewtonMeter>()));
-					}
-				}
-				if ((DataBus.DriverInfo.DrivingAction == DrivingAction.Accelerate || DataBus.DriverInfo.DrivingAction == DrivingAction.Brake) && allUnderload) {
-					if (ElectricMotorCanPropellDuringTractionInterruption || DataBus.GearboxInfo.GearEngaged(absTime)) {
-						var filtered = eval.Where(x => !x.IgnoreReason.InvalidEngineSpeed()).OrderBy(x => currentGear - x.Gear).ToArray();
-						if (!filtered.Any()) {
-							filtered = eval.OrderBy(x => currentGear - x.Gear).ToArray();
-						}
-						best = filtered.MaxBy(
-							x => x.Setting.MechanicalAssistPower.Sum(e => e.Value ?? 0.SI<NewtonMeter>()));
-					}
-				}
-				if (DataBus.DriverInfo.DrivingAction == DrivingAction.Brake && dryRun) {
-					best = MaxRecuperationSetting(absTime, dt, outTorque, outAngularVelocity);
-				}
-			}
+			var best = SelectBestOption(eval, absTime, dt, outTorque, outAngularVelocity, dryRun, currentGear);
 
 			var retVal = CreateResponse(best, currentGear);
 			if (!DataBus.EngineInfo.EngineOn && !best.ICEOff && retVal.ShiftRequired) {
@@ -267,6 +229,54 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 
 			DebugData.Add(new { Evaluations = eval, Best = best, RetVal = retVal, DryRun = dryRun });
 			return retVal;
+		}
+
+		private HybridResultEntry SelectBestOption(
+			List<HybridResultEntry> eval, Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity, bool dryRun,
+			uint currentGear)
+		{
+			var best = eval.Where(x => !double.IsNaN(x.Score)).OrderBy(x => x.Score).FirstOrDefault();
+			if (best == null) {
+				best = eval.FirstOrDefault(x => !DataBus.EngineCtl.CombustionEngineOn || !x.IgnoreReason.InvalidEngineSpeed());
+				if (best == null /*&& dryRun*/) {
+					var emEngaged = (!ElectricMotorCanPropellDuringTractionInterruption ||
+									(DataBus.GearboxInfo.GearEngaged(absTime) && eval.First().Response.Gearbox.Gear != 0));
+					if (DataBus.DriverInfo.DrivingAction == DrivingAction.Accelerate && emEngaged) {
+						best = eval.MinBy(x => x.Setting.MechanicalAssistPower.Sum(e => e.Value ?? 0.SI<NewtonMeter>()));
+					}
+					if (DataBus.DriverInfo.DrivingAction == DrivingAction.Brake && emEngaged) {
+						best = eval.MaxBy(x => x.Setting.MechanicalAssistPower.Sum(e => e.Value ?? 0.SI<NewtonMeter>()));
+					}
+				}
+				if (best == null) {
+					best = eval.FirstOrDefault();
+				}
+				var allOverload = eval.All(
+					x => (x.IgnoreReason & HybridConfigurationIgnoreReason.EngineTorqueDemandTooHigh) != 0);
+				var allUnderload = eval.All(
+					x => (x.IgnoreReason & HybridConfigurationIgnoreReason.EngineTorqueDemandTooLow) != 0);
+				if (DataBus.DriverInfo.DrivingAction == DrivingAction.Accelerate && allOverload) {
+					if (ElectricMotorCanPropellDuringTractionInterruption || DataBus.GearboxInfo.GearEngaged(absTime)) {
+						// overload, EM can support - use solution with max EM power
+						best = eval.MinBy(x => x.Setting.MechanicalAssistPower.Sum(e => e.Value ?? 0.SI<NewtonMeter>()));
+					}
+				}
+				if ((DataBus.DriverInfo.DrivingAction == DrivingAction.Accelerate ||
+					DataBus.DriverInfo.DrivingAction == DrivingAction.Brake) && allUnderload) {
+					if (ElectricMotorCanPropellDuringTractionInterruption || DataBus.GearboxInfo.GearEngaged(absTime)) {
+						var filtered = eval.Where(x => !x.IgnoreReason.InvalidEngineSpeed()).OrderBy(x => Math.Abs((int)currentGear - x.Gear)).ToArray();
+						if (!filtered.Any()) {
+							filtered = eval.OrderBy(x => Math.Abs((int)currentGear - x.Gear)).ToArray();
+						}
+						best = filtered.MaxBy(
+							x => x.Setting.MechanicalAssistPower.Sum(e => e.Value ?? 0.SI<NewtonMeter>()));
+					}
+				}
+				if (DataBus.DriverInfo.DrivingAction == DrivingAction.Brake && dryRun) {
+					best = MaxRecuperationSetting(absTime, dt, outTorque, outAngularVelocity);
+				}
+			}
+			return best;
 		}
 
 		private static HybridStrategyResponse CreateResponse(HybridResultEntry best, uint currentGear)
@@ -297,8 +307,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 
 
 			var emPos = ModelData.ElectricMachinesData.First().Item1;
+			var currentGear = PreviousState.GearboxEngaged ? DataBus.GearboxInfo.Gear : Controller.ShiftStrategy.NextGear.Gear;
 			var emTorque = !ElectricMotorCanPropellDuringTractionInterruption && (firstResponse.Gearbox.Gear == 0 || !DataBus.GearboxInfo.GearEngaged(absTime)) ? null : firstResponse.ElectricMotor.MaxRecuperationTorque;
-			return TryConfiguration(absTime, dt, outTorque, outAngularVelocity, DataBus.GearboxInfo.Gear, emPos, emTorque, double.NaN, allowICEOff);
+			return TryConfiguration(absTime, dt, outTorque, outAngularVelocity, currentGear, emPos, emTorque, double.NaN, allowICEOff);
 		}
 
 		private List<HybridResultEntry> FindSolution(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity, bool dryRun)
@@ -322,35 +333,87 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 
 			var gear = PreviousState.GearboxEngaged ? DataBus.GearboxInfo.Gear : Controller.ShiftStrategy.NextGear.Gear; // DataBus.GearboxInfo.Gear;
 			var numGears = ModelData.GearboxData.Gears.Count;
+			var allowEmergencyUpshift = false;
+			var allowEmergencyDownshift = false;
 			for (uint nextGear = (uint)Math.Max(1, gear - gearRangeDownshift);
 				nextGear <= Math.Min(numGears, gear + gearRangeUpshift);
 				nextGear++) {
-
-
-				var emOffSetting = new HybridStrategyResponse() {
-					CombustionEngineOn = true,
-					GearboxInNeutral = false,
-					MechanicalAssistPower = ElectricMotorsOff
-				};
-				var emOffResponse = RequestDryRun(absTime, dt, outTorque, outAngularVelocity, nextGear, emOffSetting);
 				
-				if (emOffResponse == null) {
+				var emOffEntry = GetEmOffResultEntry(absTime, dt, outTorque, outAngularVelocity, nextGear);
+				if (emOffEntry == null) {
 					continue;
 				}
-				var emTqReq = (emOffResponse.ElectricMotor.PowerRequest + emOffResponse.ElectricMotor.InertiaPowerDemand) / emOffResponse.ElectricMotor.AngularVelocity;
 
-				var entry = new HybridResultEntry() {
-					U = double.NaN,
-					Response = emOffResponse,
-					Setting = emOffSetting,
-					Gear = nextGear
-				};
-				CalcualteCosts(emOffResponse, dt, entry, allowICEOff);
-				responses.Add(entry);
-				IterateEMTorque(absTime, dt, outTorque, outAngularVelocity, nextGear, allowICEOff, emOffResponse, emTqReq, emPos, responses);
+				CalcualteCosts(emOffEntry.Response, dt, emOffEntry, allowICEOff);
+				if (nextGear == gear && gearRangeUpshift == 0 && (emOffEntry.IgnoreReason & HybridConfigurationIgnoreReason.EngineSpeedTooHigh) != 0) {
+					allowEmergencyUpshift = true;
+				}
+				if (nextGear == gear && gearRangeDownshift == 0 && (emOffEntry.IgnoreReason & HybridConfigurationIgnoreReason.EngineSpeedTooLow) != 0) {
+					allowEmergencyDownshift = true;
+				}
+				responses.Add(emOffEntry);
+
+				var emTqReq = (emOffEntry.Response.ElectricMotor.PowerRequest + emOffEntry.Response.ElectricMotor.InertiaPowerDemand) / emOffEntry.Response.ElectricMotor.AngularVelocity;
+				IterateEMTorque(absTime, dt, outTorque, outAngularVelocity, nextGear, allowICEOff, emOffEntry.Response, emTqReq, emPos, responses);
+			}
+
+			if (allowEmergencyUpshift) {
+				var nextGear = gear + 1;
+				var emOffEntry = GetEmOffResultEntry(absTime, dt, outTorque, outAngularVelocity, nextGear);
+				if (emOffEntry != null) {
+					CalcualteCosts(emOffEntry.Response, dt, emOffEntry, allowICEOff);
+					
+					responses.Add(emOffEntry);
+
+					var emTqReq =
+						(emOffEntry.Response.ElectricMotor.PowerRequest + emOffEntry.Response.ElectricMotor.InertiaPowerDemand) /
+						emOffEntry.Response.ElectricMotor.AngularVelocity;
+					IterateEMTorque(
+						absTime, dt, outTorque, outAngularVelocity, nextGear, allowICEOff, emOffEntry.Response, emTqReq, emPos,
+						responses);
+				}
+			}
+			if (allowEmergencyDownshift) {
+				var nextGear = gear - 1;
+				var emOffEntry = GetEmOffResultEntry(absTime, dt, outTorque, outAngularVelocity, nextGear);
+				if (emOffEntry != null) {
+					CalcualteCosts(emOffEntry.Response, dt, emOffEntry, allowICEOff);
+
+					responses.Add(emOffEntry);
+
+					var emTqReq =
+						(emOffEntry.Response.ElectricMotor.PowerRequest + emOffEntry.Response.ElectricMotor.InertiaPowerDemand) /
+						emOffEntry.Response.ElectricMotor.AngularVelocity;
+					IterateEMTorque(
+						absTime, dt, outTorque, outAngularVelocity, nextGear, allowICEOff, emOffEntry.Response, emTqReq, emPos,
+						responses);
+				}
 			}
 
 			return responses;
+		}
+
+		private HybridResultEntry GetEmOffResultEntry(
+			Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity, uint nextGear)
+		{
+			var emOffSetting = new HybridStrategyResponse() {
+				CombustionEngineOn = true,
+				GearboxInNeutral = false,
+				MechanicalAssistPower = ElectricMotorsOff
+			};
+			var emOffResponse = RequestDryRun(absTime, dt, outTorque, outAngularVelocity, nextGear, emOffSetting);
+
+			if (emOffResponse == null) {
+				return null;
+			}
+
+			var entry = new HybridResultEntry() {
+				U = double.NaN,
+				Response = emOffResponse,
+				Setting = emOffSetting,
+				Gear = nextGear
+			};
+			return entry;
 		}
 
 		private List<HybridResultEntry> FindSolutionDisengaged(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity, bool dryRun)
@@ -387,7 +450,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 			return responses;
 		}
 
-		private void IterateEMTorque(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity, uint nextGear, bool allowIceOff, ResponseDryRun firstResponse, NewtonMeter emTqReq, PowertrainPosition emPos, List<HybridResultEntry> responses)
+		private void IterateEMTorque(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity, uint nextGear, bool allowIceOff, IResponse firstResponse, NewtonMeter emTqReq, PowertrainPosition emPos, List<HybridResultEntry> responses)
 		{
 			const double stepSize = 0.1;
 
@@ -396,6 +459,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 			var maxU = allowIceOff
 				? -1.0
 				: Math.Min((maxEmTorque) / emTqReq, -1.0);
+			if (DataBus.DriverInfo.DrivingAction == DrivingAction.Brake) {
+				maxU = 0;
+			}
 			if (firstResponse.ElectricMotor.MaxDriveTorque != null && (ElectricMotorCanPropellDuringTractionInterruption || firstResponse.Gearbox.Gear != 0)) {
 				for (var u = 0.0; u >= maxU; u -= stepSize * (u < -4 ? 10 : (u < -2 ? 5 : 1))) {
 					var emTorque = emTqReq.Abs() * u;
@@ -541,7 +607,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 			TestPowertrain.CombustionEngine.PreviousState.EngineTorqueOut = (DataBus.EngineInfo as CombustionEngine).PreviousState.EngineTorqueOut;
 			TestPowertrain.CombustionEngine.PreviousState.DynamicFullLoadTorque = (DataBus.EngineInfo as CombustionEngine).PreviousState.DynamicFullLoadTorque;
 
-			if (nextGear != DataBus.GearboxInfo.Gear && TestPowertrain.ElectricMotorP2 != null) {
+			if (/*nextGear != DataBus.GearboxInfo.Gear && */TestPowertrain.ElectricMotorP2 != null) {
 				TestPowertrain.ElectricMotorP2.PreviousState.OutAngularVelocity =
 					DataBus.ElectricMotorInfo(PowertrainPosition.HybridP2).ElectricMotorSpeed;
 			}
@@ -551,7 +617,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 			return retVal as ResponseDryRun;
 		}
 
-		private void CalcualteCosts(ResponseDryRun resp, Second dt, HybridResultEntry tmp, bool allowIceOff)
+		private void CalcualteCosts(IResponse resp, Second dt, HybridResultEntry tmp, bool allowIceOff)
 		{
 			tmp.IgnoreReason = 0;
 			if (resp == null) {
@@ -568,7 +634,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 					: HybridConfigurationIgnoreReason.EngineTorqueDemandTooLow;
 			}
 
-			if (resp.Gearbox.Gear != 0 &&resp.Engine.EngineSpeed.IsGreaterOrEqual(
+			if (resp.Gearbox.Gear != 0 && resp.Engine.EngineSpeed.IsGreaterOrEqual(
 					VectoMath.Min(
 						ModelData.GearboxData.Gears[resp.Gearbox.Gear].MaxSpeed,
 						DataBus.EngineInfo.EngineN95hSpeed)) ) {
@@ -612,7 +678,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 				? ModelData.GearshiftParameters.RatingFactorCurrentGear
 				: 1;
 
-			if (!DataBus.EngineCtl.CombustionEngineOn && !tmp.ICEOff) {
+			var socthreshold = StrategyParameters.MinSoC + (StrategyParameters.MaxSoC - StrategyParameters.MinSoC) * 0.1;
+			if (!DataBus.EngineCtl.CombustionEngineOn && !tmp.ICEOff && DataBus.BatteryInfo.StateOfCharge.IsGreater(socthreshold)) {
 				tmp.ICEStartPenalty1 = IceRampUpCosts;
 				tmp.ICEStartPenalty2 = IceIdlingCosts;
 			} else {
@@ -674,6 +741,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 			}
 
 			PreviousState.AngularVelocity = outAngularVelocity;
+			PreviousState.GearboxEngaged = true;
 			PreviousState.GearshiftTriggerTstmp = -double.MaxValue.SI<Second>();
 			CurrentState.GearshiftTriggerTstmp = -double.MaxValue.SI<Second>();
 			return retVal;
