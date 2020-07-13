@@ -150,7 +150,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 				return response;
 			}
 
-			if (dryRun && DataBus.DriverInfo.DrivingAction == DrivingAction.Brake) {
+			if (dryRun && DataBus.DriverInfo.DrivingAction == DrivingAction.Brake && (DataBus.GearboxInfo.GearEngaged(absTime) || ElectricMotorCanPropellDuringTractionInterruption)) {
 				var tmp = MaxRecuperationSetting(absTime, dt, outTorque, outAngularVelocity);
 				var outTorqueWithoutBraking =
 					outTorque - 2 * DataBus.Brakes.BrakePower / (PreviousState.AngularVelocity + outAngularVelocity);
@@ -159,7 +159,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 					DryRunAction = DataBus.DriverInfo.DrivingAction;
 					DryRunResult = tmp;
 					var brakeRetVal = CreateResponse(tmp, currentGear);
-					DebugData.Add(new { Best = tmp, RetVal = brakeRetVal, DryRun = dryRun });
+					DebugData.Add(new { DrivingAction = DataBus.DriverInfo.DrivingAction, Best = tmp, RetVal = brakeRetVal, DryRun = dryRun });
 					return brakeRetVal;
 				}
 			}
@@ -227,7 +227,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 				CurrentState.GearshiftTriggerTstmp = absTime;
 			}
 
-			DebugData.Add(new { Evaluations = eval, Best = best, RetVal = retVal, DryRun = dryRun });
+			DebugData.Add(new { DrivingAction = DataBus.DriverInfo.DrivingAction, Evaluations = eval, Best = best, RetVal = retVal, DryRun = dryRun });
 			return retVal;
 		}
 
@@ -237,7 +237,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 		{
 			var best = eval.Where(x => !double.IsNaN(x.Score)).OrderBy(x => x.Score).FirstOrDefault();
 			if (best == null) {
-				best = eval.FirstOrDefault(x => !DataBus.EngineCtl.CombustionEngineOn || !x.IgnoreReason.InvalidEngineSpeed());
+				best = eval.OrderBy(x => Math.Abs((int)currentGear - x.Gear)).FirstOrDefault(x => !DataBus.EngineCtl.CombustionEngineOn || !x.IgnoreReason.InvalidEngineSpeed());
 				if (best == null /*&& dryRun*/) {
 					var emEngaged = (!ElectricMotorCanPropellDuringTractionInterruption ||
 									(DataBus.GearboxInfo.GearEngaged(absTime) && eval.First().Response.Gearbox.Gear != 0));
@@ -300,14 +300,15 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 				GearboxInNeutral = false,
 				MechanicalAssistPower = ElectricMotorsOff
 			};
-			var firstResponse = RequestDryRun(absTime, dt, outTorque, outAngularVelocity, DataBus.GearboxInfo.Gear, first);
+			var currentGear = PreviousState.GearboxEngaged ? DataBus.GearboxInfo.Gear : Controller.ShiftStrategy.NextGear.Gear;
+			var firstResponse = RequestDryRun(absTime, dt, outTorque, outAngularVelocity, currentGear, first);
 
 			var allowICEOff = PreviousState.ICEStartTStmp == null ||
 							PreviousState.ICEStartTStmp.IsSmaller(absTime + MIN_ICE_ON_TIME);
 
 
 			var emPos = ModelData.ElectricMachinesData.First().Item1;
-			var currentGear = PreviousState.GearboxEngaged ? DataBus.GearboxInfo.Gear : Controller.ShiftStrategy.NextGear.Gear;
+			
 			var emTorque = !ElectricMotorCanPropellDuringTractionInterruption && (firstResponse.Gearbox.Gear == 0 || !DataBus.GearboxInfo.GearEngaged(absTime)) ? null : firstResponse.ElectricMotor.MaxRecuperationTorque;
 			return TryConfiguration(absTime, dt, outTorque, outAngularVelocity, currentGear, emPos, emTorque, double.NaN, allowICEOff);
 		}
@@ -606,6 +607,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 			TestPowertrain.CombustionEngine.PreviousState.EngineTorque = (DataBus.EngineInfo as CombustionEngine).PreviousState.EngineTorque;
 			TestPowertrain.CombustionEngine.PreviousState.EngineTorqueOut = (DataBus.EngineInfo as CombustionEngine).PreviousState.EngineTorqueOut;
 			TestPowertrain.CombustionEngine.PreviousState.DynamicFullLoadTorque = (DataBus.EngineInfo as CombustionEngine).PreviousState.DynamicFullLoadTorque;
+
+			TestPowertrain.Clutch.PreviousState.InAngularVelocity =
+				(DataBus.ClutchInfo as SwitchableClutch).PreviousState.InAngularVelocity;
 
 			if (/*nextGear != DataBus.GearboxInfo.Gear && */TestPowertrain.ElectricMotorP2 != null) {
 				TestPowertrain.ElectricMotorP2.PreviousState.OutAngularVelocity =

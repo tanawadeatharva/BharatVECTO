@@ -1001,6 +1001,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					first = Driver.DrivingActionAccelerate(absTime, ds, targetVelocity, gradient);
 					debug.Add(new { action = "Coast:(Success & Acc<0) -> Accelerate", first });
 				}
+				if (!DataBus.EngineInfo.EngineOn && first is ResponseOverload) {
+					first = Driver.DrivingActionAccelerate(absTime, ds, targetVelocity, gradient);
+					debug.Add(new { action = "Coast:(Overload & ICE off) -> Accelerate", first });
+				}
 			} else {
 				if (DataBus.GearboxInfo.GearboxType.AutomaticTransmission() && DataBus.GearboxInfo.DisengageGearbox) {
 					first = Driver.DrivingActionCoast(absTime, ds, velocityWithOverspeed, gradient);

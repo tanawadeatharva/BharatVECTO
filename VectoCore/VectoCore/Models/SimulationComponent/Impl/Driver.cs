@@ -922,30 +922,31 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			LimitationMode limits)
 		{
 			var limitApplied = false;
-			var originalAcceleration = operatingPoint.Acceleration;
+			var retVal = new OperatingPoint(operatingPoint);
+			var originalAcceleration = retVal.Acceleration;
 			//if (((limits & LimitationMode.LimitDecelerationLookahead) != 0) &&
-			//	operatingPoint.Acceleration < DriverData.LookAheadCoasting.Deceleration) {
-			//	operatingPoint.Acceleration = DriverData.LookAheadCoasting.Deceleration;
+			//	retVal.Acceleration < DriverData.LookAheadCoasting.Deceleration) {
+			//	retVal.Acceleration = DriverData.LookAheadCoasting.Deceleration;
 			//	limitApplied = true;
 			//}
 			var accelerationLimits = DriverData.AccelerationCurve.Lookup(DataBus.VehicleInfo.VehicleSpeed);
-			if (operatingPoint.Acceleration > accelerationLimits.Acceleration) {
-				operatingPoint.Acceleration = accelerationLimits.Acceleration;
+			if (retVal.Acceleration > accelerationLimits.Acceleration) {
+				retVal.Acceleration = accelerationLimits.Acceleration;
 				limitApplied = true;
 			}
 			if (((limits & LimitationMode.LimitDecelerationDriver) != 0) &&
-				operatingPoint.Acceleration < accelerationLimits.Deceleration) {
-				operatingPoint.Acceleration = accelerationLimits.Deceleration;
+				retVal.Acceleration < accelerationLimits.Deceleration) {
+				retVal.Acceleration = accelerationLimits.Deceleration;
 				limitApplied = true;
 			}
 			if (limitApplied) {
-				operatingPoint.SimulationInterval =
-					ComputeTimeInterval(operatingPoint.Acceleration, operatingPoint.SimulationDistance)
+				retVal.SimulationInterval =
+					ComputeTimeInterval(retVal.Acceleration, retVal.SimulationDistance)
 						.SimulationInterval;
 				Log.Debug("Limiting acceleration from {0} to {1}, dt: {2}", originalAcceleration,
-					operatingPoint.Acceleration, operatingPoint.SimulationInterval);
+						retVal.Acceleration, retVal.SimulationInterval);
 			}
-			return operatingPoint;
+			return retVal;
 		}
 
 		/// <summary>
