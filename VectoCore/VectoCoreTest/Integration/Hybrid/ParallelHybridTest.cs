@@ -159,7 +159,7 @@ namespace TUGraz.VectoCore.Tests.Integration.Hybrid
 			TestCase("LongHaul", 2000, 0.5, 0, TestName = "P2 Hybrid DriveCycle LongHaul, SoC: 0.5 Payload: 2t P_auxEl: 0kW"),
 			TestCase("RegionalDelivery", 2000, 0.5, 0, TestName = "P2 Hybrid DriveCycle RegionalDelivery, SoC: 0.5 Payload: 2t P_auxEl: 0kW"),
 			TestCase("UrbanDelivery", 2000, 0.5, 0, TestName = "P2 Hybrid DriveCycle UrbanDelivery, SoC: 0.5 Payload: 2t P_auxEl: 0kW"),
-			TestCase("Construction", 2000, 0.5, 0, TestName = "P2 Hybrid DriveCycle UrbanDelivery, SoC: 0.5 Payload: 2t P_auxEl: 0kW"),
+			TestCase("Construction", 2000, 0.5, 0, TestName = "P2 Hybrid DriveCycle Construction, SoC: 0.5 Payload: 2t P_auxEl: 0kW"),
 			TestCase("Urban", 2000, 0.5, 0, TestName = "P2 Hybrid DriveCycle Urban, SoC: 0.5 Payload: 2t P_auxEl: 0kW"),
 			TestCase("Suburban", 2000, 0.5, 0, TestName = "P2 Hybrid DriveCycle SubUrban, SoC: 0.5 Payload: 2t P_auxEl: 0kW"),
 			TestCase("Interurban", 2000, 0.5, 0, TestName = "P2 Hybrid DriveCycle InterUrban, SoC: 0.5 Payload: 2t P_auxEl: 0kW"),
@@ -614,8 +614,8 @@ namespace TUGraz.VectoCore.Tests.Integration.Hybrid
 				.AddComponent(new Vehicle(container, runData.VehicleData, runData.AirdragData))
 				.AddComponent(new Wheels(container, runData.VehicleData.DynamicTyreRadius,
 					runData.VehicleData.WheelsInertia))
-				.AddComponent(new Brakes(container))
 				.AddComponent(ctl)
+				.AddComponent(new Brakes(container))
 				.AddComponent(GetElectricMachine(PowertrainPosition.HybridP4, runData.ElectricMachinesData, container,
 					es, ctl))
 				.AddComponent(new AxleGear(container, runData.AxleGearData))

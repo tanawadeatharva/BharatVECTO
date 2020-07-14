@@ -48,6 +48,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl {
 						DeltaFullLoad = outTorque * ModelData.IdleSpeed,
 						DeltaDragLoad = outTorque * ModelData.IdleSpeed,
 						Engine = {
+							TorqueOutDemand = outTorque,
 							TotalTorqueDemand = outTorque,
 							PowerRequest = outTorque * outAngularVelocity,
 							DynamicFullLoadPower = 0.SI<Watt>(),
