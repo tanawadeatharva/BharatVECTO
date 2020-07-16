@@ -250,6 +250,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 					return;
 				}
 
+				if (firstResponse.ElectricMotor.MaxRecuperationTorque == null) {
+					eval.Add(ResponseEmOff);
+					return;
+				}
+
 				var maxRecuperation = new HybridStrategyResponse() {
 					CombustionEngineOn = DataBus.EngineInfo.EngineOn, // AllowICEOff(absTime), 
 					GearboxInNeutral = false,
@@ -280,7 +285,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 				var emRecuperationTq = SearchAlgorithm.Search(
 					maxRecuperationResponse.ElectricMotor.ElectricMotorPowerMech /
 					maxRecuperationResponse.ElectricMotor.AngularVelocity,
-					maxRecuperationResponse.Engine.TorqueOutDemand, maxRecuperationResponse.ElectricMotor.MaxDriveTorque * 0.1,
+					maxRecuperationResponse.Engine.TorqueOutDemand, maxRecuperationResponse.ElectricMotor.MaxRecuperationTorque * 0.1,
 					getYValue: r => {
 						var response = r as ResponseDryRun;
 						return response.DeltaDragLoad;
@@ -381,7 +386,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 		{
 			var best = eval.Where(x => !double.IsNaN(x.Score)).OrderBy(x => x.Score).FirstOrDefault();
 			if (best == null) {
-				best = eval.OrderBy(x => Math.Abs((int)currentGear - x.Gear)).FirstOrDefault(x => !DataBus.EngineCtl.CombustionEngineOn || !x.IgnoreReason.InvalidEngineSpeed());
+				best = eval.OrderBy(x => Math.Abs((int)currentGear - x.Gear)).FirstOrDefault(
+					x => !DataBus.EngineCtl.CombustionEngineOn || !x.IgnoreReason.InvalidEngineSpeed());
 				if (best == null /*&& dryRun*/) {
 					var emEngaged = (!ElectricMotorCanPropellDuringTractionInterruption ||
 									(DataBus.GearboxInfo.GearEngaged(absTime) && eval.First().Response.Gearbox.Gear != 0));
@@ -406,9 +412,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 					}
 				}
 				if ((DataBus.DriverInfo.DrivingAction == DrivingAction.Accelerate // ||
-					/*DataBus.DriverInfo.DrivingAction == DrivingAction.Brake*/) && allUnderload) {
+						/*DataBus.DriverInfo.DrivingAction == DrivingAction.Brake*/) && allUnderload) {
 					if (ElectricMotorCanPropellDuringTractionInterruption || DataBus.GearboxInfo.GearEngaged(absTime)) {
-						var filtered = eval.Where(x => !x.IgnoreReason.InvalidEngineSpeed()).OrderBy(x => Math.Abs((int)currentGear - x.Gear)).ToArray();
+						var filtered = eval.Where(x => !x.IgnoreReason.InvalidEngineSpeed())
+											.OrderBy(x => Math.Abs((int)currentGear - x.Gear)).ToArray();
 						if (!filtered.Any()) {
 							filtered = eval.OrderBy(x => Math.Abs((int)currentGear - x.Gear)).ToArray();
 						}
@@ -416,6 +423,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 							x => x.Setting.MechanicalAssistPower.Sum(e => e.Value ?? 0.SI<NewtonMeter>()));
 					}
 				}
+			} else {
+				
 			}
 			return best;
 		}
@@ -702,16 +711,27 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 				TestPowertrain.Gearbox._nextGear = Controller.ShiftStrategy.NextGear;
 			}
 
-			TestPowertrain.CombustionEngine.PreviousState.EngineOn = (DataBus.EngineInfo as CombustionEngine).PreviousState.EngineOn;
-			TestPowertrain.CombustionEngine.PreviousState.EnginePower = (DataBus.EngineInfo as CombustionEngine).PreviousState.EnginePower;
-			TestPowertrain.CombustionEngine.PreviousState.dt = (DataBus.EngineInfo as CombustionEngine).PreviousState.dt;
-			TestPowertrain.CombustionEngine.PreviousState.EngineSpeed = (DataBus.EngineInfo as CombustionEngine).PreviousState.EngineSpeed;
-			TestPowertrain.CombustionEngine.PreviousState.EngineTorque = (DataBus.EngineInfo as CombustionEngine).PreviousState.EngineTorque;
-			TestPowertrain.CombustionEngine.PreviousState.EngineTorqueOut = (DataBus.EngineInfo as CombustionEngine).PreviousState.EngineTorqueOut;
-			TestPowertrain.CombustionEngine.PreviousState.DynamicFullLoadTorque = (DataBus.EngineInfo as CombustionEngine).PreviousState.DynamicFullLoadTorque;
+			//if (!PreviousState.GearboxEngaged) {
+				TestPowertrain.CombustionEngine.PreviousState.EngineOn =
+					(DataBus.EngineInfo as CombustionEngine).PreviousState.EngineOn;
+				TestPowertrain.CombustionEngine.PreviousState.EnginePower =
+					(DataBus.EngineInfo as CombustionEngine).PreviousState.EnginePower;
+				TestPowertrain.CombustionEngine.PreviousState.dt = (DataBus.EngineInfo as CombustionEngine).PreviousState.dt;
+				TestPowertrain.CombustionEngine.PreviousState.EngineSpeed =
+					(DataBus.EngineInfo as CombustionEngine).PreviousState.EngineSpeed;
+				TestPowertrain.CombustionEngine.PreviousState.EngineTorque =
+					(DataBus.EngineInfo as CombustionEngine).PreviousState.EngineTorque;
+				TestPowertrain.CombustionEngine.PreviousState.EngineTorqueOut =
+					(DataBus.EngineInfo as CombustionEngine).PreviousState.EngineTorqueOut;
+				TestPowertrain.CombustionEngine.PreviousState.DynamicFullLoadTorque =
+					(DataBus.EngineInfo as CombustionEngine).PreviousState.DynamicFullLoadTorque;
 
-			TestPowertrain.Clutch.PreviousState.InAngularVelocity =
-				(DataBus.ClutchInfo as SwitchableClutch).PreviousState.InAngularVelocity;
+				TestPowertrain.Gearbox.PreviousState.InAngularVelocity =
+					(DataBus.GearboxInfo as Gearbox).PreviousState.InAngularVelocity;
+
+				TestPowertrain.Clutch.PreviousState.InAngularVelocity =
+					(DataBus.ClutchInfo as SwitchableClutch).PreviousState.InAngularVelocity;
+			//}
 
 			if (/*nextGear != DataBus.GearboxInfo.Gear && */TestPowertrain.ElectricMotorP2 != null) {
 				TestPowertrain.ElectricMotorP2.PreviousState.OutAngularVelocity =
@@ -763,15 +783,17 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 				tmp.IgnoreReason |= HybridConfigurationIgnoreReason.EngineSpeedBelowDownshift;
 			}
 
-			if (!double.IsNaN(tmp.FuelCosts)) {
-				if (allowIceOff && resp.Engine.TorqueOutDemand.IsEqual(0)) {
-					// no torque from ICE requested, ICE could be turned off
-					tmp.FuelCosts = 0;
-					tmp.ICEOff = true;
-				} else {
-					tmp.FuelCosts = ModelData.EngineData.Fuels.Sum(
-						x => (x.ConsumptionMap.GetFuelConsumptionValue(resp.Engine.TotalTorqueDemand, resp.Engine.EngineSpeed)
-							* x.FuelData.LowerHeatingValueVecto * dt).Value());
+			if (allowIceOff && resp.Engine.TorqueOutDemand.IsEqual(0)) {
+				// no torque from ICE requested, ICE could be turned off
+				tmp.FuelCosts = 0;
+				tmp.ICEOff = true;
+			} else {
+				if (!double.IsNaN(tmp.FuelCosts)) {
+					//if (!allowIceOff || !resp.Engine.TorqueOutDemand.IsEqual(0)) {
+						tmp.FuelCosts = ModelData.EngineData.Fuels.Sum(
+							x => (x.ConsumptionMap.GetFuelConsumptionValue(resp.Engine.TotalTorqueDemand, resp.Engine.EngineSpeed)
+								* x.FuelData.LowerHeatingValueVecto * dt).Value());
+					//}
 				}
 			}
 			tmp.BatCosts = -(resp.ElectricSystem.BatteryPowerDemand * dt).Value();

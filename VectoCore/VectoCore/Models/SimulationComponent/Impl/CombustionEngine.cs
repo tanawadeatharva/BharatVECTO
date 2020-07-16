@@ -252,6 +252,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				};
 			}
 			CurrentState.dt = dt;
+			CurrentState.EngineOn = true;
 			CurrentState.EngineSpeed = angularVelocity;
 			CurrentState.EngineTorqueOut = torqueOut;
 			CurrentState.FullDragTorque = fullDragTorque;

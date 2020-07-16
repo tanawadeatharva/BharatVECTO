@@ -91,19 +91,31 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		public IResponse Request(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity,
 			bool dryRun = false)
 		{
-			var strategySettings = Strategy.Request(absTime, dt, outTorque, outAngularVelocity, dryRun);
-			ApplyStrategySettings(strategySettings);
-			if (!dryRun) {
-				CurrentState.SetState(outTorque, outAngularVelocity, outTorque, outAngularVelocity);
-				CurrentState.StrategyResponse = strategySettings;
-			}
-			if (!dryRun && /*!DataBus.EngineInfo.EngineOn &&*/ strategySettings.ShiftRequired) {
-				DataBus.GearboxCtl.TriggerGearshift(absTime, dt);
-				_shiftStrategy.SetNextGear(strategySettings.NextGear);
-				return new ResponseGearShift(this);
-			}
-			var retVal = NextComponent.Request(absTime, dt, outTorque, outAngularVelocity, dryRun);
-			retVal.HybridController.StrategySettings = strategySettings;
+			var retry = false;
+			var retryCount = 0;
+			IResponse retVal;
+			do {
+				retry = false;
+				var strategySettings = Strategy.Request(absTime, dt, outTorque, outAngularVelocity, dryRun);
+				ApplyStrategySettings(strategySettings);
+				if (!dryRun) {
+					CurrentState.SetState(outTorque, outAngularVelocity, outTorque, outAngularVelocity);
+					CurrentState.StrategyResponse = strategySettings;
+				}
+				if (!dryRun && /*!DataBus.EngineInfo.EngineOn &&*/ strategySettings.ShiftRequired) {
+					DataBus.GearboxCtl.TriggerGearshift(absTime, dt);
+					_shiftStrategy.SetNextGear(strategySettings.NextGear);
+					return new ResponseGearShift(this);
+				}
+
+				retVal = NextComponent.Request(absTime, dt, outTorque, outAngularVelocity, dryRun);
+				retVal.HybridController.StrategySettings = strategySettings;
+				if (!(retVal is ResponseSuccess) && retVal.Gearbox.Gear != strategySettings.EvaluatedSolution.Gear && retryCount < 3) {
+					retryCount++;
+					retry = true;
+				}
+			} while (retry);
+
 			return retVal;
 		}
 
