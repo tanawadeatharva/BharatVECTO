@@ -388,9 +388,54 @@ namespace TUGraz.VectoCore.Tests.Integration.Hybrid
 			GraphWriter.Write(modFilename);
 		}
 
-		// - - - - - - - - - - - - - - - - - - - - - - - - - 
 
-		[
+        [
+            TestCase("LongHaul", 2000, 0.5, 0, TestName = "P3 Hybrid DriveCycle LongHaul, SoC: 0.5 Payload: 2t P_auxEl: 0kW"),
+            TestCase("RegionalDelivery", 2000, 0.5, 0, TestName = "P3 Hybrid DriveCycle RegionalDelivery, SoC: 0.5 Payload: 2t P_auxEl: 0kW"),
+            TestCase("UrbanDelivery", 2000, 0.5, 0, TestName = "P3 Hybrid DriveCycle UrbanDelivery, SoC: 0.5 Payload: 2t P_auxEl: 0kW"),
+            TestCase("Construction", 2000, 0.5, 0, TestName = "P3 Hybrid DriveCycle Construction, SoC: 0.5 Payload: 2t P_auxEl: 0kW"),
+            TestCase("Urban", 2000, 0.5, 0, TestName = "P3 Hybrid DriveCycle Urban, SoC: 0.5 Payload: 2t P_auxEl: 0kW"),
+            TestCase("Suburban", 2000, 0.5, 0, TestName = "P3 Hybrid DriveCycle SubUrban, SoC: 0.5 Payload: 2t P_auxEl: 0kW"),
+            TestCase("Interurban", 2000, 0.5, 0, TestName = "P3 Hybrid DriveCycle InterUrban, SoC: 0.5 Payload: 2t P_auxEl: 0kW"),
+            TestCase("Coach", 2000, 0.5, 0, TestName = "P3 Hybrid DriveCycle Coach, SoC: 0.5 Payload: 2t P_auxEl: 0kW"),
+        ]
+        public void P3HybriDriveCycle(string declarationMission, double payload, double initialSoC, double pAuxEl)
+        {
+            GraphWriter.Yfields = Yfields.Concat(new[] { ModalResultField.P_electricMotor_mech_P3 }).ToArray();
+
+            var cycleData = RessourceHelper.ReadStream(
+                DeclarationData.DeclarationDataResourcePrefix + ".MissionCycles." +
+                declarationMission +
+                Constants.FileExtensions.CycleFile);
+            var cycle = DrivingCycleDataReader.ReadFromStream(cycleData, CycleType.DistanceBased, "", false);
+
+            const bool largeMotor = true;
+
+            var modFilename = string.Format("SimpleParallelHybrid-P3_cycle_{0}-{1}_{2}_{3}.vmod", declarationMission, initialSoC, payload, pAuxEl);
+            const PowertrainPosition pos = PowertrainPosition.HybridP3;
+            var run = CreateEngineeringRun(
+                cycle, modFilename, initialSoC, pos, largeMotor: true, pAuxEl: pAuxEl, payload: payload.SI<Kilogram>());
+
+            var hybridController = (HybridController)((VehicleContainer)run.GetContainer()).HybridController;
+            Assert.NotNull(hybridController);
+
+            var modData = ((ModalDataContainer)((VehicleContainer)run.GetContainer()).ModData).Data;
+
+            var data = run.GetContainer().RunData;
+            //File.WriteAllText(
+            //	$"{modFilename}.json",
+            //	JsonConvert.SerializeObject(data, Formatting.Indented));
+
+            run.Run();
+            Assert.IsTrue(run.FinishedWithoutErrors);
+
+            Assert.IsTrue(modData.Rows.Count > 0);
+            GraphWriter.Write(modFilename);
+        }
+
+        // - - - - - - - - - - - - - - - - - - - - - - - - - 
+
+        [
 			TestCase(30, 0.7, 0, 0, TestName = "P4 Hybrid ConstantSpeed 30km/h SoC: 0.7, level"),
 			TestCase(50, 0.7, 0, 0, TestName = "P4 Hybrid ConstantSpeed 50km/h SoC: 0.7, level"),
 			TestCase(80, 0.7, 0, 0, TestName = "P4 Hybrid ConstantSpeed 80km/h SoC: 0.7, level"),
