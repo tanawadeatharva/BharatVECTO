@@ -99,13 +99,15 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 						0.SI<Meter>(), Constants.SimulationSettings.DriverActionDistanceTolerance);
 					var closeBeforeBraking = estimatedTimestep.IsSmaller(Constants.SimulationSettings.LowerBoundTimeInterval);
 					var brakingIntervalTooShort = NextDrivingAction.Action == DrivingBehavior.Braking &&
+												NextDrivingAction.ActionDistance.IsSmaller(currentDistance + ds) &&
 												((NextDrivingAction.TriggerDistance - NextDrivingAction.ActionDistance) / Driver.DataBus.VehicleSpeed)
 												.IsSmaller(
-													Constants.SimulationSettings.LowerBoundTimeInterval / 20) && !Driver.DataBus.ClutchClosed(absTime);
+													Constants.SimulationSettings.LowerBoundTimeInterval / 2) && (Driver.DataBus.GearboxType.AutomaticTransmission() || !Driver.DataBus.ClutchClosed(absTime));
 					var brakingIntervalShort = NextDrivingAction.Action == DrivingBehavior.Braking &&
+												NextDrivingAction.ActionDistance.IsSmaller(currentDistance + ds) &&
 												((NextDrivingAction.TriggerDistance - NextDrivingAction.ActionDistance) / Driver.DataBus.VehicleSpeed)
 												.IsSmaller(
-													Constants.SimulationSettings.LowerBoundTimeInterval / 2) && !Driver.DataBus.ClutchClosed(absTime);
+													Constants.SimulationSettings.LowerBoundTimeInterval / 2) && (Driver.DataBus.GearboxType.AutomaticTransmission() || !Driver.DataBus.ClutchClosed(absTime));
 					if (brakingIntervalShort && remainingDistance.IsEqual(ds)) {
 						return new ResponseDrivingCycleDistanceExceeded()
 						{
@@ -490,8 +492,12 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			debug.Add(new { action = "ClutchOpen -> Roll", response });
 			response.Switch().Case<ResponseUnderload>(
 						r => {
-							response = Driver.DrivingActionBrake(absTime, ds, velocity, gradient, r);
-							debug.Add(new { action = "Roll:Underload -> Brake", response });
+							if (DataBus.ClutchClosed(absTime)) {
+								response = HandleRequestEngaged(absTime, ds, velocity, gradient, false, velocity, debug);
+							} else {
+								response = Driver.DrivingActionBrake(absTime, ds, velocity, gradient, r);
+								debug.Add(new { action = "Roll:Underload -> Brake", response });
+							}
 						})
 					.Case<ResponseSpeedLimitExceeded>(
 						() => {
