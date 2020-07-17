@@ -1,8 +1,18 @@
 #Changelog
 
+**VECTO-3.3.8**
+
+***Build 2024 (2020-07-17) RELEASE CANDIDATE***
+
+- Bugfixes 
+    * [VECTO-1288] - Simulation Abort UD RL
+    * [VECTO-1327] - Simulation abort Construction RefLoad: unexpected response ResponseOverload
+    * [VECTO-1266] - Gear 4 Loss-Map was extrapolated
+
+
 **VECTO 3.3.7**
 
-*** Build 1964 (2020-05-18) OFFICIAL RELEASE***
+***Build 1964 (2020-05-18) OFFICIAL RELEASE***
 
 - Bugfixes
     * [VECTO-1254] - Hashing method does not ignore certain XML attributes
