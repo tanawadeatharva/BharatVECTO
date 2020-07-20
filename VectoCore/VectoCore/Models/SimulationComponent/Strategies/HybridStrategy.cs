@@ -208,7 +208,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 			if (ElectricMotorCanPropellDuringTractionInterruption || DataBus.GearboxInfo.GearEngaged(absTime)) {
 
 				var emPos = ModelData.ElectricMachinesData.First().Item1;
-				var currentGear = PreviousState.GearboxEngaged ? DataBus.GearboxInfo.Gear : Controller.ShiftStrategy.NextGear.Gear;
+				var currentGear = !DataBus.GearboxInfo.GearEngaged(absTime)
+					? Controller.ShiftStrategy.NextGear.Gear
+					: (PreviousState.GearboxEngaged
+						? DataBus.GearboxInfo.Gear
+						: Controller.ShiftStrategy.NextGear.Gear);
 				var tmp = new HybridStrategyResponse() {
 					CombustionEngineOn = DataBus.EngineInfo.EngineOn, // AllowICEOff(absTime), 
 					GearboxInNeutral = false,
@@ -220,8 +224,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 					var firstEntry = new HybridResultEntry();
 					CalcualteCosts(firstResponse, dt, firstEntry, AllowICEOff(absTime));
 
-					if ((firstEntry.IgnoreReason & (HybridConfigurationIgnoreReason.EngineSpeedTooLow |
-													HybridConfigurationIgnoreReason.EngineSpeedBelowDownshift)) != 0) {
+					if (DataBus.GearboxInfo.GearEngaged(absTime) && (firstEntry.IgnoreReason & (HybridConfigurationIgnoreReason.EngineSpeedTooLow |
+																							HybridConfigurationIgnoreReason.EngineSpeedBelowDownshift)) != 0) {
 						// downshift required!
 						var downshift = ResponseEmOff;
 						downshift.Gear = currentGear - 1;
@@ -303,17 +307,18 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 				);
 				if (emRecuperationTq.IsBetween(
 					firstResponse.ElectricMotor.MaxDriveTorque, firstResponse.ElectricMotor.MaxRecuperationTorque)) {
-					eval.Add(
-						new HybridResultEntry() {
-							ICEOff = !DataBus.EngineInfo.EngineOn,
-							Setting = new HybridStrategyResponse() {
-								CombustionEngineOn = DataBus.EngineInfo.EngineOn,
-								GearboxInNeutral = false,
-								MechanicalAssistPower = new Dictionary<PowertrainPosition, NewtonMeter>() {
-									{ emPos, emRecuperationTq }
-								}
+					var entry = new HybridResultEntry() {
+						ICEOff = !DataBus.EngineInfo.EngineOn,
+						Setting = new HybridStrategyResponse() {
+							CombustionEngineOn = DataBus.EngineInfo.EngineOn,
+							GearboxInNeutral = false,
+							MechanicalAssistPower = new Dictionary<PowertrainPosition, NewtonMeter>() {
+								{ emPos, emRecuperationTq }
 							}
-						});
+						}
+					};
+					entry.Response = RequestDryRun(absTime, dt, outTorque, outAngularVelocity, currentGear, entry.Setting);
+					eval.Add(entry);
 				} else {
 					if (emRecuperationTq.IsGreater(0)) {
 						eval.Add(
