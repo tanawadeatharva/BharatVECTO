@@ -102,6 +102,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			var maxBatPower = electricSystemResponse.MaxPowerDrive;
 
 			var maxBatDriveTorque = maxBatPower.IsEqual(0) ? ModelData.DragCurve.Lookup(avgSpeed) : ModelData.EfficiencyMap.LookupTorque(maxBatPower, avgSpeed, maxEmTorque);
+			//if (maxBatDriveTorque == null) {
+			//	return ModelData.DragCurve.Lookup(avgSpeed);
+			//}
 			var maxTorqueDrive = VectoMath.Max(maxEmTorque, maxBatDriveTorque);
 			return maxTorqueDrive > 0 ? null : maxTorqueDrive;
 		}
