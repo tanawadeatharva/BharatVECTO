@@ -503,7 +503,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 				IterateEMTorque(absTime, dt, outTorque, outAngularVelocity, nextGear, allowICEOff, emOffEntry.Response, emTqReq, emPos, responses);
 			}
 
-			if (allowEmergencyUpshift) {
+			var tmpBest = responses.Where(x => !double.IsNaN(x.Score)).OrderBy(x => x.Score).FirstOrDefault(); 
+			if (allowEmergencyUpshift && tmpBest != null && !tmpBest.ICEOff) {
 				var nextGear = gear + 1;
 				var emOffEntry = GetEmOffResultEntry(absTime, dt, outTorque, outAngularVelocity, nextGear);
 				if (emOffEntry != null) {
@@ -519,7 +520,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 						responses);
 				}
 			}
-			if (allowEmergencyDownshift) {
+			if (allowEmergencyDownshift && tmpBest != null && !tmpBest.ICEOff) {
 				var nextGear = gear - 1;
 				var emOffEntry = GetEmOffResultEntry(absTime, dt, outTorque, outAngularVelocity, nextGear);
 				if (emOffEntry != null) {
@@ -712,8 +713,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 			}
 
 			//if (!PreviousState.GearboxEngaged) {
-				TestPowertrain.CombustionEngine.PreviousState.EngineOn =
-					(DataBus.EngineInfo as CombustionEngine).PreviousState.EngineOn;
+			TestPowertrain.CombustionEngine.PreviousState.EngineOn = true;
+					//(DataBus.EngineInfo as CombustionEngine).PreviousState.EngineOn;
 				TestPowertrain.CombustionEngine.PreviousState.EnginePower =
 					(DataBus.EngineInfo as CombustionEngine).PreviousState.EnginePower;
 				TestPowertrain.CombustionEngine.PreviousState.dt = (DataBus.EngineInfo as CombustionEngine).PreviousState.dt;
@@ -801,12 +802,20 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 			var minSoC = Math.Max(ModelData.BatteryData.MinSOC, StrategyParameters.MinSoC);
 			tmp.SoCPenalty = 1 - Math.Pow((DataBus.BatteryInfo.StateOfCharge - StrategyParameters.TargetSoC) / (0.5 * (maxSoC - minSoC)), 5);
 
+			var socthreshold = StrategyParameters.MinSoC + (StrategyParameters.MaxSoC - StrategyParameters.MinSoC) * 0.1;
+			var minSoCPenalty = 10.0;
+			if (DataBus.BatteryInfo.StateOfCharge.IsSmaller(socthreshold)) {
+				var k = minSoCPenalty / (minSoC - socthreshold);
+				var d = minSoCPenalty - k * minSoC;
+				var extraSoCPenalty = k * DataBus.BatteryInfo.StateOfCharge + d;
+				tmp.SoCPenalty += extraSoCPenalty;
+			}
+
 			tmp.EqualityFactor = StrategyParameters.EquivalenceFactor;
 			tmp.GearshiftPenalty = resp.Gearbox.Gear != 0 && resp.Gearbox.Gear != DataBus.GearboxInfo.Gear
 				? ModelData.GearshiftParameters.RatingFactorCurrentGear
 				: 1;
 
-			var socthreshold = StrategyParameters.MinSoC + (StrategyParameters.MaxSoC - StrategyParameters.MinSoC) * 0.1;
 			if (!DataBus.EngineCtl.CombustionEngineOn && !tmp.ICEOff && DataBus.BatteryInfo.StateOfCharge.IsGreater(socthreshold)) {
 				tmp.ICEStartPenalty1 = IceRampUpCosts;
 				tmp.ICEStartPenalty2 = IceIdlingCosts;
