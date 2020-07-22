@@ -12,5 +12,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 		public KilogramSquareMeter Inertia { get; internal set; }
 
 		public DragCurve DragCurve { get; internal set; }
+
 	}
 }

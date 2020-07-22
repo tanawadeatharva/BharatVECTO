@@ -385,6 +385,9 @@ namespace TUGraz.VectoCore.Tests.Utils
 			get { throw new NotImplementedException(); }
 		}
 
+		public bool HasElectricMotor { get; }
+		public PowertrainPosition[] ElectricMotorPositions { get; }
+
 		#endregion
 	}
 }

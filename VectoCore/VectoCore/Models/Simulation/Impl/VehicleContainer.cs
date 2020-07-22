@@ -236,6 +236,11 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 		public virtual bool HasElectricMotor { get; private set; }
 
+		public PowertrainPosition[] ElectricMotorPositions
+		{
+			get { return ElectricMotors.Keys.ToArray(); }
+		}
+
 		public virtual bool HasCombustionEngine { get; private set; }
 
 		public virtual bool HasGearbox { get; private set; }

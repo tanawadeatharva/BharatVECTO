@@ -32,6 +32,7 @@
 using System;
 using System.Linq;
 using TUGraz.VectoCommon.Exceptions;
+using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Configuration;
@@ -62,12 +63,41 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				AirdragData.CrossWindCorrectionCurve.SetDataBus(container);
 			}
 			var model = container.RunData;
-			if (model?.GearboxData == null || model.AxleGearData == null) {
-				return;
+			
+			if (container.PowertrainInfo.HasCombustionEngine) {
+				if (model?.GearboxData == null || model.AxleGearData == null) {
+					return;
+				}
+                MaxVehicleSpeed = model.EngineData.FullLoadCurves[0].N95hSpeed /
+					model.GearboxData.Gears[model.GearboxData.Gears.Keys.Max()].Ratio /
+					model.AxleGearData.AxleGear.Ratio /
+					(model.AngledriveData?.Angledrive.Ratio
+					?? 1.0) * model.VehicleData.DynamicTyreRadius * 0.995;
 			}
-			MaxVehicleSpeed = model.EngineData.FullLoadCurves[0].N95hSpeed /
-							model.GearboxData.Gears[model.GearboxData.Gears.Keys.Max()].Ratio / model.AxleGearData.AxleGear.Ratio /
-							(model.AngledriveData?.Angledrive.Ratio ?? 1.0) * model.VehicleData.DynamicTyreRadius * 0.995;
+
+			if (model.ElectricMachinesData != null && model.ElectricMachinesData.Count > 0) {
+				var positions = model.ElectricMachinesData.Select(x => x.Item1).ToArray();
+				if (positions.Length > 1) {
+					throw new VectoException("Multiple electrical machines are currently not supported");
+				}
+
+				var pos = positions.First();
+				if (pos.IsBatteryElectric()) {
+					var maxEMSpeed = model.ElectricMachinesData.Find(x => x.Item1 == pos).Item2.FullLoadCurve
+						.FullLoadEntries.Max(x => x.MotorSpeed); // DataBus.ElectricMotorInfo(pos).MaxSpeed;
+					var ratio = 1.0;
+					if (pos == PowertrainPosition.BatteryElectricB3) {
+						ratio = model.AxleGearData.AxleGear.Ratio;
+					}
+
+					if (pos == PowertrainPosition.BatteryElectricB2) {
+						ratio = model.GearboxData.Gears[model.GearboxData.Gears.Keys.Max()].Ratio *
+								model.AxleGearData.AxleGear.Ratio *
+								(model.AngledriveData?.Angledrive.Ratio ?? 1.0);
+					}
+					MaxVehicleSpeed = maxEMSpeed / ratio * model.VehicleData.DynamicTyreRadius * 0.995;
+                }
+			}
 		}
 
 

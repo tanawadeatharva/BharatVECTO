@@ -84,6 +84,8 @@ namespace TUGraz.VectoCore.Models.Simulation.DataBus
 	{
 		bool HasCombustionEngine { get; }
 
-		//PowertrainArchitecture A
+		bool HasElectricMotor { get; }
+
+		PowertrainPosition[] ElectricMotorPositions { get; }
 	}
 }

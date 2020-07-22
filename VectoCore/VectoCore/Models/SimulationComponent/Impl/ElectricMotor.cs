@@ -20,6 +20,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		protected IElectricSystem ElectricPower;
 		protected IElectricMotorControl Control;
 		protected ElectricMotorData ModelData;
+		private PerSecond _maxSpeed;
 
 		public ElectricMotor(IVehicleContainer container, ElectricMotorData data, IElectricMotorControl control, PowertrainPosition position) : base(container)
 		{
@@ -30,8 +31,17 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		}
 
 		public PowertrainPosition Position { get; }
+		public PerSecond MaxSpeed
+		{
+			get { return _maxSpeed ?? (_maxSpeed = ModelData.FullLoadCurve.FullLoadEntries.MaxBy(x => x.MotorSpeed).MotorSpeed); }
+		}
 
-		public IResponse Initialize(NewtonMeter outTorque, PerSecond outAngularVelocity)
+		public Watt DragPower(PerSecond electricMotorSpeed)
+		{
+			return ModelData.DragCurve.Lookup(electricMotorSpeed) * electricMotorSpeed;
+		}
+
+    public IResponse Initialize(NewtonMeter outTorque, PerSecond outAngularVelocity)
 		{
 			PreviousState.OutAngularVelocity = outAngularVelocity;
 			PreviousState.OutTorque = outTorque;

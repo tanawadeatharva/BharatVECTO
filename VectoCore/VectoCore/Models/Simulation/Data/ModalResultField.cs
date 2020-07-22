@@ -402,9 +402,12 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 
 		[ModalResultField(typeof(SI), caption: "P_em-B4_mech [kW]", outputFactor: 1e-3)]
 		P_electricMotor_mech_B4,
-		// -->
 
-		[ModalResultField(typeof(SI), caption: "P_bat_T [kW]", outputFactor: 1e-3)] P_battery_terminal,
+		[ModalResultField(typeof(SI), caption: "P_em-B3_mech [kW]", outputFactor: 1e-3)]
+        P_electricMotor_mech_B3,
+        // -->
+
+        [ModalResultField(typeof(SI), caption: "P_bat_T [kW]", outputFactor: 1e-3)] P_battery_terminal,
 		[ModalResultField(typeof(SI), caption: "P_bat_int [kW]", outputFactor: 1e-3)] P_battery_int,
 		[ModalResultField(typeof(SI), caption: "P_bat_loss [kW]", outputFactor: 1e-3)] P_battery_loss,
 		[ModalResultField(typeof(SI), caption: "Battery SOC [%]", outputFactor: 100)] BatteryStateOfCharge,

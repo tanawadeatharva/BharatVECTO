@@ -88,7 +88,7 @@ namespace TUGraz.VectoCore.Tests.Integration.Hybrid
 			var modFilename = string.Format("SimpleParallelHybrid-P2_acc_{0}-{1}_{2}.vmod", vmax, initialSoC, slope);
 			const PowertrainPosition pos = PowertrainPosition.HybridP2;
 			var run = CreateEngineeringRun(
-				cycle, modFilename, initialSoC, pos, largeMotor: true);
+				cycle, modFilename, initialSoC, pos, 1.0, largeMotor: true);
 
 			var hybridController = (HybridController)((VehicleContainer)run.GetContainer()).HybridController;
 			Assert.NotNull(hybridController);
@@ -136,7 +136,7 @@ namespace TUGraz.VectoCore.Tests.Integration.Hybrid
 			var modFilename = string.Format("SimpleParallelHybrid-P2_constant_{0}-{1}_{2}_{3}.vmod", vmax, initialSoC, slope, pAuxEl);
 			const PowertrainPosition pos = PowertrainPosition.HybridP2;
 			var run = CreateEngineeringRun(
-				cycle, modFilename, initialSoC, pos, largeMotor: true, pAuxEl: pAuxEl);
+				cycle, modFilename, initialSoC, pos, 1.0, largeMotor: true, pAuxEl: pAuxEl);
 
 			var hybridController = (HybridController)((VehicleContainer)run.GetContainer()).HybridController;
 			Assert.NotNull(hybridController);
@@ -180,7 +180,7 @@ namespace TUGraz.VectoCore.Tests.Integration.Hybrid
 			var modFilename = string.Format("SimpleParallelHybrid-P2_cycle_{0}-{1}_{2}_{3}.vmod", declarationMission, initialSoC, payload, pAuxEl);
 			const PowertrainPosition pos = PowertrainPosition.HybridP2;
 			var run = CreateEngineeringRun(
-				cycle, modFilename, initialSoC, pos, largeMotor: true, pAuxEl: pAuxEl, payload: payload.SI<Kilogram>());
+				cycle, modFilename, initialSoC, pos, 1.0, largeMotor: true, pAuxEl: pAuxEl, payload: payload.SI<Kilogram>());
 
 			var hybridController = (HybridController)((VehicleContainer)run.GetContainer()).HybridController;
 			Assert.NotNull(hybridController);
@@ -248,7 +248,7 @@ namespace TUGraz.VectoCore.Tests.Integration.Hybrid
 			var modFilename = string.Format("SimpleParallelHybrid-P2_stop_{0}-{1}_{2}.vmod", vmax, initialSoC, slope);
 			const PowertrainPosition pos = PowertrainPosition.HybridP2;
 			var run = CreateEngineeringRun(
-				cycle, modFilename, initialSoC, pos, largeMotor: true);
+				cycle, modFilename, initialSoC, pos, 1.0, largeMotor: true);
 
 			var hybridController = (HybridController)((VehicleContainer)run.GetContainer()).HybridController;
 			Assert.NotNull(hybridController);
@@ -301,7 +301,7 @@ namespace TUGraz.VectoCore.Tests.Integration.Hybrid
 			var modFilename = string.Format("SimpleParallelHybrid-P3_constant_{0}-{1}_{2}_{3}.vmod", vmax, initialSoC, slope, pAuxEl);
 			const PowertrainPosition pos = PowertrainPosition.HybridP3;
 			var run = CreateEngineeringRun(
-				cycle, modFilename, initialSoC, pos, largeMotor: true, pAuxEl: pAuxEl);
+				cycle, modFilename, initialSoC, pos, 1.0, largeMotor: true, pAuxEl: pAuxEl);
 
 			var hybridController = (HybridController)((VehicleContainer)run.GetContainer()).HybridController;
 			Assert.NotNull(hybridController);
@@ -339,7 +339,7 @@ namespace TUGraz.VectoCore.Tests.Integration.Hybrid
 			var modFilename = string.Format("SimpleParallelHybrid-P3_acc_{0}-{1}_{2}.vmod", vmax, initialSoC, slope);
 			const PowertrainPosition pos = PowertrainPosition.HybridP3;
 			var run = CreateEngineeringRun(
-				cycle, modFilename, initialSoC, pos, largeMotor: true);
+				cycle, modFilename, initialSoC, pos, 1.0, largeMotor: true);
 
 			var hybridController = (HybridController)((VehicleContainer)run.GetContainer()).HybridController;
 			Assert.NotNull(hybridController);
@@ -372,7 +372,7 @@ namespace TUGraz.VectoCore.Tests.Integration.Hybrid
 			var modFilename = string.Format("SimpleParallelHybrid-P3_stop_{0}-{1}_{2}.vmod", vmax, initialSoC, slope);
 			const PowertrainPosition pos = PowertrainPosition.HybridP3;
 			var run = CreateEngineeringRun(
-				cycle, modFilename, initialSoC, pos, largeMotor: true);
+				cycle, modFilename, initialSoC, pos, 1.0, largeMotor: true);
 
 			var hybridController = (HybridController)((VehicleContainer)run.GetContainer()).HybridController;
 			Assert.NotNull(hybridController);
@@ -414,7 +414,7 @@ namespace TUGraz.VectoCore.Tests.Integration.Hybrid
             var modFilename = string.Format("SimpleParallelHybrid-P3_cycle_{0}-{1}_{2}_{3}.vmod", declarationMission, initialSoC, payload, pAuxEl);
             const PowertrainPosition pos = PowertrainPosition.HybridP3;
             var run = CreateEngineeringRun(
-                cycle, modFilename, initialSoC, pos, largeMotor: true, pAuxEl: pAuxEl, payload: payload.SI<Kilogram>());
+                cycle, modFilename, initialSoC, pos, 1.0, largeMotor: true, pAuxEl: pAuxEl, payload: payload.SI<Kilogram>());
 
             var hybridController = (HybridController)((VehicleContainer)run.GetContainer()).HybridController;
             Assert.NotNull(hybridController);
@@ -469,7 +469,7 @@ namespace TUGraz.VectoCore.Tests.Integration.Hybrid
 			var modFilename = string.Format("SimpleParallelHybrid-P4_constant_{0}-{1}_{2}_{3}.vmod", vmax, initialSoC, slope, pAuxEl);
 			const PowertrainPosition pos = PowertrainPosition.HybridP4;
 			var run = CreateEngineeringRun(
-				cycle, modFilename, initialSoC, pos, largeMotor: true, pAuxEl: pAuxEl);
+				cycle, modFilename, initialSoC, pos, 1.0, largeMotor: true, pAuxEl: pAuxEl);
 
 			var hybridController = (HybridController)((VehicleContainer)run.GetContainer()).HybridController;
 			Assert.NotNull(hybridController);
@@ -507,7 +507,7 @@ namespace TUGraz.VectoCore.Tests.Integration.Hybrid
 			var modFilename = string.Format("SimpleParallelHybrid-P4_acc_{0}-{1}_{2}.vmod", vmax, initialSoC, slope);
 			const PowertrainPosition pos = PowertrainPosition.HybridP4;
 			var run = CreateEngineeringRun(
-				cycle, modFilename, initialSoC, pos, largeMotor: true);
+				cycle, modFilename, initialSoC, pos, 1.0, largeMotor: true);
 
 			var hybridController = (HybridController)((VehicleContainer)run.GetContainer()).HybridController;
 			Assert.NotNull(hybridController);
@@ -540,7 +540,7 @@ namespace TUGraz.VectoCore.Tests.Integration.Hybrid
 			var modFilename = string.Format("SimpleParallelHybrid-P4_stop_{0}-{1}_{2}.vmod", vmax, initialSoC, slope);
 			const PowertrainPosition pos = PowertrainPosition.HybridP4;
 			var run = CreateEngineeringRun(
-				cycle, modFilename, initialSoC, pos, largeMotor: true);
+				cycle, modFilename, initialSoC, pos, 1.0, largeMotor: true);
 
 			var hybridController = (HybridController)((VehicleContainer)run.GetContainer()).HybridController;
 			Assert.NotNull(hybridController);
@@ -558,11 +558,11 @@ namespace TUGraz.VectoCore.Tests.Integration.Hybrid
 
 		// =================================================
 
-		public static VectoRun CreateEngineeringRun(DrivingCycleData cycleData, string modFileName, double initialSoc, PowertrainPosition pos, bool largeMotor = false,
+		public static VectoRun CreateEngineeringRun(DrivingCycleData cycleData, string modFileName, double initialSoc, PowertrainPosition pos, double ratio, bool largeMotor = false,
 			SummaryDataContainer sumData = null, double pAuxEl = 0, Kilogram payload = null)
 		{
 			var container = CreateParallelHybridPowerTrain(
-				cycleData, Path.GetFileNameWithoutExtension(modFileName), initialSoc, largeMotor, sumData, pAuxEl, pos, payload);
+				cycleData, Path.GetFileNameWithoutExtension(modFileName), initialSoc, largeMotor, sumData, pAuxEl, pos, ratio, payload);
 			return new DistanceRun(container);
 		}
 
@@ -575,8 +575,8 @@ namespace TUGraz.VectoCore.Tests.Integration.Hybrid
 		}
 
 		public static VehicleContainer CreateParallelHybridPowerTrain(DrivingCycleData cycleData, string modFileName,
-			double initialBatCharge, bool largeMotor, SummaryDataContainer sumData, double pAuxEl, PowertrainPosition pos, Kilogram payload = null)
-		{
+			double initialBatCharge, bool largeMotor, SummaryDataContainer sumData, double pAuxEl, PowertrainPosition pos, double ratio, Kilogram payload = null)
+		{ 
 			var fileWriter = new FileOutputWriter(modFileName);
 			var modDataFilter = new IModalDataFilter[] { }; //new IModalDataFilter[] { new ActualModalDataFilter(), };
 			var modData = new ModalDataContainer(
@@ -593,7 +593,7 @@ namespace TUGraz.VectoCore.Tests.Integration.Hybrid
 			var driverData = CreateDriverData(AccelerationFile, true);
 
 			var electricMotorData =
-				MockSimulationDataFactory.CreateElectricMotorData(largeMotor ? MotorFile240kW : MotorFile, pos);
+				MockSimulationDataFactory.CreateElectricMotorData(largeMotor ? MotorFile240kW : MotorFile, 1, pos, ratio, 1);
 
 			var batteryData = MockSimulationDataFactory.CreateBatteryData(BatFile, initialBatCharge);
 			//batteryData.TargetSoC = 0.5;

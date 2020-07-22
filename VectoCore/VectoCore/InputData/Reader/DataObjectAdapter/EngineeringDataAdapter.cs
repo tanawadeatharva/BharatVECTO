@@ -650,19 +650,17 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			}
 
 			return electricMachines.Entries
-				.Select(x => Tuple.Create(x.Position, CreateElectricMachine(x.ElectricMachine, x.Count))).ToList();
+				.Select(x => Tuple.Create(x.Position, CreateElectricMachine(x.ElectricMachine, x.Count, x.Ratio, x.MechanicalEfficiency))).ToList();
 		}
 
-		private ElectricMotorData CreateElectricMachine(IElectricMotorEngineeringInputData motorData, int count)
+		private ElectricMotorData CreateElectricMachine(IElectricMotorEngineeringInputData motorData, int count,
+			double ratio, double efficiency)
 		{
-			if (count > 1) {
-				throw new VectoException("Multiple electric motors at a position are currently not supported");
-			}
 			return new ElectricMotorData() {
-				FullLoadCurve = ElectricFullLoadCurveReader.Create(motorData.FullLoadCurve),
-				DragCurve = ElectricMotorDragCurveReader.Create(motorData.DragCurve),
-				EfficiencyMap = ElectricMotorMapReader.Create(motorData.EfficiencyMap),
-				Inertia = motorData.Inertia
+				FullLoadCurve = ElectricFullLoadCurveReader.Create(motorData.FullLoadCurve, ratio, count, efficiency),
+				DragCurve = ElectricMotorDragCurveReader.Create(motorData.DragCurve, ratio, count, efficiency),
+				EfficiencyMap = ElectricMotorMapReader.Create(motorData.EfficiencyMap, ratio, count, efficiency),
+				Inertia = motorData.Inertia,
 			};
 		}
 	}

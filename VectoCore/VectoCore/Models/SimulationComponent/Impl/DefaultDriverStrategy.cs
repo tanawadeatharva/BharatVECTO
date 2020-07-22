@@ -680,12 +680,19 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			var rollResistanceForce = Driver.DataBus.VehicleInfo.RollingResistance(
 				((targetAltitude - vehicleAltitude) / (actionEntry.Distance - Driver.DataBus.MileageCounter.Distance))
 				.Value().SI<Radian>());
-			var engineDragLoss = Driver.DataBus.EngineInfo.EngineDragPower(Driver.DataBus.EngineInfo.EngineSpeed);
-			var gearboxLoss = Driver.DataBus.GearboxInfo.GearboxLoss();
-			var axleLoss = Driver.DataBus.AxlegearInfo.AxlegearLoss();
+			var engineDragLoss = Driver.DataBus.PowertrainInfo.HasCombustionEngine
+				? Driver.DataBus.EngineInfo.EngineDragPower(Driver.DataBus.EngineInfo.EngineSpeed)
+				: 0.SI<Watt>();
+
+			var emDragLoss = Driver.DataBus.PowertrainInfo.HasElectricMotor
+				? Driver.DataBus.PowertrainInfo.ElectricMotorPositions.Select(x => Driver.DataBus.ElectricMotorInfo(x).DragPower(Driver.DataBus.ElectricMotorInfo(x).ElectricMotorSpeed)).Sum() // Driver.DataBus.ElectricMotorInfo()
+				: 0.SI<Watt>();
+
+			var gearboxLoss = Driver.DataBus.GearboxInfo?.GearboxLoss() ?? 0.SI<Watt>();
+			var axleLoss = Driver.DataBus.AxlegearInfo?.AxlegearLoss() ?? 0.SI<Watt>();
 
 			var coastingResistanceForce = airDragForce + rollResistanceForce +
-										(gearboxLoss + axleLoss - engineDragLoss) / vehicleSpeed;
+										(gearboxLoss + axleLoss + emDragLoss - (engineDragLoss)) / vehicleSpeed;
 
 			var coastingDecisionFactor = Driver.DriverData.LookAheadCoasting.LookAheadDecisionFactor.Lookup(
 				targetSpeed,
@@ -1001,7 +1008,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					first = Driver.DrivingActionAccelerate(absTime, ds, targetVelocity, gradient);
 					debug.Add(new { action = "Coast:(Success & Acc<0) -> Accelerate", first });
 				}
-				if (!DataBus.EngineInfo.EngineOn && first is ResponseOverload) {
+				if (DataBus.PowertrainInfo.HasCombustionEngine && !DataBus.EngineInfo.EngineOn && first is ResponseOverload) {
 					first = Driver.DrivingActionAccelerate(absTime, ds, targetVelocity, gradient);
 					debug.Add(new { action = "Coast:(Overload & ICE off) -> Accelerate", first });
 				}

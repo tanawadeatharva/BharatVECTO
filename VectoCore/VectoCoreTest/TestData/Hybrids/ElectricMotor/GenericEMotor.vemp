@@ -1,4 +1,4 @@
-n [rpm] , T_drive [Nm] , T_drag [Nm]
+n [rpm] , T_drive [Nm] , T_recuperation [Nm]
 0       , 401.07       , -401.07
 1600    , 401.07       , -401.07
 1665    , 401.07       , -401.07

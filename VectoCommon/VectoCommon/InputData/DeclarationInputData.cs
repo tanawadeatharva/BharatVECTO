@@ -709,6 +709,10 @@ namespace TUGraz.VectoCommon.InputData
 		public int Count { get; set; }
 
 		public PowertrainPosition Position { get; set; }
+
+		public double Ratio { get; set; }
+
+		public double MechanicalEfficiency { get; set; }
 	}
 
 	public interface IElectricStorageDeclarationInputData

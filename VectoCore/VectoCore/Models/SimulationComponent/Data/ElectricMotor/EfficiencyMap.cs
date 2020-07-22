@@ -6,6 +6,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data {
 	public class EfficiencyMap
 	{
 		private readonly DelaunayMap _efficiencyMapMech2El;
+		private PerSecond _maxSpeed;
 
 		protected internal EfficiencyMap(DelaunayMap efficiencyMapMech2El)
 		{
@@ -109,6 +110,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data {
 			if (batPower.IsEqual(0, 1e-3)) {
 				return null;
 			}
+
+			if (avgSpeed.IsGreaterOrEqual(MaxSpeed)) {
+				return 0.SI<NewtonMeter>();
+			}
 			var retVal = SearchAlgorithm.Search(
 				maxEmTorque, elPowerMaxEM.ElectricalPower, maxEmTorque * 0.1,
 				getYValue: x => {
@@ -122,6 +127,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data {
 				});
 
 			return retVal;
+		}
+
+		protected PerSecond MaxSpeed
+		{
+			get { return _maxSpeed ?? (_maxSpeed = _efficiencyMapMech2El.Entries.Select(x => x.Y).Max().RPMtoRad()); }
 		}
 	}
 }

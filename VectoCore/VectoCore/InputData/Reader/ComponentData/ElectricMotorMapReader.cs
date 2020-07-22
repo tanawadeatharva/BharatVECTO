@@ -12,12 +12,12 @@ using TUGraz.VectoCore.Utils;
 namespace TUGraz.VectoCore.InputData.Reader.ComponentData {
 	public static class ElectricMotorMapReader
 	{
-		public static EfficiencyMap Create(Stream data)
+		public static EfficiencyMap Create(Stream data, double ratio, int count, double efficiency)
 		{
-			return Create(VectoCSVFile.ReadStream(data));
+			return Create(VectoCSVFile.ReadStream(data), ratio, count, efficiency);
 		}
 
-		public static EfficiencyMap Create(DataTable data)
+		public static EfficiencyMap Create(DataTable data, double ratio, int count, double efficiency)
 		{
 			var headerValid = HeaderIsValid(data.Columns);
 			if (!headerValid)
@@ -30,15 +30,23 @@ namespace TUGraz.VectoCore.InputData.Reader.ComponentData {
 				data.Columns[1].ColumnName = Fields.Torque;
 				data.Columns[2].ColumnName = Fields.PowerElectrical;
 			}
-			var delaunayMap = new DelaunayMap("ElectricMotorEfficiencyMap Mechanicla to Electric");
+			var delaunayMap = new DelaunayMap("ElectricMotorEfficiencyMap Mechanical to Electric");
 			foreach (DataRow row in data.Rows)
 			{
 				try
 				{
 					var entry = CreateEntry(row);
-					delaunayMap.AddPoint(-entry.Torque.Value(), entry.MotorSpeed.Value(), -entry.PowerElectrical.Value());
+					if (entry.Torque.IsGreaterOrEqual(0)) {
+						delaunayMap.AddPoint(-entry.Torque.Value() * count * ratio * efficiency,
+							entry.MotorSpeed.Value() / ratio,
+							-entry.PowerElectrical.Value() * count);
+					} else {
+						delaunayMap.AddPoint(-entry.Torque.Value() * count * ratio / efficiency, 
+							entry.MotorSpeed.Value() / ratio,
+							-entry.PowerElectrical.Value() * count);
+					}
 				}
-				catch (Exception e)
+                catch (Exception e)
 				{
 					throw new VectoException(string.Format("EfficiencyMap - Line {0}: {1}", data.Rows.IndexOf(row), e.Message), e);
 				}

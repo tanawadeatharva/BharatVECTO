@@ -179,13 +179,14 @@ namespace TUGraz.VectoCore.Tests.Utils
 			return dao.CreateDriverData(engineeringJob.DriverInputData);
 		}
 
-		public static List<Tuple<PowertrainPosition, ElectricMotorData>> CreateElectricMotorData(string file, PowertrainPosition pos)
+		public static List<Tuple<PowertrainPosition, ElectricMotorData>> CreateElectricMotorData(string file, int count,
+			PowertrainPosition pos, double ratio, double efficiency)
 		{
 			var inputData = JSONInputDataFactory.ReadElectricMotorData(file, false);
 			return new EngineeringDataAdapter().CreateElectricMachines(new MockElectricMachinesInputData() {
 				Entries = new[] {
 					new ElectricMachineEntry<IElectricMotorEngineeringInputData>()
-						{ Count = 1, ElectricMachine = inputData, Position = pos }
+						{ Count = count, ElectricMachine = inputData, Position = pos, Ratio = ratio, MechanicalEfficiency = efficiency}
 				}
 			});
 		}
