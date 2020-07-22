@@ -164,6 +164,15 @@ namespace TUGraz.VectoCore.Tests.Integration.Hybrid
 			TestCase("Suburban", 2000, 0.5, 0, TestName = "P2 Hybrid DriveCycle SubUrban, SoC: 0.5 Payload: 2t P_auxEl: 0kW"),
 			TestCase("Interurban", 2000, 0.5, 0, TestName = "P2 Hybrid DriveCycle InterUrban, SoC: 0.5 Payload: 2t P_auxEl: 0kW"),
 			TestCase("Coach", 2000, 0.5, 0, TestName = "P2 Hybrid DriveCycle Coach, SoC: 0.5 Payload: 2t P_auxEl: 0kW"),
+
+			TestCase("LongHaul", 2000, 0.5, 2000, TestName = "P2 Hybrid DriveCycle LongHaul, SoC: 0.5 Payload: 2t P_auxEl: 2kW"),
+			TestCase("RegionalDelivery", 2000, 0.5, 2000, TestName = "P2 Hybrid DriveCycle RegionalDelivery, SoC: 0.5 Payload: 2t P_auxEl: 2kW"),
+			TestCase("UrbanDelivery", 2000, 0.5, 2000, TestName = "P2 Hybrid DriveCycle UrbanDelivery, SoC: 0.5 Payload: 2t P_auxEl: 2kW"),
+			TestCase("Construction", 2000, 0.5, 2000, TestName = "P2 Hybrid DriveCycle Construction, SoC: 0.5 Payload: 2t P_auxEl: 2kW"),
+			TestCase("Urban", 2000, 0.5, 2000, TestName = "P2 Hybrid DriveCycle Urban, SoC: 0.5 Payload: 2t P_auxEl: 2kW"),
+			TestCase("Suburban", 2000, 0.5, 2000, TestName = "P2 Hybrid DriveCycle SubUrban, SoC: 0.5 Payload: 2t P_auxEl: 2kW"),
+			TestCase("Interurban", 2000, 0.5, 2000, TestName = "P2 Hybrid DriveCycle InterUrban, SoC: 0.5 Payload: 2t P_auxEl: 2kW"),
+			TestCase("Coach", 2000, 0.5, 2000, TestName = "P2 Hybrid DriveCycle Coach, SoC: 0.5 Payload: 2t P_auxEl: 2kW"),
 		]
 		public void P2HybriDriveCycle(string declarationMission, double payload, double initialSoC, double pAuxEl)
 		{
