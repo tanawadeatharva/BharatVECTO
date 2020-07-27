@@ -65,8 +65,8 @@ Public Class VectoJobForm
 
 		_pgDriver = TabPgDriver
 
-		For x = 0 To TabControl1.TabCount - 1
-			TabControl1.TabPages(x).Show()
+		For x = 0 To tcJob.TabCount - 1
+			tcJob.TabPages(x).Show()
 		Next
 
 		LvAux.Columns(AuxViewColumns.AuxInputOrTech).Width = -2
@@ -172,12 +172,12 @@ Public Class VectoJobForm
 		If onOff Then
 			If Not _pgDriverOn Then
 				_pgDriverOn = True
-				TabControl1.TabPages.Insert(1, _pgDriver)
+				tcJob.TabPages.Insert(1, _pgDriver)
 			End If
 		Else
 			If _pgDriverOn Then
 				_pgDriverOn = False
-				TabControl1.Controls.Remove(_pgDriver)
+				tcJob.Controls.Remove(_pgDriver)
 			End If
 		End If
 	End Sub
@@ -1092,7 +1092,7 @@ lbDlog:
 		ButOpenGBX.Enabled = onOff
 		TbGBX.Enabled = onOff
 		ButtonGBX.Enabled = onOff
-		GrAux.Enabled = onOff
+		GrAuxMech.Enabled = onOff
 	End Sub
 
 	'LAC changed
