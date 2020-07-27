@@ -39,6 +39,11 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering.DataProvider
 		}
 
 
+		public virtual IHybridStrategyParameters HybridStrategyParameters
+		{
+			get { return null; }
+		}
+
 		public virtual IList<ICycleData> Cycles
 		{
 			get { return (_cycles ?? (_cycles = Reader.CreateCycles)).Cycles; }

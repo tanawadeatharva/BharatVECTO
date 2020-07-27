@@ -115,6 +115,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 						Cycle = new DrivingCycleProxy(drivingCycle, cycle.Name),
 						ExecutionMode = ExecutionMode.Engineering,
 						ElectricMachinesData = dao.CreateElectricMachines(vehicle.Components.ElectricMachines),
+						HybridStrategyParameters = dao.CreateHybridStrategyParameters(InputDataProvider.JobInputData.HybridStrategyParameters),
 						BatteryData = dao.CreateBatteryData(vehicle.Components.ElectricStorage, vehicle.InitialSOC),
 						SimulationType = SimulationType.DistanceCycle | SimulationType.MeasuredSpeedCycle | SimulationType.PWheel,
 						GearshiftParameters = dao.CreateGearshiftData(

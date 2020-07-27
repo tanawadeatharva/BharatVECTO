@@ -38,9 +38,9 @@ namespace TUGraz.VectoCore.Tests.Integration.Hybrid
 		public const string BatFile = @"TestData\Hybrids\Battery\GenericBattery.vbat";
 
 		public const string AccelerationFile = @"TestData\Components\Truck.vacc";
-		public const string MotorFile240kW = @"TestData\Hybrids\ElectricMotor\GenericEMotor240kW.vem";
+        public const string MotorFile240kW = @"TestData\Hybrids\ElectricMotor\GenericEMotor240kW.vem";
 
-		public const string GearboxIndirectLoss = @"TestData\Components\Indirect Gear.vtlm";
+        public const string GearboxIndirectLoss = @"TestData\Components\Indirect Gear.vtlm";
 		public const string GearboxDirectLoss = @"TestData\Components\Direct Gear.vtlm";
 
 		[OneTimeSetUp]

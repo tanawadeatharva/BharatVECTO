@@ -97,6 +97,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 					return new JSONInputDataSingleBusV6(json, filename, tolerateMissing);
 				case 7:
 					return new JSONInputDataComptededBusFactorMethodV7(json, filename, tolerateMissing);
+                case 8:
+					return new JSONInputDataV8(json, filename, tolerateMissing);
 				default:
 					throw new VectoException("Job-File: Unsupported FileVersion. Got: {0} ", version);
 			}
@@ -170,7 +172,21 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			}
 		}
 
-		public static IBatteryPackEngineeringInputData ReadBatteryData(string filename, bool tolerateMissing)
+		public static IHybridStrategyParameters ReadHybridStrategyParameters(string filename, bool tolerateMissing)
+		{
+			var json = ReadFile(filename);
+			var version = ReadVersion(json);
+			switch (version) {
+                case 1:
+					return new JSONHybridStrategyParameters(json, filename, tolerateMissing);
+				default:
+					throw new VectoException("HybridStrategyParameter-File: Unsupported FileVersion. Got {0}", version);
+
+            }
+        }
+
+
+        public static IBatteryPackEngineeringInputData ReadBatteryData(string filename, bool tolerateMissing)
 		{
 			var json = ReadFile(filename);
 			var version = ReadVersion(json);

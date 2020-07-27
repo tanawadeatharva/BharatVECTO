@@ -144,6 +144,7 @@
     <Compile Include="InputData\FileIO\JSON\JSONComponentInputData.cs" />
     <Compile Include="InputData\FileIO\JSON\JSONElectricMotor.cs" />
     <Compile Include="InputData\FileIO\JSON\JsonExtensionMethods.cs" />
+    <Compile Include="InputData\FileIO\JSON\JSONHybridStrategyParameters.cs" />
     <Compile Include="InputData\FileIO\JSON\JSONTCUData.cs" />
     <Compile Include="InputData\FileIO\JSON\SSMInputData.cs" />
     <Compile Include="InputData\FileIO\XML\Declaration\DataProvider\AbstractCommonComponentType.cs" />

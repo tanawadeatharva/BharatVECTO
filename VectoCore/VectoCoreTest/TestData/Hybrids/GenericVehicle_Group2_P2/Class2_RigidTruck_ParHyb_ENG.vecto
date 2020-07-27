@@ -3,7 +3,7 @@
     "CreatedBy": " ()",
     "Date": "2016-10-13T08:55:18.2100810Z",
     "AppVersion": "3",
-    "FileVersion": 4
+    "FileVersion": 8
   },
   "Body": {
     "SavedInDeclMode": false,
@@ -16,8 +16,7 @@
     "AuxiliaryVersion": "CLASSIC",
     "AdvancedAuxiliaryFilePath": "",
 	
-	"HybridStrategy": "SimpleParallelHybridStrategy",
-	"HybridCtlFile": "HybridStrategyParams.vctl",
+	  "HybridStrategyParams": "HybridStrategyParams.vctl",
 	
     "Aux": [],
     "Padd": 3540.0,
@@ -47,7 +46,7 @@
     },
     "Cycles": [
       "RegionalDelivery",
-      "UrbanDelivery"
+      
     ]
   }
 }

@@ -79,6 +79,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 				var tmp = new ElectricMachineEntry<IElectricMotorEngineeringInputData>()
 				{
 					Position = PowertrainPositionHelper.Parse(entry.GetEx<string>("Position")),
+					Ratio = entry.GetEx<double>("Ratio"),
+					MechanicalEfficiency = entry.GetEx<double>("MechanicalEfficiency"),
 					Count = entry.GetEx<int>("Count"),
 					ElectricMachine = JSONInputDataFactory.ReadElectricMotorData(Path.Combine(BasePath, entry.GetEx<string>("MotorFile")), false)
 				};

@@ -40,11 +40,14 @@ namespace TUGraz.VectoCommon.InputData
 	{
 		new IVehicleEngineeringInputData Vehicle { get; }
 
-		/// <summary>
-		/// P008  Cycles
-		/// cf. VECTO Input Parameters.xlsx
-		/// </summary>
-		IList<ICycleData> Cycles { get; }
+
+		IHybridStrategyParameters HybridStrategyParameters { get; }
+
+        /// <summary>
+        /// P008  Cycles
+        /// cf. VECTO Input Parameters.xlsx
+        /// </summary>
+        IList<ICycleData> Cycles { get; }
 
 		/// <summary>
 		/// P001
@@ -55,6 +58,17 @@ namespace TUGraz.VectoCommon.InputData
 		IEngineEngineeringInputData EngineOnly { get; }
 
 	}
+
+	public interface IHybridStrategyParameters
+	{
+		double EquivalenceFactor { get; }
+
+		double MinSoC { get; }
+
+		double MaxSoC { get; }
+
+		double TargetSoC { get; }
+    }
 
 	public interface IVehicleEngineeringInputData : IVehicleDeclarationInputData
 	{

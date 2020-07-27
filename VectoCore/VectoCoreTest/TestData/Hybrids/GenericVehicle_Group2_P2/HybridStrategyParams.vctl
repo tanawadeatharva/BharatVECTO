@@ -6,10 +6,9 @@
     "FileVersion": 1
   },
   "Body": {
-	"ICE IgnitionOn Speed": "600" ,
-	"ICE RampUp Torque":  "-800"  ,
-    "Electric Motor Ramp Down Time On Engine Start": "0.1",
-  "Generator Speed": "1400" ,
-  "Generator Torque":  "600" 
+	"EquivalenceFactor":  2.5,
+	"MinSoC":  20  ,
+    "MaxSoC": 80,
+  "TargetSoC": 50 
   }
 }

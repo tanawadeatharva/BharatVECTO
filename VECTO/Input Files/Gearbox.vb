@@ -889,6 +889,7 @@ Public Class MockJobInputData
         Implements IEngineeringJobInputData.Vehicle
 
     Public Property Vehicle As IVehicleDeclarationInputData Implements IDeclarationJobInputData.Vehicle
+    Public ReadOnly Property HybridStrategyParameters As IHybridStrategyParameters Implements IEngineeringJobInputData.HybridStrategyParameters
     Public Property Cycles As IList(Of ICycleData) Implements IEngineeringJobInputData.Cycles
     Public Property EngineOnlyMode As Boolean Implements IEngineeringJobInputData.EngineOnlyMode
     Public Property EngineOnly As IEngineEngineeringInputData Implements IEngineeringJobInputData.EngineOnly

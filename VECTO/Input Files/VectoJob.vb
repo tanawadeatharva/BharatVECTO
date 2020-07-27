@@ -602,6 +602,12 @@ Public Class VectoJob
         End Get
     End Property
 
+    Public ReadOnly Property HybridStrategyParameters As IHybridStrategyParameters Implements IEngineeringJobInputData.HybridStrategyParameters
+        Get
+            Return Nothing
+        End Get
+    End Property
+
     Public ReadOnly Property Cycles As IList(Of ICycleData) Implements IEngineeringJobInputData.Cycles
         Get
             Dim retVal As ICycleData() = New ICycleData(CycleFiles.Count - 1) {}

@@ -168,6 +168,11 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			get { return Vehicle; }
 		}
 
+		public IHybridStrategyParameters HybridStrategyParameters
+		{
+			get { return null; }
+		}
+
 		public IVehicleEngineeringInputData Vehicle
 		{
 			get { return VehicleData ?? this; }

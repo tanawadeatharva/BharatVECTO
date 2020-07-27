@@ -7,17 +7,17 @@
   },
   "Body": {
     "SavedInDeclMode": false,
-	"Model": "Generic Battery",
-	"InternalResistance": 0.12,
-	"SOC_min": 20,
-	"SOC_max": 80,
-    "MaxCurrentFactor": 5,
-    "Capacity": 14,
+    "Model": "Generic Battery",
+    "SOC_min": 20,
+    "SOC_max": 80,
+    "Capacity": 7.5,
+    "InternalResistance": 0.4986666,
+    "MaxCurrentFactor": 50,
     "SOC": [
       [ 0, 590 ],
       [ 10, 614 ],
       [ 20, 626 ],
-      [ 30, 632 ],
+      [ 30, 634 ],
       [ 40, 638 ],
       [ 50, 640 ],
       [ 60, 640 ],
@@ -26,5 +26,5 @@
       [ 90, 650 ],
       [ 100, 658 ]
     ]
-	}
+  }
 }

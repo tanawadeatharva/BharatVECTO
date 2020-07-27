@@ -663,5 +663,16 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 				Inertia = motorData.Inertia,
 			};
 		}
+
+		public HybridStrategyParameters CreateHybridStrategyParameters(IHybridStrategyParameters hybridStrategyParameters)
+		{
+			var retVal = new HybridStrategyParameters() {
+				EquivalenceFactor = hybridStrategyParameters.EquivalenceFactor,
+				MinSoC = hybridStrategyParameters.MinSoC,
+				MaxSoC = hybridStrategyParameters.MaxSoC,
+				TargetSoC = hybridStrategyParameters.TargetSoC
+			};
+			return retVal;
+		}
 	}
 }

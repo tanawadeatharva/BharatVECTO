@@ -432,6 +432,9 @@
     <None Include="TestData\Hybrids\GenericVehicle_Group2_P2\GenericMap240kW.vemo">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Include="TestData\Hybrids\GenericVehicle_Group2_P2\HybridStrategyParams.vctl">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="TestData\Hybrids\GenericVehicle_Group2_P2\Truck.vacc">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>

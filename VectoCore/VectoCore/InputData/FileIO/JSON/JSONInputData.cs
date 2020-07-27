@@ -273,6 +273,11 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			get { return VehicleInputData; }
 		}
 
+		public virtual IHybridStrategyParameters HybridStrategyParameters
+		{
+			get { return null; }
+		}
+
 		public virtual IEngineeringJobInputData JobInputData
 		{
 			get { return this; }
@@ -1029,6 +1034,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 		#endregion
 	}
 
+
+
 	public class EcoRollInputData : IEcoRollEngineeringInputData
 	{
 		#region Implementation of IEcoRollEngineeringInputData
@@ -1180,5 +1187,21 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 		public string ShiftStrategy { get { return ""; } }
 
 		#endregion
+	}
+
+	public class JSONInputDataV8 : JSONInputDataV5
+	{
+		public JSONInputDataV8(JObject data, string filename, bool tolerateMissing = false) : base(data, filename, tolerateMissing) { }
+
+		public override IHybridStrategyParameters HybridStrategyParameters
+		{
+			get
+			{
+				return Body["HybridStrategyParams"] == null
+					? null : JSONInputDataFactory.ReadHybridStrategyParameters(
+						Path.Combine(BasePath, Body.GetEx<string>("HybridStrategyParams")), false);
+			}
+		}
+
 	}
 }
