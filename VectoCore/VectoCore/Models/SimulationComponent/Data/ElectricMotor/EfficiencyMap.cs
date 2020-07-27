@@ -95,7 +95,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data {
 		public NewtonMeter LookupTorque(Watt batPower, PerSecond avgSpeed, NewtonMeter maxEmTorque)
 		{
 			var elPowerMaxEM = LookupElectricPower(avgSpeed, maxEmTorque, true);
-			if (batPower < 0) {
+			if (maxEmTorque < 0) { // distinguish between propulsion and recuperation
 				if (!elPowerMaxEM.Extrapolated & elPowerMaxEM.ElectricalPower.IsGreaterOrEqual(batPower)) {
 					// the battery can provide more electric power than the EM  - no limitation here
 					return null;
