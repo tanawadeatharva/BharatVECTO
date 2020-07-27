@@ -125,6 +125,12 @@ namespace TUGraz.VectoCore.OutputData
 		void AddElectricMotor(PowertrainPosition pos);
 		KilogramPerWattSecond VehicleLineSlope(IFuelProperties fuel);
 		bool HasCombustionEngine { get; }
+		WattSecond TotalElectricMotorWorkDrive(PowertrainPosition emPos);
+		WattSecond TotalElectricMotorWorkRecuperate(PowertrainPosition emPos);
+		PerSecond ElectricMotorAverageSpeed(PowertrainPosition emPos);
+		double BatteryStartSoC();
+		double BatteryEndSoC();
+		WattSecond BatteryLoss();
 	}
 
 	public static class ModalDataContainerExtensions

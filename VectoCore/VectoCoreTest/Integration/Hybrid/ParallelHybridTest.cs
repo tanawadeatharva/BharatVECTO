@@ -85,21 +85,24 @@ namespace TUGraz.VectoCore.Tests.Integration.Hybrid
 
 			const bool largeMotor = true;
 
-			var modFilename = string.Format("SimpleParallelHybrid-P2_acc_{0}-{1}_{2}.vmod", vmax, initialSoC, slope);
+			var modFilename = string.Format("SimpleParallelHybrid-P2_acc_{0}-{1}_{2}", vmax, initialSoC, slope);
 			const PowertrainPosition pos = PowertrainPosition.HybridP2;
-			var run = CreateEngineeringRun(
+			var job = CreateEngineeringRun(
 				cycle, modFilename, initialSoC, pos, 1.0, largeMotor: true);
+			var run = job.Runs.First().Run;
 
-			var hybridController = (HybridController)((VehicleContainer)run.GetContainer()).HybridController;
+            var hybridController = (HybridController)((VehicleContainer)run.GetContainer()).HybridController;
 			Assert.NotNull(hybridController);
 			
 			var modData = ((ModalDataContainer)((VehicleContainer)run.GetContainer()).ModData).Data;
 
-			run.Run();
-			Assert.IsTrue(run.FinishedWithoutErrors);
+            //run.Run();
+			job.Execute();
+			job.WaitFinished();
+            Assert.IsTrue(run.FinishedWithoutErrors);
 
 			Assert.IsTrue(modData.Rows.Count > 0);
-			GraphWriter.Write(modFilename);
+			GraphWriter.Write(modFilename + ".vmod");
 		}
 
 		[
@@ -135,10 +138,11 @@ namespace TUGraz.VectoCore.Tests.Integration.Hybrid
 
 			var modFilename = string.Format("SimpleParallelHybrid-P2_constant_{0}-{1}_{2}_{3}.vmod", vmax, initialSoC, slope, pAuxEl);
 			const PowertrainPosition pos = PowertrainPosition.HybridP2;
-			var run = CreateEngineeringRun(
+			var job = CreateEngineeringRun(
 				cycle, modFilename, initialSoC, pos, 1.0, largeMotor: true, pAuxEl: pAuxEl);
+			var run = job.Runs.First().Run;
 
-			var hybridController = (HybridController)((VehicleContainer)run.GetContainer()).HybridController;
+            var hybridController = (HybridController)((VehicleContainer)run.GetContainer()).HybridController;
 			Assert.NotNull(hybridController);
 			
 			var modData = ((ModalDataContainer)((VehicleContainer)run.GetContainer()).ModData).Data;
@@ -188,10 +192,11 @@ namespace TUGraz.VectoCore.Tests.Integration.Hybrid
 
 			var modFilename = string.Format("SimpleParallelHybrid-P2_cycle_{0}-{1}_{2}_{3}.vmod", declarationMission, initialSoC, payload, pAuxEl);
 			const PowertrainPosition pos = PowertrainPosition.HybridP2;
-			var run = CreateEngineeringRun(
+			var job = CreateEngineeringRun(
 				cycle, modFilename, initialSoC, pos, 1.0, largeMotor: true, pAuxEl: pAuxEl, payload: payload.SI<Kilogram>());
+			var run = job.Runs.First().Run;
 
-			var hybridController = (HybridController)((VehicleContainer)run.GetContainer()).HybridController;
+            var hybridController = (HybridController)((VehicleContainer)run.GetContainer()).HybridController;
 			Assert.NotNull(hybridController);
 
 			var modData = ((ModalDataContainer)((VehicleContainer)run.GetContainer()).ModData).Data;
@@ -203,8 +208,9 @@ namespace TUGraz.VectoCore.Tests.Integration.Hybrid
 
 			run.Run();
 			Assert.IsTrue(run.FinishedWithoutErrors);
-
-			Assert.IsTrue(modData.Rows.Count > 0);
+			job.Execute();
+			job.WaitFinished();
+            Assert.IsTrue(modData.Rows.Count > 0);
 			GraphWriter.Write(modFilename);
 		}
 
@@ -256,10 +262,11 @@ namespace TUGraz.VectoCore.Tests.Integration.Hybrid
 
 			var modFilename = string.Format("SimpleParallelHybrid-P2_stop_{0}-{1}_{2}.vmod", vmax, initialSoC, slope);
 			const PowertrainPosition pos = PowertrainPosition.HybridP2;
-			var run = CreateEngineeringRun(
+			var job = CreateEngineeringRun(
 				cycle, modFilename, initialSoC, pos, 1.0, largeMotor: true);
+			var run = job.Runs.First().Run;
 
-			var hybridController = (HybridController)((VehicleContainer)run.GetContainer()).HybridController;
+            var hybridController = (HybridController)((VehicleContainer)run.GetContainer()).HybridController;
 			Assert.NotNull(hybridController);
 			//var strategy = (DelegateParallelHybridStrategy)hybridController.Strategy;
 			//Assert.NotNull(strategy);
@@ -309,10 +316,11 @@ namespace TUGraz.VectoCore.Tests.Integration.Hybrid
 
 			var modFilename = string.Format("SimpleParallelHybrid-P3_constant_{0}-{1}_{2}_{3}.vmod", vmax, initialSoC, slope, pAuxEl);
 			const PowertrainPosition pos = PowertrainPosition.HybridP3;
-			var run = CreateEngineeringRun(
+			var job = CreateEngineeringRun(
 				cycle, modFilename, initialSoC, pos, 1.0, largeMotor: true, pAuxEl: pAuxEl);
+			var run = job.Runs.First().Run;
 
-			var hybridController = (HybridController)((VehicleContainer)run.GetContainer()).HybridController;
+            var hybridController = (HybridController)((VehicleContainer)run.GetContainer()).HybridController;
 			Assert.NotNull(hybridController);
 
 			var modData = ((ModalDataContainer)((VehicleContainer)run.GetContainer()).ModData).Data;
@@ -347,10 +355,11 @@ namespace TUGraz.VectoCore.Tests.Integration.Hybrid
 
 			var modFilename = string.Format("SimpleParallelHybrid-P3_acc_{0}-{1}_{2}.vmod", vmax, initialSoC, slope);
 			const PowertrainPosition pos = PowertrainPosition.HybridP3;
-			var run = CreateEngineeringRun(
+			var job = CreateEngineeringRun(
 				cycle, modFilename, initialSoC, pos, 1.0, largeMotor: true);
+			var run = job.Runs.First().Run;
 
-			var hybridController = (HybridController)((VehicleContainer)run.GetContainer()).HybridController;
+            var hybridController = (HybridController)((VehicleContainer)run.GetContainer()).HybridController;
 			Assert.NotNull(hybridController);
 
 			var modData = ((ModalDataContainer)((VehicleContainer)run.GetContainer()).ModData).Data;
@@ -380,10 +389,11 @@ namespace TUGraz.VectoCore.Tests.Integration.Hybrid
 
 			var modFilename = string.Format("SimpleParallelHybrid-P3_stop_{0}-{1}_{2}.vmod", vmax, initialSoC, slope);
 			const PowertrainPosition pos = PowertrainPosition.HybridP3;
-			var run = CreateEngineeringRun(
+			var job = CreateEngineeringRun(
 				cycle, modFilename, initialSoC, pos, 1.0, largeMotor: true);
+			var run = job.Runs.First().Run;
 
-			var hybridController = (HybridController)((VehicleContainer)run.GetContainer()).HybridController;
+            var hybridController = (HybridController)((VehicleContainer)run.GetContainer()).HybridController;
 			Assert.NotNull(hybridController);
 			//var strategy = (DelegateParallelHybridStrategy)hybridController.Strategy;
 			//Assert.NotNull(strategy);
@@ -422,8 +432,9 @@ namespace TUGraz.VectoCore.Tests.Integration.Hybrid
 
             var modFilename = string.Format("SimpleParallelHybrid-P3_cycle_{0}-{1}_{2}_{3}.vmod", declarationMission, initialSoC, payload, pAuxEl);
             const PowertrainPosition pos = PowertrainPosition.HybridP3;
-            var run = CreateEngineeringRun(
+            var job = CreateEngineeringRun(
                 cycle, modFilename, initialSoC, pos, 1.0, largeMotor: true, pAuxEl: pAuxEl, payload: payload.SI<Kilogram>());
+			var run = job.Runs.First().Run;
 
             var hybridController = (HybridController)((VehicleContainer)run.GetContainer()).HybridController;
             Assert.NotNull(hybridController);
@@ -477,10 +488,11 @@ namespace TUGraz.VectoCore.Tests.Integration.Hybrid
 
 			var modFilename = string.Format("SimpleParallelHybrid-P4_constant_{0}-{1}_{2}_{3}.vmod", vmax, initialSoC, slope, pAuxEl);
 			const PowertrainPosition pos = PowertrainPosition.HybridP4;
-			var run = CreateEngineeringRun(
+			var job = CreateEngineeringRun(
 				cycle, modFilename, initialSoC, pos, 1.0, largeMotor: true, pAuxEl: pAuxEl);
+			var run = job.Runs.First().Run;
 
-			var hybridController = (HybridController)((VehicleContainer)run.GetContainer()).HybridController;
+            var hybridController = (HybridController)((VehicleContainer)run.GetContainer()).HybridController;
 			Assert.NotNull(hybridController);
 
 			var modData = ((ModalDataContainer)((VehicleContainer)run.GetContainer()).ModData).Data;
@@ -515,10 +527,11 @@ namespace TUGraz.VectoCore.Tests.Integration.Hybrid
 
 			var modFilename = string.Format("SimpleParallelHybrid-P4_acc_{0}-{1}_{2}.vmod", vmax, initialSoC, slope);
 			const PowertrainPosition pos = PowertrainPosition.HybridP4;
-			var run = CreateEngineeringRun(
+			var job = CreateEngineeringRun(
 				cycle, modFilename, initialSoC, pos, 1.0, largeMotor: true);
+			var run = job.Runs.First().Run;
 
-			var hybridController = (HybridController)((VehicleContainer)run.GetContainer()).HybridController;
+            var hybridController = (HybridController)((VehicleContainer)run.GetContainer()).HybridController;
 			Assert.NotNull(hybridController);
 
 			var modData = ((ModalDataContainer)((VehicleContainer)run.GetContainer()).ModData).Data;
@@ -548,10 +561,11 @@ namespace TUGraz.VectoCore.Tests.Integration.Hybrid
 
 			var modFilename = string.Format("SimpleParallelHybrid-P4_stop_{0}-{1}_{2}.vmod", vmax, initialSoC, slope);
 			const PowertrainPosition pos = PowertrainPosition.HybridP4;
-			var run = CreateEngineeringRun(
+			var job = CreateEngineeringRun(
 				cycle, modFilename, initialSoC, pos, 1.0, largeMotor: true);
+			var run = job.Runs.First().Run;
 
-			var hybridController = (HybridController)((VehicleContainer)run.GetContainer()).HybridController;
+            var hybridController = (HybridController)((VehicleContainer)run.GetContainer()).HybridController;
 			Assert.NotNull(hybridController);
 			//var strategy = (DelegateParallelHybridStrategy)hybridController.Strategy;
 			//Assert.NotNull(strategy);
@@ -567,12 +581,16 @@ namespace TUGraz.VectoCore.Tests.Integration.Hybrid
 
 		// =================================================
 
-		public static VectoRun CreateEngineeringRun(DrivingCycleData cycleData, string modFileName, double initialSoc, PowertrainPosition pos, double ratio, bool largeMotor = false,
-			SummaryDataContainer sumData = null, double pAuxEl = 0, Kilogram payload = null)
+		public static JobContainer CreateEngineeringRun(DrivingCycleData cycleData, string modFileName, double initialSoc, PowertrainPosition pos, double ratio, bool largeMotor = false, double pAuxEl = 0, Kilogram payload = null)
 		{
-			var container = CreateParallelHybridPowerTrain(
+			var fileWriter = new FileOutputWriter(Path.GetFileNameWithoutExtension(modFileName));
+			var sumData = new SummaryDataContainer(fileWriter);
+			var jobContainer = new JobContainer(sumData);
+            var container = CreateParallelHybridPowerTrain(
 				cycleData, Path.GetFileNameWithoutExtension(modFileName), initialSoc, largeMotor, sumData, pAuxEl, pos, ratio, payload);
-			return new DistanceRun(container);
+			var run = new DistanceRun(container);
+			jobContainer.AddRun(run);
+			return jobContainer;
 		}
 
 		public static VectoRun CreateConventionalEngineeringRun(DrivingCycleData cycleData, string modFileName, 

@@ -271,6 +271,35 @@ namespace TUGraz.VectoCore.Tests.Utils
 		}
 
 		public bool HasCombustionEngine { get; set; }
+		public WattSecond TotalElectricMotorWorkDrive(PowertrainPosition emPos)
+		{
+			throw new NotImplementedException();
+		}
+
+		public WattSecond TotalElectricMotorWorkRecuperate(PowertrainPosition emPos)
+		{
+			throw new NotImplementedException();
+		}
+
+		public PerSecond ElectricMotorAverageSpeed(PowertrainPosition emPos)
+		{
+			throw new NotImplementedException();
+		}
+
+		public double BatteryStartSoC()
+		{
+			throw new NotImplementedException();
+		}
+
+		public double BatteryEndSoC()
+		{
+			throw new NotImplementedException();
+		}
+
+		public WattSecond BatteryLoss()
+		{
+			throw new NotImplementedException();
+		}
 
 		public string RunName { get; set; }
 		public string CycleName { get; set; }

@@ -82,8 +82,11 @@ namespace TUGraz.VectoCore.OutputData
 		private readonly Dictionary<FuelType, KilogramPerWattSecond> _engLine = new Dictionary<FuelType, KilogramPerWattSecond>();
 		private readonly Dictionary<FuelType, KilogramPerWattSecond> _vehLine = new Dictionary<FuelType, KilogramPerWattSecond>();
 		private List<PowertrainPosition> ElectricMotors = new List<PowertrainPosition>();
+		private Dictionary<PowertrainPosition, WattSecond> _eEmDrive = new Dictionary<PowertrainPosition, WattSecond>();
+		private Dictionary<PowertrainPosition, WattSecond> _eEmRecuperate = new Dictionary<PowertrainPosition, WattSecond>();
+		//private Dictionary<PowertrainPosition, WattSecond> _eEmDrive = new Dictionary<PowertrainPosition, WattSecond>();
 
-		public int JobRunId { get; }
+        public int JobRunId { get; }
 		public string RunName { get; }
 		public string CycleName { get; }
 		public string RunSuffix { get; private set; }
@@ -233,6 +236,56 @@ namespace TUGraz.VectoCore.OutputData
 		}
 
 		public bool HasCombustionEngine { get; set; }
+
+		public WattSecond TotalElectricMotorWorkDrive(PowertrainPosition emPos)
+		{
+			if (!ElectricMotors.Contains(emPos)) {
+				return null;
+			}
+
+			if (!_eEmDrive.ContainsKey(emPos)) {
+				_eEmDrive[emPos] = TimeIntegral<WattSecond>(
+					string.Format(ModalResultField.P_electricMotor_mech_.GetCaption(), emPos.GetName()), x => x < 0);
+			}
+
+			return -_eEmDrive[emPos];
+		}
+
+		public WattSecond TotalElectricMotorWorkRecuperate(PowertrainPosition emPos)
+		{
+			if (!ElectricMotors.Contains(emPos)) {
+				return null;
+			}
+
+			if (!_eEmRecuperate.ContainsKey(emPos)) {
+				_eEmRecuperate[emPos] = TimeIntegral<WattSecond>(
+					string.Format(ModalResultField.P_electricMotor_mech_.GetCaption(), emPos.GetName()), x => x > 0); ;
+			}
+
+			return _eEmRecuperate[emPos];
+        }
+
+		public PerSecond ElectricMotorAverageSpeed(PowertrainPosition emPos)
+		{
+			var integral = GetValues(x => x.Field<PerSecond>(string.Format(ModalResultField.n_electricMotor_.GetCaption(), emPos.GetName())).Value() *
+												x.Field<Second>(ModalResultField.simulationInterval.GetName()).Value()).Sum();
+			return (integral / Duration.Value()).SI<PerSecond>();
+        }
+
+		public double BatteryStartSoC()
+		{
+			return Data.AsEnumerable().Cast<DataRow>().First().Field<SI>(ModalResultField.BatteryStateOfCharge.GetName()).Value() * 100;
+		}
+
+		public double BatteryEndSoC()
+		{
+			return Data.AsEnumerable().Cast<DataRow>().Last().Field<SI>(ModalResultField.BatteryStateOfCharge.GetName()).Value() * 100;
+        }
+
+		public WattSecond BatteryLoss()
+		{
+			return TimeIntegral<WattSecond>(ModalResultField.P_battery_loss);
+		}
 
 		public void CalculateAggregateValues()
 		{

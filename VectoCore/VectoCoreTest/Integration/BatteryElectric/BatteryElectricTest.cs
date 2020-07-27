@@ -106,10 +106,10 @@ namespace TUGraz.VectoCore.Tests.Integration.BatteryElectric
 
 			var modFilename = string.Format("SimpleBatteryElectric-B4_constant_{0}-{1}_{2}_{3}.vmod", vmax, initialSoC, slope, pAuxEl);
 			const PowertrainPosition pos = PowertrainPosition.BatteryElectricB4;
-			var run = CreateEngineeringRun(
+			var job = CreateEngineeringRun(
 				cycle, modFilename, initialSoC, pos, 2, 22.6, largeMotor: true, pAuxEl: pAuxEl);
-
-			var modData = ((ModalDataContainer)((VehicleContainer)run.GetContainer()).ModData).Data;
+			var run = job.Runs.First().Run;
+            var modData = ((ModalDataContainer)((VehicleContainer)run.GetContainer()).ModData).Data;
 
 			var data = run.GetContainer().RunData;
 			//File.WriteAllText(
@@ -141,10 +141,10 @@ namespace TUGraz.VectoCore.Tests.Integration.BatteryElectric
 
 			var modFilename = string.Format("SimpleBatteryElectric-B4_acc_{0}-{1}_{2}.vmod", vmax, initialSoC, slope);
 			const PowertrainPosition pos = PowertrainPosition.BatteryElectricB4;
-			var run = CreateEngineeringRun(
+			var job = CreateEngineeringRun(
 				cycle, modFilename, initialSoC, pos, 2, 22.6, largeMotor: true);
-
-			var modData = ((ModalDataContainer)((VehicleContainer)run.GetContainer()).ModData).Data;
+			var run = job.Runs.First().Run;
+            var modData = ((ModalDataContainer)((VehicleContainer)run.GetContainer()).ModData).Data;
 
 			run.Run();
 			Assert.IsTrue(run.FinishedWithoutErrors);
@@ -175,23 +175,26 @@ namespace TUGraz.VectoCore.Tests.Integration.BatteryElectric
 
             const bool largeMotor = true;
 
-            var modFilename = string.Format("SimpleParallelHybrid-B4_cycle_{0}-{1}_{2}_{3}.vmod", declarationMission, initialSoC, payload, pAuxEl);
+            var modFilename = string.Format("SimpleParallelHybrid-B4_cycle_{0}-{1}_{2}_{3}", declarationMission, initialSoC, payload, pAuxEl);
             const PowertrainPosition pos = PowertrainPosition.BatteryElectricB4;
-			var run = CreateEngineeringRun(
+			var job = CreateEngineeringRun(
 				cycle, modFilename, initialSoC, pos, 2, 22.6, largeMotor: true);
+			var run = job.Runs.First().Run;
+            var modData = ((ModalDataContainer)((VehicleContainer)run.GetContainer()).ModData).Data;
 
-			var modData = ((ModalDataContainer)((VehicleContainer)run.GetContainer()).ModData).Data;
-
-            var data = run.GetContainer().RunData;
+            //var data = run.GetContainer().RunData;
             //File.WriteAllText(
             //	$"{modFilename}.json",
             //	JsonConvert.SerializeObject(data, Formatting.Indented));
 
-            run.Run();
+            //run.Run();
+			job.Execute();
+			job.WaitFinished();
             Assert.IsTrue(run.FinishedWithoutErrors);
+			Assert.IsTrue(modData.Rows.Count > 0);
 
-            Assert.IsTrue(modData.Rows.Count > 0);
-            GraphWriter.Write(modFilename);
+
+            GraphWriter.Write(modFilename + ".vmod");
         }
 
         // - - - - - - - - - - - - - - - - - - -  - - - - - - - - - - -  - - - 
@@ -229,9 +232,9 @@ namespace TUGraz.VectoCore.Tests.Integration.BatteryElectric
 
             var modFilename = string.Format("SimpleBatteryElectric-B3_constant_{0}-{1}_{2}_{3}.vmod", vmax, initialSoC, slope, pAuxEl);
             const PowertrainPosition pos = PowertrainPosition.BatteryElectricB3;
-            var run = CreateEngineeringRun(
+            var job = CreateEngineeringRun(
                 cycle, modFilename, initialSoC, pos, 2, 22.6, largeMotor: true, pAuxEl: pAuxEl);
-
+			var run = job.Runs.First().Run;
             var modData = ((ModalDataContainer)((VehicleContainer)run.GetContainer()).ModData).Data;
 
             var data = run.GetContainer().RunData;
@@ -264,9 +267,9 @@ namespace TUGraz.VectoCore.Tests.Integration.BatteryElectric
 
             var modFilename = string.Format("SimpleBatteryElectric-B3_acc_{0}-{1}_{2}.vmod", vmax, initialSoC, slope);
             const PowertrainPosition pos = PowertrainPosition.BatteryElectricB3;
-            var run = CreateEngineeringRun(
+            var job = CreateEngineeringRun(
                 cycle, modFilename, initialSoC, pos, 2, 22.6, largeMotor: true);
-
+			var run = job.Runs.First().Run;
             var modData = ((ModalDataContainer)((VehicleContainer)run.GetContainer()).ModData).Data;
 
             run.Run();
@@ -298,11 +301,12 @@ namespace TUGraz.VectoCore.Tests.Integration.BatteryElectric
 
             const bool largeMotor = true;
 
-            var modFilename = string.Format("SimpleParallelHybrid-B3_cycle_{0}-{1}_{2}_{3}.vmod", declarationMission, initialSoC, payload, pAuxEl);
+            var modFilename = string.Format("SimpleParallelHybrid-B3_cycle_{0}-{1}_{2}_{3}", declarationMission, initialSoC, payload, pAuxEl);
 			const PowertrainPosition pos = PowertrainPosition.BatteryElectricB3;
-            var run = CreateEngineeringRun(
+            var job = CreateEngineeringRun(
                 cycle, modFilename, initialSoC, pos, 2, 22.6, largeMotor: true);
 
+			var run = job.Runs.First().Run;
             var modData = ((ModalDataContainer)((VehicleContainer)run.GetContainer()).ModData).Data;
 
             var data = run.GetContainer().RunData;
@@ -312,7 +316,7 @@ namespace TUGraz.VectoCore.Tests.Integration.BatteryElectric
 
             run.Run();
             Assert.IsTrue(run.FinishedWithoutErrors);
-
+			job.WaitFinished();
             Assert.IsTrue(modData.Rows.Count > 0);
             GraphWriter.Write(modFilename);
         }
@@ -321,19 +325,26 @@ namespace TUGraz.VectoCore.Tests.Integration.BatteryElectric
         // =================================================
 
 
-        public static VectoRun CreateEngineeringRun(
-			DrivingCycleData cycleData, string modFileName, double initialSoc, PowertrainPosition pos, int count, double ratio, bool largeMotor = false,
-			SummaryDataContainer sumData = null, double pAuxEl = 0, Kilogram payload = null)
+        public static JobContainer CreateEngineeringRun(
+			DrivingCycleData cycleData, string modFileName, double initialSoc, PowertrainPosition pos, int count, double ratio, bool largeMotor = false, double pAuxEl = 0, Kilogram payload = null)
 		{
+			var fileWriter = new FileOutputWriter(Path.GetFileNameWithoutExtension(modFileName));
+			var sumData = new SummaryDataContainer(fileWriter);
+            var jobContainer = new JobContainer(sumData);
 			var container = CreateBatteryElectricPowerTrain(
-				cycleData, Path.GetFileNameWithoutExtension(modFileName), initialSoc, count, ratio, largeMotor, sumData, pAuxEl, pos, payload);
-			return new DistanceRun(container);
+				cycleData, modFileName, fileWriter, sumData, initialSoc, count, ratio, largeMotor,  pAuxEl, pos, payload);
+			
+			var run = new DistanceRun(container);
+			jobContainer.AddRun(run);
+			return jobContainer;
 		}
 
-		public static VehicleContainer CreateBatteryElectricPowerTrain(DrivingCycleData cycleData, string modFileName,
-			double initialBatCharge, int count, double ratio, bool largeMotor, SummaryDataContainer sumData, double pAuxEl, PowertrainPosition pos, Kilogram payload = null)
+		public static VehicleContainer CreateBatteryElectricPowerTrain(DrivingCycleData cycleData,
+			string modFileName, FileOutputWriter fileWriter, SummaryDataContainer sumData,
+			double initialBatCharge, int count, double ratio, bool largeMotor, double pAuxEl, PowertrainPosition pos,
+			Kilogram payload = null)
 		{
-			var fileWriter = new FileOutputWriter(modFileName);
+			
 			var modDataFilter = new IModalDataFilter[] { }; //new IModalDataFilter[] { new ActualModalDataFilter(), };
 			var modData = new ModalDataContainer(
 				modFileName, new IFuelProperties[] { FuelData.Diesel }, fileWriter,
@@ -388,11 +399,13 @@ namespace TUGraz.VectoCore.Tests.Integration.BatteryElectric
 				runData.AxleGearData = axleGearData;
 				runData.GearboxData = gearboxData;
 			}
+			
 			var container = new VehicleContainer(
 				ExecutionMode.Engineering, modData, x => { sumData?.Write(x, 1, 1, runData); });
+			
 			container.RunData = runData;
-
-			var es = new ElectricSystem(container);
+			
+            var es = new ElectricSystem(container);
 			var battery = new Battery(container, batteryData);
 			battery.Initialize(initialBatCharge);
 
