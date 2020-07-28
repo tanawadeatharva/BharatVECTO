@@ -719,9 +719,13 @@ namespace TUGraz.VectoCore.OutputData
 			foreach (var em in runData.ElectricMachinesData) {
 				var emColumns = new List<Tuple<string, ConvertedSI>>() {
 					Tuple.Create(Fields.E_EM_DRIVE_FORMAT, modData.TotalElectricMotorWorkDrive(em.Item1).ConvertToKiloWattHour()), 
-					Tuple.Create(Fields.E_EM_RECUPERATE_FORMAT, modData.TotalElectricMotorWorkRecuperate(em.Item1).ConvertToKiloWattHour()),
+					Tuple.Create(Fields.E_EM_GENERATE_FORMAT, modData.TotalElectricMotorWorkRecuperate(em.Item1).ConvertToKiloWattHour()),
 					Tuple.Create(Fields.E_EM_AVG_SPEED_FORMAT, modData.ElectricMotorAverageSpeed(em.Item1).ConvertToRoundsPerMinute()),
+					Tuple.Create(Fields.E_EM_ETA_MOT_FORMAT, new ConvertedSI(modData.ElectricMotorEfficiencyDrive(em.Item1), "")),
+					Tuple.Create(Fields.E_EM_ETA_GEN_FORMAT, new ConvertedSI(modData.ElectricMotorEfficiencyGenerate(em.Item1), "")),
+					Tuple.Create(Fields.E_EM_OFF_Loss_Format, modData.ElectricMotorOffLosses(em.Item1).ConvertToKiloWattHour())
 				};
+				emColumns.Reverse();
 				foreach (var entry in emColumns) {
 					var colName = string.Format(entry.Item1, em.Item1.GetName());
 					if (!Table.Columns.Contains(colName)) {
@@ -733,15 +737,28 @@ namespace TUGraz.VectoCore.OutputData
 			}
 
 			if (runData.BatteryData != null) {
-				var col = Table.Columns.Add(Fields.BatteryEndSoC, typeof(double));
-				col.SetOrdinal(Table.Columns[Fields.P_WHEEL].Ordinal);
-				col = Table.Columns.Add(Fields.BatteryStartSoC, typeof(double));
-				col.SetOrdinal(Table.Columns[Fields.P_WHEEL].Ordinal);
-				col = Table.Columns.Add(Fields.E_BAT_LOSS, typeof(ConvertedSI));
-				col.SetOrdinal(Table.Columns[Fields.P_WHEEL].Ordinal);
-				row[Fields.BatteryStartSoC] = modData.BatteryStartSoC();
+				foreach (var field in new[] { Fields.BatteryStartSoC, Fields.BatteryEndSoC }) {
+					var col = Table.Columns.Add(field, typeof(double));
+					col.SetOrdinal(Table.Columns[Fields.P_WHEEL].Ordinal);
+				}
+
+				foreach (var field in new[] { Fields.BatteryDeltaSoC, Fields.E_BAT_LOSS, Fields.E_Batt_T_chg, Fields.E_Batt_T_dischg, Fields.E_Batt_int_chg, Fields.E_Batt_int_dischg}) {
+					var col = Table.Columns.Add(field, typeof(ConvertedSI));
+					col.SetOrdinal(Table.Columns[Fields.P_WHEEL].Ordinal);
+                }
+				
+				row[Fields.BatteryStartSoC] = runData.BatteryData.InitialSoC * 100; // modData.BatteryStartSoC();
 				row[Fields.BatteryEndSoC] = modData.BatteryEndSoC();
+				var cellVoltage = runData.BatteryData.SOCMap.Lookup(runData.BatteryData.InitialSoC);
+				row[Fields.BatteryDeltaSoC] =
+					(modData.BatteryEnergyEnd() - 
+					(runData.BatteryData.InitialSoC * runData.BatteryData.Capacity * cellVoltage * 100).Cast<WattSecond>()).ConvertToKiloWattHour();
+
 				row[Fields.E_BAT_LOSS] = modData.BatteryLoss().ConvertToKiloWattHour();
+				row[Fields.E_Batt_T_chg] = modData.WorkBatteryChargeTerminal().ConvertToKiloWattHour();
+				row[Fields.E_Batt_T_dischg] = modData.WorkBatteryDischargeTerminal().ConvertToKiloWattHour();
+				row[Fields.E_Batt_int_chg] = modData.WorkBatteryChargeInternal().ConvertToKiloWattHour();
+				row[Fields.E_Batt_int_dischg] = modData.WorkBatteryDischargeInternal().ConvertToKiloWattHour();
 			}
         }
 
@@ -1112,7 +1129,7 @@ namespace TUGraz.VectoCore.OutputData
 			public const string FCFINAL_LiterPer100M3KM = "FC-Final{0} [l/100m³km]";
 			public const string FCFINAL_LiterPer100PassengerKM = "FC-Final{0} [l/100Pkm]";
 
-			public const string ElectricEnergyConsumptionPerKm = "E_el_tot [kWh/km]";
+			public const string ElectricEnergyConsumptionPerKm = "EC_el_final [kWh/km]";
 			
             public const string CO2_KM = "CO2 [g/km]";
 			public const string CO2_TKM = "CO2 [g/tkm]";
@@ -1243,14 +1260,22 @@ namespace TUGraz.VectoCore.OutputData
 
 			public const string AVERAGE_POS_ACC = "a_avg_acc";
 
-			public const string E_EM_DRIVE_FORMAT = "E_EM_{0}_propel [kWh]";
-			public const string E_EM_RECUPERATE_FORMAT = "E_EM_{0}_recuperation [kWh]";
+			public const string E_EM_DRIVE_FORMAT = "E_EM_{0}_drive [kWh]";
+			public const string E_EM_GENERATE_FORMAT = "E_EM_{0}_gen [kWh]";
 			public const string E_EM_AVG_SPEED_FORMAT = "n_EM_{0}_avg [rpm]";
+			public const string E_EM_ETA_MOT_FORMAT = "η_EM_{0}_mot";
+			public const string E_EM_ETA_GEN_FORMAT = "η_EM_{0}_gen";
+			public const string E_EM_OFF_Loss_Format = "E_EM_{0}_off_loss [kWh]";
 
-			public const string BatteryStartSoC = "Battery Start SoC [%]";
+
+            public const string BatteryStartSoC = "Battery Start SoC [%]";
 			public const string BatteryEndSoC = "Battery end SoC [%]";
+			public const string BatteryDeltaSoC = "Battery Delta SoC [kWh]";
 			public const string E_BAT_LOSS = "E_Batt_loss [kWh]";
-
-		}
+			public const string E_Batt_T_chg = "E_Batt_T_chg [kWh]";
+			public const string E_Batt_T_dischg = "E_Batt_T_dischg [kWh]";
+			public const string E_Batt_int_chg = "E_Batt_int_chg [kWh]";
+			public const string E_Batt_int_dischg = "E_Batt_int_dischg [kWh]";
+        }
     }
 }

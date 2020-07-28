@@ -65,12 +65,12 @@ namespace TUGraz.VectoCore.OutputData
 
 		private readonly ModalResultField[] _electricMotorColumns = new[] {
 			ModalResultField.n_electricMotor_, ModalResultField.T_electricMotor_,
-			ModalResultField.T_electricMotor_full_, ModalResultField.T_electricMotor_drag_,
+			ModalResultField.T_electricMotor_drive_max_, ModalResultField.T_electricMotor_gen_max_,
 			ModalResultField.P_electricMotor_in_, ModalResultField.P_electricMotor_out_,
 			ModalResultField.P_electricMotor_mech_, ModalResultField.P_electricMotor_el_,
 			ModalResultField.P_electricMotorLoss_, ModalResultField.P_electricMotorInertiaLoss_,
 			/*ModalResultField.P_electricMotor_brake_,*/ ModalResultField.P_electricMotor_drive_max_,
-			ModalResultField.P_electricMotor_drag_max_
+			ModalResultField.P_electricMotor_gen_max_
 		};
 
 		public static readonly IList<ModalResultField> FuelConsumptionSignals = new[] {
@@ -265,7 +265,80 @@ namespace TUGraz.VectoCore.OutputData
 			return _eEmRecuperate[emPos];
         }
 
-		public PerSecond ElectricMotorAverageSpeed(PowertrainPosition emPos)
+		public double ElectricMotorEfficiencyDrive(PowertrainPosition emPos)
+		{
+			if (!ElectricMotors.Contains(emPos)) {
+				return double.NaN;
+			}
+
+			var selected = Data.AsEnumerable().Cast<DataRow>().Select(r => {
+				var dt = r.Field<Second>(ModalResultField.simulationInterval.GetName());
+				return new {
+					P_em = r.Field<Watt>(string.Format(ModalResultField.P_electricMotor_el_.GetCaption(),
+						emPos.GetName())),
+					E_mech = r.Field<Watt>(string.Format(ModalResultField.P_electricMotor_mech_.GetCaption(),
+						emPos.GetName())) * dt,
+					E_el = r.Field<Watt>(string.Format(ModalResultField.P_electricMotor_el_.GetCaption(),
+						emPos.GetName())) * dt,
+				};
+			});
+			var eMech = 0.SI<WattSecond>();
+			var eEl = 0.SI<WattSecond>();
+			foreach (var entry in selected.Where(x => x.P_em.IsSmaller(0))) {
+				eMech += entry.E_mech;
+				eEl += entry.E_el;
+			}
+
+			return (eMech / eEl).Value();
+		}
+
+		public double ElectricMotorEfficiencyGenerate(PowertrainPosition emPos)
+		{
+			if (!ElectricMotors.Contains(emPos)) {
+				return double.NaN;
+			}
+			var selected = Data.AsEnumerable().Cast<DataRow>().Select(r => {
+				var dt = r.Field<Second>(ModalResultField.simulationInterval.GetName());
+				return new
+				{
+					P_em = r.Field<Watt>(string.Format(ModalResultField.P_electricMotor_el_.GetCaption(),
+						emPos.GetName())),
+					E_mech = r.Field<Watt>(string.Format(ModalResultField.P_electricMotor_mech_.GetCaption(),
+						emPos.GetName())) * dt,
+					E_el = r.Field<Watt>(string.Format(ModalResultField.P_electricMotor_el_.GetCaption(),
+						emPos.GetName())) * dt,
+				};
+			});
+			var eMech = 0.SI<WattSecond>();
+			var eEl = 0.SI<WattSecond>();
+			foreach (var entry in selected.Where(x => x.P_em.IsGreater(0)))
+			{
+				eMech += entry.E_mech;
+				eEl += entry.E_el;
+			}
+
+			return (eEl / eMech).Value();
+        }
+
+		public WattSecond ElectricMotorOffLosses(PowertrainPosition emPos)
+		{
+			if (!ElectricMotors.Contains(emPos)) {
+				return null;
+			}
+			var selected = Data.AsEnumerable().Cast<DataRow>().Select(r => {
+				var dt = r.Field<Second>(ModalResultField.simulationInterval.GetName());
+				return new
+				{
+					P_em = r.Field<Watt>(string.Format(ModalResultField.P_electricMotor_el_.GetCaption(),
+						emPos.GetName())),
+					E_mech = r.Field<Watt>(string.Format(ModalResultField.P_electricMotorLoss_.GetCaption(),
+						emPos.GetName())) * dt,
+				};
+			});
+			return selected.Where(x => x.P_em.IsEqual(0)).Sum(x => x.E_mech);
+		}
+
+        public PerSecond ElectricMotorAverageSpeed(PowertrainPosition emPos)
 		{
 			var integral = GetValues(x => x.Field<PerSecond>(string.Format(ModalResultField.n_electricMotor_.GetCaption(), emPos.GetName())).Value() *
 												x.Field<Second>(ModalResultField.simulationInterval.GetName()).Value()).Sum();
@@ -285,6 +358,12 @@ namespace TUGraz.VectoCore.OutputData
 		public WattSecond BatteryLoss()
 		{
 			return TimeIntegral<WattSecond>(ModalResultField.P_battery_loss);
+		}
+
+		public WattSecond BatteryEnergyEnd()
+		{
+			return Data.AsEnumerable().Cast<DataRow>().Last().Field<SI>(ModalResultField.E_Bat.GetName())
+				.Cast<WattSecond>();
 		}
 
 		public void CalculateAggregateValues()
@@ -485,7 +564,8 @@ namespace TUGraz.VectoCore.OutputData
 					ModalResultField.BatteryStateOfCharge,
 					ModalResultField.U_bat_terminal,
 					ModalResultField.U0_bat,
-					ModalResultField.I_bat
+					ModalResultField.I_bat,
+					ModalResultField.E_Bat
 				}.Select(x => x.GetName()));
 				foreach (var em in ElectricMotors.OrderBy(x => x).Reverse()) {
 					dataColumns.AddRange(_electricMotorColumns.Select(emCol =>

@@ -304,14 +304,14 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			var avgSpeed = (PreviousState.OutAngularVelocity + CurrentState.OutAngularVelocity) / 2;
 			container[ModalResultField.n_electricMotor_, Position] = avgSpeed;
 			container[ModalResultField.T_electricMotor_, Position] = CurrentState.InTorque - CurrentState.OutTorque;
-			container[ModalResultField.T_electricMotor_full_, Position] = CurrentState.DriveMax;
-			container[ModalResultField.T_electricMotor_drag_, Position] = CurrentState.DragMax;
+			container[ModalResultField.T_electricMotor_drive_max_, Position] = CurrentState.DriveMax;
+			container[ModalResultField.T_electricMotor_gen_max_, Position] = CurrentState.DragMax;
 			container[ModalResultField.P_electricMotor_mech_, Position] = (CurrentState.InTorque - CurrentState.OutTorque) * avgSpeed;
 			container[ModalResultField.P_electricMotor_out_, Position] = CurrentState.OutTorque * avgSpeed;
 			container[ModalResultField.P_electricMotor_in_, Position] = CurrentState.InTorque * avgSpeed;
 			container[ModalResultField.P_electricMotor_el_, Position] = CurrentState.ElectricPowerToBattery;
 			//container[ModalResultField.P_electricMotor_brake_, Position] = CurrentState.ElectricBrakePower;
-			container[ModalResultField.P_electricMotor_drag_max_, Position] = (CurrentState.DragMax ?? 0.SI<NewtonMeter>()) * avgSpeed;
+			container[ModalResultField.P_electricMotor_gen_max_, Position] = (CurrentState.DragMax ?? 0.SI<NewtonMeter>()) * avgSpeed;
 			container[ModalResultField.P_electricMotor_drive_max_, Position] = (CurrentState.DriveMax ?? 0.SI<NewtonMeter>()) * avgSpeed;
 			container[ModalResultField.P_electricMotorLoss_, Position] = (CurrentState.InTorque - CurrentState.OutTorque) * avgSpeed - (CurrentState.ElectricPowerToBattery);
 			container[ModalResultField.P_electricMotorInertiaLoss_, Position] = CurrentState.InertiaTorqueLoss * avgSpeed;

@@ -286,6 +286,21 @@ namespace TUGraz.VectoCore.Tests.Utils
 			throw new NotImplementedException();
 		}
 
+		public double ElectricMotorEfficiencyDrive(PowertrainPosition emPos)
+		{
+			throw new NotImplementedException();
+		}
+
+		public double ElectricMotorEfficiencyGenerate(PowertrainPosition emPos)
+		{
+			throw new NotImplementedException();
+		}
+
+		public WattSecond ElectricMotorOffLosses(PowertrainPosition emPos)
+		{
+			throw new NotImplementedException();
+		}
+
 		public double BatteryStartSoC()
 		{
 			throw new NotImplementedException();
@@ -297,6 +312,11 @@ namespace TUGraz.VectoCore.Tests.Utils
 		}
 
 		public WattSecond BatteryLoss()
+		{
+			throw new NotImplementedException();
+		}
+
+		public WattSecond BatteryEnergyEnd()
 		{
 			throw new NotImplementedException();
 		}

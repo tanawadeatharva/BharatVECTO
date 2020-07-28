@@ -128,9 +128,14 @@ namespace TUGraz.VectoCore.OutputData
 		WattSecond TotalElectricMotorWorkDrive(PowertrainPosition emPos);
 		WattSecond TotalElectricMotorWorkRecuperate(PowertrainPosition emPos);
 		PerSecond ElectricMotorAverageSpeed(PowertrainPosition emPos);
-		double BatteryStartSoC();
+		double ElectricMotorEfficiencyDrive(PowertrainPosition emPos);
+		double ElectricMotorEfficiencyGenerate(PowertrainPosition emPos);
+		WattSecond ElectricMotorOffLosses(PowertrainPosition emPos);
+        double BatteryStartSoC();
 		double BatteryEndSoC();
 		WattSecond BatteryLoss();
+		WattSecond BatteryEnergyEnd();
+		
 	}
 
 	public static class ModalDataContainerExtensions
@@ -349,9 +354,28 @@ namespace TUGraz.VectoCore.OutputData
 			return data.TimeIntegral<WattSecond>(ModalResultField.P_wheel_in) / data.Duration;
 		}
 
-		
+		public static WattSecond WorkBatteryChargeTerminal(this IModalDataContainer data)
+		{
+			return data.TimeIntegral<WattSecond>(ModalResultField.P_battery_terminal, x => x.IsGreater(0));
+		}
 
-		public static KilogramPerSecond FuelConsumptionPerSecond(this IModalDataContainer data, ModalResultField mrf, IFuelProperties fuelData)
+		public static WattSecond WorkBatteryDischargeTerminal(this IModalDataContainer data)
+		{
+			return -data.TimeIntegral<WattSecond>(ModalResultField.P_battery_terminal, x => x.IsSmaller(0));
+		}
+
+        public static WattSecond WorkBatteryChargeInternal(this IModalDataContainer data)
+		{
+			return data.TimeIntegral<WattSecond>(ModalResultField.P_battery_int, x => x.IsGreater(0));
+
+        }
+
+		public static WattSecond WorkBatteryDischargeInternal(this IModalDataContainer data)
+		{
+			return -data.TimeIntegral<WattSecond>(ModalResultField.P_battery_int, x => x.IsSmaller(0));
+		}
+
+        public static KilogramPerSecond FuelConsumptionPerSecond(this IModalDataContainer data, ModalResultField mrf, IFuelProperties fuelData)
 		{
 			return data.TimeIntegral<Kilogram>(data.GetColumnName(fuelData, mrf)) / data.Duration;
 		}
