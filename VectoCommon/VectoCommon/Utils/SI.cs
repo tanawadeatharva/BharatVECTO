@@ -1090,7 +1090,7 @@ namespace TUGraz.VectoCommon.Utils
 	/// </summary>
 	public class Volt : SIBase<Volt>
 	{
-		private static readonly int[] Units = { 1, 2, -2, -1, 0, 0, 0 };
+		private static readonly int[] Units = { 1, 2, -3, -1, 0, 0, 0 };
 		private Volt(double val) : base(val, Units) { }
 
 		public override string UnitString { get { return "V"; } }
