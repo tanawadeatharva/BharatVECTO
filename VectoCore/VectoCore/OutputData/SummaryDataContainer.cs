@@ -636,7 +636,7 @@ namespace TUGraz.VectoCore.OutputData
 				return;
 			}
 
-			var gbxOutSignal = runData.Retarder.Type == RetarderType.TransmissionOutputRetarder
+			var gbxOutSignal = runData.Retarder != null && runData.Retarder.Type == RetarderType.TransmissionOutputRetarder
 				? ModalResultField.P_retarder_in
 				: (runData.AngledriveData == null ? ModalResultField.P_axle_in : ModalResultField.P_angle_in);
 			var eGbxIn = modData.TimeIntegral<WattSecond>(ModalResultField.P_gbx_in, x => x > 0);
@@ -945,8 +945,8 @@ namespace TUGraz.VectoCore.OutputData
 
 		private static void WriteRetarderData(RetarderData data, DataRow row)
 		{
-			row[Fields.RETARDER_TYPE] = data.Type.GetLabel();
-			if (data.Type.IsDedicatedComponent()) {
+			row[Fields.RETARDER_TYPE] = (data?.Type ?? RetarderType.None).GetLabel();
+			if (data != null && data.Type.IsDedicatedComponent()) {
 				row[Fields.RETARDER_MANUFACTURER] = data.Manufacturer;
 				row[Fields.RETARDER_MODEL] = data.ModelName;
 				row[Fields.RETARDER_CERTIFICATION_METHOD] = data.CertificationMethod.GetName();

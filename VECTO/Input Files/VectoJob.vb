@@ -636,9 +636,9 @@ Public Class VectoJob
         End Get
     End Property
 
-    Public ReadOnly Property EngineOnlyMode As Boolean Implements IEngineeringJobInputData.EngineOnlyMode
+    Public ReadOnly Property JobType As VectoSimulationJobType Implements IEngineeringJobInputData.JobType
         Get
-            Return EngineOnly
+            Return If(EngineOnly, VectoSimulationJobType.EngineOnlySimulation, VectoSimulationJobType.ConventionalVehicle)
         End Get
     End Property
 

@@ -4,7 +4,6 @@ using System.IO;
 using System.Linq;
 using Newtonsoft.Json;
 using NUnit.Framework;
-using TUGraz.VectoCommon.BusAuxiliaries;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
@@ -604,14 +603,6 @@ namespace TUGraz.VectoCore.Tests.Integration.Hybrid
 		public static VehicleContainer CreateParallelHybridPowerTrain(DrivingCycleData cycleData, string modFileName,
 			double initialBatCharge, bool largeMotor, SummaryDataContainer sumData, double pAuxEl, PowertrainPosition pos, double ratio, Kilogram payload = null)
 		{ 
-			var fileWriter = new FileOutputWriter(modFileName);
-			var modDataFilter = new IModalDataFilter[] { }; //new IModalDataFilter[] { new ActualModalDataFilter(), };
-			var modData = new ModalDataContainer(
-				modFileName, new IFuelProperties[] { FuelData.Diesel }, fileWriter,
-				filters: modDataFilter) {
-				WriteModalResults = true,
-			};
-
 			var gearboxData = CreateGearboxData();
 			var axleGearData = CreateAxleGearData();
 
@@ -637,6 +628,7 @@ namespace TUGraz.VectoCore.Tests.Integration.Hybrid
 			var runData = new VectoRunData() {
 				//PowertrainConfiguration = PowertrainConfiguration.ParallelHybrid,
 				JobRunId = 0,
+				JobType = VectoSimulationJobType.ParallelHybridVehicle,
 				DriverData = driverData,
 				AxleGearData = axleGearData,
 				GearboxData = gearboxData,
@@ -653,7 +645,13 @@ namespace TUGraz.VectoCore.Tests.Integration.Hybrid
 				HybridStrategyParameters = CreateHybridStrategyData(),
 				ElectricAuxDemand = pAuxEl.SI<Watt>()
 			};
-			var container = new VehicleContainer(
+			var fileWriter = new FileOutputWriter(modFileName);
+			var modDataFilter = new IModalDataFilter[] { }; //new IModalDataFilter[] { new ActualModalDataFilter(), };
+			var modData = new ModalDataContainer(runData, fileWriter, null, modDataFilter)
+			{
+				WriteModalResults = true,
+			};
+            var container = new VehicleContainer(
 				ExecutionMode.Engineering, modData, x => { sumData?.Write(x, 1, 1, runData); });
 			container.RunData = runData;
 
@@ -724,14 +722,6 @@ namespace TUGraz.VectoCore.Tests.Integration.Hybrid
 
 			//strategySettings.StrategyName = "SimpleParallelHybridStrategy";
 
-			var fileWriter = new FileOutputWriter(modFileName);
-			var modDataFilter = new IModalDataFilter[] { }; //new IModalDataFilter[] { new ActualModalDataFilter(), };
-			var modData = new ModalDataContainer(
-				modFileName, new IFuelProperties[] { FuelData.Diesel }, fileWriter,
-				filters: modDataFilter) {
-				WriteModalResults = true,
-			};
-
 			var gearboxData = CreateGearboxData();
 			var axleGearData = CreateAxleGearData();
 
@@ -760,13 +750,20 @@ namespace TUGraz.VectoCore.Tests.Integration.Hybrid
 				Cycle = cycleData,
 				Retarder = new RetarderData() { Type = RetarderType.None },
 				Aux = new List<VectoRunData.AuxData>(),
-				//ElectricMachinesData = electricMotorData,
+				ElectricMachinesData = new List<Tuple<PowertrainPosition, ElectricMotorData>>(),
 				EngineData = engineData,
 				//BatteryData = batteryData,
 				//HybridStrategy = strategySettings
 				GearshiftParameters = CreateGearshiftData(gearboxData, axleGearData.AxleGear.Ratio, engineData.IdleSpeed)
 			};
-			var container = new VehicleContainer(
+			var fileWriter = new FileOutputWriter(modFileName);
+			var modDataFilter = new IModalDataFilter[] { }; //new IModalDataFilter[] { new ActualModalDataFilter(), };
+			var modData = new ModalDataContainer(runData, fileWriter, null, modDataFilter)
+			{
+				WriteModalResults = true,
+			};
+
+            var container = new VehicleContainer(
 				ExecutionMode.Engineering, modData, x => { sumData?.Write(x, 1, 1, runData); });
 			container.RunData = runData;
 

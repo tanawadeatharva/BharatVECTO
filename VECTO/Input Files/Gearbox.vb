@@ -827,6 +827,7 @@ Public Class MockEngineeringVehicle
         Implements IVehicleDeclarationInputData.ADAS
 
     Public ReadOnly Property InitialSOC As Double Implements IVehicleEngineeringInputData.InitialSOC
+    Public ReadOnly Property VehicleType As VectoSimulationJobType Implements IVehicleEngineeringInputData.VehicleType
 
     Public Property ZeroEmissionVehicle As Boolean Implements IVehicleDeclarationInputData.ZeroEmissionVehicle
     Public Property HybridElectricHDV As Boolean Implements IVehicleDeclarationInputData.HybridElectricHDV
@@ -891,7 +892,7 @@ Public Class MockJobInputData
     Public Property Vehicle As IVehicleDeclarationInputData Implements IDeclarationJobInputData.Vehicle
     Public ReadOnly Property HybridStrategyParameters As IHybridStrategyParameters Implements IEngineeringJobInputData.HybridStrategyParameters
     Public Property Cycles As IList(Of ICycleData) Implements IEngineeringJobInputData.Cycles
-    Public Property EngineOnlyMode As Boolean Implements IEngineeringJobInputData.EngineOnlyMode
+    Public Property JobType As VectoSimulationJobType Implements IEngineeringJobInputData.JobType
     Public Property EngineOnly As IEngineEngineeringInputData Implements IEngineeringJobInputData.EngineOnly
     Public Property JobName As String Implements IDeclarationJobInputData.JobName
     Public Property ShiftStrategy As String Implements IDeclarationJobInputData.ShiftStrategy

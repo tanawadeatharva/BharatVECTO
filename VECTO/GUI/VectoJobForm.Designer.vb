@@ -31,10 +31,19 @@ Partial Class VectoJobForm
         Me.TbShiftStrategyParams = New System.Windows.Forms.TextBox()
         Me.BtnShiftParamsForm = New System.Windows.Forms.Button()
         Me.BtnShiftStrategyParams = New System.Windows.Forms.Button()
+        Me.TbGBX = New System.Windows.Forms.TextBox()
+        Me.TbENG = New System.Windows.Forms.TextBox()
+        Me.TbVEH = New System.Windows.Forms.TextBox()
+        Me.ButOpenGBX = New System.Windows.Forms.Button()
+        Me.ButOpenENG = New System.Windows.Forms.Button()
+        Me.ButOpenVEH = New System.Windows.Forms.Button()
+        Me.ButtonVEH = New System.Windows.Forms.Button()
+        Me.ButtonGBX = New System.Windows.Forms.Button()
+        Me.ButtonMAP = New System.Windows.Forms.Button()
         Me.GrCycles = New System.Windows.Forms.GroupBox()
         Me.Label2 = New System.Windows.Forms.Label()
         Me.LvCycles = New System.Windows.Forms.ListView()
-        Me.ColumnHeader1 = CType(New System.Windows.Forms.ColumnHeader(),System.Windows.Forms.ColumnHeader)
+        Me.ColumnHeader1 = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
         Me.BtDRIrem = New System.Windows.Forms.Button()
         Me.BtDRIadd = New System.Windows.Forms.Button()
         Me.GrAuxMech = New System.Windows.Forms.GroupBox()
@@ -50,21 +59,18 @@ Partial Class VectoJobForm
         Me.lbAdvancedAuxiliaries = New System.Windows.Forms.Label()
         Me.Label32 = New System.Windows.Forms.Label()
         Me.LvAux = New System.Windows.Forms.ListView()
-        Me.ColumnHeader4 = CType(New System.Windows.Forms.ColumnHeader(),System.Windows.Forms.ColumnHeader)
-        Me.ColumnHeader5 = CType(New System.Windows.Forms.ColumnHeader(),System.Windows.Forms.ColumnHeader)
-        Me.ColumnHeader6 = CType(New System.Windows.Forms.ColumnHeader(),System.Windows.Forms.ColumnHeader)
+        Me.ColumnHeader4 = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
+        Me.ColumnHeader5 = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
+        Me.ColumnHeader6 = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
         Me.ButAuxRem = New System.Windows.Forms.Button()
         Me.ButAuxAdd = New System.Windows.Forms.Button()
-        Me.TbGBX = New System.Windows.Forms.TextBox()
-        Me.TbENG = New System.Windows.Forms.TextBox()
-        Me.TbVEH = New System.Windows.Forms.TextBox()
-        Me.ButOpenGBX = New System.Windows.Forms.Button()
-        Me.ButOpenENG = New System.Windows.Forms.Button()
-        Me.ButOpenVEH = New System.Windows.Forms.Button()
-        Me.ButtonVEH = New System.Windows.Forms.Button()
-        Me.ButtonGBX = New System.Windows.Forms.Button()
-        Me.ButtonMAP = New System.Windows.Forms.Button()
         Me.tcJob = New System.Windows.Forms.TabControl()
+        Me.tpAuxiliaries = New System.Windows.Forms.TabPage()
+        Me.gbElectricAux = New System.Windows.Forms.GroupBox()
+        Me.lblElAuxConstUnit = New System.Windows.Forms.Label()
+        Me.tbElectricAuxConstant = New System.Windows.Forms.TextBox()
+        Me.lblElAuxConst = New System.Windows.Forms.Label()
+        Me.tpCycles = New System.Windows.Forms.TabPage()
         Me.TabPgDriver = New System.Windows.Forms.TabPage()
         Me.gbShiftStrategy = New System.Windows.Forms.GroupBox()
         Me.cbGearshiftStrategy = New System.Windows.Forms.ComboBox()
@@ -160,7 +166,6 @@ Partial Class VectoJobForm
         Me.ToolStripSeparator2 = New System.Windows.Forms.ToolStripSeparator()
         Me.ToolStripButton1 = New System.Windows.Forms.ToolStripButton()
         Me.PictureBox1 = New System.Windows.Forms.PictureBox()
-        Me.CbEngOnly = New System.Windows.Forms.CheckBox()
         Me.CmOpenFile = New System.Windows.Forms.ContextMenuStrip(Me.components)
         Me.OpenWithToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.ShowInFolderToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
@@ -174,13 +179,20 @@ Partial Class VectoJobForm
         Me.TbMass = New System.Windows.Forms.TextBox()
         Me.ToolTip1 = New System.Windows.Forms.ToolTip(Me.components)
         Me.lblEngineCharacteristics = New System.Windows.Forms.Label()
-        Me.tpAuxiliaries = New System.Windows.Forms.TabPage()
-        Me.tpCycles = New System.Windows.Forms.TabPage()
+        Me.lblTitle = New System.Windows.Forms.Label()
+        Me.pnJobInfo = New System.Windows.Forms.Panel()
+        Me.pnShiftParams = New System.Windows.Forms.Panel()
+        Me.pnGearbox = New System.Windows.Forms.Panel()
+        Me.pnEngine = New System.Windows.Forms.Panel()
+        Me.pnVehicle = New System.Windows.Forms.Panel()
         Me.TabPgGen.SuspendLayout()
         Me.GrCycles.SuspendLayout()
         Me.GrAuxMech.SuspendLayout()
         CType(Me.picAuxInfo, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.tcJob.SuspendLayout()
+        Me.tpAuxiliaries.SuspendLayout()
+        Me.gbElectricAux.SuspendLayout()
+        Me.tpCycles.SuspendLayout()
         Me.TabPgDriver.SuspendLayout()
         Me.gbShiftStrategy.SuspendLayout()
         Me.GrVACC.SuspendLayout()
@@ -198,28 +210,23 @@ Partial Class VectoJobForm
         Me.CmOpenFile.SuspendLayout()
         CType(Me.PicVehicle, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.PicBox, System.ComponentModel.ISupportInitialize).BeginInit()
-        Me.tpAuxiliaries.SuspendLayout()
-        Me.tpCycles.SuspendLayout()
+        Me.pnJobInfo.SuspendLayout()
+        Me.pnShiftParams.SuspendLayout()
+        Me.pnGearbox.SuspendLayout()
+        Me.pnEngine.SuspendLayout()
+        Me.pnVehicle.SuspendLayout()
         Me.SuspendLayout()
         '
         'TabPgGen
         '
-        Me.TabPgGen.Controls.Add(Me.TbShiftStrategyParams)
-        Me.TabPgGen.Controls.Add(Me.BtnShiftParamsForm)
-        Me.TabPgGen.Controls.Add(Me.BtnShiftStrategyParams)
-        Me.TabPgGen.Controls.Add(Me.TbGBX)
-        Me.TabPgGen.Controls.Add(Me.TbENG)
-        Me.TabPgGen.Controls.Add(Me.TbVEH)
-        Me.TabPgGen.Controls.Add(Me.ButOpenGBX)
-        Me.TabPgGen.Controls.Add(Me.ButOpenENG)
-        Me.TabPgGen.Controls.Add(Me.ButOpenVEH)
-        Me.TabPgGen.Controls.Add(Me.ButtonVEH)
-        Me.TabPgGen.Controls.Add(Me.ButtonGBX)
-        Me.TabPgGen.Controls.Add(Me.ButtonMAP)
+        Me.TabPgGen.Controls.Add(Me.pnVehicle)
+        Me.TabPgGen.Controls.Add(Me.pnEngine)
+        Me.TabPgGen.Controls.Add(Me.pnGearbox)
+        Me.TabPgGen.Controls.Add(Me.pnShiftParams)
         Me.TabPgGen.Location = New System.Drawing.Point(4, 22)
         Me.TabPgGen.Name = "TabPgGen"
         Me.TabPgGen.Padding = New System.Windows.Forms.Padding(3)
-        Me.TabPgGen.Size = New System.Drawing.Size(527, 512)
+        Me.TabPgGen.Size = New System.Drawing.Size(525, 472)
         Me.TabPgGen.TabIndex = 0
         Me.TabPgGen.Text = "General"
         Me.TabPgGen.UseVisualStyleBackColor = True
@@ -228,14 +235,14 @@ Partial Class VectoJobForm
         '
         Me.TbShiftStrategyParams.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.TbShiftStrategyParams.Location = New System.Drawing.Point(85, 87)
+        Me.TbShiftStrategyParams.Location = New System.Drawing.Point(81, 3)
         Me.TbShiftStrategyParams.Name = "TbShiftStrategyParams"
-        Me.TbShiftStrategyParams.Size = New System.Drawing.Size(411, 20)
+        Me.TbShiftStrategyParams.Size = New System.Drawing.Size(406, 20)
         Me.TbShiftStrategyParams.TabIndex = 12
         '
         'BtnShiftParamsForm
         '
-        Me.BtnShiftParamsForm.Location = New System.Drawing.Point(7, 87)
+        Me.BtnShiftParamsForm.Location = New System.Drawing.Point(3, 3)
         Me.BtnShiftParamsForm.Name = "BtnShiftParamsForm"
         Me.BtnShiftParamsForm.Size = New System.Drawing.Size(72, 21)
         Me.BtnShiftParamsForm.TabIndex = 11
@@ -247,12 +254,102 @@ Partial Class VectoJobForm
         '
         Me.BtnShiftStrategyParams.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.BtnShiftStrategyParams.Image = CType(resources.GetObject("BtnShiftStrategyParams.Image"), System.Drawing.Image)
-        Me.BtnShiftStrategyParams.Location = New System.Drawing.Point(497, 85)
+        Me.BtnShiftStrategyParams.Location = New System.Drawing.Point(489, 1)
         Me.BtnShiftStrategyParams.Name = "BtnShiftStrategyParams"
         Me.BtnShiftStrategyParams.Size = New System.Drawing.Size(24, 24)
         Me.BtnShiftStrategyParams.TabIndex = 13
         Me.BtnShiftStrategyParams.TabStop = False
         Me.BtnShiftStrategyParams.UseVisualStyleBackColor = True
+        '
+        'TbGBX
+        '
+        Me.TbGBX.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.TbGBX.Location = New System.Drawing.Point(82, 3)
+        Me.TbGBX.Name = "TbGBX"
+        Me.TbGBX.Size = New System.Drawing.Size(404, 20)
+        Me.TbGBX.TabIndex = 7
+        '
+        'TbENG
+        '
+        Me.TbENG.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.TbENG.Location = New System.Drawing.Point(82, 3)
+        Me.TbENG.Name = "TbENG"
+        Me.TbENG.Size = New System.Drawing.Size(404, 20)
+        Me.TbENG.TabIndex = 4
+        '
+        'TbVEH
+        '
+        Me.TbVEH.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.TbVEH.Location = New System.Drawing.Point(82, 4)
+        Me.TbVEH.Name = "TbVEH"
+        Me.TbVEH.Size = New System.Drawing.Size(404, 20)
+        Me.TbVEH.TabIndex = 1
+        '
+        'ButOpenGBX
+        '
+        Me.ButOpenGBX.Location = New System.Drawing.Point(4, 3)
+        Me.ButOpenGBX.Name = "ButOpenGBX"
+        Me.ButOpenGBX.Size = New System.Drawing.Size(72, 21)
+        Me.ButOpenGBX.TabIndex = 6
+        Me.ButOpenGBX.TabStop = False
+        Me.ButOpenGBX.Text = "Gearbox"
+        Me.ButOpenGBX.UseVisualStyleBackColor = True
+        '
+        'ButOpenENG
+        '
+        Me.ButOpenENG.Location = New System.Drawing.Point(4, 3)
+        Me.ButOpenENG.Name = "ButOpenENG"
+        Me.ButOpenENG.Size = New System.Drawing.Size(72, 21)
+        Me.ButOpenENG.TabIndex = 3
+        Me.ButOpenENG.TabStop = False
+        Me.ButOpenENG.Text = "Engine"
+        Me.ButOpenENG.UseVisualStyleBackColor = True
+        '
+        'ButOpenVEH
+        '
+        Me.ButOpenVEH.Location = New System.Drawing.Point(4, 3)
+        Me.ButOpenVEH.Name = "ButOpenVEH"
+        Me.ButOpenVEH.Size = New System.Drawing.Size(72, 21)
+        Me.ButOpenVEH.TabIndex = 0
+        Me.ButOpenVEH.TabStop = False
+        Me.ButOpenVEH.Text = "Vehicle"
+        Me.ButOpenVEH.UseVisualStyleBackColor = True
+        '
+        'ButtonVEH
+        '
+        Me.ButtonVEH.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.ButtonVEH.Image = CType(resources.GetObject("ButtonVEH.Image"), System.Drawing.Image)
+        Me.ButtonVEH.Location = New System.Drawing.Point(492, 2)
+        Me.ButtonVEH.Name = "ButtonVEH"
+        Me.ButtonVEH.Size = New System.Drawing.Size(24, 24)
+        Me.ButtonVEH.TabIndex = 2
+        Me.ButtonVEH.TabStop = False
+        Me.ButtonVEH.UseVisualStyleBackColor = True
+        '
+        'ButtonGBX
+        '
+        Me.ButtonGBX.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.ButtonGBX.Image = CType(resources.GetObject("ButtonGBX.Image"), System.Drawing.Image)
+        Me.ButtonGBX.Location = New System.Drawing.Point(492, 1)
+        Me.ButtonGBX.Name = "ButtonGBX"
+        Me.ButtonGBX.Size = New System.Drawing.Size(24, 24)
+        Me.ButtonGBX.TabIndex = 8
+        Me.ButtonGBX.TabStop = False
+        Me.ButtonGBX.UseVisualStyleBackColor = True
+        '
+        'ButtonMAP
+        '
+        Me.ButtonMAP.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.ButtonMAP.Image = CType(resources.GetObject("ButtonMAP.Image"), System.Drawing.Image)
+        Me.ButtonMAP.Location = New System.Drawing.Point(492, 1)
+        Me.ButtonMAP.Name = "ButtonMAP"
+        Me.ButtonMAP.Size = New System.Drawing.Size(24, 24)
+        Me.ButtonMAP.TabIndex = 5
+        Me.ButtonMAP.TabStop = False
+        Me.ButtonMAP.UseVisualStyleBackColor = True
         '
         'GrCycles
         '
@@ -506,96 +603,6 @@ Partial Class VectoJobForm
         Me.ButAuxAdd.TabIndex = 1
         Me.ButAuxAdd.UseVisualStyleBackColor = True
         '
-        'TbGBX
-        '
-        Me.TbGBX.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
-            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.TbGBX.Location = New System.Drawing.Point(84, 60)
-        Me.TbGBX.Name = "TbGBX"
-        Me.TbGBX.Size = New System.Drawing.Size(411, 20)
-        Me.TbGBX.TabIndex = 7
-        '
-        'TbENG
-        '
-        Me.TbENG.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
-            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.TbENG.Location = New System.Drawing.Point(84, 33)
-        Me.TbENG.Name = "TbENG"
-        Me.TbENG.Size = New System.Drawing.Size(411, 20)
-        Me.TbENG.TabIndex = 4
-        '
-        'TbVEH
-        '
-        Me.TbVEH.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
-            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.TbVEH.Location = New System.Drawing.Point(84, 7)
-        Me.TbVEH.Name = "TbVEH"
-        Me.TbVEH.Size = New System.Drawing.Size(411, 20)
-        Me.TbVEH.TabIndex = 1
-        '
-        'ButOpenGBX
-        '
-        Me.ButOpenGBX.Location = New System.Drawing.Point(6, 60)
-        Me.ButOpenGBX.Name = "ButOpenGBX"
-        Me.ButOpenGBX.Size = New System.Drawing.Size(72, 21)
-        Me.ButOpenGBX.TabIndex = 6
-        Me.ButOpenGBX.TabStop = False
-        Me.ButOpenGBX.Text = "Gearbox"
-        Me.ButOpenGBX.UseVisualStyleBackColor = True
-        '
-        'ButOpenENG
-        '
-        Me.ButOpenENG.Location = New System.Drawing.Point(6, 33)
-        Me.ButOpenENG.Name = "ButOpenENG"
-        Me.ButOpenENG.Size = New System.Drawing.Size(72, 21)
-        Me.ButOpenENG.TabIndex = 3
-        Me.ButOpenENG.TabStop = False
-        Me.ButOpenENG.Text = "Engine"
-        Me.ButOpenENG.UseVisualStyleBackColor = True
-        '
-        'ButOpenVEH
-        '
-        Me.ButOpenVEH.Location = New System.Drawing.Point(6, 6)
-        Me.ButOpenVEH.Name = "ButOpenVEH"
-        Me.ButOpenVEH.Size = New System.Drawing.Size(72, 21)
-        Me.ButOpenVEH.TabIndex = 0
-        Me.ButOpenVEH.TabStop = False
-        Me.ButOpenVEH.Text = "Vehicle"
-        Me.ButOpenVEH.UseVisualStyleBackColor = True
-        '
-        'ButtonVEH
-        '
-        Me.ButtonVEH.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.ButtonVEH.Image = CType(resources.GetObject("ButtonVEH.Image"), System.Drawing.Image)
-        Me.ButtonVEH.Location = New System.Drawing.Point(496, 5)
-        Me.ButtonVEH.Name = "ButtonVEH"
-        Me.ButtonVEH.Size = New System.Drawing.Size(24, 24)
-        Me.ButtonVEH.TabIndex = 2
-        Me.ButtonVEH.TabStop = False
-        Me.ButtonVEH.UseVisualStyleBackColor = True
-        '
-        'ButtonGBX
-        '
-        Me.ButtonGBX.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.ButtonGBX.Image = CType(resources.GetObject("ButtonGBX.Image"), System.Drawing.Image)
-        Me.ButtonGBX.Location = New System.Drawing.Point(496, 58)
-        Me.ButtonGBX.Name = "ButtonGBX"
-        Me.ButtonGBX.Size = New System.Drawing.Size(24, 24)
-        Me.ButtonGBX.TabIndex = 8
-        Me.ButtonGBX.TabStop = False
-        Me.ButtonGBX.UseVisualStyleBackColor = True
-        '
-        'ButtonMAP
-        '
-        Me.ButtonMAP.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.ButtonMAP.Image = CType(resources.GetObject("ButtonMAP.Image"), System.Drawing.Image)
-        Me.ButtonMAP.Location = New System.Drawing.Point(496, 31)
-        Me.ButtonMAP.Name = "ButtonMAP"
-        Me.ButtonMAP.Size = New System.Drawing.Size(24, 24)
-        Me.ButtonMAP.TabIndex = 5
-        Me.ButtonMAP.TabStop = False
-        Me.ButtonMAP.UseVisualStyleBackColor = True
-        '
         'tcJob
         '
         Me.tcJob.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
@@ -605,12 +612,72 @@ Partial Class VectoJobForm
         Me.tcJob.Controls.Add(Me.tpCycles)
         Me.tcJob.Controls.Add(Me.TabPgDriver)
         Me.tcJob.Controls.Add(Me.TabPgADAS)
-        Me.tcJob.Location = New System.Drawing.Point(1, 107)
+        Me.tcJob.Location = New System.Drawing.Point(1, 78)
         Me.tcJob.Name = "tcJob"
         Me.tcJob.SelectedIndex = 0
-        Me.tcJob.Size = New System.Drawing.Size(535, 498)
+        Me.tcJob.Size = New System.Drawing.Size(533, 498)
         Me.tcJob.SizeMode = System.Windows.Forms.TabSizeMode.Fixed
         Me.tcJob.TabIndex = 0
+        '
+        'tpAuxiliaries
+        '
+        Me.tpAuxiliaries.Controls.Add(Me.gbElectricAux)
+        Me.tpAuxiliaries.Controls.Add(Me.GrAuxMech)
+        Me.tpAuxiliaries.Location = New System.Drawing.Point(4, 22)
+        Me.tpAuxiliaries.Name = "tpAuxiliaries"
+        Me.tpAuxiliaries.Padding = New System.Windows.Forms.Padding(3)
+        Me.tpAuxiliaries.Size = New System.Drawing.Size(520, 472)
+        Me.tpAuxiliaries.TabIndex = 9
+        Me.tpAuxiliaries.Text = "Auxiliaries"
+        Me.tpAuxiliaries.UseVisualStyleBackColor = True
+        '
+        'gbElectricAux
+        '
+        Me.gbElectricAux.Controls.Add(Me.lblElAuxConstUnit)
+        Me.gbElectricAux.Controls.Add(Me.tbElectricAuxConstant)
+        Me.gbElectricAux.Controls.Add(Me.lblElAuxConst)
+        Me.gbElectricAux.Location = New System.Drawing.Point(6, 267)
+        Me.gbElectricAux.Name = "gbElectricAux"
+        Me.gbElectricAux.Size = New System.Drawing.Size(515, 100)
+        Me.gbElectricAux.TabIndex = 10
+        Me.gbElectricAux.TabStop = False
+        Me.gbElectricAux.Text = "Electric Auxiliaries"
+        '
+        'lblElAuxConstUnit
+        '
+        Me.lblElAuxConstUnit.AutoSize = True
+        Me.lblElAuxConstUnit.Location = New System.Drawing.Point(191, 22)
+        Me.lblElAuxConstUnit.Name = "lblElAuxConstUnit"
+        Me.lblElAuxConstUnit.Size = New System.Drawing.Size(24, 13)
+        Me.lblElAuxConstUnit.TabIndex = 47
+        Me.lblElAuxConstUnit.Text = "[W]"
+        '
+        'tbElectricAuxConstant
+        '
+        Me.tbElectricAuxConstant.Location = New System.Drawing.Point(109, 19)
+        Me.tbElectricAuxConstant.Name = "tbElectricAuxConstant"
+        Me.tbElectricAuxConstant.Size = New System.Drawing.Size(76, 20)
+        Me.tbElectricAuxConstant.TabIndex = 46
+        '
+        'lblElAuxConst
+        '
+        Me.lblElAuxConst.AutoSize = True
+        Me.lblElAuxConst.Location = New System.Drawing.Point(7, 22)
+        Me.lblElAuxConst.Name = "lblElAuxConst"
+        Me.lblElAuxConst.Size = New System.Drawing.Size(97, 13)
+        Me.lblElAuxConst.TabIndex = 45
+        Me.lblElAuxConst.Text = "Constant Aux Load"
+        '
+        'tpCycles
+        '
+        Me.tpCycles.Controls.Add(Me.GrCycles)
+        Me.tpCycles.Location = New System.Drawing.Point(4, 22)
+        Me.tpCycles.Name = "tpCycles"
+        Me.tpCycles.Padding = New System.Windows.Forms.Padding(3)
+        Me.tpCycles.Size = New System.Drawing.Size(520, 472)
+        Me.tpCycles.TabIndex = 10
+        Me.tpCycles.Text = "Cycles"
+        Me.tpCycles.UseVisualStyleBackColor = True
         '
         'TabPgDriver
         '
@@ -621,7 +688,7 @@ Partial Class VectoJobForm
         Me.TabPgDriver.Location = New System.Drawing.Point(4, 22)
         Me.TabPgDriver.Name = "TabPgDriver"
         Me.TabPgDriver.Padding = New System.Windows.Forms.Padding(3)
-        Me.TabPgDriver.Size = New System.Drawing.Size(527, 472)
+        Me.TabPgDriver.Size = New System.Drawing.Size(520, 472)
         Me.TabPgDriver.TabIndex = 7
         Me.TabPgDriver.Text = "Driver Model"
         Me.TabPgDriver.UseVisualStyleBackColor = True
@@ -990,7 +1057,7 @@ Partial Class VectoJobForm
         Me.TabPgADAS.Controls.Add(Me.gbEngineStopStart)
         Me.TabPgADAS.Location = New System.Drawing.Point(4, 22)
         Me.TabPgADAS.Name = "TabPgADAS"
-        Me.TabPgADAS.Size = New System.Drawing.Size(527, 472)
+        Me.TabPgADAS.Size = New System.Drawing.Size(520, 472)
         Me.TabPgADAS.TabIndex = 8
         Me.TabPgADAS.Text = "ADAS Parameters"
         Me.TabPgADAS.UseVisualStyleBackColor = True
@@ -1405,9 +1472,9 @@ Partial Class VectoJobForm
         'StatusStrip1
         '
         Me.StatusStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.ToolStripStatusLabelGEN})
-        Me.StatusStrip1.Location = New System.Drawing.Point(0, 614)
+        Me.StatusStrip1.Location = New System.Drawing.Point(0, 582)
         Me.StatusStrip1.Name = "StatusStrip1"
-        Me.StatusStrip1.Size = New System.Drawing.Size(944, 22)
+        Me.StatusStrip1.Size = New System.Drawing.Size(942, 22)
         Me.StatusStrip1.SizingGrip = False
         Me.StatusStrip1.TabIndex = 6
         Me.StatusStrip1.Text = "StatusStrip1"
@@ -1421,7 +1488,7 @@ Partial Class VectoJobForm
         'ButOK
         '
         Me.ButOK.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.ButOK.Location = New System.Drawing.Point(778, 587)
+        Me.ButOK.Location = New System.Drawing.Point(776, 555)
         Me.ButOK.Name = "ButOK"
         Me.ButOK.Size = New System.Drawing.Size(75, 23)
         Me.ButOK.TabIndex = 0
@@ -1432,7 +1499,7 @@ Partial Class VectoJobForm
         '
         Me.ButCancel.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.ButCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel
-        Me.ButCancel.Location = New System.Drawing.Point(859, 587)
+        Me.ButCancel.Location = New System.Drawing.Point(857, 555)
         Me.ButCancel.Name = "ButCancel"
         Me.ButCancel.Size = New System.Drawing.Size(75, 23)
         Me.ButCancel.TabIndex = 1
@@ -1445,7 +1512,7 @@ Partial Class VectoJobForm
         Me.ToolStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.ToolStripBtNew, Me.ToolStripBtOpen, Me.ToolStripBtSave, Me.ToolStripBtSaveAs, Me.ToolStripSeparator1, Me.ToolStripBtSendTo, Me.ToolStripSeparator2, Me.ToolStripButton1})
         Me.ToolStrip1.Location = New System.Drawing.Point(0, 0)
         Me.ToolStrip1.Name = "ToolStrip1"
-        Me.ToolStrip1.Size = New System.Drawing.Size(944, 25)
+        Me.ToolStrip1.Size = New System.Drawing.Size(942, 25)
         Me.ToolStrip1.TabIndex = 20
         Me.ToolStrip1.Text = "ToolStrip1"
         '
@@ -1526,19 +1593,9 @@ Partial Class VectoJobForm
         Me.PictureBox1.Image = Global.TUGraz.VECTO.My.Resources.Resources.VECTO_VECTO
         Me.PictureBox1.Location = New System.Drawing.Point(0, 28)
         Me.PictureBox1.Name = "PictureBox1"
-        Me.PictureBox1.Size = New System.Drawing.Size(944, 40)
+        Me.PictureBox1.Size = New System.Drawing.Size(942, 40)
         Me.PictureBox1.TabIndex = 21
         Me.PictureBox1.TabStop = False
-        '
-        'CbEngOnly
-        '
-        Me.CbEngOnly.AutoSize = True
-        Me.CbEngOnly.Location = New System.Drawing.Point(17, 84)
-        Me.CbEngOnly.Name = "CbEngOnly"
-        Me.CbEngOnly.Size = New System.Drawing.Size(113, 17)
-        Me.CbEngOnly.TabIndex = 0
-        Me.CbEngOnly.Text = "Engine Only Mode"
-        Me.CbEngOnly.UseVisualStyleBackColor = True
         '
         'CmOpenFile
         '
@@ -1563,7 +1620,7 @@ Partial Class VectoJobForm
         '
         Me.PicVehicle.BackColor = System.Drawing.Color.LightGray
         Me.PicVehicle.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
-        Me.PicVehicle.Location = New System.Drawing.Point(542, 127)
+        Me.PicVehicle.Location = New System.Drawing.Point(3, 3)
         Me.PicVehicle.Name = "PicVehicle"
         Me.PicVehicle.Size = New System.Drawing.Size(300, 88)
         Me.PicVehicle.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage
@@ -1574,7 +1631,7 @@ Partial Class VectoJobForm
         '
         Me.PicBox.BackColor = System.Drawing.Color.LightGray
         Me.PicBox.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
-        Me.PicBox.Location = New System.Drawing.Point(542, 266)
+        Me.PicBox.Location = New System.Drawing.Point(3, 142)
         Me.PicBox.Name = "PicBox"
         Me.PicBox.Size = New System.Drawing.Size(390, 296)
         Me.PicBox.TabIndex = 36
@@ -1582,7 +1639,7 @@ Partial Class VectoJobForm
         '
         'TbEngTxt
         '
-        Me.TbEngTxt.Location = New System.Drawing.Point(542, 218)
+        Me.TbEngTxt.Location = New System.Drawing.Point(3, 94)
         Me.TbEngTxt.Name = "TbEngTxt"
         Me.TbEngTxt.ReadOnly = True
         Me.TbEngTxt.Size = New System.Drawing.Size(390, 20)
@@ -1590,7 +1647,7 @@ Partial Class VectoJobForm
         '
         'TbVehCat
         '
-        Me.TbVehCat.Location = New System.Drawing.Point(848, 131)
+        Me.TbVehCat.Location = New System.Drawing.Point(309, 7)
         Me.TbVehCat.Name = "TbVehCat"
         Me.TbVehCat.ReadOnly = True
         Me.TbVehCat.Size = New System.Drawing.Size(87, 20)
@@ -1598,7 +1655,7 @@ Partial Class VectoJobForm
         '
         'TbAxleConf
         '
-        Me.TbAxleConf.Location = New System.Drawing.Point(904, 160)
+        Me.TbAxleConf.Location = New System.Drawing.Point(365, 36)
         Me.TbAxleConf.Name = "TbAxleConf"
         Me.TbAxleConf.ReadOnly = True
         Me.TbAxleConf.Size = New System.Drawing.Size(31, 20)
@@ -1606,7 +1663,7 @@ Partial Class VectoJobForm
         '
         'TbHVCclass
         '
-        Me.TbHVCclass.Location = New System.Drawing.Point(848, 189)
+        Me.TbHVCclass.Location = New System.Drawing.Point(309, 65)
         Me.TbHVCclass.Name = "TbHVCclass"
         Me.TbHVCclass.ReadOnly = True
         Me.TbHVCclass.Size = New System.Drawing.Size(87, 20)
@@ -1614,7 +1671,7 @@ Partial Class VectoJobForm
         '
         'TbGbxTxt
         '
-        Me.TbGbxTxt.Location = New System.Drawing.Point(542, 241)
+        Me.TbGbxTxt.Location = New System.Drawing.Point(3, 117)
         Me.TbGbxTxt.Name = "TbGbxTxt"
         Me.TbGbxTxt.ReadOnly = True
         Me.TbGbxTxt.Size = New System.Drawing.Size(390, 20)
@@ -1622,7 +1679,7 @@ Partial Class VectoJobForm
         '
         'TbMass
         '
-        Me.TbMass.Location = New System.Drawing.Point(848, 160)
+        Me.TbMass.Location = New System.Drawing.Point(309, 36)
         Me.TbMass.Name = "TbMass"
         Me.TbMass.ReadOnly = True
         Me.TbMass.Size = New System.Drawing.Size(50, 20)
@@ -1631,32 +1688,77 @@ Partial Class VectoJobForm
         'lblEngineCharacteristics
         '
         Me.lblEngineCharacteristics.AutoSize = True
-        Me.lblEngineCharacteristics.Location = New System.Drawing.Point(542, 565)
+        Me.lblEngineCharacteristics.Location = New System.Drawing.Point(7, 445)
         Me.lblEngineCharacteristics.Name = "lblEngineCharacteristics"
         Me.lblEngineCharacteristics.Size = New System.Drawing.Size(0, 13)
         Me.lblEngineCharacteristics.TabIndex = 37
         '
-        'tpAuxiliaries
+        'lblTitle
         '
-        Me.tpAuxiliaries.Controls.Add(Me.GrAuxMech)
-        Me.tpAuxiliaries.Location = New System.Drawing.Point(4, 22)
-        Me.tpAuxiliaries.Name = "tpAuxiliaries"
-        Me.tpAuxiliaries.Padding = New System.Windows.Forms.Padding(3)
-        Me.tpAuxiliaries.Size = New System.Drawing.Size(527, 472)
-        Me.tpAuxiliaries.TabIndex = 9
-        Me.tpAuxiliaries.Text = "Auxiliaries"
-        Me.tpAuxiliaries.UseVisualStyleBackColor = True
+        Me.lblTitle.AutoSize = True
+        Me.lblTitle.BackColor = System.Drawing.Color.White
+        Me.lblTitle.Font = New System.Drawing.Font("Microsoft Sans Serif", 18.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.lblTitle.Location = New System.Drawing.Point(120, 32)
+        Me.lblTitle.Name = "lblTitle"
+        Me.lblTitle.Size = New System.Drawing.Size(320, 29)
+        Me.lblTitle.TabIndex = 38
+        Me.lblTitle.Text = "Job Editor - VEHICLE_TYPE"
         '
-        'tpCycles
+        'pnJobInfo
         '
-        Me.tpCycles.Controls.Add(Me.GrCycles)
-        Me.tpCycles.Location = New System.Drawing.Point(4, 22)
-        Me.tpCycles.Name = "tpCycles"
-        Me.tpCycles.Padding = New System.Windows.Forms.Padding(3)
-        Me.tpCycles.Size = New System.Drawing.Size(527, 472)
-        Me.tpCycles.TabIndex = 10
-        Me.tpCycles.Text = "Cycles"
-        Me.tpCycles.UseVisualStyleBackColor = True
+        Me.pnJobInfo.Controls.Add(Me.PicVehicle)
+        Me.pnJobInfo.Controls.Add(Me.PicBox)
+        Me.pnJobInfo.Controls.Add(Me.TbEngTxt)
+        Me.pnJobInfo.Controls.Add(Me.lblEngineCharacteristics)
+        Me.pnJobInfo.Controls.Add(Me.TbGbxTxt)
+        Me.pnJobInfo.Controls.Add(Me.TbHVCclass)
+        Me.pnJobInfo.Controls.Add(Me.TbVehCat)
+        Me.pnJobInfo.Controls.Add(Me.TbMass)
+        Me.pnJobInfo.Controls.Add(Me.TbAxleConf)
+        Me.pnJobInfo.Location = New System.Drawing.Point(532, 78)
+        Me.pnJobInfo.Name = "pnJobInfo"
+        Me.pnJobInfo.Size = New System.Drawing.Size(397, 471)
+        Me.pnJobInfo.TabIndex = 39
+        '
+        'pnShiftParams
+        '
+        Me.pnShiftParams.Controls.Add(Me.BtnShiftParamsForm)
+        Me.pnShiftParams.Controls.Add(Me.TbShiftStrategyParams)
+        Me.pnShiftParams.Controls.Add(Me.BtnShiftStrategyParams)
+        Me.pnShiftParams.Location = New System.Drawing.Point(4, 96)
+        Me.pnShiftParams.Name = "pnShiftParams"
+        Me.pnShiftParams.Size = New System.Drawing.Size(516, 26)
+        Me.pnShiftParams.TabIndex = 14
+        '
+        'pnGearbox
+        '
+        Me.pnGearbox.Controls.Add(Me.ButOpenGBX)
+        Me.pnGearbox.Controls.Add(Me.ButtonGBX)
+        Me.pnGearbox.Controls.Add(Me.TbGBX)
+        Me.pnGearbox.Location = New System.Drawing.Point(3, 66)
+        Me.pnGearbox.Name = "pnGearbox"
+        Me.pnGearbox.Size = New System.Drawing.Size(517, 28)
+        Me.pnGearbox.TabIndex = 15
+        '
+        'pnEngine
+        '
+        Me.pnEngine.Controls.Add(Me.ButOpenENG)
+        Me.pnEngine.Controls.Add(Me.ButtonMAP)
+        Me.pnEngine.Controls.Add(Me.TbENG)
+        Me.pnEngine.Location = New System.Drawing.Point(4, 37)
+        Me.pnEngine.Name = "pnEngine"
+        Me.pnEngine.Size = New System.Drawing.Size(519, 27)
+        Me.pnEngine.TabIndex = 16
+        '
+        'pnVehicle
+        '
+        Me.pnVehicle.Controls.Add(Me.ButOpenVEH)
+        Me.pnVehicle.Controls.Add(Me.ButtonVEH)
+        Me.pnVehicle.Controls.Add(Me.TbVEH)
+        Me.pnVehicle.Location = New System.Drawing.Point(4, 7)
+        Me.pnVehicle.Name = "pnVehicle"
+        Me.pnVehicle.Size = New System.Drawing.Size(518, 27)
+        Me.pnVehicle.TabIndex = 17
         '
         'VectoJobForm
         '
@@ -1664,17 +1766,9 @@ Partial Class VectoJobForm
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.CancelButton = Me.ButCancel
-        Me.ClientSize = New System.Drawing.Size(944, 636)
-        Me.Controls.Add(Me.lblEngineCharacteristics)
-        Me.Controls.Add(Me.TbHVCclass)
-        Me.Controls.Add(Me.TbMass)
-        Me.Controls.Add(Me.TbAxleConf)
-        Me.Controls.Add(Me.TbVehCat)
-        Me.Controls.Add(Me.TbGbxTxt)
-        Me.Controls.Add(Me.TbEngTxt)
-        Me.Controls.Add(Me.PicBox)
-        Me.Controls.Add(Me.PicVehicle)
-        Me.Controls.Add(Me.CbEngOnly)
+        Me.ClientSize = New System.Drawing.Size(942, 604)
+        Me.Controls.Add(Me.pnJobInfo)
+        Me.Controls.Add(Me.lblTitle)
         Me.Controls.Add(Me.PictureBox1)
         Me.Controls.Add(Me.ToolStrip1)
         Me.Controls.Add(Me.ButCancel)
@@ -1688,13 +1782,16 @@ Partial Class VectoJobForm
         Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen
         Me.Text = "Job Editor"
         Me.TabPgGen.ResumeLayout(False)
-        Me.TabPgGen.PerformLayout()
         Me.GrCycles.ResumeLayout(False)
         Me.GrCycles.PerformLayout()
         Me.GrAuxMech.ResumeLayout(False)
         Me.GrAuxMech.PerformLayout()
         CType(Me.picAuxInfo, System.ComponentModel.ISupportInitialize).EndInit()
         Me.tcJob.ResumeLayout(False)
+        Me.tpAuxiliaries.ResumeLayout(False)
+        Me.gbElectricAux.ResumeLayout(False)
+        Me.gbElectricAux.PerformLayout()
+        Me.tpCycles.ResumeLayout(False)
         Me.TabPgDriver.ResumeLayout(False)
         Me.gbShiftStrategy.ResumeLayout(False)
         Me.GrVACC.ResumeLayout(False)
@@ -1722,110 +1819,118 @@ Partial Class VectoJobForm
         Me.CmOpenFile.ResumeLayout(False)
         CType(Me.PicVehicle, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.PicBox, System.ComponentModel.ISupportInitialize).EndInit()
-        Me.tpAuxiliaries.ResumeLayout(False)
-        Me.tpCycles.ResumeLayout(False)
+        Me.pnJobInfo.ResumeLayout(False)
+        Me.pnJobInfo.PerformLayout()
+        Me.pnShiftParams.ResumeLayout(False)
+        Me.pnShiftParams.PerformLayout()
+        Me.pnGearbox.ResumeLayout(False)
+        Me.pnGearbox.PerformLayout()
+        Me.pnEngine.ResumeLayout(False)
+        Me.pnEngine.PerformLayout()
+        Me.pnVehicle.ResumeLayout(False)
+        Me.pnVehicle.PerformLayout()
         Me.ResumeLayout(False)
-        Me.PerformLayout
+        Me.PerformLayout()
 
-End Sub
-	Friend WithEvents TabPgGen As TabPage
-	Friend WithEvents tcJob As TabControl
-	Friend WithEvents StatusStrip1 As StatusStrip
-	Friend WithEvents ButtonVEH As Button
-	Friend WithEvents ButtonMAP As Button
-	Friend WithEvents ButtonGBX As Button
-	Friend WithEvents ButOpenVEH As Button
-	Friend WithEvents ButOpenGBX As Button
-	Friend WithEvents ButOpenENG As Button
-	Friend WithEvents ToolStripStatusLabelGEN As ToolStripStatusLabel
-	Friend WithEvents ButOK As Button
-	Friend WithEvents TbGBX As TextBox
-	Friend WithEvents TbENG As TextBox
-	Friend WithEvents TbVEH As TextBox
-	Friend WithEvents ButCancel As Button
-	Friend WithEvents ToolStrip1 As ToolStrip
-	Friend WithEvents ToolStripBtNew As ToolStripButton
-	Friend WithEvents ToolStripBtOpen As ToolStripButton
-	Friend WithEvents ToolStripBtSave As ToolStripButton
-	Friend WithEvents ToolStripBtSaveAs As ToolStripButton
-	Friend WithEvents ToolStripBtSendTo As ToolStripButton
-	Friend WithEvents ToolStripSeparator1 As ToolStripSeparator
-	Friend WithEvents GrAuxMech As GroupBox
-	Friend WithEvents LvAux As ListView
-	Friend WithEvents ColumnHeader4 As ColumnHeader
-	Friend WithEvents ColumnHeader5 As ColumnHeader
-	Friend WithEvents ColumnHeader6 As ColumnHeader
-	Friend WithEvents ButAuxRem As Button
-	Friend WithEvents ButAuxAdd As Button
-	Friend WithEvents PictureBox1 As PictureBox
-	Friend WithEvents TabPgDriver As TabPage
-	Friend WithEvents BtDesMaxBr As Button
-	Friend WithEvents TbDesMaxFile As TextBox
-	Friend WithEvents GrCycles As GroupBox
-	Friend WithEvents LvCycles As ListView
-	Friend WithEvents ColumnHeader1 As ColumnHeader
-	Friend WithEvents BtDRIrem As Button
-	Friend WithEvents BtDRIadd As Button
-	Friend WithEvents ToolStripSeparator2 As ToolStripSeparator
-	Friend WithEvents ToolStripButton1 As ToolStripButton
-	Friend WithEvents CbEngOnly As CheckBox
-	Friend WithEvents BtAccOpen As Button
-	Friend WithEvents Label2 As Label
-	Friend WithEvents CmOpenFile As ContextMenuStrip
-	Friend WithEvents OpenWithToolStripMenuItem As ToolStripMenuItem
-	Friend WithEvents ShowInFolderToolStripMenuItem As ToolStripMenuItem
-	Friend WithEvents GrLAC As GroupBox
-	Friend WithEvents CbLookAhead As CheckBox
-	Friend WithEvents gbOverspeed As GroupBox
-	Friend WithEvents Label21 As Label
-	Friend WithEvents Label14 As Label
-	Friend WithEvents TbVmin As TextBox
-	Friend WithEvents TbOverspeed As TextBox
-	Friend WithEvents Label23 As Label
-	Friend WithEvents Label13 As Label
-	Friend WithEvents RdOverspeed As RadioButton
-	Friend WithEvents RdOff As RadioButton
-	Friend WithEvents Label32 As Label
-	Friend WithEvents PnEcoRoll As Panel
-	Friend WithEvents PicVehicle As PictureBox
-	Friend WithEvents PicBox As PictureBox
-	Friend WithEvents TbEngTxt As TextBox
-	Friend WithEvents TbVehCat As TextBox
-	Friend WithEvents TbAxleConf As TextBox
-	Friend WithEvents TbHVCclass As TextBox
-	Friend WithEvents TbGbxTxt As TextBox
-	Friend WithEvents TbMass As TextBox
-	Friend WithEvents GrVACC As GroupBox
-	Friend WithEvents cboAdvancedAuxiliaries As ComboBox
-	Friend WithEvents picAuxInfo As PictureBox
-	Friend WithEvents ToolTip1 As ToolTip
-	Friend WithEvents Label1 As Label
-	Friend WithEvents btnBrowseAAUXFile As Button
-	Friend WithEvents txtAdvancedAuxiliaryFile As TextBox
-	Friend WithEvents lbAdvancedAuxiliaries As Label
-	Friend WithEvents btnAAUXOpen As Button
-	Friend WithEvents pnLookAheadCoasting As System.Windows.Forms.Panel
-	Friend WithEvents btnDfVelocityDrop As System.Windows.Forms.Button
-	Friend WithEvents Label12 As System.Windows.Forms.Label
-	Friend WithEvents tbDfCoastingScale As System.Windows.Forms.TextBox
-	Friend WithEvents Label11 As System.Windows.Forms.Label
-	Friend WithEvents Label3 As System.Windows.Forms.Label
-	Friend WithEvents tbDfCoastingOffset As System.Windows.Forms.TextBox
-	Friend WithEvents tbLacDfTargetSpeedFile As System.Windows.Forms.TextBox
-	Friend WithEvents Label10 As System.Windows.Forms.Label
-	Friend WithEvents Label4 As System.Windows.Forms.Label
-	Friend WithEvents Label5 As System.Windows.Forms.Label
-	Friend WithEvents btnDfTargetSpeed As System.Windows.Forms.Button
-	Friend WithEvents tbLacPreviewFactor As System.Windows.Forms.TextBox
-	Friend WithEvents tbLacDfVelocityDropFile As System.Windows.Forms.TextBox
-	Friend WithEvents Label6 As System.Windows.Forms.Label
-	Friend WithEvents tbLacMinSpeed As System.Windows.Forms.TextBox
-	Friend WithEvents Label7 As System.Windows.Forms.Label
-	Friend WithEvents Label9 As System.Windows.Forms.Label
-	Friend WithEvents TbAuxPAdd As System.Windows.Forms.TextBox
-	Friend WithEvents Label8 As System.Windows.Forms.Label
-	Friend WithEvents Label15 As System.Windows.Forms.Label
-	Friend WithEvents lblEngineCharacteristics As System.Windows.Forms.Label
+    End Sub
+    Friend WithEvents TabPgGen As TabPage
+    Friend WithEvents tcJob As TabControl
+    Friend WithEvents StatusStrip1 As StatusStrip
+    Friend WithEvents ButtonVEH As Button
+    Friend WithEvents ButtonMAP As Button
+    Friend WithEvents ButtonGBX As Button
+    Friend WithEvents ButOpenVEH As Button
+    Friend WithEvents ButOpenGBX As Button
+    Friend WithEvents ButOpenENG As Button
+    Friend WithEvents ToolStripStatusLabelGEN As ToolStripStatusLabel
+    Friend WithEvents ButOK As Button
+    Friend WithEvents TbGBX As TextBox
+    Friend WithEvents TbENG As TextBox
+    Friend WithEvents TbVEH As TextBox
+    Friend WithEvents ButCancel As Button
+    Friend WithEvents ToolStrip1 As ToolStrip
+    Friend WithEvents ToolStripBtNew As ToolStripButton
+    Friend WithEvents ToolStripBtOpen As ToolStripButton
+    Friend WithEvents ToolStripBtSave As ToolStripButton
+    Friend WithEvents ToolStripBtSaveAs As ToolStripButton
+    Friend WithEvents ToolStripBtSendTo As ToolStripButton
+    Friend WithEvents ToolStripSeparator1 As ToolStripSeparator
+    Friend WithEvents GrAuxMech As GroupBox
+    Friend WithEvents LvAux As ListView
+    Friend WithEvents ColumnHeader4 As ColumnHeader
+    Friend WithEvents ColumnHeader5 As ColumnHeader
+    Friend WithEvents ColumnHeader6 As ColumnHeader
+    Friend WithEvents ButAuxRem As Button
+    Friend WithEvents ButAuxAdd As Button
+    Friend WithEvents PictureBox1 As PictureBox
+    Friend WithEvents TabPgDriver As TabPage
+    Friend WithEvents BtDesMaxBr As Button
+    Friend WithEvents TbDesMaxFile As TextBox
+    Friend WithEvents GrCycles As GroupBox
+    Friend WithEvents LvCycles As ListView
+    Friend WithEvents ColumnHeader1 As ColumnHeader
+    Friend WithEvents BtDRIrem As Button
+    Friend WithEvents BtDRIadd As Button
+    Friend WithEvents ToolStripSeparator2 As ToolStripSeparator
+    Friend WithEvents ToolStripButton1 As ToolStripButton
+    'Friend WithEvents CbEngOnly As CheckBox
+    Friend WithEvents BtAccOpen As Button
+    Friend WithEvents Label2 As Label
+    Friend WithEvents CmOpenFile As ContextMenuStrip
+    Friend WithEvents OpenWithToolStripMenuItem As ToolStripMenuItem
+    Friend WithEvents ShowInFolderToolStripMenuItem As ToolStripMenuItem
+    Friend WithEvents GrLAC As GroupBox
+    Friend WithEvents CbLookAhead As CheckBox
+    Friend WithEvents gbOverspeed As GroupBox
+    Friend WithEvents Label21 As Label
+    Friend WithEvents Label14 As Label
+    Friend WithEvents TbVmin As TextBox
+    Friend WithEvents TbOverspeed As TextBox
+    Friend WithEvents Label23 As Label
+    Friend WithEvents Label13 As Label
+    Friend WithEvents RdOverspeed As RadioButton
+    Friend WithEvents RdOff As RadioButton
+    Friend WithEvents Label32 As Label
+    Friend WithEvents PnEcoRoll As Panel
+    Friend WithEvents PicVehicle As PictureBox
+    Friend WithEvents PicBox As PictureBox
+    Friend WithEvents TbEngTxt As TextBox
+    Friend WithEvents TbVehCat As TextBox
+    Friend WithEvents TbAxleConf As TextBox
+    Friend WithEvents TbHVCclass As TextBox
+    Friend WithEvents TbGbxTxt As TextBox
+    Friend WithEvents TbMass As TextBox
+    Friend WithEvents GrVACC As GroupBox
+    Friend WithEvents cboAdvancedAuxiliaries As ComboBox
+    Friend WithEvents picAuxInfo As PictureBox
+    Friend WithEvents ToolTip1 As ToolTip
+    Friend WithEvents Label1 As Label
+    Friend WithEvents btnBrowseAAUXFile As Button
+    Friend WithEvents txtAdvancedAuxiliaryFile As TextBox
+    Friend WithEvents lbAdvancedAuxiliaries As Label
+    Friend WithEvents btnAAUXOpen As Button
+    Friend WithEvents pnLookAheadCoasting As System.Windows.Forms.Panel
+    Friend WithEvents btnDfVelocityDrop As System.Windows.Forms.Button
+    Friend WithEvents Label12 As System.Windows.Forms.Label
+    Friend WithEvents tbDfCoastingScale As System.Windows.Forms.TextBox
+    Friend WithEvents Label11 As System.Windows.Forms.Label
+    Friend WithEvents Label3 As System.Windows.Forms.Label
+    Friend WithEvents tbDfCoastingOffset As System.Windows.Forms.TextBox
+    Friend WithEvents tbLacDfTargetSpeedFile As System.Windows.Forms.TextBox
+    Friend WithEvents Label10 As System.Windows.Forms.Label
+    Friend WithEvents Label4 As System.Windows.Forms.Label
+    Friend WithEvents Label5 As System.Windows.Forms.Label
+    Friend WithEvents btnDfTargetSpeed As System.Windows.Forms.Button
+    Friend WithEvents tbLacPreviewFactor As System.Windows.Forms.TextBox
+    Friend WithEvents tbLacDfVelocityDropFile As System.Windows.Forms.TextBox
+    Friend WithEvents Label6 As System.Windows.Forms.Label
+    Friend WithEvents tbLacMinSpeed As System.Windows.Forms.TextBox
+    Friend WithEvents Label7 As System.Windows.Forms.Label
+    Friend WithEvents Label9 As System.Windows.Forms.Label
+    Friend WithEvents TbAuxPAdd As System.Windows.Forms.TextBox
+    Friend WithEvents Label8 As System.Windows.Forms.Label
+    Friend WithEvents Label15 As System.Windows.Forms.Label
+    Friend WithEvents lblEngineCharacteristics As System.Windows.Forms.Label
     Friend WithEvents TabPgADAS As TabPage
     Friend WithEvents gbEcoRoll As GroupBox
     Friend WithEvents Label29 As Label
@@ -1877,4 +1982,14 @@ End Sub
     Friend WithEvents cbGearshiftStrategy As ComboBox
     Friend WithEvents tpAuxiliaries As TabPage
     Friend WithEvents tpCycles As TabPage
+    Friend WithEvents gbElectricAux As GroupBox
+    Friend WithEvents lblElAuxConstUnit As Label
+    Friend WithEvents tbElectricAuxConstant As TextBox
+    Friend WithEvents lblElAuxConst As Label
+    Friend WithEvents lblTitle As Label
+    Friend WithEvents pnJobInfo As Panel
+    Friend WithEvents pnVehicle As Panel
+    Friend WithEvents pnEngine As Panel
+    Friend WithEvents pnGearbox As Panel
+    Friend WithEvents pnShiftParams As Panel
 End Class

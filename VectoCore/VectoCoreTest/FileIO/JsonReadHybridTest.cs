@@ -123,8 +123,8 @@ namespace TUGraz.VectoCore.Tests.FileIO
 
 			Assert.NotNull(bat);
 			Assert.AreEqual(2, bat.Count);
-			Assert.AreEqual(5, bat.BatteryPack.MaxCurrentFactor);
-			Assert.AreEqual(0.12, bat.BatteryPack.InternalResistance.Value());
+			Assert.AreEqual(50, bat.BatteryPack.MaxCurrentFactor);
+			Assert.AreEqual(0.4986666, bat.BatteryPack.InternalResistance.Value());
 
 			var em = engineering.JobInputData.Vehicle.Components.ElectricMachines;
 
@@ -149,16 +149,46 @@ namespace TUGraz.VectoCore.Tests.FileIO
 
 			factory.SumData = sumContainer;
 
-			var run = factory.SimulationRuns().ToArray()[0];
+			//var run = factory.SimulationRuns().ToArray()[0];
 
-			Assert.NotNull(run);
+			//Assert.NotNull(run);
 
-			var pt = run.GetContainer();
+			//var pt = run.GetContainer();
 
-			Assert.NotNull(pt);
+			//Assert.NotNull(pt);
 
-			var port = run.GetContainer().GetCycleOutPort();
-
+			//var port = run.GetContainer().GetCycleOutPort();
+			jobContainer.AddRuns(factory);
+			jobContainer.Execute();
+			jobContainer.WaitFinished();
+			Assert.IsTrue(jobContainer.GetProgress().All(x => x.Value.Success));
 		}
-	}
+
+		[TestCase()]
+		public void TestCreateBatteryElectricPowertrain()
+		{
+			var inputProvider = JSONInputDataFactory.ReadJsonJob(@"TestData\BatteryElectric\GenericVehicleB4\BEV_ENG.vecto");
+
+			var factory = new SimulatorFactory(ExecutionMode.Engineering, inputProvider, null);
+
+			var sumContainer = new SummaryDataContainer(null);
+			var jobContainer = new JobContainer(sumContainer);
+
+			factory.SumData = sumContainer;
+
+			//var run = factory.SimulationRuns().ToArray()[0];
+
+			//Assert.NotNull(run);
+
+			//var pt = run.GetContainer();
+
+			//Assert.NotNull(pt);
+
+			//var port = run.GetContainer().GetCycleOutPort();
+			jobContainer.AddRuns(factory);
+			jobContainer.Execute();
+			jobContainer.WaitFinished();
+			Assert.IsTrue(jobContainer.GetProgress().All(x => x.Value.Success));
+		}
+    }
 }

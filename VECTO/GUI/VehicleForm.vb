@@ -134,7 +134,11 @@ Public Class VehicleForm
 
 		_changed = False
 
-		NewVehicle()
+        cbEmPos.ValueMember = "Value"
+        cbEmPos.DisplayMember = "Label"
+        cbEmPos.DataSource = [Enum].GetValues(GetType(PowertrainPosition)).Cast(Of PowertrainPosition).Select(Function(x) New With {Key .Value = x, .Label = x.GetName()}).ToList()
+
+        NewVehicle()
 	End Sub
 
 	'Set HDVclasss
@@ -359,9 +363,11 @@ Public Class VehicleForm
 
 		If ChangeCheckCancel() Then Exit Sub
 
-		Dim inputData As IEngineeringInputDataProvider = TryCast(JSONInputDataFactory.ReadComponentData(file), 
-																IEngineeringInputDataProvider)
-		Dim vehicle As IVehicleEngineeringInputData = inputData.JobInputData.Vehicle
+        Dim inputData As IEngineeringInputDataProvider = TryCast(JSONInputDataFactory.ReadComponentData(file),
+                                                                IEngineeringInputDataProvider)
+        UpdateForm(inputData.JobInputData.Vehicle.VehicleType)
+
+        Dim vehicle As IVehicleEngineeringInputData = inputData.JobInputData.Vehicle
 		Dim airdrag As IAirdragEngineeringInputData = inputData.JobInputData.Vehicle.Components.AirdragInputData
 		Dim retarder As IRetarderInputData = inputData.JobInputData.Vehicle.Components.RetarderInputData
 		Dim angledrive As IAngledriveInputData = inputData.JobInputData.Vehicle.Components.AngledriveInputData
@@ -448,7 +454,19 @@ Public Class VehicleForm
 		tbAngledriveLossMapPath.Text =
 			If(angledrive.LossMap Is Nothing, "", GetRelativePath(angledrive.LossMap.Source, basePath))
 
-		DeclInit()
+        If (vehicle.VehicleType = VectoSimulationJobType.BatteryElectricVehicle OrElse vehicle.VehicleType = VectoSimulationJobType.ParallelHybridVehicle) Then
+            tbBattery.Text = GetRelativePath(vehicle.Components.ElectricStorage.BatteryPack.DataSource.SourceFile, basePath)
+            tbBatteryPackCnt.Text = vehicle.Components.ElectricStorage.Count.ToGUIFormat()
+
+            Dim em As ElectricMachineEntry(Of IElectricMotorEngineeringInputData) = vehicle.Components.ElectricMachines.Entries.First()
+            tbElectricMotor.Text = GetRelativePath(em.ElectricMachine.DataSource.SourceFile, basePath)
+            tbEmCount.Text = em.Count.ToGUIFormat()
+            tbEmEfficiency.Text = em.MechanicalEfficiency.ToGUIFormat()
+            tbRatioEm.Text = em.Ratio.ToGUIFormat()
+            cbEmPos.SelectedValue = em.Position
+        End If
+
+        DeclInit()
 
 		VehicleFileBrowser.UpdateHistory(file)
 		Text = GetFilenameWithoutPath(file, True)
@@ -459,7 +477,26 @@ Public Class VehicleForm
 		_changed = False
 	End Sub
 
-	Private Function CreateListViewItem(axleNumber As Integer, share As Double, twinTire As Boolean, rrc As Double,
+    Private Sub UpdateForm(vehicleType As VectoSimulationJobType)
+        Select Case vehicleType
+            Case VectoSimulationJobType.ConventionalVehicle
+                lblTitle.Text = "Conventional Vehicle"
+                tpElectricComponents.Enabled = False
+                cbEmPos.DataSource = New List(Of Object)
+
+            Case VectoSimulationJobType.ParallelHybridVehicle
+                lblTitle.Text = "Parallel Hybrid Vehicle"
+                cbEmPos.DataSource = [Enum].GetValues(GetType(PowertrainPosition)).Cast(Of PowertrainPosition).Where(Function(x) x.IsParallelHybrid()).Select(Function(x) New With {Key .Value = x, .Label = x.GetName()}).ToList()
+            Case VectoSimulationJobType.BatteryElectricVehicle
+                lblTitle.Text = "Battery Electric Vehicle"
+                tpPowertrain.Enabled = False
+                tpTorqueLimits.Enabled = False
+                cbEmPos.DataSource = [Enum].GetValues(GetType(PowertrainPosition)).Cast(Of PowertrainPosition).Where(Function(x) x.IsBatteryElectric()).Select(Function(x) New With {Key .Value = x, .Label = x.GetName()}).ToList()
+
+        End Select
+    End Sub
+
+    Private Function CreateListViewItem(axleNumber As Integer, share As Double, twinTire As Boolean, rrc As Double,
 										fzIso As Double, wheels As String, inertia As Double, axletype As AxleType) As ListViewItem
 		Dim retVal As New ListViewItem
 		retVal.SubItems(0).Text = axleNumber.ToGUIFormat()
@@ -957,16 +994,64 @@ Public Class VehicleForm
 		_torqueLimitDlog.tbGear.ReadOnly = False
 	End Sub
 
-	Private Sub Label18_Click(sender As Object, e As EventArgs) Handles Label18.Click
+    Private Sub Label18_Click(sender As Object, e As EventArgs)
 
-	End Sub
+    End Sub
 
-	Private Sub tbVehIdlingSpeed_TextChanged(sender As Object, e As EventArgs) Handles tbVehIdlingSpeed.TextChanged
+    Private Sub tbVehIdlingSpeed_TextChanged(sender As Object, e As EventArgs)
 
-	End Sub
+    End Sub
 
     Private Sub CheckBox1_CheckedChanged(sender As Object, e As EventArgs) Handles cbAtEcoRollReleaseLockupClutch.CheckedChanged
 
+    End Sub
+
+    Private Sub tbVehicleHeight_TextChanged(sender As Object, e As EventArgs) Handles tbVehicleHeight.TextChanged
+
+    End Sub
+
+    Private Sub btnBrowseElectricMotor_Click(sender As Object, e As EventArgs) Handles btnBrowseElectricMotor.Click
+        If ElectricMotorFileBrowser.OpenDialog(FileRepl(tbElectricMotor.Text, GetPath(_vehFile))) Then
+            tbElectricMotor.Text = GetFilenameWithoutDirectory(VehicleFileBrowser.Files(0), GetPath(_vehFile))
+        End If
+
+    End Sub
+
+    Private Sub btnBrowseBattery_Click(sender As Object, e As EventArgs) Handles btnBrowseBattery.Click
+        If BatteryFileBrowser.OpenDialog(FileRepl(tbBattery.Text, GetPath(_vehFile))) Then
+            tbBattery.Text = GetFilenameWithoutDirectory(VehicleFileBrowser.Files(0), GetPath(_vehFile))
+        End If
+    End Sub
+
+    Private Sub btnOpenElectricMotor_Click(sender As Object, e As EventArgs) Handles btnOpenElectricMotor.Click
+        Dim f As String
+        f = FileRepl(tbElectricMotor.Text, GetPath(_vehFile))
+
+        'Thus Veh-file is returned
+        ElectricMotorForm.JobDir = GetPath(_vehFile)
+        ElectricMotorForm.AutoSendTo = True
+
+        If Not Trim(f) = "" Then
+            If Not File.Exists(f) Then
+                MsgBox("File not found!")
+                Exit Sub
+            End If
+        End If
+
+        If Not ElectricMotorForm.Visible Then
+            ElectricMotorForm.Show()
+        Else
+            If ElectricMotorForm.WindowState = FormWindowState.Minimized Then ElectricMotorForm.WindowState = FormWindowState.Normal
+            ElectricMotorForm.BringToFront()
+        End If
+
+        If Not Trim(f) = "" Then
+            Try
+                ElectricMotorForm.OpenElectricMachineFile(f)
+            Catch ex As Exception
+                MsgBox(ex.Message, MsgBoxStyle.OkOnly, "Error loading Vehicle File")
+            End Try
+        End If
     End Sub
 End Class
 

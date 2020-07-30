@@ -8,7 +8,6 @@ using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.Models.Connector.Ports.Impl;
-using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.DataBus;
@@ -79,7 +78,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			}
 
 			// create a dummy powertrain for pre-processing and estimatins
-			var modData = new ModalDataContainer(data, null, new[] { FuelData.Diesel }, null, false);
+			var modData = new ModalDataContainer(data, null, null);
 			var builder = new PowertrainBuilder(modData);
 			TestContainer = new SimplePowertrainContainer(data);
 			builder.BuildSimplePowertrain(data, TestContainer);

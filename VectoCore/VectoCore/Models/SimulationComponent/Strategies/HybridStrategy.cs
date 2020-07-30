@@ -93,7 +93,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 					* x.FuelData.LowerHeatingValueVecto * MIN_ICE_ON_TIME).Value());
 
 			// create testcontainer
-			var modData = new ModalDataContainer(runData, null, new[] { FuelData.Diesel }, null, false);
+			var modData = new ModalDataContainer(runData, null, null);
 			var builder = new PowertrainBuilder(modData);
 			var testContainer = new SimplePowertrainContainer(runData);
 			builder.BuildSimpleHybridPowertrain(runData, testContainer);

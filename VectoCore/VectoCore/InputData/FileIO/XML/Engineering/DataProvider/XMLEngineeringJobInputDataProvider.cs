@@ -34,7 +34,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering.DataProvider
 			InputProvider = inputProvider;
 			FileName = fileName;
 
-			EngineOnlyMode = GetBool(XMLNames.VectoJob_EngineOnlyMode);
+			JobType = GetBool(XMLNames.VectoJob_EngineOnlyMode) ? VectoSimulationJobType.EngineOnlySimulation : VectoSimulationJobType.ConventionalVehicle;
 			SourceType = (inputProvider as IXMLResource).DataSource.SourceFile == fileName ? DataSourceType.XMLEmbedded : DataSourceType.XMLFile;
 		}
 
@@ -56,13 +56,13 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering.DataProvider
 
 		public string ShiftStrategy { get { return null; } }
 
-		public virtual bool EngineOnlyMode { get; }
+		public virtual VectoSimulationJobType JobType { get; }
 
 
 		public virtual string JobName
 		{
 			get {
-				return EngineOnlyMode
+				return JobType == VectoSimulationJobType.EngineOnlySimulation
 					? EngineOnly.Model
 					: (GetAttribute(BaseNode.SelectSingleNode(XMLHelper.QueryLocalName(XMLNames.Component_Vehicle)), "id") ??
 						Vehicle.Model + " " + Vehicle.Manufacturer);

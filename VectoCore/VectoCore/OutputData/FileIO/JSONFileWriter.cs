@@ -23,7 +23,9 @@ public class JSONFileWriter : IOutputFileWriter
 
 	private const int VectoVTPJobFormatVersion = 4;
 
-	private static JSONFileWriter _instance;
+	private const int ElectricMotorFormatVersion = 1;
+
+    private static JSONFileWriter _instance;
 
 	public const string VECTOvers = "3";
 
@@ -53,7 +55,24 @@ public class JSONFileWriter : IOutputFileWriter
 		return filePath;
 	}
 
-	public void SaveEngine(IEngineEngineeringInputData eng, string filename, bool DeclMode)
+	public void SaveElectricMotor(IElectricMotorEngineeringInputData electricMachine, string filename, bool declMode)
+	{
+		var header = GetHeader(ElectricMotorFormatVersion);
+
+		var body = new Dictionary<string, object>();
+
+		body.Add("SavedInDeclMode", declMode);
+
+		body.Add("Model", electricMachine.Model);
+		body.Add("FullLoadCurve", GetRelativePath(electricMachine.FullLoadCurve.Source, Path.GetDirectoryName(filename)));
+		body.Add("DragCurve", GetRelativePath(electricMachine.DragCurve.Source, Path.GetDirectoryName(filename)));
+		body.Add("EfficiencyMap", GetRelativePath(electricMachine.EfficiencyMap.Source, Path.GetDirectoryName(filename)));
+		body.Add("Inertia", electricMachine.Inertia.Value());
+
+		WriteFile(header, body, filename);
+    }
+
+    public void SaveEngine(IEngineEngineeringInputData eng, string filename, bool DeclMode)
 	{
 		// Header
 		var header = GetHeader(EngineFormatVersion);
@@ -339,9 +358,9 @@ public class JSONFileWriter : IOutputFileWriter
 		var job = input.JobInputData;
 
 		body.Add("SavedInDeclMode", job.SavedInDeclarationMode);
-		body.Add("EngineOnlyMode", job.EngineOnlyMode);
+		body.Add("EngineOnlyMode", job.JobType);
 
-		if (job.EngineOnlyMode) {
+		if (job.JobType == VectoSimulationJobType.EngineOnlySimulation) {
 			body.Add("EngineFile", GetRelativePath(job.EngineOnly.DataSource.SourceFile, basePath));
 			body.Add(
 				"Cycles", job.Cycles.Select(x => GetRelativePath(x.CycleData.Source, Path.GetDirectoryName(filename))).ToArray());
@@ -532,4 +551,6 @@ public class JSONFileWriter : IOutputFileWriter
 	{
 		WriteFile(JToken.FromObject(new Dictionary<string, object>() { { "Header", header }, { "Body", body } }), path);
 	}
+
+
 }

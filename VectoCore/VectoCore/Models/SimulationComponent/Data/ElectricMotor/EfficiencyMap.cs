@@ -1,5 +1,8 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
+using Newtonsoft.Json;
 using TUGraz.VectoCommon.Utils;
+using TUGraz.VectoCore.Models.SimulationComponent.Data.Engine;
 using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Data {
@@ -69,8 +72,23 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data {
 			}
 		}
 
+		[JsonIgnore]
+		public IReadOnlyCollection<EfficiencyMap.Entry> Entries
+		{
+			get
+			{
+				var entries = _efficiencyMapMech2El.Entries;
+				var retVal = new EfficiencyMap.Entry[entries.Count];
+				var i = 0;
+				foreach (var entry in entries)
+				{
+					retVal[i++] = new EfficiencyMap.Entry(entry.Y.SI<PerSecond>(), entry.X.SI<NewtonMeter>(), entry.Z.SI<Watt>());
+				}
+				return retVal;
+			}
+		}
 
-		public class Entry
+        public class Entry
 		{
 			public Entry(PerSecond speed, NewtonMeter torque, Watt powerElectrical)
 			{

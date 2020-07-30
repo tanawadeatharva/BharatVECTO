@@ -180,7 +180,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 		public IList<ICycleData> Cycles { get; private set; }
 
-		public bool EngineOnlyMode { get; private set; }
+		public VectoSimulationJobType JobType { get; private set; }
 
 		public IEngineEngineeringInputData EngineOnly { get; private set; }
 
@@ -246,8 +246,14 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 		}
 
 		public IElectricStorageEngineeringInputData ElectricStorage { get { return VehicleData?.Components?.ElectricStorage; } }
-		public IElectricMachinesEngineeringInputData ElectricMachines { get {
-			return VehicleData.Components.ElectricMachines;
+		public IElectricMachinesEngineeringInputData ElectricMachines { get
+		{
+			return new JSONElectricMotors(new List<ElectricMachineEntry<IElectricMotorEngineeringInputData>>() {
+				new ElectricMachineEntry<IElectricMotorEngineeringInputData>() {
+					ElectricMachine = ElectricMotor, Count = 1, Ratio = 1, MechanicalEfficiency = 1,
+					Position = PowertrainPosition.HybridPositionNotSet
+				}
+			});
 		} }
 
 		public IBusAuxiliariesDeclarationData BusAuxiliaries { get { return null; } }
@@ -303,6 +309,11 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 		public double InitialSOC
 		{
 			get { return VehicleData.InitialSOC; }
+		}
+
+		public VectoSimulationJobType VehicleType
+		{
+			get { return VehicleData.VehicleType; }
 		}
 
 		public IAirdragEngineeringInputData AirdragInputData

@@ -53,10 +53,18 @@ namespace TUGraz.VectoCommon.InputData
 		/// P001
 		/// cf. VECTO Input Parameters.xlsx
 		/// </summary>
-		bool EngineOnlyMode { get; }
+		VectoSimulationJobType JobType { get; }
 
 		IEngineEngineeringInputData EngineOnly { get; }
 
+	}
+
+	public enum VectoSimulationJobType
+	{
+		ConventionalVehicle,
+		ParallelHybridVehicle,
+		BatteryElectricVehicle,
+		EngineOnlySimulation,
 	}
 
 	public interface IHybridStrategyParameters
@@ -96,6 +104,8 @@ namespace TUGraz.VectoCommon.InputData
 
 		new IAdvancedDriverAssistantSystemsEngineering ADAS { get; }
 		double InitialSOC { get; }
+
+		VectoSimulationJobType VehicleType { get; }
 	}
 
 	public interface IAdvancedDriverAssistantSystemsEngineering : IAdvancedDriverAssistantSystemDeclarationInputData

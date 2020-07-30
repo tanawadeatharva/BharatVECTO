@@ -75,7 +75,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					?? 1.0) * model.VehicleData.DynamicTyreRadius * 0.995;
 			}
 
-			if (model.ElectricMachinesData != null && model.ElectricMachinesData.Count > 0) {
+			if (model.ElectricMachinesData.Count > 0) {
 				var positions = model.ElectricMachinesData.Select(x => x.Item1).ToArray();
 				if (positions.Length > 1) {
 					throw new VectoException("Multiple electrical machines are currently not supported");

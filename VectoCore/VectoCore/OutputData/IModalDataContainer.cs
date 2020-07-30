@@ -69,8 +69,7 @@ namespace TUGraz.VectoCore.OutputData
 		/// <returns></returns>
 		object this[string auxId] { get; set; }
 
-		bool HasTorqueConverter { set; }
-
+		
 		/// <summary>
 		/// Commits the data of the current simulation step.
 		/// </summary>

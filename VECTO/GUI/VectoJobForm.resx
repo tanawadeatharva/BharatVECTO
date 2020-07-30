@@ -118,7 +118,7 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
-  <data name="BtnShiftStrategyParams.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+  <data name="ButtonVEH.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAAO
         vAAADrwBlbxySQAAAtVJREFUOE+FkmtIk2EYhhc6zU1zyjyAlZn5Q0QS6k/EMDDSQiuzkmxM5wpEA00S
@@ -136,7 +136,7 @@
         eyX/NDkNOcG9FD9vY/yfYTB+A9kMOLKC3dXwAAAAAElFTkSuQmCC
 </value>
   </data>
-  <data name="ButtonVEH.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+  <data name="ButtonMAP.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAAO
         vAAADrwBlbxySQAAAtVJREFUOE+FkmtIk2EYhhc6zU1zyjyAlZn5Q0QS6k/EMDDSQiuzkmxM5wpEA00S
@@ -172,7 +172,7 @@
         eyX/NDkNOcG9FD9vY/yfYTB+A9kMOLKC3dXwAAAAAElFTkSuQmCC
 </value>
   </data>
-  <data name="ButtonMAP.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+  <data name="BtnShiftStrategyParams.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAAO
         vAAADrwBlbxySQAAAtVJREFUOE+FkmtIk2EYhhc6zU1zyjyAlZn5Q0QS6k/EMDDSQiuzkmxM5wpEA00S

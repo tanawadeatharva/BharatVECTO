@@ -734,15 +734,16 @@ Public Class Vehicle
 		End Get
 	End Property
 
-	Public ReadOnly Property InitialSOC As Double Implements IVehicleEngineeringInputData.InitialSOC
+    Public ReadOnly Property InitialSOC As Double Implements IVehicleEngineeringInputData.InitialSOC
+    Public ReadOnly Property VehicleType As VectoSimulationJobType Implements IVehicleEngineeringInputData.VehicleType
 
-	Public ReadOnly Property ZeroEmissionVehicle As Boolean Implements IVehicleDeclarationInputData.ZeroEmissionVehicle
-		Get
-			Return DeclarationData.Vehicle.ZeroEmissionVehicleDefault
-		End Get
-	End Property
+    Public ReadOnly Property ZeroEmissionVehicle As Boolean Implements IVehicleDeclarationInputData.ZeroEmissionVehicle
+        Get
+            Return DeclarationData.Vehicle.ZeroEmissionVehicleDefault
+        End Get
+    End Property
 
-	Public ReadOnly Property HybridElectricHDV As Boolean Implements IVehicleDeclarationInputData.HybridElectricHDV
+    Public ReadOnly Property HybridElectricHDV As Boolean Implements IVehicleDeclarationInputData.HybridElectricHDV
 	get
 			return DeclarationData.Vehicle.HybridElectricHDVDefault
 	End Get

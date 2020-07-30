@@ -44,5 +44,19 @@ namespace TUGraz.VectoCommon.InputData {
 			return pos == PowertrainPosition.BatteryElectricB2 || pos == PowertrainPosition.BatteryElectricB3 ||
 					pos == PowertrainPosition.BatteryElectricB4;
 		}
+
+		public static bool IsParallelHybrid(this PowertrainPosition pos)
+		{
+			switch (pos) {
+				case PowertrainPosition.HybridP0:
+				case PowertrainPosition.HybridP1:
+				case PowertrainPosition.HybridP2:
+				case PowertrainPosition.HybridP3:
+				case PowertrainPosition.HybridP4:
+					return true;
+				default:
+					return false;
+			}
+		}
 	}
 }

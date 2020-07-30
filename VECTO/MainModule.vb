@@ -10,18 +10,11 @@
 ' See the LICENSE.txt for the specific language governing permissions and limitations.
 Imports System.Collections.Generic
 Imports System.IO
-Imports System.Reflection
-Imports System.Runtime.Remoting
-Imports TUGraz.VectoCommon
-Imports TUGraz.VectoCommon.InputData
 Imports TUGraz.VectoCommon.Models
-Imports TUGraz.VectoCommon.OutputData
 Imports TUGraz.VectoCommon.Utils
 Imports TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
-Imports TUGraz.VectoCore.Models.Declaration
 Imports TUGraz.VectoCore.Models.SimulationComponent.Data
 Imports TUGraz.VectoCore.Models.SimulationComponent.Data.Engine
-Imports VectoAuxiliaries
 
 ''' <summary>
 ''' Main calculation routines.

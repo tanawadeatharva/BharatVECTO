@@ -9,41 +9,26 @@
     "SavedInDeclMode": false,
     "VehCat": "RigidTruck",
     "LegislativeClass": "Unknown",
-	"PowertrainConfiguration": "ParallelHybrid",
     "CurbWeight": 4670.0,
     "CurbWeightExtra": 1900.0,
     "Loading": 3020.0,
     "MassMax": 11.99,
     "rdyn": 421.0,
+    "PowertrainConfiguration": "BatteryElectric",
     "CdCorrMode": "CdofVdecl",
     "CdCorrFile": "",
-    "Retarder": {
-      "Type": "None",
-      "Ratio": 0.0,
-      "File": ""
-    },
-    "Angledrive": {
-      "Type": "None",
-      "Ratio": 0.0,
-      "LossMap": ""
-    },
-    "PTO": {
-      "Type": "None",
-      "LossMap": "",
-      "Cycle": ""
-    },
-	"ElectricMotors": [
+	  "ElectricMotors": [
         {
-          "Count": 1,
-          "Ratio": 1,
-          "MechanicalEfficiency":  1, 
-          "Position": "P2",
-          "MotorFile": "GenericEMotor240kW.vem"
+          "Count": 2,
+          "Ratio": 22.6,
+          "MechanicalEfficiency":  0.97, 
+          "Position": "B4",
+          "MotorFile": "GenericEMotor_125kW_485Nm.vem"
         }
     ],
     "Battery": { 
         "NumPacks": 2,
-        "BatteryFile": "GenericBattery.vbat"
+        "BatteryFile": "GenericBattery_243kWh_750V.vbat"
     },
     "InitialSoC": 80,
     "TorqueLimits": {},
@@ -93,7 +78,7 @@
     "EcoRoll": "WithEngineStop",
     "PredictiveCruiseControl": "None",
     "ATEcoRollReleaseLockupClutch": false,
-    "CdA": 4.83,
+    "CdxA": 4.83,
     "VehicleHeight": 3.0
   }
 }

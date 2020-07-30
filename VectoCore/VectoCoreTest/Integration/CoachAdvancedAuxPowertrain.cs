@@ -32,6 +32,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.InputData.FileIO.JSON;
@@ -75,13 +76,6 @@ namespace TUGraz.VectoCore.Tests.Integration
 		public static VehicleContainer CreatePowerTrain(DrivingCycleData cycleData, string modFileName, bool overspeed = false,
 			bool highEnginePower = true)
 		{
-			var fileWriter = new FileOutputWriter(modFileName);
-			var modData = new ModalDataContainer(modFileName, new[] { FuelData.Diesel }, fileWriter) {
-				WriteAdvancedAux = true,
-				WriteModalResults = true
-			};
-			var container = new VehicleContainer(ExecutionMode.Engineering, modData);
-
 			var gearboxData = CreateGearboxData();
 			var engineData = MockSimulationDataFactory.CreateEngineDataFromFile(highEnginePower ? EngineFileHigh : EngineFile,
 				gearboxData.Gears.Count);
@@ -90,9 +84,6 @@ namespace TUGraz.VectoCore.Tests.Integration
 			var airdragData = CreateAirdragData();
 			var driverData = CreateDriverData(AccelerationFile, overspeed);
 
-			var cycle = new DistanceBasedDrivingCycle(container, cycleData);
-			var engine = new CombustionEngine(container, engineData);
-
 			var runData = new VectoRunData() {
 				JobRunId = 0,
 				AxleGearData = axleGearData,
@@ -100,11 +91,22 @@ namespace TUGraz.VectoCore.Tests.Integration
 				AirdragData = airdragData,
 				GearboxData = gearboxData,
 				EngineData = engineData,
+				ElectricMachinesData = new List<Tuple<PowertrainPosition, ElectricMotorData>>(),
 				SimulationType = SimulationType.DistanceCycle,
 				Cycle = cycleData,
 				BusAuxiliaries = BusAuxiliaryInputData.ReadBusAuxiliaries(AdvancedAuxFile, vehicleData)
 			};
-			container.RunData = runData;
+			var fileWriter = new FileOutputWriter(modFileName);
+			var modData = new ModalDataContainer(runData, fileWriter, null)
+			{
+				WriteModalResults = true
+			};
+
+			var container = new VehicleContainer(ExecutionMode.Engineering, modData);
+			var cycle = new DistanceBasedDrivingCycle(container, cycleData);
+			var engine = new CombustionEngine(container, engineData);
+
+            container.RunData = runData;
 			cycle.AddComponent(new Driver(container, driverData, new DefaultDriverStrategy(container)))
 				.AddComponent(new Vehicle(container, vehicleData, airdragData))
 				.AddComponent(new Wheels(container, vehicleData.DynamicTyreRadius, vehicleData.WheelsInertia))

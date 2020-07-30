@@ -530,7 +530,7 @@ namespace TUGraz.VectoCore.Tests.FileIO
 		public IVehicleEngineeringInputData Vehicle { get; set; }
 		public IHybridStrategyParameters HybridStrategyParameters { get; }
 		public IList<ICycleData> Cycles { get; set; }
-		public bool EngineOnlyMode { get; set; }
+		public VectoSimulationJobType JobType { get; set; }
 		public IEngineEngineeringInputData EngineOnly { get; set; }
 
 		IVehicleDeclarationInputData IDeclarationJobInputData.Vehicle

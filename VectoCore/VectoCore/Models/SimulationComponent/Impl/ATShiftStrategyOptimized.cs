@@ -112,7 +112,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		private void InitializeTestContainer(VectoRunData runData)
 		{
 			// fuel list here has no effect as this is the mod-container for the test-powertrain only
-			var modData = new ModalDataContainer(runData, null, new[] {FuelData.Diesel}, null, false);
+			var modData = new ModalDataContainer(runData, null, null);
 			var builder = new PowertrainBuilder(modData);
 			TestContainer = new SimplePowertrainContainer(runData);
 

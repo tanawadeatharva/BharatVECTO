@@ -191,6 +191,11 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering.DataProvider
 			get { return double.NaN; }
 		}
 
+		public VectoSimulationJobType VehicleType
+		{
+			get { return VectoSimulationJobType.ConventionalVehicle; }
+		}
+
 
 		public IAdvancedDriverAssistantSystemsEngineering ADAS
 		{
