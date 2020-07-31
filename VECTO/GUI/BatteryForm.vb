@@ -1,4 +1,4 @@
-
+﻿
 Imports System.Drawing.Imaging
 Imports System.IO
 Imports System.Linq
@@ -10,6 +10,7 @@ Imports TUGraz.VectoCore.InputData.FileIO.JSON
 Imports TUGraz.VectoCore.InputData.Reader.ComponentData
 Imports TUGraz.VectoCore.Models.Declaration
 Imports TUGraz.VectoCore.Models.SimulationComponent.Data
+Imports TUGraz.VectoCore.Models.SimulationComponent.Data.Battery
 Imports TUGraz.VectoCore.Models.SimulationComponent.Data.Engine
 Imports TUGraz.VectoCore.Utils
 ' Copyright 2017 European Union.
@@ -27,8 +28,8 @@ Imports TUGraz.VectoCore.Utils
 ''' Engine Editor. Open and save .VENG files.
 ''' </summary>
 ''' <remarks></remarks>
-Public Class ElectricMotorForm
-    Private _emFile As String = ""
+Public Class BatteryForm
+    Private _batteryFile As String = ""
     Public AutoSendTo As Boolean = False
     Public JobDir As String = ""
     Private _changed As Boolean = False
@@ -76,9 +77,9 @@ Public Class ElectricMotorForm
     End Sub
 
     Private Sub ToolStripBtOpen_Click(sender As Object, e As EventArgs) Handles ToolStripBtOpen.Click
-        If EngineFileBrowser.OpenDialog(_emFile) Then
+        If EngineFileBrowser.OpenDialog(_batteryFile) Then
             Try
-                OpenElectricMachineFile(EngineFileBrowser.Files(0))
+                OpenBatteryFile(EngineFileBrowser.Files(0))
             Catch ex As Exception
                 MsgBox(ex.Message, MsgBoxStyle.OkOnly, "Error loading Engine File")
             End Try
@@ -97,7 +98,7 @@ Public Class ElectricMotorForm
 
         If ChangeCheckCancel() Then Exit Sub
 
-        If _emFile = "" Then
+        If _batteryFile = "" Then
             If MsgBox("Save file now?", MsgBoxStyle.YesNo) = MsgBoxResult.Yes Then
                 If Not SaveOrSaveAs(True) Then Exit Sub
             Else
@@ -113,7 +114,7 @@ Public Class ElectricMotorForm
             VectoJobForm.WindowState = FormWindowState.Normal
         End If
 
-        VectoJobForm.TbENG.Text = GetFilenameWithoutDirectory(_emFile, JobDir)
+        VectoJobForm.TbENG.Text = GetFilenameWithoutDirectory(_batteryFile, JobDir)
     End Sub
 
     Private Sub ToolStripButton1_Click(sender As Object, e As EventArgs) Handles ToolStripButton1.Click
@@ -134,15 +135,14 @@ Public Class ElectricMotorForm
         If ChangeCheckCancel() Then Exit Sub
 
         tbMakeModel.Text = ""
-        tbInertia.Text = ""
-        tbMap.Text = ""
-        tbDragTorque.Text = ""
-        tbMaxTorque.Text = ""
+        tbCapacity.Text = ""
+        tbRiCurve.Text = ""
+        tbSoCCurve.Text = ""
 
         DeclInit()
 
-        _emFile = ""
-        Text = "Electric Motor Editor"
+        _batteryFile = ""
+        Text = "Electric Energy Storage Editor"
         LbStatus.Text = ""
 
         _changed = False
@@ -151,17 +151,17 @@ Public Class ElectricMotorForm
     End Sub
 
     'Open VENG file
-    Public Sub OpenElectricMachineFile(file As String)
-        Dim engine As IElectricMotorEngineeringInputData
+    Public Sub OpenBatteryFile(file As String)
+        Dim battery As IBatteryPackEngineeringInputData
 
         If ChangeCheckCancel() Then Exit Sub
 
         Dim inputData As IEngineeringInputDataProvider = TryCast(JSONInputDataFactory.ReadComponentData(file),
                                                                 IEngineeringInputDataProvider)
 
-        engine = inputData.JobInputData.Vehicle.Components.ElectricMachines.Entries.First().ElectricMachine
+        battery = inputData.JobInputData.Vehicle.Components.ElectricStorage.BatteryPack
 
-        If Cfg.DeclMode <> engine.SavedInDeclarationMode Then
+        If Cfg.DeclMode <> battery.SavedInDeclarationMode Then
             Select Case WrongMode()
                 Case 1
                     Close()
@@ -173,19 +173,21 @@ Public Class ElectricMotorForm
         End If
 
         Dim basePath As String = Path.GetDirectoryName(file)
-        tbMakeModel.Text = engine.Model
-        tbInertia.Text = engine.Inertia.ToGUIFormat()
+        tbMakeModel.Text = battery.Model
+        tbCapacity.Text = battery.Capacity.ToGUIFormat()
 
+        tbCFactor.Text = battery.MaxCurrentFactor.ToGUIFormat()
+        tbSoCMin.Text = (battery.MinSOC * 100).ToGUIFormat()
+        tbSoCMax.Text = (battery.MaxSOC * 100).ToGUIFormat()
 
-        tbDragTorque.Text = GetRelativePath(engine.DragCurve.Source, basePath)
-        tbMaxTorque.Text = GetRelativePath(engine.FullLoadCurve.Source, basePath)
-        tbMap.Text = GetRelativePath(engine.EfficiencyMap.Source, basePath)
+        tbSoCCurve.Text = GetRelativePath(battery.VoltageCurve.Source, basePath)
+        tbRiCurve.Text = GetRelativePath(battery.InternalResistanceCurve.Source, basePath)
         DeclInit()
 
-        ElectricMotorFileBrowser.UpdateHistory(file)
+        BatteryFileBrowser.UpdateHistory(file)
         Text = GetFilenameWithoutPath(file, True)
         LbStatus.Text = ""
-        _emFile = file
+        _batteryFile = file
         Activate()
 
         _changed = False
@@ -194,31 +196,35 @@ Public Class ElectricMotorForm
 
     'Save or Save As function = true if file is saved
     Private Function SaveOrSaveAs(ByVal saveAs As Boolean) As Boolean
-        If _emFile = "" Or saveAs Then
-            If ElectricMotorFileBrowser.SaveDialog(_emFile) Then
-                _emFile = ElectricMotorFileBrowser.Files(0)
+        If _batteryFile = "" Or saveAs Then
+            If BatteryFileBrowser.SaveDialog(_batteryFile) Then
+                _batteryFile = BatteryFileBrowser.Files(0)
             Else
                 Return False
             End If
         End If
-        Return SaveElectricMotorToFile(_emFile)
+        Return SaveEngineToFile(_batteryFile)
     End Function
 
     'Save VENG file to given filepath. Called by SaveOrSaveAs. 
-    Private Function SaveElectricMotorToFile(ByVal file As String) As Boolean
+    Private Function SaveEngineToFile(ByVal file As String) As Boolean
 
-        Dim em As ElectricMachine = New ElectricMachine
-        em.FilePath = file
+        Dim battery As Battery = New Battery
+        battery.FilePath = file
 
-        em.ModelName = tbMakeModel.Text
-        If Trim(em.ModelName) = "" Then em.ModelName = "Undefined"
-        em.MotorInertia = tbInertia.Text.ToDouble(0)
+        battery.ModelName = tbMakeModel.Text
+        If Trim(battery.ModelName) = "" Then battery.ModelName = "Undefined"
+        battery.BatCapacity = tbCapacity.Text.ToDouble(0)
 
-        em.PathMaxTorque = tbMaxTorque.Text
-        em.PathDrag = tbDragTorque.Text
-        em.PathMap = tbMap.Text
+        battery.PathSoCCurve = tbSoCCurve.Text
+        battery.PathRiCurve = tbRiCurve.Text
 
-        If Not em.SaveFile Then
+        battery.BatMinSoc = tbSoCMin.Text.ToDouble(0)
+        battery.BatMaxSoc = tbSoCMax.Text.ToDouble(0)
+
+        battery.BatCFactor = tbCFactor.Text.ToDouble(0)
+
+        If Not battery.SaveFile Then
             MsgBox("Cannot save to " & file, MsgBoxStyle.Critical)
             Return False
         End If
@@ -231,7 +237,7 @@ Public Class ElectricMotorForm
         '    End If
         'End If
 
-        ElectricMotorFileBrowser.UpdateHistory(file)
+        BatteryFileBrowser.UpdateHistory(file)
         Text = GetFilenameWithoutPath(file, True)
         LbStatus.Text = ""
 
@@ -282,7 +288,7 @@ Public Class ElectricMotorForm
         DeclInit()
     End Sub
 
-    Private Sub TbInertia_TextChanged(sender As Object, e As EventArgs) Handles tbInertia.TextChanged
+    Private Sub TbInertia_TextChanged(sender As Object, e As EventArgs) Handles tbCapacity.TextChanged
         Change()
     End Sub
 
@@ -292,7 +298,7 @@ Public Class ElectricMotorForm
     End Sub
 
     Private Sub TbMAP_TextChanged(sender As Object, e As EventArgs) _
-        Handles tbDragTorque.TextChanged
+        Handles tbSoCCurve.TextChanged
         UpdatePic()
         Change()
     End Sub
@@ -317,12 +323,12 @@ Public Class ElectricMotorForm
     Private Sub BtMAPopen_Click(sender As Object, e As EventArgs)
         Dim fldfile As String
 
-        fldfile = FileRepl(tbDragTorque.Text, GetPath(_emFile))
+        fldfile = FileRepl(tbSoCCurve.Text, GetPath(_batteryFile))
 
         If fldfile <> NoFile AndAlso File.Exists(fldfile) Then
-            OpenFiles(FileRepl(tbMap.Text, GetPath(_emFile)), fldfile)
+            OpenFiles(FileRepl(tbRiCurve.Text, GetPath(_batteryFile)), fldfile)
         Else
-            OpenFiles(FileRepl(tbMap.Text, GetPath(_emFile)))
+            OpenFiles(FileRepl(tbRiCurve.Text, GetPath(_batteryFile)))
         End If
     End Sub
 
@@ -338,9 +344,8 @@ Public Class ElectricMotorForm
     End Sub
 
     Private Sub UpdatePic()
-        Dim fullLoadCurve As ElectricFullLoadCurve = Nothing
-        Dim dragCurve As DragCurve = Nothing
-        Dim fcMap As EfficiencyMap = Nothing
+        Dim socCurve As SOCMap = Nothing
+        Dim riCurve As InternalResistanceMap = Nothing
 
         'Dim engineCharacteristics As String = ""
 
@@ -349,28 +354,21 @@ Public Class ElectricMotorForm
         'If Not File.Exists(_engFile) Then Exit Sub
 
         Try
-            Dim fldFile As String =
-                    If(Not String.IsNullOrWhiteSpace(_emFile), Path.Combine(Path.GetDirectoryName(_emFile), tbMaxTorque.Text), tbDragTorque.Text)
-            If File.Exists(fldFile) Then _
-                fullLoadCurve = ElectricFullLoadCurveReader.Create(VectoCSVFile.Read(fldFile), 1.0, 1, 1.0)
+            Dim socFile As String =
+                    If(Not String.IsNullOrWhiteSpace(_batteryFile), Path.Combine(Path.GetDirectoryName(_batteryFile), tbSoCCurve.Text), tbSoCCurve.Text)
+            If File.Exists(socFile) Then _
+                socCurve = BatterySOCReader.Create(VectoCSVFile.Read(socFile))
         Catch ex As Exception
         End Try
 
         Try
-            Dim fcFile As String =
-                    If(Not String.IsNullOrWhiteSpace(_emFile), Path.Combine(Path.GetDirectoryName(_emFile), tbMap.Text), tbMap.Text)
-            If File.Exists(fcFile) Then fcMap = ElectricMotorMapReader.Create(VectoCSVFile.Read(fcFile), 1.0, 1, 1.0)
+            Dim riFile As String =
+                    If(Not String.IsNullOrWhiteSpace(_batteryFile), Path.Combine(Path.GetDirectoryName(_batteryFile), tbRiCurve.Text), tbRiCurve.Text)
+            If File.Exists(riFile) Then riCurve = BatteryInternalResistanceReader.Create(VectoCSVFile.Read(riFile), 1)
         Catch ex As Exception
         End Try
 
-        Try
-            Dim dragFile As String =
-                    If(Not String.IsNullOrWhiteSpace(_emFile), Path.Combine(Path.GetDirectoryName(_emFile), tbDragTorque.Text), tbMap.Text)
-            If File.Exists(dragFile) Then dragCurve = ElectricMotorDragCurveReader.Create(VectoCSVFile.Read(dragFile), 1.0, 1, 1.0)
-        Catch ex As Exception
-        End Try
-
-        If fullLoadCurve Is Nothing AndAlso fcMap Is Nothing AndAlso dragCurve Is Nothing Then Exit Sub
+        If socCurve Is Nothing AndAlso riCurve Is Nothing Then Exit Sub
 
         'Create plot
         Dim chart As Chart = New Chart
@@ -379,66 +377,49 @@ Public Class ElectricMotorForm
 
         Dim chartArea As ChartArea = New ChartArea
 
-        If Not fullLoadCurve Is Nothing Then
+        If Not socCurve Is Nothing Then
             Dim series As Series = New Series
-            series.Points.DataBindXY(fullLoadCurve.FullLoadEntries.Select(Function(x) x.MotorSpeed.AsRPM).ToArray(),
-                                    fullLoadCurve.FullLoadEntries.Select(Function(x) x.FullDriveTorque.Value()).ToArray())
+            series.Points.DataBindXY(socCurve.Entries.Select(Function(x) x.SOC * 100).ToArray(),
+                                    socCurve.Entries.Select(Function(x) x.BatteryVolts.Value()).ToArray())
             series.ChartType = SeriesChartType.FastLine
             series.BorderWidth = 2
             series.Color = Color.DarkBlue
-            series.Name = "Max drive torque (" & tbDragTorque.Text & ")"
+            series.Name = "Battery Voltage (" & tbSoCCurve.Text & ")"
             chart.Series.Add(series)
-
-            series = New Series
-            series.Points.DataBindXY(fullLoadCurve.FullLoadEntries.Select(Function(x) x.MotorSpeed.AsRPM).ToArray(),
-                                    fullLoadCurve.FullLoadEntries.Select(Function(x) x.FullGenerationTorque.Value()).ToArray())
-            series.ChartType = SeriesChartType.FastLine
-            series.BorderWidth = 2
-            series.Color = Color.Blue
-            series.Name = "Max generation torque (" & Path.GetFileNameWithoutExtension(tbMap.Text) & ")"
-            chart.Series.Add(series)
-
-            'engineCharacteristics +=
-            '    String.Format("Max. Torque: {0:F0} Nm; Max. Power: {1:F1} kW; n_rated: {2:F0} rpm; n_95h: {3:F0} rpm",
-            '                fullLoadCurve.MaxTorque.Value(), fullLoadCurve.MaxPower.Value() / 1000, fullLoadCurve.RatedSpeed.AsRPM,
-            '                fullLoadCurve.N95hSpeed.AsRPM)
         End If
 
-        If Not fcMap Is Nothing Then
+        If Not riCurve Is Nothing Then
             Dim series As Series = New Series
-            series.Points.DataBindXY(fcMap.Entries.Select(Function(x) x.MotorSpeed.AsRPM).ToArray(),
-                                    fcMap.Entries.Select(Function(x) x.Torque.Value()).ToArray())
-            series.ChartType = SeriesChartType.Point
+            series.Points.DataBindXY(riCurve.Entries.Select(Function(x) x.SoC * 100).ToArray(),
+                                     riCurve.Entries.Select(Function(x) x.Resistance.Value()).ToArray())
+            series.ChartType = SeriesChartType.FastLine
             series.MarkerSize = 3
             series.Color = Color.Red
-            series.Name = "Map"
+            series.Name = "Internal Resistance"
+            series.YAxisType = AxisType.Secondary
             chart.Series.Add(series)
         End If
 
-        If Not dragCurve Is Nothing Then
-            Dim series As Series = New Series
-            series.Points.DataBindXY(dragCurve.Entries.Select(Function(x) x.MotorSpeed.AsRPM).ToArray(),
-                                     dragCurve.Entries.Select(Function(x) x.DragTorque.Value()).ToArray())
-            series.ChartType = SeriesChartType.FastLine
-            series.BorderWidth = 2
-            series.Color = Color.Green
-            series.Name = "Drag torque"
-            chart.Series.Add(series)
-        End If
 
         chartArea.Name = "main"
 
-        chartArea.AxisX.Title = "engine speed [1/min]"
+        chartArea.AxisX.Title = "SoC [%]"
         chartArea.AxisX.TitleFont = New Font("Helvetica", 10)
         chartArea.AxisX.LabelStyle.Font = New Font("Helvetica", 8)
         chartArea.AxisX.LabelAutoFitStyle = LabelAutoFitStyles.None
         chartArea.AxisX.MajorGrid.LineDashStyle = ChartDashStyle.Dot
 
-        chartArea.AxisY.Title = "engine torque [Nm]"
+        chartArea.AxisY.Title = "Voltage [V]"
         chartArea.AxisY.TitleFont = New Font("Helvetica", 10)
         chartArea.AxisY.LabelStyle.Font = New Font("Helvetica", 8)
         chartArea.AxisY.LabelAutoFitStyle = LabelAutoFitStyles.None
         chartArea.AxisY.MajorGrid.LineDashStyle = ChartDashStyle.Dot
+
+        chartArea.AxisY2.Title = "Internal Resistance [Ω]"
+        chartArea.AxisY2.TitleFont = New Font("Helvetica", 10)
+        chartArea.AxisY2.LabelStyle.Font = New Font("Helvetica", 8)
+        chartArea.AxisY2.LabelAutoFitStyle = LabelAutoFitStyles.None
+        chartArea.AxisY2.MajorGrid.LineDashStyle = ChartDashStyle.Dot
 
         chartArea.AxisX.Minimum = 0
         chartArea.BorderDashStyle = ChartDashStyle.Solid
@@ -493,54 +474,38 @@ Public Class ElectricMotorForm
 
 #End Region
 
-    Private Sub btnMaxTorqueCurveOpen_Click(sender As Object, e As EventArgs) Handles btnMaxTorqueCurveOpen.Click
+
+    Private Sub btnBrowseSoCCurve_Click(sender As Object, e As EventArgs) Handles btnBrowseSoCCurve.Click
+        If BatterySoCCurveFileBrowser.OpenDialog(FileRepl(tbSoCCurve.Text, GetPath(_batteryFile))) Then _
+            tbSoCCurve.Text = GetFilenameWithoutDirectory(BatterySoCCurveFileBrowser.Files(0), GetPath(_batteryFile))
+    End Sub
+
+    Private Sub btnBrowseRiMap_Click(sender As Object, e As EventArgs) Handles btnBrowseRiMap.Click
+        If BatteryInternalResistanceCurveFileBrowser.OpenDialog(FileRepl(tbRiCurve.Text, GetPath(_batteryFile))) Then _
+            tbRiCurve.Text = GetFilenameWithoutDirectory(BatteryInternalResistanceCurveFileBrowser.Files(0), GetPath(_batteryFile))
+    End Sub
+
+    Private Sub btnSoCCurveOpen_Click(sender As Object, e As EventArgs) Handles btnSoCCurveOpen.Click
         Dim theFile As String
 
-        theFile = FileRepl(tbMaxTorque.Text, GetPath(_emFile))
+        theFile = FileRepl(tbSoCCurve.Text, GetPath(_batteryFile))
 
         If theFile <> NoFile AndAlso File.Exists(theFile) Then
-            OpenFiles(FileRepl(tbMaxTorque.Text, GetPath(_emFile)), theFile)
+            OpenFiles(FileRepl(tbSoCCurve.Text, GetPath(_batteryFile)), theFile)
         Else
-            OpenFiles(FileRepl(tbMaxTorque.Text, GetPath(_emFile)))
+            OpenFiles(FileRepl(tbSoCCurve.Text, GetPath(_batteryFile)))
         End If
     End Sub
 
-    Private Sub btnDragCurveOpen_Click(sender As Object, e As EventArgs) Handles btnDragCurveOpen.Click
+    Private Sub btnRiMapOpen_Click(sender As Object, e As EventArgs) Handles btnRiMapOpen.Click
         Dim theFile As String
 
-        theFile = FileRepl(tbDragTorque.Text, GetPath(_emFile))
+        theFile = FileRepl(tbRiCurve.Text, GetPath(_batteryFile))
 
         If theFile <> NoFile AndAlso File.Exists(theFile) Then
-            OpenFiles(FileRepl(tbDragTorque.Text, GetPath(_emFile)), theFile)
+            OpenFiles(FileRepl(tbRiCurve.Text, GetPath(_batteryFile)), theFile)
         Else
-            OpenFiles(FileRepl(tbDragTorque.Text, GetPath(_emFile)))
+            OpenFiles(FileRepl(tbRiCurve.Text, GetPath(_batteryFile)))
         End If
-    End Sub
-
-    Private Sub btnEmMapOpen_Click(sender As Object, e As EventArgs) Handles btnEmMapOpen.Click
-        Dim theFile As String
-
-        theFile = FileRepl(tbMap.Text, GetPath(_emFile))
-
-        If theFile <> NoFile AndAlso File.Exists(theFile) Then
-            OpenFiles(FileRepl(tbMap.Text, GetPath(_emFile)), theFile)
-        Else
-            OpenFiles(FileRepl(tbMap.Text, GetPath(_emFile)))
-        End If
-    End Sub
-
-    Private Sub btnBrowseMaxTorque_Click(sender As Object, e As EventArgs) Handles btnBrowseMaxTorque.Click
-        If ElectricMachineMaxTorqueFileBrowser.OpenDialog(FileRepl(tbMaxTorque.Text, GetPath(_emFile))) Then _
-            tbMaxTorque.Text = GetFilenameWithoutDirectory(ElectricMachineMaxTorqueFileBrowser.Files(0), GetPath(_emFile))
-    End Sub
-
-    Private Sub btnBrowseDragCurve_Click(sender As Object, e As EventArgs) Handles btnBrowseDragCurve.Click
-        If ElectricMachineDragTorqueFileBrowser.OpenDialog(FileRepl(tbDragTorque.Text, GetPath(_emFile))) Then _
-            tbDragTorque.Text = GetFilenameWithoutDirectory(ElectricMachineDragTorqueFileBrowser.Files(0), GetPath(_emFile))
-    End Sub
-
-    Private Sub btnBrowseEmMap_Click(sender As Object, e As EventArgs) Handles btnBrowseEmMap.Click
-        If ElectricMachineEfficiencyMapFileBrowser.OpenDialog(FileRepl(tbMap.Text, GetPath(_emFile))) Then _
-            tbMap.Text = GetFilenameWithoutDirectory(ElectricMachineEfficiencyMapFileBrowser.Files(0), GetPath(_emFile))
     End Sub
 End Class

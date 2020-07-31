@@ -72,6 +72,26 @@ public class JSONFileWriter : IOutputFileWriter
 		WriteFile(header, body, filename);
     }
 
+	public void SaveBattery(IBatteryPackEngineeringInputData battery, string filename, bool declMode)
+	{
+		var header = GetHeader(ElectricMotorFormatVersion);
+
+		var body = new Dictionary<string, object>();
+
+		body.Add("SavedInDeclMode", declMode);
+
+		body.Add("Model", battery.Model);
+		body.Add("Capacity", battery.Capacity.Value());
+		body.Add("SOC_min", battery.MinSOC * 100.0);
+		body.Add("SOC_max",battery.MaxSOC * 100.0);
+		body.Add("MaxCurrentFactor", battery.MaxCurrentFactor);
+
+        body.Add("InternalResistanceCurve", GetRelativePath(battery.InternalResistanceCurve.Source, Path.GetDirectoryName(filename)));
+		body.Add("SoCCurve", GetRelativePath(battery.VoltageCurve.Source, Path.GetDirectoryName(filename)));
+		
+		WriteFile(header, body, filename);
+    }
+
     public void SaveEngine(IEngineEngineeringInputData eng, string filename, bool DeclMode)
 	{
 		// Header

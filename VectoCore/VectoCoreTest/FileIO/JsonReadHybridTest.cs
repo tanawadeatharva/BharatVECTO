@@ -31,7 +31,7 @@ namespace TUGraz.VectoCore.Tests.FileIO
 
 			Assert.AreEqual(7.5.SI(Unit.SI.Ampere.Hour), inputProvider.Capacity);
 			
-			var soc = inputProvider.Voltage;
+			var soc = inputProvider.VoltageCurve;
 			Assert.AreEqual("0", soc.Rows[0][BatterySOCReader.Fields.StateOfCharge]);
 			Assert.AreEqual("590", soc.Rows[0][BatterySOCReader.Fields.BatteryVoltage]);
 
@@ -121,10 +121,11 @@ namespace TUGraz.VectoCore.Tests.FileIO
 
 			var bat = engineering.JobInputData.Vehicle.Components.ElectricStorage;
 
+			var ri = BatteryInternalResistanceReader.Create(bat.BatteryPack.InternalResistanceCurve, 1);
 			Assert.NotNull(bat);
 			Assert.AreEqual(2, bat.Count);
 			Assert.AreEqual(50, bat.BatteryPack.MaxCurrentFactor);
-			Assert.AreEqual(0.4986666, bat.BatteryPack.InternalResistance.Value());
+			Assert.AreEqual(0.4986666, ri.Lookup(0.5).Value());
 
 			var em = engineering.JobInputData.Vehicle.Components.ElectricMachines;
 

@@ -245,6 +245,12 @@
     <None Include="TestData\BatteryElectric\GenericVehicleB4\BEV_ENG.vecto">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Include="TestData\BatteryElectric\GenericVehicleB4\GenericBattery_243kWh.vbatr">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\BatteryElectric\GenericVehicleB4\GenericBattery_243kWh.vbatv">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="TestData\BatteryElectric\GenericVehicleB4\GenericBattery_243kWh_750V.vbat">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>

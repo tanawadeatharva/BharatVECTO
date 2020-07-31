@@ -245,7 +245,17 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			get { return _axleWheelsDecl; }
 		}
 
-		public IElectricStorageEngineeringInputData ElectricStorage { get { return VehicleData?.Components?.ElectricStorage; } }
+		public IElectricStorageEngineeringInputData ElectricStorage
+		{
+			get
+			{
+				return new JSONElectricStorageEngineeringInputData {
+					BatteryPack = Battery,
+					Count = 1
+				};
+			}
+		}
+
 		public IElectricMachinesEngineeringInputData ElectricMachines { get
 		{
 			return new JSONElectricMotors(new List<ElectricMachineEntry<IElectricMotorEngineeringInputData>>() {

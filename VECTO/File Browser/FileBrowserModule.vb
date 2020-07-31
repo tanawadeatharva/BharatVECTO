@@ -34,6 +34,9 @@ Public Module FileBrowserModule
     Public ElectricMachineDragTorqueFileBrowser As FileBrowser
     Public ElectricMachineEfficiencyMapFileBrowser As FileBrowser
 
+    Public BatteryInternalResistanceCurveFileBrowser As FileBrowser
+    Public BatterySoCCurveFileBrowser As FileBrowser
+
     Public EngineFileBrowser As FileBrowser
 	Public GearboxFileBrowser As FileBrowser
     Public TCUFileBrowser As FileBrowser

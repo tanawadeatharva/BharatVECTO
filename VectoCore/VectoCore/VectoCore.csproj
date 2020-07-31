@@ -280,6 +280,7 @@
     <Compile Include="InputData\FileIO\XML\Declaration\IXMLDeclarationInputDataReader.cs" />
     <Compile Include="InputData\FileIO\XML\IXMLInputDataReader.cs" />
     <Compile Include="InputData\FileIO\XML\XMLInputDataNinjectModule.cs" />
+    <Compile Include="InputData\Reader\ComponentData\BatteryInternalResistanceReader.cs" />
     <Compile Include="InputData\Reader\ComponentData\ElectricMotorMapReader.cs" />
     <Compile Include="InputData\Reader\DataObjectAdapter\DeclarationDataAdapterPrimaryBus.cs" />
     <Compile Include="InputData\Reader\ComponentData\ElectricFullLoadCurveReader.cs" />

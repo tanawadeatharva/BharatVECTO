@@ -223,6 +223,12 @@
     <Compile Include="BusAuxiliaries\Util\DeleteCell.vb" />
     <Compile Include="BusAuxiliaries\Util\DeleteColumn.vb" />
     <Compile Include="BusAuxiliaries\Util\SIConvert.vb" />
+    <Compile Include="GUI\BatteryForm.Designer.vb">
+      <DependentUpon>BatteryForm.vb</DependentUpon>
+    </Compile>
+    <Compile Include="GUI\BatteryForm.vb">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="GUI\ElectricMotorForm.Designer.vb">
       <DependentUpon>ElectricMotorForm.vb</DependentUpon>
     </Compile>
@@ -235,6 +241,7 @@
     <Compile Include="GUI\VectoVTPJobForm.vb">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="Input Files\Battery.vb" />
     <Compile Include="Input Files\BrowserUtils.vb" />
     <Compile Include="GUI\VehicleTorqueLimitsDialog.Designer.vb">
       <DependentUpon>VehicleTorqueLimitsDialog.vb</DependentUpon>
@@ -401,6 +408,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="File Browser\FileBrowserFavoritesDialog.resx">
       <DependentUpon>FileBrowserFavoritesDialog.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GUI\BatteryForm.resx">
+      <DependentUpon>BatteryForm.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="GUI\ElectricMotorForm.resx">
       <DependentUpon>ElectricMotorForm.vb</DependentUpon>

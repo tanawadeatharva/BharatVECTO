@@ -17,7 +17,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Battery {
 		public double MaxSOC { get; internal set; }
 
 		[SIRange(0, 1e9)]
-		public Ohm InternalResistance { get; internal set; }
+		public InternalResistanceMap InternalResistance { get; internal set; }
 
 		public AmpereSecond Capacity { get; internal set; }
 
@@ -30,7 +30,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Battery {
 
 	public class SOCMap
 	{
-		protected SOCMapEntry[] Entries;
+		protected internal SOCMapEntry[] Entries;
 
 		public SOCMap(SOCMapEntry[] entries)
 		{
@@ -65,10 +65,56 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Battery {
 			throw new VectoException("soc {0} exceeds battery model data. min: {1} max: {2}", soc, Entries.First().SOC, Entries.Last().SOC);
 		}
 
+		
 		public class SOCMapEntry
 		{
 			[Required, Range(0, 1)] public double SOC;
 			[Required, SIRange(0, double.MaxValue)] public Volt BatteryVolts;
 		}
 	}
+
+	public class InternalResistanceMap
+	{
+		protected internal InternalResistanceMapEntry[] Entries;
+
+		public InternalResistanceMap(InternalResistanceMapEntry[] entries)
+		{
+			Entries = entries;
+		}
+
+		public Ohm Lookup(double SoC)
+		{
+			var idx = FindIndex(SoC);
+			return VectoMath.Interpolate(Entries[idx - 1].SoC, Entries[idx].SoC, Entries[idx - 1].Resistance,
+				Entries[idx].Resistance, SoC);
+        }
+
+		protected int FindIndex(double soc)
+		{
+			if (soc < Entries.First().SoC)
+			{
+				return 1;
+			}
+			if (soc > Entries.Last().SoC)
+			{
+				return Entries.Length - 1;
+
+			}
+			for (var index = 1; index < Entries.Length; index++)
+			{
+				if (soc >= Entries[index - 1].SoC && soc <= Entries[index].SoC)
+				{
+					return index;
+				}
+			}
+			throw new VectoException("soc {0} exceeds battery model data. min: {1} max: {2}", soc, Entries.First().SoC, Entries.Last().SoC);
+		}
+
+        public class InternalResistanceMapEntry
+		{
+			[Required, Range(0, 1)] public double SoC;
+			[Required, SIRange(0, 1e6)] public Ohm Resistance;
+		}
+
+    }
 }
