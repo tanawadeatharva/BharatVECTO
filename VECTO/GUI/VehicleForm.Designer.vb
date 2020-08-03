@@ -180,6 +180,9 @@ Partial Class VehicleForm
         Me.cbLegislativeClass = New System.Windows.Forms.ComboBox()
         Me.Label21 = New System.Windows.Forms.Label()
         Me.lblTitle = New System.Windows.Forms.Label()
+        Me.tbInitialSoC = New System.Windows.Forms.TextBox()
+        Me.lblInitialSoC = New System.Windows.Forms.Label()
+        Me.lblInitialSoCUnit = New System.Windows.Forms.Label()
         Me.GroupBox6.SuspendLayout()
         Me.ToolStrip1.SuspendLayout()
         Me.GroupBox7.SuspendLayout()
@@ -1218,6 +1221,9 @@ Partial Class VehicleForm
         '
         'gbBattery
         '
+        Me.gbBattery.Controls.Add(Me.lblInitialSoCUnit)
+        Me.gbBattery.Controls.Add(Me.tbInitialSoC)
+        Me.gbBattery.Controls.Add(Me.lblInitialSoC)
         Me.gbBattery.Controls.Add(Me.tbBatteryPackCnt)
         Me.gbBattery.Controls.Add(Me.lblBatteryPackCnt)
         Me.gbBattery.Controls.Add(Me.Panel2)
@@ -1583,6 +1589,32 @@ Partial Class VehicleForm
         Me.lblTitle.TabIndex = 43
         Me.lblTitle.Text = "Vehicle TITLE"
         '
+        'tbInitialSoC
+        '
+        Me.tbInitialSoC.Location = New System.Drawing.Point(204, 78)
+        Me.tbInitialSoC.Name = "tbInitialSoC"
+        Me.tbInitialSoC.Size = New System.Drawing.Size(59, 20)
+        Me.tbInitialSoC.TabIndex = 26
+        '
+        'lblInitialSoC
+        '
+        Me.lblInitialSoC.AutoSize = True
+        Me.lblInitialSoC.Location = New System.Drawing.Point(7, 81)
+        Me.lblInitialSoC.Name = "lblInitialSoC"
+        Me.lblInitialSoC.RightToLeft = System.Windows.Forms.RightToLeft.Yes
+        Me.lblInitialSoC.Size = New System.Drawing.Size(54, 13)
+        Me.lblInitialSoC.TabIndex = 25
+        Me.lblInitialSoC.Text = "Initial SoC"
+        '
+        'lblInitialSoCUnit
+        '
+        Me.lblInitialSoCUnit.AutoSize = True
+        Me.lblInitialSoCUnit.Location = New System.Drawing.Point(269, 81)
+        Me.lblInitialSoCUnit.Name = "lblInitialSoCUnit"
+        Me.lblInitialSoCUnit.Size = New System.Drawing.Size(21, 13)
+        Me.lblInitialSoCUnit.TabIndex = 27
+        Me.lblInitialSoCUnit.Text = "[%]"
+        '
         'VehicleForm
         '
         Me.AcceptButton = Me.ButOK
@@ -1815,4 +1847,7 @@ End Sub
     Friend WithEvents tbVehIdlingSpeed As TextBox
     Friend WithEvents Label18 As Label
     Friend WithEvents Label19 As Label
+    Friend WithEvents lblInitialSoCUnit As Label
+    Friend WithEvents tbInitialSoC As TextBox
+    Friend WithEvents lblInitialSoC As Label
 End Class

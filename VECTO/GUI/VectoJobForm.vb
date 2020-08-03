@@ -524,6 +524,7 @@ Public Class VectoJobForm
                     Exit For
                 End If
             Next
+            tbElectricAuxConstant.Text = inputData.JobInputData.Vehicle.Components.AuxiliaryInputData.ElectricAuxPower.ToGUIFormat()
             'AA-TB
             'Assign any previously saved Axiliary FilePath
             txtAdvancedAuxiliaryFile.Text =
@@ -668,6 +669,7 @@ Public Class VectoJobForm
 
 
         Dim vectoJob As VectoJob = New VectoJob
+        vectoJob.JobType = JobType
         vectoJob.FilePath = file
 
         'Files ------------------------------------------------- -----------------
@@ -710,7 +712,9 @@ Public Class VectoJobForm
         Next
         vectoJob.AuxPAdd = TbAuxPAdd.Text.ToDouble(0)
 
-        vectoJob.EngineOnly = JobType = VectoSimulationJobType.EngineOnlySimulation
+        vectoJob.AuxElPadd = tbElectricAuxConstant.Text.ToDouble(0)
+
+        'vectoJob.EngineOnly = JobType = VectoSimulationJobType.EngineOnlySimulation
 
         vectoJob.OverSpeedOn = RdOverspeed.Checked
         vectoJob.OverSpeed = TbOverspeed.Text.ToDouble(0)
@@ -1133,6 +1137,7 @@ lbDlog:
         gbElectricAux.Enabled = True
         GrAuxMech.Enabled = True
         pnEngine.Enabled = True
+        pnShiftParams.Enabled = True
         Select Case JobType
             Case VectoSimulationJobType.ConventionalVehicle
                 gbElectricAux.Enabled = False
@@ -1142,11 +1147,16 @@ lbDlog:
                 pnShiftParams.Enabled = False
                 TabPgADAS.Enabled = False
                 tpAuxiliaries.Enabled = False
+                pnShiftParams.Enabled = False
             Case VectoSimulationJobType.ParallelHybridVehicle
+                pnEngine.Enabled = False
+                pnGearbox.Enabled = False
+                GrAuxMech.Enabled = False
             Case VectoSimulationJobType.BatteryElectricVehicle
                 pnEngine.Enabled = False
                 pnGearbox.Enabled = False
                 GrAuxMech.Enabled = False
+                pnShiftParams.Enabled = False
         End Select
     End Sub
 

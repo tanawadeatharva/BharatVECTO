@@ -397,6 +397,7 @@ namespace TUGraz.VectoCommon.InputData
 		string AuxiliaryVersion { get; }
 
 		string AdvancedAuxiliaryFilePath { get; }
+		Watt ElectricAuxPower { get; }
 	}
 
 	public interface IElectricMotorEngineeringInputData : IElectricMotorDeclarationInputData

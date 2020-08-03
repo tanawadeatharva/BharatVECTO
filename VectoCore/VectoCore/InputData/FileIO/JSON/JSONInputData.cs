@@ -643,6 +643,14 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			}
 		}
 
+		public Watt ElectricAuxPower
+		{
+			get
+			{
+				return Body["Padd_electric"] != null ? Body.GetEx<double>("Padd_electric").SI<Watt>() : 0.SI<Watt>();
+			}
+		}
+
 		#endregion
 	}
 

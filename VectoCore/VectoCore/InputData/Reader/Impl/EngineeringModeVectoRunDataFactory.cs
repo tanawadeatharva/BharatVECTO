@@ -137,6 +137,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
                     //    gearboxData.Type, InputDataProvider.DriverInputData.GearshiftInputData,
                     //    axlegearData.AxleGear.Ratio * (angledriveData?.Angledrive.Ratio ?? 1.0), engineData.IdleSpeed),
                     //ShiftStrategy = InputDataProvider.JobInputData.ShiftStrategy
+					ElectricAuxDemand = InputDataProvider.JobInputData.Vehicle.Components.AuxiliaryInputData.ElectricAuxPower,
                 };
             }
         }
@@ -214,7 +215,8 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 						GearshiftParameters = dao.CreateGearshiftData(
 							gearboxData.Type, InputDataProvider.DriverInputData.GearshiftInputData,
 							axlegearData.AxleGear.Ratio * (angledriveData?.Angledrive.Ratio ?? 1.0), engineData.IdleSpeed),
-						ShiftStrategy = InputDataProvider.JobInputData.ShiftStrategy
+						ShiftStrategy = InputDataProvider.JobInputData.ShiftStrategy,
+						ElectricAuxDemand = InputDataProvider.JobInputData.Vehicle.Components.AuxiliaryInputData.ElectricAuxPower,
 					};
 				}
 			}

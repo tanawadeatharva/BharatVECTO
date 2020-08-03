@@ -50,8 +50,9 @@ Public Class VehicleForm
 	Public AutoSendTo As Boolean = False
 	Public JobDir As String = ""
 	Private _torqueLimitDlog As VehicleTorqueLimitDialog
+    Private VehicleType As VectoSimulationJobType
 
-	'Close - Check for unsaved changes
+    'Close - Check for unsaved changes
 	Private Sub VehicleFormClosing(sender As Object, e As FormClosingEventArgs) Handles Me.FormClosing
 		If e.CloseReason <> CloseReason.ApplicationExitCall And e.CloseReason <> CloseReason.WindowsShutDown Then
 			e.Cancel = ChangeCheckCancel()
@@ -457,6 +458,7 @@ Public Class VehicleForm
         If (vehicle.VehicleType = VectoSimulationJobType.BatteryElectricVehicle OrElse vehicle.VehicleType = VectoSimulationJobType.ParallelHybridVehicle) Then
             tbBattery.Text = GetRelativePath(vehicle.Components.ElectricStorage.BatteryPack.DataSource.SourceFile, basePath)
             tbBatteryPackCnt.Text = vehicle.Components.ElectricStorage.Count.ToGUIFormat()
+            tbInitialSoC.Text = (vehicle.InitialSOC * 100).ToGUIFormat()
 
             Dim em As ElectricMachineEntry(Of IElectricMotorEngineeringInputData) = vehicle.Components.ElectricMachines.Entries.First()
             tbElectricMotor.Text = GetRelativePath(em.ElectricMachine.DataSource.SourceFile, basePath)
@@ -477,8 +479,9 @@ Public Class VehicleForm
 		_changed = False
 	End Sub
 
-    Private Sub UpdateForm(vehicleType As VectoSimulationJobType)
-        Select Case vehicleType
+    Private Sub UpdateForm(vehType As VectoSimulationJobType)
+        VehicleType = vehType
+        Select Case vehType
             Case VectoSimulationJobType.ConventionalVehicle
                 lblTitle.Text = "Conventional Vehicle"
                 tpElectricComponents.Enabled = False
@@ -525,65 +528,82 @@ Public Class VehicleForm
 		Dim veh As Vehicle = New Vehicle
 		veh.FilePath = file
 
-		veh.Mass = TbMass.Text.ToDouble(0)
-		veh.MassExtra = TbMassExtra.Text.ToDouble(0)
+        veh.VehicleType = VehicleType
+
+        veh.VehicleCategory = CType(CbCat.SelectedValue, VehicleCategory) 'CType(CbCat.SelectedIndex, tVehCat)
+        veh.Mass = TbMass.Text.ToDouble(0)
+        veh.MassExtra = TbMassExtra.Text.ToDouble(0)
 		veh.Loading = TbLoad.Text.ToDouble(0)
 		veh.VehicleHeight = tbVehicleHeight.Text.ToDouble(0)
 		veh.CdA0 = If(String.IsNullOrWhiteSpace(TBcdA.Text), Double.NaN, TBcdA.Text.ToDouble(0))
 		veh.legClass = CType(cbLegislativeClass.SelectedValue, LegislativeClass)
 		veh.DynamicTyreRadius = TBrdyn.Text.ToDouble(0)
 		veh.CrossWindCorrectionMode = CType(CbCdMode.SelectedValue, CrossWindCorrectionMode)
-		veh.CrossWindCorrectionFile.Init(GetPath(file), TbCdFile.Text)
-		veh.RetarderType = CType(CbRtType.SelectedValue, RetarderType)
-		veh.RetarderRatio = TbRtRatio.Text.ToDouble(0)
-		veh.RetarderLossMapFile.Init(GetPath(file), TbRtPath.Text)
+        veh.CrossWindCorrectionFile.Init(GetPath(file), TbCdFile.Text)
 
-		veh.VehicleidlingSpeed = _tbVehIdlingSpeed.Text.ToDouble(0).RPMtoRad()
+        veh.MassMax = TbMassMass.Text.ToDouble(0)
+        veh.MassExtra = TbMassExtra.Text.ToDouble(0)
+        veh.AxleConfiguration = CType(CbAxleConfig.SelectedValue, AxleConfiguration)
 
-		veh.AngledriveType = CType(cbAngledriveType.SelectedValue, AngledriveType)
-		veh.AngledriveRatio = tbAngledriveRatio.Text.ToDouble(0)
-		veh.AngledriveLossMapFile.Init(GetPath(file), tbAngledriveLossMapPath.Text)
+        For Each entry As ListViewItem In LvRRC.Items
+            Dim a0 As AxleInputData = New AxleInputData()
+            a0.AxleWeightShare = entry.SubItems(AxleTbl.RelativeLoad).Text.ToDouble(0)
+            a0.TwinTyres = (entry.SubItems(AxleTbl.TwinTyres).Text = "yes")
+            a0.AxleType = entry.SubItems(AxleTbl.AxleType).Text.ParseEnum(Of AxleType)()
+            Dim tyre As TyreInputData = New TyreInputData()
+            tyre.RollResistanceCoefficient = entry.SubItems(AxleTbl.RRC).Text.ToDouble(0)
+            tyre.TyreTestLoad = entry.SubItems(AxleTbl.FzISO).Text.ToDouble(0).SI(Of Newton)()
+            tyre.Dimension = entry.SubItems(AxleTbl.WheelsDimension).Text
+            tyre.Inertia = entry.SubItems(AxleTbl.Inertia).Text.ToDouble(0).SI(Of KilogramSquareMeter)()
+            a0.Tyre = tyre
+            veh.Axles.Add(a0)
+        Next
 
-		veh.VehicleCategory = CType(CbCat.SelectedValue, VehicleCategory) 'CType(CbCat.SelectedIndex, tVehCat)
+        If (VehicleType = VectoSimulationJobType.ConventionalVehicle OrElse VehicleType = VectoSimulationJobType.ParallelHybridVehicle) Then
+            veh.RetarderType = CType(CbRtType.SelectedValue, RetarderType)
+            veh.RetarderRatio = TbRtRatio.Text.ToDouble(0)
+            veh.RetarderLossMapFile.Init(GetPath(file), TbRtPath.Text)
 
-		For Each entry As ListViewItem In LvRRC.Items
-			Dim a0 As AxleInputData = New AxleInputData()
-			a0.AxleWeightShare = entry.SubItems(AxleTbl.RelativeLoad).Text.ToDouble(0)
-			a0.TwinTyres = (entry.SubItems(AxleTbl.TwinTyres).Text = "yes")
-			a0.AxleType = entry.SubItems(AxleTbl.AxleType).Text.ParseEnum(Of AxleType)()
-			dim tyre as TyreInputData = New TyreInputData()
-			tyre.RollResistanceCoefficient = entry.SubItems(AxleTbl.RRC).Text.ToDouble(0)
-			tyre.TyreTestLoad = entry.SubItems(AxleTbl.FzISO).Text.ToDouble(0).SI(Of Newton)()
-			tyre.Dimension = entry.SubItems(AxleTbl.WheelsDimension).Text
-			tyre.Inertia = entry.SubItems(AxleTbl.Inertia).Text.ToDouble(0).SI(Of KilogramSquareMeter)()
-			a0.Tyre = tyre
-			veh.Axles.Add(a0)
-		Next
+            veh.VehicleidlingSpeed = _tbVehIdlingSpeed.Text.ToDouble(0).RPMtoRad()
 
-		veh.PtoType = CType(cbPTOType.SelectedValue, String)
-		veh.PtoLossMap.Init(GetPath(file), tbPTOLossMap.Text)
-		veh.PtoCycle.Init(GetPath(file), tbPTOCycle.Text)
+            veh.AngledriveType = CType(cbAngledriveType.SelectedValue, AngledriveType)
+            veh.AngledriveRatio = tbAngledriveRatio.Text.ToDouble(0)
+            veh.AngledriveLossMapFile.Init(GetPath(file), tbAngledriveLossMapPath.Text)
 
-		veh.MassMax = TbMassMass.Text.ToDouble(0)
-		veh.MassExtra = TbMassExtra.Text.ToDouble(0)
-		veh.AxleConfiguration = CType(CbAxleConfig.SelectedValue, AxleConfiguration)
+            veh.PtoType = CType(cbPTOType.SelectedValue, String)
+            veh.PtoLossMap.Init(GetPath(file), tbPTOLossMap.Text)
+            veh.PtoCycle.Init(GetPath(file), tbPTOCycle.Text)
 
-		For Each item As ListViewItem In lvTorqueLimits.Items
-			Dim tl As TorqueLimitInputData = New TorqueLimitInputData()
-			tl.Gear() = item.SubItems(TorqueLimitsTbl.Gear).Text.ToInt(0)
-			tl.MaxTorque = item.SubItems(TorqueLimitsTbl.MaxTorque).Text.ToDouble(0).SI(Of NewtonMeter)()
-			veh.torqueLimitsList.Add(tl)
-		Next
+            For Each item As ListViewItem In lvTorqueLimits.Items
+                Dim tl As TorqueLimitInputData = New TorqueLimitInputData()
+                tl.Gear() = item.SubItems(TorqueLimitsTbl.Gear).Text.ToInt(0)
+                tl.MaxTorque = item.SubItems(TorqueLimitsTbl.MaxTorque).Text.ToDouble(0).SI(Of NewtonMeter)()
+                veh.torqueLimitsList.Add(tl)
+            Next
 
-		veh.EcoRollType = CType(cbEcoRoll.SelectedValue, EcoRollType)
+            veh.VehicleTankSystem = CType(If(cbTankSystem.SelectedIndex > 0, cbTankSystem.SelectedValue, Nothing), TankSystem?)
+        End If
+
+        If (VehicleType = VectoSimulationJobType.ParallelHybridVehicle OrElse VehicleType = VectoSimulationJobType.BatteryElectricVehicle) Then
+            veh.BatteryFile.Init(GetPath(file), tbBattery.Text)
+            veh.NumBatteryPacks = tbBatteryPackCnt.Text.ToInt()
+            veh.InitialSOC = tbInitialSoC.Text.ToDouble() / 100.0
+
+            veh.ElectricMotorFile.Init(GetPath(file), tbElectricMotor.Text)
+            veh.ElectricMotorPosition = CType(cbEmPos.SelectedValue, PowertrainPosition)
+            veh.ElectricMotorCount = tbEmCount.Text.ToInt()
+            veh.ElectricMotorRatio = tbRatioEm.Text.ToDouble()
+            veh.ElectricMotorMechEff = tbEmEfficiency.Text.ToDouble()
+        End If
+
+        veh.EcoRollType = CType(cbEcoRoll.SelectedValue, EcoRollType)
 		veh.PCC = CType(cbPcc.SelectedValue, PredictiveCruiseControlType)
 		veh.EngineStop = cbEngineStopStart.Checked
         veh.EcoRollReleaseLockupClutch = cbAtEcoRollReleaseLockupClutch.Checked
 
-		veh.VehicleTankSystem = CType(If(cbTankSystem.SelectedIndex > 0, cbTankSystem.SelectedValue, nothing), TankSystem?)
 
-		'---------------------------------------------------------------------------------
-		If Not veh.SaveFile Then
+        '---------------------------------------------------------------------------------
+        If Not veh.SaveFile Then
             MsgBox("Cannot save to " & file, MsgBoxStyle.Critical)
             Return False
 		End If
