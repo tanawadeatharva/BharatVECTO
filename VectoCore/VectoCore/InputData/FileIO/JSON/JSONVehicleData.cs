@@ -48,12 +48,12 @@ using TUGraz.VectoCore.Models.Declaration;
 
 namespace TUGraz.VectoCore.InputData.FileIO.JSON
 {
-	public class JSONVehicleDataV10 : JSONVehicleDataV9
+	public class JSONVehicleDataV10_HEV_BEV : JSONVehicleDataV9
 	{
 		private JSONElectricStorageEngineeringInputData _batteries;
 		private JSONElectricMotors _electricMotors;
 
-		public JSONVehicleDataV10(JObject data, string fileName, IJSONVehicleComponents job, bool tolerateMissing = false) :
+		public JSONVehicleDataV10_HEV_BEV(JObject data, string fileName, IJSONVehicleComponents job, bool tolerateMissing = false) :
 			base(data, fileName, job, tolerateMissing) { }
 
 		#region Overrides of JSONVehicleDataV7

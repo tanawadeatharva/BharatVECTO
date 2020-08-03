@@ -118,7 +118,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 				case 9:
 					return new JSONVehicleDataV9(json, filename, job, tolerateMissing);
 				case 10:
-					return new JSONVehicleDataV10(json, filename, job, tolerateMissing);
+					return new JSONVehicleDataV10_HEV_BEV(json, filename, job, tolerateMissing);
 				default:
 					throw new VectoException("Vehicle-File: Unsupported FileVersion. Got {0}", version);
 			}
