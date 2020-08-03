@@ -81,7 +81,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
             {
                 var dao = new EngineeringDataAdapter();
                 var driver = dao.CreateDriverData(InputDataProvider.DriverInputData);
-                var vehicle = InputDataProvider.JobInputData.Vehicle;
+				var vehicle = InputDataProvider.JobInputData.Vehicle;
                 //var tempVehicle = dao.CreateVehicleData(vehicle);
 
 				var axlegearData = vehicle.Components.AxleGearInputData != null

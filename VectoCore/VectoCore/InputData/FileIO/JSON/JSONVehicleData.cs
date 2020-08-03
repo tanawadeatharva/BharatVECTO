@@ -112,8 +112,15 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			return new JSONElectricMotors(retVal);
 		}
 
+		protected override IAdvancedDriverAssistantSystemsEngineering GetADS()
+		{
+			return _adasInputData ?? (_adasInputData = (VehicleType == VectoSimulationJobType.BatteryElectricVehicle
+				? new JSONADASInputDataV10BEV(this)
+				: base.GetADS()));
+		}
 
-		protected virtual JSONElectricStorageEngineeringInputData ReadBatteries()
+
+        protected virtual JSONElectricStorageEngineeringInputData ReadBatteries()
 		{
 			return new JSONElectricStorageEngineeringInputData() {
 				Count = Body["Battery"].GetEx<int>("NumPacks"),

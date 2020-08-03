@@ -75,7 +75,7 @@
       ]
     },
     "EngineStopStart": true,
-    "EcoRoll": "WithEngineStop",
+    "EcoRoll": "None",
     "PredictiveCruiseControl": "None",
     "ATEcoRollReleaseLockupClutch": false,
     "CdxA": 4.83,

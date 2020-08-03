@@ -486,15 +486,25 @@ Public Class VehicleForm
                 lblTitle.Text = "Conventional Vehicle"
                 tpElectricComponents.Enabled = False
                 cbEmPos.DataSource = New List(Of Object)
+                'cbEngineStopStart.Checked = False
+                cbEngineStopStart.Enabled = True
+                cbEcoRoll.DataSource = [Enum].GetValues(GetType(EcoRollType)).Cast(Of EcoRollType).Select(Function(ecoRoll) New With {Key .Value = ecoRoll, .Label = ecoRoll.GetName()}).ToList()
 
             Case VectoSimulationJobType.ParallelHybridVehicle
                 lblTitle.Text = "Parallel Hybrid Vehicle"
                 cbEmPos.DataSource = [Enum].GetValues(GetType(PowertrainPosition)).Cast(Of PowertrainPosition).Where(Function(x) x.IsParallelHybrid()).Select(Function(x) New With {Key .Value = x, .Label = x.GetName()}).ToList()
+                'cbEngineStopStart.Checked = False
+                'cbEngineStopStart.Enabled = False
+                'cbEcoRoll.DataSource = [Enum].GetValues(GetType(EcoRollType)).Cast(Of EcoRollType).Select(Function(ecoRoll) New With {Key .Value = ecoRoll, .Label = ecoRoll.GetName()}).ToList()
+
             Case VectoSimulationJobType.BatteryElectricVehicle
                 lblTitle.Text = "Battery Electric Vehicle"
                 tpPowertrain.Enabled = False
                 tpTorqueLimits.Enabled = False
                 cbEmPos.DataSource = [Enum].GetValues(GetType(PowertrainPosition)).Cast(Of PowertrainPosition).Where(Function(x) x.IsBatteryElectric()).Select(Function(x) New With {Key .Value = x, .Label = x.GetName()}).ToList()
+                cbEngineStopStart.Checked = False
+                cbEngineStopStart.Enabled = False
+                cbEcoRoll.DataSource = New EcoRollType() {EcoRollType.None}.Select(Function(ecoRoll) New With {Key .Value = ecoRoll, .Label = ecoRoll.GetName()}).ToList()
 
         End Select
     End Sub
