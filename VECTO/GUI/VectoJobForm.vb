@@ -689,7 +689,7 @@ Public Class VectoJobForm
         vectoJob.PathGbx = TbGBX.Text
         vectoJob.PathShiftParams = TbShiftStrategyParams.Text
         vectoJob.ShiftStrategy = cbGearshiftStrategy.SelectedValue?.ToString()
-
+        vectoJob.PathHybridStrategyParams = tbHybridStrategyParams.Text
         'a_DesMax
         vectoJob.DesMaxFile = TbDesMaxFile.Text
 

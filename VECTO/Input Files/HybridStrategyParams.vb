@@ -85,25 +85,25 @@ Public Class HybridStrategyParams
 
     Private ReadOnly Property IHybridStrategyParameters_EquivalenceFactor As Double Implements IHybridStrategyParameters.EquivalenceFactor
         Get
-            Throw New NotImplementedException()
+            Return EquivalenceFactor
         End Get
     End Property
 
     Private ReadOnly Property IHybridStrategyParameters_MinSoC As Double Implements IHybridStrategyParameters.MinSoC
         Get
-            Throw New NotImplementedException()
+            Return MinSoC
         End Get
     End Property
 
     Private ReadOnly Property IHybridStrategyParameters_MaxSoC As Double Implements IHybridStrategyParameters.MaxSoC
         Get
-            Throw New NotImplementedException()
+            Return MaxSoC
         End Get
     End Property
 
     Private ReadOnly Property IHybridStrategyParameters_TargetSoC As Double Implements IHybridStrategyParameters.TargetSoC
         Get
-            Throw New NotImplementedException()
+            Return TargetSoC
         End Get
     End Property
 End Class

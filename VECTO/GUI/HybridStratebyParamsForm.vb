@@ -162,7 +162,7 @@ Public Class HybridStrategyParamsForm
 
         strategyParams = inputData.JobInputData.HybridStrategyParameters
 
-        If Not Cfg.DeclMode Then
+        If Cfg.DeclMode Then
             Select Case WrongMode()
                 Case 1
                     Close()
@@ -180,7 +180,7 @@ Public Class HybridStrategyParamsForm
         tbEquivalenceFactor.Text = strategyParams.EquivalenceFactor.ToGUIFormat()
         tbMinSoC.Text = (strategyParams.MinSoC * 100).ToGUIFormat()
         tbMaxSoC.Text = (strategyParams.MaxSoC * 100).ToGUIFormat()
-        tbTargetSoC.Text = (strategyParams.MaxSoC * 100).ToGUIFormat()
+        tbTargetSoC.Text = (strategyParams.TargetSoC * 100).ToGUIFormat()
 
         'tbAuxBufferChargeTime = strategyParams.
         'tbauxBufferTime = strategyParams.
@@ -227,6 +227,14 @@ Public Class HybridStrategyParamsForm
         If Not strategyParams.SaveFile Then
             MsgBox("Cannot save to " & file, MsgBoxStyle.Critical)
             Return False
+        End If
+
+        If AutoSendTo Then
+            If VectoJobForm.Visible Then
+                If UCase(FileRepl(VectoJobForm.tbHybridStrategyParams.Text, JobDir)) <> UCase(file) Then _
+                    VectoJobForm.tbHybridStrategyParams.Text = GetFilenameWithoutDirectory(file, JobDir)
+                VectoJobForm.UpdatePic()
+            End If
         End If
 
         HCUFileBrowser.UpdateHistory(file)

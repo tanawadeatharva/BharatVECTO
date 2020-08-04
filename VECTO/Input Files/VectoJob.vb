@@ -49,6 +49,7 @@ Public Class VectoJob
     Private ReadOnly _engineFile As SubPath
     Private ReadOnly _gearboxFile As SubPath
     Private ReadOnly _tcuFile As SubPath
+    Private ReadOnly _hcuFile As SubPath
 
     Private ReadOnly _lacDfTargetSpeedFile As SubPath
     Private ReadOnly _lacDfVelocityDropFile as SubPath
@@ -114,7 +115,8 @@ Public Class VectoJob
         _vehicleFile = New SubPath
         _engineFile = New SubPath
         _gearboxFile = New SubPath
-        _tcuFile = new SubPath
+        _tcuFile = New SubPath
+        _hcuFile = New SubPath()
         _lacDfTargetSpeedFile = New SubPath()
         _lacDfVelocityDropFile = New SubPath()
 
@@ -220,7 +222,20 @@ Public Class VectoJob
             _tcuFile.Init(_myPath, value)
         End Set
     End Property
-    
+
+    Public Property PathHybridStrategyParams(Optional ByVal original As Boolean = False) As String
+        Get
+            If original Then
+                Return _hcuFile.OriginalPath
+            Else
+                Return _hcuFile.FullPath
+            End If
+        End Get
+        Set(value As String)
+            _hcuFile.Init(_myPath, value)
+        End Set
+    End Property
+
 
     Public ReadOnly Property IDriverDeclarationInputData_SavedInDeclarationMode As Boolean _
         Implements IDriverDeclarationInputData.SavedInDeclarationMode
@@ -606,7 +621,8 @@ Public Class VectoJob
 
     Public ReadOnly Property HybridStrategyParameters As IHybridStrategyParameters Implements IEngineeringJobInputData.HybridStrategyParameters
         Get
-            Return Nothing
+            If Not File.Exists(_hcuFile.FullPath) Then Return Nothing
+            Return New JSONComponentInputData(_hcuFile.FullPath, Me).JobInputData.HybridStrategyParameters
         End Get
     End Property
 
