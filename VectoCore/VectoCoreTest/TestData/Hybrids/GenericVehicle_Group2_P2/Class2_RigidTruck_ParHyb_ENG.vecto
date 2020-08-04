@@ -16,7 +16,7 @@
     "AuxiliaryVersion": "CLASSIC",
     "AdvancedAuxiliaryFilePath": "",
 	
-	  "HybridStrategyParams": "HybridStrategyParams.vctl",
+	  "HybridStrategyParams": "HybridStrategyParams.vhctl",
 	
     "Aux": [],
     "Padd": 3540.0,

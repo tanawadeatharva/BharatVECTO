@@ -76,7 +76,9 @@ namespace TUGraz.VectoCommon.InputData
 		double MaxSoC { get; }
 
 		double TargetSoC { get; }
-    }
+
+		string Source { get;  }
+	}
 
 	public interface IVehicleEngineeringInputData : IVehicleDeclarationInputData
 	{

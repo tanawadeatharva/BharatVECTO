@@ -47,7 +47,7 @@ Public Class BatteryForm
     End Sub
 
     'Initialise.
-    Private Sub EngineFormLoad(sender As Object, e As EventArgs) Handles Me.Load
+    Private Sub BatteryFormLoad(sender As Object, e As EventArgs) Handles Me.Load
 
         ' initialize form on load - nothng to do right now
 
@@ -57,7 +57,7 @@ Public Class BatteryForm
         _changed = False
 
 
-        NewEngine()
+        NewBattery()
     End Sub
 
     'Set generic values for Declaration mode.
@@ -73,15 +73,15 @@ Public Class BatteryForm
 #Region "Toolbar"
 
     Private Sub ToolStripBtNew_Click(sender As Object, e As EventArgs) Handles ToolStripBtNew.Click
-        NewEngine()
+        NewBattery()
     End Sub
 
     Private Sub ToolStripBtOpen_Click(sender As Object, e As EventArgs) Handles ToolStripBtOpen.Click
-        If EngineFileBrowser.OpenDialog(_batteryFile) Then
+        If BatteryFileBrowser.OpenDialog(_batteryFile) Then
             Try
-                OpenBatteryFile(EngineFileBrowser.Files(0))
+                OpenBatteryFile(BatteryFileBrowser.Files(0))
             Catch ex As Exception
-                MsgBox(ex.Message, MsgBoxStyle.OkOnly, "Error loading Engine File")
+                MsgBox(ex.Message, MsgBoxStyle.OkOnly, "Error loading Battery File")
             End Try
         End If
     End Sub
@@ -130,7 +130,7 @@ Public Class BatteryForm
 #End Region
 
     'Create new empty Engine file.
-    Private Sub NewEngine()
+    Private Sub NewBattery()
 
         If ChangeCheckCancel() Then Exit Sub
 
@@ -203,11 +203,11 @@ Public Class BatteryForm
                 Return False
             End If
         End If
-        Return SaveEngineToFile(_batteryFile)
+        Return SaveBatteryToFile(_batteryFile)
     End Function
 
     'Save VENG file to given filepath. Called by SaveOrSaveAs. 
-    Private Function SaveEngineToFile(ByVal file As String) As Boolean
+    Private Function SaveBatteryToFile(ByVal file As String) As Boolean
 
         Dim battery As Battery = New Battery
         battery.FilePath = file

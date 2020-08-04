@@ -28,18 +28,22 @@ Partial Class VectoJobForm
         Me.components = New System.ComponentModel.Container()
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(VectoJobForm))
         Me.TabPgGen = New System.Windows.Forms.TabPage()
-        Me.TbShiftStrategyParams = New System.Windows.Forms.TextBox()
-        Me.BtnShiftParamsForm = New System.Windows.Forms.Button()
-        Me.BtnShiftStrategyParams = New System.Windows.Forms.Button()
-        Me.TbGBX = New System.Windows.Forms.TextBox()
-        Me.TbENG = New System.Windows.Forms.TextBox()
-        Me.TbVEH = New System.Windows.Forms.TextBox()
-        Me.ButOpenGBX = New System.Windows.Forms.Button()
-        Me.ButOpenENG = New System.Windows.Forms.Button()
+        Me.pnVehicle = New System.Windows.Forms.Panel()
         Me.ButOpenVEH = New System.Windows.Forms.Button()
         Me.ButtonVEH = New System.Windows.Forms.Button()
-        Me.ButtonGBX = New System.Windows.Forms.Button()
+        Me.TbVEH = New System.Windows.Forms.TextBox()
+        Me.pnEngine = New System.Windows.Forms.Panel()
+        Me.ButOpenENG = New System.Windows.Forms.Button()
         Me.ButtonMAP = New System.Windows.Forms.Button()
+        Me.TbENG = New System.Windows.Forms.TextBox()
+        Me.pnGearbox = New System.Windows.Forms.Panel()
+        Me.ButOpenGBX = New System.Windows.Forms.Button()
+        Me.ButtonGBX = New System.Windows.Forms.Button()
+        Me.TbGBX = New System.Windows.Forms.TextBox()
+        Me.pnShiftParams = New System.Windows.Forms.Panel()
+        Me.BtnShiftParamsForm = New System.Windows.Forms.Button()
+        Me.TbShiftStrategyParams = New System.Windows.Forms.TextBox()
+        Me.BtnShiftStrategyParams = New System.Windows.Forms.Button()
         Me.GrCycles = New System.Windows.Forms.GroupBox()
         Me.Label2 = New System.Windows.Forms.Label()
         Me.LvCycles = New System.Windows.Forms.ListView()
@@ -181,11 +185,16 @@ Partial Class VectoJobForm
         Me.lblEngineCharacteristics = New System.Windows.Forms.Label()
         Me.lblTitle = New System.Windows.Forms.Label()
         Me.pnJobInfo = New System.Windows.Forms.Panel()
-        Me.pnShiftParams = New System.Windows.Forms.Panel()
-        Me.pnGearbox = New System.Windows.Forms.Panel()
-        Me.pnEngine = New System.Windows.Forms.Panel()
-        Me.pnVehicle = New System.Windows.Forms.Panel()
+        Me.pnHybridStrategy = New System.Windows.Forms.Panel()
+        Me.btnOpenHybridStrategyParameters = New System.Windows.Forms.Button()
+        Me.tbHybridStrategyParams = New System.Windows.Forms.TextBox()
+        Me.btnBrowseHybridStrategyParams = New System.Windows.Forms.Button()
+        Me.Label46 = New System.Windows.Forms.Label()
         Me.TabPgGen.SuspendLayout()
+        Me.pnVehicle.SuspendLayout()
+        Me.pnEngine.SuspendLayout()
+        Me.pnGearbox.SuspendLayout()
+        Me.pnShiftParams.SuspendLayout()
         Me.GrCycles.SuspendLayout()
         Me.GrAuxMech.SuspendLayout()
         CType(Me.picAuxInfo, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -211,14 +220,12 @@ Partial Class VectoJobForm
         CType(Me.PicVehicle, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.PicBox, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.pnJobInfo.SuspendLayout()
-        Me.pnShiftParams.SuspendLayout()
-        Me.pnGearbox.SuspendLayout()
-        Me.pnEngine.SuspendLayout()
-        Me.pnVehicle.SuspendLayout()
+        Me.pnHybridStrategy.SuspendLayout()
         Me.SuspendLayout()
         '
         'TabPgGen
         '
+        Me.TabPgGen.Controls.Add(Me.pnHybridStrategy)
         Me.TabPgGen.Controls.Add(Me.pnVehicle)
         Me.TabPgGen.Controls.Add(Me.pnEngine)
         Me.TabPgGen.Controls.Add(Me.pnGearbox)
@@ -231,82 +238,15 @@ Partial Class VectoJobForm
         Me.TabPgGen.Text = "General"
         Me.TabPgGen.UseVisualStyleBackColor = True
         '
-        'TbShiftStrategyParams
+        'pnVehicle
         '
-        Me.TbShiftStrategyParams.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
-            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.TbShiftStrategyParams.Location = New System.Drawing.Point(81, 3)
-        Me.TbShiftStrategyParams.Name = "TbShiftStrategyParams"
-        Me.TbShiftStrategyParams.Size = New System.Drawing.Size(406, 20)
-        Me.TbShiftStrategyParams.TabIndex = 12
-        '
-        'BtnShiftParamsForm
-        '
-        Me.BtnShiftParamsForm.Location = New System.Drawing.Point(3, 3)
-        Me.BtnShiftParamsForm.Name = "BtnShiftParamsForm"
-        Me.BtnShiftParamsForm.Size = New System.Drawing.Size(72, 21)
-        Me.BtnShiftParamsForm.TabIndex = 11
-        Me.BtnShiftParamsForm.TabStop = False
-        Me.BtnShiftParamsForm.Text = "Shift Parameters"
-        Me.BtnShiftParamsForm.UseVisualStyleBackColor = True
-        '
-        'BtnShiftStrategyParams
-        '
-        Me.BtnShiftStrategyParams.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.BtnShiftStrategyParams.Image = CType(resources.GetObject("BtnShiftStrategyParams.Image"), System.Drawing.Image)
-        Me.BtnShiftStrategyParams.Location = New System.Drawing.Point(489, 1)
-        Me.BtnShiftStrategyParams.Name = "BtnShiftStrategyParams"
-        Me.BtnShiftStrategyParams.Size = New System.Drawing.Size(24, 24)
-        Me.BtnShiftStrategyParams.TabIndex = 13
-        Me.BtnShiftStrategyParams.TabStop = False
-        Me.BtnShiftStrategyParams.UseVisualStyleBackColor = True
-        '
-        'TbGBX
-        '
-        Me.TbGBX.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
-            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.TbGBX.Location = New System.Drawing.Point(82, 3)
-        Me.TbGBX.Name = "TbGBX"
-        Me.TbGBX.Size = New System.Drawing.Size(404, 20)
-        Me.TbGBX.TabIndex = 7
-        '
-        'TbENG
-        '
-        Me.TbENG.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
-            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.TbENG.Location = New System.Drawing.Point(82, 3)
-        Me.TbENG.Name = "TbENG"
-        Me.TbENG.Size = New System.Drawing.Size(404, 20)
-        Me.TbENG.TabIndex = 4
-        '
-        'TbVEH
-        '
-        Me.TbVEH.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
-            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.TbVEH.Location = New System.Drawing.Point(82, 4)
-        Me.TbVEH.Name = "TbVEH"
-        Me.TbVEH.Size = New System.Drawing.Size(404, 20)
-        Me.TbVEH.TabIndex = 1
-        '
-        'ButOpenGBX
-        '
-        Me.ButOpenGBX.Location = New System.Drawing.Point(4, 3)
-        Me.ButOpenGBX.Name = "ButOpenGBX"
-        Me.ButOpenGBX.Size = New System.Drawing.Size(72, 21)
-        Me.ButOpenGBX.TabIndex = 6
-        Me.ButOpenGBX.TabStop = False
-        Me.ButOpenGBX.Text = "Gearbox"
-        Me.ButOpenGBX.UseVisualStyleBackColor = True
-        '
-        'ButOpenENG
-        '
-        Me.ButOpenENG.Location = New System.Drawing.Point(4, 3)
-        Me.ButOpenENG.Name = "ButOpenENG"
-        Me.ButOpenENG.Size = New System.Drawing.Size(72, 21)
-        Me.ButOpenENG.TabIndex = 3
-        Me.ButOpenENG.TabStop = False
-        Me.ButOpenENG.Text = "Engine"
-        Me.ButOpenENG.UseVisualStyleBackColor = True
+        Me.pnVehicle.Controls.Add(Me.ButOpenVEH)
+        Me.pnVehicle.Controls.Add(Me.ButtonVEH)
+        Me.pnVehicle.Controls.Add(Me.TbVEH)
+        Me.pnVehicle.Location = New System.Drawing.Point(4, 7)
+        Me.pnVehicle.Name = "pnVehicle"
+        Me.pnVehicle.Size = New System.Drawing.Size(518, 27)
+        Me.pnVehicle.TabIndex = 17
         '
         'ButOpenVEH
         '
@@ -329,16 +269,34 @@ Partial Class VectoJobForm
         Me.ButtonVEH.TabStop = False
         Me.ButtonVEH.UseVisualStyleBackColor = True
         '
-        'ButtonGBX
+        'TbVEH
         '
-        Me.ButtonGBX.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.ButtonGBX.Image = CType(resources.GetObject("ButtonGBX.Image"), System.Drawing.Image)
-        Me.ButtonGBX.Location = New System.Drawing.Point(492, 1)
-        Me.ButtonGBX.Name = "ButtonGBX"
-        Me.ButtonGBX.Size = New System.Drawing.Size(24, 24)
-        Me.ButtonGBX.TabIndex = 8
-        Me.ButtonGBX.TabStop = False
-        Me.ButtonGBX.UseVisualStyleBackColor = True
+        Me.TbVEH.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.TbVEH.Location = New System.Drawing.Point(82, 4)
+        Me.TbVEH.Name = "TbVEH"
+        Me.TbVEH.Size = New System.Drawing.Size(404, 20)
+        Me.TbVEH.TabIndex = 1
+        '
+        'pnEngine
+        '
+        Me.pnEngine.Controls.Add(Me.ButOpenENG)
+        Me.pnEngine.Controls.Add(Me.ButtonMAP)
+        Me.pnEngine.Controls.Add(Me.TbENG)
+        Me.pnEngine.Location = New System.Drawing.Point(4, 37)
+        Me.pnEngine.Name = "pnEngine"
+        Me.pnEngine.Size = New System.Drawing.Size(519, 27)
+        Me.pnEngine.TabIndex = 16
+        '
+        'ButOpenENG
+        '
+        Me.ButOpenENG.Location = New System.Drawing.Point(4, 3)
+        Me.ButOpenENG.Name = "ButOpenENG"
+        Me.ButOpenENG.Size = New System.Drawing.Size(72, 21)
+        Me.ButOpenENG.TabIndex = 3
+        Me.ButOpenENG.TabStop = False
+        Me.ButOpenENG.Text = "Engine"
+        Me.ButOpenENG.UseVisualStyleBackColor = True
         '
         'ButtonMAP
         '
@@ -350,6 +308,95 @@ Partial Class VectoJobForm
         Me.ButtonMAP.TabIndex = 5
         Me.ButtonMAP.TabStop = False
         Me.ButtonMAP.UseVisualStyleBackColor = True
+        '
+        'TbENG
+        '
+        Me.TbENG.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.TbENG.Location = New System.Drawing.Point(82, 3)
+        Me.TbENG.Name = "TbENG"
+        Me.TbENG.Size = New System.Drawing.Size(404, 20)
+        Me.TbENG.TabIndex = 4
+        '
+        'pnGearbox
+        '
+        Me.pnGearbox.Controls.Add(Me.ButOpenGBX)
+        Me.pnGearbox.Controls.Add(Me.ButtonGBX)
+        Me.pnGearbox.Controls.Add(Me.TbGBX)
+        Me.pnGearbox.Location = New System.Drawing.Point(3, 66)
+        Me.pnGearbox.Name = "pnGearbox"
+        Me.pnGearbox.Size = New System.Drawing.Size(517, 28)
+        Me.pnGearbox.TabIndex = 15
+        '
+        'ButOpenGBX
+        '
+        Me.ButOpenGBX.Location = New System.Drawing.Point(4, 3)
+        Me.ButOpenGBX.Name = "ButOpenGBX"
+        Me.ButOpenGBX.Size = New System.Drawing.Size(72, 21)
+        Me.ButOpenGBX.TabIndex = 6
+        Me.ButOpenGBX.TabStop = False
+        Me.ButOpenGBX.Text = "Gearbox"
+        Me.ButOpenGBX.UseVisualStyleBackColor = True
+        '
+        'ButtonGBX
+        '
+        Me.ButtonGBX.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.ButtonGBX.Image = CType(resources.GetObject("ButtonGBX.Image"), System.Drawing.Image)
+        Me.ButtonGBX.Location = New System.Drawing.Point(492, 1)
+        Me.ButtonGBX.Name = "ButtonGBX"
+        Me.ButtonGBX.Size = New System.Drawing.Size(24, 24)
+        Me.ButtonGBX.TabIndex = 8
+        Me.ButtonGBX.TabStop = False
+        Me.ButtonGBX.UseVisualStyleBackColor = True
+        '
+        'TbGBX
+        '
+        Me.TbGBX.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.TbGBX.Location = New System.Drawing.Point(82, 3)
+        Me.TbGBX.Name = "TbGBX"
+        Me.TbGBX.Size = New System.Drawing.Size(404, 20)
+        Me.TbGBX.TabIndex = 7
+        '
+        'pnShiftParams
+        '
+        Me.pnShiftParams.Controls.Add(Me.BtnShiftParamsForm)
+        Me.pnShiftParams.Controls.Add(Me.TbShiftStrategyParams)
+        Me.pnShiftParams.Controls.Add(Me.BtnShiftStrategyParams)
+        Me.pnShiftParams.Location = New System.Drawing.Point(4, 96)
+        Me.pnShiftParams.Name = "pnShiftParams"
+        Me.pnShiftParams.Size = New System.Drawing.Size(516, 26)
+        Me.pnShiftParams.TabIndex = 14
+        '
+        'BtnShiftParamsForm
+        '
+        Me.BtnShiftParamsForm.Location = New System.Drawing.Point(3, 3)
+        Me.BtnShiftParamsForm.Name = "BtnShiftParamsForm"
+        Me.BtnShiftParamsForm.Size = New System.Drawing.Size(72, 21)
+        Me.BtnShiftParamsForm.TabIndex = 11
+        Me.BtnShiftParamsForm.TabStop = False
+        Me.BtnShiftParamsForm.Text = "Shift Parameters"
+        Me.BtnShiftParamsForm.UseVisualStyleBackColor = True
+        '
+        'TbShiftStrategyParams
+        '
+        Me.TbShiftStrategyParams.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.TbShiftStrategyParams.Location = New System.Drawing.Point(81, 3)
+        Me.TbShiftStrategyParams.Name = "TbShiftStrategyParams"
+        Me.TbShiftStrategyParams.Size = New System.Drawing.Size(406, 20)
+        Me.TbShiftStrategyParams.TabIndex = 12
+        '
+        'BtnShiftStrategyParams
+        '
+        Me.BtnShiftStrategyParams.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.BtnShiftStrategyParams.Image = CType(resources.GetObject("BtnShiftStrategyParams.Image"), System.Drawing.Image)
+        Me.BtnShiftStrategyParams.Location = New System.Drawing.Point(489, 1)
+        Me.BtnShiftStrategyParams.Name = "BtnShiftStrategyParams"
+        Me.BtnShiftStrategyParams.Size = New System.Drawing.Size(24, 24)
+        Me.BtnShiftStrategyParams.TabIndex = 13
+        Me.BtnShiftStrategyParams.TabStop = False
+        Me.BtnShiftStrategyParams.UseVisualStyleBackColor = True
         '
         'GrCycles
         '
@@ -626,13 +673,14 @@ Partial Class VectoJobForm
         Me.tpAuxiliaries.Location = New System.Drawing.Point(4, 22)
         Me.tpAuxiliaries.Name = "tpAuxiliaries"
         Me.tpAuxiliaries.Padding = New System.Windows.Forms.Padding(3)
-        Me.tpAuxiliaries.Size = New System.Drawing.Size(520, 472)
+        Me.tpAuxiliaries.Size = New System.Drawing.Size(525, 472)
         Me.tpAuxiliaries.TabIndex = 9
         Me.tpAuxiliaries.Text = "Auxiliaries"
         Me.tpAuxiliaries.UseVisualStyleBackColor = True
         '
         'gbElectricAux
         '
+        Me.gbElectricAux.Controls.Add(Me.Label46)
         Me.gbElectricAux.Controls.Add(Me.lblElAuxConstUnit)
         Me.gbElectricAux.Controls.Add(Me.tbElectricAuxConstant)
         Me.gbElectricAux.Controls.Add(Me.lblElAuxConst)
@@ -674,7 +722,7 @@ Partial Class VectoJobForm
         Me.tpCycles.Location = New System.Drawing.Point(4, 22)
         Me.tpCycles.Name = "tpCycles"
         Me.tpCycles.Padding = New System.Windows.Forms.Padding(3)
-        Me.tpCycles.Size = New System.Drawing.Size(520, 472)
+        Me.tpCycles.Size = New System.Drawing.Size(525, 472)
         Me.tpCycles.TabIndex = 10
         Me.tpCycles.Text = "Cycles"
         Me.tpCycles.UseVisualStyleBackColor = True
@@ -688,7 +736,7 @@ Partial Class VectoJobForm
         Me.TabPgDriver.Location = New System.Drawing.Point(4, 22)
         Me.TabPgDriver.Name = "TabPgDriver"
         Me.TabPgDriver.Padding = New System.Windows.Forms.Padding(3)
-        Me.TabPgDriver.Size = New System.Drawing.Size(520, 472)
+        Me.TabPgDriver.Size = New System.Drawing.Size(525, 472)
         Me.TabPgDriver.TabIndex = 7
         Me.TabPgDriver.Text = "Driver Model"
         Me.TabPgDriver.UseVisualStyleBackColor = True
@@ -1057,7 +1105,7 @@ Partial Class VectoJobForm
         Me.TabPgADAS.Controls.Add(Me.gbEngineStopStart)
         Me.TabPgADAS.Location = New System.Drawing.Point(4, 22)
         Me.TabPgADAS.Name = "TabPgADAS"
-        Me.TabPgADAS.Size = New System.Drawing.Size(520, 472)
+        Me.TabPgADAS.Size = New System.Drawing.Size(525, 472)
         Me.TabPgADAS.TabIndex = 8
         Me.TabPgADAS.Text = "ADAS Parameters"
         Me.TabPgADAS.UseVisualStyleBackColor = True
@@ -1720,45 +1768,55 @@ Partial Class VectoJobForm
         Me.pnJobInfo.Size = New System.Drawing.Size(397, 471)
         Me.pnJobInfo.TabIndex = 39
         '
-        'pnShiftParams
+        'pnHybridStrategy
         '
-        Me.pnShiftParams.Controls.Add(Me.BtnShiftParamsForm)
-        Me.pnShiftParams.Controls.Add(Me.TbShiftStrategyParams)
-        Me.pnShiftParams.Controls.Add(Me.BtnShiftStrategyParams)
-        Me.pnShiftParams.Location = New System.Drawing.Point(4, 96)
-        Me.pnShiftParams.Name = "pnShiftParams"
-        Me.pnShiftParams.Size = New System.Drawing.Size(516, 26)
-        Me.pnShiftParams.TabIndex = 14
+        Me.pnHybridStrategy.Controls.Add(Me.btnOpenHybridStrategyParameters)
+        Me.pnHybridStrategy.Controls.Add(Me.tbHybridStrategyParams)
+        Me.pnHybridStrategy.Controls.Add(Me.btnBrowseHybridStrategyParams)
+        Me.pnHybridStrategy.Location = New System.Drawing.Point(4, 125)
+        Me.pnHybridStrategy.Name = "pnHybridStrategy"
+        Me.pnHybridStrategy.Size = New System.Drawing.Size(516, 26)
+        Me.pnHybridStrategy.TabIndex = 15
         '
-        'pnGearbox
+        'btnOpenHybridStrategyParameters
         '
-        Me.pnGearbox.Controls.Add(Me.ButOpenGBX)
-        Me.pnGearbox.Controls.Add(Me.ButtonGBX)
-        Me.pnGearbox.Controls.Add(Me.TbGBX)
-        Me.pnGearbox.Location = New System.Drawing.Point(3, 66)
-        Me.pnGearbox.Name = "pnGearbox"
-        Me.pnGearbox.Size = New System.Drawing.Size(517, 28)
-        Me.pnGearbox.TabIndex = 15
+        Me.btnOpenHybridStrategyParameters.Location = New System.Drawing.Point(3, 3)
+        Me.btnOpenHybridStrategyParameters.Name = "btnOpenHybridStrategyParameters"
+        Me.btnOpenHybridStrategyParameters.Size = New System.Drawing.Size(72, 21)
+        Me.btnOpenHybridStrategyParameters.TabIndex = 11
+        Me.btnOpenHybridStrategyParameters.TabStop = False
+        Me.btnOpenHybridStrategyParameters.Text = "Hyb. Str. P."
+        Me.btnOpenHybridStrategyParameters.UseVisualStyleBackColor = True
         '
-        'pnEngine
+        'tbHybridStrategyParams
         '
-        Me.pnEngine.Controls.Add(Me.ButOpenENG)
-        Me.pnEngine.Controls.Add(Me.ButtonMAP)
-        Me.pnEngine.Controls.Add(Me.TbENG)
-        Me.pnEngine.Location = New System.Drawing.Point(4, 37)
-        Me.pnEngine.Name = "pnEngine"
-        Me.pnEngine.Size = New System.Drawing.Size(519, 27)
-        Me.pnEngine.TabIndex = 16
+        Me.tbHybridStrategyParams.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.tbHybridStrategyParams.Location = New System.Drawing.Point(81, 3)
+        Me.tbHybridStrategyParams.Name = "tbHybridStrategyParams"
+        Me.tbHybridStrategyParams.Size = New System.Drawing.Size(406, 20)
+        Me.tbHybridStrategyParams.TabIndex = 12
         '
-        'pnVehicle
+        'btnBrowseHybridStrategyParams
         '
-        Me.pnVehicle.Controls.Add(Me.ButOpenVEH)
-        Me.pnVehicle.Controls.Add(Me.ButtonVEH)
-        Me.pnVehicle.Controls.Add(Me.TbVEH)
-        Me.pnVehicle.Location = New System.Drawing.Point(4, 7)
-        Me.pnVehicle.Name = "pnVehicle"
-        Me.pnVehicle.Size = New System.Drawing.Size(518, 27)
-        Me.pnVehicle.TabIndex = 17
+        Me.btnBrowseHybridStrategyParams.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.btnBrowseHybridStrategyParams.Image = CType(resources.GetObject("btnBrowseHybridStrategyParams.Image"), System.Drawing.Image)
+        Me.btnBrowseHybridStrategyParams.Location = New System.Drawing.Point(489, 1)
+        Me.btnBrowseHybridStrategyParams.Name = "btnBrowseHybridStrategyParams"
+        Me.btnBrowseHybridStrategyParams.Size = New System.Drawing.Size(24, 24)
+        Me.btnBrowseHybridStrategyParams.TabIndex = 13
+        Me.btnBrowseHybridStrategyParams.TabStop = False
+        Me.btnBrowseHybridStrategyParams.UseVisualStyleBackColor = True
+        '
+        'Label46
+        '
+        Me.Label46.AutoSize = True
+        Me.Label46.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label46.Location = New System.Drawing.Point(235, 22)
+        Me.Label46.Name = "Label46"
+        Me.Label46.Size = New System.Drawing.Size(106, 13)
+        Me.Label46.TabIndex = 48
+        Me.Label46.Text = "(high voltage system)"
         '
         'VectoJobForm
         '
@@ -1782,6 +1840,14 @@ Partial Class VectoJobForm
         Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen
         Me.Text = "Job Editor"
         Me.TabPgGen.ResumeLayout(False)
+        Me.pnVehicle.ResumeLayout(False)
+        Me.pnVehicle.PerformLayout()
+        Me.pnEngine.ResumeLayout(False)
+        Me.pnEngine.PerformLayout()
+        Me.pnGearbox.ResumeLayout(False)
+        Me.pnGearbox.PerformLayout()
+        Me.pnShiftParams.ResumeLayout(False)
+        Me.pnShiftParams.PerformLayout()
         Me.GrCycles.ResumeLayout(False)
         Me.GrCycles.PerformLayout()
         Me.GrAuxMech.ResumeLayout(False)
@@ -1821,14 +1887,8 @@ Partial Class VectoJobForm
         CType(Me.PicBox, System.ComponentModel.ISupportInitialize).EndInit()
         Me.pnJobInfo.ResumeLayout(False)
         Me.pnJobInfo.PerformLayout()
-        Me.pnShiftParams.ResumeLayout(False)
-        Me.pnShiftParams.PerformLayout()
-        Me.pnGearbox.ResumeLayout(False)
-        Me.pnGearbox.PerformLayout()
-        Me.pnEngine.ResumeLayout(False)
-        Me.pnEngine.PerformLayout()
-        Me.pnVehicle.ResumeLayout(False)
-        Me.pnVehicle.PerformLayout()
+        Me.pnHybridStrategy.ResumeLayout(False)
+        Me.pnHybridStrategy.PerformLayout()
         Me.ResumeLayout(False)
         Me.PerformLayout()
 
@@ -1992,4 +2052,9 @@ Partial Class VectoJobForm
     Friend WithEvents pnEngine As Panel
     Friend WithEvents pnGearbox As Panel
     Friend WithEvents pnShiftParams As Panel
+    Friend WithEvents pnHybridStrategy As Panel
+    Friend WithEvents btnOpenHybridStrategyParameters As Button
+    Friend WithEvents tbHybridStrategyParams As TextBox
+    Friend WithEvents btnBrowseHybridStrategyParams As Button
+    Friend WithEvents Label46 As Label
 End Class

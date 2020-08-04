@@ -57,7 +57,7 @@ Public Class Battery
             Dim messages As IEnumerable(Of String) =
                     validationResults.Select(Function(r) r.ErrorMessage + String.Join(", ", r.MemberNames.Distinct()))
             MsgBox("Invalid input." + Environment.NewLine + String.Join(Environment.NewLine, messages), MsgBoxStyle.OkOnly,
-                   "Failed to save engine")
+                   "Failed to save battery")
             Return False
         End If
 
@@ -66,7 +66,7 @@ Public Class Battery
             writer.SaveBattery(Me, _filePath, Cfg.DeclMode)
 
         Catch ex As Exception
-            MsgBox("Faled to write Engine file: " + ex.Message)
+            MsgBox("Faled to write Battery file: " + ex.Message)
             Return False
         End Try
         Return True

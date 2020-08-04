@@ -223,6 +223,12 @@
     <Compile Include="BusAuxiliaries\Util\DeleteCell.vb" />
     <Compile Include="BusAuxiliaries\Util\DeleteColumn.vb" />
     <Compile Include="BusAuxiliaries\Util\SIConvert.vb" />
+    <Compile Include="GUI\HybridStratebyParamsForm.Designer.vb">
+      <DependentUpon>HybridStratebyParamsForm.vb</DependentUpon>
+    </Compile>
+    <Compile Include="GUI\HybridStratebyParamsForm.vb">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="GUI\BatteryForm.Designer.vb">
       <DependentUpon>BatteryForm.vb</DependentUpon>
     </Compile>
@@ -328,6 +334,7 @@
     <Compile Include="File Browser\FileBrowserFavoritesDialog.vb">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="Input Files\HybridStrategyParams.vb" />
     <Compile Include="Input Files\MockComponents.vb" />
     <Compile Include="Input Files\MockVehicleInputData.vb" />
     <Compile Include="Input Files\VectoEPTPJob.vb" />
@@ -408,6 +415,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="File Browser\FileBrowserFavoritesDialog.resx">
       <DependentUpon>FileBrowserFavoritesDialog.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GUI\HybridStratebyParamsForm.resx">
+      <DependentUpon>HybridStratebyParamsForm.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="GUI\BatteryForm.resx">
       <DependentUpon>BatteryForm.vb</DependentUpon>

@@ -89,6 +89,9 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 				case Constants.FileExtensions.ElectricMotorFile:
 					tmp = JSONInputDataFactory.ReadElectricMotorData(filename, tolerateMissing);
 					break;
+                case Constants.FileExtensions.HybridStrategyParameters:
+					tmp = JSONInputDataFactory.ReadHybridStrategyParameters(filename, tolerateMissing);
+					break;
 			}
 
 			tmp.Switch()
@@ -105,7 +108,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 				.If<IAxlesDeclarationInputData>(c => _axleWheelsDecl = c)
 				.If<IAxlesEngineeringInputData>(c => _axleWheelsEng = c)
 				.If<IBatteryPackEngineeringInputData>(c => Battery = c)
-				.If<IElectricMotorEngineeringInputData>(c => { ElectricMotor = c; });
+				.If<IElectricMotorEngineeringInputData>(c => { ElectricMotor = c; })
+				.If<IHybridStrategyParameters>(c => HybridStrategyParameters = c);
 			;
 			_filename = filename;
 		}
@@ -168,10 +172,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			get { return Vehicle; }
 		}
 
-		public IHybridStrategyParameters HybridStrategyParameters
-		{
-			get { return null; }
-		}
+		public IHybridStrategyParameters HybridStrategyParameters { get; set; }
 
 		public IVehicleEngineeringInputData Vehicle
 		{

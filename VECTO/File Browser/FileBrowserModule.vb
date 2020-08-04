@@ -37,6 +37,8 @@ Public Module FileBrowserModule
     Public BatteryInternalResistanceCurveFileBrowser As FileBrowser
     Public BatterySoCCurveFileBrowser As FileBrowser
 
+    Public HCUFileBrowser As FileBrowser
+
     Public EngineFileBrowser As FileBrowser
 	Public GearboxFileBrowser As FileBrowser
     Public TCUFileBrowser As FileBrowser

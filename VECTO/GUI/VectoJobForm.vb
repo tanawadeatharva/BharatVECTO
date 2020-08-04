@@ -485,6 +485,9 @@ Public Class VectoJobForm
         Else
             TbShiftStrategyParams.Text = GetRelativePath(inputData.DriverInputData.GearshiftInputData.Source, _basePath)
         End If
+        If (JobType = VectoSimulationJobType.ParallelHybridVehicle) Then
+            tbHybridStrategyParams.Text = GetRelativePath(inputData.JobInputData.HybridStrategyParameters.Source, _basePath)
+        End If
 
         'Start/Stop
         Dim driver As IDriverEngineeringInputData = inputData.DriverInputData
@@ -1138,6 +1141,7 @@ lbDlog:
         GrAuxMech.Enabled = True
         pnEngine.Enabled = True
         pnShiftParams.Enabled = True
+        pnHybridStrategy.Enabled = False
         Select Case JobType
             Case VectoSimulationJobType.ConventionalVehicle
                 gbElectricAux.Enabled = False
@@ -1149,9 +1153,8 @@ lbDlog:
                 tpAuxiliaries.Enabled = False
                 pnShiftParams.Enabled = False
             Case VectoSimulationJobType.ParallelHybridVehicle
-                pnEngine.Enabled = False
-                pnGearbox.Enabled = False
-                GrAuxMech.Enabled = False
+                ' empty line - do not fall-through
+                pnHybridStrategy.Enabled = True
             Case VectoSimulationJobType.BatteryElectricVehicle
                 pnEngine.Enabled = False
                 pnGearbox.Enabled = False
@@ -1654,6 +1657,53 @@ lbDlog:
 	End Sub
 
     Private Sub VectoJobForm_HandleDestroyed(sender As Object, e As EventArgs) Handles Me.HandleDestroyed
+
+    End Sub
+
+    Private Sub btnBrowseHybridStrategyParams_Click(sender As Object, e As EventArgs) Handles btnBrowseHybridStrategyParams.Click
+        If HCUFileBrowser.OpenDialog(FileRepl(tbHybridStrategyParams.Text, GetPath(VectoFile))) Then
+            tbHybridStrategyParams.Text = GetFilenameWithoutDirectory(HCUFileBrowser.Files(0), GetPath(VectoFile))
+        End If
+    End Sub
+
+    Private Sub btnOpenHybridStrategyParameters_Click(sender As Object, e As EventArgs) Handles btnOpenHybridStrategyParameters.Click
+        Dim f As String
+        f = FileRepl(tbHybridStrategyParams.Text, GetPath(VectoFile))
+
+        'Thus Veh-file is returned
+        HybridStrategyParamsForm.JobDir = GetPath(VectoFile)
+        HybridStrategyParamsForm.AutoSendTo = True
+
+        If Not Trim(f) = "" Then
+            If Not File.Exists(f) Then
+                MsgBox("File not found!")
+                Exit Sub
+            End If
+        End If
+
+        If Not HybridStrategyParamsForm.Visible Then
+            HybridStrategyParamsForm.Show()
+        Else
+            If HybridStrategyParamsForm.WindowState = FormWindowState.Minimized Then HybridStrategyParamsForm.WindowState = FormWindowState.Normal
+            HybridStrategyParamsForm.BringToFront()
+        End If
+        Dim vehicleType As VehicleCategory
+        Try
+            If Not Trim(f) = "" Then
+                Dim vehInput As IVehicleDeclarationInputData =
+                        CType(JSONInputDataFactory.ReadComponentData(FileRepl(TbVEH.Text, GetPath(VectoFile))),
+                              IEngineeringInputDataProvider).JobInputData.Vehicle
+                vehicleType = vehInput.VehicleCategory
+            End If
+
+        Catch ex As Exception
+            vehicleType = VehicleCategory.RigidTruck
+        End Try
+        Try
+            If Not Trim(f) = "" Then HybridStrategyParamsForm.OpenHybridStrategyParametersFile(f)
+        Catch ex As Exception
+            MsgBox("Failed to open Gearbox File: " + ex.Message)
+        End Try
 
     End Sub
 End Class

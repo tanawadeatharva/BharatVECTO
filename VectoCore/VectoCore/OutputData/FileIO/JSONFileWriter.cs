@@ -34,6 +34,8 @@ public class JSONFileWriter : IOutputFileWriter
 
 	private const int ElectricMotorFormatVersion = 1;
 
+	private const int HybridStrategyParamsVersion = 1;
+
     private static JSONFileWriter _instance;
 
 	public const string VECTOvers = "3";
@@ -925,4 +927,17 @@ public class JSONFileWriter : IOutputFileWriter
 	}
 
 
+	public void SaveStrategyParameters(IHybridStrategyParameters hp, string filePath, bool declMode)
+	{
+		var header = GetHeader(HybridStrategyParamsVersion);
+		var body = new Dictionary<string, object>() {
+			{"EquivalenceFactor", hp.EquivalenceFactor},
+			{"MinSoC", hp.MinSoC * 100},
+			{"MaxSoC", hp.MaxSoC * 100},
+			{"TargetSoC", hp.TargetSoC * 100},
+			//{"AuxBufferTime", hp.}
+			//{"AuxBufferChgTime", hp.}
+		};
+		WriteFile(header, body, filePath);
+    }
 }
