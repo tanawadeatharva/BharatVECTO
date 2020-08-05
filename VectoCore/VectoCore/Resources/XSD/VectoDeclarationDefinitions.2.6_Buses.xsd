@@ -102,7 +102,7 @@
 					<xs:element name="VIN" type="v1.0:VINType"/>
 					<xs:element name="Date" type="v1.0:DateTimeWithTimezone"/>
 					<xs:element name="LegislativeClass" type="v2.6:LegislativeClassDeclarationType"/>
-					<xs:element name="RegisteredClass">
+					<xs:element name="ClassBus">
 						<xs:simpleType>
 							<xs:restriction base="v2.6:RegisteredClassType">
 								<xs:enumeration value="I"/>
@@ -537,6 +537,13 @@
 					<xs:element name="ADAS" type="v2.1:AbstractAdvancedDriverAssistantSystemsType"/>
 					<xs:element name="TorqueLimits" type="v2.0:AbstractTorqueLimitsType" minOccurs="0"/>
 					<xs:element name="Components" type="v2.0:AbstractVehicleComponentsDeclarationType"/>
+					<xs:element name="CargoVolume" minOccurs="0">
+						<xs:simpleType>
+							<xs:restriction base="xs:double">
+								<xs:minExclusive value="0"/>
+							</xs:restriction>
+						</xs:simpleType>
+					</xs:element>
 				</xs:sequence>
 			</xs:extension>
 		</xs:complexContent>
@@ -589,6 +596,7 @@
 		<xs:restriction base="xs:string">
 			<xs:enumeration value="electric"/>
 			<xs:enumeration value="pneumatic"/>
+			<xs:enumeration value="mixed"/>
 		</xs:restriction>
 	</xs:simpleType>
 	<xs:simpleType name="HVACTechnology">
