@@ -26,6 +26,11 @@ namespace TUGraz.VectoCore.Tests.Utils {
 
 		public double StateOfCharge { get; set; }
 
+		public WattSecond StoredEnergy
+		{
+			get { throw new System.NotImplementedException(); }
+		}
+
 		public Ampere MaxCurrent
 		{
 			get { return 375.SI<Ampere>(); }

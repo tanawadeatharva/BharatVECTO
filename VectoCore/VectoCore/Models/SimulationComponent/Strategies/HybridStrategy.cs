@@ -62,6 +62,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 		protected HybridStrategyParameters StrategyParameters;
 
 		protected DebugData DebugData = new DebugData();
+		private WattSecond BatteryDischargeEnergyThreshold;
 
 		public HybridStrategy(VectoRunData runData, IVehicleContainer vehicleContainer)
 		{
@@ -119,6 +120,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 				Log.Warn("Gear-range for FC-based gearshift must be either 1 or 2!");
 				shiftStrategyParameters.AllowedGearRangeFC = shiftStrategyParameters.AllowedGearRangeFC.LimitTo(1, 2);
 			}
+
+			var auxEnergyReserve = ModelData.ElectricAuxDemand * StrategyParameters.AuxReserveTime;
+			var minSoc = Math.Max(ModelData.BatteryData.MinSOC, StrategyParameters.MinSoC);
+			BatteryDischargeEnergyThreshold = ModelData.BatteryData.Capacity * minSoc * ModelData.BatteryData.SOCMap.Lookup(minSoc) +
+										auxEnergyReserve;
 		}
 
 		
@@ -387,7 +393,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 			var best = eval.Where(x => !double.IsNaN(x.Score)).OrderBy(x => x.Score).FirstOrDefault();
 			if (best == null) {
 				best = eval.OrderBy(x => Math.Abs((int)currentGear - x.Gear)).FirstOrDefault(
-					x => !(!x.ICEOff && x.IgnoreReason.InvalidEngineSpeed()));
+					x => !(!x.ICEOff && x.IgnoreReason.InvalidEngineSpeed() && !(x.IgnoreReason.BatteryDemandExceeded())));
 				if (best == null /*&& dryRun*/) {
 					var emEngaged = (!ElectricMotorCanPropellDuringTractionInterruption ||
 									(DataBus.GearboxInfo.GearEngaged(absTime) && eval.First().Response.Gearbox.Gear != 0));
@@ -412,7 +418,18 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 				if (DataBus.DriverInfo.DrivingAction == DrivingAction.Accelerate && allOverload) {
 					if (ElectricMotorCanPropellDuringTractionInterruption || DataBus.GearboxInfo.GearEngaged(absTime)) {
 						// overload, EM can support - use solution with max EM power
-						best = eval.OrderBy(x => Math.Abs((int)currentGear - x.Gear)).MinBy(x => x.Setting.MechanicalAssistPower.Sum(e => e.Value ?? 0.SI<NewtonMeter>()));
+						var filtered = eval.Where(x => !x.IgnoreReason.BatteryDemandExceeded() &&
+											(x.IgnoreReason & HybridConfigurationIgnoreReason.BatterySoCTooLow) == 0)
+									.OrderBy(x => Math.Abs((int)currentGear - x.Gear)).ToArray();
+						if (filtered.Length == 0) {
+							best = eval.Where(
+											x => !x.IgnoreReason.BatteryDemandExceeded())
+										.OrderBy(x => Math.Abs((int)currentGear - x.Gear))
+										.ThenBy(x => -x.Response.ElectricSystem.BatteryPowerDemand.Value()).First();
+						} else {
+							best = filtered.MinBy(
+								x => x.Setting.MechanicalAssistPower.Sum(e => e.Value ?? 0.SI<NewtonMeter>()));
+						}
 					}
 				}
 				if ((DataBus.DriverInfo.DrivingAction == DrivingAction.Accelerate // ||
@@ -877,6 +894,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 				tmp.IgnoreReason |= HybridConfigurationIgnoreReason.EngineSpeedBelowDownshift;
 			}
 
+			SetBatteryCosts(resp, dt, tmp);
+
 			if (allowIceOff && resp.Engine.TorqueOutDemand.IsEqual(0)) {
 				// no torque from ICE requested, ICE could be turned off
 				tmp.FuelCosts = 0;
@@ -890,7 +909,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 					//}
 				}
 			}
-			tmp.BatCosts = -(resp.ElectricSystem.BatteryPowerDemand * dt).Value();
+			
 			var maxSoC = Math.Min(ModelData.BatteryData.MaxSOC, StrategyParameters.MaxSoC);
 			var minSoC = Math.Max(ModelData.BatteryData.MinSOC, StrategyParameters.MinSoC);
 			tmp.SoCPenalty = 1 - Math.Pow((DataBus.BatteryInfo.StateOfCharge - StrategyParameters.TargetSoC) / (0.5 * (maxSoC - minSoC)), 5);
@@ -910,8 +929,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 				: 1;
 
 			if (!DataBus.EngineCtl.CombustionEngineOn && !tmp.ICEOff && DataBus.BatteryInfo.StateOfCharge.IsGreater(socthreshold)) {
-				tmp.ICEStartPenalty1 = IceRampUpCosts;
-				tmp.ICEStartPenalty2 = IceIdlingCosts;
+				tmp.ICEStartPenalty1 = IceRampUpCosts / 10;
+				tmp.ICEStartPenalty2 = IceIdlingCosts * 0;
 			} else {
 				tmp.ICEStartPenalty1 = 0;
 				tmp.ICEStartPenalty2 = 0;
@@ -921,7 +940,43 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 			}
 		}
 
-		
+		private void SetBatteryCosts(IResponse resp, Second dt, HybridResultEntry tmp)
+		{
+			var batEnergyStored = DataBus.BatteryInfo.StoredEnergy;
+			var batEnergy = resp.ElectricSystem.BatteryPowerDemand * dt;
+			var batPower = resp.ElectricSystem.BatteryResponse.BatteryPower;
+			if (!batPower.IsBetween(
+				resp.ElectricSystem.BatteryResponse.MaxBatteryLoadDischarge,
+				resp.ElectricSystem.BatteryResponse.MaxBatteryLoadCharge)) {
+				// battery power demand too high - would discharge below min SoC / charge above max SoC
+				tmp.BatCosts = double.NaN;
+				tmp.IgnoreReason |= batPower.IsSmaller(
+						resp.ElectricSystem.BatteryResponse.MaxBatteryLoadDischarge)
+						? HybridConfigurationIgnoreReason.BatteryBelowMinSoC
+						: HybridConfigurationIgnoreReason.BatteryAboveMaxSoc;
+			}
+			if ((batEnergyStored + batEnergy).IsSmaller(BatteryDischargeEnergyThreshold)) {
+				// battery level would go below buffer for auxiliary power - do not alow at 
+				tmp.BatCosts = double.NaN;
+				tmp.IgnoreReason |= HybridConfigurationIgnoreReason.BatterySoCTooLow;
+			}
+			if (batEnergyStored.IsSmaller(BatteryDischargeEnergyThreshold)) {
+				var missingBatCharge = BatteryDischargeEnergyThreshold - batEnergyStored;
+				var minChargePower = missingBatCharge / StrategyParameters.AuxReserveChargeTime;
+				if (batPower.IsSmaller(minChargePower)) {
+					tmp.BatCosts = double.NaN;
+					tmp.IgnoreReason |= HybridConfigurationIgnoreReason.BatterySoCTooLow;
+				} else {
+					tmp.BatCosts = 0;
+					tmp.IgnoreReason &= ~HybridConfigurationIgnoreReason.BatterySoCTooLow;
+				}
+			}
+			if (!double.IsNaN(tmp.BatCosts)) { 
+				tmp.BatCosts = -(batEnergy).Value();
+			}
+		}
+
+
 		public virtual HybridStrategyResponse Initialize(NewtonMeter outTorque, PerSecond outAngularVelocity)
 		{
 			var retVal = new HybridStrategyResponse()
@@ -1022,6 +1077,12 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 					HybridConfigurationIgnoreReason.EngineSpeedTooHigh |
 					HybridConfigurationIgnoreReason.EngineSpeedBelowDownshift |
 					 HybridConfigurationIgnoreReason.EngineSpeedAboveUpshift)) != 0;
+		}
+
+		public static bool BatteryDemandExceeded(this HybridConfigurationIgnoreReason x)
+		{
+			return (x & (HybridConfigurationIgnoreReason.BatteryAboveMaxSoc |
+						HybridConfigurationIgnoreReason.BatteryBelowMinSoC)) != 0;
 		}
 	}
 }

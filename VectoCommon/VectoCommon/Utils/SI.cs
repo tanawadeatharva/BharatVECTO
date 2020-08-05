@@ -1082,6 +1082,11 @@ namespace TUGraz.VectoCommon.Utils
 		{
 			return SIBase<Ampere>.Create(ampereSecond.Value() / t.Value());
 		}
+
+		public static WattSecond operator *(AmpereSecond ampereSeconds, Volt v)
+		{
+			return SIBase<WattSecond>.Create(ampereSeconds.Val * v.Value());
+		}
 	}
 
 	/// <summary>

@@ -8,6 +8,8 @@ namespace TUGraz.VectoCore.Models.Simulation.DataBus
 
 		double StateOfCharge { get; }
 
+		WattSecond StoredEnergy { get; }
+
 		//Ampere MaxCurrent { get; }
 
 		Watt MaxChargePower(Second dt);

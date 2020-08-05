@@ -58,7 +58,10 @@ namespace TUGraz.VectoCommon.Models {
 		EngineTorqueDemandTooLow = 1 << 5,
 		EngineSpeedAboveUpshift = 1 << 6,
 		EngineSpeedBelowDownshift = 1 << 7,
-		NoResponseAvailable = 1 << 8,
-		Evaluated = 1 << 9,
+		BatteryBelowMinSoC = 1 << 8,
+		BatteryAboveMaxSoc = 1 << 9,
+		BatterySoCTooLow = 1 << 10,
+		NoResponseAvailable = 1 << 11,
+		Evaluated = 1 << 12,
 	}
 }

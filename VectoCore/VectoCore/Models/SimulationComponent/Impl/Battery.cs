@@ -185,6 +185,13 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			get { return PreviousState.StateOfCharge; }
 		}
 
+		public WattSecond StoredEnergy
+		{
+			get {
+				return PreviousState.StateOfCharge * ModelData.Capacity * ModelData.SOCMap.Lookup(PreviousState.StateOfCharge);
+			}
+		}
+
 		public Watt MaxChargePower(Second dt)
 		{
 			var maxChargeCurrent = VectoMath.Min((ModelData.MaxSOC - PreviousState.StateOfCharge) * ModelData.Capacity / dt,

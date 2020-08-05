@@ -1,4 +1,6 @@
-﻿namespace TUGraz.VectoCore.Models.SimulationComponent.Data {
+﻿using TUGraz.VectoCommon.Utils;
+
+namespace TUGraz.VectoCore.Models.SimulationComponent.Data {
 	public class HybridStrategyParameters
 	{
 		public double EquivalenceFactor { get; set; }
@@ -8,5 +10,9 @@
 		public double MaxSoC { get; set; }
 
 		public double TargetSoC { get; set; }
+
+		public Second AuxReserveTime { get; set; }
+
+		public Second AuxReserveChargeTime { get; set; }
 	}
 }
