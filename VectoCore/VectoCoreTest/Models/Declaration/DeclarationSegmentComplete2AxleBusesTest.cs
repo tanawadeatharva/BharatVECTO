@@ -21,7 +21,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 
 		[
 			TestCase(AxleConfiguration.AxleConfig_4x2, VehicleCode.CE, RegistrationClass.I, 0, 0, false, VehicleClass.Class31a, 3),
-			TestCase(AxleConfiguration.AxleConfig_4x2, VehicleCode.CE, RegistrationClass.II, 0, 0, true, VehicleClass.Class31b, 3),
+			TestCase(AxleConfiguration.AxleConfig_4x2, VehicleCode.CE, RegistrationClass.II, 0, 0, true, VehicleClass.Class31b2, 3),
 			TestCase(AxleConfiguration.AxleConfig_4x2, VehicleCode.CF, RegistrationClass.A, 0, 0, false, VehicleClass.Class31c, 3),
 			TestCase(AxleConfiguration.AxleConfig_4x2, VehicleCode.CI, RegistrationClass.B, 0, 0, false, VehicleClass.Class31d, 3),
 			TestCase(AxleConfiguration.AxleConfig_4x2, VehicleCode.CJ, RegistrationClass.A, 0, 0, false, VehicleClass.Class31e, 3),
@@ -72,13 +72,14 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 		}
 
 
-		[TestCase(AxleConfiguration.AxleConfig_4x2, VehicleCode.CE, RegistrationClass.II, 0, 0, true, VehicleClass.Class31b, 3)]
+		[TestCase(AxleConfiguration.AxleConfig_4x2, VehicleCode.CE, RegistrationClass.I, 0, 0, true, VehicleClass.Class31b1, 3),
+		TestCase(AxleConfiguration.AxleConfig_4x2, VehicleCode.CE, RegistrationClass.II, 0, 0, true, VehicleClass.Class31b2, 4)]
 		public void TestComplete2AxlesCompleteBus31B(AxleConfiguration axleConfig, VehicleCode vehicleCode, RegistrationClass registrationClass,
 			int passengersLowerDeck, double bodyHeight, bool lowEntry, VehicleClass vehicleParameterGroup, int numberOfMissions)
 		{
 			var segment = DeclarationData.CompletedBusSegments.Lookup(axleConfig.NumAxles(), vehicleCode, registrationClass, passengersLowerDeck,
 				bodyHeight.SI<Meter>(), lowEntry);
-			Assert.AreEqual(3, segment.Missions.Length);
+			Assert.AreEqual(numberOfMissions, segment.Missions.Length);
 			Assert.AreEqual(vehicleParameterGroup, segment.VehicleClass);
 
 			for (int i = 0; i < segment.Missions.Length; i++)
@@ -92,8 +93,8 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 
 				AssertBusParameters(
 					missionType: mission.MissionType,
-					passengerDensity: new[] { 3.0 },
-					airDragAllowed: false,
+					passengerDensity: new[] { mission.MissionType == MissionType.Interurban ? 2.2 : 3 },
+					airDragAllowed: mission.MissionType == MissionType.Interurban ? true : false,
 					doubleDecker: false,
 					busParameters: mission.BusParameter
 				);
@@ -104,7 +105,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 		}
 
 
-		[TestCase(AxleConfiguration.AxleConfig_4x2, VehicleCode.CF, RegistrationClass.I, 0, 0, false, VehicleClass.Class31c, 3)]
+        [TestCase(AxleConfiguration.AxleConfig_4x2, VehicleCode.CF, RegistrationClass.I, 0, 0, false, VehicleClass.Class31c, 3)]
 		public void TestComplete2AxlesCompleteBus31F(AxleConfiguration axleConfig, VehicleCode vehicleCode, RegistrationClass registrationClass,
 			int passengersLowerDeck, double bodyHeight, bool lowEntry, VehicleClass vehicleParameterGroup, int numberOfMissions)
 		{
@@ -235,7 +236,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 		}
 		
 
-		[TestCase(AxleConfiguration.AxleConfig_4x2, VehicleCode.CA, RegistrationClass.II_III, 0, 3.1, false, VehicleClass.Class32b, 2)]
+		[TestCase(AxleConfiguration.AxleConfig_4x2, VehicleCode.CA, RegistrationClass.II_III, 0, 3.1, false, VehicleClass.Class32b, 2),]
 		public void TestComplete2AxlesCompleteBus32B(AxleConfiguration axleConfig, VehicleCode vehicleCode, RegistrationClass registrationClass,
 			int passengersLowerDeck, double bodyHeight, bool lowEntry, VehicleClass vehicleParameterGroup, int numberOfMissions)
 		{
@@ -266,6 +267,8 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 					vehicleEquipment: mission.BusParameter.ElectricalConsumers);
 			}
 		}
+
+
 
 		[TestCase(AxleConfiguration.AxleConfig_4x2, VehicleCode.CA, RegistrationClass.II_III, 0, 3.1001, false, VehicleClass.Class32c, 2)]
 		public void TestComplete2AxlesCompleteBus32C(AxleConfiguration axleConfig, VehicleCode vehicleCode, RegistrationClass registrationClass,

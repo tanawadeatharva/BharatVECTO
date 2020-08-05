@@ -97,7 +97,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 			var segment = DeclarationData.PrimaryBusSegments.Lookup(
 				vehicleData.VehicleCategory, vehicleData.AxleConfiguration, vehicleData.Articulated);
 
-			Assert.AreEqual(10, segment.Missions.Length);
+			Assert.AreEqual(11, segment.Missions.Length);
 			Assert.AreEqual(VehicleClass.ClassP31_32, segment.VehicleClass);
 
 
@@ -120,9 +120,22 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 					expVehicleEquipment: GetExpectedVehicleEquipment(3, 2, 0, 0)
 				);
 			}
-			for (var i = 3; i < 6; i++) {
+			AssertMission(
+				segment.Missions[3],
+				missionType: MissionType.Interurban,
+				cdxA: 4.9,
+				length: 12,
+				width: 2.55,
+				height: 2.8,
+				curbMass: 11975,
+				refLoad: 3519.612,
+				lowLoad: 879.903,
+				axleWeightDistribution: new[] { 0.375, 0.625 },
+				expVehicleEquipment: GetExpectedVehicleEquipment(3, 2, 0, 0)
+            );
+            for (var i = 3; i < 6; i++) {
 				AssertMission(
-					segment.Missions[i],
+					segment.Missions[i + 1],
 					missionType: missions[i % 3],
 					cdxA: 6.2,
 					length: 10.5,
@@ -137,7 +150,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 			}
 
 			AssertMission(
-				segment.Missions[6],
+				segment.Missions[7],
 				missionType: MissionType.Interurban,
 				cdxA: 3.45,
 				length: 12,
@@ -150,7 +163,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 				expVehicleEquipment: GetExpectedVehicleEquipment(2, 2, 0.5, 0.5)
 			);
 			AssertMission(
-				segment.Missions[7],
+				segment.Missions[8],
 				missionType: MissionType.Coach,
 				cdxA: 3.45,
 				length: 12,
@@ -164,7 +177,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 			);
 
 			AssertMission(
-					segment.Missions[8],
+					segment.Missions[9],
 					missionType: MissionType.Interurban,
 					cdxA: 3.9,
 					length: 10.5,
@@ -177,7 +190,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 					expVehicleEquipment: GetExpectedVehicleEquipment(1, 2, 1, 1)
 				);
 			AssertMission(
-				segment.Missions[9],
+				segment.Missions[10],
 				missionType: MissionType.Coach,
 				cdxA: 3.9,
 				length: 10.5,
@@ -204,7 +217,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 			var segment = DeclarationData.PrimaryBusSegments.Lookup(
 				vehicleData.VehicleCategory, vehicleData.AxleConfiguration, vehicleData.Articulated);
 
-			Assert.AreEqual(10, segment.Missions.Length);
+			Assert.AreEqual(11, segment.Missions.Length);
 			Assert.AreEqual(VehicleClass.ClassP33_34, segment.VehicleClass);
 
 			var missions = new[]
@@ -225,9 +238,22 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 					expVehicleEquipment: GetExpectedVehicleEquipment(3, 2, 0, 0)
 				);
 			}
-			for (var i = 3; i < 6; i++) {
+			AssertMission(
+				segment.Missions[3],
+				missionType: MissionType.Interurban,
+				cdxA: 5.0,
+				length: 14.2,
+				width: 2.55,
+				height: 2.8,
+				curbMass: 14175,
+				refLoad: 4236.57,
+				lowLoad: 1059.1425,
+				axleWeightDistribution: new[] { 0.273, 0.454, 0.273 },
+				expVehicleEquipment: GetExpectedVehicleEquipment(3, 2, 0, 0)
+            );
+            for (var i = 3; i < 6; i++) {
 				AssertMission(
-					segment.Missions[i],
+					segment.Missions[i+1],
 					missionType: missions[i % 3],
 					cdxA: 6.3,
 					length: 13.5,
@@ -242,7 +268,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 			}
 
 			AssertMission(
-				segment.Missions[6],
+				segment.Missions[7],
 				missionType: MissionType.Interurban,
 				cdxA: 3.53,
 				length: 13.8,
@@ -255,7 +281,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 				expVehicleEquipment: GetExpectedVehicleEquipment(2, 2, 0.5, 0.5)
 			);
 			AssertMission(
-				segment.Missions[7],
+				segment.Missions[8],
 				missionType: MissionType.Coach,
 				cdxA: 3.53,
 				length: 13.8,
@@ -269,7 +295,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 			);
 
 			AssertMission(
-					segment.Missions[8],
+					segment.Missions[9],
 					missionType: MissionType.Interurban,
 					cdxA: 3.98,
 					length: 14,
@@ -282,7 +308,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 					expVehicleEquipment: GetExpectedVehicleEquipment(1, 4, 1, 1.5)
 				);
 			AssertMission(
-				segment.Missions[9],
+				segment.Missions[10],
 				missionType: MissionType.Coach,
 				cdxA: 3.98,
 				length: 14,
@@ -309,7 +335,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 			var segment = DeclarationData.PrimaryBusSegments.Lookup(
 				vehicleData.VehicleCategory, vehicleData.AxleConfiguration, vehicleData.Articulated);
 
-			Assert.AreEqual(10, segment.Missions.Length);
+			Assert.AreEqual(11, segment.Missions.Length);
 			Assert.AreEqual(VehicleClass.ClassP35_36, segment.VehicleClass);
 
 			var missions = new[]
@@ -330,9 +356,22 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 					expVehicleEquipment: GetExpectedVehicleEquipment(3, 3, 0, 0)
 				);
 			}
-			for (var i = 3; i < 6; i++) {
+			AssertMission(
+				segment.Missions[3],
+				missionType: MissionType.Interurban,
+				cdxA: 5.1,
+				length: 18.2,
+				width: 2.55,
+				height: 2.8,
+				curbMass: 17800,
+				refLoad: 5540.130,
+				lowLoad: 1385.0325,
+				axleWeightDistribution: new[] { 0.243, 0.352, 0.405 },
+				expVehicleEquipment: GetExpectedVehicleEquipment(3, 3, 0, 0)
+            );
+            for (var i = 3; i < 6; i++) {
 				AssertMission(
-					segment.Missions[i],
+					segment.Missions[i+1],
 					missionType: missions[i % 3],
 					cdxA: 6.4,
 					length: 18.2,
@@ -347,7 +386,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 			}
 
 			AssertMission(
-				segment.Missions[6],
+				segment.Missions[7],
 				missionType: MissionType.Interurban,
 				cdxA: 3.6,
 				length: 18.2,
@@ -360,7 +399,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 				expVehicleEquipment: GetExpectedVehicleEquipment(null, null, null, null)
 			);
 			AssertMission(
-				segment.Missions[7],
+				segment.Missions[8],
 				missionType: MissionType.Coach,
 				cdxA: 3.6,
 				length: 18.2,
@@ -373,7 +412,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 				expVehicleEquipment: GetExpectedVehicleEquipment(null, null, null, null)
 			);
 			AssertMission(
-					segment.Missions[8],
+					segment.Missions[9],
 					missionType: MissionType.Interurban,
 					cdxA: 4.05,
 					length: 18.2,
@@ -386,7 +425,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 					expVehicleEquipment: GetExpectedVehicleEquipment(null, null, null, null)
 			);
 			AssertMission(
-				segment.Missions[9],
+				segment.Missions[10],
 				missionType: MissionType.Coach,
 				cdxA: 4.05,
 				length: 18.2,
@@ -413,7 +452,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 			var segment = DeclarationData.PrimaryBusSegments.Lookup(
 				vehicleData.VehicleCategory, vehicleData.AxleConfiguration, vehicleData.Articulated);
 
-			Assert.AreEqual(10, segment.Missions.Length);
+			Assert.AreEqual(11, segment.Missions.Length);
 			Assert.AreEqual(VehicleClass.ClassP37_38, segment.VehicleClass);
 
 			var missions = new[]
@@ -434,9 +473,22 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 					expVehicleEquipment: GetExpectedVehicleEquipment(null, null, null, null)
 				);
 			}
-			for (var i = 3; i < 6; i++) {
+			AssertMission(
+				segment.Missions[3],
+				missionType: MissionType.Interurban,
+				cdxA: 5.1,
+				length: 15,
+				width: 2.55,
+				height: 2.8,
+				curbMass: 15000,
+				refLoad: 4497.282,
+				lowLoad: 1124.3205,
+				axleWeightDistribution: new[] { 0.214, 0.214, 0.358, 0.214 },
+				expVehicleEquipment: GetExpectedVehicleEquipment(null, null, null, null)
+			);
+            for (var i = 3; i < 6; i++) {
 				AssertMission(
-					segment.Missions[i],
+					segment.Missions[i+1],
 					missionType: missions[i % 3],
 					cdxA: 6.4,
 					length: 15,
@@ -451,7 +503,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 			}
 
 			AssertMission(
-				segment.Missions[6],
+				segment.Missions[7],
 				missionType: MissionType.Interurban,
 				cdxA: 3.6,
 				length: 15,
@@ -464,7 +516,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 				expVehicleEquipment: GetExpectedVehicleEquipment(null, null, null, null)
 			);
 			AssertMission(
-				segment.Missions[7],
+				segment.Missions[8],
 				missionType: MissionType.Coach,
 				cdxA: 3.6,
 				length: 15,
@@ -478,7 +530,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 			);
 
 			AssertMission(
-					segment.Missions[8],
+					segment.Missions[9],
 					missionType: MissionType.Interurban,
 					cdxA: 4.05,
 					length: 15,
@@ -491,7 +543,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 					expVehicleEquipment: GetExpectedVehicleEquipment(null, null, null, null)
 				);
 			AssertMission(
-				segment.Missions[9],
+				segment.Missions[10],
 				missionType: MissionType.Coach,
 				cdxA: 4.05,
 				length: 15,
@@ -518,7 +570,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 			var segment = DeclarationData.PrimaryBusSegments.Lookup(
 				vehicleData.VehicleCategory, vehicleData.AxleConfiguration, vehicleData.Articulated);
 
-			Assert.AreEqual(10, segment.Missions.Length);
+			Assert.AreEqual(11, segment.Missions.Length);
 			Assert.AreEqual(VehicleClass.ClassP39_40, segment.VehicleClass);
 
 			var missions = new[]
@@ -539,9 +591,22 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 					expVehicleEquipment: GetExpectedVehicleEquipment(3, 3, 0, 0)
 				);
 			}
-			for (var i = 3; i < 6; i++) {
+			AssertMission(
+				segment.Missions[3],
+				missionType: MissionType.Interurban,
+				cdxA: 5.2,
+				length: 21,
+				width: 2.55,
+				height: 2.6,
+				curbMass: 19600,
+				refLoad: 6452.622,
+				lowLoad: 1613.1555,
+				axleWeightDistribution: new[] { 0.200, 0.282, 0.324, 0.194 },
+				expVehicleEquipment: GetExpectedVehicleEquipment(3, 3, 0, 0)
+            );
+            for (var i = 3; i < 6; i++) {
 				AssertMission(
-					segment.Missions[i],
+					segment.Missions[i+1],
 					missionType: missions[i % 3],
 					cdxA: 6.5,
 					length: 21,
@@ -556,7 +621,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 			}
 
 			AssertMission(
-				segment.Missions[6],
+				segment.Missions[7],
 				missionType: MissionType.Interurban,
 				cdxA: 3.68,
 				length: 21,
@@ -569,7 +634,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 				expVehicleEquipment: GetExpectedVehicleEquipment(null, null, null, null)
 			);
 			AssertMission(
-				segment.Missions[7],
+				segment.Missions[8],
 				missionType: MissionType.Coach,
 				cdxA: 3.68,
 				length: 21,
@@ -583,7 +648,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 			);
 
 			AssertMission(
-					segment.Missions[8],
+					segment.Missions[9],
 					missionType: MissionType.Interurban,
 					cdxA: 4.13,
 					length: 21,
@@ -596,7 +661,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 					expVehicleEquipment: GetExpectedVehicleEquipment(null, null, null, null)
 				);
 			AssertMission(
-				segment.Missions[9],
+				segment.Missions[10],
 				missionType: MissionType.Coach,
 				cdxA: 4.13,
 				length: 21,
