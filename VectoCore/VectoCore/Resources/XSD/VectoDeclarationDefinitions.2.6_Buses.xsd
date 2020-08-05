@@ -71,7 +71,7 @@
 										</xs:restriction>
 									</xs:simpleType>
 								</xs:element>
-								<xs:element name="DoubleGlasing" type="xs:boolean"/>
+								<xs:element name="DoubleGlazing" type="xs:boolean"/>
 								<xs:element name="HeatPump" type="xs:boolean"/>
 								<xs:element name="AdjustableAuxiliaryHeater" type="xs:boolean"/>
 								<xs:element name="SeparateAirDistributionDucts" type="xs:boolean"/>
@@ -512,6 +512,13 @@
 							<xs:documentation>P041 - [kg]</xs:documentation>
 						</xs:annotation>
 					</xs:element>
+					<xs:element name="CargoVolume" minOccurs="0">
+						<xs:simpleType>
+							<xs:restriction base="xs:double">
+								<xs:minExclusive value="0"/>
+							</xs:restriction>
+						</xs:simpleType>
+					</xs:element>
 					<xs:element name="IdlingSpeed" type="v1.0:EngineDeclaredSpeedType">
 						<xs:annotation>
 							<xs:documentation>P198 - [1/min]</xs:documentation>
@@ -537,13 +544,6 @@
 					<xs:element name="ADAS" type="v2.1:AbstractAdvancedDriverAssistantSystemsType"/>
 					<xs:element name="TorqueLimits" type="v2.0:AbstractTorqueLimitsType" minOccurs="0"/>
 					<xs:element name="Components" type="v2.0:AbstractVehicleComponentsDeclarationType"/>
-					<xs:element name="CargoVolume" minOccurs="0">
-						<xs:simpleType>
-							<xs:restriction base="xs:double">
-								<xs:minExclusive value="0"/>
-							</xs:restriction>
-						</xs:simpleType>
-					</xs:element>
 				</xs:sequence>
 			</xs:extension>
 		</xs:complexContent>
