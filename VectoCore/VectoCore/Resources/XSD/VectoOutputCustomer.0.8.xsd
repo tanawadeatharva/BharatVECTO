@@ -566,6 +566,8 @@
 										<xs:documentation>P252 / II.1.1.6</xs:documentation>
 									</xs:annotation>
 								</xs:element>
+								<xs:element name="InputDataSignature" type="vdecdef:SignatureType"/>
+								<xs:element name="ManufacturerRecordSignature" type="vdecdef:SignatureType"/>
 							</xs:sequence>
 						</xs:complexType>
 					</xs:element>
@@ -674,24 +676,11 @@
 						</xs:annotation>
 					</xs:element>
 					<xs:element name="RegisteredPassengers">
-						<xs:complexType>
-							<xs:sequence>
-								<xs:element name="LowerDeck">
-									<xs:simpleType>
-										<xs:restriction base="xs:int">
-											<xs:minInclusive value="0"/>
-										</xs:restriction>
-									</xs:simpleType>
-								</xs:element>
-								<xs:element name="UpperDeck">
-									<xs:simpleType>
-										<xs:restriction base="xs:int">
-											<xs:minInclusive value="0"/>
-										</xs:restriction>
-									</xs:simpleType>
-								</xs:element>
-							</xs:sequence>
-						</xs:complexType>
+						<xs:simpleType>
+							<xs:restriction base="xs:int">
+								<xs:minInclusive value="0"/>
+							</xs:restriction>
+						</xs:simpleType>
 					</xs:element>
 					<xs:element name="LowEntry" type="xs:boolean"/>
 					<xs:element name="HeightIntegratedBody">
