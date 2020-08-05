@@ -94,9 +94,13 @@ namespace TUGraz.VectoCore.Models.Declaration
 
 					var busFloorArea = DeclarationData.BusAuxiliaries.CalculateBusFloorSurfaceArea(row.ParseDouble("length").SI<Meter>(),
 								row.ParseDouble("width").SI<Meter>());
-					var passengerDensity = row.ParseDouble(missionType.ToString()).SI<PerSquareMeter>();
-					var passengerCount = busFloorArea * passengerDensity; // weight of driver is included in curb mass
-					var refLoad = passengerCount * missionType.GetAveragePassengerMass();
+					var passDensities = row.Field<string>(missionType.ToString()).Split('/');
+					
+                    var passengerDensityRef = passDensities.Last().ToDouble().SI<PerSquareMeter>();
+					var passengerDensityLow = passDensities.First().ToDouble().SI<PerSquareMeter>();
+					var passengerCountLow = busFloorArea * passengerDensityLow; // weight of driver is included in curb mass
+					var passengerCountRef = busFloorArea * passengerDensityRef; // weight of driver is included in curb mass
+					//var refLoad = passengerCountRef * missionType.GetAveragePassengerMass();
 					var mission = new Mission {
 						MissionType = missionType,
 						CrossWindCorrectionParameters = row.Field<string>("crosswindcorrection"),
@@ -111,11 +115,11 @@ namespace TUGraz.VectoCore.Models.Declaration
 						Trailer = new List<MissionTrailer>(),
 						MinLoad = null,
 						MaxLoad = null,
-						LowLoad = refLoad * missionType.GetLowLoadFactorBus(),
-						RefLoad = refLoad,
+						LowLoad = passengerCountLow * missionType.GetAveragePassengerMass() * missionType.GetLowLoadFactorBus(),
+						RefLoad = passengerCountRef * missionType.GetAveragePassengerMass(),
 						VehicleHeight = row.ParseDouble("bodyheight").SI<Meter>() + 0.3.SI<Meter>(), //row.ParseDouble("height").SI<Meter>(),
-						PassengersRefLoad = passengerCount,
-						PassengersLowLoad = passengerCount * missionType.GetLowLoadFactorBus(),
+						PassengersRefLoad = passengerCountRef,
+						PassengersLowLoad = passengerCountLow * missionType.GetLowLoadFactorBus(),
 						TotalCargoVolume = 0.SI<CubicMeter>(),
 						DefaultCDxA = row.ParseDouble("cdxastandard").SI<SquareMeter>(),
 						BusParameter = new BusParameters() {
@@ -125,7 +129,8 @@ namespace TUGraz.VectoCore.Models.Declaration
 							BodyHeight = row.ParseDouble("bodyheight").SI<Meter>(),
 							NumberPassengersLowerDeck = row.ParseDouble("passengerslowerdeck"),
 							NumberPassengersUpperDeck = row.ParseDouble("passengersupperdeck"),
-							PassengerDensity = passengerDensity,
+							PassengerDensityLow = passengerDensityLow,
+							PassengerDensityRef = passengerDensityRef,
 							DoubleDecker = row.ParseBoolean("doubledecker"),
 							LowEntry = GetLowEntry(row.Field<string>("lowentry")),
 							EntranceHeight =  row.ParseDouble("entranceheight").SI(Unit.SI.Milli.Meter).Cast<Meter>(),

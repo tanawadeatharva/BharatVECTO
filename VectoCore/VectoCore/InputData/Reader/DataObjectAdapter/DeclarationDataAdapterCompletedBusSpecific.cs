@@ -344,7 +344,9 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 		protected double GetNumberOfPassengers(Mission mission, Meter length, Meter width, double registeredPassengers, LoadingType loading)
 		{
 			var busFloorArea = DeclarationData.BusAuxiliaries.CalculateBusFloorSurfaceArea(length, width);
-			var passengerCountRef = busFloorArea * mission.BusParameter.PassengerDensity;
+			var passengerCountRef = busFloorArea * (loading == LoadingType.LowLoading
+				? mission.BusParameter.PassengerDensityLow
+				: mission.BusParameter.PassengerDensityRef);
 			//var passengerCountDecl = completedVehicle.NuberOfPassengersUpperDeck + completedVehicle.NumberOfPassengersLowerDeck;
 			if (loading != LoadingType.ReferenceLoad && loading != LoadingType.LowLoading) {
 				throw new VectoException("Unhandled loading type: {0}", loading);

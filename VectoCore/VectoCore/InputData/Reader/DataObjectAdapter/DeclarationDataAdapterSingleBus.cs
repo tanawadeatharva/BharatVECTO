@@ -29,7 +29,9 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			var busFloorArea = DeclarationData.BusAuxiliaries.CalculateBusFloorSurfaceArea(
 				CompletedVehicle.Length,
 				CompletedVehicle.Width);
-			var passengerCountRef = busFloorArea * mission.BusParameter.PassengerDensity;
+			var passengerCountRef = busFloorArea * (loading.Key == LoadingType.LowLoading
+				? mission.BusParameter.PassengerDensityLow
+				: mission.BusParameter.PassengerDensityRef);
 			var passengerCountDecl = CompletedVehicle.NumberOfPassengersUpperDeck + CompletedVehicle.NumberOfPassengersLowerDeck;
 
 			//var refLoad = passengerCount * mission.MissionType.GetAveragePassengerMass();

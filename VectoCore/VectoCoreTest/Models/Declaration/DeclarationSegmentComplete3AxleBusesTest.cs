@@ -480,11 +480,13 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 				case MissionType.Suburban:
 				case MissionType.Interurban:
 					var currentValue = passengerDensity[0];
-					Assert.AreEqual(currentValue, busParameters.PassengerDensity.Value());
+					Assert.AreEqual(currentValue, busParameters.PassengerDensityRef.Value());
+					Assert.AreEqual(currentValue, busParameters.PassengerDensityLow.Value());
 					break;
 				case MissionType.Coach:
 					var coachValue = passengerDensity[1];
-					Assert.AreEqual(coachValue, busParameters.PassengerDensity.Value());
+					Assert.AreEqual(coachValue, busParameters.PassengerDensityRef.Value());
+					Assert.AreEqual(coachValue, busParameters.PassengerDensityLow.Value());
 					break;
 
 			}
