@@ -298,6 +298,9 @@
     <None Include="TestData\Generic Vehicles\Engineering Mode\HeavyBusPrimary\HeavyBusPrimary_DECL.vecto">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Include="TestData\Integration\Buses\FactorMethod\CompletedBus_41-32b_ES-AUX_mixed.vecto">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="TestData\Integration\Buses\FactorMethod\CompletedBus_41-32b_ES-AUX.vecto">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
@@ -3502,6 +3505,9 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="TestData\Integration\Buses\FactorMethod\primary_heavyBus group41.RSLT_PIF.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="TestData\Integration\Buses\FactorMethod\vecto_vehicle-completed_heavyBus_41_mixed.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="TestData\Integration\Buses\FactorMethod\vecto_vehicle-completed_heavyBus_41.xml">
