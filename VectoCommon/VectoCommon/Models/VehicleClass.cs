@@ -184,6 +184,18 @@ namespace TUGraz.VectoCommon.Models
 			}
 		}
 
+		public static bool IsVan(this VehicleClass vehicleClass)
+		{
+			switch (vehicleClass) {
+				case VehicleClass.ClassML2van:
+				case VehicleClass.ClassML3van:
+				case VehicleClass.ClassML4van:
+					return true;
+				default:
+					return false;
+            }
+		}
+
 		public static bool IsBus(this VehicleClass vehicleClass)
 		{
 			return vehicleClass.IsPrimaryBus() || vehicleClass.IsCompletedBus();

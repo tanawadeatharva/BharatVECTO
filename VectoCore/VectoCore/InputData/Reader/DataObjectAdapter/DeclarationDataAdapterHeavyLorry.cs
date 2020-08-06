@@ -134,7 +134,13 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 				data.Components.AxleWheels.AxlesDeclaration.Where(axle => axle.AxleType == AxleType.VehicleDriven)
 					.Select(da => DeclarationData.Wheels.Lookup(da.Tyre.Dimension).DynamicTyreRadius)
 					.Average();
-			retVal.CargoVolume = mission.MissionType != MissionType.Construction ? mission.TotalCargoVolume : 0.SI<CubicMeter>();
+			if (segment.VehicleClass.IsMediumLorry() && segment.VehicleClass.IsVan()) {
+				retVal.CargoVolume = data.CargoVolume;
+			} else {
+				retVal.CargoVolume = mission.MissionType != MissionType.Construction
+					? mission.TotalCargoVolume
+					: 0.SI<CubicMeter>();
+			}
 
 			retVal.VocationalVehicle = data.VocationalVehicle;
 			retVal.ADAS = CreateADAS(data.ADAS);

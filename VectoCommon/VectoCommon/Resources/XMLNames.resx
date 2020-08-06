@@ -1368,4 +1368,7 @@
   <data name="Report_Result_EnergyConsumption" xml:space="preserve">
     <value>EnergyConsumption</value>
   </data>
+  <data name="Vehicle_CargoVolume" xml:space="preserve">
+    <value>CargoVolume</value>
+  </data>
 </root>

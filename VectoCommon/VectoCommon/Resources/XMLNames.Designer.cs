@@ -3346,6 +3346,15 @@ namespace TUGraz.VectoCommon.Resources {
         }
         
         /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die CargoVolume ähnelt.
+        /// </summary>
+        public static string Vehicle_CargoVolume {
+            get {
+                return ResourceManager.GetString("Vehicle_CargoVolume", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Sucht eine lokalisierte Zeichenfolge, die Clutch ähnelt.
         /// </summary>
         public static string Vehicle_Clutch {

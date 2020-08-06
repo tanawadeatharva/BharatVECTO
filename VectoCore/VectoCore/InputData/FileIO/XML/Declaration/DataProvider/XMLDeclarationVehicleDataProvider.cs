@@ -288,6 +288,11 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 			get { return 0; }
 		}
 
+		public virtual CubicMeter CargoVolume
+		{
+			get { return 0.SI<CubicMeter>(); }
+		}
+
 		public virtual VehicleCode VehicleCode
 		{
 			get { return VehicleCode.NOT_APPLICABLE; }
@@ -754,14 +759,20 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 			get { return null; }
 		}
 
-		#region Overrides of XMLDeclarationVehicleDataProviderV10
-
 		public override Kilogram GrossVehicleMassRating
 		{
 			get { return GetDouble(XMLNames.Vehicle_TPMLM).SI<Kilogram>(); }
 		}
 
-		#endregion
+		public override CubicMeter CargoVolume
+		{
+			get
+			{
+				return ElementExists(XMLNames.Vehicle_CargoVolume)
+					? GetDouble(XMLNames.Vehicle_CargoVolume).SI<CubicMeter>()
+					: 0.SI<CubicMeter>();
+			}
+		}
 
 		#endregion
 
@@ -1036,6 +1047,10 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		public LegislativeClass LegislativeClass { get; }
 		public int NumberOfPassengersUpperDeck { get; }
 		public int NumberOfPassengersLowerDeck { get; }
+		public CubicMeter CargoVolume
+		{
+			get { return 0.SI<CubicMeter>(); }
+		}
 		public Kilogram CurbMassChassis { get; }
 		public bool VocationalVehicle { get; }
 		public bool SleeperCab { get; }
