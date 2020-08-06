@@ -27,6 +27,7 @@ namespace TUGraz.VectoCommon.BusAuxiliaries
 		Mechanically,
 		Electrically,
 		Pneumatically,
+		Mixed
 	}
 
 	
@@ -46,6 +47,8 @@ namespace TUGraz.VectoCommon.BusAuxiliaries
 				case "pneumatically":
 				case "pneumatic":
 					return ConsumerTechnology.Pneumatically;
+                case "mixed":
+					return ConsumerTechnology.Mixed;
 				default:
 					return ConsumerTechnology.Unknown;
 			}
