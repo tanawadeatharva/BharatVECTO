@@ -248,7 +248,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			foreach (var item in DeclarationData.BusAuxiliaries.SSMTechnologyList)
 			{
 				if ("Double-glazing".Equals(item.BenefitName, StringComparison.InvariantCultureIgnoreCase) &&
-					(completedBuxAux?.HVACAux.DoubleGlasing ?? false))
+					(completedBuxAux?.HVACAux.DoubleGlazing ?? false))
 				{
 					onVehicle.Add(item);
 				}

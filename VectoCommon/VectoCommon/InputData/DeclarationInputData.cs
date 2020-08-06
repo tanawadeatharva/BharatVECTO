@@ -768,7 +768,7 @@ namespace TUGraz.VectoCommon.InputData
 
 		Watt AuxHeaterPower { get; }
 
-		bool DoubleGlasing { get; }
+		bool DoubleGlazing { get; }
 
 		bool HeatPump { get; }
 

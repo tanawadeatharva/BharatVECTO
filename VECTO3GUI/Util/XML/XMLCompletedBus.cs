@@ -182,7 +182,7 @@ namespace VECTO3GUI.Util.XML
 									new XElement(_v26 + XMLNames.Bus_DriverAC, auxBus?.CompressorTypeDriver.GetLabel()),
 									new XElement(_v26 + XMLNames.Bus_PassengerAC, auxBus?.CompressorTypePassenger.GetLabel())),
 								new XElement(_v26 + XMLNames.Bus_AuxiliaryHeaterPower, Convert.ToInt32(auxBus?.AuxHeaterPower?.Value())), 
-								new XElement(_v26 + XMLNames.Bus_DoubleGlasing, auxBus?.DoubleGlasing),
+								new XElement(_v26 + XMLNames.Bus_DoubleGlazing, auxBus?.DoubleGlasing),
 								new XElement(_v26 + XMLNames.Bus_HeatPump, auxBus?.HeatPump),
 								new XElement(_v26 + XMLNames.Bus_AdjustableAuxiliaryHeater, auxBus?.AdjustableAuxiliaryHeater), 
 								new XElement(_v26 + XMLNames.Bus_SeparateAirDistributionDucts, auxBus?.SeparateAirDistributionDucts)
