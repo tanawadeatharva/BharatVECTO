@@ -21,7 +21,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 
 		[
 			TestCase(AxleConfiguration.AxleConfig_4x2, VehicleCode.CE, RegistrationClass.I, 0, 0, false, VehicleClass.Class31a, 3),
-			TestCase(AxleConfiguration.AxleConfig_4x2, VehicleCode.CE, RegistrationClass.II, 0, 0, true, VehicleClass.Class31b2, 3),
+			TestCase(AxleConfiguration.AxleConfig_4x2, VehicleCode.CE, RegistrationClass.II, 0, 0, true, VehicleClass.Class31b2, 4),
 			TestCase(AxleConfiguration.AxleConfig_4x2, VehicleCode.CF, RegistrationClass.A, 0, 0, false, VehicleClass.Class31c, 3),
 			TestCase(AxleConfiguration.AxleConfig_4x2, VehicleCode.CI, RegistrationClass.B, 0, 0, false, VehicleClass.Class31d, 3),
 			TestCase(AxleConfiguration.AxleConfig_4x2, VehicleCode.CJ, RegistrationClass.A, 0, 0, false, VehicleClass.Class31e, 3),

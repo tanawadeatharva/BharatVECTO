@@ -22,7 +22,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 		[
 			TestCase(AxleConfiguration.AxleConfig_8x2, VehicleCode.CE, RegistrationClass.I, 0, 0, false, VehicleClass.Class37a, 3),
 			TestCase(AxleConfiguration.AxleConfig_8x2, VehicleCode.CE, RegistrationClass.I, 0, 0, true, VehicleClass.Class37b1, 3),
-			TestCase(AxleConfiguration.AxleConfig_8x2, VehicleCode.CE, RegistrationClass.II, 0, 0, true, VehicleClass.Class37b2, 3),
+			TestCase(AxleConfiguration.AxleConfig_8x2, VehicleCode.CE, RegistrationClass.II, 0, 0, true, VehicleClass.Class37b2, 4),
 			TestCase(AxleConfiguration.AxleConfig_8x2, VehicleCode.CF, RegistrationClass.A, 0, 0, false, VehicleClass.Class37c, 3),
 			TestCase(AxleConfiguration.AxleConfig_8x2, VehicleCode.CI, RegistrationClass.B, 0, 0, false, VehicleClass.Class37d, 3),
 			TestCase(AxleConfiguration.AxleConfig_8x2, VehicleCode.CJ, RegistrationClass.A, 0, 0, false, VehicleClass.Class37e, 3),
@@ -34,8 +34,8 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 			TestCase(AxleConfiguration.AxleConfig_8x2, VehicleCode.CB, RegistrationClass.II, 8, 0, false, VehicleClass.Class38f, 2),
 												  
 			TestCase(AxleConfiguration.AxleConfig_8x2, VehicleCode.CG, RegistrationClass.I, 0, 0, false, VehicleClass.Class39a, 3),
-			TestCase(AxleConfiguration.AxleConfig_8x2, VehicleCode.CG, RegistrationClass.II_III, 0, 0, true, VehicleClass.Class39b1, 3),
-			TestCase(AxleConfiguration.AxleConfig_8x2, VehicleCode.CG, RegistrationClass.II, 0, 0, true, VehicleClass.Class39b2, 3),
+			TestCase(AxleConfiguration.AxleConfig_8x2, VehicleCode.CG, RegistrationClass.I_II, 0, 0, true, VehicleClass.Class39b1, 3),
+			TestCase(AxleConfiguration.AxleConfig_8x2, VehicleCode.CG, RegistrationClass.II, 0, 0, true, VehicleClass.Class39b2, 4),
 			TestCase(AxleConfiguration.AxleConfig_8x2, VehicleCode.CH, RegistrationClass.A, 0, 0, false, VehicleClass.Class39c, 3),
 			TestCase(AxleConfiguration.AxleConfig_8x2, VehicleCode.CC, RegistrationClass.II, 0, 0, false, VehicleClass.Class40a, 2),
 			TestCase(AxleConfiguration.AxleConfig_8x2, VehicleCode.CC, RegistrationClass.II_III, 0, 3.1, true, VehicleClass.Class40b, 2),

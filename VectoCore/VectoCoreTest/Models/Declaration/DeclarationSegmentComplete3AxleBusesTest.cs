@@ -26,7 +26,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 		[										  
 			TestCase(AxleConfiguration.AxleConfig_6x2, VehicleCode.CE, RegistrationClass.I, 0, 0, false, VehicleClass.Class33a, 3),
 			TestCase(AxleConfiguration.AxleConfig_6x2, VehicleCode.CE, RegistrationClass.I, 0, 0, true, VehicleClass.Class33b1, 3),
-			TestCase(AxleConfiguration.AxleConfig_6x2, VehicleCode.CE, RegistrationClass.II, 0, 0, true, VehicleClass.Class33b2, 3),
+			TestCase(AxleConfiguration.AxleConfig_6x2, VehicleCode.CE, RegistrationClass.II, 0, 0, true, VehicleClass.Class33b2, 4),
 			TestCase(AxleConfiguration.AxleConfig_6x2, VehicleCode.CF, RegistrationClass.A, 0, 0, false, VehicleClass.Class33c, 3),
 			TestCase(AxleConfiguration.AxleConfig_6x2, VehicleCode.CI, RegistrationClass.B, 0, 0, false, VehicleClass.Class33d, 3),
 			TestCase(AxleConfiguration.AxleConfig_6x2, VehicleCode.CJ, RegistrationClass.A, 0, 0, false, VehicleClass.Class33e, 3),
@@ -38,8 +38,8 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 			TestCase(AxleConfiguration.AxleConfig_6x2, VehicleCode.CB, RegistrationClass.II, 8, 0, false, VehicleClass.Class34f, 2),
 												  
 			TestCase(AxleConfiguration.AxleConfig_6x2, VehicleCode.CG, RegistrationClass.I, 0, 0, false, VehicleClass.Class35a, 3),
-			TestCase(AxleConfiguration.AxleConfig_6x2, VehicleCode.CG, RegistrationClass.III, 0, 0, true, VehicleClass.Class35b1, 3),
-			TestCase(AxleConfiguration.AxleConfig_6x2, VehicleCode.CG, RegistrationClass.II, 0, 0, true, VehicleClass.Class35b2, 3),
+			TestCase(AxleConfiguration.AxleConfig_6x2, VehicleCode.CG, RegistrationClass.A, 0, 0, true, VehicleClass.Class35b1, 3),
+			TestCase(AxleConfiguration.AxleConfig_6x2, VehicleCode.CG, RegistrationClass.II, 0, 0, true, VehicleClass.Class35b2, 4),
 			TestCase(AxleConfiguration.AxleConfig_6x2, VehicleCode.CH, RegistrationClass.A, 0, 0, false, VehicleClass.Class35c, 3),
 			TestCase(AxleConfiguration.AxleConfig_6x2, VehicleCode.CC, RegistrationClass.II, 0, 0, false, VehicleClass.Class36a, 2),
 			TestCase(AxleConfiguration.AxleConfig_6x2, VehicleCode.CC, RegistrationClass.II_III, 0, 3.1, true, VehicleClass.Class36b, 2),
@@ -460,7 +460,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 
 				AssertBusParameters(
 					missionType: mission.MissionType,
-					passengerDensity: new[] { 3.0 },
+					passengerDensity: new[] { mission.MissionType == MissionType.Interurban ? 2.2 : 3 },
 					airDragAllowed: mission.MissionType == MissionType.Interurban ? true : false,
 					doubleDecker: false,
 					busParameters: mission.BusParameter

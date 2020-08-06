@@ -80,7 +80,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 			var segment = DeclarationData.PrimaryBusSegments.Lookup(
 				category, axleConfiguration, articulated);
 
-			Assert.AreEqual(10, segment.Missions.Length);
+			Assert.AreEqual(11, segment.Missions.Length);
 			Assert.AreEqual(expectedClass, segment.VehicleClass);
 		}
 
