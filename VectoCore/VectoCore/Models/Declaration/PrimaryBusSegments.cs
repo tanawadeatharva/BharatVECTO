@@ -133,6 +133,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 							PassengerDensityRef = passengerDensityRef,
 							DoubleDecker = row.ParseBoolean("doubledecker"),
 							LowEntry = GetLowEntry(row.Field<string>("lowentry")),
+							FloorType = row.Field<string>("floortype").ParseEnum<FloorType>(),
 							EntranceHeight =  row.ParseDouble("entranceheight").SI(Unit.SI.Milli.Meter).Cast<Meter>(),
 							VehicleCode = row.Field<string>("vehiclecode").ParseEnum<VehicleCode>(),
 							HVACConfiguration = BusHVACSystemConfigurationHelper.Parse(row.Field<string>("hvacsystemconfiguration")),

@@ -168,8 +168,10 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 						var primarySegment = GetPrimarySegment(PrimaryVehicle);
 						var primaryMission = primarySegment.Missions.Where(
 							m => {
-								return m.BusParameter.DoubleDecker == CompletedVehicle.VehicleCode.IsDoubleDeckerBus() &&
-										m.MissionType == mission.MissionType;
+								return m.BusParameter.DoubleDecker ==
+										CompletedVehicle.VehicleCode.IsDoubleDeckerBus() &&
+										m.MissionType == mission.MissionType && 
+										m.BusParameter.FloorType == CompletedVehicle.VehicleCode.GetFloorType();
 							}).First();
 						simulationRunData = CreateVectoRunDataGeneric(
 							primaryMission,
