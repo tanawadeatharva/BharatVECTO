@@ -36,12 +36,8 @@ namespace TUGraz.VectoCommon.Models
 	public enum VehicleClass
 	{
 		Unknown,
-		ClassML2r,
-		ClassML2van,
-		ClassML3r,
-		ClassML3van,
-		ClassML4r,
-		ClassML4van,
+
+		// heavy lorries
 		Class1s,
 		Class0,
 		Class1,
@@ -61,7 +57,6 @@ namespace TUGraz.VectoCommon.Models
 		Class15,
 		Class16,
 		Class17,
-
 
 		// primary bus super groups
 		ClassP31_32,
@@ -153,9 +148,18 @@ namespace TUGraz.VectoCommon.Models
 		Class40d,
 		Class40e,
 		Class40f,
-	}
 
-	public static class VehicleClassHelper
+		// medium lorries
+		Class51,
+		Class52,
+		Class53,
+		Class54,
+		Class55,
+		Class56,
+
+    }
+
+    public static class VehicleClassHelper
 	{
 		private const string Prefix = "Class";
 
@@ -172,12 +176,12 @@ namespace TUGraz.VectoCommon.Models
 		public static bool IsMediumLorry(this VehicleClass vehicleClass)
 		{
 			switch (vehicleClass) {
-				case VehicleClass.ClassML2r:
-				case VehicleClass.ClassML2van:
-				case VehicleClass.ClassML3r:
-				case VehicleClass.ClassML3van:
-				case VehicleClass.ClassML4r:
-				case VehicleClass.ClassML4van:
+				case VehicleClass.Class51:
+				case VehicleClass.Class52:
+				case VehicleClass.Class53:
+				case VehicleClass.Class54:
+				case VehicleClass.Class55:
+				case VehicleClass.Class56:
 					return true;
 				default:
 					return false;
@@ -187,9 +191,9 @@ namespace TUGraz.VectoCommon.Models
 		public static bool IsVan(this VehicleClass vehicleClass)
 		{
 			switch (vehicleClass) {
-				case VehicleClass.ClassML2van:
-				case VehicleClass.ClassML3van:
-				case VehicleClass.ClassML4van:
+				case VehicleClass.Class52:
+				case VehicleClass.Class54:
+				case VehicleClass.Class56:
 					return true;
 				default:
 					return false;
