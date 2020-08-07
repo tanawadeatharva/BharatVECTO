@@ -59,7 +59,7 @@ namespace TUGraz.VectoCore.Tests.Utils
 					Assert.AreEqual(message, ex.Message);
 				}
 				if (messageContains != null) {
-					Assert.IsTrue(ex.Message.Contains(messageContains));
+					Assert.IsTrue(ex.Message.Contains(messageContains), "Exception message does not contain expected text. Expected: '{1}', Message: '{0}'", ex.Message, messageContains);
 				}
 			}
 		}

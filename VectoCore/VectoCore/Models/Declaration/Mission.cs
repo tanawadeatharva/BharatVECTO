@@ -130,7 +130,9 @@ namespace TUGraz.VectoCore.Models.Declaration
 		public bool HVACHeatpump { get; internal set; }
 		public bool HVACAdjustableAuxHeater { get; internal set; }
 
+		// used for primary bus only
 		public bool HVACSeparateAirDistributionDucts { get; internal set; }
+
 		public PerSquareMeter PassengerDensityLow { get;  internal set; }
 		public PerSquareMeter PassengerDensityRef { get; internal set; }
 		public VehicleClass BusGroup { get; internal set; }
@@ -155,6 +157,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 		public Meter EntranceHeight { get; set; }
 		public VehicleCode VehicleCode { get; set; }
 		public FloorType FloorType { get; set; }
+		public IList<BusHVACSystemConfiguration> SeparateAirDistributionDuctsHVACCfg { get; set; }
 	}
 
 	

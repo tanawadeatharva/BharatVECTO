@@ -191,6 +191,11 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 				throw new VectoException("HVAC System Configuration {0} requires PassengerAC Technology", hvacConfiguration);
 			}
 
+			if (mission.BusParameter.SeparateAirDistributionDuctsHVACCfg.Contains(hvacConfiguration) &&
+				!completedVehicle.Components.BusAuxiliaries.HVACAux.SeparateAirDistributionDucts) {
+				throw new VectoException("Input parameter 'separate air distribution ducts' has to be set to 'true' for vehicle group '{0}' and HVAC configuration '{1}'",
+					mission.BusParameter.BusGroup.GetClassNumber(), hvacConfiguration.GetName());
+			}
 			var internalLength = hvacConfiguration == BusHVACSystemConfiguration.Configuration2
 				? 2 * Constants.BusParameters.DriverCompartmentLength // OK
 				: DeclarationData.BusAuxiliaries.CalculateInternalLength(

@@ -105,6 +105,7 @@
     <Compile Include="Integration\CoachAdvancedAuxPowertrain.cs" />
     <Compile Include="Integration\CoachPowerTrain.cs" />
     <Compile Include="Integration\CompletedBus\CompletedBusFactorMethodTest.cs" />
+    <Compile Include="Integration\CompletedBus\CompletedBusSanityCheckTests.cs" />
     <Compile Include="Integration\Declaration\ADASVehicleTest.cs" />
     <Compile Include="Integration\Declaration\EngineInputDataTests.cs" />
     <Compile Include="Integration\Declaration\NaturalGasVehicles.cs" />
