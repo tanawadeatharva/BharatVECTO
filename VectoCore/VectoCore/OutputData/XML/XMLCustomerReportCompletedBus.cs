@@ -55,9 +55,7 @@ namespace TUGraz.VectoCore.OutputData.XML {
 				new XElement(tns + XMLNames.Vehicle_VocationalVehicle, modelData.VehicleData.VocationalVehicle),
 				new XElement(tns + XMLNames.Vehicle_SleeperCab, modelData.VehicleData.SleeperCab),
 				new XElement(
-					tns + "RegisteredPassengers",
-					new XElement(tns + XMLNames.Bus_LowerDeck, modelData.VehicleData.InputData.NumberOfPassengersLowerDeck),
-					new XElement(tns + XMLNames.Bus_UpperDeck, modelData.VehicleData.InputData.NumberOfPassengersUpperDeck)
+					tns + "RegisteredPassengers", modelData.VehicleData.InputData.NumberOfPassengersLowerDeck + modelData.VehicleData.InputData.NumberOfPassengersUpperDeck
 				),
 				new XElement(tns + XMLNames.Bus_LowEntry, modelData.VehicleData.InputData.LowEntry),
 				new XElement(tns + XMLNames.Bus_HeighIntegratedBody, modelData.VehicleData.InputData.Height.ToXMLFormat(3)),
