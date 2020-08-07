@@ -37,6 +37,7 @@ using System.Windows.Forms.VisualStyles;
 using System.Xml;
 using System.Xml.Linq;
 using TUGraz.VectoCommon.BusAuxiliaries;
+using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Resources;
@@ -768,8 +769,10 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		{
 			get
 			{
-				return ElementExists(XMLNames.Vehicle_CargoVolume)
-					? GetDouble(XMLNames.Vehicle_CargoVolume).SI<CubicMeter>()
+				if (VehicleCategory == VehicleCategory.Van && !ElementExists(XMLNames.Vehicle_CargoVolume)) {
+					throw new VectoException("Medium lorries with type Van require the input parameter cargo volume!");
+				}
+				return ElementExists(XMLNames.Vehicle_CargoVolume) ? GetDouble(XMLNames.Vehicle_CargoVolume).SI<CubicMeter>()
 					: 0.SI<CubicMeter>();
 			}
 		}
