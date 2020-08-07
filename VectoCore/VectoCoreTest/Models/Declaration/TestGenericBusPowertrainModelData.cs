@@ -10,6 +10,16 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 	public class TestGenericBusPowertrainModelData
 	{
 
+        /*  expected values copied from excel demo calculation (T_max=1120, n_rated=2200, i=1
+                   , mue   , TP_1000
+                   , [-]   , [-]   , [Nm]
+Stall point        , 0.000 , 1.800 , 377.804
+Intermediate point , 0.600 , 1.233 , 302.243
+Coupling point     , 0.900 , 0.950 , 188.902
+Overrun            , 1.000 , 0.950 , 0.000
+Drag               , 5.000 , 0.900 , -1511.216
+
+		 */
 		[TestCase()]
 		public void TestGenericATSerialTCData()
 		{
@@ -53,7 +63,23 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 			Assert.AreEqual(0, tcData.TorqueConverterEntries[idx].Torque.Value(), 1e-3);
         }
 
-		[TestCase()]
+        /*  expected values copied from excel demo calculation (T_max=1120, n_rated=2200, i=1.4492754
+					, nue   , mue   , TP_1000
+					, [-]   , [-]   , [Nm]
+Stall point         , 0.000 , 5.507 , 377.80
+					, 0.069 , 4.039 , 346.32
+					, 0.138 , 3.430 , 314.84
+					, 0.207 , 2.964 , 283.35
+					, 0.276 , 2.570 , 251.87
+					, 0.345 , 2.223 , 220.39
+Intermediate point  , 0.414 , 1.910 , 188.90
+					, 0.483 , 1.622 , 144.82
+					, 0.552 , 1.353 , 100.75
+Coupling point      , 0.621 , 1.101 , 56.67
+Overrun             , 0.690 , 0.942 , 0.00
+Drag                , 3.450 , 1.304 , -1511.22
+		*/
+        [TestCase()]
 		public void TestGenericATPowerSplitTCData()
 		{
 			var maxEngineTorque = 1120.SI<NewtonMeter>();
