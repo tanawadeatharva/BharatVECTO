@@ -414,7 +414,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 				var ratio = double.IsNaN(retVal.Gears[1].Ratio) ? 1 : retVal.Gears[1].TorqueConverterRatio / retVal.Gears[1].Ratio;
 				retVal.PowershiftShiftTime = DeclarationData.Gearbox.PowershiftShiftTime;
 
-				retVal.TorqueConverterData = CreateTorqueConverterData(torqueConverter, ratio, engine);
+				retVal.TorqueConverterData = CreateTorqueConverterData(gearbox.Type, torqueConverter, ratio, engine);
 				
 				if (torqueConverter != null) {
 					retVal.TorqueConverterData.ModelName = torqueConverter.Model;
@@ -427,7 +427,9 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			return retVal;
 		}
 
-		protected virtual TorqueConverterData CreateTorqueConverterData(ITorqueConverterDeclarationInputData torqueConverter, double ratio, CombustionEngineData componentsEngineInputData)
+		protected virtual TorqueConverterData CreateTorqueConverterData(GearboxType gearboxType,
+			ITorqueConverterDeclarationInputData torqueConverter, double ratio,
+			CombustionEngineData componentsEngineInputData)
 		{
 			return TorqueConverterDataReader.Create(
 				torqueConverter.TCData,

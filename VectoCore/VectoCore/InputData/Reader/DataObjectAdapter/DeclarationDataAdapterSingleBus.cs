@@ -58,7 +58,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 		}
 
 
-		protected override TorqueConverterData CreateTorqueConverterData(
+		protected override TorqueConverterData CreateTorqueConverterData(GearboxType gearboxType,
 			ITorqueConverterDeclarationInputData torqueConverter, double ratio, CombustionEngineData engineData)
 		{
 			return TorqueConverterDataReader.Create(

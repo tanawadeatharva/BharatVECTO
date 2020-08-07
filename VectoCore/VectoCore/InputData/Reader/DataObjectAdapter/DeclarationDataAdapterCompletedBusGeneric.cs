@@ -90,7 +90,8 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 
 		#region Overrides of DeclarationDataAdapterHeavyLorry
 
-		protected override TorqueConverterData CreateTorqueConverterData(ITorqueConverterDeclarationInputData torqueConverter, double ratio, CombustionEngineData engineData)
+		protected override TorqueConverterData CreateTorqueConverterData(GearboxType gearboxType,
+			ITorqueConverterDeclarationInputData torqueConverter, double ratio, CombustionEngineData engineData)
 		{
 			if (torqueConverter != null) {
 				return TorqueConverterDataReader.Create(
@@ -100,7 +101,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 					DeclarationData.TorqueConverter.CLUpshiftMinAcceleration,
 					DeclarationData.TorqueConverter.CCUpshiftMinAcceleration);
 			}
-			return _genericTorqueConverterData.CreateTorqueConverterData(ratio, engineData);
+			return _genericTorqueConverterData.CreateTorqueConverterData(gearboxType, ratio, engineData);
 		}
 
 		#endregion
