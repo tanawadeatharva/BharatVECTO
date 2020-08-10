@@ -144,6 +144,8 @@
     <Compile Include="InputData\FileIO\JSON\JSONComponentInputData.cs" />
     <Compile Include="InputData\FileIO\JSON\JSONElectricMotor.cs" />
     <Compile Include="InputData\FileIO\JSON\JsonExtensionMethods.cs" />
+    <Compile Include="InputData\FileIO\JSON\JSONHybridStrategyParameters.cs" />
+    <Compile Include="InputData\FileIO\JSON\JSONSubComponent.cs" />
     <Compile Include="InputData\FileIO\JSON\JSONTCUData.cs" />
     <Compile Include="InputData\FileIO\JSON\SSMInputData.cs" />
     <Compile Include="InputData\FileIO\XML\Declaration\DataProvider\AbstractCommonComponentType.cs" />
@@ -278,6 +280,7 @@
     <Compile Include="InputData\FileIO\XML\Declaration\IXMLDeclarationInputDataReader.cs" />
     <Compile Include="InputData\FileIO\XML\IXMLInputDataReader.cs" />
     <Compile Include="InputData\FileIO\XML\XMLInputDataNinjectModule.cs" />
+    <Compile Include="InputData\Reader\ComponentData\BatteryInternalResistanceReader.cs" />
     <Compile Include="InputData\Reader\ComponentData\ElectricMotorMapReader.cs" />
     <Compile Include="InputData\Reader\DataObjectAdapter\DeclarationDataAdapterPrimaryBus.cs" />
     <Compile Include="InputData\Reader\ComponentData\ElectricFullLoadCurveReader.cs" />
@@ -399,6 +402,7 @@
     <Compile Include="Models\SimulationComponent\IHybridControlStrategy.cs" />
     <Compile Include="Models\SimulationComponent\Impl\Battery.cs" />
     <Compile Include="Models\SimulationComponent\Impl\BatteryElectricMotorController.cs" />
+    <Compile Include="Models\SimulationComponent\Impl\DummyGearboxInfo.cs" />
     <Compile Include="Models\SimulationComponent\Impl\ElectricAuxiliary.cs" />
     <Compile Include="Models\SimulationComponent\Impl\ElectricMotor.cs" />
     <Compile Include="Models\SimulationComponent\Impl\HybridController.cs" />
@@ -718,6 +722,11 @@
     <Compile Include="Utils\XMLValidator.cs" />
     <Compile Include="Utils\XPathHelper.cs" />
     <Compile Include="Ninject\VectoNinjectModule.cs" />
+    <Compile Include="VersionNumber1.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>VersionNumber.t4</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
@@ -966,10 +975,6 @@
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\VectoCommon\AdvancedAuxiliaryInterfaces\AdvancedAuxiliaryInterfaces.vbproj">
-      <Project>{b4b9bd2f-fd8f-4bb8-82fa-e2154d2c7fbd}</Project>
-      <Name>AdvancedAuxiliaryInterfaces</Name>
-    </ProjectReference>
     <ProjectReference Include="..\..\VectoCommon\VectoCommon\VectoCommon.csproj">
       <Project>{79a066ad-69a9-4223-90f6-6ed5d2d084f4}</Project>
       <Name>VectoCommon</Name>

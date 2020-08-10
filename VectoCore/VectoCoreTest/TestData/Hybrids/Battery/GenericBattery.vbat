@@ -11,20 +11,8 @@
     "SOC_min": 20,
     "SOC_max": 80,
     "Capacity": 7.5,
-    "InternalResistance": 0.4986666,
+    "InternalResistanceCurve": "GenericBattery.vbatr",
     "MaxCurrentFactor": 50,
-    "SOC": [
-      [ 0, 590 ],
-      [ 10, 614 ],
-      [ 20, 626 ],
-      [ 30, 634 ],
-      [ 40, 638 ],
-      [ 50, 640 ],
-      [ 60, 640 ],
-      [ 70, 642 ],
-      [ 80, 646 ],
-      [ 90, 650 ],
-      [ 100, 658 ]
-    ]
+    "SoCCurve": "GenericBattery.vbatv"
   }
 }

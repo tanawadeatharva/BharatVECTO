@@ -35,6 +35,7 @@ using System.Data;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using TUGraz.VectoCommon.BusAuxiliaries;
+using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Configuration;
@@ -270,7 +271,10 @@ namespace TUGraz.VectoCore.OutputData
 		[MethodImpl(MethodImplOptions.Synchronized)]
 		protected DataRow GetResultRow(IModalDataContainer modData, VectoRunData runData)
 		{
-			UpdateTableColumns(modData.FuelData, runData.EngineData.MultipleEngineFuelModes);
+			if (modData.HasCombustionEngine) {
+				UpdateTableColumns(modData.FuelData, runData.EngineData.MultipleEngineFuelModes);
+			}
+
 			var row = Table.NewRow();
 			Table.Rows.Add(row);
 			return row;
@@ -296,7 +300,7 @@ namespace TUGraz.VectoCore.OutputData
 
 				cargoVolume = runData.VehicleData.CargoVolume;
 				vehicleLoading = runData.VehicleData.Loading;
-				gearCount = (uint)runData.GearboxData.Gears.Count;
+				gearCount = (uint?)runData.GearboxData?.Gears.Count ?? 0u;
 				passengerCount = runData.VehicleData.PassengerCount;
 			}
 
@@ -319,7 +323,14 @@ namespace TUGraz.VectoCore.OutputData
 
 			if (modData.HasCombustionEngine) {
 				WriteFuelconsumptionEntries(modData, row, vehicleLoading, cargoVolume, passengerCount, runData);
-			}
+			} else {
+				if (runData.ElectricMachinesData.Count > 0) {
+					var col = Table.Columns.Add(Fields.ElectricEnergyConsumptionPerKm, typeof(ConvertedSI));
+					col.SetOrdinal(Table.Columns[Fields.CO2_KM].Ordinal);
+					row[Fields.ElectricEnergyConsumptionPerKm] =
+						(-modData.TimeIntegral<WattSecond>(ModalResultField.P_battery_terminal) / modData.Distance).Cast<JoulePerMeter>().ConvertToKiloWattHourPerKiloMeter();
+				}
+            }
 
 			if (runData.Mission?.MissionType == MissionType.VerificationTest) {
 				var fuelsWhtc = runData.EngineData.Fuels.Select(
@@ -347,8 +358,9 @@ namespace TUGraz.VectoCore.OutputData
 			row[Fields.COASTING_TIME_SHARE] = (ConvertedSI)modData.CoastingTimeShare();
 			row[Fields.BRAKING_TIME_SHARE] = (ConvertedSI)modData.BrakingTimeShare();
 
-			row[Fields.NUM_ICE_STARTS] = (ConvertedSI)modData.NumICEStarts().SI<Scalar>();
-
+			if (runData.EngineData != null) {
+				row[Fields.NUM_ICE_STARTS] = (ConvertedSI)modData.NumICEStarts().SI<Scalar>();
+			}
 
 			if (gearCount <= 0) {
 				return;
@@ -359,7 +371,7 @@ namespace TUGraz.VectoCore.OutputData
 
 		
 
-		private static void WriteFuelconsumptionEntries(
+		private void WriteFuelconsumptionEntries(
 			IModalDataContainer modData, DataRow row, Kilogram vehicleLoading, 
 			CubicMeter cargoVolume, double? passengers, VectoRunData runData)
 		{
@@ -596,8 +608,11 @@ namespace TUGraz.VectoCore.OutputData
 			row[Fields.MAX_SPEED] = (ConvertedSI)modData.MaxSpeed().AsKmph.SI<Scalar>();
 			row[Fields.MAX_ACCELERATION] = (ConvertedSI)modData.MaxAcceleration();
 			row[Fields.MAX_DECELERATION] = (ConvertedSI)modData.MaxDeceleration();
-			row[Fields.AVG_ENGINE_SPEED] = (ConvertedSI)modData.AvgEngineSpeed().AsRPM.SI<Scalar>();
-			row[Fields.MAX_ENGINE_SPEED] = (ConvertedSI)modData.MaxEngineSpeed().AsRPM.SI<Scalar>();
+			if (runData.EngineData != null) {
+				row[Fields.AVG_ENGINE_SPEED] = (ConvertedSI)modData.AvgEngineSpeed().AsRPM.SI<Scalar>();
+				row[Fields.MAX_ENGINE_SPEED] = (ConvertedSI)modData.MaxEngineSpeed().AsRPM.SI<Scalar>();
+			}
+
 			row[Fields.AVERAGE_POS_ACC] = (ConvertedSI)modData.AverageAccelerationBelowTargetSpeed();
 			if (accTimeShare != null && decTimeShare != null && cruiseTimeShare != null) {
 				var shareSum = accTimeShare + decTimeShare + cruiseTimeShare + stopTimeShare;
@@ -621,14 +636,14 @@ namespace TUGraz.VectoCore.OutputData
 				return;
 			}
 
-			var gbxOutSignal = runData.Retarder.Type == RetarderType.TransmissionOutputRetarder
+			var gbxOutSignal = runData.Retarder != null && runData.Retarder.Type == RetarderType.TransmissionOutputRetarder
 				? ModalResultField.P_retarder_in
 				: (runData.AngledriveData == null ? ModalResultField.P_axle_in : ModalResultField.P_angle_in);
 			var eGbxIn = modData.TimeIntegral<WattSecond>(ModalResultField.P_gbx_in, x => x > 0);
 			var eGbxOut = modData.TimeIntegral<WattSecond>(gbxOutSignal, x => x > 0);
 			row[Fields.AVERAGE_GEARBOX_EFFICIENCY] = eGbxIn.IsEqual(0, 1e-9) ? 0 : (eGbxOut / eGbxIn).Value();
 
-			if (runData.GearboxData.Type.AutomaticTransmission()) {
+			if (runData.GearboxData != null && runData.GearboxData.Type.AutomaticTransmission()) {
 				var eTcIn = modData.TimeIntegral<WattSecond>(ModalResultField.P_TC_in, x => x > 0);
 				var eTcOut = eGbxIn;
 				row[Fields.AVERAGE_TORQUE_CONVERTER_EFFICIENCY_WITHOUT_LOCKUP] = eTcIn.IsEqual(0, 1e-9) ? 0 : (eTcOut / eTcIn).Value();
@@ -662,7 +677,7 @@ namespace TUGraz.VectoCore.OutputData
 			row[Fields.AVERAGE_AXLEGEAR_EFFICIENCY] = eAxlIn.IsEqual(0, 1e-9) ? 0 : (eAxlOut / eAxlIn).Value();
 		}
 
-		private static void WriteWorkEntries(IModalDataContainer modData, DataRow row, VectoRunData runData)
+		private void WriteWorkEntries(IModalDataContainer modData, DataRow row, VectoRunData runData)
 		{
 			row[Fields.E_FCMAP_POS] = modData.TotalEngineWorkPositive().ConvertToKiloWattHour();
 			row[Fields.E_FCMAP_NEG] = (-modData.TotalEngineWorkNegative()).ConvertToKiloWattHour();
@@ -700,7 +715,52 @@ namespace TUGraz.VectoCore.OutputData
 
 			row[Fields.E_AUX_ESS_MECH] = modData.WorkAuxiliariesDuringEngineStop().ConvertToKiloWattHour();
 			row[Fields.E_ICE_START] = modData.WorkEngineStart().ConvertToKiloWattHour();
-		}
+
+			foreach (var em in runData.ElectricMachinesData) {
+				var emColumns = new List<Tuple<string, ConvertedSI>>() {
+					Tuple.Create(Fields.E_EM_DRIVE_FORMAT, modData.TotalElectricMotorWorkDrive(em.Item1).ConvertToKiloWattHour()), 
+					Tuple.Create(Fields.E_EM_GENERATE_FORMAT, modData.TotalElectricMotorWorkRecuperate(em.Item1).ConvertToKiloWattHour()),
+					Tuple.Create(Fields.E_EM_AVG_SPEED_FORMAT, modData.ElectricMotorAverageSpeed(em.Item1).ConvertToRoundsPerMinute()),
+					Tuple.Create(Fields.E_EM_ETA_MOT_FORMAT, new ConvertedSI(modData.ElectricMotorEfficiencyDrive(em.Item1), "")),
+					Tuple.Create(Fields.E_EM_ETA_GEN_FORMAT, new ConvertedSI(modData.ElectricMotorEfficiencyGenerate(em.Item1), "")),
+					Tuple.Create(Fields.E_EM_OFF_Loss_Format, modData.ElectricMotorOffLosses(em.Item1).ConvertToKiloWattHour())
+				};
+				emColumns.Reverse();
+				foreach (var entry in emColumns) {
+					var colName = string.Format(entry.Item1, em.Item1.GetName());
+					if (!Table.Columns.Contains(colName)) {
+						var col = Table.Columns.Add(colName, typeof(ConvertedSI));
+						col.SetOrdinal(Table.Columns[Fields.E_GRAD].Ordinal + 1);
+					}
+					row[colName] = entry.Item2;
+                }
+			}
+
+			if (runData.BatteryData != null) {
+				foreach (var field in new[] { Fields.BatteryStartSoC, Fields.BatteryEndSoC }) {
+					var col = Table.Columns.Add(field, typeof(double));
+					col.SetOrdinal(Table.Columns[Fields.P_WHEEL].Ordinal);
+				}
+
+				foreach (var field in new[] { Fields.BatteryDeltaSoC, Fields.E_BAT_LOSS, Fields.E_Batt_T_chg, Fields.E_Batt_T_dischg, Fields.E_Batt_int_chg, Fields.E_Batt_int_dischg}) {
+					var col = Table.Columns.Add(field, typeof(ConvertedSI));
+					col.SetOrdinal(Table.Columns[Fields.P_WHEEL].Ordinal);
+                }
+				
+				row[Fields.BatteryStartSoC] = runData.BatteryData.InitialSoC * 100; // modData.BatteryStartSoC();
+				row[Fields.BatteryEndSoC] = modData.BatteryEndSoC();
+				var cellVoltage = runData.BatteryData.SOCMap.Lookup(runData.BatteryData.InitialSoC);
+				row[Fields.BatteryDeltaSoC] =
+					(modData.BatteryEnergyEnd() - 
+					(runData.BatteryData.InitialSoC * runData.BatteryData.Capacity * cellVoltage * 100).Cast<WattSecond>()).ConvertToKiloWattHour();
+
+				row[Fields.E_BAT_LOSS] = modData.BatteryLoss().ConvertToKiloWattHour();
+				row[Fields.E_Batt_T_chg] = modData.WorkBatteryChargeTerminal().ConvertToKiloWattHour();
+				row[Fields.E_Batt_T_dischg] = modData.WorkBatteryDischargeTerminal().ConvertToKiloWattHour();
+				row[Fields.E_Batt_int_chg] = modData.WorkBatteryChargeInternal().ConvertToKiloWattHour();
+				row[Fields.E_Batt_int_dischg] = modData.WorkBatteryDischargeInternal().ConvertToKiloWattHour();
+			}
+        }
 
 		private void WriteFullPowertrain(VectoRunData runData, DataRow row)
 		{
@@ -735,7 +795,8 @@ namespace TUGraz.VectoCore.OutputData
 		private static void WriteVehicleData(VectoRunData runData, DataRow row)
 		{
 			var data = runData.VehicleData;
-			var gbxType = runData.GearboxData.Type;
+			//if (runData.VehicleData.b)
+			var gbxType = runData.GearboxData?.Type ?? GearboxType.NoGeabox;
 
 			row[Fields.VEHICLE_MANUFACTURER] = data.Manufacturer;
 			row[Fields.VIN_NUMBER] = data.VIN;
@@ -774,6 +835,9 @@ namespace TUGraz.VectoCore.OutputData
 
 		private static void WriteEngineData(CombustionEngineData data, DataRow row)
 		{
+			if (data == null) {
+				return;
+			}
 			row[Fields.ENGINE_MANUFACTURER] = data.Manufacturer;
 			row[Fields.ENGINE_MODEL] = data.ModelName;
 			row[Fields.ENGINE_CERTIFICATION_NUMBER] = data.CertificationNumber;
@@ -819,7 +883,10 @@ namespace TUGraz.VectoCore.OutputData
 
 		private static void WriteAxlegearData(AxleGearData data, DataRow row)
 		{
-			row[Fields.AXLE_MANUFACTURER] = data.Manufacturer;
+			if (data == null) {
+				return;
+			}
+            row[Fields.AXLE_MANUFACTURER] = data.Manufacturer;
 			row[Fields.AXLE_MODEL] = data.ModelName;
 			row[Fields.AXLE_RATIO] = (ConvertedSI)data.AxleGear.Ratio.SI<Scalar>();
 			row[Fields.AXLEGEAR_CERTIFICATION_METHOD] = data.CertificationMethod.GetName();
@@ -878,8 +945,8 @@ namespace TUGraz.VectoCore.OutputData
 
 		private static void WriteRetarderData(RetarderData data, DataRow row)
 		{
-			row[Fields.RETARDER_TYPE] = data.Type.GetLabel();
-			if (data.Type.IsDedicatedComponent()) {
+			row[Fields.RETARDER_TYPE] = (data?.Type ?? RetarderType.None).GetLabel();
+			if (data != null && data.Type.IsDedicatedComponent()) {
 				row[Fields.RETARDER_MANUFACTURER] = data.Manufacturer;
 				row[Fields.RETARDER_MODEL] = data.ModelName;
 				row[Fields.RETARDER_CERTIFICATION_METHOD] = data.CertificationMethod.GetName();
@@ -896,7 +963,10 @@ namespace TUGraz.VectoCore.OutputData
 
 		private static void WriteGearboxData(GearboxData data, DataRow row)
 		{
-			row[Fields.GEARBOX_MANUFACTURER] = data.Manufacturer;
+			if (data == null) {
+				return;
+			}
+            row[Fields.GEARBOX_MANUFACTURER] = data.Manufacturer;
 			row[Fields.GEARBOX_MODEL] = data.ModelName;
 			row[Fields.GEARBOX_TYPE] = data.Type;
 			row[Fields.GEARBOX_CERTIFICATION_NUMBER] = data.CertificationMethod == CertificationMethod.StandardValues
@@ -1059,7 +1129,9 @@ namespace TUGraz.VectoCore.OutputData
 			public const string FCFINAL_LiterPer100M3KM = "FC-Final{0} [l/100m³km]";
 			public const string FCFINAL_LiterPer100PassengerKM = "FC-Final{0} [l/100Pkm]";
 
-			public const string CO2_KM = "CO2 [g/km]";
+			public const string ElectricEnergyConsumptionPerKm = "EC_el_final [kWh/km]";
+			
+            public const string CO2_KM = "CO2 [g/km]";
 			public const string CO2_TKM = "CO2 [g/tkm]";
 			public const string CO2_M3KM = "CO2 [g/m³km]";
 			public const string CO2_PKM = "CO2 [g/Pkm]";
@@ -1187,6 +1259,23 @@ namespace TUGraz.VectoCore.OutputData
 			public const string AIRDRAG_CERTIFICATION_METHOD = "AirDrag certification option";
 
 			public const string AVERAGE_POS_ACC = "a_avg_acc";
-		}
-	}
+
+			public const string E_EM_DRIVE_FORMAT = "E_EM_{0}_drive [kWh]";
+			public const string E_EM_GENERATE_FORMAT = "E_EM_{0}_gen [kWh]";
+			public const string E_EM_AVG_SPEED_FORMAT = "n_EM_{0}_avg [rpm]";
+			public const string E_EM_ETA_MOT_FORMAT = "η_EM_{0}_mot";
+			public const string E_EM_ETA_GEN_FORMAT = "η_EM_{0}_gen";
+			public const string E_EM_OFF_Loss_Format = "E_EM_{0}_off_loss [kWh]";
+
+
+            public const string BatteryStartSoC = "Battery Start SoC [%]";
+			public const string BatteryEndSoC = "Battery end SoC [%]";
+			public const string BatteryDeltaSoC = "Battery Delta SoC [kWh]";
+			public const string E_BAT_LOSS = "E_Batt_loss [kWh]";
+			public const string E_Batt_T_chg = "E_Batt_T_chg [kWh]";
+			public const string E_Batt_T_dischg = "E_Batt_T_dischg [kWh]";
+			public const string E_Batt_int_chg = "E_Batt_int_chg [kWh]";
+			public const string E_Batt_int_dischg = "E_Batt_int_dischg [kWh]";
+        }
+    }
 }

@@ -380,13 +380,13 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 
 		[ModalResultField(typeof(SI), caption: "n_em-{0}_avg [1/min]", outputFactor: 60 / (2 * Math.PI))] n_electricMotor_,
 		[ModalResultField(typeof(SI), caption: "T_em-{0} [Nm]")] T_electricMotor_,
-		[ModalResultField(typeof(SI), caption: "T_em-{0}_full [Nm]")] T_electricMotor_full_,
-		[ModalResultField(typeof(SI), caption: "T_em-{0}_drag [Nm]")] T_electricMotor_drag_,
+		[ModalResultField(typeof(SI), caption: "T_em-{0}_mot_max [Nm]")] T_electricMotor_drive_max_,
+		[ModalResultField(typeof(SI), caption: "T_em-{0}_gen_max [Nm]")] T_electricMotor_gen_max_,
 		[ModalResultField(typeof(SI), caption: "P_em-{0}_in [kW]", outputFactor: 1e-3)] P_electricMotor_in_,
 		[ModalResultField(typeof(SI), caption: "P_em-{0}_out [kW]", outputFactor: 1e-3)] P_electricMotor_out_,
 		[ModalResultField(typeof(SI), caption: "P_em-{0}_mech [kW]", outputFactor: 1e-3)] P_electricMotor_mech_,
 		[ModalResultField(typeof(SI), caption: "P_em-{0}_el [kW]", outputFactor: 1e-3)] P_electricMotor_el_,
-		[ModalResultField(typeof(SI), caption: "P_em-{0}_drag_max_ [kW]", outputFactor: 1e-3)] P_electricMotor_drag_max_,
+		[ModalResultField(typeof(SI), caption: "P_em-{0}_gen_max_ [kW]", outputFactor: 1e-3)] P_electricMotor_gen_max_,
 		[ModalResultField(typeof(SI), caption: "P_em-{0}_drive_max [kW]", outputFactor: 1e-3)] P_electricMotor_drive_max_,
 		//[ModalResultField(typeof(SI), caption: "P_em-{0}_brake [kW]", outputFactor: 1e-3)] P_electricMotor_brake_,
 		[ModalResultField(typeof(SI), caption: "P_em-{0}_loss [kW]", outputFactor: 1e-3)] P_electricMotorLoss_,
@@ -416,7 +416,9 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 		[ModalResultField(typeof(SI), caption: "U_bat_terminal [V]")] U_bat_terminal,
 		[ModalResultField(typeof(SI), caption: "U_0_bat [V]")] U0_bat,
 		[ModalResultField(typeof(SI), caption: "I_bat [kW]")] I_bat,
-	}
+		
+		[ModalResultField(typeof(SI), caption: "E_Batt [kWh]", outputFactor: 1/3600e3)] E_Bat,
+    }
 
 	[AttributeUsage(AttributeTargets.Field)]
 	public class ModalResultFieldAttribute : Attribute

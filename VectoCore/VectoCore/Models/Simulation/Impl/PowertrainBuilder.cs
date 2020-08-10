@@ -277,7 +277,6 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 			powertrain.AddComponent(engine, idleController)
 				.AddAuxiliaries(container, data);
-			_modData.HasTorqueConverter = data.GearboxData.Type.AutomaticTransmission();
 
 			return container;
 		}
@@ -307,17 +306,25 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			powertrain.AddComponent(new StopStartCombustionEngine(container, data.EngineData))
 				.AddAuxiliaries(container, data);
 
-			_modData.HasTorqueConverter = data.GearboxData.Type.AutomaticTransmission();
-
+			
 			return container;
 		}
 
 		private IVehicleContainer BuildFullPowertrain(VectoRunData data)
 		{
-			var isHybridVehicle = data.BatteryData != null && data.ElectricMachinesData != null &&
-								data.ElectricMachinesData.Count > 0;
-
-			return isHybridVehicle ? BuildFullPowertrainHybrid(data) : BuildFullPowertrainConventional(data);
+			var isHybridVehicle = data.BatteryData != null && data.ElectricMachinesData.Count > 0;
+			switch (data.JobType) {
+				case VectoSimulationJobType.ConventionalVehicle:
+					return BuildFullPowertrainConventional(data);
+                case VectoSimulationJobType.ParallelHybridVehicle:
+					return BuildFullPowertrainHybrid(data);
+				case VectoSimulationJobType.BatteryElectricVehicle:
+					return BuildBatteryElectricPowertrain(data);
+				case VectoSimulationJobType.EngineOnlySimulation:
+					return BuildEngineOnly(data);
+				default:
+					throw new ArgumentOutOfRangeException();
+			}
 		}
 
 		private IVehicleContainer BuildFullPowertrainConventional(VectoRunData data)
@@ -350,8 +357,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			powertrain.AddComponent(engine, idleController)
 				.AddAuxiliaries(container, data);
 
-			_modData.HasTorqueConverter = data.GearboxData.Type.AutomaticTransmission();
-
+			
 			return container;
 		}
 
@@ -413,14 +419,78 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 			cycle.IdleController = idleController as IdleControllerSwitcher;
 
-			_modData.HasTorqueConverter = data.GearboxData.Type.AutomaticTransmission();
-
+			
 			return container;
 		}
 
-		
+		private IVehicleContainer BuildBatteryElectricPowertrain(VectoRunData data)
+		{
+			if (data.Cycle.CycleType != CycleType.DistanceBased)
+			{
+				throw new VectoException("CycleType must be DistanceBased");
+			}
 
-		private IElectricMotor GetElectricMachine(PowertrainPosition pos,
+			if (data.ElectricMachinesData.Count > 1) {
+				throw new VectoException("Electric motors on multiple positions not supported");
+			}
+
+			var container = new VehicleContainer(data.ExecutionMode, _modData, _sumWriter) { RunData = data };
+
+			var battery = new Battery(container, data.BatteryData);
+			battery.Initialize(data.BatteryData.InitialSoC);
+
+			var es = new ElectricSystem(container);
+			es.Connect(battery);
+
+			var ctl = new BatteryElectricMotorController(container, es);
+
+            var aux = new ElectricAuxiliary(container);
+			aux.AddConstant("P_aux_el", data.ElectricAuxDemand ?? 0.SI<Watt>());
+			es.Connect(aux);
+
+			var cycle = new DistanceBasedDrivingCycle(container, data.Cycle);
+            var powertrain = cycle
+				.AddComponent(new Driver(container, data.DriverData, new DefaultDriverStrategy(container)))
+				.AddComponent(new Vehicle(container, data.VehicleData, data.AirdragData))
+				.AddComponent(new VectoCore.Models.SimulationComponent.Impl.Wheels(container, data.VehicleData.DynamicTyreRadius,
+					data.VehicleData.WheelsInertia))
+				.AddComponent(new Brakes(container));
+
+			var pos = data.ElectricMachinesData.First().Item1;
+			switch (pos)
+			{
+				case PowertrainPosition.HybridPositionNotSet:
+					throw new VectoException("invalid powertrain position");
+				case PowertrainPosition.HybridP0:
+				case PowertrainPosition.HybridP1:
+				case PowertrainPosition.HybridP2:
+				case PowertrainPosition.HybridP3:
+				case PowertrainPosition.HybridP4:
+					throw new VectoException("testcase does not support parallel powertrain configurations");
+				case PowertrainPosition.BatteryElectricB4:
+					powertrain.AddComponent(
+						GetElectricMachine(PowertrainPosition.BatteryElectricB4, data.ElectricMachinesData, container, es, ctl));
+					new DummyGearboxInfo(container);
+					//new MockEngineInfo(container);
+					new ATClutchInfo(container);
+					break;
+				case PowertrainPosition.BatteryElectricB3:
+					powertrain.AddComponent(new AxleGear(container, data.AxleGearData))
+						.AddComponent(
+							GetElectricMachine(PowertrainPosition.BatteryElectricB3, data.ElectricMachinesData, container, es, ctl));
+					new DummyGearboxInfo(container);
+					//new MockEngineInfo(container);
+					new ATClutchInfo(container);
+					break;
+				case PowertrainPosition.BatteryElectricB2:
+					throw new VectoException("Battery Electric configuration B2 currently not supported");
+				default: throw new ArgumentOutOfRangeException(nameof(pos), pos, null);
+			}
+
+			return container;
+        }
+
+        private IElectricMotor GetElectricMachine(PowertrainPosition pos,
 			IList<Tuple<PowertrainPosition, ElectricMotorData>> electricMachinesData, VehicleContainer container,
 			IElectricSystem es, IHybridController ctl)
 		{
@@ -436,7 +506,23 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			return motor;
 		}
 
-		public void BuildSimplePowertrain(VectoRunData data, IVehicleContainer container)
+		private IElectricMotor GetElectricMachine(PowertrainPosition pos,
+			IList<Tuple<PowertrainPosition, ElectricMotorData>> electricMachinesData, VehicleContainer container,
+			IElectricSystem es, IElectricMotorControl ctl)
+		{
+			var motorData = electricMachinesData.FirstOrDefault(x => x.Item1 == pos);
+			if (motorData == null)
+			{
+				return null;
+			}
+
+			container.ModData.AddElectricMotor(pos);
+			var motor = new ElectricMotor(container, motorData.Item2, ctl, pos);
+			motor.Connect(es);
+			return motor;
+		}
+
+        public void BuildSimplePowertrain(VectoRunData data, IVehicleContainer container)
 		{
 			//if (data.Cycle.CycleType != CycleType.DistanceBased) {
 			//	throw new VectoException("CycleType must be DistanceBased");

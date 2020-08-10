@@ -223,12 +223,31 @@
     <Compile Include="BusAuxiliaries\Util\DeleteCell.vb" />
     <Compile Include="BusAuxiliaries\Util\DeleteColumn.vb" />
     <Compile Include="BusAuxiliaries\Util\SIConvert.vb" />
+    <Compile Include="GUI\HybridStratebyParamsForm.Designer.vb">
+      <DependentUpon>HybridStratebyParamsForm.vb</DependentUpon>
+    </Compile>
+    <Compile Include="GUI\HybridStratebyParamsForm.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="GUI\BatteryForm.Designer.vb">
+      <DependentUpon>BatteryForm.vb</DependentUpon>
+    </Compile>
+    <Compile Include="GUI\BatteryForm.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="GUI\ElectricMotorForm.Designer.vb">
+      <DependentUpon>ElectricMotorForm.vb</DependentUpon>
+    </Compile>
+    <Compile Include="GUI\ElectricMotorForm.vb">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="GUI\VectoVTPJobForm.Designer.vb">
       <DependentUpon>VectoVTPJobForm.vb</DependentUpon>
     </Compile>
     <Compile Include="GUI\VectoVTPJobForm.vb">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="Input Files\Battery.vb" />
     <Compile Include="Input Files\BrowserUtils.vb" />
     <Compile Include="GUI\VehicleTorqueLimitsDialog.Designer.vb">
       <DependentUpon>VehicleTorqueLimitsDialog.vb</DependentUpon>
@@ -297,6 +316,7 @@
     <Compile Include="GUI\VehicleAxleDialog.vb">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="Input Files\ElectricMachine.vb" />
     <Compile Include="Input Files\Engine.vb" />
     <Compile Include="Input Files\Gearbox.vb" />
     <Compile Include="Configuration.vb" />
@@ -314,6 +334,7 @@
     <Compile Include="File Browser\FileBrowserFavoritesDialog.vb">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="Input Files\HybridStrategyParams.vb" />
     <Compile Include="Input Files\MockComponents.vb" />
     <Compile Include="Input Files\MockVehicleInputData.vb" />
     <Compile Include="Input Files\VectoEPTPJob.vb" />
@@ -394,6 +415,15 @@
     </EmbeddedResource>
     <EmbeddedResource Include="File Browser\FileBrowserFavoritesDialog.resx">
       <DependentUpon>FileBrowserFavoritesDialog.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GUI\HybridStratebyParamsForm.resx">
+      <DependentUpon>HybridStratebyParamsForm.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GUI\BatteryForm.resx">
+      <DependentUpon>BatteryForm.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GUI\ElectricMotorForm.resx">
+      <DependentUpon>ElectricMotorForm.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="GUI\GraphForm.resx">
       <DependentUpon>GraphForm.vb</DependentUpon>

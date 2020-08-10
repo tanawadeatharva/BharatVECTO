@@ -1,4 +1,4 @@
-n [rpm] , T_drive [Nm] , T_drag [Nm]
+n [rpm] , T_drive [Nm] , T_recuperation [Nm]
 0       , 802.14       , -802.14
 1600    , 802.14       , -802.14
 1665    , 802.14       , -802.14

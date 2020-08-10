@@ -33,6 +33,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.InputData.Reader.ComponentData;
@@ -75,11 +76,8 @@ namespace TUGraz.VectoCore.Tests.Integration
 		public static VehicleContainer CreatePowerTrain(DrivingCycleData cycleData, GearboxType gbxType, string modFileName,
 			bool overspeed = false, KilogramSquareMeter gearBoxInertia = null)
 		{
-			var fileWriter = new FileOutputWriter(modFileName);
-			var modData = new ModalDataContainer(modFileName, new[] { FuelData.Diesel }, fileWriter) {
-				WriteModalResults = true,
-				HasTorqueConverter = true
-			};
+			
+			
 
 			var gearboxData = CreateGearboxData(gbxType);
 			var engineData = MockSimulationDataFactory.CreateEngineDataFromFile(EngineFile, gearboxData.Gears.Count);
@@ -100,6 +98,7 @@ namespace TUGraz.VectoCore.Tests.Integration
 				AirdragData = airdragData,
 				GearboxData = gearboxData,
 				EngineData = engineData,
+				ElectricMachinesData = new List<Tuple<PowertrainPosition, ElectricMotorData>>(),
 				DriverData = driverData,
 				JobName = modFileName,
 				Cycle = cycleData,
@@ -107,7 +106,12 @@ namespace TUGraz.VectoCore.Tests.Integration
 				Aux = new List<VectoRunData.AuxData>(),
 				SimulationType = SimulationType.DistanceCycle
 			};
-			var container = new VehicleContainer(ExecutionMode.Engineering, modData) {
+			var fileWriter = new FileOutputWriter(modFileName);
+			var modData = new ModalDataContainer(runData, fileWriter, null)
+			{
+				WriteModalResults = true,
+			};
+            var container = new VehicleContainer(ExecutionMode.Engineering, modData) {
 				RunData = runData,
 			};
 			var cycle = new DistanceBasedDrivingCycle(container, cycleData);

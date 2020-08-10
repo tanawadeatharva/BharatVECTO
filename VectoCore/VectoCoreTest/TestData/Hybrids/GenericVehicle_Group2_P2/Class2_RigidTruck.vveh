@@ -34,14 +34,16 @@
     },
 	"ElectricMotors": [
         {
-        "Count": 1,
-        "Position": "P2",
-        "MotorFile": "GenericEMotor240kW.vem"
+          "Count": 1,
+          "Ratio": 1,
+          "MechanicalEfficiency":  1, 
+          "Position": "P2",
+          "MotorFile": "GenericEMotor240kW.vem"
         }
-        ],
+    ],
     "Battery": { 
         "NumPacks": 2,
-        "BatteryFile": "GenericBattery.vbat",
+        "BatteryFile": "GenericBattery.vbat"
     },
     "InitialSoC": 80,
     "TorqueLimits": {},
@@ -87,6 +89,10 @@
         }
       ]
     },
+    "EngineStopStart": true,
+    "EcoRoll": "WithEngineStop",
+    "PredictiveCruiseControl": "None",
+    "ATEcoRollReleaseLockupClutch": false,
     "CdA": 4.83,
     "VehicleHeight": 3.0
   }

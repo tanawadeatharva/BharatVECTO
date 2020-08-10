@@ -43,7 +43,9 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 				Entries = new List<ElectricMachineEntry<IElectricMotorEngineeringInputData>>() {
 					new ElectricMachineEntry<IElectricMotorEngineeringInputData>() {
 						ElectricMachine = inputData,
-						Count = 1
+						Count = 1,
+						Ratio = 1,
+						MechanicalEfficiency = 1
 					}
 				}
 			};
@@ -88,7 +90,9 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 				Entries = new List<ElectricMachineEntry<IElectricMotorEngineeringInputData>>() {
 					new ElectricMachineEntry<IElectricMotorEngineeringInputData>() {
 						ElectricMachine = inputData,
-						Count = 1
+						Count = 1,
+						Ratio = 1,
+						MechanicalEfficiency = 1
 					}
 				}
 			};
@@ -130,7 +134,9 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 				Entries = new List<ElectricMachineEntry<IElectricMotorEngineeringInputData>>() {
 					new ElectricMachineEntry<IElectricMotorEngineeringInputData>() {
 						ElectricMachine = inputData,
-						Count = 1
+						Count = 1,
+						Ratio = 1,
+						MechanicalEfficiency = 1
 					}
 				}
 			};
@@ -190,7 +196,9 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 				Entries = new List<ElectricMachineEntry<IElectricMotorEngineeringInputData>>() {
 					new ElectricMachineEntry<IElectricMotorEngineeringInputData>() {
 						ElectricMachine = inputData,
-						Count = 1
+						Count = 1,
+						Ratio = 1,
+						MechanicalEfficiency = 1
 					}
 				}
 			};

@@ -29,8 +29,10 @@
 *   Martin Rexeis, rexeis@ivt.tugraz.at, IVT, Graz University of Technology
 */
 
+using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
@@ -48,6 +50,7 @@ using TUGraz.VectoCore.OutputData.FileIO;
 using TUGraz.VectoCore.Tests.Models.SimulationComponent;
 using TUGraz.VectoCore.Tests.Utils;
 using NUnit.Framework;
+using TUGraz.VectoCommon.InputData;
 
 // ReSharper disable ObjectCreationAsStatement
 
@@ -69,8 +72,20 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 
 		{
 			var fileWriter = new FileOutputWriter("AuxWriteModFileSumFile");
-			var modData = new ModalDataContainer("AuxWriteModFileSumFile", new[] { FuelData.Diesel }, fileWriter) {
-				WriteModalResults = true
+			var runData = new VectoRunData() {
+				JobName = "AuxWriteModFileSumFile",
+				EngineData = new CombustionEngineData() {
+					Fuels = new[] {new CombustionEngineFuelData {
+						FuelData = FuelData.Diesel
+					}}.ToList(),
+				},
+				ElectricMachinesData = new List<Tuple<PowertrainPosition, ElectricMotorData>>(),
+				Cycle = new DrivingCycleData() {
+					Name = "MockCycle",
+				}
+        };
+			var modData = new ModalDataContainer(runData, fileWriter, null) {
+				WriteModalResults = true,
 			};
 			modData.AddAuxiliary("FAN");
 			modData.AddAuxiliary("PS");
@@ -80,7 +95,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 
 			var sumWriter = new SummaryDataContainer(fileWriter);
 			var container = new VehicleContainer(ExecutionMode.Declaration, modData,
-				(modalData) => sumWriter.Write(modalData, 0, 0, new MockRunData()));
+				(modalData) => sumWriter.Write(modalData, 0, 0, runData));
 			var data = DrivingCycleDataReader.ReadFromFile(@"TestData\Cycles\LongHaul_short.vdri", CycleType.DistanceBased, false);
 			new MockDrivingCycle(container, data);
 			new ZeroMileageCounter(container);

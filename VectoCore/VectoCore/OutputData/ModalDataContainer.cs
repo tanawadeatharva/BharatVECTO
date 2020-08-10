@@ -43,13 +43,14 @@ using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.Impl;
+using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Impl;
 
 namespace TUGraz.VectoCore.OutputData
 {
 	public class ModalDataContainer : IModalDataContainer
 	{
-		private readonly bool _writeEngineOnly;
+		//private readonly bool _writeEngineOnly;
 		private readonly IModalDataFilter[] _filters;
 		private readonly Action<ModalDataContainer> _addReportResult;
 		protected internal ModalResults Data { get; set; }
@@ -65,12 +66,12 @@ namespace TUGraz.VectoCore.OutputData
 
 		private readonly ModalResultField[] _electricMotorColumns = new[] {
 			ModalResultField.n_electricMotor_, ModalResultField.T_electricMotor_,
-			ModalResultField.T_electricMotor_full_, ModalResultField.T_electricMotor_drag_,
+			ModalResultField.T_electricMotor_drive_max_, ModalResultField.T_electricMotor_gen_max_,
 			ModalResultField.P_electricMotor_in_, ModalResultField.P_electricMotor_out_,
 			ModalResultField.P_electricMotor_mech_, ModalResultField.P_electricMotor_el_,
 			ModalResultField.P_electricMotorLoss_, ModalResultField.P_electricMotorInertiaLoss_,
 			/*ModalResultField.P_electricMotor_brake_,*/ ModalResultField.P_electricMotor_drive_max_,
-			ModalResultField.P_electricMotor_drag_max_
+			ModalResultField.P_electricMotor_gen_max_
 		};
 
 		public static readonly IList<ModalResultField> FuelConsumptionSignals = new[] {
@@ -82,11 +83,76 @@ namespace TUGraz.VectoCore.OutputData
 		private readonly Dictionary<FuelType, KilogramPerWattSecond> _engLine = new Dictionary<FuelType, KilogramPerWattSecond>();
 		private readonly Dictionary<FuelType, KilogramPerWattSecond> _vehLine = new Dictionary<FuelType, KilogramPerWattSecond>();
 		private List<PowertrainPosition> ElectricMotors = new List<PowertrainPosition>();
+		private Dictionary<PowertrainPosition, WattSecond> _eEmDrive = new Dictionary<PowertrainPosition, WattSecond>();
+		private Dictionary<PowertrainPosition, WattSecond> _eEmRecuperate = new Dictionary<PowertrainPosition, WattSecond>();
 
-		public int JobRunId { get; }
-		public string RunName { get; }
-		public string CycleName { get; }
-		public string RunSuffix { get; private set; }
+		protected VectoRunData _runData;
+		
+       
+		public ModalDataContainer(VectoRunData runData, IModalDataWriter writer, Action<ModalDataContainer> addReportResult, params IModalDataFilter[] filter)
+		{
+			_runData = runData;
+			_writer = writer;
+			
+			_filters = filter ?? new IModalDataFilter[0];
+			_addReportResult = addReportResult ?? (x => { });
+
+			Auxiliaries = new Dictionary<string, DataColumn>();
+			Data = new ModalResults(false);
+            CurrentRow = Data.NewRow();
+			
+			if (runData.JobType == VectoSimulationJobType.BatteryElectricVehicle) {
+				return;
+			}
+
+			var multipleEngineModes = runData.EngineData?.MultipleEngineFuelModes ?? false;
+            var fuels = runData.EngineData?.Fuels ?? new List<CombustionEngineFuelData>();
+			foreach (var fuel in fuels) {
+				var entry = fuel.FuelData;
+				if (FuelColumns.ContainsKey(entry)) {
+					throw new VectoException("Fuel {0} already added!", entry.FuelType.GetLabel());
+				}
+
+				FuelColumns[entry] = new Dictionary<ModalResultField, DataColumn>();
+				foreach (var fcCol in FuelConsumptionSignals) {
+
+					var col = new DataColumn(
+						fuels.Count == 1 && !multipleEngineModes
+							? fcCol.GetName()
+							: string.Format("{0}_{1}", fcCol.GetName(), entry.FuelType.GetLabel()), typeof(SI)) {
+						Caption = string.Format(fcCol.GetCaption(),
+							fuels.Count == 1 && !multipleEngineModes ? "" : "_" + entry.FuelType.GetLabel())
+					};
+					col.ExtendedProperties[ModalResults.ExtendedPropertyNames.Decimals] =
+						fcCol.GetAttribute().Decimals;
+					col.ExtendedProperties[ModalResults.ExtendedPropertyNames.OutputFactor] =
+						fcCol.GetAttribute().OutputFactor;
+					col.ExtendedProperties[ModalResults.ExtendedPropertyNames.ShowUnit] =
+						fcCol.GetAttribute().ShowUnit;
+					FuelColumns[entry][fcCol] = col;
+					Data.Columns.Add(col);
+				}
+			}
+
+
+		}
+
+		public int JobRunId
+		{
+			get { return _runData.JobRunId; }
+		}
+		public string RunName
+		{
+			get { return _runData.JobName; }
+		}
+		public string CycleName
+		{
+			get { return _runData.Cycle?.Name ?? ""; }
+		}
+		public string RunSuffix
+		{
+			get { return _runData.ModFileSuffix; }
+		}
 
 		public bool WriteModalResults { get; set; }
 
@@ -99,70 +165,16 @@ namespace TUGraz.VectoCore.OutputData
 
 		public string StackTrace
 		{
-			get {
+			get
+			{
 				return SimException == null
 					? null
 					: (SimException.StackTrace ?? (SimException.InnerException != null ? SimException.InnerException.StackTrace : null));
 			}
 		}
+		
 
-		public bool WriteAdvancedAux { get; set; }
-
-		public ModalDataContainer(string runName, IList<IFuelProperties> fuel, IModalDataWriter writer, bool writeEngineOnly = false, params IModalDataFilter[] filters)
-			: this(0, runName, "", fuel, false, "", writer, _ => { }, writeEngineOnly, filters) {}
-
-		public ModalDataContainer(VectoRunData runData, IModalDataWriter writer, IList<IFuelProperties> fuels, Action<ModalDataContainer> addReportResult,
-			bool writeEngineOnly, params IModalDataFilter[] filter)
-			: this(
-				runData.JobRunId, runData.JobName, runData.Cycle.Name, fuels, runData.EngineData.MultipleEngineFuelModes, runData.ModFileSuffix, writer,
-				addReportResult,
-				writeEngineOnly, filter) {}
-
-		protected ModalDataContainer(int jobRunId, string runName, string cycleName, IList<IFuelProperties> fuels, bool multipleEngineModes, string runSuffix,
-			IModalDataWriter writer,
-			Action<ModalDataContainer> addReportResult, bool writeEngineOnly, params IModalDataFilter[] filters)
-		{
-			HasTorqueConverter = false;
-			HasCombustionEngine = true;
-			RunName = runName;
-			CycleName = cycleName;
-			RunSuffix = runSuffix;
-			JobRunId = jobRunId;
-			_writer = writer;
-
-			Data = new ModalResults(false);
-			foreach (var entry in fuels) {
-				if (FuelColumns.ContainsKey(entry)) {
-					throw new VectoException("Fuel {0} already added!", entry.FuelType.GetLabel());
-				}
-				FuelColumns[entry] = new Dictionary<ModalResultField, DataColumn>();
-				foreach (var fcCol in FuelConsumptionSignals) {
-
-					var col = new DataColumn(fuels.Count == 1 && !multipleEngineModes ? fcCol.GetName() : string.Format("{0}_{1}", fcCol.GetName(), entry.FuelType.GetLabel()), typeof(SI))
-					{
-						Caption = string.Format(fcCol.GetCaption(), fuels.Count == 1 && !multipleEngineModes ? "" : "_" + entry.FuelType.GetLabel())
-					};
-					col.ExtendedProperties[ModalResults.ExtendedPropertyNames.Decimals] =
-						fcCol.GetAttribute().Decimals;
-					col.ExtendedProperties[ModalResults.ExtendedPropertyNames.OutputFactor] =
-						fcCol.GetAttribute().OutputFactor;
-					col.ExtendedProperties[ModalResults.ExtendedPropertyNames.ShowUnit] =
-						fcCol.GetAttribute().ShowUnit;
-					FuelColumns[entry][fcCol] = col;
-					Data.Columns.Add(col);
-				}
-			}
-			
-			_writeEngineOnly = writeEngineOnly;
-			_filters = filters ?? new IModalDataFilter[0];
-			_addReportResult = addReportResult ?? (x => { });
-
-			Auxiliaries = new Dictionary<string, DataColumn>();
-			CurrentRow = Data.NewRow();
-			WriteAdvancedAux = false;
-		}
-
-		public void Reset()
+        public void Reset()
 		{
 			Data.Rows.Clear();
 			CurrentRow = Data.NewRow();
@@ -232,7 +244,140 @@ namespace TUGraz.VectoCore.OutputData
 			return null;
 		}
 
-		public bool HasCombustionEngine { get; set; }
+		public bool HasCombustionEngine
+		{
+			get { return _runData.JobType != VectoSimulationJobType.BatteryElectricVehicle; }
+		}
+
+		public WattSecond TotalElectricMotorWorkDrive(PowertrainPosition emPos)
+		{
+			if (!ElectricMotors.Contains(emPos)) {
+				return null;
+			}
+
+			if (!_eEmDrive.ContainsKey(emPos)) {
+				_eEmDrive[emPos] = TimeIntegral<WattSecond>(
+					string.Format(ModalResultField.P_electricMotor_mech_.GetCaption(), emPos.GetName()), x => x < 0);
+			}
+
+			return -_eEmDrive[emPos];
+		}
+
+		public WattSecond TotalElectricMotorWorkRecuperate(PowertrainPosition emPos)
+		{
+			if (!ElectricMotors.Contains(emPos)) {
+				return null;
+			}
+
+			if (!_eEmRecuperate.ContainsKey(emPos)) {
+				_eEmRecuperate[emPos] = TimeIntegral<WattSecond>(
+					string.Format(ModalResultField.P_electricMotor_mech_.GetCaption(), emPos.GetName()), x => x > 0); ;
+			}
+
+			return _eEmRecuperate[emPos];
+        }
+
+		public double ElectricMotorEfficiencyDrive(PowertrainPosition emPos)
+		{
+			if (!ElectricMotors.Contains(emPos)) {
+				return double.NaN;
+			}
+
+			var selected = Data.AsEnumerable().Cast<DataRow>().Select(r => {
+				var dt = r.Field<Second>(ModalResultField.simulationInterval.GetName());
+				return new {
+					P_em = r.Field<Watt>(string.Format(ModalResultField.P_electricMotor_el_.GetCaption(),
+						emPos.GetName())),
+					E_mech = r.Field<Watt>(string.Format(ModalResultField.P_electricMotor_mech_.GetCaption(),
+						emPos.GetName())) * dt,
+					E_el = r.Field<Watt>(string.Format(ModalResultField.P_electricMotor_el_.GetCaption(),
+						emPos.GetName())) * dt,
+				};
+			});
+			var eMech = 0.SI<WattSecond>();
+			var eEl = 0.SI<WattSecond>();
+			foreach (var entry in selected.Where(x => x.P_em.IsSmaller(0))) {
+				eMech += entry.E_mech;
+				eEl += entry.E_el;
+			}
+
+			return eMech.Value() / eEl.Value();
+		}
+
+		public double ElectricMotorEfficiencyGenerate(PowertrainPosition emPos)
+		{
+			if (!ElectricMotors.Contains(emPos)) {
+				return double.NaN;
+			}
+			var selected = Data.AsEnumerable().Cast<DataRow>().Select(r => {
+				var dt = r.Field<Second>(ModalResultField.simulationInterval.GetName());
+				return new
+				{
+					P_em = r.Field<Watt>(string.Format(ModalResultField.P_electricMotor_el_.GetCaption(),
+						emPos.GetName())),
+					E_mech = r.Field<Watt>(string.Format(ModalResultField.P_electricMotor_mech_.GetCaption(),
+						emPos.GetName())) * dt,
+					E_el = r.Field<Watt>(string.Format(ModalResultField.P_electricMotor_el_.GetCaption(),
+						emPos.GetName())) * dt,
+				};
+			});
+			var eMech = 0.SI<WattSecond>();
+			var eEl = 0.SI<WattSecond>();
+			foreach (var entry in selected.Where(x => x.P_em.IsGreater(0)))
+			{
+				eMech += entry.E_mech;
+				eEl += entry.E_el;
+			}
+
+			var eff = eEl.Value() / eMech.Value();
+			return eff;
+        }
+
+		public WattSecond ElectricMotorOffLosses(PowertrainPosition emPos)
+		{
+			if (!ElectricMotors.Contains(emPos)) {
+				return null;
+			}
+			var selected = Data.AsEnumerable().Cast<DataRow>().Select(r => {
+				var dt = r.Field<Second>(ModalResultField.simulationInterval.GetName());
+				return new
+				{
+					P_em = r.Field<Watt>(string.Format(ModalResultField.P_electricMotor_el_.GetCaption(),
+						emPos.GetName())),
+					E_mech = r.Field<Watt>(string.Format(ModalResultField.P_electricMotorLoss_.GetCaption(),
+						emPos.GetName())) * dt,
+				};
+			});
+			return selected.Where(x => x.P_em.IsEqual(0)).Sum(x => x.E_mech) ?? 0.SI<WattSecond>();
+		}
+
+        public PerSecond ElectricMotorAverageSpeed(PowertrainPosition emPos)
+		{
+			var integral = GetValues(x => x.Field<PerSecond>(string.Format(ModalResultField.n_electricMotor_.GetCaption(), emPos.GetName())).Value() *
+												x.Field<Second>(ModalResultField.simulationInterval.GetName()).Value()).Sum();
+			return (integral / Duration.Value()).SI<PerSecond>();
+        }
+
+		public double BatteryStartSoC()
+		{
+			return Data.AsEnumerable().Cast<DataRow>().First().Field<SI>(ModalResultField.BatteryStateOfCharge.GetName()).Value() * 100;
+		}
+
+		public double BatteryEndSoC()
+		{
+			return Data.AsEnumerable().Cast<DataRow>().Last().Field<SI>(ModalResultField.BatteryStateOfCharge.GetName()).Value() * 100;
+        }
+
+		public WattSecond BatteryLoss()
+		{
+			return TimeIntegral<WattSecond>(ModalResultField.P_battery_loss);
+		}
+
+		public WattSecond BatteryEnergyEnd()
+		{
+			return Data.AsEnumerable().Cast<DataRow>().Last().Field<SI>(ModalResultField.E_Bat.GetName())
+				.Cast<WattSecond>();
+		}
 
 		public void CalculateAggregateValues()
 		{
@@ -295,7 +440,10 @@ namespace TUGraz.VectoCore.OutputData
 			}
 		}
 
-		public bool HasTorqueConverter { get; set; }
+		public bool HasTorqueConverter
+		{
+			get { return _runData.GearboxData?.TorqueConverterData != null; }
+		}
 
 		public void CommitSimulationStep()
 		{
@@ -365,16 +513,17 @@ namespace TUGraz.VectoCore.OutputData
 			strCols = strCols.Concat(new[] { ModalResultField.ICEOn }.Select(x => x.GetName()));
 			//dataColumns.Add(ModalResultField.altitude);
 //#endif
+			var fileSuffix = RunSuffix;
 			if (WriteModalResults) {
 				var filteredData = Data;
 				foreach (var filter in _filters) {
-					RunSuffix += "_" + filter.ID;
+					fileSuffix += "_" + filter.ID;
 					filteredData = filter.Filter(filteredData);
 				}
 
 				try {
 					_writer.WriteModData(
-						JobRunId, RunName, CycleName, RunSuffix,
+						JobRunId, RunName, CycleName, fileSuffix,
 						new DataView(filteredData).ToTable(false, strCols.ToArray()));
 				} catch (Exception e) {
 					LogManager.GetLogger(typeof(ModalDataContainer).FullName).Error(e.Message);
@@ -387,8 +536,9 @@ namespace TUGraz.VectoCore.OutputData
 		private IList<string> GetOutputColumns()
 		{
 			var dataColumns = new List<string> { ModalResultField.time.GetName() };
+			var writeEngineOnly = _runData.JobType == VectoSimulationJobType.EngineOnlySimulation;
 
-			if (!_writeEngineOnly) {
+			if (!writeEngineOnly) {
 				dataColumns.AddRange(
 					new[] {
 						ModalResultField.simulationInterval,
@@ -400,7 +550,7 @@ namespace TUGraz.VectoCore.OutputData
 						ModalResultField.altitude
 			}.Select(x => x.GetName()));
 			}
-			if (!_writeEngineOnly) {
+			if (!writeEngineOnly) {
 				dataColumns.AddRange(
 					new[] {
 						ModalResultField.Gear,
@@ -432,7 +582,8 @@ namespace TUGraz.VectoCore.OutputData
 					ModalResultField.BatteryStateOfCharge,
 					ModalResultField.U_bat_terminal,
 					ModalResultField.U0_bat,
-					ModalResultField.I_bat
+					ModalResultField.I_bat,
+					ModalResultField.E_Bat
 				}.Select(x => x.GetName()));
 				foreach (var em in ElectricMotors.OrderBy(x => x).Reverse()) {
 					dataColumns.AddRange(_electricMotorColumns.Select(emCol =>
@@ -459,7 +610,7 @@ namespace TUGraz.VectoCore.OutputData
 					ModalResultField.P_aux_el
 				}.Select(x => x.GetName()));
 
-			if (!_writeEngineOnly) {
+			if (!writeEngineOnly) {
 				dataColumns.AddRange(
 					new[] {
 						ModalResultField.P_gbx_in,
@@ -483,7 +634,7 @@ namespace TUGraz.VectoCore.OutputData
 						ModalResultField.n_gbx_out_avg,
 						ModalResultField.T_gbx_out
 					}.Select(x => x.GetName()));
-				if (WriteAdvancedAux) {
+				if (_runData.BusAuxiliaries != null) {
 					dataColumns.AddRange(
 						new[] {
 							ModalResultField.P_busAux_ES_HVAC,

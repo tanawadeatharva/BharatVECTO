@@ -3,8 +3,6 @@ Imports System.IO
 Imports System.Linq
 Imports System.Runtime.Remoting
 Imports TUGraz.VectoCore.Models.BusAuxiliaries
-Imports TUGraz.VectoCore.Models.BusAuxiliaries.Interfaces
-Imports VectoAuxiliaries
 
 Module AdvancedAuxiliariesModule
 	'Public WithEvents AdvancedAuxModel As IBusAuxiliaries

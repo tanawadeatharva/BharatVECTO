@@ -187,7 +187,7 @@ namespace VECTO3GUI.ViewModel.Impl
 							})
 						.If<IEngineeringInputDataProvider>(
 							e => LoadValues(
-								e.JobInputData.EngineOnlyMode ? e.JobInputData.EngineOnly : e.JobInputData.Vehicle.Components.EngineInputData));
+								e.JobInputData.JobType == VectoSimulationJobType.EngineOnlySimulation ? e.JobInputData.EngineOnly : e.JobInputData.Vehicle.Components.EngineInputData));
 		}
 
 		private void LoadValues(IEngineDeclarationInputData engine)

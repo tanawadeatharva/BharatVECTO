@@ -58,7 +58,10 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 		public VectoRunData()
 		{
 			Exempted = false;
+			JobType = VectoSimulationJobType.ConventionalVehicle;
 		}
+
+		public VectoSimulationJobType JobType { get; internal set; }
 
 		[ValidateObject]
 		public VehicleData VehicleData { get; internal set; }

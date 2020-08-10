@@ -98,6 +98,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 				VehicleDesignSpeed = _segment.DesignSpeed,
 				AirdragData = _dao.CreateAirdragData(null, mission, new Segment()),
 				EngineData = DataAdapter.CreateEngineData(InputDataProvider.JobInputData.Vehicle, engineMode, mission),
+				ElectricMachinesData = new List<Tuple<PowertrainPosition, ElectricMotorData>>(),
 				GearboxData = _gearboxData,
 				AxleGearData = _axlegearData,
 				AngledriveData = _angledriveData,

@@ -80,8 +80,10 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			var driverData = CreateDriverData();
 
 			var fileWriter = new FileOutputWriter("Coach_MinimalPowertrain_Coasting");
-			var modData = new ModalDataContainer(
-				"Coach_MinimalPowertrain_Coasting", new[] { FuelData.Diesel }, fileWriter);
+			var runData = new VectoRunData() {
+				JobName = "Coach_MinimalPowertrain_Coasting"
+            };
+			var modData = new ModalDataContainer(runData, fileWriter, null);
 			var vehicleContainer = new VehicleContainer(ExecutionMode.Engineering, modData) {
 				RunData = new VectoRunData() {
 					VehicleData = vehicleData,
@@ -143,9 +145,12 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			var driverData = CreateDriverData();
 
 			var fileWriter = new FileOutputWriter("Coach_MinimalPowertrain_Coasting");
-			var modData = new ModalDataContainer(
-				"Coach_MinimalPowertrain_Coasting", new[] { FuelData.Diesel }, fileWriter);
-			var vehicleContainer = new VehicleContainer(ExecutionMode.Engineering, modData) {
+			var runData = new VectoRunData()
+			{
+				JobName = "Coach_MinimalPowertrain_Coasting"
+			};
+			var modData = new ModalDataContainer(runData, fileWriter, null);
+            var vehicleContainer = new VehicleContainer(ExecutionMode.Engineering, modData) {
 				RunData = new VectoRunData() {
 					VehicleData = vehicleData,
 					EngineData = engineData,
@@ -212,8 +217,12 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			var driverData = CreateDriverData();
 
 			var fileWriter = new FileOutputWriter("Coach_MinimalPowertrain");
-			var modData = new ModalDataContainer("Coach_MinimalPowertrain", new[] { FuelData.Diesel }, fileWriter);
-			var vehicleContainer = new VehicleContainer(ExecutionMode.Engineering, modData) {
+			var runData = new VectoRunData()
+			{
+				JobName = "Coach_MinimalPowertrain"
+			};
+			var modData = new ModalDataContainer(runData, fileWriter, null);
+            var vehicleContainer = new VehicleContainer(ExecutionMode.Engineering, modData) {
 				RunData = new VectoRunData() {
 					VehicleData = vehicleData,
 					EngineData = engineData,

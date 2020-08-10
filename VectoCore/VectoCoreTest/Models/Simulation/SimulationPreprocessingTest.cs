@@ -8,7 +8,6 @@ using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.InputData.FileIO.JSON;
 using TUGraz.VectoCore.InputData.FileIO.XML;
-using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation;
 using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.Models.SimulationComponent.Impl;
@@ -171,7 +170,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 		protected virtual Dictionary<MeterPerSecond, Radian> SimulationRunPreprocessingEcoRoll(IVectoRun run)
 		{
 			var data = run.GetContainer().RunData;
-			var modData = new ModalDataContainer(data, null, new[] {FuelData.Diesel}, null, false);
+			var modData = new ModalDataContainer(data, null, null);
 			var builder = new PowertrainBuilder(modData);
 			var simpleContainer = new SimplePowertrainContainer(data);
 			builder.BuildSimplePowertrain(data, simpleContainer);
@@ -195,7 +194,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 		protected virtual PCCSegments SimulationRunPreprocessingPCCSegments(IVectoRun run)
 		{
 			var data = run.GetContainer().RunData;
-			var modData = new ModalDataContainer(data, null, new[] { FuelData.Diesel }, null, false);
+			var modData = new ModalDataContainer(data, null, null);
 			var builder = new PowertrainBuilder(modData);
 			var simpleContainer = new SimplePowertrainContainer(data);
 			builder.BuildSimplePowertrain(data, simpleContainer);
@@ -268,7 +267,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 		protected virtual VelocityRollingLookup SimulationRunPreprocessingVelocityTractionInterruption(IVectoRun run)
 		{
 			var data = run.GetContainer().RunData;
-			var modData = new ModalDataContainer(data, null, new[] { FuelData.Diesel }, null, false);
+			var modData = new ModalDataContainer(data, null, null);
 			var builder = new PowertrainBuilder(modData);
 			var simpleContainer = new SimplePowertrainContainer(data);
 			builder.BuildSimplePowertrain(data, simpleContainer);
@@ -331,7 +330,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 		protected virtual MaxGradabilityLookup SimulationRunPreprocessingGradability(IVectoRun run)
 		{
 			var data = run.GetContainer().RunData;
-			var modData = new ModalDataContainer(data, null, new[] {FuelData.Diesel }, null, false);
+			var modData = new ModalDataContainer(data, null, null);
 			var builder = new PowertrainBuilder(modData);
 			var simpleContainer = new SimplePowertrainContainer(data);
 			builder.BuildSimplePowertrain(data, simpleContainer);
@@ -394,7 +393,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 		protected virtual Dictionary<uint, PerSecond> SimulationRunPreprocessingEngineSpeedDriveOff(IVectoRun run)
 		{
 			var data = run.GetContainer().RunData;
-			var modData = new ModalDataContainer(data, null, new[] {FuelData.Diesel }, null, false);
+			var modData = new ModalDataContainer(data, null, null);
 			var builder = new PowertrainBuilder(modData);
 			var simpleContainer = new SimplePowertrainContainer(data);
 			builder.BuildSimplePowertrain(data, simpleContainer);

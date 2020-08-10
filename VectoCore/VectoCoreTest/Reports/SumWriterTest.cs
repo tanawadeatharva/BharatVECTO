@@ -29,6 +29,8 @@
 *   Martin Rexeis, rexeis@ivt.tugraz.at, IVT, Graz University of Technology
 */
 
+using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Xml;
@@ -45,9 +47,10 @@ using TUGraz.VectoCore.OutputData.XML;
 using TUGraz.VectoCore.Tests.Utils;
 using TUGraz.VectoCore.Utils;
 using NUnit.Framework;
-using TUGraz.VectoCommon.BusAuxiliaries;
+using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCore.InputData.FileIO.XML;
 using TUGraz.VectoCore.Models.Declaration;
+using TUGraz.VectoCore.Models.SimulationComponent.Data;
 
 namespace TUGraz.VectoCore.Tests.Reports
 {
@@ -73,8 +76,19 @@ namespace TUGraz.VectoCore.Tests.Reports
 		{
 			var writer = new FileOutputWriter("testsumcalc_fixed");
 			var sumWriter = new SummaryDataContainer(writer);
-
-			var modData = new ModalDataContainer("testsumcalc_fixed", new IFuelProperties[] { FuelData.Diesel}.ToList(), writer);
+			var rundata = new VectoRunData() {
+				JobName = "AuxWriteModFileSumFile",
+				EngineData = new CombustionEngineData() {
+					Fuels = new[] {new CombustionEngineFuelData {
+						FuelData = FuelData.Diesel
+					}}.ToList(),
+				},
+				ElectricMachinesData = new List<Tuple<PowertrainPosition, ElectricMotorData>>(),
+				Cycle = new DrivingCycleData() {
+					Name = "MockCycle",
+				}
+            };
+			var modData = new ModalDataContainer(rundata, writer, null);
 
 			modData.AddAuxiliary("FAN");
 
@@ -104,7 +118,7 @@ namespace TUGraz.VectoCore.Tests.Reports
 				modData.CommitSimulationStep();
 			}
 
-			sumWriter.Write(modData, 0, 0, new MockRunData());
+			sumWriter.Write(modData, 0, 0, rundata);
 
 			modData.Finish(VectoRun.Status.Success);
 			sumWriter.Finish();
@@ -134,8 +148,21 @@ namespace TUGraz.VectoCore.Tests.Reports
 		{
 			var writer = new FileOutputWriter("testsumcalc_var");
 			var sumWriter = new SummaryDataContainer(writer);
-
-			var modData = new ModalDataContainer("testsumcalc_var", new IFuelProperties[] {FuelData.Diesel}.ToList(), writer);
+			var rundata = new VectoRunData() {
+				JobName = "testsumcalc_var",
+				EngineData = new CombustionEngineData() {
+					Fuels = new[] {
+						new CombustionEngineFuelData {
+							FuelData = FuelData.Diesel
+						}
+					}.ToList(),
+				},
+				ElectricMachinesData = new List<Tuple<PowertrainPosition, ElectricMotorData>>(),
+				Cycle = new DrivingCycleData() {
+					Name = "MockCycle",
+				}
+			};
+			var modData = new ModalDataContainer(rundata, writer, null);
 			modData.AddAuxiliary("FAN");
 
 			var timeSteps = new[]
@@ -167,7 +194,7 @@ namespace TUGraz.VectoCore.Tests.Reports
 				modData.CommitSimulationStep();
 			}
 
-			sumWriter.Write(modData, 0, 0, new MockRunData());
+			sumWriter.Write(modData, 0, 0, rundata);
 
 			modData.Finish(VectoRun.Status.Success);
 			sumWriter.Finish();

@@ -33,6 +33,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.InputData.Reader.ComponentData;
@@ -84,12 +85,6 @@ namespace TUGraz.VectoCore.Tests.Integration
 		public static VehicleContainer CreatePowerTrain(DrivingCycleData cycleData, string modFileName,
 			Kilogram massExtra, Kilogram loading, bool overspeed = false, GearboxType gbxType = GearboxType.AMT)
 		{
-			var fileWriter = new FileOutputWriter(modFileName);
-			var modData = new ModalDataContainer(Path.GetFileName(modFileName), new[] { FuelData.Diesel }, fileWriter) {
-				WriteModalResults = true
-			};
-			var container = new VehicleContainer(ExecutionMode.Engineering, modData);
-
 			var gearboxData = CreateGearboxData();
 			var engineData = MockSimulationDataFactory.CreateEngineDataFromFile(EngineFile, gearboxData.Gears.Count);
 			var axleGearData = CreateAxleGearData();
@@ -97,13 +92,11 @@ namespace TUGraz.VectoCore.Tests.Integration
 			var airdragData = CreateAirdragData();
 			var driverData = CreateDriverData(AccelerationFile, overspeed);
 
-			var cycle = new DistanceBasedDrivingCycle(container, cycleData);
-			var engine = new CombustionEngine(container, engineData);
-			var clutch = new Clutch(container, engineData);
-
 			var runData = new VectoRunData() {
 				JobRunId = 0,
+				JobName = Path.GetFileName(modFileName),
 				EngineData = engineData,
+				ElectricMachinesData = new List<Tuple<PowertrainPosition, ElectricMotorData>>(),
 				VehicleData = vehicleData,
 				AirdragData = airdragData,
 				AxleGearData = axleGearData,
@@ -112,9 +105,20 @@ namespace TUGraz.VectoCore.Tests.Integration
 				SimulationType = SimulationType.DistanceCycle,
 				Cycle = cycleData
 			};
-			container.RunData = runData;
 
-			IShiftStrategy gbxStrategy;
+			var fileWriter = new FileOutputWriter(modFileName);
+			var modData = new ModalDataContainer(runData, fileWriter, null)
+			{
+				WriteModalResults = true
+			};
+			var container = new VehicleContainer(ExecutionMode.Engineering, modData);
+            container.RunData = runData;
+
+			var cycle = new DistanceBasedDrivingCycle(container, cycleData);
+			var engine = new CombustionEngine(container, engineData);
+			var clutch = new Clutch(container, engineData);
+
+            IShiftStrategy gbxStrategy;
 			switch (gbxType) {
 				case GearboxType.MT:
 					gbxStrategy = new MTShiftStrategy(runData, container);

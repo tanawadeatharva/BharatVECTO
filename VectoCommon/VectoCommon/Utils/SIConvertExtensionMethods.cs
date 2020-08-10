@@ -128,7 +128,13 @@ namespace TUGraz.VectoCommon.Utils
 			return value == null ? null : new ConvertedSI(value.Value() * Kilo * Kilo, "g/km");
 		}
 
-		public static ConvertedSI ConvertToGramPerKiloWattHour(this SpecificFuelConsumption value)
+		public static ConvertedSI ConvertToKiloWattHourPerKiloMeter(this JoulePerMeter value)
+		{
+			return new ConvertedSI(value.Value() / 3600, "kWh/km");
+		}
+
+
+        public static ConvertedSI ConvertToGramPerKiloWattHour(this SpecificFuelConsumption value)
 		{
 			return new ConvertedSI(value.Value() * 3600e6, "g/kWh");
 		}

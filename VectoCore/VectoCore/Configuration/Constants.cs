@@ -244,6 +244,8 @@ namespace TUGraz.VectoCore.Configuration
 			public const string CycleFile = ".vdri";
 
 			public const string DriverAccelerationCurve = ".vacc";
+
+			public const string HybridStrategyParameters = ".vhctl";
 		}
 
 		public static class SimulationSettings

@@ -629,8 +629,8 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 				MaxSOC = batteryInputData.BatteryPack.MaxSOC,
 				MaxCurrent = (batteryInputData.BatteryPack.Capacity.AsAmpHour * batteryInputData.BatteryPack.MaxCurrentFactor * batteryInputData.Count).SI<Ampere>(),
 				Capacity = batteryInputData.Count * batteryInputData.BatteryPack.Capacity,
-				InternalResistance = batteryInputData.BatteryPack.InternalResistance / batteryInputData.Count,
-				SOCMap = BatterySOCReader.Create(batteryInputData.BatteryPack.Voltage),
+				InternalResistance = BatteryInternalResistanceReader.Create(batteryInputData.BatteryPack.InternalResistanceCurve, batteryInputData.Count),
+				SOCMap = BatterySOCReader.Create(batteryInputData.BatteryPack.VoltageCurve),
 				InitialSoC = initialSOC
 			};
 		}
@@ -662,6 +662,17 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 				EfficiencyMap = ElectricMotorMapReader.Create(motorData.EfficiencyMap, ratio, count, efficiency),
 				Inertia = motorData.Inertia,
 			};
+		}
+
+		public HybridStrategyParameters CreateHybridStrategyParameters(IHybridStrategyParameters hybridStrategyParameters)
+		{
+			var retVal = new HybridStrategyParameters() {
+				EquivalenceFactor = hybridStrategyParameters.EquivalenceFactor,
+				MinSoC = hybridStrategyParameters.MinSoC,
+				MaxSoC = hybridStrategyParameters.MaxSoC,
+				TargetSoC = hybridStrategyParameters.TargetSoC
+			};
+			return retVal;
 		}
 	}
 }

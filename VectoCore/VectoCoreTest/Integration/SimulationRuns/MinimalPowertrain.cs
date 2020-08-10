@@ -83,7 +83,10 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 			var driverData = CreateDriverData(AccelerationFile);
 
 			var fileWriter = new FileOutputWriter("Coach_MinimalPowertrainOverload");
-			var modData = new ModalDataContainer("Coach_MinimalPowertrainOverload", new[] { FuelData.Diesel }, fileWriter);
+			var runData = new VectoRunData() {
+				JobName = "Coach_MinimalPowertrainOverload"
+            };
+			var modData = new ModalDataContainer(runData, fileWriter, null);
 			var container = new VehicleContainer(ExecutionMode.Engineering, modData) {
 				RunData =  new VectoRunData() {
 					VehicleData = vehicleData,
@@ -133,8 +136,12 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 			var driverData = CreateDriverData(AccelerationFile);
 
 			var fileWriter = new FileOutputWriter("Coach_MinimalPowertrain");
-			var modData = new ModalDataContainer("Coach_MinimalPowertrain", new[] { FuelData.Diesel }, fileWriter);
-			var container = new VehicleContainer(ExecutionMode.Engineering, modData) {
+			var runData = new VectoRunData()
+			{
+				JobName = "Coach_MinimalPowertrain"
+            };
+			var modData = new ModalDataContainer(runData, fileWriter, null);
+            var container = new VehicleContainer(ExecutionMode.Engineering, modData) {
 				RunData = new VectoRunData() { VehicleData = vehicleData }
 			};
 
@@ -207,8 +214,12 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 			var driverData = CreateDriverData(AccelerationFile2);
 
 			var fileWriter = new FileOutputWriter("Coach_MinimalPowertrainOverload");
-			var modData = new ModalDataContainer("Coach_MinimalPowertrainOverload", new[] { FuelData.Diesel }, fileWriter);
-			var container = new VehicleContainer(ExecutionMode.Engineering, modData) {
+			var runData = new VectoRunData()
+			{
+				JobName = "Coach_MinimalPowertrain"
+			};
+			var modData = new ModalDataContainer(runData, fileWriter, null);
+            var container = new VehicleContainer(ExecutionMode.Engineering, modData) {
 				RunData = new VectoRunData() {
 					SimulationType = SimulationType.DistanceCycle,
 					VehicleData = vehicleData,

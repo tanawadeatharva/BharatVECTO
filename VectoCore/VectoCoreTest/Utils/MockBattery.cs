@@ -15,10 +15,10 @@ namespace TUGraz.VectoCore.Tests.Utils {
 		{
 			return new BatteryResponseSuccess(this)
 			{
-				MaxBatteryLoadDischarge = InternalCellVoltage * MaxCurrent,
+				MaxBatteryLoadDischarge = -InternalCellVoltage * MaxCurrent,
 				AbsTime = absTime,
 				BatteryLoss = 0.SI<Watt>(),
-				MaxBatteryLoadCharge = -InternalCellVoltage * MaxCurrent,
+				MaxBatteryLoadCharge = InternalCellVoltage * MaxCurrent,
 				BatteryPower = powerdemand,
 				SimulationInterval = dt,
 			};
