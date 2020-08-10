@@ -446,7 +446,7 @@
     <None Include="TestData\Hybrids\GenericVehicle_Group2_P2\GenericMap240kW.vemo">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="TestData\Hybrids\GenericVehicle_Group2_P2\HybridStrategyParams.vctl">
+    <None Include="TestData\Hybrids\GenericVehicle_Group2_P2\HybridStrategyParams.vhctl">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="TestData\Hybrids\GenericVehicle_Group2_P2\Truck.vacc">
