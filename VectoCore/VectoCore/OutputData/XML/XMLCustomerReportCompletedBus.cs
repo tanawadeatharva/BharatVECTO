@@ -27,7 +27,9 @@ namespace TUGraz.VectoCore.OutputData.XML {
 				new XElement(
 					tns + "PrimaryVehicle",
 					new XElement(tns + XMLNames.Component_Manufacturer, PrimaryVehicle.Manufacturer),
-					new XElement(tns + XMLNames.Component_ManufacturerAddress, PrimaryVehicle.ManufacturerAddress)
+					new XElement(tns + XMLNames.Component_ManufacturerAddress, PrimaryVehicle.ManufacturerAddress),
+					new XElement(tns + XMLNames.Report_InputDataSignature, PrimaryVehicleRecordFile.PrimaryVehicleInputDataHash.ToXML(di)),
+					new XElement(tns + "ManufacturerRecordSignature", PrimaryVehicleRecordFile.ManufacturerRecordHash.ToXML(di))
 				),
 				new XElement(
 					tns + "CompletedVehicle",
