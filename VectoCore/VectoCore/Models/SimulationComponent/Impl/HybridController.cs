@@ -110,7 +110,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 				retVal = NextComponent.Request(absTime, dt, outTorque, outAngularVelocity, dryRun);
 				retVal.HybridController.StrategySettings = strategySettings;
-				if (!(retVal is ResponseSuccess) && retVal.Gearbox.Gear != strategySettings.EvaluatedSolution.Gear && retryCount < 3) {
+				if (!(retVal is ResponseSuccess) && strategySettings.EvaluatedSolution.Gear != 0 && 
+					retVal.Gearbox.Gear != strategySettings.EvaluatedSolution.Gear && retryCount < 3) {
 					retryCount++;
 					retry = true;
 				}
