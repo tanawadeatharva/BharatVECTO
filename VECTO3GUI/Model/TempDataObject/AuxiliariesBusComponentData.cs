@@ -152,7 +152,7 @@ namespace VECTO3GUI.Model.TempDataObject
 				{XMLNames.Bus_DriverAC, nameof(CompressorTypeDriver)},
 				{XMLNames.Bus_PassengerAC, nameof(CompressorTypePassenger)},
 				{XMLNames.Bus_AuxiliaryHeaterPower, nameof(AuxHeaterPower)},
-				{XMLNames.Bus_DoubleGlasing, nameof(DoubleGlasing)},
+				{XMLNames.Bus_DoubleGlazing, nameof(DoubleGlasing)},
 				{XMLNames.Bus_HeatPump, nameof(HeatPump)},
 				{XMLNames.Bus_AdjustableAuxiliaryHeater, nameof(AdjustableAuxiliaryHeater)},
 				{XMLNames.Bus_SeparateAirDistributionDucts, nameof(SeparateAirDistributionDucts)},

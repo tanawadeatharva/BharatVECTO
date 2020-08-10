@@ -191,6 +191,11 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 				throw new VectoException("HVAC System Configuration {0} requires PassengerAC Technology", hvacConfiguration);
 			}
 
+			if (mission.BusParameter.SeparateAirDistributionDuctsHVACCfg.Contains(hvacConfiguration) &&
+				!completedVehicle.Components.BusAuxiliaries.HVACAux.SeparateAirDistributionDucts) {
+				throw new VectoException("Input parameter 'separate air distribution ducts' has to be set to 'true' for vehicle group '{0}' and HVAC configuration '{1}'",
+					mission.BusParameter.BusGroup.GetClassNumber(), hvacConfiguration.GetName());
+			}
 			var internalLength = hvacConfiguration == BusHVACSystemConfiguration.Configuration2
 				? 2 * Constants.BusParameters.DriverCompartmentLength // OK
 				: DeclarationData.BusAuxiliaries.CalculateInternalLength(
@@ -248,7 +253,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			foreach (var item in DeclarationData.BusAuxiliaries.SSMTechnologyList)
 			{
 				if ("Double-glazing".Equals(item.BenefitName, StringComparison.InvariantCultureIgnoreCase) &&
-					(completedBuxAux?.HVACAux.DoubleGlasing ?? false))
+					(completedBuxAux?.HVACAux.DoubleGlazing ?? false))
 				{
 					onVehicle.Add(item);
 				}
@@ -344,7 +349,9 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 		protected double GetNumberOfPassengers(Mission mission, Meter length, Meter width, double registeredPassengers, LoadingType loading)
 		{
 			var busFloorArea = DeclarationData.BusAuxiliaries.CalculateBusFloorSurfaceArea(length, width);
-			var passengerCountRef = busFloorArea * mission.BusParameter.PassengerDensity;
+			var passengerCountRef = busFloorArea * (loading == LoadingType.LowLoading
+				? mission.BusParameter.PassengerDensityLow
+				: mission.BusParameter.PassengerDensityRef);
 			//var passengerCountDecl = completedVehicle.NuberOfPassengersUpperDeck + completedVehicle.NumberOfPassengersLowerDeck;
 			if (loading != LoadingType.ReferenceLoad && loading != LoadingType.LowLoading) {
 				throw new VectoException("Unhandled loading type: {0}", loading);

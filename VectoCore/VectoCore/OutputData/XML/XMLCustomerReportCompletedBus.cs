@@ -27,7 +27,9 @@ namespace TUGraz.VectoCore.OutputData.XML {
 				new XElement(
 					tns + "PrimaryVehicle",
 					new XElement(tns + XMLNames.Component_Manufacturer, PrimaryVehicle.Manufacturer),
-					new XElement(tns + XMLNames.Component_ManufacturerAddress, PrimaryVehicle.ManufacturerAddress)
+					new XElement(tns + XMLNames.Component_ManufacturerAddress, PrimaryVehicle.ManufacturerAddress),
+					new XElement(tns + XMLNames.Report_InputDataSignature, PrimaryVehicleRecordFile.PrimaryVehicleInputDataHash.ToXML(di)),
+					new XElement(tns + "ManufacturerRecordSignature", PrimaryVehicleRecordFile.ManufacturerRecordHash.ToXML(di))
 				),
 				new XElement(
 					tns + "CompletedVehicle",
@@ -55,9 +57,7 @@ namespace TUGraz.VectoCore.OutputData.XML {
 				new XElement(tns + XMLNames.Vehicle_VocationalVehicle, modelData.VehicleData.VocationalVehicle),
 				new XElement(tns + XMLNames.Vehicle_SleeperCab, modelData.VehicleData.SleeperCab),
 				new XElement(
-					tns + "RegisteredPassengers",
-					new XElement(tns + XMLNames.Bus_LowerDeck, modelData.VehicleData.InputData.NumberOfPassengersLowerDeck),
-					new XElement(tns + XMLNames.Bus_UpperDeck, modelData.VehicleData.InputData.NumberOfPassengersUpperDeck)
+					tns + "RegisteredPassengers", modelData.VehicleData.InputData.NumberOfPassengersLowerDeck + modelData.VehicleData.InputData.NumberOfPassengersUpperDeck
 				),
 				new XElement(tns + XMLNames.Bus_LowEntry, modelData.VehicleData.InputData.LowEntry),
 				new XElement(tns + XMLNames.Bus_HeighIntegratedBody, modelData.VehicleData.InputData.Height.ToXMLFormat(3)),
@@ -146,7 +146,9 @@ namespace TUGraz.VectoCore.OutputData.XML {
 
 		private XElement[] GetFuelConsumptionResults(XMLDeclarationReport.ResultEntry genericResult, XMLDeclarationReport.ResultEntry specificResult, IResult primaryResult)
 		{
-			var factor = specificResult.EnergyConsumptionTotal.Value() / genericResult.EnergyConsumptionTotal.Value();
+			var factor = XMLManufacturerReportCompletedBus.CalculateFactorMethodFactor(primaryResult, specificResult,
+					genericResult);
+			//var factor = specificResult.EnergyConsumptionTotal.Value() / genericResult.EnergyConsumptionTotal.Value();
 			var retVal = new List<XElement>();
 
 			var co2Sum = 0.SI<KilogramPerMeter>();
@@ -162,11 +164,11 @@ namespace TUGraz.VectoCore.OutputData.XML {
 						tns + XMLNames.Report_Results_FuelConsumption,
 						new XAttribute(XMLNames.Report_Results_Unit_Attr, "g/km"),
 						fcMass.ConvertToGrammPerKiloMeter().ToMinSignificantDigits(3, 1)),
-					new XElement(
-						tns + XMLNames.Report_Results_FuelConsumption,
-						new XAttribute(XMLNames.Report_Results_Unit_Attr, "g/t-km"),
-						(fcMass / specificResult.Payload)
-						.ConvertToGrammPerTonKilometer().ToMinSignificantDigits(3, 1)),
+					//new XElement(
+					//	tns + XMLNames.Report_Results_FuelConsumption,
+					//	new XAttribute(XMLNames.Report_Results_Unit_Attr, "g/t-km"),
+					//	(fcMass / specificResult.Payload)
+					//	.ConvertToGrammPerTonKilometer().ToMinSignificantDigits(3, 1)),
 					specificResult.CargoVolume > 0
 						? new XElement(
 							tns + XMLNames.Report_Results_FuelConsumption,

@@ -77,7 +77,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl {
 		public ACCompressorType CompressorTypeDriver { get; }
 		public ACCompressorType CompressorTypePassenger { get; }
 		public Watt AuxHeaterPower { get; }
-		public bool DoubleGlasing { get; }
+		public bool DoubleGlazing { get; }
 		public bool HeatPump { get; }
 		public bool AdjustableCoolantThermostat { get; }
 		public bool AdjustableAuxiliaryHeater { get; }

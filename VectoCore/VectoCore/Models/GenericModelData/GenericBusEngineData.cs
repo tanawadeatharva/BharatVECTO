@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using TUGraz.VectoCommon.BusAuxiliaries;
@@ -21,10 +22,10 @@ namespace TUGraz.VectoCore.Models.Declaration
 		#region Constans
 
 		private static string GenericEngineCM_Normed_CI =
-			$"{DeclarationData.DeclarationDataResourcePrefix}.GenericBusData.EngineConsumptionMap_CI_Normed.vmap";
+			$"{DeclarationData.DeclarationDataResourcePrefix}.GenericBusData.EngineConsumptionMap_CI_normalized.vmap";
 
 		private static string GenericEngineCM_Normed_PI =
-			$"{DeclarationData.DeclarationDataResourcePrefix}.GenericBusData.EngineConsumptionMap_PI_Normed.vmap";
+			$"{DeclarationData.DeclarationDataResourcePrefix}.GenericBusData.EngineConsumptionMap_PI_normalized.vmap";
 
 		private static readonly double[] DieselCIFactors = { 1.05, 1.02, 1.0, 1.005, 1.0 };
 		private static readonly double[] PIFactors = { 1.05, 1.02, 1.0, 1.005, 1.0 };
@@ -179,7 +180,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 
 		private DataTable DenormalizeData(string ressourceId, PerSecond nIdle, PerSecond n95h, Watt ratedPower)
 		{
-			var normalized = VectoCSVFile.ReadStream(RessourceHelper.ReadStream(ressourceId), source: ressourceId);
+			var normalized = ReadCsvResource(ressourceId);
 
 			var result = new DataTable();
 			result.Columns.Add(FuelConsumptionMapReader.Fields.EngineSpeed);
@@ -202,5 +203,18 @@ namespace TUGraz.VectoCore.Models.Declaration
 			return result;
 		}
 
+		private static TableData ReadCsvResource(string ressourceId)
+		{
+			// TODO: MQ 2020-07 Remove in official bus version!
+
+			var tmp = ressourceId.Replace(DeclarationData.DeclarationDataResourcePrefix + ".", "");
+			var parts = tmp.Split('.');
+			var fileName = Path.Combine("Declaration", string.Join(".", parts[parts.Length - 2], parts[parts.Length - 1]));
+			if (File.Exists(fileName)) {
+				return VectoCSVFile.Read(fileName);
+			}
+
+			return VectoCSVFile.ReadStream(RessourceHelper.ReadStream(ressourceId), source: ressourceId);
+		}
 	}
 }

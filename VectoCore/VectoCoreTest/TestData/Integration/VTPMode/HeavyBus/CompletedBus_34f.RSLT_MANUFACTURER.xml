@@ -89,7 +89,7 @@
                 <aux:PassengerAC>2-stage</aux:PassengerAC>
               </aux:CompressorType>
               <aux:AuxiliaryHeaterPower>30000</aux:AuxiliaryHeaterPower>
-              <aux:DoubleGlasing>true</aux:DoubleGlasing>
+              <aux:DoubleGlazing>true</aux:DoubleGlazing>
               <aux:HeatPump>false</aux:HeatPump>
               <aux:AdjustableAuxiliaryHeater>true</aux:AdjustableAuxiliaryHeater>
               <aux:SeparateAirDistributionDucts>true</aux:SeparateAirDistributionDucts>

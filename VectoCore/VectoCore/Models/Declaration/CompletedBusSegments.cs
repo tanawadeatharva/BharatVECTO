@@ -140,11 +140,13 @@ namespace TUGraz.VectoCore.Models.Declaration
 						DefaultCDxA = row.ParseDouble("cdxastandard").SI<SquareMeter>(),						
 						BusParameter = new BusParameters {
 							BusGroup = VehicleClassHelper.Parse(row.Field<string>("hdvgroup")),
-							PassengerDensity = row.ParseDouble(missionType.ToString()).SI<PerSquareMeter>(),
-							AirDragMeasurementAllowed = row.ParseBoolean("airdragmeasurement"),
+							PassengerDensityLow = row.ParseDouble(missionType.ToString()).SI<PerSquareMeter>(),
+							PassengerDensityRef = row.ParseDouble(missionType.ToString()).SI<PerSquareMeter>(),
+							AirDragMeasurementAllowed = row.ParseBoolean(missionType == MissionType.Interurban ? "airdragmeasurementinterurban" : "airdragmeasurement"),
 							ElectricalConsumers = GetVehicleEquipment(row),
 							DoubleDecker =  row.Field<string>("vehiclecode").ParseEnum<VehicleCode>().IsDoubleDeckerBus(),
-							DeltaHeight = row.ParseDouble("deltaheight").SI<Meter>()
+							DeltaHeight = row.ParseDouble("deltaheight").SI<Meter>(),
+							SeparateAirDistributionDuctsHVACCfg = row.Field<string>("sepairdistrductshvaccfg").Split('/').Select(BusHVACSystemConfigurationHelper.Parse).ToArray() 
 						}
 					};
 

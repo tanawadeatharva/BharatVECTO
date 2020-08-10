@@ -73,16 +73,17 @@ Namespace UnitTests
         <TestCase("AuxHeater")>
         Public Sub InstantiateDefaultSSMGenInputsTest(section As String)
 
-            Dim mission As New Mission With{ 
-                .BusParameter = New BusParameters() with {
+            Dim mission As New Mission With {
+                .BusParameter = New BusParameters() With {
                 .HVACCompressorType = ACCompressorType.TwoStage,
-                .HVACAuxHeaterPower = 30e3.SI(Of Watt),
+                .HVACAuxHeaterPower = 30000.0.SI(Of Watt),
                 .HVACConfiguration = BusHVACSystemConfiguration.Configuration6,
                 .DoubleDecker = False,
                 .VehicleWidth = 2.55.SI(Of Meter),
-                .VehicleLength = 10.655.SI(Of meter),
+                .VehicleLength = 10.655.SI(Of Meter),
                 .BodyHeight = 2.275.SI(Of Meter),
-                .PassengerDensity = 3.SI(Of PerSquareMeter)
+                .PassengerDensityRef = 3.SI(Of PerSquareMeter),
+                .PassengerDensityLow = 3.SI(Of PerSquareMeter)
             },
             .MissionType = MissionType.Urban
             }
@@ -578,18 +579,19 @@ Namespace UnitTests
             Const filePath As String = "SSMTOOLTestSaveRetreive.json"
             Dim success As Boolean
 
-            
-            Dim mission As New Mission With{ 
+
+            Dim mission As New Mission With {
                 .MissionType = MissionType.HeavyUrban,
-                .BusParameter = New BusParameters() with {
+                .BusParameter = New BusParameters() With {
                     .HVACCompressorType = ACCompressorType.TwoStage,
-                    .HVACAuxHeaterPower = 18e3.SI(Of Watt),
+                    .HVACAuxHeaterPower = 18000.0.SI(Of Watt),
                     .HVACConfiguration = BusHVACSystemConfiguration.Configuration6,
-                    .DoubleDecker = false,
-                    .BodyHeight = 2.7.SI(of Meter),
+                    .DoubleDecker = False,
+                    .BodyHeight = 2.7.SI(Of Meter),
                     .VehicleWidth = 2.55.SI(Of Meter),
                     .VehicleLength = 12.SI(Of Meter),
-                    .PassengerDensity = 3.SI(Of PerSquareMeter)
+                    .PassengerDensityLow = 3.SI(Of PerSquareMeter),
+                    .PassengerDensityRef = 3.SI(Of PerSquareMeter)
                     }
                     }
 

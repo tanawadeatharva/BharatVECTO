@@ -1237,7 +1237,7 @@
     <value>ManufacturerAddressCompletedVehicle</value>
   </data>
   <data name="Vehicle_RegisteredClass" xml:space="preserve">
-    <value>RegisteredClass</value>
+    <value>ClassBus</value>
   </data>
   <data name="Vehicle_VehicleCode" xml:space="preserve">
     <value>VehicleCode</value>
@@ -1287,8 +1287,8 @@
   <data name="Bus_AuxiliaryHeaterPower" xml:space="preserve">
     <value>AuxiliaryHeaterPower</value>
   </data>
-  <data name="Bus_DoubleGlasing" xml:space="preserve">
-    <value>DoubleGlasing</value>
+  <data name="Bus_DoubleGlazing" xml:space="preserve">
+    <value>DoubleGlazing</value>
   </data>
   <data name="Bus_HeatPump" xml:space="preserve">
     <value>HeatPump</value>
@@ -1367,5 +1367,8 @@
   </data>
   <data name="Report_Result_EnergyConsumption" xml:space="preserve">
     <value>EnergyConsumption</value>
+  </data>
+  <data name="Vehicle_CargoVolume" xml:space="preserve">
+    <value>CargoVolume</value>
   </data>
 </root>

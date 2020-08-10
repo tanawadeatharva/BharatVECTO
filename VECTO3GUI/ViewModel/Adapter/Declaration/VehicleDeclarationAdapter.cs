@@ -110,6 +110,7 @@ namespace VECTO3GUI.ViewModel.Adapter.Declaration
 		public RegistrationClass RegisteredClass { get; }
 		public int NumberOfPassengersUpperDeck { get; }
 		public int NumberOfPassengersLowerDeck { get; }
+		public CubicMeter CargoVolume { get; }
 		public VehicleCode VehicleCode { get; }
 		public bool LowEntry { get; }
 		public bool Articulated { get; }

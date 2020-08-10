@@ -182,7 +182,11 @@ namespace TUGraz.VectoCore.OutputData
 							x.Field<SI>(GetColumnName(fuel, ModalResultField.FCFinal)).Value())
 						: null).Where(x => x != null && x.Y > 0),
 				out k, out d, out r);
-			_engLine[fuel.FuelType] = k.SI<KilogramPerWattSecond>();
+			if (double.IsInfinity(k) || double.IsNaN(k)) {
+				LogManager.GetLogger(typeof(ModalDataContainer).FullName).Warn("could not calculate engine correction line - k: {0}", k);
+				k = 0;
+			}
+            _engLine[fuel.FuelType] = k.SI<KilogramPerWattSecond>();
 
 			return _engLine[fuel.FuelType];
 		}
@@ -203,8 +207,11 @@ namespace TUGraz.VectoCore.OutputData
 									row.Field<SI>(GetColumnName(fuel, ModalResultField.FCFinal)).Value())
 								: null)
 						.Where(x => x != null && x.X > 0 && x.Y > 0), out k, out d, out r);
-
-				_vehLine[fuel.FuelType] = k.SI<KilogramPerWattSecond>();
+				if (double.IsInfinity(k) || double.IsNaN(k)) {
+					LogManager.GetLogger(typeof(ModalDataContainer).FullName).Warn("could not calculate vehicle correction line - k: {0}", k);
+					k = 0;
+				}
+                _vehLine[fuel.FuelType] = k.SI<KilogramPerWattSecond>();
 				return _vehLine[fuel.FuelType];
 			}
 
