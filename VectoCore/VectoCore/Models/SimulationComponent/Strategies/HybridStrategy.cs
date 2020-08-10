@@ -410,7 +410,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 				if (best == null) {
 					best = eval.FirstOrDefault();
 				}
-				var allOverload = eval.All(
+				var allOverload = eval.Where(x => !(x.IgnoreReason.BatteryDemandExceeded() || (x.IgnoreReason & HybridConfigurationIgnoreReason.BatterySoCTooLow) != 0)).All(
 					x => (x.IgnoreReason & HybridConfigurationIgnoreReason.EngineTorqueDemandTooHigh) != 0);
 				var allUnderload = eval.All(
 					x => (x.IgnoreReason & HybridConfigurationIgnoreReason.EngineTorqueDemandTooLow) != 0);
@@ -660,6 +660,19 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 					var tmp = TryConfiguration(absTime, dt, outTorque, outAngularVelocity, nextGear, emPos, maxEmTorque, maxEmTorque / emTqReq, allowIceOff);
 					responses.Add(tmp);
 				}
+				// if battery is getting empty try to set EM-torque to discharge battery to lower SoC boundary
+				var batEnergyAvailable = (DataBus.BatteryInfo.StoredEnergy - BatteryDischargeEnergyThreshold) / dt;
+				var emDrivePower = -(batEnergyAvailable - ModelData.ElectricAuxDemand);
+				if (maxEmTorque.IsSmaller(0)) {
+					var emDriveTorque = ModelData.ElectricMachinesData.Where(x => x.Item1 == emPos).First().Item2.EfficiencyMap
+												.LookupTorque(emDrivePower, firstResponse.ElectricMotor.AngularVelocity, maxEmTorque);
+					if (emDriveTorque != null) {
+						var tmp = TryConfiguration(
+							absTime, dt, outTorque, outAngularVelocity, nextGear, emPos, emDriveTorque, emDriveTorque / emTqReq, allowIceOff);
+						responses.Add(tmp);
+					}
+				}
+
 				if (ElectricMotorCanPropellDuringTractionInterruption && allowIceOff && DataBus.DriverInfo.DrivingAction != DrivingAction.Brake) {
 					// this means that the EM is between wheels and transmission
 					// search EM Torque that results in 0 torque at ICE out
