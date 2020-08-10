@@ -131,7 +131,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data {
 
 		protected PerSecond MaxSpeed
 		{
-			get { return _maxSpeed ?? (_maxSpeed = _efficiencyMapMech2El.Entries.Select(x => x.Y).Max().RPMtoRad()); }
+			get { return _maxSpeed ?? (_maxSpeed = _efficiencyMapMech2El.Entries.Select(x => x.Y).Max().SI<PerSecond>()); }
 		}
 	}
 }
