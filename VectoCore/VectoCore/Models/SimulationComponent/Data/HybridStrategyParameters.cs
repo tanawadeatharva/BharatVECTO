@@ -14,5 +14,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data {
 		public Second AuxReserveTime { get; set; }
 
 		public Second AuxReserveChargeTime { get; set; }
+
+		public Second MinICEOnTime { get; set; }
 	}
 }

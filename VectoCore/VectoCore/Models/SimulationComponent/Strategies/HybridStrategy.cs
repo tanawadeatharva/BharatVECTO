@@ -24,7 +24,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 
 	public class HybridStrategy : LoggingObject, IHybridControlStrategy
 	{
-		public static readonly Second MIN_ICE_ON_TIME = 3.SI<Second>();
 
 		public class StrategyState
 		{
@@ -91,7 +90,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 
 			IceIdlingCosts = ModelData.EngineData.Fuels.Sum(
 				x => (x.ConsumptionMap.GetFuelConsumptionValue(0.SI<NewtonMeter>(), ModelData.EngineData.IdleSpeed)
-					* x.FuelData.LowerHeatingValueVecto * MIN_ICE_ON_TIME).Value());
+					* x.FuelData.LowerHeatingValueVecto * StrategyParameters.MinICEOnTime).Value());
 
 			// create testcontainer
 			var modData = new ModalDataContainer(runData, null, new[] { FuelData.Diesel }, null, false);
@@ -206,7 +205,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 		protected virtual bool AllowICEOff(Second absTime)
 		{
 			return PreviousState.ICEStartTStmp == null ||
-					PreviousState.ICEStartTStmp.IsSmaller(absTime + MIN_ICE_ON_TIME);
+					(PreviousState.ICEStartTStmp + StrategyParameters.MinICEOnTime).IsSmaller(absTime);
 		}
 
 		protected virtual void HandleBrakeAction(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity, bool dryRun, List<HybridResultEntry> eval)

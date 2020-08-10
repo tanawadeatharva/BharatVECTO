@@ -696,7 +696,8 @@ namespace TUGraz.VectoCore.Tests.Integration.Hybrid
 				MaxSoC = 0.8,
 				TargetSoC = 0.5,
 				AuxReserveTime = 5.SI<Second>(),
-				AuxReserveChargeTime = 2.SI<Second>()
+				AuxReserveChargeTime = 2.SI<Second>(),
+				MinICEOnTime = 3.SI<Second>()
 			};
 		}
 
