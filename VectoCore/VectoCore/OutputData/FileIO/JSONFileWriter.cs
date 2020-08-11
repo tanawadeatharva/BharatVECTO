@@ -1088,8 +1088,9 @@ public class JSONFileWriter : IOutputFileWriter
 			{"MinSoC", hp.MinSoC * 100},
 			{"MaxSoC", hp.MaxSoC * 100},
 			{"TargetSoC", hp.TargetSoC * 100},
-			//{"AuxBufferTime", hp.}
-			//{"AuxBufferChgTime", hp.}
+			{"AuxBufferTime", hp.AuxBufferTime.Value()},
+			{"AuxBufferChgTime", hp.AuxBufferChargeTime.Value()},
+			{"MinICEOnTime", hp.MinimumICEOnTime.Value() }
 		};
 		WriteFile(header, body, filePath);
     }

@@ -12,6 +12,7 @@ Public Class HybridStrategyParams
 
     Private _filePath As String
     Private _myPath As String
+    Public MinimumIceOnTime As Double
 
     Public Sub New()
         _myPath = ""
@@ -79,9 +80,27 @@ Public Class HybridStrategyParams
         End Get
     End Property
 
-    Public Property AuxBufferTime As Double
+    Public ReadOnly Property MinICEOnTime As Second Implements IHybridStrategyParameters.MinimumICEOnTime
+        Get
+            Return MinimumICEOnTime.SI(of Second)
+        End Get
+    End Property
 
-    Public Property AuxBufferChgTime As Double
+    Public ReadOnly Property AuxBufferTime As Second Implements IHybridStrategyParameters.AuxBufferTime
+        Get
+            Return AuxiliaryBufferTime.SI(Of Second)
+        End Get
+    End Property
+
+    Public ReadOnly Property AuxBufferChargeTime As Second Implements IHybridStrategyParameters.AuxBufferChargeTime
+        Get
+            Return AuxiliaryBufferChgTime.SI(of Second)
+        End Get
+    End Property
+
+    Public Property AuxiliaryBufferTime As Double
+
+    Public Property AuxiliaryBufferChgTime As Double
 
     Private ReadOnly Property IHybridStrategyParameters_EquivalenceFactor As Double Implements IHybridStrategyParameters.EquivalenceFactor
         Get

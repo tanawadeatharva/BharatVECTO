@@ -78,6 +78,9 @@ namespace TUGraz.VectoCommon.InputData
 		double TargetSoC { get; }
 
 		string Source { get;  }
+		Second MinimumICEOnTime { get; }
+		Second AuxBufferTime { get; }
+		Second AuxBufferChargeTime { get; }
 	}
 
 	public interface IVehicleEngineeringInputData : IVehicleDeclarationInputData

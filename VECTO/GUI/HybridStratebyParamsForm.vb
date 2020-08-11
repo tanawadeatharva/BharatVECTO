@@ -221,8 +221,9 @@ Public Class HybridStrategyParamsForm
         strategyParams.MaxSoC = tbMaxSoC.Text.ToDouble(0) / 100
         strategyParams.TargetSoC = tbTargetSoC.Text.ToDouble(0) / 100
 
-        strategyParams.AuxBufferTime = tbauxBufferTime.Text.ToDouble(0)
-        strategyParams.AuxBufferChgTime = tbAuxBufferChargeTime.Text.ToDouble(0)
+        strategyParams.MinimumIceOnTime = tbMinICEOnTime.Text.ToDouble(0)
+        strategyParams.AuxiliaryBufferTime = tbauxBufferTime.Text.ToDouble(0)
+        strategyParams.AuxiliaryBufferChgTime = tbAuxBufferChargeTime.Text.ToDouble(0)
 
         If Not strategyParams.SaveFile Then
             MsgBox("Cannot save to " & file, MsgBoxStyle.Critical)

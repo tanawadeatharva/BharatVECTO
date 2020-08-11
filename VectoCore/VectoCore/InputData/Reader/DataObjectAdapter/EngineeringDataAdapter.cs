@@ -670,7 +670,10 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 				EquivalenceFactor = hybridStrategyParameters.EquivalenceFactor,
 				MinSoC = hybridStrategyParameters.MinSoC,
 				MaxSoC = hybridStrategyParameters.MaxSoC,
-				TargetSoC = hybridStrategyParameters.TargetSoC
+				TargetSoC = hybridStrategyParameters.TargetSoC,
+				MinICEOnTime = hybridStrategyParameters.MinimumICEOnTime,
+				AuxReserveTime = hybridStrategyParameters.AuxBufferTime,
+				AuxReserveChargeTime = hybridStrategyParameters.AuxBufferChargeTime
 			};
 			return retVal;
 		}
