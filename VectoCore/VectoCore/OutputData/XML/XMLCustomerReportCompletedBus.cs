@@ -188,12 +188,13 @@ namespace TUGraz.VectoCore.OutputData.XML {
 						new XElement(
 							tns + XMLNames.Report_Results_FuelConsumption,
 							new XAttribute(XMLNames.Report_Results_Unit_Attr, "l/100km"),
-							(fcMass.ConvertToGrammPerKiloMeter() / fuelData.FuelDensity * 100).Value().ToMinSignificantDigits(3, 1)),
-						new XElement(
-							tns + XMLNames.Report_Results_FuelConsumption,
-							new XAttribute(XMLNames.Report_Results_Unit_Attr, "l/t-km"),
-							(fcMass.ConvertToGrammPerKiloMeter() / fuelData.FuelDensity /
-							specificResult.Payload.ConvertToTon()).Value().ToMinSignificantDigits(3, 1)));
+							(fcMass.ConvertToGrammPerKiloMeter() / fuelData.FuelDensity * 100).Value().ToMinSignificantDigits(3, 1))
+						//new XElement(
+						//	tns + XMLNames.Report_Results_FuelConsumption,
+						//	new XAttribute(XMLNames.Report_Results_Unit_Attr, "l/t-km"),
+						//	(fcMass.ConvertToGrammPerKiloMeter() / fuelData.FuelDensity /
+						//	specificResult.Payload.ConvertToTon()).Value().ToMinSignificantDigits(3, 1))
+						);
 					if (specificResult.CargoVolume > 0) {
 						fcResult.Add(
 							new XElement(
@@ -220,11 +221,11 @@ namespace TUGraz.VectoCore.OutputData.XML {
 				new XElement(
 					tns + XMLNames.Report_Results_CO2, new XAttribute(XMLNames.Report_Results_Unit_Attr, "g/km"),
 					co2Sum.ConvertToGrammPerKiloMeter().ToMinSignificantDigits(3, 2)));
-			retVal.Add(
-				new XElement(
-					tns + XMLNames.Report_Results_CO2,
-					new XAttribute(XMLNames.Report_Results_Unit_Attr, "g/t-km"),
-					(co2Sum.ConvertToGrammPerKiloMeter() / specificResult.Payload.ConvertToTon()).ToMinSignificantDigits(3, 2)));
+			//retVal.Add(
+			//	new XElement(
+			//		tns + XMLNames.Report_Results_CO2,
+			//		new XAttribute(XMLNames.Report_Results_Unit_Attr, "g/t-km"),
+			//		(co2Sum.ConvertToGrammPerKiloMeter() / specificResult.Payload.ConvertToTon()).ToMinSignificantDigits(3, 2)));
 			if (specificResult.CargoVolume > 0)
 				retVal.Add(
 					new XElement(
