@@ -125,7 +125,7 @@ namespace TUGraz.VectoCore.Tests.FileIO
 			Assert.NotNull(bat);
 			Assert.AreEqual(2, bat.Count);
 			Assert.AreEqual(50, bat.BatteryPack.MaxCurrentFactor);
-			Assert.AreEqual(0.4986666, ri.Lookup(0.5).Value());
+			Assert.AreEqual(0.04, ri.Lookup(0.5).Value());
 
 			var em = engineering.JobInputData.Vehicle.Components.ElectricMachines;
 
@@ -134,7 +134,7 @@ namespace TUGraz.VectoCore.Tests.FileIO
 
 			Assert.AreEqual(PowertrainPosition.HybridP2, em.Entries[0].Position);
 
-			Assert.AreEqual(0.15, em.Entries[0].ElectricMachine.Inertia.Value());
+			Assert.AreEqual(0.2, em.Entries[0].ElectricMachine.Inertia.Value());
 
 		}
 

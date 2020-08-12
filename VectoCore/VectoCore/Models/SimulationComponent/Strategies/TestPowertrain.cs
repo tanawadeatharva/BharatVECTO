@@ -24,6 +24,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies {
 
 		public StopStartCombustionEngine CombustionEngine;
 		public ElectricMotor ElectricMotorP2;
+		public ElectricMotor ElectricMotorP3;
 
 		public TestPowertrain(SimplePowertrainContainer container, IDataBus realContainer)
 		{
@@ -35,6 +36,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies {
 			CombustionEngine = Container.EngineInfo as StopStartCombustionEngine;
 			ElectricMotorP2 = container.ElectricMotors.ContainsKey(PowertrainPosition.HybridP2)
 				? container.ElectricMotors[PowertrainPosition.HybridP2] as ElectricMotor
+				: null;
+			ElectricMotorP3 = container.ElectricMotors.ContainsKey(PowertrainPosition.HybridP3)
+				? container.ElectricMotors[PowertrainPosition.HybridP3] as ElectricMotor
 				: null;
 			if (Gearbox == null) {
 				throw new VectoException("Unknown gearboxtype in TestContainer: {0}", Container.GearboxCtl.GetType().FullName);

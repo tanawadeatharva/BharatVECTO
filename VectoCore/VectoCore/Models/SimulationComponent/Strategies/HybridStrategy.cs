@@ -214,7 +214,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 
 				var emPos = ModelData.ElectricMachinesData.First().Item1;
 				var currentGear = !DataBus.GearboxInfo.GearEngaged(absTime)
-					? Controller.ShiftStrategy.NextGear.Gear
+					? 0
 					: (PreviousState.GearboxEngaged
 						? DataBus.GearboxInfo.Gear
 						: Controller.ShiftStrategy.NextGear.Gear);
@@ -270,8 +270,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 				var maxRecuperationResponse = RequestDryRun(
 					absTime, dt, outTorque, outAngularVelocity, currentGear, maxRecuperation);
 
-				if (maxRecuperationResponse.DeltaDragLoad.IsSmaller(0)) {
-					// even with full recuperation (and no braking) the operating point is below the drag curve - use full recuperation
+				if (maxRecuperationResponse.DeltaDragLoad.IsSmaller(0) && 
+					maxRecuperationResponse.ElectricSystem.BatteryPowerDemand.IsBetween(maxRecuperationResponse.ElectricSystem.MaxPowerDrag, maxRecuperationResponse.ElectricSystem.MaxPowerDrive)) {
+					// even with full recuperation (and no braking) the operating point is below the drag curve (and the battery can handle it) - use full recuperation
 					eval.Add(
 						new HybridResultEntry() {
 							ICEOff = !DataBus.EngineInfo.EngineOn,
@@ -303,7 +304,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 								{ emPos, emTq }
 							}
 						};
-						return RequestDryRun(absTime, dt, outTorque, outAngularVelocity, currentGear, cfg);
+						return RequestDryRun(absTime, dt, outTorque, outAngularVelocity, DataBus.GearboxInfo.GearEngaged(absTime) ? currentGear : 0, cfg);
 					},
 					criterion: r => {
 						var response = r as ResponseDryRun;
@@ -801,6 +802,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 		private ResponseDryRun RequestDryRun(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity, uint nextGear, HybridStrategyResponse cfg)
 		{
 			TestPowertrain.Gearbox.Gear = PreviousState.GearboxEngaged ? DataBus.GearboxInfo.Gear : Controller.ShiftStrategy.NextGear.Gear;
+			TestPowertrain.Gearbox.Disengaged = nextGear == 0;
 			TestPowertrain.Gearbox.DisengageGearbox = nextGear == 0;
 			TestPowertrain.Container.VehiclePort.Initialize(DataBus.VehicleInfo.VehicleSpeed, DataBus.DrivingCycleInfo.RoadGradient ?? 0.SI<Radian>());
 			TestPowertrain.HybridController.ApplyStrategySettings(cfg);
@@ -834,6 +836,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 
 			if (nextGear == 0) {
 				TestPowertrain.Gearbox._nextGear = Controller.ShiftStrategy.NextGear;
+				TestPowertrain.Gearbox.Disengaged = nextGear == 0;
 			}
 
 			//if (!PreviousState.GearboxEngaged) {
@@ -862,7 +865,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 				TestPowertrain.ElectricMotorP2.PreviousState.OutAngularVelocity =
 					DataBus.ElectricMotorInfo(PowertrainPosition.HybridP2).ElectricMotorSpeed;
 			}
-			
+			if (/*nextGear != DataBus.GearboxInfo.Gear && */TestPowertrain.ElectricMotorP3 != null) {
+				TestPowertrain.ElectricMotorP3.PreviousState.OutAngularVelocity =
+					DataBus.ElectricMotorInfo(PowertrainPosition.HybridP3).ElectricMotorSpeed;
+			}
+
 			var retVal = TestPowertrain.HybridController.NextComponent.Request(absTime, dt, outTorque, outAngularVelocity, true);
 
 			return retVal as ResponseDryRun;

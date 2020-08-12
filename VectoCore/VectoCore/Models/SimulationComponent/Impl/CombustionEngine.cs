@@ -650,8 +650,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				if (outAngularVelocity != null) {
 					throw new VectoException("IdleController can only handle idle requests, i.e. angularVelocity == null!");
 				}
-				if (!outTorque.IsEqual(0, 1e-2)) {
-					throw new VectoException("Torque has to be 0 for idle requests!");
+				if (!outTorque.IsEqual(0, 5e-2)) {
+					throw new VectoException("Torque has to be 0 for idle requests! {0}", outTorque);
 				}
 
 				return DoHandleRequest(absTime, dt, outTorque, outAngularVelocity);

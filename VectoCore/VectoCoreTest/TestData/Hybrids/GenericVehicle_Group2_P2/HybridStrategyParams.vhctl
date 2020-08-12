@@ -9,6 +9,9 @@
     "EquivalenceFactor": 2.5,
     "MinSoC": 20.0,
     "MaxSoC": 80.0,
-    "TargetSoC": 50.0
+    "TargetSoC": 50.0,
+    "MinICEOnTime": 3,
+    "AuxBufferTime": 5,
+    "AuxBufferChgTime":  3 
   }
 }
