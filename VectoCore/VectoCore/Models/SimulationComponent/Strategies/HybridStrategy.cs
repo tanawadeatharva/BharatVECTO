@@ -389,7 +389,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 			List<HybridResultEntry> eval, Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity, bool dryRun,
 			uint currentGear)
 		{
-			var best = eval.Where(x => !double.IsNaN(x.Score)).OrderBy(x => x.Score).FirstOrDefault();
+			var best = eval.Where(x => !double.IsNaN(x.Score) && (x.IgnoreReason & HybridConfigurationIgnoreReason.EngineSpeedTooHigh) == 0).OrderBy(x => x.Score).FirstOrDefault();
 			if (best == null) {
 				best = eval.OrderBy(x => Math.Abs((int)currentGear - x.Gear)).FirstOrDefault(
 					x => !(!x.ICEOff && x.IgnoreReason.InvalidEngineSpeed() && !(x.IgnoreReason.BatteryDemandExceeded())));
@@ -663,7 +663,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 				// if battery is getting empty try to set EM-torque to discharge battery to lower SoC boundary
 				var batEnergyAvailable = (DataBus.BatteryInfo.StoredEnergy - BatteryDischargeEnergyThreshold) / dt;
 				var emDrivePower = -(batEnergyAvailable - ModelData.ElectricAuxDemand);
-				if (maxEmTorque.IsSmaller(0)) {
+				if (maxEmTorque.IsSmaller(0) && (-emDrivePower).IsGreaterOrEqual(maxEmTorque * firstResponse.ElectricMotor.AngularVelocity)) {
+					// maxEmTorque < 0  ==> EM can still propell
+					// (-emDrivePower).IsGreaterOrEqual(maxEmTorque * firstResponse.ElectricMotor.AngularVelocity) ==> power available from battery for driving does not exceed max EM power (otherwise torque lookup may fail) 
 					var emDriveTorque = ModelData.ElectricMachinesData.Where(x => x.Item1 == emPos).First().Item2.EfficiencyMap
 												.LookupTorque(emDrivePower, firstResponse.ElectricMotor.AngularVelocity, maxEmTorque);
 					if (emDriveTorque != null) {
