@@ -402,7 +402,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 						if (filtered.Length == 0) {
 							filtered = eval.OrderBy(x => Math.Abs((int)currentGear - x.Gear)).ToArray();
 						}
-						best = filtered.MinBy(x => x.Setting.MechanicalAssistPower.Sum(e => e.Value ?? 0.SI<NewtonMeter>()));
+						best = filtered.Where(x => (x.IgnoreReason & HybridConfigurationIgnoreReason.EngineTorqueDemandTooLow) == 0).MinBy(x => x.Setting.MechanicalAssistPower.Sum(e => e.Value ?? 0.SI<NewtonMeter>()));
 					}
 					if (DataBus.DriverInfo.DrivingAction == DrivingAction.Brake && emEngaged) {
 						best = eval.MaxBy(x => x.Setting.MechanicalAssistPower.Sum(e => e.Value ?? 0.SI<NewtonMeter>()));
@@ -657,7 +657,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 					var tmp = TryConfiguration(absTime, dt, outTorque, outAngularVelocity, nextGear, emPos, emTorqueM, maxU, allowIceOff);
 					responses.Add(tmp);
 				}
-				if (maxEmTorque.IsSmaller(0) && emTqReq.IsGreater(-maxEmTorque)) {
+				if (maxEmTorque.IsSmaller(0) && emTqReq.IsGreater(-maxEmTorque)) { 
 					var tmp = TryConfiguration(absTime, dt, outTorque, outAngularVelocity, nextGear, emPos, maxEmTorque, maxEmTorque / emTqReq, allowIceOff);
 					responses.Add(tmp);
 				}
@@ -671,9 +671,13 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 												.LookupTorque(emDrivePower, firstResponse.ElectricMotor.AngularVelocity, maxEmTorque);
 					var emDragTorque = ModelData.ElectricMachinesData.Where(x => x.Item1 == emPos).First().Item2
 												.DragCurve.Lookup(firstResponse.ElectricMotor.AngularVelocity);
-					if (emDriveTorque != null && !emDriveTorque.IsEqual(emDragTorque, 1.SI<NewtonMeter>())) {
+					if (emDriveTorque != null &&
+						emDriveTorque.IsBetween(
+							firstResponse.ElectricMotor.MaxRecuperationTorque, firstResponse.ElectricMotor.MaxDriveTorque) &&
+						!emDriveTorque.IsEqual(emDragTorque, 1.SI<NewtonMeter>())) {
 						var tmp = TryConfiguration(
-							absTime, dt, outTorque, outAngularVelocity, nextGear, emPos, emDriveTorque, emDriveTorque / emTqReq, allowIceOff);
+							absTime, dt, outTorque, outAngularVelocity, nextGear, emPos, emDriveTorque, emDriveTorque / emTqReq,
+							allowIceOff);
 						responses.Add(tmp);
 					}
 				}
