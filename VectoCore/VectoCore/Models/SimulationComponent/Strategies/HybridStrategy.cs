@@ -393,7 +393,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 			var best = eval.Where(x => !double.IsNaN(x.Score) && (x.IgnoreReason & HybridConfigurationIgnoreReason.EngineSpeedTooHigh) == 0).OrderBy(x => x.Score).FirstOrDefault();
 			if (best == null) {
 				best = eval.OrderBy(x => Math.Abs((int)currentGear - x.Gear)).FirstOrDefault(
-					x => !(!x.ICEOff && x.IgnoreReason.InvalidEngineSpeed() && !(x.IgnoreReason.BatteryDemandExceeded())));
+					x => !(!x.ICEOff && x.IgnoreReason.InvalidEngineSpeed() && !(x.IgnoreReason.BatteryDemandExceeded() || (x.IgnoreReason & HybridConfigurationIgnoreReason.BatterySoCTooLow) != 0)));
 				if (best == null /*&& dryRun*/) {
 					var emEngaged = (!ElectricMotorCanPropellDuringTractionInterruption ||
 									(DataBus.GearboxInfo.GearEngaged(absTime) && eval.First().Response.Gearbox.Gear != 0));
@@ -669,14 +669,16 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 					// (-emDrivePower).IsGreaterOrEqual(maxEmTorque * firstResponse.ElectricMotor.AngularVelocity) ==> power available from battery for driving does not exceed max EM power (otherwise torque lookup may fail) 
 					var emDriveTorque = ModelData.ElectricMachinesData.Where(x => x.Item1 == emPos).First().Item2.EfficiencyMap
 												.LookupTorque(emDrivePower, firstResponse.ElectricMotor.AngularVelocity, maxEmTorque);
-					if (emDriveTorque != null) {
+					var emDragTorque = ModelData.ElectricMachinesData.Where(x => x.Item1 == emPos).First().Item2
+												.DragCurve.Lookup(firstResponse.ElectricMotor.AngularVelocity);
+					if (emDriveTorque != null && !emDriveTorque.IsEqual(emDragTorque, 1.SI<NewtonMeter>())) {
 						var tmp = TryConfiguration(
 							absTime, dt, outTorque, outAngularVelocity, nextGear, emPos, emDriveTorque, emDriveTorque / emTqReq, allowIceOff);
 						responses.Add(tmp);
 					}
 				}
 
-				if (ElectricMotorCanPropellDuringTractionInterruption && allowIceOff && (DataBus.DriverInfo.DrivingAction != DrivingAction.Brake || !DataBus.EngineInfo.EngineOn)) {
+				if (ElectricMotorCanPropellDuringTractionInterruption && (allowIceOff || !DataBus.GearboxInfo.GearEngaged(absTime)) /*&& (DataBus.DriverInfo.DrivingAction != DrivingAction.Brake || !DataBus.EngineInfo.EngineOn)*/) {
 					// this means that the EM is between wheels and transmission
 					// search EM Torque that results in 0 torque at ICE out
 					try {
