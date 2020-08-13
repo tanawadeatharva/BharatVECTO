@@ -586,7 +586,7 @@ namespace TUGraz.VectoCore.Tests.Integration.Hybrid
 			var sumData = new SummaryDataContainer(fileWriter);
 			var jobContainer = new JobContainer(sumData);
             var container = CreateParallelHybridPowerTrain(
-				cycleData, Path.GetFileNameWithoutExtension(modFileName), initialSoc, largeMotor, sumData, pAuxEl, pos, ratio, payload);
+				cycleData,modFileName, initialSoc, largeMotor, sumData, pAuxEl, pos, ratio, payload);
 			var run = new DistanceRun(container);
 			jobContainer.AddRun(run);
 			return jobContainer;

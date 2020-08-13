@@ -100,7 +100,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			var electricSystemResponse = ElectricPower.Request(absTime, dt, 0.SI<Watt>(), true);
 			var maxBatPower = electricSystemResponse.MaxPowerDrag;
 
-			var maxBatRecuperationTorque = maxBatPower.IsEqual(0) ? 0.SI<NewtonMeter>() : ModelData.EfficiencyMap.LookupTorque(maxBatPower, avgSpeed, maxEmTorque);
+			var maxBatRecuperationTorque = maxBatPower.IsEqual(0) ? ModelData.DragCurve.Lookup(avgSpeed) : ModelData.EfficiencyMap.LookupTorque(maxBatPower, avgSpeed, maxEmTorque);
 			var maxTorqueRecuperate = VectoMath.Min(maxEmTorque, maxBatRecuperationTorque);
 			return maxTorqueRecuperate < 0 ? null : maxTorqueRecuperate;
 		}
@@ -120,7 +120,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		}
 
 
-		protected virtual IResponse HandleRequest(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity, bool dryRun, NewtonMeter maxDriveTorque, NewtonMeter maxRecuperationTorque)
+		protected virtual IResponse HandleRequest(
+			Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity, bool dryRun,
+			NewtonMeter maxDriveTorque, NewtonMeter maxRecuperationTorque)
 		{
 
 			var avgSpeed = (PreviousState.OutAngularVelocity + outAngularVelocity) / 2;
@@ -128,6 +130,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				? 0.SI<NewtonMeter>()
 				: Formulas.InertiaPower(outAngularVelocity, PreviousState.OutAngularVelocity, ModelData.Inertia, dt) / avgSpeed;
 			var inTorque = outTorque + inertiaTorqueLoss;
+
 			//var maxDriveTorque = ModelData.FullLoadCurve.FullLoadDriveTorque(avgSpeed);
 			//var maxDragTorque = ModelData.FullLoadCurve.FullGenerationTorque(avgSpeed);
 			if (!dryRun) {
@@ -139,20 +142,27 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				var retVal = ForwardRequest(absTime, dt, inTorque, inTorque, outAngularVelocity, null, dryRun);
 				return retVal;
 			}
-			var eMotorTorque = Control.MechanicalAssistPower(absTime, dt, inTorque, PreviousState.OutAngularVelocity, outAngularVelocity,  maxDriveTorque, maxRecuperationTorque, Position, dryRun);
 
-			if (Position == PowertrainPosition.HybridP2 && !DataBus.GearboxInfo.GearEngaged(absTime)/* && !DataBus.ClutchInfo.ClutchClosed(absTime)*/) {
+			var eMotorTorque = Control.MechanicalAssistPower(
+				absTime, dt, inTorque, PreviousState.OutAngularVelocity, outAngularVelocity, maxDriveTorque, maxRecuperationTorque,
+				Position, dryRun);
+
+			if (Position == PowertrainPosition.HybridP2 &&
+				!DataBus.GearboxInfo.GearEngaged(absTime) /* && !DataBus.ClutchInfo.ClutchClosed(absTime)*/) {
 				// electric motor is between gearbox and clutch, but no gear is engaged...
 				if (eMotorTorque != null) {
 					throw new VectoSimulationException("electric motor cannot provide torque when gearbox and clutch are disengaged");
 				}
+
 				var electricSystemResponse = ElectricPower.Request(absTime, dt, 0.SI<Watt>(), dryRun);
 				if (!dryRun) {
 					if (!(electricSystemResponse is ElectricSystemResponseSuccess)) {
 						throw new VectoException("unexpected response from electric system: {0}", electricSystemResponse);
 					}
+
 					SetState(inTorque, outAngularVelocity);
 				}
+
 				var retVal = NextComponent.Request(absTime, dt, outTorque, outAngularVelocity, dryRun);
 				retVal.ElectricMotor.ElectricMotorPowerMech = 0.SI<Watt>();
 				retVal.ElectricSystem = electricSystemResponse;
@@ -165,6 +175,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				retVal.ElectricMotor.InertiaPowerDemand = inertiaTorqueLoss * avgSpeed;
 				return retVal;
 			}
+
 			//if (eMotorTorque.IsEqual(0, 1e-3))
 			//{
 			//	var electricSystemResponse = ElectricPower.Request(absTime, dt, 0.SI<Watt>(), dryRun);
@@ -175,14 +186,24 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			//	return retVal;
 			//}
 
-			if (!dryRun && !eMotorTorque.IsBetween(maxDriveTorque ?? 0.SI<NewtonMeter>(), maxRecuperationTorque ?? 0.SI<NewtonMeter>())) {
-				throw new VectoException("Invalid operating point provided by strategy! SupportPower: {0}, max Power: {1}, min Power: {2}", eMotorTorque, maxDriveTorque, maxRecuperationTorque);
+			if (!dryRun && !eMotorTorque.IsBetween(
+					maxDriveTorque ?? 0.SI<NewtonMeter>(), maxRecuperationTorque ?? 0.SI<NewtonMeter>())) {
+				throw new VectoException(
+					"Invalid operating point provided by strategy! SupportPower: {0}, max Power: {1}, min Power: {2}", eMotorTorque,
+					maxDriveTorque, maxRecuperationTorque);
 			}
 
-			var electricPower = ModelData.EfficiencyMap
-				.LookupElectricPower(avgSpeed, eMotorTorque, DataBus.ExecutionMode != ExecutionMode.Declaration).ElectricalPower;
 
-			var electricSupplyResponse = ElectricPower.Request(absTime, dt, electricPower, dryRun);
+			var electricPower = ModelData.EfficiencyMap
+										.LookupElectricPower(avgSpeed, eMotorTorque, DataBus.ExecutionMode != ExecutionMode.Declaration)
+										.ElectricalPower;
+
+			if (ModelData.DragCurve.Lookup(avgSpeed).IsEqual(eMotorTorque)) {
+				electricPower = 0.SI<Watt>();
+			}
+		
+
+		var electricSupplyResponse = ElectricPower.Request(absTime, dt, electricPower, dryRun);
 			//if (!dryRun && !(electricSupplyResponse is ElectricSystemResponseSuccess) &&
 			//	electricPower > electricSupplyResponse.MaxPowerDrag) {
 			//	// can't charge all power into the battery - probably it's full

@@ -133,7 +133,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data {
 				return 0.SI<NewtonMeter>();
 			}
 			var retVal = SearchAlgorithm.Search(
-				maxEmTorque, elPowerMaxEM.ElectricalPower, maxEmTorque * 0.1,
+				maxEmTorque, elPowerMaxEM.ElectricalPower, maxEmTorque * 0.1 * (maxEmTorque > 0 ? -1 : 1),
 				getYValue: x => {
 					var myX = (EfficiencyResult)x;
 					return myX.ElectricalPower - batPower;
