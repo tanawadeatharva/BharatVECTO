@@ -676,7 +676,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 					}
 				}
 
-				if (ElectricMotorCanPropellDuringTractionInterruption && allowIceOff && DataBus.DriverInfo.DrivingAction != DrivingAction.Brake) {
+				if (ElectricMotorCanPropellDuringTractionInterruption && allowIceOff && (DataBus.DriverInfo.DrivingAction != DrivingAction.Brake || !DataBus.EngineInfo.EngineOn)) {
 					// this means that the EM is between wheels and transmission
 					// search EM Torque that results in 0 torque at ICE out
 					try {
