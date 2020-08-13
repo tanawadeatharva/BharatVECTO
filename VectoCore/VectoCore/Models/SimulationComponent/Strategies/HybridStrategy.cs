@@ -705,8 +705,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 							}
 						);
 						if (emTorqueICEOff.IsBetween(
-							firstResponse.ElectricMotor.MaxDriveTorque, 0.SI<NewtonMeter>())) {
-							// only consider where EM is propelling
+							firstResponse.ElectricMotor.MaxDriveTorque, firstResponse.ElectricMotor.MaxRecuperationTorque)) {
+							// only consider when within allowed EM torque range
 							var tmp = TryConfiguration(
 								absTime, dt, outTorque, outAngularVelocity, nextGear, emPos, emTorqueICEOff, emTorqueICEOff / emTqReq,
 								allowIceOff);
