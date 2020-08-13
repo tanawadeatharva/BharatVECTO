@@ -401,7 +401,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 						if (filtered.Length == 0) {
 							filtered = eval.OrderBy(x => Math.Abs((int)currentGear - x.Gear)).ToArray();
 						}
-						best = filtered.MinBy(x => x.Setting.MechanicalAssistPower.Sum(e => e.Value ?? 0.SI<NewtonMeter>()));
+						best = filtered.Where(x => (x.IgnoreReason & HybridConfigurationIgnoreReason.EngineTorqueDemandTooLow) == 0).MinBy(x => x.Setting.MechanicalAssistPower.Sum(e => e.Value ?? 0.SI<NewtonMeter>()));
 					}
 					if (DataBus.DriverInfo.DrivingAction == DrivingAction.Brake && emEngaged) {
 						best = eval.MaxBy(x => x.Setting.MechanicalAssistPower.Sum(e => e.Value ?? 0.SI<NewtonMeter>()));
@@ -656,17 +656,17 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 					var tmp = TryConfiguration(absTime, dt, outTorque, outAngularVelocity, nextGear, emPos, emTorqueM, maxU, allowIceOff);
 					responses.Add(tmp);
 				}
-				if (maxEmTorque.IsSmaller(0) && emTqReq.IsGreater(-maxEmTorque)) {
+				if (maxEmTorque.IsSmaller(0) && emTqReq.IsGreater(-maxEmTorque)) { 
 					var tmp = TryConfiguration(absTime, dt, outTorque, outAngularVelocity, nextGear, emPos, maxEmTorque, maxEmTorque / emTqReq, allowIceOff);
 					responses.Add(tmp);
 				}
 				// if battery is getting empty try to set EM-torque to discharge battery to lower SoC boundary
 				var batEnergyAvailable = (DataBus.BatteryInfo.StoredEnergy - BatteryDischargeEnergyThreshold) / dt;
 				var emDrivePower = -(batEnergyAvailable - ModelData.ElectricAuxDemand);
-				if (maxEmTorque.IsSmaller(0)) {
+				if (maxEmTorque.IsSmaller(0) && (-emDrivePower).IsGreaterOrEqual(maxEmTorque * firstResponse.ElectricMotor.AngularVelocity)) {
 					var emDriveTorque = ModelData.ElectricMachinesData.Where(x => x.Item1 == emPos).First().Item2.EfficiencyMap
 												.LookupTorque(emDrivePower, firstResponse.ElectricMotor.AngularVelocity, maxEmTorque);
-					if (emDriveTorque != null) {
+					if (emDriveTorque != null && emDriveTorque.IsBetween(firstResponse.ElectricMotor.MaxRecuperationTorque, firstResponse.ElectricMotor.MaxDriveTorque)) {
 						var tmp = TryConfiguration(
 							absTime, dt, outTorque, outAngularVelocity, nextGear, emPos, emDriveTorque, emDriveTorque / emTqReq, allowIceOff);
 						responses.Add(tmp);
