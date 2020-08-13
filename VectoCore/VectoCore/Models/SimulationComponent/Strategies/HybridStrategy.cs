@@ -916,21 +916,43 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 			}
 
 			SetBatteryCosts(resp, dt, tmp);
+			var absTime = DataBus.AbsTime; // todo!
+			if (DataBus.GearboxInfo.GearEngaged(absTime)) {
 
-			if (allowIceOff && resp.Engine.TorqueOutDemand.IsEqual(0)) {
-				// no torque from ICE requested, ICE could be turned off
-				tmp.FuelCosts = 0;
-				tmp.ICEOff = true;
-			} else {
-				if (!double.IsNaN(tmp.FuelCosts)) {
-					//if (!allowIceOff || !resp.Engine.TorqueOutDemand.IsEqual(0)) {
+				if (allowIceOff && resp.Engine.TorqueOutDemand.IsEqual(0)) {
+					// no torque from ICE requested, ICE could be turned off
+					tmp.FuelCosts = 0;
+					tmp.ICEOff = true;
+				} else {
+					if (!double.IsNaN(tmp.FuelCosts)) {
+						//if (!allowIceOff || !resp.Engine.TorqueOutDemand.IsEqual(0)) {
 						tmp.FuelCosts = ModelData.EngineData.Fuels.Sum(
 							x => (x.ConsumptionMap.GetFuelConsumptionValue(resp.Engine.TotalTorqueDemand, resp.Engine.EngineSpeed)
 								* x.FuelData.LowerHeatingValueVecto * dt).Value());
-					//}
+
+						//}
+					}
+				}
+			} else {
+				if (!resp.Engine.TorqueOutDemand.IsEqual(0, 1e-3)) {
+					tmp.FuelCosts = double.NaN;
+					tmp.IgnoreReason |= resp.Engine.TorqueOutDemand.IsGreater(0)
+						? HybridConfigurationIgnoreReason.EngineTorqueDemandTooHigh
+						: HybridConfigurationIgnoreReason.EngineTorqueDemandTooLow;
+				}
+				if (allowIceOff && resp.Engine.TorqueOutDemand.IsEqual(0, 1e-3)) {
+					// no torque from ICE requested, ICE could be turned off
+					tmp.FuelCosts = 0;
+					tmp.ICEOff = true;
+				} else {
+					if (!double.IsNaN(tmp.FuelCosts)) {
+						tmp.FuelCosts = ModelData.EngineData.Fuels.Sum(
+							x => (x.ConsumptionMap.GetFuelConsumptionValue(0.SI<NewtonMeter>(), resp.Engine.EngineSpeed)
+								* x.FuelData.LowerHeatingValueVecto * dt).Value());
+					}
 				}
 			}
-			
+
 			var maxSoC = Math.Min(ModelData.BatteryData.MaxSOC, StrategyParameters.MaxSoC);
 			var minSoC = Math.Max(ModelData.BatteryData.MinSOC, StrategyParameters.MinSoC);
 			tmp.SoCPenalty = 1 - Math.Pow((DataBus.BatteryInfo.StateOfCharge - StrategyParameters.TargetSoC) / (0.5 * (maxSoC - minSoC)), 5);
