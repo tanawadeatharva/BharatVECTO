@@ -2,6 +2,11 @@
 
 **VECTO-3.3.8**
 
+***Build 2052 (2020-08-14) OFFICIAL RELEASE***
+
+- Bugfixes (compared to 3.3.8.2024)
+    * *No additional bugfixes*
+
 ***Build 2024 (2020-07-17) RELEASE CANDIDATE***
 
 - Bugfixes 
