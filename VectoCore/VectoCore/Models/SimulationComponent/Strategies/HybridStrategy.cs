@@ -402,7 +402,12 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 						if (filtered.Length == 0) {
 							filtered = eval.OrderBy(x => Math.Abs((int)currentGear - x.Gear)).ToArray();
 						}
-						best = filtered.Where(x => (x.IgnoreReason & HybridConfigurationIgnoreReason.EngineTorqueDemandTooLow) == 0).MinBy(x => x.Setting.MechanicalAssistPower.Sum(e => e.Value ?? 0.SI<NewtonMeter>()));
+						filtered = filtered.Where(x => (x.IgnoreReason & HybridConfigurationIgnoreReason.EngineTorqueDemandTooLow) == 0)
+											.ToArray();
+						if (filtered.Length == 0) {
+							filtered = eval.OrderBy(x => Math.Abs((int)currentGear - x.Gear)).ToArray();
+						}
+						best = filtered.MinBy(x => x.Setting.MechanicalAssistPower.Sum(e => e.Value ?? 0.SI<NewtonMeter>()));
 					}
 					if (DataBus.DriverInfo.DrivingAction == DrivingAction.Brake && emEngaged) {
 						best = eval.MaxBy(x => x.Setting.MechanicalAssistPower.Sum(e => e.Value ?? 0.SI<NewtonMeter>()));
