@@ -476,7 +476,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 			return best;
 		}
 
-		private static HybridStrategyResponse CreateResponse(HybridResultEntry best, uint currentGear)
+		private HybridStrategyResponse CreateResponse(HybridResultEntry best, uint currentGear)
 		{
 			var retVal = new HybridStrategyResponse() {
 				CombustionEngineOn = !best.ICEOff,
@@ -486,6 +486,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 				NextGear = best.Gear, // gs?.Item2 ?? 0,
 				EvaluatedSolution = best,
 			};
+			if ((best.IgnoreReason & HybridConfigurationIgnoreReason.EngineSpeedTooHigh) != 0 && !DataBus.EngineInfo.EngineOn) {
+				// ICE is off, selected solution has a too high engine speed - keep ICE off
+				retVal.CombustionEngineOn = false;
+			}
 			return retVal;
 		}
 
