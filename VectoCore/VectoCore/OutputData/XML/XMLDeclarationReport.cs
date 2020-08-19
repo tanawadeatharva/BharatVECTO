@@ -53,9 +53,9 @@ namespace TUGraz.VectoCore.OutputData.XML
 		protected IXMLManufacturerReport ManufacturerRpt;
 
 		protected XMLCustomerReport CustomerRpt;
-		
 
-		private IDictionary<Tuple<MissionType, LoadingType>, double> _weightingFactors;
+
+		protected IDictionary<Tuple<MissionType, LoadingType>, double> _weightingFactors;
 
 		public XMLDeclarationReport(IReportWriter writer) : base(writer)
 		{
