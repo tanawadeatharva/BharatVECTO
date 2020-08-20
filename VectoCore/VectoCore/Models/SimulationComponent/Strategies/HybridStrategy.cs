@@ -158,10 +158,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 			if (DataBus.DriverInfo.DrivingAction == DrivingAction.Brake && (eval.Count  == 0 )) {
 				eval.Add(MaxRecuperationSetting(absTime, dt, outTorque, outAngularVelocity));
 			}
-			
-			var best = SelectBestOption(eval, absTime, dt, outTorque, outAngularVelocity, dryRun, currentGear);
-			var origBest = SelectBestOption_ORIG(eval, absTime, dt, outTorque, outAngularVelocity, dryRun, currentGear);
 
+			var origBest = SelectBestOption_ORIG(eval, absTime, dt, outTorque, outAngularVelocity, dryRun, currentGear);
+			var best = SelectBestOption(eval, absTime, dt, outTorque, outAngularVelocity, dryRun, currentGear);
+			
 			if (!best.IsEqual(origBest)) {
 				Log.Debug("best: {0}, origBest: {1}", best.ToString(), origBest.ToString());
 			}
@@ -445,8 +445,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 				return best;
 			}
 
-			var emEngaged = (!ElectricMotorCanPropellDuringTractionInterruption ||
-							(DataBus.GearboxInfo.GearEngaged(absTime) && eval.First().Response.Gearbox.Gear != 0));
+			
 			var allOverload = eval.Where(x => !(x.IgnoreReason.BatteryDemandExceeded() || x.IgnoreReason.BatterySoCTooLow()))
 								.All(x => x.IgnoreReason.EngineTorqueDemandTooHigh());
 			var allUnderload = eval.All(x => x.IgnoreReason.EngineTorqueDemandTooLow());
@@ -483,6 +482,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 				}
 			}
 
+			var emEngaged = (!ElectricMotorCanPropellDuringTractionInterruption ||
+							(DataBus.GearboxInfo.GearEngaged(absTime) && (eval.First().Response?.Gearbox.Gear ?? 0) != 0));
 			if (DataBus.DriverInfo.DrivingAction == DrivingAction.Accelerate && emEngaged) {
 				var filtered = eval.Where(x => !x.IgnoreReason.InvalidEngineSpeed()).ToArray();
 				if (filtered.Length == 0) {
