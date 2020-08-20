@@ -50,7 +50,7 @@ Public Class VehicleForm
 	Public AutoSendTo As Boolean = False
 	Public JobDir As String = ""
 	Private _torqueLimitDlog As VehicleTorqueLimitDialog
-    Private VehicleType As VectoSimulationJobType
+    Friend VehicleType As VectoSimulationJobType
 
     'Close - Check for unsaved changes
 	Private Sub VehicleFormClosing(sender As Object, e As FormClosingEventArgs) Handles Me.FormClosing
@@ -356,6 +356,8 @@ Public Class VehicleForm
 		Text = "VEH Editor"
 		LbStatus.Text = ""
 
+	    UpdateForm(VehicleType)
+
 		_changed = False
 	End Sub
 
@@ -596,7 +598,7 @@ Public Class VehicleForm
 
         If (VehicleType = VectoSimulationJobType.ParallelHybridVehicle OrElse VehicleType = VectoSimulationJobType.BatteryElectricVehicle) Then
             veh.BatteryFile.Init(GetPath(file), tbBattery.Text)
-            veh.NumBatteryPacks = tbBatteryPackCnt.Text.ToInt()
+            veh.NumBatteryPacks = tbBatteryPackCnt.Text.ToInt(0)
             veh.InitialSOC = tbInitialSoC.Text.ToDouble() / 100.0
 
             veh.ElectricMotorFile.Init(GetPath(file), tbElectricMotor.Text)
@@ -793,7 +795,7 @@ Public Class VehicleForm
 		If _axlDlog.ShowDialog = DialogResult.OK Then
 			LvRRC.Items.Add(CreateListViewItem(LvRRC.Items.Count + 1, _axlDlog.TbAxleShare.Text.ToDouble(0),
 												_axlDlog.CbTwinT.Checked, _axlDlog.TbRRC.Text.ToDouble(0), _axlDlog.TbFzISO.Text.ToDouble(0),
-												_axlDlog.CbWheels.Text, _axlDlog.TbI_wheels.Text.ToDouble(0), AxleType.VehicleNonDriven))
+												_axlDlog.CbWheels.Text, _axlDlog.TbI_wheels.Text.ToDouble(0), CType(_axlDlog.cbAxleType.SelectedValue, AxleType)))
 			Change()
 			DeclInit()
 
@@ -1042,14 +1044,14 @@ Public Class VehicleForm
 
     Private Sub btnBrowseElectricMotor_Click(sender As Object, e As EventArgs) Handles btnBrowseElectricMotor.Click
         If ElectricMotorFileBrowser.OpenDialog(FileRepl(tbElectricMotor.Text, GetPath(_vehFile))) Then
-            tbElectricMotor.Text = GetFilenameWithoutDirectory(VehicleFileBrowser.Files(0), GetPath(_vehFile))
+            tbElectricMotor.Text = GetFilenameWithoutDirectory(ElectricMotorFileBrowser.Files(0), GetPath(_vehFile))
         End If
 
     End Sub
 
     Private Sub btnBrowseBattery_Click(sender As Object, e As EventArgs) Handles btnBrowseBattery.Click
         If BatteryFileBrowser.OpenDialog(FileRepl(tbBattery.Text, GetPath(_vehFile))) Then
-            tbBattery.Text = GetFilenameWithoutDirectory(VehicleFileBrowser.Files(0), GetPath(_vehFile))
+            tbBattery.Text = GetFilenameWithoutDirectory(BatteryFileBrowser.Files(0), GetPath(_vehFile))
         End If
     End Sub
 
