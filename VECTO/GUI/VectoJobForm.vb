@@ -252,6 +252,7 @@ Public Class VectoJobForm
         'Thus Veh-file is returned
         VehicleForm.JobDir = GetPath(VectoFile)
         VehicleForm.AutoSendTo = True
+        VehicleForm.VehicleType = JobType
 
         If Not Trim(f) = "" Then
             If Not File.Exists(f) Then

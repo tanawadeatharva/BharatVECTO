@@ -313,11 +313,7 @@ public class JSONFileWriter : IOutputFileWriter
 
 		var torqueLimits = GetTorqueLimits(vehicle);
 
-		var electricMotorsOut = GetElectricMotors(vehicle, basePath);
-
-		var battery = GetBattery(vehicle, basePath);
-
-        var body = GetVehicle(vehicle, airdrag, DeclMode, basePath);
+		var body = GetVehicle(vehicle, airdrag, DeclMode, basePath);
 
 		body.Add("IdlingSpeed", vehicle.EngineIdleSpeed.AsRPM);
 		body.Add("Retarder", retarderOut);
@@ -327,11 +323,6 @@ public class JSONFileWriter : IOutputFileWriter
 		
 		if ((vehicle.TankSystem.HasValue))
 			body["TankSystem"] = vehicle.TankSystem.Value.ToString();
-
-		body.Add("InitialSoC", vehicle.InitialSOC * 100);
-		body.Add("PowertrainConfiguration", "ParallelHybrid");
-		body.Add("ElectricMotors", electricMotorsOut);
-		body.Add("Battery", battery);
 
         WriteFile(header, body, filename);
 	}
@@ -453,7 +444,7 @@ public class JSONFileWriter : IOutputFileWriter
 		var basePath = Path.GetDirectoryName(filename);
 
 		// Header
-		var header = GetHeader(VehicleFormatVersion);
+		var header = GetHeader(HEV_BEVVehicleFormatVersion);
 
 		// Body
 		var retarderOut = GetRetarderOut(retarder, basePath);
@@ -463,6 +454,10 @@ public class JSONFileWriter : IOutputFileWriter
 		var angledriveOut = GetAngledriveOut(angledrive, basePath);
 
 		var torqueLimits = GetTorqueLimits(vehicle);
+
+		var electricMotorsOut = GetElectricMotors(vehicle, basePath);
+
+		var battery = GetBattery(vehicle, basePath);
 
 		var body = GetVehicle(vehicle, airdrag, DeclMode, basePath);
 
@@ -474,6 +469,12 @@ public class JSONFileWriter : IOutputFileWriter
 
 		if ((vehicle.TankSystem.HasValue))
 			body["TankSystem"] = vehicle.TankSystem.Value.ToString();
+
+
+		body.Add("InitialSoC", vehicle.InitialSOC * 100);
+		body.Add("PowertrainConfiguration", "ParallelHybrid");
+		body.Add("ElectricMotors", electricMotorsOut);
+		body.Add("Battery", battery);
 
 		WriteFile(header, body, filename);
     }
