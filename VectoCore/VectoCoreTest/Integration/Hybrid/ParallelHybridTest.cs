@@ -84,7 +84,7 @@ namespace TUGraz.VectoCore.Tests.Integration.Hybrid
 
 			const bool largeMotor = true;
 
-			var modFilename = string.Format("SimpleParallelHybrid-P2_acc_{0}-{1}_{2}", vmax, initialSoC, slope);
+			var modFilename = string.Format("SimpleParallelHybrid-P2_acc_{0}-{1}_{2}.vmod", vmax, initialSoC, slope);
 			const PowertrainPosition pos = PowertrainPosition.HybridP2;
 			var job = CreateEngineeringRun(
 				cycle, modFilename, initialSoC, pos, 1.0, largeMotor: true);
@@ -101,7 +101,7 @@ namespace TUGraz.VectoCore.Tests.Integration.Hybrid
 			Assert.IsTrue(run.FinishedWithoutErrors);
 
 			Assert.IsTrue(modData.Rows.Count > 0);
-			GraphWriter.Write(modFilename + ".vmod");
+			GraphWriter.Write(modFilename);
 		}
 
 		[

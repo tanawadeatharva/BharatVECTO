@@ -680,14 +680,14 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			IResponse retVal = null;
 
-			var operatingPoint = ComputeAcceleration(ds, nextTargetSpeed);
+			var op1 = ComputeAcceleration(ds, nextTargetSpeed);
 
 			//if (operatingPoint.Acceleration.IsSmaller(0)) {
-			operatingPoint = IncreaseDecelerationToMaxWithinSpeedRange(operatingPoint);
+			var op2 = IncreaseDecelerationToMaxWithinSpeedRange(op1);
 
-			operatingPoint =
-				AdaptDecelerationToTargetDistance(ds, nextTargetSpeed, targetDistance, operatingPoint.Acceleration) ??
-				operatingPoint;
+			var operatingPoint =
+				AdaptDecelerationToTargetDistance(ds, nextTargetSpeed, targetDistance, op2.Acceleration) ??
+				op2;
 
 			DriverAcceleration = operatingPoint.Acceleration;
 			var response = !smartBusAux && previousResponse != null
@@ -888,8 +888,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			return null;
 		}
 
-		private OperatingPoint IncreaseDecelerationToMaxWithinSpeedRange(OperatingPoint operatingPoint)
+		private OperatingPoint IncreaseDecelerationToMaxWithinSpeedRange(OperatingPoint op)
 		{
+			var operatingPoint = new OperatingPoint(op);
 			// if we should brake with the max. deceleration and the deceleration changes within the current interval, take the larger deceleration...
 			if (
 				operatingPoint.Acceleration.IsEqual(

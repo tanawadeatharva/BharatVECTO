@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Utils;
 
@@ -46,6 +47,17 @@ namespace TUGraz.VectoCommon.Models {
 		public bool ICEOff { get; set; }
 
 		public HybridConfigurationIgnoreReason IgnoreReason { get; set; }
+
+		public bool IsEqual(HybridResultEntry other)
+		{
+			return ToString().Equals(other.ToString(), StringComparison.InvariantCultureIgnoreCase);
+		}
+
+		public string ToString()
+		{
+			var setting = string.Join(", ", Setting.MechanicalAssistPower.Select(x => $"{x.Key}, {x.Value}"));
+			return $"{U}: {setting} {Score} G{Gear}";
+		}
 	}
 
 	[Flags]
@@ -64,4 +76,100 @@ namespace TUGraz.VectoCommon.Models {
 		NoResponseAvailable = 1 << 11,
 		Evaluated = 1 << 12,
 	}
+
+	public static class HybridConfigurationIgnoreReasonHelper
+	{
+		public static string HumanReadable(this HybridConfigurationIgnoreReason x)
+		{
+			var retVal = new List<string>();
+			foreach (var entry in EnumHelper.GetValues<HybridConfigurationIgnoreReason>()) {
+
+				var tmp = x & entry;
+				switch (tmp) {
+
+					case HybridConfigurationIgnoreReason.Evaluated:
+						retVal.Add("OK");
+						break;
+					case HybridConfigurationIgnoreReason.NotEvaluated:
+						//retVal.Add("not evaluated");
+						break;
+					case HybridConfigurationIgnoreReason.EngineSpeedTooLow:
+						retVal.Add("engine speed too low");
+						break;
+					case HybridConfigurationIgnoreReason.EngineSpeedTooHigh:
+						retVal.Add("engine speed too high");
+						break;
+					case HybridConfigurationIgnoreReason.EngineTorqueDemandTooHigh:
+						retVal.Add("engine torque demand too high");
+						break;
+					case HybridConfigurationIgnoreReason.EngineTorqueDemandTooLow:
+						retVal.Add("engine torque demand too low");
+						break;
+					case HybridConfigurationIgnoreReason.EngineSpeedAboveUpshift: retVal.Add("engine speed above upshift"); break;
+					case HybridConfigurationIgnoreReason.EngineSpeedBelowDownshift:
+						retVal.Add("engine speed below downshift");
+						break;
+					case HybridConfigurationIgnoreReason.NoResponseAvailable: return "no response available";
+					default: throw new ArgumentOutOfRangeException(nameof(x), x, null);
+				}
+			}
+
+			return string.Join("/", retVal);
+		}
+
+		public static bool InvalidEngineSpeed(this HybridConfigurationIgnoreReason x)
+		{
+			return (x & (HybridConfigurationIgnoreReason.EngineSpeedTooLow |
+					HybridConfigurationIgnoreReason.EngineSpeedTooHigh |
+					HybridConfigurationIgnoreReason.EngineSpeedBelowDownshift |
+					 HybridConfigurationIgnoreReason.EngineSpeedAboveUpshift)) != 0;
+		}
+
+		public static bool BatteryDemandExceeded(this HybridConfigurationIgnoreReason x)
+		{
+			return (x & (HybridConfigurationIgnoreReason.BatteryAboveMaxSoc |
+						HybridConfigurationIgnoreReason.BatteryBelowMinSoC)) != 0;
+		}
+
+		public static bool EngineSpeedTooHigh(this HybridConfigurationIgnoreReason x)
+		{
+			return (x & HybridConfigurationIgnoreReason.EngineSpeedTooHigh) != 0;
+		}
+
+		public static bool EngineSpeedTooLow(this HybridConfigurationIgnoreReason x)
+		{
+			return (x & HybridConfigurationIgnoreReason.EngineSpeedTooLow) != 0;
+		}
+
+		public static bool EngineSpeedBelowDownshift(this HybridConfigurationIgnoreReason x)
+		{
+			return (x & HybridConfigurationIgnoreReason.EngineSpeedBelowDownshift) != 0;
+		}
+
+		public static bool EngineSpeedAboveUpshift(this HybridConfigurationIgnoreReason x)
+		{
+			return (x & HybridConfigurationIgnoreReason.EngineSpeedAboveUpshift) != 0;
+		}
+
+		public static bool EngineTorqueDemandTooHigh(this HybridConfigurationIgnoreReason x)
+		{
+			return (x & HybridConfigurationIgnoreReason.EngineTorqueDemandTooHigh) != 0;
+		}
+
+		public static bool EngineTorqueDemandTooLow(this HybridConfigurationIgnoreReason x)
+		{
+			return (x & HybridConfigurationIgnoreReason.EngineTorqueDemandTooLow) != 0;
+		}
+
+		public static bool BatterySoCTooLow(this HybridConfigurationIgnoreReason x)
+		{
+			return (x & HybridConfigurationIgnoreReason.BatterySoCTooLow) != 0;
+		}
+
+		public static bool AllOK(this HybridConfigurationIgnoreReason x)
+		{
+			return (x & HybridConfigurationIgnoreReason.Evaluated) == HybridConfigurationIgnoreReason.Evaluated;
+		}
+	}
+
 }
