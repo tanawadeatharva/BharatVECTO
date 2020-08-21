@@ -182,8 +182,9 @@ Public Class HybridStrategyParamsForm
         tbMaxSoC.Text = (strategyParams.MaxSoC * 100).ToGUIFormat()
         tbTargetSoC.Text = (strategyParams.TargetSoC * 100).ToGUIFormat()
 
-        'tbAuxBufferChargeTime = strategyParams.
-        'tbauxBufferTime = strategyParams.
+        tbAuxBufferChargeTime.Text = strategyParams.AuxBufferChargeTime.ToGUIFormat()
+        tbauxBufferTime.Text = strategyParams.AuxBufferTime.ToGUIFormat()
+        tbMinICEOnTime.Text = strategyParams.MinimumICEOnTime.ToGUIFormat()
 
         DeclInit()
 

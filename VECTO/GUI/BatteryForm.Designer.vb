@@ -82,16 +82,16 @@ Partial Class BatteryForm
         Me.lblCFactor = New System.Windows.Forms.Label()
         Me.lblCFactorUnit = New System.Windows.Forms.Label()
         Me.tbCFactor = New System.Windows.Forms.TextBox()
-        Me.ToolStrip1.SuspendLayout()
-        Me.StatusStrip1.SuspendLayout()
-        CType(Me.PictureBox1, System.ComponentModel.ISupportInitialize).BeginInit()
-        Me.CmOpenFile.SuspendLayout()
-        Me.pnInertia.SuspendLayout()
-        CType(Me.PicBox, System.ComponentModel.ISupportInitialize).BeginInit()
-        Me.Panel1.SuspendLayout()
-        Me.Panel2.SuspendLayout()
-        Me.Panel3.SuspendLayout()
-        Me.SuspendLayout()
+        Me.ToolStrip1.SuspendLayout
+        Me.StatusStrip1.SuspendLayout
+        CType(Me.PictureBox1,System.ComponentModel.ISupportInitialize).BeginInit
+        Me.CmOpenFile.SuspendLayout
+        Me.pnInertia.SuspendLayout
+        CType(Me.PicBox,System.ComponentModel.ISupportInitialize).BeginInit
+        Me.Panel1.SuspendLayout
+        Me.Panel2.SuspendLayout
+        Me.Panel3.SuspendLayout
+        Me.SuspendLayout
         '
         'tbCapacity
         '
@@ -102,7 +102,7 @@ Partial Class BatteryForm
         '
         'lblCapacityUnit
         '
-        Me.lblCapacityUnit.AutoSize = True
+        Me.lblCapacityUnit.AutoSize = true
         Me.lblCapacityUnit.Location = New System.Drawing.Point(153, 7)
         Me.lblCapacityUnit.Name = "lblCapacityUnit"
         Me.lblCapacityUnit.Size = New System.Drawing.Size(25, 13)
@@ -111,7 +111,7 @@ Partial Class BatteryForm
         '
         'lblCapacity
         '
-        Me.lblCapacity.AutoSize = True
+        Me.lblCapacity.AutoSize = true
         Me.lblCapacity.Location = New System.Drawing.Point(3, 7)
         Me.lblCapacity.Name = "lblCapacity"
         Me.lblCapacity.Size = New System.Drawing.Size(48, 13)
@@ -120,24 +120,24 @@ Partial Class BatteryForm
         '
         'ButCancel
         '
-        Me.ButCancel.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.ButCancel.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right),System.Windows.Forms.AnchorStyles)
         Me.ButCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel
         Me.ButCancel.Location = New System.Drawing.Point(811, 303)
         Me.ButCancel.Name = "ButCancel"
         Me.ButCancel.Size = New System.Drawing.Size(75, 23)
         Me.ButCancel.TabIndex = 13
         Me.ButCancel.Text = "Cancel"
-        Me.ButCancel.UseVisualStyleBackColor = True
+        Me.ButCancel.UseVisualStyleBackColor = true
         '
         'ButOK
         '
-        Me.ButOK.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.ButOK.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right),System.Windows.Forms.AnchorStyles)
         Me.ButOK.Location = New System.Drawing.Point(730, 303)
         Me.ButOK.Name = "ButOK"
         Me.ButOK.Size = New System.Drawing.Size(75, 23)
         Me.ButOK.TabIndex = 12
         Me.ButOK.Text = "Save"
-        Me.ButOK.UseVisualStyleBackColor = True
+        Me.ButOK.UseVisualStyleBackColor = true
         '
         'ToolStrip1
         '
@@ -224,7 +224,7 @@ Partial Class BatteryForm
         Me.StatusStrip1.Location = New System.Drawing.Point(0, 329)
         Me.StatusStrip1.Name = "StatusStrip1"
         Me.StatusStrip1.Size = New System.Drawing.Size(898, 22)
-        Me.StatusStrip1.SizingGrip = False
+        Me.StatusStrip1.SizingGrip = false
         Me.StatusStrip1.TabIndex = 37
         Me.StatusStrip1.Text = "StatusStrip1"
         '
@@ -243,7 +243,7 @@ Partial Class BatteryForm
         '
         'lblMakeModel
         '
-        Me.lblMakeModel.AutoSize = True
+        Me.lblMakeModel.AutoSize = true
         Me.lblMakeModel.Location = New System.Drawing.Point(16, 85)
         Me.lblMakeModel.Name = "lblMakeModel"
         Me.lblMakeModel.Size = New System.Drawing.Size(87, 13)
@@ -258,7 +258,7 @@ Partial Class BatteryForm
         Me.PictureBox1.Name = "PictureBox1"
         Me.PictureBox1.Size = New System.Drawing.Size(502, 40)
         Me.PictureBox1.TabIndex = 39
-        Me.PictureBox1.TabStop = False
+        Me.PictureBox1.TabStop = false
         '
         'CmOpenFile
         '
@@ -297,7 +297,7 @@ Partial Class BatteryForm
         '
         'lblSoCCurve
         '
-        Me.lblSoCCurve.AutoSize = True
+        Me.lblSoCCurve.AutoSize = true
         Me.lblSoCCurve.Location = New System.Drawing.Point(12, 203)
         Me.lblSoCCurve.Name = "lblSoCCurve"
         Me.lblSoCCurve.Size = New System.Drawing.Size(58, 13)
@@ -311,8 +311,8 @@ Partial Class BatteryForm
         Me.btnBrowseSoCCurve.Name = "btnBrowseSoCCurve"
         Me.btnBrowseSoCCurve.Size = New System.Drawing.Size(24, 24)
         Me.btnBrowseSoCCurve.TabIndex = 6
-        Me.btnBrowseSoCCurve.TabStop = False
-        Me.btnBrowseSoCCurve.UseVisualStyleBackColor = True
+        Me.btnBrowseSoCCurve.TabStop = false
+        Me.btnBrowseSoCCurve.UseVisualStyleBackColor = true
         '
         'btnSoCCurveOpen
         '
@@ -321,8 +321,8 @@ Partial Class BatteryForm
         Me.btnSoCCurveOpen.Name = "btnSoCCurveOpen"
         Me.btnSoCCurveOpen.Size = New System.Drawing.Size(24, 24)
         Me.btnSoCCurveOpen.TabIndex = 7
-        Me.btnSoCCurveOpen.TabStop = False
-        Me.btnSoCCurveOpen.UseVisualStyleBackColor = True
+        Me.btnSoCCurveOpen.TabStop = false
+        Me.btnSoCCurveOpen.UseVisualStyleBackColor = true
         '
         'btnRiMapOpen
         '
@@ -331,8 +331,8 @@ Partial Class BatteryForm
         Me.btnRiMapOpen.Name = "btnRiMapOpen"
         Me.btnRiMapOpen.Size = New System.Drawing.Size(24, 24)
         Me.btnRiMapOpen.TabIndex = 42
-        Me.btnRiMapOpen.TabStop = False
-        Me.btnRiMapOpen.UseVisualStyleBackColor = True
+        Me.btnRiMapOpen.TabStop = false
+        Me.btnRiMapOpen.UseVisualStyleBackColor = true
         '
         'btnBrowseRiMap
         '
@@ -341,12 +341,12 @@ Partial Class BatteryForm
         Me.btnBrowseRiMap.Name = "btnBrowseRiMap"
         Me.btnBrowseRiMap.Size = New System.Drawing.Size(24, 24)
         Me.btnBrowseRiMap.TabIndex = 41
-        Me.btnBrowseRiMap.TabStop = False
-        Me.btnBrowseRiMap.UseVisualStyleBackColor = True
+        Me.btnBrowseRiMap.TabStop = false
+        Me.btnBrowseRiMap.UseVisualStyleBackColor = true
         '
         'lblRiMap
         '
-        Me.lblRiMap.AutoSize = True
+        Me.lblRiMap.AutoSize = true
         Me.lblRiMap.Location = New System.Drawing.Point(12, 249)
         Me.lblRiMap.Name = "lblRiMap"
         Me.lblRiMap.Size = New System.Drawing.Size(129, 13)
@@ -362,9 +362,9 @@ Partial Class BatteryForm
         '
         'lblTitle
         '
-        Me.lblTitle.AutoSize = True
+        Me.lblTitle.AutoSize = true
         Me.lblTitle.BackColor = System.Drawing.Color.White
-        Me.lblTitle.Font = New System.Drawing.Font("Microsoft Sans Serif", 18.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.lblTitle.Font = New System.Drawing.Font("Microsoft Sans Serif", 18!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0,Byte))
         Me.lblTitle.Location = New System.Drawing.Point(119, 35)
         Me.lblTitle.Name = "lblTitle"
         Me.lblTitle.Size = New System.Drawing.Size(266, 29)
@@ -379,7 +379,7 @@ Partial Class BatteryForm
         Me.PicBox.Name = "PicBox"
         Me.PicBox.Size = New System.Drawing.Size(382, 266)
         Me.PicBox.TabIndex = 49
-        Me.PicBox.TabStop = False
+        Me.PicBox.TabStop = false
         '
         'Panel1
         '
@@ -393,7 +393,7 @@ Partial Class BatteryForm
         '
         'lblMinSoc
         '
-        Me.lblMinSoc.AutoSize = True
+        Me.lblMinSoc.AutoSize = true
         Me.lblMinSoc.Location = New System.Drawing.Point(3, 7)
         Me.lblMinSoc.Name = "lblMinSoc"
         Me.lblMinSoc.Size = New System.Drawing.Size(46, 13)
@@ -402,7 +402,7 @@ Partial Class BatteryForm
         '
         'lblSoCMinUnit
         '
-        Me.lblSoCMinUnit.AutoSize = True
+        Me.lblSoCMinUnit.AutoSize = true
         Me.lblSoCMinUnit.Location = New System.Drawing.Point(153, 7)
         Me.lblSoCMinUnit.Name = "lblSoCMinUnit"
         Me.lblSoCMinUnit.Size = New System.Drawing.Size(21, 13)
@@ -428,7 +428,7 @@ Partial Class BatteryForm
         '
         'lblSoCMax
         '
-        Me.lblSoCMax.AutoSize = True
+        Me.lblSoCMax.AutoSize = true
         Me.lblSoCMax.Location = New System.Drawing.Point(3, 7)
         Me.lblSoCMax.Name = "lblSoCMax"
         Me.lblSoCMax.Size = New System.Drawing.Size(49, 13)
@@ -437,7 +437,7 @@ Partial Class BatteryForm
         '
         'lblSoCMaxUnit
         '
-        Me.lblSoCMaxUnit.AutoSize = True
+        Me.lblSoCMaxUnit.AutoSize = true
         Me.lblSoCMaxUnit.Location = New System.Drawing.Point(153, 7)
         Me.lblSoCMaxUnit.Name = "lblSoCMaxUnit"
         Me.lblSoCMaxUnit.Size = New System.Drawing.Size(21, 13)
@@ -463,7 +463,7 @@ Partial Class BatteryForm
         '
         'lblCFactor
         '
-        Me.lblCFactor.AutoSize = True
+        Me.lblCFactor.AutoSize = true
         Me.lblCFactor.Location = New System.Drawing.Point(3, 7)
         Me.lblCFactor.Name = "lblCFactor"
         Me.lblCFactor.Size = New System.Drawing.Size(47, 13)
@@ -472,7 +472,7 @@ Partial Class BatteryForm
         '
         'lblCFactorUnit
         '
-        Me.lblCFactorUnit.AutoSize = True
+        Me.lblCFactorUnit.AutoSize = true
         Me.lblCFactorUnit.Location = New System.Drawing.Point(153, 7)
         Me.lblCFactorUnit.Name = "lblCFactorUnit"
         Me.lblCFactorUnit.Size = New System.Drawing.Size(16, 13)
@@ -489,7 +489,7 @@ Partial Class BatteryForm
         'BatteryForm
         '
         Me.AcceptButton = Me.ButOK
-        Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
+        Me.AutoScaleDimensions = New System.Drawing.SizeF(6!, 13!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.CancelButton = Me.ButCancel
         Me.ClientSize = New System.Drawing.Size(898, 351)
@@ -515,31 +515,31 @@ Partial Class BatteryForm
         Me.Controls.Add(Me.lblMakeModel)
         Me.Controls.Add(Me.tbMakeModel)
         Me.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle
-        Me.Icon = CType(resources.GetObject("$this.Icon"), System.Drawing.Icon)
-        Me.MaximizeBox = False
+        Me.Icon = CType(resources.GetObject("$this.Icon"),System.Drawing.Icon)
+        Me.MaximizeBox = false
         Me.Name = "BatteryForm"
         Me.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Hide
         Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen
         Me.Text = "Electric Energy Storage"
-        Me.ToolStrip1.ResumeLayout(False)
-        Me.ToolStrip1.PerformLayout()
-        Me.StatusStrip1.ResumeLayout(False)
-        Me.StatusStrip1.PerformLayout()
-        CType(Me.PictureBox1, System.ComponentModel.ISupportInitialize).EndInit()
-        Me.CmOpenFile.ResumeLayout(False)
-        Me.pnInertia.ResumeLayout(False)
-        Me.pnInertia.PerformLayout()
-        CType(Me.PicBox, System.ComponentModel.ISupportInitialize).EndInit()
-        Me.Panel1.ResumeLayout(False)
-        Me.Panel1.PerformLayout()
-        Me.Panel2.ResumeLayout(False)
-        Me.Panel2.PerformLayout()
-        Me.Panel3.ResumeLayout(False)
-        Me.Panel3.PerformLayout()
-        Me.ResumeLayout(False)
-        Me.PerformLayout()
+        Me.ToolStrip1.ResumeLayout(false)
+        Me.ToolStrip1.PerformLayout
+        Me.StatusStrip1.ResumeLayout(false)
+        Me.StatusStrip1.PerformLayout
+        CType(Me.PictureBox1,System.ComponentModel.ISupportInitialize).EndInit
+        Me.CmOpenFile.ResumeLayout(false)
+        Me.pnInertia.ResumeLayout(false)
+        Me.pnInertia.PerformLayout
+        CType(Me.PicBox,System.ComponentModel.ISupportInitialize).EndInit
+        Me.Panel1.ResumeLayout(false)
+        Me.Panel1.PerformLayout
+        Me.Panel2.ResumeLayout(false)
+        Me.Panel2.PerformLayout
+        Me.Panel3.ResumeLayout(false)
+        Me.Panel3.PerformLayout
+        Me.ResumeLayout(false)
+        Me.PerformLayout
 
-    End Sub
+End Sub
     Friend WithEvents tbCapacity As TextBox
     Friend WithEvents lblCapacityUnit As Label
     Friend WithEvents lblCapacity As Label

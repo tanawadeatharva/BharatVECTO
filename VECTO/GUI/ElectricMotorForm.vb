@@ -223,13 +223,13 @@ Public Class ElectricMotorForm
             Return False
         End If
 
-        'If AutoSendTo Then
-        '    If VectoJobForm.Visible Then
-        '        If UCase(FileRepl(VectoJobForm.TbENG.Text, JobDir)) <> UCase(file) Then _
-        '            VectoJobForm.TbENG.Text = GetFilenameWithoutDirectory(file, JobDir)
-        '        VectoJobForm.UpdatePic()
-        '    End If
-        'End If
+        If AutoSendTo Then
+            If VehicleForm.Visible Then
+                If UCase(FileRepl(VehicleForm.tbElectricMotor.Text, JobDir)) <> UCase(file) Then _
+                    VehicleForm.tbElectricMotor.Text = GetFilenameWithoutDirectory(file, JobDir)
+                VectoJobForm.UpdatePic()
+            End If
+        End If
 
         ElectricMotorFileBrowser.UpdateHistory(file)
         Text = GetFilenameWithoutPath(file, True)

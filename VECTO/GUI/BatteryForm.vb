@@ -229,13 +229,13 @@ Public Class BatteryForm
             Return False
         End If
 
-        'If AutoSendTo Then
-        '    If VectoJobForm.Visible Then
-        '        If UCase(FileRepl(VectoJobForm.TbENG.Text, JobDir)) <> UCase(file) Then _
-        '            VectoJobForm.TbENG.Text = GetFilenameWithoutDirectory(file, JobDir)
-        '        VectoJobForm.UpdatePic()
-        '    End If
-        'End If
+        If AutoSendTo Then
+            If VehicleForm.Visible Then
+                If UCase(FileRepl(VehicleForm.tbBattery.Text, JobDir)) <> UCase(file) Then _
+                    VehicleForm.tbBattery.Text = GetFilenameWithoutDirectory(file, JobDir)
+                VectoJobForm.UpdatePic()
+            End If
+        End If
 
         BatteryFileBrowser.UpdateHistory(file)
         Text = GetFilenameWithoutPath(file, True)
@@ -283,19 +283,12 @@ Public Class BatteryForm
         Change()
     End Sub
 
-    Private Sub TbDispl_TextChanged(sender As Object, e As EventArgs)
-        Change()
-        DeclInit()
-    End Sub
 
     Private Sub TbInertia_TextChanged(sender As Object, e As EventArgs) Handles tbCapacity.TextChanged
         Change()
     End Sub
 
-    Private Sub TbNleerl_TextChanged(sender As Object, e As EventArgs)
-        UpdatePic()
-        Change()
-    End Sub
+
 
     Private Sub TbMAP_TextChanged(sender As Object, e As EventArgs) _
         Handles tbSoCCurve.TextChanged
@@ -303,17 +296,7 @@ Public Class BatteryForm
         Change()
     End Sub
 
-    Private Sub TbWHTCurban_TextChanged(sender As Object, e As EventArgs)
-        Change()
-    End Sub
-
-    Private Sub TbWHTCrural_TextChanged(sender As Object, e As EventArgs)
-        Change()
-    End Sub
-
-    Private Sub TbWHTCmw_TextChanged(sender As Object, e As EventArgs)
-        Change()
-    End Sub
+   
 
 
 #End Region
@@ -507,5 +490,10 @@ Public Class BatteryForm
         Else
             OpenFiles(FileRepl(tbRiCurve.Text, GetPath(_batteryFile)))
         End If
+    End Sub
+
+    Private Sub tbRiCurve_TextChanged(sender As Object, e As EventArgs) Handles tbRiCurve.TextChanged
+        UpdatePic()
+        Change()
     End Sub
 End Class
