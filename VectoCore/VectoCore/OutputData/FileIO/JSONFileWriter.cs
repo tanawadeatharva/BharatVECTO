@@ -94,7 +94,7 @@ public class JSONFileWriter : IOutputFileWriter
 		body.Add("SavedInDeclMode", declMode);
 
 		body.Add("Model", battery.Model);
-		body.Add("Capacity", battery.Capacity.Value());
+		body.Add("Capacity", battery.Capacity.AsAmpHour);
 		body.Add("SOC_min", battery.MinSOC * 100.0);
 		body.Add("SOC_max",battery.MaxSOC * 100.0);
 		body.Add("MaxCurrentFactor", battery.MaxCurrentFactor);

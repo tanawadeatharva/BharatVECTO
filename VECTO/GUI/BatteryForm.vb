@@ -174,7 +174,7 @@ Public Class BatteryForm
 
         Dim basePath As String = Path.GetDirectoryName(file)
         tbMakeModel.Text = battery.Model
-        tbCapacity.Text = battery.Capacity.ToGUIFormat()
+        tbCapacity.Text = battery.Capacity.AsAmpHour.ToGUIFormat()
 
         tbCFactor.Text = battery.MaxCurrentFactor.ToGUIFormat()
         tbSoCMin.Text = (battery.MinSOC * 100).ToGUIFormat()

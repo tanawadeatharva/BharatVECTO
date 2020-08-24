@@ -213,7 +213,7 @@ Public Class Battery
 
     Public ReadOnly Property Capacity As AmpereSecond Implements IBatteryPackDeclarationInputData.Capacity
         Get
-            Return BatCapacity.SI(Of AmpereSecond)
+            Return BatCapacity.SI(Unit.SI.Ampere.Hour).Cast(Of AmpereSecond)
         End Get
     End Property
 

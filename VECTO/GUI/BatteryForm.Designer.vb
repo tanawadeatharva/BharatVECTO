@@ -105,9 +105,9 @@ Partial Class BatteryForm
         Me.lblCapacityUnit.AutoSize = true
         Me.lblCapacityUnit.Location = New System.Drawing.Point(153, 7)
         Me.lblCapacityUnit.Name = "lblCapacityUnit"
-        Me.lblCapacityUnit.Size = New System.Drawing.Size(25, 13)
+        Me.lblCapacityUnit.Size = New System.Drawing.Size(26, 13)
         Me.lblCapacityUnit.TabIndex = 24
-        Me.lblCapacityUnit.Text = "[As]"
+        Me.lblCapacityUnit.Text = "[Ah]"
         '
         'lblCapacity
         '
