@@ -849,7 +849,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				velocityWithOverspeed = DriverStrategy.ApplyOverspeed(velocityWithOverspeed);
 			}
 			
-			if (DataBus.GearboxInfo.GearboxType.AutomaticTransmission() || (DataBus.ClutchInfo.ClutchClosed(absTime) &&DataBus.GearboxInfo.GearEngaged(absTime) )) {
+			if (DataBus.GearboxInfo.GearboxType.AutomaticTransmission() || (DataBus.ClutchInfo.ClutchClosed(absTime) && DataBus.GearboxInfo.GearEngaged(absTime) )) {
 				for (var i = 0; i < 3; i++) {
 					var retVal = HandleRequestEngaged(
 						absTime, ds, targetVelocity, gradient, prohibitOverspeed, velocityWithOverspeed, debug);
@@ -1414,7 +1414,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			Radian gradient)
 		{
 			IResponse response;
-			if (DataBus.GearboxInfo.GearboxType.AutomaticTransmission() || DataBus.ClutchInfo.ClutchClosed(absTime)) {
+			if (DataBus.GearboxInfo.GearboxType.AutomaticTransmission() || (DataBus.ClutchInfo.ClutchClosed(absTime) && DataBus.GearboxInfo.GearEngaged(absTime))) {
 				if (DataBus.VehicleInfo.VehicleSpeed.IsGreater(0)) {
 					response = Driver.DrivingActionAccelerate(absTime, ds, DriverStrategy.BrakeTrigger.NextTargetSpeed, gradient);
 				} else {

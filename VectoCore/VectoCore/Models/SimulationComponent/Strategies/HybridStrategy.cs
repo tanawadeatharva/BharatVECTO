@@ -246,7 +246,14 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 
 				if (firstResponse.DeltaDragLoad.IsGreater(0)) {
 					// braking requested but engine operating point is not below drag curve.
-					if (ElectricMotorCanPropellDuringTractionInterruption || DataBus.GearboxInfo.GearEngaged(absTime)) {
+					if (ElectricMotorCanPropellDuringTractionInterruption) {
+						if (DataBus.GearboxInfo.GearEngaged(absTime)) {
+							eval.AddRange(FindSolution(absTime, dt, outTorque, outAngularVelocity, dryRun));
+						} else {
+							EvaluateConfigsForGear(
+								absTime, dt, outTorque, outAngularVelocity, currentGear, AllowICEOff(absTime), eval, emPos);
+						}
+					}else if (DataBus.GearboxInfo.GearEngaged(absTime)) {
 						eval.AddRange(FindSolution(absTime, dt, outTorque, outAngularVelocity, dryRun));
 					} else {
 						eval.Add(ResponseEmOff);
@@ -409,7 +416,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 				EvaluateConfigsForGear(
 					absTime, dt, outTorque, outAngularVelocity, best.Gear + 1, AllowICEOff(absTime), newEval,
 					best.Setting.MechanicalAssistPower.First().Key);
-				best = DoSelectBestOption(newEval, absTime, dt, outTorque, outAngularVelocity, dryRun, currentGear);
+				if (newEval.Count > 0) {
+					best = DoSelectBestOption(newEval, absTime, dt, outTorque, outAngularVelocity, dryRun, currentGear);
+				}
 			}
 			if (best.IgnoreReason.EngineSpeedBelowDownshift()) {
 				//try downshift
@@ -417,7 +426,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 				EvaluateConfigsForGear(
 					absTime, dt, outTorque, outAngularVelocity, best.Gear - 1, AllowICEOff(absTime), newEval,
 					best.Setting.MechanicalAssistPower.First().Key);
-				best = DoSelectBestOption(newEval, absTime, dt, outTorque, outAngularVelocity, dryRun, currentGear);
+				if (newEval.Count > 0) {
+					best = DoSelectBestOption(newEval, absTime, dt, outTorque, outAngularVelocity, dryRun, currentGear);
+				}
 			}
 			return best;
 		}
@@ -445,7 +456,12 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 				return best;
 			}
 
-			
+			best = eval.Where(x => !double.IsNaN(x.Score)).OrderBy(x => x.Score).FirstOrDefault();
+			if (best != null) {
+				return best;
+			}
+
+
 			var allOverload = eval.Where(x => !(x.IgnoreReason.BatteryDemandExceeded() || x.IgnoreReason.BatterySoCTooLow()))
 								.All(x => x.IgnoreReason.EngineTorqueDemandTooHigh());
 			var allUnderload = eval.All(x => x.IgnoreReason.EngineTorqueDemandTooLow());
@@ -647,11 +663,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 			var minimumShiftTimePassed = (DataBus.GearboxInfo.LastShift + ModelData.GearboxData.ShiftTime).IsSmallerOrEqual(absTime);
 			var gearRangeUpshift = ModelData.GearshiftParameters.AllowedGearRangeUp;
 			var gearRangeDownshift = ModelData.GearshiftParameters.AllowedGearRangeDown;
-			if (dryRun || !minimumShiftTimePassed || (absTime - DataBus.GearboxInfo.LastUpshift).IsSmaller(ModelData.GearboxData.DownshiftAfterUpshiftDelay) 
+			if (dryRun || !minimumShiftTimePassed || (absTime - DataBus.GearboxInfo.LastUpshift).IsSmaller(ModelData.GearboxData.DownshiftAfterUpshiftDelay/*, 0.1*/) 
 				|| (DataBus.DriverInfo.DrivingAction == DrivingAction.Accelerate && DataBus.VehicleInfo.VehicleSpeed.IsSmaller(5.KMPHtoMeterPerSecond()))) {
 				gearRangeDownshift = 0;
 			}
-			if (dryRun || !minimumShiftTimePassed || (absTime - DataBus.GearboxInfo.LastDownshift).IsSmaller(ModelData.GearboxData.UpshiftAfterDownshiftDelay)
+			if (dryRun || !minimumShiftTimePassed || (absTime - DataBus.GearboxInfo.LastDownshift).IsSmaller(ModelData.GearboxData.UpshiftAfterDownshiftDelay/*,0.1*/)
 				|| (DataBus.DriverInfo.DrivingAction == DrivingAction.Accelerate && DataBus.VehicleInfo.VehicleSpeed.IsSmaller(5.KMPHtoMeterPerSecond()))) {
 				gearRangeUpshift = 0;
 			}
