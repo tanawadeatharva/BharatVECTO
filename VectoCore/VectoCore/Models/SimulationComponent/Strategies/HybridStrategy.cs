@@ -489,7 +489,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 			var emEngaged = (!ElectricMotorCanPropellDuringTractionInterruption ||
 							(DataBus.GearboxInfo.GearEngaged(absTime) && (eval.First().Response?.Gearbox.Gear ?? 0) != 0));
 			if (DataBus.DriverInfo.DrivingAction == DrivingAction.Accelerate && emEngaged) {
-				var filtered = eval.Where(x => !x.IgnoreReason.InvalidEngineSpeed()).ToArray();
+				//var filtered = eval.Where(x => !x.IgnoreReason.InvalidEngineSpeed()).ToArray();
+				var filtered = eval
+					.Where(x => !x.IgnoreReason.EngineSpeedTooLow() && !x.IgnoreReason.EngineSpeedTooHigh()).ToArray();
 				if (filtered.Length == 0) {
 					filtered = eval
 						.Where(x => !x.IgnoreReason.EngineSpeedTooLow() && !x.IgnoreReason.EngineSpeedTooHigh()).ToArray();
