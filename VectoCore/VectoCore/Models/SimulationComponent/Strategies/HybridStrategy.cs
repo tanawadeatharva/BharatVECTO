@@ -788,6 +788,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 				}
 
 				// make sure the max drive point is also covered.
+				var batEnergyAvailable = (DataBus.BatteryInfo.StoredEnergy - BatteryDischargeEnergyThreshold) / dt;
+				var emDrivePower = -(batEnergyAvailable - ModelData.ElectricAuxDemand);
 				var emTorqueM = emTqReq * maxU;
 				if (!responses.Any(x => x.Gear == nextGear && x.U.IsEqual(maxU)) && emTorqueM.IsBetween(
 					0.SI<NewtonMeter>(), firstResponse.ElectricMotor.MaxDriveTorque)) {
@@ -796,11 +798,12 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 				}
 				if (maxEmTorque.IsSmaller(0) && emTqReq.IsGreater(-maxEmTorque)) { 
 					var tmp = TryConfiguration(absTime, dt, outTorque, outAngularVelocity, nextGear, emPos, maxEmTorque, maxEmTorque / emTqReq, allowIceOff);
-					responses.Add(tmp);
+					if (!tmp.Response.ElectricSystem.ConsumerPower.IsSmaller(emDrivePower)) {
+						responses.Add(tmp);
+					}
 				}
 				// if battery is getting empty try to set EM-torque to discharge battery to lower SoC boundary
-				var batEnergyAvailable = (DataBus.BatteryInfo.StoredEnergy - BatteryDischargeEnergyThreshold) / dt;
-				var emDrivePower = -(batEnergyAvailable - ModelData.ElectricAuxDemand);
+				
 				if (maxEmTorque.IsSmaller(0) && (-emDrivePower).IsGreaterOrEqual(maxEmTorque * firstResponse.ElectricMotor.AngularVelocity)) {
 					// maxEmTorque < 0  ==> EM can still propell
 					// (-emDrivePower).IsGreaterOrEqual(maxEmTorque * firstResponse.ElectricMotor.AngularVelocity) ==> power available from battery for driving does not exceed max EM power (otherwise torque lookup may fail) 
