@@ -8,6 +8,7 @@ using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Configuration;
+using TUGraz.VectoCore.InputData.FileIO.JSON;
 using TUGraz.VectoCore.InputData.Impl;
 using TUGraz.VectoCore.InputData.Reader.ComponentData;
 using TUGraz.VectoCore.InputData.Reader.ShiftStrategy;
@@ -211,6 +212,49 @@ namespace TUGraz.VectoCore.Tests.Integration.Hybrid
 			job.WaitFinished();
 			Assert.IsTrue(modData.Rows.Count > 0);
 			GraphWriter.Write(modFilename);
+		}
+
+
+
+		[TestCase(0, TestName = "P2 Hybrid Group 5 DriveCycle LongHaul"),
+		TestCase(1, TestName = "P2 Hybrid Group 5 DriveCycle Coach"),
+		TestCase(2, TestName = "P2 Hybrid Group 5 DriveCycle Construction"),
+		TestCase(3, TestName = "P2 Hybrid Group 5 DriveCycle HeavyUrban"),
+		TestCase(4, TestName = "P2 Hybrid Group 5 DriveCycle Interurban"),
+		TestCase(5, TestName = "P2 Hybrid Group 5 DriveCycle MunicipalUtility"),
+		TestCase(6, TestName = "P2 Hybrid Group 5 DriveCycle RegionalDelivery"),
+		TestCase(7, TestName = "P2 Hybrid Group 5 DriveCycle Suburban"),
+		TestCase(8, TestName = "P2 Hybrid Group 5 DriveCycle Urban"),
+		TestCase(9, TestName = "P2 Hybrid Group 5 DriveCycle UrbanDelivery"),
+			]
+		public void P2HybridGroup5DriveCycle(int cycleIdx)
+		{
+			var inputProvider = JSONInputDataFactory.ReadJsonJob(@"TestData\Hybrids\GenericVehicle_Group5_P2\P2 Group 5.vecto");
+
+			var factory = new SimulatorFactory(ExecutionMode.Engineering, inputProvider, null) {
+				Validate = false
+			};
+
+			var sumContainer = new SummaryDataContainer(null);
+			var jobContainer = new JobContainer(sumContainer);
+
+			factory.SumData = sumContainer;
+
+			var run = factory.SimulationRuns().ToArray()[cycleIdx];
+
+			Assert.NotNull(run);
+
+			var pt = run.GetContainer();
+
+			Assert.NotNull(pt);
+
+			run.Run();
+			Assert.IsTrue(run.FinishedWithoutErrors);
+
+			//jobContainer.AddRuns(factory);
+			//jobContainer.Execute();
+			//jobContainer.WaitFinished();
+			//Assert.IsTrue(jobContainer.GetProgress().All(x => x.Value.Success));
 		}
 
 		[
