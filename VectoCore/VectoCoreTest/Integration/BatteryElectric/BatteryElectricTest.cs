@@ -29,12 +29,13 @@ using ElectricSystem = TUGraz.VectoCore.Models.SimulationComponent.ElectricSyste
 namespace TUGraz.VectoCore.Tests.Integration.BatteryElectric
 {
 	[TestFixture]
+	[Parallelizable(ParallelScope.All)]
 	public class BatteryElectricTest
 	{
 
 
 
-		private ModalResultField[] Yfields;
+		//private ModalResultField[] Yfields;
 		public const string MotorFile = @"TestData\BatteryElectric\GenericVehicleB4\GenericEMotor_125kW_485Nm.vem";
 		public const string BatFile = @"TestData\BatteryElectric\GenericVehicleB4\GenericBattery_243kWh_750V.vbat";
 
@@ -48,27 +49,30 @@ namespace TUGraz.VectoCore.Tests.Integration.BatteryElectric
 		public void RunBeforeAnyTests()
 		{
 			Directory.SetCurrentDirectory(TestContext.CurrentContext.TestDirectory);
-
-			InitGraphWriter();
 		}
 
 
-		private void InitGraphWriter()
+		private GraphWriter GetGraphWriter(ModalResultField[] yFields)
 		{
+			var graphWriter = new GraphWriter();
 			//#if TRACE
-			GraphWriter.Enable();
+			graphWriter.Enable();
 
 			//#else
 			//GraphWriter.Disable();
 			//#endif
-			GraphWriter.Xfields = new[] { ModalResultField.dist };
+			
 
-			Yfields = new[] {
+			var Yfields = new[] {
 				ModalResultField.v_act, ModalResultField.altitude, ModalResultField.acc, ModalResultField.Gear,
 				ModalResultField.BatterySOC,
-			};
-			GraphWriter.Series1Label = "Hybrid";
-			GraphWriter.PlotIgnitionState = true;
+			}.Concat(yFields).ToArray();
+			graphWriter.Xfields = new[] { ModalResultField.dist };
+			graphWriter.Yfields = yFields;
+			graphWriter.Series1Label = "BEV";
+			graphWriter.PlotIgnitionState = true;
+
+			return graphWriter;
 		}
 
 
@@ -94,8 +98,6 @@ namespace TUGraz.VectoCore.Tests.Integration.BatteryElectric
 		] // the vehicle can drive max. 56km/h!! 80km/h testcase makes no sense
 		public void B4BEVConstantSpeed(double vmax, double initialSoC, double slope, double pAuxEl)
 		{
-			GraphWriter.Yfields = Yfields.Concat(new[] { ModalResultField.P_electricMotor_mech_B4 }).ToArray();
-
 			var cycleData = string.Format(
 				@"   0, {0}, {1},    0
 				  7000, {0}, {1},    0", vmax, slope);
@@ -108,7 +110,7 @@ namespace TUGraz.VectoCore.Tests.Integration.BatteryElectric
 			var job = CreateEngineeringRun(
 				cycle, modFilename, initialSoC, pos, 2, 22.6, largeMotor: true, pAuxEl: pAuxEl);
 			var run = job.Runs.First().Run;
-            var modData = ((ModalDataContainer)((VehicleContainer)run.GetContainer()).ModData).Data;
+			var modData = ((ModalDataContainer)((VehicleContainer)run.GetContainer()).ModData).Data;
 
 			var data = run.GetContainer().RunData;
 			//File.WriteAllText(
@@ -119,7 +121,9 @@ namespace TUGraz.VectoCore.Tests.Integration.BatteryElectric
 			Assert.IsTrue(run.FinishedWithoutErrors);
 
 			Assert.IsTrue(modData.Rows.Count > 0);
-			GraphWriter.Write(modFilename);
+
+			var graphWriter = GetGraphWriter(new[] { ModalResultField.P_electricMotor_mech_B4 });
+			graphWriter.Write(modFilename);
 		}
 
 
@@ -130,7 +134,6 @@ namespace TUGraz.VectoCore.Tests.Integration.BatteryElectric
 		]
 		public void B4BEVDriveOff(double vmax, double initialSoC, double slope)
 		{
-			GraphWriter.Yfields = Yfields.Concat(new[] { ModalResultField.P_electricMotor_mech_B4 }).ToArray();
 			var cycleData = string.Format(
 				@"   0,   0, {1},    3
 				   700, {0}, {1},    0", vmax, slope);
@@ -143,194 +146,195 @@ namespace TUGraz.VectoCore.Tests.Integration.BatteryElectric
 			var job = CreateEngineeringRun(
 				cycle, modFilename, initialSoC, pos, 2, 22.6, largeMotor: true);
 			var run = job.Runs.First().Run;
-            var modData = ((ModalDataContainer)((VehicleContainer)run.GetContainer()).ModData).Data;
+			var modData = ((ModalDataContainer)((VehicleContainer)run.GetContainer()).ModData).Data;
 
 			run.Run();
 			Assert.IsTrue(run.FinishedWithoutErrors);
 
 			Assert.IsTrue(modData.Rows.Count > 0);
-			GraphWriter.Write(modFilename);
+
+			var graphWriter = GetGraphWriter(new[] { ModalResultField.P_electricMotor_mech_B4 });
+			graphWriter.Write(modFilename);
 		}
 
-        [
-            TestCase("LongHaul", 2000, 0.8, 0, TestName = "B4 BEV DriveCycle LongHaul, SoC: 0.8 Payload: 2t P_auxEl: 0kW"),
-            TestCase("RegionalDelivery", 2000, 0.8, 0, TestName = "B4 BEV DriveCycle RegionalDelivery, SoC: 0.8 Payload: 2t P_auxEl: 0kW"),
-            TestCase("UrbanDelivery", 2000, 0.8, 0, TestName = "B4 BEV DriveCycle UrbanDelivery, SoC: 0.8 Payload: 2t P_auxEl: 0kW"),
-            TestCase("Construction", 2000, 0.8, 0, TestName = "B4 BEV DriveCycle Construction, SoC: 0.8 Payload: 2t P_auxEl: 0kW"),
-            TestCase("Urban", 2000, 0.8, 0, TestName = "B4 BEV DriveCycle Urban, SoC: 0.8 Payload: 2t P_auxEl: 0kW"),
-            TestCase("Suburban", 2000, 0.8, 0, TestName = "B4 BEV DriveCycle SubUrban, SoC: 0.8 Payload: 2t P_auxEl: 0kW"),
-            TestCase("Interurban", 2000, 0.8, 0, TestName = "B4 BEV DriveCycle InterUrban, SoC: 0.8 Payload: 2t P_auxEl: 0kW"),
-            TestCase("Coach", 2000, 0.8, 0, TestName = "B4 BEV DriveCycle Coach, SoC: 0.8 Payload: 2t P_auxEl: 0kW"),
-        ]
-        public void B4BEVDriveCycle(string declarationMission, double payload, double initialSoC, double pAuxEl)
-        {
-            GraphWriter.Yfields = Yfields.Concat(new[] { ModalResultField.P_electricMotor_mech_B4 }).ToArray();
+		[
+			TestCase("LongHaul", 2000, 0.8, 0, TestName = "B4 BEV DriveCycle LongHaul, SoC: 0.8 Payload: 2t P_auxEl: 0kW"),
+			TestCase("RegionalDelivery", 2000, 0.8, 0, TestName = "B4 BEV DriveCycle RegionalDelivery, SoC: 0.8 Payload: 2t P_auxEl: 0kW"),
+			TestCase("UrbanDelivery", 2000, 0.8, 0, TestName = "B4 BEV DriveCycle UrbanDelivery, SoC: 0.8 Payload: 2t P_auxEl: 0kW"),
+			TestCase("Construction", 2000, 0.8, 0, TestName = "B4 BEV DriveCycle Construction, SoC: 0.8 Payload: 2t P_auxEl: 0kW"),
+			TestCase("Urban", 2000, 0.8, 0, TestName = "B4 BEV DriveCycle Urban, SoC: 0.8 Payload: 2t P_auxEl: 0kW"),
+			TestCase("Suburban", 2000, 0.8, 0, TestName = "B4 BEV DriveCycle SubUrban, SoC: 0.8 Payload: 2t P_auxEl: 0kW"),
+			TestCase("Interurban", 2000, 0.8, 0, TestName = "B4 BEV DriveCycle InterUrban, SoC: 0.8 Payload: 2t P_auxEl: 0kW"),
+			TestCase("Coach", 2000, 0.8, 0, TestName = "B4 BEV DriveCycle Coach, SoC: 0.8 Payload: 2t P_auxEl: 0kW"),
+		]
+		public void B4BEVDriveCycle(string declarationMission, double payload, double initialSoC, double pAuxEl)
+		{
+			var cycleData = RessourceHelper.ReadStream(
+				DeclarationData.DeclarationDataResourcePrefix + ".MissionCycles." +
+				declarationMission +
+				Constants.FileExtensions.CycleFile);
+			var cycle = DrivingCycleDataReader.ReadFromStream(cycleData, CycleType.DistanceBased, "", false);
 
-            var cycleData = RessourceHelper.ReadStream(
-                DeclarationData.DeclarationDataResourcePrefix + ".MissionCycles." +
-                declarationMission +
-                Constants.FileExtensions.CycleFile);
-            var cycle = DrivingCycleDataReader.ReadFromStream(cycleData, CycleType.DistanceBased, "", false);
+			const bool largeMotor = true;
 
-            const bool largeMotor = true;
-
-            var modFilename = string.Format("SimpleParallelHybrid-B4_cycle_{0}-{1}_{2}_{3}", declarationMission, initialSoC, payload, pAuxEl);
-            const PowertrainPosition pos = PowertrainPosition.BatteryElectricB4;
+			var modFilename = string.Format("SimpleParallelHybrid-B4_cycle_{0}-{1}_{2}_{3}", declarationMission, initialSoC, payload, pAuxEl);
+			const PowertrainPosition pos = PowertrainPosition.BatteryElectricB4;
 			var job = CreateEngineeringRun(
 				cycle, modFilename, initialSoC, pos, 2, 22.6, largeMotor: true);
 			var run = job.Runs.First().Run;
-            var modData = ((ModalDataContainer)((VehicleContainer)run.GetContainer()).ModData).Data;
+			var modData = ((ModalDataContainer)((VehicleContainer)run.GetContainer()).ModData).Data;
 
-            //var data = run.GetContainer().RunData;
-            //File.WriteAllText(
-            //	$"{modFilename}.json",
-            //	JsonConvert.SerializeObject(data, Formatting.Indented));
+			//var data = run.GetContainer().RunData;
+			//File.WriteAllText(
+			//	$"{modFilename}.json",
+			//	JsonConvert.SerializeObject(data, Formatting.Indented));
 
-            //run.Run();
-			job.Execute();
-			job.WaitFinished();
-            Assert.IsTrue(run.FinishedWithoutErrors);
-			Assert.IsTrue(modData.Rows.Count > 0);
-
-
-            GraphWriter.Write(modFilename + ".vmod");
-        }
-
-        // - - - - - - - - - - - - - - - - - - -  - - - - - - - - - - -  - - - 
-
-        [
-            TestCase(30, 0.7, 0, 0, TestName = "B3 BEV ConstantSpeed 30km/h SoC: 0.7, level"),
-            TestCase(50, 0.7, 0, 0, TestName = "B3 BEV ConstantSpeed 50km/h SoC: 0.7, level"),
-            //TestCase(80, 0.7, 0, 0, TestName = "B4 BEV ConstantSpeed 80km/h SoC: 0.7, level"),
-
-            TestCase(30, 0.25, 0, 0, TestName = "B3 BEV ConstantSpeed 30km/h SoC: 0.25, level"),
-            TestCase(50, 0.25, 0, 0, TestName = "B3 BEV ConstantSpeed 50km/h SoC: 0.25, level"),
-            //TestCase(80, 0.25, 0, 0, TestName = "B4 BEV ConstantSpeed 80km/h SoC: 0.25, level"),
-
-            TestCase(30, 0.5, 5, 0, TestName = "B3 BEV ConstantSpeed 30km/h SoC: 0.5, UH 5%"),
-            TestCase(50, 0.5, 5, 0, TestName = "B3 BEV ConstantSpeed 50km/h SoC: 0.5, UH 5%"),
-            //TestCase(80, 0.5, 5, 0, TestName = "B4 BEV ConstantSpeed 80km/h SoC: 0.5, UH 5%"),
-
-            TestCase(30, 0.5, -5, 0, TestName = "B3 BEV ConstantSpeed 30km/h SoC: 0.5, DH 5%"),
-            TestCase(50, 0.5, -5, 0, TestName = "B3 BEV ConstantSpeed 50km/h SoC: 0.5, DH 5%"),
-            //TestCase(80, 0.5, -5, 0, TestName = "B4 BEV ConstantSpeed 80km/h SoC: 0.5, DH 5%"),
-
-            TestCase(30, 0.25, 0, 1000, TestName = "B3 BEV ConstantSpeed 30km/h SoC: 0.25, level P_auxEl: 1kW"),
-            TestCase(30, 0.25, 0, 5000, TestName = "B3 BEV ConstantSpeed 30km/h SoC: 0.25, level P_auxEl: 5kW"),
-        ] // the vehicle can drive max. 56km/h!! 80km/h testcase makes no sense
-        public void B3BEVConstantSpeed(double vmax, double initialSoC, double slope, double pAuxEl)
-        {
-            GraphWriter.Yfields = Yfields.Concat(new[] { ModalResultField.P_electricMotor_mech_B3 }).ToArray();
-
-            var cycleData = string.Format(
-                @"   0, {0}, {1},    0
-				  7000, {0}, {1},    0", vmax, slope);
-            var cycle = SimpleDrivingCycles.CreateCycleData(cycleData);
-
-            const bool largeMotor = true;
-
-            var modFilename = string.Format("SimpleBatteryElectric-B3_constant_{0}-{1}_{2}_{3}", vmax, initialSoC, slope, pAuxEl);
-            const PowertrainPosition pos = PowertrainPosition.BatteryElectricB3;
-            var job = CreateEngineeringRun(
-                cycle, modFilename, initialSoC, pos, 2, 22.6, largeMotor: true, pAuxEl: pAuxEl);
-			var run = job.Runs.First().Run;
-            var modData = ((ModalDataContainer)((VehicleContainer)run.GetContainer()).ModData).Data;
-
-            var data = run.GetContainer().RunData;
-            //File.WriteAllText(
-            //	$"{modFilename}.json",
-            //	JsonConvert.SerializeObject(data, Formatting.Indented));
-
-            run.Run();
-            Assert.IsTrue(run.FinishedWithoutErrors);
-
-            Assert.IsTrue(modData.Rows.Count > 0);
-            GraphWriter.Write(modFilename + ".vmod");
-        }
-
-
-        [
-            TestCase(30, 0.7, 0, TestName = "B3 BEV DriveOff 30km/h SoC: 0.7, level"),
-            TestCase(80, 0.7, 0, TestName = "B3 BEV DriveOff 80km/h SoC: 0.7, level"),
-            TestCase(30, 0.25, 0, TestName = "B3 BEV DriveOff 30km/h SoC: 0.25, level")
-        ]
-        public void B3BEVDriveOff(double vmax, double initialSoC, double slope)
-        {
-            GraphWriter.Yfields = Yfields.Concat(new[] { ModalResultField.P_electricMotor_mech_B3 }).ToArray();
-            var cycleData = string.Format(
-                @"   0,   0, {1},    3
-				   700, {0}, {1},    0", vmax, slope);
-            var cycle = SimpleDrivingCycles.CreateCycleData(cycleData);
-
-            const bool largeMotor = true;
-
-            var modFilename = string.Format("SimpleBatteryElectric-B3_acc_{0}-{1}_{2}", vmax, initialSoC, slope);
-            const PowertrainPosition pos = PowertrainPosition.BatteryElectricB3;
-            var job = CreateEngineeringRun(
-                cycle, modFilename, initialSoC, pos, 2, 22.6, largeMotor: true);
-			var run = job.Runs.First().Run;
-            var modData = ((ModalDataContainer)((VehicleContainer)run.GetContainer()).ModData).Data;
-
-            run.Run();
-            Assert.IsTrue(run.FinishedWithoutErrors);
-
-            Assert.IsTrue(modData.Rows.Count > 0);
-            GraphWriter.Write(modFilename + ".vmod");
-        }
-
-        [
-            TestCase("LongHaul", 2000, 0.8, 0, TestName = "B3 Hybrid DriveCycle LongHaul, SoC: 0.8 Payload: 2t P_auxEl: 0kW"),
-            TestCase("RegionalDelivery", 2000, 0.8, 0, TestName = "B3 Hybrid DriveCycle RegionalDelivery, SoC: 0.8 Payload: 2t P_auxEl: 0kW"),
-            TestCase("UrbanDelivery", 2000, 0.8, 0, TestName = "B3 Hybrid DriveCycle UrbanDelivery, SoC: 0.8 Payload: 2t P_auxEl: 0kW"),
-            TestCase("Construction", 2000, 0.8, 0, TestName = "B3 Hybrid DriveCycle Construction, SoC: 0.8 Payload: 2t P_auxEl: 0kW"),
-            TestCase("Urban", 2000, 0.8, 0, TestName = "B3 Hybrid DriveCycle Urban, SoC: 0.8 Payload: 2t P_auxEl: 0kW"),
-            TestCase("Suburban", 2000, 0.8, 0, TestName = "B3 Hybrid DriveCycle SubUrban, SoC: 0.8 Payload: 2t P_auxEl: 0kW"),
-            TestCase("Interurban", 2000, 0.8, 0, TestName = "B3 Hybrid DriveCycle InterUrban, SoC: 0.8 Payload: 2t P_auxEl: 0kW"),
-            TestCase("Coach", 2000, 0.8, 0, TestName = "B3 Hybrid DriveCycle Coach, SoC: 0.8 Payload: 2t P_auxEl: 0kW"),
-        ]
-        public void B3BEVDriveCycle(string declarationMission, double payload, double initialSoC, double pAuxEl)
-        {
-            GraphWriter.Yfields = Yfields.Concat(new[] { ModalResultField.P_electricMotor_mech_B3 }).ToArray();
-
-            var cycleData = RessourceHelper.ReadStream(
-                DeclarationData.DeclarationDataResourcePrefix + ".MissionCycles." +
-                declarationMission +
-                Constants.FileExtensions.CycleFile);
-            var cycle = DrivingCycleDataReader.ReadFromStream(cycleData, CycleType.DistanceBased, "", false);
-
-            const bool largeMotor = true;
-
-            var modFilename = string.Format("SimpleParallelHybrid-B3_cycle_{0}-{1}_{2}_{3}", declarationMission, initialSoC, payload, pAuxEl);
-			const PowertrainPosition pos = PowertrainPosition.BatteryElectricB3;
-            var job = CreateEngineeringRun(
-                cycle, modFilename, initialSoC, pos, 2, 22.6, largeMotor: true);
-
-			var run = job.Runs.First().Run;
-            var modData = ((ModalDataContainer)((VehicleContainer)run.GetContainer()).ModData).Data;
-
-            var data = run.GetContainer().RunData;
-            //File.WriteAllText(
-            //	$"{modFilename}.json",
-            //	JsonConvert.SerializeObject(data, Formatting.Indented));
-
-            //run.Run();
+			//run.Run();
 			job.Execute();
 			job.WaitFinished();
 			Assert.IsTrue(run.FinishedWithoutErrors);
-            Assert.IsTrue(modData.Rows.Count > 0);
-            GraphWriter.Write(modFilename + ".vmod");
-        }
+			Assert.IsTrue(modData.Rows.Count > 0);
+
+			var graphWriter = GetGraphWriter(new[] { ModalResultField.P_electricMotor_mech_B4 });
+			graphWriter.Write(modFilename + ".vmod");
+		}
+
+		// - - - - - - - - - - - - - - - - - - -  - - - - - - - - - - -  - - - 
+
+		[
+			TestCase(30, 0.7, 0, 0, TestName = "B3 BEV ConstantSpeed 30km/h SoC: 0.7, level"),
+			TestCase(50, 0.7, 0, 0, TestName = "B3 BEV ConstantSpeed 50km/h SoC: 0.7, level"),
+			//TestCase(80, 0.7, 0, 0, TestName = "B4 BEV ConstantSpeed 80km/h SoC: 0.7, level"),
+
+			TestCase(30, 0.25, 0, 0, TestName = "B3 BEV ConstantSpeed 30km/h SoC: 0.25, level"),
+			TestCase(50, 0.25, 0, 0, TestName = "B3 BEV ConstantSpeed 50km/h SoC: 0.25, level"),
+			//TestCase(80, 0.25, 0, 0, TestName = "B4 BEV ConstantSpeed 80km/h SoC: 0.25, level"),
+
+			TestCase(30, 0.5, 5, 0, TestName = "B3 BEV ConstantSpeed 30km/h SoC: 0.5, UH 5%"),
+			TestCase(50, 0.5, 5, 0, TestName = "B3 BEV ConstantSpeed 50km/h SoC: 0.5, UH 5%"),
+			//TestCase(80, 0.5, 5, 0, TestName = "B4 BEV ConstantSpeed 80km/h SoC: 0.5, UH 5%"),
+
+			TestCase(30, 0.5, -5, 0, TestName = "B3 BEV ConstantSpeed 30km/h SoC: 0.5, DH 5%"),
+			TestCase(50, 0.5, -5, 0, TestName = "B3 BEV ConstantSpeed 50km/h SoC: 0.5, DH 5%"),
+			//TestCase(80, 0.5, -5, 0, TestName = "B4 BEV ConstantSpeed 80km/h SoC: 0.5, DH 5%"),
+
+			TestCase(30, 0.25, 0, 1000, TestName = "B3 BEV ConstantSpeed 30km/h SoC: 0.25, level P_auxEl: 1kW"),
+			TestCase(30, 0.25, 0, 5000, TestName = "B3 BEV ConstantSpeed 30km/h SoC: 0.25, level P_auxEl: 5kW"),
+		] // the vehicle can drive max. 56km/h!! 80km/h testcase makes no sense
+		public void B3BEVConstantSpeed(double vmax, double initialSoC, double slope, double pAuxEl)
+		{
+			var cycleData = string.Format(
+				@"   0, {0}, {1},    0
+				  7000, {0}, {1},    0", vmax, slope);
+			var cycle = SimpleDrivingCycles.CreateCycleData(cycleData);
+
+			const bool largeMotor = true;
+
+			var modFilename = string.Format("SimpleBatteryElectric-B3_constant_{0}-{1}_{2}_{3}", vmax, initialSoC, slope, pAuxEl);
+			const PowertrainPosition pos = PowertrainPosition.BatteryElectricB3;
+			var job = CreateEngineeringRun(
+				cycle, modFilename, initialSoC, pos, 2, 22.6, largeMotor: true, pAuxEl: pAuxEl);
+			var run = job.Runs.First().Run;
+			var modData = ((ModalDataContainer)((VehicleContainer)run.GetContainer()).ModData).Data;
+
+			var data = run.GetContainer().RunData;
+			//File.WriteAllText(
+			//	$"{modFilename}.json",
+			//	JsonConvert.SerializeObject(data, Formatting.Indented));
+
+			run.Run();
+			Assert.IsTrue(run.FinishedWithoutErrors);
+
+			Assert.IsTrue(modData.Rows.Count > 0);
+
+			var graphWriter = GetGraphWriter(new[] { ModalResultField.P_electricMotor_mech_B3 });
+			graphWriter.Write(modFilename + ".vmod");
+		}
 
 
-        // =================================================
+		[
+			TestCase(30, 0.7, 0, TestName = "B3 BEV DriveOff 30km/h SoC: 0.7, level"),
+			TestCase(80, 0.7, 0, TestName = "B3 BEV DriveOff 80km/h SoC: 0.7, level"),
+			TestCase(30, 0.25, 0, TestName = "B3 BEV DriveOff 30km/h SoC: 0.25, level")
+		]
+		public void B3BEVDriveOff(double vmax, double initialSoC, double slope)
+		{
+			var cycleData = string.Format(
+				@"   0,   0, {1},    3
+				   700, {0}, {1},    0", vmax, slope);
+			var cycle = SimpleDrivingCycles.CreateCycleData(cycleData);
+
+			const bool largeMotor = true;
+
+			var modFilename = string.Format("SimpleBatteryElectric-B3_acc_{0}-{1}_{2}", vmax, initialSoC, slope);
+			const PowertrainPosition pos = PowertrainPosition.BatteryElectricB3;
+			var job = CreateEngineeringRun(
+				cycle, modFilename, initialSoC, pos, 2, 22.6, largeMotor: true);
+			var run = job.Runs.First().Run;
+			var modData = ((ModalDataContainer)((VehicleContainer)run.GetContainer()).ModData).Data;
+
+			run.Run();
+			Assert.IsTrue(run.FinishedWithoutErrors);
+
+			Assert.IsTrue(modData.Rows.Count > 0);
+			
+			var graphWriter = GetGraphWriter(new[] { ModalResultField.P_electricMotor_mech_B3 });
+			graphWriter.Write(modFilename + ".vmod");
+		}
+
+		[
+			TestCase("LongHaul", 2000, 0.8, 0, TestName = "B3 Hybrid DriveCycle LongHaul, SoC: 0.8 Payload: 2t P_auxEl: 0kW"),
+			TestCase("RegionalDelivery", 2000, 0.8, 0, TestName = "B3 Hybrid DriveCycle RegionalDelivery, SoC: 0.8 Payload: 2t P_auxEl: 0kW"),
+			TestCase("UrbanDelivery", 2000, 0.8, 0, TestName = "B3 Hybrid DriveCycle UrbanDelivery, SoC: 0.8 Payload: 2t P_auxEl: 0kW"),
+			TestCase("Construction", 2000, 0.8, 0, TestName = "B3 Hybrid DriveCycle Construction, SoC: 0.8 Payload: 2t P_auxEl: 0kW"),
+			TestCase("Urban", 2000, 0.8, 0, TestName = "B3 Hybrid DriveCycle Urban, SoC: 0.8 Payload: 2t P_auxEl: 0kW"),
+			TestCase("Suburban", 2000, 0.8, 0, TestName = "B3 Hybrid DriveCycle SubUrban, SoC: 0.8 Payload: 2t P_auxEl: 0kW"),
+			TestCase("Interurban", 2000, 0.8, 0, TestName = "B3 Hybrid DriveCycle InterUrban, SoC: 0.8 Payload: 2t P_auxEl: 0kW"),
+			TestCase("Coach", 2000, 0.8, 0, TestName = "B3 Hybrid DriveCycle Coach, SoC: 0.8 Payload: 2t P_auxEl: 0kW"),
+		]
+		public void B3BEVDriveCycle(string declarationMission, double payload, double initialSoC, double pAuxEl)
+		{
+			var cycleData = RessourceHelper.ReadStream(
+				DeclarationData.DeclarationDataResourcePrefix + ".MissionCycles." +
+				declarationMission +
+				Constants.FileExtensions.CycleFile);
+			var cycle = DrivingCycleDataReader.ReadFromStream(cycleData, CycleType.DistanceBased, "", false);
+
+			const bool largeMotor = true;
+
+			var modFilename = string.Format("SimpleParallelHybrid-B3_cycle_{0}-{1}_{2}_{3}", declarationMission, initialSoC, payload, pAuxEl);
+			const PowertrainPosition pos = PowertrainPosition.BatteryElectricB3;
+			var job = CreateEngineeringRun(
+				cycle, modFilename, initialSoC, pos, 2, 22.6, largeMotor: true);
+
+			var run = job.Runs.First().Run;
+			var modData = ((ModalDataContainer)((VehicleContainer)run.GetContainer()).ModData).Data;
+
+			var data = run.GetContainer().RunData;
+			//File.WriteAllText(
+			//	$"{modFilename}.json",
+			//	JsonConvert.SerializeObject(data, Formatting.Indented));
+
+			//run.Run();
+			job.Execute();
+			job.WaitFinished();
+			Assert.IsTrue(run.FinishedWithoutErrors);
+			Assert.IsTrue(modData.Rows.Count > 0);
+			
+			var graphWriter = GetGraphWriter(new[] { ModalResultField.P_electricMotor_mech_B3 });
+			graphWriter.Write(modFilename + ".vmod");
+		}
 
 
-        public static JobContainer CreateEngineeringRun(
+		// =================================================
+
+
+		public static JobContainer CreateEngineeringRun(
 			DrivingCycleData cycleData, string modFileName, double initialSoc, PowertrainPosition pos, int count, double ratio, bool largeMotor = false, double pAuxEl = 0, Kilogram payload = null)
 		{
 			var fileWriter = new FileOutputWriter(Path.GetFileNameWithoutExtension(modFileName));
 			var sumData = new SummaryDataContainer(fileWriter);
-            var jobContainer = new JobContainer(sumData);
+			var jobContainer = new JobContainer(sumData);
 			var container = CreateBatteryElectricPowerTrain(
 				cycleData, modFileName, fileWriter, sumData, initialSoc, count, ratio, largeMotor,  pAuxEl, pos, payload);
 			
@@ -389,7 +393,7 @@ namespace TUGraz.VectoCore.Tests.Integration.BatteryElectric
 			{
 				WriteModalResults = true,
 			};
-            if (pos == PowertrainPosition.BatteryElectricB3) {
+			if (pos == PowertrainPosition.BatteryElectricB3) {
 				runData.AxleGearData = axleGearData;
 			}
 
@@ -403,7 +407,7 @@ namespace TUGraz.VectoCore.Tests.Integration.BatteryElectric
 			
 			container.RunData = runData;
 			
-            var es = new ElectricSystem(container);
+			var es = new ElectricSystem(container);
 			var battery = new Battery(container, batteryData);
 			battery.Initialize(initialBatCharge);
 
@@ -436,10 +440,10 @@ namespace TUGraz.VectoCore.Tests.Integration.BatteryElectric
 				case PowertrainPosition.BatteryElectricB4:
 					powertrain.AddComponent(
 						GetElectricMachine(PowertrainPosition.BatteryElectricB4, runData.ElectricMachinesData, container, es, ctl));
-                    new DummyGearboxInfo(container);
-                    //new MockEngineInfo(container);
-                    new ATClutchInfo(container);
-                    break;
+					new DummyGearboxInfo(container);
+					//new MockEngineInfo(container);
+					new ATClutchInfo(container);
+					break;
 				case PowertrainPosition.BatteryElectricB3:
 					powertrain.AddComponent(new AxleGear(container, runData.AxleGearData))
 							.AddComponent(
@@ -447,7 +451,7 @@ namespace TUGraz.VectoCore.Tests.Integration.BatteryElectric
 					new DummyGearboxInfo(container);
 					//new MockEngineInfo(container);
 					new ATClutchInfo(container);
-                    break;
+					break;
 				case PowertrainPosition.BatteryElectricB2:
 					throw new VectoException("Battery Electric configuration B2 currently not supported");
 				default: throw new ArgumentOutOfRangeException(nameof(pos), pos, null);

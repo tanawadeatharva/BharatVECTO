@@ -46,23 +46,28 @@ namespace TUGraz.VectoCore.Tests.Integration.DriverStrategy
 		[OneTimeSetUp]
 		public void Init()
 		{
+			Directory.SetCurrentDirectory(TestContext.CurrentContext.TestDirectory);
 			//LogManager.DisableLogging();
-#if TRACE
-			GraphWriter.Enable();
-#else
-			GraphWriter.Disable();
-#endif
-			GraphWriter.Xfields = new[] { ModalResultField.time, ModalResultField.dist };
+		}
 
-			GraphWriter.Yfields = new[] {
+		public GraphWriter GetGraphWriter()
+		{
+			var graphWriter = new GraphWriter();
+#if TRACE
+			graphWriter.Enable();
+#else
+			graphWriter.Disable();
+#endif
+			graphWriter.Xfields = new[] { ModalResultField.time, ModalResultField.dist };
+
+			graphWriter.Yfields = new[] {
 				ModalResultField.v_act, ModalResultField.acc, ModalResultField.n_ice_avg, ModalResultField.Gear,
 				ModalResultField.P_ice_out, ModalResultField.T_ice_fcmap, ModalResultField.FCMap
 			};
-			GraphWriter.Series1Label = "Vecto 3";
-			GraphWriter.Series2Label = "Vecto 2.2";
-
-			Directory.SetCurrentDirectory(TestContext.CurrentContext.TestDirectory);
-	}
+			graphWriter.Series1Label = "Vecto 3";
+			graphWriter.Series2Label = "Vecto 2.2";
+			return graphWriter;
+		}
 
 		private static string GetSlopeString(double slope)
 		{
@@ -81,7 +86,7 @@ namespace TUGraz.VectoCore.Tests.Integration.DriverStrategy
 			var imgv22 =
 				@"TestData\Results\Integration\40t_Long_Haul_Truck_Cycle_Drive_50_Dec_Increasing_Slope_v22.vmod";
 
-			GraphWriter.Write(imgV3, imgv22);
+			GetGraphWriter().Write(imgV3, imgv22);
 		}
 
 		[TestCase, Category("ComparisonV2")]
@@ -89,7 +94,7 @@ namespace TUGraz.VectoCore.Tests.Integration.DriverStrategy
 		{
 			var imgV3 = @"TestData\Results\Integration\40t_Long_Haul_Truck_Cycle_Drive_50_Dec_Increasing_Slope_v3.vmod";
 
-			GraphWriter.Write(imgV3);
+			GetGraphWriter().Write(imgV3);
 		}
 
 		[Category("ComparisonV2"),
@@ -255,7 +260,7 @@ namespace TUGraz.VectoCore.Tests.Integration.DriverStrategy
 			run.Run();
 			Assert.IsTrue(run.FinishedWithoutErrors);
 
-			GraphWriter.Write(modFileName,
+			GetGraphWriter().Write(modFileName,
 				@"..\..\TestData\Integration\DriverStrategy\Vecto2.2\40t Truck\" + modFileName);
 		}
 
@@ -285,7 +290,7 @@ namespace TUGraz.VectoCore.Tests.Integration.DriverStrategy
 			run.Run();
 			Assert.IsTrue(run.FinishedWithoutErrors);
 
-			GraphWriter.Write(modFileName,
+			GetGraphWriter().Write(modFileName,
 				@"..\..\TestData\Integration\DriverStrategy\Vecto2.2\40t Truck_Overspeed\" + modFileName);
 		}
 
@@ -444,7 +449,7 @@ namespace TUGraz.VectoCore.Tests.Integration.DriverStrategy
 			run.Run();
 			Assert.IsTrue(run.FinishedWithoutErrors);
 
-			GraphWriter.Write(modFileName, @"..\..\TestData\Integration\DriverStrategy\Vecto2.2\Coach\" + modFileName);
+			GetGraphWriter().Write(modFileName, @"..\..\TestData\Integration\DriverStrategy\Vecto2.2\Coach\" + modFileName);
 		}
 
 		[Category("ComparisonV2"),
@@ -473,7 +478,7 @@ namespace TUGraz.VectoCore.Tests.Integration.DriverStrategy
 			run.Run();
 			Assert.IsTrue(run.FinishedWithoutErrors);
 
-			GraphWriter.Write(modFileName,
+			GetGraphWriter().Write(modFileName,
 				@"..\..\TestData\Integration\DriverStrategy\Vecto2.2\Coach_Overspeed\" + modFileName);
 		}
 

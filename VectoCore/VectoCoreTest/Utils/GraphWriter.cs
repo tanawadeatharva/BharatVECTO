@@ -45,39 +45,39 @@ using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Tests.Utils
 {
-	public static class GraphWriter
+	public class GraphWriter
 	{
-		private static bool _enabled = true;
+		private bool _enabled = true;
 
-		private static Size _diagramSize = new Size(2000, 440);
+		private Size _diagramSize = new Size(2000, 440);
 
-		private static readonly Font AxisLabelFont = new Font("Consolas", 10);
-		private static readonly Font AxisTitleFont = new Font("Verdana", 12);
-		private static readonly Font LegendFont = new Font("Verdana", 14);
+		private readonly Font AxisLabelFont = new Font("Consolas", 10);
+		private readonly Font AxisTitleFont = new Font("Verdana", 12);
+		private readonly Font LegendFont = new Font("Verdana", 14);
 
-		public static string Series2Label { get; set; }
+		public string Series2Label { get; set; }
 
-		public static string Series1Label { get; set; }
+		public string Series1Label { get; set; }
 
-		public static ModalResultField[] Yfields { get; set; }
+		public ModalResultField[] Yfields { get; set; }
 
-		public static ModalResultField[] Xfields { get; set; }
+		public ModalResultField[] Xfields { get; set; }
 
-		public static bool PlotDrivingMode = false;
+		public bool PlotDrivingMode = false;
 
-		public static bool PlotIgnitionState = false;
+		public bool PlotIgnitionState = false;
 
-		public static void Enable()
+		public void Enable()
 		{
 			_enabled = true;
 		}
 
-		public static void Disable()
+		public  void Disable()
 		{
 			_enabled = false;
 		}
 
-		public static void Write(string fileNameV3, string fileNameV22 = null)
+		public  void Write(string fileNameV3, string fileNameV22 = null)
 		{
 			if (!_enabled) {
 				return;
@@ -230,7 +230,7 @@ namespace TUGraz.VectoCore.Tests.Utils
 			}
 		}
 
-		public static bool WriteDistanceSlice(string fileNameV3, string fileNameV22, double start, double end)
+		public bool WriteDistanceSlice(string fileNameV3, string fileNameV22, double start, double end)
 		{
 			if (!_enabled) {
 				return true;
@@ -395,7 +395,7 @@ namespace TUGraz.VectoCore.Tests.Utils
 			chartArea.Position.Y = (i * (100.0f - titleHeight)) / numCharts + titleHeight;
 		}
 
-		private static ChartArea AddChartArea(Chart chart, string name, string axisXTitle, int xMax, int xMin,
+		private ChartArea AddChartArea(Chart chart, string name, string axisXTitle, int xMax, int xMin,
 			string axisYTitle, bool discreteValues)
 		{
 			var chartArea = new ChartArea { Name = name };
@@ -431,7 +431,7 @@ namespace TUGraz.VectoCore.Tests.Utils
 			return chartArea;
 		}
 
-		private static Legend CreateLegend(Chart chart, string dockToChartArea)
+		private Legend CreateLegend(Chart chart, string dockToChartArea)
 		{
 			var legend = new Legend(dockToChartArea) {
 				Docking = Docking.Right,

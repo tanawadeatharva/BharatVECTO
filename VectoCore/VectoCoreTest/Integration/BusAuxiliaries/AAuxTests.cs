@@ -46,22 +46,28 @@ namespace TUGraz.VectoCore.Tests.Integration.BusAuxiliaries
 		public void Init()
 		{
 			//LogManager.DisableLogging();
-#if TRACE
-			GraphWriter.Enable();
-#else
-			GraphWriter.Disable();
-#endif
-			GraphWriter.Xfields = new[] { ModalResultField.time, ModalResultField.dist };
+			Directory.SetCurrentDirectory(TestContext.CurrentContext.TestDirectory);
+		}
 
-			GraphWriter.Yfields = new[] {
+		private GraphWriter getGraphWriter() 
+		{
+			var graphWriter = new GraphWriter();
+#if TRACE
+			graphWriter.Enable();
+#else
+			graphWriter.Disable();
+#endif
+			graphWriter.Xfields = new[] { ModalResultField.time, ModalResultField.dist };
+
+			graphWriter.Yfields = new[] {
 				ModalResultField.v_act, ModalResultField.acc, ModalResultField.n_ice_avg, ModalResultField.Gear,
 				ModalResultField.P_ice_out, ModalResultField.T_ice_fcmap, ModalResultField.FCMap
 			};
-			GraphWriter.Series1Label = "Vecto 3";
-			GraphWriter.Series2Label = "Vecto 2.0_aux";
+			graphWriter.Series1Label = "Vecto 3";
+			graphWriter.Series2Label = "Vecto 2.0_aux";
 
-			Directory.SetCurrentDirectory(TestContext.CurrentContext.TestDirectory);
-	}
+			return graphWriter;
+		}
 
 		private static string GetSlopeString(double slope)
 		{
@@ -303,7 +309,7 @@ namespace TUGraz.VectoCore.Tests.Integration.BusAuxiliaries
 			run.Run();
 			Assert.IsTrue(run.FinishedWithoutErrors);
 
-			GraphWriter.Write(modFileName, @"..\..\TestData\Integration\BusAuxiliaries\Vecto2.0\" + compareFileName);
+			getGraphWriter().Write(modFileName, @"..\..\TestData\Integration\BusAuxiliaries\Vecto2.0\" + compareFileName);
 		}
 	}
 }
