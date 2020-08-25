@@ -229,13 +229,16 @@ namespace TUGraz.VectoCore.Tests.Integration.Hybrid
 			]
 		public void P2HybridGroup5DriveCycle(int cycleIdx)
 		{
-			var inputProvider = JSONInputDataFactory.ReadJsonJob(@"TestData\Hybrids\GenericVehicle_Group5_P2\P2 Group 5.vecto");
-
-			var factory = new SimulatorFactory(ExecutionMode.Engineering, inputProvider, null) {
-				Validate = false
+			var jobFile = @"TestData\Hybrids\GenericVehicle_Group5_P2\P2 Group 5.vecto";
+			var inputProvider = JSONInputDataFactory.ReadJsonJob(jobFile);
+			
+			var writer = new FileOutputWriter(jobFile);
+			var factory = new SimulatorFactory(ExecutionMode.Engineering, inputProvider, writer) {
+				Validate = false,
+				WriteModalResults = true,
 			};
 
-			var sumContainer = new SummaryDataContainer(null);
+			var sumContainer = new SummaryDataContainer(writer);
 			var jobContainer = new JobContainer(sumContainer);
 
 			factory.SumData = sumContainer;
