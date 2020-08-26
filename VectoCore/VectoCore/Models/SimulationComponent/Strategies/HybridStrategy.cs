@@ -433,7 +433,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 			return best;
 		}
 
-		private HybridResultEntry DoSelectBestOption(
+		private HybridResultEntry  DoSelectBestOption(
 			List<HybridResultEntry> eval, Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity,
 			bool dryRun,uint currentGear)
 		{

@@ -67,7 +67,7 @@ namespace TUGraz.VectoCore.InputData.Reader.ComponentData
 			}
 			return new DragCurve(data.AsEnumerable().Cast<DataRow>().Select(x => new DragCurve.DragLoadEntry() {
 				MotorSpeed = x.ParseDouble(Fields.MotorSpeed).RPMtoRad() / ratio,
-				DragTorque = x.ParseDouble(Fields.DragTorque).SI<NewtonMeter>() * ratio * count / efficiency
+				DragTorque = -x.ParseDouble(Fields.DragTorque).SI<NewtonMeter>() * ratio * count / efficiency
 			}).ToList());
 		}
 
