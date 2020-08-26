@@ -554,7 +554,7 @@ namespace TUGraz.VectoCore.Tests.Integration.Hybrid
 
 			Assert.IsTrue(modData.Rows.Count > 0);
 
-			var graphWriter = GetGraphWriter(new[] { ModalResultField.P_electricMotor_mech_P3 });
+			var graphWriter = GetGraphWriter(new[] { ModalResultField.P_electricMotor_mech_P4 });
 			graphWriter.Write(modFilename);
 		}
 
