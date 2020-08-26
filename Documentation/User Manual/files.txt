@@ -46,6 +46,8 @@
 3-simulation-models/BusAuxiliaries.md
 3-simulation-models/PwheelInput.md
 3-simulation-models/PTO.md
+3-simulation-models/Electric_Motor.md
+3-simulation-models/Electric_Storage.md
 3-simulation-models/HybridControlStrategy.md
 5-input-and-output-files/input-output.md
 5-input-and-output-files/XML_Job-File_DeclarationMode.md
@@ -61,6 +63,8 @@
 5-input-and-output-files/VENG.md
 5-input-and-output-files/VFLD.md
 5-input-and-output-files/VMAP.md
+5-input-and-output-files/VEMx.md
+5-input-and-output-files/VBATx.md
 5-input-and-output-files/VGBX.md
 5-input-and-output-files/VGBS.md
 5-input-and-output-files/VTLM.md
