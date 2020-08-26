@@ -1073,7 +1073,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 				tmp.FuelCosts = double.NaN; // Tuple.Create(true, response.Gearbox.Gear + 1);
 				tmp.IgnoreReason |= HybridConfigurationIgnoreReason.EngineSpeedAboveUpshift;
 			}
-			if (resp.Engine.EngineSpeed != null && resp.Gearbox.Gear > 0 && ModelData.GearboxData.Gears[resp.Gearbox.Gear].ShiftPolygon.IsBelowDownshiftCurve(resp.Engine.TorqueOutDemand, resp.Engine.EngineSpeed)) {
+			if (resp.Engine.EngineSpeed != null && resp.Gearbox.Gear > 1 && ModelData.GearboxData.Gears[resp.Gearbox.Gear].ShiftPolygon.IsBelowDownshiftCurve(resp.Engine.TorqueOutDemand, resp.Engine.EngineSpeed)) {
 				//lastShiftTime = absTime;
 				tmp.FuelCosts = double.NaN; // = Tuple.Create(true, response.Gearbox.Gear - 1);
 				tmp.IgnoreReason |= HybridConfigurationIgnoreReason.EngineSpeedBelowDownshift;

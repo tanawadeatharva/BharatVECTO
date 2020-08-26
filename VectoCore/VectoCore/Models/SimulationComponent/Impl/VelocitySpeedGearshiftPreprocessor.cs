@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.Models;
@@ -76,9 +77,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				if (speed > maxSpeed) {
 					continue;
 				}
-				var gearForSpeed = runData.GearboxData.Gears.FirstOrDefault(
-					x => (speed * ratio * x.Value.Ratio).IsBetween(
-						runData.EngineData.IdleSpeed, runData.EngineData.FullLoadCurves[0].RatedSpeed)).Key;
+
+				var targetEngineSpeed = 0.5 * (runData.EngineData.FullLoadCurves[0].RatedSpeed - runData.EngineData.IdleSpeed) + runData.EngineData.IdleSpeed;
+				var gearForSpeed = runData.GearboxData.Gears.OrderBy(x => Math.Abs((speed * ratio * x.Value.Ratio - targetEngineSpeed).Value()))
+					.FirstOrDefault().Key;
 				if (gearForSpeed == 0) {
 					continue;
 				}

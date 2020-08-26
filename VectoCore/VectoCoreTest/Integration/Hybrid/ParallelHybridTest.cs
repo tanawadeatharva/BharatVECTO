@@ -223,21 +223,23 @@ namespace TUGraz.VectoCore.Tests.Integration.Hybrid
 
 		public const string Group5TestJob2 = @"TestData\Hybrids\Hyb_P2_Group5\Hyb_P2_Group5.vecto";
 
+		public const string CityBus6x2 = @"TestData\Hybrids\Input CityBus 6x2_HEV_P2\CityBus_6x2_HEV_P2.vecto";
+			
 		[
 		TestCase(Group5TestJob, 0, TestName = "P2 Hybrid Group 5 DriveCycle LongHaul"),
-		TestCase(Group5TestJob, 1, TestName = "P2 Hybrid Group 5 DriveCycle Coach"),
-		TestCase(Group5TestJob, 2, TestName = "P2 Hybrid Group 5 DriveCycle Construction"),
+		TestCase(Group5TestJob, 1, TestName = "P2 Hybrid Group 5 DriveCycle Coach"),  // error
+		TestCase(Group5TestJob, 2, TestName = "P2 Hybrid Group 5 DriveCycle Construction"),  // error
 		TestCase(Group5TestJob, 3, TestName = "P2 Hybrid Group 5 DriveCycle HeavyUrban"),
-		TestCase(Group5TestJob, 4, TestName = "P2 Hybrid Group 5 DriveCycle Interurban"),
+		TestCase(Group5TestJob, 4, TestName = "P2 Hybrid Group 5 DriveCycle Interurban"),  // error
 		TestCase(Group5TestJob, 5, TestName = "P2 Hybrid Group 5 DriveCycle MunicipalUtility"),
 		TestCase(Group5TestJob, 6, TestName = "P2 Hybrid Group 5 DriveCycle RegionalDelivery"),
-		TestCase(Group5TestJob, 7, TestName = "P2 Hybrid Group 5 DriveCycle Suburban"),
-		TestCase(Group5TestJob, 8, TestName = "P2 Hybrid Group 5 DriveCycle Urban"),
-		TestCase(Group5TestJob, 9, TestName = "P2 Hybrid Group 5 DriveCycle UrbanDelivery"),
+		TestCase(Group5TestJob, 7, TestName = "P2 Hybrid Group 5 DriveCycle Suburban"),  // error
+		TestCase(Group5TestJob, 8, TestName = "P2 Hybrid Group 5 DriveCycle Urban"), 
+		TestCase(Group5TestJob, 9, TestName = "P2 Hybrid Group 5 DriveCycle UrbanDelivery"), // error
 
 		TestCase(Group2TestJob, 0, TestName = "P2 Hybrid Group 2 DriveCycle LongHaul"),
 		TestCase(Group2TestJob, 1, TestName = "P2 Hybrid Group 2 DriveCycle RegionalDelivery"),
-		TestCase(Group2TestJob, 2, TestName = "P2 Hybrid Group 2 DriveCycle UrbanDelivery"),
+		TestCase(Group2TestJob, 2, TestName = "P2 Hybrid Group 2 DriveCycle UrbanDelivery"),  // error
 		//TestCase(Group2TestJob, 3, TestName = "P2 Hybrid Group 2 DriveCycle Coach"),
 		//TestCase(Group2TestJob, 4, TestName = "P2 Hybrid Group 2 DriveCycle Construction"),
 		//TestCase(Group2TestJob, 5, TestName = "P2 Hybrid Group 2 DriveCycle HeavyUrban"),
@@ -247,26 +249,35 @@ namespace TUGraz.VectoCore.Tests.Integration.Hybrid
 		//TestCase(Group2TestJob, 9, TestName = "P2 Hybrid Group 2 DriveCycle Urban"),
 
 		TestCase(Group5_80kWh_TestJob, 0, TestName = "P2 Hybrid Group 5 80kWh DriveCycle LongHaul"),
-		//TestCase(Group5_80kWh_TestJob, 1, TestName = "P2 Hybrid Group 5 80kWh DriveCycle Coach"),
-		//TestCase(Group5_80kWh_TestJob, 2, TestName = "P2 Hybrid Group 5 80kWh DriveCycle Construction"),
-		//TestCase(Group5_80kWh_TestJob, 3, TestName = "P2 Hybrid Group 5 80kWh DriveCycle HeavyUrban"),
-		//TestCase(Group5_80kWh_TestJob, 4, TestName = "P2 Hybrid Group 5 80kWh DriveCycle Interurban"),
+		//TestCase(Group5_80kWh_TestJob, 1, TestName = "P2 Hybrid Group 5 80kWh DriveCycle Coach"), // error
+		//TestCase(Group5_80kWh_TestJob, 2, TestName = "P2 Hybrid Group 5 80kWh DriveCycle Construction"), // error
+		//TestCase(Group5_80kWh_TestJob, 3, TestName = "P2 Hybrid Group 5 80kWh DriveCycle HeavyUrban"), // error
+		//TestCase(Group5_80kWh_TestJob, 4, TestName = "P2 Hybrid Group 5 80kWh DriveCycle Interurban"), // error
 		//TestCase(Group5_80kWh_TestJob, 5, TestName = "P2 Hybrid Group 5 80kWh DriveCycle MunicipalUtility"),
 		//TestCase(Group5_80kWh_TestJob, 6, TestName = "P2 Hybrid Group 5 80kWh DriveCycle RegionalDelivery"),
-		//TestCase(Group5_80kWh_TestJob, 7, TestName = "P2 Hybrid Group 5 80kWh DriveCycle Suburban"),
-		//TestCase(Group5_80kWh_TestJob, 8, TestName = "P2 Hybrid Group 5 80kWh DriveCycle Urban"),
-		//TestCase(Group5_80kWh_TestJob, 9, TestName = "P2 Hybrid Group 5 80kWh DriveCycle UrbanDelivery"),
+		//TestCase(Group5_80kWh_TestJob, 7, TestName = "P2 Hybrid Group 5 80kWh DriveCycle Suburban"), // error
+		//TestCase(Group5_80kWh_TestJob, 8, TestName = "P2 Hybrid Group 5 80kWh DriveCycle Urban"),  // error
+		//TestCase(Group5_80kWh_TestJob, 9, TestName = "P2 Hybrid Group 5 80kWh DriveCycle UrbanDelivery"),  // error
 
 		TestCase(Group5TestJob2, 0, TestName = "P2 Hybrid Group 5 B DriveCycle LongHaul"),
-		//TestCase(Group5TestJob2, 1, TestName = "P2 Hybrid Group 5 B DriveCycle Coach"),
-		//TestCase(Group5TestJob2, 2, TestName = "P2 Hybrid Group 5 B DriveCycle Construction"),
-		//TestCase(Group5TestJob2, 3, TestName = "P2 Hybrid Group 5 B DriveCycle HeavyUrban"),
-		//TestCase(Group5TestJob2, 4, TestName = "P2 Hybrid Group 5 B DriveCycle Interurban"),
+		//TestCase(Group5TestJob2, 1, TestName = "P2 Hybrid Group 5 B DriveCycle Coach"), // error
+		//TestCase(Group5TestJob2, 2, TestName = "P2 Hybrid Group 5 B DriveCycle Construction"), // error
+		//TestCase(Group5TestJob2, 3, TestName = "P2 Hybrid Group 5 B DriveCycle HeavyUrban"), //error 
+		//TestCase(Group5TestJob2, 4, TestName = "P2 Hybrid Group 5 B DriveCycle Interurban"),  // error
 		//TestCase(Group5TestJob2, 5, TestName = "P2 Hybrid Group 5 B DriveCycle MunicipalUtility"),
-		//TestCase(Group5TestJob2, 6, TestName = "P2 Hybrid Group 5 B DriveCycle RegionalDelivery"),
-		//TestCase(Group5TestJob2, 7, TestName = "P2 Hybrid Group 5 B DriveCycle Suburban"),
-		//TestCase(Group5TestJob2, 8, TestName = "P2 Hybrid Group 5 B DriveCycle Urban"),
-		//TestCase(Group5TestJob2, 9, TestName = "P2 Hybrid Group 5 B DriveCycle UrbanDelivery"),
+		//TestCase(Group5TestJob2, 6, TestName = "P2 Hybrid Group 5 B DriveCycle RegionalDelivery"), 
+		//TestCase(Group5TestJob2, 7, TestName = "P2 Hybrid Group 5 B DriveCycle Suburban"), // error
+		//TestCase(Group5TestJob2, 8, TestName = "P2 Hybrid Group 5 B DriveCycle Urban"),  // error
+		//TestCase(Group5TestJob2, 9, TestName = "P2 Hybrid Group 5 B DriveCycle UrbanDelivery"),  // error
+
+		TestCase(CityBus6x2, 0, TestName = "P2 Hybrid CityBus DriveCycle Coach"),  // error
+		TestCase(CityBus6x2, 1, TestName = "P2 Hybrid CityBus DriveCycle HeavyUrban"),  // error
+		TestCase(CityBus6x2, 2, TestName = "P2 Hybrid CityBus DriveCycle Interurban"),  // error
+		TestCase(CityBus6x2, 3, TestName = "P2 Hybrid CityBus DriveCycle LongHaul"),  // error
+		TestCase(CityBus6x2, 4, TestName = "P2 Hybrid CityBus DriveCycle RegionalDelivery"),  // error
+		TestCase(CityBus6x2, 5, TestName = "P2 Hybrid CityBus DriveCycle Suburban"),  // error
+		TestCase(CityBus6x2, 6, TestName = "P2 Hybrid CityBus DriveCycle Urban"),  // error
+		TestCase(CityBus6x2, 7, TestName = "P2 Hybrid CityBus DriveCycle UrbanDelivery"),  // error
 
 			]
 		public void P2HybridGroup5DriveCycle(string jobFile, int cycleIdx)
