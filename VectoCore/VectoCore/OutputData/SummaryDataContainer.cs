@@ -738,11 +738,17 @@ namespace TUGraz.VectoCore.OutputData
 
 			if (runData.BatteryData != null) {
 				foreach (var field in new[] { Fields.BatteryStartSoC, Fields.BatteryEndSoC }) {
+					if (Table.Columns.Contains(field)) {
+						continue;
+					}
 					var col = Table.Columns.Add(field, typeof(double));
 					col.SetOrdinal(Table.Columns[Fields.P_WHEEL].Ordinal);
 				}
 
 				foreach (var field in new[] { Fields.BatteryDeltaSoC, Fields.E_BAT_LOSS, Fields.E_Batt_T_chg, Fields.E_Batt_T_dischg, Fields.E_Batt_int_chg, Fields.E_Batt_int_dischg}) {
+					if (Table.Columns.Contains(field)) {
+						continue;
+					}
 					var col = Table.Columns.Add(field, typeof(ConvertedSI));
 					col.SetOrdinal(Table.Columns[Fields.P_WHEEL].Ordinal);
                 }
