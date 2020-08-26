@@ -53,25 +53,32 @@ namespace TUGraz.VectoCore.Tests.Integration.ShiftStrategy
 	public class ShiftStrategyTest
 	{
 		[OneTimeSetUp]
-		public void DisableLogging()
+		public void RunBeforeAnyTests()
 		{
 			Directory.SetCurrentDirectory(TestContext.CurrentContext.TestDirectory);
+		}
+
+
+		public GraphWriter GetGraphWriter()
+		{
+			var graphWriter = new GraphWriter();
 
 			//LogManager.DisableLogging();
 #if TRACE
-			GraphWriter.Enable();
+			graphWriter.Enable();
 #else
-			GraphWriter.Disable();
+			graphWriter.Disable();
 #endif
 
-			GraphWriter.Xfields = new[] { ModalResultField.dist };
+			graphWriter.Xfields = new[] { ModalResultField.dist };
 
-			GraphWriter.Yfields = new[] {
+			graphWriter.Yfields = new[] {
 				ModalResultField.v_act, ModalResultField.acc, ModalResultField.n_ice_avg, ModalResultField.Gear,
 				ModalResultField.P_ice_out, /*ModalResultField.T_eng_fcmap, */ ModalResultField.FCMap,
 			};
-			GraphWriter.PlotDrivingMode = true;
-			GraphWriter.Series1Label = "Vecto 3";
+			graphWriter.PlotDrivingMode = true;
+			graphWriter.Series1Label = "Vecto 3";
+			return graphWriter;
 		}
 
 		[Test,
@@ -103,7 +110,7 @@ namespace TUGraz.VectoCore.Tests.Integration.ShiftStrategy
 			run.Run();
 			Assert.IsTrue(run.FinishedWithoutErrors);
 
-			GraphWriter.Write(modFile);
+			GetGraphWriter().Write(modFile);
 		}
 
 		[TestCase()]
