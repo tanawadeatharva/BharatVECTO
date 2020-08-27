@@ -1156,9 +1156,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 			var batEnergyStored = DataBus.BatteryInfo.StoredEnergy;
 			var batEnergy = resp.ElectricSystem.BatteryPowerDemand * dt;
 			var batPower = resp.ElectricSystem.BatteryResponse.BatteryPower;
-			if (!batPower.IsBetween(
-				resp.ElectricSystem.BatteryResponse.MaxBatteryLoadDischarge,
-				resp.ElectricSystem.BatteryResponse.MaxBatteryLoadCharge)) {
+
+			if (batPower.IsSmaller(resp.ElectricSystem.BatteryResponse.MaxBatteryLoadDischarge) || batPower.IsGreater(resp.ElectricSystem.BatteryResponse.MaxBatteryLoadCharge)) {
 				// battery power demand too high - would discharge below min SoC / charge above max SoC
 				tmp.BatCosts = double.NaN;
 				tmp.IgnoreReason |= batPower.IsSmaller(

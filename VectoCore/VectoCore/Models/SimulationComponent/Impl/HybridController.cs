@@ -357,7 +357,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 						gear++;
 					}
 
-                    //_nextGear = gear;
+                    _nextGear = gear;
                 }
 			}
 
