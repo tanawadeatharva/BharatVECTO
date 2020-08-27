@@ -1371,4 +1371,10 @@
   <data name="Vehicle_CargoVolume" xml:space="preserve">
     <value>CargoVolume</value>
   </data>
+  <data name="Report_Result_MassPassengers" xml:space="preserve">
+    <value>MassPassengers</value>
+  </data>
+  <data name="Report_Result_PassengerCount" xml:space="preserve">
+    <value>PassengerCount</value>
+  </data>
 </root>

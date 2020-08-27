@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
@@ -25,9 +27,52 @@ namespace TUGraz.VectoCore.OutputData.XML {
 			};
 		}
 
-		#endregion
+		public override void InitializeReport(VectoRunData modelData, List<List<FuelData.Entry>> fuelModes)
+		{
+			_weightingFactors = EqualWeighting;
 
-		protected internal override void DoWriteReport()
+			InstantiateReports(modelData);
+
+			ManufacturerRpt.Initialize(modelData, fuelModes);
+			CustomerRpt.Initialize(modelData, fuelModes);
+		}
+        #endregion
+
+        private static IDictionary<Tuple<MissionType, LoadingType>, double> EqualWeighting
+        {
+            get
+            {
+                return new ReadOnlyDictionary<Tuple<MissionType, LoadingType>, double>(
+                    new Dictionary<Tuple<MissionType, LoadingType>, double>() {
+                        { Tuple.Create(MissionType.LongHaul, LoadingType.LowLoading), 1 },
+                        { Tuple.Create(MissionType.LongHaul, LoadingType.ReferenceLoad), 1 },
+                        { Tuple.Create(MissionType.RegionalDelivery, LoadingType.LowLoading), 1 },
+                        { Tuple.Create(MissionType.RegionalDelivery, LoadingType.ReferenceLoad), 1 },
+                        { Tuple.Create(MissionType.UrbanDelivery, LoadingType.LowLoading), 1 },
+                        { Tuple.Create(MissionType.UrbanDelivery, LoadingType.ReferenceLoad), 1 },
+                        { Tuple.Create(MissionType.LongHaulEMS, LoadingType.LowLoading), 1 },
+                        { Tuple.Create(MissionType.LongHaulEMS, LoadingType.ReferenceLoad), 1 },
+                        { Tuple.Create(MissionType.RegionalDeliveryEMS, LoadingType.LowLoading), 1 },
+                        { Tuple.Create(MissionType.RegionalDeliveryEMS, LoadingType.ReferenceLoad), 1 },
+                        { Tuple.Create(MissionType.MunicipalUtility, LoadingType.LowLoading), 1 },
+                        { Tuple.Create(MissionType.MunicipalUtility, LoadingType.ReferenceLoad), 1 },
+                        { Tuple.Create(MissionType.Construction, LoadingType.LowLoading), 1 },
+                        { Tuple.Create(MissionType.Construction, LoadingType.ReferenceLoad), 1 },
+                        { Tuple.Create(MissionType.HeavyUrban, LoadingType.LowLoading), 1 },
+                        { Tuple.Create(MissionType.HeavyUrban, LoadingType.ReferenceLoad), 1 },
+                        { Tuple.Create(MissionType.Urban, LoadingType.LowLoading), 1 },
+                        { Tuple.Create(MissionType.Urban, LoadingType.ReferenceLoad), 1 },
+                        { Tuple.Create(MissionType.Suburban, LoadingType.LowLoading), 1 },
+                        { Tuple.Create(MissionType.Suburban, LoadingType.ReferenceLoad), 1 },
+                        { Tuple.Create(MissionType.Interurban, LoadingType.LowLoading), 1 },
+                        { Tuple.Create(MissionType.Interurban, LoadingType.ReferenceLoad), 1 },
+                        { Tuple.Create(MissionType.Coach, LoadingType.LowLoading), 1 },
+                        { Tuple.Create(MissionType.Coach, LoadingType.ReferenceLoad), 1 },
+                    });
+            }
+        }
+
+        protected internal override void DoWriteReport()
 		{
 			foreach (var specificResult in Results.Where(x => VehicleClassHelper.IsCompletedBus(x.VehicleClass)).OrderBy(x => x.VehicleClass)
 												.ThenBy(x => x.FuelMode).ThenBy(x => x.Mission)) {

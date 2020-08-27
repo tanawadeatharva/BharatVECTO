@@ -2293,11 +2293,29 @@ namespace TUGraz.VectoCommon.Resources {
         }
         
         /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die MassPassengers ähnelt.
+        /// </summary>
+        public static string Report_Result_MassPassengers {
+            get {
+                return ResourceManager.GetString("Report_Result_MassPassengers", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Sucht eine lokalisierte Zeichenfolge, die Mission ähnelt.
         /// </summary>
         public static string Report_Result_Mission {
             get {
                 return ResourceManager.GetString("Report_Result_Mission", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die PassengerCount ähnelt.
+        /// </summary>
+        public static string Report_Result_PassengerCount {
+            get {
+                return ResourceManager.GetString("Report_Result_PassengerCount", resourceCulture);
             }
         }
         
