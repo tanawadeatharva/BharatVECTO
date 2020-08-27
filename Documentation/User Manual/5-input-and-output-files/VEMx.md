@@ -19,6 +19,22 @@ n [rpm] , T_drive [Nm] , T_recuperation [Nm]
 ...
 ~~~
 
+##Electric Motor Drag Curve File (.vemd)
+
+This file contains the electric motor's drag torque (i.e. the eletric motor is not energized) depending on the motor's angluar speed. The file uses the [VECTO CSV format](#csv).
+
+- Filetype: .vemd
+- Header: **n [rpm] , T_drag [Nm]**
+- Requires at least 2 data entries
+
+**Example:**
+
+~~~
+n [rpm] , T_drag [Nm]
+0       , -10
+5000    , -50
+~~~
+
 
 ##Electric Motor Map (.vemo)
 
