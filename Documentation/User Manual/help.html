@@ -206,6 +206,8 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li><a href="#bus-auxiliaries">Bus Auxiliaries</a></li>
 <li><a href="#pwheel-input-sico-mode">P<sub>wheel</sub>-Input (SiCo Mode)</a></li>
 <li><a href="#pto">PTO</a></li>
+<li><a href="#electric-motor">Electric Motor</a></li>
+<li><a href="#ress">RESS</a></li>
 <li><a href="#hybrid-control-strategy">Hybrid Control Strategy</a></li>
 </ul></li>
 <li><a href="#input-and-output">Input and Output</a><ul>
@@ -222,6 +224,10 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li><a href="#engine-file-.veng">Engine File (.veng)</a></li>
 <li><a href="#full-load-and-drag-curves-.vfld">Full Load and Drag Curves (.vfld)</a></li>
 <li><a href="#fuel-consumption-map-.vmap">Fuel Consumption Map (.vmap)</a></li>
+<li><a href="#electric-motor-max-torque-file-.vemp">Electric Motor Max Torque File (.vemp)</a></li>
+<li><a href="#electric-motor-map-.vemo">Electric Motor Map (.vemo)</a></li>
+<li><a href="#battery-internal-voltage-file-.vbatv">Battery Internal Voltage File (.vbatv)</a></li>
+<li><a href="#battery-internal-resistance-file-.vbatv">Battery Internal Resistance File (.vbatv)</a></li>
 <li><a href="#gearbox-file-.vgbx">Gearbox File (.vgbx)</a></li>
 <li><a href="#shift-polygons-input-file-.vgbs">Shift Polygons Input File (.vgbs)</a></li>
 <li><a href="#transmission-loss-map-.vtlm">Transmission Loss Map (.vtlm)</a></li>
@@ -4612,6 +4618,12 @@ Example: “Gears\Gear1.vtlm” points to the “Gears” subdirectory of the Ge
 </ol>
 </div>
 </div>
+<div id="electric-motor" class="section level2">
+<h2>Electric Motor</h2>
+</div>
+<div id="ress" class="section level2">
+<h2>RESS</h2>
+</div>
 <div id="hybrid-control-strategy" class="section level2">
 <h2>Hybrid Control Strategy</h2>
 <p>The basic principle of the hybrid control strategy is to evaluate different options of operating modes, i.e., different splits of the demanded torque at the wheels among the electric motor and the combustion engine. For every option a cost function is calculated, taking onto account the required electric energy and the fuel consumption. Out of the examined operating modes the best option, i.e, the option with the lowest cost value is selected.</p>
@@ -4691,11 +4703,11 @@ iteration of u values in the previous step, calculate the maximum drive configur
 <li>FC is the combustion engine’s fuel consumption for the current simulation interval</li>
 <li>NCV denotes the fuel’s net calorific value</li>
 <li><img style="vertical-align:middle" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAQBAMAAACFLmBqAAAAMFBMVEX///8AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAv3aB7AAAAD3RSTlMAid2ZuzKrVCJmEO9Eds0xWRQzAAAACXBIWXMAAA7EAAAOxAGVKw4bAAAAq0lEQVQYGWNgYBD6LOwSwIAEWBIY2H8g8Rn4JzBw/UQWiA9gYP2OLDCfgYF5F7JACgPDaRRDt8y8K4WsgOMPkNf8c24GTJDzA5DFqsBQBBIoBWK2B0CCQ4EhHkgxuAIxkwBYgCOH4boNz8MJDAz9BSCB7ZWiDArcDKkMDIz+6WAVDP0NXEELgAIQADSDuyBz0YJUDqgA0Jb1nQbcy21aoQJAd/hwpddaBF8AANfiJoqA5zitAAAAAElFTkSuQmCC" alt="P_\textrm{Bat}" title="P_\textrm{Bat}" /> is the power drawn from the battery. Positive values denote the battery is discharged</li>
-<li>$f_ is the equivalence factor to compare energy from the ICE and energy from the electric system. Typically in the range of 2.5</li>
-<li>$f_ is a cost factor that depends on the battery’s state of charge.</li>
-<li><p>$P_ is a penalty for starting the combustion engine. It is set to 0.1 times the energy required to ramp up the combustion engine. The ramp-up energy is calculated the same way as for the engine stop/start correction - see <a href="#advanced-driver-assistant-systems-engine-stopstart">Advanced Driver Assistant Systems: Engine Stop/Start</a>.</p>
+<li><img style="vertical-align:middle" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACgAAAATBAMAAAAQbVIwAAAAMFBMVEX///8AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAv3aB7AAAAD3RSTlMAdmZU3TIiRM0Qibvvq5mze/DLAAAACXBIWXMAAA7EAAAOxAGVKw4bAAAAvklEQVQYGWNgYGBgVAYS6EDRBF0EyHdNxxRk+4ApxsDcgCnIuaSrAFOUWwFTjIEnAEmwFcqejyTGAFNQgiwIY8syMBgpMdQpL4gwWMLqznyQ1R0oc5GBdQPvNAdmBz4DHobnDIs4DYCCRxm4rtcWPuCECmYwAcU4PzDwCTAwLmCACnIEMTCwT74A1M6W1sDuwGhQA9TOBHQVfx3QFVZGDFaGDmzP61V7GRg2MDAwKUFdwekAZSBTWAW5PsOVAABayCRk7mL7SQAAAABJRU5ErkJggg==" alt="f_\textrm{equiv}" title="f_\textrm{equiv}" /> is the equivalence factor to compare energy from the ICE and energy from the electric system. Typically in the range of 2.5</li>
+<li><img style="vertical-align:middle" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB8AAAARBAMAAADXimp6AAAAMFBMVEX///8AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAv3aB7AAAAD3RSTlMAdmZU3TIiRM0Qibvvq5mze/DLAAAACXBIWXMAAA7EAAAOxAGVKw4bAAAAtUlEQVQYGVWNsQqCYBSFvxI1KVLaA/sFoa2hV3Bo8wWstqbAoSkoWmsS2lw0aOlBGiN7g6ZmH6Hr5n/g3nvOx+VegE4gra3JvJ3ERxsdWLWeMU46cO6XVCd9X88MYvaqbGCuQk9GgVNxFmMtGH5l7jArpmJ6Pk4DxvBKMQKvWEMs4APbt5ewXElo9JQyoxtus5GBU2OvUQLkBj72tcIu+SUc5IuR4R5jbKVmxuhBHoTQVXKipT+gvSBqGdaAkAAAAABJRU5ErkJggg==" alt="f_\textrm{SoC}" title="f_\textrm{SoC}" /> is a cost factor that depends on the battery’s state of charge.</li>
+<li><p><img style="vertical-align:middle" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACcAAAAQBAMAAABn8nsTAAAAMFBMVEX///8AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAv3aB7AAAAD3RSTlMAid2ZuzKrVCJmEO9Eds0xWRQzAAAACXBIWXMAAA7EAAAOxAGVKw4bAAAAs0lEQVQYGWNgYBD6LOwSwIAGWBIY2H+giTHwT2Dg+okuGB/AwPodXXA+AwPzLnTBFAaG0xgWbZl5VwpdIccfoEjzz7lWUInlDkAG5wcgwarAMAUqWP4AyGADEUDBeCAFAhwPgASTAJAAqWSfOeHQdEuIYH8BSHB7rVUIQxazwDqwIKN/OkhwAwOD2Jkc5gJuiEqgEETQFugJDMEQhg6woAJYGZBoBoYIu/iEuKz7BQd3NgAAtyctTX0NWqcAAAAASUVORK5CYII=" alt="P_\textrm{Pen1}" title="P_\textrm{Pen1}" /> is a penalty for starting the combustion engine. It is set to 0.1 times the energy required to ramp up the combustion engine. The ramp-up energy is calculated the same way as for the engine stop/start correction - see <a href="#advanced-driver-assistant-systems-engine-stopstart">Advanced Driver Assistant Systems: Engine Stop/Start</a>.</p>
 <p>If the combustion engine is currently off and is off in the considered configuration <img style="vertical-align:middle" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACcAAAAQBAMAAABn8nsTAAAAMFBMVEX///8AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAv3aB7AAAAD3RSTlMAid2ZuzKrVCJmEO9Eds0xWRQzAAAACXBIWXMAAA7EAAAOxAGVKw4bAAAAs0lEQVQYGWNgYBD6LOwSwIAGWBIY2H+giTHwT2Dg+okuGB/AwPodXXA+AwPzLnTBFAaG0xgWbZl5VwpdIccfoEjzz7lWUInlDkAG5wcgwarAMAUqWP4AyGADEUDBeCAFAhwPgASTAJAAqWSfOeHQdEuIYH8BSHB7rVUIQxazwDqwIKN/OkhwAwOD2Jkc5gJuiEqgEETQFugJDMEQhg6woAJYGZBoBoYIu/iEuKz7BQd3NgAAtyctTX0NWqcAAAAASUVORK5CYII=" alt="P_\textrm{Pen1}" title="P_\textrm{Pen1}" /> is set to 0.</p>
-If the battery’s SoC is below the lower SoC threshold <img style="vertical-align:middle" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAHkAAAAZCAYAAAAVDoETAAAACXBIWXMAAAsSAAALEgHS3X78AAAEsUlEQVRoge1ae2hTZxQ/jWlqjH1mD1yLyqrCBjqd1CJYdDLt3B+1RZ3639xErNiNrYpDuzGxHQ6V2VnmVqq04NyLYhXR+Vxkw2JLfaB/iNoprbVVzDtp0iTejHOye73xPvrFGB/J/cEluV/O4zvnfOec77u5ab0G81QAyAENSQs9AOwEgNlaiJMXulR3QCpAz9uYs2s1jF5Vm+r+SBoEL56Gu8UfkDlaJqcAtCCnAPSPY6Ktqgw4hwv04wogp3ZfqvvwuUfMQfYfaYLBxrP/310BY2krZJQsSi2vvWCIqVyHPXawVW6OGrNv2PhULB766xe4nfESeFvqmHnCHhvx2KsXJ3RuanB/v47mEOw69szmEFOQvft3ADfgixoLdVnB01jDxI/ORoND1zpVx5IRnMsW7cuWOrJbfOGCSASYg8zdvQmOqh/pu2FBIRQM3Yfcxs/o3lXXQlmuIXagD9GXeGV+sv3ZBtm2boVkjHNGAovZ7dxaFfdk+JLs3PKxsMIfXd3+Mxa4UzhOoOMhzox75cXA9XdL59vfDdaP5gl0fOkfTq9YNj+OPAMlb0pkIXg5OM/AxUsx+4Ev8cjPy0J9LP6RA1OQ8WDt//2KcB+6PCCh8Wz7E0I3zsdskBxCN3toZZvWzgHn+uaogD2wuWDMpQuQWbMQ3LUHwdf2AxmPwc+3XoPXbp2DwNFucDd9I5Fs37QaRpVVRLKmZiHYV30XJVtOL8pGOj7jMGjY660rvwDj/Jk0lr3tQ6LBloP0OC8cw3kGr/ep2op8fMBQLvKjbp7fd7xdwqPmHzkwBdm6ppKFDBybP2eiGw4jZ88hCsOUafQZvNohcJgqyiBtdB6MnPUu3Yd6/gVDUSnocrOhzzwJ7owvpnHO4ZRowQA7dzREMqD2YITO/bBXyukNXO6i7xkz59Onee8JCHQeA+62l2RQZq1vpt8e9N0Q6I3vLaV5mpa8r2qtuFwjPQu/mn/kMGyQB3/dTpsrFmC2D/3dqqwsJ1v5t8w8Jh0SvuxcGGzdDd4GC7x69mfKZiXYq7+F9In5QvbFC3GA8Mp4Z3ncMhMB1SDjZsqxoV4yjqtYvILFUDtS8dnn/S2ygcMy42vrpI2cbkwhk3neA4eorPn/OUn3+rGvC3uDtMw8yjJ5W2w0b8x4BGuvRPmIofbj9ImngRH5E0BXYKIWoUaPOr1/HGHS86T45aAaZPfuLyVHJoR+xiuK2aB2pMKVjqvf23wysrEYXwzG8iJ4ed9R5gkb55ZQWcZSibJQpmlJJS2UgckLwP7VFprfo8DSR7obLKQbezuTvvI1Qs9FPiyR+klFYG7aSv1WfATCoCA93+/735pGfRuhy5KvVOKejJso5Mdey/Nj5YkbvQazpddgDrt/2hQWI3i9K4zjclf/rDeI0lVfLft739iCMOe2hTXED97H/tP7Y5IVuHBKiIfiY01X/deK6yfUcY9WnhIw+32H98CoZYk53KcilCoBCxL2L5QuS3uj6EkAH5Bga0yfXvrY0hQzOW/XIcj69DyEPQ5hLH3q3KdupIb4ofovlH7C25qLkwBCkEM9t+jJlobkQPDqw6eP+EquRXtbM7mhvf6T7ACA/wBNZfePfHHJ0wAAAABJRU5ErkJggg==" alt="\textrm{SoC}_{low}}" title="\textrm{SoC}_{low}}" />, <img style="vertical-align:middle" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACcAAAAQBAMAAABn8nsTAAAAMFBMVEX///8AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAv3aB7AAAAD3RSTlMAid2ZuzKrVCJmEO9Eds0xWRQzAAAACXBIWXMAAA7EAAAOxAGVKw4bAAAAs0lEQVQYGWNgYBD6LOwSwIAGWBIY2H+giTHwT2Dg+okuGB/AwPodXXA+AwPzLnTBFAaG0xgWbZl5VwpdIccfoEjzz7lWUInlDkAG5wcgwarAMAUqWP4AyGADEUDBeCAFAhwPgASTAJAAqWSfOeHQdEuIYH8BSHB7rVUIQxazwDqwIKN/OkhwAwOD2Jkc5gJuiEqgEETQFugJDMEQhg6woAJYGZBoBoYIu/iEuKz7BQd3NgAAtyctTX0NWqcAAAAASUVORK5CYII=" alt="P_\textrm{Pen1}" title="P_\textrm{Pen1}" /> is set to 0.</li>
+If the battery’s SoC is below the lower SoC threshold <img style="vertical-align:middle" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADMAAAAQBAMAAABJt1qBAAAAMFBMVEX///8AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAv3aB7AAAAD3RSTlMAVImZZiIy3RDNu6t2RO9ilkPgAAAACXBIWXMAAA7EAAAOxAGVKw4bAAABDElEQVQYGV2QPUvDUBSGnyZNSjVpLroqRnRUEBEXRS8pbhkKujdboQ7tqNtFcDY/oZM4BnQuUfwBASe3LA6uji41ucEQeob3Pue859wvWNu5EOhwn/eigwq1tnxGsspPFB95hVo7CkNqMmfg5Bor8QZYUuMkKpapxkq6TzDQeFZq8yx78aJgI8y41Q1NuV784Pgc8dusVmyfywfFkG+dul91hwVmvAVeNi9rGXltOWBPtaVvmNpJbXXBTYaKiSrfZWdOyut+OzHvYzyflcjwOYXiN66KZDXryJseM4y7t2MIA1FMH74LeozwrHiMrDf+hzF9PttpQNG7FIFY59EQuy21ZMClMMLI2u5v8gezMDVOs4zUbwAAAABJRU5ErkJggg==" alt="\textrm{SoC}_{low}" title="\textrm{SoC}_{low}" />, <img style="vertical-align:middle" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACcAAAAQBAMAAABn8nsTAAAAMFBMVEX///8AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAv3aB7AAAAD3RSTlMAid2ZuzKrVCJmEO9Eds0xWRQzAAAACXBIWXMAAA7EAAAOxAGVKw4bAAAAs0lEQVQYGWNgYBD6LOwSwIAGWBIY2H+giTHwT2Dg+okuGB/AwPodXXA+AwPzLnTBFAaG0xgWbZl5VwpdIccfoEjzz7lWUInlDkAG5wcgwarAMAUqWP4AyGADEUDBeCAFAhwPgASTAJAAqWSfOeHQdEuIYH8BSHB7rVUIQxazwDqwIKN/OkhwAwOD2Jkc5gJuiEqgEETQFugJDMEQhg6woAJYGZBoBoYIu/iEuKz7BQd3NgAAtyctTX0NWqcAAAAASUVORK5CYII=" alt="P_\textrm{Pen1}" title="P_\textrm{Pen1}" /> is set to 0.</li>
 <li><p>$P_ is a penalty considering idling costs of the combustion engine, currently set to 0.</p></li>
 </ul>
 <p><img style="vertical-align:middle" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAWkAAAAwCAMAAADkU3v3AAAAM1BMVEX///8AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADxgEwMAAAAEHRSTlMAdmZU3TIiRM0Qibvvq5l8h7SyUgAAAAlwSFlzAAAOxAAADsQBlSsOGwAAB69JREFUeAHtW+uCoyoM5iIgKKzv/7QnCSJiBR3tbJ09w49WbgE+QxJCZOw3nUQgSB30yba/ze4g4KdR3On/2/csAr8wn0XqbjvHhbtL45v7C/7NA3wTee0LwiCj3bP5WoZiwkVGOheElkUZMz44rlitmx374IbRu9B3ZcdG7spAzAwbimJbsKn/bNb09fElbkfVlZwSvIVSE8ZKP43LNZOC3wbp1DlaC5cGYkysuFrBsPLJSNsOcaukWFfuyTCvhteQVgaomQkhFA3a85BRcl0aCCj4zAQaHkPOzuQf9De0JkdwMVzDkhQxK2ZrosEQy1NXc2zfxvd2aSCYgx3zCFLwJyscWcOLoO0HYsq8GmCbhZWrchq7Rp5m+zy9KpXT9YGwp1vJD6L02J+NDN7MU02TnyWA5IKjWOhOyF5oNiPNhOAo600/atHDG3OcO45SWQgRLEj7yTlQuJcHsssW20z9admZparTUn6aJoSK8EIxOJ1TOjPSHFDk2ENPggXFHNDyuMfxQcF+spGn2eWBfgpT94hiO6kAINkJd7wGWMYv8TTioBDMmfc6RB4oWBLMnVqQhibXBoozay/hAbU6aqLqTKKADj2beX8yzC9yGmUJJDMsaaU5k/SA1yMi0iSckZ8RfTlJSID7zNNnBorDvfz2T1aDy2xdUx8C+1FL2OUZ6Wx7NFc4I629U7gTEqKm07oHzAl9JI5IA8zXB2L8YA20hI//dDX7YZ5ZlBTGg9xAllT4m+xpMpurK5iRRu8aIL1ICc4kbYVID0wT3PzQ5vpAQB7PSA9Pdtqcs7fzJWXIBlgKajAWiPXiGbEwsrf9UDzg+kk6y8kmQc9cQiUgPQncDPIL9SzpiysDgeZYCa3XiTyjBDBoT8RZxx2YDJAEeMrm92LA7SGa70i6fuqxuQjCaB6M8WAuAhUNpsw4IFsDPYGEpce/qwMBATa816Q+WBqO+PXkFu329b6XethBM6vl6mB3iUzZKZwV1JZ7MOeZbioYwduHuXLslDN92qyppPwfzllsZac7OR43emhuiK8OsGjXg46iIxXh4l+tcaf0bFTVWryWa57thNdaLOneu+/2B1mXor8NEh4W35dqq9xIRje70gyaQtVEhlK1tl5xoJbH43NLnfalGuXgFO7eCjTI/v0tIgreFMvRobmRZbO2vuYDpOHw9w8kW1lGgbSdFuncYC/rut4VL+gsPv8LpFkGscClQNodmVlzV3IiG9h5+X1Y3IdZjQa/pNyGtZE+NKeLiT83E43xl/kVSHdrx1gDyRFsCIvqC0+ylDTJ93BwxmsjXRNw8xA/5m/cR6FAev02GkiSG0Yh0st1UU8i1u6PsWCUkd7zA6mVKoETxU9LyypfkaYd3ve4zecdnmW5BA9tFUlDtvnoSVZLITkcc6P+btvLB9LjX+HpNb8u8ANXrlVbl2SqAODqSHKye7UfQfbjC1GBfL4rquyanP4nbI9TGhGd4pgooqKOJN1SYDvVKYfWypR4OoltrNxJ4E9upYrSbnWxi7HUavV361ZCcD1wwdMs3nmYxFsVJFEhMrpnBuuDkGZRTqMbrJqs8+DmacmXyrarUoQK2l2XwmDqVG+S0xV+KpFmHPxinGRuHcl4L2FQ0gSN0gMdxmR7yAOerq+Oagr3tAFn3bIFdO8EB3fQNtGl7cUwmC2tlL9LLgbxJGr5f4N0rqghaawkRjJgP6OvEi6pHQAM9rRE6X4n+dXRU+Hz4pDQ3TT6HerU4WoYTGWqd8mJyqHE1tiwhuRkooO4Ms87xXzlbBnQecCT1bgNxZtHkSStot1TXAVkL89ZF2ae911yb/P9AifnWb33yay4gUxvkxzWFaSjPLkUb1Of+V1yw/r4Vx/mszVZlyjiLLooxClpuBHJUnuZZHwRl8NgFjrFw11yFyyoYvy/kskqMd6wRrxhaDLmIBxjk2bRcDkMZkNuzt4jlwXXPvVnlOZ40YhxjtLA+aVbcJ0g11mDXguDqa76LLmoKAoyeQ1F8cMyOaot3uWXV7hpDWqcrT+yT0C00Cra8TbVhb46YG6RgwvbdM6uDvmIiuSAgWMnoimTRsSoLrY2TWi2NkqPeEy8Em+zu+Z75I7CsHaH/EDhYmwwcoFHBwvMgwzrJD3yvOKLiDKkGm9jOiGdNBIjgrkMhsk+QKjAjnUeCR+Qs9wZGTTQBKeRBw2C2Wwqw9b6GWmJ6qVvRhBgjR9XoHd2HQU+Lya6x+Mhvh4Gg1EzYMrgRThsAng7IN8b7pIDcgI9khiv2oHvoYMgHcimyBOYZHYMPxzwzNQSwppRgiiKxoCw550PVjFI9zgMBoMM4ExEn4RZhUdA0WK8o6gavFAHhzGKLlTJlF2sIgoZfjjG8/SGBre9rGDzXdpLfSxApIGTEWmIc0ekTb94VCp9GsX4TQUQwU/M8IsbzCZ1srfvGpQ+W9X8ouhlavFrjJfisiAh7SBYDFCxUke8y1ancx7iJ4GfPXg8UXhA1vgU/bL6oug0vY81bH0l9zIpnRwjLzW5QPXe8knqodfWS8nDH4gaGq5zNQgPBZKf4yeQ4FODrE0Ar7+SyxN47BMy3ulkSFKfbv69DeeQqO8d5J3Uv/Q1c9VYe+eMztE6pzXO0WLsP3iBRcTh/RBAAAAAAElFTkSuQmCC" alt="f_\textrm{SoC} = 1 - \left(\frac{\textrm{SoC} - \textrm{TargetSoC}}{0.5 \cdot (\textrm{SoC}_\textrm{max} - \textrm{SoC}_{min}} \right)^5 + C_\textrm{SoC}" title="f_\textrm{SoC} = 1 - \left(\frac{\textrm{SoC} - \textrm{TargetSoC}}{0.5 \cdot (\textrm{SoC}_\textrm{max} - \textrm{SoC}_{min}} \right)^5 + C_\textrm{SoC}" /></p>
@@ -5190,6 +5202,85 @@ If the battery’s SoC is below the lower SoC threshold <img style="vertical-ali
 600               ,500        ,6535
 600               ,600        ,7578
 ...</code></pre>
+</div>
+<div id="electric-motor-max-torque-file-.vemp" class="section level2">
+<h2>Electric Motor Max Torque File (.vemp)</h2>
+<p>This file contains the electric motor’s maximum drive torque and maximum recuperation torque depending on the motor’s angluar speed. The file uses the <a href="#csv">VECTO CSV format</a>.</p>
+<ul>
+<li>Filetype: .vemp</li>
+<li>Header: <strong>n [rpm] , T_drive [Nm] , T_recuperation [Nm]</strong></li>
+<li>Requires at least 2 data entries</li>
+</ul>
+<p><strong>Example:</strong></p>
+<pre><code>n [rpm] , T_drive [Nm] , T_recuperation [Nm]
+0       , 802.14       , -802.14
+1600    , 802.14       , -802.14
+1665    , 802.14       , -802.14
+1675    , 798.16       , -798.16
+1685    , 793.42       , -793.42
+1695    , 788.74       , -788.74
+...</code></pre>
+</div>
+<div id="electric-motor-map-.vemo" class="section level2">
+<h2>Electric Motor Map (.vemo)</h2>
+<p>This file is used to interpolate the electric power required for a certain mechanical power at the eletric motor’s shaft. The file uses the <a href="#csv">VECTO CSV format</a>.</p>
+<ul>
+<li>Filetype: .vemo</li>
+<li>Header: <strong>n [rpm] , T [Nm] , P_el [Nm]</strong></li>
+<li>Requires at least 2 data entries</li>
+</ul>
+<p><strong>Example:</strong></p>
+<pre><code>n [rpm], T [Nm], P_el [W]
+0      , -1600 , 19.6898
+0      , -1550 , 18.5438
+0      , -1500 , 17.4322
+...
+0      , 1450  , 16.9496
+0      , 1500  , 18.0462
+0      , 1550  , 19.177
+0      , 1600  , 20.342
+47.746 , -1600 , 11.6734
+47.746 , -1550 , 10.7802
+...
+47.746 , -100  , -0.19622
+47.746 , -50   , -0.064626
+47.746 , 0     , 0.1449
+...</code></pre>
+</div>
+<div id="battery-internal-voltage-file-.vbatv" class="section level2">
+<h2>Battery Internal Voltage File (.vbatv)</h2>
+<p>This file contains the battery’s internal voltage as function of the state of charge (SoC). The file must cover the SOC range from 0 to 100%! The file uses the <a href="#csv">VECTO CSV format</a>.</p>
+<ul>
+<li>Filetype: .vbatv</li>
+<li>Header: <strong>SOC, V</strong></li>
+<li>Requires at least 2 data entries</li>
+</ul>
+<p><strong>Example:</strong></p>
+<pre><code>SOC , V
+0   , 590
+10  , 614
+20  , 626
+30  , 634
+40  , 638
+50  , 640
+60  , 640
+70  , 642
+80  , 646
+90  , 650
+100 , 658</code></pre>
+</div>
+<div id="battery-internal-resistance-file-.vbatv" class="section level2">
+<h2>Battery Internal Resistance File (.vbatv)</h2>
+<p>This file contains the battery’s internal resistance as function of the state of charge (SoC). The file must cover the SOC range from 0 to 100%! The file uses the <a href="#csv">VECTO CSV format</a>.</p>
+<ul>
+<li>Filetype: .vbatv</li>
+<li>Header: <strong>SOC, R</strong></li>
+<li>Requires at least 2 data entries</li>
+</ul>
+<p><strong>Example:</strong></p>
+<pre><code>SoC , Ri
+0   , 0.04
+100 , 0.04</code></pre>
 </div>
 <div id="gearbox-file-.vgbx" class="section level2">
 <h2>Gearbox File (.vgbx)</h2>

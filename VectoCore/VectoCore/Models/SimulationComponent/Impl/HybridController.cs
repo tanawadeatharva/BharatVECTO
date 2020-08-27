@@ -344,7 +344,22 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			}
 
 			public override void Disengage(Second absTime, Second dt, NewtonMeter outTorque,
-				PerSecond outEngineSpeed) { }
+				PerSecond outAngularVelocity)
+			{
+				if (!_controller.ShiftRequired && DataBus.DriverInfo.DrivingAction != DrivingAction.Halt) {
+					// gearbox disengaged on its own! set next gear!
+					var gear = _nextGear;
+					while (gear > 1 && SpeedTooLowForEngine(gear, outAngularVelocity)) {
+						gear--;
+					}
+
+					while (gear < ModelData.Gears.Count && SpeedTooHighForEngine(gear, outAngularVelocity)) {
+						gear++;
+					}
+
+                    //_nextGear = gear;
+                }
+			}
 
 			public override IGearbox Gearbox
 			{

@@ -114,12 +114,12 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data {
 		{
 			var elPowerMaxEM = LookupElectricPower(avgSpeed, maxEmTorque, true);
 			if (maxEmTorque < 0) { // distinguish between propulsion and recuperation
-				if (!elPowerMaxEM.Extrapolated & elPowerMaxEM.ElectricalPower.IsGreaterOrEqual(batPower)) {
+				if (!elPowerMaxEM.Extrapolated && elPowerMaxEM.ElectricalPower.IsGreaterOrEqual(batPower)) {
 					// the battery can provide more electric power than the EM  - no limitation here
 					return null;
 				}
 			} else {
-				if (!elPowerMaxEM.Extrapolated & elPowerMaxEM.ElectricalPower.IsSmallerOrEqual(batPower)) {
+				if (!elPowerMaxEM.Extrapolated && elPowerMaxEM.ElectricalPower.IsSmallerOrEqual(batPower)) {
 					// the battery can provide more electric power than the EM  - no limitation here
 					return null;
 				}
