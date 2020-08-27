@@ -491,7 +491,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 					if (!filtered.Any()) {
 						filtered = eval.OrderBy(x => Math.Abs((int)currentGear - x.Gear)).ToArray();
 					}
-					best = filtered.MaxBy(x => x.Setting.MechanicalAssistPower.Sum(e => e.Value ?? 0.SI<NewtonMeter>()));
+					best = filtered.Where(x => !x.IgnoreReason.BatteryDemandExceeded()).MaxBy(x => x.Setting.MechanicalAssistPower.Sum(e => e.Value ?? 0.SI<NewtonMeter>()));
 					if (best != null) {
 						return best;
 					}
@@ -521,7 +521,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 				}
 			}
 			if (DataBus.DriverInfo.DrivingAction == DrivingAction.Brake && emEngaged) {
-				best = eval.MaxBy(x => x.Setting.MechanicalAssistPower.Sum(e => e.Value ?? 0.SI<NewtonMeter>()));
+				best = eval.Where(x => !x.IgnoreReason.BatteryDemandExceeded()).MaxBy(x => x.Setting.MechanicalAssistPower.Sum(e => e.Value ?? 0.SI<NewtonMeter>()));
 				if (best != null) {
 					return best;
 				}
@@ -1004,6 +1004,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 			}
 
 			//if (!PreviousState.GearboxEngaged) {
+			TestPowertrain.CombustionEngine.Initialize(
+				(DataBus.EngineInfo as CombustionEngine).PreviousState.EngineTorque,
+				(DataBus.EngineInfo as CombustionEngine).PreviousState.EngineSpeed);
 			TestPowertrain.CombustionEngine.PreviousState.EngineOn = true;
 					//(DataBus.EngineInfo as CombustionEngine).PreviousState.EngineOn;
 				TestPowertrain.CombustionEngine.PreviousState.EnginePower =
@@ -1023,6 +1026,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 
 				TestPowertrain.Clutch.PreviousState.InAngularVelocity =
 					(DataBus.ClutchInfo as SwitchableClutch).PreviousState.InAngularVelocity;
+				
 			//}
 
 			if (/*nextGear != DataBus.GearboxInfo.Gear && */TestPowertrain.ElectricMotorP2 != null) {
