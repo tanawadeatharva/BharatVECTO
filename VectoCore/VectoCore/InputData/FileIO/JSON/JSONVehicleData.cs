@@ -602,6 +602,11 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			get { return 0; }
 		}
 
+		public virtual CubicMeter CargoVolume
+		{
+			get { return 0.SI<CubicMeter>(); }
+		}
+
 		public virtual VehicleCode VehicleCode
 		{
 			get { return VehicleCode.NOT_APPLICABLE; }

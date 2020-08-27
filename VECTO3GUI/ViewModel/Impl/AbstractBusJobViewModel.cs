@@ -256,7 +256,8 @@ namespace VECTO3GUI.ViewModel.Impl
 
 		private void UpdateJobData()
 		{
-			SavedJobEntry.Body.PrimaryVehicle = FirstFilePath;
+			SavedJobEntry.Body.PrimaryVehicle = JobType.SingleBusJob == JobType ? FirstFilePath : null; ;
+			SavedJobEntry.Body.PrimaryVehicleResults = JobType.CompletedBusJob == JobType ? FirstFilePath : null;
 			SavedJobEntry.Body.CompletedVehicle = SecondFilePath;
 		}
 

@@ -154,12 +154,13 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 				(actuations.ParkBrakeAndDoors * Constants.BusAuxiliaries.ElectricalConsumers.DoorActuationTimeSecond) /
 				actuations.CycleTime;
 			var busAux = vehicleData.Components.BusAuxiliaries;
-			var electricDoors = vehicleData.DoorDriveTechnology == ConsumerTechnology.Electrically;
+			var electricDoors = vehicleData.DoorDriveTechnology == ConsumerTechnology.Electrically ||
+				vehicleData.DoorDriveTechnology == ConsumerTechnology.Mixed;
 
 			foreach (var consumer in DeclarationData.BusAuxiliaries.DefaultElectricConsumerList.Items) {
 				var applied = consumer.DefaultConsumer || consumer.Bonus
 					? 1.0
-					: GetNumberOfElectricalConsumersForMission(mission, consumer);
+					: GetNumberOfElectricalConsumersForMission(mission, consumer, vehicleData);
 				var nbr = consumer.DefaultConsumer
 					? GetNumberOfElectricalConsumersInVehicle(consumer.NumberInActualVehicle, mission, vehicleData)
 					: 1.0;
@@ -184,12 +185,31 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			return retVal;
 		}
 
-		private double GetNumberOfElectricalConsumersForMission(Mission mission, ElectricalConsumer consumer)
+		private double GetNumberOfElectricalConsumersForMission(Mission mission, ElectricalConsumer consumer,
+			IVehicleDeclarationInputData vehicleData)
 		{
-			if (mission.BusParameter.ElectricalConsumers.ContainsKey(consumer.ConsumerName)) {
+			if (consumer.ConsumerName.Equals(Constants.BusAuxiliaries.ElectricalConsumers.DoorsPerVehicleConsumer,
+				StringComparison.CurrentCultureIgnoreCase)) {
+				var count = DeclarationData.BusAuxiliaries.DefaultElectricConsumerList.Items.First(x =>
+					x.ConsumerName.Equals(
+						Constants.BusAuxiliaries.ElectricalConsumers.DoorsPerVehicleConsumer,
+						StringComparison.CurrentCultureIgnoreCase)).NumberInActualVehicle.ToDouble();
+
+                switch (vehicleData.DoorDriveTechnology)
+				{
+					case ConsumerTechnology.Electrically:
+						return count;
+					case ConsumerTechnology.Mixed:
+						return count * 0.5;
+					default:
+						return 0;
+				}
+			}
+            if (mission.BusParameter.ElectricalConsumers.ContainsKey(consumer.ConsumerName)) {
 				return mission.BusParameter.ElectricalConsumers[consumer.ConsumerName];
 			}
 
+			
 			return 0;
 			
 		}
@@ -319,7 +339,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			retVal.UValue = DeclarationData.BusAuxiliaries.UValue(busParams.VehicleCode.GetFloorType());
 			retVal.NumberOfPassengers =
 				DeclarationData.BusAuxiliaries.CalculateBusFloorSurfaceArea(internalLength, busParams.VehicleWidth) *
-				busParams.PassengerDensity *
+				(loadingType == LoadingType.LowLoading ? mission.BusParameter.PassengerDensityLow : mission.BusParameter.PassengerDensityRef) *
 				(loadingType == LoadingType.LowLoading ? mission.MissionType.GetLowLoadFactorBus() : 1.0) + 1; // add driver for 'heat input'
 			retVal.VentilationRate = DeclarationData.BusAuxiliaries.VentilationRate(busParams.HVACConfiguration, false);
 			retVal.VentilationRateHeating = DeclarationData.BusAuxiliaries.VentilationRate(busParams.HVACConfiguration, true);

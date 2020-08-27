@@ -41,7 +41,7 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.Pneumati
 			//'* * ParkBrakesBreakplus2Doors * *Park break +2 doors
 			airConsumptionPerActuation = psUserConfig.Doors == ConsumerTechnology.Electrically
 				? 0.SI<NormLiter>()
-				: psAuxconfig.DoorOpening;
+				: (psUserConfig.Doors == ConsumerTechnology.Mixed ? 0.5 : 1) * psAuxconfig.DoorOpening;
 			airConsumptionPerActuation += psAuxconfig.StopBrakeActuation * vehicleMass;
 			var parkBrakesplus2Doors = actuations.ParkBrakeAndDoors * airConsumptionPerActuation;
 

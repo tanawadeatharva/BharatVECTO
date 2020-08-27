@@ -72,6 +72,8 @@ namespace TUGraz.VectoCommon.BusAuxiliaries {
 			switch (hvacConfig) {
 				case BusHVACSystemConfiguration.Configuration1:
 				case BusHVACSystemConfiguration.Configuration2:
+				case BusHVACSystemConfiguration.Configuration3:
+				case BusHVACSystemConfiguration.Configuration4:
 					return false;
 			}
 

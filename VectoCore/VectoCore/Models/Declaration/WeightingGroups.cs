@@ -41,13 +41,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 {
 	public enum WeightingGroup
 	{
-		GroupML2r = 1,
-		GroupML2van,
-		GroupML3r,
-		GroupML3van,
-		GroupML4r,
-		GroupML4van,
-		Group1s,
+		Group1s = 1,
 		Group1,
 		Group2,
 		Group3,
@@ -65,8 +59,15 @@ namespace TUGraz.VectoCore.Models.Declaration
 		Group12,
 		Group16,
 
-		Unknown
-	}
+		Group51,
+		Group52,
+		Group53,
+		Group54,
+		Group55,
+		Group56,
+
+        Unknown
+    }
 
 	public class WeightingGroupHelper
 	{

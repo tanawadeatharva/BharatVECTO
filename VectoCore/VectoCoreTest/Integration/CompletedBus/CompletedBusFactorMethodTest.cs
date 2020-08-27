@@ -50,17 +50,15 @@ namespace TUGraz.VectoCore.Tests.Integration.CompletedBus
 
 		}
 
-		private List<RelatedRun> relatedRuns;
-		private Segment primarySegment;
-		private Segment completedSegment;
-
+		//private List<RelatedRun> relatedRuns;
+		
 
 		[OneTimeSetUp]
 		public void RunBeforeAnyTests()
 		{
 			Directory.SetCurrentDirectory(TestContext.CurrentContext.TestDirectory);
 
-			relatedRuns = new List<RelatedRun>();
+			//relatedRuns = new List<RelatedRun>();
 
 			var kernel = new StandardKernel(new VectoNinjectModule());
 			xmlInputReader = kernel.Get<IXMLInputDataReader>();
@@ -81,7 +79,7 @@ namespace TUGraz.VectoCore.Tests.Integration.CompletedBus
 			//var floorType = FloorType.HighFloor;
 			var articulated = false;
 
-			primarySegment = DeclarationData.PrimaryBusSegments.Lookup(category, axleConfiguration, articulated);
+			//primarySegment = DeclarationData.PrimaryBusSegments.Lookup(category, axleConfiguration, articulated);
 		}
 
 		private void CompletedBusSegment()
@@ -93,7 +91,7 @@ namespace TUGraz.VectoCore.Tests.Integration.CompletedBus
 			var bodyHeight = 3.SI<Meter>();
 			var lowEntry = false;
 
-			completedSegment = DeclarationData.CompletedBusSegments.Lookup(numberOfAxles, vehicleCode, registrationClass, passengersLowerDeck, bodyHeight, lowEntry);
+			//completedSegment = DeclarationData.CompletedBusSegments.Lookup(numberOfAxles, vehicleCode, registrationClass, passengersLowerDeck, bodyHeight, lowEntry);
 		}
 
 		[TestCase()]
@@ -115,7 +113,7 @@ namespace TUGraz.VectoCore.Tests.Integration.CompletedBus
 			var runs = factory.DataReader.NextRun().ToList();
 			Assert.IsTrue(runs.Count == 8 || runs.Count == 12);
 
-			SetRelatedVehicleParts(runs);
+			var relatedRuns = SetRelatedVehicleParts(runs);
 
 			for (int i = 0; i < relatedRuns.Count; i++)
 			{
@@ -174,7 +172,7 @@ namespace TUGraz.VectoCore.Tests.Integration.CompletedBus
 				// generic loading values shall match expected values of primary vehicle for IU and CO cycle
 				// see TestPrimaryBusGroup41Test
 				case 0:
-					Assert.AreEqual(879.903, genericLoading.Value(), 1e-4);
+					Assert.AreEqual(1075.437, genericLoading.Value(), 1e-4);
 					Assert.AreEqual(1058.5088, specificLoading.Value(), 1e-4);
 					break;
 				case 1:
@@ -681,7 +679,7 @@ namespace TUGraz.VectoCore.Tests.Integration.CompletedBus
 				// generic loading values shall match expected values of primary vehicle for IU and CO cycle
 				// see TestPrimaryBusGroup41Test
 				case 0:
-					Assert.AreEqual(13.393, genericLoading, 1e-4);
+					Assert.AreEqual(16.147, genericLoading, 1e-4);
 					Assert.AreEqual(15.908575, specificLoading, 1e-4);
 					break;
 				case 1:
@@ -939,10 +937,11 @@ namespace TUGraz.VectoCore.Tests.Integration.CompletedBus
 
 
 
-		private void SetRelatedVehicleParts(List<VectoRunData> runs)
+		private List<RelatedRun> SetRelatedVehicleParts(List<VectoRunData> runs)
 		{
-			relatedRuns.Clear();
-			for (int i = 0; i < runs.Count; i++)
+			var relatedRuns = new List<RelatedRun>();
+
+            for (int i = 0; i < runs.Count; i++)
 			{
 				var relatedRun = new RelatedRun
 				{
@@ -952,6 +951,8 @@ namespace TUGraz.VectoCore.Tests.Integration.CompletedBus
 				relatedRuns.Add(relatedRun);
 				i++;
 			}
+
+			return relatedRuns;
 		}
 
 
@@ -959,12 +960,13 @@ namespace TUGraz.VectoCore.Tests.Integration.CompletedBus
 		[TestCase(JobFile_Group41, 0, TestName = "PrintVectoRunData CompletedBus Group 41/32b CO/LL"),
 		 TestCase(JobFile_Group42, 1, TestName = "PrintVectoRunData CompletedBus Group 42/33b HU/RL"),
 		TestCase(@"TestData\Integration\Buses\FactorMethod\CompletedBus_41-32b_AT-P.vecto", 0, TestName = "PrintVectoRunData CompletedBus Group 41/32b AT-P CO/LL"),
-		TestCase(@"TestData\Integration\Buses\FactorMethod\CompletedBus_41-32b_ES-AUX.vecto", 0, TestName = "PrintVectoRunData CompletedBus Group 41/32b ES-Aux CO/LL"),]
+		TestCase(@"TestData\Integration\Buses\FactorMethod\CompletedBus_41-32b_ES-AUX.vecto", 0, TestName = "PrintVectoRunData CompletedBus Group 41/32b ES-Aux CO/LL"),
+		TestCase(@"TestData\Integration\Buses\FactorMethod\CompletedBus_41-32b_ES-AUX_mixed.vecto", 0, TestName = "PrintVectoRunData CompletedBus Group 41/32b ES-Aux CO/LL mixedDoors"),]
 		public void PrintModelParametersCompletedBus(string jobFile, int pairIdx)
 		{
 			var runs = GetVectoRunData(jobFile);
 
-			SetRelatedVehicleParts(runs);
+			var relatedRuns = SetRelatedVehicleParts(runs);
 			var pair = relatedRuns[pairIdx];
 
 			File.WriteAllText($"{pair.VectoRunDataGenericBody.JobName}_{pair.VectoRunDataGenericBody.Cycle.Name}{pair.VectoRunDataGenericBody.ModFileSuffix}.json", JsonConvert.SerializeObject(pair.VectoRunDataGenericBody, Formatting.Indented));
@@ -984,7 +986,7 @@ namespace TUGraz.VectoCore.Tests.Integration.CompletedBus
 		{
 			var runs = GetVectoRunData(jobFile);
 
-			SetRelatedVehicleParts(runs);
+			var relatedRuns = SetRelatedVehicleParts(runs);
 			var run = runs[runIdx];
 
 			File.WriteAllText($"{run.JobName}_{run.Cycle.Name}{run.ModFileSuffix}.json", JsonConvert.SerializeObject(run, Formatting.Indented));
@@ -1072,9 +1074,9 @@ namespace TUGraz.VectoCore.Tests.Integration.CompletedBus
 		
 			TestCase(@"TestData\Integration\Buses\primary_heavyBus group P39_40_nonSmart_ESS.xml", 18, TestName = "RunBusSimulation Grp 39/40 P40DD CO/LL"),
 
-		TestCase(@"E:\QUAM\tmp\ESS_Tests\primary_heavyBus group 42_ConvAux_ESS_SmartPS.xml", 10, TestName = "RunBusSimulation ESS P33DD SU/LL ConvAux SmartPS"),
-		TestCase(@"E:\QUAM\tmp\ESS_Tests\primary_heavyBus group 42_ESS_SmartPS.xml", 10, TestName = "RunBusSimulation ESS P33DD SU/LL ES Aux SmartPS"),
-		TestCase(@"E:\QUAM\tmp\ESS_Tests\primary_heavyBus group 42_ESS_SmartPS_SmartES.xml", 10, TestName = "RunBusSimulation ESS P33DD SU/LL ES Aux SmartPS SmartES"),
+		//TestCase(@"E:\QUAM\tmp\ESS_Tests\primary_heavyBus group 42_ConvAux_ESS_SmartPS.xml", 10, TestName = "RunBusSimulation ESS P33DD SU/LL ConvAux SmartPS"),
+		//TestCase(@"E:\QUAM\tmp\ESS_Tests\primary_heavyBus group 42_ESS_SmartPS.xml", 10, TestName = "RunBusSimulation ESS P33DD SU/LL ES Aux SmartPS"),
+		//TestCase(@"E:\QUAM\tmp\ESS_Tests\primary_heavyBus group 42_ESS_SmartPS_SmartES.xml", 10, TestName = "RunBusSimulation ESS P33DD SU/LL ES Aux SmartPS SmartES"),
 			]
 		public void TestRunPrimaryBusSimulation_ESS(string jobName, int runIdx)
 		{

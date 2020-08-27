@@ -36,12 +36,8 @@ namespace TUGraz.VectoCommon.Models
 	public enum VehicleClass
 	{
 		Unknown,
-		ClassML2r,
-		ClassML2van,
-		ClassML3r,
-		ClassML3van,
-		ClassML4r,
-		ClassML4van,
+
+		// heavy lorries
 		Class1s,
 		Class0,
 		Class1,
@@ -61,7 +57,6 @@ namespace TUGraz.VectoCommon.Models
 		Class15,
 		Class16,
 		Class17,
-
 
 		// primary bus super groups
 		ClassP31_32,
@@ -94,7 +89,8 @@ namespace TUGraz.VectoCommon.Models
 		
 		// completed bus groups
 		Class31a,
-		Class31b,
+		Class31b1,
+		Class31b2,
 		Class31c,
 		Class31d,
 		Class31e,
@@ -106,7 +102,8 @@ namespace TUGraz.VectoCommon.Models
 		Class32f,
 
 		Class33a,
-		Class33b,
+		Class33b1,
+		Class33b2,
 		Class33c,
 		Class33d,
 		Class33e,
@@ -118,7 +115,8 @@ namespace TUGraz.VectoCommon.Models
 		Class34f,
 
 		Class35a,
-		Class35b,
+		Class35b1,
+		Class35b2,
 		Class35c,
 		Class36a,
 		Class36b,
@@ -128,7 +126,8 @@ namespace TUGraz.VectoCommon.Models
 		Class36f,
 
 		Class37a,
-		Class37b,
+		Class37b1,
+		Class37b2,
 		Class37c,
 		Class37d,
 		Class37e,
@@ -140,7 +139,8 @@ namespace TUGraz.VectoCommon.Models
 		Class38f,
 
 		Class39a,
-		Class39b,
+		Class39b1,
+		Class39b2,
 		Class39c,
 		Class40a,
 		Class40b,
@@ -148,9 +148,18 @@ namespace TUGraz.VectoCommon.Models
 		Class40d,
 		Class40e,
 		Class40f,
-	}
 
-	public static class VehicleClassHelper
+		// medium lorries
+		Class51,
+		Class52,
+		Class53,
+		Class54,
+		Class55,
+		Class56,
+
+    }
+
+    public static class VehicleClassHelper
 	{
 		private const string Prefix = "Class";
 
@@ -167,16 +176,28 @@ namespace TUGraz.VectoCommon.Models
 		public static bool IsMediumLorry(this VehicleClass vehicleClass)
 		{
 			switch (vehicleClass) {
-				case VehicleClass.ClassML2r:
-				case VehicleClass.ClassML2van:
-				case VehicleClass.ClassML3r:
-				case VehicleClass.ClassML3van:
-				case VehicleClass.ClassML4r:
-				case VehicleClass.ClassML4van:
+				case VehicleClass.Class51:
+				case VehicleClass.Class52:
+				case VehicleClass.Class53:
+				case VehicleClass.Class54:
+				case VehicleClass.Class55:
+				case VehicleClass.Class56:
 					return true;
 				default:
 					return false;
 			}
+		}
+
+		public static bool IsVan(this VehicleClass vehicleClass)
+		{
+			switch (vehicleClass) {
+				case VehicleClass.Class52:
+				case VehicleClass.Class54:
+				case VehicleClass.Class56:
+					return true;
+				default:
+					return false;
+            }
 		}
 
 		public static bool IsBus(this VehicleClass vehicleClass)
@@ -221,7 +242,8 @@ namespace TUGraz.VectoCommon.Models
 		{
 			switch (vehicleClass) {
 					case VehicleClass.Class31a:
-					case VehicleClass.Class31b:
+					case VehicleClass.Class31b1:
+					case VehicleClass.Class31b2:
 					case VehicleClass.Class31c:
 					case VehicleClass.Class31d:
 					case VehicleClass.Class31e:
@@ -232,7 +254,8 @@ namespace TUGraz.VectoCommon.Models
 					case VehicleClass.Class32e:
 					case VehicleClass.Class32f:
 					case VehicleClass.Class33a:
-					case VehicleClass.Class33b:
+					case VehicleClass.Class33b1:
+					case VehicleClass.Class33b2:
 					case VehicleClass.Class33c:
 					case VehicleClass.Class33d:
 					case VehicleClass.Class33e:
@@ -243,7 +266,8 @@ namespace TUGraz.VectoCommon.Models
 					case VehicleClass.Class34e:
 					case VehicleClass.Class34f:
 					case VehicleClass.Class35a:
-					case VehicleClass.Class35b:
+					case VehicleClass.Class35b1:
+					case VehicleClass.Class35b2:
 					case VehicleClass.Class35c:
 					case VehicleClass.Class36a:
 					case VehicleClass.Class36b:
@@ -252,7 +276,8 @@ namespace TUGraz.VectoCommon.Models
 					case VehicleClass.Class36e:
 					case VehicleClass.Class36f:
 					case VehicleClass.Class37a:
-					case VehicleClass.Class37b:
+					case VehicleClass.Class37b1:
+					case VehicleClass.Class37b2:
 					case VehicleClass.Class37c:
 					case VehicleClass.Class37d:
 					case VehicleClass.Class37e:
@@ -263,7 +288,8 @@ namespace TUGraz.VectoCommon.Models
 					case VehicleClass.Class38e:
 					case VehicleClass.Class38f:
 					case VehicleClass.Class39a:
-					case VehicleClass.Class39b:
+					case VehicleClass.Class39b1:
+					case VehicleClass.Class39b2:
 					case VehicleClass.Class39c:
 					case VehicleClass.Class40a:
 					case VehicleClass.Class40b:

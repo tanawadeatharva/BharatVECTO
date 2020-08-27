@@ -349,7 +349,7 @@ namespace VECTO3GUI.ViewModel.Impl
 				CompressorTypeDriver = busAux.HVACAux.CompressorTypeDriver;
 				CompressorTypePassenger = busAux.HVACAux.CompressorTypePassenger;
 				AuxHeaterPower = busAux.HVACAux.AuxHeaterPower;
-				DoubleGlasing = busAux.HVACAux.DoubleGlasing;
+				DoubleGlasing = busAux.HVACAux.DoubleGlazing;
 				HeatPump = busAux.HVACAux.HeatPump;
 				AdjustableAuxiliaryHeater = busAux.HVACAux.AdjustableAuxiliaryHeater;
 				SeparateAirDistributionDucts = busAux.HVACAux.SeparateAirDistributionDucts;

@@ -212,7 +212,7 @@ namespace TUGraz.VectoCore.OutputData
 				LogManager.GetLogger(typeof(ModalDataContainer).FullName).Warn("could not calculate engine correction line - k: {0}", k);
 				k = 0;
 			}
-			_engLine[fuel.FuelType] = k.SI<KilogramPerWattSecond>();
+            _engLine[fuel.FuelType] = k.SI<KilogramPerWattSecond>();
 
 			return _engLine[fuel.FuelType];
 		}
@@ -237,7 +237,7 @@ namespace TUGraz.VectoCore.OutputData
 					LogManager.GetLogger(typeof(ModalDataContainer).FullName).Warn("could not calculate vehicle correction line - k: {0}", k);
 					k = 0;
 				}
-				_vehLine[fuel.FuelType] = k.SI<KilogramPerWattSecond>();
+                _vehLine[fuel.FuelType] = k.SI<KilogramPerWattSecond>();
 				return _vehLine[fuel.FuelType];
 			}
 

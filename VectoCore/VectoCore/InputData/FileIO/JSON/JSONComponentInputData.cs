@@ -47,7 +47,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 {
 	public class JSONComponentInputData : IEngineeringInputDataProvider, IDeclarationInputDataProvider,
 		IEngineeringJobInputData, IVehicleEngineeringInputData, IAdvancedDriverAssistantSystemDeclarationInputData,
-		IAdvancedDriverAssistantSystemsEngineering, IVehicleComponentsDeclaration, IVehicleComponentsEngineering, IDriverEngineeringInputData
+		IAdvancedDriverAssistantSystemsEngineering, IVehicleComponentsDeclaration, IVehicleComponentsEngineering,
+		IDriverEngineeringInputData
 	{
 		protected IGearboxEngineeringInputData Gearbox;
 		protected IAxleGearInputData AxleGear;
@@ -120,7 +121,10 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			get { return this; }
 		}
 
-		public virtual IPrimaryVehicleInformationInputDataProvider PrimaryVehicleData { get { return null; } }
+		public virtual IPrimaryVehicleInformationInputDataProvider PrimaryVehicleData
+		{
+			get { return null; }
+		}
 
 		public XElement XMLHash
 		{
@@ -141,7 +145,12 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 		public IOverSpeedEngineeringInputData OverSpeedData { get; }
 		public IDriverAccelerationData AccelerationCurve { get; }
 		public ILookaheadCoastingInputData Lookahead { get; }
-		public IGearshiftEngineeringInputData GearshiftInputData { get { return GearshiftData; } }
+
+		public IGearshiftEngineeringInputData GearshiftInputData
+		{
+			get { return GearshiftData; }
+		}
+
 		public IEngineStopStartEngineeringInputData EngineStopStartData { get; }
 		public IEcoRollEngineeringInputData EcoRollData { get; }
 		public IPCCEngineeringInputData PCCData { get; }
@@ -152,7 +161,10 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			get { return new DataSource { SourceType = DataSourceType.JSONFile, SourceFile = _filename }; }
 		}
 
-		public string AppVersion {  get { return "VECTO-JSON"; } }
+		public string AppVersion
+		{
+			get { return "VECTO-JSON"; }
+		}
 
 		public string Source
 		{
@@ -267,7 +279,6 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			});
 		} }
 
-		public IBusAuxiliariesDeclarationData BusAuxiliaries { get { return null; } }
 		IElectricStorageDeclarationInputData IVehicleComponentsDeclaration.ElectricStorage
 		{
 			get { return ElectricStorage; }
@@ -283,20 +294,42 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			get { return VehicleData.DynamicTyreRadius; }
 		}
 
-		
-		public bool Articulated { get { return VehicleData.Articulated; } }
+
+		public bool Articulated
+		{
+			get { return VehicleData.Articulated; }
+		}
 
 		public Meter Height
 		{
 			get { return VehicleData.Height; }
 		}
 
-		public bool? ATEcoRollReleaseLockupClutch { get { return VehicleData.ADAS.ATEcoRollReleaseLockupClutch; } }
-		public XmlNode XMLSource { get { return null; } }
+		public bool? ATEcoRollReleaseLockupClutch
+		{
+			get { return VehicleData.ADAS.ATEcoRollReleaseLockupClutch; }
+		}
 
-		public Meter Length { get { return VehicleData.Length; } }
-		public Meter Width { get { return VehicleData.Width; } }
-		public Meter EntranceHeight { get { return null; } }
+		public XmlNode XMLSource
+		{
+			get { return null; }
+		}
+
+		public Meter Length
+		{
+			get { return VehicleData.Length; }
+		}
+
+		public Meter Width
+		{
+			get { return VehicleData.Width; }
+		}
+
+		public Meter EntranceHeight
+		{
+			get { return null; }
+		}
+
 		public ConsumerTechnology DoorDriveTechnology
 		{
 			get { return VehicleData.DoorDriveTechnology; }
@@ -478,11 +511,35 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			get { return null; }
 		}
 
-		public RegistrationClass RegisteredClass { get { return RegistrationClass.unknown; } }
-		public int NumberOfPassengersUpperDeck { get { return 0; } }
-		public int NumberOfPassengersLowerDeck { get { return 0; } }
-		public VehicleCode VehicleCode { get { return VehicleCode.NOT_APPLICABLE; } }
-		public bool LowEntry { get { return VehicleData.LowEntry; } }
+		public RegistrationClass RegisteredClass
+		{
+			get { return RegistrationClass.unknown; }
+		}
+
+		public int NumberOfPassengersUpperDeck
+		{
+			get { return 0; }
+		}
+
+		public int NumberOfPassengersLowerDeck
+		{
+			get { return 0; }
+		}
+
+		public CubicMeter CargoVolume
+		{
+			get { return VehicleData.CargoVolume; }
+		}
+
+		public VehicleCode VehicleCode
+		{
+			get { return VehicleCode.NOT_APPLICABLE; }
+		}
+
+		public bool LowEntry
+		{
+			get { return VehicleData.LowEntry; }
+		}
 
 		IVehicleComponentsDeclaration IVehicleDeclarationInputData.Components
 		{

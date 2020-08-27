@@ -107,6 +107,7 @@
     <Compile Include="Integration\CoachAdvancedAuxPowertrain.cs" />
     <Compile Include="Integration\CoachPowerTrain.cs" />
     <Compile Include="Integration\CompletedBus\CompletedBusFactorMethodTest.cs" />
+    <Compile Include="Integration\CompletedBus\CompletedBusSanityCheckTests.cs" />
     <Compile Include="Integration\Declaration\ADASVehicleTest.cs" />
     <Compile Include="Integration\Declaration\EngineInputDataTests.cs" />
     <Compile Include="Integration\Declaration\NaturalGasVehicles.cs" />
@@ -137,6 +138,7 @@
     <Compile Include="Models\Declaration\DeclarationSegmentHeavyBusesTest.cs" />
     <Compile Include="Models\Declaration\ShiftPolygonTest.cs" />
     <Compile Include="Models\SimulationComponentData\ElectricMotorEfficienyMapTest.cs" />
+    <Compile Include="Models\Declaration\TestGenericBusPowertrainModelData.cs" />
     <Compile Include="Models\SimulationComponentData\GearshiftLinesVoithTest.cs" />
     <Compile Include="Models\SimulationComponentData\ShiftstrategyParameterTests.cs" />
     <Compile Include="Models\SimulationComponentData\TorqueConverterDataTest.cs" />
@@ -804,6 +806,9 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="TestData\Hybrids\Input CityBus 6x2_HEV_P2\Gear_9.vtlm">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Integration\Buses\FactorMethod\CompletedBus_41-32b_ES-AUX_mixed.vecto">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="TestData\Integration\Buses\FactorMethod\CompletedBus_41-32b_ES-AUX.vecto">
@@ -4012,6 +4017,9 @@
     <Content Include="TestData\Integration\Buses\FactorMethod\primary_heavyBus group41.RSLT_PIF.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="TestData\Integration\Buses\FactorMethod\vecto_vehicle-completed_heavyBus_41_mixed.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="TestData\Integration\Buses\FactorMethod\vecto_vehicle-completed_heavyBus_41.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -4065,6 +4073,15 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="TestData\Integration\DeclarationMode\ExemptedVehicle\vecto_vehicle-sample_exempted.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="TestData\Integration\MediumLorries\vecto_vehicle-medium_lorry.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="TestData\Integration\MediumLorries\vecto_vehicle-medium_lorry-Van.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="TestData\Integration\MediumLorries\vecto_vehicle-medium_lorryFWD.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="TestData\Integration\ShiftStrategyV2\SampleVehicles\Rigid Truck_4x2_vehicle-class-1_EURO6_2018.xml">

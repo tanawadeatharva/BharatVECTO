@@ -7,7 +7,7 @@
 		<VIN>VEH-1234567890</VIN>
 		<Date>2020-01-09T11:00:00Z</Date>
 		<LegislativeClass>M3</LegislativeClass>
-		<RegisteredClass>II+III</RegisteredClass>
+		<ClassBus>II+III</ClassBus>
 		<VehicleCode>CB</VehicleCode>
 		<CurbMassChassis>19400</CurbMassChassis>
 		<TechnicalPermissibleMaximumLadenMass>25000</TechnicalPermissibleMaximumLadenMass>
@@ -63,7 +63,7 @@
 							<PassengerAC>2-stage</PassengerAC>
 						</CompressorType>
 						<AuxiliaryHeaterPower>30000</AuxiliaryHeaterPower>
-						<DoubleGlasing>true</DoubleGlasing>
+						<DoubleGlazing>true</DoubleGlazing>
 						<HeatPump>false</HeatPump>
 						<AdjustableAuxiliaryHeater>true</AdjustableAuxiliaryHeater>
 						<SeparateAirDistributionDucts>true</SeparateAirDistributionDucts>

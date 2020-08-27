@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Xml.Linq;
+using TUGraz.IVT.VectoXML.Writer;
 using TUGraz.VectoCommon.BusAuxiliaries;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
@@ -11,10 +13,13 @@ using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.Utils;
+using TUGraz.VectoHashing;
 
 namespace TUGraz.VectoCore.OutputData.XML {
 	public class XMLCustomerReportCompletedBus : XMLCustomerReport
 	{
+		private int _resultCount = 0;
+
 		public IPrimaryVehicleInformationInputDataProvider PrimaryVehicleRecordFile { get; set; }
 
 		public IVehicleDeclarationInputData PrimaryVehicle { get { return PrimaryVehicleRecordFile.Vehicle; } }
@@ -27,7 +32,9 @@ namespace TUGraz.VectoCore.OutputData.XML {
 				new XElement(
 					tns + "PrimaryVehicle",
 					new XElement(tns + XMLNames.Component_Manufacturer, PrimaryVehicle.Manufacturer),
-					new XElement(tns + XMLNames.Component_ManufacturerAddress, PrimaryVehicle.ManufacturerAddress)
+					new XElement(tns + XMLNames.Component_ManufacturerAddress, PrimaryVehicle.ManufacturerAddress),
+					new XElement(tns + XMLNames.Report_InputDataSignature, PrimaryVehicleRecordFile.PrimaryVehicleInputDataHash.ToXML(di)),
+					new XElement(tns + "ManufacturerRecordSignature", PrimaryVehicleRecordFile.ManufacturerRecordHash.ToXML(di))
 				),
 				new XElement(
 					tns + "CompletedVehicle",
@@ -52,12 +59,10 @@ namespace TUGraz.VectoCore.OutputData.XML {
 				new XElement(tns + XMLNames.Vehicle_DualFuelVehicle, modelData.VehicleData.DualFuelVehicle),
 
 				new XElement(tns + XMLNames.Vehicle_AxleConfiguration, modelData.VehicleData.AxleConfiguration.GetName()),
-				new XElement(tns + XMLNames.Vehicle_VocationalVehicle, modelData.VehicleData.VocationalVehicle),
-				new XElement(tns + XMLNames.Vehicle_SleeperCab, modelData.VehicleData.SleeperCab),
+				//new XElement(tns + XMLNames.Vehicle_VocationalVehicle, modelData.VehicleData.VocationalVehicle),
+				//new XElement(tns + XMLNames.Vehicle_SleeperCab, modelData.VehicleData.SleeperCab),
 				new XElement(
-					tns + "RegisteredPassengers",
-					new XElement(tns + XMLNames.Bus_LowerDeck, modelData.VehicleData.InputData.NumberOfPassengersLowerDeck),
-					new XElement(tns + XMLNames.Bus_UpperDeck, modelData.VehicleData.InputData.NumberOfPassengersUpperDeck)
+					tns + "RegisteredPassengers", modelData.VehicleData.InputData.NumberOfPassengersLowerDeck + modelData.VehicleData.InputData.NumberOfPassengersUpperDeck
 				),
 				new XElement(tns + XMLNames.Bus_LowEntry, modelData.VehicleData.InputData.LowEntry),
 				new XElement(tns + XMLNames.Bus_HeighIntegratedBody, modelData.VehicleData.InputData.Height.ToXMLFormat(3)),
@@ -79,6 +84,7 @@ namespace TUGraz.VectoCore.OutputData.XML {
 		{
 			_allSuccess &= genericResult.Status == VectoRun.Status.Success;
 			_allSuccess &= specificResult.Status == VectoRun.Status.Success;
+			_resultCount++;
 			Results.Add(
 				genericResult.Status == VectoRun.Status.Success && specificResult.Status == VectoRun.Status.Success
 					? GetSuccessResultEntry(genericResult, specificResult, primaryResult)
@@ -138,15 +144,17 @@ namespace TUGraz.VectoCore.OutputData.XML {
 				new XElement(
 					tns + XMLNames.Report_ResultEntry_TotalVehicleMass,
 					XMLHelper.ValueAsUnit(result.TotalVehicleMass, XMLNames.Unit_kg)),
-				new XElement(tns + XMLNames.Report_ResultEntry_Payload, XMLHelper.ValueAsUnit(result.Payload, XMLNames.Unit_kg)),
-				result.PassengerCount.HasValue && result.PassengerCount.Value > 0 ? new XElement(tns + "PassengerCount", result.PassengerCount.Value.ToMinSignificantDigits(3, 1)) : null,
+                new XElement(tns + XMLNames.Report_Result_MassPassengers, XMLHelper.ValueAsUnit(result.Payload, XMLNames.Unit_kg)),
+                result.PassengerCount.HasValue && result.PassengerCount.Value > 0 ? new XElement(tns + XMLNames.Report_Result_PassengerCount, result.PassengerCount.Value.ToMinSignificantDigits(3, 1)) : null,
 				new XElement(tns + XMLNames.Report_Result_FuelMode, primaryResult.SimulationParameter.FuelMode)
 			};
 		}
 
 		private XElement[] GetFuelConsumptionResults(XMLDeclarationReport.ResultEntry genericResult, XMLDeclarationReport.ResultEntry specificResult, IResult primaryResult)
 		{
-			var factor = specificResult.EnergyConsumptionTotal.Value() / genericResult.EnergyConsumptionTotal.Value();
+			var factor = XMLManufacturerReportCompletedBus.CalculateFactorMethodFactor(primaryResult, specificResult,
+					genericResult);
+			//var factor = specificResult.EnergyConsumptionTotal.Value() / genericResult.EnergyConsumptionTotal.Value();
 			var retVal = new List<XElement>();
 
 			var co2Sum = 0.SI<KilogramPerMeter>();
@@ -162,11 +170,11 @@ namespace TUGraz.VectoCore.OutputData.XML {
 						tns + XMLNames.Report_Results_FuelConsumption,
 						new XAttribute(XMLNames.Report_Results_Unit_Attr, "g/km"),
 						fcMass.ConvertToGrammPerKiloMeter().ToMinSignificantDigits(3, 1)),
-					new XElement(
-						tns + XMLNames.Report_Results_FuelConsumption,
-						new XAttribute(XMLNames.Report_Results_Unit_Attr, "g/t-km"),
-						(fcMass / specificResult.Payload)
-						.ConvertToGrammPerTonKilometer().ToMinSignificantDigits(3, 1)),
+					//new XElement(
+					//	tns + XMLNames.Report_Results_FuelConsumption,
+					//	new XAttribute(XMLNames.Report_Results_Unit_Attr, "g/t-km"),
+					//	(fcMass / specificResult.Payload)
+					//	.ConvertToGrammPerTonKilometer().ToMinSignificantDigits(3, 1)),
 					specificResult.CargoVolume > 0
 						? new XElement(
 							tns + XMLNames.Report_Results_FuelConsumption,
@@ -186,12 +194,13 @@ namespace TUGraz.VectoCore.OutputData.XML {
 						new XElement(
 							tns + XMLNames.Report_Results_FuelConsumption,
 							new XAttribute(XMLNames.Report_Results_Unit_Attr, "l/100km"),
-							(fcMass.ConvertToGrammPerKiloMeter() / fuelData.FuelDensity * 100).Value().ToMinSignificantDigits(3, 1)),
-						new XElement(
-							tns + XMLNames.Report_Results_FuelConsumption,
-							new XAttribute(XMLNames.Report_Results_Unit_Attr, "l/t-km"),
-							(fcMass.ConvertToGrammPerKiloMeter() / fuelData.FuelDensity /
-							specificResult.Payload.ConvertToTon()).Value().ToMinSignificantDigits(3, 1)));
+							(fcMass.ConvertToGrammPerKiloMeter() / fuelData.FuelDensity * 100).Value().ToMinSignificantDigits(3, 1))
+						//new XElement(
+						//	tns + XMLNames.Report_Results_FuelConsumption,
+						//	new XAttribute(XMLNames.Report_Results_Unit_Attr, "l/t-km"),
+						//	(fcMass.ConvertToGrammPerKiloMeter() / fuelData.FuelDensity /
+						//	specificResult.Payload.ConvertToTon()).Value().ToMinSignificantDigits(3, 1))
+						);
 					if (specificResult.CargoVolume > 0) {
 						fcResult.Add(
 							new XElement(
@@ -218,11 +227,11 @@ namespace TUGraz.VectoCore.OutputData.XML {
 				new XElement(
 					tns + XMLNames.Report_Results_CO2, new XAttribute(XMLNames.Report_Results_Unit_Attr, "g/km"),
 					co2Sum.ConvertToGrammPerKiloMeter().ToMinSignificantDigits(3, 2)));
-			retVal.Add(
-				new XElement(
-					tns + XMLNames.Report_Results_CO2,
-					new XAttribute(XMLNames.Report_Results_Unit_Attr, "g/t-km"),
-					(co2Sum.ConvertToGrammPerKiloMeter() / specificResult.Payload.ConvertToTon()).ToMinSignificantDigits(3, 2)));
+			//retVal.Add(
+			//	new XElement(
+			//		tns + XMLNames.Report_Results_CO2,
+			//		new XAttribute(XMLNames.Report_Results_Unit_Attr, "g/t-km"),
+			//		(co2Sum.ConvertToGrammPerKiloMeter() / specificResult.Payload.ConvertToTon()).ToMinSignificantDigits(3, 2)));
 			if (specificResult.CargoVolume > 0)
 				retVal.Add(
 					new XElement(
@@ -239,11 +248,60 @@ namespace TUGraz.VectoCore.OutputData.XML {
 
 			_weightedPayload += specificResult.Payload * specificResult.WeightingFactor;
 			_weightedCo2 += co2Sum * specificResult.WeightingFactor;
+			_passengerCount += (specificResult.PassengerCount ?? 0) * specificResult.WeightingFactor;
 
-			return retVal.ToArray();
+            return retVal.ToArray();
 		}
 
-		public override void WriteResult(XMLDeclarationReport.ResultEntry resultEntry)
+        public override void GenerateReport(XElement resultSignature)
+        {
+
+            var retVal = new XDocument();
+            var results = new XElement(Results);
+            results.AddFirst(new XElement(tns + XMLNames.Report_Result_Status, _allSuccess ? "success" : "error"));
+            var summary = _allSuccess && _weightedPayload > 0 && _resultCount > 0 && _passengerCount > 0
+                ? new XElement(tns + XMLNames.Report_Results_Summary,
+                    new XElement(tns + XMLNames.Report_SpecificCO2Emissions,
+                        new XAttribute(XMLNames.Report_Results_Unit_Attr, "gCO2/p-km"),
+                        (_weightedCo2 / _passengerCount).ConvertToGrammPerKiloMeter().ToXMLFormat(1)
+                    ),
+                    new XElement(tns + "AveragePassengerCount",
+                        new XAttribute(XMLNames.Report_Results_Unit_Attr, "-"),
+                        (_passengerCount / _resultCount).ToXMLFormat(1)
+                    )
+                    //_passengerCount > 0 ? new XElement(tns + "AveragePAssengerCount", _passengerCount.ToMinSignificantDigits(2)) : null
+                )
+                : null;
+            results.Add(summary);
+            var vehicle = new XElement(VehiclePart);
+            vehicle.Add(InputDataIntegrity);
+            retVal.Add(new XProcessingInstruction("xml-stylesheet", "href=\"https://webgate.ec.europa.eu/CITnet/svn/VECTO/trunk/Share/XML/CSS/VectoReports.css\""));
+            retVal.Add(new XElement(rootNS + XMLNames.VectoCustomerReport,
+                //new XAttribute("schemaVersion", CURRENT_SCHEMA_VERSION),
+                new XAttribute(XNamespace.Xmlns + "xsi", xsi.NamespaceName),
+                new XAttribute("xmlns", tns),
+                new XAttribute(XNamespace.Xmlns + "tns", rootNS),
+                new XAttribute(XNamespace.Xmlns + "di", di),
+                new XAttribute(xsi + "schemaLocation",
+                    string.Format("{0} {1}DEV/VectoOutputCustomer.xsd", rootNS, AbstractXMLWriter.SchemaLocationBaseUrl)),
+                new XElement(rootNS + XMLNames.Report_DataWrap,
+                    new XAttribute(xsi + "type", "VectoOutputDataType"),
+                    vehicle,
+                    new XElement(tns + XMLNames.Report_ResultData_Signature, resultSignature),
+                    results,
+                    GetApplicationInfo())
+                )
+                );
+            var stream = new MemoryStream();
+            var writer = new StreamWriter(stream);
+            writer.Write(retVal);
+            writer.Flush();
+            stream.Seek(0, SeekOrigin.Begin);
+            var h = VectoHash.Load(stream);
+            Report = h.AddHash();
+        }
+
+        public override void WriteResult(XMLDeclarationReport.ResultEntry resultEntry)
 		{
 			throw new NotSupportedException();
 		}

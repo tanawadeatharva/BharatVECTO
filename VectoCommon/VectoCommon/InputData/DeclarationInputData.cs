@@ -168,6 +168,9 @@ namespace TUGraz.VectoCommon.InputData
 
 		int NumberOfPassengersLowerDeck { get; }
 
+		// only used for medium lorries type VAN
+		CubicMeter CargoVolume { get; }
+
 		VehicleCode VehicleCode { get; }
 
 		bool LowEntry { get; }
@@ -824,7 +827,7 @@ namespace TUGraz.VectoCommon.InputData
 
 		Watt AuxHeaterPower { get; }
 
-		bool DoubleGlasing { get; }
+		bool DoubleGlazing { get; }
 
 		bool HeatPump { get; }
 
