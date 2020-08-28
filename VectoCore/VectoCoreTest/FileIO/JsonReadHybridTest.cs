@@ -15,6 +15,7 @@ using TUGraz.VectoCore.Tests.Integration.Declaration;
 namespace TUGraz.VectoCore.Tests.FileIO
 {
 	[TestFixture]
+	[Parallelizable(ParallelScope.All)]
 	public class JsonReadHybridTest
 	{
 

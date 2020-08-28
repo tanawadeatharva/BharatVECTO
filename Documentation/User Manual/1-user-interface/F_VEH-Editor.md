@@ -96,6 +96,8 @@ For missions with a trailer predefined wheels and load-shares are added by Vecto
 
 Doubleclick entries to edit existing axle configurations.
 
+###Powertrain Tab
+
 ![](pics/VehicleForm_Powertrain.png)
 
 ###Retarder Losses
@@ -132,6 +134,20 @@ Three settings can be set:
 - PTO Consumer Loss Map (.vptol): Here the [PTO Idle Loss Map](#pto-idle-consumption-map-.vptoi) of the pto consumer can be defined (adds power demand when the pto cycle is not active).
 - PTO Cycle (.vptoc): Defines the [PTO Cycle](#pto-cycle-.vptoc) which is used when the pto-cycle is activated (when the PTO-Flag in the driving cycle is set).
 
+###Electric Components
+
+![](VECTO_VehicleEditor_ParHyb_El.png)
+
+For hybrid vehicles and battery electric vehicles the input elements on the *electric components* tab are enabled. Here the component file for the eletric motor and battery pack can be loaded or created (see [Electric Motor Editor](#electric-motor-editor), [Electric Energy Storage Editor](#electric-energy-storage-editor))
+
+The position where the electric machine is positioned in the powertrain can be selected. It is possible that the electric machine is connected to the powertrain via a fixed gear ratio.
+At the moment electric machines are supported to be present at a single position only. It is not possible to have an electric motor at position P2 and another at position P4!
+However, it is possible that more than one electric machine is used at a certain position. 
+The *Efficiency EM to Drivetrain* can be used to consider the efficiency of a transmission step between drivetrain and electric machine or to consider losses of a summation gear.
+
+For the electric energy storage multiple battery packs can be configured and the initial state of charge can be defined.
+
+
 ###Torque Limits
 
 ![](pics/VehicleForm_TorqueLimits.png)
@@ -143,8 +159,6 @@ In case that the gearbox' maximum torque is lower than the engine's maximum torq
 ![](pics/VehicleForm_ADAS.png))
 
 On the ADAS tab, the options for advanced driver assistant systems can be selected.  See [ADAS: Overspeed](#driver-overspeed) and [ADAS Technologies](#vehicle-adas-technologies)
-
-
 
 ###Controls
 

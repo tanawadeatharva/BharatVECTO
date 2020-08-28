@@ -25,11 +25,11 @@ SOC , V
 ~~~
 
 
-##Battery Internal Resistance File (.vbatv)
+##Battery Internal Resistance File (.vbatr)
 
 This file contains the battery's internal resistance as function of the state of charge (SoC). The file must cover the SOC range from 0 to 100%! The file uses the [VECTO CSV format](#csv).
 
-- Filetype: .vbatv
+- Filetype: .vbatr
 - Header: **SOC, R**
 - Requires at least 2 data entries
 

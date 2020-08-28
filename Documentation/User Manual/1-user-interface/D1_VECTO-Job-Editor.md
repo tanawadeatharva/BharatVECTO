@@ -43,6 +43,16 @@ Filepath to the Engine File (.veng)
 Filepath ot the Gearbox File(.vgbx)
 :	Files can be created and edited using the [Gearbox Editor](#gearbox-editor).
 
+Filepath ot the Shift Parameters File(.vtcu)
+
+Filepath ot the Hybrid Strategy Parameters File(.vhctl)
+:	Files can be created and edited using the [Hybrid Strategy Parameters Editor](#hybrid-strategy-parameters-editor).
+
+
+###Auxiliaries Tab
+
+![](pics/VECTO_JobEditor_ParHyb_Aux.png)
+
 <div class="declaration">
 Auxiliaries
 :	This group contains input elements to define the vehicle's load from the auxiliaries.
@@ -63,7 +73,17 @@ The following list can be used to define the auxiliary load in more detail via a
 : ![remaux](pics/minus-circle-icon.png) Remove the selected Auxiliary from the list
 </div>
 
+<div class="engineering">
+Electric Auxiliaries
+:   In Engineering mode it is possible to add electric auxiliaires. These auxiliaries are connected to the high-voltage battery.
+</div>
+
 See [Auxiliaries](#auxiliaries) for details.
+
+
+###Cycles Tab
+
+![](pics/VECTO_JobEditor_Cycles.png)
 
 Cycles
 :	List of cycles used for calculation. The .vdri format is described [here](#driving-cycles-.vdri).
