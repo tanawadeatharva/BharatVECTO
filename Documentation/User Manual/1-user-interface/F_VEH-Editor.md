@@ -136,7 +136,7 @@ Three settings can be set:
 
 ###Electric Components
 
-![](VECTO_VehicleEditor_ParHyb_El.png)
+![](pics/VECTO_VehicleEditor_ParHyb_El.png)
 
 For hybrid vehicles and battery electric vehicles the input elements on the *electric components* tab are enabled. Here the component file for the eletric motor and battery pack can be loaded or created (see [Electric Motor Editor](#electric-motor-editor), [Electric Energy Storage Editor](#electric-energy-storage-editor))
 
