@@ -191,6 +191,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering.DataProvider
 			get { return double.NaN; }
 		}
 
+		public virtual Watt MaxDrivetrainPower { get { return null; } }
+
 		public VectoSimulationJobType VehicleType
 		{
 			get { return VectoSimulationJobType.ConventionalVehicle; }

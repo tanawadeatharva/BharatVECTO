@@ -664,7 +664,9 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			};
 		}
 
-		public HybridStrategyParameters CreateHybridStrategyParameters(IHybridStrategyParameters hybridStrategyParameters)
+		public HybridStrategyParameters CreateHybridStrategyParameters(
+			IHybridStrategyParameters hybridStrategyParameters,
+			IEngineeringInputDataProvider inputData)
 		{
 			var retVal = new HybridStrategyParameters() {
 				EquivalenceFactor = hybridStrategyParameters.EquivalenceFactor,
@@ -673,7 +675,8 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 				TargetSoC = hybridStrategyParameters.TargetSoC,
 				MinICEOnTime = hybridStrategyParameters.MinimumICEOnTime,
 				AuxReserveTime = hybridStrategyParameters.AuxBufferTime,
-				AuxReserveChargeTime = hybridStrategyParameters.AuxBufferChargeTime
+				AuxReserveChargeTime = hybridStrategyParameters.AuxBufferChargeTime,
+				MaxDrivetrainPower = inputData.JobInputData.Vehicle.MaxDrivetrainPower,
 			};
 			return retVal;
 		}

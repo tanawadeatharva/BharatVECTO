@@ -84,6 +84,7 @@ Public Class Vehicle
     Public ElectricMotorCount As Integer
     Public ElectricMotorRatio As Double
     Public ElectricMotorMechEff As Double
+    Public MaxPower As Double
 
     Public Sub New()
 		_path = ""
@@ -756,8 +757,13 @@ Public Class Vehicle
 		End Get
 	End Property
 
-    Public Property InitialSOC As Double Implements IVehicleEngineeringInputData.InitialSOC
-    Public Property VehicleType As VectoSimulationJobType Implements IVehicleEngineeringInputData.VehicleType
+	Public Property InitialSOC As Double Implements IVehicleEngineeringInputData.InitialSOC
+	Public ReadOnly Property MaxDrivetrainPower As Watt Implements IVehicleEngineeringInputData.MaxDrivetrainPower
+		Get
+			Return (MaxPower * 1000).SI(Of Watt)
+		End Get
+	End Property
+	Public Property VehicleType As VectoSimulationJobType Implements IVehicleEngineeringInputData.VehicleType
 
 
     Public ReadOnly Property ZeroEmissionVehicle As Boolean Implements IVehicleDeclarationInputData.ZeroEmissionVehicle

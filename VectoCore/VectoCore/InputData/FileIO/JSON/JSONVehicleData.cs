@@ -93,6 +93,18 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			}
 		}
 
+		public override Watt MaxDrivetrainPower
+		{
+			get
+			{
+				if (Body[JsonKeys.HEV_Vehicle_MaxDrivetrainPower] != null) {
+					return Body.GetEx<double>(JsonKeys.HEV_Vehicle_MaxDrivetrainPower).SI(Unit.SI.Kilo.Watt).Cast<Watt>();
+				}
+
+				return null;
+			}
+		}
+
 		protected virtual JSONElectricMotors ReadMotors()
 		{
 			var retVal = new List<ElectricMachineEntry<IElectricMotorEngineeringInputData>>();
@@ -337,6 +349,11 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
         public virtual double InitialSOC
 		{
 			get { return double.NaN; }
+		}
+
+		public virtual Watt MaxDrivetrainPower
+		{
+			get { return null; }
 		}
 
 		public virtual VectoSimulationJobType VehicleType
