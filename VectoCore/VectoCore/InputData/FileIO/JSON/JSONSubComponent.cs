@@ -634,7 +634,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
         public virtual ACCompressorType CompressorTypeDriver { get { return ACCompressorType.Unknown; } }
         public virtual ACCompressorType CompressorTypePassenger { get { return ACCompressorType.Unknown; } }
         public virtual Watt AuxHeaterPower { get { return null; } }
-        public virtual bool DoubleGlasing { get { return false; } }
+        public virtual bool DoubleGlazing { get { return false; } }
         public virtual bool HeatPump { get { return false; } }
         public virtual bool AdjustableCoolantThermostat { get { return Body["Aux"]?["HVAC"]?.GetEx<bool>("AdjustableCoolantThermostat") ?? false; } }
         public virtual bool AdjustableAuxiliaryHeater { get { return false; } }

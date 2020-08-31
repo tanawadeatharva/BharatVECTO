@@ -163,7 +163,7 @@ namespace TUGraz.VectoCore.Tests.Utils
 		{
 			var dao = new EngineeringDataAdapter();
 			var vehicleInput = JSONInputDataFactory.ReadJsonVehicle(vehicleDataFile, null);
-			var airdragData = vehicleInput as IAirdragEngineeringInputData;
+			var airdragData = vehicleInput.Components.AirdragInputData as IAirdragEngineeringInputData;
 			return dao.CreateAirdragData(airdragData, vehicleInput);
 		}
 

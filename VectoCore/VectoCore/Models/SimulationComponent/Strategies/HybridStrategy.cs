@@ -39,6 +39,19 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 			public Second GearshiftTriggerTstmp { get; set; }
 		}
 
+		public class DryRunSolutionState
+		{
+			public DryRunSolutionState(DrivingAction drivingAction, HybridResultEntry setting)
+			{
+				DrivingAction = drivingAction;
+				Solution = setting;
+			}
+
+			public DrivingAction DrivingAction { get; set; }
+
+			public HybridResultEntry Solution { get; set; }
+		}
+
 		private VectoRunData ModelData;
 		private IDataBus DataBus;
 
@@ -62,6 +75,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 
 		protected DebugData DebugData = new DebugData();
 		private WattSecond BatteryDischargeEnergyThreshold;
+
+		protected DryRunSolutionState DryRunSolution;
 
 		public HybridStrategy(VectoRunData runData, IVehicleContainer vehicleContainer)
 		{
@@ -133,6 +148,15 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 		public virtual HybridStrategyResponse Request(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity, bool dryRun)
 		{
 			var currentGear = PreviousState.GearboxEngaged ? DataBus.GearboxInfo.Gear : Controller.ShiftStrategy.NextGear.Gear;
+
+			if (DryRunSolution != null && DryRunSolution.DrivingAction == DataBus.DriverInfo.DrivingAction) {
+				return CreateResponse(DryRunSolution.Solution, currentGear);
+			}
+
+			if (DryRunSolution != null && DryRunSolution.DrivingAction != DataBus.DriverInfo.DrivingAction) {
+				DryRunSolution = null;
+			}
+
 			var eval = new List<HybridResultEntry>();
 
 			switch (DataBus.DriverInfo.DrivingAction) {
@@ -179,9 +203,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 				if (!DataBus.EngineCtl.CombustionEngineOn && !best.ICEOff && !retVal.ShiftRequired) {
 					CurrentState.ICEStartTStmp = absTime;
 				}
+				DryRunSolution = new DryRunSolutionState(DataBus.DriverInfo.DrivingAction, best);
 			}
 			
 			if (retVal.ShiftRequired) {
+				DryRunSolution = null;
 				CurrentState.GearshiftTriggerTstmp = absTime;
 			}
 
@@ -1207,6 +1233,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 			CurrentState.ICEStartTStmp = PreviousState.ICEStartTStmp;
 			CurrentState.GearshiftTriggerTstmp = PreviousState.GearshiftTriggerTstmp;
 			DebugData = new DebugData();
+			DryRunSolution = null;
 		}
 
 		public void WriteModalResults(Second time, Second simulationInterval, IModalDataContainer container)

@@ -258,6 +258,11 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			get { return _axleWheelsDecl; }
 		}
 
+		public IBusAuxiliariesDeclarationData BusAuxiliaries
+		{
+			get { return null; }
+		}
+
 		public IElectricStorageEngineeringInputData ElectricStorage
 		{
 			get

@@ -29,6 +29,7 @@
 *   Martin Rexeis, rexeis@ivt.tugraz.at, IVT, Graz University of Technology
 */
 
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -49,6 +50,7 @@ using TUGraz.VectoCore.OutputData.FileIO;
 using TUGraz.VectoCore.Tests.Utils;
 using Wheels = TUGraz.VectoCore.Models.SimulationComponent.Impl.Wheels;
 using NUnit.Framework;
+using TUGraz.VectoCommon.InputData;
 
 namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 {
@@ -226,6 +228,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 				RunData = new VectoRunData() {
 					VehicleData = vehicleData,
 					EngineData = engineData,
+					ElectricMachinesData = new List<Tuple<PowertrainPosition, ElectricMotorData>>()
 				}
 			};
 

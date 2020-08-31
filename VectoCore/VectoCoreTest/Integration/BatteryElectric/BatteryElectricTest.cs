@@ -377,7 +377,7 @@ namespace TUGraz.VectoCore.Tests.Integration.BatteryElectric
 				//GearboxData = gearboxData,
 				VehicleData = vehicleData,
 				AirdragData = airdragData,
-				JobName = modFileName,
+				JobName = Path.GetFileNameWithoutExtension(modFileName),
 				Cycle = cycleData,
 				Retarder = new RetarderData() { Type = RetarderType.None },
 				Aux = new List<VectoRunData.AuxData>(),
@@ -640,7 +640,8 @@ namespace TUGraz.VectoCore.Tests.Integration.BatteryElectric
 
 		public PerSecond EngineSpeed
 		{
-			get { return null; }
+			get;
+			set;
 		}
 		public NewtonMeter EngineTorque
 		{

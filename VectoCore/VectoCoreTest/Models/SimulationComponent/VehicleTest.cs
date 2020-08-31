@@ -33,6 +33,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using NUnit.Framework;
+using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.InputData.Reader.ComponentData;
@@ -107,6 +108,9 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			double expected)
 		{
 			var container = new VehicleContainer(ExecutionMode.Declaration);
+			container.RunData = new VectoRunData() {
+				ElectricMachinesData = new List<Tuple<PowertrainPosition, ElectricMotorData>>()
+			};
 
 			var vehicleData = MockSimulationDataFactory.CreateVehicleDataFromFile(VehicleDataFileTruck);
 			var airdragData = MockSimulationDataFactory.CreateAirdragDataFromFile(VehicleDataFileTruck);
