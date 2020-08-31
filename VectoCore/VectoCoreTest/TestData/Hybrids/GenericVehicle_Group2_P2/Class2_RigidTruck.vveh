@@ -9,7 +9,7 @@
     "SavedInDeclMode": false,
     "VehCat": "RigidTruck",
     "LegislativeClass": "Unknown",
-	"PowertrainConfiguration": "ParallelHybrid",
+    "PowertrainConfiguration": "ParallelHybrid",
     "CurbWeight": 4670.0,
     "CurbWeightExtra": 1900.0,
     "Loading": 3020.0,
@@ -32,19 +32,20 @@
       "LossMap": "",
       "Cycle": ""
     },
-	"ElectricMotors": [
-        {
-          "Count": 1,
-          "Ratio": 1,
-          "MechanicalEfficiency":  1, 
-          "Position": "P2",
-          "MotorFile": "GenericEMotor240kW.vem"
-        }
+    "ElectricMotors": [
+      {
+        "Count": 1,
+        "Ratio": 1,
+        "MechanicalEfficiency": 1,
+        "Position": "P2",
+        "MotorFile": "GenericEMotor240kW.vem"
+      }
     ],
-    "Battery": { 
-        "NumPacks": 2,
-        "BatteryFile": "GenericBattery.vbat"
+    "Battery": {
+      "NumPacks": 2,
+      "BatteryFile": "GenericBattery.vbat"
     },
+    "MaxDrivetrainPower": 180.0,
     "InitialSoC": 80,
     "TorqueLimits": {},
     "IdlingSpeed": 0.0,
