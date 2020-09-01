@@ -146,6 +146,7 @@ namespace TUGraz.VectoCore.Tests.Utils {
 		}
 
 		public double InitialSOC { get; }
+		public Watt MaxDrivetrainPower { get; }
 		public VectoSimulationJobType VehicleType { get; }
 
 		public bool ZeroEmissionVehicle { get; }

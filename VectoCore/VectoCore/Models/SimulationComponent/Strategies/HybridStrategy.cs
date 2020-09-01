@@ -132,6 +132,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 
 		public virtual HybridStrategyResponse Request(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity, bool dryRun)
 		{
+			if ((outTorque * outAngularVelocity).IsGreater(StrategyParameters.MaxDrivetrainPower)) {
+				// todo: do something...
+				throw new NotImplementedException();
+			}
+
 			var currentGear = PreviousState.GearboxEngaged ? DataBus.GearboxInfo.Gear : Controller.ShiftStrategy.NextGear.Gear;
 			var eval = new List<HybridResultEntry>();
 
