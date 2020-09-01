@@ -283,14 +283,14 @@ namespace TUGraz.VectoCore.Tests.Integration.BatteryElectric
 		}
 
 		[
-			TestCase("LongHaul", 2000, 0.8, 0, TestName = "B3 Hybrid DriveCycle LongHaul, SoC: 0.8 Payload: 2t P_auxEl: 0kW"),
-			TestCase("RegionalDelivery", 2000, 0.8, 0, TestName = "B3 Hybrid DriveCycle RegionalDelivery, SoC: 0.8 Payload: 2t P_auxEl: 0kW"),
-			TestCase("UrbanDelivery", 2000, 0.8, 0, TestName = "B3 Hybrid DriveCycle UrbanDelivery, SoC: 0.8 Payload: 2t P_auxEl: 0kW"),
-			TestCase("Construction", 2000, 0.8, 0, TestName = "B3 Hybrid DriveCycle Construction, SoC: 0.8 Payload: 2t P_auxEl: 0kW"),
-			TestCase("Urban", 2000, 0.8, 0, TestName = "B3 Hybrid DriveCycle Urban, SoC: 0.8 Payload: 2t P_auxEl: 0kW"),
-			TestCase("Suburban", 2000, 0.8, 0, TestName = "B3 Hybrid DriveCycle SubUrban, SoC: 0.8 Payload: 2t P_auxEl: 0kW"),
-			TestCase("Interurban", 2000, 0.8, 0, TestName = "B3 Hybrid DriveCycle InterUrban, SoC: 0.8 Payload: 2t P_auxEl: 0kW"),
-			TestCase("Coach", 2000, 0.8, 0, TestName = "B3 Hybrid DriveCycle Coach, SoC: 0.8 Payload: 2t P_auxEl: 0kW"),
+			TestCase("LongHaul", 2000, 0.8, 0, TestName = "B3 BEV DriveCycle LongHaul, SoC: 0.8 Payload: 2t P_auxEl: 0kW"),
+			TestCase("RegionalDelivery", 2000, 0.8, 0, TestName = "B3 BEV DriveCycle RegionalDelivery, SoC: 0.8 Payload: 2t P_auxEl: 0kW"),
+			TestCase("UrbanDelivery", 2000, 0.8, 0, TestName = "B3 BEV DriveCycle UrbanDelivery, SoC: 0.8 Payload: 2t P_auxEl: 0kW"),
+			TestCase("Construction", 2000, 0.8, 0, TestName = "B3 BEV DriveCycle Construction, SoC: 0.8 Payload: 2t P_auxEl: 0kW"),
+			TestCase("Urban", 2000, 0.8, 0, TestName = "B3 BEV DriveCycle Urban, SoC: 0.8 Payload: 2t P_auxEl: 0kW"),
+			TestCase("Suburban", 2000, 0.8, 0, TestName = "B3 BEV DriveCycle SubUrban, SoC: 0.8 Payload: 2t P_auxEl: 0kW"),
+			TestCase("Interurban", 2000, 0.8, 0, TestName = "B3 BEV DriveCycle InterUrban, SoC: 0.8 Payload: 2t P_auxEl: 0kW"),
+			TestCase("Coach", 2000, 0.8, 0, TestName = "B3 BEV DriveCycle Coach, SoC: 0.8 Payload: 2t P_auxEl: 0kW"),
 		]
 		public void B3BEVDriveCycle(string declarationMission, double payload, double initialSoC, double pAuxEl)
 		{
