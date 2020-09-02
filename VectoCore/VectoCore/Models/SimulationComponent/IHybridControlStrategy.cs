@@ -8,10 +8,18 @@ namespace TUGraz.VectoCore.Models.SimulationComponent
 {
 	public interface IHybridControlStrategy
 	{
-		HybridStrategyResponse Request(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity, bool dryRun);
-		HybridStrategyResponse Initialize(NewtonMeter outTorque, PerSecond outAngularVelocity);
+		IHybridStrategyResponse Initialize(NewtonMeter outTorque, PerSecond outAngularVelocity);
+
+		IHybridStrategyResponse Request(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity, bool dryRun);
+
+		IResponse AmendResponse(IResponse response, Second absTime, Second dt, NewtonMeter outTorque,
+			PerSecond outAngularVelocity, bool dryRun);
+
+		
 		void CommitSimulationStep(Second time, Second simulationInterval);
+		
 		IHybridController Controller { set; }
+		
 		void WriteModalResults(Second time, Second simulationInterval, IModalDataContainer container);
 	}
 }

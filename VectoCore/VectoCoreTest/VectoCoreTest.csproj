@@ -491,6 +491,9 @@
     <None Include="TestData\Hybrids\GenericVehicle_Group5_P2\P2 Group 5.vecto">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Include="TestData\Hybrids\GenericVehicle_Group5_P2\P2 Group 5_325kW.vecto">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="TestData\Hybrids\GenericVehicle_Group5_P2\Transmission\AMT_12.vgbx">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
@@ -537,6 +540,9 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="TestData\Hybrids\GenericVehicle_Group5_P2\Vehicle\Group5_HEV.vveh">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Hybrids\GenericVehicle_Group5_P2\Vehicle\Group5_HEV_325kW.vveh">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="TestData\Hybrids\GenericVehicle_Group5_P2\Vehicle\Truck.vacc">

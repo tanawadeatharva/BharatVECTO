@@ -96,7 +96,21 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			IResponse retVal;
 			do {
 				retry = false;
-				var strategySettings = Strategy.Request(absTime, dt, outTorque, outAngularVelocity, dryRun);
+				var strategyResponse = Strategy.Request(absTime, dt, outTorque, outAngularVelocity, dryRun);
+				if (strategyResponse is HybridStrategyLimitedResponse) {
+					var ovl = strategyResponse as HybridStrategyLimitedResponse;
+					if (dryRun) {
+						return new ResponseDryRun(this) {
+							DeltaDragLoad = ovl.Delta,
+							DeltaFullLoad = ovl.Delta
+						};
+					}
+					return new ResponseOverload(this) {
+						Delta = ovl.Delta
+					};
+				}
+
+				var strategySettings = strategyResponse as HybridStrategyResponse;
 				ApplyStrategySettings(strategySettings);
 				if (!dryRun) {
 					CurrentState.SetState(outTorque, outAngularVelocity, outTorque, outAngularVelocity);
@@ -117,13 +131,16 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				}
 			} while (retry);
 
-			return retVal;
+			var modifiedResponse = Strategy.AmendResponse(retVal, absTime, dt, outTorque, outAngularVelocity, dryRun);
+
+			return modifiedResponse;
 		}
 
 		public IResponse Initialize(NewtonMeter outTorque, PerSecond outAngularVelocity)
 		{
 			PreviousState.SetState(outTorque, outAngularVelocity, outTorque, outAngularVelocity);
-			PreviousState.StrategyResponse = Strategy.Initialize(outTorque, outAngularVelocity);
+			var strategyResponse = Strategy.Initialize(outTorque, outAngularVelocity);
+			PreviousState.StrategyResponse = strategyResponse as HybridStrategyResponse;
 			_electricMotorTorque = PreviousState.StrategyResponse.MechanicalAssistPower;
 			return NextComponent.Initialize(outTorque, outAngularVelocity);
 		}
