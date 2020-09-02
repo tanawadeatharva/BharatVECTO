@@ -82,7 +82,7 @@
     "TorqueLimits": {},
     "InitialSoC": 50.0,
     "PowertrainConfiguration": "ParallelHybrid",
-    "MaxDrivetrainPower": 180.0,
+    "MaxDrivetrainPower": 1800000.0,
     "ElectricMotors": [
       {
         "Count": 1,

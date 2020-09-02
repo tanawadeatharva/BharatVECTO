@@ -284,6 +284,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 
 		protected virtual bool AllowICEOff(Second absTime)
 		{
+			if (!ModelData.VehicleData.ADAS.EngineStopStart) {
+				return false;
+			}
 			return PreviousState.ICEStartTStmp == null ||
 					(PreviousState.ICEStartTStmp + StrategyParameters.MinICEOnTime).IsSmaller(absTime);
 		}
