@@ -758,7 +758,7 @@ namespace TUGraz.VectoCore.OutputData
 				var cellVoltage = runData.BatteryData.SOCMap.Lookup(runData.BatteryData.InitialSoC);
 				row[Fields.BatteryDeltaSoC] =
 					(modData.BatteryEnergyEnd() - 
-					(runData.BatteryData.InitialSoC * runData.BatteryData.Capacity * cellVoltage * 100).Cast<WattSecond>()).ConvertToKiloWattHour();
+					(runData.BatteryData.InitialSoC * runData.BatteryData.Capacity * cellVoltage).Cast<WattSecond>()).ConvertToKiloWattHour();
 
 				row[Fields.E_BAT_LOSS] = modData.BatteryLoss().ConvertToKiloWattHour();
 				row[Fields.E_Batt_T_chg] = modData.WorkBatteryChargeTerminal().ConvertToKiloWattHour();
