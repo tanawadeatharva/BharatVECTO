@@ -1207,6 +1207,9 @@ namespace TUGraz.VectoCore.Tests.Integration.Hybrid
 				DynamicTyreRadius = 0.465.SI<Meter>(),
 				AxleData = axles,
 				SavedInDeclarationMode = false,
+				ADAS = new VehicleData.ADASData() {
+					EngineStopStart = true
+				}
 			};
 		}
 
