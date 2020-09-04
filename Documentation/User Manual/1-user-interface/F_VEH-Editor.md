@@ -147,6 +147,7 @@ The *Efficiency EM to Drivetrain* can be used to consider the efficiency of a tr
 
 For the electric energy storage multiple battery packs can be configured and the initial state of charge can be defined.
 
+The maximum power of a hybrid drivetrain can be limited to a certain power. This limit has to be at least the maximum power of the combustion engine.
 
 ###Torque Limits
 
