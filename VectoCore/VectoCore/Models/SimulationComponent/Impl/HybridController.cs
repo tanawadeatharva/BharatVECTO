@@ -102,7 +102,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					if (dryRun) {
 						return new ResponseDryRun(this) {
 							DeltaDragLoad = ovl.Delta,
-							DeltaFullLoad = ovl.Delta
+							DeltaFullLoad = ovl.Delta,
+							DeltaEngineSpeed = ovl.DeltaEngineSpeed
 						};
 					}
 					return new ResponseOverload(this) {

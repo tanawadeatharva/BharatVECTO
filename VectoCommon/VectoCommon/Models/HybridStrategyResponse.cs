@@ -12,6 +12,7 @@ namespace TUGraz.VectoCommon.Models {
 	public class HybridStrategyLimitedResponse : IHybridStrategyResponse
 	{
 		public Watt Delta { get; set; }
+		public PerSecond DeltaEngineSpeed { get; set; }
 	}
 
 	public class HybridStrategyResponse : IHybridStrategyResponse

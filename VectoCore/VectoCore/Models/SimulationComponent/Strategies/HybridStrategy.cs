@@ -239,7 +239,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 				RequestDryRun(absTime, dt, outTorque, outAngularVelocity, currentGear, maxEmDriveSetting);
 			if (maxEmDriveResponse.DeltaFullLoad.IsSmallerOrEqual(0)) {
 				return new HybridStrategyLimitedResponse() {
-					Delta = outTorque * outAngularVelocity - StrategyParameters.MaxDrivetrainPower
+					Delta = outTorque * outAngularVelocity - StrategyParameters.MaxDrivetrainPower,
+					DeltaEngineSpeed = maxEmDriveResponse.DeltaEngineSpeed
 				};
 			}
 
@@ -260,7 +261,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 				delta = (outTorque  - maxTorque) * outAngularVelocity;
 			}
 			return new HybridStrategyLimitedResponse() {
-				Delta = delta
+				Delta = delta,
+				DeltaEngineSpeed = maxEmDriveResponse.DeltaEngineSpeed
 			};
 		}
 
