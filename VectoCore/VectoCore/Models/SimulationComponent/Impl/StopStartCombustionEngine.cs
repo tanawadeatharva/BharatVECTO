@@ -116,7 +116,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl {
 
 			var auxDemand = EngineAux.PowerDemandEngineOn(time, simulationInterval, ModelData.IdleSpeed) / ModelData.IdleSpeed;
 
-			WriteWHRPower(container, ModelData.IdleSpeed, auxDemand);
+			WriteWHRPowerEngineOff(container, ModelData.IdleSpeed, auxDemand);
 
 			foreach (var fuel in ModelData.Fuels) {
 				var fc = 0.SI<KilogramPerSecond>();
@@ -146,7 +146,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl {
 			}
 		}
 
-		protected override void WriteWHRPower(IModalDataContainer container, PerSecond engineSpeed, NewtonMeter engineTorque)
+		protected virtual void WriteWHRPowerEngineOff(IModalDataContainer container, PerSecond engineSpeed, NewtonMeter engineTorque)
 		{
 			var pWHRelMap = 0.SI<Watt>();
 			var pWHRelCorr = 0.SI<Watt>();
