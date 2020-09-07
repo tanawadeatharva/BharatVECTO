@@ -139,7 +139,7 @@ Public Class VehicleForm
 
         cbEmPos.ValueMember = "Value"
         cbEmPos.DisplayMember = "Label"
-        cbEmPos.DataSource = [Enum].GetValues(GetType(PowertrainPosition)).Cast(Of PowertrainPosition).Select(Function(x) New With {Key .Value = x, .Label = x.GetName()}).ToList()
+        cbEmPos.DataSource = [Enum].GetValues(GetType(PowertrainPosition)).Cast(Of PowertrainPosition).Select(Function(x) New With {Key .Value = x, .Label = x.GetLabel()}).ToList()
 
         NewVehicle()
 	End Sub
@@ -500,7 +500,7 @@ Public Class VehicleForm
 				tbMaxDrivetrainPwr.Enabled = false
             Case VectoSimulationJobType.ParallelHybridVehicle
                 lblTitle.Text = "Parallel Hybrid Vehicle"
-                cbEmPos.DataSource = [Enum].GetValues(GetType(PowertrainPosition)).Cast(Of PowertrainPosition).Where(Function(x) x.IsParallelHybrid()).Select(Function(x) New With {Key .Value = x, .Label = x.GetName()}).ToList()
+                cbEmPos.DataSource = [Enum].GetValues(GetType(PowertrainPosition)).Cast(Of PowertrainPosition).Where(Function(x) x.IsParallelHybrid()).Select(Function(x) New With {Key .Value = x, .Label = x.GetLabel()}).ToList()
                 'cbEngineStopStart.Checked = False
                 'cbEngineStopStart.Enabled = False
                 'cbEcoRoll.DataSource = [Enum].GetValues(GetType(EcoRollType)).Cast(Of EcoRollType).Select(Function(ecoRoll) New With {Key .Value = ecoRoll, .Label = ecoRoll.GetName()}).ToList()
@@ -509,7 +509,7 @@ Public Class VehicleForm
                 lblTitle.Text = "Battery Electric Vehicle"
                 tpPowertrain.Enabled = False
                 tpTorqueLimits.Enabled = False
-                cbEmPos.DataSource = [Enum].GetValues(GetType(PowertrainPosition)).Cast(Of PowertrainPosition).Where(Function(x) x.IsBatteryElectric()).Select(Function(x) New With {Key .Value = x, .Label = x.GetName()}).ToList()
+                cbEmPos.DataSource = [Enum].GetValues(GetType(PowertrainPosition)).Cast(Of PowertrainPosition).Where(Function(x) x.IsBatteryElectric()).Select(Function(x) New With {Key .Value = x, .Label = x.GetLabel()}).ToList()
                 cbEngineStopStart.Checked = False
                 cbEngineStopStart.Enabled = False
                 cbEcoRoll.DataSource = New EcoRollType() {EcoRollType.None}.Select(Function(ecoRoll) New With {Key .Value = ecoRoll, .Label = ecoRoll.GetName()}).ToList()
