@@ -1,7 +1,7 @@
 ##Job Editor
 
 
-![](pics/JobForm_General.png)
+![](pics/VECTO_JobEditor_ParHyb_General.png)
 
 
 ###Description
