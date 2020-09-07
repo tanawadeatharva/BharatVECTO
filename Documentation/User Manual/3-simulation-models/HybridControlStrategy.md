@@ -90,23 +90,29 @@ $C = \sum_{i \in  \textrm{Fuels}}{FC_{i} \cdot NCV_{i} \cdot dt} + f_{\textrm{eq
 * $P_\textrm{Bat}$ is the power drawn from the battery. Positive values denote the battery is discharged
 * $f_\textrm{equiv}$ is the equivalence factor to compare energy from the ICE and energy from the electric system. Typically in the range of 2.5
 * $f_\textrm{SoC}$ is a cost factor that depends on the battery's state of charge.
-* $P_\textrm{Pen1}$ is a penalty for starting the combustion engine. It is set to 0.1 times the energy required to ramp up the combustion engine. The ramp-up energy is calculated the same way as for the engine stop/start correction - see [Advanced Driver Assistant Systems: Engine Stop/Start](#advanced-driver-assistant-systems-engine-stopstart).
+* $C_\textrm{Pen1}$ is a penalty for starting the combustion engine. It is set to 0.1 times the energy required to ramp up the combustion engine. The ramp-up energy is calculated the same way as for the engine stop/start correction - see [Advanced Driver Assistant Systems: Engine Stop/Start](#advanced-driver-assistant-systems-engine-stopstart).
 
     If the combustion engine is currently off and is off in the considered configuration $P_\textrm{Pen1}$ is set to 0.
 
     If the battery's SoC is below the lower SoC threshold $\textrm{SoC}_{low}$ then $P_\textrm{Pen1}$ is set to 0.
-* $P_\textrm{Pen2} is a penalty considering idling costs of the combustion engine, currently set to 0.
+* $C_\textrm{Pen2}$ is a penalty considering idling costs of the combustion engine, currently set to 0.
 
 $f_\textrm{SoC} = 1 - \left(\frac{\textrm{SoC} - \textrm{TargetSoC}}{0.5 \cdot (\textrm{SoC}_\textrm{max} - \textrm{SoC}_{min}}  \right)^5 + C_\textrm{SoC}$
 
 $C_\textrm{SoC} = \left\{
 	\begin{array}{ll} 
-		\frac{p_\textrm{minSoC}}{\textrm{SoC}_\textrm{min} - \textrm{SoC}_{low}} \cdot \textrm{SoC} + p_\textrm{minSoC} - \frac{p_\textrm{minSoC}}{\textrm{SoC}_\textrm{min} - \textrm{SoC}_{low}} \cdot \textrm{SoC}_{min} : \textrm{SoC} < \textrm{SoC}_{low}\\
+		\frac{C_\textrm{minSoC}}{\textrm{SoC}_\textrm{min} - \textrm{SoC}_{low}} \cdot \textrm{SoC} + p_\textrm{minSoC} - \frac{C_\textrm{minSoC}}{\textrm{SoC}_\textrm{min} - \textrm{SoC}_{low}} \cdot \textrm{SoC}_{min} : \textrm{SoC} < \textrm{SoC}_{low}\\
 		0 : \textrm{otherwise}
 	\end{array}
 \right.$
 
 $\textrm{SoC}_\textrm{low} = \textrm{SoC}_{min} + 0.1 \cdot \left(\textrm{SoC}_{max} - \textrm{SoC}_{min}\right)$
+
+$C_\textrm{minSoC} = 10$
+
+The following graph depicts the shape of $f_\textrm{SoC}$ (red line) and both summands separately (blue: polynomial function, orange: C_\textrm{SoC}) for a minimum SoC of 20%, maximum SoC of 80% and a target SoC of 50%;
+
+![](pics/graph_SoC-Factor.png)
 
 ####Flags for ignoring a evaluated hybrid configuration
 
