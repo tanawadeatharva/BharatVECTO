@@ -105,7 +105,7 @@ namespace TUGraz.VectoCore.Tests.Integration.BatteryElectric
 
 			const bool largeMotor = true;
 
-			var modFilename = string.Format("SimpleBatteryElectric-B4_constant_{0}-{1}_{2}_{3}.vmod", vmax, initialSoC, slope, pAuxEl);
+			var modFilename = string.Format("SimpleBatteryElectric-B4_constant_{0}-{1}_{2}_{3}", vmax, initialSoC, slope, pAuxEl);
 			const PowertrainPosition pos = PowertrainPosition.BatteryElectricB4;
 			var job = CreateEngineeringRun(
 				cycle, modFilename, initialSoC, pos, 2, 22.6, largeMotor: true, pAuxEl: pAuxEl);
@@ -123,7 +123,7 @@ namespace TUGraz.VectoCore.Tests.Integration.BatteryElectric
 			Assert.IsTrue(modData.Rows.Count > 0);
 
 			var graphWriter = GetGraphWriter(new[] { ModalResultField.P_electricMotor_mech_B4 });
-			graphWriter.Write(modFilename);
+			graphWriter.Write(modFilename + ".vmod");
 		}
 
 
@@ -141,7 +141,7 @@ namespace TUGraz.VectoCore.Tests.Integration.BatteryElectric
 
 			const bool largeMotor = true;
 
-			var modFilename = string.Format("SimpleBatteryElectric-B4_acc_{0}-{1}_{2}.vmod", vmax, initialSoC, slope);
+			var modFilename = string.Format("SimpleBatteryElectric-B4_acc_{0}-{1}_{2}", vmax, initialSoC, slope);
 			const PowertrainPosition pos = PowertrainPosition.BatteryElectricB4;
 			var job = CreateEngineeringRun(
 				cycle, modFilename, initialSoC, pos, 2, 22.6, largeMotor: true);
@@ -154,7 +154,7 @@ namespace TUGraz.VectoCore.Tests.Integration.BatteryElectric
 			Assert.IsTrue(modData.Rows.Count > 0);
 
 			var graphWriter = GetGraphWriter(new[] { ModalResultField.P_electricMotor_mech_B4 });
-			graphWriter.Write(modFilename);
+			graphWriter.Write(modFilename + ".vmod");
 		}
 
 		[
