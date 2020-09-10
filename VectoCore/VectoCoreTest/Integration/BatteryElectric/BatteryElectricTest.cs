@@ -377,7 +377,7 @@ namespace TUGraz.VectoCore.Tests.Integration.BatteryElectric
 				//GearboxData = gearboxData,
 				VehicleData = vehicleData,
 				AirdragData = airdragData,
-				JobName = Path.GetFileNameWithoutExtension(modFileName),
+				JobName = modFileName,
 				Cycle = cycleData,
 				Retarder = new RetarderData() { Type = RetarderType.None },
 				Aux = new List<VectoRunData.AuxData>(),
