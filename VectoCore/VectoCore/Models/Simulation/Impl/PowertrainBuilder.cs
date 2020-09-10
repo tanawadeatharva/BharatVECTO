@@ -149,6 +149,14 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			aux.AddCycle(Constants.Auxiliaries.IDs.Fan, cycleEntry => engineFan.PowerDemand(cycleEntry.FanSpeed));
 			container.ModalData.AddAuxiliary(Constants.Auxiliaries.IDs.Fan);
 
+            if (data.PTO != null) {
+                container.ModalData.AddAuxiliary(Constants.Auxiliaries.IDs.PTOTransmission,
+                    Constants.Auxiliaries.PowerPrefix + Constants.Auxiliaries.IDs.PTOTransmission);
+
+                container.ModalData.AddAuxiliary(Constants.Auxiliaries.IDs.PTOConsumer,
+                    Constants.Auxiliaries.PowerPrefix + Constants.Auxiliaries.IDs.PTOConsumer);
+            }
+
 			engine.Connect(aux.Port());
 
 			var idleController = new CombustionEngine.CombustionEngineNoDubleclutchIdleController(engine, container);
