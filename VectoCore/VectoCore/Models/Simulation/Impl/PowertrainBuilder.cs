@@ -150,14 +150,18 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			container.ModalData.AddAuxiliary(Constants.Auxiliaries.IDs.Fan);
 
             if (data.PTO != null) {
+                aux.AddConstant(Constants.Auxiliaries.IDs.PTOTransmission,
+                    DeclarationData.PTOTransmission.Lookup(data.PTO.TransmissionType).PowerDemand);
                 container.ModalData.AddAuxiliary(Constants.Auxiliaries.IDs.PTOTransmission,
                     Constants.Auxiliaries.PowerPrefix + Constants.Auxiliaries.IDs.PTOTransmission);
 
+                aux.Add(Constants.Auxiliaries.IDs.PTOConsumer,
+                    (n, absTime, dt, dryRun) => container.PTOActive ? null : data.PTO.LossMap.GetTorqueLoss(n) * n);
                 container.ModalData.AddAuxiliary(Constants.Auxiliaries.IDs.PTOConsumer,
                     Constants.Auxiliaries.PowerPrefix + Constants.Auxiliaries.IDs.PTOConsumer);
             }
 
-			engine.Connect(aux.Port());
+            engine.Connect(aux.Port());
 
 			var idleController = new CombustionEngine.CombustionEngineNoDubleclutchIdleController(engine, container);
 			//if (data.PTO != null && data.PTO.PTOCycle != null) {
@@ -356,7 +360,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			AddSwitchingAux(aux,container.ModalData,Constants.Auxiliaries.IDs.SteeringPump, auxData);
 			AddSwitchingAux(aux,container.ModalData,Constants.Auxiliaries.IDs.ElectricSystem, auxData);
 			AddSwitchingAux(aux, container.ModalData, Constants.Auxiliaries.IDs.PneumaticSystem, auxData);
-			
+
 			return aux;
 		}
 
