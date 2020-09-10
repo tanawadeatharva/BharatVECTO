@@ -49,6 +49,7 @@ using TUGraz.VectoCore.Tests.Utils;
 namespace TUGraz.VectoCore.Tests.Integration.EngineOnlyCycle
 {
 	[TestFixture]
+	[Parallelizable(ParallelScope.All)]
 	public class EngineOnlyCycleTest
 	{
 		private const string EngineFile = @"TestData\Components\24t Coach.veng";

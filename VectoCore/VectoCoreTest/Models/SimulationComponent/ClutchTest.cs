@@ -47,6 +47,7 @@ using TUGraz.VectoCore.Utils;
 namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 {
 	[TestFixture]
+	[Parallelizable(ParallelScope.All)]
 	public class ClutchTest
 	{
 		private const string CoachEngine = @"TestData\Components\24t Coach.veng";

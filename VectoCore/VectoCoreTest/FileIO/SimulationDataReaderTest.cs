@@ -45,6 +45,7 @@ using TUGraz.VectoCore.Tests.Utils;
 namespace TUGraz.VectoCore.Tests.FileIO
 {
 	[TestFixture]
+	[Parallelizable(ParallelScope.All)]
 	public class SimulationDataReaderTest
 	{
 		protected const string DeclarationJob = @"TestData\Jobs\12t Delivery Truck.vecto";

@@ -39,6 +39,7 @@ using TUGraz.VectoCore.OutputData;
 namespace TUGraz.VectoCore.Tests.Reports
 {
 	[TestFixture]
+	[Parallelizable(ParallelScope.All)]
 	public class GearshiftCountTest
 	{
 		[TestCase()]

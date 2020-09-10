@@ -57,6 +57,7 @@ using TUGraz.VectoCore.Tests.Models.Simulation;
 namespace TUGraz.VectoCore.Tests.Reports
 {
 	[TestFixture]
+	[Parallelizable(ParallelScope.All)]
 	public class ModDataTest
 	{
 

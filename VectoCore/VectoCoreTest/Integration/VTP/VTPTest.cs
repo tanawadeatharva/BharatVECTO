@@ -46,6 +46,7 @@ using TUGraz.VectoCore.OutputData.XML;
 namespace TUGraz.VectoCore.Tests.Integration.VTP
 {
 	[TestFixture]
+	[Parallelizable(ParallelScope.All)]
 	public class VTPTest
 	{
 		[OneTimeSetUp]

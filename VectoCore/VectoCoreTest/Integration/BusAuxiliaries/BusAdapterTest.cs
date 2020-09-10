@@ -40,6 +40,7 @@ using System.IO;
 namespace TUGraz.VectoCore.Tests.Integration.BusAuxiliaries
 {
 	[TestFixture]
+	[Parallelizable(ParallelScope.All)]
 	public class BusAdapterTest
 	{
 		[OneTimeSetUp]

@@ -57,6 +57,7 @@ using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter;
 namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 {
 	[TestFixture]
+	[Parallelizable(ParallelScope.All)]
 	public class CombustionEngineTest
 	{
 		protected double Tolerance = 1E-3;

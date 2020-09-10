@@ -39,6 +39,7 @@ using NUnit.Framework;
 namespace TUGraz.VectoCore.Tests.Dummy
 {
 	[TestFixture]
+	[Parallelizable(ParallelScope.All)]
 	public class EngineFLDTest
 	{
 		[OneTimeSetUp]

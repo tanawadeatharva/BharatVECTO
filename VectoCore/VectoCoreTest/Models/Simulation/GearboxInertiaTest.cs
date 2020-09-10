@@ -37,6 +37,7 @@ using TUGraz.VectoCore.Tests.Integration;
 namespace TUGraz.VectoCore.Tests.Models.Simulation
 {
 	[TestFixture]
+	[Parallelizable(ParallelScope.All)]
 	public class GearboxInertiaTest
 	{
 		[OneTimeSetUp]

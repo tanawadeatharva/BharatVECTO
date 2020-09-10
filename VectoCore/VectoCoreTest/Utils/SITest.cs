@@ -39,6 +39,7 @@ using NUnit.Framework;
 namespace TUGraz.VectoCore.Tests.Utils
 {
 	[TestFixture]
+	[Parallelizable(ParallelScope.All)]
 	public class SITest
 	{
 		[TestCase]

@@ -45,6 +45,7 @@ using TUGraz.VectoCore.OutputData.XML.Engineering.Interfaces;
 namespace TUGraz.VectoCore.Tests.XML
 {
 	[TestFixture]
+	//[Parallelizable(ParallelScope.All)]
 	public class XMLWritingTests
 	{
 		const string EngineOnlyJob = @"TestData\XML\EngineOnlyJob\EngineOnly.vecto";

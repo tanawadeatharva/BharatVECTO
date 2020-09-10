@@ -49,6 +49,7 @@ using TUGraz.VectoCore.Tests.Utils;
 namespace TUGraz.VectoCore.Tests.Models.Declaration
 {
 	[TestFixture]
+	[Parallelizable(ParallelScope.All)]
 	public class DeclarationDataTest
 	{
 		private const double Tolerance = 0.0001;
