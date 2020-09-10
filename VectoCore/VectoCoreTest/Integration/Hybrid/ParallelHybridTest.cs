@@ -83,11 +83,12 @@ namespace TUGraz.VectoCore.Tests.Integration.Hybrid
 		[
 			TestCase(30, 0.7, 0, TestName = "P2 Hybrid DriveOff 30km/h SoC: 0.7, level"),
 			TestCase(80, 0.7, 0, TestName = "P2 Hybrid DriveOff 80km/h SoC: 0.7, level"),
-		TestCase(30, 0.22, 0, TestName = "P2 Hybrid DriveOff 30km/h SoC: 0.22, level")
-			]
+			TestCase(80, 0.7, 5, TestName = "P2 Hybrid DriveOff 80km/h SoC: 0.7, UH 5"),
+		TestCase(30, 0.22, 0, TestName = "P2 Hybrid DriveOff 30km/h SoC: 0.22, level"),
+		]
 		public void P2HybridDriveOff(double vmax, double initialSoC, double slope)
 		{
-			var GraphWriter = GetGraphWriter(new[] { ModalResultField.P_electricMotor_mech_P2 });
+			var graphWriter = GetGraphWriter(new[] { ModalResultField.P_electricMotor_mech_P2 });
 			var cycleData = string.Format(
 				@"   0,   0, {1},    3
 				   700, {0}, {1},    0", vmax, slope);
@@ -112,7 +113,42 @@ namespace TUGraz.VectoCore.Tests.Integration.Hybrid
 			Assert.IsTrue(run.FinishedWithoutErrors);
 
 			Assert.IsTrue(modData.Rows.Count > 0);
-			GraphWriter.Write(modFilename);
+			graphWriter.Write(modFilename);
+		}
+
+
+		[
+			TestCase(80, 0.7, 5, 320, TestName = "P2 Hybrid DriveOff 80km/h SoC: 0.7, UH 5% MaxPWR: 320kW"),
+			
+		]
+		public void P2HybridDriveOffLimitPwr(double vmax, double initialSoC, double slope, double maxPwrkW)
+		{
+			var graphWriter = GetGraphWriter(new[] { ModalResultField.P_electricMotor_mech_P2 });
+			var cycleData = string.Format(
+				@"   0,   0, {1},    3
+				   700, {0}, {1},    0", vmax, slope);
+			var cycle = SimpleDrivingCycles.CreateCycleData(cycleData);
+
+			const bool largeMotor = true;
+
+			var modFilename = string.Format("SimpleParallelHybrid-P2_acc_{0}-{1}_{2}_maxPwr-{3}.vmod", vmax, initialSoC, slope, maxPwrkW);
+			const PowertrainPosition pos = PowertrainPosition.HybridP2;
+			var job = CreateEngineeringRun(
+				cycle, modFilename, initialSoC, pos, 1.0, largeMotor: true, maxDriveTrainPower: (maxPwrkW * 1000).SI<Watt>());
+			var run = job.Runs.First().Run;
+
+			var hybridController = (HybridController)((VehicleContainer)run.GetContainer()).HybridController;
+			Assert.NotNull(hybridController);
+
+			var modData = ((ModalDataContainer)((VehicleContainer)run.GetContainer()).ModData).Data;
+
+			//run.Run();
+			job.Execute();
+			job.WaitFinished();
+			Assert.IsTrue(run.FinishedWithoutErrors);
+
+			Assert.IsTrue(modData.Rows.Count > 0);
+			graphWriter.Write(modFilename);
 		}
 
 		[
@@ -164,6 +200,52 @@ namespace TUGraz.VectoCore.Tests.Integration.Hybrid
 			Assert.IsTrue(run.FinishedWithoutErrors);
 
 			Assert.IsTrue(modData.Rows.Count > 0);
+			var graphWriter = GetGraphWriter(new[] { ModalResultField.P_electricMotor_mech_P2 });
+			graphWriter.Write(modFilename);
+		}
+
+		[
+			TestCase("LongHaul", 2000, 0.5, 0, 320, TestName = "P2 Hybrid DriveCycle LongHaul, SoC: 0.5 Payload: 2t P_auxEl: 0kW maxPwr: 320kW"),
+			TestCase("RegionalDelivery", 2000, 0.5, 0, 320, TestName = "P2 Hybrid DriveCycle RegionalDelivery, SoC: 0.5 Payload: 2t P_auxEl: 0kW maxPwr: 320kW"),
+			TestCase("UrbanDelivery", 2000, 0.5, 0, 320, TestName = "P2 Hybrid DriveCycle UrbanDelivery, SoC: 0.5 Payload: 2t P_auxEl: 0kW maxPwr: 320kW"),
+			TestCase("Construction", 2000, 0.5, 0, 320, TestName = "P2 Hybrid DriveCycle Construction, SoC: 0.5 Payload: 2t P_auxEl: 0kW maxPwr: 320kW"),
+			TestCase("Urban", 2000, 0.5, 0, 320, TestName = "P2 Hybrid DriveCycle Urban, SoC: 0.5 Payload: 2t P_auxEl: 0kW maxPwr: 320kW"),
+			TestCase("Suburban", 2000, 0.5, 0, 320, TestName = "P2 Hybrid DriveCycle SubUrban, SoC: 0.5 Payload: 2t P_auxEl: 0kW maxPwr: 320kW"),
+			TestCase("Interurban", 2000, 0.5, 0, 320, TestName = "P2 Hybrid DriveCycle InterUrban, SoC: 0.5 Payload: 2t P_auxEl: 0kW maxPwr: 320kW"),
+			TestCase("Coach", 2000, 0.5, 0, 320, TestName = "P2 Hybrid DriveCycle Coach, SoC: 0.5 Payload: 2t P_auxEl: 0kW maxPwr: 320kW"),
+		]
+		public void P2HybriDriveCycleOffLimitPwr(string declarationMission, double payload, double initialSoC, double pAuxEl, double maxPwrkW)
+		{
+			var cycleData = RessourceHelper.ReadStream(
+				DeclarationData.DeclarationDataResourcePrefix + ".MissionCycles." +
+				declarationMission +
+				Constants.FileExtensions.CycleFile);
+			var cycle = DrivingCycleDataReader.ReadFromStream(cycleData, CycleType.DistanceBased, "", false);
+
+			const bool largeMotor = true;
+
+			var modFilename = string.Format("SimpleParallelHybrid-P2_cycle_{0}-{1}_{2}_{3}_maxPwr-{3}.vmod", declarationMission, initialSoC, payload, pAuxEl, maxPwrkW);
+			const PowertrainPosition pos = PowertrainPosition.HybridP2;
+			var job = CreateEngineeringRun(
+				cycle, modFilename, initialSoC, pos, 1.0, largeMotor: true, pAuxEl: pAuxEl, payload: payload.SI<Kilogram>());
+			var run = job.Runs.First().Run;
+
+			var hybridController = (HybridController)((VehicleContainer)run.GetContainer()).HybridController;
+			Assert.NotNull(hybridController);
+
+			var modData = ((ModalDataContainer)((VehicleContainer)run.GetContainer()).ModData).Data;
+
+			var data = run.GetContainer().RunData;
+			//File.WriteAllText(
+			//	$"{modFilename}.json",
+			//	JsonConvert.SerializeObject(data, Formatting.Indented));
+
+			run.Run();
+			Assert.IsTrue(run.FinishedWithoutErrors);
+			job.Execute();
+			job.WaitFinished();
+			Assert.IsTrue(modData.Rows.Count > 0);
+
 			var graphWriter = GetGraphWriter(new[] { ModalResultField.P_electricMotor_mech_P2 });
 			graphWriter.Write(modFilename);
 		}
@@ -226,7 +308,15 @@ namespace TUGraz.VectoCore.Tests.Integration.Hybrid
 
 		public const string Group5TestJob = @"TestData\Hybrids\GenericVehicle_Group5_P2\P2 Group 5.vecto";
 
+		public const string Group5TestJob325kW = @"TestData\Hybrids\GenericVehicle_Group5_P2\P2 Group 5_325kW.vecto";
+
+		public const string Group5TestJob_noESS = @"TestData\Hybrids\GenericVehicle_Group5_P2\P2 Group 5.vecto";
+
+		public const string Group5TestJob325kW_noESS = @"TestData\Hybrids\GenericVehicle_Group5_P2\P2 Group 5_325kW.vecto";
+
 		public const string Group2TestJob = @"TestData\Hybrids\Hyb_P2_Group2\Class2_RigidTruck_ParHyb_ENG.vecto";
+
+		public const string Group2TestJob180kW = @"TestData\Hybrids\Hyb_P2_Group2\Class2_RigidTruck_ParHyb_ENG.vecto";
 
 		public const string Group5_80kWh_TestJob = @"TestData\Hybrids\Hyb_P2_Group5\Hyb_P2_Group5_80kWh.vecto";
 
@@ -236,57 +326,92 @@ namespace TUGraz.VectoCore.Tests.Integration.Hybrid
 			
 		[
 		TestCase(Group5TestJob, 0, TestName = "P2 Hybrid Group 5 DriveCycle LongHaul"),
-		TestCase(Group5TestJob, 1, TestName = "P2 Hybrid Group 5 DriveCycle Coach"),  // error
+		//TestCase(Group5TestJob, 1, TestName = "P2 Hybrid Group 5 DriveCycle Coach"),  // error
 		TestCase(Group5TestJob, 2, TestName = "P2 Hybrid Group 5 DriveCycle Construction"),  // error
 		TestCase(Group5TestJob, 3, TestName = "P2 Hybrid Group 5 DriveCycle HeavyUrban"),
-		TestCase(Group5TestJob, 4, TestName = "P2 Hybrid Group 5 DriveCycle Interurban"),  // error
+		//TestCase(Group5TestJob, 4, TestName = "P2 Hybrid Group 5 DriveCycle Interurban"),  // error
 		TestCase(Group5TestJob, 5, TestName = "P2 Hybrid Group 5 DriveCycle MunicipalUtility"),
 		TestCase(Group5TestJob, 6, TestName = "P2 Hybrid Group 5 DriveCycle RegionalDelivery"),
 		TestCase(Group5TestJob, 7, TestName = "P2 Hybrid Group 5 DriveCycle Suburban"),  // error
 		TestCase(Group5TestJob, 8, TestName = "P2 Hybrid Group 5 DriveCycle Urban"), 
 		TestCase(Group5TestJob, 9, TestName = "P2 Hybrid Group 5 DriveCycle UrbanDelivery"), // error
 
+		TestCase(Group5TestJob325kW, 0, TestName = "P2 Hybrid Group 5 325kW DriveCycle LongHaul"),
+		TestCase(Group5TestJob325kW, 1, TestName = "P2 Hybrid Group 5 325kW DriveCycle Coach"),  // error
+		TestCase(Group5TestJob325kW, 2, TestName = "P2 Hybrid Group 5 325kW DriveCycle Construction"),  
+		TestCase(Group5TestJob325kW, 3, TestName = "P2 Hybrid Group 5 325kW DriveCycle HeavyUrban"), 
+		TestCase(Group5TestJob325kW, 4, TestName = "P2 Hybrid Group 5 325kW DriveCycle Interurban"),  // error
+		TestCase(Group5TestJob325kW, 5, TestName = "P2 Hybrid Group 5 325kW Dr40/iveCycle MunicipalUtility"), 
+		TestCase(Group5TestJob325kW, 6, TestName = "P2 Hybrid Group 5 325kW DriveCycle RegionalDelivery"),
+		TestCase(Group5TestJob325kW, 7, TestName = "P2 Hybrid Group 5 325kW DriveCycle Suburban"), 
+		TestCase(Group5TestJob325kW, 8, TestName = "P2 Hybrid Group 5 325kW DriveCycle Urban"), 
+		TestCase(Group5TestJob325kW, 9, TestName = "P2 Hybrid Group 5 325kW DriveCycle UrbanDelivery"), 
+
 		TestCase(Group2TestJob, 0, TestName = "P2 Hybrid Group 2 DriveCycle LongHaul"),
 		TestCase(Group2TestJob, 1, TestName = "P2 Hybrid Group 2 DriveCycle RegionalDelivery"),
-		TestCase(Group2TestJob, 2, TestName = "P2 Hybrid Group 2 DriveCycle UrbanDelivery"),  // error
-		//TestCase(Group2TestJob, 3, TestName = "P2 Hybrid Group 2 DriveCycle Coach"),
-		//TestCase(Group2TestJob, 4, TestName = "P2 Hybrid Group 2 DriveCycle Construction"),
-		//TestCase(Group2TestJob, 5, TestName = "P2 Hybrid Group 2 DriveCycle HeavyUrban"),
-		//TestCase(Group2TestJob, 6, TestName = "P2 Hybrid Group 2 DriveCycle Interurban"),
-		//TestCase(Group2TestJob, 7, TestName = "P2 Hybrid Group 2 DriveCycle MunicipalUtility"),
-		//TestCase(Group2TestJob, 8, TestName = "P2 Hybrid Group 2 DriveCycle Suburban"),
-		//TestCase(Group2TestJob, 9, TestName = "P2 Hybrid Group 2 DriveCycle Urban"),
+		//TestCase(Group2TestJob, 2, TestName = "P2 Hybrid Group 2 DriveCycle UrbanDelivery"),  // error
+		TestCase(Group2TestJob, 3, TestName = "P2 Hybrid Group 2 DriveCycle Coach"),
+		//TestCase(Group2TestJob, 4, TestName = "P2 Hybrid Group 2 DriveCycle Construction"), // error
+		TestCase(Group2TestJob, 5, TestName = "P2 Hybrid Group 2 DriveCycle HeavyUrban"),
+		//TestCase(Group2TestJob, 6, TestName = "P2 Hybrid Group 2 DriveCycle Interurban"), // error
+		TestCase(Group2TestJob, 7, TestName = "P2 Hybrid Group 2 DriveCycle MunicipalUtility"),
+		TestCase(Group2TestJob, 8, TestName = "P2 Hybrid Group 2 DriveCycle Suburban"),
+		TestCase(Group2TestJob, 9, TestName = "P2 Hybrid Group 2 DriveCycle Urban"),
 
 		TestCase(Group5_80kWh_TestJob, 0, TestName = "P2 Hybrid Group 5 80kWh DriveCycle LongHaul"),
-		//TestCase(Group5_80kWh_TestJob, 1, TestName = "P2 Hybrid Group 5 80kWh DriveCycle Coach"), // error
-		//TestCase(Group5_80kWh_TestJob, 2, TestName = "P2 Hybrid Group 5 80kWh DriveCycle Construction"), // error
-		//TestCase(Group5_80kWh_TestJob, 3, TestName = "P2 Hybrid Group 5 80kWh DriveCycle HeavyUrban"), // error
-		//TestCase(Group5_80kWh_TestJob, 4, TestName = "P2 Hybrid Group 5 80kWh DriveCycle Interurban"), // error
-		//TestCase(Group5_80kWh_TestJob, 5, TestName = "P2 Hybrid Group 5 80kWh DriveCycle MunicipalUtility"),
-		//TestCase(Group5_80kWh_TestJob, 6, TestName = "P2 Hybrid Group 5 80kWh DriveCycle RegionalDelivery"),
-		//TestCase(Group5_80kWh_TestJob, 7, TestName = "P2 Hybrid Group 5 80kWh DriveCycle Suburban"), // error
-		//TestCase(Group5_80kWh_TestJob, 8, TestName = "P2 Hybrid Group 5 80kWh DriveCycle Urban"),  // error
-		//TestCase(Group5_80kWh_TestJob, 9, TestName = "P2 Hybrid Group 5 80kWh DriveCycle UrbanDelivery"),  // error
+		TestCase(Group5_80kWh_TestJob, 1, TestName = "P2 Hybrid Group 5 80kWh DriveCycle Coach"), 
+		TestCase(Group5_80kWh_TestJob, 2, TestName = "P2 Hybrid Group 5 80kWh DriveCycle Construction"), 
+		TestCase(Group5_80kWh_TestJob, 3, TestName = "P2 Hybrid Group 5 80kWh DriveCycle HeavyUrban"), 
+		TestCase(Group5_80kWh_TestJob, 4, TestName = "P2 Hybrid Group 5 80kWh DriveCycle Interurban"), 
+		TestCase(Group5_80kWh_TestJob, 5, TestName = "P2 Hybrid Group 5 80kWh DriveCycle MunicipalUtility"),
+		TestCase(Group5_80kWh_TestJob, 6, TestName = "P2 Hybrid Group 5 80kWh DriveCycle RegionalDelivery"),
+		TestCase(Group5_80kWh_TestJob, 7, TestName = "P2 Hybrid Group 5 80kWh DriveCycle Suburban"),
+		TestCase(Group5_80kWh_TestJob, 8, TestName = "P2 Hybrid Group 5 80kWh DriveCycle Urban"),  
+		TestCase(Group5_80kWh_TestJob, 9, TestName = "P2 Hybrid Group 5 80kWh DriveCycle UrbanDelivery"), 
 
 		TestCase(Group5TestJob2, 0, TestName = "P2 Hybrid Group 5 B DriveCycle LongHaul"),
-		//TestCase(Group5TestJob2, 1, TestName = "P2 Hybrid Group 5 B DriveCycle Coach"), // error
-		//TestCase(Group5TestJob2, 2, TestName = "P2 Hybrid Group 5 B DriveCycle Construction"), // error
-		//TestCase(Group5TestJob2, 3, TestName = "P2 Hybrid Group 5 B DriveCycle HeavyUrban"), //error 
+		TestCase(Group5TestJob2, 1, TestName = "P2 Hybrid Group 5 B DriveCycle Coach"), // error
+		TestCase(Group5TestJob2, 2, TestName = "P2 Hybrid Group 5 B DriveCycle Construction"), // error
+		TestCase(Group5TestJob2, 3, TestName = "P2 Hybrid Group 5 B DriveCycle HeavyUrban"), //error 
 		//TestCase(Group5TestJob2, 4, TestName = "P2 Hybrid Group 5 B DriveCycle Interurban"),  // error
-		//TestCase(Group5TestJob2, 5, TestName = "P2 Hybrid Group 5 B DriveCycle MunicipalUtility"),
-		//TestCase(Group5TestJob2, 6, TestName = "P2 Hybrid Group 5 B DriveCycle RegionalDelivery"), 
-		//TestCase(Group5TestJob2, 7, TestName = "P2 Hybrid Group 5 B DriveCycle Suburban"), // error
-		//TestCase(Group5TestJob2, 8, TestName = "P2 Hybrid Group 5 B DriveCycle Urban"),  // error
+		TestCase(Group5TestJob2, 5, TestName = "P2 Hybrid Group 5 B DriveCycle MunicipalUtility"),
+		TestCase(Group5TestJob2, 6, TestName = "P2 Hybrid Group 5 B DriveCycle RegionalDelivery"),
+		TestCase(Group5TestJob2, 7, TestName = "P2 Hybrid Group 5 B DriveCycle Suburban"), // error
+		TestCase(Group5TestJob2, 8, TestName = "P2 Hybrid Group 5 B DriveCycle Urban"),  // error
 		//TestCase(Group5TestJob2, 9, TestName = "P2 Hybrid Group 5 B DriveCycle UrbanDelivery"),  // error
 
-		TestCase(CityBus6x2, 0, TestName = "P2 Hybrid CityBus DriveCycle Coach"),  // error
-		TestCase(CityBus6x2, 1, TestName = "P2 Hybrid CityBus DriveCycle HeavyUrban"),  // error
-		TestCase(CityBus6x2, 2, TestName = "P2 Hybrid CityBus DriveCycle Interurban"),  // error
-		TestCase(CityBus6x2, 3, TestName = "P2 Hybrid CityBus DriveCycle LongHaul"),  // error
-		TestCase(CityBus6x2, 4, TestName = "P2 Hybrid CityBus DriveCycle RegionalDelivery"),  // error
-		TestCase(CityBus6x2, 5, TestName = "P2 Hybrid CityBus DriveCycle Suburban"),  // error
-		TestCase(CityBus6x2, 6, TestName = "P2 Hybrid CityBus DriveCycle Urban"),  // error
-		TestCase(CityBus6x2, 7, TestName = "P2 Hybrid CityBus DriveCycle UrbanDelivery"),  // error
+		//// P2 without ESS is not really relevant
+		TestCase(Group5TestJob_noESS, 0, TestName = "P2 Hybrid Group 5 NoESS DriveCycle LongHaul"),
+		//TestCase(Group5TestJob_noESS, 1, TestName = "P2 Hybrid Group 5 NoESS DriveCycle Coach"),  // error
+		TestCase(Group5TestJob_noESS, 2, TestName = "P2 Hybrid Group 5 NoESS DriveCycle Construction"),  // 
+		TestCase(Group5TestJob_noESS, 3, TestName = "P2 Hybrid Group 5 NoESS DriveCycle HeavyUrban"),
+		//TestCase(Group5TestJob_noESS, 4, TestName = "P2 Hybrid Group 5 NoESS DriveCycle Interurban"),  // error
+		TestCase(Group5TestJob_noESS, 5, TestName = "P2 Hybrid Group 5 NoESS DriveCycle MunicipalUtility"),
+		TestCase(Group5TestJob_noESS, 6, TestName = "P2 Hybrid Group 5 NoESS DriveCycle RegionalDelivery"),
+		TestCase(Group5TestJob_noESS, 7, TestName = "P2 Hybrid Group 5 NoESS DriveCycle Suburban"),  // 
+		TestCase(Group5TestJob_noESS, 8, TestName = "P2 Hybrid Group 5 NoESS DriveCycle Urban"), 
+		TestCase(Group5TestJob_noESS, 9, TestName = "P2 Hybrid Group 5 NoESS DriveCycle UrbanDelivery"), // 
+
+		//// P2 without ESS is not really relevant
+		TestCase(Group5TestJob325kW_noESS, 0, TestName = "P2 Hybrid Group 5 325kW NoESS DriveCycle LongHaul"),
+		//TestCase(Group5TestJob325kW_noESS, 1, TestName = "P2 Hybrid Group 5 325kW NoESS DriveCycle Coach"),  // error
+		//TestCase(Group5TestJob325kW_noESS, 2, TestName = "P2 Hybrid Group 5 325kW NoESS DriveCycle Construction"),  // error
+		//TestCase(Group5TestJob325kW_noESS, 3, TestName = "P2 Hybrid Group 5 325kW NoESS DriveCycle HeavyUrban"), // error
+		//TestCase(Group5TestJob325kW_noESS, 4, TestName = "P2 Hybrid Group 5 325kW NoESS DriveCycle Interurban"),  // error
+		TestCase(Group5TestJob325kW_noESS, 5, TestName = "P2 Hybrid Group 5 325kW NoESS DriveCycle MunicipalUtility"), 
+		TestCase(Group5TestJob325kW_noESS, 6, TestName = "P2 Hybrid Group 5 325kW NoESS DriveCycle RegionalDelivery"),
+		//TestCase(Group5TestJob325kW_noESS, 7, TestName = "P2 Hybrid Group 5 325kW NoESS DriveCycle Suburban"),  // error
+		//TestCase(Group5TestJob325kW_noESS, 8, TestName = "P2 Hybrid Group 5 325kW NoESS DriveCycle Urban"), // error
+		//TestCase(Group5TestJob325kW_noESS, 9, TestName = "P2 Hybrid Group 5 325kW NoESS DriveCycle UrbanDelivery"), // error 
+		
+		//TestCase(CityBus6x2, 0, TestName = "P2 Hybrid CityBus DriveCycle Coach"),  // error
+		//TestCase(CityBus6x2, 1, TestName = "P2 Hybrid CityBus DriveCycle HeavyUrban"),  // error
+		//TestCase(CityBus6x2, 2, TestName = "P2 Hybrid CityBus DriveCycle Interurban"),  // error
+		//TestCase(CityBus6x2, 3, TestName = "P2 Hybrid CityBus DriveCycle LongHaul"),  // error
+		//TestCase(CityBus6x2, 4, TestName = "P2 Hybrid CityBus DriveCycle RegionalDelivery"),  // error
+		//TestCase(CityBus6x2, 5, TestName = "P2 Hybrid CityBus DriveCycle Suburban"),  // error
+		//TestCase(CityBus6x2, 6, TestName = "P2 Hybrid CityBus DriveCycle Urban"),  // error
+		//TestCase(CityBus6x2, 7, TestName = "P2 Hybrid CityBus DriveCycle UrbanDelivery"),  // error
 
 			]
 		public void P2HybridGroup5DriveCycle(string jobFile, int cycleIdx)
@@ -729,13 +854,13 @@ namespace TUGraz.VectoCore.Tests.Integration.Hybrid
 
 		// =================================================
 
-		public static JobContainer CreateEngineeringRun(DrivingCycleData cycleData, string modFileName, double initialSoc, PowertrainPosition pos, double ratio, bool largeMotor = false, double pAuxEl = 0, Kilogram payload = null)
+		public static JobContainer CreateEngineeringRun(DrivingCycleData cycleData, string modFileName, double initialSoc, PowertrainPosition pos, double ratio, bool largeMotor = false, double pAuxEl = 0, Kilogram payload = null, Watt maxDriveTrainPower = null)
 		{
 			var fileWriter = new FileOutputWriter(Path.GetFileNameWithoutExtension(modFileName));
 			var sumData = new SummaryDataContainer(fileWriter);
 			var jobContainer = new JobContainer(sumData);
 			var container = CreateParallelHybridPowerTrain(
-				cycleData,modFileName, initialSoc, largeMotor, sumData, pAuxEl, pos, ratio, payload);
+				cycleData,modFileName, initialSoc, largeMotor, sumData, pAuxEl, pos, ratio, payload, maxDriveTrainPower);
 			var run = new DistanceRun(container);
 			jobContainer.AddRun(run);
 			return jobContainer;
@@ -750,7 +875,8 @@ namespace TUGraz.VectoCore.Tests.Integration.Hybrid
 		}
 
 		public static VehicleContainer CreateParallelHybridPowerTrain(DrivingCycleData cycleData, string modFileName,
-			double initialBatCharge, bool largeMotor, SummaryDataContainer sumData, double pAuxEl, PowertrainPosition pos, double ratio, Kilogram payload = null)
+			double initialBatCharge, bool largeMotor, SummaryDataContainer sumData, double pAuxEl,
+			PowertrainPosition pos, double ratio, Kilogram payload = null, Watt maxDriveTrainPower = null)
 		{ 
 			var gearboxData = CreateGearboxData();
 			var axleGearData = CreateAxleGearData();
@@ -791,7 +917,7 @@ namespace TUGraz.VectoCore.Tests.Integration.Hybrid
 				EngineData = engineData,
 				BatteryData = batteryData,
 				GearshiftParameters = CreateGearshiftData(gearboxData, axleGearData.AxleGear.Ratio, engineData.IdleSpeed),
-				HybridStrategyParameters = CreateHybridStrategyData(),
+				HybridStrategyParameters = CreateHybridStrategyData(maxDriveTrainPower),
 				ElectricAuxDemand = pAuxEl.SI<Watt>()
 			};
 			var fileWriter = new FileOutputWriter(modFileName);
@@ -853,7 +979,7 @@ namespace TUGraz.VectoCore.Tests.Integration.Hybrid
 			return container;
 		}
 
-		private static HybridStrategyParameters CreateHybridStrategyData()
+		private static HybridStrategyParameters CreateHybridStrategyData(Watt maxDriveTrainPower)
 		{
 			return new HybridStrategyParameters() {
 				EquivalenceFactor = 2.5,
@@ -862,7 +988,8 @@ namespace TUGraz.VectoCore.Tests.Integration.Hybrid
 				TargetSoC = 0.5,
 				AuxReserveTime = 5.SI<Second>(),
 				AuxReserveChargeTime = 2.SI<Second>(),
-				MinICEOnTime = 3.SI<Second>()
+				MinICEOnTime = 3.SI<Second>(), 
+				MaxDrivetrainPower = maxDriveTrainPower ?? 1e12.SI<Watt>(),
 			};
 		}
 
@@ -1081,7 +1208,10 @@ namespace TUGraz.VectoCore.Tests.Integration.Hybrid
 				Loading = loading,
 				DynamicTyreRadius = 0.465.SI<Meter>(),
 				AxleData = axles,
-				SavedInDeclarationMode = false
+				SavedInDeclarationMode = false,
+				ADAS = new VehicleData.ADASData() {
+					EngineStopStart = true
+				}
 			};
 		}
 

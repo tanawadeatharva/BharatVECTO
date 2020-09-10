@@ -105,7 +105,7 @@ namespace TUGraz.VectoCore.Tests.Integration.BatteryElectric
 
 			const bool largeMotor = true;
 
-			var modFilename = string.Format("SimpleBatteryElectric-B4_constant_{0}-{1}_{2}_{3}.vmod", vmax, initialSoC, slope, pAuxEl);
+			var modFilename = string.Format("SimpleBatteryElectric-B4_constant_{0}-{1}_{2}_{3}", vmax, initialSoC, slope, pAuxEl);
 			const PowertrainPosition pos = PowertrainPosition.BatteryElectricB4;
 			var job = CreateEngineeringRun(
 				cycle, modFilename, initialSoC, pos, 2, 22.6, largeMotor: true, pAuxEl: pAuxEl);
@@ -123,7 +123,7 @@ namespace TUGraz.VectoCore.Tests.Integration.BatteryElectric
 			Assert.IsTrue(modData.Rows.Count > 0);
 
 			var graphWriter = GetGraphWriter(new[] { ModalResultField.P_electricMotor_mech_B4 });
-			graphWriter.Write(modFilename);
+			graphWriter.Write(modFilename + ".vmod");
 		}
 
 
@@ -141,7 +141,7 @@ namespace TUGraz.VectoCore.Tests.Integration.BatteryElectric
 
 			const bool largeMotor = true;
 
-			var modFilename = string.Format("SimpleBatteryElectric-B4_acc_{0}-{1}_{2}.vmod", vmax, initialSoC, slope);
+			var modFilename = string.Format("SimpleBatteryElectric-B4_acc_{0}-{1}_{2}", vmax, initialSoC, slope);
 			const PowertrainPosition pos = PowertrainPosition.BatteryElectricB4;
 			var job = CreateEngineeringRun(
 				cycle, modFilename, initialSoC, pos, 2, 22.6, largeMotor: true);
@@ -154,7 +154,7 @@ namespace TUGraz.VectoCore.Tests.Integration.BatteryElectric
 			Assert.IsTrue(modData.Rows.Count > 0);
 
 			var graphWriter = GetGraphWriter(new[] { ModalResultField.P_electricMotor_mech_B4 });
-			graphWriter.Write(modFilename);
+			graphWriter.Write(modFilename + ".vmod");
 		}
 
 		[
@@ -283,14 +283,14 @@ namespace TUGraz.VectoCore.Tests.Integration.BatteryElectric
 		}
 
 		[
-			TestCase("LongHaul", 2000, 0.8, 0, TestName = "B3 Hybrid DriveCycle LongHaul, SoC: 0.8 Payload: 2t P_auxEl: 0kW"),
-			TestCase("RegionalDelivery", 2000, 0.8, 0, TestName = "B3 Hybrid DriveCycle RegionalDelivery, SoC: 0.8 Payload: 2t P_auxEl: 0kW"),
-			TestCase("UrbanDelivery", 2000, 0.8, 0, TestName = "B3 Hybrid DriveCycle UrbanDelivery, SoC: 0.8 Payload: 2t P_auxEl: 0kW"),
-			TestCase("Construction", 2000, 0.8, 0, TestName = "B3 Hybrid DriveCycle Construction, SoC: 0.8 Payload: 2t P_auxEl: 0kW"),
-			TestCase("Urban", 2000, 0.8, 0, TestName = "B3 Hybrid DriveCycle Urban, SoC: 0.8 Payload: 2t P_auxEl: 0kW"),
-			TestCase("Suburban", 2000, 0.8, 0, TestName = "B3 Hybrid DriveCycle SubUrban, SoC: 0.8 Payload: 2t P_auxEl: 0kW"),
-			TestCase("Interurban", 2000, 0.8, 0, TestName = "B3 Hybrid DriveCycle InterUrban, SoC: 0.8 Payload: 2t P_auxEl: 0kW"),
-			TestCase("Coach", 2000, 0.8, 0, TestName = "B3 Hybrid DriveCycle Coach, SoC: 0.8 Payload: 2t P_auxEl: 0kW"),
+			TestCase("LongHaul", 2000, 0.8, 0, TestName = "B3 BEV DriveCycle LongHaul, SoC: 0.8 Payload: 2t P_auxEl: 0kW"),
+			TestCase("RegionalDelivery", 2000, 0.8, 0, TestName = "B3 BEV DriveCycle RegionalDelivery, SoC: 0.8 Payload: 2t P_auxEl: 0kW"),
+			TestCase("UrbanDelivery", 2000, 0.8, 0, TestName = "B3 BEV DriveCycle UrbanDelivery, SoC: 0.8 Payload: 2t P_auxEl: 0kW"),
+			TestCase("Construction", 2000, 0.8, 0, TestName = "B3 BEV DriveCycle Construction, SoC: 0.8 Payload: 2t P_auxEl: 0kW"),
+			TestCase("Urban", 2000, 0.8, 0, TestName = "B3 BEV DriveCycle Urban, SoC: 0.8 Payload: 2t P_auxEl: 0kW"),
+			TestCase("Suburban", 2000, 0.8, 0, TestName = "B3 BEV DriveCycle SubUrban, SoC: 0.8 Payload: 2t P_auxEl: 0kW"),
+			TestCase("Interurban", 2000, 0.8, 0, TestName = "B3 BEV DriveCycle InterUrban, SoC: 0.8 Payload: 2t P_auxEl: 0kW"),
+			TestCase("Coach", 2000, 0.8, 0, TestName = "B3 BEV DriveCycle Coach, SoC: 0.8 Payload: 2t P_auxEl: 0kW"),
 		]
 		public void B3BEVDriveCycle(string declarationMission, double payload, double initialSoC, double pAuxEl)
 		{

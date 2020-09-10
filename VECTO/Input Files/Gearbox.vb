@@ -827,6 +827,7 @@ Public Class MockEngineeringVehicle
         Implements IVehicleDeclarationInputData.ADAS
 
     Public ReadOnly Property InitialSOC As Double Implements IVehicleEngineeringInputData.InitialSOC
+    Public ReadOnly Property MaxDrivetrainPower As Watt Implements IVehicleEngineeringInputData.MaxDrivetrainPower
     Public ReadOnly Property VehicleType As VectoSimulationJobType Implements IVehicleEngineeringInputData.VehicleType
 
     Public Property ZeroEmissionVehicle As Boolean Implements IVehicleDeclarationInputData.ZeroEmissionVehicle

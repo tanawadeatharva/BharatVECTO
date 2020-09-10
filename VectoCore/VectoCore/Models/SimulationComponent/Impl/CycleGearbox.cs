@@ -559,7 +559,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				throw new System.NotImplementedException();
 			}
 
-			public override void Disengage(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outEngineSpeed)
+			public override void Disengage(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity)
 			{
 				throw new System.NotImplementedException();
 			}

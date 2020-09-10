@@ -70,7 +70,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		public abstract uint InitGear(Second absTime, Second dt, NewtonMeter torque, PerSecond outAngularVelocity);
 		public abstract uint Engage(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity);
-		public abstract void Disengage(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outEngineSpeed);
+		public abstract void Disengage(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity);
 		public abstract IGearbox Gearbox { get; set; }
 		public abstract GearInfo NextGear { get; }
 

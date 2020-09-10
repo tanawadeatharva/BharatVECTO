@@ -490,7 +490,7 @@ Public Class VectoJob
             result.Add(New ValidationResult("Vehicle File is missing or invalid"))
         If not vectoJob.JobType = VectoSimulationJobType.BatteryElectricVehicle andalso engineInputData Is Nothing Then _
             result.Add(New ValidationResult("Engine File is missing or invalid"))
-        If vectoJob.JobType = VectoSimulationJobType.ConventionalVehicle OrElse vectoJob.JobType = VectoSimulationJobType.ParallelHybridVehicle _
+        If (vectoJob.JobType = VectoSimulationJobType.ConventionalVehicle OrElse vectoJob.JobType = VectoSimulationJobType.ParallelHybridVehicle) _
              AndAlso gearboxInputData Is Nothing Then _
             result.Add(New ValidationResult("Gearbox File is missing or invalid"))
 

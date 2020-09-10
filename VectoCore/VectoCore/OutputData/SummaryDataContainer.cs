@@ -325,8 +325,11 @@ namespace TUGraz.VectoCore.OutputData
 				WriteFuelconsumptionEntries(modData, row, vehicleLoading, cargoVolume, passengerCount, runData);
 			} else {
 				if (runData.ElectricMachinesData.Count > 0) {
-					var col = Table.Columns.Add(Fields.ElectricEnergyConsumptionPerKm, typeof(ConvertedSI));
-					col.SetOrdinal(Table.Columns[Fields.CO2_KM].Ordinal);
+					if (!Table.Columns.Contains(Fields.ElectricEnergyConsumptionPerKm)) {
+						var col = Table.Columns.Add(Fields.ElectricEnergyConsumptionPerKm, typeof(ConvertedSI));
+						col.SetOrdinal(Table.Columns[Fields.CO2_KM].Ordinal);
+					}
+
 					row[Fields.ElectricEnergyConsumptionPerKm] =
 						(-modData.TimeIntegral<WattSecond>(ModalResultField.P_battery_terminal) / modData.Distance).Cast<JoulePerMeter>().ConvertToKiloWattHourPerKiloMeter();
 				}
@@ -758,7 +761,7 @@ namespace TUGraz.VectoCore.OutputData
 				var cellVoltage = runData.BatteryData.SOCMap.Lookup(runData.BatteryData.InitialSoC);
 				row[Fields.BatteryDeltaSoC] =
 					(modData.BatteryEnergyEnd() - 
-					(runData.BatteryData.InitialSoC * runData.BatteryData.Capacity * cellVoltage * 100).Cast<WattSecond>()).ConvertToKiloWattHour();
+					(runData.BatteryData.InitialSoC * runData.BatteryData.Capacity * cellVoltage).Cast<WattSecond>()).ConvertToKiloWattHour();
 
 				row[Fields.E_BAT_LOSS] = modData.BatteryLoss().ConvertToKiloWattHour();
 				row[Fields.E_Batt_T_chg] = modData.WorkBatteryChargeTerminal().ConvertToKiloWattHour();

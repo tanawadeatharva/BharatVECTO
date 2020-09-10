@@ -490,7 +490,16 @@
     <None Include="TestData\Hybrids\GenericVehicle_Group5_P2\ElectricMotor\Inputdaten P2 Group 5\Electric components\Hybrid_Parameters.vhctl">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Include="TestData\Hybrids\GenericVehicle_Group5_P2\P2 Group 5_noESS.vecto">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="TestData\Hybrids\GenericVehicle_Group5_P2\P2 Group 5.vecto">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Hybrids\GenericVehicle_Group5_P2\P2 Group 5_325kW_noESS.vecto">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Hybrids\GenericVehicle_Group5_P2\P2 Group 5_325kW.vecto">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="TestData\Hybrids\GenericVehicle_Group5_P2\Transmission\AMT_12.vgbx">
@@ -538,7 +547,16 @@
     <None Include="TestData\Hybrids\GenericVehicle_Group5_P2\Transmission\Gear_9.vtlm">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Include="TestData\Hybrids\GenericVehicle_Group5_P2\Vehicle\Group5_HEV_noESS.vveh">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="TestData\Hybrids\GenericVehicle_Group5_P2\Vehicle\Group5_HEV.vveh">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Hybrids\GenericVehicle_Group5_P2\Vehicle\Group5_HEV_325kW_noESS.vveh">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Hybrids\GenericVehicle_Group5_P2\Vehicle\Group5_HEV_325kW.vveh">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="TestData\Hybrids\GenericVehicle_Group5_P2\Vehicle\Truck.vacc">

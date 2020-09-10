@@ -87,11 +87,13 @@ Public Class VehicleForm
 			CbAxleConfig.DataSource = DeclarationData.TruckSegments.GetAxleConfigurations() _
 				.Cast(Of AxleConfiguration) _
 				.Select(Function(category) New With {Key .Value = category, .Label = category.GetName()}).ToList()
-		else
-				CbAxleConfig.DataSource = [Enum].GetValues(GetType(AxleConfiguration)) _
+		Else
+			CbAxleConfig.DataSource = [Enum].GetValues(GetType(AxleConfiguration)) _
 					.Cast(Of AxleConfiguration) _
 					.Select(Function(category) New With {Key .Value = category, .Label = category.GetName()}).ToList()
 		End If
+
+		
 
 		cbEcoRoll.ValueMember = "Value"
 		cbEcoRoll.DisplayMember = "Label"
@@ -137,7 +139,7 @@ Public Class VehicleForm
 
         cbEmPos.ValueMember = "Value"
         cbEmPos.DisplayMember = "Label"
-        cbEmPos.DataSource = [Enum].GetValues(GetType(PowertrainPosition)).Cast(Of PowertrainPosition).Select(Function(x) New With {Key .Value = x, .Label = x.GetName()}).ToList()
+        cbEmPos.DataSource = [Enum].GetValues(GetType(PowertrainPosition)).Cast(Of PowertrainPosition).Select(Function(x) New With {Key .Value = x, .Label = x.GetLabel()}).ToList()
 
         NewVehicle()
 	End Sub
@@ -457,20 +459,24 @@ Public Class VehicleForm
 		tbAngledriveLossMapPath.Text =
 			If(angledrive.LossMap Is Nothing, "", GetRelativePath(angledrive.LossMap.Source, basePath))
 
-        If (vehicle.VehicleType = VectoSimulationJobType.BatteryElectricVehicle OrElse vehicle.VehicleType = VectoSimulationJobType.ParallelHybridVehicle) Then
-            tbBattery.Text = GetRelativePath(vehicle.Components.ElectricStorage.BatteryPack.DataSource.SourceFile, basePath)
-            tbBatteryPackCnt.Text = vehicle.Components.ElectricStorage.Count.ToGUIFormat()
-            tbInitialSoC.Text = (vehicle.InitialSOC * 100).ToGUIFormat()
+		If (vehicle.VehicleType = VectoSimulationJobType.BatteryElectricVehicle OrElse vehicle.VehicleType = VectoSimulationJobType.ParallelHybridVehicle) Then
+			tbBattery.Text = GetRelativePath(vehicle.Components.ElectricStorage.BatteryPack.DataSource.SourceFile, basePath)
+			tbBatteryPackCnt.Text = vehicle.Components.ElectricStorage.Count.ToGUIFormat()
+			tbInitialSoC.Text = (vehicle.InitialSOC * 100).ToGUIFormat()
 
-            Dim em As ElectricMachineEntry(Of IElectricMotorEngineeringInputData) = vehicle.Components.ElectricMachines.Entries.First()
-            tbElectricMotor.Text = GetRelativePath(em.ElectricMachine.DataSource.SourceFile, basePath)
-            tbEmCount.Text = em.Count.ToGUIFormat()
-            tbEmEfficiency.Text = em.MechanicalEfficiency.ToGUIFormat()
-            tbRatioEm.Text = em.Ratio.ToGUIFormat()
-            cbEmPos.SelectedValue = em.Position
-        End If
+			Dim em As ElectricMachineEntry(Of IElectricMotorEngineeringInputData) = vehicle.Components.ElectricMachines.Entries.First()
+			tbElectricMotor.Text = GetRelativePath(em.ElectricMachine.DataSource.SourceFile, basePath)
+			tbEmCount.Text = em.Count.ToGUIFormat()
+			tbEmEfficiency.Text = em.MechanicalEfficiency.ToGUIFormat()
+			tbRatioEm.Text = em.Ratio.ToGUIFormat()
+			cbEmPos.SelectedValue = em.Position
+		End If
 
-        DeclInit()
+		If (vehicle.VehicleType = VectoSimulationJobType.ParallelHybridVehicle) Then
+			tbMaxDrivetrainPwr.Text = vehicle.MaxDrivetrainPower.ConvertToKiloWatt().Value.ToXMLFormat(2)
+		End If
+
+		DeclInit()
 
 		VehicleFileBrowser.UpdateHistory(file)
 		Text = GetFilenameWithoutPath(file, True)
@@ -491,23 +497,23 @@ Public Class VehicleForm
                 'cbEngineStopStart.Checked = False
                 cbEngineStopStart.Enabled = True
                 cbEcoRoll.DataSource = [Enum].GetValues(GetType(EcoRollType)).Cast(Of EcoRollType).Select(Function(ecoRoll) New With {Key .Value = ecoRoll, .Label = ecoRoll.GetName()}).ToList()
-
+				tbMaxDrivetrainPwr.Enabled = false
             Case VectoSimulationJobType.ParallelHybridVehicle
                 lblTitle.Text = "Parallel Hybrid Vehicle"
-                cbEmPos.DataSource = [Enum].GetValues(GetType(PowertrainPosition)).Cast(Of PowertrainPosition).Where(Function(x) x.IsParallelHybrid()).Select(Function(x) New With {Key .Value = x, .Label = x.GetName()}).ToList()
+                cbEmPos.DataSource = [Enum].GetValues(GetType(PowertrainPosition)).Cast(Of PowertrainPosition).Where(Function(x) x.IsParallelHybrid()).Select(Function(x) New With {Key .Value = x, .Label = x.GetLabel()}).ToList()
                 'cbEngineStopStart.Checked = False
                 'cbEngineStopStart.Enabled = False
                 'cbEcoRoll.DataSource = [Enum].GetValues(GetType(EcoRollType)).Cast(Of EcoRollType).Select(Function(ecoRoll) New With {Key .Value = ecoRoll, .Label = ecoRoll.GetName()}).ToList()
-
+				tbMaxDrivetrainPwr.Enabled	= True
             Case VectoSimulationJobType.BatteryElectricVehicle
                 lblTitle.Text = "Battery Electric Vehicle"
                 tpPowertrain.Enabled = False
                 tpTorqueLimits.Enabled = False
-                cbEmPos.DataSource = [Enum].GetValues(GetType(PowertrainPosition)).Cast(Of PowertrainPosition).Where(Function(x) x.IsBatteryElectric()).Select(Function(x) New With {Key .Value = x, .Label = x.GetName()}).ToList()
+                cbEmPos.DataSource = [Enum].GetValues(GetType(PowertrainPosition)).Cast(Of PowertrainPosition).Where(Function(x) x.IsBatteryElectric()).Select(Function(x) New With {Key .Value = x, .Label = x.GetLabel()}).ToList()
                 cbEngineStopStart.Checked = False
                 cbEngineStopStart.Enabled = False
                 cbEcoRoll.DataSource = New EcoRollType() {EcoRollType.None}.Select(Function(ecoRoll) New With {Key .Value = ecoRoll, .Label = ecoRoll.GetName()}).ToList()
-
+				tbMaxDrivetrainPwr.Enabled = False
         End Select
     End Sub
 
@@ -596,19 +602,23 @@ Public Class VehicleForm
             veh.VehicleTankSystem = CType(If(cbTankSystem.SelectedIndex > 0, cbTankSystem.SelectedValue, Nothing), TankSystem?)
         End If
 
-        If (VehicleType = VectoSimulationJobType.ParallelHybridVehicle OrElse VehicleType = VectoSimulationJobType.BatteryElectricVehicle) Then
-            veh.BatteryFile.Init(GetPath(file), tbBattery.Text)
-            veh.NumBatteryPacks = tbBatteryPackCnt.Text.ToInt(0)
-            veh.InitialSOC = tbInitialSoC.Text.ToDouble() / 100.0
+		If (VehicleType = VectoSimulationJobType.ParallelHybridVehicle OrElse VehicleType = VectoSimulationJobType.BatteryElectricVehicle) Then
+			veh.BatteryFile.Init(GetPath(file), tbBattery.Text)
+			veh.NumBatteryPacks = tbBatteryPackCnt.Text.ToInt(0)
+			veh.InitialSOC = tbInitialSoC.Text.ToDouble() / 100.0
 
-            veh.ElectricMotorFile.Init(GetPath(file), tbElectricMotor.Text)
-            veh.ElectricMotorPosition = CType(cbEmPos.SelectedValue, PowertrainPosition)
-            veh.ElectricMotorCount = tbEmCount.Text.ToInt()
-            veh.ElectricMotorRatio = tbRatioEm.Text.ToDouble()
-            veh.ElectricMotorMechEff = tbEmEfficiency.Text.ToDouble()
-        End If
+			veh.ElectricMotorFile.Init(GetPath(file), tbElectricMotor.Text)
+			veh.ElectricMotorPosition = CType(cbEmPos.SelectedValue, PowertrainPosition)
+			veh.ElectricMotorCount = tbEmCount.Text.ToInt()
+			veh.ElectricMotorRatio = tbRatioEm.Text.ToDouble()
+			veh.ElectricMotorMechEff = tbEmEfficiency.Text.ToDouble()
+		End If
 
-        veh.EcoRollType = CType(cbEcoRoll.SelectedValue, EcoRollType)
+		If (VehicleType = VectoSimulationJobType.ParallelHybridVehicle) Then
+			veh.MaxPower = tbMaxDrivetrainPwr.Text.ToDouble(0)
+		End If
+
+		veh.EcoRollType = CType(cbEcoRoll.SelectedValue, EcoRollType)
 		veh.PCC = CType(cbPcc.SelectedValue, PredictiveCruiseControlType)
 		veh.EngineStop = cbEngineStopStart.Checked
         veh.EcoRollReleaseLockupClutch = cbAtEcoRollReleaseLockupClutch.Checked

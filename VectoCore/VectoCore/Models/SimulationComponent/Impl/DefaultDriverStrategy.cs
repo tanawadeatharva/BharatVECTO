@@ -1383,6 +1383,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 								response = Driver.DrivingActionBrake(
 									absTime, ds, DriverStrategy.BrakeTrigger.NextTargetSpeed,
 									gradient, r);
+								if (response is ResponseOverload) {
+									response = Driver.DrivingActionRoll(absTime, ds,
+										DriverStrategy.BrakeTrigger.NextTargetSpeed, gradient);
+								}
 							}).Case<ResponseOverload>(
 							() => {
 								DataBus.Brakes.BrakePower = 0.SI<Watt>();

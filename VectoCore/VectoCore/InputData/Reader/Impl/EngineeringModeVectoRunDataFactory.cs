@@ -190,7 +190,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 						: VectoSimulationJobType.ConventionalVehicle;
 
 					var hybridParameters = jobType == VectoSimulationJobType.ParallelHybridVehicle
-						? dao.CreateHybridStrategyParameters(InputDataProvider.JobInputData.HybridStrategyParameters)
+						? dao.CreateHybridStrategyParameters(InputDataProvider.JobInputData.HybridStrategyParameters, InputDataProvider)
 						: null;
                     yield return new VectoRunData {
 						JobName = InputDataProvider.JobInputData.JobName,

@@ -110,6 +110,9 @@ namespace TUGraz.VectoCommon.InputData
 		new IAdvancedDriverAssistantSystemsEngineering ADAS { get; }
 		double InitialSOC { get; }
 
+		Watt MaxDrivetrainPower { get; }
+
+
 		VectoSimulationJobType VehicleType { get; }
 	}
 

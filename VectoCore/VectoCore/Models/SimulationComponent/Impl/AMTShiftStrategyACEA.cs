@@ -717,7 +717,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			return _nextGear;
 		}
 
-		public override void Disengage(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outEngineSpeed) { }
+		public override void Disengage(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity) { }
 
 		public override GearInfo NextGear
 		{

@@ -39,6 +39,19 @@ namespace TUGraz.VectoCommon.InputData {
 			return pos.ToString().Replace(HybridPrefix, "").Replace(BatteryElectriPrefix, "");
 		}
 
+		public static string GetLabel(this PowertrainPosition pos)
+		{
+			switch (pos) {
+				case PowertrainPosition.HybridP0:
+				case PowertrainPosition.HybridP1:
+				case PowertrainPosition.HybridP2:
+				case PowertrainPosition.HybridP3:
+				case PowertrainPosition.HybridP4:
+					return pos.ToString().Replace(HybridPrefix, "");
+			}
+			return pos.ToString().Replace(BatteryElectriPrefix, "").Replace("B", "E");
+		}
+
 		public static bool IsBatteryElectric(this PowertrainPosition pos)
 		{
 			return pos == PowertrainPosition.BatteryElectricB2 || pos == PowertrainPosition.BatteryElectricB3 ||

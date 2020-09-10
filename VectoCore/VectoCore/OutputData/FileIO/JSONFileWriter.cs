@@ -470,7 +470,7 @@ public class JSONFileWriter : IOutputFileWriter
 		if ((vehicle.TankSystem.HasValue))
 			body["TankSystem"] = vehicle.TankSystem.Value.ToString();
 
-
+		body.Add(JsonKeys.HEV_Vehicle_MaxDrivetrainPower, vehicle.MaxDrivetrainPower.ConvertToKiloWatt().Value);
 		body.Add("InitialSoC", vehicle.InitialSOC * 100);
 		body.Add("PowertrainConfiguration", "ParallelHybrid");
 		body.Add("ElectricMotors", electricMotorsOut);

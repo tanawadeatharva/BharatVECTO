@@ -135,7 +135,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			return _gearbox.Gear;
 		}
 
-		public override void Disengage(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outEngineSpeed)
+		public override void Disengage(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity)
 		{
 			throw new System.NotImplementedException("AT Shift Strategy does not support disengaging.");
 		}

@@ -74,7 +74,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 		/// <summary>
 		///     [Nm]	Full load torque
 		/// </summary>
-		[ModalResultField(typeof(SI), caption: "Tq_icd_full [Nm]")] T_ice_full,
+		[ModalResultField(typeof(SI), caption: "Tq_ice_full [Nm]")] T_ice_full,
 
 		/// <summary>
 		///     [Nm]	Motoring torque

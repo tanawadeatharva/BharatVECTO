@@ -257,7 +257,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				DataBus.VehicleInfo.VehicleSpeed.IsSmaller(Constants.SimulationSettings.ClutchDisengageWhenHaltingSpeed);
 			if (halted || (driverDeceleratingNegTorque && vehiclespeedBelowThreshold)) {
 				EngageTime = VectoMath.Max(EngageTime, absTime + dt);
-
+				_strategy?.Disengage(absTime, dt, outTorque, outAngularVelocity);
 				return RequestGearDisengaged(absTime, dt, outTorque, outAngularVelocity, inTorque, dryRun);
 			}
 

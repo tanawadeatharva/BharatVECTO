@@ -6,7 +6,16 @@ using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Utils;
 
 namespace TUGraz.VectoCommon.Models {
-	public class HybridStrategyResponse
+
+	public interface IHybridStrategyResponse {}
+
+	public class HybridStrategyLimitedResponse : IHybridStrategyResponse
+	{
+		public Watt Delta { get; set; }
+		public PerSecond DeltaEngineSpeed { get; set; }
+	}
+
+	public class HybridStrategyResponse : IHybridStrategyResponse
 	{
 		public Dictionary<PowertrainPosition, NewtonMeter> MechanicalAssistPower;
 		public bool ShiftRequired { get; set; }
