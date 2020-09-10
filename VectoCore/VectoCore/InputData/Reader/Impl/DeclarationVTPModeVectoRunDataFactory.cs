@@ -164,9 +164,9 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 			}
 
 			// simulate the LongHaul cycle with RefLoad
-			var mission = Segment.Missions.FirstOrDefault(m => m.MissionType == DeclarationData.VTPMode.SelectedMission);
+			var mission = Segment.Missions.FirstOrDefault();
 			if (mission == null) {
-				throw new VectoException("Mission {0} not found in segmentation matrix", DeclarationData.VTPMode.SelectedMission);
+				throw new VectoException("No Mission found in segmentation matrix");
 			}
 			var loading = mission.Loadings.FirstOrDefault(l => l.Key == DeclarationData.VTPMode.SelectedLoading);
 			var runData = CreateVectoRunData(Segment, mission, loading.Value);
