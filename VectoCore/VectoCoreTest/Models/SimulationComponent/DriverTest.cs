@@ -55,6 +55,7 @@ using TUGraz.VectoCore.InputData.Reader;
 namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 {
 	[TestFixture]
+	[Parallelizable(ParallelScope.All)]
 	public class DriverTest
 	{
 		public const string JobFile = @"TestData\Jobs\24t Coach EngineOnly.vecto";

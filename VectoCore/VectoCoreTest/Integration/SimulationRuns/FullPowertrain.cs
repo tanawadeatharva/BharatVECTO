@@ -57,6 +57,7 @@ using TUGraz.VectoCore.InputData.Reader.Impl;
 namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 {
 	[TestFixture]
+	[Parallelizable(ParallelScope.All)]
 	public class FullPowerTrain
 	{
 		public const string CycleFile = @"TestData\Integration\FullPowerTrain\1-Gear-Test-dist.vdri";

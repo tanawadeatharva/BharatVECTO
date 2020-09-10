@@ -48,6 +48,7 @@ using Assert = NUnit.Framework.Assert;
 namespace TUGraz.VectoCore.Tests.Integration
 {
 	[TestFixture]
+	[Parallelizable(ParallelScope.All)]
 	public class TorqueLimitsTest
 	{
 		const string GearboxLimitJobDecl_865 =

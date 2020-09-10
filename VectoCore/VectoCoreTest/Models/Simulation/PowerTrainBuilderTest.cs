@@ -45,6 +45,7 @@ using TUGraz.VectoCore.Tests.Utils;
 namespace TUGraz.VectoCore.Tests.Models.Simulation
 {
 	[TestFixture]
+	[Parallelizable(ParallelScope.All)]
 	public class PowerTrainBuilderTest
 	{
 		public const string JobFile = @"TestData\Jobs\24t Coach.vecto";

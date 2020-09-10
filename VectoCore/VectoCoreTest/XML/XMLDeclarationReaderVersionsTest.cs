@@ -47,6 +47,7 @@ using XmlDocumentType = System.Xml.XmlDocumentType;
 namespace TUGraz.VectoCore.Tests.XML
 {
 	[TestFixture]
+	[Parallelizable(ParallelScope.All)]
 	public class XMLDeclarationReaderVersionsTest
 	{
 		protected IXMLInputDataReader xmlInputReader;

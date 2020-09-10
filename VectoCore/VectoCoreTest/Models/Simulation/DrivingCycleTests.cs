@@ -48,6 +48,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 	public class DrivingCycleTests
 	{
 		[TestCase()]
+		[Parallelizable(ParallelScope.All)]
 		public void TestEngineOnly()
 		{
 			var dataWriter = new MockModalDataContainer();

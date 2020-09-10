@@ -40,26 +40,33 @@ using TUGraz.VectoCore.Tests.Utils;
 namespace TUGraz.VectoCore.Tests.Integration.ShiftStrategy
 {
 	[TestFixture]
+	[Parallelizable(ParallelScope.All)]
 	public class ShiftStrategyTest
 	{
 		[OneTimeSetUp]
 		public void DisableLogging()
 		{
 			//LogManager.DisableLogging();
+		}
+
+		protected GraphWriter GetGraphWriter() 
+		{
+			var graphWriter = new GraphWriter();
 #if TRACE
-			GraphWriter.Enable();
+			graphWriter.Enable();
 #else
-			GraphWriter.Disable();
+			graphWriter.Disable();
 #endif
 
-			GraphWriter.Xfields = new[] { ModalResultField.dist };
+			graphWriter.Xfields = new[] { ModalResultField.dist };
 
-			GraphWriter.Yfields = new[] {
+			graphWriter.Yfields = new[] {
 				ModalResultField.v_act, ModalResultField.acc, ModalResultField.n_eng_avg, ModalResultField.Gear,
 				ModalResultField.P_eng_out, /*ModalResultField.T_eng_fcmap, */ ModalResultField.FCMap,
 			};
 			GraphWriter.PlotDrivingMode = true;
-			GraphWriter.Series1Label = "Vecto 3";
+			graphWriter.Series1Label = "Vecto 3";
+			return graphWriter;
 		}
 
 		[Test,
@@ -91,7 +98,7 @@ namespace TUGraz.VectoCore.Tests.Integration.ShiftStrategy
 			run.Run();
 			Assert.IsTrue(run.FinishedWithoutErrors);
 
-			GraphWriter.Write(modFile);
+			GetGraphWriter().Write(modFile);
 		}
 	}
 }

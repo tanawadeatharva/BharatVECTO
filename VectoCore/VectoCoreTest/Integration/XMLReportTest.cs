@@ -57,6 +57,7 @@ using XmlDocumentType = TUGraz.VectoCore.Utils.XmlDocumentType;
 namespace TUGraz.VectoCore.Tests.Integration
 {
 	[TestFixture]
+	[Parallelizable(ParallelScope.All)]
 	public class XMLReportTest
 	{
 		protected IXMLInputDataReader xmlInputReader;
