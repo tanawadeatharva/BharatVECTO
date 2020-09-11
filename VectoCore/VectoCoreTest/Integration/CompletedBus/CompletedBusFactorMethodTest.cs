@@ -1107,7 +1107,7 @@ namespace TUGraz.VectoCore.Tests.Integration.CompletedBus
 			//Assert.IsTrue(jobContainer.Runs.All(r => r.Success), String.Concat<Exception>(jobContainer.Runs.Select(r => r.ExecException)));
 		}
 
-		[TestCase(@"E:\QUAM\tmp\primary_heavyBus group 42_SmartPS_spec engine map.xml", 0),]
+		//[TestCase(@"E:\QUAM\tmp\primary_heavyBus group 42_SmartPS_spec engine map.xml", 0),]
 		public void TestRunPrimaryBusSimulationSngle(string jobName, int runIdx)
 		{
 			var relativeJobPath = jobName;
