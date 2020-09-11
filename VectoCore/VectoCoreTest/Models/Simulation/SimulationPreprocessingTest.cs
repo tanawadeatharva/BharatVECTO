@@ -216,15 +216,15 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 
 
 
-		[TestCase(Class9Decl, 20, 2, 18.9937),
-		 TestCase(Class9Decl, 20, 3, 18.6561),
-		 TestCase(Class9Decl, 20, 2.5, 18.8248),
-		 TestCase(Class9Decl, 25, 0, 24.6687),
-		 TestCase(Class9Decl, 25, 1, 24.3307),
-		 TestCase(Class9Decl, 25, 0.5, 24.4997),
-		 TestCase(Class9Decl, 87, -4, 87.9234),
-		 TestCase(Class9Decl, 87, -5, 88.2732),
-		 TestCase(Class9Decl, 87, -4.65, 88.15116)
+		[TestCase(Class9Decl, 20, 2, 19.019489),
+		 TestCase(Class9Decl, 20, 2.5, 18.85057),
+		 TestCase(Class9Decl, 20, 3, 18.68170),
+		 TestCase(Class9Decl, 25, 0, 24.68916),
+		 TestCase(Class9Decl, 25, 0.5, 24.52010),
+		 TestCase(Class9Decl, 25, 1, 24.35105),
+		 TestCase(Class9Decl, 87, -4, 88.86836),
+		 TestCase(Class9Decl, 87, -4.65, 89.101767),
+		 TestCase(Class9Decl, 87, -5, 89.2273896),
 			]
 		public void TestSimulationPreprocessingVelocityDuringTractionInterruption(string jobFile, double vPre, double grad, double vPost)
 		{
