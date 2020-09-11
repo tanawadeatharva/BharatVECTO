@@ -983,7 +983,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 		public bool GearEngaged(Second absTime)
 		{
-			throw new VectoException("No Gearbox available.");
+			return true;
 		}
 
 		#endregion

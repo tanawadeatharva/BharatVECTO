@@ -83,14 +83,15 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 
 			var fileWriter = new FileOutputWriter("Coach_MinimalPowertrain_Coasting");
 			var runData = new VectoRunData() {
-				JobName = "Coach_MinimalPowertrain_Coasting"
+				JobName = "Coach_MinimalPowertrain_Coasting",
+				VehicleData = vehicleData,
+				AirdragData = airdragData,
+				EngineData = engineData,
+				ElectricMachinesData = new List<Tuple<PowertrainPosition, ElectricMotorData>>()
             };
 			var modData = new ModalDataContainer(runData, fileWriter, null);
 			var vehicleContainer = new VehicleContainer(ExecutionMode.Engineering, modData) {
-				RunData = new VectoRunData() {
-					VehicleData = vehicleData,
-					EngineData = engineData,
-				}
+				RunData = runData
 			};
 			var mockCycle = new MockDrivingCycle(vehicleContainer, null);
 
@@ -221,15 +222,15 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			var fileWriter = new FileOutputWriter("Coach_MinimalPowertrain");
 			var runData = new VectoRunData()
 			{
-				JobName = "Coach_MinimalPowertrain"
+				JobName = "Coach_MinimalPowertrain",
+				VehicleData = vehicleData,
+				AirdragData = airdragData,
+				EngineData = engineData,
+				ElectricMachinesData = new List<Tuple<PowertrainPosition, ElectricMotorData>>()
 			};
 			var modData = new ModalDataContainer(runData, fileWriter, null);
             var vehicleContainer = new VehicleContainer(ExecutionMode.Engineering, modData) {
-				RunData = new VectoRunData() {
-					VehicleData = vehicleData,
-					EngineData = engineData,
-					ElectricMachinesData = new List<Tuple<PowertrainPosition, ElectricMotorData>>()
-				}
+				RunData = runData
 			};
 
 			var cycle = new MockDrivingCycle(vehicleContainer, null);

@@ -29,6 +29,7 @@
 *   Martin Rexeis, rexeis@ivt.tugraz.at, IVT, Graz University of Technology
 */
 
+using System;
 using System.Collections.Generic;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
@@ -48,6 +49,7 @@ using TUGraz.VectoCore.Utils;
 using Wheels = TUGraz.VectoCore.Models.SimulationComponent.Impl.Wheels;
 using NUnit.Framework;
 using System.IO;
+using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCore.InputData.Reader.Impl;
 using TUGraz.VectoCore.Tests.Models.SimulationComponent;
 
@@ -138,11 +140,16 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 			var fileWriter = new FileOutputWriter("Coach_MinimalPowertrain");
 			var runData = new VectoRunData()
 			{
-				JobName = "Coach_MinimalPowertrain"
-            };
+				JobName = "Coach_MinimalPowertrain",
+				VehicleData = vehicleData,
+				EngineData = engineData,
+				AxleGearData = axleGearData,
+				DriverData = driverData,
+				ElectricMachinesData = new List<Tuple<PowertrainPosition, ElectricMotorData>>()
+			};
 			var modData = new ModalDataContainer(runData, fileWriter, null);
             var container = new VehicleContainer(ExecutionMode.Engineering, modData) {
-				RunData = new VectoRunData() { VehicleData = vehicleData }
+				RunData = runData
 			};
 
 			var cycle = new DistanceBasedDrivingCycle(container, cycleData);
@@ -216,14 +223,17 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 			var fileWriter = new FileOutputWriter("Coach_MinimalPowertrainOverload");
 			var runData = new VectoRunData()
 			{
-				JobName = "Coach_MinimalPowertrain"
+				JobName = "Coach_MinimalPowertrain",
+				SimulationType = SimulationType.DistanceCycle,
+				VehicleData = vehicleData,
+				EngineData = engineData,
+				AxleGearData = axleGearData,
+				DriverData = driverData,
+				ElectricMachinesData = new List<Tuple<PowertrainPosition, ElectricMotorData>>()
 			};
 			var modData = new ModalDataContainer(runData, fileWriter, null);
             var container = new VehicleContainer(ExecutionMode.Engineering, modData) {
-				RunData = new VectoRunData() {
-					SimulationType = SimulationType.DistanceCycle,
-					VehicleData = vehicleData,
-				}
+				RunData = runData
 			};
 
 			var cycle = new DistanceBasedDrivingCycle(container, cycleData);

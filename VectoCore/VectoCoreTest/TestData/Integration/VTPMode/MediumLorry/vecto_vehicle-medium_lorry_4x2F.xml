@@ -12,6 +12,7 @@ urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.1 E:\QUAM\Workspace\VECTO_DEV_
 		<AxleConfiguration>4x2F</AxleConfiguration>
 		<CurbMassChassis>2500</CurbMassChassis>
 		<TechnicalPermissibleMaximumLadenMass>7000</TechnicalPermissibleMaximumLadenMass>
+		<CargoVolume>8.53</CargoVolume>
 		<IdlingSpeed>800</IdlingSpeed>
 		<RetarderType>None</RetarderType>
 		<AngledriveType>None</AngledriveType>
