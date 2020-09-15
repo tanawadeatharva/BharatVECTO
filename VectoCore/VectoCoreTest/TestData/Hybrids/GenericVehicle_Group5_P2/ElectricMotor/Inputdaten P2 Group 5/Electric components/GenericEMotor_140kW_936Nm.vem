@@ -7,11 +7,13 @@
   },
   "Body": {
     "SavedInDeclMode": false,
-	"Model": "Generic Electric Motor",
+    "Model": "Generic Electric Motor",
     "FullLoadCurve": "GenericEMotor_140kW_936Nm.vemp",
-    "DragCurve":  "GenericDrag_140kW_936Nm.vemd", 
+    "DragCurve": "GenericDrag_140kW_936Nm.vemd",
     "EfficiencyMap": "GenericMap_140kW_936Nm.vemo",
-    "Inertia" :  0.5 
-
-	}
+    "Inertia": 0.5,
+    "ContinuousPower": 5000000,
+    "ThermalOverloadBuffer": 0.6,
+    "ThermalOverloadRecoveryFactor": 0.9
+}
 }

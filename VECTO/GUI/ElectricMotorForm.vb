@@ -176,6 +176,9 @@ Public Class ElectricMotorForm
         tbMakeModel.Text = engine.Model
         tbInertia.Text = engine.Inertia.ToGUIFormat()
 
+        tbOvlBuffer.Text = (engine.OverloadBuffer.Value() / 1e6).ToGUIFormat()
+        tbContPwr.Text = engine.ContinuousPower.ToGUIFormat()
+        tbOverloadRecoveryFactor.Text = engine.OverloadRecoveryFactor.ToGUIFormat()
 
         tbDragTorque.Text = GetRelativePath(engine.DragCurve.Source, basePath)
         tbMaxTorque.Text = GetRelativePath(engine.FullLoadCurve.Source, basePath)
@@ -213,6 +216,9 @@ Public Class ElectricMotorForm
         em.ModelName = tbMakeModel.Text
         If Trim(em.ModelName) = "" Then em.ModelName = "Undefined"
         em.MotorInertia = tbInertia.Text.ToDouble(0)
+        em.ThermalOverloadCapacity = tbOvlBuffer.Text.ToDouble(0)
+        em.ContPwr = tbContPwr.Text.ToDouble(0)
+        em.OverloadRecoveryFactor = tbOverloadRecoveryFactor.Text.ToDouble(0)
 
         em.PathMaxTorque = tbMaxTorque.Text
         em.PathDrag = tbDragTorque.Text

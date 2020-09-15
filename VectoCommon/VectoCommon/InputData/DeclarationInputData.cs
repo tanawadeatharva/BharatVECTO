@@ -695,6 +695,12 @@ namespace TUGraz.VectoCommon.InputData
 		TableData EfficiencyMap { get; }
 
 		KilogramSquareMeter Inertia { get; }
+
+		Joule OverloadBuffer { get; }
+
+		double OverloadRecoveryFactor { get; }
+
+		Watt ContinuousPower { get; }
 	}
 
 	public interface IElectricMachinesDeclarationInputData

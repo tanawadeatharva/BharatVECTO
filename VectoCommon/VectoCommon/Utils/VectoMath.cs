@@ -175,6 +175,15 @@ namespace TUGraz.VectoCommon.Utils
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static T Max<T>(T c1, T c2) where T : IComparable
 		{
+			if (c1 == null)
+			{
+				return c2;
+			}
+
+			if (c2 == null)
+			{
+				return c1;
+			}
 			return c1.CompareTo(c2) > 0 ? c1 : c2;
 		}
 

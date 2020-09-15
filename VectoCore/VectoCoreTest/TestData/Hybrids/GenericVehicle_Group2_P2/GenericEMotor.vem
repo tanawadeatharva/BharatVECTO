@@ -7,10 +7,13 @@
 	},
 	"Body": {
 		"SavedInDeclMode": false,
-	"Model": "Generic Electric Motor",
-	"FullLoadCurve": "GenericEMotor.vemp",
-    "EfficiencyMap": "GenericMap.vemo",
-    "DragCurve":  "GenericDrag.vemd", 
-		"Inertia":  0.15
+		"Model": "Generic Electric Motor",
+		"FullLoadCurve": "GenericEMotor.vemp",
+		"EfficiencyMap": "GenericMap.vemo",
+		"DragCurve": "GenericDrag.vemd",
+		"Inertia": 0.15,
+		"ContinuousPower": 5000000,
+    "ThermalOverloadBuffer": 0.6,
+    "ThermalOverloadRecoveryFactor": 0.9
 	}
 }

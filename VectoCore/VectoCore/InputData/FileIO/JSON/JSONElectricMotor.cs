@@ -50,5 +50,25 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON {
 		{
 			get { return Body.GetEx<double>("Inertia").SI<KilogramSquareMeter>(); }
 		}
+
+		public Joule OverloadBuffer
+		{
+			get { return Body.GetEx<double>("ThermalOverloadBuffer").SI(Unit.SI.Mega.Joule).Cast<Joule>(); }
+		}
+
+		public double OverloadRecoveryFactor
+		{
+			get
+			{
+				return Body.GetEx<double>("ThermalOverloadRecoveryFactor");
+			}
+		}
+
+		public Watt ContinuousPower
+		{
+			get { return Body.GetEx<double>("ContinuousPower").SI<Watt>(); }
+		}
+
+		
 	}
 }

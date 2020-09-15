@@ -956,4 +956,7 @@ Public Class ElectricMachineWrapper
     Public ReadOnly Property DragCurve As TableData Implements IElectricMotorDeclarationInputData.DragCurve
     Public ReadOnly Property EfficiencyMap As TableData Implements IElectricMotorDeclarationInputData.EfficiencyMap
     Public ReadOnly Property Inertia As KilogramSquareMeter Implements IElectricMotorDeclarationInputData.Inertia
+    Public ReadOnly Property OverloadBuffer As Joule Implements IElectricMotorDeclarationInputData.OverloadBuffer
+    Public ReadOnly Property OverloadRecoveryFactor As Double Implements IElectricMotorDeclarationInputData.OverloadRecoveryFactor
+    Public ReadOnly Property ContinuousPower As Watt Implements IElectricMotorDeclarationInputData.ContinuousPower
 End Class

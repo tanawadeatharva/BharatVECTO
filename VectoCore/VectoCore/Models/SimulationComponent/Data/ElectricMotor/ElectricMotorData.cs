@@ -13,5 +13,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 
 		public DragCurve DragCurve { get; internal set; }
 
+		public Watt ContinuousPower { get; internal set; }
+
+		public Joule OverloadBuffer { get; internal set; }
+		public double OverloadRegenerationFactor { get; internal set; }
 	}
 }
