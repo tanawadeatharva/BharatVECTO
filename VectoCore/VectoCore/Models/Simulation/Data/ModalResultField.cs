@@ -391,6 +391,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 		//[ModalResultField(typeof(SI), caption: "P_em-{0}_brake [kW]", outputFactor: 1e-3)] P_electricMotor_brake_,
 		[ModalResultField(typeof(SI), caption: "P_em-{0}_loss [kW]", outputFactor: 1e-3)] P_electricMotorLoss_,
 		[ModalResultField(typeof(SI), caption: "P_em-{0}_inertia_loss [kW]", outputFactor: 1e-3)] P_electricMotorInertiaLoss_,
+		[ModalResultField(typeof(SI), caption: "EM-{0}_OverloadBuffer [%]", outputFactor: 100)] ElectricMotor_OvlBuffer_,
 
 		// only for graphDrawing Testcase
 		[ModalResultField(typeof(SI), caption: "P_em-P2_mech [kW]", outputFactor: 1e-3)]

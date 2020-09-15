@@ -71,7 +71,7 @@ namespace TUGraz.VectoCore.OutputData
 			ModalResultField.P_electricMotor_mech_, ModalResultField.P_electricMotor_el_,
 			ModalResultField.P_electricMotorLoss_, ModalResultField.P_electricMotorInertiaLoss_,
 			/*ModalResultField.P_electricMotor_brake_,*/ ModalResultField.P_electricMotor_drive_max_,
-			ModalResultField.P_electricMotor_gen_max_
+			ModalResultField.P_electricMotor_gen_max_, ModalResultField.ElectricMotor_OvlBuffer_
 		};
 
 		public static readonly IList<ModalResultField> FuelConsumptionSignals = new[] {

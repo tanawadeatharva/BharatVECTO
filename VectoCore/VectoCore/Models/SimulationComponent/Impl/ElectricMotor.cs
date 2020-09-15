@@ -44,7 +44,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			return ModelData.DragCurve.Lookup(electricMotorSpeed) * electricMotorSpeed;
 		}
 
-    public IResponse Initialize(NewtonMeter outTorque, PerSecond outAngularVelocity)
+	public IResponse Initialize(NewtonMeter outTorque, PerSecond outAngularVelocity)
 		{
 			PreviousState.OutAngularVelocity = outAngularVelocity;
 			PreviousState.OutTorque = outTorque;
@@ -341,6 +341,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			container[ModalResultField.P_electricMotor_drive_max_, Position] = (CurrentState.DriveMax ?? 0.SI<NewtonMeter>()) * avgSpeed;
 			container[ModalResultField.P_electricMotorLoss_, Position] = (CurrentState.InTorque - CurrentState.OutTorque) * avgSpeed - (CurrentState.ElectricPowerToBattery);
 			container[ModalResultField.P_electricMotorInertiaLoss_, Position] = CurrentState.InertiaTorqueLoss * avgSpeed;
+
+			var contribution =
+				(VectoMath.Abs((CurrentState.InTorque - CurrentState.OutTorque) * avgSpeed) -
+				ModelData.ContinuousPower) * simulationInterval;
+			container[ModalResultField.ElectricMotor_OvlBuffer_, Position] = VectoMath.Max(0, (ThermalBuffer + contribution) / ModelData.OverloadBuffer);
 		}
 
 		protected override void DoCommitSimulationStep(Second time, Second simulationInterval)
