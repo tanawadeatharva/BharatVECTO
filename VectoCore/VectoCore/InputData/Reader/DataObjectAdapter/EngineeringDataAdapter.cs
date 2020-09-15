@@ -661,8 +661,8 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 				DragCurve = ElectricMotorDragCurveReader.Create(motorData.DragCurve, ratio, count, efficiency),
 				EfficiencyMap = ElectricMotorMapReader.Create(motorData.EfficiencyMap, ratio, count, efficiency),
 				Inertia = motorData.Inertia,
-				ContinuousPower = motorData.ContinuousPower,
-				OverloadBuffer = motorData.OverloadBuffer,
+				ContinuousPower = motorData.ContinuousPower * count,
+				OverloadBuffer = motorData.OverloadBuffer * count,
 				OverloadRegenerationFactor = motorData.OverloadRecoveryFactor,
 			};
 		}
