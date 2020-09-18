@@ -723,12 +723,23 @@ namespace TUGraz.VectoCommon.InputData
 
 	public interface IElectricStorageDeclarationInputData
 	{
-		IBatteryPackDeclarationInputData BatteryPack { get; }
+		IREESSPackInputData REESSPack { get; }
 
 		int Count { get; }
 	}
 
-	public interface IBatteryPackDeclarationInputData : IComponentInputData
+	public enum REESSType
+	{
+		Battery,
+		SuperCap
+	}
+
+	public interface IREESSPackInputData : IComponentInputData
+	{
+		REESSType StorageType { get; }
+	}
+
+	public interface IBatteryPackDeclarationInputData : IREESSPackInputData
 	{
 		
 		double MinSOC { get; }
@@ -741,7 +752,18 @@ namespace TUGraz.VectoCommon.InputData
 
 		TableData VoltageCurve { get; }
 
-		double MaxCurrentFactor { get; }
+		PerSecond MaxCurrentFactor { get; }
+	}
+
+	public interface ISuperCapDeclarationInputData : IREESSPackInputData
+	{
+		Farad Capacity { get; }
+
+		Ohm InternalResistance { get; }
+
+		Volt MinVoltage { get; }
+
+		Volt MaxVoltage { get; }
 	}
 
 

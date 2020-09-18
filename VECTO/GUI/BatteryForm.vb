@@ -1,4 +1,5 @@
 ﻿
+Imports System.Collections.Generic
 Imports System.Drawing.Imaging
 Imports System.IO
 Imports System.Linq
@@ -34,6 +35,8 @@ Public Class BatteryForm
     Public JobDir As String = ""
     Private _changed As Boolean = False
 
+    Private ressType as REESSType
+
     Private _contextMenuFiles As String()
 
 
@@ -56,6 +59,12 @@ Public Class BatteryForm
 
         _changed = False
 
+        cbRESSType.DataSource = New List(Of object)() from{
+            New With {Key .Value = REESSType.Battery, .Label = "Battery"},   
+            New With {Key .Value = REESSType.SuperCap, .Label = "SuperCap"}    
+        }
+        cbRESSType.ValueMember = "Value"
+        cbRESSType.DisplayMember = "Label"
 
         NewBattery()
     End Sub
@@ -77,9 +86,9 @@ Public Class BatteryForm
     End Sub
 
     Private Sub ToolStripBtOpen_Click(sender As Object, e As EventArgs) Handles ToolStripBtOpen.Click
-        If BatteryFileBrowser.OpenDialog(_batteryFile) Then
+        If REESSFileBrowser.OpenDialog(_batteryFile) Then
             Try
-                OpenBatteryFile(BatteryFileBrowser.Files(0))
+                OpenBatteryFile(REESSFileBrowser.Files(0))
             Catch ex As Exception
                 MsgBox(ex.Message, MsgBoxStyle.OkOnly, "Error loading Battery File")
             End Try
@@ -152,16 +161,15 @@ Public Class BatteryForm
 
     'Open VENG file
     Public Sub OpenBatteryFile(file As String)
-        Dim battery As IBatteryPackEngineeringInputData
-
+        
         If ChangeCheckCancel() Then Exit Sub
 
         Dim inputData As IEngineeringInputDataProvider = TryCast(JSONInputDataFactory.ReadComponentData(file),
                                                                 IEngineeringInputDataProvider)
 
-        battery = inputData.JobInputData.Vehicle.Components.ElectricStorage.BatteryPack
+        Dim reess as IREESSPackInputData = inputData.JobInputData.Vehicle.Components.ElectricStorage.REESSPack
 
-        If Cfg.DeclMode <> battery.SavedInDeclarationMode Then
+        If Cfg.DeclMode <> reess.SavedInDeclarationMode Then
             Select Case WrongMode()
                 Case 1
                     Close()
@@ -173,18 +181,51 @@ Public Class BatteryForm
         End If
 
         Dim basePath As String = Path.GetDirectoryName(file)
-        tbMakeModel.Text = battery.Model
-        tbCapacity.Text = battery.Capacity.AsAmpHour.ToGUIFormat()
+        tbMakeModel.Text = reess.Model
 
-        tbCFactor.Text = battery.MaxCurrentFactor.ToGUIFormat()
-        tbSoCMin.Text = (battery.MinSOC * 100).ToGUIFormat()
-        tbSoCMax.Text = (battery.MaxSOC * 100).ToGUIFormat()
+        if (reess.StorageType = REESSType.Battery) then
+            pnBattery.Visible = True
+            pnSuperCap.Visible  = False
+            cbRESSType.SelectedValue = REESSType.Battery
+            Dim battery As IBatteryPackEngineeringInputData = ctype(reess, IBatteryPackEngineeringInputData)
+            tbCapacity.Text = battery.Capacity.AsAmpHour.ToGUIFormat()
 
-        tbSoCCurve.Text = GetRelativePath(battery.VoltageCurve.Source, basePath)
-        tbRiCurve.Text = GetRelativePath(battery.InternalResistanceCurve.Source, basePath)
+            tbCFactor.Text = battery.MaxCurrentFactor.ConvertToPerHour().Value.ToGUIFormat()
+            tbSoCMin.Text = (battery.MinSOC * 100).ToGUIFormat()
+            tbSoCMax.Text = (battery.MaxSOC * 100).ToGUIFormat()
+
+            tbSoCCurve.Text = GetRelativePath(battery.VoltageCurve.Source, basePath)
+            tbRiCurve.Text = GetRelativePath(battery.InternalResistanceCurve.Source, basePath)
+
+            tbSuperCapCapacity.Text = String.Empty
+            tbSuperCapMaxV.Text = string.Empty
+            tbSuperCapMinV.Text= string.Empty
+            tbSuperCapRi.Text= string.Empty
+
+        Elseif reess.StorageType = REESSType.SuperCap
+            pnBattery.Visible = False
+            pnSuperCap.Visible  = True
+            cbRESSType.SelectedValue = REESSType.SuperCap
+            Dim superCap As ISuperCapEngineeringInputData = ctype(reess, ISuperCapEngineeringInputData)
+            tbCapacity.Text = String.Empty
+
+            tbCFactor.Text  = String.Empty
+            tbSoCMin.Text  = String.Empty
+            tbSoCMax.Text = String.Empty
+
+            tbSoCCurve.Text =  String.Empty
+            tbRiCurve.Text = String.Empty
+
+            tbSuperCapCapacity.Text = superCap.Capacity.ToGUIFormat()
+            tbSuperCapMaxV.Text = superCap.MaxVoltage.ToGUIFormat()
+            tbSuperCapMinV.Text= superCap.MinVoltage.ToGUIFormat()
+            tbSuperCapRi.Text= superCap.InternalResistance.ToGUIFormat()
+
+        end if
+
         DeclInit()
 
-        BatteryFileBrowser.UpdateHistory(file)
+        REESSFileBrowser.UpdateHistory(file)
         Text = GetFilenameWithoutPath(file, True)
         LbStatus.Text = ""
         _batteryFile = file
@@ -197,8 +238,8 @@ Public Class BatteryForm
     'Save or Save As function = true if file is saved
     Private Function SaveOrSaveAs(ByVal saveAs As Boolean) As Boolean
         If _batteryFile = "" Or saveAs Then
-            If BatteryFileBrowser.SaveDialog(_batteryFile) Then
-                _batteryFile = BatteryFileBrowser.Files(0)
+            If REESSFileBrowser.SaveDialog(_batteryFile) Then
+                _batteryFile = REESSFileBrowser.Files(0)
             Else
                 Return False
             End If
@@ -209,25 +250,22 @@ Public Class BatteryForm
     'Save VENG file to given filepath. Called by SaveOrSaveAs. 
     Private Function SaveBatteryToFile(ByVal file As String) As Boolean
 
-        Dim battery As Battery = New Battery
-        battery.FilePath = file
+       
 
-        battery.ModelName = tbMakeModel.Text
-        If Trim(battery.ModelName) = "" Then battery.ModelName = "Undefined"
-        battery.BatCapacity = tbCapacity.Text.ToDouble(0)
-
-        battery.PathSoCCurve = tbSoCCurve.Text
-        battery.PathRiCurve = tbRiCurve.Text
-
-        battery.BatMinSoc = tbSoCMin.Text.ToDouble(0)
-        battery.BatMaxSoc = tbSoCMax.Text.ToDouble(0)
-
-        battery.BatCFactor = tbCFactor.Text.ToDouble(0)
-
-        If Not battery.SaveFile Then
-            MsgBox("Cannot save to " & file, MsgBoxStyle.Critical)
-            Return False
-        End If
+        Select Case cbRESSType.SelectedValue.ToString()
+            Case "Battery"
+                dim battery As Battery = FillBattery(file)
+                If Not battery.SaveFile Then
+                    MsgBox("Cannot save to " & file, MsgBoxStyle.Critical)
+                    Return False
+                End If
+            Case "SuperCap"
+                dim superCap As SuperCap = FillSuperCap(file)
+                If Not superCap.SaveFile Then
+                    MsgBox("Cannot save to " & file, MsgBoxStyle.Critical)
+                    Return False
+                End If
+        End Select
 
         If AutoSendTo Then
             If VehicleForm.Visible Then
@@ -237,13 +275,49 @@ Public Class BatteryForm
             End If
         End If
 
-        BatteryFileBrowser.UpdateHistory(file)
+        REESSFileBrowser.UpdateHistory(file)
         Text = GetFilenameWithoutPath(file, True)
         LbStatus.Text = ""
 
         _changed = False
 
         Return True
+    End Function
+
+    Private Function FillSuperCap(file As String) As SuperCap
+        Dim superCap As SuperCap = New SuperCap()
+        superCap.FilePath = file
+
+        superCap.ModelName = tbMakeModel.Text
+        If Trim(superCap.ModelName) = "" Then superCap.ModelName = "Undefined"
+
+        
+        superCap.Cap = tbSuperCapCapacity.Text.ToDouble(0)
+        superCap.Ri = _tbSuperCapRi.Text.ToDouble(0)
+
+        superCap.MinV = _tbSuperCapMinV.Text.ToDouble(0)
+        superCap.MaxV = tbSuperCapMaxV.Text.ToDouble(0)
+
+        Return superCap
+    End Function
+
+    Private Function FillBattery(file As string) As Battery
+        Dim battery As Battery = New Battery
+        battery.FilePath = file
+
+        battery.ModelName = tbMakeModel.Text
+        If Trim(battery.ModelName) = "" Then battery.ModelName = "Undefined"
+
+        battery.BatCapacity = tbCapacity.Text.ToDouble(0)
+
+        battery.PathSoCCurve = tbSoCCurve.Text
+        battery.PathRiCurve = tbRiCurve.Text
+
+        battery.BatMinSoc = tbSoCMin.Text.ToDouble(0)
+        battery.BatMaxSoc = tbSoCMax.Text.ToDouble(0)
+
+        battery.BatCFactor = tbCFactor.Text.ToDouble(0)
+        Return battery
     End Function
 
 
@@ -335,6 +409,10 @@ Public Class BatteryForm
         PicBox.Image = Nothing
 
         'If Not File.Exists(_engFile) Then Exit Sub
+
+        if (ressType <> REESSType.Battery) then
+            Return
+        end if
 
         Try
             Dim socFile As String =
@@ -495,5 +573,21 @@ Public Class BatteryForm
     Private Sub tbRiCurve_TextChanged(sender As Object, e As EventArgs) Handles tbRiCurve.TextChanged
         UpdatePic()
         Change()
+    End Sub
+
+    Private Sub lblRessType_Click(sender As Object, e As EventArgs) Handles lblRessType.Click
+
+    End Sub
+
+    Private Sub cbRESSType_SelectedIndexChanged(sender As Object, e As EventArgs) Handles cbRESSType.SelectedIndexChanged
+        If (cbRESSType.SelectedValue.Equals(REESSType.Battery)) Then
+            pnBattery.Visible = True
+            pnSuperCap.Visible = False
+            ressType = REESSType.Battery
+        Else 
+            pnBattery.Visible = False
+            pnSuperCap.Visible = True
+            ressType = REESSType.SuperCap 
+        End If
     End Sub
 End Class

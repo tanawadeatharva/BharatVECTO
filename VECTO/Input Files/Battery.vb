@@ -25,7 +25,7 @@ Public Class Battery
     Public BatMinSoc As Double
     Public BatMaxSoc As Double
     Public BatCFactor As Double
-
+    
     Public Sub New()
         _myPath = ""
         _filePath = ""
@@ -233,11 +233,16 @@ Public Class Battery
         End Get
     End Property
 
-    Public ReadOnly Property MaxCurrentFactor As Double Implements IBatteryPackDeclarationInputData.MaxCurrentFactor
+    Public ReadOnly Property MaxCurrentFactor As PerSecond Implements IBatteryPackDeclarationInputData.MaxCurrentFactor
         Get
-            Return BatCFactor
+            Return BatCFactor.SI(Unit.SI.Per.Hour).Cast(Of PerSecond)
         End Get
     End Property
 
 
+    Public ReadOnly Property StorageType As REESSType Implements IREESSPackInputData.StorageType
+    get
+        Return REESSType.Battery
+    End Get
+    End Property
 End Class

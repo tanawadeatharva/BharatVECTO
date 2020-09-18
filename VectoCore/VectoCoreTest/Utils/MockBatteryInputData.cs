@@ -3,9 +3,7 @@
 namespace TUGraz.VectoCore.Tests.Utils {
 	public class MockBatteryInputData : IElectricStorageEngineeringInputData
 	{
-		IBatteryPackDeclarationInputData IElectricStorageDeclarationInputData.BatteryPack => BatteryPack;
-
-		public IBatteryPackEngineeringInputData BatteryPack { get; set; }
+		public IREESSPackInputData REESSPack { get; set; }
 		public int Count { get; set; }
 	}
 }

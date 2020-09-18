@@ -144,7 +144,7 @@ namespace TUGraz.VectoCore.Tests.Utils
 			return null;
 		}
 
-		public IBatteryInfo BatteryInfo
+		public IRESSInfo BatteryInfo
 		{
 			get { throw new NotImplementedException(); }
 		}

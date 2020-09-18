@@ -28,7 +28,7 @@ namespace TUGraz.VectoCore.Tests.FileIO
 		[TestCase()]
 		public void TestReadBatteryPack()
 		{
-			var inputProvider = JSONInputDataFactory.ReadBatteryData(@"TestData\Hybrids\Battery\GenericBattery.vbat", false);
+			var inputProvider = JSONInputDataFactory.ReadREESSData(@"TestData\Hybrids\Battery\GenericBattery.vbat", false) as IBatteryPackEngineeringInputData;
 
 			Assert.AreEqual(7.5.SI(Unit.SI.Ampere.Hour), inputProvider.Capacity);
 			
@@ -120,12 +120,13 @@ namespace TUGraz.VectoCore.Tests.FileIO
 			Assert.NotNull(engineering);
 			Assert.AreEqual(0.8, engineering.JobInputData.Vehicle.InitialSOC);
 
-			var bat = engineering.JobInputData.Vehicle.Components.ElectricStorage;
+			var bat = engineering.JobInputData.Vehicle.Components.ElectricStorage.REESSPack as IBatteryPackEngineeringInputData;
 
-			var ri = BatteryInternalResistanceReader.Create(bat.BatteryPack.InternalResistanceCurve, 1);
+
+			var ri = BatteryInternalResistanceReader.Create(bat.InternalResistanceCurve, 1);
 			Assert.NotNull(bat);
-			Assert.AreEqual(2, bat.Count);
-			Assert.AreEqual(50, bat.BatteryPack.MaxCurrentFactor);
+			Assert.AreEqual(2, engineering.JobInputData.Vehicle.Components.ElectricStorage.Count);
+			Assert.AreEqual(50, bat.MaxCurrentFactor);
 			Assert.AreEqual(0.04, ri.Lookup(0.5).Value());
 
 			var em = engineering.JobInputData.Vehicle.Components.ElectricMachines;

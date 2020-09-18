@@ -4,9 +4,9 @@ using TUGraz.VectoCommon.Utils;
 
 namespace TUGraz.VectoCore.Models.Connector.Ports.Impl
 {
-	public abstract class AbstractBatteryResponse : IBatteryResponse
+	public abstract class AbstractRESSResponse : IRESSResponse
 	{
-		protected AbstractBatteryResponse(object source)
+		protected AbstractRESSResponse(object source)
 		{
 			Source = source;
 		}
@@ -15,13 +15,13 @@ namespace TUGraz.VectoCore.Models.Connector.Ports.Impl
 
 		public Second SimulationInterval { get; set; }
 
-		public Watt MaxBatteryLoadCharge { get; set; }
+		public Watt MaxChargePower { get; set; }
 
-		public Watt MaxBatteryLoadDischarge { get; set; }
+		public Watt MaxDischargePower { get; set; }
 
-		public Watt BatteryPower { get; set; }
+		public Watt PowerDemand { get; set; }
 
-		public Watt BatteryLoss { get; set; }
+		public Watt LossPower { get; set; }
 
 		public double StateOfCharge { get; set; }
 
@@ -29,26 +29,26 @@ namespace TUGraz.VectoCore.Models.Connector.Ports.Impl
 	}
 
 
-	public class BatteryResponseSuccess : AbstractBatteryResponse
+	public class RESSResponseSuccess : AbstractRESSResponse
 	{
-		public BatteryResponseSuccess(object source) : base(source) { }
+		public RESSResponseSuccess(object source) : base(source) { }
 
 		
 	}
 
-	public class BatteryOverloadResponse : AbstractBatteryResponse
+	public class RESSOverloadResponse : AbstractRESSResponse
 	{
-		public BatteryOverloadResponse(object source) : base(source) { }
+		public RESSOverloadResponse(object source) : base(source) { }
 	}
 
-	public class BatteryUnderloadResponse : AbstractBatteryResponse
+	public class RESSUnderloadResponse : AbstractRESSResponse
 	{
-		public BatteryUnderloadResponse(object source) : base(source) { }
+		public RESSUnderloadResponse(object source) : base(source) { }
 	}
 
-	public class BatteryDryRunResponse : AbstractBatteryResponse
+	public class RESSDryRunResponse : AbstractRESSResponse
 	{
-		public BatteryDryRunResponse(object source) : base(source) { }
+		public RESSDryRunResponse(object source) : base(source) { }
 	}
 
 
@@ -70,13 +70,13 @@ namespace TUGraz.VectoCore.Models.Connector.Ports.Impl
 
 		public Watt ChargingPower { get; set; }
 
-		public IBatteryResponse BatteryResponse { get; set; }
+		public IRESSResponse RESSResponse { get; set; }
 
 		public Watt MaxPowerDrive
 		{
 			get
 			{
-				return (BatteryResponse != null && BatteryResponse.MaxBatteryLoadDischarge != null ? BatteryResponse.MaxBatteryLoadDischarge : 0.SI<Watt>()) -
+				return (RESSResponse != null && RESSResponse.MaxDischargePower != null ? RESSResponse.MaxDischargePower : 0.SI<Watt>()) -
 						(ChargingPower != null ? ChargingPower : 0.SI<Watt>()) +
 						(AuxPower != null ? AuxPower : 0.SI<Watt>());
 			}
@@ -86,13 +86,13 @@ namespace TUGraz.VectoCore.Models.Connector.Ports.Impl
 		{
 			get
 			{
-				return (BatteryResponse != null && BatteryResponse.MaxBatteryLoadCharge != null ? BatteryResponse.MaxBatteryLoadCharge : 0.SI<Watt>()) -
+				return (RESSResponse != null && RESSResponse.MaxChargePower != null ? RESSResponse.MaxChargePower : 0.SI<Watt>()) -
 						(ChargingPower != null ? ChargingPower : 0.SI<Watt>()) +
 						(AuxPower != null ? AuxPower : 0.SI<Watt>());
 			}
 		}
 
-		public Watt BatteryPowerDemand { get; set; }
+		public Watt RESSPowerDemand { get; set; }
 
 		public object Source { get; }
 

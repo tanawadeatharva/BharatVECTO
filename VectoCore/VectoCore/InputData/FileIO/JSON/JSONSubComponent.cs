@@ -673,12 +673,9 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
     public class JSONElectricStorageEngineeringInputData : IElectricStorageEngineeringInputData
 	{
-		IBatteryPackDeclarationInputData IElectricStorageDeclarationInputData.BatteryPack
-		{
-			get { return BatteryPack; }
-		}
+		public IREESSPackInputData REESSPack { get; set; }
 
-		public IBatteryPackEngineeringInputData BatteryPack { get; internal set; }
+		
 		public int Count { get; internal set; }
 	}
 

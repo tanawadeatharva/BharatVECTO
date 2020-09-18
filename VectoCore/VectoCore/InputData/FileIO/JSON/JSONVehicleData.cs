@@ -136,7 +136,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 		{
 			return new JSONElectricStorageEngineeringInputData() {
 				Count = Body["Battery"].GetEx<int>("NumPacks"),
-				BatteryPack = JSONInputDataFactory.ReadBatteryData(Path.Combine(BasePath, Body["Battery"].GetEx<string>("BatteryFile")), false)
+				REESSPack = JSONInputDataFactory.ReadREESSData(Path.Combine(BasePath, Body["Battery"].GetEx<string>("BatteryFile")), false)
 			};
 		}
 

@@ -36,6 +36,8 @@ public class JSONFileWriter : IOutputFileWriter
 
 	private const int ElectricMotorFormatVersion = 1;
 
+	private const int REESSFormatVersion = 1;
+
 	private const int HybridStrategyParamsVersion = 1;
 
     private static JSONFileWriter _instance;
@@ -89,17 +91,17 @@ public class JSONFileWriter : IOutputFileWriter
 
 	public void SaveBattery(IBatteryPackEngineeringInputData battery, string filename, bool declMode)
 	{
-		var header = GetHeader(ElectricMotorFormatVersion);
+		var header = GetHeader(REESSFormatVersion);
 
 		var body = new Dictionary<string, object>();
 
 		body.Add("SavedInDeclMode", declMode);
-
+		body.Add("REESSType", "Battery");
 		body.Add("Model", battery.Model);
 		body.Add("Capacity", battery.Capacity.AsAmpHour);
 		body.Add("SOC_min", battery.MinSOC * 100.0);
 		body.Add("SOC_max",battery.MaxSOC * 100.0);
-		body.Add("MaxCurrentFactor", battery.MaxCurrentFactor);
+		body.Add("MaxCurrentFactor", battery.MaxCurrentFactor.ConvertToPerHour().Value);
 
         body.Add("InternalResistanceCurve", GetRelativePath(battery.InternalResistanceCurve.Source, Path.GetDirectoryName(filename)));
 		body.Add("SoCCurve", GetRelativePath(battery.VoltageCurve.Source, Path.GetDirectoryName(filename)));
@@ -107,7 +109,24 @@ public class JSONFileWriter : IOutputFileWriter
 		WriteFile(header, body, filename);
     }
 
-    public void SaveEngine(IEngineEngineeringInputData eng, string filename, bool DeclMode)
+	public void SaveSuperCap(ISuperCapEngineeringInputData superCap, string filename, bool declMode)
+	{
+		var header = GetHeader(REESSFormatVersion);
+
+		var body = new Dictionary<string, object>();
+
+		body.Add("SavedInDeclMode", declMode);
+		body.Add("REESSType", "SuperCap");
+		body.Add("Model", superCap.Model);
+		body.Add("Capacity", superCap.Capacity.Value());
+		body.Add("InternalResistance", superCap.InternalResistance.Value());
+		body.Add("U_min", superCap.MinVoltage.Value());
+		body.Add("U_max", superCap.MaxVoltage.Value());
+
+		WriteFile(header, body, filename);
+	}
+
+	public void SaveEngine(IEngineEngineeringInputData eng, string filename, bool DeclMode)
 	{
 		// Header
 		var header = GetHeader(EngineFormatVersion);
@@ -528,7 +547,7 @@ public class JSONFileWriter : IOutputFileWriter
 		var retVal = new Dictionary<string, object>()
 		{
 			{"NumPacks", vehicle.Components.ElectricStorage.Count},
-			{"BatteryFile", GetRelativePath(vehicle.Components.ElectricStorage.BatteryPack.DataSource.SourceFile, basePath)}
+			{"BatteryFile", GetRelativePath(vehicle.Components.ElectricStorage.REESSPack.DataSource.SourceFile, basePath)}
 		};
 		return retVal;
 	}

@@ -1064,6 +1064,8 @@ namespace TUGraz.VectoCommon.Utils
 		{
 			return SIBase<AmpereSecond>.Create(i.Value() * t.Value());
 		}
+
+		
 	}
 
 	public class AmpereSecond : SIBase<AmpereSecond>
@@ -1086,6 +1088,10 @@ namespace TUGraz.VectoCommon.Utils
 		public static WattSecond operator *(AmpereSecond ampereSeconds, Volt v)
 		{
 			return SIBase<WattSecond>.Create(ampereSeconds.Val * v.Value());
+		}
+		public static Ampere operator *(AmpereSecond i, PerSecond ps)
+		{
+			return SIBase<Ampere>.Create(i.Value() * ps.Value());
 		}
 	}
 
@@ -1128,6 +1134,28 @@ namespace TUGraz.VectoCommon.Utils
 		private Ohm(double val) : base(val, Units) { }
 
 		public override string UnitString { get { return "Ω"; } }
+	}
+
+	public class Farad : SIBase<Farad>
+	{
+		private static readonly int[] Units = { -1, -2, 4, 2, 0, 0, 0 };
+
+		private Farad(double val) : base(val, Units) {}
+
+		public override  string UnitString
+		{
+			get { return "F"; }
+		}
+
+		public static Volt operator /(AmpereSecond charge, Farad capacity)
+		{
+			return SIBase<Volt>.Create(charge.Value() / capacity.Val);
+		}
+
+		public static AmpereSecond operator *(Farad capacity, Volt v)
+		{
+			return SIBase<AmpereSecond>.Create(capacity.Val * v.Value());
+		}
 	}
 
 	public class VolumePerMeter : SIBase<VolumePerMeter>

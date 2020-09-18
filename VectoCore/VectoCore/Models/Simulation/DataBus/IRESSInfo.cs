@@ -2,9 +2,9 @@
 
 namespace TUGraz.VectoCore.Models.Simulation.DataBus
 {
-	public interface IBatteryInfo
+	public interface IRESSInfo
 	{
-		Volt InternalCellVoltage { get; }
+		Volt InternalVoltage { get; }
 
 		double StateOfCharge { get; }
 

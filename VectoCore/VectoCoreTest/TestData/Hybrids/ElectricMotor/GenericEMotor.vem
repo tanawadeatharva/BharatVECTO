@@ -14,6 +14,6 @@
     "Inertia": 0.15,
     "ContinuousPower": 50000,
     "ThermalOverloadBuffer": 0.6,
-    "ThermalOverloadRecoveryFactor": 0.9, 
+    "ThermalOverloadRecoveryFactor": 0.9 
   }
 }

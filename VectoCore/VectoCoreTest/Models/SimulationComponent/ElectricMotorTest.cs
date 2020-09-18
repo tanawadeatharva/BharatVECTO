@@ -72,7 +72,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			Assert.AreEqual(0, response.Engine.PowerRequest.Value(), 1e-6);
 			Assert.AreEqual(enginePower.Value(), response.ElectricMotor.ElectricMotorPowerMech.Value(), 1e-6);
 			Assert.AreEqual(expectedBatteryPower, response.ElectricSystem.ConsumerPower.Value(), 1e-6);
-			Assert.AreEqual(expectedBatteryPower, response.ElectricSystem.BatteryResponse.BatteryPower.Value(), 1e-6);
+			Assert.AreEqual(expectedBatteryPower, response.ElectricSystem.RESSResponse.PowerDemand.Value(), 1e-6);
 			Assert.IsTrue(response.ElectricSystem.ConsumerPower.Value() < enginePower.Value());
 		}
 
@@ -122,7 +122,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			Assert.AreEqual(enginePower.Value(), response.Engine.PowerRequest.Value(), 1e-6);
 			Assert.AreEqual(motorMechPower, response.ElectricMotor.ElectricMotorPowerMech);
 			Assert.AreEqual(expectedBatteryPower, response.ElectricSystem.ConsumerPower.Value(), 1e-6);
-			Assert.AreEqual(expectedBatteryPower, response.ElectricSystem.BatteryResponse.BatteryPower.Value(), 1e-6);
+			Assert.AreEqual(expectedBatteryPower, response.ElectricSystem.RESSResponse.PowerDemand.Value(), 1e-6);
 			Assert.IsTrue(response.ElectricSystem.ConsumerPower.Value() < response.ElectricMotor.ElectricMotorPowerMech.Value());
 		}
 
@@ -147,9 +147,9 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			var data = dao.CreateElectricMachines(electricMachine);
 			var strategy = new MockHybridControl();
 
-			var batInput = JSONInputDataFactory.ReadBatteryData(BatFile, false);
+			var batInput = JSONInputDataFactory.ReadREESSData(BatFile, false);
 			var tmp = new MockBatteryInputData() {
-				BatteryPack = batInput,
+				REESSPack = batInput,
 				Count = 1
 			};
 			var batteryData = dao.CreateBatteryData(tmp, 0.8);
@@ -176,7 +176,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			Assert.AreEqual(enginePower.Value(), response.Engine.PowerRequest.Value(), 1e-6);
 			Assert.AreEqual(motorMechPower, response.ElectricMotor.ElectricMotorPowerMech);
 			Assert.AreEqual(0, response.ElectricSystem.ConsumerPower.Value(), 1e-6);
-			Assert.AreEqual(0, response.ElectricSystem.BatteryResponse.BatteryPower.Value(), 1e-6);
+			Assert.AreEqual(0, response.ElectricSystem.RESSResponse.PowerDemand.Value(), 1e-6);
 			var modData = new MockModalDataContainer();
 			battery.CommitSimulationStep(absTime, dt, modData);
 		}
@@ -193,7 +193,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			var container = new MockVehicleContainer();
 
 			var inputData = JSONInputDataFactory.ReadElectricMotorData(MotorFile, false);
-			var batInput = JSONInputDataFactory.ReadBatteryData(BatFile, false);
+			var batInput = JSONInputDataFactory.ReadREESSData(BatFile, false);
 			var dao = new EngineeringDataAdapter();
 			var electricMachine = new MockElectricMachinesInputData()
 			{
@@ -211,7 +211,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 
 			var tmp = new MockBatteryInputData()
 			{
-				BatteryPack = batInput,
+				REESSPack = batInput,
 				Count = 1
 			};
 			var batteryData = dao.CreateBatteryData(tmp, 0.8);
@@ -232,9 +232,9 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			Assert.AreEqual(0, response.Engine.PowerRequest.Value(), 1e-6);
 			Assert.AreEqual(enginePower.Value(), response.ElectricMotor.ElectricMotorPowerMech.Value(), 1e-6);
 			Assert.AreEqual(expectedBatteryPower, response.ElectricSystem.ConsumerPower.Value(), 1e-6);
-			Assert.AreEqual(expectedBatteryPower, response.ElectricSystem.BatteryResponse.BatteryPower.Value(), 1e-6);
+			Assert.AreEqual(expectedBatteryPower, response.ElectricSystem.RESSResponse.PowerDemand.Value(), 1e-6);
 			Assert.IsTrue(response.ElectricSystem.ConsumerPower.Value() < enginePower.Value());
-			Assert.AreEqual(expectedBatteryLoss, response.ElectricSystem.BatteryResponse.BatteryLoss.Value(), 1e-4);
+			Assert.AreEqual(expectedBatteryLoss, response.ElectricSystem.RESSResponse.LossPower.Value(), 1e-4);
 		}
 
 
@@ -248,7 +248,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			
 
 			var inputData = JSONInputDataFactory.ReadElectricMotorData(MotorFile, false);
-			var batInput = JSONInputDataFactory.ReadBatteryData(BatFile, false);
+			var batInput = JSONInputDataFactory.ReadREESSData(BatFile, false);
 			var dao = new EngineeringDataAdapter();
 			var electricMachine = new MockElectricMachinesInputData()
 			{
@@ -267,7 +267,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 
 			var tmp = new MockBatteryInputData()
 			{
-				BatteryPack = batInput,
+				REESSPack = batInput,
 				Count = 1
 			};
 			var batteryData = dao.CreateBatteryData(tmp, 0.8);

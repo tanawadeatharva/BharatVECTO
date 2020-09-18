@@ -6,10 +6,10 @@ namespace TUGraz.VectoCore.Models.Connector.Ports.Impl
 {
 	public interface IBatteryProvider
 	{
-		IBatteryPort MainBatteryPort { get; }
+		IElectricEnergyStoragePort MainBatteryPort { get; }
 	}
 
-	public interface IBatteryPort
+	public interface IElectricEnergyStoragePort
 	{
 
 		void Initialize(double initialSoC);
@@ -23,33 +23,33 @@ namespace TUGraz.VectoCore.Models.Connector.Ports.Impl
 		/// <param name="powerDemand"></param>
 		/// <param name="dryRun"></param>
 		/// <returns></returns>
-		IBatteryResponse Request(Second absTime, Second dt, Watt powerDemand, bool dryRun);
+		IRESSResponse Request(Second absTime, Second dt, Watt powerDemand, bool dryRun);
 
 	}
 
 	public interface IElectricAuxConnecor
 	{
-		void Connect(IBatteryAuxPort aux);
+		void Connect(IElectricAuxPort aux);
 	}
 
 	public interface IElectricChargerConnector
 	{
-		void Connect(IBatteryChargePort charger);
+		void Connect(IElectricChargerPort charger);
 	}
 
 	public interface IBatteryConnector
 	{
-		void Connect(IBattery battery);
+		void Connect(IElectricEnergyStorage battery);
 	}
 
-	public interface IBatteryAuxPort
+	public interface IElectricAuxPort
 	{
 		Watt Initialize();
 
 		Watt PowerDemand(Second absTime, Second dt, bool dryRun);
 	}
 
-	public interface IBatteryChargePort
+	public interface IElectricChargerPort
 	{
 		Watt Initialize();
 

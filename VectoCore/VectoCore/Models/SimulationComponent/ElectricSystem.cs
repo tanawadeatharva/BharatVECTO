@@ -12,11 +12,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent
 	public class ElectricSystem : StatefulVectoSimulationComponent<ElectricSystem.State>, IElectricSystem, IElectricAuxConnecor, IElectricChargerConnector, IBatteryConnector
 	{
 
-		protected readonly List<IBatteryAuxPort> Consumers = new List<IBatteryAuxPort>();
+		protected readonly List<IElectricAuxPort> Consumers = new List<IElectricAuxPort>();
 
-		protected IBatteryChargePort Charger;
+		protected IElectricChargerPort Charger;
 
-		protected IBattery Battery;
+		protected IElectricEnergyStorage Battery;
 
 		public ElectricSystem(IVehicleContainer container) : base(container) { }
 
@@ -32,24 +32,24 @@ namespace TUGraz.VectoCore.Models.SimulationComponent
 				? (AbstractElectricSystemResponse)new ElectricSystemDryRunResponse(this)
 				: new ElectricSystemResponseSuccess(this);
 
-			if (batResponse is BatteryOverloadResponse)
+			if (batResponse is RESSOverloadResponse)
 			{
 				response = new ElectricSystemOverloadResponse(this);
 			}
-			if (batResponse is BatteryUnderloadResponse)
+			if (batResponse is RESSUnderloadResponse)
 			{
 				response = new ElectricSystemUnderloadResponse(this);
 			}
 
 			if (!dryRun)
 			{
-				CurrentState.SetState(powerDemand, auxDemand, chargePower, batResponse.BatteryPower);
+				CurrentState.SetState(powerDemand, auxDemand, chargePower, batResponse.PowerDemand);
 			}
 
 			response.AbsTime = absTime;
 			response.SimulationInterval = dt;
-			response.BatteryResponse = batResponse;
-			response.BatteryPowerDemand = totalPowerDemand;
+			response.RESSResponse = batResponse;
+			response.RESSPowerDemand = totalPowerDemand;
 			response.ConsumerPower = powerDemand;
 			response.AuxPower = auxDemand;
 			response.ChargingPower = chargePower;
@@ -74,7 +74,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent
 
 		#region Implementation of IBatteryChargeProvider
 
-		public void Connect(IBatteryChargePort charger)
+		public void Connect(IElectricChargerPort charger)
 		{
 			Charger = charger;
 		}
@@ -83,7 +83,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent
 
 		#region Implementation of IBatteryAuxOutProvider
 
-		public void Connect(IBatteryAuxPort aux)
+		public void Connect(IElectricAuxPort aux)
 		{
 			if (Consumers.Contains(aux)) { return; }
 			Consumers.Add(aux);
@@ -93,7 +93,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent
 
 		#region Implementation of IBatteryConnector
 
-		public void Connect(IBattery battery)
+		public void Connect(IElectricEnergyStorage battery)
 		{
 			if (Battery != null)
 			{
@@ -104,11 +104,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent
 
 		#endregion
 
-		#region Implementation of IBatteryInfo
+		#region Implementation of IRESSInfo
 
 		public Volt InternalCellVoltage
 		{
-			get { return Battery.InternalCellVoltage; }
+			get { return Battery.InternalVoltage; }
 		}
 
 		public double StateOfCharge

@@ -28,6 +28,18 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Battery {
 		//public double TargetSoC { get; internal set; }
 	}
 
+	public class SuperCapData
+	{
+		public Farad Capacity { get; internal set; }
+
+		public Ohm InternalResistance { get; internal set; }
+
+		public Volt MinVoltage { get; internal set; }
+
+		public Volt MaxVoltage { get; internal set; }
+		public double InitialSoC { get; internal set; }
+	}
+
 	public class SOCMap
 	{
 		protected internal SOCMapEntry[] Entries;

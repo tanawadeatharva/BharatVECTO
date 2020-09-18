@@ -9,7 +9,7 @@ using TUGraz.VectoCore.InputData.Reader.ComponentData;
 
 namespace TUGraz.VectoCore.InputData.FileIO.JSON
 {
-	public class JSONBatteryV1 : JSONFile, IBatteryPackEngineeringInputData
+	public class JSONBatteryV1 : JSONFile, IBatteryPackEngineeringInputData, ISuperCapEngineeringInputData
 	{
 		public JSONBatteryV1(JObject data, string filename, bool tolerateMissing = false) : base(data, filename,
 			tolerateMissing) { }
@@ -54,9 +54,41 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			get { return Body.GetEx<double>("SOC_max") / 100.0; }
 		}
 
-		public AmpereSecond Capacity
+		AmpereSecond IBatteryPackDeclarationInputData.Capacity
 		{
 			get { return Body.GetEx<double>("Capacity").SI(Unit.SI.Ampere.Hour).Cast<AmpereSecond>(); }
+		}
+
+		Farad ISuperCapDeclarationInputData.Capacity
+		{
+			get
+			{
+				return Body.GetEx<double>("Capacity").SI<Farad>();
+			}
+		}
+
+		public Ohm InternalResistance
+		{
+			get
+			{
+				return Body.GetEx<double>("InternalResistance").SI<Ohm>();
+			}
+		}
+
+		public Volt MinVoltage
+		{
+			get
+			{
+				return Body.GetEx<double>("U_min").SI<Volt>();
+			}
+		}
+
+		public Volt MaxVoltage
+		{
+			get
+			{
+				return Body.GetEx<double>("U_max").SI<Volt>();
+			}
 		}
 
 		public TableData InternalResistanceCurve
@@ -97,9 +129,18 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			}
 		}
 
-		public double MaxCurrentFactor
+		public PerSecond MaxCurrentFactor
 		{
-			get { return Body.GetEx<double>("MaxCurrentFactor"); }
+			get { return Body.GetEx<double>("MaxCurrentFactor").SI(Unit.SI.Per.Hour).Cast<PerSecond>(); }
+		}
+
+
+		public REESSType StorageType
+		{
+			get
+			{
+				return Body["REESSType"] == null ? REESSType.Battery : Body.GetEx<string>("REESSType").ParseEnum<REESSType>();
+			}
 		}
 	}
 }

@@ -146,6 +146,7 @@
     <Compile Include="Models\SimulationComponent\ElectricMotorTest.cs" />
     <Compile Include="Models\SimulationComponent\EngineFanAuxTest.cs" />
     <Compile Include="Models\SimulationComponent\GearboxShiftLossesTest.cs" />
+    <Compile Include="Models\SimulationComponent\SuperCapTest.cs" />
     <Compile Include="Utils\MockElectricConsumer.cs" />
     <Compile Include="Utils\MockHybridControl.cs" />
     <Compile Include="Utils\MockBattery.cs" />

@@ -140,7 +140,7 @@ Imports TUGraz.VectoCore.Utils
         TorqueConverterShiftPolygonFileBrowser = New FileBrowser("vgbs")
         CrossWindCorrectionFileBrowser = New FileBrowser("vcdx")
         ElectricMotorFileBrowser = New FileBrowser("vem")
-        BatteryFileBrowser = New FileBrowser("vbat")
+        REESSFileBrowser = New FileBrowser("vreess")
         DriverDecisionFactorVelocityDropFileBrowser = New FileBrowser("DfVelocityDrop")
         DriverDecisionFactorTargetSpeedFileBrowser = New FileBrowser("DfTargetSpeed")
         DriverDecisionFactorVelocityDropFileBrowser.Extensions = New String() {"csv"}
@@ -180,7 +180,7 @@ Imports TUGraz.VectoCore.Utils
         TorqueConverterShiftPolygonFileBrowser.Extensions = New String() {"vgbs"}
         CrossWindCorrectionFileBrowser.Extensions = New String() {"vcdv", "vcdb"}
         ElectricMotorFileBrowser.Extensions = New String() {"vem"}
-        BatteryFileBrowser.Extensions = New String() {"vbat"}
+        REESSFileBrowser.Extensions = New String() {"vreess"}
 
         ElectricMachineDragTorqueFileBrowser.Extensions = New String() {"vemd"}
         ElectricMachineMaxTorqueFileBrowser.Extensions = New String() {"vemp"}

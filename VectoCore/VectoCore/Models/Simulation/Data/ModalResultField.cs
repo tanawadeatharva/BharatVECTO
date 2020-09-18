@@ -408,17 +408,17 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
         P_electricMotor_mech_B3,
         // -->
 
-        [ModalResultField(typeof(SI), caption: "P_bat_T [kW]", outputFactor: 1e-3)] P_battery_terminal,
-		[ModalResultField(typeof(SI), caption: "P_bat_int [kW]", outputFactor: 1e-3)] P_battery_int,
-		[ModalResultField(typeof(SI), caption: "P_bat_loss [kW]", outputFactor: 1e-3)] P_battery_loss,
-		[ModalResultField(typeof(SI), caption: "Battery SOC [%]", outputFactor: 100)] BatteryStateOfCharge,
-		[ModalResultField(typeof(SI), caption: "P_bat charge max [kW]", outputFactor: 1e-3)] P_battery_charge_max,
-		[ModalResultField(typeof(SI), caption: "P_bat discharge max [kW]", outputFactor: 1e-3)] P_battery_discharge_max,
-		[ModalResultField(typeof(SI), caption: "U_bat_terminal [V]")] U_bat_terminal,
-		[ModalResultField(typeof(SI), caption: "U_0_bat [V]")] U0_bat,
-		[ModalResultField(typeof(SI), caption: "I_bat [kW]")] I_bat,
+        [ModalResultField(typeof(SI), caption: "P_reess_T [kW]", outputFactor: 1e-3)] P_reess_terminal,
+		[ModalResultField(typeof(SI), caption: "P_reess_int [kW]", outputFactor: 1e-3)] P_reess_int,
+		[ModalResultField(typeof(SI), caption: "P_reess_loss [kW]", outputFactor: 1e-3)] P_reess_loss,
+		[ModalResultField(typeof(SI), caption: "REESS SOC [%]", outputFactor: 100)] REESSStateOfCharge,
+		[ModalResultField(typeof(SI), caption: "P_reess charge max [kW]", outputFactor: 1e-3)] P_reess_charge_max,
+		[ModalResultField(typeof(SI), caption: "P_reess discharge max [kW]", outputFactor: 1e-3)] P_reess_discharge_max,
+		[ModalResultField(typeof(SI), caption: "U_reess_terminal [V]")] U_reess_terminal,
+		[ModalResultField(typeof(SI), caption: "U_0_reess [V]")] U0_reess,
+		[ModalResultField(typeof(SI), caption: "I_reess [kW]")] I_reess,
 		
-		[ModalResultField(typeof(SI), caption: "E_Batt [kWh]", outputFactor: 1/3600e3)] E_Bat,
+		[ModalResultField(typeof(SI), caption: "E_reess [kWh]", outputFactor: 1/3600e3)] E_RESS,
     }
 
 	[AttributeUsage(AttributeTargets.Field)]

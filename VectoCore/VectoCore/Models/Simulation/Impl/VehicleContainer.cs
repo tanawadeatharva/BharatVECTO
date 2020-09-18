@@ -72,7 +72,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 		public virtual IDrivingCycleInfo DrivingCycleInfo { get; protected set; }
 
-		public IBatteryInfo BatteryInfo { get; protected set; }
+		public IRESSInfo BatteryInfo { get; protected set; }
 
 
 		internal ISimulationOutPort Cycle;
@@ -171,7 +171,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 					HasElectricMotor = true;
 				})
 				.If<IHybridController>(c => { HybridController = c; })
-				.If<IBatteryInfo>(c => BatteryInfo = c);
+				.If<IRESSInfo>(c => BatteryInfo = c);
 
 			if (ignoreComponent) {
 				return;

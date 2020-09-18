@@ -4,22 +4,22 @@ using TUGraz.VectoCore.Models.Connector.Ports.Impl;
 using TUGraz.VectoCore.Models.SimulationComponent;
 
 namespace TUGraz.VectoCore.Tests.Utils {
-	public class MockBattery : IBattery, IBatteryPort, IElectricAuxConnecor
+	public class MockBattery : IElectricEnergyStorage, IElectricEnergyStoragePort, IElectricAuxConnecor
 	{
-		public Volt InternalCellVoltage
+		public Volt InternalVoltage
 		{
 			get { return 640.SI<Volt>(); }
 		}
 
-		public IBatteryResponse Request(Second absTime, Second dt, Watt powerdemand, bool dryRun = false)
+		public IRESSResponse Request(Second absTime, Second dt, Watt powerdemand, bool dryRun = false)
 		{
-			return new BatteryResponseSuccess(this)
+			return new RESSResponseSuccess(this)
 			{
-				MaxBatteryLoadDischarge = -InternalCellVoltage * MaxCurrent,
+				MaxDischargePower = -InternalVoltage * MaxCurrent,
 				AbsTime = absTime,
-				BatteryLoss = 0.SI<Watt>(),
-				MaxBatteryLoadCharge = InternalCellVoltage * MaxCurrent,
-				BatteryPower = powerdemand,
+				LossPower = 0.SI<Watt>(),
+				MaxChargePower = InternalVoltage * MaxCurrent,
+				PowerDemand = powerdemand,
 				SimulationInterval = dt,
 			};
 		}
@@ -46,7 +46,7 @@ namespace TUGraz.VectoCore.Tests.Utils {
 			throw new System.NotImplementedException();
 		}
 
-		public IBatteryPort MainBatteryPort
+		public IElectricEnergyStoragePort MainBatteryPort
 		{
 			get { return this; }
 		}
@@ -61,14 +61,14 @@ namespace TUGraz.VectoCore.Tests.Utils {
 			StateOfCharge = initialSoC;
 		}
 
-		public void Connect(IBatteryAuxPort aux)
+		public void Connect(IElectricAuxPort aux)
 		{
 			throw new System.NotImplementedException();
 		}
 
 		#region Implementation of IBatteryChargeProvider
 
-		public void Connect(IBatteryChargePort charger)
+		public void Connect(IElectricChargerPort charger)
 		{
 			throw new System.NotImplementedException();
 		}

@@ -8,7 +8,7 @@ using TUGraz.VectoCore.Models.Simulation.Impl;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 {
-	internal class ElectricAuxiliary : IBatteryAuxPort
+	internal class ElectricAuxiliary : IElectricAuxPort
 	{
 		protected readonly Dictionary<string, Func<Watt>> Auxiliaries = new Dictionary<string, Func<Watt>>();
 
@@ -19,7 +19,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			DataBus = container;
 		}
 
-		#region Implementation of IBatteryAuxPort
+		#region Implementation of IElectricAuxPort
 
 		public Watt Initialize()
 		{
