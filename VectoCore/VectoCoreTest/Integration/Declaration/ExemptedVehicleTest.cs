@@ -129,7 +129,7 @@ namespace TUGraz.VectoCore.Tests.Integration
 			TestCase(ExemptedVehicle, false, false, false, "Invalid input: at least one option of ZE-HDV, He-HDV, and DualFuelVehicle has to be set for an exempted vehicle!")]
 		public void TestInvalidExemptedCombination(string filename, bool zeroEmission, bool hybrid, bool dualFuel, string exMsg)
 		{
-			var writer = new FileOutputWriter(GetRandomFilename(filename));
+			var writer = new FileOutputWriter(InputDataHelper.GetRandomFilename(filename));
 
 			var customerFile = writer.XMLCustomerReportName;
 			var manufactuerFile = writer.XMLFullReportName;
@@ -174,14 +174,7 @@ namespace TUGraz.VectoCore.Tests.Integration
 			Assert.IsFalse(File.Exists(monitoringFile));
 		}
 
-		private string GetRandomFilename(string jobFile)
-		{
-			var path = Path.GetDirectoryName( Path.GetFullPath(jobFile));
-			var filename = Path.GetFileNameWithoutExtension(jobFile);
-			var extension = Path.GetExtension(jobFile);
-			var random = Regex.Replace(Convert.ToBase64String(Guid.NewGuid().ToByteArray()), "[^A-Za-z0-9_.]+", "").Substring(0, 5);
-			return Path.Combine(path, $"{filename}-{random}.{extension}");
-		}
+		
 
 
 		[TestCase(ExemptedVehicle, null, 10000),
@@ -189,7 +182,7 @@ namespace TUGraz.VectoCore.Tests.Integration
 		TestCase(ExemptedVehicle, null, null)]
 		public void TestHybridExemptedRequiresMaxNetPower(string filename, double? maxNetPower1, double? maxNetPower2)
 		{
-			var writer = new FileOutputWriter(GetRandomFilename(filename));
+			var writer = new FileOutputWriter(InputDataHelper.GetRandomFilename(filename));
 
 			var customerFile = writer.XMLCustomerReportName;
 			var manufactuerFile = writer.XMLFullReportName;

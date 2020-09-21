@@ -48,6 +48,7 @@ using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.OutputData;
 using TUGraz.VectoCore.OutputData.FileIO;
 using TUGraz.VectoCore.OutputData.XML;
+using TUGraz.VectoCore.Tests.Utils;
 using TUGraz.VectoCore.Tests.XML;
 using TUGraz.VectoCore.Utils;
 using TUGraz.VectoHashing;
@@ -77,7 +78,7 @@ namespace TUGraz.VectoCore.Tests.Integration
 		{
 			var jobfile = @"Testdata\XML\XMLReaderDeclaration\vecto_vehicle-sample.xml";
 			var dataProvider = xmlInputReader.CreateDeclaration(jobfile);
-			var writer = new FileOutputWriter(jobfile);
+			var writer = new FileOutputWriter(InputDataHelper.GetRandomFilename(jobfile));
 			var xmlReport = new XMLDeclarationReport(writer);
 			var sumData = new SummaryDataContainer(writer);
 			var jobContainer = new JobContainer(sumData);
@@ -160,7 +161,7 @@ namespace TUGraz.VectoCore.Tests.Integration
 		public void TestValidationXMLReports(string jobfile)
 		{
 			var dataProvider = xmlInputReader.CreateDeclaration(jobfile);
-			var writer = new FileOutputWriter(jobfile);
+			var writer = new FileOutputWriter(InputDataHelper.GetRandomFilename(jobfile));
 			var xmlReport = new XMLDeclarationReport(writer);
 			var sumData = new SummaryDataContainer(writer);
 			var jobContainer = new JobContainer(sumData);
@@ -249,7 +250,7 @@ namespace TUGraz.VectoCore.Tests.Integration
 
 					var modified = XmlReader.Create(new StringReader(nav.OuterXml));
 
-					var writer = new FileOutputWriter(jobfile);
+					var writer = new FileOutputWriter(InputDataHelper.GetRandomFilename(jobfile));
 					var xmlReport = new XMLDeclarationReport(writer);
 					var sumData = new SummaryDataContainer(writer);
 					var jobContainer = new JobContainer(sumData);
@@ -281,7 +282,7 @@ namespace TUGraz.VectoCore.Tests.Integration
 		{
 			var jobfile = @"Testdata\XML\XMLReaderDeclaration\vecto_vehicle-sample.xml";
 			var dataProvider = xmlInputReader.CreateDeclaration(jobfile);
-			var writer = new FileOutputWriter(jobfile);
+			var writer = new FileOutputWriter(InputDataHelper.GetRandomFilename(jobfile));
 			var xmlReport = new XMLDeclarationReport(writer);
 			var sumData = new SummaryDataContainer(writer);
 			var jobContainer = new JobContainer(sumData);
