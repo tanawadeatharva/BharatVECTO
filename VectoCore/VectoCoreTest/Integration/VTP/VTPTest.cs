@@ -161,6 +161,7 @@ namespace TUGraz.VectoCore.Tests.Integration.VTP
 		[Category("LongRunning")]
 		[Category("Integration")]
 		[TestCase(@"TestData\Integration\VTPMode\GenericVehicle\VTP_AT-gbx.vecto")]
+		[TestCase(@"TestData\Integration\VTPMode\GenericVehicle\VTP_AT-gbx_2TC.vecto")]
 		public void RunVTPWithAT(string jobFile)
 		{
 			var fileWriter = new FileOutputWriter(jobFile);
