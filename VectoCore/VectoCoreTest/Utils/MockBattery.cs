@@ -46,6 +46,15 @@ namespace TUGraz.VectoCore.Tests.Utils {
 			throw new System.NotImplementedException();
 		}
 
+		public double MinSoC
+		{
+			get { return 0; }
+		}
+		public double MaxSoC
+		{
+			get { return 1; }
+		}
+
 		public IElectricEnergyStoragePort MainBatteryPort
 		{
 			get { return this; }

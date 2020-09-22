@@ -15,5 +15,9 @@ namespace TUGraz.VectoCore.Models.Simulation.DataBus
 		Watt MaxChargePower(Second dt);
 
 		Watt MaxDischargePower(Second dt);
+
+		double MinSoC { get; }
+
+		double MaxSoC { get; }
 	}
 }

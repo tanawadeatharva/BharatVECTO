@@ -122,9 +122,14 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 			}
 
 			var auxEnergyReserve = ModelData.ElectricAuxDemand * StrategyParameters.AuxReserveTime;
-			var minSoc = Math.Max(ModelData.BatteryData.MinSOC, StrategyParameters.MinSoC);
-			BatteryDischargeEnergyThreshold = ModelData.BatteryData.Capacity * minSoc * ModelData.BatteryData.SOCMap.Lookup(minSoc) +
-										auxEnergyReserve;
+			BatteryDischargeEnergyThreshold = 0.SI<WattSecond>();
+			if (auxEnergyReserve > 0) {
+				var minSoc = Math.Max(ModelData.BatteryData?.MinSOC ?? ModelData.SuperCapData.InitialSoC,
+					StrategyParameters.MinSoC);
+				BatteryDischargeEnergyThreshold =
+					ModelData.BatteryData.Capacity * minSoc * ModelData.BatteryData.SOCMap.Lookup(minSoc) +
+					auxEnergyReserve;
+			}
 		}
 
 		
@@ -1063,7 +1068,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 			TestPowertrain.HybridController.ApplyStrategySettings(cfg);
 			TestPowertrain.HybridController.Initialize(Controller.PreviousState.OutTorque, Controller.PreviousState.OutAngularVelocity);
 			TestPowertrain.Clutch.Initialize(DataBus.ClutchInfo.ClutchLosses);
-			TestPowertrain.Battery.Initialize(DataBus.BatteryInfo.StateOfCharge);
+			TestPowertrain.Battery?.Initialize(DataBus.BatteryInfo.StateOfCharge);
+			TestPowertrain.SuperCap?.Initialize(DataBus.BatteryInfo.StateOfCharge);
 
 			var currentGear = PreviousState.GearboxEngaged ? DataBus.GearboxInfo.Gear : Controller.ShiftStrategy.NextGear.Gear;
 			
@@ -1119,6 +1125,12 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 					(DataBus.ClutchInfo as SwitchableClutch).PreviousState.InAngularVelocity;
 				
 			//}
+
+			var pos = ModelData.ElectricMachinesData.FirstOrDefault().Item1;
+			TestPowertrain.ElectricMotor.ThermalBuffer =
+				(DataBus.ElectricMotorInfo(pos) as ElectricMotor).ThermalBuffer;
+			TestPowertrain.ElectricMotor.DeRatingActive =
+				(DataBus.ElectricMotorInfo(pos) as ElectricMotor).DeRatingActive;
 
 			if (/*nextGear != DataBus.GearboxInfo.Gear && */TestPowertrain.ElectricMotorP2 != null) {
 				TestPowertrain.ElectricMotorP2.PreviousState.OutAngularVelocity =
@@ -1218,8 +1230,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 				}
 			}
 
-			var maxSoC = Math.Min(ModelData.BatteryData.MaxSOC, StrategyParameters.MaxSoC);
-			var minSoC = Math.Max(ModelData.BatteryData.MinSOC, StrategyParameters.MinSoC);
+			var maxSoC = Math.Min(DataBus.BatteryInfo.MaxSoC, StrategyParameters.MaxSoC);
+			var minSoC = Math.Max(DataBus.BatteryInfo.MinSoC , StrategyParameters.MinSoC);
 			tmp.SoCPenalty = 1 - Math.Pow((DataBus.BatteryInfo.StateOfCharge - StrategyParameters.TargetSoC) / (0.5 * (maxSoC - minSoC)), 5);
 
 			var socthreshold = StrategyParameters.MinSoC + (StrategyParameters.MaxSoC - StrategyParameters.MinSoC) * 0.1;

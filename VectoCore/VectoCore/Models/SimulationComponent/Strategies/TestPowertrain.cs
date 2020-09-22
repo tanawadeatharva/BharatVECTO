@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Utils;
@@ -16,6 +17,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies {
 		public Gearbox Gearbox;
 		public SimpleHybridController HybridController;
 		public Battery Battery;
+		public SuperCap SuperCap;
 		public Clutch Clutch;
 		public IBrakes Brakes;
 
@@ -23,6 +25,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies {
 		public IDrivingCycleInfo DrivingCycle;
 
 		public StopStartCombustionEngine CombustionEngine;
+		public ElectricMotor ElectricMotor;
 		public ElectricMotor ElectricMotorP2;
 		public ElectricMotor ElectricMotorP3;
 
@@ -32,8 +35,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies {
 			Gearbox = Container.GearboxCtl as Gearbox;
 			HybridController = Container.HybridController as SimpleHybridController;
 			Battery = Container.BatteryInfo as Battery;
+			SuperCap = Container.BatteryInfo as SuperCap;
 			Clutch = Container.ClutchInfo as Clutch;
 			CombustionEngine = Container.EngineInfo as StopStartCombustionEngine;
+			ElectricMotor = container.ElectricMotors.FirstOrDefault().Value as ElectricMotor;
 			ElectricMotorP2 = container.ElectricMotors.ContainsKey(PowertrainPosition.HybridP2)
 				? container.ElectricMotors[PowertrainPosition.HybridP2] as ElectricMotor
 				: null;

@@ -55,6 +55,15 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			return VectoMath.Max(maxDischargePower > 0 ? -double.MaxValue.SI<Watt>():maxDischargePower, maxPower);
 		}
 
+		public double MinSoC
+		{
+			get { return ModelData.MinVoltage / ModelData.MaxVoltage; }
+		}
+		public double MaxSoC
+		{
+			get { return 1; }
+		}
+
 		public void Initialize(double initialSoC)
 		{
 			PreviousState.Charge = ModelData.Capacity * ((ModelData.MaxVoltage - ModelData.MinVoltage) *  initialSoC +

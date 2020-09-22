@@ -207,6 +207,15 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			return VectoMath.Max(maxDischargePower, maxPower);
 		}
 
+		public double MinSoC
+		{
+			get { return ModelData.MinSOC; }
+		}
+		public double MaxSoC
+		{
+			get { return ModelData.MaxSOC; }
+		}
+
 		//public Ampere MaxCurrent
 		//{
 		//	get

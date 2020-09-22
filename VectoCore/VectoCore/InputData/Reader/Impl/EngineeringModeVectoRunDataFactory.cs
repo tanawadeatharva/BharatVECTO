@@ -187,7 +187,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 					var battery = dao.CreateBatteryData(vehicle.Components.ElectricStorage, vehicle.InitialSOC);
 					var superCap = dao.CreateSuperCapData(vehicle.Components.ElectricStorage, vehicle.InitialSOC);
 
-					var jobType = electricMachines.Count > 0 && battery != null
+					var jobType = electricMachines.Count > 0 && (battery != null || superCap != null)
 						? VectoSimulationJobType.ParallelHybridVehicle
 						: VectoSimulationJobType.ConventionalVehicle;
 

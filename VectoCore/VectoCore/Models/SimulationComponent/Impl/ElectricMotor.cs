@@ -22,8 +22,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		protected ElectricMotorData ModelData;
 		private PerSecond _maxSpeed;
 
-		protected Joule ThermalBuffer = 0.SI<Joule>();
-		protected bool DeRatingActive = false;
+		protected internal Joule ThermalBuffer = 0.SI<Joule>();
+		protected internal bool DeRatingActive = false;
 
 		public ElectricMotor(IVehicleContainer container, ElectricMotorData data, IElectricMotorControl control, PowertrainPosition position) : base(container)
 		{
@@ -191,8 +191,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			//	return retVal;
 			//}
 
-			if (!dryRun && !eMotorTorque.IsBetween(
-					maxDriveTorque ?? 0.SI<NewtonMeter>(), maxRecuperationTorque ?? 0.SI<NewtonMeter>())) {
+			if (!dryRun && (eMotorTorque.IsSmaller(maxDriveTorque ?? 0.SI<NewtonMeter>(), 1e-3) || eMotorTorque.IsGreater(maxRecuperationTorque ?? 0.SI<NewtonMeter>(), 1e-3))
+				//!eMotorTorque.IsBetween(
+				//	maxDriveTorque ?? 0.SI<NewtonMeter>(), maxRecuperationTorque ?? 0.SI<NewtonMeter>())
+				) {
 				throw new VectoException(
 					"Invalid operating point provided by strategy! SupportPower: {0}, max Power: {1}, min Power: {2}", eMotorTorque,
 					maxDriveTorque, maxRecuperationTorque);

@@ -49,7 +49,7 @@ Public Class SuperCap
 
     Public ReadOnly Property Manufacturer As String Implements IComponentInputData.Manufacturer
         Get
-
+            Return String.Empty
         End Get
     End Property
 
