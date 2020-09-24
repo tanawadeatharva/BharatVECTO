@@ -70,14 +70,14 @@ namespace TUGraz.VectoCore.Models.Simulation.DataBus
 
 		IDrivingCycleInfo DrivingCycleInfo { get; }
 
-
-
 		IElectricMotorInfo ElectricMotorInfo(PowertrainPosition pos);
 
 		IRESSInfo BatteryInfo { get; }
 
 		ITorqueConverterControl TorqueConverterCtl { get; }
 		IPowertainInfo PowertrainInfo { get; }
+
+		IHybridControllerInfo HybridControllerInfo { get; }
 	}
 
 	public interface IPowertainInfo

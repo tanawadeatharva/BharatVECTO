@@ -68,7 +68,7 @@ namespace TUGraz.VectoCore.Tests.Integration.BatteryElectric
 
 			var Yfields = new[] {
 				ModalResultField.v_act, ModalResultField.altitude, ModalResultField.acc, ModalResultField.Gear,
-				ModalResultField.BatterySOC,
+				ModalResultField.REESSStateOfCharge,
 			}.Concat(yFields).ToArray();
 			graphWriter.Xfields = new[] { ModalResultField.dist };
 			graphWriter.Yfields = yFields;

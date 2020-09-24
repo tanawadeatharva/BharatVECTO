@@ -61,7 +61,7 @@ namespace TUGraz.VectoCore.Tests.Integration.Hybrid
 		{
 			var Yfields = new[] {
 				ModalResultField.v_act, ModalResultField.altitude, ModalResultField.acc, ModalResultField.Gear,
-				ModalResultField.P_ice_out, ModalResultField.BatterySOC, ModalResultField.FCMap
+				ModalResultField.P_ice_out, ModalResultField.REESSStateOfCharge, ModalResultField.FCMap
 			}.Concat(emYFields).ToArray();
 
 			var graphWriter = new GraphWriter();

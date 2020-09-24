@@ -159,6 +159,8 @@ namespace TUGraz.VectoCore.Tests.Utils
 			get { return this; }
 		}
 
+		public IHybridControllerInfo HybridControllerInfo { get; }
+
 		public Watt GearboxLoss()
 		{
 			throw new System.NotImplementedException();
