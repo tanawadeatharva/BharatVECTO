@@ -159,7 +159,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			var tnPort = new MockTnOutPort();
 			motor.Connect(tnPort);
 
-			strategy.ElectricShare = 0.SI<NewtonMeter>();
+			strategy.ElectricShare = null; //0.SI<NewtonMeter>();
 			motor.Initialize(0.SI<NewtonMeter>(), speed.RPMtoRad());
 
 			var absTime = 0.SI<Second>();
@@ -167,10 +167,11 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			var response = motor.Request(absTime, dt, torque.SI<NewtonMeter>(), speed.RPMtoRad());
 
 			Assert.IsInstanceOf<ResponseSuccess>(response);
-			var enginePower = speed.RPMtoRad() * torque.SI<NewtonMeter>();
-			var motorMechPower = 0.SI<Watt>();
+			var dragTorque = data.First().Item2.DragCurve.Lookup(speed.RPMtoRad());
+			var enginePower = speed.RPMtoRad() * (torque.SI<NewtonMeter>() + dragTorque);
+			var motorMechPower = dragTorque * speed.RPMtoRad();
 			Assert.AreEqual(enginePower.Value(), response.Engine.PowerRequest.Value(), 1e-6);
-			Assert.AreEqual(motorMechPower, response.ElectricMotor.ElectricMotorPowerMech);
+			Assert.AreEqual(motorMechPower.Value(), response.ElectricMotor.ElectricMotorPowerMech.Value(), 1e-6);
 			Assert.AreEqual(0, response.ElectricSystem.ConsumerPower.Value(), 1e-6);
 			Assert.AreEqual(0, response.ElectricSystem.BatteryResponse.BatteryPower.Value(), 1e-6);
 			var modData = new MockModalDataContainer();

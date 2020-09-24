@@ -89,7 +89,7 @@ namespace TUGraz.VectoCore.Tests.Integration.Declaration
 
 			}
 			var inputDataProvider = xmlInputReader.CreateDeclaration(modified);
-			
+
 			var factory = new SimulatorFactory(ExecutionMode.Declaration, inputDataProvider, null, validate: false);
 			var first = factory.SimulationRuns().First();
 

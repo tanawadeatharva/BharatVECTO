@@ -150,14 +150,13 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			var fileWriter = new FileOutputWriter("Coach_MinimalPowertrain_Coasting");
 			var runData = new VectoRunData()
 			{
-				JobName = "Coach_MinimalPowertrain_Coasting"
+				JobName = "Coach_MinimalPowertrain_Coasting",
+				VehicleData = vehicleData,
+				EngineData = engineData,
 			};
 			var modData = new ModalDataContainer(runData, fileWriter, null);
             var vehicleContainer = new VehicleContainer(ExecutionMode.Engineering, modData) {
-				RunData = new VectoRunData() {
-					VehicleData = vehicleData,
-					EngineData = engineData,
-				}
+				RunData = runData
 			};
 			var mockCycle = new MockDrivingCycle(vehicleContainer, null);
 
