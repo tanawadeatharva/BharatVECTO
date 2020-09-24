@@ -53,7 +53,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON {
 
 		public Joule OverloadBuffer
 		{
-			get { return Body.GetValueOrDefault<double>("ThermalOverloadBuffer")?.SI(Unit.SI.Mega.Joule).Cast<Joule>() ?? 0.SI<Joule>(); }
+			get { return Body.GetValueOrDefault<double>("ThermalOverloadBuffer")?.SI(Unit.SI.Mega.Joule).Cast<Joule>() ?? 1e18.SI<Joule>(); }
 		}
 
 		public double OverloadRecoveryFactor
@@ -66,7 +66,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON {
 
 		public Watt ContinuousPower
 		{
-			get { return Body.GetValueOrDefault<double>("ContinuousPower")?.SI<Watt>() ?? 0.SI<Watt>(); }
+			get { return Body.GetValueOrDefault<double>("ContinuousPower")?.SI<Watt>() ?? 1e12.SI<Watt>(); }
 		}
 
 		

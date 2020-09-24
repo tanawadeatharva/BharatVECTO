@@ -15,7 +15,7 @@ namespace TUGraz.VectoCommon.Models {
 		public PerSecond DeltaEngineSpeed { get; set; }
 	}
 
-	public class HybridStrategyResponse : IHybridStrategyResponse
+	public class HybridStrategyResponse : AbstractComponentResponse, IHybridStrategyResponse
 	{
 		public Dictionary<PowertrainPosition, NewtonMeter> MechanicalAssistPower;
 		public bool ShiftRequired { get; set; }
@@ -62,7 +62,7 @@ namespace TUGraz.VectoCommon.Models {
 			return ToString().Equals(other.ToString(), StringComparison.InvariantCultureIgnoreCase);
 		}
 
-		public string ToString()
+		public override string ToString()
 		{
 			var setting = string.Join(", ", Setting.MechanicalAssistPower.Select(x => $"{x.Key}, {x.Value}"));
 			return $"{U}: {setting} {Score} G{Gear}";

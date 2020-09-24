@@ -181,7 +181,7 @@ namespace TUGraz.VectoCommon.Models
 		HybridControllerResponse HybridController { get; set; }
 	}
 
-	public class HybridControllerResponse
+	public class HybridControllerResponse : AbstractComponentResponse
 	{
 		public HybridStrategyResponse StrategySettings { get; set; }
 	}
