@@ -199,13 +199,16 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				HandleEcoRoll(absTime, targetVelocity);
 			}
 
-			if (ADAS.EcoRoll != EcoRollType.None) {
+			//if (ADAS.EcoRoll != EcoRollType.None) {
+			// todo MQ: keep something like this to prevent driver to turn on engine in every timestep (in combination with hybrids leads to errors!)
 				if (EcoRollState.State != EcoRollStates.EcoRollOn && PCCState != PCCStates.UseCase1 &&
 					PCCState != PCCStates.UseCase2) {
 					EngineOffTimestamp = null;
-					Driver.DataBus.EngineCtl.CombustionEngineOn = true;
+					if (Driver.DataBus.PowertrainInfo.HasCombustionEngine && !Driver.DataBus.PowertrainInfo.HasElectricMotor) {
+						Driver.DataBus.EngineCtl.CombustionEngineOn = true;
+					}
 				}
-			}
+			//}
 
 			if (CurrentDrivingMode == DrivingMode.DrivingModeBrake) {
 				if (Driver.DataBus.MileageCounter.Distance.IsGreaterOrEqual(BrakeTrigger.TriggerDistance, 1e-3.SI<Meter>())) {
