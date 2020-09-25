@@ -126,7 +126,7 @@ namespace TUGraz.VectoCore.Tests.FileIO
 			var ri = BatteryInternalResistanceReader.Create(bat.InternalResistanceCurve, 1);
 			Assert.NotNull(bat);
 			Assert.AreEqual(2, engineering.JobInputData.Vehicle.Components.ElectricStorage.Count);
-			Assert.AreEqual(50, bat.MaxCurrentFactor);
+			Assert.AreEqual(50, bat.MaxCurrentFactor.ConvertToPerHour().Value);
 			Assert.AreEqual(0.04, ri.Lookup(0.5).Value());
 
 			var em = engineering.JobInputData.Vehicle.Components.ElectricMachines;
