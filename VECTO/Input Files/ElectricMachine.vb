@@ -35,6 +35,8 @@ Public Class ElectricMachine
 
     Public ModelName As String
     Public MotorInertia As Double
+    Public ThermalOverloadCapacity As Double
+    Public ContPwr As Double
 
     ''' <summary>
     ''' New instance. Initialise
@@ -218,6 +220,20 @@ Public Class ElectricMachine
         Get
             Return MotorInertia.SI(Of KilogramSquareMeter)
         End Get
+    End Property
+
+    Public ReadOnly Property OverloadBuffer As Joule Implements IElectricMotorDeclarationInputData.OverloadBuffer
+    get
+            Return ThermalOverloadCapacity.SI(Unit.SI.Mega.Joule).Cast(of Joule)
+    End Get
+    End Property
+
+    Public Property OverloadRecoveryFactor As Double Implements IElectricMotorDeclarationInputData.OverloadRecoveryFactor
+
+    Public ReadOnly Property ContinuousPower As Watt Implements IElectricMotorDeclarationInputData.ContinuousPower
+    get
+        Return ContPwr.si(of Watt)
+    End Get
     End Property
 
     Public Property PathMaxTorque(Optional ByVal original As Boolean = False) As String

@@ -285,7 +285,7 @@
     <Compile Include="InputData\Reader\DataObjectAdapter\DeclarationDataAdapterPrimaryBus.cs" />
     <Compile Include="InputData\Reader\ComponentData\ElectricFullLoadCurveReader.cs" />
     <Compile Include="Models\Connector\Ports\Impl\BatteryResponse.cs" />
-    <Compile Include="Models\Connector\Ports\IBatteryPort.cs" />
+    <Compile Include="Models\Connector\Ports\IElectricEnergyStoragePort.cs" />
     <Compile Include="Models\SimulationComponent\Data\Battery\BatteryData.cs" />
     <Compile Include="InputData\Reader\ComponentData\BatterySOCReader.cs" />
     <Compile Include="InputData\Reader\DataObjectAdapter\DeclarationDataAdapterSingleBus.cs" />
@@ -395,7 +395,7 @@
     <Compile Include="InputData\Reader\ComponentData\WHRPowerReader.cs" />
     <Compile Include="Models\SimulationComponent\Data\HybridStrategyParameters.cs" />
     <Compile Include="Models\SimulationComponent\ElectricSystem.cs" />
-    <Compile Include="Models\SimulationComponent\IBattery.cs" />
+    <Compile Include="Models\SimulationComponent\IElectricEnergyStorage.cs" />
     <Compile Include="Models\SimulationComponent\IElectricMotor.cs" />
     <Compile Include="Models\SimulationComponent\IElectricMotorControl.cs" />
     <Compile Include="Models\SimulationComponent\IHybridControlledGearbox.cs" />
@@ -409,11 +409,12 @@
     <Compile Include="Models\SimulationComponent\IHybridController.cs" />
     <Compile Include="Models\SimulationComponent\Impl\SimpleHybridController.cs" />
     <Compile Include="Models\SimulationComponent\Impl\StopStartCombustionEngine.cs" />
+    <Compile Include="Models\SimulationComponent\Impl\SuperCap.cs" />
     <Compile Include="Models\SimulationComponent\Strategies\DelegateParallelHybridStrategy.cs" />
     <Compile Include="Models\SimulationComponent\Strategies\HybridStrategy.cs" />
     <Compile Include="Models\SimulationComponent\Strategies\TestPowertrain.cs" />
     <Compile Include="Models\SimulationComponent\SwitchableClutch.cs" />
-    <Compile Include="Models\Simulation\DataBus\IBatteryInfo.cs" />
+    <Compile Include="Models\Simulation\DataBus\IRESSInfo.cs" />
     <Compile Include="Models\Simulation\DataBus\IElectricMotorInfo.cs" />
     <Compile Include="Models\Simulation\DataBus\IEngineControl.cs" />
     <Compile Include="InputData\Reader\Impl\DeclarationModeSingleBusVectoRunDataFactory.cs" />

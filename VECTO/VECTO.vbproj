@@ -337,6 +337,7 @@
     <Compile Include="Input Files\HybridStrategyParams.vb" />
     <Compile Include="Input Files\MockComponents.vb" />
     <Compile Include="Input Files\MockVehicleInputData.vb" />
+    <Compile Include="Input Files\SuperCap.vb" />
     <Compile Include="Input Files\VectoEPTPJob.vb" />
     <Compile Include="Input Files\VectoJob.vb" />
     <Compile Include="Input Files\Vehicle.vb" />

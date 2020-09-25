@@ -23,7 +23,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent
 		IElectricSystemResponse Request(Second absTime, Second dt, Watt powerDemand, bool dryRun = false);
 	}
 
-	public interface IBattery : IBatteryProvider, IBatteryInfo
+	public interface IElectricEnergyStorage : IBatteryProvider, IRESSInfo
 	{
 
 	}

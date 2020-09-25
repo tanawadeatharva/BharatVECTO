@@ -865,23 +865,14 @@ Public Class ElectricStorageWrapper
         Vehicle = veh
     End Sub
 
-    Public ReadOnly Property BatteryPack As IBatteryPackDeclarationInputData Implements IElectricStorageDeclarationInputData.BatteryPack
-        Get
-            Return Me
-        End Get
-    End Property
-    Public ReadOnly Property IElectricStorageEngineeringInputData_Count As Integer Implements IElectricStorageEngineeringInputData.Count
-        Get
-            Return Vehicle.NumBatteryPacks
-        End Get
-    End Property
-    Public ReadOnly Property IElectricStorageEngineeringInputData_BatteryPack As IBatteryPackEngineeringInputData Implements IElectricStorageEngineeringInputData.BatteryPack
+    
+    Public ReadOnly Property REESSPack As IREESSPackInputData Implements IElectricStorageEngineeringInputData.REESSPack
         Get
             return Me
         End Get
     End Property
 
-    Public ReadOnly Property Count As Integer Implements IElectricStorageDeclarationInputData.Count
+    Public ReadOnly Property Count As Integer Implements IElectricStorageEngineeringInputData.Count
         Get
             Return Vehicle.NumBatteryPacks
         End Get
@@ -908,7 +899,8 @@ Public Class ElectricStorageWrapper
     Public ReadOnly Property Capacity As AmpereSecond Implements IBatteryPackDeclarationInputData.Capacity
     Public ReadOnly Property InternalResistanceCurve As TableData Implements IBatteryPackDeclarationInputData.InternalResistanceCurve
     Public ReadOnly Property VoltageCurve As TableData Implements IBatteryPackDeclarationInputData.VoltageCurve
-    Public ReadOnly Property MaxCurrentFactor As Double Implements IBatteryPackDeclarationInputData.MaxCurrentFactor
+    Public ReadOnly Property MaxCurrentFactor As PerSecond Implements IBatteryPackDeclarationInputData.MaxCurrentFactor
+    Public ReadOnly Property StorageType As REESSType Implements IREESSPackInputData.StorageType
 End Class
 
 Public Class ElectricMachineWrapper
@@ -957,4 +949,7 @@ Public Class ElectricMachineWrapper
     Public ReadOnly Property DragCurve As TableData Implements IElectricMotorDeclarationInputData.DragCurve
     Public ReadOnly Property EfficiencyMap As TableData Implements IElectricMotorDeclarationInputData.EfficiencyMap
     Public ReadOnly Property Inertia As KilogramSquareMeter Implements IElectricMotorDeclarationInputData.Inertia
+    Public ReadOnly Property OverloadBuffer As Joule Implements IElectricMotorDeclarationInputData.OverloadBuffer
+    Public ReadOnly Property OverloadRecoveryFactor As Double Implements IElectricMotorDeclarationInputData.OverloadRecoveryFactor
+    Public ReadOnly Property ContinuousPower As Watt Implements IElectricMotorDeclarationInputData.ContinuousPower
 End Class

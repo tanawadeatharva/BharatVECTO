@@ -460,7 +460,7 @@ Public Class VehicleForm
 			If(angledrive.LossMap Is Nothing, "", GetRelativePath(angledrive.LossMap.Source, basePath))
 
 		If (vehicle.VehicleType = VectoSimulationJobType.BatteryElectricVehicle OrElse vehicle.VehicleType = VectoSimulationJobType.ParallelHybridVehicle) Then
-			tbBattery.Text = GetRelativePath(vehicle.Components.ElectricStorage.BatteryPack.DataSource.SourceFile, basePath)
+			tbBattery.Text = GetRelativePath(vehicle.Components.ElectricStorage.REESSPack.DataSource.SourceFile, basePath)
 			tbBatteryPackCnt.Text = vehicle.Components.ElectricStorage.Count.ToGUIFormat()
 			tbInitialSoC.Text = (vehicle.InitialSOC * 100).ToGUIFormat()
 
@@ -1060,8 +1060,8 @@ Public Class VehicleForm
     End Sub
 
     Private Sub btnBrowseBattery_Click(sender As Object, e As EventArgs) Handles btnBrowseBattery.Click
-        If BatteryFileBrowser.OpenDialog(FileRepl(tbBattery.Text, GetPath(_vehFile))) Then
-            tbBattery.Text = GetFilenameWithoutDirectory(BatteryFileBrowser.Files(0), GetPath(_vehFile))
+        If REESSFileBrowser.OpenDialog(FileRepl(tbBattery.Text, GetPath(_vehFile))) Then
+            tbBattery.Text = GetFilenameWithoutDirectory(REESSFileBrowser.Files(0), GetPath(_vehFile))
         End If
     End Sub
 

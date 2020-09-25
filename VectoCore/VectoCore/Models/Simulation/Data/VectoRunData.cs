@@ -128,6 +128,9 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 
 		public BatteryData BatteryData { get; internal set; }
 
+		public SuperCapData SuperCapData { get; internal set; }
+
+
 		public SimulationType SimulationType { get; set; }
 
 		public VTPData VTPData { get; set; }

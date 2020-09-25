@@ -369,12 +369,23 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			}
 
 			var container = new VehicleContainer(data.ExecutionMode, _modData, _sumWriter) { RunData = data };
-
-			var battery = new Battery(container, data.BatteryData);
-			battery.Initialize(data.BatteryData.InitialSoC);
-
 			var es = new ElectricSystem(container);
-			es.Connect(battery);
+
+			if (data.BatteryData != null) {
+				var battery = new Battery(container, data.BatteryData);
+				battery.Initialize(data.BatteryData.InitialSoC);
+				es.Connect(battery);
+			}
+
+			if (data.SuperCapData != null) {
+				var superCap = new SuperCap(container, data.SuperCapData);
+				superCap.Initialize(data.SuperCapData.InitialSoC);
+				es.Connect(superCap);
+			}
+
+			//var battery = new Battery(container, data.BatteryData);
+			//battery.Initialize(data.BatteryData.InitialSoC);
+			//es.Connect(battery);
 			
 			var aux = new ElectricAuxiliary(container);
 			aux.AddConstant("P_aux_el", data.ElectricAuxDemand ?? 0.SI<Watt>());
@@ -436,11 +447,23 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 			var container = new VehicleContainer(data.ExecutionMode, _modData, _sumWriter) { RunData = data };
 
-			var battery = new Battery(container, data.BatteryData);
-			battery.Initialize(data.BatteryData.InitialSoC);
+			if (data.BatteryData != null && data.SuperCapData != null) {
+				throw new VectoException("Only one REESS is supported.");
+			}
 
 			var es = new ElectricSystem(container);
-			es.Connect(battery);
+
+			if (data.BatteryData != null) {
+				var battery = new Battery(container, data.BatteryData);
+				battery.Initialize(data.BatteryData.InitialSoC);
+				es.Connect(battery);
+			}
+
+			if (data.SuperCapData != null) {
+				var superCap = new SuperCap(container, data.SuperCapData);
+				superCap.Initialize(data.SuperCapData.InitialSoC);
+				es.Connect(superCap);
+			}
 
 			var ctl = new BatteryElectricMotorController(container, es);
 
@@ -572,11 +595,23 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			//	throw new VectoException("CycleType must be DistanceBased");
 			//}
 
-			var battery = new Battery(container, data.BatteryData);
-			battery.Initialize(data.BatteryData.InitialSoC);
-
 			var es = new ElectricSystem(container);
-			es.Connect(battery);
+			if (data.BatteryData != null) {
+				var battery = new Battery(container, data.BatteryData);
+				battery.Initialize(data.BatteryData.InitialSoC);
+				es.Connect(battery);
+			}
+
+			if (data.SuperCapData != null) {
+				var superCap = new SuperCap(container, data.SuperCapData);
+				superCap.Initialize(data.SuperCapData.InitialSoC);
+				es.Connect(superCap);
+			}
+
+			//var battery = new Battery(container, data.BatteryData);
+			//battery.Initialize(data.BatteryData.InitialSoC);
+			//es.Connect(battery);
+
 			var aux = new ElectricAuxiliary(container);
 			aux.AddConstant("P_aux_el", data.ElectricAuxDemand ?? 0.SI<Watt>());
 			es.Connect(aux);

@@ -61,7 +61,7 @@ namespace TUGraz.VectoCore.Tests.Integration.Hybrid
 		{
 			var Yfields = new[] {
 				ModalResultField.v_act, ModalResultField.altitude, ModalResultField.acc, ModalResultField.Gear,
-				ModalResultField.P_ice_out, ModalResultField.BatterySOC, ModalResultField.FCMap
+				ModalResultField.P_ice_out, ModalResultField.REESSStateOfCharge, ModalResultField.FCMap
 			}.Concat(emYFields).ToArray();
 
 			var graphWriter = new GraphWriter();
@@ -322,6 +322,8 @@ namespace TUGraz.VectoCore.Tests.Integration.Hybrid
 
 		public const string Group5TestJob2 = @"TestData\Hybrids\Hyb_P2_Group5\Hyb_P2_Group5.vecto";
 
+		public const string Group2TestJobSuperCapOvl = @"TestData\Hybrids\Hyb_P2_Group2SuperCapOvl\Class2_RigidTruck_ParHyb_SuperCap_Ovl_ENG.vecto";
+
 		public const string CityBus6x2 = @"TestData\Hybrids\Input CityBus 6x2_HEV_P2\CityBus_6x2_HEV_P2.vecto";
 			
 		[
@@ -403,7 +405,7 @@ namespace TUGraz.VectoCore.Tests.Integration.Hybrid
 		//TestCase(Group5TestJob325kW_noESS, 7, TestName = "P2 Hybrid Group 5 325kW NoESS DriveCycle Suburban"),  // error
 		//TestCase(Group5TestJob325kW_noESS, 8, TestName = "P2 Hybrid Group 5 325kW NoESS DriveCycle Urban"), // error
 		//TestCase(Group5TestJob325kW_noESS, 9, TestName = "P2 Hybrid Group 5 325kW NoESS DriveCycle UrbanDelivery"), // error 
-		
+
 		//TestCase(CityBus6x2, 0, TestName = "P2 Hybrid CityBus DriveCycle Coach"),  // error
 		//TestCase(CityBus6x2, 1, TestName = "P2 Hybrid CityBus DriveCycle HeavyUrban"),  // error
 		//TestCase(CityBus6x2, 2, TestName = "P2 Hybrid CityBus DriveCycle Interurban"),  // error
@@ -413,7 +415,17 @@ namespace TUGraz.VectoCore.Tests.Integration.Hybrid
 		//TestCase(CityBus6x2, 6, TestName = "P2 Hybrid CityBus DriveCycle Urban"),  // error
 		//TestCase(CityBus6x2, 7, TestName = "P2 Hybrid CityBus DriveCycle UrbanDelivery"),  // error
 
-			]
+		TestCase(Group2TestJobSuperCapOvl, 0, TestName = "P2 Hybrid Group 2 SuperCap Ovl, DriveCycle LongHaul"),
+		TestCase(Group2TestJobSuperCapOvl, 1, TestName = "P2 Hybrid Group 2 SuperCap Ovl, DriveCycle Coach"), 
+		TestCase(Group2TestJobSuperCapOvl, 2, TestName = "P2 Hybrid Group 2 SuperCap Ovl, DriveCycle Construction"), 
+		TestCase(Group2TestJobSuperCapOvl, 3, TestName = "P2 Hybrid Group 2 SuperCap Ovl, DriveCycle HeavyUrban"), 
+        TestCase(Group2TestJobSuperCapOvl, 4, TestName = "P2 Hybrid Group 2 SuperCap Ovl, DriveCycle Interurban"),  
+        TestCase(Group2TestJobSuperCapOvl, 5, TestName = "P2 Hybrid Group 2 SuperCap Ovl, DriveCycle MunicipalUtility"),
+		TestCase(Group2TestJobSuperCapOvl, 6, TestName = "P2 Hybrid Group 2 SuperCap Ovl, DriveCycle RegionalDelivery"),
+		TestCase(Group2TestJobSuperCapOvl, 7, TestName = "P2 Hybrid Group 2 SuperCap Ovl, DriveCycle Suburban"), 
+		TestCase(Group2TestJobSuperCapOvl, 8, TestName = "P2 Hybrid Group 2 SuperCap Ovl, DriveCycle Urban"),
+        TestCase(Group2TestJobSuperCapOvl, 9, TestName = "P2 Hybrid Group 2 SuperCap Ovl, DriveCycle UrbanDelivery"), 
+            ]
 		public void P2HybridGroup5DriveCycle(string jobFile, int cycleIdx)
 		{
 			var inputProvider = JSONInputDataFactory.ReadJsonJob(jobFile);

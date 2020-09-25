@@ -188,7 +188,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
         }
 
 
-        public static IBatteryPackEngineeringInputData ReadBatteryData(string filename, bool tolerateMissing)
+        public static IREESSPackInputData ReadREESSData(string filename, bool tolerateMissing)
 		{
 			var json = ReadFile(filename);
 			var version = ReadVersion(json);

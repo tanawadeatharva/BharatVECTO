@@ -85,7 +85,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 					tmp = JSONInputDataFactory.ReadShiftParameters(filename, tolerateMissing);
 					break;
 				case Constants.FileExtensions.BatteryFile:
-					tmp = JSONInputDataFactory.ReadBatteryData(filename, tolerateMissing);
+					tmp = JSONInputDataFactory.ReadREESSData(filename, tolerateMissing);
 					break;
 				case Constants.FileExtensions.ElectricMotorFile:
 					tmp = JSONInputDataFactory.ReadElectricMotorData(filename, tolerateMissing);
@@ -268,7 +268,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			get
 			{
 				return new JSONElectricStorageEngineeringInputData {
-					BatteryPack = Battery,
+					REESSPack = Battery,
 					Count = 1
 				};
 			}

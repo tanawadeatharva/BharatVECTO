@@ -132,6 +132,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
                     ElectricMachinesData = dao.CreateElectricMachines(vehicle.Components.ElectricMachines),
                     //HybridStrategyParameters = dao.CreateHybridStrategyParameters(InputDataProvider.JobInputData.HybridStrategyParameters),
                     BatteryData = dao.CreateBatteryData(vehicle.Components.ElectricStorage, vehicle.InitialSOC),
+					SuperCapData = dao.CreateSuperCapData(vehicle.Components.ElectricStorage, vehicle.InitialSOC),
                     SimulationType = SimulationType.DistanceCycle | SimulationType.MeasuredSpeedCycle | SimulationType.PWheel,
                     //GearshiftParameters = dao.CreateGearshiftData(
                     //    gearboxData.Type, InputDataProvider.DriverInputData.GearshiftInputData,
@@ -184,8 +185,9 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 
 					var electricMachines = dao.CreateElectricMachines(vehicle.Components.ElectricMachines) ?? new List<Tuple<PowertrainPosition, ElectricMotorData>>();
 					var battery = dao.CreateBatteryData(vehicle.Components.ElectricStorage, vehicle.InitialSOC);
+					var superCap = dao.CreateSuperCapData(vehicle.Components.ElectricStorage, vehicle.InitialSOC);
 
-					var jobType = electricMachines.Count > 0 && battery != null
+					var jobType = electricMachines.Count > 0 && (battery != null || superCap != null)
 						? VectoSimulationJobType.ParallelHybridVehicle
 						: VectoSimulationJobType.ConventionalVehicle;
 
@@ -211,6 +213,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 						ElectricMachinesData = electricMachines,
 						HybridStrategyParameters = hybridParameters,
 						BatteryData = battery,
+						SuperCapData = superCap,
 						SimulationType = SimulationType.DistanceCycle | SimulationType.MeasuredSpeedCycle | SimulationType.PWheel,
 						GearshiftParameters = dao.CreateGearshiftData(
 							gearboxData.Type, InputDataProvider.DriverInputData.GearshiftInputData,

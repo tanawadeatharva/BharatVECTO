@@ -71,7 +71,7 @@ namespace TUGraz.VectoCore.OutputData
 			ModalResultField.P_electricMotor_mech_, ModalResultField.P_electricMotor_el_,
 			ModalResultField.P_electricMotorLoss_, ModalResultField.P_electricMotorInertiaLoss_,
 			/*ModalResultField.P_electricMotor_brake_,*/ ModalResultField.P_electricMotor_drive_max_,
-			ModalResultField.P_electricMotor_gen_max_
+			ModalResultField.P_electricMotor_gen_max_, ModalResultField.ElectricMotor_OvlBuffer_
 		};
 
 		public static readonly IList<ModalResultField> FuelConsumptionSignals = new[] {
@@ -360,22 +360,22 @@ namespace TUGraz.VectoCore.OutputData
 
 		public double BatteryStartSoC()
 		{
-			return Data.AsEnumerable().Cast<DataRow>().First().Field<SI>(ModalResultField.BatteryStateOfCharge.GetName()).Value() * 100;
+			return Data.AsEnumerable().Cast<DataRow>().First().Field<SI>(ModalResultField.REESSStateOfCharge.GetName()).Value() * 100;
 		}
 
 		public double BatteryEndSoC()
 		{
-			return Data.AsEnumerable().Cast<DataRow>().Last().Field<SI>(ModalResultField.BatteryStateOfCharge.GetName()).Value() * 100;
+			return Data.AsEnumerable().Cast<DataRow>().Last().Field<SI>(ModalResultField.REESSStateOfCharge.GetName()).Value() * 100;
         }
 
 		public WattSecond BatteryLoss()
 		{
-			return TimeIntegral<WattSecond>(ModalResultField.P_battery_loss);
+			return TimeIntegral<WattSecond>(ModalResultField.P_reess_loss);
 		}
 
 		public WattSecond BatteryEnergyEnd()
 		{
-			return Data.AsEnumerable().Cast<DataRow>().Last().Field<SI>(ModalResultField.E_Bat.GetName())
+			return Data.AsEnumerable().Cast<DataRow>().Last().Field<SI>(ModalResultField.E_RESS.GetName())
 				.Cast<WattSecond>();
 		}
 
@@ -574,16 +574,16 @@ namespace TUGraz.VectoCore.OutputData
 				}.Select(x => x.GetName()));
 			if (ElectricMotors.Count > 0) {
 				dataColumns.AddRange(new[] {
-					ModalResultField.P_battery_terminal,
-					ModalResultField.P_battery_int,
-					ModalResultField.P_battery_loss,
-					ModalResultField.P_battery_charge_max,
-					ModalResultField.P_battery_discharge_max,
-					ModalResultField.BatteryStateOfCharge,
-					ModalResultField.U_bat_terminal,
-					ModalResultField.U0_bat,
-					ModalResultField.I_bat,
-					ModalResultField.E_Bat
+					ModalResultField.P_reess_terminal,
+					ModalResultField.P_reess_int,
+					ModalResultField.P_reess_loss,
+					ModalResultField.P_reess_charge_max,
+					ModalResultField.P_reess_discharge_max,
+					ModalResultField.REESSStateOfCharge,
+					ModalResultField.U_reess_terminal,
+					ModalResultField.U0_reess,
+					ModalResultField.I_reess,
+					ModalResultField.E_RESS
 				}.Select(x => x.GetName()));
 				foreach (var em in ElectricMotors.OrderBy(x => x).Reverse()) {
 					dataColumns.AddRange(_electricMotorColumns.Select(emCol =>

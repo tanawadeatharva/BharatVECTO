@@ -58,5 +58,5 @@ Public Module FileBrowserModule
     Public ModalResultsFileBrowser As FileBrowser
 
     Public ElectricMotorFileBrowser As FileBrowser
-    Public BatteryFileBrowser As FileBrowser
+    Public REESSFileBrowser As FileBrowser
 End Module

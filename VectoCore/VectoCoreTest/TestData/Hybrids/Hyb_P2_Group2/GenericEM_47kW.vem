@@ -7,10 +7,13 @@
 	},
 	"Body": {
 		"SavedInDeclMode": false,
-	"Model": "Generic EM 47kW",
-	"FullLoadCurve": "GenericEM_47kW.vemp",
-    "EfficiencyMap": "GenericEM_47kW.vemo",
-    "DragCurve":  "GenericEM_47kW.vemd", 
-		"Inertia":  0.1
+		"Model": "Generic EM 47kW",
+		"FullLoadCurve": "GenericEM_47kW.vemp",
+		"EfficiencyMap": "GenericEM_47kW.vemo",
+		"DragCurve": "GenericEM_47kW.vemd",
+		"Inertia": 0.1,
+		"ContinuousPower": 5000000,
+    "ThermalOverloadBuffer": 0.6,
+    "ThermalOverloadRecoveryFactor": 0.9
 	}
 }

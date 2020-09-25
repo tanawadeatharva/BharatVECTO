@@ -211,8 +211,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				EngageTime = absTime + dt;
 			}
 
+			var reEngaging = false;
 			if (GearEngaged(absTime) && Disengaged && !outAngularVelocity.IsEqual(0)) {
 				ReEngageGear(absTime, dt, outTorque, outAngularVelocity);
+				reEngaging = true;
 				Log.Debug("Gearbox engaged gear {0}", Gear);
 			}
 
@@ -223,7 +225,13 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					EngageTime, null) ?? false;
 				if (changeGear) {
 					ReEngageGear(absTime, dt, outTorque, outAngularVelocity);
+					reEngaging = true;
 				}
+			}
+
+			if (reEngaging && DataBus.HybridControllerInfo != null &&
+				Gear != DataBus.HybridControllerInfo.SelectedGear.Gear) {
+				return new ResponseDifferentGearEngaged(this);
 			}
 
 			var gear = Disengaged ? NextGear.Gear : Gear;

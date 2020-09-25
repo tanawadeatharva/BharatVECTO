@@ -181,24 +181,24 @@ namespace TUGraz.VectoCommon.Models
 		HybridControllerResponse HybridController { get; set; }
 	}
 
-	public class HybridControllerResponse
+	public class HybridControllerResponse : AbstractComponentResponse
 	{
 		public HybridStrategyResponse StrategySettings { get; set; }
 	}
 
-	public interface IBatteryResponse
+	public interface IRESSResponse
 	{
 		Second AbsTime { get; set; }
 
 		Second SimulationInterval { get; set; }
 
-		Watt MaxBatteryLoadCharge { get; set; }
+		Watt MaxChargePower { get; set; }
 
-		Watt MaxBatteryLoadDischarge { get; set; }
+		Watt MaxDischargePower { get; set; }
 
-		Watt BatteryPower { get; set; }
+		Watt PowerDemand { get; set; }
 
-		Watt BatteryLoss { get; set; }
+		Watt LossPower { get; set; }
 
 		double StateOfCharge { get; set; }
 
@@ -207,7 +207,7 @@ namespace TUGraz.VectoCommon.Models
 
 	public interface IElectricSystemResponse
 	{
-		IBatteryResponse BatteryResponse { get; set; }
+		IRESSResponse RESSResponse { get; set; }
 
 		Watt AuxPower { get; set; }
 
@@ -219,7 +219,7 @@ namespace TUGraz.VectoCommon.Models
 
 		Watt MaxPowerDrag { get; }
 
-		Watt BatteryPowerDemand { get; set; }
+		Watt RESSPowerDemand { get; set; }
 
 		object Source { get; }
 	}

@@ -419,14 +419,17 @@ namespace TUGraz.VectoCommon.InputData
 
 	public interface IElectricStorageEngineeringInputData : IElectricStorageDeclarationInputData
 	{
-		new IBatteryPackEngineeringInputData BatteryPack { get; }
 
-		int Count { get; }
 	}
 
 	public interface IBatteryPackEngineeringInputData : IBatteryPackDeclarationInputData
 	{
 		
+	}
+
+	public interface ISuperCapEngineeringInputData : ISuperCapDeclarationInputData
+	{
+
 	}
 
 	public interface IDriverModelData { }

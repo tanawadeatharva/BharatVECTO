@@ -2,7 +2,7 @@
 using TUGraz.VectoCore.Models.Connector.Ports.Impl;
 
 namespace TUGraz.VectoCore.Tests.Utils {
-	public class MockElectricConsumer : IBatteryAuxPort
+	public class MockElectricConsumer : IElectricAuxPort
 	{
 		private Watt PowwerDemand;
 

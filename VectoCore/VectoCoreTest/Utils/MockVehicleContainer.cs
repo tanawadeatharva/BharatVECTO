@@ -144,7 +144,7 @@ namespace TUGraz.VectoCore.Tests.Utils
 			return null;
 		}
 
-		public IBatteryInfo BatteryInfo
+		public IRESSInfo BatteryInfo
 		{
 			get { throw new NotImplementedException(); }
 		}
@@ -158,6 +158,8 @@ namespace TUGraz.VectoCore.Tests.Utils
 		{
 			get { return this; }
 		}
+
+		public IHybridControllerInfo HybridControllerInfo { get; }
 
 		public Watt GearboxLoss()
 		{

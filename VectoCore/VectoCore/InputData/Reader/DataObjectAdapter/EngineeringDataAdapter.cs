@@ -620,17 +620,38 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 
 		public BatteryData CreateBatteryData(IElectricStorageEngineeringInputData batteryInputData, double initialSOC)
 		{
-			if (batteryInputData == null) {
+			if (batteryInputData == null || batteryInputData.REESSPack.StorageType != REESSType.Battery) {
 				return null;
 			}
 
+			var bat = batteryInputData.REESSPack as IBatteryPackEngineeringInputData;
+
 			return new BatteryData() {
-				MinSOC = batteryInputData.BatteryPack.MinSOC,
-				MaxSOC = batteryInputData.BatteryPack.MaxSOC,
-				MaxCurrent = (batteryInputData.BatteryPack.Capacity.AsAmpHour * batteryInputData.BatteryPack.MaxCurrentFactor * batteryInputData.Count).SI<Ampere>(),
-				Capacity = batteryInputData.Count * batteryInputData.BatteryPack.Capacity,
-				InternalResistance = BatteryInternalResistanceReader.Create(batteryInputData.BatteryPack.InternalResistanceCurve, batteryInputData.Count),
-				SOCMap = BatterySOCReader.Create(batteryInputData.BatteryPack.VoltageCurve),
+				MinSOC = bat.MinSOC,
+				MaxSOC = bat.MaxSOC,
+				MaxCurrent = bat.Capacity * bat.MaxCurrentFactor * batteryInputData.Count,
+				Capacity = batteryInputData.Count * bat.Capacity,
+				InternalResistance = BatteryInternalResistanceReader.Create(bat.InternalResistanceCurve, batteryInputData.Count),
+				SOCMap = BatterySOCReader.Create(bat.VoltageCurve),
+				InitialSoC = initialSOC
+			};
+		}
+
+		public SuperCapData CreateSuperCapData(IElectricStorageEngineeringInputData reessInputData, double initialSOC)
+		{
+			if (reessInputData == null || reessInputData.REESSPack.StorageType != REESSType.SuperCap)
+			{
+				return null;
+			}
+
+			var superCap = reessInputData.REESSPack as ISuperCapEngineeringInputData;
+
+			return new SuperCapData()
+			{
+				Capacity = reessInputData.Count * superCap.Capacity,
+				InternalResistance = superCap.InternalResistance / reessInputData.Count,
+				MinVoltage = superCap.MinVoltage,
+				MaxVoltage = superCap.MaxVoltage,
 				InitialSoC = initialSOC
 			};
 		}
@@ -661,6 +682,9 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 				DragCurve = ElectricMotorDragCurveReader.Create(motorData.DragCurve, ratio, count, efficiency),
 				EfficiencyMap = ElectricMotorMapReader.Create(motorData.EfficiencyMap, ratio, count, efficiency),
 				Inertia = motorData.Inertia,
+				ContinuousPower = motorData.ContinuousPower * count,
+				OverloadBuffer = motorData.OverloadBuffer * count,
+				OverloadRegenerationFactor = motorData.OverloadRecoveryFactor,
 			};
 		}
 

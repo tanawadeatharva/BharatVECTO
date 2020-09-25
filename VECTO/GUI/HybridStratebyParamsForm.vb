@@ -188,7 +188,7 @@ Public Class HybridStrategyParamsForm
 
         DeclInit()
 
-        BatteryFileBrowser.UpdateHistory(file)
+        REESSFileBrowser.UpdateHistory(file)
         Text = GetFilenameWithoutPath(file, True)
         LbStatus.Text = ""
         _strategyParamsFile = file

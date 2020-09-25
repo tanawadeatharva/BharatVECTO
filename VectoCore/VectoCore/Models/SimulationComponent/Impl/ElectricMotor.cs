@@ -22,6 +22,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		protected ElectricMotorData ModelData;
 		private PerSecond _maxSpeed;
 
+		protected internal Joule ThermalBuffer = 0.SI<Joule>();
+		protected internal bool DeRatingActive = false;
+
 		public ElectricMotor(IVehicleContainer container, ElectricMotorData data, IElectricMotorControl control, PowertrainPosition position) : base(container)
 		{
 			Control = control;
@@ -41,7 +44,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			return ModelData.DragCurve.Lookup(electricMotorSpeed) * electricMotorSpeed;
 		}
 
-    public IResponse Initialize(NewtonMeter outTorque, PerSecond outAngularVelocity)
+	public IResponse Initialize(NewtonMeter outTorque, PerSecond outAngularVelocity)
 		{
 			PreviousState.OutAngularVelocity = outAngularVelocity;
 			PreviousState.OutTorque = outTorque;
@@ -96,7 +99,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		private NewtonMeter GetMaxRecuperationTorque(Second absTime, Second dt, PerSecond avgSpeed)
 		{
-			var maxEmTorque = ModelData.FullLoadCurve.FullGenerationTorque(avgSpeed);
+			var tqContinuousPwr = DeRatingActive ? ModelData.ContinuousPower / avgSpeed : null;
+			var maxEmTorque = VectoMath.Min(tqContinuousPwr, ModelData.FullLoadCurve.FullGenerationTorque(avgSpeed));
 			var electricSystemResponse = ElectricPower.Request(absTime, dt, 0.SI<Watt>(), true);
 			var maxBatPower = electricSystemResponse.MaxPowerDrag;
 
@@ -107,7 +111,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		private NewtonMeter GetMaxDriveTorque(Second absTime, Second dt, PerSecond avgSpeed)
 		{
-			var maxEmTorque = ModelData.FullLoadCurve.FullLoadDriveTorque(avgSpeed);
+			var tqContinuousPwr = DeRatingActive ? -ModelData.ContinuousPower / avgSpeed : null;
+			var maxEmTorque = VectoMath.Max(tqContinuousPwr ,ModelData.FullLoadCurve.FullLoadDriveTorque(avgSpeed));
 			var electricSystemResponse = ElectricPower.Request(absTime, dt, 0.SI<Watt>(), true);
 			var maxBatPower = electricSystemResponse.MaxPowerDrive;
 
@@ -186,8 +191,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			//	return retVal;
 			//}
 
-			if (!dryRun && !eMotorTorque.IsBetween(
-					maxDriveTorque ?? 0.SI<NewtonMeter>(), maxRecuperationTorque ?? 0.SI<NewtonMeter>())) {
+			if (!dryRun && (eMotorTorque.IsSmaller(maxDriveTorque ?? 0.SI<NewtonMeter>(), 1e-3) || eMotorTorque.IsGreater(maxRecuperationTorque ?? 0.SI<NewtonMeter>(), 1e-3))
+				//!eMotorTorque.IsBetween(
+				//	maxDriveTorque ?? 0.SI<NewtonMeter>(), maxRecuperationTorque ?? 0.SI<NewtonMeter>())
+				) {
 				throw new VectoException(
 					"Invalid operating point provided by strategy! SupportPower: {0}, max Power: {1}, min Power: {2}", eMotorTorque,
 					maxDriveTorque, maxRecuperationTorque);
@@ -336,6 +343,31 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			container[ModalResultField.P_electricMotor_drive_max_, Position] = (CurrentState.DriveMax ?? 0.SI<NewtonMeter>()) * avgSpeed;
 			container[ModalResultField.P_electricMotorLoss_, Position] = (CurrentState.InTorque - CurrentState.OutTorque) * avgSpeed - (CurrentState.ElectricPowerToBattery);
 			container[ModalResultField.P_electricMotorInertiaLoss_, Position] = CurrentState.InertiaTorqueLoss * avgSpeed;
+
+			var contribution =
+				(VectoMath.Abs((CurrentState.InTorque - CurrentState.OutTorque) * avgSpeed) -
+				ModelData.ContinuousPower) * simulationInterval;
+			container[ModalResultField.ElectricMotor_OvlBuffer_, Position] = VectoMath.Max(0, (ThermalBuffer + contribution) / ModelData.OverloadBuffer);
+		}
+
+		protected override void DoCommitSimulationStep(Second time, Second simulationInterval)
+		{
+			var avgSpeed = (PreviousState.OutAngularVelocity + CurrentState.OutAngularVelocity) / 2;
+			ThermalBuffer += (VectoMath.Abs((CurrentState.InTorque - CurrentState.OutTorque) * avgSpeed) - ModelData.ContinuousPower) * simulationInterval;
+			if (ThermalBuffer < 0) {
+				ThermalBuffer = 0.SI<Joule>();
+			}
+
+			if (DeRatingActive) {
+				if (ThermalBuffer.IsSmallerOrEqual(ModelData.OverloadBuffer * ModelData.OverloadRegenerationFactor)) {
+					DeRatingActive = false;
+				}
+			} else {
+				if (ThermalBuffer.IsGreater(ModelData.OverloadBuffer)) {
+					DeRatingActive = true;
+				}
+			}
+			base.DoCommitSimulationStep(time, simulationInterval);
 		}
 
 		//public NewtonMeter ElectricDragTorque(PerSecond electricMotorSpeed, Second dt, DrivingBehavior drivingBehavior)

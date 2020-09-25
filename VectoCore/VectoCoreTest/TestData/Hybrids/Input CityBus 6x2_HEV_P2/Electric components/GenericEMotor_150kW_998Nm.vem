@@ -11,6 +11,9 @@
     "FullLoadCurve": "GenericEMotor_150kW_998Nm.vemp",
     "DragCurve": "GenericDrag_150kW_998Nm.vemd",
     "EfficiencyMap": "GenericMap_150kW_998Nm.vemo",
-    "Inertia": 0.545
+    "Inertia": 0.545,
+    "ContinuousPower": 5000000,
+    "ThermalOverloadBuffer": 0.6,
+    "ThermalOverloadRecoveryFactor": 0.9
   }
 }
