@@ -154,9 +154,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 
 			var currentGear = PreviousState.GearboxEngaged ? DataBus.GearboxInfo.Gear : Controller.ShiftStrategy.NextGear.Gear;
 
-			if (DryRunSolution != null && DryRunSolution.DrivingAction == DataBus.DriverInfo.DrivingAction) {
-				return CreateResponse(DryRunSolution.Solution, currentGear);
-			}
+			//if (DryRunSolution != null && DryRunSolution.DrivingAction == DataBus.DriverInfo.DrivingAction) {
+			//	return CreateResponse(DryRunSolution.Solution, currentGear);
+			//}
 
 			if (DryRunSolution != null && DryRunSolution.DrivingAction != DataBus.DriverInfo.DrivingAction) {
 				DryRunSolution = null;
