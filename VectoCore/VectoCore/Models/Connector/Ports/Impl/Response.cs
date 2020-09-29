@@ -199,6 +199,11 @@ namespace TUGraz.VectoCore.Models.Connector.Ports.Impl
 		public ResponseDifferentGearEngaged(object source) : base(source) { }
 	}
 
+	internal class ResponseInvalidOperatingPoint : AbstractResponse
+	{
+		public ResponseInvalidOperatingPoint(object source) : base(source) { }
+	}
+
 /*
 	internal class ResponseEngineSpeedTooLow : ResponseDryRun {}
 */

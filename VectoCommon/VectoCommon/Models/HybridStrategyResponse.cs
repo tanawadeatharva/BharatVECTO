@@ -17,7 +17,7 @@ namespace TUGraz.VectoCommon.Models {
 
 	public class HybridStrategyResponse : AbstractComponentResponse, IHybridStrategyResponse
 	{
-		public Dictionary<PowertrainPosition, NewtonMeter> MechanicalAssistPower;
+		public Dictionary<PowertrainPosition, Tuple<PerSecond, NewtonMeter>> MechanicalAssistPower;
 		public bool ShiftRequired { get; set; }
 		public uint NextGear { get; set; }
 		public bool GearboxInNeutral { get; set; }

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
@@ -25,7 +26,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		protected readonly Dictionary<PowertrainPosition, ElectricMotorController> _electricMotorCtl;
 		protected readonly HybridCtlShiftStrategy _shiftStrategy;
 		protected readonly IHybridControlStrategy _hybridStrategy;
-		private Dictionary<PowertrainPosition, NewtonMeter> _electricMotorTorque = new Dictionary<PowertrainPosition, NewtonMeter>();
+		private Dictionary<PowertrainPosition, Tuple<PerSecond, NewtonMeter>> _electricMotorTorque = new Dictionary<PowertrainPosition, Tuple<PerSecond, NewtonMeter>>();
+		private HybridStrategyResponse CurrentStrategySettings;
 
 
 		public HybridController(IVehicleContainer container, IHybridControlStrategy strategy, IElectricSystem es,
@@ -90,6 +92,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		public GearInfo SelectedGear { get; protected set; }
 
+		public PerSecond ElectricMotorSpeed(PowertrainPosition pos)
+		{
+			return CurrentStrategySettings.MechanicalAssistPower[pos].Item1;
+		}
+
 
 		public IResponse Request(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity,
 			bool dryRun = false)
@@ -127,10 +134,23 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					return new ResponseGearShift(this);
 				}
 
+				if (!dryRun && DataBus.VehicleInfo.VehicleStopped) {
+					SelectedGear = new GearInfo(strategySettings.NextGear, true);
+				}
+
+				CurrentStrategySettings = strategySettings;
 				retVal = NextComponent.Request(absTime, dt, outTorque, outAngularVelocity, dryRun);
 				if (retVal is ResponseDifferentGearEngaged) {
 					retryCount++;
 					retry = true;
+					Strategy.OperatingpointChangedDuringRequest(absTime, dt, outTorque, outAngularVelocity, dryRun, retVal);
+					continue;
+				}
+
+				if (retVal is ResponseInvalidOperatingPoint) {
+					retryCount++;
+					retry = true;
+					Strategy.OperatingpointChangedDuringRequest(absTime, dt, outTorque, outAngularVelocity, dryRun, retVal);
 					continue;
 				}
 				retVal.HybridController.StrategySettings = strategySettings;
@@ -173,7 +193,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		private NewtonMeter MechanicalAssistPower(PowertrainPosition pos, Second absTime, Second dt,
 			NewtonMeter outTorque, PerSecond prevOutAngularVelocity, PerSecond currOutAngularVelocity, bool dryRun)
 		{
-			return _electricMotorTorque[pos];
+			return _electricMotorTorque[pos]?.Item2;
 
 			//return CurrentState.StrategyResponse.MechanicalAssistPower[pos];
 		}
