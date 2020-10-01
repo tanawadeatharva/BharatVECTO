@@ -70,39 +70,39 @@ namespace TUGraz.VectoCore.Models.Declaration
 
 			// stall point
 			var stallPt = retVal.NewRow();
-			stallPt[colSpeedRatio] = Math.Round(speedRatioStallPt * ratio, 4, MidpointRounding.AwayFromZero);
+			stallPt[colSpeedRatio] = Math.Round(speedRatioStallPt * ratio, 4, MidpointRounding.AwayFromZero).ToXMLFormat(6);
 			stallPt[colTqRatio] = Math.Round(torqueRatioStallPt / speedRAtioOverrunPt / ratio, 2,
-				MidpointRounding.AwayFromZero);
-			stallPt[colRefTq] = Math.Round(refTorqueStallPt, 2, MidpointRounding.AwayFromZero);
+				MidpointRounding.AwayFromZero).ToXMLFormat(6);
+			stallPt[colRefTq] = Math.Round(refTorqueStallPt, 2, MidpointRounding.AwayFromZero).ToXMLFormat(6);
 			retVal.Rows.Add(stallPt);
 
 			// intermediate point
 			var intermediatePt = retVal.NewRow();
 			intermediatePt[colSpeedRatio] =
-				Math.Round(speedRatioIntermediatePt * ratio, 4, MidpointRounding.AwayFromZero);
+				Math.Round(speedRatioIntermediatePt * ratio, 4, MidpointRounding.AwayFromZero).ToXMLFormat(6);
 			intermediatePt[colTqRatio] =
-				Math.Round(torqueRatioIntermediatePt / ratio, 2, MidpointRounding.AwayFromZero);
+				Math.Round(torqueRatioIntermediatePt / ratio, 2, MidpointRounding.AwayFromZero).ToXMLFormat(6);
 			intermediatePt[colRefTq] = Math.Round(refTorqueStallPt * refTorqueIntermediatePtFactor, 2,
-				MidpointRounding.AwayFromZero);
+				MidpointRounding.AwayFromZero).ToXMLFormat(6);
 			retVal.Rows.Add(intermediatePt);
 
 			//coupling point
 			var couplingPt = retVal.NewRow();
 			couplingPt[colSpeedRatio] = Math.Round(speedRatioCouplingPt * speedRAtioOverrunPt * ratio, 4,
-				MidpointRounding.AwayFromZero);
+				MidpointRounding.AwayFromZero).ToXMLFormat(6);
 			couplingPt[colTqRatio] = Math.Round(torqueRatioCouplingPt / speedRAtioOverrunPt / ratio, 2,
-				MidpointRounding.AwayFromZero);
+				MidpointRounding.AwayFromZero).ToXMLFormat(6);
 			couplingPt[colRefTq] = Math.Round(refTorqueStallPt * refTorqueCouplingPtFactor, 2,
-				MidpointRounding.AwayFromZero);
+				MidpointRounding.AwayFromZero).ToXMLFormat(6);
 			retVal.Rows.Add(couplingPt);
 
 			// overrun point
 			var overrunPt = retVal.NewRow();
-			overrunPt[colSpeedRatio] = Math.Round(speedRAtioOverrunPt * ratio, 4, MidpointRounding.AwayFromZero);
+			overrunPt[colSpeedRatio] = Math.Round(speedRAtioOverrunPt * ratio, 4, MidpointRounding.AwayFromZero).ToXMLFormat(6);
 			overrunPt[colTqRatio] = Math.Round(torqueRatioOverrunPt / speedRAtioOverrunPt / ratio, 2,
-				MidpointRounding.AwayFromZero);
+				MidpointRounding.AwayFromZero).ToXMLFormat(6);
 			overrunPt[colRefTq] =
-				Math.Round(refTorqueStallPt * refTorqueOverrunPtFactor, 2, MidpointRounding.AwayFromZero);
+				Math.Round(refTorqueStallPt * refTorqueOverrunPtFactor, 2, MidpointRounding.AwayFromZero).ToXMLFormat(6);
 			retVal.Rows.Add(overrunPt);
 
 			return retVal;
@@ -157,33 +157,33 @@ namespace TUGraz.VectoCore.Models.Declaration
 
             // stall point
             var stallPt = retVal.NewRow();
-			stallPt[colSpeedRatio] = Math.Round(speedRatioStallPt, 4, MidpointRounding.AwayFromZero);
+			stallPt[colSpeedRatio] = Math.Round(speedRatioStallPt, 4, MidpointRounding.AwayFromZero).ToXMLFormat(6);
 			stallPt[colTqRatio] = Math.Round(torqueRatioStallPt - c * Math.Pow(speedRatioStallPt, 0.5), 2,
-				MidpointRounding.AwayFromZero);
-			stallPt[colRefTq] = Math.Round(refTorqueStallPt, 2, MidpointRounding.AwayFromZero);
+				MidpointRounding.AwayFromZero).ToXMLFormat(6);
+			stallPt[colRefTq] = Math.Round(refTorqueStallPt, 2, MidpointRounding.AwayFromZero).ToXMLFormat(6);
 			retVal.Rows.Add(stallPt);
 
 			for (var i = speedRatioStallPt + nue_step; i.IsSmaller(speedRatioIntermediatePtFactor, nue_step / 10); i += nue_step) {
 				var pt = retVal.NewRow();
 				var nue = i * speedRatioOverrunPt;
 				var mue = torqueRatioStallPt - c * Math.Pow(nue, 0.5);
-				pt[colSpeedRatio] = Math.Round(nue, 4, MidpointRounding.AwayFromZero);
-				pt[colTqRatio] = Math.Round(mue, 2, MidpointRounding.AwayFromZero);
+				pt[colSpeedRatio] = Math.Round(nue, 4, MidpointRounding.AwayFromZero).ToXMLFormat(6);
+				pt[colTqRatio] = Math.Round(mue, 2, MidpointRounding.AwayFromZero).ToXMLFormat(6);
 				pt[colRefTq] = Math.Round(
 					refTorqueStallPt + (refTorqueIntermediatePt - refTorqueStallPt) / speedRatioIntermediatePt *
 					nue, 2,
-					MidpointRounding.AwayFromZero);
+					MidpointRounding.AwayFromZero).ToXMLFormat(6);
 				retVal.Rows.Add(pt);
 			}
 
 			// intermediate point
             var intermediatePt = retVal.NewRow();
 			
-			intermediatePt[colSpeedRatio] = Math.Round(speedRatioIntermediatePt, 4, MidpointRounding.AwayFromZero);
+			intermediatePt[colSpeedRatio] = Math.Round(speedRatioIntermediatePt, 4, MidpointRounding.AwayFromZero).ToXMLFormat(6);
 			intermediatePt[colTqRatio] = Math.Round(torqueRatioStallPt - c * Math.Pow(speedRatioIntermediatePt, 0.5), 2,
-					MidpointRounding.AwayFromZero);
+					MidpointRounding.AwayFromZero).ToXMLFormat(6);
 			intermediatePt[colRefTq] = Math.Round(refTorqueIntermediatePt, 2,
-				MidpointRounding.AwayFromZero);
+				MidpointRounding.AwayFromZero).ToXMLFormat(6);
 			retVal.Rows.Add(intermediatePt);
 
 			for (var i = speedRatioIntermediatePtFactor + nue_step; i.IsSmaller(speedRatioCouplingPtFactor, nue_step/10); i += nue_step)
@@ -191,30 +191,30 @@ namespace TUGraz.VectoCore.Models.Declaration
 				var pt = retVal.NewRow();
 				var nue = i * speedRatioOverrunPt;
 				var mue = torqueRatioStallPt - c * Math.Pow(nue, 0.5);
-				pt[colSpeedRatio] = Math.Round(nue, 4, MidpointRounding.AwayFromZero);
-				pt[colTqRatio] = Math.Round(mue, 2, MidpointRounding.AwayFromZero);
+				pt[colSpeedRatio] = Math.Round(nue, 4, MidpointRounding.AwayFromZero).ToXMLFormat(6);
+				pt[colTqRatio] = Math.Round(mue, 2, MidpointRounding.AwayFromZero).ToXMLFormat(6);
 				pt[colRefTq] = Math.Round(
 					refTorqueIntermediatePt + (refTorqueCouplingPt - refTorqueIntermediatePt) / (speedRatioCouplingPt - speedRatioIntermediatePt ) *
 					(nue - speedRatioIntermediatePt), 2,
-					MidpointRounding.AwayFromZero);
+					MidpointRounding.AwayFromZero).ToXMLFormat(6);
 				retVal.Rows.Add(pt);
 			}
 
             //coupling point
             var couplingPt = retVal.NewRow();
-			couplingPt[colSpeedRatio] = Math.Round(speedRatioCouplingPt, 4, MidpointRounding.AwayFromZero);
+			couplingPt[colSpeedRatio] = Math.Round(speedRatioCouplingPt, 4, MidpointRounding.AwayFromZero).ToXMLFormat(6);
 			couplingPt[colTqRatio] = Math.Round(torqueRatioStallPt - c * Math.Pow(speedRatioCouplingPt, 0.5), 2,
-				MidpointRounding.AwayFromZero);
-			couplingPt[colRefTq] = Math.Round(refTorqueCouplingPt, 2, MidpointRounding.AwayFromZero);
+				MidpointRounding.AwayFromZero).ToXMLFormat(6);
+			couplingPt[colRefTq] = Math.Round(refTorqueCouplingPt, 2, MidpointRounding.AwayFromZero).ToXMLFormat(6);
 			retVal.Rows.Add(couplingPt);
 
 			// overrun point
 			var overrunPt = retVal.NewRow();
-			overrunPt[colSpeedRatio] = Math.Round(speedRatioOverrunPt, 4, MidpointRounding.AwayFromZero);
+			overrunPt[colSpeedRatio] = Math.Round(speedRatioOverrunPt, 4, MidpointRounding.AwayFromZero).ToXMLFormat(6);
 			overrunPt[colTqRatio] = Math.Round(torqueRatioOverrunPt / speedRatioOverrunPt / ratio, 2,
-				MidpointRounding.AwayFromZero);
+				MidpointRounding.AwayFromZero).ToXMLFormat(6);
 			overrunPt[colRefTq] =
-				Math.Round(refTorqueStallPt * refTorqueOverrunPtFactor, 2, MidpointRounding.AwayFromZero);
+				Math.Round(refTorqueStallPt * refTorqueOverrunPtFactor, 2, MidpointRounding.AwayFromZero).ToXMLFormat(6);
 			retVal.Rows.Add(overrunPt);
 
 			return retVal;
