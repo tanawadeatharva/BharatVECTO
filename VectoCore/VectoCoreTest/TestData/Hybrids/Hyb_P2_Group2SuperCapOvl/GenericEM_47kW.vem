@@ -13,7 +13,8 @@
 		"DragCurve": "GenericEM_47kW.vemd",
 		"Inertia": 0.1,
 		"ContinuousPower": 31000,
-    "ThermalOverloadBuffer": 0.5,
-    "ThermalOverloadRecoveryFactor": 0.9
+		"ContinuousPowerSpeed": 2000,
+		"OverloadTime": 30,
+		"ThermalOverloadRecoveryFactor": 0.9
 	}
 }

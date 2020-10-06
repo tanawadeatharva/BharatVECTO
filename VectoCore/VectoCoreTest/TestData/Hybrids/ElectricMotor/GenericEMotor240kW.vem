@@ -7,10 +7,14 @@
 	},
 	"Body": {
 		"SavedInDeclMode": false,
-	"Model": "Generic Electric Motor",
-    "FullLoadCurve": "GenericEMotor240kW.vemp",
-    "DragCurve":  "GenericDrag.vemd", 
+		"Model": "Generic Electric Motor",
+		"FullLoadCurve": "GenericEMotor240kW.vemp",
+		"DragCurve": "GenericDrag.vemd",
 		"EfficiencyMap": "GenericMap240kW.vemo",
-		"Inertia" :  0.2 
+		"Inertia": 0.2,
+		"ContinuousPower": 50000,
+    "ContinuousPowerSpeed": 2000,
+    "OverloadTime": 30,
+    "ThermalOverloadRecoveryFactor": 0.9
 	}
 }

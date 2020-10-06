@@ -696,11 +696,13 @@ namespace TUGraz.VectoCommon.InputData
 
 		KilogramSquareMeter Inertia { get; }
 
-		Joule OverloadBuffer { get; }
+		Second OverloadTime { get; }
 
 		double OverloadRecoveryFactor { get; }
 
 		Watt ContinuousPower { get; }
+
+		PerSecond ContinuousPowerSpeed { get; }
 	}
 
 	public interface IElectricMachinesDeclarationInputData

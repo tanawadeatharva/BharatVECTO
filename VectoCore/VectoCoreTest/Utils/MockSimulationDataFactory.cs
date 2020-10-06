@@ -186,7 +186,9 @@ namespace TUGraz.VectoCore.Tests.Utils
 			return new EngineeringDataAdapter().CreateElectricMachines(new MockElectricMachinesInputData() {
 				Entries = new[] {
 					new ElectricMachineEntry<IElectricMotorEngineeringInputData>()
-						{ Count = count, ElectricMachine = inputData, Position = pos, Ratio = ratio, MechanicalEfficiency = efficiency}
+					{
+						Count = count, ElectricMachine = inputData, Position = pos, Ratio = ratio, MechanicalEfficiency = efficiency,
+					}
 				}
 			});
 		}

@@ -35,8 +35,9 @@ Public Class ElectricMachine
 
     Public ModelName As String
     Public MotorInertia As Double
-    Public ThermalOverloadCapacity As Double
+    Public PeakPowerTime As Double
     Public ContPwr As Double
+    Public RatedSpeed As Double
 
     ''' <summary>
     ''' New instance. Initialise
@@ -222,9 +223,15 @@ Public Class ElectricMachine
         End Get
     End Property
 
-    Public ReadOnly Property OverloadBuffer As Joule Implements IElectricMotorDeclarationInputData.OverloadBuffer
+    Public ReadOnly Property OverloadTime As Second Implements IElectricMotorDeclarationInputData.OverloadTime
     get
-            Return ThermalOverloadCapacity.SI(Unit.SI.Mega.Joule).Cast(of Joule)
+            Return PeakPowerTime.SI(of Second)
+    End Get
+    End Property
+
+    Public ReadOnly Property ConinuousPowerSpeed As PerSecond Implements IElectricMotorDeclarationInputData.ContinuousPowerSpeed
+    get
+            Return RatedSpeed.RPMtoRad()
     End Get
     End Property
 
