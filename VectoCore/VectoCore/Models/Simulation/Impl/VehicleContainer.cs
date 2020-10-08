@@ -127,6 +127,11 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			get { return HybridController; }
 		}
 
+		public IHybridControllerCtl HybridControllerCtl
+		{
+			get { return HybridController; }
+		}
+
 		public virtual void AddComponent(VectoSimulationComponent component)
 		{
 			var commitPriority = 0;

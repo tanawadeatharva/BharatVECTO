@@ -6,7 +6,7 @@ using TUGraz.VectoCore.Models.Connector.Ports.Impl;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent {
-	public interface IHybridController : IPowerTrainComponent, IHybridControllerInfo
+	public interface IHybridController : IPowerTrainComponent, IHybridControllerInfo, IHybridControllerCtl
 	{
 		IShiftStrategy ShiftStrategy { get; }
 

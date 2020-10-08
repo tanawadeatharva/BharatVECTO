@@ -1158,7 +1158,7 @@ lbDlog:
                 pnHybridStrategy.Enabled = True
             Case VectoSimulationJobType.BatteryElectricVehicle
                 pnEngine.Enabled = False
-                pnGearbox.Enabled = False
+                pnGearbox.Enabled = True
                 GrAuxMech.Enabled = False
                 pnShiftParams.Enabled = False
         End Select

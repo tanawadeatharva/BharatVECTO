@@ -160,6 +160,7 @@ namespace TUGraz.VectoCore.Tests.Utils
 		}
 
 		public IHybridControllerInfo HybridControllerInfo { get; }
+		public IHybridControllerCtl HybridControllerCtl { get; }
 
 		public Watt GearboxLoss()
 		{

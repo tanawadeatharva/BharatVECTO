@@ -1204,6 +1204,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					} else {
 						Log.Info("Brake -> Overload -> Clutch is closed - Trying brake action again");
 						DataBus.Brakes.BrakePower = 0.SI<Watt>();
+						DataBus.HybridControllerCtl?.RepeatDrivingAction(absTime);
 						response = Driver.DrivingActionBrake(
 							absTime, ds, DriverStrategy.BrakeTrigger.NextTargetSpeed, gradient,
 							targetDistance: targetDistance);
@@ -1211,8 +1212,13 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 							r1 => {
 								Log.Info("Brake -> Overload -> 2nd Brake -> Overload -> Trying accelerate action");
 								var gear = DataBus.GearboxInfo.Gear;
-								response = Driver.DrivingActionAccelerate(
-									absTime, ds, DriverStrategy.BrakeTrigger.NextTargetSpeed, gradient);
+								if (DataBus.GearboxInfo.GearEngaged(absTime)) {
+									response = Driver.DrivingActionAccelerate(
+										absTime, ds, DriverStrategy.BrakeTrigger.NextTargetSpeed, gradient);
+								} else {
+									response = Driver.DrivingActionRoll(absTime, ds, targetVelocity, gradient);
+								}
+
 								response.Switch().Case<ResponseGearShift>(
 									rs => {
 										Log.Info(

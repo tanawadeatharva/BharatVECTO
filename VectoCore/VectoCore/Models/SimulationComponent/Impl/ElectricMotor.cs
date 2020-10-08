@@ -156,7 +156,14 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				!DataBus.GearboxInfo.GearEngaged(absTime) /* && !DataBus.ClutchInfo.ClutchClosed(absTime)*/) {
 				// electric motor is between gearbox and clutch, but no gear is engaged...
 				if (eMotorTorque != null) {
-					throw new VectoSimulationException("electric motor cannot provide torque when gearbox and clutch are disengaged");
+                    if (!DataBus.HybridControllerInfo.GearboxEngaged) {
+                        return new ResponseInvalidOperatingPoint(this);
+                    }
+
+					if (!dryRun) {
+						throw new VectoSimulationException(
+							"electric motor cannot provide torque when gearbox and clutch are disengaged");
+					}
 				}
 
 				var electricSystemResponse = ElectricPower.Request(absTime, dt, 0.SI<Watt>(), dryRun);

@@ -19,9 +19,14 @@ namespace TUGraz.VectoCore.Models.SimulationComponent
 		void CommitSimulationStep(Second time, Second simulationInterval);
 		
 		IHybridController Controller { set; }
-		
+		PerSecond MinICESpeed { get; }
+
+		bool AllowEmergencyShift { set; }
+
 		void WriteModalResults(Second time, Second simulationInterval, IModalDataContainer container);
 		void OperatingpointChangedDuringRequest(Second absTime, Second dt, NewtonMeter outTorque,
 			PerSecond outAngularVelocity, bool dryRun, IResponse retVal);
+
+		void RepeatDrivingAction(Second absTime);
 	}
 }

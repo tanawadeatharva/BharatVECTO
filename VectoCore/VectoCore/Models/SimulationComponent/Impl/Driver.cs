@@ -617,7 +617,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			var auxTq = DataBus.EngineInfo.EngineAuxDemand(avgICDSpeed, operatingPoint.SimulationInterval) / avgICDSpeed;
 
 			return Tuple.Create(
-				tc.CalculateOperatingPoint(engSpeed, response.Gearbox.GearboxInputSpeed), drTq - inTq - auxTq, maxTq - inTq - auxTq);
+				tc.CalculateOperatingPoint(engSpeed, response.Gearbox.InputSpeed), drTq - inTq - auxTq, maxTq - inTq - auxTq);
 		}
 
 
@@ -853,7 +853,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 								operatingPoint.SimulationInterval) / avgEngineSpeed;
 			var auxTqDemand = DataBus.EngineInfo.EngineAuxDemand(avgEngineSpeed, operatingPoint.SimulationInterval) / avgEngineSpeed;
 			//var maxTorque = DataBus.e
-			var tcOp = tc.CalculateOperatingPoint(DataBus.EngineInfo.EngineIdleSpeed * 1.01, response.Gearbox.GearboxInputSpeed);
+			var tcOp = tc.CalculateOperatingPoint(DataBus.EngineInfo.EngineIdleSpeed * 1.01, response.Gearbox.InputSpeed);
 
 			if (!tcOp.Item2.IsBetween(dragTorque - inertiaTq - auxTqDemand, maxTorque - inertiaTq - auxTqDemand)) {
 
@@ -1052,7 +1052,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					getYValue: response => {
 						var r = (ResponseDryRun)response;
 						if (searchEngineSpeed) {
-							return r.DeltaEngineSpeed * 1.SI<NewtonMeter>();
+							return (r.DeltaEngineSpeed + 1.RPMtoRad()) * 1.SI<NewtonMeter>();
 						}
 						return actionRoll ? r.Gearbox.PowerRequest : (coastingOrRoll ? r.DeltaDragLoad : r.DeltaFullLoad);
 					},
@@ -1087,7 +1087,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					criterion: response => {
 						var r = (ResponseDryRun)response;
 						if (searchEngineSpeed) {
-							return r.DeltaEngineSpeed.Value();
+							return (r.DeltaEngineSpeed + 1.RPMtoRad()).Value();
 						}
 						delta = actionRoll
 							? r.Gearbox.PowerRequest

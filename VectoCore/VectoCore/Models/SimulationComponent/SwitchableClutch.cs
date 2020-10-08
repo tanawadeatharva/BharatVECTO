@@ -1,4 +1,5 @@
-﻿using TUGraz.VectoCommon.Models;
+﻿using System.Runtime.InteropServices.WindowsRuntime;
+using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.Models.Connector.Ports.Impl;
@@ -21,25 +22,23 @@ namespace TUGraz.VectoCore.Models.SimulationComponent
 			if (ClutchOpen)
 			{
 				IResponse response = new ResponseSuccess(this);
-				if (outTorque * outAngularVelocity > 0)
-				{
+				if (outTorque * outAngularVelocity > 0) {
 					response = new ResponseOverload(this) { Delta = outTorque * outAngularVelocity };
-
-				}
-				else if (outTorque * outAngularVelocity < 0)
-				{
+				} else if (outTorque * outAngularVelocity < 0) {
 					response = new ResponseUnderload(this) { Delta = outTorque * outAngularVelocity };
-				}
-				else
-				{
+				} else {
 					response = NextComponent.Initialize(0.SI<NewtonMeter>(), 0.RPMtoRad());
 				}
+
+				response.Clutch.OutputSpeed = outAngularVelocity;
 				return response;
 			}
 			if (DataBus.EngineCtl.CombustionEngineOn)
 				return base.Initialize(outTorque, outAngularVelocity);
 			PreviousState.SetState(outTorque, outAngularVelocity, outTorque, outAngularVelocity);
-			return NextComponent.Initialize(outTorque, outAngularVelocity);
+			var retVal = NextComponent.Initialize(outTorque, outAngularVelocity);
+			retVal.Clutch.OutputSpeed = outAngularVelocity;
+			return retVal;
 		}
 
 		public override IResponse Request(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity, bool dryRun)
@@ -54,7 +53,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent
 					{
 						DeltaFullLoad = avgOutSpeed * outTorque,
 						DeltaDragLoad = avgOutSpeed * outTorque,
-						Clutch = {PowerRequest = avgOutSpeed * outTorque }
+						Clutch = {
+							PowerRequest = avgOutSpeed * outTorque,
+							OutputSpeed = outAngularVelocity
+						}
 					};
 				}
 				var idleResponse = IdleController.Request(absTime, dt, 0.SI<NewtonMeter>(), null, false);
@@ -70,6 +72,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent
 				}
 				response.Engine.EngineSpeed = idleResponse.Engine.EngineSpeed;
 				response.Clutch.PowerRequest = outTorque * avgOutSpeed;
+				response.Clutch.OutputSpeed = outAngularVelocity;
 				return response;
 			}
 
@@ -106,6 +109,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent
 				CurrentState.ClutchLoss = clutchLoss;
 			}
 			retVal.Clutch.PowerRequest = outTorque * avgOutSpeed;
+			retVal.Clutch.OutputSpeed = outAngularVelocity;
 			return retVal;
 		}
 

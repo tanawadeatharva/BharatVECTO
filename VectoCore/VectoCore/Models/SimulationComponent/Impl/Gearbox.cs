@@ -266,6 +266,12 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			if (halted || (driverDeceleratingNegTorque && vehiclespeedBelowThreshold)) {
 				EngageTime = VectoMath.Max(EngageTime, absTime + dt);
 				_strategy?.Disengage(absTime, dt, outTorque, outAngularVelocity);
+				//if (_strategy != null && DataBus.HybridControllerInfo != null &&
+				//	DataBus.HybridControllerInfo.SelectedGear.Gear > 0 &&
+				//	NextGear.Gear != DataBus.HybridControllerInfo.SelectedGear.Gear) {
+				//	return new ResponseDifferentGearEngaged(this);
+				//}
+
 				return RequestGearDisengaged(absTime, dt, outTorque, outAngularVelocity, inTorque, dryRun);
 			}
 
@@ -385,12 +391,12 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				dryRunResponse.Gearbox.PowerRequest =
 					outTorque * (PreviousState.OutAngularVelocity + outAngularVelocity) / 2.0;
 				dryRunResponse.Gearbox.Gear = Gear;
-				//dryRunResponse.Gearbox.GearboxInputSpeed = inAngularVelocity;
-				return dryRunResponse;
+                dryRunResponse.Gearbox.InputSpeed = inAngularVelocity;
+                return dryRunResponse;
 			}
 
 			var response = NextComponent.Request(absTime, dt, inTorque, inAngularVelocity, false);
-			response.Gearbox.GearboxInputSpeed = inAngularVelocity;
+			response.Gearbox.InputSpeed = inAngularVelocity;
 			var shiftAllowed = !inAngularVelocity.IsEqual(0) && !DataBus.VehicleInfo.VehicleSpeed.IsEqual(0);
 
 			if (response is ResponseSuccess && shiftAllowed) {
