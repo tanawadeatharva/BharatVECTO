@@ -9,7 +9,7 @@ namespace TUGraz.VectoCore.InputData.Reader.ComponentData
 {
 	public static class ElectricFullLoadCurveReader
 	{
-		public static ElectricFullLoadCurve Create(DataTable data, double ratio, int count, double efficiency)
+		public static ElectricMotorFullLoadCurve Create(DataTable data, double ratio, int count, double efficiency)
 		{
 			if (data.Columns.Count < 3) {
 				throw new VectoException("Motor FullLoadCurve Data must contain at least 3 columns");
@@ -24,9 +24,9 @@ namespace TUGraz.VectoCore.InputData.Reader.ComponentData
 				data.Columns[2].ColumnName = Fields.GenerationTorque;
 			}
 
-			return new ElectricFullLoadCurve(
+			return new ElectricMotorFullLoadCurve(
 				(from DataRow row in data.Rows
-				select new ElectricFullLoadCurve.FullLoadEntry {
+				select new ElectricMotorFullLoadCurve.FullLoadEntry {
 					MotorSpeed = row.ParseDouble(Fields.MotorSpeed).RPMtoRad() / ratio,
 					FullDriveTorque = row.ParseDouble(Fields.DrivingTorque).SI<NewtonMeter>() * count * ratio * efficiency,
 					FullGenerationTorque = row.ParseDouble(Fields.GenerationTorque).SI<NewtonMeter>() * count * ratio / efficiency

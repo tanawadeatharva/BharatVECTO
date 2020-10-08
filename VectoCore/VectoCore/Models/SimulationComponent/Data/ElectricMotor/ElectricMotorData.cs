@@ -8,7 +8,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 		public EfficiencyMap EfficiencyMap { get; internal set; }
 
 		[ValidateObject]
-		public ElectricFullLoadCurve FullLoadCurve { get; internal set; }
+		public ElectricMotorFullLoadCurve FullLoadCurve { get; internal set; }
 
 		[SIRange(double.MinValue, double.MaxValue)]
 		public KilogramSquareMeter Inertia { get; internal set; }

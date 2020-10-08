@@ -482,8 +482,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		public override ShiftPolygon ComputeDeclarationShiftPolygon(
 			GearboxType gearboxType, int i, EngineFullLoadCurve engineDataFullLoadCurve,
-			IList<ITransmissionInputData> gearboxGears,
-			CombustionEngineData engineData, double axlegearRatio, Meter dynamicTyreRadius)
+			IList<ITransmissionInputData> gearboxGears, CombustionEngineData engineData, double axlegearRatio,
+			Meter dynamicTyreRadius, ElectricMotorData electricMotorData = null)
 		{
 			var shiftLine = DeclarationData.Gearbox.ComputeEfficiencyShiftPolygon(
 				Math.Max(i, 2), engineDataFullLoadCurve, gearboxGears, engineData, axlegearRatio, dynamicTyreRadius);
@@ -499,6 +499,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				upshift.Add(new ShiftPolygon.ShiftPolygonEntry(maxDragTorque, speed));
 				upshift.Add(new ShiftPolygon.ShiftPolygonEntry(maxTorque, speed));
 			}
+
 			return new ShiftPolygon(shiftLine.Downshift.ToList(), upshift);
 		}
 

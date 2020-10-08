@@ -35,7 +35,7 @@ Electric Power Consumption Map
 
 ###Chart Area
 
-The Chart Area displays the electric machine's max. drive curve and max. generation curve (blue), the drag curve (green) and the entries provided in the electric power consumption map.
+The Chart Area displays the electric machine's max. drive curve and max. generation curve (blue), the drag curve (green) and the entries provided in the electric power consumption map (red).
 
 
 ###Controls

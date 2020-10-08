@@ -60,7 +60,12 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			return ModelData.DragCurve.Lookup(electricMotorSpeed) * electricMotorSpeed;
 		}
 
-	public IResponse Initialize(NewtonMeter outTorque, PerSecond outAngularVelocity)
+		public Watt MaxPowerDrive(PerSecond electricMotorSpeed)
+		{
+			return ModelData.FullLoadCurve.FullLoadDriveTorque(electricMotorSpeed) * electricMotorSpeed;
+		}
+
+		public IResponse Initialize(NewtonMeter outTorque, PerSecond outAngularVelocity)
 		{
 			PreviousState.OutAngularVelocity = outAngularVelocity;
 			PreviousState.OutTorque = outTorque;
