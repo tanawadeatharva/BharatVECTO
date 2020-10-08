@@ -84,7 +84,8 @@ public class JSONFileWriter : IOutputFileWriter
 		body.Add("EfficiencyMap", GetRelativePath(electricMachine.EfficiencyMap.Source, Path.GetDirectoryName(filename)));
 		body.Add("Inertia", electricMachine.Inertia.Value());
 		body.Add("ContinuousPower", electricMachine.ContinuousPower.Value());
-		body.Add("ThermalOverloadBuffer", electricMachine.OverloadBuffer.Value() / 1e6);
+		body.Add("ContinuousPowerSpeed", electricMachine.ContinuousPowerSpeed.AsRPM);
+		body.Add("OverloadTime", electricMachine.OverloadTime.Value());
 		body.Add("ThermalOverloadRecoveryFactor", electricMachine.OverloadRecoveryFactor);
 		WriteFile(header, body, filename);
     }

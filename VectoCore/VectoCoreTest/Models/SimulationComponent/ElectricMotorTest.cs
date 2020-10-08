@@ -308,7 +308,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			// energy buffer reached - only P_cont is available
 
 			strategy.ElectricShare = -torque * 0.5;
-			for (; i <= 70; i++) {
+			for (; i <= 73; i++) {
 				var dt = 0.5.SI<Second>();
 				var absTime = i * dt;
 

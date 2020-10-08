@@ -13,7 +13,8 @@
     "EfficiencyMap": "GenericMap_125kW_485Nm.vemo",
     "Inertia": 0.225,
     "ContinuousPower": 30000,
-    "ThermalOverloadBuffer": 0.7,
+    "ContinuousPowerSpeed": 2000,
+    "OverloadTime": 30,
     "ThermalOverloadRecoveryFactor": 0.9
-}
+  }
 }

@@ -20,8 +20,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 		public Watt ContinuousPower { get; internal set; }
 
 		[SIRange(0, double.MaxValue)]
-		public Joule OverloadBuffer { get; internal set; }
+		public Second OverloadTime { get; internal set; }
 		
+		[SIRange(0, double.MaxValue)]
+		public PerSecond ContinuousPowerSpeed { get; internal set; }
+
 		[SIRange(0, 1)]
 		public double OverloadRegenerationFactor { get; internal set; }
 	}

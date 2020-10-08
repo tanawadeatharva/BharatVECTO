@@ -13,7 +13,8 @@
     "EfficiencyMap": "GenericMap.vemo",
     "Inertia": 0.15,
     "ContinuousPower": 50000,
-    "ThermalOverloadBuffer": 0.6,
-    "ThermalOverloadRecoveryFactor": 0.9 
+    "ContinuousPowerSpeed": 2000,
+    "OverloadTime": 30,
+    "ThermalOverloadRecoveryFactor": 0.9
   }
 }

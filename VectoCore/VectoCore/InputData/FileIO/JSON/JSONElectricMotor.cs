@@ -69,6 +69,18 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON {
 			get { return Body.GetValueOrDefault<double>("ContinuousPower")?.SI<Watt>() ?? 1e12.SI<Watt>(); }
 		}
 
-		
+		public PerSecond ContinuousPowerSpeed
+		{
+			get { return Body.GetValueOrDefault<double>("ContinuousPowerSpeed")?.RPMtoRad(); }
+		}
+
+		public Second OverloadTime
+		{
+			get
+			{
+				return Body.GetValueOrDefault<double>("OverloadTime")?.SI<Second>() ?? 0.SI<Second>();
+			}
+		}
+
 	}
 }

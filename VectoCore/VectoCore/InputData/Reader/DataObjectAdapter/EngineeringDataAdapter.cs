@@ -683,7 +683,8 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 				EfficiencyMap = ElectricMotorMapReader.Create(motorData.EfficiencyMap, ratio, count, efficiency),
 				Inertia = motorData.Inertia,
 				ContinuousPower = motorData.ContinuousPower * count,
-				OverloadBuffer = motorData.OverloadBuffer * count,
+				ContinuousPowerSpeed = motorData.ContinuousPowerSpeed,
+				OverloadTime = motorData.OverloadTime,
 				OverloadRegenerationFactor = motorData.OverloadRecoveryFactor,
 			};
 		}
