@@ -1,11 +1,12 @@
 ##Electric Motor
 
 The electric motor is modeled by basically 4 map files:
+
  - Maximum drive torque over motor speed
  - Maximum generation torque over motor speed
  - Drag curve (i.e., the motor is not energized) over motor speed
  - Electric power map ($P_\textrm{map,el}$)
- - Continuous power ($P_textrm{cont}$)
+ - Continuous power ($P_\textrm{cont}$)
  - Engine speed for continuous power ($n_\textrm{P,cont}$)
  - Maximum overload time ($t_\textrm{ovl}$)
 
@@ -35,3 +36,4 @@ $E_{\textrm{ovl,} i + 1} = E_{\textrm{ovl,} i} + P_\textrm{loss, i} * dt$
 $P_\textrm{loss, i} = T_\textrm{em, mech} * n_\textrm{em} - P_\textrm{map, el}(T_\textrm{em, mech}, n_\textrm{em})$
 
 If $E_\textrm{ovl, i}$ reaches the overload capacity $E_\textrm{th,buf}$ the power of the electric machine is limited to the continuous power until $E_\textrm{ovl,i}$ goes below the overload capacity multiplied by a certain factor. Then the maximum torque is available again.
+

@@ -34,3 +34,4 @@ The super capacitor model uses the following model parameters:
 - Maximum current discharging
 
 The values of maximum charging current and maximum discharging current need to be positive!
+
