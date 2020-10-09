@@ -1,6 +1,8 @@
 ##RESS
 
-The rechargable electrictric energy storage system uses the following model parameters:
+###Battery
+
+The battery model uses the following model parameters:
 
 - Capacity of the battery pack
 - C-Factor (limits the max. current for charging/discharging)
@@ -21,3 +23,16 @@ The maximum discharge current is further limited by the battery's internal resis
 
 $I_\textrm{disch,max} = \frac{U(\textrm{SoC})}{4 * R_i(\textrm{SoC})}$
 
+
+###Super Capacitor
+
+The super capacitor model uses the following model parameters:
+
+- Capacity of the SuperCap in Farad
+- Internal resistance
+- Minimum voltage
+- Maximum voltage
+- Maximum current charging
+- Maximum current discharging
+
+The values of maximum charging current and maximum discharging current need to be positive!
