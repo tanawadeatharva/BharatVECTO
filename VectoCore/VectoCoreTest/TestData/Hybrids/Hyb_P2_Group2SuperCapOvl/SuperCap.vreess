@@ -12,6 +12,8 @@
     "Capacity": 37.0,
     "InternalResistance": 0.02,
     "U_min": 0.0,
-    "U_max": 330.0
+    "U_max": 330.0,
+    "I_maxCharge": 100,
+    "I_maxDischarge":  100
   }
 }

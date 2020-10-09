@@ -190,10 +190,10 @@ Public Class BatteryForm
             Dim battery As IBatteryPackEngineeringInputData = ctype(reess, IBatteryPackEngineeringInputData)
             tbCapacity.Text = battery.Capacity.AsAmpHour.ToGUIFormat()
 
-            tbCFactor.Text = battery.MaxCurrentFactor.ConvertToPerHour().Value.ToGUIFormat()
             tbSoCMin.Text = (battery.MinSOC * 100).ToGUIFormat()
             tbSoCMax.Text = (battery.MaxSOC * 100).ToGUIFormat()
 
+            tbMaxCurrentMap.Text = GetRelativePath(battery.MaxCurrentMap.Source, basePath)
             tbSoCCurve.Text = GetRelativePath(battery.VoltageCurve.Source, basePath)
             tbRiCurve.Text = GetRelativePath(battery.InternalResistanceCurve.Source, basePath)
 
@@ -209,7 +209,7 @@ Public Class BatteryForm
             Dim superCap As ISuperCapEngineeringInputData = ctype(reess, ISuperCapEngineeringInputData)
             tbCapacity.Text = String.Empty
 
-            tbCFactor.Text  = String.Empty
+            tbMaxCurrentMap.Text  = String.Empty
             tbSoCMin.Text  = String.Empty
             tbSoCMax.Text = String.Empty
 
@@ -220,6 +220,9 @@ Public Class BatteryForm
             tbSuperCapMaxV.Text = superCap.MaxVoltage.ToGUIFormat()
             tbSuperCapMinV.Text= superCap.MinVoltage.ToGUIFormat()
             tbSuperCapRi.Text= superCap.InternalResistance.ToGUIFormat()
+
+            tbSuperCapMaxCurrentCharge.Text = superCap.MaxCurrentCharge.ToGuiFormat()
+            tbSuperCapMaxCurrentDischarge.Text = superCap.MaxCurrentDischarge.ToGuiFormat()
 
         end if
 
@@ -298,6 +301,8 @@ Public Class BatteryForm
         superCap.MinV = _tbSuperCapMinV.Text.ToDouble(0)
         superCap.MaxV = tbSuperCapMaxV.Text.ToDouble(0)
 
+        superCap.MaxChgCurrent = tbSuperCapMaxCurrentCharge.Text.ToDouble()
+        superCap.MaxDischgCurrent = tbSuperCapMaxCurrentDischarge.Text.ToDouble()
         Return superCap
     End Function
 
@@ -316,7 +321,7 @@ Public Class BatteryForm
         battery.BatMinSoc = tbSoCMin.Text.ToDouble(0)
         battery.BatMaxSoc = tbSoCMax.Text.ToDouble(0)
 
-        battery.BatCFactor = tbCFactor.Text.ToDouble(0)
+        battery.PathMaxCurrentCurve = tbMaxCurrentMap.Text
         Return battery
     End Function
 
@@ -588,6 +593,23 @@ Public Class BatteryForm
             pnBattery.Visible = False
             pnSuperCap.Visible = True
             ressType = REESSType.SuperCap 
+        End If
+    End Sub
+
+    Private Sub btnBrowseMaxCurrentMap_Click(sender As Object, e As EventArgs) Handles btnBrowseMaxCurrentMap.Click
+        If BatteryInternalResistanceCurveFileBrowser.OpenDialog(FileRepl(tbRiCurve.Text, GetPath(_batteryFile))) Then _
+            tbRiCurve.Text = GetFilenameWithoutDirectory(BatteryInternalResistanceCurveFileBrowser.Files(0), GetPath(_batteryFile))
+    End Sub
+
+    Private Sub btnMaxCurrentMapOpen_Click(sender As Object, e As EventArgs) Handles btnMaxCurrentMapOpen.Click
+        Dim theFile As String
+
+        theFile = FileRepl(tbMaxCurrentMap.Text, GetPath(_batteryFile))
+
+        If theFile <> NoFile AndAlso File.Exists(theFile) Then
+            OpenFiles(FileRepl(tbMaxCurrentMap.Text, GetPath(_batteryFile)), theFile)
+        Else
+            OpenFiles(FileRepl(tbMaxCurrentMap.Text, GetPath(_batteryFile)))
         End If
     End Sub
 End Class

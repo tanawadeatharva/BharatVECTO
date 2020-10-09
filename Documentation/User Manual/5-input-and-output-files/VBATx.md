@@ -41,3 +41,22 @@ SoC , Ri
 0   , 0.04
 100 , 0.04
 ~~~
+
+
+##Battery Max Current Map (.vimax)
+
+This file contains the battery's maximum current for charging and discharging depending on the state of charge (SoC). The file must cover the SOC range from 0 to 100%! The values for both, the charging and discharging current need to be positive.
+
+The file uses the [VECTO CSV format](#csv).
+
+- Filetype: .vbatr
+- Header: **SOC, I_charge, I_discharge**
+- Requires at least 2 data entries
+
+**Example:**
+
+~~~
+SOC , I_charge , I_discharge
+0   , 1620     , 1620
+100 , 1620     , 1620
+~~~

@@ -424,12 +424,10 @@ namespace TUGraz.VectoCommon.InputData
 
 	public interface IBatteryPackEngineeringInputData : IBatteryPackDeclarationInputData
 	{
-		
 	}
 
 	public interface ISuperCapEngineeringInputData : ISuperCapDeclarationInputData
 	{
-
 	}
 
 	public interface IDriverModelData { }

@@ -42,13 +42,17 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		public Watt MaxChargePower(Second dt)
 		{
-			var maxChargeCurrent = (ModelData.Capacity * ModelData.MaxVoltage - PreviousState.Charge) / dt;
+			var maxChargeCurrent =
+				VectoMath.Min((ModelData.Capacity * ModelData.MaxVoltage - PreviousState.Charge) / dt,
+					ModelData.MaxCurrentCharge);
 			return InternalVoltage * maxChargeCurrent + maxChargeCurrent * ModelData.InternalResistance * maxChargeCurrent;
 		}
 
 		public Watt MaxDischargePower(Second dt)
 		{
-			var maxDischargeCurrent = (ModelData.Capacity * ModelData.MinVoltage - PreviousState.Charge) / dt;
+			var maxDischargeCurrent =
+				VectoMath.Max((ModelData.Capacity * ModelData.MinVoltage - PreviousState.Charge) / dt,
+					ModelData.MaxCurrentDischarge);
 			var maxDischargePower = InternalVoltage * maxDischargeCurrent +
 									maxDischargeCurrent * ModelData.InternalResistance * maxDischargeCurrent;
 			var maxPower = -InternalVoltage / (4 * ModelData.InternalResistance) * InternalVoltage;
@@ -141,8 +145,12 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		{
 			var maxPower = powerDemand < 0 ? maxDischargePower : maxChargePower;
 
-			var maxChargeCurrent = (ModelData.Capacity * ModelData.MaxVoltage - PreviousState.Charge) / dt;
-			var maxDischargeCurrent = (ModelData.Capacity * ModelData.MinVoltage - PreviousState.Charge) / dt;
+			var maxChargeCurrent =
+				VectoMath.Min((ModelData.Capacity * ModelData.MaxVoltage - PreviousState.Charge) / dt,
+					ModelData.MaxCurrentCharge);
+			var maxDischargeCurrent =
+				VectoMath.Max((ModelData.Capacity * ModelData.MinVoltage - PreviousState.Charge) / dt,
+					ModelData.MaxCurrentDischarge);
 			var current = powerDemand < 0 ? maxDischargeCurrent : maxChargeCurrent;
 
 			var batteryLoss = current * ModelData.InternalResistance * current;

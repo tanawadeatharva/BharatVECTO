@@ -278,6 +278,9 @@
     <None Include="TestData\BatteryElectric\GenericVehicleB4\GenericMap_125kW_485Nm.vemo">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Include="TestData\BatteryElectric\GenericVehicleB4\MaxCurrent.vimax">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="TestData\BatteryElectric\GenericVehicleB4\Truck.vacc">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
@@ -348,6 +351,9 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="TestData\Generic Vehicles\Engineering Mode\HeavyBusPrimary\HeavyBusPrimary_DECL.vecto">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Hybrids\Battery\MaxCurrent.vimax">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="TestData\Hybrids\Battery\GenericBattery.vbat">

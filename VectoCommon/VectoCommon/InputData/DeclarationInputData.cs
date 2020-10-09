@@ -31,6 +31,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.IO;
 using System.Xml;
 using TUGraz.VectoCommon.BusAuxiliaries;
@@ -757,7 +758,7 @@ namespace TUGraz.VectoCommon.InputData
 
 		TableData VoltageCurve { get; }
 
-		PerSecond MaxCurrentFactor { get; }
+		TableData MaxCurrentMap { get; }
 	}
 
 	public interface ISuperCapDeclarationInputData : IREESSPackInputData
@@ -769,6 +770,11 @@ namespace TUGraz.VectoCommon.InputData
 		Volt MinVoltage { get; }
 
 		Volt MaxVoltage { get; }
+
+		Ampere MaxCurrentCharge { get; }
+
+		Ampere MaxCurrentDischarge { get; }
+
 	}
 
 

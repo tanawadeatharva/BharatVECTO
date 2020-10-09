@@ -17,6 +17,10 @@ Public Class SuperCap
     Public MinV As Double
     Public MaxV As Double
 
+    Public MaxChgCurrent As Double
+    Public MaxDischgCurrent As Double
+
+
     Public Sub New()
         _myPath = ""
         _filePath = ""
@@ -107,6 +111,17 @@ Public Class SuperCap
         End Get
     End Property
 
+    Public ReadOnly Property MaxCurrentCharge As Ampere Implements ISuperCapDeclarationInputData.MaxCurrentCharge
+    get
+        Return MaxChgCurrent.SI(of Ampere)
+    End Get
+    End Property
+    Public ReadOnly Property MaxCurrentDischarge As Ampere Implements ISuperCapDeclarationInputData.MaxCurrentDischarge
+    get
+        Return MaxDischgCurrent.SI(Of Ampere)
+    End Get
+    End Property
+
     Public Property FilePath() As String
         Get
             Return _filePath
@@ -150,4 +165,6 @@ Public Class SuperCap
             Return REESSType.SuperCap
         End Get
     End Property
+
+
 End Class

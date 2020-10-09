@@ -899,7 +899,7 @@ Public Class ElectricStorageWrapper
     Public ReadOnly Property Capacity As AmpereSecond Implements IBatteryPackDeclarationInputData.Capacity
     Public ReadOnly Property InternalResistanceCurve As TableData Implements IBatteryPackDeclarationInputData.InternalResistanceCurve
     Public ReadOnly Property VoltageCurve As TableData Implements IBatteryPackDeclarationInputData.VoltageCurve
-    Public ReadOnly Property MaxCurrentFactor As PerSecond Implements IBatteryPackDeclarationInputData.MaxCurrentFactor
+    Public ReadOnly Property MaxCurrentMap As TableData Implements IBatteryPackDeclarationInputData.MaxCurrentMap
     Public ReadOnly Property StorageType As REESSType Implements IREESSPackInputData.StorageType
 End Class
 
