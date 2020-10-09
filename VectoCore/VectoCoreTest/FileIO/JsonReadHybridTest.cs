@@ -38,7 +38,7 @@ namespace TUGraz.VectoCore.Tests.FileIO
 
 			Assert.AreEqual(0.20, inputProvider.MinSOC);
 			Assert.AreEqual(0.80, inputProvider.MaxSOC);
-			Assert.AreEqual(50, inputProvider.MaxCurrentFactor);
+			Assert.AreEqual(50, inputProvider.MaxCurrentFactor.ConvertToPerHour().Value);
 
 			var socMap = BatterySOCReader.Create(soc);
 

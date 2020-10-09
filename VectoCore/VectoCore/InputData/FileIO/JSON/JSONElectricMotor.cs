@@ -71,7 +71,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON {
 
 		public PerSecond ContinuousPowerSpeed
 		{
-			get { return Body.GetValueOrDefault<double>("ContinuousPowerSpeed")?.RPMtoRad(); }
+			get { return Body.GetValueOrDefault<double>("ContinuousPowerSpeed")?.RPMtoRad() ?? 0.RPMtoRad(); }
 		}
 
 		public Second OverloadTime
