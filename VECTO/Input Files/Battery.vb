@@ -22,9 +22,9 @@ Public Class Battery
     Public BatCapacity As Double
     Private _socCurvePath As SubPath
     Private _riCurvePath As SubPath
+    Private _maxCurrentPath As SubPath
     Public BatMinSoc As Double
     Public BatMaxSoc As Double
-    Public BatCFactor As Double
     
     Public Sub New()
         _myPath = ""
@@ -32,7 +32,7 @@ Public Class Battery
 
         _socCurvePath = New SubPath
         _riCurvePath = New SubPath()
-
+        _maxCurrentPath = new SubPath()
 
         SetDefault()
     End Sub
@@ -42,10 +42,10 @@ Public Class Battery
         BatCapacity = 0
         BatMinSoc = 0
         BatMaxSoc = 0
-        BatCFactor = 0
 
         _riCurvePath.Clear()
         _socCurvePath.Clear()
+        _maxCurrentPath.Clear()
     End Sub
 
     Public Function SaveFile() As Boolean
@@ -144,6 +144,19 @@ Public Class Battery
         End Set
     End Property
 
+    Public Property PathMaxCurrentCurve(Optional ByVal original As Boolean = False) As String
+        Get
+            If original Then
+                Return _maxCurrentPath.OriginalPath
+            Else
+                Return _maxCurrentPath.FullPath
+            End If
+        End Get
+        Set(ByVal value As String)
+            _maxCurrentPath.Init(_myPath, value)
+        End Set
+    End Property
+
     Public ReadOnly Property DataSource As DataSource Implements IComponentInputData.DataSource
         Get
             Dim retVal As DataSource = New DataSource()
@@ -233,12 +246,14 @@ Public Class Battery
         End Get
     End Property
 
-    Public ReadOnly Property MaxCurrentFactor As PerSecond Implements IBatteryPackDeclarationInputData.MaxCurrentFactor
+    
+    Public ReadOnly Property MaxCurrentMap As TableData Implements IBatteryPackDeclarationInputData.MaxCurrentMap
         Get
-            Return BatCFactor.SI(Unit.SI.Per.Hour).Cast(Of PerSecond)
+            If Not File.Exists(_maxCurrentPath.FullPath) Then _
+                Throw New VectoException("Max Current Map is missing or invalid")
+            Return VectoCSVFile.Read(_maxCurrentPath.FullPath)
         End Get
     End Property
-
 
     Public ReadOnly Property StorageType As REESSType Implements IREESSPackInputData.StorageType
     get

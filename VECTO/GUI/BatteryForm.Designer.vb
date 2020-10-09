@@ -78,13 +78,21 @@ Partial Class BatteryForm
         Me.lblSoCMax = New System.Windows.Forms.Label()
         Me.lblSoCMaxUnit = New System.Windows.Forms.Label()
         Me.tbSoCMax = New System.Windows.Forms.TextBox()
-        Me.Panel3 = New System.Windows.Forms.Panel()
-        Me.lblCFactor = New System.Windows.Forms.Label()
-        Me.lblCFactorUnit = New System.Windows.Forms.Label()
-        Me.tbCFactor = New System.Windows.Forms.TextBox()
         Me.FlowLayoutPanel1 = New System.Windows.Forms.FlowLayoutPanel()
         Me.pnBattery = New System.Windows.Forms.Panel()
+        Me.tbMaxCurrentMap = New System.Windows.Forms.TextBox()
+        Me.lblMaxCurrentMap = New System.Windows.Forms.Label()
+        Me.btnBrowseMaxCurrentMap = New System.Windows.Forms.Button()
+        Me.btnMaxCurrentMapOpen = New System.Windows.Forms.Button()
         Me.pnSuperCap = New System.Windows.Forms.Panel()
+        Me.Panel4 = New System.Windows.Forms.Panel()
+        Me.lblMaxCurrentDischarge = New System.Windows.Forms.Label()
+        Me.lblMaxCurrentDischargeUnit = New System.Windows.Forms.Label()
+        Me.tbSuperCapMaxCurrentDischarge = New System.Windows.Forms.TextBox()
+        Me.Panel3 = New System.Windows.Forms.Panel()
+        Me.lblMaxCurrentChg = New System.Windows.Forms.Label()
+        Me.lblMaxCurrentChargeUnit = New System.Windows.Forms.Label()
+        Me.tbSuperCapMaxCurrentCharge = New System.Windows.Forms.TextBox()
         Me.pnSuperCapMaxV = New System.Windows.Forms.Panel()
         Me.lblSuperCapMaxV = New System.Windows.Forms.Label()
         Me.lblSuperCapMaxVUnit = New System.Windows.Forms.Label()
@@ -111,10 +119,11 @@ Partial Class BatteryForm
         CType(Me.PicBox,System.ComponentModel.ISupportInitialize).BeginInit
         Me.Panel1.SuspendLayout
         Me.Panel2.SuspendLayout
-        Me.Panel3.SuspendLayout
         Me.FlowLayoutPanel1.SuspendLayout
         Me.pnBattery.SuspendLayout
         Me.pnSuperCap.SuspendLayout
+        Me.Panel4.SuspendLayout
+        Me.Panel3.SuspendLayout
         Me.pnSuperCapMaxV.SuspendLayout
         Me.pnSuperCapMinV.SuspendLayout
         Me.pnSuperCapResistance.SuspendLayout
@@ -153,7 +162,7 @@ Partial Class BatteryForm
         '
         Me.ButCancel.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right),System.Windows.Forms.AnchorStyles)
         Me.ButCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel
-        Me.ButCancel.Location = New System.Drawing.Point(1216, 482)
+        Me.ButCancel.Location = New System.Drawing.Point(1216, 476)
         Me.ButCancel.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
         Me.ButCancel.Name = "ButCancel"
         Me.ButCancel.Size = New System.Drawing.Size(112, 35)
@@ -164,7 +173,7 @@ Partial Class BatteryForm
         'ButOK
         '
         Me.ButOK.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right),System.Windows.Forms.AnchorStyles)
-        Me.ButOK.Location = New System.Drawing.Point(1095, 482)
+        Me.ButOK.Location = New System.Drawing.Point(1095, 476)
         Me.ButOK.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
         Me.ButOK.Name = "ButOK"
         Me.ButOK.Size = New System.Drawing.Size(112, 35)
@@ -257,7 +266,7 @@ Partial Class BatteryForm
         '
         Me.StatusStrip1.ImageScalingSize = New System.Drawing.Size(24, 24)
         Me.StatusStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.LbStatus})
-        Me.StatusStrip1.Location = New System.Drawing.Point(0, 524)
+        Me.StatusStrip1.Location = New System.Drawing.Point(0, 518)
         Me.StatusStrip1.Name = "StatusStrip1"
         Me.StatusStrip1.Padding = New System.Windows.Forms.Padding(2, 0, 21, 0)
         Me.StatusStrip1.Size = New System.Drawing.Size(1347, 32)
@@ -332,7 +341,7 @@ Partial Class BatteryForm
         '
         'tbSoCCurve
         '
-        Me.tbSoCCurve.Location = New System.Drawing.Point(4, 176)
+        Me.tbSoCCurve.Location = New System.Drawing.Point(4, 190)
         Me.tbSoCCurve.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
         Me.tbSoCCurve.Name = "tbSoCCurve"
         Me.tbSoCCurve.Size = New System.Drawing.Size(649, 26)
@@ -341,7 +350,7 @@ Partial Class BatteryForm
         'lblSoCCurve
         '
         Me.lblSoCCurve.AutoSize = true
-        Me.lblSoCCurve.Location = New System.Drawing.Point(4, 151)
+        Me.lblSoCCurve.Location = New System.Drawing.Point(4, 165)
         Me.lblSoCCurve.Margin = New System.Windows.Forms.Padding(4, 0, 4, 0)
         Me.lblSoCCurve.Name = "lblSoCCurve"
         Me.lblSoCCurve.Size = New System.Drawing.Size(85, 20)
@@ -351,7 +360,7 @@ Partial Class BatteryForm
         'btnBrowseSoCCurve
         '
         Me.btnBrowseSoCCurve.Image = Global.TUGraz.VECTO.My.Resources.Resources.Open_icon
-        Me.btnBrowseSoCCurve.Location = New System.Drawing.Point(655, 173)
+        Me.btnBrowseSoCCurve.Location = New System.Drawing.Point(655, 187)
         Me.btnBrowseSoCCurve.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
         Me.btnBrowseSoCCurve.Name = "btnBrowseSoCCurve"
         Me.btnBrowseSoCCurve.Size = New System.Drawing.Size(36, 37)
@@ -362,7 +371,7 @@ Partial Class BatteryForm
         'btnSoCCurveOpen
         '
         Me.btnSoCCurveOpen.Image = Global.TUGraz.VECTO.My.Resources.Resources.application_export_icon_small
-        Me.btnSoCCurveOpen.Location = New System.Drawing.Point(690, 173)
+        Me.btnSoCCurveOpen.Location = New System.Drawing.Point(690, 187)
         Me.btnSoCCurveOpen.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
         Me.btnSoCCurveOpen.Name = "btnSoCCurveOpen"
         Me.btnSoCCurveOpen.Size = New System.Drawing.Size(36, 37)
@@ -415,7 +424,7 @@ Partial Class BatteryForm
         Me.lblTitle.AutoSize = true
         Me.lblTitle.BackColor = System.Drawing.Color.White
         Me.lblTitle.Font = New System.Drawing.Font("Microsoft Sans Serif", 18!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0,Byte))
-        Me.lblTitle.Location = New System.Drawing.Point(178, 54)
+        Me.lblTitle.Location = New System.Drawing.Point(124, 52)
         Me.lblTitle.Margin = New System.Windows.Forms.Padding(4, 0, 4, 0)
         Me.lblTitle.Name = "lblTitle"
         Me.lblTitle.Size = New System.Drawing.Size(395, 40)
@@ -438,7 +447,7 @@ Partial Class BatteryForm
         Me.Panel1.Controls.Add(Me.lblMinSoc)
         Me.Panel1.Controls.Add(Me.lblSoCMinUnit)
         Me.Panel1.Controls.Add(Me.tbSoCMin)
-        Me.Panel1.Location = New System.Drawing.Point(4, 61)
+        Me.Panel1.Location = New System.Drawing.Point(4, 55)
         Me.Panel1.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
         Me.Panel1.Name = "Panel1"
         Me.Panel1.Size = New System.Drawing.Size(318, 46)
@@ -477,7 +486,7 @@ Partial Class BatteryForm
         Me.Panel2.Controls.Add(Me.lblSoCMax)
         Me.Panel2.Controls.Add(Me.lblSoCMaxUnit)
         Me.Panel2.Controls.Add(Me.tbSoCMax)
-        Me.Panel2.Location = New System.Drawing.Point(337, 61)
+        Me.Panel2.Location = New System.Drawing.Point(337, 55)
         Me.Panel2.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
         Me.Panel2.Name = "Panel2"
         Me.Panel2.Size = New System.Drawing.Size(318, 46)
@@ -511,59 +520,23 @@ Partial Class BatteryForm
         Me.tbSoCMax.Size = New System.Drawing.Size(84, 26)
         Me.tbSoCMax.TabIndex = 3
         '
-        'Panel3
-        '
-        Me.Panel3.Controls.Add(Me.lblCFactor)
-        Me.Panel3.Controls.Add(Me.lblCFactorUnit)
-        Me.Panel3.Controls.Add(Me.tbCFactor)
-        Me.Panel3.Location = New System.Drawing.Point(337, 5)
-        Me.Panel3.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
-        Me.Panel3.Name = "Panel3"
-        Me.Panel3.Size = New System.Drawing.Size(318, 46)
-        Me.Panel3.TabIndex = 25
-        '
-        'lblCFactor
-        '
-        Me.lblCFactor.AutoSize = true
-        Me.lblCFactor.Location = New System.Drawing.Point(4, 11)
-        Me.lblCFactor.Margin = New System.Windows.Forms.Padding(4, 0, 4, 0)
-        Me.lblCFactor.Name = "lblCFactor"
-        Me.lblCFactor.Size = New System.Drawing.Size(71, 20)
-        Me.lblCFactor.TabIndex = 0
-        Me.lblCFactor.Text = "C-Factor"
-        '
-        'lblCFactorUnit
-        '
-        Me.lblCFactorUnit.AutoSize = true
-        Me.lblCFactorUnit.Location = New System.Drawing.Point(230, 11)
-        Me.lblCFactorUnit.Margin = New System.Windows.Forms.Padding(4, 0, 4, 0)
-        Me.lblCFactorUnit.Name = "lblCFactorUnit"
-        Me.lblCFactorUnit.Size = New System.Drawing.Size(39, 20)
-        Me.lblCFactorUnit.TabIndex = 24
-        Me.lblCFactorUnit.Text = "[1/h]"
-        '
-        'tbCFactor
-        '
-        Me.tbCFactor.Location = New System.Drawing.Point(135, 6)
-        Me.tbCFactor.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
-        Me.tbCFactor.Name = "tbCFactor"
-        Me.tbCFactor.Size = New System.Drawing.Size(84, 26)
-        Me.tbCFactor.TabIndex = 3
-        '
         'FlowLayoutPanel1
         '
         Me.FlowLayoutPanel1.Controls.Add(Me.pnBattery)
         Me.FlowLayoutPanel1.Controls.Add(Me.pnSuperCap)
         Me.FlowLayoutPanel1.Location = New System.Drawing.Point(12, 210)
         Me.FlowLayoutPanel1.Name = "FlowLayoutPanel1"
-        Me.FlowLayoutPanel1.Size = New System.Drawing.Size(743, 309)
+        Me.FlowLayoutPanel1.Size = New System.Drawing.Size(743, 303)
         Me.FlowLayoutPanel1.TabIndex = 50
         '
         'pnBattery
         '
+        Me.pnBattery.Controls.Add(Me.tbMaxCurrentMap)
+        Me.pnBattery.Controls.Add(Me.lblMaxCurrentMap)
+        Me.pnBattery.Controls.Add(Me.btnBrowseMaxCurrentMap)
+        Me.pnBattery.Controls.Add(Me.btnMaxCurrentMapOpen)
         Me.pnBattery.Controls.Add(Me.pnInertia)
         Me.pnBattery.Controls.Add(Me.tbSoCCurve)
-        Me.pnBattery.Controls.Add(Me.Panel3)
         Me.pnBattery.Controls.Add(Me.lblSoCCurve)
         Me.pnBattery.Controls.Add(Me.Panel2)
         Me.pnBattery.Controls.Add(Me.btnBrowseSoCCurve)
@@ -578,16 +551,136 @@ Partial Class BatteryForm
         Me.pnBattery.Size = New System.Drawing.Size(734, 290)
         Me.pnBattery.TabIndex = 0
         '
+        'tbMaxCurrentMap
+        '
+        Me.tbMaxCurrentMap.Location = New System.Drawing.Point(6, 134)
+        Me.tbMaxCurrentMap.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
+        Me.tbMaxCurrentMap.Name = "tbMaxCurrentMap"
+        Me.tbMaxCurrentMap.Size = New System.Drawing.Size(649, 26)
+        Me.tbMaxCurrentMap.TabIndex = 44
+        '
+        'lblMaxCurrentMap
+        '
+        Me.lblMaxCurrentMap.AutoSize = true
+        Me.lblMaxCurrentMap.Location = New System.Drawing.Point(6, 109)
+        Me.lblMaxCurrentMap.Margin = New System.Windows.Forms.Padding(4, 0, 4, 0)
+        Me.lblMaxCurrentMap.Name = "lblMaxCurrentMap"
+        Me.lblMaxCurrentMap.Size = New System.Drawing.Size(130, 20)
+        Me.lblMaxCurrentMap.TabIndex = 47
+        Me.lblMaxCurrentMap.Text = "Max Current Map"
+        '
+        'btnBrowseMaxCurrentMap
+        '
+        Me.btnBrowseMaxCurrentMap.Image = Global.TUGraz.VECTO.My.Resources.Resources.Open_icon
+        Me.btnBrowseMaxCurrentMap.Location = New System.Drawing.Point(657, 131)
+        Me.btnBrowseMaxCurrentMap.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
+        Me.btnBrowseMaxCurrentMap.Name = "btnBrowseMaxCurrentMap"
+        Me.btnBrowseMaxCurrentMap.Size = New System.Drawing.Size(36, 37)
+        Me.btnBrowseMaxCurrentMap.TabIndex = 45
+        Me.btnBrowseMaxCurrentMap.TabStop = false
+        Me.btnBrowseMaxCurrentMap.UseVisualStyleBackColor = true
+        '
+        'btnMaxCurrentMapOpen
+        '
+        Me.btnMaxCurrentMapOpen.Image = Global.TUGraz.VECTO.My.Resources.Resources.application_export_icon_small
+        Me.btnMaxCurrentMapOpen.Location = New System.Drawing.Point(692, 131)
+        Me.btnMaxCurrentMapOpen.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
+        Me.btnMaxCurrentMapOpen.Name = "btnMaxCurrentMapOpen"
+        Me.btnMaxCurrentMapOpen.Size = New System.Drawing.Size(36, 37)
+        Me.btnMaxCurrentMapOpen.TabIndex = 46
+        Me.btnMaxCurrentMapOpen.TabStop = false
+        Me.btnMaxCurrentMapOpen.UseVisualStyleBackColor = true
+        '
         'pnSuperCap
         '
+        Me.pnSuperCap.Controls.Add(Me.Panel4)
+        Me.pnSuperCap.Controls.Add(Me.Panel3)
         Me.pnSuperCap.Controls.Add(Me.pnSuperCapMaxV)
         Me.pnSuperCap.Controls.Add(Me.pnSuperCapMinV)
         Me.pnSuperCap.Controls.Add(Me.pnSuperCapResistance)
         Me.pnSuperCap.Controls.Add(Me.pnSuperCapCapacity)
         Me.pnSuperCap.Location = New System.Drawing.Point(3, 299)
         Me.pnSuperCap.Name = "pnSuperCap"
-        Me.pnSuperCap.Size = New System.Drawing.Size(734, 118)
+        Me.pnSuperCap.Size = New System.Drawing.Size(734, 169)
         Me.pnSuperCap.TabIndex = 1
+        '
+        'Panel4
+        '
+        Me.Panel4.Controls.Add(Me.lblMaxCurrentDischarge)
+        Me.Panel4.Controls.Add(Me.lblMaxCurrentDischargeUnit)
+        Me.Panel4.Controls.Add(Me.tbSuperCapMaxCurrentDischarge)
+        Me.Panel4.Location = New System.Drawing.Point(337, 117)
+        Me.Panel4.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
+        Me.Panel4.Name = "Panel4"
+        Me.Panel4.Size = New System.Drawing.Size(318, 46)
+        Me.Panel4.TabIndex = 27
+        '
+        'lblMaxCurrentDischarge
+        '
+        Me.lblMaxCurrentDischarge.AutoSize = true
+        Me.lblMaxCurrentDischarge.Location = New System.Drawing.Point(4, 11)
+        Me.lblMaxCurrentDischarge.Margin = New System.Windows.Forms.Padding(4, 0, 4, 0)
+        Me.lblMaxCurrentDischarge.Name = "lblMaxCurrentDischarge"
+        Me.lblMaxCurrentDischarge.Size = New System.Drawing.Size(148, 20)
+        Me.lblMaxCurrentDischarge.TabIndex = 0
+        Me.lblMaxCurrentDischarge.Text = "Max Current Dischg"
+        '
+        'lblMaxCurrentDischargeUnit
+        '
+        Me.lblMaxCurrentDischargeUnit.AutoSize = true
+        Me.lblMaxCurrentDischargeUnit.Location = New System.Drawing.Point(257, 13)
+        Me.lblMaxCurrentDischargeUnit.Margin = New System.Windows.Forms.Padding(4, 0, 4, 0)
+        Me.lblMaxCurrentDischargeUnit.Name = "lblMaxCurrentDischargeUnit"
+        Me.lblMaxCurrentDischargeUnit.Size = New System.Drawing.Size(28, 20)
+        Me.lblMaxCurrentDischargeUnit.TabIndex = 24
+        Me.lblMaxCurrentDischargeUnit.Text = "[A]"
+        '
+        'tbSuperCapMaxCurrentDischarge
+        '
+        Me.tbSuperCapMaxCurrentDischarge.Location = New System.Drawing.Point(162, 8)
+        Me.tbSuperCapMaxCurrentDischarge.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
+        Me.tbSuperCapMaxCurrentDischarge.Name = "tbSuperCapMaxCurrentDischarge"
+        Me.tbSuperCapMaxCurrentDischarge.Size = New System.Drawing.Size(84, 26)
+        Me.tbSuperCapMaxCurrentDischarge.TabIndex = 3
+        '
+        'Panel3
+        '
+        Me.Panel3.Controls.Add(Me.lblMaxCurrentChg)
+        Me.Panel3.Controls.Add(Me.lblMaxCurrentChargeUnit)
+        Me.Panel3.Controls.Add(Me.tbSuperCapMaxCurrentCharge)
+        Me.Panel3.Location = New System.Drawing.Point(4, 117)
+        Me.Panel3.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
+        Me.Panel3.Name = "Panel3"
+        Me.Panel3.Size = New System.Drawing.Size(318, 46)
+        Me.Panel3.TabIndex = 26
+        '
+        'lblMaxCurrentChg
+        '
+        Me.lblMaxCurrentChg.AutoSize = true
+        Me.lblMaxCurrentChg.Location = New System.Drawing.Point(4, 11)
+        Me.lblMaxCurrentChg.Margin = New System.Windows.Forms.Padding(4, 0, 4, 0)
+        Me.lblMaxCurrentChg.Name = "lblMaxCurrentChg"
+        Me.lblMaxCurrentChg.Size = New System.Drawing.Size(128, 20)
+        Me.lblMaxCurrentChg.TabIndex = 0
+        Me.lblMaxCurrentChg.Text = "Max Current Chg"
+        '
+        'lblMaxCurrentChargeUnit
+        '
+        Me.lblMaxCurrentChargeUnit.AutoSize = true
+        Me.lblMaxCurrentChargeUnit.Location = New System.Drawing.Point(230, 11)
+        Me.lblMaxCurrentChargeUnit.Margin = New System.Windows.Forms.Padding(4, 0, 4, 0)
+        Me.lblMaxCurrentChargeUnit.Name = "lblMaxCurrentChargeUnit"
+        Me.lblMaxCurrentChargeUnit.Size = New System.Drawing.Size(28, 20)
+        Me.lblMaxCurrentChargeUnit.TabIndex = 24
+        Me.lblMaxCurrentChargeUnit.Text = "[A]"
+        '
+        'tbSuperCapMaxCurrentCharge
+        '
+        Me.tbSuperCapMaxCurrentCharge.Location = New System.Drawing.Point(135, 6)
+        Me.tbSuperCapMaxCurrentCharge.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
+        Me.tbSuperCapMaxCurrentCharge.Name = "tbSuperCapMaxCurrentCharge"
+        Me.tbSuperCapMaxCurrentCharge.Size = New System.Drawing.Size(84, 26)
+        Me.tbSuperCapMaxCurrentCharge.TabIndex = 3
         '
         'pnSuperCapMaxV
         '
@@ -769,7 +862,7 @@ Partial Class BatteryForm
         Me.AutoScaleDimensions = New System.Drawing.SizeF(9!, 20!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.CancelButton = Me.ButCancel
-        Me.ClientSize = New System.Drawing.Size(1347, 556)
+        Me.ClientSize = New System.Drawing.Size(1347, 550)
         Me.Controls.Add(Me.lblRessType)
         Me.Controls.Add(Me.cbRESSType)
         Me.Controls.Add(Me.FlowLayoutPanel1)
@@ -803,12 +896,14 @@ Partial Class BatteryForm
         Me.Panel1.PerformLayout
         Me.Panel2.ResumeLayout(false)
         Me.Panel2.PerformLayout
-        Me.Panel3.ResumeLayout(false)
-        Me.Panel3.PerformLayout
         Me.FlowLayoutPanel1.ResumeLayout(false)
         Me.pnBattery.ResumeLayout(false)
         Me.pnBattery.PerformLayout
         Me.pnSuperCap.ResumeLayout(false)
+        Me.Panel4.ResumeLayout(false)
+        Me.Panel4.PerformLayout
+        Me.Panel3.ResumeLayout(false)
+        Me.Panel3.PerformLayout
         Me.pnSuperCapMaxV.ResumeLayout(false)
         Me.pnSuperCapMaxV.PerformLayout
         Me.pnSuperCapMinV.ResumeLayout(false)
@@ -862,10 +957,6 @@ End Sub
     Friend WithEvents lblSoCMax As Label
     Friend WithEvents lblSoCMaxUnit As Label
     Friend WithEvents tbSoCMax As TextBox
-    Friend WithEvents Panel3 As Panel
-    Friend WithEvents lblCFactor As Label
-    Friend WithEvents lblCFactorUnit As Label
-    Friend WithEvents tbCFactor As TextBox
     Friend WithEvents FlowLayoutPanel1 As FlowLayoutPanel
     Friend WithEvents pnBattery As Panel
     Friend WithEvents pnSuperCap As Panel
@@ -887,4 +978,16 @@ End Sub
     Friend WithEvents lblSuperCapCapacity As Label
     Friend WithEvents lblSuperCapCapacityUnit As Label
     Friend WithEvents tbSuperCapCapacity As TextBox
+    Friend WithEvents tbMaxCurrentMap As TextBox
+    Friend WithEvents lblMaxCurrentMap As Label
+    Friend WithEvents btnBrowseMaxCurrentMap As Button
+    Friend WithEvents btnMaxCurrentMapOpen As Button
+    Friend WithEvents Panel4 As Panel
+    Friend WithEvents lblMaxCurrentDischarge As Label
+    Friend WithEvents lblMaxCurrentDischargeUnit As Label
+    Friend WithEvents tbSuperCapMaxCurrentDischarge As TextBox
+    Friend WithEvents Panel3 As Panel
+    Friend WithEvents lblMaxCurrentChg As Label
+    Friend WithEvents lblMaxCurrentChargeUnit As Label
+    Friend WithEvents tbSuperCapMaxCurrentCharge As TextBox
 End Class

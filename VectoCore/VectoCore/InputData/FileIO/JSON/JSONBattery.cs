@@ -91,6 +91,12 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			}
 		}
 
+		public Ampere MaxCurrentCharge
+		{
+			get{ return Math.Abs(Body.GetEx<double>("I_maxCharge")).SI<Ampere>(); }
+		}
+		public Ampere MaxCurrentDischarge { get { return Math.Abs(Body.GetEx<double>("I_maxDischarge")).SI<Ampere>(); } }
+
 		public TableData InternalResistanceCurve
 		{
 			get
@@ -129,9 +135,23 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			}
 		}
 
-		public PerSecond MaxCurrentFactor
+		public TableData MaxCurrentMap
 		{
-			get { return Body.GetEx<double>("MaxCurrentFactor").SI(Unit.SI.Per.Hour).Cast<PerSecond>(); }
+			get
+			{
+				try {
+					return ReadTableData(Body.GetEx<string>("MaxCurrentMap"), "Max Current Map");
+				} catch (Exception) {
+					if (!TolerateMissing) {
+						throw;
+					}
+
+					return
+						new TableData(
+							Body["MaxCurrentMap"] == null ? MissingFileSuffix : Path.Combine(BasePath, Body["MaxCurrentMap"].ToString()) + MissingFileSuffix,
+							DataSourceType.Missing);
+				}
+			}
 		}
 
 

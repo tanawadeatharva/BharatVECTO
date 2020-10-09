@@ -5,15 +5,13 @@
 The battery model uses the following model parameters:
 
 - Capacity of the battery pack
-- C-Factor (limits the max. current for charging/discharging)
+- Maximum current for charging and discharging over the state of charge
 - Minimum state of charge
 - Maximum state of charge
 - Voltage of the battery pack over state of charge
 - Internal resistance of the battery pack over state of charge
 
-The C-Factor determins the maximum current as follows: $I_\textrm{max} = \textrm{C-Factor} * \textrm{Capacity [Ah]}$.
-
-The voltage curve over state of charge is described in [Battery Internal Voltage File (.vbatv)](#battery-internal-voltage-file-.vbatv) and the internal resistance curve over state of charge is described in [Battery Internal Resistance File (.vbatr)](#battery-internal-resistance-file-.vbatr).
+The voltage curve over state of charge is described in [Battery Internal Voltage File (.vbatv)](#battery-internal-voltage-file-.vbatv) and the internal resistance curve over state of charge is described in [Battery Internal Resistance File (.vbatr)](#battery-internal-resistance-file-.vbatr). The file format of the maximum current map is described in [Battery Max Current Map (.vimax)](#battery-max-current-map-.vimax).
 
 During the simulation the battery's state of charge must always be between the minimum and maximum SoC threshold.
 
