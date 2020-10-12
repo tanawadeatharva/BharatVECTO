@@ -353,4 +353,7 @@
 	<data name="Vehicle_DynamicTyreRadius" xml:space="preserve">
     <value>rdyn</value>
   </data>
+	<data name="HEV_Vehicle_MaxDrivetrainPower" xml:space="preserve">
+		<value>MaxDrivetrainPower</value>
+	</data>
 </root>

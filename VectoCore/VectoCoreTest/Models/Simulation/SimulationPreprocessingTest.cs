@@ -8,7 +8,6 @@ using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.InputData.FileIO.JSON;
 using TUGraz.VectoCore.InputData.FileIO.XML;
-using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation;
 using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.Models.SimulationComponent.Impl;
@@ -171,7 +170,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 		protected virtual Dictionary<MeterPerSecond, Radian> SimulationRunPreprocessingEcoRoll(IVectoRun run)
 		{
 			var data = run.GetContainer().RunData;
-			var modData = new ModalDataContainer(data, null, new[] {FuelData.Diesel}, null, false);
+			var modData = new ModalDataContainer(data, null, null);
 			var builder = new PowertrainBuilder(modData);
 			var simpleContainer = new SimplePowertrainContainer(data);
 			builder.BuildSimplePowertrain(data, simpleContainer);
@@ -195,7 +194,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 		protected virtual PCCSegments SimulationRunPreprocessingPCCSegments(IVectoRun run)
 		{
 			var data = run.GetContainer().RunData;
-			var modData = new ModalDataContainer(data, null, new[] { FuelData.Diesel }, null, false);
+			var modData = new ModalDataContainer(data, null, null);
 			var builder = new PowertrainBuilder(modData);
 			var simpleContainer = new SimplePowertrainContainer(data);
 			builder.BuildSimplePowertrain(data, simpleContainer);
@@ -217,15 +216,15 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 
 
 
-		[TestCase(Class9Decl, 20, 2, 18.9937),
-		 TestCase(Class9Decl, 20, 3, 18.6561),
-		 TestCase(Class9Decl, 20, 2.5, 18.8248),
-		 TestCase(Class9Decl, 25, 0, 24.6687),
-		 TestCase(Class9Decl, 25, 1, 24.3307),
-		 TestCase(Class9Decl, 25, 0.5, 24.4997),
-		 TestCase(Class9Decl, 87, -4, 87.9234),
-		 TestCase(Class9Decl, 87, -5, 88.2732),
-		 TestCase(Class9Decl, 87, -4.65, 88.15116)
+		[TestCase(Class9Decl, 20, 2, 19.019489),
+		 TestCase(Class9Decl, 20, 2.5, 18.85057),
+		 TestCase(Class9Decl, 20, 3, 18.68170),
+		 TestCase(Class9Decl, 25, 0, 24.68916),
+		 TestCase(Class9Decl, 25, 0.5, 24.52010),
+		 TestCase(Class9Decl, 25, 1, 24.35105),
+		 TestCase(Class9Decl, 87, -4, 88.86836),
+		 TestCase(Class9Decl, 87, -4.65, 89.101767),
+		 TestCase(Class9Decl, 87, -5, 89.2273896),
 			]
 		public void TestSimulationPreprocessingVelocityDuringTractionInterruption(string jobFile, double vPre, double grad, double vPost)
 		{
@@ -268,7 +267,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 		protected virtual VelocityRollingLookup SimulationRunPreprocessingVelocityTractionInterruption(IVectoRun run)
 		{
 			var data = run.GetContainer().RunData;
-			var modData = new ModalDataContainer(data, null, new[] { FuelData.Diesel }, null, false);
+			var modData = new ModalDataContainer(data, null, null);
 			var builder = new PowertrainBuilder(modData);
 			var simpleContainer = new SimplePowertrainContainer(data);
 			builder.BuildSimplePowertrain(data, simpleContainer);
@@ -331,7 +330,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 		protected virtual MaxGradabilityLookup SimulationRunPreprocessingGradability(IVectoRun run)
 		{
 			var data = run.GetContainer().RunData;
-			var modData = new ModalDataContainer(data, null, new[] {FuelData.Diesel }, null, false);
+			var modData = new ModalDataContainer(data, null, null);
 			var builder = new PowertrainBuilder(modData);
 			var simpleContainer = new SimplePowertrainContainer(data);
 			builder.BuildSimplePowertrain(data, simpleContainer);
@@ -394,7 +393,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 		protected virtual Dictionary<uint, PerSecond> SimulationRunPreprocessingEngineSpeedDriveOff(IVectoRun run)
 		{
 			var data = run.GetContainer().RunData;
-			var modData = new ModalDataContainer(data, null, new[] {FuelData.Diesel }, null, false);
+			var modData = new ModalDataContainer(data, null, null);
 			var builder = new PowertrainBuilder(modData);
 			var simpleContainer = new SimplePowertrainContainer(data);
 			builder.BuildSimplePowertrain(data, simpleContainer);

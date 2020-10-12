@@ -86,8 +86,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent
 		/// <param name="absTime">The abs time.</param>
 		/// <param name="dt">The dt.</param>
 		/// <param name="outTorque">The out torque.</param>
-		/// <param name="outEngineSpeed">The out engine speed.</param>
-		void Disengage(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outEngineSpeed);
+		/// <param name="outAngularVelocity">The out engine speed.</param>
+		void Disengage(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity);
 
 		/// <summary>
 		/// Gets or sets the gearbox.
@@ -98,6 +98,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent
 		IGearbox Gearbox { get; set; }
 
         GearInfo NextGear { get; }
+
+		bool CheckGearshiftRequired { get; }
+
 		void Request(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity);
 
 		void WriteModalResults(IModalDataContainer container);

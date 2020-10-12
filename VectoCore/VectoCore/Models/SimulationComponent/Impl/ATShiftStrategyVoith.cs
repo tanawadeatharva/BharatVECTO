@@ -139,17 +139,17 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		protected Watt EstimateAccelerrationPower(PerSecond gbxOutSpeed, NewtonMeter gbxOutTorque)
 		{
-			var vehicleSpeed = DataBus.VehicleSpeed;
+			var vehicleSpeed = DataBus.VehicleInfo.VehicleSpeed;
 			var avgSlope =
-			((DataBus.CycleLookAhead(Constants.SimulationSettings.GearboxLookaheadForAccelerationEstimation).Altitude -
-			DataBus.Altitude) / Constants.SimulationSettings.GearboxLookaheadForAccelerationEstimation).Value().SI<Radian>();
+			((DataBus.DrivingCycleInfo.CycleLookAhead(Constants.SimulationSettings.GearboxLookaheadForAccelerationEstimation).Altitude -
+			DataBus.DrivingCycleInfo.Altitude) / Constants.SimulationSettings.GearboxLookaheadForAccelerationEstimation).Value().SI<Radian>();
 
-			var airDragLoss = DataBus.AirDragResistance(vehicleSpeed, vehicleSpeed) * DataBus.VehicleSpeed;
-			var rollResistanceLoss = DataBus.RollingResistance(avgSlope) * DataBus.VehicleSpeed;
+			var airDragLoss = DataBus.VehicleInfo.AirDragResistance(vehicleSpeed, vehicleSpeed) * DataBus.VehicleInfo.VehicleSpeed;
+			var rollResistanceLoss = DataBus.VehicleInfo.RollingResistance(avgSlope) * DataBus.VehicleInfo.VehicleSpeed;
 
 			//DataBus.GearboxLoss();
-			var slopeLoss = DataBus.SlopeResistance(avgSlope) * DataBus.VehicleSpeed;
-			var axleLoss = DataBus.AxlegearLoss();
+			var slopeLoss = DataBus.VehicleInfo.SlopeResistance(avgSlope) * DataBus.VehicleInfo.VehicleSpeed;
+			var axleLoss = DataBus.AxlegearInfo.AxlegearLoss();
 
 			return gbxOutSpeed * gbxOutTorque - axleLoss - airDragLoss - rollResistanceLoss - slopeLoss;
 		}
@@ -158,8 +158,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		public override void Request(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity)
 		{
-			driverAcceleration = DataBus.DriverAcceleration;
-			roadGradient = DataBus.RoadGradient;
+			driverAcceleration = DataBus.DriverInfo.DriverAcceleration;
+			roadGradient = DataBus.DrivingCycleInfo.RoadGradient;
 			base.Request(absTime, dt, outTorque, outAngularVelocity);
 		}
 
@@ -169,11 +169,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		{
 			var accPower = EstimateAccelerrationPower(outAngularVelocity, outTorque);
 
-			_accMin = (accPower / DataBus.VehicleSpeed / (MaxMass + DataBus.ReducedMassWheels)).Cast<MeterPerSquareSecond>();
-			_accMax = (accPower / DataBus.VehicleSpeed / (MinMass + DataBus.ReducedMassWheels)).Cast<MeterPerSquareSecond>();
+			_accMin = (accPower / DataBus.VehicleInfo.VehicleSpeed / (MaxMass + DataBus.WheelsInfo.ReducedMassWheels)).Cast<MeterPerSquareSecond>();
+			_accMax = (accPower / DataBus.VehicleInfo.VehicleSpeed / (MinMass + DataBus.WheelsInfo.ReducedMassWheels)).Cast<MeterPerSquareSecond>();
 
 			//var engineLoadPercent = inTorque / FullLoadCurve.FullLoadStationaryTorque(inAngularVelocity);
-			var engineLoadPercent = inTorque / response.EngineDynamicFullLoadTorque;
+			var engineLoadPercent = inTorque / response.Engine.DynamicFullLoadTorque;
 			_loadStage = GetLoadStage(engineLoadPercent);
 
 			return base.ShiftRequired(
@@ -224,7 +224,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 
 				var shiftSpeed = UpshiftLines[gearIdx].LookupShiftSpeed(
-					_loadStage, DataBus.RoadGradient, DataBus.DriverAcceleration, _accMin, _accMax);
+					_loadStage, DataBus.DrivingCycleInfo.RoadGradient, DataBus.DriverInfo.DriverAcceleration, _accMin, _accMax);
 				var shiftSpeedGbxOut = shiftSpeed / ModelData.Gears[nextGear].Ratio;
 				if (outAngularVelocity > shiftSpeedGbxOut) {
 					Upshift(absTime, gear);
@@ -252,7 +252,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				gearIdx += 1;
 			}
 			var shiftSpeed = DownshiftLines[gearIdx].LookupShiftSpeed(
-				_loadStage, DataBus.RoadGradient, DataBus.DriverAcceleration, -0.4.SI<MeterPerSquareSecond>(),
+				_loadStage, DataBus.DrivingCycleInfo.RoadGradient, DataBus.DriverInfo.DriverAcceleration, -0.4.SI<MeterPerSquareSecond>(),
 				-0.2.SI<MeterPerSquareSecond>());
 			if (inAngularVelocity < shiftSpeed) {
 				Downshift(absTime, gear);

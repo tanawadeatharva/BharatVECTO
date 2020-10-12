@@ -41,9 +41,11 @@ using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Configuration;
+using TUGraz.VectoCore.InputData.Reader.ComponentData;
 using TUGraz.VectoCore.InputData.Reader.Impl;
 using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
+using TUGraz.VectoCore.Models.SimulationComponent.Data.Battery;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox;
 using TUGraz.VectoCore.OutputData;
 using DriverData = TUGraz.VectoCore.Models.SimulationComponent.Data.DriverData;
@@ -56,7 +58,10 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 		public VectoRunData()
 		{
 			Exempted = false;
+			JobType = VectoSimulationJobType.ConventionalVehicle;
 		}
+
+		public VectoSimulationJobType JobType { get; internal set; }
 
 		[ValidateObject]
 		public VehicleData VehicleData { get; internal set; }
@@ -119,6 +124,13 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 
 		public AuxFanData FanDataVTP { get; internal set; }
 
+		public List<Tuple<PowertrainPosition, ElectricMotorData>> ElectricMachinesData { get; internal set; }
+
+		public BatteryData BatteryData { get; internal set; }
+
+		public SuperCapData SuperCapData { get; internal set; }
+
+
 		public SimulationType SimulationType { get; set; }
 
 		public VTPData VTPData { get; set; }
@@ -132,6 +144,10 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 		// only used for factor method
 		public IResult PrimaryResult { get; set; }
 
+		public HybridStrategyParameters HybridStrategyParameters { get; internal set; }
+
+		public Watt ElectricAuxDemand { get; internal set; }
+
 		public class AuxData
 		{
 			// ReSharper disable once InconsistentNaming
@@ -141,6 +157,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 
 			[SIRange(0, 100 * Constants.Kilo)] public Watt PowerDemand;
 
+			[JsonIgnore]
 			public Func<DrivingCycleData.DrivingCycleEntry, Watt> PowerDemandFunc;
 
 			[Required] public AuxiliaryDemandType DemandType;

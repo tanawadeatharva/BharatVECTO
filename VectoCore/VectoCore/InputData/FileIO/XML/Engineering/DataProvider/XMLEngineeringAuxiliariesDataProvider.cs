@@ -63,6 +63,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering.DataProvider
 			get { return ""; }
 		}
 
+		public Watt ElectricAuxPower { get; }
+
 		#endregion
 	}
 

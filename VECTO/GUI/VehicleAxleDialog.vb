@@ -65,7 +65,8 @@ Public Class VehicleAxleDialog
 				.TyreTestLoad = TbFzISO.Text.ToDouble(0).SI(Of Newton)(),
 				.TwinTyres = CbTwinT.Checked,
 				.WheelsDimension = If(IsNothing(CbWheels.SelectedItem), "", CbWheels.SelectedItem.ToString()),
-				.Inertia = TbI_wheels.Text.ToDouble(0).SI(Of KilogramSquareMeter)()
+				.Inertia = TbI_wheels.Text.ToDouble(0).SI(Of KilogramSquareMeter)(),
+                .AxleType = CType(if(IsNothing(cbAxleType.SelectedValue), AxleType.VehicleNonDriven, cbAxleType.SelectedValue), AxleType) 
 				}
 
 		Dim results As IList(Of ValidationResult) =

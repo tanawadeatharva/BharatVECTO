@@ -44,6 +44,7 @@ using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.SimulationComponent;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
+using TUGraz.VectoCore.Models.SimulationComponent.Data.Battery;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Engine;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox;
 using TUGraz.VectoCore.Utils;
@@ -614,6 +615,96 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 				LoadstageThresholds = gsInputData.LoadStageThresholdsUp != null && gsInputData.LoadStageThresholdsDown != null ? gsInputData.LoadStageThresholdsUp.Zip(gsInputData.LoadStageThresholdsDown, Tuple.Create) : null
 			};
 
+			return retVal;
+		}
+
+		public BatteryData CreateBatteryData(IElectricStorageEngineeringInputData batteryInputData, double initialSOC)
+		{
+			if (batteryInputData == null || batteryInputData.REESSPack.StorageType != REESSType.Battery) {
+				return null;
+			}
+
+			var bat = batteryInputData.REESSPack as IBatteryPackEngineeringInputData;
+
+			return new BatteryData() {
+				MinSOC = bat.MinSOC,
+				MaxSOC = bat.MaxSOC,
+				MaxCurrent = BatteryMaxCurrentReader.Create(bat.MaxCurrentMap, batteryInputData.Count),
+				Capacity = batteryInputData.Count * bat.Capacity,
+				InternalResistance = BatteryInternalResistanceReader.Create(bat.InternalResistanceCurve, batteryInputData.Count),
+				SOCMap = BatterySOCReader.Create(bat.VoltageCurve),
+				InitialSoC = initialSOC
+			};
+		}
+
+		public SuperCapData CreateSuperCapData(IElectricStorageEngineeringInputData reessInputData, double initialSOC)
+		{
+			if (reessInputData == null || reessInputData.REESSPack.StorageType != REESSType.SuperCap)
+			{
+				return null;
+			}
+
+			var superCap = reessInputData.REESSPack as ISuperCapEngineeringInputData;
+
+			return new SuperCapData()
+			{
+				Capacity = reessInputData.Count * superCap.Capacity,
+				InternalResistance = superCap.InternalResistance / reessInputData.Count,
+				MinVoltage = superCap.MinVoltage,
+				MaxVoltage = superCap.MaxVoltage,
+				MaxCurrentCharge = superCap.MaxCurrentCharge,
+				MaxCurrentDischarge = -superCap.MaxCurrentDischarge,
+				InitialSoC = initialSOC
+			};
+		}
+
+		public List<Tuple<PowertrainPosition, ElectricMotorData>> CreateElectricMachines(IElectricMachinesEngineeringInputData electricMachines)
+		{
+			if (electricMachines == null) {
+				return null;
+			}
+
+			if (electricMachines.Entries.Any(x => x.ElectricMachine.SavedInDeclarationMode)) {
+				WarnEngineeringMode("Electric motor");
+			}
+
+			if (electricMachines.Entries.Select(x => x.Position).Distinct().Count() > 1) {
+				throw new VectoException("multiple electric motors are not supported at the moment");
+			}
+
+			return electricMachines.Entries
+				.Select(x => Tuple.Create(x.Position, CreateElectricMachine(x.ElectricMachine, x.Count, x.Ratio, x.MechanicalEfficiency))).ToList();
+		}
+
+		private ElectricMotorData CreateElectricMachine(IElectricMotorEngineeringInputData motorData, int count,
+			double ratio, double efficiency)
+		{
+			return new ElectricMotorData() {
+				FullLoadCurve = ElectricFullLoadCurveReader.Create(motorData.FullLoadCurve, ratio, count, efficiency),
+				DragCurve = ElectricMotorDragCurveReader.Create(motorData.DragCurve, ratio, count, efficiency),
+				EfficiencyMap = ElectricMotorMapReader.Create(motorData.EfficiencyMap, ratio, count, efficiency),
+				Inertia = motorData.Inertia,
+				ContinuousPower = motorData.ContinuousPower * count,
+				ContinuousPowerSpeed = motorData.ContinuousPowerSpeed,
+				OverloadTime = motorData.OverloadTime,
+				OverloadRegenerationFactor = motorData.OverloadRecoveryFactor,
+			};
+		}
+
+		public HybridStrategyParameters CreateHybridStrategyParameters(
+			IHybridStrategyParameters hybridStrategyParameters,
+			IEngineeringInputDataProvider inputData)
+		{
+			var retVal = new HybridStrategyParameters() {
+				EquivalenceFactor = hybridStrategyParameters.EquivalenceFactor,
+				MinSoC = hybridStrategyParameters.MinSoC,
+				MaxSoC = hybridStrategyParameters.MaxSoC,
+				TargetSoC = hybridStrategyParameters.TargetSoC,
+				MinICEOnTime = hybridStrategyParameters.MinimumICEOnTime,
+				AuxReserveTime = hybridStrategyParameters.AuxBufferTime,
+				AuxReserveChargeTime = hybridStrategyParameters.AuxBufferChargeTime,
+				MaxDrivetrainPower = inputData.JobInputData.Vehicle.MaxDrivetrainPower,
+			};
 			return retVal;
 		}
 	}

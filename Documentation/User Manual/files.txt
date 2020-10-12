@@ -5,14 +5,11 @@
 1-user-interface/D1_VECTO-Job-Editor.md
 1-user-interface/D2_VTP-Job-Editor.md
 1-user-interface/E_VECTO-Editor_Aux.md
-1-user-interface/K0_VECTO-AdvancedAux.md
-1-user-interface/K1_VECTO-AdvancedAux_EL.md
-1-user-interface/K2_VECTO-AdvancedAux_EL-ALT.md
-1-user-interface/K3_VECTO-AdvancedAux_PNEU.md
-1-user-interface/K4_VECTO-AdvancedAux_HVAC.md
 1-user-interface/F_VEH-Editor.md
 1-user-interface/G_ENG-Editor.md
 1-user-interface/H_GBX-Editor.md
+1-user-interface/L_ElectricMotor.md
+1-user-interface/M_BatteryPackEditor.md
 1-user-interface/I_Graph.md
 4-command-line-arguments/cmd.md
 2-calculation-modes/calculation-modes.md
@@ -46,6 +43,9 @@
 3-simulation-models/BusAuxiliaries.md
 3-simulation-models/PwheelInput.md
 3-simulation-models/PTO.md
+3-simulation-models/Electric_Motor.md
+3-simulation-models/Electric_Storage.md
+3-simulation-models/HybridControlStrategy.md
 5-input-and-output-files/input-output.md
 5-input-and-output-files/XML_Job-File_DeclarationMode.md
 5-input-and-output-files/XML_DeclarationReport.md
@@ -60,6 +60,8 @@
 5-input-and-output-files/VENG.md
 5-input-and-output-files/VFLD.md
 5-input-and-output-files/VMAP.md
+5-input-and-output-files/VEMx.md
+5-input-and-output-files/VBATx.md
 5-input-and-output-files/VGBX.md
 5-input-and-output-files/VGBS.md
 5-input-and-output-files/VTLM.md

@@ -139,10 +139,21 @@ Imports TUGraz.VectoCore.Utils
         TorqueConverterFileBrowser = New FileBrowser("vtcc")
         TorqueConverterShiftPolygonFileBrowser = New FileBrowser("vgbs")
         CrossWindCorrectionFileBrowser = New FileBrowser("vcdx")
+        ElectricMotorFileBrowser = New FileBrowser("vem")
+        REESSFileBrowser = New FileBrowser("vreess")
         DriverDecisionFactorVelocityDropFileBrowser = New FileBrowser("DfVelocityDrop")
         DriverDecisionFactorTargetSpeedFileBrowser = New FileBrowser("DfTargetSpeed")
         DriverDecisionFactorVelocityDropFileBrowser.Extensions = New String() {"csv"}
         DriverDecisionFactorTargetSpeedFileBrowser.Extensions = New String() {"csv"}
+
+        ElectricMachineDragTorqueFileBrowser = New FileBrowser("vemd")
+        ElectricMachineMaxTorqueFileBrowser = New FileBrowser("vemp")
+        ElectricMachineEfficiencyMapFileBrowser = New FileBrowser("vemo")
+        HCUFileBrowser = New FileBrowser("vhctl")
+
+        BatteryMaxCurrentCurveFileBrowser = new FileBrowser("vimax")
+        BatteryInternalResistanceCurveFileBrowser = New FileBrowser("vbatr")
+        BatterySoCCurveFileBrowser = New FileBrowser("vbatv")
 
         ModalResultsFileBrowser = New FileBrowser("vmod")
 
@@ -169,6 +180,17 @@ Imports TUGraz.VectoCore.Utils
         TorqueConverterFileBrowser.Extensions = New String() {"vtcc"}
         TorqueConverterShiftPolygonFileBrowser.Extensions = New String() {"vgbs"}
         CrossWindCorrectionFileBrowser.Extensions = New String() {"vcdv", "vcdb"}
+        ElectricMotorFileBrowser.Extensions = New String() {"vem"}
+        REESSFileBrowser.Extensions = New String() {"vreess"}
+
+        ElectricMachineDragTorqueFileBrowser.Extensions = New String() {"vemd"}
+        ElectricMachineMaxTorqueFileBrowser.Extensions = New String() {"vemp"}
+        ElectricMachineEfficiencyMapFileBrowser.Extensions = New String() {"vemo"}
+
+        BatteryMaxCurrentCurveFileBrowser.Extensions = new String() {"vimax"}
+        BatteryInternalResistanceCurveFileBrowser.Extensions = New String() {"vbatr"}
+        BatterySoCCurveFileBrowser.Extensions = New String() {"vbatv"}
+        HCUFileBrowser.Extensions = New String() {"vhctl"}
 
         ModalResultsFileBrowser.Extensions = New String() {"vmod"}
     End Sub
@@ -392,7 +414,7 @@ Imports TUGraz.VectoCore.Utils
                         MsgBox(ex.Message, MsgBoxStyle.OkOnly, "Error loading Engine File")
                     End Try
                 Case ".VECTO"
-                    OpenVECTOeditor(file)
+                    OpenVECTOeditor(file, VectoSimulationJobType.ConventionalVehicle)
                 Case Else
                     MsgBox("Type '" & GetExtension(file) & "' unknown!", MsgBoxStyle.Critical)
             End Select
@@ -573,7 +595,7 @@ Imports TUGraz.VectoCore.Utils
         If Not File.Exists(f) Then
             MsgBox(f & " not found!")
         Else
-            OpenVECTOeditor(f)
+            OpenVECTOeditor(f, VectoSimulationJobType.ConventionalVehicle)
         End If
     End Sub
 
@@ -681,7 +703,7 @@ Imports TUGraz.VectoCore.Utils
 
     'New Job file
     Private Sub ToolStripBtNew_Click(sender As Object, e As EventArgs) Handles ToolStripBtNew.Click
-        OpenVECTOeditor("<New>")
+        OpenVECTOeditor("<New>", VectoSimulationJobType.ConventionalVehicle)
     End Sub
 
     'Open input file
@@ -694,7 +716,7 @@ Imports TUGraz.VectoCore.Utils
 
     Private Sub GENEditorToolStripMenuItem1_Click(sender As Object, e As EventArgs) _
         Handles GENEditorToolStripMenuItem1.Click
-        OpenVECTOeditor("<New>")
+        OpenVECTOeditor("<New>", VectoSimulationJobType.ConventionalVehicle)
     End Sub
 
     Private Sub VEHEditorToolStripMenuItem_Click(sender As Object, e As EventArgs) _
@@ -1356,10 +1378,10 @@ Imports TUGraz.VectoCore.Utils
 
 
     'Open Job Editor and open file (or new file)
-    Friend Sub OpenVECTOeditor(x As String)
+    Friend Sub OpenVECTOeditor(x As String, jobType As VectoSimulationJobType)
 
         If x = "<New>" Then
-            ShowVectoJobForm()
+            ShowVectoJobForm(jobType)
             VectoJobForm.VectoNew()
         ElseIf x = "<VTP>" Then
             ShowVectoEPTPJobForm()
@@ -1370,8 +1392,8 @@ Imports TUGraz.VectoCore.Utils
                                                                          IVTPEngineeringInputDataProvider)
                 Dim declJob As IVTPDeclarationInputDataProvider = TryCast(JSONInputDataFactory.ReadComponentData(x),
                                                                           IVTPDeclarationInputDataProvider)
-                If engJob Is Nothing AndAlso declJob is Nothing Then
-                    ShowVectoJobForm()
+                If engJob Is Nothing AndAlso declJob Is Nothing Then
+                    ShowVectoJobForm(jobType)
                     VectoJobForm.VECTOload2Form(x)
                 Else
                     ShowVectoEPTPJobForm()
@@ -1385,7 +1407,8 @@ Imports TUGraz.VectoCore.Utils
         VectoJobForm.Activate()
     End Sub
 
-    Private Sub ShowVectoJobForm()
+    Private Sub ShowVectoJobForm(vectoJobType As VectoSimulationJobType)
+        VectoJobForm.JobType = vectoJobType
         If Not VectoJobForm.Visible Then
             VectoJobForm.Show()
         Else
@@ -1393,6 +1416,7 @@ Imports TUGraz.VectoCore.Utils
                 VectoJobForm.WindowState = FormWindowState.Normal
             VectoJobForm.BringToFront()
         End If
+
     End Sub
 
     Private Sub ShowVectoEPTPJobForm()
@@ -1659,6 +1683,9 @@ Imports TUGraz.VectoCore.Utils
             RbDev.Checked = Not RbDecl.Checked
             DeclOnOff()
         End If
+        JobEditorBatteryElectricVehicleToolStripMenuItem.Enabled = Not Cfg.DeclMode
+        JobEditorParallelHybridVehicleToolStripMenuItem.Enabled = Not Cfg.DeclMode
+        JobEditorEngineOnlyModeToolStripMenuItem.Enabled = Not Cfg.DeclMode
     End Sub
 
 
@@ -2137,7 +2164,7 @@ Imports TUGraz.VectoCore.Utils
 
     Private Sub EPTPJobEditorToolStripMenuItem_Click(sender As Object, e As EventArgs) _
         Handles EPTPJobEditorToolStripMenuItem.Click
-        OpenVECTOeditor("<VTP>")
+        OpenVECTOeditor("<VTP>", VectoSimulationJobType.ConventionalVehicle)
     End Sub
 
     Private Sub BtTCfileBrowse_Click(sender As Object, e As EventArgs) Handles BtTCfileBrowse.Click
@@ -2149,7 +2176,25 @@ Imports TUGraz.VectoCore.Utils
         tbOutputFolder.Text = Path.GetFullPath(filePath)
     End Sub
 
-    
+    Private Sub JobEditorParallelHybridVehicleToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles JobEditorParallelHybridVehicleToolStripMenuItem.Click
+        OpenVECTOeditor("<New>", VectoSimulationJobType.ParallelHybridVehicle)
+    End Sub
+
+    Private Sub JobEditorBatteryElectricVehicleToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles JobEditorBatteryElectricVehicleToolStripMenuItem.Click
+        OpenVECTOeditor("<New>", VectoSimulationJobType.BatteryElectricVehicle)
+    End Sub
+
+    Private Sub JobEditorEngineOnlyModeToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles JobEditorEngineOnlyModeToolStripMenuItem.Click
+        OpenVECTOeditor("<New>", VectoSimulationJobType.EngineOnlySimulation)
+    End Sub
 End Class
+
+'Public Enum VectoJobType
+'    NotSet
+'    ConventionalVehicle
+'    ParallelHybrid
+'    BatteryElectric
+'    EngineOnly
+'End Enum
 
 

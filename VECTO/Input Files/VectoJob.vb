@@ -49,6 +49,7 @@ Public Class VectoJob
     Private ReadOnly _engineFile As SubPath
     Private ReadOnly _gearboxFile As SubPath
     Private ReadOnly _tcuFile As SubPath
+    Private ReadOnly _hcuFile As SubPath
 
     Private ReadOnly _lacDfTargetSpeedFile As SubPath
     Private ReadOnly _lacDfVelocityDropFile as SubPath
@@ -63,7 +64,7 @@ Public Class VectoJob
 
     Public ReadOnly CycleFiles As List(Of SubPath)
 
-    Public EngineOnly As Boolean
+    'Public EngineOnly As Boolean
 
     Public VMin As Double
     Public LookAheadOn As Boolean
@@ -89,6 +90,7 @@ Public Class VectoJob
     Public PCCUnderspeed As Double
     Public PCCOverspeedUseCase3 As Double
     Private _accelerationUpperLimit As MeterPerSquareSecond
+    Public AuxElPadd As Double
 
     'Private _vehicleInputData As JSONComponentInputData
     'Private _engineInputData As JSONComponentInputData
@@ -113,7 +115,8 @@ Public Class VectoJob
         _vehicleFile = New SubPath
         _engineFile = New SubPath
         _gearboxFile = New SubPath
-        _tcuFile = new SubPath
+        _tcuFile = New SubPath
+        _hcuFile = New SubPath()
         _lacDfTargetSpeedFile = New SubPath()
         _lacDfVelocityDropFile = New SubPath()
 
@@ -219,7 +222,20 @@ Public Class VectoJob
             _tcuFile.Init(_myPath, value)
         End Set
     End Property
-    
+
+    Public Property PathHybridStrategyParams(Optional ByVal original As Boolean = False) As String
+        Get
+            If original Then
+                Return _hcuFile.OriginalPath
+            Else
+                Return _hcuFile.FullPath
+            End If
+        End Get
+        Set(value As String)
+            _hcuFile.Init(_myPath, value)
+        End Set
+    End Property
+
 
     Public ReadOnly Property IDriverDeclarationInputData_SavedInDeclarationMode As Boolean _
         Implements IDriverDeclarationInputData.SavedInDeclarationMode
@@ -438,7 +454,7 @@ Public Class VectoJob
                         VectoValidationModeServiceContainer)
         Dim mode As ExecutionMode = If(modeService Is Nothing, ExecutionMode.Declaration, modeService.Mode)
 
-        If mode = ExecutionMode.Engineering AndAlso vectoJob.EngineOnly Then
+        If mode = ExecutionMode.Engineering AndAlso vectoJob.JobType = VectoSimulationJobType.EngineOnlySimulation Then
             Return ValidateEngineOnlyJob(vectoJob, mode)
         End If
 
@@ -472,9 +488,10 @@ Public Class VectoJob
 
         If vehicleInputData Is Nothing Then _
             result.Add(New ValidationResult("Vehicle File is missing or invalid"))
-        If engineInputData Is Nothing Then _
+        If not vectoJob.JobType = VectoSimulationJobType.BatteryElectricVehicle andalso engineInputData Is Nothing Then _
             result.Add(New ValidationResult("Engine File is missing or invalid"))
-        If gearboxInputData Is Nothing Then _
+        If (vectoJob.JobType = VectoSimulationJobType.ConventionalVehicle OrElse vectoJob.JobType = VectoSimulationJobType.ParallelHybridVehicle) _
+             AndAlso gearboxInputData Is Nothing Then _
             result.Add(New ValidationResult("Gearbox File is missing or invalid"))
 
         If result.Any() Then
@@ -504,10 +521,10 @@ Public Class VectoJob
                 If vehicleInputData.SavedInDeclarationMode Then
                     result.Add(New ValidationResult("Vehicle File is not in Engineering Mode"))
                 End If
-                If engineInputData.SavedInDeclarationMode Then
+                If Not vectoJob.JobType = VectoSimulationJobType.BatteryElectricVehicle AndAlso engineInputData.SavedInDeclarationMode Then
                     result.Add(New ValidationResult("Engine File is not in Engineering Mode"))
                 End If
-                If gearboxInputData.SavedInDeclarationMode Then
+                If Not vectoJob.JobType = VectoSimulationJobType.BatteryElectricVehicle AndAlso gearboxInputData.SavedInDeclarationMode Then
                     result.Add(New ValidationResult("Gearbox File is not in Engineering Mode"))
                 End If
                 If result.Any() Then
@@ -523,7 +540,7 @@ Public Class VectoJob
 
 
             result = jobData.Validate(If(Cfg.DeclMode, ExecutionMode.Declaration, ExecutionMode.Engineering),
-                                    jobData.GearboxData.Type, False)
+                                    If(jobData.GearboxData?.Type, GearboxType.NoGeabox), False)
             If result.Any() Then
                 Return _
                     New ValidationResult("Vecto Job Configuration is invalid. ", result.Select(Function(r) r.ErrorMessage).ToList())
@@ -602,6 +619,13 @@ Public Class VectoJob
         End Get
     End Property
 
+    Public ReadOnly Property HybridStrategyParameters As IHybridStrategyParameters Implements IEngineeringJobInputData.HybridStrategyParameters
+        Get
+            If Not File.Exists(_hcuFile.FullPath) Then Return Nothing
+            Return New JSONComponentInputData(_hcuFile.FullPath, Me).JobInputData.HybridStrategyParameters
+        End Get
+    End Property
+
     Public ReadOnly Property Cycles As IList(Of ICycleData) Implements IEngineeringJobInputData.Cycles
         Get
             Dim retVal As ICycleData() = New ICycleData(CycleFiles.Count - 1) {}
@@ -630,11 +654,8 @@ Public Class VectoJob
         End Get
     End Property
 
-    Public ReadOnly Property EngineOnlyMode As Boolean Implements IEngineeringJobInputData.EngineOnlyMode
-        Get
-            Return EngineOnly
-        End Get
-    End Property
+    Public Property JobType As VectoSimulationJobType Implements IEngineeringJobInputData.JobType
+
 
     Public ReadOnly Property IEngineeringJobInputData_EngineOnly As IEngineEngineeringInputData Implements IEngineeringJobInputData.EngineOnly
         Get
@@ -671,6 +692,12 @@ Public Class VectoJob
         Implements IAuxiliariesEngineeringInputData.Auxiliaries
         Get
             Return AuxData().Cast(Of IAuxiliaryEngineeringInputData).ToList()
+        End Get
+    End Property
+
+    Public ReadOnly Property ElectricAuxPower As Watt Implements IAuxiliariesEngineeringInputData.ElectricAuxPower
+        Get
+            Return AuxElPadd.SI(Of Watt)
         End Get
     End Property
 
@@ -712,6 +739,14 @@ Public Class VectoJob
                         .ConstantPowerDemand = AuxPAdd.SI(Of Watt)()
                         })
         End If
+        If (AuxElPadd > 0) Then
+            retVal.Add(New AuxiliaryDataInputData() With {
+                          .ID = "ConstantAuxEL",
+                          .AuxiliaryType = AuxiliaryDemandType.Constant,
+                          .ConstantPowerDemand = AuxElPadd.SI(Of Watt)
+                          })
+        End If
+
         For Each auxEntry As KeyValuePair(Of String, AuxEntry) In AuxPaths
             Dim theAuxData As AuxiliaryDataInputData = New AuxiliaryDataInputData() With {
                     .Type = auxEntry.Value.Type,

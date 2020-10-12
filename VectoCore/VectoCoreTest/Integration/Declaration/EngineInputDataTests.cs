@@ -61,10 +61,10 @@ namespace TUGraz.VectoCore.Tests.Integration.Declaration
 			xmlInputReader = _kernel.Get<IXMLInputDataReader>();
 		}
 
-		[TestCase(null, 1.0, 45.554068, TestName = "Engine CF - NONE"),
-		TestCase("CFRegPer", 1.2, 45.554068 * 1.2, TestName = "Engine CF - CFRegPer"),
-		TestCase("BFColdHot", 1.2, 45.554068 * 1.2, TestName = "Engine CF - BFColdHod"),
-		TestCase("CFNCV", 1.2, 45.554068, TestName = "Engine CF - CFNCV")  // has no influence - only for documentation purpose
+		[TestCase(null, 1.0, 45.557155, TestName = "Engine CF - NONE"),
+		TestCase("CFRegPer", 1.2, 45.557155 * 1.2, TestName = "Engine CF - CFRegPer"),
+		TestCase("BFColdHot", 1.2, 45.557155 * 1.2, TestName = "Engine CF - BFColdHod"),
+		TestCase("CFNCV", 1.2, 45.557155, TestName = "Engine CF - CFNCV")  // has no influence - only for documentation purpose
 			]
 		public void TestEngineCorrectionFactors(string correctionFactor, double value, double expectedFc)
 		{
@@ -89,7 +89,7 @@ namespace TUGraz.VectoCore.Tests.Integration.Declaration
 
 			}
 			var inputDataProvider = xmlInputReader.CreateDeclaration(modified);
-			
+
 			var factory = new SimulatorFactory(ExecutionMode.Declaration, inputDataProvider, null, validate: false);
 			var first = factory.SimulationRuns().First();
 

@@ -43,20 +43,20 @@ namespace TUGraz.VectoCore.Tests.Utils
 		public MockComponent() : base(null) {}
 		protected override void DoWriteModalResults(Second time, Second simulationInterval, IModalDataContainer container) {}
 
-		protected override void DoCommitSimulationStep() {}
+		protected override void DoCommitSimulationStep(Second time, Second simulationInterval) {}
 
 		public IResponse Request(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity,
 			bool dryRun = false)
 		{
 			if (dryRun)
-				return new ResponseDryRun();
+				return new ResponseDryRun(this);
 			else
-				return new ResponseSuccess();
+				return new ResponseSuccess(this);
 		}
 
 		public IResponse Initialize(NewtonMeter outTorque, PerSecond outAngularVelocity)
 		{
-			return new ResponseSuccess();
+			return new ResponseSuccess(this);
 		}
 	}
 }

@@ -95,6 +95,16 @@ namespace TUGraz.VectoCore.Tests.Utils
 
 		public Second LastShift { get; private set; }
 
+		public Second LastUpshift
+		{
+			get { throw new NotImplementedException(); }
+		}
+
+		public Second LastDownshift
+		{
+			get { throw new NotImplementedException(); }
+		}
+
 		public GearData GetGearData(uint gear)
 		{
 			return new GearData();
@@ -130,11 +140,21 @@ namespace TUGraz.VectoCore.Tests.Utils
 			// nothing to write
 		}
 
-		protected override void DoCommitSimulationStep() {}
+		protected override void DoCommitSimulationStep(Second time, Second simulationInterval) {}
+
+		public bool GearEngaged(Second absTime)
+		{
+			return _clutchClosed;
+		}
 
 		public bool ClutchClosed(Second absTime)
 		{
 			return _clutchClosed;
+		}
+
+		public Watt ClutchLosses
+		{
+			get { throw new NotImplementedException(); }
 		}
 
 		public void SetClutch(bool closed)
@@ -149,6 +169,9 @@ namespace TUGraz.VectoCore.Tests.Utils
 
 
 		public bool DisengageGearbox { get; set; }
-
+		public void TriggerGearshift(Second absTime, Second dt)
+		{
+			throw new NotImplementedException();
+		}
 	}
 }

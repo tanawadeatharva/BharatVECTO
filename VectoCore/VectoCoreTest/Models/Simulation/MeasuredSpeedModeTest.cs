@@ -29,12 +29,14 @@
 *   Martin Rexeis, rexeis@ivt.tugraz.at, IVT, Graz University of Technology
 */
 
+using System;
 using NUnit.Framework;
 using System.Collections.Generic;
 using System.Data;
 using System.IO;
 using System.Linq;
 using TUGraz.VectoCommon.Exceptions;
+using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.InputData.FileIO.JSON;
@@ -268,7 +270,8 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 						EngineOffStandStillActivationDelay = DeclarationData.Driver.EngineStopStart.ActivationDelay,
 						MaxEngineOffTimespan =  DeclarationData.Driver.EngineStopStart.MaxEngineOffTimespan
 					}
-				}
+				},
+				ElectricMachinesData = new List<Tuple<PowertrainPosition, ElectricMotorData>>()
 			};
 
 			// call builder (actual test)
@@ -351,7 +354,8 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 						UtilityFactor = DeclarationData.Driver.EngineStopStart.UtilityFactor,
 						MaxEngineOffTimespan = DeclarationData.Driver.EngineStopStart.MaxEngineOffTimespan,
 					}
-				}
+				},
+				ElectricMachinesData = new List<Tuple<PowertrainPosition, ElectricMotorData>>()
 			};
 
 			// call builder (actual test)

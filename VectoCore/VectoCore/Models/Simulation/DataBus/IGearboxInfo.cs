@@ -60,6 +60,10 @@ namespace TUGraz.VectoCore.Models.Simulation.DataBus
 
 		Second LastShift { get; }
 
+		Second LastUpshift { get; }
+
+		Second LastDownshift { get; }
+
 		GearData GetGearData(uint gear);
 
 		/// <summary>
@@ -71,11 +75,14 @@ namespace TUGraz.VectoCore.Models.Simulation.DataBus
 		uint NumGears { get; }
 
 		bool DisengageGearbox { get; }
+
+		bool GearEngaged(Second absTime);
 	}
 
 	public interface IGearboxControl
 	{
 		bool DisengageGearbox { set; }
+		void TriggerGearshift(Second absTime, Second dt);
 	}
 
 	public interface ITorqueConverterControl

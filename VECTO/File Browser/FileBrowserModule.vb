@@ -28,9 +28,19 @@ Public Module FileBrowserModule
 	Public DrivingCycleFileBrowser As FileBrowser
 	Public PTODrivingCycleFileBrowser As FileBrowser
 	Public FuelConsumptionMapFileBrowser As FileBrowser
-	Public FullLoadCurveFileBrowser As FileBrowser
+    Public FullLoadCurveFileBrowser As FileBrowser
 
-	Public EngineFileBrowser As FileBrowser
+    Public ElectricMachineMaxTorqueFileBrowser As FileBrowser
+    Public ElectricMachineDragTorqueFileBrowser As FileBrowser
+    Public ElectricMachineEfficiencyMapFileBrowser As FileBrowser
+
+    Public BatteryMaxCurrentCurveFileBrowser As FileBrowser
+    Public BatteryInternalResistanceCurveFileBrowser As FileBrowser
+    Public BatterySoCCurveFileBrowser As FileBrowser
+
+    Public HCUFileBrowser As FileBrowser
+
+    Public EngineFileBrowser As FileBrowser
 	Public GearboxFileBrowser As FileBrowser
     Public TCUFileBrowser As FileBrowser
 	Public DriverAccelerationFileBrowser As FileBrowser
@@ -46,5 +56,8 @@ Public Module FileBrowserModule
 	Public TorqueConverterShiftPolygonFileBrowser As FileBrowser
 	Public CrossWindCorrectionFileBrowser As FileBrowser
 
-	Public ModalResultsFileBrowser As FileBrowser
+    Public ModalResultsFileBrowser As FileBrowser
+
+    Public ElectricMotorFileBrowser As FileBrowser
+    Public REESSFileBrowser As FileBrowser
 End Module

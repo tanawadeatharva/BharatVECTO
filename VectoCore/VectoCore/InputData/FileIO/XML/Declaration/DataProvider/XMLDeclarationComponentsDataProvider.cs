@@ -92,6 +92,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		}
 
 		public virtual IBusAuxiliariesDeclarationData BusAuxiliaries { get { return null; } }
+		public virtual IElectricStorageDeclarationInputData ElectricStorage { get { return null; } }
+		public virtual IElectricMachinesDeclarationInputData ElectricMachines { get { return null; } }
 
 		#endregion
 

@@ -60,6 +60,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent
 
 		Radian RoadGradient { get; }
 
+		MeterPerSecond TargetSpeed { get; }
+
+		Second StopTime { get; }
+
 		Meter CycleStartDistance { get; }
 
 		IReadOnlyList<DrivingCycleData.DrivingCycleEntry> LookAhead(Meter lookaheadDistance);

@@ -237,9 +237,15 @@ namespace TUGraz.VectoCore.Configuration
 
 			public const string GearshiftDataFile = ".vtcu";
 
+			public const string BatteryFile = ".vbat";
+
+			public const string ElectricMotorFile = ".vem";
+
 			public const string CycleFile = ".vdri";
 
 			public const string DriverAccelerationCurve = ".vacc";
+
+			public const string HybridStrategyParameters = ".vhctl";
 		}
 
 		public static class SimulationSettings
@@ -311,6 +317,8 @@ namespace TUGraz.VectoCore.Configuration
 
 			public static readonly MeterPerSecond HighwaySpeedThreshold = 70.KMPHtoMeterPerSecond();
 			public static readonly MeterPerSecond RuralSpeedThreshold = 50.KMPHtoMeterPerSecond();
+
+			public static readonly Second ThresholdStandstillOff = 10.SI<Second>();
 
 			public static class CrosswindCorrection
 			{

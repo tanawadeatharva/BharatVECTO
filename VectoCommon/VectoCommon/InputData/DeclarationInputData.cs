@@ -31,9 +31,9 @@
 
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.IO;
 using System.Xml;
-using System.Xml.Linq;
 using TUGraz.VectoCommon.BusAuxiliaries;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.Models;
@@ -217,6 +217,10 @@ namespace TUGraz.VectoCommon.InputData
 		IAxlesDeclarationInputData AxleWheels { get; }
 
 		IBusAuxiliariesDeclarationData BusAuxiliaries { get; }
+
+		IElectricStorageDeclarationInputData ElectricStorage { get; }
+
+		IElectricMachinesDeclarationInputData ElectricMachines { get; }
 	}
 
 	public interface IAxlesDeclarationInputData
@@ -685,6 +689,94 @@ namespace TUGraz.VectoCommon.InputData
 		/// </summary>
 		IList<string> Technology { get; }
 	}
+
+	public interface IElectricMotorDeclarationInputData : IComponentInputData
+	{
+		TableData FullLoadCurve { get; }
+
+		TableData DragCurve { get; }
+		
+		TableData EfficiencyMap { get; }
+
+		KilogramSquareMeter Inertia { get; }
+
+		Second OverloadTime { get; }
+
+		double OverloadRecoveryFactor { get; }
+
+		Watt ContinuousPower { get; }
+
+		PerSecond ContinuousPowerSpeed { get; }
+	}
+
+	public interface IElectricMachinesDeclarationInputData
+	{
+		IList<ElectricMachineEntry<IElectricMotorDeclarationInputData>> Entries { get; }
+	}
+
+	public class ElectricMachineEntry<T> where T : IElectricMotorDeclarationInputData
+	{
+		public T ElectricMachine { get; set; }
+
+		public int Count { get; set; }
+
+		public PowertrainPosition Position { get; set; }
+
+		public double Ratio { get; set; }
+
+		public double MechanicalEfficiency { get; set; }
+	}
+
+	public interface IElectricStorageDeclarationInputData
+	{
+		IREESSPackInputData REESSPack { get; }
+
+		int Count { get; }
+	}
+
+	public enum REESSType
+	{
+		Battery,
+		SuperCap
+	}
+
+	public interface IREESSPackInputData : IComponentInputData
+	{
+		REESSType StorageType { get; }
+	}
+
+	public interface IBatteryPackDeclarationInputData : IREESSPackInputData
+	{
+		
+		double MinSOC { get; }
+
+		double MaxSOC { get; }
+
+		AmpereSecond Capacity { get; }
+
+		TableData InternalResistanceCurve { get; }
+
+		TableData VoltageCurve { get; }
+
+		TableData MaxCurrentMap { get; }
+	}
+
+	public interface ISuperCapDeclarationInputData : IREESSPackInputData
+	{
+		Farad Capacity { get; }
+
+		Ohm InternalResistance { get; }
+
+		Volt MinVoltage { get; }
+
+		Volt MaxVoltage { get; }
+
+		Ampere MaxCurrentCharge { get; }
+
+		Ampere MaxCurrentDischarge { get; }
+
+	}
+
 
 	public interface ITorqueLimitInputData
 	{

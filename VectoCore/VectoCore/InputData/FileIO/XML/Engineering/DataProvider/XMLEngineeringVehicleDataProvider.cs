@@ -187,6 +187,18 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering.DataProvider
 			get { return null; }
 		}
 
+		public double InitialSOC
+		{
+			get { return double.NaN; }
+		}
+
+		public virtual Watt MaxDrivetrainPower { get { return null; } }
+
+		public VectoSimulationJobType VehicleType
+		{
+			get { return VectoSimulationJobType.ConventionalVehicle; }
+		}
+
 
 		public IAdvancedDriverAssistantSystemsEngineering ADAS
 		{

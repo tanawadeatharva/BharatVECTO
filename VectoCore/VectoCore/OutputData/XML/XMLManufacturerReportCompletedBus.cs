@@ -209,12 +209,12 @@ namespace TUGraz.VectoCore.OutputData.XML {
 		protected internal static double CalculateFactorMethodFactor(IResult primaryResult,
 			XMLDeclarationReport.ResultEntry specific, XMLDeclarationReport.ResultEntry generic)
 		{
-            //return specific.EnergyConsumptionTotal.Value() / generic.EnergyConsumptionTotal.Value();
-			var energyConsumptionPrimary = primaryResult.EnergyConsumption.Sum(x => x.Value);
-			var energyConsumptionCompeted = energyConsumptionPrimary +
-											specific.EnergyConsumptionTotal / specific.Distance -
-											generic.EnergyConsumptionTotal / generic.Distance;
-			return energyConsumptionCompeted / energyConsumptionPrimary;
+            return specific.EnergyConsumptionTotal.Value() / generic.EnergyConsumptionTotal.Value();
+   //         var energyConsumptionPrimary = primaryResult.EnergyConsumption.Sum(x => x.Value);
+			//var energyConsumptionCompeted = energyConsumptionPrimary +
+			//								specific.EnergyConsumptionTotal / specific.Distance -
+			//								generic.EnergyConsumptionTotal / generic.Distance;
+			//return energyConsumptionCompeted / energyConsumptionPrimary;
 		}
 
 		private XElement[] GetFuelConsumptionResults(XMLDeclarationReport.ResultEntry genericResult, XMLDeclarationReport.ResultEntry specificResult, IResult primaryResult)

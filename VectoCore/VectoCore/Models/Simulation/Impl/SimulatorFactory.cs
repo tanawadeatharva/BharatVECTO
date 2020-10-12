@@ -36,6 +36,7 @@ using System.Linq;
 using System.Reflection;
 using System.Threading;
 using Newtonsoft.Json;
+using TUGraz.VectoCommon.BusAuxiliaries;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
@@ -57,7 +58,6 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 		private static int _jobNumberCounter;
 
 		private readonly ExecutionMode _mode;
-		private bool _engineOnlyMode;
 
 		public SimulatorFactory(ExecutionMode mode, IInputDataProvider dataProvider, IOutputDataWriter writer) : this(mode, dataProvider, writer, null, null, true)
 		{
@@ -151,9 +151,8 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			}
 			if (dataProvider is IEngineeringInputDataProvider) {
 				var engDataProvider = dataProvider as IEngineeringInputDataProvider;
-				if (engDataProvider.JobInputData.EngineOnlyMode) {
+				if (engDataProvider.JobInputData.JobType == VectoSimulationJobType.EngineOnlySimulation) {
 					DataReader = new EngineOnlyVectoRunDataFactory(engDataProvider);
-					_engineOnlyMode = true;
 				} else {
 					DataReader = new EngineeringModeVectoRunDataFactory(engDataProvider);
 				}
@@ -200,7 +199,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			if (data.Report != null) {
 				data.Report.PrepareResult(data.Loading, data.Mission, data.EngineData?.FuelMode ?? 0, data);
 			}
-			return new ExemptedRun(new VehicleContainer(data.ExecutionMode) { RunData = data }, modData => {
+			return new ExemptedRun(new ExemptedRunContainer(data.ExecutionMode) { RunData = data }, modData => {
 				if (data.Report != null) {
 					data.Report.AddResult(data.Loading, data.Mission, data.EngineData?.FuelMode ?? 0, data, modData);
 				}
@@ -214,14 +213,12 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 				Log.Error("Output filter for 1Hz results is only available for distance-based cycles!");
 				warning1Hz = true;
 			}
-			var fuels = data.EngineData.Fuels.Select(x => x.FuelData).ToList();
+			var fuels = data.EngineData != null ? data.EngineData.Fuels.Select(x => x.FuelData).ToList() : new List<IFuelProperties>();
 			IModalDataContainer modContainer =
 				new ModalDataContainer(
-					data, ModWriter, fuels,
-					addReportResult: _mode == ExecutionMode.Declaration ? addReportResult : null,
-					writeEngineOnly: _engineOnlyMode,
-					filter: GetModDataFilter(data)) {
-					WriteAdvancedAux = data.BusAuxiliaries != null,
+					data, ModWriter,
+					_mode == ExecutionMode.Declaration ? addReportResult : null,
+					GetModDataFilter(data)) {
 					WriteModalResults = _mode != ExecutionMode.Declaration || WriteModalResults
 				};
 

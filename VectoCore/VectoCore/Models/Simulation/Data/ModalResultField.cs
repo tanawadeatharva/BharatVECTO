@@ -74,7 +74,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 		/// <summary>
 		///     [Nm]	Full load torque
 		/// </summary>
-		[ModalResultField(typeof(SI), caption: "Tq_icd_full [Nm]")] T_ice_full,
+		[ModalResultField(typeof(SI), caption: "Tq_ice_full [Nm]")] T_ice_full,
 
 		/// <summary>
 		///     [Nm]	Motoring torque
@@ -109,8 +109,13 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 		/// <summary>
 		///     [kW]	Total auxiliary power demand .
 		/// </summary>
-		[ModalResultField(typeof(SI), caption: "P_aux [kW]", outputFactor: 1e-3)] P_aux,
+		[ModalResultField(typeof(SI), caption: "P_aux_mech [kW]", outputFactor: 1e-3)] P_aux_mech,
 
+		/// <summary>
+		///     [kW]	Total auxiliary power demand .
+		/// </summary>
+		[ModalResultField(typeof(SI), caption: "P_aux_el [kW]", outputFactor: 1e-3)] P_aux_el,
+		
 		/// <summary>
 		/// [g/h] Fuel consumption from FC map..
 		/// </summary>
@@ -344,6 +349,10 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 
 		[ModalResultField(typeof(DrivingBehavior))] drivingBehavior,
 
+		[ModalResultField(typeof(double))] HybridStrategyScore,
+
+		[ModalResultField(typeof(double))]HybridStrategySolution,
+
 		//[ModalResultField(typeof(double), caption: "AA_NonSmartAlternatorsEfficiency [%]")] AA_NonSmartAlternatorsEfficiency,
 		//[ModalResultField(typeof(SI), caption: "AA_SmartIdleCurrent_Amps [A]")] AA_SmartIdleCurrent_Amps,
 		//[ModalResultField(typeof(double), caption: "AA_SmartIdleAlternatorsEfficiency [%]")] AA_SmartIdleAlternatorsEfficiency,
@@ -368,7 +377,49 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 		[ModalResultField(typeof(SI), "P_WHR_el_corr [kW]", outputFactor: 1e-3)] P_WHR_el_corr,
 		[ModalResultField(typeof(SI), "P_WHR_mech [kW]", outputFactor: 1e-3)] P_WHR_mech_map,
 		[ModalResultField(typeof(SI), "P_WHR_mech_corr [kW]", outputFactor: 1e-3)] P_WHR_mech_corr,
-	}
+
+		[ModalResultField(typeof(SI), caption: "n_em-{0}_avg [1/min]", outputFactor: 60 / (2 * Math.PI))] n_electricMotor_,
+		[ModalResultField(typeof(SI), caption: "T_em-{0} [Nm]")] T_electricMotor_,
+		[ModalResultField(typeof(SI), caption: "T_em-{0}_mot_max [Nm]")] T_electricMotor_drive_max_,
+		[ModalResultField(typeof(SI), caption: "T_em-{0}_gen_max [Nm]")] T_electricMotor_gen_max_,
+		[ModalResultField(typeof(SI), caption: "P_em-{0}_in [kW]", outputFactor: 1e-3)] P_electricMotor_in_,
+		[ModalResultField(typeof(SI), caption: "P_em-{0}_out [kW]", outputFactor: 1e-3)] P_electricMotor_out_,
+		[ModalResultField(typeof(SI), caption: "P_em-{0}_mech [kW]", outputFactor: 1e-3)] P_electricMotor_mech_,
+		[ModalResultField(typeof(SI), caption: "P_em-{0}_el [kW]", outputFactor: 1e-3)] P_electricMotor_el_,
+		[ModalResultField(typeof(SI), caption: "P_em-{0}_gen_max_ [kW]", outputFactor: 1e-3)] P_electricMotor_gen_max_,
+		[ModalResultField(typeof(SI), caption: "P_em-{0}_drive_max [kW]", outputFactor: 1e-3)] P_electricMotor_drive_max_,
+		//[ModalResultField(typeof(SI), caption: "P_em-{0}_brake [kW]", outputFactor: 1e-3)] P_electricMotor_brake_,
+		[ModalResultField(typeof(SI), caption: "P_em-{0}_loss [kW]", outputFactor: 1e-3)] P_electricMotorLoss_,
+		[ModalResultField(typeof(SI), caption: "P_em-{0}_inertia_loss [kW]", outputFactor: 1e-3)] P_electricMotorInertiaLoss_,
+		[ModalResultField(typeof(SI), caption: "EM-{0}_OverloadBuffer [%]", outputFactor: 100)] ElectricMotor_OvlBuffer_,
+
+		// only for graphDrawing Testcase
+		[ModalResultField(typeof(SI), caption: "P_em-P2_mech [kW]", outputFactor: 1e-3)]
+		P_electricMotor_mech_P2,
+		[ModalResultField(typeof(SI), caption: "P_em-P3_mech [kW]", outputFactor: 1e-3)]
+		P_electricMotor_mech_P3,
+		[ModalResultField(typeof(SI), caption: "P_em-P4_mech [kW]", outputFactor: 1e-3)]
+		P_electricMotor_mech_P4,
+
+		[ModalResultField(typeof(SI), caption: "P_em-B4_mech [kW]", outputFactor: 1e-3)]
+		P_electricMotor_mech_B4,
+
+		[ModalResultField(typeof(SI), caption: "P_em-B3_mech [kW]", outputFactor: 1e-3)]
+        P_electricMotor_mech_B3,
+        // -->
+
+        [ModalResultField(typeof(SI), caption: "P_reess_T [kW]", outputFactor: 1e-3)] P_reess_terminal,
+		[ModalResultField(typeof(SI), caption: "P_reess_int [kW]", outputFactor: 1e-3)] P_reess_int,
+		[ModalResultField(typeof(SI), caption: "P_reess_loss [kW]", outputFactor: 1e-3)] P_reess_loss,
+		[ModalResultField(typeof(SI), caption: "REESS SOC [%]", outputFactor: 100)] REESSStateOfCharge,
+		[ModalResultField(typeof(SI), caption: "P_reess charge max [kW]", outputFactor: 1e-3)] P_reess_charge_max,
+		[ModalResultField(typeof(SI), caption: "P_reess discharge max [kW]", outputFactor: 1e-3)] P_reess_discharge_max,
+		[ModalResultField(typeof(SI), caption: "U_reess_terminal [V]")] U_reess_terminal,
+		[ModalResultField(typeof(SI), caption: "U_0_reess [V]")] U0_reess,
+		[ModalResultField(typeof(SI), caption: "I_reess [kW]")] I_reess,
+		
+		[ModalResultField(typeof(SI), caption: "E_reess [kWh]", outputFactor: 1/3600e3)] E_RESS,
+    }
 
 	[AttributeUsage(AttributeTargets.Field)]
 	public class ModalResultFieldAttribute : Attribute

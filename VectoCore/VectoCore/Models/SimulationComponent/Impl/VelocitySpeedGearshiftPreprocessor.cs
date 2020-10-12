@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.Models;
@@ -7,6 +8,8 @@ using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.Models.Connector.Ports.Impl;
 using TUGraz.VectoCore.Models.Simulation;
 using TUGraz.VectoCore.Models.Simulation.Data;
+using TUGraz.VectoCore.Models.Simulation.DataBus;
+using TUGraz.VectoCore.Models.SimulationComponent.Strategies;
 using TUGraz.VectoCore.OutputData;
 using TUGraz.VectoCore.Utils;
 
@@ -52,13 +55,13 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		protected Entry[] IterateVehicleSpeedAndGradient()
 		{
 			var container = Container;
-			var vehicle = container?.Vehicle as Vehicle;
+			var vehicle = container?.VehicleInfo as Vehicle;
 
 			if (vehicle == null) {
 				throw new VectoException("no vehicle found...");
 			}
 
-			var gearbox = container.Gearbox as Gearbox;
+			var gearbox = container.GearboxInfo as Gearbox;
 			if (gearbox == null) {
 				throw new VectoException("no gearbox found...");
 			}
@@ -70,15 +73,16 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 						(runData.AngledriveData?.Angledrive.Ratio ?? 1.0);
 
 			var tmp = new List<Entry>();
-
-			var maxSpeed = GetVehicleMaxSpeed(runData);
+            //(Container.DriverInfo as MockDriver).DriverBehavior = DrivingBehavior.Coasting;
+            var maxSpeed = GetVehicleMaxSpeed(runData);
 			foreach (var speed in Speeds) {
 				if (speed > maxSpeed) {
 					continue;
 				}
-				var gearForSpeed = runData.GearboxData.Gears.FirstOrDefault(
-					x => (speed * ratio * x.Value.Ratio).IsBetween(
-						runData.EngineData.IdleSpeed, runData.EngineData.FullLoadCurves[0].RatedSpeed)).Key;
+
+				var targetEngineSpeed = 0.5 * (runData.EngineData.FullLoadCurves[0].RatedSpeed - runData.EngineData.IdleSpeed) + runData.EngineData.IdleSpeed;
+				var gearForSpeed = runData.GearboxData.Gears.OrderBy(x => Math.Abs((speed * ratio * x.Value.Ratio - targetEngineSpeed).Value()))
+					.FirstOrDefault().Key;
 				if (gearForSpeed == 0) {
 					continue;
 				}
@@ -133,27 +137,27 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			var acceleration = 0.SI<MeterPerSquareSecond>();
 			var absTime = 0.SI<Second>();
 			var initialResponse = vehicle.Request(absTime, simulationInterval, acceleration, gradient);
-			var delta = initialResponse.GearboxPowerRequest;
+			var delta = initialResponse.Gearbox.PowerRequest;
 			try {
 				var time = absTime;
 				acceleration = SearchAlgorithm.Search(
 					acceleration, delta, Constants.SimulationSettings.OperatingPointInitialSearchIntervalAccelerating,
 					getYValue: response => {
 						var r = (ResponseDryRun)response;
-						return r.GearboxPowerRequest;
+						return r.Gearbox.PowerRequest;
 					},
 					evaluateFunction: acc => {
 						var response = vehicle.Request(time, simulationInterval, acc, gradient, true);
-						response.Acceleration = acc;
+						response.Driver.Acceleration = acc;
 						return response;
 					},
 					criterion: response => {
 						var r = (ResponseDryRun)response;
-						return r.GearboxPowerRequest.Value() * 100;
+						return r.Gearbox.PowerRequest.Value() * 100;
 					},
 					abortCriterion: (response, cnt) => {
 						var r = (ResponseDryRun)response;
-						return r != null && (vehicle.VehicleSpeed + r.Acceleration * simulationInterval) < 0.KMPHtoMeterPerSecond();
+						return r != null && (vehicle.VehicleSpeed + r.Driver.Acceleration * simulationInterval) < 0.KMPHtoMeterPerSecond();
 					}
 				);
 				var step = vehicle.Request(absTime, simulationInterval, acceleration, gradient);

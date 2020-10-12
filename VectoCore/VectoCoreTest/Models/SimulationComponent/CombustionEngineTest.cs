@@ -95,7 +95,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			var engineSpeed = 1500.RPMtoRad();
 
 			port.Initialize(torque, engineSpeed);
-			port.Request(absTime, dt, torque, engineSpeed);
+			port.Request(absTime, dt, torque, engineSpeed, false);
 		}
 
 		[TestCase]
@@ -116,7 +116,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 
 			port.Initialize(torque, engineSpeed);
 			for (var i = 0; i < 21; i++) {
-				port.Request(absTime, dt, torque, engineSpeed);
+				port.Request(absTime, dt, torque, engineSpeed, false);
 				engine.CommitSimulationStep(absTime, dt, dataWriter);
 				if (i > 0) {
 					dataWriter.CommitSimulationStep(absTime, dt);
@@ -125,7 +125,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			}
 
 			engineSpeed = 644.4445.RPMtoRad();
-			port.Request(absTime, dt, Formulas.PowerToTorque(2329.973.SI<Watt>(), engineSpeed), engineSpeed);
+			port.Request(absTime, dt, Formulas.PowerToTorque(2329.973.SI<Watt>(), engineSpeed), engineSpeed, false);
 			engine.CommitSimulationStep(absTime, dt, dataWriter);
 
 			AssertHelper.AreRelativeEqual(1152.40304, ((SI)dataWriter[ModalResultField.P_ice_inertia]).Value());
@@ -135,14 +135,14 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 
 			var power = new[] { 569.3641, 4264.177 };
 			for (var i = 0; i < 2; i++) {
-				port.Request(absTime, dt, Formulas.PowerToTorque(power[i].SI<Watt>(), engineSpeed), engineSpeed);
+				port.Request(absTime, dt, Formulas.PowerToTorque(power[i].SI<Watt>(), engineSpeed), engineSpeed, false);
 				engine.CommitSimulationStep(absTime, dt, dataWriter);
 				dataWriter.CommitSimulationStep(absTime, dt);
 				absTime += dt;
 			}
 
 			engineSpeed = 869.7512.RPMtoRad();
-			port.Request(absTime, dt, Formulas.PowerToTorque(7984.56.SI<Watt>(), engineSpeed), engineSpeed);
+			port.Request(absTime, dt, Formulas.PowerToTorque(7984.56.SI<Watt>(), engineSpeed), engineSpeed, false);
 			engine.CommitSimulationStep(absTime, dt, dataWriter);
 
 			Assert.AreEqual(7108.32, ((SI)dataWriter[ModalResultField.P_ice_inertia]).Value(), 0.001);
@@ -150,7 +150,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			absTime += dt;
 
 			engineSpeed = 644.4445.RPMtoRad();
-			port.Request(absTime, dt, Formulas.PowerToTorque(1351.656.SI<Watt>(), engineSpeed), engineSpeed);
+			port.Request(absTime, dt, Formulas.PowerToTorque(1351.656.SI<Watt>(), engineSpeed), engineSpeed, false);
 			engine.CommitSimulationStep(absTime, dt, dataWriter);
 
 			Assert.AreEqual(-7108.32, ((SI)dataWriter[ModalResultField.P_ice_inertia]).Value(), 0.001);
@@ -173,6 +173,9 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			var vehicleContainer = new VehicleContainer(ExecutionMode.Engineering);
 			var engineData = MockSimulationDataFactory.CreateEngineDataFromFile(engineFile, 0);
 			var engine = new EngineOnlyCombustionEngine(vehicleContainer, engineData);
+			new EngineOnlyGearboxInfo(vehicleContainer);
+			new ZeroMileageCounter(vehicleContainer);
+			new DummyDriverInfo(vehicleContainer);
 
 			var expectedResults = VectoCSVFile.Read(resultFile);
 
@@ -189,7 +192,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			var dt = 0.1.SI<Second>();
 			requestPort.Initialize(Formulas.PowerToTorque(idlePower, angularSpeed), angularSpeed);
 			for (; t < 2; t += dt) {
-				requestPort.Request(t, dt, Formulas.PowerToTorque(idlePower, angularSpeed), angularSpeed);
+				requestPort.Request(t, dt, Formulas.PowerToTorque(idlePower, angularSpeed), angularSpeed, false);
 				engine.CommitSimulationStep(t, dt, modalData);
 			}
 
@@ -203,7 +206,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 				if (t >= 10.SI<Second>()) {
 					engineLoadPower = idlePower;
 				}
-				requestPort.Request(t, dt, Formulas.PowerToTorque(engineLoadPower, angularSpeed), angularSpeed);
+				requestPort.Request(t, dt, Formulas.PowerToTorque(engineLoadPower, angularSpeed), angularSpeed, false);
 				modalData[ModalResultField.time] = t;
 				modalData[ModalResultField.simulationInterval] = dt;
 				engine.CommitSimulationStep(t, dt, modalData);
@@ -246,7 +249,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			var dt = 0.1.SI<Second>();
 			requestPort.Initialize(Formulas.PowerToTorque(idlePower, angularSpeed), angularSpeed);
 			for (; t < 2; t += dt) {
-				requestPort.Request(t, dt, Formulas.PowerToTorque(idlePower, angularSpeed), angularSpeed);
+				requestPort.Request(t, dt, Formulas.PowerToTorque(idlePower, angularSpeed), angularSpeed, false);
 				engine.CommitSimulationStep(t, dt, modalData);
 			}
 
@@ -260,7 +263,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 				if (t >= 10.SI<Second>()) {
 					engineLoadPower = idlePower;
 				}
-				requestPort.Request(t, dt, Formulas.PowerToTorque(engineLoadPower, angularSpeed), angularSpeed);
+				requestPort.Request(t, dt, Formulas.PowerToTorque(engineLoadPower, angularSpeed), angularSpeed, false);
 				modalData[ModalResultField.time] = t;
 				modalData[ModalResultField.simulationInterval] = dt;
 				engine.CommitSimulationStep(t, dt, modalData);
@@ -315,13 +318,13 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			var absTime = 0.SI<Second>();
 			var dt = Constants.SimulationSettings.TargetTimeInterval;
 
-			var response = (ResponseSuccess)requestPort.Request(absTime, dt, torque, angularVelocity);
+			var response = (ResponseSuccess)requestPort.Request(absTime, dt, torque, angularVelocity, false);
 
 			container.CommitSimulationStep(absTime, dt);
 			var row = dataWriter.Data.Rows.Cast<DataRow>().Last();
 			Assert.AreEqual(100530.96491487339.SI<Watt>().Value(), ((SI)row[ModalResultField.P_ice_out.GetName()]).Value());
 			Assert.AreEqual(105530.96491487339.SI<Watt>().Value(), ((SI)row[ModalResultField.P_ice_fcmap.GetName()]).Value());
-			Assert.AreEqual(5000.SI<Watt>(), row[ModalResultField.P_aux.GetName()]);
+			Assert.AreEqual(5000.SI<Watt>(), row[ModalResultField.P_aux_mech.GetName()]);
 			Assert.AreEqual(800.RPMtoRad(), row[ModalResultField.n_ice_avg.GetName()]);
 
 			absTime += dt;
@@ -338,7 +341,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			row = dataWriter.Data.Rows.Cast<DataRow>().Last();
 
 			Assert.AreEqual(0.SI<Watt>(), row[ModalResultField.P_ice_out.GetName()]);
-			Assert.AreEqual(5000.SI<Watt>(), row[ModalResultField.P_aux.GetName()]);
+			Assert.AreEqual(5000.SI<Watt>(), row[ModalResultField.P_aux_mech.GetName()]);
 			Assert.AreEqual(680.RPMtoRad(), row[ModalResultField.n_ice_avg.GetName()]);
 		}
 
@@ -359,8 +362,8 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 
 			var response = (ResponseSuccess)requestPort.Initialize(torque, angularVelocity);
 
-			response = (ResponseSuccess)requestPort.Request(absTime, dt, torque, angularVelocity);
-			Assert.AreEqual(105000, response.EnginePowerRequest.Value(), Tolerance);
+			response = (ResponseSuccess)requestPort.Request(absTime, dt, torque, angularVelocity, false);
+			Assert.AreEqual(105000, response.Engine.PowerRequest.Value(), Tolerance);
 			container.CommitSimulationStep(absTime, dt);
 			absTime += dt;
 
@@ -371,7 +374,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			for (var i = 0; i < engineSpeed.Length; i++) {
 				torque = 0.SI<NewtonMeter>();
 
-				response = (ResponseSuccess)requestPort.Request(absTime, dt, torque, 0.RPMtoRad());
+				response = (ResponseSuccess)requestPort.Request(absTime, dt, torque, 0.RPMtoRad(), false);
 				container.CommitSimulationStep(absTime, dt);
 				absTime += dt;
 
@@ -417,8 +420,8 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 
 			var response = (ResponseSuccess)requestPort.Initialize(torque, angularVelocity);
 
-			response = (ResponseSuccess)requestPort.Request(absTime, dt, torque, angularVelocity);
-			Assert.AreEqual(350000, response.EnginePowerRequest.Value(), Tolerance);
+			response = (ResponseSuccess)requestPort.Request(absTime, dt, torque, angularVelocity, false);
+			Assert.AreEqual(350000, response.Engine.PowerRequest.Value(), Tolerance);
 			container.CommitSimulationStep(absTime, dt);
 			absTime += dt;
 
@@ -439,7 +442,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			for (var i = 0; i < 20; i++) {
 				torque = 0.SI<NewtonMeter>();
 
-				response = (ResponseSuccess)requestPort.Request(absTime, dt, torque, 0.RPMtoRad());
+				response = (ResponseSuccess)requestPort.Request(absTime, dt, torque, 0.RPMtoRad(), false);
 
 				container.CommitSimulationStep(absTime, dt);
 
@@ -473,8 +476,8 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 
 			var response = (ResponseSuccess)requestPort.Initialize(torque, angularVelocity);
 
-			response = (ResponseSuccess)requestPort.Request(absTime, dt, torque, angularVelocity);
-			Assert.AreEqual(-14829.79713, response.EnginePowerRequest.Value(), Tolerance);
+			response = (ResponseSuccess)requestPort.Request(absTime, dt, torque, angularVelocity, false);
+			Assert.AreEqual(-14829.79713, response.Engine.PowerRequest.Value(), Tolerance);
 			container.CommitSimulationStep(absTime, dt);
 			absTime += dt;
 
@@ -496,7 +499,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			var engSpeedResults = new List<dynamic>();
 			torque = 0.SI<NewtonMeter>();
 			for (var i = 0; i < engineSpeed.Length; i++) {
-				response = (ResponseSuccess)requestPort.Request(absTime, dt, torque, 0.RPMtoRad());
+				response = (ResponseSuccess)requestPort.Request(absTime, dt, torque, 0.RPMtoRad(), false);
 
 				container.CommitSimulationStep(absTime, dt);
 

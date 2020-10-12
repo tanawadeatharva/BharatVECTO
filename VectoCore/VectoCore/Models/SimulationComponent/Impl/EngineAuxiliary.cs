@@ -79,12 +79,12 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		/// <param name="auxId"></param>
 		public void AddCycle(string auxId)
 		{
-			Add(auxId, _ => DataBus.CycleData.LeftSample.AdditionalAuxPowerDemand);
+			Add(auxId, _ => DataBus.DrivingCycleInfo.CycleData.LeftSample.AdditionalAuxPowerDemand);
 		}
 
 		public void AddCycle(string auxId, Func<DrivingCycleData.DrivingCycleEntry, Watt> powerLossFunc)
 		{
-			Add(auxId, _ => powerLossFunc(DataBus.CycleData.LeftSample));
+			Add(auxId, _ => powerLossFunc(DataBus.DrivingCycleInfo.CycleData.LeftSample));
 		}
 
 		/// <summary>
@@ -94,7 +94,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		/// <param name="data"></param>
 		public void AddMapping(string auxId, AuxiliaryData data)
 		{
-			if (!DataBus.CycleData.LeftSample.AuxiliarySupplyPower.ContainsKey(auxId)) {
+			if (!DataBus.DrivingCycleInfo.CycleData.LeftSample.AuxiliarySupplyPower.ContainsKey(auxId)) {
 				var error = string.Format("driving cycle does not contain column for auxiliary: {0}",
 					Constants.Auxiliaries.Prefix + auxId);
 				Log.Error(error);
@@ -102,7 +102,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			}
 
 			Add(auxId, speed => {
-				var powerSupply = DataBus.CycleData.LeftSample.AuxiliarySupplyPower[auxId];
+				var powerSupply = DataBus.DrivingCycleInfo.CycleData.LeftSample.AuxiliarySupplyPower[auxId];
 				var nAuxiliary = speed * data.TransmissionRatio;
 				var powerAuxOut = powerSupply / data.EfficiencyToSupply;
 				var powerAuxIn = data.GetPowerDemand(nAuxiliary, powerAuxOut);
@@ -167,13 +167,13 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			var engineOffDemand = 0.SI<Watt>();
 			foreach (var item in Auxiliaries) {
 
-				var value =  item.Value(DataBus.EngineIdleSpeed) ;
+				var value =  item.Value(DataBus.EngineInfo.EngineIdleSpeed) ;
 				if (value == null) {
 					continue;
 				}
 
 				powerDemands[item.Key] = value * (1-EngineStopStartUtilityFactor);
-				if (DataBus.VehicleStopped) {
+				if (DataBus.VehicleInfo.VehicleStopped) {
 					engineOffDemand += auxiliarieIgnoredDuringVehicleStop.Contains(item.Key)
 						? 0.SI<Watt>()
 						: value * EngineStopStartUtilityFactor;
@@ -204,7 +204,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			if (!dryRun) {
 				CurrentState.PowerDemands = powerDemands;
 			}
-			return powerDemands.Sum(kv => kv.Value);
+			return powerDemands.Sum(kv => kv.Value) ?? 0.SI<Watt>();
 		}
 
 		protected override void DoWriteModalResults(Second time, Second simulationInterval, IModalDataContainer container)
@@ -219,13 +219,13 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					}
 				}
 			}
-			if (container[ModalResultField.P_aux] == null || container[ModalResultField.P_aux] == DBNull.Value) {
+			if (container[ModalResultField.P_aux_mech] == null || container[ModalResultField.P_aux_mech] == DBNull.Value) {
 				// only overwrite if nobody else already wrote the total aux power
-				container[ModalResultField.P_aux] = auxPowerDemand;
+				container[ModalResultField.P_aux_mech] = auxPowerDemand;
 			}
 		}
 
-		protected override void DoCommitSimulationStep()
+		protected override void DoCommitSimulationStep(Second time, Second simulationInterval)
 		{
 			AdvanceState();
 		}

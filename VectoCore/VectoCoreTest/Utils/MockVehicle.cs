@@ -54,7 +54,7 @@ namespace TUGraz.VectoCore.Tests.Utils
 
 		protected override void DoWriteModalResults(Second time, Second simulationInterval, IModalDataContainer container) {}
 
-		protected override void DoCommitSimulationStep() {}
+		protected override void DoCommitSimulationStep(Second time, Second simulationInterval) {}
 
 		public IFvInPort InPort()
 		{
@@ -123,7 +123,7 @@ namespace TUGraz.VectoCore.Tests.Utils
 				acceleration = acceleration,
 				gradient = gradient
 			};
-			return new ResponseSuccess() { Source = this };
+			return new ResponseSuccess(this);
 		}
 
 		public IResponse Initialize(MeterPerSecond vehicleSpeed, Radian roadGradient)

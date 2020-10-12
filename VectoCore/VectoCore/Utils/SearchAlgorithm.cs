@@ -120,10 +120,14 @@ namespace TUGraz.VectoCore.Utils
 		/// Phase 1: Linear Bracketing: Search iterative for the area of interest (with fixed step size).
 		/// Phase 2: Binary Sectioning: Binary search in the area of interest.
 		/// </summary>
-		private static T LineSearch<T>(T x, SI y, T interval, Func<object, SI> getYValue, Func<T, object> evaluateFunction,
+		private static T LineSearch<T>(T xStart, SI yStart, T intervalStart, Func<object, SI> getYValue, Func<T, object> evaluateFunction,
 			Func<object, double> criterion, Func<object, int, bool> abortCriterion, ref int iterationCount) where T : SIBase<T>
 		{
 			var log = LogManager.GetLogger(typeof(SearchAlgorithm).FullName);
+
+			var x = xStart;
+			var y = yStart;
+			var interval = intervalStart;
 
 			var intervalFactor = 1.0;
 			var origY = y;
@@ -295,9 +299,9 @@ namespace TUGraz.VectoCore.Utils
 				row["x"] = entry.x.Value();
 				row["y"] = entry.y.Value();
 				row["delta"] = entry.delta;
-				row["AuxPower"] = response.AuxiliariesPowerDemand == null ? -1 : response.AuxiliariesPowerDemand.Value();
-				row["engineSpeed"] = response.EngineSpeed == null ? -1 : response.EngineSpeed.Value();
-				row["enginePower"] = response.EnginePowerRequest == null ? -1 : response.EnginePowerRequest.Value();
+				row["AuxPower"] = response.Engine.AuxiliariesPowerDemand == null ? -1 : response.Engine.AuxiliariesPowerDemand.Value();
+				row["engineSpeed"] = response.Engine.EngineSpeed == null ? -1 : response.Engine.EngineSpeed.Value();
+				row["enginePower"] = response.Engine.PowerRequest == null ? -1 : response.Engine.PowerRequest.Value();
 
 				table.Rows.Add(row);
 			}

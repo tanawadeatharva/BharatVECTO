@@ -75,7 +75,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			TolerateMissing = tolerateMissing;
 		}
 
-		protected bool TolerateMissing { get; set; }
+		protected internal bool TolerateMissing { get; set; }
 
 		public DataSource DataSource
 		{
@@ -101,7 +101,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			get { return Path.GetDirectoryName(_sourceFile); }
 		}
 
-		protected TableData ReadTableData(string filename, string tableType, bool required = true)
+		protected internal TableData ReadTableData(string filename, string tableType, bool required = true)
 		{
 			if (!EmptyOrInvalidFileName(filename) && File.Exists(Path.Combine(BasePath, filename))) {
 				try {
@@ -140,30 +140,18 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 	/// Class for reading json data of vecto-job-file.
 	/// Fileformat: .vecto
 	/// </summary>
-	public class JSONInputDataV2 : JSONFile, IEngineeringInputDataProvider, IDeclarationInputDataProvider,
+	public abstract class AbstractJSONInputData : JSONFile, IEngineeringInputDataProvider, IDeclarationInputDataProvider,
 		IEngineeringJobInputData, IDriverEngineeringInputData, IAuxiliariesEngineeringInputData,
 		IAuxiliariesDeclarationInputData, IJSONVehicleComponents
 	{
-		public JSONInputDataV2(JObject data, string filename, bool tolerateMissing = false)
+		public AbstractJSONInputData(JObject data, string filename, bool tolerateMissing = false)
 			: base(data, filename, tolerateMissing)
 		{
 			_jobname = Path.GetFileNameWithoutExtension(filename);
+        }
 
-			Engine = ReadEngine();
 
-			if (Body.GetEx(JsonKeys.Job_EngineOnlyMode).Value<bool>()) {
-				return;
-			}
-
-			Gearbox = ReadGearbox();
-			AxleGear = Gearbox as IAxleGearInputData;
-			TorqueConverter = Gearbox as ITorqueConverterEngineeringInputData;
-			GearshiftInputData = Gearbox as IGearshiftEngineeringInputData;
-
-			VehicleData = ReadVehicle();
-		}
-
-		public IGearboxEngineeringInputData Gearbox { get; internal set; }
+		public virtual IGearboxEngineeringInputData Gearbox { get; internal set; }
 
 		public virtual IGearshiftEngineeringInputData GearshiftInputData { get; internal set; }
 
@@ -188,7 +176,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 		public IEngineEngineeringInputData Engine { get; internal set; }
 
 
-		protected readonly IVehicleEngineeringInputData VehicleData;
+		protected IVehicleEngineeringInputData VehicleData;
 
 		private readonly string _jobname;
 
@@ -203,7 +191,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			get { return this; }
 		}
 
-		private IVehicleEngineeringInputData ReadVehicle()
+		protected IVehicleEngineeringInputData ReadVehicle()
 		{
 			try {
 				var vehicleFile = Body.GetEx(JsonKeys.Vehicle_VehicleFile).Value<string>();
@@ -224,7 +212,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			}
 		}
 
-		private IGearboxEngineeringInputData ReadGearbox()
+		protected IGearboxEngineeringInputData ReadGearbox()
 		{
 			try {
 				var gearboxFile = Body.GetEx(JsonKeys.Vehicle_GearboxFile).Value<string>();
@@ -245,7 +233,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			}
 		}
 
-		private IEngineEngineeringInputData ReadEngine()
+		protected IEngineEngineeringInputData ReadEngine()
 		{
 			try {
 				return JSONInputDataFactory.ReadEngine(
@@ -271,6 +259,11 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 		IVehicleDeclarationInputData IDeclarationJobInputData.Vehicle
 		{
 			get { return VehicleInputData; }
+		}
+
+		public virtual IHybridStrategyParameters HybridStrategyParameters
+		{
+			get { return null; }
 		}
 
 		public virtual IEngineeringJobInputData JobInputData
@@ -380,9 +373,9 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			}
 		}
 
-		public virtual bool EngineOnlyMode
+		public virtual VectoSimulationJobType JobType
 		{
-			get { return Body.GetEx(JsonKeys.Job_EngineOnlyMode).Value<bool>(); }
+			get { return Body.GetEx(JsonKeys.Job_EngineOnlyMode).Value<bool>() ? VectoSimulationJobType.EngineOnlySimulation : VectoSimulationJobType.ConventionalVehicle; }
 		}
 
 		public virtual string JobName
@@ -650,10 +643,39 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			}
 		}
 
+		public Watt ElectricAuxPower
+		{
+			get
+			{
+				return Body["Padd_electric"] != null ? Body.GetEx<double>("Padd_electric").SI<Watt>() : 0.SI<Watt>();
+			}
+		}
+
 		#endregion
 	}
 
-	public class JSONInputDataV3 : JSONInputDataV2
+	public class JSONInputDataV2 : AbstractJSONInputData
+	{
+		public JSONInputDataV2(JObject data, string filename, bool tolerateMissing = false)
+			: base(data, filename, tolerateMissing)
+		{
+			Engine = ReadEngine();
+
+			if (Body.GetEx(JsonKeys.Job_EngineOnlyMode).Value<bool>())
+			{
+				return;
+			}
+
+			Gearbox = ReadGearbox();
+			AxleGear = Gearbox as IAxleGearInputData;
+			TorqueConverter = Gearbox as ITorqueConverterEngineeringInputData;
+			GearshiftInputData = Gearbox as IGearshiftEngineeringInputData;
+
+			VehicleData = ReadVehicle();
+		}
+    }
+
+    public class JSONInputDataV3 : JSONInputDataV2
 	{
 		public JSONInputDataV3(JObject data, string filename, bool tolerateMissing = false)
 			: base(data, filename, tolerateMissing) { }
@@ -1029,6 +1051,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 		#endregion
 	}
 
+
+
 	public class EcoRollInputData : IEcoRollEngineeringInputData
 	{
 		#region Implementation of IEcoRollEngineeringInputData
@@ -1180,5 +1204,51 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 		public string ShiftStrategy { get { return ""; } }
 
 		#endregion
+	}
+
+	public class JSONInputDataV8_Hybrid : JSONInputDataV5
+	{
+		public JSONInputDataV8_Hybrid(JObject data, string filename, bool tolerateMissing = false) : base(data, filename, tolerateMissing) { }
+
+		public override VectoSimulationJobType JobType
+		{
+			get
+			{
+				return VectoSimulationJobType.ParallelHybridVehicle;
+			}
+		}
+
+		public override IHybridStrategyParameters HybridStrategyParameters
+		{
+			get
+			{
+				return Body["HybridStrategyParams"] == null
+					? null : JSONInputDataFactory.ReadHybridStrategyParameters(
+						Path.Combine(BasePath, Body.GetEx<string>("HybridStrategyParams")), false);
+			}
+		}
+
+	}
+
+	public class JSONInputDataV9_BEV : AbstractJSONInputData
+    {
+		
+        public JSONInputDataV9_BEV(JObject data, string filename, bool tolerateMissing = false) : base(data, filename,
+			tolerateMissing)
+		{
+			VehicleData = ReadVehicle();
+
+			if (Body[JsonKeys.Vehicle_GearboxFile] != null) {
+				Gearbox = ReadGearbox();
+				AxleGear = Gearbox as IAxleGearInputData;
+				TorqueConverter = Gearbox as ITorqueConverterEngineeringInputData;
+				//GearshiftInputData = Gearbox as IGearshiftEngineeringInputData;
+            }
+        }
+
+		public override VectoSimulationJobType JobType
+		{
+			get { return VectoSimulationJobType.BatteryElectricVehicle; }
+		}
 	}
 }

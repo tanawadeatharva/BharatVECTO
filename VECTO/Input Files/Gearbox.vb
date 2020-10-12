@@ -826,6 +826,10 @@ Public Class MockEngineeringVehicle
     Public Property ADAS As IAdvancedDriverAssistantSystemDeclarationInputData _
         Implements IVehicleDeclarationInputData.ADAS
 
+    Public ReadOnly Property InitialSOC As Double Implements IVehicleEngineeringInputData.InitialSOC
+    Public ReadOnly Property MaxDrivetrainPower As Watt Implements IVehicleEngineeringInputData.MaxDrivetrainPower
+    Public ReadOnly Property VehicleType As VectoSimulationJobType Implements IVehicleEngineeringInputData.VehicleType
+
     Public Property ZeroEmissionVehicle As Boolean Implements IVehicleDeclarationInputData.ZeroEmissionVehicle
     Public Property HybridElectricHDV As Boolean Implements IVehicleDeclarationInputData.HybridElectricHDV
     Public Property DualFuelVehicle As Boolean Implements IVehicleDeclarationInputData.DualFuelVehicle
@@ -876,6 +880,8 @@ Public Class MockEngineeringVehicle
         Implements IVehicleComponentsEngineering.PTOTransmissionInputData
 
     Public Property AxleWheels As IAxlesEngineeringInputData Implements IVehicleComponentsEngineering.AxleWheels
+    Public ReadOnly Property ElectricStorage As IElectricStorageEngineeringInputData Implements IVehicleComponentsEngineering.ElectricStorage
+    Public ReadOnly Property ElectricMachines As IElectricMachinesEngineeringInputData Implements IVehicleComponentsEngineering.ElectricMachines
 End Class
 
 Public Class MockJobInputData
@@ -886,8 +892,9 @@ Public Class MockJobInputData
         Implements IEngineeringJobInputData.Vehicle
 
     Public Property Vehicle As IVehicleDeclarationInputData Implements IDeclarationJobInputData.Vehicle
+    Public ReadOnly Property HybridStrategyParameters As IHybridStrategyParameters Implements IEngineeringJobInputData.HybridStrategyParameters
     Public Property Cycles As IList(Of ICycleData) Implements IEngineeringJobInputData.Cycles
-    Public Property EngineOnlyMode As Boolean Implements IEngineeringJobInputData.EngineOnlyMode
+    Public Property JobType As VectoSimulationJobType Implements IEngineeringJobInputData.JobType
     Public Property EngineOnly As IEngineEngineeringInputData Implements IEngineeringJobInputData.EngineOnly
     Public Property JobName As String Implements IDeclarationJobInputData.JobName
     Public Property ShiftStrategy As String Implements IDeclarationJobInputData.ShiftStrategy

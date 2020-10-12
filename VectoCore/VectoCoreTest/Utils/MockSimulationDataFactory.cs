@@ -29,6 +29,8 @@
 *   Martin Rexeis, rexeis@ivt.tugraz.at, IVT, Graz University of Technology
 */
 
+using System;
+using System.Collections.Generic;
 using System.Linq;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
@@ -42,6 +44,8 @@ using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox;
 using TUGraz.VectoCore.Tests.FileIO;
 using TUGraz.VECTO;
+using TUGraz.VectoCore.InputData.Reader.ComponentData;
+using TUGraz.VectoCore.Models.SimulationComponent.Data.Battery;
 
 namespace TUGraz.VectoCore.Tests.Utils
 {
@@ -159,7 +163,7 @@ namespace TUGraz.VectoCore.Tests.Utils
 		{
 			var dao = new EngineeringDataAdapter();
 			var vehicleInput = JSONInputDataFactory.ReadJsonVehicle(vehicleDataFile, null);
-			var airdragData = vehicleInput as IAirdragEngineeringInputData;
+			var airdragData = vehicleInput.Components.AirdragInputData as IAirdragEngineeringInputData;
 			return dao.CreateAirdragData(airdragData, vehicleInput);
 		}
 
@@ -173,6 +177,27 @@ namespace TUGraz.VectoCore.Tests.Utils
 
 			var dao = new EngineeringDataAdapter();
 			return dao.CreateDriverData(engineeringJob.DriverInputData);
+		}
+
+		public static List<Tuple<PowertrainPosition, ElectricMotorData>> CreateElectricMotorData(string file, int count,
+			PowertrainPosition pos, double ratio, double efficiency)
+		{
+			var inputData = JSONInputDataFactory.ReadElectricMotorData(file, false);
+			return new EngineeringDataAdapter().CreateElectricMachines(new MockElectricMachinesInputData() {
+				Entries = new[] {
+					new ElectricMachineEntry<IElectricMotorEngineeringInputData>()
+					{
+						Count = count, ElectricMachine = inputData, Position = pos, Ratio = ratio, MechanicalEfficiency = efficiency,
+					}
+				}
+			});
+		}
+	
+
+		public static BatteryData CreateBatteryData(string file, double initialSoC, int cnt = 1)
+		{
+			var inputData = JSONInputDataFactory.ReadREESSData(file, false);
+			return new EngineeringDataAdapter().CreateBatteryData(new MockBatteryInputData() {Count = cnt, REESSPack = inputData}, initialSoC);
 		}
 	}
 }

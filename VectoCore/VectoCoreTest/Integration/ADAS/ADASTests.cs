@@ -32,25 +32,25 @@ namespace TUGraz.VectoCore.Tests.Integration.ADAS
 
 			_kernel = new StandardKernel(new VectoNinjectModule());
 			xmlInputReader = _kernel.Get<IXMLInputDataReader>();
-
-			InitGraphWriter();
 		}
 
-		private void InitGraphWriter()
+		private GraphWriter  GetGraphWriter()
 		{
+			var graphWriter = new GraphWriter();
 			//#if TRACE
-			GraphWriter.Enable();
+			graphWriter.Enable();
 			//#else
-			//GraphWriter.Disable();
+			//graphWriter.Disable();
 			//#endif
-			GraphWriter.Xfields = new[] { ModalResultField.dist };
+			graphWriter.Xfields = new[] { ModalResultField.dist };
 
-			GraphWriter.Yfields = new[] {
+			graphWriter.Yfields = new[] {
 				ModalResultField.v_act, ModalResultField.altitude, ModalResultField.acc, ModalResultField.Gear,
 				ModalResultField.P_ice_out, ModalResultField.FCMap
 			};
-			GraphWriter.Series1Label = "ADAS PCC";
-			GraphWriter.PlotIgnitionState = true;
+			graphWriter.Series1Label = "ADAS PCC";
+			graphWriter.PlotIgnitionState = true;
+			return graphWriter;
 		}
 
 
@@ -113,7 +113,7 @@ namespace TUGraz.VectoCore.Tests.Integration.ADAS
 			var progress = jobContainer.GetProgress();
 			Assert.IsTrue(progress.All(r => r.Value.Success), string.Concat<Exception>(progress.Select(r => r.Value.Error)));
 			var modFilename = writer.GetModDataFileName(run.RunName, run.CycleName, run.RunSuffix);
-			GraphWriter.Write(modFilename);
+			GetGraphWriter().Write(modFilename);
 		}
 
 		[TestCase(0, TestName = "AT EcoRoll Neutral DH1.8 const"),
@@ -154,7 +154,7 @@ namespace TUGraz.VectoCore.Tests.Integration.ADAS
 			var progress = jobContainer.GetProgress();
 			Assert.IsTrue(progress.All(r => r.Value.Success), string.Concat<Exception>(progress.Select(r => r.Value.Error)));
 			var modFilename = writer.GetModDataFileName(run.RunName, run.CycleName, run.RunSuffix);
-			GraphWriter.Write(modFilename);
+			GetGraphWriter().Write(modFilename);
 		}
 
 
@@ -195,7 +195,7 @@ namespace TUGraz.VectoCore.Tests.Integration.ADAS
 			var progress = jobContainer.GetProgress();
 			Assert.IsTrue(progress.All(r => r.Value.Success), string.Concat<Exception>(progress.Select(r => r.Value.Error)));
 			var modFilename = writer.GetModDataFileName(run.RunName, run.CycleName, run.RunSuffix);
-			GraphWriter.Write(modFilename);
+			GetGraphWriter().Write(modFilename);
 		}
 
 		[TestCase(@"TestData\Integration\ADAS\Group9_AT_EngineStopStart.xml")]
@@ -289,7 +289,7 @@ namespace TUGraz.VectoCore.Tests.Integration.ADAS
 			var progress = jobContainer.GetProgress();
 			Assert.IsTrue(progress.All(r => r.Value.Success), string.Concat<Exception>(progress.Select(r => r.Value.Error)));
 			var modFilename = writer.GetModDataFileName(run.RunName, run.CycleName, run.RunSuffix);
-			GraphWriter.Write(modFilename);
+			GetGraphWriter().Write(modFilename);
 		}
 
 

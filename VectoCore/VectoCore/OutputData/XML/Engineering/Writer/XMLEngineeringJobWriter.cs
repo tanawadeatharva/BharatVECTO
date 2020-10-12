@@ -29,7 +29,7 @@ namespace TUGraz.VectoCore.OutputData.XML.Writer
 
 		public virtual object[] WriteXML()
 		{
-			if (InputData.JobInputData.EngineOnlyMode) {
+			if (InputData.JobInputData.JobType == VectoSimulationJobType.EngineOnlySimulation) {
 				return WriteEngineOnlyXML();
 			}
 
@@ -44,7 +44,7 @@ namespace TUGraz.VectoCore.OutputData.XML.Writer
 				InputData.DriverInputData, Writer, InputData.JobInputData.Vehicle.DataSource);
 			
 			return new object[] {
-				new XElement(v10 + XMLNames.VectoJob_EngineOnlyMode, InputData.JobInputData.EngineOnlyMode),
+				new XElement(v10 + XMLNames.VectoJob_EngineOnlyMode, InputData.JobInputData.JobType != VectoSimulationJobType.EngineOnlySimulation),
 				CreateVehicle(InputData.JobInputData.Vehicle),
 				new XElement(
 					v10 + XMLNames.Component_DriverModel,
@@ -58,7 +58,7 @@ namespace TUGraz.VectoCore.OutputData.XML.Writer
 		{
 			var v10 = ComponentDataNamespace;
 			return new object[] {
-				new XElement(v10 + XMLNames.VectoJob_EngineOnlyMode, InputData.JobInputData.EngineOnlyMode),
+				new XElement(v10 + XMLNames.VectoJob_EngineOnlyMode, InputData.JobInputData.JobType == VectoSimulationJobType.EngineOnlySimulation),
 				new XElement(
 					v10 + XMLNames.Component_Engine,
 					new XElement(v10 + XMLNames.ComponentDataWrapper, 

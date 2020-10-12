@@ -73,14 +73,14 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			}
 			if (IdleStart == null) {
 				IdleStart = absTime;
-				PreviousState.InAngularVelocity = DataBus.EngineSpeed;
+				PreviousState.InAngularVelocity = DataBus.EngineInfo.EngineSpeed;
 			}
 			return base.Request(absTime - IdleStart, dt);
 		}
 
 		public IResponse Initialize(NewtonMeter outTorque, PerSecond outAngularVelocity)
 		{
-			return new ResponseSuccess { Source = this };
+			return new ResponseSuccess(this);
 		}
 
 		public void Reset()

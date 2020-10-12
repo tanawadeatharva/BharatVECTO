@@ -1,0 +1,87 @@
+﻿using TUGraz.VectoCommon.Models;
+using TUGraz.VectoCommon.Utils;
+using TUGraz.VectoCore.Models.Connector.Ports.Impl;
+using TUGraz.VectoCore.Models.SimulationComponent;
+
+namespace TUGraz.VectoCore.Tests.Utils {
+	public class MockBattery : IElectricEnergyStorage, IElectricEnergyStoragePort, IElectricAuxConnecor
+	{
+		public Volt InternalVoltage
+		{
+			get { return 640.SI<Volt>(); }
+		}
+
+		public IRESSResponse Request(Second absTime, Second dt, Watt powerdemand, bool dryRun = false)
+		{
+			return new RESSResponseSuccess(this)
+			{
+				MaxDischargePower = -InternalVoltage * MaxCurrent,
+				AbsTime = absTime,
+				LossPower = 0.SI<Watt>(),
+				MaxChargePower = InternalVoltage * MaxCurrent,
+				PowerDemand = powerdemand,
+				SimulationInterval = dt,
+			};
+		}
+
+		public double StateOfCharge { get; set; }
+
+		public WattSecond StoredEnergy
+		{
+			get { throw new System.NotImplementedException(); }
+		}
+
+		public Ampere MaxCurrent
+		{
+			get { return 375.SI<Ampere>(); }
+		}
+
+		public Watt MaxChargePower(Second dt)
+		{
+			throw new System.NotImplementedException();
+		}
+
+		public Watt MaxDischargePower(Second dt)
+		{
+			throw new System.NotImplementedException();
+		}
+
+		public double MinSoC
+		{
+			get { return 0; }
+		}
+		public double MaxSoC
+		{
+			get { return 1; }
+		}
+
+		public IElectricEnergyStoragePort MainBatteryPort
+		{
+			get { return this; }
+		}
+
+		public IElectricAuxConnecor AuxBatteryPort()
+		{
+			return this;
+		}
+
+		public void Initialize(double initialSoC)
+		{
+			StateOfCharge = initialSoC;
+		}
+
+		public void Connect(IElectricAuxPort aux)
+		{
+			throw new System.NotImplementedException();
+		}
+
+		#region Implementation of IBatteryChargeProvider
+
+		public void Connect(IElectricChargerPort charger)
+		{
+			throw new System.NotImplementedException();
+		}
+
+		#endregion
+	}
+}

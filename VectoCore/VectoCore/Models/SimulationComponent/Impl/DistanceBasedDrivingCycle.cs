@@ -95,8 +95,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		public IResponse Initialize()
 		{
 			if (Left.VehicleTargetSpeed.IsEqual(0)) {
-				var retVal = NextComponent.Initialize(DataBus.StartSpeed,
-					Left.RoadGradient, DataBus.StartAcceleration);
+				var retVal = NextComponent.Initialize(DataBus.GearboxInfo.StartSpeed,
+					Left.RoadGradient, DataBus.GearboxInfo.StartAcceleration);
 				if (!(retVal is ResponseSuccess)) {
 					throw new UnexpectedResponseException("DistanceBasedDrivingCycle.Initialize: Couldn't find start gear.", retVal);
 				}
@@ -123,18 +123,18 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				}
 			}
 			if (CycleIntervalIterator.LastEntry && PreviousState.Distance.IsEqual(Right.Distance)) {
-				CurrentState.Response = new ResponseCycleFinished();
+				CurrentState.Response = new ResponseCycleFinished(this);
 				return CurrentState.Response;
 			}
 
 			var nextSpeedChange = GetSpeedChangeWithinSimulationInterval(ds);
 			if (nextSpeedChange == null || ds.IsSmallerOrEqual(nextSpeedChange - PreviousState.Distance)) {
-				if (nextSpeedChange == null || DataBus.VehicleSpeed.IsEqual(0.SI<MeterPerSecond>())) {
+				if (nextSpeedChange == null || DataBus.VehicleInfo.VehicleSpeed.IsEqual(0.SI<MeterPerSecond>())) {
 					CurrentState.Response = DriveDistance(absTime, ds);
 					return CurrentState.Response;
 				}
 				var remainingDistance = nextSpeedChange - PreviousState.Distance - ds;
-				var estimatedRemainingTime = remainingDistance / DataBus.VehicleSpeed;
+				var estimatedRemainingTime = remainingDistance / DataBus.VehicleInfo.VehicleSpeed;
 				if (_intervalProlonged || remainingDistance.IsEqual(0.SI<Meter>()) ||
 					estimatedRemainingTime.IsGreater(Constants.SimulationSettings.LowerBoundTimeInterval)) {
 					CurrentState.Response = DriveDistance(absTime, ds);
@@ -143,8 +143,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				Log.Debug("Extending distance by {0} to next sample point. ds: {1} new ds: {2}", remainingDistance, ds,
 					nextSpeedChange - PreviousState.Distance);
 				_intervalProlonged = true;
-				CurrentState.Response = new ResponseDrivingCycleDistanceExceeded {
-					Source = this,
+				CurrentState.Response = new ResponseDrivingCycleDistanceExceeded(this) {
 					MaxDistance = nextSpeedChange - PreviousState.Distance
 				};
 				return CurrentState.Response;
@@ -152,8 +151,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			// only drive until next sample point in cycle with speed change
 			Log.Debug("Limiting distance to next sample point {0}",
 				Right.Distance - PreviousState.Distance);
-			CurrentState.Response = new ResponseDrivingCycleDistanceExceeded {
-				Source = this,
+			CurrentState.Response = new ResponseDrivingCycleDistanceExceeded(this) {
 				MaxDistance = nextSpeedChange - PreviousState.Distance
 			};
 			return CurrentState.Response;
@@ -278,8 +276,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				CurrentState.RequestToNextSamplePointDone = true;
 				Log.Debug("current distance is close to the next speed change: {0}",
 					nextSpeedChanges.First().Distance - PreviousState.Distance);
-				return new ResponseDrivingCycleDistanceExceeded {
-					Source = this,
+				return new ResponseDrivingCycleDistanceExceeded(this) {
 					MaxDistance = Constants.SimulationSettings.BrakeNextTargetDistance
 				};
 			}
@@ -322,7 +319,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			}
 		}
 
-		protected override void DoCommitSimulationStep()
+		protected override void DoCommitSimulationStep(Second time, Second simulationInterval)
 		{
 			if (CurrentState.Response != null && !(CurrentState.Response is ResponseSuccess)) {
 				throw new VectoSimulationException("Previous request did not succeed!");
@@ -412,6 +409,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			}
 		}
 
+		public Second StopTime
+		{
+			get { return CycleIntervalIterator.LeftSample.StoppingTime; }
+		}
+
 		public Meter CycleStartDistance { get; internal set; }
 
 		public IReadOnlyList<DrivingCycleData.DrivingCycleEntry> LookAhead(Meter lookaheadDistance)
@@ -451,7 +453,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		public IReadOnlyList<DrivingCycleData.DrivingCycleEntry> LookAhead(Second time)
 		{
-			return LookAhead(LookaheadTimeSafetyMargin * DataBus.VehicleSpeed * time);
+			return LookAhead(LookaheadTimeSafetyMargin * DataBus.VehicleInfo.VehicleSpeed * time);
 		}
 
 		public SpeedChangeEntry LastTargetspeedChange { get; private set; }
@@ -525,6 +527,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		}
 
 		public Radian RoadGradient { get { return CurrentState.Gradient; } }
+		public MeterPerSecond TargetSpeed
+		{
+			get { return CurrentState.VehicleTargetSpeed; }
+		}
 
 
 		public sealed class DrivingCycleState

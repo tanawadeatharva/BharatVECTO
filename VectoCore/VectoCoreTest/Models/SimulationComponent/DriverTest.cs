@@ -29,6 +29,7 @@
 *   Martin Rexeis, rexeis@ivt.tugraz.at, IVT, Graz University of Technology
 */
 
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -49,6 +50,7 @@ using TUGraz.VectoCore.OutputData.FileIO;
 using TUGraz.VectoCore.Tests.Utils;
 using Wheels = TUGraz.VectoCore.Models.SimulationComponent.Impl.Wheels;
 using NUnit.Framework;
+using TUGraz.VectoCommon.InputData;
 
 namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 {
@@ -80,13 +82,16 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			var driverData = CreateDriverData();
 
 			var fileWriter = new FileOutputWriter("Coach_MinimalPowertrain_Coasting");
-			var modData = new ModalDataContainer(
-				"Coach_MinimalPowertrain_Coasting", new[] { FuelData.Diesel }, fileWriter);
+			var runData = new VectoRunData() {
+				JobName = "Coach_MinimalPowertrain_Coasting",
+				VehicleData = vehicleData,
+				AirdragData = airdragData,
+				EngineData = engineData,
+				ElectricMachinesData = new List<Tuple<PowertrainPosition, ElectricMotorData>>()
+            };
+			var modData = new ModalDataContainer(runData, fileWriter, null);
 			var vehicleContainer = new VehicleContainer(ExecutionMode.Engineering, modData) {
-				RunData = new VectoRunData() {
-					VehicleData = vehicleData,
-					EngineData = engineData,
-				}
+				RunData = runData
 			};
 			var mockCycle = new MockDrivingCycle(vehicleContainer, null);
 
@@ -115,12 +120,12 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			vehicleContainer.CommitSimulationStep(absTime, response.SimulationInterval);
 			absTime += response.SimulationInterval;
 
-			Assert.AreEqual(4.9877, vehicleContainer.VehicleSpeed.Value(), Tolerance);
+			Assert.AreEqual(4.9877, vehicleContainer.VehicleInfo.VehicleSpeed.Value(), Tolerance);
 			Assert.AreEqual(0.2004, response.SimulationInterval.Value(), Tolerance);
 			Assert.AreEqual(engine.PreviousState.FullDragTorque.Value(), engine.PreviousState.EngineTorque.Value(),
 				Constants.SimulationSettings.LineSearchTolerance);
 
-			while (vehicleContainer.VehicleSpeed > 1.7) {
+			while (vehicleContainer.VehicleInfo.VehicleSpeed > 1.7) {
 				response = driver.DrivingActionCoast(absTime, 1.SI<Meter>(), velocity, 0.SI<Radian>());
 
 				Assert.IsInstanceOf<ResponseSuccess>(response);
@@ -143,13 +148,15 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			var driverData = CreateDriverData();
 
 			var fileWriter = new FileOutputWriter("Coach_MinimalPowertrain_Coasting");
-			var modData = new ModalDataContainer(
-				"Coach_MinimalPowertrain_Coasting", new[] { FuelData.Diesel }, fileWriter);
-			var vehicleContainer = new VehicleContainer(ExecutionMode.Engineering, modData) {
-				RunData = new VectoRunData() {
-					VehicleData = vehicleData,
-					EngineData = engineData,
-				}
+			var runData = new VectoRunData()
+			{
+				JobName = "Coach_MinimalPowertrain_Coasting",
+				VehicleData = vehicleData,
+				EngineData = engineData,
+			};
+			var modData = new ModalDataContainer(runData, fileWriter, null);
+            var vehicleContainer = new VehicleContainer(ExecutionMode.Engineering, modData) {
+				RunData = runData
 			};
 			var mockCycle = new MockDrivingCycle(vehicleContainer, null);
 
@@ -181,12 +188,12 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			vehicleContainer.CommitSimulationStep(absTime, response.SimulationInterval);
 			absTime += response.SimulationInterval;
 
-			Assert.AreEqual(4.9878, vehicleContainer.VehicleSpeed.Value(), Tolerance);
+			Assert.AreEqual(4.9878, vehicleContainer.VehicleInfo.VehicleSpeed.Value(), Tolerance);
 			Assert.AreEqual(0.2004, response.SimulationInterval.Value(), Tolerance);
 			Assert.AreEqual(engine.PreviousState.FullDragTorque.Value(), engine.PreviousState.EngineTorque.Value(),
 				Constants.SimulationSettings.LineSearchTolerance);
 
-			while (vehicleContainer.VehicleSpeed > 1.7) {
+			while (vehicleContainer.VehicleInfo.VehicleSpeed > 1.7) {
 				response = driver.DrivingActionCoast(absTime, 1.SI<Meter>(), velocity, gradient);
 
 				Assert.IsInstanceOf<ResponseSuccess>(response);
@@ -212,12 +219,17 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			var driverData = CreateDriverData();
 
 			var fileWriter = new FileOutputWriter("Coach_MinimalPowertrain");
-			var modData = new ModalDataContainer("Coach_MinimalPowertrain", new[] { FuelData.Diesel }, fileWriter);
-			var vehicleContainer = new VehicleContainer(ExecutionMode.Engineering, modData) {
-				RunData = new VectoRunData() {
-					VehicleData = vehicleData,
-					EngineData = engineData,
-				}
+			var runData = new VectoRunData()
+			{
+				JobName = "Coach_MinimalPowertrain",
+				VehicleData = vehicleData,
+				AirdragData = airdragData,
+				EngineData = engineData,
+				ElectricMachinesData = new List<Tuple<PowertrainPosition, ElectricMotorData>>()
+			};
+			var modData = new ModalDataContainer(runData, fileWriter, null);
+            var vehicleContainer = new VehicleContainer(ExecutionMode.Engineering, modData) {
+				RunData = runData
 			};
 
 			var cycle = new MockDrivingCycle(vehicleContainer, null);
@@ -274,6 +286,8 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			var driver = new Driver(vehicleContainer, driverData, new DefaultDriverStrategy(vehicleContainer));
 
 			new MockEngine(vehicleContainer);
+			new EngineOnlyGearboxInfo(vehicleContainer);
+			new ATClutchInfo(vehicleContainer);
 
 			var cycle = new MockDrivingCycle(vehicleContainer, null);
 			var brakes = new Brakes(vehicleContainer);
@@ -344,6 +358,8 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			};
 			var vehicle = new MockVehicle(vehicleContainer);
 			new MockEngine(vehicleContainer);
+			new EngineOnlyGearboxInfo(vehicleContainer);
+			new ATClutchInfo(vehicleContainer);
 
 			var driverData = MockSimulationDataFactory.CreateDriverDataFromFile(JobFile);
 			var driver = new Driver(vehicleContainer, driverData, new DefaultDriverStrategy(vehicleContainer));

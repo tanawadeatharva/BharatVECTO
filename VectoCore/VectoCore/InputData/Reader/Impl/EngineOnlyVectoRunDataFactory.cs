@@ -29,12 +29,14 @@
 *   Martin Rexeis, rexeis@ivt.tugraz.at, IVT, Graz University of Technology
 */
 
+using System;
 using System.Collections.Generic;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCore.InputData.Reader.ComponentData;
 using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter;
 using TUGraz.VectoCore.Models.Simulation.Data;
+using TUGraz.VectoCore.Models.SimulationComponent.Data;
 
 namespace TUGraz.VectoCore.InputData.Reader.Impl
 {
@@ -58,7 +60,8 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 						Cycle = new DrivingCycleProxy(
 							DrivingCycleDataReader.ReadFromDataTable(cycle.CycleData, cycle.Name, false), cycle.Name),
 						ExecutionMode = ExecutionMode.Engineering,
-						SimulationType = SimulationType.EngineOnly
+						SimulationType = SimulationType.EngineOnly,
+						ElectricMachinesData = new List<Tuple<PowertrainPosition, ElectricMotorData>>()
 					};
 					yield return simulationRunData;
 				}

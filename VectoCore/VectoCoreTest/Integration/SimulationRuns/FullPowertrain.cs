@@ -51,6 +51,7 @@ using TUGraz.VectoCore.Tests.Utils;
 using TUGraz.VectoCore.Utils;
 using Wheels = TUGraz.VectoCore.Models.SimulationComponent.Impl.Wheels;
 using NUnit.Framework;
+using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCore.InputData.Reader.Impl;
 
 namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
@@ -77,11 +78,6 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 		[TestCase, Category("LongRunning")]
 		public void Test_FullPowertrain_SimpleGearbox()
 		{
-			var fileWriter = new FileOutputWriter("Coach_FullPowertrain_SimpleGearbox");
-			var modData = new ModalDataContainer("Coach_FullPowertrain_SimpleGearbox", new[] { FuelData.Diesel }, fileWriter);
-			var container = new VehicleContainer(ExecutionMode.Engineering, modData);
-			
-
 			var gearboxData = CreateSimpleGearboxData();
 			var engineData = MockSimulationDataFactory.CreateEngineDataFromFile(EngineFile, gearboxData.Gears.Count);
 			var cycleData = DrivingCycleDataReader.ReadFromFile(CycleFile, CycleType.DistanceBased, false);
@@ -90,20 +86,25 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 			var driverData = CreateDriverData(AccelerationFile);
 			var airDragData = CreateAirdragData();
 
-			var cycle = new DistanceBasedDrivingCycle(container, cycleData);
-			var cyclePort = cycle.OutPort();
-
 			var runData = new VectoRunData() {
+				JobName = "Coach_FullPowertrain_SimpleGearbox",
 				EngineData = engineData,
 				AxleGearData = axleGearData,
 				GearboxData = gearboxData,
 				VehicleData = vehicleData,
 				AirdragData = airDragData,
-				SimulationType = SimulationType.DistanceCycle
+				SimulationType = SimulationType.DistanceCycle,
+				ElectricMachinesData = new List<Tuple<PowertrainPosition, ElectricMotorData>>()
 			};
-			container.RunData = runData;
+			var fileWriter = new FileOutputWriter("Coach_FullPowertrain_SimpleGearbox");
+			var modData = new ModalDataContainer(runData, fileWriter, null);
+			var container = new VehicleContainer(ExecutionMode.Engineering, modData);
 
-			cycle.AddComponent(new Driver(container, driverData, new DefaultDriverStrategy(container)))
+			container.RunData = runData;
+			var cycle = new DistanceBasedDrivingCycle(container, cycleData);
+			var cyclePort = cycle.OutPort();
+
+            cycle.AddComponent(new Driver(container, driverData, new DefaultDriverStrategy(container)))
 				.AddComponent(new Vehicle(container, vehicleData, airDragData))
 				.AddComponent(new Wheels(container, vehicleData.DynamicTyreRadius, vehicleData.WheelsInertia))
 				.AddComponent(new Brakes(container))
@@ -116,6 +117,7 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 
 			var absTime = 0.SI<Second>();
 			var ds = Constants.SimulationSettings.DriveOffDistance;
+			container.AbsTime = absTime;
 			IResponse response;
 
 			var cnt = 0;
@@ -128,9 +130,9 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 						container.CommitSimulationStep(absTime, r.SimulationInterval);
 						absTime += r.SimulationInterval;
 
-						ds = container.VehicleSpeed.IsEqual(0)
+						ds = container.VehicleInfo.VehicleSpeed.IsEqual(0)
 							? Constants.SimulationSettings.DriveOffDistance
-							: Constants.SimulationSettings.TargetTimeInterval * container.VehicleSpeed;
+							: Constants.SimulationSettings.TargetTimeInterval * container.VehicleInfo.VehicleSpeed;
 
 						if (cnt++ % 100 == 0) {
 							modData.Finish(VectoRun.Status.Success);
@@ -146,10 +148,6 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 		[TestCase]
 		public void Test_FullPowertrain()
 		{
-			var fileWriter = new FileOutputWriter("Coach_FullPowertrain");
-			var modData = new ModalDataContainer("Coach_FullPowertrain", new[] { FuelData.Diesel }, fileWriter);
-			var container = new VehicleContainer(ExecutionMode.Engineering, modData);
-			
 			var gearboxData = CreateGearboxData();
 			var engineData = MockSimulationDataFactory.CreateEngineDataFromFile(EngineFile, gearboxData.Gears.Count);
 			var cycleData = DrivingCycleDataReader.ReadFromFile(CoachCycleFile, CycleType.DistanceBased, false);
@@ -157,21 +155,25 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 			var vehicleData = CreateVehicleData(3300.SI<Kilogram>());
 			var driverData = CreateDriverData(AccelerationFile);
 			var airDragData = CreateAirdragData();
-
-			var cycle = new DistanceBasedDrivingCycle(container, cycleData);
-
+			
 			var runData = new VectoRunData() {
+				JobName = "Coach_FullPowertrain",
 				EngineData = engineData,
 				VehicleData = vehicleData,
 				AxleGearData = axleGearData,
 				GearboxData = gearboxData,
 				AirdragData = airDragData,
-				SimulationType = SimulationType.DistanceCycle
+				SimulationType = SimulationType.DistanceCycle,
+				ElectricMachinesData = new List<Tuple<PowertrainPosition, ElectricMotorData>>()
 			};
+			var fileWriter = new FileOutputWriter("Coach_FullPowertrain");
+			var modData = new ModalDataContainer(runData, fileWriter, null);
+			var container = new VehicleContainer(ExecutionMode.Engineering, modData);
 
-			container.RunData = runData;
+            container.RunData = runData;
 
-			var cyclePort = cycle.OutPort();
+			var cycle = new DistanceBasedDrivingCycle(container, cycleData);
+            var cyclePort = cycle.OutPort();
 			cycle.AddComponent(new Driver(container, driverData, new DefaultDriverStrategy(container)))
 				.AddComponent(new Vehicle(container, vehicleData, airDragData))
 				.AddComponent(new Wheels(container, vehicleData.DynamicTyreRadius, vehicleData.WheelsInertia))
@@ -188,13 +190,14 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 			var absTime = 0.SI<Second>();
 			var ds = Constants.SimulationSettings.DriveOffDistance;
 			var response = cyclePort.Request(absTime, ds);
+			container.AbsTime = absTime;
 			Assert.IsInstanceOf<ResponseSuccess>(response);
 			container.CommitSimulationStep(absTime, response.SimulationInterval);
 			absTime += response.SimulationInterval;
 
 			//gbx.Gear = 1;
 			var cnt = 0;
-			while (!(response is ResponseCycleFinished) && container.Distance < 17000) {
+			while (!(response is ResponseCycleFinished) && container.MileageCounter.Distance < 17000) {
 				Log.Info("Test New Request absTime: {0}, ds: {1}", absTime, ds);
 				try {
 					response = cyclePort.Request(absTime, ds);
@@ -212,9 +215,9 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 						container.CommitSimulationStep(absTime, r.SimulationInterval);
 						absTime += r.SimulationInterval;
 
-						ds = container.VehicleSpeed.IsEqual(0)
+						ds = container.VehicleInfo.VehicleSpeed.IsEqual(0)
 							? Constants.SimulationSettings.DriveOffDistance
-							: Constants.SimulationSettings.TargetTimeInterval * container.VehicleSpeed;
+							: Constants.SimulationSettings.TargetTimeInterval * container.VehicleInfo.VehicleSpeed;
 
 						if (cnt++ % 100 == 0) {
 							modData.Finish(VectoRun.Status.Success);
@@ -229,10 +232,6 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 		[TestCase, Category("LongRunning")]
 		public void Test_FullPowertrain_LowSpeed()
 		{
-			var fileWriter = new FileOutputWriter("Coach_FullPowertrain_LowSpeed");
-			var modData = new ModalDataContainer("Coach_FullPowertrain_LowSpeed", new[] { FuelData.Diesel }, fileWriter);
-			var container = new VehicleContainer(ExecutionMode.Engineering, modData);
-
 			var gearboxData = CreateGearboxData();
 			var engineData = MockSimulationDataFactory.CreateEngineDataFromFile(EngineFile, gearboxData.Gears.Count);
 			var cycleData = DrivingCycleDataReader.ReadFromFile(CycleFile, CycleType.DistanceBased, false);
@@ -242,13 +241,18 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 			var driverData = CreateDriverData(AccelerationFile);
 
 			var runData = new VectoRunData() {
+				JobName = "Coach_FullPowertrain_LowSpeed",
 				EngineData = engineData,
 				VehicleData = vehicleData,
 				AxleGearData = axleGearData,
 				GearboxData = gearboxData,
-				AirdragData = airDragData
+				AirdragData = airDragData, 
+				ElectricMachinesData = new List<Tuple<PowertrainPosition, ElectricMotorData>>()
 			};
-			container.RunData = runData;
+			var fileWriter = new FileOutputWriter("Coach_FullPowertrain_LowSpeed");
+			var modData = new ModalDataContainer(runData, fileWriter, null);
+			var container = new VehicleContainer(ExecutionMode.Engineering, modData);
+            container.RunData = runData;
 
 			var cycle = new DistanceBasedDrivingCycle(container, cycleData);
 			var cyclePort = cycle.OutPort();
@@ -266,6 +270,7 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 			//container.Gear = 0;
 			var absTime = 0.SI<Second>();
 			var ds = Constants.SimulationSettings.DriveOffDistance;
+			container.AbsTime = absTime;
 			var response = cyclePort.Request(absTime, ds);
 			Assert.IsInstanceOf<ResponseSuccess>(response);
 			container.CommitSimulationStep(absTime, response.SimulationInterval);
@@ -273,7 +278,7 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 
 			//container.Gear = 1;
 			var cnt = 0;
-			while (!(response is ResponseCycleFinished) && container.Distance < 17000) {
+			while (!(response is ResponseCycleFinished) && container.MileageCounter.Distance < 17000) {
 				Log.Info("Test New Request absTime: {0}, ds: {1}", absTime, ds);
 				try {
 					response = cyclePort.Request(absTime, ds);
@@ -291,9 +296,9 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 						container.CommitSimulationStep(absTime, r.SimulationInterval);
 						absTime += r.SimulationInterval;
 
-						ds = container.VehicleSpeed.IsEqual(0)
+						ds = container.VehicleInfo.VehicleSpeed.IsEqual(0)
 							? Constants.SimulationSettings.DriveOffDistance
-							: Constants.SimulationSettings.TargetTimeInterval * container.VehicleSpeed;
+							: Constants.SimulationSettings.TargetTimeInterval * container.VehicleInfo.VehicleSpeed;
 
 						if (cnt++ % 100 == 0) {
 							modData.Finish(VectoRun.Status.Success);

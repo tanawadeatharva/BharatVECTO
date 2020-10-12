@@ -43,8 +43,7 @@ using TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox;
 namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 {
 	public abstract class AbstractGearbox<TStateType> :
-		StatefulProviderComponent<TStateType, ITnOutPort, ITnInPort, ITnOutPort>, ITnOutPort, ITnInPort, IGearbox,
-		IClutchInfo
+		StatefulProviderComponent<TStateType, ITnOutPort, ITnInPort, ITnOutPort>, ITnOutPort, ITnInPort, IGearbox
 		where TStateType : GearboxState, new()
 	{
 		/// <summary>
@@ -109,7 +108,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					PreviousState.InertiaTorqueLossOut) / ratio * PreviousState.InAngularVelocity;
 		}
 
-		public Second LastShift { get; protected set; }
+		public virtual Second LastShift { get; protected set; }
+
+		public abstract Second LastUpshift { get; protected internal set; }
+
+		public abstract Second LastDownshift { get; protected internal set; }
 
 		public GearData GetGearData(uint gear)
 		{
@@ -130,7 +133,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		#endregion
 
-		public abstract bool ClutchClosed(Second absTime);
+		public abstract bool GearEngaged(Second absTime);
 
 		protected bool ConsiderShiftLosses(GearInfo nextGear, NewtonMeter torqueOut)
 		{
@@ -156,7 +159,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				ratio = ModelData.Gears[gear].TorqueConverterRatio;
 			}
 			var torqueGbxIn = outTorque / ratio;
-			var deltaClutchSpeed = (DataBus.EngineSpeed - PreviousState.OutAngularVelocity * ratio) / 2;
+			var deltaClutchSpeed = (DataBus.EngineInfo.EngineSpeed - PreviousState.OutAngularVelocity * ratio) / 2;
 			var shiftLossEnergy = torqueGbxIn * deltaClutchSpeed * ModelData.PowershiftShiftTime;
 
 			return shiftLossEnergy.Abs();
@@ -165,6 +168,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		#region Implementation of IGearboxControl
 
 		public abstract bool DisengageGearbox { get; set; }
+		public abstract void TriggerGearshift(Second absTime, Second dt);
 
 		#endregion
 	}

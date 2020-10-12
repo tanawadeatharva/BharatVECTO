@@ -30,6 +30,7 @@
 */
 
 using System.Collections.Generic;
+using System.Data;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 
@@ -39,20 +40,47 @@ namespace TUGraz.VectoCommon.InputData
 	{
 		new IVehicleEngineeringInputData Vehicle { get; }
 
-		/// <summary>
-		/// P008  Cycles
-		/// cf. VECTO Input Parameters.xlsx
-		/// </summary>
-		IList<ICycleData> Cycles { get; }
+
+		IHybridStrategyParameters HybridStrategyParameters { get; }
+
+        /// <summary>
+        /// P008  Cycles
+        /// cf. VECTO Input Parameters.xlsx
+        /// </summary>
+        IList<ICycleData> Cycles { get; }
 
 		/// <summary>
 		/// P001
 		/// cf. VECTO Input Parameters.xlsx
 		/// </summary>
-		bool EngineOnlyMode { get; }
+		VectoSimulationJobType JobType { get; }
 
 		IEngineEngineeringInputData EngineOnly { get; }
 
+	}
+
+	public enum VectoSimulationJobType
+	{
+		ConventionalVehicle,
+		ParallelHybridVehicle,
+		BatteryElectricVehicle,
+		EngineOnlySimulation,
+	}
+
+	public interface IHybridStrategyParameters
+	{
+		double EquivalenceFactor { get; }
+
+		double MinSoC { get; }
+
+		double MaxSoC { get; }
+
+		double TargetSoC { get; }
+
+		string Source { get;  }
+		Second MinimumICEOnTime { get; }
+		Second AuxBufferTime { get; }
+		Second AuxBufferChargeTime { get; }
 	}
 
 	public interface IVehicleEngineeringInputData : IVehicleDeclarationInputData
@@ -80,6 +108,12 @@ namespace TUGraz.VectoCommon.InputData
 		new IVehicleComponentsEngineering Components { get; }
 
 		new IAdvancedDriverAssistantSystemsEngineering ADAS { get; }
+		double InitialSOC { get; }
+
+		Watt MaxDrivetrainPower { get; }
+
+
+		VectoSimulationJobType VehicleType { get; }
 	}
 
 	public interface IAdvancedDriverAssistantSystemsEngineering : IAdvancedDriverAssistantSystemDeclarationInputData
@@ -114,6 +148,12 @@ namespace TUGraz.VectoCommon.InputData
 		/// cf. VECTO Input Parameters.xlsx
 		/// </summary>
 		IAxlesEngineeringInputData AxleWheels { get; }
+
+		//IBusAuxiliariesEngineeringData BusAuxiliaries { get; }
+
+		IElectricStorageEngineeringInputData ElectricStorage { get; }
+
+		IElectricMachinesEngineeringInputData ElectricMachines { get; }
 	}
 
 	public interface IAxlesEngineeringInputData
@@ -365,6 +405,29 @@ namespace TUGraz.VectoCommon.InputData
 		string AuxiliaryVersion { get; }
 
 		string AdvancedAuxiliaryFilePath { get; }
+		Watt ElectricAuxPower { get; }
+	}
+
+	public interface IElectricMotorEngineeringInputData : IElectricMotorDeclarationInputData
+	{
+	}
+
+	public interface IElectricMachinesEngineeringInputData : IElectricMachinesDeclarationInputData
+	{
+		new IList<ElectricMachineEntry<IElectricMotorEngineeringInputData>> Entries { get; }
+	}
+
+	public interface IElectricStorageEngineeringInputData : IElectricStorageDeclarationInputData
+	{
+
+	}
+
+	public interface IBatteryPackEngineeringInputData : IBatteryPackDeclarationInputData
+	{
+	}
+
+	public interface ISuperCapEngineeringInputData : ISuperCapDeclarationInputData
+	{
 	}
 
 	public interface IDriverModelData { }

@@ -9,7 +9,7 @@
 
 
 
-The [Gearbox File (.vgbx)](#gearbox-file-.vgbx) defines alls gearbox-related input parameters like gear ratios and transmission loss maps. See [Gear Shift Model](#gearbox-gear-shift-model) for details.
+The [Gearbox File (.vgbx)](#gearbox-file-.vgbx) defines all gearbox-related input parameters like gear ratios and transmission loss maps. See [Gear Shift Model](#gearbox-gear-shift-model) for details.
 
 
 ###Relative File Paths

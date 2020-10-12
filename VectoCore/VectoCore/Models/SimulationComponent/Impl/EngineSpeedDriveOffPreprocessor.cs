@@ -22,13 +22,13 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl {
 
 		public void RunPreprocessing()
 		{
-			var vehicle = Container.Vehicle as Vehicle;
+			var vehicle = Container.VehicleInfo as Vehicle;
 
 			if (vehicle == null) {
 				throw new VectoException("no vehicle found...");
 			}
 
-			var gearbox = Container.Gearbox as Gearbox;
+			var gearbox = Container.GearboxInfo as Gearbox;
 			if (gearbox == null) {
 				throw new VectoException("no gearbox found...");
 			}
@@ -42,7 +42,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl {
 				gearbox.Gear = gearData.Key;
 				gearbox.Disengaged = false;
 				var response = vehicle.Initialize(Data.GearshiftParameters.StartVelocity, VectoMath.InclinationToAngle(0));
-				engineSpeeds[gearData.Key] = response.EngineSpeed;
+				engineSpeeds[gearData.Key] = response.Engine.EngineSpeed;
 			}
 		}
 

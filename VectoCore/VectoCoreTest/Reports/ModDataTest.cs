@@ -51,7 +51,6 @@ using System.IO;
 using Ninject;
 using TUGraz.VectoCore.InputData.FileIO.XML;
 using TUGraz.VectoCore.InputData.Reader.ComponentData;
-using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Tests.Models.Simulation;
 
 namespace TUGraz.VectoCore.Tests.Reports
@@ -77,7 +76,10 @@ namespace TUGraz.VectoCore.Tests.Reports
 			TestCase(10, 0.1)]
 		public void SumDataTest(double initialSpeedVal, double accVal)
 		{
-			var modData = new ModalDataContainer("sumDataTest", new[] { FuelData.Diesel}, null, false);
+			var rundata = new VectoRunData() {
+				JobName = "sumDataTest"
+            }; 
+			var modData = new ModalDataContainer(rundata, null, null);
 			var initalSpeed = initialSpeedVal.KMPHtoMeterPerSecond();
 			var speed = initalSpeed;
 			var dist = 0.SI<Meter>();
@@ -314,12 +316,12 @@ namespace TUGraz.VectoCore.Tests.Reports
 			jobContainer.AddRuns(runsFactory);
 			var modData = new List<Tuple<ModalResults, double>>();
 			foreach (var run in jobContainer.Runs) {
-				var distanceCycle = ((VehicleContainer)run.Run.GetContainer()).DrivingCycle as DistanceBasedDrivingCycle;
+				var distanceCycle = ((VehicleContainer)run.Run.GetContainer()).DrivingCycleInfo as DistanceBasedDrivingCycle;
 				if (distanceCycle != null) {
 					modData.Add(Tuple.Create(((ModalDataContainer)run.Run.GetContainer().ModalData).Data,
 						distanceCycle.Data.Entries.Last().Distance.Value()));
 				}
-				var cycle = ((VehicleContainer)run.Run.GetContainer()).DrivingCycle as PowertrainDrivingCycle;
+				var cycle = ((VehicleContainer)run.Run.GetContainer()).DrivingCycleInfo as PowertrainDrivingCycle;
 				if (cycle != null)
 					modData.Add(Tuple.Create(((ModalDataContainer)run.Run.GetContainer().ModalData).Data,
 						cycle.Data.Entries.Last().Time.Value()));
@@ -347,7 +349,7 @@ namespace TUGraz.VectoCore.Tests.Reports
 					.Components.EngineInputData.EngineModes.First().Fuels.First().FuelConsumptionMap);
 			}
 			var disatanceBased =
-				((VehicleContainer)(jobContainer.Runs.First().Run.GetContainer())).DrivingCycle is DistanceBasedDrivingCycle;
+				((VehicleContainer)(jobContainer.Runs.First().Run.GetContainer())).DrivingCycleInfo is DistanceBasedDrivingCycle;
 			foreach (var modalResults in modData) {
 				AssertModDataIntegrity(modalResults.Item1, auxKeys, modalResults.Item2,fcMap, disatanceBased);
 			}
@@ -505,7 +507,7 @@ namespace TUGraz.VectoCore.Tests.Reports
 				var pVehInertia = distanceBased ? (Watt)row[ModalResultField.P_veh_inertia.GetName()] : 0.SI<Watt>();
 				var pTrac = distanceBased ? (Watt)row[ModalResultField.P_trac.GetName()] : pWheelIn;
 
-				// P_﻿eng_out = P﻿_wheel + P_loss﻿gearbox + P_loss﻿axle + P_loss﻿retarder + P_a﻿gbx + Pa_﻿eng + P_aux - P_brake_loss
+				// P_﻿eng_out = P﻿_wheel + P_loss﻿gearbox + P_loss﻿axle + P_loss﻿retarder + P_a﻿gbx + Pa_﻿eng + P_aux_mech - P_brake_loss
 				var pEngOut = (Watt)row[ModalResultField.P_ice_out.GetName()];
 				var pLossGbx = (Watt)row[ModalResultField.P_gbx_loss.GetName()];
 				var pGbxIn = (Watt)row[ModalResultField.P_gbx_in.GetName()];
@@ -522,7 +524,7 @@ namespace TUGraz.VectoCore.Tests.Reports
 					: (Watt)row[ModalResultField.P_gbx_shift_loss.GetName()];
 				var pEngInertia = (Watt)row[ModalResultField.P_ice_inertia.GetName()];
 				var pAux =
-					(Watt)(row[ModalResultField.P_aux.GetName()] != DBNull.Value ? row[ModalResultField.P_aux.GetName()] : 0.SI<Watt>());
+					(Watt)(row[ModalResultField.P_aux_mech.GetName()] != DBNull.Value ? row[ModalResultField.P_aux_mech.GetName()] : 0.SI<Watt>());
 				var pBrakeLoss = distanceBased ? (Watt)row[ModalResultField.P_brake_loss.GetName()] : 0.SI<Watt>();
 				var pBrakeIn =  distanceBased ? (Watt)row[ModalResultField.P_brake_in.GetName()] : pWheelIn;
 
@@ -617,7 +619,7 @@ namespace TUGraz.VectoCore.Tests.Reports
 			var modData = new List<Tuple<ModalResults, Meter>>();
 			foreach (var run in jobContainer.Runs) {
 				modData.Add(Tuple.Create(((ModalDataContainer)run.Run.GetContainer().ModalData).Data,
-					((DistanceBasedDrivingCycle)((VehicleContainer)run.Run.GetContainer()).DrivingCycle).Data.Entries.Last()
+					((DistanceBasedDrivingCycle)((VehicleContainer)run.Run.GetContainer()).DrivingCycleInfo).Data.Entries.Last()
 						.Distance));
 			}
 			var auxKeys =
@@ -677,7 +679,7 @@ namespace TUGraz.VectoCore.Tests.Reports
 				var pVehInertia = (Watt)row[ModalResultField.P_veh_inertia.GetName()];
 				var pTrac = (Watt)row[ModalResultField.P_trac.GetName()];
 
-				// Pe_﻿eng = P﻿_wheel + P_loss﻿gearbox + P_loss﻿axle + P_loss﻿retarder + P_a﻿gbx + Pa_﻿eng + P_aux - P_brake_loss
+				// Pe_﻿eng = P﻿_wheel + P_loss﻿gearbox + P_loss﻿axle + P_loss﻿retarder + P_a﻿gbx + Pa_﻿eng + P_aux_mech - P_brake_loss
 				var pEngOut = (Watt)row[ModalResultField.P_ice_out.GetName()];
 				var pLossGbx = (Watt)row[ModalResultField.P_gbx_loss.GetName()];
 				var pGbxIn = (Watt)row[ModalResultField.P_gbx_in.GetName()];
@@ -694,7 +696,7 @@ namespace TUGraz.VectoCore.Tests.Reports
 					: (Watt)row[ModalResultField.P_gbx_shift_loss.GetName()];
 				var pEngInertia = (Watt)row[ModalResultField.P_ice_inertia.GetName()];
 				var pAux =
-					(Watt)(row[ModalResultField.P_aux.GetName()] != DBNull.Value ? row[ModalResultField.P_aux.GetName()] : 0.SI<Watt>());
+					(Watt)(row[ModalResultField.P_aux_mech.GetName()] != DBNull.Value ? row[ModalResultField.P_aux_mech.GetName()] : 0.SI<Watt>());
 				var pBrakeLoss = (Watt)row[ModalResultField.P_brake_loss.GetName()];
 				var pBrakeIn = (Watt)row[ModalResultField.P_brake_in.GetName()];
 				var pTcLoss = (Watt)row[ModalResultField.P_TC_loss.GetName()];

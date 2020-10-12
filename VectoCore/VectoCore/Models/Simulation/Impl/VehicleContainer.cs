@@ -34,6 +34,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using TUGraz.VectoCommon.Exceptions;
+using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.InputData.Reader.Impl;
@@ -49,26 +50,30 @@ using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.Simulation.Impl
 {
-	public class VehicleContainer : LoggingObject, IVehicleContainer
+	public class VehicleContainer : LoggingObject, IVehicleContainer, IPowertainInfo
 	{
 		private List<Tuple<int, VectoSimulationComponent>> _components =
 			new List<Tuple<int, VectoSimulationComponent>>();
 
-		internal IEngineInfo Engine;
-		internal IEngineControl EngineCtl;
-		internal IGearboxInfo Gearbox;
-		internal IGearboxControl GearboxCtl;
-		internal IAxlegearInfo Axlegear;
-		internal IVehicleInfo Vehicle;
-		internal IBrakes Brakes;
-		internal IWheelsInfo Wheels;
-		internal IDriverInfo Driver;
+		public virtual IEngineInfo EngineInfo { get; protected internal set; }
+		public virtual IEngineControl EngineCtl { get; protected set; }
+		public virtual IGearboxInfo GearboxInfo { get; protected set; }
+		public virtual IGearboxControl GearboxCtl { get; protected set; }
+		public virtual IAxlegearInfo AxlegearInfo { get; protected set; }
+		public virtual IVehicleInfo VehicleInfo { get; protected set; }
+		public virtual IBrakes Brakes { get; protected set; }
+		public virtual IWheelsInfo WheelsInfo { get; protected set; }
+		public virtual IDriverInfo DriverInfo { get; protected set; }
+		public virtual IHybridController HybridController { get; protected set; }
 
-		internal IMileageCounter MilageCounter;
+		public virtual IMileageCounter MileageCounter { get; protected set; }
 
-		internal IClutchInfo Clutch;
+		public virtual IClutchInfo ClutchInfo { get; protected set; }
 
-		internal IDrivingCycleInfo DrivingCycle;
+		public virtual IDrivingCycleInfo DrivingCycleInfo { get; protected set; }
+
+		public IRESSInfo BatteryInfo { get; protected set; }
+
 
 		internal ISimulationOutPort Cycle;
 
@@ -78,201 +83,10 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 		internal readonly IList<ISimulationPreprocessor> Preprocessors = new List<ISimulationPreprocessor>();
 
-		#region IGearCockpit
+		internal readonly Dictionary<PowertrainPosition, IElectricMotorInfo> ElectricMotors =
+			new Dictionary<PowertrainPosition, IElectricMotorInfo>();
 
-		public GearboxType GearboxType
-		{
-			get { return Gearbox == null ? GearboxType.MT : Gearbox.GearboxType; }
-		}
-
-		public uint Gear
-		{
-			[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design",
-				"CA1065:DoNotRaiseExceptionsInUnexpectedLocations")]
-			get {
-				if (Gearbox == null) {
-					return 0; // throw new VectoException("no gearbox available!");
-				}
-				return Gearbox.Gear;
-			}
-		}
-
-		public bool TCLocked
-		{
-			get {
-				if (Gearbox == null) {
-					return true;
-				}
-				return  Gearbox.TCLocked;
-			}
-		}
-
-		public MeterPerSecond StartSpeed
-		{
-			[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design",
-				"CA1065:DoNotRaiseExceptionsInUnexpectedLocations")]
-			get {
-				if (Gearbox == null) {
-					throw new VectoException("No Gearbox available. StartSpeed unkown");
-				}
-				return Gearbox.StartSpeed;
-			}
-		}
-
-		public MeterPerSquareSecond StartAcceleration
-		{
-			[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design",
-				"CA1065:DoNotRaiseExceptionsInUnexpectedLocations")]
-			get {
-				if (Gearbox == null) {
-					throw new VectoException("No Gearbox available. StartAcceleration unknown.");
-				}
-				return Gearbox.StartAcceleration;
-			}
-		}
-
-		public Watt GearboxLoss()
-		{
-			return Gearbox.GearboxLoss();
-		}
-
-		public Second LastShift
-		{
-			get { return Gearbox.LastShift; }
-		}
-
-		public GearData GetGearData(uint gear)
-		{
-			return Gearbox.GetGearData(gear);
-		}
-
-		public GearInfo NextGear
-		{
-			get { return Gearbox.NextGear; }
-		}
-
-		public Second TractionInterruption
-		{
-			get { return Gearbox.TractionInterruption; }
-		}
-
-		public uint NumGears
-		{
-			get { return Gearbox.NumGears; }
-		}
-
-		#endregion
-
-		#region IEngineCockpit
-
-		public PerSecond EngineSpeed
-		{
-			[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design",
-				"CA1065:DoNotRaiseExceptionsInUnexpectedLocations")]
-			get {
-				if (Engine == null) {
-					throw new VectoException("no engine available!");
-				}
-				return Engine.EngineSpeed;
-			}
-		}
-
-		public NewtonMeter EngineTorque
-		{
-			get { return Engine.EngineTorque; }
-		}
-
-		public Watt EngineStationaryFullPower(PerSecond angularSpeed)
-		{
-			return Engine.EngineStationaryFullPower(angularSpeed);
-		}
-
-		public Watt EngineDynamicFullLoadPower(PerSecond avgEngineSpeed, Second dt)
-		{
-			return Engine.EngineDynamicFullLoadPower(avgEngineSpeed, dt);
-		}
-
-		public Watt EngineDragPower(PerSecond angularSpeed)
-		{
-			return Engine.EngineDragPower(angularSpeed);
-		}
-
-		public Watt EngineAuxDemand(PerSecond avgEngineSpeed, Second dt)
-		{
-			return Engine.EngineAuxDemand(avgEngineSpeed, dt);
-		}
-
-		public PerSecond EngineIdleSpeed
-		{
-			get { return Engine.EngineIdleSpeed; }
-		}
-
-		public PerSecond EngineRatedSpeed
-		{
-			get { return Engine.EngineRatedSpeed; }
-		}
-
-		public PerSecond EngineN95hSpeed
-		{
-			get { return Engine.EngineN95hSpeed; }
-		}
-
-		public PerSecond EngineN80hSpeed
-		{
-			get { return Engine.EngineN80hSpeed; }
-		}
-
-		#endregion
-
-		#region IVehicleCockpit
-
-		public MeterPerSecond VehicleSpeed
-		{
-			get { return Vehicle != null ? Vehicle.VehicleSpeed : 0.SI<MeterPerSecond>(); }
-		}
-
-		public Kilogram VehicleMass
-		{
-			get { return Vehicle != null ? Vehicle.VehicleMass : 0.SI<Kilogram>(); }
-		}
-
-		public Kilogram VehicleLoading
-		{
-			get { return Vehicle != null ? Vehicle.VehicleLoading : 0.SI<Kilogram>(); }
-		}
-
-		public Kilogram TotalMass
-		{
-			get { return Vehicle != null ? Vehicle.TotalMass : 0.SI<Kilogram>(); }
-		}
-
-		public CubicMeter CargoVolume
-		{
-			get { return Vehicle != null ? Vehicle.CargoVolume : 0.SI<CubicMeter>(); }
-		}
-
-		public Newton AirDragResistance(MeterPerSecond previousVelocity, MeterPerSecond nextVelocity)
-		{
-			return Vehicle.AirDragResistance(previousVelocity, nextVelocity);
-		}
-
-		public Newton RollingResistance(Radian gradient)
-		{
-			return Vehicle.RollingResistance(gradient);
-		}
-
-		public Newton SlopeResistance(Radian gradient)
-		{
-			return Vehicle.SlopeResistance(gradient);
-		}
-
-		public MeterPerSecond MaxVehicleSpeed
-		{
-			get { return Vehicle.MaxVehicleSpeed; }
-		}
-
-		#endregion
-
+		
 		public VehicleContainer(ExecutionMode executionMode, IModalDataContainer modData = null,
 			WriteSumData writeSumData = null)
 		{
@@ -283,65 +97,104 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 		#region IVehicleContainer
 
-		public IModalDataContainer ModalData
+		public virtual IModalDataContainer ModalData
 		{
 			get { return ModData; }
 		}
 
-		public ISimulationOutPort GetCycleOutPort()
+		public virtual ISimulationOutPort GetCycleOutPort()
 		{
 			return Cycle;
 		}
 
 
 		public virtual Second AbsTime { get; set; }
+		public IElectricMotorInfo ElectricMotorInfo(PowertrainPosition pos)
+		{
+			return ElectricMotors[pos];
+		}
 
-		public ITorqueConverterControl TorqueConverter { get; private set; }
 
-		public void AddComponent(VectoSimulationComponent component)
+		public virtual ITorqueConverterControl TorqueConverterCtl { get; private set; }
+
+		public IPowertainInfo PowertrainInfo
+		{
+			get { return this; }
+		}
+
+		public IHybridControllerInfo HybridControllerInfo
+		{
+			get { return HybridController; }
+		}
+
+		public IHybridControllerCtl HybridControllerCtl
+		{
+			get { return HybridController; }
+		}
+
+		public virtual void AddComponent(VectoSimulationComponent component)
 		{
 			var commitPriority = 0;
-
+			var ignoreComponent = false;
 			component.Switch()
 				.If<IEngineInfo>(c => {
-					Engine = c;
+					EngineInfo = c;
 					commitPriority = 2;
+					HasCombustionEngine = true;
 				})
-				.If<IEngineControl>(c => {
-						EngineCtl = c;
-					})
-				.If<IDriverInfo>(c => Driver = c)
+				.If<IEngineControl>(c => { EngineCtl = c; })
+				.If<IDriverInfo>(c => DriverInfo = c)
 				.If<IGearboxInfo>(c => {
-					Gearbox = c;
+					GearboxInfo = c;
 					commitPriority = 4;
+					HasGearbox = true;
 				})
 				.If<IGearboxControl>(c => GearboxCtl = c)
-				.If<ITorqueConverterControl>(c => TorqueConverter = c)
-				.If<IAxlegearInfo>(c => Axlegear = c)
-				.If<IWheelsInfo>(c => Wheels = c)
+				.If<ITorqueConverterControl>(c => TorqueConverterCtl = c)
+				.If<IAxlegearInfo>(c => AxlegearInfo = c)
+				.If<IWheelsInfo>(c => WheelsInfo = c)
 				.If<IVehicleInfo>(c => {
-					Vehicle = c;
+					VehicleInfo = c;
 					commitPriority = 5;
 				})
 				.If<ISimulationOutPort>(c => Cycle = c)
-				.If<IMileageCounter>(c => MilageCounter = c)
+				.If<IMileageCounter>(c => MileageCounter = c)
 				.If<IBrakes>(c => Brakes = c)
-				.If<IClutchInfo>(c => Clutch = c)
+				.If<IClutchInfo>(c => ClutchInfo = c)
 				.If<IDrivingCycleInfo>(c => {
-					DrivingCycle = c;
+					DrivingCycleInfo = c;
 					commitPriority = 6;
 				})
 				.If<PTOCycleController>(c => { commitPriority = 99; })
-				.If<VTPCycle>(_ => { commitPriority = 0; });
+				.If<VTPCycle>(_ => { commitPriority = 0; })
+				.If<IElectricMotorInfo>(c => {
+					if (c.Position == PowertrainPosition.HybridPositionNotSet) {
+						ignoreComponent = true;
+						return;
+					}
+					if (ElectricMotors.ContainsKey(c.Position)) {
+						throw new VectoException("There is already an electric machine at position {0}",
+							c.Position);
+					}
 
+					ElectricMotors[c.Position] = c;
+					HasElectricMotor = true;
+				})
+				.If<IHybridController>(c => { HybridController = c; })
+				.If<IRESSInfo>(c => BatteryInfo = c);
+
+			if (ignoreComponent) {
+				return;
+			}
 			_components.Add(Tuple.Create(commitPriority, component));
 			_components = _components.OrderBy(x => x.Item1).Reverse().ToList();
 		}
 
-		public void CommitSimulationStep(Second time, Second simulationInterval)
+
+		public virtual void CommitSimulationStep(Second time, Second simulationInterval)
 		{
 			Log.Info("VehicleContainer committing simulation. time: {0}, dist: {1}, speed: {2}", time,
-				Distance, VehicleSpeed);
+				MileageCounter.Distance, VehicleInfo?.VehicleSpeed ?? 0.KMPHtoMeterPerSecond());
 
 
 			foreach (var component in _components) {
@@ -349,14 +202,14 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			}
 
 			if (ModData != null) {
-				ModData[ModalResultField.drivingBehavior] = DriverBehavior;
+				ModData[ModalResultField.drivingBehavior] = DriverInfo.DriverBehavior;
 				ModData[ModalResultField.time] = time + simulationInterval / 2;
 				ModData[ModalResultField.simulationInterval] = simulationInterval;
 				ModData.CommitSimulationStep();
 			}
 		}
 
-		public void FinishSimulationRun(Exception e = null)
+		public virtual void FinishSimulationRun(Exception e = null)
 		{
 			Log.Info("VehicleContainer finishing simulation.");
 			ModData?.Finish(RunStatus, e);
@@ -364,31 +217,25 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			WriteSumData(ModData);
 
 			ModData?.FinishSimulation();
-			DrivingCycle?.FinishSimulation();
+			DrivingCycleInfo?.FinishSimulation();
 		}
 
-		
-		public void FinishSimulation()
-		{
-			throw new NotImplementedException();
-		}
-
-		public IEnumerable<ISimulationPreprocessor> GetPreprocessingRuns
+		public virtual IEnumerable<ISimulationPreprocessor> GetPreprocessingRuns
 		{
 			get { return new ReadOnlyCollection<ISimulationPreprocessor>(Preprocessors); }
 		}
 
-		public void AddPreprocessor(ISimulationPreprocessor simulationPreprocessor)
+		public virtual void AddPreprocessor(ISimulationPreprocessor simulationPreprocessor)
 		{
 			Preprocessors.Add(simulationPreprocessor);
 		}
 
-		public void StartSimulationRun()
+		public virtual void StartSimulationRun()
 		{
 			ModData?.Reset();
 		}
 
-		public VectoRun.Status RunStatus { get; set; }
+		public virtual VectoRun.Status RunStatus { get; set; }
 
 		#endregion
 
@@ -397,138 +244,65 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			return new ReadOnlyCollection<VectoSimulationComponent>(_components.Select(x => x.Item2).ToList());
 		}
 
-		public Meter Distance
-		{
-			get {
-				if (RunData == null || (RunData.SimulationType & SimulationType.DistanceCycle) == 0 ) {
-					return 0.SI<Meter>();
-				}
-				if (MilageCounter != null) {
-					return MilageCounter.Distance;
-				}
+		public virtual bool HasElectricMotor { get; private set; }
 
-				Log.Warn("No MileageCounter in VehicleContainer. Distance cannot be measured.");
-				return 0.SI<Meter>();
-			}
+		public PowertrainPosition[] ElectricMotorPositions
+		{
+			get { return ElectricMotors.Keys.ToArray(); }
 		}
 
-		public IReadOnlyList<DrivingCycleData.DrivingCycleEntry> LookAhead(Meter lookaheadDistance)
+		public virtual bool HasCombustionEngine { get; private set; }
+
+		public virtual bool HasGearbox { get; private set; }
+
+		
+		public virtual VectoRunData RunData { get; set; }
+		public virtual ExecutionMode ExecutionMode { get; }
+
+
+		
+	}
+
+	public class ExemptedRunContainer : VehicleContainer
+	{
+		private IMileageCounter _mileageCounter;
+		private IVehicleInfo _vehicleInfo;
+
+		private IGearboxInfo _gearboxInfo;
+
+		public ExemptedRunContainer(
+			ExecutionMode executionMode, IModalDataContainer modData = null, WriteSumData writeSumData = null) : base(
+			executionMode, modData, writeSumData)
 		{
-			return DrivingCycle.LookAhead(lookaheadDistance);
+			_mileageCounter = new ZeroMileageCounter(this);
+			_vehicleInfo = new DummyVehicleInfo(this);
+			_gearboxInfo = new EngineOnlyGearboxInfo(this);
 		}
 
-		public IReadOnlyList<DrivingCycleData.DrivingCycleEntry> LookAhead(Second time)
+		#region Overrides of VehicleContainer
+
+		public override IMileageCounter MileageCounter
 		{
-			return DrivingCycle.LookAhead(time);
-		}
-
-
-		public Watt BrakePower
-		{
-			get { return Brakes.BrakePower; }
-			set { Brakes.BrakePower = value; }
-		}
-
-		public bool ClutchClosed(Second absTime)
-		{
-			if (Clutch == null) {
-				Log.Warn("No Clutch in VehicleContainer. ClutchClosed set to constant true!");
-				return true;
-			}
-			return Clutch.ClutchClosed(absTime);
-		}
-
-		public bool VehicleStopped
-		{
-			get { return Vehicle.VehicleStopped; }
-		}
-
-		public DrivingBehavior DriverBehavior
-		{
-			get { return Driver?.DriverBehavior ?? DrivingBehavior.Driving; }
-		}
-
-		public DrivingAction DrivingAction
-		{
-			get { return Driver?.DrivingAction ?? DrivingAction.Accelerate; }
-		}
-
-		public MeterPerSquareSecond DriverAcceleration
-		{
-			get { return Driver != null ? Driver.DriverAcceleration : 0.SI<MeterPerSquareSecond>(); }
-		}
-
-		public Radian RoadGradient
-		{
-			get { return DrivingCycle.RoadGradient; }
-		}
-
-		public SpeedChangeEntry LastTargetspeedChange
-		{
-			get { return DrivingCycle.LastTargetspeedChange; }
-		}
-
-		public Meter CycleStartDistance
-		{
-			get { return DrivingCycle == null ? 0.SI<Meter>() : DrivingCycle.CycleStartDistance; }
-		}
-
-		public VectoRunData RunData { get; set; }
-		public ExecutionMode ExecutionMode { get; }
-
-
-
-		public CycleData CycleData
-		{
-			get { return DrivingCycle.CycleData; }
-		}
-
-		public bool PTOActive
-		{
-			get { return DrivingCycle?.PTOActive ?? false; }
-		}
-
-		public DrivingCycleData.DrivingCycleEntry CycleLookAhead(Meter distance)
-		{
-			return DrivingCycle.CycleLookAhead(distance);
-		}
-
-		public Meter Altitude
-		{
-			get { return DrivingCycle.Altitude; }
-		}
-
-		public Watt AxlegearLoss()
-		{
-			return Axlegear.AxlegearLoss();
-		}
-
-		public Tuple<PerSecond, NewtonMeter> CurrentAxleDemand
-		{
-			get { return Axlegear.CurrentAxleDemand; }
-		}
-
-		public Kilogram ReducedMassWheels
-		{
-			get { return Wheels.ReducedMassWheels; }
-		}
-
-		#region Implementation of IEngineControl
-
-		public bool IgnitionOn
-		{
-			get { return EngineCtl.IgnitionOn; }
-			set { EngineCtl.IgnitionOn = value; }
+			get { return _mileageCounter; }
+			
 		}
 
 		#endregion
 
-		#region Implementation of IGearboxControl
+		#region Overrides of VehicleContainer
 
-		public bool DisengageGearbox
+		public override IVehicleInfo VehicleInfo
 		{
-			get { return Gearbox.DisengageGearbox; }
-			set { GearboxCtl.DisengageGearbox = value; }
+			get { return _vehicleInfo; }
+		}
+
+		#endregion
+
+		#region Overrides of VehicleContainer
+
+		public override IGearboxInfo GearboxInfo
+		{
+			get { return _gearboxInfo; }
 		}
 
 		#endregion

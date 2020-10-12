@@ -103,7 +103,7 @@ namespace TUGraz.VectoCore.OutputData.ModFilter
 					ModalResultField.P_ice_fcmap,
 					ModalResultField.P_clutch_out,
 					ModalResultField.P_clutch_loss,
-					ModalResultField.P_aux,
+					ModalResultField.P_aux_mech,
 					ModalResultField.P_ice_inertia,
 					ModalResultField.P_gbx_in,
 					ModalResultField.P_gbx_inertia,

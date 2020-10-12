@@ -41,6 +41,7 @@ using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.Models.SimulationComponent;
 using TUGraz.VectoCore.Models.SimulationComponent.Impl;
 using TUGraz.VectoCore.OutputData;
+using TUGraz.VectoCore.Tests.Integration.BatteryElectric;
 using TUGraz.VectoCore.Tests.Utils;
 using TUGraz.VectoCore.Utils;
 
@@ -80,6 +81,9 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			var clutch = new Clutch(container, engineData) { IdleController = new MockIdleController() };
 			var brakes = new Brakes(container) { BrakePower = 0.SI<Watt>() };
 			var vehicle = new MockVehicle(container) { MyVehicleSpeed = 50.KMPHtoMeterPerSecond() };
+			var engine  = new MockEngineInfo(container) {
+				EngineSpeed = 800.RPMtoRad()
+			};
 
 			var inPort = clutch.InPort();
 			var outPort = new MockTnOutPort();
@@ -92,7 +96,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 
 			driver.DriverBehavior = drivingBehavior;
 
-			clutchOutPort.Request(0.SI<Second>(), 0.SI<Second>(), torque.SI<NewtonMeter>(), angularSpeed.SI<PerSecond>());
+			clutchOutPort.Request(0.SI<Second>(), 0.SI<Second>(), torque.SI<NewtonMeter>(), angularSpeed.SI<PerSecond>(), false);
 
 			Assert.AreEqual(expectedTorque, outPort.Torque.Value(), 0.001);
 			Assert.AreEqual(expectedEngineSpeed, outPort.AngularVelocity.Value(), 0.001);
@@ -142,7 +146,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 				var tq = mass * accel * rDyn / ratio;
 				var angularVelocity = (accel * dt / rDyn * ratio).Cast<PerSecond>();
 
-				clutchOutPort.Request(0.SI<Second>(), 0.SI<Second>(), tq, angularVelocity);
+				clutchOutPort.Request(0.SI<Second>(), 0.SI<Second>(), tq, angularVelocity, false);
 
 				var row = data.NewRow();
 				row["a"] = a;
@@ -191,6 +195,11 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 		public PerSecond EngineN95hSpeed { get; set; }
 		public PerSecond EngineN80hSpeed { get; set; }
 
+		public bool EngineOn
+		{
+			get { throw new System.NotImplementedException(); }
+		}
+
 		protected override void DoWriteModalResults(Second time, Second simulationInterval, IModalDataContainer container)
 		{
 			container[ModalResultField.P_ice_fcmap] = 0.SI<Watt>();
@@ -212,11 +221,11 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			container[ModalResultField.FCFinal] = 0.SI<KilogramPerSecond>();
 		}
 
-		protected override void DoCommitSimulationStep() {}
+		protected override void DoCommitSimulationStep(Second time, Second simulationInterval) {}
 
 		#region Implementation of IEngineControl
 
-		public bool IgnitionOn { get; set; }
+		public bool CombustionEngineOn { get; set; }
 
 		#endregion
 	}

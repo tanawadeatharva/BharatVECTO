@@ -75,14 +75,14 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		private bool SpeedTooLowForEngine(uint gear, PerSecond outAngularSpeed)
 		{
-			return (outAngularSpeed * ModelData.Gears[gear].Ratio).IsSmaller(DataBus.EngineIdleSpeed);
+			return (outAngularSpeed * ModelData.Gears[gear].Ratio).IsSmaller(DataBus.EngineInfo.EngineIdleSpeed);
 		}
 
 		private bool SpeedTooHighForEngine(uint gear, PerSecond outAngularSpeed)
 		{
 			return
 				(outAngularSpeed * ModelData.Gears[gear].Ratio).IsGreaterOrEqual(VectoMath.Min(ModelData.Gears[gear].MaxSpeed,
-																				DataBus.EngineN95hSpeed));
+																				DataBus.EngineInfo.EngineN95hSpeed));
 		}
 
 		public override GearInfo NextGear
@@ -112,25 +112,25 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			return _nextGear;
 		}
 
-		public override void Disengage(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outEngineSpeed) {}
+		public override void Disengage(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity) {}
 
 		public override uint InitGear(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity)
 		{
-			if (DataBus.VehicleSpeed.IsEqual(0)) {
-				return InitStartGear(outTorque, outAngularVelocity);
+			if (DataBus.VehicleInfo.VehicleSpeed.IsEqual(0)) {
+				return InitStartGear(absTime, outTorque, outAngularVelocity);
 			}
 			for (var gear = (uint)ModelData.Gears.Count; gear > 1; gear--) {
-				var response = _gearbox.Initialize(gear, outTorque, outAngularVelocity);
+				var response = _gearbox.Initialize(absTime, gear, outTorque, outAngularVelocity);
 
 				var inAngularSpeed = outAngularVelocity * ModelData.Gears[gear].Ratio;
-				var fullLoadPower = response.EnginePowerRequest - response.DeltaFullLoad;
-				var reserve = 1 - response.EnginePowerRequest / fullLoadPower;
-				var inTorque = response.ClutchPowerRequest / inAngularSpeed;
+				var fullLoadPower = response.Engine.PowerRequest - response.DeltaFullLoad;
+				var reserve = 1 - response.Engine.PowerRequest / fullLoadPower;
+				var inTorque = response.Clutch.PowerRequest / inAngularSpeed;
 
 				// if in shift curve and torque reserve is provided: return the current gear
 				if (!IsBelowDownShiftCurve(gear, inTorque, inAngularSpeed) && !IsAboveUpShiftCurve(gear, inTorque, inAngularSpeed) &&
 					reserve >= ModelData.StartTorqueReserve) {
-					if ((inAngularSpeed - DataBus.EngineIdleSpeed) / (DataBus.EngineRatedSpeed - DataBus.EngineIdleSpeed) <
+					if ((inAngularSpeed - DataBus.EngineInfo.EngineIdleSpeed) / (DataBus.EngineInfo.EngineRatedSpeed - DataBus.EngineInfo.EngineIdleSpeed) <
 						Constants.SimulationSettings.ClutchClosingSpeedNorm && gear > 1) {
 						gear--;
 					}
@@ -150,22 +150,22 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			return 1;
 		}
 
-		private uint InitStartGear(NewtonMeter outTorque, PerSecond outAngularVelocity)
+		private uint InitStartGear(Second absTime, NewtonMeter outTorque, PerSecond outAngularVelocity)
 		{
 			for (var gear = MaxStartGear; gear > 1; gear--) {
 				var inAngularSpeed = outAngularVelocity * ModelData.Gears[gear].Ratio;
 
-				var ratedSpeed = DataBus.EngineRatedSpeed;
+				var ratedSpeed = DataBus.EngineInfo.EngineRatedSpeed;
 				if (inAngularSpeed > ratedSpeed || inAngularSpeed.IsEqual(0)) {
 					continue;
 				}
 
-				var response = _gearbox.Initialize(gear, outTorque, outAngularVelocity);
+				var response = _gearbox.Initialize(absTime, gear, outTorque, outAngularVelocity);
 
-				var fullLoadPower = response.DynamicFullLoadPower; //EnginePowerRequest - response.DeltaFullLoad;
-				var reserve = 1 - response.EnginePowerRequest / fullLoadPower;
+				var fullLoadPower = response.Engine.DynamicFullLoadPower; //EnginePowerRequest - response.DeltaFullLoad;
+				var reserve = 1 - response.Engine.PowerRequest / fullLoadPower;
 
-				if (response.EngineSpeed > DataBus.EngineIdleSpeed && reserve >= ModelData.StartTorqueReserve) {
+				if (response.Engine.EngineSpeed > DataBus.EngineInfo.EngineIdleSpeed && reserve >= ModelData.StartTorqueReserve) {
 					_nextGear = gear;
 					return gear;
 				}
@@ -174,10 +174,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			return 1;
 		}
 
-		public override bool ShiftRequired(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity, NewtonMeter inTorque, PerSecond inAngularVelocity, uint gear, Second lastShiftTime, IResponse response)
+		protected override bool DoCheckShiftRequired(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity, NewtonMeter inTorque, PerSecond inAngularVelocity, uint gear, Second lastShiftTime, IResponse response)
 		{
 			// no shift when vehicle stands
-			if (DataBus.VehicleStopped) {
+			if (DataBus.VehicleInfo.VehicleStopped) {
 				return false;
 			}
 
@@ -222,7 +222,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		protected virtual uint CheckUpshift(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity, NewtonMeter inTorque, PerSecond inAngularVelocity, uint currentGear, IResponse response)
 		{
 			// if the driver's intention is _not_ to accelerate or drive along then don't upshift
-			if (DataBus.DriverBehavior != DrivingBehavior.Accelerating && DataBus.DriverBehavior != DrivingBehavior.Driving) {
+			if (DataBus.DriverInfo.DriverBehavior != DrivingBehavior.Accelerating && DataBus.DriverInfo.DriverBehavior != DrivingBehavior.Driving) {
 				return currentGear;
 			}
 			if ((absTime - _gearbox.LastDownshift).IsSmaller(_gearbox.ModelData.UpshiftAfterDownshiftDelay)) {
@@ -269,12 +269,12 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					currentGear++;
 					var response = RequestDryRunWithGear(absTime, dt, outTorque, outAngularVelocity, currentGear);
 
-					inAngularVelocity = response.EngineSpeed; //ModelData.Gears[currentGear].Ratio * outAngularVelocity;
-					inTorque = response.ClutchPowerRequest / inAngularVelocity;
+					inAngularVelocity = response.Engine.EngineSpeed; //ModelData.Gears[currentGear].Ratio * outAngularVelocity;
+					inTorque = response.Clutch.PowerRequest / inAngularVelocity;
 
-					var maxTorque = VectoMath.Min(response.DynamicFullLoadPower / ((DataBus.EngineSpeed + response.EngineSpeed) / 2),
+					var maxTorque = VectoMath.Min(response.Engine.DynamicFullLoadPower / ((DataBus.EngineInfo.EngineSpeed + response.Engine.EngineSpeed) / 2),
 						currentGear > 1
-							? ModelData.Gears[currentGear].ShiftPolygon.InterpolateDownshift(response.EngineSpeed)
+							? ModelData.Gears[currentGear].ShiftPolygon.InterpolateDownshift(response.Engine.EngineSpeed)
 							: double.MaxValue.SI<NewtonMeter>());
 					var reserve = 1 - inTorque / maxTorque;
 
@@ -301,13 +301,13 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			var response = RequestDryRunWithGear(absTime, dt, outTorque, outAngularVelocity, tryNextGear);
 
 			var inAngularVelocity = ModelData.Gears[tryNextGear].Ratio * outAngularVelocity;
-			var inTorque = response.ClutchPowerRequest / inAngularVelocity;
+			var inTorque = response.Clutch.PowerRequest / inAngularVelocity;
 
 			// if next gear supplied enough power reserve: take it
 			// otherwise take
 			if (!IsBelowDownShiftCurve(tryNextGear, inTorque, inAngularVelocity)) {
-				var fullLoadPower = response.EnginePowerRequest - response.DeltaFullLoad;
-				var reserve = 1 - response.EnginePowerRequest / fullLoadPower;
+				var fullLoadPower = response.Engine.PowerRequest - response.DeltaFullLoad;
+				var reserve = 1 - response.Engine.PowerRequest / fullLoadPower;
 
 				if (reserve >= ModelData.TorqueReserve) {
 					currentGear = tryNextGear;

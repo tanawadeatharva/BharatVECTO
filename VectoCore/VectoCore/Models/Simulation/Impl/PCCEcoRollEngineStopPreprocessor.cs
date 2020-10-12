@@ -33,18 +33,18 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 		public void RunPreprocessing()
 		{
-			var vehicle = Container?.Vehicle as Vehicle;
+			var vehicle = Container?.VehicleInfo as Vehicle;
 
 			if (vehicle == null) {
 				throw new VectoException("no vehicle found...");
 			}
 
-			var gearbox = Container.Gearbox as Gearbox;
+			var gearbox = Container.GearboxInfo as Gearbox;
 			if (gearbox != null) {
 				RunPreprocessingAMTGearbox(gearbox, vehicle);
 				return;
 			}
-			var atGearbox = Container.Gearbox as ATGearbox;
+			var atGearbox = Container.GearboxInfo as ATGearbox;
 			if (atGearbox != null) {
 				RunPreprocessingATGearbox(atGearbox, vehicle);
 				return;
@@ -118,19 +118,19 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			var absTime = 0.SI<Second>();
 			var gradient = 0.SI<Radian>();
 			var initialResponse = vehicle.Request(absTime, simulationInterval, acceleration, gradient);
-			var delta = initialResponse.GearboxPowerRequest;
+			var delta = initialResponse.Gearbox.PowerRequest;
 
 			try {
 				gradient = SearchAlgorithm.Search(
 					gradient, delta, 0.1.SI<Radian>(),
 					getYValue: response => {
 						var r = (ResponseDryRun)response;
-						return r.GearboxPowerRequest;
+						return r.Gearbox.PowerRequest;
 					},
 					evaluateFunction: grad => { return vehicle.Request(absTime, simulationInterval, acceleration, grad, true); },
 					criterion: response => {
 						var r = (ResponseDryRun)response;
-						return r.GearboxPowerRequest.Value();
+						return r.Gearbox.PowerRequest.Value();
 					}
 				);
 			} catch (VectoSearchAbortedException) {

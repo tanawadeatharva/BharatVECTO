@@ -1044,10 +1044,54 @@ namespace TUGraz.VectoCommon.Utils
 		{
 			return Create(ampere.Val * val);
 		}
-
+		
 		public static Volt operator /(Watt watt, Ampere ampere)
 		{
 			return SIBase<Volt>.Create(watt.Value() / ampere.Value());
+		}
+
+		public static Volt operator *(Ampere i, Ohm r)
+		{
+			return SIBase<Volt>.Create(i.Value() * r.Value());
+		}
+
+		public static Volt operator *(Ohm r, Ampere i)
+		{
+			return SIBase<Volt>.Create(i.Value() * r.Value());
+		}
+
+		public static AmpereSecond operator *(Ampere i, Second t)
+		{
+			return SIBase<AmpereSecond>.Create(i.Value() * t.Value());
+		}
+
+		
+	}
+
+	public class AmpereSecond : SIBase<AmpereSecond>
+	{
+		private static readonly int[] Units = { 0, 0, 1, 1, 0, 0, 0 };
+
+		private AmpereSecond(double val) : base(val, Units) { }
+
+		public override string UnitString { get { return "As"; } }
+		public double AsAmpHour
+		{
+			get { return Val / 3600.0; }
+		}
+
+		public static Ampere operator /(AmpereSecond ampereSecond, Second t)
+		{
+			return SIBase<Ampere>.Create(ampereSecond.Value() / t.Value());
+		}
+
+		public static WattSecond operator *(AmpereSecond ampereSeconds, Volt v)
+		{
+			return SIBase<WattSecond>.Create(ampereSeconds.Val * v.Value());
+		}
+		public static Ampere operator *(AmpereSecond i, PerSecond ps)
+		{
+			return SIBase<Ampere>.Create(i.Value() * ps.Value());
 		}
 	}
 
@@ -1057,7 +1101,7 @@ namespace TUGraz.VectoCommon.Utils
 	/// </summary>
 	public class Volt : SIBase<Volt>
 	{
-		private static readonly int[] Units = { 1, 2, -2, -1, 0, 0, 0 };
+		private static readonly int[] Units = { 1, 2, -3, -1, 0, 0, 0 };
 		private Volt(double val) : base(val, Units) { }
 
 		public override string UnitString { get { return "V"; } }
@@ -1070,6 +1114,47 @@ namespace TUGraz.VectoCommon.Utils
 		public static Ampere operator /(Watt watt, Volt volt)
 		{
 			return SIBase<Ampere>.Create(watt.Value() / volt.Value());
+		}
+
+		public static Ohm operator /(Volt volt, Ampere current)
+		{
+			return SIBase<Ohm>.Create(volt.Value() / current.Value());
+		}
+
+		public static Ampere operator /(Volt volt, Ohm r)
+		{
+			return SIBase<Ampere>.Create(volt.Value() / r.Value());
+		}
+	}
+
+	public class Ohm : SIBase<Ohm>
+	{
+		private static readonly int[] Units = { 1, 2, -3, -2, 0, 0, 0 };
+
+		private Ohm(double val) : base(val, Units) { }
+
+		public override string UnitString { get { return "Ω"; } }
+	}
+
+	public class Farad : SIBase<Farad>
+	{
+		private static readonly int[] Units = { -1, -2, 4, 2, 0, 0, 0 };
+
+		private Farad(double val) : base(val, Units) {}
+
+		public override  string UnitString
+		{
+			get { return "F"; }
+		}
+
+		public static Volt operator /(AmpereSecond charge, Farad capacity)
+		{
+			return SIBase<Volt>.Create(charge.Value() / capacity.Val);
+		}
+
+		public static AmpereSecond operator *(Farad capacity, Volt v)
+		{
+			return SIBase<AmpereSecond>.Create(capacity.Val * v.Value());
 		}
 	}
 

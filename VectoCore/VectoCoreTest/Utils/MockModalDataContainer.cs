@@ -35,6 +35,7 @@ using System.Data;
 using System.Linq;
 using TUGraz.VectoCommon.BusAuxiliaries;
 using TUGraz.VectoCommon.Exceptions;
+using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Models.Declaration;
@@ -49,7 +50,9 @@ namespace TUGraz.VectoCore.Tests.Utils
 	/// </summary>
 	internal class MockModalDataContainer : IModalDataContainer
 	{
-		protected Dictionary<IFuelProperties, Dictionary<ModalResultField, DataColumn>> FuelColumns = new Dictionary<IFuelProperties, Dictionary<ModalResultField, DataColumn>>();
+		protected Dictionary<IFuelProperties, Dictionary<ModalResultField, DataColumn>> FuelColumns =
+			new Dictionary<IFuelProperties, Dictionary<ModalResultField, DataColumn>>();
+
 		private Second _duration;
 		private Meter _distance;
 
@@ -61,12 +64,14 @@ namespace TUGraz.VectoCore.Tests.Utils
 				if (ModalDataContainer.FuelConsumptionSignals.Contains(value)) {
 					continue;
 				}
+
 				var col = new DataColumn(value.GetName(), value.GetAttribute().DataType) { Caption = value.GetCaption() };
 				col.ExtendedProperties[ModalResults.ExtendedPropertyNames.Decimals] = value.GetAttribute().Decimals;
 				col.ExtendedProperties[ModalResults.ExtendedPropertyNames.OutputFactor] = value.GetAttribute().OutputFactor;
 				col.ExtendedProperties[ModalResults.ExtendedPropertyNames.ShowUnit] = value.GetAttribute().ShowUnit;
 				Data.Columns.Add(col);
 			}
+
 			CurrentRow = Data.NewRow();
 			Auxiliaries = new Dictionary<string, DataColumn>();
 
@@ -79,9 +84,12 @@ namespace TUGraz.VectoCore.Tests.Utils
 				if (FuelColumns.ContainsKey(entry)) {
 					throw new VectoException("Fuel {0} already added!", entry.FuelType.GetLabel());
 				}
+
 				FuelColumns[entry] = new Dictionary<ModalResultField, DataColumn>();
 				foreach (var fcCol in ModalDataContainer.FuelConsumptionSignals) {
-					var col = Data.Columns.Add(fuels.Count == 1 ? fcCol.GetName() : string.Format("{0}_{1}", fcCol.GetName(), entry.FuelType.GetLabel()), typeof(SI));
+					var col = Data.Columns.Add(
+						fuels.Count == 1 ? fcCol.GetName() : string.Format("{0}_{1}", fcCol.GetName(), entry.FuelType.GetLabel()),
+						typeof(SI));
 					col.ExtendedProperties[ModalResults.ExtendedPropertyNames.Decimals] =
 						fcCol.GetAttribute().Decimals;
 					col.ExtendedProperties[ModalResults.ExtendedPropertyNames.OutputFactor] =
@@ -117,6 +125,12 @@ namespace TUGraz.VectoCore.Tests.Utils
 
 				CurrentRow[FuelColumns[fuel][key]] = value;
 			}
+		}
+
+		public object this[ModalResultField key, PowertrainPosition pos]
+		{
+			get { throw new NotImplementedException(); }
+			set { throw new NotImplementedException(); }
 		}
 
 		public object this[string auxId]
@@ -246,9 +260,65 @@ namespace TUGraz.VectoCore.Tests.Utils
 			
 		}
 
+		public void AddElectricMotor(PowertrainPosition pos)
+		{
+			
+		}
+
 		public KilogramPerWattSecond VehicleLineSlope(IFuelProperties fuel)
 		{
 			return 0.SI<KilogramPerWattSecond>();
+		}
+
+		public bool HasCombustionEngine { get; set; }
+		public WattSecond TotalElectricMotorWorkDrive(PowertrainPosition emPos)
+		{
+			throw new NotImplementedException();
+		}
+
+		public WattSecond TotalElectricMotorWorkRecuperate(PowertrainPosition emPos)
+		{
+			throw new NotImplementedException();
+		}
+
+		public PerSecond ElectricMotorAverageSpeed(PowertrainPosition emPos)
+		{
+			throw new NotImplementedException();
+		}
+
+		public double ElectricMotorEfficiencyDrive(PowertrainPosition emPos)
+		{
+			throw new NotImplementedException();
+		}
+
+		public double ElectricMotorEfficiencyGenerate(PowertrainPosition emPos)
+		{
+			throw new NotImplementedException();
+		}
+
+		public WattSecond ElectricMotorOffLosses(PowertrainPosition emPos)
+		{
+			throw new NotImplementedException();
+		}
+
+		public double BatteryStartSoC()
+		{
+			throw new NotImplementedException();
+		}
+
+		public double BatteryEndSoC()
+		{
+			throw new NotImplementedException();
+		}
+
+		public WattSecond BatteryLoss()
+		{
+			throw new NotImplementedException();
+		}
+
+		public WattSecond BatteryEnergyEnd()
+		{
+			throw new NotImplementedException();
 		}
 
 		public string RunName { get; set; }

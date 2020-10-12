@@ -19,6 +19,8 @@ namespace VECTO3GUI.ViewModel.Adapter.Declaration
 		protected IVehicleViewModel ViewModel;
 		private DateTime _date;
 		private IAuxiliariesDeclarationInputData _auxiliaryInputData;
+		private IElectricStorageDeclarationInputData _electricStorage;
+		private IElectricMachinesDeclarationInputData _electricMachines;
 
 		[Inject] public IAdapterFactory AdapterFactory { set; protected get; }
 
@@ -159,6 +161,16 @@ namespace VECTO3GUI.ViewModel.Adapter.Declaration
 
 		public IAxlesDeclarationInputData AxleWheels { get { return this; } }
 		public IBusAuxiliariesDeclarationData BusAuxiliaries { get; }
+
+		public IElectricStorageDeclarationInputData ElectricStorage
+		{
+			get { return _electricStorage; }
+		}
+
+		public IElectricMachinesDeclarationInputData ElectricMachines
+		{
+			get { return _electricMachines; }
+		}
 
 		#endregion
 

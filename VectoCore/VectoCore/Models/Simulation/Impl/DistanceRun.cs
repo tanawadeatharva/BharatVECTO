@@ -47,9 +47,9 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			IterationStatistics.StartIteration();
 
 			// estimate distance to be traveled within the next TargetTimeInterval
-			var ds = Container.VehicleSpeed.IsEqual(0)
+			var ds = Container.VehicleInfo.VehicleSpeed.IsEqual(0)
 				? Constants.SimulationSettings.DriveOffDistance
-				: Constants.SimulationSettings.TargetTimeInterval * Container.VehicleSpeed;
+				: Constants.SimulationSettings.TargetTimeInterval * Container.VehicleInfo.VehicleSpeed;
 
 			var loopCount = 0;
 			IResponse response;
@@ -57,7 +57,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			do {
 				IterationStatistics.Increment(this, "Iterations");
 
-				Container.BrakePower = 0.SI<Watt>();
+				Container.Brakes.BrakePower = 0.SI<Watt>();
 				response = CyclePort.Request(AbsTime, ds);
 				response.Switch().
 					Case<ResponseSuccess>(r => { dt = r.SimulationInterval; }).
@@ -71,14 +71,19 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 						FinishedWithoutErrors = true;
 						Log.Info("========= Driving Cycle Finished");
 					}).
+					Case<ResponseBatteryEmpty>(
+							r => {
+								FinishedWithoutErrors = true;
+								Log.Info("========= REESS empty");
+							}).
 					Default(r => { throw new VectoException("DistanceRun got an unexpected response: {0}", r); });
 				if (loopCount++ > Constants.SimulationSettings.MaximumIterationCountForSimulationStep) {
 					throw new VectoSimulationException("Maximum iteration count for a single simulation interval reached! Aborting!");
 				}
 				debug.Add(new {Response = response});
-			} while (!(response is ResponseSuccess || response is ResponseCycleFinished));
+			} while (!(response is ResponseSuccess || response is ResponseCycleFinished || response is ResponseBatteryEmpty));
 
-			IterationStatistics.Increment(this, "Distance", Container.Distance.Value());
+			IterationStatistics.Increment(this, "Distance", Container.MileageCounter.Distance.Value());
 			IterationStatistics.Increment(this, "Time", AbsTime.Value());
 			IterationStatistics.FinishIteration(AbsTime);
 			response.AbsTime = AbsTime;

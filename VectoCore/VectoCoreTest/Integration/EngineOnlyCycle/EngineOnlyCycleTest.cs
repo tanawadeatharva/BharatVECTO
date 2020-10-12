@@ -32,12 +32,12 @@
 using System.IO;
 using System.Linq;
 using NUnit.Framework;
+using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.InputData.Reader.ComponentData;
 using TUGraz.VectoCore.Models.Connector.Ports.Impl;
-using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
@@ -90,7 +90,9 @@ namespace TUGraz.VectoCore.Tests.Integration.EngineOnlyCycle
 
 			var engine = new EngineOnlyCombustionEngine(vehicle, engineData);
 			engine.Connect(aux);
-
+			new EngineOnlyGearboxInfo(vehicle);
+			new ZeroMileageCounter(vehicle);
+			new DummyDriverInfo(vehicle);
 			//aux.InPort().Connect(engine.OutPort());
 			var port = engine.OutPort();
 
@@ -99,15 +101,20 @@ namespace TUGraz.VectoCore.Tests.Integration.EngineOnlyCycle
 
 			var modFile = Path.GetFileNameWithoutExtension(modalResultFile);
 
+			var runData = new VectoRunData() {
+				EngineData = engineData,
+				JobName = modFile,
+				JobType = VectoSimulationJobType.EngineOnlySimulation
+			};
+
 			//Path.GetFileNameWithoutExtension(Path.GetRandomFileName()); // + ".vmod";
 			var fileWriter = new FileOutputWriter(modFile);
-			var modData =
-				new ModalDataContainer(modFile, new[] { FuelData.Diesel }, fileWriter, true) { WriteModalResults = true };
+			var modData = new ModalDataContainer(runData, fileWriter, null) { WriteModalResults = true };
 			modData.AddAuxiliary(Constants.Auxiliaries.Cycle);
 			port.Initialize(data.Entries.First().Torque, data.Entries.First().AngularVelocity);
 			foreach (var cycleEntry in data.Entries) {
 				// ReSharper disable once UnusedVariable
-				var response = (ResponseSuccess)port.Request(absTime, dt, cycleEntry.Torque, cycleEntry.AngularVelocity);
+				var response = (ResponseSuccess)port.Request(absTime, dt, cycleEntry.Torque, cycleEntry.AngularVelocity, false);
 				foreach (var sc in vehicle.SimulationComponents()) {
 					modData[ModalResultField.time] = absTime + dt / 2;
 					sc.CommitSimulationStep(absTime, dt, modData);
@@ -140,7 +147,7 @@ namespace TUGraz.VectoCore.Tests.Integration.EngineOnlyCycle
 			var power = 2329.973.SI<Watt>();
 
 			engine.OutPort().Initialize(power / angularVelocity, angularVelocity);
-			engine.OutPort().Request(absTime, dt, power / angularVelocity, angularVelocity);
+			engine.OutPort().Request(absTime, dt, power / angularVelocity, angularVelocity, false);
 
 			foreach (var sc in vehicleContainer.SimulationComponents()) {
 				sc.CommitSimulationStep(absTime, dt, dataWriter);

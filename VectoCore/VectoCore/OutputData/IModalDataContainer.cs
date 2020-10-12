@@ -34,6 +34,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using TUGraz.VectoCommon.BusAuxiliaries;
+using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation.Data;
@@ -59,6 +60,8 @@ namespace TUGraz.VectoCore.OutputData
 
 		object this[ModalResultField key, IFuelProperties fuel] { get; set; }
 
+		object this[ModalResultField key, PowertrainPosition pos] { get; set; }
+
 		/// <summary>
 		/// Indexer for auxiliary fields of the DataWriter.
 		/// </summary>
@@ -66,8 +69,7 @@ namespace TUGraz.VectoCore.OutputData
 		/// <returns></returns>
 		object this[string auxId] { get; set; }
 
-		bool HasTorqueConverter { set; }
-
+		
 		/// <summary>
 		/// Commits the data of the current simulation step.
 		/// </summary>
@@ -119,7 +121,20 @@ namespace TUGraz.VectoCore.OutputData
 
 		KilogramPerWattSecond EngineLineCorrectionFactor(IFuelProperties fuel);
 		void CalculateAggregateValues();
+		void AddElectricMotor(PowertrainPosition pos);
 		KilogramPerWattSecond VehicleLineSlope(IFuelProperties fuel);
+		bool HasCombustionEngine { get; }
+		WattSecond TotalElectricMotorWorkDrive(PowertrainPosition emPos);
+		WattSecond TotalElectricMotorWorkRecuperate(PowertrainPosition emPos);
+		PerSecond ElectricMotorAverageSpeed(PowertrainPosition emPos);
+		double ElectricMotorEfficiencyDrive(PowertrainPosition emPos);
+		double ElectricMotorEfficiencyGenerate(PowertrainPosition emPos);
+		WattSecond ElectricMotorOffLosses(PowertrainPosition emPos);
+        double BatteryStartSoC();
+		double BatteryEndSoC();
+		WattSecond BatteryLoss();
+		WattSecond BatteryEnergyEnd();
+		
 	}
 
 	public static class ModalDataContainerExtensions
@@ -289,7 +304,7 @@ namespace TUGraz.VectoCore.OutputData
 
 		public static WattSecond WorkAuxiliaries(this IModalDataContainer data)
 		{
-			return data.TimeIntegral<WattSecond>(ModalResultField.P_aux);
+			return data.TimeIntegral<WattSecond>(ModalResultField.P_aux_mech);
 		}
 
 		public static WattSecond WorkRoadGradientResistance(this IModalDataContainer data)
@@ -338,9 +353,28 @@ namespace TUGraz.VectoCore.OutputData
 			return data.TimeIntegral<WattSecond>(ModalResultField.P_wheel_in) / data.Duration;
 		}
 
-		
+		public static WattSecond WorkBatteryChargeTerminal(this IModalDataContainer data)
+		{
+			return data.TimeIntegral<WattSecond>(ModalResultField.P_reess_terminal, x => x.IsGreater(0));
+		}
 
-		public static KilogramPerSecond FuelConsumptionPerSecond(this IModalDataContainer data, ModalResultField mrf, IFuelProperties fuelData)
+		public static WattSecond WorkBatteryDischargeTerminal(this IModalDataContainer data)
+		{
+			return -data.TimeIntegral<WattSecond>(ModalResultField.P_reess_terminal, x => x.IsSmaller(0));
+		}
+
+        public static WattSecond WorkBatteryChargeInternal(this IModalDataContainer data)
+		{
+			return data.TimeIntegral<WattSecond>(ModalResultField.P_reess_int, x => x.IsGreater(0));
+
+        }
+
+		public static WattSecond WorkBatteryDischargeInternal(this IModalDataContainer data)
+		{
+			return -data.TimeIntegral<WattSecond>(ModalResultField.P_reess_int, x => x.IsSmaller(0));
+		}
+
+        public static KilogramPerSecond FuelConsumptionPerSecond(this IModalDataContainer data, ModalResultField mrf, IFuelProperties fuelData)
 		{
 			return data.TimeIntegral<Kilogram>(data.GetColumnName(fuelData, mrf)) / data.Duration;
 		}

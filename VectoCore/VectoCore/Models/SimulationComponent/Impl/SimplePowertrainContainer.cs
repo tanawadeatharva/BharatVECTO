@@ -1,11 +1,12 @@
 ﻿using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Models.Connector.Ports;
 using TUGraz.VectoCore.Models.Simulation.Data;
+using TUGraz.VectoCore.Models.Simulation.DataBus;
 using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.OutputData;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Impl {
-	public class SimplePowertrainContainer : VehicleContainer
+	public class SimplePowertrainContainer : VehicleContainer, IDriverInfo
 	{
 		public SimplePowertrainContainer(VectoRunData runData, IModalDataContainer modData = null) : base(runData.ExecutionMode, modData)
 		{
@@ -14,19 +15,40 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl {
 
 		public IDriverDemandOutPort VehiclePort
 		{
-			get { return (Vehicle as Vehicle)?.OutPort(); }
+			get { return (VehicleInfo as Vehicle)?.OutPort(); }
 		}
 
 		public ITnOutPort GearboxOutPort
 		{
-			get { return (Gearbox as IGearbox)?.OutPort(); }
+			get { return (GearboxInfo as IGearbox)?.OutPort(); }
 		}
 
 		public IGearbox GearboxCtlTest
 		{
-			get { return Gearbox as IGearbox; }
+			get { return GearboxInfo as IGearbox; }
 		}
 
 		public override Second AbsTime { get { return 0.SI<Second>(); } }
+
+		public override IDriverInfo DriverInfo { get { return base.DriverInfo ?? this; } }
+
+		#region Implementation of IDriverInfo
+
+		public DrivingBehavior DriverBehavior
+		{
+			get { return  DrivingBehavior.Driving; }
+		}
+
+		public DrivingAction DrivingAction
+		{
+			get { return DrivingAction.Accelerate; }
+		}
+
+		public MeterPerSquareSecond DriverAcceleration
+		{
+			get { return 0.SI<MeterPerSquareSecond>(); }
+		}
+
+		#endregion
 	}
 }

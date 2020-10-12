@@ -110,7 +110,8 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl {
 			return new VectoRunData {
 				JobName = JobInputData.Vehicle.VIN,
 				EngineData = EngineData,
-				GearboxData = GearboxData,
+				ElectricMachinesData = new List<Tuple<PowertrainPosition, ElectricMotorData>>(),
+                GearboxData = GearboxData,
 				GearshiftParameters = GearshiftData,
 				AxleGearData = AxlegearData,
 				AngledriveData = AngledriveData,

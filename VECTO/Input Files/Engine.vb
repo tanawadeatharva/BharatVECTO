@@ -25,312 +25,313 @@ Imports TUGraz.VectoCore.Models.Declaration
 Imports TUGraz.VectoCore.Models.SimulationComponent.Data
 Imports TUGraz.VectoCore.Utils
 
+
 ''' <summary>
 ''' Engine input file
 ''' </summary>
 ''' <remarks></remarks>
 <CustomValidation(GetType(Engine), "ValidateEngine")>
 Public Class Engine
-	Implements IEngineEngineeringInputData, IEngineDeclarationInputData, IEngineModeDeclarationInputData, IEngineModeEngineeringInputData
+    Implements IEngineEngineeringInputData, IEngineDeclarationInputData, IEngineModeDeclarationInputData, IEngineModeEngineeringInputData
 
-	''' <summary>
-	''' Current format version
-	''' </summary>
-	''' <remarks></remarks>
-	Private Const FormatVersion As Short = 3
+    ''' <summary>
+    ''' Current format version
+    ''' </summary>
+    ''' <remarks></remarks>
+    Private Const FormatVersion As Short = 3
 
-	''' <summary>
-	''' Engine description (model, type, etc.). Saved in input file.
-	''' </summary>
-	''' <remarks></remarks>
-	Public ModelName As String
+    ''' <summary>
+    ''' Engine description (model, type, etc.). Saved in input file.
+    ''' </summary>
+    ''' <remarks></remarks>
+    Public ModelName As String
 
-	''' <summary>
-	''' Engine displacement [ccm]. Saved in input file.
-	''' </summary>
-	''' <remarks></remarks>
-	Public Displacement As Double
+    ''' <summary>
+    ''' Engine displacement [ccm]. Saved in input file.
+    ''' </summary>
+    ''' <remarks></remarks>
+    Public Displacement As Double
 
-	''' <summary>
-	''' Idling speed [1/min]. Saved in input file.
-	''' </summary>
-	''' <remarks></remarks>
-	Public IdleSpeed As Double
+    ''' <summary>
+    ''' Idling speed [1/min]. Saved in input file.
+    ''' </summary>
+    ''' <remarks></remarks>
+    Public IdleSpeed As Double
 
-	''' <summary>
-	''' Rotational inertia including flywheel [kgm²]. Saved in input file. Overwritten by generic value in Declaration mode.
-	''' </summary>
-	''' <remarks></remarks>
-	Public EngineInertia As Double
+    ''' <summary>
+    ''' Rotational inertia including flywheel [kgm²]. Saved in input file. Overwritten by generic value in Declaration mode.
+    ''' </summary>
+    ''' <remarks></remarks>
+    Public EngineInertia As Double
 
-	''' <summary>
-	''' List of full load/motoring curve files (.vfld)
-	''' </summary>
-	''' <remarks></remarks>
-	Private ReadOnly _fullLoadCurvePath As SubPath
+    ''' <summary>
+    ''' List of full load/motoring curve files (.vfld)
+    ''' </summary>
+    ''' <remarks></remarks>
+    Private ReadOnly _fullLoadCurvePath As SubPath
 
-	
-
-	''' <summary>
-	''' Directory of engine file. Defined in FilePath property (Set)
-	''' </summary>
-	''' <remarks></remarks>
-    Friend _myPath As String
-
-	''' <summary>
-	''' Full file path. Needs to be defined via FilePath property before calling ReadFile or SaveFile.
-	''' </summary>
-	''' <remarks></remarks>
-	Private _filePath As String
-
-
-
-	Public ratedPowerInput As Watt
-	Public ratedSpeedInput As PerSecond
-	Public maxTorqueInput As NewtonMeter
-
-    public WHRTypeInput As WHRType
-    
-
-    Public PrimaryEngineFuel As EngineFuel
-    Public SecondaryEngineFuel as EngineFuel
-
-    public ElectricalWHRData As WHRData
-    public MechanicalWHRData As WHRData
-
-    public DualFuelInput As Boolean
 
 
     ''' <summary>
-	''' New instance. Initialise
-	''' </summary>
-	''' <remarks></remarks>
-	Public Sub New()
-		_myPath = ""
-		_filePath = ""
-		
-		_fullLoadCurvePath = New SubPath
+    ''' Directory of engine file. Defined in FilePath property (Set)
+    ''' </summary>
+    ''' <remarks></remarks>
+    Friend _myPath As String
 
-        PrimaryEngineFuel = New EngineFuel(me)
-        SecondaryEngineFuel = New EngineFuel(me)
-		SetDefault()
-	End Sub
-
-	''' <summary>
-	''' Set default values
-	''' </summary>
-	''' <remarks></remarks>
-	Private Sub SetDefault()
-		ModelName = "Undefined"
-		Displacement = 0
-		IdleSpeed = 0
-		EngineInertia = 0
+    ''' <summary>
+    ''' Full file path. Needs to be defined via FilePath property before calling ReadFile or SaveFile.
+    ''' </summary>
+    ''' <remarks></remarks>
+    Private _filePath As String
 
 
-		_fullLoadCurvePath.Clear()
 
-	End Sub
+    Public ratedPowerInput As Watt
+    Public ratedSpeedInput As PerSecond
+    Public maxTorqueInput As NewtonMeter
 
-	''' <summary>
-	''' </summary>
-	''' <returns>True if successful.</returns>
-	''' <remarks></remarks>
-	Public Function SaveFile() As Boolean
-
-		Dim validationResults As IList(Of ValidationResult) =
-				Validate(If(Cfg.DeclMode, ExecutionMode.Declaration, ExecutionMode.Engineering), Nothing, False)
-
-		If validationResults.Count > 0 Then
-			Dim messages As IEnumerable(Of String) =
-					validationResults.Select(Function(r) r.ErrorMessage + String.Join(", ", r.MemberNames.Distinct()))
-			MsgBox("Invalid input." + Environment.NewLine + String.Join(Environment.NewLine, messages), MsgBoxStyle.OkOnly,
-					"Failed to save engine")
-			Return False
-		End If
-
-		Try
-			Dim writer As JSONFileWriter = New JSONFileWriter()
-			writer.SaveEngine(Me, _filePath, cfg.DeclMode)
-
-		Catch ex As Exception
-			MsgBox("Faled to write Engine file: " + ex.Message)
-			Return False
-		End Try
-		Return True
-	End Function
+    Public WHRTypeInput As WHRType
 
 
-	''' <summary>
-	''' </summary>
-	''' <value></value>
-	''' <returns>Full filepath</returns>
-	''' <remarks></remarks>
-	Public Property FilePath() As String
-		Get
-			Return _filePath
-		End Get
-		Set(ByVal value As String)
-			_filePath = value
-			If _filePath = "" Then
-				_myPath = ""
-			Else
-				_myPath = Path.GetDirectoryName(_filePath) & "\"
-			End If
-		End Set
-	End Property
+    Public PrimaryEngineFuel As EngineFuel
+    Public SecondaryEngineFuel As EngineFuel
+
+    Public ElectricalWHRData As WHRData
+    Public MechanicalWHRData As WHRData
+
+    Public DualFuelInput As Boolean
 
 
-	Public Property PathFld(Optional ByVal original As Boolean = False) As String
-		Get
-			If original Then
-				Return _fullLoadCurvePath.OriginalPath
-			Else
-				Return _fullLoadCurvePath.FullPath
-			End If
-		End Get
-		Set(ByVal value As String)
-			_fullLoadCurvePath.Init(_myPath, value)
-		End Set
-	End Property
+    ''' <summary>
+    ''' New instance. Initialise
+    ''' </summary>
+    ''' <remarks></remarks>
+    Public Sub New()
+        _myPath = ""
+        _filePath = ""
 
-	
+        _fullLoadCurvePath = New SubPath
+
+        PrimaryEngineFuel = New EngineFuel(Me)
+        SecondaryEngineFuel = New EngineFuel(Me)
+        SetDefault()
+    End Sub
+
+    ''' <summary>
+    ''' Set default values
+    ''' </summary>
+    ''' <remarks></remarks>
+    Private Sub SetDefault()
+        ModelName = "Undefined"
+        Displacement = 0
+        IdleSpeed = 0
+        EngineInertia = 0
 
 
-	' ReSharper disable once UnusedMember.Global  -- used for Validation
-	Public Shared Function ValidateEngine(engine As Engine, validationContext As ValidationContext) As ValidationResult
-		Dim engineData As CombustionEngineData
+        _fullLoadCurvePath.Clear()
+
+    End Sub
+
+    ''' <summary>
+    ''' </summary>
+    ''' <returns>True if successful.</returns>
+    ''' <remarks></remarks>
+    Public Function SaveFile() As Boolean
+
+        Dim validationResults As IList(Of ValidationResult) =
+                Validate(If(Cfg.DeclMode, ExecutionMode.Declaration, ExecutionMode.Engineering), Nothing, False)
+
+        If validationResults.Count > 0 Then
+            Dim messages As IEnumerable(Of String) =
+                    validationResults.Select(Function(r) r.ErrorMessage + String.Join(", ", r.MemberNames.Distinct()))
+            MsgBox("Invalid input." + Environment.NewLine + String.Join(Environment.NewLine, messages), MsgBoxStyle.OkOnly,
+                    "Failed to save engine")
+            Return False
+        End If
+
+        Try
+            Dim writer As JSONFileWriter = New JSONFileWriter()
+            writer.SaveEngine(Me, _filePath, Cfg.DeclMode)
+
+        Catch ex As Exception
+            MsgBox("Faled to write Engine file: " + ex.Message)
+            Return False
+        End Try
+        Return True
+    End Function
 
 
-		Dim modeService As VectoValidationModeServiceContainer =
-				TryCast(validationContext.GetService(GetType(VectoValidationModeServiceContainer)), 
-						VectoValidationModeServiceContainer)
-		Dim mode As ExecutionMode = If(modeService Is Nothing, ExecutionMode.Declaration, modeService.Mode)
-		Dim emsCycle As Boolean = (modeService IsNot Nothing) AndAlso modeService.IsEMSCycle
-		Dim gbxType As GearboxType? = If(modeService Is Nothing, GearboxType.MT, modeService.GearboxType)
+    ''' <summary>
+    ''' </summary>
+    ''' <value></value>
+    ''' <returns>Full filepath</returns>
+    ''' <remarks></remarks>
+    Public Property FilePath() As String
+        Get
+            Return _filePath
+        End Get
+        Set(ByVal value As String)
+            _filePath = value
+            If _filePath = "" Then
+                _myPath = ""
+            Else
+                _myPath = Path.GetDirectoryName(_filePath) & "\"
+            End If
+        End Set
+    End Property
 
-		Try
-			If mode = ExecutionMode.Declaration Then
-				Dim doa As DeclarationDataAdapterHeavyLorry = New DeclarationDataAdapterHeavyLorry()
-				Dim dummyGearboxData As IGearboxDeclarationInputData = New Gearbox() With {
-						.Type = GearboxType.AMT,
-						.MaxTorque = New List(Of String),
-						.GearRatios = New List(Of Double)()
-						}
-				dim dummyVehicle as IVehicleDeclarationInputData = New DummyVehicle() With {
-					.GearboxInputData = dummyGearboxData,
-					.EngineInputData = engine,
+
+    Public Property PathFld(Optional ByVal original As Boolean = False) As String
+        Get
+            If original Then
+                Return _fullLoadCurvePath.OriginalPath
+            Else
+                Return _fullLoadCurvePath.FullPath
+            End If
+        End Get
+        Set(ByVal value As String)
+            _fullLoadCurvePath.Init(_myPath, value)
+        End Set
+    End Property
+
+
+
+
+    ' ReSharper disable once UnusedMember.Global  -- used for Validation
+    Public Shared Function ValidateEngine(engine As Engine, validationContext As ValidationContext) As ValidationResult
+        Dim engineData As CombustionEngineData
+
+
+        Dim modeService As VectoValidationModeServiceContainer =
+                TryCast(validationContext.GetService(GetType(VectoValidationModeServiceContainer)),
+                        VectoValidationModeServiceContainer)
+        Dim mode As ExecutionMode = If(modeService Is Nothing, ExecutionMode.Declaration, modeService.Mode)
+        Dim emsCycle As Boolean = (modeService IsNot Nothing) AndAlso modeService.IsEMSCycle
+        Dim gbxType As GearboxType? = If(modeService Is Nothing, GearboxType.MT, modeService.GearboxType)
+
+        Try
+            If mode = ExecutionMode.Declaration Then
+                Dim doa As DeclarationDataAdapterHeavyLorry = New DeclarationDataAdapterHeavyLorry()
+                Dim dummyGearboxData As IGearboxDeclarationInputData = New Gearbox() With {
+                        .Type = GearboxType.AMT,
+                        .MaxTorque = New List(Of String),
+                        .GearRatios = New List(Of Double)()
+                        }
+                Dim dummyVehicle As IVehicleDeclarationInputData = New DummyVehicle() With {
+                    .GearboxInputData = dummyGearboxData,
+                    .EngineInputData = engine,
                     .TankSystem = TankSystem.Compressed
-				}
-				engineData = doa.CreateEngineData(dummyVehicle, engine.EngineModes.First(), New Mission() With {.MissionType = MissionType.LongHaul})
-			Else
-				Dim doa As EngineeringDataAdapter = New EngineeringDataAdapter()
-			    dim dummyVehicle as IVehicleEngineeringInputData = New DummyVehicle() With {
+                }
+                engineData = doa.CreateEngineData(dummyVehicle, engine.EngineModes.First(), New Mission() With {.MissionType = MissionType.LongHaul})
+            Else
+                Dim doa As EngineeringDataAdapter = New EngineeringDataAdapter()
+                Dim dummyVehicle As IVehicleEngineeringInputData = New DummyVehicle() With {
                         .IVehicleComponentsEngineering_EngineInputData = engine
                         }
-				engineData = doa.CreateEngineData(dummyVehicle, CType(engine.EngineModes.First(), IEngineModeEngineeringInputData))
-			End If
+                engineData = doa.CreateEngineData(dummyVehicle, CType(engine.EngineModes.First(), IEngineModeEngineeringInputData))
+            End If
 
-			Dim result As IList(Of ValidationResult) =
-					engineData.Validate(If(Cfg.DeclMode, ExecutionMode.Declaration, ExecutionMode.Engineering), gbxType, emsCycle)
+            Dim result As IList(Of ValidationResult) =
+                    engineData.Validate(If(Cfg.DeclMode, ExecutionMode.Declaration, ExecutionMode.Engineering), gbxType, emsCycle)
 
-			If Not result.Any() Then Return ValidationResult.Success
+            If Not result.Any() Then Return ValidationResult.Success
 
-			Return New ValidationResult("Engine Configuration is invalid. ",
-										result.Select(Function(r) r.ErrorMessage + String.Join(Environment.NewLine, r.MemberNames)).ToList())
-		Catch ex As Exception
-			Return New ValidationResult(ex.Message)
-		End Try
-	End Function
+            Return New ValidationResult("Engine Configuration is invalid. ",
+                                        result.Select(Function(r) r.ErrorMessage + String.Join(Environment.NewLine, r.MemberNames)).ToList())
+        Catch ex As Exception
+            Return New ValidationResult(ex.Message)
+        End Try
+    End Function
 
 #Region "IInputData"
 
-	Public ReadOnly Property DataSource As DataSource Implements IComponentInputData.DataSource
-		Get
-			Dim retVal As DataSource =  New DataSource() 
-			retVal.SourceType = DataSourceType.JSONFile
-			retVal.SourceFile = FilePath
-			Return retVal
-		End Get
-	End Property
+    Public ReadOnly Property DataSource As DataSource Implements IComponentInputData.DataSource
+        Get
+            Dim retVal As DataSource = New DataSource()
+            retVal.SourceType = DataSourceType.JSONFile
+            retVal.SourceFile = FilePath
+            Return retVal
+        End Get
+    End Property
 
-	
-	Public ReadOnly Property SavedInDeclarationMode As Boolean Implements IComponentInputData.SavedInDeclarationMode
-		Get
-			Return Cfg.DeclMode
-		End Get
-	End Property
 
-	Public ReadOnly Property Manufacturer As String Implements IComponentInputData.Manufacturer
-		Get
-			' Just for the interface. Value is not available in GUI yet.
-			Return TUGraz.VectoCore.Configuration.Constants.NOT_AVailABLE
-		End Get
-	End Property
+    Public ReadOnly Property SavedInDeclarationMode As Boolean Implements IComponentInputData.SavedInDeclarationMode
+        Get
+            Return Cfg.DeclMode
+        End Get
+    End Property
 
-	Public ReadOnly Property [Date] As DateTime Implements IComponentInputData.[Date]
-		Get
-			Return Now.ToUniversalTime()
-		End Get
-	End Property
+    Public ReadOnly Property Manufacturer As String Implements IComponentInputData.Manufacturer
+        Get
+            ' Just for the interface. Value is not available in GUI yet.
+            Return TUGraz.VectoCore.Configuration.Constants.NOT_AVailABLE
+        End Get
+    End Property
+
+    Public ReadOnly Property [Date] As DateTime Implements IComponentInputData.[Date]
+        Get
+            Return Now.ToUniversalTime()
+        End Get
+    End Property
 
     Public ReadOnly Property AppVersion As String Implements IComponentInputData.AppVersion
-    get
+        Get
             Return "VECTO-GUI"
-    End Get
+        End Get
     End Property
 
     Public ReadOnly Property CertificationMethod As CertificationMethod Implements IComponentInputData.CertificationMethod
-		Get
-			Return CertificationMethod.NotCertified
-		End Get
-	End Property
+        Get
+            Return CertificationMethod.NotCertified
+        End Get
+    End Property
 
-	Public ReadOnly Property CertificationNumber As String Implements IComponentInputData.CertificationNumber
-		Get
-			' Just for the interface. Value is not available in GUI yet.
-			Return TUGraz.VectoCore.Configuration.Constants.NOT_AVailABLE
-		End Get
-	End Property
+    Public ReadOnly Property CertificationNumber As String Implements IComponentInputData.CertificationNumber
+        Get
+            ' Just for the interface. Value is not available in GUI yet.
+            Return TUGraz.VectoCore.Configuration.Constants.NOT_AVailABLE
+        End Get
+    End Property
 
-	Public ReadOnly Property DigestValue As DigestData Implements IComponentInputData.DigestValue
-		Get
-			Return Nothing
-		End Get
-	End Property
+    Public ReadOnly Property DigestValue As DigestData Implements IComponentInputData.DigestValue
+        Get
+            Return Nothing
+        End Get
+    End Property
 
-	Public ReadOnly Property Model As String Implements IComponentInputData.Model
-		Get
-			Return ModelName
-		End Get
-	End Property
+    Public ReadOnly Property Model As String Implements IComponentInputData.Model
+        Get
+            Return ModelName
+        End Get
+    End Property
 
-	Public ReadOnly Property IEngineDeclarationInputData_Displacement As CubicMeter _
-		Implements IEngineDeclarationInputData.Displacement
-		Get
-			Return (Displacement / 1000.0 / 1000.0).SI(Of CubicMeter)()
-		End Get
-	End Property
+    Public ReadOnly Property IEngineDeclarationInputData_Displacement As CubicMeter _
+        Implements IEngineDeclarationInputData.Displacement
+        Get
+            Return (Displacement / 1000.0 / 1000.0).SI(Of CubicMeter)()
+        End Get
+    End Property
 
-	Public ReadOnly Property IEngineModeDeclarationInputData_IdleSpeed As PerSecond _
-		Implements IEngineModeDeclarationInputData.IdleSpeed
-		Get
-			Return IdleSpeed.RPMtoRad()
-		End Get
-	End Property
+    Public ReadOnly Property IEngineModeDeclarationInputData_IdleSpeed As PerSecond _
+        Implements IEngineModeDeclarationInputData.IdleSpeed
+        Get
+            Return IdleSpeed.RPMtoRad()
+        End Get
+    End Property
 
-	
 
-	Public ReadOnly Property FullLoadCurve As TableData Implements IEngineModeDeclarationInputData.FullLoadCurve
-		Get
-			If Not File.Exists(_fullLoadCurvePath.FullPath) Then _
-				Throw New VectoException("Full-Load Curve is missing or invalid")
-			Return VectoCSVFile.Read(_fullLoadCurvePath.FullPath)
-		End Get
-	End Property
+
+    Public ReadOnly Property FullLoadCurve As TableData Implements IEngineModeDeclarationInputData.FullLoadCurve
+        Get
+            If Not File.Exists(_fullLoadCurvePath.FullPath) Then _
+                Throw New VectoException("Full-Load Curve is missing or invalid")
+            Return VectoCSVFile.Read(_fullLoadCurvePath.FullPath)
+        End Get
+    End Property
 
     Public ReadOnly Property IEngineModeEngineeringInputData_Fuels As IList(Of IEngineFuelEngineeringInputData) Implements IEngineModeEngineeringInputData.Fuels
         Get
-            Dim retval As List(Of IEngineFuelEngineeringInputData) = new List(Of IEngineFuelEngineeringInputData)({PrimaryEngineFuel})
+            Dim retval As List(Of IEngineFuelEngineeringInputData) = New List(Of IEngineFuelEngineeringInputData)({PrimaryEngineFuel})
             If (DualFuelInput) Then
                 retval.Add(SecondaryEngineFuel)
             End If
@@ -339,19 +340,19 @@ Public Class Engine
     End Property
 
     Public ReadOnly Property Fuels As IList(Of IEngineFuelDelcarationInputData) Implements IEngineModeDeclarationInputData.Fuels
-	Get
-			Dim retval As List(Of IEngineFuelDelcarationInputData) = new List(Of IEngineFuelDelcarationInputData)({PrimaryEngineFuel})
+        Get
+            Dim retval As List(Of IEngineFuelDelcarationInputData) = New List(Of IEngineFuelDelcarationInputData)({PrimaryEngineFuel})
             If (DualFuelInput) Then
                 retval.Add(SecondaryEngineFuel)
             End If
             Return retval
-	End Get
-	End Property
+        End Get
+    End Property
 
     Public ReadOnly Property WasteHeatRecoveryDataElectrical As IWHRData Implements IEngineModeDeclarationInputData.WasteHeatRecoveryDataElectrical
-    Get
+        Get
             Return ElectricalWHRData
-    End Get
+        End Get
     End Property
 
     Public ReadOnly Property WasteHeatRecoveryDataMechanical As IWHRData Implements IEngineModeDeclarationInputData.WasteHeatRecoveryDataMechanical
@@ -361,46 +362,46 @@ Public Class Engine
     End Property
 
     Public ReadOnly Property RatedPowerDeclared As Watt Implements IEngineDeclarationInputData.RatedPowerDeclared
-		Get
-			Return ratedPowerInput
-		End Get
-	End Property
+        Get
+            Return ratedPowerInput
+        End Get
+    End Property
 
-	Public ReadOnly Property RatedSpeedDeclared As PerSecond Implements IEngineDeclarationInputData.RatedSpeedDeclared
-		Get
-			Return ratedSpeedInput
-		End Get
-	End Property
+    Public ReadOnly Property RatedSpeedDeclared As PerSecond Implements IEngineDeclarationInputData.RatedSpeedDeclared
+        Get
+            Return ratedSpeedInput
+        End Get
+    End Property
 
-	Public ReadOnly Property MaxTorqueDeclared As NewtonMeter Implements IEngineDeclarationInputData.MaxTorqueDeclared
-		Get
-			Return maxTorqueInput
-		End Get
-	End Property
+    Public ReadOnly Property MaxTorqueDeclared As NewtonMeter Implements IEngineDeclarationInputData.MaxTorqueDeclared
+        Get
+            Return maxTorqueInput
+        End Get
+    End Property
 
     Public ReadOnly Property IEngineEngineeringInputData_EngineModes As IList(Of IEngineModeEngineeringInputData) Implements IEngineEngineeringInputData.EngineModes
-        get
-            Return New List(Of IEngineModeEngineeringInputData)({me})
+        Get
+            Return New List(Of IEngineModeEngineeringInputData)({Me})
         End Get
     End Property
 
     Public ReadOnly Property EngineModes As IList(Of IEngineModeDeclarationInputData) Implements IEngineDeclarationInputData.EngineModes
-	get
-			Return New List(Of IEngineModeDeclarationInputData)({me})
-		End Get
-	End Property
+        Get
+            Return New List(Of IEngineModeDeclarationInputData)({Me})
+        End Get
+    End Property
 
     Public ReadOnly Property WHRType As WHRType Implements IEngineDeclarationInputData.WHRType
-    Get
+        Get
             Return WHRTypeInput
-    End Get
+        End Get
     End Property
 
     Public ReadOnly Property Inertia As KilogramSquareMeter Implements IEngineEngineeringInputData.Inertia
-		Get
-			Return EngineInertia.SI(Of KilogramSquareMeter)()
-		End Get
-	End Property
+        Get
+            Return EngineInertia.SI(Of KilogramSquareMeter)()
+        End Get
+    End Property
 
 
     Public ReadOnly Property EngineStartTime As Second Implements IEngineEngineeringInputData.EngineStartTime
@@ -411,7 +412,7 @@ Public Class Engine
 
 #End Region
 
-    
+
 End Class
 
 Public Class WHRData
@@ -637,9 +638,12 @@ Public Class DummyVehicle
             return me
     End Get
     End Property
-    Public  Property ADAS As IAdvancedDriverAssistantSystemDeclarationInputData Implements IVehicleDeclarationInputData.ADAS
-	Public  Property ZeroEmissionVehicle As Boolean Implements IVehicleDeclarationInputData.ZeroEmissionVehicle
-	Public  Property HybridElectricHDV As Boolean Implements IVehicleDeclarationInputData.HybridElectricHDV
+	Public Property ADAS As IAdvancedDriverAssistantSystemDeclarationInputData Implements IVehicleDeclarationInputData.ADAS
+    Public ReadOnly Property InitialSOC As Double Implements IVehicleEngineeringInputData.InitialSOC
+    Public ReadOnly Property MaxDrivetrainPower As Watt Implements IVehicleEngineeringInputData.MaxDrivetrainPower
+    Public ReadOnly Property VehicleType As VectoSimulationJobType Implements IVehicleEngineeringInputData.VehicleType
+    Public Property ZeroEmissionVehicle As Boolean Implements IVehicleDeclarationInputData.ZeroEmissionVehicle
+    Public  Property HybridElectricHDV As Boolean Implements IVehicleDeclarationInputData.HybridElectricHDV
 	Public  Property DualFuelVehicle As Boolean Implements IVehicleDeclarationInputData.DualFuelVehicle
 	Public  Property MaxNetPower1 As Watt Implements IVehicleDeclarationInputData.MaxNetPower1
 	Public  Property MaxNetPower2 As Watt Implements IVehicleDeclarationInputData.MaxNetPower2
@@ -688,7 +692,11 @@ Public Class DummyVehicle
     Public  Property PTOTransmissionInputData As IPTOTransmissionInputData Implements IVehicleComponentsDeclaration.PTOTransmissionInputData
     Public  Property IVehicleComponentsEngineering_AxleWheels As IAxlesEngineeringInputData Implements IVehicleComponentsEngineering.AxleWheels
     Public  Property AxleWheels As IAxlesDeclarationInputData Implements IVehicleComponentsDeclaration.AxleWheels
+    Public ReadOnly Property IVehicleComponentsEngineering_ElectricStorage As IElectricStorageEngineeringInputData Implements IVehicleComponentsEngineering.ElectricStorage
     Public ReadOnly Property BusAuxiliaries As IBusAuxiliariesDeclarationData Implements IVehicleComponentsDeclaration.BusAuxiliaries
+    Public ReadOnly Property ElectricStorage As IElectricStorageDeclarationInputData Implements IVehicleComponentsDeclaration.ElectricStorage
+    Public ReadOnly Property IVehicleComponentsEngineering_ElectricMachines As IElectricMachinesEngineeringInputData Implements IVehicleComponentsEngineering.ElectricMachines
+    Public ReadOnly Property ElectricMachines As IElectricMachinesDeclarationInputData Implements IVehicleComponentsDeclaration.ElectricMachines
 End Class
 
 

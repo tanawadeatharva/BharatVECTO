@@ -452,6 +452,9 @@ namespace TUGraz.VectoCore.Models.Declaration
 
 		public static class GearboxTCU
 		{
+
+			public static readonly MeterPerSecond MIN_SPEED_AFTER_TRACTION_INTERRUPTION = 5.KMPHtoMeterPerSecond();
+
 			public const double TorqueReserve = 0;
 			public const double TorqueReserveStart = 0.2;
 
