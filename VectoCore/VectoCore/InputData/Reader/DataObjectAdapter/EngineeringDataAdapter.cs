@@ -629,7 +629,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			return new BatteryData() {
 				MinSOC = bat.MinSOC,
 				MaxSOC = bat.MaxSOC,
-				MaxCurrent = bat.Capacity * bat.MaxCurrentFactor * batteryInputData.Count,
+				MaxCurrent = BatteryMaxCurrentReader.Create(bat.MaxCurrentMap, batteryInputData.Count),
 				Capacity = batteryInputData.Count * bat.Capacity,
 				InternalResistance = BatteryInternalResistanceReader.Create(bat.InternalResistanceCurve, batteryInputData.Count),
 				SOCMap = BatterySOCReader.Create(bat.VoltageCurve),
@@ -652,6 +652,8 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 				InternalResistance = superCap.InternalResistance / reessInputData.Count,
 				MinVoltage = superCap.MinVoltage,
 				MaxVoltage = superCap.MaxVoltage,
+				MaxCurrentCharge = superCap.MaxCurrentCharge,
+				MaxCurrentDischarge = -superCap.MaxCurrentDischarge,
 				InitialSoC = initialSOC
 			};
 		}

@@ -48,6 +48,7 @@ namespace TUGraz.VectoCore.Tests.Utils {
 		public RegistrationClass RegisteredClass { get; set; }
 		public int NumberOfPassengersUpperDeck { get; set; }
 		public int NumberOfPassengersLowerDeck { get; set; }
+		public CubicMeter CargoVolume { get; }
 		public VehicleCode VehicleCode { get; set; }
 		public bool LowEntry { get; }
 		public bool Articulated { get; }
@@ -114,6 +115,7 @@ namespace TUGraz.VectoCore.Tests.Utils {
 		public RegistrationClass RegisteredClass { get; set; }
 		public int NumberOfPassengersUpperDeck { get; set; }
 		public int NumberOfPassengersLowerDeck { get; set; }
+		public CubicMeter CargoVolume { get; }
 		public VehicleCode VehicleCode { get; set; }
 		public bool LowEntry { get; }
 

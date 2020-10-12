@@ -17,13 +17,14 @@ namespace TUGraz.VectoCommon.Models {
 
 	public class HybridStrategyResponse : AbstractComponentResponse, IHybridStrategyResponse
 	{
-		public Dictionary<PowertrainPosition, NewtonMeter> MechanicalAssistPower;
+		public Dictionary<PowertrainPosition, Tuple<PerSecond, NewtonMeter>> MechanicalAssistPower;
 		public bool ShiftRequired { get; set; }
 		public uint NextGear { get; set; }
 		public bool GearboxInNeutral { get; set; }
 		public bool CombustionEngineOn { get; set; }
 
 		public HybridResultEntry EvaluatedSolution { get; set; }
+		public bool GearboxEngaged { get; set; }
 	}
 
 	[DebuggerDisplay("{U}: {Score} - G{Gear}")]
@@ -173,6 +174,11 @@ namespace TUGraz.VectoCommon.Models {
 		public static bool BatterySoCTooLow(this HybridConfigurationIgnoreReason x)
 		{
 			return (x & HybridConfigurationIgnoreReason.BatterySoCTooLow) != 0;
+		}
+
+		public static bool BatteryBelowMinSoC(this HybridConfigurationIgnoreReason x)
+		{
+			return (x & HybridConfigurationIgnoreReason.BatteryBelowMinSoC) != 0;
 		}
 
 		public static bool AllOK(this HybridConfigurationIgnoreReason x)

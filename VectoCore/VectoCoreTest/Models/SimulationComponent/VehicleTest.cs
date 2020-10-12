@@ -33,6 +33,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using NUnit.Framework;
+using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.InputData.Reader.ComponentData;
@@ -65,13 +66,21 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
         [Test]
 		public void VehiclePortTest()
 		{
-			var container = new VehicleContainer(ExecutionMode.Engineering);
+			
 
 			//var reader = new EngineeringModeSimulationDataReader();
 			var vehicleData = MockSimulationDataFactory.CreateVehicleDataFromFile(VehicleDataFileCoach);
 			var airdragData = MockSimulationDataFactory.CreateAirdragDataFromFile(VehicleDataFileCoach);
 			//VehicleData.ReadFromFile(VehicleDataFile);
 			//vehicleData.CrossWindCorrectionMode = CrossWindCorrectionMode.NoCorrection;
+
+			var container = new VehicleContainer(ExecutionMode.Engineering) {
+				RunData = new VectoRunData() {
+					VehicleData = vehicleData,
+					AirdragData = airdragData,
+					ElectricMachinesData = new List<Tuple<PowertrainPosition, ElectricMotorData>>()
+				}
+			};
 			var vehicle = new Vehicle(container, vehicleData, airdragData);
 			var driver = new MockDriver(container) { DriverBehavior = DrivingBehavior.Driving };
 			new DummyCycle(container);
@@ -107,6 +116,9 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			double expected)
 		{
 			var container = new VehicleContainer(ExecutionMode.Declaration);
+			container.RunData = new VectoRunData() {
+				ElectricMachinesData = new List<Tuple<PowertrainPosition, ElectricMotorData>>()
+			};
 
 			var vehicleData = MockSimulationDataFactory.CreateVehicleDataFromFile(VehicleDataFileTruck);
 			var airdragData = MockSimulationDataFactory.CreateAirdragDataFromFile(VehicleDataFileTruck);
@@ -138,6 +150,11 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			airdragData.CrossWindCorrectionCurve = new CrosswindCorrectionCdxALookup(6.2985.SI<SquareMeter>(),
 				DeclarationDataAdapterHeavyLorry.GetDeclarationAirResistanceCurve("TractorSemitrailer",
 					6.2985.SI<SquareMeter>(), 3.SI<Meter>()), CrossWindCorrectionMode.DeclarationModeCorrection);
+			container.RunData = new VectoRunData() {
+				VehicleData = vehicleData,
+				AirdragData = airdragData,
+				ElectricMachinesData = new List<Tuple<PowertrainPosition, ElectricMotorData>>()
+			};
 
 			var vehicle = new Vehicle(container, vehicleData,airdragData);
 			var driver = new MockDriver(container) { DriverBehavior = DrivingBehavior.Driving };

@@ -206,13 +206,25 @@ namespace TUGraz.VectoCore.OutputData.XML {
 			);
 		}
 
+		protected internal static double CalculateFactorMethodFactor(IResult primaryResult,
+			XMLDeclarationReport.ResultEntry specific, XMLDeclarationReport.ResultEntry generic)
+		{
+            return specific.EnergyConsumptionTotal.Value() / generic.EnergyConsumptionTotal.Value();
+   //         var energyConsumptionPrimary = primaryResult.EnergyConsumption.Sum(x => x.Value);
+			//var energyConsumptionCompeted = energyConsumptionPrimary +
+			//								specific.EnergyConsumptionTotal / specific.Distance -
+			//								generic.EnergyConsumptionTotal / generic.Distance;
+			//return energyConsumptionCompeted / energyConsumptionPrimary;
+		}
+
 		private XElement[] GetFuelConsumptionResults(XMLDeclarationReport.ResultEntry genericResult, XMLDeclarationReport.ResultEntry specificResult, IResult primaryResult)
 		{
-			var factor = specificResult.EnergyConsumptionTotal.Value() / genericResult.EnergyConsumptionTotal.Value();
+			var factor = CalculateFactorMethodFactor(primaryResult, specificResult, genericResult);
+			//var factor = specificResult.EnergyConsumptionTotal.Value() / genericResult.EnergyConsumptionTotal.Value();
 			var retVal = new List<XElement>();
 
 			var co2Sum = 0.SI<KilogramPerMeter>();
-			retVal.Add(new XElement(tns + "FuelConsumptionFactor", factor.ToMinSignificantDigits(4)));
+			//retVal.Add(new XElement(tns + "FuelConsumptionFactor", factor.ToMinSignificantDigits(4)));
 			foreach (var entry in primaryResult.EnergyConsumption) {
 				var fcEnergy = entry.Value * factor;  // J/m
 				var fuelData = FuelData.Instance().Lookup(entry.Key);
@@ -225,11 +237,11 @@ namespace TUGraz.VectoCore.OutputData.XML {
 						tns + XMLNames.Report_Results_FuelConsumption,
 						new XAttribute(XMLNames.Report_Results_Unit_Attr, "g/km"),
 						fcMass.ConvertToGrammPerKiloMeter().ToMinSignificantDigits(3, 1)),
-					new XElement(
-						tns + XMLNames.Report_Results_FuelConsumption,
-						new XAttribute(XMLNames.Report_Results_Unit_Attr, "g/t-km"),
-						(fcMass / specificResult.Payload)
-						.ConvertToGrammPerTonKilometer().ToMinSignificantDigits(3, 1)),
+					//new XElement(
+					//	tns + XMLNames.Report_Results_FuelConsumption,
+					//	new XAttribute(XMLNames.Report_Results_Unit_Attr, "g/t-km"),
+					//	(fcMass / specificResult.Payload)
+					//	.ConvertToGrammPerTonKilometer().ToMinSignificantDigits(3, 1)),
 					specificResult.CargoVolume > 0
 						? new XElement(
 							tns + XMLNames.Report_Results_FuelConsumption,

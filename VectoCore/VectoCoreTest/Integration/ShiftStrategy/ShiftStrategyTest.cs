@@ -113,67 +113,67 @@ namespace TUGraz.VectoCore.Tests.Integration.ShiftStrategy
 			GetGraphWriter().Write(modFile);
 		}
 
-		[TestCase()]
-		public void TestGearshiftTrigger()
-		{
-			var amtTestcase = @"E:\QUAM\tmp\AT_Vdrop\AMT_normal\MB_Citaro_G_MP156_ZF_Sort.vecto";
-			var atTestcase = @"E:\QUAM\tmp\AT_Vdrop\AT_normal\MB_Citaro_G_MP156_ZF_Sort.vecto";
+		//[TestCase()]
+		//public void TestGearshiftTrigger()
+		//{
+		//	var amtTestcase = @"E:\QUAM\tmp\AT_Vdrop\AMT_normal\MB_Citaro_G_MP156_ZF_Sort.vecto";
+		//	var atTestcase = @"E:\QUAM\tmp\AT_Vdrop\AT_normal\MB_Citaro_G_MP156_ZF_Sort.vecto";
 
 
-			var relativeJobPath = amtTestcase;
-			var writer = new FileOutputWriter(Path.Combine(Path.GetDirectoryName(relativeJobPath), "tmp", Path.GetFileName(relativeJobPath)));
-			var inputData =  JSONInputDataFactory.ReadJsonJob(relativeJobPath);
-			var factory = new SimulatorFactory(ExecutionMode.Engineering, inputData, writer) {
-				WriteModalResults = true,
-				//ActualModalData = true,
-				Validate = false
-			};
-			var jobContainer = new JobContainer(new MockSumWriter());
-			var runs = factory.SimulationRuns().ToArray();
-			var run = runs[0];
+		//	var relativeJobPath = amtTestcase;
+		//	var writer = new FileOutputWriter(Path.Combine(Path.GetDirectoryName(relativeJobPath), "tmp", Path.GetFileName(relativeJobPath)));
+		//	var inputData =  JSONInputDataFactory.ReadJsonJob(relativeJobPath);
+		//	var factory = new SimulatorFactory(ExecutionMode.Engineering, inputData, writer) {
+		//		WriteModalResults = true,
+		//		//ActualModalData = true,
+		//		Validate = false
+		//	};
+		//	var jobContainer = new JobContainer(new MockSumWriter());
+		//	var runs = factory.SimulationRuns().ToArray();
+		//	var run = runs[0];
 
-			var container = run.GetContainer() as VehicleContainer;
-			var vehicle = container?.VehicleInfo as Vehicle;
+		//	var container = run.GetContainer() as VehicleContainer;
+		//	var vehicle = container?.VehicleInfo as Vehicle;
 
-			Assert.NotNull(container);
-			Assert.NotNull(vehicle);
+		//	Assert.NotNull(container);
+		//	Assert.NotNull(vehicle);
 
-			foreach (var preprocessor in container.Preprocessors) {
-				preprocessor.RunPreprocessing();
-			}
+		//	foreach (var preprocessor in container.Preprocessors) {
+		//		preprocessor.RunPreprocessing();
+		//	}
 
-			var decision = new List<Tuple<double, IResponse, ResponseDryRun>>();
-			for (var v = 15.0; v < 20; v += 0.1) {
-				vehicle.Initialize(v.KMPHtoMeterPerSecond(), 0.SI<Radian>());
-				container.AbsTime = 0.SI<Second>();
-				(container.GearboxInfo as Gearbox).Gear = 2;
-				//(container.Gearbox as ATGearbox)._strategy.NextGear.Gear = 0;
-				(container.DriverInfo as Driver).DrivingAction = DrivingAction.Accelerate;
-				(container.DriverInfo as Driver).DriverBehavior = DrivingBehavior.Accelerating;
-				var response = vehicle.Request(
-					0.SI<Second>(), 0.5.SI<Second>(), 0.5.SI<MeterPerSquareSecond>(), 0.SI<Radian>(), false);
-				decision.Add(Tuple.Create(v, response, ((container.GearboxInfo as Gearbox)._strategy as AMTShiftStrategyOptimized).minFCResponse));
-			}
+		//	var decision = new List<Tuple<double, IResponse, ResponseDryRun>>();
+		//	for (var v = 15.0; v < 20; v += 0.1) {
+		//		vehicle.Initialize(v.KMPHtoMeterPerSecond(), 0.SI<Radian>());
+		//		container.AbsTime = 0.SI<Second>();
+		//		(container.GearboxInfo as Gearbox).Gear = 2;
+		//		//(container.Gearbox as ATGearbox)._strategy.NextGear.Gear = 0;
+		//		(container.DriverInfo as Driver).DrivingAction = DrivingAction.Accelerate;
+		//		(container.DriverInfo as Driver).DriverBehavior = DrivingBehavior.Accelerating;
+		//		var response = vehicle.Request(
+		//			0.SI<Second>(), 0.5.SI<Second>(), 0.5.SI<MeterPerSquareSecond>(), 0.SI<Radian>(), false);
+		//		decision.Add(Tuple.Create(v, response, ((container.GearboxInfo as Gearbox)._strategy as AMTShiftStrategyOptimized).minFCResponse));
+		//	}
 
-			foreach (var tuple in decision) {
-				var r = tuple.Item2;
-				var s = tuple.Item3;
-				var fc = r.Engine.EngineSpeed != null
-					? container.RunData.EngineData.Fuels.First().ConsumptionMap.GetFuelConsumption(r.Engine.TotalTorqueDemand, r.Engine.EngineSpeed).Value
-								.ConvertToGrammPerHour().Value
-					: 0;
-				var fc2 = s?.Engine.EngineSpeed != null
-					? container.RunData.EngineData.Fuels.First().ConsumptionMap.GetFuelConsumption(s.Engine.TotalTorqueDemand, s.Engine.EngineSpeed).Value
-								.ConvertToGrammPerHour().Value
-					: 0;
-				Console.WriteLine(
-					"{0}; {1}; {2}; {3}; {4}; {5}; {6}; {7}", tuple.Item1, tuple.Item2 is ResponseGearShift ? "1" : "0",
-					r.Engine.EngineSpeed?.AsRPM ?? 0,
-					r.Engine.TorqueOutDemand?.Value() ?? 0, fc,
-					s?.Engine.EngineSpeed?.AsRPM ?? 0,
-					s?.Engine.TorqueOutDemand?.Value() ?? 0, fc2
-					);
-			}
-		}
+		//	foreach (var tuple in decision) {
+		//		var r = tuple.Item2;
+		//		var s = tuple.Item3;
+		//		var fc = r.Engine.EngineSpeed != null
+		//			? container.RunData.EngineData.Fuels.First().ConsumptionMap.GetFuelConsumption(r.Engine.TotalTorqueDemand, r.Engine.EngineSpeed).Value
+		//						.ConvertToGrammPerHour().Value
+		//			: 0;
+		//		var fc2 = s?.Engine.EngineSpeed != null
+		//			? container.RunData.EngineData.Fuels.First().ConsumptionMap.GetFuelConsumption(s.Engine.TotalTorqueDemand, s.Engine.EngineSpeed).Value
+		//						.ConvertToGrammPerHour().Value
+		//			: 0;
+		//		Console.WriteLine(
+		//			"{0}; {1}; {2}; {3}; {4}; {5}; {6}; {7}", tuple.Item1, tuple.Item2 is ResponseGearShift ? "1" : "0",
+		//			r.Engine.EngineSpeed?.AsRPM ?? 0,
+		//			r.Engine.TorqueOutDemand?.Value() ?? 0, fc,
+		//			s?.Engine.EngineSpeed?.AsRPM ?? 0,
+		//			s?.Engine.TorqueOutDemand?.Value() ?? 0, fc2
+		//			);
+		//	}
+		//}
 	}
 }

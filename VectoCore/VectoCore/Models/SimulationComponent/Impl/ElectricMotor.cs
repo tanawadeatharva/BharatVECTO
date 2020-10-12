@@ -113,7 +113,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			if (!dryRun) {
 				CurrentState.DragMax = maxRecuperationTorque;
 				CurrentState.DriveMax = maxDriveTorque;
-				CurrentState.ElectricPowerToBattery = retVal.ElectricSystem.ConsumerPower;
+				CurrentState.ElectricPowerToBattery = retVal.ElectricSystem?.ConsumerPower;
 			}
 			return retVal;
 		}
@@ -183,7 +183,14 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				!DataBus.GearboxInfo.GearEngaged(absTime) /* && !DataBus.ClutchInfo.ClutchClosed(absTime)*/) {
 				// electric motor is between gearbox and clutch, but no gear is engaged...
 				if (eMotorTorque != null) {
-					throw new VectoSimulationException("electric motor cannot provide torque when gearbox and clutch are disengaged");
+                    if (!DataBus.HybridControllerInfo.GearboxEngaged) {
+                        return new ResponseInvalidOperatingPoint(this);
+                    }
+
+					if (!dryRun) {
+						throw new VectoSimulationException(
+							"electric motor cannot provide torque when gearbox and clutch are disengaged");
+					}
 				}
 
 				var electricSystemResponse = ElectricPower.Request(absTime, dt, 0.SI<Watt>(), dryRun);
@@ -218,12 +225,14 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			//	return retVal;
 			//}
 
-			if (!dryRun && (eMotorTorque.IsSmaller(maxDriveTorque ?? 0.SI<NewtonMeter>(), 1e-3) || eMotorTorque.IsGreater(maxRecuperationTorque ?? 0.SI<NewtonMeter>(), 1e-3))
-				//!eMotorTorque.IsBetween(
-				//	maxDriveTorque ?? 0.SI<NewtonMeter>(), maxRecuperationTorque ?? 0.SI<NewtonMeter>())
-				) {
+			if (!dryRun && (eMotorTorque.IsSmaller(maxDriveTorque ?? 0.SI<NewtonMeter>(), 1e-3) ||
+							eMotorTorque.IsGreater(maxRecuperationTorque ?? 0.SI<NewtonMeter>(), 1e-3))) {
+				if (DataBus.HybridControllerInfo != null && !avgSpeed.IsEqual(DataBus.HybridControllerInfo.ElectricMotorSpeed(Position))) {
+					return new ResponseInvalidOperatingPoint(this);
+				}
 				throw new VectoException(
-					"Invalid operating point provided by strategy! SupportPower: {0}, max Power: {1}, min Power: {2}", eMotorTorque,
+					"Invalid operating point provided by strategy! SupportPower: {0}, max Power: {1}, min Power: {2}",
+					eMotorTorque,
 					maxDriveTorque, maxRecuperationTorque);
 			}
 
@@ -246,6 +255,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			//	CurrentState.ElectricBrakePower = electricPower - electricSupplyResponse.MaxPowerDrag;
 			//}
 			if (!dryRun && !(electricSupplyResponse is ElectricSystemResponseSuccess)) {
+				if (DataBus.HybridControllerInfo != null && !avgSpeed.IsEqual(DataBus.HybridControllerInfo.ElectricMotorSpeed(Position))) {
+					return new ResponseInvalidOperatingPoint(this);
+				}
 				throw new VectoException(
 						"Invalid operating point provided by strategy! SupportPower: {0}, req. electric Power: {1}, battery demand motor: {3}, max Power from Battery: {2}",
 						eMotorTorque, electricPower,

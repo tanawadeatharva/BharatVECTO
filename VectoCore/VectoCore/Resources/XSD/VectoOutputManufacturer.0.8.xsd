@@ -555,13 +555,6 @@
 						</xs:complexType>
 					</xs:element>
 					<xs:element name="VehiclePerformance" type="VehiclePerformanceType"/>
-					<xs:element name="FuelConsumptionFactor">
-						<xs:simpleType>
-							<xs:restriction base="vdecdef:Double4">
-								<xs:minExclusive value="0.0000"/>
-							</xs:restriction>
-						</xs:simpleType>
-					</xs:element>
 					<xs:element name="Fuel" maxOccurs="unbounded">
 						<xs:complexType>
 							<xs:sequence>

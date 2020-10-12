@@ -281,6 +281,7 @@
     <Compile Include="InputData\FileIO\XML\IXMLInputDataReader.cs" />
     <Compile Include="InputData\FileIO\XML\XMLInputDataNinjectModule.cs" />
     <Compile Include="InputData\Reader\ComponentData\BatteryInternalResistanceReader.cs" />
+    <Compile Include="InputData\Reader\ComponentData\BatteryMaxCurrentReader.cs" />
     <Compile Include="InputData\Reader\ComponentData\ElectricMotorMapReader.cs" />
     <Compile Include="InputData\Reader\DataObjectAdapter\DeclarationDataAdapterPrimaryBus.cs" />
     <Compile Include="InputData\Reader\ComponentData\ElectricFullLoadCurveReader.cs" />
@@ -951,11 +952,11 @@
       <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Resources\Declaration\CompletedBusSegmentationTable.csv" />
-    <EmbeddedResource Include="Resources\Declaration\GenericBusData\EngineConsumptionMap_CI_Normed.vmap" />
-    <EmbeddedResource Include="Resources\Declaration\GenericBusData\EngineConsumptionMap_PI_Normed.vmap" />
     <EmbeddedResource Include="Resources\Declaration\VAUXBus\SP-AxleFactor.csv" />
     <EmbeddedResource Include="Resources\Declaration\VAUXBus\SP-Axles_Bus.csv" />
     <EmbeddedResource Include="Resources\Declaration\VAUXBus\SP-Factors_Bus.csv" />
+    <EmbeddedResource Include="Resources\Declaration\GenericBusData\EngineConsumptionMap_CI_normalized.vmap" />
+    <EmbeddedResource Include="Resources\Declaration\GenericBusData\EngineConsumptionMap_PI_normalized.vmap" />
     <None Include="Utils\VectoVersionCore.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>VectoVersionCore.cs</LastGenOutput>

@@ -90,6 +90,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			var retVal = NextComponent.Initialize(torqueIn, engineSpeedIn);
 			retVal.Clutch.PowerRequest = outTorque * outAngularVelocity;
+			retVal.Clutch.OutputSpeed = outAngularVelocity;
 			return retVal;
 		}
 
@@ -129,7 +130,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					Gearbox = { PowerRequest = delta },
 					DeltaDragLoad = delta,
 					DeltaFullLoad = delta,
-					Clutch = { PowerRequest = delta}
+					Clutch = {
+						PowerRequest = delta,
+						OutputSpeed = outAngularVelocity
+					}
 				};
 			}
 			if ((outTorque * avgOutAngularVelocity).IsGreater(0.SI<Watt>(), Constants.SimulationSettings.LineSearchTolerance))
@@ -137,7 +141,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				return new ResponseOverload(this)
 				{
 					Delta = outTorque * avgOutAngularVelocity,
-					Clutch = {PowerRequest = outTorque * avgOutAngularVelocity}
+					Clutch = {
+						PowerRequest = outTorque * avgOutAngularVelocity,
+						OutputSpeed = outAngularVelocity
+					}
 				};
 			}
 
@@ -146,13 +153,17 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				return new ResponseUnderload(this)
 				{
 					Delta = outTorque * avgOutAngularVelocity,
-					Clutch = { PowerRequest = outTorque * avgOutAngularVelocity}
+					Clutch = {
+						PowerRequest = outTorque * avgOutAngularVelocity,
+						OutputSpeed = outAngularVelocity
+					}
 				};
 			}
 
 			Log.Debug("Invoking IdleController...");
 			var retval = IdleController.Request(absTime, dt, outTorque, null, dryRun);
 			retval.Clutch.PowerRequest = 0.SI<Watt>();
+			retval.Clutch.OutputSpeed = outAngularVelocity;
 			CurrentState.SetState(0.SI<NewtonMeter>(), retval.Engine.EngineSpeed, outTorque, outAngularVelocity);
 			CurrentState.ClutchLoss = 0.SI<Watt>();
 			return retval;
@@ -189,6 +200,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			}
 			retVal.Clutch.PowerRequest = outTorque *
 										((PreviousState.OutAngularVelocity ?? 0.SI<PerSecond>()) + CurrentState.OutAngularVelocity) / 2.0;
+			retVal.Clutch.OutputSpeed = outAngularVelocity;
 			return retVal;
 		}
 

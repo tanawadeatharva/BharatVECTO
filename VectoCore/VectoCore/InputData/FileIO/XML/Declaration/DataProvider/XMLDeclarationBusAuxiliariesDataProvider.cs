@@ -183,7 +183,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 			get { return 0.SI<Watt>(); }
 		}
 
-		public virtual bool DoubleGlasing
+		public virtual bool DoubleGlazing
 		{
 			get { return false; }
 		}
@@ -265,9 +265,9 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 			get { return GetDouble(XMLNames.Bus_AuxiliaryHeaterPower).SI<Watt>(); }
 		}
 
-		public override bool DoubleGlasing
+		public override bool DoubleGlazing
 		{
-			get { return GetBool(XMLNames.Bus_DoubleGlasing); }
+			get { return GetBool(XMLNames.Bus_DoubleGlazing); }
 		}
 
 		public override bool HeatPump

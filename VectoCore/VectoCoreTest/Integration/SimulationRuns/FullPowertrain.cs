@@ -51,6 +51,7 @@ using TUGraz.VectoCore.Tests.Utils;
 using TUGraz.VectoCore.Utils;
 using Wheels = TUGraz.VectoCore.Models.SimulationComponent.Impl.Wheels;
 using NUnit.Framework;
+using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCore.InputData.Reader.Impl;
 
 namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
@@ -92,7 +93,8 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 				GearboxData = gearboxData,
 				VehicleData = vehicleData,
 				AirdragData = airDragData,
-				SimulationType = SimulationType.DistanceCycle
+				SimulationType = SimulationType.DistanceCycle,
+				ElectricMachinesData = new List<Tuple<PowertrainPosition, ElectricMotorData>>()
 			};
 			var fileWriter = new FileOutputWriter("Coach_FullPowertrain_SimpleGearbox");
 			var modData = new ModalDataContainer(runData, fileWriter, null);
@@ -161,7 +163,8 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 				AxleGearData = axleGearData,
 				GearboxData = gearboxData,
 				AirdragData = airDragData,
-				SimulationType = SimulationType.DistanceCycle
+				SimulationType = SimulationType.DistanceCycle,
+				ElectricMachinesData = new List<Tuple<PowertrainPosition, ElectricMotorData>>()
 			};
 			var fileWriter = new FileOutputWriter("Coach_FullPowertrain");
 			var modData = new ModalDataContainer(runData, fileWriter, null);
@@ -243,7 +246,8 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 				VehicleData = vehicleData,
 				AxleGearData = axleGearData,
 				GearboxData = gearboxData,
-				AirdragData = airDragData
+				AirdragData = airDragData, 
+				ElectricMachinesData = new List<Tuple<PowertrainPosition, ElectricMotorData>>()
 			};
 			var fileWriter = new FileOutputWriter("Coach_FullPowertrain_LowSpeed");
 			var modData = new ModalDataContainer(runData, fileWriter, null);

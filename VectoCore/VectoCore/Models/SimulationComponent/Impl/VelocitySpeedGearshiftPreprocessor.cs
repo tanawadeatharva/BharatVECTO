@@ -8,6 +8,8 @@ using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.Models.Connector.Ports.Impl;
 using TUGraz.VectoCore.Models.Simulation;
 using TUGraz.VectoCore.Models.Simulation.Data;
+using TUGraz.VectoCore.Models.Simulation.DataBus;
+using TUGraz.VectoCore.Models.SimulationComponent.Strategies;
 using TUGraz.VectoCore.OutputData;
 using TUGraz.VectoCore.Utils;
 
@@ -71,8 +73,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 						(runData.AngledriveData?.Angledrive.Ratio ?? 1.0);
 
 			var tmp = new List<Entry>();
-
-			var maxSpeed = GetVehicleMaxSpeed(runData);
+            //(Container.DriverInfo as MockDriver).DriverBehavior = DrivingBehavior.Coasting;
+            var maxSpeed = GetVehicleMaxSpeed(runData);
 			foreach (var speed in Speeds) {
 				if (speed > maxSpeed) {
 					continue;

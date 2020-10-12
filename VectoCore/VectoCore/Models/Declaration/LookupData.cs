@@ -62,6 +62,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 
 		protected static DataTable ReadCsvResource(string resourceId)
 		{
+// TODO: MQ 2020-07 Remove in official bus version!
 //#if USE_EXTENAL_DECLARATION_DATA
 			var tmp = resourceId.Replace(DeclarationData.DeclarationDataResourcePrefix + ".", "");
 			var parts = tmp.Split('.');

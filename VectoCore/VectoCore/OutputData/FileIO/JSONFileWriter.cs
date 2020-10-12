@@ -102,7 +102,7 @@ public class JSONFileWriter : IOutputFileWriter
 		body.Add("Capacity", battery.Capacity.AsAmpHour);
 		body.Add("SOC_min", battery.MinSOC * 100.0);
 		body.Add("SOC_max",battery.MaxSOC * 100.0);
-		body.Add("MaxCurrentFactor", battery.MaxCurrentFactor.ConvertToPerHour().Value);
+		body.Add("MaxCurrentMap", GetRelativePath(battery.MaxCurrentMap.Source, Path.GetDirectoryName(filename)));
 
         body.Add("InternalResistanceCurve", GetRelativePath(battery.InternalResistanceCurve.Source, Path.GetDirectoryName(filename)));
 		body.Add("SoCCurve", GetRelativePath(battery.VoltageCurve.Source, Path.GetDirectoryName(filename)));
@@ -123,7 +123,8 @@ public class JSONFileWriter : IOutputFileWriter
 		body.Add("InternalResistance", superCap.InternalResistance.Value());
 		body.Add("U_min", superCap.MinVoltage.Value());
 		body.Add("U_max", superCap.MaxVoltage.Value());
-
+		body.Add("I_maxCharge", superCap.MaxCurrentCharge.Value());
+		body.Add("I_maxDischarge", superCap.MaxCurrentDischarge.Value());
 		WriteFile(header, body, filename);
 	}
 

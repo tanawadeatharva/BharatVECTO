@@ -845,7 +845,8 @@ namespace TUGraz.VectoCore.Tests.Integration.BatteryElectric
 
 		public PerSecond EngineSpeed
 		{
-			get { return null; }
+			get;
+			set;
 		}
 		public NewtonMeter EngineTorque
 		{

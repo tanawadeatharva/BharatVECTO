@@ -21,7 +21,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Battery {
 
 		public AmpereSecond Capacity { get; internal set; }
 
-		public Ampere MaxCurrent { get; internal set; }
+		public MaxCurrentMap MaxCurrent { get; internal set; }
 
 		public double InitialSoC { get; internal set; }
 
@@ -38,6 +38,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Battery {
 
 		public Volt MaxVoltage { get; internal set; }
 		public double InitialSoC { get; internal set; }
+		public Ampere MaxCurrentCharge { get; internal set; }
+
+		public Ampere MaxCurrentDischarge { get; internal set; }
 	}
 
 	public class SOCMap
@@ -103,30 +106,87 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Battery {
 
 		protected int FindIndex(double soc)
 		{
-			if (soc < Entries.First().SoC)
-			{
+			if (soc < Entries.First().SoC) {
 				return 1;
 			}
-			if (soc > Entries.Last().SoC)
-			{
+
+			if (soc > Entries.Last().SoC) {
 				return Entries.Length - 1;
 
 			}
-			for (var index = 1; index < Entries.Length; index++)
-			{
-				if (soc >= Entries[index - 1].SoC && soc <= Entries[index].SoC)
-				{
+
+			for (var index = 1; index < Entries.Length; index++) {
+				if (soc >= Entries[index - 1].SoC && soc <= Entries[index].SoC) {
 					return index;
 				}
 			}
-			throw new VectoException("soc {0} exceeds battery model data. min: {1} max: {2}", soc, Entries.First().SoC, Entries.Last().SoC);
+
+			throw new VectoException("soc {0} exceeds battery model data. min: {1} max: {2}", soc, Entries.First().SoC,
+				Entries.Last().SoC);
 		}
 
-        public class InternalResistanceMapEntry
+		public class InternalResistanceMapEntry
 		{
 			[Required, Range(0, 1)] public double SoC;
 			[Required, SIRange(0, 1e6)] public Ohm Resistance;
 		}
 
-    }
+	}
+
+
+	public class MaxCurrentMap
+	{
+		protected internal MaxCurrentEntry[] Entries;
+
+		public MaxCurrentMap(MaxCurrentEntry[] entries)
+		{
+			Entries = entries;
+		}
+
+		public Ampere LookupMaxChargeCurrent(double soc)
+		{
+			var idx = FindIndex(soc);
+			return VectoMath.Interpolate(Entries[idx - 1].SoC, Entries[idx].SoC, Entries[idx - 1].MaxChargeCurrent,
+				Entries[idx].MaxChargeCurrent, soc);
+		}
+
+		public Ampere LookupMaxDischargeCurrent(double soc)
+		{
+			var idx = FindIndex(soc);
+			return VectoMath.Interpolate(Entries[idx - 1].SoC, Entries[idx].SoC, Entries[idx - 1].MaxDischargeCurrent,
+				Entries[idx].MaxDischargeCurrent, soc);
+		}
+
+		protected int FindIndex(double soc)
+		{
+			if (soc < Entries.First().SoC) {
+				return 1;
+			}
+
+			if (soc > Entries.Last().SoC) {
+				return Entries.Length - 1;
+
+			}
+
+			for (var index = 1; index < Entries.Length; index++) {
+				if (soc >= Entries[index - 1].SoC && soc <= Entries[index].SoC) {
+					return index;
+				}
+			}
+
+			throw new VectoException("soc {0} exceeds battery model data. min: {1} max: {2}", soc, Entries.First().SoC,
+				Entries.Last().SoC);
+		}
+
+		public class MaxCurrentEntry
+		{
+			[Required, SIRange(0, 1)] public double SoC;
+
+			[Required, SIRange(0, double.MaxValue)]
+			public Ampere MaxChargeCurrent;
+
+			[Required, SIRange(-double.MaxValue, 0)]
+			public Ampere MaxDischargeCurrent;
+		}
+	}
 }

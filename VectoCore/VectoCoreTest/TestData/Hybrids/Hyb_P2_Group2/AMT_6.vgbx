@@ -68,7 +68,7 @@
       "Enabled": false
     },
     "DownshiftAfterUpshiftDelay": 6.0,
-    "UpshiftAfterDownshiftDelay": 10.0,
+    "UpshiftAfterDownshiftDelay": 6.0,
     "UpshiftMinAcceleration": 0.1,
     "PowershiftShiftTime": 0.8
   }

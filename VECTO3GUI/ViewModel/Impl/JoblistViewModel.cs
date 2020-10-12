@@ -868,7 +868,7 @@ namespace VECTO3GUI.ViewModel.Impl
 				sender.ReportProgress(100, new VectoSimulationProgress() {Type = VectoSimulationProgress.MsgType.StatusMessage, Message = "No jobs selected for simulation"});
 				return;
 			}
-			var sumFileWriter = new FileOutputWriter(Path.GetDirectoryName(jobs.First().JobEntryFilePath));
+			var sumFileWriter = new FileOutputWriter(GetOutputDirectory(jobs.First().JobEntryFilePath));
 			var sumContainer = new SummaryDataContainer(sumFileWriter);
 			var jobContainer = new JobContainer(sumContainer);
 

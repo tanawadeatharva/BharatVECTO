@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
@@ -19,7 +20,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl {
 		protected readonly Dictionary<PowertrainPosition, ElectricMotorController> _electricMotorCtl = new Dictionary<PowertrainPosition, ElectricMotorController>();
 		public ITnOutPort NextComponent;
 
-		private Dictionary<PowertrainPosition, NewtonMeter> _electricMotorTorque = new Dictionary<PowertrainPosition, NewtonMeter>();
+		private Dictionary<PowertrainPosition, Tuple<PerSecond, NewtonMeter>> _electricMotorTorque = new Dictionary<PowertrainPosition, Tuple<PerSecond, NewtonMeter>>();
 
 		public SimpleHybridController(VehicleContainer container, ElectricSystem es, SwitchableClutch clutch) : base(container)
 		{
@@ -131,7 +132,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl {
 
 		private NewtonMeter MechanicalAssistPower(PowertrainPosition pos, Second absTime, Second dt, NewtonMeter outTorque, PerSecond prevOutAngularVelocity, PerSecond currOutAngularVelocity, bool dryRun)
 		{
-			return _electricMotorTorque.ContainsKey(pos) ? _electricMotorTorque[pos] : null;
+			return _electricMotorTorque.ContainsKey(pos) ? _electricMotorTorque[pos].Item2 : null;
 		}
 
 		///=======================================================================================
@@ -179,5 +180,17 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl {
 
 
 		public GearInfo SelectedGear { get; }
+		public PerSecond ICESpeed { get; }
+		public bool GearboxEngaged { get; }
+
+		public PerSecond ElectricMotorSpeed(PowertrainPosition pos)
+		{
+			return null;
+		}
+
+		public void RepeatDrivingAction(Second absTime)
+		{
+			
+		}
 	}
 }

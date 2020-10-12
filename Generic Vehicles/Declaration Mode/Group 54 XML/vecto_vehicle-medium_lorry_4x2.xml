@@ -11,6 +11,7 @@
 		<AxleConfiguration>4x2</AxleConfiguration>
 		<CurbMassChassis>2500</CurbMassChassis>
 		<TechnicalPermissibleMaximumLadenMass>7000</TechnicalPermissibleMaximumLadenMass>
+		<CargoVolume>8.53</CargoVolume>
 		<IdlingSpeed>800</IdlingSpeed>
 		<RetarderType>None</RetarderType>
 		<AngledriveType>None</AngledriveType>

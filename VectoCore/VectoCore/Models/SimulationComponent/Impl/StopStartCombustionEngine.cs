@@ -35,7 +35,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl {
 
 		public override IResponse Request(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity, bool dryRun)
 		{
-			return CombustionEngineOn ? base.Request(absTime, dt, outTorque, outAngularVelocity, dryRun) : HandleEngineOffRequest(absTime, dt, outTorque, outAngularVelocity, dryRun);
+			var retVal = CombustionEngineOn
+				? base.Request(absTime, dt, outTorque, outAngularVelocity, dryRun)
+				: HandleEngineOffRequest(absTime, dt, outTorque, outAngularVelocity, dryRun);
+			retVal.Engine.EngineOn = CombustionEngineOn;
+			return retVal;
 		}
 
 		#endregion
@@ -53,7 +57,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl {
 							PowerRequest = outTorque * outAngularVelocity,
 							DynamicFullLoadPower = 0.SI<Watt>(),
 							DragPower = 0.SI<Watt>(),
-							EngineSpeed = 0.RPMtoRad(),
+							EngineSpeed = outAngularVelocity, // 0.RPMtoRad(),
 							AuxiliariesPowerDemand = 0.SI<Watt>(),
 						},
 						DeltaEngineSpeed = 0.RPMtoRad(),
@@ -94,7 +98,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl {
 						PowerRequest = outTorque * outAngularVelocity,
 						DynamicFullLoadPower = 0.SI<Watt>(),
 						DragPower = 0.SI<Watt>(),
-						EngineSpeed = 0.RPMtoRad(),
+						EngineSpeed = outAngularVelocity, // 0.RPMtoRad(),
 						AuxiliariesPowerDemand = 0.SI<Watt>(),
 						TotalTorqueDemand = 0.SI<NewtonMeter>(),
 						DragTorque = 0.SI<NewtonMeter>()
@@ -155,7 +159,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl {
 
 			var auxDemand = EngineAux.PowerDemandEngineOn(time, simulationInterval, ModelData.IdleSpeed) / ModelData.IdleSpeed;
 
-			WriteWHRPower(container, ModelData.IdleSpeed, auxDemand);
+			WriteWHRPowerEngineOff(container, ModelData.IdleSpeed, auxDemand);
 
 			foreach (var fuel in ModelData.Fuels) {
 				var fc = 0.SI<KilogramPerSecond>();
@@ -185,7 +189,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl {
 			}
 		}
 
-		protected override void WriteWHRPower(IModalDataContainer container, PerSecond engineSpeed, NewtonMeter engineTorque)
+		protected virtual void WriteWHRPowerEngineOff(IModalDataContainer container, PerSecond engineSpeed, NewtonMeter engineTorque)
 		{
 			var pWHRelMap = 0.SI<Watt>();
 			var pWHRelCorr = 0.SI<Watt>();

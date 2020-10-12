@@ -38,12 +38,12 @@ Module MainModule
     Public Function ConvPicPath(hdVclass As VehicleClass, isLongHaul As Boolean) As Bitmap
 
         Select Case hdVclass
-            Case VehicleClass.ClassML2r,
-                 VehicleClass.ClassML2van,
-                 VehicleClass.ClassML3r,
-                 VehicleClass.ClassML3van,
-                 VehicleClass.ClassML4r,
-                 VehicleClass.ClassML4van,
+            Case VehicleClass.Class51,
+                 VehicleClass.Class52,
+                 VehicleClass.Class53,
+                 VehicleClass.Class54,
+                 VehicleClass.Class55,
+                 VehicleClass.Class56,
                  VehicleClass.Class1s
                 Return My.Resources.Undef
 

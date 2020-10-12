@@ -65,6 +65,7 @@ namespace TUGraz.VectoCommon.Models
 
 	public class EngineResponse : AbstractPowertrainComponentResponse
 	{
+		public bool EngineOn { get; set; }
 		public PerSecond EngineSpeed { get; set; }
 
 		public NewtonMeter TorqueOutDemand { get; set; }
@@ -84,12 +85,15 @@ namespace TUGraz.VectoCommon.Models
 
 
 	[DebuggerDisplay("P_out: {PowerRequest}")]
-	public class ClutchResponse : AbstractPowertrainComponentResponse { }
+	public class ClutchResponse : AbstractPowertrainComponentResponse
+	{
+		public PerSecond OutputSpeed { get; set; }
+	}
 
 	[DebuggerDisplay("P_out: {PowerRequest}")]
 	public class GearboxResponse : AbstractPowertrainComponentResponse
 	{
-		public PerSecond GearboxInputSpeed { get; set; }
+		public PerSecond InputSpeed { get; set; }
 
 		public uint Gear { get; set; }
 	}

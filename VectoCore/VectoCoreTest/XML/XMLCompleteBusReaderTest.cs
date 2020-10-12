@@ -106,7 +106,7 @@ namespace TUGraz.VectoCore.Tests.XML
 			Assert.AreEqual(ACCompressorType.TwoStage, havacAux.CompressorTypeDriver);
 			Assert.AreEqual(ACCompressorType.FourStage, havacAux.CompressorTypePassenger);
 			Assert.AreEqual(0.SI<Watt>(), havacAux.AuxHeaterPower);
-			Assert.IsTrue(havacAux.DoubleGlasing);
+			Assert.IsTrue(havacAux.DoubleGlazing);
 			Assert.IsFalse(havacAux.HeatPump);
 			Assert.IsTrue(havacAux.AdjustableAuxiliaryHeater);
 			Assert.IsTrue(havacAux.SeparateAirDistributionDucts);

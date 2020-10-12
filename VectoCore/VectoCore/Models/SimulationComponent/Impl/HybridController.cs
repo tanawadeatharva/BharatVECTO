@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
@@ -15,6 +16,7 @@ using TUGraz.VectoCore.Models.SimulationComponent.Data.Engine;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox;
 using TUGraz.VectoCore.Models.SimulationComponent.Strategies;
 using TUGraz.VectoCore.OutputData;
+using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 {
@@ -25,7 +27,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		protected readonly Dictionary<PowertrainPosition, ElectricMotorController> _electricMotorCtl;
 		protected readonly HybridCtlShiftStrategy _shiftStrategy;
 		protected readonly IHybridControlStrategy _hybridStrategy;
-		private Dictionary<PowertrainPosition, NewtonMeter> _electricMotorTorque = new Dictionary<PowertrainPosition, NewtonMeter>();
+		private Dictionary<PowertrainPosition, Tuple<PerSecond, NewtonMeter>> _electricMotorTorque = new Dictionary<PowertrainPosition, Tuple<PerSecond, NewtonMeter>>();
+		private HybridStrategyResponse CurrentStrategySettings;
+
+		protected DebugData DebugData = new DebugData();
 
 
 		public HybridController(IVehicleContainer container, IHybridControlStrategy strategy, IElectricSystem es,
@@ -90,6 +95,21 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		public GearInfo SelectedGear { get; protected set; }
 
+		public bool GearboxEngaged
+		{
+			get { return CurrentStrategySettings.GearboxEngaged; }
+		}
+
+		public PerSecond ElectricMotorSpeed(PowertrainPosition pos)
+		{
+			return CurrentStrategySettings.MechanicalAssistPower[pos].Item1;
+		}
+
+		public PerSecond ICESpeed
+		{
+			get { return CurrentStrategySettings.EvaluatedSolution.Response?.Engine.EngineSpeed; }
+		}
+
 
 		public IResponse Request(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity,
 			bool dryRun = false)
@@ -98,6 +118,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			var retryCount = 0;
 			IResponse retVal;
 			do {
+				if (retryCount > 10) {
+					throw new VectoException("HybridStrategy: retry count exceeded! {0}", DebugData);
+				}
 				retry = false;
 				var strategyResponse = Strategy.Request(absTime, dt, outTorque, outAngularVelocity, dryRun);
 				if (strategyResponse is HybridStrategyLimitedResponse) {
@@ -120,6 +143,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					CurrentState.SetState(outTorque, outAngularVelocity, outTorque, outAngularVelocity);
 					CurrentState.StrategyResponse = strategySettings;
 				}
+				//SelectedGear = new GearInfo(strategySettings.NextGear, true);
 				if (!dryRun && /*!DataBus.EngineInfo.EngineOn &&*/ strategySettings.ShiftRequired) {
 					DataBus.GearboxCtl.TriggerGearshift(absTime, dt);
 					_shiftStrategy.SetNextGear(strategySettings.NextGear);
@@ -127,10 +151,33 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					return new ResponseGearShift(this);
 				}
 
+				if (!dryRun /*&& DataBus.VehicleInfo.VehicleStopped*/) {
+					SelectedGear = new GearInfo(strategySettings.NextGear, true);
+				}
+
+				CurrentStrategySettings = strategySettings;
 				retVal = NextComponent.Request(absTime, dt, outTorque, outAngularVelocity, dryRun);
+				DebugData.Add(new { DrivingAction = DataBus.DriverInfo.DrivingAction, StrategySettings = strategySettings, Response = retVal, DryRun = dryRun });
+
+				if (!dryRun && strategySettings.CombustionEngineOn && retVal is ResponseSuccess && retVal.Engine.EngineSpeed.IsSmaller(Strategy.MinICESpeed)) {
+					Strategy.AllowEmergencyShift = true;
+					retryCount++;
+					retry = true;
+					Strategy.OperatingpointChangedDuringRequest(absTime, dt, outTorque, outAngularVelocity, dryRun, retVal);
+					continue;
+				}
+
 				if (retVal is ResponseDifferentGearEngaged) {
 					retryCount++;
 					retry = true;
+					Strategy.OperatingpointChangedDuringRequest(absTime, dt, outTorque, outAngularVelocity, dryRun, retVal);
+					continue;
+				}
+
+				if (retVal is ResponseInvalidOperatingPoint) {
+					retryCount++;
+					retry = true;
+					Strategy.OperatingpointChangedDuringRequest(absTime, dt, outTorque, outAngularVelocity, dryRun, retVal);
 					continue;
 				}
 				retVal.HybridController.StrategySettings = strategySettings;
@@ -161,6 +208,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		{
 			base.DoCommitSimulationStep(time, simulationInterval);
 			Strategy.CommitSimulationStep(time, simulationInterval);
+			DebugData = new DebugData();
 		}
 
 		protected override void DoWriteModalResults(
@@ -173,7 +221,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		private NewtonMeter MechanicalAssistPower(PowertrainPosition pos, Second absTime, Second dt,
 			NewtonMeter outTorque, PerSecond prevOutAngularVelocity, PerSecond currOutAngularVelocity, bool dryRun)
 		{
-			return _electricMotorTorque[pos];
+			return _electricMotorTorque[pos]?.Item2;
 
 			//return CurrentState.StrategyResponse.MechanicalAssistPower[pos];
 		}
@@ -386,8 +434,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 						gear++;
 					}
 
-                    _nextGear = gear;
-                }
+					_nextGear = gear;
+				}
 			}
 
 			public override IGearbox Gearbox
@@ -416,5 +464,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			}
 		}
 
+		public void RepeatDrivingAction(Second absTime)
+		{
+			Strategy.RepeatDrivingAction(absTime);
+		}
 	}
 }

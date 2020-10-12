@@ -41,6 +41,7 @@ using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.Models.SimulationComponent;
 using TUGraz.VectoCore.Models.SimulationComponent.Impl;
 using TUGraz.VectoCore.OutputData;
+using TUGraz.VectoCore.Tests.Integration.BatteryElectric;
 using TUGraz.VectoCore.Tests.Utils;
 using TUGraz.VectoCore.Utils;
 
@@ -80,6 +81,9 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			var clutch = new Clutch(container, engineData) { IdleController = new MockIdleController() };
 			var brakes = new Brakes(container) { BrakePower = 0.SI<Watt>() };
 			var vehicle = new MockVehicle(container) { MyVehicleSpeed = 50.KMPHtoMeterPerSecond() };
+			var engine  = new MockEngineInfo(container) {
+				EngineSpeed = 800.RPMtoRad()
+			};
 
 			var inPort = clutch.InPort();
 			var outPort = new MockTnOutPort();

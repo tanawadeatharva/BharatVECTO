@@ -799,6 +799,7 @@ Public Class Vehicle
     Public ReadOnly Property RegisteredClass As RegistrationClass Implements IVehicleDeclarationInputData.RegisteredClass
     Public ReadOnly Property NumberOfPassengersUpperDeck As Integer Implements IVehicleDeclarationInputData.NumberOfPassengersUpperDeck
     Public ReadOnly Property NumberOfPassengersLowerDeck As Integer Implements IVehicleDeclarationInputData.NumberOfPassengersLowerDeck
+    Public ReadOnly Property CargoVolume As CubicMeter Implements IVehicleDeclarationInputData.CargoVolume
     Public ReadOnly Property VehicleCode As VehicleCode Implements IVehicleDeclarationInputData.VehicleCode
     Public ReadOnly Property LowEntry As Boolean Implements IVehicleDeclarationInputData.LowEntry
 
@@ -898,7 +899,7 @@ Public Class ElectricStorageWrapper
     Public ReadOnly Property Capacity As AmpereSecond Implements IBatteryPackDeclarationInputData.Capacity
     Public ReadOnly Property InternalResistanceCurve As TableData Implements IBatteryPackDeclarationInputData.InternalResistanceCurve
     Public ReadOnly Property VoltageCurve As TableData Implements IBatteryPackDeclarationInputData.VoltageCurve
-    Public ReadOnly Property MaxCurrentFactor As PerSecond Implements IBatteryPackDeclarationInputData.MaxCurrentFactor
+    Public ReadOnly Property MaxCurrentMap As TableData Implements IBatteryPackDeclarationInputData.MaxCurrentMap
     Public ReadOnly Property StorageType As REESSType Implements IREESSPackInputData.StorageType
 End Class
 

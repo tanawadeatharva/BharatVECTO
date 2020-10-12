@@ -8,6 +8,7 @@ using TUGraz.VectoCore.InputData.FileIO.JSON;
 using TUGraz.VectoCore.InputData.FileIO.XML;
 using TUGraz.VectoCore.Models.Simulation;
 using TUGraz.VectoCore.Models.Simulation.Impl;
+using TUGraz.VectoCore.OutputData;
 using TUGraz.VectoCore.OutputData.FileIO;
 using TUGraz.VectoCore.Tests.Models.Simulation;
 
@@ -86,11 +87,14 @@ namespace TUGraz.VectoCore.Tests.XML
 		}
 
 		
-		[TestCase()]
-		public void CreateRunDataMediumLorry()
+		[TestCase(@"TestData\Integration\MediumLorries\vecto_vehicle-medium_lorry-Van.xml", TestName = "Medium Lorry Van"),
+		TestCase(@"TestData\Integration\MediumLorries\vecto_vehicle-medium_lorry.xml", TestName = "Medium Lorry"),
+		TestCase(@"TestData\Integration\MediumLorries\vecto_vehicle-medium_lorryFWD.xml", TestName = "Medium Lorry FWD"),
+        ]
+		public void CreateRunDataMediumLorry(string jobFile)
 		{
 			var runIdx = 0;
-			var jobFile = @"TestData\XML\XMLReaderDeclaration\SchemaVersion2.6_Buses\vecto_vehicle-medium_lorry-sample.xml";
+			//var jobFile = @"TestData\XML\XMLReaderDeclaration\SchemaVersion2.6_Buses\vecto_vehicle-medium_lorry-sample.xml";
 
 			var writer = new FileOutputWriter(jobFile);
 			var inputData = xmlInputReader.CreateDeclaration(jobFile);
@@ -100,13 +104,23 @@ namespace TUGraz.VectoCore.Tests.XML
 				//ActualModalData = true,
 				Validate = false
 			};
-			var jobContainer = new JobContainer(new MockSumWriter());
-
-			var runs = factory.SimulationRuns().ToArray();
+			var jobContainer = new JobContainer(new SummaryDataContainer(writer));
+			jobContainer.AddRuns(factory);
+			jobContainer.Execute();
+			jobContainer.WaitFinished();
+			//var runs = factory.SimulationRuns().ToArray();
 			//jobContainer.AddRun(runs[runIdx]);
-			runs[runIdx].Run();
+			//runs[runIdx].Run();
 
-			Assert.IsTrue(runs[runIdx].FinishedWithoutErrors);
+			Assert.IsTrue(jobContainer.AllCompleted);
+			Assert.IsTrue(jobContainer.GetProgress().All(x => x.Value.Success));
+
+			var xml = new XmlDocument();
+			xml.Load(writer.XMLCustomerReportName);
+			var volumeResults =
+				xml.SelectNodes(
+					".//*[local-name()='Result']/*[local-name()='Fuel']/*[local-name()='FuelConsumption' and @unit='l/m³-km']");
+			Assert.IsTrue(volumeResults.Count > 0);
 		}
 
 

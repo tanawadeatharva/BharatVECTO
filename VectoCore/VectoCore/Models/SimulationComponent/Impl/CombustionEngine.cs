@@ -33,6 +33,7 @@ using System;
 using System.Linq;
 using TUGraz.VectoCommon.BusAuxiliaries;
 using TUGraz.VectoCommon.Exceptions;
+using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Configuration;
@@ -177,7 +178,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			Log.Debug("Engine Powertrain Power Request: torque: {0}, angularVelocity: {1}, power: {2}", outTorque,
 				outAngularVelocity, outTorque * outAngularVelocity);
 
-			return DoHandleRequest(absTime, dt, outTorque, outAngularVelocity, dryRun);
+			var retVal = DoHandleRequest(absTime, dt, outTorque, outAngularVelocity, dryRun);
+			retVal.Engine.EngineOn = true;
+			return retVal;
 		}
 
 		protected virtual IResponse DoHandleRequest(Second absTime, Second dt, NewtonMeter torqueOut,
@@ -194,7 +197,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			var avgEngineSpeed = GetEngineSpeed(angularVelocity);
 
 			var engineSpeedLimit = GetEngineSpeedLimit(absTime);
-			if (!dryRun && avgEngineSpeed.IsGreater(engineSpeedLimit, Constants.SimulationSettings.LineSearchTolerance)) {
+			if (!dryRun && !angularVelocity.IsSmallerOrEqual(engineSpeedLimit)) {
+				if (DataBus.HybridControllerInfo?.ICESpeed != null && DataBus.HybridControllerInfo.ICESpeed != angularVelocity) {
+					return new ResponseInvalidOperatingPoint(this);
+				}
 				return new ResponseEngineSpeedTooHigh(this) {
 					DeltaEngineSpeed = avgEngineSpeed - engineSpeedLimit,
 					Engine = {
@@ -236,7 +242,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				return new ResponseDryRun(this) {
 					DeltaFullLoad = deltaFull * avgEngineSpeed,
 					DeltaDragLoad = deltaDrag * avgEngineSpeed,
-					DeltaEngineSpeed = avgEngineSpeed - engineSpeedLimit,
+					DeltaEngineSpeed = angularVelocity - engineSpeedLimit,
 					Engine = {
 						EngineSpeed = angularVelocity,
 						PowerRequest = torqueOut * avgEngineSpeed,
@@ -283,6 +289,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			if (totalTorqueDemand.IsGreater(0) &&
 				(deltaFull * avgEngineSpeed).IsGreater(0, Constants.SimulationSettings.LineSearchTolerance)) {
 				Log.Debug("requested engine power exceeds fullload power: delta: {0}", deltaFull);
+				if (DataBus.HybridControllerInfo?.ICESpeed != null && DataBus.HybridControllerInfo.ICESpeed != angularVelocity && DataBus.GearboxInfo.GearEngaged(absTime))
+				{
+					return new ResponseInvalidOperatingPoint(this);
+				}
 				return new ResponseOverload(this) {
 					AbsTime = absTime,
 					Delta = deltaFull * avgEngineSpeed,
@@ -304,6 +314,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			if (totalTorqueDemand.IsSmaller(0) &&
 				(deltaDrag * avgEngineSpeed).IsSmaller(0, Constants.SimulationSettings.LineSearchTolerance)) {
 				Log.Debug("requested engine power is below drag power: delta: {0}", deltaDrag);
+				if (DataBus.HybridControllerInfo?.ICESpeed != null && DataBus.HybridControllerInfo.ICESpeed != angularVelocity && DataBus.GearboxInfo.GearEngaged(absTime))
+				{
+					return new ResponseInvalidOperatingPoint(this);
+				}
 				return new ResponseUnderload(this) {
 					AbsTime = absTime,
 					Delta = deltaDrag * avgEngineSpeed,

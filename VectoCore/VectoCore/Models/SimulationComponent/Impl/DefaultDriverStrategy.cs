@@ -199,13 +199,16 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				HandleEcoRoll(absTime, targetVelocity);
 			}
 
-			if (ADAS.EcoRoll != EcoRollType.None) {
+			//if (ADAS.EcoRoll != EcoRollType.None) {
+			// todo MQ: keep something like this to prevent driver to turn on engine in every timestep (in combination with hybrids leads to errors!)
 				if (EcoRollState.State != EcoRollStates.EcoRollOn && PCCState != PCCStates.UseCase1 &&
 					PCCState != PCCStates.UseCase2) {
 					EngineOffTimestamp = null;
-					Driver.DataBus.EngineCtl.CombustionEngineOn = true;
+					if (Driver.DataBus.PowertrainInfo.HasCombustionEngine && !Driver.DataBus.PowertrainInfo.HasElectricMotor) {
+						Driver.DataBus.EngineCtl.CombustionEngineOn = true;
+					}
 				}
-			}
+			//}
 
 			if (CurrentDrivingMode == DrivingMode.DrivingModeBrake) {
 				if (Driver.DataBus.MileageCounter.Distance.IsGreaterOrEqual(BrakeTrigger.TriggerDistance, 1e-3.SI<Meter>())) {
@@ -1201,6 +1204,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					} else {
 						Log.Info("Brake -> Overload -> Clutch is closed - Trying brake action again");
 						DataBus.Brakes.BrakePower = 0.SI<Watt>();
+						DataBus.HybridControllerCtl?.RepeatDrivingAction(absTime);
 						response = Driver.DrivingActionBrake(
 							absTime, ds, DriverStrategy.BrakeTrigger.NextTargetSpeed, gradient,
 							targetDistance: targetDistance);
@@ -1208,8 +1212,13 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 							r1 => {
 								Log.Info("Brake -> Overload -> 2nd Brake -> Overload -> Trying accelerate action");
 								var gear = DataBus.GearboxInfo.Gear;
-								response = Driver.DrivingActionAccelerate(
-									absTime, ds, DriverStrategy.BrakeTrigger.NextTargetSpeed, gradient);
+								if (DataBus.GearboxInfo.GearEngaged(absTime)) {
+									response = Driver.DrivingActionAccelerate(
+										absTime, ds, DriverStrategy.BrakeTrigger.NextTargetSpeed, gradient);
+								} else {
+									response = Driver.DrivingActionRoll(absTime, ds, targetVelocity, gradient);
+								}
+
 								response.Switch().Case<ResponseGearShift>(
 									rs => {
 										Log.Info(

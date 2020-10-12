@@ -97,8 +97,8 @@
     "TorqueConverter": {
       "Enabled": false
     },
-    "DownshiftAferUpshiftDelay": 10.0,
-    "UpshiftAfterDownshiftDelay": 10.0,
+    "DownshiftAferUpshiftDelay": 6.0,
+    "UpshiftAfterDownshiftDelay": 6.0,
     "UpshiftMinAcceleration": 0.1
   }
 }

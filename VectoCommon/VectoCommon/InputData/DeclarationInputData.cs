@@ -31,6 +31,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.IO;
 using System.Xml;
 using TUGraz.VectoCommon.BusAuxiliaries;
@@ -167,6 +168,9 @@ namespace TUGraz.VectoCommon.InputData
 		int NumberOfPassengersUpperDeck { get; }
 
 		int NumberOfPassengersLowerDeck { get; }
+
+		// only used for medium lorries type VAN
+		CubicMeter CargoVolume { get; }
 
 		VehicleCode VehicleCode { get; }
 
@@ -754,7 +758,7 @@ namespace TUGraz.VectoCommon.InputData
 
 		TableData VoltageCurve { get; }
 
-		PerSecond MaxCurrentFactor { get; }
+		TableData MaxCurrentMap { get; }
 	}
 
 	public interface ISuperCapDeclarationInputData : IREESSPackInputData
@@ -766,6 +770,11 @@ namespace TUGraz.VectoCommon.InputData
 		Volt MinVoltage { get; }
 
 		Volt MaxVoltage { get; }
+
+		Ampere MaxCurrentCharge { get; }
+
+		Ampere MaxCurrentDischarge { get; }
+
 	}
 
 
@@ -854,7 +863,7 @@ namespace TUGraz.VectoCommon.InputData
 
 		Watt AuxHeaterPower { get; }
 
-		bool DoubleGlasing { get; }
+		bool DoubleGlazing { get; }
 
 		bool HeatPump { get; }
 

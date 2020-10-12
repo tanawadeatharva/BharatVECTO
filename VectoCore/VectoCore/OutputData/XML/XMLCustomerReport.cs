@@ -69,7 +69,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 		protected KilogramPerMeter _weightedCo2 = 0.SI<KilogramPerMeter>();
 
 		protected Kilogram _weightedPayload = 0.SI<Kilogram>();
-		private double _passengerCount;
+		protected double _passengerCount = 0;
 
 
 		public XMLCustomerReport()
@@ -229,7 +229,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 			);
 		}
 
-		private XElement GetApplicationInfo()
+		protected XElement GetApplicationInfo()
 		{
 			var versionNumber = VectoSimulationCore.VersionNumber;
 #if CERTIFICATION_RELEASE
@@ -243,7 +243,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 					XmlConvert.ToString(DateTime.Now, XmlDateTimeSerializationMode.Utc)));
 		}
 
-		public void GenerateReport(XElement resultSignature)
+		public virtual void GenerateReport(XElement resultSignature)
 		{
 			
 			var retVal = new XDocument();
@@ -291,6 +291,6 @@ namespace TUGraz.VectoCore.OutputData.XML
 			Report = h.AddHash();
 		}
 
-		public XDocument Report { get; private set; }
+		public XDocument Report { get; protected set; }
 	}
 }

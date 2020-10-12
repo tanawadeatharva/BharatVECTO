@@ -7,7 +7,7 @@
 		<VIN>VEH-1234567890</VIN>
 		<Date>2020-01-09T11:00:00Z</Date>
 		<LegislativeClass>N2</LegislativeClass>
-		<RegisteredClass>II+III</RegisteredClass>
+		<ClassBus>II+III</ClassBus>
 		<VehicleCode>CD</VehicleCode>
 		<CurbMassChassis>8300</CurbMassChassis>
 		<TechnicalPermissibleMaximumLadenMass>15400</TechnicalPermissibleMaximumLadenMass>
@@ -63,7 +63,7 @@
 							<PassengerAC>4-stage</PassengerAC>
 						</CompressorType>
 						<AuxiliaryHeaterPower>0</AuxiliaryHeaterPower>
-						<DoubleGlasing>true</DoubleGlasing>
+						<DoubleGlazing>true</DoubleGlazing>
 						<HeatPump>false</HeatPump>
 						<AdjustableAuxiliaryHeater>true</AdjustableAuxiliaryHeater>
 						<SeparateAirDistributionDucts>true</SeparateAirDistributionDucts>

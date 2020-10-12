@@ -22,6 +22,18 @@ Make and Model
 Inertia \[kgm²\]
 :   Rotational inertia of the gearbox (constant for all gears). (Engineering mode only)
 
+Continuous Power \[W\]
+:    The nominal power the electric machine can provide continuously
+
+Rated Speed (cont. Pwr) \[rpm\]
+:    Speed applied when determining the continuous power. Used for determining the continuous losses in the overload model
+
+Peak Performance Time \[s\]
+:    The time interval the electric machine can operate at its peak performance
+
+Thermal Overload Recovery Factor
+:    The accumulated overload energy has to be below the max. overload capacity multiplied by this factor so that the peak power is available again.
+
 Max. Drive and Max. Generation Torque Curve
 :   Torque over engine speed the electric motor can apply on its output shaft. (see [Electric Motor Max Torque File (.vemp)](#electric-motor-max-torque-file-.vemp))
 
