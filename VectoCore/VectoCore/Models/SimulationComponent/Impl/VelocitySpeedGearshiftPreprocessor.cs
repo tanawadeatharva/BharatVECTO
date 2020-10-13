@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using TUGraz.VectoCommon.Exceptions;
+using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Configuration;
@@ -73,14 +74,14 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 						(runData.AngledriveData?.Angledrive.Ratio ?? 1.0);
 
 			var tmp = new List<Entry>();
-            //(Container.DriverInfo as MockDriver).DriverBehavior = DrivingBehavior.Coasting;
-            var maxSpeed = GetVehicleMaxSpeed(runData);
+			//(Container.DriverInfo as MockDriver).DriverBehavior = DrivingBehavior.Coasting;
+			var maxSpeed = GetVehicleMaxSpeed(runData);
 			foreach (var speed in Speeds) {
 				if (speed > maxSpeed) {
 					continue;
 				}
 
-				var targetEngineSpeed = 0.5 * (runData.EngineData.FullLoadCurves[0].RatedSpeed - runData.EngineData.IdleSpeed) + runData.EngineData.IdleSpeed;
+				var targetEngineSpeed = GetMotorTargetSpeed(runData);
 				var gearForSpeed = runData.GearboxData.Gears.OrderBy(x => Math.Abs((speed * ratio * x.Value.Ratio - targetEngineSpeed).Value()))
 					.FirstOrDefault().Key;
 				if (gearForSpeed == 0) {
@@ -105,7 +106,12 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			return tmp.ToArray();
 		}
 
-		private static MeterPerSecond GetVehicleMaxSpeed(VectoRunData runData)
+		protected virtual PerSecond GetMotorTargetSpeed(VectoRunData runData)
+		{
+			return 0.5 * (runData.EngineData.FullLoadCurves[0].RatedSpeed - runData.EngineData.IdleSpeed) + runData.EngineData.IdleSpeed;
+		}
+
+		protected virtual MeterPerSecond GetVehicleMaxSpeed(VectoRunData runData)
 		{
 			var axleGearData = runData.AxleGearData;
 			var angledriveData = runData.AngledriveData;
@@ -116,15 +122,20 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			var axlegearRatio = axleGearData != null ? axleGearData.AxleGear.Ratio : 1.0;
 			var dynamicTyreRadius = runData.VehicleData != null ? runData.VehicleData.DynamicTyreRadius : 0.0.SI<Meter>();
 
-			var vehicleMaxSpeed = runData.EngineData.FullLoadCurves[0].N95hSpeed /
-								runData.GearboxData.Gears[runData.GearboxData.Gears.Keys.Max()].Ratio / axlegearRatio /
-								angledriveRatio * dynamicTyreRadius;
-
+			var vehicleMaxSpeed = GetMaxMotorspeed(runData) /
+					runData.GearboxData.Gears[runData.GearboxData.Gears.Keys.Max()].Ratio / axlegearRatio /
+					angledriveRatio * dynamicTyreRadius;
+			
 			var maxSpeed = VectoMath.Min(
 				vehicleMaxSpeed,
 				(runData.VehicleDesignSpeed ?? 90.KMPHtoMeterPerSecond()) +
 				(runData.DriverData?.OverSpeed?.OverSpeed ?? 0.KMPHtoMeterPerSecond()));
 			return maxSpeed;
+		}
+
+		protected virtual PerSecond GetMaxMotorspeed(VectoRunData runData)
+		{
+			return runData.EngineData.FullLoadCurves[0].N95hSpeed;
 		}
 
 		public IList<MeterPerSecond> Speeds { get; }
@@ -181,5 +192,27 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			public Radian Gradient;
 			public MeterPerSecond EndVelocity;
 		}
+	}
+
+	public class VelocitySpeedGearshiftPreprocessorE2 : VelocitySpeedGearshiftPreprocessor
+	{
+		public VelocitySpeedGearshiftPreprocessorE2(VelocityRollingLookup velocityDropData,
+			Second tracktionInterruption, SimplePowertrainContainer simpleContainer, int minGradient = -24,
+			int maxGradient = 24, int gradientStep = 2) : base(velocityDropData, tracktionInterruption, simpleContainer,
+			minGradient, maxGradient, gradientStep) { }
+
+		protected override PerSecond GetMotorTargetSpeed(VectoRunData runData)
+		{
+			return 0.5 * runData.ElectricMachinesData
+				.FirstOrDefault(x => x.Item1 == PowertrainPosition.BatteryElectricB2)?.Item2.FullLoadCurve
+				.MaxSpeed;
+		}
+
+		protected override PerSecond GetMaxMotorspeed(VectoRunData runData)
+		{
+			return runData.ElectricMachinesData
+                    .FirstOrDefault(x => x.Item1 == PowertrainPosition.BatteryElectricB2)?.Item2.FullLoadCurve
+                    .MaxSpeed;
+        }
 	}
 }

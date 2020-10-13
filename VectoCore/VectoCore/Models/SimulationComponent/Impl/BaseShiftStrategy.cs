@@ -35,6 +35,7 @@ using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Configuration;
+using TUGraz.VectoCore.Models.Simulation;
 using TUGraz.VectoCore.Models.Simulation.DataBus;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Engine;
@@ -48,9 +49,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		protected readonly IDataBus DataBus;
 		protected readonly GearboxData ModelData;
 
-		protected BaseShiftStrategy(GearboxData data, IDataBus dataBus)
+		protected BaseShiftStrategy(IVehicleContainer dataBus)
 		{
-			ModelData = data;
+			ModelData = dataBus.RunData.GearboxData;
 			DataBus = dataBus;
 		}
 

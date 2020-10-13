@@ -29,6 +29,7 @@
 *   Martin Rexeis, rexeis@ivt.tugraz.at, IVT, Graz University of Technology
 */
 
+using TUGraz.VectoCore.Models.Simulation;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.DataBus;
 
@@ -36,7 +37,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 {
 	public class MTShiftStrategy : AMTShiftStrategy
 	{
-		public MTShiftStrategy(VectoRunData runData, IDataBus bus) : base(runData, bus)
+		public MTShiftStrategy(IVehicleContainer bus) : base(bus)
 		{
 			EarlyShiftUp = false;
 			SkipGears = true;

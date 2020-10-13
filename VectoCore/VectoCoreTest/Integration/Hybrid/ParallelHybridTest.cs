@@ -952,7 +952,7 @@ namespace TUGraz.VectoCore.Tests.Integration.Hybrid
 
 			es.Connect(battery);
 
-			var gearbox = new Gearbox(container, ctl.ShiftStrategy, runData);
+			var gearbox = new Gearbox(container, ctl.ShiftStrategy);
 			//var hybridStrategy = new DelegateParallelHybridStrategy();
 			ctl.Gearbox = gearbox;
 
@@ -1055,15 +1055,14 @@ namespace TUGraz.VectoCore.Tests.Integration.Hybrid
 			};
 
 			var container = new VehicleContainer(
-				ExecutionMode.Engineering, modData, x => { sumData?.Write(x, 1, 1, runData); });
-			container.RunData = runData;
+				ExecutionMode.Engineering, modData, x => { sumData?.Write(x, 1, 1, runData); }) { RunData = runData };
 
 
 			var clutch = new SwitchableClutch(container, runData.EngineData);
 
-			var gbxStrategy = new AMTShiftStrategyOptimized(runData,container);
+			var gbxStrategy = new AMTShiftStrategyOptimized(container);
 			
-			var gearbox = new Gearbox(container, gbxStrategy, runData);
+			var gearbox = new Gearbox(container, gbxStrategy);
 
 			var engine = new StopStartCombustionEngine(container, runData.EngineData);
 			var idleController = engine.IdleController;

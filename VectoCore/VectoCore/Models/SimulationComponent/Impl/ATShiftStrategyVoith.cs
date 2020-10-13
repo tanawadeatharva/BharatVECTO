@@ -7,6 +7,7 @@ using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Configuration;
+using TUGraz.VectoCore.Models.Simulation;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.DataBus;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Engine;
@@ -35,8 +36,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		private MeterPerSquareSecond driverAcceleration;
 		private bool dualTCTransmission;
 
-		public ATShiftStrategyVoith(VectoRunData data, IDataBus dataBus) : base(data, dataBus)
+		public ATShiftStrategyVoith(IVehicleContainer dataBus) : base(dataBus)
 		{
+			var data = dataBus.RunData;
 			if (data.EngineData == null) {
 				return;
 			}

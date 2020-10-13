@@ -60,8 +60,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			set { CurrentState.TorqueConverterLocked = value; }
 		}
 
-		public ATGearbox(IVehicleContainer container, IShiftStrategy strategy, VectoRunData runData)
-			: base(container, runData)
+		public ATGearbox(IVehicleContainer container, IShiftStrategy strategy)
+			: base(container)
 		{
 			_strategy = strategy;
 			if (_strategy != null) {
@@ -69,8 +69,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			}
 			LastShift = -double.MaxValue.SI<Second>();
 			TorqueConverter = new TorqueConverter(this, _strategy, container, ModelData.TorqueConverterData,
-				runData);
-			EngineInertia = runData.EngineData.Inertia;
+				container.RunData);
+			EngineInertia = container.RunData.EngineData.Inertia;
 		}
 
 		public IIdleController IdleController

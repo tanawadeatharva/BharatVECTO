@@ -642,16 +642,15 @@ namespace TUGraz.VectoCore.Models.Declaration
 				ElectricMotorFullLoadCurve fullLoadCurve, IList<ITransmissionInputData> gears,
 				double axlegearRatio, Meter dynamicTyreRadius)
 			{
-				if (gears.Count < 2)
-				{
+				if (gears.Count < 2) {
 					throw new VectoException("ComputeShiftPolygon needs at least 2 gears. {0} gears given.", gears.Count);
 				}
 
 				var downShift = new List<ShiftPolygon.ShiftPolygonEntry>();
 				var upShift = new List<ShiftPolygon.ShiftPolygonEntry>();
 				if (gearIdx > 0) {
-					downShift.Add(new ShiftPolygon.ShiftPolygonEntry(fullLoadCurve.MaxGenerationTorque * 1.1, fullLoadCurve.MaxSpeed * 0.9));
-					downShift.Add(new ShiftPolygon.ShiftPolygonEntry(fullLoadCurve.MaxDriveTorque * 1.1, fullLoadCurve.MaxSpeed * 0.9));
+					downShift.Add(new ShiftPolygon.ShiftPolygonEntry(fullLoadCurve.MaxGenerationTorque * 1.1, 0.RPMtoRad()));
+					downShift.Add(new ShiftPolygon.ShiftPolygonEntry(fullLoadCurve.MaxDriveTorque * 1.1, 0.RPMtoRad()));
 
 				}
 				if (gearIdx >= gears.Count - 1) {

@@ -125,7 +125,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 					Type = PrimaryVehicle.Components.GearboxInputData.Type,
 				}
 			};
-			var tmpStrategy = PowertrainBuilder.GetShiftStrategy(tmpRunData, new SimplePowertrainContainer(tmpRunData));
+			var tmpStrategy = PowertrainBuilder.GetShiftStrategy(new SimplePowertrainContainer(tmpRunData));
 			
 			_gearboxData = DataAdapterGeneric.CreateGearboxData(PrimaryVehicle, new VectoRunData() { EngineData = combustionEngineData, AxleGearData = _axlegearData, VehicleData = tmpVehicleData },
 				tmpStrategy);

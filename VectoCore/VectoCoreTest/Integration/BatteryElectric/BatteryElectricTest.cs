@@ -414,6 +414,38 @@ namespace TUGraz.VectoCore.Tests.Integration.BatteryElectric
 
 
 		[
+			TestCase(30, 0.7, 0, TestName = "BEV E2 Halt 30km/h SoC: 0.7, level"),
+			TestCase(80, 0.7, 0, TestName = "BEV E2 Halt 80km/h SoC: 0.7, level"),
+			TestCase(30, 0.25, 0, TestName = "BEV E2 Halt 30km/h SoC: 0.25, level"),
+			TestCase(80, 0.5, -5, TestName = "BEV E2 Halt 80km/h SoC: 0.5, DH 5%"),
+		]
+		public void B2BEVStop(double vmax, double initialSoC, double slope)
+		{
+			var cycleData = string.Format(
+				@"   0, {0}, {1},    0
+				   699, {0}, {1},    0
+				   700,   0, {1},    3", vmax, slope);
+			var cycle = SimpleDrivingCycles.CreateCycleData(cycleData);
+
+			const bool largeMotor = true;
+
+			var modFilename = string.Format("SimpleBatteryElectric-B2_stop_{0}-{1}_{2}", vmax, initialSoC, slope);
+			const PowertrainPosition pos = PowertrainPosition.BatteryElectricB2;
+			var job = CreateEngineeringRun(
+				cycle, modFilename, initialSoC, pos, 2, 2, largeMotor: true);
+			var run = job.Runs.First().Run;
+			var modData = ((ModalDataContainer)((VehicleContainer)run.GetContainer()).ModData).Data;
+
+			run.Run();
+			Assert.IsTrue(run.FinishedWithoutErrors);
+
+			Assert.IsTrue(modData.Rows.Count > 0);
+
+			var graphWriter = GetGraphWriter(new[] { ModalResultField.P_electricMotor_mech_B2 });
+			graphWriter.Write(modFilename + ".vmod");
+		}
+
+		[
 			TestCase(30, 0.7, 0, TestName = "BEV E2 DriveOff 30km/h SoC: 0.7, level"),
 			TestCase(80, 0.7, 0, TestName = "BEV E2 DriveOff 80km/h SoC: 0.7, level"),
 			TestCase(30, 0.25, 0, TestName = "BEV E2 DriveOff 30km/h SoC: 0.25, level")
@@ -593,9 +625,11 @@ namespace TUGraz.VectoCore.Tests.Integration.BatteryElectric
 			}
 			
 			var container = new VehicleContainer(
-				ExecutionMode.Engineering, modData, x => { sumData?.Write(x, 1, 1, runData); });
+				ExecutionMode.Engineering, modData, x => { sumData?.Write(x, 1, 1, runData); }) {
+				RunData = runData
+			};
 
-			var strategy = new PEVAMTShiftStrategy(gearboxData, container);
+			var strategy = new PEVAMTShiftStrategy(container);
 
 			foreach (var entry in gearboxData.Gears) {
 				entry.Value.ShiftPolygon = strategy.ComputeDeclarationShiftPolygon(GearboxType.AMT,
@@ -603,8 +637,6 @@ namespace TUGraz.VectoCore.Tests.Integration.BatteryElectric
 					vehicleData.DynamicTyreRadius, electricMotorData.First().Item2);
 			}
 
-			container.RunData = runData;
-			
 			var es = new ElectricSystem(container);
 			var battery = new Battery(container, batteryData);
 			battery.Initialize(initialBatCharge);
@@ -653,7 +685,7 @@ namespace TUGraz.VectoCore.Tests.Integration.BatteryElectric
 				case PowertrainPosition.BatteryElectricB2:
 					
 					powertrain.AddComponent(new AxleGear(container, runData.AxleGearData))
-						.AddComponent(new PEVGearbox(container, strategy, runData))
+						.AddComponent(new PEVGearbox(container, strategy))
 						.AddComponent(
 							GetElectricMachine(PowertrainPosition.BatteryElectricB2, runData.ElectricMachinesData, container, es, ctl));
 					new ATClutchInfo(container);

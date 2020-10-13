@@ -25,16 +25,17 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		private SimplePowertrainContainer TestContainer;
 		private Gearbox TestContainerGbx;
 
-		protected readonly VelocityRollingLookup VelocityDropData;
-		private AccelerationCurveData accCurve;
+		protected readonly VelocityRollingLookup VelocityDropData = new VelocityRollingLookup();
+		//private AccelerationCurveData accCurve;
 
 		private Kilogram vehicleMass;
-		protected internal ResponseDryRun minFCResponse;
+		
 
 		
 
-		public AMTShiftStrategyOptimized(VectoRunData runData, IVehicleContainer dataBus) : base(runData, dataBus)
+		public AMTShiftStrategyOptimized(IVehicleContainer dataBus) : base(dataBus)
 		{
+			var runData = dataBus.RunData;
 			if (runData.EngineData == null) {
 				return;
 			}
@@ -42,12 +43,23 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			fcMap = runData.EngineData.Fuels;
 			fld = runData.EngineData.FullLoadCurves;
 			shiftStrategyParameters = runData.GearshiftParameters;
-			accCurve = runData.DriverData.AccelerationCurve;
+			//accCurve = runData.DriverData.AccelerationCurve;
 			vehicleMass = runData.VehicleData.TotalVehicleMass;
 			if (shiftStrategyParameters == null) {
 				throw new VectoException("Parameters for shift strategy missing!");
 			}
 
+			SetupVelocityDropPreprocessor(dataBus);
+
+			if (shiftStrategyParameters.AllowedGearRangeFC > 2 || shiftStrategyParameters.AllowedGearRangeFC < 1) {
+				Log.Warn("Gear-range for FC-based gearshift must be either 1 or 2!");
+				shiftStrategyParameters.AllowedGearRangeFC = shiftStrategyParameters.AllowedGearRangeFC.LimitTo(1, 2);
+			}
+		}
+
+		private void SetupVelocityDropPreprocessor(IVehicleContainer dataBus)
+		{
+			var runData = dataBus.RunData;
 			// MQ: 2019-11-29 - fuel used here has no effect as this is the modDatacontainer for the test-powertrain only!
 			var modData = new ModalDataContainer(runData, null, null);
 			var builder = new PowertrainBuilder(modData);
@@ -65,14 +77,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				grad = 2;
 			}
 
-			VelocityDropData = new VelocityRollingLookup();
 			dataBus.AddPreprocessor(
-				new VelocitySpeedGearshiftPreprocessor(VelocityDropData, runData.GearboxData.TractionInterruption, TestContainer, -grad, grad, 2));
-
-			if (shiftStrategyParameters.AllowedGearRangeFC > 2 || shiftStrategyParameters.AllowedGearRangeFC < 1) {
-				Log.Warn("Gear-range for FC-based gearshift must be either 1 or 2!");
-				shiftStrategyParameters.AllowedGearRangeFC = shiftStrategyParameters.AllowedGearRangeFC.LimitTo(1, 2);
-			}
+				new VelocitySpeedGearshiftPreprocessor(VelocityDropData, runData.GearboxData.TractionInterruption,
+					TestContainer, -grad, grad, 2));
 		}
 
 		#region Overrides of AMTShiftStrategy
@@ -81,7 +88,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		{
 			var minFcGear = currentGear;
 			var minFc = double.MaxValue;
-			minFCResponse = null;
+			IResponse minFCResponse = null;
 			var fcCurrent = double.NaN;
 
 			var fcUpshiftPossible = true;

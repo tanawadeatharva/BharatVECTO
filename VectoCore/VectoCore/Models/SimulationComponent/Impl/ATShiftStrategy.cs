@@ -39,7 +39,7 @@ using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.Models.Connector.Ports.Impl;
 using TUGraz.VectoCore.Models.Declaration;
-using TUGraz.VectoCore.Models.Simulation.Data;
+using TUGraz.VectoCore.Models.Simulation;
 using TUGraz.VectoCore.Models.Simulation.DataBus;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Engine;
@@ -84,9 +84,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			get { return "AT - Classic"; }
 		}
 
-		public ATShiftStrategy(VectoRunData data, IDataBus dataBus) : base(data.GearboxData, dataBus)
+		public ATShiftStrategy(IVehicleContainer dataBus) : base(dataBus)
 		{
-			EngineInertia = data.EngineData?.Inertia ?? 0.SI<KilogramSquareMeter>();
+			EngineInertia = dataBus.RunData.EngineData?.Inertia ?? 0.SI<KilogramSquareMeter>();
 		}
 
 		public override uint InitGear(Second absTime, Second dt, NewtonMeter torque, PerSecond outAngularVelocity)

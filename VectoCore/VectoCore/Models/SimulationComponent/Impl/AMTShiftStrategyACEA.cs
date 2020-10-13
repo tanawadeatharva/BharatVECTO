@@ -61,8 +61,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			}
 		}
 
-		public AMTShiftStrategyACEA(VectoRunData data, IVehicleContainer dataBus) : base(data.GearboxData, dataBus)
+		public AMTShiftStrategyACEA(IVehicleContainer dataBus) : base(dataBus)
 		{
+			var data = dataBus.RunData;
 			if (data.EngineData == null) {
 				return;
 			}

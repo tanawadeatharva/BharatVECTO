@@ -62,7 +62,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		protected internal readonly TorqueConverterWrapper TorqueConverter;
 
 		public CycleGearbox(IVehicleContainer container, VectoRunData runData)
-			: base(container, runData)
+			: base(container)
 		{
 			if (!ModelData.Type.AutomaticTransmission()) {
 				return;
@@ -540,7 +540,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		public class CycleShiftStrategy : BaseShiftStrategy
 		{
-			public CycleShiftStrategy(GearboxData data, IDataBus dataBus) : base(data, dataBus) { }
+			public CycleShiftStrategy(GearboxData data, IVehicleContainer dataBus) : base(dataBus) { }
 
 			public override IGearbox Gearbox { get; set; }
 

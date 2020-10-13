@@ -82,7 +82,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 
 			var runData = GetVectoRunData(data);
 
-			var strategy = new ATShiftStrategyVoith(runData, null);
+			var strategy = new ATShiftStrategyVoith(new SimplePowertrainContainer(runData));
 			var slope = VectoMath.InclinationToAngle(gradient / 100.0);
 
 			var upshiftSpeed = strategy.UpshiftLines[gear].LookupShiftSpeed(
@@ -99,7 +99,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 			
 			var runData = GetVectoRunData(data);
 
-			var strategy = new ATShiftStrategyVoith(runData, null);
+			var strategy = new ATShiftStrategyVoith(new SimplePowertrainContainer(runData));
 			var slope = VectoMath.InclinationToAngle(gradient / 100.0);
 
 			var upshiftSpeed = strategy.DownshiftLines[gear].LookupShiftSpeed(

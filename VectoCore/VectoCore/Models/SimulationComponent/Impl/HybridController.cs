@@ -276,8 +276,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			protected readonly uint MaxStartGear;
 			protected uint _nextGear { get; set; }
 
-			public HybridCtlShiftStrategy(HybridController hybridController, IVehicleContainer container) : base(
-				container.RunData.GearboxData, container)
+			public HybridCtlShiftStrategy(HybridController hybridController, IVehicleContainer container) : base(container)
 			{
 				_controller = hybridController;
 
