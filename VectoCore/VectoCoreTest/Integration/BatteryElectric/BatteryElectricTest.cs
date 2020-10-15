@@ -37,7 +37,8 @@ namespace TUGraz.VectoCore.Tests.Integration.BatteryElectric
 		protected const string BEV_Job = @"TestData\BatteryElectric\GenericVehicleB4\BEV_ENG.vecto";
 		protected const string BEV_Job_Cont30kW = @"TestData\BatteryElectric\GenericVehicleB4\BEV_ENG_Cont30kW.vecto";
 
-
+		protected const string BEV_E2_Job = @"TestData\BatteryElectric\GenericVehicleB2\BEV_ENG.vecto";
+		protected const string BEV_E2_Job_Cont30kW = @"TestData\BatteryElectric\GenericVehicleB2\BEV_ENG_Cont30kW.vecto";
 
 		public const string MotorFile = @"TestData\BatteryElectric\GenericVehicleB4\GenericEMotor_125kW_485Nm.vem";
 		public const string BatFile = @"TestData\BatteryElectric\GenericVehicleB4\GenericBattery_243kWh_750V.vbat";
@@ -203,7 +204,7 @@ namespace TUGraz.VectoCore.Tests.Integration.BatteryElectric
 		}
 
 		[TestCase(BEV_Job, 0, TestName = "BEV E4 Job RD"),
-		TestCase(BEV_Job_Cont30kW, 0, TestName = "BEV E4 Job Cont. 80kW RD")
+		TestCase(BEV_Job_Cont30kW, 0, TestName = "BEV E4 Job Cont. 30kW RD")
 		]
 		public void B4BEVRunJob(string jobFile, int cycleIdx)
 		{
@@ -517,10 +518,30 @@ namespace TUGraz.VectoCore.Tests.Integration.BatteryElectric
 			graphWriter.Write(modFilename + ".vmod");
 		}
 
-		//[
-			//TestCase(BEV_Job_E2, 0, TestName = "BEV E2 Job RD"),
+        [
+            TestCase(BEV_E2_Job, 0, TestName = "BEV E2 Job LongHaul"),
+			TestCase(BEV_E2_Job, 1, TestName = "BEV E2 Job Coach"),
+			TestCase(BEV_E2_Job, 2, TestName = "BEV E2 Job Construction"),
+			TestCase(BEV_E2_Job, 3, TestName = "BEV E2 Job HeavyUrban"),
+			TestCase(BEV_E2_Job, 4, TestName = "BEV E2 Job Interurban"),
+			TestCase(BEV_E2_Job, 5, TestName = "BEV E2 Job MunicipalUtility"),
+			TestCase(BEV_E2_Job, 6, TestName = "BEV E2 Job RegionalDelivery"),
+			TestCase(BEV_E2_Job, 7, TestName = "BEV E2 Job Suburban"),
+			TestCase(BEV_E2_Job, 8, TestName = "BEV E2 Job Urban"),
+			TestCase(BEV_E2_Job, 9, TestName = "BEV E2 Job UrbanDelivery"),
+
+			TestCase(BEV_E2_Job_Cont30kW, 0, TestName = "BEV E2 Cont. 30kW Job LongHaul"),
+			TestCase(BEV_E2_Job_Cont30kW, 1, TestName = "BEV E2 Cont. 30kW Job Coach"),
+			TestCase(BEV_E2_Job_Cont30kW, 2, TestName = "BEV E2 Cont. 30kW Job Construction"),
+			TestCase(BEV_E2_Job_Cont30kW, 3, TestName = "BEV E2 Cont. 30kW Job HeavyUrban"),
+			TestCase(BEV_E2_Job_Cont30kW, 4, TestName = "BEV E2 Cont. 30kW Job Interurban"),
+			TestCase(BEV_E2_Job_Cont30kW, 5, TestName = "BEV E2 Cont. 30kW Job MunicipalUtility"),
+			TestCase(BEV_E2_Job_Cont30kW, 6, TestName = "BEV E2 Cont. 30kW Job RegionalDelivery"),
+			TestCase(BEV_E2_Job_Cont30kW, 7, TestName = "BEV E2 Cont. 30kW Job Suburban"),
+			TestCase(BEV_E2_Job_Cont30kW, 8, TestName = "BEV E2 Cont. 30kW Job Urban"),
+			TestCase(BEV_E2_Job_Cont30kW, 9, TestName = "BEV E2 Cont. 30kW Job UrbanDelivery"),
 		//TestCase(BEV_Job_Cont30kW, 0, TestName = "BEV E2 Job Cont. 80kW RD")
-		//]
+		]
 		public void B2BEVRunJob(string jobFile, int cycleIdx)
 		{
 			var inputProvider = JSONInputDataFactory.ReadJsonJob(jobFile);
@@ -683,7 +704,6 @@ namespace TUGraz.VectoCore.Tests.Integration.BatteryElectric
 					new ATClutchInfo(container);
 					break;
 				case PowertrainPosition.BatteryElectricB2:
-					
 					powertrain.AddComponent(new AxleGear(container, runData.AxleGearData))
 						.AddComponent(new PEVGearbox(container, strategy))
 						.AddComponent(

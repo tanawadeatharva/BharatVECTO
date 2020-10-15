@@ -34,15 +34,23 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		private Kilogram vehicleMass;
 		private EfficiencyMap PowerMap;
 		private ElectricMotorFullLoadCurve FullLoadCurve;
+		private SI TransmissionRatio;
 
 		public bool EarlyShiftUp { get; }
 
 		public bool SkipGears { get; }
 
+		public static string Name {
+			get { return "AMT - EffShift (BEV)"; }
+		}
+
 
 		public PEVAMTShiftStrategy(IVehicleContainer dataBus)
 		{
 			var runData = dataBus.RunData;
+			if (runData.VehicleData == null) {
+				return;
+			}
 			ModelData = dataBus.RunData.GearboxData;
 			PowerMap = dataBus.RunData.ElectricMachinesData
 				.FirstOrDefault(x => x.Item1 == PowertrainPosition.BatteryElectricB2)?.Item2.EfficiencyMap;
@@ -52,6 +60,12 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			EarlyShiftUp = true;
 			SkipGears = true;
+
+			TransmissionRatio = runData.AxleGearData.AxleGear.Ratio *
+									(runData.AngledriveData == null ? 1.0 : runData.AngledriveData.Angledrive.Ratio) /
+									runData.VehicleData.DynamicTyreRadius;
+			//var minEngineSpeed = (runData.EngineData.FullLoadCurves[0].RatedSpeed - runData.EngineData.IdleSpeed) *
+			//	Constants.SimulationSettings.ClutchClosingSpeedNorm + runData.EngineData.IdleSpeed;
 
 			shiftStrategyParameters = runData.GearshiftParameters;
 			vehicleMass = runData.VehicleData.TotalVehicleMass;
@@ -182,7 +196,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					inAngularVelocity = response.ElectricMotor.AngularVelocity; //ModelData.Gears[currentGear].Ratio * outAngularVelocity;
 					inTorque = response.ElectricMotor.PowerRequest / inAngularVelocity;
 
-					var maxTorque = VectoMath.Min(response.ElectricMotor.MaxDriveTorque,
+					var maxTorque = VectoMath.Min(-response.ElectricMotor.MaxDriveTorque,
 						currentGear > 1
 							? ModelData.Gears[currentGear].ShiftPolygon.InterpolateDownshift(response.Engine.EngineSpeed)
 							: double.MaxValue.SI<NewtonMeter>());
@@ -232,15 +246,15 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			for (var i = 1; i <= shiftStrategyParameters.AllowedGearRangeFC; i++) {
 				var tryNextGear = (uint)(currentGear + i);
 
-				if (tryNextGear > ModelData.Gears.Keys.Max() ||
-					!(ModelData.Gears[tryNextGear].Ratio < shiftStrategyParameters.RatioEarlyUpshiftFC)) {
-					continue;
-				}
+                if (tryNextGear > ModelData.Gears.Keys.Max() 
+					/*|| !(ModelData.Gears[tryNextGear].Ratio < shiftStrategyParameters.RatioEarlyUpshiftFC)*/) {
+                    continue;
+                }
 
-				//fcUpshiftPossible = true;
+                //fcUpshiftPossible = true;
 
-				//var response = RequestDryRunWithGear(absTime, dt, vehicleSpeedPostShift, DataBus.DriverAcceleration, tryNextGear);
-				var response = RequestDryRunWithGear(absTime, dt, outTorque, outAngularVelocity, tryNextGear);
+                //var response = RequestDryRunWithGear(absTime, dt, vehicleSpeedPostShift, DataBus.DriverAcceleration, tryNextGear);
+                var response = RequestDryRunWithGear(absTime, dt, outTorque, outAngularVelocity, tryNextGear);
 
 				var inAngularVelocity = ModelData.Gears[tryNextGear].Ratio * outAngularVelocity;
 				var inTorque = response.ElectricMotor.PowerRequest / inAngularVelocity;
@@ -434,11 +448,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			for (var i = 1; i <= shiftStrategyParameters.AllowedGearRangeFC; i++) {
 				var tryNextGear = (uint)(currentGear - i);
 
-				if (tryNextGear < 1 || !(ModelData.Gears[tryNextGear].Ratio <= shiftStrategyParameters.RatioEarlyDownshiftFC)) {
-					continue;
-				}
+                if (tryNextGear < 1 /*|| !(ModelData.Gears[tryNextGear].Ratio <= shiftStrategyParameters.RatioEarlyDownshiftFC)*/) {
+                    continue;
+                }
 
-				var response = RequestDryRunWithGear(absTime, dt, outTorque, outAngularVelocity, tryNextGear);
+                var response = RequestDryRunWithGear(absTime, dt, outTorque, outAngularVelocity, tryNextGear);
 
 				//var response = RequestDryRunWithGear(absTime, dt, DataBus.VehicleSpeed, DataBus.DriverAcceleration, tryNextGear);
 
@@ -473,8 +487,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		public uint InitGear(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity)
 		{
 			if (DataBus.VehicleInfo.VehicleSpeed.IsEqual(0)) {
-				_nextGear = 1;
-				return 1;
+				return InitStartGear(absTime, outTorque, outAngularVelocity);
 			}
 
 			for (var gear = (uint)ModelData.Gears.Count; gear > 1; gear--) {
@@ -494,7 +507,39 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			return 1;
 		}
 
-		
+		private uint InitStartGear(Second absTime, NewtonMeter outTorque, PerSecond outAngularVelocity)
+		{
+			var emSpeeds = new Dictionary<uint, Tuple<PerSecond, PerSecond>>();
+			
+			for (var gear = (uint)ModelData.Gears.Count; gear >= 1; gear--) {
+				var inAngularSpeed = outAngularVelocity * ModelData.Gears[gear].Ratio;
+
+				var ratedSpeed = FullLoadCurve.MaxSpeed * 0.9;
+				if (inAngularSpeed > ratedSpeed || inAngularSpeed.IsEqual(0)) {
+					continue;
+				}
+
+				var response = _gearbox.Initialize(absTime, gear, outTorque, outAngularVelocity);
+
+				var fullLoadPower = -(response.ElectricMotor.MaxDriveTorque * response.ElectricMotor.AngularVelocity);
+					//.DynamicFullLoadPower; //EnginePowerRequest - response.DeltaFullLoad;
+				var reserve = 1 - response.ElectricMotor.PowerRequest / fullLoadPower;
+
+				if (reserve >= ModelData.StartTorqueReserve) {
+					//_nextGear = gear;
+					//return gear;
+					emSpeeds[gear] = Tuple.Create(response.ElectricMotor.AngularVelocity, (ModelData.StartSpeed * TransmissionRatio * ModelData.Gears[gear].Ratio).Cast<PerSecond>());
+				}
+			}
+
+			if (emSpeeds.Any()) {
+				var optimum = emSpeeds.MaxBy(x => x.Key); //x => VectoMath.Abs(x.Value.Item2 - FullLoadCurve.MaxSpeed * 0.5));
+				_nextGear = optimum.Key;
+				return _nextGear;
+			}
+			_nextGear = 1;
+			return 1;
+		}
 
 		protected bool IsBelowDownShiftCurve(uint gear, NewtonMeter inTorque, PerSecond inEngineSpeed)
 		{

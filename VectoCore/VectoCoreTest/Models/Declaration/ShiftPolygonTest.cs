@@ -461,7 +461,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 				shiftPolygons.Add(DeclarationData.Gearbox.ComputeShiftPolygon(GearboxType.AMT, i,
 					engineData.FullLoadCurves[(uint)(i + 1)],
 					gearboxData.Gears,
-					engineData, axlegearRatio, rdyn));
+					engineData, axlegearRatio, rdyn, null));
 			}
 
 			for (var i = 0; i < Math.Min(gearboxData.Gears.Count, expectedDownshift.Length); i++) {
@@ -513,7 +513,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 				shiftPolygons.Add(DeclarationData.Gearbox.ComputeShiftPolygon(GearboxType.ATSerial, i,
 					engineData.FullLoadCurves[(uint)(i + 1)],
 					gearboxData.Gears,
-					engineData, axlegearRatio, rdyn));
+					engineData, axlegearRatio, rdyn, null));
 			}
 
 			for (var i = 0; i < gearboxData.Gears.Count; i++) {
@@ -574,7 +574,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 			for (var i = 0; i < gearboxData.Gears.Count; i++) {
 				shiftPolygons.Add(DeclarationData.Gearbox.ComputeShiftPolygon(GearboxType.AMT, i, fullLoadCurves[(uint)(i + 1)],
 					gearboxData.Gears,
-					engineData, axlegearRatio, rdyn));
+					engineData, axlegearRatio, rdyn, null));
 				List<Point> tmp1, tmp2, tmp3;
 
 				ShiftPolygonComparison.ComputShiftPolygonPoints(i, fullLoadCurves[(uint)(i + 1)], gearboxData.Gears,
@@ -634,7 +634,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 			for (var i = 0; i < gearboxData.Gears.Count; i++) {
 				shiftPolygons.Add(DeclarationData.Gearbox.ComputeShiftPolygon(GearboxType.AMT, i, fullLoadCurves[(uint)(i + 1)],
 					gearboxData.Gears,
-					engineData, axlegearRatio, rdyn));
+					engineData, axlegearRatio, rdyn, null));
 				List<Point> tmp1, tmp2, tmp3;
 
 				ShiftPolygonComparison.ComputShiftPolygonPoints(i, fullLoadCurves[(uint)(i + 1)], gearboxData.Gears,
@@ -736,7 +736,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 			for (var i = 0; i < gearboxData.Gears.Count; i++) {
 				shiftPolygons.Add(
 					DeclarationData.Gearbox.ComputeShiftPolygon(gearboxData.Type, i, fullLoadCurves[(uint)(i + 1)], gearboxData.Gears,
-						engineData, axlegearRatio, rdyn.SI<Meter>())
+						engineData, axlegearRatio, rdyn.SI<Meter>(), null)
 					);
 				List<Point> tmp1, tmp2, tmp3;
 				ComputShiftPolygonPoints(i, fullLoadCurves[(uint)(i + 1)], gearboxData.Gears,
@@ -892,7 +892,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 			for (var i = 0; i < gearboxData.Gears.Count; i++) {
 				shiftPolygons.Add(
 					DeclarationData.Gearbox.ComputeShiftPolygon(gearboxData.Type, i, fullLoadCurves[(uint)(i + 1)], gearboxData.Gears,
-						engineData, axlegearRatio, rdyn)
+						engineData, axlegearRatio, rdyn, null)
 					);
 				List<Point> tmp1, tmp2, tmp3;
 				ComputShiftPolygonPoints(i, fullLoadCurves[(uint)(i + 1)], gearboxData.Gears,

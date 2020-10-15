@@ -614,12 +614,12 @@ namespace TUGraz.VectoCore.Models.Declaration
 			/// <returns></returns>
 			public static ShiftPolygon ComputeShiftPolygon(
 				GearboxType type, int gearIdx, EngineFullLoadCurve fullLoadCurve,
-				IList<ITransmissionInputData> gears, CombustionEngineData engine, double axlegearRatio, Meter dynamicTyreRadius)
+				IList<ITransmissionInputData> gears, CombustionEngineData engine, double axlegearRatio, Meter dynamicTyreRadius,ElectricMotorData electricMotorData)
 			{
 				switch (type)
 				{
 					case GearboxType.AMT:
-
+						// TODO MQ: 2020-10-14: compute for AMT with ICE and AMT with EM differently
 					//return ComputeEfficiencyShiftPolygon(gearIdx, fullLoadCurve, gears, engine, axlegearRatio, dynamicTyreRadius);
 					case GearboxType.MT:
 						return ComputeManualTransmissionShiftPolygon(

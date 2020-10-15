@@ -566,7 +566,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			var fullLoad = -DataBus.ElectricMotorInfo(PowertrainPosition.BatteryElectricB2).MaxPowerDrive(inAngularVelocity);
 
 			Gear = oldGear;
-			return new ResponseDryRun(this) {
+			return new ResponseDryRun(this, response) {
 				ElectricMotor = {
 					PowerRequest = response.ElectricMotor.PowerRequest
 				},

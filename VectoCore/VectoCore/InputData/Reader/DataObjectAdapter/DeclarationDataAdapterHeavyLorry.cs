@@ -383,7 +383,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 					: DeclarationData.Gearbox.ComputeShiftPolygon(
 						gearbox.Type, (int)i, engine.FullLoadCurves[i + 1],
 						gearsInput, engine,
-						axlegearRatio, dynamicTyreRadius);
+						axlegearRatio, dynamicTyreRadius, null);
 
 				var gearData = new GearData {
 					ShiftPolygon = shiftPolygon,

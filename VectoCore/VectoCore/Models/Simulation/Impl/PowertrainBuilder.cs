@@ -434,8 +434,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 		private IVehicleContainer BuildBatteryElectricPowertrain(VectoRunData data)
 		{
-			if (data.Cycle.CycleType != CycleType.DistanceBased)
-			{
+			if (data.Cycle.CycleType != CycleType.DistanceBased) {
 				throw new VectoException("CycleType must be DistanceBased");
 			}
 
@@ -473,7 +472,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			var powertrain = cycle
 				.AddComponent(new Driver(container, data.DriverData, new DefaultDriverStrategy(container)))
 				.AddComponent(new Vehicle(container, data.VehicleData, data.AirdragData))
-				.AddComponent(new VectoCore.Models.SimulationComponent.Impl.Wheels(container, data.VehicleData.DynamicTyreRadius,
+				.AddComponent(new Wheels(container, data.VehicleData.DynamicTyreRadius,
 					data.VehicleData.WheelsInertia))
 				.AddComponent(new Brakes(container));
 
@@ -504,7 +503,13 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 					new ATClutchInfo(container);
 					break;
 				case PowertrainPosition.BatteryElectricB2:
-					throw new VectoException("Battery Electric configuration B2 currently not supported");
+					var strategy = new PEVAMTShiftStrategy(container);
+					powertrain.AddComponent(new AxleGear(container, data.AxleGearData))
+						.AddComponent(new PEVGearbox(container, strategy))
+						.AddComponent(
+							GetElectricMachine(PowertrainPosition.BatteryElectricB2, data.ElectricMachinesData, container, es, ctl));
+					new ATClutchInfo(container);
+					break;
 				default: throw new ArgumentOutOfRangeException(nameof(pos), pos, null);
 			}
 
@@ -875,8 +880,16 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			if (string.IsNullOrWhiteSpace(shiftStrategy)) {
 				switch (runData.GearboxData.Type) {
 					case GearboxType.AMT:
-						runData.ShiftStrategy = AMTShiftStrategyOptimized.Name;
-						return new AMTShiftStrategyOptimized(container);
+						if (runData.JobType == VectoSimulationJobType.ConventionalVehicle) {
+							runData.ShiftStrategy = AMTShiftStrategyOptimized.Name;
+							return new AMTShiftStrategyOptimized(container);
+						}
+
+						if (runData.JobType == VectoSimulationJobType.BatteryElectricVehicle) {
+							runData.ShiftStrategy = PEVAMTShiftStrategy.Name;
+							return new PEVAMTShiftStrategy(container);
+						}
+						throw new VectoException("no default gearshift strategy available for gearbox type {0} and job type {1}", runData.GearboxData.Type, runData.JobType);
 					//return new AMTShiftStrategy(runData, container);
 					case GearboxType.MT:
 						runData.ShiftStrategy = MTShiftStrategy.Name;

@@ -68,7 +68,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				if (model?.GearboxData == null || model.AxleGearData == null) {
 					return;
 				}
-                MaxVehicleSpeed = model.EngineData.FullLoadCurves[0].N95hSpeed /
+				MaxVehicleSpeed = model.EngineData.FullLoadCurves[0].N95hSpeed /
 					model.GearboxData.Gears[model.GearboxData.Gears.Keys.Max()].Ratio /
 					model.AxleGearData.AxleGear.Ratio /
 					(model.AngledriveData?.Angledrive.Ratio
@@ -96,7 +96,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 								(model.AngledriveData?.Angledrive.Ratio ?? 1.0);
 					}
 					MaxVehicleSpeed = maxEMSpeed / ratio * model.VehicleData.DynamicTyreRadius * 0.995;
-                }
+				}
 			}
 		}
 

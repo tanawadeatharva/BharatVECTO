@@ -148,7 +148,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			: base(data, filename, tolerateMissing)
 		{
 			_jobname = Path.GetFileNameWithoutExtension(filename);
-        }
+		}
 
 
 		public virtual IGearboxEngineeringInputData Gearbox { get; internal set; }
@@ -673,9 +673,9 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 			VehicleData = ReadVehicle();
 		}
-    }
+	}
 
-    public class JSONInputDataV3 : JSONInputDataV2
+	public class JSONInputDataV3 : JSONInputDataV2
 	{
 		public JSONInputDataV3(JObject data, string filename, bool tolerateMissing = false)
 			: base(data, filename, tolerateMissing) { }
@@ -1231,9 +1231,9 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 	}
 
 	public class JSONInputDataV9_BEV : AbstractJSONInputData
-    {
+	{
 		
-        public JSONInputDataV9_BEV(JObject data, string filename, bool tolerateMissing = false) : base(data, filename,
+		public JSONInputDataV9_BEV(JObject data, string filename, bool tolerateMissing = false) : base(data, filename,
 			tolerateMissing)
 		{
 			VehicleData = ReadVehicle();
@@ -1243,12 +1243,20 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 				AxleGear = Gearbox as IAxleGearInputData;
 				TorqueConverter = Gearbox as ITorqueConverterEngineeringInputData;
 				//GearshiftInputData = Gearbox as IGearshiftEngineeringInputData;
-            }
-        }
+			}
+		}
 
 		public override VectoSimulationJobType JobType
 		{
 			get { return VectoSimulationJobType.BatteryElectricVehicle; }
+		}
+
+		public override IGearshiftEngineeringInputData GearshiftInputData {
+			get {
+				return Body["TCU"] == null
+					? null
+					: JSONInputDataFactory.ReadShiftParameters(Path.Combine(BasePath, Body.GetEx<string>("TCU")), false);
+			}
 		}
 	}
 }

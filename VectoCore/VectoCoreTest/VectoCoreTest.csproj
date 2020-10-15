@@ -242,6 +242,93 @@
       <SubType>Designer</SubType>
     </None>
     <None Include="default.runsettings" />
+    <None Include="TestData\BatteryElectric\GenericVehicleB2\BatteryElectricVehicle.vveh">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\BatteryElectric\GenericVehicleB2\BatteryElectricVehicle_Cont30kW.vveh">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\BatteryElectric\GenericVehicleB2\BEV_ENG.vecto">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\BatteryElectric\GenericVehicleB2\BEV_ENG_Cont30kW.vecto">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\BatteryElectric\GenericVehicleB2\GenericBattery_243kWh.vbatr">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\BatteryElectric\GenericVehicleB2\GenericBattery_243kWh.vbatv">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\BatteryElectric\GenericVehicleB2\GenericBattery_243kWh_750V.vbat">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\BatteryElectric\GenericVehicleB2\GenericDrag_125kW_485Nm.vemd">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\BatteryElectric\GenericVehicleB2\GenericEMotor_125kW_485Nm.vem">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\BatteryElectric\GenericVehicleB2\GenericEMotor_125kW_485Nm.vemp">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\BatteryElectric\GenericVehicleB2\GenericEMotor_125kW_485Nm_Cont30kW.vem">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\BatteryElectric\GenericVehicleB2\GenericMap_125kW_485Nm.vemo">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\BatteryElectric\GenericVehicleB2\MaxCurrent.vimax">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\BatteryElectric\GenericVehicleB2\Transmission\AMT_12.vgbx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\BatteryElectric\GenericVehicleB2\Transmission\Axle_4x2_Tractor.vtlm">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\BatteryElectric\GenericVehicleB2\Transmission\Default.vrlm">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\BatteryElectric\GenericVehicleB2\Transmission\Gear_1.vtlm">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\BatteryElectric\GenericVehicleB2\Transmission\Gear_10.vtlm">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\BatteryElectric\GenericVehicleB2\Transmission\Gear_11.vtlm">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\BatteryElectric\GenericVehicleB2\Transmission\Gear_12.vtlm">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\BatteryElectric\GenericVehicleB2\Transmission\Gear_2.vtlm">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\BatteryElectric\GenericVehicleB2\Transmission\Gear_3.vtlm">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\BatteryElectric\GenericVehicleB2\Transmission\Gear_4.vtlm">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\BatteryElectric\GenericVehicleB2\Transmission\Gear_5.vtlm">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\BatteryElectric\GenericVehicleB2\Transmission\Gear_6.vtlm">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\BatteryElectric\GenericVehicleB2\Transmission\Gear_7.vtlm">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\BatteryElectric\GenericVehicleB2\Transmission\Gear_8.vtlm">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\BatteryElectric\GenericVehicleB2\Transmission\Gear_9.vtlm">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\BatteryElectric\GenericVehicleB2\Truck.vacc">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="TestData\BatteryElectric\GenericVehicleB4\BatteryElectricVehicle_Cont30kW.vveh">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
