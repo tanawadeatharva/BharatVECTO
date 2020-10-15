@@ -183,9 +183,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				!DataBus.GearboxInfo.GearEngaged(absTime) /* && !DataBus.ClutchInfo.ClutchClosed(absTime)*/) {
 				// electric motor is between gearbox and clutch, but no gear is engaged...
 				if (eMotorTorque != null) {
-                    if (!DataBus.HybridControllerInfo.GearboxEngaged) {
-                        return new ResponseInvalidOperatingPoint(this);
-                    }
+					if (!DataBus.HybridControllerInfo.GearboxEngaged) {
+						return new ResponseInvalidOperatingPoint(this);
+					}
 
 					if (!dryRun) {
 						throw new VectoSimulationException(
@@ -324,7 +324,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					},
 					ElectricMotor = {
 						ElectricMotorPowerMech = (inTorque - outTorque) * avgSpeed,
-						TotalTorqueDemand = inTorque
+						TotalTorqueDemand = inTorque,
 					},
 					DeltaFullLoad = remainingPower, //powerDemand + driveTorque * avgSpeed,
 					DeltaDragLoad = remainingPower, // powerDemand + dragTorque * avgSpeed,
@@ -424,8 +424,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			container[ModalResultField.P_electricMotorInertiaLoss_, Position] = CurrentState.InertiaTorqueLoss * avgSpeed;
 
 			var contribution =
-				(VectoMath.Abs((CurrentState.InTorque - CurrentState.OutTorque) * avgSpeed) -
-				ModelData.ContinuousPower) * simulationInterval;
+				(((CurrentState.InTorque - CurrentState.OutTorque) * avgSpeed -
+				CurrentState.ElectricPowerToBattery) - ContinuousPowerLoss) * simulationInterval;
 			container[ModalResultField.ElectricMotor_OvlBuffer_, Position] = VectoMath.Max(0, (ThermalBuffer + contribution) / OverloadBuffer);
 		}
 
