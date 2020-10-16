@@ -68,7 +68,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				return;
 			}
 
-			var strategy = new CycleShiftStrategy(ModelData, null);
+			var strategy = new CycleShiftStrategy(container);
 
 			
 			TorqueConverter = new TorqueConverterWrapper(runData.Cycle.Entries.All(x => x.EngineSpeed != null),
@@ -540,7 +540,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		public class CycleShiftStrategy : BaseShiftStrategy
 		{
-			public CycleShiftStrategy(GearboxData data, IVehicleContainer dataBus) : base(dataBus) { }
+			public CycleShiftStrategy(IVehicleContainer dataBus) : base(dataBus) { }
 
 			public override IGearbox Gearbox { get; set; }
 

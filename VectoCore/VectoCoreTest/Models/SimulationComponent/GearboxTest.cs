@@ -562,7 +562,8 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 				ReducedMassWheels = 100.SI<Kilogram>(),
 				TotalMass = 19000.SI<Kilogram>(),
 				EngineSpeed = n.SI<PerSecond>(),
-				RunData = GetDummyRunData(gearboxData)
+				RunData = GetDummyRunData(gearboxData),
+				HasCombustionEngine = true
 			};
 			var gearbox = new Gearbox(container, new AMTShiftStrategy(container));
 			var port = new MockTnOutPort() { EngineN95hSpeed = 2000.RPMtoRad() };

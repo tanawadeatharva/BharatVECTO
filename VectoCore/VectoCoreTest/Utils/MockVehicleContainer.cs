@@ -385,7 +385,8 @@ namespace TUGraz.VectoCore.Tests.Utils
 
 		public bool HasCombustionEngine
 		{
-			get { throw new NotImplementedException(); }
+			get;
+			set;
 		}
 
 		public bool HasElectricMotor { get; }

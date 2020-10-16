@@ -650,13 +650,7 @@ namespace TUGraz.VectoCore.Tests.Integration.BatteryElectric
 				RunData = runData
 			};
 
-			var strategy = new PEVAMTShiftStrategy(container);
-
-			foreach (var entry in gearboxData.Gears) {
-				entry.Value.ShiftPolygon = strategy.ComputeDeclarationShiftPolygon(GearboxType.AMT,
-					(int)entry.Key, null, new TransmissionInputData().Repeat(gearboxData.Gears.Count + 1).Cast<ITransmissionInputData>().ToList(), null, axleGearData.AxleGear.Ratio,
-					vehicleData.DynamicTyreRadius, electricMotorData.First().Item2);
-			}
+			
 
 			var es = new ElectricSystem(container);
 			var battery = new Battery(container, batteryData);
@@ -704,6 +698,13 @@ namespace TUGraz.VectoCore.Tests.Integration.BatteryElectric
 					new ATClutchInfo(container);
 					break;
 				case PowertrainPosition.BatteryElectricB2:
+					var strategy = new PEVAMTShiftStrategy(container);
+
+					foreach (var entry in gearboxData.Gears) {
+						entry.Value.ShiftPolygon = strategy.ComputeDeclarationShiftPolygon(GearboxType.AMT,
+							(int)entry.Key, null, new TransmissionInputData().Repeat(gearboxData.Gears.Count + 1).Cast<ITransmissionInputData>().ToList(), null, axleGearData.AxleGear.Ratio,
+							vehicleData.DynamicTyreRadius, electricMotorData.First().Item2);
+					}
 					powertrain.AddComponent(new AxleGear(container, runData.AxleGearData))
 						.AddComponent(new PEVGearbox(container, strategy))
 						.AddComponent(
