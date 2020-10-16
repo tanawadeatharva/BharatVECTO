@@ -394,13 +394,14 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 			var ctl = new HybridController(container, strategy, es, clutch);
 
+			// add engine before gearbox so that gearbox can obtain if an ICE is available already in constructor
+			var engine = new StopStartCombustionEngine(container, data.EngineData);
 			var gearbox = GetGearbox(container, ctl.ShiftStrategy);
 			var gbx = gearbox as IHybridControlledGearbox;
 			if (gbx == null) {
 				throw new VectoException("Gearbox can not be used for parallel hybrid");
 			}
 
-			var engine = new StopStartCombustionEngine(container, data.EngineData);
 			var idleController = GetIdleController(data.PTO, engine, container);
 
 			ctl.Gearbox = gbx;
@@ -621,12 +622,13 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			
 			var clutch = data.GearboxData.Type.ManualTransmission() ? new SwitchableClutch(container, data.EngineData) : null;
 
+			// add engine before gearbox so that gearbox can obtain if an ICE is available already in constructor
+			var engine = new StopStartCombustionEngine(container, data.EngineData);
 			var gearbox = GetSimpleGearbox(container, data);
 			var gbx = gearbox as IHybridControlledGearbox;
 			if (gbx == null) {
 				throw new VectoException("Gearbox can not be used for parallel hybrid");
 			}
-			var engine = new StopStartCombustionEngine(container, data.EngineData);
 
 			var ctl = new SimpleHybridController(container, es, clutch);
 
