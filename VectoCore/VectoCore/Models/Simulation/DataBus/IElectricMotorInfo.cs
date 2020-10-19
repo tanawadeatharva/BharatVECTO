@@ -11,5 +11,6 @@ namespace TUGraz.VectoCore.Models.Simulation.DataBus
 		PowertrainPosition Position { get; }
 		PerSecond MaxSpeed { get; }
 		Watt DragPower(PerSecond electricMotorSpeed);
+		Watt MaxPowerDrive(PerSecond inAngularVelocity);
 	}
 }

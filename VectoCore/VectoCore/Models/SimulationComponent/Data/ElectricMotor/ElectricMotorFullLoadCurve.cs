@@ -4,12 +4,15 @@ using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.Utils;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Data {
-	public class ElectricFullLoadCurve
+	public class ElectricMotorFullLoadCurve
 	{
 		internal readonly List<FullLoadEntry> FullLoadEntries;
+		private NewtonMeter _maxDriveTorque;
+		private NewtonMeter _maxGenerationTorque;
+		private PerSecond _maxSpeed;
 
 
-		internal ElectricFullLoadCurve(List<FullLoadEntry> entries)
+		internal ElectricMotorFullLoadCurve(List<FullLoadEntry> entries)
 		{
 			FullLoadEntries = entries;
 		}
@@ -51,6 +54,25 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data {
 			}
 			throw new VectoException("angular velocity {0} exceeds full-load curve. min: {1} max: {2}", angularVelocity, FullLoadEntries.First().MotorSpeed, FullLoadEntries.Last().MotorSpeed);
 
+		}
+
+		public NewtonMeter MaxDriveTorque
+		{
+			get { return _maxDriveTorque ?? (_maxDriveTorque = FullLoadEntries.Min(x => x.FullDriveTorque)); }
+		}
+
+		public NewtonMeter MaxGenerationTorque
+		{
+			get
+			{
+				return _maxGenerationTorque ??
+						(_maxGenerationTorque = FullLoadEntries.Max(x => x.FullGenerationTorque));
+			}
+		}
+
+		public PerSecond MaxSpeed
+		{
+			get { return _maxSpeed ?? (_maxSpeed = FullLoadEntries.Max(x => x.MotorSpeed)); }
 		}
 
 		internal class FullLoadEntry

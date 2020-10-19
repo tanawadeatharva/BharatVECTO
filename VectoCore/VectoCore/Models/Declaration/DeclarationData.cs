@@ -614,12 +614,12 @@ namespace TUGraz.VectoCore.Models.Declaration
 			/// <returns></returns>
 			public static ShiftPolygon ComputeShiftPolygon(
 				GearboxType type, int gearIdx, EngineFullLoadCurve fullLoadCurve,
-				IList<ITransmissionInputData> gears, CombustionEngineData engine, double axlegearRatio, Meter dynamicTyreRadius)
+				IList<ITransmissionInputData> gears, CombustionEngineData engine, double axlegearRatio, Meter dynamicTyreRadius,ElectricMotorData electricMotorData)
 			{
 				switch (type)
 				{
 					case GearboxType.AMT:
-
+						// TODO MQ: 2020-10-14: compute for AMT with ICE and AMT with EM differently
 					//return ComputeEfficiencyShiftPolygon(gearIdx, fullLoadCurve, gears, engine, axlegearRatio, dynamicTyreRadius);
 					case GearboxType.MT:
 						return ComputeManualTransmissionShiftPolygon(
@@ -638,12 +638,35 @@ namespace TUGraz.VectoCore.Models.Declaration
 					: ComputeManualTransmissionShiftPolygon(gearIdx, fullLoadCurve, gears, engine, axlegearRatio, dynamicTyreRadius);
 			}
 
+			public static ShiftPolygon ComputeElectricMotorShiftPolygon(int gearIdx,
+				ElectricMotorFullLoadCurve fullLoadCurve, IList<ITransmissionInputData> gears,
+				double axlegearRatio, Meter dynamicTyreRadius)
+			{
+				if (gears.Count < 2) {
+					throw new VectoException("ComputeShiftPolygon needs at least 2 gears. {0} gears given.", gears.Count);
+				}
+
+				var downShift = new List<ShiftPolygon.ShiftPolygonEntry>();
+				var upShift = new List<ShiftPolygon.ShiftPolygonEntry>();
+				if (gearIdx > 0) {
+					downShift.Add(new ShiftPolygon.ShiftPolygonEntry(fullLoadCurve.MaxGenerationTorque * 1.1, 0.RPMtoRad()));
+					downShift.Add(new ShiftPolygon.ShiftPolygonEntry(fullLoadCurve.MaxDriveTorque * 1.1, 0.RPMtoRad()));
+
+				}
+				if (gearIdx >= gears.Count - 1) {
+					return new ShiftPolygon(downShift, upShift);
+				}
+
+				upShift.Add(new ShiftPolygon.ShiftPolygonEntry(fullLoadCurve.MaxGenerationTorque * 1.1, fullLoadCurve.MaxSpeed * 0.9));
+				upShift.Add(new ShiftPolygon.ShiftPolygonEntry(fullLoadCurve.MaxDriveTorque * 1.1, fullLoadCurve.MaxSpeed * 0.9));
+				return new ShiftPolygon(downShift, upShift);
+			}
+
 			public static ShiftPolygon ComputeEfficiencyShiftPolygon(
 				int gearIdx, EngineFullLoadCurve fullLoadCurve, IList<ITransmissionInputData> gears, CombustionEngineData engine,
 				double axlegearRatio, Meter dynamicTyreRadius)
 			{
-				if (gears.Count < 2)
-				{
+				if (gears.Count < 2) {
 					throw new VectoException("ComputeShiftPolygon needs at least 2 gears. {0} gears given.", gears.Count);
 				}
 
@@ -665,8 +688,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 								new Point(fldEntry.EngineSpeed.Value(), fldEntry.TorqueFullLoad.Value() * ShiftPolygonEngineFldMargin))
 						.ToList();
 					downShift.Add(new ShiftPolygon.ShiftPolygonEntry(fullLoadCurve.MaxDragTorque * 1.1, p2.X.SI<PerSecond>()));
-					if (downShiftPoints.Count == 0)
-					{
+					if (downShiftPoints.Count == 0) {
 						// coarse grid points in FLD
 						downShift.Add(
 							new ShiftPolygon.ShiftPolygonEntry(
@@ -676,11 +698,8 @@ namespace TUGraz.VectoCore.Models.Declaration
 							new ShiftPolygon.ShiftPolygonEntry(
 								fullLoadCurve.FullLoadStationaryTorque(p3.X.SI<PerSecond>()) * ShiftPolygonEngineFldMargin,
 								p3.X.SI<PerSecond>()));
-					}
-					else
-					{
-						if (downShiftPoints.Min(x => x.X) > p2.X)
-						{
+					} else {
+						if (downShiftPoints.Min(x => x.X) > p2.X) {
 							downShift.Add(
 								new ShiftPolygon.ShiftPolygonEntry(
 									fullLoadCurve.FullLoadStationaryTorque(p2.X.SI<PerSecond>()) * ShiftPolygonEngineFldMargin,

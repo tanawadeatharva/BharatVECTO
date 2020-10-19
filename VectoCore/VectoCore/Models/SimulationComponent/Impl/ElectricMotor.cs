@@ -60,7 +60,12 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			return ModelData.DragCurve.Lookup(electricMotorSpeed) * electricMotorSpeed;
 		}
 
-	public IResponse Initialize(NewtonMeter outTorque, PerSecond outAngularVelocity)
+		public Watt MaxPowerDrive(PerSecond electricMotorSpeed)
+		{
+			return ModelData.FullLoadCurve.FullLoadDriveTorque(electricMotorSpeed) * electricMotorSpeed;
+		}
+
+		public IResponse Initialize(NewtonMeter outTorque, PerSecond outAngularVelocity)
 		{
 			PreviousState.OutAngularVelocity = outAngularVelocity;
 			PreviousState.OutTorque = outTorque;
@@ -178,9 +183,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				!DataBus.GearboxInfo.GearEngaged(absTime) /* && !DataBus.ClutchInfo.ClutchClosed(absTime)*/) {
 				// electric motor is between gearbox and clutch, but no gear is engaged...
 				if (eMotorTorque != null) {
-                    if (!DataBus.HybridControllerInfo.GearboxEngaged) {
-                        return new ResponseInvalidOperatingPoint(this);
-                    }
+					if (!DataBus.HybridControllerInfo.GearboxEngaged) {
+						return new ResponseInvalidOperatingPoint(this);
+					}
 
 					if (!dryRun) {
 						throw new VectoSimulationException(
@@ -300,34 +305,47 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			}
 			var retVal = NextComponent.Request(absTime, dt, inTorque, outAngularVelocity, dryRun);
 			retVal.ElectricMotor.ElectricMotorPowerMech = (inTorque - outTorque) * avgSpeed;
+			retVal.ElectricMotor.TotalTorqueDemand = inTorque;
 			return retVal;
 		}
 
-		private IResponse RequestElectricMotorOnly(Second absTime, Second dt, NewtonMeter outTorque, NewtonMeter inTorque, PerSecond outAngularVelocity, bool dryRun, PerSecond avgSpeed, IElectricSystemResponse electricSystemResponse)
+		private IResponse RequestElectricMotorOnly(Second absTime, Second dt, NewtonMeter outTorque,
+			NewtonMeter inTorque, PerSecond outAngularVelocity, bool dryRun, PerSecond avgSpeed,
+			IElectricSystemResponse electricSystemResponse)
 		{
 			var remainingPower = inTorque * avgSpeed;
-			if (dryRun)
-			{
+			if (dryRun) {
 				//var driveTorque = Control.MaxDriveTorque(avgSpeed, dt);
 				var dragTorque = 0.SI<NewtonMeter>(); //Control.MaxDragTorque(avgSpeed, dt);
 				var powerDemand = outTorque * avgSpeed;
 				return new ResponseDryRun(this) {
-					Engine = { 
-					EngineSpeed = avgSpeed,
+					Engine = {
+						EngineSpeed = avgSpeed,
+					},
+					ElectricMotor = {
+						ElectricMotorPowerMech = (inTorque - outTorque) * avgSpeed,
+						TotalTorqueDemand = inTorque,
 					},
 					DeltaFullLoad = remainingPower, //powerDemand + driveTorque * avgSpeed,
 					DeltaDragLoad = remainingPower, // powerDemand + dragTorque * avgSpeed,
 				};
 			}
 
+			//if (!DataBus.GearboxInfo.GearEngaged(absTime)) {
+			//	return RequestDisengagedElectricMotorOnly(absTime, dt, outTorque, inTorque, outAngularVelocity, dryRun,
+			//		avgSpeed, electricSystemResponse);
+			//}
+
 			if ((inTorque * avgSpeed).IsEqual(0, Constants.SimulationSettings.LineSearchTolerance)) {
 				SetState(inTorque, outAngularVelocity);
 				if (electricSystemResponse.MaxPowerDrive.IsGreaterOrEqual(0)) {
 					return new ResponseBatteryEmpty(this);
 				}
+
 				return new ResponseSuccess(this) {
 					ElectricMotor = {
 						ElectricMotorPowerMech = (inTorque - outTorque) * avgSpeed,
+						TotalTorqueDemand = inTorque
 					},
 					Engine = {
 						PowerRequest = 0.SI<Watt>(),
@@ -338,17 +356,44 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			AbstractResponse response;
 
-			if (remainingPower > 0)
-			{
+			if (remainingPower > 0) {
 				response = new ResponseOverload(this) { Delta = remainingPower };
-			}
-			else
-			{
+			} else {
 				response = new ResponseUnderload(this) { Delta = remainingPower };
 			}
+
 			response.Engine.EngineSpeed = avgSpeed;
 			return response;
 		}
+
+		//private IResponse RequestDisengagedElectricMotorOnly(Second absTime, Second dt, NewtonMeter outTorque,
+		//	NewtonMeter inTorque, PerSecond outAngularVelocity, bool dryRun, PerSecond avgSpeed,
+		//	IElectricSystemResponse electricSystemResponse)
+		//{
+		//	var angularSpeed = SearchAlgorithm.Search(outAngularVelocity, inTorque,
+		//		Constants.SimulationSettings.EngineIdlingSearchInterval,
+		//		getYValue: t => (NewtonMeter)t,
+		//		evaluateFunction: n => {
+		//			var avg = (PreviousState.InAngularVelocity + n) / 2.0;
+		//			var tDrag = ModelData.DragCurve.Lookup(avg);
+		//			var tInert = Formulas.InertiaPower(n, PreviousState.InAngularVelocity, ModelData.Inertia, dt) / avg;
+		//			return tDrag + tInert;
+		//		},
+		//		criterion: t => ((NewtonMeter)t).Value());
+		//	Log.Debug("Found operating point for idling. absTime: {0}, dt: {1}, torque: {2}, angularSpeed: {3}", absTime, dt,
+		//		0.SI<NewtonMeter>(), angularSpeed);
+		//	SetState(inTorque, angularSpeed);
+		//	return new ResponseSuccess(this) {
+		//		ElectricMotor = {
+		//			ElectricMotorPowerMech = (inTorque - outTorque) * (PreviousState.InAngularVelocity + angularSpeed) / 2.0,
+		//			TotalTorqueDemand = inTorque
+		//		},
+		//		Engine = {
+		//			PowerRequest = 0.SI<Watt>(),
+		//			EngineSpeed = outAngularVelocity
+		//		},
+		//	};
+		//}
 
 		private void SetState(NewtonMeter inTorque, PerSecond outAngularVelocity)
 		{
@@ -379,8 +424,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			container[ModalResultField.P_electricMotorInertiaLoss_, Position] = CurrentState.InertiaTorqueLoss * avgSpeed;
 
 			var contribution =
-				(VectoMath.Abs((CurrentState.InTorque - CurrentState.OutTorque) * avgSpeed) -
-				ModelData.ContinuousPower) * simulationInterval;
+				(((CurrentState.InTorque - CurrentState.OutTorque) * avgSpeed -
+				CurrentState.ElectricPowerToBattery) - ContinuousPowerLoss) * simulationInterval;
 			container[ModalResultField.ElectricMotor_OvlBuffer_, Position] = VectoMath.Max(0, (ThermalBuffer + contribution) / OverloadBuffer);
 		}
 

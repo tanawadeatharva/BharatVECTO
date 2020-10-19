@@ -61,8 +61,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			}
 		}
 
-		public AMTShiftStrategyACEA(VectoRunData data, IVehicleContainer dataBus) : base(data.GearboxData, dataBus)
+		public AMTShiftStrategyACEA(IVehicleContainer dataBus) : base(dataBus)
 		{
+			var data = dataBus.RunData;
 			if (data.EngineData == null) {
 				return;
 			}
@@ -748,7 +749,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		public override ShiftPolygon ComputeDeclarationShiftPolygon(
 			GearboxType gearboxType, int i, EngineFullLoadCurve engineDataFullLoadCurve, IList<ITransmissionInputData> gearboxGears,
-			CombustionEngineData engineData, double axlegearRatio, Meter dynamicTyreRadius)
+			CombustionEngineData engineData, double axlegearRatio, Meter dynamicTyreRadius, ElectricMotorData electricMotorData = null)
 		{
 			return null;
 		}

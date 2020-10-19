@@ -123,14 +123,16 @@ namespace TUGraz.VectoCore.Tests.FileIO
 			Assert.AreEqual(0.8, engineering.JobInputData.Vehicle.InitialSOC);
 
 			var bat = engineering.JobInputData.Vehicle.Components.ElectricStorage.REESSPack as IBatteryPackEngineeringInputData;
-
-
 			var ri = BatteryInternalResistanceReader.Create(bat.InternalResistanceCurve, 1);
+			var imax = BatteryMaxCurrentReader.Create(bat.MaxCurrentMap, 1);
+			
 			Assert.NotNull(bat);
 			Assert.AreEqual(2, engineering.JobInputData.Vehicle.Components.ElectricStorage.Count);
-			Assert.AreEqual(0.5, bat.MaxCurrentMap.Rows[1][BatteryMaxCurrentReader.Fields.StateOfCharge]);
-			Assert.AreEqual(375, bat.MaxCurrentMap.Rows[1][BatteryMaxCurrentReader.Fields.MaxDischargeCurrent]);
-			Assert.AreEqual(375, bat.MaxCurrentMap.Rows[1][BatteryMaxCurrentReader.Fields.MaxDischargeCurrent]);
+			Assert.AreEqual("50", bat.MaxCurrentMap.Rows[1][BatteryMaxCurrentReader.Fields.StateOfCharge]);
+			Assert.AreEqual("375", bat.MaxCurrentMap.Rows[1][BatteryMaxCurrentReader.Fields.MaxDischargeCurrent]);
+			Assert.AreEqual("375", bat.MaxCurrentMap.Rows[1][BatteryMaxCurrentReader.Fields.MaxDischargeCurrent]);
+			Assert.AreEqual(375, imax.LookupMaxChargeCurrent(0.5).Value());
+			Assert.AreEqual(-375, imax.LookupMaxDischargeCurrent(0.5).Value());
 			Assert.AreEqual(0.04, ri.Lookup(0.5).Value());
 
 			var em = engineering.JobInputData.Vehicle.Components.ElectricMachines;

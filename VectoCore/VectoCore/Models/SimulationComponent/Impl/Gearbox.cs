@@ -30,6 +30,7 @@
 */
 
 using TUGraz.VectoCommon.Exceptions;
+using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Configuration;
@@ -62,6 +63,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		protected internal GearInfo _nextGear;
 		private Second _overrideDisengage;
+		private bool ICEAvailable;
 
 		public override Second LastUpshift { get; protected internal set; }
 
@@ -89,14 +91,14 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			Log.Info("Gearshift triggered - Gearbox disengaged");
 		}
 
-		public Gearbox(IVehicleContainer container, IShiftStrategy strategy, VectoRunData runData) : base(container,
-			runData)
+		public Gearbox(IVehicleContainer container, IShiftStrategy strategy) : base(container)
 		{
 			_strategy = strategy;
 			if (_strategy != null) {
 				_strategy.Gearbox = this;
 			}
 
+			ICEAvailable = container.PowertrainInfo.HasCombustionEngine;
 			LastDownshift = -double.MaxValue.SI<Second>();
 			LastUpshift = -double.MaxValue.SI<Second>();
 			Disengaged = true;
@@ -135,7 +137,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			get { return true; }
 		}
 
-		internal ResponseDryRun Initialize(Second absTime, uint gear, NewtonMeter outTorque, PerSecond outAngularVelocity)
+		protected internal virtual ResponseDryRun Initialize(Second absTime, uint gear, NewtonMeter outTorque, PerSecond outAngularVelocity)
 		{
 			var oldGear = Gear;
 			Gear = gear;
@@ -259,7 +261,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			var driverDeceleratingNegTorque = DataBus.DriverInfo.DriverBehavior == DrivingBehavior.Braking &&
 											DataBus.DriverInfo.DrivingAction == DrivingAction.Brake &&
 											(DataBus.DrivingCycleInfo.RoadGradient.IsSmaller(0) ||
-											inAngularVelocity.IsSmaller(DataBus.EngineInfo.EngineIdleSpeed)) &&
+											(ICEAvailable && inAngularVelocity.IsSmaller(DataBus.EngineInfo.EngineIdleSpeed))) &&
 											(DataBus.Brakes.BrakePower.IsGreater(0) || inTorque.IsSmaller(0));
 			var vehiclespeedBelowThreshold =
 				DataBus.VehicleInfo.VehicleSpeed.IsSmaller(Constants.SimulationSettings.ClutchDisengageWhenHaltingSpeed);
@@ -391,8 +393,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				dryRunResponse.Gearbox.PowerRequest =
 					outTorque * (PreviousState.OutAngularVelocity + outAngularVelocity) / 2.0;
 				dryRunResponse.Gearbox.Gear = Gear;
-                dryRunResponse.Gearbox.InputSpeed = inAngularVelocity;
-                return dryRunResponse;
+				dryRunResponse.Gearbox.InputSpeed = inAngularVelocity;
+				return dryRunResponse;
 			}
 
 			var response = NextComponent.Request(absTime, dt, inTorque, inAngularVelocity, false);
@@ -531,6 +533,48 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		public override Second LastShift
 		{
 			get { return EngageTime; }
+		}
+	}
+
+	public class PEVGearbox : Gearbox
+	{
+		public PEVGearbox(IVehicleContainer container, IShiftStrategy strategy) : base(container, strategy) { }
+
+		protected internal override ResponseDryRun Initialize(Second absTime, uint gear, NewtonMeter outTorque, PerSecond outAngularVelocity)
+		{
+			var oldGear = Gear;
+			Gear = gear;
+			var inAngularVelocity = outAngularVelocity * ModelData.Gears[gear].Ratio;
+			var torqueLossResult = ModelData.Gears[gear].LossMap.GetTorqueLoss(outAngularVelocity, outTorque);
+			CurrentState.TorqueLossResult = torqueLossResult;
+			var inTorque = outTorque / ModelData.Gears[gear].Ratio + torqueLossResult.Value;
+
+			if (!inAngularVelocity.IsEqual(0)) {
+				var alpha = ModelData.Inertia.IsEqual(0)
+					? 0.SI<PerSquareSecond>()
+					: outTorque / ModelData.Inertia;
+
+				var inertiaPowerLoss = Formulas.InertiaPower(inAngularVelocity, alpha, ModelData.Inertia,
+					Constants.SimulationSettings.TargetTimeInterval);
+				inTorque += inertiaPowerLoss / inAngularVelocity;
+			}
+
+			var response =
+				NextComponent.Request(absTime, Constants.SimulationSettings.TargetTimeInterval, inTorque,
+					inAngularVelocity, true); //NextComponent.Initialize(inTorque, inAngularVelocity);
+			
+			var fullLoad = -DataBus.ElectricMotorInfo(PowertrainPosition.BatteryElectricB2).MaxPowerDrive(inAngularVelocity);
+
+			Gear = oldGear;
+			return new ResponseDryRun(this, response) {
+				ElectricMotor = {
+					PowerRequest = response.ElectricMotor.PowerRequest
+				},
+				Gearbox = {
+					PowerRequest = outTorque * outAngularVelocity,
+				},
+				DeltaFullLoad = response.ElectricMotor.PowerRequest - fullLoad
+			};
 		}
 	}
 }

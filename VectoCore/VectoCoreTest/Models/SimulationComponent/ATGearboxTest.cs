@@ -96,7 +96,8 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 				GearboxData = gearboxData,
 				EngineData = new CombustionEngineData() { Inertia = 0.SI<KilogramSquareMeter>() }
 			};
-			var gearbox = new ATGearbox(vehicleContainer, new ATShiftStrategy(runData, vehicleContainer), runData);
+			vehicleContainer.RunData = runData;
+			var gearbox = new ATGearbox(vehicleContainer, new ATShiftStrategy(vehicleContainer));
 
 			vehicleContainer.VehicleSpeed = vehicleSpeed.KMPHtoMeterPerSecond();
 

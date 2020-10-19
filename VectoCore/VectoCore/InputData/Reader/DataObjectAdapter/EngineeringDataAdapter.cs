@@ -325,13 +325,13 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 					? ShiftPolygonReader.Create(gear.ShiftPolygon)
 					: shiftPolygonCalc != null
 						? shiftPolygonCalc.ComputeDeclarationShiftPolygon(
-							gearbox.Type, (int)i, engineData.FullLoadCurves[i + 1], gearbox.Gears,
+							gearbox.Type, (int)i, engineData?.FullLoadCurves[i + 1], gearbox.Gears,
 							engineData,
-							axlegearRatio, dynamicTyreRadius)
+							axlegearRatio, dynamicTyreRadius, runData.ElectricMachinesData?.FirstOrDefault()?.Item2)
 						: DeclarationData.Gearbox.ComputeShiftPolygon(
-							gearbox.Type, (int)i, engineData.FullLoadCurves[i + 1], gearbox.Gears,
+							gearbox.Type, (int)i, engineData?.FullLoadCurves[i + 1], gearbox.Gears,
 							engineData,
-							axlegearRatio, dynamicTyreRadius);
+							axlegearRatio, dynamicTyreRadius, runData.ElectricMachinesData?.FirstOrDefault()?.Item2);
 				var gearData = new GearData {
 					ShiftPolygon = shiftPolygon,
 					MaxSpeed = gear.MaxInputSpeed,
@@ -606,7 +606,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 
 				LoadStageThresoldsDown = gsInputData.LoadStageThresholdsDown?.ToArray() ?? DeclarationData.GearboxTCU.LoadStageThresoldsDown,
 				LoadStageThresoldsUp = gsInputData.LoadStageThresholdsUp?.ToArray() ?? DeclarationData.GearboxTCU.LoadStageThresholdsUp,
-				ShiftSpeedsTCToLocked = (gsInputData.ShiftSpeedsTCToLocked ?? DeclarationData.GearboxTCU.ShiftSpeedsTCToLocked).Select(x => x.Select(y => y + engineIdlingSpeed.AsRPM).ToArray()).ToArray(),
+				ShiftSpeedsTCToLocked = engineIdlingSpeed == null ? null : (gsInputData.ShiftSpeedsTCToLocked ?? DeclarationData.GearboxTCU.ShiftSpeedsTCToLocked).Select(x => x.Select(y => y + engineIdlingSpeed.AsRPM).ToArray()).ToArray(),
 
 				// voith gs parameters
 

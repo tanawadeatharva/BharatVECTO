@@ -597,8 +597,8 @@ Public Class BatteryForm
     End Sub
 
     Private Sub btnBrowseMaxCurrentMap_Click(sender As Object, e As EventArgs) Handles btnBrowseMaxCurrentMap.Click
-        If BatteryInternalResistanceCurveFileBrowser.OpenDialog(FileRepl(tbRiCurve.Text, GetPath(_batteryFile))) Then _
-            tbRiCurve.Text = GetFilenameWithoutDirectory(BatteryInternalResistanceCurveFileBrowser.Files(0), GetPath(_batteryFile))
+        If BatteryMaxCurrentCurveFileBrowser.OpenDialog(FileRepl(tbMaxCurrentMap.Text, GetPath(_batteryFile))) Then _
+            tbMaxCurrentMap.Text = GetFilenameWithoutDirectory(BatteryMaxCurrentCurveFileBrowser.Files(0), GetPath(_batteryFile))
     End Sub
 
     Private Sub btnMaxCurrentMapOpen_Click(sender As Object, e As EventArgs) Handles btnMaxCurrentMapOpen.Click

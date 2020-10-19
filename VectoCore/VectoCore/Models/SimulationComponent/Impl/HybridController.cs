@@ -276,8 +276,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			protected readonly uint MaxStartGear;
 			protected uint _nextGear { get; set; }
 
-			public HybridCtlShiftStrategy(HybridController hybridController, IVehicleContainer container) : base(
-				container.RunData.GearboxData, container)
+			public HybridCtlShiftStrategy(HybridController hybridController, IVehicleContainer container) : base(container)
 			{
 				_controller = hybridController;
 
@@ -302,7 +301,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			public override ShiftPolygon ComputeDeclarationShiftPolygon(GearboxType gearboxType, int i,
 				EngineFullLoadCurve engineDataFullLoadCurve,
 				IList<ITransmissionInputData> gearboxGears, CombustionEngineData engineData, double axlegearRatio,
-				Meter dynamicTyreRadius)
+				Meter dynamicTyreRadius, ElectricMotorData electricMotorData = null)
 			{
 				return DeclarationData.Gearbox.ComputeEfficiencyShiftPolygon(
 					i, engineDataFullLoadCurve, gearboxGears, engineData, axlegearRatio, dynamicTyreRadius);

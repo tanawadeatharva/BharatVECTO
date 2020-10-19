@@ -406,9 +406,12 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 
 		[ModalResultField(typeof(SI), caption: "P_em-B3_mech [kW]", outputFactor: 1e-3)]
         P_electricMotor_mech_B3,
+		
+		[ModalResultField(typeof(SI), caption: "P_em-B2_mech [kW]", outputFactor: 1e-3)]
+		P_electricMotor_mech_B2,
         // -->
 
-        [ModalResultField(typeof(SI), caption: "P_reess_T [kW]", outputFactor: 1e-3)] P_reess_terminal,
+		[ModalResultField(typeof(SI), caption: "P_reess_T [kW]", outputFactor: 1e-3)] P_reess_terminal,
 		[ModalResultField(typeof(SI), caption: "P_reess_int [kW]", outputFactor: 1e-3)] P_reess_int,
 		[ModalResultField(typeof(SI), caption: "P_reess_loss [kW]", outputFactor: 1e-3)] P_reess_loss,
 		[ModalResultField(typeof(SI), caption: "REESS SOC [%]", outputFactor: 100)] REESSStateOfCharge,

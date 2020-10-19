@@ -211,9 +211,8 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			double inAngularSpeed, double expectedTorque)
 		{
 			var gearboxData = MockSimulationDataFactory.CreateGearboxDataFromFile(gbxFile, engineFile);
-			var container = new VehicleContainer(ExecutionMode.Engineering);
-			var runData = GetDummyRunData(gearboxData);
-			var gearbox = new Gearbox(container, new AMTShiftStrategy(runData, container), runData);
+			var container = new VehicleContainer(ExecutionMode.Engineering) { RunData = GetDummyRunData(gearboxData) };
+			var gearbox = new Gearbox(container, new AMTShiftStrategy(container));
 			var driver = new MockDriver(container);
 			var vehicle = new MockVehicle(container) { MyVehicleSpeed = 0.KMPHtoMeterPerSecond() };
 
@@ -291,9 +290,10 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 		{
 			// read gearbox data in engineering mode so that the loss-map is not extrapolated.
 			var gearboxData = MockSimulationDataFactory.CreateGearboxDataFromFile(gbxFile, engineFile, false);
-			var container = new VehicleContainer(ExecutionMode.Declaration);
-			var runData = GetDummyRunData(gearboxData);
-			var gearbox = new Gearbox(container, new AMTShiftStrategy(runData, container), runData);
+			var container = new VehicleContainer(ExecutionMode.Declaration) {
+				RunData = GetDummyRunData(gearboxData)
+			};
+			var gearbox = new Gearbox(container, new AMTShiftStrategy(container));
 			var driver = new MockDriver(container);
 			var vehicle = new MockVehicle(container) { MyVehicleSpeed = 0.KMPHtoMeterPerSecond() };
 
@@ -327,9 +327,9 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			double inAngularSpeed, double expectedTorque)
 		{
 			var gearboxData = MockSimulationDataFactory.CreateGearboxDataFromFile(GearboxDataFile, EngineDataFile, false);
-			var container = new VehicleContainer(executionMode: ExecutionMode.Engineering);
-			var runData = GetDummyRunData(gearboxData);
-			var gearbox = new Gearbox(container, new AMTShiftStrategy(runData, container), runData);
+			var container = new VehicleContainer(executionMode: ExecutionMode.Engineering)
+				{ RunData = GetDummyRunData(gearboxData) };
+			var gearbox = new Gearbox(container, new AMTShiftStrategy(container));
 			var driver = new MockDriver(container);
 			var vehicle = new MockVehicle(container) { MyVehicleSpeed = 0.KMPHtoMeterPerSecond() };
 
@@ -366,10 +366,8 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			double inAngularSpeed, bool extrapolated, double expectedTorque)
 		{
 			var gearboxData = MockSimulationDataFactory.CreateGearboxDataFromFile(GearboxDataFile, EngineDataFile, false);
-			var container = new VehicleContainer(ExecutionMode.Engineering);
-			var runData = GetDummyRunData(gearboxData);
-			var gearbox = new Gearbox(container, new AMTShiftStrategy(runData, container),
-				runData);
+			var container = new VehicleContainer(ExecutionMode.Engineering) { RunData = GetDummyRunData(gearboxData) };
+			var gearbox = new Gearbox(container, new AMTShiftStrategy(container));
 			var driver = new MockDriver(container);
 			var vehicle = new MockVehicle(container) { MyVehicleSpeed = 0.KMPHtoMeterPerSecond() };
 
@@ -399,11 +397,9 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 		[Test]
 		public void Gearbox_IntersectFullLoadCurves()
 		{
-			var container = new VehicleContainer(ExecutionMode.Engineering);
 			var gearboxData = MockSimulationDataFactory.CreateGearboxDataFromFile(GearboxDataFile, EngineDataFile);
-			var runData = GetDummyRunData(gearboxData);
-			var gearbox = new Gearbox(container, new AMTShiftStrategy(runData, container),
-				runData);
+			var container = new VehicleContainer(ExecutionMode.Engineering) { RunData = GetDummyRunData(gearboxData) };
+			var gearbox = new Gearbox(container, new AMTShiftStrategy( container));
 			var vehicle = new MockVehicle(container) { MyVehicleSpeed = 0.KMPHtoMeterPerSecond() };
 			var driver = new MockDriver(container);
 
@@ -455,13 +451,12 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 		]
 		public void Gearbox_Request_engaged(int gear, double t, double n, double loss, Type responseType)
 		{
-			var container = new VehicleContainer(ExecutionMode.Engineering);
+			
 			var gearboxData = CreateGearboxData();
-			var runData = GetDummyRunData(gearboxData);
+			var container = new VehicleContainer(ExecutionMode.Engineering) { RunData = GetDummyRunData(gearboxData) };
 			//runData.VehicleData.DynamicTyreRadius = 0.3.SI<Meter>();
-			runData.AxleGearData.AxleGear.Ratio = 5;
-			var gearbox = new Gearbox(container, new AMTShiftStrategy(runData, container),
-				runData);
+		 	container.RunData.AxleGearData.AxleGear.Ratio = 5;
+			var gearbox = new Gearbox(container, new AMTShiftStrategy(container));
 
 			var driver = new MockDriver(container);
 			var vehicle = new MockVehicle(container) { MyVehicleSpeed = 0.KMPHtoMeterPerSecond() };
@@ -509,11 +504,10 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 		TestCase(8, 4, 15000, 200, typeof(ResponseGearShift)),]
 		public void Gearbox_ShiftDown(int gear, int newGear, double t, double n, Type responseType)
 		{
-			var container = new VehicleContainer(ExecutionMode.Engineering);
+			
 			var gearboxData = MockSimulationDataFactory.CreateGearboxDataFromFile(GearboxDataFile, EngineDataFile);
-			var runData = GetDummyRunData(gearboxData);
-			var gearbox = new Gearbox(container, new AMTShiftStrategy(runData, container),
-				runData);
+			var container = new VehicleContainer(ExecutionMode.Engineering) { RunData = GetDummyRunData(gearboxData) };
+			var gearbox = new Gearbox(container, new AMTShiftStrategy(container));
 
 			var driver = new MockDriver(container);
 			var port = new MockTnOutPort() { EngineN95hSpeed = 2000.RPMtoRad() };
@@ -558,6 +552,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 		TestCase(1, 6, 200, 9000, typeof(ResponseGearShift)),]
 		public void Gearbox_ShiftUp(int gear, int newGear, double tq, double n, Type responseType)
 		{
+			var gearboxData = MockSimulationDataFactory.CreateGearboxDataFromFile(GearboxDataFile, EngineDataFile);
 			var container = new MockVehicleContainer() {
 				VehicleSpeed = 10.SI<MeterPerSecond>(),
 				DriverBehavior = DrivingBehavior.Driving,
@@ -566,12 +561,11 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 				VehicleMass = 10000.SI<Kilogram>(),
 				ReducedMassWheels = 100.SI<Kilogram>(),
 				TotalMass = 19000.SI<Kilogram>(),
-				EngineSpeed = n.SI<PerSecond>()
+				EngineSpeed = n.SI<PerSecond>(),
+				RunData = GetDummyRunData(gearboxData),
+				HasCombustionEngine = true
 			};
-			var gearboxData = MockSimulationDataFactory.CreateGearboxDataFromFile(GearboxDataFile, EngineDataFile);
-			var runData = GetDummyRunData(gearboxData);
-			var gearbox = new Gearbox(container, new AMTShiftStrategy(runData, container),
-				runData);
+			var gearbox = new Gearbox(container, new AMTShiftStrategy(container));
 			var port = new MockTnOutPort() { EngineN95hSpeed = 2000.RPMtoRad() };
 			container.EngineInfo = port;
 			gearbox.InPort().Connect(port);

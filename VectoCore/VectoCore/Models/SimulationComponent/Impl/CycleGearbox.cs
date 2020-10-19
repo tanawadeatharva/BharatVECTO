@@ -62,13 +62,13 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		protected internal readonly TorqueConverterWrapper TorqueConverter;
 
 		public CycleGearbox(IVehicleContainer container, VectoRunData runData)
-			: base(container, runData)
+			: base(container)
 		{
 			if (!ModelData.Type.AutomaticTransmission()) {
 				return;
 			}
 
-			var strategy = new CycleShiftStrategy(ModelData, null);
+			var strategy = new CycleShiftStrategy(container);
 
 			
 			TorqueConverter = new TorqueConverterWrapper(runData.Cycle.Entries.All(x => x.EngineSpeed != null),
@@ -540,7 +540,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		public class CycleShiftStrategy : BaseShiftStrategy
 		{
-			public CycleShiftStrategy(GearboxData data, IDataBus dataBus) : base(data, dataBus) { }
+			public CycleShiftStrategy(IVehicleContainer dataBus) : base(dataBus) { }
 
 			public override IGearbox Gearbox { get; set; }
 
@@ -571,7 +571,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			public override ShiftPolygon ComputeDeclarationShiftPolygon(
 				GearboxType gearboxType, int i, EngineFullLoadCurve engineDataFullLoadCurve, IList<ITransmissionInputData> gearboxGears,
-				CombustionEngineData engineData, double axlegearRatio, Meter dynamicTyreRadius)
+				CombustionEngineData engineData, double axlegearRatio, Meter dynamicTyreRadius, ElectricMotorData electricMotorData = null)
 			{
 				return null;
 			}

@@ -346,7 +346,7 @@ Public Class ElectricMotorForm
     End Sub
 
     Private Sub UpdatePic()
-        Dim fullLoadCurve As ElectricFullLoadCurve = Nothing
+        Dim fullLoadCurve As ElectricMotorFullLoadCurve = Nothing
         Dim dragCurve As DragCurve = Nothing
         Dim fcMap As EfficiencyMap = Nothing
 

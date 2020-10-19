@@ -9,6 +9,7 @@ using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.Models.Connector.Ports.Impl;
 using TUGraz.VectoCore.Models.Declaration;
+using TUGraz.VectoCore.Models.Simulation;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.DataBus;
 using TUGraz.VectoCore.Models.Simulation.Impl;
@@ -42,8 +43,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			get { return "AT - EffShift"; }
 		}
 
-		public ATShiftStrategyOptimized(VectoRunData runData, IDataBus dataBus) : base(runData, dataBus)
+		public ATShiftStrategyOptimized(IVehicleContainer dataBus) : base(dataBus)
 		{
+			var runData = dataBus.RunData;
 			if (runData.EngineData == null) {
 				return;
 			}
@@ -482,8 +484,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		public override ShiftPolygon ComputeDeclarationShiftPolygon(
 			GearboxType gearboxType, int i, EngineFullLoadCurve engineDataFullLoadCurve,
-			IList<ITransmissionInputData> gearboxGears,
-			CombustionEngineData engineData, double axlegearRatio, Meter dynamicTyreRadius)
+			IList<ITransmissionInputData> gearboxGears, CombustionEngineData engineData, double axlegearRatio,
+			Meter dynamicTyreRadius, ElectricMotorData electricMotorData = null)
 		{
 			var shiftLine = DeclarationData.Gearbox.ComputeEfficiencyShiftPolygon(
 				Math.Max(i, 2), engineDataFullLoadCurve, gearboxGears, engineData, axlegearRatio, dynamicTyreRadius);
@@ -499,6 +501,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				upshift.Add(new ShiftPolygon.ShiftPolygonEntry(maxDragTorque, speed));
 				upshift.Add(new ShiftPolygon.ShiftPolygonEntry(maxTorque, speed));
 			}
+
 			return new ShiftPolygon(shiftLine.Downshift.ToList(), upshift);
 		}
 

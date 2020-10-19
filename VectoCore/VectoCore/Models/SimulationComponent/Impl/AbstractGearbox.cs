@@ -35,7 +35,6 @@ using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Models.Connector.Ports;
 using TUGraz.VectoCore.Models.Simulation;
-using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.DataBus;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox;
@@ -53,9 +52,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		protected uint _gear;
 
-		protected AbstractGearbox(IVehicleContainer container, VectoRunData runData) : base(container)
+		protected AbstractGearbox(IVehicleContainer container) : base(container)
 		{
-			ModelData = runData.GearboxData;
+			ModelData = container.RunData.GearboxData;
 			LastShift = -double.MaxValue.SI<Second>();
 		}
 

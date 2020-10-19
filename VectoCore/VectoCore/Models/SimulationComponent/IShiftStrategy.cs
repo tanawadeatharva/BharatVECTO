@@ -113,7 +113,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent
 		ShiftPolygon ComputeDeclarationShiftPolygon(
 			GearboxType gearboxType, int i, EngineFullLoadCurve engineDataFullLoadCurve,
 			IList<ITransmissionInputData> gearboxGears, CombustionEngineData engineData, double axlegearRatio,
-			Meter dynamicTyreRadius);
+			Meter dynamicTyreRadius, ElectricMotorData electricMotorData = null);
 	}
 
     public class GearInfo

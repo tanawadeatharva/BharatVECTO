@@ -31,8 +31,8 @@
 
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.Utils;
+using TUGraz.VectoCore.Models.Simulation;
 using TUGraz.VectoCore.Models.Simulation.DataBus;
-using TUGraz.VectoCore.Models.SimulationComponent.Data;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 {
@@ -45,7 +45,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		protected bool EarlyShiftUp;
 		protected Gearbox _gearbox;
 
-		protected ShiftStrategy(GearboxData data, IDataBus dataBus) : base(data, dataBus) {}
+		protected ShiftStrategy(IVehicleContainer dataBus) : base(dataBus) {}
 
 		public override IGearbox Gearbox
 		{

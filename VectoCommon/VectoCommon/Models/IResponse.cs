@@ -145,6 +145,7 @@ namespace TUGraz.VectoCommon.Models
 		public PerSecond AngularVelocity { get; set; }
 
 		public SIBase<Watt> InertiaPowerDemand { get; set; }
+		public NewtonMeter TotalTorqueDemand { get; set; }
 	}
 
 
