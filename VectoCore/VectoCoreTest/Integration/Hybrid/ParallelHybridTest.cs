@@ -952,11 +952,11 @@ namespace TUGraz.VectoCore.Tests.Integration.Hybrid
 
 			es.Connect(battery);
 
+			var engine = new StopStartCombustionEngine(container, runData.EngineData);
 			var gearbox = new Gearbox(container, ctl.ShiftStrategy);
 			//var hybridStrategy = new DelegateParallelHybridStrategy();
 			ctl.Gearbox = gearbox;
 
-			var engine = new StopStartCombustionEngine(container, runData.EngineData);
 			var idleController = engine.IdleController;
 			ctl.Engine = engine;
 
