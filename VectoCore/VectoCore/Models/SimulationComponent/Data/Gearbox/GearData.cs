@@ -31,6 +31,7 @@
 
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
+using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 
@@ -84,12 +85,14 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox
 			var mode = validationService != null ? validationService.Mode : ExecutionMode.Declaration;
 			var gbxType = validationService != null ? validationService.GearboxType : GearboxType.MT;
 			var emsMission = validationService != null && validationService.IsEMSCycle;
+			var jobType = validationService != null ? validationService.JobType : VectoSimulationJobType.ConventionalVehicle;
+			var emPos = validationService != null ? validationService.EMPowertrainPosition : (PowertrainPosition?)null;
 
 			if (gearData.HasTorqueConverter) {
 				if (gearData.TorqueConverterShiftPolygon == null) {
 					return new ValidationResult("Shift Polygon for Torque Converter Gear required!");
 				}
-				var result = gearData.TorqueConverterShiftPolygon.Validate(mode, gbxType, emsMission);
+				var result = gearData.TorqueConverterShiftPolygon.Validate(mode, jobType, emPos, gbxType, emsMission);
 				if (result.Any()) {
 					return new ValidationResult("Validation of GearData failed", result.Select(x => x.ErrorMessage));
 				}

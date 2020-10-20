@@ -113,7 +113,7 @@ Public Class Gearbox
     Public Function SaveFile() As Boolean
 
         Dim validationResults As IList(Of ValidationResult) =
-                Validate(If(Cfg.DeclMode, ExecutionMode.Declaration, ExecutionMode.Engineering), Type, False)
+                Validate(If(Cfg.DeclMode, ExecutionMode.Declaration, ExecutionMode.Engineering), VectoSimulationJobType.ConventionalVehicle, Nothing, Type, False)
 
         If validationResults.Count > 0 Then
             Dim messages As IEnumerable(Of String) =
@@ -196,6 +196,9 @@ Public Class Gearbox
                         VectoValidationModeServiceContainer)
         Dim mode As ExecutionMode = If(modeService Is Nothing, ExecutionMode.Declaration, modeService.Mode)
         Dim emsCycle As Boolean = (modeService IsNot Nothing) AndAlso modeService.IsEMSCycle
+        Dim jobType as VectoSimulationJobType = If(modeService Is Nothing, VectoSimulationJobType.ConventionalVehicle, modeService.JobType)
+        Dim emPos as PowertrainPosition? = If(modeService Is Nothing, PowertrainPosition.HybridPositionNotSet, modeService.EMPowertrainPosition)
+
 
         Dim axlegearData As AxleGearData
         Dim gearboxData As GearboxData
@@ -274,8 +277,7 @@ Public Class Gearbox
             End If
 
             Dim result As IList(Of ValidationResult) =
-                    gearboxData.Validate(If(Cfg.DeclMode, ExecutionMode.Declaration, ExecutionMode.Engineering),
-                                         gearbox.Type, emsCycle)
+                    gearboxData.Validate(If(Cfg.DeclMode, ExecutionMode.Declaration, ExecutionMode.Engineering), jobType, emPos, gearbox.Type, emsCycle)
             If result.Any() Then
                 Return _
                     New ValidationResult("Gearbox Configuration is invalid. ",
@@ -285,9 +287,7 @@ Public Class Gearbox
                                                           String.Join(Environment.NewLine, r.MemberNames)).ToList())
             End If
 
-            result = axlegearData.Validate(If(Cfg.DeclMode, ExecutionMode.Declaration, ExecutionMode.Engineering),
-                                           gearbox.Type,
-                                           emsCycle)
+            result = axlegearData.Validate(If(Cfg.DeclMode, ExecutionMode.Declaration, ExecutionMode.Engineering), jobType, emPos, gearbox.Type, emsCycle)
             If result.Any() Then
                 Return _
                     New ValidationResult("Axlegear Configuration is invalid. ",

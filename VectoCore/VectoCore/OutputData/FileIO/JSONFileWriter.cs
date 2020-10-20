@@ -765,10 +765,10 @@ public class JSONFileWriter : IOutputFileWriter
 		}
 		body.Add("Padd_electric", input.JobInputData.Vehicle.Components.AuxiliaryInputData.ElectricAuxPower.Value());
 
-		//if (!job.SavedInDeclarationMode)
-  //      {
-  //          body.Add("TCU", GetRelativePath(input.DriverInputData.GearshiftInputData.Source, basePath));
-		//}
+        //if (!job.SavedInDeclarationMode)
+        //      {
+        body.Add("TCU", GetRelativePath(input.DriverInputData.GearshiftInputData.Source, basePath));
+        //}
 
         //body.Add("ShiftStrategy", input.JobInputData.ShiftStrategy);
 

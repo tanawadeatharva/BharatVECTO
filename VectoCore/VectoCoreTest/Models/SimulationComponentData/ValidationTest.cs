@@ -99,7 +99,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 			};
 			data.FullLoadCurves[0].EngineData = data;
 
-			var results = data.Validate(ExecutionMode.Declaration, null, false);
+			var results = data.Validate(ExecutionMode.Declaration, VectoSimulationJobType.ConventionalVehicle, null, null, false);
 			Assert.IsFalse(results.Any(), "Validation Failed: " + string.Join("; ", results.Select(r => r.ErrorMessage)));
 			Assert.IsTrue(data.IsValid());
 		}
@@ -135,7 +135,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 
 			var engineData = dao.CreateEngineData(data, data.EngineModes.First());
 
-			var results = engineData.Validate(ExecutionMode.Engineering, null, false);
+			var results = engineData.Validate(ExecutionMode.Engineering, VectoSimulationJobType.ConventionalVehicle, null, null, false);
 			Assert.IsFalse(results.Any(), "Validation failed: " + string.Join("; ", results.Select(r => r.ErrorMessage)));
 			Assert.IsTrue(engineData.IsValid());
 		}
@@ -181,7 +181,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 			};
 			var engineData = dao.CreateEngineData(vehicle, data.EngineModes.First(), new Mission() {MissionType = MissionType.LongHaul});
 
-			var results = engineData.Validate(ExecutionMode.Declaration, null, false);
+			var results = engineData.Validate(ExecutionMode.Declaration, VectoSimulationJobType.ConventionalVehicle, null, null, false);
 			Assert.IsFalse(results.Any(), "Validation failed: " + string.Join("; ", results.Select(r => r.ErrorMessage)));
 
 			Assert.IsTrue(engineData.IsValid());
@@ -216,10 +216,10 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 					},
 				}
 			};
-			var result = vehicleData.Validate(ExecutionMode.Engineering, null, false);
+			var result = vehicleData.Validate(ExecutionMode.Engineering, VectoSimulationJobType.ConventionalVehicle, null, null, false);
 			Assert.IsTrue(!result.Any(), "validation should have succeded but failed." + string.Concat(result));
 
-			result = vehicleData.Validate(ExecutionMode.Declaration, null, false);
+			result = vehicleData.Validate(ExecutionMode.Declaration, VectoSimulationJobType.ConventionalVehicle, null, null, false);
 			Assert.IsTrue(result.Any(), "validation should have failed, but succeeded.");
 		}
 
@@ -294,10 +294,10 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 				AxleGearData = axleGearData
 			};
 
-			var results = data.Validate(ExecutionMode.Declaration, null, false);
+			var results = data.Validate(ExecutionMode.Declaration, VectoSimulationJobType.ConventionalVehicle, null, null, false);
 			Assert.IsTrue(results.Any(), "Validation should have failed, but succeded.");
 
-			results = vehicleData.Validate(ExecutionMode.Engineering, null, false);
+			results = vehicleData.Validate(ExecutionMode.Engineering, VectoSimulationJobType.ConventionalVehicle, null, null, false);
 			Assert.IsTrue(!results.Any());
 		}
 
@@ -338,7 +338,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 				AxleGearData = axleGearData
 			};
 
-			var results = data.Validate(ExecutionMode.Declaration, null, false);
+			var results = data.Validate(ExecutionMode.Declaration, VectoSimulationJobType.ConventionalVehicle, null, null, false);
 			Assert.IsTrue(results.Any(), "Validation should have failed, but succeded.");
 		}
 
@@ -348,7 +348,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 		[TestCase]
 		public void Validation_Test()
 		{
-			var results = new DataObject().Validate(ExecutionMode.Declaration, null, false);
+			var results = new DataObject().Validate(ExecutionMode.Declaration, VectoSimulationJobType.ConventionalVehicle, null, null, false);
 
 			// every field and property should be tested except private parent fields and properties and 
 			// (4*4+1) * 2 = 17*2= 34 - 4 private parent fields (+2 public field and property which are tested twice) = 32
@@ -366,7 +366,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 				}
 			};
 
-			var results = container.Validate(ExecutionMode.Declaration, null, false);
+			var results = container.Validate(ExecutionMode.Declaration, VectoSimulationJobType.ConventionalVehicle, null, null, false);
 			Assert.AreEqual(1, results.Count);
 		}
 
@@ -389,7 +389,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 					VectoCSVFile.ReadStream(
 						InputDataHelper.InputDataAsStream("engine torque,downshift rpm [rpm],upshift rpm [rpm]	", vgbs)));
 
-			var results = shiftPolygon.Validate(ExecutionMode.Declaration, GearboxType.MT, false);
+			var results = shiftPolygon.Validate(ExecutionMode.Declaration, VectoSimulationJobType.ConventionalVehicle, null, GearboxType.MT, false);
 			Assert.IsFalse(results.Any());
 
 			// change columns
@@ -398,7 +398,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 					VectoCSVFile.ReadStream(
 						InputDataHelper.InputDataAsStream("engine torque,upshift rpm [rpm], downshift rpm [rpm]	", vgbs)));
 
-			results = shiftPolygon.Validate(ExecutionMode.Declaration, GearboxType.MT, false);
+			results = shiftPolygon.Validate(ExecutionMode.Declaration, VectoSimulationJobType.ConventionalVehicle, null, GearboxType.MT, false);
 			Assert.IsTrue(results.Any());
 		}
 
@@ -418,7 +418,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 					VectoCSVFile.ReadStream(
 						InputDataHelper.InputDataAsStream("engine torque,downshift rpm [rpm],upshift rpm [rpm]	", vgbs)));
 
-			var results = shiftPolygon.Validate(ExecutionMode.Declaration, GearboxType.ATSerial, false);
+			var results = shiftPolygon.Validate(ExecutionMode.Declaration, VectoSimulationJobType.ConventionalVehicle, null, GearboxType.ATSerial, false);
 			Assert.IsFalse(results.Any());
 
 			// change columns
@@ -427,7 +427,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 					VectoCSVFile.ReadStream(
 						InputDataHelper.InputDataAsStream("engine torque,upshift rpm [rpm], downshift rpm [rpm]	", vgbs)));
 
-			results = shiftPolygon.Validate(ExecutionMode.Declaration, GearboxType.ATSerial, false);
+			results = shiftPolygon.Validate(ExecutionMode.Declaration, VectoSimulationJobType.ConventionalVehicle, null, GearboxType.ATSerial, false);
 			Assert.IsFalse(results.Any());
 		}
 

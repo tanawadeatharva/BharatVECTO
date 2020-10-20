@@ -50,6 +50,7 @@ using TUGraz.VectoCore.Models.SimulationComponent.Impl;
 using TUGraz.VectoCore.Tests.Utils;
 using TUGraz.VectoCore.Utils;
 using System.IO;
+using TUGraz.VectoCommon.InputData;
 
 // ReSharper disable RedundantAssignment
 // ReSharper disable UnusedVariable
@@ -149,7 +150,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			var vehicle = new VehicleContainer(ExecutionMode.Engineering);
 			var axleGearData = MockSimulationDataFactory.CreateAxleGearDataFromFile(AxleGearValidRangeDataFile);
 			var axleGear = new AxleGear(vehicle, axleGearData);
-			Assert.AreEqual(0, axleGear.Validate(ExecutionMode.Declaration, null, false).Count);
+			Assert.AreEqual(0, axleGear.Validate(ExecutionMode.Declaration, VectoSimulationJobType.ConventionalVehicle, null, null, false).Count);
 		}
 
 		[TestCase]
@@ -158,7 +159,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			var vehicle = new VehicleContainer(ExecutionMode.Engineering);
 			var axleGearData = MockSimulationDataFactory.CreateAxleGearDataFromFile(AxleGearInvalidRangeDataFile);
 			var axleGear = new AxleGear(vehicle, axleGearData);
-			var errors = axleGear.Validate(ExecutionMode.Declaration, null, false);
+			var errors = axleGear.Validate(ExecutionMode.Declaration, VectoSimulationJobType.ConventionalVehicle, null, null, false);
 			Assert.AreEqual(1, errors.Count);
 		}
 

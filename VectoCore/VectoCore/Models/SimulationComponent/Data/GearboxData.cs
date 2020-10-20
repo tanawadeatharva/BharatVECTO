@@ -113,7 +113,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 			var mode = GetExecutionMode(validationContext);
 			//var gbxType = GetGearboxType(validationContext);
 			var emsMission = GetEmsMode(validationContext);
-
+			var jobType = GetSimulationJobType(validationContext);
+			var emPos = GetEMPosition(validationContext);
+			
 			var result = new List<ValidationResult>();
 
 			if (gearboxData.Gears.Any(g => g.Value.HasTorqueConverter)) {
@@ -128,7 +130,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 			if (gearboxData.Type.AutomaticTransmission()) {
 				gearboxData.TorqueConverterData.RequiredSpeedRatio =
 					Math.Round(gearboxData.Gears[1].TorqueConverterRatio / gearboxData.Gears[1].Ratio, 4) * 0.95;
-				result.AddRange(gearboxData.TorqueConverterData.Validate(mode, gearboxData.Type, emsMission));
+				result.AddRange(gearboxData.TorqueConverterData.Validate(mode, jobType, emPos, gearboxData.Type, emsMission));
 				//result.AddRange(gearboxData.PowershiftShiftTime.Validate(mode, gearboxData.Type));
 				//result.AddRange(gearboxData.PowershiftInertiaFactor.Validate(mode, gearboxData.Type));
 				validationContext.MemberName = "PowershiftShiftTime";
