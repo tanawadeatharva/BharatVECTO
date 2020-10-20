@@ -172,11 +172,27 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 			var gearboxData = runData.GearboxData;
 			var engineData = runData.EngineData;
 
-			if (gearboxData != null) {
-				var validationResult = CheckPowertrainLossMapsSize(runData, gearboxData, engineData);
+			var jobType = GetSimulationJobType(validationContext);
+			var emPos = GetEMPosition(validationContext);
+
+
+			if (jobType == VectoSimulationJobType.ConventionalVehicle || jobType == VectoSimulationJobType.ParallelHybridVehicle) {
+				if (gearboxData == null) {
+					return new ValidationResult("Gearbox data is required for conventional and parallel hybrid vehicles!");
+				}
+
+				if (engineData == null) {
+					return new ValidationResult("Combustion engine data is required for conventional and parallel hybrid vehicles!");
+				}
+
+				var validationResult = CheckPowertrainLossMapsSizeConventionalPT(runData, gearboxData, engineData);
 				if (validationResult != null) {
 					return validationResult;
 				}
+			}
+
+			if (jobType == VectoSimulationJobType.BatteryElectricVehicle) {
+				// TODO: MQ 20201020 - validate depending on EM position!?
 			}
 
 			if (runData.Cycle != null && runData.Cycle.Entries.Any(e => e.PTOActive)) {
@@ -188,7 +204,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 			return ValidationResult.Success;
 		}
 
-		private static ValidationResult CheckPowertrainLossMapsSize(VectoRunData runData, GearboxData gearboxData,
+		private static ValidationResult CheckPowertrainLossMapsSizeConventionalPT(VectoRunData runData, GearboxData gearboxData,
 			CombustionEngineData engineData)
 		{
 			var axleGearData = runData.AxleGearData;

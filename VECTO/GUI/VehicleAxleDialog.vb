@@ -15,6 +15,7 @@ Option Explicit On
 Imports System.Collections.Generic
 Imports System.ComponentModel.DataAnnotations
 Imports System.Linq
+Imports TUGraz.VectoCommon.InputData
 Imports TUGraz.VectoCommon.Models
 Imports TUGraz.VectoCommon.Utils
 Imports TUGraz.VectoCore.InputData.Impl
@@ -70,7 +71,7 @@ Public Class VehicleAxleDialog
 				}
 
 		Dim results As IList(Of ValidationResult) =
-				axleData.Validate(If(Cfg.DeclMode, ExecutionMode.Declaration, ExecutionMode.Engineering), Nothing, False)
+				axleData.Validate(If(Cfg.DeclMode, ExecutionMode.Declaration, ExecutionMode.Engineering), VectoSimulationJobType.ConventionalVehicle, Nothing, Nothing, False)
 
 		If results.Any() Then
 			Dim messages As IEnumerable(Of String) =

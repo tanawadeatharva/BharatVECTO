@@ -31,6 +31,7 @@
 
 using System;
 using System.ComponentModel.DataAnnotations;
+using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 
@@ -65,5 +66,21 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 				context.GetService(typeof(VectoValidationModeServiceContainer)) as VectoValidationModeServiceContainer;
 			return validationService != null && validationService.IsEMSCycle;
 		}
+
+		protected static VectoSimulationJobType GetSimulationJobType(ValidationContext context)
+		{
+			var validationService =
+				context.GetService(typeof(VectoValidationModeServiceContainer)) as VectoValidationModeServiceContainer;
+			return validationService != null ? validationService.JobType : VectoSimulationJobType.ConventionalVehicle;
+
+		}
+
+		protected static PowertrainPosition? GetEMPosition(ValidationContext context)
+		{
+			var validationService =
+				context.GetService(typeof(VectoValidationModeServiceContainer)) as VectoValidationModeServiceContainer;
+			return validationService != null ? validationService.EMPowertrainPosition : (PowertrainPosition?)null;
+		}
+
 	}
 }
