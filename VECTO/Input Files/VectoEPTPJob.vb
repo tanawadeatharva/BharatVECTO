@@ -77,7 +77,7 @@ Public Class VectoVTPJob
 
     Public Function SaveFile() As Boolean
         Dim validationResults As IList(Of ValidationResult) =
-                Validate(ExecutionMode.Declaration, Nothing, False)
+                Validate(ExecutionMode.Declaration, VectoSimulationJobType.ConventionalVehicle, Nothing, Nothing, False)
 
         If validationResults.Count > 0 Then
             Dim messages As IEnumerable(Of String) =

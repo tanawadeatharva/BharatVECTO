@@ -13,6 +13,7 @@ Imports System.ComponentModel.DataAnnotations
 Imports System.IO
 Imports System.Linq
 Imports System.Windows.Forms
+Imports TUGraz.VectoCommon.InputData
 Imports TUGraz.VectoCommon.Models
 Imports TUGraz.VectoCommon.Utils
 Imports TUGraz.VectoCore.InputData.Reader
@@ -71,7 +72,7 @@ Public Class GearboxGearDialog
 					.ShiftPolygon = shiftPolygon
 					}
 			Dim results As IList(Of ValidationResult) =
-					gearData.Validate(If(Cfg.DeclMode, ExecutionMode.Declaration, ExecutionMode.Engineering), GearboxType, False)
+					gearData.Validate(If(Cfg.DeclMode, ExecutionMode.Declaration, ExecutionMode.Engineering), VectoSimulationJobType.ConventionalVehicle, Nothing, GearboxType, False)
 
 			If (results.Any()) Then
 				Return results.Select(Function(r) r.ErrorMessage + String.Join(", ", r.MemberNames.Distinct())).ToList()

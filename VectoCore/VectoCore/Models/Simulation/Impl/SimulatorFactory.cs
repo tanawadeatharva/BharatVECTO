@@ -242,7 +242,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 			if (Validate) {
 				ValidateVectoRunData(
-					run, data.GearboxData == null ? (GearboxType?)null : data.GearboxData.Type,
+					run, data.JobType, data.ElectricMachinesData.FirstOrDefault()?.Item1, data.GearboxData == null ? (GearboxType?)null : data.GearboxData.Type,
 					data.Mission != null && data.Mission.MissionType.IsEMS());
 			}
 			return run;
@@ -260,9 +260,9 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			return data.Cycle.CycleType.IsDistanceBased() && ModalResults1Hz || ActualModalData ? modDataFilter : null;
 		}
 
-		private void ValidateVectoRunData(VectoRun run, GearboxType? gearboxtype, bool isEms)
+		private void ValidateVectoRunData(VectoRun run, VectoSimulationJobType jobType, PowertrainPosition? emPosition, GearboxType? gearboxtype, bool isEms)
 		{
-			var validationErrors = run.Validate(_mode, gearboxtype, isEms);
+			var validationErrors = run.Validate(_mode, jobType, emPosition, gearboxtype, isEms);
 			if (validationErrors.Any()) {
 				throw new VectoException("Validation of Run-Data Failed: " +
 										string.Join("\n", validationErrors.Select(r => r.ErrorMessage + string.Join("; ", r.MemberNames))));

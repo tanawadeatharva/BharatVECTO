@@ -120,6 +120,9 @@ Public Class Vehicle
 		Dim mode As ExecutionMode = If(modeService Is Nothing, ExecutionMode.Declaration, modeService.Mode)
 		Dim emsCycle As Boolean = (modeService IsNot Nothing) AndAlso modeService.IsEMSCycle
 		Dim gbxType As GearboxType? = If(modeService Is Nothing, Nothing, modeService.GearboxType)
+	    Dim jobType as VectoSimulationJobType = If(modeService Is Nothing, VectoSimulationJobType.ConventionalVehicle, modeService.JobType)
+	    Dim emPos as PowertrainPosition? = If(modeService Is Nothing, PowertrainPosition.HybridPositionNotSet, modeService.EMPowertrainPosition)
+
 
 		Try
 			If mode = ExecutionMode.Declaration Then
@@ -142,23 +145,21 @@ Public Class Vehicle
 			End If
 
 			Dim result As IList(Of ValidationResult) =
-					vehicleData.Validate(If(Cfg.DeclMode, ExecutionMode.Declaration, ExecutionMode.Engineering), gbxType, emsCycle)
+					vehicleData.Validate(If(Cfg.DeclMode, ExecutionMode.Declaration, ExecutionMode.Engineering), jobType, emPos, gbxType, emsCycle)
 			If result.Any() Then
 				Return _
 					New ValidationResult("Vehicle Configuration is invalid. ",
 										result.Select(Function(r) r.ErrorMessage + String.Join(Environment.NewLine, r.MemberNames)).ToList())
 			End If
 
-			result = airdragData.Validate(If(Cfg.DeclMode, ExecutionMode.Declaration, ExecutionMode.Engineering), gbxType,
-										emsCycle)
+			result = airdragData.Validate(If(Cfg.DeclMode, ExecutionMode.Declaration, ExecutionMode.Engineering), jobType, emPos, gbxType, emsCycle)
 			If result.Any() Then
 				Return _
 					New ValidationResult("Airdrag Configuration is invalid. ",
 										result.Select(Function(r) r.ErrorMessage + String.Join(Environment.NewLine, r.MemberNames)).ToList())
 			End If
 
-			result = retarderData.Validate(If(Cfg.DeclMode, ExecutionMode.Declaration, ExecutionMode.Engineering), gbxType,
-											emsCycle)
+			result = retarderData.Validate(If(Cfg.DeclMode, ExecutionMode.Declaration, ExecutionMode.Engineering), jobType, emPos, gbxType, emsCycle)
 			If result.Any() Then
 				Return _
 					New ValidationResult("Retarder Configuration is invalid. ",
@@ -166,8 +167,7 @@ Public Class Vehicle
 			End If
 
 			If vehicle.AngledriveType = AngledriveType.SeparateAngledrive Then
-				result = angledriveData.Validate(If(Cfg.DeclMode, ExecutionMode.Declaration, ExecutionMode.Engineering), gbxType,
-												emsCycle)
+				result = angledriveData.Validate(If(Cfg.DeclMode, ExecutionMode.Declaration, ExecutionMode.Engineering), jobType, emPos, gbxType, emsCycle)
 				If result.Any() Then
 					Return _
 						New ValidationResult("AngleDrive Configuration is invalid. ",
@@ -176,7 +176,7 @@ Public Class Vehicle
 			End If
 
 			If Not vehicle.PTOTransmissionType = "None" Then
-				result = ptoData.Validate(If(Cfg.DeclMode, ExecutionMode.Declaration, ExecutionMode.Engineering), gbxType, emsCycle)
+				result = ptoData.Validate(If(Cfg.DeclMode, ExecutionMode.Declaration, ExecutionMode.Engineering), jobType, emPos, gbxType, emsCycle)
 				If result.Any() Then
 					Return _
 						New ValidationResult("PTO Configuration is invalid. ",
@@ -227,7 +227,7 @@ Public Class Vehicle
 		SavedInDeclMode = Cfg.DeclMode
 
 		Dim validationResults As IList(Of ValidationResult) =
-				Validate(If(Cfg.DeclMode, ExecutionMode.Declaration, ExecutionMode.Engineering), Nothing, False)
+				Validate(If(Cfg.DeclMode, ExecutionMode.Declaration, ExecutionMode.Engineering), VehicleType, ElectricMotorPosition, Nothing, False)
 
 		If validationResults.Count > 0 Then
 			Dim messages As IEnumerable(Of String) =

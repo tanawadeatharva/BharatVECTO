@@ -31,7 +31,7 @@ Public Class HybridStrategyParams
     Public Function SaveFile() As Boolean
 
         Dim validationResults As IList(Of ValidationResult) =
-                Validate(If(Cfg.DeclMode, ExecutionMode.Declaration, ExecutionMode.Engineering), Nothing, False)
+                Validate(If(Cfg.DeclMode, ExecutionMode.Declaration, ExecutionMode.Engineering), VectoSimulationJobType.ParallelHybridVehicle, Nothing, Nothing, False)
 
         If validationResults.Count > 0 Then
             Dim messages As IEnumerable(Of String) =

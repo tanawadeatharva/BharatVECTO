@@ -139,7 +139,7 @@ Public Class Engine
     Public Function SaveFile() As Boolean
 
         Dim validationResults As IList(Of ValidationResult) =
-                Validate(If(Cfg.DeclMode, ExecutionMode.Declaration, ExecutionMode.Engineering), Nothing, False)
+                Validate(If(Cfg.DeclMode, ExecutionMode.Declaration, ExecutionMode.Engineering), VectoSimulationJobType.ConventionalVehicle, Nothing, Nothing, False)
 
         If validationResults.Count > 0 Then
             Dim messages As IEnumerable(Of String) =
@@ -208,6 +208,8 @@ Public Class Engine
         Dim mode As ExecutionMode = If(modeService Is Nothing, ExecutionMode.Declaration, modeService.Mode)
         Dim emsCycle As Boolean = (modeService IsNot Nothing) AndAlso modeService.IsEMSCycle
         Dim gbxType As GearboxType? = If(modeService Is Nothing, GearboxType.MT, modeService.GearboxType)
+        Dim jobType as VectoSimulationJobType = If(modeService Is Nothing, VectoSimulationJobType.ConventionalVehicle, modeService.JobType)
+        Dim emPos as PowertrainPosition? = If(modeService Is Nothing, PowertrainPosition.HybridPositionNotSet, modeService.EMPowertrainPosition)
 
         Try
             If mode = ExecutionMode.Declaration Then
@@ -232,7 +234,7 @@ Public Class Engine
             End If
 
             Dim result As IList(Of ValidationResult) =
-                    engineData.Validate(If(Cfg.DeclMode, ExecutionMode.Declaration, ExecutionMode.Engineering), gbxType, emsCycle)
+                    engineData.Validate(If(Cfg.DeclMode, ExecutionMode.Declaration, ExecutionMode.Engineering), jobType, emPos, gbxType, emsCycle)
 
             If Not result.Any() Then Return ValidationResult.Success
 

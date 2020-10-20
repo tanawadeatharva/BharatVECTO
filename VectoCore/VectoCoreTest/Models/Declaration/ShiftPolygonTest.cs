@@ -838,7 +838,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 					VectoCSVFile.ReadStream(
 						InputDataHelper.InputDataAsStream("engine torque,downshift rpm [rpm],upshift rpm [rpm]	", vgbs)));
 
-			var results = shiftPolygon.Validate(ExecutionMode.Engineering, GearboxType.MT, false);
+			var results = shiftPolygon.Validate(ExecutionMode.Engineering, VectoSimulationJobType.ConventionalVehicle, null, GearboxType.MT, false);
 			Assert.IsFalse(results.Any(), string.Join("\n", results.Select(r => r.ErrorMessage)));
 		}
 

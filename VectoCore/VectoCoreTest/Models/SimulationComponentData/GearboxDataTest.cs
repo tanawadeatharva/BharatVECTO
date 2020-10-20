@@ -40,6 +40,7 @@ using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter;
 using TUGraz.VectoCore.Tests.Utils;
 using TUGraz.VectoCore.Utils;
 using System.IO;
+using TUGraz.VectoCommon.InputData;
 
 namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 {
@@ -425,7 +426,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 			
 			var lossMap = TransmissionLossMapReader.Create(VectoCSVFile.ReadStream(mstream), 1.0, "TestGear", true);
 
-			var validation = lossMap.Validate(ExecutionMode.Declaration, GearboxType.AMT, false);
+			var validation = lossMap.Validate(ExecutionMode.Declaration, VectoSimulationJobType.ConventionalVehicle, null, GearboxType.AMT, false);
 
 			Assert.AreEqual(0, validation.Count);
 
