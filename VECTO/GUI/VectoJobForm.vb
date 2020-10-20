@@ -1160,7 +1160,7 @@ lbDlog:
                 pnEngine.Enabled = False
                 pnGearbox.Enabled = True
                 GrAuxMech.Enabled = False
-                pnShiftParams.Enabled = False
+                pnShiftParams.Enabled = true
         End Select
     End Sub
 
