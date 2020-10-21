@@ -15,6 +15,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies {
 	{
 		public SimplePowertrainContainer Container;
 		public Gearbox Gearbox;
+		public ATGearbox ATGearbox;
 		public SimpleHybridController HybridController;
 		public Battery Battery;
 		public SuperCap SuperCap;
@@ -33,6 +34,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies {
 		{
 			Container = container;
 			Gearbox = Container.GearboxCtl as Gearbox;
+			ATGearbox = container.GearboxCtl as ATGearbox;
 			HybridController = Container.HybridController as SimpleHybridController;
 			Battery = Container.BatteryInfo as Battery;
 			SuperCap = Container.BatteryInfo as SuperCap;
@@ -45,7 +47,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies {
 			ElectricMotorP3 = container.ElectricMotors.ContainsKey(PowertrainPosition.HybridP3)
 				? container.ElectricMotors[PowertrainPosition.HybridP3] as ElectricMotor
 				: null;
-			if (Gearbox == null) {
+			if (Gearbox == null && ATGearbox == null) {
 				throw new VectoException("Unknown gearboxtype in TestContainer: {0}", Container.GearboxCtl.GetType().FullName);
 			}
 

@@ -27,7 +27,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		protected readonly Dictionary<PowertrainPosition, ElectricMotorController> _electricMotorCtl;
 		protected readonly HybridCtlShiftStrategy _shiftStrategy;
 		protected readonly IHybridControlStrategy _hybridStrategy;
-		private Dictionary<PowertrainPosition, Tuple<PerSecond, NewtonMeter>> _electricMotorTorque = new Dictionary<PowertrainPosition, Tuple<PerSecond, NewtonMeter>>();
+
+		private Dictionary<PowertrainPosition, Tuple<PerSecond, NewtonMeter>> _electricMotorTorque =
+			new Dictionary<PowertrainPosition, Tuple<PerSecond, NewtonMeter>>();
+
 		private HybridStrategyResponse CurrentStrategySettings;
 
 		protected DebugData DebugData = new DebugData();
@@ -37,10 +40,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			SwitchableClutch clutch) : base(container)
 		{
 			_electricMotorCtl = new Dictionary<PowertrainPosition, ElectricMotorController>();
-			_shiftStrategy = new HybridCtlShiftStrategy(this, container);
+			_shiftStrategy = container.RunData.GearboxData.Type.AutomaticTransmission() ? new HybridCtlATShiftStrategy(this, container) : new HybridCtlShiftStrategy(this, container);
 			_hybridStrategy = strategy;
 			strategy.Controller = this;
-			
+
 			ElectricSystem = es;
 		}
 
@@ -121,6 +124,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				if (retryCount > 10) {
 					throw new VectoException("HybridStrategy: retry count exceeded! {0}", DebugData);
 				}
+
 				retry = false;
 				var strategyResponse = Strategy.Request(absTime, dt, outTorque, outAngularVelocity, dryRun);
 				if (strategyResponse is HybridStrategyLimitedResponse) {
@@ -132,6 +136,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 							DeltaEngineSpeed = ovl.DeltaEngineSpeed
 						};
 					}
+
 					return new ResponseOverload(this) {
 						Delta = ovl.Delta
 					};
@@ -143,6 +148,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					CurrentState.SetState(outTorque, outAngularVelocity, outTorque, outAngularVelocity);
 					CurrentState.StrategyResponse = strategySettings;
 				}
+
 				//SelectedGear = new GearInfo(strategySettings.NextGear, true);
 				if (!dryRun && /*!DataBus.EngineInfo.EngineOn &&*/ strategySettings.ShiftRequired) {
 					DataBus.GearboxCtl.TriggerGearshift(absTime, dt);
@@ -157,31 +163,39 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 				CurrentStrategySettings = strategySettings;
 				retVal = NextComponent.Request(absTime, dt, outTorque, outAngularVelocity, dryRun);
-				DebugData.Add(new { DrivingAction = DataBus.DriverInfo.DrivingAction, StrategySettings = strategySettings, Response = retVal, DryRun = dryRun });
+				DebugData.Add(new {
+					DrivingAction = DataBus.DriverInfo.DrivingAction, StrategySettings = strategySettings,
+					Response = retVal, DryRun = dryRun
+				});
 
-				if (!dryRun && strategySettings.CombustionEngineOn && retVal is ResponseSuccess && retVal.Engine.EngineSpeed.IsSmaller(Strategy.MinICESpeed)) {
+				if (!dryRun && strategySettings.CombustionEngineOn && retVal is ResponseSuccess &&
+					retVal.Engine.EngineSpeed.IsSmaller(Strategy.MinICESpeed)) {
 					Strategy.AllowEmergencyShift = true;
 					retryCount++;
 					retry = true;
-					Strategy.OperatingpointChangedDuringRequest(absTime, dt, outTorque, outAngularVelocity, dryRun, retVal);
+					Strategy.OperatingpointChangedDuringRequest(absTime, dt, outTorque, outAngularVelocity, dryRun,
+						retVal);
 					continue;
 				}
 
 				if (retVal is ResponseDifferentGearEngaged) {
 					retryCount++;
 					retry = true;
-					Strategy.OperatingpointChangedDuringRequest(absTime, dt, outTorque, outAngularVelocity, dryRun, retVal);
+					Strategy.OperatingpointChangedDuringRequest(absTime, dt, outTorque, outAngularVelocity, dryRun,
+						retVal);
 					continue;
 				}
 
 				if (retVal is ResponseInvalidOperatingPoint) {
 					retryCount++;
 					retry = true;
-					Strategy.OperatingpointChangedDuringRequest(absTime, dt, outTorque, outAngularVelocity, dryRun, retVal);
+					Strategy.OperatingpointChangedDuringRequest(absTime, dt, outTorque, outAngularVelocity, dryRun,
+						retVal);
 					continue;
 				}
+
 				retVal.HybridController.StrategySettings = strategySettings;
-				if (!(retVal is ResponseSuccess) && strategySettings.EvaluatedSolution.Gear != 0 && 
+				if (!(retVal is ResponseSuccess) && strategySettings.EvaluatedSolution.Gear != 0 &&
 					retVal.Gearbox.Gear != strategySettings.EvaluatedSolution.Gear && retryCount < 3) {
 					retryCount++;
 					retry = true;
@@ -258,7 +272,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			}
 
 			public NewtonMeter MechanicalAssistPower(Second absTime, Second dt, NewtonMeter outTorque,
-				PerSecond prevOutAngularVelocity, PerSecond currOutAngularVelocity, 
+				PerSecond prevOutAngularVelocity, PerSecond currOutAngularVelocity,
 				NewtonMeter maxDriveTorque, NewtonMeter maxRecuperationTorque, PowertrainPosition position, bool dryRun)
 			{
 				return _controller.MechanicalAssistPower(position, absTime, dt, outTorque, prevOutAngularVelocity,
@@ -276,7 +290,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			protected readonly uint MaxStartGear;
 			protected uint _nextGear { get; set; }
 
-			public HybridCtlShiftStrategy(HybridController hybridController, IVehicleContainer container) : base(container)
+			public HybridCtlShiftStrategy(HybridController hybridController, IVehicleContainer container) : base(
+				container)
 			{
 				_controller = hybridController;
 
@@ -315,6 +330,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				if (_controller.ShiftRequired) {
 					_nextGear = _controller.NextGear;
 				}
+
 				return _controller.ShiftRequired;
 			}
 
@@ -467,5 +483,32 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		{
 			Strategy.RepeatDrivingAction(absTime);
 		}
+
+
+		// - - - - - - - - - - - - - - - - 
+
+		public class HybridCtlATShiftStrategy : HybridCtlShiftStrategy
+		{
+			protected new ATGearbox _gearbox;
+
+			public HybridCtlATShiftStrategy(HybridController hybridController, IVehicleContainer container) : base(
+				hybridController, container) { }
+
+			public override IGearbox Gearbox
+			{
+				get { return _gearbox; }
+				set
+				{
+					var myGearbox = value as ATGearbox;
+					if (myGearbox == null) {
+						throw new VectoException("This shift strategy can't handle gearbox of type {0}",
+							value.GetType());
+					}
+
+					_gearbox = myGearbox;
+				}
+			}
+		}
+
 	}
 }

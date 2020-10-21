@@ -79,33 +79,33 @@ namespace TUGraz.VectoCore.Tests.Integration.Hybrid
 			return graphWriter;
 		}
 
-		const string TestJobP1_APTS = @"TestData\Hybrids\GenericVehicle_P0-APT\CityBus_AT_Ser.vecto";
-		const string TestJobP1_APTP = @"TestData\Hybrids\GenericVehicle_P0-APT\CityBus_AT_PS.vecto";
+		const string TestJobP1_APTS = @"TestData\Hybrids\GenericVehicle_P1-APT\CityBus_AT_Ser.vecto";
+		const string TestJobP1_APTP = @"TestData\Hybrids\GenericVehicle_P1-APT\CityBus_AT_PS.vecto";
 
 		[
-			TestCase(TestJobP1_APTS, 0, TestName = "P1 Hybrid, DriveCycle LongHaul"),
-			TestCase(TestJobP1_APTS, 1, TestName = "P1 Hybrid, DriveCycle Coach"),
-			TestCase(TestJobP1_APTS, 2, TestName = "P1 Hybrid, DriveCycle Construction"),
-			TestCase(TestJobP1_APTS, 3, TestName = "P1 Hybrid, DriveCycle HeavyUrban"),
-			TestCase(TestJobP1_APTS, 4, TestName = "P1 Hybrid, DriveCycle Interurban"),
-			TestCase(TestJobP1_APTS, 5, TestName = "P1 Hybrid, DriveCycle MunicipalUtility"),
-			TestCase(TestJobP1_APTS, 6, TestName = "P1 Hybrid, DriveCycle RegionalDelivery"),
-			TestCase(TestJobP1_APTS, 7, TestName = "P1 Hybrid, DriveCycle Suburban"),
-			TestCase(TestJobP1_APTS, 8, TestName = "P1 Hybrid, DriveCycle Urban"),
-			TestCase(TestJobP1_APTS, 9, TestName = "P1 Hybrid, DriveCycle UrbanDelivery"),
+			TestCase(TestJobP1_APTS, 0, TestName = "P1 Hybrid APT-S, DriveCycle LongHaul"),
+			TestCase(TestJobP1_APTS, 1, TestName = "P1 Hybrid APT-S, DriveCycle Coach"),
+			TestCase(TestJobP1_APTS, 2, TestName = "P1 Hybrid APT-S, DriveCycle Construction"),
+			TestCase(TestJobP1_APTS, 3, TestName = "P1 Hybrid APT-S, DriveCycle HeavyUrban"),
+			TestCase(TestJobP1_APTS, 4, TestName = "P1 Hybrid APT-S, DriveCycle Interurban"),
+			TestCase(TestJobP1_APTS, 5, TestName = "P1 Hybrid APT-S, DriveCycle MunicipalUtility"),
+			TestCase(TestJobP1_APTS, 6, TestName = "P1 Hybrid APT-S, DriveCycle RegionalDelivery"),
+			TestCase(TestJobP1_APTS, 7, TestName = "P1 Hybrid APT-S, DriveCycle Suburban"),
+			TestCase(TestJobP1_APTS, 8, TestName = "P1 Hybrid APT-S, DriveCycle Urban"),
+			TestCase(TestJobP1_APTS, 9, TestName = "P1 Hybrid APT-S, DriveCycle UrbanDelivery"),
 
-			TestCase(TestJobP1_APTP, 0, TestName = "P1 Hybrid, DriveCycle LongHaul"),
-			TestCase(TestJobP1_APTP, 1, TestName = "P1 Hybrid, DriveCycle Coach"),
-			TestCase(TestJobP1_APTP, 2, TestName = "P1 Hybrid, DriveCycle Construction"),
-			TestCase(TestJobP1_APTP, 3, TestName = "P1 Hybrid, DriveCycle HeavyUrban"),
-			TestCase(TestJobP1_APTP, 4, TestName = "P1 Hybrid, DriveCycle Interurban"),
-			TestCase(TestJobP1_APTP, 5, TestName = "P1 Hybrid, DriveCycle MunicipalUtility"),
-			TestCase(TestJobP1_APTP, 6, TestName = "P1 Hybrid, DriveCycle RegionalDelivery"),
-			TestCase(TestJobP1_APTP, 7, TestName = "P1 Hybrid, DriveCycle Suburban"),
-			TestCase(TestJobP1_APTP, 8, TestName = "P1 Hybrid, DriveCycle Urban"),
-			TestCase(TestJobP1_APTP, 9, TestName = "P1 Hybrid, DriveCycle UrbanDelivery"),
+			TestCase(TestJobP1_APTP, 0, TestName = "P1 Hybrid APT-P, DriveCycle LongHaul"),
+			TestCase(TestJobP1_APTP, 1, TestName = "P1 Hybrid APT-P, DriveCycle Coach"),
+			TestCase(TestJobP1_APTP, 2, TestName = "P1 Hybrid APT-P, DriveCycle Construction"),
+			TestCase(TestJobP1_APTP, 3, TestName = "P1 Hybrid APT-P, DriveCycle HeavyUrban"),
+			TestCase(TestJobP1_APTP, 4, TestName = "P1 Hybrid APT-P, DriveCycle Interurban"),
+			TestCase(TestJobP1_APTP, 5, TestName = "P1 Hybrid APT-P, DriveCycle MunicipalUtility"),
+			TestCase(TestJobP1_APTP, 6, TestName = "P1 Hybrid APT-P, DriveCycle RegionalDelivery"),
+			TestCase(TestJobP1_APTP, 7, TestName = "P1 Hybrid APT-P, DriveCycle Suburban"),
+			TestCase(TestJobP1_APTP, 8, TestName = "P1 Hybrid APT-P, DriveCycle Urban"),
+			TestCase(TestJobP1_APTP, 9, TestName = "P1 Hybrid APT-P, DriveCycle UrbanDelivery"),
 		]
-		public void P2HybridGroup5DriveCycle(string jobFile, int cycleIdx)
+		public void P1APTHybridDriveCycle(string jobFile, int cycleIdx)
 		{
 			var inputProvider = JSONInputDataFactory.ReadJsonJob(jobFile);
 

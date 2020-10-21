@@ -44,7 +44,7 @@ using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 {
-	public class ATGearbox : AbstractGearbox<ATGearbox.ATGearboxState>
+	public class ATGearbox : AbstractGearbox<ATGearbox.ATGearboxState>, IHybridControlledGearbox
 	{
 		protected internal readonly IShiftStrategy _strategy;
 		protected internal readonly TorqueConverter TorqueConverter;
@@ -494,5 +494,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			public WattSecond PowershiftLossEnergy;
 			public NewtonMeter PowershiftLoss;
 		}
+
+		public bool SwitchToNeutral { get; set; }
 	}
 }
