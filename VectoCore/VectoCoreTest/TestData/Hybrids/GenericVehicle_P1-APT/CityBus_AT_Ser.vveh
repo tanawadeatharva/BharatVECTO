@@ -31,7 +31,7 @@
       "LossMap": "",
       "Cycle": ""
     },
-	"ElectricMotors": [
+    "ElectricMotors": [
       {
         "Count": 1,
         "Ratio": 1,
@@ -44,7 +44,7 @@
       "NumPacks": 2,
       "BatteryFile": "GenericBattery.vbat"
     },
-	"InitialSoC": 80,
+    "InitialSoC": 80,
     "TorqueLimits": {},
     "IdlingSpeed": 0.0,
     "AxleConfig": {
@@ -75,6 +75,8 @@
     "PredictiveCruiseControl": "None",
     "ATEcoRollReleaseLockupClutch": false,
     "CdA": 4.83,
-    "VehicleHeight": 0.0
+    "VehicleHeight": 0.0,
+    "PowertrainConfiguration": "ParallelHybrid",
+    "MaxDrivetrainPower": 1800000.0
   }
 }

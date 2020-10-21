@@ -31,7 +31,7 @@
       "LossMap": "",
       "Cycle": ""
     },
-	"ElectricMotors": [
+    "ElectricMotors": [
       {
         "Count": 1,
         "Ratio": 1,
@@ -40,11 +40,13 @@
         "MotorFile": "GenericEMotor20kW.vem"
       }
     ],
-	"Battery": {
+    "Battery": {
       "NumPacks": 2,
       "BatteryFile": "GenericBattery.vbat"
     },
-	"InitialSoC": 80,
+    "InitialSoC": 80,
+    "PowertrainConfiguration": "ParallelHybrid",
+    "MaxDrivetrainPower": 1800000.0,
     "TorqueLimits": {},
     "IdlingSpeed": 0.0,
     "AxleConfig": {

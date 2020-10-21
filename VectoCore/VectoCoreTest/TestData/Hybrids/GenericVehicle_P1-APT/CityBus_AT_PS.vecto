@@ -3,7 +3,7 @@
     "CreatedBy": "",
     "Date": "2019-12-03T16:40:42.9254153Z",
     "AppVersion": "3",
-    "FileVersion": 5
+    "FileVersion": 8
   },
   "Body": {
     "SavedInDeclMode": false,
@@ -13,6 +13,7 @@
     "GearboxFile": "GearboxPowerSplit.vgbx",
     "TCU": "GearboxPowerSplit.vgbx",
     "ShiftStrategy": "",
+    "HybridStrategyParams": "HybridStrategyParams.vhctl",
     "AuxiliaryAssembly": "Classic",
     "AuxiliaryVersion": "CLASSIC",
     "AdvancedAuxiliaryFilePath": "",
@@ -47,7 +48,7 @@
       "OverSpeed": 5.0
     },
     "Cycles": [
-     "LongHaul",
+      "LongHaul",
       "Coach",
       "Construction",
       "HeavyUrban",

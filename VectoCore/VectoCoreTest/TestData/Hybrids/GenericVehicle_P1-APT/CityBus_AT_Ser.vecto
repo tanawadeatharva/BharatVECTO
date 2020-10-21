@@ -3,7 +3,7 @@
     "CreatedBy": "",
     "Date": "2019-12-03T16:40:13.1142195Z",
     "AppVersion": "3",
-    "FileVersion": 5
+    "FileVersion": 8
   },
   "Body": {
     "SavedInDeclMode": false,
@@ -13,6 +13,7 @@
     "GearboxFile": "GearboxSerial.vgbx",
     "TCU": "GearboxSerial.vgbx",
     "ShiftStrategy": "",
+    "HybridStrategyParams": "HybridStrategyParams.vhctl",
     "AuxiliaryAssembly": "Classic",
     "AuxiliaryVersion": "CLASSIC",
     "AdvancedAuxiliaryFilePath": "",
