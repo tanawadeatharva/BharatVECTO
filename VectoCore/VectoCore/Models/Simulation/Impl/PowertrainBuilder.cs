@@ -388,11 +388,19 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			var aux = new ElectricAuxiliary(container);
 			aux.AddConstant("P_aux_el", data.ElectricAuxDemand ?? 0.SI<Watt>());
 			es.Connect(aux);
-			
-			var strategy = new HybridStrategy(data, container);
-			var clutch = data.GearboxData.Type.AutomaticTransmission() ? null : new SwitchableClutch(container, data.EngineData);
 
-			var ctl = new HybridController(container, strategy, es, clutch);
+			HybridController ctl;
+			SwitchableClutch clutch = null;
+			if (data.GearboxData.Type.ManualTransmission()) {
+				var strategy = new HybridStrategy(data, container);
+				clutch = new SwitchableClutch(container, data.EngineData);
+				
+				ctl = new HybridController(container, strategy, es);
+			} else {
+				var strategy = new HybridStrategyAT(data, container);
+				
+				ctl = new HybridController(container, strategy, es);
+			}
 
 			// add engine before gearbox so that gearbox can obtain if an ICE is available already in constructor
 			var engine = new StopStartCombustionEngine(container, data.EngineData);
@@ -427,6 +435,11 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 				.AddComponent(engine, idleController)
 				.AddAuxiliaries(container, data);
 
+			if (data.ElectricMachinesData.Any(x => x.Item1 == PowertrainPosition.HybridP1)) {
+				if (gearbox is ATGearbox atGbx) {
+					atGbx.IdleController = idleController;
+				}
+			}
 			cycle.IdleController = idleController as IdleControllerSwitcher;
 
 			

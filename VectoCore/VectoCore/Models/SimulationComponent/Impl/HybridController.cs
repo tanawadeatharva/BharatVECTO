@@ -36,11 +36,12 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		protected DebugData DebugData = new DebugData();
 
 
-		public HybridController(IVehicleContainer container, IHybridControlStrategy strategy, IElectricSystem es,
-			SwitchableClutch clutch) : base(container)
+		public HybridController(IVehicleContainer container, IHybridControlStrategy strategy, IElectricSystem es) : base(container)
 		{
 			_electricMotorCtl = new Dictionary<PowertrainPosition, ElectricMotorController>();
-			_shiftStrategy = container.RunData.GearboxData.Type.AutomaticTransmission() ? new HybridCtlATShiftStrategy(this, container) : new HybridCtlShiftStrategy(this, container);
+			_shiftStrategy = container.RunData.GearboxData.Type.AutomaticTransmission()
+				? new HybridCtlATShiftStrategy(this, container)
+				: new HybridCtlShiftStrategy(this, container);
 			_hybridStrategy = strategy;
 			strategy.Controller = this;
 
@@ -282,6 +283,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 
 		///=======================================================================================
+		
 		public class HybridCtlShiftStrategy : ShiftStrategy
 		{
 			protected HybridController _controller;
@@ -485,7 +487,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		}
 
 
-		// - - - - - - - - - - - - - - - - 
+		///=======================================================================================
 
 		public class HybridCtlATShiftStrategy : HybridCtlShiftStrategy
 		{

@@ -1005,7 +1005,7 @@ namespace TUGraz.VectoCore.Tests.Integration.Hybrid
 			battery.Initialize(initialBatCharge);
 
 			var clutch = new SwitchableClutch(container, runData.EngineData);
-			var ctl = new HybridController(container, strategy, es, clutch);
+			var ctl = new HybridController(container, strategy, es);
 
 			es.Connect(battery);
 
