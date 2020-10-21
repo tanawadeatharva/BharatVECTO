@@ -390,7 +390,7 @@ Public Class ElectricMotorForm
         If Not fullLoadCurve Is Nothing Then
             Dim series As Series = New Series
             series.Points.DataBindXY(fullLoadCurve.FullLoadEntries.Select(Function(x) x.MotorSpeed.AsRPM).ToArray(),
-                                    fullLoadCurve.FullLoadEntries.Select(Function(x) x.FullDriveTorque.Value()).ToArray())
+                                    fullLoadCurve.FullLoadEntries.Select(Function(x) -x.FullDriveTorque.Value()).ToArray())
             series.ChartType = SeriesChartType.FastLine
             series.BorderWidth = 2
             series.Color = Color.DarkBlue
@@ -399,7 +399,7 @@ Public Class ElectricMotorForm
 
             series = New Series
             series.Points.DataBindXY(fullLoadCurve.FullLoadEntries.Select(Function(x) x.MotorSpeed.AsRPM).ToArray(),
-                                    fullLoadCurve.FullLoadEntries.Select(Function(x) x.FullGenerationTorque.Value()).ToArray())
+                                    fullLoadCurve.FullLoadEntries.Select(Function(x) -x.FullGenerationTorque.Value()).ToArray())
             series.ChartType = SeriesChartType.FastLine
             series.BorderWidth = 2
             series.Color = Color.Blue
@@ -415,7 +415,7 @@ Public Class ElectricMotorForm
         If Not fcMap Is Nothing Then
             Dim series As Series = New Series
             series.Points.DataBindXY(fcMap.Entries.Select(Function(x) x.MotorSpeed.AsRPM).ToArray(),
-                                    fcMap.Entries.Select(Function(x) x.Torque.Value()).ToArray())
+                                    fcMap.Entries.Select(Function(x) -x.Torque.Value()).ToArray())
             series.ChartType = SeriesChartType.Point
             series.MarkerSize = 3
             series.Color = Color.Red
@@ -426,7 +426,7 @@ Public Class ElectricMotorForm
         If Not dragCurve Is Nothing Then
             Dim series As Series = New Series
             series.Points.DataBindXY(dragCurve.Entries.Select(Function(x) x.MotorSpeed.AsRPM).ToArray(),
-                                     dragCurve.Entries.Select(Function(x) x.DragTorque.Value()).ToArray())
+                                     dragCurve.Entries.Select(Function(x) -x.DragTorque.Value()).ToArray())
             series.ChartType = SeriesChartType.FastLine
             series.BorderWidth = 2
             series.Color = Color.Green
