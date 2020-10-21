@@ -28,8 +28,8 @@ namespace TUGraz.VectoCore.InputData.Reader.ComponentData
 				(from DataRow row in data.Rows
 				select new ElectricMotorFullLoadCurve.FullLoadEntry {
 					MotorSpeed = row.ParseDouble(Fields.MotorSpeed).RPMtoRad() / ratio,
-					FullDriveTorque = row.ParseDouble(Fields.DrivingTorque).SI<NewtonMeter>() * count * ratio * efficiency,
-					FullGenerationTorque = row.ParseDouble(Fields.GenerationTorque).SI<NewtonMeter>() * count * ratio / efficiency
+					FullDriveTorque = -row.ParseDouble(Fields.DrivingTorque).SI<NewtonMeter>() * count * ratio * efficiency,
+					FullGenerationTorque = -row.ParseDouble(Fields.GenerationTorque).SI<NewtonMeter>() * count * ratio / efficiency
 				}).ToList());
 		}
 
