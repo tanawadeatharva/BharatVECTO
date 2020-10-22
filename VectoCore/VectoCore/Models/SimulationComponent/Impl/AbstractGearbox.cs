@@ -85,17 +85,17 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		public abstract bool TCLocked { get; }
 
-		[DebuggerHidden]
-		public MeterPerSecond StartSpeed
-		{
-			get { return ModelData.StartSpeed; }
-		}
+		//[DebuggerHidden]
+		//public MeterPerSecond StartSpeed
+		//{
+		//	get { return ModelData.StartSpeed; }
+		//}
 
-		[DebuggerHidden]
-		public MeterPerSquareSecond StartAcceleration
-		{
-			get { return ModelData.StartAcceleration; }
-		}
+		//[DebuggerHidden]
+		//public MeterPerSquareSecond StartAcceleration
+		//{
+		//	get { return ModelData.StartAcceleration; }
+		//}
 
 		public Watt GearboxLoss()
 		{

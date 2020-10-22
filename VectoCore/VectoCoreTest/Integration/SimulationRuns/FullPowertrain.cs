@@ -91,6 +91,7 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 				EngineData = engineData,
 				AxleGearData = axleGearData,
 				GearboxData = gearboxData,
+				GearshiftParameters = CreateGearshiftData(),
 				VehicleData = vehicleData,
 				AirdragData = airDragData,
 				SimulationType = SimulationType.DistanceCycle,
@@ -161,6 +162,7 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 				VehicleData = vehicleData,
 				AxleGearData = axleGearData,
 				GearboxData = gearboxData,
+				GearshiftParameters = CreateGearshiftData(),
 				AirdragData = airDragData,
 				SimulationType = SimulationType.DistanceCycle,
 				ElectricMachinesData = new List<Tuple<PowertrainPosition, ElectricMotorData>>()
@@ -244,6 +246,7 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 				VehicleData = vehicleData,
 				AxleGearData = axleGearData,
 				GearboxData = gearboxData,
+				GearshiftParameters = CreateGearshiftData(),
 				AirdragData = airDragData, 
 				ElectricMachinesData = new List<Tuple<PowertrainPosition, ElectricMotorData>>()
 			};
@@ -346,9 +349,15 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 							ShiftPolygon = ShiftPolygonReader.ReadFromFile(GearboxShiftPolygonFile)
 						}))
 					.ToDictionary(k => k.Item1 + 1, v => v.Item2),
-				ShiftTime = 2.SI<Second>(),
 				Inertia = 0.SI<KilogramSquareMeter>(),
 				TractionInterruption = 1.SI<Second>(),
+			};
+		}
+
+		private static ShiftStrategyParameters CreateGearshiftData()
+		{
+			return new ShiftStrategyParameters() {
+				TimeBetweenGearshifts = 2.SI<Second>(),
 				StartSpeed = 2.SI<MeterPerSecond>(),
 				StartAcceleration = 0.6.SI<MeterPerSquareSecond>(),
 				StartTorqueReserve = 0.2,
@@ -356,6 +365,7 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 				DownshiftAfterUpshiftDelay = DeclarationData.Gearbox.DownshiftAfterUpshiftDelay,
 				UpshiftAfterDownshiftDelay = DeclarationData.Gearbox.UpshiftAfterDownshiftDelay,
 				UpshiftMinAcceleration = DeclarationData.Gearbox.UpshiftMinAcceleration
+
 			};
 		}
 
@@ -385,14 +395,6 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 				},
 				Inertia = 0.SI<KilogramSquareMeter>(),
 				TractionInterruption = 0.SI<Second>(),
-				ShiftTime = 2.SI<Second>(),
-				StartSpeed = 2.SI<MeterPerSecond>(),
-				StartAcceleration = 0.6.SI<MeterPerSquareSecond>(),
-				StartTorqueReserve = 0.2,
-				TorqueReserve = 0.2,
-				DownshiftAfterUpshiftDelay = DeclarationData.Gearbox.DownshiftAfterUpshiftDelay,
-				UpshiftAfterDownshiftDelay = DeclarationData.Gearbox.UpshiftAfterDownshiftDelay,
-				UpshiftMinAcceleration = DeclarationData.Gearbox.UpshiftMinAcceleration
 			};
 		}
 

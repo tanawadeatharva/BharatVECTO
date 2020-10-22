@@ -53,7 +53,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			MaxMass = data.VehicleData.MaximumVehicleMass;
 			FullLoadCurve = data.EngineData.FullLoadCurves[0];
 
-			dualTCTransmission = ModelData.Gears[1].HasTorqueConverter && ModelData.Gears[2].HasTorqueConverter;
+			dualTCTransmission = GearboxModelData.Gears[1].HasTorqueConverter && GearboxModelData.Gears[2].HasTorqueConverter;
 		}
 
 		private void InitializeShiftLines(TableData lines)
@@ -195,16 +195,16 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		protected override bool CheckUpshift(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity, NewtonMeter inTorque, PerSecond inAngularVelocity, uint gear, Second lastShiftTime, IResponse response)
 		{
-			var shiftTimeReached = (absTime - lastShiftTime).IsGreaterOrEqual(ModelData.ShiftTime);
+			var shiftTimeReached = (absTime - lastShiftTime).IsGreaterOrEqual(GearshiftParams.TimeBetweenGearshifts);
 			if (!shiftTimeReached) {
 				return false;
 			}
 
-			var currentGear = ModelData.Gears[gear];
+			var currentGear = GearboxModelData.Gears[gear];
 			if (dualTCTransmission && gear == 1) {
 				// UPSHIFT - Special rule for 1C -> 2C
-				if (!_gearbox.TorqueConverterLocked && ModelData.Gears.ContainsKey(gear + 1) &&
-					ModelData.Gears[gear + 1].HasTorqueConverter && outAngularVelocity.IsGreater(0)) {
+				if (!_gearbox.TorqueConverterLocked && GearboxModelData.Gears.ContainsKey(gear + 1) &&
+					GearboxModelData.Gears[gear + 1].HasTorqueConverter && outAngularVelocity.IsGreater(0)) {
 					var result = CheckUpshiftTcTc(absTime, dt, outTorque, outAngularVelocity, inTorque, inAngularVelocity, gear, currentGear, response);
 					if (result.HasValue) {
 						return result.Value;
@@ -213,7 +213,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			} else {
 
 
-				if (gear >= ModelData.Gears.Keys.Max()) {
+				if (gear >= GearboxModelData.Gears.Keys.Max()) {
 					return false;
 				}
 
@@ -227,7 +227,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 				var shiftSpeed = UpshiftLines[gearIdx].LookupShiftSpeed(
 					_loadStage, DataBus.DrivingCycleInfo.RoadGradient, DataBus.DriverInfo.DriverAcceleration, _accMin, _accMax);
-				var shiftSpeedGbxOut = shiftSpeed / ModelData.Gears[nextGear].Ratio;
+				var shiftSpeedGbxOut = shiftSpeed / GearboxModelData.Gears[nextGear].Ratio;
 				if (outAngularVelocity > shiftSpeedGbxOut) {
 					Upshift(absTime, gear);
 					return true;
@@ -240,7 +240,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		protected override bool CheckDownshift(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity, NewtonMeter inTorque, PerSecond inAngularVelocity, uint gear, Second lastShiftTime, IResponse response)
 		{
-			var shiftTimeReached = (absTime - lastShiftTime).IsGreaterOrEqual(ModelData.ShiftTime);
+			var shiftTimeReached = (absTime - lastShiftTime).IsGreaterOrEqual(GearshiftParams.TimeBetweenGearshifts);
 			if (!shiftTimeReached) {
 				return false;
 			}

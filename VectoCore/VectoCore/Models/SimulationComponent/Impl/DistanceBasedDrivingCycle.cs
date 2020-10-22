@@ -58,6 +58,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		internal readonly DrivingCycleEnumerator CycleIntervalIterator;
 		private bool _intervalProlonged;
 		internal IdleControllerSwitcher IdleController;
+		
+		private MeterPerSquareSecond StartAcceleration;
+		private MeterPerSecond StartSpeed;
 
 		private DrivingCycleData.DrivingCycleEntry Left
 		{
@@ -85,18 +88,15 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			};
 			CurrentState = PreviousState.Clone();
 
-			if (container is SimplePowertrainContainer) {
-				return;
-			}
-
-			
+			StartSpeed = container.RunData.GearshiftParameters.StartSpeed;
+			StartAcceleration = container.RunData.GearshiftParameters.StartAcceleration;
 		}
 
 		public IResponse Initialize()
 		{
 			if (Left.VehicleTargetSpeed.IsEqual(0)) {
-				var retVal = NextComponent.Initialize(DataBus.GearboxInfo.StartSpeed,
-					Left.RoadGradient, DataBus.GearboxInfo.StartAcceleration);
+				var retVal = NextComponent.Initialize(StartSpeed,
+					Left.RoadGradient, StartAcceleration);
 				if (!(retVal is ResponseSuccess)) {
 					throw new UnexpectedResponseException("DistanceBasedDrivingCycle.Initialize: Couldn't find start gear.", retVal);
 				}

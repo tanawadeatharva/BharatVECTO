@@ -99,7 +99,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			MaxGradability = new MaxGradabilityLookup();
 			dataBus.AddPreprocessor(new MaxGradabilityPreprocessor(MaxGradability, data, TestContainer));
 
-			EngineSpeedAtDriveOff = new Dictionary<uint, PerSecond>(ModelData.Gears.Count);
+			EngineSpeedAtDriveOff = new Dictionary<uint, PerSecond>(GearboxModelData.Gears.Count);
 			dataBus.AddPreprocessor(new EngineSpeedDriveOffPreprocessor(EngineSpeedAtDriveOff, data, TestContainer));
 
 			AverageAccelerationTorqueLookup = new AverageAccelerationTorqueLookup();
@@ -112,15 +112,15 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		private bool SpeedTooLowForEngine(uint gear, PerSecond outAngularSpeed)
 		{
-			return (outAngularSpeed * ModelData.Gears[gear].Ratio).IsSmaller(DataBus.EngineInfo.EngineIdleSpeed);
+			return (outAngularSpeed * GearboxModelData.Gears[gear].Ratio).IsSmaller(DataBus.EngineInfo.EngineIdleSpeed);
 		}
 
 		private bool SpeedTooHighForEngine(uint gear, PerSecond outAngularSpeed)
 		{
 			return
-				(outAngularSpeed * ModelData.Gears[gear].Ratio).IsGreaterOrEqual(
+				(outAngularSpeed * GearboxModelData.Gears[gear].Ratio).IsGreaterOrEqual(
 					VectoMath.Min(
-						ModelData.Gears[gear].MaxSpeed,
+						GearboxModelData.Gears[gear].MaxSpeed,
 						DataBus.EngineInfo.EngineN95hSpeed));
 		}
 
@@ -156,16 +156,16 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			}
 
 			// emergency shift to not stall the engine ------------------------
-			if (gear == 1 && SpeedTooLowForEngine(_nextGear, inAngularVelocity / ModelData.Gears[gear].Ratio)) {
+			if (gear == 1 && SpeedTooLowForEngine(_nextGear, inAngularVelocity / GearboxModelData.Gears[gear].Ratio)) {
 				return true;
 			}
 
 			_nextGear = gear;
-			while (_nextGear > 1 && SpeedTooLowForEngine(_nextGear, inAngularVelocity / ModelData.Gears[gear].Ratio)) {
+			while (_nextGear > 1 && SpeedTooLowForEngine(_nextGear, inAngularVelocity / GearboxModelData.Gears[gear].Ratio)) {
 				_nextGear--;
 			}
-			while (_nextGear < ModelData.Gears.Count &&
-					SpeedTooHighForEngine(_nextGear, inAngularVelocity / ModelData.Gears[gear].Ratio)) {
+			while (_nextGear < GearboxModelData.Gears.Count &&
+					SpeedTooHighForEngine(_nextGear, inAngularVelocity / GearboxModelData.Gears[gear].Ratio)) {
 				_nextGear++;
 			}
 
@@ -177,7 +177,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			var currentVelocity = DataBus.VehicleInfo.VehicleSpeed;
 			accRsv = CalcAccelerationReserve(currentVelocity, absTime + dt);
 
-			var minimumShiftTimePassed = (lastShiftTime + ModelData.ShiftTime).IsSmallerOrEqual(absTime);
+			var minimumShiftTimePassed = (lastShiftTime + GearshiftParams.TimeBetweenGearshifts).IsSmallerOrEqual(absTime);
 			if (!minimumShiftTimePassed) {
 				return false;
 			}
@@ -212,7 +212,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			PerSecond inAngularVelocity, uint gear, Second lastShiftTime)
 		{
 			var lookAheadDistance =
-				DataBus.VehicleInfo.VehicleSpeed * ModelData.TractionInterruption; //ShiftStrategyParameters.GearResidenceTime;
+				DataBus.VehicleInfo.VehicleSpeed * GearboxModelData.TractionInterruption; //ShiftStrategyParameters.GearResidenceTime;
 			var roadGradient = DataBus.DrivingCycleInfo.CycleLookAhead(lookAheadDistance).RoadGradient;
 			
 			var currentVelocity = DataBus.VehicleInfo.VehicleSpeed;
@@ -225,7 +225,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			}
 
 			
-			var gearLimitHigh = Math.Min(ModelData.Gears.Count, gear + ShiftStrategyParameters.AllowedGearRangeUp);
+			var gearLimitHigh = Math.Min(GearboxModelData.Gears.Count, gear + ShiftStrategyParameters.AllowedGearRangeUp);
 
 			GearRatings.Clear();
 
@@ -282,9 +282,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		{
 			var gradientBelowMaxGrad = roadGradient < MaxGradability.GradabilityLimitedTorque(nextGear);
 			var engineSpeedAboveMin =
-				outAngularVelocity * ModelData.Gears[nextGear].Ratio > PowertrainConfig.EngineData.IdleSpeed;
+				outAngularVelocity * GearboxModelData.Gears[nextGear].Ratio > PowertrainConfig.EngineData.IdleSpeed;
 
-			var engineSpeedBelowMax = outAngularVelocity * ModelData.Gears[nextGear].Ratio <
+			var engineSpeedBelowMax = outAngularVelocity * GearboxModelData.Gears[nextGear].Ratio <
 									PowertrainConfig.EngineData.FullLoadCurves[0].N95hSpeed;
 
 			if (!(gradientBelowMaxGrad && engineSpeedAboveMin && engineSpeedBelowMax)) {
@@ -319,12 +319,12 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		private bool UpshiftAllowed(Second absTime)
 		{
-			return (absTime - _gearbox.LastDownshift).IsGreaterOrEqual(_gearbox.ModelData.UpshiftAfterDownshiftDelay);
+			return (absTime - _gearbox.LastDownshift).IsGreaterOrEqual(GearshiftParams.UpshiftAfterDownshiftDelay);
 		}
 
 		private bool DownshiftAllowed(Second absTime)
 		{
-			return (absTime - _gearbox.LastUpshift).IsGreaterOrEqual(_gearbox.ModelData.DownshiftAfterUpshiftDelay);
+			return (absTime - _gearbox.LastUpshift).IsGreaterOrEqual(GearshiftParams.DownshiftAfterUpshiftDelay);
 		}
 
 		private GearRating RatingGear(
@@ -504,12 +504,12 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			var estimatedVelocityPostShift = VelocityDropData.Interpolate(currentVelocity, gradient);
 			var predictedVelocity = DataBus.DriverInfo.DriverBehavior == DrivingBehavior.Braking
 				? currentVelocity + PowertrainConfig.DriverData.AccelerationCurve.Lookup(currentVelocity).Deceleration *
-				ModelData.TractionInterruption
+				GearboxModelData.TractionInterruption
 				: CalcPredictionVelocity(currentVelocity, estimatedVelocityPostShift);
 
 			if (inAngularVelocity < GetEngineSpeedLimitLow(false)) {
 				for (var i = Math.Max(1, gear - ShiftStrategyParameters.AllowedGearRangeDown);
-					i <= Math.Min(ModelData.Gears.Count, gear + ShiftStrategyParameters.AllowedGearRangeUp);
+					i <= Math.Min(GearboxModelData.Gears.Count, gear + ShiftStrategyParameters.AllowedGearRangeUp);
 					i++) {
 					var nextGear = (uint)i;
 					TestContainerGbx.Gear = nextGear;
@@ -523,7 +523,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			}
 
 			if (inAngularVelocity >= upperEngineSpeedLimit) {
-				for (var i = Math.Min(ModelData.Gears.Count, gear + ShiftStrategyParameters.AllowedGearRangeUp);
+				for (var i = Math.Min(GearboxModelData.Gears.Count, gear + ShiftStrategyParameters.AllowedGearRangeUp);
 					i >= Math.Max(1, gear + ShiftStrategyParameters.AllowedGearRangeDown);
 					i--) {
 					var nextGear = (uint)i;
@@ -586,8 +586,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				return InitStartGear(torque, outAngularVelocity);
 			}
 
-			for (var gear = (uint)ModelData.Gears.Count; gear > 1; gear--) {
-				var inAngularVelocity = outAngularVelocity * ModelData.Gears[gear].Ratio;
+			for (var gear = (uint)GearboxModelData.Gears.Count; gear > 1; gear--) {
+				var inAngularVelocity = outAngularVelocity * GearboxModelData.Gears[gear].Ratio;
 				if (DataBus.EngineInfo.EngineSpeed < inAngularVelocity && inAngularVelocity < DataBus.EngineInfo.EngineRatedSpeed) {
 					_nextGear = gear;
 					return gear;
@@ -599,7 +599,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		private uint InitStartGear(NewtonMeter outTorque, PerSecond outAngularVelocity)
 		{
-			var maxStartGear = (int)Math.Round(ModelData.Gears.Count / 2.0, MidpointRounding.AwayFromZero);
+			var maxStartGear = (int)Math.Round(GearboxModelData.Gears.Count / 2.0, MidpointRounding.AwayFromZero);
 
 			var currentVelocity = DataBus.VehicleInfo.VehicleSpeed;
 			var gradient = CalcGradientDuringGearshift(true, null, null);
@@ -710,7 +710,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			while (_nextGear > 1 && SpeedTooLowForEngine(_nextGear, outAngularVelocity)) {
 				_nextGear--;
 			}
-			while (_nextGear < ModelData.Gears.Count &&
+			while (_nextGear < GearboxModelData.Gears.Count &&
 					SpeedTooHighForEngine(_nextGear, outAngularVelocity)) {
 				_nextGear++;
 			}
@@ -731,7 +731,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		public override void WriteModalResults(IModalDataContainer container)
 		{
-			foreach (var gear in ModelData.Gears.Keys) {
+			foreach (var gear in GearboxModelData.Gears.Keys) {
 				container.SetDataValue(
 					string.Format("Gear{0}-Rating", gear),
 					GearRatings.ContainsKey(gear)

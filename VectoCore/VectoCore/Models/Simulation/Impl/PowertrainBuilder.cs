@@ -687,6 +687,11 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 			powertrain.AddComponent(engine, idleController)
 				.AddAuxiliaries(container, data);
+			if (data.ElectricMachinesData.Any(x => x.Item1 == PowertrainPosition.HybridP1)) {
+				if (gearbox is ATGearbox atGbx) {
+					atGbx.IdleController = idleController;
+				}
+			}
 		}
 
 		public void BuildSimplePowertrainE2(VectoRunData data, VehicleContainer container)

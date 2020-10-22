@@ -469,14 +469,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 		{
 			retVal.Inertia = DeclarationData.Gearbox.Inertia;
 			retVal.TractionInterruption = retVal.Type.TractionInterruption();
-			retVal.TorqueReserve = DeclarationData.GearboxTCU.TorqueReserve;
-			retVal.StartTorqueReserve = DeclarationData.GearboxTCU.TorqueReserveStart;
-			retVal.ShiftTime = DeclarationData.Gearbox.MinTimeBetweenGearshifts;
-			retVal.StartSpeed = DeclarationData.GearboxTCU.StartSpeed;
-			retVal.StartAcceleration = DeclarationData.GearboxTCU.StartAcceleration;
-			retVal.DownshiftAfterUpshiftDelay = DeclarationData.Gearbox.DownshiftAfterUpshiftDelay;
-			retVal.UpshiftAfterDownshiftDelay = DeclarationData.Gearbox.UpshiftAfterDownshiftDelay;
-			retVal.UpshiftMinAcceleration = DeclarationData.Gearbox.UpshiftMinAcceleration;
+			
 		}
 
 		public virtual AxleGearData CreateAxleGearData(IAxleGearInputData data)
@@ -695,8 +688,16 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 		public virtual ShiftStrategyParameters CreateGearshiftData(GearboxData gbx, double axleRatio, PerSecond engineIdlingSpeed)
 		{
 			var retVal = new ShiftStrategyParameters {
-				StartVelocity = DeclarationData.GearboxTCU.StartSpeed,
+				TorqueReserve = DeclarationData.GearboxTCU.TorqueReserve,
+				StartTorqueReserve = DeclarationData.GearboxTCU.TorqueReserveStart,
+				TimeBetweenGearshifts = DeclarationData.Gearbox.MinTimeBetweenGearshifts,
+				StartSpeed = DeclarationData.GearboxTCU.StartSpeed,
 				StartAcceleration = DeclarationData.GearboxTCU.StartAcceleration,
+				DownshiftAfterUpshiftDelay = DeclarationData.Gearbox.DownshiftAfterUpshiftDelay,
+				UpshiftAfterDownshiftDelay = DeclarationData.Gearbox.UpshiftAfterDownshiftDelay,
+				UpshiftMinAcceleration = DeclarationData.Gearbox.UpshiftMinAcceleration,
+
+				StartVelocity = DeclarationData.GearboxTCU.StartSpeed,
 				GearResidenceTime = DeclarationData.GearboxTCU.GearResidenceTime,
 				DnT99L_highMin1 = DeclarationData.GearboxTCU.DnT99L_highMin1,
 				DnT99L_highMin2 = DeclarationData.GearboxTCU.DnT99L_highMin2,

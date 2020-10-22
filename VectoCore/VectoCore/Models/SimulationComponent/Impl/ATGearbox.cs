@@ -164,7 +164,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				inTorque = outTorque / effectiveRatio + torqueLossResult.Value;
 			}
 			if (CurrentState.Disengaged) {
-				return NextComponent.Initialize(0.SI<NewtonMeter>(), null);
+				return NextComponent.Initialize(0.SI<NewtonMeter>(), DataBus.EngineInfo.EngineIdleSpeed);
 			}
 
 			if (!CurrentState.TorqueConverterLocked && !ModelData.Gears[Gear].HasTorqueConverter) {

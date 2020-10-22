@@ -97,6 +97,7 @@ namespace TUGraz.VectoCore.Tests.Integration
 				VehicleData = vehicleData,
 				AirdragData = airdragData,
 				GearboxData = gearboxData,
+				GearshiftParameters = CreateGearshiftData(),
 				EngineData = engineData,
 				ElectricMachinesData = new List<Tuple<PowertrainPosition, ElectricMotorData>>(),
 				DriverData = driverData,
@@ -162,9 +163,22 @@ namespace TUGraz.VectoCore.Tests.Integration
 							TorqueConverterShiftPolygon = i == 0 ? ShiftPolygonReader.ReadFromFile(GearboxShiftPolygonFile) : null
 						}))
 					.ToDictionary(k => k.Item1 + 1, v => v.Item2),
-				ShiftTime = 1.SI<Second>(),
+				
 				Inertia = 0.SI<KilogramSquareMeter>(),
 				TractionInterruption = 0.SI<Second>(),
+				
+				PowershiftShiftTime = 0.8.SI<Second>(),
+				TorqueConverterData =
+					TorqueConverterDataReader.ReadFromFile(torqueConverterFile, 1000.RPMtoRad(),
+						MaxTcSpeed, ExecutionMode.Engineering, gbxType == GearboxType.ATSerial ? 1 : 1 / ratios[0],
+						DeclarationData.Gearbox.UpshiftMinAcceleration, DeclarationData.Gearbox.UpshiftMinAcceleration)
+			};
+		}
+
+		public static ShiftStrategyParameters CreateGearshiftData()
+		{
+			return new ShiftStrategyParameters() {
+				TimeBetweenGearshifts = 1.SI<Second>(),
 				StartSpeed = 2.SI<MeterPerSecond>(),
 				StartAcceleration = 0.6.SI<MeterPerSquareSecond>(),
 				StartTorqueReserve = 0.2,
@@ -172,11 +186,6 @@ namespace TUGraz.VectoCore.Tests.Integration
 				DownshiftAfterUpshiftDelay = DeclarationData.Gearbox.DownshiftAfterUpshiftDelay,
 				UpshiftAfterDownshiftDelay = DeclarationData.Gearbox.UpshiftAfterDownshiftDelay,
 				UpshiftMinAcceleration = DeclarationData.Gearbox.UpshiftMinAcceleration,
-				PowershiftShiftTime = 0.8.SI<Second>(),
-				TorqueConverterData =
-					TorqueConverterDataReader.ReadFromFile(torqueConverterFile, 1000.RPMtoRad(),
-						MaxTcSpeed, ExecutionMode.Engineering, gbxType == GearboxType.ATSerial ? 1 : 1 / ratios[0],
-						DeclarationData.Gearbox.UpshiftMinAcceleration, DeclarationData.Gearbox.UpshiftMinAcceleration)
 			};
 		}
 

@@ -219,6 +219,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			container.EngineInfo = engine;
 			var runData = new VectoRunData() {
 				GearboxData = gearboxData,
+				GearshiftParameters = ATPowerTrain.CreateGearshiftData(),
 				EngineData = new CombustionEngineData() { Inertia = 5.SI<KilogramSquareMeter>() }
 			};
 			container.RunData = runData;

@@ -307,8 +307,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 										runData.VehicleData.DynamicTyreRadius;
 				var minEngineSpeed = (runData.EngineData.FullLoadCurves[0].RatedSpeed - runData.EngineData.IdleSpeed) *
 					Constants.SimulationSettings.ClutchClosingSpeedNorm + runData.EngineData.IdleSpeed;
-				foreach (var gearData in ModelData.Gears.Reverse()) {
-					if (ModelData.StartSpeed * transmissionRatio * gearData.Value.Ratio <= minEngineSpeed)
+				foreach (var gearData in GearboxModelData.Gears.Reverse()) {
+					if (GearshiftParams.StartSpeed * transmissionRatio * gearData.Value.Ratio <= minEngineSpeed)
 						continue;
 					MaxStartGear = gearData.Key;
 					break;
@@ -343,10 +343,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					return InitStartGear(absTime, outTorque, outAngularVelocity);
 				}
 
-				for (var gear = (uint)ModelData.Gears.Count; gear > 1; gear--) {
+				for (var gear = (uint)GearboxModelData.Gears.Count; gear > 1; gear--) {
 					var response = _gearbox.Initialize(absTime, gear, outTorque, outAngularVelocity);
 
-					var inAngularSpeed = outAngularVelocity * ModelData.Gears[gear].Ratio;
+					var inAngularSpeed = outAngularVelocity * GearboxModelData.Gears[gear].Ratio;
 					var fullLoadPower = response.Engine.PowerRequest - response.DeltaFullLoad;
 					var reserve = 1 - response.Engine.PowerRequest / fullLoadPower;
 					var inTorque = response.Clutch.PowerRequest / inAngularSpeed;
@@ -354,7 +354,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					// if in shift curve and torque reserve is provided: return the current gear
 					if (!IsBelowDownShiftCurve(gear, inTorque, inAngularSpeed) &&
 						!IsAboveUpShiftCurve(gear, inTorque, inAngularSpeed) &&
-						reserve >= ModelData.StartTorqueReserve) {
+						reserve >= GearshiftParams.StartTorqueReserve) {
 						if ((inAngularSpeed - DataBus.EngineInfo.EngineIdleSpeed) /
 							(DataBus.EngineInfo.EngineRatedSpeed - DataBus.EngineInfo.EngineIdleSpeed) <
 							Constants.SimulationSettings.ClutchClosingSpeedNorm && gear > 1) {
@@ -366,7 +366,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					}
 
 					// if over the up shift curve: return the previous gear (even thou it did not provide the required torque reserve)
-					if (IsAboveUpShiftCurve(gear, inTorque, inAngularSpeed) && gear < ModelData.Gears.Count) {
+					if (IsAboveUpShiftCurve(gear, inTorque, inAngularSpeed) && gear < GearboxModelData.Gears.Count) {
 						_nextGear = gear;
 						return gear + 1;
 					}
@@ -384,7 +384,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				}
 
 				for (var gear = MaxStartGear; gear > 1; gear--) {
-					var inAngularSpeed = outAngularVelocity * ModelData.Gears[gear].Ratio;
+					var inAngularSpeed = outAngularVelocity * GearboxModelData.Gears[gear].Ratio;
 
 					var ratedSpeed = DataBus.EngineInfo.EngineRatedSpeed;
 					if (inAngularSpeed > ratedSpeed || inAngularSpeed.IsEqual(0)) {
@@ -398,7 +398,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					var reserve = 1 - response.Engine.PowerRequest / fullLoadPower;
 
 					if (response.Engine.EngineSpeed > DataBus.EngineInfo.EngineIdleSpeed &&
-						reserve >= ModelData.StartTorqueReserve) {
+						reserve >= GearshiftParams.StartTorqueReserve) {
 						_nextGear = gear;
 						return gear;
 					}
@@ -411,14 +411,14 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			private bool SpeedTooLowForEngine(uint gear, PerSecond outAngularSpeed)
 			{
-				return (outAngularSpeed * ModelData.Gears[gear].Ratio).IsSmaller(DataBus.EngineInfo.EngineIdleSpeed);
+				return (outAngularSpeed * GearboxModelData.Gears[gear].Ratio).IsSmaller(DataBus.EngineInfo.EngineIdleSpeed);
 			}
 
 			private bool SpeedTooHighForEngine(uint gear, PerSecond outAngularSpeed)
 			{
 				return
-					(outAngularSpeed * ModelData.Gears[gear].Ratio).IsGreaterOrEqual(VectoMath.Min(
-						ModelData.Gears[gear].MaxSpeed,
+					(outAngularSpeed * GearboxModelData.Gears[gear].Ratio).IsGreaterOrEqual(VectoMath.Min(
+						GearboxModelData.Gears[gear].MaxSpeed,
 						DataBus.EngineInfo.EngineN95hSpeed));
 			}
 
@@ -429,7 +429,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 						_nextGear--;
 					}
 
-					while (_nextGear < ModelData.Gears.Count && SpeedTooHighForEngine(_nextGear, outAngularVelocity)) {
+					while (_nextGear < GearboxModelData.Gears.Count && SpeedTooHighForEngine(_nextGear, outAngularVelocity)) {
 						_nextGear++;
 					}
 				}
@@ -447,7 +447,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 						gear--;
 					}
 
-					while (gear < ModelData.Gears.Count && SpeedTooHighForEngine(gear, outAngularVelocity)) {
+					while (gear < GearboxModelData.Gears.Count && SpeedTooHighForEngine(gear, outAngularVelocity)) {
 						gear++;
 					}
 

@@ -1155,8 +1155,17 @@ namespace TUGraz.VectoCore.Tests.Integration.Hybrid
 		public static ShiftStrategyParameters CreateGearshiftData(GearboxData gbx, double axleRatio, PerSecond engineIdlingSpeed)
 		{
 			var retVal = new ShiftStrategyParameters {
+				TimeBetweenGearshifts = 2.SI<Second>(),
+				TorqueReserve = 0.2,
+				StartTorqueReserve = 0.2,
+				DownshiftAfterUpshiftDelay = DeclarationData.Gearbox.DownshiftAfterUpshiftDelay,
+				UpshiftAfterDownshiftDelay = DeclarationData.Gearbox.UpshiftAfterDownshiftDelay,
+				UpshiftMinAcceleration = DeclarationData.Gearbox.UpshiftMinAcceleration,
+				StartSpeed = 2.SI<MeterPerSecond>(),
+				StartAcceleration = 0.6.SI<MeterPerSquareSecond>(),
+
 				StartVelocity = DeclarationData.GearboxTCU.StartSpeed,
-				StartAcceleration = DeclarationData.GearboxTCU.StartAcceleration,
+				//StartAcceleration = DeclarationData.GearboxTCU.StartAcceleration,
 				GearResidenceTime = DeclarationData.GearboxTCU.GearResidenceTime,
 				DnT99L_highMin1 = DeclarationData.GearboxTCU.DnT99L_highMin1,
 				DnT99L_highMin2 = DeclarationData.GearboxTCU.DnT99L_highMin2,
@@ -1227,19 +1236,12 @@ namespace TUGraz.VectoCore.Tests.Integration.Hybrid
 							Ratio = ratio,
 							//ShiftPolygon = DeclarationData.Gearbox.ComputeEfficiencyShiftPolygon(i,)
 						})).ToDictionary(k => k.Item1 + 1, v => v.Item2),
-				ShiftTime = 2.SI<Second>(),
 				Inertia = 0.SI<KilogramSquareMeter>(),
 				TractionInterruption = 1.SI<Second>(),
-				TorqueReserve = 0.2,
-				StartTorqueReserve = 0.2,
-				DownshiftAfterUpshiftDelay = DeclarationData.Gearbox.DownshiftAfterUpshiftDelay,
-				UpshiftAfterDownshiftDelay = DeclarationData.Gearbox.UpshiftAfterDownshiftDelay,
-				UpshiftMinAcceleration = DeclarationData.Gearbox.UpshiftMinAcceleration,
-				StartSpeed = 2.SI<MeterPerSecond>(),
-				StartAcceleration = 0.6.SI<MeterPerSquareSecond>(),
 			};
 		}
 
+		
 		private static AxleGearData CreateAxleGearData()
 		{
 			var ratio = 2.59;

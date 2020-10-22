@@ -277,6 +277,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			var avgSpeed = (PreviousState.InAngularVelocity + outAngularVelocity) / 2.0;
 			var torqueLoss = ModelData.DragCurve.Lookup(avgSpeed);
 			var inTorque = outTorque + torqueLoss;
+			if (!DataBus.EngineCtl.CombustionEngineOn && Position == PowertrainPosition.HybridP1) {
+				// electric motor is directly connected to the ICE, ICE is off and EM is off - do not apply drag loss
+				inTorque = outTorque;
+			}
 
 			if (!dryRun) {
 				SetState(inTorque, outAngularVelocity);

@@ -52,9 +52,9 @@ namespace TUGraz.VectoCore.Models.Simulation.DataBus
 
 		bool TCLocked { get; }
 
-		MeterPerSecond StartSpeed { get; }
+		//MeterPerSecond StartSpeed { get; }
 
-		MeterPerSquareSecond StartAcceleration { get; }
+		//MeterPerSquareSecond StartAcceleration { get; }
 
 		Watt GearboxLoss();
 
