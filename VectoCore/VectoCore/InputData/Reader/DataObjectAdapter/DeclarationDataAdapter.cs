@@ -502,6 +502,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			var retVal = SetCommonAirdragData(airdragInputData);
 
 			retVal.DeclaredAirdragArea = mission.MissionType == MissionType.Construction ? mission.DefaultCDxA : airdragInputData.AirDragArea;
+			retVal.DeclaredAirdragAreaInput = airdragInputData.AirDragArea;
 
 			var aerodynamicDragArea = retVal.DeclaredAirdragArea + mission.Trailer.Sum(t => t.DeltaCdA).DefaultIfNull(0);
 
@@ -519,6 +520,8 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			return new AirdragData() {
 				CertificationMethod = CertificationMethod.StandardValues,
 				DeclaredAirdragArea = mission.DefaultCDxA,
+				DeclaredAirdragAreaInput = mission.DefaultCDxA,
+
 				CrossWindCorrectionCurve = new CrosswindCorrectionCdxALookup(aerodynamicDragArea,
 					GetDeclarationAirResistanceCurve(mission.CrossWindCorrectionParameters, aerodynamicDragArea, segment.VehicleHeight),
 					CrossWindCorrectionMode.DeclarationModeCorrection)
