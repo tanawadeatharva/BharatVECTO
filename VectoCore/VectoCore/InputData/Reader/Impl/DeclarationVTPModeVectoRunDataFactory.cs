@@ -170,6 +170,13 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 			}
 			var loading = mission.Loadings.FirstOrDefault(l => l.Key == DeclarationData.VTPMode.SelectedLoading);
 			var runData = CreateVectoRunData(Segment, mission, loading.Value);
+			runData.EngineData.FuelConsumptionCorrectionFactor = DeclarationData.WHTCCorrection.Lookup(
+																	mission.MissionType.GetNonEMSMissionType(), runData.EngineData.WHTCRural, runData.EngineData.WHTCUrban,
+																	runData.EngineData.WHTCMotorway) *
+																runData.EngineData.ColdHotCorrectionFactor * runData.EngineData.CorrectionFactorRegPer;
+			var adasCombination = DeclarationData.ADASCombinations.Lookup(JobInputData.Vehicle.ADAS);
+			runData.EngineData.ADASCorrectionFactor = DeclarationData.ADASBenefits.Lookup(
+				Segment.VehicleClass, adasCombination, mission.MissionType, loading.Key);
 			runData.ModFileSuffix = loading.Key.ToString();
 			var cycle = DrivingCycleDataReader.ReadFromStream(mission.CycleFile, CycleType.DistanceBased, "", false);
 			runData.Cycle = new DrivingCycleProxy(cycle, mission.MissionType.ToString());
