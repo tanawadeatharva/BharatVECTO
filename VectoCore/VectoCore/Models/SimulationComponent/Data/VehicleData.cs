@@ -53,6 +53,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 
 		public SquareMeter DeclaredAirdragArea { get; internal set; }
 
+		public SquareMeter DeclaredAirdragAreaInput { get; internal set; }
+
 		// ReSharper disable once UnusedMember.Global  -- used via Validation
 		public static ValidationResult ValidateAirDragData(AirdragData airDragData, ValidationContext validationContext)
 		{
