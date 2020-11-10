@@ -1261,6 +1261,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 					(DataBus.EngineInfo as CombustionEngine).PreviousState.EngineTorqueOut;
 				TestPowertrain.CombustionEngine.PreviousState.DynamicFullLoadTorque =
 					(DataBus.EngineInfo as CombustionEngine).PreviousState.DynamicFullLoadTorque;
+				(TestPowertrain.CombustionEngine.EngineAux as EngineAuxiliary).PreviousState.AngularSpeed =
+					((DataBus.EngineInfo as CombustionEngine).EngineAux as EngineAuxiliary).PreviousState.AngularSpeed;
 
 				TestPowertrain.Gearbox.PreviousState.InAngularVelocity =
 					(DataBus.GearboxInfo as Gearbox).PreviousState.InAngularVelocity;
