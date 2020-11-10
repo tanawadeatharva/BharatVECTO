@@ -388,7 +388,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			var inAngularVelocity = outAngularVelocity * ModelData.Gears[Gear].Ratio;
 
-			if (dryRun) {
+			if (dryRun) {		
 				var dryRunResponse = NextComponent.Request(absTime, dt, inTorque, inAngularVelocity, true);
 				dryRunResponse.Gearbox.PowerRequest =
 					outTorque * (PreviousState.OutAngularVelocity + outAngularVelocity) / 2.0;
