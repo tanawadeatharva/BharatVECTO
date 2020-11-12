@@ -33,6 +33,7 @@ using System.Diagnostics;
 using System.Dynamic;
 using System.Linq;
 using TUGraz.VectoCommon.Utils;
+using TUGraz.VectoCore.Models.SimulationComponent.Impl;
 
 namespace TUGraz.VectoCommon.Models
 {
@@ -95,7 +96,7 @@ namespace TUGraz.VectoCommon.Models
 	{
 		public PerSecond InputSpeed { get; set; }
 
-		public uint Gear { get; set; }
+		public GearshiftPosition Gear { get; set; }
 	}
 
 	public class TorqueConverterResponse : AbstractPowertrainComponentResponse

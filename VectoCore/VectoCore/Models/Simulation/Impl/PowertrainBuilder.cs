@@ -76,16 +76,16 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 				Tuple.Create<GbxTypeList, string, string, StrategyCreator>(new GbxTypeList { GearboxType.AMT },
 					typeof(AMTShiftStrategyOptimized).FullName, AMTShiftStrategyOptimized.Name,
 					c => new AMTShiftStrategyOptimized(c)),
-				Tuple.Create<GbxTypeList, string, string, StrategyCreator>(new GbxTypeList { GearboxType.AMT },
-					typeof(AMTShiftStrategyACEA).FullName, AMTShiftStrategyACEA.Name,
-					c => new AMTShiftStrategyACEA(c)),
+				//Tuple.Create<GbxTypeList, string, string, StrategyCreator>(new GbxTypeList { GearboxType.AMT },
+				//	typeof(AMTShiftStrategyACEA).FullName, AMTShiftStrategyACEA.Name,
+				//	c => new AMTShiftStrategyACEA(c)),
 				Tuple.Create<GbxTypeList, string, string, StrategyCreator>(
 					new GbxTypeList { GearboxType.ATPowerSplit, GearboxType.ATSerial },
 					typeof(ATShiftStrategy).FullName, ATShiftStrategy.Name, c => new ATShiftStrategy(c)),
-				Tuple.Create<GbxTypeList, string, string, StrategyCreator>(
-					new GbxTypeList { GearboxType.ATPowerSplit, GearboxType.ATSerial },
-					typeof(ATShiftStrategyVoith).FullName, ATShiftStrategyVoith.Name,
-					c => new ATShiftStrategyVoith(c)),
+				//Tuple.Create<GbxTypeList, string, string, StrategyCreator>(
+				//	new GbxTypeList { GearboxType.ATPowerSplit, GearboxType.ATSerial },
+				//	typeof(ATShiftStrategyVoith).FullName, ATShiftStrategyVoith.Name,
+				//	c => new ATShiftStrategyVoith(c)),
 				Tuple.Create<GbxTypeList, string, string, StrategyCreator>(
 					new GbxTypeList { GearboxType.ATPowerSplit, GearboxType.ATSerial },
 					typeof(ATShiftStrategyOptimized).FullName, ATShiftStrategyOptimized.Name,
@@ -1040,9 +1040,9 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			get {return GearboxType.DrivingCycle; }
 		}
 
-		public uint Gear
+		public GearshiftPosition Gear
 		{
-			get { return 0; }
+			get { return new GearshiftPosition(0); }
 		}
 
 		public bool TCLocked
@@ -1085,7 +1085,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			throw new VectoException("No Gearbox available.");
 		}
 
-		public GearInfo NextGear
+		public GearshiftPosition NextGear
 		{
 			get { throw new VectoException("No Gearbox available."); }
 		}

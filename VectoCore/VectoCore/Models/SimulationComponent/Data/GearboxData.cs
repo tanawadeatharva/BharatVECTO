@@ -40,6 +40,7 @@ using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox;
+using TUGraz.VectoCore.Models.SimulationComponent.Impl;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 {
@@ -54,6 +55,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 		public GearboxType Type { get; internal set; }
 
 		[Required, ValidateObject] public Dictionary<uint, GearData> Gears = new Dictionary<uint, GearData>();
+		
+		private GearList _gearlist;
 
 		public TorqueConverterData TorqueConverterData { get; internal set; } 
 
@@ -76,6 +79,34 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 		[JsonIgnore]
 		public IGearboxDeclarationInputData InputData { get; internal set; }
 
+
+		[JsonIgnore]
+		public GearList GearList
+		{
+			get
+			{
+				return _gearlist ?? (_gearlist = CreateGearList());
+			}
+		}
+
+		private GearList CreateGearList()
+		{
+			var gearList = new List<GearshiftPosition>();
+			foreach (var gear in Gears) {
+				if (Type.AutomaticTransmission()) {
+					if (gear.Value.HasTorqueConverter) {
+						gearList.Add(new GearshiftPosition(gear.Key, false));
+					}
+					if (gear.Value.HasLockedGear) {
+						gearList.Add(new GearshiftPosition(gear.Key, true));
+					}
+				} else {
+					gearList.Add(new GearshiftPosition(gear.Key));
+				}
+			}
+
+			return new GearList(gearList.ToArray());
+		}
 
 		// ReSharper disable once UnusedMember.Global -- used via Validation
 		public static ValidationResult ValidateGearboxData(GearboxData gearboxData, ValidationContext validationContext)

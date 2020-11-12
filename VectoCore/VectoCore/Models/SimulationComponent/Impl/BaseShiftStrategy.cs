@@ -30,6 +30,7 @@
 */
 
 using System.Collections.Generic;
+using System.Linq;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
@@ -51,15 +52,19 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		protected readonly GearboxData GearboxModelData;
 		protected readonly ShiftStrategyParameters GearshiftParams;
 
+		protected readonly GearList Gears;
+
 		protected BaseShiftStrategy(IVehicleContainer dataBus)
 		{
 			GearboxModelData = dataBus.RunData.GearboxData;
 			GearshiftParams = dataBus.RunData.GearshiftParameters;
 			DataBus = dataBus;
+
+			Gears = GearboxModelData.GearList;
 		}
 
 		public virtual bool ShiftRequired(Second absTime, Second dt, NewtonMeter outTorque,
-			PerSecond outAngularVelocity, NewtonMeter inTorque, PerSecond inAngularVelocity, uint gear,
+			PerSecond outAngularVelocity, NewtonMeter inTorque, PerSecond inAngularVelocity, GearshiftPosition gear,
 			Second lastShiftTime, IResponse response)
 		{
 			CheckGearshiftRequired = true;
@@ -69,14 +74,14 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		}
 
 		protected abstract bool DoCheckShiftRequired(Second absTime, Second dt, NewtonMeter outTorque,
-			PerSecond outAngularVelocity, NewtonMeter inTorque, PerSecond inAngularVelocity, uint gear,
+			PerSecond outAngularVelocity, NewtonMeter inTorque, PerSecond inAngularVelocity, GearshiftPosition gear,
 			Second lastShiftTime, IResponse response);
 
-		public abstract uint InitGear(Second absTime, Second dt, NewtonMeter torque, PerSecond outAngularVelocity);
-		public abstract uint Engage(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity);
+		public abstract GearshiftPosition InitGear(Second absTime, Second dt, NewtonMeter torque, PerSecond outAngularVelocity);
+		public abstract GearshiftPosition Engage(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity);
 		public abstract void Disengage(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity);
 		public abstract IGearbox Gearbox { get; set; }
-		public abstract GearInfo NextGear { get; }
+		public abstract GearshiftPosition NextGear { get; }
 
 		public bool CheckGearshiftRequired { get; protected set; }
 		public virtual void Request(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity)
@@ -91,15 +96,15 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			GearboxType gearboxType, int i, EngineFullLoadCurve engineDataFullLoadCurve, IList<ITransmissionInputData> gearboxGears,
 			CombustionEngineData engineData, double axlegearRatio, Meter dynamicTyreRadius, ElectricMotorData electricMotorData = null);
 
-		protected MeterPerSquareSecond EstimateAccelerationForGear(uint gear, PerSecond gbxAngularVelocityOut)
+		protected MeterPerSquareSecond EstimateAccelerationForGear(GearshiftPosition gear, PerSecond gbxAngularVelocityOut)
 		{
-			if (gear == 0 || gear > GearboxModelData.Gears.Count) {
+			if (!Gears.Contains(gear)) {
 				throw new VectoSimulationException("EstimateAccelerationForGear: invalid gear: {0}", gear);
 			}
 
 			var vehicleSpeed = DataBus.VehicleInfo.VehicleSpeed;
 
-			var nextEngineSpeed = gbxAngularVelocityOut * GearboxModelData.Gears[gear].Ratio;
+			var nextEngineSpeed = gbxAngularVelocityOut * GearboxModelData.Gears[gear.Gear].Ratio;
 			var maxEnginePower = DataBus.EngineInfo.EngineStationaryFullPower(nextEngineSpeed);
 
 			var avgSlope =
@@ -108,8 +113,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			var airDragLoss = DataBus.VehicleInfo.AirDragResistance(vehicleSpeed, vehicleSpeed) * DataBus.VehicleInfo.VehicleSpeed;
 			var rollResistanceLoss = DataBus.VehicleInfo.RollingResistance(avgSlope) * DataBus.VehicleInfo.VehicleSpeed;
-			var gearboxLoss = GearboxModelData.Gears[gear].LossMap.GetTorqueLoss(gbxAngularVelocityOut,
-				maxEnginePower / nextEngineSpeed * GearboxModelData.Gears[gear].Ratio).Value * nextEngineSpeed;
+			var gearboxLoss = GearboxModelData.Gears[gear.Gear].LossMap.GetTorqueLoss(gbxAngularVelocityOut,
+				maxEnginePower / nextEngineSpeed * GearboxModelData.Gears[gear.Gear].Ratio).Value * nextEngineSpeed;
 			//DataBus.GearboxLoss();
 			var slopeLoss = DataBus.VehicleInfo.SlopeResistance(avgSlope) * DataBus.VehicleInfo.VehicleSpeed;
 			var axleLoss = DataBus.AxlegearInfo.AxlegearLoss();

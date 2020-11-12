@@ -65,9 +65,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			}
 		}
 
-		public override GearInfo NextGear
+		public override GearshiftPosition NextGear
 		{
-			get { return new GearInfo(_nextGear.Gear, _nextGear.TorqueConverterLocked); }
+			get { return _nextGear.Gear; }
 		}
 
 		public override ShiftPolygon ComputeDeclarationShiftPolygon(
@@ -89,43 +89,39 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			EngineInertia = dataBus.RunData.EngineData?.Inertia ?? 0.SI<KilogramSquareMeter>();
 		}
 
-		public override uint InitGear(Second absTime, Second dt, NewtonMeter torque, PerSecond outAngularVelocity)
+		public override GearshiftPosition InitGear(Second absTime, Second dt, NewtonMeter torque, PerSecond outAngularVelocity)
 		{
 			if (DataBus.VehicleInfo.VehicleSpeed.IsEqual(0)) {
 				// AT always starts in first gear and TC active!
-				_gearbox.TorqueConverterLocked = false;
 				_gearbox.Disengaged = true;
-				return 1;
+				return Gears.First();
 			}
 
-			var torqueConverterLocked = true;
-			for (var gear = GearboxModelData.Gears.Keys.Max(); gear > 1; gear--) {
-				if (_gearbox.ModelData.Gears[gear].HasTorqueConverter) {
-					torqueConverterLocked = false;
-				}
-				var response = _gearbox.Initialize(gear, torqueConverterLocked, torque, outAngularVelocity);
+			//var torqueConverterLocked = true;
+			foreach (var gear in Gears.Reverse()) {
+				
+			//for (var gear = GearboxModelData.Gears.Keys.Max(); gear > 1; gear--) {
+				var response = _gearbox.Initialize(gear, torque, outAngularVelocity);
 
 				if (response.Engine.EngineSpeed > DataBus.EngineInfo.EngineRatedSpeed || response.Engine.EngineSpeed < DataBus.EngineInfo.EngineIdleSpeed) {
 					continue;
 				}
 
 				if (!IsBelowDownShiftCurve(gear, response.Engine.PowerRequest / response.Engine.EngineSpeed, response.Engine.EngineSpeed)) {
-					_gearbox.TorqueConverterLocked = torqueConverterLocked;
 					_gearbox.Disengaged = false;
 					return gear;
 				}
 			}
 
 			// fallback: start with first gear;
-			_gearbox.TorqueConverterLocked = false;
 			_gearbox.Disengaged = false;
-			return 1;
+			return Gears.First();
 		}
 
-		public override uint Engage(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity)
+		public override GearshiftPosition Engage(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity)
 		{
 			if (_nextGear.AbsTime != null && _nextGear.AbsTime.IsEqual(absTime)) {
-				_gearbox.TorqueConverterLocked = _nextGear.TorqueConverterLocked;
+				//_gearbox.Gear = _nextGear.Gear;
 				_gearbox.Disengaged = _nextGear.Disengaged;
 				_nextGear.AbsTime = null;
 				return _nextGear.Gear;
@@ -142,13 +138,13 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		protected override bool DoCheckShiftRequired(
 			Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity, NewtonMeter inTorque,
-			PerSecond inAngularVelocity, uint gear, Second lastShiftTime, IResponse response)
+			PerSecond inAngularVelocity, GearshiftPosition gear, Second lastShiftTime, IResponse response)
 		{
 			// ENGAGE ---------------------------------------------------------
 			// 0 -> 1C: drive off after disengaged - engage first gear
 			if (_gearbox.Disengaged && outAngularVelocity.IsGreater(0.SI<PerSecond>())) {
 				Log.Debug("shift required: drive off after vehicle stopped");
-				_nextGear.SetState(absTime, disengaged: false, gear: 1, tcLocked: false);
+				_nextGear.SetState(absTime, disengaged: false, gear: Gears.First());
 				return true;
 			}
 
@@ -164,7 +160,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			var disengageAngularVelocityZero = _gearbox.TorqueConverterLocked && inAngularVelocity.IsEqual(0.SI<PerSecond>());
 
 			// 3) 1C -> 0: disengange when negative T_out and positive T_in
-			var gear1C = gear == 1 && !_gearbox.TorqueConverterLocked;
+			var gear1C = Gears.First().Equals(gear);
 			var disengageTOutNegativeAndTInPositive = DataBus.DriverInfo.DriverAcceleration <= 0 && gear1C && outTorque.IsSmaller(0) &&
 													inTorque.IsGreater(0);
 
@@ -173,7 +169,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			if (disengageBeforeHalting || disengageTCEngineSpeedLowerIdle || disengageAngularVelocityZero ||
 				disengageTOutNegativeAndTInPositive) {
-				_nextGear.SetState(absTime, disengaged: true, gear: 1, tcLocked: false);
+				_nextGear.SetState(absTime, disengaged: true, gear: Gears.First());
 				return true;
 			}
 
@@ -200,7 +196,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		}
 
 		protected virtual bool CheckEmergencyShift(
-			Second absTime, NewtonMeter outTorque, PerSecond outAngularVelocity, PerSecond inAngularVelocity, uint gear)
+			Second absTime, NewtonMeter outTorque, PerSecond outAngularVelocity, PerSecond inAngularVelocity, GearshiftPosition gear)
 		{
 			// Emergency Downshift: if lower than engine idle speed
 			if (inAngularVelocity.IsSmaller(DataBus.EngineInfo.EngineIdleSpeed)) {
@@ -210,23 +206,25 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			}
 
 			// Emergency Upshift: if higher than engine rated speed
-			if (inAngularVelocity.IsGreaterOrEqual(VectoMath.Min(GearboxModelData.Gears[gear].MaxSpeed, DataBus.EngineInfo.EngineN95hSpeed))) {
+			if (inAngularVelocity.IsGreaterOrEqual(VectoMath.Min(GearboxModelData.Gears[gear.Gear].MaxSpeed, DataBus.EngineInfo.EngineN95hSpeed))) {
 				// check if upshift is possible
-				if (!GearboxModelData.Gears.ContainsKey(gear + 1)) {
+				if (!Gears.HasSuccessor(gear)) {
 					return false;
 				}
 
 				PerSecond nextInAngularSpeed;
 				NewtonMeter nextInTorque;
-				if (GearboxModelData.Gears[gear].HasLockedGear) {
-					nextInAngularSpeed = outAngularVelocity * GearboxModelData.Gears[gear].Ratio;
-					nextInTorque = outTorque / GearboxModelData.Gears[gear].Ratio;
+				if (GearboxModelData.Gears[gear.Gear].HasLockedGear) {
+					nextInAngularSpeed = outAngularVelocity * GearboxModelData.Gears[gear.Gear].Ratio;
+					nextInTorque = outTorque / GearboxModelData.Gears[gear.Gear].Ratio;
 				} else {
-					nextInAngularSpeed = outAngularVelocity * GearboxModelData.Gears[gear + 1].Ratio;
-					nextInTorque = outTorque / GearboxModelData.Gears[gear + 1].Ratio;
+					nextInAngularSpeed = outAngularVelocity * GearboxModelData.Gears[gear.Gear + 1].Ratio;
+					nextInTorque = outTorque / GearboxModelData.Gears[gear.Gear + 1].Ratio;
 				}
-				var acc = EstimateAccelerationForGear(gear + 1, outAngularVelocity);
-				if ((acc > 0 || _gearbox.TCLocked) && !IsBelowDownShiftCurve(gear + 1, nextInTorque, nextInAngularSpeed)) {
+
+				var nextGear = Gears.Successor(gear);
+				var acc = EstimateAccelerationForGear(nextGear, outAngularVelocity);
+				if ((acc > 0 || _gearbox.TCLocked) && !IsBelowDownShiftCurve(nextGear, nextInTorque, nextInAngularSpeed)) {
 					Log.Debug("engine speed would be above max speed / rated speed - shift up");
 					Upshift(absTime, gear);
 					return true;
@@ -239,14 +237,14 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		[SuppressMessage("ReSharper", "UnusedParameter.Local")]
 		protected virtual bool CheckUpshift(
 			Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity, NewtonMeter inTorque,
-			PerSecond inAngularVelocity, uint gear, Second lastShiftTime, IResponse response)
+			PerSecond inAngularVelocity, GearshiftPosition gear, Second lastShiftTime, IResponse response)
 		{
 			var shiftTimeReached = (absTime - lastShiftTime).IsGreaterOrEqual(GearshiftParams.TimeBetweenGearshifts);
 			if (!shiftTimeReached) {
 				return false;
 			}
 
-			var currentGear = GearboxModelData.Gears[gear];
+			var currentGear = GearboxModelData.Gears[gear.Gear];
 
 			if (_gearbox.TorqueConverterLocked || currentGear.HasLockedGear) {
 				var result = CheckUpshiftToLocked(absTime, outAngularVelocity, inTorque, inAngularVelocity, gear);
@@ -256,8 +254,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			}
 
 			// UPSHIFT - Special rule for 1C -> 2C
-			if (!_gearbox.TorqueConverterLocked && GearboxModelData.Gears.ContainsKey(gear + 1) &&
-				GearboxModelData.Gears[gear + 1].HasTorqueConverter && outAngularVelocity.IsGreater(0)) {
+			//var firstGear = Gears.First();
+			//var secondGear = Gears.Count() > 1 ? Gears.Skip(1).First() : null; 
+			var nextGear = Gears.Successor(gear);
+			if (!gear.TorqueConverterLocked.Value && nextGear != null && !nextGear.TorqueConverterLocked.Value && outAngularVelocity.IsGreater(0)) {
 				var result = CheckUpshiftTcTc(
 					absTime, dt, outTorque, outAngularVelocity, inTorque, inAngularVelocity, gear, currentGear, response);
 				if (result.HasValue) {
@@ -265,7 +265,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				}
 			}
 
-			if (gear < GearboxModelData.Gears.Keys.Max()) {
+			if (Gears.HasSuccessor(gear)) {
 				var earlyUpshift = CheckEarlyUpshift(
 					absTime, dt, outTorque, outAngularVelocity, inTorque, inAngularVelocity, gear, lastShiftTime, response);
 				if (earlyUpshift.HasValue) {
@@ -278,23 +278,24 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		protected virtual bool? CheckEarlyUpshift(
 			Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity, NewtonMeter inTorque,
-			PerSecond inAngularVelocity, uint gear, Second lastShiftTime, IResponse response)
+			PerSecond inAngularVelocity, GearshiftPosition gear, Second lastShiftTime, IResponse response)
 		{
 			return null;
 		}
 
 		protected virtual bool? CheckUpshiftTcTc(
 			Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity, NewtonMeter inTorque,
-			PerSecond inAngularVelocity, uint gear, GearData currentGear, IResponse response)
+			PerSecond inAngularVelocity, GearshiftPosition gear, GearData currentGear, IResponse response)
 		{
 			// C -> C+1
-			var nextGear = GearboxModelData.Gears[gear + 1];
+			var nextGearPos = Gears.Successor(gear); // GearboxModelData.Gears[gear + 1];
+			var nextGear = GearboxModelData.Gears[nextGearPos.Gear];
 			var gearRatio = nextGear.TorqueConverterRatio / currentGear.TorqueConverterRatio;
 			var minEngineSpeed = VectoMath.Min(700.RPMtoRad(), gearRatio * (DataBus.EngineInfo.EngineN80hSpeed - 150.RPMtoRad()));
 
 			var nextGearboxInSpeed = outAngularVelocity * nextGear.TorqueConverterRatio;
 			var nextGearboxInTorque = outTorque / nextGear.TorqueConverterRatio;
-			var shiftLosses = _gearbox.ComputeShiftLosses(outTorque, outAngularVelocity, gear + 1) /
+			var shiftLosses = _gearbox.ComputeShiftLosses(outTorque, outAngularVelocity, nextGearPos) /
 							GearboxModelData.PowershiftShiftTime / nextGearboxInSpeed;
 			nextGearboxInTorque += shiftLosses;
 			var tcOperatingPoint =
@@ -310,7 +311,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			var reachableAcceleration =
 				EstimateAcceleration(
-					outAngularVelocity, outTorque, inAngularVelocity, inTorque, gear, response); // EstimateAccelerationForGear(gear + 1, outAngularVelocity);
+					outAngularVelocity, outTorque, inAngularVelocity, inTorque, gear.Gear, response); // EstimateAccelerationForGear(gear + 1, outAngularVelocity);
 			var minAcceleration = VectoMath.Min(
 				GearboxModelData.TorqueConverterData.CCUpshiftMinAcceleration,
 				DataBus.DriverInfo.DriverAcceleration);
@@ -326,17 +327,17 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		protected virtual bool? CheckUpshiftToLocked(
 			Second absTime, PerSecond outAngularVelocity, NewtonMeter inTorque,
-			PerSecond inAngularVelocity, uint gear)
+			PerSecond inAngularVelocity, GearshiftPosition gear)
 		{
 			// UPSHIFT - General Rule
 			// L -> L+1 
 			// C -> L
-			var nextGear = _gearbox.TorqueConverterLocked ? gear + 1 : gear;
-			if (!GearboxModelData.Gears.ContainsKey(nextGear)) {
+			var nextGear = Gears.Successor(gear); // _gearbox.TorqueConverterLocked ? gear + 1 : gear;
+			if (nextGear == null || !GearboxModelData.Gears.ContainsKey(nextGear.Gear)) {
 				return false;
 			}
 
-			var nextEngineSpeed = outAngularVelocity * GearboxModelData.Gears[nextGear].Ratio;
+			var nextEngineSpeed = outAngularVelocity * GearboxModelData.Gears[nextGear.Gear].Ratio;
 			if (nextEngineSpeed.IsEqual(0)) {
 				return false;
 			}
@@ -373,40 +374,47 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		/// <param name="torqueConverterLocked">if true, the regular shift polygon is used, otherwise the shift polygon for the torque converter is used</param>
 		/// <returns><c>true</c> if the operating point is above the up-shift curve; otherwise, <c>false</c>.</returns>
 		protected virtual bool IsAboveUpShiftCurve(
-			uint gear, NewtonMeter inTorque, PerSecond inEngineSpeed,
+			GearshiftPosition gear, NewtonMeter inTorque, PerSecond inEngineSpeed,
 			bool torqueConverterLocked)
 		{
 			var shiftPolygon = torqueConverterLocked
-				? GearboxModelData.Gears[gear].ShiftPolygon
-				: GearboxModelData.Gears[gear].TorqueConverterShiftPolygon;
+				? GearboxModelData.Gears[gear.Gear].ShiftPolygon
+				: GearboxModelData.Gears[gear.Gear].TorqueConverterShiftPolygon;
 
-			return gear < GearboxModelData.Gears.Keys.Max() && shiftPolygon.IsAboveUpshiftCurve(inTorque, inEngineSpeed);
+			return Gears.HasSuccessor(gear) && shiftPolygon.IsAboveUpshiftCurve(inTorque, inEngineSpeed);
 		}
 
-		protected virtual void Upshift(Second absTime, uint gear)
+		protected virtual void Upshift(Second absTime, GearshiftPosition gear)
 		{
-			// C -> L: switch from torque converter to locked gear
-			if (!_gearbox.TorqueConverterLocked && GearboxModelData.Gears[gear].HasLockedGear) {
-				_nextGear.SetState(absTime, disengaged: false, gear: gear, tcLocked: true);
-				return;
+			if (!Gears.HasSuccessor(gear)) {
+				throw new VectoSimulationException(
+					"ShiftStrategy wanted to shift up but no higher gear available.");
 			}
 
-			// L -> L+1
-			// C -> C+1
-			if (GearboxModelData.Gears.ContainsKey(gear + 1)) {
-				_nextGear.SetState(absTime, disengaged: false, gear: gear + 1, tcLocked: _gearbox.TorqueConverterLocked);
-				return;
-			}
+			_nextGear.SetState(absTime, false, Gears.Successor(gear));
 
-			// C -> L+1 -- not allowed!!
-			throw new VectoSimulationException(
-				"ShiftStrategy wanted to shift up, but current gear has active torque converter (C) but no locked gear (no L) and shifting directly to (L) is not allowed.");
+			//// C -> L: switch from torque converter to locked gear
+			//if (!_gearbox.TorqueConverterLocked && GearboxModelData.Gears[gear].HasLockedGear) {
+			//	_nextGear.SetState(absTime, disengaged: false, gear: gear, tcLocked: true);
+			//	return;
+			//}
+
+			//// L -> L+1
+			//// C -> C+1
+			//if (GearboxModelData.Gears.ContainsKey(gear + 1)) {
+			//	_nextGear.SetState(absTime, disengaged: false, gear: gear + 1, tcLocked: _gearbox.TorqueConverterLocked);
+			//	return;
+			//}
+
+			//// C -> L+1 -- not allowed!!
+			//throw new VectoSimulationException(
+			//	"ShiftStrategy wanted to shift up, but current gear has active torque converter (C) but no locked gear (no L) and shifting directly to (L) is not allowed.");
 		}
 
 		[SuppressMessage("ReSharper", "UnusedParameter.Local")]
 		protected virtual bool CheckDownshift(
 			Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity, NewtonMeter inTorque,
-			PerSecond inAngularVelocity, uint gear, Second lastShiftTime, IResponse response)
+			PerSecond inAngularVelocity, GearshiftPosition gear, Second lastShiftTime, IResponse response)
 		{
 			var shiftTimeReached = (absTime - lastShiftTime).IsGreaterOrEqual(GearshiftParams.TimeBetweenGearshifts);
 
@@ -419,15 +427,13 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				if (DataBus.VehicleInfo.VehicleSpeed < DataBus.DrivingCycleInfo.CycleData.LeftSample.VehicleTargetSpeed - 10.KMPHtoMeterPerSecond() &&
 					DataBus.DriverInfo.DriverAcceleration < 0.SI<MeterPerSquareSecond>()) {
 					var tmpResponseCurr = (ResponseDryRun)_gearbox.Request(absTime, dt, outTorque, outAngularVelocity, true);
-					if (_gearbox.Gear > 1 || _gearbox.Gear == 1 && _gearbox.TorqueConverterLocked) {
-						var tmpCurr = _nextGear.Clone();
-						var tmpGbxState = new NextGearState(absTime, _gearbox);
-
-						Downshift(absTime, gear);
-						SetGear(_nextGear);
+					if (_gearbox.Gear > Gears.First()) {
+						var tmp = _nextGear.Clone();
+						var gbxState = new NextGearState(absTime, _gearbox);
+						tmp.Gear = Gears.Predecessor(_gearbox.Gear);
+						SetGear(tmp);
 						var tmpResponseDs = (ResponseDryRun)_gearbox.Request(absTime, dt, outTorque, outAngularVelocity, true);
-						_nextGear.SetState(tmpCurr);
-						SetGear(tmpGbxState);
+						SetGear(gbxState);
 						if (tmpResponseDs.DeltaFullLoad - Formulas.InertiaPower(
 								tmpResponseDs.Engine.EngineSpeed, DataBus.EngineInfo.EngineSpeed, EngineInertia, dt) < tmpResponseCurr.DeltaFullLoad) {
 							Downshift(absTime, gear);
@@ -437,7 +443,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				}
 			}
 
-			if (shiftTimeReached && gear > 1 || (gear == 1 && _gearbox.TorqueConverterLocked)) {
+			if (shiftTimeReached && gear > Gears.First()) {
 				var earlyDownshift = CheckEarlyDownshift(
 					absTime, dt, outTorque, outAngularVelocity, inTorque, inAngularVelocity, gear, lastShiftTime, response);
 				if (earlyDownshift.HasValue) {
@@ -450,7 +456,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		protected virtual bool? CheckEarlyDownshift(
 			Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity, NewtonMeter inTorque,
-			PerSecond inAngularVelocity, uint gear, Second lastShiftTime, IResponse response)
+			PerSecond inAngularVelocity, GearshiftPosition gear, Second lastShiftTime, IResponse response)
 		{
 			return null;
 		}
@@ -458,7 +464,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		protected virtual void SetGear(NextGearState gbxState)
 		{
 			_gearbox.Gear = gbxState.Gear;
-			_gearbox.TorqueConverterLocked = gbxState.TorqueConverterLocked;
+			//_gearbox.TorqueConverterLocked = gbxState.TorqueConverterLocked;
 			_gearbox.Disengaged = gbxState.Disengaged;
 		}
 
@@ -469,29 +475,35 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		/// <param name="inTorque">The in torque.</param>
 		/// <param name="inEngineSpeed">The in engine speed.</param>
 		/// <returns><c>true</c> if the operating point is below the down-shift curv; otherwise, <c>false</c>.</returns>
-		protected virtual bool IsBelowDownShiftCurve(uint gear, NewtonMeter inTorque, PerSecond inEngineSpeed)
+		protected virtual bool IsBelowDownShiftCurve(GearshiftPosition gear, NewtonMeter inTorque, PerSecond inEngineSpeed)
 		{
-			return gear > 1 && GearboxModelData.Gears[gear].ShiftPolygon.IsBelowDownshiftCurve(inTorque, inEngineSpeed);
+			return !Gears.First().Equals(gear) && GearboxModelData.Gears[gear.Gear].ShiftPolygon.IsBelowDownshiftCurve(inTorque, inEngineSpeed);
 		}
 
-		protected virtual void Downshift(Second absTime, uint gear)
+		protected virtual void Downshift(Second absTime, GearshiftPosition gear)
 		{
-			// L -> C
-			if (_gearbox.TorqueConverterLocked && GearboxModelData.Gears[gear].HasTorqueConverter) {
-				_nextGear.SetState(absTime, disengaged: false, gear: gear, tcLocked: false);
-				return;
+			if (!Gears.HasPredecessor(gear)) {
+				throw new VectoSimulationException(
+					"ShiftStrategy wanted to shift down but no lower gear available.");
 			}
+			_nextGear.SetState(absTime, false, Gears.Predecessor(gear));
 
-			// L -> L-1
-			// C -> C-1
-			if (GearboxModelData.Gears.ContainsKey(gear - 1)) {
-				_nextGear.SetState(absTime, disengaged: false, gear: gear - 1, tcLocked: _gearbox.TorqueConverterLocked);
-				return;
-			}
+			//// L -> C
+			//if (_gearbox.TorqueConverterLocked && GearboxModelData.Gears[gear].HasTorqueConverter) {
+			//	_nextGear.SetState(absTime, disengaged: false, gear: gear, tcLocked: false);
+			//	return;
+			//}
 
-			// L -> 0 -- not allowed!!
-			throw new VectoSimulationException(
-				"ShiftStrategy wanted to shift down but current gear is locked (L) and has no torque converter (C) and disenganging directly from (L) is not allowed.");
+			//// L -> L-1
+			//// C -> C-1
+			//if (GearboxModelData.Gears.ContainsKey(gear - 1)) {
+			//	_nextGear.SetState(absTime, disengaged: false, gear: gear - 1, tcLocked: _gearbox.TorqueConverterLocked);
+			//	return;
+			//}
+
+			//// L -> 0 -- not allowed!!
+			//throw new VectoSimulationException(
+			//	"ShiftStrategy wanted to shift down but current gear is locked (L) and has no torque converter (C) and disenganging directly from (L) is not allowed.");
 		}
 
 		protected MeterPerSquareSecond EstimateAcceleration(
@@ -527,48 +539,51 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		protected class NextGearState
 		{
-			public Second AbsTime;
-			public bool Disengaged;
-			public uint Gear;
-			public bool TorqueConverterLocked;
+			public Second AbsTime { get; internal set; }
+			public bool Disengaged { get; private set; }
+			public GearshiftPosition Gear { get; internal set; }
+			//public bool TorqueConverterLocked;
 
-			public NextGearState() { }
+			public NextGearState()
+			{
+				Gear = new GearshiftPosition(0);
+			}
 
 			private NextGearState(NextGearState nextGearState)
 			{
 				AbsTime = nextGearState.AbsTime;
 				Disengaged = nextGearState.Disengaged;
 				Gear = nextGearState.Gear;
-				TorqueConverterLocked = nextGearState.TorqueConverterLocked;
+				//TorqueConverterLocked = nextGearState.TorqueConverterLocked;
 			}
 
-			public NextGearState(Second absTime, ATGearbox gearbox)
-			{
-				SetState(absTime, gearbox);
-			}
+            public NextGearState(Second absTime, ATGearbox gearbox)
+            {
+                SetState(absTime, gearbox);
+            }
 
-			public void SetState(Second absTime, bool disengaged, uint gear, bool tcLocked)
+            public void SetState(Second absTime, bool disengaged, GearshiftPosition gear)
 			{
 				AbsTime = absTime;
 				Disengaged = disengaged;
 				Gear = gear;
-				TorqueConverterLocked = tcLocked;
+				//TorqueConverterLocked = tcLocked;
 			}
 
-			public void SetState(NextGearState state)
-			{
-				AbsTime = state.AbsTime;
-				Disengaged = state.Disengaged;
-				Gear = state.Gear;
-				TorqueConverterLocked = state.TorqueConverterLocked;
-			}
+			//public void SetState(NextGearState state)
+			//{
+			//	AbsTime = state.AbsTime;
+			//	Disengaged = state.Disengaged;
+			//	Gear = state.Gear;
+			//	//TorqueConverterLocked = state.TorqueConverterLocked;
+			//}
 
 			public void SetState(Second absTime, ATGearbox gearbox)
 			{
 				AbsTime = absTime;
 				Disengaged = gearbox.Disengaged;
 				Gear = gearbox.Gear;
-				TorqueConverterLocked = gearbox.TorqueConverterLocked;
+				//TorqueConverterLocked = gearbox.TorqueConverterLocked;
 			}
 
 			public NextGearState Clone()

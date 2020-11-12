@@ -50,7 +50,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		/// </summary>
 		[Required, ValidateObject] internal readonly GearboxData ModelData;
 
-		protected uint _gear;
+		protected GearshiftPosition _gear;
 
 		protected AbstractGearbox(IVehicleContainer container) : base(container)
 		{
@@ -77,7 +77,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		/// <summary>
 		/// The current gear.
 		/// </summary>
-		public virtual uint Gear
+		public virtual GearshiftPosition Gear
 		{
 			get { return _gear; }
 			protected internal set { _gear = value; }
@@ -99,9 +99,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		public Watt GearboxLoss()
 		{
-			var ratio = ModelData.Gears[PreviousState.Gear].HasLockedGear
-				? ModelData.Gears[PreviousState.Gear].Ratio
-				: ModelData.Gears[PreviousState.Gear].TorqueConverterRatio;
+			var ratio = ModelData.Gears[PreviousState.Gear.Gear].HasLockedGear
+				? ModelData.Gears[PreviousState.Gear.Gear].Ratio
+				: ModelData.Gears[PreviousState.Gear.Gear].TorqueConverterRatio;
 
 			return (PreviousState.TransmissionTorqueLoss +
 					PreviousState.InertiaTorqueLossOut) / ratio * PreviousState.InAngularVelocity;
@@ -118,7 +118,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			return ModelData.Gears[gear];
 		}
 
-		public abstract GearInfo NextGear { get; }
+		public abstract GearshiftPosition NextGear { get; }
 
 		public virtual Second TractionInterruption
 		{
@@ -134,7 +134,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		public abstract bool GearEngaged(Second absTime);
 
-		protected bool ConsiderShiftLosses(GearInfo nextGear, NewtonMeter torqueOut)
+		protected bool ConsiderShiftLosses(GearshiftPosition nextGear, NewtonMeter torqueOut)
 		{
 			if (ModelData.Type.ManualTransmission()) {
 				return false;
@@ -146,16 +146,16 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				return false;
 			}
 			if (ModelData.Gears[2].HasTorqueConverter) {
-				return nextGear.TorqueConverterLocked; // || nextGear.Gear == 2;
+				return nextGear.TorqueConverterLocked.HasValue && nextGear.TorqueConverterLocked.Value; // || nextGear.Gear == 2;
 			}
-			return nextGear.TorqueConverterLocked;
+			return nextGear.TorqueConverterLocked.HasValue && nextGear.TorqueConverterLocked.Value;
 		}
 
-		protected internal WattSecond ComputeShiftLosses(NewtonMeter outTorque, PerSecond outAngularVelocity, uint gear)
+		protected internal WattSecond ComputeShiftLosses(NewtonMeter outTorque, PerSecond outAngularVelocity, GearshiftPosition gear)
 		{
-			var ratio = ModelData.Gears[gear].Ratio;
+			var ratio = ModelData.Gears[gear.Gear].Ratio;
 			if (double.IsNaN(ratio)) {
-				ratio = ModelData.Gears[gear].TorqueConverterRatio;
+				ratio = ModelData.Gears[gear.Gear].TorqueConverterRatio;
 			}
 			var torqueGbxIn = outTorque / ratio;
 			var deltaClutchSpeed = (DataBus.EngineInfo.EngineSpeed - PreviousState.OutAngularVelocity * ratio) / 2;
@@ -176,7 +176,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 	{
 		public NewtonMeter InertiaTorqueLossOut = 0.SI<NewtonMeter>();
 		public NewtonMeter TransmissionTorqueLoss = 0.SI<NewtonMeter>();
-		public uint Gear;
+		public GearshiftPosition Gear;
 		public TransmissionLossMap.LossMapResult TorqueLossResult;
 	}
 }

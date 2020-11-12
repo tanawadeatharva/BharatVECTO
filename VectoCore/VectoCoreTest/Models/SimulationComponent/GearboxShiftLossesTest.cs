@@ -90,8 +90,8 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			var cycleDataStr = "0, 0, 0, 2\n100, 20, 0, 0\n1000, 50, 0, 0";
 			var container = CreateVehicle(cycleDataStr, preShiftRpm, out axleGear, out gbx, out engine);
 			new ATClutchInfo(container);
-			gbx.Gear = gear;
-
+			gbx.Gear = new GearshiftPosition(gear, true);
+			
 			var absTime = 20.SI<Second>();
 			var dt = 0.5.SI<Second>();
 			var response = gbx.Request(absTime, dt, 0.SI<NewtonMeter>(), preShiftRpm.RPMtoRad());
@@ -110,7 +110,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 
 			Assert.IsInstanceOf<ResponseSuccess>(response);
 			Assert.AreEqual(expectedShiftLoss, gbx.CurrentState.PowershiftLoss.Value(), 1e-3);
-			Assert.AreEqual(gear + (postShiftRpm > preShiftRpm ? 1 : -1), gbx.Gear);
+			Assert.AreEqual(gear + (postShiftRpm > preShiftRpm ? 1 : -1), gbx.Gear.Gear);
 
 			if (!double.IsNaN(expectedShiftLossEnergy)) {
 				var modData = new MockModalDataContainer();
@@ -143,7 +143,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			var container = CreateVehicle(cycleDataStr, preShiftRpm, out axleGear, out gbx, out engine);
 			var modData = new MockModalDataContainer();
 			
-			gbx.Gear = gear;
+			gbx.Gear = new GearshiftPosition(gear, true);
 
 			var absTime = 20.SI<Second>();
 			var dt = 0.5.SI<Second>();
@@ -165,7 +165,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 
 			Assert.IsInstanceOf<ResponseSuccess>(response);
 			Assert.AreEqual(expectedShiftLoss, gbx.CurrentState.PowershiftLoss.Value(), 1e-3);
-			Assert.AreEqual(gear + (postShiftRpm > preShiftRpm ? 1 : -1), gbx.Gear);
+			Assert.AreEqual(gear + (postShiftRpm > preShiftRpm ? 1 : -1), gbx.Gear.Gear);
 
 			gbx.CommitSimulationStep(absTime, dt, modData);
 			engine.CommitSimulationStep(absTime, dt, modData);

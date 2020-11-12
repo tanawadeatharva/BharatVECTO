@@ -87,9 +87,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				VehicleTargetSpeed = Data.Entries.First().VehicleTargetSpeed
 			};
 			CurrentState = PreviousState.Clone();
-
-			StartSpeed = container.RunData.GearshiftParameters.StartSpeed;
-			StartAcceleration = container.RunData.GearshiftParameters.StartAcceleration;
+			
+			StartSpeed = container.RunData.GearshiftParameters?.StartSpeed;
+			StartAcceleration = container.RunData.GearshiftParameters?.StartAcceleration;
+			
 		}
 
 		public IResponse Initialize()

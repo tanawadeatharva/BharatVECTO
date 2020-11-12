@@ -31,9 +31,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			get { return GearboxType.AMT; }
 		}
 
-		public uint Gear
+		public GearshiftPosition Gear
 		{
-			get { return 1; }
+			get { return new GearshiftPosition(1); }
 		}
 
 		public bool TCLocked
@@ -76,7 +76,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			throw new NotImplementedException();
 		}
 
-		public GearInfo NextGear
+		public GearshiftPosition NextGear
 		{
 			get { throw new NotImplementedException(); }
 		}

@@ -107,7 +107,7 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 			new DummyCycle(container);
 			var driverPort = driver.OutPort();
 
-			gbx.Gear = 1;
+			gbx.Gear = new GearshiftPosition(1);
 
 			var response = driverPort.Initialize(18.KMPHtoMeterPerSecond(),
 				VectoMath.InclinationToAngle(2.842372037 / 100));
@@ -145,7 +145,12 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 				EngineData = engineData,
 				AxleGearData = axleGearData,
 				DriverData = driverData,
-				ElectricMachinesData = new List<Tuple<PowertrainPosition, ElectricMotorData>>()
+				ElectricMachinesData = new List<Tuple<PowertrainPosition, ElectricMotorData>>(),
+				GearshiftParameters = new ShiftStrategyParameters() {
+					StartSpeed = DeclarationData.GearboxTCU.StartSpeed,
+					StartAcceleration = DeclarationData.GearboxTCU.StartAcceleration
+				}
+
 			};
 			var modData = new ModalDataContainer(runData, fileWriter, null);
             var container = new VehicleContainer(ExecutionMode.Engineering, modData) {
@@ -164,12 +169,13 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 			//engine.IdleController.RequestPort = clutch.IdleControlPort;
 
 			var gbx = new MockGearbox(container);
+			gbx.Gear = new GearshiftPosition(0);
 
 			var cyclePort = cycle.OutPort();
 
 			cyclePort.Initialize();
 
-			gbx.Gear = 0;
+			gbx.Gear = new GearshiftPosition(0);
 
 			var absTime = 0.SI<Second>();
 			var ds = Constants.SimulationSettings.DriveOffDistance;
@@ -178,7 +184,7 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 			container.CommitSimulationStep(absTime, response.SimulationInterval);
 			absTime += response.SimulationInterval;
 
-			gbx.Gear = 1;
+			gbx.Gear = new GearshiftPosition(1);
 			var cnt = 0;
 			while (!(response is ResponseCycleFinished) && container.MileageCounter.Distance < 17000) {
 				response = cyclePort.Request(absTime, ds);
@@ -247,16 +253,17 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 			//engine.IdleController.RequestPort = clutch.IdleControlPort;
 
 			var gbx = new MockGearbox(container);
+			gbx.Gear = new GearshiftPosition(0);
 
 			var cyclePort = cycle.OutPort();
 
 			cyclePort.Initialize();
 
-			gbx.Gear = 0;
+			gbx.Gear = new GearshiftPosition(0);
 
 			var absTime = 0.SI<Second>();
 
-			gbx.Gear = 1;
+			gbx.Gear = new GearshiftPosition(1);
 			var ds = Constants.SimulationSettings.DriveOffDistance;
 			while (container.MileageCounter.Distance < 100) {
 				var response = cyclePort.Request(absTime, ds);

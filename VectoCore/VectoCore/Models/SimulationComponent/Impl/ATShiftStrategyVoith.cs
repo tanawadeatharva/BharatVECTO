@@ -18,8 +18,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 {
 	public class ATShiftStrategyVoith : ATShiftStrategy
 	{
-		public const double DownhillSlope = -5;
-		public const double UphillSlope = 5;
+		
 
 		protected ShiftStrategyParameters shiftParameters;
 
@@ -58,9 +57,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		private void InitializeShiftLines(TableData lines)
 		{
-			var slopeDh = VectoMath.InclinationToAngle(DownhillSlope / 100.0);
+			var slopeDh = VectoMath.InclinationToAngle(ShiftLineSet.DownhillSlope / 100.0);
 			var slopeLevel = VectoMath.InclinationToAngle(0);
-			var slopeUh = VectoMath.InclinationToAngle(UphillSlope / 100.0);
+			var slopeUh = VectoMath.InclinationToAngle(ShiftLineSet.UphillSlope / 100.0);
 
 			foreach (DataRow row in lines.Rows) {
 				var shift = row[ShiftLinesColumns.Shift].ToString().Split('-');
@@ -167,7 +166,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		public override bool ShiftRequired(
 			Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity, NewtonMeter inTorque,
-			PerSecond inAngularVelocity, uint gear, Second lastShiftTime, IResponse response)
+			PerSecond inAngularVelocity, GearshiftPosition gear, Second lastShiftTime, IResponse response)
 		{
 			var accPower = EstimateAccelerrationPower(outAngularVelocity, outTorque);
 
@@ -193,19 +192,22 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		}
 
 
-		protected override bool CheckUpshift(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity, NewtonMeter inTorque, PerSecond inAngularVelocity, uint gear, Second lastShiftTime, IResponse response)
+		protected override bool CheckUpshift(Second absTime, Second dt, NewtonMeter outTorque,
+			PerSecond outAngularVelocity, NewtonMeter inTorque, PerSecond inAngularVelocity, GearshiftPosition gear,
+			Second lastShiftTime, IResponse response)
 		{
 			var shiftTimeReached = (absTime - lastShiftTime).IsGreaterOrEqual(GearshiftParams.TimeBetweenGearshifts);
 			if (!shiftTimeReached) {
 				return false;
 			}
 
-			var currentGear = GearboxModelData.Gears[gear];
-			if (dualTCTransmission && gear == 1) {
+			var currentGear = GearboxModelData.Gears[gear.Gear];
+			if (dualTCTransmission && gear.Gear == 1) {
 				// UPSHIFT - Special rule for 1C -> 2C
-				if (!_gearbox.TorqueConverterLocked && GearboxModelData.Gears.ContainsKey(gear + 1) &&
-					GearboxModelData.Gears[gear + 1].HasTorqueConverter && outAngularVelocity.IsGreater(0)) {
-					var result = CheckUpshiftTcTc(absTime, dt, outTorque, outAngularVelocity, inTorque, inAngularVelocity, gear, currentGear, response);
+				if (!_gearbox.TorqueConverterLocked && GearboxModelData.Gears.ContainsKey(gear.Gear + 1) &&
+					GearboxModelData.Gears[gear.Gear + 1].HasTorqueConverter && outAngularVelocity.IsGreater(0)) {
+					var result = CheckUpshiftTcTc(absTime, dt, outTorque, outAngularVelocity, inTorque,
+						inAngularVelocity, gear, currentGear, response);
 					if (result.HasValue) {
 						return result.Value;
 					}
@@ -213,20 +215,21 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			} else {
 
 
-				if (gear >= GearboxModelData.Gears.Keys.Max()) {
+				if (gear.Gear >= GearboxModelData.Gears.Keys.Max()) {
 					return false;
 				}
 
-				var nextGear = _gearbox.TorqueConverterLocked ? gear + 1 : gear;
+				var nextGear = _gearbox.TorqueConverterLocked ? gear.Gear + 1 : gear.Gear;
 
-				var gearIdx = (int)gear;
+				var gearIdx = (int)gear.Gear;
 				if (_gearbox.TorqueConverterLocked) {
 					gearIdx += 1;
 				}
 
 
 				var shiftSpeed = UpshiftLines[gearIdx].LookupShiftSpeed(
-					_loadStage, DataBus.DrivingCycleInfo.RoadGradient, DataBus.DriverInfo.DriverAcceleration, _accMin, _accMax);
+					_loadStage, DataBus.DrivingCycleInfo.RoadGradient, DataBus.DriverInfo.DriverAcceleration, _accMin,
+					_accMax);
 				var shiftSpeedGbxOut = shiftSpeed / GearboxModelData.Gears[nextGear].Ratio;
 				if (outAngularVelocity > shiftSpeedGbxOut) {
 					Upshift(absTime, gear);
@@ -238,23 +241,27 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		}
 
 
-		protected override bool CheckDownshift(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity, NewtonMeter inTorque, PerSecond inAngularVelocity, uint gear, Second lastShiftTime, IResponse response)
+		protected override bool CheckDownshift(Second absTime, Second dt, NewtonMeter outTorque,
+			PerSecond outAngularVelocity, NewtonMeter inTorque, PerSecond inAngularVelocity, GearshiftPosition gear,
+			Second lastShiftTime, IResponse response)
 		{
 			var shiftTimeReached = (absTime - lastShiftTime).IsGreaterOrEqual(GearshiftParams.TimeBetweenGearshifts);
 			if (!shiftTimeReached) {
 				return false;
 			}
 
-			if (gear == 1) {
+			if (gear.Gear == 1) {
 				return false;
 			}
 
-			var gearIdx = (int)gear;
+			var gearIdx = (int)gear.Gear;
 			if (_gearbox.TorqueConverterLocked) {
 				gearIdx += 1;
 			}
+
 			var shiftSpeed = DownshiftLines[gearIdx].LookupShiftSpeed(
-				_loadStage, DataBus.DrivingCycleInfo.RoadGradient, DataBus.DriverInfo.DriverAcceleration, -0.4.SI<MeterPerSquareSecond>(),
+				_loadStage, DataBus.DrivingCycleInfo.RoadGradient, DataBus.DriverInfo.DriverAcceleration,
+				-0.4.SI<MeterPerSquareSecond>(),
 				-0.2.SI<MeterPerSquareSecond>());
 			if (inAngularVelocity < shiftSpeed) {
 				Downshift(absTime, gear);
@@ -306,64 +313,5 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		}
 	}
 
-	public class ShiftLineSet
-	{
-		public Dictionary<int, ShiftLines> LoadStages = new Dictionary<int, ShiftLines>();
-
-		public PerSecond LookupShiftSpeed(
-			int loadStage, Radian gradient, MeterPerSquareSecond acceleration, MeterPerSquareSecond aMin,
-			MeterPerSquareSecond aMax)
-		{
-			if (!LoadStages.ContainsKey(loadStage)) {
-				throw new VectoException("No Shiftlines for load stage {0} found", loadStage);
-			}
-
-			var shiftLinesSet = LoadStages[loadStage];
-
-			//var slope = (Math.Tan(gradient.Value()) * 100).LimitTo(
-			//	ATShiftStrategyVoith.DownhillSlope, ATShiftStrategyVoith.UphillSlope);
-
-			gradient = gradient.LimitTo(
-				VectoMath.InclinationToAngle(ATShiftStrategyVoith.DownhillSlope),
-				VectoMath.InclinationToAngle(ATShiftStrategyVoith.UphillSlope));
-			var shiftLine = shiftLinesSet.LookupShiftSpeed(gradient);
-			var acc = aMin > aMax ? acceleration.LimitTo(aMax, aMin) : acceleration.LimitTo(aMin, aMax);
-
-			var shiftSpeed = VectoMath.Interpolate(
-				aMin, aMax, shiftLine.ShiftSpeedAMin, shiftLine.ShiftSpeedAMax, acc);
-
-			return shiftSpeed;
-		}
-	}
-
-	public class ShiftLines
-	{
 	
-		internal readonly List<Tuple<Radian, PerSecond>> entriesAMin = new List<Tuple<Radian, PerSecond>>();
-		internal readonly List<Tuple<Radian, PerSecond>> entriesAMax = new List<Tuple<Radian, PerSecond>>();
-
-
-		public ShiftSpeedTuple LookupShiftSpeed(Radian gradent)
-		{
-			var sectLow = entriesAMin.GetSection(x => x.Item1 < gradent);
-			var sectHigh = entriesAMax.GetSection(x => x.Item1 < gradent);
-
-			return new ShiftSpeedTuple(
-				VectoMath.Interpolate(sectLow.Item1.Item1, sectLow.Item2.Item1, sectLow.Item1.Item2, sectLow.Item2.Item2, gradent),
-				VectoMath.Interpolate(
-					sectHigh.Item1.Item1, sectHigh.Item2.Item1, sectHigh.Item1.Item2, sectHigh.Item2.Item2, gradent));
-		}
-	}
-
-	public class ShiftSpeedTuple
-	{
-		public PerSecond ShiftSpeedAMin { get; }
-		public PerSecond ShiftSpeedAMax { get; }
-
-		public ShiftSpeedTuple(PerSecond shiftSpeedAMin, PerSecond shiftSpeedAMax)
-		{
-			ShiftSpeedAMin = shiftSpeedAMin;
-			ShiftSpeedAMax = shiftSpeedAMax;
-		}
-	}
 }

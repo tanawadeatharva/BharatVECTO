@@ -104,13 +104,13 @@ namespace TUGraz.VectoCore.Tests.Integration
 			var modData = new ModalDataContainer(runData, fileWriter, null)
 				{ WriteModalResults = true };
 
-			var container = new VehicleContainer(ExecutionMode.Engineering, modData);
+			var container = new VehicleContainer(ExecutionMode.Engineering, modData) { RunData = runData };
 			var cycle = new DistanceBasedDrivingCycle(container, cycleData);
 			var engine = new CombustionEngine(container, engineData);
 			var clutch = new Clutch(container, engineData);
 			
 
-            container.RunData = runData;
+            
 			var tmp = cycle.AddComponent(new Driver(container, driverData, new DefaultDriverStrategy(container)))
 				.AddComponent(new Vehicle(container, vehicleData, airDragData))
 				.AddComponent(new Wheels(container, vehicleData.DynamicTyreRadius, vehicleData.WheelsInertia))

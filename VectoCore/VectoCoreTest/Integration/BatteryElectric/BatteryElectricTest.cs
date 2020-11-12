@@ -37,6 +37,10 @@ namespace TUGraz.VectoCore.Tests.Integration.BatteryElectric
 		protected const string BEV_Job = @"TestData\BatteryElectric\GenericVehicleB4\BEV_ENG.vecto";
 		protected const string BEV_Job_Cont30kW = @"TestData\BatteryElectric\GenericVehicleB4\BEV_ENG_Cont30kW.vecto";
 
+		protected const string BEV_E3_Job = @"TestData\BatteryElectric\GenericVehicleB3\BEV_ENG.vecto";
+		protected const string BEV_E3_Job_Cont30kW = @"TestData\BatteryElectric\GenericVehicleB3\BEV_ENG_Cont30kW.vecto";
+
+
 		protected const string BEV_E2_Job = @"TestData\BatteryElectric\GenericVehicleB2\BEV_ENG.vecto";
 		protected const string BEV_E2_Job_Cont30kW = @"TestData\BatteryElectric\GenericVehicleB2\BEV_ENG_Cont30kW.vecto";
 
@@ -359,6 +363,37 @@ namespace TUGraz.VectoCore.Tests.Integration.BatteryElectric
 			
 			var graphWriter = GetGraphWriter(new[] { ModalResultField.P_electricMotor_mech_B3 });
 			graphWriter.Write(modFilename + ".vmod");
+		}
+
+
+		[TestCase(BEV_E3_Job, 0, TestName = "BEV E3 Job RD"),
+		TestCase(BEV_E3_Job_Cont30kW, 0, TestName = "BEV E3 Job Cont. 30kW RD")
+		]
+		public void B3BEVRunJob(string jobFile, int cycleIdx)
+		{
+			var inputProvider = JSONInputDataFactory.ReadJsonJob(jobFile);
+
+			var writer = new FileOutputWriter(jobFile);
+			var factory = new SimulatorFactory(ExecutionMode.Engineering, inputProvider, writer) {
+				Validate = false,
+				WriteModalResults = true,
+			};
+
+			var sumContainer = new SummaryDataContainer(writer);
+			var jobContainer = new JobContainer(sumContainer);
+
+			factory.SumData = sumContainer;
+
+			var run = factory.SimulationRuns().ToArray()[cycleIdx];
+
+			Assert.NotNull(run);
+
+			var pt = run.GetContainer();
+
+			Assert.NotNull(pt);
+
+			run.Run();
+			Assert.IsTrue(run.FinishedWithoutErrors);
 		}
 
 		// - - - - - - - - - - - - - - - - - - -  - - - - - - - - - - -  - - - 

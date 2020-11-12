@@ -138,7 +138,7 @@ namespace TUGraz.VectoCore.Tests.Integration.EngineOnlyCycle
 
 			var engine = new CombustionEngine(
 				vehicleContainer, MockSimulationDataFactory.CreateEngineDataFromFile(EngineFile, 0));
-			var gbx = new MockGearbox(vehicleContainer) { Gear = 0 };
+			var gbx = new MockGearbox(vehicleContainer) { Gear = new GearshiftPosition(0) };
 
 			var absTime = 0.SI<Second>();
 			var dt = 1.SI<Second>();

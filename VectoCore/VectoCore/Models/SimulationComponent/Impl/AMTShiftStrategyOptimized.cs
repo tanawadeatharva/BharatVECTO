@@ -84,7 +84,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		#region Overrides of AMTShiftStrategy
 
-		protected override uint CheckEarlyUpshift(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity, uint currentGear, IResponse response1)
+		protected override GearshiftPosition CheckEarlyUpshift(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity, GearshiftPosition currentGear, IResponse response1)
 		{
 			var minFcGear = currentGear;
 			var minFc = double.MaxValue;
@@ -93,7 +93,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			var fcUpshiftPossible = true;
 
-			if (response1.Engine.TorqueOutDemand.IsSmaller(DeclarationData.GearboxTCU.DragMarginFactor * fld[currentGear].DragLoadStationaryTorque(response1.Engine.EngineSpeed))) {
+			if (response1.Engine.TorqueOutDemand.IsSmaller(DeclarationData.GearboxTCU.DragMarginFactor * fld[currentGear.Gear].DragLoadStationaryTorque(response1.Engine.EngineSpeed))) {
 				return currentGear;
 			}
 
@@ -109,7 +109,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			//var totalTransmissionRatio = outAngularVelocity / DataBus.VehicleSpeed;
 
 			for (var i = 1; i <= shiftStrategyParameters.AllowedGearRangeFC; i++) {
-				var tryNextGear = (uint)(currentGear + i);
+				var tryNextGear = (uint)(currentGear.Gear + i);
 
 				if (tryNextGear > GearboxModelData.Gears.Keys.Max() ||
 					!(GearboxModelData.Gears[tryNextGear].Ratio < shiftStrategyParameters.RatioEarlyUpshiftFC)) {
@@ -119,18 +119,19 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				fcUpshiftPossible = true;
 
 				//var response = RequestDryRunWithGear(absTime, dt, vehicleSpeedPostShift, DataBus.DriverAcceleration, tryNextGear);
-				var response = RequestDryRunWithGear(absTime, dt, outTorque, outAngularVelocity, tryNextGear);
-
+				var response = RequestDryRunWithGear(absTime, dt, outTorque, outAngularVelocity,
+					new GearshiftPosition(tryNextGear));
+				
 				var inAngularVelocity = GearboxModelData.Gears[tryNextGear].Ratio * outAngularVelocity;
 				var inTorque = response.Clutch.PowerRequest / inAngularVelocity;
 
 				// if next gear supplied enough power reserve: take it
 				// otherwise take
-				if (IsBelowDownShiftCurve(tryNextGear, inTorque, inAngularVelocity)) {
+				if (IsBelowDownShiftCurve(new GearshiftPosition(tryNextGear), inTorque, inAngularVelocity)) {
 					continue;
 				}
 
-				var estimatedEngineSpeed = (vehicleSpeedPostShift * (totalTransmissionRatio / GearboxModelData.Gears[currentGear].Ratio * GearboxModelData.Gears[tryNextGear].Ratio)).Cast<PerSecond>();
+				var estimatedEngineSpeed = (vehicleSpeedPostShift * (totalTransmissionRatio / GearboxModelData.Gears[currentGear.Gear].Ratio * GearboxModelData.Gears[tryNextGear].Ratio)).Cast<PerSecond>();
 				if (estimatedEngineSpeed.IsSmaller(shiftStrategyParameters.MinEngineSpeedPostUpshift)) {
 					continue;
 				}
@@ -149,11 +150,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				if (reserve < GearshiftParams.TorqueReserve /* && reserve > -0.1*/) {
 					//var acc = EstimateAcceleration(outAngularVelocity, outTorque);
 
-					var accelerationFactor = outAngularVelocity * GearboxModelData.Gears[currentGear].Ratio < fld[0].NTq98hSpeed
+					var accelerationFactor = outAngularVelocity * GearboxModelData.Gears[currentGear.Gear].Ratio < fld[0].NTq98hSpeed
 						? 1.0
 						: VectoMath.Interpolate(
 							fld[0].NTq98hSpeed, fld[0].NP98hSpeed, 1.0, shiftStrategyParameters.AccelerationFactor,
-							outAngularVelocity * GearboxModelData.Gears[currentGear].Ratio);
+							outAngularVelocity * GearboxModelData.Gears[currentGear.Gear].Ratio);
 					if (accelerationFactor.IsEqual(1, 1e-9)) {
 						continue;
 					}
@@ -163,7 +164,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					var accelerationTorque = vehicleMass * DataBus.DriverInfo.DriverAcceleration * DataBus.VehicleInfo.VehicleSpeed / outAngularVelocity;
 					var reducedTorque = outTorque - accelerationTorque * (1 - accelerationFactor);
 
-					response = RequestDryRunWithGear(absTime, dt, reducedTorque, outAngularVelocity, tryNextGear);
+					response = RequestDryRunWithGear(absTime, dt, reducedTorque, outAngularVelocity,
+						new GearshiftPosition(tryNextGear));
 					fullLoadPower = response.Engine.PowerRequest - response.DeltaFullLoad;
 					reserve = 1 - response.Engine.PowerRequest / fullLoadPower;
 					if (reserve < GearshiftParams.TorqueReserve) {
@@ -177,8 +179,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					//var responseCurrent = RequestDryRunWithGear(absTime, dt, DataBus.VehicleSpeed, DataBus.DriverAcceleration, currentGear);
 					var responseCurrent = RequestDryRunWithGear(absTime, dt, outTorque, outAngularVelocity, currentGear);
 					var tqCurrent = responseCurrent.Engine.TotalTorqueDemand.LimitTo(
-						fld[currentGear].DragLoadStationaryTorque(responseCurrent.Engine.EngineSpeed),
-						fld[currentGear].FullLoadStationaryTorque(responseCurrent.Engine.EngineSpeed));
+						fld[currentGear.Gear].DragLoadStationaryTorque(responseCurrent.Engine.EngineSpeed),
+						fld[currentGear.Gear].FullLoadStationaryTorque(responseCurrent.Engine.EngineSpeed));
 					fcCurrent = GetFCRating(responseCurrent.Engine.EngineSpeed, tqCurrent);
 				}
 				var tqNext = response.Engine.TotalTorqueDemand.LimitTo(
@@ -191,7 +193,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					continue;
 				}
 
-				minFcGear = tryNextGear;
+				minFcGear = new GearshiftPosition(tryNextGear);
 				minFc = fcNext;
 				minFCResponse = response;
 			}
@@ -221,20 +223,20 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		}
 
 		
-		protected override uint DoCheckDownshift(
+		protected override GearshiftPosition DoCheckDownshift(
 			Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity,
-			NewtonMeter inTorque, PerSecond inAngularVelocity, uint currentGear, IResponse response)
+			NewtonMeter inTorque, PerSecond inAngularVelocity, GearshiftPosition currentGear, IResponse response)
 		{
 			var nextGear = base.DoCheckDownshift(
 				absTime, dt, outTorque, outAngularVelocity, inTorque, inAngularVelocity, currentGear, response);
 
-			if (nextGear == currentGear && currentGear > GearboxModelData.Gears.Keys.Min()) {
+			if (Equals(nextGear, currentGear) && currentGear.Gear > GearboxModelData.Gears.Keys.Min()) {
 				nextGear = CheckEarlyDownshift(absTime, dt, outTorque, outAngularVelocity, currentGear, response);
 			}
 			return nextGear;
 		}
 
-		protected virtual uint CheckEarlyDownshift(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity, uint currentGear, IResponse response1)
+		protected virtual GearshiftPosition CheckEarlyDownshift(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity, GearshiftPosition currentGear, IResponse response1)
 		{
 			var minFcGear = currentGear;
 			var minFc = double.MaxValue;
@@ -245,25 +247,25 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				return currentGear;
 			}
 
-			if (response1.Engine.TorqueOutDemand.IsSmaller(DeclarationData.GearboxTCU.DragMarginFactor * fld[currentGear].DragLoadStationaryTorque(response1.Engine.EngineSpeed))) {
+			if (response1.Engine.TorqueOutDemand.IsSmaller(DeclarationData.GearboxTCU.DragMarginFactor * fld[currentGear.Gear].DragLoadStationaryTorque(response1.Engine.EngineSpeed))) {
 				return currentGear;
 			}
 
 			for (var i = 1; i <= shiftStrategyParameters.AllowedGearRangeFC; i++) {
-				var tryNextGear = (uint)(currentGear - i);
+				var tryNextGear = (uint)(currentGear.Gear - i);
 
 				if (tryNextGear <= 1 || !(GearboxModelData.Gears[tryNextGear].Ratio <= shiftStrategyParameters.RatioEarlyDownshiftFC)) {
 					continue;
 				}
 
-				var response = RequestDryRunWithGear(absTime, dt, outTorque, outAngularVelocity, tryNextGear);
+				var response = RequestDryRunWithGear(absTime, dt, outTorque, outAngularVelocity, new GearshiftPosition(tryNextGear));
 
 				//var response = RequestDryRunWithGear(absTime, dt, DataBus.VehicleSpeed, DataBus.DriverAcceleration, tryNextGear);
 
 				var inAngularVelocity = GearboxModelData.Gears[tryNextGear].Ratio * outAngularVelocity;
 				var inTorque = response.Clutch.PowerRequest / inAngularVelocity;
 
-				if (IsAboveUpShiftCurve(tryNextGear, inTorque, inAngularVelocity)) {
+				if (IsAboveUpShiftCurve(new GearshiftPosition(tryNextGear), inTorque, inAngularVelocity)) {
 					continue;
 				}
 
@@ -272,8 +274,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 					//var responseCurrent = RequestDryRunWithGear(absTime, dt, DataBus.VehicleSpeed, DataBus.DriverAcceleration, currentGear);
 					fcCurrent = GetFCRating(responseCurrent.Engine.EngineSpeed, responseCurrent.Engine.TorqueOutDemand.LimitTo(
-							fld[currentGear].DragLoadStationaryTorque(responseCurrent.Engine.EngineSpeed),
-							fld[currentGear].FullLoadStationaryTorque(responseCurrent.Engine.EngineSpeed)));
+							fld[currentGear.Gear].DragLoadStationaryTorque(responseCurrent.Engine.EngineSpeed),
+							fld[currentGear.Gear].FullLoadStationaryTorque(responseCurrent.Engine.EngineSpeed)));
 				}
 				var fcNext = GetFCRating(response.Engine.EngineSpeed, response.Engine.TorqueOutDemand.LimitTo(
 						fld[tryNextGear].DragLoadStationaryTorque(response.Engine.EngineSpeed),
@@ -284,7 +286,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					continue;
 				}
 
-				minFcGear = tryNextGear;
+				minFcGear = new GearshiftPosition(tryNextGear);
 				minFc = fcNext;
 			}
 
@@ -312,7 +314,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		//}
 
 		protected override ResponseDryRun RequestDryRunWithGear(
-			Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity, uint tryNextGear)
+			Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity, GearshiftPosition tryNextGear)
 		{
 			LogEnabled = false;
 			TestContainerGbx.Disengaged = false;

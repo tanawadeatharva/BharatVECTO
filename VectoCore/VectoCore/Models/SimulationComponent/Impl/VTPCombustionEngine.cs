@@ -60,8 +60,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					EngineSpeed = outAngularVelocity,
 					dt = 1.SI<Second>(),
 					InertiaTorqueLoss = 0.SI<NewtonMeter>(),
-					StationaryFullLoadTorque = ModelData.FullLoadCurves[DataBus.GearboxInfo.Gear].FullLoadStationaryTorque(outAngularVelocity),
-					FullDragTorque = ModelData.FullLoadCurves[DataBus.GearboxInfo.Gear].DragLoadStationaryTorque(outAngularVelocity),
+					StationaryFullLoadTorque = ModelData.FullLoadCurves[DataBus.GearboxInfo.Gear.Gear].FullLoadStationaryTorque(outAngularVelocity),
+					FullDragTorque = ModelData.FullLoadCurves[DataBus.GearboxInfo.Gear.Gear].DragLoadStationaryTorque(outAngularVelocity),
 					EngineTorque = outTorque + auxDemand,
 					EnginePower = (outTorque + auxDemand) * outAngularVelocity,
 				};
@@ -86,8 +86,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			var torqueOut = powerDemand / avgEngineSpeed;
 
 
-			var fullDragTorque = ModelData.FullLoadCurves[DataBus.GearboxInfo.Gear].DragLoadStationaryTorque(avgEngineSpeed);
-			var fullLoadTorque = ModelData.FullLoadCurves[DataBus.GearboxInfo.Gear].FullLoadStationaryTorque(avgEngineSpeed);
+			var fullDragTorque = ModelData.FullLoadCurves[DataBus.GearboxInfo.Gear.Gear].DragLoadStationaryTorque(avgEngineSpeed);
+			var fullLoadTorque = ModelData.FullLoadCurves[DataBus.GearboxInfo.Gear.Gear].FullLoadStationaryTorque(avgEngineSpeed);
 			
 			var inertiaTorqueLoss =
 				Formulas.InertiaPower(angularVelocity, PreviousState.EngineSpeed, ModelData.Inertia, dt) /

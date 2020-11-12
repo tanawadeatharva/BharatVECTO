@@ -63,7 +63,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			for (var speed = MinSpeed; speed <= MaxSpeed; speed += SpeedStep) {
 				var gear = FindLowestGearForSpeed(speed);
 				gearbox.Gear = gear;
-				gearbox.TorqueConverterLocked = true;
+				//gearbox.TorqueConverterLocked = true;
 				gearbox.DisengageGearbox = true;
 
 				//gearbox._nextGear = new GearInfo(gear, true);
@@ -85,7 +85,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 				var gear = FindLowestGearForSpeed(speed);
 				gearbox.Gear = gear;
 				gearbox.DisengageGearbox = true;
-				gearbox._nextGear = new GearInfo(gear, true);
+				gearbox._nextGear = gear;
 				vehicle.Initialize(speed, 0.SI<Radian>());
 
 				var slope = SearchSlope(vehicle, Container);
@@ -95,20 +95,23 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			}
 		}
 
-		private uint FindLowestGearForSpeed(MeterPerSecond speed)
+		private GearshiftPosition FindLowestGearForSpeed(MeterPerSecond speed)
 		{
 			var data = Container.RunData;
 			var ratio = data.AxleGearData.AxleGear.Ratio * (data.AngledriveData?.Angledrive.Ratio ?? 1.0) /
 						data.VehicleData.DynamicTyreRadius;
-			return Container.RunData.GearboxData.Gears.Select(
-				x => {
-					if (double.IsNaN(x.Value.Ratio)) {
-						// ignore converter gears
-						return 0u;
-					}
-					var n = speed * ratio * x.Value.Ratio;
-					return n < data.EngineData.IdleSpeed ? 0 : x.Key;
-				}).Max();
+			var possible = new List<GearshiftPosition>();
+			foreach (var gear in data.GearboxData.GearList) {
+				if (!gear.TorqueConverterLocked.Value) {
+					continue;
+				}
+
+				var n = speed * ratio * data.GearboxData.Gears[gear.Gear].Ratio;
+				possible.Add(n < data.EngineData.IdleSpeed ? new GearshiftPosition(0) : gear);
+			}
+			
+			var selected = possible.MaxBy(x => x.Gear);
+			return selected;
 		}
 
 		private Radian SearchSlope(Vehicle vehicle, SimplePowertrainContainer container)

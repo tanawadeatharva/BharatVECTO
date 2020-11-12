@@ -104,7 +104,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			AddComponent(tmp, engine);
 			clutch.IdleController = engine.IdleController;
 
-			var gbx = new MockGearbox(vehicleContainer) { Gear = 1 };
+			var gbx = new MockGearbox(vehicleContainer) { Gear = new GearshiftPosition(1) };
 
 			var driverPort = driver.OutPort();
 
@@ -171,7 +171,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			clutch.IdleController = engine.IdleController;
 
 			var gbx = new MockGearbox(vehicleContainer);
-			gbx.Gear = 1;
+			gbx.Gear = new GearshiftPosition(1);
 
 			var driverPort = driver.OutPort();
 
@@ -245,7 +245,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			AddComponent(tmp, engine);
 
 			var gbx = new MockGearbox(vehicleContainer);
-			gbx.Gear = 1;
+			gbx.Gear = new GearshiftPosition(1);
 
 			var driverPort = driver.OutPort();
 
