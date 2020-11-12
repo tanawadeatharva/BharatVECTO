@@ -36,6 +36,7 @@ using System.ComponentModel.DataAnnotations;
 using System.IO;
 using System.Linq;
 using TUGraz.VectoCommon.Exceptions;
+using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.InputData.FileIO.JSON;
@@ -180,9 +181,14 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 			var runData = new VectoRunData {
 				EngineData = engineData,
 				AxleGearData = axleGearData,
-				Cycle = new DrivingCycleData { Entries = new List<DrivingCycleData.DrivingCycleEntry>() }
+				Cycle = new DrivingCycleData { Entries = new List<DrivingCycleData.DrivingCycleEntry>() },
+				JobType = VectoSimulationJobType.EngineOnlySimulation
 			};
-			var result = VectoRunData.ValidateRunData(runData, new ValidationContext(runData));
+			var context = new ValidationContext(runData);
+			context.ServiceContainer.AddService(typeof(VectoValidationModeServiceContainer),
+				new VectoValidationModeServiceContainer(ExecutionMode.Declaration, VectoSimulationJobType.EngineOnlySimulation, PowertrainPosition.HybridPositionNotSet, GearboxType.AMT, false));
+
+			var result = VectoRunData.ValidateRunData(runData, context);
 			Assert.IsTrue(ValidationResult.Success == result);
 			Assert.IsFalse(runData.IsValid());
 		}
