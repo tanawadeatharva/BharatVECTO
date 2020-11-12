@@ -762,13 +762,13 @@ public class JSONFileWriter : IOutputFileWriter
 				"GearboxFile",
 				GetRelativePath(input.JobInputData.Vehicle.Components.GearboxInputData.DataSource.SourceFile,
 					basePath));
+			body.Add("TCU", GetRelativePath(input.DriverInputData.GearshiftInputData.Source, basePath));
 		}
 		body.Add("Padd_electric", input.JobInputData.Vehicle.Components.AuxiliaryInputData.ElectricAuxPower.Value());
 
-        //if (!job.SavedInDeclarationMode)
-        //      {
-        body.Add("TCU", GetRelativePath(input.DriverInputData.GearshiftInputData.Source, basePath));
-        //}
+		//if (!job.SavedInDeclarationMode)
+		//      {
+		//}
 
         //body.Add("ShiftStrategy", input.JobInputData.ShiftStrategy);
 

@@ -187,6 +187,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 			var context = new ValidationContext(runData);
 			context.ServiceContainer.AddService(typeof(VectoValidationModeServiceContainer),
 				new VectoValidationModeServiceContainer(ExecutionMode.Declaration, VectoSimulationJobType.EngineOnlySimulation, PowertrainPosition.HybridPositionNotSet, GearboxType.AMT, false));
+
 			var result = VectoRunData.ValidateRunData(runData, context);
 			Assert.IsTrue(ValidationResult.Success == result);
 			Assert.IsFalse(runData.IsValid());

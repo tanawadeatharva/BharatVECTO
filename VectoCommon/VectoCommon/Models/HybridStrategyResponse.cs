@@ -121,6 +121,16 @@ namespace TUGraz.VectoCommon.Models {
 						retVal.Add("engine speed below downshift");
 						break;
 					case HybridConfigurationIgnoreReason.NoResponseAvailable: return "no response available";
+
+					case HybridConfigurationIgnoreReason.BatteryBelowMinSoC:
+						retVal.Add("battery below MinSoC");
+						break;
+					case HybridConfigurationIgnoreReason.BatteryAboveMaxSoc:
+						retVal.Add("battery above MaxSoC");
+						break;
+					case HybridConfigurationIgnoreReason.BatterySoCTooLow:
+						retVal.Add("battery SoC too low");
+						break;
 					default: throw new ArgumentOutOfRangeException(nameof(x), x, null);
 				}
 			}

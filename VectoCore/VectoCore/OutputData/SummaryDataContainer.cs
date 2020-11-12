@@ -164,7 +164,7 @@ namespace TUGraz.VectoCore.OutputData
 				Tuple.Create(Fields.TCU_MODEL, typeof(string)),
 					Tuple.Create(Fields.ADAS_TECHNOLOGY_COMBINATION, typeof(string)),
 					Tuple.Create(Fields.PTO_TECHNOLOGY, typeof(string)),
-
+					Tuple.Create(Fields.REESS_CAPACITY, typeof(string)),
 					//Tuple.Create(PTO_OTHER_ELEMENTS, typeof(string)),
 				}.Select(x => new DataColumn(x.Item1, x.Item2)).ToArray());
 
@@ -333,7 +333,7 @@ namespace TUGraz.VectoCore.OutputData
 					row[Fields.ElectricEnergyConsumptionPerKm] =
 						(-modData.TimeIntegral<WattSecond>(ModalResultField.P_reess_terminal) / modData.Distance).Cast<JoulePerMeter>().ConvertToKiloWattHourPerKiloMeter();
 				}
-            }
+			}
 
 			if (runData.Mission?.MissionType == MissionType.VerificationTest) {
 				var fuelsWhtc = runData.EngineData.Fuels.Select(
@@ -736,40 +736,61 @@ namespace TUGraz.VectoCore.OutputData
 						col.SetOrdinal(Table.Columns[Fields.E_GRAD].Ordinal + 1);
 					}
 					row[colName] = entry.Item2;
-                }
+				}
 			}
 
-			if (runData.BatteryData != null) {
-				foreach (var field in new[] { Fields.BatteryStartSoC, Fields.BatteryEndSoC }) {
+			if (runData.BatteryData != null || runData.SuperCapData != null) {
+				foreach (var field in new[] { Fields.REESS_StartSoC, Fields.REESS_EndSoC }) {
 					if (Table.Columns.Contains(field)) {
 						continue;
 					}
+
 					var col = Table.Columns.Add(field, typeof(double));
 					col.SetOrdinal(Table.Columns[Fields.P_WHEEL].Ordinal);
 				}
 
-				foreach (var field in new[] { Fields.BatteryDeltaSoC, Fields.E_BAT_LOSS, Fields.E_Batt_T_chg, Fields.E_Batt_T_dischg, Fields.E_Batt_int_chg, Fields.E_Batt_int_dischg}) {
+				foreach (var field in new[] {
+					Fields.REESS_DeltaSoC, Fields.E_REESS_LOSS, Fields.E_REESS_T_chg, Fields.E_REESS_T_dischg,
+					Fields.E_REESS_int_chg, Fields.E_REESS_int_dischg
+				}) {
 					if (Table.Columns.Contains(field)) {
 						continue;
 					}
+
 					var col = Table.Columns.Add(field, typeof(ConvertedSI));
 					col.SetOrdinal(Table.Columns[Fields.P_WHEEL].Ordinal);
-                }
-				
-				row[Fields.BatteryStartSoC] = runData.BatteryData.InitialSoC * 100; // modData.BatteryStartSoC();
-				row[Fields.BatteryEndSoC] = modData.BatteryEndSoC();
+				}
+				row[Fields.E_REESS_LOSS] = modData.BatteryLoss().ConvertToKiloWattHour();
+				row[Fields.E_REESS_T_chg] = modData.WorkBatteryChargeTerminal().ConvertToKiloWattHour();
+				row[Fields.E_REESS_T_dischg] = modData.WorkBatteryDischargeTerminal().ConvertToKiloWattHour();
+				row[Fields.E_REESS_int_chg] = modData.WorkBatteryChargeInternal().ConvertToKiloWattHour();
+				row[Fields.E_REESS_int_dischg] = modData.WorkBatteryDischargeInternal().ConvertToKiloWattHour();
+			}
+
+			if (runData.BatteryData != null) {
+				row[Fields.REESS_StartSoC] = runData.BatteryData.InitialSoC * 100; 
+				row[Fields.REESS_EndSoC] = modData.BatteryEndSoC();
 				var cellVoltage = runData.BatteryData.SOCMap.Lookup(runData.BatteryData.InitialSoC);
-				row[Fields.BatteryDeltaSoC] =
+				row[Fields.REESS_DeltaSoC] =
 					(modData.BatteryEnergyEnd() - 
 					(runData.BatteryData.InitialSoC * runData.BatteryData.Capacity * cellVoltage).Cast<WattSecond>()).ConvertToKiloWattHour();
 
-				row[Fields.E_BAT_LOSS] = modData.BatteryLoss().ConvertToKiloWattHour();
-				row[Fields.E_Batt_T_chg] = modData.WorkBatteryChargeTerminal().ConvertToKiloWattHour();
-				row[Fields.E_Batt_T_dischg] = modData.WorkBatteryDischargeTerminal().ConvertToKiloWattHour();
-				row[Fields.E_Batt_int_chg] = modData.WorkBatteryChargeInternal().ConvertToKiloWattHour();
-				row[Fields.E_Batt_int_dischg] = modData.WorkBatteryDischargeInternal().ConvertToKiloWattHour();
+				
 			}
-        }
+			if (runData.SuperCapData != null) {
+				row[Fields.REESS_StartSoC] = runData.SuperCapData.InitialSoC * 100;
+				row[Fields.REESS_EndSoC] = modData.BatteryEndSoC();
+				var initialCharge = runData.SuperCapData.Capacity *
+									((runData.SuperCapData.MaxVoltage - runData.SuperCapData.MinVoltage) *
+									runData.SuperCapData.InitialSoC +
+									runData.SuperCapData.MinVoltage);
+				row[Fields.REESS_DeltaSoC] =
+					(modData.BatteryEnergyEnd() -
+					(initialCharge * initialCharge / runData.SuperCapData.Capacity / 2.0).Cast<WattSecond>()).ConvertToKiloWattHour();
+
+
+			}
+		}
 
 		private void WriteFullPowertrain(VectoRunData runData, DataRow row)
 		{
@@ -830,6 +851,17 @@ namespace TUGraz.VectoCore.OutputData
 			row[Fields.R_DYN] = (ConvertedSI)data.DynamicTyreRadius;
 
 			row[Fields.ADAS_TECHNOLOGY_COMBINATION] = data.ADAS != null ? DeclarationData.ADASCombinations.Lookup(data.ADAS, gbxType).ID : "";
+
+			var cap = "";
+			if (runData.BatteryData?.Capacity != null) {
+				cap = $"{runData.BatteryData.Capacity.AsAmpHour} Ah";
+			}
+
+			if (runData.SuperCapData?.Capacity != null) {
+				cap = $"{runData.SuperCapData.Capacity} F";
+			}
+
+			row[Fields.REESS_CAPACITY] = cap;
 		}
 
 		private static void WriteAirdragData(AirdragData data, DataRow row)
@@ -895,7 +927,7 @@ namespace TUGraz.VectoCore.OutputData
 			if (data == null) {
 				return;
 			}
-            row[Fields.AXLE_MANUFACTURER] = data.Manufacturer;
+			row[Fields.AXLE_MANUFACTURER] = data.Manufacturer;
 			row[Fields.AXLE_MODEL] = data.ModelName;
 			row[Fields.AXLE_RATIO] = (ConvertedSI)data.AxleGear.Ratio.SI<Scalar>();
 			row[Fields.AXLEGEAR_CERTIFICATION_METHOD] = data.CertificationMethod.GetName();
@@ -975,7 +1007,7 @@ namespace TUGraz.VectoCore.OutputData
 			if (data == null) {
 				return;
 			}
-            row[Fields.GEARBOX_MANUFACTURER] = data.Manufacturer;
+			row[Fields.GEARBOX_MANUFACTURER] = data.Manufacturer;
 			row[Fields.GEARBOX_MODEL] = data.ModelName;
 			row[Fields.GEARBOX_TYPE] = data.Type;
 			row[Fields.GEARBOX_CERTIFICATION_NUMBER] = data.CertificationMethod == CertificationMethod.StandardValues
@@ -1140,7 +1172,7 @@ namespace TUGraz.VectoCore.OutputData
 
 			public const string ElectricEnergyConsumptionPerKm = "EC_el_final [kWh/km]";
 			
-            public const string CO2_KM = "CO2 [g/km]";
+			public const string CO2_KM = "CO2 [g/km]";
 			public const string CO2_TKM = "CO2 [g/tkm]";
 			public const string CO2_M3KM = "CO2 [g/m³km]";
 			public const string CO2_PKM = "CO2 [g/Pkm]";
@@ -1277,14 +1309,16 @@ namespace TUGraz.VectoCore.OutputData
 			public const string E_EM_OFF_Loss_Format = "E_EM_{0}_off_loss [kWh]";
 
 
-            public const string BatteryStartSoC = "Battery Start SoC [%]";
-			public const string BatteryEndSoC = "Battery end SoC [%]";
-			public const string BatteryDeltaSoC = "Battery Delta SoC [kWh]";
-			public const string E_BAT_LOSS = "E_Batt_loss [kWh]";
-			public const string E_Batt_T_chg = "E_Batt_T_chg [kWh]";
-			public const string E_Batt_T_dischg = "E_Batt_T_dischg [kWh]";
-			public const string E_Batt_int_chg = "E_Batt_int_chg [kWh]";
-			public const string E_Batt_int_dischg = "E_Batt_int_dischg [kWh]";
-        }
-    }
+			public const string REESS_StartSoC = "REESS Start SoC [%]";
+			public const string REESS_EndSoC = "REESS End SoC [%]";
+			public const string REESS_DeltaSoC = "REESS Delta SoC [kWh]";
+			public const string REESS_CAPACITY = "REESS Capacity";
+
+			public const string E_REESS_LOSS = "E_REESS_loss [kWh]";
+			public const string E_REESS_T_chg = "E_REESS_T_chg [kWh]";
+			public const string E_REESS_T_dischg = "E_REESS_T_dischg [kWh]";
+			public const string E_REESS_int_chg = "E_REESS_int_chg [kWh]";
+			public const string E_REESS_int_dischg = "E_REESS_int_dischg [kWh]";
+		}
+	}
 }

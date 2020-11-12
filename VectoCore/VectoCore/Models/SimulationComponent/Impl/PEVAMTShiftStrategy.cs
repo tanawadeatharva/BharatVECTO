@@ -232,10 +232,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		protected virtual GearshiftPosition CheckEarlyUpshift(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity, GearshiftPosition currentGear, IResponse response1)
 		{
-			var minFcGear = currentGear;
-			var minFc = double.MaxValue;
-			IResponse minFCResponse = null;
-			var fcCurrent = double.NaN;
+			//var minFcGear = currentGear;
+			//var minFc = double.MaxValue;
+			//IResponse minFCResponse = null;
+			//var fcCurrent = double.NaN;
 
 			//var fcUpshiftPossible = true;
 
@@ -295,26 +295,36 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				//var reserve = 1 - response.EngineTorqueDemandTotal / response.EngineStationaryFullLoadTorque;
 
 				
-				if (double.IsNaN(fcCurrent)) {
-					//var responseCurrent = RequestDryRunWithGear(absTime, dt, DataBus.VehicleSpeed, DataBus.DriverAcceleration, currentGear);
-					var responseCurrent = RequestDryRunWithGear(absTime, dt, outTorque, outAngularVelocity, currentGear);
-					fcCurrent = GetFCRating(responseCurrent);
-				}
+				//if (double.IsNaN(fcCurrent)) {
+				//	//var responseCurrent = RequestDryRunWithGear(absTime, dt, DataBus.VehicleSpeed, DataBus.DriverAcceleration, currentGear);
+				//	var responseCurrent = RequestDryRunWithGear(absTime, dt, outTorque, outAngularVelocity, currentGear);
+				//	fcCurrent = GetFCRating(responseCurrent);
+				//}
 				
 				var fcNext = GetFCRating(response);
+				results.Add(Tuple.Create(tryNextGear, fcNext));
 
 				if (reserve < GearshiftParams.TorqueReserve ||
-					!fcNext.IsSmaller(fcCurrent * shiftStrategyParameters.RatingFactorCurrentGear) || !fcNext.IsSmaller(minFc)) {
-					continue;
-				}
+				//	!fcNext.IsGreater(fcCurrent * shiftStrategyParameters.RatingFactorCurrentGear) || !fcNext.IsSmaller(minFc)) {
+				//	continue;
+				//}
 
-				minFcGear = tryNextGear;
-				minFc = fcNext;
-				minFCResponse = response;
+				//minFcGear = tryNextGear;
+				//minFc = fcNext;
+				//minFCResponse = response;
 			}
 
-			if (currentGear != minFcGear) {
-				return minFcGear;
+			if (results.Count == 0) {
+				return currentGear;
+			}
+
+			var responseCurrent = RequestDryRunWithGear(absTime, dt, outTorque, outAngularVelocity, currentGear);
+			var fcCurrent = GetFCRating(responseCurrent);
+
+			var minFc = results.MinBy(x => x.Item2);
+
+			if (minFc.Item2.IsGreater(fcCurrent * shiftStrategyParameters.RatingFactorCurrentGear)) {
+				return minFc.Item1;
 			}
 
 			return currentGear;
@@ -333,7 +343,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				? VectoMath.Max(-GearboxModelData.Gears[currentGear.Gear].MaxTorque, response.ElectricMotor.MaxDriveTorque)
 				: response.ElectricMotor.MaxDriveTorque;
 
-			var tqCurrent = (response.ElectricMotor.PowerRequest / response.ElectricMotor.AngularVelocity).LimitTo(maxDriveTorque, maxGenTorque);
+			var tqCurrent = (response.ElectricMotor.ElectricMotorPowerMech / response.ElectricMotor.AngularVelocity).LimitTo(maxDriveTorque, maxGenTorque);
 			var engineSpeed = response.ElectricMotor.AngularVelocity;
 
 			
@@ -444,9 +454,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		protected virtual GearshiftPosition CheckEarlyDownshift(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity, GearshiftPosition currentGear, IResponse response1)
 		{
-			var minFcGear = currentGear;
-			var minFc = double.MaxValue;
-			var fcCurrent = double.NaN;
+			//var minFcGear = currentGear;
+			//var minFc = double.MaxValue * Math.Sign(outTorque.Value()) ;
+			//var fcCurrent = double.NaN;
 
 			var estimatedVelocityPostShift = VelocityDropData.Interpolate(DataBus.VehicleInfo.VehicleSpeed, DataBus.DrivingCycleInfo.RoadGradient ?? 0.SI<Radian>());
 			if (!estimatedVelocityPostShift.IsGreater(DeclarationData.GearboxTCU.MIN_SPEED_AFTER_TRACTION_INTERRUPTION)) {
@@ -477,24 +487,38 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					continue;
 				}
 
-				if (double.IsNaN(fcCurrent)) {
-					var responseCurrent = RequestDryRunWithGear(absTime, dt, outTorque, outAngularVelocity, currentGear);
+				//if (double.IsNaN(fcCurrent)) {
+				//	var responseCurrent = RequestDryRunWithGear(absTime, dt, outTorque, outAngularVelocity, currentGear);
 
-					//var responseCurrent = RequestDryRunWithGear(absTime, dt, DataBus.VehicleSpeed, DataBus.DriverAcceleration, currentGear);
-					fcCurrent = GetFCRating(responseCurrent);
-				}
+				//	//var responseCurrent = RequestDryRunWithGear(absTime, dt, DataBus.VehicleSpeed, DataBus.DriverAcceleration, currentGear);
+				//	fcCurrent = GetFCRating(responseCurrent);
+				//}
 				var fcNext = GetFCRating(response);
+				results.Add(Tuple.Create(tryNextGear,fcNext));
 
-				if (!fcNext.IsSmaller(fcCurrent * shiftStrategyParameters.RatingFactorCurrentGear) ||
-					!fcNext.IsSmaller(minFc)) {
-					continue;
-				}
+				//if (!fcNext.IsGreater(fcCurrent * shiftStrategyParameters.RatingFactorCurrentGear) ||
+				//	!fcNext.IsGreater(minFc)) {
+				//	continue;
+				//}
 
-				minFcGear = tryNextGear;
-				minFc = fcNext;
+				//minFcGear = tryNextGear;
+				//minFc = fcNext;
 			}
 
-			return minFcGear;
+			if (results.Count == 0) {
+				return currentGear;
+			}
+
+			var responseCurrent = RequestDryRunWithGear(absTime, dt, outTorque, outAngularVelocity, currentGear);
+			var fcCurrent = GetFCRating(responseCurrent);
+
+			var minFc = results.MinBy(x => x.Item2);
+			
+			if (minFc.Item2.IsGreater(fcCurrent * shiftStrategyParameters.RatingFactorCurrentGear)) {
+				return minFc.Item1;
+			}
+			
+			return currentGear;
 		}
 
 

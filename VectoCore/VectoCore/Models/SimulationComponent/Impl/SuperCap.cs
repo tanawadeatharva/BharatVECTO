@@ -37,7 +37,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		public WattSecond StoredEnergy
 		{
-			get { return PreviousState.Charge * InternalVoltage; }
+			// E = 1/2 C * U^2 = 1/2 Q^2/C
+			get { return PreviousState.Charge * InternalVoltage / 2.0; }
 		}
 
 		public Watt MaxChargePower(Second dt)
@@ -191,7 +192,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			container[ModalResultField.P_reess_charge_max] = CurrentState.MaxChargePower;
 			container[ModalResultField.P_reess_discharge_max] = CurrentState.MaxDischargePower;
 
-			container[ModalResultField.E_RESS] = CurrentState.Charge * internalVoltage * ModelData.Capacity;
+			container[ModalResultField.E_RESS] = CurrentState.Charge * CurrentState.Charge / ModelData.Capacity / 2.0;
 		}
 
 		protected override void DoCommitSimulationStep(Second time, Second simulationInterval)
