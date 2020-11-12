@@ -61,6 +61,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 							DrivingCycleDataReader.ReadFromDataTable(cycle.CycleData, cycle.Name, false), cycle.Name),
 						ExecutionMode = ExecutionMode.Engineering,
 						SimulationType = SimulationType.EngineOnly,
+						JobType = VectoSimulationJobType.EngineOnlySimulation,
 						ElectricMachinesData = new List<Tuple<PowertrainPosition, ElectricMotorData>>()
 					};
 					yield return simulationRunData;
