@@ -28,8 +28,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		private SimplePowertrainContainer TestContainer;
 		private ATGearbox TestContainerGbx;
 
-		protected readonly GearList GearList;
-
 		private Kilogram vehicleMass;
 		private Kilogram MinMass;
 		private Kilogram MaxMass;
@@ -65,7 +63,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			InitializeTestContainer(runData);
 
-			GearList = runData.GearboxData.GearList;
 		}
 
 		private void InitializeShiftlinesTCToLocked()
@@ -147,7 +144,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity, NewtonMeter origInTorque,
 			PerSecond origInAngularVelocity, GearshiftPosition currentGear, Second lastShiftTime, IResponse response)
 		{
-			var next = GearList.Successor(currentGear);
+			var next = Gears.Successor(currentGear);
 			
 			if (currentGear.Gear == next.Gear && currentGear.TorqueConverterLocked != next.TorqueConverterLocked) {
 				return CheckUpshiftFromTC(
@@ -193,7 +190,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			var airDragLoss = DataBus.VehicleInfo.AirDragResistance(vehicleSpeed, vehicleSpeed) * DataBus.VehicleInfo.VehicleSpeed;
 			var rollResistanceLoss = DataBus.VehicleInfo.RollingResistance(avgSlope) * DataBus.VehicleInfo.VehicleSpeed;
 
-			//DataBus.GearboxLoss();
 			var slopeLoss = DataBus.VehicleInfo.SlopeResistance(avgSlope) * DataBus.VehicleInfo.VehicleSpeed;
 			var axleLoss = DataBus.AxlegearInfo.AxlegearLoss();
 
@@ -241,8 +237,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				.Cast<PerSecond>();
 			var outTorqueEst = outTorque * outAngularVelocity / outAngularVelocityEst;
 
-			foreach (var next in GearList.IterateGears(GearList.Successor(currentGear), GearList.Successor(currentGear, (uint)shiftStrategyParameters.AllowedGearRangeFC))) {
-				//for (var i = 1; i <= shiftStrategyParameters.AllowedGearRangeFC; i++) {
+			foreach (var next in Gears.IterateGears(Gears.Successor(currentGear), Gears.Successor(currentGear, (uint)shiftStrategyParameters.AllowedGearRangeFC))) {
 				
 				if (next == null) {
                     // no further gear
@@ -268,8 +263,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				var pNextGearMax = DataBus.EngineInfo.EngineStationaryFullPower(estimatedEngineSpeed);
 
 				var response = RequestDryRunWithGear(absTime, dt, outTorqueEst, outAngularVelocityEst, next);
-
-				//var response = RequestDryRunWithGear(absTime, dt, vehicleSpeedPostShift, DataBus.DriverAcceleration, next);
 
 				if (!response.Engine.PowerRequest.IsSmaller(pNextGearMax)) {
 					continue;
@@ -372,9 +365,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			var current = currentGear;
 
-			foreach (var next in GearList.IterateGears(GearList.Predecessor(current), GearList.Predecessor(current, (uint)shiftStrategyParameters.AllowedGearRangeFC))) {
-				//for (var i = 1; i <= shiftStrategyParameters.AllowedGearRangeFC; i++) {
-				//var next = GearList.Predecessor(currentGear, );
+			foreach (var next in Gears.IterateGears(Gears.Predecessor(current), Gears.Predecessor(current, (uint)shiftStrategyParameters.AllowedGearRangeFC))) {
 				if (next == null) {
 					// no further gear
 					continue;

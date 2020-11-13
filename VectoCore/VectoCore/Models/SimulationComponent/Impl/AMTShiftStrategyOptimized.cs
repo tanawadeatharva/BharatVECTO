@@ -106,8 +106,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			var vehicleSpeedPostShift = DataBus.VehicleInfo.VehicleSpeed - vDrop * shiftStrategyParameters.VelocityDropFactor;
 
 			var totalTransmissionRatio = DataBus.EngineInfo.EngineSpeed / DataBus.VehicleInfo.VehicleSpeed;
-			//var totalTransmissionRatio = outAngularVelocity / DataBus.VehicleSpeed;
-
+			
 			for (var i = 1; i <= shiftStrategyParameters.AllowedGearRangeFC; i++) {
 				var tryNextGear = (uint)(currentGear.Gear + i);
 
@@ -198,7 +197,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				minFCResponse = response;
 			}
 
-			if (currentGear != minFcGear) {
+			if (!currentGear.Equals(minFcGear)) {
 				return minFcGear;
 			}
 

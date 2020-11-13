@@ -257,9 +257,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			var results = new List<Tuple<GearshiftPosition, double>>();
 			foreach (var tryNextGear in GearList.IterateGears(GearList.Successor(currentGear), GearList.Successor(currentGear, (uint)shiftStrategyParameters.AllowedGearRangeFC))) {
-				//for (var i = 1; i <= shiftStrategyParameters.AllowedGearRangeFC; i++) {
-				//var tryNextGear = (uint)(currentGear + i);
-
+				
 				//if (tryNextGear > GearboxModelData.Gears.Keys.Max() 
 				//	/*|| !(ModelData.Gears[tryNextGear].Ratio < shiftStrategyParameters.RatioEarlyUpshiftFC)*/) {
 				//	continue;
@@ -471,9 +469,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			var results = new List<Tuple<GearshiftPosition, double>>();
 			foreach (var tryNextGear in GearList.IterateGears(GearList.Predecessor(currentGear), GearList.Predecessor(currentGear, (uint)shiftStrategyParameters.AllowedGearRangeFC))) {
-				//for (var i = 1; i <= shiftStrategyParameters.AllowedGearRangeFC; i++) {
-				//var tryNextGear = (uint)(currentGear - i);
-
+				
 				//if (tryNextGear < 1 /*|| !(ModelData.Gears[tryNextGear].Ratio <= shiftStrategyParameters.RatioEarlyDownshiftFC)*/) {
 				//	continue;
 				//}
