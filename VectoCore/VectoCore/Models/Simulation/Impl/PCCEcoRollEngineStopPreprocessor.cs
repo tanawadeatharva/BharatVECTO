@@ -102,7 +102,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 						data.VehicleData.DynamicTyreRadius;
 			var possible = new List<GearshiftPosition>();
 			foreach (var gear in data.GearboxData.GearList) {
-				if (!gear.TorqueConverterLocked.Value) {
+				if (gear.TorqueConverterLocked.HasValue && !gear.TorqueConverterLocked.Value) {
 					continue;
 				}
 

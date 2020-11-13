@@ -255,6 +255,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			var totalTransmissionRatio = DataBus.ElectricMotorInfo(PowertrainPosition.BatteryElectricB2).ElectricMotorSpeed / DataBus.VehicleInfo.VehicleSpeed;
 			//var totalTransmissionRatio = outAngularVelocity / DataBus.VehicleSpeed;
 
+			var results = new List<Tuple<GearshiftPosition, double>>();
 			foreach (var tryNextGear in GearList.IterateGears(GearList.Successor(currentGear), GearList.Successor(currentGear, (uint)shiftStrategyParameters.AllowedGearRangeFC))) {
 				//for (var i = 1; i <= shiftStrategyParameters.AllowedGearRangeFC; i++) {
 				//var tryNextGear = (uint)(currentGear + i);
@@ -304,7 +305,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				var fcNext = GetFCRating(response);
 				results.Add(Tuple.Create(tryNextGear, fcNext));
 
-				if (reserve < GearshiftParams.TorqueReserve ||
+				//if (reserve < GearshiftParams.TorqueReserve ||
 				//	!fcNext.IsGreater(fcCurrent * shiftStrategyParameters.RatingFactorCurrentGear) || !fcNext.IsSmaller(minFc)) {
 				//	continue;
 				//}
@@ -468,6 +469,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			//	return currentGear;
 			//}
 
+			var results = new List<Tuple<GearshiftPosition, double>>();
 			foreach (var tryNextGear in GearList.IterateGears(GearList.Predecessor(currentGear), GearList.Predecessor(currentGear, (uint)shiftStrategyParameters.AllowedGearRangeFC))) {
 				//for (var i = 1; i <= shiftStrategyParameters.AllowedGearRangeFC; i++) {
 				//var tryNextGear = (uint)(currentGear - i);
