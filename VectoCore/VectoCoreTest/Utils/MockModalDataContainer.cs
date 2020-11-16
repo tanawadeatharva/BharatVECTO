@@ -301,22 +301,32 @@ namespace TUGraz.VectoCore.Tests.Utils
 			throw new NotImplementedException();
 		}
 
+		public WattSecond ElectricMotorLosses(PowertrainPosition emPos)
+		{
+			throw new NotImplementedException();
+		}
+
+		public WattSecond ElectricMotorTransmissionLosses(PowertrainPosition emPos)
+		{
+			throw new NotImplementedException();
+		}
+
 		public double BatteryStartSoC()
 		{
 			throw new NotImplementedException();
 		}
 
-		public double BatteryEndSoC()
+		public double REESSEndSoC()
 		{
 			throw new NotImplementedException();
 		}
 
-		public WattSecond BatteryLoss()
+		public WattSecond REESSLoss()
 		{
 			throw new NotImplementedException();
 		}
 
-		public WattSecond BatteryEnergyEnd()
+		public WattSecond REESSEnergyEnd()
 		{
 			throw new NotImplementedException();
 		}
