@@ -130,11 +130,14 @@ namespace TUGraz.VectoCore.OutputData
 		double ElectricMotorEfficiencyDrive(PowertrainPosition emPos);
 		double ElectricMotorEfficiencyGenerate(PowertrainPosition emPos);
 		WattSecond ElectricMotorOffLosses(PowertrainPosition emPos);
-        double BatteryStartSoC();
-		double BatteryEndSoC();
-		WattSecond BatteryLoss();
-		WattSecond BatteryEnergyEnd();
-		
+		WattSecond ElectricMotorLosses(PowertrainPosition emPos);
+		WattSecond ElectricMotorTransmissionLosses(PowertrainPosition emPos);
+        
+		double BatteryStartSoC();
+		double REESSEndSoC();
+		WattSecond REESSLoss();
+		WattSecond REESSEnergyEnd();
+
 	}
 
 	public static class ModalDataContainerExtensions
@@ -353,23 +356,23 @@ namespace TUGraz.VectoCore.OutputData
 			return data.TimeIntegral<WattSecond>(ModalResultField.P_wheel_in) / data.Duration;
 		}
 
-		public static WattSecond WorkBatteryChargeTerminal(this IModalDataContainer data)
+		public static WattSecond WorkREESSChargeTerminal(this IModalDataContainer data)
 		{
 			return data.TimeIntegral<WattSecond>(ModalResultField.P_reess_terminal, x => x.IsGreater(0));
 		}
 
-		public static WattSecond WorkBatteryDischargeTerminal(this IModalDataContainer data)
+		public static WattSecond WorkREESSDischargeTerminal(this IModalDataContainer data)
 		{
 			return -data.TimeIntegral<WattSecond>(ModalResultField.P_reess_terminal, x => x.IsSmaller(0));
 		}
 
-        public static WattSecond WorkBatteryChargeInternal(this IModalDataContainer data)
+        public static WattSecond WorkREESSChargeInternal(this IModalDataContainer data)
 		{
 			return data.TimeIntegral<WattSecond>(ModalResultField.P_reess_int, x => x.IsGreater(0));
 
         }
 
-		public static WattSecond WorkBatteryDischargeInternal(this IModalDataContainer data)
+		public static WattSecond WorkREESSDischargeInternal(this IModalDataContainer data)
 		{
 			return -data.TimeIntegral<WattSecond>(ModalResultField.P_reess_int, x => x.IsSmaller(0));
 		}
@@ -532,14 +535,25 @@ namespace TUGraz.VectoCore.OutputData
 			return data.Max<PerSecond>(ModalResultField.n_ice_avg);
 		}
 
-		public static Scalar EngineMaxLoadTimeShare(this IModalDataContainer data)
+		public static Scalar ICEMaxLoadTimeShare(this IModalDataContainer data)
 		{
 			var sum = data.GetValues(x => new {
 				tMax = x.Field<NewtonMeter>(ModalResultField.T_ice_full.GetName()).DefaultIfNull(-1),
 				tEng = x.Field<NewtonMeter>(ModalResultField.T_ice_fcmap.GetName()).DefaultIfNull(0),
-				dt = x.Field<Second>(ModalResultField.simulationInterval.GetName())
-			}).Sum(x => x.tMax.IsEqual(x.tEng, 5.SI<NewtonMeter>()) ? x.dt : 0.SI<Second>()) ?? 0.SI<Second>();
+				dt = x.Field<Second>(ModalResultField.simulationInterval.GetName()),
+				iceOn =  !(x[ModalResultField.ICEOn.GetName()] is DBNull) && x.Field<bool>(ModalResultField.ICEOn.GetName())
+			}).Where(x => x.iceOn).Sum(x => x.tMax.IsEqual(x.tEng, 5.SI<NewtonMeter>()) ? x.dt : 0.SI<Second>()) ?? 0.SI<Second>();
 			return 100 * sum / data.Duration;
+		}
+
+		public static Scalar ICEOffTimeShare(this IModalDataContainer data)
+		{
+			var iceOff = data.GetValues(x => new {
+				dt = x[ModalResultField.ICEOn.GetName()] is DBNull
+					? 0.SI<Second>()
+					: x.Field<Second>(ModalResultField.simulationInterval.GetName())
+			}).Sum(x => x.dt) ?? 0.SI<Second>();
+			return 100 * iceOff / data.Duration;
 		}
 
 		/// <summary>

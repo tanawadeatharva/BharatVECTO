@@ -421,6 +421,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			container[ModalResultField.P_electricMotor_gen_max_, Position] = (CurrentState.DragMax ?? 0.SI<NewtonMeter>()) * avgSpeed;
 			container[ModalResultField.P_electricMotor_drive_max_, Position] = (CurrentState.DriveMax ?? 0.SI<NewtonMeter>()) * avgSpeed;
 			container[ModalResultField.P_electricMotorLoss_, Position] = (CurrentState.InTorque - CurrentState.OutTorque) * avgSpeed - (CurrentState.ElectricPowerToBattery);
+			container[ModalResultField.P_electricMotorTransmissionLoss_, Position] = 0.SI<Watt>();
 			container[ModalResultField.P_electricMotorInertiaLoss_, Position] = CurrentState.InertiaTorqueLoss * avgSpeed;
 
 			var contribution =

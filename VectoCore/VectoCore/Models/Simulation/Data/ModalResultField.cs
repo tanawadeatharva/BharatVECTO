@@ -380,7 +380,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 
 		[ModalResultField(typeof(SI), caption: "n_em-{0}_avg [1/min]", outputFactor: 60 / (2 * Math.PI))] n_electricMotor_,
 		[ModalResultField(typeof(SI), caption: "T_em-{0} [Nm]")] T_electricMotor_,
-		[ModalResultField(typeof(SI), caption: "T_em-{0}_mot_max [Nm]")] T_electricMotor_drive_max_,
+		[ModalResultField(typeof(SI), caption: "T_em-{0}_drive_max [Nm]")] T_electricMotor_drive_max_,
 		[ModalResultField(typeof(SI), caption: "T_em-{0}_gen_max [Nm]")] T_electricMotor_gen_max_,
 		[ModalResultField(typeof(SI), caption: "P_em-{0}_in [kW]", outputFactor: 1e-3)] P_electricMotor_in_,
 		[ModalResultField(typeof(SI), caption: "P_em-{0}_out [kW]", outputFactor: 1e-3)] P_electricMotor_out_,
@@ -390,6 +390,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 		[ModalResultField(typeof(SI), caption: "P_em-{0}_drive_max [kW]", outputFactor: 1e-3)] P_electricMotor_drive_max_,
 		//[ModalResultField(typeof(SI), caption: "P_em-{0}_brake [kW]", outputFactor: 1e-3)] P_electricMotor_brake_,
 		[ModalResultField(typeof(SI), caption: "P_em-{0}_loss [kW]", outputFactor: 1e-3)] P_electricMotorLoss_,
+		[ModalResultField(typeof(SI), caption: "P_em-{0}_transm_loss [kW]", outputFactor: 1e-3)] P_electricMotorTransmissionLoss_,
 		[ModalResultField(typeof(SI), caption: "P_em-{0}_inertia_loss [kW]", outputFactor: 1e-3)] P_electricMotorInertiaLoss_,
 		[ModalResultField(typeof(SI), caption: "EM-{0}_OverloadBuffer [%]", outputFactor: 100)] ElectricMotor_OvlBuffer_,
 
@@ -419,7 +420,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 		[ModalResultField(typeof(SI), caption: "P_reess discharge max [kW]", outputFactor: 1e-3)] P_reess_discharge_max,
 		[ModalResultField(typeof(SI), caption: "U_reess_terminal [V]")] U_reess_terminal,
 		[ModalResultField(typeof(SI), caption: "U_0_reess [V]")] U0_reess,
-		[ModalResultField(typeof(SI), caption: "I_reess [kW]")] I_reess,
+		[ModalResultField(typeof(SI), caption: "I_reess [A]")] I_reess,
 		
 		[ModalResultField(typeof(SI), caption: "E_reess [kWh]", outputFactor: 1/3600e3)] E_RESS,
     }

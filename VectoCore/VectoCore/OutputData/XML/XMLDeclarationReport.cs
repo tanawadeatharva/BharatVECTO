@@ -139,7 +139,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 				MaxSpeed = data.MaxSpeed();
 				MaxAcceleration = data.MaxAcceleration();
 				MaxDeceleration = data.MaxDeceleration();
-				FullLoadPercentage = data.EngineMaxLoadTimeShare();
+				FullLoadPercentage = data.ICEMaxLoadTimeShare();
 				GearshiftCount = data.GearshiftCount();
 
 				var entriesDriving = data.GetValues(

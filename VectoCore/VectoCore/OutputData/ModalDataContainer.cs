@@ -70,6 +70,7 @@ namespace TUGraz.VectoCore.OutputData
 			ModalResultField.P_electricMotor_in_, ModalResultField.P_electricMotor_out_,
 			ModalResultField.P_electricMotor_mech_, ModalResultField.P_electricMotor_el_,
 			ModalResultField.P_electricMotorLoss_, ModalResultField.P_electricMotorInertiaLoss_,
+			ModalResultField.P_electricMotorTransmissionLoss_,
 			/*ModalResultField.P_electricMotor_brake_,*/ ModalResultField.P_electricMotor_drive_max_,
 			ModalResultField.P_electricMotor_gen_max_, ModalResultField.ElectricMotor_OvlBuffer_
 		};
@@ -351,7 +352,25 @@ namespace TUGraz.VectoCore.OutputData
 			return selected.Where(x => x.P_em.IsEqual(0)).Sum(x => x.E_mech) ?? 0.SI<WattSecond>();
 		}
 
-        public PerSecond ElectricMotorAverageSpeed(PowertrainPosition emPos)
+		public WattSecond ElectricMotorLosses(PowertrainPosition emPos)
+		{
+			return Data.AsEnumerable().Cast<DataRow>().Sum(r => {
+				var dt = r.Field<Second>(ModalResultField.simulationInterval.GetName());
+				return r.Field<Watt>(string.Format(ModalResultField.P_electricMotorLoss_.GetCaption(),
+					emPos.GetName())) * dt;
+			});
+		}
+
+		public WattSecond ElectricMotorTransmissionLosses(PowertrainPosition emPos)
+		{
+			return Data.AsEnumerable().Cast<DataRow>().Sum(r => {
+				var dt = r.Field<Second>(ModalResultField.simulationInterval.GetName());
+				return r.Field<Watt>(string.Format(ModalResultField.P_electricMotorTransmissionLoss_.GetCaption(),
+					emPos.GetName())) * dt;
+			});
+		}
+
+		public PerSecond ElectricMotorAverageSpeed(PowertrainPosition emPos)
 		{
 			var integral = GetValues(x => x.Field<PerSecond>(string.Format(ModalResultField.n_electricMotor_.GetCaption(), emPos.GetName())).Value() *
 												x.Field<Second>(ModalResultField.simulationInterval.GetName()).Value()).Sum();
@@ -363,17 +382,17 @@ namespace TUGraz.VectoCore.OutputData
 			return Data.AsEnumerable().Cast<DataRow>().First().Field<SI>(ModalResultField.REESSStateOfCharge.GetName()).Value() * 100;
 		}
 
-		public double BatteryEndSoC()
+		public double REESSEndSoC()
 		{
 			return Data.AsEnumerable().Cast<DataRow>().Last().Field<SI>(ModalResultField.REESSStateOfCharge.GetName()).Value() * 100;
         }
 
-		public WattSecond BatteryLoss()
+		public WattSecond REESSLoss()
 		{
 			return TimeIntegral<WattSecond>(ModalResultField.P_reess_loss);
 		}
 
-		public WattSecond BatteryEnergyEnd()
+		public WattSecond REESSEnergyEnd()
 		{
 			return Data.AsEnumerable().Cast<DataRow>().Last().Field<SI>(ModalResultField.E_RESS.GetName())
 				.Cast<WattSecond>();
