@@ -68,7 +68,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		internal readonly CombustionEngineData ModelData;
 
-		protected IAuxPort EngineAux;
+		protected internal IAuxPort EngineAux;
 
 		public CombustionEngine(IVehicleContainer container, CombustionEngineData modelData, bool pt1Disabled = false)
 			: base(container)

@@ -83,8 +83,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 				var pos = positions.First();
 				if (pos.IsBatteryElectric()) {
-					var maxEMSpeed = model.ElectricMachinesData.Find(x => x.Item1 == pos).Item2.FullLoadCurve
-						.FullLoadEntries.Max(x => x.MotorSpeed); // DataBus.ElectricMotorInfo(pos).MaxSpeed;
+					var maxEMSpeed = model.ElectricMachinesData.Find(x => x.Item1 == pos).Item2.FullLoadCurve.MaxSpeed;
 					var ratio = 1.0;
 					if (pos == PowertrainPosition.BatteryElectricB3) {
 						ratio = model.AxleGearData.AxleGear.Ratio;
