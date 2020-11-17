@@ -20,6 +20,7 @@ using TUGraz.VectoCore.Utils;
 namespace TUGraz.VectoCore.Tests.Models.Declaration.DataAdapter
 {
 	[TestFixture()]
+	[Parallelizable(ParallelScope.All)]
 	public class DeclarationAdapterCreateVocationalVehicleTest
 	{
 		protected IXMLInputDataReader xmlInputReader;

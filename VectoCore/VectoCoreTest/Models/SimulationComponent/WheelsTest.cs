@@ -40,6 +40,7 @@ using TUGraz.VectoCore.Tests.Utils;
 namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 {
 	[TestFixture]
+	[Parallelizable(ParallelScope.All)]
 	public class WheelsTest
 	{
 		private const string VehicleDataFile = @"TestData\Components\24t Coach.vveh";

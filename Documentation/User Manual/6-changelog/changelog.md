@@ -1,5 +1,21 @@
 #Changelog
 
+**VECTO-3.3.9**
+
+***Build 2147 (2020-11-17) RELEASE CANDIDATE***
+
+- Bugfixes
+    * [VECTO-1331] - VTP Mode does not function for vehicles of group 3
+    * [VECTO-1355] - VTP Simulation Abort
+    * [VECTO-1356] - PTO Losses not considered in VTP simulation
+    * [VECTO-1361] - Torque Converter in use for the First and Second Gear VTP file does not allow for this
+    * [VECTO-1372] - Deviation of CdxA Input vs. Output for HDV16
+    * [VECTO-1374] - VECTO VTP error
+
+- Improvements
+    * [VECTO-1360] - make unit tests execute in parallel
+
+
 **VECTO-3.3.8**
 
 ***Build 2052 (2020-08-14) OFFICIAL RELEASE***

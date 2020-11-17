@@ -237,7 +237,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 			if (airdragData.CertificationMethod == CertificationMethod.StandardValues) {
 				return new XElement(tns + XMLNames.Component_AirDrag,
 					new XElement(tns + XMLNames.Report_Component_CertificationMethod, airdragData.CertificationMethod.ToXMLFormat()),
-					new XElement(tns + XMLNames.Report_AirDrag_CdxA, airdragData.DeclaredAirdragArea.ToXMLFormat(2))
+					new XElement(tns + XMLNames.Report_AirDrag_CdxA, airdragData.DeclaredAirdragAreaInput.ToXMLFormat(2))
 					);
 			}
 			return new XElement(tns + XMLNames.Component_AirDrag,
@@ -245,7 +245,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 				new XElement(tns + XMLNames.Report_Component_CertificationMethod, airdragData.CertificationMethod.ToXMLFormat()),
 				new XElement(tns + XMLNames.Report_Component_CertificationNumber, airdragData.CertificationNumber),
 				new XElement(tns + XMLNames.DI_Signature_Reference_DigestValue, airdragData.DigestValueInput),
-				new XElement(tns + XMLNames.Report_AirDrag_CdxA, airdragData.DeclaredAirdragArea.ToXMLFormat(2))
+				new XElement(tns + XMLNames.Report_AirDrag_CdxA, airdragData.DeclaredAirdragAreaInput.ToXMLFormat(2))
 				);
 		}
 

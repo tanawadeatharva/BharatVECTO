@@ -29,6 +29,7 @@
 *   Martin Rexeis, rexeis@ivt.tugraz.at, IVT, Graz University of Technology
 */
 
+using System.IO;
 using NUnit.Framework;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.InputData.Reader.ComponentData;
@@ -37,10 +38,17 @@ using TUGraz.VectoCore.Models.SimulationComponent.Data;
 namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 {
 	[TestFixture]
+	[Parallelizable(ParallelScope.All)]
 	public class AccelerationCurveTest
 	{
 		public const double Tolerance = 0.0001;
 		public AccelerationCurveData Data;
+
+		[OneTimeSetUp]
+		public void RunBeforeAnyTests()
+		{
+			Directory.SetCurrentDirectory(TestContext.CurrentContext.TestDirectory);
+		}
 
 		public void EqualAcceleration(double velocity, double acceleration, double deceleration)
 		{

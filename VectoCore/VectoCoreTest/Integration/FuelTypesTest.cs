@@ -45,6 +45,7 @@ using TUGraz.VectoCore.Tests.Utils;
 namespace TUGraz.VectoCore.Tests.Integration
 {
 	[TestFixture]
+	[Parallelizable(ParallelScope.All)]
 	public class FuelTypesTest
 	{
 

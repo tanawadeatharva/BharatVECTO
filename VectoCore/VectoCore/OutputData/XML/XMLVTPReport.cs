@@ -181,15 +181,15 @@ namespace TUGraz.VectoCore.OutputData.XML
 			var vtpResult = Missions.FirstOrDefault(x => x.Key == MissionType.VerificationTest).Value.ResultEntry
 									.FirstOrDefault().Value;
 
-			const MissionType selectedMission = DeclarationData.VTPMode.SelectedMission;
+			//const MissionType selectedMission = DeclarationData.VTPMode.SelectedMission;
 			const LoadingType selectedLoading = DeclarationData.VTPMode.SelectedLoading;
-			var result = Missions.FirstOrDefault(x => x.Key == selectedMission).Value.ResultEntry
+			var result = Missions.FirstOrDefault(x => x.Key != MissionType.VerificationTest).Value.ResultEntry
 								.FirstOrDefault(x => x.Key == selectedLoading).Value;
 			var vtpFcMeasured = vtpResult.VTPFcMeasured / vtpResult.VTPWorkPWheelPos;
 			var vtpFcMeasuredCorr = vtpResult.VTPFcMeasured / vtpResult.VTPWorkPWheelPos * vtpResult.VTPFcCorrectionFactor;
 			var vtpFcSimulated = vtpResult.VTPFcFinalSimulated / vtpResult.FuelData.HeatingValueCorrection / vtpResult.VTPWorPWheelSimPos;
 			var cVtp = vtpFcMeasuredCorr / vtpFcSimulated;
-			var declaredCO2 = result.FuelConsumptionTotal / result.Distance / result.Payload;
+			var declaredCO2 = result.FuelConsumptionTotal * result.FuelData.CO2PerFuelWeight / result.Distance / result.Payload;
 			var verifiedCO2 = declaredCO2 * cVtp;
 
 			Results.Add(
@@ -223,7 +223,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 					tns + "CO2",
 					new XElement(
 						tns + "Mission",
-						string.Format("{0}, {1}", selectedMission.ToXMLFormat(), selectedLoading.ToString())
+						string.Format("{0}, {1}", Missions.FirstOrDefault(x => x.Key != MissionType.VerificationTest).Key.ToXMLFormat(), selectedLoading.ToString())
 					),
 					new XElement(
 						tns + "Declared", new XAttribute(XMLNames.Report_Results_Unit_Attr, "g/t-km"),

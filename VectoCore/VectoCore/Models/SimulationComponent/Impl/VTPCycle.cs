@@ -171,7 +171,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		private void SelectStartGear()
 		{
-			var transmissionRatio = RunData.AxleGearData.AxleGear.Ratio *
+            if (RunData.GearboxData.Type.AutomaticTransmission()) {
+                StartGear = 1;
+                return;
+            }
+            var transmissionRatio = RunData.AxleGearData.AxleGear.Ratio *
 									(RunData.AngledriveData == null ? 1.0 : RunData.AngledriveData.Angledrive.Ratio) /
 									RunData.VehicleData.DynamicTyreRadius;
 			var cardanStartSpeed = (RunData.GearboxData.StartSpeed * transmissionRatio).Cast<PerSecond>();

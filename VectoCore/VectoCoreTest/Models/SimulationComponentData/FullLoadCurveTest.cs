@@ -49,6 +49,7 @@ using System.IO;
 namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 {
 	[TestFixture]
+	[Parallelizable(ParallelScope.All)]
 	public class FullLoadCurveTest
 	{
 		private const string CoachEngineFLD = @"TestData\Components\24t Coach.vfld";

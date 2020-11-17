@@ -60,6 +60,7 @@ using System.IO;
 namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 {
 	[TestFixture]
+	[Parallelizable(ParallelScope.All)]
 	public class GearboxTest
 	{
 		public const string GearboxDataFile = @"TestData\Components\24t Coach.vgbx";

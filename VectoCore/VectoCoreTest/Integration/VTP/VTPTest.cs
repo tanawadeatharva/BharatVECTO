@@ -35,6 +35,7 @@ using System.Xml;
 using System.Xml.Linq;
 using System.Xml.XPath;
 using NUnit.Framework;
+using NUnit.Framework.Internal;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.InputData.FileIO.JSON;
@@ -46,6 +47,7 @@ using TUGraz.VectoCore.OutputData.XML;
 namespace TUGraz.VectoCore.Tests.Integration.VTP
 {
 	[TestFixture]
+	[Parallelizable(ParallelScope.All)]
 	public class VTPTest
 	{
 		[OneTimeSetUp]
@@ -85,8 +87,11 @@ namespace TUGraz.VectoCore.Tests.Integration.VTP
 
 		[Category("LongRunning")]
 		[Category("Integration")]
-		[TestCase(@"TestData\Integration\VTPMode\GenericVehicle\class_5_generic vehicle_DECL.vecto")]
-		public void RunVTP_Declaration(string jobFile)
+		[TestCase(@"TestData\Integration\VTPMode\GenericVehicle\class_5_generic vehicle_DECL.vecto", 0.8972, TestName = "Generic Group 5 VTP Test Declaration Mode"),
+		 TestCase(@"TestData\Integration\VTPMode\GenericVehicle XMLJob PTO\class_5_generic vehicle_DECL.vecto", 0.8925, TestName = "Generic Group 5 VTP Test Declaration Mode with PTO"),
+		TestCase(@"TestData\Integration\VTPMode\GenericVehicle\class_3_generic vehicle_DECL.vecto", 1.0068, TestName = "Generic Group 3 VTP Test Declaration Mode")
+		]
+		public void RunVTP_Declaration(string jobFile, double expectedVTPFactor)
 		{
 			var fileWriter = new FileOutputWriter(jobFile);
 			var sumWriter = new SummaryDataContainer(fileWriter);
@@ -114,7 +119,7 @@ namespace TUGraz.VectoCore.Tests.Integration.VTP
 			var vtpReport = XDocument.Load(XmlReader.Create(fileWriter.XMLVTPReportName));
 			var vtpFactor = vtpReport.XPathSelectElement("//*[local-name() = 'Results']/*[local-name() = 'VTRatio']")?.Value.ToDouble(0);
 
-			Assert.AreEqual(0.8972, vtpFactor);
+			Assert.AreEqual(expectedVTPFactor, vtpFactor);
 		}
 
 		[Category("LongRunning")]
@@ -151,9 +156,12 @@ namespace TUGraz.VectoCore.Tests.Integration.VTP
 			Assert.AreEqual(0.8972, vtpFactor);
 		}
 
+
+
 		[Category("LongRunning")]
 		[Category("Integration")]
 		[TestCase(@"TestData\Integration\VTPMode\GenericVehicle\VTP_AT-gbx.vecto")]
+		[TestCase(@"TestData\Integration\VTPMode\GenericVehicle\VTP_AT-gbx_2TC.vecto")]
 		public void RunVTPWithAT(string jobFile)
 		{
 			var fileWriter = new FileOutputWriter(jobFile);

@@ -49,6 +49,7 @@ using TUGraz.VectoCore.Tests.Utils;
 namespace TUGraz.VectoCore.Tests.Models.Declaration
 {
 	[TestFixture]
+	[Parallelizable(ParallelScope.All)]
 	public class DeclarationDataTest
 	{
 		private const double Tolerance = 0.0001;
@@ -534,8 +535,9 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 			Assert.AreEqual(first.Value(), last.Value(), 1e-3);
 		}
 
-		[TestCase(MissionType.LongHaul, VehicleClass.Class1, "Dual displacement",
-			TestName = "Aux_SteeringPumpLookupFail( No Value )"),
+		[
+			//TestCase(MissionType.LongHaul, VehicleClass.Class1, "Dual displacement",
+			//TestName = "Aux_SteeringPumpLookupFail( No Value )"),
 		TestCase(MissionType.RegionalDelivery, VehicleClass.Class2, "Super displacement",
 			TestName = "Aux_SteeringPumpLookupFail( Wrong Tech )"),
 		TestCase(MissionType.RegionalDelivery, VehicleClass.Class2, "Dual displacement", "Dual displacement",

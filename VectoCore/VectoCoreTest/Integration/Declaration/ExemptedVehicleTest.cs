@@ -32,6 +32,7 @@
 using System;
 using System.IO;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Xml;
 using System.Xml.XPath;
 using Ninject;
@@ -54,6 +55,7 @@ using XmlDocumentType = TUGraz.VectoCore.Utils.XmlDocumentType;
 namespace TUGraz.VectoCore.Tests.Integration
 {
 	[TestFixture]
+	[Parallelizable(ParallelScope.All)]
 	public class ExemptedVehicleTest
 	{
 		const string ExemptedVehicle = @"Testdata\Integration\DeclarationMode\ExemptedVehicle\vecto_vehicle-sample_exempted.xml";
@@ -127,7 +129,7 @@ namespace TUGraz.VectoCore.Tests.Integration
 			TestCase(ExemptedVehicle, false, false, false, "Invalid input: at least one option of ZE-HDV, He-HDV, and DualFuelVehicle has to be set for an exempted vehicle!")]
 		public void TestInvalidExemptedCombination(string filename, bool zeroEmission, bool hybrid, bool dualFuel, string exMsg)
 		{
-			var writer = new FileOutputWriter(filename);
+			var writer = new FileOutputWriter(InputDataHelper.GetRandomFilename(filename));
 
 			var customerFile = writer.XMLCustomerReportName;
 			var manufactuerFile = writer.XMLFullReportName;
@@ -172,6 +174,7 @@ namespace TUGraz.VectoCore.Tests.Integration
 			Assert.IsFalse(File.Exists(monitoringFile));
 		}
 
+		
 
 
 		[TestCase(ExemptedVehicle, null, 10000),
@@ -179,7 +182,7 @@ namespace TUGraz.VectoCore.Tests.Integration
 		TestCase(ExemptedVehicle, null, null)]
 		public void TestHybridExemptedRequiresMaxNetPower(string filename, double? maxNetPower1, double? maxNetPower2)
 		{
-			var writer = new FileOutputWriter(filename);
+			var writer = new FileOutputWriter(InputDataHelper.GetRandomFilename(filename));
 
 			var customerFile = writer.XMLCustomerReportName;
 			var manufactuerFile = writer.XMLFullReportName;

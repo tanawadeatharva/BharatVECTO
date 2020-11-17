@@ -39,6 +39,7 @@ using TUGraz.VECTO;
 namespace TUGraz.VectoCore.Tests.FileIO
 {
 	[TestFixture]
+	[Parallelizable(ParallelScope.All)]
 	public class JsonWriteTest
 	{
 		[OneTimeSetUp]

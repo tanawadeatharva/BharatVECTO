@@ -50,6 +50,7 @@ using TUGraz.VectoCore.Models.Declaration;
 namespace TUGraz.VectoCore.Tests.Reports
 {
 	[TestFixture]
+	[Parallelizable(ParallelScope.All)]
 	public class SumWriterTest
 	{
 

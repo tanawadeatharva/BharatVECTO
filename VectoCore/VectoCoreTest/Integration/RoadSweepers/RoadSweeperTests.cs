@@ -22,6 +22,7 @@ using TUGraz.VectoCore.Utils;
 namespace TUGraz.VectoCore.Tests.Integration.RoadSweepers
 {
 	[TestFixture]
+	[Parallelizable(ParallelScope.All)]
 	public class RoadSweeperTests
 	{
 		public const string RoadSweeperJob =

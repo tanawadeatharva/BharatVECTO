@@ -164,12 +164,19 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 			}
 
 			// simulate the LongHaul cycle with RefLoad
-			var mission = Segment.Missions.FirstOrDefault(m => m.MissionType == DeclarationData.VTPMode.SelectedMission);
+			var mission = Segment.Missions.FirstOrDefault();
 			if (mission == null) {
-				throw new VectoException("Mission {0} not found in segmentation matrix", DeclarationData.VTPMode.SelectedMission);
+				throw new VectoException("No Mission found in segmentation matrix");
 			}
 			var loading = mission.Loadings.FirstOrDefault(l => l.Key == DeclarationData.VTPMode.SelectedLoading);
 			var runData = CreateVectoRunData(Segment, mission, loading.Value);
+			runData.EngineData.FuelConsumptionCorrectionFactor = DeclarationData.WHTCCorrection.Lookup(
+																	mission.MissionType.GetNonEMSMissionType(), runData.EngineData.WHTCRural, runData.EngineData.WHTCUrban,
+																	runData.EngineData.WHTCMotorway) *
+																runData.EngineData.ColdHotCorrectionFactor * runData.EngineData.CorrectionFactorRegPer;
+			var adasCombination = DeclarationData.ADASCombinations.Lookup(JobInputData.Vehicle.ADAS);
+			runData.EngineData.ADASCorrectionFactor = DeclarationData.ADASBenefits.Lookup(
+				Segment.VehicleClass, adasCombination, mission.MissionType, loading.Key);
 			runData.ModFileSuffix = loading.Key.ToString();
 			var cycle = DrivingCycleDataReader.ReadFromStream(mission.CycleFile, CycleType.DistanceBased, "", false);
 			runData.Cycle = new DrivingCycleProxy(cycle, mission.MissionType.ToString());

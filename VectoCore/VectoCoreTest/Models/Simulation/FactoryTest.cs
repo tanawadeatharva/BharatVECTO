@@ -44,6 +44,7 @@ using TUGraz.VectoCore.Tests.Utils;
 namespace TUGraz.VectoCore.Tests.Models.Simulation
 {
 	[TestFixture]
+	[Parallelizable(ParallelScope.All)]
 	public class FactoryTest
 	{
 		public const string DeclarationJobFile = @"Testdata\Jobs\12t Delivery Truck.vecto";

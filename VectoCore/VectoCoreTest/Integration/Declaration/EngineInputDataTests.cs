@@ -50,6 +50,7 @@ using TUGraz.VectoCore.Utils;
 namespace TUGraz.VectoCore.Tests.Integration.Declaration
 {
 	[TestFixture]
+	[Parallelizable(ParallelScope.All)]
 	public class EngineInputDataTests
 	{
 		const string SampleVehicleDecl = "TestData/XML/XMLReaderDeclaration/vecto_vehicle-sample.xml";
