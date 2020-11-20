@@ -38,7 +38,7 @@ using TUGraz.VectoCore.OutputData;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 {
-	public class Angledrive : TransmissionComponent
+	public class Angledrive :  TransmissionComponent, IAngledrive
 	{
 		public Angledrive(IVehicleContainer container, AngledriveData modelData) : base(container, modelData.Angledrive) {}
 
@@ -56,6 +56,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			container[ModalResultField.P_angle_loss] = (CurrentState.InTorque - CurrentState.OutTorque / ModelData.Ratio) *
 														avgAngularVelocity;
 			container[ModalResultField.P_angle_in] = CurrentState.InTorque * avgAngularVelocity;
+		}
+
+		public double Ratio
+		{
+			get { return ModelData.Ratio; }
 		}
 	}
 }

@@ -12,12 +12,12 @@ using TUGraz.VectoCore.Utils;
 namespace TUGraz.VectoCore.InputData.Reader.ComponentData {
 	public static class ElectricMotorMapReader
 	{
-		public static EfficiencyMap Create(Stream data, double ratio, int count, double efficiency)
+		public static EfficiencyMap Create(Stream data, int count)
 		{
-			return Create(VectoCSVFile.ReadStream(data), ratio, count, efficiency);
+			return Create(VectoCSVFile.ReadStream(data), count);
 		}
 
-		public static EfficiencyMap Create(DataTable data, double ratio, int count, double efficiency)
+		public static EfficiencyMap Create(DataTable data, int count)
 		{
 			var headerValid = HeaderIsValid(data.Columns);
 			if (!headerValid)
@@ -37,12 +37,12 @@ namespace TUGraz.VectoCore.InputData.Reader.ComponentData {
 				{
 					var entry = CreateEntry(row);
 					if (entry.Torque.IsGreaterOrEqual(0)) {
-						delaunayMap.AddPoint(-entry.Torque.Value() * count * ratio * efficiency,
-							entry.MotorSpeed.Value() / ratio,
+						delaunayMap.AddPoint(-entry.Torque.Value() * count, // * ratio * efficiency,
+							entry.MotorSpeed.Value(), // / ratio,
 							-entry.PowerElectrical.Value() * count);
 					} else {
-						delaunayMap.AddPoint(-entry.Torque.Value() * count * ratio / efficiency, 
-							entry.MotorSpeed.Value() / ratio,
+						delaunayMap.AddPoint(-entry.Torque.Value() * count, // * ratio / efficiency, 
+							entry.MotorSpeed.Value(), // / ratio,
 							-entry.PowerElectrical.Value() * count);
 					}
 				}

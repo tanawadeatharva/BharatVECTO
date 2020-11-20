@@ -81,5 +81,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					(PreviousState.InAngularVelocity + CurrentState.InAngularVelocity) / 2.0, CurrentState.InTorque);
 			}
 		}
+
+		public double Ratio
+		{
+			get { return ModelData.Ratio; }
+		}
 	}
 }

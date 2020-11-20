@@ -27,5 +27,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 
 		[SIRange(0, 1)]
 		public double OverloadRegenerationFactor { get; internal set; }
+
+		public double Ratio { get; internal set; }
+		public double TransmissionEfficiency { get; internal set; }
 	}
 }

@@ -378,37 +378,49 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 		[ModalResultField(typeof(SI), "P_WHR_mech [kW]", outputFactor: 1e-3)] P_WHR_mech_map,
 		[ModalResultField(typeof(SI), "P_WHR_mech_corr [kW]", outputFactor: 1e-3)] P_WHR_mech_corr,
 
-		[ModalResultField(typeof(SI), caption: "n_em-{0}_avg [1/min]", outputFactor: 60 / (2 * Math.PI))] n_electricMotor_,
-		[ModalResultField(typeof(SI), caption: "T_em-{0} [Nm]")] T_electricMotor_,
-		[ModalResultField(typeof(SI), caption: "T_em-{0}_drive_max [Nm]")] T_electricMotor_drive_max_,
-		[ModalResultField(typeof(SI), caption: "T_em-{0}_gen_max [Nm]")] T_electricMotor_gen_max_,
-		[ModalResultField(typeof(SI), caption: "P_em-{0}_in [kW]", outputFactor: 1e-3)] P_electricMotor_in_,
-		[ModalResultField(typeof(SI), caption: "P_em-{0}_out [kW]", outputFactor: 1e-3)] P_electricMotor_out_,
-		[ModalResultField(typeof(SI), caption: "P_em-{0}_mech [kW]", outputFactor: 1e-3)] P_electricMotor_mech_,
-		[ModalResultField(typeof(SI), caption: "P_em-{0}_el [kW]", outputFactor: 1e-3)] P_electricMotor_el_,
-		[ModalResultField(typeof(SI), caption: "P_em-{0}_gen_max_ [kW]", outputFactor: 1e-3)] P_electricMotor_gen_max_,
-		[ModalResultField(typeof(SI), caption: "P_em-{0}_drive_max [kW]", outputFactor: 1e-3)] P_electricMotor_drive_max_,
-		//[ModalResultField(typeof(SI), caption: "P_em-{0}_brake [kW]", outputFactor: 1e-3)] P_electricMotor_brake_,
-		[ModalResultField(typeof(SI), caption: "P_em-{0}_loss [kW]", outputFactor: 1e-3)] P_electricMotorLoss_,
-		[ModalResultField(typeof(SI), caption: "P_em-{0}_transm_loss [kW]", outputFactor: 1e-3)] P_electricMotorTransmissionLoss_,
-		[ModalResultField(typeof(SI), caption: "P_em-{0}_inertia_loss [kW]", outputFactor: 1e-3)] P_electricMotorInertiaLoss_,
-		[ModalResultField(typeof(SI), caption: "EM-{0}_OverloadBuffer [%]", outputFactor: 100)] ElectricMotor_OvlBuffer_,
+		[ModalResultField(typeof(SI), caption: "i_{0}-em [-]")] EM_ratio_,
+		[ModalResultField(typeof(SI), caption: "n_{0}-em_avg [1/min]", outputFactor: 60 / (2 * Math.PI))] n_EM_electricMotor_,
+		[ModalResultField(typeof(SI), caption: "T_{0}-em [Nm]")] T_EM_electricMotor_,
+		[ModalResultField(typeof(SI), caption: "T_{0}-em_map [Nm]")] T_EM_electricMotor_map_,
+
+		[ModalResultField(typeof(SI), caption: "T_{0}-em_drive_max [Nm]")] T_EM_electricMotor_drive_max_,
+		[ModalResultField(typeof(SI), caption: "T_{0}-em_gen_max [Nm]")] T_EM_electricMotor_gen_max_,
+		[ModalResultField(typeof(SI), caption: "P_{0}-em_gen_max_ [kW]", outputFactor: 1e-3)] P_EM_electricMotor_gen_max_,
+		[ModalResultField(typeof(SI), caption: "P_{0}-em_drive_max [kW]", outputFactor: 1e-3)] P_EM_electricMotor_drive_max_,
+		
+		[ModalResultField(typeof(SI), caption: "P_{0}-em_mech [kW]", outputFactor: 1e-3)] P_EM_electricMotor_em_mech_,
+		[ModalResultField(typeof(SI), caption: "P_{0}-em_mech_map [kW]", outputFactor: 1e-3)] P_EM_electricMotor_em_mech_map_,
+		[ModalResultField(typeof(SI), caption: "P_{0}-em_el [kW]", outputFactor: 1e-3)] P_EM_electricMotor_el_,
+		[ModalResultField(typeof(SI), caption: "P_{0}-em_loss [kW]", outputFactor: 1e-3)] P_EM_electricMotorLoss_,
+		[ModalResultField(typeof(SI), caption: "P_{0}-em_inertia_loss [kW]", outputFactor: 1e-3)] P_EM_electricMotorInertiaLoss_,
+
+		[ModalResultField(typeof(SI), caption: "P_{0}_in [kW]", outputFactor: 1e-3)] P_EM_in_,
+		[ModalResultField(typeof(SI), caption: "P_{0}_out [kW]", outputFactor: 1e-3)] P_EM_out_,
+		[ModalResultField(typeof(SI), caption: "P_{0}_mech [kW]", outputFactor: 1e-3)] P_EM_mech_,
+		[ModalResultField(typeof(SI), caption: "P_{0}_loss [kW]", outputFactor: 1e-3)] P_EM_loss_,
+		
+		[ModalResultField(typeof(SI), caption: "P_{0}_transm_loss [kW]", outputFactor: 1e-3)] P_EM_TransmissionLoss_,
+
+		[ModalResultField(typeof(SI), caption: "EM_OVL-{0}-em [%]", outputFactor: 100)] ElectricMotor_OvlBuffer_,
+
+		[ModalResultField(typeof(SI), caption: "EM_{0}_off")] EM_Off_,
+
 
 		// only for graphDrawing Testcase
-		[ModalResultField(typeof(SI), caption: "P_em-P2_mech [kW]", outputFactor: 1e-3)]
+		[ModalResultField(typeof(SI), caption: "P_P2_mech [kW]", outputFactor: 1e-3)]
 		P_electricMotor_mech_P2,
-		[ModalResultField(typeof(SI), caption: "P_em-P3_mech [kW]", outputFactor: 1e-3)]
+		[ModalResultField(typeof(SI), caption: "P_P3_mech [kW]", outputFactor: 1e-3)]
 		P_electricMotor_mech_P3,
-		[ModalResultField(typeof(SI), caption: "P_em-P4_mech [kW]", outputFactor: 1e-3)]
+		[ModalResultField(typeof(SI), caption: "P_P4_mech [kW]", outputFactor: 1e-3)]
 		P_electricMotor_mech_P4,
 
-		[ModalResultField(typeof(SI), caption: "P_em-B4_mech [kW]", outputFactor: 1e-3)]
+		[ModalResultField(typeof(SI), caption: "P_E4_mech [kW]", outputFactor: 1e-3)]
 		P_electricMotor_mech_B4,
 
-		[ModalResultField(typeof(SI), caption: "P_em-B3_mech [kW]", outputFactor: 1e-3)]
+		[ModalResultField(typeof(SI), caption: "P_E3_mech [kW]", outputFactor: 1e-3)]
         P_electricMotor_mech_B3,
 		
-		[ModalResultField(typeof(SI), caption: "P_em-B2_mech [kW]", outputFactor: 1e-3)]
+		[ModalResultField(typeof(SI), caption: "P_E2_mech [kW]", outputFactor: 1e-3)]
 		P_electricMotor_mech_B2,
         // -->
 

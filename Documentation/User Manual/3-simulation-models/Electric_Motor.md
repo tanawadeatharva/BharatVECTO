@@ -14,8 +14,31 @@ The first two curves are read from a single .vemp file (see [Electric Motor Max 
 
 The convention for all input files is that positive torque values drive the vehicle while negative torque values apply additional drag and generate electric power.
 
+The follwing picture shows the signals used in VECTO and provided in the .vmod file. The VECTO convention is that positive torque adds additional drag to the drivetrain. Thus, if the electric motor propells the vehicle it applies negative torque.
 
 ![](pics/electric_motor_map.png)
+
+###Electric Motor Model
+
+The VECTO component for the electric motor contains the electric motor itself which is connected via a transmission stage to the drivetrain. The ratio and efficiency of the transmission stage can be defined in the vehicle model.
+
+![](pics/EM_Model_scaled.png)
+
+The naming convention for the signals is that 'X' denotes the position of the EM in the powertrain. P_X_... denotes signals related to the drivetrain speed while P_X-em_... denotes signals to the electric motor shaft.
+
+P_X_in = P_X_out + P_X_mech
+
+P_X_mech = P_X-em_mech + P_X_transm_loss
+
+P_X-em_mech = P_X-em_mech_elmap + P_X-em_inertia
+
+P_X-em_mech_elmap = P_X-em_el + P_X-em_loss
+
+P_X-em_mech_elmap = n_X-em * T_X-em_map
+
+P_X-em_el = PowerMap(n_X-em, T_X-em_map)
+
+P_X_loss = P_X_mech - P_X-em_el
 
 
 ###Thermal De-Rating

@@ -53,9 +53,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			}
 			ModelData = dataBus.RunData.GearboxData;
 			PowerMap = dataBus.RunData.ElectricMachinesData
-				.FirstOrDefault(x => x.Item1 == PowertrainPosition.BatteryElectricB2)?.Item2.EfficiencyMap;
+				.FirstOrDefault(x => x.Item1 == PowertrainPosition.BatteryElectricE2)?.Item2.EfficiencyMap;
 			FullLoadCurve = dataBus.RunData.ElectricMachinesData
-				.FirstOrDefault(x => x.Item1 == PowertrainPosition.BatteryElectricB2)?.Item2.FullLoadCurve;
+				.FirstOrDefault(x => x.Item1 == PowertrainPosition.BatteryElectricE2)?.Item2.FullLoadCurve;
 			DataBus = dataBus;
 
 			EarlyShiftUp = true;
@@ -240,7 +240,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			var vDrop = DataBus.VehicleInfo.VehicleSpeed - estimatedVelocityPostShift;
 			var vehicleSpeedPostShift = DataBus.VehicleInfo.VehicleSpeed - vDrop * shiftStrategyParameters.VelocityDropFactor;
 
-			var totalTransmissionRatio = DataBus.ElectricMotorInfo(PowertrainPosition.BatteryElectricB2).ElectricMotorSpeed / DataBus.VehicleInfo.VehicleSpeed;
+			var totalTransmissionRatio = DataBus.ElectricMotorInfo(PowertrainPosition.BatteryElectricE2).ElectricMotorSpeed / DataBus.VehicleInfo.VehicleSpeed;
 			//var totalTransmissionRatio = outAngularVelocity / DataBus.VehicleSpeed;
 
 			var results = new List<Tuple<uint, double>>();
@@ -607,7 +607,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		{
 			return
 				(outAngularSpeed * ModelData.Gears[gear].Ratio).IsGreaterOrEqual(VectoMath.Min(ModelData.Gears[gear].MaxSpeed,
-					DataBus.ElectricMotorInfo(PowertrainPosition.BatteryElectricB2).MaxSpeed));
+					DataBus.ElectricMotorInfo(PowertrainPosition.BatteryElectricE2).MaxSpeed));
 		}
 
 		public void Disengage(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity) { }

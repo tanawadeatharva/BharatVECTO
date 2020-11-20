@@ -126,11 +126,16 @@ namespace TUGraz.VectoCore.OutputData
 		bool HasCombustionEngine { get; }
 		WattSecond TotalElectricMotorWorkDrive(PowertrainPosition emPos);
 		WattSecond TotalElectricMotorWorkRecuperate(PowertrainPosition emPos);
+		WattSecond TotalElectricMotorMotWorkDrive(PowertrainPosition emPos);
+		WattSecond TotalElectricMotorMotWorkRecuperate(PowertrainPosition emPos);
 		PerSecond ElectricMotorAverageSpeed(PowertrainPosition emPos);
 		double ElectricMotorEfficiencyDrive(PowertrainPosition emPos);
 		double ElectricMotorEfficiencyGenerate(PowertrainPosition emPos);
+		double ElectricMotorMotEfficiencyDrive(PowertrainPosition emPos);
+		double ElectricMotorMotEfficiencyGenerate(PowertrainPosition emPos);
 		WattSecond ElectricMotorOffLosses(PowertrainPosition emPos);
 		WattSecond ElectricMotorLosses(PowertrainPosition emPos);
+		WattSecond ElectricMotorMotLosses(PowertrainPosition emPos);
 		WattSecond ElectricMotorTransmissionLosses(PowertrainPosition emPos);
         
 		double BatteryStartSoC();

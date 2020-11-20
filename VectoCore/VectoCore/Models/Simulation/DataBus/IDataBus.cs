@@ -80,6 +80,7 @@ namespace TUGraz.VectoCore.Models.Simulation.DataBus
 		IHybridControllerInfo HybridControllerInfo { get; }
 
 		IHybridControllerCtl HybridControllerCtl { get; }
+		IAngledriveInfo AngledriveInfo { get; }
 	}
 
 	public interface IPowertainInfo

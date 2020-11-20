@@ -12,9 +12,9 @@ namespace TUGraz.VectoCommon.InputData {
 		HybridP3,
 		HybridP4,
 
-		BatteryElectricB4,
-		BatteryElectricB3,
-		BatteryElectricB2,
+		BatteryElectricE4,
+		BatteryElectricE3,
+		BatteryElectricE2,
 	}
 
 	public static class PowertrainPositionHelper
@@ -29,6 +29,9 @@ namespace TUGraz.VectoCommon.InputData {
 			}
 
 			if (pos.StartsWith("B", StringComparison.InvariantCultureIgnoreCase)) {
+				return (BatteryElectriPrefix + pos.Replace("B", "E")).ParseEnum<PowertrainPosition>();
+			}
+			if (pos.StartsWith("E", StringComparison.InvariantCultureIgnoreCase)) {
 				return (BatteryElectriPrefix + pos).ParseEnum<PowertrainPosition>();
 			}
 			throw new VectoException("invalid powertrain position {0}", pos);
@@ -54,8 +57,8 @@ namespace TUGraz.VectoCommon.InputData {
 
 		public static bool IsBatteryElectric(this PowertrainPosition pos)
 		{
-			return pos == PowertrainPosition.BatteryElectricB2 || pos == PowertrainPosition.BatteryElectricB3 ||
-					pos == PowertrainPosition.BatteryElectricB4;
+			return pos == PowertrainPosition.BatteryElectricE2 || pos == PowertrainPosition.BatteryElectricE3 ||
+					pos == PowertrainPosition.BatteryElectricE4;
 		}
 
 		public static bool IsParallelHybrid(this PowertrainPosition pos)

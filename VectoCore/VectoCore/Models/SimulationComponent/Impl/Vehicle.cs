@@ -64,44 +64,13 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			}
 			var model = container.RunData;
 			
-			if (container.PowertrainInfo.HasCombustionEngine) {
-				if (model?.GearboxData == null || model.AxleGearData == null) {
-					return;
-				}
-				MaxVehicleSpeed = model.EngineData.FullLoadCurves[0].N95hSpeed /
-					model.GearboxData.Gears[model.GearboxData.Gears.Keys.Max()].Ratio /
-					model.AxleGearData.AxleGear.Ratio /
-					(model.AngledriveData?.Angledrive.Ratio
-					?? 1.0) * model.VehicleData.DynamicTyreRadius * 0.995;
-			}
-
-			if (model.ElectricMachinesData.Count > 0) {
-				var positions = model.ElectricMachinesData.Select(x => x.Item1).ToArray();
-				if (positions.Length > 1) {
-					throw new VectoException("Multiple electrical machines are currently not supported");
-				}
-
-				var pos = positions.First();
-				if (pos.IsBatteryElectric()) {
-					var maxEMSpeed = model.ElectricMachinesData.Find(x => x.Item1 == pos).Item2.FullLoadCurve.MaxSpeed;
-					var ratio = 1.0;
-					if (pos == PowertrainPosition.BatteryElectricB3) {
-						ratio = model.AxleGearData.AxleGear.Ratio;
-					}
-
-					if (pos == PowertrainPosition.BatteryElectricB2) {
-						ratio = model.GearboxData.Gears[model.GearboxData.Gears.Keys.Max()].Ratio *
-								model.AxleGearData.AxleGear.Ratio *
-								(model.AngledriveData?.Angledrive.Ratio ?? 1.0);
-					}
-					MaxVehicleSpeed = maxEMSpeed / ratio * model.VehicleData.DynamicTyreRadius * 0.995;
-				}
-			}
+			
 		}
 
 
 		public IResponse Initialize(MeterPerSecond vehicleSpeed, Radian roadGradient)
 		{
+			SetMaxVehicleSpeed();
 			PreviousState = new VehicleState {
 				Distance = DataBus.DrivingCycleInfo.CycleStartDistance,
 				Velocity = vehicleSpeed,
@@ -114,6 +83,46 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 												+ PreviousState.SlopeResistance;
 
 			return NextComponent?.Initialize(PreviousState.VehicleTractionForce, vehicleSpeed);
+		}
+
+		protected virtual void SetMaxVehicleSpeed()
+		{
+			if (DataBus.PowertrainInfo.HasCombustionEngine) {
+				if (DataBus.GearboxInfo == null || DataBus.AxlegearInfo == null) {
+					throw new VectoException("Powertrain with combustion engine requires gearbox and axlegear!");
+					//return;
+				}
+				MaxVehicleSpeed = DataBus.EngineInfo.EngineN95hSpeed /
+					DataBus.GearboxInfo.GetGearData(DataBus.GearboxInfo.NumGears).Ratio /
+					DataBus.AxlegearInfo.Ratio /
+					(DataBus.AngledriveInfo?.Ratio ?? 1.0) * 
+					DataBus.WheelsInfo.DynamicTyreRadius * 0.995;
+			}
+
+			
+			if (DataBus.PowertrainInfo.HasElectricMotor) {
+				var positions = DataBus.PowertrainInfo.ElectricMotorPositions;
+				if (positions.Length > 1) {
+					throw new VectoException("Multiple electrical machines are currently not supported");
+				}
+
+				var pos = positions.First();
+				if (pos.IsBatteryElectric()) {
+					var maxEMSpeed = DataBus.ElectricMotorInfo(pos).MaxSpeed;
+
+					var ratio = 1.0;
+					if (pos == PowertrainPosition.BatteryElectricE3) {
+						ratio = DataBus.AxlegearInfo.Ratio;
+					}
+
+					if (pos == PowertrainPosition.BatteryElectricE2) {
+						ratio = DataBus.GearboxInfo.GetGearData(DataBus.GearboxInfo.NumGears).Ratio *
+								DataBus.AxlegearInfo.Ratio *
+								(DataBus.AngledriveInfo?.Ratio ?? 1.0);
+					}
+					MaxVehicleSpeed = maxEMSpeed / ratio * DataBus.WheelsInfo.DynamicTyreRadius * 0.995;
+				}
+			}
 		}
 
 		public IResponse Initialize(MeterPerSecond vehicleSpeed, Radian roadGradient, MeterPerSquareSecond startAcceleration)
@@ -216,7 +225,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			return retVal;
 		}
 
-		public MeterPerSecond MaxVehicleSpeed { get; }
+		public MeterPerSecond MaxVehicleSpeed { get; set; }
 
 		public Newton AirDragResistance(MeterPerSecond previousVelocity, MeterPerSecond nextVelocity)
 		{

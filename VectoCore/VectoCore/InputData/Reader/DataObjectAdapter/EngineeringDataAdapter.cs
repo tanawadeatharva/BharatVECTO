@@ -680,14 +680,16 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			double ratio, double efficiency)
 		{
 			return new ElectricMotorData() {
-				FullLoadCurve = ElectricFullLoadCurveReader.Create(motorData.FullLoadCurve, ratio, count, efficiency),
-				DragCurve = ElectricMotorDragCurveReader.Create(motorData.DragCurve, ratio, count, efficiency),
-				EfficiencyMap = ElectricMotorMapReader.Create(motorData.EfficiencyMap, ratio, count, efficiency),
+				FullLoadCurve = ElectricFullLoadCurveReader.Create(motorData.FullLoadCurve, count),
+				DragCurve = ElectricMotorDragCurveReader.Create(motorData.DragCurve, count),
+				EfficiencyMap = ElectricMotorMapReader.Create(motorData.EfficiencyMap, count),
 				Inertia = motorData.Inertia,
 				ContinuousPower = motorData.ContinuousPower * count,
 				ContinuousPowerSpeed = motorData.ContinuousPowerSpeed,
 				OverloadTime = motorData.OverloadTime,
 				OverloadRegenerationFactor = motorData.OverloadRecoveryFactor,
+				Ratio = ratio,
+				TransmissionEfficiency = efficiency
 			};
 		}
 
