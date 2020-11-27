@@ -105,6 +105,14 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			return CurrentStrategySettings.MechanicalAssistPower[pos].Item1;
 		}
 
+		public Second SimulationInterval
+		{
+			get
+			{
+				return CurrentStrategySettings.SimulationInterval;
+			}
+		}
+
 		public PerSecond ICESpeed
 		{
 			get { return CurrentStrategySettings.EvaluatedSolution.Response?.Engine.EngineSpeed; }

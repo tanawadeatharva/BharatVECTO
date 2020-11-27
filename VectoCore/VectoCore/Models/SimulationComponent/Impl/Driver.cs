@@ -769,6 +769,25 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				Log.Debug("Gear changed after a valid operating point was found - braking is no longer applicable due to overload"); 
 				return null;
 			}
+
+			if (DataBus.HybridControllerCtl != null && response is ResponseEngineSpeedTooHigh &&
+				!(retVal is ResponseSuccess)) {
+				// search brakingpower found a solution but request resulted in non-success - try again
+				DataBus.Brakes.BrakePower = 0.SI<Watt>();
+				try {
+					operatingPoint = SearchBrakingPower(
+						absTime, operatingPoint.SimulationDistance, gradient,
+						operatingPoint.Acceleration, response);
+				} catch (VectoSearchAbortedException vsa) {
+					Log.Warn("Search braking power aborted {0}", vsa);
+					if (DataBus.GearboxInfo.GearboxType.AutomaticTransmission()) {
+						operatingPoint = SetTCOperatingPointATGbxBraking(absTime, gradient, operatingPoint, response);
+					}
+				}
+				retVal = NextComponent.Request(absTime, operatingPoint.SimulationInterval, operatingPoint.Acceleration,
+					gradient, false);
+			}
+
 			retVal.Switch().
 				Case<ResponseSuccess>().
 				Case<ResponseGearShift>().

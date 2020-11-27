@@ -155,7 +155,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					acceleration, delta, Constants.SimulationSettings.OperatingPointInitialSearchIntervalAccelerating,
 					getYValue: response => {
 						var r = (ResponseDryRun)response;
-						return r.Gearbox.PowerRequest;
+						return r.Clutch.PowerRequest;
 					},
 					evaluateFunction: acc => {
 						var response = vehicle.Request(time, simulationInterval, acc, gradient, true);
@@ -164,7 +164,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					},
 					criterion: response => {
 						var r = (ResponseDryRun)response;
-						return r.Gearbox.PowerRequest.Value() * 100;
+						return r.Clutch.PowerRequest.Value() * 100;
 					},
 					abortCriterion: (response, cnt) => {
 						var r = (ResponseDryRun)response;
