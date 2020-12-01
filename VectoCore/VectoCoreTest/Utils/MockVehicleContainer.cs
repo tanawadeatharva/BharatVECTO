@@ -161,6 +161,7 @@ namespace TUGraz.VectoCore.Tests.Utils
 
 		public IHybridControllerInfo HybridControllerInfo { get; }
 		public IHybridControllerCtl HybridControllerCtl { get; }
+		public IAngledriveInfo AngledriveInfo { get; }
 
 		public Watt GearboxLoss()
 		{
@@ -350,8 +351,10 @@ namespace TUGraz.VectoCore.Tests.Utils
 		}
 
 		public Tuple<PerSecond, NewtonMeter> CurrentAxleDemand { get; }
+		public double Ratio { get; }
 
 		public Kilogram ReducedMassWheels { get; set; }
+		public Meter DynamicTyreRadius { get; }
 
 		#region Implementation of IEngineControl
 

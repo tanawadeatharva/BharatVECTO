@@ -42,7 +42,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 	public class Wheels : StatefulProviderComponent<Wheels.WheelsState, IFvOutPort, ITnInPort, ITnOutPort>, IWheels,
 		IFvOutPort, ITnInPort
 	{
-		private readonly Meter _dynamicWheelRadius;
 		private readonly KilogramSquareMeter _totalWheelsInertia;
 
 		public class WheelsState
@@ -55,14 +54,14 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		public Wheels(IVehicleContainer cockpit, Meter rdyn, KilogramSquareMeter totalWheelsInertia)
 			: base(cockpit)
 		{
-			_dynamicWheelRadius = rdyn;
+			DynamicTyreRadius = rdyn;
 			_totalWheelsInertia = totalWheelsInertia;
 		}
 
 		public IResponse Initialize(Newton force, MeterPerSecond velocity)
 		{
-			PreviousState.TorqueIn = force * _dynamicWheelRadius;
-			PreviousState.AngularVelocity = velocity / _dynamicWheelRadius;
+			PreviousState.TorqueIn = force * DynamicTyreRadius;
+			PreviousState.AngularVelocity = velocity / DynamicTyreRadius;
 			PreviousState.InertiaTorqueLoss = 0.SI<NewtonMeter>();
 
 			return NextComponent.Initialize(PreviousState.TorqueIn, PreviousState.AngularVelocity);
@@ -72,13 +71,13 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		{
 			Log.Debug("request: force: {0}, velocity: {1}", force, velocity);
 
-			CurrentState.AngularVelocity = velocity / _dynamicWheelRadius;
+			CurrentState.AngularVelocity = velocity / DynamicTyreRadius;
 			var avgAngularSpeed = (CurrentState.AngularVelocity + PreviousState.AngularVelocity) / 2.0;
 			CurrentState.InertiaTorqueLoss = avgAngularSpeed.IsEqual(0.SI<PerSecond>())
 				? 0.SI<NewtonMeter>()
 				: Formulas.InertiaPower(CurrentState.AngularVelocity, PreviousState.AngularVelocity, _totalWheelsInertia, dt) /
 				avgAngularSpeed; //(_totalWheelsInertia * avgAngularSpeed / dt).Cast<NewtonMeter>();
-			CurrentState.TorqueIn = force * _dynamicWheelRadius + CurrentState.InertiaTorqueLoss;
+			CurrentState.TorqueIn = force * DynamicTyreRadius + CurrentState.InertiaTorqueLoss;
 			var retVal = NextComponent.Request(absTime, dt, CurrentState.TorqueIn, CurrentState.AngularVelocity,
 				dryRun);
 
@@ -96,7 +95,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		public Kilogram ReducedMassWheels
 		{
-			get { return (_totalWheelsInertia / _dynamicWheelRadius / _dynamicWheelRadius).Cast<Kilogram>(); }
+			get { return (_totalWheelsInertia / DynamicTyreRadius / DynamicTyreRadius).Cast<Kilogram>(); }
 		}
+
+		public Meter DynamicTyreRadius { get; }
 	}
 }

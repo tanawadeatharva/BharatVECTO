@@ -360,21 +360,21 @@ Public Class ElectricMotorForm
             Dim fldFile As String =
                     If(Not String.IsNullOrWhiteSpace(_emFile), Path.Combine(Path.GetDirectoryName(_emFile), tbMaxTorque.Text), tbDragTorque.Text)
             If File.Exists(fldFile) Then _
-                fullLoadCurve = ElectricFullLoadCurveReader.Create(VectoCSVFile.Read(fldFile), 1.0, 1, 1.0)
+                fullLoadCurve = ElectricFullLoadCurveReader.Create(VectoCSVFile.Read(fldFile), 1)
         Catch ex As Exception
         End Try
 
         Try
             Dim fcFile As String =
                     If(Not String.IsNullOrWhiteSpace(_emFile), Path.Combine(Path.GetDirectoryName(_emFile), tbMap.Text), tbMap.Text)
-            If File.Exists(fcFile) Then fcMap = ElectricMotorMapReader.Create(VectoCSVFile.Read(fcFile), 1.0, 1, 1.0)
+            If File.Exists(fcFile) Then fcMap = ElectricMotorMapReader.Create(VectoCSVFile.Read(fcFile), 1)
         Catch ex As Exception
         End Try
 
         Try
             Dim dragFile As String =
                     If(Not String.IsNullOrWhiteSpace(_emFile), Path.Combine(Path.GetDirectoryName(_emFile), tbDragTorque.Text), tbMap.Text)
-            If File.Exists(dragFile) Then dragCurve = ElectricMotorDragCurveReader.Create(VectoCSVFile.Read(dragFile), 1.0, 1, 1.0)
+            If File.Exists(dragFile) Then dragCurve = ElectricMotorDragCurveReader.Create(VectoCSVFile.Read(dragFile), 1)
         Catch ex As Exception
         End Try
 

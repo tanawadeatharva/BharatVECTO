@@ -110,7 +110,7 @@ namespace TUGraz.VectoCore.Tests.Integration.BatteryElectric
 			const bool largeMotor = true;
 
 			var modFilename = string.Format("SimpleBatteryElectric-B4_constant_{0}-{1}_{2}_{3}", vmax, initialSoC, slope, pAuxEl);
-			const PowertrainPosition pos = PowertrainPosition.BatteryElectricB4;
+			const PowertrainPosition pos = PowertrainPosition.BatteryElectricE4;
 			var job = CreateEngineeringRun(
 				cycle, modFilename, initialSoC, pos, 2, 22.6, largeMotor: true, pAuxEl: pAuxEl);
 			var run = job.Runs.First().Run;
@@ -146,7 +146,7 @@ namespace TUGraz.VectoCore.Tests.Integration.BatteryElectric
 			const bool largeMotor = true;
 
 			var modFilename = string.Format("SimpleBatteryElectric-B4_acc_{0}-{1}_{2}", vmax, initialSoC, slope);
-			const PowertrainPosition pos = PowertrainPosition.BatteryElectricB4;
+			const PowertrainPosition pos = PowertrainPosition.BatteryElectricE4;
 			var job = CreateEngineeringRun(
 				cycle, modFilename, initialSoC, pos, 2, 22.6, largeMotor: true);
 			var run = job.Runs.First().Run;
@@ -182,7 +182,7 @@ namespace TUGraz.VectoCore.Tests.Integration.BatteryElectric
 			const bool largeMotor = true;
 
 			var modFilename = string.Format("SimpleParallelHybrid-B4_cycle_{0}-{1}_{2}_{3}", declarationMission, initialSoC, payload, pAuxEl);
-			const PowertrainPosition pos = PowertrainPosition.BatteryElectricB4;
+			const PowertrainPosition pos = PowertrainPosition.BatteryElectricE4;
 			var job = CreateEngineeringRun(
 				cycle, modFilename, initialSoC, pos, 2, 22.6, largeMotor: true);
 			var run = job.Runs.First().Run;
@@ -267,7 +267,7 @@ namespace TUGraz.VectoCore.Tests.Integration.BatteryElectric
 			const bool largeMotor = true;
 
 			var modFilename = string.Format("SimpleBatteryElectric-B3_constant_{0}-{1}_{2}_{3}", vmax, initialSoC, slope, pAuxEl);
-			const PowertrainPosition pos = PowertrainPosition.BatteryElectricB3;
+			const PowertrainPosition pos = PowertrainPosition.BatteryElectricE3;
 			var job = CreateEngineeringRun(
 				cycle, modFilename, initialSoC, pos, 2, 22.6, largeMotor: true, pAuxEl: pAuxEl);
 			var run = job.Runs.First().Run;
@@ -303,7 +303,7 @@ namespace TUGraz.VectoCore.Tests.Integration.BatteryElectric
 			const bool largeMotor = true;
 
 			var modFilename = string.Format("SimpleBatteryElectric-B3_acc_{0}-{1}_{2}", vmax, initialSoC, slope);
-			const PowertrainPosition pos = PowertrainPosition.BatteryElectricB3;
+			const PowertrainPosition pos = PowertrainPosition.BatteryElectricE3;
 			var job = CreateEngineeringRun(
 				cycle, modFilename, initialSoC, pos, 2, 22.6, largeMotor: true);
 			var run = job.Runs.First().Run;
@@ -339,7 +339,7 @@ namespace TUGraz.VectoCore.Tests.Integration.BatteryElectric
 			const bool largeMotor = true;
 
 			var modFilename = string.Format("SimpleParallelHybrid-B3_cycle_{0}-{1}_{2}_{3}", declarationMission, initialSoC, payload, pAuxEl);
-			const PowertrainPosition pos = PowertrainPosition.BatteryElectricB3;
+			const PowertrainPosition pos = PowertrainPosition.BatteryElectricE3;
 			var job = CreateEngineeringRun(
 				cycle, modFilename, initialSoC, pos, 2, 22.6, largeMotor: true);
 
@@ -393,7 +393,7 @@ namespace TUGraz.VectoCore.Tests.Integration.BatteryElectric
 			const bool largeMotor = true;
 
 			var modFilename = string.Format("SimpleBatteryElectric-B2_constant_{0}-{1}_{2}_{3}", vmax, initialSoC, slope, pAuxEl);
-			const PowertrainPosition pos = PowertrainPosition.BatteryElectricB2;
+			const PowertrainPosition pos = PowertrainPosition.BatteryElectricE2;
 			var job = CreateEngineeringRun(
 				cycle, modFilename, initialSoC, pos, 2, 2, largeMotor: true, pAuxEl: pAuxEl);
 			var run = job.Runs.First().Run;
@@ -431,7 +431,7 @@ namespace TUGraz.VectoCore.Tests.Integration.BatteryElectric
 			const bool largeMotor = true;
 
 			var modFilename = string.Format("SimpleBatteryElectric-B2_stop_{0}-{1}_{2}", vmax, initialSoC, slope);
-			const PowertrainPosition pos = PowertrainPosition.BatteryElectricB2;
+			const PowertrainPosition pos = PowertrainPosition.BatteryElectricE2;
 			var job = CreateEngineeringRun(
 				cycle, modFilename, initialSoC, pos, 2, 2, largeMotor: true);
 			var run = job.Runs.First().Run;
@@ -461,7 +461,7 @@ namespace TUGraz.VectoCore.Tests.Integration.BatteryElectric
 			const bool largeMotor = true;
 
 			var modFilename = string.Format("SimpleBatteryElectric-B2_acc_{0}-{1}_{2}", vmax, initialSoC, slope);
-			const PowertrainPosition pos = PowertrainPosition.BatteryElectricB2;
+			const PowertrainPosition pos = PowertrainPosition.BatteryElectricE2;
 			var job = CreateEngineeringRun(
 				cycle, modFilename, initialSoC, pos, 2, 2, largeMotor: true);
 			var run = job.Runs.First().Run;
@@ -496,8 +496,8 @@ namespace TUGraz.VectoCore.Tests.Integration.BatteryElectric
 
 			const bool largeMotor = true;
 
-			var modFilename = string.Format("SimpleParallelHybrid-B2_cycle_{0}-{1}_{2}_{3}", declarationMission, initialSoC, payload, pAuxEl);
-			const PowertrainPosition pos = PowertrainPosition.BatteryElectricB2;
+			var modFilename = string.Format("SimpleBatteryElectric-B2_cycle_{0}-{1}_{2}_{3}", declarationMission, initialSoC, payload, pAuxEl);
+			const PowertrainPosition pos = PowertrainPosition.BatteryElectricE2;
 			var job = CreateEngineeringRun(
 				cycle, modFilename, initialSoC, pos, 2, 2, largeMotor: true);
 			var run = job.Runs.First().Run;
@@ -603,7 +603,7 @@ namespace TUGraz.VectoCore.Tests.Integration.BatteryElectric
 			var driverData = CreateDriverData(AccelerationFile, true);
 
 			var electricMotorData =
-				MockSimulationDataFactory.CreateElectricMotorData(MotorFile, count, pos, ratio / (pos == PowertrainPosition.BatteryElectricB3 ? 2.59 : 1.0), 0.97);
+				MockSimulationDataFactory.CreateElectricMotorData(MotorFile, count, pos, ratio / (pos == PowertrainPosition.BatteryElectricE3 ? 2.59 : 1.0), 0.97);
 
 			var batteryData = MockSimulationDataFactory.CreateBatteryData(BatFile, initialBatCharge);
 			
@@ -636,11 +636,11 @@ namespace TUGraz.VectoCore.Tests.Integration.BatteryElectric
 			{
 				WriteModalResults = true,
 			};
-			if (pos == PowertrainPosition.BatteryElectricB3) {
+			if (pos == PowertrainPosition.BatteryElectricE3) {
 				runData.AxleGearData = axleGearData;
 			}
 
-			if (pos == PowertrainPosition.BatteryElectricB2) {
+			if (pos == PowertrainPosition.BatteryElectricE2) {
 				runData.AxleGearData = axleGearData;
 				runData.GearboxData = gearboxData;
 			}
@@ -682,22 +682,22 @@ namespace TUGraz.VectoCore.Tests.Integration.BatteryElectric
 				case PowertrainPosition.HybridP3: 
 				case PowertrainPosition.HybridP4: 
 					throw new VectoException("testcase does not support parallel powertrain configurations");
-				case PowertrainPosition.BatteryElectricB4:
+				case PowertrainPosition.BatteryElectricE4:
 					powertrain.AddComponent(
-						GetElectricMachine(PowertrainPosition.BatteryElectricB4, runData.ElectricMachinesData, container, es, ctl));
+						GetElectricMachine(PowertrainPosition.BatteryElectricE4, runData.ElectricMachinesData, container, es, ctl));
 					new DummyGearboxInfo(container);
 					//new MockEngineInfo(container);
 					new ATClutchInfo(container);
 					break;
-				case PowertrainPosition.BatteryElectricB3:
+				case PowertrainPosition.BatteryElectricE3:
 					powertrain.AddComponent(new AxleGear(container, runData.AxleGearData))
 							.AddComponent(
-								GetElectricMachine(PowertrainPosition.BatteryElectricB3, runData.ElectricMachinesData, container, es, ctl));
+								GetElectricMachine(PowertrainPosition.BatteryElectricE3, runData.ElectricMachinesData, container, es, ctl));
 					new DummyGearboxInfo(container);
 					//new MockEngineInfo(container);
 					new ATClutchInfo(container);
 					break;
-				case PowertrainPosition.BatteryElectricB2:
+				case PowertrainPosition.BatteryElectricE2:
 					var strategy = new PEVAMTShiftStrategy(container);
 
 					foreach (var entry in gearboxData.Gears) {
@@ -708,7 +708,7 @@ namespace TUGraz.VectoCore.Tests.Integration.BatteryElectric
 					powertrain.AddComponent(new AxleGear(container, runData.AxleGearData))
 						.AddComponent(new PEVGearbox(container, strategy))
 						.AddComponent(
-							GetElectricMachine(PowertrainPosition.BatteryElectricB2, runData.ElectricMachinesData, container, es, ctl));
+							GetElectricMachine(PowertrainPosition.BatteryElectricE2, runData.ElectricMachinesData, container, es, ctl));
 					new ATClutchInfo(container);
 					break;
 					//throw new VectoException("Battery Electric configuration B2 currently not supported");

@@ -182,6 +182,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl {
 		public GearInfo SelectedGear { get; }
 		public PerSecond ICESpeed { get; }
 		public bool GearboxEngaged { get; }
+		public Second SimulationInterval { get; }
 
 		public PerSecond ElectricMotorSpeed(PowertrainPosition pos)
 		{

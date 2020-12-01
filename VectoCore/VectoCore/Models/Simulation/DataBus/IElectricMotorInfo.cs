@@ -12,5 +12,6 @@ namespace TUGraz.VectoCore.Models.Simulation.DataBus
 		PerSecond MaxSpeed { get; }
 		Watt DragPower(PerSecond electricMotorSpeed);
 		Watt MaxPowerDrive(PerSecond inAngularVelocity);
+		NewtonMeter GetTorqueForElectricPower(Watt electricPower, PerSecond avgEmSpeed, Second dt);
 	}
 }
