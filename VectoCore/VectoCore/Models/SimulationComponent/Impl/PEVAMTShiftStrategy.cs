@@ -634,10 +634,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		public void WriteModalResults(IModalDataContainer container) { }
 
-		public ShiftPolygon ComputeDeclarationShiftPolygon(GearboxType gearboxType, int i, EngineFullLoadCurve engineDataFullLoadCurve,
+		public ShiftPolygon ComputeDeclarationShiftPolygon(GearboxType gearboxType, int i, EngineFullLoadCurve engineDataFullLoadCurve, 
 			IList<ITransmissionInputData> gearboxGears, CombustionEngineData engineData, double axlegearRatio, Meter dynamicTyreRadius, ElectricMotorData electricMotorData)
 		{
-			return DeclarationData.Gearbox.ComputeElectricMotorShiftPolygon(i, electricMotorData.FullLoadCurve, gearboxGears, axlegearRatio, dynamicTyreRadius);
+			return DeclarationData.Gearbox.ComputeElectricMotorShiftPolygon(i, electricMotorData.FullLoadCurve, electricMotorData.Ratio, gearboxGears, axlegearRatio, dynamicTyreRadius);
 		}
 
 	}
