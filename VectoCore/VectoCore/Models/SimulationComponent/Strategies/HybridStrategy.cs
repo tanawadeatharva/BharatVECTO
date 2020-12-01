@@ -124,11 +124,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 				(DataBus.ElectricMotorInfo(pos) as ElectricMotor).DeRatingActive;
 
 			if (/*nextGear != DataBus.GearboxInfo.Gear && */TestPowertrain.ElectricMotorP2 != null) {
-				TestPowertrain.ElectricMotorP2.PreviousState.OutAngularVelocity =
+				TestPowertrain.ElectricMotorP2.PreviousState.EMSpeed =
 					DataBus.ElectricMotorInfo(PowertrainPosition.HybridP2).ElectricMotorSpeed;
 			}
 			if (/*nextGear != DataBus.GearboxInfo.Gear && */TestPowertrain.ElectricMotorP3 != null) {
-				TestPowertrain.ElectricMotorP3.PreviousState.OutAngularVelocity =
+				TestPowertrain.ElectricMotorP3.PreviousState.EMSpeed =
 					DataBus.ElectricMotorInfo(PowertrainPosition.HybridP3).ElectricMotorSpeed;
 			}
 
@@ -233,11 +233,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 				(DataBus.ElectricMotorInfo(pos) as ElectricMotor).DeRatingActive;
 
 			if (/*nextGear != DataBus.GearboxInfo.Gear && */TestPowertrain.ElectricMotorP2 != null) {
-				TestPowertrain.ElectricMotorP2.PreviousState.OutAngularVelocity =
+				TestPowertrain.ElectricMotorP2.PreviousState.EMSpeed =
 					DataBus.ElectricMotorInfo(PowertrainPosition.HybridP2).ElectricMotorSpeed;
 			}
 			if (/*nextGear != DataBus.GearboxInfo.Gear && */TestPowertrain.ElectricMotorP3 != null) {
-				TestPowertrain.ElectricMotorP3.PreviousState.OutAngularVelocity =
+				TestPowertrain.ElectricMotorP3.PreviousState.EMSpeed =
 					DataBus.ElectricMotorInfo(PowertrainPosition.HybridP3).ElectricMotorSpeed;
 			}
 

@@ -198,6 +198,12 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				emTorque = 0.SI<NewtonMeter>();
 			}
 
+			if (Position == PowertrainPosition.HybridP1 && !DataBus.EngineCtl.CombustionEngineOn) {
+				// electric motor is directly connected to the ICE, ICE is off and EM is off - do not apply drag loss
+				emTorqueDt = 0.SI<NewtonMeter>();
+				emTorque = 0.SI<NewtonMeter>();
+			}
+
 			if (ElectricPower == null || emTorqueDt == null) {
 				// no electric system or EM shall be off - apply drag only
 				// if EM is off, calculate EM drag torque 'forward' to be applied on drivetrain
@@ -299,11 +305,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				CurrentState.DriveMax = maxDriveTorqueEmMap;
 
 				CurrentState.InertiaTorqueLoss = inertiaTorqueEm;
-			if (Position == PowertrainPosition.HybridP1 && !DataBus.EngineCtl.CombustionEngineOn) {
-				// electric motor is directly connected to the ICE, ICE is off and EM is off - do not apply drag loss
-				inTorque = outTorque;
-			}
-
 				CurrentState.DrivetrainSpeed = outAngularVelocity;
 				CurrentState.DrivetrainInTorque = inTorqueDt;
 				CurrentState.DrivetrainOutTorque = outTorque;
