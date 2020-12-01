@@ -559,6 +559,16 @@ namespace TUGraz.VectoCore.OutputData
 			return 100 * iceOff / data.Duration;
 		}
 
+		public static Scalar ElectricMotorOffTimeShare(this IModalDataContainer data, PowertrainPosition pos)
+		{
+			var emOff = data.GetValues(x => new {
+				dt = x[string.Format(ModalResultField.EM_Off_.GetCaption(), pos.GetName())] is DBNull
+					? 0.SI<Second>()
+					: x.Field<Second>(ModalResultField.simulationInterval.GetName())
+			}).Sum(x => x.dt) ?? 0.SI<Second>();
+			return 100 * emOff / data.Duration;
+		}
+
 		/// <summary>
 		/// The following logic applies:
 		/// - shifting from gear A to gear B counts as gearshift (with or without traction interruption)

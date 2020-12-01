@@ -104,6 +104,8 @@ namespace TUGraz.VectoCore.OutputData
 		private List<PowertrainPosition> ElectricMotors = new List<PowertrainPosition>();
 		private Dictionary<PowertrainPosition, WattSecond> _eEmDrive = new Dictionary<PowertrainPosition, WattSecond>();
 		private Dictionary<PowertrainPosition, WattSecond> _eEmRecuperate = new Dictionary<PowertrainPosition, WattSecond>();
+		private Dictionary<PowertrainPosition, WattSecond> _eEmDriveMot = new Dictionary<PowertrainPosition, WattSecond>();
+		private Dictionary<PowertrainPosition, WattSecond> _eEmRecuperateMot = new Dictionary<PowertrainPosition, WattSecond>();
 
 		protected VectoRunData _runData;
 		
@@ -288,12 +290,12 @@ namespace TUGraz.VectoCore.OutputData
 				return null;
 			}
 
-			if (!_eEmDrive.ContainsKey(emPos)) {
-				_eEmDrive[emPos] = TimeIntegral<WattSecond>(
+			if (!_eEmDriveMot.ContainsKey(emPos)) {
+				_eEmDriveMot[emPos] = TimeIntegral<WattSecond>(
 					string.Format(ModalResultField.P_EM_electricMotor_em_mech_.GetCaption(), emPos.GetName()), x => x < 0);
 			}
 
-			return -_eEmDrive[emPos];
+			return -_eEmDriveMot[emPos];
 		}
 
 		public WattSecond TotalElectricMotorWorkRecuperate(PowertrainPosition emPos)
@@ -316,13 +318,13 @@ namespace TUGraz.VectoCore.OutputData
 				return null;
 			}
 
-			if (!_eEmRecuperate.ContainsKey(emPos)) {
-				_eEmRecuperate[emPos] = TimeIntegral<WattSecond>(
+			if (!_eEmRecuperateMot.ContainsKey(emPos)) {
+				_eEmRecuperateMot[emPos] = TimeIntegral<WattSecond>(
 					string.Format(ModalResultField.P_EM_electricMotor_em_mech_.GetCaption(), emPos.GetName()), x => x > 0);
 				;
 			}
 
-			return _eEmRecuperate[emPos];
+			return _eEmRecuperateMot[emPos];
 		}
 
 

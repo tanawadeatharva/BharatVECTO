@@ -741,8 +741,10 @@ namespace TUGraz.VectoCore.OutputData
 					
 					Tuple.Create(Fields.E_EM_OFF_Loss_Format, modData.ElectricMotorOffLosses(em.Item1).ConvertToKiloWattHour()),
 					Tuple.Create(Fields.E_EM_LOSS_TRANSM_FORMAT, modData.ElectricMotorTransmissionLosses(em.Item1).ConvertToKiloWattHour()),
-					Tuple.Create(Fields.E_EM_Mot_LOSS_FORMAT, modData.ElectricMotorLosses(em.Item1).ConvertToKiloWattHour()),
-					Tuple.Create(Fields.E_EM_LOSS_FORMAT, modData.ElectricMotorMotLosses(em.Item1).ConvertToKiloWattHour()),
+					Tuple.Create(Fields.E_EM_Mot_LOSS_FORMAT, modData.ElectricMotorMotLosses(em.Item1).ConvertToKiloWattHour()),
+					Tuple.Create(Fields.E_EM_LOSS_FORMAT, modData.ElectricMotorLosses(em.Item1).ConvertToKiloWattHour()),
+
+					Tuple.Create(Fields.E_EM_OFF_TIME_SHARE, (ConvertedSI)modData.ElectricMotorOffTimeShare(em.Item1))
 				};
 				emColumns.Reverse();
 				foreach (var entry in emColumns) {
@@ -1326,7 +1328,7 @@ namespace TUGraz.VectoCore.OutputData
 			public const string E_EM_LOSS_TRANSM_FORMAT = "E_EM_{0}_transm_loss [kWh]";
 			public const string E_EM_Mot_LOSS_FORMAT = "E_EM_{0}-em_loss [kWh]";
 			public const string E_EM_LOSS_FORMAT = "E_EM_{0}_loss [kWh]";
-
+			public const string E_EM_OFF_TIME_SHARE = "EM {0} off time share [%]"; 
 
 			public const string REESS_CAPACITY = "REESS Capacity";
 			public const string REESS_StartSoC = "REESS Start SoC [%]";
