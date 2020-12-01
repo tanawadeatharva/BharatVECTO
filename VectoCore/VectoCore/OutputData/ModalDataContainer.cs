@@ -504,12 +504,6 @@ namespace TUGraz.VectoCore.OutputData
 			return TimeIntegral<WattSecond>(ModalResultField.P_reess_loss);
 		}
 
-		public WattSecond REESSEnergyEnd()
-		{
-			return Data.AsEnumerable().Cast<DataRow>().Last().Field<SI>(ModalResultField.E_RESS.GetName())
-				.Cast<WattSecond>();
-		}
-
 		public void CalculateAggregateValues()
 		{
 			var duration = Duration;
@@ -714,7 +708,6 @@ namespace TUGraz.VectoCore.OutputData
 					ModalResultField.U_reess_terminal,
 					ModalResultField.U0_reess,
 					ModalResultField.I_reess,
-					ModalResultField.E_RESS
 				}.Select(x => x.GetName()));
 				foreach (var em in ElectricMotors.OrderBy(x => x).Reverse()) {
 					dataColumns.AddRange(_electricMotorColumns.Select(emCol =>

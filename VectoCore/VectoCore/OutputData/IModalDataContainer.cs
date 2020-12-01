@@ -141,8 +141,6 @@ namespace TUGraz.VectoCore.OutputData
 		double BatteryStartSoC();
 		double REESSEndSoC();
 		WattSecond REESSLoss();
-		WattSecond REESSEnergyEnd();
-
 	}
 
 	public static class ModalDataContainerExtensions

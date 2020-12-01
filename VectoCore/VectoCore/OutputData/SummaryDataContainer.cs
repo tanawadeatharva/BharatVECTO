@@ -786,25 +786,15 @@ namespace TUGraz.VectoCore.OutputData
 			if (runData.BatteryData != null) {
 				row[Fields.REESS_StartSoC] = runData.BatteryData.InitialSoC * 100; 
 				row[Fields.REESS_EndSoC] = modData.REESSEndSoC();
-				var cellVoltage = runData.BatteryData.SOCMap.Lookup(runData.BatteryData.InitialSoC);
-				row[Fields.REESS_DeltaSoC] =
-					(modData.REESSEnergyEnd() - 
-					(runData.BatteryData.InitialSoC * runData.BatteryData.Capacity * cellVoltage).Cast<WattSecond>()).ConvertToKiloWattHour();
+				row[Fields.REESS_DeltaSoC] = modData.TimeIntegral<WattSecond>(ModalResultField.P_reess_int.GetName())
+					.ConvertToKiloWattHour();
 
-				
 			}
 			if (runData.SuperCapData != null) {
 				row[Fields.REESS_StartSoC] = runData.SuperCapData.InitialSoC * 100;
 				row[Fields.REESS_EndSoC] = modData.REESSEndSoC();
-				var initialCharge = runData.SuperCapData.Capacity *
-									((runData.SuperCapData.MaxVoltage - runData.SuperCapData.MinVoltage) *
-									runData.SuperCapData.InitialSoC +
-									runData.SuperCapData.MinVoltage);
-				row[Fields.REESS_DeltaSoC] =
-					(modData.REESSEnergyEnd() -
-					(initialCharge * initialCharge / runData.SuperCapData.Capacity / 2.0).Cast<WattSecond>()).ConvertToKiloWattHour();
-
-
+				row[Fields.REESS_DeltaSoC] = modData.TimeIntegral<WattSecond>(ModalResultField.P_reess_int.GetName())
+					.ConvertToKiloWattHour();
 			}
 		}
 
@@ -1338,10 +1328,10 @@ namespace TUGraz.VectoCore.OutputData
 			public const string E_EM_LOSS_FORMAT = "E_EM_{0}_loss [kWh]";
 
 
+			public const string REESS_CAPACITY = "REESS Capacity";
 			public const string REESS_StartSoC = "REESS Start SoC [%]";
 			public const string REESS_EndSoC = "REESS End SoC [%]";
-			public const string REESS_DeltaSoC = "REESS Delta SoC [kWh]";
-			public const string REESS_CAPACITY = "REESS Capacity";
+			public const string REESS_DeltaSoC = "ΔE_REESS [kWh]";
 
 			public const string E_REESS_LOSS = "E_REESS_loss [kWh]";
 			public const string E_REESS_T_chg = "E_REESS_T_chg [kWh]";

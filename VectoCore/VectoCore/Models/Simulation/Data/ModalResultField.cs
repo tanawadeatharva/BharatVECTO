@@ -433,9 +433,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 		[ModalResultField(typeof(SI), caption: "U_reess_terminal [V]")] U_reess_terminal,
 		[ModalResultField(typeof(SI), caption: "U_0_reess [V]")] U0_reess,
 		[ModalResultField(typeof(SI), caption: "I_reess [A]")] I_reess,
-		
-		[ModalResultField(typeof(SI), caption: "E_reess [kWh]", outputFactor: 1/3600e3)] E_RESS,
-    }
+	}
 
 	[AttributeUsage(AttributeTargets.Field)]
 	public class ModalResultFieldAttribute : Attribute
