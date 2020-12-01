@@ -496,7 +496,7 @@ namespace TUGraz.VectoCore.Tests.Integration.BatteryElectric
 
 			const bool largeMotor = true;
 
-			var modFilename = string.Format("SimpleParallelHybrid-B2_cycle_{0}-{1}_{2}_{3}", declarationMission, initialSoC, payload, pAuxEl);
+			var modFilename = string.Format("SimpleBatteryElectric-B2_cycle_{0}-{1}_{2}_{3}", declarationMission, initialSoC, payload, pAuxEl);
 			const PowertrainPosition pos = PowertrainPosition.BatteryElectricE2;
 			var job = CreateEngineeringRun(
 				cycle, modFilename, initialSoC, pos, 2, 2, largeMotor: true);

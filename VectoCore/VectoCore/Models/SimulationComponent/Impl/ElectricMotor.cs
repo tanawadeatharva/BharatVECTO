@@ -56,7 +56,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		public PowertrainPosition Position { get; }
 		public PerSecond MaxSpeed
 		{
-			get { return _maxSpeed ?? (_maxSpeed = ModelData.FullLoadCurve.FullLoadEntries.MaxBy(x => x.MotorSpeed).MotorSpeed) / ModelData.Ratio; }
+			get { return _maxSpeed ?? (_maxSpeed = (ModelData.FullLoadCurve.FullLoadEntries.MaxBy(x => x.MotorSpeed).MotorSpeed) / ModelData.Ratio); }
 		}
 
 		public Watt DragPower(PerSecond electricMotorSpeed)
@@ -192,6 +192,12 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				emTorque = 0.SI<NewtonMeter>();
 			}
 
+			if (Position == PowertrainPosition.BatteryElectricE2 && !DataBus.GearboxInfo.GearEngaged(absTime)) {
+				// electric motor is after the gearbox but no gear engaged - ignore inertia and drag...
+				emTorqueDt = 0.SI<NewtonMeter>();
+				emTorque = 0.SI<NewtonMeter>();
+			}
+
 			if (ElectricPower == null || emTorqueDt == null) {
 				// no electric system or EM shall be off - apply drag only
 				// if EM is off, calculate EM drag torque 'forward' to be applied on drivetrain
@@ -218,8 +224,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			var electricSupplyResponse =
 				ElectricPower.Request(absTime, dt, electricPower, dryRun);
-			if (!dryRun && !(electricSupplyResponse is ElectricSystemResponseSuccess)) {
-				if (!emOff && DataBus.HybridControllerInfo != null && !avgEmSpeed.IsEqual(DataBus.HybridControllerInfo.ElectricMotorSpeed(Position))) {
+			if (!dryRun && !emOff && !(electricSupplyResponse is ElectricSystemResponseSuccess)) {
+				if (DataBus.HybridControllerInfo != null && !avgEmSpeed.IsEqual(DataBus.HybridControllerInfo.ElectricMotorSpeed(Position))) {
 					return new ResponseInvalidOperatingPoint(this);
 				}
 				throw new VectoException(
