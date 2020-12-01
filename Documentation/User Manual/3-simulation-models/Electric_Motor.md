@@ -50,13 +50,14 @@ The basic principal of the thermal de-rating is as follows: based on the continu
 
 $E_\textrm{th,buf} = P_\textrm{loss,cont} * t_\textrm{ovl}$
 
-$P_\textrm{loss,cont} = P_\textrm{map, el}(\frac{P_\textrm{cont}}{n_\textrm{P, cont}}, n_\textrm{P, cont}) - P_\textrm{cont}$
+$P_\textrm{loss,cont} = P_\textrm{cont} - P_\textrm{map, el}(\frac{P_\textrm{cont}}{n_\textrm{P, cont}}, n_\textrm{P, cont})$
 
 In every simulation step the losses of the electric machine are accumulated:
 
-$E_{\textrm{ovl,} i + 1} = E_{\textrm{ovl,} i} + P_\textrm{loss, i} * dt$
+$E_{\textrm{ovl,} i + 1} = E_{\textrm{ovl,} i} + (P_\textrm{loss, i} - P_\textrm{loss,cont}) * dt$
 
 $P_\textrm{loss, i} = T_\textrm{em, mech} * n_\textrm{em} - P_\textrm{map, el}(T_\textrm{em, mech}, n_\textrm{em})$
+
 
 If $E_\textrm{ovl, i}$ reaches the overload capacity $E_\textrm{th,buf}$ the power of the electric machine is limited to the continuous power until $E_\textrm{ovl,i}$ goes below the overload capacity multiplied by a certain factor. Then the maximum torque is available again.
 
