@@ -19,7 +19,9 @@ namespace TUGraz.VectoCommon.Models {
 	public class HybridStrategyResponse : AbstractComponentResponse, IHybridStrategyResponse
 	{
 		public Dictionary<PowertrainPosition, Tuple<PerSecond, NewtonMeter>> MechanicalAssistPower;
-		public bool ShiftRequired { get; set; }
+
+        public Second SimulationInterval;
+        public bool ShiftRequired { get; set; }
 		public GearshiftPosition NextGear { get; set; }
 		public bool GearboxInNeutral { get; set; }
 		public bool CombustionEngineOn { get; set; }
@@ -31,6 +33,8 @@ namespace TUGraz.VectoCommon.Models {
 	[DebuggerDisplay("{U}: {Score} - G{Gear}")]
 	public class HybridResultEntry
 	{
+		public Second SimulationInterval
+			;
 		public double U { get; set; }
 
 		public HybridStrategyResponse Setting { get; set; }

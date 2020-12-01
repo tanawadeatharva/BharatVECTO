@@ -397,7 +397,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 			}
 
 			if (DryRunSolution != null && DryRunSolution.DrivingAction == DataBus.DriverInfo.DrivingAction) {
-				return CreateResponse(DryRunSolution.Solution, currentGear);
+				var tmp = CreateResponse(DryRunSolution.Solution, currentGear);
+				return tmp;
 			}
 
 
@@ -434,7 +435,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 			//	Log.Debug("best: {0}, origBest: {1}", best.ToString(), origBest.ToString());
 			//}
 
+			//best.SimulationInterval = dt;
 			var retVal = CreateResponse(best, currentGear);
+			
 			retVal.GearboxEngaged = DataBus.GearboxInfo.GearEngaged(absTime);
 			if (!DataBus.EngineInfo.EngineOn && !best.ICEOff && retVal.ShiftRequired) {
 				CurrentState.ICEStartTStmp = absTime + dt;
@@ -839,6 +842,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 			var best = DoSelectBestOption(eval, absTime, dt, outTorque, outAngularVelocity, dryRun, currentGear);
 			if (best == null || !best.IgnoreReason.InvalidEngineSpeed() || best.ICEOff ||
 				eval.Select(x => x.Gear).Distinct().Count() <= 1) {
+				best.SimulationInterval = dt;
 				return best;
 			}
 
@@ -863,6 +867,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 					best = DoSelectBestOption(newEval, absTime, dt, outTorque, outAngularVelocity, dryRun, currentGear);
 				}
 			}
+
+			best.SimulationInterval = dt;
 			return best;
 		}
 
@@ -979,7 +985,12 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 				ShiftRequired = best.Gear.Engaged && !best.Gear.Equals(currentGear), //  gs?.Item1 ?? false,
 				NextGear = best.Gear, // gs?.Item2 ?? 0,
 				EvaluatedSolution = best,
-			};
+                SimulationInterval = best.SimulationInterval
+            };
+			//var pos = retVal.MechanicalAssistPower.Keys.First();
+			//if (retVal.MechanicalAssistPower[pos].Item1 == null) {
+			//	retVal.MechanicalAssistPower[pos] = Tuple.Create(best.Response.ElectricMotor.AngularVelocity, retVal.MechanicalAssistPower[pos].Item2);
+			//}
 			if (best.IgnoreReason.EngineSpeedTooHigh() && !DataBus.EngineInfo.EngineOn) {
 				// ICE is off, selected solution has a too low or too high engine speed - keep ICE off
 				retVal.CombustionEngineOn = false;
@@ -1190,10 +1201,12 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 				// if battery is getting empty try to set EM-torque to discharge battery to lower SoC boundary
 				
 				if (maxEmTorque.IsSmaller(0) && (-emDrivePower).IsGreaterOrEqual(maxEmTorque * firstResponse.ElectricMotor.AngularVelocity)) {
-					// maxEmTorque < 0  ==> EM can still propell
+					// maxEmTorque < 0  ==> EM can still propel
 					// (-emDrivePower).IsGreaterOrEqual(maxEmTorque * firstResponse.ElectricMotor.AngularVelocity) ==> power available from battery for driving does not exceed max EM power (otherwise torque lookup may fail) 
-					var emDriveTorque = ModelData.ElectricMachinesData.Where(x => x.Item1 == emPos).First().Item2.EfficiencyMap
-												.LookupTorque(emDrivePower, firstResponse.ElectricMotor.AngularVelocity, maxEmTorque);
+					//var emDriveTorque = ModelData.ElectricMachinesData.Where(x => x.Item1 == emPos).First().Item2.EfficiencyMap
+					//							.LookupTorque(emDrivePower, firstResponse.ElectricMotor.AngularVelocity, maxEmTorque);
+
+					var emDriveTorque = DataBus.ElectricMotorInfo(emPos).GetTorqueForElectricPower(emDrivePower, firstResponse.ElectricMotor.AngularVelocity, dt);
 					var emDragTorque = ModelData.ElectricMachinesData.Where(x => x.Item1 == emPos).First().Item2
 												.DragCurve.Lookup(firstResponse.ElectricMotor.AngularVelocity);
 					if (emDriveTorque != null &&

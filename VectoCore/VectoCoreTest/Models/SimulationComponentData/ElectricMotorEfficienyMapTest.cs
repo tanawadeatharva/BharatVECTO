@@ -26,10 +26,10 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData {
 				JSONInputDataFactory.ReadElectricMotorData(@"TestData\Hybrids\ElectricMotor\GenericEMotor.vem", false);
 
 			var fld = inputProvider.FullLoadCurve;
-			var fldMap = ElectricFullLoadCurveReader.Create(fld, 1.0, 1, 1.0);
+			var fldMap = ElectricFullLoadCurveReader.Create(fld, 1);
 
 			var pwr = inputProvider.EfficiencyMap;
-			var pwrMap = ElectricMotorMapReader.Create(pwr, 1.0, 1, 1.0);
+			var pwrMap = ElectricMotorMapReader.Create(pwr, 1);
 
 			var maxEmPwr = batPwr < 0
 				? fldMap.FullLoadDriveTorque(emSpeed.RPMtoRad())
@@ -51,10 +51,10 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData {
 				JSONInputDataFactory.ReadElectricMotorData(@"TestData\Hybrids\ElectricMotor\GenericEMotor.vem", false);
 
 			var fld = inputProvider.FullLoadCurve;
-			var fldMap = ElectricFullLoadCurveReader.Create(fld, 1.0, 1, 1.0);
+			var fldMap = ElectricFullLoadCurveReader.Create(fld, 1);
 
 			var pwr = inputProvider.EfficiencyMap;
-			var pwrMap = ElectricMotorMapReader.Create(pwr, 1.0, 1, 1.0);
+			var pwrMap = ElectricMotorMapReader.Create(pwr, 1);
 
 			var maxEmPwr = batPwr < 0
 				? fldMap.FullLoadDriveTorque(emSpeed.RPMtoRad())

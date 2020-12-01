@@ -281,6 +281,16 @@ namespace TUGraz.VectoCore.Tests.Utils
 			throw new NotImplementedException();
 		}
 
+		public WattSecond TotalElectricMotorMotWorkDrive(PowertrainPosition emPos)
+		{
+			throw new NotImplementedException();
+		}
+
+		public WattSecond TotalElectricMotorMotWorkRecuperate(PowertrainPosition emPos)
+		{
+			throw new NotImplementedException();
+		}
+
 		public PerSecond ElectricMotorAverageSpeed(PowertrainPosition emPos)
 		{
 			throw new NotImplementedException();
@@ -296,7 +306,32 @@ namespace TUGraz.VectoCore.Tests.Utils
 			throw new NotImplementedException();
 		}
 
+		public double ElectricMotorMotEfficiencyDrive(PowertrainPosition emPos)
+		{
+			throw new NotImplementedException();
+		}
+
+		public double ElectricMotorMotEfficiencyGenerate(PowertrainPosition emPos)
+		{
+			throw new NotImplementedException();
+		}
+
 		public WattSecond ElectricMotorOffLosses(PowertrainPosition emPos)
+		{
+			throw new NotImplementedException();
+		}
+
+		public WattSecond ElectricMotorLosses(PowertrainPosition emPos)
+		{
+			throw new NotImplementedException();
+		}
+
+		public WattSecond ElectricMotorMotLosses(PowertrainPosition emPos)
+		{
+			throw new NotImplementedException();
+		}
+
+		public WattSecond ElectricMotorTransmissionLosses(PowertrainPosition emPos)
 		{
 			throw new NotImplementedException();
 		}
@@ -306,17 +341,17 @@ namespace TUGraz.VectoCore.Tests.Utils
 			throw new NotImplementedException();
 		}
 
-		public double BatteryEndSoC()
+		public double REESSEndSoC()
 		{
 			throw new NotImplementedException();
 		}
 
-		public WattSecond BatteryLoss()
+		public WattSecond REESSLoss()
 		{
 			throw new NotImplementedException();
 		}
 
-		public WattSecond BatteryEnergyEnd()
+		public WattSecond REESSEnergyEnd()
 		{
 			throw new NotImplementedException();
 		}

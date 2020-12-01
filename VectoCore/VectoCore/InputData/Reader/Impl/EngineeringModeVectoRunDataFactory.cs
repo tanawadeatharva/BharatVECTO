@@ -94,7 +94,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 				GearboxData gearboxData = null;
 				ShiftStrategyParameters gearshiftParams = null;
 				AngledriveData angledriveData = null;
-				if (electricMachinesData.Any(x => x.Item1 == PowertrainPosition.BatteryElectricB2)) {
+				if (electricMachinesData.Any(x => x.Item1 == PowertrainPosition.BatteryElectricE2)) {
 					// gearbox required!
 					var tmpRunData = new VectoRunData() {
 						JobType = VectoSimulationJobType.BatteryElectricVehicle,

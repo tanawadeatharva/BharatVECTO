@@ -639,7 +639,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 			}
 
 			public static ShiftPolygon ComputeElectricMotorShiftPolygon(int gearIdx,
-				ElectricMotorFullLoadCurve fullLoadCurve, IList<ITransmissionInputData> gears,
+				ElectricMotorFullLoadCurve fullLoadCurve, double emRatio, IList<ITransmissionInputData> gears,
 				double axlegearRatio, Meter dynamicTyreRadius)
 			{
 				if (gears.Count < 2) {
@@ -649,16 +649,16 @@ namespace TUGraz.VectoCore.Models.Declaration
 				var downShift = new List<ShiftPolygon.ShiftPolygonEntry>();
 				var upShift = new List<ShiftPolygon.ShiftPolygonEntry>();
 				if (gearIdx > 0) {
-					downShift.Add(new ShiftPolygon.ShiftPolygonEntry(fullLoadCurve.MaxGenerationTorque * 1.1, 0.RPMtoRad()));
-					downShift.Add(new ShiftPolygon.ShiftPolygonEntry(fullLoadCurve.MaxDriveTorque * 1.1, 0.RPMtoRad()));
+					downShift.Add(new ShiftPolygon.ShiftPolygonEntry(fullLoadCurve.MaxGenerationTorque * emRatio * 1.1, 0.RPMtoRad()));
+					downShift.Add(new ShiftPolygon.ShiftPolygonEntry(fullLoadCurve.MaxDriveTorque * emRatio * 1.1, 0.RPMtoRad()));
 
 				}
 				if (gearIdx >= gears.Count - 1) {
 					return new ShiftPolygon(downShift, upShift);
 				}
 
-				upShift.Add(new ShiftPolygon.ShiftPolygonEntry(fullLoadCurve.MaxGenerationTorque * 1.1, fullLoadCurve.MaxSpeed * 0.9));
-				upShift.Add(new ShiftPolygon.ShiftPolygonEntry(fullLoadCurve.MaxDriveTorque * 1.1, fullLoadCurve.MaxSpeed * 0.9));
+				upShift.Add(new ShiftPolygon.ShiftPolygonEntry(fullLoadCurve.MaxGenerationTorque * emRatio * 1.1, fullLoadCurve.MaxSpeed / emRatio * 0.9));
+				upShift.Add(new ShiftPolygon.ShiftPolygonEntry(fullLoadCurve.MaxDriveTorque * emRatio * 1.1, fullLoadCurve.MaxSpeed / emRatio * 0.9));
 				return new ShiftPolygon(downShift, upShift);
 			}
 

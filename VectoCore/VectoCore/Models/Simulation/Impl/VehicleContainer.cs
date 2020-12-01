@@ -60,6 +60,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 		public virtual IGearboxInfo GearboxInfo { get; protected set; }
 		public virtual IGearboxControl GearboxCtl { get; protected set; }
 		public virtual IAxlegearInfo AxlegearInfo { get; protected set; }
+		public virtual IAngledriveInfo AngledriveInfo { get; protected set; }
 		public virtual IVehicleInfo VehicleInfo { get; protected set; }
 		public virtual IBrakes Brakes { get; protected set; }
 		public virtual IWheelsInfo WheelsInfo { get; protected set; }
@@ -132,6 +133,8 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			get { return HybridController; }
 		}
 
+		
+
 		public virtual void AddComponent(VectoSimulationComponent component)
 		{
 			var commitPriority = 0;
@@ -152,6 +155,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 				.If<IGearboxControl>(c => GearboxCtl = c)
 				.If<ITorqueConverterControl>(c => TorqueConverterCtl = c)
 				.If<IAxlegearInfo>(c => AxlegearInfo = c)
+				.If<IAngledriveInfo>(c => AngledriveInfo = c)
 				.If<IWheelsInfo>(c => WheelsInfo = c)
 				.If<IVehicleInfo>(c => {
 					VehicleInfo = c;

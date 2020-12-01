@@ -39,5 +39,12 @@ namespace TUGraz.VectoCore.Models.Simulation.DataBus
 		Watt AxlegearLoss();
 
 		Tuple<PerSecond, NewtonMeter> CurrentAxleDemand { get; }
+		
+		double Ratio { get; }
+	}
+
+	public interface IAngledriveInfo
+	{
+		double Ratio { get; }
 	}
 }

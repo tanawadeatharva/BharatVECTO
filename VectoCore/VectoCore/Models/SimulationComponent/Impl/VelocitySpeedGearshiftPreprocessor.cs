@@ -212,14 +212,14 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		protected override PerSecond GetMotorTargetSpeed(VectoRunData runData)
 		{
 			return 0.5 * runData.ElectricMachinesData
-				.FirstOrDefault(x => x.Item1 == PowertrainPosition.BatteryElectricB2)?.Item2.FullLoadCurve
+				.FirstOrDefault(x => x.Item1 == PowertrainPosition.BatteryElectricE2)?.Item2.FullLoadCurve
 				.MaxSpeed;
 		}
 
 		protected override PerSecond GetMaxMotorspeed(VectoRunData runData)
 		{
 			return runData.ElectricMachinesData
-                    .FirstOrDefault(x => x.Item1 == PowertrainPosition.BatteryElectricB2)?.Item2.FullLoadCurve
+                    .FirstOrDefault(x => x.Item1 == PowertrainPosition.BatteryElectricE2)?.Item2.FullLoadCurve
                     .MaxSpeed;
         }
 	}

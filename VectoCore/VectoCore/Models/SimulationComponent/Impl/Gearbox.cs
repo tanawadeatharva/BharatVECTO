@@ -563,7 +563,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				NextComponent.Request(absTime, Constants.SimulationSettings.TargetTimeInterval, inTorque,
 					inAngularVelocity, true); //NextComponent.Initialize(inTorque, inAngularVelocity);
 			
-			var fullLoad = -DataBus.ElectricMotorInfo(PowertrainPosition.BatteryElectricB2).MaxPowerDrive(inAngularVelocity);
+			var fullLoad = -DataBus.ElectricMotorInfo(PowertrainPosition.BatteryElectricE2).MaxPowerDrive(inAngularVelocity);
 
 			Gear = oldGear;
 			return new ResponseDryRun(this, response) {

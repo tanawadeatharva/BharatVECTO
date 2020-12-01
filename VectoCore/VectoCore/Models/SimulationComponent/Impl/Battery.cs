@@ -157,9 +157,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			container[ModalResultField.P_reess_loss] = CurrentState.BatteryLoss;
 			container[ModalResultField.P_reess_charge_max] = CurrentState.MaxChargePower;
 			container[ModalResultField.P_reess_discharge_max] = CurrentState.MaxDischargePower;
-
-			container[ModalResultField.E_RESS] = CurrentState.StateOfCharge * cellVoltage * ModelData.Capacity;
-
 		}
 
 		protected override void DoCommitSimulationStep(Second time, Second simulationInterval)

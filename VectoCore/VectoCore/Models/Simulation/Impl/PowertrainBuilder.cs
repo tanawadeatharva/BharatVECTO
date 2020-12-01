@@ -501,27 +501,27 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 				case PowertrainPosition.HybridP3:
 				case PowertrainPosition.HybridP4:
 					throw new VectoException("testcase does not support parallel powertrain configurations");
-				case PowertrainPosition.BatteryElectricB4:
+				case PowertrainPosition.BatteryElectricE4:
 					powertrain.AddComponent(
-						GetElectricMachine(PowertrainPosition.BatteryElectricB4, data.ElectricMachinesData, container, es, ctl));
+						GetElectricMachine(PowertrainPosition.BatteryElectricE4, data.ElectricMachinesData, container, es, ctl));
 					new DummyGearboxInfo(container);
 					//new MockEngineInfo(container);
 					new ATClutchInfo(container);
 					break;
-				case PowertrainPosition.BatteryElectricB3:
+				case PowertrainPosition.BatteryElectricE3:
 					powertrain.AddComponent(new AxleGear(container, data.AxleGearData))
 						.AddComponent(
-							GetElectricMachine(PowertrainPosition.BatteryElectricB3, data.ElectricMachinesData, container, es, ctl));
+							GetElectricMachine(PowertrainPosition.BatteryElectricE3, data.ElectricMachinesData, container, es, ctl));
 					new DummyGearboxInfo(container);
 					//new MockEngineInfo(container);
 					new ATClutchInfo(container);
 					break;
-				case PowertrainPosition.BatteryElectricB2:
+				case PowertrainPosition.BatteryElectricE2:
 					var strategy = new PEVAMTShiftStrategy(container);
 					powertrain.AddComponent(new AxleGear(container, data.AxleGearData))
 						.AddComponent(new PEVGearbox(container, strategy))
 						.AddComponent(
-							GetElectricMachine(PowertrainPosition.BatteryElectricB2, data.ElectricMachinesData, container, es, ctl));
+							GetElectricMachine(PowertrainPosition.BatteryElectricE2, data.ElectricMachinesData, container, es, ctl));
 					new ATClutchInfo(container);
 					break;
 				default: throw new ArgumentOutOfRangeException(nameof(pos), pos, null);
@@ -731,7 +731,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 				.AddComponent(new AxleGear(container, data.AxleGearData))
 				.AddComponent(data.AngledriveData != null ? new Angledrive(container, data.AngledriveData) : null)
 				.AddComponent(GetSimpleGearbox(container, data), data.Retarder, container)
-				.AddComponent(GetElectricMachine(PowertrainPosition.BatteryElectricB2, data.ElectricMachinesData, container, es, ctl));
+				.AddComponent(GetElectricMachine(PowertrainPosition.BatteryElectricE2, data.ElectricMachinesData, container, es, ctl));
 			
 			// DistanceBasedDrivingCycle --> driver --> vehicle --> wheels 
 			// --> axleGear --> (retarder) --> gearBox --> (retarder) --> clutch --> engine <-- Aux
