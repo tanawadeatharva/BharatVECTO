@@ -82,9 +82,17 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				}
 
 				var targetEngineSpeed = GetMotorTargetSpeed(runData);
-				var gearForSpeed = runData.GearboxData.Gears.OrderBy(x => Math.Abs((speed * ratio * x.Value.Ratio - targetEngineSpeed).Value()))
-					.FirstOrDefault().Key;
-				if (gearForSpeed == 0) {
+				var gearForSpeed = runData.GearboxData.GearList
+					.Where(x => !x.TorqueConverterLocked.HasValue || x.TorqueConverterLocked.Value)
+					.Select(x => new {
+						Gear = x,
+						SpeedDiff = Math.Abs((speed * ratio * runData.GearboxData.Gears[x.Gear].Ratio -
+											targetEngineSpeed).Value())
+					})
+					.OrderBy(x => x.SpeedDiff).FirstOrDefault()?.Gear ?? new GearshiftPosition(0);
+				//var gearForSpeed = runData.GearboxData.Gears.OrderBy(x => Math.Abs((speed * ratio * x.Value.Ratio - targetEngineSpeed).Value()))
+				//	.FirstOrDefault().Key;
+				if (!gearForSpeed.Engaged) {
 					continue;
 				}
 
@@ -93,10 +101,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					gearbox.Disengaged = false;
 					gearbox.Gear = gearForSpeed;
 					vehicle.Initialize(speed, gradient);
-					gearbox.Gear = 0;
+					gearbox.Gear = new GearshiftPosition(0);
 					gearbox.Disengaged = true;
 					gearbox.EngageTime = 100.SI<Second>();
-					gearbox._nextGear = new GearInfo(gearForSpeed, true);
+					gearbox._nextGear = gearForSpeed;
 					var vehicleSpeed = SimulateRollingVehicle(vehicle, gradient, container);
 					modData?.Reset();
 					tmp.Add(new Entry() { StartVelocity = speed, Gradient = gradient, EndVelocity = vehicleSpeed });

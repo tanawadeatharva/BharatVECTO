@@ -100,7 +100,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			EcoRollState = new EcoRoll() {
 				State = Impl.EcoRollStates.EcoRollOff,
-				Gear = 0,
+				Gear = new GearshiftPosition(0),
 				StateChangeTstmp = -double.MaxValue.SI<Second>(),
 				PreviousBrakePower = 0.SI<Watt>(),
 				AcceleratorPedalIdle = false,
@@ -722,7 +722,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		public Second StateChangeTstmp;
 
-		public uint Gear;
+		public GearshiftPosition Gear;
 
 		public Watt PreviousBrakePower;
 

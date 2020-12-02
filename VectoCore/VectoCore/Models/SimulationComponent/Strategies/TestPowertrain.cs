@@ -11,10 +11,11 @@ using TUGraz.VectoCore.Models.SimulationComponent.Impl;
 using TUGraz.VectoCore.OutputData;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies {
-	public class TestPowertrain
+	public class TestPowertrain<T> where T: class, IHybridControlledGearbox
 	{
 		public SimplePowertrainContainer Container;
-		public Gearbox Gearbox;
+		public T Gearbox;
+		
 		public SimpleHybridController HybridController;
 		public Battery Battery;
 		public SuperCap SuperCap;
@@ -32,7 +33,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies {
 		public TestPowertrain(SimplePowertrainContainer container, IDataBus realContainer)
 		{
 			Container = container;
-			Gearbox = Container.GearboxCtl as Gearbox;
+			Gearbox = Container.GearboxCtl as T;
+			
 			HybridController = Container.HybridController as SimpleHybridController;
 			Battery = Container.BatteryInfo as Battery;
 			SuperCap = Container.BatteryInfo as SuperCap;

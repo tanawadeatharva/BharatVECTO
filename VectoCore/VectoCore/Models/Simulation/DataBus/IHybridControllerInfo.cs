@@ -1,11 +1,12 @@
 ﻿using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Utils;
+using TUGraz.VectoCore.Models.SimulationComponent.Impl;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent
 {
 	public interface IHybridControllerInfo
 	{
-		GearInfo SelectedGear { get; }
+		GearshiftPosition SelectedGear { get; }
 		
 		PerSecond ICESpeed { get; }
 		bool GearboxEngaged { get; }

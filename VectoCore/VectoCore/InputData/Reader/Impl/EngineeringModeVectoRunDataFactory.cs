@@ -37,6 +37,7 @@ using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCore.InputData.Reader.ComponentData;
 using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter;
+using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
@@ -117,6 +118,13 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
                     gearshiftParams = dao.CreateGearshiftData(
 						gearboxData.Type, InputDataProvider.DriverInputData.GearshiftInputData,
 						axlegearData.AxleGear.Ratio * (angledriveData?.Angledrive.Ratio ?? 1.0),null);
+				}
+
+				if (gearshiftParams == null) {
+					gearshiftParams = new ShiftStrategyParameters() {
+						StartSpeed = DeclarationData.GearboxTCU.StartSpeed,
+						StartAcceleration = DeclarationData.GearboxTCU.StartAcceleration
+					};
 				}
 
 				var crossWindRequired = vehicle.Components.AirdragInputData.CrossWindCorrectionMode ==

@@ -40,6 +40,7 @@ using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox;
+using TUGraz.VectoCore.Models.SimulationComponent.Impl;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 {
@@ -54,6 +55,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 		public GearboxType Type { get; internal set; }
 
 		[Required, ValidateObject] public Dictionary<uint, GearData> Gears = new Dictionary<uint, GearData>();
+		
+		private GearList _gearlist;
 
 		public TorqueConverterData TorqueConverterData { get; internal set; } 
 
@@ -66,37 +69,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 		/// <summary>
 		///	[%] (0-1) The torque reserve for shift strategy (early upshift, skipgears)
 		/// </summary>
-		[Required, Range(0, 0.5)]
-		public double TorqueReserve { get; internal set; } // todo: move to shift parameters
-
-		/// <summary>
-		/// Gets the minimum time between shifts.
-		/// </summary>
-		[Required, SIRange(0, 5)]
-		public Second ShiftTime { get; internal set; } // todo: move to shift parameters
-
-		/// <summary>
-		/// [%] (0-1) The starting torque reserve for finding the starting gear after standstill.
-		/// </summary>
-		[Required, Range(0, 0.5)]
-		public double StartTorqueReserve { get; internal set; } // todo: move to shift parameters
-
-		// MQ: TODO: move to Driver Data ?
-		[Required, SIRange(double.Epsilon, 5)]
-		public MeterPerSecond StartSpeed { get; internal set; } // todo: move to shift parameters
-
-		// MQ: TODO: move to Driver Data ?
-		[Required, SIRange(double.Epsilon, 2)]
-		public MeterPerSquareSecond StartAcceleration { get; internal set; } // todo: move to shift parameters
-
-		[Required, SIRange(0, double.MaxValue)]
-		public Second UpshiftAfterDownshiftDelay { get; internal set; } // todo: move to shift parameters
-
-		[Required, SIRange(0, double.MaxValue)]
-		public Second DownshiftAfterUpshiftDelay { get; internal set; } // todo: move to shift parameters
-
-		[Required, SIRange(0, double.MaxValue)]
-		public MeterPerSquareSecond UpshiftMinAcceleration { get; internal set; } // todo: move to shift parameters
+		
 
 		[SIRange(0.5, 1)]
 		public Second PowershiftShiftTime { get; internal set; }
@@ -106,6 +79,34 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 		[JsonIgnore]
 		public IGearboxDeclarationInputData InputData { get; internal set; }
 
+
+		[JsonIgnore]
+		public GearList GearList
+		{
+			get
+			{
+				return _gearlist ?? (_gearlist = CreateGearList());
+			}
+		}
+
+		private GearList CreateGearList()
+		{
+			var gearList = new List<GearshiftPosition>();
+			foreach (var gear in Gears) {
+				if (Type.AutomaticTransmission()) {
+					if (gear.Value.HasTorqueConverter) {
+						gearList.Add(new GearshiftPosition(gear.Key, false));
+					}
+					if (gear.Value.HasLockedGear) {
+						gearList.Add(new GearshiftPosition(gear.Key, true));
+					}
+				} else {
+					gearList.Add(new GearshiftPosition(gear.Key));
+				}
+			}
+
+			return new GearList(gearList.ToArray());
+		}
 
 		// ReSharper disable once UnusedMember.Global -- used via Validation
 		public static ValidationResult ValidateGearboxData(GearboxData gearboxData, ValidationContext validationContext)

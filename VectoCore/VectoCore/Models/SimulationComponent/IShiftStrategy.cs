@@ -36,6 +36,7 @@ using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Engine;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox;
+using TUGraz.VectoCore.Models.SimulationComponent.Impl;
 using TUGraz.VectoCore.OutputData;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent
@@ -58,7 +59,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent
 		/// <param name="lastShiftTime">The last shift time.</param>
 		/// <param name="response"></param>
 		/// <returns><c>true</c> if a shift is required, <c>false</c> otherwise.</returns>
-		bool ShiftRequired(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity, NewtonMeter inTorque, PerSecond inAngularVelocity, uint gear, Second lastShiftTime, IResponse response);
+		bool ShiftRequired(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity, NewtonMeter inTorque, PerSecond inAngularVelocity, GearshiftPosition gear, Second lastShiftTime, IResponse response);
 
 		/// <summary>
 		/// Returns an appropriate starting gear after a vehicle standstill.
@@ -68,7 +69,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent
 		/// <param name="torque">The torque.</param>
 		/// <param name="outAngularVelocity">The angular speed.</param>
 		/// <returns>The initial gear.</returns>
-		uint InitGear(Second absTime, Second dt, NewtonMeter torque, PerSecond outAngularVelocity);
+		GearshiftPosition InitGear(Second absTime, Second dt, NewtonMeter torque, PerSecond outAngularVelocity);
 
 		/// <summary>
 		/// Engages a gear.
@@ -78,7 +79,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent
 		/// <param name="outTorque">The out torque.</param>
 		/// <param name="outAngularVelocity">The out engine speed.</param>
 		/// <returns>The gear to take.</returns>
-		uint Engage(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity);
+		GearshiftPosition Engage(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity);
 
 		/// <summary>
 		/// Disengages a gear.
@@ -97,7 +98,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent
 		/// </value>
 		IGearbox Gearbox { get; set; }
 
-        GearInfo NextGear { get; }
+        GearshiftPosition NextGear { get; }
 
 		bool CheckGearshiftRequired { get; }
 
@@ -116,15 +117,15 @@ namespace TUGraz.VectoCore.Models.SimulationComponent
 			Meter dynamicTyreRadius, ElectricMotorData electricMotorData = null);
 	}
 
-    public class GearInfo
-    {
-		public GearInfo(uint gear, bool tcLocked)
-		{
-			Gear = gear;
-			TorqueConverterLocked = tcLocked;
-		}
+  //  public class GearInfo
+  //  {
+		//public GearInfo(uint gear, bool tcLocked)
+		//{
+		//	Gear = gear;
+		//	TorqueConverterLocked = tcLocked;
+		//}
 
-		public uint Gear { get; protected internal set; }
-		public bool TorqueConverterLocked { get; private set; }
-    }
+		//public uint Gear { get; protected internal set; }
+		//public bool TorqueConverterLocked { get; private set; }
+  //  }
 }

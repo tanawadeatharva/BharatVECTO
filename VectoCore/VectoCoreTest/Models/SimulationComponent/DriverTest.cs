@@ -51,6 +51,7 @@ using TUGraz.VectoCore.Tests.Utils;
 using Wheels = TUGraz.VectoCore.Models.SimulationComponent.Impl.Wheels;
 using NUnit.Framework;
 using TUGraz.VectoCommon.InputData;
+using TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox;
 
 namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 {
@@ -104,7 +105,8 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			AddComponent(tmp, engine);
 			clutch.IdleController = engine.IdleController;
 
-			var gbx = new MockGearbox(vehicleContainer) { Gear = 1 };
+			var gbx = new MockGearbox(vehicleContainer) { Gear = new GearshiftPosition(1) };
+			var axlegear = new MockAxlegear(vehicleContainer);
 
 			var driverPort = driver.OutPort();
 
@@ -170,8 +172,8 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			AddComponent(tmp, engine);
 			clutch.IdleController = engine.IdleController;
 
-			var gbx = new MockGearbox(vehicleContainer);
-			gbx.Gear = 1;
+			var gbx = new MockGearbox(vehicleContainer) { Gear = new GearshiftPosition(1) };
+			var axleGear = new MockAxlegear(vehicleContainer);
 
 			var driverPort = driver.OutPort();
 
@@ -244,8 +246,8 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			tmp = AddComponent(tmp, clutch);
 			AddComponent(tmp, engine);
 
-			var gbx = new MockGearbox(vehicleContainer);
-			gbx.Gear = 1;
+			var gbx = new MockGearbox(vehicleContainer) { Gear = new GearshiftPosition(1) };
+			var axleGear = new MockAxlegear(vehicleContainer);
 
 			var driverPort = driver.OutPort();
 

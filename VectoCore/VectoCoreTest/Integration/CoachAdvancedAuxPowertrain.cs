@@ -90,6 +90,7 @@ namespace TUGraz.VectoCore.Tests.Integration
 				VehicleData = vehicleData,
 				AirdragData = airdragData,
 				GearboxData = gearboxData,
+				GearshiftParameters = CreateGearshiftData(),
 				EngineData = engineData,
 				ElectricMachinesData = new List<Tuple<PowertrainPosition, ElectricMotorData>>(),
 				SimulationType = SimulationType.DistanceCycle,
@@ -102,12 +103,11 @@ namespace TUGraz.VectoCore.Tests.Integration
 				WriteModalResults = true
 			};
 
-			var container = new VehicleContainer(ExecutionMode.Engineering, modData);
+			var container = new VehicleContainer(ExecutionMode.Engineering, modData) { RunData = runData };
 			var cycle = new DistanceBasedDrivingCycle(container, cycleData);
 			var engine = new CombustionEngine(container, engineData);
 
-            container.RunData = runData;
-			cycle.AddComponent(new Driver(container, driverData, new DefaultDriverStrategy(container)))
+            cycle.AddComponent(new Driver(container, driverData, new DefaultDriverStrategy(container)))
 				.AddComponent(new Vehicle(container, vehicleData, airdragData))
 				.AddComponent(new Wheels(container, vehicleData.DynamicTyreRadius, vehicleData.WheelsInertia))
 				.AddComponent(new Brakes(container))
@@ -140,9 +140,16 @@ namespace TUGraz.VectoCore.Tests.Integration
 							ShiftPolygon = ShiftPolygonReader.ReadFromFile(GearboxShiftPolygonFile)
 						}))
 					.ToDictionary(k => k.Item1 + 1, v => v.Item2),
-				ShiftTime = 2.SI<Second>(),
+				
 				Inertia = 0.SI<KilogramSquareMeter>(),
 				TractionInterruption = 1.SI<Second>(),
+			};
+		}
+
+		private static ShiftStrategyParameters CreateGearshiftData()
+		{
+			return new ShiftStrategyParameters() {
+				TimeBetweenGearshifts = 2.SI<Second>(),
 				StartSpeed = 2.SI<MeterPerSecond>(),
 				StartAcceleration = 0.6.SI<MeterPerSquareSecond>(),
 				StartTorqueReserve = 0.2,

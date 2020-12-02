@@ -47,7 +47,7 @@
 						<CFRegPer>1.0000</CFRegPer>
 					</WHRCorrectionFactors>
 					<FuelConsumptionMap>
-						<Entry engineSpeed="560.00" torque="-149.00" fuelConsumption="0.00" electricPower="200.00" />
+						<Entry engineSpeed="560.00" torque="-149.00" fuelConsumption="0.00" electricPower="200.00" mechanicalPower="" />
 						<Entry engineSpeed="560.00" torque="0.00" fuelConsumption="125.60" electricPower="200.00" />
 						<Entry engineSpeed="560.00" torque="200.00" fuelConsumption="319.70" electricPower="200.00"  />
 						<Entry engineSpeed="560.00" torque="400.00" fuelConsumption="529.50" electricPower="200.00"  />

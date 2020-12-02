@@ -259,7 +259,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			
 			signals.ExcessiveDragPower = CurrentState.ExcessiveDragPower;
 			signals.Idle = DataBus.VehicleInfo.VehicleStopped;
-			signals.InNeutral = DataBus.GearboxInfo.Gear == 0;
+			signals.InNeutral = DataBus.GearboxInfo.Gear.Gear == 0;
 
 			
 

@@ -38,6 +38,8 @@ using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.InputData.Reader.ComponentData;
 using TUGraz.VectoCore.Models.Connector.Ports.Impl;
+using TUGraz.VectoCore.Models.Declaration;
+using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.DataBus;
 using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.Models.SimulationComponent;
@@ -75,7 +77,12 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 				" 20,  30, -0.1,   0"
 			};
 			var cycleData = SimpleDrivingCycles.CreateCycleData(data);
-			var container = new VehicleContainer(ExecutionMode.Engineering);
+			var container = new VehicleContainer(ExecutionMode.Engineering) {RunData = new VectoRunData() {
+				GearshiftParameters = new ShiftStrategyParameters() {
+					StartSpeed = DeclarationData.GearboxTCU.StartSpeed,
+					StartAcceleration = DeclarationData.GearboxTCU.StartAcceleration
+				}
+			}};
 			var cycle = new DistanceBasedDrivingCycle(container, cycleData);
 
 			var gbx = new MockGearbox(container);
@@ -159,7 +166,14 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 		{
 			var cycleData = DrivingCycleDataReader.ReadFromFile(ShortCycle, CycleType.DistanceBased, false);
 
-			var container = new VehicleContainer(ExecutionMode.Engineering);
+			var container = new VehicleContainer(ExecutionMode.Engineering) {
+				RunData = new VectoRunData() {
+					GearshiftParameters = new ShiftStrategyParameters() {
+						StartSpeed = DeclarationData.GearboxTCU.StartSpeed,
+						StartAcceleration = DeclarationData.GearboxTCU.StartAcceleration
+					}
+				}
+			};
 			var cycle = new DistanceBasedDrivingCycle(container, cycleData);
 
 			var gbx = new MockGearbox(container);

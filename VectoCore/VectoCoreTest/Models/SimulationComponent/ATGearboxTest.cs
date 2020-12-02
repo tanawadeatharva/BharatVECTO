@@ -109,7 +109,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			var response = gearbox.Initialize(torque.SI<NewtonMeter>(), angularVelocity);
 
 			Assert.IsInstanceOf(typeof(ResponseSuccess), response);
-			Assert.AreEqual(expectedGear, gearbox.Gear);
+			Assert.AreEqual(expectedGear, gearbox.Gear.Gear);
 			Assert.AreEqual(vehicleSpeed.IsEqual(0), gearbox.Disengaged);
 		}
 

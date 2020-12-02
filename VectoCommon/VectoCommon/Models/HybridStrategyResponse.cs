@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Linq;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Utils;
+using TUGraz.VectoCore.Models.SimulationComponent.Impl;
 
 namespace TUGraz.VectoCommon.Models {
 
@@ -21,7 +22,7 @@ namespace TUGraz.VectoCommon.Models {
 
         public Second SimulationInterval;
         public bool ShiftRequired { get; set; }
-		public uint NextGear { get; set; }
+		public GearshiftPosition NextGear { get; set; }
 		public bool GearboxInNeutral { get; set; }
 		public bool CombustionEngineOn { get; set; }
 
@@ -56,7 +57,7 @@ namespace TUGraz.VectoCommon.Models {
 
 		public double ICEStartPenalty2 { get; set; }
 
-		public uint Gear { get; set; }
+		public GearshiftPosition Gear { get; set; }
 
 		public bool ICEOff { get; set; }
 

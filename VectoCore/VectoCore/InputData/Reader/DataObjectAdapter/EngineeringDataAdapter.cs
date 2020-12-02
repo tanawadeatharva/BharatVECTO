@@ -388,14 +388,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 		{
 			retVal.Inertia = gearbox.Type.ManualTransmission() ? gearbox.Inertia : 0.SI<KilogramSquareMeter>();
 			retVal.TractionInterruption = gearbox.TractionInterruption;
-			retVal.TorqueReserve = gearshiftData.TorqueReserve;
-			retVal.StartTorqueReserve = gearshiftData.StartTorqueReserve;
-			retVal.ShiftTime = gearshiftData.MinTimeBetweenGearshift;
-			retVal.StartSpeed = gearshiftData.StartSpeed;
-			retVal.StartAcceleration = gearshiftData.StartAcceleration;
-			retVal.DownshiftAfterUpshiftDelay = gearshiftData.DownshiftAfterUpshiftDelay;
-			retVal.UpshiftAfterDownshiftDelay = gearshiftData.UpshiftAfterDownshiftDelay;
-			retVal.UpshiftMinAcceleration = gearshiftData.UpshiftMinAcceleration;
+			
 		}
 
 		public AxleGearData CreateAxleGearData(IAxleGearInputData data)
@@ -552,6 +545,14 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			}
 
 			var retVal = new ShiftStrategyParameters {
+				TorqueReserve = gsInputData.TorqueReserve,
+				StartTorqueReserve = gsInputData.StartTorqueReserve,
+				TimeBetweenGearshifts = gsInputData.MinTimeBetweenGearshift,
+				StartSpeed = gsInputData.StartSpeed,
+				DownshiftAfterUpshiftDelay = gsInputData.DownshiftAfterUpshiftDelay,
+				UpshiftAfterDownshiftDelay = gsInputData.UpshiftAfterDownshiftDelay,
+				UpshiftMinAcceleration = gsInputData.UpshiftMinAcceleration,
+
 				StartVelocity = gsInputData.StartSpeed ?? DeclarationData.GearboxTCU.StartSpeed,
 				StartAcceleration = gsInputData.StartAcceleration ?? DeclarationData.GearboxTCU.StartAcceleration,
 				GearResidenceTime = gsInputData.GearResidenceTime ?? DeclarationData.GearboxTCU.GearResidenceTime,

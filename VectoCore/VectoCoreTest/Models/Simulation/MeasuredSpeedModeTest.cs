@@ -345,6 +345,8 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 						{ 2, new GearData { Ratio = 3.806 } },
 						{ 3, new GearData { Ratio = 2.289 } }
 					},
+				},
+				GearshiftParameters = new ShiftStrategyParameters() {
 					StartSpeed = 2.SI<MeterPerSecond>()
 				},
 				Retarder = new RetarderData(),

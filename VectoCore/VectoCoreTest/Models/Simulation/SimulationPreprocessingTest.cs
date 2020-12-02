@@ -288,129 +288,129 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 		}
 
 
-		[TestCase(Class9Decl),
-		]
-		public void TestSimulationPreprocessingGradability(string jobFile)
-		{
-			var fileWriter = new FileOutputWriter(jobFile);
-			var sumWriter = new SummaryDataContainer(fileWriter);
-			var jobContainer = new JobContainer(sumWriter);
-			var dataProvider = JSONInputDataFactory.ReadJsonJob(jobFile);
-			var runsFactory = new SimulatorFactory(ExecutionMode.Declaration, dataProvider, fileWriter) {
-				ModalResults1Hz = false,
-				WriteModalResults = true,
-				ActualModalData = false,
-				Validate = false,
-			};
+		//[TestCase(Class9Decl),
+		//]
+		//public void TestSimulationPreprocessingGradability(string jobFile)
+		//{
+		//	var fileWriter = new FileOutputWriter(jobFile);
+		//	var sumWriter = new SummaryDataContainer(fileWriter);
+		//	var jobContainer = new JobContainer(sumWriter);
+		//	var dataProvider = JSONInputDataFactory.ReadJsonJob(jobFile);
+		//	var runsFactory = new SimulatorFactory(ExecutionMode.Declaration, dataProvider, fileWriter) {
+		//		ModalResults1Hz = false,
+		//		WriteModalResults = true,
+		//		ActualModalData = false,
+		//		Validate = false,
+		//	};
 
-			jobContainer.AddRuns(runsFactory);
-
-
-			var i = 1;
-			//jobContainer.Runs[i].Run.Run();
-
-			var lookup = SimulationRunPreprocessingGradability(jobContainer.Runs[i].Run);
-
-			foreach (var tuple in lookup._data) {
-				Console.WriteLine("gear: {0}, maxTorque gradability: {1}, redTorque gradeabitlity: {2}", tuple.Key, tuple.Value.Item1, tuple.Value.Item2);
-			}
-
-			Assert.AreEqual(0.2004, lookup._data[4].Item1.Value(), 1e-3);
-			Assert.AreEqual(0.1225, lookup._data[4].Item2.Value(), 1e-3);
-
-			Assert.AreEqual(0.0710, lookup._data[8].Item1.Value(), 1e-3);
-			Assert.AreEqual(0.0719, lookup._data[8].Item2.Value(), 1e-3);
-
-			Assert.AreEqual(0.0187, lookup._data[12].Item1.Value(), 1e-3);
-			Assert.AreEqual(0.0176, lookup._data[12].Item2.Value(), 1e-3);
-
-		}
+		//	jobContainer.AddRuns(runsFactory);
 
 
-		protected virtual MaxGradabilityLookup SimulationRunPreprocessingGradability(IVectoRun run)
-		{
-			var data = run.GetContainer().RunData;
-			var modData = new ModalDataContainer(data, null, null);
-			var builder = new PowertrainBuilder(modData);
-			var simpleContainer = new SimplePowertrainContainer(data);
-			builder.BuildSimplePowertrain(data, simpleContainer);
+		//	var i = 1;
+		//	//jobContainer.Runs[i].Run.Run();
 
-			var tmp = new MaxGradabilityLookup();
-			var preprocessor = new MaxGradabilityPreprocessor(tmp, run.GetContainer().RunData, simpleContainer);
-			var t = Stopwatch.StartNew();
+		//	var lookup = SimulationRunPreprocessingGradability(jobContainer.Runs[i].Run);
 
-			preprocessor.RunPreprocessing();
-			t.Stop();
-			//Console.WriteLine(t.ElapsedMilliseconds);
+		//	foreach (var tuple in lookup._data) {
+		//		Console.WriteLine("gear: {0}, maxTorque gradability: {1}, redTorque gradeabitlity: {2}", tuple.Key, tuple.Value.Item1, tuple.Value.Item2);
+		//	}
 
-			t = Stopwatch.StartNew();
-			t.Stop();
-			//Console.WriteLine(t.ElapsedMilliseconds);
+		//	Assert.AreEqual(0.2004, lookup._data[4].Item1.Value(), 1e-3);
+		//	Assert.AreEqual(0.1225, lookup._data[4].Item2.Value(), 1e-3);
 
-			return tmp;
-		}
+		//	Assert.AreEqual(0.0710, lookup._data[8].Item1.Value(), 1e-3);
+		//	Assert.AreEqual(0.0719, lookup._data[8].Item2.Value(), 1e-3);
+
+		//	Assert.AreEqual(0.0187, lookup._data[12].Item1.Value(), 1e-3);
+		//	Assert.AreEqual(0.0176, lookup._data[12].Item2.Value(), 1e-3);
+
+		//}
 
 
-		[TestCase(Class9Decl),
-		]
-		public void TestSimulationPreprocessingEngineSpeedDriveOff(string jobFile)
-		{
-			var fileWriter = new FileOutputWriter(jobFile);
-			var sumWriter = new SummaryDataContainer(fileWriter);
-			var jobContainer = new JobContainer(sumWriter);
-			var dataProvider = JSONInputDataFactory.ReadJsonJob(jobFile);
-			var runsFactory = new SimulatorFactory(ExecutionMode.Declaration, dataProvider, fileWriter) {
-				ModalResults1Hz = false,
-				WriteModalResults = true,
-				ActualModalData = false,
-				Validate = false,
-			};
+		//protected virtual MaxGradabilityLookup SimulationRunPreprocessingGradability(IVectoRun run)
+		//{
+		//	var data = run.GetContainer().RunData;
+		//	var modData = new ModalDataContainer(data, null, null);
+		//	var builder = new PowertrainBuilder(modData);
+		//	var simpleContainer = new SimplePowertrainContainer(data);
+		//	builder.BuildSimplePowertrain(data, simpleContainer);
 
-			jobContainer.AddRuns(runsFactory);
+		//	var tmp = new MaxGradabilityLookup();
+		//	var preprocessor = new MaxGradabilityPreprocessor(tmp, run.GetContainer().RunData, simpleContainer);
+		//	var t = Stopwatch.StartNew();
 
+		//	preprocessor.RunPreprocessing();
+		//	t.Stop();
+		//	//Console.WriteLine(t.ElapsedMilliseconds);
 
-			var i = 1;
-			//jobContainer.Runs[i].Run.Run();
+		//	t = Stopwatch.StartNew();
+		//	t.Stop();
+		//	//Console.WriteLine(t.ElapsedMilliseconds);
 
-			var lookup = SimulationRunPreprocessingEngineSpeedDriveOff(jobContainer.Runs[i].Run);
-
-			foreach (var tuple in lookup) {
-				Console.WriteLine("gear: {0}, engineSpeed: {1}", tuple.Key, tuple.Value);
-			}
-
-			//Assert.AreEqual(0.2004, lookup._data[4].Item1.Value(), 1e-3);
-			//Assert.AreEqual(0.1225, lookup._data[4].Item2.Value(), 1e-3);
-
-			//Assert.AreEqual(0.0710, lookup._data[8].Item1.Value(), 1e-3);
-			//Assert.AreEqual(0.0719, lookup._data[8].Item2.Value(), 1e-3);
-
-			//Assert.AreEqual(0.0187, lookup._data[12].Item1.Value(), 1e-3);
-			//Assert.AreEqual(0.0176, lookup._data[12].Item2.Value(), 1e-3);
-
-		}
+		//	return tmp;
+		//}
 
 
-		protected virtual Dictionary<uint, PerSecond> SimulationRunPreprocessingEngineSpeedDriveOff(IVectoRun run)
-		{
-			var data = run.GetContainer().RunData;
-			var modData = new ModalDataContainer(data, null, null);
-			var builder = new PowertrainBuilder(modData);
-			var simpleContainer = new SimplePowertrainContainer(data);
-			builder.BuildSimplePowertrain(data, simpleContainer);
+		//[TestCase(Class9Decl),
+		//]
+		//public void TestSimulationPreprocessingEngineSpeedDriveOff(string jobFile)
+		//{
+		//	var fileWriter = new FileOutputWriter(jobFile);
+		//	var sumWriter = new SummaryDataContainer(fileWriter);
+		//	var jobContainer = new JobContainer(sumWriter);
+		//	var dataProvider = JSONInputDataFactory.ReadJsonJob(jobFile);
+		//	var runsFactory = new SimulatorFactory(ExecutionMode.Declaration, dataProvider, fileWriter) {
+		//		ModalResults1Hz = false,
+		//		WriteModalResults = true,
+		//		ActualModalData = false,
+		//		Validate = false,
+		//	};
 
-			var tmp = new Dictionary<uint, PerSecond>();
-			var preprocessor = new EngineSpeedDriveOffPreprocessor(tmp, run.GetContainer().RunData, simpleContainer);
-			var t = Stopwatch.StartNew();
+		//	jobContainer.AddRuns(runsFactory);
 
-			preprocessor.RunPreprocessing();
-			t.Stop();
-			//Console.WriteLine(t.ElapsedMilliseconds);
 
-			t = Stopwatch.StartNew();
-			t.Stop();
-			//Console.WriteLine(t.ElapsedMilliseconds);
+		//	var i = 1;
+		//	//jobContainer.Runs[i].Run.Run();
 
-			return tmp;
-		}
+		//	var lookup = SimulationRunPreprocessingEngineSpeedDriveOff(jobContainer.Runs[i].Run);
+
+		//	foreach (var tuple in lookup) {
+		//		Console.WriteLine("gear: {0}, engineSpeed: {1}", tuple.Key, tuple.Value);
+		//	}
+
+		//	//Assert.AreEqual(0.2004, lookup._data[4].Item1.Value(), 1e-3);
+		//	//Assert.AreEqual(0.1225, lookup._data[4].Item2.Value(), 1e-3);
+
+		//	//Assert.AreEqual(0.0710, lookup._data[8].Item1.Value(), 1e-3);
+		//	//Assert.AreEqual(0.0719, lookup._data[8].Item2.Value(), 1e-3);
+
+		//	//Assert.AreEqual(0.0187, lookup._data[12].Item1.Value(), 1e-3);
+		//	//Assert.AreEqual(0.0176, lookup._data[12].Item2.Value(), 1e-3);
+
+		//}
+
+
+		//protected virtual Dictionary<uint, PerSecond> SimulationRunPreprocessingEngineSpeedDriveOff(IVectoRun run)
+		//{
+		//	var data = run.GetContainer().RunData;
+		//	var modData = new ModalDataContainer(data, null, null);
+		//	var builder = new PowertrainBuilder(modData);
+		//	var simpleContainer = new SimplePowertrainContainer(data);
+		//	builder.BuildSimplePowertrain(data, simpleContainer);
+
+		//	var tmp = new Dictionary<uint, PerSecond>();
+		//	var preprocessor = new EngineSpeedDriveOffPreprocessor(tmp, run.GetContainer().RunData, simpleContainer);
+		//	var t = Stopwatch.StartNew();
+
+		//	preprocessor.RunPreprocessing();
+		//	t.Stop();
+		//	//Console.WriteLine(t.ElapsedMilliseconds);
+
+		//	t = Stopwatch.StartNew();
+		//	t.Stop();
+		//	//Console.WriteLine(t.ElapsedMilliseconds);
+
+		//	return tmp;
+		//}
 	}
 }

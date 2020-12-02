@@ -35,8 +35,10 @@ using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Models.Connector.Ports;
 using TUGraz.VectoCore.Models.Simulation;
 using TUGraz.VectoCore.Models.Simulation.DataBus;
+using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.Models.SimulationComponent;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox;
+using TUGraz.VectoCore.Models.SimulationComponent.Impl;
 using TUGraz.VectoCore.OutputData;
 
 namespace TUGraz.VectoCore.Tests.Utils
@@ -62,9 +64,9 @@ namespace TUGraz.VectoCore.Tests.Utils
 		}
 
 		public GearboxType GearboxType { get; set; }
-		public uint Gear { get; set; }
+		public GearshiftPosition Gear { get; set; }
 		public bool TCLocked { get; set; }
-		public GearInfo NextGear { get; private set; }
+		public GearshiftPosition NextGear { get; private set; }
 
 		public Second TractionInterruption
 		{
@@ -107,7 +109,7 @@ namespace TUGraz.VectoCore.Tests.Utils
 
 		public GearData GetGearData(uint gear)
 		{
-			return new GearData();
+			return new GearData() { Ratio = 1.0 };
 		}
 
 		public void Connect(ITnOutPort other)
@@ -172,6 +174,45 @@ namespace TUGraz.VectoCore.Tests.Utils
 		public void TriggerGearshift(Second absTime, Second dt)
 		{
 			throw new NotImplementedException();
+		}
+	}
+
+	public class MockAxlegear : VectoSimulationComponent, IAxlegear
+	{
+		public MockAxlegear(VehicleContainer vehicleContainer) : base(vehicleContainer)
+		{
+			
+		}
+
+		public ITnInPort InPort()
+		{
+			throw new NotImplementedException();
+		}
+
+		public ITnOutPort OutPort()
+		{
+			throw new NotImplementedException();
+		}
+
+		public Watt AxlegearLoss()
+		{
+			throw new NotImplementedException();
+		}
+
+		public Tuple<PerSecond, NewtonMeter> CurrentAxleDemand { get; }
+		public double Ratio
+		{
+			get { return 1; }
+		}
+
+		protected override void DoWriteModalResults(Second time, Second simulationInterval, IModalDataContainer container)
+		{
+			
+		}
+
+		protected override void DoCommitSimulationStep(Second time, Second simulationInterval)
+		{
+			
 		}
 	}
 }

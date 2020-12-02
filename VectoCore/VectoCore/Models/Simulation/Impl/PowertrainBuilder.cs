@@ -76,16 +76,16 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 				Tuple.Create<GbxTypeList, string, string, StrategyCreator>(new GbxTypeList { GearboxType.AMT },
 					typeof(AMTShiftStrategyOptimized).FullName, AMTShiftStrategyOptimized.Name,
 					c => new AMTShiftStrategyOptimized(c)),
-				Tuple.Create<GbxTypeList, string, string, StrategyCreator>(new GbxTypeList { GearboxType.AMT },
-					typeof(AMTShiftStrategyACEA).FullName, AMTShiftStrategyACEA.Name,
-					c => new AMTShiftStrategyACEA(c)),
+				//Tuple.Create<GbxTypeList, string, string, StrategyCreator>(new GbxTypeList { GearboxType.AMT },
+				//	typeof(AMTShiftStrategyACEA).FullName, AMTShiftStrategyACEA.Name,
+				//	c => new AMTShiftStrategyACEA(c)),
 				Tuple.Create<GbxTypeList, string, string, StrategyCreator>(
 					new GbxTypeList { GearboxType.ATPowerSplit, GearboxType.ATSerial },
 					typeof(ATShiftStrategy).FullName, ATShiftStrategy.Name, c => new ATShiftStrategy(c)),
-				Tuple.Create<GbxTypeList, string, string, StrategyCreator>(
-					new GbxTypeList { GearboxType.ATPowerSplit, GearboxType.ATSerial },
-					typeof(ATShiftStrategyVoith).FullName, ATShiftStrategyVoith.Name,
-					c => new ATShiftStrategyVoith(c)),
+				//Tuple.Create<GbxTypeList, string, string, StrategyCreator>(
+				//	new GbxTypeList { GearboxType.ATPowerSplit, GearboxType.ATSerial },
+				//	typeof(ATShiftStrategyVoith).FullName, ATShiftStrategyVoith.Name,
+				//	c => new ATShiftStrategyVoith(c)),
 				Tuple.Create<GbxTypeList, string, string, StrategyCreator>(
 					new GbxTypeList { GearboxType.ATPowerSplit, GearboxType.ATSerial },
 					typeof(ATShiftStrategyOptimized).FullName, ATShiftStrategyOptimized.Name,
@@ -388,11 +388,19 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			var aux = new ElectricAuxiliary(container);
 			aux.AddConstant("P_aux_el", data.ElectricAuxDemand ?? 0.SI<Watt>());
 			es.Connect(aux);
-			
-			var strategy = new HybridStrategy(data, container);
-			var clutch = data.GearboxData.Type.AutomaticTransmission() ? null : new SwitchableClutch(container, data.EngineData);
 
-			var ctl = new HybridController(container, strategy, es, clutch);
+			HybridController ctl;
+			SwitchableClutch clutch = null;
+			if (data.GearboxData.Type.ManualTransmission()) {
+				var strategy = new HybridStrategy(data, container);
+				clutch = new SwitchableClutch(container, data.EngineData);
+				
+				ctl = new HybridController(container, strategy, es);
+			} else {
+				var strategy = new HybridStrategyAT(data, container);
+				
+				ctl = new HybridController(container, strategy, es);
+			}
 
 			// add engine before gearbox so that gearbox can obtain if an ICE is available already in constructor
 			var engine = new StopStartCombustionEngine(container, data.EngineData);
@@ -427,6 +435,11 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 				.AddComponent(engine, idleController)
 				.AddAuxiliaries(container, data);
 
+			if (data.ElectricMachinesData.Any(x => x.Item1 == PowertrainPosition.HybridP1)) {
+				if (gearbox is ATGearbox atGbx) {
+					atGbx.IdleController = idleController;
+				}
+			}
 			cycle.IdleController = idleController as IdleControllerSwitcher;
 
 			
@@ -674,6 +687,11 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 			powertrain.AddComponent(engine, idleController)
 				.AddAuxiliaries(container, data);
+			if (data.ElectricMachinesData.Any(x => x.Item1 == PowertrainPosition.HybridP1)) {
+				if (gearbox is ATGearbox atGbx) {
+					atGbx.IdleController = idleController;
+				}
+			}
 		}
 
 		public void BuildSimplePowertrainE2(VectoRunData data, VehicleContainer container)
@@ -1022,9 +1040,9 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			get {return GearboxType.DrivingCycle; }
 		}
 
-		public uint Gear
+		public GearshiftPosition Gear
 		{
-			get { return 0; }
+			get { return new GearshiftPosition(0); }
 		}
 
 		public bool TCLocked
@@ -1067,7 +1085,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			throw new VectoException("No Gearbox available.");
 		}
 
-		public GearInfo NextGear
+		public GearshiftPosition NextGear
 		{
 			get { throw new VectoException("No Gearbox available."); }
 		}

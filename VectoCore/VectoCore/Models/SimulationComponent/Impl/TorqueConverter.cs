@@ -131,7 +131,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			var retVal = NextComponent.Request(absTime, dt, inTorque, operatingPoint.InAngularVelocity, false);
 			//retVal.TorqueConverterOperatingPoint = operatingPoint;
 			// check if shift is required
-			var ratio = Gearbox.GetGearData(Gearbox.Gear).TorqueConverterRatio;
+			var ratio = Gearbox.GetGearData(Gearbox.Gear.Gear).TorqueConverterRatio;
 			if (!Gearbox.DisengageGearbox && absTime > DataBus.GearboxInfo.LastShift && retVal is ResponseSuccess) {
 				var shiftRequired = ShiftStrategy?.ShiftRequired(
 					absTime, dt, outTorque * ratio, outAngularVelocity / ratio, inTorque,

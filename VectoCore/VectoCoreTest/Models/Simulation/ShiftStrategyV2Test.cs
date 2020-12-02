@@ -292,7 +292,8 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 
 
 		[TestCase(@"TestData\Integration\ShiftStrategyV2\CityBus_AT_GSVoith\CityBus_AT_PS.vecto"),
-		TestCase(@"TestData\Integration\ShiftStrategyV2\CityBus_AT_GSVoith\CityBus_AT_Ser.vecto")]
+		TestCase(@"TestData\Integration\ShiftStrategyV2\CityBus_AT_GSVoith\CityBus_AT_Ser.vecto"),
+		Ignore("Voith Shift strategy no longer maintained")]
 		public void RunEngineeringVoith(string jobName)
 		{
 			RunJob_Engineering(jobName);
