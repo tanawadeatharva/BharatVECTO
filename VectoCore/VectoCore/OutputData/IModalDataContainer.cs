@@ -551,12 +551,12 @@ namespace TUGraz.VectoCore.OutputData
 
 		public static Scalar ICEOffTimeShare(this IModalDataContainer data)
 		{
-			var iceOff = data.GetValues(x => new {
+			var iceOn = data.GetValues(x => new {
 				dt = x[ModalResultField.ICEOn.GetName()] is DBNull
 					? 0.SI<Second>()
 					: x.Field<Second>(ModalResultField.simulationInterval.GetName())
 			}).Sum(x => x.dt) ?? 0.SI<Second>();
-			return 100 * iceOff / data.Duration;
+			return 100 * (1 - iceOn / data.Duration);
 		}
 
 		/// <summary>
