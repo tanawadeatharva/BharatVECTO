@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
@@ -57,7 +58,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			var maxDischargePower = InternalVoltage * maxDischargeCurrent +
 									maxDischargeCurrent * ModelData.InternalResistance * maxDischargeCurrent;
 			var maxPower = -InternalVoltage / (4 * ModelData.InternalResistance) * InternalVoltage;
-			return VectoMath.Max(maxDischargePower > 0 ? -double.MaxValue.SI<Watt>():maxDischargePower, maxPower);
+			return VectoMath.Max(maxDischargePower, maxPower);
 		}
 
 		public double MinSoC
@@ -71,8 +72,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		public void Initialize(double initialSoC)
 		{
-			PreviousState.Charge = ModelData.Capacity * ((ModelData.MaxVoltage - ModelData.MinVoltage) *  initialSoC +
-						ModelData.MinVoltage);
+			PreviousState.Charge = ModelData.Capacity * (ModelData.MaxVoltage *  initialSoC );
 
 		}
 

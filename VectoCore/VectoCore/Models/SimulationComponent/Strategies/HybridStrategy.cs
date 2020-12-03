@@ -360,7 +360,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 			var auxEnergyReserve = ModelData.ElectricAuxDemand * StrategyParameters.AuxReserveTime;
 			BatteryDischargeEnergyThreshold = 0.SI<WattSecond>();
 			if (auxEnergyReserve > 0) {
-				var minSoc = Math.Max(ModelData.BatteryData?.MinSOC ?? ModelData.SuperCapData.InitialSoC,
+				var minSoc = Math.Max(ModelData.BatteryData?.MinSOC ?? ModelData.SuperCapData.MinVoltage / ModelData.SuperCapData.MaxVoltage,
 					StrategyParameters.MinSoC);
 				BatteryDischargeEnergyThreshold =
 					ModelData.BatteryData.Capacity * minSoc * ModelData.BatteryData.SOCMap.Lookup(minSoc) +
@@ -985,8 +985,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 				ShiftRequired = best.Gear.Engaged && !best.Gear.Equals(currentGear), //  gs?.Item1 ?? false,
 				NextGear = best.Gear, // gs?.Item2 ?? 0,
 				EvaluatedSolution = best,
-                SimulationInterval = best.SimulationInterval
-            };
+				SimulationInterval = best.SimulationInterval
+			};
 			//var pos = retVal.MechanicalAssistPower.Keys.First();
 			//if (retVal.MechanicalAssistPower[pos].Item1 == null) {
 			//	retVal.MechanicalAssistPower[pos] = Tuple.Create(best.Response.ElectricMotor.AngularVelocity, retVal.MechanicalAssistPower[pos].Item2);
