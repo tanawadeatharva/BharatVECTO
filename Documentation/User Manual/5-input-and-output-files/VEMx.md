@@ -41,13 +41,13 @@ n [rpm] , T_drag [Nm]
 This file is used to interpolate the electric power required for a certain mechanical power at the eletric motor's shaft.  The file uses the [VECTO CSV format](#csv).
 
 - Filetype: .vemo
-- Header: **n [rpm] , T [Nm] , P_el [Nm]**
+- Header: **n [rpm] , T [Nm] , P_el [kW]**
 - Requires at least 2 data entries
 
 **Example:**
 
 ~~~
-n [rpm], T [Nm], P_el [W]
+n [rpm], T [Nm], P_el [kW]
 0      , -1600 , 19.6898
 0      , -1550 , 18.5438
 0      , -1500 , 17.4322
