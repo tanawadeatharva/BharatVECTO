@@ -971,6 +971,9 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			PerSecond currOutAngularVelocity, NewtonMeter maxDriveTorque, NewtonMeter maxRecuperationTorque,
 			PowertrainPosition position, bool dryRun)
 		{
+			if (dryRun) {
+				return -outTorque;
+			}
 			return (-outTorque).LimitTo(maxDriveTorque, maxRecuperationTorque);
 		}
 	}
