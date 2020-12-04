@@ -36,6 +36,8 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 				InternalResistance = 0.02.SI<Ohm>(),
 				MinVoltage = 0.SI<Volt>(),
 				MaxVoltage = 330.SI<Volt>(),
+				MaxCurrentDischarge = -200.SI<Ampere>(),
+				MaxCurrentCharge = 200.SI<Ampere>()
 			};
 
 			var container = new MockVehicleContainer();

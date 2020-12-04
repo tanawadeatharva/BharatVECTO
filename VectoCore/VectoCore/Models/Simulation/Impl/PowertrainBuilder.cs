@@ -370,12 +370,18 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			var es = new ElectricSystem(container);
 
 			if (data.BatteryData != null) {
+				if (data.BatteryData.InitialSoC < data.BatteryData.MinSOC) {
+					throw new VectoException("Battery: Initial SoC has to be higher than min SoC");
+				}
 				var battery = new Battery(container, data.BatteryData);
 				battery.Initialize(data.BatteryData.InitialSoC);
 				es.Connect(battery);
 			}
 
 			if (data.SuperCapData != null) {
+				if (data.SuperCapData.InitialSoC < data.SuperCapData.MinVoltage / data.SuperCapData.MaxVoltage) {
+					throw new VectoException("SuperCap: Initial SoC has to be higher than min SoC");
+				}
 				var superCap = new SuperCap(container, data.SuperCapData);
 				superCap.Initialize(data.SuperCapData.InitialSoC);
 				es.Connect(superCap);
