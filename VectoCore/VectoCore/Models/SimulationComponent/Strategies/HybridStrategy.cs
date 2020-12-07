@@ -1529,25 +1529,25 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 			container[ModalResultField.HybridStrategyScore] = (CurrentState.Solution?.Score ?? 0)/1e3;
 			container[ModalResultField.HybridStrategySolution] = CurrentState.Solution?.U ?? -100;
 
-			//if (CurrentState.Evaluations != null) {
-			//	container.SetDataValue(
-			//		"HybridStrategyEvaluation",
-			//		string.Join(
-			//			" | ", CurrentState.Evaluations.Select(
-			//				x => {
-			//					var foo = string.Join(" ",  x.Setting.MechanicalAssistPower.Select(e => $"{e.Key.GetName()} - {e.Value}"));
-			//					var ice = "====";
-			//					if (x.Response != null) {
-			//						ice =
-			//							$"{x.Response.Engine.TorqueOutDemand}, {x.Response.Engine.TotalTorqueDemand}, {x.Response.Engine.DynamicFullLoadTorque}";
-			//					}
-			//					return
-			//						$"{x.U:F2}: {x.Score:F2}; G{x.Gear}; ({x.FuelCosts:F2} + {x.EqualityFactor:F2} * ({x.BatCosts:F2} + {x.ICEStartPenalty1:F2}) * {x.SoCPenalty:F2} + {x.ICEStartPenalty2:F2}) / {x.GearshiftPenalty:F2} = {x.Score:F2} ({foo} ICE: {ice}); {x.IgnoreReason.HumanReadable()}";
-			//				})
-			//			)
-			//		);
-			//}
-		}
+            //if (CurrentState.Evaluations != null) {
+            //    container.SetDataValue(
+            //        "HybridStrategyEvaluation",
+            //        string.Join(
+            //            " | ", CurrentState.Evaluations.Select(
+            //                x => {
+            //                    var foo = string.Join(" ", x.Setting.MechanicalAssistPower.Select(e => $"{e.Key.GetName()} - {e.Value}"));
+            //                    var ice = "====";
+            //                    if (x.Response != null) {
+            //                        ice =
+            //                            $"{x.Response.Engine.TorqueOutDemand}, {x.Response.Engine.TotalTorqueDemand}, {x.Response.Engine.DynamicFullLoadTorque}";
+            //                    }
+            //                    return
+            //                        $"{x.U:F2}: {x.Score:F2}; G{x.Gear}; ({x.FuelCosts:F2} + {x.EqualityFactor:F2} * ({x.BatCosts:F2} + {x.ICEStartPenalty1:F2}) * {x.SoCPenalty:F2} + {x.ICEStartPenalty2:F2}) / {x.GearshiftPenalty:F2} = {x.Score:F2} ({foo} ICE: {ice}); {x.IgnoreReason.HumanReadable()}";
+            //                })
+            //            )
+            //        );
+            //}
+        }
 
 		
 	}
