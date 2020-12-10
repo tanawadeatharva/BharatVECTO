@@ -407,6 +407,8 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 
 
 		// only for graphDrawing Testcase
+		[ModalResultField(typeof(SI), caption: "P_P1_mech [kW]", outputFactor: 1e-3)]
+		P_electricMotor_mech_P1,
 		[ModalResultField(typeof(SI), caption: "P_P2_mech [kW]", outputFactor: 1e-3)]
 		P_electricMotor_mech_P2,
 		[ModalResultField(typeof(SI), caption: "P_P3_mech [kW]", outputFactor: 1e-3)]

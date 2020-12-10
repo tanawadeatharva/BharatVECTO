@@ -45,6 +45,9 @@ namespace TUGraz.VectoCore.Tests.Integration.Hybrid
 		public const string GearboxDirectLoss = @"TestData\Components\Direct Gear.vtlm";
 
 
+		public const string TorqueConverterSerial = @"TestData\Hybrids\GenericVehicle_P1-APT\TorqueConverter.vtcc";
+		public const string TorqueConverterPowerSplit = @"TestData\Hybrids\GenericVehicle_P1-APT\TorqueConverterPowerSplit.vtcc";
+
 		public const bool PlotGraphs = true;
 
 		[OneTimeSetUp]
@@ -77,6 +80,76 @@ namespace TUGraz.VectoCore.Tests.Integration.Hybrid
 			}
 
 			return graphWriter;
+		}
+
+		// --------------------------------------
+
+		[
+		TestCase(30, 0.7, 0, GearboxType.ATSerial, TestName = "P1 Hybrid APT-S ConstantSpeed 30km/h SoC: 0.7, level"),
+		TestCase(50, 0.7, 0, GearboxType.ATSerial, TestName = "P1 Hybrid APT-S ConstantSpeed 50km/h SoC: 0.7, level"),
+		TestCase(70, 0.7, 0, GearboxType.ATSerial, TestName = "P1 Hybrid APT-S ConstantSpeed 70km/h SoC: 0.7, level"),
+
+		TestCase(30, 0.25, 0, GearboxType.ATSerial, TestName = "P1 Hybrid APT-S ConstantSpeed 30km/h SoC: 0.25, level"),
+		TestCase(50, 0.25, 0, GearboxType.ATSerial, TestName = "P1 Hybrid APT-S ConstantSpeed 50km/h SoC: 0.25, level"),
+		TestCase(70, 0.25, 0, GearboxType.ATSerial, TestName = "P1 Hybrid APT-S ConstantSpeed 70km/h SoC: 0.25, level"),
+
+		TestCase(30, 0.5, 5, GearboxType.ATSerial, TestName = "P1 Hybrid APT-S ConstantSpeed 30km/h SoC: 0.5, UH 5%"),
+		TestCase(50, 0.5, 5, GearboxType.ATSerial, TestName = "P1 Hybrid APT-S ConstantSpeed 50km/h SoC: 0.5, UH 5%"),
+		TestCase(70, 0.5, 5, GearboxType.ATSerial, TestName = "P1 Hybrid APT-S ConstantSpeed 70km/h SoC: 0.5, UH 5%"),
+
+		TestCase(30, 0.5, -5, GearboxType.ATSerial, TestName = "P1 Hybrid APT-S ConstantSpeed 30km/h SoC: 0.5, DH 5%"),
+		TestCase(50, 0.5, -5, GearboxType.ATSerial, TestName = "P1 Hybrid APT-S ConstantSpeed 50km/h SoC: 0.5, DH 5%"),
+		TestCase(70, 0.5, -5, GearboxType.ATSerial, TestName = "P1 Hybrid APT-S ConstantSpeed 70km/h SoC: 0.5, DH 5%"),
+
+		//------
+
+		TestCase(30, 0.7, 0, GearboxType.ATPowerSplit, TestName = "P1 Hybrid APT-P ConstantSpeed 30km/h SoC: 0.7, level"),
+		TestCase(50, 0.7, 0, GearboxType.ATPowerSplit, TestName = "P1 Hybrid APT-P ConstantSpeed 50km/h SoC: 0.7, level"),
+		TestCase(70, 0.7, 0, GearboxType.ATPowerSplit, TestName = "P1 Hybrid APT-P ConstantSpeed 70km/h SoC: 0.7, level"),
+
+		TestCase(30, 0.25, 0, GearboxType.ATPowerSplit, TestName = "P1 Hybrid APT-P ConstantSpeed 30km/h SoC: 0.25, level"),
+		TestCase(50, 0.25, 0, GearboxType.ATPowerSplit, TestName = "P1 Hybrid APT-P ConstantSpeed 50km/h SoC: 0.25, level"),
+		TestCase(70, 0.25, 0, GearboxType.ATPowerSplit, TestName = "P1 Hybrid APT-P ConstantSpeed 70km/h SoC: 0.25, level"),
+
+		TestCase(30, 0.5, 5, GearboxType.ATPowerSplit, TestName = "P1 Hybrid APT-P ConstantSpeed 30km/h SoC: 0.5, UH 5%"),
+		TestCase(50, 0.5, 5, GearboxType.ATPowerSplit, TestName = "P1 Hybrid APT-P ConstantSpeed 50km/h SoC: 0.5, UH 5%"),
+		TestCase(70, 0.5, 5, GearboxType.ATPowerSplit, TestName = "P1 Hybrid APT-P ConstantSpeed 70km/h SoC: 0.5, UH 5%"),
+
+		TestCase(30, 0.5, -5, GearboxType.ATPowerSplit, TestName = "P1 Hybrid APT-P ConstantSpeed 30km/h SoC: 0.5, DH 5%"),
+		TestCase(50, 0.5, -5, GearboxType.ATPowerSplit, TestName = "P1 Hybrid APT-P ConstantSpeed 50km/h SoC: 0.5, DH 5%"),
+		TestCase(70, 0.5, -5, GearboxType.ATPowerSplit, TestName = "P1 Hybrid APT-P ConstantSpeed 70km/h SoC: 0.5, DH 5%"),
+		]
+		public void P1HybridConstantSpeed(double vmax, double initialSoC, double slope, GearboxType gbxType)
+		{
+			var cycleData = string.Format(
+				@"   0, {0}, {1},    0
+				  7000, {0}, {1},    0", vmax, slope);
+			var cycle = SimpleDrivingCycles.CreateCycleData(cycleData);
+
+			const bool largeMotor = true;
+
+			var modFilename = string.Format("SimpleParallelHybrid-P1_constant_{0}-{1}_{2}_{3}.vmod", vmax, initialSoC, slope, gbxType.ToXMLFormat());
+			const PowertrainPosition pos = PowertrainPosition.HybridP1;
+			var job = CreateEngineeringRun(
+				cycle, modFilename, initialSoC, pos, 1.0, largeMotor: true, gearboxType: gbxType);
+			var run = job.Runs.First().Run;
+
+			var hybridController = (HybridController)((VehicleContainer)run.GetContainer()).HybridController;
+			Assert.NotNull(hybridController);
+
+			var modData = ((ModalDataContainer)((VehicleContainer)run.GetContainer()).ModData).Data;
+
+			var data = run.GetContainer().RunData;
+			//File.WriteAllText(
+			//	$"{modFilename}.json",
+			//	JsonConvert.SerializeObject(data, Formatting.Indented));
+
+			run.Run();
+			Assert.IsTrue(run.FinishedWithoutErrors);
+
+			Assert.IsTrue(modData.Rows.Count > 0);
+			var graphWriter = GetGraphWriter(new[] { ModalResultField.P_electricMotor_mech_P1 });
+			graphWriter.Write(modFilename);
 		}
 
 		const string TestJobP1_APTS = @"TestData\Hybrids\GenericVehicle_P1-APT\CityBus_AT_Ser.vecto";
@@ -136,6 +209,8 @@ namespace TUGraz.VectoCore.Tests.Integration.Hybrid
 			//jobContainer.WaitFinished();
 			//Assert.IsTrue(jobContainer.GetProgress().All(x => x.Value.Success));
 		}
+
+		// =======================================================================================
 
 		[
 			TestCase(30, 0.7, 0, TestName = "P2 Hybrid DriveOff 30km/h SoC: 0.7, level"),
@@ -923,13 +998,16 @@ namespace TUGraz.VectoCore.Tests.Integration.Hybrid
 
 		// =================================================
 
-		public static JobContainer CreateEngineeringRun(DrivingCycleData cycleData, string modFileName, double initialSoc, PowertrainPosition pos, double ratio, bool largeMotor = false, double pAuxEl = 0, Kilogram payload = null, Watt maxDriveTrainPower = null)
+		public static JobContainer CreateEngineeringRun(DrivingCycleData cycleData, string modFileName,
+			double initialSoc, PowertrainPosition pos, double ratio, bool largeMotor = false, double pAuxEl = 0,
+			Kilogram payload = null, Watt maxDriveTrainPower = null, GearboxType gearboxType = GearboxType.NoGeabox)
 		{
 			var fileWriter = new FileOutputWriter(Path.GetFileNameWithoutExtension(modFileName));
 			var sumData = new SummaryDataContainer(fileWriter);
 			var jobContainer = new JobContainer(sumData);
 			var container = CreateParallelHybridPowerTrain(
-				cycleData,modFileName, initialSoc, largeMotor, sumData, pAuxEl, pos, ratio, payload, maxDriveTrainPower);
+				cycleData, modFileName, initialSoc, largeMotor, sumData, pAuxEl, pos, ratio, payload,
+				maxDriveTrainPower, gearboxType);
 			var run = new DistanceRun(container);
 			jobContainer.AddRun(run);
 			return jobContainer;
@@ -945,10 +1023,10 @@ namespace TUGraz.VectoCore.Tests.Integration.Hybrid
 
 		public static VehicleContainer CreateParallelHybridPowerTrain(DrivingCycleData cycleData, string modFileName,
 			double initialBatCharge, bool largeMotor, SummaryDataContainer sumData, double pAuxEl,
-			PowertrainPosition pos, double ratio, Kilogram payload = null, Watt maxDriveTrainPower = null)
+			PowertrainPosition pos, double ratio, Kilogram payload = null, Watt maxDriveTrainPower = null, GearboxType gearboxType = GearboxType.NoGeabox)
 		{ 
-			var gearboxData = CreateGearboxData();
-			var axleGearData = CreateAxleGearData();
+			var gearboxData = CreateGearboxData(gearboxType);
+			var axleGearData = CreateAxleGearData(gearboxType);
 
 			var vehicleData = CreateVehicleData(payload ??3300.SI<Kilogram>());
 			var airdragData = CreateAirdragData();
@@ -999,18 +1077,22 @@ namespace TUGraz.VectoCore.Tests.Integration.Hybrid
 				ExecutionMode.Engineering, modData, x => { sumData?.Write(x, 1, 1, runData); });
 			container.RunData = runData;
 
-			var strategy = new HybridStrategy(runData, container);
+			var strategy = gearboxType.AutomaticTransmission()
+				? (IHybridControlStrategy) new HybridStrategyAT(runData, container)
+				: new HybridStrategy(runData, container);
 			var es = new ElectricSystem(container);
 			var battery = new Battery(container, batteryData);
 			battery.Initialize(initialBatCharge);
 
-			var clutch = new SwitchableClutch(container, runData.EngineData);
+			var clutch = gearboxType.AutomaticTransmission() ? null :  new SwitchableClutch(container, runData.EngineData);
 			var ctl = new HybridController(container, strategy, es);
 
 			es.Connect(battery);
 
 			var engine = new StopStartCombustionEngine(container, runData.EngineData);
-			var gearbox = new Gearbox(container, ctl.ShiftStrategy);
+			var gearbox = gearboxType.AutomaticTransmission()
+				? (IHybridControlledGearbox)new ATGearbox(container, ctl.ShiftStrategy)
+				: new Gearbox(container, ctl.ShiftStrategy);
 			//var hybridStrategy = new DelegateParallelHybridStrategy();
 			ctl.Gearbox = gearbox;
 
@@ -1036,7 +1118,7 @@ namespace TUGraz.VectoCore.Tests.Integration.Hybrid
 				.AddComponent(GetElectricMachine(PowertrainPosition.HybridP3, runData.ElectricMachinesData, container,
 					es, ctl))
 				.AddComponent(runData.AngledriveData != null ? new Angledrive(container, runData.AngledriveData) : null)
-				.AddComponent(gearbox, runData.Retarder, container)
+				.AddComponent((IGearbox)gearbox, runData.Retarder, container)
 				.AddComponent(GetElectricMachine(PowertrainPosition.HybridP2, runData.ElectricMachinesData, container,
 					es, ctl))
 				.AddComponent(clutch)
@@ -1044,6 +1126,13 @@ namespace TUGraz.VectoCore.Tests.Integration.Hybrid
 					es, ctl))
 				.AddComponent(engine, idleController)
 				.AddAuxiliaries(container, runData);
+
+			if (runData.ElectricMachinesData.Any(x => x.Item1 == PowertrainPosition.HybridP1)) {
+				if (gearbox is ATGearbox atGbx) {
+					atGbx.IdleController = idleController;
+					new ATClutchInfo(container);
+				}
+			}
 
 			return container;
 		}
@@ -1071,7 +1160,7 @@ namespace TUGraz.VectoCore.Tests.Integration.Hybrid
 			//strategySettings.StrategyName = "SimpleParallelHybridStrategy";
 
 			var gearboxData = CreateGearboxData();
-			var axleGearData = CreateAxleGearData();
+			var axleGearData = CreateAxleGearData(GearboxType.AMT);
 
 			var vehicleData = CreateVehicleData(3300.SI<Kilogram>());
 			var airdragData = CreateAirdragData();
@@ -1169,8 +1258,8 @@ namespace TUGraz.VectoCore.Tests.Integration.Hybrid
 				GearResidenceTime = DeclarationData.GearboxTCU.GearResidenceTime,
 				DnT99L_highMin1 = DeclarationData.GearboxTCU.DnT99L_highMin1,
 				DnT99L_highMin2 = DeclarationData.GearboxTCU.DnT99L_highMin2,
-				AllowedGearRangeUp = DeclarationData.GearboxTCU.AllowedGearRangeUp,
-				AllowedGearRangeDown = DeclarationData.GearboxTCU.AllowedGearRangeDown,
+				AllowedGearRangeUp = gbx.Type.AutomaticTransmission() ? 1 : DeclarationData.GearboxTCU.AllowedGearRangeUp,
+				AllowedGearRangeDown = gbx.Type.AutomaticTransmission() ? 1: DeclarationData.GearboxTCU.AllowedGearRangeDown,
 				LookBackInterval = DeclarationData.GearboxTCU.LookBackInterval,
 				DriverAccelerationLookBackInterval = DeclarationData.GearboxTCU.DriverAccelerationLookBackInterval,
 				DriverAccelerationThresholdLow = DeclarationData.GearboxTCU.DriverAccelerationThresholdLow,
@@ -1220,7 +1309,23 @@ namespace TUGraz.VectoCore.Tests.Integration.Hybrid
 			return motor;
 		}
 
-		private static GearboxData CreateGearboxData()
+		private static GearboxData CreateGearboxData(GearboxType gearboxType = GearboxType.NoGeabox)
+		{
+			switch (gearboxType) {
+				
+				case GearboxType.NoGeabox:
+				case GearboxType.AMT:
+					return CreateAMTGearbox();
+				case GearboxType.ATSerial:
+					return CreateATSerial();
+				case GearboxType.ATPowerSplit:
+					return CreateATPowerSplit();
+				default:
+					throw new ArgumentOutOfRangeException(nameof(gearboxType), gearboxType, null);
+			}
+		}
+
+		private static GearboxData CreateAMTGearbox()
 		{
 			var ratios = new[] { 14.93, 11.64, 9.02, 7.04, 5.64, 4.4, 3.39, 2.65, 2.05, 1.6, 1.28, 1.0 };
 
@@ -1241,10 +1346,82 @@ namespace TUGraz.VectoCore.Tests.Integration.Hybrid
 			};
 		}
 
-		
-		private static AxleGearData CreateAxleGearData()
+		private static GearboxData CreateATSerial()
+		{
+			//var shiftPolygon = DeclarationData.Gearbox.ComputeShiftPolygon(
+			//		gearbox.Type, (int)i, engine.FullLoadCurves[i + 1],
+			//		gearsInput, engine,
+			//		axlegearRatio, dynamicTyreRadius, null);
+
+			var ratios = new[] { 3.4, 1.9, 1.42, 1.0, 0.7, 0.62 };
+			return new GearboxData {
+				Type = GearboxType.ATSerial,
+				Gears = ratios.Select(
+					(ratio, i) => Tuple.Create(
+						(uint)i, new GearData {
+							//MaxTorque = 2300.SI<NewtonMeter>(),
+							LossMap =
+								TransmissionLossMapReader.ReadFromFile(
+									ratio.IsEqual(1) ? GearboxIndirectLoss : GearboxDirectLoss, ratio,
+									string.Format("Gear {0}", i)),
+							Ratio = ratio,
+							//ShiftPolygon = ShiftPolygonReader.ReadFromFile(GearboxShiftPolygonFile),
+							TorqueConverterRatio = i == 0 ? ratio : double.NaN,
+							TorqueConverterGearLossMap = i == 0
+								? TransmissionLossMapReader.Create( 0.98, ratio, string.Format("Gear {0}", i))
+								: null,
+							//TorqueConverterShiftPolygon = i == 0 ? ShiftPolygonReader.ReadFromFile(GearboxShiftPolygonFile) : null
+						})).ToDictionary(k => k.Item1 + 1, v => v.Item2),
+				Inertia = 0.SI<KilogramSquareMeter>(),
+				TractionInterruption = 1.SI<Second>(),
+				TorqueConverterData = TorqueConverterDataReader.ReadFromFile(TorqueConverterSerial, 1000.RPMtoRad(),
+					5000.RPMtoRad(), ExecutionMode.Engineering, 1.0, DeclarationData.Gearbox.UpshiftMinAcceleration,
+					DeclarationData.Gearbox.UpshiftMinAcceleration), 
+				PowershiftShiftTime = DeclarationData.Gearbox.PowershiftShiftTime
+		};
+		}
+
+		private static GearboxData CreateATPowerSplit()
+		{
+			var ratios = new[] { 1.35, 1.0, 0.73 };
+			return new GearboxData {
+				Type = GearboxType.ATPowerSplit,
+				Gears = ratios.Select(
+					(ratio, i) => Tuple.Create(
+						(uint)i, new GearData {
+							//MaxTorque = 2300.SI<NewtonMeter>(),
+							LossMap =
+								TransmissionLossMapReader.ReadFromFile(
+									ratio.IsEqual(1) ? GearboxIndirectLoss : GearboxDirectLoss, ratio,
+									string.Format("Gear {0}", i)),
+							Ratio = ratio,
+							//ShiftPolygon = ShiftPolygonReader.ReadFromFile(GearboxShiftPolygonFile),
+							TorqueConverterRatio = i == 0 ? 1.0 : double.NaN,
+							TorqueConverterGearLossMap = i == 0
+								? TransmissionLossMapReader.Create(1.0, ratio, string.Format("Gear {0}", i))
+								: null,
+							//TorqueConverterShiftPolygon = i == 0 ? ShiftPolygonReader.ReadFromFile(GearboxShiftPolygonFile) : null
+						})).ToDictionary(k => k.Item1 + 1, v => v.Item2),
+				Inertia = 0.SI<KilogramSquareMeter>(),
+				TractionInterruption = 1.SI<Second>(),
+				TorqueConverterData = TorqueConverterDataReader.ReadFromFile(TorqueConverterSerial, 1000.RPMtoRad(),
+					5000.RPMtoRad(), ExecutionMode.Engineering, 1.0 / ratios[0], DeclarationData.Gearbox.UpshiftMinAcceleration,
+					DeclarationData.Gearbox.UpshiftMinAcceleration),
+				PowershiftShiftTime = DeclarationData.Gearbox.PowershiftShiftTime
+			};
+		}
+
+		private static AxleGearData CreateAxleGearData(GearboxType gearboxType)
 		{
 			var ratio = 2.59;
+			switch (gearboxType) {
+				case GearboxType.ATSerial:
+					ratio = 6.2;
+					break;
+				case GearboxType.ATPowerSplit:
+					ratio = 5.8;
+					break;
+			}
 			return new AxleGearData {
 				AxleGear = new GearData {
 					Ratio = ratio,

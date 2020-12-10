@@ -107,13 +107,21 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		public override Second LastUpshift
 		{
-			get { throw new System.NotImplementedException(); }
+			get
+			{
+				return -double.MaxValue.SI<Second>();
+				//throw new System.NotImplementedException();
+			}
 			protected internal set { throw new System.NotImplementedException(); }
 		}
 
 		public override Second LastDownshift
 		{
-			get { throw new System.NotImplementedException(); }
+			get
+			{
+				return -double.MaxValue.SI<Second>();
+				//throw new System.NotImplementedException();
+			}
 			protected internal set { throw new System.NotImplementedException(); }
 		}
 
@@ -147,7 +155,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		public override bool DisengageGearbox { get; set; }
 		public override void TriggerGearshift(Second absTime, Second dt)
 		{
-			throw new System.NotImplementedException();
+			//throw new System.NotImplementedException();
 		}
 
 		public override IResponse Initialize(NewtonMeter outTorque, PerSecond outAngularVelocity)
