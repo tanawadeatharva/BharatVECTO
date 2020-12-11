@@ -299,7 +299,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			
 			if (!dryRun) {
 				CurrentState.EMSpeed = emSpeed;
-				CurrentState.EMTorque = emTorque;
+				CurrentState.EMTorque = emOff ? null : emTorque;
 				CurrentState.EmTorqueMap = emTorqueMap;
 				CurrentState.DragMax = maxRecuperationTorqueEmMap;
 				CurrentState.DriveMax = maxDriveTorqueEmMap;
@@ -391,7 +391,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			container[ModalResultField.P_EM_electricMotor_gen_max_, Position] = (CurrentState.DragMax ?? 0.SI<NewtonMeter>()) * avgEMSpeed;
 			container[ModalResultField.P_EM_electricMotor_drive_max_, Position] = (CurrentState.DriveMax ?? 0.SI<NewtonMeter>()) * avgEMSpeed;
 			
-			container[ModalResultField.P_EM_electricMotor_em_mech_, Position] = CurrentState.EMTorque * avgEMSpeed;
+			container[ModalResultField.P_EM_electricMotor_em_mech_, Position] = (CurrentState.EMTorque ?? 0.SI<NewtonMeter>() ) * avgEMSpeed;
 			container[ModalResultField.P_EM_electricMotor_em_mech_map_, Position] = (CurrentState.EmTorqueMap ?? 0.SI<NewtonMeter>()) * avgEMSpeed;
 
 
@@ -419,7 +419,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		protected override void DoCommitSimulationStep(Second time, Second simulationInterval)
 		{
 			var avgSpeed = (PreviousState.EMSpeed + CurrentState.EMSpeed) / 2;
-			var losses = CurrentState.EMTorque * avgSpeed - CurrentState.ElectricPowerToBattery;
+			var losses = (CurrentState.EMTorque ?? 0.SI<NewtonMeter>()) * avgSpeed - CurrentState.ElectricPowerToBattery;
 			ThermalBuffer += (losses - ContinuousPowerLoss) * simulationInterval;
 			if (ThermalBuffer < 0) {
 				ThermalBuffer = 0.SI<Joule>();
