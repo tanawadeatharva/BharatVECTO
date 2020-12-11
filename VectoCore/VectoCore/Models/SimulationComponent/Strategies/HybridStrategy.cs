@@ -45,7 +45,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 				testContainer, -grad, grad, 2);
 		}
 
-		protected override ResponseDryRun RequestDryRun(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity, GearshiftPosition nextGear, HybridStrategyResponse cfg)
+		protected override IResponse RequestDryRun(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity, GearshiftPosition nextGear, HybridStrategyResponse cfg)
 		{
 			TestPowertrain.Gearbox.Gear = PreviousState.GearboxEngaged ? DataBus.GearboxInfo.Gear : Controller.ShiftStrategy.NextGear;
 			TestPowertrain.Gearbox.Disengaged = !nextGear.Engaged;
@@ -130,7 +130,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 
 			var retVal = TestPowertrain.HybridController.NextComponent.Request(absTime, dt, outTorque, outAngularVelocity, true);
 
-			return retVal as ResponseDryRun;
+			return retVal;
 		}
 
 	}
@@ -149,7 +149,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 
 		}
 
-		protected override ResponseDryRun RequestDryRun(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity,
+		protected override IResponse RequestDryRun(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity,
 			GearshiftPosition nextGear, HybridStrategyResponse cfg)
 		{
 			TestPowertrain.Gearbox.Gear = PreviousState.GearboxEngaged ? DataBus.GearboxInfo.Gear : Controller.ShiftStrategy.NextGear;
@@ -249,7 +249,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 				var retVal = TestPowertrain.HybridController.NextComponent.Request(absTime, dt, outTorque,
 					outAngularVelocity, false);
 
-				return retVal as ResponseDryRun;
+				return retVal;
 			} catch (Exception e) {
 				Log.Debug(e);
 				return null;
@@ -510,7 +510,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 			DryRunSolution = null;
 		}
 
-		protected abstract ResponseDryRun RequestDryRun(Second absTime, Second dt, NewtonMeter outTorque,
+		protected abstract IResponse RequestDryRun(Second absTime, Second dt, NewtonMeter outTorque,
 			PerSecond outAngularVelocity, GearshiftPosition nextGear, HybridStrategyResponse cfg);
 
 		private IHybridStrategyResponse HandleRequestExceedsMaxPower(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity, bool dryRun)
@@ -540,14 +540,24 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 			};
 			var maxEmDriveResponse =
 				RequestDryRun(absTime, dt, outTorque, outAngularVelocity, currentGear, maxEmDriveSetting);
-			if (maxEmDriveResponse.DeltaFullLoad.IsSmallerOrEqual(0)) {
+			var deltaFullLoadTq = (maxEmDriveResponse.Engine.TotalTorqueDemand -
+								maxEmDriveResponse.Engine.DynamicFullLoadTorque);
+			var maxEngineSpeed =
+				maxEmDriveResponse.Gearbox.Gear.Gear == 0 || !DataBus.ClutchInfo.ClutchClosed(absTime) ||
+				!DataBus.GearboxInfo.TCLocked
+					? ModelData.EngineData.FullLoadCurves[0].N95hSpeed :
+					VectoMath.Min(DataBus.GearboxInfo.GetGearData(DataBus.GearboxInfo.Gear.Gear).MaxSpeed, ModelData.EngineData.FullLoadCurves[0].N95hSpeed);
+
+			if (deltaFullLoadTq.IsSmallerOrEqual(0)) {
+				
 				return new HybridStrategyLimitedResponse() {
 					Delta = outTorque * outAngularVelocity - StrategyParameters.MaxDrivetrainPower,
-					DeltaEngineSpeed = maxEmDriveResponse.DeltaEngineSpeed
+					DeltaEngineSpeed = maxEmDriveResponse.Engine.EngineSpeed - maxEngineSpeed, // .DeltaEngineSpeed
 				};
 			}
 
-			var maxTorque = SearchAlgorithm.Search(outTorque, maxEmDriveResponse.DeltaFullLoad, -outTorque * 0.1,
+			var avgEngineSpeed = (maxEmDriveResponse.Engine.EngineSpeed + DataBus.EngineInfo.EngineSpeed) / 2;
+			var maxTorque = SearchAlgorithm.Search(outTorque, deltaFullLoadTq * avgEngineSpeed, -outTorque * 0.1,
 				getYValue: resp => {
 					var r = resp as ResponseDryRun;
 					return r.DeltaFullLoad;
@@ -563,9 +573,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 			if ((maxTorque * outAngularVelocity).IsSmaller(StrategyParameters.MaxDrivetrainPower)) {
 				delta = (outTorque  - maxTorque) * outAngularVelocity;
 			}
+
 			return new HybridStrategyLimitedResponse() {
 				Delta = delta,
-				DeltaEngineSpeed = maxEmDriveResponse.DeltaEngineSpeed
+				DeltaEngineSpeed = maxEmDriveResponse.Engine.EngineSpeed - maxEngineSpeed
 			};
 		}
 
@@ -657,7 +668,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 					}
 				}
 
-				if (firstResponse.DeltaDragLoad.IsGreater(0)) {
+				var deltaDragTqFirst = firstResponse.Engine.TotalTorqueDemand - firstResponse.Engine.DragTorque;
+
+				if (deltaDragTqFirst.IsGreater(0)) {
 					// braking requested but engine operating point is not below drag curve.
 					if (ElectricMotorCanPropellDuringTractionInterruption) {
 						if (DataBus.GearboxInfo.GearEngaged(absTime)) {
@@ -696,7 +709,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 				var maxRecuperationResponse = RequestDryRun(
 					absTime, dt, outTorque, outAngularVelocity, nextGear, maxRecuperation);
 
-				if (maxRecuperationResponse.DeltaDragLoad.IsSmaller(0) && 
+				var deltaDragTqMaxRecuperation = maxRecuperationResponse.Engine.TotalTorqueDemand - maxRecuperationResponse.Engine.DragTorque;
+
+				if (deltaDragTqMaxRecuperation.IsSmaller(0) && 
 					maxRecuperationResponse.ElectricSystem.RESSPowerDemand.IsBetween(maxRecuperationResponse.ElectricSystem.MaxPowerDrag, maxRecuperationResponse.ElectricSystem.MaxPowerDrive)) {
 					// even with full recuperation (and no braking) the operating point is below the drag curve (and the battery can handle it) - use full recuperation
 					eval.Add(
