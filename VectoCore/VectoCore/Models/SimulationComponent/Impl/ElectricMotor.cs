@@ -51,6 +51,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				.ElectricalPower;
 			var peakPwrLoss = -peakElPwr + ModelData.ContinuousPowerSpeed * maxTqDrive; // losses need to be positive
 			OverloadBuffer = (peakPwrLoss - ContinuousPowerLoss) * ModelData.OverloadTime;
+			if (OverloadBuffer.IsSmallerOrEqual(0) && !(container is SimplePowertrainContainer)) {
+				Log.Error("Overload buffer for thermal de-rating is negative! Please check electric motor data!");
+			}
 		}
 
 		public PowertrainPosition Position { get; }
