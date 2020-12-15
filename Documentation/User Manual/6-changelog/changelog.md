@@ -2,6 +2,11 @@
 
 **VECTO-3.3.9**
 
+***Build 2175 (2020-12-15) OFFICIAL RELEASE***
+
+- Bugfixes (compared to 3.3.9.2147)
+    * [VECTO-1374] - VECTO VTP error - regression update
+
 ***Build 2147 (2020-11-17) RELEASE CANDIDATE***
 
 - Bugfixes
