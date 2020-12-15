@@ -368,16 +368,16 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 			AssertHelper.Exception<VectoException>(() => DeclarationData.Fan.Lookup(missionType, technology));
 		}
 
-		[TestCase(VehicleClass.Class1, new[] { 0, 150, 150, 0, 0 }),
+		[TestCase(VehicleClass.Class1, new[] { 200, 150, 150, 0, 0 }),
 		TestCase(VehicleClass.Class2, new[] { 200, 200, 150, 0, 0 }),
-		TestCase(VehicleClass.Class3, new[] { 0, 200, 150, 0, 0 }),
+		TestCase(VehicleClass.Class3, new[] { 200, 200, 150, 0, 0 }),
 		TestCase(VehicleClass.Class4, new[] { 350, 200, 150, 300, 200 }),
 		TestCase(VehicleClass.Class5, new[] { 350, 200, 150, 0, 200 }),
 		TestCase(VehicleClass.Class9, new[] { 350, 200, 150, 300, 200 }),
-		TestCase(VehicleClass.Class10, new[] { 350, 200, 0, 0, 200 }),
-		TestCase(VehicleClass.Class11, new[] { 350, 200, 0, 300, 200 }),
-		TestCase(VehicleClass.Class12, new[] { 350, 200, 0, 0, 200 }),
-		TestCase(VehicleClass.Class16, new[] { 0, 0, 0, 0, 200 })]
+		TestCase(VehicleClass.Class10, new[] { 350, 200, 150, 0, 200 }),
+		TestCase(VehicleClass.Class11, new[] { 350, 200, 150, 300, 200 }),
+		TestCase(VehicleClass.Class12, new[] { 350, 200, 150, 0, 200 }),
+		TestCase(VehicleClass.Class16, new[] { 350, 200, 150, 0, 200 })]
 		public void AuxHeatingVentilationAirConditionTest_Default(VehicleClass vehicleClass, int[] expected)
 		{
 			for (var i = 0; i < expected.Length; i++) {
