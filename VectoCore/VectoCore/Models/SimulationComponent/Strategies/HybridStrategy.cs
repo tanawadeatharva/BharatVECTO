@@ -559,15 +559,19 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 			var avgEngineSpeed = (maxEmDriveResponse.Engine.EngineSpeed + DataBus.EngineInfo.EngineSpeed) / 2;
 			var maxTorque = SearchAlgorithm.Search(outTorque, deltaFullLoadTq * avgEngineSpeed, -outTorque * 0.1,
 				getYValue: resp => {
-					var r = resp as ResponseDryRun;
-					return r.DeltaFullLoad;
+					var r = resp as IResponse;
+					var deltaMaxTq = (r.Engine.TotalTorqueDemand -
+											r.Engine.DynamicFullLoadTorque);
+					return deltaMaxTq * avgEngineSpeed;
 				},
 				evaluateFunction: x => {
 					return RequestDryRun(absTime, dt, x, outAngularVelocity, currentGear, maxEmDriveSetting);
 				},
 				criterion: resp => {
-					var r = resp as ResponseDryRun;
-					return r.DeltaFullLoad.Value();
+					var r = resp as IResponse;
+					var deltaMaxTq = (r.Engine.TotalTorqueDemand -
+									r.Engine.DynamicFullLoadTorque);
+					return (deltaMaxTq * avgEngineSpeed).Value();
 				});
 			var delta = outTorque * outAngularVelocity - StrategyParameters.MaxDrivetrainPower;
 			if ((maxTorque * outAngularVelocity).IsSmaller(StrategyParameters.MaxDrivetrainPower)) {
@@ -736,8 +740,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 					maxRecuperationResponse.ElectricMotor.AngularVelocity,
 					maxRecuperationResponse.Engine.TorqueOutDemand, maxRecuperationResponse.ElectricMotor.MaxRecuperationTorque * 0.1,
 					getYValue: r => {
-						var response = r as ResponseDryRun;
-						return response.DeltaDragLoad;
+						var response = r as IResponse;
+						var deltaDragLoad = response.Engine.TotalTorqueDemand - response.Engine.DragTorque;
+						return deltaDragLoad;
 					},
 					evaluateFunction: emTq => {
 						var cfg = new HybridStrategyResponse() {
@@ -751,8 +756,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 						return RequestDryRun(absTime, dt, outTorque, outAngularVelocity, DataBus.GearboxInfo.GearEngaged(absTime) ? nextGear : new GearshiftPosition(0), cfg);
 					},
 					criterion: r => {
-						var response = r as ResponseDryRun;
-						return response.DeltaDragLoad.Value();
+						var response = r as IResponse;
+						var deltaDragLoad = response.Engine.TotalTorqueDemand - response.Engine.DragTorque;
+						return deltaDragLoad.Value();
 					}
 				);
 				if (emRecuperationTq.IsBetween(
@@ -928,10 +934,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 				return best;
 			}
 
-
-			var allOverload = eval.Where(x => !(x.IgnoreReason.BatteryDemandExceeded() || x.IgnoreReason.BatterySoCTooLow()))
+			var validResponses = eval.Where(x => x.Response != null).ToArray();
+			var allOverload = validResponses.Where(x => !(x.IgnoreReason.BatteryDemandExceeded() || x.IgnoreReason.BatterySoCTooLow()))
 								.All(x => x.IgnoreReason.EngineTorqueDemandTooHigh());
-			var allUnderload = eval.All(x => x.IgnoreReason.EngineTorqueDemandTooLow());
+			var allUnderload = validResponses.All(x => x.IgnoreReason.EngineTorqueDemandTooLow());
 			if (DataBus.DriverInfo.DrivingAction == DrivingAction.Accelerate && allOverload) {
 				if (ElectricMotorCanPropellDuringTractionInterruption || DataBus.GearboxInfo.GearEngaged(absTime)) {
 					// overload, EM can support - use solution with max EM power
@@ -1104,39 +1110,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 				var nextGear = GearList.Successor(gear);
 				var emOffEntry = EvaluateConfigsForGear(
 					absTime, dt, outTorque, outAngularVelocity, nextGear, allowICEOff, responses, emPos, dryRun);
-
-				//	GetEmOffResultEntry(absTime, dt, outTorque, outAngularVelocity, nextGear);
-				//if (emOffEntry != null) {
-				//	CalcualteCosts(emOffEntry.Response, dt, emOffEntry, allowICEOff);
-
-				//	responses.Add(emOffEntry);
-
-				//	var emTqReq =
-				//		(emOffEntry.Response.ElectricMotor.PowerRequest + emOffEntry.Response.ElectricMotor.InertiaPowerDemand) /
-				//		emOffEntry.Response.ElectricMotor.AngularVelocity;
-				//	IterateEMTorque(
-				//		absTime, dt, outTorque, outAngularVelocity, nextGear, allowICEOff, emOffEntry.Response, emTqReq, emPos,
-				//		responses);
-				//}
 			}
 			if (allowEmergencyDownshift && tmpBest != null && !tmpBest.ICEOff) {
 				var nextGear = GearList.Predecessor(gear);
 				var emOffEntry = EvaluateConfigsForGear(
 					absTime, dt, outTorque, outAngularVelocity, nextGear, allowICEOff, responses, emPos, dryRun);
-
-				//	GetEmOffResultEntry(absTime, dt, outTorque, outAngularVelocity, nextGear);
-				//if (emOffEntry != null) {
-				//	CalcualteCosts(emOffEntry.Response, dt, emOffEntry, allowICEOff);
-
-				//	responses.Add(emOffEntry);
-
-				//	var emTqReq =
-				//		(emOffEntry.Response.ElectricMotor.PowerRequest + emOffEntry.Response.ElectricMotor.InertiaPowerDemand) /
-				//		emOffEntry.Response.ElectricMotor.AngularVelocity;
-				//	IterateEMTorque(
-				//		absTime, dt, outTorque, outAngularVelocity, nextGear, allowICEOff, emOffEntry.Response, emTqReq, emPos,
-				//		responses);
-				//}
 			}
 
 			return responses;
@@ -1256,7 +1234,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 							firstResponse.ElectricMotor.ElectricMotorPowerMech / firstResponse.ElectricMotor.AngularVelocity,
 							firstResponse.Engine.TorqueOutDemand, firstResponse.ElectricMotor.MaxDriveTorque * 0.1,
 							getYValue: r => {
-								var response = r as ResponseDryRun;
+								var response = r as IResponse;
 								return response.Engine.TorqueOutDemand;
 							},
 							evaluateFunction: emTq => {
@@ -1270,7 +1248,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 								return RequestDryRun(absTime, dt, outTorque, outAngularVelocity, nextGear, cfg);
 							},
 							criterion: r => {
-								var response = r as ResponseDryRun;
+								var response = r as IResponse;
 								return response.Engine.TorqueOutDemand.Value();
 							}
 						);
@@ -1311,7 +1289,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 								firstResponse.ElectricMotor.ElectricMotorPowerMech / firstResponse.ElectricMotor.AngularVelocity,
 								firstResponse.Engine.TorqueOutDemand, firstResponse.ElectricMotor.MaxRecuperationTorque * 0.1,
 								getYValue: r => {
-									var response = r as ResponseDryRun;
+									var response = r as IResponse;
 									return response.Engine.TorqueOutDemand;
 								},
 								evaluateFunction: emTq => {
@@ -1325,7 +1303,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 									return RequestDryRun(absTime, dt, outTorque, outAngularVelocity, nextGear, cfg);
 								},
 								criterion: r => {
-									var response = r as ResponseDryRun;
+									var response = r as IResponse;
 									return response.Engine.TorqueOutDemand.Value();
 								}
 							);

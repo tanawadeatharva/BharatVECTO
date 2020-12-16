@@ -41,6 +41,9 @@ namespace TUGraz.VectoCore.Tests.Integration.Hybrid
 		public const string AccelerationFile = @"TestData\Components\Truck.vacc";
 		public const string MotorFile240kW = @"TestData\Hybrids\ElectricMotor\GenericEMotor240kW.vem";
 
+		public const string P1HybridMotor = @"Testdata\Hybrids\GenericVehicle_P1-APT\GenericEMotor20kW.vem";
+		public const string P1BatteryFile = @"Testdata\Hybrids\GenericVehicle_P1-APT\GenericBattery.vbat";
+
 		public const string GearboxIndirectLoss = @"TestData\Components\Indirect Gear.vtlm";
 		public const string GearboxDirectLoss = @"TestData\Components\Direct Gear.vtlm";
 
@@ -131,7 +134,7 @@ namespace TUGraz.VectoCore.Tests.Integration.Hybrid
 			var modFilename = string.Format("SimpleParallelHybrid-P1_constant_{0}-{1}_{2}_{3}.vmod", vmax, initialSoC, slope, gbxType.ToXMLFormat());
 			const PowertrainPosition pos = PowertrainPosition.HybridP1;
 			var job = CreateEngineeringRun(
-				cycle, modFilename, initialSoC, pos, 1.0, largeMotor: true, gearboxType: gbxType);
+				cycle, modFilename, initialSoC, pos, 1.0, largeMotor: false, gearboxType: gbxType);
 			var run = job.Runs.First().Run;
 
 			var hybridController = (HybridController)((VehicleContainer)run.GetContainer()).HybridController;
@@ -1032,10 +1035,11 @@ namespace TUGraz.VectoCore.Tests.Integration.Hybrid
 			var airdragData = CreateAirdragData();
 			var driverData = CreateDriverData(AccelerationFile, true);
 
-			var electricMotorData =
-				MockSimulationDataFactory.CreateElectricMotorData(largeMotor ? MotorFile240kW : MotorFile, 1, pos, ratio, 1);
+			var emFile = pos == PowertrainPosition.HybridP1 ? P1HybridMotor : (largeMotor ? MotorFile240kW : MotorFile);
+			var electricMotorData = MockSimulationDataFactory.CreateElectricMotorData(emFile, 1, pos, ratio, 1);
 
-			var batteryData = MockSimulationDataFactory.CreateBatteryData(BatFile, initialBatCharge);
+			var batFile = pos == PowertrainPosition.HybridP1 ? P1BatteryFile : BatFile;
+			var batteryData = MockSimulationDataFactory.CreateBatteryData(batFile, initialBatCharge);
 			//batteryData.TargetSoC = 0.5;
 
 			var engineData = MockSimulationDataFactory.CreateEngineDataFromFile(

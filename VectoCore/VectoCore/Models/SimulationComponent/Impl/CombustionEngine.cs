@@ -197,18 +197,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			var avgEngineSpeed = GetEngineSpeed(angularVelocity);
 
 			var engineSpeedLimit = GetEngineSpeedLimit(absTime);
-			if (!dryRun && !angularVelocity.IsSmallerOrEqual(engineSpeedLimit)) {
-				if (DataBus.HybridControllerInfo?.ICESpeed != null && DataBus.HybridControllerInfo.ICESpeed != angularVelocity) {
-					return new ResponseInvalidOperatingPoint(this);
-				}
-				return new ResponseEngineSpeedTooHigh(this) {
-					DeltaEngineSpeed = avgEngineSpeed - engineSpeedLimit,
-					Engine = {
-						EngineSpeed = angularVelocity
-					}
-				};
-			}
-
+			
 			var fullDragTorque = ModelData.FullLoadCurves[DataBus.GearboxInfo.Gear.Gear].DragLoadStationaryTorque(avgEngineSpeed);
 			var stationaryFullLoadTorque = ModelData.FullLoadCurves[DataBus.GearboxInfo.Gear.Gear].FullLoadStationaryTorque(avgEngineSpeed);
 			var dynamicFullLoadPower = ComputeFullLoadPower(avgEngineSpeed, stationaryFullLoadTorque, dt, dryRun);
@@ -236,7 +225,49 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			var deltaFull = totalTorqueDemand - dynamicFullLoadTorque;
 			//ComputeDelta(torqueOut, totalTorqueDemand, dynamicFullLoadTorque, gearboxFullLoad, true);
 			var deltaDrag = totalTorqueDemand - fullDragTorque; //ComputeDelta(torqueOut, totalTorqueDemand, fullDragTorque,
-			//gearboxFullLoad != null ? -gearboxFullLoad : null, false);
+																//gearboxFullLoad != null ? -gearboxFullLoad : null, false);
+
+			if (!dryRun && !angularVelocity.IsSmallerOrEqual(engineSpeedLimit)) {
+				if (DataBus.HybridControllerInfo?.ICESpeed != null && DataBus.HybridControllerInfo.ICESpeed != angularVelocity) {
+					return new ResponseInvalidOperatingPoint(this);
+				}
+				return new ResponseEngineSpeedTooHigh(this) {
+					DeltaEngineSpeed = avgEngineSpeed - engineSpeedLimit,
+					Engine = {
+						EngineSpeed = angularVelocity,
+						PowerRequest = torqueOut * avgEngineSpeed,
+						TorqueOutDemand = torqueOut,
+						TotalTorqueDemand = totalTorqueDemand,
+						DynamicFullLoadPower = dynamicFullLoadPower,
+						DynamicFullLoadTorque = dynamicFullLoadTorque,
+						StationaryFullLoadTorque = stationaryFullLoadTorque,
+						DragPower = fullDragTorque * avgEngineSpeed,
+						DragTorque = fullDragTorque,
+						AuxiliariesPowerDemand = auxTorqueDemand * avgEngineSpeed,
+					}
+				};
+			}
+
+			if (!dryRun && !angularVelocity.IsSmallerOrEqual(engineSpeedLimit)) {
+				if (DataBus.HybridControllerInfo?.ICESpeed != null && DataBus.HybridControllerInfo.ICESpeed != angularVelocity) {
+					return new ResponseInvalidOperatingPoint(this);
+				}
+				return new ResponseEngineSpeedTooHigh(this) {
+					DeltaEngineSpeed = avgEngineSpeed - engineSpeedLimit,
+					Engine = {
+						EngineSpeed = angularVelocity,
+						PowerRequest = torqueOut * avgEngineSpeed,
+						TorqueOutDemand = torqueOut,
+						TotalTorqueDemand = totalTorqueDemand,
+						DynamicFullLoadPower = dynamicFullLoadPower,
+						DynamicFullLoadTorque = dynamicFullLoadTorque,
+						StationaryFullLoadTorque = stationaryFullLoadTorque,
+						DragPower = fullDragTorque * avgEngineSpeed,
+						DragTorque = fullDragTorque,
+						AuxiliariesPowerDemand = auxTorqueDemand * avgEngineSpeed,
+					}
+				};
+			}
 
 			if (dryRun) {
 				return new ResponseDryRun(this) {

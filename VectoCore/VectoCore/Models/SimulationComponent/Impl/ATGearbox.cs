@@ -156,6 +156,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		public override void TriggerGearshift(Second absTime, Second dt)
 		{
 			//throw new System.NotImplementedException();
+			RequestAfterGearshift = true;
 		}
 
 		public override IResponse Initialize(NewtonMeter outTorque, PerSecond outAngularVelocity)
