@@ -2,6 +2,7 @@
 using System.Linq;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
+using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Models.Simulation;
 using TUGraz.VectoCore.Models.Simulation.DataBus;
@@ -11,7 +12,7 @@ using TUGraz.VectoCore.Models.SimulationComponent.Impl;
 using TUGraz.VectoCore.OutputData;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies {
-	public class TestPowertrain<T> where T: class, IHybridControlledGearbox
+	public class TestPowertrain<T> where T: class, IHybridControlledGearbox, IGearbox
 	{
 		public SimplePowertrainContainer Container;
 		public T Gearbox;
@@ -28,6 +29,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies {
 		public StopStartCombustionEngine CombustionEngine;
 		public ElectricMotor ElectricMotor;
 		public Dictionary<PowertrainPosition, ElectricMotor> ElectricMotorsUpstreamTransmission = new Dictionary<PowertrainPosition, ElectricMotor>();
+		public TorqueConverter TorqueConverter;
 
 		public TestPowertrain(SimplePowertrainContainer container, IDataBus realContainer)
 		{
@@ -48,6 +50,13 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies {
 			}
 			if (Gearbox == null) {
 				throw new VectoException("Unknown gearboxtype in TestContainer: {0}", Container.GearboxCtl.GetType().FullName);
+			}
+
+			if (Gearbox.GearboxType.AutomaticTransmission()) {
+				TorqueConverter = Container.TorqueConverterInfo as TorqueConverter;
+				if (TorqueConverter == null) {
+					throw new VectoException("Torque converter missing for automatic transmission: {0}", Container.TorqueConverterInfo?.GetType().FullName);
+				}
 			}
 
 			if (HybridController == null) {

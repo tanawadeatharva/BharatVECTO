@@ -74,7 +74,10 @@ namespace TUGraz.VectoCore.Models.Simulation.DataBus
 
 		IRESSInfo BatteryInfo { get; }
 
+		ITorqueConverterInfo TorqueConverterInfo { get; }
+
 		ITorqueConverterControl TorqueConverterCtl { get; }
+
 		IPowertainInfo PowertrainInfo { get; }
 
 		IHybridControllerInfo HybridControllerInfo { get; }

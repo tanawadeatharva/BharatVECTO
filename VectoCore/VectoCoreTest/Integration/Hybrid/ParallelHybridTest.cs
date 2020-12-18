@@ -155,6 +155,87 @@ namespace TUGraz.VectoCore.Tests.Integration.Hybrid
 			graphWriter.Write(modFilename);
 		}
 
+		[
+			TestCase(30, 0.7, 0, GearboxType.ATSerial, TestName = "P1 Hybrid APT-S DriveOff 30km/h SoC: 0.7, level"),
+			TestCase(80, 0.7, 0, GearboxType.ATSerial, TestName = "P1 Hybrid APT-S DriveOff 80km/h SoC: 0.7, level"),
+			TestCase(80, 0.7, 5, GearboxType.ATSerial, TestName = "P1 Hybrid APT-S DriveOff 80km/h SoC: 0.7, UH 5"),
+			TestCase(30, 0.22, 0, GearboxType.ATSerial, TestName = "P1 Hybrid APT-S DriveOff 30km/h SoC: 0.22, level"),
+
+			TestCase(30, 0.7, 0, GearboxType.ATPowerSplit, TestName = "P1 Hybrid APT-P DriveOff 30km/h SoC: 0.7, level"),
+			TestCase(80, 0.7, 0, GearboxType.ATPowerSplit, TestName = "P1 Hybrid APT-P DriveOff 80km/h SoC: 0.7, level"),
+			TestCase(80, 0.7, 5, GearboxType.ATPowerSplit, TestName = "P1 Hybrid APT-P DriveOff 80km/h SoC: 0.7, UH 5"),
+			TestCase(30, 0.22, 0, GearboxType.ATPowerSplit, TestName = "P1 Hybrid APT-P DriveOff 30km/h SoC: 0.22, level"),
+
+		]
+		public void P1HybridDriveOff(double vmax, double initialSoC, double slope, GearboxType gbxType)
+		{
+			var graphWriter = GetGraphWriter(new[] { ModalResultField.P_electricMotor_mech_P1 });
+			var cycleData = string.Format(
+				@"   0,   0, {1},    3
+				   700, {0}, {1},    0", vmax, slope);
+			var cycle = SimpleDrivingCycles.CreateCycleData(cycleData);
+
+			const bool largeMotor = true;
+
+			var modFilename = string.Format("SimpleParallelHybrid-P1_acc_{0}-{1}_{2}_{3}.vmod", vmax, initialSoC, slope, gbxType.ToXMLFormat());
+			const PowertrainPosition pos = PowertrainPosition.HybridP1;
+			var job = CreateEngineeringRun(
+				cycle, modFilename, initialSoC, pos, 1.0, largeMotor: false, gearboxType: gbxType);
+			var run = job.Runs.First().Run;
+
+			var hybridController = (HybridController)((VehicleContainer)run.GetContainer()).HybridController;
+			Assert.NotNull(hybridController);
+
+			var modData = ((ModalDataContainer)((VehicleContainer)run.GetContainer()).ModData).Data;
+
+			//run.Run();
+			job.Execute();
+			job.WaitFinished();
+			Assert.IsTrue(run.FinishedWithoutErrors);
+
+			Assert.IsTrue(modData.Rows.Count > 0);
+			graphWriter.Write(modFilename);
+		}
+
+		[
+			TestCase(50, 0.79, 0, GearboxType.ATSerial, TestName = "P1 Hybrid APT-S Brake Standstill 50km/h SoC: 0.79, level"),
+			TestCase(50, 0.25, 0, GearboxType.ATSerial, TestName = "P1 Hybrid APT-S Brake Standstill 50km/h SoC: 0.25, level"),
+			TestCase(50, 0.65, 0, GearboxType.ATSerial, TestName = "P1 Hybrid APT-S Brake Standstill 50km/h SoC: 0.65, level"),
+
+			TestCase(50, 0.79, 0, GearboxType.ATPowerSplit, TestName = "P1 Hybrid APT-P Brake Standstill 50km/h SoC: 0.79, level"),
+			TestCase(50, 0.25, 0, GearboxType.ATPowerSplit, TestName = "P1 Hybrid APT-P Brake Standstill 50km/h SoC: 0.25, level"),
+			TestCase(50, 0.65, 0, GearboxType.ATPowerSplit, TestName = "P1 Hybrid APT-P Brake Standstill 50km/h SoC: 0.65, level")
+		]
+		public void P1HybridBrakeStandstill(double vmax, double initialSoC, double slope, GearboxType gbxType)
+		{
+			var cycleData = string.Format(
+				@"   0, {0}, {1},    0
+				   200,   0, {1},    3", vmax, slope);
+			var cycle = SimpleDrivingCycles.CreateCycleData(cycleData);
+
+			const bool largeMotor = true;
+
+			var modFilename = string.Format("SimpleParallelHybrid-P1_stop_{0}-{1}_{2}_{3}.vmod", vmax, initialSoC, slope, gbxType.ToXMLFormat());
+			const PowertrainPosition pos = PowertrainPosition.HybridP1;
+			var job = CreateEngineeringRun(
+				cycle, modFilename, initialSoC, pos, 1.0, largeMotor: false, gearboxType: gbxType);
+			var run = job.Runs.First().Run;
+
+			var hybridController = (HybridController)((VehicleContainer)run.GetContainer()).HybridController;
+			Assert.NotNull(hybridController);
+			//var strategy = (DelegateParallelHybridStrategy)hybridController.Strategy;
+			//Assert.NotNull(strategy);
+
+			var modData = ((ModalDataContainer)((VehicleContainer)run.GetContainer()).ModData).Data;
+
+			run.Run();
+			Assert.IsTrue(run.FinishedWithoutErrors);
+
+			Assert.IsTrue(modData.Rows.Count > 0);
+			var graphWriter = GetGraphWriter(new[] { ModalResultField.P_electricMotor_mech_P1 });
+			graphWriter.Write(modFilename);
+		}
+
 		const string TestJobP1_APTS = @"TestData\Hybrids\GenericVehicle_P1-APT\CityBus_AT_Ser.vecto";
 		const string TestJobP1_APTP = @"TestData\Hybrids\GenericVehicle_P1-APT\CityBus_AT_PS.vecto";
 

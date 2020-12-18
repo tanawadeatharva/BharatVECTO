@@ -55,7 +55,7 @@ namespace TUGraz.VectoCore.Tests.Utils
 		public List<VectoSimulationComponent> Components = new List<VectoSimulationComponent>();
 		private Watt _axlegearLoss = 0.SI<Watt>();
 		private bool _clutchClosed = true;
-		private ITorqueConverterControl _torqueConverter;
+		private ITorqueConverter _torqueConverter;
 		private IGearboxInfo _gearboxInfoImplementation;
 
 		public IAxlegearInfo AxlegearInfo
@@ -147,6 +147,11 @@ namespace TUGraz.VectoCore.Tests.Utils
 		public IRESSInfo BatteryInfo
 		{
 			get { throw new NotImplementedException(); }
+		}
+
+		public ITorqueConverterInfo TorqueConverterInfo
+		{
+			get { return _torqueConverter; }
 		}
 
 		public ITorqueConverterControl TorqueConverterCtl

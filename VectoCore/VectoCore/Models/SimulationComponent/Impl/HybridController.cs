@@ -552,6 +552,13 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				return Gears.First();
 			}
 
+			protected override bool DoCheckShiftRequired(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity,
+				NewtonMeter inTorque, PerSecond inAngularVelocity, GearshiftPosition gear, Second lastShiftTime,
+				IResponse response)
+			{
+				return false;
+			}
+
 			//public override GearshiftPosition Engage(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity)
 			//{
 			//	if (_nextGear.AbsTime != null && _nextGear.AbsTime.IsEqual(absTime)) {

@@ -55,10 +55,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		private WattSecond _powershiftLossEnergy;
 		protected internal KilogramSquareMeter EngineInertia;
 
-        public bool TorqueConverterLocked {
-            get { return CurrentState.Gear.TorqueConverterLocked.Value; }
-            //set { CurrentState.TorqueConverterLocked = value; }
-        }
+		public bool TorqueConverterLocked {
+			get { return CurrentState.Gear.TorqueConverterLocked.Value; }
+			//set { CurrentState.TorqueConverterLocked = value; }
+		}
 
 		public override bool TCLocked { get { return Gear.TorqueConverterLocked.Value; } }
 
@@ -504,8 +504,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		public class ATGearboxState : GearboxState
 		{
-            
-            public bool Disengaged = true;
+			
+			public bool Disengaged = true;
 			public WattSecond PowershiftLossEnergy;
 			public NewtonMeter PowershiftLoss;
 		}

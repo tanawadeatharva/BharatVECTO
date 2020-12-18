@@ -165,7 +165,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 
 			var currentGear = PreviousState.GearboxEngaged ? DataBus.GearboxInfo.Gear : Controller.ShiftStrategy.NextGear;
 
-			if (nextGear.Engaged && nextGear.Equals(currentGear)) {
+			if (nextGear.Engaged && !nextGear.Equals(currentGear)) {
 				if (!AllowEmergencyShift && ModelData.GearboxData.Gears[nextGear.Gear].Ratio > ModelData.GearshiftParameters.RatioEarlyUpshiftFC) {
 					return null;
 				}
@@ -226,8 +226,17 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 			(TestPowertrain.CombustionEngine.EngineAux as EngineAuxiliary).PreviousState.AngularSpeed =
 				((DataBus.EngineInfo as CombustionEngine).EngineAux as EngineAuxiliary).PreviousState.AngularSpeed;
 
+			TestPowertrain.Gearbox.PreviousState.OutAngularVelocity =
+				(DataBus.GearboxInfo as ATGearbox).PreviousState.OutAngularVelocity;
 			TestPowertrain.Gearbox.PreviousState.InAngularVelocity =
 				(DataBus.GearboxInfo as ATGearbox).PreviousState.InAngularVelocity;
+
+			if (nextGear.TorqueConverterLocked.HasValue && !nextGear.TorqueConverterLocked.Value) {
+				TestPowertrain.TorqueConverter.PreviousState.InAngularVelocity =
+					(DataBus.TorqueConverterInfo as TorqueConverter).PreviousState.InAngularVelocity;
+				TestPowertrain.TorqueConverter.PreviousState.OutAngularVelocity =
+					(DataBus.TorqueConverterInfo as TorqueConverter).PreviousState.OutAngularVelocity;
+			}
 
 			//TestPowertrain.Clutch.PreviousState.InAngularVelocity =
 			//	(DataBus.ClutchInfo as SwitchableClutch).PreviousState.InAngularVelocity;
@@ -249,6 +258,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 				var retVal = TestPowertrain.HybridController.NextComponent.Request(absTime, dt, outTorque,
 					outAngularVelocity, false);
 
+				if (retVal.Source is TorqueConverter) {
+					return null;
+				}
+
 				return retVal;
 			} catch (Exception e) {
 				Log.Debug(e);
@@ -259,7 +272,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 
 	// =====================================================
 
-	public abstract class AbstractHybridStrategy<T> : LoggingObject, IHybridControlStrategy where T: class, IHybridControlledGearbox 
+	public abstract class AbstractHybridStrategy<T> : LoggingObject, IHybridControlStrategy where T: class, IHybridControlledGearbox, IGearbox 
 	{
 
 		public class StrategyState
@@ -269,7 +282,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 			public List<HybridResultEntry> Evaluations;
 			public HybridResultEntry Solution { get; set; }
 
-			public bool GearboxEngaged;
+			public bool GearboxEngaged { get; set; }
 
 			public Second ICEStartTStmp { get; set; }
 
@@ -459,7 +472,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 				CurrentState.Solution = best;
 				CurrentState.AngularVelocity = outAngularVelocity;
 				CurrentState.Evaluations = eval;
-				CurrentState.GearboxEngaged = DataBus.GearboxInfo.GearEngaged(absTime);
+				CurrentState.GearboxEngaged = DataBus.GearboxInfo.GearEngaged(absTime) || DataBus.GearboxInfo.GearboxType.AutomaticTransmission();
 				if (!DataBus.EngineCtl.CombustionEngineOn && !best.ICEOff && !retVal.ShiftRequired) {
 					CurrentState.ICEStartTStmp = absTime;
 				} else {
@@ -613,11 +626,18 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 
 		protected virtual void HandleBrakeAction(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity, bool dryRun, List<HybridResultEntry> eval)
 		{
+			if (DataBus.GearboxInfo.GearboxType.AutomaticTransmission() &&
+				DataBus.GearboxInfo.Gear.Equals(GearList.First())) {
+				eval.Add(ResponseEmOff);
+				return;
+			}
 			if (ElectricMotorCanPropellDuringTractionInterruption || DataBus.GearboxInfo.GearEngaged(absTime)) {
 
 				var emPos = ModelData.ElectricMachinesData.First().Item1;
-				var vehiclespeedBelowThreshold =
-					DataBus.VehicleInfo.VehicleSpeed.IsSmaller(Constants.SimulationSettings.ClutchDisengageWhenHaltingSpeed);
+				var disengageSpeedThreshold = DataBus.GearboxInfo.GearboxType.AutomaticTransmission()
+					? Constants.SimulationSettings.ATGearboxDisengageWhenHaltingSpeed
+					: Constants.SimulationSettings.ClutchDisengageWhenHaltingSpeed;
+				var vehiclespeedBelowThreshold = DataBus.VehicleInfo.VehicleSpeed.IsSmaller(disengageSpeedThreshold);
 				if ((vehiclespeedBelowThreshold) && emPos == PowertrainPosition.HybridP2) {
 					eval.Add(ResponseEmOff);
 					return;
@@ -642,8 +662,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 					: firstResponse.Engine.EngineSpeed.IsSmaller(ModelData.EngineData.IdleSpeed);
 				if (GearList.HasPredecessor(nextGear) && engineSpeedTooLow && !vehiclespeedBelowThreshold) {
 					// engine speed would fall below idling speed - consider downshift
-					var estimatedVelocityPostShift = VelocityDropData.Interpolate(DataBus.VehicleInfo.VehicleSpeed, DataBus.DrivingCycleInfo.RoadGradient ?? 0.SI<Radian>());
-					var postShiftBelowThreshold = estimatedVelocityPostShift.IsSmaller(Constants.SimulationSettings.ClutchDisengageWhenHaltingSpeed);
+					var estimatedVelocityPostShift = VelocityDropData.Valid
+						? VelocityDropData.Interpolate(DataBus.VehicleInfo.VehicleSpeed,
+							DataBus.DrivingCycleInfo.RoadGradient ?? 0.SI<Radian>())
+						: DataBus.VehicleInfo.VehicleSpeed;
+					var postShiftBelowThreshold = estimatedVelocityPostShift.IsSmaller(disengageSpeedThreshold);
 					if (postShiftBelowThreshold) {
 						var downshift = ResponseEmOff;
 						downshift.Gear = GearList.Predecessor(nextGear);
@@ -654,6 +677,13 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 						nextGear = GearList.Predecessor(nextGear);
 						firstResponse = RequestDryRun(absTime, dt, outTorque, outAngularVelocity, nextGear, tmp);
 					} while (GearList.HasPredecessor(nextGear) && firstResponse == null);
+				}
+
+				if (DataBus.GearboxInfo.GearboxType.AutomaticTransmission() && firstResponse == null && nextGear.Equals(GearList.First())) {
+					var downshift = ResponseEmOff;
+					downshift.Gear = nextGear;
+					eval.Add(downshift);
+					return;
 				}
 
 				if (tmp.CombustionEngineOn) {
@@ -862,7 +892,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 
 		protected virtual void HandleAccelerateAction(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity, bool dryRun, List<HybridResultEntry> eval)
 		{
-			if (ElectricMotorCanPropellDuringTractionInterruption || DataBus.GearboxInfo.GearEngaged(absTime)) {
+			if (ElectricMotorCanPropellDuringTractionInterruption || DataBus.GearboxInfo.GearEngaged(absTime) || DataBus.GearboxInfo.GearboxType.AutomaticTransmission()) {
 				eval.AddRange(FindSolution(absTime, dt, outTorque, outAngularVelocity, dryRun));
 			} else {
 				eval.Add(ResponseEmOff);
