@@ -204,3 +204,5 @@ Documentation/VehiclesReleaseComparisonDeclarationMode/*.vsum
 
 DISTR/
 Documentation/VehiclesReleaseComparisonDeclarationMode/tmp/
+Documentation/VehiclesReleaseComparisonDeclarationMode/**/*.vmod
+Documentation/VehiclesReleaseComparisonDeclarationMode/**/*.vsum
