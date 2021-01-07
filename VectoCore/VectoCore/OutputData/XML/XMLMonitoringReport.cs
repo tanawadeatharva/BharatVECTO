@@ -93,7 +93,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 
 			//retVal.Add(
 			//	new XProcessingInstruction(
-			//		"xml-stylesheet", "href=\"https://webgate.ec.europa.eu/CITnet/svn/VECTO/trunk/Share/XML/CSS/VectoReports.css\""));
+			//		"xml-stylesheet", "href=\"https://citnet.tech.ec.europa.eu/CITnet/svn/VECTO/trunk/Share/XML/CSS/VectoReports.css\""));
 			retVal.Add(
 				new XElement(
 					tns + "VectoMonitoring",
