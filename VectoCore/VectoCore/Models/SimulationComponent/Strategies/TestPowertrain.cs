@@ -49,7 +49,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies {
 				}
 			}
 			if (Gearbox == null) {
-				throw new VectoException("Unknown gearboxtype in TestContainer: {0}", Container.GearboxCtl.GetType().FullName);
 			}
 
 			if (Gearbox.GearboxType.AutomaticTransmission()) {
@@ -60,12 +59,16 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies {
 			}
 
 			if (HybridController == null) {
-				throw new VectoException("Unknown HybridController in TestContainer: {0}", Container.HybridController.GetType().FullName);
+				throw new VectoException("Unknown HybridController in TestContainer: {0}", Container.HybridController?.GetType().FullName);
 			}
 
 			Driver = new MockDriver(container, realContainer);
 			DrivingCycle = new MockDrivingCycle(container, realContainer);
-			Brakes = new MockBrakes(container);
+			Brakes = container.Brakes as Brakes;
+			if (Brakes == null) {
+				throw new VectoException("Unknown or missing brakes in TestContainer: {0}", Container.Brakes?.GetType().FullName);
+			}
+			//Brakes = new MockBrakes(container);
 		}
 	}
 

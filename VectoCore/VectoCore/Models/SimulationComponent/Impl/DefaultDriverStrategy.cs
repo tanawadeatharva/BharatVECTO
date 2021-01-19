@@ -925,7 +925,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 							debug.Add(new { action = "first:(Underload & Overspeed)-> Coast", second });
 							second = HandleCoastAfterUnderloadWithOverspeed(absTime, ds, gradient, velocityWithOverspeed, debug, second);
 						} else {
-							second = Driver.DrivingActionBrake(absTime, ds, velocityWithOverspeed, gradient);
+							second = Driver.DrivingActionBrake(absTime, ds, velocityWithOverspeed, gradient,
+								overrideAction: DataBus.GearboxInfo.GearboxType.AutomaticTransmission()
+									? DrivingAction.Accelerate
+									: (DrivingAction?)null);
 							debug.Add(new { action = "first:(Underload & !Overspeed) -> Brake", second });
 						}
 					})

@@ -50,9 +50,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		protected internal readonly IShiftStrategy _strategy;
 		protected internal readonly TorqueConverter TorqueConverter;
 		private IIdleController _idleController;
-		protected bool RequestAfterGearshift;
+		protected internal bool RequestAfterGearshift;
 
-		private WattSecond _powershiftLossEnergy;
+		internal WattSecond _powershiftLossEnergy;
 		protected internal KilogramSquareMeter EngineInertia;
 
 		public bool TorqueConverterLocked {
@@ -310,7 +310,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		{
 			if (RequestAfterGearshift /*&& Gear != PreviousState.Gear*/) {
 				LastShift = absTime;
-				Gear = _strategy.Engage(absTime, dt, outTorque, outAngularVelocity);
+				Gear = _strategy?.Engage(absTime, dt, outTorque, outAngularVelocity) ?? Gear;
 				_powershiftLossEnergy = ComputeShiftLosses(outTorque, outAngularVelocity, Gear);
 			} else {
 				if (PreviousState.PowershiftLossEnergy != null && PreviousState.PowershiftLossEnergy.IsGreater(0)) {
