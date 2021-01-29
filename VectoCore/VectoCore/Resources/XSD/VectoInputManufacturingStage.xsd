@@ -1,0 +1,895 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- edited with XMLSpy v2021 (x64) (http://www.altova.com) by Franz Kober (Technische Universität Graz) -->
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:vectoParam="urn:tugraz:ivt:VectoAPI:ParameterDocumentation" elementFormDefault="qualified" attributeFormDefault="unqualified">
+	<xs:complexType name="VectoStageInput">
+		<xs:annotation>
+			<xs:documentation>Vehicle stage input parts</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="Manufacturer" type="ManufacturerType">
+				<xs:annotation>
+					<xs:documentation>P235</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="ManfactuerAddress" type="ManufactuerAddressType">
+				<xs:annotation>
+					<xs:documentation>P252</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Model" type="ModelType" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>P236</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="VIN" type="VINType">
+				<xs:annotation>
+					<xs:documentation>P238</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Date" type="DateTimeWithTimezone">
+				<xs:annotation>
+					<xs:documentation>P239</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="LegislativeCategory" type="LegislativeCategoryType" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>P251 - enum</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="CorrectedActualMass" type="CorrectedActualMassType" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>P038 - [kg]</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="TechniclaPermissibleMaximumLadenMass" type="TechnicalPermissibleMaximumLadenMassType" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>P041 - [kg]</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="CertificationNumberAirdrag" type="CertificationNumberAirdragType" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>P268 - [-]</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="AirdragModifiedMultistage" type="AirdragModifiedMultistageType" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>P334 - bool</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="NgTankSystem" type="NgTankSystemType" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>P275 - enum</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="ClassBus" type="ClassBusType" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>P282 - enum</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:sequence minOccurs="0">
+				<xs:element name="NumberPassengersLowerDeck" type="NumberPassengersLowerDeckType">
+					<xs:annotation>
+						<xs:documentation>P283 - [-]</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+				<xs:element name="NumberPassengersUpperDeck" type="NumberPassengersUpperDeckType">
+					<xs:annotation>
+						<xs:documentation>P284 - [-]</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+			</xs:sequence>
+			<xs:element name="VehicleCode" type="VehicleCodeType" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>P285 - enum</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="LowEntry" type="LowEntryType" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>P286 - bool</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="HeightIntegratedBody" type="HeightIntegratedBodyType" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>P287 - [mm]</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="VehicleLength" type="VehicleLengthType" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>P288 - [mm]</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="VehicleWidth" type="VehicleWidthType" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>P289 - [mm]</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="EntranceHeight" type="EntranceHeightType" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>P290 - [mm]</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="DoorDriveTechnology" type="DoorDriveTechnologyType" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>P291 - enum</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="StateOfCompletion" type="StateOfCompletionType" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>P293 - enum</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="ElectricSystem" minOccurs="0">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="InteriorlightsLED" type="InteriorlightsLEDType" minOccurs="0">
+							<xs:annotation>
+								<xs:documentation>P304 - bool</xs:documentation>
+							</xs:annotation>
+						</xs:element>
+						<xs:element name="DayrunninglightsLED" type="DayrunninglightsLEDType" minOccurs="0">
+							<xs:annotation>
+								<xs:documentation>P305 - bool</xs:documentation>
+							</xs:annotation>
+						</xs:element>
+						<xs:element name="PositionlightsLED" type="PositionlightsLEDType" minOccurs="0">
+							<xs:annotation>
+								<xs:documentation>P306 - bool</xs:documentation>
+							</xs:annotation>
+						</xs:element>
+						<xs:element name="BrakelightsLED" type="BrakelightsLEDType" minOccurs="0">
+							<xs:annotation>
+								<xs:documentation>P307 - bool</xs:documentation>
+							</xs:annotation>
+						</xs:element>
+						<xs:element name="HeadlightsLED" type="HeadlightsLEDType" minOccurs="0">
+							<xs:annotation>
+								<xs:documentation>P308 - bool</xs:documentation>
+							</xs:annotation>
+						</xs:element>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="HVAC" minOccurs="0">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:sequence minOccurs="0">
+							<xs:element name="SystemConfiguration" type="SystemConfigurationType">
+								<xs:annotation>
+									<xs:documentation>P317 - enum</xs:documentation>
+								</xs:annotation>
+							</xs:element>
+							<xs:element name="HeatPumpTypeDriverCompartment" type="HeatPumpTypeDriverCompartmentType">
+								<xs:annotation>
+									<xs:documentation>P318 - enum</xs:documentation>
+								</xs:annotation>
+							</xs:element>
+							<xs:element name="HeatPumpDirverCompartmentHeating" type="HeatPumpTypeDriverCompartmentType">
+								<xs:annotation>
+									<xs:documentation>P319 - bool</xs:documentation>
+								</xs:annotation>
+							</xs:element>
+							<xs:element name="HeatPumpTypePassengerCompartment" type="HeatPumpTypePassengerCompartmentType">
+								<xs:annotation>
+									<xs:documentation>P320 - enum</xs:documentation>
+								</xs:annotation>
+							</xs:element>
+							<xs:element name="HeatPumpPassengerCompartmentHeating" type="HeatPumpPassengerCompartmentHeatingType">
+								<xs:annotation>
+									<xs:documentation>P321 - bool</xs:documentation>
+								</xs:annotation>
+							</xs:element>
+						</xs:sequence>
+						<xs:element name="AuxiliaryHeaterPower" type="AuxiliaryHeaterPowerType" minOccurs="0">
+							<xs:annotation>
+								<xs:documentation>P322 - [W]</xs:documentation>
+							</xs:annotation>
+						</xs:element>
+						<xs:element name="DoubleGlasing" type="DoubleGlasingType" minOccurs="0">
+							<xs:annotation>
+								<xs:documentation>P323 - bool</xs:documentation>
+							</xs:annotation>
+						</xs:element>
+						<xs:element name="AdjustableAuxiliaryHeater" type="AdjustableAuxiliaryHeaterType" minOccurs="0">
+							<xs:annotation>
+								<xs:documentation>P325 - bool</xs:documentation>
+							</xs:annotation>
+						</xs:element>
+						<xs:element name="SeparateAirDistributionDucts" type="SeparateAirDistributionDuctsType" minOccurs="0">
+							<xs:annotation>
+								<xs:documentation>P327 - bool</xs:documentation>
+							</xs:annotation>
+						</xs:element>
+						<xs:element name="WaterElectricHeater" type="WaterElectricHeaterType" minOccurs="0">
+							<xs:annotation>
+								<xs:documentation>P328 - bool</xs:documentation>
+							</xs:annotation>
+						</xs:element>
+						<xs:element name="AirElectricHeater" type="AirElectricHeaterType" minOccurs="0">
+							<xs:annotation>
+								<xs:documentation>P329 - bool</xs:documentation>
+							</xs:annotation>
+						</xs:element>
+						<xs:element name="OtherHeatingTechnology" type="OtherHeatingTechnologyType" minOccurs="0">
+							<xs:annotation>
+								<xs:documentation>P330 - bool</xs:documentation>
+							</xs:annotation>
+						</xs:element>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="ExemptedVectoStageInput">
+		<xs:annotation>
+			<xs:documentation>Exempted vehicle stage input parts</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="Manufacturer" type="ManufacturerType">
+				<xs:annotation>
+					<xs:documentation>P235</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="ManfactuerAddress" type="ManufactuerAddressType">
+				<xs:annotation>
+					<xs:documentation>P252</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Model" type="ModelType" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>P236</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="VIN" type="VINType">
+				<xs:annotation>
+					<xs:documentation>P238</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Date" type="DateTimeWithTimezone">
+				<xs:annotation>
+					<xs:documentation>P239</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="LegislativeCategory" type="LegislativeCategoryType" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>P251 - enum</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="CorrectedActualMass" type="CorrectedActualMassType" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>P038 - [kg]</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="TechniclaPermissibleMaximumLadenMass" type="TechnicalPermissibleMaximumLadenMassType" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>P041 - [kg]</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="ClassBus" type="ClassBusType" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>P282 - enum</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:sequence minOccurs="0">
+				<xs:element name="NumberPassengersLowerDeck" type="NumberPassengersLowerDeckType">
+					<xs:annotation>
+						<xs:documentation>P283 - [-]</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+				<xs:element name="NumberPassengersUpperDeck" type="NumberPassengersUpperDeckType">
+					<xs:annotation>
+						<xs:documentation>P284 - [-]</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+			</xs:sequence>
+			<xs:element name="VehicleCode" type="VehicleCodeType" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>P285 - enum</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="LowEntry" type="LowEntryType" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>P286 - bool</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="HeightIntegratedBody" type="HeightIntegratedBodyType" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>P287 - [mm]</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="EngineStopStart" type="EngineStopStartType" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>P271 - [-]</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="EcoRollWithoutEngineStop" type="EcoRollWithoutEngineStopType" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>P272 - [-]</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="EcoRollWithEngineStop" type="EcoRollWithEngineStopType" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>P273 - [-]</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="PredictiveCruiseControl" type="PredictiveCruiseControlType" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>P274 - enum</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="APTEcoRollReleaseLockupClutch" type="APTEcoRollReleaseLockupClutchType" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>P333 - [-]</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:simpleType name="ManufacturerType">
+		<xs:annotation>
+			<xs:appinfo>
+				<vectoParam:description>
+					<vectoParam:unit>-</vectoParam:unit>
+				</vectoParam:description>
+			</xs:appinfo>
+			<xs:documentation>P235 - [-]</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:token"/>
+	</xs:simpleType>
+	<xs:simpleType name="ManufactuerAddressType">
+		<xs:annotation>
+			<xs:appinfo>
+				<vectoParam:description>
+					<vectoParam:unit>-</vectoParam:unit>
+				</vectoParam:description>
+			</xs:appinfo>
+			<xs:documentation>P252 - [-]</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:token"/>
+	</xs:simpleType>
+	<xs:simpleType name="VINType">
+		<xs:annotation>
+			<xs:appinfo>
+				<vectoParam:description>
+					<vectoParam:unit>-</vectoParam:unit>
+				</vectoParam:description>
+			</xs:appinfo>
+			<xs:documentation>P238 - [-]</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:token"/>
+	</xs:simpleType>
+	<xs:simpleType name="DateTimeWithTimezone">
+		<xs:annotation>
+			<xs:appinfo>
+				<vectoParam:description>
+					<vectoParam:unit>-</vectoParam:unit>
+				</vectoParam:description>
+			</xs:appinfo>
+			<xs:documentation>P239 - [-]</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:dateTime">
+			<xs:minInclusive value="2017-01-01T00:00:00Z"/>
+			<xs:pattern value=".+T.+Z"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="ModelType">
+		<xs:annotation>
+			<xs:appinfo>
+				<vectoParam:description>
+					<vectoParam:unit>-</vectoParam:unit>
+				</vectoParam:description>
+			</xs:appinfo>
+			<xs:documentation>P236 - [-]</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:token"/>
+	</xs:simpleType>
+	<xs:simpleType name="LegislativeCategoryType">
+		<xs:annotation>
+			<xs:appinfo>
+				<vectoParam:description>
+					<vectoParam:unit>-</vectoParam:unit>
+				</vectoParam:description>
+			</xs:appinfo>
+			<xs:documentation>P251 - enum</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:pattern value="N2"/>
+			<xs:pattern value="N3"/>
+			<xs:pattern value="M3"/>
+			<xs:enumeration value="N2"/>
+			<xs:enumeration value="N3"/>
+			<xs:enumeration value="M3"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="CorrectedActualMassType">
+		<xs:annotation>
+			<xs:appinfo>
+				<vectoParam:description>
+					<vectoParam:unit>[kg]</vectoParam:unit>
+				</vectoParam:description>
+			</xs:appinfo>
+			<xs:documentation>P038 - [kg]</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:int"/>
+	</xs:simpleType>
+	<xs:simpleType name="TechnicalPermissibleMaximumLadenMassType">
+		<xs:annotation>
+			<xs:appinfo>
+				<vectoParam:description>
+					<vectoParam:unit>[kg]</vectoParam:unit>
+				</vectoParam:description>
+			</xs:appinfo>
+			<xs:documentation>P041 - [kg]</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:int"/>
+	</xs:simpleType>
+	<xs:simpleType name="CertificationNumberAirdragType">
+		<xs:annotation>
+			<xs:appinfo>
+				<vectoParam:description>
+					<vectoParam:unit>[-]</vectoParam:unit>
+				</vectoParam:description>
+			</xs:appinfo>
+			<xs:documentation>P268 - [-]</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:token"/>
+	</xs:simpleType>
+	<xs:simpleType name="AirdragModifiedMultistageType">
+		<xs:annotation>
+			<xs:appinfo>
+				<vectoParam:description>
+					<vectoParam:unit>[-]</vectoParam:unit>
+				</vectoParam:description>
+			</xs:appinfo>
+			<xs:documentation>P334 - [-]</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:boolean"/>
+	</xs:simpleType>
+	<xs:simpleType name="NgTankSystemType">
+		<xs:annotation>
+			<xs:appinfo>
+				<vectoParam:description>
+					<vectoParam:unit>[-]</vectoParam:unit>
+				</vectoParam:description>
+			</xs:appinfo>
+			<xs:documentation>P275 - enum</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:pattern value="Compressed"/>
+			<xs:pattern value="Liquefied"/>
+			<xs:enumeration value="Compressed"/>
+			<xs:enumeration value="Liquefied"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="ClassBusType">
+		<xs:annotation>
+			<xs:appinfo>
+				<vectoParam:description>
+					<vectoParam:unit>[-]</vectoParam:unit>
+				</vectoParam:description>
+			</xs:appinfo>
+			<xs:documentation>P282 - enum</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:pattern value="I"/>
+			<xs:pattern value="I+II"/>
+			<xs:pattern value="A"/>
+			<xs:pattern value="II"/>
+			<xs:pattern value="II+III"/>
+			<xs:pattern value="III"/>
+			<xs:pattern value="B"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="NumberPassengersLowerDeckType">
+		<xs:annotation>
+			<xs:appinfo>
+				<vectoParam:description>
+					<vectoParam:unit>[-]</vectoParam:unit>
+				</vectoParam:description>
+			</xs:appinfo>
+			<xs:documentation>P283 - [-]</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:int">
+			<xs:minInclusive value="1"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="NumberPassengersUpperDeckType">
+		<xs:annotation>
+			<xs:appinfo>
+				<vectoParam:description>
+					<vectoParam:unit>[-]</vectoParam:unit>
+				</vectoParam:description>
+			</xs:appinfo>
+			<xs:documentation>P284 - [-]</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:int">
+			<xs:minInclusive value="0"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="VehicleCodeType">
+		<xs:annotation>
+			<xs:appinfo>
+				<vectoParam:description>
+					<vectoParam:unit>[-]</vectoParam:unit>
+				</vectoParam:description>
+			</xs:appinfo>
+			<xs:documentation>P285 - enum</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:pattern value="CA"/>
+			<xs:pattern value="CB"/>
+			<xs:pattern value="CC"/>
+			<xs:pattern value="CD"/>
+			<xs:pattern value="CE"/>
+			<xs:pattern value="CF"/>
+			<xs:pattern value="CG"/>
+			<xs:pattern value="CH"/>
+			<xs:pattern value="CI"/>
+			<xs:pattern value="CJ"/>
+			<xs:enumeration value="CA"/>
+			<xs:enumeration value="CB"/>
+			<xs:enumeration value="CC"/>
+			<xs:enumeration value="CD"/>
+			<xs:enumeration value="CE"/>
+			<xs:enumeration value="CF"/>
+			<xs:enumeration value="CG"/>
+			<xs:enumeration value="CH"/>
+			<xs:enumeration value="CI"/>
+			<xs:enumeration value="CJ"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="LowEntryType">
+		<xs:annotation>
+			<xs:appinfo>
+				<vectoParam:description>
+					<vectoParam:unit>[-]</vectoParam:unit>
+				</vectoParam:description>
+			</xs:appinfo>
+			<xs:documentation>P286 - [-]</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:boolean"/>
+	</xs:simpleType>
+	<xs:simpleType name="HeightIntegratedBodyType">
+		<xs:annotation>
+			<xs:appinfo>
+				<vectoParam:description>
+					<vectoParam:unit>[mm]</vectoParam:unit>
+				</vectoParam:description>
+			</xs:appinfo>
+			<xs:documentation>P287 - [mm]</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:int"/>
+	</xs:simpleType>
+	<xs:simpleType name="VehicleLengthType">
+		<xs:annotation>
+			<xs:appinfo>
+				<vectoParam:description>
+					<vectoParam:unit>[mm]</vectoParam:unit>
+				</vectoParam:description>
+			</xs:appinfo>
+			<xs:documentation>P288 - [mm]</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:int"/>
+	</xs:simpleType>
+	<xs:simpleType name="VehicleWidthType">
+		<xs:annotation>
+			<xs:appinfo>
+				<vectoParam:description>
+					<vectoParam:unit>[mm]</vectoParam:unit>
+				</vectoParam:description>
+			</xs:appinfo>
+			<xs:documentation>P289 - [mm]</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:int"/>
+	</xs:simpleType>
+	<xs:simpleType name="EntranceHeightType">
+		<xs:annotation>
+			<xs:appinfo>
+				<vectoParam:description>
+					<vectoParam:unit>[mm]</vectoParam:unit>
+				</vectoParam:description>
+			</xs:appinfo>
+			<xs:documentation>P290 - [mm]</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:int"/>
+	</xs:simpleType>
+	<xs:simpleType name="DoorDriveTechnologyType">
+		<xs:annotation>
+			<xs:appinfo>
+				<vectoParam:description>
+					<vectoParam:unit>[-]</vectoParam:unit>
+				</vectoParam:description>
+			</xs:appinfo>
+			<xs:documentation>P291 - enum</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:pattern value="pneumatic"/>
+			<xs:pattern value="electric"/>
+			<xs:pattern value="mixed"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="StateOfCompletionType">
+		<xs:annotation>
+			<xs:appinfo>
+				<vectoParam:description>
+					<vectoParam:unit>[-]</vectoParam:unit>
+				</vectoParam:description>
+			</xs:appinfo>
+			<xs:documentation>P293 - enum</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:pattern value="incomplete"/>
+			<xs:pattern value="complete"/>
+			<xs:pattern value="completed"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="InteriorlightsLEDType">
+		<xs:annotation>
+			<xs:appinfo>
+				<vectoParam:description>
+					<vectoParam:unit>[-]</vectoParam:unit>
+				</vectoParam:description>
+			</xs:appinfo>
+			<xs:documentation>P304 - [-]</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:boolean"/>
+	</xs:simpleType>
+	<xs:simpleType name="DayrunninglightsLEDType">
+		<xs:annotation>
+			<xs:appinfo>
+				<vectoParam:description>
+					<vectoParam:unit>[-]</vectoParam:unit>
+				</vectoParam:description>
+			</xs:appinfo>
+			<xs:documentation>P305 - [-]</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:boolean"/>
+	</xs:simpleType>
+	<xs:simpleType name="PositionlightsLEDType">
+		<xs:annotation>
+			<xs:appinfo>
+				<vectoParam:description>
+					<vectoParam:unit>[-]</vectoParam:unit>
+				</vectoParam:description>
+			</xs:appinfo>
+			<xs:documentation>P306 - [-]</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:boolean"/>
+	</xs:simpleType>
+	<xs:simpleType name="BrakelightsLEDType">
+		<xs:annotation>
+			<xs:appinfo>
+				<vectoParam:description>
+					<vectoParam:unit>[-]</vectoParam:unit>
+				</vectoParam:description>
+			</xs:appinfo>
+			<xs:documentation>P307 - [-]</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:boolean"/>
+	</xs:simpleType>
+	<xs:simpleType name="HeadlightsLEDType">
+		<xs:annotation>
+			<xs:appinfo>
+				<vectoParam:description>
+					<vectoParam:unit>[-]</vectoParam:unit>
+				</vectoParam:description>
+			</xs:appinfo>
+			<xs:documentation>P308 - [-]</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:boolean"/>
+	</xs:simpleType>
+	<xs:simpleType name="SystemConfigurationType">
+		<xs:annotation>
+			<xs:appinfo>
+				<vectoParam:description>
+					<vectoParam:unit>[-]</vectoParam:unit>
+				</vectoParam:description>
+			</xs:appinfo>
+			<xs:documentation>P317 - enum</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:int">
+			<xs:pattern value="0"/>
+			<xs:pattern value="1"/>
+			<xs:pattern value="2"/>
+			<xs:pattern value="3"/>
+			<xs:pattern value="4"/>
+			<xs:pattern value="5"/>
+			<xs:pattern value="6"/>
+			<xs:pattern value="7"/>
+			<xs:pattern value="8"/>
+			<xs:pattern value="9"/>
+			<xs:pattern value="10"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="HeatPumpTypeDriverCompartmentType">
+		<xs:annotation>
+			<xs:appinfo>
+				<vectoParam:description>
+					<vectoParam:unit>[-]</vectoParam:unit>
+				</vectoParam:description>
+			</xs:appinfo>
+			<xs:documentation>P318 - enum</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:pattern value="none"/>
+			<xs:pattern value="R-744"/>
+			<xs:pattern value="non R-744 2-stage"/>
+			<xs:pattern value="non R-744 3-stage"/>
+			<xs:pattern value="non R-744 4-stage"/>
+			<xs:pattern value="non R-744 continuous"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="HeatPumpDriverCompartmentHeatingType">
+		<xs:annotation>
+			<xs:appinfo>
+				<vectoParam:description>
+					<vectoParam:unit>[-]</vectoParam:unit>
+				</vectoParam:description>
+			</xs:appinfo>
+			<xs:documentation>P319 - [-]</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:boolean"/>
+	</xs:simpleType>
+	<xs:simpleType name="HeatPumpTypePassengerCompartmentType">
+		<xs:annotation>
+			<xs:appinfo>
+				<vectoParam:description>
+					<vectoParam:unit>[-]</vectoParam:unit>
+				</vectoParam:description>
+			</xs:appinfo>
+			<xs:documentation>P320 - enum</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:pattern value="none"/>
+			<xs:pattern value="R-744"/>
+			<xs:pattern value="non R-744 2-stage"/>
+			<xs:pattern value="non R-744 3-stage"/>
+			<xs:pattern value="non R-744 4-stage"/>
+			<xs:pattern value="non R-744 continuous"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="HeatPumpPassengerCompartmentHeatingType">
+		<xs:annotation>
+			<xs:appinfo>
+				<vectoParam:description>
+					<vectoParam:unit>[-]</vectoParam:unit>
+				</vectoParam:description>
+			</xs:appinfo>
+			<xs:documentation>P321 - [-]</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:boolean"/>
+	</xs:simpleType>
+	<xs:simpleType name="AuxiliaryHeaterPowerType">
+		<xs:annotation>
+			<xs:appinfo>
+				<vectoParam:description>
+					<vectoParam:unit>[W]</vectoParam:unit>
+				</vectoParam:description>
+			</xs:appinfo>
+			<xs:documentation>P322 - [W]</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:int"/>
+	</xs:simpleType>
+	<xs:simpleType name="DoubleGlasingType">
+		<xs:annotation>
+			<xs:appinfo>
+				<vectoParam:description>
+					<vectoParam:unit>[-]</vectoParam:unit>
+				</vectoParam:description>
+			</xs:appinfo>
+			<xs:documentation>P323 - [-]</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:boolean"/>
+	</xs:simpleType>
+	<xs:simpleType name="AdjustableAuxiliaryHeaterType">
+		<xs:annotation>
+			<xs:appinfo>
+				<vectoParam:description>
+					<vectoParam:unit>[-]</vectoParam:unit>
+				</vectoParam:description>
+			</xs:appinfo>
+			<xs:documentation>P325 - [-]</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:boolean"/>
+	</xs:simpleType>
+	<xs:simpleType name="SeparateAirDistributionDuctsType">
+		<xs:annotation>
+			<xs:appinfo>
+				<vectoParam:description>
+					<vectoParam:unit>[-]</vectoParam:unit>
+				</vectoParam:description>
+			</xs:appinfo>
+			<xs:documentation>P327 - [-]</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:boolean"/>
+	</xs:simpleType>
+	<xs:simpleType name="WaterElectricHeaterType">
+		<xs:annotation>
+			<xs:appinfo>
+				<vectoParam:description>
+					<vectoParam:unit>[-]</vectoParam:unit>
+				</vectoParam:description>
+			</xs:appinfo>
+			<xs:documentation>P328 - [-]</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:boolean"/>
+	</xs:simpleType>
+	<xs:simpleType name="AirElectricHeaterType">
+		<xs:annotation>
+			<xs:appinfo>
+				<vectoParam:description>
+					<vectoParam:unit>[-]</vectoParam:unit>
+				</vectoParam:description>
+			</xs:appinfo>
+			<xs:documentation>P329 - [-]</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:boolean"/>
+	</xs:simpleType>
+	<xs:simpleType name="OtherHeatingTechnologyType">
+		<xs:annotation>
+			<xs:appinfo>
+				<vectoParam:description>
+					<vectoParam:unit>[-]</vectoParam:unit>
+				</vectoParam:description>
+			</xs:appinfo>
+			<xs:documentation>P330 - [-]</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:boolean"/>
+	</xs:simpleType>
+	<xs:simpleType name="EngineStopStartType">
+		<xs:annotation>
+			<xs:appinfo>
+				<vectoParam:description>
+					<vectoParam:unit>[-]</vectoParam:unit>
+				</vectoParam:description>
+			</xs:appinfo>
+			<xs:documentation>P271 - [-]</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:boolean"/>
+	</xs:simpleType>
+	<xs:simpleType name="EcoRollWithoutEngineStopType">
+		<xs:annotation>
+			<xs:appinfo>
+				<vectoParam:description>
+					<vectoParam:unit>[-]</vectoParam:unit>
+				</vectoParam:description>
+			</xs:appinfo>
+			<xs:documentation>P272 - [-]</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:boolean"/>
+	</xs:simpleType>
+	<xs:simpleType name="EcoRollWithEngineStopType">
+		<xs:annotation>
+			<xs:appinfo>
+				<vectoParam:description>
+					<vectoParam:unit>[-]</vectoParam:unit>
+				</vectoParam:description>
+			</xs:appinfo>
+			<xs:documentation>P273 - [-]</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:boolean"/>
+	</xs:simpleType>
+	<xs:simpleType name="PredictiveCruiseControlType">
+		<xs:annotation>
+			<xs:appinfo>
+				<vectoParam:description>
+					<vectoParam:unit>[-]</vectoParam:unit>
+				</vectoParam:description>
+			</xs:appinfo>
+			<xs:documentation>P274 - enum</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:pattern value="1,2"/>
+			<xs:pattern value="1,2,3"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="APTEcoRollReleaseLockupClutchType">
+		<xs:annotation>
+			<xs:appinfo>
+				<vectoParam:description>
+					<vectoParam:unit>[-]</vectoParam:unit>
+				</vectoParam:description>
+			</xs:appinfo>
+			<xs:documentation>P333 - [-]</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:boolean"/>
+	</xs:simpleType>
+</xs:schema>
