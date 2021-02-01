@@ -46,7 +46,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl {
 
 		protected virtual IResponse HandleEngineOffRequest(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity, bool dryRun)
 		{
-			if (!outTorque.IsEqual(0, 1e-3)) {
+			if (!outTorque.IsEqual(0, 1e-2)) {
 				if (dryRun) {
 					return new ResponseDryRun(this) {
 						DeltaFullLoad = outTorque * ModelData.IdleSpeed,
