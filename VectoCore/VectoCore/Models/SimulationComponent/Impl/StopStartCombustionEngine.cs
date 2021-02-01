@@ -51,6 +51,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl {
 					return new ResponseDryRun(this) {
 						DeltaFullLoad = outTorque * ModelData.IdleSpeed,
 						DeltaDragLoad = outTorque * ModelData.IdleSpeed,
+						DeltaDragLoadTorque = outTorque,
+						DeltaFullLoadTorque = outTorque,
 						Engine = {
 							TorqueOutDemand = outTorque,
 							TotalTorqueDemand = outTorque,
@@ -94,6 +96,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl {
 				return new ResponseDryRun(this) {
 					DeltaFullLoad = 0.SI<Watt>(),
 					DeltaDragLoad = 0.SI<Watt>(),
+					DeltaDragLoadTorque = 0.SI<NewtonMeter>(),
+					DeltaFullLoadTorque = 0.SI<NewtonMeter>(),
 					Engine = {
 						TorqueOutDemand = outTorque,
 						PowerRequest = outTorque * outAngularVelocity,

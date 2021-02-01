@@ -273,6 +273,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				return new ResponseDryRun(this) {
 					DeltaFullLoad = deltaFull * avgEngineSpeed,
 					DeltaDragLoad = deltaDrag * avgEngineSpeed,
+					DeltaFullLoadTorque = deltaFull,
+					DeltaDragLoadTorque = deltaDrag,
 					DeltaEngineSpeed = angularVelocity - engineSpeedLimit,
 					Engine = {
 						EngineSpeed = angularVelocity,

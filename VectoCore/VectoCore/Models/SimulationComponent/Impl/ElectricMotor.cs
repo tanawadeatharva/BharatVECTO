@@ -262,6 +262,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 						},
 						DeltaFullLoad =  remainingPower,
 						DeltaDragLoad = remainingPower,
+						DeltaFullLoadTorque = inTorqueDt,
+						DeltaDragLoadTorque = inTorqueDt,
+
 					};
 				} else {
 

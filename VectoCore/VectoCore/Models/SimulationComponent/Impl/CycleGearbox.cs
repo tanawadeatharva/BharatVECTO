@@ -320,6 +320,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					},
 					DeltaDragLoad = outTorque * avgOutAngularVelocity,
 					DeltaFullLoad = outTorque * avgOutAngularVelocity,
+					DeltaFullLoadTorque = outTorque,
+					DeltaDragLoadTorque = outTorque,
+
 				};
 			}
 

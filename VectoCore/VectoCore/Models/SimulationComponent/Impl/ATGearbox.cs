@@ -408,6 +408,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					},
 					DeltaDragLoad = outTorque * avgAngularVelocity,
 					DeltaFullLoad = outTorque * avgAngularVelocity,
+					DeltaFullLoadTorque = outTorque,
+					DeltaDragLoadTorque = outTorque,
 				};
 			}
 			if ((outTorque * avgAngularVelocity).IsGreater(0.SI<Watt>(),

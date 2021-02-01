@@ -183,7 +183,12 @@ namespace TUGraz.VectoCore.Models.Connector.Ports.Impl
 		public ResponseDryRun(object source, IResponse subResponse) : base(source, subResponse) { }
 
 		public Watt DeltaFullLoad { get; set; }
+
+		public NewtonMeter DeltaFullLoadTorque { get; set; }
 		public Watt DeltaDragLoad { get; set; }
+
+		public NewtonMeter DeltaDragLoadTorque { get; set; }
+
 		public PerSecond DeltaEngineSpeed { get; set; }
 	}
 

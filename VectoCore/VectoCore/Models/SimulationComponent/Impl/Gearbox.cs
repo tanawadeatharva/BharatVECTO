@@ -321,7 +321,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 						Gear = new GearshiftPosition(0),
 					},
 					DeltaDragLoad = delta,
-					DeltaFullLoad = delta
+					DeltaFullLoad = delta,
+					DeltaDragLoadTorque = inTorque,
+					DeltaFullLoadTorque = inTorque,
 				};
 			}
 

@@ -112,6 +112,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				return new ResponseDryRun(this) {
 					DeltaFullLoad = deltaFull * avgEngineSpeed,
 					DeltaDragLoad = deltaDrag * avgEngineSpeed,
+					DeltaDragLoadTorque = deltaDrag,
+					DeltaFullLoadTorque = deltaFull,
 					DeltaEngineSpeed = 0.RPMtoRad(),
 					Engine = {
 						PowerRequest = torqueOut * avgEngineSpeed,

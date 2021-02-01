@@ -130,6 +130,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					Gearbox = { PowerRequest = delta },
 					DeltaDragLoad = delta,
 					DeltaFullLoad = delta,
+					DeltaFullLoadTorque = outTorque,
+					DeltaDragLoadTorque = outTorque,
 					Clutch = {
 						PowerRequest = delta,
 						OutputSpeed = outAngularVelocity
