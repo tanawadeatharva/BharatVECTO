@@ -225,7 +225,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				emTorqueMap = null;
 			}
 
-			var electricPower = emOff || (ModelData.DragCurve.Lookup(avgEmSpeed) + inertiaTorqueEm).IsEqual(emTorque)
+			var electricPower = emOff || (ModelData.DragCurve.Lookup(avgEmSpeed) + inertiaTorqueEm).IsEqual(emTorque, 1e-3.SI<NewtonMeter>())
 				? 0.SI<Watt>()
 				: ModelData.EfficiencyMap
 					.LookupElectricPower(avgEmSpeed, emTorqueMap, DataBus.ExecutionMode != ExecutionMode.Declaration)
@@ -298,6 +298,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			retVal.ElectricMotor.MaxDriveTorque = maxDriveTorqueDt;
 			retVal.ElectricMotor.MaxRecuperationTorque = maxRecuperationTorqueDt;
 			retVal.ElectricMotor.AngularVelocity = avgEmSpeed;
+
+			retVal.ElectricMotor.TorqueRequest = outTorque;
+			retVal.ElectricMotor.InertiaTorque =
+				avgDtSpeed.IsEqual(0) ? 0.SI<NewtonMeter>() : inertiaTorqueEm * avgEmSpeed / avgDtSpeed;
 			
 			retVal.ElectricMotor.PowerRequest = outTorque * outAngularVelocity;
 			retVal.ElectricMotor.InertiaPowerDemand = inertiaTorqueEm * avgEmSpeed;
