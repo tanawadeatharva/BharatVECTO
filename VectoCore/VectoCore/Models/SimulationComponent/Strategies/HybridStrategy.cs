@@ -1203,10 +1203,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 			var allowEmergencyDownshift = false;
 			foreach (var nextGear in GearList.IterateGears(GearList.Predecessor(gear, (uint)gearRangeDownshift), GearList.Successor(gear, (uint)gearRangeUpshift))) {
 
-				//for (uint nextGear = (uint)Math.Max(1, gear - gearRangeDownshift);
-				//nextGear <= Math.Min(numGears, gear + gearRangeUpshift);
-				//nextGear++) {
-				
 				var emOffEntry = EvaluateConfigsForGear(absTime, dt, outTorque, outAngularVelocity, nextGear, allowICEOff, responses, emPos, dryRun);
 
 				if (emOffEntry == null) {
@@ -1248,8 +1244,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 
 			responses.Add(emOffEntry);
 
-			//var emTqReq = (emOffEntry.Response.ElectricMotor.PowerRequest + emOffEntry.Response.ElectricMotor.InertiaPowerDemand) /
-			//			emOffEntry.Response.ElectricMotor.AngularVelocity;
 			var emTqReq = emOffEntry.Response.ElectricMotor.TorqueRequest +
 						emOffEntry.Response.ElectricMotor.InertiaTorque;
 
