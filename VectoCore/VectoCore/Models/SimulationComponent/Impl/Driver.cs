@@ -440,6 +440,22 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				searchedOperatingPoint = SetTCOperatingPointATGbxCoastOrRoll(absTime, gradient, requestedOperatingPoint, initialResponse as ResponseDryRun);
 			}
 
+			if (searchedOperatingPoint == null) {
+				searchedOperatingPoint = SearchOperatingPoint(
+					absTime, requestedOperatingPoint.SimulationDistance,
+					gradient,
+					requestedOperatingPoint.Acceleration, initialResponse, coastingOrRoll: true, allowDistanceDecrease: true);
+				if (searchedOperatingPoint == null) {
+					throw new NotImplementedException();
+				}
+
+				if (searchedOperatingPoint.SimulationDistance.IsSmaller(ds)) {
+					return new ResponseDrivingCycleDistanceExceeded(this) {
+						MaxDistance = searchedOperatingPoint.SimulationDistance
+					};
+				}
+			}
+
 			if (!ds.IsEqual(searchedOperatingPoint.SimulationDistance)) {
 				// vehicle is at low speed, coasting would lead to stop before ds is reached: reduce simulated distance to stop distance.
 				Log.Debug(
@@ -1052,7 +1068,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		}
 
 		protected OperatingPoint SearchOperatingPoint(Second absTime, Meter ds, Radian gradient,
-			MeterPerSquareSecond acceleration, IResponse initialResponse, bool coastingOrRoll = false)
+			MeterPerSquareSecond acceleration, IResponse initialResponse, bool coastingOrRoll = false, bool allowDistanceDecrease = false)
 		{
 			IterationStatistics.Increment(this, "SearchOperatingPoint", 0);
 
@@ -1124,7 +1140,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 							if (nanCount > 10) {
 								return true;
 							}
-							return r != null && !actionRoll && !ds.IsEqual(r.Driver.OperatingPoint.SimulationDistance);
+							return r != null && !actionRoll && !allowDistanceDecrease && !ds.IsEqual(r.Driver.OperatingPoint.SimulationDistance);
 						});
 				return ComputeTimeInterval(retVal.Acceleration, retVal.SimulationDistance);
 			} catch (VectoSearchAbortedException) {
