@@ -78,6 +78,10 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 		public virtual ITorqueConverterControl TorqueConverterCtl { get; private set; }
 
+		public virtual bool IsTestPowertrain
+		{
+			get { return false; }
+		}
 
 		internal ISimulationOutPort Cycle;
 

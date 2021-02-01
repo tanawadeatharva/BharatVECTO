@@ -29,8 +29,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		protected internal Joule ThermalBuffer = 0.SI<Joule>();
 		protected internal bool DeRatingActive = false;
 		
-		private bool IsTestPowertrain;
-
 		public Joule OverloadBuffer { get; }
 		public NewtonMeter ContinuousTorque { get; }
 
@@ -42,8 +40,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			ModelData = data;
 			Position = position;
 			container.AddComponent(this); // We have to do this again because in the base class the position is unknown!
-
-			IsTestPowertrain = container is SimplePowertrainContainer;
 
 			ContinuousTorque = ModelData.ContinuousPower / ModelData.ContinuousPowerSpeed;
 			var contElPwr =
@@ -161,7 +157,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			var emTorque = emTorqueDt == null ? null : ConvertDrivetrainTorqueToEm(emTorqueDt);
 			var emOff = emTorqueDt == null;
 
-			if (!dryRun && !IsTestPowertrain && emTorqueDt != null && ((emTorque).IsSmaller(maxDriveTorqueEm ?? 0.SI<NewtonMeter>(), 1e-3) ||
+			if (!dryRun && !DataBus.IsTestPowertrain && emTorqueDt != null && ((emTorque).IsSmaller(maxDriveTorqueEm ?? 0.SI<NewtonMeter>(), 1e-3) ||
 																		(emTorque).IsGreater(maxRecuperationTorqueEm ?? 0.SI<NewtonMeter>(), 1e-3))) {
 				// check if provided EM torque (drivetrain) is valid)
 				if ((!avgDtSpeed.IsEqual(DataBus.HybridControllerInfo.ElectricMotorSpeed(Position)) ||
@@ -237,7 +233,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			var electricSupplyResponse =
 				ElectricPower.Request(absTime, dt, electricPower, dryRun);
-			if (!dryRun && !IsTestPowertrain && !emOff && !(electricSupplyResponse is ElectricSystemResponseSuccess)) {
+			if (!dryRun && !DataBus.IsTestPowertrain && !emOff && !(electricSupplyResponse is ElectricSystemResponseSuccess)) {
 				if ( !avgEmSpeed.IsEqual(DataBus.HybridControllerInfo.ElectricMotorSpeed(Position))) {
 					return new ResponseInvalidOperatingPoint(this);
 				}
