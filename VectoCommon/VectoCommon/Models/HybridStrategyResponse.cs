@@ -200,6 +200,11 @@ namespace TUGraz.VectoCommon.Models {
 		{
 			return (x & HybridConfigurationIgnoreReason.Evaluated) == HybridConfigurationIgnoreReason.Evaluated;
 		}
+
+		public static bool Evaluated(this HybridConfigurationIgnoreReason x)
+		{
+			return x != HybridConfigurationIgnoreReason.NotEvaluated;
+		}
 	}
 
 }
