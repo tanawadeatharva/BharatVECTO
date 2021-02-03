@@ -102,19 +102,7 @@
 					<xs:element name="VIN" type="v1.0:VINType"/>
 					<xs:element name="Date" type="v1.0:DateTimeWithTimezone"/>
 					<xs:element name="LegislativeClass" type="v2.6:LegislativeClassDeclarationType"/>
-					<xs:element name="ClassBus">
-						<xs:simpleType>
-							<xs:restriction base="v2.6:RegisteredClassType">
-								<xs:enumeration value="I"/>
-								<xs:enumeration value="II"/>
-								<xs:enumeration value="III"/>
-								<xs:enumeration value="A"/>
-								<xs:enumeration value="B"/>
-								<xs:enumeration value="I+II"/>
-								<xs:enumeration value="II+III"/>
-							</xs:restriction>
-						</xs:simpleType>
-					</xs:element>
+					<xs:element name="ClassBus" type="v2.6:RegisteredClassType"/>
 					<xs:element name="VehicleCode" type="v2.6:VehicleCodeType"/>
 					<xs:element name="CurbMassChassis" type="v1.0:VehicleCurbMassChassisType"/>
 					<xs:element name="TechnicalPermissibleMaximumLadenMass" type="v1.0:VehicleGrossVehicleMassType"/>
@@ -593,6 +581,14 @@
 		</xs:restriction>
 	</xs:simpleType>
 	<xs:simpleType name="DoorDriveTechnologyType">
+		<xs:annotation>
+			<xs:appinfo>
+				<vectoParam:description>
+					<vectoParam:parameterId component="Vehicle">291</vectoParam:parameterId>
+					<vectoParam:unit>-</vectoParam:unit>
+				</vectoParam:description>
+			</xs:appinfo>
+		</xs:annotation>	
 		<xs:restriction base="xs:string">
 			<xs:enumeration value="electric"/>
 			<xs:enumeration value="pneumatic"/>
@@ -632,7 +628,24 @@
 		</xs:restriction>
 	</xs:simpleType>
 	<xs:simpleType name="RegisteredClassType">
-		<xs:restriction base="xs:string"/>
+		<xs:annotation>
+			<xs:appinfo>
+				<vectoParam:description>
+					<vectoParam:parameterId component="Vehicle">282</vectoParam:parameterId>
+					<vectoParam:unit>-</vectoParam:unit>
+				</vectoParam:description>
+			</xs:appinfo>
+			<xs:documentation>P282 - enum</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="I"/>
+			<xs:enumeration value="II"/>
+			<xs:enumeration value="III"/>
+			<xs:enumeration value="A"/>
+			<xs:enumeration value="B"/>
+			<xs:enumeration value="I+II"/>
+			<xs:enumeration value="II+III"/>
+		</xs:restriction>
 	</xs:simpleType>
 	<xs:simpleType name="VehicleAxleConfigurationDeclarationType">
 		<xs:annotation>
@@ -668,6 +681,15 @@
 		</xs:restriction>
 	</xs:simpleType>
 	<xs:simpleType name="VehicleCodeType">
+		<xs:annotation>
+			<xs:appinfo>
+				<vectoParam:description>
+					<vectoParam:parameterId component="Vehicle">285</vectoParam:parameterId>
+					<vectoParam:unit>-</vectoParam:unit>
+				</vectoParam:description>
+			</xs:appinfo>
+			<xs:documentation>P285 - enum</xs:documentation>
+		</xs:annotation>
 		<xs:restriction base="xs:string">
 			<xs:enumeration value="CA"/>
 			<xs:enumeration value="CB"/>
