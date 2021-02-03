@@ -33,6 +33,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using TUGraz.VectoCommon.Exceptions;
+using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Configuration;
@@ -225,8 +226,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			ResponseDryRun engineResponse, Watt previousPower)
 		{
 			try {
+				var emPower = DataBus.ElectricMotorInfo(PowertrainPosition.HybridP1) == null
+					? 0.SI<Watt>()
+					: engineResponse.ElectricMotor.ElectricMotorPowerMech;
 				var operatingPoint = ModelData.FindOperatingPointForPowerDemand(
-					engineResponse.Engine.DragPower - engineResponse.Engine.AuxiliariesPowerDemand,
+					engineResponse.Engine.DragPower - engineResponse.Engine.AuxiliariesPowerDemand - emPower,
 					DataBus.EngineInfo.EngineSpeed, outAngularVelocity, _engineInertia, dt, previousPower);
 				var maxInputSpeed = VectoMath.Min(ModelData.TorqueConverterSpeedLimit, DataBus.EngineInfo.EngineN95hSpeed);
 				var lowerInputSpeed = DataBus.EngineInfo.EngineIdleSpeed * 1.001; // VectoMath.Max(DataBus.EngineIdleSpeed * 1.001, 0.8 * DataBus.EngineSpeed);
@@ -259,8 +263,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					absTime, dt, outAngularVelocity, engineSpeed,
 					x => x.DeltaDragLoad.IsGreater(0),
 					x => VectoMath.Abs(DataBus.EngineInfo.EngineSpeed - x.Engine.EngineSpeed).Value());
-				if (retVal != null)
-				retVal.Creeping = true;
+				if (retVal != null) {
+					retVal.Creeping = true;
+				}
+
 				return retVal;
 			}
 		}
@@ -272,8 +278,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			ResponseDryRun engineResponse, Watt previousPower)
 		{
 			try {
+				var emPower = DataBus.ElectricMotorInfo(PowertrainPosition.HybridP1) == null
+					? 0.SI<Watt>()
+					: engineResponse.ElectricMotor.ElectricMotorPowerMech;
 				var operatingPoint = ModelData.FindOperatingPointForPowerDemand(
-					(engineResponse.Engine.DynamicFullLoadPower - engineResponse.Engine.AuxiliariesPowerDemand),
+					(engineResponse.Engine.DynamicFullLoadPower - engineResponse.Engine.AuxiliariesPowerDemand - emPower),
 					DataBus.EngineInfo.EngineSpeed, outAngularVelocity, _engineInertia, dt, previousPower);
 				var maxInputSpeed = VectoMath.Min(ModelData.TorqueConverterSpeedLimit, DataBus.EngineInfo.EngineN95hSpeed);
 				if (operatingPoint.InAngularVelocity.IsGreater(maxInputSpeed)) {
