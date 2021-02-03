@@ -66,7 +66,12 @@ Public Class HybridStrategyParams
         End Set
     End Property
 
-    Public Property EquivalenceFactor As Double
+
+    Public Property EquivalenceFactorCharge As Double Implements IHybridStrategyParameters.EquivalenceFactorCharge
+    
+
+    Public  Property EquivalenceFactorDischarge As Double Implements IHybridStrategyParameters.EquivalenceFactorDischarge
+        
 
     Public Property MinSoC As Double
 
@@ -102,11 +107,7 @@ Public Class HybridStrategyParams
 
     Public Property AuxiliaryBufferChgTime As Double
 
-    Private ReadOnly Property IHybridStrategyParameters_EquivalenceFactor As Double Implements IHybridStrategyParameters.EquivalenceFactor
-        Get
-            Return EquivalenceFactor
-        End Get
-    End Property
+
 
     Private ReadOnly Property IHybridStrategyParameters_MinSoC As Double Implements IHybridStrategyParameters.MinSoC
         Get
