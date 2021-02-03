@@ -699,7 +699,8 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			IEngineeringInputDataProvider inputData)
 		{
 			var retVal = new HybridStrategyParameters() {
-				EquivalenceFactor = hybridStrategyParameters.EquivalenceFactor,
+				EquivalenceFactorDischarge = hybridStrategyParameters.EquivalenceFactorDischarge,
+				EquivalenceFactorCharge = hybridStrategyParameters.EquivalenceFactorCharge,
 				MinSoC = hybridStrategyParameters.MinSoC,
 				MaxSoC = hybridStrategyParameters.MaxSoC,
 				TargetSoC = hybridStrategyParameters.TargetSoC,

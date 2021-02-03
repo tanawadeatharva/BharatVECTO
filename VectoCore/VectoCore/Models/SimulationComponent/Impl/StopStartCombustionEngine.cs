@@ -76,6 +76,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl {
 				retVal.Engine.PowerRequest = outTorque * outAngularVelocity;
 				retVal.Engine.DynamicFullLoadPower = 0.SI<Watt>();
 				retVal.Engine.DragPower = 0.SI<Watt>();
+				retVal.Engine.DragTorque = 0.SI<NewtonMeter>();
 				retVal.Engine.EngineSpeed = 0.RPMtoRad();
 				retVal.Engine.AuxiliariesPowerDemand = 0.SI<Watt>();
 				return retVal;

@@ -1108,7 +1108,8 @@ public class JSONFileWriter : IOutputFileWriter
 	{
 		var header = GetHeader(HybridStrategyParamsVersion);
 		var body = new Dictionary<string, object>() {
-			{"EquivalenceFactor", hp.EquivalenceFactor},
+			{"EquivalenceFactorDischarge", hp.EquivalenceFactorDischarge},
+			{"EquivalenceFactorCharge", hp.EquivalenceFactorCharge},
 			{"MinSoC", hp.MinSoC * 100},
 			{"MaxSoC", hp.MaxSoC * 100},
 			{"TargetSoC", hp.TargetSoC * 100},

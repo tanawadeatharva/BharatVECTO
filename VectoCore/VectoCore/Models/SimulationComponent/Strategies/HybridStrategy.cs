@@ -524,9 +524,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 				}
 			}
 
-            DryRunSolution = new DryRunSolutionState(DataBus.DriverInfo.DrivingAction, best, eval);
+			DryRunSolution = new DryRunSolutionState(DataBus.DriverInfo.DrivingAction, best, eval);
 
-            if (retVal.ShiftRequired) {
+			if (retVal.ShiftRequired) {
 				DryRunSolution = null;
 				CurrentState.GearshiftTriggerTstmp = absTime;
 			}
@@ -1562,7 +1562,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 				tmp.SoCPenalty += extraSoCPenalty;
 			}
 
-			tmp.EqualityFactor = StrategyParameters.EquivalenceFactor;
+			tmp.EquivalenceFactor = resp.ElectricSystem.RESSPowerDemand.IsSmaller(0)
+				? StrategyParameters.EquivalenceFactorDischarge
+				: StrategyParameters.EquivalenceFactorCharge;
 			tmp.GearshiftPenalty = resp.Gearbox.Gear.Engaged && !resp.Gearbox.Gear.Equals(DataBus.GearboxInfo.Gear)
 				? ModelData.GearshiftParameters.RatingFactorCurrentGear
 				: 1;
@@ -1660,7 +1662,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 			//							$"{x.Response.Engine.TorqueOutDemand}, {x.Response.Engine.TotalTorqueDemand}, {x.Response.Engine.DynamicFullLoadTorque}";
 			//					}
 			//					return
-			//						$"{x.U:F2}: {x.Score:F2}; G{x.Gear}; ({x.FuelCosts:F2} + {x.EqualityFactor:F2} * ({x.BatCosts:F2} + {x.ICEStartPenalty1:F2}) * {x.SoCPenalty:F2} + {x.ICEStartPenalty2:F2}) / {x.GearshiftPenalty:F2} = {x.Score:F2} ({foo} ICE: {ice}); {x.IgnoreReason.HumanReadable()}";
+			//						$"{x.U:F2}: {x.Score:F2}; G{x.Gear}; ({x.FuelCosts:F2} + {x.EquivalenceFactorDischarge:F2} * ({x.BatCosts:F2} + {x.ICEStartPenalty1:F2}) * {x.SoCPenalty:F2} + {x.ICEStartPenalty2:F2}) / {x.GearshiftPenalty:F2} = {x.Score:F2} ({foo} ICE: {ice}); {x.IgnoreReason.HumanReadable()}";
 			//				})
 			//			)
 			//		);
