@@ -502,6 +502,60 @@
     <None Include="TestData\Hybrids\Battery\GenericBatteryLarge.vbat">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Include="TestData\Hybrids\Citybus_P1-APT-P-220kW-7.7l\Bus.vacc">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Hybrids\Citybus_P1-APT-P-220kW-7.7l\CityBus_AT-P.vecto">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Hybrids\Citybus_P1-APT-P-220kW-7.7l\CityBus_AT-P.vsum">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Hybrids\Citybus_P1-APT-P-220kW-7.7l\CityBus_AT-P.vveh">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Hybrids\Citybus_P1-APT-P-220kW-7.7l\Engine map_7.7l.vmap">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Hybrids\Citybus_P1-APT-P-220kW-7.7l\Full-load curve 220kW.vfld">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Hybrids\Citybus_P1-APT-P-220kW-7.7l\GearboxAT-P.vgbx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Hybrids\Citybus_P1-APT-P-220kW-7.7l\Generic Supercap 48V.vreess">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Hybrids\Citybus_P1-APT-P-220kW-7.7l\GenericEM.vemd">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Hybrids\Citybus_P1-APT-P-220kW-7.7l\GenericEM_15KW_220Nm.vem">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Hybrids\Citybus_P1-APT-P-220kW-7.7l\GenericEM_15kW_220Nm.vemp">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Hybrids\Citybus_P1-APT-P-220kW-7.7l\GenericEM_32kW_450Nm.vemo">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Hybrids\Citybus_P1-APT-P-220kW-7.7l\GenericICE_220kW_7.7l.veng">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Hybrids\Citybus_P1-APT-P-220kW-7.7l\HeavyUrban.vdri">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Hybrids\Citybus_P1-APT-P-220kW-7.7l\HybridStrategyParams.vhctl">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Hybrids\Citybus_P1-APT-P-220kW-7.7l\MaxCurrent.vimax">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Hybrids\Citybus_P1-APT-P-220kW-7.7l\ShiftParameters.vtcu">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Hybrids\Citybus_P1-APT-P-220kW-7.7l\TC Parallel.vtcc">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="TestData\Hybrids\ElectricMotor\GenericDrag.vemd">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
