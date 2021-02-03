@@ -9,19 +9,14 @@
 	<xs:import namespace="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:DEV:v2.6" schemaLocation="VectoDeclarationDefinitions.2.6_Buses.xsd"/>
 	<xs:complexType name="AbstractCompletedVehicleAuxiliaryDataDeclarationType" abstract="true"/>
 	<xs:complexType name="AbstractCompletedVehicleComponentsDeclarationType" abstract="true"/>
-	<xs:complexType name="AirDragModifiedUseStandardValueType">
-		<xs:complexContent>
-			<xs:extension base="v1.0:AbstractAirdragDataDeclarationType"/>
-		</xs:complexContent>
-	</xs:complexType>
 	<xs:complexType name="CompletedVehicleAuxiliariesComponentDeclarationType">
 		<xs:sequence>
-			<xs:element name="Data" type="v2.6:AbstractCompletedVehicleAuxiliaryDataDeclarationType"/>
+			<xs:element name="Data" type="v2.8:AbstractCompletedVehicleAuxiliaryDataDeclarationType"/>
 		</xs:sequence>
 	</xs:complexType>
 	<xs:complexType name="CompletedVehicleAuxiliaryDataDeclarationType">
 		<xs:complexContent>
-			<xs:extension base="v2.6:AbstractCompletedVehicleAuxiliaryDataDeclarationType">
+			<xs:extension base="v2.8:AbstractCompletedVehicleAuxiliaryDataDeclarationType">
 				<xs:sequence>
 					<xs:element name="ElectricSystem" minOccurs="0">
 						<xs:complexType>
@@ -70,7 +65,7 @@
 										</xs:annotation>
 										<xs:simpleType>
 											<xs:restriction base="xs:int">
-												<xs:minInclusive value="1"/>
+												<xs:minInclusive value="0"/>
 												<xs:maxInclusive value="10"/>
 											</xs:restriction>
 										</xs:simpleType>
@@ -238,7 +233,7 @@
 							<xs:documentation>P235</xs:documentation>
 						</xs:annotation>
 					</xs:element>
-					<xs:element name="ManfactuerAddress" type="v1.0:ManufacturerAddressType">
+					<xs:element name="ManufacturerAddress" type="v1.0:ManufacturerAddressType">
 						<xs:annotation>
 							<xs:documentation>P252</xs:documentation>
 						</xs:annotation>
@@ -341,13 +336,7 @@
 						</xs:annotation>
 					</xs:element>
 					<xs:element name="ADAS" type="v2.3:AdvancedDriverAssistantSystemsType" minOccurs="0"/>
-					<xs:element name="Components" minOccurs="0">
-						<xs:complexType>
-							<xs:complexContent>
-								<xs:extension base="v2.6:AbstractCompletedVehicleComponentsDeclarationType"/>
-							</xs:complexContent>
-						</xs:complexType>
-					</xs:element>
+					<xs:element name="Components" type="v2.8:AbstractCompletedVehicleAuxiliaryDataDeclarationType" minOccurs="0"/>
 				</xs:sequence>
 			</xs:extension>
 		</xs:complexContent>
@@ -457,4 +446,9 @@
 			<xs:enumeration value="non R-744 continuous"/>
 		</xs:restriction>
 	</xs:simpleType>
+	<xs:complexType name="AirDragModifiedUseStandardValueType">
+		<xs:complexContent>
+			<xs:extension base="v1.0:AbstractAirdragDataDeclarationType"/>
+		</xs:complexContent>
+	</xs:complexType>
 </xs:schema>
