@@ -39,7 +39,7 @@
         }
       ]
     },
-    "EngineStopStart": false,
+    "EngineStopStart": true,
     "EcoRoll": "None",
     "PredictiveCruiseControl": "None",
     "ATEcoRollReleaseLockupClutch": false,
