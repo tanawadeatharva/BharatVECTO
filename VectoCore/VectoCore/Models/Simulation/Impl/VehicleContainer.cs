@@ -119,7 +119,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 		public virtual Second AbsTime { get; set; }
 		public IElectricMotorInfo ElectricMotorInfo(PowertrainPosition pos)
 		{
-			return ElectricMotors[pos];
+			return ElectricMotors.ContainsKey(pos) ?  ElectricMotors[pos] : null;
 		}
 
 

@@ -268,7 +268,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				}
 
 				return retVal;
-			}
+			} 
 		}
 
 
