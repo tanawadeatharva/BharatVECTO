@@ -85,26 +85,26 @@ namespace TUGraz.VectoCore.Tests.Integration.BatteryElectric
 
 
 		[
-			TestCase(30, 0.7, 0, 0, TestName = "BEV E4 ConstantSpeed 30km/h SoC: 0.7, level"),
-			TestCase(50, 0.7, 0, 0, TestName = "BEV E4 ConstantSpeed 50km/h SoC: 0.7, level"),
-			//TestCase(80, 0.7, 0, 0, TestName = "BEV E4 ConstantSpeed 80km/h SoC: 0.7, level"),
+			TestCase(30, 0.7, 0, 0, TestName = "PEV E4 ConstantSpeed 30km/h SoC: 0.7, level"),
+			TestCase(50, 0.7, 0, 0, TestName = "PEV E4 ConstantSpeed 50km/h SoC: 0.7, level"),
+			//TestCase(80, 0.7, 0, 0, TestName = "PEV E4 ConstantSpeed 80km/h SoC: 0.7, level"),
 
-			TestCase(30, 0.25, 0, 0, TestName = "BEV E4 ConstantSpeed 30km/h SoC: 0.25, level"),
-			TestCase(50, 0.25, 0, 0, TestName = "BEV E4 ConstantSpeed 50km/h SoC: 0.25, level"),
-			//TestCase(80, 0.25, 0, 0, TestName = "BEV E4 ConstantSpeed 80km/h SoC: 0.25, level"),
+			TestCase(30, 0.25, 0, 0, TestName = "PEV E4 ConstantSpeed 30km/h SoC: 0.25, level"),
+			TestCase(50, 0.25, 0, 0, TestName = "PEV E4 ConstantSpeed 50km/h SoC: 0.25, level"),
+			//TestCase(80, 0.25, 0, 0, TestName = "PEV E4 ConstantSpeed 80km/h SoC: 0.25, level"),
 
-			TestCase(30, 0.5, 5, 0, TestName = "BEV E4 ConstantSpeed 30km/h SoC: 0.5, UH 5%"),
-			TestCase(50, 0.5, 5, 0, TestName = "BEV E4 ConstantSpeed 50km/h SoC: 0.5, UH 5%"),
-			//TestCase(80, 0.5, 5, 0, TestName = "BEV E4 ConstantSpeed 80km/h SoC: 0.5, UH 5%"),
+			TestCase(30, 0.5, 5, 0, TestName = "PEV E4 ConstantSpeed 30km/h SoC: 0.5, UH 5%"),
+			TestCase(50, 0.5, 5, 0, TestName = "PEV E4 ConstantSpeed 50km/h SoC: 0.5, UH 5%"),
+			//TestCase(80, 0.5, 5, 0, TestName = "PEV E4 ConstantSpeed 80km/h SoC: 0.5, UH 5%"),
 
-			TestCase(30, 0.5, -5, 0, TestName = "BEV E4 ConstantSpeed 30km/h SoC: 0.5, DH 5%"),
-			TestCase(50, 0.5, -5, 0, TestName = "BEV E4 ConstantSpeed 50km/h SoC: 0.5, DH 5%"),
-			//TestCase(80, 0.5, -5, 0, TestName = "BEV E4 ConstantSpeed 80km/h SoC: 0.5, DH 5%"),
+			TestCase(30, 0.5, -5, 0, TestName = "PEV E4 ConstantSpeed 30km/h SoC: 0.5, DH 5%"),
+			TestCase(50, 0.5, -5, 0, TestName = "PEV E4 ConstantSpeed 50km/h SoC: 0.5, DH 5%"),
+			//TestCase(80, 0.5, -5, 0, TestName = "PEV E4 ConstantSpeed 80km/h SoC: 0.5, DH 5%"),
 
-			TestCase(30, 0.25, 0, 1000, TestName = "BEV E4 ConstantSpeed 30km/h SoC: 0.25, level P_auxEl: 1kW"),
-			TestCase(30, 0.25, 0, 5000, TestName = "BEV E4 ConstantSpeed 30km/h SoC: 0.25, level P_auxEl: 5kW"),
+			TestCase(30, 0.25, 0, 1000, TestName = "PEV E4 ConstantSpeed 30km/h SoC: 0.25, level P_auxEl: 1kW"),
+			TestCase(30, 0.25, 0, 5000, TestName = "PEV E4 ConstantSpeed 30km/h SoC: 0.25, level P_auxEl: 5kW"),
 		] // the vehicle can drive max. 56km/h!! 80km/h testcase makes no sense
-		public void B4BEVConstantSpeed(double vmax, double initialSoC, double slope, double pAuxEl)
+		public void B4PEVConstantSpeed(double vmax, double initialSoC, double slope, double pAuxEl)
 		{
 			var cycleData = string.Format(
 				@"   0, {0}, {1},    0
@@ -136,11 +136,11 @@ namespace TUGraz.VectoCore.Tests.Integration.BatteryElectric
 
 
 		[
-			TestCase(30, 0.7, 0, TestName = "BEV E4 DriveOff 30km/h SoC: 0.7, level"),
-			TestCase(80, 0.7, 0, TestName = "BEV E4 DriveOff 80km/h SoC: 0.7, level"),
-			TestCase(30, 0.25, 0, TestName = "BEV E4 DriveOff 30km/h SoC: 0.25, level")
+			TestCase(30, 0.7, 0, TestName = "PEV E4 DriveOff 30km/h SoC: 0.7, level"),
+			TestCase(80, 0.7, 0, TestName = "PEV E4 DriveOff 80km/h SoC: 0.7, level"),
+			TestCase(30, 0.25, 0, TestName = "PEV E4 DriveOff 30km/h SoC: 0.25, level")
 		]
-		public void B4BEVDriveOff(double vmax, double initialSoC, double slope)
+		public void B4PEVDriveOff(double vmax, double initialSoC, double slope)
 		{
 			var cycleData = string.Format(
 				@"   0,   0, {1},    3
@@ -166,16 +166,16 @@ namespace TUGraz.VectoCore.Tests.Integration.BatteryElectric
 		}
 
 		[
-			TestCase("LongHaul", 2000, 0.8, 0, TestName = "BEV E4 DriveCycle LongHaul, SoC: 0.8 Payload: 2t P_auxEl: 0kW"),
-			TestCase("RegionalDelivery", 2000, 0.8, 0, TestName = "BEV E4 DriveCycle RegionalDelivery, SoC: 0.8 Payload: 2t P_auxEl: 0kW"),
-			TestCase("UrbanDelivery", 2000, 0.8, 0, TestName = "BEV E4 DriveCycle UrbanDelivery, SoC: 0.8 Payload: 2t P_auxEl: 0kW"),
-			TestCase("Construction", 2000, 0.8, 0, TestName = "BEV E4 DriveCycle Construction, SoC: 0.8 Payload: 2t P_auxEl: 0kW"),
-			TestCase("Urban", 2000, 0.8, 0, TestName = "BEV E4 DriveCycle Urban, SoC: 0.8 Payload: 2t P_auxEl: 0kW"),
-			TestCase("Suburban", 2000, 0.8, 0, TestName = "BEV E4 DriveCycle SubUrban, SoC: 0.8 Payload: 2t P_auxEl: 0kW"),
-			TestCase("Interurban", 2000, 0.8, 0, TestName = "BEV E4 DriveCycle InterUrban, SoC: 0.8 Payload: 2t P_auxEl: 0kW"),
-			TestCase("Coach", 2000, 0.8, 0, TestName = "BEV E4 DriveCycle Coach, SoC: 0.8 Payload: 2t P_auxEl: 0kW"),
+			TestCase("LongHaul", 2000, 0.8, 0, TestName = "PEV E4 DriveCycle LongHaul, SoC: 0.8 Payload: 2t P_auxEl: 0kW"),
+			TestCase("RegionalDelivery", 2000, 0.8, 0, TestName = "PEV E4 DriveCycle RegionalDelivery, SoC: 0.8 Payload: 2t P_auxEl: 0kW"),
+			TestCase("UrbanDelivery", 2000, 0.8, 0, TestName = "PEV E4 DriveCycle UrbanDelivery, SoC: 0.8 Payload: 2t P_auxEl: 0kW"),
+			TestCase("Construction", 2000, 0.8, 0, TestName = "PEV E4 DriveCycle Construction, SoC: 0.8 Payload: 2t P_auxEl: 0kW"),
+			TestCase("Urban", 2000, 0.8, 0, TestName = "PEV E4 DriveCycle Urban, SoC: 0.8 Payload: 2t P_auxEl: 0kW"),
+			TestCase("Suburban", 2000, 0.8, 0, TestName = "PEV E4 DriveCycle SubUrban, SoC: 0.8 Payload: 2t P_auxEl: 0kW"),
+			TestCase("Interurban", 2000, 0.8, 0, TestName = "PEV E4 DriveCycle InterUrban, SoC: 0.8 Payload: 2t P_auxEl: 0kW"),
+			TestCase("Coach", 2000, 0.8, 0, TestName = "PEV E4 DriveCycle Coach, SoC: 0.8 Payload: 2t P_auxEl: 0kW"),
 		]
-		public void B4BEVDriveCycle(string declarationMission, double payload, double initialSoC, double pAuxEl)
+		public void B4PEVDriveCycle(string declarationMission, double payload, double initialSoC, double pAuxEl)
 		{
 			var cycleData = RessourceHelper.ReadStream(
 				DeclarationData.DeclarationDataResourcePrefix + ".MissionCycles." +
@@ -207,10 +207,10 @@ namespace TUGraz.VectoCore.Tests.Integration.BatteryElectric
 			graphWriter.Write(modFilename + ".vmod");
 		}
 
-		[TestCase(BEV_Job, 0, TestName = "BEV E4 Job RD"),
-		TestCase(BEV_Job_Cont30kW, 0, TestName = "BEV E4 Job Cont. 30kW RD")
+		[TestCase(BEV_Job, 0, TestName = "PEV E4 Job RD"),
+		TestCase(BEV_Job_Cont30kW, 0, TestName = "PEV E4 Job Cont. 30kW RD")
 		]
-		public void B4BEVRunJob(string jobFile, int cycleIdx)
+		public void B4PEVRunJob(string jobFile, int cycleIdx)
 		{
 			var inputProvider = JSONInputDataFactory.ReadJsonJob(jobFile);
 
@@ -242,26 +242,26 @@ namespace TUGraz.VectoCore.Tests.Integration.BatteryElectric
 		// - - - - - - - - - - - - - - - - - - -  - - - - - - - - - - -  - - - 
 
 		[
-			TestCase(30, 0.7, 0, 0, TestName = "BEV E3 ConstantSpeed 30km/h SoC: 0.7, level"),
-			TestCase(50, 0.7, 0, 0, TestName = "BEV E3 ConstantSpeed 50km/h SoC: 0.7, level"),
-			//TestCase(80, 0.7, 0, 0, TestName = "BEV E4 ConstantSpeed 80km/h SoC: 0.7, level"),
+			TestCase(30, 0.7, 0, 0, TestName = "PEV E3 ConstantSpeed 30km/h SoC: 0.7, level"),
+			TestCase(50, 0.7, 0, 0, TestName = "PEV E3 ConstantSpeed 50km/h SoC: 0.7, level"),
+			//TestCase(80, 0.7, 0, 0, TestName = "PEV E4 ConstantSpeed 80km/h SoC: 0.7, level"),
 
-			TestCase(30, 0.25, 0, 0, TestName = "BEV E3 ConstantSpeed 30km/h SoC: 0.25, level"),
-			TestCase(50, 0.25, 0, 0, TestName = "BEV E3 ConstantSpeed 50km/h SoC: 0.25, level"),
-			//TestCase(80, 0.25, 0, 0, TestName = "BEV E4 ConstantSpeed 80km/h SoC: 0.25, level"),
+			TestCase(30, 0.25, 0, 0, TestName = "PEV E3 ConstantSpeed 30km/h SoC: 0.25, level"),
+			TestCase(50, 0.25, 0, 0, TestName = "PEV E3 ConstantSpeed 50km/h SoC: 0.25, level"),
+			//TestCase(80, 0.25, 0, 0, TestName = "PEV E4 ConstantSpeed 80km/h SoC: 0.25, level"),
 
-			TestCase(30, 0.5, 5, 0, TestName = "BEV E3 ConstantSpeed 30km/h SoC: 0.5, UH 5%"),
-			TestCase(50, 0.5, 5, 0, TestName = "BEV E3 ConstantSpeed 50km/h SoC: 0.5, UH 5%"),
-			//TestCase(80, 0.5, 5, 0, TestName = "BEV E4 ConstantSpeed 80km/h SoC: 0.5, UH 5%"),
+			TestCase(30, 0.5, 5, 0, TestName = "PEV E3 ConstantSpeed 30km/h SoC: 0.5, UH 5%"),
+			TestCase(50, 0.5, 5, 0, TestName = "PEV E3 ConstantSpeed 50km/h SoC: 0.5, UH 5%"),
+			//TestCase(80, 0.5, 5, 0, TestName = "PEV E4 ConstantSpeed 80km/h SoC: 0.5, UH 5%"),
 
-			TestCase(30, 0.5, -5, 0, TestName = "BEV E3 ConstantSpeed 30km/h SoC: 0.5, DH 5%"),
-			TestCase(50, 0.5, -5, 0, TestName = "BEV E3 ConstantSpeed 50km/h SoC: 0.5, DH 5%"),
-			//TestCase(80, 0.5, -5, 0, TestName = "BEV E4 ConstantSpeed 80km/h SoC: 0.5, DH 5%"),
+			TestCase(30, 0.5, -5, 0, TestName = "PEV E3 ConstantSpeed 30km/h SoC: 0.5, DH 5%"),
+			TestCase(50, 0.5, -5, 0, TestName = "PEV E3 ConstantSpeed 50km/h SoC: 0.5, DH 5%"),
+			//TestCase(80, 0.5, -5, 0, TestName = "PEV E4 ConstantSpeed 80km/h SoC: 0.5, DH 5%"),
 
-			TestCase(30, 0.25, 0, 1000, TestName = "BEV E3 ConstantSpeed 30km/h SoC: 0.25, level P_auxEl: 1kW"),
-			TestCase(30, 0.25, 0, 5000, TestName = "BEV E3 ConstantSpeed 30km/h SoC: 0.25, level P_auxEl: 5kW"),
+			TestCase(30, 0.25, 0, 1000, TestName = "PEV E3 ConstantSpeed 30km/h SoC: 0.25, level P_auxEl: 1kW"),
+			TestCase(30, 0.25, 0, 5000, TestName = "PEV E3 ConstantSpeed 30km/h SoC: 0.25, level P_auxEl: 5kW"),
 		] // the vehicle can drive max. 56km/h!! 80km/h testcase makes no sense
-		public void B3BEVConstantSpeed(double vmax, double initialSoC, double slope, double pAuxEl)
+		public void B3PEVConstantSpeed(double vmax, double initialSoC, double slope, double pAuxEl)
 		{
 			var cycleData = string.Format(
 				@"   0, {0}, {1},    0
@@ -293,11 +293,11 @@ namespace TUGraz.VectoCore.Tests.Integration.BatteryElectric
 
 
 		[
-			TestCase(30, 0.7, 0, TestName = "BEV E3 DriveOff 30km/h SoC: 0.7, level"),
-			TestCase(80, 0.7, 0, TestName = "BEV E3 DriveOff 80km/h SoC: 0.7, level"),
-			TestCase(30, 0.25, 0, TestName = "BEV E3 DriveOff 30km/h SoC: 0.25, level")
+			TestCase(30, 0.7, 0, TestName = "PEV E3 DriveOff 30km/h SoC: 0.7, level"),
+			TestCase(80, 0.7, 0, TestName = "PEV E3 DriveOff 80km/h SoC: 0.7, level"),
+			TestCase(30, 0.25, 0, TestName = "PEV E3 DriveOff 30km/h SoC: 0.25, level")
 		]
-		public void B3BEVDriveOff(double vmax, double initialSoC, double slope)
+		public void B3PEVDriveOff(double vmax, double initialSoC, double slope)
 		{
 			var cycleData = string.Format(
 				@"   0,   0, {1},    3
@@ -323,16 +323,16 @@ namespace TUGraz.VectoCore.Tests.Integration.BatteryElectric
 		}
 
 		[
-			TestCase("LongHaul", 2000, 0.8, 0, TestName = "BEV E3 DriveCycle LongHaul, SoC: 0.8 Payload: 2t P_auxEl: 0kW"),
-			TestCase("RegionalDelivery", 2000, 0.8, 0, TestName = "BEV E3 DriveCycle RegionalDelivery, SoC: 0.8 Payload: 2t P_auxEl: 0kW"),
-			TestCase("UrbanDelivery", 2000, 0.8, 0, TestName = "BEV E3 DriveCycle UrbanDelivery, SoC: 0.8 Payload: 2t P_auxEl: 0kW"),
-			TestCase("Construction", 2000, 0.8, 0, TestName = "BEV E3 DriveCycle Construction, SoC: 0.8 Payload: 2t P_auxEl: 0kW"),
-			TestCase("Urban", 2000, 0.8, 0, TestName = "BEV E3 DriveCycle Urban, SoC: 0.8 Payload: 2t P_auxEl: 0kW"),
-			TestCase("Suburban", 2000, 0.8, 0, TestName = "BEV E3 DriveCycle SubUrban, SoC: 0.8 Payload: 2t P_auxEl: 0kW"),
-			TestCase("Interurban", 2000, 0.8, 0, TestName = "BEV E3 DriveCycle InterUrban, SoC: 0.8 Payload: 2t P_auxEl: 0kW"),
-			TestCase("Coach", 2000, 0.8, 0, TestName = "BEV E3 DriveCycle Coach, SoC: 0.8 Payload: 2t P_auxEl: 0kW"),
+			TestCase("LongHaul", 2000, 0.8, 0, TestName = "PEV E3 DriveCycle LongHaul, SoC: 0.8 Payload: 2t P_auxEl: 0kW"),
+			TestCase("RegionalDelivery", 2000, 0.8, 0, TestName = "BPEVEV E3 DriveCycle RegionalDelivery, SoC: 0.8 Payload: 2t P_auxEl: 0kW"),
+			TestCase("UrbanDelivery", 2000, 0.8, 0, TestName = "PEV E3 DriveCycle UrbanDelivery, SoC: 0.8 Payload: 2t P_auxEl: 0kW"),
+			TestCase("Construction", 2000, 0.8, 0, TestName = "PEV E3 DriveCycle Construction, SoC: 0.8 Payload: 2t P_auxEl: 0kW"),
+			TestCase("Urban", 2000, 0.8, 0, TestName = "PEV E3 DriveCycle Urban, SoC: 0.8 Payload: 2t P_auxEl: 0kW"),
+			TestCase("Suburban", 2000, 0.8, 0, TestName = "PEV E3 DriveCycle SubUrban, SoC: 0.8 Payload: 2t P_auxEl: 0kW"),
+			TestCase("Interurban", 2000, 0.8, 0, TestName = "PEV E3 DriveCycle InterUrban, SoC: 0.8 Payload: 2t P_auxEl: 0kW"),
+			TestCase("Coach", 2000, 0.8, 0, TestName = "PEV E3 DriveCycle Coach, SoC: 0.8 Payload: 2t P_auxEl: 0kW"),
 		]
-		public void B3BEVDriveCycle(string declarationMission, double payload, double initialSoC, double pAuxEl)
+		public void B3PEVDriveCycle(string declarationMission, double payload, double initialSoC, double pAuxEl)
 		{
 			var cycleData = RessourceHelper.ReadStream(
 				DeclarationData.DeclarationDataResourcePrefix + ".MissionCycles." +
@@ -366,10 +366,10 @@ namespace TUGraz.VectoCore.Tests.Integration.BatteryElectric
 		}
 
 
-		[TestCase(BEV_E3_Job, 0, TestName = "BEV E3 Job RD"),
-		TestCase(BEV_E3_Job_Cont30kW, 0, TestName = "BEV E3 Job Cont. 30kW RD")
+		[TestCase(BEV_E3_Job, 0, TestName = "PEV E3 Job RD"),
+		TestCase(BEV_E3_Job_Cont30kW, 0, TestName = "PEV E3 Job Cont. 30kW RD")
 		]
-		public void B3BEVRunJob(string jobFile, int cycleIdx)
+		public void B3PEVRunJob(string jobFile, int cycleIdx)
 		{
 			var inputProvider = JSONInputDataFactory.ReadJsonJob(jobFile);
 
@@ -399,26 +399,26 @@ namespace TUGraz.VectoCore.Tests.Integration.BatteryElectric
 		// - - - - - - - - - - - - - - - - - - -  - - - - - - - - - - -  - - - 
 
 		[
-			TestCase(30, 0.7, 0, 0, TestName = "BEV E2 ConstantSpeed 30km/h SoC: 0.7, level"),
-			TestCase(50, 0.7, 0, 0, TestName = "BEV E2 ConstantSpeed 50km/h SoC: 0.7, level"),
-			//TestCase(80, 0.7, 0, 0, TestName = "BEV E2 ConstantSpeed 80km/h SoC: 0.7, level"),
+			TestCase(30, 0.7, 0, 0, TestName = "PEV E2 ConstantSpeed 30km/h SoC: 0.7, level"),
+			TestCase(50, 0.7, 0, 0, TestName = "PEV E2 ConstantSpeed 50km/h SoC: 0.7, level"),
+			//TestCase(80, 0.7, 0, 0, TestName = "PEV E2 ConstantSpeed 80km/h SoC: 0.7, level"),
 
-			TestCase(30, 0.25, 0, 0, TestName = "BEV E2 ConstantSpeed 30km/h SoC: 0.25, level"),
-			TestCase(50, 0.25, 0, 0, TestName = "BEV E2 ConstantSpeed 50km/h SoC: 0.25, level"),
-			//TestCase(80, 0.25, 0, 0, TestName = "BEV E2 ConstantSpeed 80km/h SoC: 0.25, level"),
+			TestCase(30, 0.25, 0, 0, TestName = "PEV E2 ConstantSpeed 30km/h SoC: 0.25, level"),
+			TestCase(50, 0.25, 0, 0, TestName = "PEV E2 ConstantSpeed 50km/h SoC: 0.25, level"),
+			//TestCase(80, 0.25, 0, 0, TestName = "PEV E2 ConstantSpeed 80km/h SoC: 0.25, level"),
 
-			TestCase(30, 0.5, 5, 0, TestName = "BEV E2 ConstantSpeed 30km/h SoC: 0.5, UH 5%"),
-			TestCase(50, 0.5, 5, 0, TestName = "BEV E2 ConstantSpeed 50km/h SoC: 0.5, UH 5%"),
-			//TestCase(80, 0.5, 5, 0, TestName = "BEV E2 ConstantSpeed 80km/h SoC: 0.5, UH 5%"),
+			TestCase(30, 0.5, 5, 0, TestName = "PEV E2 ConstantSpeed 30km/h SoC: 0.5, UH 5%"),
+			TestCase(50, 0.5, 5, 0, TestName = "PEV E2 ConstantSpeed 50km/h SoC: 0.5, UH 5%"),
+			//TestCase(80, 0.5, 5, 0, TestName = "PEV E2 ConstantSpeed 80km/h SoC: 0.5, UH 5%"),
 
-			TestCase(30, 0.5, -5, 0, TestName = "BEV E2 ConstantSpeed 30km/h SoC: 0.5, DH 5%"),
-			TestCase(50, 0.5, -5, 0, TestName = "BEV E2 ConstantSpeed 50km/h SoC: 0.5, DH 5%"),
-			//TestCase(80, 0.5, -5, 0, TestName = "BEV E2 ConstantSpeed 80km/h SoC: 0.5, DH 5%"),
+			TestCase(30, 0.5, -5, 0, TestName = "PEV E2 ConstantSpeed 30km/h SoC: 0.5, DH 5%"),
+			TestCase(50, 0.5, -5, 0, TestName = "PEV E2 ConstantSpeed 50km/h SoC: 0.5, DH 5%"),
+			//TestCase(80, 0.5, -5, 0, TestName = "PEV E2 ConstantSpeed 80km/h SoC: 0.5, DH 5%"),
 
-			TestCase(30, 0.25, 0, 1000, TestName = "BEV E2 ConstantSpeed 30km/h SoC: 0.25, level P_auxEl: 1kW"),
-			TestCase(30, 0.25, 0, 5000, TestName = "BEV E2 ConstantSpeed 30km/h SoC: 0.25, level P_auxEl: 5kW"),
+			TestCase(30, 0.25, 0, 1000, TestName = "PEV E2 ConstantSpeed 30km/h SoC: 0.25, level P_auxEl: 1kW"),
+			TestCase(30, 0.25, 0, 5000, TestName = "PEV E2 ConstantSpeed 30km/h SoC: 0.25, level P_auxEl: 5kW"),
 		] // the vehicle can drive max. 56km/h!! 80km/h testcase makes no sense
-		public void B2BEVConstantSpeed(double vmax, double initialSoC, double slope, double pAuxEl)
+		public void B2PEVConstantSpeed(double vmax, double initialSoC, double slope, double pAuxEl)
 		{
 			var cycleData = string.Format(
 				@"   0, {0}, {1},    0
@@ -450,12 +450,12 @@ namespace TUGraz.VectoCore.Tests.Integration.BatteryElectric
 
 
 		[
-			TestCase(30, 0.7, 0, TestName = "BEV E2 Halt 30km/h SoC: 0.7, level"),
-			TestCase(80, 0.7, 0, TestName = "BEV E2 Halt 80km/h SoC: 0.7, level"),
-			TestCase(30, 0.25, 0, TestName = "BEV E2 Halt 30km/h SoC: 0.25, level"),
-			TestCase(80, 0.5, -5, TestName = "BEV E2 Halt 80km/h SoC: 0.5, DH 5%"),
+			TestCase(30, 0.7, 0, TestName = "PEV E2 Halt 30km/h SoC: 0.7, level"),
+			TestCase(80, 0.7, 0, TestName = "PEV E2 Halt 80km/h SoC: 0.7, level"),
+			TestCase(30, 0.25, 0, TestName = "PEV E2 Halt 30km/h SoC: 0.25, level"),
+			TestCase(80, 0.5, -5, TestName = "PEV E2 Halt 80km/h SoC: 0.5, DH 5%"),
 		]
-		public void B2BEVStop(double vmax, double initialSoC, double slope)
+		public void B2PEVStop(double vmax, double initialSoC, double slope)
 		{
 			var cycleData = string.Format(
 				@"   0, {0}, {1},    0
@@ -482,11 +482,11 @@ namespace TUGraz.VectoCore.Tests.Integration.BatteryElectric
 		}
 
 		[
-			TestCase(30, 0.7, 0, TestName = "BEV E2 DriveOff 30km/h SoC: 0.7, level"),
-			TestCase(80, 0.7, 0, TestName = "BEV E2 DriveOff 80km/h SoC: 0.7, level"),
-			TestCase(30, 0.25, 0, TestName = "BEV E2 DriveOff 30km/h SoC: 0.25, level")
+			TestCase(30, 0.7, 0, TestName = "PEV E2 DriveOff 30km/h SoC: 0.7, level"),
+			TestCase(80, 0.7, 0, TestName = "PEV E2 DriveOff 80km/h SoC: 0.7, level"),
+			TestCase(30, 0.25, 0, TestName = "PEV E2 DriveOff 30km/h SoC: 0.25, level")
 		]
-		public void B2BEVDriveOff(double vmax, double initialSoC, double slope)
+		public void B2PEVDriveOff(double vmax, double initialSoC, double slope)
 		{
 			var cycleData = string.Format(
 				@"   0,   0, {1},    3
@@ -512,16 +512,16 @@ namespace TUGraz.VectoCore.Tests.Integration.BatteryElectric
 		}
 
 		[
-			TestCase("LongHaul", 2000, 0.8, 0, TestName = "BEV E2 DriveCycle LongHaul, SoC: 0.8 Payload: 2t P_auxEl: 0kW"),
-			TestCase("RegionalDelivery", 2000, 0.8, 0, TestName = "BEV E2 DriveCycle RegionalDelivery, SoC: 0.8 Payload: 2t P_auxEl: 0kW"),
-			TestCase("UrbanDelivery", 2000, 0.8, 0, TestName = "BEV E2 DriveCycle UrbanDelivery, SoC: 0.8 Payload: 2t P_auxEl: 0kW"),
-			TestCase("Construction", 2000, 0.8, 0, TestName = "BEV E2 DriveCycle Construction, SoC: 0.8 Payload: 2t P_auxEl: 0kW"),
-			TestCase("Urban", 2000, 0.8, 0, TestName = "BEV E2 DriveCycle Urban, SoC: 0.8 Payload: 2t P_auxEl: 0kW"),
-			TestCase("Suburban", 2000, 0.8, 0, TestName = "BEV E2 DriveCycle SubUrban, SoC: 0.8 Payload: 2t P_auxEl: 0kW"),
-			TestCase("Interurban", 2000, 0.8, 0, TestName = "BEV E2 DriveCycle InterUrban, SoC: 0.8 Payload: 2t P_auxEl: 0kW"),
-			TestCase("Coach", 2000, 0.8, 0, TestName = "BEV E2 DriveCycle Coach, SoC: 0.8 Payload: 2t P_auxEl: 0kW"),
+			TestCase("LongHaul", 2000, 0.8, 0, TestName = "PEV E2 DriveCycle LongHaul, SoC: 0.8 Payload: 2t P_auxEl: 0kW"),
+			TestCase("RegionalDelivery", 2000, 0.8, 0, TestName = "PEV E2 DriveCycle RegionalDelivery, SoC: 0.8 Payload: 2t P_auxEl: 0kW"),
+			TestCase("UrbanDelivery", 2000, 0.8, 0, TestName = "PEV E2 DriveCycle UrbanDelivery, SoC: 0.8 Payload: 2t P_auxEl: 0kW"),
+			TestCase("Construction", 2000, 0.8, 0, TestName = "PEV E2 DriveCycle Construction, SoC: 0.8 Payload: 2t P_auxEl: 0kW"),
+			TestCase("Urban", 2000, 0.8, 0, TestName = "PEV E2 DriveCycle Urban, SoC: 0.8 Payload: 2t P_auxEl: 0kW"),
+			TestCase("Suburban", 2000, 0.8, 0, TestName = "PEV E2 DriveCycle SubUrban, SoC: 0.8 Payload: 2t P_auxEl: 0kW"),
+			TestCase("Interurban", 2000, 0.8, 0, TestName = "PEV E2 DriveCycle InterUrban, SoC: 0.8 Payload: 2t P_auxEl: 0kW"),
+			TestCase("Coach", 2000, 0.8, 0, TestName = "PEV E2 DriveCycle Coach, SoC: 0.8 Payload: 2t P_auxEl: 0kW"),
 		]
-		public void B2BEVDriveCycle(string declarationMission, double payload, double initialSoC, double pAuxEl)
+		public void B2PEVDriveCycle(string declarationMission, double payload, double initialSoC, double pAuxEl)
 		{
 			var cycleData = RessourceHelper.ReadStream(
 				DeclarationData.DeclarationDataResourcePrefix + ".MissionCycles." +
@@ -554,30 +554,30 @@ namespace TUGraz.VectoCore.Tests.Integration.BatteryElectric
 		}
 
         [
-            TestCase(BEV_E2_Job, 0, TestName = "BEV E2 Job LongHaul"),
-			TestCase(BEV_E2_Job, 1, TestName = "BEV E2 Job Coach"),
-			TestCase(BEV_E2_Job, 2, TestName = "BEV E2 Job Construction"),
-			TestCase(BEV_E2_Job, 3, TestName = "BEV E2 Job HeavyUrban"),
-			TestCase(BEV_E2_Job, 4, TestName = "BEV E2 Job Interurban"),
-			TestCase(BEV_E2_Job, 5, TestName = "BEV E2 Job MunicipalUtility"),
-			TestCase(BEV_E2_Job, 6, TestName = "BEV E2 Job RegionalDelivery"),
-			TestCase(BEV_E2_Job, 7, TestName = "BEV E2 Job Suburban"),
-			TestCase(BEV_E2_Job, 8, TestName = "BEV E2 Job Urban"),
-			TestCase(BEV_E2_Job, 9, TestName = "BEV E2 Job UrbanDelivery"),
+            TestCase(BEV_E2_Job, 0, TestName = "PEV E2 Job LongHaul"),
+			TestCase(BEV_E2_Job, 1, TestName = "PEV E2 Job Coach"),
+			TestCase(BEV_E2_Job, 2, TestName = "PEV E2 Job Construction"),
+			TestCase(BEV_E2_Job, 3, TestName = "PEV E2 Job HeavyUrban"),
+			TestCase(BEV_E2_Job, 4, TestName = "PEV E2 Job Interurban"),
+			TestCase(BEV_E2_Job, 5, TestName = "PEV E2 Job MunicipalUtility"),
+			TestCase(BEV_E2_Job, 6, TestName = "PEV E2 Job RegionalDelivery"),
+			TestCase(BEV_E2_Job, 7, TestName = "PEV E2 Job Suburban"),
+			TestCase(BEV_E2_Job, 8, TestName = "PEV E2 Job Urban"),
+			TestCase(BEV_E2_Job, 9, TestName = "PEV E2 Job UrbanDelivery"),
 
-			TestCase(BEV_E2_Job_Cont30kW, 0, TestName = "BEV E2 Cont. 30kW Job LongHaul"),
-			TestCase(BEV_E2_Job_Cont30kW, 1, TestName = "BEV E2 Cont. 30kW Job Coach"),
-			TestCase(BEV_E2_Job_Cont30kW, 2, TestName = "BEV E2 Cont. 30kW Job Construction"),
-			TestCase(BEV_E2_Job_Cont30kW, 3, TestName = "BEV E2 Cont. 30kW Job HeavyUrban"),
-			TestCase(BEV_E2_Job_Cont30kW, 4, TestName = "BEV E2 Cont. 30kW Job Interurban"),
-			TestCase(BEV_E2_Job_Cont30kW, 5, TestName = "BEV E2 Cont. 30kW Job MunicipalUtility"),
-			TestCase(BEV_E2_Job_Cont30kW, 6, TestName = "BEV E2 Cont. 30kW Job RegionalDelivery"),
-			TestCase(BEV_E2_Job_Cont30kW, 7, TestName = "BEV E2 Cont. 30kW Job Suburban"),
-			TestCase(BEV_E2_Job_Cont30kW, 8, TestName = "BEV E2 Cont. 30kW Job Urban"),
-			TestCase(BEV_E2_Job_Cont30kW, 9, TestName = "BEV E2 Cont. 30kW Job UrbanDelivery"),
-		//TestCase(BEV_Job_Cont30kW, 0, TestName = "BEV E2 Job Cont. 80kW RD")
+			TestCase(BEV_E2_Job_Cont30kW, 0, TestName = "PEV E2 Cont. 30kW Job LongHaul"),
+			TestCase(BEV_E2_Job_Cont30kW, 1, TestName = "PEV E2 Cont. 30kW Job Coach"),
+			TestCase(BEV_E2_Job_Cont30kW, 2, TestName = "PEV E2 Cont. 30kW Job Construction"),
+			TestCase(BEV_E2_Job_Cont30kW, 3, TestName = "PEV E2 Cont. 30kW Job HeavyUrban"),
+			TestCase(BEV_E2_Job_Cont30kW, 4, TestName = "PEV E2 Cont. 30kW Job Interurban"),
+			TestCase(BEV_E2_Job_Cont30kW, 5, TestName = "PEV E2 Cont. 30kW Job MunicipalUtility"),
+			TestCase(BEV_E2_Job_Cont30kW, 6, TestName = "PEV E2 Cont. 30kW Job RegionalDelivery"),
+			TestCase(BEV_E2_Job_Cont30kW, 7, TestName = "PEV E2 Cont. 30kW Job Suburban"),
+			TestCase(BEV_E2_Job_Cont30kW, 8, TestName = "PEV E2 Cont. 30kW Job Urban"),
+			TestCase(BEV_E2_Job_Cont30kW, 9, TestName = "PEV E2 Cont. 30kW Job UrbanDelivery"),
+		//TestCase(BEV_Job_Cont30kW, 0, TestName = "PEV E2 Job Cont. 80kW RD")
 		]
-		public void B2BEVRunJob(string jobFile, int cycleIdx)
+		public void B2PEVRunJob(string jobFile, int cycleIdx)
 		{
 			var inputProvider = JSONInputDataFactory.ReadJsonJob(jobFile);
 

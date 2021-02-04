@@ -346,7 +346,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				? VectoMath.Max(-GearboxModelData.Gears[currentGear.Gear].MaxTorque, response.ElectricMotor.MaxDriveTorque)
 				: response.ElectricMotor.MaxDriveTorque;
 
-			var tqCurrent = (response.ElectricMotor.ElectricMotorPowerMech / response.ElectricMotor.AngularVelocity).LimitTo(maxDriveTorque, maxGenTorque);
+			var tqCurrent = (response.ElectricMotor.ElectricMotorPowerMech / response.ElectricMotor.AngularVelocity);
+			if (!tqCurrent.IsBetween(maxDriveTorque, maxGenTorque)) {
+				return double.NaN;
+			}
 			var engineSpeed = response.ElectricMotor.AngularVelocity;
 
 			
