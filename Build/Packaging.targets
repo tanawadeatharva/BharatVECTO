@@ -47,11 +47,13 @@
 	<Message Text="Generating Release Notes PDF"/>
 	<Exec Command="cscript &quot;$(solutiondir)documentation\user manual source\convertpptxtopdf.vbs&quot; &quot;$(solutiondir)documentation\user manual source\release notes vecto3.x.pptx&quot; &quot;$(solutiondir)documentation\user manual source\release notes vecto3.x.pdf&quot;"/>  
 </Target>  
-<Target Name="GenerateHelpHTML" BeforeTargets="AfterBuild"  Condition="$(Configuration) == 'Deploy'">  
+<!-- 
+<Target Name="GenerateHelpHTML" BeforeTargets="AfterBuild"  Condition="$(Configuration) == 'Deploy'">
 	<Message Text="Generating Help"/>
 	<Exec Command="&quot;$(solutiondir)documentation\user manual\convert.bat&quot;" WorkingDirectory="$(solutiondir)documentation\user manual"/>  
 	<Exec Command="&quot;$(solutiondir)documentation\VectoHashingTool\convert.bat&quot;" WorkingDirectory="$(solutiondir)documentation\VectoHashingTool"/>  
-</Target>  
+ </Target>   
+ -->
 
 <Target Name="AfterBuild" Condition="$(Configuration) == 'Deploy'">
 	<ItemGroup>  

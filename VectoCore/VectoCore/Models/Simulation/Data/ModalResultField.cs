@@ -385,7 +385,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 
 		[ModalResultField(typeof(SI), caption: "T_{0}-em_drive_max [Nm]")] T_EM_electricMotor_drive_max_,
 		[ModalResultField(typeof(SI), caption: "T_{0}-em_gen_max [Nm]")] T_EM_electricMotor_gen_max_,
-		[ModalResultField(typeof(SI), caption: "P_{0}-em_gen_max_ [kW]", outputFactor: 1e-3)] P_EM_electricMotor_gen_max_,
+		[ModalResultField(typeof(SI), caption: "P_{0}-em_gen_max [kW]", outputFactor: 1e-3)] P_EM_electricMotor_gen_max_,
 		[ModalResultField(typeof(SI), caption: "P_{0}-em_drive_max [kW]", outputFactor: 1e-3)] P_EM_electricMotor_drive_max_,
 		
 		[ModalResultField(typeof(SI), caption: "P_{0}-em_mech [kW]", outputFactor: 1e-3)] P_EM_electricMotor_em_mech_,
