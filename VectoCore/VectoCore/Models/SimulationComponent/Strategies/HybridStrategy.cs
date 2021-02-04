@@ -665,6 +665,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 			if (!ModelData.VehicleData.ADAS.EngineStopStart) {
 				return false;
 			}
+			var emPos = ModelData.ElectricMachinesData.First().Item1;
+			if (ModelData.VehicleData.ADAS.EngineStopStart && emPos == PowertrainPosition.HybridP1) {
+				return false;
+			}
 			return PreviousState.ICEStartTStmp == null ||
 					(PreviousState.ICEStartTStmp + StrategyParameters.MinICEOnTime).IsSmaller(absTime);
 		}
