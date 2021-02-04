@@ -53,6 +53,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent
 					{
 						DeltaFullLoad = avgOutSpeed * outTorque,
 						DeltaDragLoad = avgOutSpeed * outTorque,
+						DeltaFullLoadTorque = outTorque,
+						DeltaDragLoadTorque = outTorque,
 						Clutch = {
 							PowerRequest = avgOutSpeed * outTorque,
 							OutputSpeed = outAngularVelocity

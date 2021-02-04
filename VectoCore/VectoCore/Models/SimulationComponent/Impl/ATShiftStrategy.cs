@@ -522,12 +522,12 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				Gear = nextGearState.Gear;
 			}
 
-            public NextGearState(Second absTime, ATGearbox gearbox)
-            {
-                SetState(absTime, gearbox);
-            }
+			public NextGearState(Second absTime, ATGearbox gearbox)
+			{
+				SetState(absTime, gearbox);
+			}
 
-            public void SetState(Second absTime, bool disengaged, GearshiftPosition gear)
+			public void SetState(Second absTime, bool disengaged, GearshiftPosition gear)
 			{
 				AbsTime = absTime;
 				Disengaged = disengaged;

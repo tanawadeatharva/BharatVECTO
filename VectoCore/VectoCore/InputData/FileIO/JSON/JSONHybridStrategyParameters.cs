@@ -9,11 +9,19 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 		public JSONHybridStrategyParameters(JObject json, string filename, bool tolerateMissing) : base(json, filename, tolerateMissing)
 		{ }
 
-		public double EquivalenceFactor
+		public double EquivalenceFactorDischarge
 		{
 			get
 			{
-				return Body.GetEx<double>("EquivalenceFactor");
+				return Body["EquivalenceFactor"] == null ? Body.GetEx<double>("EquivalenceFactorDischarge") :
+					Body.GetEx<double>("EquivalenceFactor");
+			}
+		}
+
+		public double EquivalenceFactorCharge {
+			get {
+				return Body["EquivalenceFactor"] == null ? Body.GetEx<double>("EquivalenceFactorCharge") :
+					Body.GetEx<double>("EquivalenceFactor");
 			}
 		}
 

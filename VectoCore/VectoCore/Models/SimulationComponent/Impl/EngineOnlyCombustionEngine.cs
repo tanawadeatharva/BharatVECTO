@@ -80,7 +80,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			if (dryRun) {
 				return new ResponseDryRun(this) {
 					DeltaFullLoad = CurrentState.EnginePower - CurrentState.DynamicFullLoadTorque * avgEngineSpeed,
-					DeltaDragLoad = CurrentState.EnginePower - CurrentState.FullDragTorque * avgEngineSpeed
+					DeltaDragLoad = CurrentState.EnginePower - CurrentState.FullDragTorque * avgEngineSpeed,
+					DeltaFullLoadTorque = CurrentState.EngineTorque - CurrentState.DynamicFullLoadTorque,
+					DeltaDragLoadTorque = CurrentState.EngineTorque - CurrentState.FullDragTorque,
 				};
 			}
 

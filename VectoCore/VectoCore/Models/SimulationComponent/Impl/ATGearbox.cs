@@ -50,15 +50,15 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		protected internal readonly IShiftStrategy _strategy;
 		protected internal readonly TorqueConverter TorqueConverter;
 		private IIdleController _idleController;
-		protected bool RequestAfterGearshift;
+		protected internal bool RequestAfterGearshift;
 
-		private WattSecond _powershiftLossEnergy;
+		internal WattSecond _powershiftLossEnergy;
 		protected internal KilogramSquareMeter EngineInertia;
 
-        public bool TorqueConverterLocked {
-            get { return CurrentState.Gear.TorqueConverterLocked.Value; }
-            //set { CurrentState.TorqueConverterLocked = value; }
-        }
+		public bool TorqueConverterLocked {
+			get { return CurrentState.Gear.TorqueConverterLocked.Value; }
+			//set { CurrentState.TorqueConverterLocked = value; }
+		}
 
 		public override bool TCLocked { get { return Gear.TorqueConverterLocked.Value; } }
 
@@ -107,13 +107,21 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		public override Second LastUpshift
 		{
-			get { throw new System.NotImplementedException(); }
+			get
+			{
+				return -double.MaxValue.SI<Second>();
+				//throw new System.NotImplementedException();
+			}
 			protected internal set { throw new System.NotImplementedException(); }
 		}
 
 		public override Second LastDownshift
 		{
-			get { throw new System.NotImplementedException(); }
+			get
+			{
+				return -double.MaxValue.SI<Second>();
+				//throw new System.NotImplementedException();
+			}
 			protected internal set { throw new System.NotImplementedException(); }
 		}
 
@@ -147,7 +155,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		public override bool DisengageGearbox { get; set; }
 		public override void TriggerGearshift(Second absTime, Second dt)
 		{
-			throw new System.NotImplementedException();
+			//throw new System.NotImplementedException();
+			RequestAfterGearshift = true;
 		}
 
 		public override IResponse Initialize(NewtonMeter outTorque, PerSecond outAngularVelocity)
@@ -301,7 +310,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		{
 			if (RequestAfterGearshift /*&& Gear != PreviousState.Gear*/) {
 				LastShift = absTime;
-				Gear = _strategy.Engage(absTime, dt, outTorque, outAngularVelocity);
+				Gear = _strategy?.Engage(absTime, dt, outTorque, outAngularVelocity) ?? Gear;
 				_powershiftLossEnergy = ComputeShiftLosses(outTorque, outAngularVelocity, Gear);
 			} else {
 				if (PreviousState.PowershiftLossEnergy != null && PreviousState.PowershiftLossEnergy.IsGreater(0)) {
@@ -399,6 +408,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					},
 					DeltaDragLoad = outTorque * avgAngularVelocity,
 					DeltaFullLoad = outTorque * avgAngularVelocity,
+					DeltaFullLoadTorque = outTorque,
+					DeltaDragLoadTorque = outTorque,
 				};
 			}
 			if ((outTorque * avgAngularVelocity).IsGreater(0.SI<Watt>(),
@@ -495,8 +506,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		public class ATGearboxState : GearboxState
 		{
-            
-            public bool Disengaged = true;
+			
+			public bool Disengaged = true;
 			public WattSecond PowershiftLossEnergy;
 			public NewtonMeter PowershiftLoss;
 		}

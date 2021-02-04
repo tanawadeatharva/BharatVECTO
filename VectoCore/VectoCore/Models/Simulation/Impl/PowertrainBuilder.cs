@@ -406,6 +406,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 				var strategy = new HybridStrategyAT(data, container);
 				
 				ctl = new HybridController(container, strategy, es);
+				new ATClutchInfo(container);
 			}
 
 			// add engine before gearbox so that gearbox can obtain if an ICE is available already in constructor
@@ -661,6 +662,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 				.AddComponent(
 					new Wheels(container, data.VehicleData.DynamicTyreRadius, data.VehicleData.WheelsInertia))
 				.AddComponent(ctl)
+				.AddComponent(new Brakes(container))
 				.AddComponent(GetElectricMachine(PowertrainPosition.HybridP4, data.ElectricMachinesData, container, es, ctl))
 				.AddComponent(new AxleGear(container, data.AxleGearData))
 				.AddComponent(GetElectricMachine(PowertrainPosition.HybridP3, data.ElectricMachinesData, container, es, ctl))
@@ -696,6 +698,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			if (data.ElectricMachinesData.Any(x => x.Item1 == PowertrainPosition.HybridP1)) {
 				if (gearbox is ATGearbox atGbx) {
 					atGbx.IdleController = idleController;
+					new ATClutchInfo(container);
 				}
 			}
 		}

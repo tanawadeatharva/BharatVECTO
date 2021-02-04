@@ -135,7 +135,7 @@ Public Class HybridStrategyParamsForm
         If ChangeCheckCancel() Then Exit Sub
 
 
-        tbEquivalenceFactor.Text = ""
+        tbEquivalenceFactorDischarge.Text = ""
         tbMinSoC.Text = ""
         tbMaxSoC.Text = ""
         tbTargetSoC.Text = ""
@@ -175,9 +175,9 @@ Public Class HybridStrategyParamsForm
 
         Dim basePath As String = Path.GetDirectoryName(file)
 
-        tbEquivalenceFactor.Text = strategyParams.EquivalenceFactor.ToGUIFormat()
+        tbEquivalenceFactorDischarge.Text = strategyParams.EquivalenceFactorDischarge.ToGUIFormat()
 
-        tbEquivalenceFactor.Text = strategyParams.EquivalenceFactor.ToGUIFormat()
+        tbEquivalenceFactorDischarge.Text = strategyParams.EquivalenceFactorDischarge.ToGUIFormat()
         tbMinSoC.Text = (strategyParams.MinSoC * 100).ToGUIFormat()
         tbMaxSoC.Text = (strategyParams.MaxSoC * 100).ToGUIFormat()
         tbTargetSoC.Text = (strategyParams.TargetSoC * 100).ToGUIFormat()
@@ -216,7 +216,8 @@ Public Class HybridStrategyParamsForm
         strategyParams.FilePath = file
 
 
-        strategyParams.EquivalenceFactor = tbEquivalenceFactor.Text.ToDouble(0)
+        strategyParams.EquivalenceFactorDischarge = tbEquivalenceFactorDischarge.Text.ToDouble(0)
+        strategyParams.EquivalenceFactorCharge = tbEquivalenceFactorCharge.Text.ToDouble(0)
 
         strategyParams.MinSoC = tbMinSoC.Text.ToDouble(0) / 100
         strategyParams.MaxSoC = tbMaxSoC.Text.ToDouble(0) / 100
@@ -352,7 +353,7 @@ Public Class HybridStrategyParamsForm
         Change()
     End Sub
 
-    Private Sub tbEquivalenceFactor_TextChanged(sender As Object, e As EventArgs) Handles tbEquivalenceFactor.TextChanged
+    Private Sub tbEquivalenceFactor_TextChanged(sender As Object, e As EventArgs) Handles tbEquivalenceFactorDischarge.TextChanged
         Change()
     End Sub
 

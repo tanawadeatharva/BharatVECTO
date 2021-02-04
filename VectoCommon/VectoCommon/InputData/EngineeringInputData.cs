@@ -69,7 +69,9 @@ namespace TUGraz.VectoCommon.InputData
 
 	public interface IHybridStrategyParameters
 	{
-		double EquivalenceFactor { get; }
+		double EquivalenceFactorDischarge { get; }
+		
+		double EquivalenceFactorCharge { get; }
 
 		double MinSoC { get; }
 

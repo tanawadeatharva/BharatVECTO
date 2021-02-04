@@ -41,7 +41,7 @@ namespace TUGraz.VectoCommon.Models {
 
 		public IResponse Response { get; set; }
 
-		public double Score { get { return (FuelCosts + EqualityFactor * (BatCosts + ICEStartPenalty1) * SoCPenalty + ICEStartPenalty2) / GearshiftPenalty; } }
+		public double Score { get { return (FuelCosts + EquivalenceFactor * (BatCosts + ICEStartPenalty1) * SoCPenalty + ICEStartPenalty2) / GearshiftPenalty; } }
 
 		public double FuelCosts { get; set; }
 
@@ -49,7 +49,7 @@ namespace TUGraz.VectoCommon.Models {
 
 		public double SoCPenalty { get; set; }
 
-		public double EqualityFactor { get; set; }
+		public double EquivalenceFactor { get; set; }
 
 		public double GearshiftPenalty { get; set; }
 
@@ -199,6 +199,11 @@ namespace TUGraz.VectoCommon.Models {
 		public static bool AllOK(this HybridConfigurationIgnoreReason x)
 		{
 			return (x & HybridConfigurationIgnoreReason.Evaluated) == HybridConfigurationIgnoreReason.Evaluated;
+		}
+
+		public static bool Evaluated(this HybridConfigurationIgnoreReason x)
+		{
+			return x != HybridConfigurationIgnoreReason.NotEvaluated;
 		}
 	}
 

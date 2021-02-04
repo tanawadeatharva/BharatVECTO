@@ -865,6 +865,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			}
 
 			var response = HandleRequestDisengaged(absTime, ds, gradient, velocityWithOverspeed, debug);
+			if (response is ResponseDrivingCycleDistanceExceeded) {
+				return response;
+			}
 			if (!(response is ResponseSuccess) && DataBus.ClutchInfo.ClutchClosed(absTime)) {
 				response = HandleRequestEngaged(
 					absTime, ds, targetVelocity, gradient, prohibitOverspeed, velocityWithOverspeed, debug);
@@ -925,7 +928,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 							debug.Add(new { action = "first:(Underload & Overspeed)-> Coast", second });
 							second = HandleCoastAfterUnderloadWithOverspeed(absTime, ds, gradient, velocityWithOverspeed, debug, second);
 						} else {
-							second = Driver.DrivingActionBrake(absTime, ds, velocityWithOverspeed, gradient);
+							second = Driver.DrivingActionBrake(absTime, ds, velocityWithOverspeed, gradient,
+								overrideAction: DataBus.GearboxInfo.GearboxType.AutomaticTransmission()
+									? DrivingAction.Accelerate
+									: (DrivingAction?)null);
 							debug.Add(new { action = "first:(Underload & !Overspeed) -> Brake", second });
 						}
 					})
@@ -1097,7 +1103,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			Second absTime, Meter ds, MeterPerSecond targetVelocity, Radian gradient,
 			bool prohibitOverspeed = false)
 		{
-			if (DataBus.VehicleInfo.VehicleSpeed <= DriverStrategy.BrakeTrigger.NextTargetSpeed && !DataBus.VehicleInfo.VehicleStopped) {
+			if (DataBus.VehicleInfo.VehicleSpeed.IsSmallerOrEqual(DriverStrategy.BrakeTrigger.NextTargetSpeed) && !DataBus.VehicleInfo.VehicleStopped) {
 				var retVal = HandleTargetspeedReached(absTime, ds, targetVelocity, gradient);
 				for (var i = 0; i < 3 && retVal == null; i++) {
 					retVal = HandleTargetspeedReached(absTime, ds, targetVelocity, gradient);

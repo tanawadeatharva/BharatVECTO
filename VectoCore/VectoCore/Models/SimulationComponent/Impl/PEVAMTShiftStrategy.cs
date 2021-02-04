@@ -322,7 +322,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			var minFc = results.MinBy(x => x.Item2);
 
-			if (minFc.Item2.IsGreater(fcCurrent * shiftStrategyParameters.RatingFactorCurrentGear)) {
+			var ratingFactor = outTorque < 0
+				? 1 / shiftStrategyParameters.RatingFactorCurrentGear
+				: shiftStrategyParameters.RatingFactorCurrentGear;
+
+			if (minFc.Item2.IsGreater(fcCurrent * ratingFactor)) {
 				return minFc.Item1;
 			}
 
@@ -511,8 +515,13 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			var fcCurrent = GetFCRating(responseCurrent);
 
 			var minFc = results.MinBy(x => x.Item2);
-			
-			if (minFc.Item2.IsGreater(fcCurrent * shiftStrategyParameters.RatingFactorCurrentGear)) {
+
+			var ratingFactor = outTorque < 0
+				? 1 / shiftStrategyParameters.RatingFactorCurrentGear
+				: shiftStrategyParameters.RatingFactorCurrentGear;
+
+
+			if (minFc.Item2.IsGreater(fcCurrent * ratingFactor)) {
 				return minFc.Item1;
 			}
 			

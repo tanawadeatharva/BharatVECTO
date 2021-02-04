@@ -74,7 +74,14 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 		public virtual IDrivingCycleInfo DrivingCycleInfo { get; protected set; }
 
 		public IRESSInfo BatteryInfo { get; protected set; }
+		public ITorqueConverterInfo TorqueConverterInfo { get; protected set; }
 
+		public virtual ITorqueConverterControl TorqueConverterCtl { get; private set; }
+
+		public virtual bool IsTestPowertrain
+		{
+			get { return false; }
+		}
 
 		internal ISimulationOutPort Cycle;
 
@@ -112,11 +119,10 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 		public virtual Second AbsTime { get; set; }
 		public IElectricMotorInfo ElectricMotorInfo(PowertrainPosition pos)
 		{
-			return ElectricMotors[pos];
+			return ElectricMotors.ContainsKey(pos) ?  ElectricMotors[pos] : null;
 		}
 
 
-		public virtual ITorqueConverterControl TorqueConverterCtl { get; private set; }
 
 		public IPowertainInfo PowertrainInfo
 		{
@@ -153,7 +159,8 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 					HasGearbox = true;
 				})
 				.If<IGearboxControl>(c => GearboxCtl = c)
-				.If<ITorqueConverterControl>(c => TorqueConverterCtl = c)
+				.If<ITorqueConverterInfo>(c => TorqueConverterInfo = c)
+				.If<ITorqueConverterControl>(c =>  TorqueConverterCtl = c)
 				.If<IAxlegearInfo>(c => AxlegearInfo = c)
 				.If<IAngledriveInfo>(c => AngledriveInfo = c)
 				.If<IWheelsInfo>(c => WheelsInfo = c)

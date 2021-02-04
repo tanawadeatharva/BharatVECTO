@@ -28,7 +28,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		protected internal Joule ThermalBuffer = 0.SI<Joule>();
 		protected internal bool DeRatingActive = false;
-
+		
 		public Joule OverloadBuffer { get; }
 		public NewtonMeter ContinuousTorque { get; }
 
@@ -51,6 +51,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				.ElectricalPower;
 			var peakPwrLoss = -peakElPwr + ModelData.ContinuousPowerSpeed * maxTqDrive; // losses need to be positive
 			OverloadBuffer = (peakPwrLoss - ContinuousPowerLoss) * ModelData.OverloadTime;
+			if (OverloadBuffer.IsSmallerOrEqual(0) && !(container is SimplePowertrainContainer)) {
+				Log.Error("Overload buffer for thermal de-rating is negative! Please check electric motor data!");
+			}
 		}
 
 		public PowertrainPosition Position { get; }
@@ -154,10 +157,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			var emTorque = emTorqueDt == null ? null : ConvertDrivetrainTorqueToEm(emTorqueDt);
 			var emOff = emTorqueDt == null;
 
-			if (!dryRun && emTorqueDt != null && ((emTorque).IsSmaller(maxDriveTorqueEm ?? 0.SI<NewtonMeter>(), 1e-3) ||
-									(emTorque).IsGreater(maxRecuperationTorqueEm ?? 0.SI<NewtonMeter>(), 1e-3))) {
+			if (!dryRun && !DataBus.IsTestPowertrain && emTorqueDt != null && ((emTorque).IsSmaller(maxDriveTorqueEm ?? 0.SI<NewtonMeter>(), 1e-3) ||
+																		(emTorque).IsGreater(maxRecuperationTorqueEm ?? 0.SI<NewtonMeter>(), 1e-3))) {
 				// check if provided EM torque (drivetrain) is valid)
-				if (DataBus.HybridControllerInfo != null && (!avgDtSpeed.IsEqual(DataBus.HybridControllerInfo.ElectricMotorSpeed(Position)) ||
+				if ((!avgDtSpeed.IsEqual(DataBus.HybridControllerInfo.ElectricMotorSpeed(Position) / ModelData.Ratio) ||
 															!dt.IsEqual(DataBus.HybridControllerInfo.SimulationInterval))) {
 					return new ResponseInvalidOperatingPoint(this);
 				}
@@ -222,7 +225,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				emTorqueMap = null;
 			}
 
-			var electricPower = emOff || (ModelData.DragCurve.Lookup(avgEmSpeed) + inertiaTorqueEm).IsEqual(emTorque)
+			var electricPower = emOff || (ModelData.DragCurve.Lookup(avgEmSpeed) + inertiaTorqueEm).IsEqual(emTorque, 1e-3.SI<NewtonMeter>())
 				? 0.SI<Watt>()
 				: ModelData.EfficiencyMap
 					.LookupElectricPower(avgEmSpeed, emTorqueMap, DataBus.ExecutionMode != ExecutionMode.Declaration)
@@ -230,8 +233,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			var electricSupplyResponse =
 				ElectricPower.Request(absTime, dt, electricPower, dryRun);
-			if (!dryRun && !emOff && !(electricSupplyResponse is ElectricSystemResponseSuccess)) {
-				if (DataBus.HybridControllerInfo != null && !avgEmSpeed.IsEqual(DataBus.HybridControllerInfo.ElectricMotorSpeed(Position))) {
+			if (!dryRun && !DataBus.IsTestPowertrain && !emOff && !(electricSupplyResponse is ElectricSystemResponseSuccess)) {
+				if ( !avgEmSpeed.IsEqual(DataBus.HybridControllerInfo.ElectricMotorSpeed(Position) / ModelData.Ratio)) {
 					return new ResponseInvalidOperatingPoint(this);
 				}
 				throw new VectoException(
@@ -255,6 +258,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 						},
 						DeltaFullLoad =  remainingPower,
 						DeltaDragLoad = remainingPower,
+						DeltaFullLoadTorque = inTorqueDt,
+						DeltaDragLoadTorque = inTorqueDt,
+
 					};
 				} else {
 
@@ -292,6 +298,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			retVal.ElectricMotor.MaxDriveTorque = maxDriveTorqueDt;
 			retVal.ElectricMotor.MaxRecuperationTorque = maxRecuperationTorqueDt;
 			retVal.ElectricMotor.AngularVelocity = avgEmSpeed;
+
+			retVal.ElectricMotor.TorqueRequest = outTorque;
+			retVal.ElectricMotor.InertiaTorque =
+				avgDtSpeed.IsEqual(0) ? 0.SI<NewtonMeter>() : inertiaTorqueEm * avgEmSpeed / avgDtSpeed;
 			
 			retVal.ElectricMotor.PowerRequest = outTorque * outAngularVelocity;
 			retVal.ElectricMotor.InertiaPowerDemand = inertiaTorqueEm * avgEmSpeed;

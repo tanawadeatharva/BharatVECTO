@@ -142,6 +142,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 						return new ResponseDryRun(this) {
 							DeltaDragLoad = ovl.Delta,
 							DeltaFullLoad = ovl.Delta,
+							// TODO! delta full/drag torque
 							DeltaEngineSpeed = ovl.DeltaEngineSpeed
 						};
 					}
@@ -163,7 +164,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					DataBus.GearboxCtl.TriggerGearshift(absTime, dt);
 					_shiftStrategy.SetNextGear(strategySettings.NextGear);
 					SelectedGear = strategySettings.NextGear;
-					return new ResponseGearShift(this);
+					if (!DataBus.GearboxInfo.GearboxType.AutomaticTransmission()) {
+						return new ResponseGearShift(this);
+					}
 				}
 
 				if (!dryRun /*&& DataBus.VehicleInfo.VehicleStopped*/) {
@@ -289,9 +292,13 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			}
 		}
 
+		public void RepeatDrivingAction(Second absTime)
+		{
+			Strategy.RepeatDrivingAction(absTime);
+		}
 
 		///=======================================================================================
-		
+
 		public class HybridCtlShiftStrategy : ShiftStrategy
 		{
 			protected HybridController _controller;
@@ -496,11 +503,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			}
 		}
 
-		public void RepeatDrivingAction(Second absTime)
-		{
-			Strategy.RepeatDrivingAction(absTime);
-		}
-
 
 		///=======================================================================================
 
@@ -524,6 +526,57 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 					_gearbox = myGearbox;
 				}
+			}
+
+			public override GearshiftPosition InitGear(Second absTime, Second dt, NewtonMeter torque, PerSecond outAngularVelocity)
+			{
+				if (DataBus.VehicleInfo.VehicleSpeed.IsEqual(0)) {
+					// AT always starts in first gear and TC active!
+					_gearbox.Disengaged = true;
+					return Gears.First();
+				}
+
+				foreach (var gear in Gears.Reverse()) {
+					var response = _gearbox.Initialize(gear, torque, outAngularVelocity);
+
+					if (response.Engine.EngineSpeed > DataBus.EngineInfo.EngineRatedSpeed || response.Engine.EngineSpeed < DataBus.EngineInfo.EngineIdleSpeed) {
+						continue;
+					}
+
+					if (!IsBelowDownShiftCurve(gear, response.Engine.PowerRequest / response.Engine.EngineSpeed, response.Engine.EngineSpeed)) {
+						_gearbox.Disengaged = false;
+						return gear;
+					}
+				}
+
+				// fallback: start with first gear;
+				_gearbox.Disengaged = false;
+				return Gears.First();
+			}
+
+			protected override bool DoCheckShiftRequired(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity,
+				NewtonMeter inTorque, PerSecond inAngularVelocity, GearshiftPosition gear, Second lastShiftTime,
+				IResponse response)
+			{
+				return false;
+			}
+
+			//public override GearshiftPosition Engage(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity)
+			//{
+			//	if (_nextGear.AbsTime != null && _nextGear.AbsTime.IsEqual(absTime)) {
+			//		//_gearbox.Gear = _nextGear.Gear;
+			//		_gearbox.Disengaged = _nextGear.Disengaged;
+			//		_nextGear.AbsTime = null;
+			//		return _nextGear.Gear;
+			//	}
+
+			//	_nextGear.AbsTime = null;
+			//	return _gearbox.Gear;
+			//}
+
+			public override void Disengage(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity)
+			{
+				throw new System.NotImplementedException("AT Shift Strategy does not support disengaging.");
 			}
 		}
 

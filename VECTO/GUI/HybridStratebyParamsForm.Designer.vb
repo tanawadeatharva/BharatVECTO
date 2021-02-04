@@ -37,9 +37,9 @@ Partial Class HybridStrategyParamsForm
     Private Sub InitializeComponent()
         Me.components = New System.ComponentModel.Container()
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(HybridStrategyParamsForm))
-        Me.tbEquivalenceFactor = New System.Windows.Forms.TextBox()
+        Me.tbEquivalenceFactorDischarge = New System.Windows.Forms.TextBox()
         Me.lblEquivFactorUnit = New System.Windows.Forms.Label()
-        Me.lblEvquivFactor = New System.Windows.Forms.Label()
+        Me.lblEvquivFactorDischg = New System.Windows.Forms.Label()
         Me.ButCancel = New System.Windows.Forms.Button()
         Me.ButOK = New System.Windows.Forms.Button()
         Me.ToolStrip1 = New System.Windows.Forms.ToolStrip()
@@ -83,6 +83,10 @@ Partial Class HybridStrategyParamsForm
         Me.lblMinIceOnTime = New System.Windows.Forms.Label()
         Me.lblMinIceOnTimeUnit = New System.Windows.Forms.Label()
         Me.tbMinICEOnTime = New System.Windows.Forms.TextBox()
+        Me.Panel2 = New System.Windows.Forms.Panel()
+        Me.EquivalenceFactorChg = New System.Windows.Forms.Label()
+        Me.lblEquivFactorChargeUnit = New System.Windows.Forms.Label()
+        Me.tbEquivalenceFactorCharge = New System.Windows.Forms.TextBox()
         Me.ToolStrip1.SuspendLayout
         Me.StatusStrip1.SuspendLayout
         CType(Me.PictureBox1,System.ComponentModel.ISupportInitialize).BeginInit
@@ -94,14 +98,15 @@ Partial Class HybridStrategyParamsForm
         Me.pnAuxBufferTime.SuspendLayout
         Me.pnAuxBufferChgTime.SuspendLayout
         Me.Panel1.SuspendLayout
+        Me.Panel2.SuspendLayout
         Me.SuspendLayout
         '
-        'tbEquivalenceFactor
+        'tbEquivalenceFactorDischarge
         '
-        Me.tbEquivalenceFactor.Location = New System.Drawing.Point(181, 4)
-        Me.tbEquivalenceFactor.Name = "tbEquivalenceFactor"
-        Me.tbEquivalenceFactor.Size = New System.Drawing.Size(57, 20)
-        Me.tbEquivalenceFactor.TabIndex = 3
+        Me.tbEquivalenceFactorDischarge.Location = New System.Drawing.Point(181, 4)
+        Me.tbEquivalenceFactorDischarge.Name = "tbEquivalenceFactorDischarge"
+        Me.tbEquivalenceFactorDischarge.Size = New System.Drawing.Size(57, 20)
+        Me.tbEquivalenceFactorDischarge.TabIndex = 3
         '
         'lblEquivFactorUnit
         '
@@ -112,20 +117,20 @@ Partial Class HybridStrategyParamsForm
         Me.lblEquivFactorUnit.TabIndex = 24
         Me.lblEquivFactorUnit.Text = "[-]"
         '
-        'lblEvquivFactor
+        'lblEvquivFactorDischg
         '
-        Me.lblEvquivFactor.AutoSize = true
-        Me.lblEvquivFactor.Location = New System.Drawing.Point(3, 7)
-        Me.lblEvquivFactor.Name = "lblEvquivFactor"
-        Me.lblEvquivFactor.Size = New System.Drawing.Size(99, 13)
-        Me.lblEvquivFactor.TabIndex = 0
-        Me.lblEvquivFactor.Text = "Equivalence Factor"
+        Me.lblEvquivFactorDischg.AutoSize = true
+        Me.lblEvquivFactorDischg.Location = New System.Drawing.Point(3, 7)
+        Me.lblEvquivFactorDischg.Name = "lblEvquivFactorDischg"
+        Me.lblEvquivFactorDischg.Size = New System.Drawing.Size(150, 13)
+        Me.lblEvquivFactorDischg.TabIndex = 0
+        Me.lblEvquivFactorDischg.Text = "Equivalence Factor Discharge"
         '
         'ButCancel
         '
         Me.ButCancel.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right),System.Windows.Forms.AnchorStyles)
         Me.ButCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel
-        Me.ButCancel.Location = New System.Drawing.Point(362, 291)
+        Me.ButCancel.Location = New System.Drawing.Point(362, 355)
         Me.ButCancel.Name = "ButCancel"
         Me.ButCancel.Size = New System.Drawing.Size(75, 23)
         Me.ButCancel.TabIndex = 13
@@ -135,7 +140,7 @@ Partial Class HybridStrategyParamsForm
         'ButOK
         '
         Me.ButOK.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right),System.Windows.Forms.AnchorStyles)
-        Me.ButOK.Location = New System.Drawing.Point(281, 291)
+        Me.ButOK.Location = New System.Drawing.Point(281, 355)
         Me.ButOK.Name = "ButOK"
         Me.ButOK.Size = New System.Drawing.Size(75, 23)
         Me.ButOK.TabIndex = 12
@@ -224,7 +229,7 @@ Partial Class HybridStrategyParamsForm
         'StatusStrip1
         '
         Me.StatusStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.LbStatus})
-        Me.StatusStrip1.Location = New System.Drawing.Point(0, 317)
+        Me.StatusStrip1.Location = New System.Drawing.Point(0, 381)
         Me.StatusStrip1.Name = "StatusStrip1"
         Me.StatusStrip1.Size = New System.Drawing.Size(449, 22)
         Me.StatusStrip1.SizingGrip = false
@@ -267,9 +272,9 @@ Partial Class HybridStrategyParamsForm
         '
         'pnEquivFactor
         '
-        Me.pnEquivFactor.Controls.Add(Me.lblEvquivFactor)
+        Me.pnEquivFactor.Controls.Add(Me.lblEvquivFactorDischg)
         Me.pnEquivFactor.Controls.Add(Me.lblEquivFactorUnit)
-        Me.pnEquivFactor.Controls.Add(Me.tbEquivalenceFactor)
+        Me.pnEquivFactor.Controls.Add(Me.tbEquivalenceFactorDischarge)
         Me.pnEquivFactor.Location = New System.Drawing.Point(12, 74)
         Me.pnEquivFactor.Name = "pnEquivFactor"
         Me.pnEquivFactor.Size = New System.Drawing.Size(288, 28)
@@ -291,7 +296,7 @@ Partial Class HybridStrategyParamsForm
         Me.pnMinSoC.Controls.Add(Me.lblMinSoC)
         Me.pnMinSoC.Controls.Add(Me.lblMinSoCUnit)
         Me.pnMinSoC.Controls.Add(Me.tbMinSoC)
-        Me.pnMinSoC.Location = New System.Drawing.Point(12, 104)
+        Me.pnMinSoC.Location = New System.Drawing.Point(12, 134)
         Me.pnMinSoC.Name = "pnMinSoC"
         Me.pnMinSoC.Size = New System.Drawing.Size(288, 28)
         Me.pnMinSoC.TabIndex = 25
@@ -326,7 +331,7 @@ Partial Class HybridStrategyParamsForm
         Me.pnMaxSoC.Controls.Add(Me.lblMaxSoC)
         Me.pnMaxSoC.Controls.Add(Me.lblMaxSoCUnit)
         Me.pnMaxSoC.Controls.Add(Me.tbMaxSoC)
-        Me.pnMaxSoC.Location = New System.Drawing.Point(12, 134)
+        Me.pnMaxSoC.Location = New System.Drawing.Point(12, 164)
         Me.pnMaxSoC.Name = "pnMaxSoC"
         Me.pnMaxSoC.Size = New System.Drawing.Size(288, 28)
         Me.pnMaxSoC.TabIndex = 26
@@ -361,7 +366,7 @@ Partial Class HybridStrategyParamsForm
         Me.pnTargetSoC.Controls.Add(Me.lblTargetSoC)
         Me.pnTargetSoC.Controls.Add(Me.lblTargetSoCUnit)
         Me.pnTargetSoC.Controls.Add(Me.tbTargetSoC)
-        Me.pnTargetSoC.Location = New System.Drawing.Point(12, 164)
+        Me.pnTargetSoC.Location = New System.Drawing.Point(12, 194)
         Me.pnTargetSoC.Name = "pnTargetSoC"
         Me.pnTargetSoC.Size = New System.Drawing.Size(288, 28)
         Me.pnTargetSoC.TabIndex = 27
@@ -396,7 +401,7 @@ Partial Class HybridStrategyParamsForm
         Me.pnAuxBufferTime.Controls.Add(Me.lblAuxBufferTime)
         Me.pnAuxBufferTime.Controls.Add(Me.lblAuxBufferTimeUnit)
         Me.pnAuxBufferTime.Controls.Add(Me.tbauxBufferTime)
-        Me.pnAuxBufferTime.Location = New System.Drawing.Point(12, 224)
+        Me.pnAuxBufferTime.Location = New System.Drawing.Point(12, 254)
         Me.pnAuxBufferTime.Name = "pnAuxBufferTime"
         Me.pnAuxBufferTime.Size = New System.Drawing.Size(288, 28)
         Me.pnAuxBufferTime.TabIndex = 28
@@ -431,7 +436,7 @@ Partial Class HybridStrategyParamsForm
         Me.pnAuxBufferChgTime.Controls.Add(Me.Label1)
         Me.pnAuxBufferChgTime.Controls.Add(Me.lblAuxBufferChgTimeUnit)
         Me.pnAuxBufferChgTime.Controls.Add(Me.tbAuxBufferChargeTime)
-        Me.pnAuxBufferChgTime.Location = New System.Drawing.Point(12, 254)
+        Me.pnAuxBufferChgTime.Location = New System.Drawing.Point(12, 284)
         Me.pnAuxBufferChgTime.Name = "pnAuxBufferChgTime"
         Me.pnAuxBufferChgTime.Size = New System.Drawing.Size(288, 28)
         Me.pnAuxBufferChgTime.TabIndex = 29
@@ -466,7 +471,7 @@ Partial Class HybridStrategyParamsForm
         Me.Panel1.Controls.Add(Me.lblMinIceOnTime)
         Me.Panel1.Controls.Add(Me.lblMinIceOnTimeUnit)
         Me.Panel1.Controls.Add(Me.tbMinICEOnTime)
-        Me.Panel1.Location = New System.Drawing.Point(12, 194)
+        Me.Panel1.Location = New System.Drawing.Point(12, 224)
         Me.Panel1.Name = "Panel1"
         Me.Panel1.Size = New System.Drawing.Size(288, 28)
         Me.Panel1.TabIndex = 29
@@ -496,13 +501,49 @@ Partial Class HybridStrategyParamsForm
         Me.tbMinICEOnTime.Size = New System.Drawing.Size(57, 20)
         Me.tbMinICEOnTime.TabIndex = 3
         '
+        'Panel2
+        '
+        Me.Panel2.Controls.Add(Me.EquivalenceFactorChg)
+        Me.Panel2.Controls.Add(Me.lblEquivFactorChargeUnit)
+        Me.Panel2.Controls.Add(Me.tbEquivalenceFactorCharge)
+        Me.Panel2.Location = New System.Drawing.Point(12, 104)
+        Me.Panel2.Name = "Panel2"
+        Me.Panel2.Size = New System.Drawing.Size(288, 28)
+        Me.Panel2.TabIndex = 25
+        '
+        'EquivalenceFactorChg
+        '
+        Me.EquivalenceFactorChg.AutoSize = true
+        Me.EquivalenceFactorChg.Location = New System.Drawing.Point(3, 7)
+        Me.EquivalenceFactorChg.Name = "EquivalenceFactorChg"
+        Me.EquivalenceFactorChg.Size = New System.Drawing.Size(136, 13)
+        Me.EquivalenceFactorChg.TabIndex = 0
+        Me.EquivalenceFactorChg.Text = "Equivalence Factor Charge"
+        '
+        'lblEquivFactorChargeUnit
+        '
+        Me.lblEquivFactorChargeUnit.AutoSize = true
+        Me.lblEquivFactorChargeUnit.Location = New System.Drawing.Point(244, 7)
+        Me.lblEquivFactorChargeUnit.Name = "lblEquivFactorChargeUnit"
+        Me.lblEquivFactorChargeUnit.Size = New System.Drawing.Size(16, 13)
+        Me.lblEquivFactorChargeUnit.TabIndex = 24
+        Me.lblEquivFactorChargeUnit.Text = "[-]"
+        '
+        'tbEquivalenceFactorCharge
+        '
+        Me.tbEquivalenceFactorCharge.Location = New System.Drawing.Point(181, 4)
+        Me.tbEquivalenceFactorCharge.Name = "tbEquivalenceFactorCharge"
+        Me.tbEquivalenceFactorCharge.Size = New System.Drawing.Size(57, 20)
+        Me.tbEquivalenceFactorCharge.TabIndex = 3
+        '
         'HybridStrategyParamsForm
         '
         Me.AcceptButton = Me.ButOK
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6!, 13!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.CancelButton = Me.ButCancel
-        Me.ClientSize = New System.Drawing.Size(449, 339)
+        Me.ClientSize = New System.Drawing.Size(449, 403)
+        Me.Controls.Add(Me.Panel2)
         Me.Controls.Add(Me.Panel1)
         Me.Controls.Add(Me.pnAuxBufferChgTime)
         Me.Controls.Add(Me.pnAuxBufferTime)
@@ -543,13 +584,15 @@ Partial Class HybridStrategyParamsForm
         Me.pnAuxBufferChgTime.PerformLayout
         Me.Panel1.ResumeLayout(false)
         Me.Panel1.PerformLayout
+        Me.Panel2.ResumeLayout(false)
+        Me.Panel2.PerformLayout
         Me.ResumeLayout(false)
         Me.PerformLayout
 
 End Sub
-    Friend WithEvents tbEquivalenceFactor As TextBox
+    Friend WithEvents tbEquivalenceFactorDischarge As TextBox
     Friend WithEvents lblEquivFactorUnit As Label
-    Friend WithEvents lblEvquivFactor As Label
+    Friend WithEvents lblEvquivFactorDischg As Label
     Friend WithEvents ButCancel As Button
     Friend WithEvents ButOK As Button
     Friend WithEvents ToolStrip1 As ToolStrip
@@ -593,4 +636,8 @@ End Sub
     Friend WithEvents lblMinIceOnTime As Label
     Friend WithEvents lblMinIceOnTimeUnit As Label
     Friend WithEvents tbMinICEOnTime As TextBox
+    Friend WithEvents Panel2 As Panel
+    Friend WithEvents EquivalenceFactorChg As Label
+    Friend WithEvents lblEquivFactorChargeUnit As Label
+    Friend WithEvents tbEquivalenceFactorCharge As TextBox
 End Class

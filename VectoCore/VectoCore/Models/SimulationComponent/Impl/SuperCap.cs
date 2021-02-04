@@ -52,12 +52,14 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		public Watt MaxDischargePower(Second dt)
 		{
+			var maxPower = -InternalVoltage / (4 * ModelData.InternalResistance) * InternalVoltage;
+			var maxPowerCurrent = maxPower / InternalVoltage;
 			var maxDischargeCurrent =
 				VectoMath.Max((ModelData.Capacity * ModelData.MinVoltage - PreviousState.Charge) / dt,
 					ModelData.MaxCurrentDischarge);
+			maxDischargeCurrent = VectoMath.Max(maxDischargeCurrent, maxPowerCurrent);
 			var maxDischargePower = InternalVoltage * maxDischargeCurrent +
 									maxDischargeCurrent * ModelData.InternalResistance * maxDischargeCurrent;
-			var maxPower = -InternalVoltage / (4 * ModelData.InternalResistance) * InternalVoltage;
 			return VectoMath.Max(maxDischargePower, maxPower);
 		}
 

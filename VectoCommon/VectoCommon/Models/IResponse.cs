@@ -147,6 +147,8 @@ namespace TUGraz.VectoCommon.Models
 
 		public SIBase<Watt> InertiaPowerDemand { get; set; }
 		public NewtonMeter TotalTorqueDemand { get; set; }
+		public NewtonMeter TorqueRequest { get; set; }
+		public NewtonMeter InertiaTorque { get; set; }
 	}
 
 

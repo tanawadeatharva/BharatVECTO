@@ -86,9 +86,15 @@ namespace TUGraz.VectoCore.Models.Simulation.DataBus
 		void TriggerGearshift(Second absTime, Second dt);
 	}
 
-	public interface ITorqueConverterControl
+	public interface ITorqueConverterInfo
 	{
 		Tuple<TorqueConverterOperatingPoint, NewtonMeter> CalculateOperatingPoint(PerSecond inSpeed, PerSecond outSpeed);
+
+	}
+
+	public interface ITorqueConverterControl
+	{
+		
 		TorqueConverterOperatingPoint SetOperatingPoint { get; set; }
 	}
 }
