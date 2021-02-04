@@ -9,6 +9,16 @@
 	<xs:import namespace="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:DEV:v2.6" schemaLocation="VectoDeclarationDefinitions.2.6_Buses.xsd"/>
 	<xs:complexType name="AbstractCompletedVehicleAuxiliaryDataDeclarationType" abstract="true"/>
 	<xs:complexType name="AbstractCompletedVehicleComponentsDeclarationType" abstract="true"/>
+	<xs:complexType name="CompletedVehicleComponentsDeclarationType">
+		<xs:complexContent>
+			<xs:extension base="v2.8:AbstractCompletedVehicleComponentsDeclarationType">
+				<xs:sequence>
+					<xs:element name="AirDrag" type="v2.0:AirDragComponentDeclarationType" minOccurs="0"/>
+					<xs:element name="Auxiliaries" type="v2.8:CompletedVehicleAuxiliariesComponentDeclarationType"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
 	<xs:complexType name="CompletedVehicleAuxiliariesComponentDeclarationType">
 		<xs:sequence>
 			<xs:element name="Data" type="v2.8:AbstractCompletedVehicleAuxiliaryDataDeclarationType"/>
@@ -336,7 +346,7 @@
 						</xs:annotation>
 					</xs:element>
 					<xs:element name="ADAS" type="v2.3:AdvancedDriverAssistantSystemsType" minOccurs="0"/>
-					<xs:element name="Components" type="v2.8:AbstractCompletedVehicleAuxiliaryDataDeclarationType" minOccurs="0"/>
+					<xs:element name="Components" type="v2.8:AbstractCompletedVehicleComponentsDeclarationType" minOccurs="0"/>
 				</xs:sequence>
 			</xs:extension>
 		</xs:complexContent>
