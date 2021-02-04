@@ -160,7 +160,7 @@
 							<xs:documentation>P235</xs:documentation>
 						</xs:annotation>
 					</xs:element>
-					<xs:element name="ManfactuerAddress" type="v1.0:ManufacturerAddressType">
+					<xs:element name="ManufacturerAddress" type="v1.0:ManufacturerAddressType">
 						<xs:annotation>
 							<xs:documentation>P252</xs:documentation>
 						</xs:annotation>
@@ -340,7 +340,7 @@
 							<xs:documentation>P291 - enum</xs:documentation>
 						</xs:annotation>
 					</xs:element>
-					<xs:element name="StateOfCompletion" type="v2.8:StateOfCompletionType" minOccurs="0">
+					<xs:element name="StateOfCompletion" type="v2.8:StateOfCompletionType">
 						<xs:annotation>
 							<xs:documentation>P293 - enum</xs:documentation>
 						</xs:annotation>
