@@ -5,8 +5,11 @@ using TUGraz.VectoCommon.Utils;
 
 namespace TUGraz.VectoCommon.BusAuxiliaries
 {
-	public interface ISSMInputs
+	public interface ISSMInputs { }
+
+	public interface ISSMDeclarationInputs : ISSMInputs
 	{
+
 		ISSMBusParameters BusParameters { get; }
 
 		ISSMTechnologyBenefits Technologies { get; }
@@ -185,5 +188,23 @@ namespace TUGraz.VectoCommon.BusAuxiliaries
 		Watt FuelFiredHeaterPower { get; }
 		double FuelEnergyToHeatToCoolant { get; }
 		double CoolantHeatTransferredToAirCabinHeater { get; }
+	}
+
+	public interface ISSMEngineeringInputs : ISSMInputs
+	{
+		Watt ElectricPower { get; }
+
+		Watt MechanicalPower { get; }
+
+		Watt AuxHeaterPower { get; }
+
+		Joule HeatingDemand { get; }
+
+		double AuxHeaterEfficiency { get; set; }
+		
+		double FuelEnergyToHeatToCoolant { get; set; }
+		
+		double CoolantHeatTransferredToAirCabinHeater { get; set; }
+
 	}
 }

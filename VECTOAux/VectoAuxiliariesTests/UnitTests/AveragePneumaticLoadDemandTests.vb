@@ -106,7 +106,7 @@ Namespace UnitTests
                     New M03Impl(auxConfig, psCompressorMap, auxConfig.Actuations, _Signals)
 
             Dim expected As Double = 7947.684
-            Dim actual As NormLiter = target.TotalAirDemand
+            Dim actual As NormLiter = target.AverageAirConsumed * auxConfig.Actuations.CycleTime
 
             Assert.AreEqual(expected, actual.Value(), 0.000001)
         End Sub

@@ -223,10 +223,16 @@
     <Compile Include="BusAuxiliaries\Util\DeleteCell.vb" />
     <Compile Include="BusAuxiliaries\Util\DeleteColumn.vb" />
     <Compile Include="BusAuxiliaries\Util\SIConvert.vb" />
-    <Compile Include="GUI\HybridStratebyParamsForm.Designer.vb">
-      <DependentUpon>HybridStratebyParamsForm.vb</DependentUpon>
+    <Compile Include="GUI\BusAuxiliariesEngParametersForm.Designer.vb">
+      <DependentUpon>BusAuxiliariesEngParametersForm.vb</DependentUpon>
     </Compile>
-    <Compile Include="GUI\HybridStratebyParamsForm.vb">
+    <Compile Include="GUI\BusAuxiliariesEngParametersForm.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="GUI\HybridStrategyParamsForm.Designer.vb">
+      <DependentUpon>HybridStrategyParamsForm.vb</DependentUpon>
+    </Compile>
+    <Compile Include="GUI\HybridStrategyParamsForm.vb">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="GUI\BatteryForm.Designer.vb">
@@ -267,7 +273,6 @@
     <Compile Include="GUI\XMLImportJobDialog.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Input Files\AdvancedAuxiliary.vb" />
     <Compile Include="GUI\GraphForm.Designer.vb">
       <DependentUpon>GraphForm.vb</DependentUpon>
     </Compile>
@@ -321,7 +326,6 @@
     <Compile Include="Input Files\Gearbox.vb" />
     <Compile Include="Configuration.vb" />
     <Compile Include="File Browser\FileBrowser.vb" />
-    <Compile Include="AdvancedAuxiliariesModule.vb" />
     <Compile Include="File Browser\FileBrowserDialog.designer.vb">
       <DependentUpon>FileBrowserDialog.vb</DependentUpon>
     </Compile>
@@ -334,6 +338,7 @@
     <Compile Include="File Browser\FileBrowserFavoritesDialog.vb">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="Input Files\BusParamsEngineering.vb" />
     <Compile Include="Input Files\HybridStrategyParams.vb" />
     <Compile Include="Input Files\MockComponents.vb" />
     <Compile Include="Input Files\MockVehicleInputData.vb" />
@@ -417,8 +422,11 @@
     <EmbeddedResource Include="File Browser\FileBrowserFavoritesDialog.resx">
       <DependentUpon>FileBrowserFavoritesDialog.vb</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="GUI\HybridStratebyParamsForm.resx">
-      <DependentUpon>HybridStratebyParamsForm.vb</DependentUpon>
+    <EmbeddedResource Include="GUI\BusAuxiliariesEngParametersForm.resx">
+      <DependentUpon>BusAuxiliariesEngParametersForm.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GUI\HybridStrategyParamsForm.resx">
+      <DependentUpon>HybridStrategyParamsForm.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="GUI\BatteryForm.resx">
       <DependentUpon>BatteryForm.vb</DependentUpon>

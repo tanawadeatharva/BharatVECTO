@@ -214,5 +214,17 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			}
 
 		}
+
+		public static IBusAuxiliariesEngineeringData ReadEngineeringBusAuxiliaries(string filename, bool tolerateMissing = false)
+		{
+			var json = ReadFile(filename);
+			var version = ReadVersion(json);
+			switch (version) {
+				case 1:
+					return new JSONBusAuxiliariesEngineeringDataV1(json, filename, tolerateMissing);
+				default:
+					throw new VectoException("Engineering BusAuxiliaries: Unsupported FileVersion. Got {0}", version);
+			}
+		}
 	}
 }

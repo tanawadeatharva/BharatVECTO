@@ -35,12 +35,7 @@ Public Class VectoJob
                 IDeclarationJobInputData, IDriverEngineeringInputData, IDriverDeclarationInputData, IAuxiliariesEngineeringInputData,
                 IAuxiliariesDeclarationInputData, IJSONVehicleComponents, IEngineStopStartEngineeringInputData, IEcoRollEngineeringInputData, IPCCEngineeringInputData
 
-    'AA-TB
-    'STORES THE Type and version of the chosen or default Auxiliary Type ( Classic/Original or other )
-    Public AuxiliaryAssembly As String
-    Public AuxiliaryVersion As String
-    Public AdvancedAuxiliaryFilePath As String
-
+    
     Private _sFilePath As String
     Private _myPath As String
 
@@ -693,30 +688,15 @@ Public Class VectoJob
         End Get
     End Property
 
+    Public ReadOnly Property BusAuxiliariesData As IBusAuxiliariesEngineeringData Implements IAuxiliariesEngineeringInputData.BusAuxiliariesData
+    get
+            Throw new NotImplementedException
+    End Get
+    End Property
+
     Public ReadOnly Property ElectricAuxPower As Watt Implements IAuxiliariesEngineeringInputData.ElectricAuxPower
         Get
             Return AuxElPadd.SI(Of Watt)
-        End Get
-    End Property
-
-    Public ReadOnly Property IAuxiliariesEngineeringInputData_AdvancedAuxiliaryFilePath As String _
-        Implements IAuxiliariesEngineeringInputData.AdvancedAuxiliaryFilePath
-        Get
-            Return AdvancedAuxiliaryFilePath
-        End Get
-    End Property
-
-    Public ReadOnly Property IAuxiliariesEngineeringInputData_AuxiliaryVersion As String _
-        Implements IAuxiliariesEngineeringInputData.AuxiliaryVersion
-        Get
-            Return AuxiliaryVersion
-        End Get
-    End Property
-
-    Public ReadOnly Property IAuxiliariesEngineeringInputData_AuxiliaryAssembly As AuxiliaryModel _
-        Implements IAuxiliariesEngineeringInputData.AuxiliaryAssembly
-        Get
-            Return AuxiliaryModelHelper.Parse(AuxiliaryAssembly)
         End Get
     End Property
 

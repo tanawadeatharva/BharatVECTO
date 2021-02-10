@@ -31,6 +31,7 @@
 
 using System.Collections.Generic;
 using System.Data;
+using TUGraz.VectoCommon.BusAuxiliaries;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 
@@ -401,13 +402,58 @@ namespace TUGraz.VectoCommon.InputData
 	{
 		IList<IAuxiliaryEngineeringInputData> Auxiliaries { get; }
 
-		// Advanced Auxiliaries
-		AuxiliaryModel AuxiliaryAssembly { get; }
+		IBusAuxiliariesEngineeringData BusAuxiliariesData { get; }
 
-		string AuxiliaryVersion { get; }
-
-		string AdvancedAuxiliaryFilePath { get; }
 		Watt ElectricAuxPower { get; }
+	}
+
+	public interface IBusAuxiliariesEngineeringData
+	{
+
+		IBusAuxPneumaticSystemEngineeringData PneumaticSystem { get; }
+
+		IBusAuxElectricSystemEngineeringData ElectricSystem { get; }
+
+		IBusAuxHVACData HVACData { get; }
+	}
+
+	public interface IBusAuxPneumaticSystemEngineeringData
+	{
+		TableData CompressorMap { get; }
+
+		NormLiterPerSecond AverageAirConsumed { get; }
+
+		bool SmartAirCompression { get; }
+
+		double GearRatio { get; }
+	}
+
+	public interface IBusAuxElectricSystemEngineeringData
+	{
+		double AlternatorEfficiency { get; }
+
+		Ampere CurrentDemand { get; }
+
+		Ampere CurrentDemandEngineOffDriving { get; }
+
+		Ampere CurrentDemandEngineOffStandstill { get; }
+
+		bool SmartElectric { get; }
+
+		WattSecond ElectricStorageCapacity { get; }
+
+		Watt MaxAlternatorPower { get; }
+	}
+
+	public interface IBusAuxHVACData
+	{
+		Watt ElectricalPowerDemand { get; }
+
+		Watt MechanicalPowerDemand { get; }
+
+		Joule AverageHeatingDemand { get; }
+
+		Watt AuxHeaterPower { get; }
 	}
 
 	public interface IElectricMotorEngineeringInputData : IElectricMotorDeclarationInputData

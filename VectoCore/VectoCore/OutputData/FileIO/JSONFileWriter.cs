@@ -623,11 +623,6 @@ public class JSONFileWriter : IOutputFileWriter
 		body.Add("HybridStrategyParams", GetRelativePath(input.JobInputData.HybridStrategyParameters.Source, basePath));
         var aux = job.Vehicle.Components.AuxiliaryInputData;
 
-        // AA-TB
-        // ADVANCED AUXILIARIES 
-        body.Add("AuxiliaryAssembly", aux.AuxiliaryAssembly.GetName());
-        body.Add("AuxiliaryVersion", aux.AuxiliaryVersion);
-        body.Add("AdvancedAuxiliaryFilePath", GetRelativePath(aux.AdvancedAuxiliaryFilePath, basePath));
 
         var pAdd = 0.0;
 		var pAddEl = 0.0;
@@ -936,12 +931,6 @@ public class JSONFileWriter : IOutputFileWriter
 
 		var aux = job.Vehicle.Components.AuxiliaryInputData;
 
-		// AA-TB
-		// ADVANCED AUXILIARIES 
-		body.Add("AuxiliaryAssembly", aux.AuxiliaryAssembly.GetName());
-		body.Add("AuxiliaryVersion", aux.AuxiliaryVersion);
-		body.Add("AdvancedAuxiliaryFilePath", GetRelativePath(aux.AdvancedAuxiliaryFilePath, basePath));
-
 		var pAdd = 0.0;
 		var auxList = new List<object>();
 		foreach (var auxEntry in aux.Auxiliaries) {
@@ -1119,4 +1108,39 @@ public class JSONFileWriter : IOutputFileWriter
 		};
 		WriteFile(header, body, filePath);
     }
+
+	public void SaveBusAuxEngineeringParameters(IBusAuxiliariesEngineeringData busAux, string filePath, bool declMode)
+	{
+		var header = GetHeader(HybridStrategyParamsVersion);
+
+
+		var ps = new Dictionary<string, object>() {
+			{"CompressorMap", GetRelativePath(busAux.PneumaticSystem.CompressorMap.Source, Path.GetDirectoryName(filePath))},
+			{"AverageAirDemand", busAux.PneumaticSystem.AverageAirConsumed.Value()},
+			{"SmartAirCompression", busAux.PneumaticSystem.SmartAirCompression},
+			{"GearRatio", busAux.PneumaticSystem.GearRatio},
+		};
+		var es = new Dictionary<string, object>() {
+			{"AlternatorEfficiency", busAux.ElectricSystem.AlternatorEfficiency},
+			{"CurrentDemand", busAux.ElectricSystem.CurrentDemand.Value()},
+			{"CurrentDemandEngineOffDriving", busAux.ElectricSystem.CurrentDemandEngineOffDriving.Value()},
+			{"CurrentDemandEngineOffStandstill", busAux.ElectricSystem.CurrentDemandEngineOffStandstill.Value()},
+			{"SmartElectric", busAux.ElectricSystem.SmartElectric},
+			{"ElectricStorageCapacity", busAux.ElectricSystem.ElectricStorageCapacity.ConvertToWattHour().Value},
+			{ "MaxAlternatorPower", busAux.ElectricSystem.MaxAlternatorPower.Value()},
+		};
+		var hvac = new Dictionary<string, object>() {
+			{"ElectricPowerDemand", busAux.HVACData.ElectricalPowerDemand.Value()},
+			{"MechanicalPowerDemand", busAux.HVACData.MechanicalPowerDemand.Value()},
+			{"AuxHeaterPower", busAux.HVACData.AuxHeaterPower.Value()},
+			{ "AverageHeatingDemand", busAux.HVACData.AverageHeatingDemand.Value() / 1e6}
+		};
+
+		var body = new Dictionary<string, object>() {
+			{"PneumaticSystem", ps},
+			{"ElectricSystem", es},
+			{ "HVAC", hvac}
+		};
+		WriteFile(header, body, filePath);
+	}
 }

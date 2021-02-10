@@ -654,8 +654,8 @@ namespace TUGraz.VectoCore.Tests.Integration.CompletedBus
 
 		private void AssertSSMBusParameters(RelatedRun relatedRun, int currentIndex)
 		{
-			var genericBusParam = relatedRun.VectoRunDataGenericBody.BusAuxiliaries.SSMInputs.BusParameters;
-			var specificBusParam = relatedRun.VectoRunDataSpezificBody.BusAuxiliaries.SSMInputs.BusParameters;
+			var genericBusParam = (relatedRun.VectoRunDataGenericBody.BusAuxiliaries.SSMInputs as ISSMDeclarationInputs).BusParameters;
+			var specificBusParam = (relatedRun.VectoRunDataSpezificBody.BusAuxiliaries.SSMInputs as ISSMDeclarationInputs).BusParameters;
 			
 			AssertPassengerCount(genericBusParam.NumberOfPassengers, 
 				specificBusParam.NumberOfPassengers, currentIndex);
@@ -703,8 +703,8 @@ namespace TUGraz.VectoCore.Tests.Integration.CompletedBus
 
 		private void AssertTechnologyBenefits(RelatedRun relatedRun)
 		{
-			var genericTechnolgyBenefit = relatedRun.VectoRunDataGenericBody.BusAuxiliaries.SSMInputs.Technologies;
-			var specificTechnolgyBenefit = relatedRun.VectoRunDataSpezificBody.BusAuxiliaries.SSMInputs.Technologies;
+			var genericTechnolgyBenefit = (relatedRun.VectoRunDataGenericBody.BusAuxiliaries.SSMInputs as ISSMDeclarationInputs).Technologies;
+			var specificTechnolgyBenefit = (relatedRun.VectoRunDataSpezificBody.BusAuxiliaries.SSMInputs as ISSMDeclarationInputs).Technologies;
 
 			Assert.AreEqual(0.0, genericTechnolgyBenefit.CValueVariation);
 			Assert.AreEqual(0.02, genericTechnolgyBenefit.HValueVariation);
@@ -725,8 +725,8 @@ namespace TUGraz.VectoCore.Tests.Integration.CompletedBus
 
 		private void AssertBoundaryConditions(RelatedRun relatedRun)
 		{
-			var genericBound = relatedRun.VectoRunDataGenericBody.BusAuxiliaries.SSMInputs.BoundaryConditions;
-			var specificBound = relatedRun.VectoRunDataGenericBody.BusAuxiliaries.SSMInputs.BoundaryConditions;
+			var genericBound = (relatedRun.VectoRunDataGenericBody.BusAuxiliaries.SSMInputs as ISSMDeclarationInputs).BoundaryConditions;
+			var specificBound = (relatedRun.VectoRunDataGenericBody.BusAuxiliaries.SSMInputs as ISSMDeclarationInputs).BoundaryConditions;
 		
 			Assert.AreEqual(Constants.BusAuxiliaries.SteadyStateModel.GFactor, genericBound.GFactor);
 			Assert.AreEqual(genericBound.GFactor, specificBound.GFactor);
@@ -759,8 +759,8 @@ namespace TUGraz.VectoCore.Tests.Integration.CompletedBus
 
 		private void AssertEnvironmentalConditions(RelatedRun relatedRun)
 		{
-			var genericEnv = relatedRun.VectoRunDataGenericBody.BusAuxiliaries.SSMInputs.EnvironmentalConditions;
-			var specificEnv = relatedRun.VectoRunDataSpezificBody.BusAuxiliaries.SSMInputs.EnvironmentalConditions;
+			var genericEnv = (relatedRun.VectoRunDataGenericBody.BusAuxiliaries.SSMInputs as ISSMDeclarationInputs).EnvironmentalConditions;
+			var specificEnv = (relatedRun.VectoRunDataSpezificBody.BusAuxiliaries.SSMInputs as ISSMDeclarationInputs).EnvironmentalConditions;
 
 			Assert.AreEqual(Constants.BusAuxiliaries.SteadyStateModel.DefaultSolar, genericEnv.DefaultConditions.Solar);
 			Assert.AreEqual(genericEnv.DefaultConditions.Solar, specificEnv.DefaultConditions.Solar);

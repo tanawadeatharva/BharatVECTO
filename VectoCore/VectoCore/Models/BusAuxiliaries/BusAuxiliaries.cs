@@ -21,6 +21,7 @@ using TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.Pneumatics;
 using TUGraz.VectoCore.Models.BusAuxiliaries.Interfaces;
 using TUGraz.VectoCore.Models.BusAuxiliaries.Interfaces.DownstreamModules;
 using TUGraz.VectoCore.Models.BusAuxiliaries.Interfaces.DownstreamModules.Electrics;
+using TUGraz.VectoCore.Models.BusAuxiliaries.Interfaces.DownstreamModules.HVAC;
 using TUGraz.VectoCore.Models.BusAuxiliaries.Util;
 using TUGraz.VectoCore.OutputData;
 
@@ -82,8 +83,12 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries
 				throw new VectoException("Auxiliary configuration missing!");
 			}
 
-			var ssmTool = new SSMTOOL(auxConfig.SSMInputs);
-			var M14 = new M14aImpl(ssmTool);
+			if (auxConfig.SSMInputs is ISSMEngineeringInputs ssmEngineeringInputs) {
+				var M14eng = new M14bImpl(ssmEngineeringInputs);
+				return M14eng.AuxHeaterDemand(cycleTime, engineWasteHeatTotal);
+			}
+
+			var M14 = new M14aImpl(new SSMTOOL(auxConfig.SSMInputs));
 			return M14.AuxHeaterDemand(cycleTime, engineWasteHeatTotal);
 		}
 
@@ -97,7 +102,9 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries
 			// SSM HVAC
 			//var ssmPath = FilePathUtils.ResolveFilePath(vectoDirectory, auxConfig.HvacUserInputsConfig.SSMFilePath);
 			//var BusDatabase = FilePathUtils.ResolveFilePath(vectoDirectory, auxConfig.HvacUserInputsConfig.BusDatabasePath);
-			var ssmTool = new SSMTOOL(auxConfig.SSMInputs);
+			var ssmTool = auxConfig.SSMInputs is ISSMEngineeringInputs ? 
+				new SimpleSSMTool(auxConfig.SSMInputs)
+				: (ISSMPowerDemand)new SSMTOOL(auxConfig.SSMInputs);
 
 			ElectricStorage = new SimpleBattery(
 				auxCfg.ElectricalUserInputsConfig.SmartElectrical
@@ -127,8 +134,8 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries
 			//	auxConfig.ElectricalUserInputsConfig.AlternatorGearEfficiency);
 			M5 = new M05Impl_P0(M0, M1, M2, ElectricStorage, auxCfg.ElectricalUserInputsConfig, Signals);
 			M6 = new M06Impl(auxCfg.ElectricalUserInputsConfig, M1, M2, M3, M4, M5, Signals);
-			M7 = new M07Impl(
-				M0, M1, M2, M5, M6, ElectricStorage, auxCfg.ElectricalUserInputsConfig.AlternatorGearEfficiency, Signals);
+			M7 = new M07Impl(M0, M1, M2, M5, M6, ElectricStorage,
+				auxCfg.ElectricalUserInputsConfig.AlternatorGearEfficiency, Signals);
 			M8 = new M08Impl(auxConfig, M1, M6, M7, Signals);
 
 			//M9 = new M09Impl(M1, M4, M6, M8, fuelMap, auxConfig.PneumaticAuxillariesConfig, Signals);
@@ -258,15 +265,15 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries
 		}
 
 
-		public string AuxiliaryName
-		{
-			get { return "BusAuxiliaries"; }
-		}
+		//public string AuxiliaryName
+		//{
+		//	get { return "BusAuxiliaries"; }
+		//}
 
-		public string AuxiliaryVersion
-		{
-			get { return "Version 2.0 DEV"; }
-		}
+		//public string AuxiliaryVersion
+		//{
+		//	get { return "Version 2.0 DEV"; }
+		//}
 
 		public Watt AuxiliaryPowerAtCrankWatts
 		{

@@ -19,6 +19,5 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.Interfaces.DownstreamModules
 
 		NormLiterPerSecond AverageAirConsumed { get; }
 
-		NormLiter TotalAirDemand { get; }
 	}
 }

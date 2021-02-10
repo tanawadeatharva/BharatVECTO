@@ -1,6 +1,7 @@
 ﻿using System.Linq;
 using System.Text;
 using TUGraz.VectoCommon.BusAuxiliaries;
+using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Models.BusAuxiliaries.Interfaces;
@@ -11,6 +12,39 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.HVAC
 	// Used by frmHVACTool
 	// Replaces Spreadsheet model which does the same calculation
 	// Version of which appears on the form title.
+	public class SimpleSSMTool : ISSMPowerDemand
+	{
+		private ISSMEngineeringInputs _ssmInput;
+
+		public SimpleSSMTool(ISSMInputs ssmInput)
+		{
+			if (!(ssmInput is ISSMEngineeringInputs)) {
+				throw new VectoException("SSM Inputs are not in engineering mode!");
+			}
+
+			_ssmInput = ssmInput as ISSMEngineeringInputs;
+		}
+
+		#region Implementation of ISSMPowerDemand
+
+		public Watt ElectricalWAdjusted
+		{
+			get { return _ssmInput.ElectricPower; }
+		}
+		public Watt MechanicalWBaseAdjusted
+		{
+			get { return _ssmInput.MechanicalPower; }
+		}
+
+		public Watt AverageAuxHeaterPower(Watt averageUseableEngineWasteHeat)
+		{
+			throw new System.NotImplementedException();
+		}
+
+		#endregion
+	}
+
+
 	public class SSMTOOL : ISSMTOOL
 	{
 		
@@ -18,15 +52,18 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.HVAC
 		// Constructors
 		public SSMTOOL(ISSMInputs ssmInput)
 		{
+			SSMInputs = ssmInput as ISSMDeclarationInputs;
+			if (SSMInputs == null) {
+				throw new VectoException("SSM Inputs are not in declaration mode!");
+			}
 
-			SSMInputs = ssmInput; 
-			TechList = ssmInput.Technologies;
+			TechList = SSMInputs.Technologies;
 
 			Calculate = new SSMCalculate(this);
 			EngineWasteHeat = 0.SI<Watt>();
 		}
 
-		public ISSMInputs SSMInputs { get;  }
+		public ISSMDeclarationInputs SSMInputs { get;  }
 
 		public ISSMBoundaryConditions BoundaryConditions { get; set; }
 
