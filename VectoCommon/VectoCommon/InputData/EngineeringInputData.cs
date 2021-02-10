@@ -409,6 +409,7 @@ namespace TUGraz.VectoCommon.InputData
 
 	public interface IBusAuxiliariesEngineeringData
 	{
+		DataSource DataSource { get; }
 
 		IBusAuxPneumaticSystemEngineeringData PneumaticSystem { get; }
 

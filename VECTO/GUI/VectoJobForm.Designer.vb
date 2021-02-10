@@ -67,6 +67,12 @@ Partial Class VectoJobForm
         Me.ButAuxAdd = New System.Windows.Forms.Button()
         Me.tcJob = New System.Windows.Forms.TabControl()
         Me.tpAuxiliaries = New System.Windows.Forms.TabPage()
+        Me.gbBusAux = New System.Windows.Forms.GroupBox()
+        Me.cbEnableBusAux = New System.Windows.Forms.CheckBox()
+        Me.pnBusAux = New System.Windows.Forms.Panel()
+        Me.btnBusAuxP = New System.Windows.Forms.Button()
+        Me.tbBusAuxParams = New System.Windows.Forms.TextBox()
+        Me.btnBrowsBusAuxParams = New System.Windows.Forms.Button()
         Me.gbElectricAux = New System.Windows.Forms.GroupBox()
         Me.Label46 = New System.Windows.Forms.Label()
         Me.lblElAuxConstUnit = New System.Windows.Forms.Label()
@@ -183,12 +189,6 @@ Partial Class VectoJobForm
         Me.lblEngineCharacteristics = New System.Windows.Forms.Label()
         Me.lblTitle = New System.Windows.Forms.Label()
         Me.pnJobInfo = New System.Windows.Forms.Panel()
-        Me.gbBusAux = New System.Windows.Forms.GroupBox()
-        Me.pnBusAux = New System.Windows.Forms.Panel()
-        Me.btnBusAuxP = New System.Windows.Forms.Button()
-        Me.tbBusAuxParams = New System.Windows.Forms.TextBox()
-        Me.btnBrowsBusAuxParams = New System.Windows.Forms.Button()
-        Me.cbEnableBusAux = New System.Windows.Forms.CheckBox()
         Me.TabPgGen.SuspendLayout
         Me.pnHybridStrategy.SuspendLayout
         Me.pnVehicle.SuspendLayout
@@ -199,6 +199,8 @@ Partial Class VectoJobForm
         Me.GrAuxMech.SuspendLayout
         Me.tcJob.SuspendLayout
         Me.tpAuxiliaries.SuspendLayout
+        Me.gbBusAux.SuspendLayout
+        Me.pnBusAux.SuspendLayout
         Me.gbElectricAux.SuspendLayout
         Me.tpCycles.SuspendLayout
         Me.TabPgDriver.SuspendLayout
@@ -219,8 +221,6 @@ Partial Class VectoJobForm
         CType(Me.PicVehicle,System.ComponentModel.ISupportInitialize).BeginInit
         CType(Me.PicBox,System.ComponentModel.ISupportInitialize).BeginInit
         Me.pnJobInfo.SuspendLayout
-        Me.gbBusAux.SuspendLayout
-        Me.pnBusAux.SuspendLayout
         Me.SuspendLayout
         '
         'TabPgGen
@@ -648,6 +648,67 @@ Partial Class VectoJobForm
         Me.tpAuxiliaries.TabIndex = 9
         Me.tpAuxiliaries.Text = "Auxiliaries"
         Me.tpAuxiliaries.UseVisualStyleBackColor = true
+        '
+        'gbBusAux
+        '
+        Me.gbBusAux.Controls.Add(Me.cbEnableBusAux)
+        Me.gbBusAux.Controls.Add(Me.pnBusAux)
+        Me.gbBusAux.Location = New System.Drawing.Point(6, 223)
+        Me.gbBusAux.Name = "gbBusAux"
+        Me.gbBusAux.Size = New System.Drawing.Size(515, 78)
+        Me.gbBusAux.TabIndex = 11
+        Me.gbBusAux.TabStop = false
+        Me.gbBusAux.Text = "Bus Auxiliaries"
+        '
+        'cbEnableBusAux
+        '
+        Me.cbEnableBusAux.AutoSize = true
+        Me.cbEnableBusAux.Location = New System.Drawing.Point(10, 17)
+        Me.cbEnableBusAux.Name = "cbEnableBusAux"
+        Me.cbEnableBusAux.Size = New System.Drawing.Size(115, 17)
+        Me.cbEnableBusAux.TabIndex = 17
+        Me.cbEnableBusAux.Text = "Use Bus Auxiliaries"
+        Me.cbEnableBusAux.UseVisualStyleBackColor = true
+        '
+        'pnBusAux
+        '
+        Me.pnBusAux.Controls.Add(Me.btnBusAuxP)
+        Me.pnBusAux.Controls.Add(Me.tbBusAuxParams)
+        Me.pnBusAux.Controls.Add(Me.btnBrowsBusAuxParams)
+        Me.pnBusAux.Location = New System.Drawing.Point(6, 40)
+        Me.pnBusAux.Name = "pnBusAux"
+        Me.pnBusAux.Size = New System.Drawing.Size(503, 26)
+        Me.pnBusAux.TabIndex = 16
+        '
+        'btnBusAuxP
+        '
+        Me.btnBusAuxP.Location = New System.Drawing.Point(3, 3)
+        Me.btnBusAuxP.Name = "btnBusAuxP"
+        Me.btnBusAuxP.Size = New System.Drawing.Size(72, 21)
+        Me.btnBusAuxP.TabIndex = 11
+        Me.btnBusAuxP.TabStop = false
+        Me.btnBusAuxP.Text = "BusAux P."
+        Me.btnBusAuxP.UseVisualStyleBackColor = true
+        '
+        'tbBusAuxParams
+        '
+        Me.tbBusAuxParams.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left)  _
+            Or System.Windows.Forms.AnchorStyles.Right),System.Windows.Forms.AnchorStyles)
+        Me.tbBusAuxParams.Location = New System.Drawing.Point(81, 3)
+        Me.tbBusAuxParams.Name = "tbBusAuxParams"
+        Me.tbBusAuxParams.Size = New System.Drawing.Size(393, 20)
+        Me.tbBusAuxParams.TabIndex = 12
+        '
+        'btnBrowsBusAuxParams
+        '
+        Me.btnBrowsBusAuxParams.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right),System.Windows.Forms.AnchorStyles)
+        Me.btnBrowsBusAuxParams.Image = CType(resources.GetObject("btnBrowsBusAuxParams.Image"),System.Drawing.Image)
+        Me.btnBrowsBusAuxParams.Location = New System.Drawing.Point(476, 1)
+        Me.btnBrowsBusAuxParams.Name = "btnBrowsBusAuxParams"
+        Me.btnBrowsBusAuxParams.Size = New System.Drawing.Size(24, 24)
+        Me.btnBrowsBusAuxParams.TabIndex = 13
+        Me.btnBrowsBusAuxParams.TabStop = false
+        Me.btnBrowsBusAuxParams.UseVisualStyleBackColor = true
         '
         'gbElectricAux
         '
@@ -1749,67 +1810,6 @@ Partial Class VectoJobForm
         Me.pnJobInfo.Size = New System.Drawing.Size(397, 471)
         Me.pnJobInfo.TabIndex = 39
         '
-        'gbBusAux
-        '
-        Me.gbBusAux.Controls.Add(Me.cbEnableBusAux)
-        Me.gbBusAux.Controls.Add(Me.pnBusAux)
-        Me.gbBusAux.Location = New System.Drawing.Point(6, 223)
-        Me.gbBusAux.Name = "gbBusAux"
-        Me.gbBusAux.Size = New System.Drawing.Size(515, 78)
-        Me.gbBusAux.TabIndex = 11
-        Me.gbBusAux.TabStop = false
-        Me.gbBusAux.Text = "Bus Auxiliaries"
-        '
-        'pnBusAux
-        '
-        Me.pnBusAux.Controls.Add(Me.btnBusAuxP)
-        Me.pnBusAux.Controls.Add(Me.tbBusAuxParams)
-        Me.pnBusAux.Controls.Add(Me.btnBrowsBusAuxParams)
-        Me.pnBusAux.Location = New System.Drawing.Point(6, 40)
-        Me.pnBusAux.Name = "pnBusAux"
-        Me.pnBusAux.Size = New System.Drawing.Size(503, 26)
-        Me.pnBusAux.TabIndex = 16
-        '
-        'btnBusAuxP
-        '
-        Me.btnBusAuxP.Location = New System.Drawing.Point(3, 3)
-        Me.btnBusAuxP.Name = "btnBusAuxP"
-        Me.btnBusAuxP.Size = New System.Drawing.Size(72, 21)
-        Me.btnBusAuxP.TabIndex = 11
-        Me.btnBusAuxP.TabStop = false
-        Me.btnBusAuxP.Text = "BusAux P."
-        Me.btnBusAuxP.UseVisualStyleBackColor = true
-        '
-        'tbBusAuxParams
-        '
-        Me.tbBusAuxParams.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left)  _
-            Or System.Windows.Forms.AnchorStyles.Right),System.Windows.Forms.AnchorStyles)
-        Me.tbBusAuxParams.Location = New System.Drawing.Point(81, 3)
-        Me.tbBusAuxParams.Name = "tbBusAuxParams"
-        Me.tbBusAuxParams.Size = New System.Drawing.Size(393, 20)
-        Me.tbBusAuxParams.TabIndex = 12
-        '
-        'btnBrowsBusAuxParams
-        '
-        Me.btnBrowsBusAuxParams.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right),System.Windows.Forms.AnchorStyles)
-        Me.btnBrowsBusAuxParams.Image = CType(resources.GetObject("btnBrowsBusAuxParams.Image"),System.Drawing.Image)
-        Me.btnBrowsBusAuxParams.Location = New System.Drawing.Point(476, 1)
-        Me.btnBrowsBusAuxParams.Name = "btnBrowsBusAuxParams"
-        Me.btnBrowsBusAuxParams.Size = New System.Drawing.Size(24, 24)
-        Me.btnBrowsBusAuxParams.TabIndex = 13
-        Me.btnBrowsBusAuxParams.TabStop = false
-        Me.btnBrowsBusAuxParams.UseVisualStyleBackColor = true
-        '
-        'cbEnableBusAux
-        '
-        Me.cbEnableBusAux.AutoSize = true
-        Me.cbEnableBusAux.Location = New System.Drawing.Point(10, 17)
-        Me.cbEnableBusAux.Name = "cbEnableBusAux"
-        Me.cbEnableBusAux.Size = New System.Drawing.Size(115, 17)
-        Me.cbEnableBusAux.TabIndex = 17
-        Me.cbEnableBusAux.Text = "Use Bus Auxiliaries"
-        Me.cbEnableBusAux.UseVisualStyleBackColor = true
-        '
         'VectoJobForm
         '
         Me.AcceptButton = Me.ButOK
@@ -1848,6 +1848,10 @@ Partial Class VectoJobForm
         Me.GrAuxMech.PerformLayout
         Me.tcJob.ResumeLayout(false)
         Me.tpAuxiliaries.ResumeLayout(false)
+        Me.gbBusAux.ResumeLayout(false)
+        Me.gbBusAux.PerformLayout
+        Me.pnBusAux.ResumeLayout(false)
+        Me.pnBusAux.PerformLayout
         Me.gbElectricAux.ResumeLayout(false)
         Me.gbElectricAux.PerformLayout
         Me.tpCycles.ResumeLayout(false)
@@ -1880,10 +1884,6 @@ Partial Class VectoJobForm
         CType(Me.PicBox,System.ComponentModel.ISupportInitialize).EndInit
         Me.pnJobInfo.ResumeLayout(false)
         Me.pnJobInfo.PerformLayout
-        Me.gbBusAux.ResumeLayout(false)
-        Me.gbBusAux.PerformLayout
-        Me.pnBusAux.ResumeLayout(false)
-        Me.pnBusAux.PerformLayout
         Me.ResumeLayout(false)
         Me.PerformLayout
 

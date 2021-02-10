@@ -153,14 +153,10 @@ Public Class BusAuxiliariesEngParametersForm
 
     'Open VENG file
     Public Sub OpenBusAuxParametersFile(file As String)
-        Dim strategyParams As IHybridStrategyParameters
 
         If ChangeCheckCancel() Then Exit Sub
 
-        Dim inputData As IEngineeringInputDataProvider = TryCast(JSONInputDataFactory.ReadComponentData(file),
-                                                                IEngineeringInputDataProvider)
-
-        strategyParams = inputData.JobInputData.HybridStrategyParameters
+        Dim inputData As IBusAuxiliariesEngineeringData = JSONInputDataFactory.ReadEngineeringBusAuxiliaries(file)
 
         If Cfg.DeclMode Then
             Select Case WrongMode()
@@ -175,20 +171,30 @@ Public Class BusAuxiliariesEngParametersForm
 
         Dim basePath As String = Path.GetDirectoryName(file)
 
-        'tbEquivalenceFactorDischarge.Text = strategyParams.EquivalenceFactorDischarge.ToGUIFormat()
 
-        'tbEquivalenceFactorDischarge.Text = strategyParams.EquivalenceFactorDischarge.ToGUIFormat()
-        'tbMinSoC.Text = (strategyParams.MinSoC * 100).ToGUIFormat()
-        'tbMaxSoC.Text = (strategyParams.MaxSoC * 100).ToGUIFormat()
-        'tbTargetSoC.Text = (strategyParams.TargetSoC * 100).ToGUIFormat()
+        tbAlternatorEfficiency.Text = inputData.ElectricSystem.AlternatorEfficiency.ToGUIFormat()
+        tbCurrentDemand.Text = inputData.ElectricSystem.CurrentDemand.ToGUIFormat()
+        tbCurrentDemandEngineOffDriving.Text = inputData.ElectricSystem.CurrentDemandEngineOffDriving.ToGUIFormat()
+        tbCurrentDemandEngineOffStandstill.Text = inputData.ElectricSystem.CurrentDemandEngineOffStandstill.ToGUIFormat()
+        cbSmartElectric.Checked  = inputData.ElectricSystem.SmartElectric
+        tbMaxAlternatorPower.Text = inputData.ElectricSystem.MaxAlternatorPower.ToGUIFormat()
+        tbElectricStorageCapacity.Text = inputData.ElectricSystem.ElectricStorageCapacity.ConvertToWattHour().Value.ToGUIFormat()
 
-        'tbAuxBufferChargeTime.Text = strategyParams.AuxBufferChargeTime.ToGUIFormat()
-        'tbauxBufferTime.Text = strategyParams.AuxBufferTime.ToGUIFormat()
-        'tbMinICEOnTime.Text = strategyParams.MinimumICEOnTime.ToGUIFormat()
+        tbCompressorMap.Text = GetRelativePath(inputData.PneumaticSystem.CompressorMap.Source, basePath)
+        tbAverageAirDemand.Text = inputData.PneumaticSystem.AverageAirConsumed.ToGUIFormat()
+        tbCompressorRatio.Text = inputData.PneumaticSystem.GearRatio.ToGUIFormat()
+        cbSmartCompressor.Checked = inputData.PneumaticSystem.SmartAirCompression
+
+        tbHvacElectricPowerDemand.Text = inputData.HVACData.ElectricalPowerDemand.ToGUIFormat()
+        tbHvacMechPowerDemand.Text = inputData.HVACData.MechanicalPowerDemand.ToGUIFormat()
+        tbHvacAuxHeaterPwr.Text = inputData.HVACData.AuxHeaterPower.ToGUIFormat()
+        tbHvacHeatingDemand.Text = (inputData.HVACData.AverageHeatingDemand.Value() / 1e6).ToGUIFormat()
+
+        pnSmartElectricParams.Enabled = inputData.ElectricSystem.SmartElectric
 
         DeclInit()
 
-        REESSFileBrowser.UpdateHistory(file)
+       
         Text = GetFilenameWithoutPath(file, True)
         LbStatus.Text = ""
         _busAuxParamsFile = file
@@ -212,30 +218,37 @@ Public Class BusAuxiliariesEngParametersForm
     'Save VENG file to given filepath. Called by SaveOrSaveAs. 
     Private Function SaveParamsToFile(ByVal file As String) As Boolean
 
-        Dim strategyParams As HybridStrategyParams = New HybridStrategyParams
-        strategyParams.FilePath = file
+        Dim busAuxParams As BusAuxEngineeringParams = New BusAuxEngineeringParams
+        busAuxParams.FilePath = file
 
 
-        strategyParams.EquivalenceFactorDischarge = tbEquivalenceFactorDischarge.Text.ToDouble(0)
-        strategyParams.EquivalenceFactorCharge = tbEquivalenceFactorCharge.Text.ToDouble(0)
+        busAuxParams.AlternatorEfficiency = tbAlternatorEfficiency.Text.ToDouble(0)
+        busAuxParams.CurrentDemandEngineOn = tbCurrentDemand.Text.ToDouble(0)
+        busAuxParams.CurrentDemandEngineOffDriving = tbCurrentDemandEngineOffDriving.Text.ToDouble(0)
+        busAuxParams.CurrentDemandEngineOffStandstill = tbCurrentDemandEngineOffStandstill.Text.ToDouble(0)
+        busAuxParams.SmartElectric = cbSmartElectric.Checked
+        busAuxParams.MaxAlternatorPower = tbMaxAlternatorPower.Text.ToDouble(0)
+        busAuxParams.ElectricStorageCapacity = tbElectricStorageCapacity.Text.ToDouble(0)
 
-        strategyParams.MinSoC = tbMinSoC.Text.ToDouble(0) / 100
-        strategyParams.MaxSoC = tbMaxSoC.Text.ToDouble(0) / 100
-        strategyParams.TargetSoC = tbTargetSoC.Text.ToDouble(0) / 100
+        busAuxParams.PathCompressorMap = tbCompressorMap.Text
+        busAuxParams.AverageAirDemand = tbAverageAirDemand.Text.ToDouble(0)
+        busAuxParams.GearRatio = tbCompressorRatio.Text.ToDouble(0)
+        busAuxParams.SmartCompression = cbSmartCompressor.Checked
 
-        strategyParams.MinimumIceOnTime = tbMinICEOnTime.Text.ToDouble(0)
-        strategyParams.AuxiliaryBufferTime = tbauxBufferTime.Text.ToDouble(0)
-        strategyParams.AuxiliaryBufferChgTime = tbAuxBufferChargeTime.Text.ToDouble(0)
+        busAuxParams.ElectricPowerDemand = tbHvacElectricPowerDemand.Text.ToDouble(0)
+        busAuxParams.MechanicalPowerDemand = tbHvacMechPowerDemand.Text.ToDouble(0)
+        busAuxParams.AuxHeaterPower = tbHvacAuxHeaterPwr.Text.ToDouble(0)
+        busAuxParams.AverageHeatingDemand = tbHvacHeatingDemand.Text.ToDouble(0)
 
-        If Not strategyParams.SaveFile Then
+        If Not busAuxParams.SaveFile Then
             MsgBox("Cannot save to " & file, MsgBoxStyle.Critical)
             Return False
         End If
 
         If AutoSendTo Then
             If VectoJobForm.Visible Then
-                If UCase(FileRepl(VectoJobForm.tbHybridStrategyParams.Text, JobDir)) <> UCase(file) Then _
-                    VectoJobForm.tbHybridStrategyParams.Text = GetFilenameWithoutDirectory(file, JobDir)
+                If UCase(FileRepl(VectoJobForm.tbBusAuxParams.Text, JobDir)) <> UCase(file) Then _
+                    VectoJobForm.tbBusAuxParams.Text = GetFilenameWithoutDirectory(file, JobDir)
                 VectoJobForm.UpdatePic()
             End If
         End If
@@ -355,6 +368,10 @@ Public Class BusAuxiliariesEngParametersForm
 
     Private Sub tbEquivalenceFactor_TextChanged(sender As Object, e As EventArgs) 
         Change()
+    End Sub
+
+    Private Sub cbSmartElectric_CheckedChanged(sender As Object, e As EventArgs) Handles cbSmartElectric.CheckedChanged
+        pnSmartElectricParams.Enabled = cbSmartElectric.Checked
     End Sub
 
 #End Region

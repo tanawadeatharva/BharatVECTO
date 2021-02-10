@@ -3,29 +3,53 @@ Imports System.ComponentModel.DataAnnotations
 Imports System.IO
 Imports System.Linq
 Imports TUGraz.VECTO.Input_Files
+Imports TUGraz.VectoCommon.Exceptions
 Imports TUGraz.VectoCommon.InputData
 Imports TUGraz.VectoCommon.Models
 Imports TUGraz.VectoCommon.Utils
+Imports TUGraz.VectoCore.Utils
 
-Public Class HybridStrategyParams
-    Implements IHybridStrategyParameters
+Public Class BusAuxEngineeringParams
+    Implements IBusAuxiliariesEngineeringData, 
+               IBusAuxPneumaticSystemEngineeringData, 
+               IBusAuxElectricSystemEngineeringData,
+               IBusAuxHVACData
 
     Private _filePath As String
     Private _myPath As String
-    Public MinimumIceOnTime As Double
+
+    public  CurrentDemandEngineOn as double
+    public  CurrentDemandEngineOffDriving as double
+    public  CurrentDemandEngineOffStandstill as double
+
+    public  AlternatorEfficiency as double
+    public  MaxAlternatorPower as double
+    public  ElectricStorageCapacity as double
+    public SmartElectric As Boolean
+
+    public CompressorMap as SubPath
+    public AverageAirDemand as Double
+    public GearRatio As Double
+    public SmartCompression as Boolean
+
+    public ElectricPowerDemand as Double
+    public MechanicalPowerDemand As Double
+    public AuxHeaterPower As Double
+    public AverageHeatingDemand As Double
+
 
     Public Sub New()
         _myPath = ""
         _filePath = ""
 
-
+        CompressorMap = new SubPath()
 
 
         SetDefault()
     End Sub
 
     Private Sub SetDefault()
-
+        CompressorMap.Clear()
     End Sub
 
     Public Function SaveFile() As Boolean
@@ -43,7 +67,7 @@ Public Class HybridStrategyParams
 
         Try
             Dim writer As JSONFileWriter = New JSONFileWriter()
-            writer.SaveStrategyParameters(Me, _filePath, Cfg.DeclMode)
+            writer.SaveBusAuxEngineeringParameters(Me, _filePath, Cfg.DeclMode)
 
         Catch ex As Exception
             MsgBox("Faled to write Strategy Parameters file: " + ex.Message)
@@ -66,64 +90,131 @@ Public Class HybridStrategyParams
         End Set
     End Property
 
-
-    Public Property EquivalenceFactorCharge As Double Implements IHybridStrategyParameters.EquivalenceFactorCharge
-    
-
-    Public  Property EquivalenceFactorDischarge As Double Implements IHybridStrategyParameters.EquivalenceFactorDischarge
-        
-
-    Public Property MinSoC As Double
-
-    Public Property MaxSoC As Double
-
-    Public Property TargetSoC As Double
-
-    Public ReadOnly Property Source As String Implements IHybridStrategyParameters.Source
+    Public Property PathCompressorMap(Optional ByVal original As Boolean = False) As String
         Get
-            Return FilePath
+            If original Then
+                Return CompressorMap.OriginalPath
+            Else
+                Return CompressorMap.FullPath
+            End If
         End Get
+        Set(ByVal value As String)
+            CompressorMap.Init(_myPath, value)
+        End Set
     End Property
 
-    Public ReadOnly Property MinICEOnTime As Second Implements IHybridStrategyParameters.MinimumICEOnTime
-        Get
-            Return MinimumICEOnTime.SI(of Second)
-        End Get
+    Public ReadOnly Property DataSource As DataSource Implements IBusAuxiliariesEngineeringData.DataSource
+    get
+        Return new DataSource() With{ .SourceFile = FilePath }
+    End Get
     End Property
 
-    Public ReadOnly Property AuxBufferTime As Second Implements IHybridStrategyParameters.AuxBufferTime
-        Get
-            Return AuxiliaryBufferTime.SI(Of Second)
-        End Get
+    Public ReadOnly Property PneumaticSystem As IBusAuxPneumaticSystemEngineeringData Implements IBusAuxiliariesEngineeringData.PneumaticSystem
+    get
+        return me
+    End Get
     End Property
 
-    Public ReadOnly Property AuxBufferChargeTime As Second Implements IHybridStrategyParameters.AuxBufferChargeTime
-        Get
-            Return AuxiliaryBufferChgTime.SI(of Second)
-        End Get
+    Public ReadOnly Property ElectricSystem As IBusAuxElectricSystemEngineeringData Implements IBusAuxiliariesEngineeringData.ElectricSystem
+    get
+        Return me
+    End Get
     End Property
 
-    Public Property AuxiliaryBufferTime As Double
-
-    Public Property AuxiliaryBufferChgTime As Double
-
-
-
-    Private ReadOnly Property IHybridStrategyParameters_MinSoC As Double Implements IHybridStrategyParameters.MinSoC
-        Get
-            Return MinSoC
-        End Get
+    Public ReadOnly Property HVACData As IBusAuxHVACData Implements IBusAuxiliariesEngineeringData.HVACData
+    get
+        Return me
+    End Get
     End Property
 
-    Private ReadOnly Property IHybridStrategyParameters_MaxSoC As Double Implements IHybridStrategyParameters.MaxSoC
-        Get
-            Return MaxSoC
-        End Get
+    Public ReadOnly Property PS_CompressorMap As TableData Implements IBusAuxPneumaticSystemEngineeringData.CompressorMap
+    get
+        if Not file.Exists(CompressorMap.FullPath) Then
+             Throw new VectoException("Compressor Map is missing or invalid")               
+        End If
+        Return VectoCSVFile.Read(CompressorMap.FullPath)
+    End Get
+    End Property
+    Public ReadOnly Property PS_AverageAirConsumed As NormLiterPerSecond Implements IBusAuxPneumaticSystemEngineeringData.AverageAirConsumed
+    get
+        Return AverageAirDemand.SI(Of NormLiterPerSecond)
+    End Get
     End Property
 
-    Private ReadOnly Property IHybridStrategyParameters_TargetSoC As Double Implements IHybridStrategyParameters.TargetSoC
-        Get
-            Return TargetSoC
-        End Get
+    Public ReadOnly Property PS_SmartAirCompression As Boolean Implements IBusAuxPneumaticSystemEngineeringData.SmartAirCompression
+    get
+            Return SmartCompression
+    End Get
+    End Property
+
+    Public ReadOnly Property PS_GearRatio As Double Implements IBusAuxPneumaticSystemEngineeringData.GearRatio
+    get
+            Return GearRatio
+    End Get
+    End Property
+
+    Public ReadOnly Property ES_AlternatorEfficiency As Double Implements IBusAuxElectricSystemEngineeringData.AlternatorEfficiency
+    get
+            Return AlternatorEfficiency
+    End Get
+    End Property
+
+    Public ReadOnly Property ES_CurrentDemand As Ampere Implements IBusAuxElectricSystemEngineeringData.CurrentDemand
+    get
+            return CurrentDemandEngineOn.SI(of Ampere)
+    End Get
+    End Property
+
+    Public ReadOnly Property ES_SmartElectric As Boolean Implements IBusAuxElectricSystemEngineeringData.SmartElectric
+    get
+            Return SmartElectric
+    End Get
+    End Property
+
+    Public ReadOnly Property ES_MaxAlternatorPower As Watt Implements IBusAuxElectricSystemEngineeringData.MaxAlternatorPower
+    get
+        Return MaxAlternatorPower.SI(of Watt)
+    End Get
+    End Property
+
+    Public ReadOnly Property ES_ElectricStorageCapacity As WattSecond Implements IBusAuxElectricSystemEngineeringData.ElectricStorageCapacity
+    get
+        Return ElectricStorageCapacity.SI(Unit.SI.Watt.Hour).Cast(Of WattSecond)
+    End Get
+    End Property
+
+    Public ReadOnly Property ES_CurrentDemandEngineOffStandstill As Ampere Implements IBusAuxElectricSystemEngineeringData.CurrentDemandEngineOffStandstill
+    get
+            Return CurrentDemandEngineOffStandstill.SI(of Ampere)
+    End Get
+    End Property
+
+    Public ReadOnly Property ES_CurrentDemandEngineOffDriving As Ampere Implements IBusAuxElectricSystemEngineeringData.CurrentDemandEngineOffDriving
+    get
+            Return CurrentDemandEngineOffDriving.SI(of Ampere)
+    End Get
+    End Property
+
+    Public ReadOnly Property HVAC_ElectricalPowerDemand As Watt Implements IBusAuxHVACData.ElectricalPowerDemand
+    get
+            Return ElectricPowerDemand.SI(of Watt)
+    End Get
+    End Property
+
+    Public ReadOnly Property HVAC_MechanicalPowerDemand As Watt Implements IBusAuxHVACData.MechanicalPowerDemand
+    get
+            Return MechanicalPowerDemand.SI(of Watt)
+    End Get
+    End Property
+
+    Public ReadOnly Property HVAC_AverageHeatingDemand As Joule Implements IBusAuxHVACData.AverageHeatingDemand
+    get
+            Return AverageHeatingDemand.SI(unit.SI.Mega.Joule).Cast(of Joule)
+    End Get
+    End Property
+    Public ReadOnly Property HVAC_AuxHeaterPower As Watt Implements IBusAuxHVACData.AuxHeaterPower
+    get
+        Return AuxHeaterPower.SI(of Watt)
+    End Get
     End Property
 End Class

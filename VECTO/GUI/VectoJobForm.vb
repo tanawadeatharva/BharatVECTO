@@ -72,6 +72,7 @@ Public Class VectoJobForm
 			LvAux.Columns(AuxViewColumns.AuxInputOrTech).Text = "Input File"
 		End If
 		TbAuxPAdd.Enabled = Not Cfg.DeclMode
+        gbBusAux.Enabled = Not cfg.DeclMode
 
         'CbEngOnly.Enabled = Not Cfg.DeclMode
         GrCycles.Enabled = Not Cfg.DeclMode
@@ -584,6 +585,14 @@ Public Class VectoJobForm
         End If
         If (Not inputData.JobInputData.ShiftStrategy Is Nothing) Then
             cbGearshiftStrategy.SelectedValue = inputData.JobInputData.ShiftStrategy
+        End If
+
+        if (Not inputData.JobInputData.Vehicle.Components.AuxiliaryInputData.BusAuxiliariesData Is nothing) Then
+            cbEnableBusAux.Checked = True
+            tbBusAuxParams.Text = GetRelativePath(inputData.JobInputData.Vehicle.Components.AuxiliaryInputData.BusAuxiliariesData.DataSource.SourceFile, _basePath)
+        Else 
+            cbEnableBusAux.Checked = False
+            tbBusAuxParams.Text = ""
         End If
 
         DeclInit()
@@ -1529,7 +1538,7 @@ lbDlog:
         Try
             If Not Trim(f) = "" Then HybridStrategyParamsForm.OpenHybridStrategyParametersFile(f)
         Catch ex As Exception
-            MsgBox("Failed to open Gearbox File: " + ex.Message)
+            MsgBox("Failed to open Hybrid strategy parameters File: " + ex.Message)
         End Try
 
     End Sub
@@ -1538,6 +1547,51 @@ lbDlog:
         pnBusAux.Enabled = not Cfg.DeclMode AndAlso cbEnableBusAux.Checked
     End Sub
 
+    Private Sub btnBusAuxP_Click(sender As Object, e As EventArgs) Handles btnBusAuxP.Click 
+        Dim f As String
+        f = FileRepl(tbBusAuxParams.Text, GetPath(VectoFile))
+
+        'Thus Veh-file is returned
+        BusAuxiliariesEngParametersForm.JobDir = GetPath(VectoFile)
+        BusAuxiliariesEngParametersForm.AutoSendTo = True
+
+        If Not Trim(f) = "" Then
+            If Not File.Exists(f) Then
+                MsgBox("File not found!")
+                Exit Sub
+            End If
+        End If
+
+        If Not BusAuxiliariesEngParametersForm.Visible Then
+            BusAuxiliariesEngParametersForm.Show()
+        Else
+            If BusAuxiliariesEngParametersForm.WindowState = FormWindowState.Minimized Then BusAuxiliariesEngParametersForm.WindowState = FormWindowState.Normal
+            BusAuxiliariesEngParametersForm.BringToFront()
+        End If
+        Dim vehicleType As VehicleCategory
+        Try
+            If Not Trim(f) = "" Then
+                Dim vehInput As IVehicleDeclarationInputData =
+                        CType(JSONInputDataFactory.ReadComponentData(FileRepl(TbVEH.Text, GetPath(VectoFile))),
+                              IEngineeringInputDataProvider).JobInputData.Vehicle
+                vehicleType = vehInput.VehicleCategory
+            End If
+
+        Catch ex As Exception
+            vehicleType = VehicleCategory.RigidTruck
+        End Try
+        Try
+            If Not Trim(f) = "" Then BusAuxiliariesEngParametersForm.OpenBusAuxParametersFile(f)
+        Catch ex As Exception
+            MsgBox("Failed to open Gearbox File: " + ex.Message)
+        End Try
+    End Sub
+
+    Private Sub btnBrowsBusAuxParams_Click(sender As Object, e As EventArgs) Handles btnBrowsBusAuxParams.Click
+        If BusAuxFileBrowser.OpenDialog(FileRepl(tbBusAuxParams.Text, GetPath(VectoFile))) Then
+            tbBusAuxParams.Text = GetFilenameWithoutDirectory(BusAuxFileBrowser.Files(0), GetPath(VectoFile))
+        End If
+    End Sub
 End Class
 
 
