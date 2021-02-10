@@ -16,45 +16,42 @@
 		</xs:annotation>
 		<xs:complexType>
 			<xs:sequence>
-				<xs:element name="PrimaryVehicle" type="vif:PrimaryVehicleHeavyBusDataType"/>
-				<xs:element name="ManufacturingStage" type="vif:ManufacturingStageType" maxOccurs="unbounded"/>
+				<xs:element name="PrimaryVehicle" type="vif:PrimaryVehicleType"/>
+				<xs:element name="ManufacturingStage" type="vif:ManufacturingStageType" minOccurs="0" maxOccurs="unbounded"/>
 			</xs:sequence>
 		</xs:complexType>
 	</xs:element>
-	<xs:complexType name="AbstractManufacturingStageDataType" abstract="true"/>
-	<xs:complexType name="ManufacturingStageDataType">
+	<xs:complexType name="AbstractManufacturingStageDataType" abstract="true">
+		<xs:attribute name="id" type="xs:NCName" use="required"/>
+	</xs:complexType>
+	<xs:complexType name="BusManufacturingStageDataType">
 		<xs:complexContent>
 			<xs:extension base="vif:AbstractManufacturingStageDataType">
 				<xs:sequence>
-					<xs:element name="Data">
-						<xs:complexType>
-							<xs:sequence>
-								<xs:element name="HashPreviousStage" type="v1.0:SignatureType"/>
-								<xs:element name="Vehicle" type="v2.8:VectoStageInputType"/>
-								<xs:element name="ApplicationInformation" type="v0.1:ApplicationInformationPIFType"/>
-							</xs:sequence>
-						</xs:complexType>
-					</xs:element>
-					<xs:element name="Signature" type="v1.0:SignatureType"/>
+					<xs:element name="HashPreviousStage" type="v1.0:SignatureType"/>
+					<xs:element name="Vehicle" type="v2.8:AbstractCompletedBusVehicleType"/>
+					<xs:element name="ApplicationInformation" type="v0.1:ApplicationInformationPIFType"/>
 				</xs:sequence>
-				<xs:attribute name="stageCount" use="required">
-					<xs:simpleType>
-						<xs:restriction base="xs:int">
-							<xs:minInclusive value="2"/>
-						</xs:restriction>
-					</xs:simpleType>
-				</xs:attribute>
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
 	<xs:complexType name="ManufacturingStageType">
 		<xs:sequence>
 			<xs:element name="Data" type="vif:AbstractManufacturingStageDataType"/>
+			<xs:element name="Signature" type="v1.0:SignatureType"/>
 		</xs:sequence>
+		<xs:attribute name="stageCount" use="required">
+			<xs:simpleType>
+				<xs:restriction base="xs:int">
+					<xs:minInclusive value="2"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
 	</xs:complexType>
-	<xs:complexType name="PrimaryVehicleHeavyBusDataType">
+	<xs:complexType name="PrimaryVehicleType">
 		<xs:sequence>
-			<xs:element name="Data" type="v0.1:PrimaryVehicleHeavyBusDataType"/>
+			<xs:element name="Data" type="v0.1:PrimaryVehicleDataType"/>
+			<xs:element name="Signature" type="v1.0:SignatureType"/>
 		</xs:sequence>
 	</xs:complexType>
 </xs:schema>

@@ -153,7 +153,7 @@
 			<xs:documentation>Exempted vehicle stage input parts</xs:documentation>
 		</xs:annotation>
 		<xs:complexContent>
-			<xs:extension base="v2.0:AbstractVehicleDeclarationType">
+			<xs:extension base="v2.8:AbstractCompletedBusVehicleType">
 				<xs:sequence>
 					<xs:element name="Manufacturer" type="v1.0:ManufacturerType">
 						<xs:annotation>
@@ -236,7 +236,7 @@
 			<xs:documentation>Vehicle stage input parts</xs:documentation>
 		</xs:annotation>
 		<xs:complexContent>
-			<xs:extension base="v2.0:AbstractVehicleDeclarationType">
+			<xs:extension base="v2.8:AbstractCompletedBusVehicleType">
 				<xs:sequence>
 					<xs:element name="Manufacturer" type="v1.0:ManufacturerType">
 						<xs:annotation>
@@ -459,6 +459,11 @@
 	<xs:complexType name="AirDragModifiedUseStandardValueType">
 		<xs:complexContent>
 			<xs:extension base="v1.0:AbstractAirdragDataDeclarationType"/>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="AbstractCompletedBusVehicleType" abstract="true">
+		<xs:complexContent>
+			<xs:extension base="v2.0:AbstractVehicleDeclarationType"/>
 		</xs:complexContent>
 	</xs:complexType>
 </xs:schema>
