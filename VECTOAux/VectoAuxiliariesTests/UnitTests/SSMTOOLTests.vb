@@ -91,7 +91,7 @@ Namespace UnitTests
             Dim auxInput as IBusAuxiliariesDeclarationData = nothing
 
             Dim dao = New DeclarationDataAdapterCompletedBusGeneric()
-            Dim target As ISSMInputs = dao.CreateSSMModelParameters(auxInput, mission, FuelData.Diesel, LoadingType.ReferenceLoad)
+            Dim target As ISSMDeclarationInputs = dao.CreateSSMModelParameters(auxInput, mission, FuelData.Diesel, LoadingType.ReferenceLoad)
 
             If section = "BusParameterisation" Then
                 'BUS Parameterisation
@@ -179,7 +179,7 @@ Namespace UnitTests
         Public Sub Instantiate_TechListTest()
 
 
-            Dim gen As ISSMInputs = New SSMInputs(Nothing)
+            Dim gen As ISSMDeclarationInputs = New SSMInputs(Nothing)
 
             'Dim target As ISSMTechList = New SSMTechList(gen.BusParameters.BusFloorType)
             'target.TechLines = SSMTechnologiesReader.ReadFromFile(GOODTechList).Items
@@ -192,7 +192,7 @@ Namespace UnitTests
         Public Sub Instantiate_TechListTestALLON()
 
 
-            Dim gen As ISSMInputs = New SSMInputs(Nothing)
+            Dim gen As ISSMDeclarationInputs = New SSMInputs(Nothing)
 
             'Dim target As ISSMTechList = New SSMTechList(gen.BusParameters.BusFloorType)
             'target.TechLines = SSMTechnologiesReader.ReadFromFile(GOODTechListALLON).Items
@@ -220,7 +220,7 @@ Namespace UnitTests
         Public Sub Instantiate_TechListTestEMPTYList()
 
 
-            Dim gen As ISSMInputs = New SSMInputs(Nothing)
+            Dim gen As ISSMDeclarationInputs = New SSMInputs(Nothing)
 
             'Dim target As ISSMTechList = New SSMTechList(gen.BusParameters.BusFloorType)
             'target.TechLines = SSMTechnologiesReader.ReadFromFile(GOODTechListEMPTYLIST).Items
@@ -234,7 +234,7 @@ Namespace UnitTests
         Public Sub Instantiate_TechListTestEMPTYListADD1()
 
 
-            Dim gen As ISSMInputs = New SSMInputs(Nothing)
+            Dim gen As ISSMDeclarationInputs = New SSMInputs(Nothing)
 
             'Dim target As ISSMTechList = New SSMTechList(gen.BusParameters.BusFloorType)
             'target.TechLines = SSMTechnologiesReader.ReadFromFile(GOODTechListEMPTYLIST).Items
@@ -275,7 +275,7 @@ Namespace UnitTests
         Public Sub Instantiate_TechListTestEMPTYListADD1Duplicate()
 
 
-            Dim gen As ISSMInputs = New SSMInputs(Nothing)
+            Dim gen As ISSMDeclarationInputs = New SSMInputs(Nothing)
 
             'Dim target As ISSMTechList = New SSMTechList(gen.BusParameters.BusFloorType)
             'target.TechLines = SSMTechnologiesReader.ReadFromFile(GOODTechListEMPTYLIST).Items
@@ -317,7 +317,7 @@ Namespace UnitTests
         Public Sub Instantiate_TechListTestEMPTYListADD1AndClear()
 
 
-            Dim gen As ISSMInputs = New SSMInputs(Nothing)
+            Dim gen As ISSMDeclarationInputs = New SSMInputs(Nothing)
 
             'Dim target As ISSMTechList = New SSMTechList(gen.BusParameters.BusFloorType)
             'target.TechLines = SSMTechnologiesReader.ReadFromFile(GOODTechListEMPTYLIST).Items
@@ -359,7 +359,7 @@ Namespace UnitTests
         Public Sub Instantiate_TechListTestEMPTYListADD1AndModify()
 
 
-            Dim gen As ISSMInputs = New SSMInputs(Nothing)
+            Dim gen As ISSMDeclarationInputs = New SSMInputs(Nothing)
 
             'Dim target As ISSMTechList = New SSMTechList(gen.BusParameters.BusFloorType)
             'target.TechLines = SSMTechnologiesReader.ReadFromFile(GOODTechListEMPTYLIST).Items
@@ -401,7 +401,7 @@ Namespace UnitTests
         Public Sub Instantiate_TechListTestEMPTYListADD1andDeleteIt()
 
 
-            Dim gen As ISSMInputs = New SSMInputs(Nothing)
+            Dim gen As ISSMDeclarationInputs = New SSMInputs(Nothing)
 
             'Dim target As SSMTechList = New SSMTechList()
             'target.TechLines = SSMTechnologiesReader.ReadFromFile(GOODTechListEMPTYLIST).Items
@@ -441,7 +441,7 @@ Namespace UnitTests
         Public Sub Instantiate_TechListTestEMPTYListandDeleteNonExistantItem()
 
 
-            Dim gen As ISSMInputs = New SSMInputs(Nothing)
+            Dim gen As ISSMDeclarationInputs = New SSMInputs(Nothing)
 
             'Dim target As SSMTechList = New SSMTechList()
             'target.TechLines = SSMTechnologiesReader.ReadFromFile(GOODTechListEMPTYLIST).Items
@@ -478,7 +478,7 @@ Namespace UnitTests
         <Test()>
         Public Sub Instantiate_NewTechListLine()
 
-            Dim gen As ISSMInputs = New SSMInputs(Nothing)
+            Dim gen As ISSMDeclarationInputs = New SSMInputs(Nothing)
 
             Dim ttl As SSMTechnology = New SSMTechnology()
             'ttl.BusFloorType = gen.BusParameters.BusFloorType
@@ -489,7 +489,7 @@ Namespace UnitTests
         <Test()>
         Public Sub TechBenefitLineCompareAsEqual()
 
-            Dim gen As ISSMInputs = New SSMInputs(Nothing)
+            Dim gen As ISSMDeclarationInputs = New SSMInputs(Nothing)
 
             Dim ttl1 As SSMTechnology = New SSMTechnology()
             'ttl1.BusFloorType = gen.BusParameters.BusFloorType
@@ -520,7 +520,7 @@ Namespace UnitTests
         <TestCase("OnVehicle")>
         Public Sub TechBenefitLineCompareAsUnequal(prop As String)
 
-            Dim gen As ISSMInputs = New SSMInputs(Nothing)
+            Dim gen As ISSMDeclarationInputs = New SSMInputs(Nothing)
 
             Dim ttl1 As SSMTechnology = New SSMTechnology()
             'ttl1.BusFloorType = gen.BusParameters.BusFloorType

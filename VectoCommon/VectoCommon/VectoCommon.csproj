@@ -73,7 +73,7 @@
     <Compile Include="BusAuxiliaries\IPneumaticUserInputsConfig.cs" />
     <Compile Include="BusAuxiliaries\IResultCard.cs" />
     <Compile Include="BusAuxiliaries\ISignals.cs" />
-    <Compile Include="BusAuxiliaries\ISSMInputs.cs" />
+    <Compile Include="BusAuxiliaries\ISSMDeclarationInputs.cs" />
     <Compile Include="BusAuxiliaries\ISSMTechnologyBenefits.cs" />
     <Compile Include="BusAuxiliaries\IVehicleData.cs" />
     <Compile Include="BusAuxiliaries\SmartResult.cs" />
@@ -98,7 +98,6 @@
     <Compile Include="InputData\IntegrityStatus.cs" />
     <Compile Include="Models\AuxiliaryDemandType.cs" />
     <Compile Include="Models\AngledriveType.cs" />
-    <Compile Include="Models\AuxiliaryModel.cs" />
     <Compile Include="Models\AxleConfiguration.cs" />
     <Compile Include="Models\AxleLineType.cs" />
     <Compile Include="Models\CertificationMethod.cs" />

@@ -141,6 +141,7 @@
     <Compile Include="InputData\FileIO\JSON\BusAuxiliaryInputData.cs" />
     <Compile Include="InputData\FileIO\JSON\IJSONVehicleComponents.cs" />
     <Compile Include="InputData\FileIO\JSON\JSONBattery.cs" />
+    <Compile Include="InputData\FileIO\JSON\JSONBusAuxiliariesEngineeringData.cs" />
     <Compile Include="InputData\FileIO\JSON\JSONComponentInputData.cs" />
     <Compile Include="InputData\FileIO\JSON\JSONElectricMotor.cs" />
     <Compile Include="InputData\FileIO\JSON\JsonExtensionMethods.cs" />

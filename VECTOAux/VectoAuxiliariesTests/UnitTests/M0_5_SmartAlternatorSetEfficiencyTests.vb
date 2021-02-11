@@ -39,7 +39,7 @@ Namespace UnitTests
             Const _SSMMAP As String = "TestFiles\ssm.Ahsm"
             'Const _BusDatabase As String ="TestFiles\BusDatabase.abdb
 
-            dim ssmInput As ISSMInputs = SSMInputData.ReadFile(_SSMMAP, utils.GetDefaultVehicleData(), Nothing)
+            dim ssmInput As ISSMDeclarationInputs = SSMInputData.ReadFile(_SSMMAP, utils.GetDefaultVehicleData(), Nothing)
             'CType(CType(ssmInput, SSMInputs).Vehicle, VehicleData).Height = 0.SI (Of Meter)
             Dim ssm As ISSMTOOL = New SSMTOOL(ssmInput)
 

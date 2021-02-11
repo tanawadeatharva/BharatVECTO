@@ -9,7 +9,7 @@ using TUGraz.VectoCore.Models.Declaration;
 namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.HVAC
 {
 	// Used by SSMHVAC Class
-	public class SSMInputs : ISSMInputs, ISSMBoundaryConditions, IEnvironmentalConditions, IACSystem, IVentilation,
+	public class SSMInputs : ISSMDeclarationInputs, ISSMBoundaryConditions, IEnvironmentalConditions, IACSystem, IVentilation,
 		IAuxHeater, ISSMBusParameters
 	{
 		private readonly IFuelProperties HeatingFuel;
@@ -195,4 +195,20 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.HVAC
 
 		#endregion
 	}
+
+	public class SSMEngineeringInputs :ISSMEngineeringInputs
+	{
+		#region Implementation of ISSMEngineeringInputs
+
+		public Watt ElectricPower { get; set; }
+		public Watt MechanicalPower { get; set; }
+		public Watt AuxHeaterPower { get; set; }
+		public Joule HeatingDemand { get; set; }
+		public double AuxHeaterEfficiency { get; set; }
+		public double FuelEnergyToHeatToCoolant { get; set; }
+		public double CoolantHeatTransferredToAirCabinHeater { get; set; }
+
+		#endregion
+	}
+
 }

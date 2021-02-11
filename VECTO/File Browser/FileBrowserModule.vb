@@ -40,6 +40,8 @@ Public Module FileBrowserModule
 
     Public HCUFileBrowser As FileBrowser
 
+	public BusAuxFileBrowser As FileBrowser
+
     Public EngineFileBrowser As FileBrowser
 	Public GearboxFileBrowser As FileBrowser
     Public TCUFileBrowser As FileBrowser

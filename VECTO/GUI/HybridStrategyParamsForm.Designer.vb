@@ -563,7 +563,7 @@ Partial Class HybridStrategyParamsForm
         Me.Name = "HybridStrategyParamsForm"
         Me.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Hide
         Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen
-        Me.Text = "Electric Energy Storage"
+        Me.Text = "Hybrid Strategy Parameters"
         Me.ToolStrip1.ResumeLayout(false)
         Me.ToolStrip1.PerformLayout
         Me.StatusStrip1.ResumeLayout(false)

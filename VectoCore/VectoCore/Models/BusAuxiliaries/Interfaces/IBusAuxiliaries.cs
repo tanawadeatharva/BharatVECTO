@@ -26,8 +26,8 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.Interfaces
 		// Information
 		//bool Running { get; }
 
-		string AuxiliaryName { get; }
-		string AuxiliaryVersion { get; }
+		//string AuxiliaryName { get; }
+		//string AuxiliaryVersion { get; }
 
 		// Additional Permenent Monitoring Signals - Required by engineering
 		//double AA_NonSmartAlternatorsEfficiency { get; }

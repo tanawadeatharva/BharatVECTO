@@ -146,7 +146,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
                     AirdragData = dao.CreateAirdragData(vehicle.Components.AirdragInputData, vehicle),
                     DriverData = driver,
                     Aux = dao.CreateAuxiliaryData(vehicle.Components.AuxiliaryInputData),
-                    //BusAuxiliaries = dao.CreateAdvancedAuxData(vehicle.Components.AuxiliaryInputData),
+                    //BusAuxiliaries = dao.CreateBusAuxiliariesData(vehicle.Components.AuxiliaryInputData),
                     Retarder = dao.CreateRetarderData(vehicle.Components.RetarderInputData),
                     //PTO = ptoTransmissionData,
                     Cycle = new DrivingCycleProxy(drivingCycle, cycle.Name),
@@ -214,18 +214,19 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 					var hybridParameters = jobType == VectoSimulationJobType.ParallelHybridVehicle
 						? dao.CreateHybridStrategyParameters(InputDataProvider.JobInputData.HybridStrategyParameters, InputDataProvider)
 						: null;
-                    yield return new VectoRunData {
+					var vehicleData = dao.CreateVehicleData(vehicle);
+					yield return new VectoRunData {
 						JobName = InputDataProvider.JobInputData.JobName,
 						JobType = jobType,
 						EngineData = engineData,
 						GearboxData = gearboxData,
 						AxleGearData = axlegearData,
 						AngledriveData = angledriveData,
-						VehicleData = dao.CreateVehicleData(vehicle),
+						VehicleData = vehicleData,
 						AirdragData = dao.CreateAirdragData(vehicle.Components.AirdragInputData, vehicle),
 						DriverData = driver,
 						Aux = dao.CreateAuxiliaryData(vehicle.Components.AuxiliaryInputData),
-						BusAuxiliaries = dao.CreateAdvancedAuxData(vehicle.Components.AuxiliaryInputData),
+						BusAuxiliaries = dao.CreateBusAuxiliariesData(vehicle.Components.AuxiliaryInputData, vehicleData),
 						Retarder = dao.CreateRetarderData(vehicle.Components.RetarderInputData),
 						PTO = ptoTransmissionData,
 						Cycle = new DrivingCycleProxy(drivingCycle, cycle.Name),
