@@ -53,7 +53,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering.DataProvider
 		{
 			get
 			{
-				throw new NotImplementedException("BuxAux EngineeringXML");
+				// TODO: MQ 20210211 - implement...
+				return null;
 			}
 		}
 

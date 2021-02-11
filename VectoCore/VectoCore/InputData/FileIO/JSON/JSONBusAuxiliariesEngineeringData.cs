@@ -2,6 +2,7 @@
 using Newtonsoft.Json.Linq;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Utils;
+using TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl;
 using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.InputData.FileIO.JSON
@@ -118,7 +119,10 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 		public Watt AuxHeaterPower
 		{
-			get { return _hvac.GetEx<double>("AuxHeaterPower").SI<Watt>(); }
+			get
+			{
+				return _hvac.GetEx<double>("AuxHeaterPower").SI<Watt>();
+			}
 		}
 
 		#endregion
