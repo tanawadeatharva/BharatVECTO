@@ -16,7 +16,7 @@
 		<xs:complexType>
 			<xs:sequence>
 				<xs:element name="PrimaryVehicle" type="vif:PrimaryVehicleType"/>
-				<xs:element name="ManufacturingStage" type="vif:ManufacturingStageType" maxOccurs="unbounded"/>
+				<xs:element name="ManufacturingStage" type="vif:ManufacturingStageType" minOccurs="0" maxOccurs="unbounded"/>
 			</xs:sequence>
 		</xs:complexType>
 	</xs:element>
