@@ -177,6 +177,11 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering.DataProvider
 		public virtual Meter EntranceHeight { get { return null; } }
 		public ConsumerTechnology DoorDriveTechnology { get { return ConsumerTechnology.Unknown; } }
 
+		public TableData MaxPropulsionTorque
+		{
+			get { return null; }
+		}
+
 		IVehicleComponentsDeclaration IVehicleDeclarationInputData.Components
 		{
 			get { return null; }
@@ -256,6 +261,11 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering.DataProvider
 		public virtual Meter Height
 		{
 			get { return GetNode("VehicleHeight")?.InnerText.ToDouble().SI<Meter>(); }
+		}
+
+		public TableData ElectricMotorTorqueLimits
+		{
+			get { return null; }
 		}
 
 		public virtual Meter Length { get { return null; } }

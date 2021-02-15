@@ -130,7 +130,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 				? new JSONADASInputDataV10BEV(this)
 				: base.GetADS()));
 		}
-
+		
 
         protected virtual JSONElectricStorageEngineeringInputData ReadBatteries()
 		{
@@ -138,6 +138,14 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 				Count = Body["Battery"].GetEx<int>("NumPacks"),
 				REESSPack = JSONInputDataFactory.ReadREESSData(Path.Combine(BasePath, Body["Battery"].GetEx<string>("BatteryFile")), false)
 			};
+		}
+
+		public override TableData ElectricMotorTorqueLimits {
+			get { return Body["EMTorqueLimits"] == null ? null : ReadTableData(Path.Combine(BasePath, Body.GetEx<string>("EMTorqueLimits")), "ElectricMotorTorqueLimits"); }
+		}
+
+		public override TableData MaxPropulsionTorque {
+			get { return Body["MaxPropulsionTorque"] == null ? null : ReadTableData(Path.Combine(BasePath, Body.GetEx<string>("MaxPropulsionTorque")), "MaxPropulsionTorque"); }
 		}
 
 		#endregion
@@ -307,7 +315,17 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			get { return Body["VehicleHeight"] == null ? null : Body.GetEx<double>("VehicleHeight").SI<Meter>(); }
 		}
 
-		
+		public virtual TableData ElectricMotorTorqueLimits
+		{
+			get { return null; }
+		}
+
+		public virtual TableData MaxPropulsionTorque
+		{
+			get { return null; }
+		}
+
+
 		public virtual Meter Length
 		{
 			get { return null; }

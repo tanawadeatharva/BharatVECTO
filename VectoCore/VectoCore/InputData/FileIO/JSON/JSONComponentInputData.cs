@@ -310,6 +310,22 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			get { return VehicleData.Height; }
 		}
 
+		public TableData ElectricMotorTorqueLimits
+		{
+			get
+			{
+				return Vehicle.ElectricMotorTorqueLimits;
+			}
+		}
+
+		public TableData MaxPropulsionTorque
+		{
+			get
+			{
+				return Vehicle.ElectricMotorTorqueLimits;
+			}
+		}
+
 		public bool? ATEcoRollReleaseLockupClutch
 		{
 			get { return VehicleData.ADAS.ATEcoRollReleaseLockupClutch; }

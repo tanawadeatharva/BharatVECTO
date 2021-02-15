@@ -753,7 +753,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			};
 		}
 
-		public List<Tuple<PowertrainPosition, ElectricMotorData>> CreateElectricMachines(IElectricMachinesEngineeringInputData electricMachines)
+		public List<Tuple<PowertrainPosition, ElectricMotorData>> CreateElectricMachines(IElectricMachinesEngineeringInputData electricMachines, TableData torqueLimits)
 		{
 			if (electricMachines == null) {
 				return null;
@@ -768,14 +768,19 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			}
 
 			return electricMachines.Entries
-				.Select(x => Tuple.Create(x.Position, CreateElectricMachine(x.ElectricMachine, x.Count, x.Ratio, x.MechanicalEfficiency))).ToList();
+				.Select(x => Tuple.Create(x.Position, CreateElectricMachine(x.ElectricMachine, x.Count, x.Ratio, x.MechanicalEfficiency, torqueLimits))).ToList();
 		}
 
 		private ElectricMotorData CreateElectricMachine(IElectricMotorEngineeringInputData motorData, int count,
-			double ratio, double efficiency)
+			double ratio, double efficiency, TableData torqueLimits)
 		{
+			var fullLoadCurve = ElectricFullLoadCurveReader.Create(motorData.FullLoadCurve, count);
+			var maxTorqueCurve = torqueLimits == null ? null : ElectricFullLoadCurveReader.Create(torqueLimits, count);
+
+			var fullLoadCurveCombined = IntersectEMFullLoadCurves(fullLoadCurve, maxTorqueCurve);
+
 			return new ElectricMotorData() {
-				FullLoadCurve = ElectricFullLoadCurveReader.Create(motorData.FullLoadCurve, count),
+				FullLoadCurve = fullLoadCurveCombined,
 				DragCurve = ElectricMotorDragCurveReader.Create(motorData.DragCurve, count),
 				EfficiencyMap = ElectricMotorMapReader.Create(motorData.EfficiencyMap, count),
 				Inertia = motorData.Inertia,

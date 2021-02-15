@@ -290,6 +290,101 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			}
 		}
 
+		internal static ElectricMotorFullLoadCurve IntersectEMFullLoadCurves(ElectricMotorFullLoadCurve fullLoadCurve,
+			ElectricMotorFullLoadCurve maxTorqueCurve)
+		{
+			if (maxTorqueCurve == null)
+			{
+				return fullLoadCurve;
+			}
+
+			if (maxTorqueCurve.MaxSpeed.IsSmaller(fullLoadCurve.MaxSpeed)) {
+				throw new VectoException("EM Torque limitation has to cover the whole speed range");
+			}
+
+			var motorSpeeds = fullLoadCurve.FullLoadEntries.Select(x => x.MotorSpeed)
+				.Concat(maxTorqueCurve.FullLoadEntries.Select(x => x.MotorSpeed)).ToList();
+			// iterate over all segments in the full-load curve
+			foreach (var fldTuple in fullLoadCurve.FullLoadEntries.Pairwise()) {
+				// find all grid points of max torque curve within the current segment of fld
+				var maxPtsWithinSegment = maxTorqueCurve.FullLoadEntries.Where(x =>
+					x.MotorSpeed.IsGreaterOrEqual(fldTuple.Item1.MotorSpeed) &&
+					x.MotorSpeed.IsSmallerOrEqual(fldTuple.Item2.MotorSpeed)).OrderBy(x => x.MotorSpeed).ToList();
+				if (maxPtsWithinSegment.Count == 0) {
+					// if grid pint is within, take the 'surrounding' segment
+					var segment =
+						maxTorqueCurve.FullLoadEntries.GetSection(x => x.MotorSpeed < fldTuple.Item1.MotorSpeed);
+					maxPtsWithinSegment = new[] { segment.Item1, segment.Item2 }.ToList();
+				} else {
+					// add the point just before and just after the current list of points 
+					if (maxPtsWithinSegment.Min(x => x.MotorSpeed).IsGreater(fldTuple.Item1.MotorSpeed)) {
+						maxPtsWithinSegment.Add(maxTorqueCurve.FullLoadEntries.Last(x =>
+							x.MotorSpeed.IsSmaller(fldTuple.Item1.MotorSpeed)));
+					}
+
+					if (maxPtsWithinSegment.Max(x => x.MotorSpeed).IsSmaller(fldTuple.Item2.MotorSpeed)) {
+						maxPtsWithinSegment.Add(maxTorqueCurve.FullLoadEntries.First(x => x.MotorSpeed.IsGreater(fldTuple.Item2.MotorSpeed)));
+					}
+
+					maxPtsWithinSegment = maxPtsWithinSegment.OrderBy(x => x.MotorSpeed).ToList();
+				}
+
+				var fldEdgeDrive =
+					Edge.Create(new Point(fldTuple.Item1.MotorSpeed.Value(), fldTuple.Item1.FullDriveTorque.Value()),
+						new Point(fldTuple.Item2.MotorSpeed.Value(), fldTuple.Item2.FullDriveTorque.Value()));
+				var fldEdgeGenerate =
+					Edge.Create(new Point(fldTuple.Item1.MotorSpeed.Value(), fldTuple.Item1.FullGenerationTorque.Value()),
+						new Point(fldTuple.Item2.MotorSpeed.Value(), fldTuple.Item2.FullGenerationTorque.Value()));
+				foreach (var maxTuple in maxPtsWithinSegment.Pairwise()) {
+					var maxEdgeDrive =
+						Edge.Create(new Point(maxTuple.Item1.MotorSpeed.Value(), maxTuple.Item1.FullDriveTorque.Value()),
+							new Point(maxTuple.Item2.MotorSpeed.Value(), maxTuple.Item2.FullDriveTorque.Value()));
+					if (!(maxEdgeDrive.SlopeXY - fldEdgeDrive.SlopeXY).IsEqual(0, 1e-12)) {
+						// lines are not parallel
+						var nIntersectDrive =
+							((fldEdgeDrive.OffsetXY - maxEdgeDrive.OffsetXY) /
+							(maxEdgeDrive.SlopeXY - fldEdgeDrive.SlopeXY)).SI<PerSecond>();
+						if (nIntersectDrive.IsBetween(fldTuple.Item1.MotorSpeed, fldTuple.Item2.MotorSpeed)) {
+							motorSpeeds.Add(nIntersectDrive);
+						}
+					}
+
+					var maxEdgeGenerate =
+						Edge.Create(new Point(maxTuple.Item1.MotorSpeed.Value(), maxTuple.Item1.FullGenerationTorque.Value()),
+							new Point(maxTuple.Item2.MotorSpeed.Value(), maxTuple.Item2.FullGenerationTorque.Value()));
+					if (!((maxEdgeGenerate.SlopeXY - fldEdgeGenerate.SlopeXY).IsEqual(0, 1e-12))) {
+						// lines are not parallel
+						var nIntersectGenerate =
+							((fldEdgeGenerate.OffsetXY - maxEdgeGenerate.OffsetXY) /
+							(maxEdgeGenerate.SlopeXY - fldEdgeGenerate.SlopeXY)).SI<PerSecond>();
+
+
+						if (nIntersectGenerate.IsBetween(fldTuple.Item1.MotorSpeed, fldTuple.Item2.MotorSpeed)) {
+							motorSpeeds.Add(nIntersectGenerate);
+						}
+					}
+				}
+			}
+
+			// create new full-load curve with values closest to zero.
+			return new ElectricMotorFullLoadCurve(motorSpeeds.OrderBy(x => x.Value()).Distinct().Select(x => new ElectricMotorFullLoadCurve.FullLoadEntry() {
+				MotorSpeed = x,
+				FullDriveTorque = VectoMath.Max(fullLoadCurve.FullLoadDriveTorque(x), maxTorqueCurve.FullLoadDriveTorque(x)),
+				FullGenerationTorque = VectoMath.Min(fullLoadCurve.FullGenerationTorque(x), maxTorqueCurve.FullGenerationTorque(x)),
+			}).ToList());
+		}
+
+		private static PerSecond CalcIntersection(PerSecond n1, PerSecond n2, NewtonMeter f1, NewtonMeter f2,
+			NewtonMeter m1, NewtonMeter m2)
+		{
+			var e1 = Edge.Create(new Point(n1.Value(), f1.Value()), new Point(n2.Value(), f2.Value()));
+			var e2 = Edge.Create(new Point(n1.Value(), m1.Value()), new Point(n2.Value(), m2.Value()));
+
+			return ((e1.OffsetXY - e2.OffsetXY) / (e2.SlopeXY - e1.SlopeXY)).SI<PerSecond>();
+		}
+
+
+
 		/// <summary>
 		/// Intersects full load curves.
 		/// </summary>
@@ -351,3 +446,5 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 		}
 	}
 }
+
+

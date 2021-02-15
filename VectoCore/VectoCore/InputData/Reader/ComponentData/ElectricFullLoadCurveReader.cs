@@ -1,4 +1,5 @@
 ﻿using System.Data;
+using System.IO;
 using System.Linq;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.Utils;
@@ -9,6 +10,11 @@ namespace TUGraz.VectoCore.InputData.Reader.ComponentData
 {
 	public static class ElectricFullLoadCurveReader
 	{
+		public static ElectricMotorFullLoadCurve Read(Stream str, int count)
+		{
+			return Create(VectoCSVFile.ReadStream(str), count);
+		}
+
 		public static ElectricMotorFullLoadCurve Create(DataTable data, int count)
 		{
 			if (data.Columns.Count < 3) {
