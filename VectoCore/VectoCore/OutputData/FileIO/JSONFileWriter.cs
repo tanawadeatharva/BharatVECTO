@@ -954,6 +954,9 @@ public class JSONFileWriter : IOutputFileWriter
 			auxList.Add(auxOut);
 		}
 
+		if (aux.BusAuxiliariesData != null) {
+			body.Add("BusAux", GetRelativePath(job.Vehicle.Components.AuxiliaryInputData.BusAuxiliariesData.DataSource.SourceFile, basePath));
+		}
 		body.Add("Aux", auxList);
 		if (!job.SavedInDeclarationMode)
 			body.Add("Padd", pAdd);

@@ -45,12 +45,15 @@ Public Class VectoJob
     Private ReadOnly _gearboxFile As SubPath
     Private ReadOnly _tcuFile As SubPath
     Private ReadOnly _hcuFile As SubPath
+    Private ReadOnly _busAuxFile As SubPath
 
     Private ReadOnly _lacDfTargetSpeedFile As SubPath
     Private ReadOnly _lacDfVelocityDropFile as SubPath
 
     Private _startStop As Boolean
     Public StartStopDelay As Double
+
+    public UseBusAux as Boolean
 
     Private ReadOnly _driverAccelerationFile As SubPath
 
@@ -112,6 +115,7 @@ Public Class VectoJob
         _gearboxFile = New SubPath
         _tcuFile = New SubPath
         _hcuFile = New SubPath()
+        _busAuxFile = new SubPath()
         _lacDfTargetSpeedFile = New SubPath()
         _lacDfVelocityDropFile = New SubPath()
 
@@ -201,6 +205,19 @@ Public Class VectoJob
         End Get
         Set(value As String)
             _gearboxFile.Init(_myPath, value)
+        End Set
+    End Property
+
+    Public Property PathBusAux(Optional ByVal original As Boolean = False) As String
+        Get
+            If original Then
+                Return _busAuxFile.OriginalPath
+            Else
+                Return _busAuxFile.FullPath
+            End If
+        End Get
+        Set(value As String)
+            _busAuxFile.Init(_myPath, value)
         End Set
     End Property
 
@@ -690,7 +707,10 @@ Public Class VectoJob
 
     Public ReadOnly Property BusAuxiliariesData As IBusAuxiliariesEngineeringData Implements IAuxiliariesEngineeringInputData.BusAuxiliariesData
     get
-            Throw new NotImplementedException
+        If (not UseBusAux) Then
+            Return Nothing
+        End If
+        Return New JSONComponentInputData(_busAuxFile.FullPath, Me).JobInputData.Vehicle.Components.AuxiliaryInputData.BusAuxiliariesData
     End Get
     End Property
 
