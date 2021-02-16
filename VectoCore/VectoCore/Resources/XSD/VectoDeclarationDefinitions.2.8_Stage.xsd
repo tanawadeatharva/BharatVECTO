@@ -27,7 +27,7 @@
 	<xs:complexType name="CompletedVehicleAuxiliaryDataDeclarationType">
 		<xs:complexContent>
 			<xs:extension base="v2.8:AbstractCompletedVehicleAuxiliaryDataDeclarationType">
-				<xs:sequence>
+				<xs:sequence minOccurs="0">
 					<xs:element name="ElectricSystem" minOccurs="0">
 						<xs:complexType>
 							<xs:sequence minOccurs="0">
