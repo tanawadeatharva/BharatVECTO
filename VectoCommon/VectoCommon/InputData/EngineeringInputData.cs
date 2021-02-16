@@ -118,8 +118,6 @@ namespace TUGraz.VectoCommon.InputData
 		
 		double InitialSOC { get; }
 
-		Watt MaxDrivetrainPower { get; }
-
 
 		VectoSimulationJobType VehicleType { get; }
 	}

@@ -806,7 +806,6 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 				MinICEOnTime = hybridStrategyParameters.MinimumICEOnTime,
 				AuxReserveTime = hybridStrategyParameters.AuxBufferTime,
 				AuxReserveChargeTime = hybridStrategyParameters.AuxBufferChargeTime,
-				MaxDrivetrainPower = inputData.JobInputData.Vehicle.MaxDrivetrainPower,
 			};
 			return retVal;
 		}

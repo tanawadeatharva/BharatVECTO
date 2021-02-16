@@ -20,6 +20,7 @@ Imports TUGraz.VectoCommon.Utils
 Imports TUGraz.VectoCore.InputData.FileIO.JSON
 Imports TUGraz.VectoCore.InputData.Impl
 Imports TUGraz.VectoCore.Models.Declaration
+Imports TUGraz.VectoCore.Models.SimulationComponent.Data
 
 ''' <summary>
 ''' Vehicle Editor.
@@ -473,7 +474,8 @@ Public Class VehicleForm
 		End If
 
 		If (vehicle.VehicleType = VectoSimulationJobType.ParallelHybridVehicle) Then
-			tbMaxDrivetrainPwr.Text = vehicle.MaxDrivetrainPower.ConvertToKiloWatt().Value.ToXMLFormat(2)
+			'tbMaxDrivetrainPwr.Text = vehicle.MaxDrivetrainPower.ConvertToKiloWatt().Value.ToXMLFormat(2)
+			tbEmTorqueLimits.Text = if (Not vehicle.ElectricMotorTorqueLimits Is Nothing, GetRelativePath(vehicle.ElectricMotorTorqueLimits.Source, basePath), "")
 		End If
 
 		DeclInit()
@@ -497,14 +499,14 @@ Public Class VehicleForm
                 'cbEngineStopStart.Checked = False
                 cbEngineStopStart.Enabled = True
                 cbEcoRoll.DataSource = [Enum].GetValues(GetType(EcoRollType)).Cast(Of EcoRollType).Select(Function(ecoRoll) New With {Key .Value = ecoRoll, .Label = ecoRoll.GetName()}).ToList()
-				tbMaxDrivetrainPwr.Enabled = false
+                gbEMTorqueLimits.Enabled = false
             Case VectoSimulationJobType.ParallelHybridVehicle
                 lblTitle.Text = "Parallel Hybrid Vehicle"
                 cbEmPos.DataSource = [Enum].GetValues(GetType(PowertrainPosition)).Cast(Of PowertrainPosition).Where(Function(x) x.IsParallelHybrid()).Select(Function(x) New With {Key .Value = x, .Label = x.GetLabel()}).ToList()
                 'cbEngineStopStart.Checked = False
                 'cbEngineStopStart.Enabled = False
                 'cbEcoRoll.DataSource = [Enum].GetValues(GetType(EcoRollType)).Cast(Of EcoRollType).Select(Function(ecoRoll) New With {Key .Value = ecoRoll, .Label = ecoRoll.GetName()}).ToList()
-				tbMaxDrivetrainPwr.Enabled	= True
+                gbEMTorqueLimits.Enabled	= True
             Case VectoSimulationJobType.BatteryElectricVehicle
                 lblTitle.Text = "Battery Electric Vehicle"
                 tpPowertrain.Enabled = False
@@ -513,7 +515,7 @@ Public Class VehicleForm
                 cbEngineStopStart.Checked = False
                 cbEngineStopStart.Enabled = False
                 cbEcoRoll.DataSource = New EcoRollType() {EcoRollType.None}.Select(Function(ecoRoll) New With {Key .Value = ecoRoll, .Label = ecoRoll.GetName()}).ToList()
-				tbMaxDrivetrainPwr.Enabled = False
+                gbEMTorqueLimits.Enabled = False
         End Select
     End Sub
 
@@ -614,8 +616,8 @@ Public Class VehicleForm
 			veh.ElectricMotorMechEff = tbEmEfficiency.Text.ToDouble()
 		End If
 
-		If (VehicleType = VectoSimulationJobType.ParallelHybridVehicle) Then
-			veh.MaxPower = tbMaxDrivetrainPwr.Text.ToDouble(0)
+		If (VehicleType = VectoSimulationJobType.ParallelHybridVehicle) AndAlso not String.IsNullOrWhiteSpace(tbEmTorqueLimits.Text) Then
+			veh.EmTorqueLimitsFile.Init(GetPath(file), tbEmTorqueLimits.Text)
 		End If
 
 		veh.EcoRollType = CType(cbEcoRoll.SelectedValue, EcoRollType)
@@ -1125,6 +1127,11 @@ Public Class VehicleForm
                 MsgBox(ex.Message, MsgBoxStyle.OkOnly, "Error loading Vehicle File")
             End Try
         End If
+    End Sub
+
+    Private Sub btnEmTorqueLimits_Click(sender As Object, e As EventArgs) Handles btnEmTorqueLimits.Click
+        If ElectricMachineMaxTorqueFileBrowser.OpenDialog(FileRepl(tbEmTorqueLimits.Text, GetPath(_vehFile))) Then _
+            tbEmTorqueLimits.Text = GetFilenameWithoutDirectory(ElectricMachineMaxTorqueFileBrowser.Files(0), GetPath(_vehFile))
     End Sub
 End Class
 

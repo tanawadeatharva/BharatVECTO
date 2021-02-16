@@ -381,11 +381,6 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			get { return VehicleData.InitialSOC; }
 		}
 
-		public Watt MaxDrivetrainPower
-		{
-			get { return VehicleData.MaxDrivetrainPower; }
-		}
-
 		public VectoSimulationJobType VehicleType
 		{
 			get { return VehicleData.VehicleType; }
