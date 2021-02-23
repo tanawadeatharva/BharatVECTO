@@ -228,7 +228,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 																//gearboxFullLoad != null ? -gearboxFullLoad : null, false);
 
 			if (!dryRun && !angularVelocity.IsSmallerOrEqual(engineSpeedLimit)) {
-				if (DataBus.HybridControllerInfo?.ICESpeed != null && DataBus.HybridControllerInfo.ICESpeed != angularVelocity) {
+				if (DataBus.HybridControllerInfo?.ICESpeed != null && !DataBus.HybridControllerInfo.ICESpeed.IsEqual(angularVelocity)) {
 					return new ResponseInvalidOperatingPoint(this);
 				}
 				return new ResponseEngineSpeedTooHigh(this) {

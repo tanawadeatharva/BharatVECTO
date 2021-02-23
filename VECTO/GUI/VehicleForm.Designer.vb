@@ -187,6 +187,9 @@ Partial Class VehicleForm
         Me.gbEMTorqueLimits = New System.Windows.Forms.GroupBox()
         Me.btnEmTorqueLimits = New System.Windows.Forms.Button()
         Me.tbEmTorqueLimits = New System.Windows.Forms.TextBox()
+        Me.gbPropulsionTorque = New System.Windows.Forms.GroupBox()
+        Me.btnPropulsionTorqueLimit = New System.Windows.Forms.Button()
+        Me.tbPropulsionTorqueLimit = New System.Windows.Forms.TextBox()
         Me.GroupBox6.SuspendLayout
         Me.ToolStrip1.SuspendLayout
         Me.GroupBox7.SuspendLayout
@@ -222,6 +225,7 @@ Partial Class VehicleForm
         Me.GroupBox5.SuspendLayout
         Me.bgVehicleTorqueLimits.SuspendLayout
         Me.gbEMTorqueLimits.SuspendLayout
+        Me.gbPropulsionTorque.SuspendLayout
         Me.SuspendLayout
         '
         'Label1
@@ -1451,6 +1455,7 @@ Partial Class VehicleForm
         '
         'tpTorqueLimits
         '
+        Me.tpTorqueLimits.Controls.Add(Me.gbPropulsionTorque)
         Me.tpTorqueLimits.Controls.Add(Me.gbEMTorqueLimits)
         Me.tpTorqueLimits.Controls.Add(Me.bgVehicleTorqueLimits)
         Me.tpTorqueLimits.Location = New System.Drawing.Point(4, 22)
@@ -1663,6 +1668,33 @@ Partial Class VehicleForm
         Me.tbEmTorqueLimits.Size = New System.Drawing.Size(319, 20)
         Me.tbEmTorqueLimits.TabIndex = 15
         '
+        'gbPropulsionTorque
+        '
+        Me.gbPropulsionTorque.Controls.Add(Me.btnPropulsionTorqueLimit)
+        Me.gbPropulsionTorque.Controls.Add(Me.tbPropulsionTorqueLimit)
+        Me.gbPropulsionTorque.Location = New System.Drawing.Point(3, 236)
+        Me.gbPropulsionTorque.Name = "gbPropulsionTorque"
+        Me.gbPropulsionTorque.Size = New System.Drawing.Size(407, 52)
+        Me.gbPropulsionTorque.TabIndex = 17
+        Me.gbPropulsionTorque.TabStop = false
+        Me.gbPropulsionTorque.Text = "Propulsion Torque Limit"
+        '
+        'btnPropulsionTorqueLimit
+        '
+        Me.btnPropulsionTorqueLimit.Image = Global.TUGraz.VECTO.My.Resources.Resources.Open_icon
+        Me.btnPropulsionTorqueLimit.Location = New System.Drawing.Point(331, 17)
+        Me.btnPropulsionTorqueLimit.Name = "btnPropulsionTorqueLimit"
+        Me.btnPropulsionTorqueLimit.Size = New System.Drawing.Size(24, 24)
+        Me.btnPropulsionTorqueLimit.TabIndex = 16
+        Me.btnPropulsionTorqueLimit.UseVisualStyleBackColor = true
+        '
+        'tbPropulsionTorqueLimit
+        '
+        Me.tbPropulsionTorqueLimit.Location = New System.Drawing.Point(6, 20)
+        Me.tbPropulsionTorqueLimit.Name = "tbPropulsionTorqueLimit"
+        Me.tbPropulsionTorqueLimit.Size = New System.Drawing.Size(319, 20)
+        Me.tbPropulsionTorqueLimit.TabIndex = 15
+        '
         'VehicleForm
         '
         Me.AcceptButton = Me.ButOK
@@ -1748,6 +1780,8 @@ Partial Class VehicleForm
         Me.bgVehicleTorqueLimits.PerformLayout
         Me.gbEMTorqueLimits.ResumeLayout(false)
         Me.gbEMTorqueLimits.PerformLayout
+        Me.gbPropulsionTorque.ResumeLayout(false)
+        Me.gbPropulsionTorque.PerformLayout
         Me.ResumeLayout(false)
         Me.PerformLayout
 
@@ -1905,4 +1939,7 @@ End Sub
     Friend WithEvents btnEmTorqueLimits As Button
     Friend WithEvents tbEmTorqueLimits As TextBox
     Friend WithEvents bgVehicleTorqueLimits As GroupBox
+    Friend WithEvents gbPropulsionTorque As GroupBox
+    Friend WithEvents btnPropulsionTorqueLimit As Button
+    Friend WithEvents tbPropulsionTorqueLimit As TextBox
 End Class

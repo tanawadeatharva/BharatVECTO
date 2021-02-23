@@ -412,6 +412,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			container[ModalResultField.n_gbx_out_avg] = (PreviousState.OutAngularVelocity +
 														CurrentState.OutAngularVelocity) / 2.0;
 			container[ModalResultField.T_gbx_out] = CurrentState.OutTorque;
+			container[ModalResultField.T_gbx_in] = CurrentState.InTorque;
 
 			if (ModelData.Type.AutomaticTransmission()) {
 				container[ModalResultField.TC_Locked] = !CurrentState.TorqueConverterActive;

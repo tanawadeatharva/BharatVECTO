@@ -190,6 +190,15 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					continue;
 				}
 
+				if (!dryRun && strategySettings.CombustionEngineOn && retVal is ResponseEngineSpeedTooHigh) {
+					retryCount++;
+					retry = true;
+					Strategy.AllowEmergencyShift = true;
+					Strategy.OperatingpointChangedDuringRequest(absTime, dt, outTorque, outAngularVelocity, dryRun,
+						retVal);
+					continue;
+				}
+
 				if (retVal is ResponseDifferentGearEngaged) {
 					retryCount++;
 					retry = true;

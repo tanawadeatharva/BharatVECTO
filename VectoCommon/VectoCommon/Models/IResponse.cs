@@ -96,6 +96,8 @@ namespace TUGraz.VectoCommon.Models
 	{
 		public PerSecond InputSpeed { get; set; }
 
+		public NewtonMeter InputTorque { get; set; }
+
 		public GearshiftPosition Gear { get; set; }
 	}
 

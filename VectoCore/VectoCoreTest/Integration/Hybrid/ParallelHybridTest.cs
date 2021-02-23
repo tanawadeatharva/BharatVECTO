@@ -557,6 +557,8 @@ namespace TUGraz.VectoCore.Tests.Integration.Hybrid
 
 		public const string Group5_EMTorqueLimit_TestJob = @"TestData\Hybrids\GenericVehicle_Group5_P2\P2 Group 5_LimitEMTorqueDrive.vecto";
 
+		public const string Group5_LimitPropTq_TestJob = @"TestData\Hybrids\GenericVehicle_Group5_P2\P2 Group 5_LimitVehiclePropTq.vecto";
+
 		[
 		TestCase(Group5TestJob, 0, TestName = "P2 Hybrid Group 5 DriveCycle LongHaul"),
 		TestCase(Group5TestJob, 1, TestName = "P2 Hybrid Group 5 DriveCycle Coach"),  // error
@@ -657,7 +659,9 @@ namespace TUGraz.VectoCore.Tests.Integration.Hybrid
 		TestCase(Group2TestJobSuperCapOvl, 8, TestName = "P2 Hybrid Group 2 SuperCap Ovl, DriveCycle Suburban"),
 		TestCase(Group2TestJobSuperCapOvl, 9, TestName = "P2 Hybrid Group 2 SuperCap Ovl, DriveCycle Urban"),
 
-		TestCase(Group5_EMTorqueLimit_TestJob, 9, TestName = "P2 Hybrid Group 5 EM TorqueLimit DriveCycle UrbanDelivery"), // error
+		TestCase(Group5_EMTorqueLimit_TestJob, 9, TestName = "P2 Hybrid Group 5 EM TorqueLimit DriveCycle UrbanDelivery"),
+
+		TestCase(Group5_LimitPropTq_TestJob, 9, TestName = "P2 Hybrid Group 5 Vehicle Prop TorqueLimit DriveCycle UrbanDelivery"),
 
 			]
 		public void P2HybridGroup5DriveCycle(string jobFile, int cycleIdx)

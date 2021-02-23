@@ -4,7 +4,7 @@ using System.Linq;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.Utils;
 
-namespace TUGraz.VectoCore.Models.SimulationComponent.Data {
+namespace TUGraz.VectoCore.Models.SimulationComponent.Data.ElectricMotor {
 	public class ElectricMotorFullLoadCurve
 	{
 		internal readonly List<FullLoadEntry> FullLoadEntries;

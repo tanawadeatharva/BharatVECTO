@@ -795,8 +795,12 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 
 		public HybridStrategyParameters CreateHybridStrategyParameters(
 			IHybridStrategyParameters hybridStrategyParameters,
-			IEngineeringInputDataProvider inputData)
+			TableData maxPropulsionTorque, CombustionEngineData combustionEngineData)
 		{
+			VehicleMaxPropulsionTorque torqueLimit = maxPropulsionTorque == null
+				? null
+				: CreateMaxPropulsionTorque(maxPropulsionTorque, combustionEngineData);
+			
 			var retVal = new HybridStrategyParameters() {
 				EquivalenceFactorDischarge = hybridStrategyParameters.EquivalenceFactorDischarge,
 				EquivalenceFactorCharge = hybridStrategyParameters.EquivalenceFactorCharge,
@@ -806,8 +810,28 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 				MinICEOnTime = hybridStrategyParameters.MinimumICEOnTime,
 				AuxReserveTime = hybridStrategyParameters.AuxBufferTime,
 				AuxReserveChargeTime = hybridStrategyParameters.AuxBufferChargeTime,
+				MaxPropulsionTorque = torqueLimit
 			};
 			return retVal;
+		}
+
+		private VehicleMaxPropulsionTorque CreateMaxPropulsionTorque(TableData maxPropulsionTorque, CombustionEngineData engineData)
+		{
+			var offset = MaxPropulsionTorqueReader.Create(maxPropulsionTorque);
+			var belowIdle = offset.FullLoadEntries.Where(x => x.MotorSpeed < engineData.IdleSpeed).ToList();
+
+			var entries = belowIdle.Select(fullLoadEntry => new VehicleMaxPropulsionTorque.FullLoadEntry()
+					{ MotorSpeed = fullLoadEntry.MotorSpeed, FullDriveTorque = fullLoadEntry.FullDriveTorque })
+				.Concat(
+					engineData.FullLoadCurves[0].FullLoadEntries.Select(fullLoadCurveEntry =>
+						new VehicleMaxPropulsionTorque.FullLoadEntry() {
+							MotorSpeed = fullLoadCurveEntry.EngineSpeed,
+							FullDriveTorque = fullLoadCurveEntry.TorqueFullLoad +
+											VectoMath.Max(offset.FullLoadDriveTorque(fullLoadCurveEntry.EngineSpeed),
+												0.SI<NewtonMeter>())
+						})).OrderBy(x => x.MotorSpeed).ToList();
+
+			return new VehicleMaxPropulsionTorque(entries);
 		}
 	}
 }

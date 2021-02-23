@@ -128,12 +128,26 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			};
 		}
 
-		public override TableData ElectricMotorTorqueLimits {
-			get { return Body["EMTorqueLimits"] == null ? null : ReadTableData(Path.Combine(BasePath, Body.GetEx<string>("EMTorqueLimits")), "ElectricMotorTorqueLimits"); }
+		public override TableData ElectricMotorTorqueLimits
+		{
+			get
+			{
+				return Body["EMTorqueLimits"] == null
+					? null
+					: ReadTableData(Path.Combine(BasePath, Body.GetEx<string>("EMTorqueLimits")),
+						"ElectricMotorTorqueLimits");
+			}
 		}
 
-		public override TableData MaxPropulsionTorque {
-			get { return Body["MaxPropulsionTorque"] == null ? null : ReadTableData(Path.Combine(BasePath, Body.GetEx<string>("MaxPropulsionTorque")), "MaxPropulsionTorque"); }
+		public override TableData MaxPropulsionTorque
+		{
+			get
+			{
+				return Body["MaxPropulsionTorque"] == null
+					? null
+					: ReadTableData(Path.Combine(BasePath, Body.GetEx<string>("MaxPropulsionTorque")),
+						"MaxPropulsionTorque");
+			}
 		}
 
 		#endregion

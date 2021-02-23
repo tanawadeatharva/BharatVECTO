@@ -154,7 +154,7 @@ Imports TUGraz.VectoCore.Utils
         BatteryMaxCurrentCurveFileBrowser = new FileBrowser("vimax")
         BatteryInternalResistanceCurveFileBrowser = New FileBrowser("vbatr")
         BatterySoCCurveFileBrowser = New FileBrowser("vbatv")
-
+        PropulsionTorqueLimitFileBrowser = new FileBrowser("vtqp")
         ModalResultsFileBrowser = New FileBrowser("vmod")
 
 
@@ -192,6 +192,7 @@ Imports TUGraz.VectoCore.Utils
         BatterySoCCurveFileBrowser.Extensions = New String() {"vbatv"}
         HCUFileBrowser.Extensions = New String() {"vhctl"}
         BusAuxFileBrowser.Extensions = New String(){"vaux"}
+        PropulsionTorqueLimitFileBrowser.Extensions = new String(){"vtqp"}
 
         ModalResultsFileBrowser.Extensions = New String() {"vmod"}
     End Sub

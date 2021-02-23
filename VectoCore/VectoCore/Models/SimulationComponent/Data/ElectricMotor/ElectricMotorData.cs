@@ -1,4 +1,5 @@
 ﻿using TUGraz.VectoCommon.Utils;
+using TUGraz.VectoCore.Models.SimulationComponent.Data.ElectricMotor;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 {
