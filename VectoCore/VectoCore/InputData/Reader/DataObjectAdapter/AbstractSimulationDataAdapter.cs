@@ -375,14 +375,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			}).ToList());
 		}
 
-		private static PerSecond CalcIntersection(PerSecond n1, PerSecond n2, NewtonMeter f1, NewtonMeter f2,
-			NewtonMeter m1, NewtonMeter m2)
-		{
-			var e1 = Edge.Create(new Point(n1.Value(), f1.Value()), new Point(n2.Value(), f2.Value()));
-			var e2 = Edge.Create(new Point(n1.Value(), m1.Value()), new Point(n2.Value(), m2.Value()));
-
-			return ((e1.OffsetXY - e2.OffsetXY) / (e2.SlopeXY - e1.SlopeXY)).SI<PerSecond>();
-		}
+		
 
 
 

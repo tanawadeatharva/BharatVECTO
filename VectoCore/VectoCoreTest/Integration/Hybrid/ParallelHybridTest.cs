@@ -659,8 +659,26 @@ namespace TUGraz.VectoCore.Tests.Integration.Hybrid
 		TestCase(Group2TestJobSuperCapOvl, 8, TestName = "P2 Hybrid Group 2 SuperCap Ovl, DriveCycle Suburban"),
 		TestCase(Group2TestJobSuperCapOvl, 9, TestName = "P2 Hybrid Group 2 SuperCap Ovl, DriveCycle Urban"),
 
+		TestCase(Group5_EMTorqueLimit_TestJob, 0, TestName = "P2 Hybrid Group 5 EM TorqueLimit DriveCycle LongHaul"),
+		TestCase(Group5_EMTorqueLimit_TestJob, 1, TestName = "P2 Hybrid Group 5 EM TorqueLimit DriveCycle Coach "),
+		TestCase(Group5_EMTorqueLimit_TestJob, 2, TestName = "P2 Hybrid Group 5 EM TorqueLimit DriveCycle Construction"),
+		TestCase(Group5_EMTorqueLimit_TestJob, 3, TestName = "P2 Hybrid Group 5 EM TorqueLimit DriveCycle HeavyUrban"),
+		TestCase(Group5_EMTorqueLimit_TestJob, 4, TestName = "P2 Hybrid Group 5 EM TorqueLimit DriveCycle Interurban"),
+		TestCase(Group5_EMTorqueLimit_TestJob, 5, TestName = "P2 Hybrid Group 5 EM TorqueLimit DriveCycle MunicipalUtility"),
+		TestCase(Group5_EMTorqueLimit_TestJob, 6, TestName = "P2 Hybrid Group 5 EM TorqueLimit DriveCycle RegionalDelivery"),
+		TestCase(Group5_EMTorqueLimit_TestJob, 7, TestName = "P2 Hybrid Group 5 EM TorqueLimit DriveCycle Suburban"),
+		TestCase(Group5_EMTorqueLimit_TestJob, 8, TestName = "P2 Hybrid Group 5 EM TorqueLimit DriveCycle Urban"),
 		TestCase(Group5_EMTorqueLimit_TestJob, 9, TestName = "P2 Hybrid Group 5 EM TorqueLimit DriveCycle UrbanDelivery"),
 
+		TestCase(Group5_LimitPropTq_TestJob, 0, TestName = "P2 Hybrid Group 5 Vehicle Prop TorqueLimit DriveCycle LongHaul"),
+		TestCase(Group5_LimitPropTq_TestJob, 1, TestName = "P2 Hybrid Group 5 Vehicle Prop TorqueLimit DriveCycle Coach "),
+		TestCase(Group5_LimitPropTq_TestJob, 2, TestName = "P2 Hybrid Group 5 Vehicle Prop TorqueLimit DriveCycle Construction"),
+		TestCase(Group5_LimitPropTq_TestJob, 3, TestName = "P2 Hybrid Group 5 Vehicle Prop TorqueLimit DriveCycle HeavyUrban"),
+		TestCase(Group5_LimitPropTq_TestJob, 4, TestName = "P2 Hybrid Group 5 Vehicle Prop TorqueLimit DriveCycle Interurban"),
+		TestCase(Group5_LimitPropTq_TestJob, 5, TestName = "P2 Hybrid Group 5 Vehicle Prop TorqueLimit DriveCycle MunicipalUtility"),
+		TestCase(Group5_LimitPropTq_TestJob, 6, TestName = "P2 Hybrid Group 5 Vehicle Prop TorqueLimit DriveCycle RegionalDelivery"),
+		TestCase(Group5_LimitPropTq_TestJob, 7, TestName = "P2 Hybrid Group 5 Vehicle Prop TorqueLimit DriveCycle Suburban"),
+		TestCase(Group5_LimitPropTq_TestJob, 8, TestName = "P2 Hybrid Group 5 Vehicle Prop TorqueLimit DriveCycle Urban"),
 		TestCase(Group5_LimitPropTq_TestJob, 9, TestName = "P2 Hybrid Group 5 Vehicle Prop TorqueLimit DriveCycle UrbanDelivery"),
 
 			]
