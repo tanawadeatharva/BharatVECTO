@@ -89,7 +89,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 					? dao.CreateAxleGearData(vehicle.Components.AxleGearInputData)
 					: null;
 
-				var electricMachinesData = dao.CreateElectricMachines(vehicle.Components.ElectricMachines);
+				var electricMachinesData = dao.CreateElectricMachines(vehicle.Components.ElectricMachines, vehicle.ElectricMotorTorqueLimits);
 
 				GearboxData gearboxData = null;
 				ShiftStrategyParameters gearshiftParams = null;
@@ -203,7 +203,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 						? CyclesCache[cycle.CycleData.Source]
 						: DrivingCycleDataReader.ReadFromDataTable(cycle.CycleData, cycle.Name, crossWindRequired);
 
-					var electricMachines = dao.CreateElectricMachines(vehicle.Components.ElectricMachines) ?? new List<Tuple<PowertrainPosition, ElectricMotorData>>();
+					var electricMachines = dao.CreateElectricMachines(vehicle.Components.ElectricMachines, vehicle.ElectricMotorTorqueLimits) ?? new List<Tuple<PowertrainPosition, ElectricMotorData>>();
 					var battery = dao.CreateBatteryData(vehicle.Components.ElectricStorage, vehicle.InitialSOC);
 					var superCap = dao.CreateSuperCapData(vehicle.Components.ElectricStorage, vehicle.InitialSOC);
 
@@ -211,10 +211,11 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 						? VectoSimulationJobType.ParallelHybridVehicle
 						: VectoSimulationJobType.ConventionalVehicle;
 
-					var hybridParameters = jobType == VectoSimulationJobType.ParallelHybridVehicle
-						? dao.CreateHybridStrategyParameters(InputDataProvider.JobInputData.HybridStrategyParameters, InputDataProvider)
-						: null;
 					var vehicleData = dao.CreateVehicleData(vehicle);
+					
+					var hybridParameters = jobType == VectoSimulationJobType.ParallelHybridVehicle
+						? dao.CreateHybridStrategyParameters(InputDataProvider.JobInputData.HybridStrategyParameters, vehicle.MaxPropulsionTorque, engineData)
+						: null;
 					yield return new VectoRunData {
 						JobName = InputDataProvider.JobInputData.JobName,
 						JobType = jobType,

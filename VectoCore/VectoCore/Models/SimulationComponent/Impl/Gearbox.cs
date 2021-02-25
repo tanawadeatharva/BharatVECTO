@@ -319,6 +319,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					Gearbox = {
 						PowerRequest =  delta,
 						Gear = new GearshiftPosition(0),
+						InputSpeed = inAngularVelocity,
+						InputTorque = inTorque
 					},
 					DeltaDragLoad = delta,
 					DeltaFullLoad = delta,
@@ -396,11 +398,15 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					outTorque * (PreviousState.OutAngularVelocity + outAngularVelocity) / 2.0;
 				dryRunResponse.Gearbox.Gear = Gear;
 				dryRunResponse.Gearbox.InputSpeed = inAngularVelocity;
+				dryRunResponse.Gearbox.InputTorque = inTorque;
+
 				return dryRunResponse;
 			}
 
 			var response = NextComponent.Request(absTime, dt, inTorque, inAngularVelocity, false);
 			response.Gearbox.InputSpeed = inAngularVelocity;
+			response.Gearbox.InputTorque = inTorque;
+
 			var shiftAllowed = !inAngularVelocity.IsEqual(0) && !DataBus.VehicleInfo.VehicleSpeed.IsEqual(0);
 
 			if (response is ResponseSuccess && shiftAllowed) {
@@ -491,6 +497,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			container[ModalResultField.n_gbx_out_avg] = (PreviousState.OutAngularVelocity +
 														CurrentState.OutAngularVelocity) / 2.0;
 			container[ModalResultField.T_gbx_out] = CurrentState.OutTorque;
+			container[ModalResultField.T_gbx_in] = CurrentState.InTorque;
 			_strategy.WriteModalResults(container);
 		}
 

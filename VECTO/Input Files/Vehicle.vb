@@ -47,6 +47,8 @@ Public Class Vehicle
 	<ValidateObject> Public RetarderType As RetarderType
 	Public RetarderRatio As Double = 0
 	Public ReadOnly RetarderLossMapFile As SubPath
+    Public ReadOnly EmTorqueLimitsFile As SubPath
+    public ReadOnly PropulsionTorqueFile as SubPath
 
 	Public DynamicTyreRadius As Double
 	Public ReadOnly Axles As List(Of AxleInputData)
@@ -84,7 +86,6 @@ Public Class Vehicle
     Public ElectricMotorCount As Integer
     Public ElectricMotorRatio As Double
     Public ElectricMotorMechEff As Double
-    Public MaxPower As Double
 
     Public Sub New()
 		_path = ""
@@ -93,6 +94,8 @@ Public Class Vehicle
 
 		RetarderLossMapFile = New SubPath
 		AngledriveLossMapFile = New SubPath()
+        EmTorqueLimitsFile = new SubPath()
+        PropulsionTorqueFile = New SubPath()
 
 		Axles = New List(Of AxleInputData)
 		torqueLimitsList = New List(Of ITorqueLimitInputData)
@@ -205,6 +208,8 @@ Public Class Vehicle
 		RetarderRatio = 1
 		RetarderLossMapFile.Clear()
 		AngledriveLossMapFile.Clear()
+		EmTorqueLimitsFile.Clear()
+	    PropulsionTorqueFile.Clear()
 
 		AngledriveType = AngledriveType.None
 		AngledriveLossMapFile.Clear()
@@ -436,6 +441,23 @@ Public Class Vehicle
 			Return VehicleHeight.SI(Of Meter)()
 		End Get
 	End Property
+
+    Public ReadOnly Property ElectricMotorTorqueLimits As TableData Implements IVehicleEngineeringInputData.ElectricMotorTorqueLimits
+	get
+		If (String.IsNullOrWhiteSpace(EmTorqueLimitsFile.FullPath))
+			return Nothing
+		End If
+		Return VectoCSVFile.Read(EmTorqueLimitsFile.FullPath)
+	End Get
+    End Property
+    Public ReadOnly Property MaxPropulsionTorque As TableData Implements IVehicleEngineeringInputData.MaxPropulsionTorque
+	get
+	    If (String.IsNullOrWhiteSpace(PropulsionTorqueFile.FullPath))
+	        return Nothing
+	    End If
+	    Return VectoCSVFile.Read(PropulsionTorqueFile.FullPath)
+	End Get
+    End Property
 
     Public ReadOnly Property Length As Meter Implements IVehicleDeclarationInputData.Length
     Public ReadOnly Property Width As Meter Implements IVehicleDeclarationInputData.Width
@@ -758,12 +780,7 @@ Public Class Vehicle
 	End Property
 
 	Public Property InitialSOC As Double Implements IVehicleEngineeringInputData.InitialSOC
-	Public ReadOnly Property MaxDrivetrainPower As Watt Implements IVehicleEngineeringInputData.MaxDrivetrainPower
-		Get
-			Return (MaxPower * 1000).SI(Of Watt)
-		End Get
-	End Property
-	Public Property VehicleType As VectoSimulationJobType Implements IVehicleEngineeringInputData.VehicleType
+    Public Property VehicleType As VectoSimulationJobType Implements IVehicleEngineeringInputData.VehicleType
 
 
     Public ReadOnly Property ZeroEmissionVehicle As Boolean Implements IVehicleDeclarationInputData.ZeroEmissionVehicle

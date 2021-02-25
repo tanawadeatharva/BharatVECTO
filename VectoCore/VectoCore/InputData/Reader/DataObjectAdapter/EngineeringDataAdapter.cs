@@ -189,7 +189,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			}
 			
 			var retVal = SetCommonCombustionEngineData(engine, tankSystem);
-			retVal.IdleSpeed = engineMode.IdleSpeed;
+			retVal.IdleSpeed = VectoMath.Max(engineMode.IdleSpeed, vehicle.EngineIdleSpeed);
 			retVal.Fuels = new List<CombustionEngineFuelData>();
 			foreach (var fuel in engineMode.Fuels) {
 				retVal.Fuels.Add(
@@ -753,7 +753,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			};
 		}
 
-		public List<Tuple<PowertrainPosition, ElectricMotorData>> CreateElectricMachines(IElectricMachinesEngineeringInputData electricMachines)
+		public List<Tuple<PowertrainPosition, ElectricMotorData>> CreateElectricMachines(IElectricMachinesEngineeringInputData electricMachines, TableData torqueLimits)
 		{
 			if (electricMachines == null) {
 				return null;
@@ -768,14 +768,19 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			}
 
 			return electricMachines.Entries
-				.Select(x => Tuple.Create(x.Position, CreateElectricMachine(x.ElectricMachine, x.Count, x.Ratio, x.MechanicalEfficiency))).ToList();
+				.Select(x => Tuple.Create(x.Position, CreateElectricMachine(x.ElectricMachine, x.Count, x.Ratio, x.MechanicalEfficiency, torqueLimits))).ToList();
 		}
 
 		private ElectricMotorData CreateElectricMachine(IElectricMotorEngineeringInputData motorData, int count,
-			double ratio, double efficiency)
+			double ratio, double efficiency, TableData torqueLimits)
 		{
+			var fullLoadCurve = ElectricFullLoadCurveReader.Create(motorData.FullLoadCurve, count);
+			var maxTorqueCurve = torqueLimits == null ? null : ElectricFullLoadCurveReader.Create(torqueLimits, count);
+
+			var fullLoadCurveCombined = IntersectEMFullLoadCurves(fullLoadCurve, maxTorqueCurve);
+
 			return new ElectricMotorData() {
-				FullLoadCurve = ElectricFullLoadCurveReader.Create(motorData.FullLoadCurve, count),
+				FullLoadCurve = fullLoadCurveCombined,
 				DragCurve = ElectricMotorDragCurveReader.Create(motorData.DragCurve, count),
 				EfficiencyMap = ElectricMotorMapReader.Create(motorData.EfficiencyMap, count),
 				Inertia = motorData.Inertia,
@@ -790,8 +795,12 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 
 		public HybridStrategyParameters CreateHybridStrategyParameters(
 			IHybridStrategyParameters hybridStrategyParameters,
-			IEngineeringInputDataProvider inputData)
+			TableData maxPropulsionTorque, CombustionEngineData combustionEngineData)
 		{
+			VehicleMaxPropulsionTorque torqueLimit = maxPropulsionTorque == null
+				? null
+				: CreateMaxPropulsionTorque(maxPropulsionTorque, combustionEngineData);
+			
 			var retVal = new HybridStrategyParameters() {
 				EquivalenceFactorDischarge = hybridStrategyParameters.EquivalenceFactorDischarge,
 				EquivalenceFactorCharge = hybridStrategyParameters.EquivalenceFactorCharge,
@@ -801,9 +810,39 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 				MinICEOnTime = hybridStrategyParameters.MinimumICEOnTime,
 				AuxReserveTime = hybridStrategyParameters.AuxBufferTime,
 				AuxReserveChargeTime = hybridStrategyParameters.AuxBufferChargeTime,
-				MaxDrivetrainPower = inputData.JobInputData.Vehicle.MaxDrivetrainPower,
+				MaxPropulsionTorque = torqueLimit
 			};
 			return retVal;
+		}
+
+		private VehicleMaxPropulsionTorque CreateMaxPropulsionTorque(TableData maxPropulsionTorque, CombustionEngineData engineData)
+		{
+			var offset = MaxPropulsionTorqueReader.Create(maxPropulsionTorque);
+			var belowIdle = offset.FullLoadEntries.Where(x => x.MotorSpeed < engineData.IdleSpeed).ToList();
+
+			var entries = belowIdle.Select(fullLoadEntry => new VehicleMaxPropulsionTorque.FullLoadEntry()
+					{ MotorSpeed = fullLoadEntry.MotorSpeed, FullDriveTorque = fullLoadEntry.FullDriveTorque })
+				.Concat(
+					engineData.FullLoadCurves[0].FullLoadEntries.Where(x => x.EngineSpeed > engineData.IdleSpeed)
+						.Select(fullLoadCurveEntry =>
+							new VehicleMaxPropulsionTorque.FullLoadEntry() {
+								MotorSpeed = fullLoadCurveEntry.EngineSpeed,
+								FullDriveTorque = fullLoadCurveEntry.TorqueFullLoad +
+												VectoMath.Max(
+													offset.FullLoadDriveTorque(fullLoadCurveEntry.EngineSpeed),
+													0.SI<NewtonMeter>())
+							}))
+				.Concat(
+					new[] { engineData.IdleSpeed, engineData.IdleSpeed - 0.1.RPMtoRad() }.Select(x =>
+						new VehicleMaxPropulsionTorque.FullLoadEntry() {
+							MotorSpeed = x,
+							FullDriveTorque = engineData.FullLoadCurves[0].FullLoadStationaryTorque(x) +
+											VectoMath.Max(offset.FullLoadDriveTorque(x),
+												0.SI<NewtonMeter>())
+						}))
+				.OrderBy(x => x.MotorSpeed).ToList();
+
+			return new VehicleMaxPropulsionTorque(entries);
 		}
 	}
 }

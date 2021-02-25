@@ -108,12 +108,15 @@ namespace TUGraz.VectoCommon.InputData
 
 		Meter Height { get; }
 
+		TableData ElectricMotorTorqueLimits { get; }
+
+		TableData MaxPropulsionTorque { get; }
+
 		new IVehicleComponentsEngineering Components { get; }
 
 		new IAdvancedDriverAssistantSystemsEngineering ADAS { get; }
+		
 		double InitialSOC { get; }
-
-		Watt MaxDrivetrainPower { get; }
 
 
 		VectoSimulationJobType VehicleType { get; }

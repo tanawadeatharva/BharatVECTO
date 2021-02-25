@@ -590,9 +590,11 @@ Public Class VectoJobForm
         if (Not inputData.JobInputData.Vehicle.Components.AuxiliaryInputData.BusAuxiliariesData Is nothing) Then
             cbEnableBusAux.Checked = True
             tbBusAuxParams.Text = GetRelativePath(inputData.JobInputData.Vehicle.Components.AuxiliaryInputData.BusAuxiliariesData.DataSource.SourceFile, _basePath)
+            pnBusAux.Enabled = true
         Else 
             cbEnableBusAux.Checked = False
             tbBusAuxParams.Text = ""
+            pnBusAux.Enabled = False
         End If
 
         DeclInit()
@@ -670,6 +672,13 @@ Public Class VectoJobForm
         vectoJob.AuxPAdd = TbAuxPAdd.Text.ToDouble(0)
 
         vectoJob.AuxElPadd = tbElectricAuxConstant.Text.ToDouble(0)
+
+        if cbEnableBusAux.Checked AndAlso Not string.IsNullOrWhiteSpace(tbBusAuxParams.Text) Then
+            vectoJob.UseBusAux = true
+            vectoJob.PathBusAux = tbBusAuxParams.Text
+        Else 
+            vectoJob.UseBusAux = false
+        End If
 
         'vectoJob.EngineOnly = JobType = VectoSimulationJobType.EngineOnlySimulation
 

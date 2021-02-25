@@ -642,7 +642,6 @@ Public Class DummyVehicle
     End Property
 	Public Property ADAS As IAdvancedDriverAssistantSystemDeclarationInputData Implements IVehicleDeclarationInputData.ADAS
     Public ReadOnly Property InitialSOC As Double Implements IVehicleEngineeringInputData.InitialSOC
-    Public ReadOnly Property MaxDrivetrainPower As Watt Implements IVehicleEngineeringInputData.MaxDrivetrainPower
     Public ReadOnly Property VehicleType As VectoSimulationJobType Implements IVehicleEngineeringInputData.VehicleType
     Public Property ZeroEmissionVehicle As Boolean Implements IVehicleDeclarationInputData.ZeroEmissionVehicle
     Public  Property HybridElectricHDV As Boolean Implements IVehicleDeclarationInputData.HybridElectricHDV
@@ -658,6 +657,8 @@ Public Class DummyVehicle
     Public  Property Loading As Kilogram Implements IVehicleEngineeringInputData.Loading
     Public  Property DynamicTyreRadius As Meter Implements IVehicleEngineeringInputData.DynamicTyreRadius
     Public  Property Height As Meter Implements IVehicleEngineeringInputData.Height
+    Public ReadOnly Property ElectricMotorTorqueLimits As TableData Implements IVehicleEngineeringInputData.ElectricMotorTorqueLimits
+    Public ReadOnly Property MaxPropulsionTorque As TableData Implements IVehicleEngineeringInputData.MaxPropulsionTorque
     Public ReadOnly Property LowEntry As Boolean Implements IVehicleDeclarationInputData.LowEntry
     Public ReadOnly Property Articulated As Boolean Implements IVehicleDeclarationInputData.Articulated
     Public ReadOnly Property IVehicleDeclarationInputData_Height As Meter Implements IVehicleDeclarationInputData.Height
