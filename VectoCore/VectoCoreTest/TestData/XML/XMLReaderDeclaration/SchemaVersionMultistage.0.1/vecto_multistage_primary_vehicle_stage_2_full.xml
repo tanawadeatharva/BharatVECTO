@@ -631,7 +631,7 @@ xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:DeclarationOutput:VehicleInterimFile
 				<v2.8:Model>Intermediate Model 1</v2.8:Model>
 				<v2.8:LegislativeCategory>M3</v2.8:LegislativeCategory>
 				<v2.8:CorrectedActualMass>25000</v2.8:CorrectedActualMass>
-				<v2.8:TechniclaPermissibleMaximumLadenMass>30000</v2.8:TechniclaPermissibleMaximumLadenMass>
+				<v2.8:TechnicalPermissibleMaximumLadenMass>30000</v2.8:TechnicalPermissibleMaximumLadenMass>
 				<v2.8:AirdragModifiedMultistage>true</v2.8:AirdragModifiedMultistage>
 				<v2.8:NgTankSystem>Liquefied</v2.8:NgTankSystem>
 				<v2.8:ClassBus>B</v2.8:ClassBus>

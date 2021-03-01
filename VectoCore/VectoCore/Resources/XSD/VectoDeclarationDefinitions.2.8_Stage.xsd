@@ -190,7 +190,7 @@
 							<xs:documentation>P038 - [kg]</xs:documentation>
 						</xs:annotation>
 					</xs:element>
-					<xs:element name="TechniclaPermissibleMaximumLadenMass" type="v1.0:VehicleGrossVehicleMassType" minOccurs="0">
+					<xs:element name="TechnicalPermissibleMaximumLadenMass" type="v1.0:VehicleGrossVehicleMassType" minOccurs="0">
 						<xs:annotation>
 							<xs:documentation>P041 - [kg]</xs:documentation>
 						</xs:annotation>
@@ -273,7 +273,7 @@
 							<xs:documentation>P038 - [kg]</xs:documentation>
 						</xs:annotation>
 					</xs:element>
-					<xs:element name="TechniclaPermissibleMaximumLadenMass" type="v1.0:VehicleGrossVehicleMassType" minOccurs="0">
+					<xs:element name="TechnicalPermissibleMaximumLadenMass" type="v1.0:VehicleGrossVehicleMassType" minOccurs="0">
 						<xs:annotation>
 							<xs:documentation>P041 - [kg]</xs:documentation>
 						</xs:annotation>
