@@ -623,7 +623,7 @@ xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:DeclarationOutput:VehicleInterimFile
 				<di:DigestValue>nI+57QQtWA2rFqJTZ41t0XrXcJbcGmc7j4E66iGJyT0=</di:DigestValue>
 			</di:Reference>
 			</HashPreviousStage>
-			<Vehicle xsi:type="v2.8:VectoStageInputType" id="MSTG-1-Vehicle">
+			<Vehicle xsi:type="v2.8:InterimStageInputType" id="MSTG-1-Vehicle">
 				<v2.8:Manufacturer>Intermediate Manufacturer 1</v2.8:Manufacturer>
 				<v2.8:ManufacturerAddress>Intermediate Manufacturer Address 1</v2.8:ManufacturerAddress>
 				<v2.8:VIN>VEH-1234567890</v2.8:VIN>
@@ -658,7 +658,7 @@ xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:DeclarationOutput:VehicleInterimFile
 				<di:DigestValue>BMpFCKh1bu/YPwYj37kJK1uCrv++BTLf2OUZcOt43Os=</di:DigestValue>
 			</di:Reference>
 			</HashPreviousStage>
-			<Vehicle xsi:type="v2.8:VectoStageInputType" id="MSTG-2-Vehicle">
+			<Vehicle xsi:type="v2.8:InterimStageInputType" id="MSTG-2-Vehicle">
 				<v2.8:Manufacturer>Intermediate Manufacturer 2</v2.8:Manufacturer>
 				<v2.8:ManufacturerAddress></v2.8:ManufacturerAddress>
 				<v2.8:VIN>VEH-2234567890</v2.8:VIN>
