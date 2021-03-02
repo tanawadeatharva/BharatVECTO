@@ -32,7 +32,7 @@ Imports TUGraz.VectoCore.Utils
 <CustomValidation(GetType(VectoJob), "ValidateJob")>
 Public Class VectoJob
     Implements IEngineeringInputDataProvider, IDeclarationInputDataProvider, IEngineeringJobInputData,
-                IDeclarationJobInputData, IDriverEngineeringInputData, IDriverDeclarationInputData, IAuxiliariesEngineeringInputData,
+                IDeclarationJobInputData, IDriverEngineeringInputData, IDriverDeclarationInputData, IAuxiliariesEngineeringInputData, IAuxiliaryEngineeringInputData,
                 IAuxiliariesDeclarationInputData, IJSONVehicleComponents, IEngineStopStartEngineeringInputData, IEcoRollEngineeringInputData, IPCCEngineeringInputData
 
     
@@ -57,7 +57,6 @@ Public Class VectoJob
 
     Private ReadOnly _driverAccelerationFile As SubPath
 
-    Public ReadOnly AuxPaths As Dictionary(Of String, AuxEntry)
     'Alle Nebenverbraucher die in der Veh-Datei UND im Zyklus definiert sind
 
     Public ReadOnly CycleFiles As List(Of SubPath)
@@ -89,6 +88,8 @@ Public Class VectoJob
     Public PCCOverspeedUseCase3 As Double
     Private _accelerationUpperLimit As MeterPerSquareSecond
     Public AuxElPadd As Double
+    Public AuxPwrDrivingICEOff As Double
+    Public AuxPwrStandstillICEOff As Double
 
     'Private _vehicleInputData As JSONComponentInputData
     'Private _engineInputData As JSONComponentInputData
@@ -120,8 +121,6 @@ Public Class VectoJob
         _lacDfVelocityDropFile = New SubPath()
 
         _driverAccelerationFile = New SubPath
-
-        AuxPaths = New Dictionary(Of String, AuxEntry)
 
         CycleFiles = New List(Of SubPath)
     End Sub
@@ -689,7 +688,7 @@ Public Class VectoJob
         End set
     End Property
 
-    Public Property AuxPAdd As Double
+    Public Property AuxPwrICEOn As Double
 
     Public ReadOnly Property IAuxiliariesDeclarationInputData_SavedInDeclarationMode As Boolean _
         Implements IAuxiliariesDeclarationInputData.SavedInDeclarationMode
@@ -698,10 +697,10 @@ Public Class VectoJob
         End Get
     End Property
 
-    Public ReadOnly Property Auxiliaries As IList(Of IAuxiliaryEngineeringInputData) _
+    Public ReadOnly Property Auxiliaries As IAuxiliaryEngineeringInputData _
         Implements IAuxiliariesEngineeringInputData.Auxiliaries
         Get
-            Return AuxData().Cast(Of IAuxiliaryEngineeringInputData).ToList()
+            Return me
         End Get
     End Property
 
@@ -714,11 +713,6 @@ Public Class VectoJob
     End Get
     End Property
 
-    Public ReadOnly Property ElectricAuxPower As Watt Implements IAuxiliariesEngineeringInputData.ElectricAuxPower
-        Get
-            Return AuxElPadd.SI(Of Watt)
-        End Get
-    End Property
 
     Public ReadOnly Property IAuxiliariesDeclarationInputData_Auxiliaries As IList(Of IAuxiliaryDeclarationInputData) _
         Implements IAuxiliariesDeclarationInputData.Auxiliaries
@@ -727,43 +721,9 @@ Public Class VectoJob
         End Get
     End Property
 
-    Protected Function AuxData() As IList(Of AuxiliaryDataInputData)
-        Dim retVal As List(Of AuxiliaryDataInputData) = New List(Of AuxiliaryDataInputData)
+    Protected Function AuxData() As IList(Of DeclarationAuxiliaryDataInputData)
 
-        If AuxPAdd > 0 Then
-            retVal.Add(New AuxiliaryDataInputData() With {
-                        .ID = "ConstantAux",
-                        .AuxiliaryType = AuxiliaryDemandType.Constant,
-                        .ConstantPowerDemand = AuxPAdd.SI(Of Watt)()
-                        })
-        End If
-        If (AuxElPadd > 0) Then
-            retVal.Add(New AuxiliaryDataInputData() With {
-                          .ID = "ConstantAuxEL",
-                          .AuxiliaryType = AuxiliaryDemandType.Constant,
-                          .ConstantPowerDemand = AuxElPadd.SI(Of Watt)
-                          })
-        End If
-
-        For Each auxEntry As KeyValuePair(Of String, AuxEntry) In AuxPaths
-            Dim theAuxData As AuxiliaryDataInputData = New AuxiliaryDataInputData() With {
-                    .Type = auxEntry.Value.Type,
-                    .Technology = auxEntry.Value.TechnologyList,
-                    .ID = auxEntry.Key
-                    }
-            retVal.Add(theAuxData)
-            If Not File.Exists(auxEntry.Value.Path.FullPath) Then Continue For
-
-            Dim stream As StreamReader = New StreamReader(auxEntry.Value.Path.FullPath)
-            stream.ReadLine() ' skip header "Transmission ration to engine rpm [-]"
-            theAuxData.TransmissionRatio = stream.ReadLine().IndulgentParse()
-            stream.ReadLine() ' skip header "Efficiency to engine [-]"
-            theAuxData.EfficiencyToEngine = stream.ReadLine().IndulgentParse()
-            stream.ReadLine() ' skip header "Efficiency auxiliary to supply [-]"
-            theAuxData.EfficiencyToSupply = stream.ReadLine().IndulgentParse()
-            theAuxData.DemandMap = VectoCSVFile.ReadStream(New MemoryStream(Encoding.UTF8.GetBytes(stream.ReadToEnd())),
-                                                            source:=auxEntry.Value.Path.FullPath)
-        Next
+        Dim retVal As List(Of DeclarationAuxiliaryDataInputData) = New List(Of DeclarationAuxiliaryDataInputData)
 
         Return retVal
     End Function
@@ -817,6 +777,26 @@ Public Class VectoJob
         End Get
     End Property
 
+    Public ReadOnly Property ConstantPowerDemand As Watt Implements IAuxiliaryEngineeringInputData.ConstantPowerDemand
+    get
+        Return AuxPwrICEOn.SI(of Watt)
+    End Get
+    End Property
+    Public ReadOnly Property PowerDemandICEOffDriving As Watt Implements IAuxiliaryEngineeringInputData.PowerDemandICEOffDriving
+    get
+        Return AuxPwrDrivingICEOff.SI(of Watt)
+    End Get
+    End Property
+    Public ReadOnly Property PowerDemandICEOffStandstill As Watt Implements IAuxiliaryEngineeringInputData.PowerDemandICEOffStandstill
+    get
+        Return AuxPwrStandstillICEOff.SI(Of Watt)
+    End Get
+    End Property
+    Public ReadOnly Property ElectricPowerDemand As Watt Implements IAuxiliaryEngineeringInputData.ElectricPowerDemand
+    get
+            Return AuxElPadd.SI(of Watt)
+    End Get
+    End Property
 End Class
 
 

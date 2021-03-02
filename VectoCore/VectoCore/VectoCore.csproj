@@ -137,7 +137,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Configuration\Constants.cs" />
-    <Compile Include="InputData\AuxiliaryFileHelper.cs" />
     <Compile Include="InputData\FileIO\JSON\BusAuxiliaryInputData.cs" />
     <Compile Include="InputData\FileIO\JSON\IJSONVehicleComponents.cs" />
     <Compile Include="InputData\FileIO\JSON\JSONBattery.cs" />
@@ -491,7 +490,6 @@
     <Compile Include="InputData\Impl\InputData.cs" />
     <Compile Include="InputData\IVectoRunDataFactory.cs" />
     <Compile Include="InputData\Reader\ComponentData\AccelerationCurveReader.cs" />
-    <Compile Include="InputData\Reader\ComponentData\AuxiliaryDataReader.cs" />
     <Compile Include="InputData\Reader\ComponentData\CrossWindCorrectionCurveReader.cs" />
     <Compile Include="InputData\Reader\ComponentData\PTOIdleLossMapReader.cs" />
     <Compile Include="InputData\Reader\ComponentData\RetarderLossMapReader.cs" />
@@ -595,7 +593,6 @@
     <Compile Include="Models\Declaration\Wheels.cs" />
     <Compile Include="Models\Declaration\WHTCCorrection.cs" />
     <Compile Include="Models\SimulationComponent\Data\CrosswindCorrectionCdxALookup.cs" />
-    <Compile Include="Models\SimulationComponent\Data\AuxiliaryData.cs" />
     <Compile Include="Models\SimulationComponent\Data\AuxSupplyPowerReader.cs" />
     <Compile Include="Models\SimulationComponent\Data\AxleGearData.cs" />
     <Compile Include="Models\SimulationComponent\Data\CycleData.cs" />

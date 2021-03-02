@@ -504,6 +504,72 @@
     <None Include="TestData\Hybrids\Battery\GenericBatteryLarge.vbat">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Include="TestData\Hybrids\BusAuxEngineeringMode\BusAuxData_C3b.vaux">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Hybrids\BusAuxEngineeringMode\BusAuxData_C3a.vaux">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Hybrids\BusAuxEngineeringMode\BusAuxData_C2b.vaux">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Hybrids\BusAuxEngineeringMode\BusAuxData_C2a.vaux">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Hybrids\BusAuxEngineeringMode\BusAuxData_C1.vaux">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Hybrids\BusAuxEngineeringMode\GenericBattery.vreess">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Hybrids\BusAuxEngineeringMode\GenericBat_3kWh.vbatr">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Hybrids\BusAuxEngineeringMode\GenericBat_3kWh.vbatv">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Hybrids\BusAuxEngineeringMode\GenericEM.vemd">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Hybrids\BusAuxEngineeringMode\GenericEM_15KW_220Nm.vem">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Hybrids\BusAuxEngineeringMode\GenericEM_15kW_220Nm.vemp">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Hybrids\BusAuxEngineeringMode\GenericEM_32kW_450Nm.vemo">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Hybrids\BusAuxEngineeringMode\HybridStrategyParams.vhctl">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Hybrids\BusAuxEngineeringMode\InterurbanBus_ENG_BusAux_C3b.vecto">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Hybrids\BusAuxEngineeringMode\InterurbanBus_ENG_BusAux_C3a.vecto">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Hybrids\BusAuxEngineeringMode\InterurbanBus_ENG_BusAux_C2b.vecto">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Hybrids\BusAuxEngineeringMode\InterurbanBus_ENG_BusAux_C2a.vecto">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Hybrids\BusAuxEngineeringMode\InterurbanBus_P1.vveh">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Hybrids\BusAuxEngineeringMode\InterurbanBus_ENG_BusAux_C1.vecto">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Hybrids\BusAuxEngineeringMode\InterurbanBus_ENG_BusAux_B.vecto">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Hybrids\BusAuxEngineeringMode\MaxCurrent.vimax">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Hybrids\BusAuxEngineeringMode\ShiftParameters.vtcu">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="TestData\Hybrids\Citybus_P1-APT-P-220kW-7.7l\Bus.vacc">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
@@ -577,6 +643,63 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="TestData\Hybrids\ElectricMotor\GenericMap240kW.vemo">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Hybrids\BusAuxEngineeringMode\250kW.vfld">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Hybrids\BusAuxEngineeringMode\250kW.vmap">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Hybrids\BusAuxEngineeringMode\Axle_Coach.vtlm">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Hybrids\BusAuxEngineeringMode\BusAuxData_A.vaux">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Hybrids\BusAuxEngineeringMode\BusAuxData_B.vaux">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Hybrids\BusAuxEngineeringMode\Default.vrlm">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Hybrids\BusAuxEngineeringMode\DEFAULT_3-Cylinder_2-Stage_598ccm.ACMP">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Hybrids\BusAuxEngineeringMode\Driver.vacc">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Hybrids\BusAuxEngineeringMode\Engine_250kW_7.7l.veng">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Hybrids\BusAuxEngineeringMode\Gear_1.vtlm">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Hybrids\BusAuxEngineeringMode\Gear_2.vtlm">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Hybrids\BusAuxEngineeringMode\Gear_3.vtlm">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Hybrids\BusAuxEngineeringMode\Gear_4.vtlm">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Hybrids\BusAuxEngineeringMode\Gear_5.vtlm">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Hybrids\BusAuxEngineeringMode\Gear_6.vtlm">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Hybrids\BusAuxEngineeringMode\Interurban.vdri">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Hybrids\BusAuxEngineeringMode\InterurbanBus.vveh">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Hybrids\BusAuxEngineeringMode\InterurbanBus_ENG_BusAux_A.vecto">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Hybrids\BusAuxEngineeringMode\MT_6_Bus.vgbx">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="TestData\Hybrids\GenericVehicle_Group2_P2\175kW.vfld">

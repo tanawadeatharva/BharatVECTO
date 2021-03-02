@@ -55,16 +55,21 @@ Partial Class VectoJobForm
         Me.BtDRIrem = New System.Windows.Forms.Button()
         Me.BtDRIadd = New System.Windows.Forms.Button()
         Me.GrAuxMech = New System.Windows.Forms.GroupBox()
-        Me.Label9 = New System.Windows.Forms.Label()
-        Me.TbAuxPAdd = New System.Windows.Forms.TextBox()
-        Me.Label8 = New System.Windows.Forms.Label()
+        Me.pnAuxEngineering = New System.Windows.Forms.Panel()
+        Me.tbPAuxStandstillICEOff = New System.Windows.Forms.TextBox()
+        Me.lblAuxStandstillICEOffUnit = New System.Windows.Forms.Label()
+        Me.lblAuxStandstillICEOff = New System.Windows.Forms.Label()
+        Me.tbPAuxDrivingICEOff = New System.Windows.Forms.TextBox()
+        Me.lblAuxDrivingICEOffUnit = New System.Windows.Forms.Label()
+        Me.lblAuxDrivingICEOff = New System.Windows.Forms.Label()
+        Me.TbAuxPAuxICEOn = New System.Windows.Forms.TextBox()
+        Me.lblAuxICEOnUnit = New System.Windows.Forms.Label()
+        Me.lblAuxICEOn = New System.Windows.Forms.Label()
         Me.Label32 = New System.Windows.Forms.Label()
         Me.LvAux = New System.Windows.Forms.ListView()
         Me.ColumnHeader4 = CType(New System.Windows.Forms.ColumnHeader(),System.Windows.Forms.ColumnHeader)
         Me.ColumnHeader5 = CType(New System.Windows.Forms.ColumnHeader(),System.Windows.Forms.ColumnHeader)
         Me.ColumnHeader6 = CType(New System.Windows.Forms.ColumnHeader(),System.Windows.Forms.ColumnHeader)
-        Me.ButAuxRem = New System.Windows.Forms.Button()
-        Me.ButAuxAdd = New System.Windows.Forms.Button()
         Me.tcJob = New System.Windows.Forms.TabControl()
         Me.tpAuxiliaries = New System.Windows.Forms.TabPage()
         Me.gbBusAux = New System.Windows.Forms.GroupBox()
@@ -189,6 +194,7 @@ Partial Class VectoJobForm
         Me.lblEngineCharacteristics = New System.Windows.Forms.Label()
         Me.lblTitle = New System.Windows.Forms.Label()
         Me.pnJobInfo = New System.Windows.Forms.Panel()
+        Me.pnAuxDeclarationMode = New System.Windows.Forms.Panel()
         Me.TabPgGen.SuspendLayout
         Me.pnHybridStrategy.SuspendLayout
         Me.pnVehicle.SuspendLayout
@@ -197,6 +203,7 @@ Partial Class VectoJobForm
         Me.pnShiftParams.SuspendLayout
         Me.GrCycles.SuspendLayout
         Me.GrAuxMech.SuspendLayout
+        Me.pnAuxEngineering.SuspendLayout
         Me.tcJob.SuspendLayout
         Me.tpAuxiliaries.SuspendLayout
         Me.gbBusAux.SuspendLayout
@@ -221,6 +228,7 @@ Partial Class VectoJobForm
         CType(Me.PicVehicle,System.ComponentModel.ISupportInitialize).BeginInit
         CType(Me.PicBox,System.ComponentModel.ISupportInitialize).BeginInit
         Me.pnJobInfo.SuspendLayout
+        Me.pnAuxDeclarationMode.SuspendLayout
         Me.SuspendLayout
         '
         'TabPgGen
@@ -515,51 +523,112 @@ Partial Class VectoJobForm
         '
         Me.GrAuxMech.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left)  _
             Or System.Windows.Forms.AnchorStyles.Right),System.Windows.Forms.AnchorStyles)
-        Me.GrAuxMech.Controls.Add(Me.Label9)
-        Me.GrAuxMech.Controls.Add(Me.TbAuxPAdd)
-        Me.GrAuxMech.Controls.Add(Me.Label8)
-        Me.GrAuxMech.Controls.Add(Me.Label32)
-        Me.GrAuxMech.Controls.Add(Me.LvAux)
-        Me.GrAuxMech.Controls.Add(Me.ButAuxRem)
-        Me.GrAuxMech.Controls.Add(Me.ButAuxAdd)
+        Me.GrAuxMech.Controls.Add(Me.pnAuxDeclarationMode)
+        Me.GrAuxMech.Controls.Add(Me.pnAuxEngineering)
         Me.GrAuxMech.Location = New System.Drawing.Point(6, 16)
         Me.GrAuxMech.Name = "GrAuxMech"
-        Me.GrAuxMech.Size = New System.Drawing.Size(515, 201)
+        Me.GrAuxMech.Size = New System.Drawing.Size(515, 280)
         Me.GrAuxMech.TabIndex = 9
         Me.GrAuxMech.TabStop = false
         Me.GrAuxMech.Text = "Mechanical Auxiliaries"
         '
-        'Label9
+        'pnAuxEngineering
         '
-        Me.Label9.AutoSize = true
-        Me.Label9.Location = New System.Drawing.Point(191, 24)
-        Me.Label9.Name = "Label9"
-        Me.Label9.Size = New System.Drawing.Size(24, 13)
-        Me.Label9.TabIndex = 44
-        Me.Label9.Text = "[W]"
+        Me.pnAuxEngineering.Controls.Add(Me.tbPAuxStandstillICEOff)
+        Me.pnAuxEngineering.Controls.Add(Me.lblAuxStandstillICEOffUnit)
+        Me.pnAuxEngineering.Controls.Add(Me.lblAuxStandstillICEOff)
+        Me.pnAuxEngineering.Controls.Add(Me.tbPAuxDrivingICEOff)
+        Me.pnAuxEngineering.Controls.Add(Me.lblAuxDrivingICEOffUnit)
+        Me.pnAuxEngineering.Controls.Add(Me.lblAuxDrivingICEOff)
+        Me.pnAuxEngineering.Controls.Add(Me.TbAuxPAuxICEOn)
+        Me.pnAuxEngineering.Controls.Add(Me.lblAuxICEOnUnit)
+        Me.pnAuxEngineering.Controls.Add(Me.lblAuxICEOn)
+        Me.pnAuxEngineering.Location = New System.Drawing.Point(6, 19)
+        Me.pnAuxEngineering.Name = "pnAuxEngineering"
+        Me.pnAuxEngineering.Size = New System.Drawing.Size(500, 80)
+        Me.pnAuxEngineering.TabIndex = 45
         '
-        'TbAuxPAdd
+        'tbPAuxStandstillICEOff
         '
-        Me.TbAuxPAdd.Location = New System.Drawing.Point(109, 21)
-        Me.TbAuxPAdd.Name = "TbAuxPAdd"
-        Me.TbAuxPAdd.Size = New System.Drawing.Size(76, 20)
-        Me.TbAuxPAdd.TabIndex = 43
+        Me.tbPAuxStandstillICEOff.Location = New System.Drawing.Point(170, 55)
+        Me.tbPAuxStandstillICEOff.Name = "tbPAuxStandstillICEOff"
+        Me.tbPAuxStandstillICEOff.Size = New System.Drawing.Size(76, 20)
+        Me.tbPAuxStandstillICEOff.TabIndex = 49
         '
-        'Label8
+        'lblAuxStandstillICEOffUnit
         '
-        Me.Label8.AutoSize = true
-        Me.Label8.Location = New System.Drawing.Point(7, 24)
-        Me.Label8.Name = "Label8"
-        Me.Label8.Size = New System.Drawing.Size(97, 13)
-        Me.Label8.TabIndex = 42
-        Me.Label8.Text = "Constant Aux Load"
+        Me.lblAuxStandstillICEOffUnit.AutoSize = true
+        Me.lblAuxStandstillICEOffUnit.Location = New System.Drawing.Point(252, 58)
+        Me.lblAuxStandstillICEOffUnit.Name = "lblAuxStandstillICEOffUnit"
+        Me.lblAuxStandstillICEOffUnit.Size = New System.Drawing.Size(24, 13)
+        Me.lblAuxStandstillICEOffUnit.TabIndex = 50
+        Me.lblAuxStandstillICEOffUnit.Text = "[W]"
+        '
+        'lblAuxStandstillICEOff
+        '
+        Me.lblAuxStandstillICEOff.AutoSize = true
+        Me.lblAuxStandstillICEOff.Location = New System.Drawing.Point(3, 58)
+        Me.lblAuxStandstillICEOff.Name = "lblAuxStandstillICEOff"
+        Me.lblAuxStandstillICEOff.Size = New System.Drawing.Size(143, 13)
+        Me.lblAuxStandstillICEOff.TabIndex = 48
+        Me.lblAuxStandstillICEOff.Text = "Aux Load (Standstill, ICE Off)"
+        '
+        'tbPAuxDrivingICEOff
+        '
+        Me.tbPAuxDrivingICEOff.Location = New System.Drawing.Point(170, 29)
+        Me.tbPAuxDrivingICEOff.Name = "tbPAuxDrivingICEOff"
+        Me.tbPAuxDrivingICEOff.Size = New System.Drawing.Size(76, 20)
+        Me.tbPAuxDrivingICEOff.TabIndex = 46
+        '
+        'lblAuxDrivingICEOffUnit
+        '
+        Me.lblAuxDrivingICEOffUnit.AutoSize = true
+        Me.lblAuxDrivingICEOffUnit.Location = New System.Drawing.Point(252, 32)
+        Me.lblAuxDrivingICEOffUnit.Name = "lblAuxDrivingICEOffUnit"
+        Me.lblAuxDrivingICEOffUnit.Size = New System.Drawing.Size(24, 13)
+        Me.lblAuxDrivingICEOffUnit.TabIndex = 47
+        Me.lblAuxDrivingICEOffUnit.Text = "[W]"
+        '
+        'lblAuxDrivingICEOff
+        '
+        Me.lblAuxDrivingICEOff.AutoSize = true
+        Me.lblAuxDrivingICEOff.Location = New System.Drawing.Point(3, 32)
+        Me.lblAuxDrivingICEOff.Name = "lblAuxDrivingICEOff"
+        Me.lblAuxDrivingICEOff.Size = New System.Drawing.Size(134, 13)
+        Me.lblAuxDrivingICEOff.TabIndex = 45
+        Me.lblAuxDrivingICEOff.Text = "Aux Load (Driving, ICE Off)"
+        '
+        'TbAuxPAuxICEOn
+        '
+        Me.TbAuxPAuxICEOn.Location = New System.Drawing.Point(170, 3)
+        Me.TbAuxPAuxICEOn.Name = "TbAuxPAuxICEOn"
+        Me.TbAuxPAuxICEOn.Size = New System.Drawing.Size(76, 20)
+        Me.TbAuxPAuxICEOn.TabIndex = 43
+        '
+        'lblAuxICEOnUnit
+        '
+        Me.lblAuxICEOnUnit.AutoSize = true
+        Me.lblAuxICEOnUnit.Location = New System.Drawing.Point(252, 6)
+        Me.lblAuxICEOnUnit.Name = "lblAuxICEOnUnit"
+        Me.lblAuxICEOnUnit.Size = New System.Drawing.Size(24, 13)
+        Me.lblAuxICEOnUnit.TabIndex = 44
+        Me.lblAuxICEOnUnit.Text = "[W]"
+        '
+        'lblAuxICEOn
+        '
+        Me.lblAuxICEOn.AutoSize = true
+        Me.lblAuxICEOn.Location = New System.Drawing.Point(3, 6)
+        Me.lblAuxICEOn.Name = "lblAuxICEOn"
+        Me.lblAuxICEOn.Size = New System.Drawing.Size(95, 13)
+        Me.lblAuxICEOn.TabIndex = 42
+        Me.lblAuxICEOn.Text = "Aux Load (ICE On)"
         '
         'Label32
         '
         Me.Label32.Anchor = CType(((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left)  _
             Or System.Windows.Forms.AnchorStyles.Right),System.Windows.Forms.AnchorStyles)
         Me.Label32.AutoSize = true
-        Me.Label32.Location = New System.Drawing.Point(403, 171)
+        Me.Label32.Location = New System.Drawing.Point(9, 151)
         Me.Label32.Name = "Label32"
         Me.Label32.Size = New System.Drawing.Size(106, 13)
         Me.Label32.TabIndex = 3
@@ -574,10 +643,10 @@ Partial Class VectoJobForm
         Me.LvAux.FullRowSelect = true
         Me.LvAux.GridLines = true
         Me.LvAux.HideSelection = false
-        Me.LvAux.Location = New System.Drawing.Point(6, 50)
+        Me.LvAux.Location = New System.Drawing.Point(3, 3)
         Me.LvAux.MultiSelect = false
         Me.LvAux.Name = "LvAux"
-        Me.LvAux.Size = New System.Drawing.Size(503, 115)
+        Me.LvAux.Size = New System.Drawing.Size(504, 145)
         Me.LvAux.TabIndex = 0
         Me.LvAux.TabStop = false
         Me.LvAux.UseCompatibleStateImageBehavior = false
@@ -597,28 +666,6 @@ Partial Class VectoJobForm
         '
         Me.ColumnHeader6.Text = "Input File"
         Me.ColumnHeader6.Width = 331
-        '
-        'ButAuxRem
-        '
-        Me.ButAuxRem.Anchor = CType(((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left)  _
-            Or System.Windows.Forms.AnchorStyles.Right),System.Windows.Forms.AnchorStyles)
-        Me.ButAuxRem.Image = Global.TUGraz.VECTO.My.Resources.Resources.minus_circle_icon
-        Me.ButAuxRem.Location = New System.Drawing.Point(29, 171)
-        Me.ButAuxRem.Name = "ButAuxRem"
-        Me.ButAuxRem.Size = New System.Drawing.Size(24, 24)
-        Me.ButAuxRem.TabIndex = 2
-        Me.ButAuxRem.UseVisualStyleBackColor = true
-        '
-        'ButAuxAdd
-        '
-        Me.ButAuxAdd.Anchor = CType(((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left)  _
-            Or System.Windows.Forms.AnchorStyles.Right),System.Windows.Forms.AnchorStyles)
-        Me.ButAuxAdd.Image = Global.TUGraz.VECTO.My.Resources.Resources.plus_circle_icon
-        Me.ButAuxAdd.Location = New System.Drawing.Point(5, 171)
-        Me.ButAuxAdd.Name = "ButAuxAdd"
-        Me.ButAuxAdd.Size = New System.Drawing.Size(24, 24)
-        Me.ButAuxAdd.TabIndex = 1
-        Me.ButAuxAdd.UseVisualStyleBackColor = true
         '
         'tcJob
         '
@@ -653,7 +700,7 @@ Partial Class VectoJobForm
         '
         Me.gbBusAux.Controls.Add(Me.cbEnableBusAux)
         Me.gbBusAux.Controls.Add(Me.pnBusAux)
-        Me.gbBusAux.Location = New System.Drawing.Point(6, 223)
+        Me.gbBusAux.Location = New System.Drawing.Point(6, 302)
         Me.gbBusAux.Name = "gbBusAux"
         Me.gbBusAux.Size = New System.Drawing.Size(515, 78)
         Me.gbBusAux.TabIndex = 11
@@ -716,7 +763,7 @@ Partial Class VectoJobForm
         Me.gbElectricAux.Controls.Add(Me.lblElAuxConstUnit)
         Me.gbElectricAux.Controls.Add(Me.tbElectricAuxConstant)
         Me.gbElectricAux.Controls.Add(Me.lblElAuxConst)
-        Me.gbElectricAux.Location = New System.Drawing.Point(6, 307)
+        Me.gbElectricAux.Location = New System.Drawing.Point(6, 386)
         Me.gbElectricAux.Name = "gbElectricAux"
         Me.gbElectricAux.Size = New System.Drawing.Size(515, 55)
         Me.gbElectricAux.TabIndex = 10
@@ -1562,7 +1609,7 @@ Partial Class VectoJobForm
         'StatusStrip1
         '
         Me.StatusStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.ToolStripStatusLabelGEN})
-        Me.StatusStrip1.Location = New System.Drawing.Point(0, 582)
+        Me.StatusStrip1.Location = New System.Drawing.Point(0, 581)
         Me.StatusStrip1.Name = "StatusStrip1"
         Me.StatusStrip1.Size = New System.Drawing.Size(942, 22)
         Me.StatusStrip1.SizingGrip = false
@@ -1578,7 +1625,7 @@ Partial Class VectoJobForm
         'ButOK
         '
         Me.ButOK.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right),System.Windows.Forms.AnchorStyles)
-        Me.ButOK.Location = New System.Drawing.Point(776, 555)
+        Me.ButOK.Location = New System.Drawing.Point(776, 554)
         Me.ButOK.Name = "ButOK"
         Me.ButOK.Size = New System.Drawing.Size(75, 23)
         Me.ButOK.TabIndex = 0
@@ -1589,7 +1636,7 @@ Partial Class VectoJobForm
         '
         Me.ButCancel.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right),System.Windows.Forms.AnchorStyles)
         Me.ButCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel
-        Me.ButCancel.Location = New System.Drawing.Point(857, 555)
+        Me.ButCancel.Location = New System.Drawing.Point(857, 554)
         Me.ButCancel.Name = "ButCancel"
         Me.ButCancel.Size = New System.Drawing.Size(75, 23)
         Me.ButCancel.TabIndex = 1
@@ -1810,13 +1857,22 @@ Partial Class VectoJobForm
         Me.pnJobInfo.Size = New System.Drawing.Size(397, 471)
         Me.pnJobInfo.TabIndex = 39
         '
+        'pnAuxDeclarationMode
+        '
+        Me.pnAuxDeclarationMode.Controls.Add(Me.LvAux)
+        Me.pnAuxDeclarationMode.Controls.Add(Me.Label32)
+        Me.pnAuxDeclarationMode.Location = New System.Drawing.Point(6, 104)
+        Me.pnAuxDeclarationMode.Name = "pnAuxDeclarationMode"
+        Me.pnAuxDeclarationMode.Size = New System.Drawing.Size(503, 170)
+        Me.pnAuxDeclarationMode.TabIndex = 40
+        '
         'VectoJobForm
         '
         Me.AcceptButton = Me.ButOK
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6!, 13!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.CancelButton = Me.ButCancel
-        Me.ClientSize = New System.Drawing.Size(942, 604)
+        Me.ClientSize = New System.Drawing.Size(942, 603)
         Me.Controls.Add(Me.pnJobInfo)
         Me.Controls.Add(Me.lblTitle)
         Me.Controls.Add(Me.PictureBox1)
@@ -1845,7 +1901,8 @@ Partial Class VectoJobForm
         Me.GrCycles.ResumeLayout(false)
         Me.GrCycles.PerformLayout
         Me.GrAuxMech.ResumeLayout(false)
-        Me.GrAuxMech.PerformLayout
+        Me.pnAuxEngineering.ResumeLayout(false)
+        Me.pnAuxEngineering.PerformLayout
         Me.tcJob.ResumeLayout(false)
         Me.tpAuxiliaries.ResumeLayout(false)
         Me.gbBusAux.ResumeLayout(false)
@@ -1884,6 +1941,8 @@ Partial Class VectoJobForm
         CType(Me.PicBox,System.ComponentModel.ISupportInitialize).EndInit
         Me.pnJobInfo.ResumeLayout(false)
         Me.pnJobInfo.PerformLayout
+        Me.pnAuxDeclarationMode.ResumeLayout(false)
+        Me.pnAuxDeclarationMode.PerformLayout
         Me.ResumeLayout(false)
         Me.PerformLayout
 
@@ -1915,8 +1974,6 @@ End Sub
     Friend WithEvents ColumnHeader4 As ColumnHeader
     Friend WithEvents ColumnHeader5 As ColumnHeader
     Friend WithEvents ColumnHeader6 As ColumnHeader
-    Friend WithEvents ButAuxRem As Button
-    Friend WithEvents ButAuxAdd As Button
     Friend WithEvents PictureBox1 As PictureBox
     Friend WithEvents TabPgDriver As TabPage
     Friend WithEvents BtDesMaxBr As Button
@@ -1974,9 +2031,9 @@ End Sub
     Friend WithEvents Label6 As System.Windows.Forms.Label
     Friend WithEvents tbLacMinSpeed As System.Windows.Forms.TextBox
     Friend WithEvents Label7 As System.Windows.Forms.Label
-    Friend WithEvents Label9 As System.Windows.Forms.Label
-    Friend WithEvents TbAuxPAdd As System.Windows.Forms.TextBox
-    Friend WithEvents Label8 As System.Windows.Forms.Label
+    Friend WithEvents lblAuxICEOnUnit As System.Windows.Forms.Label
+    Friend WithEvents TbAuxPAuxICEOn As System.Windows.Forms.TextBox
+    Friend WithEvents lblAuxICEOn As System.Windows.Forms.Label
     Friend WithEvents Label15 As System.Windows.Forms.Label
     Friend WithEvents lblEngineCharacteristics As System.Windows.Forms.Label
     Friend WithEvents TabPgADAS As TabPage
@@ -2051,4 +2108,12 @@ End Sub
     Friend WithEvents btnBusAuxP As Button
     Friend WithEvents tbBusAuxParams As TextBox
     Friend WithEvents btnBrowsBusAuxParams As Button
+    Friend WithEvents pnAuxEngineering As Panel
+    Friend WithEvents tbPAuxStandstillICEOff As TextBox
+    Friend WithEvents lblAuxStandstillICEOffUnit As Label
+    Friend WithEvents lblAuxStandstillICEOff As Label
+    Friend WithEvents tbPAuxDrivingICEOff As TextBox
+    Friend WithEvents lblAuxDrivingICEOffUnit As Label
+    Friend WithEvents lblAuxDrivingICEOff As Label
+    Friend WithEvents pnAuxDeclarationMode As Panel
 End Class

@@ -158,7 +158,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
                     SimulationType = SimulationType.DistanceCycle | SimulationType.MeasuredSpeedCycle | SimulationType.PWheel,
                     GearshiftParameters = gearshiftParams,
                     ShiftStrategy = InputDataProvider.JobInputData.ShiftStrategy,
-					ElectricAuxDemand = InputDataProvider.JobInputData.Vehicle.Components.AuxiliaryInputData.ElectricAuxPower,
+					ElectricAuxDemand = InputDataProvider.JobInputData.Vehicle.Components.AuxiliaryInputData.Auxiliaries.ElectricPowerDemand,
                 };
             }
         }
@@ -241,7 +241,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 							gearboxData.Type, InputDataProvider.DriverInputData.GearshiftInputData,
 							axlegearData.AxleGear.Ratio * (angledriveData?.Angledrive.Ratio ?? 1.0), engineData.IdleSpeed),
 						ShiftStrategy = InputDataProvider.JobInputData.ShiftStrategy,
-						ElectricAuxDemand = InputDataProvider.JobInputData.Vehicle.Components.AuxiliaryInputData.ElectricAuxPower,
+						ElectricAuxDemand = InputDataProvider.JobInputData.Vehicle.Components.AuxiliaryInputData.Auxiliaries.ElectricPowerDemand,
 					};
 				}
 			}

@@ -628,49 +628,44 @@ public class JSONFileWriter : IOutputFileWriter
 		}
 		body.Add("ShiftStrategy", input.JobInputData.ShiftStrategy);
 		body.Add("HybridStrategyParams", GetRelativePath(input.JobInputData.HybridStrategyParameters.Source, basePath));
-		var aux = job.Vehicle.Components.AuxiliaryInputData;
 
-
-		var pAdd = 0.0;
-		var pAddEl = 0.0;
 		var auxList = new List<object>();
-		foreach (var auxEntry in aux.Auxiliaries)
-		{
-			if (auxEntry.AuxiliaryType == AuxiliaryDemandType.Constant)
-			{
-				if (auxEntry.ID == "ConstantAuxEL") {
-					pAddEl += auxEntry.ConstantPowerDemand.Value();
+		if (job.SavedInDeclarationMode && job.Vehicle is IVehicleDeclarationInputData declVehicle) {
+			var aux = declVehicle.Components.AuxiliaryInputData;
+			foreach (var auxEntry in aux.Auxiliaries) {
+				
+				var auxOut = new Dictionary<string, object>();
+				var engineeringAuxEntry = auxEntry as IAuxiliaryDeclarationInputData;
+				if (!job.SavedInDeclarationMode) {
+					auxOut.Add("Type", auxEntry.Type.Name());
+					auxOut.Add("Technology", new string[] { });
 				} else {
-					pAdd += auxEntry.ConstantPowerDemand.Value();
+					auxOut.Add("Type", auxEntry.Type.Name());
+					auxOut.Add("Technology", engineeringAuxEntry.Technology);
 				}
-				continue;
-			}
 
-			var auxOut = new Dictionary<string, object>();
-			var engineeringAuxEntry = auxEntry as IAuxiliaryDeclarationInputData;
-			if (!job.SavedInDeclarationMode)
-			{
-				auxOut.Add("ID", auxEntry.ID);
-				auxOut.Add("Type", AuxiliaryTypeHelper.ParseKey(auxEntry.ID).Name());
-				auxOut.Add("Path", GetRelativePath(auxEntry.DemandMap.Source, basePath));
-				auxOut.Add("Technology", new string[] { });
+				auxList.Add(auxOut);
 			}
-			else
-			{
-				auxOut.Add("ID", auxEntry.ID);
-				auxOut.Add("Type", AuxiliaryTypeHelper.ParseKey(auxEntry.ID).Name());
-				auxOut.Add("Technology", engineeringAuxEntry.Technology);
+			if (declVehicle.Components.BusAuxiliaries != null) {
+				body.Add("BusAux", GetRelativePath(job.Vehicle.Components.AuxiliaryInputData.BusAuxiliariesData.DataSource.SourceFile, basePath));
 			}
-			auxList.Add(auxOut);
+			body.Add("Aux", auxList);
 		}
 
-		if (aux.BusAuxiliariesData != null) {
-			body.Add("BusAux", GetRelativePath(job.Vehicle.Components.AuxiliaryInputData.BusAuxiliariesData.DataSource.SourceFile, basePath));
-		}
-		body.Add("Aux", auxList);
-		if (!job.SavedInDeclarationMode) {
-			body.Add("Padd", pAdd);
-			body.Add("Padd_electric", pAddEl);
+		
+
+		if (!job.SavedInDeclarationMode && job.Vehicle is IVehicleEngineeringInputData engVehicle) {
+			var aux = engVehicle.Components.AuxiliaryInputData;
+			if (aux.BusAuxiliariesData != null) {
+				body.Add("BusAux",
+					GetRelativePath(job.Vehicle.Components.AuxiliaryInputData.BusAuxiliariesData.DataSource.SourceFile,
+						basePath));
+			}
+
+			body.Add("Padd", aux.Auxiliaries.ConstantPowerDemand.Value());
+			body.Add("Paux_ICEOff_Driving", aux.Auxiliaries.PowerDemandICEOffDriving.Value());
+			body.Add("Paux_ICEOff_Standstill", aux.Auxiliaries.PowerDemandICEOffStandstill.Value());
+			body.Add("Padd_electric", aux.Auxiliaries.ElectricPowerDemand);
 		}
 
 		var driver = input.DriverInputData;
@@ -769,7 +764,7 @@ public class JSONFileWriter : IOutputFileWriter
 					basePath));
 			body.Add("TCU", GetRelativePath(input.DriverInputData.GearshiftInputData.Source, basePath));
 		}
-		body.Add("Padd_electric", input.JobInputData.Vehicle.Components.AuxiliaryInputData.ElectricAuxPower.Value());
+		body.Add("Padd_electric", input.JobInputData.Vehicle.Components.AuxiliaryInputData.Auxiliaries.ElectricPowerDemand.Value());
 
 		//if (!job.SavedInDeclarationMode)
 		//      {
@@ -939,37 +934,40 @@ public class JSONFileWriter : IOutputFileWriter
 		}
 		body.Add("ShiftStrategy", input.JobInputData.ShiftStrategy);
 
-		var aux = job.Vehicle.Components.AuxiliaryInputData;
 
-		var pAdd = 0.0;
-		var auxList = new List<object>();
-		foreach (var auxEntry in aux.Auxiliaries) {
-			if (auxEntry.AuxiliaryType == AuxiliaryDemandType.Constant) {
-				pAdd += auxEntry.ConstantPowerDemand.Value();
-				continue;
+		if (job.SavedInDeclarationMode && job.Vehicle is IVehicleDeclarationInputData declVehicle) {
+			var aux = declVehicle.Components.AuxiliaryInputData;
+			var auxList = new List<object>();
+			foreach (var auxEntry in aux.Auxiliaries) {
+				var auxOut = new Dictionary<string, object>();
+				var engineeringAuxEntry = auxEntry;
+				if (!job.SavedInDeclarationMode) {
+					auxOut.Add("Type", auxEntry.Type.Name());
+					auxOut.Add("Technology", new string[] { });
+				} else {
+					auxOut.Add("Type", auxEntry.Type.Name());
+					auxOut.Add("Technology", engineeringAuxEntry.Technology);
+				}
+
+				auxList.Add(auxOut);
+				body.Add("Aux", auxList);
 			}
 
-			var auxOut = new Dictionary<string, object>();
-			var engineeringAuxEntry = auxEntry as IAuxiliaryDeclarationInputData;
-			if (!job.SavedInDeclarationMode) {
-				auxOut.Add("ID", auxEntry.ID);
-				auxOut.Add("Type", AuxiliaryTypeHelper.ParseKey(auxEntry.ID).Name());
-				auxOut.Add("Path", GetRelativePath(auxEntry.DemandMap.Source, basePath));
-				auxOut.Add("Technology", new string[] { });
-			} else {
-				auxOut.Add("ID", auxEntry.ID);
-				auxOut.Add("Type", AuxiliaryTypeHelper.ParseKey(auxEntry.ID).Name());
-				auxOut.Add("Technology", engineeringAuxEntry.Technology);
-			}
-			auxList.Add(auxOut);
+			
 		}
 
-		if (aux.BusAuxiliariesData != null) {
-			body.Add("BusAux", GetRelativePath(job.Vehicle.Components.AuxiliaryInputData.BusAuxiliariesData.DataSource.SourceFile, basePath));
+		if (!job.SavedInDeclarationMode && job.Vehicle is IVehicleEngineeringInputData engVehicle) {
+			var aux = engVehicle.Components.AuxiliaryInputData;
+			if (aux.BusAuxiliariesData != null) {
+				body.Add("BusAux",
+					GetRelativePath(job.Vehicle.Components.AuxiliaryInputData.BusAuxiliariesData.DataSource.SourceFile,
+						basePath));
+			}
+
+			body.Add("Padd", aux.Auxiliaries.ConstantPowerDemand.Value());
+			body.Add("Paux_ICEOff_Driving", aux.Auxiliaries.PowerDemandICEOffDriving.Value());
+			body.Add("Paux_ICEOff_Standstill", aux.Auxiliaries.PowerDemandICEOffStandstill.Value());
 		}
-		body.Add("Aux", auxList);
-		if (!job.SavedInDeclarationMode)
-			body.Add("Padd", pAdd);
 
 		var driver = input.DriverInputData;
 

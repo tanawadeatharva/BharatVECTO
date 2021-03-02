@@ -677,6 +677,7 @@ namespace TUGraz.VectoCommon.InputData
 
 	public interface IAuxiliaryDeclarationInputData
 	{
+
 		/// <summary>
 		/// P005  Aux-Type
 		/// cf. VECTO Input Parameters.xlsx

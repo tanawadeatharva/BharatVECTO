@@ -40,6 +40,7 @@ using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Resources;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Configuration;
+using TUGraz.VectoCore.InputData.Impl;
 using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Utils;
 
@@ -608,7 +609,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 		#region Implementation of IAuxiliariesEngineeringInputData
 
-		public IList<IAuxiliaryEngineeringInputData> Auxiliaries { get { return new List<IAuxiliaryEngineeringInputData>();} }
+		public IAuxiliaryEngineeringInputData Auxiliaries { get { return new EngineeringAuxiliaryDataInputData();} }
 		public IBusAuxiliariesEngineeringData BusAuxiliariesData
 		{
 			get { return BusAux; }

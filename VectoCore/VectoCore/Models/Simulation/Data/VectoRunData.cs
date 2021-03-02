@@ -162,7 +162,6 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 
 			[Required] public AuxiliaryDemandType DemandType;
 
-			[ValidateObject] public AuxiliaryData Data;
 
 			public MissionType? MissionType;
 		}

@@ -205,11 +205,10 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 			}
 		}
 
-		[TestCase]
+		[TestCase] // todo: update expected values as no mapping aux is used
 		public void AuxAllCombined()
 		{
 			var dataWriter = new MockModalDataContainer();
-			dataWriter.AddAuxiliary("ALT1");
 			dataWriter.AddAuxiliary("CONSTANT");
 
 			var container = new VehicleContainer(ExecutionMode.Engineering, dataWriter);
@@ -223,19 +222,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 
 			var aux = new EngineAuxiliary(container);
 
-			var auxDataInputData = new AuxiliaryDataInputData {
-				ID = "ALT1",
-				Type = AuxiliaryType.ElectricSystem,
-				Technology = new List<string>(),
-			};
-			AuxiliaryFileHelper.FillAuxiliaryDataInputData(auxDataInputData, @"TestData\Components\24t_Coach_ALT.vaux");
-			var auxData = AuxiliaryDataReader.Create(auxDataInputData);
 
-			// ratio = 4.078
-			// efficiency_engine = 0.96
-			// efficiency_supply = 0.98
-
-			aux.AddMapping("ALT1", auxData);
 			aux.AddCycle("CYCLE");
 			var constPower = 1200.SI<Watt>();
 			aux.AddConstant("CONSTANT", constPower);
@@ -270,13 +257,12 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 			}
 		}
 
-		[TestCase]
+		[TestCase] // TODO: remove?!
 		public void AuxMapping()
 		{
-			var auxId = "ALT1";
+			
 			var dataWriter = new MockModalDataContainer();
-			dataWriter.AddAuxiliary(auxId);
-
+			
 			var container = new VehicleContainer(ExecutionMode.Engineering, dataWriter);
 			var data = DrivingCycleDataReader.ReadFromFile(@"TestData\Cycles\Coach time based short.vdri",
 				CycleType.MeasuredSpeed, false);
@@ -289,19 +275,6 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 
 			var aux = new EngineAuxiliary(container);
 
-			var auxDataInputData = new AuxiliaryDataInputData {
-				ID = "ALT1",
-				Type = AuxiliaryType.ElectricSystem,
-				Technology = new List<string>(),
-			};
-			AuxiliaryFileHelper.FillAuxiliaryDataInputData(auxDataInputData, @"TestData\Components\24t_Coach_ALT.vaux");
-			var auxData = AuxiliaryDataReader.Create(auxDataInputData);
-
-			// ratio = 4.078
-			// efficiency_engine = 0.96
-			// efficiency_supply = 0.98
-
-			aux.AddMapping(auxId, auxData);
 
 			var speed = 578.22461991.RPMtoRad(); // = 2358 (nAuxiliary) * ratio
 			var torque = 500.SI<NewtonMeter>();
@@ -331,28 +304,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 			}
 		}
 
-		[TestCase]
-		public void AuxColumnMissing()
-		{
-			var container = new VehicleContainer(ExecutionMode.Engineering);
-			var data = DrivingCycleDataReader.ReadFromFile(@"TestData\Cycles\Coach time based short.vdri",
-				CycleType.MeasuredSpeed, false);
-			new MockDrivingCycle(container, data);
-
-			var aux = new EngineAuxiliary(container);
-			AssertHelper.Exception<VectoException>(() => aux.AddMapping("NONEXISTING_AUX", null),
-				"driving cycle does not contain column for auxiliary: AUX_NONEXISTING_AUX");
-		}
-
-		[TestCase]
-		public void AuxFileMissing()
-		{
-			AssertHelper.Exception<VectoException>(() => {
-				var auxDataInputData = new AuxiliaryDataInputData();
-				AuxiliaryFileHelper.FillAuxiliaryDataInputData(auxDataInputData, @"NOT_EXISTING_AUX_FILE.vaux");
-			}, "Auxiliary file not found: NOT_EXISTING_AUX_FILE.vaux");
-		}
-
+		
 		[Category("LongRunning")]
 		[TestCase]
 		public void AuxReadJobFileDeclarationMode()

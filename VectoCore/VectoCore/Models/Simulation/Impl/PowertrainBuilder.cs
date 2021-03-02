@@ -225,9 +225,6 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 							aux.AddCycle(id, auxData.PowerDemandFunc);
 						}
 						break;
-					case AuxiliaryDemandType.Mapping:
-						aux.AddMapping(id, auxData.Data);
-						break;
 					default:
 						throw new ArgumentOutOfRangeException("AuxiliaryDemandType", auxData.DemandType.ToString());
 				}
@@ -840,9 +837,6 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 						break;
 					case AuxiliaryDemandType.Direct:
 						aux.AddCycle(id);
-						break;
-					case AuxiliaryDemandType.Mapping:
-						aux.AddMapping(id, auxData.Data);
 						break;
 					default:
 						throw new ArgumentOutOfRangeException("AuxiliaryDemandType", auxData.DemandType.ToString());

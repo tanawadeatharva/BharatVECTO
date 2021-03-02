@@ -58,6 +58,10 @@ namespace TUGraz.VectoCore.Configuration
 				public const string HeatingVentilationAirCondition = "AC";
 				public const string PneumaticSystem = "PS";
 				public const string PTOConsumer = "PTO_CONSUM";
+
+				public const string ENG_AUX_MECH_BASE = "ENG_AUX_BASE";
+				public const string ENG_AUX_MECH_FAN = "ENG_AUX_FAN";
+				public const string ENG_AUX_MECH_STP = "ENG_AUX_STP";
 			}
 
 			public static class Names

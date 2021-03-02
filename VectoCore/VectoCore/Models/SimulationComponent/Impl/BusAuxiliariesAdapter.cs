@@ -142,8 +142,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		public Watt PowerDemandEngineOff(Second absTime, Second dt)
 		{
-			var conventionalAux = AdditionalAux;
-			AdditionalAux = null;
+			
 			CurrentState.AngularSpeed = DataBus.EngineInfo.EngineIdleSpeed;
 			CurrentState.dt = dt;
 
@@ -153,6 +152,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			signals.EngineStopped = false;
 			signals.VehicleStopped = false;
 
+			// get busaux PowerDemand without additional Auxiliaries first.
+			var conventionalAux = AdditionalAux;
+			AdditionalAux = null;
 			var busAuxPowerDemand  = GetBusAuxPowerDemand(
 				absTime, dt, 0.SI<NewtonMeter>(), DataBus.EngineInfo.EngineIdleSpeed);
 			AdditionalAux = conventionalAux;
@@ -292,7 +294,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		{
 			public Second dt;
 			public PerSecond AngularSpeed;
-			public Watt PowerDemand;
+			public Watt PowerDemand { get; set; }
 			
 			public Watt ExcessiveDragPower = 0.SI<Watt>();
 		}

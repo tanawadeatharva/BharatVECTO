@@ -409,49 +409,21 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 
 		public IList<VectoRunData.AuxData> CreateAuxiliaryData(IAuxiliariesEngineeringInputData auxInputData)
 		{
-			var auxList = new List<VectoRunData.AuxData>(auxInputData.Auxiliaries.Count + 1) {
-				new VectoRunData.AuxData { ID = Constants.Auxiliaries.Cycle, DemandType = AuxiliaryDemandType.Direct }
-			};
+			var pwrICEOn = auxInputData.Auxiliaries.ConstantPowerDemand;
+			var pwrICEOffDriving = auxInputData.Auxiliaries.PowerDemandICEOffDriving;
+			var pwrICEOffStandstill = auxInputData.Auxiliaries.PowerDemandICEOffStandstill;
 
-			foreach (var a in auxInputData.Auxiliaries) {
-				switch (a.AuxiliaryType) {
-					case AuxiliaryDemandType.Mapping:
-						auxList.Add(CreateMappingAuxiliary(a));
-						break;
-					case AuxiliaryDemandType.Constant:
-						auxList.Add(CreateConstantAuxiliary(a));
-						break;
-					default: throw new VectoException("Auxiliary type {0} not supported!", a.AuxiliaryType);
-				}
-			}
+			var baseDemand = pwrICEOffStandstill;
+			var stpDemand = pwrICEOffDriving - baseDemand;
+			var fanDemand = pwrICEOn - stpDemand;
+
+			var auxList = new List<VectoRunData.AuxData>() {
+				new VectoRunData.AuxData { ID = Constants.Auxiliaries.IDs.ENG_AUX_MECH_BASE, DemandType = AuxiliaryDemandType.Constant, PowerDemand = baseDemand},
+				new VectoRunData.AuxData { ID = Constants.Auxiliaries.IDs.ENG_AUX_MECH_STP, DemandType = AuxiliaryDemandType.Constant, PowerDemand = stpDemand},
+				new VectoRunData.AuxData { ID = Constants.Auxiliaries.IDs.ENG_AUX_MECH_FAN, DemandType = AuxiliaryDemandType.Constant, PowerDemand = fanDemand},
+			};
 
 			return auxList;
-		}
-
-		private static VectoRunData.AuxData CreateMappingAuxiliary(IAuxiliaryEngineeringInputData a)
-		{
-			if (a.DemandMap == null) {
-				throw new VectoSimulationException("Demand Map for auxiliary {0} required", a.ID);
-			}
-			if (a.DemandMap.Columns.Count != 3 || a.DemandMap.Rows.Count < 4) {
-				throw new VectoSimulationException(
-					"Demand Map for auxiliary {0} has to contain exactly 3 columns and at least 4 rows", a.ID);
-			}
-
-			return new VectoRunData.AuxData {
-				ID = a.ID,
-				DemandType = AuxiliaryDemandType.Mapping,
-				Data = AuxiliaryDataReader.Create(a)
-			};
-		}
-
-		private static VectoRunData.AuxData CreateConstantAuxiliary(IAuxiliaryEngineeringInputData a)
-		{
-			return new VectoRunData.AuxData {
-				ID = a.ID,
-				DemandType = AuxiliaryDemandType.Constant,
-				PowerDemand = a.ConstantPowerDemand
-			};
 		}
 
 		internal DriverData CreateDriverData(IDriverEngineeringInputData driver)
