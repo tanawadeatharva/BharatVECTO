@@ -83,8 +83,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			var maxChargePower = MaxChargePower(dt);
 			var maxDischargePower = MaxDischargePower(dt);
 
-			if (powerDemand.IsGreater(maxChargePower, Constants.SimulationSettings.InterpolateSearchTolerance) ||
-				powerDemand.IsSmaller(maxDischargePower, Constants.SimulationSettings.InterpolateSearchTolerance))
+			if (powerDemand.IsGreater(maxChargePower, Constants.SimulationSettings.LineSearchTolerance) ||
+				powerDemand.IsSmaller(maxDischargePower, Constants.SimulationSettings.LineSearchTolerance))
 			{
 				return PowerDemandExceeded(absTime, dt, powerDemand, maxDischargePower, maxChargePower, dryRun);
 			}
