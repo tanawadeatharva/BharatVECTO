@@ -67,6 +67,8 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 		public virtual IDriverInfo DriverInfo { get; protected set; }
 		public virtual IHybridController HybridController { get; protected set; }
 
+		public virtual IAuxInProvider BusAux { get; protected set; }
+
 		public virtual IMileageCounter MileageCounter { get; protected set; }
 
 		public virtual IClutchInfo ClutchInfo { get; protected set; }
@@ -192,7 +194,9 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 					HasElectricMotor = true;
 				})
 				.If<IHybridController>(c => { HybridController = c; })
-				.If<IRESSInfo>(c => BatteryInfo = c);
+				.If<IRESSInfo>(c => BatteryInfo = c)
+				.If<BusAuxiliariesAdapter>(c => BusAux = c);
+
 
 			if (ignoreComponent) {
 				return;
@@ -200,6 +204,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			_components.Add(Tuple.Create(commitPriority, component));
 			_components = _components.OrderBy(x => x.Item1).Reverse().ToList();
 		}
+
 
 
 		public virtual void CommitSimulationStep(Second time, Second simulationInterval)

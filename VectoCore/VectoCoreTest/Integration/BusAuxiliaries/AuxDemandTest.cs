@@ -95,7 +95,7 @@ namespace TUGraz.VectoCore.Tests.Integration.BusAuxiliaries
 			for (int i = 0; i < 10; i++) {
 				var torque = busAux.TorqueDemand(0.SI<Second>(), 1.SI<Second>(), engineDrivelinePower / engineSpeed, engineSpeed);
 				Assert.AreEqual(6087.03221, (torque * engineSpeed).Value(), 1e-3);
-				busAux.DoWriteModalResults(0.SI<Second>(), 1.SI<Second>(), modalData);
+				busAux.DoWriteModalResultsICE(0.SI<Second>(), 1.SI<Second>(), modalData);
 				busAux.DoCommitSimulationStep();
 			}
 
@@ -107,7 +107,7 @@ namespace TUGraz.VectoCore.Tests.Integration.BusAuxiliaries
 			for (int i = 0; i < 10; i++) {
 				var torque = busAux.TorqueDemand(0.SI<Second>(), 1.SI<Second>(), engineDrivelinePower / engineSpeed, engineSpeed);
 				Assert.AreEqual(8954.1429, (torque * engineSpeed).Value(), 1e-3);
-				busAux.DoWriteModalResults(0.SI<Second>(), 1.SI<Second>(), modalData);
+				busAux.DoWriteModalResultsICE(0.SI<Second>(), 1.SI<Second>(), modalData);
 				busAux.DoCommitSimulationStep();
 			}
 
@@ -119,7 +119,7 @@ namespace TUGraz.VectoCore.Tests.Integration.BusAuxiliaries
 			for (int i = 0; i < 10; i++) {
 				var torque = busAux.TorqueDemand(0.SI<Second>(), 1.SI<Second>(), engineDrivelinePower / engineSpeed, engineSpeed);
 				Assert.AreEqual(6087.03221, (torque * engineSpeed).Value(), 1e-3);
-				busAux.DoWriteModalResults(0.SI<Second>(), 1.SI<Second>(), modalData);
+				busAux.DoWriteModalResultsICE(0.SI<Second>(), 1.SI<Second>(), modalData);
 				busAux.DoCommitSimulationStep();
 			}
 

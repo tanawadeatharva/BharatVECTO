@@ -32,6 +32,14 @@ namespace TUGraz.VectoCore.Tests.Models.EngineeringMode
 		const string JobFile_SmartPS = @"TestData\Integration\Buses\EngineeringMode\InterurbanBus_ENG_BusAux_SmartPS.vecto";
 		const string JobFile_SmartES_SmartPS = @"TestData\Integration\Buses\EngineeringMode\InterurbanBus_ENG_BusAux_SmartES-SmartPS.vecto";
 
+		const string JobFile_A = @"TestData\Hybrids\BusAuxEngineeringMode\InterurbanBus_ENG_BusAux_A.vecto";
+		const string JobFile_B = @"TestData\Hybrids\BusAuxEngineeringMode\InterurbanBus_ENG_BusAux_B.vecto";
+		const string JobFile_C1 = @"TestData\Hybrids\BusAuxEngineeringMode\InterurbanBus_ENG_BusAux_C1.vecto";
+		const string JobFile_C2a = @"TestData\Hybrids\BusAuxEngineeringMode\InterurbanBus_ENG_BusAux_C2a.vecto";
+		const string JobFile_C2b = @"TestData\Hybrids\BusAuxEngineeringMode\InterurbanBus_ENG_BusAux_C2b.vecto";
+		const string JobFile_C3a = @"TestData\Hybrids\BusAuxEngineeringMode\InterurbanBus_ENG_BusAux_C3a.vecto";
+		const string JobFile_C3b = @"TestData\Hybrids\BusAuxEngineeringMode\InterurbanBus_ENG_BusAux_C3b.vecto";
+
 		[
 		TestCase(JobFile, 0, TestName = "InterurbanBus ENG BusAux NonSmart Interurban"),
 		TestCase(JobFile, 1, TestName = "InterurbanBus ENG BusAux NonSmart Coach"),
@@ -56,6 +64,15 @@ namespace TUGraz.VectoCore.Tests.Models.EngineeringMode
 		TestCase(JobFile_SmartES_SmartPS, 2, TestName = "InterurbanBus ENG BusAux Smart-ES Smart-PS Urban"),
 		TestCase(JobFile_SmartES_SmartPS, 3, TestName = "InterurbanBus ENG BusAux Smart-ES Smart-PS Suburban"),
 		TestCase(JobFile_SmartES_SmartPS, 4, TestName = "InterurbanBus ENG BusAux Smart-ES Smart-PS HeavyUrban"),
+
+		TestCase(JobFile_A, 2, TestName = "InterurbanBus ENG BusAux A Urban"),
+		TestCase(JobFile_B, 2, TestName = "InterurbanBus ENG BusAux B Urban"),
+		TestCase(JobFile_C1, 2, TestName = "InterurbanBus ENG BusAux C1 Urban"),
+		TestCase(JobFile_C2a, 2, TestName = "InterurbanBus ENG BusAux C2a Urban"),
+		TestCase(JobFile_C2b, 2, TestName = "InterurbanBus ENG BusAux C2b Urban"),
+		TestCase(JobFile_C3a, 2, TestName = "InterurbanBus ENG BusAux C3a Urban"),
+		TestCase(JobFile_C3b, 2, TestName = "InterurbanBus ENG BusAux C3b Urban"),
+
 		]
 		public void InterurbanBus_BusAuxTest(string jobFile, int runIdx)
 		{

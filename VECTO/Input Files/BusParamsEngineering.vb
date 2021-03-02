@@ -25,7 +25,7 @@ Public Class BusAuxEngineeringParams
     public  AlternatorEfficiency as double
     public  MaxAlternatorPower as double
     public  ElectricStorageCapacity as double
-    public SmartElectric As Boolean
+    public AlternatorType As AlternatorType
 
     public CompressorMap as SubPath
     public AverageAirDemand as Double
@@ -36,6 +36,8 @@ Public Class BusAuxEngineeringParams
     public MechanicalPowerDemand As Double
     public AuxHeaterPower As Double
     public AverageHeatingDemand As Double
+    Public DCDCEfficiency As Double
+    Public SupplyESFromHEVREESS As Boolean
 
 
     Public Sub New()
@@ -165,12 +167,6 @@ Public Class BusAuxEngineeringParams
     End Get
     End Property
 
-    Public ReadOnly Property ES_SmartElectric As Boolean Implements IBusAuxElectricSystemEngineeringData.SmartElectric
-    get
-            Return SmartElectric
-    End Get
-    End Property
-
     Public ReadOnly Property ES_MaxAlternatorPower As Watt Implements IBusAuxElectricSystemEngineeringData.MaxAlternatorPower
     get
         Return MaxAlternatorPower.SI(of Watt)
@@ -215,6 +211,24 @@ Public Class BusAuxEngineeringParams
     Public ReadOnly Property HVAC_AuxHeaterPower As Watt Implements IBusAuxHVACData.AuxHeaterPower
     get
         Return AuxHeaterPower.SI(of Watt)
+    End Get
+    End Property
+
+    Public ReadOnly Property DCDCConverterEfficiency As Double Implements IBusAuxElectricSystemEngineeringData.DCDCConverterEfficiency
+    get
+        Return DCDCEfficiency
+    End Get
+    End Property
+
+    Public ReadOnly Property ESSupplyFromHEVREESS As Boolean Implements IBusAuxElectricSystemEngineeringData.ESSupplyFromHEVREESS
+    get
+        Return SupplyESFromHEVREESS
+    End Get
+    End Property
+
+    Public ReadOnly Property IBusAuxElectricSystemEngineeringData_AlternatorType As AlternatorType Implements IBusAuxElectricSystemEngineeringData.AlternatorType
+    get
+        Return AlternatorType
     End Get
     End Property
 End Class

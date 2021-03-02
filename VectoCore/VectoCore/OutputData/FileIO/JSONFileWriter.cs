@@ -1138,15 +1138,17 @@ public class JSONFileWriter : IOutputFileWriter
 			{"CurrentDemand", busAux.ElectricSystem.CurrentDemand.Value()},
 			{"CurrentDemandEngineOffDriving", busAux.ElectricSystem.CurrentDemandEngineOffDriving.Value()},
 			{"CurrentDemandEngineOffStandstill", busAux.ElectricSystem.CurrentDemandEngineOffStandstill.Value()},
-			{"SmartElectric", busAux.ElectricSystem.SmartElectric},
+			{"AlternatorType", busAux.ElectricSystem.AlternatorType.ToString()},
 			{"ElectricStorageCapacity", busAux.ElectricSystem.ElectricStorageCapacity.ConvertToWattHour().Value},
-			{ "MaxAlternatorPower", busAux.ElectricSystem.MaxAlternatorPower.Value()},
+			{"MaxAlternatorPower", busAux.ElectricSystem.MaxAlternatorPower.Value()},
+			{"DCDCConverterEfficiency", busAux.ElectricSystem.DCDCConverterEfficiency},
+			{"ESSupplyFromHEVREESS", busAux.ElectricSystem.ESSupplyFromHEVREESS}
 		};
 		var hvac = new Dictionary<string, object>() {
 			{"ElectricPowerDemand", busAux.HVACData.ElectricalPowerDemand.Value()},
 			{"MechanicalPowerDemand", busAux.HVACData.MechanicalPowerDemand.Value()},
 			{"AuxHeaterPower", busAux.HVACData.AuxHeaterPower.Value()},
-			{ "AverageHeatingDemand", busAux.HVACData.AverageHeatingDemand.Value() / 1e6}
+			{"AverageHeatingDemand", busAux.HVACData.AverageHeatingDemand.Value() / 1e6}
 		};
 
 		var body = new Dictionary<string, object>() {

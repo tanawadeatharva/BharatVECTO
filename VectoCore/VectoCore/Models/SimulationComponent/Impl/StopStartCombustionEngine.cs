@@ -176,7 +176,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl {
 				var advancedAux = EngineAux as BusAuxiliariesAdapter;
 				if (advancedAux != null) {
 					//throw new VectoException("Engine Stop/Start with advanced auxiliaries not supported!");
-					advancedAux.DoWriteModalResults(time, simulationInterval, container);
+					advancedAux.DoWriteModalResultsICE(time, simulationInterval, container);
 					//fcAAUX = advancedAux.AAuxFuelConsumption;
 				}
 

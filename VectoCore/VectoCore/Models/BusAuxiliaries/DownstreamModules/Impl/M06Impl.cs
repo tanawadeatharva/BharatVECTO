@@ -1,4 +1,5 @@
 ﻿using TUGraz.VectoCommon.BusAuxiliaries;
+using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.Models.BusAuxiliaries.Interfaces.DownstreamModules;
@@ -35,7 +36,7 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl
 			_m4 = m4;
 			_m5 = m5;
 			_signals = signals;
-			_smartElectrics = electricConfig.SmartElectrical;
+			_smartElectrics = electricConfig.AlternatorType == AlternatorType.Smart;
 		}
 
 		protected override void DoCalculate()

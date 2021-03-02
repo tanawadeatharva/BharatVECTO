@@ -436,17 +436,21 @@ namespace TUGraz.VectoCommon.InputData
 	{
 		double AlternatorEfficiency { get; }
 
+		double DCDCConverterEfficiency { get; }
+
 		Ampere CurrentDemand { get; }
 
 		Ampere CurrentDemandEngineOffDriving { get; }
 
 		Ampere CurrentDemandEngineOffStandstill { get; }
 
-		bool SmartElectric { get; }
+		AlternatorType AlternatorType { get; }
 
 		WattSecond ElectricStorageCapacity { get; }
 
 		Watt MaxAlternatorPower { get; }
+
+		bool ESSupplyFromHEVREESS { get; }
 	}
 
 	public interface IBusAuxHVACData

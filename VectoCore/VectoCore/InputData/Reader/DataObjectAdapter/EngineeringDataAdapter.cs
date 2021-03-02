@@ -557,7 +557,9 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 					AlternatorMap = new SimpleAlternator(busAux.ElectricSystem.AlternatorEfficiency) {
 						Technologies = new List<string>() { "engineering mode"}
 					},
-					SmartElectrical = busAux.ElectricSystem.SmartElectric,
+					AlternatorType = busAux.ElectricSystem.AlternatorType,
+					ConnectESToREESS = busAux.ElectricSystem.ESSupplyFromHEVREESS,
+					DCDCEfficiency = busAux.ElectricSystem.DCDCConverterEfficiency.LimitTo(0, 1),
 					MaxAlternatorPower = busAux.ElectricSystem.MaxAlternatorPower,
 					ElectricStorageCapacity = busAux.ElectricSystem.ElectricStorageCapacity ?? 0.SI<WattSecond>(),
 					ElectricalConsumers = GetElectricConsumers(busAux.ElectricSystem)

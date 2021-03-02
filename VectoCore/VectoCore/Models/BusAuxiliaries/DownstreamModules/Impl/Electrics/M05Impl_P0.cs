@@ -1,4 +1,5 @@
 ﻿using TUGraz.VectoCommon.BusAuxiliaries;
+using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Models.BusAuxiliaries.Interfaces.DownstreamModules;
 using TUGraz.VectoCore.Models.BusAuxiliaries.Interfaces.DownstreamModules.Electrics;
@@ -21,7 +22,8 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.Electric
 			_m01 = m01;
 			_m02 = m02;
 			_bat = bat;
-			_maxAlternatorPower = elCfg.SmartElectrical ? elCfg.MaxAlternatorPower : 0.SI<Watt>();
+			_maxAlternatorPower =
+				elCfg.AlternatorType == AlternatorType.Smart ? elCfg.MaxAlternatorPower : 0.SI<Watt>();
 			_alternatorGearEfficiency = elCfg.AlternatorGearEfficiency;
 			_signals = signals;
 		}

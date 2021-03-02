@@ -713,7 +713,7 @@ namespace TUGraz.VectoCore.OutputData
 
 				row[Fields.E_BusAux_ES_generated] = modData.EnergyBusAuxESGeneratedMech().ConvertToKiloWattHour();
 				row[Fields.E_BusAux_ES_consumed] = modData.EnergyBusAuxESConsumed().ConvertToKiloWattHour();
-				row[Fields.Delta_E_BusAux_Battery] = (runData.BusAuxiliaries.ElectricalUserInputsConfig.SmartElectrical
+				row[Fields.Delta_E_BusAux_Battery] = (runData.BusAuxiliaries.ElectricalUserInputsConfig.AlternatorType == AlternatorType.Smart
 						? modData.DeltaSOCBusAuxBattery() * runData.BusAuxiliaries.ElectricalUserInputsConfig.ElectricStorageCapacity
 						: 0.SI<WattSecond>())
 					.ConvertToKiloWattHour();

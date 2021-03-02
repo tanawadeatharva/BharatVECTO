@@ -470,7 +470,7 @@ Namespace UnitTests
 			Dim auxFresh = GetDefaultAuxiliaryConfig()
 			Dim auxNow = GetDefaultAuxiliaryConfig()
 			Dim compareResult As Boolean
-			CType (auxNow.ElectricalUserInputsConfig, ElectricsUserInputsConfig).SmartElectrical = Not auxNow.ElectricalUserInputsConfig.SmartElectrical
+			CType (auxNow.ElectricalUserInputsConfig, ElectricsUserInputsConfig).AlternatorType() = Not auxNow.ElectricalUserInputsConfig.AlternatorType()
 
 			'Act
 			compareResult = auxFresh.ConfigValuesAreTheSameAs(auxNow)

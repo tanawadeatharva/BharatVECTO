@@ -445,9 +445,22 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			if (data.ElectricMachinesData.Any(x => x.Item1 == PowertrainPosition.HybridP1)) {
 				if (gearbox is ATGearbox atGbx) {
 					atGbx.IdleController = idleController;
+				} else {
+					clutch.IdleController = idleController;
 				}
 			}
 			cycle.IdleController = idleController as IdleControllerSwitcher;
+
+			if (data.BusAuxiliaries != null && data.BusAuxiliaries.ElectricalUserInputsConfig.ConnectESToREESS) {
+				if (container.BusAux is BusAuxiliariesAdapter busAux) {
+					var dcdc = new DCDCConverter(container,
+						data.BusAuxiliaries.ElectricalUserInputsConfig.DCDCEfficiency);
+					busAux.DCDCConverter = dcdc;
+					es.Connect(dcdc);
+				} else {
+					throw new VectoException("BusAux data set but no BusAux component found!");
+				}
+			}
 
 			
 			return container;
@@ -699,6 +712,19 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 				if (gearbox is ATGearbox atGbx) {
 					atGbx.IdleController = idleController;
 					new ATClutchInfo(container);
+				} else {
+					clutch.IdleController = idleController;
+				}
+			}
+
+			if (data.BusAuxiliaries != null && data.BusAuxiliaries.ElectricalUserInputsConfig.ConnectESToREESS) {
+				if (container.BusAux is BusAuxiliariesAdapter busAux) {
+					var dcdc = new DCDCConverter(container,
+						data.BusAuxiliaries.ElectricalUserInputsConfig.DCDCEfficiency);
+					busAux.DCDCConverter = dcdc;
+					es.Connect(dcdc);
+				} else {
+					throw new VectoException("BusAux data set but no BusAux component found!");
 				}
 			}
 		}

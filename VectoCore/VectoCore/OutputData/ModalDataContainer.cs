@@ -779,6 +779,9 @@ namespace TUGraz.VectoCore.OutputData
 							ModalResultField.P_busAux_PS_generated,
 							ModalResultField.P_busAux_PS_generated_alwaysOn,
 							ModalResultField.P_busAux_PS_generated_dragOnly,
+							ModalResultField.P_DCDC_In,
+							ModalResultField.P_DCDC_Out,
+							ModalResultField.P_DCDC_missing,
 						}.Select(x => x.GetName()));
 				}
 				if (HasTorqueConverter) {

@@ -12,15 +12,17 @@
 		"SmartAirCompression": true,
 		"GearRatio": 1
     },
-    "ElectricSystem": {
-		"AlternatorEfficiency": 0.7,
-		"CurrentDemand": 54.181,
-		"CurrentDemandEngineOffDriving": 54.181,
-		"CurrentDemandEngineOffStandstill": 54.181,
-		"SmartElectric": true,
-		"ElectricStorageCapacity": 50,
-		"MaxAlternatorPower": 35000,
-    },
+		"ElectricSystem": {
+			"AlternatorEfficiency": 0.7,
+			"CurrentDemand": 54.181,
+			"CurrentDemandEngineOffDriving": 54.181,
+			"CurrentDemandEngineOffStandstill": 54.181,
+			"ElectricStorageCapacity": 50,
+			"MaxAlternatorPower": 35000,
+      "AlternatorType": "smart",
+      "ESSupplyFromHEVREESS": false,
+      "DCDCConverterEfficiency": 1.0
+		},
     "HVAC": {
 		"ElectricPowerDemand": 469.76,
 		"MechanicalPowerDemand": 181.28,

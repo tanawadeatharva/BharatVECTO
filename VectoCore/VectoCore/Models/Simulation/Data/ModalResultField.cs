@@ -437,7 +437,12 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 		[ModalResultField(typeof(SI), caption: "U_reess_terminal [V]")] U_reess_terminal,
 		[ModalResultField(typeof(SI), caption: "U_0_reess [V]")] U0_reess,
 		[ModalResultField(typeof(SI), caption: "I_reess [A]")] I_reess,
-		[ModalResultField(typeof(SI), caption: "T_max_propulsion [Nm]")] MaxPropulsionTorqe
+		[ModalResultField(typeof(SI), caption: "T_max_propulsion [Nm]")] MaxPropulsionTorqe,
+
+		[ModalResultField(typeof(SI), caption: "P_DC/DC_In [kW]", outputFactor: 1e-3)] P_DCDC_In,
+		[ModalResultField(typeof(SI), caption: "P_DC/DC_Out [kW]", outputFactor: 1e-3)] P_DCDC_Out,
+		[ModalResultField(typeof(SI), caption: "P_DC/DC_missing [kW]", outputFactor: 1e-3)] P_DCDC_missing,
+
 	}
 
 	[AttributeUsage(AttributeTargets.Field)]

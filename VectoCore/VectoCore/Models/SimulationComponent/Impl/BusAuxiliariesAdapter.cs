@@ -42,9 +42,8 @@ using TUGraz.VectoCore.OutputData;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 {
-	public class BusAuxiliariesAdapter : LoggingObject, IAuxInProvider, IAuxPort
+	public class BusAuxiliariesAdapter : VectoSimulationComponent, IAuxInProvider, IAuxPort
 	{
-		protected readonly IDataBus DataBus;
 		protected internal BusAuxState CurrentState;
 		protected internal BusAuxState PreviousState;
 
@@ -59,9 +58,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		//private readonly FuelConsumptionAdapter _fcMapAdapter;
 
 		public BusAuxiliariesAdapter(
-			IVehicleContainer container, IAuxiliaryConfig auxiliaryConfig, IAuxPort additionalAux = null)
+			IVehicleContainer container, IAuxiliaryConfig auxiliaryConfig, IAuxPort additionalAux = null) : base(container)
 		{
-
+			container.AddComponent(this);
 			EngineStopStartUtilityFactor = container.RunData?.DriverData?.EngineStopStart?.UtilityFactor ?? double.NaN;
 
 			CurrentState = new BusAuxState();
@@ -71,18 +70,22 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			AuxCfg = auxiliaryConfig;
 			DataBus = container;
 
-			var tmpAux = new BusAuxiliaries.BusAuxiliaries(container.ModalData);
+			var tmpAux = auxiliaryConfig.ElectricalUserInputsConfig.AlternatorType == AlternatorType.None
+				? new BusAuxiliaries.BusAuxiliariesNoAlternator(container.ModalData)
+				: new BusAuxiliaries.BusAuxiliaries(container.ModalData);
 
 			//'Set Signals
 			tmpAux.Signals.EngineIdleSpeed = container.EngineInfo.EngineIdleSpeed;
 			tmpAux.Initialise(auxiliaryConfig);
 
-			SmartElectricSystem = auxiliaryConfig.ElectricalUserInputsConfig.SmartElectrical;
+			SmartElectricSystem = auxiliaryConfig.ElectricalUserInputsConfig.AlternatorType == AlternatorType.Smart;
 
 			Auxiliaries = tmpAux;
 		}
 
-		
+		public DCDCConverter DCDCConverter { get; set; }
+
+
 		public IAuxPort Port()
 		{
 			return this;
@@ -93,9 +96,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			//PreviousState.TotalFuelConsumption = 0.SI<Kilogram>();
 			PreviousState.AngularSpeed = angularSpeed;
 			CurrentState.AngularSpeed = angularSpeed;
-			if (AdditionalAux != null) {
-				AdditionalAux.Initialize(torque, angularSpeed);
-			}
+			AdditionalAux?.Initialize(torque, angularSpeed);
+			DCDCConverter?.Initialize();
 			PreviousState.PowerDemand = GetBusAuxPowerDemand(0.SI<Second>(), 1.SI<Second>(), torque, angularSpeed);
 			return PreviousState.PowerDemand / angularSpeed;
 		}
@@ -171,8 +173,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		}
 
 
-		protected internal virtual void DoWriteModalResults(Second absTime, Second dt, IModalDataContainer container)
+
+		protected internal virtual void DoWriteModalResultsICE(Second absTime, Second dt, IModalDataContainer container)
 		{
+			// called from ICE - write modal results there
+
 			var essUtilityFactor = 1.0;
 			if (!DataBus.EngineCtl.CombustionEngineOn) {
 				essUtilityFactor = 1 - EngineStopStartUtilityFactor;
@@ -200,8 +205,12 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				var batteryPwr = (oldSOC - newSOC) * AuxCfg.ElectricalUserInputsConfig.ElectricStorageCapacity / dt;
 
 				container[ModalResultField.BatterySOC] = Auxiliaries.BatterySOC * 100.0;
-				
-				container[ModalResultField.P_busAux_ES_generated] = essUtilityFactor * (DataBus.VehicleInfo.VehicleStopped && !DataBus.EngineCtl.CombustionEngineOn ? Auxiliaries.ElectricPowerConsumerSum : Auxiliaries.ElectricPowerGenerated);
+
+				container[ModalResultField.P_busAux_ES_generated] = essUtilityFactor *
+																	(DataBus.VehicleInfo.VehicleStopped &&
+																	!DataBus.EngineCtl.CombustionEngineOn
+																		? Auxiliaries.ElectricPowerConsumerSum
+																		: Auxiliaries.ElectricPowerGenerated);
 				container[ModalResultField.P_busAux_ES_sum_mech] = essUtilityFactor * (Auxiliaries.ElectricPowerConsumerSum - batteryPwr) /
 																	AuxCfg.ElectricalUserInputsConfig.AlternatorGearEfficiency /
 																	AuxCfg.ElectricalUserInputsConfig.AlternatorMap.GetEfficiency(0.RPMtoRad(), 0.SI<Ampere>());
@@ -223,8 +232,19 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			container[ModalResultField.P_busAux_HVACmech_gen] = essUtilityFactor *  Auxiliaries.HVACMechanicalPowerGenerated;
 		}
 
+		protected override void DoWriteModalResults(Second time, Second simulationInterval, IModalDataContainer container)
+		{
+			// called from base class - do nothing here
+		}
+
+		protected override void DoCommitSimulationStep(Second time, Second simulationInterval)
+		{
+			// called from base class - do nothing here
+		}
+
 		protected internal virtual void DoCommitSimulationStep()
 		{
+			// called from combustion engine - do commit here
 			PreviousState = CurrentState;
 			CurrentState = new BusAuxState();
 		}
@@ -248,7 +268,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				: 0.SI<Watt>();
 
 			var drivetrainPower = torquePowerTrain * avgAngularSpeed;
-			if (!dryRun && DataBus.DriverInfo.DrivingAction == DrivingAction.Brake && CurrentState.ExcessiveDragPower.IsEqual(0)) {
+			if (!dryRun && !DataBus.IsTestPowertrain && DataBus.DriverInfo.DrivingAction == DrivingAction.Brake && CurrentState.ExcessiveDragPower.IsEqual(0)) {
 				CurrentState.ExcessiveDragPower = drivetrainPower -
 												(DataBus.EngineInfo.EngineDragPower(avgAngularSpeed) - signals.PreExistingAuxPower) - DataBus.Brakes.BrakePower;
 			}
@@ -261,7 +281,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			signals.Idle = DataBus.VehicleInfo.VehicleStopped;
 			signals.InNeutral = DataBus.GearboxInfo.Gear.Gear == 0;
 
-			
+			if (AuxCfg.ElectricalUserInputsConfig.ConnectESToREESS) {
+				DCDCConverter.ConsumerPower(Auxiliaries.ElectricPowerConsumerSum, dt, dryRun);
+			}
 
 			return Auxiliaries.AuxiliaryPowerAtCrankWatts + signals.PreExistingAuxPower;
 		}

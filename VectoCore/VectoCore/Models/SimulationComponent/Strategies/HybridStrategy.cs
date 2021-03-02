@@ -86,10 +86,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 				}
 			}
 
-			if (!nextGear.Engaged) {
+			//if (!nextGear.Engaged) {
 				TestPowertrain.Gearbox._nextGear = Controller.ShiftStrategy.NextGear;
 				TestPowertrain.Gearbox.Disengaged = !nextGear.Engaged;
-			}
+			//}
 
 			//if (!PreviousState.GearboxEngaged) {
 			TestPowertrain.CombustionEngine.Initialize(
@@ -108,8 +108,17 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 				(DataBus.EngineInfo as CombustionEngine).PreviousState.EngineTorqueOut;
 			TestPowertrain.CombustionEngine.PreviousState.DynamicFullLoadTorque =
 				(DataBus.EngineInfo as CombustionEngine).PreviousState.DynamicFullLoadTorque;
-			(TestPowertrain.CombustionEngine.EngineAux as EngineAuxiliary).PreviousState.AngularSpeed =
-				((DataBus.EngineInfo as CombustionEngine).EngineAux as EngineAuxiliary).PreviousState.AngularSpeed;
+		
+			switch (TestPowertrain.CombustionEngine.EngineAux) {
+				case EngineAuxiliary engineAux:
+					engineAux.PreviousState.AngularSpeed =
+						((DataBus.EngineInfo as CombustionEngine).EngineAux as EngineAuxiliary).PreviousState.AngularSpeed;
+					break;
+				case BusAuxiliariesAdapter busAux:
+					busAux.PreviousState.AngularSpeed =
+						((DataBus.EngineInfo as CombustionEngine).EngineAux as BusAuxiliariesAdapter).PreviousState.AngularSpeed;
+					break;
+			}
 
 			TestPowertrain.Gearbox.PreviousState.InAngularVelocity =
 				(DataBus.GearboxInfo as Gearbox).PreviousState.InAngularVelocity;
@@ -236,8 +245,17 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 				(DataBus.EngineInfo as CombustionEngine).PreviousState.EngineTorqueOut;
 			TestPowertrain.CombustionEngine.PreviousState.DynamicFullLoadTorque =
 				(DataBus.EngineInfo as CombustionEngine).PreviousState.DynamicFullLoadTorque;
-			(TestPowertrain.CombustionEngine.EngineAux as EngineAuxiliary).PreviousState.AngularSpeed =
-				((DataBus.EngineInfo as CombustionEngine).EngineAux as EngineAuxiliary).PreviousState.AngularSpeed;
+			
+			switch (TestPowertrain.CombustionEngine.EngineAux) {
+				case EngineAuxiliary engineAux:
+					engineAux.PreviousState.AngularSpeed =
+						((DataBus.EngineInfo as CombustionEngine).EngineAux as EngineAuxiliary).PreviousState.AngularSpeed;
+					break;
+				case BusAuxiliariesAdapter busAux:
+					busAux.PreviousState.AngularSpeed =
+						((DataBus.EngineInfo as CombustionEngine).EngineAux as BusAuxiliariesAdapter).PreviousState.AngularSpeed;
+					break;
+			}
 
 			TestPowertrain.Gearbox.PreviousState.OutAngularVelocity =
 				(DataBus.GearboxInfo as ATGearbox).PreviousState.OutAngularVelocity;
