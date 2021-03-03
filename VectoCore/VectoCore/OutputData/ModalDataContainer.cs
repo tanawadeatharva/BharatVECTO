@@ -626,7 +626,7 @@ namespace TUGraz.VectoCore.OutputData
 
 			var dataColumns = GetOutputColumns();
 
-			var strCols = dataColumns.Concat(Auxiliaries.Values.Select(c => c.ColumnName))
+			var strCols = dataColumns.Concat(Auxiliaries.Values.Where(x => !x.ColumnName.Contains("P_aux_ENG_AUX_")).Select(c => c.ColumnName))
 									.Concat(
 										new[] {
 											ModalResultField.P_WHR_el_map, ModalResultField.P_WHR_el_corr, ModalResultField.P_WHR_mech_map, ModalResultField.P_WHR_mech_corr, ModalResultField.P_aux_ice_off,
@@ -796,9 +796,12 @@ namespace TUGraz.VectoCore.OutputData
 						}.Select(x => x.GetName()));
 				}
 			}
-			//if (!_writeEngineOnly && WriteAdvancedAux) {
-			dataColumns.AddRange(new [] {ModalResultField.HybridStrategyScore, ModalResultField.HybridStrategySolution, ModalResultField.MaxPropulsionTorqe }.Select(x => x.GetName()));	
-			//}
+			if (_runData.HybridStrategyParameters != null) {
+				dataColumns.AddRange(new[] {
+					ModalResultField.HybridStrategyScore, ModalResultField.HybridStrategySolution,
+					ModalResultField.MaxPropulsionTorqe
+				}.Select(x => x.GetName()));
+			}
 			return dataColumns;
 		}
 
