@@ -527,7 +527,7 @@ namespace TUGraz.VectoCore.Tests.Integration.CompletedBus
 			var specificElectric =
 				relatedRun.VectoRunDataSpezificBody.BusAuxiliaries.ElectricalUserInputsConfig;
 			
-			Assert.AreEqual(false, genericElectric.AlternatorType);
+			Assert.AreEqual(AlternatorType.Conventional, genericElectric.AlternatorType);
 			Assert.AreEqual(genericElectric.AlternatorType, specificElectric.AlternatorType);
 
 			Assert.AreEqual(null, genericElectric.MaxAlternatorPower);
