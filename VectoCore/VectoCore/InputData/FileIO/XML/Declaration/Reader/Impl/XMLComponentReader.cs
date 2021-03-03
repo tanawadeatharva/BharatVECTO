@@ -452,4 +452,89 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 		
 	}
 
+	// ---------------------------------------------------------------------------------------
+
+	public class XMLComponentReaderV28 : XMLComponentReaderV20
+	{
+		public new static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V28;
+
+		public new const string XSD_TYPE = "CompletedVehicleComponentsDeclarationType";
+
+
+		public new static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
+
+		protected IBusAuxiliariesDeclarationData _busAuxInputData;
+
+
+		public XMLComponentReaderV28(IXMLDeclarationVehicleData vehicle, XmlNode componentsNode)
+			: base(vehicle, componentsNode)
+		{
+			
+		}
+
+		public override IAngledriveInputData AngledriveInputData
+		{
+			get { return null; }
+		}
+
+		public override IAxleGearInputData AxleGearInputData
+		{
+			get { return null; }
+		}
+
+		public override IAxlesDeclarationInputData AxlesDeclarationInputData
+		{
+			get { return null; }
+		}
+
+		public override IEngineDeclarationInputData EngineInputData
+		{
+			get { return null; }
+		}
+
+		public override IGearboxDeclarationInputData GearboxInputData
+		{
+			get { return null; }
+		}
+
+		public override ITorqueConverterDeclarationInputData TorqueConverterInputData
+		{
+			get { return null; }
+		}
+
+		public override ITyreDeclarationInputData Tyre
+		{
+			get { return null; }
+		}
+
+		public override IRetarderInputData RetarderInputData
+		{
+			get { return null; }
+		}
+
+		public override IAuxiliariesDeclarationInputData AuxiliaryData
+		{
+			get { return null; }
+		}
+
+		public override IAirdragDeclarationInputData AirdragInputData
+		{
+			get
+			{
+				return _airdragInputData ??
+						(_airdragInputData = CreateComponent(XMLNames.Component_AirDrag, AirdragCreator));
+			}
+		}
+		
+		public override IBusAuxiliariesDeclarationData BusAuxiliariesInputData
+		{
+			get { return _busAuxInputData ?? (_busAuxInputData = CreateComponent(XMLNames.Component_Auxiliaries, BusAuxCreator)); }
+		}
+
+		protected virtual IBusAuxiliariesDeclarationData BusAuxCreator(string version, XmlNode componentNode, string sourceFile)
+		{
+			return Factory.CreateBusAuxiliaires(version, Vehicle, componentNode, sourceFile);
+		}
+
+	}
 }

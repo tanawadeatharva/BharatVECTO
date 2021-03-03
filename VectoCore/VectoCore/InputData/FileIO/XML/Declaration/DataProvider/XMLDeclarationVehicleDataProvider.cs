@@ -1112,4 +1112,161 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 			return torqueLimits;
 		}
 	}
+
+
+
+	// ---------------------------------------------------------------------------------------
+
+
+	public class XMLDeclarationInterimStageBusDataProviderV28 : XMLDeclarationVehicleDataProviderV20
+	{
+		public new static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V28;
+
+		public new const string XSD_TYPE = "InterimStageInputType";
+
+		public new static readonly string QUALIFIED_XSD_TYPE =
+			XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
+
+		private IAdvancedDriverAssistantSystemDeclarationInputData _adas;
+		public XMLDeclarationInterimStageBusDataProviderV28(
+			IXMLDeclarationJobInputData jobData, XmlNode xmlNode, string sourceFile) : base(jobData, xmlNode, sourceFile)
+		{
+			SourceType = DataSourceType.XMLEmbedded;
+		}
+
+		public override XmlElement PTONode
+		{
+			get { return null; }
+		}
+
+		
+		public override LegislativeClass LegislativeClass
+		{
+			get { return GetString(XMLNames.Bus_LegislativeCategory).ParseEnum<LegislativeClass>(); }
+		}
+		
+		public override Kilogram CurbMassChassis
+		{
+			get { return GetDouble(XMLNames.Bus_CorrectedActualMass).SI<Kilogram>(); }
+		}
+		
+		public override Kilogram GrossVehicleMassRating
+		{
+			get { return GetDouble(XMLNames.Vehicle_TPMLM).SI<Kilogram>(); }
+		}
+
+		//public override bool AirdragModifiedMultistage
+		//{
+		//	get
+		//	{
+		//		return GetBool(XMLNames.Bus_AirdragModifiedMultistage);
+		//	}
+		//}
+
+		public override RegistrationClass RegisteredClass
+		{
+			get
+			{
+				return RegistrationClassHelper.Parse(GetString(XMLNames.Vehicle_RegisteredClass)).First(); 
+			}
+		}
+		
+		
+
+		public override int NumberOfPassengersLowerDeck
+		{
+			get
+			{
+				var node = GetNode(XMLNames.Bus_NumberPassengersLowerDeck);
+				return XmlConvert.ToInt32(node.InnerText);
+			}
+		}
+
+		public override int NumberOfPassengersUpperDeck
+		{
+			get
+			{
+				var node = GetNode(XMLNames.Bus_NumberPassengersUpperDeck);
+				return XmlConvert.ToInt32(node.InnerText);
+			}
+		}
+
+		public override VehicleCode VehicleCode
+		{
+			get
+			{
+				return GetString(XMLNames.Vehicle_VehicleCode).ParseEnum<VehicleCode>();
+			}
+		}
+
+		public override bool LowEntry
+		{
+			get { return GetBool(XMLNames.Bus_LowEntry); }
+		}
+
+		public override Meter Height
+		{
+			get
+			{
+				 return GetDouble(XMLNames.Bus_HeighIntegratedBody).SI<Meter>(); 
+			}
+		}
+
+		public override Meter Length
+		{
+			get
+			{
+				return GetDouble(XMLNames.Bus_VehicleLength).SI<Meter>();
+			}
+		}
+
+		public override Meter Width
+		{
+			get
+			{
+				return GetDouble(XMLNames.Bus_VehicleWidth).SI<Meter>();
+			}
+		}
+
+		public override Meter EntranceHeight
+		{
+			get
+			{
+				return GetDouble(XMLNames.Bus_EntranceHeight).SI<Meter>();
+			}
+		}
+
+		public override ConsumerTechnology DoorDriveTechnology
+		{
+			get { return ConsumerTechnologyHelper.Parse(GetString(XMLNames.BusAux_PneumaticSystem_DoorDriveTechnology)); }
+		}
+
+		public override IAdvancedDriverAssistantSystemDeclarationInputData ADAS
+		{
+			get { return _adas ?? (_adas = ADASReader.ADASInputData); }
+		}
+
+		//public override StateOfCompletion StateOfCompletion
+		//{
+		//	get
+		//	{
+		//		return StateOfCompletionHelper.Parse(GetString(XMLNames.Bus_StateOfCompletion));
+		//	}
+		//}
+
+
+		protected override DataSourceType SourceType { get; }
+
+		#region Overrides of AbstractXMLResource
+
+		protected override XNamespace SchemaNamespace
+		{
+			get { return NAMESPACE_URI; }
+		}
+		
+		#endregion
+
+	}
 }
+
+

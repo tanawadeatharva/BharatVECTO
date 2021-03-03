@@ -6,6 +6,7 @@ namespace TUGraz.VectoCommon.BusAuxiliaries {
 	public enum BusHVACSystemConfiguration
 	{
 		Unknown,
+		Configuration0,
 		Configuration1,
 		Configuration2,
 		Configuration3,

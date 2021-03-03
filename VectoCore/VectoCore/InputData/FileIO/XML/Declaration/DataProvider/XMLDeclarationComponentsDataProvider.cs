@@ -287,4 +287,72 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 		#endregion
 	}
+
+
+	public class XMLDeclarationInterimStageBusComponentsDataProviderV28 : XMLDeclarationComponentsDataProviderV10,
+		IXMLVehicleComponentsDeclaration
+	{
+		public new static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V28;
+
+		public new const string XSD_TYPE = "CompletedVehicleComponentsDeclarationType";
+
+		public new static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
+
+
+		private IBusAuxiliariesDeclarationData _busAuxiliaries;
+		
+
+		public XMLDeclarationInterimStageBusComponentsDataProviderV28(IXMLDeclarationVehicleData vehicle,
+				XmlNode componentNode, string sourceFile)
+				: base(vehicle, componentNode, sourceFile) { }
+		
+		public override IGearboxDeclarationInputData GearboxInputData
+		{
+			get { return null; }
+		}
+
+		public override ITorqueConverterDeclarationInputData TorqueConverterInputData
+		{
+			get { return null; }
+		}
+
+		public override IAxleGearInputData AxleGearInputData
+		{
+			get { return null; }
+		}
+
+		public override IAngledriveInputData AngledriveInputData
+		{
+			get { return null; }
+		}
+
+		public override IEngineDeclarationInputData EngineInputData
+		{
+			get { return null; }
+		}
+
+		public override IRetarderInputData RetarderInputData
+		{
+			get { return null; }
+		}
+
+		public override IPTOTransmissionInputData PTOTransmissionInputData
+		{
+			get { return null; }
+		}
+
+		public override IAxlesDeclarationInputData AxleWheels
+		{
+			get { return null; }
+		}
+
+
+		public override IBusAuxiliariesDeclarationData BusAuxiliaries
+		{
+			get { return _busAuxiliaries ?? (_busAuxiliaries = ComponentReader.BusAuxiliariesInputData); }
+		}
+
+	}
+
+
 }

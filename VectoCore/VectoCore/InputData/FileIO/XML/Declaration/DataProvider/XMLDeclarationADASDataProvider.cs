@@ -107,11 +107,13 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		{
 			get {
 				var node = GetNode(XMLNames.Vehicle_ADAS_ATEcoRollReleaseLockupClutch, required:false);
-				if (node == null) {
+				var busNode = GetNode(XMLNames.Bus_ADAS_APTEcoRollReleaseLockupClutch, required: false);
+				if (node == null && busNode == null) {
 					return null;
 				}
 
-				return XmlConvert.ToBoolean(node.InnerText);
+				var innerText = node == null ? busNode.InnerText : node.InnerText;
+				return XmlConvert.ToBoolean(innerText);
 			}
 		}
 
