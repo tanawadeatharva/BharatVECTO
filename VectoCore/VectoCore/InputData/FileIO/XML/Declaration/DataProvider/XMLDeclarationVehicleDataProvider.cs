@@ -32,8 +32,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.InteropServices;
-using System.Windows.Forms.VisualStyles;
 using System.Xml;
 using System.Xml.Linq;
 using TUGraz.VectoCommon.BusAuxiliaries;
@@ -42,7 +40,6 @@ using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Resources;
 using TUGraz.VectoCommon.Utils;
-using TUGraz.VectoCore.InputData.FileIO.XML.Common;
 using TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Interfaces;
 using TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader;
 using TUGraz.VectoCore.InputData.Impl;
@@ -227,6 +224,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 			get { return XmlConvert.ToBoolean(GetString(XMLNames.Vehicle_SleeperCab)); }
 		}
 
+		public virtual bool AirdragModifiedMultistage { get; }
+
 		public virtual TankSystem? TankSystem
 		{
 			get {
@@ -330,6 +329,11 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		}
 
 		public virtual ConsumerTechnology DoorDriveTechnology { get { return ConsumerTechnology.Unknown; } }
+		
+		public virtual StateOfCompletion StateOfCompletion
+		{
+			get { return StateOfCompletion.unknown; }
+		}
 
 		public virtual IVehicleComponentsDeclaration Components
 		{
@@ -1037,6 +1041,11 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 			get { return ConsumerTechnology.Unknown; }
 		}
 
+		public StateOfCompletion StateOfCompletion
+		{
+			get { return StateOfCompletion.unknown; }
+		}
+
 		public IVehicleComponentsDeclaration Components
 		{
 			get { return _components ?? (_components = ComponentReader.ComponentInputData); }
@@ -1057,6 +1066,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		public Kilogram CurbMassChassis { get; }
 		public bool VocationalVehicle { get; }
 		public bool SleeperCab { get; }
+		public bool AirdragModifiedMultistage { get; }
 		public TankSystem? TankSystem { get; }
 
 		public bool HybridElectricHDV { get; }
@@ -1155,13 +1165,13 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 			get { return GetDouble(XMLNames.Vehicle_TPMLM).SI<Kilogram>(); }
 		}
 
-		//public override bool AirdragModifiedMultistage
-		//{
-		//	get
-		//	{
-		//		return GetBool(XMLNames.Bus_AirdragModifiedMultistage);
-		//	}
-		//}
+		public override bool AirdragModifiedMultistage
+		{
+			get
+			{
+				return GetBool(XMLNames.Bus_AirdragModifiedMultistage);
+			}
+		}
 
 		public override RegistrationClass RegisteredClass
 		{
@@ -1246,14 +1256,13 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 			get { return _adas ?? (_adas = ADASReader.ADASInputData); }
 		}
 
-		//public override StateOfCompletion StateOfCompletion
-		//{
-		//	get
-		//	{
-		//		return StateOfCompletionHelper.Parse(GetString(XMLNames.Bus_StateOfCompletion));
-		//	}
-		//}
-
+		public override StateOfCompletion StateOfCompletion
+		{
+			get
+			{
+				return StateOfCompletionHelper.Parse(GetString(XMLNames.Bus_StateOfCompletion));
+			}
+		}
 
 		protected override DataSourceType SourceType { get; }
 

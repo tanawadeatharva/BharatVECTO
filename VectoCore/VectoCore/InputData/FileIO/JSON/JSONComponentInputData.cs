@@ -90,7 +90,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 				case Constants.FileExtensions.ElectricMotorFile:
 					tmp = JSONInputDataFactory.ReadElectricMotorData(filename, tolerateMissing);
 					break;
-                case Constants.FileExtensions.HybridStrategyParameters:
+				case Constants.FileExtensions.HybridStrategyParameters:
 					tmp = JSONInputDataFactory.ReadHybridStrategyParameters(filename, tolerateMissing);
 					break;
 			}
@@ -340,6 +340,11 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			get { return VehicleData.DoorDriveTechnology; }
 		}
 
+		public StateOfCompletion StateOfCompletion
+		{
+			get { return StateOfCompletion.unknown; }
+		}
+
 		IVehicleComponentsEngineering IVehicleEngineeringInputData.Components
 		{
 			get { return this; }
@@ -485,6 +490,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 		{
 			get { return DeclarationData.Vehicle.SleeperCabDefault; }
 		}
+
+		public bool AirdragModifiedMultistage { get; }
 
 		public TankSystem? TankSystem
 		{

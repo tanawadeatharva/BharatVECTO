@@ -811,15 +811,16 @@ Public Class MockEngineeringVehicle
     Public Property EngineIdleSpeed As PerSecond Implements IVehicleDeclarationInputData.EngineIdleSpeed
     Public Property VocationalVehicle As Boolean Implements IVehicleDeclarationInputData.VocationalVehicle
     Public Property SleeperCab As Boolean Implements IVehicleDeclarationInputData.SleeperCab
+    Public ReadOnly Property AirdragModifiedMultistage As Boolean Implements IVehicleDeclarationInputData.AirdragModifiedMultistage
     Public Property TankSystem As TankSystem? Implements IVehicleDeclarationInputData.TankSystem
 
     Public Property IVehicleEngineeringInputData_ADAS As IAdvancedDriverAssistantSystemsEngineering _
         Implements IVehicleEngineeringInputData.ADAS
 
-    Public readonly Property IVehicleEngineeringInputData_Components As IVehicleComponentsEngineering _
+    Public ReadOnly Property IVehicleEngineeringInputData_Components As IVehicleComponentsEngineering _
         Implements IVehicleEngineeringInputData.Components
         Get
-            Return me
+            Return Me
         End Get
     End Property
 
@@ -851,6 +852,7 @@ Public Class MockEngineeringVehicle
     Public ReadOnly Property Width As Meter Implements IVehicleDeclarationInputData.Width
     Public ReadOnly Property EntranceHeight As Meter Implements IVehicleDeclarationInputData.EntranceHeight
     Public ReadOnly Property DoorDriveTechnology As ConsumerTechnology Implements IVehicleDeclarationInputData.DoorDriveTechnology
+    Public ReadOnly Property StateOfCompletion As StateOfCompletion Implements IVehicleDeclarationInputData.StateOfCompletion
     Public Property Components As IVehicleComponentsDeclaration Implements IVehicleDeclarationInputData.Components
     Public ReadOnly Property XMLSource As XmlNode Implements IVehicleDeclarationInputData.XMLSource
 

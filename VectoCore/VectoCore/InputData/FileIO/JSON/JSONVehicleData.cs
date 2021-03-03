@@ -321,6 +321,11 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 		public virtual Meter EntranceHeight { get { return null; } }
 		public virtual ConsumerTechnology DoorDriveTechnology { get { return ConsumerTechnology.Unknown; } }
 
+		public virtual StateOfCompletion StateOfCompletion
+		{
+			get { return StateOfCompletion.unknown; }
+		}
+
 		IVehicleComponentsEngineering IVehicleEngineeringInputData.Components
 		{
 			get { return this; }
@@ -572,6 +577,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 		{
 			get { return DeclarationData.Vehicle.SleeperCabDefault; }
 		}
+
+		public virtual bool AirdragModifiedMultistage { get; }
 
 		public virtual TankSystem? TankSystem
 		{

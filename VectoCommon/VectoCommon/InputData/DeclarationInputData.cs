@@ -147,6 +147,8 @@ namespace TUGraz.VectoCommon.InputData
 
 		bool SleeperCab { get; }
 
+		bool AirdragModifiedMultistage { get; }
+
 		TankSystem? TankSystem { get; }
 
 		IAdvancedDriverAssistantSystemDeclarationInputData ADAS { get; }
@@ -187,6 +189,8 @@ namespace TUGraz.VectoCommon.InputData
 		Meter EntranceHeight { get; }
 
 		ConsumerTechnology DoorDriveTechnology { get; }
+
+		StateOfCompletion StateOfCompletion { get; }
 
 		// components
 
@@ -913,4 +917,32 @@ namespace TUGraz.VectoCommon.InputData
 		string SimulationToolVersion { get; }
 		DateTime Date { get; }
 	}
+
+	public enum StateOfCompletion
+	{
+		unknown,
+		incomplete,
+		complete,
+		completed
+	}
+
+
+	public static class StateOfCompletionHelper
+	{
+		public static StateOfCompletion Parse(string parse)
+		{
+			switch (parse)
+			{
+				case nameof(StateOfCompletion.incomplete):
+					return StateOfCompletion.incomplete;
+				case nameof(StateOfCompletion.complete):
+					return StateOfCompletion.complete;
+				case nameof(StateOfCompletion.completed):
+					return StateOfCompletion.completed;
+				default:
+					return StateOfCompletion.unknown;
+			}
+		}
+	}
+
 }

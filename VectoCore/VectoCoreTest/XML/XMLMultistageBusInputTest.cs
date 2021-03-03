@@ -43,7 +43,7 @@ namespace TUGraz.VectoCore.Tests.XML
 			Assert.AreEqual(LegislativeClass.M3, vehicle.LegislativeClass);
 			Assert.AreEqual(500, vehicle.CurbMassChassis.Value());//CurbMassChassis
 			Assert.AreEqual(3500, vehicle.GrossVehicleMassRating.Value());//TechnicalPermissibleMaximumLadenMass
-			//Assert.AreEqual(false, vehicle.AirdragModifiedMultistage);
+			Assert.AreEqual(false, vehicle.AirdragModifiedMultistage);
 			Assert.AreEqual(TankSystem.Compressed, vehicle.TankSystem);//NgTankSystem
 			Assert.AreEqual(RegistrationClass.II_III, vehicle.RegisteredClass);//ClassBus
 			Assert.AreEqual(0, vehicle.NumberOfPassengersLowerDeck);
@@ -55,8 +55,8 @@ namespace TUGraz.VectoCore.Tests.XML
 			Assert.AreEqual(2500, vehicle.Width.Value());
 			Assert.AreEqual(2000, vehicle.EntranceHeight.Value());
 			Assert.AreEqual(ConsumerTechnology.Electrically, vehicle.DoorDriveTechnology);
-			//Assert.AreEqual(StateOfCompletion.incomplete, vehicle.StateOfCompletion);
-			
+			Assert.AreEqual(StateOfCompletion.incomplete, vehicle.StateOfCompletion);
+
 			TestADASInput(vehicle);
 			TestComponents(vehicle.Components);
 		}
