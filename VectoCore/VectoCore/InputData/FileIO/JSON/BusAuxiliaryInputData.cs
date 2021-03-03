@@ -94,7 +94,9 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 
 			// SmartElectrical
-			electricalUserInputsConfig.AlternatorType = elData.GetEx<string>("SmartElectrical").ParseEnum<AlternatorType>();
+			electricalUserInputsConfig.AlternatorType = elData["SmartElectrical"] != null 
+				? (elData.GetEx<bool>("SmartElectrical") ? AlternatorType.Smart : AlternatorType.Conventional)
+				: elData.GetEx<string>("AlternatorType").ParseEnum<AlternatorType>();
 
 			// ResultCardIdle
 

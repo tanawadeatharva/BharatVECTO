@@ -546,8 +546,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			get { return new EngineeringAuxiliaryDataInputData() {
 				ElectricPowerDemand = Body["Padd_electric"] != null ? Body.GetEx<double>("Padd_electric").SI<Watt>() : 0.SI<Watt>(),
 				ConstantPowerDemand = Body["Padd"] != null ? Body.GetEx<double>("Padd").SI<Watt>() : 0.SI<Watt>(),
-				PowerDemandICEOffDriving = Body["P_aux_ICEOff_Driving"] != null ? Body.GetEx<double>("P_aux_ICEOff_Driving").SI<Watt>() : 0.SI<Watt>(),
-				PowerDemandICEOffStandstill = Body["P_aux_ICEOff_Standstill"] != null ? Body.GetEx<double>("P_aux_ICEOff_Standstill").SI<Watt>() : 0.SI<Watt>()
+				PowerDemandICEOffDriving = Body["Paux_ICEOff_Driving"] != null ? Body.GetEx<double>("Paux_ICEOff_Driving").SI<Watt>() : 0.SI<Watt>(),
+				PowerDemandICEOffStandstill = Body["Paux_ICEOff_Standstill"] != null ? Body.GetEx<double>("Paux_ICEOff_Standstill").SI<Watt>() : 0.SI<Watt>()
 			}; }
 		}
 
