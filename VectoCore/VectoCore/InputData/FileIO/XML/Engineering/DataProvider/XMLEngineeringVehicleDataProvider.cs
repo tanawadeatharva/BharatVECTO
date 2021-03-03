@@ -129,7 +129,10 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering.DataProvider
 			get { return false; }
 		}
 
-		public virtual bool AirdragModifiedMultistage { get; }
+		public virtual bool AirdragModifiedMultistage
+		{
+			get { return false; }
+		}
 
 		public TankSystem? TankSystem
 		{
@@ -178,10 +181,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering.DataProvider
 		public virtual Meter Width { get { return null; } }
 		public virtual Meter EntranceHeight { get { return null; } }
 		public ConsumerTechnology DoorDriveTechnology { get { return ConsumerTechnology.Unknown; } }
-		public virtual StateOfCompletion StateOfCompletion
-		{
-			get { return StateOfCompletion.unknown; }
-		}
+		public virtual StateOfCompletion StateOfCompletion { get; }
 
 		IVehicleComponentsDeclaration IVehicleDeclarationInputData.Components
 		{

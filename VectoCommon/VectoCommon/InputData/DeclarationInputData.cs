@@ -862,22 +862,36 @@ namespace TUGraz.VectoCommon.InputData
 	{
 		BusHVACSystemConfiguration SystemConfiguration { get; }
 
-		ACCompressorType CompressorTypeDriver { get; }
-		ACCompressorType CompressorTypePassenger { get; }
+		HeatPumpType? HeatPumpTypeDriverCompartment { get; }
+		
+		HeatPumpMode? HeatPumpModeDriverCompartment { get; }
+
+		HeatPumpType? HeatPumpTypePassengerCompartment { get; }
+		
+		HeatPumpMode? HeatPumpModePassengerCompartment { get; }
+		
+		ACCompressorType CompressorTypeDriver { get; }//
+		ACCompressorType CompressorTypePassenger { get; }//
 
 		Watt AuxHeaterPower { get; }
 
 		bool DoubleGlazing { get; }
 
-		bool HeatPump { get; }
-
-		bool AdjustableCoolantThermostat { get; }
-
+		bool HeatPump { get; } //
+		
 		bool AdjustableAuxiliaryHeater { get; }
 
-		bool EngineWasteGasHeatExchanger { get; }
-
 		bool SeparateAirDistributionDucts { get; }
+
+		bool WaterElectricHeater { get; }
+
+		bool AirElectricHeater { get; }
+
+		bool OtherHeatingTechnology { get; }
+
+		bool AdjustableCoolantThermostat { get; }
+	
+		bool EngineWasteGasHeatExchanger { get; }
 	}
 
 
@@ -940,7 +954,7 @@ namespace TUGraz.VectoCommon.InputData
 				case nameof(StateOfCompletion.completed):
 					return StateOfCompletion.completed;
 				default:
-					return StateOfCompletion.unknown;
+					throw new ArgumentOutOfRangeException();
 			}
 		}
 	}

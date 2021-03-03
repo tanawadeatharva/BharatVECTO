@@ -168,6 +168,11 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 			get { return BusHVACSystemConfiguration.Unknown; }
 		}
 
+		public virtual HeatPumpType? HeatPumpTypeDriverCompartment { get { return null; } }
+		public virtual HeatPumpMode? HeatPumpModeDriverCompartment { get { return null; } }
+		public virtual HeatPumpType? HeatPumpTypePassengerCompartment { get { return null; } }
+		public virtual HeatPumpMode? HeatPumpModePassengerCompartment { get { return null; } }
+
 		public virtual ACCompressorType CompressorTypeDriver
 		{
 			get { return ACCompressorType.None; }
@@ -193,6 +198,11 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 			get { return false; }
 		}
 
+		public virtual bool OtherHeatingTechnology
+		{
+			get { return false; }
+		}
+
 		public virtual bool AdjustableCoolantThermostat
 		{
 			get { return GetBool(new[] { "HVAC", "AdjustableCoolantThermostat" }); }
@@ -209,6 +219,15 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		}
 
 		public virtual bool SeparateAirDistributionDucts
+		{
+			get { return false; }
+		}
+
+		public virtual bool WaterElectricHeater
+		{
+			get { return false; }
+		}
+		public virtual bool AirElectricHeater
 		{
 			get { return false; }
 		}
@@ -323,5 +342,41 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		public XMLDeclarationCompleteBusAuxiliariesDataProviderV28(IXMLDeclarationVehicleData vehicle,
 			XmlNode componentNode, string sourceFile)
 			: base(vehicle, componentNode, sourceFile) { }
+
+
+		public override HeatPumpType? HeatPumpTypeDriverCompartment
+		{
+			get { return HeatPumpTypeHelper.Parse(GetString(XMLNames.Bus_HeatPumpTypeDriver)); }
+		}
+
+		public override HeatPumpMode? HeatPumpModeDriverCompartment
+		{
+			get { return HeatPumpModeHelper.Parse(GetString(XMLNames.Bus_HeatPumpModeDriver)); }
+		}
+
+		public override HeatPumpType? HeatPumpTypePassengerCompartment
+		{
+			get { return HeatPumpTypeHelper.Parse(GetString(XMLNames.Bus_HeatPumpTypePassenger)); }
+		}
+
+		public override HeatPumpMode? HeatPumpModePassengerCompartment
+		{
+			get { return HeatPumpModeHelper.Parse(GetString(XMLNames.Bus_HeatPumpModePassenger)); }
+		}
+
+		public override bool WaterElectricHeater
+		{
+			get { return GetBool(XMLNames.Bus_WaterElectricHeater); }
+		}
+
+		public override bool AirElectricHeater
+		{
+			get { return GetBool(XMLNames.Bus_AirElectricHeater); }
+		}
+
+		public override bool OtherHeatingTechnology
+		{
+			get { return GetBool(XMLNames.Bus_OtherHeatingTechnology); }
+		}
 	}
 }

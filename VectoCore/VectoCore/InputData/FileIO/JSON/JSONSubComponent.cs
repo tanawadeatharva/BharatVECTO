@@ -631,17 +631,24 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
         #region Implementation of IHVACBusAuxiliariesDeclarationData
 
         public virtual BusHVACSystemConfiguration SystemConfiguration { get; set; }
-        public virtual ACCompressorType CompressorTypeDriver { get { return ACCompressorType.Unknown; } }
+		public virtual HeatPumpType? HeatPumpTypeDriverCompartment { get { return null; } }
+		public virtual HeatPumpMode? HeatPumpModeDriverCompartment { get { return null; } }
+		public virtual HeatPumpType? HeatPumpTypePassengerCompartment { get{ return null; } }
+		public virtual HeatPumpMode? HeatPumpModePassengerCompartment { get { return null; } }
+		public virtual ACCompressorType CompressorTypeDriver { get { return ACCompressorType.Unknown; } }
         public virtual ACCompressorType CompressorTypePassenger { get { return ACCompressorType.Unknown; } }
         public virtual Watt AuxHeaterPower { get { return null; } }
         public virtual bool DoubleGlazing { get { return false; } }
         public virtual bool HeatPump { get { return false; } }
-        public virtual bool AdjustableCoolantThermostat { get { return Body["Aux"]?["HVAC"]?.GetEx<bool>("AdjustableCoolantThermostat") ?? false; } }
+		public bool OtherHeatingTechnology { get; }
+		public virtual bool AdjustableCoolantThermostat { get { return Body["Aux"]?["HVAC"]?.GetEx<bool>("AdjustableCoolantThermostat") ?? false; } }
         public virtual bool AdjustableAuxiliaryHeater { get { return false; } }
         public virtual bool EngineWasteGasHeatExchanger { get { return Body["Aux"]?["HVAC"]?.GetEx<bool>("EngineWasteGasHeatExchanger") ?? false; } }
         public virtual bool SeparateAirDistributionDucts { get { return false; } }
+		public virtual bool WaterElectricHeater { get; }
+		public virtual bool AirElectricHeater { get; }
 
-        #endregion
+		#endregion
 
     }
 

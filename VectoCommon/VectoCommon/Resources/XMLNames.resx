@@ -1398,4 +1398,25 @@
   <data name="Bus_StateOfCompletion" xml:space="preserve">
     <value>StateOfCompletion</value>
   </data>
+  <data name="Bus_AirElectricHeater" xml:space="preserve">
+    <value>AirElectricHeater</value>
+  </data>
+  <data name="Bus_HeatPumpModeDriver" xml:space="preserve">
+    <value>HeatPumpModeDriverCompartment</value>
+  </data>
+  <data name="Bus_HeatPumpModePassenger" xml:space="preserve">
+    <value>HeatPumpModePassengerCompartment</value>
+  </data>
+  <data name="Bus_HeatPumpTypeDriver" xml:space="preserve">
+    <value>HeatPumpTypeDriverCompartment</value>
+  </data>
+  <data name="Bus_HeatPumpTypePassenger" xml:space="preserve">
+    <value>HeatPumpTypePassengerCompartment</value>
+  </data>
+  <data name="Bus_OtherHeatingTechnology" xml:space="preserve">
+    <value>OtherHeatingTechnology</value>
+  </data>
+  <data name="Bus_WaterElectricHeater" xml:space="preserve">
+    <value>WaterElectricHeater</value>
+  </data>
 </root>

@@ -330,10 +330,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 		public virtual ConsumerTechnology DoorDriveTechnology { get { return ConsumerTechnology.Unknown; } }
 		
-		public virtual StateOfCompletion StateOfCompletion
-		{
-			get { return StateOfCompletion.unknown; }
-		}
+		public virtual StateOfCompletion StateOfCompletion { get; }
 
 		public virtual IVehicleComponentsDeclaration Components
 		{
@@ -1041,10 +1038,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 			get { return ConsumerTechnology.Unknown; }
 		}
 
-		public StateOfCompletion StateOfCompletion
-		{
-			get { return StateOfCompletion.unknown; }
-		}
+		public StateOfCompletion StateOfCompletion { get; }
+		
 
 		public IVehicleComponentsDeclaration Components
 		{

@@ -321,10 +321,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 		public virtual Meter EntranceHeight { get { return null; } }
 		public virtual ConsumerTechnology DoorDriveTechnology { get { return ConsumerTechnology.Unknown; } }
 
-		public virtual StateOfCompletion StateOfCompletion
-		{
-			get { return StateOfCompletion.unknown; }
-		}
+		public virtual StateOfCompletion StateOfCompletion { get; }
 
 		IVehicleComponentsEngineering IVehicleEngineeringInputData.Components
 		{

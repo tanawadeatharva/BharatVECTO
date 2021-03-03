@@ -84,7 +84,6 @@ namespace TUGraz.VectoCore.Tests.XML
 			Assert.AreEqual("Vecto AirDrag x.y", airdrag.AppVersion);
 			Assert.AreEqual(6.34, airdrag.AirDragArea.Value());
 		}
-
 		
 		private void TestAuxiliariesComponent(IBusAuxiliariesDeclarationData busAux)
 		{
@@ -104,10 +103,17 @@ namespace TUGraz.VectoCore.Tests.XML
 		private void TestHVACComponent(IHVACBusAuxiliariesDeclarationData hvacAux)
 		{
 			Assert.AreEqual(BusHVACSystemConfiguration.Configuration0, hvacAux.SystemConfiguration);
+			Assert.AreEqual(HeatPumpType.none, hvacAux.HeatPumpTypeDriverCompartment);
+			Assert.AreEqual(HeatPumpMode.heating, hvacAux.HeatPumpModeDriverCompartment);
+			Assert.AreEqual(HeatPumpType.non_R_744_2_stage, hvacAux.HeatPumpTypePassengerCompartment);
+			Assert.AreEqual(HeatPumpMode.cooling, hvacAux.HeatPumpModePassengerCompartment);
 			Assert.AreEqual(50, hvacAux.AuxHeaterPower.Value());
 			Assert.AreEqual(false, hvacAux.DoubleGlazing);
 			Assert.AreEqual(true, hvacAux.AdjustableAuxiliaryHeater);
 			Assert.AreEqual(false, hvacAux.SeparateAirDistributionDucts);
+			Assert.AreEqual(true, hvacAux.WaterElectricHeater);
+			Assert.AreEqual(false, hvacAux.AirElectricHeater);
+			Assert.AreEqual(false, hvacAux.OtherHeatingTechnology);
 		}
 	}
 }

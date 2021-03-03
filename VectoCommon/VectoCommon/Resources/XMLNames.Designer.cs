@@ -448,6 +448,15 @@ namespace TUGraz.VectoCommon.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to AirElectricHeater.
+        /// </summary>
+        public static string Bus_AirElectricHeater {
+            get {
+                return ResourceManager.GetString("Bus_AirElectricHeater", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to AirsuspensionControl.
         /// </summary>
         public static string Bus_AirsuspensionControl {
@@ -574,6 +583,42 @@ namespace TUGraz.VectoCommon.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to HeatPumpModeDriverCompartment.
+        /// </summary>
+        public static string Bus_HeatPumpModeDriver {
+            get {
+                return ResourceManager.GetString("Bus_HeatPumpModeDriver", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to HeatPumpModePassengerCompartment.
+        /// </summary>
+        public static string Bus_HeatPumpModePassenger {
+            get {
+                return ResourceManager.GetString("Bus_HeatPumpModePassenger", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to HeatPumpTypeDriverCompartment.
+        /// </summary>
+        public static string Bus_HeatPumpTypeDriver {
+            get {
+                return ResourceManager.GetString("Bus_HeatPumpTypeDriver", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to HeatPumpTypePassengerCompartment.
+        /// </summary>
+        public static string Bus_HeatPumpTypePassenger {
+            get {
+                return ResourceManager.GetString("Bus_HeatPumpTypePassenger", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to HeightIntegratedBody.
         /// </summary>
         public static string Bus_HeighIntegratedBody {
@@ -633,6 +678,15 @@ namespace TUGraz.VectoCommon.Resources {
         public static string Bus_NumberPassengersUpperDeck {
             get {
                 return ResourceManager.GetString("Bus_NumberPassengersUpperDeck", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to OtherHeatingTechnology.
+        /// </summary>
+        public static string Bus_OtherHeatingTechnology {
+            get {
+                return ResourceManager.GetString("Bus_OtherHeatingTechnology", resourceCulture);
             }
         }
         
@@ -768,6 +822,15 @@ namespace TUGraz.VectoCommon.Resources {
         public static string Bus_VehicleWidth {
             get {
                 return ResourceManager.GetString("Bus_VehicleWidth", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to WaterElectricHeater.
+        /// </summary>
+        public static string Bus_WaterElectricHeater {
+            get {
+                return ResourceManager.GetString("Bus_WaterElectricHeater", resourceCulture);
             }
         }
         

@@ -186,4 +186,89 @@ namespace TUGraz.VectoCommon.BusAuxiliaries
 		double FuelEnergyToHeatToCoolant { get; }
 		double CoolantHeatTransferredToAirCabinHeater { get; }
 	}
+
+
+	public enum HeatPumpType
+	{
+		none,
+		R_744,
+		non_R_744_2_stage,
+		non_R_744_3_stage,
+		non_R_744_4_stage,
+		non_R_744_continuous
+	}
+
+	public static class HeatPumpTypeHelper
+	{
+		private const string NONE = "none";
+		private const string R_744 = "R-744";
+		private const string NON_R_744_2_STAGE = "non R-744 2-stage";
+		private const string NON_R_744_3_STAGE = "non R-744 3-stage";
+		private const string NON_R_744_4_STAGE = "non R-744 4-stage";
+		private const string NON_R_744_CONTINUOUS = "non R-744 continuous";
+		
+		public static HeatPumpType? Parse(string parse)
+		{
+			switch (parse)
+			{
+				case NONE: return HeatPumpType.none;
+				case R_744: return HeatPumpType.R_744;
+				case NON_R_744_2_STAGE: return HeatPumpType.non_R_744_2_stage;
+				case NON_R_744_3_STAGE: return HeatPumpType.non_R_744_3_stage;
+				case NON_R_744_4_STAGE: return HeatPumpType.non_R_744_4_stage;
+				case NON_R_744_CONTINUOUS: return HeatPumpType.non_R_744_continuous;
+				default: return null;
+			}
+		}
+
+		public static string GetLabel(this HeatPumpType type)
+		{
+			switch (type) {
+				case HeatPumpType.none: return NONE;
+				case HeatPumpType.R_744: return R_744;
+				case HeatPumpType.non_R_744_2_stage: return NON_R_744_2_STAGE;
+				case HeatPumpType.non_R_744_3_stage: return NON_R_744_3_STAGE;
+				case HeatPumpType.non_R_744_4_stage: return NON_R_744_4_STAGE;
+				case HeatPumpType.non_R_744_continuous: return NON_R_744_CONTINUOUS;
+				default: return null;
+			}
+		}
+	}
+
+
+	public enum HeatPumpMode
+	{
+		heating,
+		heating_and_cooling,
+		cooling
+	}
+
+	public static class HeatPumpModeHelper
+	{
+		private const string HEATING = "heating";
+		private const string HEATING_AND_COOLING = "heating_and_cooling";
+		private const string COOLING = "cooling";
+
+		public static HeatPumpMode? Parse(string parse)
+		{
+			switch (parse)
+			{
+				case HEATING: return HeatPumpMode.heating;
+				case HEATING_AND_COOLING: return HeatPumpMode.heating_and_cooling;
+				case COOLING: return HeatPumpMode.cooling;
+				default: return null;
+			}
+		}
+
+		public static string GetLabel(this HeatPumpMode type)
+		{
+			switch (type)
+			{
+				case HeatPumpMode.heating: return HEATING;
+				case HeatPumpMode.heating_and_cooling: return HEATING_AND_COOLING;
+				case HeatPumpMode.cooling: return COOLING;
+				default: return null;
+			}
+		}
+	}
 }
