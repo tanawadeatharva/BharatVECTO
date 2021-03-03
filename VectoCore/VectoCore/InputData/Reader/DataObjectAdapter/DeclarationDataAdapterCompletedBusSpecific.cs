@@ -183,14 +183,6 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			var hvacConfiguration = completedVehicle.Components.BusAuxiliaries.HVACAux.SystemConfiguration;
 			var busAux = completedVehicle.Components.BusAuxiliaries.HVACAux;
 
-			if (hvacConfiguration.RequiresDriverAC() && (busAux.CompressorTypeDriver == ACCompressorType.None || busAux.CompressorTypeDriver == ACCompressorType.Unknown)) {
-				throw new VectoException("HVAC System Configuration {0} requires DriverAC Technology", hvacConfiguration);
-			}
-
-			if (hvacConfiguration.RequiresPassengerAC() && (busAux.CompressorTypePassenger == ACCompressorType.None || busAux.CompressorTypePassenger == ACCompressorType.Unknown)) {
-				throw new VectoException("HVAC System Configuration {0} requires PassengerAC Technology", hvacConfiguration);
-			}
-
 			if (mission.BusParameter.SeparateAirDistributionDuctsHVACCfg.Contains(hvacConfiguration) &&
 				!completedVehicle.Components.BusAuxiliaries.HVACAux.SeparateAirDistributionDucts) {
 				throw new VectoException("Input parameter 'separate air distribution ducts' has to be set to 'true' for vehicle group '{0}' and HVAC configuration '{1}'",
@@ -232,13 +224,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			ssmInputs.VentilationRateHeating = DeclarationData.BusAuxiliaries.VentilationRate(hvacConfiguration, true);
 
 			ssmInputs.HVACMaxCoolingPower = coolingPower.Item1 + coolingPower.Item2;
-			ssmInputs.HVACCompressorType = busAux.CompressorTypePassenger; // use passenger compartment
-			ssmInputs.HVACTechnology = string.Format(
-				"{0} ({1})", busAux.SystemConfiguration.GetName(),
-				string.Join(", ", new[] { busAux.CompressorTypePassenger.GetName(), busAux.CompressorTypeDriver.GetName() })); ;
-			ssmInputs.COP = DeclarationData.BusAuxiliaries.CalculateCOP(
-				coolingPower.Item1, busAux.CompressorTypeDriver, coolingPower.Item2, busAux.CompressorTypePassenger,
-				floorType);
+
 
 			return ssmInputs;
 		}
@@ -254,11 +240,6 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			{
 				if ("Double-glazing".Equals(item.BenefitName, StringComparison.InvariantCultureIgnoreCase) &&
 					(completedBuxAux?.HVACAux.DoubleGlazing ?? false))
-				{
-					onVehicle.Add(item);
-				}
-				if ("Heat pump systems".Equals(item.BenefitName, StringComparison.InvariantCultureIgnoreCase) &&
-					(completedBuxAux?.HVACAux.HeatPump ?? false))
 				{
 					onVehicle.Add(item);
 				}
