@@ -15,8 +15,8 @@ namespace TUGraz.VectoCore.Tests.XML
 		protected IXMLInputDataReader xmlInputReader;
 		private IKernel _kernel;
 
-		const string VehicleStageInput = @"TestData\XML\XMLReaderDeclaration\SchemaVersion2.8\vecto_vehicle-stage_input_full-sample.xml";
-
+		const string VehicleInterimStageInput = @"TestData\XML\XMLReaderDeclaration\SchemaVersion2.8\vecto_vehicle-stage_input_full-sample.xml";
+		const string VehicleExemptedInterimStageInput = @"TestData\XML\XMLReaderDeclaration\SchemaVersion2.8\vecto_vehicle-exempted_input_full-sample.xml";
 
 		[OneTimeSetUp]
 		public void RunBeforeAnyTests()
@@ -28,9 +28,9 @@ namespace TUGraz.VectoCore.Tests.XML
 		}
 
 		[TestCase]
-		public void TestVehicleStageInput()
+		public void TestVehicleInterimStageInput()
 		{
-			var reader = XmlReader.Create(VehicleStageInput);
+			var reader = XmlReader.Create(VehicleInterimStageInput);
 			var inputDataProvider = xmlInputReader.CreateDeclaration(reader);
 			var vehicle = inputDataProvider.JobInputData.Vehicle;
 
@@ -41,7 +41,7 @@ namespace TUGraz.VectoCore.Tests.XML
 			Assert.AreEqual(DateTime.Parse("2020-01-09T11:00:00Z").ToUniversalTime(), vehicle.Date);
 			Assert.AreEqual("Sample Bus Model", vehicle.Model);
 			Assert.AreEqual(LegislativeClass.M3, vehicle.LegislativeClass);
-			Assert.AreEqual(500, vehicle.CurbMassChassis.Value());//CurbMassChassis
+			Assert.AreEqual(500, vehicle.CurbMassChassis.Value());//CorrectedActualMass
 			Assert.AreEqual(3500, vehicle.GrossVehicleMassRating.Value());//TechnicalPermissibleMaximumLadenMass
 			Assert.AreEqual(false, vehicle.AirdragModifiedMultistage);
 			Assert.AreEqual(TankSystem.Compressed, vehicle.TankSystem);//NgTankSystem
@@ -114,6 +114,31 @@ namespace TUGraz.VectoCore.Tests.XML
 			Assert.AreEqual(true, hvacAux.WaterElectricHeater);
 			Assert.AreEqual(false, hvacAux.AirElectricHeater);
 			Assert.AreEqual(false, hvacAux.OtherHeatingTechnology);
+		}
+
+
+		[TestCase]
+		public void TestVehicleExemptedInterimStageInput()
+		{
+			var reader = XmlReader.Create(VehicleExemptedInterimStageInput);
+			var inputDataProvider = xmlInputReader.CreateDeclaration(reader);
+			var vehicle = inputDataProvider.JobInputData.Vehicle;
+			
+			Assert.AreEqual("VEH-1234567890", vehicle.Identifier);
+			Assert.AreEqual("Some Manufacturer", vehicle.Manufacturer);
+			Assert.AreEqual("Infinite Loop", vehicle.ManufacturerAddress);
+			Assert.AreEqual("VEH-1234567891", vehicle.VIN);
+			Assert.AreEqual(DateTime.Parse("2021-01-09T11:00:00Z").ToUniversalTime(), vehicle.Date);
+			Assert.AreEqual("Sample Bus Model 2", vehicle.Model);
+			Assert.AreEqual(LegislativeClass.M3, vehicle.LegislativeClass);
+			Assert.AreEqual(7000, vehicle.CurbMassChassis.Value());//CorrectedActualMass
+			Assert.AreEqual(10000, vehicle.GrossVehicleMassRating.Value());//TechnicalPermissibleMaximumLadenMass
+			Assert.AreEqual(RegistrationClass.A, vehicle.RegisteredClass);//ClassBus
+			Assert.AreEqual(10, vehicle.NumberOfPassengersLowerDeck);
+			Assert.AreEqual(20, vehicle.NumberOfPassengersUpperDeck);
+			Assert.AreEqual(VehicleCode.CC, vehicle.VehicleCode);
+			Assert.AreEqual(true, vehicle.LowEntry);
+			Assert.AreEqual(2500, vehicle.Height.Value());
 		}
 	}
 }
