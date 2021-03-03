@@ -111,7 +111,7 @@
 										</xs:restriction>
 									</xs:simpleType>
 								</xs:element>
-								<xs:element name="DoubleGlasing" type="xs:boolean" minOccurs="0">
+								<xs:element name="DoubleGlazing" type="xs:boolean" minOccurs="0">
 									<xs:annotation>
 										<xs:documentation>P323 - bool</xs:documentation>
 									</xs:annotation>
