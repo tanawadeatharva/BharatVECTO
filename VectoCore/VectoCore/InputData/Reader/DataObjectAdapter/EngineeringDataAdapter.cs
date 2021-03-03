@@ -414,8 +414,8 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			var pwrICEOffStandstill = auxInputData.Auxiliaries.PowerDemandICEOffStandstill;
 
 			var baseDemand = pwrICEOffStandstill;
-			var stpDemand = pwrICEOffDriving - baseDemand;
-			var fanDemand = pwrICEOn - stpDemand;
+			var stpDemand = pwrICEOffDriving - pwrICEOffStandstill;
+			var fanDemand = pwrICEOn - pwrICEOffDriving;
 
 			var auxList = new List<VectoRunData.AuxData>() {
 				new VectoRunData.AuxData { ID = Constants.Auxiliaries.IDs.ENG_AUX_MECH_BASE, DemandType = AuxiliaryDemandType.Constant, PowerDemand = baseDemand},
