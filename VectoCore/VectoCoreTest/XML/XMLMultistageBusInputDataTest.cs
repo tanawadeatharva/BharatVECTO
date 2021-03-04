@@ -10,7 +10,7 @@ using TUGraz.VectoCore.InputData.FileIO.XML;
 
 namespace TUGraz.VectoCore.Tests.XML
 {
-	public class XMLMultistageBusInputTest
+	public class XMLMultistageBusInputDataTest
 	{
 		protected IXMLInputDataReader xmlInputReader;
 		private IKernel _kernel;
