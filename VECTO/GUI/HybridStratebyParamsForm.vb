@@ -177,7 +177,7 @@ Public Class HybridStrategyParamsForm
 
         tbEquivalenceFactorDischarge.Text = strategyParams.EquivalenceFactorDischarge.ToGUIFormat()
 
-        tbEquivalenceFactorDischarge.Text = strategyParams.EquivalenceFactorDischarge.ToGUIFormat()
+        tbEquivalenceFactorCharge.Text = strategyParams.EquivalenceFactorCharge.ToGUIFormat()
         tbMinSoC.Text = (strategyParams.MinSoC * 100).ToGUIFormat()
         tbMaxSoC.Text = (strategyParams.MaxSoC * 100).ToGUIFormat()
         tbTargetSoC.Text = (strategyParams.TargetSoC * 100).ToGUIFormat()

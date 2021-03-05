@@ -508,9 +508,6 @@
     <None Include="TestData\Hybrids\Citybus_P1-APT-P-220kW-7.7l\CityBus_AT-P.vecto">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="TestData\Hybrids\Citybus_P1-APT-P-220kW-7.7l\CityBus_AT-P.vsum">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
     <None Include="TestData\Hybrids\Citybus_P1-APT-P-220kW-7.7l\CityBus_AT-P.vveh">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
@@ -539,9 +536,6 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="TestData\Hybrids\Citybus_P1-APT-P-220kW-7.7l\GenericICE_220kW_7.7l.veng">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="TestData\Hybrids\Citybus_P1-APT-P-220kW-7.7l\HeavyUrban.vdri">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="TestData\Hybrids\Citybus_P1-APT-P-220kW-7.7l\HybridStrategyParams.vhctl">
