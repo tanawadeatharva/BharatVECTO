@@ -804,7 +804,8 @@ namespace TUGraz.VectoCore.OutputData
 		{
 			WriteVehicleData(runData, row);
 
-			if (runData.BusAuxiliaries != null) {
+			if (runData.BusAuxiliaries != null && runData.BusAuxiliaries.InputData != null) {
+				// only write in declaration mode - if input data is set
 				// subtract driver!
 				row[Fields.PassengerCount] = runData.VehicleData.PassengerCount;
 			}
@@ -967,9 +968,12 @@ namespace TUGraz.VectoCore.OutputData
 				return;
 			}
 
-			row[string.Format(Fields.AUX_TECH_FORMAT, Constants.Auxiliaries.IDs.HeatingVentilationAirCondition)] = busAux.SSMInputs.HVACTechnology;
-			row[string.Format(Fields.AUX_TECH_FORMAT, Constants.Auxiliaries.IDs.ElectricSystem)] = string.Join("/", busAux.ElectricalUserInputsConfig.AlternatorMap.Technologies);
-			row[string.Format(Fields.AUX_TECH_FORMAT, Constants.Auxiliaries.IDs.PneumaticSystem)] = busAux.PneumaticUserInputsConfig.CompressorMap.Technology;
+			row[string.Format(Fields.AUX_TECH_FORMAT, Constants.Auxiliaries.IDs.HeatingVentilationAirCondition)] =
+				busAux.SSMInputs is ISSMDeclarationInputs inputs ? inputs.HVACTechnology : "engineering mode";
+			row[string.Format(Fields.AUX_TECH_FORMAT, Constants.Auxiliaries.IDs.ElectricSystem)] =
+				string.Join("/", busAux.ElectricalUserInputsConfig.AlternatorMap.Technologies);
+			row[string.Format(Fields.AUX_TECH_FORMAT, Constants.Auxiliaries.IDs.PneumaticSystem)] =
+				busAux.PneumaticUserInputsConfig.CompressorMap.Technology;
 		}
 
 		private static void WriteAngledriveData(AngledriveData data, DataRow row)

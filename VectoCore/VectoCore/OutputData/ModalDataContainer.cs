@@ -758,7 +758,8 @@ namespace TUGraz.VectoCore.OutputData
 						ModalResultField.P_roll,
 						ModalResultField.P_veh_inertia,
 						ModalResultField.n_gbx_out_avg,
-						ModalResultField.T_gbx_out
+						ModalResultField.T_gbx_out,
+						ModalResultField.T_gbx_in
 					}.Select(x => x.GetName()));
 				if (_runData.BusAuxiliaries != null) {
 					dataColumns.AddRange(
@@ -793,7 +794,7 @@ namespace TUGraz.VectoCore.OutputData
 				}
 			}
 			//if (!_writeEngineOnly && WriteAdvancedAux) {
-			dataColumns.AddRange(new [] {ModalResultField.HybridStrategyScore, ModalResultField.HybridStrategySolution}.Select(x => x.GetName()));	
+			dataColumns.AddRange(new [] {ModalResultField.HybridStrategyScore, ModalResultField.HybridStrategySolution, ModalResultField.MaxPropulsionTorqe }.Select(x => x.GetName()));	
 			//}
 			return dataColumns;
 		}

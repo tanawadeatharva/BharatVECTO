@@ -181,6 +181,8 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 
 		[ModalResultField(typeof(SI), caption: "T_gbx_out [Nm]")] T_gbx_out,
 
+		[ModalResultField(typeof(SI), caption: "T_gbx_in [Nm]")] T_gbx_in,
+
 		/// <summary>
 		///     [kW]	Gearbox losses.
 		/// </summary>
@@ -435,6 +437,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 		[ModalResultField(typeof(SI), caption: "U_reess_terminal [V]")] U_reess_terminal,
 		[ModalResultField(typeof(SI), caption: "U_0_reess [V]")] U0_reess,
 		[ModalResultField(typeof(SI), caption: "I_reess [A]")] I_reess,
+		[ModalResultField(typeof(SI), caption: "T_max_propulsion [Nm]")] MaxPropulsionTorqe
 	}
 
 	[AttributeUsage(AttributeTargets.Field)]

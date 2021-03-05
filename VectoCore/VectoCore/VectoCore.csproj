@@ -141,6 +141,7 @@
     <Compile Include="InputData\FileIO\JSON\BusAuxiliaryInputData.cs" />
     <Compile Include="InputData\FileIO\JSON\IJSONVehicleComponents.cs" />
     <Compile Include="InputData\FileIO\JSON\JSONBattery.cs" />
+    <Compile Include="InputData\FileIO\JSON\JSONBusAuxiliariesEngineeringData.cs" />
     <Compile Include="InputData\FileIO\JSON\JSONComponentInputData.cs" />
     <Compile Include="InputData\FileIO\JSON\JSONElectricMotor.cs" />
     <Compile Include="InputData\FileIO\JSON\JsonExtensionMethods.cs" />
@@ -283,6 +284,7 @@
     <Compile Include="InputData\Reader\ComponentData\BatteryInternalResistanceReader.cs" />
     <Compile Include="InputData\Reader\ComponentData\BatteryMaxCurrentReader.cs" />
     <Compile Include="InputData\Reader\ComponentData\ElectricMotorMapReader.cs" />
+    <Compile Include="InputData\Reader\ComponentData\MaxPropulsionTorqueReader.cs" />
     <Compile Include="InputData\Reader\DataObjectAdapter\DeclarationDataAdapterPrimaryBus.cs" />
     <Compile Include="InputData\Reader\ComponentData\ElectricFullLoadCurveReader.cs" />
     <Compile Include="Models\Connector\Ports\Impl\BatteryResponse.cs" />
@@ -392,6 +394,7 @@
     <Compile Include="Models\SimulationComponent\Data\ElectricMotor\EfficiencyMap.cs" />
     <Compile Include="Models\SimulationComponent\Data\ElectricMotor\ElectricMotorFullLoadCurve.cs" />
     <Compile Include="Models\SimulationComponent\Data\ElectricMotor\ElectricMotorData.cs" />
+    <Compile Include="Models\SimulationComponent\Data\VehicleMaxPropulsionTorque.cs" />
     <Compile Include="Models\SimulationComponent\Data\Engine\WHRPowerMap.cs" />
     <Compile Include="InputData\Reader\ComponentData\WHRPowerReader.cs" />
     <Compile Include="Models\SimulationComponent\Data\HybridStrategyParameters.cs" />

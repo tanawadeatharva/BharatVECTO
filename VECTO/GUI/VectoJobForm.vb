@@ -49,15 +49,6 @@ Public Class VectoJobForm
     Public Property JobType As VectoSimulationJobType
 
 
-    'AA-TB
-    'Populate Advanced Auxiliaries
-    Private Sub PopulateAdvancedAuxiliaries()
-		'Scan the program directory for DLL's which are AdvancedAuxiliaries and display
-		Dim aList As Dictionary(Of String, AdvancedAuxiliary) = DiscoverAdvancedAuxiliaries()
-
-		cboAdvancedAuxiliaries.DataSource = aList.Select(Function(x) x.Value).ToList()
-		cboAdvancedAuxiliaries.DisplayMember = "AuxiliaryName"
-	End Sub
 
 
 	'Initialise form
@@ -81,6 +72,7 @@ Public Class VectoJobForm
 			LvAux.Columns(AuxViewColumns.AuxInputOrTech).Text = "Input File"
 		End If
 		TbAuxPAdd.Enabled = Not Cfg.DeclMode
+        gbBusAux.Enabled = Not cfg.DeclMode
 
         'CbEngOnly.Enabled = Not Cfg.DeclMode
         GrCycles.Enabled = Not Cfg.DeclMode
@@ -96,8 +88,6 @@ Public Class VectoJobForm
 		gbPCC.Enabled = Not Cfg.DeclMode
 
 		_changed = False
-		'AA-TB
-		PopulateAdvancedAuxiliaries()
 
 		cbGearshiftStrategy.DataSource = PowertrainBuilder.GetRegisteredShiftStrategies(Nothing).Select(Function(entry) New With {.Value = entry.Item1, .Label = entry.Item2}).ToList()
 		cbGearshiftStrategy.DisplayMember = "Label"
@@ -500,8 +490,6 @@ Public Class VectoJobForm
             Dim declarationInput As IDeclarationInputDataProvider = CType(inputData, IDeclarationInputDataProvider)
             Dim auxInput As IAuxiliariesDeclarationInputData = declarationInput.JobInputData.Vehicle.Components.AuxiliaryInputData
 
-            cboAdvancedAuxiliaries.SelectedIndex = 0
-            cboAdvancedAuxiliaries.Enabled = False
             LvAux.Items.Clear()
             Dim entry As IAuxiliaryDeclarationInputData
             For Each entry In auxInput.Auxiliaries
@@ -517,24 +505,8 @@ Public Class VectoJobForm
             TbDesMaxFile.Text =
                 If(driver.AccelerationCurve Is Nothing, "", GetRelativePath(driver.AccelerationCurve.AccelerationCurve.Source, _basePath))
 
-            cboAdvancedAuxiliaries.Enabled = True
             Dim auxInput As IAuxiliariesEngineeringInputData = inputData.JobInputData.Vehicle.Components.AuxiliaryInputData
-            For Each item As AdvancedAuxiliary In cboAdvancedAuxiliaries.Items
-                If _
-                    AuxiliaryModelHelper.Parse(item.AssemblyName) = auxInput.AuxiliaryAssembly AndAlso
-                    auxInput.AuxiliaryVersion = item.AuxiliaryVersion _
-                    Then
-                    cboAdvancedAuxiliaries.SelectedItem = item
-                    Exit For
-                End If
-            Next
             tbElectricAuxConstant.Text = inputData.JobInputData.Vehicle.Components.AuxiliaryInputData.ElectricAuxPower.ToGUIFormat()
-            'AA-TB
-            'Assign any previously saved Axiliary FilePath
-            txtAdvancedAuxiliaryFile.Text =
-                If _
-                    (IO.File.Exists(auxInput.AdvancedAuxiliaryFilePath), GetRelativePath(auxInput.AdvancedAuxiliaryFilePath, _basePath),
-                    "")
 
             LvAux.Items.Clear()
             For Each entry As IAuxiliaryEngineeringInputData In auxInput.Auxiliaries
@@ -615,6 +587,16 @@ Public Class VectoJobForm
             cbGearshiftStrategy.SelectedValue = inputData.JobInputData.ShiftStrategy
         End If
 
+        if (Not inputData.JobInputData.Vehicle.Components.AuxiliaryInputData.BusAuxiliariesData Is nothing) Then
+            cbEnableBusAux.Checked = True
+            tbBusAuxParams.Text = GetRelativePath(inputData.JobInputData.Vehicle.Components.AuxiliaryInputData.BusAuxiliariesData.DataSource.SourceFile, _basePath)
+            pnBusAux.Enabled = true
+        Else 
+            cbEnableBusAux.Checked = False
+            tbBusAuxParams.Text = ""
+            pnBusAux.Enabled = False
+        End If
+
         DeclInit()
 
 
@@ -650,28 +632,6 @@ Public Class VectoJobForm
     Private Function VECTOsave(file As String) As Boolean
         Dim message As String = String.Empty
 
-        'AA-TB
-        'Validation of Auxiliary Types/Advanced Auxiliaries
-        'if not classic, check the file is valid, if not fail the operation and alert user.
-        If cboAdvancedAuxiliaries.SelectedIndex > 0 Then
-
-            'resolve absolute path for auxiliary file.
-            Dim absoluteAAUxFile As String = ResolveAAUXFilePath(GetPath(VectoFile), txtAdvancedAuxiliaryFile.Text)
-
-            Dim aaAssemblyName As String = DirectCast(cboAdvancedAuxiliaries.SelectedItem, AdvancedAuxiliary).AssemblyName
-            Dim aaAssemblyVersion As String = DirectCast(cboAdvancedAuxiliaries.SelectedItem, AdvancedAuxiliary).AuxiliaryVersion
-
-
-            If Not ValidateAAUXFile(absoluteAAUxFile, aaAssemblyName, aaAssemblyVersion, message) Then
-                MessageBox.Show(
-                    String.Format("You have selected an advanced auxiliary *Auxiliary Type*, but the file specified is invalid :{0}",
-                                message))
-                Return False
-            End If
-
-        End If
-
-
         Dim vectoJob As VectoJob = New VectoJob
         vectoJob.JobType = JobType
         vectoJob.FilePath = file
@@ -694,11 +654,6 @@ Public Class VectoJobForm
         'a_DesMax
         vectoJob.DesMaxFile = TbDesMaxFile.Text
 
-        'AA-TB
-        vectoJob.AuxiliaryAssembly = DirectCast(cboAdvancedAuxiliaries.SelectedItem, AdvancedAuxiliary).AssemblyName
-        vectoJob.AuxiliaryVersion = DirectCast(cboAdvancedAuxiliaries.SelectedItem, AdvancedAuxiliary).AuxiliaryVersion
-        vectoJob.AdvancedAuxiliaryFilePath = txtAdvancedAuxiliaryFile.Text
-
         For Each lv0 As ListViewItem In LvAux.Items
             Dim auxEntry As VectoJob.AuxEntry = New VectoJob.AuxEntry
 
@@ -717,6 +672,13 @@ Public Class VectoJobForm
         vectoJob.AuxPAdd = TbAuxPAdd.Text.ToDouble(0)
 
         vectoJob.AuxElPadd = tbElectricAuxConstant.Text.ToDouble(0)
+
+        if cbEnableBusAux.Checked AndAlso Not string.IsNullOrWhiteSpace(tbBusAuxParams.Text) Then
+            vectoJob.UseBusAux = true
+            vectoJob.PathBusAux = tbBusAuxParams.Text
+        Else 
+            vectoJob.UseBusAux = false
+        End If
 
         'vectoJob.EngineOnly = JobType = VectoSimulationJobType.EngineOnlySimulation
 
@@ -802,7 +764,6 @@ Public Class VectoJobForm
         tbLacDfTargetSpeedFile.Text = ""
         tbLacDfVelocityDropFile.Text = ""
 
-        cboAdvancedAuxiliaries.Enabled = Not Cfg.DeclMode
         '---------------------------------------------------
 
         DeclInit()
@@ -1506,123 +1467,6 @@ lbDlog:
 #End Region
 
 
-	'AA-TB
-	Private Sub picAuxInfo_MouseEnter(sender As Object, e As EventArgs) Handles picAuxInfo.MouseEnter
-
-
-		If cboAdvancedAuxiliaries.SelectedIndex = -1 Then Exit Sub
-
-		'Get tooltip
-		Dim item As AdvancedAuxiliary
-
-		item = DirectCast(cboAdvancedAuxiliaries.SelectedItem, AdvancedAuxiliary)
-
-		If item.AuxiliaryVersion = "CLASSIC" Then
-
-			ToolTip1.ToolTipTitle = "Classic Vecto Auxiliaries"
-			ToolTip1.SetToolTip(picAuxInfo, "Uses original basic auxiliaries calculation")
-
-		Else
-
-			ToolTip1.ToolTipTitle = "Advanced Auxiliary Information"
-			ToolTip1.SetToolTip(picAuxInfo, item.AuxiliaryName & " : Version=" & item.AuxiliaryVersion)
-
-		End If
-	End Sub
-
-	'AA-TB
-	Private Sub btnBrowseAAUXFile_Click(sender As Object, e As EventArgs) Handles btnBrowseAAUXFile.Click
-
-		If String.IsNullOrEmpty(VectoFile) Then
-			MessageBox.Show(
-				"Please complete and save a valid new .vecto file before adding/configuring advanced bus auxiliaries.")
-			Return
-		End If
-
-		Dim aauxFileValidated As Boolean = False
-		Dim fbAux As New FileBrowser("aaux", False, False)
-		Dim message As String = String.Empty
-		Dim absoluteAuxPath As String
-		Dim assembly As AdvancedAuxiliary
-
-		'If Classic is selected, then bail
-		If cboAdvancedAuxiliaries.SelectedIndex = 0 Then Return
-
-		'Get Absolute Path for AAUX FILE.
-		absoluteAuxPath = ResolveAAUXFilePath(GetPath(VectoFile), txtAdvancedAuxiliaryFile.Text)
-
-		'Set Extensions
-		fbAux.Extensions = New String() {"AAUX"}
-
-		Try
-
-			assembly = DirectCast(cboAdvancedAuxiliaries.SelectedItem, AdvancedAuxiliary)
-
-			Dim validAAUXFile As Boolean = ValidateAAUXFile(absoluteAuxPath, assembly.AssemblyName,
-															assembly.AuxiliaryVersion, message)
-			Dim fileExists As Boolean = File.Exists(absoluteAuxPath)
-
-			If fileExists AndAlso validAAUXFile Then
-				ConfigureAdvancedAuxiliaries(assembly.AssemblyName, assembly.AuxiliaryVersion,
-											txtAdvancedAuxiliaryFile.Text, VectoFile)
-			Else
-
-				Dim needToFindOrCreateFile As Boolean = True
-
-				While needToFindOrCreateFile
-
-					'Find / Create  file and configure.
-					If fbAux.CustomDialog(absoluteAuxPath, False, False, FileBrowserFileExtensionMode.ForceExt, False, String.Empty) _
-						Then
-						txtAdvancedAuxiliaryFile.Text = GetFilenameWithoutDirectory(fbAux.Files(0), GetPath(VectoFile))
-						assembly = DirectCast(cboAdvancedAuxiliaries.SelectedItem, AdvancedAuxiliary)
-
-						If _
-							File.Exists(ResolveAAUXFilePath(GetPath(VectoFile), txtAdvancedAuxiliaryFile.Text)) OrElse
-							MsgBox("Do you want to create a new .AAUX file?", MsgBoxStyle.YesNo) = MsgBoxResult.Yes Then
-							needToFindOrCreateFile = False
-							ConfigureAdvancedAuxiliaries(assembly.AssemblyName, assembly.AuxiliaryVersion,
-														txtAdvancedAuxiliaryFile.Text, VectoFile)
-						End If
-					Else
-						needToFindOrCreateFile = False
-					End If
-
-				End While
-
-			End If
-
-		Catch ex As Exception
-			MessageBox.Show("There was an error configuring your Advanced Auxiliary File")
-		End Try
-	End Sub
-
-	'AA-TB
-	Private Sub cboAdvancedAuxiliaries_SelectedIndexChanged(sender As Object, e As EventArgs) _
-		Handles cboAdvancedAuxiliaries.SelectedIndexChanged
-
-		'Enable or otherwise the text box and browser button associated with Advanced Axuiliaries
-		If cboAdvancedAuxiliaries.SelectedIndex = 0 Then
-
-			btnBrowseAAUXFile.Enabled = False
-			txtAdvancedAuxiliaryFile.Enabled = False
-
-		Else
-
-			btnBrowseAAUXFile.Enabled = True
-			txtAdvancedAuxiliaryFile.Enabled = True
-
-		End If
-	End Sub
-
-
-	'AA-TB
-	Private Sub btnAAUXOpen_Click(sender As Object, e As EventArgs) Handles btnAAUXOpen.Click
-
-		OpenFiles(FileRepl(txtAdvancedAuxiliaryFile.Text, GetPath(VectoFile)))
-	End Sub
-
-
 	Private Sub btnDfTargetSpeed_Click(sender As Object, e As EventArgs) Handles btnDfTargetSpeed.Click
 		If DriverDecisionFactorTargetSpeedFileBrowser.OpenDialog(FileRepl(tbLacDfTargetSpeedFile.Text, GetPath(VectoFile))) _
 			Then _
@@ -1703,9 +1547,59 @@ lbDlog:
         Try
             If Not Trim(f) = "" Then HybridStrategyParamsForm.OpenHybridStrategyParametersFile(f)
         Catch ex As Exception
-            MsgBox("Failed to open Gearbox File: " + ex.Message)
+            MsgBox("Failed to open Hybrid strategy parameters File: " + ex.Message)
         End Try
 
+    End Sub
+
+    Private Sub cbEnableBusAux_CheckedChanged(sender As Object, e As EventArgs) Handles cbEnableBusAux.CheckedChanged
+        pnBusAux.Enabled = not Cfg.DeclMode AndAlso cbEnableBusAux.Checked
+    End Sub
+
+    Private Sub btnBusAuxP_Click(sender As Object, e As EventArgs) Handles btnBusAuxP.Click 
+        Dim f As String
+        f = FileRepl(tbBusAuxParams.Text, GetPath(VectoFile))
+
+        'Thus Veh-file is returned
+        BusAuxiliariesEngParametersForm.JobDir = GetPath(VectoFile)
+        BusAuxiliariesEngParametersForm.AutoSendTo = True
+
+        If Not Trim(f) = "" Then
+            If Not File.Exists(f) Then
+                MsgBox("File not found!")
+                Exit Sub
+            End If
+        End If
+
+        If Not BusAuxiliariesEngParametersForm.Visible Then
+            BusAuxiliariesEngParametersForm.Show()
+        Else
+            If BusAuxiliariesEngParametersForm.WindowState = FormWindowState.Minimized Then BusAuxiliariesEngParametersForm.WindowState = FormWindowState.Normal
+            BusAuxiliariesEngParametersForm.BringToFront()
+        End If
+        Dim vehicleType As VehicleCategory
+        Try
+            If Not Trim(f) = "" Then
+                Dim vehInput As IVehicleDeclarationInputData =
+                        CType(JSONInputDataFactory.ReadComponentData(FileRepl(TbVEH.Text, GetPath(VectoFile))),
+                              IEngineeringInputDataProvider).JobInputData.Vehicle
+                vehicleType = vehInput.VehicleCategory
+            End If
+
+        Catch ex As Exception
+            vehicleType = VehicleCategory.RigidTruck
+        End Try
+        Try
+            If Not Trim(f) = "" Then BusAuxiliariesEngParametersForm.OpenBusAuxParametersFile(f)
+        Catch ex As Exception
+            MsgBox("Failed to open Gearbox File: " + ex.Message)
+        End Try
+    End Sub
+
+    Private Sub btnBrowsBusAuxParams_Click(sender As Object, e As EventArgs) Handles btnBrowsBusAuxParams.Click
+        If BusAuxFileBrowser.OpenDialog(FileRepl(tbBusAuxParams.Text, GetPath(VectoFile))) Then
+            tbBusAuxParams.Text = GetFilenameWithoutDirectory(BusAuxFileBrowser.Files(0), GetPath(VectoFile))
+        End If
     End Sub
 End Class
 

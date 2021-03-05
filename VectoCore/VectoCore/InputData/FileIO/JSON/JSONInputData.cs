@@ -179,6 +179,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 		protected IVehicleEngineeringInputData VehicleData;
 
 		private readonly string _jobname;
+		private IBusAuxiliariesEngineeringData _busAux;
 
 
 		public IAuxiliariesEngineeringInputData EngineeringAuxiliaries
@@ -545,6 +546,18 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			get { return AuxData().Cast<IAuxiliaryEngineeringInputData>().ToList(); }
 		}
 
+		public IBusAuxiliariesEngineeringData BusAuxiliariesData
+		{
+			get
+			{
+				if (Body["BusAux"] == null) {
+					return null;
+				}
+
+				return _busAux ?? (_busAux = JSONInputDataFactory.ReadEngineeringBusAuxiliaries(Path.Combine(BasePath, Body.GetEx<string>("BusAux"))));
+			}
+		}
+
 		IList<IAuxiliaryDeclarationInputData> IAuxiliariesDeclarationInputData.Auxiliaries
 		{
 			get { return AuxData().Cast<IAuxiliaryDeclarationInputData>().ToList(); }
@@ -617,31 +630,6 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 		#endregion
 
-		#region AdvancedAuxiliaries
-
-		public AuxiliaryModel AuxiliaryAssembly
-		{
-			get {
-				return AuxiliaryModelHelper.Parse(
-					Body["AuxiliaryAssembly"] == null
-						? ""
-						: Body["AuxiliaryAssembly"].ToString());
-			}
-		}
-
-		public string AuxiliaryVersion
-		{
-			get { return Body["AuxiliaryVersion"] != null ? Body["AuxiliaryVersion"].Value<string>() : "<CLASSIC>"; }
-		}
-
-		public string AdvancedAuxiliaryFilePath
-		{
-			get {
-				return Body["AdvancedAuxiliaryFilePath"] != null
-					? Path.Combine(Path.GetFullPath(BasePath), Body["AdvancedAuxiliaryFilePath"].Value<string>())
-					: "";
-			}
-		}
 
 		public Watt ElectricAuxPower
 		{
@@ -650,8 +638,6 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 				return Body["Padd_electric"] != null ? Body.GetEx<double>("Padd_electric").SI<Watt>() : 0.SI<Watt>();
 			}
 		}
-
-		#endregion
 	}
 
 	public class JSONInputDataV2 : AbstractJSONInputData

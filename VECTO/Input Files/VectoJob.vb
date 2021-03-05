@@ -35,12 +35,7 @@ Public Class VectoJob
                 IDeclarationJobInputData, IDriverEngineeringInputData, IDriverDeclarationInputData, IAuxiliariesEngineeringInputData,
                 IAuxiliariesDeclarationInputData, IJSONVehicleComponents, IEngineStopStartEngineeringInputData, IEcoRollEngineeringInputData, IPCCEngineeringInputData
 
-    'AA-TB
-    'STORES THE Type and version of the chosen or default Auxiliary Type ( Classic/Original or other )
-    Public AuxiliaryAssembly As String
-    Public AuxiliaryVersion As String
-    Public AdvancedAuxiliaryFilePath As String
-
+    
     Private _sFilePath As String
     Private _myPath As String
 
@@ -50,12 +45,15 @@ Public Class VectoJob
     Private ReadOnly _gearboxFile As SubPath
     Private ReadOnly _tcuFile As SubPath
     Private ReadOnly _hcuFile As SubPath
+    Private ReadOnly _busAuxFile As SubPath
 
     Private ReadOnly _lacDfTargetSpeedFile As SubPath
     Private ReadOnly _lacDfVelocityDropFile as SubPath
 
     Private _startStop As Boolean
     Public StartStopDelay As Double
+
+    public UseBusAux as Boolean
 
     Private ReadOnly _driverAccelerationFile As SubPath
 
@@ -117,6 +115,7 @@ Public Class VectoJob
         _gearboxFile = New SubPath
         _tcuFile = New SubPath
         _hcuFile = New SubPath()
+        _busAuxFile = new SubPath()
         _lacDfTargetSpeedFile = New SubPath()
         _lacDfVelocityDropFile = New SubPath()
 
@@ -206,6 +205,19 @@ Public Class VectoJob
         End Get
         Set(value As String)
             _gearboxFile.Init(_myPath, value)
+        End Set
+    End Property
+
+    Public Property PathBusAux(Optional ByVal original As Boolean = False) As String
+        Get
+            If original Then
+                Return _busAuxFile.OriginalPath
+            Else
+                Return _busAuxFile.FullPath
+            End If
+        End Get
+        Set(value As String)
+            _busAuxFile.Init(_myPath, value)
         End Set
     End Property
 
@@ -693,30 +705,18 @@ Public Class VectoJob
         End Get
     End Property
 
+    Public ReadOnly Property BusAuxiliariesData As IBusAuxiliariesEngineeringData Implements IAuxiliariesEngineeringInputData.BusAuxiliariesData
+    get
+        If (not UseBusAux) Then
+            Return Nothing
+        End If
+        Return New JSONComponentInputData(_busAuxFile.FullPath, Me).JobInputData.Vehicle.Components.AuxiliaryInputData.BusAuxiliariesData
+    End Get
+    End Property
+
     Public ReadOnly Property ElectricAuxPower As Watt Implements IAuxiliariesEngineeringInputData.ElectricAuxPower
         Get
             Return AuxElPadd.SI(Of Watt)
-        End Get
-    End Property
-
-    Public ReadOnly Property IAuxiliariesEngineeringInputData_AdvancedAuxiliaryFilePath As String _
-        Implements IAuxiliariesEngineeringInputData.AdvancedAuxiliaryFilePath
-        Get
-            Return AdvancedAuxiliaryFilePath
-        End Get
-    End Property
-
-    Public ReadOnly Property IAuxiliariesEngineeringInputData_AuxiliaryVersion As String _
-        Implements IAuxiliariesEngineeringInputData.AuxiliaryVersion
-        Get
-            Return AuxiliaryVersion
-        End Get
-    End Property
-
-    Public ReadOnly Property IAuxiliariesEngineeringInputData_AuxiliaryAssembly As AuxiliaryModel _
-        Implements IAuxiliariesEngineeringInputData.AuxiliaryAssembly
-        Get
-            Return AuxiliaryModelHelper.Parse(AuxiliaryAssembly)
         End Get
     End Property
 

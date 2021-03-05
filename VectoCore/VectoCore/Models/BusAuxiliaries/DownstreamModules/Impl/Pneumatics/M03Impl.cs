@@ -23,8 +23,8 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.Pneumati
 			_signals = signals;
 
 			//'Calculate the Total Required Air Delivery Rate L / S
-			TotalAirDemand = TotalAirDemandCalculation(auxConfig, actuations);
-			AverageAirConsumed = TotalAirDemand / actuations.CycleTime;
+			var totalAirDemand = TotalAirDemandCalculation(auxConfig, actuations);
+			AverageAirConsumed = totalAirDemand / actuations.CycleTime;
 		}
 
 
@@ -96,8 +96,6 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.Pneumati
 		}
 
 		public NormLiterPerSecond AverageAirConsumed { get; }
-
-		public NormLiter TotalAirDemand { get; }
 
 		#endregion
 	}

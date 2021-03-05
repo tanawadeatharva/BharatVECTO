@@ -23,11 +23,11 @@ Namespace UnitTests
             End Get
         End Property
 
-        Public ReadOnly Property ElectricalWBase As Watt Implements ISSMTOOL.ElectricalWBase
-            Get
-                Throw New NotImplementedException
-            End Get
-        End Property
+        'Public ReadOnly Property ElectricalWBase As Watt Implements ISSMTOOL.ElectricalWBase
+        '    Get
+        '        Throw New NotImplementedException
+        '    End Get
+        'End Property
 
         'Public ReadOnly Property FuelPerHBase As KilogramPerSecond Implements ISSMTOOL.FuelPerHBase
         '    Get
@@ -49,12 +49,12 @@ Namespace UnitTests
             Return (0.5*(averageUseableEngineWasteHeat.Value()*0.835).SI(Unit.SI.Liter.Per.Hour).Value()).SI (of Watt)
         End Function
 
-        Public Property SSMInputs As ISSMInputs Implements ISSMTOOL.SSMInputs
+        Public Property SSMInputs As ISSMDeclarationInputs Implements ISSMTOOL.SSMInputs
 
             Get
-                Return Utils.GetAuxTestConfig().SSMInputs
+                Return CType(Utils.GetAuxTestConfig().SSMInputs, ISSMDeclarationInputs)
             End Get
-            Set(value As ISSMInputs)
+            Set(value As ISSMDeclarationInputs)
             End Set
         End Property
 
@@ -66,11 +66,11 @@ Namespace UnitTests
         '	Throw New NotImplementedException
         'End Function
 
-        Public ReadOnly Property MechanicalWBase As Watt Implements ISSMTOOL.MechanicalWBase
-            Get
-                Throw New NotImplementedException
-            End Get
-        End Property
+        'Public ReadOnly Property MechanicalWBase As Watt Implements ISSMTOOL.MechanicalWBase
+        '    Get
+        '        Throw New NotImplementedException
+        '    End Get
+        'End Property
 
         Public ReadOnly Property MechanicalWBaseAdjusted As Watt Implements ISSMTOOL.MechanicalWBaseAdjusted
             Get

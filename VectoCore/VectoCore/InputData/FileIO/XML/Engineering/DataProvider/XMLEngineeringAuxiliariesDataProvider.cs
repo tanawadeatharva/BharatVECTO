@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Xml;
@@ -48,19 +49,13 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering.DataProvider
 			}
 		}
 
-		public virtual AuxiliaryModel AuxiliaryAssembly
+		public IBusAuxiliariesEngineeringData BusAuxiliariesData
 		{
-			get { return AuxiliaryModel.Classic; }
-		}
-
-		public virtual string AuxiliaryVersion
-		{
-			get { return ""; }
-		}
-
-		public virtual string AdvancedAuxiliaryFilePath
-		{
-			get { return ""; }
+			get
+			{
+				// TODO: MQ 20210211 - implement...
+				return null;
+			}
 		}
 
 		public Watt ElectricAuxPower { get; }

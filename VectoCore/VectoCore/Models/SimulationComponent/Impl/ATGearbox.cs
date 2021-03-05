@@ -381,7 +381,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					//RequestAfterGearshift = false;
 				}
 				response.Gearbox.InputSpeed = inAngularVelocity;
-
+				response.Gearbox.InputTorque = inTorque;
 				return response;
 			}
 			var retVal = NextComponent.Request(absTime, dt, inTorque, inAngularVelocity, dryRun);
@@ -392,6 +392,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				//RequestAfterGearshift = false;
 			}
 			retVal.Gearbox.InputSpeed = inAngularVelocity;
+			retVal.Gearbox.InputTorque = inTorque;
 
 			return retVal;
 		}
@@ -474,6 +475,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			container[ModalResultField.P_gbx_shift_loss] = CurrentState.PowershiftLoss.DefaultIfNull(0) * avgInAngularSpeed;
 			container[ModalResultField.n_gbx_out_avg] = avgOutAngularSpeed;
 			container[ModalResultField.T_gbx_out] = CurrentState.OutTorque;
+			container[ModalResultField.T_gbx_in] = CurrentState.InTorque;
 
 			_strategy?.WriteModalResults(container);
 		}

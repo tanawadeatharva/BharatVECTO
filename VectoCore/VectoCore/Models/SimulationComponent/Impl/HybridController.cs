@@ -190,6 +190,15 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					continue;
 				}
 
+				if (!dryRun && strategySettings.CombustionEngineOn && retVal is ResponseEngineSpeedTooHigh) {
+					retryCount++;
+					retry = true;
+					Strategy.AllowEmergencyShift = true;
+					Strategy.OperatingpointChangedDuringRequest(absTime, dt, outTorque, outAngularVelocity, dryRun,
+						retVal);
+					continue;
+				}
+
 				if (retVal is ResponseDifferentGearEngaged) {
 					retryCount++;
 					retry = true;
@@ -325,8 +334,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 										runData.VehicleData.DynamicTyreRadius;
 				var minEngineSpeed = (runData.EngineData.FullLoadCurves[0].RatedSpeed - runData.EngineData.IdleSpeed) *
 					Constants.SimulationSettings.ClutchClosingSpeedNorm + runData.EngineData.IdleSpeed;
-                MaxStartGear = GearList.First();
-                foreach (var gear in GearList.Reverse()) {
+				MaxStartGear = GearList.First();
+				foreach (var gear in GearList.Reverse()) {
 					var gearData = GearboxModelData.Gears[gear.Gear];
 					if (GearshiftParams.StartSpeed * transmissionRatio * gearData.Ratio <= minEngineSpeed)
 						continue;

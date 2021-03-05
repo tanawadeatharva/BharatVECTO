@@ -92,7 +92,8 @@ namespace TUGraz.VectoCore.OutputData.ModFilter
 					ModalResultField.T_ice_fcmap,
 					ModalResultField.T_ice_full,
 					ModalResultField.T_ice_drag,
-					ModalResultField.T_gbx_out
+					ModalResultField.T_gbx_out,
+					ModalResultField.T_gbx_in
 					);
 
 				SetConstantValues(current, start, end,

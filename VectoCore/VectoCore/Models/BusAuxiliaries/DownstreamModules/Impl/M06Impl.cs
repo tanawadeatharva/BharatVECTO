@@ -25,7 +25,9 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl
 		protected ISignals _signals;
 		private bool _smartElectrics;
 
-		public M06Impl(IElectricsUserInputsConfig electricConfig, IM1_AverageHVACLoadDemand m1, IM2_AverageElectricalLoadDemand m2, IM3_AveragePneumaticLoadDemand m3, IM4_AirCompressor m4, IM5_SmartAlternatorSetGeneration m5, ISignals signals)
+		public M06Impl(IElectricsUserInputsConfig electricConfig, IM1_AverageHVACLoadDemand m1,
+			IM2_AverageElectricalLoadDemand m2, IM3_AveragePneumaticLoadDemand m3, IM4_AirCompressor m4,
+			IM5_SmartAlternatorSetGeneration m5, ISignals signals)
 		{
 			_m1 = m1;
 			_m2 = m2;

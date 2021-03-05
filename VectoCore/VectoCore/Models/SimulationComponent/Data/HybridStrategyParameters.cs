@@ -19,6 +19,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data {
 
 		public Second MinICEOnTime { get; set; }
 		
-		public Watt MaxDrivetrainPower { get; set; }
+		public VehicleMaxPropulsionTorque MaxPropulsionTorque { get; set; }
+
+		//public Watt MaxDrivetrainPower { get; set; }
 	}
 }

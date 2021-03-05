@@ -194,6 +194,10 @@ namespace TUGraz.VectoCommon.Utils
 		{
 			return new ConvertedSI(value.Value() / Kilo / SecondsPerHour, "kWh");
 		}
+		public static ConvertedSI ConvertToWattHour(this WattSecond value)
+		{
+			return new ConvertedSI(value.Value() / SecondsPerHour, "Wh");
+		}
 		public static ConvertedSI ConvertToKiloWatt(this Watt value)
 		{
 			return new ConvertedSI(value.Value() / Kilo, "kW");
