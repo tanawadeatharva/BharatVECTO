@@ -17,6 +17,8 @@
     "BusAux": "BusAuxData_C3a.vaux",
     "Aux": [],
     "Padd": 5000.0,
+    "Paux_ICEOff_Driving": 2800.0,
+    "Paux_ICEOff_Standstill": 1500.0,
     "VACC": "Driver.vacc",
     "StartStop": {
       "Enabled": false,
@@ -24,7 +26,7 @@
       "MinTime": 5.0,
       "Delay": 5.0
     },
-    "EngineStopStartUtilityFactor":  1,
+    "EngineStopStartUtilityFactor": 1,
     "LAC": {
       "Enabled": true,
       "PreviewDistanceFactor": 10.0,
@@ -41,10 +43,10 @@
     },
     "Cycles": [
       "Interurban",
-	  "Coach",
-	  "Urban",
-	  "Suburban",
-	  "HeavyUrban"
+      "Coach",
+      "Urban",
+      "Suburban",
+      "HeavyUrban"
     ]
   }
 }
