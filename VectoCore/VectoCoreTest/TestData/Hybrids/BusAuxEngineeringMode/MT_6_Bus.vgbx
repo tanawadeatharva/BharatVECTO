@@ -12,7 +12,7 @@
     "TracInt": 2.0,
     "Gears": [
       {
-        "Ratio": 4.9,
+        "Ratio": 6.5,
         "LossMap": "Axle_Coach.vtlm"
       },
       {
