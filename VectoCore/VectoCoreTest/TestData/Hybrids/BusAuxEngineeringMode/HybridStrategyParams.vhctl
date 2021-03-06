@@ -6,8 +6,8 @@
     "FileVersion": 1
   },
   "Body": {
-    "EquivalenceFactorDischarge": 2.5,
-    "EquivalenceFactorCharge": 1.5,
+    "EquivalenceFactorDischarge": 2.95,
+    "EquivalenceFactorCharge": 2.15,
     "MinSoC": 10.0,
     "MaxSoC": 90.0,
     "TargetSoC": 50.0,

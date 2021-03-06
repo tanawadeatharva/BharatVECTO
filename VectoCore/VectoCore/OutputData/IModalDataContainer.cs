@@ -341,7 +341,7 @@ namespace TUGraz.VectoCore.OutputData
 
 		public static WattSecond WorkAuxiliariesDuringEngineStop(this IModalDataContainer data)
 		{
-			return data.TimeIntegral<WattSecond>(ModalResultField.P_aux_ice_off);
+			return data.TimeIntegral<WattSecond>(ModalResultField.P_aux_ESS_mech_ice_off);
 		}
 
 		public static WattSecond WorkEngineStart(this IModalDataContainer data)

@@ -1,12 +1,13 @@
 ﻿using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Models.Connector.Ports.Impl;
 using TUGraz.VectoCore.Models.Simulation.Data;
+using TUGraz.VectoCore.Models.Simulation.DataBus;
 using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.OutputData;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent
 {
-	public class DCDCConverter : StatefulVectoSimulationComponent<DCDCConverter.State>, IElectricAuxPort
+	public class DCDCConverter : StatefulVectoSimulationComponent<DCDCConverter.State>, IDCDCConverter
 	{
 		public double Efficiency { get; protected set; }
 
@@ -29,12 +30,15 @@ namespace TUGraz.VectoCore.Models.SimulationComponent
 
 		public Watt PowerDemand(Second absTime, Second dt, bool dryRun)
 		{
-			if (DataBus.BatteryInfo.StoredEnergy.IsGreater(PreviousState.ConsumedEnergy)) {
+			if ((-DataBus.BatteryInfo.MaxDischargePower(dt) * dt).IsGreater(PreviousState.ConsumedEnergy)) {
 				return PreviousState.ConsumedEnergy / dt / Efficiency;
 			}
 
 			// write in mod-file for post-processing correction
-			CurrentState.MissingEnergy = PreviousState.ConsumedEnergy;
+			if (!dryRun) {
+				CurrentState.MissingEnergy = PreviousState.ConsumedEnergy;
+			}
+
 			return 0.SI<Watt>();
 		}
 
@@ -66,10 +70,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent
 
 		#endregion
 
-		public void ConsumerPower(Watt electricConsumerPower, Second dt, bool dryRun)
+		public void ConsumerEnergy(WattSecond electricConsumerEnergy, bool dryRun)
 		{
 			if (!dryRun) {
-				CurrentState.ConsumedEnergy = electricConsumerPower * dt;
+				CurrentState.ConsumedEnergy = electricConsumerEnergy;
 			}
 		}
 

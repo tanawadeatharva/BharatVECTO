@@ -35,6 +35,7 @@ using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Models.BusAuxiliaries;
 using TUGraz.VectoCore.Models.BusAuxiliaries.Interfaces;
+using TUGraz.VectoCore.Models.BusAuxiliaries.Interfaces.DownstreamModules.Electrics;
 using TUGraz.VectoCore.Models.Simulation;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.DataBus;
@@ -70,21 +71,40 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			AuxCfg = auxiliaryConfig;
 			DataBus = container;
 
-			var tmpAux = auxiliaryConfig.ElectricalUserInputsConfig.AlternatorType == AlternatorType.None
-				? new BusAuxiliaries.BusAuxiliariesNoAlternator(container.ModalData)
-				: new BusAuxiliaries.BusAuxiliaries(container.ModalData);
+			if (container.ModalData != null) {
+				container.ModalData.AuxHeaterDemandCalc = AuxHeaterDemandCalculation;
+			}
+
+			var electricStorage =
+				AuxCfg.ElectricalUserInputsConfig.AlternatorType == AlternatorType.Smart &&
+				AuxCfg.ElectricalUserInputsConfig.ConnectESToREESS
+					// in case of smat alternator with Px hybrid take electric power from P0 REESS first, then from HEV REESS.
+					// do not use alternator to generate demanded power if P0 REESS is empty. so trick busaux that there is always
+					// energy in the battery.
+					? (ISimpleBatteryInfo)new InfinityBattery(AuxCfg.ElectricalUserInputsConfig.ElectricStorageCapacity) 
+					: new ElectricStorageWrapper(this);
+			var tmpAux = AuxCfg.ElectricalUserInputsConfig.AlternatorType == AlternatorType.None
+				? new BusAuxiliariesNoAlternator(electricStorage)
+				: new BusAuxiliaries.BusAuxiliaries(electricStorage);
+
 
 			//'Set Signals
-			tmpAux.Signals.EngineIdleSpeed = container.EngineInfo.EngineIdleSpeed;
-			tmpAux.Initialise(auxiliaryConfig);
+			tmpAux.Signals.EngineIdleSpeed = DataBus.EngineInfo.EngineIdleSpeed;
+			tmpAux.Initialise(AuxCfg);
 
-			SmartElectricSystem = auxiliaryConfig.ElectricalUserInputsConfig.AlternatorType == AlternatorType.Smart;
+			SmartElectricSystem = AuxCfg.ElectricalUserInputsConfig.AlternatorType == AlternatorType.Smart;
 
 			Auxiliaries = tmpAux;
 		}
 
-		public DCDCConverter DCDCConverter { get; set; }
+		
+		public IDCDCConverter DCDCConverter { get; set; }
 
+		public ISimpleBattery ElectricStorage { get; set; }
+
+		public virtual Joule AuxHeaterDemandCalculation(Second cycleTime, Joule engineWasteHeatTotal)
+		{
+			return Auxiliaries.AuxHeaterDemandCalculation(cycleTime, engineWasteHeatTotal);}
 
 		public IAuxPort Port()
 		{
@@ -98,7 +118,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			CurrentState.AngularSpeed = angularSpeed;
 			AdditionalAux?.Initialize(torque, angularSpeed);
 			DCDCConverter?.Initialize();
-			PreviousState.PowerDemand = GetBusAuxPowerDemand(0.SI<Second>(), 1.SI<Second>(), torque, angularSpeed);
+			PreviousState.PowerDemand = GetBusAuxPowerDemand(0.SI<Second>(), 1.SI<Second>(), torque, angularSpeed) +
+										(AdditionalAux?.PowerDemandEngineOn(0.SI<Second>(), 1.SI<Second>(), angularSpeed) ?? 0.SI<Watt>());
 			return PreviousState.PowerDemand / angularSpeed;
 		}
 
@@ -113,7 +134,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			signals.EngineStopped = false; 
 			signals.VehicleStopped = false; 
 
-			CurrentState.PowerDemand = GetBusAuxPowerDemand(absTime, dt, torquePowerTrain, angularSpeed, dryRun);
+			CurrentState.PowerDemand = GetBusAuxPowerDemand(absTime, dt, torquePowerTrain, angularSpeed, dryRun) +
+										(AdditionalAux?.PowerDemandEngineOn(0.SI<Second>(), 1.SI<Second>(), angularSpeed) ?? 0.SI<Watt>());
 
 			var avgAngularSpeed = (CurrentState.AngularSpeed + PreviousState.AngularSpeed) / 2.0;
 			return CurrentState.PowerDemand / avgAngularSpeed;
@@ -124,13 +146,14 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			var signals = Auxiliaries.Signals;
 			signals.EngineStopped = false; 
 			signals.VehicleStopped = false;
-			var retVal =  GetBusAuxPowerDemand(time, simulationInterval, 0.SI<NewtonMeter>(), engineSpeed, true);
+			var retVal =  GetBusAuxPowerDemand(time, simulationInterval, 0.SI<NewtonMeter>(), engineSpeed, true) +
+						(AdditionalAux?.PowerDemandEngineOn(0.SI<Second>(), 1.SI<Second>(), engineSpeed) ?? 0.SI<Watt>());
 
 			if (!SmartElectricSystem) {
 				return retVal;
 			}
 
-			var batteryPwr = Auxiliaries.BatterySOC * AuxCfg.ElectricalUserInputsConfig.ElectricStorageCapacity / simulationInterval;
+			//var batteryPwr = ElectricStorage.SOC * AuxCfg.ElectricalUserInputsConfig.ElectricStorageCapacity / simulationInterval;
 			var esSum = Auxiliaries.ElectricPowerConsumerSum;
 			//if (batteryPwr < esSum) {
 				retVal += (esSum ) / AuxCfg.ElectricalUserInputsConfig.AlternatorGearEfficiency /
@@ -148,30 +171,32 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			var signals = Auxiliaries.Signals;
 
-			// set internal state of power demand as if ICE is on - multiplied by (1-ESS_UF) 
-			signals.EngineStopped = false;
-			signals.VehicleStopped = false;
+			//// set internal state of power demand as if ICE is on - multiplied by (1-ESS_UF) 
+			//signals.EngineStopped = false;
+			//signals.VehicleStopped = false;
 
-			// get busaux PowerDemand without additional Auxiliaries first.
-			var conventionalAux = AdditionalAux;
-			AdditionalAux = null;
+			//// get busaux PowerDemand without additional Auxiliaries first.
+			//var conventionalAux = AdditionalAux;
+			//AdditionalAux = null;
+			signals.EngineStopped = !DataBus.EngineCtl.CombustionEngineOn;
+			signals.VehicleStopped = DataBus.VehicleInfo.VehicleStopped;
+
 			var busAuxPowerDemand  = GetBusAuxPowerDemand(
 				absTime, dt, 0.SI<NewtonMeter>(), DataBus.EngineInfo.EngineIdleSpeed);
-			AdditionalAux = conventionalAux;
+			//AdditionalAux = conventionalAux;
 
 			CurrentState.PowerDemand = ((AdditionalAux?.PowerDemandEngineOn(absTime, dt, DataBus.EngineInfo.EngineIdleSpeed) ?? 0.SI<Watt>()) +
 										busAuxPowerDemand) * (1 - EngineStopStartUtilityFactor);
 			//CurrentState.ESPowerGeneratedICE_On = Auxiliaries.ElectricPowerGenerated;
 			//CurrentState.ESPowerMech = Auxiliaries.ElectricPowerDemandMech;
 			// 
-			signals.EngineStopped = !DataBus.EngineCtl.CombustionEngineOn;
-			signals.VehicleStopped = DataBus.VehicleInfo.VehicleStopped;
+			
 
-			busAuxPowerDemand = GetBusAuxPowerDemand(
-				absTime, dt, 0.SI<NewtonMeter>(), DataBus.EngineInfo.EngineIdleSpeed);
-			AdditionalAux = conventionalAux;
+			//busAuxPowerDemand = GetBusAuxPowerDemand(
+			//	absTime, dt, 0.SI<NewtonMeter>(), DataBus.EngineInfo.EngineIdleSpeed);
+			//AdditionalAux = conventionalAux;
 
-			return EngineStopStartUtilityFactor * (busAuxPowerDemand + AdditionalAux?.PowerDemandEngineOff(absTime, dt));
+			return EngineStopStartUtilityFactor * (busAuxPowerDemand + (AdditionalAux?.PowerDemandEngineOff(absTime, dt) ?? 0.SI<Watt>()));
 		}
 
 
@@ -190,35 +215,44 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			//signals.VehicleStopped = DataBus.VehicleStopped;
 
 			// cycleStep has to be called here and not in DoCommit, write is called before Commit!
-			var oldSOC = Auxiliaries.BatterySOC;
+			//var oldSOC = Auxiliaries.BatterySOC;
 			Auxiliaries.CycleStep(CurrentState.dt, DataBus.EngineCtl.CombustionEngineOn ? 1.0 : EngineStopStartUtilityFactor);
-			var newSOC = Auxiliaries.BatterySOC;
+			//var newSOC = Auxiliaries.BatterySOC;
 
 			//CurrentState.TotalFuelConsumption = Auxiliaries.TotalFuel;
 			container[ModalResultField.P_aux_mech] = CurrentState.PowerDemand;
 
-			container[ModalResultField.P_busAux_ES_HVAC] = essUtilityFactor * Auxiliaries.HVACElectricalPowerConsumer;
-			container[ModalResultField.P_busAux_ES_other] = essUtilityFactor * Auxiliaries.ElectricPowerConsumer;
-			container[ModalResultField.P_busAux_ES_consumer_sum] = essUtilityFactor * Auxiliaries.ElectricPowerConsumerSum;
+			container[ModalResultField.P_busAux_ES_HVAC] = /*essUtilityFactor **/ Auxiliaries.HVACElectricalPowerConsumer;
+			container[ModalResultField.P_busAux_ES_other] = /*essUtilityFactor **/ Auxiliaries.ElectricPowerConsumer;
+			container[ModalResultField.P_busAux_ES_consumer_sum] = /*essUtilityFactor **/ Auxiliaries.ElectricPowerConsumerSum;
 			container[ModalResultField.P_busAux_ES_sum_mech] = essUtilityFactor * Auxiliaries.ElectricPowerDemandMech;
 			container[ModalResultField.P_busAux_ES_generated] = essUtilityFactor * Auxiliaries.ElectricPowerGenerated;
 
-			if (SmartElectricSystem) {
-				var batteryPwr = (oldSOC - newSOC) * AuxCfg.ElectricalUserInputsConfig.ElectricStorageCapacity / dt;
+			if (AuxCfg.ElectricalUserInputsConfig.ConnectESToREESS) {
+				container[ModalResultField.P_busAux_ES_HVAC] = Auxiliaries.HVACElectricalPowerConsumer;
+				container[ModalResultField.P_busAux_ES_other] = Auxiliaries.ElectricPowerConsumer;
+				container[ModalResultField.P_busAux_ES_consumer_sum] = Auxiliaries.ElectricPowerConsumerSum;
+				container[ModalResultField.P_busAux_ES_sum_mech] = Auxiliaries.ElectricPowerDemandMech;
+				container[ModalResultField.P_busAux_ES_generated] = Auxiliaries.ElectricPowerGenerated;
+				if (SmartElectricSystem) {
+					container[ModalResultField.BatterySOC] = ElectricStorage.SOC * 100.0;
+				}
+			} else {
+				if (SmartElectricSystem) {
+					var batteryPwr = ElectricStorage.ConsumedEnergy / dt;
 
-				container[ModalResultField.BatterySOC] = Auxiliaries.BatterySOC * 100.0;
+					container[ModalResultField.BatterySOC] = ElectricStorage.SOC * 100.0;
 
-				container[ModalResultField.P_busAux_ES_generated] = essUtilityFactor *
-																	(DataBus.VehicleInfo.VehicleStopped &&
-																	!DataBus.EngineCtl.CombustionEngineOn
-																		? Auxiliaries.ElectricPowerConsumerSum
-																		: Auxiliaries.ElectricPowerGenerated);
-				container[ModalResultField.P_busAux_ES_sum_mech] = essUtilityFactor * (Auxiliaries.ElectricPowerConsumerSum - batteryPwr) /
-																	AuxCfg.ElectricalUserInputsConfig.AlternatorGearEfficiency /
-																	AuxCfg.ElectricalUserInputsConfig.AlternatorMap.GetEfficiency(0.RPMtoRad(), 0.SI<Ampere>());
-				
-				if (batteryPwr.IsSmaller(Auxiliaries.ElectricPowerConsumerSum * EngineStopStartUtilityFactor)) {
-					// add to P_aux_ES
+					container[ModalResultField.P_busAux_ES_generated] = essUtilityFactor *
+																		(DataBus.VehicleInfo.VehicleStopped &&
+																		!DataBus.EngineCtl.CombustionEngineOn
+																			? Auxiliaries.ElectricPowerConsumerSum
+																			: Auxiliaries.ElectricPowerGenerated);
+					container[ModalResultField.P_busAux_ES_sum_mech] =
+						essUtilityFactor * (Auxiliaries.ElectricPowerConsumerSum - batteryPwr) /
+						AuxCfg.ElectricalUserInputsConfig.AlternatorGearEfficiency /
+						AuxCfg.ElectricalUserInputsConfig.AlternatorMap.GetEfficiency(0.RPMtoRad(), 0.SI<Ampere>());
+
 				}
 			}
 
@@ -258,21 +292,21 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			var signals = Auxiliaries.Signals;
 
 			signals.SimulationInterval = dt;
-			signals.ClutchEngaged = DataBus.ClutchInfo.ClutchClosed(absTime);
+			signals.ClutchEngaged = DataBus.ClutchInfo.ClutchClosed(absTime) && DataBus.GearboxInfo.GearEngaged(absTime);
 			signals.EngineDrivelineTorque = torquePowerTrain;
 			
 			signals.EngineSpeed = angularSpeed;
 			var avgAngularSpeed = (PreviousState.AngularSpeed + CurrentState.AngularSpeed) / 2;
 
 
-			signals.PreExistingAuxPower = AdditionalAux != null
+			var preExistingAuxPower = AdditionalAux != null
 				? AdditionalAux.TorqueDemand(absTime, dt, torquePowerTrain, angularSpeed, dryRun) * avgAngularSpeed
 				: 0.SI<Watt>();
 
 			var drivetrainPower = torquePowerTrain * avgAngularSpeed;
 			if (!dryRun && !DataBus.IsTestPowertrain && DataBus.DriverInfo.DrivingAction == DrivingAction.Brake && CurrentState.ExcessiveDragPower.IsEqual(0)) {
 				CurrentState.ExcessiveDragPower = drivetrainPower -
-												(DataBus.EngineInfo.EngineDragPower(avgAngularSpeed) - signals.PreExistingAuxPower) - DataBus.Brakes.BrakePower;
+												(DataBus.EngineInfo.EngineDragPower(avgAngularSpeed) - preExistingAuxPower) - DataBus.Brakes.BrakePower;
 			}
 			if (!dryRun && DataBus.DriverInfo.DrivingAction != DrivingAction.Brake) {
 				CurrentState.ExcessiveDragPower = 0.SI<Watt>();
@@ -283,11 +317,34 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			signals.Idle = DataBus.VehicleInfo.VehicleStopped;
 			signals.InNeutral = DataBus.GearboxInfo.Gear.Gear == 0;
 
-			if (AuxCfg.ElectricalUserInputsConfig.ConnectESToREESS) {
-				DCDCConverter.ConsumerPower(Auxiliaries.ElectricPowerConsumerSum, dt, dryRun);
+
+
+			var maxChg = ElectricStorage.MaxChargeEnergy();
+			var maxDischg = ElectricStorage.MaxDischargeEnergy();
+			
+			var essFactor = DataBus.EngineCtl.CombustionEngineOn ? 0.0 : EngineStopStartUtilityFactor;
+			var elPwrGen = Auxiliaries.ElectricPowerGenerated;
+			var elPwrConsumed = Auxiliaries.ElectricPowerConsumerSum;
+
+			var energyDemand = (elPwrGen * (1 - essFactor) - elPwrConsumed)  * dt;
+
+			var batEnergy = energyDemand.LimitTo(maxDischg, maxChg);
+
+			if (SmartElectricSystem) {
+				ElectricStorage.ConsumeEnergy(batEnergy, dryRun);
 			}
 
-			return Auxiliaries.AuxiliaryPowerAtCrankWatts + signals.PreExistingAuxPower;
+			var missingEnergy = energyDemand - batEnergy;
+
+			if (AuxCfg.ElectricalUserInputsConfig.ConnectESToREESS) {
+				DCDCConverter.ConsumerEnergy(-missingEnergy, dryRun);
+			} else {
+				if (!dryRun) {
+					CurrentState.MissingElectricEnergy = missingEnergy;
+				}
+			}
+
+			return Auxiliaries.AuxiliaryPowerAtCrankWatts;
 		}
 
 		public class BusAuxState
@@ -295,8 +352,47 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			public Second dt;
 			public PerSecond AngularSpeed;
 			public Watt PowerDemand { get; set; }
-			
+			public WattSecond MissingElectricEnergy { get; set; }
+
 			public Watt ExcessiveDragPower = 0.SI<Watt>();
+		}
+
+		public class ElectricStorageWrapper : ISimpleBatteryInfo
+		{
+			private BusAuxiliariesAdapter busAuxAdapter;
+
+			public ElectricStorageWrapper(BusAuxiliariesAdapter busAuxiliariesAdapter)
+			{
+				busAuxAdapter = busAuxiliariesAdapter;
+			}
+
+			#region Implementation of ISimpleBatteryInfo
+
+			public double SOC {
+				get { return busAuxAdapter.ElectricStorage.SOC; }
+			}
+			public WattSecond Capacity {
+				get { return busAuxAdapter.ElectricStorage.Capacity; }
+			}
+
+			#endregion
+		}
+
+		public class InfinityBattery : ISimpleBatteryInfo
+		{
+			public InfinityBattery(WattSecond electricStorageCapacity)
+			{
+				Capacity = electricStorageCapacity;
+			}
+
+			#region Implementation of ISimpleBatteryInfo
+
+			public double SOC {
+				get { return 0.5; }
+			}
+			public WattSecond Capacity { get; }
+
+			#endregion
 		}
 	}
 }

@@ -15,14 +15,14 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl
 		protected IM5_SmartAlternatorSetGeneration _m5;
 		protected IM6 _m6;
 		protected readonly ISignals _signals;
-		private ISimpleBattery _bat;
+		private ISimpleBatteryInfo _bat;
 		private IM2_AverageElectricalLoadDemand _m2;
 		private IM1_AverageHVACLoadDemand _m1;
 		private IM0_NonSmart_AlternatorsSetEfficiency _m0;
 		private double _alternatorGearEfficiency;
 
 		public M07Impl(IM0_NonSmart_AlternatorsSetEfficiency m0, IM1_AverageHVACLoadDemand m1,
-			IM2_AverageElectricalLoadDemand m2, IM5_SmartAlternatorSetGeneration m5, IM6 m6, ISimpleBattery bat,
+			IM2_AverageElectricalLoadDemand m2, IM5_SmartAlternatorSetGeneration m5, IM6 m6, ISimpleBatteryInfo bat,
 			double alternatorGearEfficiency, ISignals signals)
 		{
 			_m5 = m5;

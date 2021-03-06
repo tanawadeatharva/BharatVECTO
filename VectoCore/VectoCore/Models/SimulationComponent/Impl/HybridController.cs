@@ -455,10 +455,17 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			public override GearshiftPosition Engage(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity)
 			{
+				var tmpGear = new GearshiftPosition(_nextGear.Gear);
 				if (DataBus.EngineCtl.CombustionEngineOn) {
 					while (GearList.HasPredecessor(_nextGear) && SpeedTooLowForEngine(_nextGear, outAngularVelocity)) {
 						_nextGear = GearList.Predecessor(_nextGear);
 					}
+
+					//if (!tmpGear.Equals(_nextGear)) {
+					//	if (GearList.HasPredecessor(_nextGear) && IsBelowDownShiftCurve(_nextGear,)) {
+					//		_nextGear = GearList.Predecessor(_nextGear);
+					//	}
+					//}
 
 					while (GearList.HasSuccessor(_nextGear) && SpeedTooHighForEngine(_nextGear, outAngularVelocity)) {
 						_nextGear = GearList.Successor(_nextGear);

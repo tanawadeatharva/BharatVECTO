@@ -59,7 +59,9 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 		[ModalResultField(typeof(SI), caption: "P_ice_start [kW]", outputFactor: 1e-3)] P_ice_start,
 
 
-		[ModalResultField(typeof(SI), caption: "P_aux_ESS_mech [kW]", outputFactor: 1e-3)] P_aux_ice_off,
+		[ModalResultField(typeof(SI), caption: "P_aux_ESS_mech_ICE_off [kW]", outputFactor: 1e-3)] P_aux_ESS_mech_ice_off,
+
+		[ModalResultField(typeof(SI), caption: "P_aux_ESS_mech_ICE_on [kW]", outputFactor: 1e-3)] P_aux_ESS_mech_ice_on,
 
 		/// <summary>
 		///     Engine speed [1/min].

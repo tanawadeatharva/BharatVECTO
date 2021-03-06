@@ -120,6 +120,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 					break;
 			}
 
+			if (TestPowertrain.DCDCConverter != null) {
+				TestPowertrain.DCDCConverter.PreviousState.ConsumedEnergy =
+					(DataBus.DCDCConverter as DCDCConverter).PreviousState.ConsumedEnergy;
+			}
+
 			TestPowertrain.Gearbox.PreviousState.InAngularVelocity =
 				(DataBus.GearboxInfo as Gearbox).PreviousState.InAngularVelocity;
 
@@ -865,13 +870,16 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 					CalcualteCosts(firstResponse, dt, firstEntry, AllowICEOff(absTime), dryRun);
 					var minimumShiftTimePassed = (DataBus.GearboxInfo.LastShift + ModelData.GearshiftParameters.TimeBetweenGearshifts).IsSmallerOrEqual(absTime);
 					if (DataBus.GearboxInfo.GearEngaged(absTime) && !vehiclespeedBelowThreshold) {
-						if (firstEntry.IgnoreReason.EngineSpeedBelowDownshift() ||
+						if (firstEntry.IgnoreReason.EngineSpeedBelowDownshift()||
 							firstEntry.IgnoreReason.EngineSpeedTooLow()) {
-							// downshift required!
-							var downshift = ResponseEmOff;
-							downshift.Gear = GearList.Predecessor(nextGear);
-							eval.Add(downshift);
-							return;
+							var best = FindBestGearForBraking(nextGear, firstResponse);
+							if (!best.Equals(nextGear)) {
+								// downshift required!
+								var downshift = ResponseEmOff;
+								downshift.Gear = best; // GearList.Predecessor(nextGear);
+								eval.Add(downshift);
+								return;
+							}
 						}
 					}
 				}
@@ -913,7 +921,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 					GearboxInNeutral = false,
 					NextGear = nextGear,
 					MechanicalAssistPower = new Dictionary<PowertrainPosition, Tuple<PerSecond, NewtonMeter>>() {
-						{ emPos, Tuple.Create(firstResponse.ElectricMotor.AngularVelocity, firstResponse.ElectricMotor.MaxRecuperationTorque) }
+						{ emPos, Tuple.Create(firstResponse.ElectricMotor.AngularVelocity, VectoMath.Max(firstResponse.ElectricMotor.MaxRecuperationTorque, 0.SI<NewtonMeter>())) }
 					}
 				};
 				var maxRecuperationResponse = RequestDryRun(
@@ -929,14 +937,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 						new HybridResultEntry() {
 							ICEOff = !DataBus.EngineInfo.EngineOn,
 							Gear = nextGear,
-							Setting = new HybridStrategyResponse() {
-								CombustionEngineOn = DataBus.EngineInfo.EngineOn,
-								GearboxInNeutral = false,
-								NextGear = nextGear,
-								MechanicalAssistPower = new Dictionary<PowertrainPosition, Tuple<PerSecond, NewtonMeter>>() {
-									{ emPos, Tuple.Create(firstResponse.ElectricMotor.AngularVelocity, firstResponse.ElectricMotor.MaxRecuperationTorque) }
-								}
-							}
+							Setting = maxRecuperation
 						});
 					return;
 				}
@@ -1029,6 +1030,23 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 			} else {
 				eval.Add(ResponseEmOff);
 			}
+		}
+
+		private GearshiftPosition FindBestGearForBraking(GearshiftPosition nextGear, IResponse firstResponse)
+		{
+			var tmpGear = new GearshiftPosition(nextGear.Gear, nextGear.TorqueConverterLocked);
+			var candidates = new Dictionary<GearshiftPosition, PerSecond>();
+			var gbxOutSpeed = firstResponse.Engine.EngineSpeed /
+							ModelData.GearboxData.Gears[tmpGear.Gear].Ratio;
+			while (GearList.HasPredecessor(tmpGear)) {
+				candidates[tmpGear] = gbxOutSpeed * ModelData.GearboxData.Gears[tmpGear.Gear].Ratio;
+				tmpGear = GearList.Predecessor(tmpGear);
+			}
+
+			var targetEngineSpeed = ModelData.EngineData.IdleSpeed +
+									0.7 * (ModelData.EngineData.FullLoadCurves[0].NP98hSpeed);
+			var best = candidates.MinBy(x => VectoMath.Abs(x.Value - targetEngineSpeed)).Key;
+			return best;
 		}
 
 		protected virtual void HandleCoastAction(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity, bool dryRun, List<HybridResultEntry> eval)
@@ -1468,7 +1486,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 				var emDrivePower = -(batEnergyAvailable - ModelData.ElectricAuxDemand);
 				var emTorqueM = emTqReq * maxU;
 				if (!responses.Any(x => x.Gear == nextGear && x.U.IsEqual(maxU)) && emTorqueM.IsBetween(
-					0.SI<NewtonMeter>(), firstResponse.ElectricMotor.MaxDriveTorque)) {
+					firstResponse.ElectricMotor.MaxRecuperationTorque, firstResponse.ElectricMotor.MaxDriveTorque)) {
 					var tmp = TryConfiguration(absTime, dt, outTorque, outAngularVelocity, nextGear, emPos, Tuple.Create(firstResponse.ElectricMotor.AngularVelocity, emTorqueM), maxU, allowIceOff, dryRun);
 					responses.Add(tmp);
 				}
@@ -1545,7 +1563,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 				for (var u = stepSize; u <= 1.0; u += stepSize) {
 					var emTorque = firstResponse.ElectricMotor.MaxRecuperationTorque * u;
 					if (!(emTorque).IsBetween(
-						firstResponse.ElectricMotor.MaxRecuperationTorque, 0.SI<NewtonMeter>())) {
+						firstResponse.ElectricMotor.MaxRecuperationTorque, firstResponse.ElectricMotor.MaxDriveTorque)) {
 						continue;
 					}
 

@@ -527,9 +527,13 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 					AlternatorGearEfficiency = Constants.BusAuxiliaries.ElectricSystem.AlternatorGearEfficiency,
 					DoorActuationTimeSecond = Constants.BusAuxiliaries.ElectricalConsumers.DoorActuationTimeSecond,
 					AlternatorMap = new SimpleAlternator(busAux.ElectricSystem.AlternatorEfficiency) {
-						Technologies = new List<string>() { "engineering mode"}
+						Technologies = new List<string>() { "engineering mode" }
 					},
-					AlternatorType = busAux.ElectricSystem.AlternatorType,
+					AlternatorType =
+						busAux.ElectricSystem.ESSupplyFromHEVREESS &&
+						busAux.ElectricSystem.AlternatorType != AlternatorType.Smart
+							? AlternatorType.None
+							: busAux.ElectricSystem.AlternatorType,
 					ConnectESToREESS = busAux.ElectricSystem.ESSupplyFromHEVREESS,
 					DCDCEfficiency = busAux.ElectricSystem.DCDCConverterEfficiency.LimitTo(0, 1),
 					MaxAlternatorPower = busAux.ElectricSystem.MaxAlternatorPower,
@@ -551,7 +555,9 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 					StopBrakeActuation = 0.SI<NormLiterPerKilogram>(),
 				},
 				PneumaticUserInputsConfig = new PneumaticUserInputsConfig() {
-					CompressorMap = new CompressorMap(CompressorMapReader.Create(busAux.PneumaticSystem.CompressorMap, 1.0), "engineering mode", busAux.PneumaticSystem.CompressorMap.Source),
+					CompressorMap =
+						new CompressorMap(CompressorMapReader.Create(busAux.PneumaticSystem.CompressorMap, 1.0),
+							"engineering mode", busAux.PneumaticSystem.CompressorMap.Source),
 					CompressorGearEfficiency = Constants.BusAuxiliaries.PneumaticUserConfig.CompressorGearEfficiency,
 					CompressorGearRatio = busAux.PneumaticSystem.GearRatio,
 					SmartAirCompression = busAux.PneumaticSystem.SmartAirCompression,
@@ -574,7 +580,8 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 					HeatingDemand = busAux.HVACData.AverageHeatingDemand,
 					AuxHeaterEfficiency = Constants.BusAuxiliaries.SteadyStateModel.AuxHeaterEfficiency,
 					FuelEnergyToHeatToCoolant = Constants.BusAuxiliaries.Heater.FuelEnergyToHeatToCoolant,
-					CoolantHeatTransferredToAirCabinHeater = Constants.BusAuxiliaries.Heater.CoolantHeatTransferredToAirCabinHeater,
+					CoolantHeatTransferredToAirCabinHeater =
+						Constants.BusAuxiliaries.Heater.CoolantHeatTransferredToAirCabinHeater,
 				},
 				VehicleData = vehicleData,
 			};

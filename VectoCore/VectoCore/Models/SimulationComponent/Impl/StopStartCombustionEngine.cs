@@ -134,7 +134,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl {
 				base.DoWriteModalResults(time, simulationInterval, container);
 				var engineStart = !PreviousState.EngineOn && CurrentState.EngineOn;
 				container[ModalResultField.P_ice_start] = engineStart ? EngineStartEnergy / CurrentState.dt : 0.SI<Watt>();
-				container[ModalResultField.P_aux_ice_off] = 0.SI<Watt>();
+				container[ModalResultField.P_aux_ESS_mech_ice_off] = 0.SI<Watt>();
+				container[ModalResultField.P_aux_ESS_mech_ice_on] = 0.SI<Watt>();
 			} else {
 				container[ModalResultField.P_ice_start] = 0.SI<Watt>();
 				DoWriteEngineOffResults(time, simulationInterval, container);
@@ -160,12 +161,14 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl {
 			container[ModalResultField.T_ice_drag] = 0.SI<NewtonMeter>();
 
 			container[ModalResultField.ICEOn] = CurrentState.EngineOn;
-			container[ModalResultField.P_aux_ice_off] = (CurrentState.AuxPowerEngineOff ?? 0.SI<Watt>());
+			
+			var auxDemandPwr = EngineAux.PowerDemandEngineOn(time, simulationInterval, ModelData.IdleSpeed);
+			var auxDemandTq = auxDemandPwr / ModelData.IdleSpeed;
+			
+			container[ModalResultField.P_aux_ESS_mech_ice_off] = (CurrentState.AuxPowerEngineOff ?? 0.SI<Watt>());
+			container[ModalResultField.P_aux_ESS_mech_ice_on] = (auxDemandPwr ?? 0.SI<Watt>());
 
-
-			var auxDemand = EngineAux.PowerDemandEngineOn(time, simulationInterval, ModelData.IdleSpeed) / ModelData.IdleSpeed;
-
-			WriteWHRPowerEngineOff(container, ModelData.IdleSpeed, auxDemand);
+			WriteWHRPowerEngineOff(container, ModelData.IdleSpeed, auxDemandTq);
 
 			foreach (var fuel in ModelData.Fuels) {
 				var fc = 0.SI<KilogramPerSecond>();
@@ -181,7 +184,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl {
 				}
 
 				
-				var result = fuel.ConsumptionMap.GetFuelConsumption(auxDemand, ModelData.IdleSpeed);
+				var result = fuel.ConsumptionMap.GetFuelConsumption(auxDemandTq, ModelData.IdleSpeed);
 
 				var fcESS = result.Value * (1 - EngineStopStartUtilityFactor) * fuel.FuelData.HeatingValueCorrection * WHTCCorrectionFactor(fuel.FuelData);
 				var fcFinal = fcESS;

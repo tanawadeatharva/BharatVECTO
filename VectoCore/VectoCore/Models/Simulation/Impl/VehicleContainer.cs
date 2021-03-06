@@ -80,6 +80,8 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 		public virtual ITorqueConverterControl TorqueConverterCtl { get; private set; }
 
+		public IDCDCConverter DCDCConverter { get; private set; }
+
 		public virtual bool IsTestPowertrain
 		{
 			get { return false; }
@@ -195,7 +197,8 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 				})
 				.If<IHybridController>(c => { HybridController = c; })
 				.If<IRESSInfo>(c => BatteryInfo = c)
-				.If<BusAuxiliariesAdapter>(c => BusAux = c);
+				.If<BusAuxiliariesAdapter>(c => BusAux = c)
+				.If<IDCDCConverter>(c => DCDCConverter = c);
 
 
 			if (ignoreComponent) {

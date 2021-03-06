@@ -10,13 +10,13 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.Electric
 	{
 		private IM2_AverageElectricalLoadDemand _m02;
 		private IM1_AverageHVACLoadDemand _m01;
-		private ISimpleBattery _bat;
+		private ISimpleBatteryInfo _bat;
 		private IM0_NonSmart_AlternatorsSetEfficiency _m00;
 		private ISignals _signals;
 		private double _alternatorGearEfficiency;
 		private Watt _maxAlternatorPower;
 
-		public M05Impl_P0(IM0_NonSmart_AlternatorsSetEfficiency m0, IM1_AverageHVACLoadDemand m01, IM2_AverageElectricalLoadDemand m02, ISimpleBattery bat, IElectricsUserInputsConfig elCfg, ISignals signals)
+		public M05Impl_P0(IM0_NonSmart_AlternatorsSetEfficiency m0, IM1_AverageHVACLoadDemand m01, IM2_AverageElectricalLoadDemand m02, ISimpleBatteryInfo bat, IElectricsUserInputsConfig elCfg, ISignals signals)
 		{
 			_m00 = m0;
 			_m01 = m01;

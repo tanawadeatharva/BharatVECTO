@@ -37,7 +37,7 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries
 		private Ampere _totalAverageDemandAmpsEngineOffDriving;
 		private ISSMPowerDemand ssmTool;
 
-		public BusAuxiliariesNoAlternator(IModalDataContainer modDataContainer) : base(modDataContainer) { }
+		public BusAuxiliariesNoAlternator(ISimpleBatteryInfo battery) : base(battery) { }
 
 
 		public override void Initialise(IAuxiliaryConfig auxCfg)
@@ -58,7 +58,6 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries
 				new SimpleSSMTool(auxConfig.SSMInputs)
 				: (ISSMPowerDemand)new SSMTOOL(auxConfig.SSMInputs);
 
-			ElectricStorage = new SimpleBattery(0.SI<WattSecond>());
 
 			var electricUserInputConfigNoAlternator = new ElectricsUserInputsConfig() {
 				PowerNetVoltage = auxCfg.ElectricalUserInputsConfig.PowerNetVoltage,
@@ -95,7 +94,7 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries
 		}
 
 		public override Watt ElectricPowerConsumer {
-			get { return M2.AveragePowerDemandAtAlternatorFromElectrics; }
+			get { return AveragePowerDemandAtAlternatorFromElectrics; }
 		}
 
 		public override Watt HVACElectricalPowerConsumer {
@@ -156,8 +155,8 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries
 		protected IM6 M6;
 		protected IM7 M7;
 		protected IM8 M8;
+		public ISimpleBatteryInfo ElectricStorage { get; protected set; }
 
-		protected ISimpleBattery ElectricStorage;
 
 		//private IM9 M9;
 		//private IM10 M10;
@@ -167,15 +166,13 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries
 		//private IM14 M14;
 
 
-		public BusAuxiliaries(IModalDataContainer modDataContainer)
+		public BusAuxiliaries(ISimpleBatteryInfo battery)
 		{
 			Signals = new Signals();
-			if (modDataContainer != null) {
-				modDataContainer.AuxHeaterDemandCalc = AuxHeaterDemandCalculation;
-			}
+			ElectricStorage = battery;
 		}
 
-		protected virtual Joule AuxHeaterDemandCalculation(Second cycleTime, Joule engineWasteHeatTotal)
+		public virtual Joule AuxHeaterDemandCalculation(Second cycleTime, Joule engineWasteHeatTotal)
 		{
 			if (auxConfig == null) {
 				throw new VectoException("Auxiliary configuration missing!");
@@ -204,11 +201,7 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries
 				new SimpleSSMTool(auxConfig.SSMInputs)
 				: (ISSMPowerDemand)new SSMTOOL(auxConfig.SSMInputs);
 
-			ElectricStorage = new SimpleBattery(
-				auxCfg.ElectricalUserInputsConfig.AlternatorType == AlternatorType.Smart
-					? auxCfg.ElectricalUserInputsConfig.ElectricStorageCapacity
-					: 0.SI<WattSecond>());
-
+			
 			M0 = new M00Impl(auxConfig.ElectricalUserInputsConfig, Signals, ssmTool.ElectricalWAdjusted);
 
 			//M0_5 = new M0_5Impl(
@@ -357,11 +350,7 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries
 			get { return M1.AveragePowerDemandAtCrankFromHVACMechanicals; }
 		}
 
-		public virtual double BatterySOC
-		{
-			get { return ElectricStorage.SOC; }
-		}
-
+		
 		//public string AuxiliaryName
 		//{
 		//	get { return "BusAuxiliaries"; }
@@ -377,33 +366,51 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries
 			get { return M8.AuxPowerAtCrankFromElectricalHVACAndPneumaticsAncillaries; }
 		}
 
-
-		public virtual void CycleStep(Second seconds, double essFactor)
+		public WattSecond BatteryEnergyDemand(Second dt, double essFactor)
 		{
-			try {
-				//M9.CycleStep(seconds);
-				//M10.CycleStep(seconds);
-				//M11.CycleStep(seconds);
-				if (auxConfig.ElectricalUserInputsConfig.AlternatorType == AlternatorType.Smart) {
-					var generatedElPower =
-						(auxConfig.PneumaticUserInputsConfig.SmartAirCompression
-							? M7.SmartElectricalAndPneumaticAuxAltPowerGenAtCrank
-							: M7.SmartElectricalOnlyAuxAltPowerGenAtCrank) * M0.AlternatorsEfficiency *
-						auxConfig.ElectricalUserInputsConfig.AlternatorGearEfficiency;
-					var energy = (generatedElPower - ElectricPowerConsumerSum) * essFactor * seconds;
-					var maxCharge = (ElectricStorage.SOC - 1) * ElectricStorage.Capacity;
-					var maxDischarge = ElectricStorage.SOC * ElectricStorage.Capacity;
-					var batEnergy = energy.LimitTo(-maxDischarge, -maxCharge);
-					ElectricStorage.Request(batEnergy);
-				}
-				Signals.CurrentCycleTimeInSeconds += seconds.Value();
-			} catch (Exception ex) {
-				//MessageBox.Show("Exception: " + ex.Message + " Stack Trace: " + ex.StackTrace);
-				throw ex;
+			if (auxConfig.ElectricalUserInputsConfig.AlternatorType == AlternatorType.Smart) {
+				var generatedElPower =
+					(auxConfig.PneumaticUserInputsConfig.SmartAirCompression
+						? M7.SmartElectricalAndPneumaticAuxAltPowerGenAtCrank
+						: M7.SmartElectricalOnlyAuxAltPowerGenAtCrank) * M0.AlternatorsEfficiency *
+					auxConfig.ElectricalUserInputsConfig.AlternatorGearEfficiency;
+				var energy = (generatedElPower - ElectricPowerConsumerSum) * essFactor * dt;
+				return energy;
 			}
+
+			return 0.SI<WattSecond>();
 		}
 
-		public virtual void ResetCalculations()
+
+		
+
+
+        public virtual void CycleStep(Second seconds, double essFactor)
+        {
+            try {
+                //M9.CycleStep(seconds);
+                //M10.CycleStep(seconds);
+                //M11.CycleStep(seconds);
+                //if (auxConfig.ElectricalUserInputsConfig.AlternatorType == AlternatorType.Smart) {
+                //    var generatedElPower =
+                //        (auxConfig.PneumaticUserInputsConfig.SmartAirCompression
+                //            ? M7.SmartElectricalAndPneumaticAuxAltPowerGenAtCrank
+                //            : M7.SmartElectricalOnlyAuxAltPowerGenAtCrank) * M0.AlternatorsEfficiency *
+                //        auxConfig.ElectricalUserInputsConfig.AlternatorGearEfficiency;
+                //    var energy = (generatedElPower - ElectricPowerConsumerSum) * essFactor * seconds;
+                //    var maxCharge = (ElectricStorage.SOC - 1) * ElectricStorage.Capacity;
+                //    var maxDischarge = ElectricStorage.SOC * ElectricStorage.Capacity;
+                //    var batEnergy = energy.LimitTo(-maxDischarge, -maxCharge);
+                //    ElectricStorage.Request(batEnergy);
+                //}
+                Signals.CurrentCycleTimeInSeconds += seconds.Value();
+            } catch (Exception ex) {
+                //MessageBox.Show("Exception: " + ex.Message + " Stack Trace: " + ex.StackTrace);
+                throw ex;
+            }
+        }
+
+        public virtual void ResetCalculations()
 		{
 			var modules = new List<IAbstractModule>() { M0, M1, M2, M3, M4, M5, M6, M7, M8 };
 			foreach (var moduel in modules)

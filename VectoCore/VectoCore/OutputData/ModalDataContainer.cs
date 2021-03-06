@@ -531,7 +531,8 @@ namespace TUGraz.VectoCore.OutputData
 
 				TimeIntegral<WattSecond>(ModalResultField.P_WHR_el_corr);
 				TimeIntegral<WattSecond>(ModalResultField.P_WHR_mech_corr);
-				TimeIntegral<WattSecond>(ModalResultField.P_aux_ice_off);
+				TimeIntegral<WattSecond>(ModalResultField.P_aux_ESS_mech_ice_off);
+				TimeIntegral<WattSecond>(ModalResultField.P_aux_ESS_mech_ice_on);
 				TimeIntegral<WattSecond>(ModalResultField.P_ice_start);
 			}
 
@@ -626,13 +627,15 @@ namespace TUGraz.VectoCore.OutputData
 
 			var dataColumns = GetOutputColumns();
 
-			var strCols = dataColumns.Concat(Auxiliaries.Values.Where(x => !x.ColumnName.Contains("P_aux_ENG_AUX_")).Select(c => c.ColumnName))
-									.Concat(
-										new[] {
-											ModalResultField.P_WHR_el_map, ModalResultField.P_WHR_el_corr, ModalResultField.P_WHR_mech_map, ModalResultField.P_WHR_mech_corr, ModalResultField.P_aux_ice_off,
-											ModalResultField.P_ice_start//, ModalResultField.altitude
-										}.Select(x => x.GetName()))
-									.Concat(FuelColumns.SelectMany(kv => kv.Value.Select(kv2 => kv2.Value.ColumnName)));
+			var strCols = dataColumns.Concat(Auxiliaries.Values.Where(x => !x.ColumnName.Contains("P_aux_ENG_AUX_"))
+					.Select(c => c.ColumnName))
+				.Concat(
+					new[] {
+						ModalResultField.P_WHR_el_map, ModalResultField.P_WHR_el_corr, ModalResultField.P_WHR_mech_map,
+						ModalResultField.P_WHR_mech_corr, ModalResultField.P_aux_ESS_mech_ice_off, ModalResultField.P_aux_ESS_mech_ice_on,
+						ModalResultField.P_ice_start //, ModalResultField.altitude
+					}.Select(x => x.GetName()))
+				.Concat(FuelColumns.SelectMany(kv => kv.Value.Select(kv2 => kv2.Value.ColumnName)));
 
 			// TODO: 2018-11-20: Disable additional columns after testing gearshifting!
 //#if TRACE
