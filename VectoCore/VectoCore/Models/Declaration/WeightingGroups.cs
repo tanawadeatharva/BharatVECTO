@@ -77,7 +77,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 			if (group == WeightingGroup.Unknown) {
 				return Constants.NOT_AVAILABLE;
 			}
-			return string.Join("-", Regex.Split(group.ToString().Replace(Prefix, ""), @"\D+"));
+			return string.Join("-", Regex.Split(group.ToString().Replace(Prefix, ""), @"(\d+|\w+)").Where(x => !string.IsNullOrWhiteSpace(x)));
 		}
 	}
 
