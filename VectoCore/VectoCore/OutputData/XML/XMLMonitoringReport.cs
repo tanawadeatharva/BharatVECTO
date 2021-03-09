@@ -44,7 +44,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 {
 	public class XMLMonitoringReport
 	{
-		public const string CURRENT_SCHEMA_VERSION = "0.7";
+		public const string CURRENT_SCHEMA_VERSION = "0.7.1";
 
 		private XMLManufacturerReport _manufacturerReport;
 

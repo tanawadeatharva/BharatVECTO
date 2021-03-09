@@ -53,7 +53,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 {
 	public class XMLManufacturerReport
 	{
-		public const string CURRENT_SCHEMA_VERSION = "0.7";
+		public const string CURRENT_SCHEMA_VERSION = "0.7.1";
 		
 		protected XElement VehiclePart;
 		
@@ -66,13 +66,16 @@ namespace TUGraz.VectoCore.OutputData.XML
 
 		private bool _allSuccess = true;
 
-		public XMLManufacturerReport()
+		public XMLManufacturerReport(XMLDeclarationReport xmlDeclarationReport)
 		{
+			DeclarationReport = xmlDeclarationReport;
 			di = "http://www.w3.org/2000/09/xmldsig#";
 			tns = "urn:tugraz:ivt:VectoAPI:DeclarationOutput:v" + CURRENT_SCHEMA_VERSION;
 			VehiclePart = new XElement(tns + XMLNames.Component_Vehicle);
 			Results = new XElement(tns + XMLNames.Report_Results);
 		}
+
+		public XMLDeclarationReport DeclarationReport { get; }
 
 		public void Initialize(VectoRunData modelData)
 		{
@@ -93,6 +96,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 					: new[] {
 						new XElement(tns + XMLNames.Vehicle_AxleConfiguration, modelData.VehicleData.AxleConfiguration.GetName()),
 						new XElement(tns + XMLNames.Report_Vehicle_VehicleGroup, modelData.VehicleData.VehicleClass.GetClassNumber()),
+						new XElement(tns + XMLNames.Report_VehicleSubGroup, DeclarationReport.WeightingGroup.ToXMLFormat()), 
 						new XElement(tns + XMLNames.Vehicle_VocationalVehicle, modelData.VehicleData.VocationalVehicle),
 						new XElement(tns + XMLNames.Vehicle_SleeperCab, modelData.VehicleData.SleeperCab),
 						new XElement(tns + XMLNames.Vehicle_PTO, modelData.PTO != null),
