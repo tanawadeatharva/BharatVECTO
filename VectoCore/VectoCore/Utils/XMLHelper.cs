@@ -54,7 +54,7 @@ namespace TUGraz.VectoCore.Utils
 				case "VectoInputEngineering": return XmlDocumentType.EngineeringJobData;
 				case "VectoComponentEngineering": return XmlDocumentType.EngineeringComponentData;
 				case "VectoOutputPrimaryVehicle": return XmlDocumentType.PrimaryVehicleBusOutputData;
-				case "VectoOuputMultistage": return XmlDocumentType.MultistageOutputData;
+				case "VectoOutputMultistage": return XmlDocumentType.MultistageOutputData;
 			}
 
 			return null;

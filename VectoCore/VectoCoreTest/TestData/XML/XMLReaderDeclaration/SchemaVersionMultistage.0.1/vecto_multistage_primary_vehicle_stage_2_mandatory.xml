@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<VectoOuputMultistage xmlns="urn:tugraz:ivt:VectoAPI:DeclarationOutput:VehicleInterimFile:v0.1"
+<VectoOutputMultistage xmlns="urn:tugraz:ivt:VectoAPI:DeclarationOutput:VehicleInterimFile:v0.1"
 xmlns:di="http://www.w3.org/2000/09/xmldsig#" 
 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
 xmlns:v2.0="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0" 
@@ -646,4 +646,4 @@ xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:DeclarationOutput:VehicleInterimFile
 			</di:Reference>
 		</Signature>
 	</ManufacturingStage>
-</VectoOuputMultistage>
+</VectoOutputMultistage>

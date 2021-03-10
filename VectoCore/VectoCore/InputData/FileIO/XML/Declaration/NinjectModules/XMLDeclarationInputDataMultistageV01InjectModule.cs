@@ -15,8 +15,6 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.NinjectModules
             Bind<IXMLDeclarationMultistageJobInputData>().To<XMLDeclarationMultistageJobInputDataV01>()
                 .Named(XMLDeclarationMultistageJobInputDataV01.QUALIFIED_XSD_TYPE);
 
-			Bind<IXMLDeclarationMultistageJobInputData>().To<XMLDeclarationMultistageJobInputDataV01>();
-
 			Bind<IXMLDeclarationMultistageVehicleBusInputDataReader>().To<XMLDeclarationInputReaderMultistageV01>()
 				.Named(XMLDeclarationInputReaderMultistageV01.QUALIFIED_XSD_TYPE);
 

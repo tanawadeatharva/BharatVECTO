@@ -3301,11 +3301,11 @@ namespace TUGraz.VectoCommon.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to VectoOuputMultistage.
+        ///   Looks up a localized string similar to VectoOutputMultistage.
         /// </summary>
-        public static string VectoOuputMultistage {
+        public static string VectoOutputMultistage {
             get {
-                return ResourceManager.GetString("VectoOuputMultistage", resourceCulture);
+                return ResourceManager.GetString("VectoOutputMultistage", resourceCulture);
             }
         }
         

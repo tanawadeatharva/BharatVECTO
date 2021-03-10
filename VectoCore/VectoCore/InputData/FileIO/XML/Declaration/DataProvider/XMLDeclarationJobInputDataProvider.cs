@@ -149,16 +149,25 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		public const string XSD_TYPE = "VectoOutputMultistageType";
 
 		public static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
+		private IPrimaryVehicleInformationInputDataProvider _primaryVehicle;
+		private IList<IManufacturingStageInputData> _manufacturingStages;
 
 
-		public XMLDeclarationMultistageJobInputDataV01(XmlNode node, IXMLMultistageBusInputDataProvider inputProvider,
-			string fileName) : base(node, fileName)
+		public XMLDeclarationMultistageJobInputDataV01(XmlNode node, IXMLMultistageBusInputDataProvider inputProvider, string fileName) : base(node, fileName)
 		{
 			InputData = inputProvider;
 		}
 
-		public IPrimaryVehicleInformationInputDataProvider PrimaryVehicle { get; }
-		public IList<IManufacturingStageInputData> ManufacturingStages { get; }
+		public IPrimaryVehicleInformationInputDataProvider PrimaryVehicle
+		{
+			get { return _primaryVehicle ?? (_primaryVehicle = Reader.PrimaryVehicle); }
+		}
+
+		public IList<IManufacturingStageInputData> ManufacturingStages
+		{
+			get { return _manufacturingStages ?? (_manufacturingStages = Reader.ManufacturingStages); }
+		}
+
 		public IXMLMultistageJobReader Reader { get; set; }
 		public IXMLMultistageBusInputDataProvider InputData { get; }
 		protected override XNamespace SchemaNamespace { get; }

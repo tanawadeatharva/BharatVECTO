@@ -72,7 +72,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 
 		public static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_MULTISTAGE_BUS_VEHICLE_NAMESPACE_VO1;
 
-		public const string XSD_TYPE = "VectoOuputMultistageType";
+		public const string XSD_TYPE = "VectoOutputMultistageType";
 
 		public static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
 
@@ -94,7 +94,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 
 		public IDeclarationMultistageJobInputData JobData
 		{
-			get { return _jobData ?? (_jobData = CreateComponent(XMLNames.VectoOuputMultistage, JobCreator)); }
+			get { return _jobData ?? (_jobData = CreateComponent(XMLNames.VectoOutputMultistage, JobCreator)); }
 		}
 
 		protected virtual IDeclarationMultistageJobInputData JobCreator(string version, XmlNode node, string arg3)
@@ -112,7 +112,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 	{
 		public static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_MULTISTAGE_BUS_VEHICLE_NAMESPACE_VO1;
 
-		public const string XSD_TYPE = "VectoOuputMultistageType";
+		public const string XSD_TYPE = "VectoOutputMultistageType";
 
 		public static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
 
