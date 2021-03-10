@@ -729,7 +729,7 @@
 							<xs:documentation>VECTO / I.1.1.7 / #13</xs:documentation>
 						</xs:annotation>
 					</xs:element>
-					<xs:element name="VehicleSubGroup">
+					<xs:element name="CO2StandardsGroup">
 						<xs:simpleType>
 							<xs:restriction base="xs:string">
 								<xs:minLength value="1"/>

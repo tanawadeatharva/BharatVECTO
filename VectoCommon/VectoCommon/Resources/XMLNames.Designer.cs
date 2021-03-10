@@ -1447,6 +1447,15 @@ namespace TUGraz.VectoCommon.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to CO2StandardsGroup.
+        /// </summary>
+        public static string Report_CO2StandardsGroup {
+            get {
+                return ResourceManager.GetString("Report_CO2StandardsGroup", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to CertificationMethod.
         /// </summary>
         public static string Report_Component_CertificationMethod {
@@ -1938,15 +1947,6 @@ namespace TUGraz.VectoCommon.Resources {
         public static string Report_Vehicle_VehicleGroup {
             get {
                 return ResourceManager.GetString("Report_Vehicle_VehicleGroup", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to VehicleSubGroup.
-        /// </summary>
-        public static string Report_VehicleSubGroup {
-            get {
-                return ResourceManager.GetString("Report_VehicleSubGroup", resourceCulture);
             }
         }
         
