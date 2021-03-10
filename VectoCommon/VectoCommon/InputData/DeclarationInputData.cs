@@ -927,9 +927,15 @@ namespace TUGraz.VectoCommon.InputData
 		DateTime Date { get; }
 	}
 
+	public interface IManufacturingStageInputData : IVehicleDeclarationInputData
+	{
+		int StageCount { get; }
+
+		DigestData HashPreviousStage { get; }
+	}
+
 	public enum StateOfCompletion
 	{
-		unknown,
 		incomplete,
 		complete,
 		completed
