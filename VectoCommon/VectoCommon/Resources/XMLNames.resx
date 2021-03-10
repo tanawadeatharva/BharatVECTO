@@ -1419,4 +1419,7 @@
   <data name="Bus_WaterElectricHeater" xml:space="preserve">
     <value>WaterElectricHeater</value>
   </data>
+  <data name="VectoOuputMultistage" xml:space="preserve">
+    <value>VectoOuputMultistage</value>
+  </data>
 </root>

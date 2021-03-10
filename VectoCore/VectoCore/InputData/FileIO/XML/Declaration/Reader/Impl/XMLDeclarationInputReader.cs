@@ -59,13 +59,47 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 
 		public new static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
 
-		public XMLDeclarationInputReaderV20(IXMLDeclarationInputData inputData, XmlNode baseNode) : base(inputData,
-			baseNode)
+		public XMLDeclarationInputReaderV20(IXMLDeclarationInputData inputData, XmlNode baseNode) 
+			: base(inputData, baseNode) { }
+	}
+
+	// ---------------------------------------------------------------------------------------
+	
+	public class XMLDeclarationInputReaderMultistageV01 : AbstractComponentReader, IXMLDeclarationInputDataReader
+	{
+
+		public static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_MULTISTAGE_BUS_VEHICLE_NAMESPACE_VO1;
+
+		public const string XSD_TYPE = "VectoOuputMultistageType";
+
+		public static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
+
+		[Inject]
+		public IDeclarationInjectFactory Factory { protected get; set; }
+
+		protected IDeclarationJobInputData _jobData;
+
+
+		public XMLDeclarationInputReaderMultistageV01(IXMLDeclarationInputData inputData, XmlNode baseNode)
+			: base(inputData, baseNode)
 		{
 
 		}
-	}
 
+		public IDeclarationJobInputData JobData
+		{
+			get { return _jobData ?? (_jobData = CreateComponent(XMLNames.VectoOuputMultistage, JobCreator)); }
+		}
+
+		protected virtual IDeclarationJobInputData JobCreator(string version, XmlNode node, string arg3)
+		{
+			//var job = Factory.CreateJobData(version, BaseNode, InputData, (InputData as IXMLResource).DataSource.SourceFile);
+			//job.Reader = Factory.CreateJobReader(version, job, JobNode);
+			//return job;
+
+			return null;
+		}
+	}
 
 	// ---------------------------------------------------------------------------------------
 

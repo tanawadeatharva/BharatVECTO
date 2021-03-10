@@ -3301,6 +3301,15 @@ namespace TUGraz.VectoCommon.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to VectoOuputMultistage.
+        /// </summary>
+        public static string VectoOuputMultistage {
+            get {
+                return ResourceManager.GetString("VectoOuputMultistage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to VectoOutputPrimaryVehicle.
         /// </summary>
         public static string VectoPrimaryVehicleReport {
