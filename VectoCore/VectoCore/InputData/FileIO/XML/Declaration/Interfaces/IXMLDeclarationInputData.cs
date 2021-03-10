@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Xml;
 using TUGraz.VectoCommon.InputData;
 
@@ -19,9 +20,10 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Interfaces
 		XmlNode ApplicationInformationNode { get; }
 	}
 
-	public interface IXMLMultistageVehicleBusInputData : IMultistageBusInputDataProvider, IXMLResource
+	public interface IXMLMultistageBusInputDataProvider : IMultistageBusInputDataProvider, IXMLResource
 	{
-		IXMLPrimaryVehicleBusInputData PrimaryVehicleInputData { get; }
-		IXMLDeclarationMultistageVehicleBusInputDataReader MultistageVehicleInputData { get; }
+		IXMLDeclarationMultistageVehicleBusInputDataReader Reader { set; }
+
+		
 	}
 }

@@ -1,4 +1,5 @@
-﻿using System.Xml;
+﻿using System.Collections.Generic;
+using System.Xml;
 using System.Xml.Linq;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCore.InputData.FileIO.XML.Common;
@@ -141,5 +142,26 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		public IXMLPrimaryVehicleBusInputData InputData { get; }
 	}
 
+	public class XMLDeclarationMultistageJobInputDataV01 : AbstractXMLResource, IXMLDeclarationMultistageJobInputData
+	{
+		public static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_MULTISTAGE_BUS_VEHICLE_NAMESPACE_VO1;
 
+		public const string XSD_TYPE = "VectoOutputMultistageType";
+
+		public static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
+
+
+		public XMLDeclarationMultistageJobInputDataV01(XmlNode node, IXMLMultistageBusInputDataProvider inputProvider,
+			string fileName) : base(node, fileName)
+		{
+			InputData = inputProvider;
+		}
+
+		public IPrimaryVehicleInformationInputDataProvider PrimaryVehicle { get; }
+		public IList<IManufacturingStageInputData> ManufacturingStages { get; }
+		public IXMLMultistageJobReader Reader { get; set; }
+		public IXMLMultistageBusInputDataProvider InputData { get; }
+		protected override XNamespace SchemaNamespace { get; }
+		protected override DataSourceType SourceType { get; }
+	}
 }

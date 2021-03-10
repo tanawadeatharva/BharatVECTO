@@ -35,8 +35,9 @@ namespace TUGraz.VectoCore.Tests.XML
 		{
 			var reader = XmlReader.Create(VIF);
 			var inputDataProvider = xmlInputReader.Create(reader) as IMultistageBusInputDataProvider;
-			var vehicle = inputDataProvider.PrimaryVehicle.ApplicationInformation;
-
+			var vehicle = inputDataProvider.JobInputData.PrimaryVehicle;
+			
+			var prodStages = inputDataProvider.JobInputData.ManufacturingStages;
 
 		}
 	}

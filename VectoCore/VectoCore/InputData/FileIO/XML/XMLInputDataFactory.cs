@@ -124,12 +124,12 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML
 			}
 		}
 
-		private IInputDataProvider ReadMultistageDeclarationJob(XmlDocument xmlDoc, string source)
+		private IMultistageBusInputDataProvider ReadMultistageDeclarationJob(XmlDocument xmlDoc, string source)
 		{
 			var versionNumber = XMLHelper.GetXsdType(xmlDoc.DocumentElement?.SchemaInfo.SchemaType);
 			try {
-				var input = DeclarationFactory.CreateInputProvider(versionNumber, xmlDoc, source);
-				input.Reader = DeclarationFactory.CreateInputReader(versionNumber, input, xmlDoc.DocumentElement);
+				var input = DeclarationFactory.CreateMultistageInputProvider(versionNumber, xmlDoc, source);
+				input.Reader = DeclarationFactory.CreateMultistageInputReader(versionNumber, input, xmlDoc.DocumentElement);
 				return input;
 			} catch (Exception e) {
 				throw new VectoException("Failed to read Declaration job version {0}", e, versionNumber);
