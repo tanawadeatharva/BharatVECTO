@@ -1394,14 +1394,14 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					//	gradient, r);
 					response = Driver.DrivingActionBrake(
 						absTime, ds, DataBus.VehicleInfo.VehicleSpeed + r.Driver.Acceleration * r.SimulationInterval,
-						gradient, r);
+						gradient, DataBus.HybridControllerInfo == null ? r : null);
 					if (response != null) {
 						response.Switch().Case<ResponseGearShift>(
 							() => {
 								DataBus.Brakes.BrakePower = 0.SI<Watt>();
 								response = Driver.DrivingActionBrake(
 									absTime, ds, DriverStrategy.BrakeTrigger.NextTargetSpeed,
-									gradient, r);
+									gradient, DataBus.HybridControllerInfo == null ? r : null);
 								if (response is ResponseOverload) {
 									response = Driver.DrivingActionRoll(absTime, ds,
 										DriverStrategy.BrakeTrigger.NextTargetSpeed, gradient);

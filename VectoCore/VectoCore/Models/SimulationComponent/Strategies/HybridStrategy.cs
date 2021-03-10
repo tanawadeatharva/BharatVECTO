@@ -870,14 +870,15 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 					CalcualteCosts(firstResponse, dt, firstEntry, AllowICEOff(absTime), dryRun);
 					var minimumShiftTimePassed = (DataBus.GearboxInfo.LastShift + ModelData.GearshiftParameters.TimeBetweenGearshifts).IsSmallerOrEqual(absTime);
 					if (DataBus.GearboxInfo.GearEngaged(absTime) && !vehiclespeedBelowThreshold) {
-						if (firstEntry.IgnoreReason.EngineSpeedBelowDownshift()||
+						if ((firstEntry.IgnoreReason.EngineSpeedBelowDownshift() && firstEntry.IgnoreReason.EngineTorqueOK())||
 							firstEntry.IgnoreReason.EngineSpeedTooLow()) {
 							var best = FindBestGearForBraking(nextGear, firstResponse);
 							if (!best.Equals(nextGear)) {
 								// downshift required!
 								var downshift = ResponseEmOff;
-								downshift.Gear = best; // GearList.Predecessor(nextGear);
-								eval.Add(downshift);
+                                //downshift.Gear = GearList.Predecessor(nextGear);
+                                downshift.Gear = best; // GearList.Predecessor(nextGear);
+                                eval.Add(downshift);
 								return;
 							}
 						}
@@ -1034,16 +1035,19 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 
 		private GearshiftPosition FindBestGearForBraking(GearshiftPosition nextGear, IResponse firstResponse)
 		{
-			var tmpGear = new GearshiftPosition(nextGear.Gear, nextGear.TorqueConverterLocked);
-			var candidates = new Dictionary<GearshiftPosition, PerSecond>();
+            var tmpGear = new GearshiftPosition(nextGear.Gear, nextGear.TorqueConverterLocked);
+            var candidates = new Dictionary<GearshiftPosition, PerSecond>();
 			var gbxOutSpeed = firstResponse.Engine.EngineSpeed /
 							ModelData.GearboxData.Gears[tmpGear.Gear].Ratio;
-			while (GearList.HasPredecessor(tmpGear)) {
-				candidates[tmpGear] = gbxOutSpeed * ModelData.GearboxData.Gears[tmpGear.Gear].Ratio;
-				tmpGear = GearList.Predecessor(tmpGear);
-			}
+			var firstGear = GearList.Predecessor(nextGear, 1);
+			var lastGear = GearList.Predecessor(nextGear, (uint)ModelData.GearshiftParameters.AllowedGearRangeDown);
+			//while (GearList.HasPredecessor(tmpGear)) {
+			foreach (var gear in GearList.IterateGears(firstGear, lastGear)) {
+				candidates[gear] = gbxOutSpeed * ModelData.GearboxData.Gears[gear.Gear].Ratio;
+				//tmpGear = GearList.Predecessor(tmpGear);
+            }
 
-			var targetEngineSpeed = ModelData.EngineData.IdleSpeed +
+            var targetEngineSpeed = ModelData.EngineData.IdleSpeed +
 									0.7 * (ModelData.EngineData.FullLoadCurves[0].NP98hSpeed);
 			var best = candidates.MinBy(x => VectoMath.Abs(x.Value - targetEngineSpeed)).Key;
 			return best;
@@ -1485,8 +1489,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 				var batEnergyAvailable = (DataBus.BatteryInfo.StoredEnergy - BatteryDischargeEnergyThreshold) / dt;
 				var emDrivePower = -(batEnergyAvailable - ModelData.ElectricAuxDemand);
 				var emTorqueM = emTqReq * maxU;
-				if (!responses.Any(x => x.Gear == nextGear && x.U.IsEqual(maxU)) && emTorqueM.IsBetween(
-					firstResponse.ElectricMotor.MaxRecuperationTorque, firstResponse.ElectricMotor.MaxDriveTorque)) {
+				if (!responses.Any(x => x.Gear.Equals(nextGear) && x.U.IsEqual(maxU)) && emTorqueM.IsBetween(
+					VectoMath.Min(0.SI<NewtonMeter>(), firstResponse.ElectricMotor.MaxRecuperationTorque), firstResponse.ElectricMotor.MaxDriveTorque)) {
 					var tmp = TryConfiguration(absTime, dt, outTorque, outAngularVelocity, nextGear, emPos, Tuple.Create(firstResponse.ElectricMotor.AngularVelocity, emTorqueM), maxU, allowIceOff, dryRun);
 					responses.Add(tmp);
 				}
@@ -1545,7 +1549,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 							}
 						);
 						if (emTorqueICEOff.IsBetween(
-							firstResponse.ElectricMotor.MaxDriveTorque, firstResponse.ElectricMotor.MaxRecuperationTorque)) {
+							firstResponse.ElectricMotor.MaxDriveTorque, VectoMath.Min(0.SI<NewtonMeter>(), firstResponse.ElectricMotor.MaxRecuperationTorque))) {
 							// only consider when within allowed EM torque range
 							var tmp = TryConfiguration(
 								absTime, dt, outTorque, outAngularVelocity, nextGear, emPos, Tuple.Create(firstResponse.ElectricMotor.AngularVelocity, emTorqueICEOff), emTorqueICEOff / emTqReq,

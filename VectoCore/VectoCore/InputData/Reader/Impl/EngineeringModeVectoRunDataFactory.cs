@@ -203,7 +203,10 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 						? CyclesCache[cycle.CycleData.Source]
 						: DrivingCycleDataReader.ReadFromDataTable(cycle.CycleData, cycle.Name, crossWindRequired);
 
-					var electricMachines = dao.CreateElectricMachines(vehicle.Components.ElectricMachines, vehicle.ElectricMotorTorqueLimits) ?? new List<Tuple<PowertrainPosition, ElectricMotorData>>();
+					var electricMachines =
+						dao.CreateElectricMachines(vehicle.Components.ElectricMachines,
+							vehicle.ElectricMotorTorqueLimits) ??
+						new List<Tuple<PowertrainPosition, ElectricMotorData>>();
 					var battery = dao.CreateBatteryData(vehicle.Components.ElectricStorage, vehicle.InitialSOC);
 					var superCap = dao.CreateSuperCapData(vehicle.Components.ElectricStorage, vehicle.InitialSOC);
 

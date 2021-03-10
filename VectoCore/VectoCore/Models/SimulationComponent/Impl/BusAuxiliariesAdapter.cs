@@ -81,7 +81,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					// in case of smat alternator with Px hybrid take electric power from P0 REESS first, then from HEV REESS.
 					// do not use alternator to generate demanded power if P0 REESS is empty. so trick busaux that there is always
 					// energy in the battery.
-					? (ISimpleBatteryInfo)new InfinityBattery(AuxCfg.ElectricalUserInputsConfig.ElectricStorageCapacity) 
+					? (ISimpleBatteryInfo)new InfinityBattery(AuxCfg.ElectricalUserInputsConfig.ElectricStorageCapacity, new ElectricStorageWrapper(this)) 
 					: new ElectricStorageWrapper(this);
 			var tmpAux = AuxCfg.ElectricalUserInputsConfig.AlternatorType == AlternatorType.None
 				? new BusAuxiliariesNoAlternator(electricStorage)
@@ -380,15 +380,18 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		public class InfinityBattery : ISimpleBatteryInfo
 		{
-			public InfinityBattery(WattSecond electricStorageCapacity)
+			private ISimpleBatteryInfo ElectricStorage;
+
+			public InfinityBattery(WattSecond electricStorageCapacity, ElectricStorageWrapper electricStorageWrapper)
 			{
 				Capacity = electricStorageCapacity;
+				ElectricStorage = electricStorageWrapper;
 			}
 
 			#region Implementation of ISimpleBatteryInfo
 
 			public double SOC {
-				get { return 0.5; }
+				get { return ElectricStorage.SOC.IsEqual(1, 1e-2) ? 1 : 0.5; }
 			}
 			public WattSecond Capacity { get; }
 

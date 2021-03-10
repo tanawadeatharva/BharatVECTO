@@ -186,6 +186,12 @@ namespace TUGraz.VectoCommon.Models {
 			return (x & HybridConfigurationIgnoreReason.EngineTorqueDemandTooLow) != 0;
 		}
 
+		public static bool EngineTorqueOK(this HybridConfigurationIgnoreReason x)
+		{
+			return (x & (HybridConfigurationIgnoreReason.EngineTorqueDemandTooHigh |
+						HybridConfigurationIgnoreReason.EngineTorqueDemandTooLow)) == 0;
+		}
+
 		public static bool BatterySoCTooLow(this HybridConfigurationIgnoreReason x)
 		{
 			return (x & HybridConfigurationIgnoreReason.BatterySoCTooLow) != 0;
