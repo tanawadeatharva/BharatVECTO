@@ -112,6 +112,37 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration
 
 	}
 
+	public class XMLDeclarationInputDataProviderMultistageV01 : AbstractXMLResource, IXMLDeclarationInputData
+	{
+		public static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_MULTISTAGE_BUS_VEHICLE_NAMESPACE_VO1;
+
+		public const string XSD_TYPE = "VectoOuputMultistageType";
+
+		public static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
+
+		protected IDeclarationJobInputData JobData;
+
+		public XMLDeclarationInputDataProviderMultistageV01(XmlDocument xmlDoc, string fileName) : base(xmlDoc.DocumentElement, fileName)
+		{
+
+		}
+
+		protected override XNamespace SchemaNamespace
+		{
+			get { return NAMESPACE_URI; }
+		}
+		protected override DataSourceType SourceType { get; }
+		public IDeclarationJobInputData JobInputData
+		{
+			get { return JobData ?? (JobData = Reader.JobData); }
+		}
+
+
+		public IPrimaryVehicleInformationInputDataProvider PrimaryVehicleData { get; }
+		public XElement XMLHash { get; }
+		public IXMLDeclarationInputDataReader Reader { protected get; set; }
+	}
+
 
 	// ---------------------------------------------------------------------------------------
 

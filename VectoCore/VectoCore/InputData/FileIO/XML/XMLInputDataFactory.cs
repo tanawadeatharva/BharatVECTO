@@ -114,12 +114,25 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML
 				case XmlDocumentType.DeclarationJobData: return ReadDeclarationJob(xmlDoc, source);
 				case XmlDocumentType.EngineeringJobData: return ReadEngineeringJob(xmlDoc, source);
 				case XmlDocumentType.PrimaryVehicleBusOutputData: return ReadPrimaryVehicleDeclarationJob(xmlDoc, source);
+				case XmlDocumentType.MultistageOutputData: return ReadMultistageDeclarationJob(xmlDoc, source);
 				case XmlDocumentType.EngineeringComponentData:
 				case XmlDocumentType.DeclarationComponentData:
 				case XmlDocumentType.ManufacturerReport:
 				case XmlDocumentType.CustomerReport:
 					throw new VectoException("XML Document {0} not supported as simulation input!", documentType.Value);
 				default: throw new ArgumentOutOfRangeException();
+			}
+		}
+
+		private IInputDataProvider ReadMultistageDeclarationJob(XmlDocument xmlDoc, string source)
+		{
+			var versionNumber = XMLHelper.GetXsdType(xmlDoc.DocumentElement?.SchemaInfo.SchemaType);
+			try {
+				var input = DeclarationFactory.CreateInputProvider(versionNumber, xmlDoc, source);
+				input.Reader = DeclarationFactory.CreateInputReader(versionNumber, input, xmlDoc.DocumentElement);
+				return input;
+			} catch (Exception e) {
+				throw new VectoException("Failed to read Declaration job version {0}", e, versionNumber);
 			}
 		}
 

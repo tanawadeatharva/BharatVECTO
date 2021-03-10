@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- edited with XMLSpy v2021 (x64) (http://www.altova.com) by Franz Kober (Technische Universität Graz) -->
+<!-- edited with XMLSpy v2021 (x64) (http://www.altova.com) by Markus Quaritsch (Technische Universität Graz) -->
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:vif="urn:tugraz:ivt:VectoAPI:DeclarationOutput:VehicleInterimFile:v0.1" xmlns:v1.0="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v1.0" xmlns:v2.0="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0" xmlns:v2.1="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.1" xmlns:v2.3="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:DEV:v2.3" xmlns:v2.4="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:DEV:v2.4" xmlns:v2.6="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:DEV:v2.6" xmlns:v2.8="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:DEV:v2.8" xmlns:out="urn:tugraz:ivt:VectoAPI:DeclarationOutputDefinitions" xmlns:common="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions" targetNamespace="urn:tugraz:ivt:VectoAPI:DeclarationOutput:VehicleInterimFile:v0.1" elementFormDefault="qualified" attributeFormDefault="unqualified" xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:ParameterDocumentation ParameterDocumentation.xsd">
 	<xs:import namespace="urn:tugraz:ivt:VectoAPI:DeclarationOutputDefinitions" schemaLocation="VectoOutputDefinitions.xsd"/>
 	<xs:import namespace="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions" schemaLocation="VectoDeclarationDefinitions.xsd"/>
@@ -9,16 +9,10 @@
 	<xs:import namespace="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:DEV:v2.3" schemaLocation="VectoDeclarationDefinitions.2.3_DEV.xsd"/>
 	<xs:import namespace="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:DEV:v2.6" schemaLocation="VectoDeclarationDefinitions.2.6_Buses.xsd"/>
 	<xs:import namespace="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:DEV:v2.8" schemaLocation="VectoDeclarationDefinitions.2.8_Stage.xsd"/>
-	<xs:element name="VectoOuputMultistage">
+	<xs:element name="VectoOuputMultistage" type="vif:VectoOuputMultistageType">
 		<xs:annotation>
 			<xs:documentation>Comment describing your root element</xs:documentation>
 		</xs:annotation>
-		<xs:complexType>
-			<xs:sequence>
-				<xs:element name="PrimaryVehicle" type="vif:PrimaryVehicleType"/>
-				<xs:element name="ManufacturingStage" type="vif:ManufacturingStageType" minOccurs="0" maxOccurs="unbounded"/>
-			</xs:sequence>
-		</xs:complexType>
 	</xs:element>
 	<xs:complexType name="AbstractAngledriveDataPIFType" abstract="true"/>
 	<xs:complexType name="AbstractAxlegearDataPIFType" abstract="true"/>
@@ -572,4 +566,10 @@
 			<xs:enumeration value="Coach"/>
 		</xs:restriction>
 	</xs:simpleType>
+	<xs:complexType name="VectoOuputMultistageType">
+		<xs:sequence>
+			<xs:element name="PrimaryVehicle" type="vif:PrimaryVehicleType"/>
+			<xs:element name="ManufacturingStage" type="vif:ManufacturingStageType" minOccurs="0" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
 </xs:schema>
