@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Xml;
 using TUGraz.VectoCommon.InputData;
 
@@ -15,5 +16,10 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration
 		DigestData GetDigestData(XmlNode xmlNode);
 
 		IApplicationInformation ApplicationInformation { get; }
+	}
+
+	public interface IXMLDeclarationMultistageVehicleBusInputDataReader : IXMLDeclarationPrimaryVehicleBusInputDataReader
+	{
+		IList<IManufacturingStageInputData> ManufacturingStageInputData { get; }
 	}
 }
