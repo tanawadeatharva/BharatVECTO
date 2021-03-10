@@ -34,7 +34,9 @@ using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Net.NetworkInformation;
+using System.Text.RegularExpressions;
 using TUGraz.VectoCommon.Utils;
+using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.Declaration
@@ -62,12 +64,38 @@ namespace TUGraz.VectoCore.Models.Declaration
 		Unknown
 	}
 
-	public class WeightingGroupHelper
+	public static class WeightingGroupHelper
 	{
 		public const string Prefix = "Group";
 		public static WeightingGroup Parse(string groupStr)
 		{
 			return (Prefix + groupStr.Replace("-", "")).ParseEnum<WeightingGroup>();
+		}
+
+		public static string ToXMLFormat(this WeightingGroup group)
+		{
+			switch (group) {
+				case WeightingGroup.Group1:
+				case WeightingGroup.Group2:
+				case WeightingGroup.Group3:
+				case WeightingGroup.Group11:
+				case WeightingGroup.Group12:
+				case WeightingGroup.Group16:
+				case WeightingGroup.Unknown:
+					return Constants.NOT_AVAILABLE;
+				case WeightingGroup.Group4UD:
+				case WeightingGroup.Group4RD:
+				case WeightingGroup.Group4LH:
+				case WeightingGroup.Group5RD:
+				case WeightingGroup.Group5LH:
+				case WeightingGroup.Group9RD:
+				case WeightingGroup.Group9LH:
+				case WeightingGroup.Group10RD:
+				case WeightingGroup.Group10LH:
+					return string.Join("-", Regex.Split(group.ToString().Replace(Prefix, ""), @"(\d+|\w+)").Where(x => !string.IsNullOrWhiteSpace(x)));
+				default:
+					return Constants.NOT_AVAILABLE;
+			}
 		}
 	}
 

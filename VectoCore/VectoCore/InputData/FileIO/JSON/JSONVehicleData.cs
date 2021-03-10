@@ -95,7 +95,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 		public virtual string VIN
 		{
-			get { return Constants.NOT_AVailABLE; }
+			get { return Constants.NOT_AVAILABLE; }
 		}
 
 		public virtual LegislativeClass LegislativeClass
@@ -196,7 +196,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 		public virtual string ManufacturerAddress
 		{
-			get { return Constants.NOT_AVailABLE; }
+			get { return Constants.NOT_AVAILABLE; }
 		}
 
 		public virtual PerSecond EngineIdleSpeed
@@ -579,17 +579,17 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 		public virtual string Manufacturer
 		{
-			get { return Constants.NOT_AVailABLE; }
+			get { return Constants.NOT_AVAILABLE; }
 		}
 
 		public virtual string Model
 		{
-			get { return Constants.NOT_AVailABLE; }
+			get { return Constants.NOT_AVAILABLE; }
 		}
 
 		public virtual string Date
 		{
-			get { return Constants.NOT_AVailABLE; }
+			get { return Constants.NOT_AVAILABLE; }
 		}
 
 		public CertificationMethod CertificationMethod
@@ -599,7 +599,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 		public virtual string CertificationNumber
 		{
-			get { return Constants.NOT_AVailABLE; }
+			get { return Constants.NOT_AVAILABLE; }
 		}
 
 		public virtual DigestData DigestValue

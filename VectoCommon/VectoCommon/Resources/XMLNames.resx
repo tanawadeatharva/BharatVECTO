@@ -1053,4 +1053,7 @@
   <data name="TorqueConverter_MaxInputSpeed" xml:space="preserve">
     <value>MaxInputSpeed</value>
   </data>
+<data name="Report_CO2StandardsGroup" xml:space="preserve">
+	<value>CO2StandardsGroup</value>
+</data>
 </root>

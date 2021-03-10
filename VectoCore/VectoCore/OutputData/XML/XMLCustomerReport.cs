@@ -52,7 +52,8 @@ namespace TUGraz.VectoCore.OutputData.XML
 {
 	public class XMLCustomerReport
 	{
-		public const string CURRENT_SCHEMA_VERSION = "0.7";
+		public const string SCHEMA_VERSION_STRING = "0.7";
+		public const string CURRENT_SCHEMA_VERSION = "0.7.1";
 
 		protected readonly XElement VehiclePart;
 
@@ -70,13 +71,16 @@ namespace TUGraz.VectoCore.OutputData.XML
 		private Kilogram _weightedPayload = 0.SI<Kilogram>();
 
 
-		public XMLCustomerReport()
+		public XMLCustomerReport(XMLDeclarationReport xmlDeclarationReport)
 		{
+			DeclarationReport = xmlDeclarationReport;
 			di = "http://www.w3.org/2000/09/xmldsig#";
 			tns = "urn:tugraz:ivt:VectoAPI:CustomerOutput:v" + CURRENT_SCHEMA_VERSION;
 			VehiclePart = new XElement(tns + XMLNames.Component_Vehicle);
 			Results = new XElement(tns + XMLNames.Report_Results);
 		}
+
+		public XMLDeclarationReport DeclarationReport { get; }
 
 		public void Initialize(VectoRunData modelData)
 		{
@@ -96,6 +100,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 				exempted ? ExemptedData(modelData) : new[] {
 					new XElement(tns + XMLNames.Vehicle_AxleConfiguration, modelData.VehicleData.AxleConfiguration.GetName()),
 					new XElement(tns + XMLNames.Report_Vehicle_VehicleGroup, modelData.VehicleData.VehicleClass.GetClassNumber()),
+					new XElement(tns + XMLNames.Report_CO2StandardsGroup, DeclarationReport.WeightingGroup.ToXMLFormat()),
 					new XElement(tns + XMLNames.Vehicle_VocationalVehicle, modelData.VehicleData.VocationalVehicle),
 					new XElement(tns + XMLNames.Vehicle_SleeperCab, modelData.VehicleData.SleeperCab),
 					GetADAS(modelData.VehicleData.ADAS)
@@ -241,7 +246,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 			vehicle.Add(InputDataIntegrity);
 			retVal.Add(new XProcessingInstruction("xml-stylesheet", "href=\"https://citnet.tech.ec.europa.eu/CITnet/svn/VECTO/trunk/Share/XML/CSS/VectoReports.css\""));
 			retVal.Add(new XElement(tns + XMLNames.VectoCustomerReport,
-				new XAttribute("schemaVersion", CURRENT_SCHEMA_VERSION),
+				new XAttribute("schemaVersion", SCHEMA_VERSION_STRING),
 				new XAttribute(XNamespace.Xmlns + "xsi", xsi.NamespaceName),
 				new XAttribute("xmlns", tns),
 				new XAttribute(XNamespace.Xmlns + "di", di),

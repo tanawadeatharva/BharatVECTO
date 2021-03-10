@@ -791,8 +791,50 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					forceLineSearch: DataBus.GearboxType.AutomaticTransmission() && !DataBus.TCLocked);
 
 				return operatingPoint;
-			} catch (Exception) {
-				Log.Error("Failed to find operating point for braking power! absTime: {0}", absTime);
+			} catch (VectoSearchFailedException vse) {
+				Log.Error("Failed to find operating point for braking power! absTime: {0}  {1}", absTime, vse);
+				if (DataBus.GearboxType.AutomaticTransmission() && !DataBus.TCLocked) {
+					// AT transmission in TC gear - maybe search failed because engine speed 'jumps' during
+					// search and cannot reach drag curve
+					// take an operating point that is 
+					try {
+						DataBus.BrakePower = SearchAlgorithm.Search(DataBus.BrakePower, deltaPower,
+							DataBus.BrakePower * 0.01,
+							getYValue: result => {
+								var response = (ResponseDryRun)result;
+								return DataBus.ClutchClosed(absTime)
+									? response.DeltaDragLoad
+									: response.GearboxPowerRequest;
+							},
+							evaluateFunction: x => {
+								DataBus.BrakePower = x;
+								operatingPoint = ComputeTimeInterval(operatingPoint.Acceleration, ds);
+
+								IterationStatistics.Increment(this, "SearchBrakingPower");
+								DriverAcceleration = operatingPoint.Acceleration;
+								return NextComponent.Request(absTime, operatingPoint.SimulationInterval,
+									operatingPoint.Acceleration, gradient,
+									true);
+							},
+							criterion: result => {
+								var response = (ResponseDryRun)result;
+								var delta = DataBus.ClutchClosed(absTime)
+									? response.DeltaDragLoad
+									: response.GearboxPowerRequest;
+								return Math.Min(delta.Value(), 0);
+							},
+							forceLineSearch: true);
+						return operatingPoint;
+					} catch (Exception e2) {
+						Log.Error("Failed to find operating point for braking power (attempt 2)! absTime: {0}  {1}", absTime, e2);
+						throw;
+					}
+
+				} else {
+					throw;
+				}
+			} catch (Exception e) {
+				Log.Error("Failed to find operating point for braking power! absTime: {0}  {1}", absTime, e);
 				throw;
 			}
 		}
