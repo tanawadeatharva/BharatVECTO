@@ -74,10 +74,28 @@ namespace TUGraz.VectoCore.Models.Declaration
 
 		public static string ToXMLFormat(this WeightingGroup group)
 		{
-			if (group == WeightingGroup.Unknown) {
-				return Constants.NOT_AVAILABLE;
+			switch (group) {
+				case WeightingGroup.Group1:
+				case WeightingGroup.Group2:
+				case WeightingGroup.Group3:
+				case WeightingGroup.Group11:
+				case WeightingGroup.Group12:
+				case WeightingGroup.Group16:
+				case WeightingGroup.Unknown:
+					return Constants.NOT_AVAILABLE;
+				case WeightingGroup.Group4UD:
+				case WeightingGroup.Group4RD:
+				case WeightingGroup.Group4LH:
+				case WeightingGroup.Group5RD:
+				case WeightingGroup.Group5LH:
+				case WeightingGroup.Group9RD:
+				case WeightingGroup.Group9LH:
+				case WeightingGroup.Group10RD:
+				case WeightingGroup.Group10LH:
+					return string.Join("-", Regex.Split(group.ToString().Replace(Prefix, ""), @"(\d+|\w+)").Where(x => !string.IsNullOrWhiteSpace(x)));
+				default:
+					return Constants.NOT_AVAILABLE;
 			}
-			return string.Join("-", Regex.Split(group.ToString().Replace(Prefix, ""), @"(\d+|\w+)").Where(x => !string.IsNullOrWhiteSpace(x)));
 		}
 	}
 
