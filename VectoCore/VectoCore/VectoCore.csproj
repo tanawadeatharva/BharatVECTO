@@ -152,6 +152,7 @@
     <Compile Include="InputData\FileIO\XML\Common\AbstractXMLResource.cs" />
     <Compile Include="InputData\FileIO\XML\Common\AbstractXMLType.cs" />
     <Compile Include="InputData\FileIO\XML\Declaration\DataProvider\XMLAuxiliaryDeclarationDataProvider.cs" />
+    <Compile Include="InputData\FileIO\XML\Declaration\DataProvider\XMLDeclarationMultistageInputData.cs" />
     <Compile Include="InputData\FileIO\XML\Declaration\DataProvider\XMLDeclarationPrimaryVehicleBusApplicationInformationDataProviderV01.cs" />
     <Compile Include="InputData\FileIO\XML\Declaration\DataProvider\XMLDeclarationBusAuxiliariesDataProvider.cs" />
     <Compile Include="InputData\FileIO\XML\Declaration\DataProvider\XMLDeclarationADASDataProvider.cs" />
@@ -200,6 +201,7 @@
     <Compile Include="InputData\FileIO\XML\Declaration\Reader\Impl\AbstractComponentReader.cs" />
     <Compile Include="InputData\FileIO\XML\Declaration\Reader\Impl\XMLADASReader.cs" />
     <Compile Include="InputData\FileIO\XML\Declaration\Reader\Impl\XMLComponentReader.cs" />
+    <Compile Include="InputData\FileIO\XML\Declaration\Reader\Impl\XMLDeclarationMultistageInputReader.cs" />
     <Compile Include="InputData\FileIO\XML\Declaration\Reader\Impl\XMLPTOReader.cs" />
     <Compile Include="InputData\FileIO\XML\Declaration\Reader\IXMLADASReader.cs" />
     <Compile Include="InputData\FileIO\XML\Declaration\Reader\IXMLComponentReader.cs" />

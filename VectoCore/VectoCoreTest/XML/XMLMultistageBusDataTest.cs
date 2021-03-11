@@ -31,7 +31,7 @@ namespace TUGraz.VectoCore.Tests.XML
 
 
 		[TestCase]
-		public void TestVehicleMultistageBustInput()
+		public void TestVehicleMultistageBusInput()
 		{
 			var reader = XmlReader.Create(VIF);
 			var inputDataProvider = xmlInputReader.Create(reader) as IMultistageBusInputDataProvider;

@@ -20,9 +20,9 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Interfaces
 		XmlNode ApplicationInformationNode { get; }
 	}
 
-	public interface IXMLMultistageBusInputDataProvider : IMultistageBusInputDataProvider, IXMLResource
+	public interface IXMLMultistageInputDataProvider : IMultistageBusInputDataProvider, IXMLResource
 	{
-		IXMLDeclarationMultistageVehicleBusInputDataReader Reader { set; }
+		IXMLDeclarationMultistageVehicleInputDataReader Reader { set; }
 
 		
 	}

@@ -18,7 +18,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration
 		IApplicationInformation ApplicationInformation { get; }
 	}
 
-	public interface IXMLDeclarationMultistageVehicleBusInputDataReader
+	public interface IXMLDeclarationMultistageVehicleInputDataReader
 	{
 		IDeclarationMultistageJobInputData JobData { get; }
 	}

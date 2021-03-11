@@ -9,14 +9,16 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.NinjectModules
 	{
 		public override void Load()
 		{
-			Bind<IXMLMultistageBusInputDataProvider>().To<XMLDeclarationInputDataProviderMultistageV01>()
+			Bind<IXMLMultistageInputDataProvider>().To<XMLDeclarationInputDataProviderMultistageV01>()
 				.Named(XMLDeclarationInputDataProviderMultistageV01.QUALIFIED_XSD_TYPE);
 
             Bind<IXMLDeclarationMultistageJobInputData>().To<XMLDeclarationMultistageJobInputDataV01>()
                 .Named(XMLDeclarationMultistageJobInputDataV01.QUALIFIED_XSD_TYPE);
 
-			Bind<IXMLDeclarationMultistageVehicleBusInputDataReader>().To<XMLDeclarationInputReaderMultistageV01>()
-				.Named(XMLDeclarationInputReaderMultistageV01.QUALIFIED_XSD_TYPE);
+			// -----------------------------------
+
+			Bind<IXMLDeclarationMultistageVehicleInputDataReader>().To<XMLDeclarationMultistageInputReaderV01>()
+				.Named(XMLDeclarationMultistageInputReaderV01.QUALIFIED_XSD_TYPE);
 
 
 			Bind<IXMLMultistageJobReader>().To<XMLMultistageJobReaderV01>()
