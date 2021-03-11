@@ -815,9 +815,16 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 					? Constants.SimulationSettings.ATGearboxDisengageWhenHaltingSpeed
 					: Constants.SimulationSettings.ClutchDisengageWhenHaltingSpeed;
 				var vehiclespeedBelowThreshold = DataBus.VehicleInfo.VehicleSpeed.IsSmaller(disengageSpeedThreshold);
-				if ((vehiclespeedBelowThreshold) && emPos == PowertrainPosition.HybridP2) {
+				if ((vehiclespeedBelowThreshold) && (emPos == PowertrainPosition.HybridP2 || emPos == PowertrainPosition.HybridP1)) {
+					if (DataBus.GearboxInfo.GearboxType.AutomaticTransmission()) {
+						var firstgear = ResponseEmOff;
+						firstgear.Gear = GearList.First();
+						eval.Add(firstgear);
+						return;
+					} else {
 					eval.Add(ResponseEmOff);
 					return;
+				}
 				}
 				
 				var nextGear = !DataBus.GearboxInfo.GearEngaged(absTime)
