@@ -62,7 +62,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			IVehicleContainer container, IAuxiliaryConfig auxiliaryConfig, IAuxPort additionalAux = null) : base(container)
 		{
 			container.AddComponent(this);
-			EngineStopStartUtilityFactor = container.RunData?.DriverData?.EngineStopStart?.UtilityFactor ?? double.NaN;
+			EngineStopStartUtilityFactor = container.RunData?.DriverData?.EngineStopStart?.UtilityFactorStandstill ?? double.NaN;
 
 			CurrentState = new BusAuxState();
 			PreviousState = new BusAuxState { AngularSpeed = container.EngineInfo.EngineIdleSpeed };

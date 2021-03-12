@@ -20,7 +20,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl {
 			container, modelData, pt1Disabled)
 		{
 			CombustionEngineOn = true;
-			EngineStopStartUtilityFactor = container.RunData.DriverData.EngineStopStart.UtilityFactor;
+			EngineStopStartUtilityFactor = container.RunData.DriverData.EngineStopStart.UtilityFactorStandstill;
 
 			var engineRampUpEnergy = Formulas.InertiaPower(modelData.IdleSpeed, 0.RPMtoRad(), modelData.Inertia, modelData.EngineStartTime) * modelData.EngineStartTime;
 			var engineDragEnergy = VectoMath.Abs(modelData.FullLoadCurves[0].DragLoadStationaryTorque(modelData.IdleSpeed)) *
