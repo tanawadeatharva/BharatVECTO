@@ -9,7 +9,7 @@
     "SavedInDeclMode": false,
     "ModelName": "Undefined",
     "Inertia": 0.0,
-    "TracInt": 2.0,
+    "TracInt": 1.0,
     "Gears": [
       {
         "Ratio": 6.5,
@@ -57,7 +57,7 @@
     "StartTqReserve": 0.2,
     "StartSpeed": 2.0,
     "StartAcc": 0.6,
-    "GearboxType": "MT",
+    "GearboxType": "AMT",
     "TorqueConverter": {
       "Enabled": false
     },

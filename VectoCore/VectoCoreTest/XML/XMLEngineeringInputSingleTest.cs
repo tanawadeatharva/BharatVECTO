@@ -918,7 +918,7 @@ namespace TUGraz.VectoCore.Tests.XML
 			var essData = inputDataProvider.DriverInputData.EngineStopStartData;
 			Assert.AreEqual(2.01, essData.ActivationDelay.Value());
 			Assert.AreEqual(120.23, essData.MaxEngineOffTimespan.Value());
-			Assert.AreEqual(0.834, essData.UtilityFactor);
+			Assert.AreEqual(0.834, essData.UtilityFactorStandstill);
 		}
 
 

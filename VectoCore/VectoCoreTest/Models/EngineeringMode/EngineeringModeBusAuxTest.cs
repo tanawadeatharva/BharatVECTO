@@ -33,6 +33,7 @@ namespace TUGraz.VectoCore.Tests.Models.EngineeringMode
 		const string JobFile_SmartES_SmartPS = @"TestData\Integration\Buses\EngineeringMode\InterurbanBus_ENG_BusAux_SmartES-SmartPS.vecto";
 
 		const string JobFile_A = @"TestData\Hybrids\BusAuxEngineeringMode\InterurbanBus_ENG_BusAux_A.vecto";
+		const string JobFile_A_ESS = @"TestData\Hybrids\BusAuxEngineeringMode\InterurbanBus_ENG_BusAux_A_ESS.vecto";
 		const string JobFile_B = @"TestData\Hybrids\BusAuxEngineeringMode\InterurbanBus_ENG_BusAux_B.vecto";
 		const string JobFile_C1 = @"TestData\Hybrids\BusAuxEngineeringMode\InterurbanBus_ENG_BusAux_C1.vecto";
 		const string JobFile_C2a = @"TestData\Hybrids\BusAuxEngineeringMode\InterurbanBus_ENG_BusAux_C2a.vecto";
@@ -72,6 +73,12 @@ namespace TUGraz.VectoCore.Tests.Models.EngineeringMode
 		TestCase(JobFile_C2b, 2, TestName = "InterurbanBus ENG BusAux C2b Urban"),
 		TestCase(JobFile_C3a, 2, TestName = "InterurbanBus ENG BusAux C3a Urban"),
 		TestCase(JobFile_C3b, 2, TestName = "InterurbanBus ENG BusAux C3b Urban"),
+
+		TestCase(JobFile_A_ESS, 0, TestName = "InterurbanBus ENG BusAux A ESS Interurban"),
+		TestCase(JobFile_A_ESS, 1, TestName = "InterurbanBus ENG BusAux A ESS Coach"),
+		TestCase(JobFile_A_ESS, 2, TestName = "InterurbanBus ENG BusAux A ESS Urban"),
+
+		TestCase(JobFile_C1, 0, TestName = "InterurbanBus ENG BusAux C1 Interurban"),
 
 		]
 		public void InterurbanBus_BusAuxTest(string jobFile, int runIdx)

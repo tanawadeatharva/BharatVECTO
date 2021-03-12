@@ -675,7 +675,8 @@ public class JSONFileWriter : IOutputFileWriter
 			body.Add("VACC", GetRelativePath(driver.AccelerationCurve.AccelerationCurve.Source, basePath));
 			body.Add("EngineStopStartAtVehicleStopThreshold", driver.EngineStopStartData.ActivationDelay.Value());
 			body.Add("EngineStopStartMaxOffTimespan", driver.EngineStopStartData.MaxEngineOffTimespan.Value());
-			body.Add("EngineStopStartUtilityFactor", driver.EngineStopStartData.UtilityFactor);
+			body.Add("EngineStopStartUtilityFactor", driver.EngineStopStartData.UtilityFactorStandstill);
+			body.Add("EngineStopStartUtilityFactorDriving", driver.EngineStopStartData.UtilityFactorDriving);
 
 			body.Add("EcoRollMinSpeed", driver.EcoRollData.MinSpeed.AsKmph);
 			body.Add("EcoRollActivationDelay", driver.EcoRollData.ActivationDelay.Value());
@@ -819,7 +820,8 @@ public class JSONFileWriter : IOutputFileWriter
 			body.Add("VACC", GetRelativePath(driver.AccelerationCurve.AccelerationCurve.Source, basePath));
 			body.Add("EngineStopStartAtVehicleStopThreshold", driver.EngineStopStartData.ActivationDelay.Value());
 			body.Add("EngineStopStartMaxOffTimespan", driver.EngineStopStartData.MaxEngineOffTimespan.Value());
-			body.Add("EngineStopStartUtilityFactor", driver.EngineStopStartData.UtilityFactor);
+			body.Add("EngineStopStartUtilityFactor", driver.EngineStopStartData.UtilityFactorStandstill);
+			body.Add("EngineStopStartUtilityFactorDriving", driver.EngineStopStartData.UtilityFactorDriving);
 
 			body.Add("EcoRollMinSpeed", driver.EcoRollData.MinSpeed.AsKmph);
 			body.Add("EcoRollActivationDelay", driver.EcoRollData.ActivationDelay.Value());
@@ -975,7 +977,8 @@ public class JSONFileWriter : IOutputFileWriter
 			body.Add("VACC", GetRelativePath(driver.AccelerationCurve.AccelerationCurve.Source, basePath));
 			body.Add("EngineStopStartAtVehicleStopThreshold", driver.EngineStopStartData.ActivationDelay.Value());
 			body.Add("EngineStopStartMaxOffTimespan", driver.EngineStopStartData.MaxEngineOffTimespan.Value());
-			body.Add("EngineStopStartUtilityFactor", driver.EngineStopStartData.UtilityFactor);
+			body.Add("EngineStopStartUtilityFactor", driver.EngineStopStartData.UtilityFactorStandstill);
+			body.Add("EngineStopStartUtilityFactorDriving", driver.EngineStopStartData.UtilityFactorDriving);
 
 			body.Add("EcoRollMinSpeed", driver.EcoRollData.MinSpeed.AsKmph);
 			body.Add("EcoRollActivationDelay", driver.EcoRollData.ActivationDelay.Value());

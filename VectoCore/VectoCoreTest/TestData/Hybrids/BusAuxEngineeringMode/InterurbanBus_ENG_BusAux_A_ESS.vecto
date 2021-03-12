@@ -8,7 +8,7 @@
   "Body": {
     "SavedInDeclMode": false,
     "EngineOnlyMode": false,
-    "VehicleFile": "InterurbanBus.vveh",
+    "VehicleFile": "InterurbanBus_ESS.vveh",
     "EngineFile": "Engine_250kW_7.7l.veng",
     "GearboxFile": "MT_6_Bus.vgbx",
     "TCU": "MT_6_Bus.vgbx",
