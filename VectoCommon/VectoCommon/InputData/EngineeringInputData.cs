@@ -591,7 +591,8 @@ namespace TUGraz.VectoCommon.InputData
 	{
 		Second ActivationDelay { get; }
 		Second MaxEngineOffTimespan { get; }
-		double UtilityFactor { get; }
+		double UtilityFactorStandstill { get; }
+		double UtilityFactorDriving { get;}
 	}
 
 	public interface IAuxiliaryEngineeringInputData

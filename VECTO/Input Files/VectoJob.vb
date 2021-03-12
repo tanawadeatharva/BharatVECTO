@@ -74,6 +74,7 @@ Public Class VectoJob
     Private _shiftStrategy As String
     public EngineOffTimeLimit As double
     public EngineStStUtilityFactor As Double
+    public EngineStStUtilityFactorDriving as Double
 
     Public EcoRollMinSpeed As double
     Public EcoRollUnderspeedThreshold As Double
@@ -407,10 +408,16 @@ Public Class VectoJob
         End Get
     End Property
 
-    Public ReadOnly Property UtilityFactor As Double Implements IEngineStopStartEngineeringInputData.UtilityFactor
+    Public ReadOnly Property UtilityFactorStandstill As Double Implements IEngineStopStartEngineeringInputData.UtilityFactorStandstill
         Get
             Return EngineStStUtilityFactor
         End Get
+    End Property
+
+    Public ReadOnly Property UtilityFactorDriving As Double Implements IEngineStopStartEngineeringInputData.UtilityFactorDriving
+    get
+        Return EngineStStUtilityFactorDriving
+    End Get
     End Property
 
     Public Property DesMaxFile(Optional ByVal original As Boolean = False) As String

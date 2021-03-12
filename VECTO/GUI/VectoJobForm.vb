@@ -553,7 +553,8 @@ Public Class VectoJobForm
 
         tbEngineStopStartActivationDelay.Text = If(driver.EngineStopStartData?.ActivationDelay?.ToGUIFormat(), DeclarationData.Driver.EngineStopStart.ActivationDelay.ToGUIFormat())
         tbMaxEngineOffTimespan.Text = If(driver.EngineStopStartData?.MaxEngineOffTimespan?.ToGUIFormat(), DeclarationData.Driver.EngineStopStart.MaxEngineOffTimespan.ToGUIFormat())
-        tbEssUtility.Text = If(driver.EngineStopStartData?.UtilityFactor.ToGUIFormat(), DeclarationData.Driver.EngineStopStart.UtilityFactor.ToGUIFormat())
+        tbEssUtility.Text = If(driver.EngineStopStartData?.UtilityFactorStandstill.ToGUIFormat(), DeclarationData.Driver.EngineStopStart.UtilityFactor.ToGUIFormat())
+        tbESSUtilityFactorDriving.Text = If(driver.EngineStopStartData?.UtilityFactorDriving.ToGUIFormat(), DeclarationData.Driver.EngineStopStart.UtilityFactor.ToGUIFormat())
 
         tbEcoRollActivationDelay.Text = If(driver.EcoRollData?.ActivationDelay?.ToGUIFormat(), DeclarationData.Driver.EcoRoll.ActivationDelay.ToGUIFormat())
         tbEcoRollMinSpeed.Text = If(driver.EcoRollData?.MinSpeed?.AsKmph().ToGUIFormat(), DeclarationData.Driver.EcoRoll.MinSpeed.AsKmph().ToGUIFormat())
@@ -689,6 +690,7 @@ Public Class VectoJobForm
         vectoJob.EngineStopStartActivationThreshold = tbEngineStopStartActivationDelay.Text.ToDouble(0)
         vectoJob.EngineOffTimeLimit = tbMaxEngineOffTimespan.Text.ToDouble(0)
         vectoJob.EngineStStUtilityFactor = tbEssUtility.Text.ToDouble(0)
+        vectoJob.EngineStStUtilityFactorDriving = tbESSUtilityFactorDriving.Text.ToDouble(0)
 
         vectoJob.EcoRollActivationDelay = tbEcoRollActivationDelay.Text.ToDouble(0)
         vectoJob.EcoRollMinSpeed = tbEcoRollMinSpeed.Text.ToDouble(0)
@@ -1022,9 +1024,13 @@ Public Class VectoJobForm
         pnEngine.Enabled = True
         pnShiftParams.Enabled = True
         pnHybridStrategy.Enabled = False
+        lblESSUtilityFactorDriving.Enabled  = false
+        tbESSUtilityFactorDriving.Enabled = false
         Select Case JobType
             Case VectoSimulationJobType.ConventionalVehicle
                 gbElectricAux.Enabled = False
+                lblESSUtilityFactorDriving.Enabled  = true
+                tbESSUtilityFactorDriving.Enabled = true
             Case VectoSimulationJobType.EngineOnlySimulation
                 pnVehicle.Enabled = False
                 pnGearbox.Enabled = False

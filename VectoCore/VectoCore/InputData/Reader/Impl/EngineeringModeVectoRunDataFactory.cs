@@ -174,6 +174,8 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 				foreach (var cycle in InputDataProvider.JobInputData.Cycles) {
 					var dao = new EngineeringDataAdapter();
 					var driver = dao.CreateDriverData(InputDataProvider.DriverInputData);
+					if (InputDataProvider.JobInputData.JobType != VectoSimulationJobType.ConventionalVehicle)
+						driver.EngineStopStart.UtilityFactorDriving = 1;
 					var vehicle = InputDataProvider.JobInputData.Vehicle;
 					var engineData = dao.CreateEngineData(vehicle, engineMode);
 					engineData.FuelMode = modeIdx;

@@ -27,12 +27,14 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering.DataProvider {
 			get { return GetDouble("MaxEngineOffTime", DeclarationData.Driver.EngineStopStart.MaxEngineOffTimespan.Value()).SI<Second>(); }
 		}
 
-		public virtual double UtilityFactor
+		public virtual double UtilityFactorStandstill
 		{
 			get {
 				return GetDouble("UtilityFactor", DeclarationData.Driver.EngineStopStart.UtilityFactor);
 			}
 		}
+
+		public double UtilityFactorDriving { get { return GetDouble("UtilityFactorDriving", DeclarationData.Driver.EngineStopStart.UtilityFactor); } }
 
 		protected XNamespace SchemaNamespace { get { return NAMESPACE_URI; } }
 
