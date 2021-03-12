@@ -351,6 +351,8 @@ namespace TUGraz.VectoCore.Tests.Utils
 			throw new NotImplementedException();
 		}
 
+		public ICorrectedModalData CorrectedModalData { get; }
+
 		public WattSecond REESSEnergyEnd()
 		{
 			throw new NotImplementedException();

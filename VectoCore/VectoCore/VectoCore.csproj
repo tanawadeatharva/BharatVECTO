@@ -435,6 +435,7 @@
     <Compile Include="Models\Simulation\SimulationFactoryNinjectModule.cs" />
     <Compile Include="OutputData\FileIO\BusAuxWriter.cs" />
     <Compile Include="OutputData\FileIO\JSONFileWriter.cs" />
+    <Compile Include="OutputData\ModalDataPostprocessingCorrection.cs" />
     <Compile Include="OutputData\XML\AbstractXMLManufacturerReport.cs" />
     <Compile Include="OutputData\XML\DeclarationJobs\XMLCompletedBusWriter.cs" />
     <Compile Include="OutputData\XML\Engineering\Factory\EngineeringWriterFactory.cs" />

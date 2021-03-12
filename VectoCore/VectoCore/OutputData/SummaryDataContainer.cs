@@ -174,7 +174,7 @@ namespace TUGraz.VectoCore.OutputData
 					Fields.CARGO_VOLUME, Fields.TIME, Fields.DISTANCE, Fields.SPEED, Fields.ALTITUDE_DELTA,
 				}.Select(x => new DataColumn(x, typeof(ConvertedSI))).ToArray());
 
-			
+
 			Table.Columns.AddRange(
 				new[] {
 					Fields.CO2_KM, Fields.CO2_TKM, Fields.CO2_M3KM, Fields.CO2_PKM, Fields.P_WHEEL, Fields.P_WHEEL_POS, Fields.P_FCMAP, Fields.P_FCMAP_POS,
@@ -256,7 +256,7 @@ namespace TUGraz.VectoCore.OutputData
 		{
 			foreach (var entry in modDataFuelData) {
 				foreach (var column in fcColumns.Reverse()) {
-					var colName = string.Format(column, modDataFuelData.Count <= 1 && !engineDataMultipleEngineFuelModes ? "" : "_" +entry.FuelType.GetLabel());
+					var colName = string.Format(column, modDataFuelData.Count <= 1 && !engineDataMultipleEngineFuelModes ? "" : "_" + entry.FuelType.GetLabel());
 					if (!Table.Columns.Contains(colName)) {
 						var col = new DataColumn(colName, typeof(ConvertedSI));
 						Table.Columns.Add(col);
@@ -374,67 +374,24 @@ namespace TUGraz.VectoCore.OutputData
 			WriteGearshiftStats(modData, row, gearCount);
 		}
 
-		
+
 
 		private void WriteFuelconsumptionEntries(
-			IModalDataContainer modData, DataRow row, Kilogram vehicleLoading, 
+			IModalDataContainer modData, DataRow row, Kilogram vehicleLoading,
 			CubicMeter cargoVolume, double? passengers, VectoRunData runData)
 		{
 			var multipleEngineModes = runData.EngineData.MultipleEngineFuelModes;
 			var vtpCycle = runData.Cycle.CycleType == CycleType.VTP;
 
-			var workESS = modData.WorkAuxiliariesDuringEngineStop() +
-						modData.WorkEngineStart();
+		   
+			row[Fields.E_WHR_EL] = modData.CorrectedModalData.WorkWHREl.ConvertToKiloWattHour();
+			row[Fields.E_WHR_MECH] = modData.CorrectedModalData.WorkWHRMech.ConvertToKiloWattHour();
 
-			var workWHREl = modData.TimeIntegral<WattSecond>(ModalResultField.P_WHR_el_corr);
-			var workWhrElMech = - workWHREl / DeclarationData.AlternaterEfficiency;
+			row[Fields.E_BusAux_PS_corr] = modData.CorrectedModalData.WorkBusAuxPSCorr.ConvertToKiloWattHour();
+			row[Fields.E_BusAux_ES_mech_corr] = modData.CorrectedModalData.WorkBusAuxESMech.ConvertToKiloWattHour();
 
-			var workWHRMech = -modData.TimeIntegral<WattSecond>(ModalResultField.P_WHR_mech_corr);
+			row[Fields.E_BusAux_AuxHeater] = modData.CorrectedModalData.AuxHeaterDemand.Cast<WattSecond>().ConvertToKiloWattHour();
 
-			var workWhr = workWhrElMech + workWHRMech;
-
-			row[Fields.E_WHR_EL] = workWHREl.ConvertToKiloWattHour();
-			row[Fields.E_WHR_MECH] = workWHRMech.ConvertToKiloWattHour();
-
-			var workBusAuxPSCorr = 0.SI<WattSecond>();
-			var workBusAuxESMech = 0.SI<WattSecond>();
-			if (runData.BusAuxiliaries != null) {
-				var workBusAuxPSCompOff = modData.EnergyPneumaticCompressorPowerOff();
-				var workBusAuxPSCompOn = modData.EnergyPneumaticCompressorAlwaysOn();
-				var airBusAuxPSON = modData.AirGeneratedAlwaysOn();
-				var deltaAir = modData.AirConsumed() - modData.AirGenerated();
-
-				var kAir = (workBusAuxPSCompOn - workBusAuxPSCompOff) / (airBusAuxPSON - 0.SI<NormLiter>());
-				workBusAuxPSCorr = (kAir * deltaAir).Cast<WattSecond>();
-
-				var workBusAuxES = modData.EnergyBusAuxESConsumed() - modData.EnergyBusAuxESGenerated();
-				workBusAuxESMech = workBusAuxES  /
-										runData.BusAuxiliaries.ElectricalUserInputsConfig.AlternatorMap.GetEfficiency(0.RPMtoRad(), 0.SI<Ampere>()) /
-										runData.BusAuxiliaries.ElectricalUserInputsConfig.AlternatorGearEfficiency;
-
-
-			}
-			row[Fields.E_BusAux_PS_corr] = workBusAuxPSCorr.ConvertToKiloWattHour();
-			row[Fields.E_BusAux_ES_mech_corr] = workBusAuxESMech.ConvertToKiloWattHour();
-
-			var distance = modData.Distance;
-			var duration = modData.Duration;
-
-			var kilogramCO2PerMeter = 0.SI<KilogramPerMeter>();
-
-
-			var engineWasteheatSum = modData.FuelData.Aggregate(
-				0.SI<Joule>(),
-				(current, fuel) => current + modData.TotalFuelConsumption(ModalResultField.FCFinal, fuel) *
-									fuel.LowerHeatingValueVecto);
-
-			var auxHeaterDemand = modData.AuxHeaterDemandCalc == null
-				? 0.SI<Joule>()
-				: modData.AuxHeaterDemandCalc(duration, engineWasteheatSum);
-
-			row[Fields.E_BusAux_AuxHeater] = auxHeaterDemand.Cast<WattSecond>().ConvertToKiloWattHour();
-
-			var firstFuel = true;
 			foreach (var fuel in modData.FuelData) {
 				var suffix = modData.FuelData.Count <= 1 && !multipleEngineModes ? "" : "_" + fuel.FuelType.GetLabel();
 
@@ -459,76 +416,54 @@ namespace TUGraz.VectoCore.OutputData
 				row[FcCol(Fields.FCESS_KM, suffix)] = modData.FuelConsumptionPerMeter(ModalResultField.FCICEStopStart, fuel)
 													?.ConvertToGrammPerKiloMeter();
 
-				var fcModSum = modData.TotalFuelConsumption(ModalResultField.FCFinal, fuel);
+				var fuelConsumption = modData.CorrectedModalData.FuelConsumptionCorrection(fuel);
 
-				var correction = modData.EngineLineCorrectionFactor(fuel);
-				
-				row[FcCol(Fields.K_ENGLINE, suffix)] = correction.ConvertToGramPerKiloWattHour();
+				row[FcCol(Fields.K_ENGLINE, suffix)] = fuelConsumption.EngineLineCorrectionFactor.ConvertToGramPerKiloWattHour();
+				row[FcCol(Fields.K_VEHLINE, suffix)] = fuelConsumption.VehicleLine?.ConvertToGramPerKiloWattHour();
 
 				var vehLine = modData.VehicleLineSlope(fuel);
 				if (vehLine != null) {
 					row[FcCol(Fields.K_VEHLINE, suffix)] = vehLine.ConvertToGramPerKiloWattHour();
 				}
 
-				var fcEssCorr = fcModSum + correction * workESS;
-				row[FcCol(Fields.FCESS_H_CORR, suffix)] = duration != null ? (fcEssCorr / duration).ConvertToGrammPerHour() : null;
+				row[FcCol(Fields.FCESS_H_CORR, suffix)] = fuelConsumption.FC_ESS_CORR_H?.ConvertToGrammPerHour();
+				row[FcCol(Fields.FC_BusAux_PS_CORR_H, suffix)] = fuelConsumption.FC_BusAux_PS_CORR_H?.ConvertToGrammPerHour();
+				row[FcCol(Fields.FC_BusAux_ES_CORR_H, suffix)] = fuelConsumption.FC_BusAux_ES_CORR_H;
+				row[FcCol(Fields.FCWHR_H_CORR, suffix)] = fuelConsumption.FC_WHR_CORR_H;
+				row[FcCol(Fields.FC_AUXHTR_H, suffix)] = fuelConsumption.FC_AUXHTR_H?.ConvertToGrammPerHour();
+				row[FcCol(Fields.FC_AUXHTR_H_CORR, suffix)] = fuelConsumption.FC_AUXHTR_H_CORR?.ConvertToGrammPerHour();
 
-				var fcBusAuxPSCorr = fcEssCorr + correction * workBusAuxPSCorr;
-				row[FcCol(Fields.FC_BusAux_PS_CORR_H, suffix)] =
-					duration != null ? (fcBusAuxPSCorr / duration).ConvertToGrammPerHour() : null;
 
-				var fcBusAuxESCorr = fcBusAuxPSCorr + correction * workBusAuxESMech;
-				row[FcCol(Fields.FC_BusAux_ES_CORR_H, suffix)] =
-					duration != null ? (fcBusAuxESCorr / duration).ConvertToGrammPerHour() : null;
+				row[FcCol(Fields.FCFINAL_H, suffix)] = fuelConsumption.FC_FINAL_H?.ConvertToGrammPerHour();
 
-				var fcWHRCorr = fcBusAuxESCorr + correction * workWhr;
-				row[FcCol(Fields.FCWHR_H_CORR, suffix)] = duration != null ? (fcWHRCorr / duration).ConvertToGrammPerHour() : null;
+				row[FcCol(Fields.FCWHR_KM_CORR, suffix)] = fuelConsumption.FC_WHR_CORR_KM?.ConvertToGrammPerKiloMeter();
+				row[FcCol(Fields.FC_BusAux_PS_CORR_KM, suffix)] = fuelConsumption.FC_BusAux_PS_CORR_KM?.ConvertToGrammPerKiloMeter();
+				row[FcCol(Fields.FC_BusAux_ES_CORR_KM, suffix)] = fuelConsumption.FC_BusAux_ES_CORR_KM?.ConvertToGrammPerKiloMeter();
+				row[FcCol(Fields.FC_AUXHTR_KM, suffix)] = fuelConsumption.FC_AUXHTR_KM?.ConvertToGrammPerKiloMeter();
+				row[FcCol(Fields.FC_AUXHTR_KM_CORR, suffix)] = fuelConsumption.FC_AUXHTR_KM_CORR?.ConvertToGrammPerKiloMeter();
 
-				var fcAuxHtr = 0.SI<Kilogram>();
-				if (firstFuel) {
-					firstFuel = false;
-					fcAuxHtr = auxHeaterDemand / fuel.LowerHeatingValueVecto;
-				}
-				var fcAuxHtrCorr = fcWHRCorr + fcAuxHtr;
+				row[FcCol(Fields.FCESS_KM_CORR, suffix)] = fuelConsumption.FC_ESS_CORR_KM?.ConvertToGrammPerKiloMeter();
+				row[FcCol(Fields.FCFINAL_KM, suffix)] = fuelConsumption.FC_FINAL_KM?.ConvertToGrammPerKiloMeter();
 
-				var fcFinal = fcAuxHtrCorr;
-
-				row[FcCol(Fields.FC_AUXHTR_H, suffix)] = (fcAuxHtr / duration).ConvertToGrammPerHour();
-				row[FcCol(Fields.FC_AUXHTR_H_CORR, suffix)] = (fcAuxHtrCorr / duration).ConvertToGrammPerHour();
-
-				row[FcCol(Fields.FCFINAL_H, suffix)] = (fcFinal / duration).ConvertToGrammPerHour();
-
-				if (distance != null && distance.IsGreater(0)) {
-					row[FcCol(Fields.FCWHR_KM_CORR, suffix)] = (fcWHRCorr / distance).ConvertToGrammPerKiloMeter();
-					row[FcCol(Fields.FC_BusAux_PS_CORR_KM, suffix)] = (fcBusAuxPSCorr / distance).ConvertToGrammPerKiloMeter();
-					row[FcCol(Fields.FC_BusAux_ES_CORR_KM, suffix)] = (fcBusAuxESCorr / distance).ConvertToGrammPerKiloMeter();
-					row[FcCol(Fields.FC_AUXHTR_KM, suffix)] = (fcAuxHtr / distance).ConvertToGrammPerKiloMeter();
-					row[FcCol(Fields.FC_AUXHTR_KM_CORR, suffix)] = (fcAuxHtrCorr / distance).ConvertToGrammPerKiloMeter();
-
-					row[FcCol(Fields.FCESS_KM_CORR, suffix)] = (fcEssCorr / distance).ConvertToGrammPerKiloMeter();
-					row[FcCol(Fields.FCFINAL_KM, suffix)] = (fcFinal / distance).ConvertToGrammPerKiloMeter();
-
-					if (fuel.FuelDensity != null) {
-						var fcVolumePerMeter = (fcFinal / distance / fuel.FuelDensity).Cast<VolumePerMeter>();
-
-						row[FcCol(Fields.FCFINAL_LITERPER100KM, suffix)] = fcVolumePerMeter.ConvertToLiterPer100Kilometer();
-						if (vehicleLoading != null && !vehicleLoading.IsEqual(0) && fcFinal != null) {
-							row[FcCol(Fields.FCFINAL_LITERPER100TKM, suffix)] =
-								(fcVolumePerMeter / vehicleLoading).ConvertToLiterPer100TonKiloMeter();
-						}
-						if (cargoVolume > 0 && fcFinal != null) {
-							row[FcCol(Fields.FCFINAL_LiterPer100M3KM, suffix)] =
-								(fcVolumePerMeter / cargoVolume).ConvertToLiterPerCubicMeter100KiloMeter();
-						}
-
-						if (passengers != null) {
-							// subtract driver!
-							row[FcCol(Fields.FCFINAL_LiterPer100PassengerKM, suffix)] =
-								(fcVolumePerMeter / passengers.Value).ConvertToLiterPer100Kilometer();
-						}
+				if (fuel.FuelDensity != null) {
+					
+					var fcVolumePerMeter = fuelConsumption.FuelVolumePerMeter;
+					row[FcCol(Fields.FCFINAL_LITERPER100KM, suffix)] = fcVolumePerMeter.ConvertToLiterPer100Kilometer();
+					
+					if (vehicleLoading != null && !vehicleLoading.IsEqual(0)) {
+						row[FcCol(Fields.FCFINAL_LITERPER100TKM, suffix)] =
+							(fcVolumePerMeter / vehicleLoading).ConvertToLiterPer100TonKiloMeter();
+					}
+					if (cargoVolume > 0) {
+						row[FcCol(Fields.FCFINAL_LiterPer100M3KM, suffix)] =
+							(fcVolumePerMeter / cargoVolume).ConvertToLiterPerCubicMeter100KiloMeter();
 					}
 
-					kilogramCO2PerMeter += fcFinal * fuel.CO2PerFuelWeight / distance;
+					if (passengers != null) {
+						// subtract driver!
+						row[FcCol(Fields.FCFINAL_LiterPer100PassengerKM, suffix)] =
+							(fcVolumePerMeter / passengers.Value).ConvertToLiterPer100Kilometer();
+					}
 				}
 
 				if (vtpCycle) {
@@ -537,17 +472,17 @@ namespace TUGraz.VectoCore.OutputData
 				}
 			}
 
-			
 
-			row[Fields.CO2_KM] = kilogramCO2PerMeter.ConvertToGrammPerKiloMeter();
+
+			row[Fields.CO2_KM] = modData.CorrectedModalData.KilogramCO2PerMeter.ConvertToGrammPerKiloMeter();
 			if (vehicleLoading != null && !vehicleLoading.IsEqual(0)) {
-				row[Fields.CO2_TKM] = (kilogramCO2PerMeter / vehicleLoading).ConvertToGrammPerTonKilometer();
+				row[Fields.CO2_TKM] = (modData.CorrectedModalData.KilogramCO2PerMeter / vehicleLoading).ConvertToGrammPerTonKilometer();
 			}
 			if (cargoVolume > 0) {
-				row[Fields.CO2_M3KM] = (kilogramCO2PerMeter / cargoVolume).ConvertToGrammPerCubicMeterKiloMeter();
+				row[Fields.CO2_M3KM] = (modData.CorrectedModalData.KilogramCO2PerMeter / cargoVolume).ConvertToGrammPerCubicMeterKiloMeter();
 			}
 			if (passengers != null) {
-				row[Fields.CO2_PKM] = (kilogramCO2PerMeter / passengers.Value).ConvertToGrammPerKiloMeter();
+				row[Fields.CO2_PKM] = (modData.CorrectedModalData.KilogramCO2PerMeter / passengers.Value).ConvertToGrammPerKiloMeter();
 			}
 		}
 
@@ -726,7 +661,7 @@ namespace TUGraz.VectoCore.OutputData
 				var emColumns = new List<Tuple<string, ConvertedSI>>() {
 					Tuple.Create(Fields.EM_AVG_SPEED_FORMAT, modData.ElectricMotorAverageSpeed(em.Item1).ConvertToRoundsPerMinute()),
 
-					Tuple.Create(Fields.E_EM_Mot_DRIVE_FORMAT, modData.TotalElectricMotorMotWorkDrive(em.Item1).ConvertToKiloWattHour()), 
+					Tuple.Create(Fields.E_EM_Mot_DRIVE_FORMAT, modData.TotalElectricMotorMotWorkDrive(em.Item1).ConvertToKiloWattHour()),
 					Tuple.Create(Fields.E_EM_Mot_GENERATE_FORMAT, modData.TotalElectricMotorMotWorkRecuperate(em.Item1).ConvertToKiloWattHour()),
 
 					Tuple.Create(Fields.ETA_EM_Mot_DRIVE_FORMAT, new ConvertedSI(modData.ElectricMotorMotEfficiencyDrive(em.Item1), "")),
@@ -735,10 +670,10 @@ namespace TUGraz.VectoCore.OutputData
 
 					Tuple.Create(Fields.E_EM_DRIVE_FORMAT, modData.TotalElectricMotorWorkDrive(em.Item1).ConvertToKiloWattHour()),
 					Tuple.Create(Fields.E_EM_GENERATE_FORMAT, modData.TotalElectricMotorWorkRecuperate(em.Item1).ConvertToKiloWattHour()),
-					
+
 					Tuple.Create(Fields.ETA_EM_DRIVE_FORMAT, new ConvertedSI(modData.ElectricMotorEfficiencyDrive(em.Item1), "")),
 					Tuple.Create(Fields.ETA_EM_GEN_FORMAT, new ConvertedSI(modData.ElectricMotorEfficiencyGenerate(em.Item1), "")),
-					
+
 					Tuple.Create(Fields.E_EM_OFF_Loss_Format, modData.ElectricMotorOffLosses(em.Item1).ConvertToKiloWattHour()),
 					Tuple.Create(Fields.E_EM_LOSS_TRANSM_FORMAT, modData.ElectricMotorTransmissionLosses(em.Item1).ConvertToKiloWattHour()),
 					Tuple.Create(Fields.E_EM_Mot_LOSS_FORMAT, modData.ElectricMotorMotLosses(em.Item1).ConvertToKiloWattHour()),
@@ -786,7 +721,7 @@ namespace TUGraz.VectoCore.OutputData
 			}
 
 			if (runData.BatteryData != null) {
-				row[Fields.REESS_StartSoC] = runData.BatteryData.InitialSoC * 100; 
+				row[Fields.REESS_StartSoC] = runData.BatteryData.InitialSoC * 100;
 				row[Fields.REESS_EndSoC] = modData.REESSEndSoC();
 				row[Fields.REESS_DeltaSoC] = modData.TimeIntegral<WattSecond>(ModalResultField.P_reess_int.GetName())
 					.ConvertToKiloWattHour();
@@ -1183,7 +1118,7 @@ namespace TUGraz.VectoCore.OutputData
 			public const string FCFINAL_LiterPer100PassengerKM = "FC-Final{0} [l/100Pkm]";
 
 			public const string ElectricEnergyConsumptionPerKm = "EC_el_final [kWh/km]";
-			
+
 			public const string CO2_KM = "CO2 [g/km]";
 			public const string CO2_TKM = "CO2 [g/tkm]";
 			public const string CO2_M3KM = "CO2 [g/m³km]";
@@ -1332,7 +1267,7 @@ namespace TUGraz.VectoCore.OutputData
 			public const string E_EM_LOSS_TRANSM_FORMAT = "E_EM_{0}_transm_loss [kWh]";
 			public const string E_EM_Mot_LOSS_FORMAT = "E_EM_{0}-em_loss [kWh]";
 			public const string E_EM_LOSS_FORMAT = "E_EM_{0}_loss [kWh]";
-			public const string E_EM_OFF_TIME_SHARE = "EM {0} off time share [%]"; 
+			public const string E_EM_OFF_TIME_SHARE = "EM {0} off time share [%]";
 
 			public const string REESS_CAPACITY = "REESS Capacity";
 			public const string REESS_StartSoC = "REESS Start SoC [%]";

@@ -108,8 +108,10 @@ namespace TUGraz.VectoCore.OutputData
 		private Dictionary<PowertrainPosition, WattSecond> _eEmRecuperateMot = new Dictionary<PowertrainPosition, WattSecond>();
 
 		protected VectoRunData _runData;
-		
-       
+		private ICorrectedModalData _correctedModalData;
+		public IModalDataPostProcessor PostProcessingCorrection { set; protected get; }
+
+
 		public ModalDataContainer(VectoRunData runData, IModalDataWriter writer, Action<ModalDataContainer> addReportResult, params IModalDataFilter[] filter)
 		{
 			_runData = runData;
@@ -125,6 +127,8 @@ namespace TUGraz.VectoCore.OutputData
 			if (runData.JobType == VectoSimulationJobType.BatteryElectricVehicle) {
 				return;
 			}
+
+			PostProcessingCorrection = new ModalDataPostprocessingCorrection();
 
 			var multipleEngineModes = runData.EngineData?.MultipleEngineFuelModes ?? false;
             var fuels = runData.EngineData?.Fuels ?? new List<CombustionEngineFuelData>();
@@ -506,6 +510,12 @@ namespace TUGraz.VectoCore.OutputData
 			return TimeIntegral<WattSecond>(ModalResultField.P_reess_loss);
 		}
 
+		public ICorrectedModalData CorrectedModalData
+		{
+			get { return _correctedModalData ?? (_correctedModalData = PostProcessingCorrection.ApplyCorrection(this, _runData)); }
+		}
+
+
 		public void CalculateAggregateValues()
 		{
 			var duration = Duration;
@@ -585,6 +595,7 @@ namespace TUGraz.VectoCore.OutputData
 			_duration = null;
 			_distance = null;
 			_timeIntegrals.Clear();
+			_correctedModalData = null;
 		}
 
 		protected virtual Second CalcDuration()
