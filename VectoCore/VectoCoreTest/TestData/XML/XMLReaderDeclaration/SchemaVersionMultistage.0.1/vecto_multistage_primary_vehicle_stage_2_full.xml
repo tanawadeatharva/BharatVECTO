@@ -27,7 +27,7 @@ xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:DeclarationOutput:VehicleInterimFile
 				<ZeroEmissionVehicle>false</ZeroEmissionVehicle>
 				<ADAS xsi:type="v2.3:AdvancedDriverAssistantSystemsType">
 					<v2.3:EngineStopStart>true</v2.3:EngineStopStart>
-					<v2.3:EcoRollWithoutEngineStop>true</v2.3:EcoRollWithoutEngineStop>
+					<v2.3:EcoRollWithoutEngineStop>false</v2.3:EcoRollWithoutEngineStop>
 					<v2.3:EcoRollWithEngineStop>true</v2.3:EcoRollWithEngineStop>
 					<v2.3:PredictiveCruiseControl>1,2,3</v2.3:PredictiveCruiseControl>
 					<v2.3:APTEcoRollReleaseLockupClutch>false</v2.3:APTEcoRollReleaseLockupClutch>
@@ -213,7 +213,7 @@ xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:DeclarationOutput:VehicleInterimFile
 											<Model>Generic Wheel</Model>
 											<CertificationNumber>e12*0815/8051*2017/05E0000*00</CertificationNumber>
 											<Date>2017-01-11T14:00:00Z</Date>
-											<AppVersion>Tyre Generation App 1.0</AppVersion>
+											<AppVersion>Tyre Generation App 1.1</AppVersion>
 											<Dimension>315/70 R22.5</Dimension>
 											<RRCDeclared>0.0055</RRCDeclared>
 											<FzISO>31300</FzISO>

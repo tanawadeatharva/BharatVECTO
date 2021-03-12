@@ -42,7 +42,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 
 		protected virtual IDeclarationMultistageJobInputData JobCreator(string version, XmlNode node, string arg3)
 		{
-			var job = Factory.CreateMultiStageJobData(version, BaseNode, InputData,"foo"); //(InputData as IXMLResource).DataSource.SourceFile);
+			var job = Factory.CreateMultiStageJobData(version, BaseNode, InputData, (InputData as IXMLResource).DataSource.SourceFile);
 			job.Reader = Factory.CreateMultistageJobReader(version, job, JobNode);
 			return job;
 
@@ -60,20 +60,62 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 		public static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
 
 		protected IXMLDeclarationMultistageJobInputData InputData;
+		protected IPrimaryVehicleInformationInputDataProvider _primaryVehicle;
 
-		public XMLMultistageJobReaderV01(IXMLDeclarationMultistageJobInputData inputData, XmlNode baseNode) : base(
-			inputData, baseNode)
+
+		[Inject]
+		public IDeclarationInjectFactory Factory { protected get; set; }
+
+
+
+		public XMLMultistageJobReaderV01(IXMLDeclarationMultistageJobInputData inputData, XmlNode baseNode)
+			: base(inputData, baseNode)
 		{
 			InputData = inputData;
+
 		}
 
-		public IPrimaryVehicleInformationInputDataProvider PrimaryVehicle {
-			get { return null; }
+		public IPrimaryVehicleInformationInputDataProvider PrimaryVehicle
+		{
+			get { return _primaryVehicle ?? (_primaryVehicle = CreateComponent(XMLNames.Bus_PrimaryVehicle, PrimaryVehicleCreator)); }
 		}
-		public IList<IManufacturingStageInputData> ManufacturingStages {
-			get {
+		public IList<IManufacturingStageInputData> ManufacturingStages
+		{
+			get
+			{
 				//InputData.ManufacturingStages.Select(x => CreateComponent(x, ManufacturingStageCreator)).ToList();
 				return null;
+			}
+		}
+
+		protected IPrimaryVehicleInformationInputDataProvider PrimaryVehicleCreator(string version, XmlNode node,
+			string arg3)
+		{
+			var vehicle = Factory.CreatePrimaryMultistageVehicleData(version, node, arg3);
+			vehicle.Reader = Factory.CreatePrimaryVehicleBusInputReader(version, vehicle, node.FirstChild);
+			return vehicle;
+		}
+	}
+
+	// ---------------------------------------------------------------------------------------
+
+	
+	public class XMLMultistagePrimaryVehicleReaderV01 : XMLPrimaryVehicleBusInputReaderV01
+	{
+		public new static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_MULTISTAGE_BUS_VEHICLE_NAMESPACE_VO1;
+
+		public new const string XSD_TYPE = "PrimaryVehicleDataType";
+
+		public new static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
+
+		public XMLMultistagePrimaryVehicleReaderV01(IXMLPrimaryVehicleBusInputData inputData, XmlNode baseNode)
+			: base(inputData, baseNode) { }
+
+		public override IDeclarationJobInputData JobData
+		{
+			get
+			{
+				return _jobData ?? (_jobData = CreateComponent(XMLNames.Tag_Vehicle, JobCreator));
 			}
 		}
 	}

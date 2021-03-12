@@ -153,6 +153,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration
 			get { return Reader.GetDigestData(GetNode("InputDataSignature")); }
 		}
 
+		public DigestData VehicleSignatureHash { get { return null; } }
+
 		public DigestData ManufacturerRecordHash
 		{
 			get { return Reader.GetDigestData(GetNode("ManufacturerRecordSignature")); }

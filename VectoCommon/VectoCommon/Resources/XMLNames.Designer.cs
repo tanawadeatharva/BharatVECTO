@@ -718,6 +718,15 @@ namespace TUGraz.VectoCommon.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to PrimaryVehicle.
+        /// </summary>
+        public static string Bus_PrimaryVehicle {
+            get {
+                return ResourceManager.GetString("Bus_PrimaryVehicle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to ResultCards.
         /// </summary>
         public static string Bus_ResultCards {

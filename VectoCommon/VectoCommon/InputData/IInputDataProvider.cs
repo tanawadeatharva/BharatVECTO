@@ -68,6 +68,8 @@ namespace TUGraz.VectoCommon.InputData
 
 		DigestData PrimaryVehicleInputDataHash { get; }
 
+		DigestData VehicleSignatureHash { get; }
+
 		IResultsInputData ResultsInputData { get; }
 
 		IApplicationInformation ApplicationInformation { get; }

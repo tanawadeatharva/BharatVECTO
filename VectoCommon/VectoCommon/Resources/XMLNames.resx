@@ -1422,4 +1422,7 @@
   <data name="VectoOutputMultistage" xml:space="preserve">
     <value>VectoOutputMultistage</value>
   </data>
+  <data name="Bus_PrimaryVehicle" xml:space="preserve">
+    <value>PrimaryVehicle</value>
+  </data>
 </root>

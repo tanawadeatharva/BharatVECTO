@@ -94,7 +94,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 			_primaryInputData = inputData;
 		}
 
-		public IDeclarationJobInputData JobData
+		public virtual IDeclarationJobInputData JobData
 		{
 			get
 			{
