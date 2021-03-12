@@ -186,7 +186,7 @@ namespace TUGraz.VectoCore.OutputData
 					Fields.E_BusAux_PS_corr, Fields.E_BusAux_ES_mech_corr,
 					Fields.E_BusAux_HVAC_Mech, Fields.E_BusAux_HVAC_El,
 					Fields.E_BusAux_AuxHeater,
-					Fields.E_WHR_EL, Fields.E_WHR_MECH, Fields.E_AUX_ESS_MECH, Fields.E_ICE_START, Fields.NUM_ICE_STARTS, Fields.ACC,
+					Fields.E_WHR_EL, Fields.E_WHR_MECH, Fields.E_ICE_START, Fields.NUM_ICE_STARTS, Fields.ACC,
 					Fields.ACC_POS, Fields.ACC_NEG, Fields.ACC_TIMESHARE, Fields.DEC_TIMESHARE, Fields.CRUISE_TIMESHARE,
 					Fields.MAX_SPEED, Fields.MAX_ACCELERATION, Fields.MAX_DECELERATION, Fields.AVG_ENGINE_SPEED,
 					Fields.MAX_ENGINE_SPEED, Fields.NUM_GEARSHIFTS, Fields.STOP_TIMESHARE, Fields.ICE_FULL_LOAD_TIME_SHARE, Fields.ICE_OFF_TIME_SHARE,
@@ -428,8 +428,8 @@ namespace TUGraz.VectoCore.OutputData
 
 				row[FcCol(Fields.FCESS_H_CORR, suffix)] = fuelConsumption.FC_ESS_CORR_H?.ConvertToGrammPerHour();
 				row[FcCol(Fields.FC_BusAux_PS_CORR_H, suffix)] = fuelConsumption.FC_BusAux_PS_CORR_H?.ConvertToGrammPerHour();
-				row[FcCol(Fields.FC_BusAux_ES_CORR_H, suffix)] = fuelConsumption.FC_BusAux_ES_CORR_H;
-				row[FcCol(Fields.FCWHR_H_CORR, suffix)] = fuelConsumption.FC_WHR_CORR_H;
+				row[FcCol(Fields.FC_BusAux_ES_CORR_H, suffix)] = fuelConsumption.FC_BusAux_ES_CORR_H?.ConvertToGrammPerHour();
+				row[FcCol(Fields.FCWHR_H_CORR, suffix)] = fuelConsumption.FC_WHR_CORR_H?.ConvertToGrammPerHour();
 				row[FcCol(Fields.FC_AUXHTR_H, suffix)] = fuelConsumption.FC_AUXHTR_H?.ConvertToGrammPerHour();
 				row[FcCol(Fields.FC_AUXHTR_H_CORR, suffix)] = fuelConsumption.FC_AUXHTR_H_CORR?.ConvertToGrammPerHour();
 
@@ -654,7 +654,6 @@ namespace TUGraz.VectoCore.OutputData
 					.ConvertToKiloWattHour();
 			}
 
-			row[Fields.E_AUX_ESS_MECH] = modData.WorkAuxiliariesDuringEngineStop().ConvertToKiloWattHour();
 			row[Fields.E_ICE_START] = modData.WorkEngineStart().ConvertToKiloWattHour();
 
 			foreach (var em in runData.ElectricMachinesData) {
@@ -1075,8 +1074,6 @@ namespace TUGraz.VectoCore.OutputData
 
 			public const string CD_x_A = "CdxA [m²]";
 
-			//public const string ROLLING_RESISTANCE_COEFFICIENT = "weighed RRC [-]";
-
 			public const string R_DYN = "r_dyn [m]";
 
 			public const string CARGO_VOLUME = "Cargo Volume [m³]";
@@ -1091,8 +1088,7 @@ namespace TUGraz.VectoCore.OutputData
 			public const string FCNCVC_KM = "FC-NCVc{0} [g/km]";
 			public const string FCWHTCC_H = "FC-WHTCc{0} [g/h]";
 			public const string FCWHTCC_KM = "FC-WHTCc{0} [g/km]";
-			//public const string FCAAUX_H = "FC-AAUX{0} [g/h]";
-			//public const string FCAAUX_KM = "FC-AAUX{0} [g/km]";
+			
 			public const string FCESS_H = "FC-ESS{0} [g/h]";
 			public const string FCESS_KM = "FC-ESS{0} [g/km]";
 			public const string FCESS_H_CORR = "FC-ESS_Corr{0} [g/h]";
@@ -1135,7 +1131,6 @@ namespace TUGraz.VectoCore.OutputData
 
 			public const string E_AUX_EL_HV = "E_aux_el(HV) [kWh]";
 
-			public const string E_AUX_ESS_MECH = "E_aux_ess_mech [kWh]";
 			public const string E_ICE_START = "E_ice_start [kWh]";
 			public const string NUM_ICE_STARTS = "ice_starts [-]";
 			public const string K_ENGLINE = "k_engline{0} [g/kWh]";

@@ -153,7 +153,6 @@ namespace TUGraz.VectoCore.OutputData
 
 	public interface ICorrectedModalData
 	{
-		WattSecond WorkESS { get; }
 		WattSecond WorkWHREl { get;  }
 		WattSecond WorkWHRElMech { get;  }
 		WattSecond WorkWHRMech { get;  }
@@ -390,11 +389,6 @@ namespace TUGraz.VectoCore.OutputData
 		public static WattSecond TotalEngineWorkNegative(this IModalDataContainer data)
 		{
 			return data.TimeIntegral<WattSecond>(ModalResultField.P_ice_fcmap, x => x < 0);
-		}
-
-		public static WattSecond WorkAuxiliariesDuringEngineStop(this IModalDataContainer data)
-		{
-			return data.TimeIntegral<WattSecond>(ModalResultField.P_aux_ESS_mech_ice_off);
 		}
 
 		public static WattSecond WorkEngineStart(this IModalDataContainer data)
