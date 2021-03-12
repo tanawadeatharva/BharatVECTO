@@ -822,9 +822,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 						eval.Add(firstgear);
 						return;
 					} else {
-					eval.Add(ResponseEmOff);
-					return;
-				}
+						eval.Add(ResponseEmOff);
+						return;
+					}
 				}
 				
 				var nextGear = !DataBus.GearboxInfo.GearEngaged(absTime)
@@ -833,6 +833,12 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 						? DataBus.GearboxInfo.Gear
 						: Controller.ShiftStrategy.NextGear);
 				var disengaged = nextGear.Gear == 0;
+				//if (!disengaged && outAngularVelocity.IsEqual(0)) {
+				//	var stop = ResponseEmOff;
+				//	stop.Gear = new GearshiftPosition(0);
+				//	eval.Add(stop);
+				//	return;
+				//}
 				var currentGear = nextGear;
 				var tmp = new HybridStrategyResponse() {
 					CombustionEngineOn = DataBus.EngineInfo.EngineOn, // AllowICEOff(absTime), 
@@ -859,11 +865,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 						eval.Add(downshift);
 						return;
 					}
-					do {
-						nextGear = GearList.Predecessor(nextGear);
-						firstResponse = RequestDryRun(absTime, dt, outTorque, outAngularVelocity, nextGear, tmp);
-					} while (GearList.HasPredecessor(nextGear) && firstResponse == null);
-				}
+                    do {
+                        nextGear = GearList.Predecessor(nextGear);
+                        firstResponse = RequestDryRun(absTime, dt, outTorque, outAngularVelocity, nextGear, tmp);
+                    } while (GearList.HasPredecessor(nextGear) && firstResponse == null);
+                }
 
 				if (DataBus.GearboxInfo.GearboxType.AutomaticTransmission() && firstResponse == null && nextGear.Equals(GearList.First())) {
 					var downshift = ResponseEmOff;
@@ -877,8 +883,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 					CalcualteCosts(firstResponse, dt, firstEntry, AllowICEOff(absTime), dryRun);
 					var minimumShiftTimePassed = (DataBus.GearboxInfo.LastShift + ModelData.GearshiftParameters.TimeBetweenGearshifts).IsSmallerOrEqual(absTime);
 					if (DataBus.GearboxInfo.GearEngaged(absTime) && !vehiclespeedBelowThreshold) {
-						if ((firstEntry.IgnoreReason.EngineSpeedBelowDownshift() && firstEntry.IgnoreReason.EngineTorqueOK())||
+						if ((firstEntry.IgnoreReason.EngineSpeedBelowDownshift() && !firstEntry.IgnoreReason.EngineTorqueDemandTooHigh())||
 							firstEntry.IgnoreReason.EngineSpeedTooLow()) {
+							// ICE torque below FLD is OK as EM may regenerate and shift ICE operating point on drag line
+							// for negative torques the shift line is vertical anyway ;-)
 							var best = FindBestGearForBraking(nextGear, firstResponse);
 							if (!best.Equals(nextGear)) {
 								// downshift required!
