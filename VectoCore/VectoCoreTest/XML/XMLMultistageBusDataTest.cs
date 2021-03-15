@@ -105,10 +105,13 @@ namespace TUGraz.VectoCore.Tests.XML
 		{
 			TestEngineData(vehicleComponents.EngineInputData);
 			TestTransmissionData(vehicleComponents.GearboxInputData);
+			TestTorqueConverterData(vehicleComponents.TorqueConverterInputData);
+			TestAngledriveData(vehicleComponents.AngledriveInputData);
 			TestAxelgearData(vehicleComponents.AxleGearInputData);
 			TestAxelWheelsData(vehicleComponents.AxleWheels);
 			TestAuxiliarieData(vehicleComponents.BusAuxiliaries);
 		}
+		
 		#region Components Data Tests
 
 		#region Engine Data Test
@@ -169,6 +172,7 @@ namespace TUGraz.VectoCore.Tests.XML
 			Assert.AreEqual("Generic Gearbox Manufacturer", transmissionData.Manufacturer);
 			Assert.AreEqual("Generic 40t Long Haul Truck Gearbox", transmissionData.Model);
 			Assert.AreEqual(CertificationMethod.StandardValues, transmissionData.CertificationMethod);
+			Assert.AreEqual("Trans-5464sdf6sdf555", transmissionData.CertificationNumber);
 			Assert.AreEqual(DateTime.Parse("2017-01-11T11:00:00Z").ToUniversalTime(), transmissionData.Date);
 			Assert.AreEqual("3.0.1", transmissionData.AppVersion);
 			Assert.AreEqual(GearboxType.AMT, transmissionData.Type);
@@ -210,12 +214,57 @@ namespace TUGraz.VectoCore.Tests.XML
 
 		#endregion
 
+		#region Torque Converter Data Test
+
+		private void TestTorqueConverterData(ITorqueConverterDeclarationInputData torqueConvData)
+		{
+			Assert.AreEqual("Generic Torque Converter", torqueConvData.Manufacturer);
+			Assert.AreEqual("Generic Torque Converter Model", torqueConvData.Model);
+			Assert.AreEqual(CertificationMethod.StandardValues, torqueConvData.CertificationMethod);
+			Assert.AreEqual("Torq-4546565455", torqueConvData.CertificationNumber);
+			Assert.AreEqual(DateTime.Parse("2018-01-12T12:00:00Z").ToUniversalTime(), torqueConvData.Date);
+			Assert.AreEqual("3.0.3", torqueConvData.AppVersion);
+
+			Assert.AreEqual(3, torqueConvData.TCData.Rows.Count);
+			var rowIndex = 0;
+			CheckTorqueConvertCharacteristics("0.0000", "1.00", "300.00", ref rowIndex, torqueConvData.TCData);
+			CheckTorqueConvertCharacteristics("0.5000", "1.00", "200.00", ref rowIndex, torqueConvData.TCData);
+			CheckTorqueConvertCharacteristics("0.9000", "0.90", "200.00", ref rowIndex, torqueConvData.TCData);
+		}
+
+		private void CheckTorqueConvertCharacteristics(string speedRatio, string torqueRation, string inputTorque,
+			ref int rowIndex, TableData tableData)
+		{
+			Assert.AreEqual(speedRatio, tableData.Rows[rowIndex][0]);
+			Assert.AreEqual(torqueRation, tableData.Rows[rowIndex][1]);
+			Assert.AreEqual(inputTorque, tableData.Rows[rowIndex][2]);
+			rowIndex++;
+		}
+
+		#endregion
+
+		#region Angledrive Data Test
+
+		private void TestAngledriveData(IAngledriveInputData angledriveData)
+		{
+			Assert.AreEqual("Generic Angledrive", angledriveData.Manufacturer);
+			Assert.AreEqual("Generic Angledrive Model", angledriveData.Model);
+			Assert.AreEqual(CertificationMethod.StandardValues, angledriveData.CertificationMethod);
+			Assert.AreEqual("ANG-Z64665456654", angledriveData.CertificationNumber);
+			Assert.AreEqual(DateTime.Parse("2019-01-12T12:00:00Z").ToUniversalTime(), angledriveData.Date);
+			Assert.AreEqual("3.2.3", angledriveData.AppVersion);
+			Assert.AreEqual(20, angledriveData.Ratio);
+		}
+
+		#endregion
+
 		#region Axelgear Test
 		private void TestAxelgearData(IAxleGearInputData axelgearData)
 		{
 			Assert.AreEqual("Generic Gearbox Manufacturer", axelgearData.Manufacturer);
 			Assert.AreEqual("Generic 40t Long Haul Truck AxleGear", axelgearData.Model);
 			Assert.AreEqual(CertificationMethod.StandardValues, axelgearData.CertificationMethod);
+			Assert.AreEqual("AX-6654888s5f4", axelgearData.CertificationNumber);
 			Assert.AreEqual(DateTime.Parse("2017-01-11T11:00:00Z").ToUniversalTime(), axelgearData.Date);
 			Assert.AreEqual("3.0.1", axelgearData.AppVersion);
 			Assert.AreEqual(AxleLineType.SinglePortalAxle, axelgearData.LineType);
