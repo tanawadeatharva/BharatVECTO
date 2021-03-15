@@ -216,7 +216,7 @@ namespace TUGraz.VectoCore.OutputData
 		public WattSecond EnergyAuxICEOffStandstill { get; set; }
 		public WattSecond EnergyAuxICEOnStandstill { get; set; }
 		public Watt AvgAuxPowerICEOnStandstill {
-			get { return EnergyAuxICEOnStandstill / ICEOffTimeStandstill; }
+			get { return ICEOffTimeStandstill.IsEqual(0) ? 0.SI<Watt>() : EnergyAuxICEOnStandstill / ICEOffTimeStandstill; }
 		}
 
 
@@ -225,7 +225,7 @@ namespace TUGraz.VectoCore.OutputData
 		public WattSecond EnergyPowerICEOnDriving { get; set; }
 		public Watt AvgAuxPowerICEOnDriving
 		{
-			get { return EnergyPowerICEOnDriving / ICEOffTimeDriving; }
+			get { return ICEOffTimeDriving.IsEqual(0) ? 0.SI<Watt>() : EnergyPowerICEOnDriving / ICEOffTimeDriving; }
 		}
 
 		public WattSecond EnergyDCDCMissing { get; set; }
