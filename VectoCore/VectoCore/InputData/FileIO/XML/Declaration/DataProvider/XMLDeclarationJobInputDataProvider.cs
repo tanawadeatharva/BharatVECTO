@@ -140,4 +140,43 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		public IXMLJobDataReader Reader { protected get; set; }
 		public IXMLPrimaryVehicleBusInputData InputData { get; }
 	}
+
+
+	// ---------------------------------------------------------------------------------------
+
+	public class XMLDeclarationMultistagePrimaryVehicleBusJobInputDataProviderV01 : AbstractXMLResource,
+		IXMLPrimaryVehicleBusJobInputData
+	{
+		public static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_MULTISTAGE_BUS_VEHICLE_NAMESPACE_VO1;
+
+		public const string XSD_TYPE = "VehiclePIFType";
+
+		public static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
+
+		protected IVehicleDeclarationInputData _vehicle;
+
+		public XMLDeclarationMultistagePrimaryVehicleBusJobInputDataProviderV01(XmlNode node, IXMLPrimaryVehicleBusInputData inputProvider,
+			string fileName) : base(node, fileName)
+		{
+			InputData = inputProvider;
+		}
+		protected override XNamespace SchemaNamespace
+		{
+			get { return NAMESPACE_URI; }
+		}
+
+		public IVehicleDeclarationInputData Vehicle
+		{
+			get { return _vehicle ?? (_vehicle = Reader.CreateVehicle); }
+		}
+
+		protected override DataSourceType SourceType { get; }
+		public bool SavedInDeclarationMode { get; }
+		public string JobName { get; }
+		public string ShiftStrategy { get{ return null; } }
+		public IXMLJobDataReader Reader { protected get; set; }
+		public IXMLPrimaryVehicleBusInputData InputData { get; }
+	}
+
+
 }

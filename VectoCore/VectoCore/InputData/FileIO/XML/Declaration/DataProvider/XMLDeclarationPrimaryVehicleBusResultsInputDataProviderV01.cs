@@ -1,11 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.Linq;
-using Castle.Components.DictionaryAdapter.Xml;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Resources;
@@ -13,7 +9,6 @@ using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.InputData.FileIO.XML.Common;
 using TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Interfaces;
 using TUGraz.VectoCore.InputData.Impl;
-using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
@@ -95,5 +90,20 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 				FuelMode =  GetString(XMLNames.Report_Result_FuelMode, xmlNode)
 			};
 		}
+	}
+
+	// ---------------------------------------------------------------------------------------
+
+	public class XMLDeclarationMultistagePrimaryVehicleBusResultsInputDataProviderV01 :
+		XMLDeclarationPrimaryVehicleBusResultsInputDataProviderV01
+	{
+		public new static XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_MULTISTAGE_BUS_VEHICLE_NAMESPACE_VO1;
+
+		public new const string XSD_TYPE = "ResultsPrimaryVehicleType";
+
+		public new static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
+
+		public XMLDeclarationMultistagePrimaryVehicleBusResultsInputDataProviderV01(XmlNode resultsNode) 
+			: base(resultsNode) { }
 	}
 }

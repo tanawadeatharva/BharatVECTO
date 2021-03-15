@@ -146,4 +146,21 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 			return vehicle;
 		}
 	}
+
+
+	// ---------------------------------------------------------------------------------------
+
+
+	public class XMLJobDataMultistagePrimaryVehicleReaderV01 : XMLJobDataPrimaryVehicleReaderV01
+	{
+		public new static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_MULTISTAGE_BUS_VEHICLE_NAMESPACE_VO1;
+
+		public new const string XSD_TYPE = "VehiclePIFType";
+
+		public new static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
+
+		public XMLJobDataMultistagePrimaryVehicleReaderV01(IXMLPrimaryVehicleBusJobInputData busJobData,
+			XmlNode jobNode) : base(busJobData, jobNode) { }
+	}
+
 }

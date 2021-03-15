@@ -38,7 +38,9 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Factory
 		
 		IXMLDeclarationVehicleData CreatePrimaryVehicleData(
 			string version, IXMLPrimaryVehicleBusJobInputData busJobData, XmlNode xmlNode, string sourceFile);
-
+		
+		IXMLPrimaryVehicleBusInputData CreatePrimaryMultistageVehicleData(
+			string version, XmlNode xmlNode, string fileName);
 
 
 		IXMLVehicleComponentsDeclaration CreateComponentData(
