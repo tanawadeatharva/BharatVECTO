@@ -23,6 +23,7 @@ xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:DeclarationOutput:VehicleInterimFile
 				<TechnicalPermissibleMaximumLadenMass>4000</TechnicalPermissibleMaximumLadenMass>
 				<IdlingSpeed>600</IdlingSpeed>
 				<RetarderType>Transmission Output Retarder</RetarderType>
+				<RetarderRatio>1.000</RetarderRatio>
 				<AngledriveType>None</AngledriveType>
 				<ZeroEmissionVehicle>false</ZeroEmissionVehicle>
 				<ADAS xsi:type="v2.3:AdvancedDriverAssistantSystemsType">
@@ -33,7 +34,7 @@ xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:DeclarationOutput:VehicleInterimFile
 					<v2.3:APTEcoRollReleaseLockupClutch>false</v2.3:APTEcoRollReleaseLockupClutch>
 				</ADAS>
 				<TorqueLimits xmlns:tcl="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0" xsi:type="tcl:TorqueLimitsType">
-					<tcl:Entry gear="6" maxTorque="1800"/>			
+					<tcl:Entry gear="6" maxTorque="1800"/>
 					<tcl:Entry gear="1" maxTorque="2500"/>
 					<tcl:Entry gear="12" maxTorque="1900"/>
 				</TorqueLimits>
@@ -73,12 +74,13 @@ xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:DeclarationOutput:VehicleInterimFile
 								</Fuels>
 							</Mode>
 						</Data>
-					</Engine>					
+					</Engine>
 					<Transmission>
 						<Data xsi:type="TransmissionDataPIFType">
 							<Manufacturer>Generic Gearbox Manufacturer</Manufacturer>
 							<Model>Generic 40t Long Haul Truck Gearbox</Model>
 							<MainCertificationMethod>Standard values</MainCertificationMethod>
+							<CertificationNumber>Trans-5464sdf6sdf555</CertificationNumber>
 							<Date>2017-01-11T11:00:00Z</Date>
 							<AppVersion>3.0.1</AppVersion>
 							<TransmissionType>AMT</TransmissionType>
@@ -135,11 +137,38 @@ xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:DeclarationOutput:VehicleInterimFile
 							</Gears>
 						</Data>
 					</Transmission>
+					<TorqueConverter>
+						<Data xsi:type="vif:TorqueConverterDataPIFType">
+							<Manufacturer>Generic Torque Converter</Manufacturer>
+							<Model>Generic Torque Converter Model</Model>
+							<CertificationMethod>Standard values</CertificationMethod>
+							<CertificationNumber>Torq-4546565455</CertificationNumber>
+							<Date>2018-01-12T12:00:00Z</Date>
+							<AppVersion>3.0.3</AppVersion>
+							<Characteristics>
+								<Entry speedRatio="0.0000" torqueRatio="1.00" inputTorqueRef="300.00"/>
+								<Entry speedRatio="0.5000" torqueRatio="1.00" inputTorqueRef="200.00"/>
+								<Entry speedRatio="0.9000" torqueRatio="0.90" inputTorqueRef="200.00"/>
+							</Characteristics>
+						</Data>
+					</TorqueConverter>
+					<Angledrive>
+						<Data xsi:type="vif:AngledriveDataPIFType">
+							<Manufacturer>Generic Angledrive</Manufacturer>
+							<Model>Generic Angledrive Model</Model>
+							<CertificationMethod>Standard values</CertificationMethod>
+							<CertificationNumber>ANG-Z64665456654</CertificationNumber>
+							<Date>2019-01-12T12:00:00Z</Date>
+							<AppVersion>3.2.3</AppVersion>
+							<Ratio>20</Ratio>
+						</Data>
+					</Angledrive>
 					<Axlegear>
 						<Data xsi:type="AxlegearDataPIFType">
 							<Manufacturer>Generic Gearbox Manufacturer</Manufacturer>
 							<Model>Generic 40t Long Haul Truck AxleGear</Model>
 							<CertificationMethod>Standard values</CertificationMethod>
+							<CertificationNumber>AX-6654888s5f4</CertificationNumber>
 							<Date>2017-01-11T11:00:00Z</Date>
 							<AppVersion>3.0.1</AppVersion>
 							<LineType>Single portal axle</LineType>
