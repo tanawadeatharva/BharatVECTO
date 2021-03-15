@@ -912,11 +912,10 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 	}
 
 
-	// ---------------------------------------------------------------------------------------
-
-	public class XMLDeclarationPrimaryVehicleBusDataProviderV01 : AbstractCommonComponentType, IXMLDeclarationVehicleData
+	public class XMLDeclarationMultistagePrimaryVehicleBusDataProviderV01 : AbstractCommonComponentType, IXMLDeclarationVehicleData
 	{
-		public static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_PRIMARY_BUS_VEHICLE_URI_V01;
+
+		public static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_MULTISTAGE_BUS_VEHICLE_NAMESPACE_VO1;
 
 		public const string XSD_TYPE = "VehiclePIFType";
 
@@ -927,9 +926,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		private IAdvancedDriverAssistantSystemDeclarationInputData _adas;
 		private XmlElement _componentNode;
 		private IVehicleComponentsDeclaration _components;
-
-
-		public XMLDeclarationPrimaryVehicleBusDataProviderV01(
+		
+		public XMLDeclarationMultistagePrimaryVehicleBusDataProviderV01(
 			IXMLPrimaryVehicleBusJobInputData busJobData, XmlNode xmlNode, string sourceFile)
 			: base(xmlNode, sourceFile)
 		{
@@ -1020,8 +1018,10 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 		public XmlElement ComponentNode
 		{
-			get {
-				if (ExemptedVehicle) {
+			get
+			{
+				if (ExemptedVehicle)
+				{
 					return null;
 				}
 
@@ -1039,7 +1039,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		}
 
 		public StateOfCompletion StateOfCompletion { get; }
-		
+
 
 		public IVehicleComponentsDeclaration Components
 		{
@@ -1103,10 +1103,13 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		{
 			var torqueLimits = new List<ITorqueLimitInputData>();
 			var limits = GetNodes(new[] { XMLNames.Vehicle_TorqueLimits, XMLNames.Vehicle_TorqueLimits_Entry });
-			foreach (XmlNode current in limits) {
-				if (current.Attributes != null) {
+			foreach (XmlNode current in limits)
+			{
+				if (current.Attributes != null)
+				{
 					torqueLimits.Add(
-						new TorqueLimitInputData() {
+						new TorqueLimitInputData()
+						{
 							Gear = GetAttribute(current, XMLNames.Vehicle_TorqueLimits_Entry_Gear_Attr).ToInt(),
 							MaxTorque = GetAttribute(current, XMLNames.Vehicle_TorqueLimits_Entry_MaxTorque_Attr)
 								.ToDouble().SI<NewtonMeter>()
@@ -1116,27 +1119,6 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 			return torqueLimits;
 		}
-	}
-
-	// ---------------------------------------------------------------------------------------
-
-	public class XMLDeclarationMultistagePrimaryVehicleBusDataProviderV01 : XMLDeclarationPrimaryVehicleBusDataProviderV01
-	{
-		public new static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_MULTISTAGE_BUS_VEHICLE_NAMESPACE_VO1;
-
-		public new const string XSD_TYPE = "VehiclePIFType";
-
-		public new static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
-
-		public XMLDeclarationMultistagePrimaryVehicleBusDataProviderV01(IXMLPrimaryVehicleBusJobInputData busJobData,
-			XmlNode xmlNode, string sourceFile)
-			: base(busJobData, xmlNode, sourceFile) { }
-		
-		protected override XNamespace SchemaNamespace
-		{
-			get { return NAMESPACE_URI; }
-		}
-		protected override DataSourceType SourceType { get; }
 	}
 
 

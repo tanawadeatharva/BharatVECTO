@@ -25,8 +25,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration
 
 	public interface IXMLMultistageJobReader
 	{
-        IPrimaryVehicleInformationInputDataProvider PrimaryVehicle { get; }
+		IPrimaryVehicleInformationInputDataProvider PrimaryVehicle { get; }
 
-        IList<IManufacturingStageInputData> ManufacturingStages { get; }
-    }
+		IList<IManufacturingStageInputData> ManufacturingStages { get; }
+	}
 }

@@ -94,19 +94,17 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		}
 	}
 
-
 	// ---------------------------------------------------------------------------------------
 
-	public class XMLDeclarationPrimaryVehicleBusAngledriveDataProviderV01 : XMLDeclarationAngledriveDataProviderV10
+	public class XMLDeclarationMultistagePrimaryVehicleBusAngledriveDataProviderV01 : XMLDeclarationAngledriveDataProviderV10
 	{
-		public new static XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_PRIMARY_BUS_VEHICLE_URI_V01;
+		public new static XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_MULTISTAGE_BUS_VEHICLE_NAMESPACE_VO1;
 
 		public new const string XSD_TYPE = "AngledriveDataPIFType";
 
 		public new static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
-
-
-		public XMLDeclarationPrimaryVehicleBusAngledriveDataProviderV01(
+		
+		public XMLDeclarationMultistagePrimaryVehicleBusAngledriveDataProviderV01(
 			IXMLDeclarationVehicleData vehicle, XmlNode componentNode, string sourceFile)
 			: base(vehicle, componentNode, sourceFile) { }
 

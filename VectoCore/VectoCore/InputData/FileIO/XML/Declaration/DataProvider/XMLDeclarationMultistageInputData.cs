@@ -23,11 +23,16 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		public static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
 
 		protected IDeclarationMultistageJobInputData JobData;
+		protected readonly XmlDocument Document;
 
-
-		public XMLDeclarationInputDataProviderMultistageV01(XmlDocument xmlDoc, string fileName) : base(xmlDoc.DocumentElement, fileName)
+		public XMLDeclarationInputDataProviderMultistageV01(XmlDocument xmlDoc, string fileName) 
+			: base(xmlDoc.DocumentElement, fileName)
 		{
+			Document = xmlDoc;
+			SourceType = DataSourceType.XMLFile;
 
+			var h = VectoHash.Load(xmlDoc);
+			XMLHash = h.ComputeXmlHash();
 		}
 
 		protected override XNamespace SchemaNamespace {
@@ -70,6 +75,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		public XMLDeclarationMultistageJobInputDataV01(XmlNode node, IXMLMultistageInputDataProvider inputProvider, string fileName) : base(node, fileName)
 		{
 			InputData = inputProvider;
+			SourceType = DataSourceType.XMLFile;
 		}
 
 		public IPrimaryVehicleInformationInputDataProvider PrimaryVehicle
@@ -102,10 +108,11 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		
 		public static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
 
+		private readonly XmlNode _signatureNode;
 		private IVehicleDeclarationInputData _vehicle;
 		private IApplicationInformation _applicationInformation;
 		private IResultsInputData _resultsInputData;
-		private XmlNode _signatureNode;
+
 
 		public XMLDeclarationMultistagePrimaryVehicleInputDataV01(XmlNode xmlNode, string fileName) 
 			: base(xmlNode, fileName)

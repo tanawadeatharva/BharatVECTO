@@ -25,10 +25,10 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Factory
 		IXMLDeclarationJobInputData CreateJobData(
 			string version, XmlNode node, IXMLDeclarationInputData inputProvider, string fileName);
 
-        IXMLDeclarationMultistageJobInputData CreateMultiStageJobData(
-            string version, XmlNode node, IXMLMultistageInputDataProvider inputProvider, string fileName);
+		IXMLDeclarationMultistageJobInputData CreateMultiStageJobData(
+			string version, XmlNode node, IXMLMultistageInputDataProvider inputProvider, string fileName);
 
-        IXMLPrimaryVehicleBusJobInputData CreatePrimaryVehicleJobData(
+		IXMLPrimaryVehicleBusJobInputData CreatePrimaryVehicleJobData(
 			string version, XmlNode node, IXMLPrimaryVehicleBusInputData inputProvider, string fileName);
 
 

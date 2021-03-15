@@ -105,16 +105,15 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 			return vehicle;
 		}
 	}
-
+	
 
 	// ---------------------------------------------------------------------------------------
-
-	public class XMLJobDataPrimaryVehicleReaderV01 : AbstractComponentReader, IXMLJobDataReader
+	
+	public class XMLJobDataMultistagePrimaryVehicleReaderV01 : AbstractComponentReader, IXMLJobDataReader
 	{
+		public static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_MULTISTAGE_BUS_VEHICLE_NAMESPACE_VO1;
 
-		public static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_PRIMARY_BUS_VEHICLE_URI_V01;
-
-		public const string XSD_TYPE = "PrimaryVehicleHeavyBusDataType";
+		public const string XSD_TYPE = "VehiclePIFType";
 
 		public static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
 
@@ -125,13 +124,13 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 		protected IVehicleDeclarationInputData _vehicle;
 
 		private readonly IXMLPrimaryVehicleBusJobInputData _primaryBusJobData;
-		
-		public XMLJobDataPrimaryVehicleReaderV01(IXMLPrimaryVehicleBusJobInputData busJobData, XmlNode jobNode) 
+
+		public XMLJobDataMultistagePrimaryVehicleReaderV01(IXMLPrimaryVehicleBusJobInputData busJobData, XmlNode jobNode)
 			: base(busJobData, jobNode)
 		{
 			_primaryBusJobData = busJobData;
 		}
-		
+
 		public IVehicleDeclarationInputData CreateVehicle
 		{
 			get { return _vehicle ?? (_vehicle = CreateComponent(XMLNames.Component_Vehicle, VehicleCreator)); }
@@ -142,25 +141,9 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 			var vehicle = Factory.CreatePrimaryVehicleData(version, _primaryBusJobData, vehicleNode, sourceFile);
 			vehicle.ComponentReader = GetReader(vehicle, vehicle.ComponentNode, Factory.CreateComponentReader);
 			vehicle.ADASReader = GetReader(vehicle, vehicle.ADASNode, Factory.CreateADASReader);
-			
+
 			return vehicle;
 		}
-	}
-
-
-	// ---------------------------------------------------------------------------------------
-
-
-	public class XMLJobDataMultistagePrimaryVehicleReaderV01 : XMLJobDataPrimaryVehicleReaderV01
-	{
-		public new static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_MULTISTAGE_BUS_VEHICLE_NAMESPACE_VO1;
-
-		public new const string XSD_TYPE = "VehiclePIFType";
-
-		public new static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
-
-		public XMLJobDataMultistagePrimaryVehicleReaderV01(IXMLPrimaryVehicleBusJobInputData busJobData,
-			XmlNode jobNode) : base(busJobData, jobNode) { }
 	}
 
 }

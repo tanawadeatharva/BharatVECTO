@@ -50,7 +50,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 			get { return _gearboxInputData ?? (_gearboxInputData = ComponentReader.GearboxInputData); }
 		}
 
-		
+
 		public virtual ITorqueConverterDeclarationInputData TorqueConverterInputData
 		{
 			get { return _torqueconverterInputData ?? (_torqueconverterInputData = ComponentReader.TorqueConverterInputData); }
@@ -128,7 +128,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 		public XMLDeclarationComponentsDataProviderV20(
 			IXMLDeclarationVehicleData vehicle, XmlNode componentNode, string sourceFile) : base(
-			vehicle, componentNode, sourceFile) { }
+			vehicle, componentNode, sourceFile)
+		{ }
 
 		protected override XNamespace SchemaNamespace
 		{
@@ -184,10 +185,14 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 		#region Overrides of XMLDeclarationComponentsDataProviderV10
 
-		public override IAxleGearInputData AxleGearInputData { get {
-			return null;
+		public override IAxleGearInputData AxleGearInputData
+		{
+			get
+			{
+				return null;
 				//throw new NotSupportedException("No Axlegeardata available"); 
-			} }
+			}
+		}
 
 		#endregion
 
@@ -219,7 +224,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		{
 			get { return null; }
 		}
-		
+
 		IAuxiliariesDeclarationInputData IVehicleComponentsDeclaration.AuxiliaryInputData
 		{
 			get { return null; }
@@ -237,11 +242,10 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 	// ---------------------------------------------------------------------------------------
 
 
-	public class XMLDeclarationComponentsPrimaryVehicleBusDataProviderV01 : XMLDeclarationComponentsDataProviderV10, IXMLVehicleComponentsDeclaration,
-		IRetarderInputData
-		
+	public class XMLDeclarationComponentsMultistagePrimaryVehicleBusDataProviderV01 : XMLDeclarationComponentsDataProviderV10,
+		IXMLVehicleComponentsDeclaration, IRetarderInputData
 	{
-		public new static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_PRIMARY_BUS_VEHICLE_URI_V01;
+		public new static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_MULTISTAGE_BUS_VEHICLE_NAMESPACE_VO1;
 
 		public new const string XSD_TYPE = "VehicleComponentsPIFType";
 
@@ -249,8 +253,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 		private IBusAuxiliariesDeclarationData _busAuxiliaries;
 
-
-		public XMLDeclarationComponentsPrimaryVehicleBusDataProviderV01(IXMLDeclarationVehicleData vehicle,
+		public XMLDeclarationComponentsMultistagePrimaryVehicleBusDataProviderV01(IXMLDeclarationVehicleData vehicle,
 			XmlNode componentNode, string sourceFile) : base(vehicle, componentNode, sourceFile) { }
 
 
@@ -263,7 +266,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		{
 			get { return null; }
 		}
-		
+
 		IAuxiliariesDeclarationInputData IVehicleComponentsDeclaration.AuxiliaryInputData
 		{
 			get { return null; }
@@ -281,34 +284,14 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 		#region IRetarderInputData Interface Implementation
 
-		public RetarderType Type { get{ return _vehicle.RetarderType; }}
-		public double Ratio { get { return _vehicle.RetarderRatio; }}
+		public RetarderType Type { get { return _vehicle.RetarderType; } }
+		public double Ratio { get { return _vehicle.RetarderRatio; } }
 		public TableData LossMap { get; }
 
 		#endregion
 	}
 
-	// ---------------------------------------------------------------------------------------
 
-	
-	public class XMLDeclarationComponentsMultistagePrimaryVehicleBusDataProviderV01 : XMLDeclarationComponentsPrimaryVehicleBusDataProviderV01
-	{
-		public new static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_MULTISTAGE_BUS_VEHICLE_NAMESPACE_VO1;
-		
-		public new const string XSD_TYPE = "VehicleComponentsPIFType";
-
-		public new static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
-
-		public XMLDeclarationComponentsMultistagePrimaryVehicleBusDataProviderV01(IXMLDeclarationVehicleData vehicle,
-			XmlNode componentNode, string sourceFile) : base(vehicle, componentNode, sourceFile) { }
-
-		protected override XNamespace SchemaNamespace
-		{
-			get { return NAMESPACE_URI; }
-		}
-	}
-
-	
 	// ---------------------------------------------------------------------------------------
 
 	public class XMLDeclarationInterimStageBusComponentsDataProviderV28 : XMLDeclarationComponentsDataProviderV10,
@@ -322,12 +305,11 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 
 		private IBusAuxiliariesDeclarationData _busAuxiliaries;
-		
+
 
 		public XMLDeclarationInterimStageBusComponentsDataProviderV28(IXMLDeclarationVehicleData vehicle,
-				XmlNode componentNode, string sourceFile)
-				: base(vehicle, componentNode, sourceFile) { }
-		
+				XmlNode componentNode, string sourceFile) : base(vehicle, componentNode, sourceFile) { }
+
 		public override IGearboxDeclarationInputData GearboxInputData
 		{
 			get { return null; }

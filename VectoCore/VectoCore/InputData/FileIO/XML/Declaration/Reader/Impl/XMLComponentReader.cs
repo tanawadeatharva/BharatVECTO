@@ -361,10 +361,11 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 		}
 	}
 
+	// ---------------------------------------------------------------------------------------
 
-	public class XMLPrimaryVehicleBusComponentReaderV01 : XMLComponentReaderV20
+	public class XMLMultistagePrimaryVehicleBusComponentReaderV01 : XMLComponentReaderV20
 	{
-		public new static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_PRIMARY_BUS_VEHICLE_URI_V01;
+		public new static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_MULTISTAGE_BUS_VEHICLE_NAMESPACE_VO1;
 
 		public new const string XSD_TYPE = "VehicleComponentsPIFType";
 		public new const string GEARBOX_READER_TYPE = "TransmissionDataPIFType";
@@ -373,9 +374,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 		public new static readonly string GEARBOX_READER_QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI, GEARBOX_READER_TYPE);
 
 		protected IBusAuxiliariesDeclarationData _busAuxInputData;
-
-
-		public XMLPrimaryVehicleBusComponentReaderV01(IXMLDeclarationVehicleData vehicle, XmlNode componentsNode)
+		
+		public XMLMultistagePrimaryVehicleBusComponentReaderV01(IXMLDeclarationVehicleData vehicle, XmlNode componentsNode)
 			: base(vehicle, componentsNode) { }
 
 		public override IGearboxDeclarationInputData GearboxInputData
@@ -385,22 +385,22 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 				return _gearboxInputData ?? (_gearboxInputData = CreateComponent(XMLNames.Component_Transmission, GearboxCreator));
 			}
 		}
-		
+
 		public override IRetarderInputData RetarderInputData
 		{
 			get { return null; }
 		}
-		
+
 		public override IAirdragDeclarationInputData AirdragInputData
 		{
 			get { return null; }
 		}
-		
+
 		public override IAuxiliariesDeclarationInputData AuxiliaryData
 		{
 			get { return null; }
 		}
-		
+
 		public override IBusAuxiliariesDeclarationData BusAuxiliariesInputData
 		{
 			get { return _busAuxInputData ?? (_busAuxInputData = CreateComponent(XMLNames.Component_Auxiliaries, BusAuxCreator)); }
@@ -410,22 +410,6 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 		{
 			return Factory.CreateBusAuxiliaires(version, Vehicle, componentNode, sourceFile);
 		}
-	}
-
-	// ---------------------------------------------------------------------------------------
-
-	public class XMLMultistagePrimaryVehicleBusComponentReaderV01 : XMLPrimaryVehicleBusComponentReaderV01
-	{
-		public new static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_MULTISTAGE_BUS_VEHICLE_NAMESPACE_VO1;
-
-		public new const string XSD_TYPE = "VehicleComponentsPIFType";
-		public new const string GEARBOX_READER_TYPE = "TransmissionDataPIFType";
-
-		public new static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
-		public new static readonly string GEARBOX_READER_QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI, GEARBOX_READER_TYPE);
-		
-		public XMLMultistagePrimaryVehicleBusComponentReaderV01(IXMLDeclarationVehicleData vehicle, XmlNode componentsNode) 
-			: base(vehicle, componentsNode) { }
 	}
 	
 

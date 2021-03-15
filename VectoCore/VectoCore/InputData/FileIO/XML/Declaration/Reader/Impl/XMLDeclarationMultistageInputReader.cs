@@ -100,22 +100,83 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 	// ---------------------------------------------------------------------------------------
 
 	
-	public class XMLMultistagePrimaryVehicleReaderV01 : XMLPrimaryVehicleBusInputReaderV01
+	public class XMLMultistagePrimaryVehicleReaderV01 : AbstractComponentReader, IXMLDeclarationPrimaryVehicleBusInputDataReader
 	{
-		public new static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_MULTISTAGE_BUS_VEHICLE_NAMESPACE_VO1;
 
-		public new const string XSD_TYPE = "PrimaryVehicleDataType";
+		public static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_MULTISTAGE_BUS_VEHICLE_NAMESPACE_VO1;
 
-		public new static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
+		public const string XSD_TYPE = "PrimaryVehicleDataType";
 
-		public XMLMultistagePrimaryVehicleReaderV01(IXMLPrimaryVehicleBusInputData inputData, XmlNode baseNode)
-			: base(inputData, baseNode) { }
+		public static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
 
-		public override IDeclarationJobInputData JobData
+
+		protected XmlNode JobNode;
+		protected IDeclarationJobInputData _jobData;
+		protected IXMLPrimaryVehicleBusInputData _primaryInputData;
+		protected IApplicationInformation _applicationInformation;
+		protected IResultsInputData _resultsInputData;
+
+		[Inject]
+		public IDeclarationInjectFactory Factory { protected get; set; }
+
+
+		public XMLMultistagePrimaryVehicleReaderV01(IXMLPrimaryVehicleBusInputData inputData, XmlNode baseNode) : base(inputData, baseNode)
+		{
+			JobNode = baseNode;
+			_primaryInputData = inputData;
+		}
+
+		public virtual IDeclarationJobInputData JobData
 		{
 			get
 			{
 				return _jobData ?? (_jobData = CreateComponent(XMLNames.Tag_Vehicle, JobCreator));
+			}
+		}
+
+
+		protected IDeclarationJobInputData JobCreator(string version, XmlNode node, string arg3)
+		{
+			var job = Factory.CreatePrimaryVehicleJobData(version, BaseNode, _primaryInputData,
+				(_primaryInputData as IXMLResource).DataSource.SourceFile);
+			job.Reader = Factory.CreatePrimaryVehicleJobReader(version, job, JobNode);
+			return job;
+		}
+
+
+		public IResultsInputData ResultsInputData
+		{
+			get
+			{
+				return _resultsInputData ??
+					   (_resultsInputData = CreateComponent(XMLNames.Report_Results, ResultsInputDataCreator));
+			}
+		}
+
+		protected IResultsInputData ResultsInputDataCreator(string version, XmlNode node, string arg3)
+		{
+			return Factory.CreateResultsInputDataReader(version, node);
+		}
+
+
+		public DigestData GetDigestData(XmlNode xmlNode)
+		{
+			return xmlNode == null ? null : new DigestData(xmlNode);
+		}
+
+
+		protected IApplicationInformation ApplicationCreator(string version, XmlNode node, string agr3)
+		{
+			return Factory.CreateApplicationInformationReader(version, node);
+		}
+
+
+		public IApplicationInformation ApplicationInformation
+		{
+			get
+			{
+				return _applicationInformation ??
+					  (_applicationInformation = CreateComponent(XMLNames.Tag_ApplicationInformation, ApplicationCreator));
 			}
 		}
 	}
