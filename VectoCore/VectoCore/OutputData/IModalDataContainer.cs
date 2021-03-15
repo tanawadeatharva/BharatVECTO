@@ -160,6 +160,7 @@ namespace TUGraz.VectoCore.OutputData
 		WattSecond WorkBusAuxPSCorr { get; }
 		WattSecond WorkBusAuxESMech { get; }
 		WattSecond WorkBusAuxCorr { get; }
+		WattSecond EnergyDCDCMissing { get; }
 		Joule AuxHeaterDemand { get; }
 
 		IFuelConsumptionCorrection FuelConsumptionCorrection(IFuelProperties fuel);

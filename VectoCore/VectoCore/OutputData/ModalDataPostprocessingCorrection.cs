@@ -38,13 +38,13 @@ namespace TUGraz.VectoCore.OutputData
 				IceOn = x.Field<bool>(ModalResultField.ICEOn.GetName())
 			}).Where(x => !x.v.IsEqual(0) && !x.IceOn).ToList();
 
-			r.ICEOffTimeStandstill = entriesAuxICEStandstill.Sum(x => x.dt);
-			r.EnergyAuxICEOffStandstill = entriesAuxICEStandstill.Sum(x => x.P_off * x.dt); 
-			r.EnergyAuxICEOnStandstill = entriesAuxICEStandstill.Sum(x => x.P_on * x.dt);
+			r.ICEOffTimeStandstill = entriesAuxICEStandstill.Sum(x => x.dt) ?? 0.SI<Second>();
+			r.EnergyAuxICEOffStandstill = entriesAuxICEStandstill.Sum(x => x.P_off * x.dt) ?? 0.SI<WattSecond>(); 
+			r.EnergyAuxICEOnStandstill = entriesAuxICEStandstill.Sum(x => x.P_on * x.dt) ?? 0.SI<WattSecond>();
 				
-			r.ICEOffTimeDriving = entriesAuxICEDriving.Sum(x => x.dt);
-			r.EnergyAuxICEOffDriving = entriesAuxICEDriving.Sum(x => x.P_off * x.dt);
-			r.EnergyPowerICEOnDriving = entriesAuxICEDriving.Sum(x => x.P_on * x.dt);
+			r.ICEOffTimeDriving = entriesAuxICEDriving.Sum(x => x.dt) ?? 0.SI<Second>();
+			r.EnergyAuxICEOffDriving = entriesAuxICEDriving.Sum(x => x.P_off * x.dt) ?? 0.SI<WattSecond>();
+			r.EnergyPowerICEOnDriving = entriesAuxICEDriving.Sum(x => x.P_on * x.dt) ?? 0.SI<WattSecond>();
 
 			
 			r.WorkWHREl = modData.TimeIntegral<WattSecond>(ModalResultField.P_WHR_el_corr);
@@ -74,6 +74,28 @@ namespace TUGraz.VectoCore.OutputData
 				0.SI<Joule>(),
 				(current, fuel) => current + modData.TotalFuelConsumption(ModalResultField.FCFinal, fuel) *
 					fuel.LowerHeatingValueVecto);
+
+			r.EnergyDCDCMissing = 0.SI<WattSecond>();
+			if (runData.BusAuxiliaries != null && runData.BusAuxiliaries.ElectricalUserInputsConfig.ConnectESToREESS) {
+				// either case C1, C2a, or C3a
+				var missingDCDCEnergy = modData.TimeIntegral<WattSecond>(ModalResultField.P_DCDC_missing);
+				if (runData.BusAuxiliaries.ElectricalUserInputsConfig.AlternatorType == AlternatorType.Smart) {
+					// case C3a
+					if (runData.ElectricMachinesData.Count != 1) {
+						throw new VectoException("exactly 1 electric machine is required. got {0} ({1})",
+							runData.ElectricMachinesData.Count,
+							string.Join(",", runData.ElectricMachinesData.Select(x => x.Item1.ToString())));
+					}
+					var emPos = runData.ElectricMachinesData.First().Item1;
+					var averageEmEfficiencyCharging = modData.ElectricMotorEfficiencyGenerate(emPos);
+					r.EnergyDCDCMissing = missingDCDCEnergy /
+										runData.BusAuxiliaries.ElectricalUserInputsConfig.DCDCEfficiency /
+										averageEmEfficiencyCharging;
+				} else {
+					// case C1, C2a
+					r.EnergyDCDCMissing = missingDCDCEnergy / DeclarationData.AlternaterEfficiency;
+				}
+			}
 
 			r.AuxHeaterDemand = modData.AuxHeaterDemandCalc == null
 				? 0.SI<Joule>()
@@ -108,6 +130,8 @@ namespace TUGraz.VectoCore.OutputData
 											essParams.UtilityFactorDriving;
 				f.FcESS_AuxDriving_ICEOff = fcIceOnAuxDriving * r.ICEOffTimeDriving *
 											(1 - essParams.UtilityFactorDriving);
+				f.FcESS_DCDCMissing =
+					r.EnergyDCDCMissing * f.EngineLineCorrectionFactor * essParams.UtilityFactorStandstill;
 
 				f.FcBusAuxPs = f.EngineLineCorrectionFactor * r.WorkBusAuxPSCorr;
 				f.FcBusAuxEs =  f.EngineLineCorrectionFactor * r.WorkBusAuxESMech;
@@ -204,6 +228,8 @@ namespace TUGraz.VectoCore.OutputData
 			get { return EnergyPowerICEOnDriving / ICEOffTimeDriving; }
 		}
 
+		public WattSecond EnergyDCDCMissing { get; set; }
+
 		#endregion
 	}
 
@@ -222,9 +248,11 @@ namespace TUGraz.VectoCore.OutputData
 		public Kilogram FcESS_AuxDriving_ICEOn { get; set; }
 		public Kilogram FcESS_AuxDriving_ICEOff { get; set; }
 
+		public Kilogram FcESS_DCDCMissing { get; set; }
+
 		public Kilogram FcESS =>
 			FcESS_EngineStart + FcESS_AuxStandstill_ICEOff + FcESS_AuxStandstill_ICEOn
-			+ FcESS_AuxDriving_ICEOn + FcESS_AuxDriving_ICEOff;
+			+ FcESS_AuxDriving_ICEOn + FcESS_AuxDriving_ICEOff + FcESS_DCDCMissing;
 
 		public Kilogram FcBusAuxPs { get; set; }
 		public Kilogram FcBusAuxEs { get; set; }
@@ -279,6 +307,7 @@ namespace TUGraz.VectoCore.OutputData
 		{
 			get { return FcFinal * Fuel.LowerHeatingValueVecto; }
 		}
+
 
 		#endregion
 	}
