@@ -57,7 +57,7 @@ Public Class HybridStrategyParamsForm
         _changed = False
 
 
-        NewEngine()
+        NewHybStrategyParams()
     End Sub
 
     'Set generic values for Declaration mode.
@@ -73,7 +73,7 @@ Public Class HybridStrategyParamsForm
 #Region "Toolbar"
 
     Private Sub ToolStripBtNew_Click(sender As Object, e As EventArgs) Handles ToolStripBtNew.Click
-        NewEngine()
+        NewHybStrategyParams()
     End Sub
 
     Private Sub ToolStripBtOpen_Click(sender As Object, e As EventArgs) Handles ToolStripBtOpen.Click
@@ -130,7 +130,7 @@ Public Class HybridStrategyParamsForm
 #End Region
 
     'Create new empty Engine file.
-    Private Sub NewEngine()
+    Private Sub NewHybStrategyParams()
 
         If ChangeCheckCancel() Then Exit Sub
 
@@ -177,7 +177,7 @@ Public Class HybridStrategyParamsForm
 
         tbEquivalenceFactorDischarge.Text = strategyParams.EquivalenceFactorDischarge.ToGUIFormat()
 
-        tbEquivalenceFactorDischarge.Text = strategyParams.EquivalenceFactorDischarge.ToGUIFormat()
+        tbEquivalenceFactorCharge.Text = strategyParams.EquivalenceFactorCharge.ToGUIFormat()
         tbMinSoC.Text = (strategyParams.MinSoC * 100).ToGUIFormat()
         tbMaxSoC.Text = (strategyParams.MaxSoC * 100).ToGUIFormat()
         tbTargetSoC.Text = (strategyParams.TargetSoC * 100).ToGUIFormat()
@@ -186,6 +186,7 @@ Public Class HybridStrategyParamsForm
         tbauxBufferTime.Text = strategyParams.AuxBufferTime.ToGUIFormat()
         tbMinICEOnTime.Text = strategyParams.MinimumICEOnTime.ToGUIFormat()
 
+        tbICEStartPenaltyFactor.Text = strategyParams.ICEStartPenaltyFactor.ToGUIFormat()
         DeclInit()
 
         REESSFileBrowser.UpdateHistory(file)
@@ -226,6 +227,7 @@ Public Class HybridStrategyParamsForm
         strategyParams.MinimumIceOnTime = tbMinICEOnTime.Text.ToDouble(0)
         strategyParams.AuxiliaryBufferTime = tbauxBufferTime.Text.ToDouble(0)
         strategyParams.AuxiliaryBufferChgTime = tbAuxBufferChargeTime.Text.ToDouble(0)
+        strategyParams.ICEStartPenaltyFactor = tbICEStartPenaltyFactor.Text.ToDouble()
 
         If Not strategyParams.SaveFile Then
             MsgBox("Cannot save to " & file, MsgBoxStyle.Critical)

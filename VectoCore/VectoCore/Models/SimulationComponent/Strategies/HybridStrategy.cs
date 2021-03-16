@@ -1775,6 +1775,18 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 				tmp.ICEStartPenalty1 = 0;
 				tmp.ICEStartPenalty2 = 0;
 			}
+
+			if (!DataBus.EngineCtl.CombustionEngineOn && !tmp.ICEOff) {
+				var engineRampUpEnergy = Formulas.InertiaPower(DataBus.EngineInfo.EngineSpeed, ModelData.EngineData.IdleSpeed,
+					ModelData.EngineData.Inertia, ModelData.EngineData.EngineStartTime) * ModelData.EngineData.EngineStartTime;
+				var avgRampUpSpeed = (ModelData.EngineData.IdleSpeed + DataBus.EngineInfo.EngineSpeed) / 2.0;
+				var engineDragEnergy =
+					VectoMath.Abs(ModelData.EngineData.FullLoadCurves[0].DragLoadStationaryTorque(avgRampUpSpeed)) *
+					avgRampUpSpeed * 0.5.SI<Second>();
+				tmp.RampUpPenalty = (engineRampUpEnergy + engineDragEnergy).Value() * StrategyParameters.ICEStartPenaltyFactor;
+			} else {
+				tmp.RampUpPenalty = 0;
+			}
 			if (!double.IsNaN(tmp.FuelCosts) && tmp.IgnoreReason == 0) {
 				tmp.IgnoreReason = HybridConfigurationIgnoreReason.Evaluated;
 			}
@@ -1851,25 +1863,25 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 
 			container[ModalResultField.MaxPropulsionTorqe] = CurrentState.MaxGbxTq ?? 0.SI<NewtonMeter>();
 
-			//if (CurrentState.Evaluations != null) {
-			//    container.SetDataValue(
-			//        "HybridStrategyEvaluation",
-			//        string.Join(
-			//            " | ", CurrentState.Evaluations.Select(
-			//                x => {
-			//                    var foo = string.Join(" ", x.Setting.MechanicalAssistPower.Select(e => $"{e.Key.GetName()} - {e.Value}"));
-			//                    var ice = "====";
-			//                    if (x.Response != null) {
-			//                        ice =
-			//                            $"{x.Response.Engine.TorqueOutDemand}, {x.Response.Engine.TotalTorqueDemand}, {x.Response.Engine.DynamicFullLoadTorque}";
-			//                    }
-			//                    return
-			//                        $"{x.U:F2}: {x.Score:F2}; G{x.Gear}; ({x.FuelCosts:F2} + {x.EquivalenceFactor:F2} * ({x.BatCosts:F2} + {x.ICEStartPenalty1:F2}) * {x.SoCPenalty:F2} + {x.ICEStartPenalty2:F2}) / {x.GearshiftPenalty:F2} = {x.Score:F2} ({foo} ICE: {ice}); {x.IgnoreReason.HumanReadable()}";
-			//                })
-			//            )
-			//        );
-			//}
-		}
+            if (CurrentState.Evaluations != null) {
+                container.SetDataValue(
+                    "HybridStrategyEvaluation",
+                    string.Join(
+                        " | ", CurrentState.Evaluations.Select(
+                            x => {
+                                var foo = string.Join(" ", x.Setting.MechanicalAssistPower.Select(e => $"{e.Key.GetName()} - {e.Value}"));
+                                var ice = "====";
+                                if (x.Response != null) {
+                                    ice =
+                                        $"{x.Response.Engine.TorqueOutDemand}, {x.Response.Engine.TotalTorqueDemand}, {x.Response.Engine.DynamicFullLoadTorque}";
+                                }
+                                return
+                                    $"{x.U:F2}: {x.Score:F2}; G{x.Gear}; ({x.FuelCosts:F2} + {x.EquivalenceFactor:F2} * ({x.BatCosts:F2} + {x.ICEStartPenalty1:F2}) * {x.SoCPenalty:F2} + {x.ICEStartPenalty2:F2} + {x.RampUpPenalty:F2}) / {x.GearshiftPenalty:F2} = {x.Score:F2} ({foo} ICE: {ice}); {x.IgnoreReason.HumanReadable()}";
+                            })
+                        )
+                    );
+            }
+        }
 
 		
 	}

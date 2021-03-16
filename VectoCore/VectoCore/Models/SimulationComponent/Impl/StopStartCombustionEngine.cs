@@ -143,7 +143,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl {
 						ModelData.Inertia, ModelData.EngineStartTime) * ModelData.EngineStartTime;
 					var avgRampUpSpeed = (ModelData.IdleSpeed + PreviousState.EngineSpeed) / 2.0;
 					var engineDragEnergy =
-						VectoMath.Abs(ModelData.FullLoadCurves[0].DragLoadStationaryPower(avgRampUpSpeed)) *
+						VectoMath.Abs(ModelData.FullLoadCurves[0].DragLoadStationaryTorque(avgRampUpSpeed)) *
 						avgRampUpSpeed * 0.5.SI<Second>();
 
 					container[ModalResultField.P_ice_start] =

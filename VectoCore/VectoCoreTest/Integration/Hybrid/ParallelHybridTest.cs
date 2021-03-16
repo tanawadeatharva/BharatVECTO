@@ -1273,6 +1273,7 @@ namespace TUGraz.VectoCore.Tests.Integration.Hybrid
 				AuxReserveTime = 5.SI<Second>(),
 				AuxReserveChargeTime = 2.SI<Second>(),
 				MinICEOnTime = 3.SI<Second>(), 
+				ICEStartPenaltyFactor = 0,
 				//MaxDrivetrainPower = maxDriveTrainPower ?? 1e12.SI<Watt>(),
 			};
 		}
