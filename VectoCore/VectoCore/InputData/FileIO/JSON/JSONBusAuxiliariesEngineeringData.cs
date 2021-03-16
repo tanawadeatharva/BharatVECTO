@@ -117,6 +117,14 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			}
 		}
 
+		public double ElectricStorageEfficiency
+		{
+			get
+			{
+				return _electric["BatteryEfficiency"] == null ? 1 : _electric.GetEx<double>("BatteryEfficiency");
+			}
+		}
+
 		#endregion
 
 		#region Implementation of IBusAuxHVACData

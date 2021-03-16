@@ -67,11 +67,14 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.Electric
 
 	public class SimpleBattery : StatefulVectoSimulationComponent<SimpleBattery.State>, ISimpleBattery
 	{
-		public SimpleBattery(IVehicleContainer container, WattSecond capacity, double soc = 0.9) : base(container)
+		public SimpleBattery(IVehicleContainer container, WattSecond capacity, double storageEfficiency, double soc = 0.9) : base(container)
 		{
 			Capacity = capacity;
 			SOC = soc;
+			StorageEfficiency = storageEfficiency;
 		}
+
+		public double StorageEfficiency { get; set; }
 
 		#region Implementation of ISimpleBattery
 
@@ -84,10 +87,12 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.Electric
 
 		public void ConsumeEnergy(WattSecond energy, bool dryRun)
 		{
+			var batEnergy = energy * (energy.IsSmaller(0) ? StorageEfficiency : 1);
+
 			if (!dryRun) {
-				CurrentState.ConsumedEnergy = energy;
+				CurrentState.ConsumedEnergy = batEnergy;
 			}
-			var tmpSoc = SOC + energy / Capacity;
+			var tmpSoc = SOC + batEnergy / Capacity;
 			if (tmpSoc > 1) {
 				Log.Warn("SOC would exceed max!");
 				
@@ -102,7 +107,7 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.Electric
 
 		public WattSecond MaxChargeEnergy()
 		{
-			return -(SOC - 1) * Capacity;
+			return -(SOC - 1) * Capacity / StorageEfficiency;
 		}
 
 		public WattSecond MaxDischargeEnergy()

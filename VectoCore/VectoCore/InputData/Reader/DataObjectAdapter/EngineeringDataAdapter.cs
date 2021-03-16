@@ -521,7 +521,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 				//InputData = auxInputData.BusAuxiliariesData,
 				ElectricalUserInputsConfig = new ElectricsUserInputsConfig() {
 					PowerNetVoltage = Constants.BusAuxiliaries.ElectricSystem.PowernetVoltage,
-					StoredEnergyEfficiency = Constants.BusAuxiliaries.ElectricSystem.StoredEnergyEfficiency,
+					//StoredEnergyEfficiency = Constants.BusAuxiliaries.ElectricSystem.StoredEnergyEfficiency,
 					ResultCardIdle = new DummyResultCard(),
 					ResultCardOverrun = new DummyResultCard(),
 					ResultCardTraction = new DummyResultCard(),
@@ -539,6 +539,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 					DCDCEfficiency = busAux.ElectricSystem.DCDCConverterEfficiency.LimitTo(0, 1),
 					MaxAlternatorPower = busAux.ElectricSystem.MaxAlternatorPower,
 					ElectricStorageCapacity = busAux.ElectricSystem.ElectricStorageCapacity ?? 0.SI<WattSecond>(),
+					StoredEnergyEfficiency = busAux.ElectricSystem.ElectricStorageEfficiency,
 					ElectricalConsumers = GetElectricConsumers(busAux.ElectricSystem)
 				},
 				PneumaticAuxillariesConfig = new PneumaticsConsumersDemand() {

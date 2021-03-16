@@ -226,6 +226,8 @@ Public Class BusAuxEngineeringParams
     End Get
     End Property
 
+    Public Property ElectricStorageEfficiency As Double Implements IBusAuxElectricSystemEngineeringData.ElectricStorageEfficiency
+
     Public ReadOnly Property IBusAuxElectricSystemEngineeringData_AlternatorType As AlternatorType Implements IBusAuxElectricSystemEngineeringData.AlternatorType
     get
         Return AlternatorType

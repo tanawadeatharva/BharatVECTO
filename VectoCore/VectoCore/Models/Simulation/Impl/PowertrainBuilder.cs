@@ -454,7 +454,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 				if (container.BusAux is BusAuxiliariesAdapter busAux) {
 					var auxCfg = data.BusAuxiliaries;
 					var electricStorage = auxCfg.ElectricalUserInputsConfig.AlternatorType == AlternatorType.Smart
-						? new SimpleBattery(container, auxCfg.ElectricalUserInputsConfig.ElectricStorageCapacity)
+						? new SimpleBattery(container, auxCfg.ElectricalUserInputsConfig.ElectricStorageCapacity, auxCfg.ElectricalUserInputsConfig.StoredEnergyEfficiency)
 						: (ISimpleBattery)new NoBattery(container);
 					busAux.ElectricStorage = electricStorage;
 					if (data.BusAuxiliaries.ElectricalUserInputsConfig.ConnectESToREESS) {
@@ -727,7 +727,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 				if (container.BusAux is BusAuxiliariesAdapter busAux) {
 					var auxCfg = data.BusAuxiliaries;
 					var electricStorage = auxCfg.ElectricalUserInputsConfig.AlternatorType == AlternatorType.Smart
-						? new SimpleBattery(container, auxCfg.ElectricalUserInputsConfig.ElectricStorageCapacity)
+						? new SimpleBattery(container, auxCfg.ElectricalUserInputsConfig.ElectricStorageCapacity, auxCfg.ElectricalUserInputsConfig.StoredEnergyEfficiency)
 						: (ISimpleBattery)new NoBattery(container);
 					busAux.ElectricStorage = electricStorage;
 					if (data.BusAuxiliaries.ElectricalUserInputsConfig.ConnectESToREESS) {
@@ -841,7 +841,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			var busAux = new BusAuxiliariesAdapter(container, data.BusAuxiliaries, conventionalAux);
 			var auxCfg = data.BusAuxiliaries;
 			var electricStorage = auxCfg.ElectricalUserInputsConfig.AlternatorType == AlternatorType.Smart
-				? new SimpleBattery(container, auxCfg.ElectricalUserInputsConfig.ElectricStorageCapacity)
+				? new SimpleBattery(container, auxCfg.ElectricalUserInputsConfig.ElectricStorageCapacity, auxCfg.ElectricalUserInputsConfig.StoredEnergyEfficiency)
 				: (ISimpleBattery)new NoBattery(container);
 			busAux.ElectricStorage = electricStorage;
 			return busAux;

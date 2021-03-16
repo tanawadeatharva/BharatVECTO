@@ -186,6 +186,7 @@ Public Class BusAuxiliariesEngParametersForm
         cbAlternatorTechnology.SelectedValue  = inputData.ElectricSystem.AlternatorType
         tbMaxAlternatorPower.Text = inputData.ElectricSystem.MaxAlternatorPower.ToGUIFormat()
         tbElectricStorageCapacity.Text = inputData.ElectricSystem.ElectricStorageCapacity.ConvertToWattHour().Value.ToGUIFormat()
+        tbBatEfficiency.Text = inputData.ElectricSystem.ElectricStorageEfficiency.ToGuiFormat()
 
         tbCompressorMap.Text = GetRelativePath(inputData.PneumaticSystem.CompressorMap.Source, basePath)
         tbAverageAirDemand.Text = inputData.PneumaticSystem.AverageAirConsumed.ToGUIFormat()
@@ -240,6 +241,7 @@ Public Class BusAuxiliariesEngParametersForm
         busAuxParams.AlternatorType = CType(cbAlternatorTechnology.SelectedValue, AlternatorType)
         busAuxParams.MaxAlternatorPower = tbMaxAlternatorPower.Text.ToDouble(0)
         busAuxParams.ElectricStorageCapacity = tbElectricStorageCapacity.Text.ToDouble(0)
+        busAuxParams.ElectricStorageEfficiency = tbBatEfficiency.Text.ToDouble(1)
         busAuxParams.DCDCEfficiency = tbDCDCEff.Text.ToDouble(0)
         busAuxParams.SupplyESFromHEVREESS = cbES_HEVREESS.Checked
 
