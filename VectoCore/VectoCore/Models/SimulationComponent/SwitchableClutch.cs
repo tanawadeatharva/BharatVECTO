@@ -104,7 +104,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent
 
 			if (!dryRun)
 			{
-				CurrentState.SetState(outTorque, retVal.Engine.EngineSpeed, outTorque, outAngularVelocity);
+				CurrentState.SetState(outTorque, outAngularVelocity, outTorque, outAngularVelocity);
 				var avgInAngularVelocity = (PreviousState.InAngularVelocity + CurrentState.InAngularVelocity) / 2;
 				var avgOutAngularVelocity = (PreviousState.OutAngularVelocity + CurrentState.OutAngularVelocity) / 2;
 				var clutchLoss = outTorque * (avgInAngularVelocity - avgOutAngularVelocity);
