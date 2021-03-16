@@ -448,18 +448,18 @@ namespace TUGraz.VectoCore.OutputData
 				if (fuel.FuelDensity != null) {
 					
 					var fcVolumePerMeter = fuelConsumption.FuelVolumePerMeter;
-					row[FcCol(Fields.FCFINAL_LITERPER100KM, suffix)] = fcVolumePerMeter.ConvertToLiterPer100Kilometer();
+					row[FcCol(Fields.FCFINAL_LITERPER100KM, suffix)] = fcVolumePerMeter?.ConvertToLiterPer100Kilometer();
 					
-					if (vehicleLoading != null && !vehicleLoading.IsEqual(0)) {
+					if (vehicleLoading != null && !vehicleLoading.IsEqual(0) && fcVolumePerMeter != null) {
 						row[FcCol(Fields.FCFINAL_LITERPER100TKM, suffix)] =
 							(fcVolumePerMeter / vehicleLoading).ConvertToLiterPer100TonKiloMeter();
 					}
-					if (cargoVolume > 0) {
+					if (cargoVolume > 0 && fcVolumePerMeter != null) {
 						row[FcCol(Fields.FCFINAL_LiterPer100M3KM, suffix)] =
 							(fcVolumePerMeter / cargoVolume).ConvertToLiterPerCubicMeter100KiloMeter();
 					}
 
-					if (passengers != null) {
+					if (passengers != null && fcVolumePerMeter != null) {
 						// subtract driver!
 						row[FcCol(Fields.FCFINAL_LiterPer100PassengerKM, suffix)] =
 							(fcVolumePerMeter / passengers.Value).ConvertToLiterPer100Kilometer();
