@@ -123,7 +123,7 @@ namespace TUGraz.VectoCore.Tests.Integration
 			
 			var auxCfg = runData.BusAuxiliaries;
 			var electricStorage = auxCfg.ElectricalUserInputsConfig.AlternatorType == AlternatorType.Smart
-				? new SimpleBattery(container, auxCfg.ElectricalUserInputsConfig.ElectricStorageCapacity)
+				? new SimpleBattery(container, auxCfg.ElectricalUserInputsConfig.ElectricStorageCapacity, auxCfg.ElectricalUserInputsConfig.StoredEnergyEfficiency)
 				: (ISimpleBattery)new NoBattery(container);
 			aux.ElectricStorage = electricStorage;
 			engine.Connect(aux.Port());

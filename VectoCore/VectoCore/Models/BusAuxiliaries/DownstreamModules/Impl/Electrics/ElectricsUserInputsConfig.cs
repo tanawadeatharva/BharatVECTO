@@ -109,6 +109,7 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.Electric
 		public bool ConnectESToREESS { get; set; }
 		
 		public double DCDCEfficiency { get; set; }
+		
 	}
 
 }
