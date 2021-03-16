@@ -451,6 +451,7 @@ namespace TUGraz.VectoCommon.InputData
 		Watt MaxAlternatorPower { get; }
 
 		bool ESSupplyFromHEVREESS { get; }
+		double ElectricStorageEfficiency { get; }
 	}
 
 	public interface IBusAuxHVACData

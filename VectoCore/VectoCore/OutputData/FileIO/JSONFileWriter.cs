@@ -1142,6 +1142,7 @@ public class JSONFileWriter : IOutputFileWriter
 			{"CurrentDemandEngineOffStandstill", busAux.ElectricSystem.CurrentDemandEngineOffStandstill.Value()},
 			{"AlternatorType", busAux.ElectricSystem.AlternatorType.ToString()},
 			{"ElectricStorageCapacity", busAux.ElectricSystem.ElectricStorageCapacity.ConvertToWattHour().Value},
+			{"BatteryEfficiency", busAux.ElectricSystem.ElectricStorageEfficiency},
 			{"MaxAlternatorPower", busAux.ElectricSystem.MaxAlternatorPower.Value()},
 			{"DCDCConverterEfficiency", busAux.ElectricSystem.DCDCConverterEfficiency},
 			{"ESSupplyFromHEVREESS", busAux.ElectricSystem.ESSupplyFromHEVREESS}
