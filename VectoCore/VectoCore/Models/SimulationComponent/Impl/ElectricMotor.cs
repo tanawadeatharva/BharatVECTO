@@ -343,7 +343,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				return null;
 			}
 
-			var maxBatRecuperationTorque = maxBatPower.IsEqual(0, 1e-3) ? ModelData.DragCurve.Lookup(avgSpeed) : ModelData.EfficiencyMap.LookupTorque(maxBatPower, avgSpeed, maxEmTorque);
+			var maxBatRecuperationTorque = maxBatPower.IsEqual(0, 1e-3)
+				? ModelData.DragCurve.Lookup(avgSpeed)
+				: ModelData.EfficiencyMap.LookupTorque(maxBatPower, avgSpeed, maxEmTorque);
 			var maxTorqueRecuperate = VectoMath.Min(maxEmTorque, maxBatRecuperationTorque);
 			return maxTorqueRecuperate < 0 ? null : maxTorqueRecuperate;
 		}
@@ -363,7 +365,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				return null;
 			}
 
-			var maxBatDriveTorque = maxBatPower.IsEqual(0, 1e-3) ? ModelData.DragCurve.Lookup(avgSpeed) : ModelData.EfficiencyMap.LookupTorque(maxBatPower, avgSpeed, maxEmTorque);
+			var maxBatDriveTorque = maxBatPower.IsEqual(0, 1e-3)
+				? ModelData.DragCurve.Lookup(avgSpeed)
+				: ModelData.EfficiencyMap.LookupTorque(maxBatPower, avgSpeed, maxEmTorque);
 			//if (maxBatDriveTorque == null) {
 			//	return ModelData.DragCurve.Lookup(avgSpeed);
 			//}

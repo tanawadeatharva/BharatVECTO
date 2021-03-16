@@ -87,6 +87,10 @@ Partial Class HybridStrategyParamsForm
         Me.EquivalenceFactorChg = New System.Windows.Forms.Label()
         Me.lblEquivFactorChargeUnit = New System.Windows.Forms.Label()
         Me.tbEquivalenceFactorCharge = New System.Windows.Forms.TextBox()
+        Me.Panel3 = New System.Windows.Forms.Panel()
+        Me.lblICEStartPenaltyFactor = New System.Windows.Forms.Label()
+        Me.lblICEStartPenaltyFactorUnit = New System.Windows.Forms.Label()
+        Me.tbICEStartPenaltyFactor = New System.Windows.Forms.TextBox()
         Me.ToolStrip1.SuspendLayout
         Me.StatusStrip1.SuspendLayout
         CType(Me.PictureBox1,System.ComponentModel.ISupportInitialize).BeginInit
@@ -99,6 +103,7 @@ Partial Class HybridStrategyParamsForm
         Me.pnAuxBufferChgTime.SuspendLayout
         Me.Panel1.SuspendLayout
         Me.Panel2.SuspendLayout
+        Me.Panel3.SuspendLayout
         Me.SuspendLayout
         '
         'tbEquivalenceFactorDischarge
@@ -536,6 +541,41 @@ Partial Class HybridStrategyParamsForm
         Me.tbEquivalenceFactorCharge.Size = New System.Drawing.Size(57, 20)
         Me.tbEquivalenceFactorCharge.TabIndex = 3
         '
+        'Panel3
+        '
+        Me.Panel3.Controls.Add(Me.lblICEStartPenaltyFactor)
+        Me.Panel3.Controls.Add(Me.lblICEStartPenaltyFactorUnit)
+        Me.Panel3.Controls.Add(Me.tbICEStartPenaltyFactor)
+        Me.Panel3.Location = New System.Drawing.Point(12, 314)
+        Me.Panel3.Name = "Panel3"
+        Me.Panel3.Size = New System.Drawing.Size(288, 28)
+        Me.Panel3.TabIndex = 30
+        '
+        'lblICEStartPenaltyFactor
+        '
+        Me.lblICEStartPenaltyFactor.AutoSize = true
+        Me.lblICEStartPenaltyFactor.Location = New System.Drawing.Point(3, 7)
+        Me.lblICEStartPenaltyFactor.Name = "lblICEStartPenaltyFactor"
+        Me.lblICEStartPenaltyFactor.Size = New System.Drawing.Size(114, 13)
+        Me.lblICEStartPenaltyFactor.TabIndex = 0
+        Me.lblICEStartPenaltyFactor.Text = "ICE start penalty factor"
+        '
+        'lblICEStartPenaltyFactorUnit
+        '
+        Me.lblICEStartPenaltyFactorUnit.AutoSize = true
+        Me.lblICEStartPenaltyFactorUnit.Location = New System.Drawing.Point(244, 7)
+        Me.lblICEStartPenaltyFactorUnit.Name = "lblICEStartPenaltyFactorUnit"
+        Me.lblICEStartPenaltyFactorUnit.Size = New System.Drawing.Size(16, 13)
+        Me.lblICEStartPenaltyFactorUnit.TabIndex = 24
+        Me.lblICEStartPenaltyFactorUnit.Text = "[-]"
+        '
+        'tbICEStartPenaltyFactor
+        '
+        Me.tbICEStartPenaltyFactor.Location = New System.Drawing.Point(181, 4)
+        Me.tbICEStartPenaltyFactor.Name = "tbICEStartPenaltyFactor"
+        Me.tbICEStartPenaltyFactor.Size = New System.Drawing.Size(57, 20)
+        Me.tbICEStartPenaltyFactor.TabIndex = 3
+        '
         'HybridStrategyParamsForm
         '
         Me.AcceptButton = Me.ButOK
@@ -543,6 +583,7 @@ Partial Class HybridStrategyParamsForm
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.CancelButton = Me.ButCancel
         Me.ClientSize = New System.Drawing.Size(449, 403)
+        Me.Controls.Add(Me.Panel3)
         Me.Controls.Add(Me.Panel2)
         Me.Controls.Add(Me.Panel1)
         Me.Controls.Add(Me.pnAuxBufferChgTime)
@@ -586,6 +627,8 @@ Partial Class HybridStrategyParamsForm
         Me.Panel1.PerformLayout
         Me.Panel2.ResumeLayout(false)
         Me.Panel2.PerformLayout
+        Me.Panel3.ResumeLayout(false)
+        Me.Panel3.PerformLayout
         Me.ResumeLayout(false)
         Me.PerformLayout
 
@@ -640,4 +683,8 @@ End Sub
     Friend WithEvents EquivalenceFactorChg As Label
     Friend WithEvents lblEquivFactorChargeUnit As Label
     Friend WithEvents tbEquivalenceFactorCharge As TextBox
+    Friend WithEvents Panel3 As Panel
+    Friend WithEvents lblICEStartPenaltyFactor As Label
+    Friend WithEvents lblICEStartPenaltyFactorUnit As Label
+    Friend WithEvents tbICEStartPenaltyFactor As TextBox
 End Class

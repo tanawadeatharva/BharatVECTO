@@ -109,7 +109,7 @@ namespace TUGraz.VectoCore.OutputData.FileIO
 			elData["ResultCardTraction"] = resultCard;
 
 			// SmartElectrical
-			elData["SmartElectrical"] = electricalUserCfg.SmartElectrical;
+			elData["SmartElectrical"] = electricalUserCfg.AlternatorType;
 
 			return elData;
 		}

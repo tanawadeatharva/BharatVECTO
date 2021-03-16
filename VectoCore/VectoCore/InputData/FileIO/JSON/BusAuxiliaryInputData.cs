@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using Newtonsoft.Json.Linq;
 using TUGraz.VectoCommon.BusAuxiliaries;
+using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.InputData.Reader.ComponentData;
 using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter;
@@ -93,11 +94,13 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 
 			// SmartElectrical
-			electricalUserInputsConfig.SmartElectrical = elData.GetEx<bool>("SmartElectrical");
+			electricalUserInputsConfig.AlternatorType = elData["SmartElectrical"] != null 
+				? (elData.GetEx<bool>("SmartElectrical") ? AlternatorType.Smart : AlternatorType.Conventional)
+				: elData.GetEx<string>("AlternatorType").ParseEnum<AlternatorType>();
 
 			// ResultCardIdle
 
-			electricalUserInputsConfig.ResultCardIdle = electricalUserInputsConfig.SmartElectrical
+			electricalUserInputsConfig.ResultCardIdle = electricalUserInputsConfig.AlternatorType == AlternatorType.Smart
 				? new ResultCard(
 					elData["ResultCardIdle"].Select(
 						result => new SmartResult(
@@ -105,7 +108,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 				: (IResultCard)new DummyResultCard();
 
 			// ResultCardOverrun
-			electricalUserInputsConfig.ResultCardOverrun = electricalUserInputsConfig.SmartElectrical
+			electricalUserInputsConfig.ResultCardOverrun = electricalUserInputsConfig.AlternatorType == AlternatorType.Smart
 				? new ResultCard(
 					elData["ResultCardOverrun"].Select(
 						result => new SmartResult(
@@ -113,7 +116,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 				: (IResultCard)new DummyResultCard();
 
 			// ResultCardTraction
-			electricalUserInputsConfig.ResultCardTraction = electricalUserInputsConfig.SmartElectrical
+			electricalUserInputsConfig.ResultCardTraction = electricalUserInputsConfig.AlternatorType == AlternatorType.Smart
 				? new ResultCard(
 					elData["ResultCardTraction"].Select(
 						result => new SmartResult(

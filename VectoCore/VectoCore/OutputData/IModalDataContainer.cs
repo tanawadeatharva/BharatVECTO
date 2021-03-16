@@ -35,6 +35,7 @@ using System.Data;
 using System.Linq;
 using TUGraz.VectoCommon.BusAuxiliaries;
 using TUGraz.VectoCommon.InputData;
+using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation.Data;
@@ -141,6 +142,58 @@ namespace TUGraz.VectoCore.OutputData
 		double BatteryStartSoC();
 		double REESSEndSoC();
 		WattSecond REESSLoss();
+
+		ICorrectedModalData CorrectedModalData { get; }
+	}
+
+	public interface IModalDataPostProcessor
+	{
+		ICorrectedModalData ApplyCorrection(IModalDataContainer modData, VectoRunData runData);
+	}
+
+	public interface ICorrectedModalData
+	{
+		WattSecond WorkWHREl { get;  }
+		WattSecond WorkWHRElMech { get;  }
+		WattSecond WorkWHRMech { get;  }
+		WattSecond WorkWHR { get; }
+		WattSecond WorkBusAuxPSCorr { get; }
+		WattSecond WorkBusAuxESMech { get; }
+		WattSecond WorkBusAuxCorr { get; }
+		WattSecond EnergyDCDCMissing { get; }
+		Joule AuxHeaterDemand { get; }
+
+		IFuelConsumptionCorrection FuelConsumptionCorrection(IFuelProperties fuel);
+
+		KilogramPerMeter KilogramCO2PerMeter { get; }
+		Dictionary<FuelType, IFuelConsumptionCorrection> FuelCorrection { get; }
+		Kilogram CO2Total { get; }
+		Joule EnergyConsumptionTotal { get; }
+	}
+
+	public interface IFuelConsumptionCorrection
+	{
+		IFuelProperties Fuel { get; }
+		KilogramPerWattSecond EngineLineCorrectionFactor { get; }
+		KilogramPerWattSecond VehicleLine { get; }
+		KilogramPerSecond FC_ESS_CORR_H { get; }
+		KilogramPerSecond FC_BusAux_PS_CORR_H { get; }
+		KilogramPerSecond FC_BusAux_ES_CORR_H { get; }
+		KilogramPerSecond FC_WHR_CORR_H { get; }
+		KilogramPerSecond FC_AUXHTR_H { get; }
+		KilogramPerSecond FC_AUXHTR_H_CORR { get; }
+		KilogramPerSecond FC_FINAL_H { get; }
+		KilogramPerMeter FC_WHR_CORR_KM { get; }
+		KilogramPerMeter FC_BusAux_PS_CORR_KM { get; }
+		KilogramPerMeter FC_BusAux_ES_CORR_KM { get; }
+		KilogramPerMeter FC_AUXHTR_KM { get; }
+		KilogramPerMeter FC_AUXHTR_KM_CORR { get; }
+		KilogramPerMeter FC_ESS_CORR_KM { get; }
+		KilogramPerMeter FC_FINAL_KM { get; }
+		VolumePerMeter FuelVolumePerMeter { get; }
+
+		Kilogram TotalFuelConsumptionCorrected { get; }
+		Joule EnergyDemand { get; }
 	}
 
 	public static class ModalDataContainerExtensions
@@ -337,11 +390,6 @@ namespace TUGraz.VectoCore.OutputData
 		public static WattSecond TotalEngineWorkNegative(this IModalDataContainer data)
 		{
 			return data.TimeIntegral<WattSecond>(ModalResultField.P_ice_fcmap, x => x < 0);
-		}
-
-		public static WattSecond WorkAuxiliariesDuringEngineStop(this IModalDataContainer data)
-		{
-			return data.TimeIntegral<WattSecond>(ModalResultField.P_aux_ice_off);
 		}
 
 		public static WattSecond WorkEngineStart(this IModalDataContainer data)

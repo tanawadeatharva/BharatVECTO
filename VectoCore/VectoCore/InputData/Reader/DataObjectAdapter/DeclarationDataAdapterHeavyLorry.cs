@@ -80,7 +80,8 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 				EngineStopStart = new DriverData.EngineStopStartData() {
 					EngineOffStandStillActivationDelay = DeclarationData.Driver.EngineStopStart.ActivationDelay,
 					MaxEngineOffTimespan = DeclarationData.Driver.EngineStopStart.MaxEngineOffTimespan,
-					UtilityFactor = DeclarationData.Driver.EngineStopStart.UtilityFactor,
+					UtilityFactorStandstill = DeclarationData.Driver.EngineStopStart.UtilityFactor,
+					UtilityFactorDriving = DeclarationData.Driver.EngineStopStart.UtilityFactor,
 				},
 				EcoRoll = new DriverData.EcoRollData() {
 					UnderspeedThreshold = DeclarationData.Driver.EcoRoll.UnderspeedThreshold,

@@ -84,6 +84,7 @@ namespace TUGraz.VectoCommon.InputData
 		Second MinimumICEOnTime { get; }
 		Second AuxBufferTime { get; }
 		Second AuxBufferChargeTime { get; }
+		double ICEStartPenaltyFactor { get; }
 	}
 
 	public interface IVehicleEngineeringInputData : IVehicleDeclarationInputData
@@ -403,11 +404,10 @@ namespace TUGraz.VectoCommon.InputData
 
 	public interface IAuxiliariesEngineeringInputData
 	{
-		IList<IAuxiliaryEngineeringInputData> Auxiliaries { get; }
+		IAuxiliaryEngineeringInputData Auxiliaries { get; }
 
 		IBusAuxiliariesEngineeringData BusAuxiliariesData { get; }
 
-		Watt ElectricAuxPower { get; }
 	}
 
 	public interface IBusAuxiliariesEngineeringData
@@ -436,17 +436,21 @@ namespace TUGraz.VectoCommon.InputData
 	{
 		double AlternatorEfficiency { get; }
 
+		double DCDCConverterEfficiency { get; }
+
 		Ampere CurrentDemand { get; }
 
 		Ampere CurrentDemandEngineOffDriving { get; }
 
 		Ampere CurrentDemandEngineOffStandstill { get; }
 
-		bool SmartElectric { get; }
+		AlternatorType AlternatorType { get; }
 
 		WattSecond ElectricStorageCapacity { get; }
 
 		Watt MaxAlternatorPower { get; }
+
+		bool ESSupplyFromHEVREESS { get; }
 	}
 
 	public interface IBusAuxHVACData
@@ -588,53 +592,25 @@ namespace TUGraz.VectoCommon.InputData
 	{
 		Second ActivationDelay { get; }
 		Second MaxEngineOffTimespan { get; }
-		double UtilityFactor { get; }
+		double UtilityFactorStandstill { get; }
+		double UtilityFactorDriving { get;}
 	}
 
 	public interface IAuxiliaryEngineeringInputData
 	{
-		/// <summary>
-		/// P006  Aux-ID
-		/// cf. VECTO Input Parameters.xlsx
-		/// </summary>
-		string ID { get; }
-
-		/// <summary>
-		/// either mapping or constant
-		/// </summary>
-		AuxiliaryDemandType AuxiliaryType { get; }
-
-		/// <summary>
-		/// P022  Aux-InputFile: transmission ratio
-		/// cf. VECTO Input Parameters.xlsx
-		/// </summary>
-		double TransmissionRatio { get; }
-
-		/// <summary>
-		/// P023  Aux-InputFile: efficiency to engine
-		/// cf. VECTO Input Parameters.xlsx
-		/// </summary>
-		double EfficiencyToEngine { get; }
-
-		/// <summary>
-		/// P024  Aux-InputFile: efficiency to supply
-		/// cf. VECTO Input Parameters.xlsx
-		/// </summary>
-		double EfficiencyToSupply { get; }
-
-		/// <summary>
-		/// P025, P026, P027  Aux-InputFile: map
-		/// cf. VECTO Input Parameters.xlsx
-		/// </summary>
-		TableData DemandMap { get; }
-
+		
 		/// <summary>
 		/// P178
 		/// additional constant auxiliary load, similar to Padd; not specified in the cycle but as auxiliary
 		/// </summary>
 		Watt ConstantPowerDemand { get; }
 
-		DataSource DataSource { get; }
+		Watt PowerDemandICEOffDriving { get; }
+		
+		Watt PowerDemandICEOffStandstill { get; }
+
+
+		Watt ElectricPowerDemand { get; }
 	}
 
 }

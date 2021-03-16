@@ -59,7 +59,9 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 		[ModalResultField(typeof(SI), caption: "P_ice_start [kW]", outputFactor: 1e-3)] P_ice_start,
 
 
-		[ModalResultField(typeof(SI), caption: "P_aux_ESS_mech [kW]", outputFactor: 1e-3)] P_aux_ice_off,
+		[ModalResultField(typeof(SI), caption: "P_aux_ESS_mech_ICE_off [kW]", outputFactor: 1e-3)] P_aux_ESS_mech_ice_off,
+
+		[ModalResultField(typeof(SI), caption: "P_aux_ESS_mech_ICE_on [kW]", outputFactor: 1e-3)] P_aux_ESS_mech_ice_on,
 
 		/// <summary>
 		///     Engine speed [1/min].
@@ -437,7 +439,12 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 		[ModalResultField(typeof(SI), caption: "U_reess_terminal [V]")] U_reess_terminal,
 		[ModalResultField(typeof(SI), caption: "U_0_reess [V]")] U0_reess,
 		[ModalResultField(typeof(SI), caption: "I_reess [A]")] I_reess,
-		[ModalResultField(typeof(SI), caption: "T_max_propulsion [Nm]")] MaxPropulsionTorqe
+		[ModalResultField(typeof(SI), caption: "T_max_propulsion [Nm]")] MaxPropulsionTorqe,
+
+		[ModalResultField(typeof(SI), caption: "P_DC/DC_In [kW]", outputFactor: 1e-3)] P_DCDC_In,
+		[ModalResultField(typeof(SI), caption: "P_DC/DC_Out [kW]", outputFactor: 1e-3)] P_DCDC_Out,
+		[ModalResultField(typeof(SI), caption: "P_DC/DC_missing [kW]", outputFactor: 1e-3)] P_DCDC_missing,
+
 	}
 
 	[AttributeUsage(AttributeTargets.Field)]

@@ -1273,6 +1273,7 @@ namespace TUGraz.VectoCore.Tests.Integration.Hybrid
 				AuxReserveTime = 5.SI<Second>(),
 				AuxReserveChargeTime = 2.SI<Second>(),
 				MinICEOnTime = 3.SI<Second>(), 
+				ICEStartPenaltyFactor = 0,
 				//MaxDrivetrainPower = maxDriveTrainPower ?? 1e12.SI<Watt>(),
 			};
 		}
@@ -1619,7 +1620,7 @@ namespace TUGraz.VectoCore.Tests.Integration.Hybrid
 				EngineStopStart = new DriverData.EngineStopStartData() {
 					EngineOffStandStillActivationDelay = DeclarationData.Driver.EngineStopStart.ActivationDelay,
 					MaxEngineOffTimespan = DeclarationData.Driver.EngineStopStart.MaxEngineOffTimespan,
-					UtilityFactor = DeclarationData.Driver.EngineStopStart.UtilityFactor
+					UtilityFactorStandstill = DeclarationData.Driver.EngineStopStart.UtilityFactor
 				}
 			};
 		}

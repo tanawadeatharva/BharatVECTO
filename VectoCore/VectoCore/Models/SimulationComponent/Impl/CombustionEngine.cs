@@ -501,7 +501,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				//var fcAAUX = fcWHTC;
 				var advancedAux = EngineAux as BusAuxiliariesAdapter;
 				if (advancedAux != null) {
-					advancedAux.DoWriteModalResults(time, simulationInterval ,container);
+					advancedAux.DoWriteModalResultsICE(time, simulationInterval ,container);
 					//fcAAUX = advancedAux.AAuxFuelConsumption;
 				}
 				var fcFinal = fcWHTC; // fcAAUX;

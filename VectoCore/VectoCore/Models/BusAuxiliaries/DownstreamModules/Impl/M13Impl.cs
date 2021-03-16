@@ -1,4 +1,5 @@
 ﻿using TUGraz.VectoCommon.BusAuxiliaries;
+using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Models.BusAuxiliaries.Interfaces;
 using TUGraz.VectoCore.Models.BusAuxiliaries.Interfaces.DownstreamModules;
@@ -24,7 +25,7 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl
 			M11 = m11;
 			M12 = m12;
 			Signals = signals;
-			_smartElectrics = auxCfg.ElectricalUserInputsConfig.SmartElectrical;
+			_smartElectrics = auxCfg.ElectricalUserInputsConfig.AlternatorType == AlternatorType.Smart;
 			_smartPneumatics = auxCfg.PneumaticUserInputsConfig.SmartAirCompression;
 		}
 

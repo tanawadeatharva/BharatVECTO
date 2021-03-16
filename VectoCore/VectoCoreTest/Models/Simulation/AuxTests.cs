@@ -205,11 +205,10 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 			}
 		}
 
-		[TestCase]
+		[TestCase] 
 		public void AuxAllCombined()
 		{
 			var dataWriter = new MockModalDataContainer();
-			dataWriter.AddAuxiliary("ALT1");
 			dataWriter.AddAuxiliary("CONSTANT");
 
 			var container = new VehicleContainer(ExecutionMode.Engineering, dataWriter);
@@ -223,19 +222,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 
 			var aux = new EngineAuxiliary(container);
 
-			var auxDataInputData = new AuxiliaryDataInputData {
-				ID = "ALT1",
-				Type = AuxiliaryType.ElectricSystem,
-				Technology = new List<string>(),
-			};
-			AuxiliaryFileHelper.FillAuxiliaryDataInputData(auxDataInputData, @"TestData\Components\24t_Coach_ALT.vaux");
-			var auxData = AuxiliaryDataReader.Create(auxDataInputData);
 
-			// ratio = 4.078
-			// efficiency_engine = 0.96
-			// efficiency_supply = 0.98
-
-			aux.AddMapping("ALT1", auxData);
 			aux.AddCycle("CYCLE");
 			var constPower = 1200.SI<Watt>();
 			aux.AddConstant("CONSTANT", constPower);
@@ -243,21 +230,22 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 			var speed = 578.22461991.RPMtoRad(); // = 2358 (nAuxiliary) * ratio
 			var torque = 500.SI<NewtonMeter>();
 			var t = 0.SI<Second>();
+			// MQ 2021-03-03: updated expected values - mapping auxiliary is no longer supported
 			var expected = new[] {
-				1200 + 6100 + 72.9166666666667,
+				1200 + 6100, // + 72.9166666666667,
 				// = 1000 * 0.07 (nAuxiliary=2358 and psupply=0) / 0.98 (efficiency_supply)
-				1200 + 3100 + 677.083333333333,
+				1200 + 3100, // + 677.083333333333,
 				// = 1000 * 0.65 (nAuxiliary=2358 and psupply=0.38) / 0.98 (efficiency_supply)
-				1200 + 2300 + 822.916666666667,
+				1200 + 2300, // + 822.916666666667,
 				// = 1000 * 0.79 (nAuxiliary=2358 and psupply=0.49) / 0.98 (efficiency_supply)
-				1200 + 4500 + 1031.25, // = ...
-				1200 + 6100 + 1166.66666666667,
-				1200 + 6100 + 1656.25,
-				1200 + 6100 + 2072.91666666667,
-				1200 + 6100 + 2510.41666666667,
-				1200 + 6100 + 2979.16666666667,
-				1200 + 6100 + 3322.91666666667,
-				1200 + 6100 + 3656.25
+				1200 + 4500, // + 1031.25, // = ...
+				1200 + 6100, // + 1166.66666666667,
+				1200 + 6100, // + 1656.25,
+				1200 + 6100, // + 2072.91666666667,
+				1200 + 6100, // + 2510.41666666667,
+				1200 + 6100, // + 2979.16666666667,
+				1200 + 6100, // + 3322.91666666667,
+				1200 + 6100, // + 3656.25
 			};
 
 			foreach (var e in expected) {
@@ -270,89 +258,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 			}
 		}
 
-		[TestCase]
-		public void AuxMapping()
-		{
-			var auxId = "ALT1";
-			var dataWriter = new MockModalDataContainer();
-			dataWriter.AddAuxiliary(auxId);
-
-			var container = new VehicleContainer(ExecutionMode.Engineering, dataWriter);
-			var data = DrivingCycleDataReader.ReadFromFile(@"TestData\Cycles\Coach time based short.vdri",
-				CycleType.MeasuredSpeed, false);
-			// cycle ALT1 is set to values to equal the first few fixed points in the auxiliary file.
-			// ALT1.aux file: nAuxiliary speed 2358: 0, 0.38, 0.49, 0.64, ...
-			// ALT1 in cycle file: 0, 0.3724 (=0.38*0.96), 0.4802 (=0.49*0.96), 0.6272 (0.64*0.96), ...
-
-			var cycle = new MockDrivingCycle(container, data);
-			new MockTnOutPort();
-
-			var aux = new EngineAuxiliary(container);
-
-			var auxDataInputData = new AuxiliaryDataInputData {
-				ID = "ALT1",
-				Type = AuxiliaryType.ElectricSystem,
-				Technology = new List<string>(),
-			};
-			AuxiliaryFileHelper.FillAuxiliaryDataInputData(auxDataInputData, @"TestData\Components\24t_Coach_ALT.vaux");
-			var auxData = AuxiliaryDataReader.Create(auxDataInputData);
-
-			// ratio = 4.078
-			// efficiency_engine = 0.96
-			// efficiency_supply = 0.98
-
-			aux.AddMapping(auxId, auxData);
-
-			var speed = 578.22461991.RPMtoRad(); // = 2358 (nAuxiliary) * ratio
-			var torque = 500.SI<NewtonMeter>();
-			var t = 0.SI<Second>();
-			var expected = new[] {
-				72.9166666666667,
-				// = 1000 * 0.07 (pmech from aux file at nAuxiliary=2358 and psupply=0) / 0.98 (efficiency_supply)
-				677.083333333333, // = 1000 * 0.65 (nAuxiliary=2358 and psupply=0.38) / 0.98
-				822.916666666667, // = 1000 * 0.79 (nAuxiliary=2358 and psupply=0.49) / 0.98
-				1031.25, // = ...
-				1166.66666666667,
-				1656.25,
-				2072.91666666667,
-				2510.41666666667,
-				2979.16666666667,
-				3322.91666666667,
-				3656.25
-			};
-
-			foreach (var e in expected) {
-				aux.Initialize(torque, speed);
-				var auxDemand = aux.TorqueDemand(t, t, torque, speed);
-
-				AssertHelper.AreRelativeEqual((e.SI<Watt>() / speed).Value(), auxDemand);
-
-				cycle.CommitSimulationStep(t, t, null);
-			}
-		}
-
-		[TestCase]
-		public void AuxColumnMissing()
-		{
-			var container = new VehicleContainer(ExecutionMode.Engineering);
-			var data = DrivingCycleDataReader.ReadFromFile(@"TestData\Cycles\Coach time based short.vdri",
-				CycleType.MeasuredSpeed, false);
-			new MockDrivingCycle(container, data);
-
-			var aux = new EngineAuxiliary(container);
-			AssertHelper.Exception<VectoException>(() => aux.AddMapping("NONEXISTING_AUX", null),
-				"driving cycle does not contain column for auxiliary: AUX_NONEXISTING_AUX");
-		}
-
-		[TestCase]
-		public void AuxFileMissing()
-		{
-			AssertHelper.Exception<VectoException>(() => {
-				var auxDataInputData = new AuxiliaryDataInputData();
-				AuxiliaryFileHelper.FillAuxiliaryDataInputData(auxDataInputData, @"NOT_EXISTING_AUX_FILE.vaux");
-			}, "Auxiliary file not found: NOT_EXISTING_AUX_FILE.vaux");
-		}
-
+		
 		[Category("LongRunning")]
 		[TestCase]
 		public void AuxReadJobFileDeclarationMode()

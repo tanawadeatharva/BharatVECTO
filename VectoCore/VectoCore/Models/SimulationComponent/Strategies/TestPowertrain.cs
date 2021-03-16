@@ -23,13 +23,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies {
 		public Clutch Clutch;
 		public IBrakes Brakes;
 
-		public IDriverInfo Driver;
-		public IDrivingCycleInfo DrivingCycle;
-
 		public StopStartCombustionEngine CombustionEngine;
 		public ElectricMotor ElectricMotor;
 		public Dictionary<PowertrainPosition, ElectricMotor> ElectricMotorsUpstreamTransmission = new Dictionary<PowertrainPosition, ElectricMotor>();
 		public TorqueConverter TorqueConverter;
+		public DCDCConverter DCDCConverter;
 
 		public TestPowertrain(SimplePowertrainContainer container, IDataBus realContainer)
 		{
@@ -62,8 +60,13 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies {
 				throw new VectoException("Unknown HybridController in TestContainer: {0}", Container.HybridController?.GetType().FullName);
 			}
 
-			Driver = new MockDriver(container, realContainer);
-			DrivingCycle = new MockDrivingCycle(container, realContainer);
+			var busAux = container.RunData.BusAuxiliaries;
+			if (busAux != null && busAux.ElectricalUserInputsConfig.ConnectESToREESS) {
+				DCDCConverter = container.DCDCConverter as DCDCConverter;
+			}
+			var driver = new MockDriver(container, realContainer);
+			var cycle = new MockDrivingCycle(container, realContainer);
+
 			Brakes = container.Brakes as Brakes;
 			if (Brakes == null) {
 				throw new VectoException("Unknown or missing brakes in TestContainer: {0}", Container.Brakes?.GetType().FullName);

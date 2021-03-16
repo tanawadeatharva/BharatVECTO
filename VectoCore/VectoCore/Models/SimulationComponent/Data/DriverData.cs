@@ -113,8 +113,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 
 			[Required, SIRange(0, double.MaxValue)] public Second MaxEngineOffTimespan;
 
-			[Required, Range(0.0, 1.0)] public double UtilityFactor;
+			[Required, Range(0.0, 1.0)] public double UtilityFactorStandstill;
 
+			[Required, Range(0.0, 1.0)] public double UtilityFactorDriving;
 		}
 
 		public class PCCData

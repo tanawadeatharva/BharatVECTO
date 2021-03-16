@@ -1,4 +1,5 @@
 ﻿
+Imports System.Collections.Generic
 Imports System.Drawing.Imaging
 Imports System.IO
 Imports System.Linq
@@ -52,6 +53,12 @@ Public Class BusAuxiliariesEngParametersForm
         ' initialize form on load - nothng to do right now
 
         'pnInertia.Enabled = Not Cfg.DeclMode
+
+        cbAlternatorTechnology.ValueMember = "Value"
+        cbAlternatorTechnology.DisplayMember = "Label"
+        cbAlternatorTechnology.DataSource =
+            [Enum].GetValues(GetType(AlternatorType)).cast (of AlternatorType)().select(
+                Function(type) new With {Key .Value = type, .Label = type.GetLabel()}).tolist()
 
 
         _changed = False
@@ -145,7 +152,7 @@ Public Class BusAuxiliariesEngParametersForm
         DeclInit()
 
         _busAuxParamsFile = ""
-        Text = "Hybrid Strategy Parameters Editor"
+        Text = "Bus Auxiliaries Parameters Editor"
         LbStatus.Text = ""
 
         _changed = False
@@ -176,7 +183,7 @@ Public Class BusAuxiliariesEngParametersForm
         tbCurrentDemand.Text = inputData.ElectricSystem.CurrentDemand.ToGUIFormat()
         tbCurrentDemandEngineOffDriving.Text = inputData.ElectricSystem.CurrentDemandEngineOffDriving.ToGUIFormat()
         tbCurrentDemandEngineOffStandstill.Text = inputData.ElectricSystem.CurrentDemandEngineOffStandstill.ToGUIFormat()
-        cbSmartElectric.Checked  = inputData.ElectricSystem.SmartElectric
+        cbAlternatorTechnology.SelectedValue  = inputData.ElectricSystem.AlternatorType
         tbMaxAlternatorPower.Text = inputData.ElectricSystem.MaxAlternatorPower.ToGUIFormat()
         tbElectricStorageCapacity.Text = inputData.ElectricSystem.ElectricStorageCapacity.ConvertToWattHour().Value.ToGUIFormat()
 
@@ -190,7 +197,11 @@ Public Class BusAuxiliariesEngParametersForm
         tbHvacAuxHeaterPwr.Text = inputData.HVACData.AuxHeaterPower.ToGUIFormat()
         tbHvacHeatingDemand.Text = (inputData.HVACData.AverageHeatingDemand.Value() / 1e6).ToGUIFormat()
 
-        pnSmartElectricParams.Enabled = inputData.ElectricSystem.SmartElectric
+        pnSmartElectricParams.Enabled = inputData.ElectricSystem.AlternatorType = AlternatorType.Smart
+
+        tbDCDCEff.Text = inputData.ElectricSystem.DCDCConverterEfficiency.ToGUIFormat()
+        cbES_HEVREESS.Checked = inputData.ElectricSystem.ESSupplyFromHEVREESS
+        pnDCDCEff.Enabled = cbES_HEVREESS.Checked
 
         DeclInit()
 
@@ -206,8 +217,8 @@ Public Class BusAuxiliariesEngParametersForm
     'Save or Save As function = true if file is saved
     Private Function SaveOrSaveAs(ByVal saveAs As Boolean) As Boolean
         If _busAuxParamsFile = "" Or saveAs Then
-            If HCUFileBrowser.SaveDialog(_busAuxParamsFile) Then
-                _busAuxParamsFile = HCUFileBrowser.Files(0)
+            If BusAuxFileBrowser.SaveDialog(_busAuxParamsFile) Then
+                _busAuxParamsFile = BusAuxFileBrowser.Files(0)
             Else
                 Return False
             End If
@@ -226,9 +237,11 @@ Public Class BusAuxiliariesEngParametersForm
         busAuxParams.CurrentDemandEngineOn = tbCurrentDemand.Text.ToDouble(0)
         busAuxParams.CurrentDemandEngineOffDriving = tbCurrentDemandEngineOffDriving.Text.ToDouble(0)
         busAuxParams.CurrentDemandEngineOffStandstill = tbCurrentDemandEngineOffStandstill.Text.ToDouble(0)
-        busAuxParams.SmartElectric = cbSmartElectric.Checked
+        busAuxParams.AlternatorType = CType(cbAlternatorTechnology.SelectedValue, AlternatorType)
         busAuxParams.MaxAlternatorPower = tbMaxAlternatorPower.Text.ToDouble(0)
         busAuxParams.ElectricStorageCapacity = tbElectricStorageCapacity.Text.ToDouble(0)
+        busAuxParams.DCDCEfficiency = tbDCDCEff.Text.ToDouble(0)
+        busAuxParams.SupplyESFromHEVREESS = cbES_HEVREESS.Checked
 
         busAuxParams.PathCompressorMap = tbCompressorMap.Text
         busAuxParams.AverageAirDemand = tbAverageAirDemand.Text.ToDouble(0)
@@ -346,32 +359,24 @@ Public Class BusAuxiliariesEngParametersForm
         End If
     End Sub
 
-    Private Sub tbMinSoC_TextChanged(sender As Object, e As EventArgs) 
-        Change()
+
+    Private Sub cbAlternatorTechnology_SelectedIndexChanged(sender As Object, e As EventArgs) Handles cbAlternatorTechnology.SelectedIndexChanged
+
+        Select CType(cbAlternatorTechnology.SelectedValue, AlternatorType)
+            Case AlternatorType.Conventional:
+                pnSmartElectricParams.Enabled = false  
+                
+            Case AlternatorType.Smart:
+                pnSmartElectricParams.Enabled = true    
+            
+            Case AlternatorType.None:
+                pnSmartElectricParams.Enabled = false    
+        End Select
+
     End Sub
 
-    Private Sub tbMaxSoC_TextChanged(sender As Object, e As EventArgs) 
-        Change()
-    End Sub
-
-    Private Sub tbTargetSoC_TextChanged(sender As Object, e As EventArgs) 
-        Change()
-    End Sub
-
-    Private Sub tbauxBufferTime_TextChanged(sender As Object, e As EventArgs) 
-        Change()
-    End Sub
-
-    Private Sub tbAuxBufferChargeTime_TextChanged(sender As Object, e As EventArgs) 
-        Change()
-    End Sub
-
-    Private Sub tbEquivalenceFactor_TextChanged(sender As Object, e As EventArgs) 
-        Change()
-    End Sub
-
-    Private Sub cbSmartElectric_CheckedChanged(sender As Object, e As EventArgs) Handles cbSmartElectric.CheckedChanged
-        pnSmartElectricParams.Enabled = cbSmartElectric.Checked
+    Private Sub cbES_HEVREESS_CheckedChanged(sender As Object, e As EventArgs) Handles cbES_HEVREESS.CheckedChanged
+        pnDCDCEff.Enabled = cbES_HEVREESS.Checked
     End Sub
 
 #End Region

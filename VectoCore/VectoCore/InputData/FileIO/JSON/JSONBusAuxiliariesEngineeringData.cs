@@ -1,6 +1,7 @@
 ﻿using System.IO;
 using Newtonsoft.Json.Linq;
 using TUGraz.VectoCommon.InputData;
+using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl;
 using TUGraz.VectoCore.Utils;
@@ -66,6 +67,14 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			get { return _electric.GetEx<double>("AlternatorEfficiency"); }
 		}
 
+		public double DCDCConverterEfficiency
+		{
+			get
+			{
+				return _electric["DCDCConverterEfficiency"] == null ? 1 : _electric.GetEx<double>("DCDCConverterEfficiency");
+			}
+		}
+
 		public Ampere CurrentDemand
 		{
 			get { return _electric.GetEx<double>("CurrentDemand").SI<Ampere>(); }
@@ -75,9 +84,12 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 		public Ampere CurrentDemandEngineOffStandstill { get { return _electric.GetEx<double>("CurrentDemandEngineOffStandstill").SI<Ampere>(); } }
 
-		public bool SmartElectric
+		public AlternatorType AlternatorType
 		{
-			get { return _electric.GetEx<bool>("SmartElectric"); }
+			get
+			{
+				return _electric["AlternatorType"] == null ? AlternatorType.Conventional :  _electric.GetEx<string>("AlternatorType").ParseEnum<AlternatorType>();
+			}
 		}
 
 		public WattSecond ElectricStorageCapacity
@@ -97,6 +109,13 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			get { return _electric.GetEx<double>("MaxAlternatorPower").SI<Watt>(); }
 		}
 
+		public bool ESSupplyFromHEVREESS
+		{
+			get
+			{
+				return _electric["ESSupplyFromHEVREESS"] == null ? false : _electric.GetEx<bool>("ESSupplyFromHEVREESS");
+			}
+		}
 
 		#endregion
 

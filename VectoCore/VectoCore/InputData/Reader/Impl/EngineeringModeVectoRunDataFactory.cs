@@ -158,7 +158,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
                     SimulationType = SimulationType.DistanceCycle | SimulationType.MeasuredSpeedCycle | SimulationType.PWheel,
                     GearshiftParameters = gearshiftParams,
                     ShiftStrategy = InputDataProvider.JobInputData.ShiftStrategy,
-					ElectricAuxDemand = InputDataProvider.JobInputData.Vehicle.Components.AuxiliaryInputData.ElectricAuxPower,
+					ElectricAuxDemand = InputDataProvider.JobInputData.Vehicle.Components.AuxiliaryInputData.Auxiliaries.ElectricPowerDemand,
                 };
             }
         }
@@ -174,6 +174,8 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 				foreach (var cycle in InputDataProvider.JobInputData.Cycles) {
 					var dao = new EngineeringDataAdapter();
 					var driver = dao.CreateDriverData(InputDataProvider.DriverInputData);
+					if (InputDataProvider.JobInputData.JobType != VectoSimulationJobType.ConventionalVehicle)
+						driver.EngineStopStart.UtilityFactorDriving = 1;
 					var vehicle = InputDataProvider.JobInputData.Vehicle;
 					var engineData = dao.CreateEngineData(vehicle, engineMode);
 					engineData.FuelMode = modeIdx;
@@ -203,7 +205,10 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 						? CyclesCache[cycle.CycleData.Source]
 						: DrivingCycleDataReader.ReadFromDataTable(cycle.CycleData, cycle.Name, crossWindRequired);
 
-					var electricMachines = dao.CreateElectricMachines(vehicle.Components.ElectricMachines, vehicle.ElectricMotorTorqueLimits) ?? new List<Tuple<PowertrainPosition, ElectricMotorData>>();
+					var electricMachines =
+						dao.CreateElectricMachines(vehicle.Components.ElectricMachines,
+							vehicle.ElectricMotorTorqueLimits) ??
+						new List<Tuple<PowertrainPosition, ElectricMotorData>>();
 					var battery = dao.CreateBatteryData(vehicle.Components.ElectricStorage, vehicle.InitialSOC);
 					var superCap = dao.CreateSuperCapData(vehicle.Components.ElectricStorage, vehicle.InitialSOC);
 
@@ -241,7 +246,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 							gearboxData.Type, InputDataProvider.DriverInputData.GearshiftInputData,
 							axlegearData.AxleGear.Ratio * (angledriveData?.Angledrive.Ratio ?? 1.0), engineData.IdleSpeed),
 						ShiftStrategy = InputDataProvider.JobInputData.ShiftStrategy,
-						ElectricAuxDemand = InputDataProvider.JobInputData.Vehicle.Components.AuxiliaryInputData.ElectricAuxPower,
+						ElectricAuxDemand = InputDataProvider.JobInputData.Vehicle.Components.AuxiliaryInputData.Auxiliaries.ElectricPowerDemand,
 					};
 				}
 			}
