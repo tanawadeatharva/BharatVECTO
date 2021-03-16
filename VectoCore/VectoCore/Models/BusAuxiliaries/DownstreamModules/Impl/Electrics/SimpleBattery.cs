@@ -87,7 +87,7 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.Electric
 
 		public void ConsumeEnergy(WattSecond energy, bool dryRun)
 		{
-			var batEnergy = energy * (energy.IsSmaller(0) ? StorageEfficiency : 1);
+			var batEnergy = energy * (energy.IsGreater(0) ? StorageEfficiency : 1);
 
 			if (!dryRun) {
 				CurrentState.ConsumedEnergy = batEnergy;
