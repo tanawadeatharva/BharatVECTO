@@ -28,7 +28,7 @@ xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:DeclarationOutput:VehicleInterimFile
 				<ZeroEmissionVehicle>false</ZeroEmissionVehicle>
 				<ADAS xsi:type="v2.3:AdvancedDriverAssistantSystemsType">
 					<v2.3:EngineStopStart>true</v2.3:EngineStopStart>
-					<v2.3:EcoRollWithoutEngineStop>true</v2.3:EcoRollWithoutEngineStop>
+					<v2.3:EcoRollWithoutEngineStop>false</v2.3:EcoRollWithoutEngineStop>
 					<v2.3:EcoRollWithEngineStop>true</v2.3:EcoRollWithEngineStop>
 					<v2.3:PredictiveCruiseControl>1,2,3</v2.3:PredictiveCruiseControl>
 					<v2.3:APTEcoRollReleaseLockupClutch>false</v2.3:APTEcoRollReleaseLockupClutch>
