@@ -665,7 +665,7 @@ public class JSONFileWriter : IOutputFileWriter
 			body.Add("Padd", aux.Auxiliaries.ConstantPowerDemand.Value());
 			body.Add("Paux_ICEOff_Driving", aux.Auxiliaries.PowerDemandICEOffDriving.Value());
 			body.Add("Paux_ICEOff_Standstill", aux.Auxiliaries.PowerDemandICEOffStandstill.Value());
-			body.Add("Padd_electric", aux.Auxiliaries.ElectricPowerDemand);
+			body.Add("Padd_electric", aux.Auxiliaries.ElectricPowerDemand.Value());
 		}
 
 		var driver = input.DriverInputData;
