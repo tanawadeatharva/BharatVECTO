@@ -927,11 +927,17 @@ namespace TUGraz.VectoCommon.InputData
 		DateTime Date { get; }
 	}
 
-	public interface IManufacturingStageInputData : IVehicleDeclarationInputData
+	public interface IManufacturingStageInputData
 	{
+		DigestData HashPreviousStage { get; }
 		int StageCount { get; }
 
-		DigestData HashPreviousStage { get; }
+		IVehicleDeclarationInputData Vehicle { get; }
+
+		IApplicationInformation ApplicationInformation { get; }
+
+		DigestData Signature { get; }
+
 	}
 
 	public enum StateOfCompletion

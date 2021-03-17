@@ -16,39 +16,45 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 {
 	public class XMLDeclarationInputDataProviderMultistageV01 : AbstractXMLResource, IXMLMultistageInputDataProvider
 	{
-		public static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_MULTISTAGE_BUS_VEHICLE_NAMESPACE_VO1;
+		public static readonly XNamespace NAMESPACE_URI =
+			XMLDefinitions.DECLARATION_MULTISTAGE_BUS_VEHICLE_NAMESPACE_VO1;
 
 		public const string XSD_TYPE = "VectoOutputMultistageType";
 
-		public static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
+		public static readonly string QUALIFIED_XSD_TYPE =
+			XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
 
 		protected IDeclarationMultistageJobInputData JobData;
 		protected readonly XmlDocument Document;
 
-		public XMLDeclarationInputDataProviderMultistageV01(XmlDocument xmlDoc, string fileName) 
+		public XMLDeclarationInputDataProviderMultistageV01(XmlDocument xmlDoc, string fileName)
 			: base(xmlDoc.DocumentElement, fileName)
 		{
 			Document = xmlDoc;
-			SourceType = DataSourceType.XMLFile;
 
 			var h = VectoHash.Load(xmlDoc);
 			XMLHash = h.ComputeXmlHash();
 		}
 
-		protected override XNamespace SchemaNamespace {
+		protected override XNamespace SchemaNamespace
+		{
 			get { return NAMESPACE_URI; }
 		}
-		protected override DataSourceType SourceType { get; }
 
-		public IDeclarationMultistageJobInputData JobInputData {
+		protected override DataSourceType SourceType
+		{
+			get { return DataSourceType.XMLFile; }
+		}
+
+		public IDeclarationMultistageJobInputData JobInputData
+		{
 			get { return JobData ?? (JobData = Reader.JobData); }
 		}
 
 
-		IDeclarationJobInputData IDeclarationInputDataProvider.JobInputData {
-			get {
-				throw new NotImplementedException();
-			}
+		IDeclarationJobInputData IDeclarationInputDataProvider.JobInputData
+		{
+			get { throw new NotImplementedException(); }
 		}
 
 		public IPrimaryVehicleInformationInputDataProvider PrimaryVehicleData { get; }
@@ -63,16 +69,20 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 	public class XMLDeclarationMultistageJobInputDataV01 : AbstractXMLResource, IXMLDeclarationMultistageJobInputData
 	{
-		public static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_MULTISTAGE_BUS_VEHICLE_NAMESPACE_VO1;
+		public static readonly XNamespace NAMESPACE_URI =
+			XMLDefinitions.DECLARATION_MULTISTAGE_BUS_VEHICLE_NAMESPACE_VO1;
 
 		public const string XSD_TYPE = "VectoOutputMultistageType";
 
-		public static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
+		public static readonly string QUALIFIED_XSD_TYPE =
+			XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
+
 		private IPrimaryVehicleInformationInputDataProvider _primaryVehicle;
 		private IList<IManufacturingStageInputData> _manufacturingStages;
 
 
-		public XMLDeclarationMultistageJobInputDataV01(XmlNode node, IXMLMultistageInputDataProvider inputProvider, string fileName) : base(node, fileName)
+		public XMLDeclarationMultistageJobInputDataV01(XmlNode node, IXMLMultistageInputDataProvider inputProvider,
+			string fileName) : base(node, fileName)
 		{
 			InputData = inputProvider;
 			SourceType = DataSourceType.XMLFile;
@@ -88,36 +98,41 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 			get { return _manufacturingStages ?? (_manufacturingStages = Reader.ManufacturingStages); }
 		}
 
-		public IXMLMultistageJobReader Reader { get; set; }
+		public IXMLMultistageJobReader Reader { protected get; set; }
+
 		public IXMLMultistageInputDataProvider InputData { get; }
+
 		protected override XNamespace SchemaNamespace
 		{
 			get { return NAMESPACE_URI; }
 		}
+
 		protected override DataSourceType SourceType { get; }
 	}
 
 
 	// ---------------------------------------------------------------------------------------
-	
-	public class XMLDeclarationMultistagePrimaryVehicleInputDataV01 :  AbstractXMLResource, IXMLPrimaryVehicleBusInputData
+
+	public class XMLDeclarationMultistagePrimaryVehicleInputDataV01 : AbstractXMLResource,
+		IXMLPrimaryVehicleBusInputData
 	{
 		public static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_MULTISTAGE_BUS_VEHICLE_NAMESPACE_VO1;
 
 		public const string XSD_TYPE = "PrimaryVehicleDataType";
-		
+
 		public static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
 
 		private readonly XmlNode _signatureNode;
 		private IVehicleDeclarationInputData _vehicle;
 		private IApplicationInformation _applicationInformation;
 		private IResultsInputData _resultsInputData;
-
-
-		public XMLDeclarationMultistagePrimaryVehicleInputDataV01(XmlNode xmlNode, string fileName) 
+		private DigestData _primaryVehicleInputDataHash;
+		private DigestData _vehicleSignatureHash;
+		private DigestData _manufacturerRecordHash;
+		
+		public XMLDeclarationMultistagePrimaryVehicleInputDataV01(XmlNode xmlNode, string fileName)
 			: base(xmlNode, fileName)
 		{
-			SourceType = DataSourceType.XMLFile;
 			_signatureNode = xmlNode.LastChild;
 		}
 
@@ -125,7 +140,12 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		{
 			get { return NAMESPACE_URI; }
 		}
-		protected override DataSourceType SourceType { get; }
+
+		protected override DataSourceType SourceType
+		{
+			get { return DataSourceType.XMLFile; }
+		}
+
 
 		public IVehicleDeclarationInputData Vehicle
 		{
@@ -134,24 +154,27 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 		public DigestData PrimaryVehicleInputDataHash
 		{
-			get { return Reader.GetDigestData(GetNode("InputDataSignature")); }
+			get { return _primaryVehicleInputDataHash ?? 
+						(_primaryVehicleInputDataHash =  Reader.GetDigestData(GetNode("InputDataSignature")));}
 		}
 
 		public DigestData VehicleSignatureHash
 		{
-			get { return Reader.GetDigestData(_signatureNode); }
+			get { return _vehicleSignatureHash ?? 
+						(_vehicleSignatureHash = Reader.GetDigestData(_signatureNode));}
 		}
 
 		public DigestData ManufacturerRecordHash
 		{
-			get { return Reader.GetDigestData(GetNode("ManufacturerRecordSignature")); }
+			get { return _manufacturerRecordHash ??
+						(_manufacturerRecordHash =  Reader.GetDigestData(GetNode("ManufacturerRecordSignature"))); }
 		}
 
 		public IResultsInputData ResultsInputData
 		{
 			get { return _resultsInputData ?? (_resultsInputData = Reader.ResultsInputData); }
 		}
-		
+
 		public IResult GetResult(VehicleClass vehicleClass, MissionType mission, string fuelMode, Kilogram payload)
 		{
 			return ResultsInputData.Results.FirstOrDefault(
@@ -160,7 +183,10 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 					x.SimulationParameter.FuelMode.Equals(fuelMode, StringComparison.InvariantCultureIgnoreCase));
 		}
 
-		public XmlNode ResultsNode { get { return GetNode(XMLNames.Report_Results); } }
+		public XmlNode ResultsNode
+		{
+			get { return GetNode(XMLNames.Report_Results); }
+		}
 
 		public IApplicationInformation ApplicationInformation
 		{
@@ -173,8 +199,73 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		}
 
 		public XElement XMLHash { get; }
-		public IXMLDeclarationPrimaryVehicleBusInputDataReader Reader { get; set; }
 
+		public IXMLDeclarationPrimaryVehicleBusInputDataReader Reader { protected get; set; }
+
+	}
+
+
+	// ---------------------------------------------------------------------------------------
+
+	public class XMLDeclarationMultistageTypeInputDataV01 : AbstractXMLResource, IXMLMultistageEntryInputDataProvider
+	{
+		public static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_MULTISTAGE_BUS_VEHICLE_NAMESPACE_VO1;
+
+		public const string XSD_TYPE = "ManufacturingStageType";
+
+		public static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
+
+		private readonly XmlNode _signatureXmlNode;
+		private IVehicleDeclarationInputData _vehicle;
+		private IApplicationInformation _applicationInformation;
+		private DigestData _hashPreviousStage;
+		private DigestData _signature;
+
+
+		public XMLDeclarationMultistageTypeInputDataV01(XmlNode xmlNode, string fileName) 
+			: base(xmlNode, fileName)
+		{
+			_signatureXmlNode = xmlNode.LastChild;
+		}
 		
+		protected override XNamespace SchemaNamespace
+		{
+			get { return NAMESPACE_URI; }
+		}
+		protected override DataSourceType SourceType
+		{
+			get { return DataSourceType.XMLFile; }
+		}
+
+		public DigestData HashPreviousStage
+		{
+			get { return _hashPreviousStage ??
+						(_hashPreviousStage = Reader.GetDigestData(GetNode("HashPreviousStage"))); }
+		}
+
+		public int StageCount
+		{
+			get { return Convert.ToInt32(GetAttribute(BaseNode, XMLNames.ManufacturingStage_StageCount)); }
+		}
+
+		public IVehicleDeclarationInputData Vehicle
+		{
+			get { return _vehicle ?? (_vehicle = Reader.Vehicle); }
+		}
+
+		public IApplicationInformation ApplicationInformation
+		{
+			get
+			{
+				return _applicationInformation ?? (_applicationInformation = Reader.ApplicationInformation);
+			}
+		}
+
+		public DigestData Signature
+		{
+			get { return _signature ?? (_signature = Reader.GetDigestData(_signatureXmlNode)); }
+		}
+
+		public IXMLMultistageReader Reader { protected get; set; }
 	}
 }

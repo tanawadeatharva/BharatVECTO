@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Xml;
 using System.Xml.Linq;
+using Castle.Core.Internal;
 using Ninject;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Resources;
@@ -61,7 +62,9 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 
 		protected IXMLDeclarationMultistageJobInputData InputData;
 		protected IPrimaryVehicleInformationInputDataProvider _primaryVehicle;
+		protected IList<IManufacturingStageInputData> _manufacturingStages;
 
+		private XmlNodeList _manufacturingNodeStages;
 
 		[Inject]
 		public IDeclarationInjectFactory Factory { protected get; set; }
@@ -72,34 +75,124 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 			: base(inputData, baseNode)
 		{
 			InputData = inputData;
-
+			SetManufacturingStageNodes();
 		}
-
+		
 		public IPrimaryVehicleInformationInputDataProvider PrimaryVehicle
 		{
 			get { return _primaryVehicle ?? (_primaryVehicle = CreateComponent(XMLNames.Bus_PrimaryVehicle, PrimaryVehicleCreator)); }
 		}
+
 		public IList<IManufacturingStageInputData> ManufacturingStages
 		{
 			get
 			{
-				//InputData.ManufacturingStages.Select(x => CreateComponent(x, ManufacturingStageCreator)).ToList();
-				return null;
+				if (_manufacturingNodeStages.IsNullOrEmpty())
+					return null;
+
+				return _manufacturingStages ?? (_manufacturingStages = ManufacturingStagesCreator());
 			}
 		}
 
 		protected IPrimaryVehicleInformationInputDataProvider PrimaryVehicleCreator(string version, XmlNode node,
 			string arg3)
 		{
-			var vehicle = Factory.CreatePrimaryMultistageVehicleData(version, node, arg3);
-			vehicle.Reader = Factory.CreatePrimaryVehicleBusInputReader(version, vehicle, node.FirstChild);
-			return vehicle;
+			var primaryVehicle = Factory.CreatePrimaryMultistageVehicleData(version, node, arg3);
+			primaryVehicle.Reader = Factory.CreatePrimaryVehicleBusInputReader(version, primaryVehicle, node.FirstChild);
+			return primaryVehicle;
+		}
+
+		private IList<IManufacturingStageInputData> ManufacturingStagesCreator()
+		{
+			var stages = new List<IManufacturingStageInputData>();
+
+			foreach (XmlNode manufacturingNodeStage in _manufacturingNodeStages) {
+				var version = XMLHelper.GetXsdType(manufacturingNodeStage?.SchemaInfo.SchemaType);
+				stages.Add(ManufacturingStageCreator(version, manufacturingNodeStage));
+			}
+			return stages;
+		}
+		
+		protected IManufacturingStageInputData ManufacturingStageCreator(string version, XmlNode node)
+		{
+			var stage = Factory.CreateMultistageData(version, node, null);
+			stage.Reader = Factory.CreateMultistageDataReader(version, stage, node);
+			return stage;
+		}
+
+		private void SetManufacturingStageNodes()
+		{
+			_manufacturingNodeStages = BaseNode.SelectNodes(XMLHelper.QueryLocalName(XMLNames.ManufacturingStage));
 		}
 	}
 
 	// ---------------------------------------------------------------------------------------
-
 	
+	public class XMLMultistageEntryReaderV01 : AbstractComponentReader, IXMLMultistageReader
+	{
+		public static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_MULTISTAGE_BUS_VEHICLE_NAMESPACE_VO1;
+
+		public const string XSD_TYPE = "ManufacturingStageType";
+
+		public static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
+
+		
+		protected readonly XmlNode JobNode;
+		protected readonly IXMLMultistageEntryInputDataProvider _multistageData;
+		protected IApplicationInformation _applicationInformation;
+		protected IVehicleDeclarationInputData _vehicle;
+
+		[Inject]
+		public IDeclarationInjectFactory Factory { protected get; set; }
+
+		public XMLMultistageEntryReaderV01(IXMLMultistageEntryInputDataProvider multistageData, XmlNode node) : base(
+			multistageData, node)
+		{
+			JobNode = node;
+			_multistageData = multistageData;
+		}
+		
+		public IVehicleDeclarationInputData Vehicle
+		{
+			get { return _vehicle ?? (_vehicle = CreateComponent(XMLNames.Tag_Vehicle, VehicleCreator)); }
+		}
+
+		private IVehicleDeclarationInputData VehicleCreator(string version, XmlNode node, string arg3)
+		{
+			var vehicle = Factory.CreateVehicleData(version, null, node, arg3);
+
+			if(vehicle.ComponentNode != null)
+				vehicle.ComponentReader = GetReader(vehicle, vehicle.ComponentNode, Factory.CreateComponentReader);
+			
+			if(vehicle.ADASNode != null)
+				vehicle.ADASReader = GetReader(vehicle, vehicle.ADASNode, Factory.CreateADASReader);
+			
+			return vehicle;
+		}
+
+		public IApplicationInformation ApplicationInformation 
+		{ 
+			get
+			{
+				return _applicationInformation ??
+						(_applicationInformation = CreateComponent(XMLNames.Tag_ApplicationInformation, ApplicationCreator));
+			}
+		}
+
+		protected IApplicationInformation ApplicationCreator(string version, XmlNode node, string agr3)
+		{
+			return Factory.CreateApplicationInformationReader(version, node);
+		}
+
+		public DigestData GetDigestData(XmlNode xmlNode)
+		{
+			return xmlNode == null ? null : new DigestData(xmlNode);
+		}
+	}
+	
+	// ---------------------------------------------------------------------------------------
+
+
 	public class XMLMultistagePrimaryVehicleReaderV01 : AbstractComponentReader, IXMLDeclarationPrimaryVehicleBusInputDataReader
 	{
 
@@ -108,8 +201,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 		public const string XSD_TYPE = "PrimaryVehicleDataType";
 
 		public static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
-
-
+		
 		protected XmlNode JobNode;
 		protected IDeclarationJobInputData _jobData;
 		protected IXMLPrimaryVehicleBusInputData _primaryInputData;
@@ -142,8 +234,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 			job.Reader = Factory.CreatePrimaryVehicleJobReader(version, job, JobNode);
 			return job;
 		}
-
-
+		
 		public IResultsInputData ResultsInputData
 		{
 			get
@@ -157,20 +248,17 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 		{
 			return Factory.CreateResultsInputDataReader(version, node);
 		}
-
-
+		
 		public DigestData GetDigestData(XmlNode xmlNode)
 		{
 			return xmlNode == null ? null : new DigestData(xmlNode);
 		}
-
-
+		
 		protected IApplicationInformation ApplicationCreator(string version, XmlNode node, string agr3)
 		{
 			return Factory.CreateApplicationInformationReader(version, node);
 		}
-
-
+		
 		public IApplicationInformation ApplicationInformation
 		{
 			get

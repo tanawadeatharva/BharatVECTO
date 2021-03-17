@@ -215,7 +215,7 @@ xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:DeclarationOutput:VehicleInterimFile
 											<Model>Generic Wheel</Model>
 											<CertificationNumber>e12*0815/8051*2017/05E0000*00</CertificationNumber>
 											<Date>2017-01-11T14:00:00Z</Date>
-											<AppVersion>Tyre Generation App 1.0</AppVersion>
+											<AppVersion>Tyre Generation App 1.1</AppVersion>
 											<Dimension>315/70 R22.5</Dimension>
 											<RRCDeclared>0.0063</RRCDeclared>
 											<FzISO>31300</FzISO>
@@ -242,7 +242,7 @@ xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:DeclarationOutput:VehicleInterimFile
 											<Model>Generic Wheel</Model>
 											<CertificationNumber>e12*0815/8051*2017/05E0000*00</CertificationNumber>
 											<Date>2017-01-11T14:00:00Z</Date>
-											<AppVersion>Tyre Generation App 1.0</AppVersion>
+											<AppVersion>Tyre Generation App 1.1</AppVersion>
 											<Dimension>315/70 R22.5</Dimension>
 											<RRCDeclared>0.0055</RRCDeclared>
 											<FzISO>31300</FzISO>

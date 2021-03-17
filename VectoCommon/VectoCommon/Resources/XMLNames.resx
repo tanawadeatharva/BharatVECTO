@@ -1425,4 +1425,10 @@
   <data name="Bus_PrimaryVehicle" xml:space="preserve">
     <value>PrimaryVehicle</value>
   </data>
+  <data name="ManufacturingStage" xml:space="preserve">
+    <value>ManufacturingStage</value>
+  </data>
+  <data name="ManufacturingStage_StageCount" xml:space="preserve">
+    <value>stageCount</value>
+  </data>
 </root>

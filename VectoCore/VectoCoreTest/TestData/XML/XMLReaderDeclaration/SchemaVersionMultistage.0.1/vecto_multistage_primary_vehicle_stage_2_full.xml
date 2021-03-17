@@ -215,7 +215,7 @@ xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:DeclarationOutput:VehicleInterimFile
 											<Model>Generic Wheel</Model>
 											<CertificationNumber>e12*0815/8051*2017/05E0000*00</CertificationNumber>
 											<Date>2017-01-11T14:00:00Z</Date>
-											<AppVersion>Tyre Generation App 1.0</AppVersion>
+											<AppVersion>Tyre Generation App 1.1</AppVersion>
 											<Dimension>315/70 R22.5</Dimension>
 											<RRCDeclared>0.0063</RRCDeclared>
 											<FzISO>31300</FzISO>
@@ -643,20 +643,20 @@ xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:DeclarationOutput:VehicleInterimFile
 	<ManufacturingStage stageCount="2">
 		<Data xsi:type="vif:BusManufacturingStageDataType" id="MSTG-1">
 			<HashPreviousStage>
-			<di:Reference URI="#PIF-d10aff76c5d149948046">
+			<di:Reference URI="#PIF-d11aff76c5d149948046">
 				<di:Transforms>
 					<di:Transform Algorithm="urn:vecto:xml:2017:canonicalization"/>
 					<di:Transform Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#"/>
 				</di:Transforms>
 				<di:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"/>
-				<di:DigestValue>nI+57QQtWA2rFqJTZ41t0XrXcJbcGmc7j4E66iGJyT0=</di:DigestValue>
+				<di:DigestValue>nI+67QQtWA2rFqJTZ41t0XrXcJbcGmc7j4E66iGJyT0=</di:DigestValue>
 			</di:Reference>
 			</HashPreviousStage>
 			<Vehicle xsi:type="v2.8:InterimStageInputType" id="MSTG-1-Vehicle">
 				<v2.8:Manufacturer>Intermediate Manufacturer 1</v2.8:Manufacturer>
 				<v2.8:ManufacturerAddress>Intermediate Manufacturer Address 1</v2.8:ManufacturerAddress>
-				<v2.8:VIN>adfas</v2.8:VIN>
-				<v2.8:Date>2018-02-15T11:00:00Z</v2.8:Date>
+				<v2.8:VIN>VIN-132564</v2.8:VIN>
+				<v2.8:Date>2018-01-15T11:00:00Z</v2.8:Date>
 				<v2.8:Model>Intermediate Model 1</v2.8:Model>
 				<v2.8:LegislativeCategory>M3</v2.8:LegislativeCategory>
 				<v2.8:CorrectedActualMass>25000</v2.8:CorrectedActualMass>
@@ -667,16 +667,16 @@ xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:DeclarationOutput:VehicleInterimFile
 				<v2.8:NumberPassengersLowerDeck>30</v2.8:NumberPassengersLowerDeck>
 				<v2.8:NumberPassengersUpperDeck>24</v2.8:NumberPassengersUpperDeck>
 				<v2.8:VehicleCode>CA</v2.8:VehicleCode>
-				<v2.8:LowEntry>false</v2.8:LowEntry>
+				<v2.8:LowEntry>true</v2.8:LowEntry>
 				<v2.8:HeightIntegratedBody>2500</v2.8:HeightIntegratedBody>				
 				<v2.8:VehicleLength>12000</v2.8:VehicleLength>				
 				<v2.8:VehicleWidth>2000</v2.8:VehicleWidth>				
-				<v2.8:EntranceHeight>2000</v2.8:EntranceHeight>
+				<v2.8:EntranceHeight>2050</v2.8:EntranceHeight>
 				<v2.8:DoorDriveTechnology>pneumatic</v2.8:DoorDriveTechnology>
 				<v2.8:StateOfCompletion>incomplete</v2.8:StateOfCompletion>
 				<v2.8:ADAS>
 					<v2.3:EngineStopStart>false</v2.3:EngineStopStart>
-					<v2.3:EcoRollWithoutEngineStop>false</v2.3:EcoRollWithoutEngineStop>
+					<v2.3:EcoRollWithoutEngineStop>true</v2.3:EcoRollWithoutEngineStop>
 					<v2.3:EcoRollWithEngineStop>false</v2.3:EcoRollWithEngineStop>
 					<v2.3:PredictiveCruiseControl>none</v2.3:PredictiveCruiseControl>
 					<v2.3:APTEcoRollReleaseLockupClutch>true</v2.3:APTEcoRollReleaseLockupClutch>	
@@ -686,12 +686,12 @@ xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:DeclarationOutput:VehicleInterimFile
 					<v2.0:Data xmlns:v2.0="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0" xsi:type="v2.0:AirDragDataDeclarationType" id="CabinX23h">
 						<v2.0:Manufacturer>Generic Manufacturer</v2.0:Manufacturer>
 						<v2.0:Model>Generic Model</v2.0:Model>
-						<v2.0:CertificationNumber>e12*0815/8051*2017/05E0000*00</v2.0:CertificationNumber>
-						<v2.0:Date>2017-03-24T15:00:00Z</v2.0:Date>
-						<v2.0:AppVersion>Vecto AirDrag x.y</v2.0:AppVersion>
+						<v2.0:CertificationNumber>e12*0815/8051*2017/05E1000*00</v2.0:CertificationNumber>
+						<v2.0:Date>2018-03-24T15:00:00Z</v2.0:Date>
+						<v2.0:AppVersion>Vecto AirDrag x.y.z</v2.0:AppVersion>
 						<v2.0:CdxA_0>6.31</v2.0:CdxA_0>
 						<v2.0:TransferredCdxA>6.32</v2.0:TransferredCdxA>
-						<v2.0:DeclaredCdxA>6.34</v2.0:DeclaredCdxA>					
+						<v2.0:DeclaredCdxA>6.35</v2.0:DeclaredCdxA>					
 					</v2.0:Data>
 					<v2.0:Signature>
 						<di:Reference URI="#CabinX23h">
@@ -735,7 +735,7 @@ xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:DeclarationOutput:VehicleInterimFile
 			</Vehicle>
 			<ApplicationInformation>
 				<SimulationToolVersion>!!NOT FOR CERTIFICATION!!</SimulationToolVersion>
-				<Date>2021-01-12T07:20:08.0187663Z</Date>
+				<Date>2021-01-12T07:20:08.0187666Z</Date>
 			</ApplicationInformation>
 		</Data>
 		<Signature>			

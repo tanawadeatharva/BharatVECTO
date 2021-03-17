@@ -42,6 +42,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Factory
 		IXMLPrimaryVehicleBusInputData CreatePrimaryMultistageVehicleData(
 			string version, XmlNode xmlNode, string fileName);
 
+		IXMLMultistageEntryInputDataProvider CreateMultistageData(string version, XmlNode xmlNode, string fileName);
+
 
 		IXMLVehicleComponentsDeclaration CreateComponentData(
 			string version, IXMLDeclarationVehicleData vehicle, XmlNode componentNode, string sourceFile);
@@ -131,6 +133,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Factory
 
 		IXMLResultsInputData CreateResultsInputDataReader(string version, XmlNode resultsNode);
 
+
+		IXMLMultistageReader CreateMultistageDataReader(string version, IXMLMultistageEntryInputDataProvider multistageData, XmlNode node);
 	}
 
 }

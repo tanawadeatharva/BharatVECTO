@@ -16,11 +16,15 @@ namespace TUGraz.VectoCore.Tests.XML
 {
 	public class XMLMultistageBusDataTest
 	{
-		protected IXMLInputDataReader xmlInputReader;
+		protected IXMLInputDataReader _xmlInputReader;
 		private IKernel _kernel;
 
-		const string VIF =
+		const string VIF01 =
+			@"TestData\XML\XMLReaderDeclaration\SchemaVersionMultistage.0.1\vecto_multistage_primary_vehicle_stage_2_3.xml";
+
+		const string VIF02 =
 			@"TestData\XML\XMLReaderDeclaration\SchemaVersionMultistage.0.1\vecto_multistage_primary_vehicle_stage_2_full.xml";
+
 
 		[OneTimeSetUp]
 		public void RunBeforeAnyTests()
@@ -28,20 +32,20 @@ namespace TUGraz.VectoCore.Tests.XML
 			Directory.SetCurrentDirectory(TestContext.CurrentContext.TestDirectory);
 
 			_kernel = new StandardKernel(new VectoNinjectModule());
-			xmlInputReader = _kernel.Get<IXMLInputDataReader>();
+			_xmlInputReader = _kernel.Get<IXMLInputDataReader>();
 		}
 
 
 		[TestCase]
-		public void TestVehicleMultistageBusInput()
+		public void TestVehicleMultistageBusInput01()
 		{
-			var reader = XmlReader.Create(VIF);
-			var inputDataProvider = xmlInputReader.Create(reader) as IMultistageBusInputDataProvider;
+			var reader = XmlReader.Create(VIF01);
+			var inputDataProvider = _xmlInputReader.Create(reader) as IMultistageBusInputDataProvider;
 			TestPrimaryVehicleDataType(inputDataProvider.JobInputData.PrimaryVehicle);
-
-			//var prodStages = inputDataProvider.JobInputData.ManufacturingStages;
+			TestManufacturingStages(inputDataProvider.JobInputData.ManufacturingStages);
 		}
-
+		
+		#region Primary Vehicle Test
 
 		private void TestPrimaryVehicleDataType(IPrimaryVehicleInformationInputDataProvider primaryVehicle)
 		{
@@ -58,7 +62,7 @@ namespace TUGraz.VectoCore.Tests.XML
 
 
 		#region Vehicle Test Methods
-		
+
 		private void TestVehicleData(IVehicleDeclarationInputData vehicleData)
 		{
 			Assert.AreEqual("Generic Truck Manufacturer", vehicleData.Manufacturer);
@@ -111,7 +115,7 @@ namespace TUGraz.VectoCore.Tests.XML
 			TestAxelWheelsData(vehicleComponents.AxleWheels);
 			TestAuxiliarieData(vehicleComponents.BusAuxiliaries);
 		}
-		
+
 		#region Components Data Tests
 
 		#region Engine Data Test
@@ -148,7 +152,7 @@ namespace TUGraz.VectoCore.Tests.XML
 			Assert.IsTrue(CheckFullLoadAndDragCurveEntry("2000.00", "1253.00", "-278.00", fullLoadCurve, ref entryIndex));
 			Assert.IsTrue(CheckFullLoadAndDragCurveEntry("2100.00", "1019.00", "-296.00", fullLoadCurve, ref entryIndex));
 			Assert.IsTrue(CheckFullLoadAndDragCurveEntry("2200.00", "0.00", "-314.00", fullLoadCurve, ref entryIndex));
-			
+
 			Assert.AreEqual(1, engineModes[0].Fuels.Count);
 			Assert.AreEqual(FuelType.DieselCI, engineModes[0].Fuels.First().FuelType);
 		}
@@ -198,16 +202,16 @@ namespace TUGraz.VectoCore.Tests.XML
 			Assert.AreEqual(gear, entry.Gear);
 			Assert.AreEqual(ratio, entry.Ratio);
 
-			if(maxTorque == null)
+			if (maxTorque == null)
 				Assert.IsNull(entry.MaxTorque);
 			else
-				Assert.AreEqual(((int) maxTorque).SI<NewtonMeter>(), entry.MaxTorque);
+				Assert.AreEqual(((int)maxTorque).SI<NewtonMeter>(), entry.MaxTorque);
 
-			if(maxSpeed == null)
+			if (maxSpeed == null)
 				Assert.IsNull(entry.MaxInputSpeed);
-			else 
+			else
 				Assert.AreEqual((double)maxSpeed, entry.MaxInputSpeed.AsRPM, 1e-6);
-			
+
 			entryIndex++;
 			return true;
 		}
@@ -277,11 +281,11 @@ namespace TUGraz.VectoCore.Tests.XML
 		private void TestAxelWheelsData(IAxlesDeclarationInputData axelWheels)
 		{
 			Assert.AreEqual(3, axelWheels.AxlesDeclaration.Count);
-			
+
 			var entry = axelWheels.AxlesDeclaration[0];
 			Assert.AreEqual(AxleType.VehicleNonDriven, entry.AxleType);
 			Assert.AreEqual(false, entry.TwinTyres);
-			
+
 			var tyre1 = entry.Tyre;
 			Assert.AreEqual("Generic Wheels Manufacturer", tyre1.Manufacturer);
 			Assert.AreEqual("Generic Wheel", tyre1.Model);
@@ -308,7 +312,7 @@ namespace TUGraz.VectoCore.Tests.XML
 			Assert.AreEqual("Generic Wheel", tyre2.Model);
 			Assert.AreEqual("e12*0815/8051*2017/05E0000*00", tyre2.CertificationNumber);
 			Assert.AreEqual(DateTime.Parse("2017-01-11T14:00:00Z").ToUniversalTime(), tyre2.Date);
-			Assert.AreEqual("Tyre Generation App 1.0", tyre2.AppVersion);
+			Assert.AreEqual("Tyre Generation App 1.1", tyre2.AppVersion);
 			Assert.AreEqual("315/70 R22.5", tyre2.Dimension);
 			Assert.AreEqual(0.0063, tyre2.RollResistanceCoefficient);
 			Assert.AreEqual(31300, tyre2.TyreTestLoad.Value());
@@ -342,12 +346,12 @@ namespace TUGraz.VectoCore.Tests.XML
 
 
 		#endregion
-		
+
 		#region Auxiliaries Test
 		private void TestAuxiliarieData(IBusAuxiliariesDeclarationData aux)
 		{
 			Assert.AreEqual("Hydraulic driven - Constant displacement pump", aux.FanTechnology);
-			
+
 			Assert.AreEqual(1, aux.SteeringPumpTechnology.Count);
 			Assert.AreEqual("Variable displacement elec. controlled", aux.SteeringPumpTechnology[0]);
 
@@ -356,7 +360,7 @@ namespace TUGraz.VectoCore.Tests.XML
 			Assert.AreEqual(true, aux.ElectricSupply.SmartElectrics);
 			Assert.AreEqual(15000, aux.ElectricSupply.MaxAlternatorPower.Value());
 			Assert.AreEqual(50.SI(Unit.SI.Watt.Hour).Cast<WattSecond>(), aux.ElectricSupply.ElectricStorageCapacity);
-			
+
 			Assert.AreEqual("Large Supply 2-stage", aux.PneumaticSupply.CompressorSize);
 			Assert.AreEqual("none", aux.PneumaticSupply.Clutch);
 			Assert.AreEqual(1.000, aux.PneumaticSupply.Ratio);
@@ -364,7 +368,7 @@ namespace TUGraz.VectoCore.Tests.XML
 			Assert.AreEqual(false, aux.PneumaticSupply.SmartRegeneration);
 			Assert.AreEqual(ConsumerTechnology.Electrically, aux.PneumaticConsumers.AirsuspensionControl);
 			Assert.AreEqual(ConsumerTechnology.Electrically, aux.PneumaticConsumers.AirsuspensionControl);
-			Assert.AreEqual(ConsumerTechnology.Pneumatically, aux.PneumaticConsumers.AdBlueDosing); 
+			Assert.AreEqual(ConsumerTechnology.Pneumatically, aux.PneumaticConsumers.AdBlueDosing);
 
 			Assert.AreEqual(true, aux.HVACAux.AdjustableCoolantThermostat);
 			Assert.AreEqual(true, aux.HVACAux.EngineWasteGasHeatExchanger);
@@ -401,7 +405,7 @@ namespace TUGraz.VectoCore.Tests.XML
 		#endregion
 
 		#region Application Information Test
-		
+
 		private void TestApplicationInformationData(IApplicationInformation appInfo)
 		{
 			Assert.AreEqual("String", appInfo.SimulationToolVersion);
@@ -411,7 +415,7 @@ namespace TUGraz.VectoCore.Tests.XML
 		#endregion
 
 		#region Results Data Test
-		
+
 		private void TestResultsData(IResultsInputData data)
 		{
 			Assert.AreEqual("success", data.Status);
@@ -485,7 +489,7 @@ namespace TUGraz.VectoCore.Tests.XML
 			CheckSimulationParameters(22484.88, 4634.88, 65.28, "single fuel mode", data.Results[index], ref index);
 		}
 
-		private void CheckResultData(VehicleClass vGroup, MissionType mission, double energyCon,  IResult result)
+		private void CheckResultData(VehicleClass vGroup, MissionType mission, double energyCon, IResult result)
 		{
 			Assert.AreEqual(vGroup, result.VehicleGroup);
 			Assert.AreEqual(mission, result.Mission);
@@ -516,7 +520,226 @@ namespace TUGraz.VectoCore.Tests.XML
 			Assert.AreEqual("http://www.w3.org/2001/04/xmlenc#sha256", data.DigestMethod);
 			Assert.AreEqual("nI+57QQtWA2rFqJTZ41t0XrXcJbcGmc7j4E66iGJyT0=", data.DigestValue);
 		}
+
+		#endregion
+
+
+		#endregion
+
+		#region Manufacturing Stages Test
+
+		private void TestManufacturingStages(IList<IManufacturingStageInputData> manufacturingStages)
+		{
+			Assert.AreEqual(2, manufacturingStages.Count);
+			TestManufacturingStag01(manufacturingStages[0]);
+			TestManufacturingStag02(manufacturingStages[1]);
+		}
 		
+
+		#region Test Manufacturing Stage 1
+		
+		private void TestManufacturingStag01(IManufacturingStageInputData manufacturingStage)
+		{
+			Assert.AreEqual(2, manufacturingStage.StageCount);
+
+			TestDigestData("#PIF-d10aff76c5d149948046", "nI+57QQtWA2rFqJTZ41t0XrXcJbcGmc7j4E66iGJyT0=",
+				manufacturingStage.HashPreviousStage);
+
+			TestVehicleDataStage01(manufacturingStage.Vehicle);
+
+			TestApplicationInformationData("!!NOT FOR CERTIFICATION!!", "2021-01-12T07:20:08.0187663Z",
+				manufacturingStage.ApplicationInformation);
+
+			TestDigestData("#RESULT-6f30c7fe665a47938f6b", "BMpFCKh1bu/YPwYj37kJK1uCrv++BTLf2OUZcOt43Os=",
+				manufacturingStage.Signature);
+		}
+
+		private void TestVehicleDataStage01(IVehicleDeclarationInputData vehicleData)
+		{
+			Assert.AreEqual("MSTG-1-Vehicle", vehicleData.Identifier);
+			Assert.AreEqual("Intermediate Manufacturer 1", vehicleData.Manufacturer);
+			Assert.AreEqual("Intermediate Manufacturer Address 1", vehicleData.ManufacturerAddress);
+			Assert.AreEqual("VEH-1234567890", vehicleData.VIN);
+			Assert.AreEqual(DateTime.Parse("2018-02-15T11:00:00Z").ToUniversalTime(), vehicleData.Date);
+			Assert.AreEqual(StateOfCompletion.incomplete, vehicleData.StateOfCompletion);
+		}
+
+		#endregion
+
+
+		#region Test manufacturing Stage 2
+		
+		private void TestManufacturingStag02(IManufacturingStageInputData manufacturingStage)
+		{
+			Assert.AreEqual(3, manufacturingStage.StageCount);
+
+			TestDigestData("#RESULT-6f30c7fe665a47938f6b", "BMpFCKh1bu/YPwYj37kJK1uCrv++BTLf2OUZcOt43Os=",
+				manufacturingStage.HashPreviousStage);
+
+			TestVehicleDataStage02(manufacturingStage.Vehicle);
+		}
+
+		private void TestVehicleDataStage02(IVehicleDeclarationInputData vehicleData)
+		{
+			Assert.AreEqual("MSTG-2-Vehicle", vehicleData.Identifier);
+			Assert.AreEqual("Intermediate Manufacturer 2", vehicleData.Manufacturer);
+			Assert.AreEqual("", vehicleData.ManufacturerAddress);
+			Assert.AreEqual("VEH-2234567890", vehicleData.VIN);
+			Assert.AreEqual(DateTime.Parse("2021-02-13T07:20:08.0187663Z").ToUniversalTime(), vehicleData.Date);
+			Assert.AreEqual(false, vehicleData.AirdragModifiedMultistage);
+			Assert.AreEqual(StateOfCompletion.complete, vehicleData.StateOfCompletion);
+
+			Assert.AreEqual(true, vehicleData.ADAS.EngineStopStart);
+			Assert.AreEqual(EcoRollType.WithEngineStop, vehicleData.ADAS.EcoRoll);
+			Assert.AreEqual(PredictiveCruiseControlType.Option_1_2, vehicleData.ADAS.PredictiveCruiseControl);
+
+			var busAux = vehicleData.Components.BusAuxiliaries;
+			Assert.AreEqual(true, busAux.ElectricConsumers.InteriorLightsLED);
+			Assert.AreEqual(true, busAux.ElectricConsumers.DayrunninglightsLED);
+			Assert.AreEqual(false, busAux.ElectricConsumers.PositionlightsLED);
+			Assert.AreEqual(false, busAux.ElectricConsumers.BrakelightsLED);
+			Assert.AreEqual(true, busAux.ElectricConsumers.HeadlightsLED);
+
+			var hvacAux = vehicleData.Components.BusAuxiliaries.HVACAux;
+			Assert.AreEqual(BusHVACSystemConfiguration.Configuration1, hvacAux.SystemConfiguration);
+			Assert.AreEqual(HeatPumpType.non_R_744_2_stage, hvacAux.HeatPumpTypeDriverCompartment);
+			Assert.AreEqual(HeatPumpMode.heating, hvacAux.HeatPumpModeDriverCompartment);
+			Assert.AreEqual(HeatPumpType.non_R_744_3_stage, hvacAux.HeatPumpTypePassengerCompartment);
+			Assert.AreEqual(HeatPumpMode.cooling, hvacAux.HeatPumpModePassengerCompartment);
+			Assert.AreEqual(50.SI<Watt>(), hvacAux.AuxHeaterPower);
+			Assert.AreEqual(false, hvacAux.DoubleGlazing);
+			Assert.AreEqual(true, hvacAux.AdjustableAuxiliaryHeater);
+			Assert.AreEqual(false, hvacAux.SeparateAirDistributionDucts);
+			Assert.AreEqual(false, hvacAux.WaterElectricHeater);
+			Assert.AreEqual(false, hvacAux.AirElectricHeater);
+			Assert.AreEqual(true, hvacAux.OtherHeatingTechnology);
+		}
+
+		#endregion
+		
+		private void TestApplicationInformationData(string toolVersion, string date,
+			IApplicationInformation applicationInfoData)
+		{
+			Assert.AreEqual(toolVersion, applicationInfoData.SimulationToolVersion);
+			Assert.AreEqual(DateTime.Parse(date).ToUniversalTime(), applicationInfoData.Date);
+		}
+
+		private void TestDigestData(string reference, string digestValue, DigestData digestData)
+		{
+			Assert.AreEqual(reference, digestData.Reference);
+			Assert.AreEqual("urn:vecto:xml:2017:canonicalization", digestData.CanonicalizationMethods[0]);
+			Assert.AreEqual("http://www.w3.org/2001/10/xml-exc-c14n#", digestData.CanonicalizationMethods[1]);
+			Assert.AreEqual("http://www.w3.org/2001/04/xmlenc#sha256", digestData.DigestMethod);
+			Assert.AreEqual(digestValue, digestData.DigestValue);
+		}
+
+		#endregion
+		
+
+		[TestCase]
+		public void TestVehicleMultistageBusInput02()
+		{
+			var reader = XmlReader.Create(VIF02);
+			var inputDataProvider = _xmlInputReader.Create(reader) as IMultistageBusInputDataProvider;
+			TestPrimaryVehicleDataType(inputDataProvider.JobInputData.PrimaryVehicle);
+			TestManufacturingStageVIF02(inputDataProvider.JobInputData.ManufacturingStages);
+		}
+		
+		#region Manufacutring Stage Test VIF02
+
+		private void TestManufacturingStageVIF02(IList<IManufacturingStageInputData> manufacturingStages)
+		{
+			Assert.AreEqual(1, manufacturingStages.Count);
+			
+			var stageData = manufacturingStages[0];
+			Assert.AreEqual(2, stageData.StageCount);
+
+			TestDigestData("#PIF-d11aff76c5d149948046", "nI+67QQtWA2rFqJTZ41t0XrXcJbcGmc7j4E66iGJyT0=",
+				stageData.HashPreviousStage);
+
+			TestVehicleDataVIF02(stageData.Vehicle);
+
+			TestApplicationInformationData("!!NOT FOR CERTIFICATION!!", "2021-01-12T07:20:08.0187666Z",
+				stageData.ApplicationInformation);
+
+			TestDigestData("#RESULT-6f30c7fe665a47938f6b", "BMpFCKh1bu/YPwYj37kJK1uCrv++BTLf2OUZcOt43Os=", stageData.Signature);
+		}
+
+		private void TestVehicleDataVIF02(IVehicleDeclarationInputData vehicleData)
+		{
+			Assert.AreEqual("MSTG-1-Vehicle", vehicleData.Identifier);
+			Assert.AreEqual("Intermediate Manufacturer 1", vehicleData.Manufacturer);
+			Assert.AreEqual("Intermediate Manufacturer Address 1", vehicleData.ManufacturerAddress);
+			Assert.AreEqual("VIN-132564", vehicleData.VIN);
+			Assert.AreEqual(DateTime.Parse("2018-01-15T11:00:00Z").ToUniversalTime(), vehicleData.Date);
+			Assert.AreEqual("Intermediate Model 1", vehicleData.Model);
+			Assert.AreEqual(LegislativeClass.M3, vehicleData.LegislativeClass);
+			Assert.AreEqual(25000.SI<Kilogram>(), vehicleData.CurbMassChassis);
+			Assert.AreEqual(30000.SI<Kilogram>(), vehicleData.GrossVehicleMassRating);
+			Assert.AreEqual(true, vehicleData.AirdragModifiedMultistage);
+			Assert.AreEqual(TankSystem.Liquefied, vehicleData.TankSystem);
+			Assert.AreEqual(RegistrationClass.B, vehicleData.RegisteredClass);
+			Assert.AreEqual(30, vehicleData.NumberOfPassengersLowerDeck);
+			Assert.AreEqual(24, vehicleData.NumberOfPassengersUpperDeck);
+			Assert.AreEqual(VehicleCode.CA, vehicleData.VehicleCode);
+			Assert.AreEqual(true, vehicleData.LowEntry);
+			Assert.AreEqual(2500.SI<Meter>(), vehicleData.Height);
+			Assert.AreEqual(12000.SI<Meter>(), vehicleData.Length);
+			Assert.AreEqual(2000.SI<Meter>(), vehicleData.Width);
+			Assert.AreEqual(2050.SI<Meter>(), vehicleData.EntranceHeight);
+			Assert.AreEqual(ConsumerTechnology.Pneumatically, vehicleData.DoorDriveTechnology);
+			Assert.AreEqual(StateOfCompletion.incomplete, vehicleData.StateOfCompletion);
+
+			Assert.AreEqual(false, vehicleData.ADAS.EngineStopStart);
+			Assert.AreEqual(EcoRollType.WithoutEngineStop, vehicleData.ADAS.EcoRoll);
+			Assert.AreEqual(PredictiveCruiseControlType.None, vehicleData.ADAS.PredictiveCruiseControl);
+			Assert.AreEqual(true, vehicleData.ADAS.ATEcoRollReleaseLockupClutch);
+
+
+			TestVehicleComponentDataVIF02(vehicleData.Components);
+		}
+
+		private void TestVehicleComponentDataVIF02(IVehicleComponentsDeclaration componentData)
+		{
+			TestAirdragVIF02(componentData.AirdragInputData);
+			TestBusAuxVIF02(componentData.BusAuxiliaries);
+		}
+
+		private void TestBusAuxVIF02(IBusAuxiliariesDeclarationData busAux)
+		{
+			Assert.AreEqual(true, busAux.ElectricConsumers.InteriorLightsLED);
+			Assert.AreEqual(false, busAux.ElectricConsumers.DayrunninglightsLED);
+			Assert.AreEqual(true, busAux.ElectricConsumers.PositionlightsLED);
+			Assert.AreEqual(true, busAux.ElectricConsumers.BrakelightsLED);
+			Assert.AreEqual(false, busAux.ElectricConsumers.HeadlightsLED);
+
+			var hvacAux = busAux.HVACAux;
+			Assert.AreEqual(BusHVACSystemConfiguration.Configuration0, hvacAux.SystemConfiguration);
+			Assert.AreEqual(HeatPumpType.non_R_744_3_stage, hvacAux.HeatPumpTypeDriverCompartment);
+			Assert.AreEqual(HeatPumpMode.heating, hvacAux.HeatPumpModeDriverCompartment);
+			Assert.AreEqual(HeatPumpType.non_R_744_2_stage, hvacAux.HeatPumpTypePassengerCompartment);
+			Assert.AreEqual(HeatPumpMode.heating, hvacAux.HeatPumpModePassengerCompartment);
+			Assert.AreEqual(40.SI<Watt>(), hvacAux.AuxHeaterPower);
+			Assert.AreEqual(false, hvacAux.DoubleGlazing);
+			Assert.AreEqual(false, hvacAux.AdjustableAuxiliaryHeater);
+			Assert.AreEqual(true, hvacAux.SeparateAirDistributionDucts);
+			Assert.AreEqual(false, hvacAux.WaterElectricHeater);
+			Assert.AreEqual(true, hvacAux.AirElectricHeater);
+			Assert.AreEqual(false, hvacAux.OtherHeatingTechnology);
+		}
+
+		private void TestAirdragVIF02(IAirdragDeclarationInputData airdragData)
+		{
+			Assert.AreEqual("Generic Manufacturer", airdragData.Manufacturer);
+			Assert.AreEqual("Generic Model", airdragData.Model);
+			Assert.AreEqual("e12*0815/8051*2017/05E1000*00", airdragData.CertificationNumber);
+			Assert.AreEqual(DateTime.Parse("2018-03-24T15:00:00Z").ToUniversalTime(), airdragData.Date);
+			Assert.AreEqual("Vecto AirDrag x.y.z", airdragData.AppVersion);
+			Assert.AreEqual(6.35, airdragData.AirDragArea.Value());
+
+			TestDigestData("#CabinX23h", "b9SHCfOoVrBxFQ8wwDK32OO+9bd85DuaUdgs6j/29N8=", airdragData.DigestValue);
+		}
+
 		#endregion
 	}
 }

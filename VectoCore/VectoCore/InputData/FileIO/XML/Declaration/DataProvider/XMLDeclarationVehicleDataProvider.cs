@@ -1122,6 +1122,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 	}
 
 
+
 	// ---------------------------------------------------------------------------------------
 
 	public class XMLDeclarationInterimStageBusDataProviderV28 : XMLDeclarationVehicleDataProviderV20
@@ -1132,13 +1133,14 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 			XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
 
 		private IAdvancedDriverAssistantSystemDeclarationInputData _adas;
+		
 
 		public XMLDeclarationInterimStageBusDataProviderV28(
 			IXMLDeclarationJobInputData jobData, XmlNode xmlNode, string sourceFile) : base(jobData, xmlNode, sourceFile)
 		{
 			SourceType = DataSourceType.XMLEmbedded;
 		}
-
+		
 		public override XmlElement PTONode
 		{
 			get { return null; }
@@ -1168,7 +1170,18 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		{
 			get { return RegistrationClassHelper.Parse(GetString(XMLNames.Vehicle_RegisteredClass)).First(); }
 		}
-		
+
+		public override TankSystem? TankSystem
+		{
+			get
+			{
+				return ElementExists(XMLNames.Vehicle_NgTankSystem)
+					? EnumHelper.ParseEnum<TankSystem>(GetString(XMLNames.Vehicle_NgTankSystem))
+					: (TankSystem?)null;
+			}
+		}
+
+
 		public override int NumberOfPassengersLowerDeck
 		{
 			get
@@ -1221,6 +1234,30 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		{
 			get { return ConsumerTechnologyHelper.Parse(GetString(XMLNames.BusAux_PneumaticSystem_DoorDriveTechnology)); }
 		}
+
+
+		public override XmlElement ADASNode
+		{
+			get
+			{
+				return _adasNode ?? (_adasNode = GetNode(XMLNames.Vehicle_ADAS, required: false) as XmlElement);
+			}
+		}
+
+
+		public override XmlElement ComponentNode
+		{
+			get
+			{
+				if (ExemptedVehicle)
+				{
+					return null;
+				}
+
+				return _componentNode ?? (_componentNode = GetNode(XMLNames.Vehicle_Components, required:false) as XmlElement);
+			}
+		}
+
 
 		public override IAdvancedDriverAssistantSystemDeclarationInputData ADAS
 		{
