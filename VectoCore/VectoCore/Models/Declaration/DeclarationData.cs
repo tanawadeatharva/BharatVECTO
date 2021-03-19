@@ -278,7 +278,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 			}
 			 
 
-			public static Meter CalculateInternalLength(Meter vehicleLength, VehicleCode vehicleCode, double numPassLowFloor)
+			public static Meter CalculateInternalLength(Meter vehicleLength, VehicleCode? vehicleCode, double numPassLowFloor)
 				{
 				if (vehicleCode.GetFloorType()  == FloorType.LowFloor) {
 					return vehicleCode.IsDoubleDeckerBus() ? 2 * vehicleLength : vehicleLength;
@@ -295,12 +295,12 @@ namespace TUGraz.VectoCore.Models.Declaration
 			}
 
 			public static Meter CalculateLengthInteriorLights(
-				Meter vehicleLength, VehicleCode vehicleCode, double numPassLowFloor)
+				Meter vehicleLength, VehicleCode? vehicleCode, double numPassLowFloor)
 			{
 				return CalculateInternalLength(vehicleLength, vehicleCode, numPassLowFloor);
 			}
 
-			public static Meter CalculateInternalHeight(VehicleCode vehicleCode, RegistrationClass registrationClass, Meter bodyHeight)
+			public static Meter CalculateInternalHeight(VehicleCode? vehicleCode, RegistrationClass? registrationClass, Meter bodyHeight)
 			{
 				if (vehicleCode.IsDoubleDeckerBus()) {
 					return Constants.BusParameters.InternalHeightDoubleDecker;
@@ -359,9 +359,9 @@ namespace TUGraz.VectoCore.Models.Declaration
 						(coolingPwrDriver + coolingPwrPass);
 			}
 
-			public static Meter CorrectionLengthDrivetrainVolume(VehicleCode vehicleCode, bool lowEntry, int numAxles, bool articulated)
+			public static Meter CorrectionLengthDrivetrainVolume(VehicleCode? vehicleCode, bool? lowEntry, int numAxles, bool articulated)
 			{
-				if ((vehicleCode == VehicleCode.CE || vehicleCode == VehicleCode.CG) && !lowEntry) {
+				if ((vehicleCode == VehicleCode.CE || vehicleCode == VehicleCode.CG) && !(bool)lowEntry) {
 					switch (numAxles) {
 						case 2: return 1.0.SI<Meter>();
 						case 3: return articulated ? 1.0.SI<Meter>() : 1.25.SI<Meter>();

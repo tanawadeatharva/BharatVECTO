@@ -20,17 +20,17 @@ namespace TUGraz.VectoCommon.Models {
 	public static class VehicleCodeHelper
 	{
 
-		public static string GetLabel(this VehicleCode self)
+		public static string GetLabel(this VehicleCode? self)
 		{
 			return self.ToString();
 		}
 
-		public static string ToXMLFormat(this VehicleCode self)
+		public static string ToXMLFormat(this VehicleCode? self)
 		{
 			return self.ToString();
 		}
 
-		public static bool IsDoubleDeckerBus(this VehicleCode self)
+		public static bool IsDoubleDeckerBus(this VehicleCode? self)
 		{
 			switch (self) {
 				case VehicleCode.CF:
@@ -50,7 +50,7 @@ namespace TUGraz.VectoCommon.Models {
 			}
 		}
 
-		public static FloorType GetFloorType(this VehicleCode vehicleCode)
+		public static FloorType GetFloorType(this VehicleCode? vehicleCode)
 		{
 			switch (vehicleCode) {
 				case VehicleCode.CA:

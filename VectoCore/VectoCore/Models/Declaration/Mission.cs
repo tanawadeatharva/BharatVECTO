@@ -155,7 +155,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 
 		public Meter DeltaHeight { get; internal set; }
 		public Meter EntranceHeight { get; set; }
-		public VehicleCode VehicleCode { get; set; }
+		public VehicleCode? VehicleCode { get; set; }
 		public FloorType FloorType { get; set; }
 		public IList<BusHVACSystemConfiguration> SeparateAirDistributionDuctsHVACCfg { get; set; }
 	}

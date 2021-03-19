@@ -195,7 +195,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 						Constants.BusAuxiliaries.ElectricalConsumers.DoorsPerVehicleConsumer,
 						StringComparison.CurrentCultureIgnoreCase)).NumberInActualVehicle.ToDouble();
 
-                switch (vehicleData.DoorDriveTechnology)
+				switch (vehicleData.DoorDriveTechnology)
 				{
 					case ConsumerTechnology.Electrically:
 						return count;
@@ -205,7 +205,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 						return 0;
 				}
 			}
-            if (mission.BusParameter.ElectricalConsumers.ContainsKey(consumer.ConsumerName)) {
+			if (mission.BusParameter.ElectricalConsumers.ContainsKey(consumer.ConsumerName)) {
 				return mission.BusParameter.ElectricalConsumers[consumer.ConsumerName];
 			}
 

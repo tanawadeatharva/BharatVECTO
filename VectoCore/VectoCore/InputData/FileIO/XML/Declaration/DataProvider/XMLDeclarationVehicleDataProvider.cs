@@ -120,7 +120,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 			get { return GetString(XMLNames.Vehicle_VIN); }
 		}
 
-		public virtual LegislativeClass LegislativeClass
+		public virtual LegislativeClass? LegislativeClass
 		{
 			get { return GetString(XMLNames.Vehicle_LegislativeClass).ParseEnum<LegislativeClass>(); }
 		}
@@ -224,7 +224,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 			get { return XmlConvert.ToBoolean(GetString(XMLNames.Vehicle_SleeperCab)); }
 		}
 
-		public virtual bool AirdragModifiedMultistage { get; }
+		public virtual bool? AirdragModifiedMultistage { get; }
 
 		public virtual TankSystem? TankSystem
 		{
@@ -273,7 +273,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 			}
 		}
 
-		public virtual RegistrationClass RegisteredClass
+		public virtual RegistrationClass? RegisteredClass
 		{
 			get { return RegistrationClass.unknown; }
 		}
@@ -293,12 +293,12 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 			get { return 0.SI<CubicMeter>(); }
 		}
 
-		public virtual VehicleCode VehicleCode
+		public virtual VehicleCode? VehicleCode
 		{
-			get { return VehicleCode.NOT_APPLICABLE; }
+			get { return VectoCommon.Models.VehicleCode.NOT_APPLICABLE; }
 		}
 
-		public virtual bool LowEntry
+		public virtual bool? LowEntry
 		{
 			get { return false; }
 		}
@@ -328,7 +328,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 			get { return null; }
 		}
 
-		public virtual ConsumerTechnology DoorDriveTechnology { get { return ConsumerTechnology.Unknown; } }
+		public virtual ConsumerTechnology? DoorDriveTechnology { get { return ConsumerTechnology.Unknown; } }
 		
 		public virtual StateOfCompletion StateOfCompletion { get; }
 
@@ -676,9 +676,9 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 		#region Overrides of XMLDeclarationVehicleDataProviderV10
 
-		public override LegislativeClass LegislativeClass
+		public override LegislativeClass? LegislativeClass
 		{
-			get { return LegislativeClass.M3; }
+			get { return VectoCommon.Models.LegislativeClass.M3; }
 		}
 
 		#endregion
@@ -815,12 +815,12 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 			get { return VehicleCategory.HeavyBusCompletedVehicle; }
 		}
 
-		public override RegistrationClass RegisteredClass
+		public override RegistrationClass? RegisteredClass
 		{
 			get { return RegistrationClassHelper.Parse(GetString(XMLNames.Vehicle_RegisteredClass)).First(); }
 		}
 
-		public override VehicleCode VehicleCode
+		public override VehicleCode? VehicleCode
 		{
 			get { return GetString(XMLNames.Vehicle_VehicleCode).ParseEnum<VehicleCode>(); }
 		}
@@ -883,7 +883,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		#endregion
 
 		
-		public override bool LowEntry
+		public override bool? LowEntry
 		{
 			get { return GetBool(XMLNames.Bus_LowEntry); }
 		}
@@ -893,7 +893,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 			get { return GetDouble(XMLNames.Bus_EntranceHeight).SI<Meter>(); }
 		}
 
-		public override ConsumerTechnology DoorDriveTechnology
+		public override ConsumerTechnology? DoorDriveTechnology
 		{
 			get { return ConsumerTechnologyHelper.Parse(GetString(XMLNames.BusAux_PneumaticSystem_DoorDriveTechnology)); }
 		}
@@ -1033,7 +1033,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 		public Meter EntranceHeight { get; }
 
-		public virtual ConsumerTechnology DoorDriveTechnology
+		public virtual ConsumerTechnology? DoorDriveTechnology
 		{
 			get { return ConsumerTechnology.Unknown; }
 		}
@@ -1051,7 +1051,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 		public string Identifier { get; }
 		public bool ExemptedVehicle { get; }
-		public LegislativeClass LegislativeClass { get; }
+		public LegislativeClass? LegislativeClass { get; }
 		public int NumberOfPassengersUpperDeck { get; }
 		public int NumberOfPassengersLowerDeck { get; }
 		public CubicMeter CargoVolume
@@ -1061,16 +1061,16 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		public Kilogram CurbMassChassis { get; }
 		public bool VocationalVehicle { get; }
 		public bool SleeperCab { get; }
-		public bool AirdragModifiedMultistage { get; }
+		public bool? AirdragModifiedMultistage { get; }
 		public TankSystem? TankSystem { get; }
 
 		public bool HybridElectricHDV { get; }
 		public bool DualFuelVehicle { get; }
 		public Watt MaxNetPower1 { get; }
 		public Watt MaxNetPower2 { get; }
-		public RegistrationClass RegisteredClass { get; }
-		public VehicleCode VehicleCode { get; }
-		public bool LowEntry { get; }
+		public RegistrationClass? RegisteredClass { get; }
+		public VehicleCode? VehicleCode { get; }
+		public bool? LowEntry { get; }
 		public bool Articulated { get { return GetBool(XMLNames.Vehicle_Articulated); } }
 		public Meter Height { get; }
 		public Meter Length { get; }
@@ -1134,41 +1134,66 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 		private IAdvancedDriverAssistantSystemDeclarationInputData _adas;
 		
-
 		public XMLDeclarationInterimStageBusDataProviderV28(
-			IXMLDeclarationJobInputData jobData, XmlNode xmlNode, string sourceFile) : base(jobData, xmlNode, sourceFile)
+			IXMLDeclarationJobInputData jobData, XmlNode xmlNode, string sourceFile) 
+			: base(jobData, xmlNode, sourceFile) { }
+
+		public override string Model
 		{
-			SourceType = DataSourceType.XMLEmbedded;
+			get
+			{
+				return ElementExists(XMLNames.Component_Model)
+					? GetString(XMLNames.Component_Model) : null;
+			}
 		}
-		
-		public override XmlElement PTONode
+
+		public override LegislativeClass? LegislativeClass
 		{
-			get { return null; }
-		}
-		
-		public override LegislativeClass LegislativeClass
-		{
-			get { return GetString(XMLNames.Bus_LegislativeCategory).ParseEnum<LegislativeClass>(); }
+			get
+			{
+				return ElementExists(XMLNames.Bus_LegislativeCategory)
+					? GetString(XMLNames.Bus_LegislativeCategory).ParseEnum<LegislativeClass?>()
+					: null;
+			}
 		}
 		
 		public override Kilogram CurbMassChassis
 		{
-			get { return GetDouble(XMLNames.Bus_CorrectedActualMass).SI<Kilogram>(); }
+			get
+			{
+				return ElementExists(XMLNames.Bus_CorrectedActualMass)
+					? GetDouble(XMLNames.Bus_CorrectedActualMass).SI<Kilogram>()
+					: null;
+			}
 		}
 		
 		public override Kilogram GrossVehicleMassRating
 		{
-			get { return GetDouble(XMLNames.Vehicle_TPMLM).SI<Kilogram>(); }
+			get { 
+				return ElementExists(XMLNames.Vehicle_TPMLM)
+					? GetDouble(XMLNames.Vehicle_TPMLM).SI<Kilogram>()
+					: null;
+			}
 		}
 
-		public override bool AirdragModifiedMultistage
+		public override bool? AirdragModifiedMultistage
 		{
-			get { return GetBool(XMLNames.Bus_AirdragModifiedMultistage); }
+			get
+			{
+				return ElementExists(XMLNames.Bus_AirdragModifiedMultistage)
+					? GetBool(XMLNames.Bus_AirdragModifiedMultistage)
+					: (bool?)null;
+			}
 		}
 
-		public override RegistrationClass RegisteredClass
+		public override RegistrationClass? RegisteredClass
 		{
-			get { return RegistrationClassHelper.Parse(GetString(XMLNames.Vehicle_RegisteredClass)).First(); }
+			get
+			{
+				return ElementExists(XMLNames.Vehicle_RegisteredClass)
+					? RegistrationClassHelper.Parse(GetString(XMLNames.Vehicle_RegisteredClass)).First()
+					: (RegistrationClass?)null;
+			}
 		}
 
 		public override TankSystem? TankSystem
@@ -1186,6 +1211,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		{
 			get
 			{
+				if (!ElementExists(XMLNames.Bus_NumberPassengersLowerDeck))
+					return 0;
 				var node = GetNode(XMLNames.Bus_NumberPassengersLowerDeck);
 				return XmlConvert.ToInt32(node.InnerText);
 			}
@@ -1195,44 +1222,79 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		{
 			get
 			{
+				if (!ElementExists(XMLNames.Bus_NumberPassengersUpperDeck))
+					return 0;
 				var node = GetNode(XMLNames.Bus_NumberPassengersUpperDeck);
 				return XmlConvert.ToInt32(node.InnerText);
 			}
 		}
 
-		public override VehicleCode VehicleCode
+		public override VehicleCode? VehicleCode
 		{
-			get { return GetString(XMLNames.Vehicle_VehicleCode).ParseEnum<VehicleCode>(); }
+			get {
+				return ElementExists(XMLNames.Vehicle_VehicleCode)
+					? GetString(XMLNames.Vehicle_VehicleCode).ParseEnum<VehicleCode>()
+					: (VehicleCode?)null; }
 		}
 
-		public override bool LowEntry
+		public override bool? LowEntry
 		{
-			get { return GetBool(XMLNames.Bus_LowEntry); }
+			get 
+			{ 
+				return ElementExists(XMLNames.Bus_LowEntry) 
+					? GetBool(XMLNames.Bus_LowEntry)
+					: (bool?)null;
+			}
 		}
 
 		public override Meter Height
 		{
-			get { return GetDouble(XMLNames.Bus_HeighIntegratedBody).SI<Meter>(); }
+			get
+			{
+				return ElementExists(XMLNames.Bus_HeighIntegratedBody)
+					? GetDouble(XMLNames.Bus_HeighIntegratedBody).SI<Meter>()
+					: null;
+			}
 		}
 
 		public override Meter Length
 		{
-			get { return GetDouble(XMLNames.Bus_VehicleLength).SI<Meter>(); }
+			get
+			{
+				return ElementExists(XMLNames.Bus_VehicleLength)
+					? GetDouble(XMLNames.Bus_VehicleLength).SI<Meter>()
+					: null;
+			}
 		}
 
 		public override Meter Width
 		{
-			get { return GetDouble(XMLNames.Bus_VehicleWidth).SI<Meter>();}
+			get
+			{
+				return ElementExists(XMLNames.Bus_VehicleWidth)
+					? GetDouble(XMLNames.Bus_VehicleWidth).SI<Meter>()
+					: null;
+			}
 		}
 
 		public override Meter EntranceHeight
 		{
-			get { return GetDouble(XMLNames.Bus_EntranceHeight).SI<Meter>(); }
+			get
+			{
+				return ElementExists(XMLNames.Bus_EntranceHeight)
+					? GetDouble(XMLNames.Bus_EntranceHeight).SI<Meter>()
+					: null;
+			}
 		}
 
-		public override ConsumerTechnology DoorDriveTechnology
+		public override ConsumerTechnology? DoorDriveTechnology
 		{
-			get { return ConsumerTechnologyHelper.Parse(GetString(XMLNames.BusAux_PneumaticSystem_DoorDriveTechnology)); }
+			get
+			{
+				return ElementExists(XMLNames.BusAux_PneumaticSystem_DoorDriveTechnology)
+					? ConsumerTechnologyHelper.Parse(GetString(XMLNames.BusAux_PneumaticSystem_DoorDriveTechnology))
+					: (ConsumerTechnology?)null;
+			}
 		}
 
 
@@ -1250,9 +1312,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 			get
 			{
 				if (ExemptedVehicle)
-				{
 					return null;
-				}
 
 				return _componentNode ?? (_componentNode = GetNode(XMLNames.Vehicle_Components, required:false) as XmlElement);
 			}
@@ -1261,7 +1321,27 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 		public override IAdvancedDriverAssistantSystemDeclarationInputData ADAS
 		{
-			get { return _adas ?? (_adas = ADASReader.ADASInputData); }
+			get 
+			{
+				if(ADASNode != null)
+					return _adas ?? (_adas = ADASReader.ADASInputData);
+				return null;
+			}
+		}
+
+		public override IVehicleComponentsDeclaration Components
+		{
+			get 
+			{ 
+				if (ComponentNode == null)
+					return null;
+				return _components ?? (_components = ComponentReader.ComponentInputData);
+			}
+		}
+		
+		public override XmlElement PTONode
+		{
+			get { return null; }
 		}
 
 		public override StateOfCompletion StateOfCompletion
@@ -1269,10 +1349,14 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 			get { return StateOfCompletionHelper.Parse(GetString(XMLNames.Bus_StateOfCompletion)); }
 		}
 
-		protected override DataSourceType SourceType { get; }
 
 		#region Overrides of AbstractXMLResource
 
+		protected override DataSourceType SourceType
+		{
+			get { return DataSourceType.XMLFile; }
+		}
+		
 		protected override XNamespace SchemaNamespace
 		{
 			get { return NAMESPACE_URI; }
@@ -1293,13 +1377,9 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		
 		public XMLDeclarationExemptedInterimStageBusDataProviderV28(IXMLDeclarationJobInputData jobData,
 			XmlNode xmlNode, string sourceFile)
-			: base(jobData, xmlNode, sourceFile)
-		{
-
-			SourceType = DataSourceType.XMLEmbedded;
-		}
+			: base(jobData, xmlNode, sourceFile) {}
 		
-		public override LegislativeClass LegislativeClass
+		public override LegislativeClass? LegislativeClass
 		{
 			get { return GetString(XMLNames.Bus_LegislativeCategory).ParseEnum<LegislativeClass>(); }
 		}
@@ -1314,7 +1394,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 			get { return GetDouble(XMLNames.Vehicle_TPMLM).SI<Kilogram>(); }
 		}
 		
-		public override RegistrationClass RegisteredClass
+		public override RegistrationClass? RegisteredClass
 		{
 			get { return RegistrationClassHelper.Parse(GetString(XMLNames.Vehicle_RegisteredClass)).First(); }
 		}
@@ -1337,12 +1417,12 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 			}
 		}
 
-		public override VehicleCode VehicleCode
+		public override VehicleCode? VehicleCode
 		{
 			get { return GetString(XMLNames.Vehicle_VehicleCode).ParseEnum<VehicleCode>(); }
 		}
 
-		public override bool LowEntry
+		public override bool? LowEntry
 		{
 			get { return GetBool(XMLNames.Bus_LowEntry); }
 		}
@@ -1357,9 +1437,15 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 			get { return null; }
 		}
 
-		public override XmlElement ComponentNode { get{ return null; }}
+		public override XmlElement ComponentNode
+		{
+			get{ return null; }
+		}
 
-		protected override DataSourceType SourceType { get; }
+		public override IVehicleComponentsDeclaration Components
+		{
+			get { return null; }
+		}
 
 		#region Overrides of AbstractXMLResource
 
@@ -1367,6 +1453,12 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		{
 			get { return NAMESPACE_URI; }
 		}
+
+		protected override DataSourceType SourceType
+		{
+			get { return DataSourceType.XMLFile; }
+		}
+
 
 		#endregion
 	}

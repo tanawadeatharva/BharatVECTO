@@ -223,7 +223,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			get { return VehicleData.VIN; }
 		}
 
-		public LegislativeClass LegislativeClass
+		public LegislativeClass? LegislativeClass
 		{
 			get { return VehicleData.LegislativeClass; }
 		}
@@ -335,7 +335,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			get { return null; }
 		}
 
-		public ConsumerTechnology DoorDriveTechnology
+		public ConsumerTechnology? DoorDriveTechnology
 		{
 			get { return VehicleData.DoorDriveTechnology; }
 		}
@@ -488,7 +488,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			get { return DeclarationData.Vehicle.SleeperCabDefault; }
 		}
 
-		public bool AirdragModifiedMultistage { get; }
+		public bool? AirdragModifiedMultistage { get; }
 
 		public TankSystem? TankSystem
 		{
@@ -525,7 +525,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			get { return null; }
 		}
 
-		public RegistrationClass RegisteredClass
+		public RegistrationClass? RegisteredClass
 		{
 			get { return RegistrationClass.unknown; }
 		}
@@ -545,12 +545,12 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			get { return VehicleData.CargoVolume; }
 		}
 
-		public VehicleCode VehicleCode
+		public VehicleCode? VehicleCode
 		{
-			get { return VehicleCode.NOT_APPLICABLE; }
+			get { return VectoCommon.Models.VehicleCode.NOT_APPLICABLE; }
 		}
 
-		public bool LowEntry
+		public bool? LowEntry
 		{
 			get { return VehicleData.LowEntry; }
 		}

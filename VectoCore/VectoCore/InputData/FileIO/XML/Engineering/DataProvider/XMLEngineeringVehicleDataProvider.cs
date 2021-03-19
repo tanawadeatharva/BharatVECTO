@@ -76,7 +76,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering.DataProvider
 			get { return GetString(XMLNames.Vehicle_VIN); }
 		}
 
-		public virtual LegislativeClass LegislativeClass
+		public virtual LegislativeClass? LegislativeClass
 		{
 			get { return GetString(XMLNames.Vehicle_LegislativeClass).ParseEnum<LegislativeClass>(); }
 		}
@@ -129,9 +129,9 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering.DataProvider
 			get { return false; }
 		}
 
-		public virtual bool AirdragModifiedMultistage
+		public virtual bool? AirdragModifiedMultistage
 		{
-			get { return false; }
+			get { return null; }
 		}
 
 		public TankSystem? TankSystem
@@ -169,18 +169,18 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering.DataProvider
 			get { return null; }
 		}
 
-		public virtual RegistrationClass RegisteredClass { get { return RegistrationClass.unknown;} }
+		public virtual RegistrationClass? RegisteredClass { get { return RegistrationClass.unknown;} }
 		public virtual int NumberOfPassengersUpperDeck { get { return 0; } }
 		public virtual int NumberOfPassengersLowerDeck { get { return 0; } }
 		public CubicMeter CargoVolume { get; }
-		public virtual VehicleCode VehicleCode { get { return VehicleCode.NOT_APPLICABLE; } }
-		public virtual bool LowEntry { get { return false; } }
+		public virtual VehicleCode? VehicleCode { get { return VectoCommon.Models.VehicleCode.NOT_APPLICABLE; } }
+		public virtual bool? LowEntry { get { return false; } }
 		public virtual bool Articulated { get { return false; } }
 		
 
 		public virtual Meter Width { get { return null; } }
 		public virtual Meter EntranceHeight { get { return null; } }
-		public ConsumerTechnology DoorDriveTechnology { get { return ConsumerTechnology.Unknown; } }
+		public ConsumerTechnology? DoorDriveTechnology { get { return ConsumerTechnology.Unknown; } }
 		public virtual StateOfCompletion StateOfCompletion { get; }
 
 		IVehicleComponentsDeclaration IVehicleDeclarationInputData.Components

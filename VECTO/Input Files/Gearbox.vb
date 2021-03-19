@@ -801,7 +801,7 @@ Public Class MockEngineeringVehicle
     Public Property Identifier As String Implements IVehicleDeclarationInputData.Identifier
     Public Property ExemptedVehicle As Boolean Implements IVehicleDeclarationInputData.ExemptedVehicle
     Public Property VIN As String Implements IVehicleDeclarationInputData.VIN
-    Public Property LegislativeClass As LegislativeClass Implements IVehicleDeclarationInputData.LegislativeClass
+    Public Property LegislativeClass As LegislativeClass? Implements IVehicleDeclarationInputData.LegislativeClass
     Public Property VehicleCategory As VehicleCategory Implements IVehicleDeclarationInputData.VehicleCategory
     Public Property AxleConfiguration As AxleConfiguration Implements IVehicleDeclarationInputData.AxleConfiguration
     Public Property CurbMassChassis As Kilogram Implements IVehicleDeclarationInputData.CurbMassChassis
@@ -811,7 +811,7 @@ Public Class MockEngineeringVehicle
     Public Property EngineIdleSpeed As PerSecond Implements IVehicleDeclarationInputData.EngineIdleSpeed
     Public Property VocationalVehicle As Boolean Implements IVehicleDeclarationInputData.VocationalVehicle
     Public Property SleeperCab As Boolean Implements IVehicleDeclarationInputData.SleeperCab
-    Public ReadOnly Property AirdragModifiedMultistage As Boolean Implements IVehicleDeclarationInputData.AirdragModifiedMultistage
+    Public ReadOnly Property AirdragModifiedMultistage As Boolean? Implements IVehicleDeclarationInputData.AirdragModifiedMultistage
     Public Property TankSystem As TankSystem? Implements IVehicleDeclarationInputData.TankSystem
 
     Public Property IVehicleEngineeringInputData_ADAS As IAdvancedDriverAssistantSystemsEngineering _
@@ -836,12 +836,12 @@ Public Class MockEngineeringVehicle
     Public Property DualFuelVehicle As Boolean Implements IVehicleDeclarationInputData.DualFuelVehicle
     Public Property MaxNetPower1 As Watt Implements IVehicleDeclarationInputData.MaxNetPower1
     Public Property MaxNetPower2 As Watt Implements IVehicleDeclarationInputData.MaxNetPower2
-    Public ReadOnly Property RegisteredClass As RegistrationClass Implements IVehicleDeclarationInputData.RegisteredClass
+    Public ReadOnly Property RegisteredClass As RegistrationClass? Implements IVehicleDeclarationInputData.RegisteredClass
     Public ReadOnly Property NumberOfPassengersUpperDeck As Integer Implements IVehicleDeclarationInputData.NumberOfPassengersUpperDeck
     Public ReadOnly Property NumberOfPassengersLowerDeck As Integer Implements IVehicleDeclarationInputData.NumberOfPassengersLowerDeck
     Public ReadOnly Property CargoVolume As CubicMeter Implements IVehicleDeclarationInputData.CargoVolume
-    Public ReadOnly Property VehicleCode As VehicleCode Implements IVehicleDeclarationInputData.VehicleCode
-    Public ReadOnly Property LowEntry As Boolean Implements IVehicleDeclarationInputData.LowEntry
+    Public ReadOnly Property VehicleCode As VehicleCode? Implements IVehicleDeclarationInputData.VehicleCode
+    Public ReadOnly Property LowEntry As Boolean? Implements IVehicleDeclarationInputData.LowEntry
     Public ReadOnly Property Articulated As Boolean Implements IVehicleDeclarationInputData.Articulated
     Public ReadOnly Property IVehicleDeclarationInputData_Height As Meter Implements IVehicleDeclarationInputData.Height
     Public Property CurbMassExtra As Kilogram Implements IVehicleEngineeringInputData.CurbMassExtra
@@ -851,7 +851,7 @@ Public Class MockEngineeringVehicle
     Public ReadOnly Property Length As Meter Implements IVehicleDeclarationInputData.Length
     Public ReadOnly Property Width As Meter Implements IVehicleDeclarationInputData.Width
     Public ReadOnly Property EntranceHeight As Meter Implements IVehicleDeclarationInputData.EntranceHeight
-    Public ReadOnly Property DoorDriveTechnology As ConsumerTechnology Implements IVehicleDeclarationInputData.DoorDriveTechnology
+    Public ReadOnly Property DoorDriveTechnology As ConsumerTechnology? Implements IVehicleDeclarationInputData.DoorDriveTechnology
     Public ReadOnly Property StateOfCompletion As StateOfCompletion Implements IVehicleDeclarationInputData.StateOfCompletion
     Public Property Components As IVehicleComponentsDeclaration Implements IVehicleDeclarationInputData.Components
     Public ReadOnly Property XMLSource As XmlNode Implements IVehicleDeclarationInputData.XMLSource

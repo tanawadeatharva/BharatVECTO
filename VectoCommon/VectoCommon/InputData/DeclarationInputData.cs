@@ -97,7 +97,7 @@ namespace TUGraz.VectoCommon.InputData
 
 		string VIN { get; }
 
-		LegislativeClass LegislativeClass { get; }
+		LegislativeClass? LegislativeClass { get; }
 
 		/// <summary>
 		/// P036
@@ -147,7 +147,7 @@ namespace TUGraz.VectoCommon.InputData
 
 		bool SleeperCab { get; }
 
-		bool AirdragModifiedMultistage { get; }
+		bool? AirdragModifiedMultistage { get; }
 
 		TankSystem? TankSystem { get; }
 
@@ -165,7 +165,7 @@ namespace TUGraz.VectoCommon.InputData
 
 		Watt MaxNetPower2 { get; }
 
-		RegistrationClass RegisteredClass { get; }
+		RegistrationClass? RegisteredClass { get; }
 
 		int NumberOfPassengersUpperDeck { get; }
 
@@ -174,9 +174,9 @@ namespace TUGraz.VectoCommon.InputData
 		// only used for medium lorries type VAN
 		CubicMeter CargoVolume { get; }
 
-		VehicleCode VehicleCode { get; }
+		VehicleCode? VehicleCode { get; }
 
-		bool LowEntry { get; }
+		bool? LowEntry { get; }
 
 		bool Articulated { get; }
 
@@ -188,7 +188,7 @@ namespace TUGraz.VectoCommon.InputData
 
 		Meter EntranceHeight { get; }
 
-		ConsumerTechnology DoorDriveTechnology { get; }
+		ConsumerTechnology? DoorDriveTechnology { get; }
 
 		StateOfCompletion StateOfCompletion { get; }
 

@@ -562,13 +562,37 @@ namespace TUGraz.VectoCore.Tests.XML
 			Assert.AreEqual("VEH-1234567890", vehicleData.VIN);
 			Assert.AreEqual(DateTime.Parse("2018-02-15T11:00:00Z").ToUniversalTime(), vehicleData.Date);
 			Assert.AreEqual(StateOfCompletion.incomplete, vehicleData.StateOfCompletion);
+			TestEmptyInterimStageInputFields(vehicleData);
 		}
 
+		private void TestEmptyInterimStageInputFields(IVehicleDeclarationInputData vehicleData)
+		{
+			Assert.AreEqual(null, vehicleData.Model);
+			Assert.AreEqual(null, vehicleData.LegislativeClass);			
+			Assert.AreEqual(null, vehicleData.CurbMassChassis);
+			Assert.AreEqual(null, vehicleData.GrossVehicleMassRating);
+			Assert.AreEqual(null, vehicleData.AirdragModifiedMultistage);
+			Assert.AreEqual(null, vehicleData.TankSystem);
+			Assert.AreEqual(null, vehicleData.RegisteredClass);
+			Assert.AreEqual(0, vehicleData.NumberOfPassengersLowerDeck);
+			Assert.AreEqual(0, vehicleData.NumberOfPassengersUpperDeck);
+			Assert.AreEqual(null, vehicleData.VehicleCode);
+			Assert.AreEqual(null, vehicleData.LowEntry);
+			Assert.AreEqual(null, vehicleData.Height);
+			Assert.AreEqual(null, vehicleData.Length);
+			Assert.AreEqual(null, vehicleData.Width);
+			Assert.AreEqual(null, vehicleData.EntranceHeight);
+			Assert.AreEqual(null, vehicleData.DoorDriveTechnology);
+
+			Assert.AreEqual(null, vehicleData.ADAS);
+			Assert.AreEqual(null, vehicleData.Components);
+		}
+		
 		#endregion
 
 
 		#region Test manufacturing Stage 2
-		
+
 		private void TestManufacturingStag02(IManufacturingStageInputData manufacturingStage)
 		{
 			Assert.AreEqual(3, manufacturingStage.StageCount);
