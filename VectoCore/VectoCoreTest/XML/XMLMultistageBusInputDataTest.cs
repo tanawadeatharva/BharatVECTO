@@ -14,9 +14,12 @@ namespace TUGraz.VectoCore.Tests.XML
 	{
 		protected IXMLInputDataReader xmlInputReader;
 		private IKernel _kernel;
+		
+		const string DirPath = @"TestData\XML\XMLReaderDeclaration\SchemaVersion2.8\";
+		const string VehicleInterimStageInput = DirPath + "vecto_vehicle-stage_input_full-sample.xml";
+		const string VehicleExemptedInterimStageInput = DirPath + "vecto_vehicle-exempted_input_full-sample.xml";
+		const string VehicleExemptedMandatoryOnly = DirPath + "vecto_vehicle-exempted_input_only_mandatory_entries.xml";
 
-		const string VehicleInterimStageInput = @"TestData\XML\XMLReaderDeclaration\SchemaVersion2.8\vecto_vehicle-stage_input_full-sample.xml";
-		const string VehicleExemptedInterimStageInput = @"TestData\XML\XMLReaderDeclaration\SchemaVersion2.8\vecto_vehicle-exempted_input_full-sample.xml";
 
 		[OneTimeSetUp]
 		public void RunBeforeAnyTests()
@@ -139,6 +142,32 @@ namespace TUGraz.VectoCore.Tests.XML
 			Assert.AreEqual(VehicleCode.CC, vehicle.VehicleCode);
 			Assert.AreEqual(true, vehicle.LowEntry);
 			Assert.AreEqual(2500, vehicle.Height.Value());
+		}
+
+		[TestCase]
+		public void TestVehicleExemptedMandatoryInput()
+		{
+			var reader = XmlReader.Create(VehicleExemptedMandatoryOnly);
+			var inputDataProvider = xmlInputReader.CreateDeclaration(reader);
+			var vehicle = inputDataProvider.JobInputData.Vehicle;
+
+			Assert.AreEqual("VEH-1234567890", vehicle.Identifier);
+			Assert.AreEqual("Some Manufacturer 3", vehicle.Manufacturer);
+			Assert.AreEqual("Some Manufacturer Address 3", vehicle.ManufacturerAddress);
+			Assert.AreEqual("VEH-1234567891", vehicle.VIN);
+			Assert.AreEqual(DateTime.Parse("2021-01-09T11:00:00Z").ToUniversalTime(), vehicle.Date);
+
+			Assert.AreEqual(null, vehicle.Model);
+			Assert.AreEqual(null, vehicle.LegislativeClass);
+			Assert.AreEqual(null, vehicle.CurbMassChassis);
+			Assert.AreEqual(null, vehicle.GrossVehicleMassRating);
+			Assert.AreEqual(null, vehicle.RegisteredClass);
+			Assert.AreEqual(0, vehicle.NumberOfPassengersLowerDeck);
+			Assert.AreEqual(0, vehicle.NumberOfPassengersUpperDeck);
+			Assert.AreEqual(null, vehicle.VehicleCode);
+			Assert.AreEqual(null, vehicle.LowEntry);
+			Assert.AreEqual(null, vehicle.Height);
+			Assert.AreEqual(null, vehicle.Components);
 		}
 	}
 }

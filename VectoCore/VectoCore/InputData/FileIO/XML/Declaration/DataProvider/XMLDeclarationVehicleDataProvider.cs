@@ -1152,8 +1152,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 			get
 			{
 				return ElementExists(XMLNames.Bus_LegislativeCategory)
-					? GetString(XMLNames.Bus_LegislativeCategory).ParseEnum<LegislativeClass?>()
-					: null;
+					? GetString(XMLNames.Bus_LegislativeCategory).ParseEnum<LegislativeClass>()
+					:  (LegislativeClass?)null;
 			}
 		}
 		
@@ -1192,7 +1192,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 			{
 				return ElementExists(XMLNames.Vehicle_RegisteredClass)
 					? RegistrationClassHelper.Parse(GetString(XMLNames.Vehicle_RegisteredClass)).First()
-					: (RegistrationClass?)null;
+					: null;
 			}
 		}
 
@@ -1231,10 +1231,12 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 		public override VehicleCode? VehicleCode
 		{
-			get {
+			get
+			{
 				return ElementExists(XMLNames.Vehicle_VehicleCode)
 					? GetString(XMLNames.Vehicle_VehicleCode).ParseEnum<VehicleCode>()
-					: (VehicleCode?)null; }
+					: (VehicleCode?)null;
+			}
 		}
 
 		public override bool? LowEntry
@@ -1378,31 +1380,63 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		public XMLDeclarationExemptedInterimStageBusDataProviderV28(IXMLDeclarationJobInputData jobData,
 			XmlNode xmlNode, string sourceFile)
 			: base(jobData, xmlNode, sourceFile) {}
-		
+
+
+		public override string Model
+		{
+			get
+			{
+				return ElementExists(XMLNames.Component_Model)
+					? GetString(XMLNames.Component_Model) : null;
+			}
+		}
+
 		public override LegislativeClass? LegislativeClass
 		{
-			get { return GetString(XMLNames.Bus_LegislativeCategory).ParseEnum<LegislativeClass>(); }
+			get
+			{
+				return ElementExists(XMLNames.Bus_LegislativeCategory)
+					? GetString(XMLNames.Bus_LegislativeCategory).ParseEnum<LegislativeClass>()
+					: (LegislativeClass?)null;
+			}
 		}
 
 		public override Kilogram CurbMassChassis
 		{
-			get { return GetDouble(XMLNames.Bus_CorrectedActualMass).SI<Kilogram>(); }
+			get
+			{
+				return ElementExists(XMLNames.Bus_CorrectedActualMass)
+					? GetDouble(XMLNames.Bus_CorrectedActualMass).SI<Kilogram>()
+					: null;
+			}
 		}
 
 		public override Kilogram GrossVehicleMassRating
 		{
-			get { return GetDouble(XMLNames.Vehicle_TPMLM).SI<Kilogram>(); }
+			get
+			{
+				return ElementExists(XMLNames.Vehicle_TPMLM)
+					? GetDouble(XMLNames.Vehicle_TPMLM).SI<Kilogram>()
+					: null;
+			}
 		}
 		
 		public override RegistrationClass? RegisteredClass
 		{
-			get { return RegistrationClassHelper.Parse(GetString(XMLNames.Vehicle_RegisteredClass)).First(); }
+			get
+			{
+				return ElementExists(XMLNames.Vehicle_RegisteredClass)
+					? RegistrationClassHelper.Parse(GetString(XMLNames.Vehicle_RegisteredClass)).First()
+					: null;
+			}
 		}
 
 		public override int NumberOfPassengersLowerDeck
 		{
 			get
 			{
+				if (!ElementExists(XMLNames.Bus_NumberPassengersLowerDeck))
+					return 0;
 				var node = GetNode(XMLNames.Bus_NumberPassengersLowerDeck);
 				return XmlConvert.ToInt32(node.InnerText);
 			}
@@ -1412,6 +1446,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		{
 			get
 			{
+				if (!ElementExists(XMLNames.Bus_NumberPassengersUpperDeck))
+					return 0;
 				var node = GetNode(XMLNames.Bus_NumberPassengersUpperDeck);
 				return XmlConvert.ToInt32(node.InnerText);
 			}
@@ -1419,17 +1455,32 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 		public override VehicleCode? VehicleCode
 		{
-			get { return GetString(XMLNames.Vehicle_VehicleCode).ParseEnum<VehicleCode>(); }
+			get
+			{
+				return ElementExists(XMLNames.Vehicle_VehicleCode)
+					? GetString(XMLNames.Vehicle_VehicleCode).ParseEnum<VehicleCode>()
+					: (VehicleCode?)null;
+			}
 		}
 
 		public override bool? LowEntry
 		{
-			get { return GetBool(XMLNames.Bus_LowEntry); }
+			get
+			{
+				return ElementExists(XMLNames.Bus_LowEntry)
+					? GetBool(XMLNames.Bus_LowEntry)
+					: (bool?)null;
+			}
 		}
 
 		public override Meter Height
 		{
-			get { return GetDouble(XMLNames.Bus_HeighIntegratedBody).SI<Meter>(); }
+			get
+			{
+				return ElementExists(XMLNames.Bus_HeighIntegratedBody)
+					? GetDouble(XMLNames.Bus_HeighIntegratedBody).SI<Meter>()
+					: null;
+			}
 		}
 		
 		public override XmlElement PTONode
