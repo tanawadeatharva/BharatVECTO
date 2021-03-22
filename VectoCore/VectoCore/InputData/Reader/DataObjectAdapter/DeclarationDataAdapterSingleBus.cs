@@ -40,7 +40,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			}
 
 			var passengerCountCalc = loading.Key == LoadingType.ReferenceLoad
-				? VectoMath.Min(passengerCountRef, passengerCountDecl)
+				? VectoMath.Min(passengerCountRef, (int)passengerCountDecl)
 				: passengerCountRef * mission.MissionType.GetLowLoadFactorBus();
 			var payload = passengerCountCalc * mission.MissionType.GetAveragePassengerMass();
 

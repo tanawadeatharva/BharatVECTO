@@ -162,8 +162,8 @@ namespace TUGraz.VectoCore.Tests.XML
 			Assert.AreEqual(null, vehicle.CurbMassChassis);
 			Assert.AreEqual(null, vehicle.GrossVehicleMassRating);
 			Assert.AreEqual(null, vehicle.RegisteredClass);
-			Assert.AreEqual(0, vehicle.NumberOfPassengersLowerDeck);
-			Assert.AreEqual(0, vehicle.NumberOfPassengersUpperDeck);
+			Assert.AreEqual(null, vehicle.NumberOfPassengersLowerDeck);
+			Assert.AreEqual(null, vehicle.NumberOfPassengersUpperDeck);
 			Assert.AreEqual(null, vehicle.VehicleCode);
 			Assert.AreEqual(null, vehicle.LowEntry);
 			Assert.AreEqual(null, vehicle.Height);

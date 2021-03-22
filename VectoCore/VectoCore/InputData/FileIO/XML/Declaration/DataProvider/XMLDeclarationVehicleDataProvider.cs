@@ -278,12 +278,12 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 			get { return RegistrationClass.unknown; }
 		}
 
-		public virtual int NumberOfPassengersUpperDeck
+		public virtual int? NumberOfPassengersUpperDeck
 		{
 			get { return 0; }
 		}
 
-		public virtual int NumberOfPassengersLowerDeck
+		public virtual int? NumberOfPassengersLowerDeck
 		{
 			get { return 0; }
 		}
@@ -841,7 +841,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 			}
 		}
 
-		public override int NumberOfPassengersLowerDeck
+		public override int? NumberOfPassengersLowerDeck
 		{
 			get {
 				var node = GetNode(XMLNames.Bus_LowerDeck);
@@ -849,7 +849,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 			}
 		}
 
-		public override int NumberOfPassengersUpperDeck
+		public override int? NumberOfPassengersUpperDeck
 		{
 			get {
 				var node = GetNode(XMLNames.Bus_UpperDeck);
@@ -1052,8 +1052,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		public string Identifier { get; }
 		public bool ExemptedVehicle { get; }
 		public LegislativeClass? LegislativeClass { get; }
-		public int NumberOfPassengersUpperDeck { get; }
-		public int NumberOfPassengersLowerDeck { get; }
+		public int? NumberOfPassengersUpperDeck { get; }
+		public int? NumberOfPassengersLowerDeck { get; }
 		public CubicMeter CargoVolume
 		{
 			get { return 0.SI<CubicMeter>(); }
@@ -1207,23 +1207,23 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		}
 
 
-		public override int NumberOfPassengersLowerDeck
+		public override int? NumberOfPassengersLowerDeck
 		{
 			get
 			{
 				if (!ElementExists(XMLNames.Bus_NumberPassengersLowerDeck))
-					return 0;
+					return null;
 				var node = GetNode(XMLNames.Bus_NumberPassengersLowerDeck);
 				return XmlConvert.ToInt32(node.InnerText);
 			}
 		}
 
-		public override int NumberOfPassengersUpperDeck
+		public override int? NumberOfPassengersUpperDeck
 		{
 			get
 			{
 				if (!ElementExists(XMLNames.Bus_NumberPassengersUpperDeck))
-					return 0;
+					return null;
 				var node = GetNode(XMLNames.Bus_NumberPassengersUpperDeck);
 				return XmlConvert.ToInt32(node.InnerText);
 			}
@@ -1431,23 +1431,23 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 			}
 		}
 
-		public override int NumberOfPassengersLowerDeck
+		public override int? NumberOfPassengersLowerDeck
 		{
 			get
 			{
 				if (!ElementExists(XMLNames.Bus_NumberPassengersLowerDeck))
-					return 0;
+					return null;
 				var node = GetNode(XMLNames.Bus_NumberPassengersLowerDeck);
 				return XmlConvert.ToInt32(node.InnerText);
 			}
 		}
 
-		public override int NumberOfPassengersUpperDeck
+		public override int? NumberOfPassengersUpperDeck
 		{
 			get
 			{
 				if (!ElementExists(XMLNames.Bus_NumberPassengersUpperDeck))
-					return 0;
+					return null;
 				var node = GetNode(XMLNames.Bus_NumberPassengersUpperDeck);
 				return XmlConvert.ToInt32(node.InnerText);
 			}

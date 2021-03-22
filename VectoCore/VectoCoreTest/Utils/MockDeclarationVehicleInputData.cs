@@ -47,8 +47,8 @@ namespace TUGraz.VectoCore.Tests.Utils {
 		public Watt MaxNetPower1 { get; }
 		public Watt MaxNetPower2 { get; }
 		public RegistrationClass? RegisteredClass { get; set; }
-		public int NumberOfPassengersUpperDeck { get; set; }
-		public int NumberOfPassengersLowerDeck { get; set; }
+		public int? NumberOfPassengersUpperDeck { get; set; }
+		public int? NumberOfPassengersLowerDeck { get; set; }
 		public CubicMeter CargoVolume { get; }
 		public VehicleCode? VehicleCode { get; set; }
 		public bool? LowEntry { get; }
@@ -116,8 +116,8 @@ namespace TUGraz.VectoCore.Tests.Utils {
 		public StateOfCompletion StateOfCompletion { get; }
 		public Watt MaxNetPower2 { get; }
 		public RegistrationClass? RegisteredClass { get; set; }
-		public int NumberOfPassengersUpperDeck { get; set; }
-		public int NumberOfPassengersLowerDeck { get; set; }
+		public int? NumberOfPassengersUpperDeck { get; set; }
+		public int? NumberOfPassengersLowerDeck { get; set; }
 		public CubicMeter CargoVolume { get; }
 		public VehicleCode? VehicleCode { get; set; }
 		public bool? LowEntry { get; }

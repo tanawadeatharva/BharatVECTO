@@ -530,12 +530,12 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			get { return RegistrationClass.unknown; }
 		}
 
-		public int NumberOfPassengersUpperDeck
+		public int? NumberOfPassengersUpperDeck
 		{
 			get { return 0; }
 		}
 
-		public int NumberOfPassengersLowerDeck
+		public int? NumberOfPassengersLowerDeck
 		{
 			get { return 0; }
 		}

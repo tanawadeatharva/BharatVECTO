@@ -27,7 +27,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 		{
 			var passengers = GetNumberOfPassengers(
 				mission, completedVehicle.Length, completedVehicle.Width,
-				completedVehicle.NumberOfPassengersLowerDeck + completedVehicle.NumberOfPassengersUpperDeck, loading.Key);
+				(int)completedVehicle.NumberOfPassengersLowerDeck + (int)completedVehicle.NumberOfPassengersUpperDeck, loading.Key);
 
 			var vehicleData = base.CreateVehicleData(primaryVehicle, segment, mission, loading);
 			vehicleData.InputData = completedVehicle;
@@ -192,7 +192,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 				? 2 * Constants.BusParameters.DriverCompartmentLength // OK
 				: DeclarationData.BusAuxiliaries.CalculateInternalLength(
 					completedVehicle.Length, completedVehicle.VehicleCode,
-					completedVehicle.NumberOfPassengersLowerDeck);
+					(int)completedVehicle.NumberOfPassengersLowerDeck);
 			var correctionLengthDrivetrainVolume = DeclarationData.BusAuxiliaries.CorrectionLengthDrivetrainVolume(
 				completedVehicle.VehicleCode, completedVehicle.LowEntry, primaryVehicle.AxleConfiguration.NumAxles(),
 				primaryVehicle.Articulated);
@@ -219,7 +219,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			ssmInputs.UValue = DeclarationData.BusAuxiliaries.UValue(completedVehicle.VehicleCode.GetFloorType());
 			ssmInputs.NumberOfPassengers = GetNumberOfPassengers(
 				mission, internalLength, correctedBusWidth,
-				completedVehicle.NumberOfPassengersLowerDeck + completedVehicle.NumberOfPassengersUpperDeck, loadingType) + 1; // add driver for 'heat input'
+				(int)completedVehicle.NumberOfPassengersLowerDeck + (int)completedVehicle.NumberOfPassengersUpperDeck, loadingType) + 1; // add driver for 'heat input'
 			ssmInputs.VentilationRate = DeclarationData.BusAuxiliaries.VentilationRate(hvacConfiguration, false);
 			ssmInputs.VentilationRateHeating = DeclarationData.BusAuxiliaries.VentilationRate(hvacConfiguration, true);
 
@@ -280,7 +280,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 
 			var pasengerCompartmentLength = DeclarationData.BusAuxiliaries.CalculateInternalLength(
 			 	completedVehicle.Length , completedVehicle.VehicleCode, 
-				completedVehicle.NumberOfPassengersLowerDeck) - Constants.BusParameters.DriverCompartmentLength - correctionLengthDrivetrainVolume;
+				(int)completedVehicle.NumberOfPassengersLowerDeck) - Constants.BusParameters.DriverCompartmentLength - correctionLengthDrivetrainVolume;
 			
 			var internalHeight = DeclarationData.BusAuxiliaries.CalculateInternalHeight(completedVehicle.VehicleCode, completedVehicle.RegisteredClass, completedVehicle.Height);
 			var volume = pasengerCompartmentLength * internalHeight * completedVehicle.Width;

@@ -41,8 +41,8 @@ Public Class MockVehicleInputData
     Public Property MaxNetPower1 As Watt Implements IVehicleDeclarationInputData.MaxNetPower1
     Public Property MaxNetPower2 As Watt Implements IVehicleDeclarationInputData.MaxNetPower2
     Public ReadOnly Property RegisteredClass As RegistrationClass? Implements IVehicleDeclarationInputData.RegisteredClass
-    Public ReadOnly Property NumberOfPassengersUpperDeck As Integer Implements IVehicleDeclarationInputData.NumberOfPassengersUpperDeck
-    Public ReadOnly Property NumberOfPassengersLowerDeck As Integer Implements IVehicleDeclarationInputData.NumberOfPassengersLowerDeck
+    Public ReadOnly Property NumberOfPassengersUpperDeck As Integer? Implements IVehicleDeclarationInputData.NumberOfPassengersUpperDeck
+    Public ReadOnly Property NumberOfPassengersLowerDeck As Integer? Implements IVehicleDeclarationInputData.NumberOfPassengersLowerDeck
     Public ReadOnly Property CargoVolume As CubicMeter Implements IVehicleDeclarationInputData.CargoVolume
     Public ReadOnly Property VehicleCode As VehicleCode? Implements IVehicleDeclarationInputData.VehicleCode
     Public ReadOnly Property LowEntry As Boolean? Implements IVehicleDeclarationInputData.LowEntry
