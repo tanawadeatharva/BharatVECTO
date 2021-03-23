@@ -39,6 +39,8 @@ using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.InputData.Reader.ComponentData;
+using TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.Electrics;
+using TUGraz.VectoCore.Models.BusAuxiliaries.Interfaces.DownstreamModules.Electrics;
 using TUGraz.VectoCore.Models.Connector.Ports;
 using TUGraz.VectoCore.Models.Connector.Ports.Impl;
 using TUGraz.VectoCore.Models.Declaration;
@@ -224,9 +226,6 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 						} else {
 							aux.AddCycle(id, auxData.PowerDemandFunc);
 						}
-						break;
-					case AuxiliaryDemandType.Mapping:
-						aux.AddMapping(id, auxData.Data);
 						break;
 					default:
 						throw new ArgumentOutOfRangeException("AuxiliaryDemandType", auxData.DemandType.ToString());
@@ -445,11 +444,31 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			if (data.ElectricMachinesData.Any(x => x.Item1 == PowertrainPosition.HybridP1)) {
 				if (gearbox is ATGearbox atGbx) {
 					atGbx.IdleController = idleController;
+				} else {
+					clutch.IdleController = idleController;
 				}
 			}
 			cycle.IdleController = idleController as IdleControllerSwitcher;
 
-			
+			if (data.BusAuxiliaries != null) {
+				if (container.BusAux is BusAuxiliariesAdapter busAux) {
+					var auxCfg = data.BusAuxiliaries;
+					var electricStorage = auxCfg.ElectricalUserInputsConfig.AlternatorType == AlternatorType.Smart
+						? new SimpleBattery(container, auxCfg.ElectricalUserInputsConfig.ElectricStorageCapacity, auxCfg.ElectricalUserInputsConfig.StoredEnergyEfficiency)
+						: (ISimpleBattery)new NoBattery(container);
+					busAux.ElectricStorage = electricStorage;
+					if (data.BusAuxiliaries.ElectricalUserInputsConfig.ConnectESToREESS) {
+						var dcdc = new DCDCConverter(container,
+							data.BusAuxiliaries.ElectricalUserInputsConfig.DCDCEfficiency);
+						busAux.DCDCConverter = dcdc;
+						es.Connect(dcdc);
+					}
+
+				} else {
+					throw new VectoException("BusAux data set but no BusAux component found!");
+				}
+			}
+
 			return container;
 		}
 
@@ -699,8 +718,30 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 				if (gearbox is ATGearbox atGbx) {
 					atGbx.IdleController = idleController;
 					new ATClutchInfo(container);
+				} else {
+					clutch.IdleController = idleController;
 				}
 			}
+
+			if (data.BusAuxiliaries != null) {
+				if (container.BusAux is BusAuxiliariesAdapter busAux) {
+					var auxCfg = data.BusAuxiliaries;
+					var electricStorage = auxCfg.ElectricalUserInputsConfig.AlternatorType == AlternatorType.Smart
+						? new SimpleBattery(container, auxCfg.ElectricalUserInputsConfig.ElectricStorageCapacity, auxCfg.ElectricalUserInputsConfig.StoredEnergyEfficiency)
+						: (ISimpleBattery)new NoBattery(container);
+					busAux.ElectricStorage = electricStorage;
+					if (data.BusAuxiliaries.ElectricalUserInputsConfig.ConnectESToREESS) {
+						var dcdc = new DCDCConverter(container,
+							data.BusAuxiliaries.ElectricalUserInputsConfig.DCDCEfficiency);
+						busAux.DCDCConverter = dcdc;
+						es.Connect(dcdc);
+					}
+
+				} else {
+					throw new VectoException("BusAux data set but no BusAux component found!");
+				}
+			}
+
 		}
 
 		public void BuildSimplePowertrainE2(VectoRunData data, VehicleContainer container)
@@ -798,6 +839,11 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			var conventionalAux = CreateAuxiliaries(data, container);
 			// TODO: MQ 2019-07-30 -- which fuel map for advanced auxiliaries?!
 			var busAux = new BusAuxiliariesAdapter(container, data.BusAuxiliaries, conventionalAux);
+			var auxCfg = data.BusAuxiliaries;
+			var electricStorage = auxCfg.ElectricalUserInputsConfig.AlternatorType == AlternatorType.Smart
+				? new SimpleBattery(container, auxCfg.ElectricalUserInputsConfig.ElectricStorageCapacity, auxCfg.ElectricalUserInputsConfig.StoredEnergyEfficiency)
+				: (ISimpleBattery)new NoBattery(container);
+			busAux.ElectricStorage = electricStorage;
 			return busAux;
 		}
 
@@ -814,9 +860,6 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 						break;
 					case AuxiliaryDemandType.Direct:
 						aux.AddCycle(id);
-						break;
-					case AuxiliaryDemandType.Mapping:
-						aux.AddMapping(id, auxData.Data);
 						break;
 					default:
 						throw new ArgumentOutOfRangeException("AuxiliaryDemandType", auxData.DemandType.ToString());

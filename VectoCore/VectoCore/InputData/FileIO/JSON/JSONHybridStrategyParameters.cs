@@ -63,5 +63,13 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 		{
 			get { return Body.GetEx<double>("AuxBufferChgTime").SI<Second>(); }
 		}
+
+		public double ICEStartPenaltyFactor
+		{
+			get
+			{
+				return Body["ICEStartPenaltyFactor"] == null ? 0 : Body.GetEx<double>("ICEStartPenaltyFactor");
+			}
+		}
 	}
 }

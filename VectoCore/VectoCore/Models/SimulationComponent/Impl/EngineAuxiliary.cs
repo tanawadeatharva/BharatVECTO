@@ -55,7 +55,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		public EngineAuxiliary(IVehicleContainer container) : base(container)
 		{
-			EngineStopStartUtilityFactor = container.RunData?.DriverData?.EngineStopStart?.UtilityFactor ?? double.NaN;
+			EngineStopStartUtilityFactor = 1; // container.RunData?.DriverData?.EngineStopStart?.UtilityFactorStandstill ?? double.NaN;
 		}
 
 		public IAuxPort Port()
@@ -87,29 +87,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			Add(auxId, _ => powerLossFunc(DataBus.DrivingCycleInfo.CycleData.LeftSample));
 		}
 
-		/// <summary>
-		/// Adds an auxiliary which calculates the demand based on a aux-map and the engine speed.
-		/// </summary>
-		/// <param name="auxId"></param>
-		/// <param name="data"></param>
-		public void AddMapping(string auxId, AuxiliaryData data)
-		{
-			if (!DataBus.DrivingCycleInfo.CycleData.LeftSample.AuxiliarySupplyPower.ContainsKey(auxId)) {
-				var error = string.Format("driving cycle does not contain column for auxiliary: {0}",
-					Constants.Auxiliaries.Prefix + auxId);
-				Log.Error(error);
-				throw new VectoException(error);
-			}
-
-			Add(auxId, speed => {
-				var powerSupply = DataBus.DrivingCycleInfo.CycleData.LeftSample.AuxiliarySupplyPower[auxId];
-				var nAuxiliary = speed * data.TransmissionRatio;
-				var powerAuxOut = powerSupply / data.EfficiencyToSupply;
-				var powerAuxIn = data.GetPowerDemand(nAuxiliary, powerAuxOut);
-				return powerAuxIn / data.EfficiencyToEngine;
-			});
-		}
-
+		
 		/// <summary>
 		/// Adds an auxiliary with a function returning the power demand based on the engine speed.
 		/// </summary>
@@ -158,10 +136,12 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			var auxiliarieIgnoredDuringVehicleStop = new[] {
 				Constants.Auxiliaries.IDs.SteeringPump, Constants.Auxiliaries.IDs.Fan,
-				Constants.Auxiliaries.IDs.PTOConsumer, Constants.Auxiliaries.IDs.PTOTransmission
+				Constants.Auxiliaries.IDs.PTOConsumer, Constants.Auxiliaries.IDs.PTOTransmission,
+				Constants.Auxiliaries.IDs.ENG_AUX_MECH_FAN, Constants.Auxiliaries.IDs.ENG_AUX_MECH_STP
 			};
 			var auxiliarieIgnoredDuringDrive = new[] {
 				Constants.Auxiliaries.IDs.Fan,
+				Constants.Auxiliaries.IDs.ENG_AUX_MECH_FAN
 			};
 			var powerDemands = new Dictionary<string, Watt>(Auxiliaries.Count);
 			var engineOffDemand = 0.SI<Watt>();

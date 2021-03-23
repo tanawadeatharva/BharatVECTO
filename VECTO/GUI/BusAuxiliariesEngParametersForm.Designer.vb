@@ -56,6 +56,15 @@ Partial Class BusAuxiliariesEngParametersForm
         Me.ShowInFolderToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.lblTitle = New System.Windows.Forms.Label()
         Me.gbElectricSystem = New System.Windows.Forms.GroupBox()
+        Me.pnDCDCEff = New System.Windows.Forms.Panel()
+        Me.lblDCDCEff = New System.Windows.Forms.Label()
+        Me.lblDCDCEffUnit = New System.Windows.Forms.Label()
+        Me.tbDCDCEff = New System.Windows.Forms.TextBox()
+        Me.pnES_HEVREESS = New System.Windows.Forms.Panel()
+        Me.cbES_HEVREESS = New System.Windows.Forms.CheckBox()
+        Me.Panel1 = New System.Windows.Forms.Panel()
+        Me.cbAlternatorTechnology = New System.Windows.Forms.ComboBox()
+        Me.lbAlternatorTechnology = New System.Windows.Forms.Label()
         Me.pnSmartElectricParams = New System.Windows.Forms.Panel()
         Me.pnElectricStorageCapacity = New System.Windows.Forms.Panel()
         Me.lblElectricStorageCapacity = New System.Windows.Forms.Label()
@@ -65,8 +74,6 @@ Partial Class BusAuxiliariesEngParametersForm
         Me.lblMaxAlternatorPower = New System.Windows.Forms.Label()
         Me.lblMaxAlternatorPowerUnit = New System.Windows.Forms.Label()
         Me.tbMaxAlternatorPower = New System.Windows.Forms.TextBox()
-        Me.Panel1 = New System.Windows.Forms.Panel()
-        Me.cbSmartElectric = New System.Windows.Forms.CheckBox()
         Me.pnAlternatorEfficiency = New System.Windows.Forms.Panel()
         Me.lblAlternatorEfficiency = New System.Windows.Forms.Label()
         Me.lblAlternatorEfficiencyUnit = New System.Windows.Forms.Label()
@@ -115,15 +122,21 @@ Partial Class BusAuxiliariesEngParametersForm
         Me.lblHvacMechPowerDemand = New System.Windows.Forms.Label()
         Me.lblHvacMechPowerDemandUnit = New System.Windows.Forms.Label()
         Me.tbHvacMechPowerDemand = New System.Windows.Forms.TextBox()
+        Me.pnBattEfficiency = New System.Windows.Forms.Panel()
+        Me.lblBatEfficiency = New System.Windows.Forms.Label()
+        Me.lblBatEfficiencyUnit = New System.Windows.Forms.Label()
+        Me.tbBatEfficiency = New System.Windows.Forms.TextBox()
         Me.ToolStrip1.SuspendLayout
         Me.StatusStrip1.SuspendLayout
         CType(Me.PictureBox1,System.ComponentModel.ISupportInitialize).BeginInit
         Me.CmOpenFile.SuspendLayout
         Me.gbElectricSystem.SuspendLayout
+        Me.pnDCDCEff.SuspendLayout
+        Me.pnES_HEVREESS.SuspendLayout
+        Me.Panel1.SuspendLayout
         Me.pnSmartElectricParams.SuspendLayout
         Me.pnElectricStorageCapacity.SuspendLayout
         Me.pnMaxAlternatorPower.SuspendLayout
-        Me.Panel1.SuspendLayout
         Me.pnAlternatorEfficiency.SuspendLayout
         Me.pnCurrentDemandEngineOffStandstill.SuspendLayout
         Me.pnCurrentDemandEngineOffDriving.SuspendLayout
@@ -138,13 +151,14 @@ Partial Class BusAuxiliariesEngParametersForm
         Me.pnHvacAuxHeaterPwr.SuspendLayout
         Me.pnHvacElecPowerDemand.SuspendLayout
         Me.pnHvacMechPowerDemand.SuspendLayout
+        Me.pnBattEfficiency.SuspendLayout
         Me.SuspendLayout
         '
         'ButCancel
         '
         Me.ButCancel.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right),System.Windows.Forms.AnchorStyles)
         Me.ButCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel
-        Me.ButCancel.Location = New System.Drawing.Point(421, 688)
+        Me.ButCancel.Location = New System.Drawing.Point(936, 505)
         Me.ButCancel.Name = "ButCancel"
         Me.ButCancel.Size = New System.Drawing.Size(75, 23)
         Me.ButCancel.TabIndex = 13
@@ -154,7 +168,7 @@ Partial Class BusAuxiliariesEngParametersForm
         'ButOK
         '
         Me.ButOK.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right),System.Windows.Forms.AnchorStyles)
-        Me.ButOK.Location = New System.Drawing.Point(340, 688)
+        Me.ButOK.Location = New System.Drawing.Point(855, 505)
         Me.ButOK.Name = "ButOK"
         Me.ButOK.Size = New System.Drawing.Size(75, 23)
         Me.ButOK.TabIndex = 12
@@ -167,7 +181,7 @@ Partial Class BusAuxiliariesEngParametersForm
         Me.ToolStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.ToolStripBtNew, Me.ToolStripBtOpen, Me.ToolStripBtSave, Me.ToolStripBtSaveAs, Me.ToolStripSeparator3, Me.ToolStripBtSendTo, Me.ToolStripSeparator1, Me.ToolStripButton1})
         Me.ToolStrip1.Location = New System.Drawing.Point(0, 0)
         Me.ToolStrip1.Name = "ToolStrip1"
-        Me.ToolStrip1.Size = New System.Drawing.Size(508, 25)
+        Me.ToolStrip1.Size = New System.Drawing.Size(1023, 25)
         Me.ToolStrip1.TabIndex = 30
         Me.ToolStrip1.Text = "ToolStrip1"
         '
@@ -243,9 +257,9 @@ Partial Class BusAuxiliariesEngParametersForm
         'StatusStrip1
         '
         Me.StatusStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.LbStatus})
-        Me.StatusStrip1.Location = New System.Drawing.Point(0, 714)
+        Me.StatusStrip1.Location = New System.Drawing.Point(0, 531)
         Me.StatusStrip1.Name = "StatusStrip1"
-        Me.StatusStrip1.Size = New System.Drawing.Size(508, 22)
+        Me.StatusStrip1.Size = New System.Drawing.Size(1023, 22)
         Me.StatusStrip1.SizingGrip = false
         Me.StatusStrip1.TabIndex = 37
         Me.StatusStrip1.Text = "StatusStrip1"
@@ -262,7 +276,7 @@ Partial Class BusAuxiliariesEngParametersForm
         Me.PictureBox1.Image = Global.TUGraz.VECTO.My.Resources.Resources.VECTO_ENG
         Me.PictureBox1.Location = New System.Drawing.Point(0, 28)
         Me.PictureBox1.Name = "PictureBox1"
-        Me.PictureBox1.Size = New System.Drawing.Size(502, 40)
+        Me.PictureBox1.Size = New System.Drawing.Size(1011, 40)
         Me.PictureBox1.TabIndex = 39
         Me.PictureBox1.TabStop = false
         '
@@ -297,26 +311,108 @@ Partial Class BusAuxiliariesEngParametersForm
         '
         'gbElectricSystem
         '
-        Me.gbElectricSystem.Controls.Add(Me.pnSmartElectricParams)
+        Me.gbElectricSystem.Controls.Add(Me.pnDCDCEff)
+        Me.gbElectricSystem.Controls.Add(Me.pnES_HEVREESS)
         Me.gbElectricSystem.Controls.Add(Me.Panel1)
+        Me.gbElectricSystem.Controls.Add(Me.pnSmartElectricParams)
         Me.gbElectricSystem.Controls.Add(Me.pnAlternatorEfficiency)
         Me.gbElectricSystem.Controls.Add(Me.pnCurrentDemandEngineOffStandstill)
         Me.gbElectricSystem.Controls.Add(Me.pnCurrentDemandEngineOffDriving)
         Me.gbElectricSystem.Controls.Add(Me.pnCurrentDemand)
         Me.gbElectricSystem.Location = New System.Drawing.Point(12, 74)
         Me.gbElectricSystem.Name = "gbElectricSystem"
-        Me.gbElectricSystem.Size = New System.Drawing.Size(317, 242)
+        Me.gbElectricSystem.Size = New System.Drawing.Size(317, 403)
         Me.gbElectricSystem.TabIndex = 49
         Me.gbElectricSystem.TabStop = false
         Me.gbElectricSystem.Text = "Electric System"
         '
+        'pnDCDCEff
+        '
+        Me.pnDCDCEff.Controls.Add(Me.lblDCDCEff)
+        Me.pnDCDCEff.Controls.Add(Me.lblDCDCEffUnit)
+        Me.pnDCDCEff.Controls.Add(Me.tbDCDCEff)
+        Me.pnDCDCEff.Location = New System.Drawing.Point(10, 294)
+        Me.pnDCDCEff.Name = "pnDCDCEff"
+        Me.pnDCDCEff.Size = New System.Drawing.Size(288, 28)
+        Me.pnDCDCEff.TabIndex = 26
+        '
+        'lblDCDCEff
+        '
+        Me.lblDCDCEff.AutoSize = true
+        Me.lblDCDCEff.Location = New System.Drawing.Point(3, 7)
+        Me.lblDCDCEff.Name = "lblDCDCEff"
+        Me.lblDCDCEff.Size = New System.Drawing.Size(140, 13)
+        Me.lblDCDCEff.TabIndex = 0
+        Me.lblDCDCEff.Text = "DC/DC Converter Efficiency"
+        '
+        'lblDCDCEffUnit
+        '
+        Me.lblDCDCEffUnit.AutoSize = true
+        Me.lblDCDCEffUnit.Location = New System.Drawing.Point(258, 7)
+        Me.lblDCDCEffUnit.Name = "lblDCDCEffUnit"
+        Me.lblDCDCEffUnit.Size = New System.Drawing.Size(16, 13)
+        Me.lblDCDCEffUnit.TabIndex = 24
+        Me.lblDCDCEffUnit.Text = "[-]"
+        '
+        'tbDCDCEff
+        '
+        Me.tbDCDCEff.Location = New System.Drawing.Point(197, 4)
+        Me.tbDCDCEff.Name = "tbDCDCEff"
+        Me.tbDCDCEff.Size = New System.Drawing.Size(57, 20)
+        Me.tbDCDCEff.TabIndex = 3
+        '
+        'pnES_HEVREESS
+        '
+        Me.pnES_HEVREESS.Controls.Add(Me.cbES_HEVREESS)
+        Me.pnES_HEVREESS.Location = New System.Drawing.Point(10, 265)
+        Me.pnES_HEVREESS.Name = "pnES_HEVREESS"
+        Me.pnES_HEVREESS.Size = New System.Drawing.Size(288, 28)
+        Me.pnES_HEVREESS.TabIndex = 54
+        '
+        'cbES_HEVREESS
+        '
+        Me.cbES_HEVREESS.AutoSize = true
+        Me.cbES_HEVREESS.Location = New System.Drawing.Point(6, 6)
+        Me.cbES_HEVREESS.Name = "cbES_HEVREESS"
+        Me.cbES_HEVREESS.Size = New System.Drawing.Size(160, 17)
+        Me.cbES_HEVREESS.TabIndex = 25
+        Me.cbES_HEVREESS.Text = "ES supply from HEV REESS"
+        Me.cbES_HEVREESS.UseVisualStyleBackColor = true
+        '
+        'Panel1
+        '
+        Me.Panel1.Controls.Add(Me.cbAlternatorTechnology)
+        Me.Panel1.Controls.Add(Me.lbAlternatorTechnology)
+        Me.Panel1.Location = New System.Drawing.Point(10, 139)
+        Me.Panel1.Name = "Panel1"
+        Me.Panel1.Size = New System.Drawing.Size(288, 28)
+        Me.Panel1.TabIndex = 26
+        '
+        'cbAlternatorTechnology
+        '
+        Me.cbAlternatorTechnology.FormattingEnabled = true
+        Me.cbAlternatorTechnology.Location = New System.Drawing.Point(134, 4)
+        Me.cbAlternatorTechnology.Name = "cbAlternatorTechnology"
+        Me.cbAlternatorTechnology.Size = New System.Drawing.Size(121, 21)
+        Me.cbAlternatorTechnology.TabIndex = 1
+        '
+        'lbAlternatorTechnology
+        '
+        Me.lbAlternatorTechnology.AutoSize = true
+        Me.lbAlternatorTechnology.Location = New System.Drawing.Point(3, 7)
+        Me.lbAlternatorTechnology.Name = "lbAlternatorTechnology"
+        Me.lbAlternatorTechnology.Size = New System.Drawing.Size(111, 13)
+        Me.lbAlternatorTechnology.TabIndex = 0
+        Me.lbAlternatorTechnology.Text = "Alternator Technology"
+        '
         'pnSmartElectricParams
         '
+        Me.pnSmartElectricParams.Controls.Add(Me.pnBattEfficiency)
         Me.pnSmartElectricParams.Controls.Add(Me.pnElectricStorageCapacity)
         Me.pnSmartElectricParams.Controls.Add(Me.pnMaxAlternatorPower)
         Me.pnSmartElectricParams.Location = New System.Drawing.Point(10, 168)
         Me.pnSmartElectricParams.Name = "pnSmartElectricParams"
-        Me.pnSmartElectricParams.Size = New System.Drawing.Size(288, 66)
+        Me.pnSmartElectricParams.Size = New System.Drawing.Size(288, 96)
         Me.pnSmartElectricParams.TabIndex = 27
         '
         'pnElectricStorageCapacity
@@ -334,9 +430,9 @@ Partial Class BusAuxiliariesEngParametersForm
         Me.lblElectricStorageCapacity.AutoSize = true
         Me.lblElectricStorageCapacity.Location = New System.Drawing.Point(3, 7)
         Me.lblElectricStorageCapacity.Name = "lblElectricStorageCapacity"
-        Me.lblElectricStorageCapacity.Size = New System.Drawing.Size(126, 13)
+        Me.lblElectricStorageCapacity.Size = New System.Drawing.Size(168, 13)
         Me.lblElectricStorageCapacity.TabIndex = 0
-        Me.lblElectricStorageCapacity.Text = "Electric Storage Capacity"
+        Me.lblElectricStorageCapacity.Text = "Useable Electric Storage Capacity"
         '
         'lblElectricStorageCapacityUnit
         '
@@ -369,9 +465,9 @@ Partial Class BusAuxiliariesEngParametersForm
         Me.lblMaxAlternatorPower.AutoSize = true
         Me.lblMaxAlternatorPower.Location = New System.Drawing.Point(3, 7)
         Me.lblMaxAlternatorPower.Name = "lblMaxAlternatorPower"
-        Me.lblMaxAlternatorPower.Size = New System.Drawing.Size(108, 13)
+        Me.lblMaxAlternatorPower.Size = New System.Drawing.Size(127, 13)
         Me.lblMaxAlternatorPower.TabIndex = 0
-        Me.lblMaxAlternatorPower.Text = "Max Alternator Power"
+        Me.lblMaxAlternatorPower.Text = "Max Recuperation Power"
         '
         'lblMaxAlternatorPowerUnit
         '
@@ -388,24 +484,6 @@ Partial Class BusAuxiliariesEngParametersForm
         Me.tbMaxAlternatorPower.Name = "tbMaxAlternatorPower"
         Me.tbMaxAlternatorPower.Size = New System.Drawing.Size(57, 20)
         Me.tbMaxAlternatorPower.TabIndex = 3
-        '
-        'Panel1
-        '
-        Me.Panel1.Controls.Add(Me.cbSmartElectric)
-        Me.Panel1.Location = New System.Drawing.Point(10, 139)
-        Me.Panel1.Name = "Panel1"
-        Me.Panel1.Size = New System.Drawing.Size(288, 28)
-        Me.Panel1.TabIndex = 26
-        '
-        'cbSmartElectric
-        '
-        Me.cbSmartElectric.AutoSize = true
-        Me.cbSmartElectric.Location = New System.Drawing.Point(6, 6)
-        Me.cbSmartElectric.Name = "cbSmartElectric"
-        Me.cbSmartElectric.Size = New System.Drawing.Size(91, 17)
-        Me.cbSmartElectric.TabIndex = 25
-        Me.cbSmartElectric.Text = "Smart Electric"
-        Me.cbSmartElectric.UseVisualStyleBackColor = true
         '
         'pnAlternatorEfficiency
         '
@@ -553,7 +631,7 @@ Partial Class BusAuxiliariesEngParametersForm
         Me.bgPneumaticSystem.Controls.Add(Me.pnCompressorRatio)
         Me.bgPneumaticSystem.Controls.Add(Me.pnCompressorMap)
         Me.bgPneumaticSystem.Controls.Add(Me.pnAverageAirDemand)
-        Me.bgPneumaticSystem.Location = New System.Drawing.Point(12, 322)
+        Me.bgPneumaticSystem.Location = New System.Drawing.Point(335, 74)
         Me.bgPneumaticSystem.Name = "bgPneumaticSystem"
         Me.bgPneumaticSystem.Size = New System.Drawing.Size(317, 181)
         Me.bgPneumaticSystem.TabIndex = 51
@@ -563,7 +641,7 @@ Partial Class BusAuxiliariesEngParametersForm
         'pnSmartCompressor
         '
         Me.pnSmartCompressor.Controls.Add(Me.cbSmartCompressor)
-        Me.pnSmartCompressor.Location = New System.Drawing.Point(10, 145)
+        Me.pnSmartCompressor.Location = New System.Drawing.Point(10, 141)
         Me.pnSmartCompressor.Name = "pnSmartCompressor"
         Me.pnSmartCompressor.Size = New System.Drawing.Size(288, 28)
         Me.pnSmartCompressor.TabIndex = 53
@@ -693,7 +771,7 @@ Partial Class BusAuxiliariesEngParametersForm
         Me.gbHVAC.Controls.Add(Me.pnHvacAuxHeaterPwr)
         Me.gbHVAC.Controls.Add(Me.pnHvacElecPowerDemand)
         Me.gbHVAC.Controls.Add(Me.pnHvacMechPowerDemand)
-        Me.gbHVAC.Location = New System.Drawing.Point(12, 509)
+        Me.gbHVAC.Location = New System.Drawing.Point(658, 74)
         Me.gbHVAC.Name = "gbHVAC"
         Me.gbHVAC.Size = New System.Drawing.Size(317, 160)
         Me.gbHVAC.TabIndex = 52
@@ -840,13 +918,48 @@ Partial Class BusAuxiliariesEngParametersForm
         Me.tbHvacMechPowerDemand.Size = New System.Drawing.Size(57, 20)
         Me.tbHvacMechPowerDemand.TabIndex = 3
         '
+        'pnBattEfficiency
+        '
+        Me.pnBattEfficiency.Controls.Add(Me.lblBatEfficiency)
+        Me.pnBattEfficiency.Controls.Add(Me.lblBatEfficiencyUnit)
+        Me.pnBattEfficiency.Controls.Add(Me.tbBatEfficiency)
+        Me.pnBattEfficiency.Location = New System.Drawing.Point(0, 63)
+        Me.pnBattEfficiency.Name = "pnBattEfficiency"
+        Me.pnBattEfficiency.Size = New System.Drawing.Size(300, 28)
+        Me.pnBattEfficiency.TabIndex = 28
+        '
+        'lblBatEfficiency
+        '
+        Me.lblBatEfficiency.AutoSize = true
+        Me.lblBatEfficiency.Location = New System.Drawing.Point(3, 7)
+        Me.lblBatEfficiency.Name = "lblBatEfficiency"
+        Me.lblBatEfficiency.Size = New System.Drawing.Size(131, 13)
+        Me.lblBatEfficiency.TabIndex = 0
+        Me.lblBatEfficiency.Text = "Electric Storage Efficiency"
+        '
+        'lblBatEfficiencyUnit
+        '
+        Me.lblBatEfficiencyUnit.AutoSize = true
+        Me.lblBatEfficiencyUnit.Location = New System.Drawing.Point(258, 7)
+        Me.lblBatEfficiencyUnit.Name = "lblBatEfficiencyUnit"
+        Me.lblBatEfficiencyUnit.Size = New System.Drawing.Size(16, 13)
+        Me.lblBatEfficiencyUnit.TabIndex = 24
+        Me.lblBatEfficiencyUnit.Text = "[-]"
+        '
+        'tbBatEfficiency
+        '
+        Me.tbBatEfficiency.Location = New System.Drawing.Point(197, 4)
+        Me.tbBatEfficiency.Name = "tbBatEfficiency"
+        Me.tbBatEfficiency.Size = New System.Drawing.Size(57, 20)
+        Me.tbBatEfficiency.TabIndex = 3
+        '
         'BusAuxiliariesEngParametersForm
         '
         Me.AcceptButton = Me.ButOK
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6!, 13!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.CancelButton = Me.ButCancel
-        Me.ClientSize = New System.Drawing.Size(508, 736)
+        Me.ClientSize = New System.Drawing.Size(1023, 553)
         Me.Controls.Add(Me.gbHVAC)
         Me.Controls.Add(Me.bgPneumaticSystem)
         Me.Controls.Add(Me.gbElectricSystem)
@@ -870,13 +983,17 @@ Partial Class BusAuxiliariesEngParametersForm
         CType(Me.PictureBox1,System.ComponentModel.ISupportInitialize).EndInit
         Me.CmOpenFile.ResumeLayout(false)
         Me.gbElectricSystem.ResumeLayout(false)
+        Me.pnDCDCEff.ResumeLayout(false)
+        Me.pnDCDCEff.PerformLayout
+        Me.pnES_HEVREESS.ResumeLayout(false)
+        Me.pnES_HEVREESS.PerformLayout
+        Me.Panel1.ResumeLayout(false)
+        Me.Panel1.PerformLayout
         Me.pnSmartElectricParams.ResumeLayout(false)
         Me.pnElectricStorageCapacity.ResumeLayout(false)
         Me.pnElectricStorageCapacity.PerformLayout
         Me.pnMaxAlternatorPower.ResumeLayout(false)
         Me.pnMaxAlternatorPower.PerformLayout
-        Me.Panel1.ResumeLayout(false)
-        Me.Panel1.PerformLayout
         Me.pnAlternatorEfficiency.ResumeLayout(false)
         Me.pnAlternatorEfficiency.PerformLayout
         Me.pnCurrentDemandEngineOffStandstill.ResumeLayout(false)
@@ -903,6 +1020,8 @@ Partial Class BusAuxiliariesEngParametersForm
         Me.pnHvacElecPowerDemand.PerformLayout
         Me.pnHvacMechPowerDemand.ResumeLayout(false)
         Me.pnHvacMechPowerDemand.PerformLayout
+        Me.pnBattEfficiency.ResumeLayout(false)
+        Me.pnBattEfficiency.PerformLayout
         Me.ResumeLayout(false)
         Me.PerformLayout
 
@@ -947,8 +1066,6 @@ End Sub
     Friend WithEvents lblMaxAlternatorPower As Label
     Friend WithEvents lblMaxAlternatorPowerUnit As Label
     Friend WithEvents tbMaxAlternatorPower As TextBox
-    Friend WithEvents Panel1 As Panel
-    Friend WithEvents cbSmartElectric As CheckBox
     Friend WithEvents pnAlternatorEfficiency As Panel
     Friend WithEvents lblAlternatorEfficiency As Label
     Friend WithEvents lblAlternatorEfficiencyUnit As Label
@@ -985,4 +1102,17 @@ End Sub
     Friend WithEvents lblHvacMechPowerDemand As Label
     Friend WithEvents lblHvacMechPowerDemandUnit As Label
     Friend WithEvents tbHvacMechPowerDemand As TextBox
+    Friend WithEvents Panel1 As Panel
+    Friend WithEvents cbAlternatorTechnology As ComboBox
+    Friend WithEvents lbAlternatorTechnology As Label
+    Friend WithEvents pnDCDCEff As Panel
+    Friend WithEvents lblDCDCEff As Label
+    Friend WithEvents lblDCDCEffUnit As Label
+    Friend WithEvents tbDCDCEff As TextBox
+    Friend WithEvents pnES_HEVREESS As Panel
+    Friend WithEvents cbES_HEVREESS As CheckBox
+    Friend WithEvents pnBattEfficiency As Panel
+    Friend WithEvents lblBatEfficiency As Label
+    Friend WithEvents lblBatEfficiencyUnit As Label
+    Friend WithEvents tbBatEfficiency As TextBox
 End Class

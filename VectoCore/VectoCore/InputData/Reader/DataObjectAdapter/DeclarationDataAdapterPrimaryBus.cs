@@ -101,7 +101,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 
 			var retVal = GetDefaultElectricalUserConfig();
 
-			retVal.SmartElectrical = busAux.ElectricSupply.SmartElectrics;
+			retVal.AlternatorType = busAux.ElectricSupply.SmartElectrics ? AlternatorType.Smart : AlternatorType.Conventional;
 			retVal.ElectricalConsumers = currentDemand;
 			retVal.AlternatorMap = new SimpleAlternator(CalculateAlternatorEfficiency(busAux.ElectricSupply.Alternators)) {
 				Technologies = busAux.ElectricSupply.Alternators.Select(x => x.Technology).ToList()

@@ -1,27 +1,139 @@
 ﻿using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Models.BusAuxiliaries.Interfaces.DownstreamModules.Electrics;
+using TUGraz.VectoCore.Models.Simulation;
+using TUGraz.VectoCore.Models.Simulation.Impl;
+using TUGraz.VectoCore.Models.SimulationComponent;
+using TUGraz.VectoCore.OutputData;
 
 namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.Electrics
 {
-	public class SimpleBattery : LoggingObject, ISimpleBattery
+
+	public class NoBattery : VectoSimulationComponent, ISimpleBattery
 	{
-		public SimpleBattery(WattSecond capacity, double soc = 0.9)
+		public NoBattery(IVehicleContainer dataBus) : base(dataBus) { }
+
+		#region Implementation of ISimpleBatteryInfo
+
+		public double SOC
+		{
+			get { return 0; }
+		}
+		public WattSecond Capacity
+		{
+			get { return 0.SI<WattSecond>(); }
+		}
+
+		#endregion
+
+		#region Implementation of ISimpleBattery
+
+		public WattSecond ConsumedEnergy { get; }
+		public void ConsumeEnergy(WattSecond energy, bool dryRun)
+		{
+			
+		}
+
+		public WattSecond MaxChargeEnergy()
+		{
+			return 0.SI<WattSecond>();
+		}
+
+		public WattSecond MaxDischargeEnergy()
+		{
+			return 0.SI<WattSecond>();
+		}
+
+		#endregion
+
+		
+
+		#region Overrides of VectoSimulationComponent
+
+		protected override void DoWriteModalResults(Second time, Second simulationInterval, IModalDataContainer container)
+		{
+			
+		}
+
+		protected override void DoCommitSimulationStep(Second time, Second simulationInterval)
+		{
+			
+		}
+
+		#endregion
+	}
+
+	// ########################################
+
+	public class SimpleBattery : StatefulVectoSimulationComponent<SimpleBattery.State>, ISimpleBattery
+	{
+		public SimpleBattery(IVehicleContainer container, WattSecond capacity, double storageEfficiency, double soc = 0.9) : base(container)
 		{
 			Capacity = capacity;
 			SOC = soc;
+			StorageEfficiency = storageEfficiency;
 		}
+
+		public double StorageEfficiency { get; set; }
 
 		#region Implementation of ISimpleBattery
 
 		public double SOC { get; private set; }
 		public WattSecond Capacity { get; }
+		public WattSecond ConsumedEnergy
+		{
+			get { return CurrentState.ConsumedEnergy; }
+		}
+
+		public void ConsumeEnergy(WattSecond energy, bool dryRun)
+		{
+			var batEnergy = energy * (energy.IsGreater(0) ? StorageEfficiency : 1);
+
+			if (!dryRun) {
+				CurrentState.ConsumedEnergy = batEnergy;
+			}
+			var tmpSoc = SOC + batEnergy / Capacity;
+			if (tmpSoc > 1) {
+				Log.Warn("SOC would exceed max!");
+				
+			}
+			if (tmpSoc < 0) {
+				Log.Warn("SOC would  exceed min!");
+			}
+		}
 
 		#endregion
 
-		public void Request(WattSecond energy)
+
+		public WattSecond MaxChargeEnergy()
 		{
-			SOC += energy / Capacity;
+			return -(SOC - 1) * Capacity / StorageEfficiency;
+		}
+
+		public WattSecond MaxDischargeEnergy()
+		{
+			return -SOC * Capacity;
+		}
+
+		public class State
+		{
+			public State()
+			{
+				ConsumedEnergy = 0.SI<WattSecond>();
+			}
+			public WattSecond ConsumedEnergy { get; set; }
+		}
+
+		#region Overrides of VectoSimulationComponent
+
+		protected override void DoWriteModalResults(Second time, Second simulationInterval, IModalDataContainer container)
+		{
+			
+		}
+
+		protected override void DoCommitSimulationStep(Second time, Second simulationInterval)
+		{
+			SOC += CurrentState.ConsumedEnergy / Capacity;
 			if (SOC > 1) {
 				Log.Warn("SOC > 1!");
 				SOC = 1;
@@ -30,6 +142,9 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.Electric
 				Log.Warn("SOC < 0!");
 				SOC = 0;
 			}
+			AdvanceState();
 		}
+
+		#endregion
 	}
 }

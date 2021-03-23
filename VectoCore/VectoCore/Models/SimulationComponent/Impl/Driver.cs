@@ -74,7 +74,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			DriverAcceleration = 0.SI<MeterPerSquareSecond>();
 			var busAux = container.RunData.BusAuxiliaries;
 			smartBusAux = busAux != null && (busAux.PneumaticUserInputsConfig.SmartAirCompression ||
-											busAux.ElectricalUserInputsConfig.SmartElectrical);
+											busAux.ElectricalUserInputsConfig.AlternatorType == AlternatorType.Smart);
 		}
 
 

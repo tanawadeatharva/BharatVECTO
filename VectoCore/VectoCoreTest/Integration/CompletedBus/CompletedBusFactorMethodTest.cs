@@ -527,8 +527,8 @@ namespace TUGraz.VectoCore.Tests.Integration.CompletedBus
 			var specificElectric =
 				relatedRun.VectoRunDataSpezificBody.BusAuxiliaries.ElectricalUserInputsConfig;
 			
-			Assert.AreEqual(false, genericElectric.SmartElectrical);
-			Assert.AreEqual(genericElectric.SmartElectrical, specificElectric.SmartElectrical);
+			Assert.AreEqual(AlternatorType.Conventional, genericElectric.AlternatorType);
+			Assert.AreEqual(genericElectric.AlternatorType, specificElectric.AlternatorType);
 
 			Assert.AreEqual(null, genericElectric.MaxAlternatorPower);
 			Assert.AreEqual(genericElectric.MaxAlternatorPower, specificElectric.MaxAlternatorPower);
@@ -899,7 +899,7 @@ namespace TUGraz.VectoCore.Tests.Integration.CompletedBus
 		{
 			Assert.AreEqual(DeclarationData.Driver.EngineStopStart.ActivationDelay, engineStopStart.EngineOffStandStillActivationDelay);
 			Assert.AreEqual(DeclarationData.Driver.EngineStopStart.MaxEngineOffTimespan, engineStopStart.MaxEngineOffTimespan);
-			Assert.AreEqual(DeclarationData.Driver.EngineStopStart.UtilityFactor, engineStopStart.UtilityFactor);
+			Assert.AreEqual(DeclarationData.Driver.EngineStopStart.UtilityFactor, engineStopStart.UtilityFactorStandstill);
 		}
 
 		private void AssertEcoRoll(DriverData.EcoRollData ecoRoll)

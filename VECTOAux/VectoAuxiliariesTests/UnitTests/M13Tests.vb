@@ -2,6 +2,7 @@
 Imports NUnit.Framework
 Imports Moq
 Imports TUGraz.VectoCommon.BusAuxiliaries
+Imports TUGraz.VectoCommon.Models
 Imports TUGraz.VectoCommon.Utils
 Imports TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl
 Imports TUGraz.VectoCore.Models.BusAuxiliaries.Interfaces
@@ -53,7 +54,7 @@ Namespace UnitTests
 
             Dim auxCfg As New Mock(Of IAuxiliaryConfig)
             Dim elecCfg = New Mock(Of IElectricsUserInputsConfig)
-            elecCfg.Setup(Function(x) x.SmartElectrical).Returns(IP5)
+            elecCfg.Setup(Function(x) x.AlternatorType()).Returns(If(IP5, AlternatorType.Smart, AlternatorType.Conventional))
             Dim psconfig = New Mock(Of IPneumaticUserInputsConfig)
             psconfig.Setup(Function(x) x.SmartAirCompression).Returns(IP4)
             auxCfg.Setup(Function(x) x.ElectricalUserInputsConfig).Returns(elecCfg.Object)

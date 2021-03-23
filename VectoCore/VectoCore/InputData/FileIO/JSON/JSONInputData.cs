@@ -541,9 +541,14 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 		#region IAuxiliariesEngineeringInputData
 
-		IList<IAuxiliaryEngineeringInputData> IAuxiliariesEngineeringInputData.Auxiliaries
+		IAuxiliaryEngineeringInputData IAuxiliariesEngineeringInputData.Auxiliaries
 		{
-			get { return AuxData().Cast<IAuxiliaryEngineeringInputData>().ToList(); }
+			get { return new EngineeringAuxiliaryDataInputData() {
+				ElectricPowerDemand = Body["Padd_electric"] != null ? Body.GetEx<double>("Padd_electric").SI<Watt>() : 0.SI<Watt>(),
+				ConstantPowerDemand = Body["Padd"] != null ? Body.GetEx<double>("Padd").SI<Watt>() : 0.SI<Watt>(),
+				PowerDemandICEOffDriving = Body["Paux_ICEOff_Driving"] != null ? Body.GetEx<double>("Paux_ICEOff_Driving").SI<Watt>() : 0.SI<Watt>(),
+				PowerDemandICEOffStandstill = Body["Paux_ICEOff_Standstill"] != null ? Body.GetEx<double>("Paux_ICEOff_Standstill").SI<Watt>() : 0.SI<Watt>()
+			}; }
 		}
 
 		public IBusAuxiliariesEngineeringData BusAuxiliariesData
@@ -563,13 +568,13 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			get { return AuxData().Cast<IAuxiliaryDeclarationInputData>().ToList(); }
 		}
 
-		protected virtual IList<AuxiliaryDataInputData> AuxData()
+		protected virtual IList<IAuxiliaryDeclarationInputData> AuxData()
 		{
-			var retVal = new List<AuxiliaryDataInputData>();
+			var retVal = new List<IAuxiliaryDeclarationInputData>();
 			foreach (var aux in Body["Aux"] ?? Enumerable.Empty<JToken>()) {
 				var type = AuxiliaryTypeHelper.Parse(aux.GetEx<string>("Type"));
 
-				var auxData = new AuxiliaryDataInputData {
+				var auxData = new DeclarationAuxiliaryDataInputData() {
 					ID = aux.GetEx<string>("ID"),
 					Type = type,
 					Technology = new List<string>(),
@@ -592,16 +597,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 					auxData.Technology.Add(MapLegacyFanTechnologies(tech));
 				}
 
-				var auxFile = aux["Path"];
 				retVal.Add(auxData);
-
-				if (auxFile == null || EmptyOrInvalidFileName(auxFile.Value<string>())) {
-					continue;
-				}
-
-				AuxiliaryFileHelper.FillAuxiliaryDataInputData(
-					auxData,
-					Path.Combine(BasePath, auxFile.Value<string>()));
 			}
 
 			return retVal;
@@ -630,14 +626,6 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 		#endregion
 
-
-		public Watt ElectricAuxPower
-		{
-			get
-			{
-				return Body["Padd_electric"] != null ? Body.GetEx<double>("Padd_electric").SI<Watt>() : 0.SI<Watt>();
-			}
-		}
 	}
 
 	public class JSONInputDataV2 : AbstractJSONInputData
@@ -666,17 +654,10 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 		public JSONInputDataV3(JObject data, string filename, bool tolerateMissing = false)
 			: base(data, filename, tolerateMissing) { }
 
-		protected override IList<AuxiliaryDataInputData> AuxData()
+		protected override IList<IAuxiliaryDeclarationInputData> AuxData()
 		{
-			var retVal = new List<AuxiliaryDataInputData>();
-			if (Body["Padd"] != null) {
-				retVal.Add(
-					new AuxiliaryDataInputData() {
-						ID = "ConstantAux",
-						AuxiliaryType = AuxiliaryDemandType.Constant,
-						ConstantPowerDemand = Body.GetEx<double>("Padd").SI<Watt>()
-					});
-			}
+			var retVal = new List<IAuxiliaryDeclarationInputData>();
+			
 			foreach (var aux in Body["Aux"] ?? Enumerable.Empty<JToken>()) {
 				try {
 					aux.GetEx("Technology").ToObject<List<string>>();
@@ -688,22 +669,15 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 				var type = AuxiliaryTypeHelper.Parse(aux.GetEx<string>("Type"));
 
-				var auxData = new AuxiliaryDataInputData {
+				var auxData = new DeclarationAuxiliaryDataInputData {
 					ID = aux.GetEx<string>("ID"),
 					Type = type,
 					Technology = aux.GetEx("Technology").ToObject<List<string>>()
 				};
 
-				var auxFile = aux["Path"];
+				
 				retVal.Add(auxData);
 
-				if (auxFile == null || EmptyOrInvalidFileName(auxFile.Value<string>())) {
-					continue;
-				}
-
-				AuxiliaryFileHelper.FillAuxiliaryDataInputData(
-					auxData,
-					Path.Combine(BasePath, auxFile.Value<string>()));
 			}
 
 			return retVal;
@@ -993,9 +967,14 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 					MaxEngineOffTimespan = Body["EngineStopStartMaxOffTimespan"] == null
 						? null
 						: Body.GetEx<double>("EngineStopStartMaxOffTimespan").SI<Second>(),
-					UtilityFactor = Body["EngineStopStartUtilityFactor"] == null
+					UtilityFactorStandstill = Body["EngineStopStartUtilityFactor"] == null
 						? DeclarationData.Driver.EngineStopStart.UtilityFactor
 						: Body.GetEx<double>("EngineStopStartUtilityFactor"),
+					UtilityFactorDriving = Body["EngineStopStartUtilityFactorDriving"] == null
+						? (Body["EngineStopStartUtilityFactor"] == null
+							? DeclarationData.Driver.EngineStopStart.UtilityFactor
+							: Body.GetEx<double>("EngineStopStartUtilityFactor"))
+						: Body.GetEx<double>("EngineStopStartUtilityFactorDriving"),
 					ActivationDelay = Body["EngineStopStartAtVehicleStopThreshold"] == null
 						? null
 						: Body.GetEx<double>("EngineStopStartAtVehicleStopThreshold").SI<Second>()
@@ -1060,7 +1039,9 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 		public Second MaxEngineOffTimespan { get; set; }
 
-		public double UtilityFactor { get; set; }
+		public double UtilityFactorStandstill { get; set; }
+		
+		public double UtilityFactorDriving { get; set; }
 
 		#endregion
 	}

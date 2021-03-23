@@ -169,7 +169,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 				Retarder = new RetarderData(),
 				DriverData = new DriverData() {
 					EngineStopStart = new DriverData.EngineStopStartData() {
-						UtilityFactor = DeclarationData.Driver.EngineStopStart.UtilityFactor,
+						UtilityFactorStandstill = DeclarationData.Driver.EngineStopStart.UtilityFactor,
 						EngineOffStandStillActivationDelay = DeclarationData.Driver.EngineStopStart.ActivationDelay,
 						MaxEngineOffTimespan = DeclarationData.Driver.EngineStopStart.MaxEngineOffTimespan
 					}

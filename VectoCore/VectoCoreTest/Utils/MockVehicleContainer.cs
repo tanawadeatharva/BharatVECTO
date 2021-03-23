@@ -167,6 +167,8 @@ namespace TUGraz.VectoCore.Tests.Utils
 		public IHybridControllerInfo HybridControllerInfo { get; }
 		public IHybridControllerCtl HybridControllerCtl { get; }
 		public IAngledriveInfo AngledriveInfo { get; }
+		public IDCDCConverter DCDCConverter { get; }
+
 		public bool IsTestPowertrain
 		{
 			get { return false; }

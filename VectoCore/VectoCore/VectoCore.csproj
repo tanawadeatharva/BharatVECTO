@@ -137,7 +137,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Configuration\Constants.cs" />
-    <Compile Include="InputData\AuxiliaryFileHelper.cs" />
     <Compile Include="InputData\FileIO\JSON\BusAuxiliaryInputData.cs" />
     <Compile Include="InputData\FileIO\JSON\IJSONVehicleComponents.cs" />
     <Compile Include="InputData\FileIO\JSON\JSONBattery.cs" />
@@ -398,6 +397,7 @@
     <Compile Include="Models\SimulationComponent\Data\Engine\WHRPowerMap.cs" />
     <Compile Include="InputData\Reader\ComponentData\WHRPowerReader.cs" />
     <Compile Include="Models\SimulationComponent\Data\HybridStrategyParameters.cs" />
+    <Compile Include="Models\SimulationComponent\DCDCConverter.cs" />
     <Compile Include="Models\SimulationComponent\ElectricSystem.cs" />
     <Compile Include="Models\SimulationComponent\IElectricEnergyStorage.cs" />
     <Compile Include="Models\SimulationComponent\IElectricMotor.cs" />
@@ -405,6 +405,7 @@
     <Compile Include="Models\SimulationComponent\IHybridControlledGearbox.cs" />
     <Compile Include="Models\SimulationComponent\Impl\PEVAMTShiftStrategy.cs" />
     <Compile Include="Models\SimulationComponent\Impl\ShiftLineSet.cs" />
+    <Compile Include="Models\Simulation\DataBus\IDCDCConverter.cs" />
     <Compile Include="Models\Simulation\DataBus\IHybridControllerInfo.cs" />
     <Compile Include="Models\SimulationComponent\IHybridControlStrategy.cs" />
     <Compile Include="Models\SimulationComponent\Impl\Battery.cs" />
@@ -434,6 +435,7 @@
     <Compile Include="Models\Simulation\SimulationFactoryNinjectModule.cs" />
     <Compile Include="OutputData\FileIO\BusAuxWriter.cs" />
     <Compile Include="OutputData\FileIO\JSONFileWriter.cs" />
+    <Compile Include="OutputData\ModalDataPostprocessingCorrection.cs" />
     <Compile Include="OutputData\XML\AbstractXMLManufacturerReport.cs" />
     <Compile Include="OutputData\XML\DeclarationJobs\XMLCompletedBusWriter.cs" />
     <Compile Include="OutputData\XML\Engineering\Factory\EngineeringWriterFactory.cs" />
@@ -490,7 +492,6 @@
     <Compile Include="InputData\Impl\InputData.cs" />
     <Compile Include="InputData\IVectoRunDataFactory.cs" />
     <Compile Include="InputData\Reader\ComponentData\AccelerationCurveReader.cs" />
-    <Compile Include="InputData\Reader\ComponentData\AuxiliaryDataReader.cs" />
     <Compile Include="InputData\Reader\ComponentData\CrossWindCorrectionCurveReader.cs" />
     <Compile Include="InputData\Reader\ComponentData\PTOIdleLossMapReader.cs" />
     <Compile Include="InputData\Reader\ComponentData\RetarderLossMapReader.cs" />
@@ -594,7 +595,6 @@
     <Compile Include="Models\Declaration\Wheels.cs" />
     <Compile Include="Models\Declaration\WHTCCorrection.cs" />
     <Compile Include="Models\SimulationComponent\Data\CrosswindCorrectionCdxALookup.cs" />
-    <Compile Include="Models\SimulationComponent\Data\AuxiliaryData.cs" />
     <Compile Include="Models\SimulationComponent\Data\AuxSupplyPowerReader.cs" />
     <Compile Include="Models\SimulationComponent\Data\AxleGearData.cs" />
     <Compile Include="Models\SimulationComponent\Data\CycleData.cs" />

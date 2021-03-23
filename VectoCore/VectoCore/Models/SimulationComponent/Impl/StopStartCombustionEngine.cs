@@ -20,7 +20,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl {
 			container, modelData, pt1Disabled)
 		{
 			CombustionEngineOn = true;
-			EngineStopStartUtilityFactor = container.RunData.DriverData.EngineStopStart.UtilityFactor;
+			EngineStopStartUtilityFactor = 1; // container.RunData.DriverData.EngineStopStart.UtilityFactorStandstill;
 
 			var engineRampUpEnergy = Formulas.InertiaPower(modelData.IdleSpeed, 0.RPMtoRad(), modelData.Inertia, modelData.EngineStartTime) * modelData.EngineStartTime;
 			var engineDragEnergy = VectoMath.Abs(modelData.FullLoadCurves[0].DragLoadStationaryTorque(modelData.IdleSpeed)) *
@@ -56,11 +56,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl {
 						Engine = {
 							TorqueOutDemand = outTorque,
 							TotalTorqueDemand = outTorque,
-							PowerRequest = outTorque * outAngularVelocity,
+							PowerRequest = outTorque * 0.RPMtoRad(), //outAngularVelocity,
 							DynamicFullLoadPower = 0.SI<Watt>(),
 							DragPower = 0.SI<Watt>(),
 							DragTorque = 0.SI<NewtonMeter>(),
-							EngineSpeed = outAngularVelocity, // 0.RPMtoRad(),
+							EngineSpeed =  0.RPMtoRad(), // outAngularVelocity, //
 							AuxiliariesPowerDemand = 0.SI<Watt>(),
 						},
 						DeltaEngineSpeed = 0.RPMtoRad(),
@@ -73,7 +73,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl {
 					: (AbstractResponse)new ResponseUnderload(this) { Delta = outTorque * ModelData.IdleSpeed };
 				retVal.Engine.TotalTorqueDemand = outTorque;
 				retVal.Engine.TorqueOutDemand = outTorque;
-				retVal.Engine.PowerRequest = outTorque * outAngularVelocity;
+				retVal.Engine.PowerRequest = outTorque * 0.RPMtoRad(); // outAngularVelocity;
 				retVal.Engine.DynamicFullLoadPower = 0.SI<Watt>();
 				retVal.Engine.DragPower = 0.SI<Watt>();
 				retVal.Engine.DragTorque = 0.SI<NewtonMeter>();
@@ -84,7 +84,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl {
 				//throw new VectoSimulationException("Combustion engine cannot supply outtorque when switched off (T_out: {0})", outTorque);
 			}
 			CurrentState.EngineOn = false;
-			CurrentState.EngineSpeed = ModelData.IdleSpeed;
+			CurrentState.EngineSpeed = outAngularVelocity; //ModelData.IdleSpeed;
 			CurrentState.EngineTorque = 0.SI<NewtonMeter>();
 			CurrentState.EngineTorqueOut = 0.SI<NewtonMeter>();
 			CurrentState.EnginePower = 0.SI<Watt>();
@@ -101,10 +101,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl {
 					DeltaFullLoadTorque = 0.SI<NewtonMeter>(),
 					Engine = {
 						TorqueOutDemand = outTorque,
-						PowerRequest = outTorque * outAngularVelocity,
+						PowerRequest = outTorque * 0.RPMtoRad(), // outAngularVelocity,
 						DynamicFullLoadPower = 0.SI<Watt>(),
 						DragPower = 0.SI<Watt>(),
-						EngineSpeed = outAngularVelocity, // 0.RPMtoRad(),
+						EngineSpeed = 0.RPMtoRad(), // outAngularVelocity, // 0.RPMtoRad(),
 						AuxiliariesPowerDemand = 0.SI<Watt>(),
 						TotalTorqueDemand = 0.SI<NewtonMeter>(),
 						DragTorque = 0.SI<NewtonMeter>()
@@ -133,8 +133,28 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl {
 			if (CombustionEngineOn) {
 				base.DoWriteModalResults(time, simulationInterval, container);
 				var engineStart = !PreviousState.EngineOn && CurrentState.EngineOn;
-				container[ModalResultField.P_ice_start] = engineStart ? EngineStartEnergy / CurrentState.dt : 0.SI<Watt>();
-				container[ModalResultField.P_aux_ice_off] = 0.SI<Watt>();
+
+				//var engineRampUpEnergy = Formulas.InertiaPower(modelData.IdleSpeed, 0.RPMtoRad(), modelData.Inertia, modelData.EngineStartTime) * modelData.EngineStartTime;
+				//var engineDragEnergy = VectoMath.Abs(modelData.FullLoadCurves[0].DragLoadStationaryTorque(modelData.IdleSpeed)) *
+				//	modelData.IdleSpeed / 2.0 * modelData.EngineStartTime;
+
+				if (engineStart) {
+					var engineRampUpEnergy = Formulas.InertiaPower(PreviousState.EngineSpeed, ModelData.IdleSpeed,
+						ModelData.Inertia, ModelData.EngineStartTime) * ModelData.EngineStartTime;
+					var avgRampUpSpeed = (ModelData.IdleSpeed + PreviousState.EngineSpeed) / 2.0;
+					var engineDragEnergy =
+						VectoMath.Abs(ModelData.FullLoadCurves[0].DragLoadStationaryTorque(avgRampUpSpeed)) *
+						avgRampUpSpeed * 0.5.SI<Second>();
+
+					container[ModalResultField.P_ice_start] =
+						(EngineStartEnergy + (engineRampUpEnergy + engineDragEnergy) * EngineStopStartUtilityFactor) /
+						CurrentState.dt;
+				} else {
+					container[ModalResultField.P_ice_start] =  0.SI<Watt>();
+				}
+
+				container[ModalResultField.P_aux_ESS_mech_ice_off] = 0.SI<Watt>();
+				container[ModalResultField.P_aux_ESS_mech_ice_on] = 0.SI<Watt>();
 			} else {
 				container[ModalResultField.P_ice_start] = 0.SI<Watt>();
 				DoWriteEngineOffResults(time, simulationInterval, container);
@@ -160,12 +180,14 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl {
 			container[ModalResultField.T_ice_drag] = 0.SI<NewtonMeter>();
 
 			container[ModalResultField.ICEOn] = CurrentState.EngineOn;
-			container[ModalResultField.P_aux_ice_off] = (CurrentState.AuxPowerEngineOff ?? 0.SI<Watt>());
+			
+			var auxDemandPwr = EngineAux.PowerDemandEngineOn(time, simulationInterval, ModelData.IdleSpeed);
+			var auxDemandTq = auxDemandPwr / ModelData.IdleSpeed;
+			
+			container[ModalResultField.P_aux_ESS_mech_ice_off] = (CurrentState.AuxPowerEngineOff ?? 0.SI<Watt>());
+			container[ModalResultField.P_aux_ESS_mech_ice_on] = (auxDemandPwr ?? 0.SI<Watt>());
 
-
-			var auxDemand = EngineAux.PowerDemandEngineOn(time, simulationInterval, ModelData.IdleSpeed) / ModelData.IdleSpeed;
-
-			WriteWHRPowerEngineOff(container, ModelData.IdleSpeed, auxDemand);
+			WriteWHRPowerEngineOff(container, ModelData.IdleSpeed, auxDemandTq);
 
 			foreach (var fuel in ModelData.Fuels) {
 				var fc = 0.SI<KilogramPerSecond>();
@@ -176,12 +198,12 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl {
 				var advancedAux = EngineAux as BusAuxiliariesAdapter;
 				if (advancedAux != null) {
 					//throw new VectoException("Engine Stop/Start with advanced auxiliaries not supported!");
-					advancedAux.DoWriteModalResults(time, simulationInterval, container);
+					advancedAux.DoWriteModalResultsICE(time, simulationInterval, container);
 					//fcAAUX = advancedAux.AAuxFuelConsumption;
 				}
 
 				
-				var result = fuel.ConsumptionMap.GetFuelConsumption(auxDemand, ModelData.IdleSpeed);
+				var result = fuel.ConsumptionMap.GetFuelConsumption(auxDemandTq, ModelData.IdleSpeed);
 
 				var fcESS = result.Value * (1 - EngineStopStartUtilityFactor) * fuel.FuelData.HeatingValueCorrection * WHTCCorrectionFactor(fuel.FuelData);
 				var fcFinal = fcESS;
