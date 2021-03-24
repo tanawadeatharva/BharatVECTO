@@ -1395,9 +1395,6 @@
   <data name="Bus_NumberPassengersUpperDeck" xml:space="preserve">
     <value>NumberPassengersUpperDeck</value>
   </data>
-  <data name="Bus_StateOfCompletion" xml:space="preserve">
-    <value>StateOfCompletion</value>
-  </data>
   <data name="Bus_AirElectricHeater" xml:space="preserve">
     <value>AirElectricHeater</value>
   </data>
@@ -1430,5 +1427,8 @@
   </data>
   <data name="ManufacturingStage_StageCount" xml:space="preserve">
     <value>stageCount</value>
+  </data>
+  <data name="Bus_DeclarationType" xml:space="preserve">
+    <value>DeclarationType</value>
   </data>
 </root>

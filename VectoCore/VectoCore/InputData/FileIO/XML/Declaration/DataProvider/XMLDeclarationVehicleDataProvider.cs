@@ -329,8 +329,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		}
 
 		public virtual ConsumerTechnology? DoorDriveTechnology { get { return ConsumerTechnology.Unknown; } }
-		
-		public virtual StateOfCompletion StateOfCompletion { get; }
+		public virtual DeclarationType DeclarationType { get; }
+
 
 		public virtual IVehicleComponentsDeclaration Components
 		{
@@ -1038,7 +1038,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 			get { return ConsumerTechnology.Unknown; }
 		}
 
-		public StateOfCompletion StateOfCompletion { get; }
+		public virtual DeclarationType DeclarationType { get; }
 
 
 		public IVehicleComponentsDeclaration Components
@@ -1299,6 +1299,11 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 			}
 		}
 
+		public override DeclarationType DeclarationType
+		{
+			get { return DeclarationTypeHelper.Parse(GetString(XMLNames.Bus_DeclarationType)); }
+		}
+
 
 		public override XmlElement ADASNode
 		{
@@ -1346,10 +1351,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 			get { return null; }
 		}
 
-		public override StateOfCompletion StateOfCompletion
-		{
-			get { return StateOfCompletionHelper.Parse(GetString(XMLNames.Bus_StateOfCompletion)); }
-		}
+
 
 
 		#region Overrides of AbstractXMLResource

@@ -529,6 +529,15 @@ namespace TUGraz.VectoCommon.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to DeclarationType.
+        /// </summary>
+        public static string Bus_DeclarationType {
+            get {
+                return ResourceManager.GetString("Bus_DeclarationType", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to DoubleGlazing.
         /// </summary>
         public static string Bus_DoubleGlazing {
@@ -777,15 +786,6 @@ namespace TUGraz.VectoCommon.Resources {
         public static string Bus_SmartRegenerationSystem {
             get {
                 return ResourceManager.GetString("Bus_SmartRegenerationSystem", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to StateOfCompletion.
-        /// </summary>
-        public static string Bus_StateOfCompletion {
-            get {
-                return ResourceManager.GetString("Bus_StateOfCompletion", resourceCulture);
             }
         }
         

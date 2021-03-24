@@ -190,7 +190,7 @@ namespace TUGraz.VectoCommon.InputData
 
 		ConsumerTechnology? DoorDriveTechnology { get; }
 
-		StateOfCompletion StateOfCompletion { get; }
+		DeclarationType DeclarationType { get; }
 
 		// components
 
@@ -940,30 +940,25 @@ namespace TUGraz.VectoCommon.InputData
 
 	}
 
-	public enum StateOfCompletion
+	public enum DeclarationType
 	{
-		incomplete,
-		complete,
-		completed
+		interim,
+		final
 	}
 
-
-	public static class StateOfCompletionHelper
+	public static class DeclarationTypeHelper
 	{
-		public static StateOfCompletion Parse(string parse)
+		public static DeclarationType Parse(string parse)
 		{
-			switch (parse)
+			switch (parse) 
 			{
-				case nameof(StateOfCompletion.incomplete):
-					return StateOfCompletion.incomplete;
-				case nameof(StateOfCompletion.complete):
-					return StateOfCompletion.complete;
-				case nameof(StateOfCompletion.completed):
-					return StateOfCompletion.completed;
+				case nameof(DeclarationType.interim):
+					return DeclarationType.interim;
+				case nameof(DeclarationType.final):
+					return DeclarationType.final;
 				default:
 					throw new ArgumentOutOfRangeException();
 			}
 		}
 	}
-
 }

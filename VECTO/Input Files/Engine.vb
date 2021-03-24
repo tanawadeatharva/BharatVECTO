@@ -666,7 +666,7 @@ Public Class DummyVehicle
 	Public ReadOnly Property Width As Meter Implements IVehicleDeclarationInputData.Width
 	Public ReadOnly Property EntranceHeight As Meter Implements IVehicleDeclarationInputData.EntranceHeight
 	Public ReadOnly Property DoorDriveTechnology As ConsumerTechnology? Implements IVehicleDeclarationInputData.DoorDriveTechnology
-	Public ReadOnly Property StateOfCompletion As StateOfCompletion Implements IVehicleDeclarationInputData.StateOfCompletion
+	Public ReadOnly Property DeclarationType As DeclarationType Implements IVehicleDeclarationInputData.DeclarationType
 
 	Public ReadOnly Property Components As IVehicleComponentsDeclaration Implements IVehicleDeclarationInputData.Components
 		Get
