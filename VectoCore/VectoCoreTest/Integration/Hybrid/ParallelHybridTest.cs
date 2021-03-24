@@ -950,6 +950,43 @@ namespace TUGraz.VectoCore.Tests.Integration.Hybrid
 			graphWriter.Write(modFilename);
 		}
 
+		public const string Group5_APT = @"TestData\Hybrids\GenericVehicle_Group5_P3_APT\P3 APT Group 5.vecto";
+
+
+		[TestCase(Group5_APT, 9, TestName = "P3 APT Hybrid Group 5 Vehicle Prop TorqueLimit DriveCycle UrbanDelivery"),
+		]
+		public void P3APTHybridGroup5DriveCycle(string jobFile, int cycleIdx)
+		{
+			var inputProvider = JSONInputDataFactory.ReadJsonJob(jobFile);
+
+			var writer = new FileOutputWriter(jobFile);
+			var factory = new SimulatorFactory(ExecutionMode.Engineering, inputProvider, writer) {
+				Validate = false,
+				WriteModalResults = true,
+			};
+
+			var sumContainer = new SummaryDataContainer(writer);
+			var jobContainer = new JobContainer(sumContainer);
+
+			factory.SumData = sumContainer;
+
+			var run = factory.SimulationRuns().ToArray()[cycleIdx];
+
+			Assert.NotNull(run);
+
+			var pt = run.GetContainer();
+
+			Assert.NotNull(pt);
+
+			run.Run();
+			Assert.IsTrue(run.FinishedWithoutErrors);
+
+			//jobContainer.AddRuns(factory);
+			//jobContainer.Execute();
+			//jobContainer.WaitFinished();
+			//Assert.IsTrue(jobContainer.GetProgress().All(x => x.Value.Success));
+		}
+
 		// - - - - - - - - - - - - - - - - - - - - - - - - - 
 
 		[

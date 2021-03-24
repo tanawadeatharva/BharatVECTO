@@ -337,6 +337,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				MaxStartGear = GearList.First();
 				foreach (var gear in GearList.Reverse()) {
 					var gearData = GearboxModelData.Gears[gear.Gear];
+					if (gear.TorqueConverterLocked.HasValue && !gear.TorqueConverterLocked.Value) {
+						continue;
+					}
 					if (GearshiftParams.StartSpeed * transmissionRatio * gearData.Ratio <= minEngineSpeed)
 						continue;
 					MaxStartGear = gear;
@@ -440,12 +443,12 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			}
 
 
-			private bool SpeedTooLowForEngine(GearshiftPosition gear, PerSecond outAngularSpeed)
+			protected virtual bool SpeedTooLowForEngine(GearshiftPosition gear, PerSecond outAngularSpeed)
 			{
 				return (outAngularSpeed * GearboxModelData.Gears[gear.Gear].Ratio).IsSmaller(DataBus.EngineInfo.EngineIdleSpeed);
 			}
 
-			private bool SpeedTooHighForEngine(GearshiftPosition gear, PerSecond outAngularSpeed)
+			protected virtual bool SpeedTooHighForEngine(GearshiftPosition gear, PerSecond outAngularSpeed)
 			{
 				return
 					(outAngularSpeed * GearboxModelData.Gears[gear.Gear].Ratio).IsGreaterOrEqual(VectoMath.Min(
@@ -594,6 +597,29 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			{
 				throw new System.NotImplementedException("AT Shift Strategy does not support disengaging.");
 			}
+
+			protected override bool SpeedTooLowForEngine(GearshiftPosition gear, PerSecond outAngularSpeed)
+			{
+				if (gear.TorqueConverterLocked.HasValue && !gear.TorqueConverterLocked.Value) {
+					return false;
+				}
+
+				return base.SpeedTooLowForEngine(gear, outAngularSpeed);
+				//(outAngularSpeed * GearboxModelData.Gears[gear.Gear].Ratio).IsSmaller(DataBus.EngineInfo.EngineIdleSpeed);
+			}
+
+			protected override bool SpeedTooHighForEngine(GearshiftPosition gear, PerSecond outAngularSpeed)
+			{
+				if (gear.TorqueConverterLocked.HasValue && !gear.TorqueConverterLocked.Value) {
+					return false;
+				}
+
+				return base.SpeedTooHighForEngine(gear, outAngularSpeed);
+					//(outAngularSpeed * GearboxModelData.Gears[gear.Gear].Ratio).IsGreaterOrEqual(VectoMath.Min(
+					//	GearboxModelData.Gears[gear.Gear].MaxSpeed,
+					//	DataBus.EngineInfo.EngineN95hSpeed));
+			}
+
 		}
 
 	}

@@ -120,6 +120,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl {
 					DynamicFullLoadPower = 0.SI<Watt>(),
 					TotalTorqueDemand = 0.SI<NewtonMeter>(),
 					DragPower = 0.SI<Watt>(),
+					DragTorque = 0.SI<NewtonMeter>(),
 					EngineSpeed = 0.RPMtoRad(),
 					AuxiliariesPowerDemand = 0.SI<Watt>(),
 				},
