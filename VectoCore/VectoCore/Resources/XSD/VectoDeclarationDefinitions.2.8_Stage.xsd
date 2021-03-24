@@ -342,7 +342,7 @@
 							<xs:documentation>P291 - enum</xs:documentation>
 						</xs:annotation>
 					</xs:element>
-					<xs:element name="StateOfCompletion" type="v2.8:StateOfCompletionType">
+					<xs:element name="DeclarationType" type="v2.8:DeclarationType">
 						<xs:annotation>
 							<xs:documentation>P293 - enum</xs:documentation>
 						</xs:annotation>
@@ -407,7 +407,7 @@
 		</xs:annotation>
 		<xs:restriction base="xs:int"/>
 	</xs:simpleType>
-	<xs:simpleType name="StateOfCompletionType">
+	<xs:simpleType name="DeclarationType">
 		<xs:annotation>
 			<xs:appinfo>
 				<vectoParam:description>
@@ -418,9 +418,8 @@
 			<xs:documentation>P293 - enum</xs:documentation>
 		</xs:annotation>
 		<xs:restriction base="xs:string">
-			<xs:enumeration value="incomplete"/>
-			<xs:enumeration value="complete"/>
-			<xs:enumeration value="completed"/>
+			<xs:enumeration value="interim"/>
+			<xs:enumeration value="final"/>
 		</xs:restriction>
 	</xs:simpleType>
 	<xs:simpleType name="HVACHeatPumpModeType">

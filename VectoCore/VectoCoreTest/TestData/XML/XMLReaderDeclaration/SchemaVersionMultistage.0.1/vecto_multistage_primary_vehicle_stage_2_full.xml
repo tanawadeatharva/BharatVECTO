@@ -673,7 +673,7 @@ xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:DeclarationOutput:VehicleInterimFile
 				<v2.8:VehicleWidth>2000</v2.8:VehicleWidth>				
 				<v2.8:EntranceHeight>2050</v2.8:EntranceHeight>
 				<v2.8:DoorDriveTechnology>pneumatic</v2.8:DoorDriveTechnology>
-				<v2.8:StateOfCompletion>incomplete</v2.8:StateOfCompletion>
+				<v2.8:DeclarationType>final</v2.8:DeclarationType>
 				<v2.8:ADAS>
 					<v2.3:EngineStopStart>false</v2.3:EngineStopStart>
 					<v2.3:EcoRollWithoutEngineStop>true</v2.3:EcoRollWithoutEngineStop>
