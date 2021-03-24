@@ -3,6 +3,7 @@ using System.Xml;
 using System.Xml.Linq;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
+using TUGraz.VectoCommon.Resources;
 using TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Interfaces;
 using TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader;
 using TUGraz.VectoCore.Utils;
@@ -309,6 +310,19 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 		public XMLDeclarationInterimStageBusComponentsDataProviderV28(IXMLDeclarationVehicleData vehicle,
 				XmlNode componentNode, string sourceFile) : base(vehicle, componentNode, sourceFile) { }
+
+
+		public override IAirdragDeclarationInputData AirdragInputData
+		{
+			get
+			{
+				if (!ElementExists(XMLNames.Component_AirDrag))
+					return null;
+				
+				return _airdragInputData ?? (_airdragInputData = ComponentReader.AirdragInputData);
+			}
+		}
+
 
 		public override IGearboxDeclarationInputData GearboxInputData
 		{

@@ -1323,11 +1323,11 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 		public override IAdvancedDriverAssistantSystemDeclarationInputData ADAS
 		{
-			get 
+			get
 			{
-				if(ADASNode != null)
-					return _adas ?? (_adas = ADASReader.ADASInputData);
-				return null;
+				if (ADASNode == null)
+					return null;
+				return _adas ?? (_adas = ADASReader.ADASInputData);
 			}
 		}
 

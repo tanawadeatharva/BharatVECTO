@@ -240,7 +240,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 				get { return hvacMaxCoolingPower ?? (hvacMaxCoolingPower = new HVACCoolingPower()); }
 			}
 
-			public static PerSecond VentilationRate(BusHVACSystemConfiguration hvacSystemConfig, bool heating)
+			public static PerSecond VentilationRate(BusHVACSystemConfiguration? hvacSystemConfig, bool heating)
 			{
 
 				switch (hvacSystemConfig) {

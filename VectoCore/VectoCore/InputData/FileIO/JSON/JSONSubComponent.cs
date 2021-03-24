@@ -548,27 +548,27 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
         #region Implementation of IElectricConsumersDeclarationData
 
-        public virtual bool InteriorLightsLED
+        public virtual bool? InteriorLightsLED
         {
             get { return false; }
         }
 
-        public virtual bool DayrunninglightsLED
+        public virtual bool? DayrunninglightsLED
         {
             get { return false; }
         }
 
-        public virtual bool PositionlightsLED
+        public virtual bool? PositionlightsLED
         {
             get { return false; }
         }
 
-        public virtual bool HeadlightsLED
+        public virtual bool? HeadlightsLED
         {
             get { return false; }
         }
 
-        public virtual bool BrakelightsLED
+        public virtual bool? BrakelightsLED
         {
             get { return false; }
         }
@@ -630,7 +630,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
         #region Implementation of IHVACBusAuxiliariesDeclarationData
 
-        public virtual BusHVACSystemConfiguration SystemConfiguration { get; set; }
+        public virtual BusHVACSystemConfiguration? SystemConfiguration { get; set; }
 		public virtual HeatPumpType? HeatPumpTypeDriverCompartment { get { return null; } }
 		public virtual HeatPumpMode? HeatPumpModeDriverCompartment { get { return null; } }
 		public virtual HeatPumpType? HeatPumpTypePassengerCompartment { get{ return null; } }
@@ -638,15 +638,15 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 		public virtual ACCompressorType CompressorTypeDriver { get { return ACCompressorType.Unknown; } }
         public virtual ACCompressorType CompressorTypePassenger { get { return ACCompressorType.Unknown; } }
         public virtual Watt AuxHeaterPower { get { return null; } }
-        public virtual bool DoubleGlazing { get { return false; } }
+        public virtual bool? DoubleGlazing { get { return false; } }
         public virtual bool HeatPump { get { return false; } }
-		public bool OtherHeatingTechnology { get; }
-		public virtual bool AdjustableCoolantThermostat { get { return Body["Aux"]?["HVAC"]?.GetEx<bool>("AdjustableCoolantThermostat") ?? false; } }
-        public virtual bool AdjustableAuxiliaryHeater { get { return false; } }
+		public bool? OtherHeatingTechnology { get; }
+		public virtual bool? AdjustableCoolantThermostat { get { return Body["Aux"]?["HVAC"]?.GetEx<bool>("AdjustableCoolantThermostat") ?? false; } }
+        public virtual bool? AdjustableAuxiliaryHeater { get { return false; } }
         public virtual bool EngineWasteGasHeatExchanger { get { return Body["Aux"]?["HVAC"]?.GetEx<bool>("EngineWasteGasHeatExchanger") ?? false; } }
-        public virtual bool SeparateAirDistributionDucts { get { return false; } }
-		public virtual bool WaterElectricHeater { get; }
-		public virtual bool AirElectricHeater { get; }
+        public virtual bool? SeparateAirDistributionDucts { get { return false; } }
+		public virtual bool? WaterElectricHeater { get; }
+		public virtual bool? AirElectricHeater { get; }
 
 		#endregion
 

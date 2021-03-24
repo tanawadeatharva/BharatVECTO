@@ -184,7 +184,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			var busAux = completedVehicle.Components.BusAuxiliaries.HVACAux;
 
 			if (mission.BusParameter.SeparateAirDistributionDuctsHVACCfg.Contains(hvacConfiguration) &&
-				!completedVehicle.Components.BusAuxiliaries.HVACAux.SeparateAirDistributionDucts) {
+				!(bool)completedVehicle.Components.BusAuxiliaries.HVACAux.SeparateAirDistributionDucts) {
 				throw new VectoException("Input parameter 'separate air distribution ducts' has to be set to 'true' for vehicle group '{0}' and HVAC configuration '{1}'",
 					mission.BusParameter.BusGroup.GetClassNumber(), hvacConfiguration.GetName());
 			}
@@ -301,15 +301,15 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 
 		protected override bool VehicleHasElectricalConsumer(string consumerName, IBusAuxiliariesDeclarationData busAux)
 		{
-			if (consumerName == "Day running lights LED bonus" && busAux.ElectricConsumers.DayrunninglightsLED)
+			if (consumerName == "Day running lights LED bonus" && (bool)busAux.ElectricConsumers.DayrunninglightsLED)
 				return true;
-			if (consumerName == "Position lights LED bonus" && busAux.ElectricConsumers.PositionlightsLED)
+			if (consumerName == "Position lights LED bonus" && (bool)busAux.ElectricConsumers.PositionlightsLED)
 				return true;
-			if (consumerName == "Brake lights LED bonus" && busAux.ElectricConsumers.BrakelightsLED)
+			if (consumerName == "Brake lights LED bonus" && (bool)busAux.ElectricConsumers.BrakelightsLED)
 				return true;
-			if (consumerName == "Interior lights LED bonus" && busAux.ElectricConsumers.InteriorLightsLED)
+			if (consumerName == "Interior lights LED bonus" && (bool)busAux.ElectricConsumers.InteriorLightsLED)
 				return true;
-			if (consumerName == "Headlights LED bonus" && busAux.ElectricConsumers.HeadlightsLED)
+			if (consumerName == "Headlights LED bonus" && (bool)busAux.ElectricConsumers.HeadlightsLED)
 				return true;
 
 			return false;

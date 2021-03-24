@@ -112,7 +112,7 @@ namespace TUGraz.VectoCore.Tests.Integration.CompletedBus
             //}, messageContains: "Input parameter 'separate air distribution ducts' has to be set to 'true' for vehicle group ");
         }
 
-        private static XmlReader GetModifiedXML(string completedJob, BusHVACSystemConfiguration hvacConfig, bool separateDucts)
+        private static XmlReader GetModifiedXML(string completedJob, BusHVACSystemConfiguration? hvacConfig, bool separateDucts)
 		{
 			var completedXML = new XmlDocument();
 			completedXML.Load(completedJob);

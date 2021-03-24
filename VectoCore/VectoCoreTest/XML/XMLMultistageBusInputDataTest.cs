@@ -19,6 +19,7 @@ namespace TUGraz.VectoCore.Tests.XML
 		const string VehicleInterimStageInput = DirPath + "vecto_vehicle-stage_input_full-sample.xml";
 		const string VehicleExemptedInterimStageInput = DirPath + "vecto_vehicle-exempted_input_full-sample.xml";
 		const string VehicleExemptedMandatoryOnly = DirPath + "vecto_vehicle-exempted_input_only_mandatory_entries.xml";
+		const string VehicleComponentsEntriesNullable = DirPath + "vecto_vehicle-stage_input_only_component_nullable_entries.xml";
 
 
 		[OneTimeSetUp]
@@ -156,6 +157,7 @@ namespace TUGraz.VectoCore.Tests.XML
 			Assert.AreEqual("Some Manufacturer Address 3", vehicle.ManufacturerAddress);
 			Assert.AreEqual("VEH-1234567891", vehicle.VIN);
 			Assert.AreEqual(DateTime.Parse("2021-01-09T11:00:00Z").ToUniversalTime(), vehicle.Date);
+			Assert.AreEqual(StateOfCompletion.incomplete, vehicle.StateOfCompletion);
 
 			Assert.AreEqual(null, vehicle.Model);
 			Assert.AreEqual(null, vehicle.LegislativeClass);
@@ -168,6 +170,62 @@ namespace TUGraz.VectoCore.Tests.XML
 			Assert.AreEqual(null, vehicle.LowEntry);
 			Assert.AreEqual(null, vehicle.Height);
 			Assert.AreEqual(null, vehicle.Components);
+		}
+
+		[TestCase]
+		public void TestNullableComponentEntriesInput()
+		{
+			var reader = XmlReader.Create(VehicleComponentsEntriesNullable);
+			var inputDataProvider = xmlInputReader.CreateDeclaration(reader);
+			var vehicle = inputDataProvider.JobInputData.Vehicle;
+
+
+			Assert.AreEqual("VEH-1234567890", vehicle.Identifier);
+			Assert.AreEqual("Some Manufacturer 4", vehicle.Manufacturer);
+			Assert.AreEqual("Some Manufacturer Address 4", vehicle.ManufacturerAddress);
+			Assert.AreEqual("VEH-1234567894", vehicle.VIN);
+			Assert.AreEqual(DateTime.Parse("2022-01-09T11:00:00Z").ToUniversalTime(), vehicle.Date);
+			Assert.AreEqual(StateOfCompletion.incomplete, vehicle.StateOfCompletion);
+
+			Assert.AreEqual(null, vehicle.Model);
+			Assert.AreEqual(null, vehicle.LegislativeClass);
+			Assert.AreEqual(null, vehicle.CurbMassChassis);
+			Assert.AreEqual(null, vehicle.GrossVehicleMassRating);
+			Assert.AreEqual(null, vehicle.RegisteredClass);
+			Assert.AreEqual(null, vehicle.NumberOfPassengersLowerDeck);
+			Assert.AreEqual(null, vehicle.NumberOfPassengersUpperDeck);
+			Assert.AreEqual(null, vehicle.VehicleCode);
+			Assert.AreEqual(null, vehicle.LowEntry);
+			Assert.AreEqual(null, vehicle.Height);
+	
+			Assert.AreEqual(true, vehicle.ADAS.EngineStopStart);
+			Assert.AreEqual(EcoRollType.WithEngineStop, vehicle.ADAS.EcoRoll);
+			Assert.AreEqual(PredictiveCruiseControlType.Option_1_2_3, vehicle.ADAS.PredictiveCruiseControl);
+			Assert.AreEqual(null, vehicle.ADAS.ATEcoRollReleaseLockupClutch);
+			
+			Assert.AreEqual(null, vehicle.Components.AirdragInputData);
+			
+			var electricConsumer = vehicle.Components.BusAuxiliaries.ElectricConsumers;
+			Assert.AreEqual(null, electricConsumer.InteriorLightsLED);
+			Assert.AreEqual(null, electricConsumer.DayrunninglightsLED);
+			Assert.AreEqual(null, electricConsumer.PositionlightsLED);
+			Assert.AreEqual(null, electricConsumer.BrakelightsLED);
+			Assert.AreEqual(null, electricConsumer.HeadlightsLED);
+
+			var hvacAux = vehicle.Components.BusAuxiliaries.HVACAux;
+			Assert.AreEqual(null, hvacAux.SystemConfiguration);
+			Assert.AreEqual(null, hvacAux.HeatPumpTypeDriverCompartment);
+			Assert.AreEqual(null, hvacAux.HeatPumpModeDriverCompartment);
+			Assert.AreEqual(null, hvacAux.HeatPumpTypePassengerCompartment);
+			Assert.AreEqual(null, hvacAux.HeatPumpModePassengerCompartment);
+			
+			Assert.AreEqual(null, hvacAux.AuxHeaterPower);
+			Assert.AreEqual(null, hvacAux.DoubleGlazing);
+			Assert.AreEqual(null, hvacAux.AdjustableAuxiliaryHeater);
+			Assert.AreEqual(null, hvacAux.SeparateAirDistributionDucts);
+			Assert.AreEqual(null, hvacAux.WaterElectricHeater);
+			Assert.AreEqual(null, hvacAux.AirElectricHeater);
+			Assert.AreEqual(null, hvacAux.OtherHeatingTechnology);
 		}
 	}
 }

@@ -55,11 +55,11 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl {
 
 		#region Implementation of IElectricConsumersDeclarationData
 
-		public bool InteriorLightsLED { get; }
-		public bool DayrunninglightsLED { get; }
-		public bool PositionlightsLED { get; }
-		public bool HeadlightsLED { get; }
-		public bool BrakelightsLED { get; }
+		public bool? InteriorLightsLED { get; }
+		public bool? DayrunninglightsLED { get; }
+		public bool? PositionlightsLED { get; }
+		public bool? HeadlightsLED { get; }
+		public bool? BrakelightsLED { get; }
 
 		#endregion
 
@@ -73,7 +73,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl {
 
 		#region Implementation of IHVACBusAuxiliariesDeclarationData
 
-		public BusHVACSystemConfiguration SystemConfiguration { get; }
+		public BusHVACSystemConfiguration? SystemConfiguration { get; }
 		public HeatPumpType? HeatPumpTypeDriverCompartment { get; }
 		public HeatPumpMode? HeatPumpModeDriverCompartment { get; }
 		public HeatPumpType? HeatPumpTypePassengerCompartment { get; }
@@ -81,15 +81,15 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl {
 		public ACCompressorType CompressorTypeDriver { get; }
 		public ACCompressorType CompressorTypePassenger { get; }
 		public Watt AuxHeaterPower { get; }
-		public bool DoubleGlazing { get; }
+		public bool? DoubleGlazing { get; }
 		public bool HeatPump { get; }
-		public bool OtherHeatingTechnology { get; }
-		public bool AdjustableCoolantThermostat { get; }
-		public bool AdjustableAuxiliaryHeater { get; }
+		public bool? OtherHeatingTechnology { get; }
+		public bool? AdjustableCoolantThermostat { get; }
+		public bool? AdjustableAuxiliaryHeater { get; }
 		public bool EngineWasteGasHeatExchanger { get; }
-		public bool SeparateAirDistributionDucts { get; }
-		public bool WaterElectricHeater { get; }
-		public bool AirElectricHeater { get; }
+		public bool? SeparateAirDistributionDucts { get; }
+		public bool? WaterElectricHeater { get; }
+		public bool? AirElectricHeater { get; }
 
 		#endregion
 	}

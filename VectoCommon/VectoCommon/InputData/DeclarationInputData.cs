@@ -821,15 +821,15 @@ namespace TUGraz.VectoCommon.InputData
 
 	public interface IElectricConsumersDeclarationData
 	{
-		bool InteriorLightsLED { get; }
+		bool? InteriorLightsLED { get; }
 
-		bool DayrunninglightsLED { get; }
+		bool? DayrunninglightsLED { get; }
 
-		bool PositionlightsLED { get; }
+		bool? PositionlightsLED { get; }
 
-		bool HeadlightsLED { get; }
+		bool? HeadlightsLED { get; }
 
-		bool BrakelightsLED { get; }
+		bool? BrakelightsLED { get; }
 	}
 
 	public interface IAlternatorDeclarationInputData
@@ -860,7 +860,7 @@ namespace TUGraz.VectoCommon.InputData
 
 	public interface IHVACBusAuxiliariesDeclarationData
 	{
-		BusHVACSystemConfiguration SystemConfiguration { get; }
+		BusHVACSystemConfiguration? SystemConfiguration { get; }
 
 		HeatPumpType? HeatPumpTypeDriverCompartment { get; }
 		
@@ -872,19 +872,19 @@ namespace TUGraz.VectoCommon.InputData
 
 		Watt AuxHeaterPower { get; }
 
-		bool DoubleGlazing { get; }
+		bool? DoubleGlazing { get; }
 
-		bool AdjustableAuxiliaryHeater { get; }
+		bool? AdjustableAuxiliaryHeater { get; }
 
-		bool SeparateAirDistributionDucts { get; }
+		bool? SeparateAirDistributionDucts { get; }
 
-		bool WaterElectricHeater { get; }
+		bool? WaterElectricHeater { get; }
 
-		bool AirElectricHeater { get; }
+		bool? AirElectricHeater { get; }
 
-		bool OtherHeatingTechnology { get; }
+		bool? OtherHeatingTechnology { get; }
 
-		bool AdjustableCoolantThermostat { get; }
+		bool? AdjustableCoolantThermostat { get; }
 	
 		bool EngineWasteGasHeatExchanger { get; }
 	}

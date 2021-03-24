@@ -23,12 +23,12 @@ namespace TUGraz.VectoCommon.BusAuxiliaries {
 	{
 		private const string Prefix = "Configuration";
 
-		public static BusHVACSystemConfiguration Parse(string text)
+		public static BusHVACSystemConfiguration? Parse(string text)
 		{
 			return (Prefix + text).ParseEnum<BusHVACSystemConfiguration>();
 		}
 
-		public static string GetLabel(this BusHVACSystemConfiguration hvacConfiguration)
+		public static string GetLabel(this BusHVACSystemConfiguration? hvacConfiguration)
 		{
 			if (hvacConfiguration == BusHVACSystemConfiguration.Unknown) { 
 					return BusHVACSystemConfiguration.Unknown.ToString();
@@ -37,7 +37,7 @@ namespace TUGraz.VectoCommon.BusAuxiliaries {
 			return Prefix + " " + hvacConfiguration.ToString().Replace(Prefix, "");
 		}
 
-		public static string GetName(this BusHVACSystemConfiguration hvacConfig)
+		public static string GetName(this BusHVACSystemConfiguration? hvacConfig)
 		{
 			if (hvacConfig == BusHVACSystemConfiguration.Unknown) {
 				return "Unknown";
@@ -46,7 +46,7 @@ namespace TUGraz.VectoCommon.BusAuxiliaries {
 			return hvacConfig.ToString().Replace(Prefix, "");
 		}
 
-		public static string GetXmlFormat(this BusHVACSystemConfiguration hvacConfiguration)
+		public static string GetXmlFormat(this BusHVACSystemConfiguration? hvacConfiguration)
 		{
 			if (hvacConfiguration == BusHVACSystemConfiguration.Unknown) {
 				return "0";
@@ -55,7 +55,7 @@ namespace TUGraz.VectoCommon.BusAuxiliaries {
 			return GetName(hvacConfiguration);
 		}
 
-		public static bool RequiresDriverAC(this BusHVACSystemConfiguration hvacConfig)
+		public static bool RequiresDriverAC(this BusHVACSystemConfiguration? hvacConfig)
 		{
 			switch (hvacConfig) {
 				case BusHVACSystemConfiguration.Configuration2: 
