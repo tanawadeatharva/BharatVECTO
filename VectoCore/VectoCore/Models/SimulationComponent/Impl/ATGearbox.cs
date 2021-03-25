@@ -410,6 +410,25 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				? ModelData.Gears[Gear.Gear].TorqueConverterRatio
 				: ModelData.Gears[Gear.Gear].Ratio;
 			var inAngularVelocity = outAngularVelocity * ratio;
+
+			var effectiveRatio = ModelData.Gears[Gear.Gear].Ratio;
+			var effectiveLossMap = ModelData.Gears[Gear.Gear].LossMap;
+			if (!Gear.TorqueConverterLocked.Value) {
+				effectiveRatio = ModelData.Gears[Gear.Gear].TorqueConverterRatio;
+				effectiveLossMap = ModelData.Gears[Gear.Gear].TorqueConverterGearLossMap;
+			}
+			
+			var avgInAngularVelocity = (PreviousState.InAngularVelocity + inAngularVelocity) / 2.0;
+
+			var inTorqueLossResult = effectiveLossMap.GetTorqueLoss(avgAngularVelocity, outTorque);
+			var inTorque = avgInAngularVelocity.IsEqual(0) ? outTorque : outTorque * (avgAngularVelocity / avgInAngularVelocity) + inTorqueLossResult.Value;
+
+			var inertiaTorqueLossOut = !inAngularVelocity.IsEqual(0)
+				? Formulas.InertiaPower(outAngularVelocity, PreviousState.OutAngularVelocity, ModelData.Inertia, dt) /
+				avgAngularVelocity
+				: 0.SI<NewtonMeter>();
+			inTorque += inertiaTorqueLossOut / effectiveRatio;
+
 			if (dryRun) {
 				// if gearbox is disengaged the 0[W]-line is the limit for drag and full load.
 				var engResponse = NextComponent.Request(absTime, dt, 0.SI<NewtonMeter>(), 0.RPMtoRad(), dryRun);
@@ -469,10 +488,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				};
 			}
 
-			var effectiveRatio = ModelData.Gears[Gear.Gear].Ratio;
-			if (!Gear.TorqueConverterLocked.Value) {
-				effectiveRatio = ModelData.Gears[Gear.Gear].TorqueConverterRatio;
-			}
+			
 
 			CurrentState.SetState(0.SI<NewtonMeter>(), outAngularVelocity * effectiveRatio, outTorque,
 				outAngularVelocity);
@@ -502,7 +518,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				inAngularVelocity = DataBus.EngineInfo.EngineIdleSpeed;
 			}
 			
-			return NextComponent.Request(absTime, dt, 0.SI<NewtonMeter>(), inAngularVelocity, false);
+			var retVal =  NextComponent.Request(absTime, dt, 0.SI<NewtonMeter>(), inAngularVelocity, false);
+			retVal.Gearbox.InputSpeed = inAngularVelocity;
+			retVal.Gearbox.InputTorque = inTorque;
+			return retVal;
 		}
 
 		protected override void DoWriteModalResults(Second time, Second simulationInterval, IModalDataContainer container)

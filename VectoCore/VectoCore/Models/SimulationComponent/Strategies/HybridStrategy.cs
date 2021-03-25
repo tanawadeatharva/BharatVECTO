@@ -911,6 +911,12 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 							}
 						}
 					}
+
+					if (firstEntry.IgnoreReason.AllOK()) {
+						firstEntry.Gear = nextGear;
+						firstEntry.Setting = tmp;
+						eval.Add(firstEntry);
+					}
 				}
 
 				var deltaDragTqFirst = disengaged ? 
