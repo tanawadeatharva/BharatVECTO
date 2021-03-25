@@ -950,10 +950,33 @@ namespace TUGraz.VectoCore.Tests.Integration.Hybrid
 			graphWriter.Write(modFilename);
 		}
 
-		public const string Group5_APT = @"TestData\Hybrids\GenericVehicle_Group5_P3_APT\P3 APT Group 5.vecto";
+		public const string Group5_P3_APT = @"TestData\Hybrids\GenericVehicle_Group5_P3_APT\P3 APT Group 5.vecto";
+		public const string Group5_P4_APT = @"TestData\Hybrids\GenericVehicle_Group5_P4_APT\P4 APT Group 5.vecto";
 
 
-		[TestCase(Group5_APT, 9, TestName = "P3 APT Hybrid Group 5 Vehicle Prop TorqueLimit DriveCycle UrbanDelivery"),
+		[
+			TestCase(Group5_P3_APT, 0, TestName = "P3 APT Hybrid Group 5 DriveCycle LongHaul"),
+			TestCase(Group5_P3_APT, 1, TestName = "P3 APT Hybrid Group 5 DriveCycle Coach"),
+			TestCase(Group5_P3_APT, 2, TestName = "P3 APT Hybrid Group 5 DriveCycle Construction"),
+			TestCase(Group5_P3_APT, 3, TestName = "P3 APT Hybrid Group 5 DriveCycle HeavyUrban"),
+			TestCase(Group5_P3_APT, 4, TestName = "P3 APT Hybrid Group 5 DriveCycle Interurban"),
+			TestCase(Group5_P3_APT, 5, TestName = "P3 APT Hybrid Group 5 DriveCycle MunicipalUtility"),
+			TestCase(Group5_P3_APT, 6, TestName = "P3 APT Hybrid Group 5 DriveCycle RegionalDelivery"),
+			TestCase(Group5_P3_APT, 7, TestName = "P3 APT Hybrid Group 5 DriveCycle Suburban"),
+			TestCase(Group5_P3_APT, 8, TestName = "P3 APT Hybrid Group 5 DriveCycle Urban"),
+			TestCase(Group5_P3_APT, 9, TestName = "P3 APT Hybrid Group 5 DriveCycle UrbanDelivery"),
+
+			TestCase(Group5_P4_APT, 0, TestName = "P4 APT Hybrid Group 5 DriveCycle LongHaul"),
+			TestCase(Group5_P4_APT, 1, TestName = "P4 APT Hybrid Group 5 DriveCycle Coach"),
+			TestCase(Group5_P4_APT, 2, TestName = "P4 APT Hybrid Group 5 DriveCycle Construction"),
+			TestCase(Group5_P4_APT, 3, TestName = "P4 APT Hybrid Group 5 DriveCycle HeavyUrban"),
+			TestCase(Group5_P4_APT, 4, TestName = "P4 APT Hybrid Group 5 DriveCycle Interurban"),
+			TestCase(Group5_P4_APT, 5, TestName = "P4 APT Hybrid Group 5 DriveCycle MunicipalUtility"),
+			TestCase(Group5_P4_APT, 6, TestName = "P4 APT Hybrid Group 5 DriveCycle RegionalDelivery"),
+			TestCase(Group5_P4_APT, 7, TestName = "P4 APT Hybrid Group 5 DriveCycle Suburban"),
+			TestCase(Group5_P4_APT, 8, TestName = "P4 APT Hybrid Group 5 DriveCycle Urban"),
+			TestCase(Group5_P4_APT, 9, TestName = "P4 APT Hybrid Group 5 DriveCycle UrbanDelivery"),
+
 		]
 		public void P3APTHybridGroup5DriveCycle(string jobFile, int cycleIdx)
 		{
