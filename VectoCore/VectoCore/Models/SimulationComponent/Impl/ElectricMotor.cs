@@ -347,7 +347,15 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				? ModelData.DragCurve.Lookup(avgSpeed)
 				: ModelData.EfficiencyMap.LookupTorque(maxBatPower, avgSpeed, maxEmTorque);
 			var maxTorqueRecuperate = VectoMath.Min(maxEmTorque, maxBatRecuperationTorque);
-			return maxTorqueRecuperate < 0 ? null : maxTorqueRecuperate;
+			if (maxTorqueRecuperate < 0) {
+				return null;
+			}
+
+			var elPower = ModelData.EfficiencyMap.LookupElectricPower(avgSpeed, maxTorqueRecuperate);
+			if (elPower.ElectricalPower.IsSmallerOrEqual(0)) {
+				return null;
+			}
+			return maxTorqueRecuperate;
 		}
 
 		private NewtonMeter GetMaxDriveTorque(Second dt, PerSecond avgSpeed)
@@ -472,13 +480,17 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 	public class ElectricMotorState // : SimpleComponentState
 	{
+		public ElectricMotorState()
+		{
+			EMSpeed = 0.RPMtoRad();
+		}
 
 		public PerSecond DrivetrainSpeed = 0.RPMtoRad();
 		public NewtonMeter DrivetrainInTorque = 0.SI<NewtonMeter>();
 		public NewtonMeter DrivetrainOutTorque = 0.SI<NewtonMeter>();
 		public NewtonMeter TransmissionTorqueLoss;
 
-		public PerSecond EMSpeed = 0.RPMtoRad();
+		public PerSecond EMSpeed { get; set; }
 		public NewtonMeter EMTorque;
 		public NewtonMeter EmTorqueMap;
 
