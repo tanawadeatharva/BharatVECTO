@@ -224,11 +224,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 				//var vehicleSpeedPostShift = estimatedVelocityPostShift; // DataBus.VehicleInfo.VehicleSpeed - vDrop * ModelData.GearshiftParameters.VelocityDropFactor;
 				TestPowertrain.Gearbox.Gear = nextGear;
 				TestPowertrain.Gearbox.RequestAfterGearshift = true;
-				var init = TestPowertrain.Container.VehiclePort.Initialize(
-					vehicleSpeedPostShift, DataBus.DrivingCycleInfo.RoadGradient ?? 0.SI<Radian>());
-				if (!AllowEmergencyShift && init.Engine.EngineSpeed.IsSmaller(ModelData.EngineData.IdleSpeed)) {
-					return null;
-				}
+				//var init = TestPowertrain.Container.VehiclePort.Initialize(
+				//	vehicleSpeedPostShift, DataBus.DrivingCycleInfo.RoadGradient ?? 0.SI<Radian>());
+				//if (!AllowEmergencyShift && init.Engine.EngineSpeed.IsSmaller(ModelData.EngineData.IdleSpeed)) {
+				//	return null;
+				//}
 			} else {
 				TestPowertrain.Gearbox.RequestAfterGearshift = (DataBus.GearboxInfo as ATGearbox).RequestAfterGearshift;
 			}
