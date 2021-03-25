@@ -190,7 +190,7 @@ namespace TUGraz.VectoCommon.InputData
 
 		ConsumerTechnology? DoorDriveTechnology { get; }
 
-		DeclarationType DeclarationType { get; }
+		VehicleDeclarationType VehicleDeclarationType { get; }
 
 		// components
 
@@ -940,22 +940,22 @@ namespace TUGraz.VectoCommon.InputData
 
 	}
 
-	public enum DeclarationType
+	public enum VehicleDeclarationType
 	{
 		interim,
 		final
 	}
 
-	public static class DeclarationTypeHelper
+	public static class VehicleDeclarationTypeHelper
 	{
-		public static DeclarationType Parse(string parse)
+		public static VehicleDeclarationType Parse(string parse)
 		{
 			switch (parse) 
 			{
-				case nameof(DeclarationType.interim):
-					return DeclarationType.interim;
-				case nameof(DeclarationType.final):
-					return DeclarationType.final;
+				case nameof(VehicleDeclarationType.interim):
+					return VehicleDeclarationType.interim;
+				case nameof(VehicleDeclarationType.final):
+					return VehicleDeclarationType.final;
 				default:
 					throw new ArgumentOutOfRangeException();
 			}

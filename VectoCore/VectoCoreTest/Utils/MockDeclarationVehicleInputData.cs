@@ -58,7 +58,7 @@ namespace TUGraz.VectoCore.Tests.Utils {
 		public Meter Width { get; set; }
 		public Meter EntranceHeight { get; }
 		public ConsumerTechnology? DoorDriveTechnology { get; }
-		public DeclarationType DeclarationType { get; }
+		public VehicleDeclarationType VehicleDeclarationType { get; }
 		public IVehicleComponentsDeclaration Components { get { return this; } }
 		public XmlNode XMLSource { get; }
 
@@ -113,7 +113,7 @@ namespace TUGraz.VectoCore.Tests.Utils {
 		public Meter Width { get; set; }
 		public Meter EntranceHeight { get; }
 		public ConsumerTechnology? DoorDriveTechnology { get; }
-		public DeclarationType DeclarationType { get; }
+		public VehicleDeclarationType VehicleDeclarationType { get; }
 		public Watt MaxNetPower2 { get; }
 		public RegistrationClass? RegisteredClass { get; set; }
 		public int? NumberOfPassengersUpperDeck { get; set; }

@@ -561,7 +561,7 @@ namespace TUGraz.VectoCore.Tests.XML
 			Assert.AreEqual("Intermediate Manufacturer Address 1", vehicleData.ManufacturerAddress);
 			Assert.AreEqual("VEH-1234567890", vehicleData.VIN);
 			Assert.AreEqual(DateTime.Parse("2018-02-15T11:00:00Z").ToUniversalTime(), vehicleData.Date);
-			Assert.AreEqual(DeclarationType.interim, vehicleData.DeclarationType);
+			Assert.AreEqual(VehicleDeclarationType.interim, vehicleData.VehicleDeclarationType);
 			TestEmptyInterimStageInputFields(vehicleData);
 		}
 
@@ -611,7 +611,7 @@ namespace TUGraz.VectoCore.Tests.XML
 			Assert.AreEqual("VEH-2234567890", vehicleData.VIN);
 			Assert.AreEqual(DateTime.Parse("2021-02-13T07:20:08.0187663Z").ToUniversalTime(), vehicleData.Date);
 			Assert.AreEqual(false, vehicleData.AirdragModifiedMultistage);
-			Assert.AreEqual(DeclarationType.final, vehicleData.DeclarationType);
+			Assert.AreEqual(VehicleDeclarationType.final, vehicleData.VehicleDeclarationType);
 
 			Assert.AreEqual(true, vehicleData.ADAS.EngineStopStart);
 			Assert.AreEqual(EcoRollType.WithEngineStop, vehicleData.ADAS.EcoRoll);
@@ -712,7 +712,7 @@ namespace TUGraz.VectoCore.Tests.XML
 			Assert.AreEqual(2000.SI<Meter>(), vehicleData.Width);
 			Assert.AreEqual(2050.SI<Meter>(), vehicleData.EntranceHeight);
 			Assert.AreEqual(ConsumerTechnology.Pneumatically, vehicleData.DoorDriveTechnology);
-			Assert.AreEqual(DeclarationType.final, vehicleData.DeclarationType);
+			Assert.AreEqual(VehicleDeclarationType.final, vehicleData.VehicleDeclarationType);
 
 			Assert.AreEqual(false, vehicleData.ADAS.EngineStopStart);
 			Assert.AreEqual(EcoRollType.WithoutEngineStop, vehicleData.ADAS.EcoRoll);

@@ -340,7 +340,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			get { return VehicleData.DoorDriveTechnology; }
 		}
 
-		public DeclarationType DeclarationType { get; }
+		public VehicleDeclarationType VehicleDeclarationType { get; }
 		
 		IVehicleComponentsEngineering IVehicleEngineeringInputData.Components
 		{

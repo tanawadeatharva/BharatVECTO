@@ -59,7 +59,7 @@ namespace TUGraz.VectoCore.Tests.XML
 			Assert.AreEqual(2500, vehicle.Width.Value());
 			Assert.AreEqual(2000, vehicle.EntranceHeight.Value());
 			Assert.AreEqual(ConsumerTechnology.Electrically, vehicle.DoorDriveTechnology);
-			Assert.AreEqual(DeclarationType.interim, vehicle.DeclarationType);
+			Assert.AreEqual(VehicleDeclarationType.interim, vehicle.VehicleDeclarationType);
 
 			TestADASInput(vehicle);
 			TestComponents(vehicle.Components);
@@ -184,7 +184,7 @@ namespace TUGraz.VectoCore.Tests.XML
 			Assert.AreEqual("Some Manufacturer Address 4", vehicle.ManufacturerAddress);
 			Assert.AreEqual("VEH-1234567894", vehicle.VIN);
 			Assert.AreEqual(DateTime.Parse("2022-01-09T11:00:00Z").ToUniversalTime(), vehicle.Date);
-			Assert.AreEqual(DeclarationType.interim, vehicle.DeclarationType);
+			Assert.AreEqual(VehicleDeclarationType.interim, vehicle.VehicleDeclarationType);
 
 			Assert.AreEqual(null, vehicle.Model);
 			Assert.AreEqual(null, vehicle.LegislativeClass);

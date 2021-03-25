@@ -329,7 +329,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		}
 
 		public virtual ConsumerTechnology? DoorDriveTechnology { get { return ConsumerTechnology.Unknown; } }
-		public virtual DeclarationType DeclarationType { get; }
+		public virtual VehicleDeclarationType VehicleDeclarationType { get; }
 
 
 		public virtual IVehicleComponentsDeclaration Components
@@ -1038,7 +1038,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 			get { return ConsumerTechnology.Unknown; }
 		}
 
-		public virtual DeclarationType DeclarationType { get; }
+		public virtual VehicleDeclarationType VehicleDeclarationType { get; }
 
 
 		public IVehicleComponentsDeclaration Components
@@ -1299,9 +1299,9 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 			}
 		}
 
-		public override DeclarationType DeclarationType
+		public override VehicleDeclarationType VehicleDeclarationType
 		{
-			get { return DeclarationTypeHelper.Parse(GetString(XMLNames.Bus_DeclarationType)); }
+			get { return VehicleDeclarationTypeHelper.Parse(GetString(XMLNames.Bus_DeclarationType)); }
 		}
 
 
