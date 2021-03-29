@@ -1,0 +1,187 @@
+﻿using System;
+using System.Diagnostics;
+using System.Xml.Linq;
+using TUGraz.IVT.VectoXML.Writer;
+using TUGraz.VectoCommon.InputData;
+using TUGraz.VectoCommon.Models;
+using TUGraz.VectoCommon.Resources;
+using TUGraz.VectoCommon.Utils;
+using TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider;
+using TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Interfaces;
+using VECTO3GUI2020.Util.XML.Interfaces;
+using VECTO3GUI2020.ViewModel.Implementation.JobEdit.Vehicle;
+using VECTO3GUI2020.ViewModel.Interfaces.JobEdit.Vehicle;
+
+namespace VECTO3GUI2020.Util.XML.Implementation
+{
+    public abstract class XMLVehicleWriter : IXMLVehicleWriter
+    {
+
+
+
+        #region XML
+		protected XElement _Xelement;
+
+		protected XNamespace _defaultNamespace;
+		#endregion
+
+        //Template Methods
+        protected abstract void Initialize();
+		protected abstract void CreateElements();
+
+        protected readonly IVehicleDeclarationInputData _inputData;
+		protected IXMLWriterFactory _xmlWriterFactory;
+
+		public XMLVehicleWriter(IVehicleDeclarationInputData inputData, IXMLWriterFactory xmlWriterFactory)
+        {
+            Debug.Assert(inputData != null);
+            this._inputData = inputData;
+			_xmlWriterFactory = xmlWriterFactory;
+		}
+
+
+
+		public XElement GetElement()
+        {
+			if (_Xelement == null) {
+				Initialize();
+				
+				CreateElements();
+			}
+			return _Xelement;
+        }
+	}
+	public  class XMLVehicleWriter_v1_0 : XMLVehicleWriter
+	{
+		public static readonly string[] SUPPORTEDVERSIONS = {
+			typeof(XMLDeclarationVehicleDataProviderV10).ToString(),
+            typeof(VehicleViewModel_v1_0).ToString()
+		};
+		
+		public XMLVehicleWriter_v1_0(IVehicleDeclarationInputData inputData, IXMLWriterFactory xmlWriterFactory) : base(inputData, xmlWriterFactory)
+        {
+            
+        }
+
+		protected override void CreateElements()
+		{
+			throw new NotImplementedException();
+			_Xelement.Add(new XElement(_defaultNamespace + XMLNames.Component_Manufacturer, _inputData.Manufacturer),
+				new XElement(_defaultNamespace + XMLNames.Component_ManufacturerAddress,
+					_inputData.ManufacturerAddress),
+				new XElement(_defaultNamespace + XMLNames.Component_Model, _inputData.Model),
+				new XElement(_defaultNamespace + XMLNames.Vehicle_VIN, _inputData.VIN),
+				new XElement(_defaultNamespace + XMLNames.Component_Date, _inputData.Date),
+				new XElement(_defaultNamespace + XMLNames.Vehicle_LegislativeClass, _inputData.LegislativeClass),
+				new XElement(_defaultNamespace + XMLNames.Vehicle_AxleConfiguration,
+					AxleConfigurationHelper.ToXMLFormat(_inputData.AxleConfiguration)),
+				new XElement(_defaultNamespace + XMLNames.Vehicle_CurbMassChassis,
+					_inputData.CurbMassChassis.ToXMLFormat()),
+				new XElement(_defaultNamespace + XMLNames.Vehicle_GrossVehicleMass,
+					_inputData.GrossVehicleMassRating.ToXMLFormat()),
+				new XElement(_defaultNamespace + XMLNames.Vehicle_IdlingSpeed,
+					_inputData.EngineIdleSpeed.ToXMLFormat()));
+
+			//new XElement(_defaultNamespace + XMLNames.Vehicle_RetarderType, _inputData.RetarderType.ToXMLFormat()),
+
+			//_inputData.RetarderRatio == null ? null : new XElement(_defaultNamespace + XMLNames.Vehicle_RetarderRatio, _inputData.RetarderRatio),
+
+			//new XElement(_defaultNamespace + XMLNames.Vehicle_AngledriveType, _inputData.AngledriveType.ToXMLFormat()),
+
+
+			//https://stackoverflow.com/questions/24743916/how-to-convert-xmlnode-into-xelement
+			//Remove this when PTOType is handled correct.
+			//XElement.Load(_inputData.PTONode.CreateNavigator().ReadSubtree()),
+
+			//new XElement(_defaultNamespace + XMLNames.Vehicle_Components, 
+			//  new XAttribute(_xsi + "type", ComponentsXSD))
+
+
+			//);
+
+
+		}
+
+		protected override void Initialize()
+        {
+            throw new NotImplementedException();
+		}
+    }
+
+
+    public class XMLVehicleWriter_v2_0 : XMLVehicleWriter_v1_0
+    {
+		public new static readonly string[] SUPPORTEDVERSIONS = {
+			typeof(XMLDeclarationVehicleDataProviderV10).ToString(),
+            typeof(VehicleViewModel_v2_0).ToString()
+		};
+
+		public XMLVehicleWriter_v2_0(IVehicleDeclarationInputData inputData, IXMLWriterFactory xmlWriterFactory) : base(inputData, xmlWriterFactory)
+        {
+
+
+        }
+
+        protected override void CreateElements()
+		{
+			_Xelement.Add(new XElement(_defaultNamespace + XMLNames.Component_Manufacturer, _inputData.Manufacturer));
+			_Xelement.Add(new XElement(_defaultNamespace + XMLNames.Component_ManufacturerAddress,
+				_inputData.ManufacturerAddress));
+			_Xelement.Add(new XElement(_defaultNamespace + XMLNames.Component_Model, _inputData.Model));
+			_Xelement.Add(new XElement(_defaultNamespace + XMLNames.Vehicle_VIN, _inputData.VIN));
+			_Xelement.Add(new XElement(_defaultNamespace + XMLNames.Component_Date, _inputData.Date));
+			_Xelement.Add(new XElement(_defaultNamespace + XMLNames.Vehicle_LegislativeClass,
+				_inputData.LegislativeClass));
+            _Xelement.Add(new XElement(_defaultNamespace + XMLNames.Vehicle_VehicleCategory, _inputData.VehicleCategory));
+			_Xelement.Add(new XElement(_defaultNamespace + XMLNames.Vehicle_AxleConfiguration,
+				_inputData.AxleConfiguration.ToXMLFormat()));
+
+            _Xelement.Add(new XElement(_defaultNamespace + XMLNames.Vehicle_CurbMassChassis, _inputData.CurbMassChassis.ToXMLFormat(0)));
+			_Xelement.Add(new XElement(_defaultNamespace + XMLNames.Vehicle_GrossVehicleMass,
+				_inputData.GrossVehicleMassRating.ToXMLFormat(0)));
+			_Xelement.Add(new XElement(_defaultNamespace + XMLNames.Vehicle_IdlingSpeed,
+				_inputData.EngineIdleSpeed.AsRPM.ToXMLFormat(0)));
+
+            //TODO: Remove when IVehicleDeclarationInputData is updated
+			if (_inputData is IVehicleViewModel viewModelInputData) {
+				_Xelement.Add(new XElement(_defaultNamespace + XMLNames.Vehicle_RetarderType,
+					viewModelInputData.RetarderType.ToXMLFormat()));
+				_Xelement.Add(new XElement(_defaultNamespace + XMLNames.Vehicle_RetarderRatio, viewModelInputData.RetarderRatio.ToXMLFormat(3)));
+				_Xelement.Add(new XElement(_defaultNamespace + XMLNames.Vehicle_AngledriveType,
+					viewModelInputData.AngledriveType.ToXMLFormat()));
+				_Xelement.Add(_xmlWriterFactory.CreateComponentWriter(viewModelInputData.PTOTransmissionInputData)
+					.GetElement());
+			} else {
+				_Xelement.Add(new XElement(_defaultNamespace + XMLNames.Vehicle_RetarderType,
+					RetarderType.None.ToXMLFormat()));
+				//_Xelement.Add(new XElement(_defaultNamespace + XMLNames.Vehicle_RetarderRatio, "1.000")); 
+				_Xelement.Add(new XElement(_defaultNamespace + XMLNames.Vehicle_AngledriveType,
+					AngledriveType.None.ToXMLFormat()));
+				_Xelement.Add(new XElement(_defaultNamespace + XMLNames.Vehicle_PTO, 
+					new XElement(_defaultNamespace + XMLNames.Vehicle_PTO_ShaftsGearWheels, "none"), 
+					new XElement(_defaultNamespace + XMLNames.Vehicle_PTO_OtherElements, "none")));
+			}
+
+			
+
+			_Xelement.Add(_xmlWriterFactory.CreateComponentsWriter(_inputData.Components).GetComponents());
+		}
+
+		protected override void Initialize()
+		{
+			_defaultNamespace = XMLNamespaces.V20;
+			_Xelement = new XElement(_defaultNamespace + XMLNames.Component_Vehicle);
+			_Xelement.Add(new XAttribute(XMLNames.Component_ID_Attr, _inputData.Identifier));
+			_Xelement.Add(new XAttribute(XMLNamespaces.Xsi + XMLNames.Attr_Type, XMLNames.VehicleAttr_VehicleDeclarationType));
+		}
+    }
+
+    public class XMLVehicleWriter_v2_1 { }
+
+	public class XMLVehicleWriter_v2_7 { }
+
+	public class XMLVehicleWriter_PrimaryBus_v2_6 {}
+	
+    public class XMLVehicleWriter_ExcemptedVehicle_v2_2 { }
+
+}

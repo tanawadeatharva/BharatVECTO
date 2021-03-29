@@ -71,7 +71,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 		public class XMLSingleFuelEngineMode : AbstractXMLType, IEngineModeDeclarationInputData
 		{
-			protected IList<IEngineFuelDelcarationInputData> FuelsList;
+			protected IList<IEngineFuelDeclarationInputData> FuelsList;
 
 			public XMLSingleFuelEngineMode(XmlNode baseNode) : base(baseNode) { }
 
@@ -89,11 +89,11 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 				}
 			}
 
-			public virtual IList<IEngineFuelDelcarationInputData> Fuels
+			public virtual IList<IEngineFuelDeclarationInputData> Fuels
 			{
 				get {
 					return FuelsList ??
-							(FuelsList = new List<IEngineFuelDelcarationInputData>() { new XMLSingleFuelEngineFuel(BaseNode) });
+							(FuelsList = new List<IEngineFuelDeclarationInputData>() { new XMLSingleFuelEngineFuel(BaseNode) });
 				}
 			}
 
@@ -108,7 +108,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 			}
 		}
 
-		public class XMLSingleFuelEngineFuel : AbstractXMLType, IEngineFuelDelcarationInputData
+		public class XMLSingleFuelEngineFuel : AbstractXMLType, IEngineFuelDeclarationInputData
 		{
 			public XMLSingleFuelEngineFuel(XmlNode baseNode) : base(baseNode) { }
 
@@ -285,12 +285,12 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 			#region Overrides of XMLSingleFuelEngineMode
 
-			public override IList<IEngineFuelDelcarationInputData> Fuels
+			public override IList<IEngineFuelDeclarationInputData> Fuels
 			{
 				get {
 					return FuelsList ?? (FuelsList = GetNodes(XMLNames.Engine_FuelModes_Fuel)
 								.Cast<XmlNode>().Select(x => new XMLDualFuelEngineFuel(x))
-								.Cast<IEngineFuelDelcarationInputData>().ToList());
+								.Cast<IEngineFuelDeclarationInputData>().ToList());
 				}
 			}
 

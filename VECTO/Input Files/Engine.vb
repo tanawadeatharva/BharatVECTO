@@ -341,9 +341,9 @@ Public Class Engine
 		End Get
 	End Property
 
-	Public ReadOnly Property Fuels As IList(Of IEngineFuelDelcarationInputData) Implements IEngineModeDeclarationInputData.Fuels
+	Public ReadOnly Property Fuels As IList(Of IEngineFuelDeclarationInputData) Implements IEngineModeDeclarationInputData.Fuels
 		Get
-			Dim retval As List(Of IEngineFuelDelcarationInputData) = New List(Of IEngineFuelDelcarationInputData)({PrimaryEngineFuel})
+			Dim retval As List(Of IEngineFuelDeclarationInputData) = New List(Of IEngineFuelDeclarationInputData)({PrimaryEngineFuel})
 			If (DualFuelInput) Then
 				retval.Add(SecondaryEngineFuel)
 			End If
@@ -477,7 +477,7 @@ Public Class WHRData
 End Class
 
 Public Class EngineFuel
-	Implements IEngineFuelDelcarationInputData, IEngineFuelEngineeringInputData
+	Implements IEngineFuelDeclarationInputData, IEngineFuelEngineeringInputData
 
 	''' <summary>
 	''' WHTC Urban test results. Saved in input file. 
@@ -533,37 +533,37 @@ Public Class EngineFuel
 		WHTCEngineeringInput = 1
 	End Sub
 
-	Public ReadOnly Property WHTCMotorway As Double Implements IEngineFuelDelcarationInputData.WHTCMotorway
+	Public ReadOnly Property WHTCMotorway As Double Implements IEngineFuelDeclarationInputData.WHTCMotorway
 		Get
 			Return WHTCMotorwayInput
 		End Get
 	End Property
 
-	Public ReadOnly Property WHTCRural As Double Implements IEngineFuelDelcarationInputData.WHTCRural
+	Public ReadOnly Property WHTCRural As Double Implements IEngineFuelDeclarationInputData.WHTCRural
 		Get
 			Return WHTCRuralInput
 		End Get
 	End Property
 
-	Public ReadOnly Property WHTCUrban As Double Implements IEngineFuelDelcarationInputData.WHTCUrban
+	Public ReadOnly Property WHTCUrban As Double Implements IEngineFuelDeclarationInputData.WHTCUrban
 		Get
 			Return WHTCUrbanInput
 		End Get
 	End Property
 
-	Public ReadOnly Property ColdHotBalancingFactor As Double Implements IEngineFuelDelcarationInputData.ColdHotBalancingFactor
+	Public ReadOnly Property ColdHotBalancingFactor As Double Implements IEngineFuelDeclarationInputData.ColdHotBalancingFactor
 		Get
 			Return ColdHotBalancingFactorInput
 		End Get
 	End Property
 
-	Public ReadOnly Property CorrectionFactorRegPer As Double Implements IEngineFuelDelcarationInputData.CorrectionFactorRegPer
+	Public ReadOnly Property CorrectionFactorRegPer As Double Implements IEngineFuelDeclarationInputData.CorrectionFactorRegPer
 		Get
 			Return correctionFactorRegPerInput
 		End Get
 	End Property
 
-	Public ReadOnly Property FuelType As FuelType Implements IEngineFuelDelcarationInputData.FuelType
+	Public ReadOnly Property FuelType As FuelType Implements IEngineFuelDeclarationInputData.FuelType
 		Get
 			Return FuelTypeInput
 		End Get
@@ -589,7 +589,7 @@ Public Class EngineFuel
 		End Set
 	End Property
 
-	Public ReadOnly Property FuelConsumptionMap As TableData Implements IEngineFuelDelcarationInputData.FuelConsumptionMap
+	Public ReadOnly Property FuelConsumptionMap As TableData Implements IEngineFuelDeclarationInputData.FuelConsumptionMap
 		Get
 			If Not File.Exists(_fuelConsumptionMapPath.FullPath) Then _
 				Throw New VectoException("FuelConsumptionMap is missing or invalid")

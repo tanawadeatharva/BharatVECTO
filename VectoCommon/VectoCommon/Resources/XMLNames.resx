@@ -1431,4 +1431,61 @@
   <data name="Bus_DeclarationType" xml:space="preserve">
     <value>DeclarationType</value>
   </data>
+  <data name="AirDrag_CdxA_0" xml:space="preserve">
+    <value>CdxA_0</value>
+  </data>
+  <data name="AirDrag_Data_Type_Attr" xml:space="preserve">
+    <value>AirDragDataDeclarationType</value>
+  </data>
+  <data name="AirDrag_DeclaredCdxA1" xml:space="preserve">
+    <value>DeclaredCdxA</value>
+  </data>
+  <data name="AirDrag_TransferredCDxA" xml:space="preserve">
+    <value>TransferredCdxA</value>
+  </data>
+  <data name="Attr_Type" xml:space="preserve">
+    <value>type</value>
+  </data>
+  <data name="Auxiliaries_Type_Attr_DataDeclarationType" xml:space="preserve">
+    <value>AuxiliariesDataDeclarationType</value>
+  </data>
+  <data name="AxleGear_Type_Attr" xml:space="preserve">
+    <value>AxlegearDataDeclarationType</value>
+  </data>
+  <data name="AxleWheels_Type_Attr_AxleWheelsDeclarationType" xml:space="preserve">
+    <value>AxleWheelsDataDeclarationType</value>
+  </data>
+  <data name="Axle_Type_Attr_AxleDataDeclarationType" xml:space="preserve">
+    <value>AxleDataDeclarationType</value>
+  </data>
+  <data name="Components_type_attr" xml:space="preserve">
+    <value>VehicleComponentsType</value>
+  </data>
+  <data name="Component_Type_Attr" xml:space="preserve">
+    <value>type</value>
+  </data>
+  <data name="Component_Type_Attr_PTO" xml:space="preserve">
+    <value>PTOType</value>
+  </data>
+  <data name="Engine_Type_Attr" xml:space="preserve">
+    <value>EngineDataDeclarationType</value>
+  </data>
+  <data name="Gearbox_attr_GearboxDataDeclarationType" xml:space="preserve">
+    <value>GearboxDataDeclarationType</value>
+  </data>
+  <data name="Gearbox_Gears_Attr_GearsDeclarationType" xml:space="preserve">
+    <value>GearsDeclarationType</value>
+  </data>
+  <data name="Retarder_Attr_DataDeclarationType" xml:space="preserve">
+    <value>RetarderDataDeclarationType</value>
+  </data>
+  <data name="String" xml:space="preserve">
+    <value>Component_Type_Attr</value>
+  </data>
+  <data name="Tyre_Type_Attr_TyreDataDeclarationType" xml:space="preserve">
+    <value>TyreDataDeclarationType</value>
+  </data>
+  <data name="VehicleAttr_VehicleDeclarationType" xml:space="preserve">
+    <value>VehicleDeclarationType</value>
+  </data>
 </root>
