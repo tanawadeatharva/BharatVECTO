@@ -49,6 +49,7 @@ using TUGraz.VectoCore.Utils;
 using NUnit.Framework;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCore.InputData.FileIO.XML;
+using TUGraz.VectoCore.InputData.Reader.ComponentData;
 using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 
@@ -80,12 +81,17 @@ namespace TUGraz.VectoCore.Tests.Reports
 				JobName = "AuxWriteModFileSumFile",
 				EngineData = new CombustionEngineData() {
 					Fuels = new[] {new CombustionEngineFuelData {
-						FuelData = FuelData.Diesel
+						FuelData = FuelData.Diesel,
+						ConsumptionMap = FuelConsumptionMapReader.ReadFromFile(@"TestData\Components\12t Delivery Truck.vmap")
 					}}.ToList(),
+					IdleSpeed = 600.RPMtoRad()
 				},
 				ElectricMachinesData = new List<Tuple<PowertrainPosition, ElectricMotorData>>(),
 				Cycle = new DrivingCycleData() {
 					Name = "MockCycle",
+				},
+				DriverData = new DriverData() {
+					EngineStopStart = new DriverData.EngineStopStartData()
 				}
             };
 			var modData = new ModalDataContainer(rundata, writer, null);
@@ -151,15 +157,18 @@ namespace TUGraz.VectoCore.Tests.Reports
 			var rundata = new VectoRunData() {
 				JobName = "testsumcalc_var",
 				EngineData = new CombustionEngineData() {
-					Fuels = new[] {
-						new CombustionEngineFuelData {
-							FuelData = FuelData.Diesel
-						}
-					}.ToList(),
+					Fuels = new[] {new CombustionEngineFuelData {
+						FuelData = FuelData.Diesel,
+						ConsumptionMap = FuelConsumptionMapReader.ReadFromFile(@"TestData\Components\12t Delivery Truck.vmap")
+					}}.ToList(),
+					IdleSpeed = 600.RPMtoRad()
 				},
 				ElectricMachinesData = new List<Tuple<PowertrainPosition, ElectricMotorData>>(),
 				Cycle = new DrivingCycleData() {
 					Name = "MockCycle",
+				},
+				DriverData = new DriverData() {
+					EngineStopStart = new DriverData.EngineStopStartData()
 				}
 			};
 			var modData = new ModalDataContainer(rundata, writer, null);
