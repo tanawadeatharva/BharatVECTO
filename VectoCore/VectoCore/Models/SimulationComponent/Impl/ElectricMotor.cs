@@ -352,7 +352,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			}
 
 			var elPower = ModelData.EfficiencyMap.LookupElectricPower(avgSpeed, maxTorqueRecuperate);
-			if (elPower.ElectricalPower.IsSmallerOrEqual(0)) {
+			if (elPower.ElectricalPower?.IsSmallerOrEqual(0) ?? true) {
 				return null;
 			}
 			return maxTorqueRecuperate;

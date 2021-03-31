@@ -118,16 +118,33 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			if (!outAngularVelocity.IsEqual(operatingPoint.OutAngularVelocity) || !outTorque.IsEqual(operatingPoint.OutTorque)) {
 				var delta = (outTorque - operatingPoint.OutTorque) *
 							(PreviousState.OutAngularVelocity + operatingPoint.OutAngularVelocity) / 2.0;
+				var engineResponse = NextComponent.Request(absTime, dt, operatingPoint.InTorque,
+					operatingPoint.InAngularVelocity, true);
 				if (!delta.IsEqual(0, Constants.SimulationSettings.LineSearchTolerance)) {
-					return delta > 0
+					var retVal1 = delta > 0
 						? new ResponseOverload(this) {
 							Delta = delta, TorqueConverter = {TorqueConverterOperatingPoint = operatingPoint },
-							Engine = { EngineSpeed = operatingPoint.InAngularVelocity, EngineOn = DataBus.EngineCtl.CombustionEngineOn}
+							
 						}
 						: (IResponse)
 						new ResponseUnderload(this) { Delta = delta, TorqueConverter = { TorqueConverterOperatingPoint = operatingPoint },
-							Engine = { EngineSpeed = operatingPoint.InAngularVelocity, EngineOn = DataBus.EngineCtl.CombustionEngineOn }
 						};
+
+					retVal1.Engine.EngineSpeed = engineResponse.Engine.EngineSpeed;
+					retVal1.Engine.EngineOn = DataBus.EngineCtl.CombustionEngineOn;
+					retVal1.Engine.TorqueOutDemand = engineResponse.Engine.TorqueOutDemand;
+					retVal1.Engine.TotalTorqueDemand = engineResponse.Engine.TotalTorqueDemand;
+					retVal1.Engine.DynamicFullLoadPower = engineResponse.Engine.DynamicFullLoadPower;
+					retVal1.Engine.DynamicFullLoadTorque = engineResponse.Engine.DynamicFullLoadTorque;
+					retVal1.Engine.DragPower = engineResponse.Engine.DragPower;
+					retVal1.Engine.DragTorque = engineResponse.Engine.DragTorque;
+
+					retVal1.ElectricSystem = engineResponse.ElectricSystem;
+					retVal1.ElectricMotor.TorqueRequest = engineResponse.ElectricMotor.TorqueRequest;
+					retVal1.ElectricMotor.InertiaTorque = engineResponse.ElectricMotor.InertiaTorque;
+					retVal1.ElectricMotor.TotalTorqueDemand = engineResponse.ElectricMotor.TotalTorqueDemand;
+
+					return retVal1;
 				}
 			}
 

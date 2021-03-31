@@ -312,9 +312,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 				var retVal = TestPowertrain.HybridController.NextComponent.Request(absTime, dt, outTorque,
 					outAngularVelocity, false);
 
-				if (retVal.Source is TorqueConverter) {
-					return null;
-				}
+				//if (retVal.Source is TorqueConverter) {
+				//	return null;
+				//}
 
 				retVal.HybridController.StrategySettings = cfg;
 				return retVal;
@@ -901,7 +901,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 							// ICE torque below FLD is OK as EM may regenerate and shift ICE operating point on drag line
 							// for negative torques the shift line is vertical anyway ;-)
 							var best = FindBestGearForBraking(nextGear, firstResponse);
-							if (!best.Equals(nextGear)) {
+							if (!best.Equals(currentGear)) {
 								// downshift required!
 								var downshift = ResponseEmOff;
                                 //downshift.Gear = GearList.Predecessor(nextGear);
@@ -912,7 +912,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 						}
 					}
 
-					if (firstEntry.IgnoreReason.AllOK()) {
+					if (!nextGear.Equals(currentGear) && !firstEntry.IgnoreReason.InvalidEngineSpeed()) {
 						firstEntry.Gear = nextGear;
 						firstEntry.Setting = tmp;
 						eval.Add(firstEntry);
@@ -1106,7 +1106,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 			var lastGear = GearList.Predecessor(nextGear, (uint)ModelData.GearshiftParameters.AllowedGearRangeDown);
 			//while (GearList.HasPredecessor(tmpGear)) {
 			foreach (var gear in GearList.IterateGears(firstGear, lastGear)) {
-				candidates[gear] = gbxOutSpeed * ModelData.GearboxData.Gears[gear.Gear].Ratio;
+				var ratio = gear.IsLockedGear()
+					? ModelData.GearboxData.Gears[gear.Gear].Ratio
+					: ModelData.GearboxData.Gears[gear.Gear].TorqueConverterRatio;
+				candidates[gear] = gbxOutSpeed * ratio;
 				//tmpGear = GearList.Predecessor(tmpGear);
             }
 
@@ -1217,7 +1220,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 					absTime, dt, outTorque, outAngularVelocity, GearList.Successor(best.Gear), AllowICEOff(absTime), newEval,
 					best.Setting.MechanicalAssistPower.First().Key, dryRun);
 				if (newEval.Count > 0) {
-					best = DoSelectBestOption(newEval, absTime, dt, outTorque, outAngularVelocity, dryRun, currentGear);
+					var newBest = DoSelectBestOption(newEval, absTime, dt, outTorque, outAngularVelocity, dryRun, currentGear);
+					if (!newBest.IgnoreReason.EngineSpeedTooHigh()) {
+						best = newBest;
+					}
 				}
 			}
 			if (best.IgnoreReason.EngineSpeedBelowDownshift()) {
@@ -1340,6 +1346,18 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 			}
 			if (DataBus.DriverInfo.DrivingAction == DrivingAction.Brake && emEngaged) {
 				best = eval.Where(x => !x.IgnoreReason.BatteryDemandExceeded()).MaxBy(x => x.Setting.MechanicalAssistPower.Sum(e => e.Value?.Item2 ?? 0.SI<NewtonMeter>()));
+				if (best != null && !best.IgnoreReason.InvalidEngineSpeed()) {
+					return best;
+				}
+				var filtered = eval.Where(x => !x.IgnoreReason.BatteryDemandExceeded()).ToArray();
+				var filtered2 = filtered
+					.Where(x => !x.IgnoreReason.EngineSpeedTooLow() && !x.IgnoreReason.EngineSpeedTooHigh()).ToArray();
+				if (filtered2.Length == 0) {
+					filtered2 = filtered.OrderBy(x => Math.Abs(GearList.Distance(currentGear, x.Gear))).ToArray();
+				}
+
+				best = filtered2.MaxBy(x =>
+					x.Setting.MechanicalAssistPower.Sum(e => e.Value?.Item2 ?? 0.SI<NewtonMeter>()));
 				if (best != null) {
 					return best;
 				}
@@ -1760,6 +1778,16 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 				//lastShiftTime = absTime;
 				tmp.FuelCosts = double.NaN; // = Tuple.Create(true, response.Gearbox.Gear - 1);
 				tmp.IgnoreReason |= HybridConfigurationIgnoreReason.EngineSpeedBelowDownshift;
+			}
+
+			if (resp.Source is TorqueConverter) {
+				if (resp is ResponseUnderload) {
+					tmp.IgnoreReason |= HybridConfigurationIgnoreReason.EngineTorqueDemandTooLow;
+				}
+
+				if (resp is ResponseOverload) {
+					tmp.IgnoreReason |= HybridConfigurationIgnoreReason.EngineTorqueDemandTooHigh;
+				}
 			}
 
 			SetBatteryCosts(resp, dt, tmp);

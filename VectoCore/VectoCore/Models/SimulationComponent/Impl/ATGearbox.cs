@@ -435,7 +435,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				return new ResponseDryRun(this, engResponse) {
 					Gearbox = {
 						PowerRequest = outTorque * avgAngularVelocity,
-						InputTorque = outTorque, // in case ICE is off (hybrid vehicle) the AT gearbox is disengaged  - we need some 'reference point' for searching the operating point - use out torque
+						InputTorque = inTorque, // in case ICE is off (hybrid vehicle) the AT gearbox is disengaged  - we need some 'reference point' for searching the operating point - use input torque
 						InputSpeed = inAngularVelocity,
 					},
 					DeltaDragLoad = outTorque * avgAngularVelocity,
@@ -450,7 +450,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					Delta = outTorque * avgAngularVelocity,
 					Gearbox = {
 						PowerRequest = outTorque * avgAngularVelocity,
-						InputTorque = outTorque,
+						InputTorque = inTorque,
 						InputSpeed = inAngularVelocity,
 					},
 					Engine = {
@@ -472,7 +472,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					Delta = outTorque * avgAngularVelocity,
 					Gearbox = {
 						PowerRequest = outTorque * avgAngularVelocity,
-						InputTorque = outTorque,
+						InputTorque = inTorque,
 						InputSpeed = inAngularVelocity,
 					},
 					Engine = {
