@@ -26,6 +26,7 @@
                 <Menu IsMainMenu="True">
                     <MenuItem Header="File" VerticalAlignment="Center">
                         <MenuItem Header="Settings" Command="{Binding OpenSettings}"/>
+                        <MenuItem Header="New File" Command="{Binding NewInterimFile}"/>
                     </MenuItem>
                 </Menu>
             </StackPanel>

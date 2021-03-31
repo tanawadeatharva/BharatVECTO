@@ -123,12 +123,6 @@ namespace VECTO3GUI2020.Views.CustomControls
 
 
 			var items = Enum.GetValues(data.GetType()).Cast<object>().ToList<object>();
-
-			foreach (var item in items)
-			{
-				//Console.WriteLine(item.ToString());
-			}
-
 			ListItems = items;
 			SelectedItem = data;
 

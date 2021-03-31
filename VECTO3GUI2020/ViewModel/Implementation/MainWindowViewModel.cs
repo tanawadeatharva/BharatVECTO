@@ -1,7 +1,9 @@
-﻿using VECTO3GUI2020.ViewModel.Interfaces;
+﻿using System;
+using VECTO3GUI2020.ViewModel.Interfaces;
 using Ninject;
 using System.Diagnostics;
 using System.Windows.Input;
+using Castle.DynamicProxy.Generators.Emitters.SimpleAST;
 using VECTO3GUI2020.Helper;
 using VECTO3GUI2020.ViewModel.Implementation.Common;
 using VECTO3GUI2020.Util;
@@ -12,33 +14,33 @@ namespace VECTO3GUI2020.ViewModel.Implementation
     public class MainWindowViewModel : ViewModelBase, IMainWindowViewModel
     {
         #region Member
-        private IMainViewModel _topView;
+        private IJobListViewModel _jobListVm;
         private IMainViewModel _bottomView;
 		#endregion
         
         #region Commands
         private ICommand _openSettings;
-        private ICommand _editJob;
 		private IWindowHelper _windowHelper;
 		private ISettingsViewModel _settingsViewModel;
+
 
 		#endregion
 
 
-        public MainWindowViewModel(IWindowHelper windowHelper, ISettingsViewModel settingsViewModel)
+        public MainWindowViewModel(IWindowHelper windowHelper, ISettingsViewModel settingsViewModel, IJobListViewModel jobListViewModel)
 		{
 			_windowHelper = windowHelper;
 			_settingsViewModel = settingsViewModel;
+			_jobListVm = jobListViewModel;
 		}
 
-        [Inject]
-        public IMainViewModel CurrentViewModelTop
+		public IMainViewModel CurrentViewModelTop
         {
-            get { return _topView;
+            get { return _jobListVm;
 
             }
-            set { _topView = value; }
-        }
+			set { throw new NotImplementedException(); }
+		}
 
         public IMainViewModel CurrentViewModelBottom
         {
@@ -65,11 +67,18 @@ namespace VECTO3GUI2020.ViewModel.Implementation
             _windowHelper.ShowWindow(_settingsViewModel);
 		}
 
- 
+
+        #region newMultiStage
+
+		public ICommand NewInterimFile => _jobListVm.NewManufacturingStageFile;
+
+
+
+
+
+		#endregion
 
         #endregion
-
-
 
 
 

@@ -10,5 +10,6 @@ namespace VECTO3GUI2020.ViewModel.Interfaces
         ICommand AddJob { get; }
         ICommand EditJob { get; }
         ObservableCollection<IDocumentViewModel> Jobs { get; }
-    }
+		ICommand NewManufacturingStageFile { get; }
+	}
 }

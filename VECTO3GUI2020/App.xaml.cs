@@ -32,7 +32,8 @@ namespace VECTO3GUI2020
                 new JobEditModule(),
                 new ComponentModule(),
 				new DocumentModule(),
-				new XMLWriterFactoryModule()
+				new XMLWriterFactoryModule(),
+                new MultistageModule()
                 ) ;
 
             

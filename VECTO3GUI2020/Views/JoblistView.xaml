@@ -67,7 +67,7 @@
                 <Button Command="{Binding AddJob}" Template="{DynamicResource MainViewButtonStyle}">OpenFile</Button>
                 <Button Command="{Binding EditJob}" Template="{DynamicResource MainViewButtonStyle}"
                         CommandParameter="{Binding ElementName=JobDataGrid, Path=SelectedItem}" Style="{DynamicResource MainViewButton}">EditFile</Button>
-                <Button Template="{DynamicResource MainViewButtonStyle}">NewFile</Button>
+                <Button Command="{Binding NewManufacturingStageFile}" Template="{DynamicResource MainViewButtonStyle}">New Multistage File</Button>
                 <Button Command="{Binding RemoveJob}" Template="{DynamicResource MainViewButtonStyle}"
                         CommandParameter="{Binding ElementName=JobDataGrid, Path=SelectedItem}">DeleteFile</Button>
             </StackPanel>

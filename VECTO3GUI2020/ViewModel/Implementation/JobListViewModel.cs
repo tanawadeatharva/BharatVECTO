@@ -14,6 +14,8 @@ using VECTO3GUI2020.Util;
 using VECTO3GUI2020.ViewModel.Implementation.Common;
 using VECTO3GUI2020.ViewModel.Interfaces;
 using VECTO3GUI2020.ViewModel.Interfaces.Document;
+using VECTO3GUI2020.ViewModel.MultiStage.Implementation;
+using VECTO3GUI2020.ViewModel.MultiStage.Interfaces;
 using VECTO3GUI2020.Views;
 using IDocumentViewModel = VECTO3GUI2020.ViewModel.Interfaces.Document.IDocumentViewModel;
 
@@ -47,8 +49,10 @@ namespace VECTO3GUI2020.ViewModel.Implementation
         private IDialogHelper _dialogHelper;
         private IWindowHelper _windowHelper;
         private IDocumentViewModelFactory _documentViewModelFactory;
+		private ICommand _newMultiStageFileCommand;
+		private IViewModelFactory _viewModelFactory;
 
-        #endregion
+		#endregion
 
 
         public JobListViewModel()
@@ -59,12 +63,14 @@ namespace VECTO3GUI2020.ViewModel.Implementation
 
         public JobListViewModel(IDocumentViewModelFactory documentViewModelFactory,
             IDialogHelper dialogHelper,
-            IWindowHelper windowHelper) : this()
+            IWindowHelper windowHelper,
+			IViewModelFactory viewModelFactory) : this()
         {
             _documentViewModelFactory = documentViewModelFactory;
             _dialogHelper = dialogHelper;
             _windowHelper = windowHelper;
-        }
+			_viewModelFactory = viewModelFactory;
+		}
 
 
 
@@ -85,7 +91,21 @@ namespace VECTO3GUI2020.ViewModel.Implementation
 
         #region Commands
 
-        public ICommand AddJob
+		public ICommand NewManufacturingStageFile
+		{
+			get
+			{
+				return _newMultiStageFileCommand ?? new RelayCommand(NewManufacturingStageFileExecute, () => { return true; });
+			}
+		}
+
+		private void NewManufacturingStageFileExecute()
+		{
+            _windowHelper.ShowWindow(_viewModelFactory.createManufacturingStageEditViewModel());
+		}
+
+
+		public ICommand AddJob
         {
             get
             {

@@ -20,7 +20,6 @@ namespace VECTO3GUI2020.Helper
 
 		#region File and Folder Dialogs
 		private string _xmlFilter = "XML Files (*.xml)|*.xml";
-		public string FileName { get; set; }
 		private string[] OpenFilesDialog(string filter, string initialDirectory, bool multiselect)
 		{
 
@@ -55,7 +54,7 @@ namespace VECTO3GUI2020.Helper
 			return OpenFilesDialog(_xmlFilter, initialDirectory);
 		}
 
-		public string OpenXMLFileDialog(string initialDirectory)
+		public string OpenXMLFileDialog(string initialDirectory = null)
 		{
 			return OpenFilesDialog(_xmlFilter, initialDirectory, false)?[0];
 		}

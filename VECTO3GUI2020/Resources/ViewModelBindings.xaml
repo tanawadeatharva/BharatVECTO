@@ -8,8 +8,10 @@
                     xmlns:jobeditimpl="clr-namespace:VECTO3GUI2020.ViewModel.Implementation.JobEdit"
                     xmlns:vehicleimpl="clr-namespace:VECTO3GUI2020.ViewModel.Implementation.JobEdit.Vehicle"
                     xmlns:vehicleviews="clr-namespace:VECTO3GUI2020.Views.JobEditViews.Vehicle"
+                    xmlns:multistageviews="clr-namespace:VECTO3GUI2020.Views.Multistage"
                     xmlns:componentimpl="clr-namespace:VECTO3GUI2020.ViewModel.Implementation.JobEdit.Vehicle.Components"
-                    xmlns:componentviews="clr-namespace:VECTO3GUI2020.Views.JobEditViews.Vehicle.Components">
+                    xmlns:componentviews="clr-namespace:VECTO3GUI2020.Views.JobEditViews.Vehicle.Components"
+                    xmlns:multistageimpl="clr-namespace:VECTO3GUI2020.ViewModel.MultiStage.Implementation">
     <DataTemplate DataType="{x:Type impl:JobListViewModel}">
         <views:JobListView />
     </DataTemplate>
@@ -192,6 +194,13 @@
     </DataTemplate>
 
 
+    <DataTemplate DataType="{x:Type multistageimpl:ManufacturingStageEditViewModel}">
+        <multistageviews:ManufacturingStageView/>
+    </DataTemplate>
+
+    <DataTemplate DataType="{x:Type multistageimpl:DeclarationInterimStageBusVehicleViewModel_v2_8}">
+        <multistageviews:VehicleView_v2_8/>
+    </DataTemplate>
 
 
 </ResourceDictionary>

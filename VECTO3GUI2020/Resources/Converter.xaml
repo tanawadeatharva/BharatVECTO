@@ -9,5 +9,7 @@
     <converter:AlwaysVisibleConverter x:Key="AlwaysVisibleConverter"/>
     <converter:LabledTextBoxConverter x:Key="LabledTextBoxConverter" x:Shared="false" />
     <converter:LabledTextBoxLabelConverter x:Key="LabledTextBoxLabelConverter" />
+    <converter:InvertBoolConverter x:Key="InvertBoolConverter"/>
+    <converter:InvertedBoolToVisibilityConverter x:Key="InvertedBoolToVisibilityConverter"></converter:InvertedBoolToVisibilityConverter>
 </ResourceDictionary>
 
