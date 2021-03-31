@@ -1254,7 +1254,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 			get
 			{
 				return ElementExists(XMLNames.Bus_HeighIntegratedBody)
-					? GetDouble(XMLNames.Bus_HeighIntegratedBody).SI<Meter>()
+					? GetDouble(XMLNames.Bus_HeighIntegratedBody).SI<Meter>() * 0.001 
 					: null;
 			}
 		}
@@ -1264,7 +1264,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 			get
 			{
 				return ElementExists(XMLNames.Bus_VehicleLength)
-					? GetDouble(XMLNames.Bus_VehicleLength).SI<Meter>()
+					? GetDouble(XMLNames.Bus_VehicleLength).SI<Meter>() * 0.001
 					: null;
 			}
 		}
@@ -1274,7 +1274,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 			get
 			{
 				return ElementExists(XMLNames.Bus_VehicleWidth)
-					? GetDouble(XMLNames.Bus_VehicleWidth).SI<Meter>()
+					? GetDouble(XMLNames.Bus_VehicleWidth).SI<Meter>() * 0.001
 					: null;
 			}
 		}
@@ -1284,7 +1284,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 			get
 			{
 				return ElementExists(XMLNames.Bus_EntranceHeight)
-					? GetDouble(XMLNames.Bus_EntranceHeight).SI<Meter>()
+					? GetDouble(XMLNames.Bus_EntranceHeight).SI<Meter>() * 0.001
 					: null;
 			}
 		}
@@ -1480,7 +1480,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 			get
 			{
 				return ElementExists(XMLNames.Bus_HeighIntegratedBody)
-					? GetDouble(XMLNames.Bus_HeighIntegratedBody).SI<Meter>()
+					? GetDouble(XMLNames.Bus_HeighIntegratedBody).SI<Meter>() * 0.001
 					: null;
 			}
 		}

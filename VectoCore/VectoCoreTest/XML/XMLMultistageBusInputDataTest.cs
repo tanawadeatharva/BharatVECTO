@@ -54,10 +54,10 @@ namespace TUGraz.VectoCore.Tests.XML
 			Assert.AreEqual(10, vehicle.NumberOfPassengersUpperDeck);
 			Assert.AreEqual(VehicleCode.CB, vehicle.VehicleCode);
 			Assert.AreEqual(false, vehicle.LowEntry);
-			Assert.AreEqual(2500, vehicle.Height.Value());//HeightIntegratedBody
-			Assert.AreEqual(9500, vehicle.Length.Value());
-			Assert.AreEqual(2500, vehicle.Width.Value());
-			Assert.AreEqual(2000, vehicle.EntranceHeight.Value());
+			Assert.AreEqual(2.5, vehicle.Height.Value());//HeightIntegratedBody
+			Assert.AreEqual(9.5, vehicle.Length.Value());
+			Assert.AreEqual(2.5, vehicle.Width.Value());
+			Assert.AreEqual(2, vehicle.EntranceHeight.Value());
 			Assert.AreEqual(ConsumerTechnology.Electrically, vehicle.DoorDriveTechnology);
 			Assert.AreEqual(VehicleDeclarationType.interim, vehicle.VehicleDeclarationType);
 
@@ -142,7 +142,7 @@ namespace TUGraz.VectoCore.Tests.XML
 			Assert.AreEqual(20, vehicle.NumberOfPassengersUpperDeck);
 			Assert.AreEqual(VehicleCode.CC, vehicle.VehicleCode);
 			Assert.AreEqual(true, vehicle.LowEntry);
-			Assert.AreEqual(2500, vehicle.Height.Value());
+			Assert.AreEqual(2.5, vehicle.Height.Value());
 		}
 
 		[TestCase]

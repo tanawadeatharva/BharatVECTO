@@ -14,6 +14,7 @@ using TUGraz.VectoCore.Models.Declaration;
 
 namespace TUGraz.VectoCore.Tests.XML
 {
+	[TestFixture]
 	public class XMLMultistageBusDataTest
 	{
 		protected IXMLInputDataReader _xmlInputReader;
@@ -707,10 +708,10 @@ namespace TUGraz.VectoCore.Tests.XML
 			Assert.AreEqual(24, vehicleData.NumberOfPassengersUpperDeck);
 			Assert.AreEqual(VehicleCode.CA, vehicleData.VehicleCode);
 			Assert.AreEqual(true, vehicleData.LowEntry);
-			Assert.AreEqual(2500.SI<Meter>(), vehicleData.Height);
-			Assert.AreEqual(12000.SI<Meter>(), vehicleData.Length);
-			Assert.AreEqual(2000.SI<Meter>(), vehicleData.Width);
-			Assert.AreEqual(2050.SI<Meter>(), vehicleData.EntranceHeight);
+			Assert.AreEqual(2.5.SI<Meter>(), vehicleData.Height);
+			Assert.AreEqual(12.SI<Meter>(), vehicleData.Length);
+			Assert.AreEqual(2.SI<Meter>(), vehicleData.Width);
+			Assert.AreEqual(2.05.SI<Meter>(), vehicleData.EntranceHeight);
 			Assert.AreEqual(ConsumerTechnology.Pneumatically, vehicleData.DoorDriveTechnology);
 			Assert.AreEqual(VehicleDeclarationType.final, vehicleData.VehicleDeclarationType);
 
