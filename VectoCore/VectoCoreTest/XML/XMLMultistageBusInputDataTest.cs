@@ -10,6 +10,7 @@ using TUGraz.VectoCore.InputData.FileIO.XML;
 
 namespace TUGraz.VectoCore.Tests.XML
 {
+	[TestFixture]
 	public class XMLMultistageBusInputDataTest
 	{
 		protected IXMLInputDataReader xmlInputReader;
@@ -205,26 +206,10 @@ namespace TUGraz.VectoCore.Tests.XML
 			Assert.AreEqual(null, vehicle.Components.AirdragInputData);
 			
 			var electricConsumer = vehicle.Components.BusAuxiliaries.ElectricConsumers;
-			Assert.AreEqual(null, electricConsumer.InteriorLightsLED);
-			Assert.AreEqual(null, electricConsumer.DayrunninglightsLED);
-			Assert.AreEqual(null, electricConsumer.PositionlightsLED);
-			Assert.AreEqual(null, electricConsumer.BrakelightsLED);
-			Assert.AreEqual(null, electricConsumer.HeadlightsLED);
+			Assert.AreEqual(null, electricConsumer);
 
 			var hvacAux = vehicle.Components.BusAuxiliaries.HVACAux;
-			Assert.AreEqual(null, hvacAux.SystemConfiguration);
-			Assert.AreEqual(null, hvacAux.HeatPumpTypeDriverCompartment);
-			Assert.AreEqual(null, hvacAux.HeatPumpModeDriverCompartment);
-			Assert.AreEqual(null, hvacAux.HeatPumpTypePassengerCompartment);
-			Assert.AreEqual(null, hvacAux.HeatPumpModePassengerCompartment);
-			
-			Assert.AreEqual(null, hvacAux.AuxHeaterPower);
-			Assert.AreEqual(null, hvacAux.DoubleGlazing);
-			Assert.AreEqual(null, hvacAux.AdjustableAuxiliaryHeater);
-			Assert.AreEqual(null, hvacAux.SeparateAirDistributionDucts);
-			Assert.AreEqual(null, hvacAux.WaterElectricHeater);
-			Assert.AreEqual(null, hvacAux.AirElectricHeater);
-			Assert.AreEqual(null, hvacAux.OtherHeatingTechnology);
+			Assert.AreEqual(null, hvacAux);
 		}
 	}
 }

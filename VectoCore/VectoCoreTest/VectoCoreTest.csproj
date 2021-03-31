@@ -117,6 +117,7 @@
     <Compile Include="Integration\Declaration\TestMaxMassInMUCycle.cs" />
     <Compile Include="Integration\DualFuel\DualFuelTests.cs" />
     <Compile Include="Integration\Hybrid\ParallelHybridTest.cs" />
+    <Compile Include="Integration\Multistage\MultistageVehicleTest.cs" />
     <Compile Include="Integration\VTP\VTPTest.cs" />
     <Compile Include="Integration\FuelTypesTest.cs" />
     <Compile Include="Integration\FullCycleDeclarationTest.cs">
@@ -231,6 +232,7 @@
     <Compile Include="XML\XMLDeclarationReaderVersionsTest.cs" />
     <Compile Include="XML\XMLEngineeringInputRefTest.cs" />
     <Compile Include="XML\XMLEngineeringInputSingleTest.cs" />
+    <Compile Include="XML\XMLMultistageBusConsolidatedInputDataTest.cs" />
     <Compile Include="XML\XMLMultistageBusDataTest.cs" />
     <Compile Include="XML\XMLMultistageBusInputDataTest.cs" />
     <Compile Include="XML\XMLPrimaryBusInputDataTest.cs" />
@@ -4290,6 +4292,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Integration\FullPowertrain\" />
+    <Folder Include="TestData\Integration\DeclarationMode\MultistageVehicle\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="TestData\Integration\ADAS\Group5PCCDecl\Tractor_4x2_vehicle-class-5_5_t_0.xml">
@@ -4673,6 +4676,15 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="TestData\XML\XMLReaderDeclaration\SchemaVersion2.8\vecto_vehicle-stage_input_only_mandatory_entries.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="TestData\XML\XMLReaderDeclaration\SchemaVersionMultistage.0.1\vecto_multistage_consolidated_multiple_stages.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="TestData\XML\XMLReaderDeclaration\SchemaVersionMultistage.0.1\vecto_multistage_consolidated_one_stage.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="TestData\XML\XMLReaderDeclaration\SchemaVersionMultistage.0.1\vecto_multistage_consolidated_two_stages.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="TestData\XML\XMLReaderDeclaration\SchemaVersionMultistage.0.1\vecto_multistage_primary_vehicle_only.xml">

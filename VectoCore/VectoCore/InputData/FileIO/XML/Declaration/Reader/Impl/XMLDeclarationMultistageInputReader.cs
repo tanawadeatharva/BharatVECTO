@@ -1,10 +1,15 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Xml;
 using System.Xml.Linq;
 using Castle.Core.Internal;
 using Ninject;
+using TUGraz.VectoCommon.BusAuxiliaries;
 using TUGraz.VectoCommon.InputData;
+using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Resources;
+using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Factory;
 using TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Interfaces;
 using TUGraz.VectoCore.Utils;
@@ -63,6 +68,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 		protected IXMLDeclarationMultistageJobInputData InputData;
 		protected IPrimaryVehicleInformationInputDataProvider _primaryVehicle;
 		protected IList<IManufacturingStageInputData> _manufacturingStages;
+		protected ConsolidateManufacturingStages _consolidateManufacturingStages;
 
 		private XmlNodeList _manufacturingNodeStages;
 
@@ -77,10 +83,18 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 			InputData = inputData;
 			SetManufacturingStageNodes();
 		}
-		
+
 		public IPrimaryVehicleInformationInputDataProvider PrimaryVehicle
 		{
 			get { return _primaryVehicle ?? (_primaryVehicle = CreateComponent(XMLNames.Bus_PrimaryVehicle, PrimaryVehicleCreator)); }
+		}
+
+		protected IPrimaryVehicleInformationInputDataProvider PrimaryVehicleCreator(string version, XmlNode node,
+			string arg3)
+		{
+			var primaryVehicle = Factory.CreatePrimaryMultistageVehicleData(version, node, arg3);
+			primaryVehicle.Reader = Factory.CreatePrimaryVehicleBusInputReader(version, primaryVehicle, node.FirstChild);
+			return primaryVehicle;
 		}
 
 		public IList<IManufacturingStageInputData> ManufacturingStages
@@ -94,31 +108,56 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 			}
 		}
 
-		protected IPrimaryVehicleInformationInputDataProvider PrimaryVehicleCreator(string version, XmlNode node,
-			string arg3)
-		{
-			var primaryVehicle = Factory.CreatePrimaryMultistageVehicleData(version, node, arg3);
-			primaryVehicle.Reader = Factory.CreatePrimaryVehicleBusInputReader(version, primaryVehicle, node.FirstChild);
-			return primaryVehicle;
-		}
-
 		private IList<IManufacturingStageInputData> ManufacturingStagesCreator()
 		{
 			var stages = new List<IManufacturingStageInputData>();
 
-			foreach (XmlNode manufacturingNodeStage in _manufacturingNodeStages) {
+			foreach (XmlNode manufacturingNodeStage in _manufacturingNodeStages)
+			{
 				var version = XMLHelper.GetXsdType(manufacturingNodeStage?.SchemaInfo.SchemaType);
 				stages.Add(ManufacturingStageCreator(version, manufacturingNodeStage));
 			}
 			return stages;
 		}
-		
+
 		protected IManufacturingStageInputData ManufacturingStageCreator(string version, XmlNode node)
 		{
 			var stage = Factory.CreateMultistageData(version, node, null);
 			stage.Reader = Factory.CreateMultistageDataReader(version, stage, node);
 			return stage;
 		}
+
+		public IManufacturingStageInputData ConsolidateManufacturingStage
+		{
+			get
+			{
+				if (ManufacturingStages.IsNullOrEmpty())
+					return null;
+
+				return _consolidateManufacturingStages ??
+						(_consolidateManufacturingStages = GetConsolidateManufacturingStage());
+			}
+		}
+
+		public bool InputComplete
+		{
+			get
+			{
+				if (ManufacturingStages.IsNullOrEmpty())
+					return false;
+
+				if(_consolidateManufacturingStages == null)
+					_consolidateManufacturingStages = GetConsolidateManufacturingStage();
+
+				return _consolidateManufacturingStages.IsInputDataComplete();
+			}
+		}
+
+		private ConsolidateManufacturingStages GetConsolidateManufacturingStage()
+		{
+			return new ConsolidateManufacturingStages(ManufacturingStages);
+		}
+
 
 		private void SetManufacturingStageNodes()
 		{
@@ -127,7 +166,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 	}
 
 	// ---------------------------------------------------------------------------------------
-	
+
 	public class XMLMultistageEntryReaderV01 : AbstractComponentReader, IXMLMultistageReader
 	{
 		public static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_MULTISTAGE_BUS_VEHICLE_NAMESPACE_VO1;
@@ -136,7 +175,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 
 		public static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
 
-		
+
 		protected readonly XmlNode JobNode;
 		protected readonly IXMLMultistageEntryInputDataProvider _multistageData;
 		protected IApplicationInformation _applicationInformation;
@@ -151,7 +190,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 			JobNode = node;
 			_multistageData = multistageData;
 		}
-		
+
 		public IVehicleDeclarationInputData Vehicle
 		{
 			get { return _vehicle ?? (_vehicle = CreateComponent(XMLNames.Tag_Vehicle, VehicleCreator)); }
@@ -161,17 +200,17 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 		{
 			var vehicle = Factory.CreateVehicleData(version, null, node, arg3);
 
-			if(vehicle.ComponentNode != null)
+			if (vehicle.ComponentNode != null)
 				vehicle.ComponentReader = GetReader(vehicle, vehicle.ComponentNode, Factory.CreateComponentReader);
-			
-			if(vehicle.ADASNode != null)
+
+			if (vehicle.ADASNode != null)
 				vehicle.ADASReader = GetReader(vehicle, vehicle.ADASNode, Factory.CreateADASReader);
-			
+
 			return vehicle;
 		}
 
-		public IApplicationInformation ApplicationInformation 
-		{ 
+		public IApplicationInformation ApplicationInformation
+		{
 			get
 			{
 				return _applicationInformation ??
@@ -189,7 +228,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 			return xmlNode == null ? null : new DigestData(xmlNode);
 		}
 	}
-	
+
 	// ---------------------------------------------------------------------------------------
 
 
@@ -201,7 +240,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 		public const string XSD_TYPE = "PrimaryVehicleDataType";
 
 		public static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
-		
+
 		protected XmlNode JobNode;
 		protected IDeclarationJobInputData _jobData;
 		protected IXMLPrimaryVehicleBusInputData _primaryInputData;
@@ -234,7 +273,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 			job.Reader = Factory.CreatePrimaryVehicleJobReader(version, job, JobNode);
 			return job;
 		}
-		
+
 		public IResultsInputData ResultsInputData
 		{
 			get
@@ -248,17 +287,17 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 		{
 			return Factory.CreateResultsInputDataReader(version, node);
 		}
-		
+
 		public DigestData GetDigestData(XmlNode xmlNode)
 		{
 			return xmlNode == null ? null : new DigestData(xmlNode);
 		}
-		
+
 		protected IApplicationInformation ApplicationCreator(string version, XmlNode node, string agr3)
 		{
 			return Factory.CreateApplicationInformationReader(version, node);
 		}
-		
+
 		public IApplicationInformation ApplicationInformation
 		{
 			get
@@ -266,6 +305,793 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 				return _applicationInformation ??
 					  (_applicationInformation = CreateComponent(XMLNames.Tag_ApplicationInformation, ApplicationCreator));
 			}
+		}
+	}
+
+	// ---------------------------------------------------------------------------------------
+
+
+
+	public abstract class ConsolidatedDataBase
+	{
+		protected readonly IList<IManufacturingStageInputData> _manufacturingStages;
+
+		public ConsolidatedDataBase(IList<IManufacturingStageInputData> manufacturingStages)
+		{
+			_manufacturingStages = manufacturingStages;
+		}
+
+		protected T GetPropertyValue<T>(object obj, string name)
+		{
+			var propertyValue = GetPropertyValue(obj, name);
+			if (propertyValue == null)
+				return default;
+
+			return (T)propertyValue;
+		}
+
+		protected object GetPropertyValue(object obj, string name)
+		{
+			foreach (var part in name.Split('.'))
+			{
+				if (obj == null) { return null; }
+
+				var type = obj.GetType();
+				var info = type.GetProperty(part);
+				if (info == null) { return null; }
+
+				obj = info.GetValue(obj, null);
+			}
+			return obj;
+		}
+
+		public abstract bool IsInputDataComplete();
+	}
+
+	public class ConsolidateManufacturingStages : ConsolidatedDataBase, IManufacturingStageInputData
+	{
+
+		private ConsolidatedVehicleData _consolidatedVehicleData;
+
+		public ConsolidateManufacturingStages(IList<IManufacturingStageInputData> manufacturingStages)
+			: base(manufacturingStages) { }
+
+		public DigestData HashPreviousStage
+		{
+			get { return _manufacturingStages.Last().HashPreviousStage; }
+		}
+
+		public int StageCount
+		{
+			get { return _manufacturingStages.Last().StageCount; }
+		}
+
+		public IVehicleDeclarationInputData Vehicle
+		{
+			get
+			{
+				return _consolidatedVehicleData ??
+					  (_consolidatedVehicleData = new ConsolidatedVehicleData(_manufacturingStages));
+			}
+		}
+
+		public IApplicationInformation ApplicationInformation
+		{
+			get { return _manufacturingStages.Last().ApplicationInformation; }
+		}
+
+		public DigestData Signature
+		{
+			get { return _manufacturingStages.Last().Signature; }
+		}
+
+		public override bool IsInputDataComplete()
+		{
+			if (_consolidatedVehicleData == null)
+				_consolidatedVehicleData = new ConsolidatedVehicleData(_manufacturingStages);
+			
+			return _consolidatedVehicleData.IsInputDataComplete();
+		}
+	}
+
+
+	public class ConsolidatedVehicleData : ConsolidatedDataBase, IVehicleDeclarationInputData
+	{
+		private ConsolidatedADASData _consolidatedADAS;
+		private ConsolidatedComponentData _consolidatedComponents;
+
+		public ConsolidatedVehicleData(IList<IManufacturingStageInputData> manufacturingStages)
+			: base(manufacturingStages) { }
+
+		#region ManufacturingStage mandatory properties
+
+		public string Manufacturer
+		{
+			get { return _manufacturingStages.Last().Vehicle.Manufacturer; }
+		}
+
+		public string ManufacturerAddress
+		{
+			get { return _manufacturingStages.Last().Vehicle.ManufacturerAddress; }
+		}
+		
+		public DateTime Date
+		{
+			get { return _manufacturingStages.Last().Vehicle.Date; }
+		}
+
+		public string VIN
+		{
+			get { return _manufacturingStages.Last().Vehicle.VIN; }
+		}
+
+		public VehicleDeclarationType VehicleDeclarationType
+		{
+			get { return _manufacturingStages.Last().Vehicle.VehicleDeclarationType; }
+		}
+
+		#endregion
+
+		#region ManufacturingStage optional properties
+
+		public string Model
+		{
+			get { return GetVehiclePropertyValue<string>(nameof(Model)); }
+		}
+
+		public LegislativeClass? LegislativeClass
+		{
+			get { return GetVehiclePropertyValue<LegislativeClass?>(nameof(LegislativeClass)); }
+		}
+
+		public Kilogram CurbMassChassis
+		{
+			get { return GetVehiclePropertyValue<Kilogram>(nameof(CurbMassChassis)); }
+		}
+
+		public Kilogram GrossVehicleMassRating
+		{
+			get
+			{
+				return GetVehiclePropertyValue<Kilogram>(nameof(GrossVehicleMassRating));
+			}
+		}
+
+		public bool? AirdragModifiedMultistage
+		{
+			get
+			{
+				return GetVehiclePropertyValue<bool?>(nameof(AirdragModifiedMultistage));
+			}
+		}
+
+		public TankSystem? TankSystem
+		{
+			get { return GetVehiclePropertyValue<TankSystem?>(nameof(TankSystem)); }
+		}
+
+		public RegistrationClass? RegisteredClass
+		{
+			get { return GetVehiclePropertyValue<RegistrationClass?>(nameof(RegisteredClass)); }
+		}
+
+
+		public int? NumberOfPassengersUpperDeck
+		{
+			get
+			{
+				return GetVehiclePropertyValue<int?>(nameof(NumberOfPassengersUpperDeck));
+			}
+		}
+
+		public int? NumberOfPassengersLowerDeck
+		{
+			get
+			{
+				return GetVehiclePropertyValue<int?>(nameof(NumberOfPassengersLowerDeck));
+			}
+		}
+
+		public VehicleCode? VehicleCode
+		{
+			get { return GetVehiclePropertyValue<VehicleCode?>(nameof(VehicleCode)); }
+		}
+
+		public bool? LowEntry
+		{
+			get { return GetVehiclePropertyValue<bool?>(nameof(LowEntry)); }
+		}
+
+		public Meter Height
+		{
+			get { return GetVehiclePropertyValue<Meter>(nameof(Height)); }
+		}
+
+		public Meter Length
+		{
+			get { return GetVehiclePropertyValue<Meter>(nameof(Length)); }
+		}
+
+		public Meter Width
+		{
+			get { return GetVehiclePropertyValue<Meter>(nameof(Width)); }
+		}
+
+		public Meter EntranceHeight
+		{
+			get { return GetVehiclePropertyValue<Meter>(nameof(EntranceHeight)); }
+		}
+
+		public ConsumerTechnology? DoorDriveTechnology
+		{
+			get { return GetVehiclePropertyValue<ConsumerTechnology?>(nameof(DoorDriveTechnology)); }
+
+		}
+
+		public IAdvancedDriverAssistantSystemDeclarationInputData ADAS
+		{
+			get
+			{
+				if (GetVehiclePropertyValue<IAdvancedDriverAssistantSystemDeclarationInputData>(nameof(ADAS)) == null)
+					return null;
+
+				return _consolidatedADAS
+						?? (_consolidatedADAS = new ConsolidatedADASData(_manufacturingStages));
+			}
+		}
+
+		public IVehicleComponentsDeclaration Components
+		{
+			get
+			{
+				if (GetVehiclePropertyValue<IVehicleComponentsDeclaration>(nameof(Components)) == null)
+					return null;
+
+				return _consolidatedComponents
+						?? (_consolidatedComponents = new ConsolidatedComponentData(_manufacturingStages));
+
+			}
+		}
+
+		#endregion
+
+		#region Non set IVehicleDeclarationInputData interface properties
+
+		public DataSource DataSource { get; }
+		public bool SavedInDeclarationMode { get; }
+		public string AppVersion { get; }
+		public CertificationMethod CertificationMethod { get; }
+		public string CertificationNumber { get; }
+		public DigestData DigestValue { get; }
+		public string Identifier { get; }
+		public bool ExemptedVehicle { get; }
+		public VehicleCategory VehicleCategory { get; }
+		public AxleConfiguration AxleConfiguration { get; }
+		public IList<ITorqueLimitInputData> TorqueLimits { get; }
+
+		public PerSecond EngineIdleSpeed { get; }
+		public bool VocationalVehicle { get; }
+		public bool SleeperCab { get; }
+		public bool ZeroEmissionVehicle { get; }
+		public bool HybridElectricHDV { get; }
+		public bool DualFuelVehicle { get; }
+		public Watt MaxNetPower1 { get; }
+		public Watt MaxNetPower2 { get; }
+		public CubicMeter CargoVolume { get; }
+		public bool Articulated { get; }
+
+		public XmlNode XMLSource { get; }
+
+		#endregion
+
+		private T GetVehiclePropertyValue<T>(string propertyName)
+		{
+			for (int i = _manufacturingStages.Count - 1; i >= 0; i--)
+			{
+				var value = GetPropertyValue<T>(_manufacturingStages[i].Vehicle, propertyName);
+				if (value != null)
+					return value;
+			}
+			return default;
+		}
+
+		public override bool IsInputDataComplete()
+		{
+			return Model != null && LegislativeClass != null && CurbMassChassis != null && GrossVehicleMassRating != null 
+					&& AirdragModifiedMultistage != null && TankSystem != null && RegisteredClass != null 
+					&& NumberOfPassengersLowerDeck != null && NumberOfPassengersUpperDeck != null && VehicleCode != null 
+					&& LowEntry != null && Height != null && Length != null && Width != null && EntranceHeight != null 
+					&& DoorDriveTechnology != null && _consolidatedADAS != null && _consolidatedADAS.IsInputDataComplete() 
+					&& _consolidatedComponents != null && _consolidatedComponents.IsInputDataComplete();
+		}
+	}
+
+
+	public class ConsolidatedADASData : ConsolidatedDataBase, IAdvancedDriverAssistantSystemDeclarationInputData
+	{
+		public ConsolidatedADASData(IList<IManufacturingStageInputData> manufacturingStages)
+			: base(manufacturingStages) { }
+
+		public bool EngineStopStart
+		{
+			get { return GetADASPropertyValue<bool>(nameof(EngineStopStart)); }
+		}
+
+		public EcoRollType EcoRoll
+		{
+			get { return GetADASPropertyValue<EcoRollType>(nameof(EcoRoll)); }
+		}
+
+		public PredictiveCruiseControlType PredictiveCruiseControl
+		{
+			get { return GetADASPropertyValue<PredictiveCruiseControlType>(nameof(PredictiveCruiseControl)); }
+		}
+
+		public bool? ATEcoRollReleaseLockupClutch
+		{
+			get { return GetADASPropertyValue<bool?>(nameof(ATEcoRollReleaseLockupClutch)); }
+		}
+
+		public XmlNode XMLSource { get; }
+
+
+		private T GetADASPropertyValue<T>(string propertyName)
+		{
+			for (int i = _manufacturingStages.Count - 1; i >= 0; i--)
+			{
+				var adas = _manufacturingStages[i].Vehicle.ADAS;
+				if (adas == null)
+					continue;
+				var value = GetPropertyValue<T>(adas, propertyName);
+				if (value != null)
+					return value;
+			}
+
+			return default;
+		}
+
+		public override bool IsInputDataComplete()
+		{
+			return ATEcoRollReleaseLockupClutch != null;
+		}
+	}
+
+	public class ConsolidatedComponentData : ConsolidatedDataBase, IVehicleComponentsDeclaration
+	{
+		private ConsolidatedAirdragData _consolidateAirdragData;
+		private ConsolidatedBusAuxiliariesData _consolidateBusAuxiliariesData;
+
+		public ConsolidatedComponentData(IList<IManufacturingStageInputData> manufacturingStages)
+			: base(manufacturingStages) { }
+
+
+		public IAirdragDeclarationInputData AirdragInputData
+		{
+			get
+			{
+				if (GetComponentPropertyValue<IAirdragDeclarationInputData>(nameof(AirdragInputData)) == null)
+					return null;
+
+				return _consolidateAirdragData ??
+						(_consolidateAirdragData = new ConsolidatedAirdragData(_manufacturingStages));
+			}
+		}
+		public IGearboxDeclarationInputData GearboxInputData
+		{
+			get { return null; }
+		}
+		public ITorqueConverterDeclarationInputData TorqueConverterInputData
+		{
+			get { return null; }
+		}
+		public IAxleGearInputData AxleGearInputData
+		{
+			get { return null; }
+		}
+		public IAngledriveInputData AngledriveInputData
+		{
+			get { return null; }
+		}
+		public IEngineDeclarationInputData EngineInputData
+		{
+			get { return null; }
+		}
+		public IAuxiliariesDeclarationInputData AuxiliaryInputData
+		{
+			get { return null; }
+		}
+		public IRetarderInputData RetarderInputData
+		{
+			get { return null; }
+		}
+		public IPTOTransmissionInputData PTOTransmissionInputData
+		{
+			get { return null; }
+		}
+		public IAxlesDeclarationInputData AxleWheels
+		{
+			get { return null; }
+		}
+		
+		public IBusAuxiliariesDeclarationData BusAuxiliaries
+		{
+			get
+			{
+				if (GetComponentPropertyValue<IBusAuxiliariesDeclarationData>(nameof(BusAuxiliaries)) == null)
+					return null;
+
+				return _consolidateBusAuxiliariesData ??
+						(_consolidateBusAuxiliariesData = new ConsolidatedBusAuxiliariesData(_manufacturingStages));
+			}
+		}
+		public IElectricStorageDeclarationInputData ElectricStorage
+		{
+			get { return null; }
+		}
+		public IElectricMachinesDeclarationInputData ElectricMachines
+		{
+			get { return null; }
+		}
+
+		private T GetComponentPropertyValue<T>(string propertyName)
+		{
+			for (int i = _manufacturingStages.Count - 1; i >= 0; i--)
+			{
+				var component = _manufacturingStages[i].Vehicle?.Components;
+				if (component == null)
+					continue;
+				var value = GetPropertyValue<T>(component, propertyName);
+				if (value != null)
+					return value;
+			}
+
+			return default;
+		}
+
+
+		public override bool IsInputDataComplete()
+		{
+			return _consolidateBusAuxiliariesData != null && _consolidateBusAuxiliariesData.IsInputDataComplete();
+		}
+	}
+
+
+
+	public class ConsolidatedAirdragData : ConsolidatedDataBase, IAirdragDeclarationInputData
+	{
+		public IAirdragDeclarationInputData AirdragEntry { private set; get; }
+
+		public ConsolidatedAirdragData(IList<IManufacturingStageInputData> manufacturingStages)
+			: base(manufacturingStages)
+		{
+			SetLastValidAirdragEntry();
+		}
+
+		public string Manufacturer
+		{
+			get { return AirdragEntry?.Manufacturer; }
+		}
+
+		public string Model
+		{
+			get { return AirdragEntry?.Model; }
+		}
+
+		public DateTime Date
+		{
+			get { return AirdragEntry.Date; }
+		}
+
+		public string AppVersion
+		{
+			get { return AirdragEntry?.AppVersion; }
+		}
+		public CertificationMethod CertificationMethod
+		{
+			get { return AirdragEntry.CertificationMethod; }
+		}
+		public string CertificationNumber
+		{
+			get { return AirdragEntry?.CertificationNumber; }
+		}
+		public DigestData DigestValue
+		{
+			get { return AirdragEntry?.DigestValue; }
+		}
+		public SquareMeter AirDragArea
+		{
+			get { return AirdragEntry?.AirDragArea; }
+		}
+		public DataSource DataSource
+		{
+			get { return AirdragEntry?.DataSource; }
+		}
+		public bool SavedInDeclarationMode { get; }
+
+		private void SetLastValidAirdragEntry()
+		{
+			for (int i = _manufacturingStages.Count - 1; i >= 0; i--)
+			{
+				var airdragData = _manufacturingStages[i].Vehicle?.Components?.AirdragInputData;
+				if (airdragData == null)
+					continue;
+
+				var value = airdragData.AirDragArea;
+				if (value == null)
+					continue;
+
+				AirdragEntry = airdragData;
+				return;
+			}
+		}
+
+		public override bool IsInputDataComplete()
+		{
+			return AirdragEntry != null;
+		}
+	}
+
+	public class ConsolidatedBusAuxiliariesData : ConsolidatedDataBase, IBusAuxiliariesDeclarationData
+	{
+		private ConsolidateElectricConsumerData _consolidateElectricConsumerData;
+		private ConsolidatedHVACBusAuxiliariesData _consolidatedHVACBusAuxiliariesData;
+
+
+		public ConsolidatedBusAuxiliariesData(IList<IManufacturingStageInputData> manufacturingStages)
+			: base(manufacturingStages) { }
+
+		public XmlNode XMLSource { get; }
+		public string FanTechnology
+		{
+			get { return null; }
+		}
+		public IList<string> SteeringPumpTechnology
+		{
+			get { return null; }
+		}
+		public IElectricSupplyDeclarationData ElectricSupply
+		{
+			get { return null; }
+		}
+
+		public IElectricConsumersDeclarationData ElectricConsumers
+		{
+			get
+			{
+				if (GetBusAuxPropertyValue<IElectricConsumersDeclarationData>(nameof(ElectricConsumers)) == null)
+					return null;
+					
+				return	_consolidateElectricConsumerData ??
+						(_consolidateElectricConsumerData = new ConsolidateElectricConsumerData(_manufacturingStages));
+			}
+		}
+
+		public IPneumaticSupplyDeclarationData PneumaticSupply
+		{
+			get { return null; }
+		}
+
+		public IPneumaticConsumersDeclarationData PneumaticConsumers
+		{
+			get { return null; }
+		}
+
+		public IHVACBusAuxiliariesDeclarationData HVACAux
+		{
+			get
+			{
+				if (GetBusAuxPropertyValue<IHVACBusAuxiliariesDeclarationData>(nameof(HVACAux)) == null)
+					return null;
+				
+				return _consolidatedHVACBusAuxiliariesData ??
+						(_consolidatedHVACBusAuxiliariesData = new ConsolidatedHVACBusAuxiliariesData(_manufacturingStages));
+			}
+		}
+
+		private T GetBusAuxPropertyValue<T>(string propertyName)
+		{
+			for (int i = _manufacturingStages.Count - 1; i >= 0; i--)
+			{
+				var busAux = _manufacturingStages[i].Vehicle?.Components?.BusAuxiliaries;
+				if (busAux == null)
+					continue;
+				var value = GetPropertyValue<T>(busAux, propertyName);
+				if (value != null)
+					return value;
+			}
+
+			return default;
+		}
+		
+		public override bool IsInputDataComplete()
+		{
+			return _consolidateElectricConsumerData != null && _consolidateElectricConsumerData.IsInputDataComplete() &&
+					_consolidatedHVACBusAuxiliariesData != null && _consolidatedHVACBusAuxiliariesData.IsInputDataComplete();
+		}
+	}
+
+
+	public class ConsolidateElectricConsumerData : ConsolidatedDataBase, IElectricConsumersDeclarationData
+	{
+		public ConsolidateElectricConsumerData(IList<IManufacturingStageInputData> manufacturingStages)
+			: base(manufacturingStages) { }
+
+		public bool? InteriorLightsLED
+		{
+			get { return GetElectricConsumerPropertyValue<bool?>(nameof(InteriorLightsLED)); }
+		}
+
+		public bool? DayrunninglightsLED
+		{
+			get { return GetElectricConsumerPropertyValue<bool?>(nameof(DayrunninglightsLED)); }
+		}
+
+		public bool? PositionlightsLED
+		{
+			get { return GetElectricConsumerPropertyValue<bool?>(nameof(PositionlightsLED)); }
+		}
+
+		public bool? HeadlightsLED
+		{
+			get { return GetElectricConsumerPropertyValue<bool?>(nameof(HeadlightsLED)); }
+		}
+
+		public bool? BrakelightsLED
+		{
+			get { return GetElectricConsumerPropertyValue<bool?>(nameof(BrakelightsLED)); }
+		}
+
+
+		private T GetElectricConsumerPropertyValue<T>(string propertyName)
+		{
+			for (int i = _manufacturingStages.Count - 1; i >= 0; i--)
+			{
+				var electricConsumer = _manufacturingStages[i].Vehicle?.Components?.BusAuxiliaries?.ElectricConsumers;
+				if (electricConsumer == null)
+					continue;
+				var value = GetPropertyValue<T>(electricConsumer, propertyName);
+				if (value != null)
+					return value;
+			}
+
+			return default;
+		}
+
+		public override bool IsInputDataComplete()
+		{
+			return InteriorLightsLED != null && DayrunninglightsLED != null && PositionlightsLED != null &&
+					HeadlightsLED != null && BrakelightsLED != null;
+		}
+	}
+
+
+	public class ConsolidatedHVACBusAuxiliariesData : ConsolidatedDataBase, IHVACBusAuxiliariesDeclarationData
+	{
+		public ConsolidatedHVACBusAuxiliariesData(IList<IManufacturingStageInputData> manufacturingStages)
+			: base(manufacturingStages) { }
+
+		public BusHVACSystemConfiguration? SystemConfiguration
+		{
+			get
+			{
+				return GetHVACBusAuxPropertyValue<BusHVACSystemConfiguration?>(nameof(SystemConfiguration));
+			}
+		}
+
+		public HeatPumpType? HeatPumpTypeDriverCompartment
+		{
+			get
+			{
+				return GetHVACBusAuxPropertyValue<HeatPumpType?>(nameof(HeatPumpTypeDriverCompartment));
+			}
+		}
+
+		public HeatPumpMode? HeatPumpModeDriverCompartment
+		{
+			get
+			{
+				return GetHVACBusAuxPropertyValue<HeatPumpMode?>(nameof(HeatPumpModeDriverCompartment));
+			}
+		}
+
+		public HeatPumpType? HeatPumpTypePassengerCompartment
+		{
+			get
+			{
+				return GetHVACBusAuxPropertyValue<HeatPumpType?>(nameof(HeatPumpTypePassengerCompartment));
+			}
+		}
+
+		public HeatPumpMode? HeatPumpModePassengerCompartment
+		{
+			get
+			{
+				return GetHVACBusAuxPropertyValue<HeatPumpMode?>(nameof(HeatPumpModePassengerCompartment));
+			}
+		}
+
+		public Watt AuxHeaterPower
+		{
+			get
+			{
+				return GetHVACBusAuxPropertyValue<Watt>(nameof(AuxHeaterPower));
+			}
+		}
+
+		public bool? DoubleGlazing
+		{
+			get
+			{
+				return GetHVACBusAuxPropertyValue<bool?>(nameof(DoubleGlazing));
+			}
+		}
+
+		public bool? AdjustableAuxiliaryHeater
+		{
+			get
+			{
+				return GetHVACBusAuxPropertyValue<bool?>(nameof(AdjustableAuxiliaryHeater));
+			}
+		}
+
+		public bool? SeparateAirDistributionDucts
+		{
+			get
+			{
+				return GetHVACBusAuxPropertyValue<bool?>(nameof(SeparateAirDistributionDucts));
+			}
+		}
+
+		public bool? WaterElectricHeater
+		{
+			get
+			{
+				return GetHVACBusAuxPropertyValue<bool?>(nameof(WaterElectricHeater));
+			}
+		}
+
+		public bool? AirElectricHeater
+		{
+			get
+			{
+				return GetHVACBusAuxPropertyValue<bool?>(nameof(AirElectricHeater));
+			}
+		}
+
+		public bool? OtherHeatingTechnology
+		{
+			get
+			{
+				return GetHVACBusAuxPropertyValue<bool?>(nameof(OtherHeatingTechnology));
+			}
+		}
+
+		public bool? AdjustableCoolantThermostat { get; }
+
+		public bool EngineWasteGasHeatExchanger { get; }
+
+
+		private T GetHVACBusAuxPropertyValue<T>(string propertyName)
+		{
+			for (int i = _manufacturingStages.Count - 1; i >= 0; i--)
+			{
+				var havacAux = _manufacturingStages[i].Vehicle?.Components?.BusAuxiliaries?.HVACAux;
+				if (havacAux == null)
+					continue;
+				var value = GetPropertyValue<T>(havacAux, propertyName);
+				if (value != null)
+					return value;
+			}
+
+			return default;
+		}
+
+		public override bool IsInputDataComplete()
+		{
+			return SystemConfiguration != null && HeatPumpTypeDriverCompartment != null && HeatPumpModeDriverCompartment != null &&
+					HeatPumpTypePassengerCompartment != null && HeatPumpModePassengerCompartment != null && AuxHeaterPower != null &&
+					DoubleGlazing != null && AdjustableAuxiliaryHeater != null && SeparateAirDistributionDucts != null &&
+					WaterElectricHeater != null && AirElectricHeater != null && OtherHeatingTechnology != null;
 		}
 	}
 }

@@ -1336,13 +1336,22 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 			}
 		}
 
+		
+
 		public override IVehicleComponentsDeclaration Components
 		{
 			get 
 			{ 
 				if (ComponentNode == null)
 					return null;
-				return _components ?? (_components = ComponentReader.ComponentInputData);
+				
+				if(_components == null)
+					_components = ComponentReader.ComponentInputData;
+
+				if (_components.BusAuxiliaries == null && _components.AirdragInputData == null)
+					return null;
+
+				return _components;
 			}
 		}
 		

@@ -349,7 +349,20 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 		public XMLDeclarationCompleteBusAuxiliariesDataProviderV28(IXMLDeclarationVehicleData vehicle,
 			XmlNode componentNode, string sourceFile)
-			: base(vehicle, componentNode, sourceFile) { }
+			: base(vehicle, componentNode, sourceFile) {}
+
+		private bool IsBusHVACTagEmpty()
+		{
+			return SystemConfiguration == null && HeatPumpTypeDriverCompartment == null && HeatPumpModeDriverCompartment == null &&
+					HeatPumpTypePassengerCompartment == null && HeatPumpModePassengerCompartment == null && AuxHeaterPower == null &&
+					DoubleGlazing == null && AdjustableAuxiliaryHeater == null && SeparateAirDistributionDucts == null &&
+					WaterElectricHeater == null && AirElectricHeater == null && OtherHeatingTechnology == null ;
+		}
+		
+		public override IHVACBusAuxiliariesDeclarationData HVACAux
+		{
+			get { return IsBusHVACTagEmpty() ? null : this; }
+		}
 
 
 		public override BusHVACSystemConfiguration? SystemConfiguration
@@ -458,6 +471,17 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 			}
 		}
 
+		private bool IsElectricConsumersTagEmpty()
+		{
+			return InteriorLightsLED == null && DayrunninglightsLED == null && PositionlightsLED == null &&
+					HeadlightsLED == null && BrakelightsLED == null;
+		}
+
+
+		public override IElectricConsumersDeclarationData ElectricConsumers
+		{
+			get { return IsElectricConsumersTagEmpty() ? null : this; }
+		}
 
 		public override bool? InteriorLightsLED
 		{

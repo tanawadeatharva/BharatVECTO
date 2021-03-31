@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Xml;
 using System.Xml.Linq;
+using Ninject;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Resources;
@@ -79,6 +80,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 		private IPrimaryVehicleInformationInputDataProvider _primaryVehicle;
 		private IList<IManufacturingStageInputData> _manufacturingStages;
+		private IManufacturingStageInputData _concolidateManfacturingStage;
 
 
 		public XMLDeclarationMultistageJobInputDataV01(XmlNode node, IXMLMultistageInputDataProvider inputProvider,
@@ -96,6 +98,16 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		public IList<IManufacturingStageInputData> ManufacturingStages
 		{
 			get { return _manufacturingStages ?? (_manufacturingStages = Reader.ManufacturingStages); }
+		}
+
+		public IManufacturingStageInputData ConsolidateManufacturingStage
+		{
+			get { return _concolidateManfacturingStage ?? (_concolidateManfacturingStage = Reader.ConsolidateManufacturingStage); }
+		}
+
+		public bool InputComplete
+		{
+			get { return Reader.InputComplete; }
 		}
 
 		public IXMLMultistageJobReader Reader { protected get; set; }
@@ -268,4 +280,39 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 		public IXMLMultistageReader Reader { protected get; set; }
 	}
+
+	// ---------------------------------------------------------------------------------------
+
+
+	public class XMLDeclarationVIFInputData : IMultistageVIFInputData
+	{
+
+		private readonly IXMLInputDataReader _xmlInputReader;
+		
+		public XMLDeclarationVIFInputData(string vifFileName, IVehicleDeclarationInputData vehicleInput)
+		{
+
+			var kernel = new StandardKernel(new VectoNinjectModule());
+			_xmlInputReader = kernel.Get<IXMLInputDataReader>();
+
+			VehicleInputData = vehicleInput;
+			MultistageInputData = CreateMultistageReader(vifFileName);
+		}
+
+
+		private IMultistageBusInputDataProvider CreateMultistageReader(string vifFileName)
+		{
+			var reader = XmlReader.Create(vifFileName);
+			return _xmlInputReader.Create(reader) as IMultistageBusInputDataProvider;
+		}
+
+
+		public DataSource DataSource
+		{
+			get { return null; }
+		}
+		public IVehicleDeclarationInputData VehicleInputData { get; }
+		public IMultistageBusInputDataProvider MultistageInputData { get; }
+	}
+
 }

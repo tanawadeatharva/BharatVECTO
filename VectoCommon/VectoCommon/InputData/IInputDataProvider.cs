@@ -99,6 +99,10 @@ namespace TUGraz.VectoCommon.InputData
 		IPrimaryVehicleInformationInputDataProvider PrimaryVehicle { get; }
 
 		IList<IManufacturingStageInputData> ManufacturingStages { get; }
+
+		IManufacturingStageInputData ConsolidateManufacturingStage { get; }
+
+		bool InputComplete { get; }
 	}
 
 

@@ -28,6 +28,11 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration
 		IPrimaryVehicleInformationInputDataProvider PrimaryVehicle { get; }
 
 		IList<IManufacturingStageInputData> ManufacturingStages { get; }
+
+		IManufacturingStageInputData ConsolidateManufacturingStage { get; }
+
+		bool InputComplete { get; }
+
 	}
 
 	public interface IXMLMultistageReader 
