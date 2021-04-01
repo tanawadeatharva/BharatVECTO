@@ -155,6 +155,10 @@ namespace TUGraz.VectoCore.Tests.Integration.CompletedBus
 
 		public string JobName { get; }
 		public string ShiftStrategy { get; }
+		public VectoSimulationJobType JobType
+		{
+			get { return VectoSimulationJobType.ConventionalVehicle; }
+		}
 
 		public DataSource DataSource { get; }
 	}

@@ -56,6 +56,10 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		}
 
 		public virtual string ShiftStrategy { get { return null; } }
+		public VectoSimulationJobType JobType
+		{
+			get { return VectoSimulationJobType.ConventionalVehicle; }
+		}
 
 		#endregion
 
@@ -118,6 +122,10 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		public bool SavedInDeclarationMode { get; }
 		public string JobName { get; }
 		public string ShiftStrategy { get{ return null; } }
+		public VectoSimulationJobType JobType
+		{
+			get { return VectoSimulationJobType.ConventionalVehicle; }
+		}
 		public IXMLJobDataReader Reader { protected get; set; }
 		public IXMLPrimaryVehicleBusInputData InputData { get; }
 	}

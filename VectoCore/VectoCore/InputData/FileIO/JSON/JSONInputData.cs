@@ -1148,6 +1148,10 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 		public IVehicleDeclarationInputData Vehicle { get { return PrimaryVehicle; } }
 		public string JobName { get; }
 		public string ShiftStrategy { get { return ""; } }
+		public VectoSimulationJobType JobType
+		{
+			get { return VectoSimulationJobType.ConventionalVehicle; }
+		}
 
 		#endregion
 	}
@@ -1202,6 +1206,10 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 		public IVehicleDeclarationInputData Vehicle { get; }
 		public string JobName { get; }
 		public string ShiftStrategy { get { return ""; } }
+		public VectoSimulationJobType JobType
+		{
+			get { return VectoSimulationJobType.ConventionalVehicle; }
+		}
 
 		#endregion
 	}

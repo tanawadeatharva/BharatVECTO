@@ -49,14 +49,8 @@ namespace TUGraz.VectoCommon.InputData
         /// </summary>
         IList<ICycleData> Cycles { get; }
 
-		/// <summary>
-		/// P001
-		/// cf. VECTO Input Parameters.xlsx
-		/// </summary>
-		VectoSimulationJobType JobType { get; }
-
+		//ToDo Remove use JobType
 		IEngineEngineeringInputData EngineOnly { get; }
-
 	}
 
 	public enum VectoSimulationJobType
