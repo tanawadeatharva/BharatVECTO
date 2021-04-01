@@ -11,6 +11,8 @@
                 <ResourceDictionary Source="Resources/GlobalStyles.xaml"/>
                 <ResourceDictionary Source="Resources/Colors.xaml"/>
                 <ResourceDictionary Source="DataGridStyles.xaml"/>
+                <ResourceDictionary Source="ButtonTemplates.xaml"/>
+                <ResourceDictionary Source="ButtonStyles.xaml"/>
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Application.Resources>

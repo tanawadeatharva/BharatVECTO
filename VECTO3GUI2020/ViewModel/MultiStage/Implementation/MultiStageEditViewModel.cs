@@ -1,4 +1,5 @@
 ﻿using System;
+using System.CodeDom;
 using System.Diagnostics;
 using System.Linq;
 using System.Linq.Expressions;
@@ -17,12 +18,12 @@ using VECTO3GUI2020.ViewModel.Interfaces.JobEdit.Vehicle.Components;
 
 namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 {
-	public interface IManufacturingStageEditViewModel
+	public interface IMultiStageEditViewModel
 	{
 
 	}
 
-	public class ManufacturingStageEditViewModel : ViewModelBase, IManufacturingStageEditViewModel
+	public class MultiStageEditViewModel : ViewModelBase, IMultiStageEditViewModel
 	{
 		private readonly Settings _settings = Settings.Default;
 		private ICommand _addVifCommand;
@@ -31,7 +32,13 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 		private IXMLInputDataReader _inputDataReader;
 		private IVehicleViewModel _vehicleViewModel;
 		private IComponentViewModelFactory _componentViewModelFactory;
+		private int _stageCount;
 		public string VifPath { get => _vifPath; set => SetProperty(ref _vifPath, value); }
+		public int StageCount
+		{
+			get => _stageCount;
+			set => SetProperty(ref _stageCount, value);
+		}
 
 
 		public IVehicleViewModel VehicleViewModel
@@ -41,7 +48,9 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 		}
 
 
-		public ManufacturingStageEditViewModel(IDialogHelper dialogHelper, 
+
+
+		public MultiStageEditViewModel(IDialogHelper dialogHelper, 
 			IXMLInputDataReader inputDataReader, 
 			IComponentViewModelFactory componentViewModelFactory)
 		{
@@ -78,9 +87,17 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 				_dialogHelper.ShowMessageBox("invalid input file", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
 				return;
 			}
-			VifPath = fileName;
+			
 			
 			var lastManufacturingStageInputData = inputDataProvider.JobInputData.ManufacturingStages.Last();
+
+			VifPath = fileName;
+
+			_stageCount = inputDataProvider.JobInputData.ManufacturingStages.Count + 1;
+			
+			
+			
+
 
 			VehicleViewModel =
 				_componentViewModelFactory.CreateVehicleViewModel(lastManufacturingStageInputData.Vehicle);

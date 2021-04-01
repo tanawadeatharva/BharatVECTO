@@ -194,7 +194,7 @@
     </DataTemplate>
 
 
-    <DataTemplate DataType="{x:Type multistageimpl:ManufacturingStageEditViewModel}">
+    <DataTemplate DataType="{x:Type multistageimpl:MultiStageEditViewModel}">
         <multistageviews:ManufacturingStageView/>
     </DataTemplate>
 

@@ -238,7 +238,7 @@
     <Compile Include="ViewModel\Interfaces\JobEdit\Vehicle\Components\ITyreViewModel.cs" />
     <Compile Include="ViewModel\Interfaces\JobEdit\Vehicle\IVehicleViewModel.cs" />
     <Compile Include="ViewModel\MultiStage\Implementation\DeclarationInterimStageBusVehicleViewModel_v2_8.cs" />
-    <Compile Include="ViewModel\MultiStage\Implementation\ManufacturingStageEditViewModel.cs" />
+    <Compile Include="ViewModel\MultiStage\Implementation\MultiStageEditViewModel.cs" />
     <Compile Include="ViewModel\MultiStage\Interfaces\IViewModelFactory.cs" />
     <Compile Include="Views\CustomControls\ComboParameter.xaml.cs">
       <DependentUpon>ComboParameter.xaml</DependentUpon>
@@ -349,6 +349,12 @@
     <Compile Include="Views\XMLViewer.xaml.cs">
       <DependentUpon>XMLViewer.xaml</DependentUpon>
     </Compile>
+    <Page Include="ButtonStyles.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="ButtonTemplates.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="DataGridStyles.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

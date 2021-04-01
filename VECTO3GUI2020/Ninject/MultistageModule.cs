@@ -15,7 +15,7 @@ namespace VECTO3GUI2020.Ninject
 		public override void Load()
 		{
 			Bind<IViewModelFactory>().ToFactory();
-			Bind<IManufacturingStageEditViewModel>().To<ManufacturingStageEditViewModel>();
+			Bind<IMultiStageEditViewModel>().To<MultiStageEditViewModel>();
 		}
 	}
 }
