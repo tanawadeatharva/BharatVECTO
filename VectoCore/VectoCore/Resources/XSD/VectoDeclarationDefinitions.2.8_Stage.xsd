@@ -436,6 +436,7 @@
 			<xs:enumeration value="heating"/>
 			<xs:enumeration value="heating and cooling"/>
 			<xs:enumeration value="cooling"/>
+			<xs:enumeration value="N.A."/>
 		</xs:restriction>
 	</xs:simpleType>
 	<xs:simpleType name="HVACHeatPumpType">
