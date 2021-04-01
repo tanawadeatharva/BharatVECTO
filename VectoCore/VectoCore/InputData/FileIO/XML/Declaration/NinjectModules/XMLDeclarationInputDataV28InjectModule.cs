@@ -25,6 +25,9 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.NinjectModules
 
 			Bind<IXMLBusAuxiliariesDeclarationData>().To<XMLDeclarationCompleteBusAuxiliariesDataProviderV28>()
 				.Named(XMLDeclarationCompleteBusAuxiliariesDataProviderV28.QUALIFIED_XSD_TYPE);
+
+			Bind<IXMLAirdragDeclarationInputData>().To<XMLDeclarationAirdragDataProviderV28>().Named(
+				XMLDeclarationAirdragDataProviderV28.QUALIFIED_XSD_TYPE);
 		}
 
 		#endregion

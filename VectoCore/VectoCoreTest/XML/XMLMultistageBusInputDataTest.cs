@@ -21,7 +21,7 @@ namespace TUGraz.VectoCore.Tests.XML
 		const string VehicleExemptedInterimStageInput = DirPath + "vecto_vehicle-exempted_input_full-sample.xml";
 		const string VehicleExemptedMandatoryOnly = DirPath + "vecto_vehicle-exempted_input_only_mandatory_entries.xml";
 		const string VehicleComponentsEntriesNullable = DirPath + "vecto_vehicle-stage_input_only_component_nullable_entries.xml";
-
+		const string VehicleAirdragStandardValue = DirPath + "vecto_vehicle-stage_input_only_mandatory_standard_value_airdrag.xml";
 
 		[OneTimeSetUp]
 		public void RunBeforeAnyTests()
@@ -211,5 +211,25 @@ namespace TUGraz.VectoCore.Tests.XML
 			var hvacAux = vehicle.Components.BusAuxiliaries.HVACAux;
 			Assert.AreEqual(null, hvacAux);
 		}
+
+
+		[TestCase]
+		public void TestStandardValueAirdragComponent()
+		{
+			var reader = XmlReader.Create(VehicleAirdragStandardValue);
+			var inputDataProvider = xmlInputReader.CreateDeclaration(reader);
+			var vehicle = inputDataProvider.JobInputData.Vehicle;
+			
+			Assert.AreEqual("VEH-1234567890", vehicle.Identifier);
+			Assert.AreEqual("Some Manufacturer 3", vehicle.Manufacturer);
+			Assert.AreEqual("Some Manufacturer Address 3", vehicle.ManufacturerAddress);
+			Assert.AreEqual("VEH-1234567890", vehicle.VIN);
+			Assert.AreEqual(DateTime.Parse("2020-01-09T11:00:00Z").ToUniversalTime(), vehicle.Date);
+			Assert.AreEqual(VehicleDeclarationType.final, vehicle.VehicleDeclarationType);
+
+			var airdrag = vehicle.Components.AirdragInputData;
+			Assert.IsNotNull(airdrag);
+		}
+
 	}
 }
