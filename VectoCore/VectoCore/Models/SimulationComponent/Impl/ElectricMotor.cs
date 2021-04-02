@@ -146,6 +146,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			var maxDriveTorqueEm = maxDriveTorqueEmMap == null ? null : maxDriveTorqueEmMap + inertiaTorqueEm;
 			// inertia has to be added here. recuperation torque is positive, when accelerating inertia is positive and adds more drag to the drivetrain, 
 			var maxRecuperationTorqueEm = maxRecuperationTorqueEmMap == null ? null : maxRecuperationTorqueEmMap + inertiaTorqueEm;
+			if (maxRecuperationTorqueEm != null && maxRecuperationTorqueEm.IsSmallerOrEqual(0)) {
+				// max recuperation torque may get negative due to torque losses
+				maxRecuperationTorqueEm = null;
+			}
 
 			var maxDriveTorqueDt = maxDriveTorqueEm == null ? null : ConvertEmTorqueToDrivetrain(maxDriveTorqueEm);
 			var maxRecuperationTorqueDt = maxRecuperationTorqueEm == null ? null : ConvertEmTorqueToDrivetrain(maxRecuperationTorqueEm);
