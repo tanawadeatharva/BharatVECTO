@@ -112,11 +112,18 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 			switch (TestPowertrain.CombustionEngine.EngineAux) {
 				case EngineAuxiliary engineAux:
 					engineAux.PreviousState.AngularSpeed =
-						((DataBus.EngineInfo as CombustionEngine).EngineAux as EngineAuxiliary).PreviousState.AngularSpeed;
+						((DataBus.EngineInfo as CombustionEngine).EngineAux as EngineAuxiliary).PreviousState
+						.AngularSpeed;
 					break;
 				case BusAuxiliariesAdapter busAux:
 					busAux.PreviousState.AngularSpeed =
-						((DataBus.EngineInfo as CombustionEngine).EngineAux as BusAuxiliariesAdapter).PreviousState.AngularSpeed;
+						((DataBus.EngineInfo as CombustionEngine).EngineAux as BusAuxiliariesAdapter).PreviousState
+						.AngularSpeed;
+					if (busAux.ElectricStorage is SimpleBattery bat) {
+						bat.SOC = ((DataBus.EngineInfo as CombustionEngine).EngineAux as BusAuxiliariesAdapter)
+							.ElectricStorage
+							.SOC;
+					}
 					break;
 			}
 
