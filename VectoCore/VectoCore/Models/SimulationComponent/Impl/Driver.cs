@@ -323,6 +323,12 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					}).
 					Case<ResponseSuccess>(() => operatingPoint = limitedOperatingPoint).
 					Case<ResponseBatteryEmpty>(() => { }).
+					Case<ResponseEngineSpeedTooHigh>(r => {
+							nextOperatingPoint = SearchOperatingPoint(absTime, ds, gradient, operatingPoint.Acceleration,
+								r);
+							retVal = NextComponent.Request(absTime, nextOperatingPoint.SimulationInterval,
+								nextOperatingPoint.Acceleration, gradient, false);
+					}).
 					Default(
 						r => {
 							throw new UnexpectedResponseException(

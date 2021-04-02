@@ -878,11 +878,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 						eval.Add(downshift);
 						return;
 					}
-                    do {
-                        nextGear = GearList.Predecessor(nextGear);
-                        firstResponse = RequestDryRun(absTime, dt, outTorque, outAngularVelocity, nextGear, tmp);
-                    } while (GearList.HasPredecessor(nextGear) && firstResponse == null);
-                }
+					do {
+						nextGear = GearList.Predecessor(nextGear);
+						firstResponse = RequestDryRun(absTime, dt, outTorque, outAngularVelocity, nextGear, tmp);
+					} while (GearList.HasPredecessor(nextGear) && firstResponse == null);
+				}
 
 				if (DataBus.GearboxInfo.GearboxType.AutomaticTransmission() && firstResponse == null && nextGear.Equals(GearList.First())) {
 					var downshift = ResponseEmOff;
@@ -904,9 +904,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 							if (!best.Equals(currentGear)) {
 								// downshift required!
 								var downshift = ResponseEmOff;
-                                //downshift.Gear = GearList.Predecessor(nextGear);
-                                downshift.Gear = best; // GearList.Predecessor(nextGear);
-                                eval.Add(downshift);
+								//downshift.Gear = GearList.Predecessor(nextGear);
+								downshift.Gear = best; // GearList.Predecessor(nextGear);
+								eval.Add(downshift);
 								return;
 							}
 						}
@@ -1098,8 +1098,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 
 		private GearshiftPosition FindBestGearForBraking(GearshiftPosition nextGear, IResponse firstResponse)
 		{
-            var tmpGear = new GearshiftPosition(nextGear.Gear, nextGear.TorqueConverterLocked);
-            var candidates = new Dictionary<GearshiftPosition, PerSecond>();
+			var tmpGear = new GearshiftPosition(nextGear.Gear, nextGear.TorqueConverterLocked);
+			var candidates = new Dictionary<GearshiftPosition, PerSecond>();
 			var gbxOutSpeed = firstResponse.Engine.EngineSpeed /
 							ModelData.GearboxData.Gears[tmpGear.Gear].Ratio;
 			var firstGear = GearList.Predecessor(nextGear, 1);
@@ -1111,9 +1111,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 					: ModelData.GearboxData.Gears[gear.Gear].TorqueConverterRatio;
 				candidates[gear] = gbxOutSpeed * ratio;
 				//tmpGear = GearList.Predecessor(tmpGear);
-            }
+			}
 
-            var targetEngineSpeed = ModelData.EngineData.IdleSpeed +
+			var targetEngineSpeed = ModelData.EngineData.IdleSpeed +
 									0.7 * (ModelData.EngineData.FullLoadCurves[0].NP98hSpeed);
 			var best = candidates.MinBy(x => VectoMath.Abs(x.Value - targetEngineSpeed)).Key;
 			return best;
@@ -1202,7 +1202,12 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 			List<HybridResultEntry> eval, Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity,
 			bool dryRun, GearshiftPosition currentGear)
 		{
-			var best = DoSelectBestOption(eval, absTime, dt, outTorque, outAngularVelocity, dryRun, currentGear);
+			var eval2 = eval.Where(x =>
+					(x.IgnoreReason & HybridConfigurationIgnoreReason.VehicleSpeedBelowMinSpeedAfterGearshift) == 0)
+				.ToList();
+			var prohibitGearshift = eval.Where(x => !x.Gear.Equals(currentGear)).All(x =>
+				(x.IgnoreReason & HybridConfigurationIgnoreReason.VehicleSpeedBelowMinSpeedAfterGearshift) != 0);
+			var best = DoSelectBestOption(eval2, absTime, dt, outTorque, outAngularVelocity, dryRun, currentGear);
 			if (best == null) {
 				return null;
 			}
@@ -1212,32 +1217,43 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 				return best;
 			}
 
-			// selected solution has invalid engine speed and engine is on and evaluation contains only one gear - allow emergency shift
-			if (best.IgnoreReason.EngineSpeedAboveUpshift()) {
-				//try upshift
-				var newEval = new List<HybridResultEntry>();
-				EvaluateConfigsForGear(
-					absTime, dt, outTorque, outAngularVelocity, GearList.Successor(best.Gear), AllowICEOff(absTime), newEval,
-					best.Setting.MechanicalAssistPower.First().Key, dryRun);
-				if (newEval.Count > 0) {
-					var newBest = DoSelectBestOption(newEval, absTime, dt, outTorque, outAngularVelocity, dryRun, currentGear);
-					if (!newBest.IgnoreReason.EngineSpeedTooHigh()) {
-						best = newBest;
+			if (!prohibitGearshift) {
+				// selected solution has invalid engine speed and engine is on and evaluation contains only one gear - allow emergency shift
+				if (best.IgnoreReason.EngineSpeedAboveUpshift()) {
+					//try upshift
+					var newEval = new List<HybridResultEntry>();
+					EvaluateConfigsForGear(
+						absTime, dt, outTorque, outAngularVelocity, GearList.Successor(best.Gear), AllowICEOff(absTime),
+						newEval,
+						best.Setting.MechanicalAssistPower.First().Key, dryRun);
+					if (newEval.Count > 0) {
+						var newBest = DoSelectBestOption(newEval, absTime, dt, outTorque, outAngularVelocity, dryRun,
+							currentGear);
+						if (!newBest.IgnoreReason.EngineSpeedTooHigh()) {
+							best = newBest;
+						}
 					}
 				}
 			}
-			if (best.IgnoreReason.EngineSpeedBelowDownshift()) {
-				//try downshift
-				var newEval = new List<HybridResultEntry>();
-				EvaluateConfigsForGear(
-					absTime, dt, outTorque, outAngularVelocity, GearList.Predecessor(best.Gear), AllowICEOff(absTime), newEval,
-					best.Setting.MechanicalAssistPower.First().Key, dryRun);
-				if (newEval.Count > 0) {
-					best = DoSelectBestOption(newEval, absTime, dt, outTorque, outAngularVelocity, dryRun, currentGear);
+
+			if ((!prohibitGearshift || AllowEmergencyShift) && best.IgnoreReason.EngineSpeedBelowDownshift()) {
+				best = DoSelectBestOption(eval, absTime, dt, outTorque, outAngularVelocity, dryRun, currentGear);
+				if (best.IgnoreReason.EngineSpeedBelowDownshift()) {
+					//try downshift
+					var newEval = new List<HybridResultEntry>();
+					EvaluateConfigsForGear(
+						absTime, dt, outTorque, outAngularVelocity, GearList.Predecessor(best.Gear),
+						AllowICEOff(absTime), newEval,
+						best.Setting.MechanicalAssistPower.First().Key, dryRun);
+					if (newEval.Count > 0) {
+						best = DoSelectBestOption(newEval, absTime, dt, outTorque, outAngularVelocity, dryRun,
+							currentGear);
+					}
 				}
 			}
 
 			best.SimulationInterval = dt;
+			best.ProhibitGearshift = prohibitGearshift;
 			return best;
 		}
 
@@ -1375,7 +1391,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 				ShiftRequired = best.Gear.Engaged && !best.Gear.Equals(currentGear), //  gs?.Item1 ?? false,
 				NextGear = best.Gear, // gs?.Item2 ?? 0,
 				EvaluatedSolution = best,
-				SimulationInterval = best.SimulationInterval
+				SimulationInterval = best.SimulationInterval,
+				ProhibitGearshift = best.ProhibitGearshift,
 			};
 			//var pos = retVal.MechanicalAssistPower.Keys.First();
 			//if (retVal.MechanicalAssistPower[pos].Item1 == null) {
@@ -1749,6 +1766,25 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 				iceOff = false;
 			}
 
+			if (VelocityDropData.Valid && resp.Gearbox.Gear.Engaged && !resp.Gearbox.Gear.Equals(DataBus.GearboxInfo.Gear)) {
+				var estimatedVelocityPostShift = VelocityDropData.Interpolate(DataBus.VehicleInfo.VehicleSpeed,
+					DataBus.DrivingCycleInfo.RoadGradient ?? 0.SI<Radian>());
+				if (!estimatedVelocityPostShift.IsGreater(DeclarationData.GearboxTCU.MIN_SPEED_AFTER_TRACTION_INTERRUPTION)) {
+					tmp.IgnoreReason |= HybridConfigurationIgnoreReason.VehicleSpeedBelowMinSpeedAfterGearshift;
+				}
+			}
+
+			if (DataBus.DriverInfo.DrivingAction == DrivingAction.Accelerate &&
+				StrategyParameters.MaxPropulsionTorque != null) {
+				var tqRequest = resp.Gearbox.InputTorque;
+				var maxTorque =
+					StrategyParameters.MaxPropulsionTorque.FullLoadDriveTorque(resp.Gearbox.InputSpeed);
+				if (((tqRequest - maxTorque) * resp.Gearbox.InputSpeed).IsGreater(0, Constants.SimulationSettings.LineSearchTolerance)) {
+					tmp.IgnoreReason |= HybridConfigurationIgnoreReason.MaxPropulsionTorqueExceeded;
+				}
+			}
+
+
 			if (!iceOff && !resp.Engine.TotalTorqueDemand.IsBetween(
 				resp.Engine.DragTorque, resp.Engine.DynamicFullLoadTorque)) {
 				tmp.FuelCosts = double.NaN;
@@ -1953,25 +1989,25 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 
 			container[ModalResultField.MaxPropulsionTorqe] = CurrentState.MaxGbxTq ?? 0.SI<NewtonMeter>();
 
-            //if (CurrentState.Evaluations != null) {
-            //    container.SetDataValue(
-            //        "HybridStrategyEvaluation",
-            //        string.Join(
-            //            " | ", CurrentState.Evaluations.Select(
-            //                x => {
-            //                    var foo = string.Join(" ", x.Setting.MechanicalAssistPower.Select(e => $"{e.Key.GetName()} - {e.Value}"));
-            //                    var ice = "====";
-            //                    if (x.Response != null) {
-            //                        ice =
-            //                            $"{x.Response.Engine.TorqueOutDemand}, {x.Response.Engine.TotalTorqueDemand}, {x.Response.Engine.DynamicFullLoadTorque}";
-            //                    }
-            //                    return
-            //                        $"{x.U:F2}: {x.Score:F2}; G{x.Gear}; ({x.FuelCosts:F2} + {x.EquivalenceFactor:F2} * ({x.BatCosts:F2} + {x.ICEStartPenalty1:F2}) * {x.SoCPenalty:F2} + {x.ICEStartPenalty2:F2} + {x.RampUpPenalty:F2}) / {x.GearshiftPenalty:F2} = {x.Score:F2} ({foo} ICE: {ice}); {x.IgnoreReason.HumanReadable()}";
-            //                })
-            //            )
-            //        );
-            //}
-        }
+			//if (CurrentState.Evaluations != null) {
+			//    container.SetDataValue(
+			//        "HybridStrategyEvaluation",
+			//        string.Join(
+			//            " | ", CurrentState.Evaluations.Select(
+			//                x => {
+			//                    var foo = string.Join(" ", x.Setting.MechanicalAssistPower.Select(e => $"{e.Key.GetName()} - {e.Value}"));
+			//                    var ice = "====";
+			//                    if (x.Response != null) {
+			//                        ice =
+			//                            $"{x.Response.Engine.TorqueOutDemand}, {x.Response.Engine.TotalTorqueDemand}, {x.Response.Engine.DynamicFullLoadTorque}";
+			//                    }
+			//                    return
+			//                        $"{x.U:F2}: {x.Score:F2}; G{x.Gear}; ({x.FuelCosts:F2} + {x.EquivalenceFactor:F2} * ({x.BatCosts:F2} + {x.ICEStartPenalty1:F2}) * {x.SoCPenalty:F2} + {x.ICEStartPenalty2:F2} + {x.RampUpPenalty:F2}) / {x.GearshiftPenalty:F2} = {x.Score:F2} ({foo} ICE: {ice}); {x.IgnoreReason.HumanReadable()}";
+			//                })
+			//            )
+			//        );
+			//}
+		}
 
 		
 	}

@@ -10,6 +10,7 @@ using TUGraz.VectoCore.Models.Connector.Ports;
 using TUGraz.VectoCore.Models.Connector.Ports.Impl;
 using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation;
+using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.DataBus;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Engine;
@@ -190,7 +191,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					continue;
 				}
 
-				if (!dryRun && strategySettings.CombustionEngineOn && retVal is ResponseEngineSpeedTooHigh) {
+				if (!dryRun && strategySettings.CombustionEngineOn && retVal is ResponseEngineSpeedTooHigh && !strategySettings.ProhibitGearshift) {
 					retryCount++;
 					retry = true;
 					Strategy.AllowEmergencyShift = true;
@@ -317,23 +318,24 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			protected GearshiftPosition _nextGear { get; set; }
 
 			protected readonly GearList GearList;
+			private readonly VectoRunData _runData;
 
 			public HybridCtlShiftStrategy(HybridController hybridController, IVehicleContainer container) : base(
 				container)
 			{
 				_controller = hybridController;
 
-				var runData = container.RunData;
-				if (runData == null || runData.EngineData == null) {
+				_runData = container.RunData;
+				if (_runData?.EngineData == null) {
 					return;
 				}
 
 				GearList = GearboxModelData.GearList;
-				var transmissionRatio = runData.AxleGearData.AxleGear.Ratio *
-										(runData.AngledriveData?.Angledrive.Ratio ?? 1.0) /
-										runData.VehicleData.DynamicTyreRadius;
-				var minEngineSpeed = (runData.EngineData.FullLoadCurves[0].RatedSpeed - runData.EngineData.IdleSpeed) *
-					Constants.SimulationSettings.ClutchClosingSpeedNorm + runData.EngineData.IdleSpeed;
+				var transmissionRatio = _runData.AxleGearData.AxleGear.Ratio *
+										(_runData.AngledriveData?.Angledrive.Ratio ?? 1.0) /
+										_runData.VehicleData.DynamicTyreRadius;
+				var minEngineSpeed = (_runData.EngineData.FullLoadCurves[0].RatedSpeed - _runData.EngineData.IdleSpeed) *
+					Constants.SimulationSettings.ClutchClosingSpeedNorm + _runData.EngineData.IdleSpeed;
 				MaxStartGear = GearList.First();
 				foreach (var gear in GearList.Reverse()) {
 					var gearData = GearboxModelData.Gears[gear.Gear];
@@ -428,11 +430,18 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					var response = _gearbox.Initialize(absTime, gear, outTorque, outAngularVelocity);
 
 					var fullLoadPower =
-						response.Engine.DynamicFullLoadPower; //EnginePowerRequest - response.DeltaFullLoad;
-					var reserve = 1 - response.Engine.PowerRequest / fullLoadPower;
+						response.Engine.DynamicFullLoadTorque; //EnginePowerRequest - response.DeltaFullLoad;
+					var reserve = 1 - response.Engine.TorqueOutDemand / fullLoadPower;
+
+					if (_runData != null && _runData.HybridStrategyParameters.MaxPropulsionTorque != null) {
+						var tqRequest = response.Gearbox.InputTorque;
+						var maxTorque = _runData.HybridStrategyParameters.MaxPropulsionTorque.FullLoadDriveTorque(response.Gearbox.InputSpeed);
+						reserve = 1 - VectoMath.Min(response.Engine.TorqueOutDemand / fullLoadPower,  tqRequest / maxTorque);
+					}
 
 					if (response.Engine.EngineSpeed > DataBus.EngineInfo.EngineIdleSpeed &&
-						reserve >= GearshiftParams.StartTorqueReserve) {
+						reserve.IsGreaterOrEqual(0)) {
+						//reserve >= GearshiftParams.StartTorqueReserve) {
 						_nextGear = gear;
 						return gear;
 					}
