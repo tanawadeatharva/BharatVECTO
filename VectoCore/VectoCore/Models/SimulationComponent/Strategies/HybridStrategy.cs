@@ -6,6 +6,7 @@ using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Configuration;
+using TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.Electrics;
 using TUGraz.VectoCore.Models.Connector.Ports.Impl;
 using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation;
@@ -108,7 +109,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 				(DataBus.EngineInfo as CombustionEngine).PreviousState.EngineTorqueOut;
 			TestPowertrain.CombustionEngine.PreviousState.DynamicFullLoadTorque =
 				(DataBus.EngineInfo as CombustionEngine).PreviousState.DynamicFullLoadTorque;
-		
+
 			switch (TestPowertrain.CombustionEngine.EngineAux) {
 				case EngineAuxiliary engineAux:
 					engineAux.PreviousState.AngularSpeed =
@@ -1668,6 +1669,45 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 						Log.Debug("Failed to find EM torque to compensate drag losses of next components.");
 					}
 				}
+
+				if (DataBus.DriverInfo.DrivingAction == DrivingAction.Accelerate) {
+					// search EM torque for ICE to be on FLD
+					try {
+						var emTorqueICEMax = SearchAlgorithm.Search(
+							firstResponse.ElectricMotor.ElectricMotorPowerMech / firstResponse.ElectricMotor.AngularVelocity,
+							firstResponse.Engine.TorqueOutDemand, firstResponse.ElectricMotor.MaxDriveTorque * 0.1,
+							getYValue: r => {
+								var response = r as IResponse;
+								return response.Engine.TotalTorqueDemand - response.Engine.DynamicFullLoadTorque;
+							},
+							evaluateFunction: emTq => {
+								var cfg = new HybridStrategyResponse() {
+									CombustionEngineOn = nextGear.IsLockedGear() ? true : false,
+									GearboxInNeutral = false,
+									MechanicalAssistPower = new Dictionary<PowertrainPosition, Tuple<PerSecond, NewtonMeter>>() {
+										{ emPos, Tuple.Create(firstResponse.ElectricMotor.AngularVelocity, emTq) }
+									}
+								};
+								return RequestDryRun(absTime, dt, outTorque, outAngularVelocity, nextGear, cfg);
+							},
+							criterion: r => {
+								var response = r as IResponse;
+								return (response.Engine.TotalTorqueDemand - response.Engine.DynamicFullLoadTorque).Value();
+							},
+							abortCriterion: (r, c) => r == null
+						);
+						if (emTorqueICEMax.IsBetween(maxEmTorque, 0.SI<NewtonMeter>())) {
+							// only consider where EM is recuperating
+							var tmp = TryConfiguration(
+								absTime, dt, outTorque, outAngularVelocity, nextGear, emPos, Tuple.Create(firstResponse.ElectricMotor.AngularVelocity, emTorqueICEMax),
+								emTorqueICEMax / emTqReq,
+								allowIceOff, dryRun);
+							responses.Add(tmp);
+						}
+					} catch (Exception) {
+						Log.Debug("Failed to find EM torque to compensate drag losses of next components.");
+					}
+				}
 			}
 			
 			// iterate over 'EM recuperates' up to max available recuperation potential
@@ -1792,8 +1832,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 			}
 
 
-			if (!iceOff && !resp.Engine.TotalTorqueDemand.IsBetween(
-				resp.Engine.DragTorque, resp.Engine.DynamicFullLoadTorque)) {
+			if (!iceOff && /*!resp.Engine.TotalTorqueDemand.IsBetween(resp.Engine.DragTorque, resp.Engine.DynamicFullLoadTorque)*/
+				(resp.Engine.TotalTorqueDemand.IsSmaller(resp.Engine.DragTorque) || resp.Engine.TotalTorqueDemand.IsGreater(resp.Engine.DynamicFullLoadTorque))) {
 				tmp.FuelCosts = double.NaN;
 				tmp.IgnoreReason |= resp.Engine.TotalTorqueDemand.IsGreater(resp.Engine.DynamicFullLoadTorque)
 					? HybridConfigurationIgnoreReason.EngineTorqueDemandTooHigh
