@@ -21,14 +21,13 @@ namespace VECTO3GUI2020.Ninject.Vehicle
 
 			#region IComponentViewModelFactory
 
-            Bind<IComponentViewModelFactory>().ToFactory(
-				() => new UseFirstArgumentTypeAsNameInstanceProvider(true));
 
 
 			Bind<IVehicleViewModel>().To<VehicleViewModel_v1_0>().Named(VehicleViewModel_v1_0.VERSION);
 			Bind<IVehicleViewModel>().To<VehicleViewModel_v2_0>().Named(VehicleViewModel_v2_0.VERSION);
-			Bind<IVehicleViewModel>().To<DeclarationInterimStageBusVehicleViewModel_v2_8>()
-				.Named(DeclarationInterimStageBusVehicleViewModel_v2_8.VERSION);
+
+			//Bind<IVehicleViewModel>().To<DeclarationInterimStageBusVehicleViewModel_v2_8>()
+			//	.Named(DeclarationInterimStageBusVehicleViewModel_v2_8.INPUTPROVIDERTYPE).BindingConfiguration.;
 
 
             Bind<IComponentViewModel>().To<EngineViewModel_v1_0>().Named(EngineViewModel_v1_0.VERSION);

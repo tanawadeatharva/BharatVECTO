@@ -20,7 +20,7 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 {
     class DeclarationInterimStageBusVehicleViewModel_v2_8 : ViewModelBase, IVehicleViewModel
 	{
-		public static String VERSION = typeof(XMLDeclarationInterimStageBusDataProviderV28).ToString();
+		public static readonly string INPUTPROVIDERTYPE = typeof(XMLDeclarationInterimStageBusDataProviderV28).ToString();
 
 		public string Name
 		{
@@ -151,15 +151,9 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 		}
 
 
-		public DeclarationInterimStageBusVehicleViewModel_v2_8(IVehicleDeclarationInputData inputData)
+		public DeclarationInterimStageBusVehicleViewModel_v2_8()
 		{
-			_inputData = inputData;
 
-
-			_manufacturer = inputData.Manufacturer;
-			_manufacturerAddress = inputData.ManufacturerAddress;
-			_vin = inputData.VIN;
-			_width = inputData.Width;
 		}
 
 

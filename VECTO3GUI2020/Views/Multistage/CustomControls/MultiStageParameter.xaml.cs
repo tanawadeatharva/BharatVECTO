@@ -181,7 +181,7 @@ namespace VECTO3GUI2020.Views.Multistage.CustomControls
 			try {
 				//Create SI Dummy
 
-				if (baseType == typeof(SI)) {
+				if (baseType.BaseType == typeof(SI)) {
 					var createMethod = baseType.GetMethod("Create");
 					var dummyContent = createMethod?.Invoke(null, new object[] { (new double()) });
 					return dummyContent;

@@ -194,13 +194,24 @@
     </DataTemplate>
 
 
-    <DataTemplate DataType="{x:Type multistageimpl:MultiStageEditViewModel}">
-        <multistageviews:ManufacturingStageView/>
+    <DataTemplate DataType="{x:Type multistageimpl:NewMultiStageJobViewModel}">
+        <multistageviews:NewMultistageFileView/>
+    </DataTemplate>
+
+    <DataTemplate DataType="{x:Type multistageimpl:ManufacturingStageViewModel_v0_1}">
+        <multistageviews:ManufacturingStageView></multistageviews:ManufacturingStageView>
     </DataTemplate>
 
     <DataTemplate DataType="{x:Type multistageimpl:DeclarationInterimStageBusVehicleViewModel_v2_8}">
         <multistageviews:VehicleView_v2_8/>
     </DataTemplate>
 
+    <DataTemplate DataType="{x:Type multistageimpl:MultiStageJobViewModel_v0_1}">
+        <multistageviews:MultiStageView/>
+    </DataTemplate>
+
+    <DataTemplate DataType="{x:Type multistageimpl:MultistageAirdragViewModel}">
+        <multistageviews:MultistageAirDragView/>
+    </DataTemplate>
 
 </ResourceDictionary>

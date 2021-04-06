@@ -13,26 +13,31 @@ namespace VECTO3GUI2020.Ninject.Util
     /// </summary>
     public class UseFirstArgumentAsNameInstanceProvider : StandardInstanceProvider
     {
-        private bool _skip_first_argument = true;
-        public UseFirstArgumentAsNameInstanceProvider(bool skip_first_argument) : base()
+        private bool _skipFirstArgument = true;
+        public UseFirstArgumentAsNameInstanceProvider(bool skipFirstArgument=true, bool fallback=false) : base()
         {
-            _skip_first_argument = skip_first_argument;
-        }
+            _skipFirstArgument = skipFirstArgument;
+			base.Fallback = fallback;
+		}
 
         public UseFirstArgumentAsNameInstanceProvider() : base()
         {
 
         }
 
-
-
-        protected override IConstructorArgument[] GetConstructorArguments(MethodInfo methodInfo, object[] arguments)
+		protected override IConstructorArgument[] GetConstructorArguments(MethodInfo methodInfo, object[] arguments)
         {
-            return base.GetConstructorArguments(methodInfo, arguments).Skip(_skip_first_argument ? 1 : 0).ToArray();
+			if (arguments.Length == 0) {
+				return base.GetConstructorArguments(methodInfo, arguments).ToArray();
+			}
+            return base.GetConstructorArguments(methodInfo, arguments).Skip(_skipFirstArgument ? 1 : 0).ToArray();
         }
 
         protected override string GetName(MethodInfo methodInfo, object[] arguments)
         {
+			if (arguments.Length == 0) {
+				return "";
+			}
             return arguments[0].ToString();
         }
 

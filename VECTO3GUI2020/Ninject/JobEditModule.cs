@@ -13,7 +13,7 @@ namespace VECTO3GUI2020.Ninject
     {
         public override void Load()
         {
-            Bind<IJobEditViewModelFactory>().ToFactory(() => new UseFirstArgumentTypeAsNameInstanceProvider());
+
             Bind<IJobEditViewModel>().To<DeclarationJobEditViewModel_v1_0>().Named(DeclarationJobEditViewModel_v1_0.VERSION);
             Bind<IJobEditViewModel>().To<DeclarationJobEditViewModel_v2_0>().Named(DeclarationJobEditViewModel_v2_0.VERSION);
 

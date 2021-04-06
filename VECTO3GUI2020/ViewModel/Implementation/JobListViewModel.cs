@@ -50,7 +50,7 @@ namespace VECTO3GUI2020.ViewModel.Implementation
         private IWindowHelper _windowHelper;
         private IDocumentViewModelFactory _documentViewModelFactory;
 		private ICommand _newMultiStageFileCommand;
-		private IViewModelFactory _viewModelFactory;
+		private IMultiStageViewModelFactory _multiStageViewModelFactory;
 
 		#endregion
 
@@ -64,12 +64,12 @@ namespace VECTO3GUI2020.ViewModel.Implementation
         public JobListViewModel(IDocumentViewModelFactory documentViewModelFactory,
             IDialogHelper dialogHelper,
             IWindowHelper windowHelper,
-			IViewModelFactory viewModelFactory) : this()
+			IMultiStageViewModelFactory multiStageViewModelFactory) : this()
         {
             _documentViewModelFactory = documentViewModelFactory;
             _dialogHelper = dialogHelper;
             _windowHelper = windowHelper;
-			_viewModelFactory = viewModelFactory;
+			_multiStageViewModelFactory = multiStageViewModelFactory;
 		}
 
 
@@ -101,7 +101,7 @@ namespace VECTO3GUI2020.ViewModel.Implementation
 
 		private void NewManufacturingStageFileExecute()
 		{
-            _windowHelper.ShowWindow(_viewModelFactory.createManufacturingStageEditViewModel());
+            _windowHelper.ShowWindow(_multiStageViewModelFactory.CreateNewMultiStageJobViewModel());
 		}
 
 

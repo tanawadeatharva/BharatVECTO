@@ -73,6 +73,9 @@
     <Reference Include="Ninject, Version=3.3.4.0, Culture=neutral, PublicKeyToken=c7192dc5380945e7, processorArchitecture=MSIL">
       <HintPath>..\packages\Ninject.3.3.4\lib\net45\Ninject.dll</HintPath>
     </Reference>
+    <Reference Include="Ninject.Extensions.ChildKernel, Version=3.3.0.0, Culture=neutral, PublicKeyToken=c7192dc5380945e7, processorArchitecture=MSIL">
+      <HintPath>..\packages\Ninject.Extensions.ChildKernel.3.3.0\lib\net45\Ninject.Extensions.ChildKernel.dll</HintPath>
+    </Reference>
     <Reference Include="Ninject.Extensions.Factory, Version=3.3.3.0, Culture=neutral, PublicKeyToken=c7192dc5380945e7, processorArchitecture=MSIL">
       <HintPath>..\packages\Ninject.Extensions.Factory.3.3.3\lib\net45\Ninject.Extensions.Factory.dll</HintPath>
     </Reference>
@@ -131,6 +134,7 @@
     <Compile Include="Helper\DialogHelper.cs" />
     <Compile Include="Helper\WindowHelper.cs" />
     <Compile Include="Helper\XMLExtension.cs" />
+    <Compile Include="Ninject\FactoryModule.cs" />
     <Compile Include="Ninject\MultistageModule.cs" />
     <Compile Include="Util\XML\Implementation\ComponentWriter\XMLPTOWriter.cs" />
     <Compile Include="ViewModel\Implementation\Document\DeclarationJobViewModel.cs" />
@@ -238,8 +242,12 @@
     <Compile Include="ViewModel\Interfaces\JobEdit\Vehicle\Components\ITyreViewModel.cs" />
     <Compile Include="ViewModel\Interfaces\JobEdit\Vehicle\IVehicleViewModel.cs" />
     <Compile Include="ViewModel\MultiStage\Implementation\DeclarationInterimStageBusVehicleViewModel_v2_8.cs" />
-    <Compile Include="ViewModel\MultiStage\Implementation\MultiStageEditViewModel.cs" />
-    <Compile Include="ViewModel\MultiStage\Interfaces\IViewModelFactory.cs" />
+    <Compile Include="ViewModel\MultiStage\Implementation\ManufacturingStageViewModel_v0_1.cs" />
+    <Compile Include="ViewModel\MultiStage\Implementation\MultistageAirdragViewModel.cs" />
+    <Compile Include="ViewModel\MultiStage\Implementation\NewMultiStageJobViewModel.cs" />
+    <Compile Include="ViewModel\MultiStage\Implementation\MultistageJobViewModel_v0_1.cs" />
+    <Compile Include="ViewModel\MultiStage\Interfaces\IMultistageAirdragViewModel.cs" />
+    <Compile Include="ViewModel\MultiStage\Interfaces\IMultiStageViewModelFactory.cs" />
     <Compile Include="Views\CustomControls\ComboParameter.xaml.cs">
       <DependentUpon>ComboParameter.xaml</DependentUpon>
     </Compile>
@@ -331,8 +339,20 @@
     <Compile Include="Views\MessageView.xaml.cs">
       <DependentUpon>MessageView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\Multistage\CustomControls\FilePicker.xaml.cs">
+      <DependentUpon>FilePicker.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\Multistage\CustomControls\MultiStageParameter.xaml.cs">
       <DependentUpon>MultiStageParameter.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Multistage\MultistageAirDragView.xaml.cs">
+      <DependentUpon>MultistageAirDragView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Multistage\MultiStageView.xaml.cs">
+      <DependentUpon>MultiStageView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Multistage\NewMultistageFileView.xaml.cs">
+      <DependentUpon>NewMultistageFileView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\Multistage\ManufacturingStageView.xaml.cs">
       <DependentUpon>ManufacturingStageView.xaml</DependentUpon>
@@ -507,7 +527,23 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Views\Multistage\CustomControls\FilePicker.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\Multistage\CustomControls\MultiStageParameter.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Multistage\MultistageAirDragView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Multistage\MultiStageView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Multistage\NewMultistageFileView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -606,7 +642,9 @@
   <ItemGroup>
     <Resource Include="Resources\folderpicker.ico" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Model\Multistage\" />
+  </ItemGroup>
   <!-- ItemGroup>
     <Analyzer Include="..\packages\Microsoft.DependencyValidation.Analyzers.0.11.0\analyzers\dotnet\cs\Microsoft.DependencyValidation.Analyzers.resources.dll" />
   </-ItemGroup -->

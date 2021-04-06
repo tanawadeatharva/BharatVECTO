@@ -13,7 +13,7 @@ namespace VECTO3GUI2020.Ninject
     {
 		public override void Load()
 		{
-			Bind<IXMLWriterFactory>().ToFactory(() => new UseFirstArgumentTypeAsNameInstanceProvider());
+	
 
 			Array.ForEach(
 				XMLDeclarationJobWriter_v1_0.SUPPORTED_VERSIONS,

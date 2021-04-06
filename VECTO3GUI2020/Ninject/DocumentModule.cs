@@ -6,6 +6,7 @@ using VECTO3GUI2020.Ninject.Util;
 using VECTO3GUI2020.Util;
 using VECTO3GUI2020.ViewModel.Implementation.Document;
 using VECTO3GUI2020.ViewModel.Interfaces.Document;
+using VECTO3GUI2020.ViewModel.MultiStage.Implementation;
 
 namespace VECTO3GUI2020.Ninject
 {
@@ -13,10 +14,11 @@ namespace VECTO3GUI2020.Ninject
     {
         public override void Load()
         {
-            Bind<IDocumentViewModelFactory>().ToFactory(() => new UseFirstArgumentAsNameInstanceProvider(false));
+
             Bind<IDocumentViewModel>().To<DeclarationJobViewModel>().Named(XmlDocumentType.DeclarationJobData.ToString());
-            //Bind<IDocumentViewModel>().To<DeclarationTrailerJobDocumentViewModel>().Named(XmlDocumentType.DeclarationTrailerJobData.ToString());
-            
-        }
+			//Bind<IDocumentViewModel>().To<MultistageJobViewModel>().Named(XmlDocumentType.MultistageOutputData.ToString());
+			//Bind<IDocumentViewModel>().To<DeclarationTrailerJobDocumentViewModel>().Named(XmlDocumentType.DeclarationTrailerJobData.ToString());
+
+		}
     }
 }

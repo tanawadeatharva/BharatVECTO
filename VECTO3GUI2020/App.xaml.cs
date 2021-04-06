@@ -1,5 +1,6 @@
 ﻿using System.Windows;
 using Ninject;
+using Ninject.Extensions.ChildKernel;
 using VECTO3GUI2020.ViewModel.Interfaces;
 using VECTO3GUI2020.ViewModel.Implementation;
 using VECTO3GUI2020.Model.Interfaces;
@@ -16,6 +17,7 @@ namespace VECTO3GUI2020
     {
 
         private IKernel container;
+		private IKernel multiStageChildContainer;
 
         protected override void OnStartup(StartupEventArgs e)
         {
@@ -33,13 +35,13 @@ namespace VECTO3GUI2020
                 new ComponentModule(),
 				new DocumentModule(),
 				new XMLWriterFactoryModule(),
+                new FactoryModule(),
                 new MultistageModule()
-                ) ;
-
-            
+			) ;
 
 
-            container.Bind<IJobListViewModel>().To<JobListViewModel>();
+
+			container.Bind<IJobListViewModel>().To<JobListViewModel>();
             container.Bind<IMainWindowViewModel>().To<MainWindowViewModel>();
             container.Bind<IMainViewModel>().To<JobListViewModel>();
             container.Bind<ISettingsViewModel>().To<SettingsViewModel>();

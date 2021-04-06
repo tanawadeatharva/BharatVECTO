@@ -14,19 +14,16 @@
                 <ColumnDefinition></ColumnDefinition>
                 <ColumnDefinition Width="30px"></ColumnDefinition>
             </Grid.ColumnDefinitions>
-            <TextBox VerticalContentAlignment="Center" Height="Auto" Padding="4" Margin = "0 0 0 0" IsReadOnly="True" 
-                         Text="{Binding VifPath}" HorizontalAlignment="Stretch"/>
-            <Button Padding="4" Margin="4 0 0 0" Grid.Column="1" Command="{Binding AddVifFile}">
-                <Image Source="../../Resources/folderpicker.ico">
-                </Image>
-            </Button>
         </Grid>
         <DockPanel Grid.Row="1" LastChildFill="False" DockPanel.Dock="Top" >
-            <Button DockPanel.Dock="Left" Style="{DynamicResource MultiStageButtonStyle1}" Margin="4">Vehicle</Button>
-            <Button DockPanel.Dock="Left" Style="{DynamicResource MultiStageButtonStyle1}" Margin="4">Airdrag</Button>
-            <Button DockPanel.Dock="Left" Style="{DynamicResource MultiStageButtonStyle1}" Margin="4">Auxiliaries</Button>
+            <Button DockPanel.Dock="Left" Style="{DynamicResource MultiStageButtonStyle1}" 
+                    Margin="4" Command="{Binding SwitchComponentViewCommand}" CommandParameter="Vehicle">Vehicle</Button>
+            <Button DockPanel.Dock="Left" Style="{DynamicResource MultiStageButtonStyle1}" 
+                    Margin="4" Command="{Binding SwitchComponentViewCommand}" CommandParameter="Airdrag">Airdrag</Button>
+            <Button DockPanel.Dock="Left" Style="{DynamicResource MultiStageButtonStyle1}" 
+                    Margin="4" Command="{Binding SwitchComponentViewCommand}" CommandParameter="Auxiliaries">Auxiliaries</Button>
         </DockPanel>
-        <ContentControl Grid.Row="2" Content="{Binding VehicleViewModel}"></ContentControl>
+        <ContentControl Content="{Binding CurrentView}"></ContentControl>
         </DockPanel>
     </Grid>
 </UserControl>
