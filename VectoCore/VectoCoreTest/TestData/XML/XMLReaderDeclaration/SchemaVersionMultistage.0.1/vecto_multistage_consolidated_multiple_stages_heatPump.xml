@@ -701,7 +701,7 @@ xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:DeclarationOutput:VehicleInterimFile
 				<v2.8:ManufacturerAddress>Intermediate Manufacturer Address 2</v2.8:ManufacturerAddress>
 				<v2.8:VIN>VEH-2234567890</v2.8:VIN>
 				<v2.8:Date>2021-02-13T07:20:08.0187663Z</v2.8:Date>
-				<v2.8:CorrectedActualMass>15000</v2.8:CorrectedActualMass>				
+				<v2.8:CorrectedActualMass>15000</v2.8:CorrectedActualMass>	
 				<v2.8:VehicleCode>CB</v2.8:VehicleCode>
 				<v2.8:DoorDriveTechnology>mixed</v2.8:DoorDriveTechnology>				
 				<v2.8:DeclarationType>interim</v2.8:DeclarationType>				
@@ -722,8 +722,8 @@ xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:DeclarationOutput:VehicleInterimFile
 							</v2.8:ElectricSystem>
 							<v2.8:HVAC>
 								<v2.8:SystemConfiguration>1</v2.8:SystemConfiguration>
-								<v2.8:HeatPumpTypeDriverCompartment>non R-744 2-stage</v2.8:HeatPumpTypeDriverCompartment>
-								<v2.8:HeatPumpModeDriverCompartment>heating</v2.8:HeatPumpModeDriverCompartment>
+								<v2.8:HeatPumpTypeDriverCompartment>none</v2.8:HeatPumpTypeDriverCompartment>
+								<v2.8:HeatPumpModeDriverCompartment>N.A.</v2.8:HeatPumpModeDriverCompartment>
 								<v2.8:HeatPumpTypePassengerCompartment>non R-744 3-stage</v2.8:HeatPumpTypePassengerCompartment>
 								<v2.8:HeatPumpModePassengerCompartment>cooling</v2.8:HeatPumpModePassengerCompartment>
 								<v2.8:AuxiliaryHeaterPower>50</v2.8:AuxiliaryHeaterPower>
@@ -769,7 +769,7 @@ xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:DeclarationOutput:VehicleInterimFile
 				<v2.8:VIN>VEH-2234567866</v2.8:VIN>
 				<v2.8:Date>2021-02-13T07:20:08.0187663Z</v2.8:Date>
 				<v2.8:LegislativeCategory>M3</v2.8:LegislativeCategory>				
-				<v2.8:TechnicalPermissibleMaximumLadenMass>20000</v2.8:TechnicalPermissibleMaximumLadenMass>				
+				<v2.8:TechnicalPermissibleMaximumLadenMass>20000</v2.8:TechnicalPermissibleMaximumLadenMass>
 				<v2.8:NgTankSystem>Liquefied</v2.8:NgTankSystem>				
 				<v2.8:ClassBus>B</v2.8:ClassBus>			
 				<v2.8:DeclarationType>interim</v2.8:DeclarationType>

@@ -790,11 +790,6 @@ xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:DeclarationOutput:VehicleInterimFile
 									<v2.8:Headlights>true</v2.8:Headlights>									
 								</v2.8:LEDLights>
 							</v2.8:ElectricSystem>
-							<v2.8:HVAC>
-								<v2.8:WaterElectricHeater>false</v2.8:WaterElectricHeater>
-								<v2.8:AirElectricHeater>false</v2.8:AirElectricHeater>
-								<v2.8:OtherHeatingTechnology>true</v2.8:OtherHeatingTechnology>							
-							</v2.8:HVAC>
 						</v2.8:Data>
 					</v2.8:Auxiliaries>
 				</v2.8:Components>
