@@ -539,5 +539,30 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 			}
 		}
 
+
+		public override IPneumaticSupplyDeclarationData PneumaticSupply
+		{
+			get { return null; }
+		}
+
+		public override IElectricSupplyDeclarationData ElectricSupply
+		{
+			get { return null; }
+		}
+
+		public override IPneumaticConsumersDeclarationData PneumaticConsumers
+		{
+			get { return null; }
+		}
+
+		public override string FanTechnology
+		{
+			get { return null; }
+		}
+
+		public override IList<string> SteeringPumpTechnology
+		{
+			get { return null; }
+		}
 	}
 }

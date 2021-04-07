@@ -21,8 +21,13 @@ namespace TUGraz.VectoCore.Tests.XML
 		const string _primaryOnlyInputData = _dirPath + "vecto_multistage_primary_vehicle_only.xml";
 		const string _oneStageInputData = _dirPath + "vecto_multistage_consolidated_one_stage.xml";
 		const string _twoStagesInputData = _dirPath + "vecto_multistage_consolidated_two_stages.xml";
-		
 
+		const string _consolidatedInputDataAirdrag = _dirPath + "vecto_multistage_consolidated_multiple_stages_airdrag.xml";
+		const string _consolidatedInputDataHeatPump = _dirPath + "vecto_multistage_consolidated_multiple_stages_heatPump.xml";
+		const string _consolidatedInputDataHeatHev = _dirPath + "vecto_multistage_consolidated_multiple_stages_hev.xml";
+		const string _consolidatedInputDataHeatNgTank = _dirPath + "vecto_multistage_consolidated_multiple_stages_NGTankSystem.xml";
+
+		
 		[OneTimeSetUp]
 		public void RunBeforeAnyTests()
 		{
@@ -38,8 +43,8 @@ namespace TUGraz.VectoCore.Tests.XML
 		{
 			var reader = XmlReader.Create(_consolidatedInputData);
 			var inputDataProvider = _xmlInputReader.Create(reader) as IMultistageBusInputDataProvider;
-			TestConsolidateManufacturingStage(inputDataProvider.JobInputData.ConsolidateManufacturingStage);
 			Assert.AreEqual(true, inputDataProvider.JobInputData.InputComplete);
+			TestConsolidateManufacturingStage(inputDataProvider.JobInputData.ConsolidateManufacturingStage);
 		}
 
 		private void TestConsolidateManufacturingStage(IManufacturingStageInputData consolidateStage)
@@ -53,7 +58,7 @@ namespace TUGraz.VectoCore.Tests.XML
 			Assert.AreEqual(LegislativeClass.M3, vehicle.LegislativeClass);
 			Assert.AreEqual(15000, vehicle.CurbMassChassis.Value());//CorrectedActualMass
 			Assert.AreEqual(20000, vehicle.GrossVehicleMassRating.Value());//TechnicalPermissibleMaximumLadenMass
-			Assert.AreEqual(false, vehicle.AirdragModifiedMultistage);
+			Assert.AreEqual(null, vehicle.AirdragModifiedMultistage);
 			Assert.AreEqual(TankSystem.Liquefied, vehicle.TankSystem);//NgTankSystem
 			Assert.AreEqual(RegistrationClass.B, vehicle.RegisteredClass);//ClassBus
 			Assert.AreEqual(10, vehicle.NumberOfPassengersLowerDeck);
@@ -177,14 +182,41 @@ namespace TUGraz.VectoCore.Tests.XML
 			Assert.AreEqual(EcoRollType.WithEngineStop, vehicle.ADAS.EcoRoll);
 			Assert.AreEqual(PredictiveCruiseControlType.Option_1_2, vehicle.ADAS.PredictiveCruiseControl);
 			Assert.AreEqual(null, vehicle.ADAS.ATEcoRollReleaseLockupClutch);
+			
+			Assert.AreEqual(null, vehicle.Components);
+		}
 
-			Assert.AreEqual(null, vehicle.Components.AirdragInputData);
 
-			var busAux = vehicle.Components.BusAuxiliaries.ElectricConsumers;
-			Assert.AreEqual(null, busAux);
+		[TestCase]
+		public void TestConsolidateMultistageAirdrag()
+		{
+			var reader = XmlReader.Create(_consolidatedInputDataAirdrag);
+			var inputDataProvider = _xmlInputReader.Create(reader) as IMultistageBusInputDataProvider;
+			Assert.AreEqual(true, inputDataProvider.JobInputData.InputComplete);
+		}
 
-			var busHVACAux = vehicle.Components.BusAuxiliaries.HVACAux;
-			Assert.AreEqual(null, busHVACAux);
+		[TestCase]
+		public void TestConsolidateMultistageHeatPump()
+		{
+			var reader = XmlReader.Create(_consolidatedInputDataHeatPump);
+			var inputDataProvider = _xmlInputReader.Create(reader) as IMultistageBusInputDataProvider;
+			Assert.AreEqual(true, inputDataProvider.JobInputData.InputComplete);
+		}
+		
+		[TestCase]
+		public void TestConsolidateMultistageHeatHev()
+		{
+			var reader = XmlReader.Create(_consolidatedInputDataHeatHev);
+			var inputDataProvider = _xmlInputReader.Create(reader) as IMultistageBusInputDataProvider;
+			Assert.AreEqual(true, inputDataProvider.JobInputData.InputComplete);
+		}
+
+		[TestCase]
+		public void TestConsolidateMultistageHeatNgTankSystem()
+		{
+			var reader = XmlReader.Create(_consolidatedInputDataHeatNgTank);
+			var inputDataProvider = _xmlInputReader.Create(reader) as IMultistageBusInputDataProvider;
+			Assert.AreEqual(true, inputDataProvider.JobInputData.InputComplete);
 		}
 	}
 }

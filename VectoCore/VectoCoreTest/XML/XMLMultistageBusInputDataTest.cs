@@ -203,13 +203,7 @@ namespace TUGraz.VectoCore.Tests.XML
 			Assert.AreEqual(PredictiveCruiseControlType.Option_1_2_3, vehicle.ADAS.PredictiveCruiseControl);
 			Assert.AreEqual(null, vehicle.ADAS.ATEcoRollReleaseLockupClutch);
 			
-			Assert.AreEqual(null, vehicle.Components.AirdragInputData);
-			
-			var electricConsumer = vehicle.Components.BusAuxiliaries.ElectricConsumers;
-			Assert.AreEqual(null, electricConsumer);
-
-			var hvacAux = vehicle.Components.BusAuxiliaries.HVACAux;
-			Assert.AreEqual(null, hvacAux);
+			Assert.AreEqual(null , vehicle.Components);
 		}
 
 

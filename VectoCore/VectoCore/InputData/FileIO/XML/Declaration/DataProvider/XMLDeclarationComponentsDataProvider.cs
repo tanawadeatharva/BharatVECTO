@@ -367,10 +367,25 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 		public override IBusAuxiliariesDeclarationData BusAuxiliaries
 		{
-			get { return _busAuxiliaries ?? (_busAuxiliaries = ComponentReader.BusAuxiliariesInputData); }
+			get
+			{
+				if (!ElementExists(XMLNames.Component_Auxiliaries))
+					return null;
+
+				return _busAuxiliaries ?? (_busAuxiliaries = GetBusAuxiliaries());
+			}
 		}
 
+		private IBusAuxiliariesDeclarationData GetBusAuxiliaries()
+		{
+			var busAux = ComponentReader.BusAuxiliariesInputData;
+
+			if (busAux.ElectricConsumers == null && busAux.HVACAux == null &&
+				busAux.PneumaticConsumers == null && busAux.PneumaticSupply == null &&
+				busAux.ElectricSupply == null && busAux.FanTechnology == null &&
+				busAux.SteeringPumpTechnology == null)
+				return null;
+			return busAux;
+		}
 	}
-
-
 }
