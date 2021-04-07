@@ -61,11 +61,47 @@ namespace TUGraz.VectoCommon.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to CdxA_0.
+        /// </summary>
+        public static string AirDrag_CdxA_0 {
+            get {
+                return ResourceManager.GetString("AirDrag_CdxA_0", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to AirDragDataDeclarationType.
+        /// </summary>
+        public static string AirDrag_Data_Type_Attr {
+            get {
+                return ResourceManager.GetString("AirDrag_Data_Type_Attr", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to DeclaredCdxA.
         /// </summary>
         public static string AirDrag_DeclaredCdxA {
             get {
                 return ResourceManager.GetString("AirDrag_DeclaredCdxA", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to DeclaredCdxA.
+        /// </summary>
+        public static string AirDrag_DeclaredCdxA1 {
+            get {
+                return ResourceManager.GetString("AirDrag_DeclaredCdxA1", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to TransferredCdxA.
+        /// </summary>
+        public static string AirDrag_TransferredCDxA {
+            get {
+                return ResourceManager.GetString("AirDrag_TransferredCDxA", resourceCulture);
             }
         }
         
@@ -102,6 +138,15 @@ namespace TUGraz.VectoCommon.Resources {
         public static string AngleDrive_TorqueLossMap {
             get {
                 return ResourceManager.GetString("AngleDrive_TorqueLossMap", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to type.
+        /// </summary>
+        public static string Attr_Type {
+            get {
+                return ResourceManager.GetString("Attr_Type", resourceCulture);
             }
         }
         
@@ -205,11 +250,29 @@ namespace TUGraz.VectoCommon.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to AuxiliariesDataDeclarationType.
+        /// </summary>
+        public static string Auxiliaries_Type_Attr_DataDeclarationType {
+            get {
+                return ResourceManager.GetString("Auxiliaries_Type_Attr_DataDeclarationType", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to supplyPower.
         /// </summary>
         public static string Auxr_AuxMapMapping_SupplyPower_Attr {
             get {
                 return ResourceManager.GetString("Auxr_AuxMapMapping_SupplyPower_Attr", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to AxleDataDeclarationType.
+        /// </summary>
+        public static string Axle_Type_Attr_AxleDataDeclarationType {
+            get {
+                return ResourceManager.GetString("Axle_Type_Attr_AxleDataDeclarationType", resourceCulture);
             }
         }
         
@@ -255,6 +318,15 @@ namespace TUGraz.VectoCommon.Resources {
         public static string Axlegear_TorqueLossMap_Entry {
             get {
                 return ResourceManager.GetString("Axlegear_TorqueLossMap_Entry", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to AxlegearDataDeclarationType.
+        /// </summary>
+        public static string AxleGear_Type_Attr {
+            get {
+                return ResourceManager.GetString("AxleGear_Type_Attr", resourceCulture);
             }
         }
         
@@ -399,6 +471,15 @@ namespace TUGraz.VectoCommon.Resources {
         public static string AxleWheels_Axles_Axle_WeightShare {
             get {
                 return ResourceManager.GetString("AxleWheels_Axles_Axle_WeightShare", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to AxleWheelsDataDeclarationType.
+        /// </summary>
+        public static string AxleWheels_Type_Attr_AxleWheelsDeclarationType {
+            get {
+                return ResourceManager.GetString("AxleWheels_Type_Attr_AxleWheelsDeclarationType", resourceCulture);
             }
         }
         
@@ -1195,6 +1276,24 @@ namespace TUGraz.VectoCommon.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to type.
+        /// </summary>
+        public static string Component_Type_Attr {
+            get {
+                return ResourceManager.GetString("Component_Type_Attr", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to PTOType.
+        /// </summary>
+        public static string Component_Type_Attr_PTO {
+            get {
+                return ResourceManager.GetString("Component_Type_Attr_PTO", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Vehicle.
         /// </summary>
         public static string Component_Vehicle {
@@ -1209,6 +1308,15 @@ namespace TUGraz.VectoCommon.Resources {
         public static string ComponentDataWrapper {
             get {
                 return ResourceManager.GetString("ComponentDataWrapper", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to VehicleComponentsType.
+        /// </summary>
+        public static string Components_type_attr {
+            get {
+                return ResourceManager.GetString("Components_type_attr", resourceCulture);
             }
         }
         
@@ -1807,6 +1915,15 @@ namespace TUGraz.VectoCommon.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to EngineDataDeclarationType.
+        /// </summary>
+        public static string Engine_Type_Attr {
+            get {
+                return ResourceManager.GetString("Engine_Type_Attr", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to ElectricalOutput.
         /// </summary>
         public static string Engine_WHR_ElectricalOutput {
@@ -2059,6 +2176,15 @@ namespace TUGraz.VectoCommon.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to GearboxDataDeclarationType.
+        /// </summary>
+        public static string Gearbox_attr_GearboxDataDeclarationType {
+            get {
+                return ResourceManager.GetString("Gearbox_attr_GearboxDataDeclarationType", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to AxlegearRatio.
         /// </summary>
         public static string Gearbox_AxlegearRatio {
@@ -2136,6 +2262,15 @@ namespace TUGraz.VectoCommon.Resources {
         public static string Gearbox_Gears {
             get {
                 return ResourceManager.GetString("Gearbox_Gears", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to GearsDeclarationType.
+        /// </summary>
+        public static string Gearbox_Gears_Attr_GearsDeclarationType {
+            get {
+                return ResourceManager.GetString("Gearbox_Gears_Attr_GearsDeclarationType", resourceCulture);
             }
         }
         
@@ -2950,6 +3085,15 @@ namespace TUGraz.VectoCommon.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to RetarderDataDeclarationType.
+        /// </summary>
+        public static string Retarder_Attr_DataDeclarationType {
+            get {
+                return ResourceManager.GetString("Retarder_Attr_DataDeclarationType", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to RetarderLossMap.
         /// </summary>
         public static string Retarder_RetarderLossMap {
@@ -2982,6 +3126,15 @@ namespace TUGraz.VectoCommon.Resources {
         public static string Retarder_RetarderLossmap_TorqueLoss_Attr {
             get {
                 return ResourceManager.GetString("Retarder_RetarderLossmap_TorqueLoss_Attr", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Component_Type_Attr.
+        /// </summary>
+        public static string String {
+            get {
+                return ResourceManager.GetString("String", resourceCulture);
             }
         }
         
@@ -3153,6 +3306,15 @@ namespace TUGraz.VectoCommon.Resources {
         public static string TransmissionLossmap_TorqueLoss_Attr {
             get {
                 return ResourceManager.GetString("TransmissionLossmap_TorqueLoss_Attr", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to TyreDataDeclarationType.
+        /// </summary>
+        public static string Tyre_Type_Attr_TyreDataDeclarationType {
+            get {
+                return ResourceManager.GetString("Tyre_Type_Attr_TyreDataDeclarationType", resourceCulture);
             }
         }
         
@@ -3981,6 +4143,15 @@ namespace TUGraz.VectoCommon.Resources {
         public static string Vehicle_ZeroEmissionVehicle {
             get {
                 return ResourceManager.GetString("Vehicle_ZeroEmissionVehicle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to VehicleDeclarationType.
+        /// </summary>
+        public static string VehicleAttr_VehicleDeclarationType {
+            get {
+                return ResourceManager.GetString("VehicleAttr_VehicleDeclarationType", resourceCulture);
             }
         }
         

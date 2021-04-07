@@ -1,0 +1,50 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Resources;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows;
+using System.Windows.Controls;
+
+namespace VECTO3GUI2020.Views.CustomControls
+{
+    public static class CustomControlExtensionMethods
+    {
+		/// <summary>
+		/// Looks up the Label by the name the Property that is used for the binding
+		/// </summary>
+		/// <param name="dependencyProperty"></param>
+		/// <param name="resourceManager"></param>
+		/// <returns></returns>
+		public static string GetLabelByPropertyName(this UserControl userControl, DependencyProperty dependencyProperty, ResourceManager resourceManager)
+		{
+			var name = "unresolved";
+			var Binding = userControl.GetBindingExpression(dependencyProperty);
+			var PropertyName = Binding?.ResolvedSourcePropertyName;
+			
+			if (PropertyName == null || Binding == null)
+			{
+				return name;
+			}
+
+
+			var extendedPropertyName = Binding?.ResolvedSource.GetType().Name + "_" + PropertyName;
+			name = resourceManager?.GetString(extendedPropertyName) ?? resourceManager?.GetString(PropertyName) ?? (PropertyName + "_"); //_Postfix to label Property Names that are not in strings.resx
+
+			return name;
+		}
+
+		public static Type GetPropertyType(this UserControl userControl, DependencyProperty dependencyProperty)
+		{
+			var Binding = userControl.GetBindingExpression(dependencyProperty);
+			var PropertyName = Binding?.ResolvedSourcePropertyName;
+
+			if (PropertyName == null || Binding == null) {
+				return typeof(object);
+			}
+			var PropertyType = Binding?.ResolvedSource.GetType().GetProperty(PropertyName).PropertyType;
+			return PropertyType;
+		}
+	}
+}

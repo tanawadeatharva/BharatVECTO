@@ -382,7 +382,7 @@ namespace TUGraz.VectoCommon.InputData
 		new IList<IEngineFuelEngineeringInputData> Fuels { get; }
 	}
 
-	public interface IEngineFuelEngineeringInputData : IEngineFuelDelcarationInputData
+	public interface IEngineFuelEngineeringInputData : IEngineFuelDeclarationInputData
 	{
 		/// <summary>
 		/// P170

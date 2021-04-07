@@ -586,7 +586,7 @@ namespace TUGraz.VectoCommon.InputData
 		/// </summary>
 		TableData FullLoadCurve { get; }
 
-		IList<IEngineFuelDelcarationInputData> Fuels { get; }
+		IList<IEngineFuelDeclarationInputData> Fuels { get; }
 
 		IWHRData WasteHeatRecoveryDataElectrical { get; }
 
@@ -610,7 +610,7 @@ namespace TUGraz.VectoCommon.InputData
 		TableData GeneratedPower { get; }
 	}
 
-	public interface IEngineFuelDelcarationInputData
+	public interface IEngineFuelDeclarationInputData
 	{
 		FuelType FuelType { get; }
 
