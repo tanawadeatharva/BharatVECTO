@@ -20,8 +20,10 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Interfaces
 
 		IVehicleViewModel CreateInterimStageVehicleViewModel(string inputProviderType);
 
+		IVehicleViewModel CreateInterimStageVehicleViewModel(string inputProviderType, IVehicleDeclarationInputData prevStageInputData);
+
 		IManufacturingStageViewModel CreateManufacturingStageViewModel(string inputProviderType, IManufacturingStageInputData prevStageInputData);
 
-		IMultistageAirdragViewModel createMultistageAirdragViewModel();
+		IMultistageAirdragViewModel CreateMultistageAirdragViewModel();
 	}
 }

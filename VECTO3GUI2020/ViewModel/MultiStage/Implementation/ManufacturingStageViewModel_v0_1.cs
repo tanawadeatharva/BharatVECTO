@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using System.Windows.Input;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider;
+using TUGraz.VectoCore.InputData.Impl;
 using TUGraz.VectoCore.Models.GenericModelData;
 using VECTO3GUI2020.Util;
 using VECTO3GUI2020.ViewModel.Implementation.Common;
@@ -27,9 +28,17 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 		public static readonly string QualifiedXSD = XMLDeclarationMultistageTypeInputDataV01.QUALIFIED_XSD_TYPE;
 		private Dictionary<string, IViewModelBase> Components = new Dictionary<string, IViewModelBase>(StringComparer.CurrentCultureIgnoreCase);
 
-		public DigestData HashPreviousStage => throw new NotImplementedException();
+		public DigestData HashPreviousStage
+		{
+			get => _hashPreviousStage;
+			set => SetProperty(ref _hashPreviousStage, value);
+		}
 
-		public int StageCount => throw new NotImplementedException();
+		public int StageCount
+		{
+			get => _stageCount;
+			set => SetProperty(ref _stageCount, value);
+		}
 
 		public IVehicleDeclarationInputData Vehicle => _vehicleViewModel;
 
@@ -39,7 +48,9 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 			set => SetProperty(ref _currentview, value);
 		}
 
-		private IApplicationInformation _applicationInformation;
+		private IApplicationInformation _applicationInformation = new ApplicationInformation {
+			Date = DateTime.Today,
+		};
 		private IVehicleViewModel _vehicleViewModel;
 		private IMultiStageViewModelFactory _viewModelFactory;
 		private IViewModelBase _currentview;
@@ -62,28 +73,34 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 		public ManufacturingStageViewModel_v0_1(IManufacturingStageInputData prevStageInputData, IMultiStageViewModelFactory viewModelFactory)
 		{
 			_viewModelFactory = viewModelFactory;
+			StageCount = prevStageInputData.StageCount + 1;
+			HashPreviousStage = prevStageInputData.Signature;
+
+
+
+
+
+
 
 			VehicleViewModel =
-				_viewModelFactory.CreateInterimStageVehicleViewModel(prevStageInputData.Vehicle.GetType().ToString());
-			
-
+				_viewModelFactory.CreateInterimStageVehicleViewModel(prevStageInputData.Vehicle.GetType().ToString(), prevStageInputData.Vehicle);
 			CurrentView = VehicleViewModel as IViewModelBase;
-
-
-
 			Components.Add(VehicleViewModel.Name, VehicleViewModel as IViewModelBase);
 
-			var airDragEditViewModel = viewModelFactory.createMultistageAirdragViewModel();
+
+			var airDragEditViewModel = viewModelFactory.CreateMultistageAirdragViewModel();
 			Components.Add("Airdrag", airDragEditViewModel as IViewModelBase);
 		}
 
 
 		private ICommand _switchComponentViewCommand;
+		private int _stageCount;
+		private DigestData _hashPreviousStage;
+
 		public ICommand SwitchComponentViewCommand
 		{
 			get {
 				return _switchComponentViewCommand ?? new RelayCommand<string>(SwitchViewExecute, (string s) => true);
-
 			}
 		}
 
@@ -95,7 +112,20 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 				CurrentView = newView;
 			}
 		}
+
+		private class ApplicationInformationMultistage : IApplicationInformation
+		{
+			public string SimulationToolVersion => "VECTO3";
+
+			public DateTime Date => DateTime.Today;
+		}
 	}
 
-	public interface IManufacturingStageViewModel : IManufacturingStageInputData { }
+	public interface IManufacturingStageViewModel : IManufacturingStageInputData
+	{
+
+
+
+		
+	}
 }

@@ -186,15 +186,20 @@ namespace VECTO3GUI2020.Views.Multistage.CustomControls
 					var dummyContent = createMethod?.Invoke(null, new object[] { (new double()) });
 					return dummyContent;
 				} else{
-
 					var bindingProperty = userControl.GetBindingExpression(e.Property);
 					var dataItemType = bindingProperty?.DataItem.GetType();
 					var sourcePropertyType =
 						dataItemType?.GetProperty(bindingProperty?.ResolvedSourcePropertyName)?.PropertyType;
 
 					var underlyingType = Nullable.GetUnderlyingType(type);
+					Enum dummyEnum;
+					if (underlyingType != null) {
+						dummyEnum = Enum.Parse(underlyingType, underlyingType.GetEnumNames()[0]);
+                    } else {
+						dummyEnum = Enum.Parse(type, type.GetEnumNames()[0]);
+					}
 
-					var dummyEnum = Enum.Parse(underlyingType, underlyingType.GetEnumNames()[0]);
+					
 
 					return dummyEnum;
 				}
@@ -210,11 +215,13 @@ namespace VECTO3GUI2020.Views.Multistage.CustomControls
 		private static void EditingEnabledChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
 		{
 			MultiStageParameter multiStageParameter = (MultiStageParameter)d;
-			if ((bool)e.NewValue == false)
+			if((bool)e.NewValue == false)
 			{
 				multiStageParameter.Content = null;
             } else {
-
+				if (multiStageParameter.DummyContent != null) {
+					multiStageParameter.Content = multiStageParameter.DummyContent;
+				}
 			}
 		}
 
@@ -229,6 +236,11 @@ namespace VECTO3GUI2020.Views.Multistage.CustomControls
 			InitializeComponent();
 			
 			//LabelText = this.GetLabelByPropertyName(ContentProperty, Strings.ResourceManager);
+		}
+
+		private void Control_OnMouseDoubleClick(object sender, MouseButtonEventArgs e)
+		{
+			EditingEnabled = true;
 		}
 	}
 }

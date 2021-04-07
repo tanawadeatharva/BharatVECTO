@@ -129,6 +129,7 @@
     <Compile Include="Helper\Converter\SIToUnitString.cs" />
     <Compile Include="Helper\Converter\SIValueToStringConverter.cs" />
     <Compile Include="Helper\Converter\VehicleCategoryToStringConverter.cs" />
+    <Compile Include="Helper\DoubleValidation.cs" />
     <Compile Include="Helper\Extension.cs" />
     <Compile Include="Helper\IWindowHelper.cs" />
     <Compile Include="Helper\DialogHelper.cs" />
@@ -242,6 +243,8 @@
     <Compile Include="ViewModel\Interfaces\JobEdit\Vehicle\Components\ITyreViewModel.cs" />
     <Compile Include="ViewModel\Interfaces\JobEdit\Vehicle\IVehicleViewModel.cs" />
     <Compile Include="ViewModel\MultiStage\Implementation\DeclarationInterimStageBusVehicleViewModel_v2_8.cs" />
+    <Compile Include="ViewModel\MultiStage\Implementation\InterimStageBusAuxiliariesViewModel_v2_8.cs" />
+    <Compile Include="ViewModel\MultiStage\Implementation\InterimStageViewModel.cs" />
     <Compile Include="ViewModel\MultiStage\Implementation\ManufacturingStageViewModel_v0_1.cs" />
     <Compile Include="ViewModel\MultiStage\Implementation\MultistageAirdragViewModel.cs" />
     <Compile Include="ViewModel\MultiStage\Implementation\NewMultiStageJobViewModel.cs" />

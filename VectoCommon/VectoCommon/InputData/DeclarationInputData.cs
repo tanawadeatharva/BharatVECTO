@@ -962,5 +962,15 @@ namespace TUGraz.VectoCommon.InputData
 					throw new ArgumentOutOfRangeException();
 			}
 		}
+		public static string GetLabel(this VehicleDeclarationType type)
+		{
+			switch (type)
+			{
+				case VehicleDeclarationType.final: return nameof(VehicleDeclarationType.final);
+				case VehicleDeclarationType.interim:
+					return nameof(VehicleDeclarationType.interim);
+				default: return null;
+			}
+		}
 	}
 }

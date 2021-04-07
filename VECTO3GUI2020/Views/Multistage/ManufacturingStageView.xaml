@@ -6,7 +6,7 @@
              xmlns:local="clr-namespace:VECTO3GUI2020.Views.Multistage" 
              xmlns:implementation="clr-namespace:VECTO3GUI2020.ViewModel.MultiStage.Implementation" 
              mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="800">
+             d:DesignHeight="450" d:DesignWidth="800" d:DataContext="{d:DesignInstance implementation:ManufacturingStageViewModel_v0_1 }">
     <Grid MaxWidth="900">
         <DockPanel>
         <Grid Margin="4" DockPanel.Dock="Top">
@@ -22,6 +22,12 @@
                     Margin="4" Command="{Binding SwitchComponentViewCommand}" CommandParameter="Airdrag">Airdrag</Button>
             <Button DockPanel.Dock="Left" Style="{DynamicResource MultiStageButtonStyle1}" 
                     Margin="4" Command="{Binding SwitchComponentViewCommand}" CommandParameter="Auxiliaries">Auxiliaries</Button>
+
+            <StackPanel Orientation="Horizontal" DockPanel.Dock="Right">
+                <Label>Manufacturing Stage</Label>
+                    <Label Content="{Binding StageCount}"/>
+                </StackPanel>
+               
         </DockPanel>
         <ContentControl Content="{Binding CurrentView}"></ContentControl>
         </DockPanel>

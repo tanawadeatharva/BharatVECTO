@@ -30,21 +30,24 @@
             Mode=TwoWay}"/>
 
         <TextBox Grid.Column="2" VerticalAlignment="Center" Margin="2 0 2 0" IsReadOnly="True"
+                 Text="{Binding ElementName=MultistageParameterControl, Path=PreviousContent, Converter={StaticResource SIValueToStringConverter}}"
                  Visibility="{Binding Optional, 
                     ElementName=MultistageParameterControl, Converter={StaticResource BooleanToVisibilityConverter}, UpdateSourceTrigger=PropertyChanged}"/>
 
         <TextBox Grid.Column="3" Name ="TextBoxContent" VerticalAlignment="Center" Margin="2 0 2 0" 
-                 Text="{Binding Content, 
-                    ElementName=MultistageParameterControl }"
+                 Text="{Binding Content,
+                    ElementName=MultistageParameterControl, 
+                    Converter={StaticResource SIValueToStringConverter}, 
+                    ValidatesOnExceptions=True, 
+                    UpdateSourceTrigger=PropertyChanged}"
                  IsReadOnly="{Binding ElementName=MultistageParameterControl,
-            Path=EditingEnabled, Converter={StaticResource InvertBoolConverter}}"/>
+            Path=EditingEnabled, Converter={StaticResource InvertBoolConverter}}" MouseDoubleClick="Control_OnMouseDoubleClick"/>
 
         <Label Grid.Column="4" x:Name="AutoUnitLabel"
                Content="{Binding DummyContent, ElementName=MultistageParameterControl, Converter={StaticResource SIToUnitStringConverter}}">
         </Label>
     </Grid>
-        <!-- ______________________________________________ Comboboxmode  ___________________________________________________-->
-    <Grid Visibility="{Binding ElementName=MultistageParameterControl, 
+        <Grid Visibility="{Binding ElementName=MultistageParameterControl, 
         Path=ComboBoxMode, 
         Converter={StaticResource BooleanToVisibilityConverter}}">
         <Grid.ColumnDefinitions>
@@ -66,7 +69,9 @@
 
             <ComboBox Grid.Column="2" HorizontalAlignment="Stretch" VerticalAlignment="Center" Margin="2 0 2 0" Visibility="{Binding Optional, 
                     ElementName=MultistageParameterControl, 
-                    Converter={StaticResource BooleanToVisibilityConverter}}" IsHitTestVisible="False" Focusable="False" IsEditable="False"/>
+                    Converter={StaticResource BooleanToVisibilityConverter}}" IsHitTestVisible="False" Focusable="False" IsEditable="False"
+                      SelectedValue="{Binding PreviousContent, Mode=TwoWay, ElementName=MultistageParameterControl}"
+                      ItemsSource="{Binding ListItems, ElementName=MultistageParameterControl}"/>
 
             <ComboBox Grid.Column="3" HorizontalAlignment="Stretch" VerticalAlignment="Center" Margin="2 0 2 0" 
                       SelectedValue="{Binding Content, Mode=TwoWay, ElementName=MultistageParameterControl}" 
