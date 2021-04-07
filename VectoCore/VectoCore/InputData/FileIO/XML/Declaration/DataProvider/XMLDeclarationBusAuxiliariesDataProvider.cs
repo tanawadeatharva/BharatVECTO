@@ -384,6 +384,9 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		{
 			get
 			{
+				if (HeatPumpTypeDriverCompartment == HeatPumpType.none && !ElementExists(XMLNames.Bus_HeatPumpModeDriver)) 
+					return HeatPumpMode.N_A;
+				
 				return ElementExists(XMLNames.Bus_HeatPumpModeDriver)
 					? HeatPumpModeHelper.Parse(GetString(XMLNames.Bus_HeatPumpModeDriver)) : null;
 			}
@@ -402,6 +405,9 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		{
 			get
 			{
+				if (HeatPumpTypePassengerCompartment == HeatPumpType.none && !ElementExists(XMLNames.Bus_HeatPumpModePassenger))
+					return HeatPumpMode.N_A;
+
 				return ElementExists(XMLNames.Bus_HeatPumpModePassenger)
 					? HeatPumpModeHelper.Parse(GetString(XMLNames.Bus_HeatPumpModePassenger)) : null;
 			}
