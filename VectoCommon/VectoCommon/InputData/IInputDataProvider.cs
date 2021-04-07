@@ -102,6 +102,8 @@ namespace TUGraz.VectoCommon.InputData
 
 		IManufacturingStageInputData ConsolidateManufacturingStage { get; }
 
+		VectoSimulationJobType JobType { get; }
+
 		bool InputComplete { get; }
 	}
 

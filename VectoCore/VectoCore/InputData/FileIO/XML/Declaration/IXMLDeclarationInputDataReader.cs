@@ -31,8 +31,9 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration
 
 		IManufacturingStageInputData ConsolidateManufacturingStage { get; }
 
-		bool InputComplete { get; }
+		VectoSimulationJobType JobType { get; }
 
+		bool InputComplete { get; }
 	}
 
 	public interface IXMLMultistageReader 

@@ -139,6 +139,11 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 			}
 		}
 
+		public VectoSimulationJobType JobType
+		{
+			get { return InputData.JobType; }
+		}
+
 		public bool InputComplete
 		{
 			get

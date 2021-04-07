@@ -105,11 +105,16 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 			get { return _concolidateManfacturingStage ?? (_concolidateManfacturingStage = Reader.ConsolidateManufacturingStage); }
 		}
 
+		public VectoSimulationJobType JobType
+		{
+			get { return VectoSimulationJobType.ConventionalVehicle; }
+		}
+
 		public bool InputComplete
 		{
 			get { return Reader.InputComplete; }
 		}
-
+		
 		public IXMLMultistageJobReader Reader { protected get; set; }
 
 		public IXMLMultistageInputDataProvider InputData { get; }

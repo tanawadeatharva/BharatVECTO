@@ -57,6 +57,7 @@ namespace TUGraz.VectoCommon.InputData
 	{
 		ConventionalVehicle,
 		ParallelHybridVehicle,
+		SerialHybridVehicle,
 		BatteryElectricVehicle,
 		EngineOnlySimulation,
 	}
