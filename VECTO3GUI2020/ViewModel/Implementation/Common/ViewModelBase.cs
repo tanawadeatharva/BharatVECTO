@@ -12,6 +12,7 @@ namespace VECTO3GUI2020.ViewModel.Implementation.Common
     /// 
     public class ViewModelBase : INotifyPropertyChanged, IViewModelBase
 	{
+		private string _error;
 		public event PropertyChangedEventHandler PropertyChanged;
         /// <summary>
         /// Needs to be called when a Property is changed
@@ -24,7 +25,7 @@ namespace VECTO3GUI2020.ViewModel.Implementation.Common
 		}
 
 
-        //borrowed from Franz Josef Kober
+        //borrowed from Franz Kober
         protected virtual bool SetProperty<T>(ref T field, T value, [CallerMemberName] string propertyName = null)
         {
             bool propertyChanged = false;

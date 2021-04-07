@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml;
+using Castle.Core.Internal;
 using TUGraz.VectoCommon.BusAuxiliaries;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
@@ -15,6 +16,7 @@ using VECTO3GUI2020.Properties;
 using VECTO3GUI2020.ViewModel.Implementation.Common;
 using VECTO3GUI2020.ViewModel.Interfaces.JobEdit.Vehicle;
 using VECTO3GUI2020.ViewModel.Interfaces.JobEdit.Vehicle.Components;
+using VECTO3GUI2020.ViewModel.MultiStage.Interfaces;
 
 namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 {
@@ -42,16 +44,39 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 			get { throw new NotImplementedException(); }
 		}
 
-
+		#region Implementation used fields in IVehicleInputData
 		private string _manufacturer;
 		private string _model;
 		private string _vin;
 		private string _manufacturerAddress;
 
+		private bool _measurementsGroupEditingEnabled = false;
+		private bool _numberOfPassengersEditingEnabled = false;
+		private int? _numberOfPassengersUpperDeck;
+		private int? _numberOfPassengersLowerDeck;
+		private Kilogram _grossVehicleMassRating;
+		private Meter _entranceHeight;
+		private bool? _lowEntry;
+		private VehicleCode? _vehicleCode;
+		private RegistrationClass? _registeredClass;
+		private bool? _airdragModifiedMultistage;
+		private LegislativeClass? _legislativeClass;
+		private ConsumerTechnology? _doorDriveTechnology;
+		private TankSystem? _tankSystem;
+		private Kilogram _curbMassChassis;
+		private Meter _length; 
+		private Meter _height;
+		private Meter _width;
+
+
+
 		public string Manufacturer
 		{
 			get { return _manufacturer; }
-			set { SetProperty(ref _manufacturer, value); }
+			set
+			{
+				SetProperty(ref _manufacturer, value);
+			}
 		}
 
 		public string Model
@@ -72,49 +97,44 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 			set { SetProperty(ref _manufacturerAddress, value); }
 		}
 
-		private bool _measurementsGroupEditingEnabled = false;
+
 		public bool MeasurementsGroupEditingEnabled
 		{
 			get { return _measurementsGroupEditingEnabled; }
 			set { SetProperty(ref _measurementsGroupEditingEnabled, value); }
 		}
 
-		private Meter _height;
+
 		public Meter Height
 		{
 			get { return _height; }
 			set { SetProperty(ref _height, value); }
 		}
 
-		private Meter _length;
+
 		public Meter Length
 		{
 			get { return _length; }
 			set { SetProperty(ref _length, value); }
 		}
 
-		private Meter _width;
 		public Meter Width
 		{
 			get { return _width; }
 			set { SetProperty(ref _width, value); }
 		}
 
-		private Kilogram _curbMassChassis;
 
-		public Kilogram CurbMassChassis
+		public Kilogram CurbMassChassis //Corrected Actual Mass
 		{
 			get { return _curbMassChassis; }
 			set { SetProperty(ref _curbMassChassis, value); }
 		}
 
-		private bool __numberOfPassengersEditingEnabled = false;
-		private int? _numberOfPassengersUpperDeck;
-		private int? _numberOfPassengersLowerDeck;
 		public bool NumberOfPassengersEditingEnabled
 		{
-			get { return __numberOfPassengersEditingEnabled; }
-			set { SetProperty(ref __numberOfPassengersEditingEnabled, value); }
+			get { return _numberOfPassengersEditingEnabled; }
+			set { SetProperty(ref _numberOfPassengersEditingEnabled, value); }
 		}
 
 
@@ -130,24 +150,87 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 			set { SetProperty(ref _numberOfPassengersLowerDeck, value); }
 		}
 
-		private TankSystem? _tankSystem;
+
 		public TankSystem? TankSystem
 		{
 			get { return _tankSystem; }
 			set { SetProperty(ref _tankSystem, value); }
 		}
 
+		public Kilogram GrossVehicleMassRating //Technical Permissible Maximum Laden Mass
+		{
+			get =>_grossVehicleMassRating;
+			set => SetProperty(ref _grossVehicleMassRating, value);
+		}
+
+		public ConsumerTechnology? DoorDriveTechnology
+		{
+			get => _doorDriveTechnology;
+			set => SetProperty(ref _doorDriveTechnology, value);
+		}
+
+		public LegislativeClass? LegislativeClass
+		{
+			get => _legislativeClass;
+			set => SetProperty(ref _legislativeClass, value);
+		}
+
+		public bool? AirdragModifiedMultistage
+		{
+			get => _airdragModifiedMultistage;
+			set => SetProperty(ref _airdragModifiedMultistage, value);
+		}
+
+		public RegistrationClass? RegisteredClass
+		{
+			get => _registeredClass;
+			set => SetProperty(ref _registeredClass , value);
+		}
+
+		public VehicleCode? VehicleCode
+		{
+			get => _vehicleCode;
+			set => SetProperty(ref _vehicleCode, value);
+		}
+
+		public bool? LowEntry
+		{
+			get => _lowEntry;
+			set => SetProperty(ref _lowEntry, value);
+		}
+
+
+		public Meter EntranceHeight
+		{
+			get => _entranceHeight;
+			set => SetProperty(ref _entranceHeight, value);
+		}
+
+		public VehicleDeclarationType VehicleDeclarationType
+		{
+			get => _vehicleDeclarationType;
+			set => SetProperty(ref _vehicleDeclarationType, value);
+		}
+
+		#endregion
 
 		private IList<IComponentViewModel> _componentViewModels;
 		private IVehicleDeclarationInputData _inputData;
 
-
-
+		private Dictionary<string, object> _accumulatedProperties = new Dictionary<string, object>();
+		private IVehicleViewModel _prevStageVehicleViewModel;
+		private IVehicleDeclarationInputData _prevStageInputData;
+		private VehicleDeclarationType _vehicleDeclarationType;
 
 		public ObservableCollection<IComponentViewModel> ComponentViewModels
 		{
 			get { throw new NotImplementedException(); }
 			set { throw new NotImplementedException(); }
+		}
+
+		public IVehicleViewModel PreviousStageVehicleViewModel
+		{
+			get => _prevStageVehicleViewModel;
 		}
 
 
@@ -157,6 +240,16 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 		}
 
 
+		public DeclarationInterimStageBusVehicleViewModel_v2_8(IVehicleDeclarationInputData prevStageInputData, IMultiStageViewModelFactory vmFactory)
+		{
+			PrevStageInputData = prevStageInputData;
+		}
+
+		public IVehicleDeclarationInputData PrevStageInputData
+		{
+			get { return _prevStageInputData; }
+			set { SetProperty(ref _prevStageInputData, value); }
+		}
 
 
 		#region implementation of IVehicleDeclarationInputData;
@@ -196,10 +289,6 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 		}
 
 
-		public LegislativeClass? LegislativeClass
-		{
-			get { throw new NotImplementedException(); }
-		}
 
 		public VehicleCategory VehicleCategory
 		{
@@ -212,10 +301,7 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 		}
 
 
-		public Kilogram GrossVehicleMassRating
-		{
-			get { throw new NotImplementedException(); }
-		}
+
 
 		public IList<ITorqueLimitInputData> TorqueLimits
 		{
@@ -238,10 +324,7 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 			get { throw new NotImplementedException(); }
 		}
 
-		public bool? AirdragModifiedMultistage
-		{
-			get { throw new NotImplementedException(); }
-		}
+
 
 
 
@@ -275,10 +358,6 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 			get { throw new NotImplementedException(); }
 		}
 
-		public RegistrationClass? RegisteredClass
-		{
-			get { throw new NotImplementedException(); }
-		}
 
 
 		public CubicMeter CargoVolume
@@ -286,35 +365,15 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 			get { throw new NotImplementedException(); }
 		}
 
-		public VehicleCode? VehicleCode
-		{
-			get { throw new NotImplementedException(); }
-		}
-
-		public bool? LowEntry
-		{
-			get { throw new NotImplementedException(); }
-		}
 
 		public bool Articulated
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Meter EntranceHeight
-		{
-			get { throw new NotImplementedException(); }
-		}
 
-		public ConsumerTechnology? DoorDriveTechnology
-		{
-			get { throw new NotImplementedException(); }
-		}
 
-		public VehicleDeclarationType VehicleDeclarationType
-		{
-			get { throw new NotImplementedException(); }
-		}
+
 
 		public IVehicleComponentsDeclaration Components
 		{
@@ -349,6 +408,12 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 		public IPTOTransmissionInputData PTOTransmissionInputData
 		{
 			get { throw new NotImplementedException(); }
+		}
+
+		public Dictionary<string, object> AccumulatedProperties
+		{
+			get => _accumulatedProperties;
+			set => throw new NotImplementedException();
 		}
 
 		#endregion;

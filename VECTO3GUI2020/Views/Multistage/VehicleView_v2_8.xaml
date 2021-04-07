@@ -14,27 +14,55 @@
         <custom:MultiStageParameter Optional="False" Content="{Binding ManufacturerAddress}"/>
         <custom:MultiStageParameter Optional="False" Content="{Binding VIN}"/>
 
+        <custom:MultiStageParameter 
+            PreviousContent="{Binding PrevStageInputData.Model}" 
+            Content="{Binding Model}"/>
+        <Separator/>
         <custom:MultiStageParameter EditingEnabled="{Binding 
             MeasurementsGroupEditingEnabled}" 
+                                    PreviousContent="{Binding PrevStageInputData.Height}"
                                     Content="{Binding Height}"/>
         <custom:MultiStageParameter EditingEnabled="{Binding 
             MeasurementsGroupEditingEnabled}" 
+                                    PreviousContent="{Binding PrevStageInputData.Width}"
                                     Content="{Binding Width}"
                                     HideCheckBox="True"/>
         <custom:MultiStageParameter EditingEnabled="{Binding 
             MeasurementsGroupEditingEnabled}" 
+                                    PreviousContent="{Binding PrevStageInputData.Length}"
                                     Content="{Binding Length}"
                                     HideCheckBox="True"/>
-
+            <Separator/>
         <custom:MultiStageParameter EditingEnabled="{Binding 
             NumberOfPassengersEditingEnabled}" 
+                                    PreviousContent="{Binding PrevStageInputData.NumberOfPassengersUpperDeck}"
                                     Content="{Binding NumberOfPassengersUpperDeck}"/>
         <custom:MultiStageParameter EditingEnabled="{Binding 
             NumberOfPassengersEditingEnabled}" 
+                                    PreviousContent="{Binding PrevStageInputData.NumberOfPassengersLowerDeck}"
                                     Content="{Binding NumberOfPassengersLowerDeck}"
                                     HideCheckBox="True"/>
 
-        <custom:MultiStageParameter Content="{Binding TankSystem}" ComboBoxMode="True"/>
+        <Separator/>
+        <custom:MultiStageParameter PreviousContent="{Binding PrevStageInputData.GrossVehicleMassRating}"
+                                    Content="{Binding GrossVehicleMassRating}"/>
+        <custom:MultiStageParameter PreviousContent="{Binding PrevStageInputData.DoorDriveTechnology}"
+                                    Content="{Binding DoorDriveTechnology}" ComboBoxMode="True" />
+        <custom:MultiStageParameter PreviousContent="{Binding PrevStageInputData.LegislativeClass}"
+                                    Content="{Binding LegislativeClass}" ComboBoxMode="True" />
+        <custom:MultiStageParameter PreviousContent="{Binding PrevStageInputData.RegisteredClass}"
+                                    Content="{Binding RegisteredClass}" ComboBoxMode="True" />
+        <custom:MultiStageParameter PreviousContent="{Binding PrevStageInputData.VehicleCode}"
+                                    Content="{Binding VehicleCode}" ComboBoxMode="True" />
+        <custom:MultiStageParameter PreviousContent="{Binding PrevStageInputData.LowEntry}"
+                                    Content="{Binding LowEntry}" />
+        <custom:MultiStageParameter PreviousContent="{Binding PrevStageInputData.EntranceHeight}"
+                                    Content="{Binding EntranceHeight}" />
+        <custom:MultiStageParameter PreviousContent="{Binding PrevStageInputData.TankSystem}"
+                                    Content="{Binding TankSystem}" ComboBoxMode="True" />
+        <custom:MultiStageParameter PreviousContent="{Binding PrevStageInputData.VehicleDeclarationType}"
+                                    Content="{Binding VehicleDeclarationType}" ComboBoxMode="True" />
+
 
         </StackPanel>
     </Grid>

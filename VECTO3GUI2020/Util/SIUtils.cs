@@ -5,7 +5,7 @@ using System.Reflection;
 using TUGraz.VectoCommon.Utils;
 
 
-//Copied from VECTO3GUI franzjosefkober
+//Copied from VECTO3GUI franz kober
 namespace VECTO3GUI2020.Util
 {
 	public static class SIUtils
