@@ -15,52 +15,52 @@
         <custom:MultiStageParameter Optional="False" Content="{Binding VIN}"/>
 
         <custom:MultiStageParameter 
-            PreviousContent="{Binding PrevStageInputData.Model}" 
+            PreviousContent="{Binding ConsolidatedVehicleData.Model}" 
             Content="{Binding Model}"/>
         <Separator/>
         <custom:MultiStageParameter EditingEnabled="{Binding 
             MeasurementsGroupEditingEnabled}" 
-                                    PreviousContent="{Binding PrevStageInputData.Height}"
+                                    PreviousContent="{Binding ConsolidatedVehicleData.Height}"
                                     Content="{Binding Height}"/>
         <custom:MultiStageParameter EditingEnabled="{Binding 
             MeasurementsGroupEditingEnabled}" 
-                                    PreviousContent="{Binding PrevStageInputData.Width}"
+                                    PreviousContent="{Binding ConsolidatedVehicleData.Width}"
                                     Content="{Binding Width}"
                                     HideCheckBox="True"/>
         <custom:MultiStageParameter EditingEnabled="{Binding 
             MeasurementsGroupEditingEnabled}" 
-                                    PreviousContent="{Binding PrevStageInputData.Length}"
+                                    PreviousContent="{Binding ConsolidatedVehicleData.Length}"
                                     Content="{Binding Length}"
                                     HideCheckBox="True"/>
             <Separator/>
         <custom:MultiStageParameter EditingEnabled="{Binding 
             NumberOfPassengersEditingEnabled}" 
-                                    PreviousContent="{Binding PrevStageInputData.NumberOfPassengersUpperDeck}"
+                                    PreviousContent="{Binding ConsolidatedVehicleData.NumberOfPassengersUpperDeck}"
                                     Content="{Binding NumberOfPassengersUpperDeck}"/>
         <custom:MultiStageParameter EditingEnabled="{Binding 
             NumberOfPassengersEditingEnabled}" 
-                                    PreviousContent="{Binding PrevStageInputData.NumberOfPassengersLowerDeck}"
+                                    PreviousContent="{Binding ConsolidatedVehicleData.NumberOfPassengersLowerDeck}"
                                     Content="{Binding NumberOfPassengersLowerDeck}"
                                     HideCheckBox="True"/>
 
         <Separator/>
-        <custom:MultiStageParameter PreviousContent="{Binding PrevStageInputData.GrossVehicleMassRating}"
+        <custom:MultiStageParameter PreviousContent="{Binding ConsolidatedVehicleData.GrossVehicleMassRating}"
                                     Content="{Binding GrossVehicleMassRating}"/>
-        <custom:MultiStageParameter PreviousContent="{Binding PrevStageInputData.DoorDriveTechnology}"
+        <custom:MultiStageParameter PreviousContent="{Binding ConsolidatedVehicleData.DoorDriveTechnology}"
                                     Content="{Binding DoorDriveTechnology}" ComboBoxMode="True" />
-        <custom:MultiStageParameter PreviousContent="{Binding PrevStageInputData.LegislativeClass}"
+        <custom:MultiStageParameter PreviousContent="{Binding ConsolidatedVehicleData.LegislativeClass}"
                                     Content="{Binding LegislativeClass}" ComboBoxMode="True" />
-        <custom:MultiStageParameter PreviousContent="{Binding PrevStageInputData.RegisteredClass}"
+        <custom:MultiStageParameter PreviousContent="{Binding ConsolidatedVehicleData.RegisteredClass}"
                                     Content="{Binding RegisteredClass}" ComboBoxMode="True" />
-        <custom:MultiStageParameter PreviousContent="{Binding PrevStageInputData.VehicleCode}"
+        <custom:MultiStageParameter PreviousContent="{Binding ConsolidatedVehicleData.VehicleCode}"
                                     Content="{Binding VehicleCode}" ComboBoxMode="True" />
-        <custom:MultiStageParameter PreviousContent="{Binding PrevStageInputData.LowEntry}"
+        <custom:MultiStageParameter PreviousContent="{Binding ConsolidatedVehicleData.LowEntry}"
                                     Content="{Binding LowEntry}" />
-        <custom:MultiStageParameter PreviousContent="{Binding PrevStageInputData.EntranceHeight}"
+        <custom:MultiStageParameter PreviousContent="{Binding ConsolidatedVehicleData.EntranceHeight}"
                                     Content="{Binding EntranceHeight}" />
-        <custom:MultiStageParameter PreviousContent="{Binding PrevStageInputData.TankSystem}"
+        <custom:MultiStageParameter PreviousContent="{Binding ConsolidatedVehicleData.TankSystem}"
                                     Content="{Binding TankSystem}" ComboBoxMode="True" />
-        <custom:MultiStageParameter PreviousContent="{Binding PrevStageInputData.VehicleDeclarationType}"
+        <custom:MultiStageParameter PreviousContent="{Binding ConsolidatedVehicleData.VehicleDeclarationType}"
                                     Content="{Binding VehicleDeclarationType}" ComboBoxMode="True" />
 
 

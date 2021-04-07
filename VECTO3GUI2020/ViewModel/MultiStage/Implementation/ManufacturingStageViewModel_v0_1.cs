@@ -70,25 +70,23 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 		public DigestData Signature => throw new NotImplementedException();
 
 
-		public ManufacturingStageViewModel_v0_1(IManufacturingStageInputData prevStageInputData, IMultiStageViewModelFactory viewModelFactory)
+		public ManufacturingStageViewModel_v0_1(IManufacturingStageInputData consolidatedManufacturingStageInputData, IMultiStageViewModelFactory viewModelFactory)
 		{
 			_viewModelFactory = viewModelFactory;
-			StageCount = prevStageInputData.StageCount + 1;
-			HashPreviousStage = prevStageInputData.Signature;
+			_stageCount = consolidatedManufacturingStageInputData.StageCount + 1;
+			_consolidatedManufacturingStageInputData = consolidatedManufacturingStageInputData;
 
 
 
 
 
 
-
-			VehicleViewModel =
-				_viewModelFactory.CreateInterimStageVehicleViewModel(prevStageInputData.Vehicle.GetType().ToString(), prevStageInputData.Vehicle);
+			VehicleViewModel = _viewModelFactory.GetInterimStageVehicleViewModel(consolidatedManufacturingStageInputData.Vehicle);
 			CurrentView = VehicleViewModel as IViewModelBase;
 			Components.Add(VehicleViewModel.Name, VehicleViewModel as IViewModelBase);
 
 
-			var airDragEditViewModel = viewModelFactory.CreateMultistageAirdragViewModel();
+			var airDragEditViewModel = viewModelFactory.GetMultistageAirdragViewModel();
 			Components.Add("Airdrag", airDragEditViewModel as IViewModelBase);
 		}
 
@@ -96,6 +94,7 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 		private ICommand _switchComponentViewCommand;
 		private int _stageCount;
 		private DigestData _hashPreviousStage;
+		private IManufacturingStageInputData _consolidatedManufacturingStageInputData;
 
 		public ICommand SwitchComponentViewCommand
 		{

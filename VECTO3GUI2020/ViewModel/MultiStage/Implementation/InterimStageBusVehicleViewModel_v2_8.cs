@@ -219,7 +219,7 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 
 		private Dictionary<string, object> _accumulatedProperties = new Dictionary<string, object>();
 		private IVehicleViewModel _prevStageVehicleViewModel;
-		private IVehicleDeclarationInputData _prevStageInputData;
+		private IVehicleDeclarationInputData _consolidatedVehicleData;
 		private VehicleDeclarationType _vehicleDeclarationType;
 
 		public ObservableCollection<IComponentViewModel> ComponentViewModels
@@ -240,15 +240,15 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 		}
 
 
-		public DeclarationInterimStageBusVehicleViewModel_v2_8(IVehicleDeclarationInputData prevStageInputData, IMultiStageViewModelFactory vmFactory)
+		public DeclarationInterimStageBusVehicleViewModel_v2_8(IVehicleDeclarationInputData consolidatedVehicleData, IMultiStageViewModelFactory vmFactory)
 		{
-			PrevStageInputData = prevStageInputData;
+			ConsolidatedVehicleData = consolidatedVehicleData;
 		}
 
-		public IVehicleDeclarationInputData PrevStageInputData
+		public IVehicleDeclarationInputData ConsolidatedVehicleData
 		{
-			get { return _prevStageInputData; }
-			set { SetProperty(ref _prevStageInputData, value); }
+			get { return _consolidatedVehicleData; }
+			set { SetProperty(ref _consolidatedVehicleData, value); }
 		}
 
 

@@ -34,20 +34,19 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 		}
 
 		private IMultiStageViewModelFactory _vmFactory;
+		private IManufacturingStageInputData _consolidateManufacturingStage;
+		private VectoSimulationJobType _jobType;
+		private bool _inputComplete;
 
 
 		public MultiStageJobViewModel_v0_1(IMultistageBusInputDataProvider inputData, IMultiStageViewModelFactory vmFactory)
 		{
 			_jobInputData = inputData.JobInputData;
 			_vmFactory = vmFactory;
-
-
-			
-			var prevStageInputData = _jobInputData.ManufacturingStages.Last();
+			_consolidateManufacturingStage = inputData.JobInputData.ConsolidateManufacturingStage;
 
 			_manufacturingStageViewModel =
-				vmFactory.CreateManufacturingStageViewModel(prevStageInputData.GetType().ToString(),
-					prevStageInputData);
+				vmFactory.GetManufacturingStageViewModel(_consolidateManufacturingStage);
 
 			_jobInputData.ManufacturingStages.Add(_manufacturingStageViewModel as IManufacturingStageInputData);
 			
@@ -58,6 +57,12 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 		public IPrimaryVehicleInformationInputDataProvider PrimaryVehicle => throw new NotImplementedException();
 
 		public IList<IManufacturingStageInputData> ManufacturingStages => throw new NotImplementedException();
+
+		public IManufacturingStageInputData ConsolidateManufacturingStage => _consolidateManufacturingStage;
+
+		public VectoSimulationJobType JobType => _jobType;
+
+		public bool InputComplete => _inputComplete;
 	}
 
 	public interface IMultiStageJobViewModel : IDeclarationMultistageJobInputData

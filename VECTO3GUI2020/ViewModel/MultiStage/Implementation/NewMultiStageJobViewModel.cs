@@ -78,7 +78,7 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 			}
 
 			MultiStageJobViewModel =
-				_vmFactory.CreateMultiStageJobViewModel(inputDataProvider.GetType().ToString(), inputDataProvider);
+				_vmFactory.GetMultiStageJobViewModel(inputDataProvider);
 			VifPath = fileName;
 		}
 

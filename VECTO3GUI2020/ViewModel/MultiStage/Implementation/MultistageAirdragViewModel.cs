@@ -38,6 +38,7 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 		#region Commands
 
 		private ICommand _loadAirdragFileCommand;
+		private IAirdragDeclarationInputData _consolidatedAirdragInputData;
 
 		public ICommand LoadAirdragFileCommand
 		{
@@ -71,6 +72,15 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 			_dialogHelper = dialogHelper;
 			_inputDataReader = inputDataReader;
 			_componentViewModelFactory = componentViewModelFactory;
+		}
+
+		public MultistageAirdragViewModel(IAirdragDeclarationInputData consolidatedAirdragInputData,
+			IDialogHelper dialogHelper,
+			IXMLInputDataReader inputDataReader,
+			IComponentViewModelFactory componentViewModelFactory) : this(dialogHelper, inputDataReader, componentViewModelFactory)
+		{
+			_consolidatedAirdragInputData = consolidatedAirdragInputData;
+			
 		}
 	}
 }

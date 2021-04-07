@@ -242,11 +242,12 @@
     <Compile Include="ViewModel\Interfaces\JobEdit\Vehicle\Components\ITorqueConverterViewModel.cs" />
     <Compile Include="ViewModel\Interfaces\JobEdit\Vehicle\Components\ITyreViewModel.cs" />
     <Compile Include="ViewModel\Interfaces\JobEdit\Vehicle\IVehicleViewModel.cs" />
-    <Compile Include="ViewModel\MultiStage\Implementation\DeclarationInterimStageBusVehicleViewModel_v2_8.cs" />
+    <Compile Include="ViewModel\MultiStage\Implementation\InterimStageBusVehicleViewModel_v2_8.cs" />
     <Compile Include="ViewModel\MultiStage\Implementation\InterimStageBusAuxiliariesViewModel_v2_8.cs" />
     <Compile Include="ViewModel\MultiStage\Implementation\InterimStageViewModel.cs" />
     <Compile Include="ViewModel\MultiStage\Implementation\ManufacturingStageViewModel_v0_1.cs" />
     <Compile Include="ViewModel\MultiStage\Implementation\MultistageAirdragViewModel.cs" />
+    <Compile Include="ViewModel\MultiStage\Implementation\MultistageAuxiliariesViewModel.cs" />
     <Compile Include="ViewModel\MultiStage\Implementation\NewMultiStageJobViewModel.cs" />
     <Compile Include="ViewModel\MultiStage\Implementation\MultistageJobViewModel_v0_1.cs" />
     <Compile Include="ViewModel\MultiStage\Interfaces\IMultistageAirdragViewModel.cs" />

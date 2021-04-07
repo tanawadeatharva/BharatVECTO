@@ -101,7 +101,7 @@ namespace VECTO3GUI2020.ViewModel.Implementation
 
 		private void NewManufacturingStageFileExecute()
 		{
-            _windowHelper.ShowWindow(_multiStageViewModelFactory.CreateNewMultiStageJobViewModel());
+            _windowHelper.ShowWindow(_multiStageViewModelFactory.GetNewMultistageJobViewModel());
 		}
 
 
