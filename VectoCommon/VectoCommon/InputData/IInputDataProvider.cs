@@ -111,6 +111,12 @@ namespace TUGraz.VectoCommon.InputData
 	public interface IMultiStageTypeInputData : IManufacturingStageInputData,  IInputDataProvider
 	{
 	}
+
+	public interface IMultistageVIFInputData :  IInputDataProvider
+	{
+		IVehicleDeclarationInputData VehicleInputData { get; }
+		IMultistageBusInputDataProvider MultistageInputData { get; }
+	}
 }
 
 
