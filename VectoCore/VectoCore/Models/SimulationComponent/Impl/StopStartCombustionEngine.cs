@@ -84,7 +84,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl {
 				//throw new VectoSimulationException("Combustion engine cannot supply outtorque when switched off (T_out: {0})", outTorque);
 			}
 			CurrentState.EngineOn = false;
-			CurrentState.EngineSpeed = outAngularVelocity; //ModelData.IdleSpeed;
+			CurrentState.EngineSpeed = DataBus.VehicleInfo.VehicleStopped ? ModelData.IdleSpeed : outAngularVelocity; //ModelData.IdleSpeed;
 			CurrentState.EngineTorque = 0.SI<NewtonMeter>();
 			CurrentState.EngineTorqueOut = 0.SI<NewtonMeter>();
 			CurrentState.EnginePower = 0.SI<Watt>();
@@ -120,6 +120,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl {
 					DynamicFullLoadPower = 0.SI<Watt>(),
 					TotalTorqueDemand = 0.SI<NewtonMeter>(),
 					DragPower = 0.SI<Watt>(),
+					DragTorque = 0.SI<NewtonMeter>(),
 					EngineSpeed = 0.RPMtoRad(),
 					AuxiliariesPowerDemand = 0.SI<Watt>(),
 				},

@@ -78,7 +78,7 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.Electric
 
 		#region Implementation of ISimpleBattery
 
-		public double SOC { get; private set; }
+		public double SOC { get; internal set; }
 		public WattSecond Capacity { get; }
 		public WattSecond ConsumedEnergy
 		{

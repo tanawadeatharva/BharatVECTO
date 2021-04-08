@@ -43,7 +43,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl {
 				return null;
 			}
 
-			return (-outTorque).LimitTo(maxDriveTorque, maxRecuperationTorque);
+			return (-outTorque).LimitTo(maxDriveTorque,  maxRecuperationTorque ?? VectoMath.Max(maxDriveTorque, 0.SI<NewtonMeter>()));
 		}
 
 		#endregion

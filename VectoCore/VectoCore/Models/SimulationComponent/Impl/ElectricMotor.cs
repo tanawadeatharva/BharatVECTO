@@ -146,6 +146,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			var maxDriveTorqueEm = maxDriveTorqueEmMap == null ? null : maxDriveTorqueEmMap + inertiaTorqueEm;
 			// inertia has to be added here. recuperation torque is positive, when accelerating inertia is positive and adds more drag to the drivetrain, 
 			var maxRecuperationTorqueEm = maxRecuperationTorqueEmMap == null ? null : maxRecuperationTorqueEmMap + inertiaTorqueEm;
+			if (maxRecuperationTorqueEm != null && maxRecuperationTorqueEm.IsSmallerOrEqual(0)) {
+				// max recuperation torque may get negative due to torque losses
+				maxRecuperationTorqueEm = null;
+			}
 
 			var maxDriveTorqueDt = maxDriveTorqueEm == null ? null : ConvertEmTorqueToDrivetrain(maxDriveTorqueEm);
 			var maxRecuperationTorqueDt = maxRecuperationTorqueEm == null ? null : ConvertEmTorqueToDrivetrain(maxRecuperationTorqueEm);
@@ -338,7 +342,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			var electricSystemResponse = ElectricPower.Request(0.SI<Second>(), dt, 0.SI<Watt>(), true);
 			var maxBatPower = electricSystemResponse.MaxPowerDrag;
 
-			if (maxBatPower.IsSmaller(0, 1e-3)) {
+			if (maxBatPower.IsSmallerOrEqual(0, 1e-3)) {
 				// has to be positive for recuperation - battery is full
 				return null;
 			}
@@ -347,7 +351,15 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				? ModelData.DragCurve.Lookup(avgSpeed)
 				: ModelData.EfficiencyMap.LookupTorque(maxBatPower, avgSpeed, maxEmTorque);
 			var maxTorqueRecuperate = VectoMath.Min(maxEmTorque, maxBatRecuperationTorque);
-			return maxTorqueRecuperate < 0 ? null : maxTorqueRecuperate;
+			if (maxTorqueRecuperate < 0) {
+				return null;
+			}
+
+			var elPower = ModelData.EfficiencyMap.LookupElectricPower(avgSpeed, maxTorqueRecuperate);
+			if (elPower.ElectricalPower?.IsSmallerOrEqual(0) ?? true) {
+				return null;
+			}
+			return maxTorqueRecuperate;
 		}
 
 		private NewtonMeter GetMaxDriveTorque(Second dt, PerSecond avgSpeed)
@@ -472,13 +484,17 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 	public class ElectricMotorState // : SimpleComponentState
 	{
+		public ElectricMotorState()
+		{
+			EMSpeed = 0.RPMtoRad();
+		}
 
 		public PerSecond DrivetrainSpeed = 0.RPMtoRad();
 		public NewtonMeter DrivetrainInTorque = 0.SI<NewtonMeter>();
 		public NewtonMeter DrivetrainOutTorque = 0.SI<NewtonMeter>();
 		public NewtonMeter TransmissionTorqueLoss;
 
-		public PerSecond EMSpeed = 0.RPMtoRad();
+		public PerSecond EMSpeed { get; set; }
 		public NewtonMeter EMTorque;
 		public NewtonMeter EmTorqueMap;
 

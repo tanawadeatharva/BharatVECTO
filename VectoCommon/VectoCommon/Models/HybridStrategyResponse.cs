@@ -14,6 +14,8 @@ namespace TUGraz.VectoCommon.Models {
 	{
 		public Watt Delta { get; set; }
 		public PerSecond DeltaEngineSpeed { get; set; }
+		
+		public GearboxResponse GearboxResponse { get; set; }
 	}
 
 	public class HybridStrategyResponse : AbstractComponentResponse, IHybridStrategyResponse
@@ -28,6 +30,7 @@ namespace TUGraz.VectoCommon.Models {
 
 		public HybridResultEntry EvaluatedSolution { get; set; }
 		public bool GearboxEngaged { get; set; }
+		public bool ProhibitGearshift { get; set; }
 	}
 
 	[DebuggerDisplay("{U}: {Score} - G{Gear}")]
@@ -70,6 +73,7 @@ namespace TUGraz.VectoCommon.Models {
 
 		public HybridConfigurationIgnoreReason IgnoreReason { get; set; }
 		public double RampUpPenalty { get; set; }
+		public bool ProhibitGearshift { get; set; }
 
 		public bool IsEqual(HybridResultEntry other)
 		{
@@ -96,8 +100,10 @@ namespace TUGraz.VectoCommon.Models {
 		BatteryBelowMinSoC = 1 << 8,
 		BatteryAboveMaxSoc = 1 << 9,
 		BatterySoCTooLow = 1 << 10,
-		NoResponseAvailable = 1 << 11,
-		Evaluated = 1 << 12,
+		VehicleSpeedBelowMinSpeedAfterGearshift = 1 << 11,
+		MaxPropulsionTorqueExceeded = 1 << 12,
+		NoResponseAvailable = 1 << 13,
+		Evaluated = 1 << 14,
 	}
 
 	public static class HybridConfigurationIgnoreReasonHelper

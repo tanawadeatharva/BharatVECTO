@@ -144,6 +144,12 @@ namespace TUGraz.VectoCore.Utils
 					interval *= intervalFactor;
 					x += interval * -y.Sign();
 					var result = evaluateFunction(x);
+					if (abortCriterion != null && abortCriterion(result, iterationCount)) {
+						LogManager.EnableLogging();
+						log.Debug("LineSearch aborted due to abortCriterion: {0}", result);
+						LogManager.DisableLogging();
+						throw new VectoSearchAbortedException("LineSearch");
+					}
 					y = getYValue(result);
 					debug.Add(new { x = x.Value(), y = y.Value(), delta = criterion(result), result });
 					if (criterion(result).IsEqual(0, Constants.SimulationSettings.LineSearchTolerance / 2)) {
@@ -154,12 +160,7 @@ namespace TUGraz.VectoCore.Utils
 						AppendDebug(debug);
 						return x;
 					}
-					if (abortCriterion != null && abortCriterion(result, iterationCount)) {
-						LogManager.EnableLogging();
-						log.Debug("LineSearch aborted due to abortCriterion: {0}", result);
-						LogManager.DisableLogging();
-						throw new VectoSearchAbortedException("LineSearch");
-					}
+
 				}
 			} finally {
 				LogManager.EnableLogging();
@@ -220,6 +221,12 @@ namespace TUGraz.VectoCore.Utils
 			try {
 				var x2 = x1 + interval;
 				var result = evaluateFunction(x2.SI<T>());
+				if (abortCriterion != null && abortCriterion(result, iterationCount)) {
+					LogManager.EnableLogging();
+					log.Debug("LineSearch aborted due to abortCriterion: {0}", result);
+					LogManager.DisableLogging();
+					throw new VectoSearchAbortedException("InterpolateLinearSearch");
+				}
 				if (criterion(result).IsEqual(0, Constants.SimulationSettings.InterpolateSearchTolerance)) {
 					LogManager.EnableLogging();
 					log.Debug("InterpolateSearch found an operating point after 1 function call.");
@@ -250,6 +257,12 @@ namespace TUGraz.VectoCore.Utils
 					}
 
 					result = evaluateFunction(x2.SI<T>());
+					if (abortCriterion != null && abortCriterion(result, iterationCount)) {
+						LogManager.EnableLogging();
+						log.Debug("LineSearch aborted due to abortCriterion: {0}", result);
+						LogManager.DisableLogging();
+						throw new VectoSearchAbortedException("InterpolateLinearSearch");
+					}
 					if (criterion(result).IsEqual(0, Constants.SimulationSettings.InterpolateSearchTolerance)) {
 						debug.Add(new { x = x2, y = getYValue(result).Value(), delta = criterion(result), result });
 						LogManager.EnableLogging();
@@ -258,12 +271,7 @@ namespace TUGraz.VectoCore.Utils
 						AppendDebug(debug);
 						return x2.SI<T>();
 					}
-					if (abortCriterion != null && abortCriterion(result, iterationCount)) {
-						LogManager.EnableLogging();
-						log.Debug("LineSearch aborted due to abortCriterion: {0}", result);
-						LogManager.DisableLogging();
-						throw new VectoSearchAbortedException("InterpolateLinearSearch");
-					}
+					
 					y1 = y2;
 				}
 			} finally {
