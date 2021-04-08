@@ -144,7 +144,14 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 							DeltaDragLoad = ovl.Delta,
 							DeltaFullLoad = ovl.Delta,
 							// TODO! delta full/drag torque
-							DeltaEngineSpeed = ovl.DeltaEngineSpeed
+							DeltaEngineSpeed = ovl.DeltaEngineSpeed,
+							Gearbox = {
+								InputTorque = ovl.GearboxResponse?.InputTorque,
+								InputSpeed = ovl.GearboxResponse?.InputSpeed,
+								PowerRequest = ovl.GearboxResponse?.PowerRequest,
+								Gear = ovl.GearboxResponse?.Gear
+							}
+
 						};
 					}
 
