@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using NUnit.Framework;
@@ -7,6 +8,7 @@ using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.InputData.FileIO.JSON;
+using TUGraz.VectoCore.InputData.Reader.ComponentData;
 using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter;
 using TUGraz.VectoCore.Models.Connector.Ports.Impl;
 using TUGraz.VectoCore.Models.Simulation.Data;
@@ -15,6 +17,7 @@ using TUGraz.VectoCore.Models.SimulationComponent;
 using TUGraz.VectoCore.Models.SimulationComponent.Impl;
 using TUGraz.VectoCore.OutputData;
 using TUGraz.VectoCore.Tests.Utils;
+using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 {
@@ -326,6 +329,45 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 				var response = motor.Request(absTime, dt, torque * 0.5, speed);
 				Assert.AreEqual(-334.23, response.ElectricMotor.MaxDriveTorque.Value(), 1e-2);
 				motor.CommitSimulationStep(absTime, dt, modData);
+			}
+		}
+
+		[
+			TestCase(),
+		//TestCase(750, 750),
+		//TestCase(750, 750),
+		//TestCase(750, 750),
+		//TestCase(750, 750),
+		]
+		public void TestEM_ADC_Lookup(/*double nDTd, double TDTd*/)
+		{
+			var ratio = 2;
+
+			var adcMap = @"TestData\Hybrids\GenericVehicle_Group2_P2\GenericADC.vtlm";
+			var tlm = TransmissionLossMapReader.Create(VectoCSVFile.Read(adcMap), ratio, "EM_ADC",false);
+
+			for (var nDTd = 0; nDTd <= 2500; nDTd++) {
+				for (var TDTd = -2500; TDTd <= 2500; TDTd++) {
+
+					var nDT = nDTd.RPMtoRad();
+					var TDT = TDTd.SI<NewtonMeter>();
+
+					var torqueLoss = tlm.GetTorqueLoss(nDT, TDT);
+
+					var nEM = nDT * ratio;
+					var TEM = TDT / ratio + torqueLoss.Value;
+
+					Console.WriteLine(
+						$"Drivetrain: n = {nDT.AsRPM}, T = {TDT.Value()}; EM: n_em = {nEM.AsRPM}, T_em = {TEM.Value()} T_loss = {torqueLoss.Value}");
+
+					var TDT2 = tlm.GetOutTorque(nEM, TEM, true);
+
+					Console.WriteLine($"Drivetrain: n = {nDT.AsRPM}, T = {TDT2.Value()}");
+					Console.WriteLine();
+
+					Assert.AreEqual(TDT.Value(), TDT2.Value(), 1e-3, $"{TDT.Value()} / {TDT2.Value()} -- {TDT - TDT2}");
+
+				}
 			}
 		}
 	}
