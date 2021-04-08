@@ -178,5 +178,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		public NewtonMeter TransmissionTorqueLoss = 0.SI<NewtonMeter>();
 		public GearshiftPosition Gear;
 		public TransmissionLossMap.LossMapResult TorqueLossResult;
+		public DrivingBehavior DrivingBehavior;
 	}
 }
