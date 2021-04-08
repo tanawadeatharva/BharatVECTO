@@ -342,7 +342,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			var electricSystemResponse = ElectricPower.Request(0.SI<Second>(), dt, 0.SI<Watt>(), true);
 			var maxBatPower = electricSystemResponse.MaxPowerDrag;
 
-			if (maxBatPower.IsSmaller(0, 1e-3)) {
+			if (maxBatPower.IsSmallerOrEqual(0, 1e-3)) {
 				// has to be positive for recuperation - battery is full
 				return null;
 			}
