@@ -458,6 +458,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 						TorqueOutDemand = 0.SI<NewtonMeter>(), // outTorque,
 						PowerRequest = 0.SI<Watt>(), // outAngularVelocity;
 						DynamicFullLoadPower = 0.SI<Watt>(),
+						DynamicFullLoadTorque = 0.SI<NewtonMeter>(),
 						DragPower = 0.SI<Watt>(),
 						DragTorque = 0.SI<NewtonMeter>(),
 						EngineSpeed = 0.RPMtoRad(),
@@ -480,6 +481,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 						TorqueOutDemand = 0.SI<NewtonMeter>(), // outTorque,
 						PowerRequest = 0.SI<Watt>(), // outAngularVelocity;
 						DynamicFullLoadPower = 0.SI<Watt>(),
+						DynamicFullLoadTorque = 0.SI<NewtonMeter>(),
 						DragPower = 0.SI<Watt>(),
 						DragTorque = 0.SI<NewtonMeter>(),
 						EngineSpeed = 0.RPMtoRad(),

@@ -281,6 +281,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				return RequestGearDisengaged(absTime, dt, outTorque, outAngularVelocity, inTorque, dryRun);
 			}
 
+			if (!dryRun) {
+				CurrentState.DrivingBehavior = DataBus.DriverInfo.DriverBehavior;
+			}
+
 			return GearEngaged(absTime)
 				? RequestGearEngaged(absTime, dt, outTorque, outAngularVelocity, inTorque, inTorqueLossResult,
 					inertiaTorqueLossOut, dryRun)
@@ -529,6 +533,20 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			if (GearEngaged(DataBus.AbsTime)) {
 				_overrideDisengage = null;
+			}
+
+			if (PreviousState.DrivingBehavior != CurrentState.DrivingBehavior) {
+				Log.Debug("driving action changed...");
+				if (CurrentState.DrivingBehavior == DrivingBehavior.Driving ||
+					CurrentState.DrivingBehavior == DrivingBehavior.Braking) {
+					if (GearEngaged(time)) {
+						Log.Debug("resetting gearshift time interval");
+						LastDownshift = -double.MaxValue.SI<Second>();
+						LastUpshift = -double.MaxValue.SI<Second>();
+					} else {
+						CurrentState.DrivingBehavior = PreviousState.DrivingBehavior;
+					}
+				}
 			}
 
 			base.DoCommitSimulationStep(time, simulationInterval);
