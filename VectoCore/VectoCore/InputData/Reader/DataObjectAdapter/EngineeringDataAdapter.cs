@@ -499,7 +499,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			if (pto.PTOTransmissionType != "None") {
 				var ptoData = new PTOData {
 					TransmissionType = pto.PTOTransmissionType,
-					LossMap = PTOIdleLossMapReader.Create(pto.PTOLossMap),
+					LossMap = pto.PTOLossMap == null ? PTOIdleLossMapReader.GetZeroLossMap() : PTOIdleLossMapReader.Create(pto.PTOLossMap),
 				};
 				if (pto.PTOCycle != null) {
 					ptoData.PTOCycle = DrivingCycleDataReader.ReadFromDataTable(pto.PTOCycle, "PTO", false);
