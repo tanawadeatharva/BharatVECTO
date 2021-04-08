@@ -25,18 +25,18 @@ namespace TUGraz.VectoCore.OutputData
 			var entriesAuxICEStandstill = modData.GetValues(x => new
 			{
 				dt = x.Field<Second>(ModalResultField.simulationInterval.GetName()), 
-				P_off = x.Field<Watt>(ModalResultField.P_aux_ESS_mech_ice_off.GetName()),
-				P_on = x.Field<Watt>(ModalResultField.P_aux_ESS_mech_ice_on.GetName()),
+				P_off = x.Field<Watt>(ModalResultField.P_aux_ESS_mech_ice_off.GetName()) ?? 0.SI<Watt>(),
+				P_on = x.Field<Watt>(ModalResultField.P_aux_ESS_mech_ice_on.GetName()) ?? 0.SI<Watt>(),
 				v = x.Field<MeterPerSecond>(ModalResultField.v_act.GetName()),
 				IceOn = x.Field<bool>(ModalResultField.ICEOn.GetName())
-			}).Where(x => x.v.IsEqual(0) && !x.IceOn).ToList();
+			}).Where(x => x.v != null && x.v.IsEqual(0) && !x.IceOn).ToList();
 			var entriesAuxICEDriving = modData.GetValues(x => new {
 				dt = x.Field<Second>(ModalResultField.simulationInterval.GetName()),
-				P_off = x.Field<Watt>(ModalResultField.P_aux_ESS_mech_ice_off.GetName()),
-				P_on = x.Field<Watt>(ModalResultField.P_aux_ESS_mech_ice_on.GetName()),
+				P_off = x.Field<Watt>(ModalResultField.P_aux_ESS_mech_ice_off.GetName()) ?? 0.SI<Watt>(),
+				P_on = x.Field<Watt>(ModalResultField.P_aux_ESS_mech_ice_on.GetName()) ?? 0.SI<Watt>(),
 				v = x.Field<MeterPerSecond>(ModalResultField.v_act.GetName()),
 				IceOn = x.Field<bool>(ModalResultField.ICEOn.GetName())
-			}).Where(x => !x.v.IsEqual(0) && !x.IceOn).ToList();
+			}).Where(x => x.v != null && !x.v.IsEqual(0) && !x.IceOn).ToList();
 
 			r.ICEOffTimeStandstill = entriesAuxICEStandstill.Sum(x => x.dt) ?? 0.SI<Second>();
 			r.EnergyAuxICEOffStandstill = entriesAuxICEStandstill.Sum(x => x.P_off * x.dt) ?? 0.SI<WattSecond>(); 
@@ -57,7 +57,7 @@ namespace TUGraz.VectoCore.OutputData
 				var airBusAuxPSON = modData.AirGeneratedAlwaysOn();
 				var deltaAir = modData.AirConsumed() - modData.AirGenerated();
 
-				var kAir = (workBusAuxPSCompOn - workBusAuxPSCompOff) / (airBusAuxPSON - 0.SI<NormLiter>());
+				var kAir = airBusAuxPSON.IsEqual(0) ? 0.SI(Unit.SI.Watt.Second.Per.Cubic.Meter) :(workBusAuxPSCompOn - workBusAuxPSCompOff) / (airBusAuxPSON - 0.SI<NormLiter>());
 				r.WorkBusAuxPSCorr = (kAir * deltaAir).Cast<WattSecond>();
 
 				var workBusAuxES = modData.EnergyBusAuxESConsumed() - modData.EnergyBusAuxESGenerated();

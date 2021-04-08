@@ -225,6 +225,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl {
 			vtpRunData.VTPData = new VTPData() {
 				CorrectionFactor = mileageCorrection,
 			};
+			vtpRunData.DriverData = Driverdata;
 			yield return vtpRunData;
 		}
 

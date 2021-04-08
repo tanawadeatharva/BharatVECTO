@@ -1020,7 +1020,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			if (dryRun) {
 				return -outTorque;
 			}
-			return (-outTorque).LimitTo(maxDriveTorque, maxRecuperationTorque);
+			return (-outTorque).LimitTo(maxDriveTorque, maxRecuperationTorque ?? VectoMath.Max(maxDriveTorque, 0.SI<NewtonMeter>()));
 		}
 	}
 

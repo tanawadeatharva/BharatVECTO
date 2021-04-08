@@ -175,6 +175,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 			};
 			vtpRunData.VehicleData.VehicleClass = Segment.VehicleClass;
 			vtpRunData.VehicleData.LegislativeClass = JobInputData.Vehicle.LegislativeClass;
+			vtpRunData.DriverData = Driverdata;
 
 			//var ncvStd = DeclarationData.FuelData.Lookup(JobInputData.Vehicle.Components.EngineInputData.FuelType).LowerHeatingValueVecto;
 			//var ncvCorrection = ncvStd / JobInputData.NetCalorificValueTestFuel;

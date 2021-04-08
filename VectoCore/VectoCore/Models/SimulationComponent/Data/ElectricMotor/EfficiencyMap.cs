@@ -1,12 +1,14 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using Newtonsoft.Json;
+using TUGraz.VectoCommon.Exceptions;
+using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
-using TUGraz.VectoCore.Models.SimulationComponent.Data.Engine;
 using TUGraz.VectoCore.Utils;
 
-namespace TUGraz.VectoCore.Models.SimulationComponent.Data {
-	public class EfficiencyMap
+namespace TUGraz.VectoCore.Models.SimulationComponent.Data.ElectricMotor
+{
+	public class EfficiencyMap : LoggingObject
 	{
 		private readonly DelaunayMap _efficiencyMapMech2El;
 		private PerSecond _maxSpeed;
@@ -132,19 +134,27 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data {
 			if (avgSpeed.IsGreaterOrEqual(MaxSpeed)) {
 				return 0.SI<NewtonMeter>();
 			}
-			var retVal = SearchAlgorithm.Search(
-				maxEmTorque, elPowerMaxEM.ElectricalPower - batPower, -maxEmTorque * 0.1 * (maxEmTorque > 0 ? -1 : 1),
-				getYValue: x => {
-					var myX = (EfficiencyResult)x;
-					return myX.ElectricalPower - batPower;
-				},
-				evaluateFunction: x => LookupElectricPower(avgSpeed, x, true),
-				criterion: x => {
-					var myX = (EfficiencyResult)x;
-					return (myX.ElectricalPower - batPower).Value();
-				});
 
-			return retVal;
+			try {
+				var retVal = SearchAlgorithm.Search(
+					maxEmTorque, elPowerMaxEM.ElectricalPower - batPower,
+					-maxEmTorque * 0.1 * (maxEmTorque > 0 ? -1 : 1),
+					getYValue: x => {
+						var myX = (EfficiencyResult)x;
+						return myX.ElectricalPower - batPower;
+					},
+					evaluateFunction: x => LookupElectricPower(avgSpeed, x, true),
+					criterion: x => {
+						var myX = (EfficiencyResult)x;
+						return (myX.ElectricalPower - batPower).Value();
+					});
+
+				return retVal;
+			} catch (VectoSearchFailedException vsfe) {
+				Log.Error("Failed to find mechanic power for given electric power! n_avg: {0} P_el: {1}; {2}", avgSpeed.AsRPM, batPower, vsfe.Message);
+			}
+
+			return null;
 		}
 
 		protected PerSecond MaxSpeed

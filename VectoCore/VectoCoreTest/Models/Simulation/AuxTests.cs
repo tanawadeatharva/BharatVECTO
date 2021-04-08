@@ -51,6 +51,7 @@ using TUGraz.VectoCore.Tests.Models.SimulationComponent;
 using TUGraz.VectoCore.Tests.Utils;
 using NUnit.Framework;
 using TUGraz.VectoCommon.InputData;
+using TUGraz.VectoCore.Models.SimulationComponent.Data.Engine;
 
 // ReSharper disable ObjectCreationAsStatement
 
@@ -76,12 +77,17 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 				JobName = "AuxWriteModFileSumFile",
 				EngineData = new CombustionEngineData() {
 					Fuels = new[] {new CombustionEngineFuelData {
-						FuelData = FuelData.Diesel
+						FuelData = FuelData.Diesel,
+						ConsumptionMap = FuelConsumptionMapReader.ReadFromFile(@"TestData\Components\12t Delivery Truck.vmap"),
 					}}.ToList(),
+					IdleSpeed = 600.RPMtoRad()
 				},
 				ElectricMachinesData = new List<Tuple<PowertrainPosition, ElectricMotorData>>(),
 				Cycle = new DrivingCycleData() {
 					Name = "MockCycle",
+				},
+				DriverData = new DriverData() {
+					EngineStopStart = new DriverData.EngineStopStartData(),
 				}
         };
 			var modData = new ModalDataContainer(runData, fileWriter, null) {
@@ -129,6 +135,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 				modData[ModalResultField.P_ice_out] = 0.SI<Watt>();
 				modData[ModalResultField.acc] = 0.SI<MeterPerSquareSecond>();
 				modData[ModalResultField.ICEOn] = false;
+				modData[ModalResultField.v_act] = 0.KMPHtoMeterPerSecond();
 				container.CommitSimulationStep(t, dt);
 				t += dt;
 			}
