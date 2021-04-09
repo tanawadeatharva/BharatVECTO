@@ -56,6 +56,7 @@ using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter;
 namespace TUGraz.VectoCore.Tests.XML
 {
 	[TestFixture]
+	[Parallelizable(ParallelScope.All)]
 	public class XMLDeclarationInputTest
 	{
 		const string SampleVehicleDecl = "TestData/XML/XMLReaderDeclaration/vecto_vehicle-sample.xml";

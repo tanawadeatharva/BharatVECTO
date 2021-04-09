@@ -58,6 +58,7 @@ using TUGraz.VectoCore.Models.SimulationComponent.Data.Engine;
 namespace TUGraz.VectoCore.Tests.Models.Simulation
 {
 	[TestFixture]
+	[Parallelizable(ParallelScope.All)]
 	public class AuxTests
 	{
 

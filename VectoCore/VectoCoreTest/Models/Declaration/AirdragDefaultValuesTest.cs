@@ -36,6 +36,7 @@ using NUnit.Framework;
 namespace TUGraz.VectoCore.Tests.Models.Declaration
 {
 	[TestFixture]
+	[Parallelizable(ParallelScope.All)]
 	public class AirdragDefaultValuesTest
 	{
 		[OneTimeSetUp]

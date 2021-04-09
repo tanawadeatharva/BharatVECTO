@@ -37,6 +37,7 @@ using TUGraz.VectoCommon.Utils;
 namespace TUGraz.VectoCore.Tests.Models.Simulation
 {
 	[TestFixture]
+	[Parallelizable(ParallelScope.All)]
 	public class GetSectionTests
 	{
 		public class Entry

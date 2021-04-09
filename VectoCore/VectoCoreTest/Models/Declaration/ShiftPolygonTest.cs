@@ -53,6 +53,7 @@ using Point = TUGraz.VectoCommon.Utils.Point;
 namespace TUGraz.VectoCore.Tests.Models.Declaration
 {
 	[TestFixture]
+	[Parallelizable(ParallelScope.All)]
 	public class ShiftPolygonTest
 	{
 		protected IXMLInputDataReader xmlInputReader;

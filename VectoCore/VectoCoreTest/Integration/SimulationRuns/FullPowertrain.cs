@@ -57,6 +57,7 @@ using TUGraz.VectoCore.InputData.Reader.Impl;
 namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 {
 	[TestFixture]
+	[Parallelizable(ParallelScope.All)]
 	public class FullPowerTrain
 	{
 		public const string CycleFile = @"TestData\Integration\FullPowerTrain\1-Gear-Test-dist.vdri";
@@ -164,6 +165,7 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 				GearboxData = gearboxData,
 				GearshiftParameters = CreateGearshiftData(),
 				AirdragData = airDragData,
+				DriverData = driverData,
 				SimulationType = SimulationType.DistanceCycle,
 				ElectricMachinesData = new List<Tuple<PowertrainPosition, ElectricMotorData>>()
 			};
@@ -247,7 +249,8 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 				AxleGearData = axleGearData,
 				GearboxData = gearboxData,
 				GearshiftParameters = CreateGearshiftData(),
-				AirdragData = airDragData, 
+				AirdragData = airDragData,
+				DriverData = driverData,
 				ElectricMachinesData = new List<Tuple<PowertrainPosition, ElectricMotorData>>()
 			};
 			var fileWriter = new FileOutputWriter("Coach_FullPowertrain_LowSpeed");

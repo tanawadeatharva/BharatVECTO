@@ -5,6 +5,7 @@ using TUGraz.VectoCommon.BusAuxiliaries;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
+using TUGraz.VectoCore.Models.SimulationComponent.Impl;
 
 namespace TUGraz.VectoCore.Tests.Utils {
 	public class MockDeclarationVehicleInputData : IVehicleDeclarationInputData, IVehicleComponentsDeclaration
@@ -151,6 +152,8 @@ namespace TUGraz.VectoCore.Tests.Utils {
 
 		public double InitialSOC { get; }
 		public VectoSimulationJobType VehicleType { get; }
+		public GearshiftPosition PTO_DriveGear { get; }
+		public PerSecond PTO_DriveEngineSpeed { get; }
 
 		public bool ZeroEmissionVehicle { get; }
 		public bool HybridElectricHDV { get; }

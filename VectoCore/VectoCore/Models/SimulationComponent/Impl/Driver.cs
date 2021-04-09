@@ -973,7 +973,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			//	limitApplied = true;
 			//}
 			var accelerationLimits = DriverData.AccelerationCurve.Lookup(DataBus.VehicleInfo.VehicleSpeed);
-			if (retVal.Acceleration > accelerationLimits.Acceleration) {
+			//if (retVal.Acceleration > accelerationLimits.Acceleration) {
+			if (limits != LimitationMode.NoLimitation && operatingPoint.Acceleration > accelerationLimits.Acceleration) {
 				retVal.Acceleration = accelerationLimits.Acceleration;
 				limitApplied = true;
 			}
@@ -986,7 +987,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				retVal.SimulationInterval =
 					ComputeTimeInterval(retVal.Acceleration, retVal.SimulationDistance)
 						.SimulationInterval;
-				Log.Debug("Limiting acceleration from {0} to {1}, dt: {2}", originalAcceleration,
+				Log.Debug("Limiting acceleration from {0} to {1}, dt: {2}", operatingPoint.Acceleration,
 						retVal.Acceleration, retVal.SimulationInterval);
 			}
 			return retVal;

@@ -46,6 +46,7 @@ using TUGraz.VectoCore.Utils;
 namespace TUGraz.VectoCore.Tests.Integration.Declaration
 {
 	[TestFixture]
+	[Parallelizable(ParallelScope.All)]
 	public class EngineInputDataTests
 	{
 		const string SampleVehicleDecl = "TestData/XML/XMLReaderDeclaration/vecto_vehicle-sample.xml";
@@ -91,7 +92,7 @@ namespace TUGraz.VectoCore.Tests.Integration.Declaration
 			var inputDataProvider = xmlInputReader.CreateDeclaration(modified);
 
 			var factory = new SimulatorFactory(ExecutionMode.Declaration, inputDataProvider, null, validate: false);
-			var first = factory.SimulationRuns().First();
+			var first = factory.SimulationRuns().ToArray().First();
 
 			var modData = ((ModalDataContainer)first.GetContainer().ModalData).Data;
 			first.Run();

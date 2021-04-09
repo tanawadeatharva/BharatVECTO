@@ -108,7 +108,7 @@ namespace TUGraz.VectoCore.OutputData.FileIO
 				modFileName = string.Format("{0}{1}", runName, Constants.FileExtensions.ModDataFile);
 			}
 
-			return Path.Combine(BasePath, modFileName);
+			return Path.Combine(BasePath, string.Concat(modFileName.Split(Path.GetInvalidFileNameChars())));
 		}
 
 		public void WriteModData(int jobRunId, string runName, string cycleName, string runSuffix, DataTable modData)

@@ -14,6 +14,7 @@ or
 
 "c:\Program Files (x86)\MSBuild\14.0\Bin\MSBuild.exe" Vecto.sln /t:Build /p:Configuration=Debug
 
+"C:\Program Files (x86)\Microsoft Visual Studio\2019\Professional\MSBuild\Current\Bin\amd64\MSBuild.exe"
 
 Option 2: Load the solution file in Visual Studio and compile VECTO.
 

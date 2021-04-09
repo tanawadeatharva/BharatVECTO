@@ -96,7 +96,8 @@ namespace TUGraz.VectoCore.Tests.Integration
 				EngineData = engineData,
 				ElectricMachinesData = new List<Tuple<PowertrainPosition, ElectricMotorData>>(),
 				SimulationType = SimulationType.DistanceCycle,
-				Cycle = cycleData,
+				Cycle = cycleData, 
+				DriverData = driverData,
 				BusAuxiliaries = BusAuxiliaryInputData.ReadBusAuxiliaries(AdvancedAuxFile, vehicleData)
 			};
 			var fileWriter = new FileOutputWriter(modFileName);

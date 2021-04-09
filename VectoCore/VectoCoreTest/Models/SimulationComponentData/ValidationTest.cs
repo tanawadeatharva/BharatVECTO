@@ -55,6 +55,7 @@ using TUGraz.VectoCore.Utils;
 namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 {
 	[TestFixture]
+	[Parallelizable(ParallelScope.All)]
 	[SuppressMessage("ReSharper", "InconsistentNaming")]
 	[SuppressMessage("ReSharper", "UnusedMember.Local")]
 	public class ValidationTestClass

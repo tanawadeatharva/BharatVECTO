@@ -25,6 +25,7 @@ Imports TUGraz.VectoCore.InputData.Impl
 Imports TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 Imports TUGraz.VectoCore.Models.Declaration
 Imports TUGraz.VectoCore.Models.SimulationComponent.Data
+Imports TUGraz.VectoCore.Models.SimulationComponent.Impl
 Imports TUGraz.VectoCore.Utils
 
 <CustomValidation(GetType(Vehicle), "ValidateVehicle")>
@@ -66,7 +67,8 @@ Public Class Vehicle
 
 	Public PtoType As String
 	Public ReadOnly PtoLossMap As SubPath
-	Public ReadOnly PtoCycle As SubPath
+	Public ReadOnly PtoCycleStandstill As SubPath
+    Public ReadOnly PtoCycleDriving As SubPath
 	Public torqueLimitsList As List(Of ITorqueLimitInputData)
 	Public VehicleidlingSpeed As PerSecond
 	Public legClass As LegislativeClass
@@ -87,6 +89,9 @@ Public Class Vehicle
     Public ElectricMotorRatio As Double
     Public ElectricMotorMechEff As Double
 
+    public GearDuringPTODrive As UInteger?
+    Public EngineSpeedDuringPTODrive As PerSecond
+
     Public Sub New()
 		_path = ""
 		_filePath = ""
@@ -100,7 +105,8 @@ Public Class Vehicle
 		Axles = New List(Of AxleInputData)
 		torqueLimitsList = New List(Of ITorqueLimitInputData)
 		PtoLossMap = New SubPath()
-        PtoCycle = New SubPath()
+		PtoCycleStandstill = New SubPath()
+        PtoCycleDriving = new SubPath()
         BatteryFile = New SubPath()
         ElectricMotorFile = New SubPath()
 
@@ -217,7 +223,8 @@ Public Class Vehicle
 
 		PtoType = PTOTransmission.NoPTO
 		PtoLossMap.Clear()
-		PtoCycle.Clear()
+		PtoCycleStandstill.Clear()
+	    PtoCycleDriving.Clear()
 
 		Axles.Clear()
 		VehicleCategory = VehicleCategory.RigidTruck
@@ -551,24 +558,34 @@ Public Class Vehicle
 		End Get
 	End Property
 
-	Public ReadOnly Property IPTOTransmissionInputData_PTOCycle As TableData Implements IPTOTransmissionInputData.PTOCycle
+	Public ReadOnly Property PTOCycleDuringStop As TableData Implements IPTOTransmissionInputData.PTOCycleDuringStop
 		Get
-			If String.IsNullOrWhiteSpace(PtoCycle.FullPath) Then
+			If String.IsNullOrWhiteSpace(PtoCycleStandstill.FullPath) Then
 				Return Nothing
 			End If
-			Return VectoCSVFile.Read(PtoCycle.FullPath)
+			Return VectoCSVFile.Read(PtoCycleStandstill.FullPath)
 		End Get
 	End Property
 
 	Public ReadOnly Property IPTOTransmissionInputData_PTOLossMap As TableData _
 		Implements IPTOTransmissionInputData.PTOLossMap
 		Get
-			If String.IsNullOrWhiteSpace(PtoCycle.FullPath) Then
+			If String.IsNullOrWhiteSpace(PtoLossMap.FullPath) Then
 				Return Nothing
 			End If
 			Return VectoCSVFile.Read(PtoLossMap.FullPath)
 		End Get
 	End Property
+
+    Public ReadOnly Property PTOCycleWhileDriving As TableData _
+        Implements IPTOTransmissionInputData.PTOCycleWhileDriving
+        Get
+            If String.IsNullOrWhiteSpace(PtoCycleDriving.FullPath) Then
+                Return Nothing
+            End If
+            Return VectoCSVFile.Read(PtoCycleDriving.FullPath)
+        End Get
+    End Property
 
 
 	Public ReadOnly Property IDeclarationInputDataProvider_AirdragInputData As IAirdragDeclarationInputData _
@@ -779,9 +796,21 @@ Public Class Vehicle
 		End Get
 	End Property
 
-	Public Property InitialSOC As Double Implements IVehicleEngineeringInputData.InitialSOC
+    Public ReadOnly Property PTO_DriveGear As GearshiftPosition Implements IVehicleEngineeringInputData.PTO_DriveGear
+    get
+            return If(gearDuringPTODrive.HasValue, new GearshiftPosition(GearDuringPTODrive.Value), Nothing)
+    End Get
+end Property
+
+    Public Property InitialSOC As Double Implements IVehicleEngineeringInputData.InitialSOC
     Public Property VehicleType As VectoSimulationJobType Implements IVehicleEngineeringInputData.VehicleType
 
+
+    Public ReadOnly Property PTO_DriveEngineSpeed As PerSecond Implements IVehicleEngineeringInputData.PTO_DriveEngineSpeed
+    get
+            Return EngineSpeedDuringPTODrive
+    End Get
+    End Property
 
     Public ReadOnly Property ZeroEmissionVehicle As Boolean Implements IVehicleDeclarationInputData.ZeroEmissionVehicle
         Get

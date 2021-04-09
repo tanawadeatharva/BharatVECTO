@@ -49,6 +49,7 @@ using TUGraz.VectoCore.Tests.Utils;
 namespace TUGraz.VectoCore.Tests.Models.Declaration
 {
     [TestFixture]
+	[Parallelizable(ParallelScope.All)]
     public class DeclarationDataTest
     {
         private const double Tolerance = 0.0001;
@@ -418,10 +419,10 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
         TestCase(VehicleClass.Class4, new[] { 350, 200, 150, 300, 200 }),
         TestCase(VehicleClass.Class5, new[] { 350, 200, 150, -1, 200 }),
         TestCase(VehicleClass.Class9, new[] { 350, 200, 150, 300, 200 }),
-        TestCase(VehicleClass.Class10, new[] { 350, 200, -1, -1, 200 }),
-        TestCase(VehicleClass.Class11, new[] { 350, 200, -1, 300, 200 }),
-        TestCase(VehicleClass.Class12, new[] { 350, 200, -1, -1, 200 }),
-        TestCase(VehicleClass.Class16, new[] { -1, -1, - 1, -1, 200 })]
+		TestCase(VehicleClass.Class10, new[] { 350, 200, 150, 0, 200 }),
+		TestCase(VehicleClass.Class11, new[] { 350, 200, 150, 300, 200 }),
+		TestCase(VehicleClass.Class12, new[] { 350, 200, 150, 0, 200 }),
+		TestCase(VehicleClass.Class16, new[] { 350, 200, 150, 0, 200 })]
         public void AuxHeatingVentilationAirConditionTest_Default(VehicleClass vehicleClass, int[] expected)
         {
             for (var i = 0; i < expected.Length; i++)
@@ -667,46 +668,56 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
         TestCase(VehicleCategory.Tractor, AxleConfiguration.AxleConfig_4x2, 7500.01, 0, false, VehicleClass.Class1),
         TestCase(VehicleCategory.RigidTruck, AxleConfiguration.AxleConfig_4x2, 10000, 0, false, VehicleClass.Class1),
         TestCase(VehicleCategory.Tractor, AxleConfiguration.AxleConfig_4x2, 10000, 0, false, VehicleClass.Class1),
+
         TestCase(VehicleCategory.RigidTruck, AxleConfiguration.AxleConfig_4x2, 10001, 0, false, VehicleClass.Class2),
         TestCase(VehicleCategory.Tractor, AxleConfiguration.AxleConfig_4x2, 10001, 0, false, VehicleClass.Class2),
         TestCase(VehicleCategory.RigidTruck, AxleConfiguration.AxleConfig_4x2, 12000, 0, false, VehicleClass.Class2),
         TestCase(VehicleCategory.Tractor, AxleConfiguration.AxleConfig_4x2, 12000, 0, false, VehicleClass.Class2),
+
         TestCase(VehicleCategory.RigidTruck, AxleConfiguration.AxleConfig_4x2, 12001, 0, false, VehicleClass.Class3),
         TestCase(VehicleCategory.Tractor, AxleConfiguration.AxleConfig_4x2, 12001, 0, false, VehicleClass.Class3),
         TestCase(VehicleCategory.RigidTruck, AxleConfiguration.AxleConfig_4x2, 16000, 0, false, VehicleClass.Class3),
         TestCase(VehicleCategory.Tractor, AxleConfiguration.AxleConfig_4x2, 16000, 0, false, VehicleClass.Class3),
+
         TestCase(VehicleCategory.RigidTruck, AxleConfiguration.AxleConfig_4x2, 16001, 0, false, VehicleClass.Class4),
         TestCase(VehicleCategory.RigidTruck, AxleConfiguration.AxleConfig_4x2, 99000, 0, false, VehicleClass.Class4),
         TestCase(VehicleCategory.RigidTruck, AxleConfiguration.AxleConfig_4x2, 16001, 0, true, VehicleClass.Class4),
         TestCase(VehicleCategory.RigidTruck, AxleConfiguration.AxleConfig_4x2, 99000, 0, true, VehicleClass.Class4),
+
         TestCase(VehicleCategory.Tractor, AxleConfiguration.AxleConfig_4x2, 16001, 0, false, VehicleClass.Class5),
         TestCase(VehicleCategory.Tractor, AxleConfiguration.AxleConfig_4x2, 99000, 0, false, VehicleClass.Class5),
         TestCase(VehicleCategory.Tractor, AxleConfiguration.AxleConfig_4x2, 16001, 0, true, VehicleClass.Class5),
         TestCase(VehicleCategory.Tractor, AxleConfiguration.AxleConfig_4x2, 99000, 0, true, VehicleClass.Class5),
+
         //TestCase(VehicleCategory.RigidTruck, AxleConfiguration.AxleConfig_4x4, 7500, 0, VehicleClass.Class6),
         //TestCase(VehicleCategory.RigidTruck, AxleConfiguration.AxleConfig_4x4, 16000, 0, VehicleClass.Class6),
         //TestCase(VehicleCategory.RigidTruck, AxleConfiguration.AxleConfig_4x4, 16001, 0, VehicleClass.Class7),
         //TestCase(VehicleCategory.RigidTruck, AxleConfiguration.AxleConfig_4x4, 99000, 0, VehicleClass.Class7),
         //TestCase(VehicleCategory.Tractor, AxleConfiguration.AxleConfig_4x4, 16000, 0, VehicleClass.Class8),
         //TestCase(VehicleCategory.Tractor, AxleConfiguration.AxleConfig_4x4, 99000, 0, VehicleClass.Class8),
+
         TestCase(VehicleCategory.RigidTruck, AxleConfiguration.AxleConfig_6x2, 7500, 0, false, VehicleClass.Class9),
         TestCase(VehicleCategory.RigidTruck, AxleConfiguration.AxleConfig_6x2, 16000, 0, false, VehicleClass.Class9),
         TestCase(VehicleCategory.RigidTruck, AxleConfiguration.AxleConfig_6x2, 40000, 0, false, VehicleClass.Class9),
         TestCase(VehicleCategory.RigidTruck, AxleConfiguration.AxleConfig_6x2, 99000, 0, false, VehicleClass.Class9),
         TestCase(VehicleCategory.RigidTruck, AxleConfiguration.AxleConfig_6x2, 7500, 0, true, VehicleClass.Class9),
         TestCase(VehicleCategory.RigidTruck, AxleConfiguration.AxleConfig_6x2, 99000, 0, true, VehicleClass.Class9),
+
         TestCase(VehicleCategory.Tractor, AxleConfiguration.AxleConfig_6x2, 7500, 0, false, VehicleClass.Class10),
         TestCase(VehicleCategory.Tractor, AxleConfiguration.AxleConfig_6x2, 16000, 0, false, VehicleClass.Class10),
         TestCase(VehicleCategory.Tractor, AxleConfiguration.AxleConfig_6x2, 40000, 0, false, VehicleClass.Class10),
         TestCase(VehicleCategory.Tractor, AxleConfiguration.AxleConfig_6x2, 99000, 0, false, VehicleClass.Class10),
         TestCase(VehicleCategory.Tractor, AxleConfiguration.AxleConfig_6x2, 7500, 0, true, VehicleClass.Class10),
         TestCase(VehicleCategory.Tractor, AxleConfiguration.AxleConfig_6x2, 99000, 0, true, VehicleClass.Class10),
+
         TestCase(VehicleCategory.RigidTruck, AxleConfiguration.AxleConfig_6x4, 7500, 0, false, VehicleClass.Class11),
         TestCase(VehicleCategory.RigidTruck, AxleConfiguration.AxleConfig_6x4, 40000, 0, false, VehicleClass.Class11),
+
         TestCase(VehicleCategory.Tractor, AxleConfiguration.AxleConfig_6x4, 7500, 0, false, VehicleClass.Class12),
         TestCase(VehicleCategory.Tractor, AxleConfiguration.AxleConfig_6x4, 99000, 0, false, VehicleClass.Class12),
+
         TestCase(VehicleCategory.RigidTruck, AxleConfiguration.AxleConfig_8x4, 7500, 0, false, VehicleClass.Class16),
-        TestCase(VehicleCategory.RigidTruck, AxleConfiguration.AxleConfig_8x4, 99000, 0, false, VehicleClass.Class16)
+		TestCase(VehicleCategory.RigidTruck, AxleConfiguration.AxleConfig_8x4, 99000, 0, false, VehicleClass.Class16),
         ]
         public void SegmentLookupTest(VehicleCategory category, AxleConfiguration axleConfiguration, double grossWeight,
             double curbWeight, bool vocational, VehicleClass expectedClass)
@@ -2215,6 +2226,14 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
         }
 
         [
+		TestCase(VehicleClass.Class1, true, 169.9, WeightingGroup.Group1),
+		TestCase(VehicleClass.Class1, false, 265, WeightingGroup.Group1),
+		TestCase(VehicleClass.Class2, true, 169.9, WeightingGroup.Group2),
+		TestCase(VehicleClass.Class2, false, 265, WeightingGroup.Group2),
+		TestCase(VehicleClass.Class3, true, 169.9, WeightingGroup.Group3),
+		TestCase(VehicleClass.Class3, false, 265, WeightingGroup.Group3),
+
+
         TestCase(VehicleClass.Class4, true, 169.9, WeightingGroup.Group4UD),
         TestCase(VehicleClass.Class4, false, 169.9, WeightingGroup.Group4UD),
         TestCase(VehicleClass.Class4, false, 170, WeightingGroup.Group4RD),
@@ -2242,6 +2261,13 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
         TestCase(VehicleClass.Class10, true, 169.9, WeightingGroup.Group10LH),
         TestCase(VehicleClass.Class10, true, 264.9, WeightingGroup.Group10LH),
         TestCase(VehicleClass.Class10, true, 265, WeightingGroup.Group10LH),
+
+		TestCase(VehicleClass.Class11, true, 169.9, WeightingGroup.Group11),
+		TestCase(VehicleClass.Class11, false, 265, WeightingGroup.Group11),
+		TestCase(VehicleClass.Class12, true, 169.9, WeightingGroup.Group12),
+		TestCase(VehicleClass.Class12, false, 265, WeightingGroup.Group12),
+		TestCase(VehicleClass.Class16, true, 169.9, WeightingGroup.Group16),
+		TestCase(VehicleClass.Class16, false, 265, WeightingGroup.Group16),
             ]
         public void TestWeightingGroupLookup(
             VehicleClass vehicleGroup, bool sleeperCab, double ratedPowerkWm, WeightingGroup expectedWeightingGroup)
@@ -2262,29 +2288,28 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 
             TestCase(WeightingGroup.Group1s, 0.1, 0.4, 0, 0, 0.15, 0.35),
             TestCase(WeightingGroup.Group1, 0.1, 0.4, 0, 0, 0.15, 0.35),
-			TestCase(WeightingGroup.Group2, 0.06, 0.24, 0.06, 0.14, 0.15, 0.35),
-			TestCase(WeightingGroup.Group3, 0.1, 0.4, 0, 0, 0.15, 0.35),
 
-            TestCase(WeightingGroup.Group4UD, 0, 0, 0, 0, 0.5, 0.5),
+			TestCase(WeightingGroup.Group4UD, 0, 0, 0, 0, 0.5, 0.5, TestName = "TestMissionProfileWeights Grp 4UD"),
             TestCase(WeightingGroup.Group4RD, 0.45, 0.45, 0.05, 0.05, 0, 0),
             TestCase(WeightingGroup.Group4LH, 0.05, 0.05, 0.45, 0.45, 0, 0),
+			TestCase(WeightingGroup.Group4RD, 0.05, 0.05, 0.45, 0.45, 0, 0, TestName = "TestMissionProfileWeights Grp 4RD"),
+			TestCase(WeightingGroup.Group4LH, 0.45, 0.45, 0.05, 0.05, 0, 0, TestName = "TestMissionProfileWeights Grp 4LH"),
 
-            TestCase(WeightingGroup.Group5RD, 0.27, 0.63, 0.03, 0.07, 0, 0),
-            TestCase(WeightingGroup.Group5LH, 0.03, 0.07, 0.27, 0.63, 0, 0),
+			TestCase(WeightingGroup.Group5RD, 0.03, 0.07, 0.27, 0.63, 0, 0, TestName = "TestMissionProfileWeights Grp 5RD"),
+			TestCase(WeightingGroup.Group5LH, 0.27, 0.63, 0.03, 0.07, 0, 0, TestName = "TestMissionProfileWeights Grp 5LH"),
 
-            TestCase(WeightingGroup.Group9RD, 0.27, 0.63, 0.03, 0.07, 0, 0),
-            TestCase(WeightingGroup.Group9LH, 0.03, 0.07, 0.27, 0.63, 0, 0),
+			TestCase(WeightingGroup.Group9RD, 0.03, 0.07, 0.27, 0.63, 0, 0, TestName = "TestMissionProfileWeights Grp 9RD"),
+			TestCase(WeightingGroup.Group9LH, 0.27, 0.63, 0.03, 0.07, 0, 0, TestName = "TestMissionProfileWeights Grp 9LH"),
 
-            TestCase(WeightingGroup.Group10RD, 0.27, 0.63, 0.03, 0.07, 0, 0),
-            TestCase(WeightingGroup.Group10LH, 0.03, 0.07, 0.27, 0.63, 0, 0),
+			TestCase(WeightingGroup.Group10RD, 0.03, 0.07, 0.27, 0.63, 0, 0, TestName = "TestMissionProfileWeights Grp 10RD"),
+			TestCase(WeightingGroup.Group10LH, 0.27, 0.63, 0.03, 0.07, 0, 0, TestName = "TestMissionProfileWeights Grp 10LH"),
 
-			TestCase(WeightingGroup.Group11, 0.11, 0.25, 0.01, 0.02, 0, 0, 0.08, 0.19, 0.09, 0.25),
-			TestCase(WeightingGroup.Group12, 0.03, 0.07, 0.16, 0.36, 0, 0, 0, 0, 0.11, 0.27),
-			TestCase(WeightingGroup.Group16, 0, 0, 0, 0, 0, 0, 0, 0, 0.3, 0.7),
+			TestCase(WeightingGroup.Group11, 0, 0, 0.15, 0.35, 0, 0, 0, 0, 0.15, 0.35, TestName = "TestMissionProfileWeights Grp 11"),
+			TestCase(WeightingGroup.Group12, 0, 0, 0.21, 0.49, 0, 0, 0, 0, 0.09, 0.21, TestName = "TestMissionProfileWeights Grp 12"),
+			TestCase(WeightingGroup.Group16, 0, 0, 0, 0, 0, 0, 0, 0, 0.3, 0.7, TestName = "TestMissionProfileWeights Grp 16"),
 
-        ]
-        public void TestMissionProfileWeights(
-			WeightingGroup group, double eRdLow, double eRdRef, double eLhLow, double eLhRef, double eUdLow, double eUdRef, double eMuLow = 0, double eMuRef = 0, double eCoLow = 0, double eCoRef = 0, double eLhEmsRef = 0, double elhEmsLow = 0, double eRdEmsLow = 0, double eRdEmsRef = 0)
+		]
+		public void TestMissionProfileWeights(WeightingGroup group, double eLhLow, double eLhRef, double eRdLow, double eRdRef, double eUdLow, double eUdRef, double eMuLow = 0, double eMuRef = 0, double eCoLow = 0, double eCoRef = 0, double elhEmsLow = 0, double eLhEmsRef = 0, double eRdEmsLow = 0, double eRdEmsRef = 0)
 		{
             var factors = DeclarationData.WeightingFactors.Lookup(group);
 

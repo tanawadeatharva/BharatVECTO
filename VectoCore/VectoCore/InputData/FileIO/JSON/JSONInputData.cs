@@ -32,6 +32,7 @@
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.IO;
 using System.Linq;
 using System.Xml;
@@ -312,6 +313,11 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 				return Engine;
 			}
+		}
+
+		public virtual TableData PTOCycleWhileDrive
+		{
+			get { return null; }
 		}
 
 		IDriverEngineeringInputData IEngineeringInputDataProvider.DriverInputData
@@ -690,6 +696,10 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 		public JSONInputDataV4(JObject data, string filename, bool tolerateMissing = false)
 			: base(data, filename, tolerateMissing) { }
 
+		public override TableData PTOCycleWhileDrive
+		{
+			get { return Body["PTOCycleDuringDrive"] != null ? VectoCSVFile.Read(Path.Combine(BasePath, Body.GetEx<string>("PTOCycleDuringDrive"))) : null; }
+		}
 		public override IGearshiftEngineeringInputData GearshiftInputData { get {
 			return Body["TCU"] == null
 				? null

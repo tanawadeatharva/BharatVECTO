@@ -392,6 +392,47 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			}
 		}
 
+		public virtual TableData PTOCycleDuringStop {
+			get {
+				var pto = Body[JsonKeys.Vehicle_PTO];
+				if (pto == null || pto[JsonKeys.Vehicle_PTO_Cycle] == null) {
+					return null;
+				}
+				var cycle = pto[JsonKeys.Vehicle_PTO_Cycle];
+				if (string.IsNullOrWhiteSpace(cycle.Value<string>())) {
+					return null;
+				}
+				try {
+					return ReadTableData(Body.GetEx(JsonKeys.Vehicle_PTO).GetEx<string>(JsonKeys.Vehicle_PTO_Cycle), "PTO Cycle Standstill");
+				} catch (Exception) {
+					if (!TolerateMissing) {
+						throw;
+					}
+					return new TableData(Path.Combine(BasePath, cycle.Value<string>()) + JSONFile.MissingFileSuffix, DataSourceType.Missing);
+				}
+			}
+		}
+
+		public virtual TableData PTOCycleWhileDriving {
+			get {
+				var pto = Body[JsonKeys.Vehicle_PTO];
+				if (pto == null || pto[JsonKeys.Vehicle_PTO_CycleDriving] == null) {
+					return null;
+				}
+				var cycle = pto[JsonKeys.Vehicle_PTO_CycleDriving];
+				if (string.IsNullOrWhiteSpace(cycle.Value<string>())) {
+					return null;
+				}
+				try {
+					return ReadTableData(Body.GetEx(JsonKeys.Vehicle_PTO).GetEx<string>(JsonKeys.Vehicle_PTO_CycleDriving), "PTO Cycle Driving");
+				} catch (Exception) {
+					if (!TolerateMissing) {
+						throw;
+					}
+					return new TableData(Path.Combine(BasePath, cycle.Value<string>()) + JSONFile.MissingFileSuffix, DataSourceType.Missing);
+				}
+			}
+		}
 		#endregion
 
 	}

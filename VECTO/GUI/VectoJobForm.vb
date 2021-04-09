@@ -482,7 +482,7 @@ Public Class VectoJobForm
         'Start/Stop
         Dim driver As IDriverEngineeringInputData = inputData.DriverInputData
 
-        If (Cfg.DeclMode) Then
+	    If (Cfg.DeclMode) Then
             TbDesMaxFile.Text = ""
             'AA-TB
             'Try and Select any previously selected Auxiliary Type
@@ -1523,6 +1523,7 @@ Public Class VectoJobForm
             tbBusAuxParams.Text = GetFilenameWithoutDirectory(BusAuxFileBrowser.Files(0), GetPath(VectoFile))
         End If
     End Sub
+
 End Class
 
 

@@ -23,7 +23,9 @@ Namespace UnitTests
         Private target As IM0_5_SmartAlternatorSetEfficiency
         Private signals As Signals = New Signals
 
-        Public Sub New()
+       
+		Public Sub New()
+		    Directory.SetCurrentDirectory(TestContext.CurrentContext.TestDirectory)
         End Sub
 
         <OneTimeSetUp>

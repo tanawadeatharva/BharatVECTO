@@ -38,6 +38,7 @@ using System.Xml;
 using System.Xml.Linq;
 using System.Xml.XPath;
 using TUGraz.VectoCommon.BusAuxiliaries;
+using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Resources;
@@ -204,8 +205,13 @@ namespace TUGraz.VectoCore.OutputData.XML
 
 		protected override void WriteResult(ResultEntry result)
 		{
-			ManufacturerRpt.WriteResult(result);
-			CustomerRpt.WriteResult(result);
+			var sumWeightinFactors = _weightingFactors.Values.Sum(x => x);
+			if (!sumWeightinFactors.IsEqual(0) && !sumWeightinFactors.IsEqual(1)) {
+				throw new VectoException("Mission Profile Weighting factors do not sum up to 1!");
+			}
+			
+				ManufacturerRpt.WriteResult(result);
+				CustomerRpt.WriteResult(result);
 		}
 
 		protected override void GenerateReports()

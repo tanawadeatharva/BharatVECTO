@@ -42,6 +42,7 @@ using TUGraz.VectoCore.Models.Declaration;
 namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 {
 	[TestFixture]
+	[Parallelizable(ParallelScope.All)]
 	public class FuelConsumptionMapTest
 	{
 		private const double Tolerance = 0.0001;
