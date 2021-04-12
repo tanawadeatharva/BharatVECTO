@@ -139,7 +139,7 @@ Public Class Vehicle
 				Dim segment As Segment = DeclarationData.TruckSegments.Lookup(vehicle.VehicleCategory, vehicle.AxleConfiguration,
 																		vehicle.GrossVehicleMassRating, vehicle.CurbMassChassis, false)
 				vehicleData = doa.CreateVehicleData(vehicle, segment, segment.Missions.First(),
-													segment.Missions.First().Loadings.First())
+													segment.Missions.First().Loadings.First(), true)
 				airdragData = doa.CreateAirdragData(vehicle, segment.Missions.First(), segment)
 				retarderData = doa.CreateRetarderData(vehicle)
 				angledriveData = doa.CreateAngledriveData(vehicle)

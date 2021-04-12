@@ -50,7 +50,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl {
 			Driverdata.AccelerationCurve = AccelerationCurveReader.ReadFromStream(Segment.AccelerationFile);
 			var tempVehicle = Dao.CreateVehicleData(
 				vehicle, Segment, Segment.Missions.First(),
-				Segment.Missions.First().Loadings.First());
+				Segment.Missions.First().Loadings.First(), _allowVocational);
 			tempVehicle.VehicleClass = JobInputData.ManufacturerReportInputData.VehicleClass;
 			tempVehicle.VehicleCode = JobInputData.ManufacturerReportInputData.VehicleCode;
 
@@ -87,7 +87,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl {
 			var vehicle = JobInputData.Vehicle;
 			var tempVehicle = Dao.CreateVehicleData(
 				vehicle, Segment, Segment.Missions.First(),
-				Segment.Missions.First().Loadings.First());
+				Segment.Missions.First().Loadings.First(), _allowVocational);
 			tempVehicle.VehicleClass = JobInputData.ManufacturerReportInputData.VehicleClass;
 			tempVehicle.VehicleCode = JobInputData.ManufacturerReportInputData.VehicleCode;
 			var powertrainConfig = new VectoRunData() {

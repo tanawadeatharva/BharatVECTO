@@ -29,7 +29,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 				mission, completedVehicle.Length, completedVehicle.Width,
 				completedVehicle.NumberOfPassengersLowerDeck + completedVehicle.NumberOfPassengersUpperDeck, loading.Key);
 
-			var vehicleData = base.CreateVehicleData(primaryVehicle, segment, mission, loading);
+			var vehicleData = base.CreateVehicleData(primaryVehicle, segment, mission, loading, false);
 			vehicleData.InputData = completedVehicle;
 			vehicleData.VIN = completedVehicle.VIN;
 			vehicleData.LegislativeClass = completedVehicle.LegislativeClass;

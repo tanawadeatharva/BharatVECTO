@@ -407,22 +407,22 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
         }
 
         [TestCase(VehicleClass.Class51, new[] { 200, 150, 150, -1, -1 }),
-        TestCase(VehicleClass.Class52, new[] { 200, 150, 150, -1, -1 }),
-        TestCase(VehicleClass.Class53, new[] { 200, 150, 150, -1, -1 }),
-        TestCase(VehicleClass.Class54, new[] { 200, 150, 150, -1, -1 }),
-        TestCase(VehicleClass.Class55, new[] { 200, 150, 150, -1, -1 }),
-        TestCase(VehicleClass.Class56, new[] { 200, 150, 150, -1, -1 }),
+		TestCase(VehicleClass.Class52, new[] { 200, 150, 150, -1, -1 }),
+		TestCase(VehicleClass.Class53, new[] { 200, 150, 150, -1, -1 }),
+		TestCase(VehicleClass.Class54, new[] { 200, 150, 150, -1, -1 }),
+		TestCase(VehicleClass.Class55, new[] { 200, 150, 150, -1, -1 }),
+		TestCase(VehicleClass.Class56, new[] { 200, 150, 150, -1, -1 }),
 		TestCase(VehicleClass.Class1s, new[] { 200, 150, 150, -1, -1 }),
-        TestCase(VehicleClass.Class1, new[] { 200, 150, 150, -1, -1 }),
-        TestCase(VehicleClass.Class2, new[] { 200, 200, 150, -1, -1 }),
-        TestCase(VehicleClass.Class3, new[] { 275, 200, 150, -1, -1 }),
-        TestCase(VehicleClass.Class4, new[] { 350, 200, 150, 300, 200 }),
-        TestCase(VehicleClass.Class5, new[] { 350, 200, 150, -1, 200 }),
-        TestCase(VehicleClass.Class9, new[] { 350, 200, 150, 300, 200 }),
-		TestCase(VehicleClass.Class10, new[] { 350, 200, 150, 0, 200 }),
+		TestCase(VehicleClass.Class1, new[] { 200, 150, 150, -1, -1 }),
+		TestCase(VehicleClass.Class2, new[] { 200, 200, 150, -1, -1 }),
+		TestCase(VehicleClass.Class3, new[] { 200, 200, 150, -1, -1 }),
+		TestCase(VehicleClass.Class4, new[] { 350, 200, 150, 300, 200 }),
+		TestCase(VehicleClass.Class5, new[] { 350, 200, 150, -1, 200 }),
+		TestCase(VehicleClass.Class9, new[] { 350, 200, 150, 300, 200 }),
+		TestCase(VehicleClass.Class10, new[] { 350, 200, 150, -1, 200 }),
 		TestCase(VehicleClass.Class11, new[] { 350, 200, 150, 300, 200 }),
-		TestCase(VehicleClass.Class12, new[] { 350, 200, 150, 0, 200 }),
-		TestCase(VehicleClass.Class16, new[] { 350, 200, 150, 0, 200 })]
+		TestCase(VehicleClass.Class12, new[] { 350, 200, 150, -1, 200 }),
+		TestCase(VehicleClass.Class16, new[] { 350, 200, 150, -1, 200 })]
         public void AuxHeatingVentilationAirConditionTest_Default(VehicleClass vehicleClass, int[] expected)
         {
             for (var i = 0; i < expected.Length; i++)
@@ -2279,19 +2279,19 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 
         [
 
-            TestCase(WeightingGroup.Group51, 0.25, 0.25, 0, 0, 0.25, 0.25),
-            TestCase(WeightingGroup.Group52, 0.25, 0.25, 0, 0, 0.25, 0.25),
-            TestCase(WeightingGroup.Group53, 0.25, 0.25, 0, 0, 0.25, 0.25),
-            TestCase(WeightingGroup.Group54, 0.25, 0.25, 0, 0, 0.25, 0.25),
-            TestCase(WeightingGroup.Group55, 0.25, 0.25, 0, 0, 0.25, 0.25),
-            TestCase(WeightingGroup.Group56, 0.25, 0.25, 0, 0, 0.25, 0.25),
+            TestCase(WeightingGroup.Group51, 0, 0, 0.25, 0.25, 0.25, 0.25),
+            TestCase(WeightingGroup.Group52, 0, 0, 0.25, 0.25, 0.25, 0.25),
+            TestCase(WeightingGroup.Group53, 0, 0, 0.25, 0.25, 0.25, 0.25),
+            TestCase(WeightingGroup.Group54, 0, 0, 0.25, 0.25, 0.25, 0.25),
+            TestCase(WeightingGroup.Group55, 0, 0, 0.25, 0.25, 0.25, 0.25),
+            TestCase(WeightingGroup.Group56, 0, 0, 0.25, 0.25, 0.25, 0.25),
 
-            TestCase(WeightingGroup.Group1s, 0.1, 0.4, 0, 0, 0.15, 0.35),
-            TestCase(WeightingGroup.Group1, 0.1, 0.4, 0, 0, 0.15, 0.35),
+			TestCase(WeightingGroup.Group1, 0, 0, 0.1, 0.3, 0.18, 0.42, TestName = "TestMissionProfileWeights Grp 1"),
+			TestCase(WeightingGroup.Group2, 0, 0, 0.125, 0.375, 0.15, 0.35, TestName = "TestMissionProfileWeights Grp 2"),
+			TestCase(WeightingGroup.Group3, 0, 0, 0.125, 0.375, 0.15, 0.35, TestName = "TestMissionProfileWeights Grp 3"),
+
 
 			TestCase(WeightingGroup.Group4UD, 0, 0, 0, 0, 0.5, 0.5, TestName = "TestMissionProfileWeights Grp 4UD"),
-            TestCase(WeightingGroup.Group4RD, 0.45, 0.45, 0.05, 0.05, 0, 0),
-            TestCase(WeightingGroup.Group4LH, 0.05, 0.05, 0.45, 0.45, 0, 0),
 			TestCase(WeightingGroup.Group4RD, 0.05, 0.05, 0.45, 0.45, 0, 0, TestName = "TestMissionProfileWeights Grp 4RD"),
 			TestCase(WeightingGroup.Group4LH, 0.45, 0.45, 0.05, 0.05, 0, 0, TestName = "TestMissionProfileWeights Grp 4LH"),
 
@@ -2307,7 +2307,6 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 			TestCase(WeightingGroup.Group11, 0, 0, 0.15, 0.35, 0, 0, 0, 0, 0.15, 0.35, TestName = "TestMissionProfileWeights Grp 11"),
 			TestCase(WeightingGroup.Group12, 0, 0, 0.21, 0.49, 0, 0, 0, 0, 0.09, 0.21, TestName = "TestMissionProfileWeights Grp 12"),
 			TestCase(WeightingGroup.Group16, 0, 0, 0, 0, 0, 0, 0, 0, 0.3, 0.7, TestName = "TestMissionProfileWeights Grp 16"),
-
 		]
 		public void TestMissionProfileWeights(WeightingGroup group, double eLhLow, double eLhRef, double eRdLow, double eRdRef, double eUdLow, double eUdRef, double eMuLow = 0, double eMuRef = 0, double eCoLow = 0, double eCoRef = 0, double elhEmsLow = 0, double eLhEmsRef = 0, double eRdEmsLow = 0, double eRdEmsRef = 0)
 		{
