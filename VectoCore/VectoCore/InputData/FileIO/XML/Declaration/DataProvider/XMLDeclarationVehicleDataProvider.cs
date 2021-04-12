@@ -501,12 +501,12 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 		public override Watt MaxNetPower1
 		{
-			get { return GetDouble(XMLNames.Vehicle_MaxNetPower1).SI<Watt>(); }
+			get { return HybridElectricHDV ? GetDouble(XMLNames.Vehicle_MaxNetPower1).SI<Watt>() : null; }
 		}
 
 		public override Watt MaxNetPower2
 		{
-			get { return GetDouble(XMLNames.Vehicle_MaxNetPower2).SI<Watt>(); }
+			get { return HybridElectricHDV ? GetDouble(XMLNames.Vehicle_MaxNetPower2).SI<Watt>() : null; }
 		}
 
 		public override IVehicleComponentsDeclaration Components

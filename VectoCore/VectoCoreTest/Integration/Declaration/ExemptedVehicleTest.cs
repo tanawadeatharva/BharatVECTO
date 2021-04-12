@@ -59,6 +59,9 @@ namespace TUGraz.VectoCore.Tests.Integration
 	public class ExemptedVehicleTest
 	{
 		const string ExemptedVehicle = @"Testdata\Integration\DeclarationMode\ExemptedVehicle\vecto_vehicle-sample_exempted.xml";
+		const string ExemptedVehicleNoHEV = @"Testdata\Integration\DeclarationMode\ExemptedVehicle\vecto_vehicle-sample_exempted_nonHEV.xml";
+		const string ExemptedVehicleV2 = @"Testdata\Integration\DeclarationMode\ExemptedVehicle\vecto_vehicle-sample_exempted_v2.xml";
+		const string ExemptedVehicleV2NoHEV = @"Testdata\Integration\DeclarationMode\ExemptedVehicle\vecto_vehicle-sample_exempted_v2_nonHEV.xml";
 
 		protected IXMLInputDataReader xmlInputReader;
 		private IKernel _kernel;
@@ -72,7 +75,11 @@ namespace TUGraz.VectoCore.Tests.Integration
 			xmlInputReader = _kernel.Get<IXMLInputDataReader>();
 		}
 
-		[TestCase(ExemptedVehicle, 1)]
+		[TestCase(ExemptedVehicle, 1),
+		TestCase(ExemptedVehicleNoHEV, 1),
+		TestCase(ExemptedVehicleV2, 1),
+		TestCase(ExemptedVehicleV2NoHEV, 1)
+		]
 		public void TestSimulationExemptedVehicle(string filename, int numRuns)
 		{
 			var writer = new FileOutputWriter(filename);
