@@ -48,7 +48,7 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 			_manufacturingStageViewModel =
 				vmFactory.GetManufacturingStageViewModel(_consolidateManufacturingStage);
 
-			_jobInputData.ManufacturingStages.Add(_manufacturingStageViewModel as IManufacturingStageInputData);
+			//_jobInputData.ManufacturingStages.Add(_manufacturingStageViewModel as IManufacturingStageInputData);
 			
 		}
 

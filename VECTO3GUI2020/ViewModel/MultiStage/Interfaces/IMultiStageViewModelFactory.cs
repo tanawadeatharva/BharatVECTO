@@ -25,9 +25,11 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Interfaces
 		IManufacturingStageViewModel GetManufacturingStageViewModel(IManufacturingStageInputData consolidatedManufacturingStageInputData);
 		IMultistageAirdragViewModel GetMultistageAirdragViewModel();
 
-		IMultistageAirdragViewModel getMultistageAirdragViewModel(
+		IMultistageAirdragViewModel GetMultistageAirdragViewModel(
 			IAirdragDeclarationInputData consolidatedAirdragInputData);
 
+		IMultistageAuxiliariesViewModel GetAuxiliariesViewModel(
+			IBusAuxiliariesDeclarationData consolidatedAuxiliariesInputData);
 		//IViewModelBase CreateNewMultiStageJobViewModel();
 
 		//IMultiStageJobViewModel CreateMultiStageJobViewModel(string inputProviderType, IMultistageBusInputDataProvider inputData);

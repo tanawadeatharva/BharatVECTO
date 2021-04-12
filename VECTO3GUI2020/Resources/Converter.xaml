@@ -10,6 +10,8 @@
     <converter:LabledTextBoxConverter x:Key="LabledTextBoxConverter" x:Shared="false" />
     <converter:LabledTextBoxLabelConverter x:Key="LabledTextBoxLabelConverter" />
     <converter:InvertBoolConverter x:Key="InvertBoolConverter"/>
-    <converter:InvertedBoolToVisibilityConverter x:Key="InvertedBoolToVisibilityConverter"></converter:InvertedBoolToVisibilityConverter>
+    <converter:InvertedBoolToVisibilityConverter x:Key="InvertedBoolToVisibilityConverter"/>
+    <converter:MultistageParameterModeToVisibilityConverter x:Key="ParameterModeToVisibilityConverter"/>
+    <converter:XToBoolConverter x:Key="XToBoolConverter"/>
 </ResourceDictionary>
 

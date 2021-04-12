@@ -34,6 +34,9 @@ namespace VECTO3GUI2020.Ninject
 
 			Bind<IMultistageAirdragViewModel>().To<MultistageAirdragViewModel>().
 				NamedLikeFactoryMethod((IMultiStageViewModelFactory f) => f.GetMultistageAirdragViewModel());
+
+			Bind<IMultistageAuxiliariesViewModel>().To<MultistageAuxiliariesViewModel>().
+				NamedLikeFactoryMethod((IMultiStageViewModelFactory f) => f.GetAuxiliariesViewModel(null));
 		}
 	}
 }

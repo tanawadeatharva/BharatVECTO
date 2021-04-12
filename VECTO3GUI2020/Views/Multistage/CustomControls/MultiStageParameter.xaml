@@ -10,8 +10,8 @@
 
         <!-- _____________________________________________ Text mode ___________________________________________________________________-->
         <Grid Visibility="{Binding ElementName=MultistageParameterControl, 
-        Path=ComboBoxMode, 
-        Converter={StaticResource InvertedBoolToVisibilityConverter}}">
+        Path=Mode, 
+        Converter={StaticResource ParameterModeToVisibilityConverter}, ConverterParameter={x:Static local:MultistageParameterViewMode.TEXTBOX}}">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="4*" SharedSizeGroup="W"/>
                 <ColumnDefinition Width="1*" SharedSizeGroup="N"/>
@@ -47,10 +47,13 @@
                Content="{Binding DummyContent, ElementName=MultistageParameterControl, Converter={StaticResource SIToUnitStringConverter}}">
         </Label>
     </Grid>
+
+
+        <!--_________________________________________________ComboBoxMode____________________________________________________________________-->
         <Grid Visibility="{Binding ElementName=MultistageParameterControl, 
-        Path=ComboBoxMode, 
-        Converter={StaticResource BooleanToVisibilityConverter}}">
-        <Grid.ColumnDefinitions>
+        Path=Mode, 
+        Converter={StaticResource ParameterModeToVisibilityConverter}, ConverterParameter={x:Static local:MultistageParameterViewMode.COMBOBOX}}">
+            <Grid.ColumnDefinitions>
             <ColumnDefinition Width="4*" SharedSizeGroup="W"/>
             <ColumnDefinition Width="1*" SharedSizeGroup="N"/>
             <ColumnDefinition Width="4*" SharedSizeGroup="W"/>
@@ -87,5 +90,40 @@
                Content="{Binding DummyContent, ElementName=MultistageParameterControl, Converter={StaticResource SIToUnitStringConverter}}">
         </Label>
     </Grid>
+
+        <!--_________________________________________________CheckBoxMode____________________________________________________________________-->
+        <Grid Visibility="{Binding ElementName=MultistageParameterControl, 
+        Path=Mode, 
+        Converter={StaticResource ParameterModeToVisibilityConverter}, ConverterParameter={x:Static local:MultistageParameterViewMode.CHECKBOX}}">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="4*" SharedSizeGroup="W"/>
+                <ColumnDefinition Width="1*" SharedSizeGroup="N"/>
+                <ColumnDefinition Width="4*" SharedSizeGroup="W"/>
+                <ColumnDefinition Width="4*" SharedSizeGroup="W"/>
+                <ColumnDefinition Width="1*" SharedSizeGroup="N"/>
+            </Grid.ColumnDefinitions>
+
+            <Label Content="{Binding LabelText, ElementName=MultistageParameterControl}"></Label>
+            <CheckBox Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center" Name="CheckBoxCheckBox"
+                  Visibility="{Binding Optional, 
+                    ElementName=MultistageParameterControl, 
+                    Converter={StaticResource BooleanToVisibilityConverter}}"
+                  IsChecked="{Binding EditingEnabled, 
+            ElementName=MultistageParameterControl, 
+            Mode=TwoWay}"/>
+
+            <CheckBox Grid.Column="2" VerticalAlignment="Center" HorizontalAlignment="Center" IsChecked="{Binding ElementName=MultistageParameterControl, 
+                Path=PreviousContent, 
+                Converter={StaticResource XToBoolConverter}}" IsEnabled="False">
+            </CheckBox>
+
+            <CheckBox Grid.Column="3" VerticalAlignment="Center" HorizontalAlignment="Center" IsEnabled="{Binding ElementName=MultistageParameterControl, 
+                Path=EditingEnabled}">
+
+            </CheckBox>
+            <Label Grid.Column="4"
+                   Content="{Binding DummyContent, ElementName=MultistageParameterControl, Converter={StaticResource SIToUnitStringConverter}}">
+            </Label>
+        </Grid>
     </Grid>
 </UserControl>

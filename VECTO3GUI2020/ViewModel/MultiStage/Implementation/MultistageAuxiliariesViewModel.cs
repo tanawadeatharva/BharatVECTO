@@ -9,24 +9,180 @@ using VECTO3GUI2020.ViewModel.Implementation.Common;
 
 namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 {
-	
-	public class MultistageAuxiliariesViewModel : ViewModelBase, IBusAuxiliariesDeclarationData,
+
+	public interface IMultistageAuxiliariesViewModel : IBusAuxiliariesDeclarationData,
 		IElectricSupplyDeclarationData,
 		IPneumaticSupplyDeclarationData,
 		IElectricConsumersDeclarationData,
 		IPneumaticConsumersDeclarationData,
-		IHVACBusAuxiliariesDeclarationData //implements all used interfaces similar to 
+		IHVACBusAuxiliariesDeclarationData
 	{
+
+	}
+
+
+	public class MultistageAuxiliariesViewModel : ViewModelBase, IMultistageAuxiliariesViewModel
+	{
+
+		private IBusAuxiliariesDeclarationData _consolidatedInputData;
+
+
+		public IBusAuxiliariesDeclarationData ConsolidatedInputData
+		{
+			get => _consolidatedInputData;
+			set => SetProperty(ref _consolidatedInputData, value);
+		}
+
+		#region HVAV
+		private bool _heatPumpGroupEditingEnabled;
+		private BusHVACSystemConfiguration? _systemConfiguration;
+		private HeatPumpType? _heatPumpTypeDriverCompartment;
+		private HeatPumpMode? _heatPumpModeDriverCompartment;
+		private HeatPumpType? _heatPumpTypePassengerCompartment;
+		private HeatPumpMode? _heatPumpModePassengerCompartment;
+
+
+
+
+		public IHVACBusAuxiliariesDeclarationData HVACAux
+		{
+			get => this;
+			set => throw new NotImplementedException();
+		}
+
+
+		private Watt _auxHeaterPower;
+		private bool? _doubleGlazing;
+		private bool? _adjustableAuxiliaryHeater;
+		private bool? _separateAirDistributionDucts;
+		private bool? _waterElectricHeater;
+		private bool? _airElectricHeater;
+		private bool? _otherHeatingTechnology;
+
+
+		public Watt AuxHeaterPower
+		{
+			get => _auxHeaterPower;
+			set => SetProperty(ref _auxHeaterPower, value);
+		}
+
+		public bool? DoubleGlazing
+		{
+			get => _doubleGlazing;
+			set => SetProperty(ref _doubleGlazing, value);
+		}
+
+		public bool? AdjustableAuxiliaryHeater
+		{
+			get => _adjustableAuxiliaryHeater;
+			set => SetProperty(ref _adjustableAuxiliaryHeater, value);
+		}
+
+		public bool? SeparateAirDistributionDucts
+		{
+			get => _separateAirDistributionDucts;
+			set => SetProperty(ref _separateAirDistributionDucts , value);
+		}
+
+		public bool? WaterElectricHeater
+		{
+			get => _waterElectricHeater;
+			set => SetProperty(ref _waterElectricHeater , value);
+		}
+
+		public bool? AirElectricHeater
+		{
+			get => _airElectricHeater;
+			set => SetProperty(ref _airElectricHeater , value);
+		}
+
+		public bool? OtherHeatingTechnology
+		{
+			get => _otherHeatingTechnology;
+			set => SetProperty(ref _otherHeatingTechnology , value);
+		}
+
+		public bool HeatPumpGroupEditingEnabled
+		{
+			get => _heatPumpGroupEditingEnabled;
+			set => SetProperty(ref _heatPumpGroupEditingEnabled, value);
+		}
+
+		public BusHVACSystemConfiguration? SystemConfiguration
+		{
+			get => _systemConfiguration;
+			set => SetProperty(ref _systemConfiguration , value);
+		}
+
+		public HeatPumpType? HeatPumpTypeDriverCompartment
+		{
+			get => _heatPumpTypeDriverCompartment;
+			set => SetProperty(ref _heatPumpTypeDriverCompartment , value);
+		}
+
+		public HeatPumpMode? HeatPumpModeDriverCompartment
+		{
+			get => _heatPumpModeDriverCompartment;
+			set => SetProperty(ref _heatPumpModeDriverCompartment , value);
+		}
+
+		public HeatPumpType? HeatPumpTypePassengerCompartment
+		{
+			get => _heatPumpTypePassengerCompartment;
+			set => SetProperty(ref _heatPumpTypePassengerCompartment , value);
+		}
+
+		public HeatPumpMode? HeatPumpModePassengerCompartment
+		{
+			get => _heatPumpModePassengerCompartment;
+			set => SetProperty(ref _heatPumpModePassengerCompartment , value);
+		}
+
+
+		//LED lights
+		private bool? _interiorLightsLed;
+		private bool? _dayrunninglightsLed;
+		private bool? _positionlightsLed;
+		private bool? _headlightsLed;
+		private bool? _brakelightsLed;
+
+		public bool? InteriorLightsLED
+		{
+			get => _interiorLightsLed;
+			set => SetProperty(ref _interiorLightsLed, value);
+		}
+
+		public bool? DayrunninglightsLED
+		{
+			get => _dayrunninglightsLed;
+			set => SetProperty(ref _dayrunninglightsLed, value);
+		}
+
+		public bool? PositionlightsLED
+		{
+			get => _positionlightsLed;
+			set => SetProperty(ref _positionlightsLed, value);
+		}
+
+		public bool? HeadlightsLED
+		{
+			get => _headlightsLed;
+			set => SetProperty(ref _headlightsLed, value);
+		}
+
+		public bool? BrakelightsLED
+		{
+			get => _brakelightsLed;
+			set => SetProperty(ref _brakelightsLed, value);
+		}
+
+
+
+		#endregion
 		#region Implementation of interfaces;
 		private XmlNode _xmlSource;
 		private string _fanTechnology;
 		private IList<string> _steeringPumpTechnology;
-		private IElectricSupplyDeclarationData _electricSupply;
-		private IElectricConsumersDeclarationData _electricConsumers;
-		private IPneumaticSupplyDeclarationData _pneumaticSupply;
-		private IPneumaticConsumersDeclarationData _pneumaticConsumers;
-		private IHVACBusAuxiliariesDeclarationData _hvacAux;
-		private IList<IAlternatorDeclarationInputData> _alternators;
 		private bool _smartElectrics;
 		private Watt _maxAlternatorPower;
 		private WattSecond _electricStorageCapacity;
@@ -35,27 +191,15 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 		private string _compressorSize;
 		private bool _smartAirCompression;
 		private bool _smartRegeneration;
-		private bool? _interiorLightsLed;
-		private bool? _dayrunninglightsLed;
-		private bool? _positionlightsLed;
-		private bool? _headlightsLed;
-		private bool? _brakelightsLed;
+
 		private ConsumerTechnology _airsuspensionControl;
 		private ConsumerTechnology _adBlueDosing;
-		private BusHVACSystemConfiguration? _systemConfiguration;
-		private HeatPumpType? _heatPumpTypeDriverCompartment;
-		private HeatPumpMode? _heatPumpModeDriverCompartment;
-		private HeatPumpType? _heatPumpTypePassengerCompartment;
-		private HeatPumpMode? _heatPumpModePassengerCompartment;
-		private Watt _auxHeaterPower;
-		private bool? _doubleGlazing;
-		private bool? _adjustableAuxiliaryHeater;
-		private bool? _separateAirDistributionDucts;
-		private bool? _waterElectricHeater;
-		private bool? _airElectricHeater;
-		private bool? _otherHeatingTechnology;
+
+
 		private bool? _adjustableCoolantThermostat;
 		private bool _engineWasteGasHeatExchanger;
+
+
 
 		public XmlNode XMLSource
 		{
@@ -99,11 +243,7 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 			set => throw new NotImplementedException();
 		}
 
-		public IHVACBusAuxiliariesDeclarationData HVACAux
-		{
-			get => this;
-			set => throw new NotImplementedException();
-		}
+
 
 		public IList<IAlternatorDeclarationInputData> Alternators
 		{
@@ -159,36 +299,7 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 			set => _smartRegeneration = value;
 		}
 
-		public bool? InteriorLightsLED
-		{
-			get => _interiorLightsLed;
-			set => _interiorLightsLed = value;
-		}
-
-		public bool? DayrunninglightsLED
-		{
-			get => _dayrunninglightsLed;
-			set => _dayrunninglightsLed = value;
-		}
-
-		public bool? PositionlightsLED
-		{
-			get => _positionlightsLed;
-			set => _positionlightsLed = value;
-		}
-
-		public bool? HeadlightsLED
-		{
-			get => _headlightsLed;
-			set => _headlightsLed = value;
-		}
-
-		public bool? BrakelightsLED
-		{
-			get => _brakelightsLed;
-			set => _brakelightsLed = value;
-		}
-
+		
 		public ConsumerTechnology AirsuspensionControl
 		{
 			get => _airsuspensionControl;
@@ -201,78 +312,9 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 			set => _adBlueDosing = value;
 		}
 
-		public BusHVACSystemConfiguration? SystemConfiguration
-		{
-			get => _systemConfiguration;
-			set => _systemConfiguration = value;
-		}
+	
 
-		public HeatPumpType? HeatPumpTypeDriverCompartment
-		{
-			get => _heatPumpTypeDriverCompartment;
-			set => _heatPumpTypeDriverCompartment = value;
-		}
-
-		public HeatPumpMode? HeatPumpModeDriverCompartment
-		{
-			get => _heatPumpModeDriverCompartment;
-			set => _heatPumpModeDriverCompartment = value;
-		}
-
-		public HeatPumpType? HeatPumpTypePassengerCompartment
-		{
-			get => _heatPumpTypePassengerCompartment;
-			set => _heatPumpTypePassengerCompartment = value;
-		}
-
-		public HeatPumpMode? HeatPumpModePassengerCompartment
-		{
-			get => _heatPumpModePassengerCompartment;
-			set => _heatPumpModePassengerCompartment = value;
-		}
-
-		public Watt AuxHeaterPower
-		{
-			get => _auxHeaterPower;
-			set => _auxHeaterPower = value;
-		}
-
-		public bool? DoubleGlazing
-		{
-			get => _doubleGlazing;
-			set => _doubleGlazing = value;
-		}
-
-		public bool? AdjustableAuxiliaryHeater
-		{
-			get => _adjustableAuxiliaryHeater;
-			set => _adjustableAuxiliaryHeater = value;
-		}
-
-		public bool? SeparateAirDistributionDucts
-		{
-			get => _separateAirDistributionDucts;
-			set => _separateAirDistributionDucts = value;
-		}
-
-		public bool? WaterElectricHeater
-		{
-			get => _waterElectricHeater;
-			set => _waterElectricHeater = value;
-		}
-
-		public bool? AirElectricHeater
-		{
-			get => _airElectricHeater;
-			set => _airElectricHeater = value;
-		}
-
-		public bool? OtherHeatingTechnology
-		{
-			get => _otherHeatingTechnology;
-			set => _otherHeatingTechnology = value;
-		}
-
+		
 		public bool? AdjustableCoolantThermostat
 		{
 			get => _adjustableCoolantThermostat;
@@ -284,6 +326,15 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 			get => _engineWasteGasHeatExchanger;
 			set => _engineWasteGasHeatExchanger = value;
 		}
+
+
 		#endregion
+
+
+		public MultistageAuxiliariesViewModel(IBusAuxiliariesDeclarationData consolidatedAuxiliariesInputData)
+		{
+			ConsolidatedInputData = consolidatedAuxiliariesInputData;
+		}
+
 	}
 }

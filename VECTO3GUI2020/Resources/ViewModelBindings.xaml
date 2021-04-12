@@ -36,10 +36,10 @@
     <DataTemplate DataType="{x:Type jobeditimpl:DeclarationJobEditViewModel_v2_0}">
         <jobeditviews:DeclarationJobEditView/>
     </DataTemplate>
-    
-    
-    
 
+
+
+    <!--#region HeavyLorry -->
     <DataTemplate DataType="{x:Type vehicleimpl:VehicleViewModel_v1_0 }">
         <vehicleviews:VehicleView_v2_0/>
     </DataTemplate>
@@ -51,7 +51,7 @@
     <DataTemplate DataType="{x:Type componentimpl:CommonComponentViewModel}">
         <componentviews:CommonComponentView/>
     </DataTemplate>
-    
+
     <DataTemplate DataType="{x:Type componentimpl:EngineViewModel_v2_0}">
         <componentviews:EngineView_v2_0/>
     </DataTemplate>
@@ -79,7 +79,7 @@
     <DataTemplate DataType="{x:Type componentimpl:AxleGearViewModel_v1_0}">
         <componentviews:AxleGearView_v2_0/>
     </DataTemplate>
-    
+
     <DataTemplate DataType="{x:Type componentviews:AxleGearView_v2_0}">
         <componentviews:AxleGearView_v2_0/>
     </DataTemplate>
@@ -192,8 +192,8 @@
     <DataTemplate DataType="{x:Type componentimpl:EngineFuelViewModel}">
         <componentviews:EngineFuelView/>
     </DataTemplate>
-
-
+    <!--#endregion-->
+    <!--#region Multistage -->
     <DataTemplate DataType="{x:Type multistageimpl:NewMultiStageJobViewModel}">
         <multistageviews:NewMultistageFileView/>
     </DataTemplate>
@@ -213,5 +213,10 @@
     <DataTemplate DataType="{x:Type multistageimpl:MultistageAirdragViewModel}">
         <multistageviews:MultistageAirDragView/>
     </DataTemplate>
+
+    <DataTemplate DataType="{x:Type multistageimpl:MultistageAuxiliariesViewModel}">
+        <multistageviews:ManufacturingStageAuxiliariesView/>
+    </DataTemplate>
+    <!--#endregion-->
 
 </ResourceDictionary>

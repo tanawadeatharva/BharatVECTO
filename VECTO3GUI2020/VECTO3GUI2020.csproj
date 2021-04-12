@@ -124,11 +124,13 @@
     <Compile Include="Helper\Converter\InvertBoolConverter.cs" />
     <Compile Include="Helper\Converter\JobTypeStringConverter.cs" />
     <Compile Include="Helper\Converter\LabledTextBoxLabelConverter.cs" />
+    <Compile Include="Helper\Converter\MultistageParameterModeToVisibilityConverter.cs" />
     <Compile Include="Helper\Converter\NullToVisibilityConverter.cs" />
     <Compile Include="Helper\Converter\LabledTextBoxConverter.cs" />
     <Compile Include="Helper\Converter\SIToUnitString.cs" />
     <Compile Include="Helper\Converter\SIValueToStringConverter.cs" />
     <Compile Include="Helper\Converter\VehicleCategoryToStringConverter.cs" />
+    <Compile Include="Helper\Converter\XToBoolConverter.cs" />
     <Compile Include="Helper\DoubleValidation.cs" />
     <Compile Include="Helper\Extension.cs" />
     <Compile Include="Helper\IWindowHelper.cs" />
@@ -244,7 +246,6 @@
     <Compile Include="ViewModel\Interfaces\JobEdit\Vehicle\IVehicleViewModel.cs" />
     <Compile Include="ViewModel\MultiStage\Implementation\InterimStageBusVehicleViewModel_v2_8.cs" />
     <Compile Include="ViewModel\MultiStage\Implementation\InterimStageBusAuxiliariesViewModel_v2_8.cs" />
-    <Compile Include="ViewModel\MultiStage\Implementation\InterimStageViewModel.cs" />
     <Compile Include="ViewModel\MultiStage\Implementation\ManufacturingStageViewModel_v0_1.cs" />
     <Compile Include="ViewModel\MultiStage\Implementation\MultistageAirdragViewModel.cs" />
     <Compile Include="ViewModel\MultiStage\Implementation\MultistageAuxiliariesViewModel.cs" />
@@ -348,6 +349,9 @@
     </Compile>
     <Compile Include="Views\Multistage\CustomControls\MultiStageParameter.xaml.cs">
       <DependentUpon>MultiStageParameter.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Multistage\ManufacturingStageAuxiliariesView.xaml.cs">
+      <DependentUpon>ManufacturingStageAuxiliariesView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\Multistage\MultistageAirDragView.xaml.cs">
       <DependentUpon>MultistageAirDragView.xaml</DependentUpon>
@@ -536,6 +540,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\Multistage\CustomControls\MultiStageParameter.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Multistage\ManufacturingStageAuxiliariesView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

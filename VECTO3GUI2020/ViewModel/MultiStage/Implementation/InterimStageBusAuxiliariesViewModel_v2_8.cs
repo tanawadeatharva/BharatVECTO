@@ -9,5 +9,10 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 {
     public class InterimStageBusAuxiliariesViewModel_v2_8 : ViewModelBase
     {
+
+
+
+
+
     }
 }

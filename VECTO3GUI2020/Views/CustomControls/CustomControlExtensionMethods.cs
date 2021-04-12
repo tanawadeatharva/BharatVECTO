@@ -20,17 +20,17 @@ namespace VECTO3GUI2020.Views.CustomControls
 		public static string GetLabelByPropertyName(this UserControl userControl, DependencyProperty dependencyProperty, ResourceManager resourceManager)
 		{
 			var name = "unresolved";
-			var Binding = userControl.GetBindingExpression(dependencyProperty);
-			var PropertyName = Binding?.ResolvedSourcePropertyName;
+			var binding = userControl.GetBindingExpression(dependencyProperty);
+			var propertyName = binding?.ResolvedSourcePropertyName;
 			
-			if (PropertyName == null || Binding == null)
+			if (propertyName == null || binding == null)
 			{
 				return name;
 			}
 
 
-			var extendedPropertyName = Binding?.ResolvedSource.GetType().Name + "_" + PropertyName;
-			name = resourceManager?.GetString(extendedPropertyName) ?? resourceManager?.GetString(PropertyName) ?? (PropertyName + "_"); //_Postfix to label Property Names that are not in strings.resx
+			var extendedPropertyName = binding?.ResolvedSource.GetType().Name + "_" + propertyName;
+			name = resourceManager?.GetString(extendedPropertyName) ?? resourceManager?.GetString(propertyName) ?? (propertyName + "_"); //_Postfix to label Property Names that are not in strings.resx
 
 			return name;
 		}
@@ -43,7 +43,7 @@ namespace VECTO3GUI2020.Views.CustomControls
 			if (PropertyName == null || Binding == null) {
 				return typeof(object);
 			}
-			var PropertyType = Binding?.ResolvedSource.GetType().GetProperty(PropertyName).PropertyType;
+			var PropertyType = Binding?.ResolvedSource?.GetType().GetProperty(PropertyName).PropertyType;
 			return PropertyType;
 		}
 	}

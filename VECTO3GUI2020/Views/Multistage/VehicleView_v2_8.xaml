@@ -47,21 +47,21 @@
         <custom:MultiStageParameter PreviousContent="{Binding ConsolidatedVehicleData.GrossVehicleMassRating}"
                                     Content="{Binding GrossVehicleMassRating}"/>
         <custom:MultiStageParameter PreviousContent="{Binding ConsolidatedVehicleData.DoorDriveTechnology}"
-                                    Content="{Binding DoorDriveTechnology}" ComboBoxMode="True" />
+                                    Content="{Binding DoorDriveTechnology}" Mode="COMBOBOX" />
         <custom:MultiStageParameter PreviousContent="{Binding ConsolidatedVehicleData.LegislativeClass}"
-                                    Content="{Binding LegislativeClass}" ComboBoxMode="True" />
+                                    Content="{Binding LegislativeClass}" Mode="COMBOBOX" />
         <custom:MultiStageParameter PreviousContent="{Binding ConsolidatedVehicleData.RegisteredClass}"
-                                    Content="{Binding RegisteredClass}" ComboBoxMode="True" />
+                                    Content="{Binding RegisteredClass}" Mode="COMBOBOX" />
         <custom:MultiStageParameter PreviousContent="{Binding ConsolidatedVehicleData.VehicleCode}"
-                                    Content="{Binding VehicleCode}" ComboBoxMode="True" />
+                                    Content="{Binding VehicleCode}" Mode="COMBOBOX" />
         <custom:MultiStageParameter PreviousContent="{Binding ConsolidatedVehicleData.LowEntry}"
-                                    Content="{Binding LowEntry}" />
+                                    Content="{Binding LowEntry}" Mode="CHECKBOX"/>
         <custom:MultiStageParameter PreviousContent="{Binding ConsolidatedVehicleData.EntranceHeight}"
                                     Content="{Binding EntranceHeight}" />
         <custom:MultiStageParameter PreviousContent="{Binding ConsolidatedVehicleData.TankSystem}"
-                                    Content="{Binding TankSystem}" ComboBoxMode="True" />
+                                    Content="{Binding TankSystem}" Mode="COMBOBOX" />
         <custom:MultiStageParameter PreviousContent="{Binding ConsolidatedVehicleData.VehicleDeclarationType}"
-                                    Content="{Binding VehicleDeclarationType}" ComboBoxMode="True" />
+                                    Content="{Binding VehicleDeclarationType}" Mode="COMBOBOX" />
 
 
         </StackPanel>

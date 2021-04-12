@@ -24,11 +24,21 @@ using VECTO3GUI2020.Views.CustomControls;
 
 namespace VECTO3GUI2020.Views.Multistage.CustomControls
 {
-    /// <summary>
-    /// Interaction logic for MultiStageParameter.xaml
-    /// </summary>
-    public partial class MultiStageParameter : UserControl
+
+	public enum MultistageParameterViewMode
+	{
+		TEXTBOX,
+		CHECKBOX,
+		COMBOBOX
+	}
+
+
+	/// <summary>
+	/// Interaction logic for MultiStageParameter.xaml
+	/// </summary>
+	public partial class MultiStageParameter : UserControl
     {
+
 		#region Dependency Properties
 
 
@@ -59,15 +69,14 @@ namespace VECTO3GUI2020.Views.Multistage.CustomControls
 			set { SetValue(OptionalProperty, value); }
 		}
 
-		public static readonly DependencyProperty ComboBoxModeProperty = DependencyProperty.Register(
-			"ComboBoxMode", typeof(bool), typeof(MultiStageParameter), new PropertyMetadata(false));
+		public static readonly DependencyProperty ModeProperty = DependencyProperty.Register(
+            "Mode", typeof(MultistageParameterViewMode), typeof(MultiStageParameter), new PropertyMetadata(MultistageParameterViewMode.TEXTBOX));
 
-		public bool ComboBoxMode
+        public MultistageParameterViewMode Mode
 		{
-			get { return (bool)GetValue(ComboBoxModeProperty); }
-			set { SetValue(ComboBoxModeProperty, value); }
+			get { return (MultistageParameterViewMode)GetValue(ModeProperty); }
+			set { SetValue(ModeProperty, value); }
 		}
-
 
 
 
@@ -163,7 +172,7 @@ namespace VECTO3GUI2020.Views.Multistage.CustomControls
 
 		private void SetListItems()
 		{
-			if (!ComboBoxMode) 
+			if (Mode != MultistageParameterViewMode.COMBOBOX) 
 				return;
 
 			if(DummyContent is Enum en) {
@@ -175,10 +184,13 @@ namespace VECTO3GUI2020.Views.Multistage.CustomControls
 
 		private object CreateDummyContent(DependencyPropertyChangedEventArgs e, UserControl userControl)
 		{
-			dynamic type = userControl.GetPropertyType(e.Property);
-
-			var baseType = type.BaseType;
+			var type = userControl.GetPropertyType(e.Property);
+			if (type == null) {
+				return null;
+			}
 			try {
+				dynamic dynType = type;
+				var baseType = dynType.BaseType;
 				//Create SI Dummy
 
 				if (baseType.BaseType == typeof(SI)) {
@@ -191,12 +203,12 @@ namespace VECTO3GUI2020.Views.Multistage.CustomControls
 					var sourcePropertyType =
 						dataItemType?.GetProperty(bindingProperty?.ResolvedSourcePropertyName)?.PropertyType;
 
-					var underlyingType = Nullable.GetUnderlyingType(type);
+					var underlyingType = Nullable.GetUnderlyingType(dynType);
 					Enum dummyEnum;
 					if (underlyingType != null) {
 						dummyEnum = Enum.Parse(underlyingType, underlyingType.GetEnumNames()[0]);
                     } else {
-						dummyEnum = Enum.Parse(type, type.GetEnumNames()[0]);
+						dummyEnum = Enum.Parse(dynType, dynType.GetEnumNames()[0]);
 					}
 
 					
