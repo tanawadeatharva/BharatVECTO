@@ -89,6 +89,7 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 
 			var runData = new VectoRunData() {
 				JobName = "Coach_FullPowertrain_SimpleGearbox",
+				DriverData = driverData,
 				EngineData = engineData,
 				AxleGearData = axleGearData,
 				GearboxData = gearboxData,

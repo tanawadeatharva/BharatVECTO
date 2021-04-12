@@ -199,24 +199,28 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 					var crossWindRequired = vehicle.Components.AirdragInputData.CrossWindCorrectionMode ==
 											CrossWindCorrectionMode.VAirBetaLookupTable;
 					var angledriveData = dao.CreateAngledriveData(vehicle.Components.AngledriveInputData);
-					var ptoTransmissionData = dao.CreatePTOTransmissionData(vehicle.Components.PTOTransmissionInputData);
+					var ptoTransmissionData =
+						dao.CreatePTOTransmissionData(vehicle.Components.PTOTransmissionInputData);
 
-			if (InputDataProvider.JobInputData.Vehicle.PTO_DriveGear != null &&
-				InputDataProvider.JobInputData.Vehicle.PTO_DriveEngineSpeed != null) {
-				driver.PTODriveMinSpeed = InputDataProvider.JobInputData.Vehicle.PTO_DriveEngineSpeed /
-										axlegearData.AxleGear.Ratio /
-										gearboxData.Gears[InputDataProvider.JobInputData.Vehicle.PTO_DriveGear.Gear].Ratio /
-										(angledriveData?.Angledrive.Ratio ?? 1.0) * vehicle.DynamicTyreRadius;
-				driver.PTODriveRoadsweepingGear = InputDataProvider.JobInputData.Vehicle.PTO_DriveGear;
-				engineData.PTORoadSweepEngineSpeed = InputDataProvider.JobInputData.Vehicle.PTO_DriveEngineSpeed;
-			}
+					if (InputDataProvider.JobInputData.Vehicle.PTO_DriveGear != null &&
+						InputDataProvider.JobInputData.Vehicle.PTO_DriveEngineSpeed != null) {
+						driver.PTODriveMinSpeed = InputDataProvider.JobInputData.Vehicle.PTO_DriveEngineSpeed /
+							axlegearData.AxleGear.Ratio /
+							gearboxData.Gears[InputDataProvider.JobInputData.Vehicle.PTO_DriveGear.Gear].Ratio /
+							(angledriveData?.Angledrive.Ratio ?? 1.0) * vehicle.DynamicTyreRadius;
+						driver.PTODriveRoadsweepingGear = InputDataProvider.JobInputData.Vehicle.PTO_DriveGear;
+						engineData.PTORoadSweepEngineSpeed =
+							InputDataProvider.JobInputData.Vehicle.PTO_DriveEngineSpeed;
+					}
 
-			var ptoCycleWhileDrive =
-				InputDataProvider.JobInputData.Vehicle.Components.PTOTransmissionInputData.PTOCycleWhileDriving != null
-					? DrivingCycleDataReader.ReadFromDataTable(
-						InputDataProvider.JobInputData.Vehicle.Components.PTOTransmissionInputData.PTOCycleWhileDriving,
-						"PTO During Drive", false)
-					: null;
+					var ptoCycleWhileDrive =
+						InputDataProvider.JobInputData.Vehicle.Components.PTOTransmissionInputData
+							.PTOCycleWhileDriving != null
+							? DrivingCycleDataReader.ReadFromDataTable(
+								InputDataProvider.JobInputData.Vehicle.Components.PTOTransmissionInputData
+									.PTOCycleWhileDriving,
+								"PTO During Drive", false)
+							: null;
 
 
 					var drivingCycle = CyclesCache.ContainsKey(cycle.CycleData.Source)
@@ -235,9 +239,24 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 						: VectoSimulationJobType.ConventionalVehicle;
 
 					var vehicleData = dao.CreateVehicleData(vehicle);
-					
+
+					var gearshiftParams = dao.CreateGearshiftData(
+						gearboxData.Type, InputDataProvider.DriverInputData.GearshiftInputData,
+						axlegearData.AxleGear.Ratio * (angledriveData?.Angledrive.Ratio ?? 1.0),
+						engineData.IdleSpeed);
+					if (gearshiftParams == null) {
+						gearshiftParams = new ShiftStrategyParameters() {
+							StartSpeed = DeclarationData.GearboxTCU.StartSpeed,
+							StartAcceleration = DeclarationData.GearboxTCU.StartAcceleration,
+							TimeBetweenGearshifts = DeclarationData.Gearbox.MinTimeBetweenGearshifts,
+							DownshiftAfterUpshiftDelay = DeclarationData.Gearbox.DownshiftAfterUpshiftDelay,
+							UpshiftAfterDownshiftDelay = DeclarationData.Gearbox.UpshiftAfterDownshiftDelay,
+							UpshiftMinAcceleration = DeclarationData.Gearbox.UpshiftMinAcceleration,
+						};
+					}
 					var hybridParameters = jobType == VectoSimulationJobType.ParallelHybridVehicle
-						? dao.CreateHybridStrategyParameters(InputDataProvider.JobInputData.HybridStrategyParameters, vehicle.MaxPropulsionTorque, engineData)
+						? dao.CreateHybridStrategyParameters(InputDataProvider.JobInputData.HybridStrategyParameters,
+							vehicle.MaxPropulsionTorque, engineData)
 						: null;
 					yield return new VectoRunData {
 						JobName = InputDataProvider.JobInputData.JobName,
@@ -250,7 +269,8 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 						AirdragData = dao.CreateAirdragData(vehicle.Components.AirdragInputData, vehicle),
 						DriverData = driver,
 						Aux = dao.CreateAuxiliaryData(vehicle.Components.AuxiliaryInputData),
-						BusAuxiliaries = dao.CreateBusAuxiliariesData(vehicle.Components.AuxiliaryInputData, vehicleData),
+						BusAuxiliaries =
+							dao.CreateBusAuxiliariesData(vehicle.Components.AuxiliaryInputData, vehicleData),
 						Retarder = dao.CreateRetarderData(vehicle.Components.RetarderInputData),
 						PTO = ptoTransmissionData,
 						Cycle = new DrivingCycleProxy(drivingCycle, cycle.Name),
@@ -260,12 +280,12 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 						HybridStrategyParameters = hybridParameters,
 						BatteryData = battery,
 						SuperCapData = superCap,
-						SimulationType = SimulationType.DistanceCycle | SimulationType.MeasuredSpeedCycle | SimulationType.PWheel,
-						GearshiftParameters = dao.CreateGearshiftData(
-							gearboxData.Type, InputDataProvider.DriverInputData.GearshiftInputData,
-							axlegearData.AxleGear.Ratio * (angledriveData?.Angledrive.Ratio ?? 1.0), engineData.IdleSpeed),
+						SimulationType = SimulationType.DistanceCycle | SimulationType.MeasuredSpeedCycle |
+										SimulationType.PWheel,
+						GearshiftParameters = gearshiftParams,
 						ShiftStrategy = InputDataProvider.JobInputData.ShiftStrategy,
-						ElectricAuxDemand = InputDataProvider.JobInputData.Vehicle.Components.AuxiliaryInputData.Auxiliaries.ElectricPowerDemand,
+						ElectricAuxDemand = InputDataProvider.JobInputData.Vehicle.Components.AuxiliaryInputData
+							.Auxiliaries.ElectricPowerDemand,
 					};
 				}
 			}

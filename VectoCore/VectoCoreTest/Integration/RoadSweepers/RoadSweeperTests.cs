@@ -234,7 +234,7 @@ namespace TUGraz.VectoCore.Tests.Integration.RoadSweepers
 				Vehicle = job.JobInputData.Vehicle,
 				DriverInputData = job.DriverInputData,
 				Cycles = (new[] {cycle}).ToList(),
-				PTOCycleWhileDrive = job.JobInputData.Vehicle.Components.PTOTransmissionInputData.PTOCycleWhileDriving
+				PTOCycleWhileDrive = job.JobInputData.Vehicle.Components.PTOTransmissionInputData.PTOCycleWhileDriving,
 			};
 			
 

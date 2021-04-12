@@ -71,7 +71,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 
 			if (!segment.Found) {
 				throw new VectoException(
-					"no segment found for vehicle configruation: vehicle category: {0}, axle configuration: {1}, GVMR: {2}",
+					"no segment found for vehicle configuration: vehicle category: {0}, axle configuration: {1}, GVMR: {2}",
 					vehicle.VehicleCategory, vehicle.AxleConfiguration,
 					vehicle.GrossVehicleMassRating);
 			}
