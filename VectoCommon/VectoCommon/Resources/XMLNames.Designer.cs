@@ -106,6 +106,15 @@ namespace TUGraz.VectoCommon.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to TransferredCdxA.
+        /// </summary>
+        public static string AirDragArea_TransferredCdxA {
+            get {
+                return ResourceManager.GetString("AirDragArea_TransferredCdxA", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Efficiency.
         /// </summary>
         public static string AngleDrive_Efficiency {

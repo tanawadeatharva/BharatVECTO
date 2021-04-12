@@ -128,9 +128,9 @@
       <DesignTime>True</DesignTime>
     </Compile>
     <Compile Include="Resources\XMLNames.Designer.cs">
-      <DependentUpon>XMLNames.resx</DependentUpon>
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
+      <DependentUpon>XMLNames.resx</DependentUpon>
     </Compile>
     <Compile Include="Utils\DoubleExtensionMethods.cs" />
     <Compile Include="Utils\EnumerableExtensionMethods.cs" />
@@ -154,8 +154,8 @@
   <ItemGroup>
     <EmbeddedResource Include="Resources\XMLNames.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
-      <LastGenOutput>XMLNames.Designer.cs</LastGenOutput>
       <SubType>Designer</SubType>
+      <LastGenOutput>XMLNames.Designer.cs</LastGenOutput>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

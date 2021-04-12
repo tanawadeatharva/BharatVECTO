@@ -101,6 +101,8 @@ namespace VECTO3GUI2020.ViewModel.Implementation.JobEdit.Vehicle.Components
 
 
 		public virtual SquareMeter AirDragArea {get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+		public SquareMeter TransferredAirDragArea { get => throw new NotImplementedException(); }
+		public SquareMeter AirDragArea_0 { get => throw new NotImplementedException(); }
 
 		#endregion
 	}

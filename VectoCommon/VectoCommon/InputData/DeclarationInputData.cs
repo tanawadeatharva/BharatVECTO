@@ -372,6 +372,9 @@ namespace TUGraz.VectoCommon.InputData
 		/// cf. VECTO Input Parameters.xlsx
 		/// </summary>
 		SquareMeter AirDragArea { get; } // without trailer
+		SquareMeter TransferredAirDragArea { get; } // P246
+
+		SquareMeter AirDragArea_0 { get; } // P245
 	}
 
 	public interface IRetarderInputData : IComponentInputData

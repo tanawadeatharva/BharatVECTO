@@ -1488,4 +1488,7 @@
   <data name="VehicleAttr_VehicleDeclarationType" xml:space="preserve">
     <value>VehicleDeclarationType</value>
   </data>
+  <data name="AirDragArea_TransferredCdxA" xml:space="preserve">
+    <value>TransferredCdxA</value>
+  </data>
 </root>

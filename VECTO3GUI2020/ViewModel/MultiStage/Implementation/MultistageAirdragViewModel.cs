@@ -115,5 +115,7 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 		public DigestData DigestValue => _digestValue;
 
 		public SquareMeter AirDragArea => _airDragArea;
+		public SquareMeter TransferredAirDragArea { get; }
+		public SquareMeter AirDragArea_0 { get; }
 	}
 }

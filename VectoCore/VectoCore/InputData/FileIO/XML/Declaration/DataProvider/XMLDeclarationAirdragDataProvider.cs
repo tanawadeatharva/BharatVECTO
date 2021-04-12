@@ -34,6 +34,26 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 			}
 		}
 
+		public virtual SquareMeter TransferredAirDragArea
+		{
+			get
+			{
+				return ElementExists(XMLNames.AirDrag_TransferredCDxA) 
+					? GetDouble(XMLNames.AirDrag_TransferredCDxA).SI<SquareMeter>() 
+					: null;
+			}
+		}
+
+		public virtual SquareMeter AirDragArea_0
+		{
+			get
+			{
+				return ElementExists(XMLNames.AirDrag_CdxA_0)
+					? GetDouble(XMLNames.AirDrag_CdxA_0).SI<SquareMeter>()
+					: null;
+			}
+		}
+
 		public override CertificationMethod CertificationMethod
 		{
 			get { return CertificationMethod.Measured; }
