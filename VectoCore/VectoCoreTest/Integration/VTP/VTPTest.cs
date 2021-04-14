@@ -92,7 +92,7 @@ namespace TUGraz.VectoCore.Tests.Integration.VTP
 		[Category("Integration")]
 		[TestCase(@"TestData\Integration\VTPMode\GenericVehicle\class_5_generic vehicle_DECL.vecto", 45.6, 0.8972, TestName = "RunVTPHeavyLorry_Declaration"),
 		TestCase(@"TestData\Integration\VTPMode\MediumLorry\VTP_MediumLorry.vecto", 400.0, 1.06, TestName = "RunVTPMediumLorry_Declaration"),
-		TestCase(@"TestData\Integration\VTPMode\DualFuelVehicle\VTP_DualFuel.vecto", 43.5, 1.018, TestName = "RunVTPDualFuel_Declaration"),
+		TestCase(@"TestData\Integration\VTPMode\DualFuelVehicle\VTP_DualFuel.vecto", 43.5, 1.0107, TestName = "RunVTPDualFuel_Declaration"),
 		TestCase(@"TestData\Integration\VTPMode\HeavyBus\VTP_PrimaryBus.vecto", 14.2, 1.1413, TestName = "RunVTPHeavyPrimaryBus")	
 			]
 		public void RunVTP_Declaration(string jobFile, double expectedDeclaredCO2, double expectedCVTP)
@@ -149,7 +149,7 @@ namespace TUGraz.VectoCore.Tests.Integration.VTP
 
 			jobContainer.AddRuns(runsFactory);
 
-			Assert.AreEqual(2, jobContainer.Runs.Count);
+			Assert.AreEqual(1, jobContainer.Runs.Count);
 			//var i = 0;
 			//jobContainer.Runs[i].Run.Run();
 			//Assert.IsTrue(jobContainer.Runs[i].Run.FinishedWithoutErrors);
@@ -160,9 +160,9 @@ namespace TUGraz.VectoCore.Tests.Integration.VTP
 			Assert.AreEqual(true, jobContainer.AllCompleted);
 
 			var vtpReport = XDocument.Load(XmlReader.Create(fileWriter.XMLVTPReportName));
-			var vtpFactor = vtpReport.XPathSelectElement("//*[local-name() = 'Results']/*[local-name() = 'VTRatio']")?.Value.ToDouble(0);
+			var vtpFactor = vtpReport.XPathSelectElement("//*[local-name() = 'Results']/*[local-name() = 'C_VTP']")?.Value.ToDouble(0);
 
-			Assert.AreEqual(0.8972, vtpFactor);
+			Assert.AreEqual(0.9549, vtpFactor);
 		}
 
 

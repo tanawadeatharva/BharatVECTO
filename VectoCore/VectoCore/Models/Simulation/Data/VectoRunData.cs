@@ -220,7 +220,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 				}
 			}
 
-			if (runData.EngineData.PTORoadSweepEngineSpeed != null) {
+			if ((jobType == VectoSimulationJobType.ConventionalVehicle || jobType == VectoSimulationJobType.ParallelHybridVehicle) && runData.EngineData.PTORoadSweepEngineSpeed != null) {
 				if (runData.EngineData.IdleSpeed.IsGreater(runData.EngineData.PTORoadSweepEngineSpeed)) {
 					return new ValidationResult("PTO Operating enginespeed is below engine idling speed");
 				}

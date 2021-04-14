@@ -88,11 +88,12 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 			var fileWriter = new FileOutputWriter("Coach_MinimalPowertrainOverload");
 			var runData = new VectoRunData() {
 				JobName = "Coach_MinimalPowertrainOverload"
-            };
+			};
 			var modData = new ModalDataContainer(runData, fileWriter, null);
 			var container = new VehicleContainer(ExecutionMode.Engineering, modData) {
 				RunData =  new VectoRunData() {
 					VehicleData = vehicleData,
+					DriverData = driverData
 				}
 			};
 
@@ -154,7 +155,7 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 
 			};
 			var modData = new ModalDataContainer(runData, fileWriter, null);
-            var container = new VehicleContainer(ExecutionMode.Engineering, modData) {
+			var container = new VehicleContainer(ExecutionMode.Engineering, modData) {
 				RunData = runData
 			};
 
@@ -239,7 +240,7 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 				ElectricMachinesData = new List<Tuple<PowertrainPosition, ElectricMotorData>>()
 			};
 			var modData = new ModalDataContainer(runData, fileWriter, null);
-            var container = new VehicleContainer(ExecutionMode.Engineering, modData) {
+			var container = new VehicleContainer(ExecutionMode.Engineering, modData) {
 				RunData = runData
 			};
 
