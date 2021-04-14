@@ -28,6 +28,9 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl {
 		protected abstract IDeclarationDataAdapter DataAdapter { get; }
 
 		protected Segment _segment;
+
+		protected bool _allowVocational;
+
 		protected DriverData _driverdata;
 		protected AirdragData _airdragData;
 		protected AxleGearData _axlegearData;
@@ -45,6 +48,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl {
 			InputDataProvider = dataProvider;
 			Report = report;
 
+			_allowVocational = true;
 			//try {
 			//	Initialize();
 			//	if (Report != null) {
@@ -79,7 +83,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl {
 			_driverdata = DataAdapter.CreateDriverData();
 			_driverdata.AccelerationCurve = AccelerationCurveReader.ReadFromStream(_segment.AccelerationFile);
 			var tempVehicle = DataAdapter.CreateVehicleData(vehicle, _segment, _segment.Missions.First(),
-													_segment.Missions.First().Loadings.First());
+													_segment.Missions.First().Loadings.First(), _allowVocational);
 			_airdragData = DataAdapter.CreateAirdragData(vehicle.Components.AirdragInputData,
 												_segment.Missions.First(), _segment);
 			if (InputDataProvider.JobInputData.Vehicle.AxleConfiguration.AxlegearIncludedInGearbox()) {

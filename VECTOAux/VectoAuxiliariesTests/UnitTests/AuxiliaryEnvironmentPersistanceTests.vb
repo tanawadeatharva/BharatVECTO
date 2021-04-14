@@ -15,6 +15,7 @@ Namespace UnitTests
         'We load the previously saved config into the Emptu Aux
         'We then compare the two Aux's, if they are the same persistance has worked and they are the same.
 
+    
         Public Sub SaveDefaultFile()
 
             dim auxDefault = AuxiliaryComparisonTests.GetDefaultAuxiliaryConfig() ' New AuxiliaryConfig("")

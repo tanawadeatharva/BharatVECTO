@@ -1,5 +1,115 @@
 #Changelog
 
+**VECTO-3.3.9**
+
+***Build 2175 (2020-12-15) OFFICIAL RELEASE***
+
+- Bugfixes (compared to 3.3.9.2147)
+    * [VECTO-1374] - VECTO VTP error - regression update
+
+***Build 2147 (2020-11-17) RELEASE CANDIDATE***
+
+- Bugfixes
+    * [VECTO-1331] - VTP Mode does not function for vehicles of group 3
+    * [VECTO-1355] - VTP Simulation Abort
+    * [VECTO-1356] - PTO Losses not considered in VTP simulation
+    * [VECTO-1361] - Torque Converter in use for the First and Second Gear VTP file does not allow for this
+    * [VECTO-1372] - Deviation of CdxA Input vs. Output for HDV16
+    * [VECTO-1374] - VECTO VTP error
+
+- Improvements
+    * [VECTO-1360] - make unit tests execute in parallel
+
+
+**VECTO-3.3.8**
+
+***Build 2052 (2020-08-14) OFFICIAL RELEASE***
+
+- Bugfixes (compared to 3.3.8.2024)
+    * *No additional bugfixes*
+
+***Build 2024 (2020-07-17) RELEASE CANDIDATE***
+
+- Bugfixes 
+    * [VECTO-1288] - Simulation Abort UD RL
+    * [VECTO-1327] - Simulation abort Construction RefLoad: unexpected response ResponseOverload
+    * [VECTO-1266] - Gear 4 Loss-Map was extrapolated
+
+
+**VECTO 3.3.7**
+
+***Build 1964 (2020-05-18) OFFICIAL RELEASE***
+
+- Bugfixes
+    * [VECTO-1254] - Hashing method does not ignore certain XML attributes
+    * [VECTO-1259] - Mission profile weighting factors for vehicles of group 16 are not correct
+
+
+**VECTO 3.3.6**
+
+***Build 1916 (2020-03-31) OFFICIAL RELEASE***
+
+- Bugfixes
+    * [VECTO-1250] - Error creating new gearbox file from scratch
+
+***Build 1898 (2020-03-13) RELEASE CANDIDATE***
+
+- Improvement
+    * [VECTO-1239] - Adaptation of Mission Profile Weighting Factors
+    * [VECTO-1241] - Engineering mode: Adding support for additional PTO activations
+
+- Bugfixes
+    * [VECTO-1243] - Bug in VTP mode for heavy lorries
+    * [VECTO-1234] - urban cycle at reference load not running for bug when find braking operating point
+
+
+**VECTO 3.3.5**
+
+***Build 1812 (2019-12-18) OFFICIAL RELEASE***
+
+- Bugfixes
+    * [VECTO-1220] - Simulation Abort Urban Delivery RefLoad
+
+***Build 1783 (2019-11-19) RELEASE CANDIDATE***
+
+- Improvement
+    * [VECTO-1194] - Handling input parameter 'vocational' for groups other than 4, 5, 9, 10
+    * [VECTO-1147] - Updating declaration mode cycles values in user manual 
+    * [VECTO-1207] - run VECTO in 64bit mode by default
+
+- Bugfixes
+    * [VECTO-1074] - Vecto Calculation Aborts with Interpolation Error
+    * [VECTO-1159] - Simulation Abort in UrbanDelivery LowLoading
+    * [VECTO-1189] - Error in delaunay triangulation invariant violated
+    * [VECTO-1209] - Unexpected Response Response Overload
+    * [VECTO-1211] - Simulation Abort Urban Delivery Ref Load
+    * [VECTO-1214] - Validation of input data fails when gearbox speed limits are applied
+
+
+**VECTO 3.3.4**
+
+***Build 1716 (2019-09-13) OFFICIAL RELEASE***
+
+- Bugfixes
+    * [VECTO-1074] - Vecto Calculation Aborts with Interpolation Error ([VECTO-1046])
+    * [VECTO-1111] - Simulation Abort in Municipal Reference Load
+
+
+***Build 1686 (2019-08-14) RELEASE CANDIDATE***
+
+- Improvement
+    * [VECTO-1042] - Add option to write results into a certain directory
+    * [VECTO-1064] - add weighting factors for vehicle groups 1, 2, 3, 11, 12, 16
+
+- Bugfixes
+    * [VECTO-1030] - Exceeded max iterations when searching for operating point! Failed to find operating point!
+    * [VECTO-1032] - Gear 5 LossMap data was extrapolated in Declaration Mode: range for loss map is not sufficient
+    * [VECTO-1067] - Vair and Beta correction for Aerodynamics
+    * [VECTO-1000] - Error Loss-Map extrapolation in Declaration Mode
+    * [VECTO-1040] - Gear 6 LossMap data was extrapolated in Declaration Mode
+    * [VECTO-1047] - Failed to find operating point on construction cycle, ref load, AT gearbox
+
+
 **VECTO 3.3.3**
 
 ***Build 1639 (2019-06-27) OFFICIAL RELEASE***

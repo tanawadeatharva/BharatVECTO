@@ -56,6 +56,7 @@ using TUGraz.VectoCore.Models.SimulationComponent.Data;
 namespace TUGraz.VectoCore.Tests.Reports
 {
 	[TestFixture]
+	[Parallelizable(ParallelScope.All)]
 	public class SumWriterTest
 	{
 

@@ -178,7 +178,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			if (Position == PowertrainPosition.HybridP2 && !DataBus.GearboxInfo.GearEngaged(absTime)) {
 				// electric motor is between gearbox and clutch, but no gear is engaged...
 				if (emTorque != null) {
-					if (!DataBus.HybridControllerInfo.GearboxEngaged) {
+					if (!DataBus.HybridControllerInfo.GearboxEngaged || (DataBus.HybridControllerInfo.GearboxEngaged && !DataBus.GearboxInfo.GearEngaged(absTime))) {
 						return new ResponseInvalidOperatingPoint(this) {
 							ElectricMotor = {
 								MaxDriveTorque = maxDriveTorqueDt,

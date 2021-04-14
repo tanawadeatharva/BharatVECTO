@@ -59,6 +59,7 @@ using TUGraz.VectoCommon.InputData;
 namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 {
 	[TestFixture]
+	[Parallelizable(ParallelScope.All)]
 	public class GearboxTest
 	{
 		public const string GearboxDataFile = @"TestData\Components\24t Coach.vgbx";
@@ -517,6 +518,9 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			var gearboxData = MockSimulationDataFactory.CreateGearboxDataFromFile(GearboxDataFile, EngineDataFile);
 			var container = new VehicleContainer(ExecutionMode.Engineering) { RunData = GetDummyRunData(gearboxData) };
 			var gearbox = new Gearbox(container, new AMTShiftStrategy(container));
+			var cycleData = DrivingCycleDataReader.ReadFromStream("s,v,grad,stop\n0,0,0,10\n10,20,0,0\n20,21,0,0\n30,22,0,0\n40,23,0,0\n50,24,0,0\n60,25,0,0\n70,26,0,0\n80,27,0,0\n90,28,0,0\n100,29,0,0".ToStream(), CycleType.DistanceBased, "DummyCycle", false);
+			var cycle = new MockDrivingCycle(container, cycleData);
+			container.RunData = new VectoRunData() { Cycle = cycleData };
 
 			var driver = new MockDriver(container);
 			var port = new MockTnOutPort() { EngineN95hSpeed = 2000.RPMtoRad() };
@@ -562,6 +566,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 		public void Gearbox_ShiftUp(int gear, int newGear, double tq, double n, Type responseType)
 		{
 			var gearboxData = MockSimulationDataFactory.CreateGearboxDataFromFile(GearboxDataFile, EngineDataFile);
+			var cycleData = DrivingCycleDataReader.ReadFromStream("s,v,grad,stop\n0,0,0,10\n10,20,0,0\n20,21,0,0\n30,22,0,0\n40,23,0,0\n50,24,0,0\n60,25,0,0\n70,26,0,0\n80,27,0,0\n90,28,0,0\n100,29,0,0".ToStream(), CycleType.DistanceBased, "DummyCycle", false);
 			var container = new MockVehicleContainer() {
 				VehicleSpeed = 10.SI<MeterPerSecond>(),
 				DriverBehavior = DrivingBehavior.Driving,
@@ -572,8 +577,13 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 				TotalMass = 19000.SI<Kilogram>(),
 				EngineSpeed = n.SI<PerSecond>(),
 				RunData = GetDummyRunData(gearboxData),
+				CycleData = new CycleData() {
+					LeftSample = cycleData.Entries.First(),
+				},
 				HasCombustionEngine = true
 			};
+			var cycle = new MockDrivingCycle(container, cycleData);
+			
 			var gearbox = new Gearbox(container, new AMTShiftStrategy(container));
 			var port = new MockTnOutPort() { EngineN95hSpeed = 2000.RPMtoRad() };
 			container.EngineInfo = port;

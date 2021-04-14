@@ -26,9 +26,9 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 		#region Overrides of DeclarationDataAdapterPrimaryBus
 
 		public override VehicleData CreateVehicleData(
-			IVehicleDeclarationInputData data, Segment segment, Mission mission, KeyValuePair<LoadingType, Tuple<Kilogram, double?>> loading)
+			IVehicleDeclarationInputData data, Segment segment, Mission mission, KeyValuePair<LoadingType, Tuple<Kilogram, double?>> loading, bool allowVocational)
 		{
-			var retVal =  base.CreateVehicleData(data, segment, mission, loading);
+			var retVal =  base.CreateVehicleData(data, segment, mission, loading, allowVocational);
 			retVal.GrossVehicleMass = data.GrossVehicleMassRating;
 			if (retVal.TotalVehicleMass.IsGreater(retVal.GrossVehicleMass)) {
 				throw new VectoException("Total Vehicle Mass exceeds Gross Vehicle Mass for completed bus generic ({0}/{1})", retVal.TotalVehicleMass, retVal.GrossVehicleMass);

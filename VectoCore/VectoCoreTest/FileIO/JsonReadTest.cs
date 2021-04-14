@@ -50,6 +50,7 @@ using TUGraz.VECTO;
 namespace TUGraz.VectoCore.Tests.FileIO
 {
 	[TestFixture]
+	[Parallelizable(ParallelScope.All)]
 	public class JsonReadTest
 	{
 		private const string TestJobFile = @"Testdata\Jobs\40t_Long_Haul_Truck.vecto";

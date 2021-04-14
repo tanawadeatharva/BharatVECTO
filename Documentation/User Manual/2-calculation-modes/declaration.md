@@ -1,6 +1,6 @@
 ##Declaration Mode
 
-In Declaration Mode many input parameters are predefined for the official certification. They are locked in the user interface and will automatically be set by VECTO during calculation. Calculations will be performed for each mission profile (of the corresponding HDV class) with three different loadings each: Empty, full, and reference loading. 
+In Declaration Mode many input parameters are predefined for the official certification. They are locked in the user interface and will automatically be set by VECTO during calculation. Calculations will be performed for each mission profile (of the corresponding HDV class) with two different loadings: low loading and reference loading. 
 
 Declaration Mode can be activated in the [Options Tab](#main-form).
 

@@ -50,6 +50,7 @@ using TUGraz.VectoCore.Models.Connector.Ports.Impl;
 namespace TUGraz.VectoCore.Tests.Integration.ShiftStrategy
 {
 	[TestFixture]
+	[Parallelizable(ParallelScope.All)]
 	public class ShiftStrategyTest
 	{
 		[OneTimeSetUp]
@@ -59,11 +60,9 @@ namespace TUGraz.VectoCore.Tests.Integration.ShiftStrategy
 		}
 
 
-		public GraphWriter GetGraphWriter()
+		protected GraphWriter GetGraphWriter() 
 		{
 			var graphWriter = new GraphWriter();
-
-			//LogManager.DisableLogging();
 #if TRACE
 			graphWriter.Enable();
 #else

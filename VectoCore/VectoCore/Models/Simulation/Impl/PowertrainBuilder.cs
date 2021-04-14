@@ -196,6 +196,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			} else if (data.VehicleData.VehicleCategory.IsBus()) {
 				AddVTPBusAuxiliaries(data, container, engine);
 			}
+           
 
 			var idleController = new CombustionEngine.CombustionEngineNoDubleclutchIdleController(engine, container);
 			//if (data.PTO != null && data.PTO.PTOCycle != null) {
@@ -243,6 +244,18 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			var engineFan = new EngineFanAuxiliary(data.FanDataVTP.FanCoefficients.Take(3).ToArray(), data.FanDataVTP.FanDiameter);
 			aux.AddCycle(Constants.Auxiliaries.IDs.Fan, cycleEntry => engineFan.PowerDemand(cycleEntry.FanSpeed));
 			container.ModalData.AddAuxiliary(Constants.Auxiliaries.IDs.Fan);
+
+			if (data.PTO != null) {
+				aux.AddConstant(Constants.Auxiliaries.IDs.PTOTransmission,
+					DeclarationData.PTOTransmission.Lookup(data.PTO.TransmissionType).PowerDemand);
+				container.ModalData.AddAuxiliary(Constants.Auxiliaries.IDs.PTOTransmission,
+					Constants.Auxiliaries.PowerPrefix + Constants.Auxiliaries.IDs.PTOTransmission);
+
+				aux.Add(Constants.Auxiliaries.IDs.PTOConsumer,
+					(n, absTime, dt, dryRun) => container.DrivingCycleInfo.PTOActive ? null : data.PTO.LossMap.GetTorqueLoss(n) * n);
+				container.ModalData.AddAuxiliary(Constants.Auxiliaries.IDs.PTOConsumer,
+					Constants.Auxiliaries.PowerPrefix + Constants.Auxiliaries.IDs.PTOConsumer);
+			}
 
 			engine.Connect(aux.Port());
 		}
@@ -868,16 +881,39 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 				container.ModalData?.AddAuxiliary(id);
 			}
 
+			RoadSweeperAuxiliary rdSwpAux = null;
+			PTODriveAuxiliary ptoDrive = null;
+			
+
+			if (data.ExecutionMode == ExecutionMode.Engineering && data.Cycle.Entries.Any(x => x.PTOActive == PTOActivity.PTOActivityRoadSweeping)) {
+				if (data.DriverData.PTODriveMinSpeed == null) {
+					throw new VectoSimulationException("PTO activity 'road sweeping' requested, but no min. engine speed or gear provided");
+				}
+				rdSwpAux = new RoadSweeperAuxiliary(container);
+				aux.Add(Constants.Auxiliaries.IDs.PTORoadsweeping, (nEng, absTime, dt, dryRun) => rdSwpAux.PowerDemand(nEng, absTime, dt, dryRun));
+				container.ModalData?.AddAuxiliary(Constants.Auxiliaries.IDs.PTORoadsweeping, Constants.Auxiliaries.PowerPrefix + Constants.Auxiliaries.IDs.PTORoadsweeping);
+			}
+
+			if (data.ExecutionMode == ExecutionMode.Engineering &&
+				data.Cycle.Entries.Any(x => x.PTOActive == PTOActivity.PTOActivityWhileDrive)) {
+				if (data.PTOCycleWhileDrive == null) {
+					throw new VectoException("PTO activation while drive requested in cycle but no PTO cycle provided");
+				}
+
+				ptoDrive = new PTODriveAuxiliary(container, data.PTOCycleWhileDrive);
+				aux.Add(Constants.Auxiliaries.IDs.PTODuringDrive, (nEng, absTime, dt, dryRun) => ptoDrive.PowerDemand(nEng, absTime, dt, dryRun));
+				container.ModalData?.AddAuxiliary(Constants.Auxiliaries.IDs.PTODuringDrive, Constants.Auxiliaries.PowerPrefix + Constants.Auxiliaries.IDs.PTODuringDrive);
+			}
 			if (data.PTO != null) {
 				aux.AddConstant(Constants.Auxiliaries.IDs.PTOTransmission,
-					DeclarationData.PTOTransmission.Lookup(data.PTO.TransmissionType).PowerDemand);
+								DeclarationData.PTOTransmission.Lookup(data.PTO.TransmissionType).PowerDemand);
 				container.ModalData?.AddAuxiliary(Constants.Auxiliaries.IDs.PTOTransmission,
-					Constants.Auxiliaries.PowerPrefix + Constants.Auxiliaries.IDs.PTOTransmission);
+												Constants.Auxiliaries.PowerPrefix + Constants.Auxiliaries.IDs.PTOTransmission);
 
 				aux.Add(Constants.Auxiliaries.IDs.PTOConsumer,
-					n => container.DrivingCycleInfo.PTOActive ? null : data.PTO.LossMap.GetTorqueLoss(n) * n);
+						(n, absTime, dt, dryRun) => container.DrivingCycleInfo.PTOActive || (rdSwpAux?.Active(absTime) ?? false) || (ptoDrive?.Active(absTime) ?? false) ? null : data.PTO.LossMap.GetTorqueLoss(n) * n);
 				container.ModalData?.AddAuxiliary(Constants.Auxiliaries.IDs.PTOConsumer,
-					Constants.Auxiliaries.PowerPrefix + Constants.Auxiliaries.IDs.PTOConsumer);
+												Constants.Auxiliaries.PowerPrefix + Constants.Auxiliaries.IDs.PTOConsumer);
 			}
 
 			return aux;

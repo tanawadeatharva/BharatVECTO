@@ -56,6 +56,7 @@ using TUGraz.VECTO;
 namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 {
 	[TestFixture]
+	[Parallelizable(ParallelScope.All)]
 	public class ATGearboxTest
 	{
 		public const string EngineDataFile = @"TestData\Components\AT_GBX\Engine.veng";

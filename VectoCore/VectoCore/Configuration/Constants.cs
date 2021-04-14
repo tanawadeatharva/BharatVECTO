@@ -51,7 +51,9 @@ namespace TUGraz.VectoCore.Configuration
 
 			public static class IDs
 			{
-				public static string PTOTransmission = "PTO_TRANSM";
+				public const string PTOTransmission = "PTO_TRANSM";
+				public const string PTORoadsweeping = "PTO_RoadSweeping";
+				public const string PTODuringDrive = "PTO_DuringDrive";
 				public const string Fan = "FAN";
 				public const string SteeringPump = "STP";
 				public const string ElectricSystem = "ES";
@@ -302,7 +304,7 @@ namespace TUGraz.VectoCore.Configuration
 
 			public static readonly Meter DriverActionDistanceTolerance = 0.25.SI<Meter>();
 
-			public static readonly MeterPerSecond VehicleSpeedHaltTolerance = 1e-3.SI<MeterPerSecond>();
+			public static readonly MeterPerSecond VehicleSpeedHaltTolerance = 2e-3.SI<MeterPerSecond>();
 
 			/// <summary>
 			/// The initial search interval for the operating point search in the driver.

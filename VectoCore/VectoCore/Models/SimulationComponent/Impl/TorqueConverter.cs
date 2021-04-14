@@ -245,6 +245,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				DeltaFullLoad = 10 * deltaMax,
 				DeltaDragLoad = 10 * deltaMin,
 				// TODO! delta full/drag torque
+				//TorqueConverterOperatingPoint = DataBus.DrivingAction == DrivingAction.Brake ? dryOperatingPointMin : dryOperatingPointMax
 				DeltaEngineSpeed = dryOperatingPointMax.InAngularVelocity - maxEngineSpeed,
 				TorqueConverter = { TorqueConverterOperatingPoint = dryOperatingPointMax},
 				Engine = {
@@ -268,7 +269,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					engineResponse.Engine.DragPower - engineResponse.Engine.AuxiliariesPowerDemand - emPower,
 					DataBus.EngineInfo.EngineSpeed, outAngularVelocity, _engineInertia, dt, previousPower);
 				var maxInputSpeed = VectoMath.Min(ModelData.TorqueConverterSpeedLimit, DataBus.EngineInfo.EngineN95hSpeed);
-				var lowerInputSpeed = DataBus.EngineInfo.EngineIdleSpeed * 1.001; // VectoMath.Max(DataBus.EngineIdleSpeed * 1.001, 0.8 * DataBus.EngineSpeed);
+				var lowerInputSpeed = DataBus.DriverInfo.DrivingAction == DrivingAction.Brake
+					? DataBus.EngineInfo.EngineIdleSpeed * 1.001
+					: VectoMath.Max(DataBus.EngineInfo.EngineIdleSpeed * 1.001, 0.8 * DataBus.EngineInfo.EngineSpeed);
 				var corrected = false;
 				if (operatingPoint.InAngularVelocity.IsGreater(maxInputSpeed, 1e-2)) {
 					operatingPoint = ModelData.FindOperatingPoint(maxInputSpeed, outAngularVelocity);
@@ -401,7 +404,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			var operatingPointList = ModelData.FindOperatingPoint(outTorque, outAngularVelocity, DataBus.EngineInfo.EngineIdleSpeed);
 			if (operatingPointList.Count == 0) {
 				Log.Debug("TorqueConverter: Failed to find torque converter operating point, fallback: creeping");
-				var tqOperatingPoint = ModelData.FindOperatingPoint(DataBus.EngineInfo.EngineIdleSpeed, outAngularVelocity);
+				//var tqOperatingPoint = ModelData.FindOperatingPoint(DataBus.EngineInfo.EngineIdleSpeed, outAngularVelocity);
+				var tqOperatingPoint = ModelData.FindOperatingPoint(DataBus.EngineInfo.EngineIdleSpeed * 1.00, outAngularVelocity);
 
 				var engineResponse = (ResponseDryRun)
 					NextComponent.Request(absTime, dt, tqOperatingPoint.InTorque, tqOperatingPoint.InAngularVelocity, true);

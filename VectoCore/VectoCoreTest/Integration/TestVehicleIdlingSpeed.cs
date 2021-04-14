@@ -47,6 +47,7 @@ using TUGraz.VectoCore.InputData.FileIO.XML;
 namespace TUGraz.VectoCore.Tests.Integration
 {
 	[TestFixture]
+	[Parallelizable(ParallelScope.All)]
 	public class TestVehicleIdlingSpeed
 	{
 		const string SampleVehicleDecl = "TestData/XML/XMLReaderDeclaration/vecto_vehicle-sample.xml";

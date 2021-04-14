@@ -44,6 +44,8 @@ using XmlDocumentType = TUGraz.VectoCore.Utils.XmlDocumentType;
 
 namespace TUGraz.VectoCore.Tests.XML
 {
+	[TestFixture]
+	[Parallelizable(ParallelScope.All)]
 	public class XMLReportTest
 	{
 		const string SampleVehicleDecl = "TestData/XML/XMLReaderDeclaration/vecto_vehicle-sample.xml";
