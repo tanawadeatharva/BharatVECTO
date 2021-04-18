@@ -4,17 +4,26 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:VECTO3GUI2020.Views.Multistage"
-             xmlns:customControls="clr-namespace:VECTO3GUI2020.Views.Multistage.CustomControls"
-             xmlns:customControls1="clr-namespace:VECTO3GUI2020.Views.CustomControls"
+             xmlns:customControlsMultistage="clr-namespace:VECTO3GUI2020.Views.Multistage.CustomControls"
+             xmlns:customControls="clr-namespace:VECTO3GUI2020.Views.CustomControls"
              xmlns:impl="clr-namespace:VECTO3GUI2020.ViewModel.MultiStage.Implementation"
+             xmlns:properties="clr-namespace:VECTO3GUI2020.Properties"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800" BorderBrush="Aquamarine" BorderThickness="2" Margin="4"
              d:DataContext="{d:DesignInstance impl:MultistageAirdragViewModel}">
     <Grid>
         <StackPanel>
             <Label Content="AIRDRAG" HorizontalAlignment="Stretch" Background="Aquamarine"/>
-            <customControls1:LabledCheckBoxAutomatic Content="{Binding AirdragModified}"></customControls1:LabledCheckBoxAutomatic>
-            <customControls:FilePicker Height="30px" VerticalAlignment="Top" Text="Test" Command="{Binding LoadAirdragFileCommand}"></customControls:FilePicker>
+            <customControlsMultistage:FilePicker Text="Test" Command="{Binding LoadAirdragFileCommand}"/>
+            <StackPanel HorizontalAlignment="Stretch" Margin="4">
+                <Label>Consolidated Airdrag Data</Label>
+                <customControlsMultistage:LabledTextBoxMultistage Content="{Binding ConsolidatedAirdragData.Manufacturer, Mode=OneWay}" ReadOnly="True"/>
+                <customControlsMultistage:LabledTextBoxMultistage Content="{Binding ConsolidatedAirdragData.Model, Mode=OneWay}" ReadOnly="True"/>
+                <customControlsMultistage:LabledTextBoxMultistage Content="{Binding ConsolidatedAirdragData.AirDragArea, Mode=OneWay}" ReadOnly="True"/>
+                <Separator/>
+                <Label>Data from File</Label>
+                <ContentControl Margin="0" Padding="0" Content="{Binding AirDragViewModel}"/>
+            </StackPanel>
         </StackPanel>
 
     </Grid>

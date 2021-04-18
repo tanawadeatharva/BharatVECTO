@@ -30,11 +30,8 @@ namespace VECTO3GUI2020.Helper.Converter
 				
 
             }
-            return Binding.DoNothing;
 
-
-
-        }
+		}
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {

@@ -88,7 +88,7 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 			Components.Add(VehicleViewModel.Name, VehicleViewModel as IViewModelBase);
 
 
-			var airDragEditViewModel = viewModelFactory.GetMultistageAirdragViewModel();
+			var airDragEditViewModel = viewModelFactory.GetMultistageAirdragViewModel(_consolidatedManufacturingStageInputData.Vehicle.Components.AirdragInputData);
 			Components.Add("Airdrag", airDragEditViewModel as IViewModelBase);
 
 			var auxiliariesViewModel =

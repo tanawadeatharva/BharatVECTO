@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Resources;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using TUGraz.VectoCommon.Utils;
 
 namespace VECTO3GUI2020.Views.CustomControls
 {
@@ -46,5 +48,56 @@ namespace VECTO3GUI2020.Views.CustomControls
 			var PropertyType = Binding?.ResolvedSource?.GetType().GetProperty(PropertyName).PropertyType;
 			return PropertyType;
 		}
+
+		public static object CreateDummyContent(this UserControl userControl, DependencyPropertyChangedEventArgs e)
+		{
+			var type = userControl.GetPropertyType(e.Property);
+			if (type == null)
+			{
+				return null;
+			}
+			try
+			{
+				dynamic dynType = type;
+				var baseType = dynType.BaseType;
+				//Create SI Dummy
+
+				if (baseType.BaseType == typeof(SI))
+				{
+					var createMethod = baseType.GetMethod("Create");
+					var dummyContent = createMethod?.Invoke(null, new object[] { (new double()) });
+					return dummyContent;
+				}
+				else
+				{
+					var bindingProperty = userControl.GetBindingExpression(e.Property);
+					var dataItemType = bindingProperty?.DataItem.GetType();
+					var sourcePropertyType =
+						dataItemType?.GetProperty(bindingProperty?.ResolvedSourcePropertyName)?.PropertyType;
+
+					var underlyingType = Nullable.GetUnderlyingType(dynType);
+					Enum dummyEnum;
+					if (underlyingType != null)
+					{
+						dummyEnum = Enum.Parse(underlyingType, underlyingType.GetEnumNames()[0]);
+					}
+					else
+					{
+						dummyEnum = Enum.Parse(dynType, dynType.GetEnumNames()[0]);
+					}
+
+					return dummyEnum;
+				}
+
+			}
+			catch (Exception ex)
+			{
+				Debug.WriteLine(ex.Message);
+				return null;
+			}
+
+			return null;
+		}
+
 	}
 }

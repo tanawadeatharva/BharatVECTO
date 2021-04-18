@@ -44,6 +44,9 @@
                                     HideCheckBox="True"/>
 
         <Separator/>
+        <custom:MultiStageParameter PreviousContent="{Binding ConsolidatedVehicleData.AirdragModifiedMultistage}"
+                                    Content="{Binding AirdragModifiedMultistage}" Mode="CHECKBOX"/>
+
         <custom:MultiStageParameter PreviousContent="{Binding ConsolidatedVehicleData.GrossVehicleMassRating}"
                                     Content="{Binding GrossVehicleMassRating}"/>
         <custom:MultiStageParameter PreviousContent="{Binding ConsolidatedVehicleData.DoorDriveTechnology}"

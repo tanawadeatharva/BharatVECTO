@@ -193,6 +193,11 @@
         <componentviews:EngineFuelView/>
     </DataTemplate>
     <!--#endregion-->
+    
+    <DataTemplate DataType="{x:Type componentimpl:AirDragViewModel_v2_8}">
+        <multistageviews:AirDragView_v2_8></multistageviews:AirDragView_v2_8>
+    </DataTemplate>
+
     <!--#region Multistage -->
     <DataTemplate DataType="{x:Type multistageimpl:NewMultiStageJobViewModel}">
         <multistageviews:NewMultistageFileView/>

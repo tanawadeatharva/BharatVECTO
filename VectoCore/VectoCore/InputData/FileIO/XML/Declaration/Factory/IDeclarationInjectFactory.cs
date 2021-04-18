@@ -128,6 +128,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Factory
 		IXMLAxleReader CreateAxleReader(string version, IXMLDeclarationVehicleData vehicle, XmlNode componentsNode);
 		IXMLGearboxReader CreateGearboxReader(string version, IXMLDeclarationVehicleData vehicle, XmlNode componentsNode);
 		IXMLAuxiliaryReader CreateAuxiliariesReader(string version, IXMLDeclarationVehicleData vehicle, XmlNode componentsNode);
+
 		
 		IXMLApplicationInformationData CreateApplicationInformationReader(string version, XmlNode applicationNode);
 

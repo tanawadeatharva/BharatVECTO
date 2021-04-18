@@ -5,19 +5,20 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:VECTO3GUI2020.Views.Multistage.CustomControls"
              mc:Ignorable="d" 
-             d:DesignHeight="30" d:DesignWidth="800" Name="filepickercustomcontrol">
-    <Grid>
-        <Grid Margin="4" DockPanel.Dock="Top">
-            <Grid.ColumnDefinitions>
+             d:DesignHeight="30" d:DesignWidth="800" Name="filepickercustomcontrol" MinHeight="40" MaxHeight="30">
+    <Grid Margin="4" VerticalAlignment="Stretch">
+        <Grid.RowDefinitions>
+            <RowDefinition></RowDefinition>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
                 <ColumnDefinition></ColumnDefinition>
                 <ColumnDefinition Width="30px"></ColumnDefinition>
             </Grid.ColumnDefinitions>
-            <TextBox VerticalContentAlignment="Center" Height="Auto" Padding="4" Margin = "0 0 0 0" IsReadOnly="True" 
+            <TextBox VerticalContentAlignment="Center" Padding="4" Margin = "0 0 0 0" IsReadOnly="True" 
                      Text="{Binding Text, ElementName=filepickercustomcontrol}" HorizontalAlignment="Stretch"/>
             <Button Padding="4" Margin="4 0 0 0" Grid.Column="1" Command="{Binding Command, ElementName=filepickercustomcontrol}">
                 <Image Source="../../../Resources/folderpicker.ico">
                 </Image>
             </Button>
         </Grid>
-    </Grid>
 </UserControl>

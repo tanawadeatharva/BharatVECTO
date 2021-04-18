@@ -7,7 +7,7 @@
              xmlns:implementation="clr-namespace:VECTO3GUI2020.ViewModel.MultiStage.Implementation" 
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800" d:DataContext="{d:DesignInstance implementation:ManufacturingStageViewModel_v0_1 }">
-    <Grid MaxWidth="900">
+    <Grid>
         <DockPanel>
         <Grid Margin="4" DockPanel.Dock="Top">
             <Grid.ColumnDefinitions>

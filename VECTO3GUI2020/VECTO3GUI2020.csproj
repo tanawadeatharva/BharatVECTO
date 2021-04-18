@@ -345,8 +345,14 @@
     <Compile Include="Views\MessageView.xaml.cs">
       <DependentUpon>MessageView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\Multistage\AirDragView_v2_8.xaml.cs">
+      <DependentUpon>AirDragView_v2_8.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\Multistage\CustomControls\FilePicker.xaml.cs">
       <DependentUpon>FilePicker.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Multistage\CustomControls\LabledTextBoxMultistage.xaml.cs">
+      <DependentUpon>LabledTextBoxMultistage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\Multistage\CustomControls\MultiStageParameter.xaml.cs">
       <DependentUpon>MultiStageParameter.xaml</DependentUpon>
@@ -536,7 +542,15 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Views\Multistage\AirDragView_v2_8.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\Multistage\CustomControls\FilePicker.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Multistage\CustomControls\LabledTextBoxMultistage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
