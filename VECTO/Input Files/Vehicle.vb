@@ -85,7 +85,8 @@ Public Class Vehicle
     Public ElectricMotorPosition As PowertrainPosition
     Public ElectricMotorCount As Integer
     Public ElectricMotorRatio As Double
-    Public ElectricMotorMechEff As Double
+    'Public ElectricMotorMechEff As Double
+    Public ElectricMotorMechLossMap As SubPath
 
     Public Sub New()
 		_path = ""
@@ -103,6 +104,7 @@ Public Class Vehicle
         PtoCycle = New SubPath()
         BatteryFile = New SubPath()
         ElectricMotorFile = New SubPath()
+		ElectricMotorMechLossMap = new SubPath()
 
         SetDefault()
 	End Sub
@@ -223,6 +225,9 @@ Public Class Vehicle
 		VehicleCategory = VehicleCategory.RigidTruck
 		MassMax = 0
 		AxleConfiguration = AxleConfiguration.AxleConfig_4x2
+
+		ElectricMotorFile.Clear()
+		ElectricMotorMechLossMap.Clear()
 
 		SavedInDeclMode = False
 	End Sub
@@ -935,7 +940,11 @@ Public Class ElectricMachineWrapper
             Return New List(Of ElectricMachineEntry(Of IElectricMotorDeclarationInputData))(New ElectricMachineEntry(Of IElectricMotorDeclarationInputData)() {
             New ElectricMachineEntry(Of IElectricMotorDeclarationInputData) With {
                     .ElectricMachine = Me,
-                    .MechanicalEfficiency = Vehicle.ElectricMotorMechEff, .Position = Vehicle.ElectricMotorPosition, .Ratio = Vehicle.ElectricMotorRatio, .Count = Vehicle.ElectricMotorCount}})
+                    .MechanicalTransmissionEfficiency = If(IsNumeric(Vehicle.ElectricMotorMechLossMap.OriginalPath), Vehicle.ElectricMotorMechLossMap.OriginalPath.ToDouble(), double.NaN), 
+				    .MechanicalTransmissionLossMap = VectoCSVFile.Read(Vehicle.ElectricMotorMechLossMap.FullPath),
+                    .Position = Vehicle.ElectricMotorPosition, 
+                    .Ratio = Vehicle.ElectricMotorRatio, 
+                    .Count = Vehicle.ElectricMotorCount}})
         End Get
     End Property
     Public ReadOnly Property IElectricMachinesEngineeringInputData_Entries As IList(Of ElectricMachineEntry(Of IElectricMotorEngineeringInputData)) Implements IElectricMachinesEngineeringInputData.Entries
@@ -943,7 +952,11 @@ Public Class ElectricMachineWrapper
             Return New List(Of ElectricMachineEntry(Of IElectricMotorEngineeringInputData))(New ElectricMachineEntry(Of IElectricMotorEngineeringInputData)() {
             New ElectricMachineEntry(Of IElectricMotorEngineeringInputData)() With {
                     .ElectricMachine = Me,
-                    .MechanicalEfficiency = Vehicle.ElectricMotorMechEff, .Position = Vehicle.ElectricMotorPosition, .Ratio = Vehicle.ElectricMotorRatio, .Count = Vehicle.ElectricMotorCount}})
+                    .MechanicalTransmissionEfficiency = If(IsNumeric(Vehicle.ElectricMotorMechLossMap.OriginalPath), Vehicle.ElectricMotorMechLossMap.OriginalPath.ToDouble(), double.NaN), 
+                    .MechanicalTransmissionLossMap = If(IsNumeric(Vehicle.ElectricMotorMechLossMap.OriginalPath), Nothing, VectoCSVFile.Read(Vehicle.ElectricMotorMechLossMap.FullPath)),
+                    .Position = Vehicle.ElectricMotorPosition, 
+                    .Ratio = Vehicle.ElectricMotorRatio, 
+                    .Count = Vehicle.ElectricMotorCount}})
 
         End Get
     End Property

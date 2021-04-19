@@ -468,7 +468,8 @@ Public Class VehicleForm
 			Dim em As ElectricMachineEntry(Of IElectricMotorEngineeringInputData) = vehicle.Components.ElectricMachines.Entries.First()
 			tbElectricMotor.Text = GetRelativePath(em.ElectricMachine.DataSource.SourceFile, basePath)
 			tbEmCount.Text = em.Count.ToGUIFormat()
-			tbEmEfficiency.Text = em.MechanicalEfficiency.ToGUIFormat()
+			tbEmADCLossMap.Text = If(em.MechanicalTransmissionLossMap Is Nothing, em.MechanicalTransmissionEfficiency.ToGUIFormat(),
+									 GetRelativePath(em.MechanicalTransmissionLossMap.Source, basePath))
 			tbRatioEm.Text = em.Ratio.ToGUIFormat()
 			cbEmPos.SelectedValue = em.Position
 		End If
@@ -614,7 +615,8 @@ Public Class VehicleForm
 			veh.ElectricMotorPosition = CType(cbEmPos.SelectedValue, PowertrainPosition)
 			veh.ElectricMotorCount = tbEmCount.Text.ToInt()
 			veh.ElectricMotorRatio = tbRatioEm.Text.ToDouble()
-			veh.ElectricMotorMechEff = tbEmEfficiency.Text.ToDouble()
+			'veh.ElectricMotorMechEff = tbEmADCLossMap.Text.ToDouble()
+			veh.ElectricMotorMechLossMap.Init(GetPath(file), tbEmADCLossMap.Text)
 		End If
 
 		If (VehicleType = VectoSimulationJobType.ParallelHybridVehicle) AndAlso not String.IsNullOrWhiteSpace(tbEmTorqueLimits.Text) Then
@@ -1144,5 +1146,11 @@ Public Class VehicleForm
 			tbPropulsionTorqueLimit.Text = GetFilenameWithoutDirectory(PropulsionTorqueLimitFileBrowser.Files(0), GetPath(_vehFile))
 
 	End Sub
+
+    Private Sub btnEmADCLossMap_Click(sender As Object, e As EventArgs) Handles btnEmADCLossMap.Click
+        If EmADCLossMapFileBrowser.OpenDialog(FileRepl(tbEmADCLossMap.Text, GetPath(_vehFile))) Then _
+            tbEmADCLossMap.Text = GetFilenameWithoutDirectory(EmADCLossMapFileBrowser.Files(0), GetPath(_vehFile))
+
+    End Sub
 End Class
 

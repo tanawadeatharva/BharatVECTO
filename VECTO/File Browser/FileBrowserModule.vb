@@ -64,4 +64,6 @@ Public Module FileBrowserModule
 
     Public ElectricMotorFileBrowser As FileBrowser
     Public REESSFileBrowser As FileBrowser
+
+	public EmADCLossMapFileBrowser As FileBrowser
 End Module
