@@ -187,7 +187,7 @@ namespace TUGraz.VectoCore.Tests.Utils
 				Entries = new[] {
 					new ElectricMachineEntry<IElectricMotorEngineeringInputData>()
 					{
-						Count = count, ElectricMachine = inputData, Position = pos, Ratio = ratio, MechanicalEfficiency = efficiency,
+						Count = count, ElectricMachine = inputData, Position = pos, Ratio = ratio, MechanicalTransmissionEfficiency = efficiency,
 					}
 				}
 			}, null);

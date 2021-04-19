@@ -52,6 +52,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox
 		/// </summary>
 		private readonly DelaunayMap _lossMap;
 
+		/// <summary>
+		/// The inverted loss map for range sanity checks. [X=Input EngineSpeed, Y=Input Torque] => Z=Output Torque
+		/// </summary>
+		private readonly DelaunayMap _invertedLossMap;
+
 		public string GearName { get; private set; }
 
 
@@ -67,11 +72,14 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox
 			_ratio = gearRatio;
 			_entries = entries;
 			_lossMap = new DelaunayMap("TransmissionLossMap " + GearName);
+			_invertedLossMap = new DelaunayMap("TransmissionLossMapInv. " + GearName);
 			foreach (var entry in _entries) {
 				_lossMap.AddPoint(entry.InputSpeed.Value(), (entry.InputTorque - entry.TorqueLoss).Value(), entry.TorqueLoss.Value());
+				_invertedLossMap.AddPoint(entry.InputSpeed.Value(), entry.InputTorque.Value(), entry.TorqueLoss.Value());
 			}
 
 			_lossMap.Triangulate();
+			_invertedLossMap.Triangulate();
 		}
 
 		/// <summary>
@@ -104,7 +112,30 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox
 			public NewtonMeter Value;
 		}
 
-		
+		///  <summary>
+		/// 	Computes the OUTPUT torque given by the input engineSpeed and the input torque.
+		///  </summary>
+		///  <param name="inAngularVelocity">Angular speed at input side.</param>
+		///  <param name="inTorque">Torque at input side.</param>
+		/// <param name="allowExtrapolation"></param>
+		/// <returns>Torque needed at output side (towards the wheels).</returns>
+		public NewtonMeter GetOutTorque(PerSecond inAngularVelocity, NewtonMeter inTorque, bool allowExtrapolation = false)
+		{
+			var torqueLoss = _invertedLossMap.Interpolate(inAngularVelocity.Value(), inTorque.Value());
+			if (torqueLoss.HasValue) {
+				return (inTorque - torqueLoss.Value.SI<NewtonMeter>()) * _ratio;
+			}
+
+			if (allowExtrapolation) {
+				torqueLoss = _invertedLossMap.Extrapolate(inAngularVelocity.Value(), inTorque.Value());
+				return (inTorque - torqueLoss.Value.SI<NewtonMeter>()) * _ratio;
+			}
+
+			throw new VectoException("TransmissionLossMap {0}: Interpolation failed. inTorque: {1}, inAngularVelocity: {2}",
+				GearName, inTorque,
+				inAngularVelocity.AsRPM);
+		}
+
 		public GearLossMapEntry this[int i]
 		{
 			get { return _entries[i]; }

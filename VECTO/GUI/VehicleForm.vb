@@ -69,8 +69,8 @@ Public Class VehicleForm
 		PnWheelDiam.Enabled = Not Cfg.DeclMode
 		'gbPTO.Enabled = Not Cfg.DeclMode
 		pnPTO.Enabled = Not Cfg.DeclMode
-        gbPTODrive.Enabled = not Cfg.DeclMode
-        tpRoadSweeper.Visible = Not cfg.DeclMode
+		gbPTODrive.Enabled = not Cfg.DeclMode
+		tpRoadSweeper.Visible = Not cfg.DeclMode
 
 		CbCdMode.ValueMember = "Value"
 		CbCdMode.DisplayMember = "Label"
@@ -425,8 +425,8 @@ Public Class VehicleForm
 				cbTankSystem.SelectedValue = declVehicle.TankSystem.Value
 			End If
 
-            tbPtoEngineSpeed.Text = vehicle.PTO_DriveEngineSpeed?.AsRPM.ToGUIFormat()
-            tbPtoGear.Text = if (not vehicle.PTO_DriveGear is nothing, vehicle.PTO_DriveGear.Gear.ToString() ,"")
+			tbPtoEngineSpeed.Text = vehicle.PTO_DriveEngineSpeed?.AsRPM.ToGUIFormat()
+			tbPtoGear.Text = if (not vehicle.PTO_DriveGear is nothing, vehicle.PTO_DriveGear.Gear.ToString() ,"")
 		End If
 
 		LvRRC.Items.Clear()
@@ -459,7 +459,7 @@ Public Class VehicleForm
 		tbPTOLossMap.Text =
 			If(Cfg.DeclMode OrElse pto.PTOLossMap Is Nothing, "", GetRelativePath(pto.PTOLossMap.Source, basePath))
 		tbPTOCycle.Text = If(Cfg.DeclMode OrElse pto.PTOCycleDuringStop Is Nothing, "", GetRelativePath(pto.PTOCycleDuringStop.Source, basePath))
-        tbPTODrive.Text = If (Cfg.DeclMode OrElse pto.PTOCycleWhileDriving Is Nothing, "", GetRelativePath(pto.PTOCycleWhileDriving.Source, basePath))
+		tbPTODrive.Text = If (Cfg.DeclMode OrElse pto.PTOCycleWhileDriving Is Nothing, "", GetRelativePath(pto.PTOCycleWhileDriving.Source, basePath))
 
 		cbAngledriveType.SelectedValue = angledrive.Type
 		tbAngledriveRatio.Text = angledrive.Ratio.ToGUIFormat()
@@ -474,7 +474,8 @@ Public Class VehicleForm
 			Dim em As ElectricMachineEntry(Of IElectricMotorEngineeringInputData) = vehicle.Components.ElectricMachines.Entries.First()
 			tbElectricMotor.Text = GetRelativePath(em.ElectricMachine.DataSource.SourceFile, basePath)
 			tbEmCount.Text = em.Count.ToGUIFormat()
-			tbEmEfficiency.Text = em.MechanicalEfficiency.ToGUIFormat()
+			tbEmADCLossMap.Text = If(em.MechanicalTransmissionLossMap Is Nothing, em.MechanicalTransmissionEfficiency.ToGUIFormat(),
+									 GetRelativePath(em.MechanicalTransmissionLossMap.Source, basePath))
 			tbRatioEm.Text = em.Ratio.ToGUIFormat()
 			cbEmPos.SelectedValue = em.Position
 		End If
@@ -482,7 +483,7 @@ Public Class VehicleForm
 		If (vehicle.VehicleType = VectoSimulationJobType.ParallelHybridVehicle) Then
 			'tbMaxDrivetrainPwr.Text = vehicle.MaxDrivetrainPower.ConvertToKiloWatt().Value.ToXMLFormat(2)
 			tbEmTorqueLimits.Text = if (Not vehicle.ElectricMotorTorqueLimits Is Nothing, GetRelativePath(vehicle.ElectricMotorTorqueLimits.Source, basePath), "")
-		    tbPropulsionTorqueLimit.Text = if (Not vehicle.MaxPropulsionTorque Is Nothing, GetRelativePath(vehicle.MaxPropulsionTorque.Source, basePath), "")
+			tbPropulsionTorqueLimit.Text = if (Not vehicle.MaxPropulsionTorque Is Nothing, GetRelativePath(vehicle.MaxPropulsionTorque.Source, basePath), "")
 		End If
 
 		DeclInit()
@@ -600,7 +601,7 @@ Public Class VehicleForm
 			veh.PtoType = CType(cbPTOType.SelectedValue, String)
 			veh.PtoLossMap.Init(GetPath(file), tbPTOLossMap.Text)
 		veh.PtoCycleStandstill.Init(GetPath(file), tbPTOCycle.Text)
-	    veh.PtoCycleDriving.Init(GetPath(file), tbPTODrive.Text)
+		veh.PtoCycleDriving.Init(GetPath(file), tbPTODrive.Text)
 
 			For Each item As ListViewItem In lvTorqueLimits.Items
 				Dim tl As TorqueLimitInputData = New TorqueLimitInputData()
@@ -621,7 +622,8 @@ Public Class VehicleForm
 			veh.ElectricMotorPosition = CType(cbEmPos.SelectedValue, PowertrainPosition)
 			veh.ElectricMotorCount = tbEmCount.Text.ToInt()
 			veh.ElectricMotorRatio = tbRatioEm.Text.ToDouble()
-			veh.ElectricMotorMechEff = tbEmEfficiency.Text.ToDouble()
+			'veh.ElectricMotorMechEff = tbEmADCLossMap.Text.ToDouble()
+			veh.ElectricMotorMechLossMap.Init(GetPath(file), tbEmADCLossMap.Text)
 		End If
 
 		If (VehicleType = VectoSimulationJobType.ParallelHybridVehicle) AndAlso not String.IsNullOrWhiteSpace(tbEmTorqueLimits.Text) Then
@@ -638,8 +640,8 @@ Public Class VehicleForm
 		veh.EcoRollReleaseLockupClutch = cbAtEcoRollReleaseLockupClutch.Checked
 
 
-        veh.GearDuringPTODrive = If(string.IsNullOrWhiteSpace(tbPtoGear.Text), nothing, CType(tbPtoGear.Text.ToInt(), UInteger?))
-        veh.EngineSpeedDuringPTODrive = if(string.IsNullOrWhiteSpace(tbPtoEngineSpeed.Text), Nothing, tbPtoEngineSpeed.Text.ToDouble().RPMtoRad())
+		veh.GearDuringPTODrive = If(string.IsNullOrWhiteSpace(tbPtoGear.Text), nothing, CType(tbPtoGear.Text.ToInt(), UInteger?))
+		veh.EngineSpeedDuringPTODrive = if(string.IsNullOrWhiteSpace(tbPtoEngineSpeed.Text), Nothing, tbPtoEngineSpeed.Text.ToDouble().RPMtoRad())
 		'---------------------------------------------------------------------------------
 		If Not veh.SaveFile Then
 			MsgBox("Cannot save to " & file, MsgBoxStyle.Critical)
@@ -970,11 +972,11 @@ Public Class VehicleForm
 
 		If (cbPTOType.SelectedIndex = 0) Then
 			pnPTO.Enabled = False
-            gbPTODrive.Enabled = false
+			gbPTODrive.Enabled = false
 			tbPTOLossMap.Text = ""
 		Else
 			pnPTO.Enabled = True
-            gbPTODrive.Enabled = True
+			gbPTODrive.Enabled = True
 		End If
 
 		Change()
@@ -1156,10 +1158,15 @@ Public Class VehicleForm
 
 	End Sub
 
-    Private Sub btPTOCycleDrive_Click(sender As Object, e As EventArgs) Handles btPTOCycleDrive.Click
-        If PTODrivingCycleDrivingFileBrowser.OpenDialog(FileRepl(tbPTODrive.Text, GetPath(_vehFile))) Then
-            tbPTODrive.Text = GetFilenameWithoutDirectory(PTODrivingCycleDrivingFileBrowser.Files(0), GetPath(_vehFile))
-        End If
-    End Sub
+	Private Sub btnEmADCLossMap_Click(sender As Object, e As EventArgs) Handles btnEmADCLossMap.Click
+		If EmADCLossMapFileBrowser.OpenDialog(FileRepl(tbEmADCLossMap.Text, GetPath(_vehFile))) Then _
+			tbEmADCLossMap.Text = GetFilenameWithoutDirectory(EmADCLossMapFileBrowser.Files(0), GetPath(_vehFile))
+	End Sub
+
+	Private Sub btPTOCycleDrive_Click(sender As Object, e As EventArgs) Handles btPTOCycleDrive.Click
+		If PTODrivingCycleDrivingFileBrowser.OpenDialog(FileRepl(tbPTODrive.Text, GetPath(_vehFile))) Then
+			tbPTODrive.Text = GetFilenameWithoutDirectory(PTODrivingCycleDrivingFileBrowser.Files(0), GetPath(_vehFile))
+		End If
+	End Sub
 End Class
 

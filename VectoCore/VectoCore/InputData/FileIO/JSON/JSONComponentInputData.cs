@@ -287,7 +287,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 		{
 			return new JSONElectricMotors(new List<ElectricMachineEntry<IElectricMotorEngineeringInputData>>() {
 				new ElectricMachineEntry<IElectricMotorEngineeringInputData>() {
-					ElectricMachine = ElectricMotor, Count = 1, Ratio = 1, MechanicalEfficiency = 1,
+					ElectricMachine = ElectricMotor, Count = 1, Ratio = 1, MechanicalTransmissionEfficiency = 1,
 					Position = PowertrainPosition.HybridPositionNotSet
 				}
 			});

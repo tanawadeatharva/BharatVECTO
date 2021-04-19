@@ -63,7 +63,7 @@ public class JSONFileWriter : IOutputFileWriter
 			return filePath;
 		}
 
-		if (Path.GetDirectoryName(filePath).StartsWith(basePath, StringComparison.OrdinalIgnoreCase)) {
+		if (Path.GetDirectoryName(Path.GetFullPath(filePath)).StartsWith(basePath, StringComparison.OrdinalIgnoreCase)) {
 			return Path.GetFullPath(filePath).Substring(basePath.Length + (basePath.EndsWith(@"\") ? 0 : 1));
 		}
 
@@ -566,12 +566,23 @@ public class JSONFileWriter : IOutputFileWriter
 	private Array GetElectricMotors(IVehicleEngineeringInputData vehicle, string basePath)
 	{
 		//var em = vehicle.Components.ElectricMachines.Entries.First();
-		return vehicle.Components.ElectricMachines.Entries.Select(em =>new Dictionary<string, object>() {
-			{"Count", em.Count},
-			{"Ratio", em.Ratio},
-			{"MechanicalEfficiency", em.MechanicalEfficiency},
-			{"Position", em.Position.GetName()},
-			{"MotorFile", GetRelativePath(em.ElectricMachine.DataSource.SourceFile, basePath)}
+		return vehicle.Components.ElectricMachines.Entries.Select(em => {
+			var d = new Dictionary<string, object>() {
+				{ "Count", em.Count },
+				{ "Ratio", em.Ratio },
+				{ "Position", em.Position.GetName() },
+				{ "MotorFile", GetRelativePath(em.ElectricMachine.DataSource.SourceFile, basePath) }
+			};
+			if (!double.IsNaN(em.MechanicalTransmissionEfficiency)) {
+				d["MechanicalEfficiency"] = em.MechanicalTransmissionEfficiency;
+
+			}
+
+			if (em.MechanicalTransmissionLossMap != null) {
+				d["MechanicalTransmissionLossMap"] = GetRelativePath(em.MechanicalTransmissionLossMap.Source, basePath);
+
+			}
+				return d;
 		}).ToArray();
 	}
 

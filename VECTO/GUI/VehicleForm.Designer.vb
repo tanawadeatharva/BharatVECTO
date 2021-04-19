@@ -150,8 +150,8 @@ Partial Class VehicleForm
         Me.btnBrowseBattery = New System.Windows.Forms.Button()
         Me.tbBattery = New System.Windows.Forms.TextBox()
         Me.gpElectricMotor = New System.Windows.Forms.GroupBox()
-        Me.tbEmEfficiency = New System.Windows.Forms.TextBox()
-        Me.lblEmEfficiency = New System.Windows.Forms.Label()
+        Me.tbEmADCLossMap = New System.Windows.Forms.TextBox()
+        Me.lblEmADCLossmap = New System.Windows.Forms.Label()
         Me.tbRatioEm = New System.Windows.Forms.TextBox()
         Me.lblRatioEm = New System.Windows.Forms.Label()
         Me.tbEmCount = New System.Windows.Forms.TextBox()
@@ -163,6 +163,13 @@ Partial Class VehicleForm
         Me.btnBrowseElectricMotor = New System.Windows.Forms.Button()
         Me.tbElectricMotor = New System.Windows.Forms.TextBox()
         Me.tpTorqueLimits = New System.Windows.Forms.TabPage()
+        Me.gbPropulsionTorque = New System.Windows.Forms.GroupBox()
+        Me.btnPropulsionTorqueLimit = New System.Windows.Forms.Button()
+        Me.tbPropulsionTorqueLimit = New System.Windows.Forms.TextBox()
+        Me.gbEMTorqueLimits = New System.Windows.Forms.GroupBox()
+        Me.btnEmTorqueLimits = New System.Windows.Forms.Button()
+        Me.tbEmTorqueLimits = New System.Windows.Forms.TextBox()
+        Me.bgVehicleTorqueLimits = New System.Windows.Forms.GroupBox()
         'Me.TabPage2 = New System.Windows.Forms.TabPage()
         'Me.GroupBox9 = New System.Windows.Forms.GroupBox()
         'Me.cbTankSystem = New System.Windows.Forms.ComboBox()
@@ -171,9 +178,9 @@ Partial Class VehicleForm
         Me.lvTorqueLimits = New System.Windows.Forms.ListView()
         Me.ColumnHeader5 = CType(New System.Windows.Forms.ColumnHeader(),System.Windows.Forms.ColumnHeader)
         Me.ColumnHeader6 = CType(New System.Windows.Forms.ColumnHeader(),System.Windows.Forms.ColumnHeader)
+        Me.btAddMaxTorqueEntry = New System.Windows.Forms.Button()
         Me.Label17 = New System.Windows.Forms.Label()
         Me.btDelMaxTorqueEntry = New System.Windows.Forms.Button()
-        Me.btAddMaxTorqueEntry = New System.Windows.Forms.Button()
         Me.tpADAS = New System.Windows.Forms.TabPage()
         Me.GroupBox5 = New System.Windows.Forms.GroupBox()
         Me.cbAtEcoRollReleaseLockupClutch = New System.Windows.Forms.CheckBox()
@@ -201,13 +208,7 @@ Partial Class VehicleForm
         Me.cbLegislativeClass = New System.Windows.Forms.ComboBox()
         Me.Label21 = New System.Windows.Forms.Label()
         Me.lblTitle = New System.Windows.Forms.Label()
-        Me.bgVehicleTorqueLimits = New System.Windows.Forms.GroupBox()
-        Me.gbEMTorqueLimits = New System.Windows.Forms.GroupBox()
-        Me.btnEmTorqueLimits = New System.Windows.Forms.Button()
-        Me.tbEmTorqueLimits = New System.Windows.Forms.TextBox()
-        Me.gbPropulsionTorque = New System.Windows.Forms.GroupBox()
-        Me.btnPropulsionTorqueLimit = New System.Windows.Forms.Button()
-        Me.tbPropulsionTorqueLimit = New System.Windows.Forms.TextBox()
+        Me.btnEmADCLossMap = New System.Windows.Forms.Button()
         Me.GroupBox6.SuspendLayout
         Me.ToolStrip1.SuspendLayout
         Me.GroupBox7.SuspendLayout
@@ -237,6 +238,9 @@ Partial Class VehicleForm
         Me.gpElectricMotor.SuspendLayout
         Me.pnElectricMotor.SuspendLayout
         Me.tpTorqueLimits.SuspendLayout
+        Me.gbPropulsionTorque.SuspendLayout
+        Me.gbEMTorqueLimits.SuspendLayout
+        Me.bgVehicleTorqueLimits.SuspendLayout
         Me.tpADAS.SuspendLayout
         Me.GroupBox5.SuspendLayout
         Me.bgVehicleTorqueLimits.SuspendLayout
@@ -1155,7 +1159,7 @@ Partial Class VehicleForm
         Me.tpGeneral.Controls.Add(Me.GrAirRes)
         Me.tpGeneral.Location = New System.Drawing.Point(4, 22)
         Me.tpGeneral.Name = "tpGeneral"
-        Me.tpGeneral.Padding = New System.Windows.Forms.Padding(3, 3, 3, 3)
+        Me.tpGeneral.Padding = New System.Windows.Forms.Padding(3)
         Me.tpGeneral.Size = New System.Drawing.Size(579, 355)
         Me.tpGeneral.TabIndex = 0
         Me.tpGeneral.Text = "General"
@@ -1170,7 +1174,7 @@ Partial Class VehicleForm
         Me.tpPowertrain.Controls.Add(Me.GroupBox2)
         Me.tpPowertrain.Location = New System.Drawing.Point(4, 22)
         Me.tpPowertrain.Name = "tpPowertrain"
-        Me.tpPowertrain.Padding = New System.Windows.Forms.Padding(3, 3, 3, 3)
+        Me.tpPowertrain.Padding = New System.Windows.Forms.Padding(3)
         Me.tpPowertrain.Size = New System.Drawing.Size(579, 355)
         Me.tpPowertrain.TabIndex = 1
         Me.tpPowertrain.Text = "Powertrain"
@@ -1334,7 +1338,7 @@ Partial Class VehicleForm
         Me.tpElectricComponents.Controls.Add(Me.gpElectricMotor)
         Me.tpElectricComponents.Location = New System.Drawing.Point(4, 22)
         Me.tpElectricComponents.Name = "tpElectricComponents"
-        Me.tpElectricComponents.Padding = New System.Windows.Forms.Padding(3, 3, 3, 3)
+        Me.tpElectricComponents.Padding = New System.Windows.Forms.Padding(3)
         Me.tpElectricComponents.Size = New System.Drawing.Size(579, 355)
         Me.tpElectricComponents.TabIndex = 4
         Me.tpElectricComponents.Text = "Electric Components"
@@ -1439,8 +1443,9 @@ Partial Class VehicleForm
         '
         'gpElectricMotor
         '
-        Me.gpElectricMotor.Controls.Add(Me.tbEmEfficiency)
-        Me.gpElectricMotor.Controls.Add(Me.lblEmEfficiency)
+        Me.gpElectricMotor.Controls.Add(Me.btnEmADCLossMap)
+        Me.gpElectricMotor.Controls.Add(Me.tbEmADCLossMap)
+        Me.gpElectricMotor.Controls.Add(Me.lblEmADCLossmap)
         Me.gpElectricMotor.Controls.Add(Me.tbRatioEm)
         Me.gpElectricMotor.Controls.Add(Me.lblRatioEm)
         Me.gpElectricMotor.Controls.Add(Me.tbEmCount)
@@ -1455,21 +1460,21 @@ Partial Class VehicleForm
         Me.gpElectricMotor.TabStop = false
         Me.gpElectricMotor.Text = "Electric Motor"
         '
-        'tbEmEfficiency
+        'tbEmADCLossMap
         '
-        Me.tbEmEfficiency.Location = New System.Drawing.Point(204, 131)
-        Me.tbEmEfficiency.Name = "tbEmEfficiency"
-        Me.tbEmEfficiency.Size = New System.Drawing.Size(59, 20)
-        Me.tbEmEfficiency.TabIndex = 26
+        Me.tbEmADCLossMap.Location = New System.Drawing.Point(204, 131)
+        Me.tbEmADCLossMap.Name = "tbEmADCLossMap"
+        Me.tbEmADCLossMap.Size = New System.Drawing.Size(323, 20)
+        Me.tbEmADCLossMap.TabIndex = 26
         '
-        'lblEmEfficiency
+        'lblEmADCLossmap
         '
-        Me.lblEmEfficiency.AutoSize = true
-        Me.lblEmEfficiency.Location = New System.Drawing.Point(7, 134)
-        Me.lblEmEfficiency.Name = "lblEmEfficiency"
-        Me.lblEmEfficiency.Size = New System.Drawing.Size(135, 13)
-        Me.lblEmEfficiency.TabIndex = 25
-        Me.lblEmEfficiency.Text = "Efficiency EM to Drivetrain:"
+        Me.lblEmADCLossmap.AutoSize = true
+        Me.lblEmADCLossmap.Location = New System.Drawing.Point(7, 134)
+        Me.lblEmADCLossmap.Name = "lblEmADCLossmap"
+        Me.lblEmADCLossmap.Size = New System.Drawing.Size(100, 13)
+        Me.lblEmADCLossmap.TabIndex = 25
+        Me.lblEmADCLossmap.Text = "Loss Map EM ADC:"
         '
         'tbRatioEm
         '
@@ -1586,6 +1591,73 @@ Partial Class VehicleForm
 '        Me.TabPage3.UseVisualStyleBackColor = true
 '>>>>>>> VECTO_CERT/master
         '
+        'gbPropulsionTorque
+        '
+        Me.gbPropulsionTorque.Controls.Add(Me.btnPropulsionTorqueLimit)
+        Me.gbPropulsionTorque.Controls.Add(Me.tbPropulsionTorqueLimit)
+        Me.gbPropulsionTorque.Location = New System.Drawing.Point(3, 236)
+        Me.gbPropulsionTorque.Name = "gbPropulsionTorque"
+        Me.gbPropulsionTorque.Size = New System.Drawing.Size(407, 52)
+        Me.gbPropulsionTorque.TabIndex = 17
+        Me.gbPropulsionTorque.TabStop = false
+        Me.gbPropulsionTorque.Text = "Propulsion Torque Limit"
+        '
+        'btnPropulsionTorqueLimit
+        '
+        Me.btnPropulsionTorqueLimit.Image = Global.TUGraz.VECTO.My.Resources.Resources.Open_icon
+        Me.btnPropulsionTorqueLimit.Location = New System.Drawing.Point(331, 17)
+        Me.btnPropulsionTorqueLimit.Name = "btnPropulsionTorqueLimit"
+        Me.btnPropulsionTorqueLimit.Size = New System.Drawing.Size(24, 24)
+        Me.btnPropulsionTorqueLimit.TabIndex = 16
+        Me.btnPropulsionTorqueLimit.UseVisualStyleBackColor = true
+        '
+        'tbPropulsionTorqueLimit
+        '
+        Me.tbPropulsionTorqueLimit.Location = New System.Drawing.Point(6, 20)
+        Me.tbPropulsionTorqueLimit.Name = "tbPropulsionTorqueLimit"
+        Me.tbPropulsionTorqueLimit.Size = New System.Drawing.Size(319, 20)
+        Me.tbPropulsionTorqueLimit.TabIndex = 15
+        '
+        'gbEMTorqueLimits
+        '
+        Me.gbEMTorqueLimits.Controls.Add(Me.btnEmTorqueLimits)
+        Me.gbEMTorqueLimits.Controls.Add(Me.tbEmTorqueLimits)
+        Me.gbEMTorqueLimits.Location = New System.Drawing.Point(3, 178)
+        Me.gbEMTorqueLimits.Name = "gbEMTorqueLimits"
+        Me.gbEMTorqueLimits.Size = New System.Drawing.Size(407, 52)
+        Me.gbEMTorqueLimits.TabIndex = 9
+        Me.gbEMTorqueLimits.TabStop = false
+        Me.gbEMTorqueLimits.Text = "Electric Machine Torque Limits"
+        '
+        'btnEmTorqueLimits
+        '
+        Me.btnEmTorqueLimits.Image = Global.TUGraz.VECTO.My.Resources.Resources.Open_icon
+        Me.btnEmTorqueLimits.Location = New System.Drawing.Point(331, 17)
+        Me.btnEmTorqueLimits.Name = "btnEmTorqueLimits"
+        Me.btnEmTorqueLimits.Size = New System.Drawing.Size(24, 24)
+        Me.btnEmTorqueLimits.TabIndex = 16
+        Me.btnEmTorqueLimits.UseVisualStyleBackColor = true
+        '
+        'tbEmTorqueLimits
+        '
+        Me.tbEmTorqueLimits.Location = New System.Drawing.Point(6, 20)
+        Me.tbEmTorqueLimits.Name = "tbEmTorqueLimits"
+        Me.tbEmTorqueLimits.Size = New System.Drawing.Size(319, 20)
+        Me.tbEmTorqueLimits.TabIndex = 15
+        '
+        'bgVehicleTorqueLimits
+        '
+        Me.bgVehicleTorqueLimits.Controls.Add(Me.lvTorqueLimits)
+        Me.bgVehicleTorqueLimits.Controls.Add(Me.btAddMaxTorqueEntry)
+        Me.bgVehicleTorqueLimits.Controls.Add(Me.Label17)
+        Me.bgVehicleTorqueLimits.Controls.Add(Me.btDelMaxTorqueEntry)
+        Me.bgVehicleTorqueLimits.Location = New System.Drawing.Point(3, 9)
+        Me.bgVehicleTorqueLimits.Name = "bgVehicleTorqueLimits"
+        Me.bgVehicleTorqueLimits.Size = New System.Drawing.Size(407, 163)
+        Me.bgVehicleTorqueLimits.TabIndex = 8
+        Me.bgVehicleTorqueLimits.TabStop = false
+        Me.bgVehicleTorqueLimits.Text = "ICE Torque Limits"
+        '
         'lvTorqueLimits
         '
         Me.lvTorqueLimits.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left)  _
@@ -1613,6 +1685,15 @@ Partial Class VehicleForm
         Me.ColumnHeader6.Text = "Max. Torque"
         Me.ColumnHeader6.Width = 172
         '
+        'btAddMaxTorqueEntry
+        '
+        Me.btAddMaxTorqueEntry.Image = Global.TUGraz.VECTO.My.Resources.Resources.plus_circle_icon
+        Me.btAddMaxTorqueEntry.Location = New System.Drawing.Point(6, 127)
+        Me.btAddMaxTorqueEntry.Name = "btAddMaxTorqueEntry"
+        Me.btAddMaxTorqueEntry.Size = New System.Drawing.Size(24, 24)
+        Me.btAddMaxTorqueEntry.TabIndex = 4
+        Me.btAddMaxTorqueEntry.UseVisualStyleBackColor = true
+        '
         'Label17
         '
         Me.Label17.AutoSize = true
@@ -1631,21 +1712,12 @@ Partial Class VehicleForm
         Me.btDelMaxTorqueEntry.TabIndex = 5
         Me.btDelMaxTorqueEntry.UseVisualStyleBackColor = true
         '
-        'btAddMaxTorqueEntry
-        '
-        Me.btAddMaxTorqueEntry.Image = Global.TUGraz.VECTO.My.Resources.Resources.plus_circle_icon
-        Me.btAddMaxTorqueEntry.Location = New System.Drawing.Point(6, 127)
-        Me.btAddMaxTorqueEntry.Name = "btAddMaxTorqueEntry"
-        Me.btAddMaxTorqueEntry.Size = New System.Drawing.Size(24, 24)
-        Me.btAddMaxTorqueEntry.TabIndex = 4
-        Me.btAddMaxTorqueEntry.UseVisualStyleBackColor = true
-        '
         'tpADAS
         '
         Me.tpADAS.Controls.Add(Me.GroupBox5)
         Me.tpADAS.Location = New System.Drawing.Point(4, 22)
         Me.tpADAS.Name = "tpADAS"
-        Me.tpADAS.Padding = New System.Windows.Forms.Padding(3, 3, 3, 3)
+        Me.tpADAS.Padding = New System.Windows.Forms.Padding(3)
         Me.tpADAS.Size = New System.Drawing.Size(579, 355)
         Me.tpADAS.TabIndex = 3
         Me.tpADAS.Text = "ADAS"
@@ -1908,72 +1980,15 @@ Partial Class VehicleForm
         Me.lblTitle.TabIndex = 43
         Me.lblTitle.Text = "Vehicle TITLE"
         '
-        'bgVehicleTorqueLimits
+        'btnEmADCLossMap
         '
-        Me.bgVehicleTorqueLimits.Controls.Add(Me.lvTorqueLimits)
-        Me.bgVehicleTorqueLimits.Controls.Add(Me.btAddMaxTorqueEntry)
-        Me.bgVehicleTorqueLimits.Controls.Add(Me.Label17)
-        Me.bgVehicleTorqueLimits.Controls.Add(Me.btDelMaxTorqueEntry)
-        Me.bgVehicleTorqueLimits.Location = New System.Drawing.Point(3, 9)
-        Me.bgVehicleTorqueLimits.Name = "bgVehicleTorqueLimits"
-        Me.bgVehicleTorqueLimits.Size = New System.Drawing.Size(407, 163)
-        Me.bgVehicleTorqueLimits.TabIndex = 8
-        Me.bgVehicleTorqueLimits.TabStop = false
-        Me.bgVehicleTorqueLimits.Text = "ICE Torque Limits"
-        '
-        'gbEMTorqueLimits
-        '
-        Me.gbEMTorqueLimits.Controls.Add(Me.btnEmTorqueLimits)
-        Me.gbEMTorqueLimits.Controls.Add(Me.tbEmTorqueLimits)
-        Me.gbEMTorqueLimits.Location = New System.Drawing.Point(3, 178)
-        Me.gbEMTorqueLimits.Name = "gbEMTorqueLimits"
-        Me.gbEMTorqueLimits.Size = New System.Drawing.Size(407, 52)
-        Me.gbEMTorqueLimits.TabIndex = 9
-        Me.gbEMTorqueLimits.TabStop = false
-        Me.gbEMTorqueLimits.Text = "Electric Machine Torque Limits"
-        '
-        'btnEmTorqueLimits
-        '
-        Me.btnEmTorqueLimits.Image = Global.TUGraz.VECTO.My.Resources.Resources.Open_icon
-        Me.btnEmTorqueLimits.Location = New System.Drawing.Point(331, 17)
-        Me.btnEmTorqueLimits.Name = "btnEmTorqueLimits"
-        Me.btnEmTorqueLimits.Size = New System.Drawing.Size(24, 24)
-        Me.btnEmTorqueLimits.TabIndex = 16
-        Me.btnEmTorqueLimits.UseVisualStyleBackColor = true
-        '
-        'tbEmTorqueLimits
-        '
-        Me.tbEmTorqueLimits.Location = New System.Drawing.Point(6, 20)
-        Me.tbEmTorqueLimits.Name = "tbEmTorqueLimits"
-        Me.tbEmTorqueLimits.Size = New System.Drawing.Size(319, 20)
-        Me.tbEmTorqueLimits.TabIndex = 15
-        '
-        'gbPropulsionTorque
-        '
-        Me.gbPropulsionTorque.Controls.Add(Me.btnPropulsionTorqueLimit)
-        Me.gbPropulsionTorque.Controls.Add(Me.tbPropulsionTorqueLimit)
-        Me.gbPropulsionTorque.Location = New System.Drawing.Point(3, 236)
-        Me.gbPropulsionTorque.Name = "gbPropulsionTorque"
-        Me.gbPropulsionTorque.Size = New System.Drawing.Size(407, 52)
-        Me.gbPropulsionTorque.TabIndex = 17
-        Me.gbPropulsionTorque.TabStop = false
-        Me.gbPropulsionTorque.Text = "Propulsion Torque Limit"
-        '
-        'btnPropulsionTorqueLimit
-        '
-        Me.btnPropulsionTorqueLimit.Image = Global.TUGraz.VECTO.My.Resources.Resources.Open_icon
-        Me.btnPropulsionTorqueLimit.Location = New System.Drawing.Point(331, 17)
-        Me.btnPropulsionTorqueLimit.Name = "btnPropulsionTorqueLimit"
-        Me.btnPropulsionTorqueLimit.Size = New System.Drawing.Size(24, 24)
-        Me.btnPropulsionTorqueLimit.TabIndex = 16
-        Me.btnPropulsionTorqueLimit.UseVisualStyleBackColor = true
-        '
-        'tbPropulsionTorqueLimit
-        '
-        Me.tbPropulsionTorqueLimit.Location = New System.Drawing.Point(6, 20)
-        Me.tbPropulsionTorqueLimit.Name = "tbPropulsionTorqueLimit"
-        Me.tbPropulsionTorqueLimit.Size = New System.Drawing.Size(319, 20)
-        Me.tbPropulsionTorqueLimit.TabIndex = 15
+        Me.btnEmADCLossMap.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left),System.Windows.Forms.AnchorStyles)
+        Me.btnEmADCLossMap.Image = Global.TUGraz.VECTO.My.Resources.Resources.Open_icon
+        Me.btnEmADCLossMap.Location = New System.Drawing.Point(533, 127)
+        Me.btnEmADCLossMap.Name = "btnEmADCLossMap"
+        Me.btnEmADCLossMap.Size = New System.Drawing.Size(24, 24)
+        Me.btnEmADCLossMap.TabIndex = 28
+        Me.btnEmADCLossMap.UseVisualStyleBackColor = true
         '
         'VehicleForm
         '
@@ -2051,6 +2066,12 @@ Partial Class VehicleForm
         Me.pnElectricMotor.ResumeLayout(false)
         Me.pnElectricMotor.PerformLayout
         Me.tpTorqueLimits.ResumeLayout(false)
+        Me.gbPropulsionTorque.ResumeLayout(false)
+        Me.gbPropulsionTorque.PerformLayout
+        Me.gbEMTorqueLimits.ResumeLayout(false)
+        Me.gbEMTorqueLimits.PerformLayout
+        Me.bgVehicleTorqueLimits.ResumeLayout(false)
+        Me.bgVehicleTorqueLimits.PerformLayout
         Me.tpADAS.ResumeLayout(false)
         Me.GroupBox5.ResumeLayout(false)
         Me.GroupBox5.PerformLayout
@@ -2210,8 +2231,8 @@ End Sub
     Friend WithEvents tpElectricComponents As TabPage
     Friend WithEvents gpElectricMotor As GroupBox
     Friend WithEvents gbBattery As GroupBox
-    Friend WithEvents tbEmEfficiency As TextBox
-    Friend WithEvents lblEmEfficiency As Label
+    Friend WithEvents tbEmADCLossMap As TextBox
+    Friend WithEvents lblEmADCLossmap As Label
     Friend WithEvents tbRatioEm As TextBox
     Friend WithEvents lblRatioEm As Label
     Friend WithEvents tbEmCount As TextBox
@@ -2244,6 +2265,7 @@ End Sub
     Friend WithEvents gbPropulsionTorque As GroupBox
     Friend WithEvents btnPropulsionTorqueLimit As Button
     Friend WithEvents tbPropulsionTorqueLimit As TextBox
+    Friend WithEvents btnEmADCLossMap As Button
 '=======
     Friend WithEvents tpRoadSweeper As TabPage
     Friend WithEvents gbPTODrive As GroupBox
