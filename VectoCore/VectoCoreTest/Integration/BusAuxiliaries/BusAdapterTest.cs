@@ -41,6 +41,7 @@ using TUGraz.VectoCore.Models.SimulationComponent.Impl;
 namespace TUGraz.VectoCore.Tests.Integration.BusAuxiliaries
 {
 	[TestFixture]
+	[Parallelizable(ParallelScope.All)]
 	public class BusAdapterTest
 	{
 		[OneTimeSetUp]

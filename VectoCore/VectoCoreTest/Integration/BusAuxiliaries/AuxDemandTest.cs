@@ -51,6 +51,7 @@ using TUGraz.VectoCore.Models.Declaration;
 namespace TUGraz.VectoCore.Tests.Integration.BusAuxiliaries
 {
 	[TestFixture]
+	[Parallelizable(ParallelScope.All)]
 	public class AuxDemandTest
 	{
 		[OneTimeSetUp]

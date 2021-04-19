@@ -51,11 +51,13 @@ using TUGraz.VectoCore.Tests.Utils;
 using Wheels = TUGraz.VectoCore.Models.SimulationComponent.Impl.Wheels;
 using NUnit.Framework;
 using TUGraz.VectoCommon.InputData;
+using TUGraz.VectoCore.InputData.Reader;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox;
 
 namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 {
 	[TestFixture]
+	[Parallelizable(ParallelScope.All)]
 	public class DriverTest
 	{
 		public const string JobFile = @"TestData\Jobs\24t Coach EngineOnly.vecto";
@@ -85,6 +87,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			var fileWriter = new FileOutputWriter("Coach_MinimalPowertrain_Coasting");
 			var runData = new VectoRunData() {
 				JobName = "Coach_MinimalPowertrain_Coasting",
+				DriverData = driverData,
 				VehicleData = vehicleData,
 				AirdragData = airdragData,
 				EngineData = engineData,
@@ -92,7 +95,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
             };
 			var modData = new ModalDataContainer(runData, fileWriter, null);
 			var vehicleContainer = new VehicleContainer(ExecutionMode.Engineering, modData) {
-				RunData = runData
+				RunData = runData,
 			};
 			var mockCycle = new MockDrivingCycle(vehicleContainer, null);
 
@@ -153,6 +156,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			var runData = new VectoRunData()
 			{
 				JobName = "Coach_MinimalPowertrain_Coasting",
+				DriverData = driverData,
 				VehicleData = vehicleData,
 				EngineData = engineData,
 			};
@@ -227,14 +231,16 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 				VehicleData = vehicleData,
 				AirdragData = airdragData,
 				EngineData = engineData,
-				ElectricMachinesData = new List<Tuple<PowertrainPosition, ElectricMotorData>>()
+				ElectricMachinesData = new List<Tuple<PowertrainPosition, ElectricMotorData>>(),
+				DriverData = driverData,
 			};
 			var modData = new ModalDataContainer(runData, fileWriter, null);
             var vehicleContainer = new VehicleContainer(ExecutionMode.Engineering, modData) {
 				RunData = runData
 			};
 
-			var cycle = new MockDrivingCycle(vehicleContainer, null);
+			var cycleData = DrivingCycleDataReader.ReadFromStream("s,v,grad,stop\n0,0,0,10\n10,20,0,0\n20,21,0,0\n30,22,0,0\n40,23,0,0\n50,24,0,0\n60,25,0,0\n70,26,0,0\n80,27,0,0\n90,28,0,0\n100,29,0,0".ToStream(), CycleType.DistanceBased, "DummyCycle", false);
+			var cycle = new MockDrivingCycle(vehicleContainer, cycleData);
 			var brakes = new Brakes(vehicleContainer);
 			var driver = new Driver(vehicleContainer, driverData, new DefaultDriverStrategy(vehicleContainer));
 
@@ -277,21 +283,23 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 		[TestCase]
 		public void DriverAccelerationTest()
 		{
+			var driverData = MockSimulationDataFactory.CreateDriverDataFromFile(JobFile);
+			var cycleData = DrivingCycleDataReader.ReadFromStream("s,v,grad,stop\n0,0,0,10\n10,20,0,0\n20,21,0,0\n30,22,0,0\n40,23,0,0\n50,24,0,0\n60,25,0,0\n70,26,0,0\n80,27,0,0\n90,28,0,0\n100,29,0,0".ToStream(), CycleType.DistanceBased, "DummyCycle", false);
 			var vehicleContainer = new VehicleContainer(ExecutionMode.Engineering) {
 				RunData = new VectoRunData() {
-					VehicleData = new VehicleData() { VehicleCategory = VehicleCategory.RigidTruck},
+					DriverData = driverData,
+					Cycle = cycleData,
+					VehicleData = new VehicleData() { VehicleCategory = VehicleCategory.RigidTruck },
 				}
 			};
 			var vehicle = new MockVehicle(vehicleContainer);
 
-			var driverData = MockSimulationDataFactory.CreateDriverDataFromFile(JobFile);
+			var cycle = new MockDrivingCycle(vehicleContainer, cycleData);
 			var driver = new Driver(vehicleContainer, driverData, new DefaultDriverStrategy(vehicleContainer));
-
 			new MockEngine(vehicleContainer);
 			new EngineOnlyGearboxInfo(vehicleContainer);
 			new ATClutchInfo(vehicleContainer);
 
-			var cycle = new MockDrivingCycle(vehicleContainer, null);
 			var brakes = new Brakes(vehicleContainer);
 			driver.Connect(vehicle.OutPort());
 
@@ -353,9 +361,13 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 		[TestCase]
 		public void DriverDecelerationTest()
 		{
+			var driverData = MockSimulationDataFactory.CreateDriverDataFromFile(JobFile);
+			var cycleData = DrivingCycleDataReader.ReadFromStream("s,v,grad,stop\n0,0,0,10\n10,20,0,0\n20,21,0,0\n30,22,0,0\n40,23,0,0\n50,24,0,0\n60,25,0,0\n70,26,0,0\n80,27,0,0\n90,28,0,0\n100,29,0,0\n110,20,0,0\n120,21,0,0\n130,22,0,0\n140,23,0,0\n150,24,0,0\n160,25,0,0\n170,26,0,0\n180,27,0,0\n190,28,0,0\n200,29,0,0".ToStream(), CycleType.DistanceBased, "DummyCycle", false);
 			var vehicleContainer = new VehicleContainer(ExecutionMode.Engineering) {
 				RunData = new VectoRunData() {
-					VehicleData = new VehicleData() { VehicleCategory = VehicleCategory.RigidTruck }
+					VehicleData = new VehicleData() { VehicleCategory = VehicleCategory.RigidTruck },
+					Cycle = cycleData,
+					DriverData = driverData
 				}
 			};
 			var vehicle = new MockVehicle(vehicleContainer);
@@ -363,11 +375,10 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			new EngineOnlyGearboxInfo(vehicleContainer);
 			new ATClutchInfo(vehicleContainer);
 
-			var driverData = MockSimulationDataFactory.CreateDriverDataFromFile(JobFile);
-			var driver = new Driver(vehicleContainer, driverData, new DefaultDriverStrategy(vehicleContainer));
-
-			var cycle = new MockDrivingCycle(vehicleContainer, null);
+			var cycle = new MockDrivingCycle(vehicleContainer, cycleData);
 			var brakes = new Brakes(vehicleContainer);
+			
+			var driver = new Driver(vehicleContainer, driverData, new DefaultDriverStrategy(vehicleContainer));
 			driver.Connect(vehicle.OutPort());
 
 			vehicle.MyVehicleSpeed = 5.SI<MeterPerSecond>();

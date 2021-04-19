@@ -53,6 +53,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 	{
 		protected readonly GearshiftPosition MaxStartGear;
 		protected GearshiftPosition _nextGear;
+		private GearshiftPosition DesiredGearRoadsweeping;
 
 		public AMTShiftStrategy(IVehicleContainer dataBus) : base(dataBus)
 		{
@@ -67,6 +68,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 									runData.VehicleData.DynamicTyreRadius;
 			var minEngineSpeed = (runData.EngineData.FullLoadCurves[0].RatedSpeed - runData.EngineData.IdleSpeed) *
 								Constants.SimulationSettings.ClutchClosingSpeedNorm + runData.EngineData.IdleSpeed;
+
+			DesiredGearRoadsweeping = runData.DriverData?.PTODriveRoadsweepingGear;
+
 			MaxStartGear = GearboxModelData.GearList.First();
 			foreach (var gear in GearboxModelData.GearList.Reverse()) {
 				var gearData = GearboxModelData.Gears[gear.Gear];
@@ -209,6 +213,28 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			if (!_nextGear.Equals(gear)) {
 				return true;
+			}
+
+			// PTO Active while drive (roadsweeping) shift rules
+			if (DataBus.DrivingCycleInfo.CycleData.LeftSample.PTOActive == PTOActivity.PTOActivityRoadSweeping) {
+				if (gear == DesiredGearRoadsweeping) {
+					return false;
+				}
+
+				if (gear > DesiredGearRoadsweeping) {
+					if (IsAboveDownShiftCurve(DesiredGearRoadsweeping, inTorque, inAngularVelocity)) {
+						_nextGear = DesiredGearRoadsweeping;
+						return true;
+					}
+				}
+
+				if (gear < DesiredGearRoadsweeping) {
+					if (!SpeedTooHighForEngine(
+						DesiredGearRoadsweeping, inAngularVelocity / GearboxModelData.Gears[DesiredGearRoadsweeping.Gear].Ratio)) {
+						_nextGear = DesiredGearRoadsweeping;
+						return true;
+					}
+				}
 			}
 
 			// normal shift when all requirements are fullfilled ------------------

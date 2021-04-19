@@ -38,6 +38,7 @@ using TUGraz.VectoCore.Utils;
 namespace TUGraz.VectoCore.Tests.Algorithms
 {
 	[TestFixture]
+	[Parallelizable(ParallelScope.All)]
 	public class MeanShiftClusteringTest
 	{
 		

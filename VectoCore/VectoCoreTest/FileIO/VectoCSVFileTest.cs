@@ -41,6 +41,7 @@ using TUGraz.VectoCore.Utils;
 namespace TUGraz.VectoCore.Tests.FileIO
 {
 	[TestFixture]
+	[Parallelizable(ParallelScope.All)]
 	public class VectoCSVFileTest
 	{
 		[OneTimeSetUp]

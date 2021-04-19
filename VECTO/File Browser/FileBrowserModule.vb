@@ -26,7 +26,8 @@ Public Module FileBrowserModule
 	Public VehicleXMLFileBrowser As FileBrowser
     public ManRXMLFileBrowser As FileBrowser
 	Public DrivingCycleFileBrowser As FileBrowser
-	Public PTODrivingCycleFileBrowser As FileBrowser
+	Public PTODrivingCycleStandstillFileBrowser As FileBrowser
+    Public PTODrivingCycleDrivingFileBrowser As FileBrowser
 	Public FuelConsumptionMapFileBrowser As FileBrowser
     Public FullLoadCurveFileBrowser As FileBrowser
 
@@ -50,6 +51,7 @@ Public Module FileBrowserModule
 	Public DriverAccelerationFileBrowser As FileBrowser
 	Public DriverDecisionFactorTargetSpeedFileBrowser As FileBrowser
 	Public DriverDecisionFactorVelocityDropFileBrowser As FileBrowser
+    'public PTOSideloadCycleBrowser As FileBrowser
 	Public AuxFileBrowser As FileBrowser
 
 	Public GearboxShiftPolygonFileBrowser As FileBrowser

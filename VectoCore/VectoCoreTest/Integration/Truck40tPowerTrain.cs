@@ -102,9 +102,9 @@ namespace TUGraz.VectoCore.Tests.Integration
 				AxleGearData = axleGearData,
 				GearboxData = gearboxData,
 				GearshiftParameters = CreateGearshiftData(),
-				DriverData = driverData,
 				SimulationType = SimulationType.DistanceCycle,
-				Cycle = cycleData
+				Cycle = cycleData,
+				DriverData = driverData,
 			};
 
 			var fileWriter = new FileOutputWriter(modFileName);

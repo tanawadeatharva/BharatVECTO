@@ -53,6 +53,7 @@ using Point = TUGraz.VectoCommon.Utils.Point;
 namespace TUGraz.VectoCore.Tests.Models.Declaration
 {
 	[TestFixture]
+	[Parallelizable(ParallelScope.All)]
 	public class ShiftPolygonTest
 	{
 		protected IXMLInputDataReader xmlInputReader;
@@ -883,7 +884,9 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 			var segment = DeclarationData.TruckSegments.Lookup(
 				vehicle.VehicleCategory, vehicle.AxleConfiguration, vehicle.GrossVehicleMassRating, vehicle.CurbMassChassis,
 				false);
-			var vehicleData = dao.CreateVehicleData(inputData.JobInputData.Vehicle, segment, segment.Missions.First(), new KeyValuePair<LoadingType, Tuple<Kilogram, double?>>(LoadingType.LowLoading, new Tuple<Kilogram, double?>(0.SI<Kilogram>(), null)));
+			var vehicleData = dao.CreateVehicleData(inputData.JobInputData.Vehicle, segment, segment.Missions.First(),
+				new KeyValuePair<LoadingType, Tuple<Kilogram, double?>>(LoadingType.LowLoading,
+					new Tuple<Kilogram, double?>(0.SI<Kilogram>(), null)), true);
 			var rdyn = vehicleData.DynamicTyreRadius;
 
 			var shiftPolygons = new List<ShiftPolygon>();

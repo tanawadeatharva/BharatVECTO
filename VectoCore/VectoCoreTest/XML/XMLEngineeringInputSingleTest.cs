@@ -1,7 +1,7 @@
 ﻿/*
 * This file is part of VECTO.
 *
-* Copyright © 2012-2017 European Union
+* Copyright © 2012-2019 European Union
 *
 * Developed by Graz University of Technology,
 *              Institute of Internal Combustion Engines and Thermodynamics,
@@ -55,6 +55,7 @@ using TUGraz.VectoCore.Models.Simulation;
 namespace TUGraz.VectoCore.Tests.XML
 {
 	[TestFixture]
+	[Parallelizable(ParallelScope.All)]
 	public class XMLEngineeringInputSingleTest
 	{
 		public const string EngineeringSampleFile = "TestData/XML/XMLReaderEngineering/engineering_job-sample.xml";
@@ -616,10 +617,10 @@ namespace TUGraz.VectoCore.Tests.XML
 			Assert.AreEqual("2800.00", ptoData.PTOLossMap.Rows[1][0]);
 			Assert.AreEqual("100.00", ptoData.PTOLossMap.Rows[1][1]);
 
-			Assert.AreEqual(4, ptoData.PTOCycle.Rows.Count);
-			Assert.AreEqual("3", ptoData.PTOCycle.Rows[3][0]);
-			Assert.AreEqual("1200.00", ptoData.PTOCycle.Rows[3][1]);
-			Assert.AreEqual("100.00", ptoData.PTOCycle.Rows[3][2]);
+			Assert.AreEqual(4, ptoData.PTOCycleDuringStop.Rows.Count);
+			Assert.AreEqual("3", ptoData.PTOCycleDuringStop.Rows[3][0]);
+			Assert.AreEqual("1200.00", ptoData.PTOCycleDuringStop.Rows[3][1]);
+			Assert.AreEqual("100.00", ptoData.PTOCycleDuringStop.Rows[3][2]);
 		}
 
 

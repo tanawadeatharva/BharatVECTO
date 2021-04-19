@@ -33,7 +33,9 @@ using System.IO;
 using System.Xml;
 using System.Xml.Linq;
 using System.Xml.XPath;
+using System.Xml.XPath;
 using NUnit.Framework;
+using NUnit.Framework.Internal;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.InputData.FileIO.JSON;
@@ -41,11 +43,13 @@ using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.OutputData;
 using TUGraz.VectoCore.OutputData.FileIO;
 using TUGraz.VectoCore.Utils;
+using TUGraz.VectoCore.OutputData.XML;
 using XmlDocumentType = TUGraz.VectoCore.Utils.XmlDocumentType;
 
 namespace TUGraz.VectoCore.Tests.Integration.VTP
 {
 	[TestFixture]
+	[Parallelizable(ParallelScope.All)]
 	public class VTPTest
 	{
 		[OneTimeSetUp]
@@ -88,7 +92,7 @@ namespace TUGraz.VectoCore.Tests.Integration.VTP
 		[Category("Integration")]
 		[TestCase(@"TestData\Integration\VTPMode\GenericVehicle\class_5_generic vehicle_DECL.vecto", 45.6, 0.8972, TestName = "RunVTPHeavyLorry_Declaration"),
 		TestCase(@"TestData\Integration\VTPMode\MediumLorry\VTP_MediumLorry.vecto", 400.0, 1.06, TestName = "RunVTPMediumLorry_Declaration"),
-		TestCase(@"TestData\Integration\VTPMode\DualFuelVehicle\VTP_DualFuel.vecto", 43.5, 1.018, TestName = "RunVTPDualFuel_Declaration"),
+		TestCase(@"TestData\Integration\VTPMode\DualFuelVehicle\VTP_DualFuel.vecto", 43.5, 1.0107, TestName = "RunVTPDualFuel_Declaration"),
 		TestCase(@"TestData\Integration\VTPMode\HeavyBus\VTP_PrimaryBus.vecto", 14.2, 1.1413, TestName = "RunVTPHeavyPrimaryBus")	
 			]
 		public void RunVTP_Declaration(string jobFile, double expectedDeclaredCO2, double expectedCVTP)
@@ -129,7 +133,44 @@ namespace TUGraz.VectoCore.Tests.Integration.VTP
 
 		[Category("LongRunning")]
 		[Category("Integration")]
+		[TestCase(@"TestData\Integration\VTPMode\GenericVehicle_CNG\class_5_generic vehicle_DECL.vecto")]
+		public void RunVTP_Declaration_NCVCorrection_CNG(string jobFile)
+		{
+			var fileWriter = new FileOutputWriter(jobFile);
+			var sumWriter = new SummaryDataContainer(fileWriter);
+			var jobContainer = new JobContainer(sumWriter);
+			var dataProvider = JSONInputDataFactory.ReadJsonJob(jobFile);
+			var runsFactory = new SimulatorFactory(ExecutionMode.Declaration, dataProvider, fileWriter) {
+				ModalResults1Hz = false,
+				WriteModalResults = true,
+				ActualModalData = false,
+				Validate = false,
+			};
+
+			jobContainer.AddRuns(runsFactory);
+
+			Assert.AreEqual(1, jobContainer.Runs.Count);
+			//var i = 0;
+			//jobContainer.Runs[i].Run.Run();
+			//Assert.IsTrue(jobContainer.Runs[i].Run.FinishedWithoutErrors);
+
+			jobContainer.Execute();
+			jobContainer.WaitFinished();
+
+			Assert.AreEqual(true, jobContainer.AllCompleted);
+
+			var vtpReport = XDocument.Load(XmlReader.Create(fileWriter.XMLVTPReportName));
+			var vtpFactor = vtpReport.XPathSelectElement("//*[local-name() = 'Results']/*[local-name() = 'C_VTP']")?.Value.ToDouble(0);
+
+			Assert.AreEqual(0.9549, vtpFactor);
+		}
+
+
+
+		[Category("LongRunning")]
+		[Category("Integration")]
 		[TestCase(@"TestData\Integration\VTPMode\GenericVehicle\VTP_AT-gbx.vecto")]
+		[TestCase(@"TestData\Integration\VTPMode\GenericVehicle\VTP_AT-gbx_2TC.vecto")]
 		public void RunVTPWithAT(string jobFile)
 		{
 			var fileWriter = new FileOutputWriter(jobFile);

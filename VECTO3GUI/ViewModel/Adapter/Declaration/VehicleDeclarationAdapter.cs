@@ -185,6 +185,8 @@ namespace VECTO3GUI.ViewModel.Adapter.Declaration
 
 		public string PTOTransmissionType { get { return ViewModel.PTOTechnology; } }
 		public TableData PTOLossMap { get { throw new NotImplementedException(); } }
+		public TableData PTOCycleDuringStop { get { throw new NotImplementedException();} }
+		public TableData PTOCycleWhileDriving { get { throw new NotImplementedException();} }
 		public TableData PTOCycle { get { throw new NotImplementedException(); } }
 
 		#endregion

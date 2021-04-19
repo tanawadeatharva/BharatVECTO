@@ -40,6 +40,7 @@ using TUGraz.VectoCore.OutputData.FileIO;
 namespace TUGraz.VectoCore.Tests.Reports
 {
 	[TestFixture]
+	[Parallelizable(ParallelScope.All)]
 	public class ActualModalSimulationDataTest
 	{
 		[OneTimeSetUp]

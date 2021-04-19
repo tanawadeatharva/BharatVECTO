@@ -71,6 +71,17 @@ Partial Class VectoJobForm
         Me.TbAuxPAuxICEOn = New System.Windows.Forms.TextBox()
         Me.lblAuxICEOnUnit = New System.Windows.Forms.Label()
         Me.lblAuxICEOn = New System.Windows.Forms.Label()
+        Me.GrAux = New System.Windows.Forms.GroupBox()
+        Me.Label9 = New System.Windows.Forms.Label()
+        Me.TbAuxPAdd = New System.Windows.Forms.TextBox()
+        Me.Label8 = New System.Windows.Forms.Label()
+        Me.btnAAUXOpen = New System.Windows.Forms.Button()
+        Me.Label1 = New System.Windows.Forms.Label()
+        Me.btnBrowseAAUXFile = New System.Windows.Forms.Button()
+        Me.txtAdvancedAuxiliaryFile = New System.Windows.Forms.TextBox()
+        Me.picAuxInfo = New System.Windows.Forms.PictureBox()
+        Me.cboAdvancedAuxiliaries = New System.Windows.Forms.ComboBox()
+        Me.lbAdvancedAuxiliaries = New System.Windows.Forms.Label()
         Me.tcJob = New System.Windows.Forms.TabControl()
         Me.tpAuxiliaries = New System.Windows.Forms.TabPage()
         Me.gbBusAux = New System.Windows.Forms.GroupBox()
@@ -158,6 +169,8 @@ Partial Class VectoJobForm
         Me.Label26 = New System.Windows.Forms.Label()
         Me.tbEcoRollMinSpeed = New System.Windows.Forms.TextBox()
         Me.gbEngineStopStart = New System.Windows.Forms.GroupBox()
+        Me.tbESSUtilityFactorDriving = New System.Windows.Forms.TextBox()
+        Me.lblESSUtilityFactorDriving = New System.Windows.Forms.Label()
         Me.tbEssUtility = New System.Windows.Forms.TextBox()
         Me.Label24 = New System.Windows.Forms.Label()
         Me.Label18 = New System.Windows.Forms.Label()
@@ -166,6 +179,11 @@ Partial Class VectoJobForm
         Me.Label17 = New System.Windows.Forms.Label()
         Me.tbEngineStopStartActivationDelay = New System.Windows.Forms.TextBox()
         Me.Label16 = New System.Windows.Forms.Label()
+        Me.ButAuxRem = New System.Windows.Forms.Button()
+        Me.ButAuxAdd = New System.Windows.Forms.Button()
+        Me.GroupBox1 = New System.Windows.Forms.GroupBox()
+        Me.GroupBox2 = New System.Windows.Forms.GroupBox()
+        Me.TbUnderSpeed = New System.Windows.Forms.TextBox()
         Me.StatusStrip1 = New System.Windows.Forms.StatusStrip()
         Me.ToolStripStatusLabelGEN = New System.Windows.Forms.ToolStripStatusLabel()
         Me.ButOK = New System.Windows.Forms.Button()
@@ -195,8 +213,6 @@ Partial Class VectoJobForm
         Me.lblEngineCharacteristics = New System.Windows.Forms.Label()
         Me.lblTitle = New System.Windows.Forms.Label()
         Me.pnJobInfo = New System.Windows.Forms.Panel()
-        Me.tbESSUtilityFactorDriving = New System.Windows.Forms.TextBox()
-        Me.lblESSUtilityFactorDriving = New System.Windows.Forms.Label()
         Me.TabPgGen.SuspendLayout
         Me.pnHybridStrategy.SuspendLayout
         Me.pnVehicle.SuspendLayout
@@ -207,6 +223,7 @@ Partial Class VectoJobForm
         Me.GrAuxMech.SuspendLayout
         Me.pnAuxDeclarationMode.SuspendLayout
         Me.pnAuxEngineering.SuspendLayout
+        CType(Me.picAuxInfo,System.ComponentModel.ISupportInitialize).BeginInit
         Me.tcJob.SuspendLayout
         Me.tpAuxiliaries.SuspendLayout
         Me.gbBusAux.SuspendLayout
@@ -243,7 +260,7 @@ Partial Class VectoJobForm
         Me.TabPgGen.Location = New System.Drawing.Point(4, 22)
         Me.TabPgGen.Name = "TabPgGen"
         Me.TabPgGen.Padding = New System.Windows.Forms.Padding(3)
-        Me.TabPgGen.Size = New System.Drawing.Size(525, 472)
+        Me.TabPgGen.Size = New System.Drawing.Size(525, 494)
         Me.TabPgGen.TabIndex = 0
         Me.TabPgGen.Text = "General"
         Me.TabPgGen.UseVisualStyleBackColor = true
@@ -678,6 +695,85 @@ Partial Class VectoJobForm
         Me.lblAuxICEOn.TabIndex = 42
         Me.lblAuxICEOn.Text = "Aux Load (ICE On)"
         '
+        'GrAux
+        '
+        Me.GrAux.Location = New System.Drawing.Point(0, 0)
+        Me.GrAux.Name = "GrAux"
+        Me.GrAux.Size = New System.Drawing.Size(200, 100)
+        Me.GrAux.TabIndex = 0
+        Me.GrAux.TabStop = false
+        '
+        'Label9
+        '
+        Me.Label9.Location = New System.Drawing.Point(0, 0)
+        Me.Label9.Name = "Label9"
+        Me.Label9.Size = New System.Drawing.Size(100, 23)
+        Me.Label9.TabIndex = 0
+        '
+        'TbAuxPAdd
+        '
+        Me.TbAuxPAdd.Location = New System.Drawing.Point(0, 0)
+        Me.TbAuxPAdd.Name = "TbAuxPAdd"
+        Me.TbAuxPAdd.Size = New System.Drawing.Size(100, 20)
+        Me.TbAuxPAdd.TabIndex = 0
+        '
+        'Label8
+        '
+        Me.Label8.Location = New System.Drawing.Point(0, 0)
+        Me.Label8.Name = "Label8"
+        Me.Label8.Size = New System.Drawing.Size(100, 23)
+        Me.Label8.TabIndex = 0
+        '
+        'btnAAUXOpen
+        '
+        Me.btnAAUXOpen.Location = New System.Drawing.Point(0, 0)
+        Me.btnAAUXOpen.Name = "btnAAUXOpen"
+        Me.btnAAUXOpen.Size = New System.Drawing.Size(75, 23)
+        Me.btnAAUXOpen.TabIndex = 0
+        '
+        'Label1
+        '
+        Me.Label1.Location = New System.Drawing.Point(0, 0)
+        Me.Label1.Name = "Label1"
+        Me.Label1.Size = New System.Drawing.Size(100, 23)
+        Me.Label1.TabIndex = 0
+        '
+        'btnBrowseAAUXFile
+        '
+        Me.btnBrowseAAUXFile.Location = New System.Drawing.Point(0, 0)
+        Me.btnBrowseAAUXFile.Name = "btnBrowseAAUXFile"
+        Me.btnBrowseAAUXFile.Size = New System.Drawing.Size(75, 23)
+        Me.btnBrowseAAUXFile.TabIndex = 0
+        '
+        'txtAdvancedAuxiliaryFile
+        '
+        Me.txtAdvancedAuxiliaryFile.Location = New System.Drawing.Point(0, 0)
+        Me.txtAdvancedAuxiliaryFile.Name = "txtAdvancedAuxiliaryFile"
+        Me.txtAdvancedAuxiliaryFile.Size = New System.Drawing.Size(100, 20)
+        Me.txtAdvancedAuxiliaryFile.TabIndex = 0
+        '
+        'picAuxInfo
+        '
+        Me.picAuxInfo.Location = New System.Drawing.Point(0, 0)
+        Me.picAuxInfo.Name = "picAuxInfo"
+        Me.picAuxInfo.Size = New System.Drawing.Size(100, 50)
+        Me.picAuxInfo.TabIndex = 0
+        Me.picAuxInfo.TabStop = false
+        '
+        'cboAdvancedAuxiliaries
+        '
+        Me.cboAdvancedAuxiliaries.Location = New System.Drawing.Point(0, 0)
+        Me.cboAdvancedAuxiliaries.Name = "cboAdvancedAuxiliaries"
+        Me.cboAdvancedAuxiliaries.Size = New System.Drawing.Size(121, 21)
+        Me.cboAdvancedAuxiliaries.TabIndex = 0
+        '
+        'lbAdvancedAuxiliaries
+        '
+        Me.lbAdvancedAuxiliaries.Location = New System.Drawing.Point(0, 0)
+        Me.lbAdvancedAuxiliaries.Name = "lbAdvancedAuxiliaries"
+        Me.lbAdvancedAuxiliaries.Size = New System.Drawing.Size(100, 23)
+        Me.lbAdvancedAuxiliaries.TabIndex = 0
+        '
         'tcJob
         '
         Me.tcJob.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left)  _
@@ -702,7 +798,7 @@ Partial Class VectoJobForm
         Me.tpAuxiliaries.Location = New System.Drawing.Point(4, 22)
         Me.tpAuxiliaries.Name = "tpAuxiliaries"
         Me.tpAuxiliaries.Padding = New System.Windows.Forms.Padding(3)
-        Me.tpAuxiliaries.Size = New System.Drawing.Size(525, 472)
+        Me.tpAuxiliaries.Size = New System.Drawing.Size(525, 494)
         Me.tpAuxiliaries.TabIndex = 9
         Me.tpAuxiliaries.Text = "Auxiliaries"
         Me.tpAuxiliaries.UseVisualStyleBackColor = true
@@ -822,7 +918,7 @@ Partial Class VectoJobForm
         Me.tpCycles.Location = New System.Drawing.Point(4, 22)
         Me.tpCycles.Name = "tpCycles"
         Me.tpCycles.Padding = New System.Windows.Forms.Padding(3)
-        Me.tpCycles.Size = New System.Drawing.Size(525, 472)
+        Me.tpCycles.Size = New System.Drawing.Size(525, 494)
         Me.tpCycles.TabIndex = 10
         Me.tpCycles.Text = "Cycles"
         Me.tpCycles.UseVisualStyleBackColor = true
@@ -836,7 +932,7 @@ Partial Class VectoJobForm
         Me.TabPgDriver.Location = New System.Drawing.Point(4, 22)
         Me.TabPgDriver.Name = "TabPgDriver"
         Me.TabPgDriver.Padding = New System.Windows.Forms.Padding(3)
-        Me.TabPgDriver.Size = New System.Drawing.Size(525, 472)
+        Me.TabPgDriver.Size = New System.Drawing.Size(525, 494)
         Me.TabPgDriver.TabIndex = 7
         Me.TabPgDriver.Text = "Driver Model"
         Me.TabPgDriver.UseVisualStyleBackColor = true
@@ -1553,6 +1649,22 @@ Partial Class VectoJobForm
         Me.gbEngineStopStart.TabStop = false
         Me.gbEngineStopStart.Text = "Engine Stop/Start"
         '
+        'tbESSUtilityFactorDriving
+        '
+        Me.tbESSUtilityFactorDriving.Location = New System.Drawing.Point(247, 95)
+        Me.tbESSUtilityFactorDriving.Name = "tbESSUtilityFactorDriving"
+        Me.tbESSUtilityFactorDriving.Size = New System.Drawing.Size(52, 20)
+        Me.tbESSUtilityFactorDriving.TabIndex = 9
+        '
+        'lblESSUtilityFactorDriving
+        '
+        Me.lblESSUtilityFactorDriving.AutoSize = true
+        Me.lblESSUtilityFactorDriving.Location = New System.Drawing.Point(7, 98)
+        Me.lblESSUtilityFactorDriving.Name = "lblESSUtilityFactorDriving"
+        Me.lblESSUtilityFactorDriving.Size = New System.Drawing.Size(208, 13)
+        Me.lblESSUtilityFactorDriving.TabIndex = 8
+        Me.lblESSUtilityFactorDriving.Text = "Engie stop/start utility factor (while driving):"
+        '
         'tbEssUtility
         '
         Me.tbEssUtility.Location = New System.Drawing.Point(247, 69)
@@ -1619,12 +1731,49 @@ Partial Class VectoJobForm
         Me.Label16.TabIndex = 0
         Me.Label16.Text = "Delay engine-off:"
         '
+        'ButAuxRem
+        '
+        Me.ButAuxRem.Location = New System.Drawing.Point(0, 0)
+        Me.ButAuxRem.Name = "ButAuxRem"
+        Me.ButAuxRem.Size = New System.Drawing.Size(75, 23)
+        Me.ButAuxRem.TabIndex = 0
+        '
+        'ButAuxAdd
+        '
+        Me.ButAuxAdd.Location = New System.Drawing.Point(0, 0)
+        Me.ButAuxAdd.Name = "ButAuxAdd"
+        Me.ButAuxAdd.Size = New System.Drawing.Size(75, 23)
+        Me.ButAuxAdd.TabIndex = 0
+        '
+        'GroupBox1
+        '
+        Me.GroupBox1.Location = New System.Drawing.Point(0, 0)
+        Me.GroupBox1.Name = "GroupBox1"
+        Me.GroupBox1.Size = New System.Drawing.Size(200, 100)
+        Me.GroupBox1.TabIndex = 0
+        Me.GroupBox1.TabStop = false
+        '
+        'GroupBox2
+        '
+        Me.GroupBox2.Location = New System.Drawing.Point(0, 0)
+        Me.GroupBox2.Name = "GroupBox2"
+        Me.GroupBox2.Size = New System.Drawing.Size(200, 100)
+        Me.GroupBox2.TabIndex = 0
+        Me.GroupBox2.TabStop = false
+        '
+        'TbUnderSpeed
+        '
+        Me.TbUnderSpeed.Location = New System.Drawing.Point(0, 0)
+        Me.TbUnderSpeed.Name = "TbUnderSpeed"
+        Me.TbUnderSpeed.Size = New System.Drawing.Size(100, 20)
+        Me.TbUnderSpeed.TabIndex = 0
+        '
         'StatusStrip1
         '
         Me.StatusStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.ToolStripStatusLabelGEN})
-        Me.StatusStrip1.Location = New System.Drawing.Point(0, 606)
+        Me.StatusStrip1.Location = New System.Drawing.Point(0, 609)
         Me.StatusStrip1.Name = "StatusStrip1"
-        Me.StatusStrip1.Size = New System.Drawing.Size(942, 22)
+        Me.StatusStrip1.Size = New System.Drawing.Size(944, 22)
         Me.StatusStrip1.SizingGrip = false
         Me.StatusStrip1.TabIndex = 6
         Me.StatusStrip1.Text = "StatusStrip1"
@@ -1638,7 +1787,7 @@ Partial Class VectoJobForm
         'ButOK
         '
         Me.ButOK.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right),System.Windows.Forms.AnchorStyles)
-        Me.ButOK.Location = New System.Drawing.Point(776, 579)
+        Me.ButOK.Location = New System.Drawing.Point(776, 563)
         Me.ButOK.Name = "ButOK"
         Me.ButOK.Size = New System.Drawing.Size(75, 23)
         Me.ButOK.TabIndex = 0
@@ -1649,7 +1798,7 @@ Partial Class VectoJobForm
         '
         Me.ButCancel.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right),System.Windows.Forms.AnchorStyles)
         Me.ButCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel
-        Me.ButCancel.Location = New System.Drawing.Point(857, 579)
+        Me.ButCancel.Location = New System.Drawing.Point(857, 563)
         Me.ButCancel.Name = "ButCancel"
         Me.ButCancel.Size = New System.Drawing.Size(75, 23)
         Me.ButCancel.TabIndex = 1
@@ -1662,7 +1811,7 @@ Partial Class VectoJobForm
         Me.ToolStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.ToolStripBtNew, Me.ToolStripBtOpen, Me.ToolStripBtSave, Me.ToolStripBtSaveAs, Me.ToolStripSeparator1, Me.ToolStripBtSendTo, Me.ToolStripSeparator2, Me.ToolStripButton1})
         Me.ToolStrip1.Location = New System.Drawing.Point(0, 0)
         Me.ToolStrip1.Name = "ToolStrip1"
-        Me.ToolStrip1.Size = New System.Drawing.Size(942, 25)
+        Me.ToolStrip1.Size = New System.Drawing.Size(944, 25)
         Me.ToolStrip1.TabIndex = 20
         Me.ToolStrip1.Text = "ToolStrip1"
         '
@@ -1770,7 +1919,7 @@ Partial Class VectoJobForm
         '
         Me.PicVehicle.BackColor = System.Drawing.Color.LightGray
         Me.PicVehicle.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
-        Me.PicVehicle.Location = New System.Drawing.Point(3, 3)
+        Me.PicVehicle.Location = New System.Drawing.Point(4, 3)
         Me.PicVehicle.Name = "PicVehicle"
         Me.PicVehicle.Size = New System.Drawing.Size(300, 88)
         Me.PicVehicle.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage
@@ -1781,7 +1930,7 @@ Partial Class VectoJobForm
         '
         Me.PicBox.BackColor = System.Drawing.Color.LightGray
         Me.PicBox.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
-        Me.PicBox.Location = New System.Drawing.Point(3, 142)
+        Me.PicBox.Location = New System.Drawing.Point(4, 144)
         Me.PicBox.Name = "PicBox"
         Me.PicBox.Size = New System.Drawing.Size(390, 296)
         Me.PicBox.TabIndex = 36
@@ -1789,7 +1938,7 @@ Partial Class VectoJobForm
         '
         'TbEngTxt
         '
-        Me.TbEngTxt.Location = New System.Drawing.Point(3, 94)
+        Me.TbEngTxt.Location = New System.Drawing.Point(4, 93)
         Me.TbEngTxt.Name = "TbEngTxt"
         Me.TbEngTxt.ReadOnly = true
         Me.TbEngTxt.Size = New System.Drawing.Size(390, 20)
@@ -1797,7 +1946,7 @@ Partial Class VectoJobForm
         '
         'TbVehCat
         '
-        Me.TbVehCat.Location = New System.Drawing.Point(309, 7)
+        Me.TbVehCat.Location = New System.Drawing.Point(307, 3)
         Me.TbVehCat.Name = "TbVehCat"
         Me.TbVehCat.ReadOnly = true
         Me.TbVehCat.Size = New System.Drawing.Size(87, 20)
@@ -1805,7 +1954,7 @@ Partial Class VectoJobForm
         '
         'TbAxleConf
         '
-        Me.TbAxleConf.Location = New System.Drawing.Point(365, 36)
+        Me.TbAxleConf.Location = New System.Drawing.Point(363, 29)
         Me.TbAxleConf.Name = "TbAxleConf"
         Me.TbAxleConf.ReadOnly = true
         Me.TbAxleConf.Size = New System.Drawing.Size(31, 20)
@@ -1813,7 +1962,7 @@ Partial Class VectoJobForm
         '
         'TbHVCclass
         '
-        Me.TbHVCclass.Location = New System.Drawing.Point(309, 65)
+        Me.TbHVCclass.Location = New System.Drawing.Point(307, 66)
         Me.TbHVCclass.Name = "TbHVCclass"
         Me.TbHVCclass.ReadOnly = true
         Me.TbHVCclass.Size = New System.Drawing.Size(87, 20)
@@ -1821,7 +1970,7 @@ Partial Class VectoJobForm
         '
         'TbGbxTxt
         '
-        Me.TbGbxTxt.Location = New System.Drawing.Point(3, 117)
+        Me.TbGbxTxt.Location = New System.Drawing.Point(4, 118)
         Me.TbGbxTxt.Name = "TbGbxTxt"
         Me.TbGbxTxt.ReadOnly = true
         Me.TbGbxTxt.Size = New System.Drawing.Size(390, 20)
@@ -1829,7 +1978,7 @@ Partial Class VectoJobForm
         '
         'TbMass
         '
-        Me.TbMass.Location = New System.Drawing.Point(309, 36)
+        Me.TbMass.Location = New System.Drawing.Point(307, 29)
         Me.TbMass.Name = "TbMass"
         Me.TbMass.ReadOnly = true
         Me.TbMass.Size = New System.Drawing.Size(50, 20)
@@ -1848,7 +1997,7 @@ Partial Class VectoJobForm
         Me.lblTitle.AutoSize = true
         Me.lblTitle.BackColor = System.Drawing.Color.White
         Me.lblTitle.Font = New System.Drawing.Font("Microsoft Sans Serif", 18!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0,Byte))
-        Me.lblTitle.Location = New System.Drawing.Point(120, 32)
+        Me.lblTitle.Location = New System.Drawing.Point(114, 32)
         Me.lblTitle.Name = "lblTitle"
         Me.lblTitle.Size = New System.Drawing.Size(320, 29)
         Me.lblTitle.TabIndex = 38
@@ -1857,34 +2006,17 @@ Partial Class VectoJobForm
         'pnJobInfo
         '
         Me.pnJobInfo.Controls.Add(Me.PicVehicle)
-        Me.pnJobInfo.Controls.Add(Me.PicBox)
-        Me.pnJobInfo.Controls.Add(Me.TbEngTxt)
-        Me.pnJobInfo.Controls.Add(Me.lblEngineCharacteristics)
-        Me.pnJobInfo.Controls.Add(Me.TbGbxTxt)
-        Me.pnJobInfo.Controls.Add(Me.TbHVCclass)
         Me.pnJobInfo.Controls.Add(Me.TbVehCat)
-        Me.pnJobInfo.Controls.Add(Me.TbMass)
+        Me.pnJobInfo.Controls.Add(Me.TbHVCclass)
         Me.pnJobInfo.Controls.Add(Me.TbAxleConf)
+        Me.pnJobInfo.Controls.Add(Me.TbMass)
+        Me.pnJobInfo.Controls.Add(Me.PicBox)
+        Me.pnJobInfo.Controls.Add(Me.TbGbxTxt)
+        Me.pnJobInfo.Controls.Add(Me.TbEngTxt)
         Me.pnJobInfo.Location = New System.Drawing.Point(532, 78)
         Me.pnJobInfo.Name = "pnJobInfo"
         Me.pnJobInfo.Size = New System.Drawing.Size(397, 471)
         Me.pnJobInfo.TabIndex = 39
-        '
-        'tbESSUtilityFactorDriving
-        '
-        Me.tbESSUtilityFactorDriving.Location = New System.Drawing.Point(247, 95)
-        Me.tbESSUtilityFactorDriving.Name = "tbESSUtilityFactorDriving"
-        Me.tbESSUtilityFactorDriving.Size = New System.Drawing.Size(52, 20)
-        Me.tbESSUtilityFactorDriving.TabIndex = 9
-        '
-        'lblESSUtilityFactorDriving
-        '
-        Me.lblESSUtilityFactorDriving.AutoSize = true
-        Me.lblESSUtilityFactorDriving.Location = New System.Drawing.Point(7, 98)
-        Me.lblESSUtilityFactorDriving.Name = "lblESSUtilityFactorDriving"
-        Me.lblESSUtilityFactorDriving.Size = New System.Drawing.Size(208, 13)
-        Me.lblESSUtilityFactorDriving.TabIndex = 8
-        Me.lblESSUtilityFactorDriving.Text = "Engie stop/start utility factor (while driving):"
         '
         'VectoJobForm
         '
@@ -1892,13 +2024,14 @@ Partial Class VectoJobForm
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6!, 13!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.CancelButton = Me.ButCancel
-        Me.ClientSize = New System.Drawing.Size(942, 628)
+        Me.ClientSize = New System.Drawing.Size(944, 631)
         Me.Controls.Add(Me.pnJobInfo)
         Me.Controls.Add(Me.lblTitle)
+        Me.Controls.Add(Me.tcJob)
+        Me.Controls.Add(Me.lblEngineCharacteristics)
         Me.Controls.Add(Me.PictureBox1)
         Me.Controls.Add(Me.ToolStrip1)
         Me.Controls.Add(Me.ButCancel)
-        Me.Controls.Add(Me.tcJob)
         Me.Controls.Add(Me.ButOK)
         Me.Controls.Add(Me.StatusStrip1)
         Me.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle
@@ -1925,6 +2058,7 @@ Partial Class VectoJobForm
         Me.pnAuxDeclarationMode.PerformLayout
         Me.pnAuxEngineering.ResumeLayout(false)
         Me.pnAuxEngineering.PerformLayout
+        CType(Me.picAuxInfo,System.ComponentModel.ISupportInitialize).EndInit
         Me.tcJob.ResumeLayout(false)
         Me.tpAuxiliaries.ResumeLayout(false)
         Me.gbBusAux.ResumeLayout(false)
@@ -1967,6 +2101,7 @@ Partial Class VectoJobForm
         Me.PerformLayout
 
 End Sub
+
     Friend WithEvents TabPgGen As TabPage
     Friend WithEvents tcJob As TabControl
     Friend WithEvents StatusStrip1 As StatusStrip
@@ -2034,28 +2169,9 @@ End Sub
     Friend WithEvents TbMass As TextBox
     Friend WithEvents GrVACC As GroupBox
     Friend WithEvents ToolTip1 As ToolTip
-    Friend WithEvents pnLookAheadCoasting As System.Windows.Forms.Panel
-    Friend WithEvents btnDfVelocityDrop As System.Windows.Forms.Button
-    Friend WithEvents Label12 As System.Windows.Forms.Label
-    Friend WithEvents tbDfCoastingScale As System.Windows.Forms.TextBox
-    Friend WithEvents Label11 As System.Windows.Forms.Label
-    Friend WithEvents Label3 As System.Windows.Forms.Label
-    Friend WithEvents tbDfCoastingOffset As System.Windows.Forms.TextBox
-    Friend WithEvents tbLacDfTargetSpeedFile As System.Windows.Forms.TextBox
-    Friend WithEvents Label10 As System.Windows.Forms.Label
-    Friend WithEvents Label4 As System.Windows.Forms.Label
-    Friend WithEvents Label5 As System.Windows.Forms.Label
-    Friend WithEvents btnDfTargetSpeed As System.Windows.Forms.Button
-    Friend WithEvents tbLacPreviewFactor As System.Windows.Forms.TextBox
-    Friend WithEvents tbLacDfVelocityDropFile As System.Windows.Forms.TextBox
-    Friend WithEvents Label6 As System.Windows.Forms.Label
-    Friend WithEvents tbLacMinSpeed As System.Windows.Forms.TextBox
-    Friend WithEvents Label7 As System.Windows.Forms.Label
     Friend WithEvents lblAuxICEOnUnit As System.Windows.Forms.Label
     Friend WithEvents TbAuxPAuxICEOn As System.Windows.Forms.TextBox
     Friend WithEvents lblAuxICEOn As System.Windows.Forms.Label
-    Friend WithEvents Label15 As System.Windows.Forms.Label
-    Friend WithEvents lblEngineCharacteristics As System.Windows.Forms.Label
     Friend WithEvents TabPgADAS As TabPage
     Friend WithEvents gbEcoRoll As GroupBox
     Friend WithEvents Label29 As Label
@@ -2138,4 +2254,40 @@ End Sub
     Friend WithEvents pnAuxDeclarationMode As Panel
     Friend WithEvents tbESSUtilityFactorDriving As TextBox
     Friend WithEvents lblESSUtilityFactorDriving As Label
+	Friend WithEvents GrAux As GroupBox
+	Friend WithEvents ButAuxRem As Button
+	Friend WithEvents ButAuxAdd As Button
+	Friend WithEvents GroupBox1 As GroupBox
+	Friend WithEvents TbUnderSpeed As TextBox
+	Friend WithEvents cboAdvancedAuxiliaries As ComboBox
+	Friend WithEvents picAuxInfo As PictureBox
+	Friend WithEvents Label1 As Label
+	Friend WithEvents btnBrowseAAUXFile As Button
+	Friend WithEvents txtAdvancedAuxiliaryFile As TextBox
+	Friend WithEvents lbAdvancedAuxiliaries As Label
+	Friend WithEvents btnAAUXOpen As Button
+	Friend WithEvents pnLookAheadCoasting As System.Windows.Forms.Panel
+	Friend WithEvents btnDfVelocityDrop As System.Windows.Forms.Button
+	Friend WithEvents Label12 As System.Windows.Forms.Label
+	Friend WithEvents tbDfCoastingScale As System.Windows.Forms.TextBox
+	Friend WithEvents Label11 As System.Windows.Forms.Label
+	Friend WithEvents Label3 As System.Windows.Forms.Label
+	Friend WithEvents tbDfCoastingOffset As System.Windows.Forms.TextBox
+	Friend WithEvents tbLacDfTargetSpeedFile As System.Windows.Forms.TextBox
+	Friend WithEvents Label10 As System.Windows.Forms.Label
+	Friend WithEvents Label4 As System.Windows.Forms.Label
+	Friend WithEvents Label5 As System.Windows.Forms.Label
+	Friend WithEvents btnDfTargetSpeed As System.Windows.Forms.Button
+	Friend WithEvents tbLacPreviewFactor As System.Windows.Forms.TextBox
+	Friend WithEvents tbLacDfVelocityDropFile As System.Windows.Forms.TextBox
+	Friend WithEvents Label6 As System.Windows.Forms.Label
+	Friend WithEvents tbLacMinSpeed As System.Windows.Forms.TextBox
+	Friend WithEvents Label7 As System.Windows.Forms.Label
+	Friend WithEvents Label9 As System.Windows.Forms.Label
+	Friend WithEvents TbAuxPAdd As System.Windows.Forms.TextBox
+	Friend WithEvents Label8 As System.Windows.Forms.Label
+	Friend WithEvents Label15 As System.Windows.Forms.Label
+	Friend WithEvents GroupBox2 As System.Windows.Forms.GroupBox
+	Friend WithEvents lblEngineCharacteristics As System.Windows.Forms.Label
+
 End Class

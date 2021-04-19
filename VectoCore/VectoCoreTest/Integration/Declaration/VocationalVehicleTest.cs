@@ -43,6 +43,7 @@ using TUGraz.VectoCore.Tests.Models.Simulation;
 namespace TUGraz.VectoCore.Tests.Integration
 {
 	[TestFixture]
+	[Parallelizable(ParallelScope.All)]
 	public class VocationalVehicleTest
 	{
 		const string Class4Vocational = @"Testdata\Integration\DeclarationMode\Class4_Vocational\Rigid Truck_4x2_vehicle-class-4_EURO6_2018.xml";

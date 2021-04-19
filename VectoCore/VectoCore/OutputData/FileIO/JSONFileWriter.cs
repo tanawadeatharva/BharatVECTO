@@ -427,15 +427,17 @@ public class JSONFileWriter : IOutputFileWriter
 			ptoOut.Add("Type", "None");
 		else {
 			ptoOut.Add("Type", pto.PTOTransmissionType);
-			ptoOut.Add(
-				"LossMap",
+			ptoOut.Add("LossMap",
 				pto.PTOTransmissionType != "None" && pto.PTOLossMap != null
 					? GetRelativePath(pto.PTOLossMap.Source, basePath)
 					: "");
-			ptoOut.Add(
-				"Cycle",
-				pto.PTOTransmissionType != "None" && pto.PTOCycle != null
-					? GetRelativePath(pto.PTOCycle.Source, basePath)
+			ptoOut.Add("Cycle",
+				pto.PTOTransmissionType != "None" && pto.PTOCycleDuringStop != null
+					? GetRelativePath(pto.PTOCycleDuringStop.Source, basePath)
+					: "");
+			ptoOut.Add("CycleDriving",
+				pto.PTOTransmissionType != "None" && pto.PTOCycleWhileDriving != null
+					? GetRelativePath(pto.PTOCycleWhileDriving.Source, basePath)
 					: "");
 		}
 

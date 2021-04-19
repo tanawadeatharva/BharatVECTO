@@ -95,10 +95,10 @@ namespace TUGraz.VectoCore.Tests.Integration
 				GearshiftParameters = CreateGearshiftData(),
 				EngineData = engineData,
 				ElectricMachinesData = new List<Tuple<PowertrainPosition, ElectricMotorData>>(),
-				DriverData = driverData,
 				AirdragData = airDragData,
 				SimulationType = SimulationType.DistanceCycle,
-				Cycle = cycleData
+				Cycle = cycleData, 
+				DriverData = driverData
 			};
 			var fileWriter = new FileOutputWriter(modFileName);
 			var modData = new ModalDataContainer(runData, fileWriter, null)

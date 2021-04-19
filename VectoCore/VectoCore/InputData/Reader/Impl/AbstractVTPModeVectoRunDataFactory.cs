@@ -26,6 +26,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl {
 		protected PTOData PTOTransmissionData;
 		protected List<VectoRunData.AuxData> AuxVTP;
 		protected Segment Segment;
+		protected bool _allowVocational;
 		
 		protected Exception InitException;
 
@@ -40,6 +41,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl {
 		{
 			JobInputData = job;
 			Report = report;
+			_allowVocational = true;
 			try {
 				Initialize();
 				if (Report != null) {
@@ -58,7 +60,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl {
 				VehicleData =
 					Dao.CreateVehicleData(
 						JobInputData.Vehicle, Segment, Segment.Missions.First(),
-						Segment.Missions.First().Loadings.First()),
+						Segment.Missions.First().Loadings.First(), _allowVocational),
 				AirdragData = AirdragData,
 				EngineData = EngineData,
 				GearboxData = GearboxData,
@@ -117,7 +119,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl {
 				AngledriveData = AngledriveData,
 				VehicleData = Dao.CreateVehicleData(
 					JobInputData.Vehicle, segment, mission,
-					new KeyValuePair<LoadingType, Tuple<Kilogram, double?>>(LoadingType.ReferenceLoad, loading)),
+					new KeyValuePair<LoadingType, Tuple<Kilogram, double?>>(LoadingType.ReferenceLoad, loading), _allowVocational),
 				AirdragData = AirdragData,
 				DriverData = null,
 				BusAuxiliaries = null,

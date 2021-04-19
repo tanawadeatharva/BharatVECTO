@@ -41,10 +41,12 @@ using TUGraz.VectoCommon.BusAuxiliaries;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
+using TUGraz.VectoCommon.Resources;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.InputData.Impl;
 using TUGraz.VectoCore.Models.Declaration;
+using TUGraz.VectoCore.Models.SimulationComponent.Impl;
 
 namespace TUGraz.VectoCore.InputData.FileIO.JSON
 {
@@ -356,6 +358,14 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			get { return null; }
 		}
 
+		public GearshiftPosition PTO_DriveGear { get {
+			return Body["GearDuringPTODrive"] != null ? new GearshiftPosition(Body["GearDuringPTODrive"].Value<uint>()) : null;
+		} }
+
+		public PerSecond PTO_DriveEngineSpeed { get {
+			return Body["EngineSpeedDuringPTODrive"] != null ? Body.GetEx<double>("EngineSpeedDuringPTODrive").RPMtoRad() : null;
+		} }
+
 		IAdvancedDriverAssistantSystemsEngineering IVehicleEngineeringInputData.ADAS
 		{
 			get { return GetADS(); }
@@ -639,11 +649,51 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			get { return 0; }
 		}
 
-		public virtual CubicMeter CargoVolume
-		{
+		public virtual CubicMeter CargoVolume {
 			get { return 0.SI<CubicMeter>(); }
 		}
 
+		public virtual TableData PTOCycleDuringStop {
+			get {
+				var pto = Body[JsonKeys.Vehicle_PTO];
+				if (pto == null || pto[JsonKeys.Vehicle_PTO_Cycle] == null) {
+					return null;
+				}
+				var cycle = pto[JsonKeys.Vehicle_PTO_Cycle];
+				if (string.IsNullOrWhiteSpace(cycle.Value<string>())) {
+					return null;
+				}
+				try {
+					return ReadTableData(Body.GetEx(JsonKeys.Vehicle_PTO).GetEx<string>(JsonKeys.Vehicle_PTO_Cycle), "PTO Cycle Standstill");
+				} catch (Exception) {
+					if (!TolerateMissing) {
+						throw;
+					}
+					return new TableData(Path.Combine(BasePath, cycle.Value<string>()) + MissingFileSuffix, DataSourceType.Missing);
+				}
+			}
+		}
+
+		public virtual TableData PTOCycleWhileDriving {
+			get {
+				var pto = Body[JsonKeys.Vehicle_PTO];
+				if (pto == null || pto[JsonKeys.Vehicle_PTO_CycleDriving] == null) {
+					return null;
+				}
+				var cycle = pto[JsonKeys.Vehicle_PTO_CycleDriving];
+				if (string.IsNullOrWhiteSpace(cycle.Value<string>())) {
+					return null;
+				}
+				try {
+					return ReadTableData(Body.GetEx(JsonKeys.Vehicle_PTO).GetEx<string>(JsonKeys.Vehicle_PTO_CycleDriving), "PTO Cycle Driving");
+				} catch (Exception) {
+					if (!TolerateMissing) {
+						throw;
+					}
+					return new TableData(Path.Combine(BasePath, cycle.Value<string>()) + MissingFileSuffix, DataSourceType.Missing);
+				}
+			}
+		}
 		public virtual VehicleCode VehicleCode
 		{
 			get { return VehicleCode.NOT_APPLICABLE; }

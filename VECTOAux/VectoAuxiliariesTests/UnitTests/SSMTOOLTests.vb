@@ -22,6 +22,11 @@ Namespace UnitTests
         Private Const GOODTechListALLOFF As String = "TestFiles\testSSMTechBenefitsALLOFF.csv"
         Private Const GOODTechListEMPTYLIST As String = "TestFiles\testSSMTechBenefitsEMPTYLIST.csv"
 
+        <OneTimeSetUp>
+        Public Sub RunBeforeAnyTests()
+            Directory.SetCurrentDirectory(TestContext.CurrentContext.TestDirectory)
+        End Sub
+
         'Helpers
         Private Sub AddDefaultTechLine(source As ISSMTOOL)
 
@@ -58,10 +63,6 @@ Namespace UnitTests
             'CType(src.TechList, SSMTechList).TechLines = New List(Of SSMTechnology)({newItem})
         End Sub
 
-        <OneTimeSetUp>
-        Sub RunBeforeAnyTests()
-            Directory.SetCurrentDirectory(TestContext.CurrentContext.TestDirectory)
-        end Sub
 
         'SSMGenInputTests
         <Test()> _

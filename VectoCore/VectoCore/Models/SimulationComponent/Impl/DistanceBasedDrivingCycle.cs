@@ -31,6 +31,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.Models;
@@ -58,6 +59,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		internal readonly DrivingCycleEnumerator CycleIntervalIterator;
 		private bool _intervalProlonged;
 		internal IdleControllerSwitcher IdleController;
+		private Meter CycleEndDistance;
+
 		
 		private MeterPerSquareSecond StartAcceleration;
 		private MeterPerSecond StartSpeed;
@@ -77,6 +80,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			Data = cycle;
 			CycleIntervalIterator = new DrivingCycleEnumerator(Data);
 			CycleStartDistance = Data.Entries.Count > 0 ? Data.Entries.First().Distance : 0.SI<Meter>();
+			CycleEndDistance = Data.Entries.Count > 0 ? Data.Entries.Last().Distance : 0.SI<Meter>();
 
 			var first = Data.Entries.First();
 			PreviousState = new DrivingCycleState {
@@ -149,6 +153,18 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				};
 				return CurrentState.Response;
 			}
+
+			if (DataBus.VehicleInfo.VehicleSpeed.IsGreater(0) && Right.Distance.IsSmaller(CycleEndDistance)) {
+				var distanceToSpeedChange = nextSpeedChange - PreviousState.Distance;
+				var estimatedTimeToSpeedChange = distanceToSpeedChange / DataBus.VehicleInfo.VehicleSpeed;
+				if (estimatedTimeToSpeedChange.IsSmaller(Constants.SimulationSettings.LowerBoundTimeInterval / 2) &&
+					DataBus.VehicleInfo.VehicleSpeed.IsSmaller(Left.VehicleTargetSpeed, 1.KMPHtoMeterPerSecond()) &&
+					DataBus.VehicleInfo.VehicleSpeed.IsSmaller(Right.VehicleTargetSpeed, 1.KMPHtoMeterPerSecond())) {
+					CurrentState.Response = DriveDistance(absTime, ds);
+					return CurrentState.Response;
+				}
+			}
+
 			// only drive until next sample point in cycle with speed change
 			Log.Debug("Limiting distance to next sample point {0}",
 				Right.Distance - PreviousState.Distance);
@@ -172,7 +188,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		private IResponse DoFirstSimulationInterval(Second absTime)
 		{
 // we are exactly on an entry in the cycle.
-			var stopTime = Left.PTOActive && IdleController != null
+			var stopTime = Left.PTOActive == PTOActivity.PTOActivityDuringStop && IdleController != null
 				? Left.StoppingTime + IdleController.Duration
 				: Left.StoppingTime;
 
@@ -198,7 +214,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		private Second GetStopTimeInterval()
 		{
-			if (!Left.PTOActive || IdleController == null) {
+			if (Left.PTOActive != PTOActivity.PTOActivityDuringStop || IdleController == null) {
 				if ((Left.StoppingTime - PreviousState.WaitTime).IsGreater(2 * Constants.SimulationSettings.TargetTimeInterval,
 					0.1 * Constants.SimulationSettings.TargetTimeInterval)) {
 					return 2 * Constants.SimulationSettings.TargetTimeInterval;
@@ -331,7 +347,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			_intervalProlonged = false;
 
 
-			var stopTime = Left.PTOActive && IdleController != null
+			var stopTime = Left.PTOActive == PTOActivity.PTOActivityDuringStop && IdleController != null
 				? Left.StoppingTime + IdleController.Duration
 				: Left.StoppingTime;
 
@@ -342,7 +358,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					// we have reached the end of the current interval in the cycle, move on...
 					CycleIntervalIterator.MoveNext();
 
-					stopTime = Left.PTOActive && IdleController != null
+					stopTime = Left.PTOActive == PTOActivity.PTOActivityDuringStop && IdleController != null
 						? Left.StoppingTime + IdleController.Duration
 						: Left.StoppingTime;
 				}

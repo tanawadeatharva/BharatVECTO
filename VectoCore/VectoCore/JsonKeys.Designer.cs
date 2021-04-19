@@ -754,6 +754,15 @@ namespace TUGraz.VectoCore {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to CycleDriving.
+        /// </summary>
+        internal static string Vehicle_PTO_CycleDriving {
+            get {
+                return ResourceManager.GetString("Vehicle_PTO_CycleDriving", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to LossMap.
         /// </summary>
         internal static string Vehicle_PTO_LossMapFile {

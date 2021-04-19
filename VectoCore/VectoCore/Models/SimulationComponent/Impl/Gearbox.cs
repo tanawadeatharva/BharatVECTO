@@ -63,6 +63,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		protected internal GearshiftPosition _nextGear;
 		private Second _overrideDisengage;
+		private bool postponeEngage;
+
 		private bool ICEAvailable;
 
 		public override Second LastUpshift { get; protected internal set; }
@@ -77,7 +79,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		public override bool GearEngaged(Second absTime)
 		{
 			return !DisengageGearbox && (_overrideDisengage == null || !_overrideDisengage.IsEqual(absTime)) &&
-					EngageTime.IsSmallerOrEqual(absTime, ModelData.TractionInterruption / 20);
+					EngageTime.IsSmallerOrEqual(absTime, ModelData.TractionInterruption / 20) && !postponeEngage;
 		}
 
 		// controlled by driver (PCC / EcoRoll)
@@ -217,11 +219,17 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				EngageTime = absTime + dt;
 			}
 
+			postponeEngage = false;
 			var reEngaging = false;
 			if (GearEngaged(absTime) && Disengaged && !outAngularVelocity.IsEqual(0)) {
-				ReEngageGear(absTime, dt, outTorque, outAngularVelocity);
+				if (dt.IsSmaller(Constants.SimulationSettings.TargetTimeInterval / 10)) {
+					Log.Debug("postponing re-engage due to small simulation interval {0}", dt);
+					postponeEngage = true;
+				} else {
+					ReEngageGear(absTime, dt, outTorque, outAngularVelocity);
 				reEngaging = true;
-				Log.Debug("Gearbox engaged gear {0}", Gear);
+					Log.Debug("Gearbox engaged gear {0}", Gear);
+				}
 			}
 
 			if (_overrideDisengage != null && (!_strategy?.CheckGearshiftRequired ?? false) && !dryRun) {
@@ -511,6 +519,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		protected override void DoCommitSimulationStep(Second time, Second simulationInterval)
 		{
+			postponeEngage = false;
 			if (!Disengaged) {
 				if (CurrentState.TorqueLossResult != null && CurrentState.TorqueLossResult.Extrapolated) {
 					Log.Warn(

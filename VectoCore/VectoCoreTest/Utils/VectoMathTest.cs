@@ -37,6 +37,7 @@ using TUGraz.VectoCommon.Utils;
 namespace TUGraz.VectoCore.Tests.Utils
 {
 	[TestFixture]
+	[Parallelizable(ParallelScope.All)]
 	public class VectoMathTest
 	{
 		[Test]

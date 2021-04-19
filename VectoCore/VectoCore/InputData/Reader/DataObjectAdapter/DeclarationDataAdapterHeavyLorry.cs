@@ -102,17 +102,17 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			return retVal;
 		}
 
-		public virtual VehicleData CreateVehicleData(IVehicleDeclarationInputData data, Segment segment, Mission mission, KeyValuePair<LoadingType, Tuple<Kilogram, double?>> loading)
+		public virtual VehicleData CreateVehicleData(IVehicleDeclarationInputData data, Segment segment, Mission mission, KeyValuePair<LoadingType, Tuple<Kilogram, double?>> loading, bool allowVocational)
 		{
 			if (!data.SavedInDeclarationMode) {
 				WarnDeclarationMode("VehicleData");
 			}
 			return data.ExemptedVehicle
 				? CreateExemptedVehicleData(data)
-				: CreateNonExemptedVehicleData(data, segment, mission, loading.Value.Item1, loading.Value.Item2);
+				: CreateNonExemptedVehicleData(data, segment, mission, loading.Value.Item1, loading.Value.Item2, allowVocational);
 		}
 
-		protected virtual VehicleData CreateNonExemptedVehicleData(IVehicleDeclarationInputData data, Segment segment, Mission mission, Kilogram loading, double? passengerCount)
+		protected virtual VehicleData CreateNonExemptedVehicleData(IVehicleDeclarationInputData data, Segment segment, Mission mission, Kilogram loading, double? passengerCount, bool allowVocational)
 		{
 			var retVal = SetCommonVehicleData(data);
 			retVal.LegislativeClass = data.LegislativeClass;
@@ -143,7 +143,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 					: 0.SI<CubicMeter>();
 			}
 
-			retVal.VocationalVehicle = data.VocationalVehicle;
+			retVal.VocationalVehicle = allowVocational && data.VocationalVehicle;
 			retVal.ADAS = CreateADAS(data.ADAS);
 
 			var axles = data.Components.AxleWheels.AxlesDeclaration;

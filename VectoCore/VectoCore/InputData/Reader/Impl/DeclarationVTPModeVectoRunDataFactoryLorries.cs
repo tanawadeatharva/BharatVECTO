@@ -62,17 +62,27 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 		protected override void Initialize()
 		{
 			var vehicle = JobInputData.Vehicle;
-			Segment = DeclarationData.TruckSegments.Lookup(
-				vehicle.VehicleCategory,
-				vehicle.AxleConfiguration,
-				vehicle.GrossVehicleMassRating,
-				vehicle.CurbMassChassis,
-				vehicle.VocationalVehicle);
+			try {
+				Segment = DeclarationData.TruckSegments.Lookup(
+					vehicle.VehicleCategory,
+					vehicle.AxleConfiguration,
+					vehicle.GrossVehicleMassRating,
+					vehicle.CurbMassChassis,
+					vehicle.VocationalVehicle);
+			} catch (VectoException) {
+				_allowVocational = false;
+				Segment = DeclarationData.TruckSegments.Lookup(
+					vehicle.VehicleCategory,
+					vehicle.AxleConfiguration,
+					vehicle.GrossVehicleMassRating,
+					vehicle.CurbMassChassis,
+					false);
+			}
 			Driverdata = Dao.CreateDriverData();
 			Driverdata.AccelerationCurve = AccelerationCurveReader.ReadFromStream(Segment.AccelerationFile);
 			var tempVehicle = Dao.CreateVehicleData(
 				vehicle, Segment, Segment.Missions.First(),
-				Segment.Missions.First().Loadings.First());
+				Segment.Missions.First().Loadings.First(), _allowVocational);
 
 			var vtpMission = Segment.VehicleClass.IsMediumLorry()
 				? DeclarationData.VTPMode.SelectedMissionMediumLorry

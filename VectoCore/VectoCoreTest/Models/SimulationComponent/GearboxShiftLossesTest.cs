@@ -47,6 +47,8 @@ using System.IO;
 
 namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 {
+	[TestFixture]
+	[Parallelizable(ParallelScope.All)]
 	public class GearboxShiftLossesTest
 	{
 

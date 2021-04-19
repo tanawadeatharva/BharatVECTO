@@ -34,6 +34,7 @@ using System.Data;
 using TUGraz.VectoCommon.BusAuxiliaries;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
+using TUGraz.VectoCore.Models.SimulationComponent.Impl;
 
 namespace TUGraz.VectoCommon.InputData
 {
@@ -119,8 +120,13 @@ namespace TUGraz.VectoCommon.InputData
 		
 		double InitialSOC { get; }
 
+		// input parameters for road sweeper use case
+
 
 		VectoSimulationJobType VehicleType { get; }
+		GearshiftPosition PTO_DriveGear { get; }
+
+		PerSecond PTO_DriveEngineSpeed { get; }
 	}
 
 	public interface IAdvancedDriverAssistantSystemsEngineering : IAdvancedDriverAssistantSystemDeclarationInputData
@@ -203,7 +209,10 @@ namespace TUGraz.VectoCommon.InputData
 		/// </summary>
 		TableData PTOLossMap { get; }
 
-		TableData PTOCycle { get; }
+		TableData PTOCycleDuringStop { get; }
+
+		TableData PTOCycleWhileDriving { get; }
+
 	}
 
 	public interface IAxleEngineeringInputData : IAxleDeclarationInputData

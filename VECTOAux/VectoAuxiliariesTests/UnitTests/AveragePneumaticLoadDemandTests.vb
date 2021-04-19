@@ -33,9 +33,9 @@ Namespace UnitTests
         Private _Signals As ISignals = New Signals
 
         <OneTimeSetUp>
-        Sub RunBeforeAnyTests()
+        Public Sub RunBeforeAnyTests()
             Directory.SetCurrentDirectory(TestContext.CurrentContext.TestDirectory)
-        end Sub
+        End Sub
 
         'Constructors
         Public Sub New()

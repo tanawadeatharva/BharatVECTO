@@ -37,6 +37,7 @@ using System.IO;
 namespace TUGraz.VectoCore.Tests.Models.Declaration.DataAdapter
 {
 	[TestFixture]
+	[Parallelizable(ParallelScope.All)]
 	public class DeclarationDataAdapterTest_Class2
 	{
 		public const string Class2RigidTruckNoEMSJob =

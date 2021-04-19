@@ -103,10 +103,15 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			IResponse response;
 
 			if (Gear.Gear != 0) {
-				inAngularVelocity = outAngularVelocity * ModelData.Gears[Gear.Gear].Ratio;
-				var inTorqueLossResult = ModelData.Gears[Gear.Gear].LossMap.GetTorqueLoss(outAngularVelocity, outTorque);
+				var ratio = !Gear.IsLockedGear()
+					? ModelData.Gears[Gear.Gear].TorqueConverterRatio
+					: ModelData.Gears[Gear.Gear].Ratio;
+				inAngularVelocity = outAngularVelocity * ratio;
+				var inTorqueLossResult = !Gear.IsLockedGear()
+					? ModelData.Gears[Gear.Gear].TorqueConverterGearLossMap.GetTorqueLoss(outAngularVelocity, outTorque)
+					: ModelData.Gears[Gear.Gear].LossMap.GetTorqueLoss(outAngularVelocity, outTorque);
 				CurrentState.TorqueLossResult = inTorqueLossResult;
-				inTorque = outTorque / ModelData.Gears[Gear.Gear].Ratio + inTorqueLossResult.Value;
+				inTorque = outTorque / ratio + inTorqueLossResult.Value;
 
 				var torqueLossInertia = outAngularVelocity.IsEqual(0)
 					? 0.SI<NewtonMeter>()
