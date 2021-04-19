@@ -725,7 +725,9 @@ namespace TUGraz.VectoCommon.InputData
 
 		public double Ratio { get; set; }
 
-		public double MechanicalEfficiency { get; set; }
+		public double MechanicalTransmissionEfficiency { get; set; }
+
+		public TableData MechanicalTransmissionLossMap { get; set; }
 	}
 
 	public interface IElectricStorageDeclarationInputData

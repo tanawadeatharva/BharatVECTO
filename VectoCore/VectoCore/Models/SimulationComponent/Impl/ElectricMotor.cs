@@ -1,4 +1,5 @@
-﻿using System.Runtime.InteropServices.WindowsRuntime;
+﻿using System;
+using System.Runtime.InteropServices.WindowsRuntime;
 using System.Security.Cryptography;
 using NLog.LayoutRenderers;
 using TUGraz.VectoCommon.Exceptions;
@@ -86,7 +87,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			var tqInertia = Formulas.InertiaPower(emSpeed, PreviousState.EMSpeed, ModelData.Inertia, dt) / avgEmSpeed;
 			var tqEm = tqEmMap + tqInertia;
-			var tqDt = ConvertEmTorqueToDrivetrain(tqEm);
+			var tqDt = ConvertEmTorqueToDrivetrain(avgEmSpeed, tqEm);
 			return tqDt;
 
 		}
@@ -151,14 +152,14 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				maxRecuperationTorqueEm = null;
 			}
 
-			var maxDriveTorqueDt = maxDriveTorqueEm == null ? null : ConvertEmTorqueToDrivetrain(maxDriveTorqueEm);
-			var maxRecuperationTorqueDt = maxRecuperationTorqueEm == null ? null : ConvertEmTorqueToDrivetrain(maxRecuperationTorqueEm);
+			var maxDriveTorqueDt = maxDriveTorqueEm == null ? null : ConvertEmTorqueToDrivetrain(avgEmSpeed, maxDriveTorqueEm);
+			var maxRecuperationTorqueDt = maxRecuperationTorqueEm == null ? null : ConvertEmTorqueToDrivetrain(avgEmSpeed, maxRecuperationTorqueEm);
 			
 			// control returns torque that shall be applied on the drivetrain. calculate backward to the EM
 			var emTorqueDt = Control.MechanicalAssistPower(absTime, dt, outTorque,
 				PreviousState.DrivetrainSpeed, outAngularVelocity, maxDriveTorqueDt, maxRecuperationTorqueDt, Position, dryRun);
 
-			var emTorque = emTorqueDt == null ? null : ConvertDrivetrainTorqueToEm(emTorqueDt);
+			var emTorque = emTorqueDt == null ? null : ConvertDrivetrainTorqueToEm(avgDtSpeed, emTorqueDt);
 			var emOff = emTorqueDt == null;
 
 			if (!dryRun && !DataBus.IsTestPowertrain && emTorqueDt != null && ((emTorque).IsSmaller(maxDriveTorqueEm ?? 0.SI<NewtonMeter>(), 1e-3) ||
@@ -216,7 +217,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				// if EM is off, calculate EM drag torque 'forward' to be applied on drivetrain
 				// add inertia, drag is positive
 				emTorque =  ModelData.DragCurve.Lookup(avgEmSpeed) + inertiaTorqueEm;
-				emTorqueDt = ConvertEmTorqueToDrivetrain(emTorque);
+				emTorqueDt = ConvertEmTorqueToDrivetrain(avgEmSpeed, emTorque);
 				emOff = true;
 			}
 
@@ -388,16 +389,37 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		}
 
 
-		protected NewtonMeter ConvertEmTorqueToDrivetrain(NewtonMeter emTorque)
+		protected NewtonMeter ConvertEmTorqueToDrivetrain(PerSecond emSpeed, NewtonMeter emTorque)
 		{
-			return emTorque * ModelData.Ratio *
-					(emTorque < 0 ? ModelData.TransmissionEfficiency : 1 / ModelData.TransmissionEfficiency);
+			var dtTorque = ModelData.TransmissionLossMap.GetOutTorque(emSpeed, emTorque);
+
+			var dtSpeed = emSpeed / ModelData.Ratio;
+			var emTorqueBwd = ConvertDrivetrainTorqueToEm(dtSpeed, dtTorque);
+			if (!emTorque.IsEqual(emTorqueBwd, 1e-8.SI<NewtonMeter>())) {
+				Log.Debug("Forward Calculation and Backward Calculation do not match...");
+				dtTorque = SearchAlgorithm.Search(emTorque, (emTorqueBwd - emTorque) * 1e3, emTorque / 10,
+					getYValue: r => (r as NewtonMeter - emTorque) * 1e3,
+					evaluateFunction: x => ConvertDrivetrainTorqueToEm(dtSpeed, x),
+					criterion: r => {
+						var i = r as NewtonMeter;
+						return (i - emTorque).Value() * 1e3;
+					});
+			}
+
+			return dtTorque;
+			//return emTorque * ModelData.Ratio *
+			//		(emTorque < 0 ? ModelData.TransmissionLossMap : 1 / ModelData.TransmissionLossMap);
 		}
 
-		protected NewtonMeter ConvertDrivetrainTorqueToEm(NewtonMeter dtTorque)
+		protected NewtonMeter ConvertDrivetrainTorqueToEm(PerSecond dtSpeed, NewtonMeter dtTorque)
 		{
-			return dtTorque / ModelData.Ratio *
-					(dtTorque < 0 ? 1 / ModelData.TransmissionEfficiency : ModelData.TransmissionEfficiency);
+			var torqueLoss = ModelData.TransmissionLossMap.GetTorqueLoss(dtSpeed, dtTorque);
+
+			var emTorque = dtTorque / ModelData.Ratio + torqueLoss.Value;
+
+			return emTorque;
+			//return dtTorque / ModelData.Ratio *
+			//		(dtTorque < 0 ? 1 / ModelData.TransmissionLossMap : ModelData.TransmissionLossMap);
 		}
 
 

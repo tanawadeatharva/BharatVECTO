@@ -736,7 +736,8 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			};
 		}
 
-		public List<Tuple<PowertrainPosition, ElectricMotorData>> CreateElectricMachines(IElectricMachinesEngineeringInputData electricMachines, TableData torqueLimits)
+		public List<Tuple<PowertrainPosition, ElectricMotorData>> CreateElectricMachines(
+			IElectricMachinesEngineeringInputData electricMachines, TableData torqueLimits)
 		{
 			if (electricMachines == null) {
 				return null;
@@ -751,16 +752,22 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			}
 
 			return electricMachines.Entries
-				.Select(x => Tuple.Create(x.Position, CreateElectricMachine(x.ElectricMachine, x.Count, x.Ratio, x.MechanicalEfficiency, torqueLimits))).ToList();
+				.Select(x => Tuple.Create(x.Position,
+					CreateElectricMachine(x.ElectricMachine, x.Count, x.Ratio, x.MechanicalTransmissionEfficiency,
+						x.MechanicalTransmissionLossMap, torqueLimits))).ToList();
 		}
 
 		private ElectricMotorData CreateElectricMachine(IElectricMotorEngineeringInputData motorData, int count,
-			double ratio, double efficiency, TableData torqueLimits)
+			double ratio, double efficiency, TableData adcLossMap, TableData torqueLimits)
 		{
 			var fullLoadCurve = ElectricFullLoadCurveReader.Create(motorData.FullLoadCurve, count);
 			var maxTorqueCurve = torqueLimits == null ? null : ElectricFullLoadCurveReader.Create(torqueLimits, count);
 
 			var fullLoadCurveCombined = IntersectEMFullLoadCurves(fullLoadCurve, maxTorqueCurve);
+
+			var lossMap = adcLossMap != null
+				? TransmissionLossMapReader.CreateEmADCLossMap(adcLossMap, ratio, "EM ADC LossMap")
+				: TransmissionLossMapReader.CreateEmADCLossMap(efficiency, ratio, "EM ADC LossMap Eff");
 
 			return new ElectricMotorData() {
 				FullLoadCurve = fullLoadCurveCombined,
@@ -772,7 +779,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 				OverloadTime = motorData.OverloadTime,
 				OverloadRegenerationFactor = motorData.OverloadRecoveryFactor,
 				Ratio = ratio,
-				TransmissionEfficiency = efficiency
+				TransmissionLossMap = lossMap
 			};
 		}
 

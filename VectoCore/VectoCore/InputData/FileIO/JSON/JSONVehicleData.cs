@@ -96,15 +96,20 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 		protected virtual JSONElectricMotors ReadMotors()
 		{
 			var retVal = new List<ElectricMachineEntry<IElectricMotorEngineeringInputData>>();
-			foreach (var entry in Body["ElectricMotors"])
-			{
-				var tmp = new ElectricMachineEntry<IElectricMotorEngineeringInputData>()
-				{
+			foreach (var entry in Body["ElectricMotors"]) {
+				var tmp = new ElectricMachineEntry<IElectricMotorEngineeringInputData>() {
 					Position = PowertrainPositionHelper.Parse(entry.GetEx<string>("Position")),
 					Ratio = entry.GetEx<double>("Ratio"),
-					MechanicalEfficiency = entry.GetEx<double>("MechanicalEfficiency"),
+					MechanicalTransmissionEfficiency = entry["MechanicalEfficiency"] != null
+						? entry.GetEx<double>("MechanicalEfficiency")
+						: double.NaN,
+					MechanicalTransmissionLossMap = entry["MechanicalTransmissionLossMap"] != null
+						? ReadTableData(Path.Combine(BasePath, entry.GetEx<string>("MechanicalTransmissionLossMap")), "EM ADC LossMap")
+						: null,
 					Count = entry.GetEx<int>("Count"),
-					ElectricMachine = JSONInputDataFactory.ReadElectricMotorData(Path.Combine(BasePath, entry.GetEx<string>("MotorFile")), false)
+					ElectricMachine =
+						JSONInputDataFactory.ReadElectricMotorData(
+							Path.Combine(BasePath, entry.GetEx<string>("MotorFile")), false)
 				};
 				retVal.Add(tmp);
 			}

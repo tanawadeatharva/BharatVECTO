@@ -567,7 +567,8 @@ public class JSONFileWriter : IOutputFileWriter
 		return vehicle.Components.ElectricMachines.Entries.Select(em =>new Dictionary<string, object>() {
 			{"Count", em.Count},
 			{"Ratio", em.Ratio},
-			{"MechanicalEfficiency", em.MechanicalEfficiency},
+			{"MechanicalEfficiency", em.MechanicalTransmissionEfficiency},
+			{"MechanicalTransmissionLossMap", GetRelativePath(em.MechanicalTransmissionLossMap.Source, basePath)},
 			{"Position", em.Position.GetName()},
 			{"MotorFile", GetRelativePath(em.ElectricMachine.DataSource.SourceFile, basePath)}
 		}).ToArray();
