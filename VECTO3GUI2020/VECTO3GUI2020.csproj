@@ -50,7 +50,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup>
-    <ApplicationIcon>Resources\Icon2.ico</ApplicationIcon>
+    <ApplicationIcon>Resources\Icons\Icon2.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Castle.Core, Version=4.0.0.0, Culture=neutral, PublicKeyToken=407dd0808d44fbdc, processorArchitecture=MSIL">
@@ -384,17 +384,13 @@
     <Compile Include="Views\XMLViewer.xaml.cs">
       <DependentUpon>XMLViewer.xaml</DependentUpon>
     </Compile>
-    <Page Include="ButtonStyles.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="ButtonTemplates.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Page Include="DataGridStyles.xaml">
-      <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Resources\Colors.xaml">
+    <Page Include="Resources\Styles\ButtonStyles.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Resources\Styles\Colors.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -414,7 +410,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Resources\GlobalStyles.xaml">
+    <Page Include="Resources\Styles\GlobalStyles.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -650,7 +646,7 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Resources\Icon2.ico" />
+    <Resource Include="Resources\Icons\Icon2.ico" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\VectoCommon\VectoCommon\VectoCommon.csproj">
@@ -667,7 +663,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Resources\folderpicker.ico" />
+    <Resource Include="Resources\Icons\folderpicker.ico" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Model\Multistage\" />

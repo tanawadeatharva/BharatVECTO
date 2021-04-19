@@ -278,25 +278,29 @@ namespace VECTO3GUI2020.ViewModel.Implementation
             string filename = e.Argument as string;
             Debug.Assert(filename != null);
 
-			//TODO: update usage of GetDocumentType;
-   //         //Loading the file
-			//try {
-			//	var xElement = new System.Xml.XmlDocument();
-			//	xElement.Load(filename);
-			//	var documentType = XMLHelper.GetDocumentType(xElement.);
-			//	if (documentType == null) {
-			//		Debug.WriteLine("Unknown Document Type");
-			//		e.Cancel = true;
-			//		return;
-			//	}
+            //TODO: update usage of GetDocumentType;
+            //Loading the file
+            try
+            {
+                var xElement = new System.Xml.XmlDocument();
+                xElement.Load(filename);
+                var documentType = XMLHelper.GetDocumentType(xElement?.DocumentElement?.LocalName);
+                if (documentType == null)
+                {
+                    Debug.WriteLine("Unknown Document Type");
+                    e.Cancel = true;
+                    return;
+                }
 
-			//	var result = _documentViewModelFactory.CreateDocumentViewModel((XmlDocumentType)documentType, filename);
-			//	e.Result = result;
-			//} catch (Exception) {
-			//	e.Cancel = true;
-			//	throw;
-			//}
-		}
+                var result = _documentViewModelFactory.CreateDocumentViewModel((XmlDocumentType)documentType, filename);
+                e.Result = result;
+            }
+            catch (Exception)
+            {
+                e.Cancel = true;
+                throw;
+            }
+        }
 
         void fileworker_ProgressChanged(object sender, ProgressChangedEventArgs e)
         {

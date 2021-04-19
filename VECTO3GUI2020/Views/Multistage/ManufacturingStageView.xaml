@@ -16,11 +16,11 @@
             </Grid.ColumnDefinitions>
         </Grid>
         <DockPanel Grid.Row="1" LastChildFill="False" DockPanel.Dock="Top" >
-            <Button DockPanel.Dock="Left" Style="{DynamicResource MultiStageButtonStyle1}" 
+            <Button Width="100" DockPanel.Dock="Left" Style="{DynamicResource MultiStageButtonStyle1}" 
                     Margin="4" Command="{Binding SwitchComponentViewCommand}" CommandParameter="Vehicle">Vehicle</Button>
-            <Button DockPanel.Dock="Left" Style="{DynamicResource MultiStageButtonStyle1}" 
+            <Button Width="100" DockPanel.Dock="Left" Style="{DynamicResource MultiStageButtonStyle1}" 
                     Margin="4" Command="{Binding SwitchComponentViewCommand}" CommandParameter="Airdrag">Airdrag</Button>
-            <Button DockPanel.Dock="Left" Style="{DynamicResource MultiStageButtonStyle1}" 
+            <Button  Width="100" DockPanel.Dock="Left" Style="{DynamicResource MultiStageButtonStyle1}" 
                     Margin="4" Command="{Binding SwitchComponentViewCommand}" CommandParameter="Auxiliaries">Auxiliaries</Button>
 
             <StackPanel Orientation="Horizontal" DockPanel.Dock="Right">
