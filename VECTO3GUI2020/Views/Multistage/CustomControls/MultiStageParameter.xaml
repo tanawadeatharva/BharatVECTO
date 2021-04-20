@@ -84,7 +84,13 @@
                       IsHitTestVisible="{Binding ElementName=MultistageParameterControl,
                         Path=EditingEnabled}" 
                       Focusable="{Binding RelativeSource={RelativeSource Self}, 
-                        Path=IsHitTestVisible}" IsEditable="False"/>
+                        Path=IsHitTestVisible}" IsEditable="False">
+                <ComboBox.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock Text="{Binding Converter={StaticResource EnumConverter}}" />
+                    </DataTemplate>
+                </ComboBox.ItemTemplate>
+            </ComboBox>
 
 
 

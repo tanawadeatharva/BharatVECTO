@@ -5,6 +5,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Data;
+using Castle.Core.Internal;
+using TUGraz.VectoCommon.Utils;
 
 namespace VECTO3GUI2020.Helper.Converter
 {
@@ -12,20 +14,24 @@ namespace VECTO3GUI2020.Helper.Converter
     {
 		public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
 		{
-			/*
-			 *Enum dummyEnum;
-					if (underlyingType != null) {
-						dummyEnum = Enum.Parse(underlyingType, underlyingType.GetEnumNames()[0]);
-                    } else {
-						dummyEnum = Enum.Parse(dynType, dynType.GetEnumNames()[0]);
-					}
-			 *
-			 *
-			 *
-			 *
-			 */
+			if (value == null) {
+				return Binding.DoNothing;
+			}
 
-			return value;
+			Type valueType = value.GetType();
+			if (!valueType.IsEnum) {
+				return value;
+			}
+
+			var attributes =
+				valueType.GetField(value.ToString())?.GetCustomAttributes( typeof(GuiLabelAttribute),false);
+
+			GuiLabelAttribute attribute = attributes.IsNullOrEmpty() ? null : attributes.First() as GuiLabelAttribute;
+			if (attribute == null) {
+				return value;
+			} else {
+				return attribute.Label;
+			}
 		}
 
 		public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)

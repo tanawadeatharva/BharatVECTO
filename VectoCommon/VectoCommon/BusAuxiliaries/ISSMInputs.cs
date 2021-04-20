@@ -238,9 +238,13 @@ namespace TUGraz.VectoCommon.BusAuxiliaries
 
 	public enum HeatPumpMode
 	{
+		[GuiLabel("Heating")]
 		heating,
+		[GuiLabel("Heating and cooling")]
 		heating_and_cooling,
+		[GuiLabel("Cooling")]
 		cooling,
+		[GuiLabel("N_A")]
 		N_A,
 	}
 

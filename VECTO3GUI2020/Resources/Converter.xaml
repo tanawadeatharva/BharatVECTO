@@ -13,5 +13,6 @@
     <converter:InvertedBoolToVisibilityConverter x:Key="InvertedBoolToVisibilityConverter"/>
     <converter:MultistageParameterModeToVisibilityConverter x:Key="ParameterModeToVisibilityConverter"/>
     <converter:XToBoolConverter x:Key="XToBoolConverter"/>
+    <converter:EnumConverter x:Key="EnumConverter"></converter:EnumConverter>
 </ResourceDictionary>
 

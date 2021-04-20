@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using TUGraz.VectoCommon.BusAuxiliaries;
 using TUGraz.VectoCommon.Utils;
 using VECTO3GUI2020.ViewModel.Implementation.Common;
 using VECTO3GUI2020.ViewModel.Interfaces;
@@ -33,11 +34,18 @@ namespace VECTO3GUI2020
 
 
 		private Meter _meter;
+		private HeatPumpMode? _heatpumpMode;
 
 		public Meter Meter
 		{
 			get => _meter;
 			set => SetProperty(ref _meter, value);
+		}
+
+		public HeatPumpMode? HeatPumpMode
+		{
+			get => _heatpumpMode;
+			set => SetProperty(ref _heatpumpMode, value);
 		}
 
 		public TestViewModel()

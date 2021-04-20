@@ -135,6 +135,7 @@
     <Compile Include="Utils\DoubleExtensionMethods.cs" />
     <Compile Include="Utils\EnumerableExtensionMethods.cs" />
     <Compile Include="Utils\EnumHelper.cs" />
+    <Compile Include="Utils\GuiLabelAttribute.cs" />
     <Compile Include="Utils\IntExtensionMethods.cs" />
     <Compile Include="Utils\SI.cs" />
     <Compile Include="Utils\SIConvertExtensionMethods.cs" />
