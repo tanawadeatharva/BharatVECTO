@@ -16,13 +16,24 @@ using VECTO3GUI2020.Properties;
 using VECTO3GUI2020.ViewModel.Implementation.Common;
 using VECTO3GUI2020.ViewModel.Interfaces.JobEdit.Vehicle;
 using VECTO3GUI2020.ViewModel.Interfaces.JobEdit.Vehicle.Components;
+using VECTO3GUI2020.ViewModel.MultiStage.Implementation;
 using VECTO3GUI2020.ViewModel.MultiStage.Interfaces;
 
 namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 {
-    class DeclarationInterimStageBusVehicleViewModel_v2_8 : ViewModelBase, IVehicleViewModel
+
+	public interface IMultistageVehicleViewModel : IVehicleViewModel
 	{
-		public static readonly string INPUTPROVIDERTYPE = typeof(XMLDeclarationInterimStageBusDataProviderV28).ToString();
+		void SetAirdragData(IAirdragDeclarationInputData airdragData);
+		void SetBusAuxiliaries(IBusAuxiliariesDeclarationData busAuxData);
+	}
+
+
+	class DeclarationInterimStageBusVehicleViewModel_v2_8 : ViewModelBase, IMultistageVehicleViewModel,
+		IVehicleComponentsDeclaration
+	{
+		public static readonly string INPUTPROVIDERTYPE =
+			typeof(XMLDeclarationInterimStageBusDataProviderV28).ToString();
 
 		public string Name
 		{
@@ -45,6 +56,7 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 		}
 
 		#region Implementation used fields in IVehicleInputData
+
 		private string _manufacturer;
 		private string _model;
 		private string _vin;
@@ -64,7 +76,7 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 		private ConsumerTechnology? _doorDriveTechnology;
 		private TankSystem? _tankSystem;
 		private Kilogram _curbMassChassis;
-		private Meter _length; 
+		private Meter _length;
 		private Meter _height;
 		private Meter _width;
 
@@ -73,10 +85,7 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 		public string Manufacturer
 		{
 			get { return _manufacturer; }
-			set
-			{
-				SetProperty(ref _manufacturer, value);
-			}
+			set { SetProperty(ref _manufacturer, value); }
 		}
 
 		public string Model
@@ -104,11 +113,34 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 			set { SetProperty(ref _measurementsGroupEditingEnabled, value); }
 		}
 
+		public ConvertedSI HeightInMm
+		{
+			get { return Height?.ConvertToMilliMeter(); }
+			set { Height = value?.ConvertToMeter(); }
+		}
+
+		public ConvertedSI ConsolidatedHeightInMm
+		{
+			get { return ConsolidatedVehicleData.Height?.ConvertToMilliMeter(); }
+			set { throw new NotImplementedException(); }
+		}
 
 		public Meter Height
 		{
 			get { return _height; }
 			set { SetProperty(ref _height, value); }
+		}
+
+		public ConvertedSI LengthInMm
+		{
+			get { return Length?.ConvertToMilliMeter(); }
+			set { Length = value?.ConvertToMeter(); }
+		}
+
+		public ConvertedSI ConsolidatedLengthInMm
+		{
+			get { return ConsolidatedVehicleData.Length?.ConvertToMilliMeter(); }
+			set { throw new NotImplementedException(); }
 		}
 
 
@@ -117,6 +149,19 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 			get { return _length; }
 			set { SetProperty(ref _length, value); }
 		}
+
+		public ConvertedSI WidthInMm
+		{
+			get { return Width?.ConvertToMilliMeter(); }
+			set { Width = value?.ConvertToMeter(); }
+		}
+
+		public ConvertedSI ConsolidatedWidthInMm
+		{
+			get { return ConsolidatedVehicleData.Width?.ConvertToMilliMeter(); }
+			set { throw new NotImplementedException(); }
+		}
+
 
 		public Meter Width
 		{
@@ -159,7 +204,7 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 
 		public Kilogram GrossVehicleMassRating //Technical Permissible Maximum Laden Mass
 		{
-			get =>_grossVehicleMassRating;
+			get => _grossVehicleMassRating;
 			set => SetProperty(ref _grossVehicleMassRating, value);
 		}
 
@@ -184,7 +229,7 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 		public RegistrationClass? RegisteredClass
 		{
 			get => _registeredClass;
-			set => SetProperty(ref _registeredClass , value);
+			set => SetProperty(ref _registeredClass, value);
 		}
 
 		public VehicleCode? VehicleCode
@@ -214,13 +259,56 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 
 		#endregion
 
-		private IList<IComponentViewModel> _componentViewModels;
-		private IVehicleDeclarationInputData _inputData;
 
-		private Dictionary<string, object> _accumulatedProperties = new Dictionary<string, object>();
-		private IVehicleViewModel _prevStageVehicleViewModel;
+
 		private IVehicleDeclarationInputData _consolidatedVehicleData;
 		private VehicleDeclarationType _vehicleDeclarationType;
+		private IAirdragDeclarationInputData _airdragInputData;
+		private IBusAuxiliariesDeclarationData _busAuxiliaries;
+
+
+		#region implementation of IVehicleComponentsDeclaration
+
+		public IAirdragDeclarationInputData AirdragInputData
+		{
+			get => _airdragInputData;
+			set => _airdragInputData = value;
+		}
+
+		public IBusAuxiliariesDeclarationData BusAuxiliaries
+		{
+			get => _busAuxiliaries;
+			set => _busAuxiliaries = value;
+		}
+
+		#region not implemented
+
+		public IGearboxDeclarationInputData GearboxInputData => throw new NotImplementedException();
+
+		public ITorqueConverterDeclarationInputData TorqueConverterInputData => throw new NotImplementedException();
+
+		public IAxleGearInputData AxleGearInputData => throw new NotImplementedException();
+
+		public IAngledriveInputData AngledriveInputData => throw new NotImplementedException();
+
+		public IEngineDeclarationInputData EngineInputData => throw new NotImplementedException();
+
+		public IAuxiliariesDeclarationInputData AuxiliaryInputData => throw new NotImplementedException();
+
+		public IRetarderInputData RetarderInputData => throw new NotImplementedException();
+
+		public IPTOTransmissionInputData PTOTransmissionInputData => throw new NotImplementedException();
+
+		public IAxlesDeclarationInputData AxleWheels => throw new NotImplementedException();
+
+
+		public IElectricStorageDeclarationInputData ElectricStorage => throw new NotImplementedException();
+
+		public IElectricMachinesDeclarationInputData ElectricMachines => throw new NotImplementedException();
+
+		#endregion
+
+		#endregion
 
 		public ObservableCollection<IComponentViewModel> ComponentViewModels
 		{
@@ -228,19 +316,12 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 			set { throw new NotImplementedException(); }
 		}
 
-		public IVehicleViewModel PreviousStageVehicleViewModel
-		{
-			get => _prevStageVehicleViewModel;
-		}
+
+		public DeclarationInterimStageBusVehicleViewModel_v2_8() { }
 
 
-		public DeclarationInterimStageBusVehicleViewModel_v2_8()
-		{
-
-		}
-
-
-		public DeclarationInterimStageBusVehicleViewModel_v2_8(IVehicleDeclarationInputData consolidatedVehicleData, IMultiStageViewModelFactory vmFactory)
+		public DeclarationInterimStageBusVehicleViewModel_v2_8(IVehicleDeclarationInputData consolidatedVehicleData,
+			IMultiStageViewModelFactory vmFactory)
 		{
 			ConsolidatedVehicleData = consolidatedVehicleData;
 		}
@@ -253,6 +334,7 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 
 
 		#region implementation of IVehicleDeclarationInputData;
+
 		public DateTime Date
 		{
 			get { throw new NotImplementedException(); }
@@ -405,17 +487,16 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 			get { throw new NotImplementedException(); }
 		}
 
-		public IPTOTransmissionInputData PTOTransmissionInputData
-		{
-			get { throw new NotImplementedException(); }
-		}
-
-		public Dictionary<string, object> AccumulatedProperties
-		{
-			get => _accumulatedProperties;
-			set => throw new NotImplementedException();
-		}
-
 		#endregion;
+
+		public void SetAirdragData(IAirdragDeclarationInputData airdragData)
+		{
+			_airdragInputData = airdragData;
+		}
+
+		public void SetBusAuxiliaries(IBusAuxiliariesDeclarationData busAuxData)
+		{
+			_busAuxiliaries = busAuxData;
+		}
 	}
 }

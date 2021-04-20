@@ -20,7 +20,7 @@
                     Converter={StaticResourceExtension SIValueToStringConverter}, 
                      ValidatesOnExceptions=True, 
                     UpdateSourceTrigger=PropertyChanged}"
-                 
+                 Style="{DynamicResource TextBoxStyle1}"
                  IsReadOnly="{Binding ElementName=labledTextBoxMultistage, Path=ReadOnly}"/>
         <Label Grid.Column="2" x:Name="AutoUnitLabel"
                Content="{Binding DummyContent, ElementName=labledTextBoxMultistage, Converter={StaticResource SIToUnitStringConverter}}">

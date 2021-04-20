@@ -51,11 +51,11 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 		private IApplicationInformation _applicationInformation = new ApplicationInformation {
 			Date = DateTime.Today,
 		};
-		private IVehicleViewModel _vehicleViewModel;
+		private IMultistageVehicleViewModel _vehicleViewModel;
 		private IMultiStageViewModelFactory _viewModelFactory;
 		private IViewModelBase _currentview;
 
-		public IVehicleViewModel VehicleViewModel
+		public IMultistageVehicleViewModel VehicleViewModel
 		{
 			get => _vehicleViewModel;
 			set => SetProperty(ref _vehicleViewModel, value);
@@ -81,7 +81,7 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 
 
 
-			VehicleViewModel = _viewModelFactory.GetInterimStageVehicleViewModel(consolidatedManufacturingStageInputData.Vehicle);
+			VehicleViewModel = (IMultistageVehicleViewModel)_viewModelFactory.GetInterimStageVehicleViewModel(consolidatedManufacturingStageInputData.Vehicle);
 			CurrentView = VehicleViewModel as IViewModelBase;
 
 
@@ -95,13 +95,20 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 				viewModelFactory.GetAuxiliariesViewModel(consolidatedManufacturingStageInputData.Vehicle.Components
 					.BusAuxiliaries);
 			Components.Add("Auxiliaries", auxiliariesViewModel as IViewModelBase);
+
+			VehicleViewModel.SetAirdragData(airDragEditViewModel);
+			VehicleViewModel.SetBusAuxiliaries(auxiliariesViewModel);
 		}
 
 
-		private ICommand _switchComponentViewCommand;
+		
 		private int _stageCount;
 		private DigestData _hashPreviousStage;
 		private IManufacturingStageInputData _consolidatedManufacturingStageInputData;
+
+		#region Commands
+
+		private ICommand _switchComponentViewCommand;
 
 		public ICommand SwitchComponentViewCommand
 		{
@@ -118,6 +125,8 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 				CurrentView = newView;
 			}
 		}
+
+		#endregion
 
 		private class ApplicationInformationMultistage : IApplicationInformation
 		{

@@ -32,6 +32,11 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 		private IAirDragViewModel _airdragViewModel;
 		private bool _airdragModified;
 
+		public string AirdragFilePath
+		{
+			get => _airdragFilePath;
+			set => SetProperty(ref _airdragFilePath, value);
+		}
 
 		public IAirDragViewModel AirDragViewModel
 		{
@@ -54,6 +59,7 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 
 		private IAirdragDeclarationInputData _consolidatedAirdragInputData;
 		private readonly IDeclarationInjectFactory _injectFactory;
+		private string _airdragFilePath;
 
 		public ICommand LoadAirdragFileCommand
 		{
@@ -85,20 +91,19 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 				} else {
 					success = false;
 				}
-				
-				
-			
 			}
 			catch (Exception e) {
 				_dialogHelper.ShowMessageBox(e.Message, 
 					"Invalid File", 
 					MessageBoxButton.OK,
 					MessageBoxImage.Error);
+				success = false;
 			}
 
-			if (!success) {
-
+			if (success) {
+				AirdragFilePath = fileName;
 			}
+			
 		}
 
 		private void ValidationErrorAction(XmlSeverityType arg1, ValidationEvent arg2)
@@ -124,6 +129,7 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 			_dialogHelper = dialogHelper;
 			_injectFactory = injectFactory;
 			_componentViewModelFactory = componentViewModelFactory;
+			_airdragFilePath = "Select Airdrag File - if no file is selected a default Airdrag Component is loaded";
 		}
 
 		public MultistageAirdragViewModel(IAirdragDeclarationInputData consolidatedAirdragInputData,

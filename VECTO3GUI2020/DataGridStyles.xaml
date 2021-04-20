@@ -49,7 +49,7 @@
         </Setter>
         <Style.Triggers>
             <Trigger Property="IsSelected" Value="True">
-                <Setter Property="Background" Value="{StaticResource ButtonHightlightColor}"/>
+                <Setter Property="Background" Value="{StaticResource ButtonHighlightColor}"/>
                 <!-- <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.HighlightTextBrushKey}}"/>
                 <Setter Property="BorderBrush" Value="{DynamicResource {x:Static SystemColors.HighlightBrushKey}}"/> -->
                 <Setter Property="Foreground" Value="Black"/>

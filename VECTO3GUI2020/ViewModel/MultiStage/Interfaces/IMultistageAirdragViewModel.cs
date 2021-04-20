@@ -5,6 +5,7 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Interfaces
 {
 	public interface IMultistageAirdragViewModel : IAirdragDeclarationInputData
 	{
-		
+		IAirDragViewModel AirDragViewModel { get; set; }
+
 	}
 }

@@ -1,0 +1,48 @@
+﻿using System;
+using System.CodeDom;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using TUGraz.VectoCommon.Utils;
+using VECTO3GUI2020.ViewModel.Implementation.Common;
+using VECTO3GUI2020.ViewModel.Interfaces;
+using VECTO3GUI2020.ViewModel.Interfaces.Common;
+
+namespace VECTO3GUI2020
+{
+    public class TestViewModel : ViewModelBase, IMainViewModel
+    {
+		private ConvertedSI _convertedSI;
+
+		public ConvertedSI ConvertedSI
+		{
+			get => _convertedSI;
+			set => SetProperty(ref _convertedSI, value);
+
+		}
+
+		private ConvertedSI _convertedSI1;
+
+		public ConvertedSI ConvertedSI1
+		{
+			get => _convertedSI1;
+			set => SetProperty(ref _convertedSI1, value);
+
+		}
+
+
+		private Meter _meter;
+
+		public Meter Meter
+		{
+			get => _meter;
+			set => SetProperty(ref _meter, value);
+		}
+
+		public TestViewModel()
+		{
+			
+		}
+    }
+}

@@ -32,6 +32,7 @@ namespace VECTO3GUI2020.ViewModel.Implementation
 			_windowHelper = windowHelper;
 			_settingsViewModel = settingsViewModel;
 			_jobListVm = jobListViewModel;
+			_bottomView = new TestViewModel();
 		}
 
 		public IMainViewModel CurrentViewModelTop

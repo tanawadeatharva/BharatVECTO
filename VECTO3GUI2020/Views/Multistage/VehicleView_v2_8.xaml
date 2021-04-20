@@ -6,67 +6,76 @@
              xmlns:local="clr-namespace:VECTO3GUI2020.Views.Multistage"
              xmlns:custom="clr-namespace:VECTO3GUI2020.Views.Multistage.CustomControls" xmlns:implementation="clr-namespace:VECTO3GUI2020.ViewModel.MultiStage.Implementation" d:DataContext="{d:DesignInstance Type=implementation:DeclarationInterimStageBusVehicleViewModel_v2_8}"
              mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="800" BorderBrush="Aquamarine" BorderThickness="2px" Margin="4px">
+             d:DesignHeight="450" d:DesignWidth="800" BorderBrush="{DynamicResource ButtonHighlightColor}" BorderThickness="2px" Margin="4px">
     <Grid>
-        <StackPanel>
-        <Label Content="VEHICLE DATA" HorizontalAlignment="Stretch" Background="Aquamarine"/>
-        <custom:MultiStageParameter Optional="False" Content="{Binding Manufacturer}"/>
-        <custom:MultiStageParameter Optional="False" Content="{Binding ManufacturerAddress}"/>
-        <custom:MultiStageParameter Optional="False" Content="{Binding VIN}"/>
+        <ScrollViewer>
+            <DockPanel>
+            <StackPanel>
+                <Label Content="VEHICLE DATA" HorizontalAlignment="Stretch" FontSize="15" VerticalAlignment="Stretch"
+                       Style="{DynamicResource LabelStyle1}"/>
+                <!--Background="{Binding Path=BorderBrush,
+                   RelativeSource={RelativeSource Mode=FindAncestor,
+                   AncestorType=Window}}"/>-->
+                <custom:MultiStageParameter Optional="False" Content="{Binding Manufacturer}"/>
+                <custom:MultiStageParameter Optional="False" Content="{Binding ManufacturerAddress}"/>
+                <custom:MultiStageParameter Optional="False" Content="{Binding VIN}"/>
 
-        <custom:MultiStageParameter 
+                <custom:MultiStageParameter 
             PreviousContent="{Binding ConsolidatedVehicleData.Model}" 
             Content="{Binding Model}"/>
-        <Separator/>
-        <custom:MultiStageParameter EditingEnabled="{Binding 
+                <Separator/>
+                <custom:MultiStageParameter EditingEnabled="{Binding 
             MeasurementsGroupEditingEnabled}" 
-                                    PreviousContent="{Binding ConsolidatedVehicleData.Height}"
-                                    Content="{Binding Height}"/>
-        <custom:MultiStageParameter EditingEnabled="{Binding 
+                                    PreviousContent="{Binding ConsolidatedHeightInMm}"
+                                    Content="{Binding HeightInMm}"
+                                   DummyContent="{Binding Source={StaticResource milimeterDummy}}"/>
+                <custom:MultiStageParameter EditingEnabled="{Binding 
             MeasurementsGroupEditingEnabled}" 
-                                    PreviousContent="{Binding ConsolidatedVehicleData.Width}"
-                                    Content="{Binding Width}"
-                                    HideCheckBox="True"/>
-        <custom:MultiStageParameter EditingEnabled="{Binding 
+                                    PreviousContent="{Binding ConsolidatedWidthInMm}"
+                                    Content="{Binding WidthInMm}"
+                                    HideCheckBox="True"
+                                    DummyContent="{Binding Source={StaticResource milimeterDummy}}"/>
+                <custom:MultiStageParameter EditingEnabled="{Binding 
             MeasurementsGroupEditingEnabled}" 
-                                    PreviousContent="{Binding ConsolidatedVehicleData.Length}"
-                                    Content="{Binding Length}"
-                                    HideCheckBox="True"/>
-            <Separator/>
-        <custom:MultiStageParameter EditingEnabled="{Binding 
+                                    PreviousContent="{Binding ConsolidatedLengthInMm}"
+                                    Content="{Binding LengthInMm}"
+                                    HideCheckBox="True"
+                                    DummyContent="{Binding Source={StaticResource milimeterDummy}}"/>
+                <Separator/>
+                <custom:MultiStageParameter EditingEnabled="{Binding 
             NumberOfPassengersEditingEnabled}" 
                                     PreviousContent="{Binding ConsolidatedVehicleData.NumberOfPassengersUpperDeck}"
                                     Content="{Binding NumberOfPassengersUpperDeck}"/>
-        <custom:MultiStageParameter EditingEnabled="{Binding 
+                <custom:MultiStageParameter EditingEnabled="{Binding 
             NumberOfPassengersEditingEnabled}" 
                                     PreviousContent="{Binding ConsolidatedVehicleData.NumberOfPassengersLowerDeck}"
                                     Content="{Binding NumberOfPassengersLowerDeck}"
                                     HideCheckBox="True"/>
 
-        <Separator/>
-        <custom:MultiStageParameter PreviousContent="{Binding ConsolidatedVehicleData.AirdragModifiedMultistage}"
+                <Separator/>
+                <custom:MultiStageParameter PreviousContent="{Binding ConsolidatedVehicleData.AirdragModifiedMultistage}"
                                     Content="{Binding AirdragModifiedMultistage}" Mode="CHECKBOX"/>
 
-        <custom:MultiStageParameter PreviousContent="{Binding ConsolidatedVehicleData.GrossVehicleMassRating}"
+                <custom:MultiStageParameter PreviousContent="{Binding ConsolidatedVehicleData.GrossVehicleMassRating}"
                                     Content="{Binding GrossVehicleMassRating}"/>
-        <custom:MultiStageParameter PreviousContent="{Binding ConsolidatedVehicleData.DoorDriveTechnology}"
+                <custom:MultiStageParameter PreviousContent="{Binding ConsolidatedVehicleData.DoorDriveTechnology}"
                                     Content="{Binding DoorDriveTechnology}" Mode="COMBOBOX" />
-        <custom:MultiStageParameter PreviousContent="{Binding ConsolidatedVehicleData.LegislativeClass}"
+                <custom:MultiStageParameter PreviousContent="{Binding ConsolidatedVehicleData.LegislativeClass}"
                                     Content="{Binding LegislativeClass}" Mode="COMBOBOX" />
-        <custom:MultiStageParameter PreviousContent="{Binding ConsolidatedVehicleData.RegisteredClass}"
+                <custom:MultiStageParameter PreviousContent="{Binding ConsolidatedVehicleData.RegisteredClass}"
                                     Content="{Binding RegisteredClass}" Mode="COMBOBOX" />
-        <custom:MultiStageParameter PreviousContent="{Binding ConsolidatedVehicleData.VehicleCode}"
+                <custom:MultiStageParameter PreviousContent="{Binding ConsolidatedVehicleData.VehicleCode}"
                                     Content="{Binding VehicleCode}" Mode="COMBOBOX" />
-        <custom:MultiStageParameter PreviousContent="{Binding ConsolidatedVehicleData.LowEntry}"
+                <custom:MultiStageParameter PreviousContent="{Binding ConsolidatedVehicleData.LowEntry}"
                                     Content="{Binding LowEntry}" Mode="CHECKBOX"/>
-        <custom:MultiStageParameter PreviousContent="{Binding ConsolidatedVehicleData.EntranceHeight}"
+                <custom:MultiStageParameter PreviousContent="{Binding ConsolidatedVehicleData.EntranceHeight}"
                                     Content="{Binding EntranceHeight}" />
-        <custom:MultiStageParameter PreviousContent="{Binding ConsolidatedVehicleData.TankSystem}"
+                <custom:MultiStageParameter PreviousContent="{Binding ConsolidatedVehicleData.TankSystem}"
                                     Content="{Binding TankSystem}" Mode="COMBOBOX" />
-        <custom:MultiStageParameter PreviousContent="{Binding ConsolidatedVehicleData.VehicleDeclarationType}"
+                <custom:MultiStageParameter PreviousContent="{Binding ConsolidatedVehicleData.VehicleDeclarationType}"
                                     Content="{Binding VehicleDeclarationType}" Mode="COMBOBOX" />
-
-
-        </StackPanel>
+            </StackPanel>
+        </DockPanel>
+        </ScrollViewer>
     </Grid>
 </UserControl>

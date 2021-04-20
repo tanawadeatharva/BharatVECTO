@@ -105,7 +105,8 @@ namespace VECTO3GUI2020.Views.Multistage.CustomControls
 		}
 
 		public static readonly DependencyProperty DummyContentProperty = DependencyProperty.Register(
-			"DummyContent", typeof(object), typeof(MultiStageParameter), new PropertyMetadata(default(object)));
+			"DummyContent", typeof(object), typeof(MultiStageParameter),
+			new FrameworkPropertyMetadata(null));
 
 		public object DummyContent
 		{
@@ -155,8 +156,10 @@ namespace VECTO3GUI2020.Views.Multistage.CustomControls
 		{
 			var multiStageParameter = (CustomControls.MultiStageParameter) d;
 
-
-			multiStageParameter.DummyContent = multiStageParameter.CreateDummyContent(e, multiStageParameter);
+			if (multiStageParameter.DummyContent == null) {
+				multiStageParameter.DummyContent = multiStageParameter.CreateDummyContent(e, multiStageParameter);
+			}
+			
 
 
 			multiStageParameter.SetListItems();
@@ -177,6 +180,7 @@ namespace VECTO3GUI2020.Views.Multistage.CustomControls
 
 			if(DummyContent is Enum en) {
 				var enType = en.GetType();
+				
 
 				ListItems = Enum.GetValues(enType).Cast<object>().ToList();
 			}
@@ -188,16 +192,24 @@ namespace VECTO3GUI2020.Views.Multistage.CustomControls
 			if (type == null) {
 				return null;
 			}
+
+			if (type == typeof(ConvertedSI)) {
+				//var dummyContent = new ConvertedSI(0, (userControl.Content as ConvertedSI).Units);
+				return null; //dummyContent;
+			}
 			try {
 				dynamic dynType = type;
 				var baseType = dynType.BaseType;
 				//Create SI Dummy
 
+				
+
+
 				if (baseType.BaseType == typeof(SI)) {
 					var createMethod = baseType.GetMethod("Create");
 					var dummyContent = createMethod?.Invoke(null, new object[] { (new double()) });
 					return dummyContent;
-				} else{
+				}else{
 					var bindingProperty = userControl.GetBindingExpression(e.Property);
 					var dataItemType = bindingProperty?.DataItem.GetType();
 					var sourcePropertyType =

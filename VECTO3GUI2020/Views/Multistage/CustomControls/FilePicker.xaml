@@ -14,9 +14,10 @@
                 <ColumnDefinition></ColumnDefinition>
                 <ColumnDefinition Width="30px"></ColumnDefinition>
             </Grid.ColumnDefinitions>
-            <TextBox VerticalContentAlignment="Center" Padding="4" Margin = "0 0 0 0" IsReadOnly="True" 
-                     Text="{Binding Text, ElementName=filepickercustomcontrol}" HorizontalAlignment="Stretch" TextWrapping="Wrap"/>
-            <Button Padding="4" Margin="4 0 0 0" Grid.Column="1" Command="{Binding Command, ElementName=filepickercustomcontrol}">
+        <TextBox VerticalContentAlignment="Center" Padding="4" Margin = "0 0 0 0" IsReadOnly="True" 
+                     Text="{Binding Text, ElementName=filepickercustomcontrol}" HorizontalAlignment="Stretch" TextWrapping="Wrap"
+                     Style="{DynamicResource TextBoxStyle1}"/>
+        <Button Padding="4" Margin="4 0 0 0" Grid.Column="1" Command="{Binding Command, ElementName=filepickercustomcontrol}" Style="{DynamicResource FilePickerButtonStyle}">
                 <Image Source="../../../Resources/Icons/folderpicker.ico">
                 </Image>
             </Button>

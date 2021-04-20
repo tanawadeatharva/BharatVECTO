@@ -31,6 +31,7 @@
 
         <TextBox Grid.Column="2" VerticalAlignment="Center" Margin="2 0 2 0" IsReadOnly="True"
                  Text="{Binding ElementName=MultistageParameterControl, Path=PreviousContent, Converter={StaticResource SIValueToStringConverter}}"
+                 Style="{DynamicResource TextBoxStyle1}"
                  Visibility="{Binding Optional, 
                     ElementName=MultistageParameterControl, Converter={StaticResource BooleanToVisibilityConverter}, UpdateSourceTrigger=PropertyChanged}"/>
 
@@ -40,6 +41,7 @@
                     Converter={StaticResource SIValueToStringConverter}, 
                     ValidatesOnExceptions=True, 
                     UpdateSourceTrigger=PropertyChanged}"
+                 Style="{DynamicResource TextBoxStyle1}"
                  IsReadOnly="{Binding ElementName=MultistageParameterControl,
             Path=EditingEnabled, Converter={StaticResource InvertBoolConverter}}" MouseDoubleClick="Control_OnMouseDoubleClick"/>
 

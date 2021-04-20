@@ -224,4 +224,8 @@
     </DataTemplate>
     <!--#endregion-->
 
+    <DataTemplate DataType="{x:Type local:TestViewModel}">
+        <local:Test></local:Test>
+    </DataTemplate>
+
 </ResourceDictionary>

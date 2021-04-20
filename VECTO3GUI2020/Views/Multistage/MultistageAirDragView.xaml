@@ -9,12 +9,12 @@
              xmlns:impl="clr-namespace:VECTO3GUI2020.ViewModel.MultiStage.Implementation"
              xmlns:properties="clr-namespace:VECTO3GUI2020.Properties"
              mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="800" BorderBrush="Aquamarine" BorderThickness="2" Margin="4"
+             d:DesignHeight="450" d:DesignWidth="800" BorderBrush="{DynamicResource ButtonHighlightColor}" BorderThickness="2" Margin="4"
              d:DataContext="{d:DesignInstance impl:MultistageAirdragViewModel}">
     <Grid>
         <StackPanel>
-            <Label Content="AIRDRAG" HorizontalAlignment="Stretch" Background="Aquamarine"/>
-            <customControlsMultistage:FilePicker Text="Test" Command="{Binding LoadAirdragFileCommand}"/>
+            <Label Content="AIRDRAG" HorizontalAlignment="Stretch" Background="{DynamicResource ButtonHighlightColor}" Style="{DynamicResource LabelStyle1}"/>
+            <customControlsMultistage:FilePicker Text="{Binding AirdragFilePath}" Command="{Binding LoadAirdragFileCommand}"/>
             <StackPanel HorizontalAlignment="Stretch" Margin="4">
                 <Label>Consolidated Airdrag Data</Label>
                 <customControlsMultistage:LabledTextBoxMultistage Content="{Binding ConsolidatedAirdragData.Manufacturer, Mode=OneWay}" ReadOnly="True"/>
