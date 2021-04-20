@@ -72,6 +72,7 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 		private VehicleCode? _vehicleCode;
 		private RegistrationClass? _registeredClass;
 		private bool? _airdragModifiedMultistage;
+		private bool _airdragModifiedEditingEnabled;
 		private LegislativeClass? _legislativeClass;
 		private ConsumerTechnology? _doorDriveTechnology;
 		private TankSystem? _tankSystem;
@@ -225,6 +226,20 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 			get => _airdragModifiedMultistage;
 			set => SetProperty(ref _airdragModifiedMultistage, value);
 		}
+
+		public bool AirdragModifiedMultistageEditingEnabled
+		{
+			get
+			{
+				//IF MODIFIED ONCE IT HAS TO BE SET
+				if (_consolidatedVehicleData.AirdragModifiedMultistage != null) {
+					_airdragModifiedEditingEnabled = true;
+				}
+				return _airdragModifiedEditingEnabled;
+			}
+			set => SetProperty(ref _airdragModifiedEditingEnabled, value);
+		}
+
 
 		public RegistrationClass? RegisteredClass
 		{
