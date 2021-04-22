@@ -276,6 +276,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 					break;
 			}
 
+			if (TestPowertrain.DCDCConverter != null) {
+				TestPowertrain.DCDCConverter.PreviousState.ConsumedEnergy =
+					(DataBus.DCDCConverter as DCDCConverter).PreviousState.ConsumedEnergy;
+			}
+
 			TestPowertrain.Gearbox.PreviousState.OutAngularVelocity =
 				(DataBus.GearboxInfo as ATGearbox).PreviousState.OutAngularVelocity;
 			TestPowertrain.Gearbox.PreviousState.InAngularVelocity =
@@ -401,6 +406,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 		protected readonly GearList GearList;
 		protected bool LimitedGbxTorque;
 
+		public Second EngineOffTimestamp { get; set; }
+
+		public Second VehicleHaltTimestamp { get; set; }
+
+
 		public AbstractHybridStrategy(VectoRunData runData, IVehicleContainer vehicleContainer)
 		{
 			DataBus = vehicleContainer;
@@ -511,7 +521,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 				}
 			}
 
-
+			VehicleHaltTimestamp = DataBus.VehicleInfo.VehicleStopped ? VehicleHaltTimestamp : null;
+			EngineOffTimestamp = null;
 
 			var currentGear = PreviousState.GearboxEngaged ? DataBus.GearboxInfo.Gear : Controller.ShiftStrategy.NextGear;
 
@@ -559,7 +570,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 
 			var best = SelectBestOption(eval, absTime, dt, outTorque, outAngularVelocity, dryRun, currentGear);
 			
-            if (best == null) {
+			if (best == null) {
 				best = ResponseEmOff;
 				best.ICEOff = false;
 			}
@@ -798,11 +809,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 
 		protected virtual bool AllowICEOff(Second absTime)
 		{
-			if (!ModelData.VehicleData.ADAS.EngineStopStart) {
-				return false;
-			}
+			//if (!ModelData.VehicleData.ADAS.EngineStopStart) {
+			//	return false;
+			//}
 			var emPos = ModelData.ElectricMachinesData.First().Item1;
-			if (ModelData.VehicleData.ADAS.EngineStopStart && emPos == PowertrainPosition.HybridP1) {
+			if (/*ModelData.VehicleData.ADAS.EngineStopStart &&*/ emPos == PowertrainPosition.HybridP1) {
 				return false;
 			}
 			return PreviousState.ICEStartTStmp == null ||
@@ -1180,10 +1191,32 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 
 		protected virtual void HandleHaltAction(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity, bool dryRun, List<HybridResultEntry> eval)
 		{
+			var iceOn = ModelData.VehicleData.ADAS.EngineStopStart ? DataBus.EngineInfo.EngineOn : true;
+
+			if (ModelData.VehicleData.ADAS.EngineStopStart) {
+				if (VehicleHaltTimestamp == null) {
+					VehicleHaltTimestamp = absTime;
+				}
+
+				if ((absTime - VehicleHaltTimestamp).IsGreaterOrEqual(
+					ModelData.DriverData.EngineStopStart.EngineOffStandStillActivationDelay)) {
+					if (EngineOffTimestamp == null) {
+						EngineOffTimestamp = absTime;
+						iceOn = false;
+					}
+				}
+
+				if (EngineOffTimestamp != null &&
+					(absTime - EngineOffTimestamp).IsGreaterOrEqual(ModelData.DriverData.EngineStopStart
+						.MaxEngineOffTimespan)) {
+					iceOn = true;
+				}
+			}
+
 			var tmp = ResponseEmOff;
 			tmp.Setting.GearboxInNeutral = false;
-			tmp.Setting.CombustionEngineOn = false;
-			tmp.ICEOff = true;
+			tmp.Setting.CombustionEngineOn = iceOn;
+			tmp.ICEOff = !iceOn;
 
 			eval.Add(tmp);
 		}
