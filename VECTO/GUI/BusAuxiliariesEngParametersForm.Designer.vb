@@ -66,6 +66,10 @@ Partial Class BusAuxiliariesEngParametersForm
         Me.cbAlternatorTechnology = New System.Windows.Forms.ComboBox()
         Me.lbAlternatorTechnology = New System.Windows.Forms.Label()
         Me.pnSmartElectricParams = New System.Windows.Forms.Panel()
+        Me.pnBattEfficiency = New System.Windows.Forms.Panel()
+        Me.lblBatEfficiency = New System.Windows.Forms.Label()
+        Me.lblBatEfficiencyUnit = New System.Windows.Forms.Label()
+        Me.tbBatEfficiency = New System.Windows.Forms.TextBox()
         Me.pnElectricStorageCapacity = New System.Windows.Forms.Panel()
         Me.lblElectricStorageCapacity = New System.Windows.Forms.Label()
         Me.lblElectricStorageCapacityUnit = New System.Windows.Forms.Label()
@@ -122,10 +126,6 @@ Partial Class BusAuxiliariesEngParametersForm
         Me.lblHvacMechPowerDemand = New System.Windows.Forms.Label()
         Me.lblHvacMechPowerDemandUnit = New System.Windows.Forms.Label()
         Me.tbHvacMechPowerDemand = New System.Windows.Forms.TextBox()
-        Me.pnBattEfficiency = New System.Windows.Forms.Panel()
-        Me.lblBatEfficiency = New System.Windows.Forms.Label()
-        Me.lblBatEfficiencyUnit = New System.Windows.Forms.Label()
-        Me.tbBatEfficiency = New System.Windows.Forms.TextBox()
         Me.ToolStrip1.SuspendLayout
         Me.StatusStrip1.SuspendLayout
         CType(Me.PictureBox1,System.ComponentModel.ISupportInitialize).BeginInit
@@ -135,6 +135,7 @@ Partial Class BusAuxiliariesEngParametersForm
         Me.pnES_HEVREESS.SuspendLayout
         Me.Panel1.SuspendLayout
         Me.pnSmartElectricParams.SuspendLayout
+        Me.pnBattEfficiency.SuspendLayout
         Me.pnElectricStorageCapacity.SuspendLayout
         Me.pnMaxAlternatorPower.SuspendLayout
         Me.pnAlternatorEfficiency.SuspendLayout
@@ -151,7 +152,6 @@ Partial Class BusAuxiliariesEngParametersForm
         Me.pnHvacAuxHeaterPwr.SuspendLayout
         Me.pnHvacElecPowerDemand.SuspendLayout
         Me.pnHvacMechPowerDemand.SuspendLayout
-        Me.pnBattEfficiency.SuspendLayout
         Me.SuspendLayout
         '
         'ButCancel
@@ -414,6 +414,41 @@ Partial Class BusAuxiliariesEngParametersForm
         Me.pnSmartElectricParams.Name = "pnSmartElectricParams"
         Me.pnSmartElectricParams.Size = New System.Drawing.Size(288, 96)
         Me.pnSmartElectricParams.TabIndex = 27
+        '
+        'pnBattEfficiency
+        '
+        Me.pnBattEfficiency.Controls.Add(Me.lblBatEfficiency)
+        Me.pnBattEfficiency.Controls.Add(Me.lblBatEfficiencyUnit)
+        Me.pnBattEfficiency.Controls.Add(Me.tbBatEfficiency)
+        Me.pnBattEfficiency.Location = New System.Drawing.Point(0, 63)
+        Me.pnBattEfficiency.Name = "pnBattEfficiency"
+        Me.pnBattEfficiency.Size = New System.Drawing.Size(300, 28)
+        Me.pnBattEfficiency.TabIndex = 28
+        '
+        'lblBatEfficiency
+        '
+        Me.lblBatEfficiency.AutoSize = true
+        Me.lblBatEfficiency.Location = New System.Drawing.Point(3, 7)
+        Me.lblBatEfficiency.Name = "lblBatEfficiency"
+        Me.lblBatEfficiency.Size = New System.Drawing.Size(131, 13)
+        Me.lblBatEfficiency.TabIndex = 0
+        Me.lblBatEfficiency.Text = "Electric Storage Efficiency"
+        '
+        'lblBatEfficiencyUnit
+        '
+        Me.lblBatEfficiencyUnit.AutoSize = true
+        Me.lblBatEfficiencyUnit.Location = New System.Drawing.Point(258, 7)
+        Me.lblBatEfficiencyUnit.Name = "lblBatEfficiencyUnit"
+        Me.lblBatEfficiencyUnit.Size = New System.Drawing.Size(16, 13)
+        Me.lblBatEfficiencyUnit.TabIndex = 24
+        Me.lblBatEfficiencyUnit.Text = "[-]"
+        '
+        'tbBatEfficiency
+        '
+        Me.tbBatEfficiency.Location = New System.Drawing.Point(197, 4)
+        Me.tbBatEfficiency.Name = "tbBatEfficiency"
+        Me.tbBatEfficiency.Size = New System.Drawing.Size(57, 20)
+        Me.tbBatEfficiency.TabIndex = 3
         '
         'pnElectricStorageCapacity
         '
@@ -918,41 +953,6 @@ Partial Class BusAuxiliariesEngParametersForm
         Me.tbHvacMechPowerDemand.Size = New System.Drawing.Size(57, 20)
         Me.tbHvacMechPowerDemand.TabIndex = 3
         '
-        'pnBattEfficiency
-        '
-        Me.pnBattEfficiency.Controls.Add(Me.lblBatEfficiency)
-        Me.pnBattEfficiency.Controls.Add(Me.lblBatEfficiencyUnit)
-        Me.pnBattEfficiency.Controls.Add(Me.tbBatEfficiency)
-        Me.pnBattEfficiency.Location = New System.Drawing.Point(0, 63)
-        Me.pnBattEfficiency.Name = "pnBattEfficiency"
-        Me.pnBattEfficiency.Size = New System.Drawing.Size(300, 28)
-        Me.pnBattEfficiency.TabIndex = 28
-        '
-        'lblBatEfficiency
-        '
-        Me.lblBatEfficiency.AutoSize = true
-        Me.lblBatEfficiency.Location = New System.Drawing.Point(3, 7)
-        Me.lblBatEfficiency.Name = "lblBatEfficiency"
-        Me.lblBatEfficiency.Size = New System.Drawing.Size(131, 13)
-        Me.lblBatEfficiency.TabIndex = 0
-        Me.lblBatEfficiency.Text = "Electric Storage Efficiency"
-        '
-        'lblBatEfficiencyUnit
-        '
-        Me.lblBatEfficiencyUnit.AutoSize = true
-        Me.lblBatEfficiencyUnit.Location = New System.Drawing.Point(258, 7)
-        Me.lblBatEfficiencyUnit.Name = "lblBatEfficiencyUnit"
-        Me.lblBatEfficiencyUnit.Size = New System.Drawing.Size(16, 13)
-        Me.lblBatEfficiencyUnit.TabIndex = 24
-        Me.lblBatEfficiencyUnit.Text = "[-]"
-        '
-        'tbBatEfficiency
-        '
-        Me.tbBatEfficiency.Location = New System.Drawing.Point(197, 4)
-        Me.tbBatEfficiency.Name = "tbBatEfficiency"
-        Me.tbBatEfficiency.Size = New System.Drawing.Size(57, 20)
-        Me.tbBatEfficiency.TabIndex = 3
-        '
         'BusAuxiliariesEngParametersForm
         '
         Me.AcceptButton = Me.ButOK
@@ -990,6 +990,8 @@ Partial Class BusAuxiliariesEngParametersForm
         Me.Panel1.ResumeLayout(false)
         Me.Panel1.PerformLayout
         Me.pnSmartElectricParams.ResumeLayout(false)
+        Me.pnBattEfficiency.ResumeLayout(false)
+        Me.pnBattEfficiency.PerformLayout
         Me.pnElectricStorageCapacity.ResumeLayout(false)
         Me.pnElectricStorageCapacity.PerformLayout
         Me.pnMaxAlternatorPower.ResumeLayout(false)
@@ -1020,8 +1022,6 @@ Partial Class BusAuxiliariesEngParametersForm
         Me.pnHvacElecPowerDemand.PerformLayout
         Me.pnHvacMechPowerDemand.ResumeLayout(false)
         Me.pnHvacMechPowerDemand.PerformLayout
-        Me.pnBattEfficiency.ResumeLayout(false)
-        Me.pnBattEfficiency.PerformLayout
         Me.ResumeLayout(false)
         Me.PerformLayout
 

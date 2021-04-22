@@ -89,6 +89,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 					tmp = JSONInputDataFactory.ReadShiftParameters(filename, tolerateMissing);
 					break;
 				case Constants.FileExtensions.BatteryFile:
+				case ".vbat":
 					tmp = JSONInputDataFactory.ReadREESSData(filename, tolerateMissing);
 					break;
 				case Constants.FileExtensions.ElectricMotorFile:

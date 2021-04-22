@@ -381,6 +381,12 @@ Public Class BusAuxiliariesEngParametersForm
         pnDCDCEff.Enabled = cbES_HEVREESS.Checked
     End Sub
 
+    Private Sub btnBrowseCompressorMap_Click(sender As Object, e As EventArgs) Handles btnBrowseCompressorMap.Click
+        If BusAuxCompressorMapFileBrowser.OpenDialog(FileRepl(tbCompressorMap.Text, GetPath(_busAuxParamsFile))) Then _
+            tbCompressorMap.Text = GetFilenameWithoutDirectory(BusAuxCompressorMapFileBrowser.Files(0), GetPath(_busAuxParamsFile))
+
+    End Sub
+
 #End Region
 
 
