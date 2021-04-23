@@ -801,7 +801,8 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 				AuxReserveTime = hybridStrategyParameters.AuxBufferTime,
 				AuxReserveChargeTime = hybridStrategyParameters.AuxBufferChargeTime,
 				MaxPropulsionTorque = torqueLimit,
-				ICEStartPenaltyFactor = hybridStrategyParameters.ICEStartPenaltyFactor
+				ICEStartPenaltyFactor = hybridStrategyParameters.ICEStartPenaltyFactor,
+				CostFactorSOCExponent = double.IsNaN(hybridStrategyParameters.CostFactorSOCExpponent) ? 5 : hybridStrategyParameters.CostFactorSOCExpponent,
 			};
 			return retVal;
 		}

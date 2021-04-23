@@ -86,7 +86,9 @@ namespace TUGraz.VectoCommon.InputData
 		Second AuxBufferTime { get; }
 		Second AuxBufferChargeTime { get; }
 		double ICEStartPenaltyFactor { get; }
-	}
+
+        double CostFactorSOCExpponent { get; }
+    }
 
 	public interface IVehicleEngineeringInputData : IVehicleDeclarationInputData
 	{

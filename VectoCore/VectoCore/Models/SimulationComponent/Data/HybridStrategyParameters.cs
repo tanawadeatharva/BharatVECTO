@@ -24,5 +24,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data {
 		public double ICEStartPenaltyFactor { get; set; }
 
 		//public Watt MaxDrivetrainPower { get; set; }
+
+		public double CostFactorSOCExponent { get; internal set; }
 	}
 }
