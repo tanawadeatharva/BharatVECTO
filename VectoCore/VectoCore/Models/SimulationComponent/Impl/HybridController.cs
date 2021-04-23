@@ -148,6 +148,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 							Gearbox = {
 								InputTorque = ovl.GearboxResponse?.InputTorque,
 								InputSpeed = ovl.GearboxResponse?.InputSpeed,
+								OutputTorque = ovl.GearboxResponse?.OutputTorque,
+								OutputSpeed = ovl.GearboxResponse?.OutputSpeed,
 								PowerRequest = ovl.GearboxResponse?.PowerRequest,
 								Gear = ovl.GearboxResponse?.Gear
 							}

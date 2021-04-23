@@ -99,6 +99,10 @@ namespace TUGraz.VectoCommon.Models
 		public NewtonMeter InputTorque { get; set; }
 
 		public GearshiftPosition Gear { get; set; }
+
+		public PerSecond OutputSpeed { get; set; }
+
+		public NewtonMeter OutputTorque { get; set; }
 	}
 
 	public class TorqueConverterResponse : AbstractPowertrainComponentResponse

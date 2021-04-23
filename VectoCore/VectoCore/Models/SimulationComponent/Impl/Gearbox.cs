@@ -185,6 +185,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					PowerRequest = outTorque * outAngularVelocity,
 					InputSpeed = inAngularVelocity,
 					InputTorque = inTorque,
+					OutputTorque = outTorque,
+					OutputSpeed = outAngularVelocity,
 				},
 				DeltaFullLoad = response.Engine.PowerRequest - fullLoad
 			};
@@ -336,7 +338,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 						PowerRequest =  delta,
 						Gear = new GearshiftPosition(0),
 						InputSpeed = inAngularVelocity,
-						InputTorque = inTorque
+						InputTorque = inTorque,
+						OutputTorque = outTorque,
+						OutputSpeed = outAngularVelocity,
 					},
 					DeltaDragLoad = delta,
 					DeltaFullLoad = delta,
@@ -415,13 +419,16 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				dryRunResponse.Gearbox.Gear = Gear;
 				dryRunResponse.Gearbox.InputSpeed = inAngularVelocity;
 				dryRunResponse.Gearbox.InputTorque = inTorque;
-
+				dryRunResponse.Gearbox.OutputTorque = outTorque;
+				dryRunResponse.Gearbox.OutputSpeed = outAngularVelocity;
 				return dryRunResponse;
 			}
 
 			var response = NextComponent.Request(absTime, dt, inTorque, inAngularVelocity, false);
 			response.Gearbox.InputSpeed = inAngularVelocity;
 			response.Gearbox.InputTorque = inTorque;
+			response.Gearbox.OutputTorque = outTorque;
+			response.Gearbox.OutputSpeed = outAngularVelocity;
 
 			var shiftAllowed = !inAngularVelocity.IsEqual(0) && !DataBus.VehicleInfo.VehicleSpeed.IsEqual(0);
 

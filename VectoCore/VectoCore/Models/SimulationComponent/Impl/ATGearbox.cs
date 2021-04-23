@@ -384,6 +384,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 					response.Gearbox.InputSpeed = inAngularVelocity;
 					response.Gearbox.InputTorque = inTorque;
+					response.Gearbox.OutputSpeed = outAngularVelocity;
+					response.Gearbox.OutputTorque = outTorque;
 					return response;
 				}
 
@@ -398,7 +400,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			}
 			retVal.Gearbox.InputSpeed = inAngularVelocity;
 			retVal.Gearbox.InputTorque = inTorque;
-
+			retVal.Gearbox.OutputSpeed = outAngularVelocity;
+			retVal.Gearbox.OutputTorque = outTorque;
 			return retVal;
 		}
 
@@ -437,6 +440,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 						PowerRequest = outTorque * avgAngularVelocity,
 						InputTorque = inTorque, // in case ICE is off (hybrid vehicle) the AT gearbox is disengaged  - we need some 'reference point' for searching the operating point - use input torque
 						InputSpeed = inAngularVelocity,
+						OutputTorque = outTorque,
+						OutputSpeed = outAngularVelocity,
 					},
 					DeltaDragLoad = outTorque * avgAngularVelocity,
 					DeltaFullLoad = outTorque * avgAngularVelocity,
@@ -452,6 +457,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 						PowerRequest = outTorque * avgAngularVelocity,
 						InputTorque = inTorque,
 						InputSpeed = inAngularVelocity,
+						OutputTorque = outTorque,
+						OutputSpeed = outAngularVelocity,
+
 					},
 					Engine = {
 						TotalTorqueDemand = 0.SI<NewtonMeter>(), //outTorque,
@@ -475,6 +483,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 						PowerRequest = outTorque * avgAngularVelocity,
 						InputTorque = inTorque,
 						InputSpeed = inAngularVelocity,
+						OutputTorque = outTorque,
+						OutputSpeed = outAngularVelocity,
+
 					},
 					Engine = {
 						TotalTorqueDemand = 0.SI<NewtonMeter>(), //outTorque,
@@ -523,6 +534,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			var retVal =  NextComponent.Request(absTime, dt, 0.SI<NewtonMeter>(), inAngularVelocity, false);
 			retVal.Gearbox.InputSpeed = inAngularVelocity;
 			retVal.Gearbox.InputTorque = inTorque;
+			retVal.Gearbox.OutputTorque = outTorque;
+			retVal.Gearbox.OutputSpeed = outAngularVelocity;
 			return retVal;
 		}
 
