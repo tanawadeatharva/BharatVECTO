@@ -44,9 +44,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent
 		public override IResponse Request(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity, bool dryRun)
 		{
 			var avgOutSpeed = (PreviousState.OutAngularVelocity + outAngularVelocity) / 2.0;
-			if (ClutchOpen)
-			{
-
+			if (ClutchOpen) {
 				if (dryRun)
 				{
 					return new ResponseDryRun(this)
@@ -82,7 +80,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent
 			{
 				if (DataBus.DriverInfo.DriverBehavior == DrivingBehavior.Halted && !ClutchOpen)
 				{
-					return HandleClutchClosed(absTime, dt, outTorque, outAngularVelocity, dryRun);
+					//return HandleClutchClosed(absTime, dt, outTorque, outAngularVelocity, dryRun);
+					return base.HandleClutchOpen(absTime, dt, outTorque, outAngularVelocity, dryRun);
 				}
 				return base.Request(absTime, dt, outTorque, outAngularVelocity, dryRun);
 
