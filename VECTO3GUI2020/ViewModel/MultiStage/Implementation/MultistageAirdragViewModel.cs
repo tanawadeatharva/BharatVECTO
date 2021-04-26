@@ -46,8 +46,15 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 
 		public void SetAirdragInputData(IAirdragDeclarationInputData airdragInputData)
 		{
+			if (airdragInputData == null) {
+				AirDragViewModel = null;
+				return;
+				
+			}
 			AirDragViewModel = _dependencies.ComponentViewModelFactory.CreateComponentViewModel(airdragInputData) as IAirDragViewModel;
-
+			if (AirDragViewModel != null) {
+				AirDragViewModel.LabelVisible = false;
+			}
 		}
 
 		public IAirdragDeclarationInputData ConsolidatedAirdragData

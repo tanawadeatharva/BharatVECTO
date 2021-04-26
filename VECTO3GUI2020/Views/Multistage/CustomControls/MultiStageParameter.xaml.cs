@@ -168,18 +168,21 @@ namespace VECTO3GUI2020.Views.Multistage.CustomControls
 			if (multiStageParameter.DummyContent == null) {
 				multiStageParameter.DummyContent = multiStageParameter.CreateDummyContent(e, multiStageParameter);
 			}
-			
 
-
-			multiStageParameter.SetListItems();
-
-
-			if (multiStageParameter.LabelText != null) {
-				return;
+			if (multiStageParameter.Content != null) {
+				multiStageParameter.EditingEnabled = true;
 			}
-			multiStageParameter.LabelText = multiStageParameter.GetLabelByPropertyName(
-				MultiStageParameter.ContentProperty,
-				Strings.ResourceManager);
+
+			if (multiStageParameter.Mode == MultistageParameterViewMode.COMBOBOX) {
+				multiStageParameter.SetListItems();
+			}
+
+
+			if (multiStageParameter.LabelText == null) {
+				multiStageParameter.LabelText = multiStageParameter.GetLabelByPropertyName(
+					MultiStageParameter.ContentProperty,
+					Strings.ResourceManager);
+			}
 		}
 
 		private void SetListItems()
@@ -248,11 +251,13 @@ namespace VECTO3GUI2020.Views.Multistage.CustomControls
 		private static void EditingEnabledChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
 		{
 			MultiStageParameter multiStageParameter = (MultiStageParameter)d;
-			if((bool)e.NewValue == false)
-			{
+			if((bool)e.NewValue == false) {
+				multiStageParameter.DummyContent = multiStageParameter.Content;
 				multiStageParameter.Content = null;
             } else {
-				if (multiStageParameter.DummyContent != null) {
+				if (multiStageParameter.Content != null) {
+					multiStageParameter.DummyContent = multiStageParameter.Content;
+				}else if (multiStageParameter.DummyContent != null) {
 					multiStageParameter.Content = multiStageParameter.DummyContent;
 				}
 			}
@@ -267,8 +272,6 @@ namespace VECTO3GUI2020.Views.Multistage.CustomControls
 		public MultiStageParameter()
         {
 			InitializeComponent();
-			
-			//LabelText = this.GetLabelByPropertyName(ContentProperty, Strings.ResourceManager);
 		}
 
 		private void Control_OnMouseDoubleClick(object sender, MouseButtonEventArgs e)

@@ -335,26 +335,54 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 		#endregion
 		public void SetAuxiliariesInputData(IBusAuxiliariesDeclarationData componentsAuxiliaryInputData)
 		{
-			_heatPumpGroupEditingEnabled = componentsAuxiliaryInputData.HVACAux != null;
-			_systemConfiguration = componentsAuxiliaryInputData.HVACAux?.SystemConfiguration;
-			_heatPumpTypeDriverCompartment = componentsAuxiliaryInputData.HVACAux?.HeatPumpTypeDriverCompartment;
-			_heatPumpModeDriverCompartment = componentsAuxiliaryInputData.HVACAux?.HeatPumpModeDriverCompartment;
-			_heatPumpTypePassengerCompartment = componentsAuxiliaryInputData.HVACAux?.HeatPumpTypePassengerCompartment;
-			_heatPumpModePassengerCompartment = componentsAuxiliaryInputData.HVACAux?.HeatPumpModePassengerCompartment;
+			if (componentsAuxiliaryInputData == null) {
+				return;
+			}
 
-			_auxHeaterPower = componentsAuxiliaryInputData.HVACAux?.AuxHeaterPower;
-			_doubleGlazing = componentsAuxiliaryInputData.HVACAux?.DoubleGlazing;
-			_adjustableAuxiliaryHeater = componentsAuxiliaryInputData.HVACAux?.AdjustableAuxiliaryHeater;
-			_separateAirDistributionDucts = componentsAuxiliaryInputData.HVACAux?.SeparateAirDistributionDucts;
-			_waterElectricHeater = componentsAuxiliaryInputData.HVACAux?.WaterElectricHeater;
-			_airElectricHeater = componentsAuxiliaryInputData.HVACAux?.AirElectricHeater;
-			_otherHeatingTechnology = componentsAuxiliaryInputData.HVACAux?.OtherHeatingTechnology;
+			HeatPumpGroupEditingEnabled = componentsAuxiliaryInputData.HVACAux != null;
+			SystemConfiguration = componentsAuxiliaryInputData.HVACAux?.SystemConfiguration;
+			HeatPumpTypeDriverCompartment = componentsAuxiliaryInputData.HVACAux?.HeatPumpTypeDriverCompartment;
+			HeatPumpModeDriverCompartment = componentsAuxiliaryInputData.HVACAux?.HeatPumpModeDriverCompartment;
+			HeatPumpTypePassengerCompartment = componentsAuxiliaryInputData.HVACAux?.HeatPumpTypePassengerCompartment;
+			HeatPumpModePassengerCompartment = componentsAuxiliaryInputData.HVACAux?.HeatPumpModePassengerCompartment;
 
-			_interiorLightsLed = componentsAuxiliaryInputData.ElectricConsumers?.InteriorLightsLED;
-			_dayrunninglightsLed = componentsAuxiliaryInputData.ElectricConsumers?.DayrunninglightsLED;
-			_positionlightsLed = componentsAuxiliaryInputData.ElectricConsumers?.PositionlightsLED;
-			_headlightsLed = componentsAuxiliaryInputData.ElectricConsumers?.HeadlightsLED;
-			_brakelightsLed = componentsAuxiliaryInputData.ElectricConsumers?.BrakelightsLED;
+			AuxHeaterPower = componentsAuxiliaryInputData.HVACAux?.AuxHeaterPower;
+			DoubleGlazing = componentsAuxiliaryInputData.HVACAux?.DoubleGlazing;
+			AdjustableAuxiliaryHeater = componentsAuxiliaryInputData.HVACAux?.AdjustableAuxiliaryHeater;
+			SeparateAirDistributionDucts = componentsAuxiliaryInputData.HVACAux?.SeparateAirDistributionDucts;
+			WaterElectricHeater = componentsAuxiliaryInputData.HVACAux?.WaterElectricHeater;
+			AirElectricHeater = componentsAuxiliaryInputData.HVACAux?.AirElectricHeater;
+			OtherHeatingTechnology = componentsAuxiliaryInputData.HVACAux?.OtherHeatingTechnology;
+
+			InteriorLightsLED = componentsAuxiliaryInputData.ElectricConsumers?.InteriorLightsLED;
+			DayrunninglightsLED = componentsAuxiliaryInputData.ElectricConsumers?.DayrunninglightsLED;
+			PositionlightsLED = componentsAuxiliaryInputData.ElectricConsumers?.PositionlightsLED;
+			HeadlightsLED = componentsAuxiliaryInputData.ElectricConsumers?.HeadlightsLED;
+			BrakelightsLED = componentsAuxiliaryInputData.ElectricConsumers?.BrakelightsLED;
+		}
+
+		private void ResetData()
+		{
+			HeatPumpGroupEditingEnabled = false;
+			SystemConfiguration = null;
+			HeatPumpTypeDriverCompartment = null;
+			HeatPumpModeDriverCompartment = null;
+			HeatPumpTypePassengerCompartment = null;
+			HeatPumpModePassengerCompartment = null;
+
+			AuxHeaterPower = null;
+			DoubleGlazing = null;
+			AdjustableAuxiliaryHeater = null;
+			SeparateAirDistributionDucts = null;
+			WaterElectricHeater = null;
+			AirElectricHeater = null;
+			OtherHeatingTechnology = null;
+
+			InteriorLightsLED = null;
+			DayrunninglightsLED = null;
+			PositionlightsLED = null;
+			HeadlightsLED = null;
+			BrakelightsLED = null;
 		}
 
 		public MultistageAuxiliariesViewModel(IBusAuxiliariesDeclarationData consolidatedAuxiliariesInputData)

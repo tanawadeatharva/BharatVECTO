@@ -35,6 +35,7 @@ namespace VECTO3GUI2020
 
 		private Meter _meter;
 		private HeatPumpMode? _heatpumpMode;
+		private string _testString;
 
 		public Meter Meter
 		{
@@ -48,9 +49,15 @@ namespace VECTO3GUI2020
 			set => SetProperty(ref _heatpumpMode, value);
 		}
 
+		public String TestString
+		{
+			get => _testString;
+			set => SetProperty(ref _testString, value);
+		}
+
 		public TestViewModel()
 		{
-			
+			TestString = "Value loaded";
 		}
     }
 }

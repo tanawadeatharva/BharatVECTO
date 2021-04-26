@@ -16,6 +16,7 @@
             <customControls:MultiStageParameter Content="{Binding ConvertedSI}" DummyContent="{Binding Source={StaticResource milimeterDummy}}"/>
             <customControls:MultiStageParameter Content="{Binding ConvertedSI1}" DummyContent="{Binding Source={StaticResource milimeterDummy}}"/>
             <customControls:MultiStageParameter Mode="COMBOBOX" Content="{Binding HeatPumpMode}"></customControls:MultiStageParameter>
+            <customControls:MultiStageParameter Mode="TEXTBOX" Content="{Binding TestString}"></customControls:MultiStageParameter>
         </StackPanel>
     </Grid>
 </UserControl>

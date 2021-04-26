@@ -71,8 +71,8 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 		public void SetInputData(IVehicleDeclarationInputData vehicleInputData)
 		{
 			_vehicleViewModel.SetVehicleInputData(vehicleInputData);
-			_airDragEditViewModel.SetAirdragInputData(vehicleInputData.Components.AirdragInputData);
-			_auxiliariesViewModel.SetAuxiliariesInputData(vehicleInputData.Components.BusAuxiliaries);
+			_airDragEditViewModel.SetAirdragInputData(vehicleInputData?.Components?.AirdragInputData);
+			_auxiliariesViewModel.SetAuxiliariesInputData(vehicleInputData?.Components?.BusAuxiliaries);
 
 		}
 
