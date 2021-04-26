@@ -164,31 +164,8 @@ namespace VECTO3GUI2020.ViewModel.Implementation.JobEdit.Vehicle.Components
 		public override void SetProperties()
 		{
 			_airDragArea = _inputData.AirDragArea;
-		}
-
-		public override SquareMeter AirDragArea
-		{
-			get => _airDragArea;
-			set => SetProperty(ref _airDragArea, value);
-		}
-	}
-
-	public class AirDragViewModel_v2_8 : AirDragViewModel_v2_0
-	{
-		public static new readonly string VERSION = typeof(XMLDeclarationAirdragDataProviderV28).FullName;
-
-		public AirDragViewModel_v2_8(IXMLAirdragDeclarationInputData inputData, IComponentViewModelFactory vmFactory) : base(inputData, vmFactory)
-		{
-			LabelVisible = false;
-			IsReadOnly = true;
-		}
-
-		public override void SetProperties()
-		{
-			_airDragArea = _inputData.AirDragArea;
 			_airDragArea_0 = _inputData.AirDragArea_0;
 			_transferredAirDragArea = _inputData.TransferredAirDragArea;
-
 		}
 
 		public override SquareMeter AirDragArea
@@ -206,6 +183,23 @@ namespace VECTO3GUI2020.ViewModel.Implementation.JobEdit.Vehicle.Components
 		{
 			get => _airDragArea_0;
 			set => SetProperty(ref _airDragArea_0, value);
+		}
+	}
+
+	public class AirDragViewModel_v2_8 : AirDragViewModel_v2_0
+	{
+		public new static readonly string VERSION = typeof(XMLDeclarationAirdragDataProviderV28).FullName;
+
+		public AirDragViewModel_v2_8(IXMLAirdragDeclarationInputData inputData, IComponentViewModelFactory vmFactory) : base(inputData, vmFactory)
+		{
+			LabelVisible = false;
+			IsReadOnly = true;
+		}
+
+		public override void SetProperties()
+		{
+			base.SetProperties();
+
 		}
 	}
 }

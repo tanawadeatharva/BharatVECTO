@@ -1,11 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Windows;
 using System.Windows.Input;
 using System.Xml.Linq;
 using TUGraz.VectoCommon.InputData;
+using TUGraz.VectoCore.InputData.FileIO.XML;
 using TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider;
-using TUGraz.VectoCore.Utils;
+using VECTO3GUI2020.Helper;
+using VECTO3GUI2020.Ninject;
+using VECTO3GUI2020.Properties;
 using VECTO3GUI2020.Util;
 using VECTO3GUI2020.ViewModel.Implementation.Common;
 using VECTO3GUI2020.ViewModel.Interfaces;
@@ -16,6 +20,8 @@ using VECTO3GUI2020.ViewModel.MultiStage.Interfaces;
 
 namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 {
+	//AGGREGATE MULTISTAGEDEPENDENCIES
+
 	public class MultiStageJobViewModel_v0_1 : ViewModelBase, IMultiStageJobViewModel, IMultistageVIFInputData, IMultistageBusInputDataProvider
 	{
 		private IDeclarationMultistageJobInputData _jobInputData;
@@ -52,17 +58,61 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 			var vifInputData = inputData;
 			
 		}
+
+
+		private ICommand _loadVehicleDataCommand;
+		private readonly Lazy<IDialogHelper> _dialogHelper;
+		private readonly Lazy<IXMLInputDataReader> _inputDataReader;
+		private string _vehicleInputDataFilePath = "Select Vehicle Input Data";
+
+		public ICommand LoadVehicleDataCommand
+		{
+			get
+			{
+				return _loadVehicleDataCommand ?? new RelayCommand(LoadVehicleDataExecute, () => true);
+			}
+		}
+
+		private void LoadVehicleDataExecute()
+		{
+			var fileName = _dialogHelper.Value.OpenXMLFileDialog(Settings.Default.DefaultFilePath);
+			if (fileName == null) {
+				return;
+			}
+
+			IDeclarationInputDataProvider inputData;
+			IVehicleDeclarationInputData vehicleInputData;
+			try {
+				inputData = (IDeclarationInputDataProvider)_inputDataReader.Value.CreateDeclaration(fileName);
+				vehicleInputData = inputData.JobInputData.Vehicle;
+				_manufacturingStageViewModel.SetInputData(vehicleInputData);
+			} catch (Exception e) {
+				_dialogHelper.Value.ShowMessageBox(e.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+				return;
+			}
+
+			
+			return;
+		}
+
+		public string VehicleInputDataFilePath
+		{
+			get => _vehicleInputDataFilePath;
+			set => SetProperty(ref _vehicleInputDataFilePath, value);
+		}
 		#endregion
 
 
-		public MultiStageJobViewModel_v0_1(IMultistageBusInputDataProvider inputData, IMultiStageViewModelFactory vmFactory)
+		public MultiStageJobViewModel_v0_1(IMultistageBusInputDataProvider inputData, IMultiStageViewModelFactory vmFactory, IMultistageDependencies multistageDependencies )
 		{
+
 			_jobInputData = inputData.JobInputData;
 			_vmFactory = vmFactory;
 			_consolidateManufacturingStage = _jobInputData.ConsolidateManufacturingStage;
 			_manufacturingStages =_jobInputData.ManufacturingStages;
 			_primaryVehicle = _jobInputData.PrimaryVehicle;
-
+			_dialogHelper = multistageDependencies.DialogHelperLazy;
+			_inputDataReader = multistageDependencies.InputDataReaderLazy;
 			_manufacturingStageViewModel =
 				vmFactory.GetManufacturingStageViewModel(_consolidateManufacturingStage);
 		}

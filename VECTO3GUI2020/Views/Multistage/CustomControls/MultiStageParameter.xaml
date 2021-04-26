@@ -22,7 +22,7 @@
 
         <Label Content="{Binding LabelText, ElementName=MultistageParameterControl}"></Label>
         <CheckBox Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center" Name="CheckBox"
-                  Visibility="{Binding Optional, 
+                  Visibility="{Binding ShowCheckBox, 
                     ElementName=MultistageParameterControl, 
                     Converter={StaticResource BooleanToVisibilityConverter}}"
                   IsChecked="{Binding EditingEnabled, 
@@ -65,7 +65,7 @@
 
         <Label Content="{Binding LabelText, ElementName=MultistageParameterControl}"></Label>
         <CheckBox Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center" Name="CheckBoxCombo"
-                  Visibility="{Binding Optional, 
+                  Visibility="{Binding ShowCheckBox, 
                     ElementName=MultistageParameterControl, 
                     Converter={StaticResource BooleanToVisibilityConverter}}"
                   IsChecked="{Binding EditingEnabled, 
@@ -76,15 +76,7 @@
                     ElementName=MultistageParameterControl, 
                     Converter={StaticResource BooleanToVisibilityConverter}}" IsHitTestVisible="False" Focusable="False" IsEditable="False"
                       SelectedValue="{Binding PreviousContent, Mode=TwoWay, ElementName=MultistageParameterControl}"
-                      ItemsSource="{Binding ListItems, ElementName=MultistageParameterControl}"/>
-
-            <ComboBox Grid.Column="3" HorizontalAlignment="Stretch" VerticalAlignment="Center" Margin="2 0 2 0" 
-                      SelectedValue="{Binding Content, Mode=TwoWay, ElementName=MultistageParameterControl}" 
-                      ItemsSource="{Binding ListItems, ElementName=MultistageParameterControl}"
-                      IsHitTestVisible="{Binding ElementName=MultistageParameterControl,
-                        Path=EditingEnabled}" 
-                      Focusable="{Binding RelativeSource={RelativeSource Self}, 
-                        Path=IsHitTestVisible}" IsEditable="False">
+                      ItemsSource="{Binding ListItems, ElementName=MultistageParameterControl}">
                 <ComboBox.ItemTemplate>
                     <DataTemplate>
                         <TextBlock Text="{Binding Converter={StaticResource EnumConverter}}" />
@@ -92,6 +84,19 @@
                 </ComboBox.ItemTemplate>
             </ComboBox>
 
+        
+                <ComboBox Grid.Column="3" HorizontalAlignment="Stretch" VerticalAlignment="Center" Margin="2 0 2 0" 
+                          SelectedValue="{Binding Content, Mode=TwoWay, ElementName=MultistageParameterControl, ValidatesOnExceptions=True}" 
+                          ItemsSource="{Binding ListItems, ElementName=MultistageParameterControl}"
+                          
+                          IsEnabled="{Binding EditingEnabled, ElementName=MultistageParameterControl}"
+                          IsEditable="False" MouseDoubleClick="Control_OnMouseDoubleClick">
+                <ComboBox.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock Text="{Binding Converter={StaticResource EnumConverter}}" />
+                    </DataTemplate>
+                </ComboBox.ItemTemplate>
+            </ComboBox>
 
 
         <Label Grid.Column="4"
@@ -113,7 +118,7 @@
 
             <Label Content="{Binding LabelText, ElementName=MultistageParameterControl}"></Label>
             <CheckBox Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center" Name="CheckBoxCheckBox"
-                  Visibility="{Binding Optional, 
+                  Visibility="{Binding ShowCheckBox, 
                     ElementName=MultistageParameterControl, 
                     Converter={StaticResource BooleanToVisibilityConverter}}"
                   IsChecked="{Binding EditingEnabled, 

@@ -60,13 +60,19 @@ namespace VECTO3GUI2020.Views.Multistage.CustomControls
 			MultiStageParameter multiStageParameter = (MultiStageParameter)d;
 			if ((bool)e.NewValue == false) {
 				multiStageParameter.EditingEnabled = true;
+				multiStageParameter.ShowCheckBox = false;
+			} else {
+				multiStageParameter.ShowCheckBox = true;
 			}
 		}
 
 		public bool Optional
 		{
 			get { return (bool)GetValue(OptionalProperty); }
-			set { SetValue(OptionalProperty, value); }
+			set
+			{
+				SetValue(OptionalProperty, value);
+			}
 		}
 
 		public static readonly DependencyProperty ModeProperty = DependencyProperty.Register(
@@ -97,7 +103,10 @@ namespace VECTO3GUI2020.Views.Multistage.CustomControls
 
 		public bool EditingEnabled
 		{
-			get { return (bool)GetValue(EditingEnabledProperty);}
+			get
+			{
+				return (bool)GetValue(EditingEnabledProperty);
+			}
 			set
 			{
 				SetValue(EditingEnabledProperty, value);
@@ -115,13 +124,13 @@ namespace VECTO3GUI2020.Views.Multistage.CustomControls
 		}
 
 
-		public static readonly DependencyProperty HideCheckBoxProperty = DependencyProperty.Register(
-			"HideCheckBox", typeof(bool), typeof(MultiStageParameter), new PropertyMetadata(default(bool)));
+		public static readonly DependencyProperty ShowCheckBoxProperty = DependencyProperty.Register(
+			"ShowCheckBox", typeof(bool), typeof(MultiStageParameter), new PropertyMetadata(true));
 
-		public bool HideCheckBox
+		public bool ShowCheckBox
 		{
-			get { return (bool)GetValue(HideCheckBoxProperty); }
-			set { SetValue(HideCheckBoxProperty, value); }
+			get { return (bool)GetValue(ShowCheckBoxProperty); }
+			set { SetValue(ShowCheckBoxProperty, value); }
 		}
 
 

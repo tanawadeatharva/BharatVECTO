@@ -3,6 +3,8 @@
     <SolidColorBrush x:Key="Button.Static.Background2" Color="#FFDDDDDD"/>
     <SolidColorBrush x:Key="Button.Static.Border2" Color="#FF707070"/>
     <SolidColorBrush x:Key="MultiStageButtonMouseOverBackGround" Color="#FFBEE6FD"/>
+    
+    
     <Style x:Key="MultiStageButtonStyle1" TargetType="{x:Type Button}">
         <Setter Property="FocusVisualStyle" Value="{StaticResource FocusVisual}"/>
         <Setter Property="Background" Value="{StaticResource Button.Static.Background2}"/>

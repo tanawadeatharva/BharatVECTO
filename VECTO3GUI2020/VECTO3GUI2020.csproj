@@ -141,6 +141,8 @@
     <Compile Include="Helper\XMLExtension.cs" />
     <Compile Include="Helper\XmlHelper.cs" />
     <Compile Include="Ninject\FactoryModule.cs" />
+    <Compile Include="Ninject\IMultistageDependencies.cs" />
+    <Compile Include="Ninject\MultistageLazyDependencies.cs" />
     <Compile Include="Ninject\MultistageModule.cs" />
     <Compile Include="Test.xaml.cs">
       <DependentUpon>Test.xaml</DependentUpon>

@@ -12,19 +12,27 @@
              d:DesignHeight="450" d:DesignWidth="800" BorderBrush="{DynamicResource ButtonHighlightColor}" BorderThickness="2" Margin="4"
              d:DataContext="{d:DesignInstance impl:MultistageAirdragViewModel}">
     <Grid>
-        <StackPanel>
-            <Label Content="AIRDRAG" HorizontalAlignment="Stretch" Background="{DynamicResource ButtonHighlightColor}" Style="{DynamicResource LabelStyle1}"/>
-            <customControlsMultistage:FilePicker Text="{Binding AirdragFilePath}" Command="{Binding LoadAirdragFileCommand}"/>
-            <StackPanel HorizontalAlignment="Stretch" Margin="4">
-                <Label>Consolidated Airdrag Data</Label>
-                <customControlsMultistage:LabledTextBoxMultistage Content="{Binding ConsolidatedAirdragData.Manufacturer, Mode=OneWay}" ReadOnly="True"/>
-                <customControlsMultistage:LabledTextBoxMultistage Content="{Binding ConsolidatedAirdragData.Model, Mode=OneWay}" ReadOnly="True"/>
-                <customControlsMultistage:LabledTextBoxMultistage Content="{Binding ConsolidatedAirdragData.AirDragArea, Mode=OneWay}" ReadOnly="True"/>
-                <Separator/>
-                <Label>Data from File</Label>
-                <ContentControl Margin="0" Padding="0" Content="{Binding AirDragViewModel}"/>
-            </StackPanel>
-        </StackPanel>
-
+        <ScrollViewer>
+            <DockPanel>
+                <StackPanel DockPanel.Dock="Top">
+                    <Label Content="AIRDRAG" HorizontalAlignment="Stretch" Background="{DynamicResource ButtonHighlightColor}" Style="{DynamicResource LabelStyle1}"/>
+                    <customControlsMultistage:FilePicker Text="{Binding AirdragFilePath}" Command="{Binding LoadAirdragFileCommand}"/>
+                    <StackPanel HorizontalAlignment="Stretch" Margin="4">
+                        <Label Style="{DynamicResource LabelStyle1}">Consolidated Airdrag Data</Label>
+                        <customControlsMultistage:LabledTextBoxMultistage Content="{Binding ConsolidatedAirdragData.Manufacturer, Mode=OneWay}" ReadOnly="True"/>
+                        <customControlsMultistage:LabledTextBoxMultistage Content="{Binding ConsolidatedAirdragData.Model, Mode=OneWay}" ReadOnly="True"/>
+                        <customControlsMultistage:LabledTextBoxMultistage Content="{Binding ConsolidatedAirdragData.AirDragArea, Mode=OneWay}" ReadOnly="True"/>
+                        <Label Style="{DynamicResource LabelStyle1}">Data from File</Label>
+                        <ContentControl Content="{Binding AirDragViewModel}">
+                            <ContentControl.ContentTemplate>
+                                <DataTemplate>
+                                    <local:AirDragView_v2_8 DataContext="{Binding }"/>
+                                </DataTemplate>
+                            </ContentControl.ContentTemplate>
+                        </ContentControl>
+                    </StackPanel>
+                </StackPanel>
+            </DockPanel>
+        </ScrollViewer>
     </Grid>
 </UserControl>

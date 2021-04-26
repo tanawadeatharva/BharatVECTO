@@ -15,7 +15,7 @@ namespace VECTO3GUI2020.Helper.Converter
 		private SI _si;
 		private ConvertedSI _convertedSI;
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
-        {
+		{
 			if (value == null) {
 				_si = null;
 				_convertedSI = null;
@@ -28,7 +28,7 @@ namespace VECTO3GUI2020.Helper.Converter
 
 			if (value is ConvertedSI convertedSI) {
 				_convertedSI = convertedSI;
-				return convertedSI.ToOutputFormat(showUnit: false, decimals: 1);
+				return convertedSI.ToOutputFormat(showUnit: false, decimals:0);
 			}
 
 			return value?.ToString();

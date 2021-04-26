@@ -68,6 +68,13 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 		} 
 
 		public DigestData Signature => throw new NotImplementedException();
+		public void SetInputData(IVehicleDeclarationInputData vehicleInputData)
+		{
+			_vehicleViewModel.SetVehicleInputData(vehicleInputData);
+			_airDragEditViewModel.SetAirdragInputData(vehicleInputData.Components.AirdragInputData);
+			_auxiliariesViewModel.SetAuxiliariesInputData(vehicleInputData.Components.BusAuxiliaries);
+
+		}
 
 
 		public ManufacturingStageViewModel_v0_1(IManufacturingStageInputData consolidatedManufacturingStageInputData, IMultiStageViewModelFactory viewModelFactory)
@@ -88,16 +95,16 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 			Components.Add(VehicleViewModel.Name, VehicleViewModel as IViewModelBase);
 
 
-			var airDragEditViewModel = viewModelFactory.GetMultistageAirdragViewModel(_consolidatedManufacturingStageInputData.Vehicle.Components.AirdragInputData);
-			Components.Add("Airdrag", airDragEditViewModel as IViewModelBase);
+			_airDragEditViewModel = viewModelFactory.GetMultistageAirdragViewModel(_consolidatedManufacturingStageInputData.Vehicle.Components.AirdragInputData);
+			Components.Add("Airdrag", _airDragEditViewModel as IViewModelBase);
 
-			var auxiliariesViewModel =
+			_auxiliariesViewModel =
 				viewModelFactory.GetAuxiliariesViewModel(consolidatedManufacturingStageInputData.Vehicle.Components
 					.BusAuxiliaries);
-			Components.Add("Auxiliaries", auxiliariesViewModel as IViewModelBase);
+			Components.Add("Auxiliaries", _auxiliariesViewModel as IViewModelBase);
 
-			VehicleViewModel.SetAirdragData(airDragEditViewModel);
-			VehicleViewModel.SetBusAuxiliaries(auxiliariesViewModel);
+			VehicleViewModel.SetAirdragData(_airDragEditViewModel);
+			VehicleViewModel.SetBusAuxiliaries(_auxiliariesViewModel);
 		}
 
 
@@ -109,6 +116,8 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 		#region Commands
 
 		private ICommand _switchComponentViewCommand;
+		private readonly IMultistageAirdragViewModel _airDragEditViewModel;
+		private readonly IMultistageAuxiliariesViewModel _auxiliariesViewModel;
 
 		public ICommand SwitchComponentViewCommand
 		{
@@ -138,9 +147,6 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 
 	public interface IManufacturingStageViewModel : IManufacturingStageInputData
 	{
-
-
-
-		
+		void SetInputData(IVehicleDeclarationInputData vehicleInputData);
 	}
 }

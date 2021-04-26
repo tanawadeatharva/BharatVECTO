@@ -37,6 +37,8 @@ namespace VECTO3GUI2020.Ninject
 
 			Bind<IMultistageAuxiliariesViewModel>().To<MultistageAuxiliariesViewModel>().
 				NamedLikeFactoryMethod((IMultiStageViewModelFactory f) => f.GetAuxiliariesViewModel(null));
+
+			Bind<IMultistageDependencies>().To<MultistageLazyDependencies>();
 		}
 	}
 }

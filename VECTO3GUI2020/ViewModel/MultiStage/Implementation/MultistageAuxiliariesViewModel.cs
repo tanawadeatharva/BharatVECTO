@@ -17,7 +17,7 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 		IPneumaticConsumersDeclarationData,
 		IHVACBusAuxiliariesDeclarationData
 	{
-
+		void SetAuxiliariesInputData(IBusAuxiliariesDeclarationData componentsAuxiliaryInputData);
 	}
 
 
@@ -34,6 +34,7 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 		}
 
 		#region HVAV
+
 		private bool _heatPumpGroupEditingEnabled;
 		private BusHVACSystemConfiguration? _systemConfiguration;
 		private HeatPumpType? _heatPumpTypeDriverCompartment;
@@ -81,25 +82,25 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 		public bool? SeparateAirDistributionDucts
 		{
 			get => _separateAirDistributionDucts;
-			set => SetProperty(ref _separateAirDistributionDucts , value);
+			set => SetProperty(ref _separateAirDistributionDucts, value);
 		}
 
 		public bool? WaterElectricHeater
 		{
 			get => _waterElectricHeater;
-			set => SetProperty(ref _waterElectricHeater , value);
+			set => SetProperty(ref _waterElectricHeater, value);
 		}
 
 		public bool? AirElectricHeater
 		{
 			get => _airElectricHeater;
-			set => SetProperty(ref _airElectricHeater , value);
+			set => SetProperty(ref _airElectricHeater, value);
 		}
 
 		public bool? OtherHeatingTechnology
 		{
 			get => _otherHeatingTechnology;
-			set => SetProperty(ref _otherHeatingTechnology , value);
+			set => SetProperty(ref _otherHeatingTechnology, value);
 		}
 
 		public bool HeatPumpGroupEditingEnabled
@@ -111,31 +112,31 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 		public BusHVACSystemConfiguration? SystemConfiguration
 		{
 			get => _systemConfiguration;
-			set => SetProperty(ref _systemConfiguration , value);
+			set => SetProperty(ref _systemConfiguration, value);
 		}
 
 		public HeatPumpType? HeatPumpTypeDriverCompartment
 		{
 			get => _heatPumpTypeDriverCompartment;
-			set => SetProperty(ref _heatPumpTypeDriverCompartment , value);
+			set => SetProperty(ref _heatPumpTypeDriverCompartment, value);
 		}
 
 		public HeatPumpMode? HeatPumpModeDriverCompartment
 		{
 			get => _heatPumpModeDriverCompartment;
-			set => SetProperty(ref _heatPumpModeDriverCompartment , value);
+			set => SetProperty(ref _heatPumpModeDriverCompartment, value);
 		}
 
 		public HeatPumpType? HeatPumpTypePassengerCompartment
 		{
 			get => _heatPumpTypePassengerCompartment;
-			set => SetProperty(ref _heatPumpTypePassengerCompartment , value);
+			set => SetProperty(ref _heatPumpTypePassengerCompartment, value);
 		}
 
 		public HeatPumpMode? HeatPumpModePassengerCompartment
 		{
 			get => _heatPumpModePassengerCompartment;
-			set => SetProperty(ref _heatPumpModePassengerCompartment , value);
+			set => SetProperty(ref _heatPumpModePassengerCompartment, value);
 		}
 
 
@@ -179,7 +180,9 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 
 
 		#endregion
+
 		#region Implementation of interfaces;
+
 		private XmlNode _xmlSource;
 		private string _fanTechnology;
 		private IList<string> _steeringPumpTechnology;
@@ -299,7 +302,7 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 			set => _smartRegeneration = value;
 		}
 
-		
+
 		public ConsumerTechnology AirsuspensionControl
 		{
 			get => _airsuspensionControl;
@@ -312,9 +315,9 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 			set => _adBlueDosing = value;
 		}
 
-	
 
-		
+
+
 		public bool? AdjustableCoolantThermostat
 		{
 			get => _adjustableCoolantThermostat;
@@ -328,8 +331,31 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 		}
 
 
-		#endregion
 
+		#endregion
+		public void SetAuxiliariesInputData(IBusAuxiliariesDeclarationData componentsAuxiliaryInputData)
+		{
+			_heatPumpGroupEditingEnabled = componentsAuxiliaryInputData.HVACAux != null;
+			_systemConfiguration = componentsAuxiliaryInputData.HVACAux?.SystemConfiguration;
+			_heatPumpTypeDriverCompartment = componentsAuxiliaryInputData.HVACAux?.HeatPumpTypeDriverCompartment;
+			_heatPumpModeDriverCompartment = componentsAuxiliaryInputData.HVACAux?.HeatPumpModeDriverCompartment;
+			_heatPumpTypePassengerCompartment = componentsAuxiliaryInputData.HVACAux?.HeatPumpTypePassengerCompartment;
+			_heatPumpModePassengerCompartment = componentsAuxiliaryInputData.HVACAux?.HeatPumpModePassengerCompartment;
+
+			_auxHeaterPower = componentsAuxiliaryInputData.HVACAux?.AuxHeaterPower;
+			_doubleGlazing = componentsAuxiliaryInputData.HVACAux?.DoubleGlazing;
+			_adjustableAuxiliaryHeater = componentsAuxiliaryInputData.HVACAux?.AdjustableAuxiliaryHeater;
+			_separateAirDistributionDucts = componentsAuxiliaryInputData.HVACAux?.SeparateAirDistributionDucts;
+			_waterElectricHeater = componentsAuxiliaryInputData.HVACAux?.WaterElectricHeater;
+			_airElectricHeater = componentsAuxiliaryInputData.HVACAux?.AirElectricHeater;
+			_otherHeatingTechnology = componentsAuxiliaryInputData.HVACAux?.OtherHeatingTechnology;
+
+			_interiorLightsLed = componentsAuxiliaryInputData.ElectricConsumers?.InteriorLightsLED;
+			_dayrunninglightsLed = componentsAuxiliaryInputData.ElectricConsumers?.DayrunninglightsLED;
+			_positionlightsLed = componentsAuxiliaryInputData.ElectricConsumers?.PositionlightsLED;
+			_headlightsLed = componentsAuxiliaryInputData.ElectricConsumers?.HeadlightsLED;
+			_brakelightsLed = componentsAuxiliaryInputData.ElectricConsumers?.BrakelightsLED;
+		}
 
 		public MultistageAuxiliariesViewModel(IBusAuxiliariesDeclarationData consolidatedAuxiliariesInputData)
 		{

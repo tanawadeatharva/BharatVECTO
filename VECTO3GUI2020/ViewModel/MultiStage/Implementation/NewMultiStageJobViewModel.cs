@@ -46,7 +46,7 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 			_inputDataReader = inputDataReader;
 			_dialogHelper = dialogHelper;
 			_vmFactory = vmFactory;
-			Title = "New Multistage file";
+			Title = "New Multistage File";
 			VifPath = "Select VIF File";
 		}
 
@@ -63,6 +63,9 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 		{
 			
 			var fileName = _dialogHelper.OpenXMLFileDialog(_settings.DefaultFilePath);
+			if (fileName == null) {
+				return;
+			}
 			IMultistageBusInputDataProvider inputDataProvider = null;
 			try {
 				inputDataProvider = _inputDataReader.Create(fileName) as IMultistageBusInputDataProvider;

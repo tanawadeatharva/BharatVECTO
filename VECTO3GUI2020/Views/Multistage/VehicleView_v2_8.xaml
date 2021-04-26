@@ -13,68 +13,144 @@
             <StackPanel>
                 <Label Content="VEHICLE DATA" HorizontalAlignment="Stretch" FontSize="15" VerticalAlignment="Stretch"
                        Style="{DynamicResource LabelStyle1}"/>
-                <!--Background="{Binding Path=BorderBrush,
-                   RelativeSource={RelativeSource Mode=FindAncestor,
-                   AncestorType=Window}}"/>-->
-                <custom:MultiStageParameter Optional="False" Content="{Binding Manufacturer}"/>
-                <custom:MultiStageParameter Optional="False" Content="{Binding ManufacturerAddress}"/>
-                <custom:MultiStageParameter Optional="False" Content="{Binding VIN}"/>
 
                 <custom:MultiStageParameter 
-            PreviousContent="{Binding ConsolidatedVehicleData.Model}" 
-            Content="{Binding Model}"/>
-                <Separator/>
-                <custom:MultiStageParameter EditingEnabled="{Binding 
-            MeasurementsGroupEditingEnabled}" 
-                                    PreviousContent="{Binding ConsolidatedHeightInMm}"
-                                    Content="{Binding HeightInMm}"
-                                   DummyContent="{Binding Source={StaticResource milimeterDummy}}"/>
-                <custom:MultiStageParameter EditingEnabled="{Binding 
-            MeasurementsGroupEditingEnabled}" 
-                                    PreviousContent="{Binding ConsolidatedWidthInMm}"
-                                    Content="{Binding WidthInMm}"
-                                    HideCheckBox="True"
-                                    DummyContent="{Binding Source={StaticResource milimeterDummy}}"/>
-                <custom:MultiStageParameter EditingEnabled="{Binding 
-            MeasurementsGroupEditingEnabled}" 
-                                    PreviousContent="{Binding ConsolidatedLengthInMm}"
-                                    Content="{Binding LengthInMm}"
-                                    HideCheckBox="True"
-                                    DummyContent="{Binding Source={StaticResource milimeterDummy}}"/>
-                <Separator/>
-                <custom:MultiStageParameter EditingEnabled="{Binding 
-            NumberOfPassengersEditingEnabled}" 
-                                    PreviousContent="{Binding ConsolidatedVehicleData.NumberOfPassengersUpperDeck}"
-                                    Content="{Binding NumberOfPassengersUpperDeck}"/>
-                <custom:MultiStageParameter EditingEnabled="{Binding 
-            NumberOfPassengersEditingEnabled}" 
-                                    PreviousContent="{Binding ConsolidatedVehicleData.NumberOfPassengersLowerDeck}"
-                                    Content="{Binding NumberOfPassengersLowerDeck}"
-                                    HideCheckBox="True"/>
+                    Optional="False" 
+                    Content="{Binding Manufacturer}"/>
+                <custom:MultiStageParameter 
+                    Optional="False"
+                    Content="{Binding ManufacturerAddress}"/>
+                <custom:MultiStageParameter 
+                    Optional="False" 
+                    Content="{Binding VIN}"/>
+
+                <custom:MultiStageParameter 
+                    PreviousContent="{Binding ConsolidatedVehicleData.Model}" 
+                    Content="{Binding Model}"/>
+               
+                <custom:MultiStageParameter
+                    LabelText="Date"
+                    Content="Date - todo"/>
+
+                <custom:MultiStageParameter 
+                    PreviousContent="{Binding ConsolidatedVehicleData.LegislativeClass}"
+                    Content="{Binding LegislativeClass}" 
+                    Mode="COMBOBOX" />
+
+                <custom:MultiStageParameter 
+                    PreviousContent="{Binding ConsolidatedVehicleData.CurbMassChassis}"
+                    Content="{Binding CurbMassChassis}"/>
+
+                <custom:MultiStageParameter 
+                    PreviousContent="{Binding ConsolidatedVehicleData.GrossVehicleMassRating}"
+                    Content="{Binding GrossVehicleMassRating}"/>
+
+
+                <custom:MultiStageParameter 
+                    EditingEnabled="{Binding AirdragModifiedMultistageEditingEnabled}"
+                    PreviousContent="{Binding ConsolidatedAirdragModifiedEnum}"
+                    Content="{Binding AirdragModifiedEnum}" 
+                    Mode="COMBOBOX"/>
+
+                <custom:MultiStageParameter 
+                    PreviousContent="{Binding ConsolidatedVehicleData.TankSystem}"
+                    Content="{Binding TankSystem}" 
+                    Mode="COMBOBOX" />
+
+                <custom:MultiStageParameter 
+                    PreviousContent="{Binding ConsolidatedVehicleData.RegisteredClass}"
+                    Content="{Binding RegisteredClass}" 
+                    Mode="COMBOBOX" />
 
                 <Separator/>
-                <custom:MultiStageParameter EditingEnabled="{Binding AirdragModifiedMultistageEditingEnabled}"
-                    PreviousContent="{Binding ConsolidatedVehicleData.AirdragModifiedMultistage}"
-                                    Content="{Binding AirdragModifiedMultistage}" Mode="CHECKBOX"/>
+                <custom:MultiStageParameter 
+                    EditingEnabled="{Binding NumberOfPassengersEditingEnabled}" 
+                    PreviousContent="{Binding ConsolidatedVehicleData.NumberOfPassengersUpperDeck}"
+                    Content="{Binding NumberOfPassengersUpperDeck}"/>
+                <custom:MultiStageParameter 
+                    EditingEnabled="{Binding NumberOfPassengersEditingEnabled}" 
+                    PreviousContent="{Binding ConsolidatedVehicleData.NumberOfPassengersLowerDeck}"
+                    Content="{Binding NumberOfPassengersLowerDeck}"
+                    ShowCheckBox="False"/>
+                <Separator/>
+                <custom:MultiStageParameter 
+                    PreviousContent="{Binding ConsolidatedVehicleData.VehicleCode}"
+                    Content="{Binding VehicleCode}" 
+                    Mode="COMBOBOX"
+                    />
 
-                <custom:MultiStageParameter PreviousContent="{Binding ConsolidatedVehicleData.GrossVehicleMassRating}"
-                                    Content="{Binding GrossVehicleMassRating}"/>
-                <custom:MultiStageParameter PreviousContent="{Binding ConsolidatedVehicleData.DoorDriveTechnology}"
-                                    Content="{Binding DoorDriveTechnology}" Mode="COMBOBOX" />
-                <custom:MultiStageParameter PreviousContent="{Binding ConsolidatedVehicleData.LegislativeClass}"
-                                    Content="{Binding LegislativeClass}" Mode="COMBOBOX" />
-                <custom:MultiStageParameter PreviousContent="{Binding ConsolidatedVehicleData.RegisteredClass}"
-                                    Content="{Binding RegisteredClass}" Mode="COMBOBOX" />
-                <custom:MultiStageParameter PreviousContent="{Binding ConsolidatedVehicleData.VehicleCode}"
-                                    Content="{Binding VehicleCode}" Mode="COMBOBOX" />
-                <custom:MultiStageParameter PreviousContent="{Binding ConsolidatedVehicleData.LowEntry}"
-                                    Content="{Binding LowEntry}" Mode="CHECKBOX"/>
-                <custom:MultiStageParameter PreviousContent="{Binding ConsolidatedVehicleData.EntranceHeight}"
-                                    Content="{Binding EntranceHeight}" />
-                <custom:MultiStageParameter PreviousContent="{Binding ConsolidatedVehicleData.TankSystem}"
-                                    Content="{Binding TankSystem}" Mode="COMBOBOX" />
-                <custom:MultiStageParameter PreviousContent="{Binding ConsolidatedVehicleData.VehicleDeclarationType}"
-                                    Content="{Binding VehicleDeclarationType}" Mode="COMBOBOX" />
+                <custom:MultiStageParameter 
+                    PreviousContent="{Binding ConsolidatedVehicleData.LowEntry}"
+                    Content="{Binding LowEntry}" 
+                    Mode="CHECKBOX"
+                    />
+
+                <Separator/>
+                <custom:MultiStageParameter 
+                    EditingEnabled="{Binding 
+        MeasurementsGroupEditingEnabled}" 
+                    PreviousContent="{Binding ConsolidatedHeightInMm}"
+                    Content="{Binding HeightInMm}"
+                    DummyContent="{Binding Source={StaticResource milimeterDummy}}"/>
+                <custom:MultiStageParameter 
+                    EditingEnabled="{Binding MeasurementsGroupEditingEnabled}" 
+                    PreviousContent="{Binding ConsolidatedWidthInMm}"
+                    Content="{Binding WidthInMm}"
+                    ShowCheckBox="False"
+                    DummyContent="{Binding Source={StaticResource milimeterDummy}}"/>
+                <custom:MultiStageParameter 
+                    EditingEnabled="{Binding MeasurementsGroupEditingEnabled}" 
+                    PreviousContent="{Binding ConsolidatedLengthInMm}"
+                    Content="{Binding LengthInMm}"
+                    ShowCheckBox="False"
+                    DummyContent="{Binding Source={StaticResource milimeterDummy}}"/>
+
+                <custom:MultiStageParameter 
+                    EditingEnabled="{Binding MeasurementsGroupEditingEnabled}"
+                    PreviousContent="{Binding ConsolidatedEntranceHeightInMm}"
+                    Content="{Binding EntranceHeightInMm}" 
+                    ShowCheckBox="False"
+                    DummyContent="{Binding Source={StaticResource milimeterDummy}}"/>
+
+                <Separator/>
+
+
+                <custom:MultiStageParameter 
+                    PreviousContent="{Binding ConsolidatedVehicleData.DoorDriveTechnology}"
+                                            
+                    Content="{Binding DoorDriveTechnology}" Mode="COMBOBOX" />
+
+
+                <custom:MultiStageParameter 
+                    PreviousContent="{Binding ConsolidatedVehicleData.VehicleDeclarationType}"
+                                    
+                    Content="{Binding VehicleDeclarationType}" Mode="COMBOBOX" />
+
+                <Label Content="ADAS" Style="{DynamicResource LabelStyle1}"/>
+                <custom:MultiStageParameter 
+                    EditingEnabled="{Binding AdasEditingEnabled}"
+                    PreviousContent="{Binding ConsolidatedVehicleData.ADAS.EngineStopStart}"
+                    Content="{Binding EngineStopStartNullable}"
+                    
+                    Mode="CHECKBOX"/>
+                <custom:MultiStageParameter 
+                    EditingEnabled="{Binding AdasEditingEnabled}"
+                    PreviousContent="{Binding ConsolidatedVehicleData.ADAS.EcoRoll}"
+                    Content="{Binding EcoRollTypeNullable}"
+                    ShowCheckBox="False"
+                    Mode="COMBOBOX"/>
+                <custom:MultiStageParameter 
+                    EditingEnabled="{Binding AdasEditingEnabled}"
+                    PreviousContent="{Binding ConsolidatedVehicleData.ADAS.PredictiveCruiseControl}"
+                    Content="{Binding PredictiveCruiseControlNullable}"
+                    ShowCheckBox="False"
+                    Mode="COMBOBOX"/>
+                <custom:MultiStageParameter
+                    EditingEnabled="{Binding AdasEditingEnabled}"
+                    PreviousContent="{Binding ConsolidatedVehicleData.ADAS.ATEcoRollReleaseLockupClutch}"
+                    Content="{Binding ATEcoRollReleaseLockupClutch}"
+                    ShowCheckBox="False"
+                    Mode="CHECKBOX"/>
             </StackPanel>
         </DockPanel>
         </ScrollViewer>

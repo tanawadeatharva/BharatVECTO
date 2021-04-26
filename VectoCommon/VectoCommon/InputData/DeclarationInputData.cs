@@ -255,8 +255,11 @@ namespace TUGraz.VectoCommon.InputData
 
 	public enum PredictiveCruiseControlType
 	{
+		[GuiLabel("None")]
 		None,
+		[GuiLabel("Option I + II")]
 		Option_1_2,
+		[GuiLabel("Option I + II + III")]
 		Option_1_2_3
 	}
 
@@ -288,8 +291,11 @@ namespace TUGraz.VectoCommon.InputData
 
 	public enum EcoRollType
 	{
+		[GuiLabel("None")]
 		None,
+		[GuiLabel("Without Engine Stop")]
 		WithoutEngineStop,
+		[GuiLabel("With Engine Stop")]
 		WithEngineStop
 	}
 
@@ -947,7 +953,9 @@ namespace TUGraz.VectoCommon.InputData
 
 	public enum VehicleDeclarationType
 	{
+		[GuiLabel("Interim")]
 		interim,
+		[GuiLabel("Final")]
 		final
 	}
 

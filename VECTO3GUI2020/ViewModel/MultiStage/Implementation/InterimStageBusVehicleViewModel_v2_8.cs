@@ -18,20 +18,58 @@ using VECTO3GUI2020.ViewModel.Interfaces.JobEdit.Vehicle;
 using VECTO3GUI2020.ViewModel.Interfaces.JobEdit.Vehicle.Components;
 using VECTO3GUI2020.ViewModel.MultiStage.Implementation;
 using VECTO3GUI2020.ViewModel.MultiStage.Interfaces;
+using Convert = System.Convert;
 
 namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 {
+	public enum AirdragModifiedEnum
+	{
+		[GuiLabel("Unknown")]
+		UNKNOWN = -1,
+		[GuiLabel("True")]
+		TRUE = 1,
+		[GuiLabel("False")]
+		FALSE = 0,
+
+	}
+
+	public static class AirdragModifiedEnumHelper
+	{
+		public static AirdragModifiedEnum toAirdragModifiedEnum(this bool? nullableBool)
+		{
+			if (nullableBool.HasValue) {
+				return nullableBool.Value == true ? AirdragModifiedEnum.TRUE : AirdragModifiedEnum.FALSE;
+
+			}
+			return AirdragModifiedEnum.UNKNOWN;
+		}
+
+		public static bool? toNullableBool(this AirdragModifiedEnum airdragModified)
+		{
+			switch (airdragModified) {
+				case AirdragModifiedEnum.TRUE:
+					return true;
+				case AirdragModifiedEnum.FALSE:
+					return false;
+				default:
+					return null;
+			}
+		}
+	}
 
 	public interface IMultistageVehicleViewModel : IVehicleViewModel
 	{
 		void SetAirdragData(IAirdragDeclarationInputData airdragData);
 		void SetBusAuxiliaries(IBusAuxiliariesDeclarationData busAuxData);
+		void SetVehicleInputData(IVehicleDeclarationInputData vehicleInputData);
 	}
 
 
 	class DeclarationInterimStageBusVehicleViewModel_v2_8 : ViewModelBase, IMultistageVehicleViewModel,
-		IVehicleComponentsDeclaration
+		IVehicleComponentsDeclaration, IAdvancedDriverAssistantSystemDeclarationInputData
 	{
+
+
 		public static readonly string INPUTPROVIDERTYPE =
 			typeof(XMLDeclarationInterimStageBusDataProviderV28).ToString();
 
@@ -107,7 +145,7 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 			set { SetProperty(ref _manufacturerAddress, value); }
 		}
 
-
+		#region Measurements
 		public bool MeasurementsGroupEditingEnabled
 		{
 			get { return _measurementsGroupEditingEnabled; }
@@ -170,7 +208,26 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 			set { SetProperty(ref _width, value); }
 		}
 
+		public ConvertedSI ConsolidatedEntranceHeightInMm
+		{
+			get { return ConsolidatedVehicleData.EntranceHeight?.ConvertToMilliMeter(); }
+			set { throw new NotImplementedException(); }
+		}
 
+		public ConvertedSI EntranceHeightInMm
+		{
+			get { return EntranceHeight?.ConvertToMilliMeter(); }
+			set { EntranceHeight = value?.ConvertToMeter(); }
+		}
+
+
+		public Meter EntranceHeight
+		{
+			get => _entranceHeight;
+			set => SetProperty(ref _entranceHeight, value);
+		}
+
+		#endregion
 		public Kilogram CurbMassChassis //Corrected Actual Mass
 		{
 			get { return _curbMassChassis; }
@@ -221,12 +278,35 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 			set => SetProperty(ref _legislativeClass, value);
 		}
 
-		public bool? AirdragModifiedMultistage
+        #region AirdragModified
+		
+
+        public AirdragModifiedEnum AirdragModifiedEnum
+		{
+			get => _airdragModifiedMultistage.toAirdragModifiedEnum();
+			set {
+				if (value == AirdragModifiedEnum.UNKNOWN && AirdragModifiedMultistageEditingEnabled) {
+					throw new ArgumentException();
+				}
+				AirdragModifiedMultistage = value.toNullableBool();
+			} 
+		
+
+		}
+
+        public AirdragModifiedEnum ConsolidatedAirdragModifiedEnum
+		{
+			get => _consolidatedVehicleData.AirdragModifiedMultistage.toAirdragModifiedEnum();
+			set => throw new NotImplementedException();
+		}
+
+        public bool? AirdragModifiedMultistage
 		{
 			get => _airdragModifiedMultistage;
 			set => SetProperty(ref _airdragModifiedMultistage, value);
 		}
 
+		#endregion;
 		public bool AirdragModifiedMultistageEditingEnabled
 		{
 			get
@@ -259,12 +339,9 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 			set => SetProperty(ref _lowEntry, value);
 		}
 
+		
 
-		public Meter EntranceHeight
-		{
-			get => _entranceHeight;
-			set => SetProperty(ref _entranceHeight, value);
-		}
+
 
 		public VehicleDeclarationType VehicleDeclarationType
 		{
@@ -280,6 +357,14 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 		private VehicleDeclarationType _vehicleDeclarationType;
 		private IAirdragDeclarationInputData _airdragInputData;
 		private IBusAuxiliariesDeclarationData _busAuxiliaries;
+		private PredictiveCruiseControlType _predictiveCruiseControl;
+		private bool? _atEcoRollReleaseLockupClutch;
+		private EcoRollType _ecoRoll;
+		private bool _engineStopStart;
+		private bool _adasEditingEnabled;
+		private bool? _engineStopStartNullable;
+		private EcoRollType? _ecoRollTypeNullable;
+		private PredictiveCruiseControlType? _predictiveCruiseControlNullable;
 
 
 		#region implementation of IVehicleComponentsDeclaration
@@ -346,6 +431,60 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 			get { return _consolidatedVehicleData; }
 			set { SetProperty(ref _consolidatedVehicleData, value); }
 		}
+
+		#region implementation of IAdvancedDriverAssistantSystemDeclarationInputData
+		public IAdvancedDriverAssistantSystemDeclarationInputData ADAS
+		{
+			get { return _adasEditingEnabled ? this : null; }
+		}
+
+		public bool AdasEditingEnabled
+		{
+			get => _adasEditingEnabled;
+			set => SetProperty(ref _adasEditingEnabled, value);
+		}
+
+		public bool? EngineStopStartNullable
+		{
+			get => _engineStopStartNullable;
+			set => SetProperty(ref _engineStopStartNullable, value);
+		}
+
+		public bool EngineStopStart
+		{
+			get => _engineStopStartNullable.HasValue ? _engineStopStartNullable.Value : false;
+			
+		}
+
+		public EcoRollType? EcoRollTypeNullable
+		{
+			get => _ecoRollTypeNullable;
+			set => SetProperty(ref _ecoRollTypeNullable, value);
+		}
+
+		public EcoRollType EcoRoll
+		{
+			get => _ecoRollTypeNullable.HasValue ? _ecoRollTypeNullable.Value : EcoRollType.None;
+		}
+
+		public PredictiveCruiseControlType? PredictiveCruiseControlNullable
+		{
+			get => _predictiveCruiseControlNullable;
+			set => SetProperty(ref _predictiveCruiseControlNullable, value);
+		}
+
+		public PredictiveCruiseControlType PredictiveCruiseControl
+		{
+			get => _predictiveCruiseControlNullable.HasValue ? _predictiveCruiseControlNullable.Value : PredictiveCruiseControlType.None;
+		}
+
+		public bool? ATEcoRollReleaseLockupClutch
+		{
+			get => _atEcoRollReleaseLockupClutch;
+			set => SetProperty(ref _atEcoRollReleaseLockupClutch, value);
+		}
+
+		#endregion
 
 
 		#region implementation of IVehicleDeclarationInputData;
@@ -425,10 +564,7 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 
 
 
-		public IAdvancedDriverAssistantSystemDeclarationInputData ADAS
-		{
-			get { throw new NotImplementedException(); }
-		}
+
 
 		public bool ZeroEmissionVehicle
 		{
@@ -477,6 +613,7 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 			get { throw new NotImplementedException(); }
 		}
 
+		
 		public XmlNode XMLSource
 		{
 			get { throw new NotImplementedException(); }
@@ -512,6 +649,35 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 		public void SetBusAuxiliaries(IBusAuxiliariesDeclarationData busAuxData)
 		{
 			_busAuxiliaries = busAuxData;
+		}
+
+		public void SetVehicleInputData(IVehicleDeclarationInputData vehicleInputData)
+		{
+			Manufacturer = vehicleInputData.Manufacturer;
+			ManufacturerAddress = vehicleInputData.ManufacturerAddress;
+            VIN = vehicleInputData.VIN;
+			Model = vehicleInputData.Model;
+			LegislativeClass = vehicleInputData.LegislativeClass;
+            CurbMassChassis = vehicleInputData.CurbMassChassis;
+			GrossVehicleMassRating = vehicleInputData.GrossVehicleMassRating;
+			AirdragModifiedMultistage = vehicleInputData.AirdragModifiedMultistage;
+			TankSystem = vehicleInputData.TankSystem;
+			RegisteredClass = vehicleInputData.RegisteredClass;
+			NumberOfPassengersUpperDeck = vehicleInputData.NumberOfPassengersUpperDeck;
+			NumberOfPassengersLowerDeck = vehicleInputData.NumberOfPassengersLowerDeck;
+			VehicleCode = vehicleInputData.VehicleCode;
+			LowEntry = vehicleInputData.LowEntry;
+			Height = vehicleInputData.Height;
+			Width = vehicleInputData.Width;
+			Length = vehicleInputData.Length;
+			EntranceHeight = vehicleInputData.EntranceHeight;
+			DoorDriveTechnology = vehicleInputData.DoorDriveTechnology;
+			VehicleDeclarationType = vehicleInputData.VehicleDeclarationType;
+			AdasEditingEnabled = vehicleInputData.ADAS != null;
+			EngineStopStartNullable = vehicleInputData.ADAS?.EngineStopStart;
+			EcoRollTypeNullable = vehicleInputData.ADAS?.EcoRoll;
+			PredictiveCruiseControlNullable = vehicleInputData.ADAS?.PredictiveCruiseControl;
+			ATEcoRollReleaseLockupClutch = vehicleInputData.ADAS?.ATEcoRollReleaseLockupClutch;
 		}
 	}
 }
