@@ -78,6 +78,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			Gearbox.SwitchToNeutral = strategySettings.GearboxInNeutral;
 			Engine.CombustionEngineOn = strategySettings.CombustionEngineOn;
 			_electricMotorTorque = strategySettings.MechanicalAssistPower;
+			if (DataBus.VehicleInfo.VehicleStopped && strategySettings.NextGear.Gear != 0) {
+				_shiftStrategy.SetNextGear(strategySettings.NextGear);
+			}
 			//if (strategySettings.ShiftRequired) {
 			//	_shiftStrategy.SetNextGear(strategySettings.NextGear);
 			//}
@@ -323,7 +326,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			protected HybridController _controller;
 
 
-			protected readonly GearshiftPosition MaxStartGear;
+			//protected readonly GearshiftPosition MaxStartGear;
 			protected GearshiftPosition _nextGear { get; set; }
 
 			protected readonly GearList GearList;
@@ -377,6 +380,18 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 				return _controller.ShiftRequired;
 			}
+
+			#region Overrides of BaseShiftStrategy
+
+			public override void Request(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity)
+			{
+				base.Request(absTime, dt, outTorque, outAngularVelocity);
+				if (DataBus.DriverInfo.DrivingAction == DrivingAction.Halt) {
+					_nextGear = MaxStartGear;
+				}
+			}
+
+			#endregion
 
 			public override GearshiftPosition InitGear(Second absTime, Second dt, NewtonMeter outTorque,
 				PerSecond outAngularVelocity)

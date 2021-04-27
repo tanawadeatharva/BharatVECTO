@@ -50,6 +50,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		public PEVAMTShiftStrategy(IVehicleContainer dataBus)
 		{
+			MaxStartGear = GearList.Reverse().First();
 			var runData = dataBus.RunData;
 			if (runData.VehicleData == null) {
 				return;
@@ -655,6 +656,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 
 		public bool CheckGearshiftRequired { get; protected set; }
+		public GearshiftPosition MaxStartGear { get; }
 
 		public void Request(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity) { }
 
