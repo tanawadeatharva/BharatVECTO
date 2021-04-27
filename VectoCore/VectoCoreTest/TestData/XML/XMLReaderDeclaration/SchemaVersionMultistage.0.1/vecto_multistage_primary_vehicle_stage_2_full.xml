@@ -138,7 +138,7 @@ xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:DeclarationOutput:VehicleInterimFile
 						</Data>
 					</Transmission>
 					<TorqueConverter>
-						<Data xsi:type="vif:TorqueConverterDataPIFType">
+						<Data xsi:type="TorqueConverterDataPIFType">
 							<Manufacturer>Generic Torque Converter</Manufacturer>
 							<Model>Generic Torque Converter Model</Model>
 							<CertificationMethod>Standard values</CertificationMethod>
@@ -153,7 +153,7 @@ xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:DeclarationOutput:VehicleInterimFile
 						</Data>
 					</TorqueConverter>
 					<Angledrive>
-						<Data xsi:type="vif:AngledriveDataPIFType">
+						<Data xsi:type="AngledriveDataPIFType">
 							<Manufacturer>Generic Angledrive</Manufacturer>
 							<Model>Generic Angledrive Model</Model>
 							<CertificationMethod>Standard values</CertificationMethod>
@@ -641,7 +641,7 @@ xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:DeclarationOutput:VehicleInterimFile
 		</Signature>
 	</PrimaryVehicle>
 	<ManufacturingStage stageCount="2">
-		<Data xsi:type="vif:BusManufacturingStageDataType" id="MSTG-1">
+		<Data xsi:type="BusManufacturingStageDataType" id="MSTG-1">
 			<HashPreviousStage>
 			<di:Reference URI="#PIF-d11aff76c5d149948046">
 				<di:Transforms>
