@@ -9,6 +9,35 @@
 	<xs:import namespace="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:DEV:v2.3" schemaLocation="VectoDeclarationDefinitions.2.3_DEV.xsd"/>
 	<xs:import namespace="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:DEV:v2.6" schemaLocation="VectoDeclarationDefinitions.2.6_Buses.xsd"/>
 	<xs:import namespace="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:DEV:v2.8" schemaLocation="VectoDeclarationDefinitions.2.8_Stage.xsd"/>
+	<xs:complexType name="AbstractAxleWheelsComponentPIFType" abstract="true"/>
+	<xs:complexType name="AbstractAxleWheelsDataPIFType" abstract="true"/>
+	<xs:complexType name="AxleWheelsComponentPIFType">
+		<xs:complexContent>
+			<xs:extension base="vif:AbstractAxleWheelsComponentPIFType">
+				<xs:sequence>
+					<xs:element name="Data" type="vif:AbstractAxleWheelsDataPIFType"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="AxleWheelsDataPIFType">
+		<xs:annotation>
+			<xs:documentation>Axles &amp; Wheels Component</xs:documentation>
+		</xs:annotation>
+		<xs:complexContent>
+			<xs:extension base="vif:AbstractAxleWheelsDataPIFType">
+				<xs:sequence>
+					<xs:element name="Axles">
+						<xs:complexType>
+							<xs:sequence>
+								<xs:element name="Axle" type="v2.0:AbstractAxleDataDeclarationType" minOccurs="2" maxOccurs="4"/>
+							</xs:sequence>
+						</xs:complexType>
+					</xs:element>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
 	<xs:element name="VectoOutputMultistage" type="vif:VectoOutputMultistageType">
 		<xs:annotation>
 			<xs:documentation>Comment describing your root element</xs:documentation>
@@ -615,7 +644,7 @@
 					<xs:element name="TorqueConverter" type="vif:TorqueConverterPIFType" minOccurs="0"/>
 					<xs:element name="Angledrive" type="vif:AngledrivePIFType" minOccurs="0"/>
 					<xs:element name="Axlegear" type="vif:AxlegearComponentPIFType"/>
-					<xs:element name="AxleWheels" type="v2.0:AbstractAxleWheelsComponentDeclarationType"/>
+					<xs:element name="AxleWheels" type="vif:AxleWheelsComponentPIFType"/>
 					<xs:element name="Auxiliaries" type="vif:AuxiliaryComponentPIFType"/>
 				</xs:sequence>
 			</xs:extension>

@@ -6,8 +6,7 @@ xmlns:v2.0="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0"
 xmlns:v2.1="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.1" 
 xmlns:v2.3="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:DEV:v2.3" 
 xmlns:v2.6="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:DEV:v2.6" 
-xmlns:v2.8="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:DEV:v2.8" 
-xmlns:vif="urn:tugraz:ivt:VectoAPI:DeclarationOutput:VehicleInterimFile:v0.1" 
+xmlns:v2.8="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:DEV:v2.8"
 xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:DeclarationOutput:VehicleInterimFile:v0.1 E:\VECTO_DEV\fk_vecto-dev\VectoCore\VectoCore\Resources\XSD/VectoOutputMultistage.0.1.xsd">
 	<PrimaryVehicle>
 		<Data id="text" xsi:type="PrimaryVehicleDataType">
@@ -175,25 +174,25 @@ xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:DeclarationOutput:VehicleInterimFile
 							<Ratio>2.590</Ratio>
 						</Data>
 					</Axlegear>
-					<vif:AxleWheels xsi:type="v2.0:AxleWheelsComponentDeclarationType" xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0">
-						<Data xsi:type="AxleWheelsDataDeclarationType">
+					<AxleWheels>
+						<Data xsi:type="AxleWheelsDataPIFType">
 							<Axles>
-								<Axle axleNumber="1" xsi:type="AxleDataDeclarationType">
-									<AxleType>VehicleNonDriven</AxleType>
-									<TwinTyres>false</TwinTyres>
-									<Steered>true</Steered>
-									<Tyre>
-										<Data id="WHL-5432198760-315-70-R22.5" xsi:type="TyreDataDeclarationType">
-											<Manufacturer>Generic Wheels Manufacturer</Manufacturer>
-											<Model>Generic Wheel</Model>
-											<CertificationNumber>e12*0815/8051*2017/05E0000*00</CertificationNumber>
-											<Date>2017-01-11T14:00:00Z</Date>
-											<AppVersion>Tyre Generation App 1.0</AppVersion>
-											<Dimension>315/70 R22.5</Dimension>
-											<RRCDeclared>0.0055</RRCDeclared>
-											<FzISO>31300</FzISO>
-										</Data>
-										<Signature>
+								<Axle axleNumber="1" xmlns:v2.0="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0" xsi:type="v2.0:AxleDataDeclarationType">
+									<v2.0:AxleType>VehicleNonDriven</v2.0:AxleType>
+									<v2.0:TwinTyres>false</v2.0:TwinTyres>
+									<v2.0:Steered>true</v2.0:Steered>
+									<v2.0:Tyre>
+										<v2.0:Data id="WHL-5432198760-315-70-R22.5" xsi:type="v2.0:TyreDataDeclarationType">
+											<v2.0:Manufacturer>Generic Wheels Manufacturer</v2.0:Manufacturer>
+											<v2.0:Model>Generic Wheel</v2.0:Model>
+											<v2.0:CertificationNumber>e12*0815/8051*2017/05E0000*00</v2.0:CertificationNumber>
+											<v2.0:Date>2017-01-11T14:00:00Z</v2.0:Date>
+											<v2.0:AppVersion>Tyre Generation App 1.0</v2.0:AppVersion>
+											<v2.0:Dimension>315/70 R22.5</v2.0:Dimension>
+											<v2.0:RRCDeclared>0.0055</v2.0:RRCDeclared>
+											<v2.0:FzISO>31300</v2.0:FzISO>
+										</v2.0:Data>
+										<v2.0:Signature>
 											<di:Reference URI="#WHL-5432198760-315-70-R22.5" xmlns:di="http://www.w3.org/2000/09/xmldsig#">
 												<di:Transforms>
 													<di:Transform Algorithm="urn:vecto:xml:2017:canonicalization"/>
@@ -202,25 +201,25 @@ xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:DeclarationOutput:VehicleInterimFile
 												<di:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"/>
 												<di:DigestValue>4TkUGQTX8tevHOU9Cj9uyCFuI/aqcEYlo/gyVjVQmv0=</di:DigestValue>
 											</di:Reference>
-										</Signature>
-									</Tyre>
+										</v2.0:Signature>
+									</v2.0:Tyre>
 								</Axle>
-								<Axle axleNumber="2" xsi:type="AxleDataDeclarationType">
-									<AxleType>VehicleDriven</AxleType>
-									<TwinTyres>true</TwinTyres>
-									<Steered>false</Steered>
-									<Tyre>
-										<Data id="WHL-5432198760-315-70-R22.5" xsi:type="TyreDataDeclarationType">
-											<Manufacturer>Generic Wheels Manufacturer</Manufacturer>
-											<Model>Generic Wheel</Model>
-											<CertificationNumber>e12*0815/8051*2017/05E0000*00</CertificationNumber>
-											<Date>2017-01-11T14:00:00Z</Date>
-											<AppVersion>Tyre Generation App 1.1</AppVersion>
-											<Dimension>315/70 R22.5</Dimension>
-											<RRCDeclared>0.0063</RRCDeclared>
-											<FzISO>31300</FzISO>
-										</Data>
-										<Signature>
+								<Axle axleNumber="2" xmlns:v2.0="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0" xsi:type="v2.0:AxleDataDeclarationType">
+									<v2.0:AxleType>VehicleDriven</v2.0:AxleType>
+									<v2.0:TwinTyres>true</v2.0:TwinTyres>
+									<v2.0:Steered>false</v2.0:Steered>
+									<v2.0:Tyre>
+										<v2.0:Data id="WHL-5432198760-315-70-R22.5" xsi:type="v2.0:TyreDataDeclarationType">
+											<v2.0:Manufacturer>Generic Wheels Manufacturer</v2.0:Manufacturer>
+											<v2.0:Model>Generic Wheel</v2.0:Model>
+											<v2.0:CertificationNumber>e12*0815/8051*2017/05E0000*00</v2.0:CertificationNumber>
+											<v2.0:Date>2017-01-11T14:00:00Z</v2.0:Date>
+											<v2.0:AppVersion>Tyre Generation App 1.1</v2.0:AppVersion>
+											<v2.0:Dimension>315/70 R22.5</v2.0:Dimension>
+											<v2.0:RRCDeclared>0.0063</v2.0:RRCDeclared>
+											<v2.0:FzISO>31300</v2.0:FzISO>
+										</v2.0:Data>
+										<v2.0:Signature>
 											<di:Reference URI="#WHL-5432198760-315-70-R22.5" xmlns:di="http://www.w3.org/2000/09/xmldsig#">
 												<di:Transforms>
 													<di:Transform Algorithm="urn:vecto:xml:2017:canonicalization"/>
@@ -229,25 +228,25 @@ xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:DeclarationOutput:VehicleInterimFile
 												<di:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"/>
 												<di:DigestValue>KljvtvGUUQ/L7MiLVAqU+bckL5PNDNNwdeLH9kUVrfM=</di:DigestValue>
 											</di:Reference>
-										</Signature>
-									</Tyre>
+										</v2.0:Signature>
+									</v2.0:Tyre>
 								</Axle>
-								<Axle axleNumber="3" xsi:type="AxleDataDeclarationType">
-									<AxleType>VehicleNonDriven</AxleType>
-									<TwinTyres>false</TwinTyres>
-									<Steered>false</Steered>
-									<Tyre>
-										<Data id="WHL-5432198760-315-70-R22.5" xsi:type="TyreDataDeclarationType">
-											<Manufacturer>Generic Wheels Manufacturer</Manufacturer>
-											<Model>Generic Wheel</Model>
-											<CertificationNumber>e12*0815/8051*2017/05E0000*00</CertificationNumber>
-											<Date>2017-01-11T14:00:00Z</Date>
-											<AppVersion>Tyre Generation App 1.1</AppVersion>
-											<Dimension>315/70 R22.5</Dimension>
-											<RRCDeclared>0.0055</RRCDeclared>
-											<FzISO>31300</FzISO>
-										</Data>
-										<Signature>
+								<Axle axleNumber="3" xmlns:v2.0="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0" xsi:type="v2.0:AxleDataDeclarationType">
+									<v2.0:AxleType>VehicleNonDriven</v2.0:AxleType>
+									<v2.0:TwinTyres>false</v2.0:TwinTyres>
+									<v2.0:Steered>false</v2.0:Steered>
+									<v2.0:Tyre>
+										<v2.0:Data id="WHL-5432198760-315-70-R22.5" xsi:type="v2.0:TyreDataDeclarationType">
+											<v2.0:Manufacturer>Generic Wheels Manufacturer</v2.0:Manufacturer>
+											<v2.0:Model>Generic Wheel</v2.0:Model>
+											<v2.0:CertificationNumber>e12*0815/8051*2017/05E0000*00</v2.0:CertificationNumber>
+											<v2.0:Date>2017-01-11T14:00:00Z</v2.0:Date>
+											<v2.0:AppVersion>Tyre Generation App 1.1</v2.0:AppVersion>
+											<v2.0:Dimension>315/70 R22.5</v2.0:Dimension>
+											<v2.0:RRCDeclared>0.0055</v2.0:RRCDeclared>
+											<v2.0:FzISO>31300</v2.0:FzISO>
+										</v2.0:Data>
+										<v2.0:Signature>
 											<di:Reference URI="#WHL-5432198760-315-70-R22.5" xmlns:di="http://www.w3.org/2000/09/xmldsig#">
 												<di:Transforms>
 													<di:Transform Algorithm="urn:vecto:xml:2017:canonicalization"/>
@@ -256,12 +255,12 @@ xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:DeclarationOutput:VehicleInterimFile
 												<di:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"/>
 												<di:DigestValue>4TkUGQTX8tevHOU9Cj9uyCFuI/aqcEYlo/gyVjVQmv0=</di:DigestValue>
 											</di:Reference>
-										</Signature>
-									</Tyre>
+										</v2.0:Signature>
+									</v2.0:Tyre>
 								</Axle>
 							</Axles>
 						</Data>
-					</vif:AxleWheels>
+					</AxleWheels>
 					<Auxiliaries>
 						<Data xsi:type="AuxiliaryDataPIFType">
 							<Fan>
