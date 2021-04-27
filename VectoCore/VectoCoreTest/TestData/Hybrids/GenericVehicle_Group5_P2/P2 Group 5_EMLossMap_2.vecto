@@ -22,7 +22,7 @@
     "Padd_electric": 0.0,
     "VACC": "Vehicle\\Truck.vacc",
     "EngineStopStartAtVehicleStopThreshold": 0.0,
-    "EngineStopStartMaxOffTimespan": 0.0,
+    "EngineStopStartMaxOffTimespan": 1000.0,
     "EngineStopStartUtilityFactor": 0.0,
     "EcoRollMinSpeed": 0.0,
     "EcoRollActivationDelay": 0.0,

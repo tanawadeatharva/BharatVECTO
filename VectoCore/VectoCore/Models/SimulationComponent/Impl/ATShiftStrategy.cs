@@ -91,6 +91,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			if (Gears.Any(x => !x.TorqueConverterLocked.HasValue)) {
 				throw new VectoException("Gear list must have TC info for all gears! {0}", string.Join(", ", Gears));
 			}
+
+			MaxStartGear = Gears.Any() ? Gears.First() : new GearshiftPosition(0);
 		}
 
 		public override GearshiftPosition InitGear(Second absTime, Second dt, NewtonMeter torque, PerSecond outAngularVelocity)

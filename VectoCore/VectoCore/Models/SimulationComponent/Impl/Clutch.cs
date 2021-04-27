@@ -118,7 +118,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			return HandleClutchClosed(absTime, dt, outTorque, outAngularVelocity, dryRun);
 		}
 
-		private IResponse HandleClutchOpen(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity,
+		protected IResponse HandleClutchOpen(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity,
 			bool dryRun)
 		{
 			var avgOutAngularVelocity = (PreviousState.OutAngularVelocity + outAngularVelocity) / 2.0;

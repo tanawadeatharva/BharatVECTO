@@ -170,7 +170,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					return new ResponseInvalidOperatingPoint(this);
 				}
 				throw new VectoException(
-					"Invalid operating point provided by strategy! SupportPower: {0}, max Power: {1}, min Power: {2}",
+					"Invalid operating point provided by strategy! EM Torque: {0}, max Drive Torque: {1}, min Recup Torque: {2}",
 					emTorqueDt, maxDriveTorqueDt, maxRecuperationTorqueDt);
 			}
 

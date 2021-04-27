@@ -71,5 +71,13 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 				return Body["ICEStartPenaltyFactor"] == null ? 0 : Body.GetEx<double>("ICEStartPenaltyFactor");
 			}
 		}
+
+		public double CostFactorSOCExpponent
+		{
+			get
+			{
+				return Body["CostFactorSOCExponent"] == null ? double.NaN : Body.GetEx<double>("CostFactorSOCExponent");
+			}
+		}
 	}
 }

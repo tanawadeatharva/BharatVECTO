@@ -44,6 +44,7 @@ Public Module FileBrowserModule
     Public HCUFileBrowser As FileBrowser
 
 	public BusAuxFileBrowser As FileBrowser
+	public BusAuxCompressorMapFileBrowser As FileBrowser
 
     Public EngineFileBrowser As FileBrowser
 	Public GearboxFileBrowser As FileBrowser

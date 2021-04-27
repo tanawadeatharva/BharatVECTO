@@ -51,7 +51,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 	/// </summary>
 	public class AMTShiftStrategy : ShiftStrategy
 	{
-		protected readonly GearshiftPosition MaxStartGear;
+		//protected readonly GearshiftPosition MaxStartGear;
 		protected GearshiftPosition _nextGear;
 		private GearshiftPosition DesiredGearRoadsweeping;
 

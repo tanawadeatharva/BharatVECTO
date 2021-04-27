@@ -1360,6 +1360,7 @@ namespace TUGraz.VectoCore.Tests.Integration.Hybrid
 				MinICEOnTime = 3.SI<Second>(), 
 				ICEStartPenaltyFactor = 0,
 				//MaxDrivetrainPower = maxDriveTrainPower ?? 1e12.SI<Watt>(),
+				CostFactorSOCExponent = 5,
 			};
 		}
 

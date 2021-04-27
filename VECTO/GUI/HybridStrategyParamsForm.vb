@@ -187,6 +187,7 @@ Public Class HybridStrategyParamsForm
         tbMinICEOnTime.Text = strategyParams.MinimumICEOnTime.ToGUIFormat()
 
         tbICEStartPenaltyFactor.Text = strategyParams.ICEStartPenaltyFactor.ToGUIFormat()
+        tbCostFactorSoCExponent.Text = if(Double.IsNaN(strategyParams.CostFactorSOCExpponent), 5, strategyParams.CostFactorSOCExpponent).ToGUIFormat()
         DeclInit()
 
         REESSFileBrowser.UpdateHistory(file)
@@ -228,6 +229,7 @@ Public Class HybridStrategyParamsForm
         strategyParams.AuxiliaryBufferTime = tbauxBufferTime.Text.ToDouble(0)
         strategyParams.AuxiliaryBufferChgTime = tbAuxBufferChargeTime.Text.ToDouble(0)
         strategyParams.ICEStartPenaltyFactor = tbICEStartPenaltyFactor.Text.ToDouble()
+        strategyParams.CostFactorSOCExpponent = tbCostFactorSoCExponent.Text.ToDouble(5)
 
         If Not strategyParams.SaveFile Then
             MsgBox("Cannot save to " & file, MsgBoxStyle.Critical)
@@ -356,6 +358,18 @@ Public Class HybridStrategyParamsForm
     End Sub
 
     Private Sub tbEquivalenceFactor_TextChanged(sender As Object, e As EventArgs) Handles tbEquivalenceFactorDischarge.TextChanged
+        Change()
+    End Sub
+
+    Private Sub Panel4_Paint(sender As Object, e As PaintEventArgs) Handles pnCostFactorSoCExponent.Paint
+
+    End Sub
+
+    Private Sub tbICEStartPenaltyFactor_TextChanged(sender As Object, e As EventArgs) Handles tbICEStartPenaltyFactor.TextChanged
+        Change()
+    End Sub
+
+    Private Sub tbCostFactorSoCExponent_TextChanged(sender As Object, e As EventArgs) Handles tbCostFactorSoCExponent.TextChanged
         Change()
     End Sub
 
