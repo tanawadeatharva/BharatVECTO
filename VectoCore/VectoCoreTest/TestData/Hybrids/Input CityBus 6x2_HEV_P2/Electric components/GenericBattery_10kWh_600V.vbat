@@ -11,8 +11,8 @@
     "Capacity": 15.9984,
     "SOC_min": 30.0,
     "SOC_max": 70.0,
-    "MaxCurrentFactor": 25.0,
     "InternalResistanceCurve": "GenericBattery_10kWh_600V.vbatr",
+    "MaxCurrentMap": "MaxCurrent_280.vimax",
     "SoCCurve": "GenericBattery_10kWh_600V.vbatv"
   }
 }

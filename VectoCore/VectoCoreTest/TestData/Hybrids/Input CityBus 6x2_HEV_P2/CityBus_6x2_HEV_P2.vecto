@@ -19,7 +19,7 @@
     "AdvancedAuxiliaryFilePath": "",
     "Aux": [],
     "Padd": 10000.0,
-    "Padd_electric": 2800.0,
+    "Padd_electric": 0.0,
     "VACC": "Acc_Citybus.vacc",
     "EngineStopStartAtVehicleStopThreshold": 0.0,
     "EngineStopStartMaxOffTimespan": 1000.0,
