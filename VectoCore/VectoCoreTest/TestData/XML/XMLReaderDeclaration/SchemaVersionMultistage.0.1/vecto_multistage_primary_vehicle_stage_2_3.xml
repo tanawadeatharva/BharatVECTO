@@ -263,7 +263,7 @@ xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:DeclarationOutput:VehicleInterimFile
 						</Data>
 					</vif:AxleWheels>
 					<Auxiliaries>
-						<vif:Data xsi:type="PrimaryVehicleAuxiliaryDataDeclarationType" xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:DEV:v2.6">
+						<Data xsi:type="AuxiliaryDataPIFType">
 							<Fan>
 								<Technology>Hydraulic driven - Constant displacement pump</Technology>
 							</Fan>
@@ -289,7 +289,7 @@ xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:DeclarationOutput:VehicleInterimFile
 								<AdjustableCoolantThermostat>true</AdjustableCoolantThermostat>
 								<EngineWasteGasHeatExchanger>true</EngineWasteGasHeatExchanger>
 							</HVAC>
-						</vif:Data>
+						</Data>
 					</Auxiliaries>
 				</Components>
 			</Vehicle>
