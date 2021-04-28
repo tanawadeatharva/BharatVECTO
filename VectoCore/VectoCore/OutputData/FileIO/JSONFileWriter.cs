@@ -569,7 +569,7 @@ public class JSONFileWriter : IOutputFileWriter
 		return vehicle.Components.ElectricMachines.Entries.Select(em => {
 			var d = new Dictionary<string, object>() {
 				{ "Count", em.Count },
-				{ "Ratio", em.Ratio },
+				{ "Ratio", em.RatioADC },
 				{ "Position", em.Position.GetName() },
 				{ "MotorFile", GetRelativePath(em.ElectricMachine.DataSource.SourceFile, basePath) }
 			};

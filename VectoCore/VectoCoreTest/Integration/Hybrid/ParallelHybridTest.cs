@@ -777,6 +777,38 @@ namespace TUGraz.VectoCore.Tests.Integration.Hybrid
 		public void P2HybridGroup5DriveCycle_EMLossMap_2(string jobFile, int cycleIdx)
 		{ RunHybridJob(jobFile, cycleIdx);}
 
+
+		public const string Group2_5TestJob = @"TestData\Hybrids\GenericVehicle_Group5_P2.5\P2.5 Group 5.vecto";
+		public const string Group2_5TestJob_2 = @"TestData\Hybrids\GenericVehicle_Group5_P2.5\P2.5 Group 5 2.vecto";
+
+		[
+			TestCase(Group2_5TestJob, 0, TestName = "P2.5 Hybrid Group 2 DriveCycle LongHaul"),
+			TestCase(Group2_5TestJob, 1, TestName = "P2.5 Hybrid Group 2 DriveCycle Coach"),
+			TestCase(Group2_5TestJob, 2, TestName = "P2.5 Hybrid Group 2 DriveCycle Construction"),
+			TestCase(Group2_5TestJob, 3, TestName = "P2.5 Hybrid Group 2 DriveCycle HeavyUrban"),
+			TestCase(Group2_5TestJob, 4, TestName = "P2.5 Hybrid Group 2 DriveCycle Interurban"),
+			TestCase(Group2_5TestJob, 5, TestName = "P2.5 Hybrid Group 2 DriveCycle MunicipalUtility"),
+			TestCase(Group2_5TestJob, 6, TestName = "P2.5 Hybrid Group 2 DriveCycle RegionalDelivery"),
+			TestCase(Group2_5TestJob, 7, TestName = "P2.5 Hybrid Group 2 DriveCycle Suburban"),
+			TestCase(Group2_5TestJob, 8, TestName = "P2.5 Hybrid Group 2 DriveCycle Urban"),
+			TestCase(Group2_5TestJob, 9, TestName = "P2.5 Hybrid Group 2 DriveCycle UrbanDelivery"),
+
+			TestCase(Group2_5TestJob_2, 0, TestName = "P2.5 Hybrid Group 2 Even/Odd DriveCycle LongHaul"),
+			TestCase(Group2_5TestJob_2, 1, TestName = "P2.5 Hybrid Group 2 Even/Odd DriveCycle Coach"),
+			TestCase(Group2_5TestJob_2, 2, TestName = "P2.5 Hybrid Group 2 Even/Odd DriveCycle Construction"),
+			TestCase(Group2_5TestJob_2, 3, TestName = "P2.5 Hybrid Group 2 Even/Odd DriveCycle HeavyUrban"),
+			TestCase(Group2_5TestJob_2, 4, TestName = "P2.5 Hybrid Group 2 Even/Odd DriveCycle Interurban"),
+			TestCase(Group2_5TestJob_2, 5, TestName = "P2.5 Hybrid Group 2 Even/Odd DriveCycle MunicipalUtility"),
+			TestCase(Group2_5TestJob_2, 6, TestName = "P2.5 Hybrid Group 2 Even/Odd DriveCycle RegionalDelivery"),
+			TestCase(Group2_5TestJob_2, 7, TestName = "P2.5 Hybrid Group 2 Even/Odd DriveCycle Suburban"),
+			TestCase(Group2_5TestJob_2, 8, TestName = "P2.5 Hybrid Group 2 Even/Odd DriveCycle Urban"),
+			TestCase(Group2_5TestJob_2, 9, TestName = "P2.5 Hybrid Group 2 Even/Odd DriveCycle UrbanDelivery"),
+
+		]
+		public void P2HybridGroup2_5DriveCycle(string jobFile, int cycleIdx)
+		{ RunHybridJob(jobFile, cycleIdx); }
+
+
 		public void RunHybridJob(string jobFile, int cycleIdx)
 		{
 			var inputProvider = JSONInputDataFactory.ReadJsonJob(jobFile);

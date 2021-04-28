@@ -101,12 +101,16 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			foreach (var entry in Body["ElectricMotors"]) {
 				var tmp = new ElectricMachineEntry<IElectricMotorEngineeringInputData>() {
 					Position = PowertrainPositionHelper.Parse(entry.GetEx<string>("Position")),
-					Ratio = entry.GetEx<double>("Ratio"),
+					RatioADC = entry.GetEx<double>("Ratio"),
+					RatioPerGear = entry["RatioPerGear"] != null
+						? entry["RatioPerGear"].Select(x => x.Value<double>()).ToArray()
+						: new double[] { },
 					MechanicalTransmissionEfficiency = entry["MechanicalEfficiency"] != null
 						? entry.GetEx<double>("MechanicalEfficiency")
 						: double.NaN,
 					MechanicalTransmissionLossMap = entry["MechanicalTransmissionLossMap"] != null
-						? ReadTableData(Path.Combine(BasePath, entry.GetEx<string>("MechanicalTransmissionLossMap")), "EM ADC LossMap")
+						? ReadTableData(Path.Combine(BasePath, entry.GetEx<string>("MechanicalTransmissionLossMap")),
+							"EM ADC LossMap")
 						: null,
 					Count = entry.GetEx<int>("Count"),
 					ElectricMachine =

@@ -803,6 +803,129 @@
     <None Include="TestData\Hybrids\GenericVehicle_Group2_P2\Truck.vacc">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Include="TestData\Hybrids\GenericVehicle_Group5_P2.5\ElectricMotor\Inputdaten P2 Group 5\Electric components\GenericBattery_10kWh_658V.vbat">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Hybrids\GenericVehicle_Group5_P2.5\ElectricMotor\Inputdaten P2 Group 5\Electric components\GenericBattery_10kWh_658V.vbatr">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Hybrids\GenericVehicle_Group5_P2.5\ElectricMotor\Inputdaten P2 Group 5\Electric components\GenericBattery_10kWh_658V.vbatv">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Hybrids\GenericVehicle_Group5_P2.5\ElectricMotor\Inputdaten P2 Group 5\Electric components\GenericDrag_30kW_50Nm.vemd">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Hybrids\GenericVehicle_Group5_P2.5\ElectricMotor\Inputdaten P2 Group 5\Electric components\GenericDrag_140kW_936Nm.vemd">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Hybrids\GenericVehicle_Group5_P2.5\ElectricMotor\Inputdaten P2 Group 5\Electric components\GenericEMotor_30kW_50Nm.vem">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Hybrids\GenericVehicle_Group5_P2.5\ElectricMotor\Inputdaten P2 Group 5\Electric components\GenericEMotor_30kW_50Nm.vemp">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Hybrids\GenericVehicle_Group5_P2.5\ElectricMotor\Inputdaten P2 Group 5\Electric components\GenericEMotor_140kW_936Nm.vem">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Hybrids\GenericVehicle_Group5_P2.5\ElectricMotor\Inputdaten P2 Group 5\Electric components\GenericEMotor_140kW_936Nm.vemp">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Hybrids\GenericVehicle_Group5_P2.5\ElectricMotor\Inputdaten P2 Group 5\Electric components\GenericMap_30kW_50Nm.vemo">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Hybrids\GenericVehicle_Group5_P2.5\ElectricMotor\Inputdaten P2 Group 5\Electric components\GenericMap_140kW_936Nm.vemo">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Hybrids\GenericVehicle_Group5_P2.5\ElectricMotor\Inputdaten P2 Group 5\Electric components\Hybrid_Parameters.vhctl">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Hybrids\GenericVehicle_Group5_P2.5\ElectricMotor\Inputdaten P2 Group 5\Electric components\MaxCurrent.vimax">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Hybrids\GenericVehicle_Group5_P2.5\P2.5 Group 5 2.vecto">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Hybrids\GenericVehicle_Group5_P2.5\P2.5 Group 5.vecto">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Hybrids\GenericVehicle_Group5_P2.5\Transmission\AMT_12_P2.5.vgbx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Hybrids\GenericVehicle_Group5_P2.5\Transmission\AMT_12.vgbx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Hybrids\GenericVehicle_Group5_P2.5\Transmission\Axle_4x2_Tractor.vtlm">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Hybrids\GenericVehicle_Group5_P2.5\Transmission\Default.vrlm">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Hybrids\GenericVehicle_Group5_P2.5\Transmission\Gear_1.vtlm">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Hybrids\GenericVehicle_Group5_P2.5\Transmission\Gear_10.vtlm">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Hybrids\GenericVehicle_Group5_P2.5\Transmission\Gear_11.vtlm">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Hybrids\GenericVehicle_Group5_P2.5\Transmission\Gear_12.vtlm">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Hybrids\GenericVehicle_Group5_P2.5\Transmission\Gear_2.vtlm">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Hybrids\GenericVehicle_Group5_P2.5\Transmission\Gear_3.vtlm">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Hybrids\GenericVehicle_Group5_P2.5\Transmission\Gear_4.vtlm">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Hybrids\GenericVehicle_Group5_P2.5\Transmission\Gear_5.vtlm">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Hybrids\GenericVehicle_Group5_P2.5\Transmission\Gear_6.vtlm">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Hybrids\GenericVehicle_Group5_P2.5\Transmission\Gear_7.vtlm">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Hybrids\GenericVehicle_Group5_P2.5\Transmission\Gear_8.vtlm">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Hybrids\GenericVehicle_Group5_P2.5\Transmission\Gear_9.vtlm">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Hybrids\GenericVehicle_Group5_P2.5\Vehicle\EM_TorqueLimits.vemp">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Hybrids\GenericVehicle_Group5_P2.5\Vehicle\GenericADC_1.vtlm">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Hybrids\GenericVehicle_Group5_P2.5\Vehicle\GenericADC_2.vtlm">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Hybrids\GenericVehicle_Group5_P2.5\Vehicle\Group5_HEV_2.vveh">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Hybrids\GenericVehicle_Group5_P2.5\Vehicle\Group5_HEV.vveh">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Hybrids\GenericVehicle_Group5_P2.5\Vehicle\Truck.vacc">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Hybrids\GenericVehicle_Group5_P2.5\Vehicle\VehicleMaxPropulsionTorque.vtqp">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Hybrids\GenericVehicle_Group5_P2.5\VKM\325kW.vfld">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Hybrids\GenericVehicle_Group5_P2.5\VKM\325kW.vmap">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Hybrids\GenericVehicle_Group5_P2.5\VKM\Engine_325kW_12.7l.veng">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="TestData\Hybrids\GenericVehicle_Group5_P2\ElectricMotor\Inputdaten P2 Group 5\Electric components\GenericBattery_10kWh_658V.vbat">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
@@ -1632,6 +1755,9 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="TestData\Hybrids\Input CityBus 6x2_HEV_P2\Electric components\Hybrid_Parameters.vhctl">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Hybrids\Input CityBus 6x2_HEV_P2\Electric components\MaxCurrent_280.vimax">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="TestData\Hybrids\Input CityBus 6x2_HEV_P2\Engine_175kW_6.8l.veng">
@@ -3952,14 +4078,14 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="TestData\Integration\VTPMode\DualFuelVehicle\vtp_cycle_2Hz.vdri">
-		<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-	</None>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="TestData\Integration\VTPMode\GenericVehicle XMLJob PTO\class_5_generic vehicle_DECL.vecto">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="TestData\Integration\VTPMode\GenericVehicle XMLJob PTO\VTP_rural_2Hz.vdri">
-		<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-	</None>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="TestData\Integration\VTPMode\DualFuelVehicle\VTP_DualFuel.vecto">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
@@ -5124,44 +5250,44 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="TestData\Integration\MediumLorries\vecto_vehicle-medium_lorry.xml">
-		<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-		</Content>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="TestData\Integration\VTPMode\GenericVehicle XMLJob PTO\Tractor_4x2_vehicle-class-5_Generic vehicle.RSLT_MANUFACTURER.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="TestData\Integration\MediumLorries\vecto_vehicle-medium_lorry-Van.xml">
-		<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-		</Content>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="TestData\Integration\VTPMode\GenericVehicle XMLJob PTO\Tractor_4x2_vehicle-class-5_Generic vehicle.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-	<Content Include="TestData\Integration\MediumLorries\vecto_vehicle-medium_lorryFWD.xml">
-		<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-	</Content>
+    <Content Include="TestData\Integration\MediumLorries\vecto_vehicle-medium_lorryFWD.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="TestData\Integration\VTPMode\GenericVehicle\CityBus_AT_Ser_2TC.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="TestData\Integration\ShiftStrategyV2\SampleVehicles\Rigid Truck_4x2_vehicle-class-1_EURO6_2018.xml">
-		<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-	</Content>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="TestData\Integration\VTPMode\GenericVehicle\Rigid Truck_4x2_vehicle-class-3_EURO6_2018.MANUFACTURER.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="TestData\Integration\ShiftStrategyV2\SampleVehicles\Rigid Truck_4x2_vehicle-class-2_EURO6_2018.xml">
-		<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-	</Content>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="TestData\Integration\VTPMode\GenericVehicle\Rigid Truck_4x2_vehicle-class-3_EURO6_2018.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="TestData\Integration\ShiftStrategyV2\SampleVehicles\Rigid Truck_4x2_vehicle-class-3_EURO6_2018.xml">
-		<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-	</Content>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="TestData\Integration\VTPMode\GenericVehicle_CNG\Tractor_4x2_vehicle-class-5_Generic vehicle.RSLT_MANUFACTURER.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="TestData\Integration\ShiftStrategyV2\SampleVehicles\Rigid Truck_4x2_vehicle-class-4_EURO6_2018.xml">
-		<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-	</Content>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="TestData\Integration\VTPMode\GenericVehicle_CNG\Tractor_4x2_vehicle-class-5_Generic vehicle.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

@@ -42,7 +42,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies {
 			ElectricMotor = container.ElectricMotors.FirstOrDefault().Value as ElectricMotor;
 			foreach (var pos in container.ElectricMotorPositions) {
 				if (pos == PowertrainPosition.HybridP1 || pos == PowertrainPosition.HybridP2 ||
-					pos == PowertrainPosition.HybridP3) {
+					pos == PowertrainPosition.HybridP2_5 || pos == PowertrainPosition.HybridP3) {
 					ElectricMotorsUpstreamTransmission[pos] = container.ElectricMotors[pos] as ElectricMotor;
 				}
 			}

@@ -753,12 +753,12 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 
 			return electricMachines.Entries
 				.Select(x => Tuple.Create(x.Position,
-					CreateElectricMachine(x.ElectricMachine, x.Count, x.Ratio, x.MechanicalTransmissionEfficiency,
+					CreateElectricMachine(x.ElectricMachine, x.Count, x.RatioADC, x.RatioPerGear, x.MechanicalTransmissionEfficiency,
 						x.MechanicalTransmissionLossMap, torqueLimits))).ToList();
 		}
 
 		private ElectricMotorData CreateElectricMachine(IElectricMotorEngineeringInputData motorData, int count,
-			double ratio, double efficiency, TableData adcLossMap, TableData torqueLimits)
+			double ratio, double[] ratioPerGear, double efficiency, TableData adcLossMap, TableData torqueLimits)
 		{
 			var fullLoadCurve = ElectricFullLoadCurveReader.Create(motorData.FullLoadCurve, count);
 			var maxTorqueCurve = torqueLimits == null ? null : ElectricFullLoadCurveReader.Create(torqueLimits, count);
@@ -778,7 +778,8 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 				ContinuousPowerSpeed = motorData.ContinuousPowerSpeed,
 				OverloadTime = motorData.OverloadTime,
 				OverloadRegenerationFactor = motorData.OverloadRecoveryFactor,
-				Ratio = ratio,
+				RatioADC = ratio,
+				RatioPerGear = ratioPerGear,
 				TransmissionLossMap = lossMap
 			};
 		}

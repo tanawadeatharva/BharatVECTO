@@ -972,7 +972,7 @@ Public Class ElectricMachineWrapper
                     .MechanicalTransmissionEfficiency = If(IsNumeric(Vehicle.ElectricMotorMechLossMap.OriginalPath), Vehicle.ElectricMotorMechLossMap.OriginalPath.ToDouble(), double.NaN), 
 				    .MechanicalTransmissionLossMap = VectoCSVFile.Read(Vehicle.ElectricMotorMechLossMap.FullPath),
                     .Position = Vehicle.ElectricMotorPosition, 
-                    .Ratio = Vehicle.ElectricMotorRatio, 
+                    .RatioADC = Vehicle.ElectricMotorRatio, 
                     .Count = Vehicle.ElectricMotorCount}})
         End Get
     End Property
@@ -984,7 +984,7 @@ Public Class ElectricMachineWrapper
                     .MechanicalTransmissionEfficiency = If(IsNumeric(Vehicle.ElectricMotorMechLossMap.OriginalPath), Vehicle.ElectricMotorMechLossMap.OriginalPath.ToDouble(), double.NaN), 
                     .MechanicalTransmissionLossMap = If(IsNumeric(Vehicle.ElectricMotorMechLossMap.OriginalPath), Nothing, VectoCSVFile.Read(Vehicle.ElectricMotorMechLossMap.FullPath)),
                     .Position = Vehicle.ElectricMotorPosition, 
-                    .Ratio = Vehicle.ElectricMotorRatio, 
+                    .RatioADC = Vehicle.ElectricMotorRatio, 
                     .Count = Vehicle.ElectricMotorCount}})
 
         End Get

@@ -476,7 +476,7 @@ Public Class VehicleForm
 			tbEmCount.Text = em.Count.ToGUIFormat()
 			tbEmADCLossMap.Text = If(em.MechanicalTransmissionLossMap Is Nothing, em.MechanicalTransmissionEfficiency.ToGUIFormat(),
 									 GetRelativePath(em.MechanicalTransmissionLossMap.Source, basePath))
-			tbRatioEm.Text = em.Ratio.ToGUIFormat()
+			tbRatioEm.Text = em.RatioADC.ToGUIFormat()
 			cbEmPos.SelectedValue = em.Position
 		End If
 

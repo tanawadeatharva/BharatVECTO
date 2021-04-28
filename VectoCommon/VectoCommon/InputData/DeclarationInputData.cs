@@ -723,7 +723,9 @@ namespace TUGraz.VectoCommon.InputData
 
 		public PowertrainPosition Position { get; set; }
 
-		public double Ratio { get; set; }
+		public double RatioADC { get; set; }
+
+		public double[] RatioPerGear { get; set; }
 
 		public double MechanicalTransmissionEfficiency { get; set; }
 

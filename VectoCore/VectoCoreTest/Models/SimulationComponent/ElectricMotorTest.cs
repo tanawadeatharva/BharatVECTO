@@ -51,7 +51,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 					new ElectricMachineEntry<IElectricMotorEngineeringInputData>() {
 						ElectricMachine = inputData,
 						Count = 1,
-						Ratio = 1,
+						RatioADC = 1,
 						MechanicalTransmissionEfficiency = 1
 					}
 				}
@@ -97,7 +97,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 					new ElectricMachineEntry<IElectricMotorEngineeringInputData>() {
 						ElectricMachine = inputData,
 						Count = 1,
-						Ratio = 1,
+						RatioADC = 1,
 						MechanicalTransmissionEfficiency= 0.95
 					}
 				}
@@ -143,7 +143,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 					new ElectricMachineEntry<IElectricMotorEngineeringInputData>() {
 						ElectricMachine = inputData,
 						Count = 1,
-						Ratio = 1,
+						RatioADC = 1,
 						MechanicalTransmissionEfficiency = 1
 					}
 				}
@@ -191,7 +191,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 					new ElectricMachineEntry<IElectricMotorEngineeringInputData>() {
 						ElectricMachine = inputData,
 						Count = 1,
-						Ratio = 1,
+						RatioADC = 1,
 						MechanicalTransmissionEfficiency = 0.95
 					}
 				}
@@ -235,7 +235,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 					new ElectricMachineEntry<IElectricMotorEngineeringInputData>() {
 						ElectricMachine = inputData,
 						Count = 1,
-						Ratio = 1,
+						RatioADC = 1,
 						MechanicalTransmissionEfficiency = 1
 					}
 				}
@@ -298,7 +298,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 					new ElectricMachineEntry<IElectricMotorEngineeringInputData>() {
 						ElectricMachine = inputData,
 						Count = 1,
-						Ratio = 1,
+						RatioADC = 1,
 						MechanicalTransmissionEfficiency = 1
 					}
 				}
@@ -354,7 +354,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 						ElectricMachine = inputData,
 						Position = PowertrainPosition.HybridP2,
 						Count = 1,
-						Ratio = 1,
+						RatioADC = 1,
 						MechanicalTransmissionEfficiency = 1
 					}
 				}
