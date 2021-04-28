@@ -291,33 +291,26 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 	public class XMLDeclarationVIFInputData : IMultistageVIFInputData
 	{
+		private readonly IMultistageBusInputDataProvider _multistageJobInputData;
+		private readonly IVehicleDeclarationInputData _vehicleInput;
 
-		private readonly IXMLInputDataReader _xmlInputReader;
-		
-		public XMLDeclarationVIFInputData(string vifFileName, IVehicleDeclarationInputData vehicleInput)
+		public XMLDeclarationVIFInputData(IMultistageBusInputDataProvider multistageJobInputData,
+			IVehicleDeclarationInputData vehicleInput)
 		{
-
-			var kernel = new StandardKernel(new VectoNinjectModule());
-			_xmlInputReader = kernel.Get<IXMLInputDataReader>();
-
-			VehicleInputData = vehicleInput;
-			MultistageInputData = CreateMultistageReader(vifFileName);
+			_multistageJobInputData = multistageJobInputData;
+			_vehicleInput = vehicleInput;
 		}
 
-
-		private IMultistageBusInputDataProvider CreateMultistageReader(string vifFileName)
+		public IVehicleDeclarationInputData VehicleInputData
 		{
-			var reader = XmlReader.Create(vifFileName);
-			return _xmlInputReader.Create(reader) as IMultistageBusInputDataProvider;
+			get { return _vehicleInput; }
+		}
+		public IMultistageBusInputDataProvider MultistageJobInputData
+		{
+			get { return _multistageJobInputData; }
 		}
 
-
-		public DataSource DataSource
-		{
-			get { return null; }
-		}
-		public IVehicleDeclarationInputData VehicleInputData { get; }
-		public IMultistageBusInputDataProvider MultistageInputData { get; }
+		public DataSource DataSource { get; }
 	}
 
 }
