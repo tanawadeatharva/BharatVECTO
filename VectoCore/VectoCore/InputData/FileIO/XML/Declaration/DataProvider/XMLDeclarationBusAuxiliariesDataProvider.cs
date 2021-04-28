@@ -242,6 +242,24 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		#endregion
 	}
 
+	public class XMLDeclarationPrimaryBusAuxiliariesDataProviderV01 : XMLDeclarationPrimaryBusAuxiliariesDataProviderV26
+	{
+		public new static XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_MULTISTAGE_BUS_VEHICLE_NAMESPACE_VO1;
+
+		public new const string XSD_TYPE = "AuxiliaryDataPIFType";
+
+		public new static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
+
+		public XMLDeclarationPrimaryBusAuxiliariesDataProviderV01(IXMLDeclarationVehicleData vehicle, XmlNode componentNode, string sourceFile) 
+			: base(vehicle, componentNode, sourceFile) { }
+
+
+		public override XmlNode XMLSource
+		{
+			get { return BaseNode; }
+		}
+	}
+
 	public class XMLDeclarationCompleteBusAuxiliariesDataProviderV26 : XMLDeclarationPrimaryBusAuxiliariesDataProviderV26, IElectricConsumersDeclarationData
 	{
 		public new static XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V26;
