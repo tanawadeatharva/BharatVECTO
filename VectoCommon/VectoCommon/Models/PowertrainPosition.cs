@@ -9,6 +9,7 @@ namespace TUGraz.VectoCommon.InputData {
 		HybridP0,
 		HybridP1,
 		HybridP2,
+		HybridP2_5,
 		HybridP3,
 		HybridP4,
 
@@ -25,7 +26,7 @@ namespace TUGraz.VectoCommon.InputData {
 		public static PowertrainPosition Parse(string pos)
 		{
 			if (pos.StartsWith("P",StringComparison.InvariantCultureIgnoreCase)) {
-				return (HybridPrefix + pos).ParseEnum<PowertrainPosition>();
+				return (HybridPrefix + pos).Replace(".", "_").ParseEnum<PowertrainPosition>();
 			}
 
 			if (pos.StartsWith("B", StringComparison.InvariantCultureIgnoreCase)) {
@@ -39,7 +40,7 @@ namespace TUGraz.VectoCommon.InputData {
 
 		public static string GetName(this PowertrainPosition pos)
 		{
-			return pos.ToString().Replace(HybridPrefix, "").Replace(BatteryElectriPrefix, "");
+			return pos.ToString().Replace(HybridPrefix, "").Replace(BatteryElectriPrefix, "").Replace("_", ".");
 		}
 
 		public static string GetLabel(this PowertrainPosition pos)
@@ -51,6 +52,8 @@ namespace TUGraz.VectoCommon.InputData {
 				case PowertrainPosition.HybridP3:
 				case PowertrainPosition.HybridP4:
 					return pos.ToString().Replace(HybridPrefix, "");
+				case PowertrainPosition.HybridP2_5:
+					return pos.ToString().Replace(HybridPrefix, "").Replace("_", ".");
 			}
 			return pos.ToString().Replace(BatteryElectriPrefix, "").Replace("B", "E");
 		}
@@ -67,6 +70,7 @@ namespace TUGraz.VectoCommon.InputData {
 				case PowertrainPosition.HybridP0:
 				case PowertrainPosition.HybridP1:
 				case PowertrainPosition.HybridP2:
+				case PowertrainPosition.HybridP2_5:
 				case PowertrainPosition.HybridP3:
 				case PowertrainPosition.HybridP4:
 					return true;

@@ -253,6 +253,12 @@
     <Compile Include="GUI\VectoVTPJobForm.vb">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="GUI\EMGearRatioDialog.Designer.vb">
+      <DependentUpon>EMGearRatioDialog.vb</DependentUpon>
+    </Compile>
+    <Compile Include="GUI\EMGearRatioDialog.vb">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Input Files\Battery.vb" />
     <Compile Include="Input Files\BrowserUtils.vb" />
     <Compile Include="GUI\VehicleTorqueLimitsDialog.Designer.vb">
@@ -445,6 +451,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="GUI\VectoVTPJobForm.resx">
       <DependentUpon>VectoVTPJobForm.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GUI\EMGearRatioDialog.resx">
+      <DependentUpon>EMGearRatioDialog.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="GUI\VehicleTorqueLimitsDialog.resx">
       <DependentUpon>VehicleTorqueLimitsDialog.vb</DependentUpon>

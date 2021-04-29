@@ -448,6 +448,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 				.AddComponent(GetElectricMachine(PowertrainPosition.HybridP3, data.ElectricMachinesData, container, es, ctl))
 				.AddComponent(data.AngledriveData != null ? new Angledrive(container, data.AngledriveData) : null)
 				.AddComponent(gearbox, data.Retarder, container)
+				.AddComponent(GetElectricMachine(PowertrainPosition.HybridP2_5, data.ElectricMachinesData, container, es, ctl))
 				.AddComponent(GetElectricMachine(PowertrainPosition.HybridP2, data.ElectricMachinesData, container, es, ctl))
 				.AddComponent(clutch)
 				.AddComponent(GetElectricMachine(PowertrainPosition.HybridP1, data.ElectricMachinesData, container, es, ctl))
@@ -700,6 +701,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 				.AddComponent(GetElectricMachine(PowertrainPosition.HybridP3, data.ElectricMachinesData, container, es, ctl))
 				.AddComponent(data.AngledriveData != null ? new Angledrive(container, data.AngledriveData) : null)
 				.AddComponent(gearbox, data.Retarder, container)
+				.AddComponent(GetElectricMachine(PowertrainPosition.HybridP2_5, data.ElectricMachinesData, container, es, ctl))
 				.AddComponent(GetElectricMachine(PowertrainPosition.HybridP2, data.ElectricMachinesData, container, es, ctl))
 				.AddComponent(clutch)
 				.AddComponent(GetElectricMachine(PowertrainPosition.HybridP1, data.ElectricMachinesData, container, es, ctl));
