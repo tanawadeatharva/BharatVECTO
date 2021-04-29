@@ -42,6 +42,12 @@ Public Class VehicleForm
 		MaxTorque = 1
 	End Enum
 
+	Private Enum RatiosPerGearTbl
+		Gear = 0
+		Ratio = 1
+	End Enum
+
+
 	Private _axlDlog As VehicleAxleDialog
 	Private _hdVclass As VehicleClass
 	Private _vehFile As String
@@ -51,6 +57,7 @@ Public Class VehicleForm
 	Public AutoSendTo As Boolean = False
 	Public JobDir As String = ""
 	Private _torqueLimitDlog As VehicleTorqueLimitDialog
+	private _emRatioPerGearDlog as EMGearRatioDialog
 	Friend VehicleType As VectoSimulationJobType
 
 	'Close - Check for unsaved changes
@@ -126,6 +133,7 @@ Public Class VehicleForm
 			.Cast(Of AngledriveType).Select(Function(type) New With {Key .Value = type, .Label = type.GetLabel()}).ToList()
 		_axlDlog = New VehicleAxleDialog
 		_torqueLimitDlog = New VehicleTorqueLimitDialog()
+		_emRatioPerGearDlog = new EMGearRatioDialog()
 
 		cbPTOType.ValueMember = "Value"
 		cbPTOType.DisplayMember = "Label"
@@ -478,6 +486,16 @@ Public Class VehicleForm
 									 GetRelativePath(em.MechanicalTransmissionLossMap.Source, basePath))
 			tbRatioEm.Text = em.RatioADC.ToGUIFormat()
 			cbEmPos.SelectedValue = em.Position
+
+			If (em.Position = PowertrainPosition.HybridP2_5) AndAlso Not em.RatioPerGear Is nothing Then
+				lvRatioPerGear.Items.Clear()
+				dim gear as integer = 1
+				for each entry as Double in em.RatioPerGear
+					lvRatioPerGear.Items.Add(CreateRatioPerGearListViewItem(gear, entry))
+					gear += 1
+				Next
+			End If
+
 		End If
 
 		If (vehicle.VehicleType = VectoSimulationJobType.ParallelHybridVehicle) Then
@@ -497,7 +515,14 @@ Public Class VehicleForm
 		_changed = False
 	End Sub
 
-	Private Sub UpdateForm(vehType As VectoSimulationJobType)
+    Private Function CreateRatioPerGearListViewItem(gear As Integer, ratio As Double) As ListViewItem
+        dim retval as new ListViewItem
+        retVal.SubItems(0).Text = gear.ToGUIFormat()
+        retVal.SubItems.Add(ratio.ToGUIFormat())
+		return retval
+    End Function
+
+    Private Sub UpdateForm(vehType As VectoSimulationJobType)
 		VehicleType = vehType
 		Select Case vehType
 			Case VectoSimulationJobType.ConventionalVehicle
@@ -624,6 +649,9 @@ Public Class VehicleForm
 			veh.ElectricMotorRatio = tbRatioEm.Text.ToDouble()
 			'veh.ElectricMotorMechEff = tbEmADCLossMap.Text.ToDouble()
 			veh.ElectricMotorMechLossMap.Init(GetPath(file), tbEmADCLossMap.Text)
+			if (veh.ElectricMotorPosition = PowertrainPosition.HybridP2_5) 
+				veh.ElectricMotorPerGearRatios = lvRatioPerGear.Items.Cast(Of ListViewItem).Select(function(item) item.SubItems(RatiosPerGearTbl.Ratio).Text.ToDouble(0)).ToArray()
+			End If
 		End If
 
 		If (VehicleType = VectoSimulationJobType.ParallelHybridVehicle) AndAlso not String.IsNullOrWhiteSpace(tbEmTorqueLimits.Text) Then
@@ -1168,5 +1196,62 @@ Public Class VehicleForm
 			tbPTODrive.Text = GetFilenameWithoutDirectory(PTODrivingCycleDrivingFileBrowser.Files(0), GetPath(_vehFile))
 		End If
 	End Sub
+
+	Private Sub lvTorqueLimits_SelectedIndexChanged(sender As Object, e As EventArgs) Handles lvTorqueLimits.SelectedIndexChanged
+
+	End Sub
+
+	Private Sub cbEmPos_SelectedIndexChanged(sender As Object, e As EventArgs) Handles cbEmPos.SelectedIndexChanged
+		gbRatiosPerGear.Enabled = cbEmPos.SelectedValue.Equals(PowertrainPosition.HybridP2_5) 
+	End Sub
+
+	Private Sub Button1_Click(sender As Object, e As EventArgs) Handles Button1.Click
+		_emRatioPerGearDlog.Clear()
+		If _emRatioPerGearDlog.ShowDialog() = DialogResult.OK Then
+			Dim gear As Integer = _emRatioPerGearDlog.tbGear.Text.ToInt(0)
+			For Each entry As ListViewItem In lvRatioPerGear.Items
+				If entry.SubItems(TorqueLimitsTbl.Gear).Text.ToInt() = gear Then
+					entry.SubItems(TorqueLimitsTbl.MaxTorque).Text = _emRatioPerGearDlog.tbGearRatio.Text.ToDouble(0).ToGUIFormat
+					Change()
+					Return
+				End If
+			Next
+
+			lvRatioPerGear.Items.Add(CreateRatioPerGearListViewItem(gear, _emRatioPerGearDlog.tbGearRatio.Text.ToDouble(0)))
+
+			Change()
+
+		End If
+	End Sub
+
+	Private Sub Button2_Click(sender As Object, e As EventArgs) Handles Button2.Click
+		If lvRatioPerGear.SelectedItems.Count = 0 Then
+			If lvRatioPerGear.Items.Count = 0 Then
+				Exit Sub
+			Else
+				lvRatioPerGear.Items(lvRatioPerGear.Items.Count - 1).Selected = True
+			End If
+		End If
+
+		lvRatioPerGear.SelectedItems(0).Remove()
+	End Sub
+
+	Private Sub lvRatioPerGear_DoubleClick(sender As Object, e As EventArgs) Handles lvRatioPerGear.DoubleClick
+		If lvRatioPerGear.SelectedItems.Count = 0 Then Exit Sub
+
+		Dim entry As ListViewItem = lvRatioPerGear.SelectedItems(0)
+		_emRatioPerGearDlog.tbGear.Text = entry.SubItems(RatiosPerGearTbl.Gear).Text
+		_emRatioPerGearDlog.tbGear.ReadOnly = True
+		_emRatioPerGearDlog.tbGearRatio.Text = entry.SubItems(RatiosPerGearTbl.Ratio).Text
+		_emRatioPerGearDlog.tbGearRatio.Focus()
+		If (_emRatioPerGearDlog.ShowDialog() = DialogResult.OK) Then
+			entry.SubItems(RatiosPerGearTbl.Ratio).Text = _emRatioPerGearDlog.tbGearRatio.Text
+		End If
+		_emRatioPerGearDlog.tbGear.ReadOnly = False
+	End Sub
+
+    Private Sub lvRatioPerGear_SelectedIndexChanged(sender As Object, e As EventArgs) Handles lvRatioPerGear.SelectedIndexChanged
+
+    End Sub
 End Class
 

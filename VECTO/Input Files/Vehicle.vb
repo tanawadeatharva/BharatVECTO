@@ -92,6 +92,7 @@ Public Class Vehicle
 
     public GearDuringPTODrive As UInteger?
     Public EngineSpeedDuringPTODrive As PerSecond
+    Public ElectricMotorPerGearRatios As Double()
 
     Public Sub New()
 		_path = ""
@@ -973,6 +974,7 @@ Public Class ElectricMachineWrapper
 				    .MechanicalTransmissionLossMap = VectoCSVFile.Read(Vehicle.ElectricMotorMechLossMap.FullPath),
                     .Position = Vehicle.ElectricMotorPosition, 
                     .RatioADC = Vehicle.ElectricMotorRatio, 
+				    .RatioPerGear = vehicle.ElectricMotorPerGearRatios,
                     .Count = Vehicle.ElectricMotorCount}})
         End Get
     End Property
@@ -985,6 +987,7 @@ Public Class ElectricMachineWrapper
                     .MechanicalTransmissionLossMap = If(IsNumeric(Vehicle.ElectricMotorMechLossMap.OriginalPath), Nothing, VectoCSVFile.Read(Vehicle.ElectricMotorMechLossMap.FullPath)),
                     .Position = Vehicle.ElectricMotorPosition, 
                     .RatioADC = Vehicle.ElectricMotorRatio, 
+				    .RatioPerGear = Vehicle.ElectricMotorPerGearRatios,
                     .Count = Vehicle.ElectricMotorCount}})
 
         End Get

@@ -582,7 +582,11 @@ public class JSONFileWriter : IOutputFileWriter
 				d["MechanicalTransmissionLossMap"] = GetRelativePath(em.MechanicalTransmissionLossMap.Source, basePath);
 
 			}
-				return d;
+
+			if (em.Position == PowertrainPosition.HybridP2_5) {
+				d["RatioPerGear"] = em.RatioPerGear;
+			}
+			return d;
 		}).ToArray();
 	}
 

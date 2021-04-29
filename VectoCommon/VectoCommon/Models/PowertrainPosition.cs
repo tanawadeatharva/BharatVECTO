@@ -26,7 +26,7 @@ namespace TUGraz.VectoCommon.InputData {
 		public static PowertrainPosition Parse(string pos)
 		{
 			if (pos.StartsWith("P",StringComparison.InvariantCultureIgnoreCase)) {
-				return (HybridPrefix + pos).ParseEnum<PowertrainPosition>();
+				return (HybridPrefix + pos).Replace(".", "_").ParseEnum<PowertrainPosition>();
 			}
 
 			if (pos.StartsWith("B", StringComparison.InvariantCultureIgnoreCase)) {
