@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
 using System.Security.Cryptography;
 using NLog.LayoutRenderers;
@@ -41,7 +42,13 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			ModelData = data;
 			Position = position;
 
-			TransmissionRatioPerGear = Position == PowertrainPosition.HybridP2_5 ? ModelData.RatioPerGear : null;
+			if (Position == PowertrainPosition.HybridP2_5) {
+				TransmissionRatioPerGear = ModelData.RatioPerGear;
+				if (TransmissionRatioPerGear == null ||
+					TransmissionRatioPerGear.Length < container.RunData.GearboxData.GearList.Count()) {
+					throw new VectoException("For powertrain configuration P2.5 a EM ratio for every gear has to be provided!");
+				}
+			}
 
 			container.AddComponent(this); // We have to do this again because in the base class the position is unknown!
 
