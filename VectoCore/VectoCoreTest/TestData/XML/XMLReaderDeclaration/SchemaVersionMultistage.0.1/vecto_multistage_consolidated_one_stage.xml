@@ -282,7 +282,7 @@ xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:DeclarationOutput:VehicleInterimFile
 								<SmartCompressionSystem>true</SmartCompressionSystem>
 								<SmartRegenerationSystem>false</SmartRegenerationSystem>
 								<AirsuspensionControl>electronically</AirsuspensionControl>
-								<AdBlueDosing>true</AdBlueDosing>
+								<SCRReagentDosing>true</SCRReagentDosing>
 							</PneumaticSystem>
 							<HVAC>
 								<AdjustableCoolantThermostat>true</AdjustableCoolantThermostat>
@@ -656,7 +656,7 @@ xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:DeclarationOutput:VehicleInterimFile
 				<v2.8:ManufacturerAddress>Intermediate Manufacturer Address 1</v2.8:ManufacturerAddress>
 				<v2.8:VIN>VEH-1234567890</v2.8:VIN>
 				<v2.8:Date>2018-02-15T11:00:00Z</v2.8:Date>
-				<v2.8:DeclarationType>interim</v2.8:DeclarationType>
+				<v2.8:VehicleDeclarationType>interim</v2.8:VehicleDeclarationType>
 				<v2.8:Components xmlns:v2.8="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:DEV:v2.8" xsi:type="v2.8:CompletedVehicleComponentsDeclarationType">
 					<v2.8:Auxiliaries>
 						<v2.8:Data xsi:type="v2.8:CompletedVehicleAuxiliaryDataDeclarationType"/>

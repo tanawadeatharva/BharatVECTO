@@ -212,7 +212,7 @@
 							</xs:annotation>
 						</xs:element>
 					</xs:sequence>
-					<xs:element name="VehicleCode" type="v2.6:VehicleCodeType" minOccurs="0">
+					<xs:element name="BodyworkCode" type="v2.6:VehicleCodeType" minOccurs="0">
 						<xs:annotation>
 							<xs:documentation>P285 - enum</xs:documentation>
 						</xs:annotation>
@@ -305,7 +305,7 @@
 							</xs:annotation>
 						</xs:element>
 					</xs:sequence>
-					<xs:element name="VehicleCode" type="v2.6:VehicleCodeType" minOccurs="0">
+					<xs:element name="BodyworkCode" type="v2.6:VehicleCodeType" minOccurs="0">
 						<xs:annotation>
 							<xs:documentation>P285 - enum</xs:documentation>
 						</xs:annotation>
@@ -342,7 +342,7 @@
 							<xs:documentation>P291 - enum</xs:documentation>
 						</xs:annotation>
 					</xs:element>
-					<xs:element name="DeclarationType" type="v2.8:DeclarationType">
+					<xs:element name="VehicleDeclarationType" type="v2.8:DeclarationType">
 						<xs:annotation>
 							<xs:documentation>P293 - enum</xs:documentation>
 						</xs:annotation>

@@ -282,7 +282,7 @@ xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:DeclarationOutput:VehicleInterimFile
 								<SmartCompressionSystem>true</SmartCompressionSystem>
 								<SmartRegenerationSystem>false</SmartRegenerationSystem>
 								<AirsuspensionControl>electronically</AirsuspensionControl>
-								<AdBlueDosing>true</AdBlueDosing>
+								<SCRReagentDosing>true</SCRReagentDosing>
 							</PneumaticSystem>
 							<HVAC>
 								<AdjustableCoolantThermostat>true</AdjustableCoolantThermostat>
@@ -665,14 +665,14 @@ xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:DeclarationOutput:VehicleInterimFile
 				<v2.8:ClassBus>B</v2.8:ClassBus>
 				<v2.8:NumberPassengersLowerDeck>30</v2.8:NumberPassengersLowerDeck>
 				<v2.8:NumberPassengersUpperDeck>24</v2.8:NumberPassengersUpperDeck>
-				<v2.8:VehicleCode>CA</v2.8:VehicleCode>
+				<v2.8:BodyworkCode>CA</v2.8:BodyworkCode>
 				<v2.8:LowEntry>true</v2.8:LowEntry>
 				<v2.8:HeightIntegratedBody>2500</v2.8:HeightIntegratedBody>				
 				<v2.8:VehicleLength>12000</v2.8:VehicleLength>				
 				<v2.8:VehicleWidth>2000</v2.8:VehicleWidth>				
 				<v2.8:EntranceHeight>2050</v2.8:EntranceHeight>
 				<v2.8:DoorDriveTechnology>pneumatic</v2.8:DoorDriveTechnology>
-				<v2.8:DeclarationType>final</v2.8:DeclarationType>
+				<v2.8:VehicleDeclarationType>final</v2.8:VehicleDeclarationType>
 				<v2.8:ADAS>
 					<v2.3:EngineStopStart>false</v2.3:EngineStopStart>
 					<v2.3:EcoRollWithoutEngineStop>true</v2.3:EcoRollWithoutEngineStop>
