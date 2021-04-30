@@ -1233,8 +1233,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		{
 			get
 			{
-				return ElementExists(XMLNames.Vehicle_VehicleCode)
-					? GetString(XMLNames.Vehicle_VehicleCode).ParseEnum<VehicleCode>()
+				return ElementExists(XMLNames.Vehicle_BodyworkCode)
+					? GetString(XMLNames.Vehicle_BodyworkCode).ParseEnum<VehicleCode>()
 					: (VehicleCode?)null;
 			}
 		}
@@ -1301,7 +1301,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 		public override VehicleDeclarationType VehicleDeclarationType
 		{
-			get { return VehicleDeclarationTypeHelper.Parse(GetString(XMLNames.Bus_DeclarationType)); }
+			get { return VehicleDeclarationTypeHelper.Parse(GetString(XMLNames.Bus_VehicleDeclarationType)); }
 		}
 
 
@@ -1468,8 +1468,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		{
 			get
 			{
-				return ElementExists(XMLNames.Vehicle_VehicleCode)
-					? GetString(XMLNames.Vehicle_VehicleCode).ParseEnum<VehicleCode>()
+				return ElementExists(XMLNames.Vehicle_BodyworkCode)
+					? GetString(XMLNames.Vehicle_BodyworkCode).ParseEnum<VehicleCode>()
 					: (VehicleCode?)null;
 			}
 		}

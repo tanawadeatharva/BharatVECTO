@@ -128,7 +128,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 			get
 			{
 				return GetBool(
-					new[] { XMLNames.BusAux_PneumaticSystem, XMLNames.BusAux_PneumaticSystem_AdBlueDosing })
+					new[] { XMLNames.BusAux_PneumaticSystem, XMLNames.BusAux_PneumaticSystem_SCRReagentDosing })
 					? ConsumerTechnology.Pneumatically
 					: ConsumerTechnology.Electrically;
 			}

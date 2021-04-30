@@ -1488,4 +1488,13 @@
   <data name="VehicleAttr_VehicleDeclarationType" xml:space="preserve">
     <value>VehicleDeclarationType</value>
   </data>
+  <data name="BusAux_PneumaticSystem_SCRReagentDosing" xml:space="preserve">
+    <value>SCRReagentDosing</value>
+  </data>
+  <data name="Bus_VehicleDeclarationType" xml:space="preserve">
+    <value>VehicleDeclarationType</value>
+  </data>
+  <data name="Vehicle_BodyworkCode" xml:space="preserve">
+    <value>BodyworkCode</value>
+  </data>
 </root>
