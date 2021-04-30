@@ -369,12 +369,14 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 
 		public new const string XSD_TYPE = "VehicleComponentsPIFType";
 		public new const string GEARBOX_READER_TYPE = "TransmissionDataPIFType";
-
+		public new const string AXLES_READER_TYPE = "AxleWheelsDataPIFType";
+		
 		public new static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
 		public new static readonly string GEARBOX_READER_QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI, GEARBOX_READER_TYPE);
+		public new static readonly string AXLES_READER_QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI, AXLES_READER_TYPE);
 
 		protected IBusAuxiliariesDeclarationData _busAuxInputData;
-		
+
 		public XMLMultistagePrimaryVehicleBusComponentReaderV01(IXMLDeclarationVehicleData vehicle, XmlNode componentsNode)
 			: base(vehicle, componentsNode) { }
 

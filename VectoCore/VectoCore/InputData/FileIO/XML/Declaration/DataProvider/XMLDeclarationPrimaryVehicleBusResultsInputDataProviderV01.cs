@@ -70,6 +70,17 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 												string.Format(".//*[local-name()='{0}' and @unit='MJ/km']", XMLNames.Report_Result_EnergyConsumption))?.InnerText
 													.ToDouble().SI(Unit.SI.Mega.Joule.Per.Kilo.Meter).Cast<JoulePerMeter>())).ToDictionary(x => x.Key, x => x.Value);
 
+			
+			var co2Nodes = GetNodes(XMLNames.Report_Results_CO2, xmlNode);
+			var resultCO2 = new Dictionary<string, double>();
+			foreach (XmlNode co2Node in co2Nodes) {
+				var attribute = GetAttribute(co2Node, XMLNames.Report_Results_Unit_Attr);
+				var value = co2Node?.InnerText;
+				if(value != null)
+					resultCO2.Add(attribute, value.ToDouble());
+			}
+			
+
 			return new Result
 			{
 				ResultStatus = resultStatus,
@@ -77,7 +88,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 				VehicleGroup = VehicleClassHelper.Parse(vehicleGroup),
 				SimulationParameter = simulationParams,
 				EnergyConsumption = energyConsumption,
-				CO2 = new Dictionary<string, double>()
+				CO2 = resultCO2
 			};
 		}
 

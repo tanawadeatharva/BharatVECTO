@@ -30,10 +30,11 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.NinjectModules
 			Bind<IXMLPrimaryVehicleBusInputData>().To<XMLDeclarationMultistagePrimaryVehicleInputDataV01>()
 				.Named(XMLDeclarationMultistagePrimaryVehicleInputDataV01.QUALIFIED_XSD_TYPE);
 
+			Bind<IXMLBusAuxiliariesDeclarationData>().To<XMLDeclarationPrimaryBusAuxiliariesDataProviderV01>()
+				.Named(XMLDeclarationPrimaryBusAuxiliariesDataProviderV01.QUALIFIED_XSD_TYPE);
 
 			Bind<IXMLDeclarationPrimaryVehicleBusInputDataReader>().To<XMLMultistagePrimaryVehicleReaderV01>()
 				.Named(XMLMultistagePrimaryVehicleReaderV01.QUALIFIED_XSD_TYPE);
-
 			
 			Bind<IXMLPrimaryVehicleBusJobInputData>().To<XMLDeclarationMultistagePrimaryVehicleBusJobInputDataProviderV01>()
 				.Named(XMLDeclarationMultistagePrimaryVehicleBusJobInputDataProviderV01.QUALIFIED_XSD_TYPE);
@@ -53,6 +54,9 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.NinjectModules
 
 			Bind<IXMLGearboxReader>().To<XMLMultistagePrimaryVehicleBusComponentReaderV01>()
 				.Named(XMLMultistagePrimaryVehicleBusComponentReaderV01.GEARBOX_READER_QUALIFIED_XSD_TYPE);
+
+			Bind<IXMLAxlesReader>().To<XMLMultistagePrimaryVehicleBusComponentReaderV01>()
+				.Named(XMLMultistagePrimaryVehicleBusComponentReaderV01.AXLES_READER_QUALIFIED_XSD_TYPE);
 
 			Bind<IXMLVehicleComponentsDeclaration>()
 				.To<XMLDeclarationComponentsMultistagePrimaryVehicleBusDataProviderV01>()
@@ -78,6 +82,9 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.NinjectModules
 
 			Bind<IXMLAxleGearInputData>().To<XMLDeclarationMultistagePrimaryVehicleBusAxlegearDataProviderV01>().Named(
 				XMLDeclarationMultistagePrimaryVehicleBusAxlegearDataProviderV01.QUALIFIED_XSD_TYPE);
+
+			Bind<IXMLAxlesDeclarationInputData>().To<XMLDeclarationAxlesDataProviderV01>().Named(
+				XMLDeclarationAxlesDataProviderV01.QUALIFIED_XSD_TYPE);
 
 			Bind<IXMLApplicationInformationData>().To<XMLDeclarationMultistagePrimaryVehicleBusApplicationInformationDataProviderV01>()
 				.Named(XMLDeclarationMultistagePrimaryVehicleBusApplicationInformationDataProviderV01.QUALIFIED_XSD_TYPE);

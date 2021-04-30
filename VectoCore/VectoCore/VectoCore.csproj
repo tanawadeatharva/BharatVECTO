@@ -288,6 +288,8 @@
     <Compile Include="InputData\Reader\ComponentData\ElectricMotorMapReader.cs" />
     <Compile Include="InputData\Reader\DataObjectAdapter\DeclarationDataAdapterPrimaryBus.cs" />
     <Compile Include="InputData\Reader\ComponentData\ElectricFullLoadCurveReader.cs" />
+    <Compile Include="InputData\Reader\Impl\AbstractDeclarationMultistageBusVectoRunDataFactory.cs" />
+    <Compile Include="InputData\Reader\Impl\DeclarationModeMultistageBusVectoRunDataFactory.cs" />
     <Compile Include="Models\Connector\Ports\Impl\BatteryResponse.cs" />
     <Compile Include="Models\Connector\Ports\IElectricEnergyStoragePort.cs" />
     <Compile Include="Models\SimulationComponent\Data\Battery\BatteryData.cs" />
@@ -472,10 +474,12 @@
     <Compile Include="OutputData\XML\Engineering\XMLWriterMapping.cs" />
     <Compile Include="OutputData\XML\XMLCustomerReportCompletedBus.cs" />
     <Compile Include="OutputData\XML\XMLDeclarationReportCompletedVehicle.cs" />
+    <Compile Include="OutputData\XML\XMLDeclarationReportMultistageBusVehicle.cs" />
     <Compile Include="OutputData\XML\XMLDeclarationReportPrimaryVehicle.cs" />
     <Compile Include="OutputData\XML\XMLManufacturerReportCompletedBus.cs" />
     <Compile Include="OutputData\XML\XMLManufacturerReportExemptedTruck.cs" />
     <Compile Include="OutputData\XML\XMLManufacturerReportPrimaryBus.cs" />
+    <Compile Include="OutputData\XML\XMLMultistageBusReport.cs" />
     <Compile Include="OutputData\XML\XMLPrimaryVehicleReport.cs" />
     <Compile Include="Utils\Ninject\UseFirstArgumentAsInstanceProvider.cs" />
     <Compile Include="InputData\FileIO\XML\Declaration\NinjectModules\XMLDeclarationReaderInjectModule.cs" />

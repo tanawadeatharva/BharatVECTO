@@ -134,6 +134,15 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 						return;
 				}
 			}
+
+			if (dataProvider is IMultistageVIFInputData) {
+				var declDataProvider = dataProvider as IMultistageVIFInputData;
+				var report = declarationReport ?? new XMLDeclarationReportMultistageBusVehicle(ModWriter);
+				DataReader = new DeclarationModeMultistageBusVectoRunDataFactory(declDataProvider, report);
+				return;
+			}
+
+
 			throw new VectoException("Unknown InputData for Declaration Mode!");
 		}
 

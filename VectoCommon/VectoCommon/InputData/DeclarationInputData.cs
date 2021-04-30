@@ -277,7 +277,7 @@ namespace TUGraz.VectoCommon.InputData
 
 		public static string ToXMLFormat(this PredictiveCruiseControlType pcc)
 		{
-			return pcc.ToString().ToLowerInvariant().Replace(Prefix, "").Replace(SeparatorEnum, SeparatorXML);
+			return pcc.ToString().ToLowerInvariant().Replace(Prefix.ToLowerInvariant(), "").Replace(SeparatorEnum, SeparatorXML);
 		}
 
 		public static string GetName(this PredictiveCruiseControlType pcc)

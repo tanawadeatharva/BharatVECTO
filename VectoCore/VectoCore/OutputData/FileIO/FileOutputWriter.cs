@@ -85,6 +85,12 @@ namespace TUGraz.VectoCore.OutputData.FileIO
 			get { return Path.ChangeExtension(_jobFile, Constants.FileExtensions.SumFile); }
 		}
 
+		public string XMLMultistageReportFileName
+		{
+			get { return Path.ChangeExtension(_jobFile, "VIF_Report.xml"); }
+		}
+
+
 		/// <summary>
 		/// 
 		/// </summary>
@@ -134,6 +140,9 @@ namespace TUGraz.VectoCore.OutputData.FileIO
 					break;
 				case ReportType.DeclarationVTPReportXML:
 					fileName = XMLVTPReportName;
+					break;
+				case ReportType.DeclarationReportMultistageVehicleXML:
+					fileName = XMLMultistageReportFileName;
 					break;
 				default:
 					throw new ArgumentOutOfRangeException("ReportType");
