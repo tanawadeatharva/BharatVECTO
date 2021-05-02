@@ -175,7 +175,11 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 		public Meter Height
 		{
 			get { return _height; }
-			set { SetProperty(ref _height, value); }
+			set
+			{
+				SetProperty(ref _height, value);
+				//OnPropertyChanged(nameof(HeightInMm));
+			}
 		}
 
 		public ConvertedSI LengthInMm
@@ -194,7 +198,11 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 		public Meter Length
 		{
 			get { return _length; }
-			set { SetProperty(ref _length, value); }
+			set
+			{
+				SetProperty(ref _length, value);
+				//OnPropertyChanged(nameof(LengthInMm));
+			}
 		}
 
 		public ConvertedSI WidthInMm
@@ -213,7 +221,11 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 		public Meter Width
 		{
 			get { return _width; }
-			set { SetProperty(ref _width, value); }
+			set
+			{
+				SetProperty(ref _width, value);
+				//OnPropertyChanged(nameof(WidthInMm));
+			}
 		}
 
 		public ConvertedSI ConsolidatedEntranceHeightInMm
@@ -225,14 +237,22 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 		public ConvertedSI EntranceHeightInMm
 		{
 			get { return EntranceHeight?.ConvertToMilliMeter(); }
-			set { EntranceHeight = value?.ConvertToMeter(); }
+			set
+			{
+				EntranceHeight = value?.ConvertToMeter(); 
+				
+			}
 		}
 
 
 		public Meter EntranceHeight
 		{
 			get => _entranceHeight;
-			set => SetProperty(ref _entranceHeight, value);
+			set
+			{
+				SetProperty(ref _entranceHeight, value);
+				//OnPropertyChanged(nameof(EntranceHeightInMm));
+			}
 		}
 
 		#endregion
@@ -676,11 +696,18 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 			NumberOfPassengersUpperDeck = vehicleInputData.NumberOfPassengersUpperDeck;
 			NumberOfPassengersLowerDeck = vehicleInputData.NumberOfPassengersLowerDeck;
 			VehicleCode = vehicleInputData.VehicleCode;
+		
 			LowEntry = vehicleInputData.LowEntry;
+
+
+	
+						
 			Height = vehicleInputData.Height;
 			Width = vehicleInputData.Width;
 			Length = vehicleInputData.Length;
 			EntranceHeight = vehicleInputData.EntranceHeight;
+
+	
 			DoorDriveTechnology = vehicleInputData.DoorDriveTechnology;
 			VehicleDeclarationType = vehicleInputData.VehicleDeclarationType;
 			AdasEditingEnabled = vehicleInputData.ADAS != null;
@@ -688,6 +715,8 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 			EcoRollTypeNullable = vehicleInputData.ADAS?.EcoRoll;
 			PredictiveCruiseControlNullable = vehicleInputData.ADAS?.PredictiveCruiseControl;
 			ATEcoRollReleaseLockupClutch = vehicleInputData.ADAS?.ATEcoRollReleaseLockupClutch;
+			OnPropertyChanged(String.Empty);
+
 		}
 
 		#region Implementation of IDataErrorInfo

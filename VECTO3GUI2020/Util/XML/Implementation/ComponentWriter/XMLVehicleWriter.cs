@@ -246,11 +246,11 @@ namespace VECTO3GUI2020.Util.XML.Implementation
 			_Xelement.Add(new XElement(_defaultNamespace + XMLNames.Bus_LowEntry, _inputData.LowEntry));
 
 
-			_Xelement.Add(new XElement(_defaultNamespace + XMLNames.Bus_HeighIntegratedBody, _inputData.Height.ConvertToMilliMeter()));
-			_Xelement.Add(new XElement(_defaultNamespace + XMLNames.Bus_VehicleLength, _inputData.Length.ConvertToMilliMeter()));
+			_Xelement.Add(new XElement(_defaultNamespace + XMLNames.Bus_HeighIntegratedBody, _inputData.Height?.ConvertToMilliMeter()));
+			_Xelement.Add(new XElement(_defaultNamespace + XMLNames.Bus_VehicleLength, _inputData.Length?.ConvertToMilliMeter()));
 
-			_Xelement.Add(new XElement(_defaultNamespace + XMLNames.Bus_VehicleWidth, _inputData.Width.ConvertToMilliMeter()));
-			_Xelement.Add(new XElement(_defaultNamespace + XMLNames.Bus_EntranceHeight, _inputData.EntranceHeight.ConvertToMilliMeter()));
+			_Xelement.Add(new XElement(_defaultNamespace + XMLNames.Bus_VehicleWidth, _inputData.Width?.ConvertToMilliMeter()));
+			_Xelement.Add(new XElement(_defaultNamespace + XMLNames.Bus_EntranceHeight, _inputData.EntranceHeight?.ConvertToMilliMeter()));
 
 			_Xelement.Add(new XElement(_defaultNamespace + XMLNames.BusAux_PneumaticSystem_DoorDriveTechnology, 
 				_inputData.DoorDriveTechnology != null 

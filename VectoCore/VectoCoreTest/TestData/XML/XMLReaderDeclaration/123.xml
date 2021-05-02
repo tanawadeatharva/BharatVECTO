@@ -4,12 +4,12 @@
     <Manufacturer>Some Manufacturer</Manufacturer>
     <ManufacturerAddress>Some Manufacturer Address</ManufacturerAddress>
     <VIN>VEH-1234567890</VIN>
-    <Date>2021-04-28T22:00:00Z</Date>
+    <Date>2021-05-01T22:00:00Z</Date>
     <Model>Sample Bus Model</Model>
     <LegislativeCategory>M3</LegislativeCategory>
     <CorrectedActualMass>500</CorrectedActualMass>
     <TechnicalPermissibleMaximumLadenMass>3500</TechnicalPermissibleMaximumLadenMass>
-    <AirdragModifiedMultistage>true</AirdragModifiedMultistage>
+    <AirdragModifiedMultistage>false</AirdragModifiedMultistage>
     <NgTankSystem>Compressed</NgTankSystem>
     <ClassBus>II+III</ClassBus>
     <VehicleCode>CB</VehicleCode>
