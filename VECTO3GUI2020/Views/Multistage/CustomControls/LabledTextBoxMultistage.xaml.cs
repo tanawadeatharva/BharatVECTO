@@ -72,6 +72,15 @@ namespace VECTO3GUI2020.Views.Multistage.CustomControls
 			set { SetValue(LabelTextProperty, value); }
 		}
 
+		public static readonly DependencyProperty ModeProperty = DependencyProperty.Register(
+			"Mode", typeof(MultistageParameterViewMode), typeof(LabledTextBoxMultistage), new PropertyMetadata(default(MultistageParameterViewMode)));
+
+		public MultistageParameterViewMode Mode
+		{
+			get { return (MultistageParameterViewMode)GetValue(ModeProperty); }
+			set { SetValue(ModeProperty, value); }
+		}
+
 		#endregion
 
 		private static void ContentChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
@@ -79,7 +88,8 @@ namespace VECTO3GUI2020.Views.Multistage.CustomControls
 			var labledTextBoxMultistage = (CustomControls.LabledTextBoxMultistage)d;
 
 
-			labledTextBoxMultistage.DummyContent = labledTextBoxMultistage.CreateDummyContent(e);
+			labledTextBoxMultistage.DummyContent = labledTextBoxMultistage.CreateDummyContent(e, 
+				createEnum:labledTextBoxMultistage.Mode == MultistageParameterViewMode.COMBOBOX);
 
 			if (labledTextBoxMultistage.LabelText != null)
 			{

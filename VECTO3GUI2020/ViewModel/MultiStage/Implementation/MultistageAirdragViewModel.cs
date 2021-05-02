@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Windows;
@@ -34,7 +35,10 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 
 		public string AirdragFilePath
 		{
-			get => _airdragFilePath;
+			get
+			{
+				return AirDragViewModel?.DataSource.SourceFile.ToString();
+			} 
 			set => SetProperty(ref _airdragFilePath, value);
 		}
 
@@ -46,6 +50,7 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 
 		public void SetAirdragInputData(IAirdragDeclarationInputData airdragInputData)
 		{
+			Debug.WriteLine("[MultistageAirdragViewModel] loaded AirdragInputData");
 			if (airdragInputData == null) {
 				AirDragViewModel = null;
 				return;
@@ -66,7 +71,12 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 
 		#region Commands
 
+
+
 		private ICommand _loadAirdragFileCommand;
+		private ICommand _removeAirdragDataCommand;
+
+
 
 		private Dictionary<string, string> _validationErrors;
 
@@ -113,7 +123,7 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 
 					var airDragInputData = _dependencies.InjectFactory.CreateAirdragData(dataProviderVersion, null, airdragNode, fileName);
 					AirDragViewModel = _dependencies.ComponentViewModelFactory.CreateComponentViewModel(airDragInputData) as IAirDragViewModel;
-					success = false;
+					success = true;
 				} else {
 					success = false;
 				}
@@ -124,13 +134,20 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 					MessageBoxButton.OK,
 					MessageBoxImage.Error);
 				success = false;
+				return;
 			}
 
 			if (success) {
 				AirdragFilePath = fileName;
+			} else {
+				_dependencies.DialogHelper.ShowMessageBox("Invalid input file", "Error", MessageBoxButton.OK,
+					MessageBoxImage.Error);
 			}
 			
 		}
+
+
+
 
 		private void ValidationErrorAction(XmlSeverityType arg1, ValidationEvent arg2)
 		{
@@ -145,6 +162,14 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 					_validationErrors.Add(localName, message?.Message);
 			}
 		}
+
+		public ICommand RemoveAirdragDataCommand{
+			get => _removeAirdragDataCommand ?? new RelayCommand(() => {
+				AirDragViewModel = null;
+				OnPropertyChanged(nameof(AirdragFilePath));
+			},  () => AirDragViewModel != null);
+		}
+
 		#endregion
 
 
@@ -162,13 +187,13 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 			ConsolidatedAirdragData = consolidatedAirdragInputData;
 		}
 
-		public DataSource DataSource => _airdragViewModel.DataSource;
+		public DataSource DataSource => _airdragViewModel?.DataSource;
 
-		public bool SavedInDeclarationMode => _airdragViewModel.SavedInDeclarationMode;
+		public bool SavedInDeclarationMode => _airdragViewModel?.SavedInDeclarationMode ?? false;
 
-		public string Manufacturer => _airdragViewModel.Manufacturer;
+		public string Manufacturer => _airdragViewModel?.Manufacturer;
 
-		public string Model => _airdragViewModel.Model;
+		public string Model => _airdragViewModel?.Model;
 
 		public DateTime Date => _airdragViewModel.Date;
 

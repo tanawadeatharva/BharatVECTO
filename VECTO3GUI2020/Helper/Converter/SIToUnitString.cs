@@ -27,7 +27,7 @@ namespace VECTO3GUI2020.Helper.Converter
 				return convertedSI.Units;
 			}
 
-
+			return Binding.DoNothing;
 
             //TRY GET DYNAMIC UNIT STRING
 			try {

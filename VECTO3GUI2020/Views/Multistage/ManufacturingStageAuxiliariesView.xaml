@@ -59,6 +59,7 @@
                                                 ShowCheckBox="False"/>
                     <Separator/>
                     <customControls:MultiStageParameter Mode="TEXTBOX" 
+                                                        Validation.ErrorTemplate="{DynamicResource multistageParameterControlErrorTemplate}"
                                                 PreviousContent="{Binding ConsolidatedInputData.HVACAux.AuxHeaterPower}"
                                                 Content="{Binding AuxHeaterPower}"/>
                     <customControls:MultiStageParameter Mode="CHECKBOX" 

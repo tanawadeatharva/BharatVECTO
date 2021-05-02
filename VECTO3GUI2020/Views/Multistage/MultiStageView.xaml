@@ -10,17 +10,26 @@
              d:DesignHeight="450" d:DesignWidth="800" d:DataContext="{d:DesignInstance implementation:MultiStageJobViewModel_v0_1}">
     <Grid>
         <DockPanel>
-            <customControls:FilePicker Command="{Binding LoadVehicleDataCommand}" DockPanel.Dock="Top" Text="{Binding VehicleInputDataFilePath}"></customControls:FilePicker>
+            <customControls:FilePicker 
+                DockPanel.Dock="Top" 
+                Command="{Binding LoadVehicleDataCommand}" 
+                Text="{Binding VehicleInputDataFilePath, TargetNullValue=Select Vehicle Input Data . . .}"></customControls:FilePicker>
             <Border BorderThickness="1" BorderBrush="{DynamicResource ButtonHighlightColor}" Height="40" DockPanel.Dock="Bottom">
                 <DockPanel LastChildFill="False">
                     <Button DockPanel.Dock="Right"
                             Width="100"
-                            Command="{Binding SaveCommand}"
+                            Command="{Binding SaveVIFCommand}"
                             Style="{DynamicResource MultiStageButtonStyle1}"
                             Margin="4"
                             Padding="4">Save as new VIF</Button>
-                    <Button DockPanel.Dock="Right" Width="100"  Style="{DynamicResource MultiStageButtonStyle1}" Margin="4" Padding="4">Save Input</Button>
-                    <Button DockPanel.Dock="Right" Width="100"  Style="{DynamicResource MultiStageButtonStyle1}" Margin="4" Padding="4">Save Input As ... </Button>
+                    <Button 
+                        DockPanel.Dock="Right" 
+                        Width="100"  
+                        Style="{DynamicResource MultiStageButtonStyle1}" 
+                        Margin="4" 
+                        Padding="4" 
+                        Command="{Binding SaveInputDataCommand}">Save Input</Button>
+                    <Button DockPanel.Dock="Right" Width="100"  Style="{DynamicResource MultiStageButtonStyle1}" Margin="4" Padding="4" Command="{Binding SaveInputDataAsCommand}">Save Input As ... </Button>
                 </DockPanel>
             </Border>
             <ContentControl DockPanel.Dock="Top" Content="{Binding ManufacturingStageViewModel}"/>

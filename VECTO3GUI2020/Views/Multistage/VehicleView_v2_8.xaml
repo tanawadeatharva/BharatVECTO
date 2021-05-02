@@ -14,15 +14,15 @@
                 <Label Content="VEHICLE DATA" HorizontalAlignment="Stretch" FontSize="15" VerticalAlignment="Stretch"
                        Style="{DynamicResource LabelStyle1}"/>
 
-                <custom:MultiStageParameter 
+                <custom:MultiStageParameter Validation.ErrorTemplate="{StaticResource multistageParameterControlErrorTemplate}"
                     Optional="False" 
-                    Content="{Binding Manufacturer}"/>
-                <custom:MultiStageParameter 
+                    Content="{Binding Manufacturer, ValidatesOnDataErrors=True}"/>
+                <custom:MultiStageParameter Validation.ErrorTemplate="{StaticResource multistageParameterControlErrorTemplate}"
                     Optional="False"
-                    Content="{Binding ManufacturerAddress}"/>
-                <custom:MultiStageParameter 
+                    Content="{Binding ManufacturerAddress, ValidatesOnDataErrors=True}"/>
+                <custom:MultiStageParameter Validation.ErrorTemplate="{StaticResource multistageParameterControlErrorTemplate}"
                     Optional="False" 
-                    Content="{Binding VIN}"/>
+                    Content="{Binding VIN, ValidatesOnDataErrors=True}"/>
 
                 <custom:MultiStageParameter 
                     PreviousContent="{Binding ConsolidatedVehicleData.Model}" 
@@ -37,20 +37,20 @@
                     Content="{Binding LegislativeClass}" 
                     Mode="COMBOBOX" />
 
-                <custom:MultiStageParameter 
-                    PreviousContent="{Binding ConsolidatedVehicleData.CurbMassChassis}"
-                    Content="{Binding CurbMassChassis}"/>
+                <custom:MultiStageParameter Validation.ErrorTemplate="{StaticResource multistageParameterControlErrorTemplate}"
+                                            PreviousContent="{Binding ConsolidatedVehicleData.CurbMassChassis}"
+                                            Content="{Binding CurbMassChassis}"/>
 
-                <custom:MultiStageParameter 
-                    PreviousContent="{Binding ConsolidatedVehicleData.GrossVehicleMassRating}"
-                    Content="{Binding GrossVehicleMassRating}"/>
+                <custom:MultiStageParameter Validation.ErrorTemplate="{StaticResource multistageParameterControlErrorTemplate}"
+                                            PreviousContent="{Binding ConsolidatedVehicleData.GrossVehicleMassRating}"
+                                            Content="{Binding GrossVehicleMassRating}"/>
 
 
-                <custom:MultiStageParameter 
-                    EditingEnabled="{Binding AirdragModifiedMultistageEditingEnabled}"
-                    PreviousContent="{Binding ConsolidatedAirdragModifiedEnum}"
-                    Content="{Binding AirdragModifiedEnum}" 
-                    Mode="COMBOBOX"/>
+                <custom:MultiStageParameter Validation.ErrorTemplate="{StaticResource multistageParameterControlErrorTemplate}"
+                                            EditingEnabled="{Binding AirdragModifiedMultistageEditingEnabled}"
+                                            PreviousContent="{Binding ConsolidatedAirdragModifiedEnum}"
+                                            Content="{Binding AirdragModifiedEnum, ValidatesOnDataErrors=True}" 
+                                            Mode="COMBOBOX"/>
 
                 <custom:MultiStageParameter 
                     PreviousContent="{Binding ConsolidatedVehicleData.TankSystem}"
@@ -86,31 +86,31 @@
                     />
 
                 <Separator/>
-                <custom:MultiStageParameter 
-                    EditingEnabled="{Binding 
-        MeasurementsGroupEditingEnabled}" 
-                    PreviousContent="{Binding ConsolidatedHeightInMm}"
-                    Content="{Binding HeightInMm}"
-                    DummyContent="{Binding Source={StaticResource milimeterDummy}}"/>
-                <custom:MultiStageParameter 
-                    EditingEnabled="{Binding MeasurementsGroupEditingEnabled}" 
-                    PreviousContent="{Binding ConsolidatedWidthInMm}"
-                    Content="{Binding WidthInMm}"
-                    ShowCheckBox="False"
-                    DummyContent="{Binding Source={StaticResource milimeterDummy}}"/>
-                <custom:MultiStageParameter 
-                    EditingEnabled="{Binding MeasurementsGroupEditingEnabled}" 
-                    PreviousContent="{Binding ConsolidatedLengthInMm}"
-                    Content="{Binding LengthInMm}"
-                    ShowCheckBox="False"
-                    DummyContent="{Binding Source={StaticResource milimeterDummy}}"/>
+                <custom:MultiStageParameter Validation.ErrorTemplate="{StaticResource multistageParameterControlErrorTemplate}"
+                                            EditingEnabled="{Binding 
+                                MeasurementsGroupEditingEnabled}" 
+                                            PreviousContent="{Binding ConsolidatedHeightInMm}"
+                                            Content="{Binding HeightInMm, ValidatesOnExceptions=True}"
+                                            DummyContent="{Binding Source={StaticResource milimeterDummy}}"/>
+                <custom:MultiStageParameter Validation.ErrorTemplate="{StaticResource multistageParameterControlErrorTemplate}"
+                                            EditingEnabled="{Binding MeasurementsGroupEditingEnabled}" 
+                                            PreviousContent="{Binding ConsolidatedWidthInMm}"
+                                            Content="{Binding WidthInMm}"
+                                            ShowCheckBox="False"
+                                            DummyContent="{Binding Source={StaticResource milimeterDummy}}"/>
+                <custom:MultiStageParameter Validation.ErrorTemplate="{StaticResource multistageParameterControlErrorTemplate}"
+                                            EditingEnabled="{Binding MeasurementsGroupEditingEnabled}" 
+                                            PreviousContent="{Binding ConsolidatedLengthInMm}"
+                                            Content="{Binding LengthInMm}"
+                                            ShowCheckBox="False"
+                                            DummyContent="{Binding Source={StaticResource milimeterDummy}}"/>
 
-                <custom:MultiStageParameter 
-                    EditingEnabled="{Binding MeasurementsGroupEditingEnabled}"
-                    PreviousContent="{Binding ConsolidatedEntranceHeightInMm}"
-                    Content="{Binding EntranceHeightInMm}" 
-                    ShowCheckBox="False"
-                    DummyContent="{Binding Source={StaticResource milimeterDummy}}"/>
+                <custom:MultiStageParameter Validation.ErrorTemplate="{StaticResource multistageParameterControlErrorTemplate}"
+                                            EditingEnabled="{Binding MeasurementsGroupEditingEnabled}"
+                                            PreviousContent="{Binding ConsolidatedEntranceHeightInMm}"
+                                            Content="{Binding EntranceHeightInMm}" 
+                                            ShowCheckBox="False"
+                                            DummyContent="{Binding Source={StaticResource milimeterDummy}}"/>
 
                 <Separator/>
 
@@ -122,8 +122,9 @@
 
 
                 <custom:MultiStageParameter 
+                    EditingEnabled="True"
+                    ShowCheckBox="False"
                     PreviousContent="{Binding ConsolidatedVehicleData.VehicleDeclarationType}"
-                                    
                     Content="{Binding VehicleDeclarationType}" Mode="COMBOBOX" />
 
                 <Label Content="ADAS" Style="{DynamicResource LabelStyle1}"/>

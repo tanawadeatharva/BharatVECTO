@@ -49,7 +49,7 @@ namespace VECTO3GUI2020.Views.CustomControls
 			return PropertyType;
 		}
 
-		public static object CreateDummyContent(this UserControl userControl, DependencyPropertyChangedEventArgs e)
+		public static object CreateDummyContent(this UserControl userControl, DependencyPropertyChangedEventArgs e, bool createEnum = false)
 		{
 			var type = userControl.GetPropertyType(e.Property);
 			if (type == null)
@@ -62,13 +62,13 @@ namespace VECTO3GUI2020.Views.CustomControls
 				var baseType = dynType.BaseType;
 				//Create SI Dummy
 
-				if (baseType.BaseType == typeof(SI))
+				if (baseType?.BaseType != null && baseType.BaseType == typeof(SI))
 				{
 					var createMethod = baseType.GetMethod("Create");
 					var dummyContent = createMethod?.Invoke(null, new object[] { (new double()) });
 					return dummyContent;
 				}
-				else
+				else if(createEnum)
 				{
 					var bindingProperty = userControl.GetBindingExpression(e.Property);
 					var dataItemType = bindingProperty?.DataItem.GetType();

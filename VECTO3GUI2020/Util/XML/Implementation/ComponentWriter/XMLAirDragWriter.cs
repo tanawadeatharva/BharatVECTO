@@ -10,6 +10,7 @@ using TUGraz.VectoCore.InputData.FileIO.XML.Engineering.Interfaces;
 using VECTO3GUI2020.Helper;
 using VECTO3GUI2020.Util.XML.Interfaces;
 using VECTO3GUI2020.ViewModel.Implementation.JobEdit.Vehicle.Components;
+using VECTO3GUI2020.ViewModel.MultiStage.Implementation;
 
 namespace VECTO3GUI2020.Util.XML.Implementation.ComponentWriter
 {
@@ -45,7 +46,8 @@ namespace VECTO3GUI2020.Util.XML.Implementation.ComponentWriter
 	public class XMLAirDragWriter_v2_0 : XMLAirDragWriter
 	{
 		public static readonly string[] SUPPORTED_VERSIONS = {
-			typeof(AirDragViewModel_v2_0).ToString()
+			typeof(AirDragViewModel_v2_0).ToString(),
+			typeof(MultistageAirdragViewModel).ToString()
 		};
 		public XMLAirDragWriter_v2_0(IAirdragDeclarationInputData inputData) : base(inputData) { }
 		protected override void CreateDataElements()
@@ -60,8 +62,8 @@ namespace VECTO3GUI2020.Util.XML.Implementation.ComponentWriter
 			dataElement.Add(new XElement(_defaultNamespace + XMLNames.Component_CertificationNumber, _inputData.CertificationNumber));
 			dataElement.Add(new XElement(_defaultNamespace + XMLNames.Component_Date, _inputData.Date));
 			dataElement.Add(new XElement(_defaultNamespace + XMLNames.Component_AppVersion, _inputData.AppVersion));
-			dataElement.Add(new XElement(_defaultNamespace + XMLNames.AirDrag_CdxA_0, _inputData.AirDragArea.ToXMLFormat(2)));
-			dataElement.Add(new XElement(_defaultNamespace + XMLNames.AirDrag_TransferredCDxA, _inputData.AirDragArea.ToXMLFormat(2)));
+			dataElement.Add(new XElement(_defaultNamespace + XMLNames.AirDrag_CdxA_0, _inputData.AirDragArea_0.ToXMLFormat(2)));
+			dataElement.Add(new XElement(_defaultNamespace + XMLNames.AirDrag_TransferredCDxA, _inputData.TransferredAirDragArea.ToXMLFormat(2)));
 			dataElement.Add(new XElement(_defaultNamespace + XMLNames.AirDrag_DeclaredCdxA, _inputData.AirDragArea.ToXMLFormat(2)));
 
 		}
@@ -69,7 +71,7 @@ namespace VECTO3GUI2020.Util.XML.Implementation.ComponentWriter
 		protected override void Initialize()
 		{
 			_defaultNamespace = XMLNamespaces.V20;
-			_xElement = new XElement(_defaultNamespace + XMLNames.Component_AirDrag);
+			_xElement = new XElement(XMLNames.Component_AirDrag);
 		}
 	}
 }

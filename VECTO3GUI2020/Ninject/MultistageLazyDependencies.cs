@@ -3,6 +3,7 @@ using TUGraz.VectoCore.InputData.FileIO.XML;
 using TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Factory;
 using TUGraz.VectoCore.Utils;
 using VECTO3GUI2020.Helper;
+using VECTO3GUI2020.Util.XML.Interfaces;
 using VECTO3GUI2020.ViewModel.Interfaces.JobEdit.Vehicle.Components;
 
 namespace VECTO3GUI2020.Ninject
@@ -26,16 +27,26 @@ namespace VECTO3GUI2020.Ninject
 
 		public IDeclarationInjectFactory InjectFactory => _injectFactory.Value;
 		public IComponentViewModelFactory ComponentViewModelFactory => _componentViewModelFactory.Value;
+		public IXMLWriterFactory XMLWriterFactory => _xmlWriterFactory.Value;
+
+		private Lazy<IXMLWriterFactory> _xmlWriterFactory;
 
 
 		private readonly Lazy<IDeclarationInjectFactory> _injectFactory;
 		private readonly Lazy<IComponentViewModelFactory> _componentViewModelFactory;
-		public MultistageLazyDependencies(Lazy<IDialogHelper> dialogHelper, Lazy<IXMLInputDataReader> inputDataReader, Lazy<IDeclarationInjectFactory> injectFactory, Lazy<IComponentViewModelFactory> componentViewModelFactory)
+		public MultistageLazyDependencies(
+			Lazy<IDialogHelper> dialogHelper, 
+			Lazy<IXMLInputDataReader> inputDataReader, 
+			Lazy<IDeclarationInjectFactory> injectFactory, 
+			Lazy<IComponentViewModelFactory> componentViewModelFactory,
+			Lazy<IXMLWriterFactory> xmlWriterFactory)
 		{
 			_dialogHelper = dialogHelper;
 			_inputDataReader = inputDataReader;
 			_componentViewModelFactory = componentViewModelFactory;
 			_injectFactory = injectFactory;
+			_xmlWriterFactory = xmlWriterFactory;
+
 		}
 	}
 }

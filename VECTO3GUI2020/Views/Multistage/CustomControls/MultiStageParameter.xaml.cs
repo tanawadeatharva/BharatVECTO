@@ -190,11 +190,15 @@ namespace VECTO3GUI2020.Views.Multistage.CustomControls
 			if (Mode != MultistageParameterViewMode.COMBOBOX) 
 				return;
 
-			if(DummyContent is Enum en) {
-				var enType = en.GetType();
-				
-
+			if(DummyContent is Enum dummyEnum) {
+				var enType = dummyEnum.GetType();
 				ListItems = Enum.GetValues(enType).Cast<object>().ToList();
+			}
+
+			if (Content is Enum contentEnum) {
+				var enType = contentEnum.GetType();
+				ListItems = Enum.GetValues(enType).Cast<object>().ToList();
+
 			}
 		}
 
@@ -217,13 +221,13 @@ namespace VECTO3GUI2020.Views.Multistage.CustomControls
 				
 
 
-				if (baseType.BaseType == typeof(SI)) {
+				if (baseType?.BaseType != null && baseType.BaseType == typeof(SI)) {
 					var createMethod = baseType.GetMethod("Create");
 					var dummyContent = createMethod?.Invoke(null, new object[] { (new double()) });
 					return dummyContent;
-				}else{
+				}else if(Mode == MultistageParameterViewMode.COMBOBOX) {
 					var bindingProperty = userControl.GetBindingExpression(e.Property);
-					var dataItemType = bindingProperty?.DataItem.GetType();
+					var dataItemType = bindingProperty?.DataItem?.GetType();
 					var sourcePropertyType =
 						dataItemType?.GetProperty(bindingProperty?.ResolvedSourcePropertyName)?.PropertyType;
 
@@ -252,7 +256,9 @@ namespace VECTO3GUI2020.Views.Multistage.CustomControls
 		{
 			MultiStageParameter multiStageParameter = (MultiStageParameter)d;
 			if((bool)e.NewValue == false) {
-				multiStageParameter.DummyContent = multiStageParameter.Content;
+				if (!Validation.GetHasError(multiStageParameter.TextBoxContent)) {
+					multiStageParameter.DummyContent = multiStageParameter.Content;
+				}
 				multiStageParameter.Content = null;
             } else {
 				if (multiStageParameter.Content != null) {

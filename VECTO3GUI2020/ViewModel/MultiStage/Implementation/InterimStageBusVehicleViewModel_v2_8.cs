@@ -1,17 +1,21 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Configuration;
 using System.Linq;
+using System.Runtime.InteropServices.WindowsRuntime;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml;
 using Castle.Core.Internal;
+using Microsoft.Build.Framework;
 using TUGraz.VectoCommon.BusAuxiliaries;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider;
+using VECTO3GUI2020.Helper;
 using VECTO3GUI2020.Properties;
 using VECTO3GUI2020.ViewModel.Implementation.Common;
 using VECTO3GUI2020.ViewModel.Interfaces.JobEdit.Vehicle;
@@ -59,6 +63,8 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 
 	public interface IMultistageVehicleViewModel : IVehicleViewModel
 	{
+		bool HasErrors { get; }
+		Dictionary<string, string> Errors { get; }
 		void SetAirdragData(IAirdragDeclarationInputData airdragData);
 		void SetBusAuxiliaries(IBusAuxiliariesDeclarationData busAuxData);
 		void SetVehicleInputData(IVehicleDeclarationInputData vehicleInputData);
@@ -66,7 +72,7 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 
 
 	class DeclarationInterimStageBusVehicleViewModel_v2_8 : ViewModelBase, IMultistageVehicleViewModel,
-		IVehicleComponentsDeclaration, IAdvancedDriverAssistantSystemDeclarationInputData
+		IVehicleComponentsDeclaration, IAdvancedDriverAssistantSystemDeclarationInputData, IDataErrorInfo
 	{
 
 
@@ -120,11 +126,13 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 		private Meter _width;
 
 
-
 		public string Manufacturer
 		{
 			get { return _manufacturer; }
-			set { SetProperty(ref _manufacturer, value); }
+			set
+			{
+				SetProperty(ref _manufacturer, value);
+			}
 		}
 
 		public string Model
@@ -285,13 +293,8 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 		{
 			get => _airdragModifiedMultistage.toAirdragModifiedEnum();
 			set {
-				if (value == AirdragModifiedEnum.UNKNOWN && AirdragModifiedMultistageEditingEnabled) {
-					throw new ArgumentException();
-				}
 				AirdragModifiedMultistage = value.toNullableBool();
-			} 
-		
-
+			}
 		}
 
         public AirdragModifiedEnum ConsolidatedAirdragModifiedEnum
@@ -491,7 +494,7 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 
 		public DateTime Date
 		{
-			get { throw new NotImplementedException(); }
+			get => DateTime.Today;
 		}
 
 		public string AppVersion
@@ -610,7 +613,14 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 
 		public IVehicleComponentsDeclaration Components
 		{
-			get { throw new NotImplementedException(); }
+			get
+			{
+				if ((_airdragInputData != null) || (_busAuxiliaries != null)) {
+					return this;
+				} else {
+					return null;
+				}
+			}
 		}
 
 		
@@ -679,5 +689,62 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 			PredictiveCruiseControlNullable = vehicleInputData.ADAS?.PredictiveCruiseControl;
 			ATEcoRollReleaseLockupClutch = vehicleInputData.ADAS?.ATEcoRollReleaseLockupClutch;
 		}
+
+		#region Implementation of IDataErrorInfo
+
+		public Dictionary<string, string> Errors { get; private set; } = new Dictionary<string, string>();
+
+		public string this[string propertyName]
+		{
+			get
+			{
+				string result = null;
+				switch (propertyName) {
+					case nameof(Manufacturer):
+						if (string.IsNullOrWhiteSpace(Manufacturer)) {
+							result = "Manufacturer cannot be empty";
+						}
+						
+						break;
+					case nameof(ManufacturerAddress):
+						if (string.IsNullOrWhiteSpace(ManufacturerAddress))
+						{
+							result = "Manufacturer address cannot be empty";
+						}
+						break;
+					case nameof(VIN):
+						if (string.IsNullOrEmpty(VIN)) {
+							result = "VIN cannot be empty";
+						}
+						break;
+					case nameof(AirdragModifiedEnum):
+						if (AirdragModifiedMultistageEditingEnabled && AirdragModifiedEnum == AirdragModifiedEnum.UNKNOWN) {
+							result = "Air drag modified has to be set";
+						}
+						break;
+				}
+				//string result_null; //https://www.youtube.com/watch?v=5KF0GGObuAQ
+
+				if (result == null) {
+					if(Errors.ContainsKey(propertyName))
+					Errors.Remove(propertyName);
+				} else {
+					Errors[propertyName] = result;
+				}
+				
+
+				return result;
+			}
+		}
+
+		public string Error { get => String.Join(",", Errors.Values); }
+		public bool HasErrors
+		{
+			get
+			{
+				return !Error.IsNullOrEmpty();
+			}
+		}
+		#endregion
 	}
 }

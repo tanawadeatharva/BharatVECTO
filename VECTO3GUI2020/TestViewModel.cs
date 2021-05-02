@@ -4,8 +4,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Castle.Core.Internal;
 using TUGraz.VectoCommon.BusAuxiliaries;
 using TUGraz.VectoCommon.Utils;
+using VECTO3GUI2020.Helper;
 using VECTO3GUI2020.ViewModel.Implementation.Common;
 using VECTO3GUI2020.ViewModel.Interfaces;
 using VECTO3GUI2020.ViewModel.Interfaces.Common;
@@ -52,12 +54,19 @@ namespace VECTO3GUI2020
 		public String TestString
 		{
 			get => _testString;
-			set => SetProperty(ref _testString, value);
+			set
+			{
+				if (value.IsNullOrEmpty()) {
+					throw new VectoEmptyFieldException();
+				}
+				SetProperty(ref _testString, value);
+			}
 		}
+
 
 		public TestViewModel()
 		{
-			TestString = "Value loaded";
+			
 		}
     }
 }

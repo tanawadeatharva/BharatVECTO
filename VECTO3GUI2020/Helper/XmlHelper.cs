@@ -1,10 +1,16 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Linq;
 using System.Xml;
 using System.Xml.Linq;
 using System.Xml.Schema;
 using Castle.Core.Internal;
 using TUGraz.VectoCommon.Exceptions;
+using TUGraz.VectoCommon.Resources;
 using TUGraz.VectoCore.Utils;
+using VECTO3GUI2020.Util.XML;
+using XmlDocumentType = TUGraz.VectoCore.Utils.XmlDocumentType;
 
 namespace VECTO3GUI2020.Helper
 {
@@ -55,6 +61,52 @@ namespace VECTO3GUI2020.Helper
 				return null;
 
 			return Uri.UnescapeDataString(new Uri(baseUri).AbsolutePath);
+		}
+
+		public static XDocument CreateWrapperDocument(this XElement xElement, XNamespace defaultNamespace,
+			XmlDocumentType docType = XmlDocumentType.DeclarationJobData)
+		{
+			var prefixMap = new Dictionary<string, XNamespace>();
+
+			var xDocument = new XDocument();
+			var rootElement = new XElement(XMLNamespaces.Tns_v20 + XMLNames.VectoInputDeclaration, new XAttribute(XNamespace.Xmlns + "tns",
+				XMLNamespaces.Tns_v20));
+			Debug.WriteLine(rootElement.ToString());
+
+			rootElement.Add(new XAttribute("xmlns", defaultNamespace));
+			rootElement.Add(new XAttribute("schemaVersion", XMLHelper.GetVersionFromNamespaceUri(defaultNamespace)));
+
+			xDocument.Add(rootElement);
+
+
+
+			Dictionary<string, XNamespace> nsAttributes = new Dictionary<string, XNamespace> {
+				["xsi"] = XMLNamespaces.Xsi
+			};
+
+			foreach (var element in xElement.DescendantsAndSelf()) {
+				var ns = element.Name.Namespace;
+				if (ns != defaultNamespace) {
+					var prefix = XMLNamespaces.GetPrefix(ns);
+					if(prefix != null)
+						nsAttributes[prefix] = ns;
+				}
+			}
+
+			
+			foreach (var nsAttribute in nsAttributes) {
+				rootElement.Add(new XAttribute(XNamespace.Xmlns + nsAttribute.Key, nsAttribute.Value));
+			}
+
+			var LocalSchemaLocation = @"V:\VectoCore\VectoCore\Resources\XSD\";
+
+			rootElement.Add(new XAttribute(XMLNamespaces.Xsi + "schemaLocation",
+				$"{XMLNamespaces.DeclarationRootNamespace} {LocalSchemaLocation}VectoDeclarationJob.xsd"));
+
+
+			rootElement.Add(xElement);
+
+			return xDocument;
 		}
 	}
 }

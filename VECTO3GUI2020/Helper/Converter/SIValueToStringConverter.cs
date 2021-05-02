@@ -17,8 +17,6 @@ namespace VECTO3GUI2020.Helper.Converter
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
 		{
 			if (value == null) {
-				_si = null;
-				_convertedSI = null;
 				return value;
 			}
             if(value is SI SIvalue) {
@@ -53,8 +51,7 @@ namespace VECTO3GUI2020.Helper.Converter
 				}
 
 			}
-			catch (Exception e)
-			{
+			catch (Exception e) {
 				return value;
 			}
 

@@ -16,14 +16,27 @@
             <DockPanel>
                 <StackPanel DockPanel.Dock="Top">
                     <Label Content="AIRDRAG" HorizontalAlignment="Stretch" Background="{DynamicResource ButtonHighlightColor}" Style="{DynamicResource LabelStyle1}"/>
-                    <customControlsMultistage:FilePicker Text="{Binding AirdragFilePath}" Command="{Binding LoadAirdragFileCommand}"/>
-                    <StackPanel HorizontalAlignment="Stretch" Margin="4">
+                    <DockPanel HorizontalAlignment="Stretch" >
+                        <Button Width="30" Margin="4" DockPanel.Dock="Right"  
+                                Style="{DynamicResource FilePickerButtonStyle}" 
+                                ContentTemplate="{DynamicResource TrashIcon}"
+                                Command="{Binding RemoveAirdragDataCommand}">
+                            
+                        </Button>
+                        <customControlsMultistage:FilePicker 
+                            DockPanel.Dock="Left"
+                            Text="{Binding AirdragFilePath, TargetNullValue=Select Airdrag Input Data}" 
+                            Command="{Binding LoadAirdragFileCommand}"/>
+                    </DockPanel>
+                   
+                    <StackPanel HorizontalAlignment="Stretch" Margin="4" Visibility="{Binding ConsolidatedAirdragData, Converter={StaticResource NullToVisibilityConverter}}">
                         <Label Style="{DynamicResource LabelStyle1}">Consolidated Airdrag Data</Label>
                         <customControlsMultistage:LabledTextBoxMultistage Content="{Binding ConsolidatedAirdragData.Manufacturer, Mode=OneWay}" ReadOnly="True"/>
                         <customControlsMultistage:LabledTextBoxMultistage Content="{Binding ConsolidatedAirdragData.Model, Mode=OneWay}" ReadOnly="True"/>
                         <customControlsMultistage:LabledTextBoxMultistage Content="{Binding ConsolidatedAirdragData.AirDragArea, Mode=OneWay}" ReadOnly="True"/>
                         <Label Style="{DynamicResource LabelStyle1}">Data from File</Label>
-                        <ContentControl Content="{Binding AirDragViewModel}">
+                        <ContentControl Content="{Binding AirDragViewModel}" 
+                                        Visibility="{Binding AirDragViewModel, Converter={StaticResource NullToVisibilityConverter}}">
                             <ContentControl.ContentTemplate>
                                 <DataTemplate>
                                     <local:AirDragView_v2_8 DataContext="{Binding }"/>

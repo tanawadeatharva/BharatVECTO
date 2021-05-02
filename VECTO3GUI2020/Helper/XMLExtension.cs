@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
+using System.Windows.Forms;
 using System.Xml;
 using System.Xml.Linq;
 using System.Xml.Schema;
@@ -94,6 +95,12 @@ namespace VECTO3GUI2020.Helper
 			}
 
 			return version;
+		}
+
+
+		public static string ToXmlFormat(this DateTime dateTime)
+		{
+			return XmlConvert.ToString(dateTime, XmlDateTimeSerializationMode.Utc);
 		}
 
 }

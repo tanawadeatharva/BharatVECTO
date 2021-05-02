@@ -13,10 +13,9 @@ namespace VECTO3GUI2020.Helper.Converter
             {
                 return Visibility.Collapsed;
             }
-            else
-            {
-                return Binding.DoNothing;
-            }
+            else {
+				return Visibility.Visible;
+			}
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)

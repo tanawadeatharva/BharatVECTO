@@ -3,8 +3,8 @@
                     xmlns:converter="clr-namespace:VECTO3GUI2020.Helper.Converter">
     <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
 
-    <converter:SIToUnitString x:Key="SIToUnitStringConverter"/>
-    <converter:SIValueToStringConverter x:Key="SIValueToStringConverter"/>
+    <converter:SIToUnitString x:Shared="False" x:Key="SIToUnitStringConverter"/>
+    <converter:SIValueToStringConverter  x:Shared="False" x:Key="SIValueToStringConverter"/>
     <converter:NullToVisibilityConverter x:Key="NullToVisibilityConverter"/>
     <converter:AlwaysVisibleConverter x:Key="AlwaysVisibleConverter"/>
     <converter:LabledTextBoxConverter x:Key="LabledTextBoxConverter" x:Shared="false" />

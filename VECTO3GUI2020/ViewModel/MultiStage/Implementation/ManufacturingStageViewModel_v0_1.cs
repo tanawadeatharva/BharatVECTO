@@ -103,7 +103,7 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 					.BusAuxiliaries);
 			Components.Add("Auxiliaries", _auxiliariesViewModel as IViewModelBase);
 
-			VehicleViewModel.SetAirdragData(_airDragEditViewModel);
+			VehicleViewModel.SetAirdragData(_airDragEditViewModel.AirDragViewModel);
 			VehicleViewModel.SetBusAuxiliaries(_auxiliariesViewModel);
 		}
 
