@@ -595,7 +595,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 				var nextGear = DataBus.VehicleInfo.VehicleStopped
 					? Controller.ShiftStrategy.NextGear
 					: !DataBus.GearboxInfo.GearEngaged(absTime)
-						? new GearshiftPosition(0)
+						? Controller.ShiftStrategy.NextGear
 						: (PreviousState.GearboxEngaged
 							? DataBus.GearboxInfo.Gear
 							: Controller.ShiftStrategy.NextGear);
@@ -605,6 +605,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 					NextGear = nextGear,
 					MechanicalAssistPower = ElectricMotorsOff
 				};
+				if (ElectricMotorCanPropellDuringTractionInterruption) {
+					// for P3 or P4 let the EM compensate its own drag to get correct gearbox in torque
+					emOff.MechanicalAssistPower[emOff.MechanicalAssistPower.First().Key] =
+						Tuple.Create((PerSecond)null, 0.SI<NewtonMeter>());
+				}
 				testRequest = RequestDryRun(absTime, dt, outTorque, outAngularVelocity, nextGear, emOff);
 				var tqRequest = testRequest.Gearbox.InputTorque;
 				var maxTorque =
@@ -731,17 +736,50 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 					// overwrite delta value...
 					var maxTorque =
 						StrategyParameters.MaxPropulsionTorque.FullLoadDriveTorque(response.Gearbox.InputSpeed);
-					dryRunResponse.DeltaFullLoad = (dryRunResponse.Gearbox.InputTorque - maxTorque) *
+					
+					var emPos = ModelData.ElectricMachinesData.First().Item1;
+
+					var gbxInTq = GetGearboxInTorqueLimitedVehiclePorpTorque(dryRunResponse, emPos);
+					dryRunResponse.DeltaFullLoad = (gbxInTq - maxTorque) *
 													dryRunResponse.Gearbox.InputSpeed;
-					dryRunResponse.DeltaFullLoadTorque = (dryRunResponse.Gearbox.InputTorque - maxTorque);
-					dryRunResponse.DeltaDragLoad = (dryRunResponse.Gearbox.InputTorque - maxTorque) *
+					dryRunResponse.DeltaFullLoadTorque = (gbxInTq - maxTorque);
+					dryRunResponse.DeltaDragLoad = (gbxInTq - maxTorque) *
 													dryRunResponse.Gearbox.InputSpeed;
-					dryRunResponse.DeltaDragLoadTorque = (dryRunResponse.Gearbox.InputTorque - maxTorque);
+					dryRunResponse.DeltaDragLoadTorque = (gbxInTq - maxTorque);
 
 				}
 			}
 
 			return response;
+		}
+
+		/// <summary>
+		///  get the input torque at the gearbox to calculate overload limit. in case of P3 or P4 compensate the EM torque
+		/// to get the 'virtual' gearbox input torque
+		/// </summary>
+		/// <param name="dryRunResponse"></param>
+		/// <param name="emPos"></param>
+		/// <returns></returns>
+		private NewtonMeter GetGearboxInTorqueLimitedVehiclePorpTorque(IResponse dryRunResponse, PowertrainPosition emPos)
+		{
+			var gbxInTq = dryRunResponse.Gearbox.InputTorque;
+			if ((emPos == PowertrainPosition.HybridP3 || emPos == PowertrainPosition.HybridP4) && dryRunResponse.Gearbox.Gear.Gear != 0) {
+				//var gbxEff = dryRunResponse.Gearbox.OutputSpeed * dryRunResponse.Gearbox.OutputTorque / (
+				//	dryRunResponse.Gearbox.InputSpeed * dryRunResponse.Gearbox.InputTorque);
+				//emPower = dryRunResponse.ElectricMotor.ElectricMotorPowerMech / gbxEff;
+				var gear = dryRunResponse.Gearbox.Gear;
+				var emTq = dryRunResponse.ElectricMotor.ElectricMotorPowerMech /
+							dryRunResponse.ElectricMotor.AngularVelocity;
+				var gbxOutTqV = dryRunResponse.Gearbox.OutputTorque - emTq;
+
+				var prevGbxSpeed = (DataBus.GearboxInfo as AbstractGearbox<GearboxState>).PreviousState
+					.OutAngularVelocity;
+				var gbxLoss = ModelData.GearboxData.Gears[gear.Gear].LossMap
+					.GetTorqueLoss((dryRunResponse.Gearbox.OutputSpeed + prevGbxSpeed) / 2.0, gbxOutTqV);
+				gbxInTq = gbxOutTqV / ModelData.GearboxData.Gears[gear.Gear].Ratio + gbxLoss.Value;
+			}
+
+			return gbxInTq;
 		}
 
 		public void OperatingpointChangedDuringRequest(Second absTime, Second dt, NewtonMeter outTorque,
@@ -793,6 +831,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 					NextGear = nextGear,
 					MechanicalAssistPower = ElectricMotorsOff
 				};
+				if (ElectricMotorCanPropellDuringTractionInterruption) {
+					// for P3 or P4 let the EM compensate its own drag to get correct gearbox in torque
+					emOff.MechanicalAssistPower[emOff.MechanicalAssistPower.First().Key] =
+						Tuple.Create((PerSecond)null, 0.SI<NewtonMeter>());
+				}
 				var testRequest = RequestDryRun(absTime, dt, outTorque, outAngularVelocity, nextGear, emOff);
 				if (testRequest != null) {
 					var maxGbxTorque = StrategyParameters.MaxPropulsionTorque.FullLoadDriveTorque(testRequest.Gearbox.InputSpeed);
@@ -836,23 +879,25 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 					? ModelData.EngineData.FullLoadCurves[0].N95hSpeed :
 					VectoMath.Min(DataBus.GearboxInfo.GetGearData(DataBus.GearboxInfo.Gear.Gear).MaxSpeed, ModelData.EngineData.FullLoadCurves[0].N95hSpeed);
 
+
+			var gbxInTq = GetGearboxInTorqueLimitedVehiclePorpTorque(emOffResponse, emPos);
 			if (deltaFullLoadTq.IsSmallerOrEqual(0)) {
 				// the engine is not overloaded if EM boosts, limit to max gearbox torque
 				return new HybridStrategyLimitedResponse() {
 					//Delta = outTorque * outAngularVelocity - StrategyParameters.MaxDrivetrainPower,
-					Delta = (emOffResponse.Gearbox.InputTorque - maxTorqueGbxIn) * emOffResponse.Gearbox.InputSpeed,
+					Delta = (gbxInTq - maxTorqueGbxIn) * emOffResponse.Gearbox.InputSpeed,
 					DeltaEngineSpeed = maxEmDriveResponse.Engine.EngineSpeed - maxEngineSpeed, // .DeltaEngineSpeed
 					GearboxResponse = maxEmDriveResponse.Gearbox,
 				};
 			}
 
-			var deltaMaxTorque = emOffResponse.Gearbox.InputTorque - maxTorqueGbxIn;
+			var deltaMaxTorque = gbxInTq - maxTorqueGbxIn;
 			if (deltaMaxTorque.IsGreater(deltaFullLoadTq)) {
 				// gearbox in torque is much higher above limit than ice operating point above full-load curve (with em boosting)
 				// search to max torque curve
 				// i.e. when limiting to max torque the ICE operating point is below full-load curve
 				return new HybridStrategyLimitedResponse() {
-					Delta = (emOffResponse.Gearbox.InputTorque - maxTorqueGbxIn) * emOffResponse.Gearbox.InputSpeed,
+					Delta = (gbxInTq - maxTorqueGbxIn) * emOffResponse.Gearbox.InputSpeed,
 					DeltaEngineSpeed = maxEmDriveResponse.Engine.EngineSpeed - maxEngineSpeed, // .DeltaEngineSpeed
 					GearboxResponse = maxEmDriveResponse.Gearbox,
 				};
@@ -880,7 +925,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 				});
 			var rqMaxTorque = RequestDryRun(absTime, dt, maxTorque, outAngularVelocity, currentGear, maxEmDriveSetting);
 			// limiting to ICE FLD with max propulsion - delta gearbox torque
-			var delta1 = ( rqMaxTorque.Gearbox.InputTorque - maxTorqueGbxIn) * emOffResponse.Gearbox.InputSpeed;
+			var rqMaxGbxInTq = GetGearboxInTorqueLimitedVehiclePorpTorque(rqMaxTorque, emPos);
+			var delta1 = ( rqMaxGbxInTq - maxTorqueGbxIn) * emOffResponse.Gearbox.InputSpeed;
 			var delta2 = (outTorque - maxTorque) * outAngularVelocity;
 			var delta = VectoMath.Max(delta1, delta2);
 			return new HybridStrategyLimitedResponse() {
