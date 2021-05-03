@@ -4,7 +4,7 @@
     <Manufacturer>Some Manufacturer</Manufacturer>
     <ManufacturerAddress>Some Manufacturer Address</ManufacturerAddress>
     <VIN>VEH-1234567890</VIN>
-    <Date>2021-05-01T22:00:00Z</Date>
+    <Date>2021-05-02T22:00:00Z</Date>
     <Model>Sample Bus Model</Model>
     <LegislativeCategory>M3</LegislativeCategory>
     <CorrectedActualMass>500</CorrectedActualMass>
@@ -14,10 +14,6 @@
     <ClassBus>II+III</ClassBus>
     <VehicleCode>CB</VehicleCode>
     <LowEntry>false</LowEntry>
-    <HeightIntegratedBody>2500</HeightIntegratedBody>
-    <VehicleLength>9500</VehicleLength>
-    <VehicleWidth>2500</VehicleWidth>
-    <EntranceHeight>2000</EntranceHeight>
     <DoorDriveTechnology>electric</DoorDriveTechnology>
     <DeclarationType>interim</DeclarationType>
     <ADAS>
@@ -26,5 +22,33 @@
       <v2.3:EcoRollWithEngineStop>false</v2.3:EcoRollWithEngineStop>
       <v2.3:PredictiveCruiseControl>none</v2.3:PredictiveCruiseControl>
     </ADAS>
+    <Components xsi:type="CompletedVehicleComponentsDeclarationType">
+      <Auxiliaries>
+        <Data xsi:type="CompletedVehicleAuxiliaryDataDeclarationType">
+          <ElectricSystem>
+            <LEDLights>
+              <Interiorlights>false</Interiorlights>
+              <Dayrunninglights>true</Dayrunninglights>
+              <Positionlights>true</Positionlights>
+              <Brakelights>true</Brakelights>
+              <Headlights>false</Headlights>
+            </LEDLights>
+          </ElectricSystem>
+          <HVAC>
+            <SystemConfiguration>0</SystemConfiguration>
+            <HeatPumpTypeDriverCompartment>none</HeatPumpTypeDriverCompartment>
+            <HeatPumpModeDriverCompartment>heating</HeatPumpModeDriverCompartment>
+            <HeatPumpTypePassengerCompartment>non R-744 2-stage</HeatPumpTypePassengerCompartment>
+            <HeatPumpModePassengerCompartment>cooling</HeatPumpModePassengerCompartment>
+            <AuxiliaryHeaterPower>50</AuxiliaryHeaterPower>
+            <DoubleGlazing>false</DoubleGlazing>
+            <AdjustableAuxiliaryHeater>true</AdjustableAuxiliaryHeater>
+            <WaterElectricHeater>true</WaterElectricHeater>
+            <AirElectricHeater>false</AirElectricHeater>
+            <OtherHeatingTechnology>false</OtherHeatingTechnology>
+          </HVAC>
+        </Data>
+      </Auxiliaries>
+    </Components>
   </v2.0:Vehicle>
 </tns:VectoInputDeclaration>

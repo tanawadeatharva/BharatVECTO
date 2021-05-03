@@ -54,6 +54,7 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 			get
 			{
 				return _saveVifCommand ?? new RelayCommand(() => {
+					
 					SaveVIF(this);
 				}, () => true);
 			}
@@ -61,6 +62,8 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 
 		private static void SaveVIF(IMultistageVIFInputData inputData)
 		{
+			
+
 			var vifInputData = inputData;
 		}
 
@@ -106,7 +109,12 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 			Debug.WriteLine(xElement.CreateWrapperDocument(XMLNamespaces.V28).ToString());
 
 			var validator = new XMLValidator(xDoc.ToXmlDocument());
-			var valid = validator.ValidateXML(XmlDocumentType.DeclarationJobData);
+			var valid = false;
+			try {
+				valid = validator.ValidateXML(XmlDocumentType.DeclarationJobData);
+			} catch (Exception e) {
+				_dialogHelper.Value.ShowMessageBox(e.Message, "Error");
+			}
 			if (!valid) {
 				_dialogHelper.Value.ShowMessageBox($"Invalid Document: {validator.ValidationError}", "Error");
 				xDoc.Save(filename, SaveOptions.OmitDuplicateNamespaces);

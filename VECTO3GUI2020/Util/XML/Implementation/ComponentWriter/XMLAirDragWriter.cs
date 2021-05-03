@@ -37,6 +37,12 @@ namespace VECTO3GUI2020.Util.XML.Implementation.ComponentWriter
 
 			return _xElement;
 		}
+
+		public XElement GetElement(XNamespace wrapperNamespace)
+		{
+			throw new NotImplementedException();
+		}
+
 		protected abstract void Initialize();
 		protected abstract void CreateDataElements();
 
@@ -65,7 +71,7 @@ namespace VECTO3GUI2020.Util.XML.Implementation.ComponentWriter
 			dataElement.Add(new XElement(_defaultNamespace + XMLNames.AirDrag_CdxA_0, _inputData.AirDragArea_0.ToXMLFormat(2)));
 			dataElement.Add(new XElement(_defaultNamespace + XMLNames.AirDrag_TransferredCDxA, _inputData.TransferredAirDragArea.ToXMLFormat(2)));
 			dataElement.Add(new XElement(_defaultNamespace + XMLNames.AirDrag_DeclaredCdxA, _inputData.AirDragArea.ToXMLFormat(2)));
-
+			
 		}
 
 		protected override void Initialize()

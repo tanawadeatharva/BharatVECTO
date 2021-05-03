@@ -192,7 +192,7 @@ namespace VECTO3GUI2020.Util.XML.Implementation
 
 	public class XMLVehicleWriter_v2_8 : XMLVehicleWriter
 	{
-		public new static readonly string[] SUPPORTEDVERSIONS = {
+		public static readonly string[] SUPPORTEDVERSIONS = {
 			typeof(DeclarationInterimStageBusVehicleViewModel_v2_8).ToString()
 		};
 		public XMLVehicleWriter_v2_8(IVehicleDeclarationInputData inputData, IXMLWriterFactory xmlWriterFactory) : base(inputData, xmlWriterFactory)
@@ -277,18 +277,27 @@ namespace VECTO3GUI2020.Util.XML.Implementation
 			if (_inputData.Components != null) {
 				var componentElement = new XElement(
 					_defaultNamespace + XMLNames.Vehicle_Components,
-					new XAttribute(XMLNamespaces.Xsi + XMLNames.Components_type_attr,
+					new XAttribute(XMLNamespaces.Xsi + XMLNames.Attr_Type,
 						"CompletedVehicleComponentsDeclarationType"));
 
 				//Airdrag
 				if (_inputData.Components.AirdragInputData != null) {
 					var airDragElement = _xmlWriterFactory.CreateComponentWriter(_inputData.Components.AirdragInputData)
 						.GetElement();
+					var tempAirDragElement = new XElement(_defaultNamespace + XMLNames.Component_AirDrag);
+
+					airDragElement.Name = tempAirDragElement.Name;
 					componentElement.Add(airDragElement);
 				}
 
 				//auxiliaries
+				if (_inputData.Components.BusAuxiliaries != null) {
+					var auxiliaryElement = _xmlWriterFactory.CreateBuxAuxiliariesWriter(_inputData.Components.BusAuxiliaries)
+						.GetElement();
+					
+					componentElement.Add(auxiliaryElement);
 
+				}
 
 
 				_Xelement.Add(componentElement);

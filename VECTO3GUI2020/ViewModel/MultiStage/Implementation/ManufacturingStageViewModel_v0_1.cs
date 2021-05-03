@@ -84,10 +84,6 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 			_consolidatedManufacturingStageInputData = consolidatedManufacturingStageInputData;
 
 
-
-
-
-
 			VehicleViewModel = (IMultistageVehicleViewModel)_viewModelFactory.GetInterimStageVehicleViewModel(consolidatedManufacturingStageInputData.Vehicle);
 			CurrentView = VehicleViewModel as IViewModelBase;
 

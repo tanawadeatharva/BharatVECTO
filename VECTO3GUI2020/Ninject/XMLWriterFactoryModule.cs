@@ -100,6 +100,8 @@ namespace VECTO3GUI2020.Ninject
 				XMLAirDragWriter_v2_0.SUPPORTED_VERSIONS,
 				sv => Bind<IXMLComponentWriter>().To<XMLAirDragWriter_v2_0>().Named(sv));
 
+			Bind<IXMLBusAuxiliariesWriter>().To<XMLBusAuxiliariesWriterMultistage>();
+
 		}
 	}
 }
