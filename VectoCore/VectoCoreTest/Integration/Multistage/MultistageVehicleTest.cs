@@ -27,7 +27,7 @@ namespace TUGraz.VectoCore.Tests.Integration.Multistage
 		const string VIFDirPath = @"TestData\XML\XMLReaderDeclaration\SchemaVersionMultistage.0.1\";
 		const string InputDirPath = @"TestData\XML\XMLReaderDeclaration\SchemaVersion2.8\";
 		
-		const string InputFilePath = InputDirPath  + "vecto_vehicle-stage_vif_input.xml";
+		const string InputFilePath = InputDirPath  + "vecto_vehicle-stage_input_full-sample.xml";
 		const string VIFInputFile = VIFDirPath  + "vecto_multistage_primary_vehicle_stage_2_3.xml";
 
 		private const string vifResult = VIFDirPath + "vif_vehicle-sample.xml";

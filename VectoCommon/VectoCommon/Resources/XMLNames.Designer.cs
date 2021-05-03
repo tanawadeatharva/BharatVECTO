@@ -619,6 +619,15 @@ namespace TUGraz.VectoCommon.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to DoorDriveTechnology.
+        /// </summary>
+        public static string Bus_DoorDriveTechnology {
+            get {
+                return ResourceManager.GetString("Bus_DoorDriveTechnology", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to DoubleGlazing.
         /// </summary>
         public static string Bus_DoubleGlazing {
@@ -975,6 +984,24 @@ namespace TUGraz.VectoCommon.Resources {
         public static string BusAux_ElectricSystem_SmartElectrics {
             get {
                 return ResourceManager.GetString("BusAux_ElectricSystem_SmartElectrics", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to HVAC.
+        /// </summary>
+        public static string BusAux_HVAC {
+            get {
+                return ResourceManager.GetString("BusAux_HVAC", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to LEDLights.
+        /// </summary>
+        public static string BusAux_LEDLights {
+            get {
+                return ResourceManager.GetString("BusAux_LEDLights", resourceCulture);
             }
         }
         

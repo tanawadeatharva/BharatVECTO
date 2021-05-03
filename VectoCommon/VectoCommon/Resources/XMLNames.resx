@@ -1497,4 +1497,13 @@
   <data name="Vehicle_BodyworkCode" xml:space="preserve">
     <value>BodyworkCode</value>
   </data>
+  <data name="BusAux_LEDLights" xml:space="preserve">
+    <value>LEDLights</value>
+  </data>
+  <data name="Bus_DoorDriveTechnology" xml:space="preserve">
+    <value>DoorDriveTechnology</value>
+  </data>
+  <data name="BusAux_HVAC" xml:space="preserve">
+    <value>HVAC</value>
+  </data>
 </root>

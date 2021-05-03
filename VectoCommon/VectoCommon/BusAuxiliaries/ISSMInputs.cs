@@ -221,7 +221,7 @@ namespace TUGraz.VectoCommon.BusAuxiliaries
 			}
 		}
 
-		public static string GetLabel(this HeatPumpType type)
+		public static string GetLabel(this HeatPumpType? type)
 		{
 			switch (type) {
 				case HeatPumpType.none: return NONE;
@@ -263,7 +263,7 @@ namespace TUGraz.VectoCommon.BusAuxiliaries
 			}
 		}
 
-		public static string GetLabel(this HeatPumpMode type)
+		public static string GetLabel(this HeatPumpMode? type)
 		{
 			switch (type)
 			{
