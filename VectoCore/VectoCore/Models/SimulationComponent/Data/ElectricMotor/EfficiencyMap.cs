@@ -4,6 +4,7 @@ using Newtonsoft.Json;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
+using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Data.ElectricMotor
@@ -148,7 +149,22 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.ElectricMotor
 						var myX = (EfficiencyResult)x;
 						return (myX.ElectricalPower - batPower).Value();
 					});
-
+				var tmp = LookupElectricPower(avgSpeed, retVal, true);
+				if ((tmp.ElectricalPower - batPower).IsGreater(Constants.SimulationSettings.InterpolateSearchTolerance)) {
+					// searched operating point is not accurate enough...
+					retVal = SearchAlgorithm.Search(
+						maxEmTorque, elPowerMaxEM.ElectricalPower - batPower,
+						-maxEmTorque * 0.1 * (maxEmTorque > 0 ? -1 : 1),
+						getYValue: x => {
+							var myX = (EfficiencyResult)x;
+							return (myX.ElectricalPower - batPower) * 1e3;
+						},
+						evaluateFunction: x => LookupElectricPower(avgSpeed, x, true),
+						criterion: x => {
+							var myX = (EfficiencyResult)x;
+							return (myX.ElectricalPower - batPower).Value() * 1e3;
+						});
+				}
 				return retVal;
 			} catch (VectoSearchFailedException vsfe) {
 				Log.Error("Failed to find mechanic power for given electric power! n_avg: {0} P_el: {1}; {2}", avgSpeed.AsRPM, batPower, vsfe.Message);
