@@ -273,6 +273,7 @@ namespace VECTO3GUI2020.Util.XML.Implementation
 				aDASElement.Add(new XElement(adasNamespace + XMLNames.Vehicle_ADAS_PCC,
 					_inputData.ADAS.PredictiveCruiseControl.ToXMLFormat()));
 			}
+			_Xelement.DescendantsAndSelf().Where(e => e.Value.IsNullOrEmpty()).Remove();
 
 			if (_inputData.Components != null) {
 				var componentElement = new XElement(
@@ -303,7 +304,7 @@ namespace VECTO3GUI2020.Util.XML.Implementation
 				_Xelement.Add(componentElement);
 			}
 
-			_Xelement.DescendantsAndSelf().Where(e => e.Value.IsNullOrEmpty()).Remove();
+			
 		}
 
 		#endregion

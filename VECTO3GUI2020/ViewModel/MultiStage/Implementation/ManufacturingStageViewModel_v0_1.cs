@@ -71,8 +71,8 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 		public void SetInputData(IVehicleDeclarationInputData vehicleInputData)
 		{
 			_vehicleViewModel.SetVehicleInputData(vehicleInputData);
-			_airDragEditViewModel.SetAirdragInputData(vehicleInputData?.Components?.AirdragInputData);
-			_auxiliariesViewModel.SetAuxiliariesInputData(vehicleInputData?.Components?.BusAuxiliaries);
+			_vehicleViewModel.MultistageAirdragViewModel.SetAirdragInputData(vehicleInputData?.Components?.AirdragInputData);
+			_vehicleViewModel.MultistageAuxiliariesViewModel.SetAuxiliariesInputData(vehicleInputData?.Components?.BusAuxiliaries);
 
 		}
 
@@ -91,16 +91,10 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 			Components.Add(VehicleViewModel.Name, VehicleViewModel as IViewModelBase);
 
 
-			_airDragEditViewModel = viewModelFactory.GetMultistageAirdragViewModel(_consolidatedManufacturingStageInputData.Vehicle.Components.AirdragInputData);
-			Components.Add("Airdrag", _airDragEditViewModel as IViewModelBase);
+			
+			Components.Add("Airdrag", VehicleViewModel.MultistageAirdragViewModel as IViewModelBase);
 
-			_auxiliariesViewModel =
-				viewModelFactory.GetAuxiliariesViewModel(consolidatedManufacturingStageInputData.Vehicle.Components
-					.BusAuxiliaries);
-			Components.Add("Auxiliaries", _auxiliariesViewModel as IViewModelBase);
-
-			VehicleViewModel.SetAirdragData(_airDragEditViewModel.AirDragViewModel);
-			VehicleViewModel.SetBusAuxiliaries(_auxiliariesViewModel);
+			Components.Add("Auxiliaries", VehicleViewModel.MultistageAuxiliariesViewModel as IViewModelBase);
 		}
 
 
@@ -112,8 +106,7 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 		#region Commands
 
 		private ICommand _switchComponentViewCommand;
-		private readonly IMultistageAirdragViewModel _airDragEditViewModel;
-		private readonly IMultistageAuxiliariesViewModel _auxiliariesViewModel;
+
 
 		public ICommand SwitchComponentViewCommand
 		{

@@ -22,7 +22,7 @@ namespace VECTO3GUI2020.Helper
 		{
 			var di = XMLNamespaces.Di;
 			var signatureElement = new XElement(nameSpace + XMLNames.DI_Signature);
-			signatureElement.Add(new XElement(di + XMLNames.DI_Signature_Reference, new XAttribute(XMLNames.DI_Signature_Reference_URI_Attr, uri)));
+			signatureElement.Add(new XElement(di + XMLNames.DI_Signature_Reference, new XAttribute(XMLNames.DI_Signature_Reference_URI_Attr, digestData.Reference)));
 
 			var refElement = signatureElement.FirstNode as XElement;
 			refElement?.Add(new XElement(di + XMLNames.DI_Signature_Reference_Transforms));
@@ -38,7 +38,7 @@ namespace VECTO3GUI2020.Helper
 			if (hash) {
 				throw new NotImplementedException("Hashing not implemented");
 			}
-			refElement?.Add(new XElement(di + XMLNames.DI_Signature_Reference_DigestValue, ""));
+			refElement?.Add(new XElement(di + XMLNames.DI_Signature_Reference_DigestValue, digestData.DigestValue));
 
 
 			return signatureElement;

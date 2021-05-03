@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Linq;
+using Castle.Core.Internal;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Resources;
 using TUGraz.VectoCore.InputData.FileIO.XML.Engineering.Interfaces;
@@ -24,6 +25,7 @@ namespace VECTO3GUI2020.Util.XML.Implementation.ComponentWriter
 		public XMLAirDragWriter(IAirdragDeclarationInputData inputData)
 		{
 			_inputData = inputData;
+			_uri = inputData.DigestValue.Reference.Replace("#","");
 		}
 
 		public XElement GetElement()
@@ -32,7 +34,8 @@ namespace VECTO3GUI2020.Util.XML.Implementation.ComponentWriter
 
 				Initialize();
 				CreateDataElements();
-				_xElement.Add(this.CreateSignatureElement(_defaultNamespace, _uri, _inputData.DigestValue));
+				var signatureElemnet = this.CreateSignatureElement(_defaultNamespace, _uri, _inputData.DigestValue);
+				_xElement.Add(signatureElemnet);
 			}
 
 			return _xElement;
@@ -61,7 +64,8 @@ namespace VECTO3GUI2020.Util.XML.Implementation.ComponentWriter
 			var dataElement = new XElement(_defaultNamespace + XMLNames.ComponentDataWrapper);
 			_xElement.Add(dataElement);
 
-			dataElement.Add(new XAttribute(XMLNames.Component_ID_Attr, _uri), new XAttribute(XMLNamespaces.Xsi + XMLNames.Component_Type_Attr, XMLNames.AirDrag_Data_Type_Attr));
+			dataElement.Add(new XAttribute(XMLNames.Component_ID_Attr, _uri), new XAttribute(XMLNamespaces.Xsi + XMLNames.Component_Type_Attr, "v2.0:" +
+			 XMLNames.AirDrag_Data_Type_Attr));
 
 			dataElement.Add(new XElement(_defaultNamespace + XMLNames.Component_Manufacturer, _inputData.Manufacturer));
 			dataElement.Add(new XElement(_defaultNamespace + XMLNames.Component_Model, _inputData.Model));
@@ -71,7 +75,9 @@ namespace VECTO3GUI2020.Util.XML.Implementation.ComponentWriter
 			dataElement.Add(new XElement(_defaultNamespace + XMLNames.AirDrag_CdxA_0, _inputData.AirDragArea_0.ToXMLFormat(2)));
 			dataElement.Add(new XElement(_defaultNamespace + XMLNames.AirDrag_TransferredCDxA, _inputData.TransferredAirDragArea.ToXMLFormat(2)));
 			dataElement.Add(new XElement(_defaultNamespace + XMLNames.AirDrag_DeclaredCdxA, _inputData.AirDragArea.ToXMLFormat(2)));
-			
+
+
+			dataElement.DescendantsAndSelf().Where(e => e.Value.IsNullOrEmpty()).Remove();
 		}
 
 		protected override void Initialize()

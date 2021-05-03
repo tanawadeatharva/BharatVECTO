@@ -106,7 +106,7 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 				if (airdragElements.Count() == 1) {
 
 					//GET FROM FILE
-					var dataProviderVersion = XMLDeclarationAirdragDataProviderV28.QUALIFIED_XSD_TYPE;
+					var dataProviderVersion = XMLDeclarationAirdragDataProviderV20.QUALIFIED_XSD_TYPE;
 					
 
 					var validator = new XMLValidator(doc);

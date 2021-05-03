@@ -5,6 +5,7 @@ using TUGraz.VectoCore.Utils;
 using VECTO3GUI2020.Helper;
 using VECTO3GUI2020.Util.XML.Interfaces;
 using VECTO3GUI2020.ViewModel.Interfaces.JobEdit.Vehicle.Components;
+using VECTO3GUI2020.ViewModel.MultiStage.Interfaces;
 
 namespace VECTO3GUI2020.Ninject
 {
@@ -39,7 +40,8 @@ namespace VECTO3GUI2020.Ninject
 			Lazy<IXMLInputDataReader> inputDataReader, 
 			Lazy<IDeclarationInjectFactory> injectFactory, 
 			Lazy<IComponentViewModelFactory> componentViewModelFactory,
-			Lazy<IXMLWriterFactory> xmlWriterFactory)
+			Lazy<IXMLWriterFactory> xmlWriterFactory,
+			Lazy<IMultiStageViewModelFactory> viewModelFactory)
 		{
 			_dialogHelper = dialogHelper;
 			_inputDataReader = inputDataReader;

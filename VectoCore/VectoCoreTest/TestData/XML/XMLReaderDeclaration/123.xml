@@ -43,6 +43,7 @@
             <AuxiliaryHeaterPower>50</AuxiliaryHeaterPower>
             <DoubleGlazing>false</DoubleGlazing>
             <AdjustableAuxiliaryHeater>true</AdjustableAuxiliaryHeater>
+            <SeparateAirDistributionDucts>false</SeparateAirDistributionDucts>
             <WaterElectricHeater>true</WaterElectricHeater>
             <AirElectricHeater>false</AirElectricHeater>
             <OtherHeatingTechnology>false</OtherHeatingTechnology>

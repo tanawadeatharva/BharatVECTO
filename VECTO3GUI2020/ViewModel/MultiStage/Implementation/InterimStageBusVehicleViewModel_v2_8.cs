@@ -16,6 +16,7 @@ using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider;
 using VECTO3GUI2020.Helper;
+using VECTO3GUI2020.Ninject;
 using VECTO3GUI2020.Properties;
 using VECTO3GUI2020.ViewModel.Implementation.Common;
 using VECTO3GUI2020.ViewModel.Interfaces.JobEdit.Vehicle;
@@ -65,6 +66,8 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 	{
 		bool HasErrors { get; }
 		Dictionary<string, string> Errors { get; }
+		IMultistageAirdragViewModel MultistageAirdragViewModel { get; set; }
+		IMultistageAuxiliariesViewModel MultistageAuxiliariesViewModel { get; set; }
 		void SetAirdragData(IAirdragDeclarationInputData airdragData);
 		void SetBusAuxiliaries(IBusAuxiliariesDeclarationData busAuxData);
 		void SetVehicleInputData(IVehicleDeclarationInputData vehicleInputData);
@@ -75,29 +78,104 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 		IVehicleComponentsDeclaration, IAdvancedDriverAssistantSystemDeclarationInputData, IDataErrorInfo
 	{
 
+		private readonly IMultiStageViewModelFactory _multiStageViewModelFactory;
+
+		#region Subcomponents
+		private IMultistageAirdragViewModel _multistageAirdragViewModel;
+		private IMultistageAuxiliariesViewModel _multistageAuxiliariesViewModel;
+		public IMultistageAirdragViewModel MultistageAirdragViewModel
+		{
+			get => _multistageAirdragViewModel;
+			set => SetProperty(ref _multistageAirdragViewModel, value);
+		}
+
+		public IMultistageAuxiliariesViewModel MultistageAuxiliariesViewModel
+		{
+			get => _multistageAuxiliariesViewModel;
+			set => SetProperty(ref _multistageAuxiliariesViewModel, value);
+		}
+
+		#endregion
 
 		public static readonly string INPUTPROVIDERTYPE =
 			typeof(XMLDeclarationInterimStageBusDataProviderV28).ToString();
 
-		public string Name
-		{
-			get { return "Vehicle"; }
-		}
+		public string Name => "Vehicle";
 
-		public bool IsPresent
-		{
-			get { return true; }
-		}
+		public bool IsPresent => true;
 
-		public DataSource DataSource
+		public DataSource DataSource => throw new NotImplementedException();
+
+		public bool SavedInDeclarationMode => true;
+
+		public ObservableCollection<IComponentViewModel> ComponentViewModels
 		{
 			get { throw new NotImplementedException(); }
+			set { throw new NotImplementedException(); }
 		}
 
-		public bool SavedInDeclarationMode
+
+		public DeclarationInterimStageBusVehicleViewModel_v2_8(IVehicleDeclarationInputData consolidatedVehicleData,
+			IMultiStageViewModelFactory multistageViewModelFactory)
 		{
-			get { throw new NotImplementedException(); }
+			ConsolidatedVehicleData = consolidatedVehicleData;
+			_multiStageViewModelFactory = multistageViewModelFactory;
+
+			MultistageAirdragViewModel = _multiStageViewModelFactory.GetMultistageAirdragViewModel(consolidatedVehicleData.Components.AirdragInputData);
+			MultistageAuxiliariesViewModel =
+				_multiStageViewModelFactory.GetAuxiliariesViewModel(consolidatedVehicleData.Components
+					.BusAuxiliaries);
 		}
+
+		public IVehicleDeclarationInputData ConsolidatedVehicleData
+		{
+			get { return _consolidatedVehicleData; }
+			set { SetProperty(ref _consolidatedVehicleData, value); }
+		}
+
+		public void SetAirdragData(IAirdragDeclarationInputData airdragData)
+		{
+			MultistageAirdragViewModel.SetAirdragInputData(airdragInputData: airdragData);
+		}
+
+		public void SetBusAuxiliaries(IBusAuxiliariesDeclarationData busAuxData)
+		{
+			//BusAuxiliaries.SetBusAuxiliariesInputData()
+		}
+
+		public void SetVehicleInputData(IVehicleDeclarationInputData vehicleInputData)
+		{
+			Manufacturer = vehicleInputData.Manufacturer;
+			ManufacturerAddress = vehicleInputData.ManufacturerAddress;
+			VIN = vehicleInputData.VIN;
+			Model = vehicleInputData.Model;
+			LegislativeClass = vehicleInputData.LegislativeClass;
+			CurbMassChassis = vehicleInputData.CurbMassChassis;
+			GrossVehicleMassRating = vehicleInputData.GrossVehicleMassRating;
+			AirdragModifiedMultistage = vehicleInputData.AirdragModifiedMultistage;
+			TankSystem = vehicleInputData.TankSystem;
+			RegisteredClass = vehicleInputData.RegisteredClass;
+			NumberOfPassengersUpperDeck = vehicleInputData.NumberOfPassengersUpperDeck;
+			NumberOfPassengersLowerDeck = vehicleInputData.NumberOfPassengersLowerDeck;
+			VehicleCode = vehicleInputData.VehicleCode;
+			LowEntry = vehicleInputData.LowEntry;
+			Height = vehicleInputData.Height;
+			Width = vehicleInputData.Width;
+			Length = vehicleInputData.Length;
+			EntranceHeight = vehicleInputData.EntranceHeight;
+			DoorDriveTechnology = vehicleInputData.DoorDriveTechnology;
+			VehicleDeclarationType = vehicleInputData.VehicleDeclarationType;
+			AdasEditingEnabled = vehicleInputData.ADAS != null;
+			EngineStopStartNullable = vehicleInputData.ADAS?.EngineStopStart;
+			EcoRollTypeNullable = vehicleInputData.ADAS?.EcoRoll;
+			PredictiveCruiseControlNullable = vehicleInputData.ADAS?.PredictiveCruiseControl;
+			ATEcoRollReleaseLockupClutch = vehicleInputData.ADAS?.ATEcoRollReleaseLockupClutch;
+			OnPropertyChanged(String.Empty);
+
+		}
+
+
+
 
 		#region Implementation used fields in IVehicleInputData
 
@@ -378,30 +456,19 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 
 		private IVehicleDeclarationInputData _consolidatedVehicleData;
 		private VehicleDeclarationType _vehicleDeclarationType;
-		private IAirdragDeclarationInputData _airdragInputData;
 		private IBusAuxiliariesDeclarationData _busAuxiliaries;
-		private PredictiveCruiseControlType _predictiveCruiseControl;
-		private bool? _atEcoRollReleaseLockupClutch;
-		private EcoRollType _ecoRoll;
-		private bool _engineStopStart;
-		private bool _adasEditingEnabled;
-		private bool? _engineStopStartNullable;
-		private EcoRollType? _ecoRollTypeNullable;
-		private PredictiveCruiseControlType? _predictiveCruiseControlNullable;
 
 
 		#region implementation of IVehicleComponentsDeclaration
 
 		public IAirdragDeclarationInputData AirdragInputData
 		{
-			get => _airdragInputData;
-			set => _airdragInputData = value;
+			get => MultistageAirdragViewModel.AirDragViewModel;
 		}
 
 		public IBusAuxiliariesDeclarationData BusAuxiliaries
 		{
-			get => _busAuxiliaries;
-			set => _busAuxiliaries = value;
+			get => MultistageAuxiliariesViewModel;
 		}
 
 		#region not implemented
@@ -433,29 +500,21 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 
 		#endregion
 
-		public ObservableCollection<IComponentViewModel> ComponentViewModels
-		{
-			get { throw new NotImplementedException(); }
-			set { throw new NotImplementedException(); }
-		}
 
-
-		public DeclarationInterimStageBusVehicleViewModel_v2_8() { }
-
-
-		public DeclarationInterimStageBusVehicleViewModel_v2_8(IVehicleDeclarationInputData consolidatedVehicleData,
-			IMultiStageViewModelFactory vmFactory)
-		{
-			ConsolidatedVehicleData = consolidatedVehicleData;
-		}
-
-		public IVehicleDeclarationInputData ConsolidatedVehicleData
-		{
-			get { return _consolidatedVehicleData; }
-			set { SetProperty(ref _consolidatedVehicleData, value); }
-		}
 
 		#region implementation of IAdvancedDriverAssistantSystemDeclarationInputData
+
+		private PredictiveCruiseControlType _predictiveCruiseControl;
+		private bool? _atEcoRollReleaseLockupClutch;
+		private EcoRollType _ecoRoll;
+		private bool _engineStopStart;
+		private bool _adasEditingEnabled;
+		private bool? _engineStopStartNullable;
+		private EcoRollType? _ecoRollTypeNullable;
+		private PredictiveCruiseControlType? _predictiveCruiseControlNullable;
+
+
+
 		public IAdvancedDriverAssistantSystemDeclarationInputData ADAS
 		{
 			get { return _adasEditingEnabled ? this : null; }
@@ -635,7 +694,7 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 		{
 			get
 			{
-				if ((_airdragInputData != null) || (_busAuxiliaries != null)) {
+				if (AirdragInputData != null || BusAuxiliaries != null) {
 					return this;
 				} else {
 					return null;
@@ -671,53 +730,7 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 
 		#endregion;
 
-		public void SetAirdragData(IAirdragDeclarationInputData airdragData)
-		{
-			_airdragInputData = airdragData;
-		}
 
-		public void SetBusAuxiliaries(IBusAuxiliariesDeclarationData busAuxData)
-		{
-			_busAuxiliaries = busAuxData;
-		}
-
-		public void SetVehicleInputData(IVehicleDeclarationInputData vehicleInputData)
-		{
-			Manufacturer = vehicleInputData.Manufacturer;
-			ManufacturerAddress = vehicleInputData.ManufacturerAddress;
-            VIN = vehicleInputData.VIN;
-			Model = vehicleInputData.Model;
-			LegislativeClass = vehicleInputData.LegislativeClass;
-            CurbMassChassis = vehicleInputData.CurbMassChassis;
-			GrossVehicleMassRating = vehicleInputData.GrossVehicleMassRating;
-			AirdragModifiedMultistage = vehicleInputData.AirdragModifiedMultistage;
-			TankSystem = vehicleInputData.TankSystem;
-			RegisteredClass = vehicleInputData.RegisteredClass;
-			NumberOfPassengersUpperDeck = vehicleInputData.NumberOfPassengersUpperDeck;
-			NumberOfPassengersLowerDeck = vehicleInputData.NumberOfPassengersLowerDeck;
-			VehicleCode = vehicleInputData.VehicleCode;
-		
-			LowEntry = vehicleInputData.LowEntry;
-
-
-	
-						
-			Height = vehicleInputData.Height;
-			Width = vehicleInputData.Width;
-			Length = vehicleInputData.Length;
-			EntranceHeight = vehicleInputData.EntranceHeight;
-
-	
-			DoorDriveTechnology = vehicleInputData.DoorDriveTechnology;
-			VehicleDeclarationType = vehicleInputData.VehicleDeclarationType;
-			AdasEditingEnabled = vehicleInputData.ADAS != null;
-			EngineStopStartNullable = vehicleInputData.ADAS?.EngineStopStart;
-			EcoRollTypeNullable = vehicleInputData.ADAS?.EcoRoll;
-			PredictiveCruiseControlNullable = vehicleInputData.ADAS?.PredictiveCruiseControl;
-			ATEcoRollReleaseLockupClutch = vehicleInputData.ADAS?.ATEcoRollReleaseLockupClutch;
-			OnPropertyChanged(String.Empty);
-
-		}
 
 		#region Implementation of IDataErrorInfo
 
