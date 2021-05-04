@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography;
+using System.Text;
 using System.Text.RegularExpressions;
 using System.Xml;
 using System.Xml.Linq;
@@ -57,6 +59,8 @@ namespace TUGraz.VectoCore.OutputData.XML
 			SetInputXMLData(_primaryVehicleInputData.Vehicle.XMLSource);
 		}
 
+		#region Set current VIF Data
+		
 		private void SetInputXMLData(XmlNode primeVehicleNode)
 		{
 			var nodes = GetDocumentNodes(primeVehicleNode);
@@ -128,6 +132,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 			NodeParentSearch(currentNode.ParentNode, nodes);
 		}
 
+		#endregion
 
 		public void GenerateReport()
 		{
@@ -143,18 +148,22 @@ namespace TUGraz.VectoCore.OutputData.XML
 			Report = retVal;
 		}
 
+		#region Generate new manfuacturing Stage
 
 		private XElement GenerateInputManufacturingStage()
 		{
+			var multistageId = $"MST-{GetGUID()}";
+			var vehicleId = $"VEH-{GetGUID()}";
+
 			return new XElement(tns + XMLNames.ManufacturingStage,
 					new XAttribute("stageCount", GetStageNumber()),
 					new XElement(tns + XMLNames.Report_DataWrap,
 						new XAttribute(xsi + XMLNames.Attr_Type, "BusManufacturingStageDataType"),
-						new XAttribute("id", "AddContent"),
+						new XAttribute(XMLNames.Component_ID_Attr, multistageId),
 						GetHashPreviousStageElement(),
-						GetVehicleElement(),
+						GetVehicleElement(vehicleId),
 						GetApplicationInformation()),
-					GetInputdataSignature());
+					GetInputdataSignature(multistageId));
 		}
 		
 		private int GetStageNumber()
@@ -179,11 +188,11 @@ namespace TUGraz.VectoCore.OutputData.XML
 		}
 
 
-		private XElement GetVehicleElement()
+		private XElement GetVehicleElement(string vehicleId)
 		{
 			return new XElement(tns + XMLNames.Tag_Vehicle,
 				new XAttribute(xsi + XMLNames.Attr_Type, "v2.8:InterimStageInputType"),
-				new XAttribute("id", GetVehicleId()),
+				new XAttribute(XMLNames.Component_ID_Attr, vehicleId),
 				new XElement(v28 + XMLNames.Component_Manufacturer, _vehicleInputData.Manufacturer),
 				new XElement(v28 + XMLNames.Component_ManufacturerAddress, _vehicleInputData.ManufacturerAddress),
 				new XElement(v28 + XMLNames.Vehicle_VIN, _vehicleInputData.VIN),
@@ -225,11 +234,6 @@ namespace TUGraz.VectoCore.OutputData.XML
 				GetADAS(_vehicleInputData.ADAS),
 				GetBusVehicleComponents(_vehicleInputData.Components)
 			);
-		}
-
-		private string GetVehicleId()
-		{
-			return  $"{_vehicleInputData.VIN}-{GetStageNumber()}";
 		}
 
 		private XElement GetADAS(IAdvancedDriverAssistantSystemDeclarationInputData adasData)
@@ -397,10 +401,38 @@ namespace TUGraz.VectoCore.OutputData.XML
 					XmlConvert.ToString(DateTime.Now, XmlDateTimeSerializationMode.Utc)));
 		}
 
-		private XElement GetInputdataSignature()
+		private XElement GetInputdataSignature(string multistageId)
 		{
-			return new XElement(tns + XMLNames.DI_Signature, XMLHelper.CreateDummySig(di));
+			return new XElement(tns + XMLNames.DI_Signature,
+					new XElement(di + XMLNames.DI_Signature_Reference,
+						new XAttribute(XMLNames.DI_Signature_Reference_URI_Attr, $"#{multistageId}"),
+						new XElement(di + XMLNames.DI_Signature_Reference_Transforms,
+							new XElement(di + XMLNames.DI_Signature_Reference_Transforms_Transform,
+								new XAttribute(XMLNames.DI_Signature_Algorithm_Attr, "urn:vecto:xml:2017:canonicalization")),
+							new XElement(di + XMLNames.DI_Signature_Reference_Transforms_Transform,
+								new XAttribute(XMLNames.DI_Signature_Algorithm_Attr, "http://www.w3.org/2001/10/xml-exc-c14n#"))
+						),
+						new XElement(di + XMLNames.DI_Signature_Reference_DigestMethod,
+							new XAttribute(XMLNames.DI_Signature_Algorithm_Attr, "http://www.w3.org/2001/04/xmlenc#sha256")),
+						new XElement(di + XMLNames.DI_Signature_Reference_DigestValue, GetDigestValue(multistageId)))
+				
+				);
 		}
+
+		private string GetGUID()
+		{
+			return Guid.NewGuid().ToString("n").Substring(0, 20);
+		}
+
+		private string GetDigestValue(string multistageId)
+		{
+			var alg = SHA256.Create();
+			alg.ComputeHash(Encoding.UTF8.GetBytes(multistageId));
+			return Convert.ToBase64String(alg.Hash); 
+		}
+
+
+		#endregion
 
 		private string GetNamespaceVersionNumber(XNamespace ns)
 		{
