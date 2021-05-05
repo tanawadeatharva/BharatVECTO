@@ -138,6 +138,11 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 		#region Implementation of IPneumaticSupplyDeclarationData
 
+		public CompressorDrive CompressorDrive
+		{
+			get { return CompressorDriveHelper.Parse(GetString(XMLNames.CompressorDrive)); }
+		}
+
 		public virtual string Clutch { get { return GetString(new[] { XMLNames.BusAux_PneumaticSystem, "Clutch" }); } }
 
 		public virtual double Ratio

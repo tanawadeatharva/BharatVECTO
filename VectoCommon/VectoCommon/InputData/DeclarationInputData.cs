@@ -846,6 +846,7 @@ namespace TUGraz.VectoCommon.InputData
 
 	public interface IPneumaticSupplyDeclarationData
 	{
+		CompressorDrive CompressorDrive { get; }
 		string Clutch { get; }
 		double Ratio { get; }
 
@@ -975,4 +976,37 @@ namespace TUGraz.VectoCommon.InputData
 			}
 		}
 	}
+
+	public enum CompressorDrive
+	{
+		electrically,
+		mechanically
+	}
+	
+	public static class CompressorDriveHelper
+	{
+		public static CompressorDrive Parse(string parse)
+		{
+			switch (parse)
+			{
+				case nameof(CompressorDrive.electrically):
+					return CompressorDrive.electrically;
+				case nameof(CompressorDrive.mechanically):
+					return CompressorDrive.mechanically;
+				default:
+					throw new ArgumentOutOfRangeException();
+			}
+		}
+
+		public static string GetLabel(this CompressorDrive type)
+		{
+			switch (type)
+			{
+				case CompressorDrive.electrically: return nameof(CompressorDrive.electrically);
+				case CompressorDrive.mechanically: return nameof(CompressorDrive.electrically);
+				default: return null;
+			}
+		}
+	}
+
 }

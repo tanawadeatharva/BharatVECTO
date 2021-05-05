@@ -45,6 +45,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl {
 
 		#region Implementation of IPneumaticSupplyDeclarationData
 
+		public CompressorDrive CompressorDrive { get; }
 		public string Clutch { get; }
 		public double Ratio { get; }
 		public string CompressorSize { get; }

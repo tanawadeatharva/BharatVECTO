@@ -1506,4 +1506,7 @@
   <data name="BusAux_HVAC" xml:space="preserve">
     <value>HVAC</value>
   </data>
+  <data name="CompressorDrive" xml:space="preserve">
+    <value>CompressorDrive</value>
+  </data>
 </root>

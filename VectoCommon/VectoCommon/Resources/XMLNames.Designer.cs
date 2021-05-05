@@ -1366,6 +1366,15 @@ namespace TUGraz.VectoCommon.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to CompressorDrive.
+        /// </summary>
+        public static string CompressorDrive {
+            get {
+                return ResourceManager.GetString("CompressorDrive", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Signature.
         /// </summary>
         public static string DI_Signature {

@@ -364,6 +364,7 @@ namespace TUGraz.VectoCore.Tests.XML
 			Assert.AreEqual(50.SI(Unit.SI.Watt.Hour).Cast<WattSecond>(), aux.ElectricSupply.ElectricStorageCapacity);
 
 			Assert.AreEqual("Large Supply 2-stage", aux.PneumaticSupply.CompressorSize);//SizeOfAirSupply
+			Assert.AreEqual(CompressorDrive.electrically, aux.PneumaticSupply.CompressorDrive);
 			Assert.AreEqual("none", aux.PneumaticSupply.Clutch);
 			Assert.AreEqual(1.000, aux.PneumaticSupply.Ratio);
 			Assert.AreEqual(true, aux.PneumaticSupply.SmartAirCompression);
