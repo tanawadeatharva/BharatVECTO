@@ -10,6 +10,7 @@ using TUGraz.VectoCommon.BusAuxiliaries;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Resources;
+using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Utils;
@@ -213,24 +214,24 @@ namespace TUGraz.VectoCore.OutputData.XML
 				_vehicleInputData.RegisteredClass != null
 					? new XElement(v28 + XMLNames.Vehicle_RegisteredClass, _vehicleInputData.RegisteredClass.ToXMLFormat()) : null,
 				_vehicleInputData.NumberOfPassengersLowerDeck != null 
-					? new XElement(v28 + XMLNames.Bus_NumberPassengersLowerDeck, _vehicleInputData.NumberOfPassengersLowerDeck.ToString()) : null,
+					? new XElement(v28 + XMLNames.Bus_NumberPassengersLowerDeck, _vehicleInputData.NumberOfPassengersLowerDeck) : null,
 				_vehicleInputData.NumberOfPassengersUpperDeck != null
-					? new XElement(v28 + XMLNames.Bus_NumberPassengersUpperDeck, _vehicleInputData.NumberOfPassengersUpperDeck.ToString()) : null,
+					? new XElement(v28 + XMLNames.Bus_NumberPassengersUpperDeck, _vehicleInputData.NumberOfPassengersUpperDeck) : null,
 				_vehicleInputData.VehicleCode != null
 					? new XElement(v28 + XMLNames.Vehicle_BodyworkCode, _vehicleInputData.VehicleCode.ToXMLFormat()) : null,
 				_vehicleInputData.LowEntry != null
 					? new XElement(v28 + XMLNames.Bus_LowEntry, _vehicleInputData.LowEntry) : null,
 				_vehicleInputData.Height != null
-					? new XElement(v28 + XMLNames.Bus_HeighIntegratedBody, _vehicleInputData.Height.Value() * 1000.000) : null,
+					? new XElement(v28 + XMLNames.Bus_HeighIntegratedBody, _vehicleInputData.Height.ConvertToMilliMeter().ToXMLFormat(0)) : null,
 				_vehicleInputData.Length != null
-					? new XElement(v28 + XMLNames.Bus_VehicleLength, _vehicleInputData.Length.Value() * 1000) : null,
+					? new XElement(v28 + XMLNames.Bus_VehicleLength, _vehicleInputData.Length.ConvertToMilliMeter().ToXMLFormat(0)) : null,
 				_vehicleInputData.Width != null 
-					? new XElement(v28 + XMLNames.Bus_VehicleWidth, _vehicleInputData.Width.Value() * 1000) : null,
+					? new XElement(v28 + XMLNames.Bus_VehicleWidth, _vehicleInputData.Width.ConvertToMilliMeter().ToXMLFormat(0)) : null,
 				_vehicleInputData.EntranceHeight != null 
-					? new XElement(v28 + XMLNames.Bus_EntranceHeight, _vehicleInputData.EntranceHeight.Value() * 1000) : null,
+					? new XElement(v28 + XMLNames.Bus_EntranceHeight, _vehicleInputData.EntranceHeight.ConvertToMilliMeter().ToXMLFormat(0)) : null,
 				_vehicleInputData.DoorDriveTechnology != null
 					? new XElement(v28 + XMLNames.Bus_DoorDriveTechnology, _vehicleInputData.DoorDriveTechnology.ToXMLFormat()) : null,
-				new XElement(v28 + XMLNames.Bus_VehicleDeclarationType, _vehicleInputData.VehicleDeclarationType),
+				new XElement(v28 + XMLNames.Bus_VehicleDeclarationType, _vehicleInputData.VehicleDeclarationType.GetLabel()),
 				GetADAS(_vehicleInputData.ADAS),
 				GetBusVehicleComponents(_vehicleInputData.Components)
 			);
@@ -375,7 +376,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 				hvac.HeatPumpModePassengerCompartment != null
 					? new XElement(v28 + XMLNames.Bus_HeatPumpModePassenger, hvac.HeatPumpModePassengerCompartment.GetLabel()) : null,
 				hvac.AuxHeaterPower != null
-					? new XElement(v28 + XMLNames.Bus_AuxiliaryHeaterPower, hvac.AuxHeaterPower.Value()) : null,
+					? new XElement(v28 + XMLNames.Bus_AuxiliaryHeaterPower, hvac.AuxHeaterPower.ToXMLFormat(0)) : null,
 				hvac.DoubleGlazing != null
 					? new XElement(v28 + XMLNames.Bus_DoubleGlazing, hvac.DoubleGlazing) : null,
 				hvac.AdjustableAuxiliaryHeater != null
