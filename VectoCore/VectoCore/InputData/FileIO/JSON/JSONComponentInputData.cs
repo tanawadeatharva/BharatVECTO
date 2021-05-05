@@ -223,6 +223,11 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			get { return VehicleData.VIN; }
 		}
 
+		public string LegislativeCategory
+		{
+			get { return null; }
+		}
+
 		public LegislativeClass? LegislativeClass
 		{
 			get { return VehicleData.LegislativeClass; }

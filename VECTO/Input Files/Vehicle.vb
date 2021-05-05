@@ -362,6 +362,8 @@ Public Class Vehicle
 		End Get
 	End Property
 
+	Public ReadOnly Property LegislativeCategory As String Implements IVehicleDeclarationInputData.LegislativeCategory
+
 	Public ReadOnly Property LegislativeClass As LegislativeClass? Implements IVehicleEngineeringInputData.LegislativeClass
 		Get
 			Return legClass

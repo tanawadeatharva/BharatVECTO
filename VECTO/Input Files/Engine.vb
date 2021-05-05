@@ -619,6 +619,7 @@ Public Class DummyVehicle
 	Public Property Identifier As String Implements IVehicleDeclarationInputData.Identifier
 	Public Property ExemptedVehicle As Boolean Implements IVehicleDeclarationInputData.ExemptedVehicle
 	Public Property VIN As String Implements IVehicleDeclarationInputData.VIN
+	Public ReadOnly Property LegislativeCategory As String Implements IVehicleDeclarationInputData.LegislativeCategory
 	Public Property LegislativeClass As LegislativeClass? Implements IVehicleDeclarationInputData.LegislativeClass
 	Public Property VehicleCategory As VehicleCategory Implements IVehicleDeclarationInputData.VehicleCategory
 	Public Property AxleConfiguration As AxleConfiguration Implements IVehicleDeclarationInputData.AxleConfiguration
