@@ -16,6 +16,7 @@ xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:DeclarationOutput:VehicleInterimFile
 				<Model>Generic Model</Model>
 				<VIN>VEH-1234567890_nonSmart-ESS</VIN>
 				<Date>2017-02-15T11:00:00Z</Date>
+				<LegislativeCategory>M3</LegislativeCategory>
 				<VehicleCategory>Bus</VehicleCategory>
 				<AxleConfiguration>8x2</AxleConfiguration>
 				<Articulated>true</Articulated>
@@ -277,6 +278,7 @@ xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:DeclarationOutput:VehicleInterimFile
 							</ElectricSystem>
 							<PneumaticSystem>
 								<SizeOfAirSupply>Large Supply 2-stage</SizeOfAirSupply>
+								<CompressorDrive>electrically</CompressorDrive>
 								<Clutch>none</Clutch>
 								<CompressorRatio>1.000</CompressorRatio>
 								<SmartCompressionSystem>true</SmartCompressionSystem>
