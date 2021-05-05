@@ -403,8 +403,8 @@ namespace TUGraz.VectoCore.Tests.Utils
 			set;
 		}
 
-		public bool HasElectricMotor { get; }
-		public PowertrainPosition[] ElectricMotorPositions { get; }
+		public bool HasElectricMotor { get; set; }
+		public PowertrainPosition[] ElectricMotorPositions { get; set; }
 
 		#endregion
 	}
