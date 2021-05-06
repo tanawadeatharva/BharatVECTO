@@ -6,12 +6,15 @@
              xmlns:local="clr-namespace:VECTO3GUI2020.Views.Multistage.CustomControls"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800" Name="MultistageParameterControl">
+
+    
+    
     <Grid>
 
         <!-- _____________________________________________ Text mode ___________________________________________________________________-->
         <Grid Visibility="{Binding ElementName=MultistageParameterControl, 
-        Path=ComboBoxMode, 
-        Converter={StaticResource InvertedBoolToVisibilityConverter}}">
+        Path=Mode, 
+        Converter={StaticResource ParameterModeToVisibilityConverter}, ConverterParameter={x:Static local:MultistageParameterViewMode.TEXTBOX}}">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="4*" SharedSizeGroup="W"/>
                 <ColumnDefinition Width="1*" SharedSizeGroup="N"/>
@@ -22,7 +25,7 @@
 
         <Label Content="{Binding LabelText, ElementName=MultistageParameterControl}"></Label>
         <CheckBox Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center" Name="CheckBox"
-                  Visibility="{Binding Optional, 
+                  Visibility="{Binding ShowCheckBox, 
                     ElementName=MultistageParameterControl, 
                     Converter={StaticResource BooleanToVisibilityConverter}}"
                   IsChecked="{Binding EditingEnabled, 
@@ -31,6 +34,7 @@
 
         <TextBox Grid.Column="2" VerticalAlignment="Center" Margin="2 0 2 0" IsReadOnly="True"
                  Text="{Binding ElementName=MultistageParameterControl, Path=PreviousContent, Converter={StaticResource SIValueToStringConverter}}"
+                 Style="{DynamicResource TextBoxStyle1}"
                  Visibility="{Binding Optional, 
                     ElementName=MultistageParameterControl, Converter={StaticResource BooleanToVisibilityConverter}, UpdateSourceTrigger=PropertyChanged}"/>
 
@@ -38,8 +42,8 @@
                  Text="{Binding Content,
                     ElementName=MultistageParameterControl, 
                     Converter={StaticResource SIValueToStringConverter}, 
-                    ValidatesOnExceptions=True, 
                     UpdateSourceTrigger=PropertyChanged}"
+                 Style="{DynamicResource TextBoxStyle1}"
                  IsReadOnly="{Binding ElementName=MultistageParameterControl,
             Path=EditingEnabled, Converter={StaticResource InvertBoolConverter}}" MouseDoubleClick="Control_OnMouseDoubleClick"/>
 
@@ -47,10 +51,13 @@
                Content="{Binding DummyContent, ElementName=MultistageParameterControl, Converter={StaticResource SIToUnitStringConverter}}">
         </Label>
     </Grid>
+
+
+        <!--_________________________________________________ComboBoxMode____________________________________________________________________-->
         <Grid Visibility="{Binding ElementName=MultistageParameterControl, 
-        Path=ComboBoxMode, 
-        Converter={StaticResource BooleanToVisibilityConverter}}">
-        <Grid.ColumnDefinitions>
+        Path=Mode, 
+        Converter={StaticResource ParameterModeToVisibilityConverter}, ConverterParameter={x:Static local:MultistageParameterViewMode.COMBOBOX}}">
+            <Grid.ColumnDefinitions>
             <ColumnDefinition Width="4*" SharedSizeGroup="W"/>
             <ColumnDefinition Width="1*" SharedSizeGroup="N"/>
             <ColumnDefinition Width="4*" SharedSizeGroup="W"/>
@@ -60,7 +67,7 @@
 
         <Label Content="{Binding LabelText, ElementName=MultistageParameterControl}"></Label>
         <CheckBox Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center" Name="CheckBoxCombo"
-                  Visibility="{Binding Optional, 
+                  Visibility="{Binding ShowCheckBox, 
                     ElementName=MultistageParameterControl, 
                     Converter={StaticResource BooleanToVisibilityConverter}}"
                   IsChecked="{Binding EditingEnabled, 
@@ -71,21 +78,69 @@
                     ElementName=MultistageParameterControl, 
                     Converter={StaticResource BooleanToVisibilityConverter}}" IsHitTestVisible="False" Focusable="False" IsEditable="False"
                       SelectedValue="{Binding PreviousContent, Mode=TwoWay, ElementName=MultistageParameterControl}"
-                      ItemsSource="{Binding ListItems, ElementName=MultistageParameterControl}"/>
+                      ItemsSource="{Binding ListItems, ElementName=MultistageParameterControl}">
+                <ComboBox.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock Text="{Binding Converter={StaticResource EnumConverter}}" />
+                    </DataTemplate>
+                </ComboBox.ItemTemplate>
+            </ComboBox>
 
-            <ComboBox Grid.Column="3" HorizontalAlignment="Stretch" VerticalAlignment="Center" Margin="2 0 2 0" 
-                      SelectedValue="{Binding Content, Mode=TwoWay, ElementName=MultistageParameterControl}" 
-                      ItemsSource="{Binding ListItems, ElementName=MultistageParameterControl}"
-                      IsHitTestVisible="{Binding ElementName=MultistageParameterControl,
-                        Path=EditingEnabled}" 
-                      Focusable="{Binding RelativeSource={RelativeSource Self}, 
-                        Path=IsHitTestVisible}" IsEditable="False"/>
-
+        
+                <ComboBox Grid.Column="3" HorizontalAlignment="Stretch" VerticalAlignment="Center" Margin="2 0 2 0" 
+                          SelectedValue="{Binding Content, Mode=TwoWay, ElementName=MultistageParameterControl, ValidatesOnExceptions=True}" 
+                          ItemsSource="{Binding ListItems, ElementName=MultistageParameterControl}"
+                          IsEnabled="{Binding EditingEnabled, ElementName=MultistageParameterControl}"
+                          IsEditable="False" MouseDoubleClick="Control_OnMouseDoubleClick">
+                <ComboBox.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock Text="{Binding Converter={StaticResource EnumConverter}}" />
+                    </DataTemplate>
+                </ComboBox.ItemTemplate>
+            </ComboBox>
 
 
         <Label Grid.Column="4"
                Content="{Binding DummyContent, ElementName=MultistageParameterControl, Converter={StaticResource SIToUnitStringConverter}}">
         </Label>
     </Grid>
+
+        <!--_________________________________________________CheckBoxMode____________________________________________________________________-->
+        <Grid Visibility="{Binding ElementName=MultistageParameterControl, 
+        Path=Mode, 
+        Converter={StaticResource ParameterModeToVisibilityConverter}, ConverterParameter={x:Static local:MultistageParameterViewMode.CHECKBOX}}">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="4*" SharedSizeGroup="W"/>
+                <ColumnDefinition Width="1*" SharedSizeGroup="N"/>
+                <ColumnDefinition Width="4*" SharedSizeGroup="W"/>
+                <ColumnDefinition Width="4*" SharedSizeGroup="W"/>
+                <ColumnDefinition Width="1*" SharedSizeGroup="N"/>
+            </Grid.ColumnDefinitions>
+
+            <Label Content="{Binding LabelText, ElementName=MultistageParameterControl}"></Label>
+            <CheckBox Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center" Name="CheckBoxCheckBox"
+                  Visibility="{Binding ShowCheckBox, 
+                    ElementName=MultistageParameterControl, 
+                    Converter={StaticResource BooleanToVisibilityConverter}}"
+                  IsChecked="{Binding EditingEnabled, 
+            ElementName=MultistageParameterControl, 
+            Mode=TwoWay}"/>
+
+            <CheckBox Grid.Column="2" VerticalAlignment="Center" HorizontalAlignment="Center" IsChecked="{Binding ElementName=MultistageParameterControl, 
+                Path=PreviousContent, 
+                Converter={StaticResource XToBoolConverter}}" IsEnabled="False">
+            </CheckBox>
+
+            <CheckBox Grid.Column="3" VerticalAlignment="Center" HorizontalAlignment="Center" IsEnabled="{Binding ElementName=MultistageParameterControl, 
+                Path=EditingEnabled}">
+
+            </CheckBox>
+            <Label Grid.Column="4"
+                   Content="{Binding DummyContent, ElementName=MultistageParameterControl, Converter={StaticResource SIToUnitStringConverter}}">
+            </Label>
+        </Grid>
+
+        <!-- DatePicker Mode -->
+
     </Grid>
 </UserControl>

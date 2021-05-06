@@ -273,6 +273,22 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			}
 		}
 
+		public SquareMeter TransferredAirDragArea
+		{
+			get
+			{
+				return AirDragArea;
+			}
+		}
+
+		public SquareMeter AirDragArea_0
+		{
+			get
+			{
+				return AirDragArea;
+			}
+		}
+
 		public virtual CrossWindCorrectionMode CrossWindCorrectionMode
 		{
 			get { return CrossWindCorrectionModeHelper.Parse(Body.GetEx<string>("CdCorrMode")); }

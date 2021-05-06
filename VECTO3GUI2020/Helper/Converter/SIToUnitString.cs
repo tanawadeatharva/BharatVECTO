@@ -9,7 +9,11 @@ namespace VECTO3GUI2020.Helper.Converter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
 		{
-			
+			if (value == null) {
+				return Binding.DoNothing;
+			}
+
+
             if(value is SI SIValue)
             {
                 if (SIValue.UnitString == "1/s")
@@ -17,24 +21,28 @@ namespace VECTO3GUI2020.Helper.Converter
                     return "rpm";
                 }
                 return SIValue.UnitString;
-            } else {
-				try {
-					dynamic type = value?.GetType();
-					if (type == null) {
-						return Binding.DoNothing;
-					}
-					return type.GetUnitString();
-				} catch {
+            }
+
+			if (value is ConvertedSI convertedSI) {
+				return convertedSI.Units;
+			}
+
+			return Binding.DoNothing;
+
+            //TRY GET DYNAMIC UNIT STRING
+			try {
+				dynamic type = value?.GetType();
+				if (type == null) {
 					return Binding.DoNothing;
 				}
-				
 
-            }
-            return Binding.DoNothing;
+				var unitString = type.GetUnitString();
+				return unitString;
+			} catch (Exception e){
+				return Binding.DoNothing;
+			}
 
-
-
-        }
+		}
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {

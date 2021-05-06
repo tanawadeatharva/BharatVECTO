@@ -1,9 +1,12 @@
-﻿using VECTO3GUI2020.ViewModel.Interfaces.JobEdit.Vehicle.Components;
+﻿using TUGraz.VectoCommon.InputData;
+using VECTO3GUI2020.ViewModel.Interfaces.JobEdit.Vehicle.Components;
 
 namespace VECTO3GUI2020.ViewModel.MultiStage.Interfaces
 {
-	public interface IMultistageAirdragViewModel
+	public interface IMultistageAirdragViewModel : IAirdragDeclarationInputData
 	{
-		
+		IAirDragViewModel AirDragViewModel { get; set; }
+
+		void SetAirdragInputData(IAirdragDeclarationInputData airdragInputData);
 	}
 }

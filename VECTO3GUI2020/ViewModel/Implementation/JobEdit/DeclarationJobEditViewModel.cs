@@ -104,6 +104,7 @@ namespace VECTO3GUI2020.ViewModel.Implementation.JobEdit
 		private ICommand _saveAsCommand;
 		private DataSource _dataSource;
 		private IDialogHelper _dialogHelper;
+		private VectoSimulationJobType _jobType;
 
 
 		private void UpdateDataSource(string filename)
@@ -166,6 +167,8 @@ namespace VECTO3GUI2020.ViewModel.Implementation.JobEdit
 		public string JobName => Name;
 
 		public string ShiftStrategy => throw new NotImplementedException();
+
+		public VectoSimulationJobType JobType => _jobType;
 	}
 
     public class DeclarationJobEditViewModel_v1_0 : DeclarationJobEditViewModel

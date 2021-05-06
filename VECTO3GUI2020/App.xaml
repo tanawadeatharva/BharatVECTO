@@ -8,11 +8,14 @@
             <!-- Add new ResourceDictionaries here-->
                 <ResourceDictionary Source="Resources/ViewModelBindings.xaml"/>
                 <ResourceDictionary Source="Resources/Converter.xaml"/>
-                <ResourceDictionary Source="Resources/GlobalStyles.xaml"/>
-                <ResourceDictionary Source="Resources/Colors.xaml"/>
+                <ResourceDictionary Source="Resources\Styles\ButtonStyles.xaml"/>
+                <ResourceDictionary Source="Resources/Styles/GlobalStyles.xaml"/>
+                <ResourceDictionary Source="Resources/Styles/Colors.xaml"/>
+                <ResourceDictionary Source="Resources/Styles/ButtonStyles.xaml"/>
                 <ResourceDictionary Source="DataGridStyles.xaml"/>
-                <ResourceDictionary Source="ButtonTemplates.xaml"/>
-                <ResourceDictionary Source="ButtonStyles.xaml"/>
+                <ResourceDictionary Source="Resources/Templates/ErrorTemplates.xaml"/>
+                <ResourceDictionary Source="Resources/ObjectProvider.xaml"/>
+                <ResourceDictionary Source="Resources/Icons/drawables.xaml"></ResourceDictionary>
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Application.Resources>

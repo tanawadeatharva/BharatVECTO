@@ -257,8 +257,11 @@ namespace TUGraz.VectoCommon.InputData
 
 	public enum PredictiveCruiseControlType
 	{
+		[GuiLabel("None")]
 		None,
+		[GuiLabel("Option I + II")]
 		Option_1_2,
+		[GuiLabel("Option I + II + III")]
 		Option_1_2_3
 	}
 
@@ -290,8 +293,11 @@ namespace TUGraz.VectoCommon.InputData
 
 	public enum EcoRollType
 	{
+		[GuiLabel("None")]
 		None,
+		[GuiLabel("Without Engine Stop")]
 		WithoutEngineStop,
+		[GuiLabel("With Engine Stop")]
 		WithEngineStop
 	}
 
@@ -374,6 +380,9 @@ namespace TUGraz.VectoCommon.InputData
 		/// cf. VECTO Input Parameters.xlsx
 		/// </summary>
 		SquareMeter AirDragArea { get; } // without trailer
+		SquareMeter TransferredAirDragArea { get; } // P246
+
+		SquareMeter AirDragArea_0 { get; } // P245
 	}
 
 	public interface IRetarderInputData : IComponentInputData
@@ -947,7 +956,9 @@ namespace TUGraz.VectoCommon.InputData
 
 	public enum VehicleDeclarationType
 	{
+		[GuiLabel("Interim")]
 		interim,
+		[GuiLabel("Final")]
 		final
 	}
 

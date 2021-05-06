@@ -5,17 +5,40 @@ using TUGraz.VectoCommon.Utils;
 namespace TUGraz.VectoCommon.BusAuxiliaries {
 	public enum BusHVACSystemConfiguration
 	{
+		[GuiLabel("Unknown")]
 		Unknown,
+
+		[GuiLabel("Configuration 0")]
 		Configuration0,
+
+		[GuiLabel("Configuration 1")]
 		Configuration1,
+
+		[GuiLabel("Configuration 2")]
 		Configuration2,
+
+		[GuiLabel("Configuration 3")]
 		Configuration3,
+
+		[GuiLabel("Configuration 4")]
 		Configuration4,
+
+		[GuiLabel("Configuration 5")]
 		Configuration5,
+
+		[GuiLabel("Configuration 6")]
 		Configuration6,
+
+		[GuiLabel("Configuration 7")]
 		Configuration7,
+
+		[GuiLabel("Configuration 8")]
 		Configuration8,
+
+		[GuiLabel("Configuration 9")]
 		Configuration9,
+
+		[GuiLabel("Configuration 10")]
 		Configuration10,
 	}
 

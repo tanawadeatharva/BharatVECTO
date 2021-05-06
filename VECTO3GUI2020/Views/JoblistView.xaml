@@ -4,29 +4,36 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:VECTO3GUI2020.Views"
-             xmlns:converter="clr-namespace:VECTO3GUI2020.Helper.Converter"
+             xmlns:converter="clr-namespace:VECTO3GUI2020.Helper.Converter" xmlns:implementation="clr-namespace:VECTO3GUI2020.ViewModel.Implementation" d:DataContext="{d:DesignInstance Type=implementation:JobListViewModel}"
              mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="800">
+             d:DesignHeight="450" d:DesignWidth="1000">
 
-    <Grid Background="Azure">
+    <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="1*"/>
+            <ColumnDefinition MinWidth="140" Width="1*"/>
             <ColumnDefinition Name="MiddleColumn" Width="6*"/>
-            <ColumnDefinition Width="1*"/>
+            <ColumnDefinition MinWidth="140" Width="1*"/>
         </Grid.ColumnDefinitions>
 
-
-        <Grid Grid.Column="0">
-            <StackPanel>
-                <Button Template="{DynamicResource MainViewButtonStyle}">Simulieren</Button>
-                <Button Command="{Binding moveJobUp}" Template="{DynamicResource MainViewButtonStyle}"
+        <Border  BorderBrush="Transparent" BorderThickness="1">
+            <Grid>
+                <StackPanel HorizontalAlignment="Stretch">
+                    <Button Margin="4" HorizontalAlignment="Stretch" 
+                        Style="{StaticResource MultiStageButtonStyle1}" >Simulation</Button>
+                    <Button Margin="4"  HorizontalAlignment="Stretch" 
+                        Style="{StaticResource MultiStageButtonStyle1}" 
+                        Command="{Binding moveJobUp}"
                         CommandParameter="{Binding ElementName=JobDataGrid, Path=SelectedItem}">Up</Button>
-                <Button Command="{Binding moveJobDown}" Template="{DynamicResource MainViewButtonStyle}"
+                    <Button Margin="4" HorizontalAlignment="Stretch" 
+                        Style="{StaticResource MultiStageButtonStyle1}" 
+                        Command="{Binding moveJobDown}"
                         CommandParameter="{Binding ElementName=JobDataGrid, Path=SelectedItem}">Down</Button>
-            </StackPanel>
-        </Grid>
+                </StackPanel>
+            </Grid>
+        </Border>
         <Grid Grid.Column="1">
-            <StackPanel Margin="2 0 2 0">
+            <Border BorderBrush="{StaticResource AccentColorButton}" BorderThickness="1">
+            <StackPanel VerticalAlignment="Stretch">
                 <DataGrid ItemsSource="{Binding Jobs}"
                               Name="JobDataGrid"
                               HorizontalAlignment="Stretch"
@@ -34,22 +41,28 @@
                               CanUserReorderColumns="False" 
                               AutoGenerateColumns="False"
                               SelectionMode="Single"
-                              BorderThickness="0" 
-                              GridLinesVisibility="Horizontal" 
-                              HorizontalScrollBarVisibility="Disabled" RowHeaderWidth="0"                         
+                              GridLinesVisibility="None" 
+                              HorizontalScrollBarVisibility="Disabled" 
+                              RowHeaderWidth="0"
+                              ColumnHeaderHeight="30"     
+                              VerticalAlignment="Stretch"
+                              VerticalContentAlignment="Stretch"
+                              BorderThickness="0"
+                              ColumnHeaderStyle="{StaticResource JobListDataGridHeaderStyle}"
+                              Height="Auto"
+                              RowHeight="30"
+                              AlternatingRowBackground="LightGray" CellStyle="{DynamicResource DataGridCellStyle1}"
                               >
-                    <DataGrid.Columns>
-                        <DataGridTextColumn Header="Name" Binding="{Binding DocumentName}" Width="1*"/>
-                        <DataGridTextColumn Header="Type" Binding="{Binding DocumentType}" Width="1*"/>
-                    </DataGrid.Columns>
-
-                    <DataGrid.RowDetailsTemplate>
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="Name" Binding="{Binding DocumentName}" Width="1*"></DataGridTextColumn>
+                            <DataGridTextColumn Header="Type" Binding="{Binding DocumentType}" Width="1*"></DataGridTextColumn>
+                        </DataGrid.Columns>
+                        <DataGrid.RowDetailsTemplate>
                                 <DataTemplate>
-                            <StackPanel Orientation="Vertical">
-                                <Label Content="Filename"/>
-                                <TextBlock Text="{Binding DataSource.SourceFile}" TextWrapping="Wrap" Margin="10" />
-                            </StackPanel>
-                                    
+                                    <StackPanel Orientation="Vertical">
+                                        <Label Content="Filename"/>
+                                        <TextBlock Text="{Binding DataSource.SourceFile}" TextWrapping="Wrap" Margin="10" />
+                                    </StackPanel>
                                 </DataTemplate>
                     </DataGrid.RowDetailsTemplate>
                     <DataGrid.InputBindings>
@@ -61,16 +74,28 @@
                 </DataGrid>
                 <Label Content="Loading . . ." Visibility="{Binding IsLoading, Converter={StaticResource BooleanToVisibilityConverter}}"/>
             </StackPanel>
+            </Border>
         </Grid>
         <Grid Grid.Column="2">
-            <StackPanel>
-                <Button Command="{Binding AddJob}" Template="{DynamicResource MainViewButtonStyle}">OpenFile</Button>
-                <Button Command="{Binding EditJob}" Template="{DynamicResource MainViewButtonStyle}"
-                        CommandParameter="{Binding ElementName=JobDataGrid, Path=SelectedItem}" Style="{DynamicResource MainViewButton}">EditFile</Button>
-                <Button Command="{Binding NewManufacturingStageFile}" Template="{DynamicResource MainViewButtonStyle}">New Multistage File</Button>
-                <Button Command="{Binding RemoveJob}" Template="{DynamicResource MainViewButtonStyle}"
+            <Border  BorderBrush="Transparent" BorderThickness="1">
+                <StackPanel >
+                    <Button Margin="4" HorizontalAlignment="Stretch" 
+                        Style="{StaticResource MultiStageButtonStyle1}"
+                        Command="{Binding AddJob}" Background="#FFDDDDDD">
+                         OpenFile</Button>
+                    <Button Margin ="4" HorizontalAlignment="Stretch" 
+                        Style="{StaticResource MultiStageButtonStyle1}"
+                        Command="{Binding EditJob}"
+                        CommandParameter="{Binding ElementName=JobDataGrid, Path=SelectedItem}">EditFile</Button>
+                    <Button Margin="4" HorizontalAlignment="Stretch" 
+                        Style="{StaticResource MultiStageButtonStyle1}"
+                        Command="{Binding NewManufacturingStageFile}">New Multistage File</Button>
+                    <Button Margin="4" HorizontalAlignment="Stretch" 
+                        Style="{StaticResource MultiStageButtonStyle1}"
+                        Command="{Binding RemoveJob}"
                         CommandParameter="{Binding ElementName=JobDataGrid, Path=SelectedItem}">DeleteFile</Button>
-            </StackPanel>
+                </StackPanel>
+            </Border>
         </Grid>
     </Grid>
 </UserControl>
