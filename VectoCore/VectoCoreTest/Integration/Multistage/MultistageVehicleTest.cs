@@ -30,7 +30,7 @@ namespace TUGraz.VectoCore.Tests.Integration.Multistage
 		const string InputFilePath = InputDirPath  + "vecto_vehicle-stage_input_full-sample.xml";
 		const string VIFInputFile = VIFDirPath  + "vecto_multistage_primary_vehicle_stage_2_3.xml";
 
-		private const string vifResult = VIFDirPath + "vif_vehicle-sample.xml";
+		private const string vifResult = VIFDirPath + "vif_vehicle-sample.VIF_Report_3.xml";
 
 		protected IXMLInputDataReader xmlInputReader;
 		protected IXMLInputDataReader xmlVIFInputReader;
@@ -58,8 +58,9 @@ namespace TUGraz.VectoCore.Tests.Integration.Multistage
 
 			var vifReader = XmlReader.Create(vifFilename);
 			var vifDataProvider = xmlInputReader.Create(vifReader) as IMultistageBusInputDataProvider;
-			
-			var writer = new FileOutputWriter(vifResult);
+
+			var numberOfManufacturingStages = vifDataProvider.JobInputData.ManufacturingStages?.Count ?? 0;
+			var writer = new FileOutputVIFWriter(vifResult, numberOfManufacturingStages);
 			var inputData = new XMLDeclarationVIFInputData(vifDataProvider, vehicle);
 			
 			var factory = new SimulatorFactory(ExecutionMode.Declaration, inputData, writer);
