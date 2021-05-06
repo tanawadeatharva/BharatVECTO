@@ -146,7 +146,8 @@ namespace TUGraz.VectoCore.Tests.Utils
 
 		public IRESSInfo BatteryInfo
 		{
-			get { throw new NotImplementedException(); }
+			get;
+			set;
 		}
 
 		public ITorqueConverterInfo TorqueConverterInfo

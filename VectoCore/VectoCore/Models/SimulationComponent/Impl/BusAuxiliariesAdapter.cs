@@ -156,7 +156,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			// if busAuxPwrICEOn and busAuxPwrICEOff are different the battery is empty and the mechanical power is the difference
 			// if both are equal we need to add the difference between ES ICE On and ES ICE Off power demand (the latter is corrected by ES correction) 
-			var esMech = (busAuxPwrICEOn - busAuxPwrICEOff).IsEqual(0)
+			var esMech = (busAuxPwrICEOn - busAuxPwrICEOff).IsEqual(0) &&AuxCfg.ElectricalUserInputsConfig.AlternatorType != AlternatorType.None
 				? (esICEOnLoad - esICEOffLoad) / AuxCfg.ElectricalUserInputsConfig.AlternatorGearEfficiency /
 				AuxCfg.ElectricalUserInputsConfig.AlternatorMap.GetEfficiency(0.RPMtoRad(), 0.SI<Ampere>())
 				: 0.SI<Watt>();
@@ -204,7 +204,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			signals.VehicleStopped = DataBus.VehicleInfo.VehicleStopped;
 
 			var busAuxPowerDemand  = GetBusAuxPowerDemand(
-				absTime, dt, 0.SI<NewtonMeter>(), DataBus.EngineInfo.EngineIdleSpeed) - Auxiliaries.ElectricPowerDemandMech;
+				absTime, dt, 0.SI<NewtonMeter>(), DataBus.EngineInfo.EngineIdleSpeed, true) - Auxiliaries.ElectricPowerDemandMech;
             //AdditionalAux = conventionalAux;
 
             CurrentState.PowerDemand = ((AdditionalAux?.PowerDemandESSEngineOn(absTime, dt, DataBus.EngineInfo.EngineIdleSpeed) ?? 0.SI<Watt>()) +
