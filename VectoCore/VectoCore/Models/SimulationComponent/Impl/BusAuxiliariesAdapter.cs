@@ -131,8 +131,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			var signals = Auxiliaries.Signals;
 			// trick bus auxiliaries that ice is on - all auxiliaries are considered. ESS is corrected in post-processing
-			signals.EngineStopped = false; 
-			signals.VehicleStopped = false; 
+			signals.EngineStopped = !DataBus.EngineCtl.CombustionEngineOn; //false; 
+			signals.VehicleStopped = DataBus.VehicleInfo.VehicleStopped; // false; 
 
 			CurrentState.PowerDemand = GetBusAuxPowerDemand(absTime, dt, torquePowerTrain, angularSpeed, dryRun) +
 										(AdditionalAux?.PowerDemandESSEngineOn(0.SI<Second>(), 1.SI<Second>(), angularSpeed) ?? 0.SI<Watt>());
