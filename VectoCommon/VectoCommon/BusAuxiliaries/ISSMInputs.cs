@@ -244,15 +244,6 @@ namespace TUGraz.VectoCommon.BusAuxiliaries
 				default: return null;
 			}
 		}
-
-		public static string GetLabel(this HeatPumpType? type)
-		{
-			if (type.HasValue) {
-				return type.Value.GetLabel();
-			} else {
-				return null;
-			}
-		}
 	}
 
 
