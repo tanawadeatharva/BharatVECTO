@@ -84,7 +84,7 @@ namespace TUGraz.VectoCore.OutputData.FileIO
 		{
 			get { return Path.ChangeExtension(_jobFile, Constants.FileExtensions.SumFile); }
 		}
-
+		
 		/// <summary>
 		/// 
 		/// </summary>

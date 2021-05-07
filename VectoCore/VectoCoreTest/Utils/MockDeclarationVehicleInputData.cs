@@ -28,6 +28,7 @@ namespace TUGraz.VectoCore.Tests.Utils {
 		public string Identifier { get; }
 		public bool ExemptedVehicle { get; }
 		public string VIN { get; }
+		public string LegislativeCategory { get; }
 		public LegislativeClass? LegislativeClass { get; }
 		public VehicleCategory VehicleCategory { get; }
 		public AxleConfiguration AxleConfiguration { get; }
@@ -133,6 +134,7 @@ namespace TUGraz.VectoCore.Tests.Utils {
 		public string Identifier { get; }
 		public bool ExemptedVehicle { get; }
 		public string VIN { get; }
+		public string LegislativeCategory { get; }
 		public LegislativeClass? LegislativeClass { get; }
 		public VehicleCategory VehicleCategory { get; }
 		public AxleConfiguration AxleConfiguration { get; }

@@ -10,7 +10,7 @@ xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:DeclarationJob V:\\VectoCore\VectoCo
 		<ManufacturerAddress>Some Manufacturer Address 3</ManufacturerAddress>
 		<VIN>VEH-1234567890</VIN>
 		<Date>2020-01-09T11:00:00Z</Date>
-		<DeclarationType>final</DeclarationType>
+		<VehicleDeclarationType>final</VehicleDeclarationType>
 		<Components xmlns:v2.8="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:DEV:v2.8" xsi:type="v2.8:CompletedVehicleComponentsDeclarationType">
 			<v2.8:AirDrag>
 				<v2.0:Data xsi:type="v2.8:AirDragModifiedUseStandardValueType" id="std"/>

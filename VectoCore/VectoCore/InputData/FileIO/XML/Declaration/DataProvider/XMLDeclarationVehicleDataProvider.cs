@@ -120,6 +120,11 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 			get { return GetString(XMLNames.Vehicle_VIN); }
 		}
 
+		public virtual string LegislativeCategory
+		{
+			get { return null; }
+		}
+
 		public virtual LegislativeClass? LegislativeClass
 		{
 			get { return GetString(XMLNames.Vehicle_LegislativeClass).ParseEnum<LegislativeClass>(); }
@@ -956,6 +961,11 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 			get { return GetString(XMLNames.Vehicle_VIN); }
 		}
 
+		public string LegislativeCategory
+		{
+			get { return GetString(XMLNames.Bus_LegislativeCategory); }
+		}
+
 		public VehicleCategory VehicleCategory
 		{
 			get { return VehicleCategoryHelper.Parse(GetString(XMLNames.Vehicle_VehicleCategory)); }
@@ -1233,8 +1243,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		{
 			get
 			{
-				return ElementExists(XMLNames.Vehicle_VehicleCode)
-					? GetString(XMLNames.Vehicle_VehicleCode).ParseEnum<VehicleCode>()
+				return ElementExists(XMLNames.Vehicle_BodyworkCode)
+					? GetString(XMLNames.Vehicle_BodyworkCode).ParseEnum<VehicleCode>()
 					: (VehicleCode?)null;
 			}
 		}
@@ -1301,7 +1311,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 		public override VehicleDeclarationType VehicleDeclarationType
 		{
-			get { return VehicleDeclarationTypeHelper.Parse(GetString(XMLNames.Bus_DeclarationType)); }
+			get { return VehicleDeclarationTypeHelper.Parse(GetString(XMLNames.Bus_VehicleDeclarationType)); }
 		}
 
 
@@ -1468,8 +1478,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		{
 			get
 			{
-				return ElementExists(XMLNames.Vehicle_VehicleCode)
-					? GetString(XMLNames.Vehicle_VehicleCode).ParseEnum<VehicleCode>()
+				return ElementExists(XMLNames.Vehicle_BodyworkCode)
+					? GetString(XMLNames.Vehicle_BodyworkCode).ParseEnum<VehicleCode>()
 					: (VehicleCode?)null;
 			}
 		}

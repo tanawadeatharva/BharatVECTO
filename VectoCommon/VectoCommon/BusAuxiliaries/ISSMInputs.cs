@@ -232,7 +232,7 @@ namespace TUGraz.VectoCommon.BusAuxiliaries
 			}
 		}
 
-		public static string GetLabel(this HeatPumpType type)
+		public static string GetLabel(this HeatPumpType? type)
 		{
 			switch (type) {
 				case HeatPumpType.none: return NONE;
@@ -242,15 +242,6 @@ namespace TUGraz.VectoCommon.BusAuxiliaries
 				case HeatPumpType.non_R_744_4_stage: return NON_R_744_4_STAGE;
 				case HeatPumpType.non_R_744_continuous: return NON_R_744_CONTINUOUS;
 				default: return null;
-			}
-		}
-
-		public static string GetLabel(this HeatPumpType? type)
-		{
-			if (type.HasValue) {
-				return type.Value.GetLabel();
-			} else {
-				return null;
 			}
 		}
 	}
@@ -287,7 +278,7 @@ namespace TUGraz.VectoCommon.BusAuxiliaries
 			}
 		}
 
-		public static string GetLabel(this HeatPumpMode type)
+		public static string GetLabel(this HeatPumpMode? type)
 		{
 			switch (type)
 			{

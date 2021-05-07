@@ -70,6 +70,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 												string.Format(".//*[local-name()='{0}' and @unit='MJ/km']", XMLNames.Report_Result_EnergyConsumption))?.InnerText
 													.ToDouble().SI(Unit.SI.Mega.Joule.Per.Kilo.Meter).Cast<JoulePerMeter>())).ToDictionary(x => x.Key, x => x.Value);
 
+
 			return new Result
 			{
 				ResultStatus = resultStatus,

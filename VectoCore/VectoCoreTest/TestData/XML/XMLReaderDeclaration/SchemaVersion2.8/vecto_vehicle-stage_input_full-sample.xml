@@ -1,7 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<tns:VectoInputDeclaration 
-schemaVersion="2.8" 
-xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:DEV:v2.8"
+<tns:VectoInputDeclaration schemaVersion="2.8" xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:DEV:v2.8"
 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
 xmlns:tns="urn:tugraz:ivt:VectoAPI:DeclarationInput:v2.0" 
 xmlns:v2.3="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:DEV:v2.3" 
@@ -22,14 +20,14 @@ xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:DeclarationJob E:\VECTO_DEV\fk_vecto
 		<ClassBus>II+III</ClassBus>
 		<NumberPassengersLowerDeck>0</NumberPassengersLowerDeck>
 		<NumberPassengersUpperDeck>10</NumberPassengersUpperDeck>
-		<VehicleCode>CB</VehicleCode>
+		<BodyworkCode>CB</BodyworkCode>
 		<LowEntry>false</LowEntry>
 		<HeightIntegratedBody>2500</HeightIntegratedBody>
 		<VehicleLength>9500</VehicleLength>
 		<VehicleWidth>2500</VehicleWidth>
 		<EntranceHeight>2000</EntranceHeight>
 		<DoorDriveTechnology>electric</DoorDriveTechnology>
-		<DeclarationType>interim</DeclarationType>
+		<VehicleDeclarationType>interim</VehicleDeclarationType>
 		<ADAS>
 			<v2.3:EngineStopStart>true</v2.3:EngineStopStart>
 			<v2.3:EcoRollWithoutEngineStop>false</v2.3:EcoRollWithoutEngineStop>

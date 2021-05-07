@@ -115,7 +115,7 @@ namespace TUGraz.VectoCommon.InputData
 	public interface IMultistageVIFInputData :  IInputDataProvider
 	{
 		IVehicleDeclarationInputData VehicleInputData { get; }
-		IMultistageBusInputDataProvider MultistageInputData { get; }
+		IMultistageBusInputDataProvider MultistageJobInputData { get; }
 	}
 }
 

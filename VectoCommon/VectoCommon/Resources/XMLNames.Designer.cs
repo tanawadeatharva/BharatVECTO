@@ -628,6 +628,15 @@ namespace TUGraz.VectoCommon.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to DoorDriveTechnology.
+        /// </summary>
+        public static string Bus_DoorDriveTechnology {
+            get {
+                return ResourceManager.GetString("Bus_DoorDriveTechnology", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to DoubleGlazing.
         /// </summary>
         public static string Bus_DoubleGlazing {
@@ -907,6 +916,15 @@ namespace TUGraz.VectoCommon.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to VehicleDeclarationType.
+        /// </summary>
+        public static string Bus_VehicleDeclarationType {
+            get {
+                return ResourceManager.GetString("Bus_VehicleDeclarationType", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to VehicleLength.
         /// </summary>
         public static string Bus_VehicleLength {
@@ -979,6 +997,24 @@ namespace TUGraz.VectoCommon.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to HVAC.
+        /// </summary>
+        public static string BusAux_HVAC {
+            get {
+                return ResourceManager.GetString("BusAux_HVAC", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to LEDLights.
+        /// </summary>
+        public static string BusAux_LEDLights {
+            get {
+                return ResourceManager.GetString("BusAux_LEDLights", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to PneumaticSystem.
         /// </summary>
         public static string BusAux_PneumaticSystem {
@@ -1029,6 +1065,15 @@ namespace TUGraz.VectoCommon.Resources {
         public static string BusAux_PneumaticSystem_DoorDriveTechnology {
             get {
                 return ResourceManager.GetString("BusAux_PneumaticSystem_DoorDriveTechnology", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to SCRReagentDosing.
+        /// </summary>
+        public static string BusAux_PneumaticSystem_SCRReagentDosing {
+            get {
+                return ResourceManager.GetString("BusAux_PneumaticSystem_SCRReagentDosing", resourceCulture);
             }
         }
         
@@ -1326,6 +1371,15 @@ namespace TUGraz.VectoCommon.Resources {
         public static string Components_type_attr {
             get {
                 return ResourceManager.GetString("Components_type_attr", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to CompressorDrive.
+        /// </summary>
+        public static string CompressorDrive {
+            get {
+                return ResourceManager.GetString("CompressorDrive", resourceCulture);
             }
         }
         
@@ -3693,6 +3747,15 @@ namespace TUGraz.VectoCommon.Resources {
         public static string Vehicle_AxleConfiguration {
             get {
                 return ResourceManager.GetString("Vehicle_AxleConfiguration", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to BodyworkCode.
+        /// </summary>
+        public static string Vehicle_BodyworkCode {
+            get {
+                return ResourceManager.GetString("Vehicle_BodyworkCode", resourceCulture);
             }
         }
         

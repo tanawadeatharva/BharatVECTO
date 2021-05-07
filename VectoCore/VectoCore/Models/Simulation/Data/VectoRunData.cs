@@ -148,6 +148,9 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 
 		public Watt ElectricAuxDemand { get; internal set; }
 
+		[JsonIgnore]
+		public IMultistageVIFInputData MultistageVIFInputData { get; internal set; }
+
 		public class AuxData
 		{
 			// ReSharper disable once InconsistentNaming

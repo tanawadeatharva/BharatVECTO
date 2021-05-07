@@ -445,6 +445,11 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 			get { return _manufacturingStages.First().Vehicle.VIN; }
 		}
 
+		public string LegislativeCategory
+		{
+			get { return null; }
+		}
+
 		public VehicleDeclarationType VehicleDeclarationType
 		{
 			get { return _manufacturingStages.First().Vehicle.VehicleDeclarationType; }
