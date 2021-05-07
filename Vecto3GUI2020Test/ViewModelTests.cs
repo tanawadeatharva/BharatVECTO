@@ -1,6 +1,8 @@
 using System;
 using System.IO;
+using System.Linq;
 using System.Runtime.CompilerServices;
+using System.Xml;
 using Moq;
 using Ninject;
 using NUnit.Framework;
@@ -9,7 +11,11 @@ using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCore;
 using TUGraz.VectoCore.InputData.FileIO.XML;
+using TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider;
+using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.Models.SimulationComponent.Strategies;
+using TUGraz.VectoCore.OutputData.FileIO;
+using TUGraz.VectoCore.Utils;
 using VECTO3GUI2020.Helper;
 using VECTO3GUI2020.Ninject;
 using VECTO3GUI2020.Ninject.Vehicle;
@@ -204,6 +210,11 @@ namespace Vecto3GUI2020Test
 			Assert.AreEqual(VehicleDeclarationType.interim, vehicle.VehicleDeclarationType);
 
 
+			var airdrag = vehicle.MultistageAirdragViewModel;
+			Assert.NotNull(airdrag.AirDragViewModel.XMLSource);
+
+
+
 
 		}
 
@@ -215,6 +226,7 @@ namespace Vecto3GUI2020Test
 		}
 
 
+		
 
 
 		#region Helper
@@ -224,7 +236,7 @@ namespace Vecto3GUI2020Test
 			var exists = File.Exists(filePath);
 			if (!exists)
 			{
-				Console.WriteLine(filePath + " not existing");
+				Console.WriteLine(filePath + @" not existing");
 			}
 
 			Assert.IsTrue(exists);

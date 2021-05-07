@@ -185,6 +185,7 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 		private bool? _positionlightsLed;
 		private bool? _headlightsLed;
 		private bool? _brakelightsLed;
+	
 
 		public bool? InteriorLightsLED
 		{
@@ -219,7 +220,22 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 
 
 		#endregion
+		#region IPneumaticSuppyDeclarationData
+		public IPneumaticSupplyDeclarationData PneumaticSupply
+		{
+			get => this;
+			set => throw new NotImplementedException();
+		}
 
+		private CompressorDrive _compressorDrive;
+		public CompressorDrive CompressorDrive
+		{
+			get => _compressorDrive;
+			set => SetProperty(ref _compressorDrive, value);
+		}
+
+
+		#endregion
 
 
 		#region Implementation of interfaces (unused Properties);
@@ -242,11 +258,7 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 			set => throw new NotImplementedException();
 		}
 
-		public IPneumaticSupplyDeclarationData PneumaticSupply
-		{
-			get => this;
-			set => throw new NotImplementedException();
-		}
+		
 
 		public IPneumaticConsumersDeclarationData PneumaticConsumers
 		{
@@ -254,8 +266,7 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 			set => throw new NotImplementedException();
 		}
 
-
-
+	
 
 
 
@@ -330,6 +341,8 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 		#endregion
 
 		#region Implementation of IPneumaticSupplyDeclarationData
+
+		
 
 		public string Clutch => throw new NotImplementedException();
 

@@ -179,6 +179,8 @@ namespace VECTO3GUI2020.ViewModel.Implementation.JobEdit.Vehicle
 			set => throw new NotImplementedException();
 		}
 
+		public virtual string LegislativeCategory => throw new NotImplementedException();
+
 		LegislativeClass? IVehicleDeclarationInputData.LegislativeClass { get; }
 
 		public virtual LegislativeClass LegislativeClass

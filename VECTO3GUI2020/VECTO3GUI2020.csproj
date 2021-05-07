@@ -684,6 +684,10 @@
       <Project>{B673E12F-D323-4C4C-8805-9915B2C72D3D}</Project>
       <Name>VectoHashing</Name>
     </ProjectReference>
+    <ProjectReference Include="..\VectoCore\VectoCoreTest\VectoCoreTest.csproj">
+      <Project>{6A27F93E-4A58-48F6-B00B-3908C5D3D5A2}</Project>
+      <Name>VectoCoreTest</Name>
+    </ProjectReference>
     <ProjectReference Include="..\VectoCore\VectoCore\VectoCore.csproj">
       <Project>{cd36938a-add9-4c65-96da-b397cdeea90a}</Project>
       <Name>VectoCore</Name>

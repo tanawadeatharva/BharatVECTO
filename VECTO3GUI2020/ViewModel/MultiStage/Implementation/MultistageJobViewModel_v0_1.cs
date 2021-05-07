@@ -2,14 +2,19 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Navigation;
 using System.Xml;
 using System.Xml.Linq;
 using TUGraz.VectoCommon.InputData;
+using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCore.InputData.FileIO.XML;
 using TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider;
+using TUGraz.VectoCore.Models.Simulation.Impl;
+using TUGraz.VectoCore.OutputData.FileIO;
+using TUGraz.VectoCore.Tests.Models.Simulation;
 using TUGraz.VectoCore.Utils;
 using VECTO3GUI2020.Helper;
 using VECTO3GUI2020.Ninject;
@@ -54,16 +59,44 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 			get
 			{
 				return _saveVifCommand ?? new RelayCommand(() => {
-					
-					SaveVIF(this);
+					var outPutFile = _multistageDependencies.DialogHelperLazy.Value.SaveToXMLDialog(Settings.Default.DefaultFilePath);
+					if (outPutFile == null) {
+						return;
+					}
+					SaveVIF(this, outPutFile);
 				}, () => true);
 			}
 		}
 
-		private static void SaveVIF(IMultistageVIFInputData inputData)
+		private static void SaveVIF(IMultistageVIFInputData vifData, string outputFile)
 		{
+
+
+
+			var numberOfManufacturingStages =
+				vifData.MultistageJobInputData.JobInputData.ManufacturingStages?.Count ?? 1;
+
+
+
+			var writer = new FileOutputVIFWriter(outputFile, numberOfManufacturingStages);
+			var inputData = new XMLDeclarationVIFInputData(vifData.MultistageJobInputData, vifData.VehicleInputData);
+
+			var factory = new SimulatorFactory(ExecutionMode.Declaration, inputData, writer);
+
+			var jobContainer = new JobContainer(new MockSumWriter()); //TODO: Replace with real sumwriter
+
+			var runs = factory.SimulationRuns().ToList();
+			foreach (var run in runs)
+			{
+				jobContainer.AddRun(run);
+			}
+
+			jobContainer.Execute();
+			jobContainer.WaitFinished();
+			var progress = jobContainer.GetProgress();
 			
 
+			var validator = new XMLValidator(XmlReader.Create(writer.XMLMultistageReportFileName));
 			var vifInputData = inputData;
 		}
 
@@ -202,7 +235,8 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 
 		public IVehicleDeclarationInputData VehicleInputData => _manufacturingStageViewModel.Vehicle;
 
-		public IMultistageBusInputDataProvider MultistageInputData => this;
+		public IMultistageBusInputDataProvider MultistageJobInputData => this;
+
 
 		#endregion
 

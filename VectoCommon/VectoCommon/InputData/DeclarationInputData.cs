@@ -990,7 +990,9 @@ namespace TUGraz.VectoCommon.InputData
 
 	public enum CompressorDrive
 	{
+		[GuiLabel("Electrically")]
 		electrically,
+		[GuiLabel("Mechanically")]
 		mechanically
 	}
 	

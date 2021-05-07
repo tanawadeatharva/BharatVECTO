@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Reflection.Emit;
+using System.Xml;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
@@ -16,6 +17,8 @@ namespace VECTO3GUI2020.ViewModel.Implementation.JobEdit.Vehicle.Components
         private static readonly string _name = "AirDrag";
 
         protected IAirdragDeclarationInputData _inputData;
+
+		public XmlNode XMLSource { get; }
 
 		private ICommonComponentViewModel _commonComponentViewModel;
 		public ICommonComponentViewModel CommonComponentViewModel
@@ -38,6 +41,8 @@ namespace VECTO3GUI2020.ViewModel.Implementation.JobEdit.Vehicle.Components
 			_inputData = inputData as IAirdragDeclarationInputData;
             Debug.Assert(_inputData != null);
             _isPresent = (_inputData?.DataSource?.SourceFile != null);
+
+			XMLSource = (inputData as AbstractCommonComponentType)?.XMLSource;
 
             _commonComponentViewModel = vmFactory.CreateCommonComponentViewModel(_inputData);
 			SetProperties();

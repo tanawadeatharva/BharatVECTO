@@ -85,9 +85,9 @@ namespace VECTO3GUI2020.Util.XML.Implementation.ComponentWriter
 				var hvacElement = new XElement(_defaultNamespace + "HVAC");
 				hvacElement.Add(new XElement(_defaultNamespace + XMLNames.Bus_SystemConfiguration, _inputData.HVACAux.SystemConfiguration.GetXmlFormat()));
 				hvacElement.Add(new XElement(_defaultNamespace + XMLNames.Bus_HeatPumpTypeDriver, _inputData.HVACAux.HeatPumpTypeDriverCompartment.GetLabel()));
-				hvacElement.Add(new XElement(_defaultNamespace + XMLNames.Bus_HeatPumpModeDriver, _inputData.HVACAux.HeatPumpModeDriverCompartment?.GetLabel()));
-				hvacElement.Add(new XElement(_defaultNamespace + XMLNames.Bus_HeatPumpTypePassenger, _inputData.HVACAux.HeatPumpTypePassengerCompartment?.GetLabel()));
-				hvacElement.Add(new XElement(_defaultNamespace + XMLNames.Bus_HeatPumpModePassenger, _inputData.HVACAux.HeatPumpModePassengerCompartment?.GetLabel()));
+				hvacElement.Add(new XElement(_defaultNamespace + XMLNames.Bus_HeatPumpModeDriver, _inputData.HVACAux.HeatPumpModeDriverCompartment.GetLabel()));
+				hvacElement.Add(new XElement(_defaultNamespace + XMLNames.Bus_HeatPumpTypePassenger, _inputData.HVACAux.HeatPumpTypePassengerCompartment.GetLabel()));
+				hvacElement.Add(new XElement(_defaultNamespace + XMLNames.Bus_HeatPumpModePassenger, _inputData.HVACAux.HeatPumpModePassengerCompartment.GetLabel()));
 				hvacElement.Add(new XElement(_defaultNamespace + XMLNames.Bus_AuxiliaryHeaterPower, _inputData.HVACAux.AuxHeaterPower?.ToXMLFormat(0)));
 				hvacElement.Add(new XElement(_defaultNamespace + XMLNames.Bus_DoubleGlazing, _inputData.HVACAux.DoubleGlazing));
 				hvacElement.Add(new XElement(_defaultNamespace + XMLNames.Bus_AdjustableAuxiliaryHeater, _inputData.HVACAux.AdjustableAuxiliaryHeater));
