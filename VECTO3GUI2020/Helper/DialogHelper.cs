@@ -49,12 +49,19 @@ namespace VECTO3GUI2020.Helper
 			return OpenFilesDialog(filter, initialDirectory, true);
 		}
 
+		public string OpenXMLFileDialog()
+		{
+			return OpenXMLFileDialog(null);
+		}
+
+
+
 		public string[] OpenXMLFilesDialog(string initialDirectory)
 		{
 			return OpenFilesDialog(_xmlFilter, initialDirectory);
 		}
 
-		public string OpenXMLFileDialog(string initialDirectory = null)
+		public string OpenXMLFileDialog(string initialDirectory)
 		{
 			return OpenFilesDialog(_xmlFilter, initialDirectory, false)?[0];
 		}
@@ -138,7 +145,9 @@ namespace VECTO3GUI2020.Helper
 		/// </summary>
 		/// <param name="initialDirectory">If no directory is specified the location of the assembly is used</param>
 		/// <returns></returns>
-		string OpenXMLFileDialog(string initialDirectory = null);
+		string OpenXMLFileDialog(string initialDirectory);
+
+		string OpenXMLFileDialog();
 
 
 		/// <summary>

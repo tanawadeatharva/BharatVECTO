@@ -97,6 +97,8 @@ namespace VECTO3GUI2020.Util.XML.Implementation.ComponentWriter
 				hvacElement.Add(new XElement(_defaultNamespace + XMLNames.Bus_OtherHeatingTechnology, _inputData.HVACAux.OtherHeatingTechnology));
 				dataElement.Add(hvacElement);
 			}
+
+			dataElement.DescendantsAndSelf().Where(e => e.Value.IsNullOrEmpty()).Remove();
 		}
 
 		#endregion

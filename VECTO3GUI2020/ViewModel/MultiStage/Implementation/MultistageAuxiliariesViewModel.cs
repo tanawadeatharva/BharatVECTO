@@ -18,6 +18,7 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 		IHVACBusAuxiliariesDeclarationData
 	{
 		void SetAuxiliariesInputData(IBusAuxiliariesDeclarationData componentsAuxiliaryInputData);
+		bool HasValues { get; }
 	}
 
 
@@ -33,7 +34,39 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 			set => SetProperty(ref _consolidatedInputData, value);
 		}
 
-		#region HVAV
+		public bool HasValues
+		{
+			get
+			{
+				var hasValues = false;
+
+
+				//Check if one of the Implemented properties of is not null
+				var HVACinterfaceProperties = typeof(IHVACBusAuxiliariesDeclarationData).GetProperties();
+
+				var notImplemented = new List<string>(new string[] {
+					nameof(IHVACBusAuxiliariesDeclarationData.AdjustableCoolantThermostat),
+					nameof(IHVACBusAuxiliariesDeclarationData.EngineWasteGasHeatExchanger)
+				});
+				foreach (var propInfo in HVACinterfaceProperties) {
+					if (notImplemented.Contains(propInfo.Name)) continue;
+					hasValues = hasValues || propInfo.GetValue(this) != null;
+				}
+
+
+				var ElectricConsumersInterfaceProperties = typeof(IElectricConsumersDeclarationData).GetProperties();
+				foreach (var propInfo in ElectricConsumersInterfaceProperties) {
+					hasValues = hasValues || propInfo.GetValue(this) != null;
+				}
+
+
+
+				return hasValues;
+			}
+		}
+
+
+		#region HVAC
 
 		private bool _heatPumpGroupEditingEnabled;
 		private BusHVACSystemConfiguration? _systemConfiguration;
@@ -103,6 +136,10 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 			set => SetProperty(ref _otherHeatingTechnology, value);
 		}
 
+		public bool? AdjustableCoolantThermostat => throw new NotImplementedException();
+
+		public bool EngineWasteGasHeatExchanger => throw new NotImplementedException();
+
 		public bool HeatPumpGroupEditingEnabled
 		{
 			get => _heatPumpGroupEditingEnabled;
@@ -139,6 +176,8 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 			set => SetProperty(ref _heatPumpModePassengerCompartment, value);
 		}
 
+#endregion
+		#region IElectricConsumersDeclaration
 
 		//LED lights
 		private bool? _interiorLightsLed;
@@ -181,46 +220,15 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 
 		#endregion
 
-		#region Implementation of interfaces;
-
-		private XmlNode _xmlSource;
-		private string _fanTechnology;
-		private IList<string> _steeringPumpTechnology;
-		private bool _smartElectrics;
-		private Watt _maxAlternatorPower;
-		private WattSecond _electricStorageCapacity;
-		private string _clutch;
-		private double _ratio;
-		private string _compressorSize;
-		private bool _smartAirCompression;
-		private bool _smartRegeneration;
-
-		private ConsumerTechnology _airsuspensionControl;
-		private ConsumerTechnology _adBlueDosing;
 
 
-		private bool? _adjustableCoolantThermostat;
-		private bool _engineWasteGasHeatExchanger;
+		#region Implementation of interfaces (unused Properties);
 
+		public XmlNode XMLSource => throw new NotImplementedException();
 
+		public string FanTechnology => throw new NotImplementedException();
 
-		public XmlNode XMLSource
-		{
-			get => _xmlSource;
-			set => _xmlSource = value;
-		}
-
-		public string FanTechnology
-		{
-			get => _fanTechnology;
-			set => _fanTechnology = value;
-		}
-
-		public IList<string> SteeringPumpTechnology
-		{
-			get => _steeringPumpTechnology;
-			set => _steeringPumpTechnology = value;
-		}
+		public IList<string> SteeringPumpTechnology => throw new NotImplementedException();
 
 		public IElectricSupplyDeclarationData ElectricSupply
 		{
@@ -248,87 +256,6 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 
 
 
-		public IList<IAlternatorDeclarationInputData> Alternators
-		{
-			get => throw new NotImplementedException();
-			set => throw new NotImplementedException();
-		}
-
-		public bool SmartElectrics
-		{
-			get => _smartElectrics;
-			set => _smartElectrics = value;
-		}
-
-		public Watt MaxAlternatorPower
-		{
-			get => _maxAlternatorPower;
-			set => _maxAlternatorPower = value;
-		}
-
-		public WattSecond ElectricStorageCapacity
-		{
-			get => _electricStorageCapacity;
-			set => _electricStorageCapacity = value;
-		}
-
-		public string Clutch
-		{
-			get => _clutch;
-			set => _clutch = value;
-		}
-
-		public double Ratio
-		{
-			get => _ratio;
-			set => _ratio = value;
-		}
-
-		public string CompressorSize
-		{
-			get => _compressorSize;
-			set => _compressorSize = value;
-		}
-
-		public bool SmartAirCompression
-		{
-			get => _smartAirCompression;
-			set => _smartAirCompression = value;
-		}
-
-		public bool SmartRegeneration
-		{
-			get => _smartRegeneration;
-			set => _smartRegeneration = value;
-		}
-
-
-		public ConsumerTechnology AirsuspensionControl
-		{
-			get => _airsuspensionControl;
-			set => _airsuspensionControl = value;
-		}
-
-		public ConsumerTechnology AdBlueDosing
-		{
-			get => _adBlueDosing;
-			set => _adBlueDosing = value;
-		}
-
-
-
-
-		public bool? AdjustableCoolantThermostat
-		{
-			get => _adjustableCoolantThermostat;
-			set => _adjustableCoolantThermostat = value;
-		}
-
-		public bool EngineWasteGasHeatExchanger
-		{
-			get => _engineWasteGasHeatExchanger;
-			set => _engineWasteGasHeatExchanger = value;
-		}
 
 
 
@@ -390,5 +317,38 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 			ConsolidatedInputData = consolidatedAuxiliariesInputData;
 		}
 
+		#region Implementation of IElectricSupplyDeclarationData
+
+		public IList<IAlternatorDeclarationInputData> Alternators => throw new NotImplementedException();
+
+		public bool SmartElectrics => throw new NotImplementedException();
+
+		public Watt MaxAlternatorPower => throw new NotImplementedException();
+
+		public WattSecond ElectricStorageCapacity => throw new NotImplementedException();
+
+		#endregion
+
+		#region Implementation of IPneumaticSupplyDeclarationData
+
+		public string Clutch => throw new NotImplementedException();
+
+		public double Ratio => throw new NotImplementedException();
+
+		public string CompressorSize => throw new NotImplementedException();
+
+		public bool SmartAirCompression => throw new NotImplementedException();
+
+		public bool SmartRegeneration => throw new NotImplementedException();
+
+		#endregion
+
+		#region Implementation of IPneumaticConsumersDeclarationData
+
+		public ConsumerTechnology AirsuspensionControl => throw new NotImplementedException();
+
+		public ConsumerTechnology AdBlueDosing => throw new NotImplementedException();
+
+		#endregion
 	}
 }

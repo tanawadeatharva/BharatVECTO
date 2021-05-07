@@ -91,7 +91,6 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 			}
 			
 
-
 			if (filename == null) {
 				filename = _dialogHelper.Value.SaveToXMLDialog(Settings.Default.DefaultFilePath);
 				if (filename == null) {
@@ -130,6 +129,7 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 		private readonly Lazy<IXMLInputDataReader> _inputDataReader;
 		private string _vehicleInputDataFilePath = null;
 		private readonly IMultistageDependencies _multistageDependencies;
+		private readonly DataSource _dataSource;
 
 		public ICommand LoadVehicleDataCommand
 		{
@@ -178,7 +178,7 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 
 		public MultiStageJobViewModel_v0_1(IMultistageBusInputDataProvider inputData, IMultiStageViewModelFactory vmFactory, IMultistageDependencies multistageDependencies )
 		{
-
+			_dataSource = inputData.DataSource;
 			_jobInputData = inputData.JobInputData;
 			_vmFactory = vmFactory;
 			_consolidateManufacturingStage = _jobInputData.ConsolidateManufacturingStage;
@@ -194,7 +194,7 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 
 		#region Implementation of IInputDataProvider
 
-		public DataSource DataSource => throw new NotImplementedException();
+		public DataSource DataSource => _dataSource;
 
 		#endregion
 

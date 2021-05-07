@@ -11,15 +11,15 @@
             <RowDefinition></RowDefinition>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
-                <ColumnDefinition></ColumnDefinition>
-                <ColumnDefinition Width="30px"></ColumnDefinition>
-            </Grid.ColumnDefinitions>
-        <TextBox VerticalContentAlignment="Center" Padding="4" Margin = "0 0 0 0" IsReadOnly="True" 
+            <ColumnDefinition></ColumnDefinition>
+            <ColumnDefinition Width="30px"></ColumnDefinition>
+        </Grid.ColumnDefinitions>
+        <TextBox x:Name="textBox" VerticalContentAlignment="Center" Padding="4" Margin = "0 0 0 0" IsReadOnly="True" 
                      Text="{Binding Text, ElementName=filepickercustomcontrol}" HorizontalAlignment="Stretch" TextWrapping="Wrap"
                      Style="{DynamicResource TextBoxStyle1}"/>
-        <Button Padding="4" Margin="4 0 0 0" Grid.Column="1" ContentTemplate="{DynamicResource AddDocumentIcon}"
+        <Button x:Name="button" Padding="4" Margin="4 0 0 0" Grid.Column="1" ContentTemplate="{DynamicResource AddDocumentIcon}"
                 Command="{Binding Command, ElementName=filepickercustomcontrol}" Style="{DynamicResource FilePickerButtonStyle}">
-                
-            </Button>
-        </Grid>
+
+        </Button>
+    </Grid>
 </UserControl>

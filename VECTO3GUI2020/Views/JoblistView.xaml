@@ -18,13 +18,13 @@
         <Border  BorderBrush="Transparent" BorderThickness="1">
             <Grid>
                 <StackPanel HorizontalAlignment="Stretch">
-                    <Button Margin="4" HorizontalAlignment="Stretch" 
+                    <Button x:Name="button" Margin="4" HorizontalAlignment="Stretch" 
                         Style="{StaticResource MultiStageButtonStyle1}" >Simulation</Button>
-                    <Button Margin="4"  HorizontalAlignment="Stretch" 
+                    <Button x:Name="button1" Margin="4"  HorizontalAlignment="Stretch" 
                         Style="{StaticResource MultiStageButtonStyle1}" 
                         Command="{Binding moveJobUp}"
                         CommandParameter="{Binding ElementName=JobDataGrid, Path=SelectedItem}">Up</Button>
-                    <Button Margin="4" HorizontalAlignment="Stretch" 
+                    <Button x:Name="button2" Margin="4" HorizontalAlignment="Stretch" 
                         Style="{StaticResource MultiStageButtonStyle1}" 
                         Command="{Binding moveJobDown}"
                         CommandParameter="{Binding ElementName=JobDataGrid, Path=SelectedItem}">Down</Button>
@@ -33,8 +33,8 @@
         </Border>
         <Grid Grid.Column="1">
             <Border BorderBrush="{StaticResource AccentColorButton}" BorderThickness="1">
-            <StackPanel VerticalAlignment="Stretch">
-                <DataGrid ItemsSource="{Binding Jobs}"
+                <StackPanel VerticalAlignment="Stretch">
+                    <DataGrid ItemsSource="{Binding Jobs}"
                               Name="JobDataGrid"
                               HorizontalAlignment="Stretch"
                               IsReadOnly="True" 
@@ -58,39 +58,39 @@
                             <DataGridTextColumn Header="Type" Binding="{Binding DocumentType}" Width="1*"></DataGridTextColumn>
                         </DataGrid.Columns>
                         <DataGrid.RowDetailsTemplate>
-                                <DataTemplate>
-                                    <StackPanel Orientation="Vertical">
-                                        <Label Content="Filename"/>
-                                        <TextBlock Text="{Binding DataSource.SourceFile}" TextWrapping="Wrap" Margin="10" />
-                                    </StackPanel>
-                                </DataTemplate>
-                    </DataGrid.RowDetailsTemplate>
-                    <DataGrid.InputBindings>
-                        <MouseBinding
+                            <DataTemplate>
+                                <StackPanel Orientation="Vertical">
+                                    <Label x:Name="label" Content="Filename"/>
+                                    <TextBlock x:Name="textBlock" Text="{Binding DataSource.SourceFile}" TextWrapping="Wrap" Margin="10" />
+                                </StackPanel>
+                            </DataTemplate>
+                        </DataGrid.RowDetailsTemplate>
+                        <DataGrid.InputBindings>
+                            <MouseBinding
                         MouseAction="LeftDoubleClick"
                         Command="{Binding EditJob}"
                         CommandParameter="{Binding ElementName=JobDataGrid, Path=SelectedItem}"></MouseBinding>
-                    </DataGrid.InputBindings>
-                </DataGrid>
-                <Label Content="Loading . . ." Visibility="{Binding IsLoading, Converter={StaticResource BooleanToVisibilityConverter}}"/>
-            </StackPanel>
+                        </DataGrid.InputBindings>
+                    </DataGrid>
+                    <Label x:Name="label" Content="Loading . . ." Visibility="{Binding IsLoading, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+                </StackPanel>
             </Border>
         </Grid>
         <Grid Grid.Column="2">
             <Border  BorderBrush="Transparent" BorderThickness="1">
                 <StackPanel >
-                    <Button Margin="4" HorizontalAlignment="Stretch" 
+                    <Button x:Name="button3" Margin="4" HorizontalAlignment="Stretch" 
                         Style="{StaticResource MultiStageButtonStyle1}"
                         Command="{Binding AddJob}" Background="#FFDDDDDD">
-                         OpenFile</Button>
-                    <Button Margin ="4" HorizontalAlignment="Stretch" 
+                        OpenFile</Button>
+                    <Button x:Name="button4" Margin ="4" HorizontalAlignment="Stretch" 
                         Style="{StaticResource MultiStageButtonStyle1}"
                         Command="{Binding EditJob}"
                         CommandParameter="{Binding ElementName=JobDataGrid, Path=SelectedItem}">EditFile</Button>
-                    <Button Margin="4" HorizontalAlignment="Stretch" 
+                    <Button x:Name="button5" Margin="4" HorizontalAlignment="Stretch"
                         Style="{StaticResource MultiStageButtonStyle1}"
-                        Command="{Binding NewManufacturingStageFile}">New Multistage File</Button>
-                    <Button Margin="4" HorizontalAlignment="Stretch" 
+                        Command="{Binding NewManufacturingStageFile}" AutomationProperties.AutomationId="JobListViewNewManufacturingStageFileButton">New Multistage File</Button>
+                    <Button x:Name="button6" Margin="4" HorizontalAlignment="Stretch" 
                         Style="{StaticResource MultiStageButtonStyle1}"
                         Command="{Binding RemoveJob}"
                         CommandParameter="{Binding ElementName=JobDataGrid, Path=SelectedItem}">DeleteFile</Button>

@@ -63,6 +63,7 @@ namespace VECTO3GUI2020
 
             var mainwindow = container.Get<MainWindow>();
             this.MainWindow = mainwindow;
+			Application.Current.MainWindow = mainwindow;
             this.MainWindow.Show();
 
 

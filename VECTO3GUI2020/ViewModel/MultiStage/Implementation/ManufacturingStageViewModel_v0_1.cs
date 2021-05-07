@@ -80,11 +80,11 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 		public ManufacturingStageViewModel_v0_1(IManufacturingStageInputData consolidatedManufacturingStageInputData, IMultiStageViewModelFactory viewModelFactory)
 		{
 			_viewModelFactory = viewModelFactory;
-			_stageCount = consolidatedManufacturingStageInputData.StageCount + 1;
+			_stageCount = consolidatedManufacturingStageInputData?.StageCount?? + 1;
 			_consolidatedManufacturingStageInputData = consolidatedManufacturingStageInputData;
 
 
-			VehicleViewModel = (IMultistageVehicleViewModel)_viewModelFactory.GetInterimStageVehicleViewModel(consolidatedManufacturingStageInputData.Vehicle);
+			VehicleViewModel = (IMultistageVehicleViewModel)_viewModelFactory.GetInterimStageVehicleViewModel(consolidatedManufacturingStageInputData?.Vehicle);
 			CurrentView = VehicleViewModel as IViewModelBase;
 
 

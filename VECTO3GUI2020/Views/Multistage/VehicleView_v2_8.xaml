@@ -46,7 +46,8 @@
                                             Content="{Binding GrossVehicleMassRating}"/>
 
 
-                <custom:MultiStageParameter Validation.ErrorTemplate="{StaticResource multistageParameterControlErrorTemplate}"
+                <custom:MultiStageParameter x:Name="AirdragModified"
+                    Validation.ErrorTemplate="{StaticResource multistageParameterControlErrorTemplate}"
                                             EditingEnabled="{Binding AirdragModifiedMultistageEditingEnabled}"
                                             PreviousContent="{Binding ConsolidatedAirdragModifiedEnum}"
                                             Content="{Binding AirdragModifiedEnum, ValidatesOnDataErrors=True}" 

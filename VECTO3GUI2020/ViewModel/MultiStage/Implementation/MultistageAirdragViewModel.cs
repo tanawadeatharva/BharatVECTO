@@ -115,7 +115,7 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 					if (!valid) {
 						throw new VectoException("Invalid input file");
 					}
-
+					
 					//dataProviderVersion = XMLHelper.GetVersion(doc.Node);
 
 					XElement airdragElement = airdragElements.First();
