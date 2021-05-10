@@ -27,34 +27,35 @@ using Convert = System.Convert;
 
 namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 {
-	public enum AirdragModifiedEnum
+	public enum AIRDRAGMODIFIED
 	{
 		[GuiLabel("Unknown")]
-		UNKNOWN = -1,
+		UNKNOWN = 0,
 		[GuiLabel("True")]
 		TRUE = 1,
 		[GuiLabel("False")]
-		FALSE = 0,
+		FALSE = 2,
 
 	}
 
 	public static class AirdragModifiedEnumHelper
 	{
-		public static AirdragModifiedEnum toAirdragModifiedEnum(this bool? nullableBool)
+		public static AIRDRAGMODIFIED toAirdragModifiedEnum(this bool? nullableBool)
 		{
 			if (nullableBool.HasValue) {
-				return nullableBool.Value == true ? AirdragModifiedEnum.TRUE : AirdragModifiedEnum.FALSE;
+				return nullableBool.Value == true ? AIRDRAGMODIFIED.TRUE : AIRDRAGMODIFIED.FALSE;
 
 			}
-			return AirdragModifiedEnum.UNKNOWN;
+			return AIRDRAGMODIFIED.UNKNOWN;
 		}
 
-		public static bool? toNullableBool(this AirdragModifiedEnum airdragModified)
+
+		public static bool? toNullableBool(this AIRDRAGMODIFIED airdragModified)
 		{
 			switch (airdragModified) {
-				case AirdragModifiedEnum.TRUE:
+				case AIRDRAGMODIFIED.TRUE:
 					return true;
-				case AirdragModifiedEnum.FALSE:
+				case AIRDRAGMODIFIED.FALSE:
 					return false;
 				default:
 					return null;
@@ -69,7 +70,6 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 		IMultistageAirdragViewModel MultistageAirdragViewModel { get; set; }
 		IMultistageAuxiliariesViewModel MultistageAuxiliariesViewModel { get; set; }
 		void SetAirdragData(IAirdragDeclarationInputData airdragData);
-		void SetBusAuxiliaries(IBusAuxiliariesDeclarationData busAuxData);
 		void SetVehicleInputData(IVehicleDeclarationInputData vehicleInputData);
 	}
 
@@ -136,12 +136,13 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 
 		public void SetAirdragData(IAirdragDeclarationInputData airdragData)
 		{
+			throw new NotImplementedException();
 			MultistageAirdragViewModel.SetAirdragInputData(airdragInputData: airdragData);
 		}
 
 		public void SetBusAuxiliaries(IBusAuxiliariesDeclarationData busAuxData)
 		{
-			//BusAuxiliaries.SetBusAuxiliariesInputData()
+			throw new NotImplementedException();
 		}
 
 		public void SetVehicleInputData(IVehicleDeclarationInputData vehicleInputData)
@@ -199,7 +200,7 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 		private VehicleCode? _vehicleCode;
 		private RegistrationClass? _registeredClass;
 		private bool? _airdragModifiedMultistage;
-		private bool _airdragModifiedEditingEnabled;
+		private bool _airdragModifiedEditingEnabled = false;
 		private LegislativeClass? _legislativeClass;
 		private ConsumerTechnology? _doorDriveTechnology;
 		private TankSystem? _tankSystem;
@@ -392,24 +393,30 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
         #region AirdragModified
 		
 
-        public AirdragModifiedEnum AirdragModifiedEnum
+        public AIRDRAGMODIFIED? AirdragModifiedEnum
 		{
-			get => _airdragModifiedMultistage.toAirdragModifiedEnum();
+			get
+			{
+				if (AirdragModifiedMultistageEditingEnabled) {
+					return _airdragModifiedMultistage.toAirdragModifiedEnum();
+				} else {
+					return null;
+				}
+			}
 			set {
-				AirdragModifiedMultistage = value.toNullableBool();
+				AirdragModifiedMultistage = value?.toNullableBool();
 			}
 		}
 
-        public AirdragModifiedEnum ConsolidatedAirdragModifiedEnum
+		public AIRDRAGMODIFIED? ConsolidatedAirdragmodified
 		{
 			get
 			{
 				if (_consolidatedVehicleData?.AirdragModifiedMultistage != null) {
 					return _consolidatedVehicleData.AirdragModifiedMultistage.toAirdragModifiedEnum();
 				} else {
-					return AirdragModifiedEnum.UNKNOWN;
+					return null;
 				}
-				
 			}
 			set => throw new NotImplementedException();
 		}
@@ -420,7 +427,7 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 			set => SetProperty(ref _airdragModifiedMultistage, value);
 		}
 
-		#endregion;
+		
 		public bool AirdragModifiedMultistageEditingEnabled
 		{
 			get
@@ -431,9 +438,12 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 				}
 				return _airdragModifiedEditingEnabled;
 			}
-			set => SetProperty(ref _airdragModifiedEditingEnabled, value);
+			set{
+				SetProperty(ref _airdragModifiedEditingEnabled, value);
+			}
+				
 		}
-
+		#endregion;
 
 		public RegistrationClass? RegisteredClass
 		{
@@ -533,53 +543,92 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 
 		public IAdvancedDriverAssistantSystemDeclarationInputData ADAS
 		{
-			get { return _adasEditingEnabled ? this : null; }
+			get
+			{
+				if (EngineStopStartNullable.HasValue 
+					|| EcoRollTypeNullable.HasValue
+					|| PredictiveCruiseControlNullable.HasValue
+					|| ATEcoRollReleaseLockupClutch.HasValue) {
+					return this;
+				} else {
+					return null;
+				}
+			;
+		}
+
+				
+			
 		}
 
 		public bool AdasEditingEnabled
 		{
 			get => _adasEditingEnabled;
-			set => SetProperty(ref _adasEditingEnabled, value);
+			set
+			{
+				SetProperty(ref _adasEditingEnabled, value);
+			}
 		}
 
 		public bool? EngineStopStartNullable
 		{
 			get => _engineStopStartNullable;
-			set => SetProperty(ref _engineStopStartNullable, value);
+			set
+			{
+				SetProperty(ref _engineStopStartNullable, value);
+			}
 		}
 
 		public bool EngineStopStart
 		{
-			get => _engineStopStartNullable.HasValue ? _engineStopStartNullable.Value : false;
-			
+			get
+			{
+				return _engineStopStartNullable.HasValue ? _engineStopStartNullable.Value : false;
+			}
 		}
 
 		public EcoRollType? EcoRollTypeNullable
 		{
 			get => _ecoRollTypeNullable;
-			set => SetProperty(ref _ecoRollTypeNullable, value);
+			set
+			{
+				SetProperty(ref _ecoRollTypeNullable, value);
+			}
 		}
 
 		public EcoRollType EcoRoll
 		{
-			get => _ecoRollTypeNullable.HasValue ? _ecoRollTypeNullable.Value : EcoRollType.None;
+			get
+			{
+				return _ecoRollTypeNullable.HasValue ? _ecoRollTypeNullable.Value : EcoRollType.None;
+			}
 		}
 
 		public PredictiveCruiseControlType? PredictiveCruiseControlNullable
 		{
 			get => _predictiveCruiseControlNullable;
-			set => SetProperty(ref _predictiveCruiseControlNullable, value);
+			set
+			{
+				SetProperty(ref _predictiveCruiseControlNullable, value);
+			}
 		}
 
 		public PredictiveCruiseControlType PredictiveCruiseControl
 		{
-			get => _predictiveCruiseControlNullable.HasValue ? _predictiveCruiseControlNullable.Value : PredictiveCruiseControlType.None;
+			get
+			{
+				return _predictiveCruiseControlNullable.HasValue
+					? _predictiveCruiseControlNullable.Value
+					: PredictiveCruiseControlType.None;
+			}
 		}
 
 		public bool? ATEcoRollReleaseLockupClutch
 		{
 			get => _atEcoRollReleaseLockupClutch;
-			set => SetProperty(ref _atEcoRollReleaseLockupClutch, value);
+			set
+			{
+				SetProperty(ref _atEcoRollReleaseLockupClutch, value);
+			}
 		}
 
 		#endregion
@@ -783,12 +832,12 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 						}
 						break;
 					case nameof(AirdragModifiedEnum):
-						if (AirdragModifiedMultistageEditingEnabled && AirdragModifiedEnum == AirdragModifiedEnum.UNKNOWN) {
+						if (AirdragModifiedMultistageEditingEnabled && (AirdragModifiedEnum == AIRDRAGMODIFIED.UNKNOWN)) {
 							result = "Air drag modified has to be set";
 						}
 						break;
 				}
-				//string result_null; //https://www.youtube.com/watch?v=5KF0GGObuAQ
+				//https://www.youtube.com/watch?v=5KF0GGObuAQ
 
 				if (result == null) {
 					if(Errors.ContainsKey(propertyName))

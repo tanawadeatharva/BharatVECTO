@@ -49,7 +49,7 @@
                 <custom:MultiStageParameter x:Name="AirdragModified"
                     Validation.ErrorTemplate="{StaticResource multistageParameterControlErrorTemplate}"
                                             EditingEnabled="{Binding AirdragModifiedMultistageEditingEnabled}"
-                                            PreviousContent="{Binding ConsolidatedAirdragModifiedEnum}"
+                                            PreviousContent="{Binding ConsolidatedAirdragmodified}"
                                             Content="{Binding AirdragModifiedEnum, ValidatesOnDataErrors=True}" 
                                             Mode="COMBOBOX"/>
 
