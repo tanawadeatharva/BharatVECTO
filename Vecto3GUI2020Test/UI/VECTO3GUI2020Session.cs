@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using NUnit.Framework;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Appium.Windows;
@@ -11,6 +12,8 @@ namespace Vecto3GUI2020Test.UI
         protected const string WindowsApplicationDriverUrl = "http://127.0.0.1:4723";
         private const string NotepadAppId = @"C:\Windows\System32\notepad.exe";
 
+		private static Process winappDriverProcess;
+
         internal static WindowsDriver<WindowsElement> session;
 		internal static DesktopSession desktopSession;
 
@@ -22,9 +25,9 @@ namespace Vecto3GUI2020Test.UI
 		public static void Setup(TestContext context)
         {
             // Launch a new instance of VECTO application
-            if (session == null)
-            {
-                // Create a new session to launch Notepad application
+            if (session == null) {
+				winappDriverProcess = Process.Start(@"C:\Program Files (x86)\Windows Application Driver\WinAppDriver.exe");
+				// Create a new session to launch Notepad application
 				var appiumOptions = new OpenQA.Selenium.Appium.AppiumOptions();
 				appiumOptions.AddAdditionalCapability("app", @"C:\Users\Harry\source\repos\vecto-dev\VECTO3GUI2020\bin\Debug\VECTO3GUI2020.exe");
 				appiumOptions.AddAdditionalCapability("deviceName", "WindowsPC");
@@ -49,7 +52,8 @@ namespace Vecto3GUI2020Test.UI
             if (session != null)
             {
                 session.CloseApp();
-
+				winappDriverProcess.Kill();
+				
 				session = null;
             }
         }

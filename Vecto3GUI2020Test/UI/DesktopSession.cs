@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -16,6 +17,8 @@ namespace Vecto3GUI2020Test
 
 		public DesktopSession()
 		{
+			var process = Process.Start(@"C:\Program Files (x86)\Windows Application Driver\WinAppDriver.exe");
+
 			var appCapabilities = new AppiumOptions();
 			appCapabilities.AddAdditionalCapability("app", "Root");
 			appCapabilities.AddAdditionalCapability("deviceName", "WindowsPC");

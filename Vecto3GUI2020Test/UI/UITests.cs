@@ -24,25 +24,48 @@ namespace Vecto3GUI2020Test
             Setup(TestContext.CurrentContext);
 		}
 
+
+		[Test]
+		public void LoadFileSession()
+		{
+			session.FindElementByXPath(
+				"//Button[@Name=\"New Multistage File\"][@AutomationId=\"JobListViewNewManufacturingStageFileButton\"]").Click(); //open new multistageWindow
+			
+			//session.SwitchTo().Window(session.WindowHandles.First());
+			
+
+			session.FindElementByXPath("//Button[@AutomationId=\"button\"]").Click(); //open filepicker
+
+
+			Thread.Sleep(100000);
+		}  
+
+
+
+
+		#region DesktopSessionTests
+
+		[Ignore("disabled Desktop Session tests")]
 		[Test]
 		public void LoadFile()
 		{
 			LoadFileThroughUIWithDesktopSession(fileName: "vecto_multistage_consolidated_multiple_stages.xml");
 		}
-
+		[Ignore("disabled Desktop Session tests")]
 		[Test]
 		public void LoadFileAirdrag()
 		{
 			LoadFileThroughUIWithDesktopSession(fileName: "vecto_multistage_consolidated_multiple_stages_airdrag.xml");
 
 		}
+		[Ignore("disabled Desktop Session tests")]
 		[Test]
 		public void LoadFileheatPump()
 		{
 			LoadFileThroughUIWithDesktopSession(fileName: "vecto_multistage_consolidated_multiple_stages_heatPump.xml");
 
 		}
-
+		[Ignore("disabled Desktop Session tests")]
 		[Test]
 		public void LoadFilehev()
 		{
@@ -50,37 +73,39 @@ namespace Vecto3GUI2020Test
 
 		}
 
-
+		[Ignore("disabled Desktop Session tests")]
 		[Test]
 		public void LoadFileNGTankSystem()
 		{
 			LoadFileThroughUIWithDesktopSession(fileName: "vecto_multistage_consolidated_multiple_stages_NGTankSystem.xml");
 		}
 
+		[Ignore("disabled Desktop Session tests")]
 		[Test]
 		public void LoadFileConsolidatedOneStage()
 		{
 			LoadFileThroughUIWithDesktopSession(fileName: "vecto_multistage_consolidated_one_stage.xml");
 		}
-
+		[Ignore("disabled Desktop Session tests")]
 		[Test]
 		public void LoadFileConsolidatedTwoStages()
 		{
 			LoadFileThroughUIWithDesktopSession(fileName: "vecto_multistage_consolidated_two_stages.xml");
 		}
-
+		[Ignore("disabled Desktop Session tests")]
 		[Test]
 		public void LoadFilePrimaryVehicleOnly()
 		{
 			LoadFileThroughUIWithDesktopSession(fileName: "vecto_multistage_primary_vehicle_only.xml");
 		}
 
+		[Ignore("disabled Desktop Session tests")]
 		[Test]
 		public void LoadFilePrimaryVehicleStage_2_3()
 		{
 			LoadFileThroughUIWithDesktopSession(fileName: "vecto_multistage_consolidated_one_stage.xml");
 		}
-
+		[Ignore("disabled Desktop Session tests")]
 		[Test]
 		public void LoadFilePrimaryVehicleOnlyAndCheckFields()
 		{
@@ -210,14 +235,14 @@ namespace Vecto3GUI2020Test
 		}
 
 
-
+		#endregion
 
 
 		[TearDown]
 		public void OneTimeTeardown()
 		{
 			TearDown();
-			Thread.Sleep(1000);
+			Thread.Sleep(0);
 		}
 
 

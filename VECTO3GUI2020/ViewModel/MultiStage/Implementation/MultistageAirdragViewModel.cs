@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Windows;
 using System.Windows.Input;
@@ -59,6 +60,7 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 			AirDragViewModel = _dependencies.ComponentViewModelFactory.CreateComponentViewModel(airdragInputData) as IAirDragViewModel;
 			if (AirDragViewModel != null) {
 				AirDragViewModel.LabelVisible = false;
+				AirDragViewModel.IsReadOnly = true;
 			}
 		}
 
@@ -123,6 +125,8 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 
 					var airDragInputData = _dependencies.InjectFactory.CreateAirdragData(dataProviderVersion, null, airdragNode, fileName);
 					AirDragViewModel = _dependencies.ComponentViewModelFactory.CreateComponentViewModel(airDragInputData) as IAirDragViewModel;
+					AirDragViewModel.IsReadOnly = true;
+					AirDragViewModel.LabelVisible = false;
 					success = true;
 				} else {
 					success = false;

@@ -3,59 +3,26 @@ using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Xml;
+using Castle.DynamicProxy.Generators.Emitters.SimpleAST;
 using Moq;
 using Ninject;
 using NUnit.Framework;
 using TUGraz.VectoCommon.BusAuxiliaries;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
-using TUGraz.VectoCore;
-using TUGraz.VectoCore.InputData.FileIO.XML;
 using TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider;
 using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.Models.SimulationComponent.Strategies;
 using TUGraz.VectoCore.OutputData.FileIO;
 using TUGraz.VectoCore.Utils;
 using VECTO3GUI2020.Helper;
-using VECTO3GUI2020.Ninject;
-using VECTO3GUI2020.Ninject.Vehicle;
 using VECTO3GUI2020.ViewModel.MultiStage.Implementation;
-using VECTO3GUI2020.ViewModel.MultiStage.Interfaces;
 
 namespace Vecto3GUI2020Test
 {
-    [TestFixture]
-    public class ViewModelTests
-    {
-		protected IXMLInputDataReader xmlInputReader;
-		private IKernel _kernel;
-
-		const string DirPath = @"Testdata\";
-
-		private const string consolidated_multiple_stages = "vecto_multistage_consolidated_multiple_stages.xml";
-
-		private const string consolidated_multiple_stages_airdrag =
-			"vecto_multistage_consolidated_multiple_stages_airdrag.xml";
-
-		private const string consolidated_one_stage = "vecto_multistage_consolidated_one_stage.xml";
-		private const string primary_vehicle_only = "vecto_multistage_primary_vehicle_only.xml";
-
-		[SetUp]
-        public void OneTimeSetUp()
-        {
-			_kernel = new StandardKernel(
-				new VectoNinjectModule(),
-				new JobEditModule(),
-				new ComponentModule(),
-				new DocumentModule(),
-				new XMLWriterFactoryModule(),
-				new FactoryModule(),
-				new MultistageModule()
-			);
-			xmlInputReader = _kernel.Get<IXMLInputDataReader>();
-			
-		}
-
+	[TestFixture]
+    public class LoadAndSaveVehicleData : ViewModelTestBase
+	{
 		[Test]
 		public void loadInputFileMultipleStage()
 		{
@@ -67,6 +34,7 @@ namespace Vecto3GUI2020Test
 		{
 			var newMultiStageJob = loadFile(primary_vehicle_only);
 			var vehicle = newMultiStageJob.MultiStageJobViewModel.ManufacturingStageViewModel.Vehicle as DeclarationInterimStageBusVehicleViewModel_v2_8;
+			Assert.NotNull(vehicle);
 			vehicle.Manufacturer = "test1";
 			vehicle.ManufacturerAddress = "testAddress2";
 			vehicle.VIN = "VIN123456789";
@@ -75,16 +43,31 @@ namespace Vecto3GUI2020Test
 			var manufacturingStage =
 				newMultiStageJob.MultiStageJobViewModel as MultiStageJobViewModel_v0_1;
 
+			Assert.NotNull(manufacturingStage);
+
+
 			var fileName = primary_vehicle_only.Replace(".xml", "") + "_output.xml";
-
+			deleteFile(fileName);
 			_kernel.Rebind<IDialogHelper>().ToConstant(getMockDialogHelper(fileToSave:fileName).Object);
-			
 			manufacturingStage.SaveInputDataAsCommand.Execute(null);
+			Assert.True(checkFileExists(fileName));
+		}
 
+		[TestCase(primary_vehicle_only)]
+		[TestCase(consolidated_multiple_stages)]
+		[TestCase(consolidated_one_stage)]
+		public void SaveVehicleDataWithMissingFields(string fileName)
+		{
+			var newMultistageJobViewModel = loadFile(fileName);
+			var manstage = newMultistageJobViewModel.MultiStageJobViewModel as MultiStageJobViewModel_v0_1;
+			Assert.NotNull(manstage);
 
-			checkFileExists(fileName);
+			var saveFileName = fileName.Replace(".xml", "") + "_output.xml";
+			deleteFile(saveFileName);
+			_kernel.Rebind<IDialogHelper>().ToConstant(getMockDialogHelper(fileToSave: saveFileName).Object);
+			manstage.SaveInputDataAsCommand.Execute(null);
 
-
+			Assert.False(checkFileExists(saveFileName));
 
 		}
 
@@ -131,10 +114,12 @@ namespace Vecto3GUI2020Test
 			Assert.Null(vehicleViewModel_v2_8.ConsolidatedEntranceHeightInMm);
 
 			Assert.AreEqual(vehicleViewModel_v2_8.AirdragModifiedMultistageEditingEnabled, false);
-
-
 			Assert.Null(vehicleViewModel_v2_8.BusAuxiliaries);
 
+
+			var vifInputData = vm.MultiStageJobViewModel as IMultistageVIFInputData;
+
+			Assert.Null(vifInputData.VehicleInputData.Components);
 		}
 
 
@@ -218,90 +203,10 @@ namespace Vecto3GUI2020Test
 
 		}
 
-		[TearDown]
-		public void TearDown()
-		{
-			_kernel.Dispose();
-			_kernel = null;
-		}
-
-
-		
-
 
 		#region Helper
-		public bool checkFileExists(string fileName)
-		{
-			var filePath = Path.GetFullPath(DirPath + fileName);
-			var exists = File.Exists(filePath);
-			if (!exists)
-			{
-				Console.WriteLine(filePath + @" not existing");
-			}
 
-			Assert.IsTrue(exists);
-			return exists;
-		}
-
-		public NewMultiStageJobViewModel loadFile(string fileName)
-		{
-			string filePath = "";
-			filePath = Path.GetFullPath(DirPath + fileName);
-
-			var dialogMock = new Mock<IDialogHelper>();
-			dialogMock.Setup(dialogHelper => dialogHelper.OpenXMLFileDialog(It.IsAny<string>())).Returns(filePath);
-			dialogMock.Setup(dialogHelper => dialogHelper.OpenXMLFileDialog()).Returns(filePath);
-
-			var newMultistageJobViewModel = new NewMultiStageJobViewModel(dialogMock.Object, xmlInputReader,
-				_kernel.Get<IMultiStageViewModelFactory>());
-			newMultistageJobViewModel.AddVifFile.Execute(null);
-
-			Assert.NotNull(newMultistageJobViewModel.MultiStageJobViewModel);
-
-			var manstageVehicleViewModel = newMultistageJobViewModel.MultiStageJobViewModel.ManufacturingStageViewModel.Vehicle as DeclarationInterimStageBusVehicleViewModel_v2_8;
-			Assert.NotNull(manstageVehicleViewModel);
-
-			var auxiliariesViewModel = manstageVehicleViewModel.MultistageAuxiliariesViewModel;
-			Assert.NotNull(auxiliariesViewModel);
-
-
-
-
-			var airdragViewModel = (manstageVehicleViewModel as DeclarationInterimStageBusVehicleViewModel_v2_8)?.MultistageAirdragViewModel;
-			Assert.NotNull(airdragViewModel);
-
-			Assert.AreEqual(filePath, newMultistageJobViewModel.VifPath);
-
-
-
-			return newMultistageJobViewModel;
-		}
-
-		private Mock<IDialogHelper> getMockDialogHelper(string fileToLoad = null, string fileToSave = null)
-		{
-			Mock<IDialogHelper> mockDialogHelper = null;
-			if (fileToLoad != null) {
-				var filePath = Path.GetFullPath(DirPath + fileToLoad);
-
-				Assert.NotNull(filePath);
-				mockDialogHelper = new Mock<IDialogHelper>();
-				mockDialogHelper.Setup(dialogHelper => dialogHelper.OpenXMLFileDialog(It.IsAny<string>())).Returns(filePath);
-				mockDialogHelper.Setup(dialogHelper => dialogHelper.OpenXMLFileDialog()).Returns(filePath);
-			}
-
-			if (fileToSave != null) {
-				var filePath = Path.GetFullPath(DirPath + fileToSave);
-				mockDialogHelper = mockDialogHelper ?? new Mock<IDialogHelper>();
-				mockDialogHelper.Setup(dialogHelper =>
-					dialogHelper.SaveToXMLDialog(It.IsAny<string>())).Returns(filePath);
-				mockDialogHelper.Setup(dialogHelper =>
-					dialogHelper.SaveToXMLDialog(null)).Returns(filePath);
-			}
-
-
-			return mockDialogHelper;
-		}
-#endregion
+		#endregion
 	}
 
 }

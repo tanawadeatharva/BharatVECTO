@@ -31,9 +31,14 @@ using XmlDocumentType = TUGraz.VectoCore.Utils.XmlDocumentType;
 
 namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 {
-	//AGGREGATE MULTISTAGEDEPENDENCIES
 
-	public class MultiStageJobViewModel_v0_1 : ViewModelBase, IMultiStageJobViewModel, IMultistageVIFInputData, IMultistageBusInputDataProvider
+	public interface IMultiStageJobViewModel : IDeclarationMultistageJobInputData, IMultistageVIFInputData, IMultistageBusInputDataProvider
+	{
+		IManufacturingStageViewModel ManufacturingStageViewModel { get; }
+	}
+
+
+	public class MultiStageJobViewModel_v0_1 : ViewModelBase, IMultiStageJobViewModel
 	{
 		private IDeclarationMultistageJobInputData _jobInputData;
 
@@ -51,6 +56,7 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 			set => SetProperty(ref _manufacturingStageViewModel, value);
 		}
 
+
 		#region Commands
 		private ICommand _saveVifCommand;
 
@@ -59,16 +65,16 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 			get
 			{
 				return _saveVifCommand ?? new RelayCommand(() => {
-					var outPutFile = _multistageDependencies.DialogHelperLazy.Value.SaveToXMLDialog(Settings.Default.DefaultFilePath);
-					if (outPutFile == null) {
+					var outputFile = _multistageDependencies.DialogHelperLazy.Value.SaveToXMLDialog(Settings.Default.DefaultFilePath);
+					if (outputFile == null) {
 						return;
 					}
-					SaveVIF(this, outPutFile);
+					SaveVif(this, outputFile);
 				}, () => true);
 			}
 		}
 
-		private static void SaveVIF(IMultistageVIFInputData vifData, string outputFile)
+		public static void SaveVif(IMultistageVIFInputData vifData, string outputFile)
 		{
 
 
@@ -149,10 +155,11 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 			}
 			if (!valid) {
 				_dialogHelper.Value.ShowMessageBox($"Invalid Document: {validator.ValidationError}", "Error");
-				xDoc.Save(filename, SaveOptions.OmitDuplicateNamespaces);
-				LoadVehicleData(filename);
+				//xDoc.Save(filename, SaveOptions.OmitDuplicateNamespaces);
+				//LoadVehicleData(filename);
 			} else {
 				xDoc.Save(filename, SaveOptions.OmitDuplicateNamespaces);
+				LoadVehicleData(filename);
 			}
 		}
 
@@ -290,8 +297,5 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 		#endregion
 	}
 
-	public interface IMultiStageJobViewModel : IDeclarationMultistageJobInputData
-	{
-		IManufacturingStageViewModel ManufacturingStageViewModel { get; }
-	}
+
 }
