@@ -9,38 +9,34 @@ namespace VECTO3GUI2020.Helper.Converter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
 		{
-			if (value == null) {
-				return Binding.DoNothing;
-			}
-
-
-            if(value is SI SIValue)
-            {
-                if (SIValue.UnitString == "1/s")
-                {
-                    return "rpm";
-                }
-                return SIValue.UnitString;
-            }
-
-			if (value is ConvertedSI convertedSI) {
-				return convertedSI.Units;
-			}
-
-			return Binding.DoNothing;
-
-            //TRY GET DYNAMIC UNIT STRING
-			try {
-				dynamic type = value?.GetType();
-				if (type == null) {
-					return Binding.DoNothing;
-				}
-
-				var unitString = type.GetUnitString();
+			var unitString = getUnitString(value);
+			if (unitString != null) {
+				unitString = unitString.Replace("^2", ((char)0xB2).ToString());
+				unitString = unitString.Replace("^3", ((char)0xB3).ToString());
 				return unitString;
-			} catch (Exception e){
+			} else {
 				return Binding.DoNothing;
 			}
+
+			//if (value == null) {
+			//	return Binding.DoNothing;
+			//}
+
+
+			//         if(value is SI SIValue)
+			//         {
+			//             if (SIValue.UnitString == "1/s")
+			//             {
+			//                 return "rpm";
+			//             }
+			//             return SIValue.UnitString;
+			//         }
+
+			//if (value is ConvertedSI convertedSI) {
+			//	return convertedSI.Units;
+			//}
+
+			//return Binding.DoNothing;
 
 		}
 
@@ -48,5 +44,29 @@ namespace VECTO3GUI2020.Helper.Converter
         {
             throw new NotImplementedException();
         }
+
+		private string getUnitString(object value)
+		{
+			if (value == null) {
+				return null;
+			}
+
+
+			if (value is SI SIValue)
+			{
+				if (SIValue.UnitString == "1/s")
+				{
+					return "rpm";
+				}
+				return SIValue.UnitString;
+			}
+
+			if (value is ConvertedSI convertedSI)
+			{
+				return convertedSI.Units;
+			}
+
+			return null;
+		}
     }
 }
