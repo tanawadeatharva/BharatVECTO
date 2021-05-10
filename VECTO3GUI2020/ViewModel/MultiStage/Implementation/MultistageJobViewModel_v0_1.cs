@@ -76,13 +76,8 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 
 		public static void SaveVif(IMultistageVIFInputData vifData, string outputFile)
 		{
-			Debug.Assert(outputFile != null);
-			
-
 			var numberOfManufacturingStages =
 				vifData.MultistageJobInputData.JobInputData.ManufacturingStages?.Count ?? 1;
-
-
 
 			var writer = new FileOutputVIFWriter(outputFile, numberOfManufacturingStages);
 			var inputData = new XMLDeclarationVIFInputData(vifData.MultistageJobInputData, vifData.VehicleInputData);

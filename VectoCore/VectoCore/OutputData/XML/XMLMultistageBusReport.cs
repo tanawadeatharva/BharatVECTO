@@ -16,6 +16,7 @@ using TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Utils;
 
+
 namespace TUGraz.VectoCore.OutputData.XML
 {
 	public interface IXMLMultistageReport
@@ -240,6 +241,9 @@ namespace TUGraz.VectoCore.OutputData.XML
 
 		private XElement GetADAS(IAdvancedDriverAssistantSystemDeclarationInputData adasData)
 		{
+			if (adasData == null)
+				return null;
+			
 			return new XElement(
 				v28 + XMLNames.Vehicle_ADAS,
 				new XElement(v23 + XMLNames.Vehicle_ADAS_EngineStopStart, adasData.EngineStopStart),
@@ -254,6 +258,9 @@ namespace TUGraz.VectoCore.OutputData.XML
 
 		private XElement GetBusVehicleComponents(IVehicleComponentsDeclaration vehicleComponents)
 		{
+			if (vehicleComponents == null)
+				return null;
+
 			var busAirdrag = GetBusAirdrag(vehicleComponents.AirdragInputData);
 			var busAux = GetBusAuxiliaries(vehicleComponents.BusAuxiliaries);
 
@@ -286,12 +293,24 @@ namespace TUGraz.VectoCore.OutputData.XML
 		
 		private XElement GetAirdragElement(IAirdragDeclarationInputData airdrag)
 		{
-			var component = airdrag as AbstractCommonComponentType;
-			if (component == null)
+			if (airdrag == null)
+				return null;
+			
+			XmlNode airdragNode = null;
+			if (airdrag is AbstractCommonComponentType)
+				airdragNode = (airdrag as AbstractCommonComponentType).XMLSource;
+			else {
+				var type = airdrag.GetType();
+				var property = type.GetProperty(nameof(AbstractCommonComponentType.XMLSource));
+				if (property != null)
+					airdragNode = (XmlNode)property.GetValue(airdrag, null);
+			}
+
+			if (airdragNode == null)
 				return null;
 
-			var dataElement = XElement.Parse(component.XMLSource.FirstChild.OuterXml);
-			var signatureElement = XElement.Parse(component.XMLSource.LastChild.OuterXml);
+			var dataElement = XElement.Parse(airdragNode.FirstChild.OuterXml);
+			var signatureElement = XElement.Parse(airdragNode.LastChild.OuterXml);
 			dataElement.Attribute(XNamespace.Xmlns + "xsi")?.Remove();
 			
 			return new XElement(v28 + XMLNames.Component_AirDrag,
