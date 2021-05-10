@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics;
 using System.IO;
 using Moq;
 using Ninject;
@@ -24,8 +25,14 @@ namespace Vecto3GUI2020Test
 		protected const string consolidated_one_stage = "vecto_multistage_consolidated_one_stage.xml";
 		protected const string primary_vehicle_only = "vecto_multistage_primary_vehicle_only.xml";
 
+		
+
+		protected const string stageInputFullSample = "vecto_vehicle-stage_input_full-sample.xml";
+
 		protected IXMLInputDataReader xmlInputReader;
 		protected IKernel _kernel;
+		private Mock<IDialogHelper> _mockDialogHelper = new Mock<IDialogHelper>();
+
 
 		[SetUp]
 		public void OneTimeSetUp()
@@ -40,6 +47,7 @@ namespace Vecto3GUI2020Test
 				new MultistageModule()
 			);
 			xmlInputReader = _kernel.Get<IXMLInputDataReader>();
+
 			
 		}
 
@@ -104,29 +112,48 @@ namespace Vecto3GUI2020Test
 			return newMultistageJobViewModel;
 		}
 
+		protected void loadVehicleData(MultiStageJobViewModel_v0_1 multiStageViewModel, string inputFile)
+		{
+
+			var vehicleInputData = Path.GetFullPath(DirPath + inputFile);
+			Assert.IsTrue(File.Exists(vehicleInputData));
+
+			var vehicleInputDataFiledialogMock = new Mock<IDialogHelper>();
+			vehicleInputDataFiledialogMock.Setup(dialogHelper => dialogHelper.OpenXMLFileDialog(It.IsAny<string>())).Returns(vehicleInputData);
+			vehicleInputDataFiledialogMock.Setup(dialogHelper => dialogHelper.OpenXMLFileDialog()).Returns(vehicleInputData);
+			_kernel.Rebind<IDialogHelper>().ToConstant(vehicleInputDataFiledialogMock.Object);
+
+			multiStageViewModel.LoadVehicleDataCommand.Execute(null);
+		}
+
+
 		protected Mock<IDialogHelper> getMockDialogHelper(string fileToLoad = null, string fileToSave = null)
 		{
-			Mock<IDialogHelper> mockDialogHelper = null;
+			if (_mockDialogHelper == null) {
+				_mockDialogHelper = new Mock<IDialogHelper>();
+			}
 			if (fileToLoad != null) {
 				var filePath = Path.GetFullPath(DirPath + fileToLoad);
 
 				Assert.NotNull(filePath);
-				mockDialogHelper = new Mock<IDialogHelper>();
-				mockDialogHelper.Setup(dialogHelper => dialogHelper.OpenXMLFileDialog(It.IsAny<string>())).Returns(filePath);
-				mockDialogHelper.Setup(dialogHelper => dialogHelper.OpenXMLFileDialog()).Returns(filePath);
+				_mockDialogHelper.Setup(dialogHelper => dialogHelper.OpenXMLFileDialog(It.IsAny<string>())).Returns(filePath);
+				_mockDialogHelper.Setup(dialogHelper => dialogHelper.OpenXMLFileDialog()).Returns(filePath);
+
+				Debug.WriteLine($"Created MOCKDIALOGHELPER, returns {filePath} for OpenXMLFileDialog()");
 			}
 
 			if (fileToSave != null) {
 				var filePath = Path.GetFullPath(DirPath + fileToSave);
-				mockDialogHelper = mockDialogHelper ?? new Mock<IDialogHelper>();
-				mockDialogHelper.Setup(dialogHelper =>
+				_mockDialogHelper.Setup(dialogHelper =>
 					dialogHelper.SaveToXMLDialog(It.IsAny<string>())).Returns(filePath);
-				mockDialogHelper.Setup(dialogHelper =>
+				_mockDialogHelper.Setup(dialogHelper =>
 					dialogHelper.SaveToXMLDialog(null)).Returns(filePath);
+
+				Debug.WriteLine($"Created MOCKDIALOGHELPER, returns {filePath} for SaveToXMLFileDialog()");
 			}
 
 
-			return mockDialogHelper;
+			return _mockDialogHelper;
 		}
 	}
 }

@@ -53,6 +53,10 @@ namespace Vecto3GUI2020Test
 			Assert.True(checkFileExists(fileName));
 		}
 
+
+
+
+
 		[TestCase(primary_vehicle_only)]
 		[TestCase(consolidated_multiple_stages)]
 		[TestCase(consolidated_one_stage)]
@@ -113,6 +117,15 @@ namespace Vecto3GUI2020Test
 			Assert.Null(vehicleViewModel_v2_8.ConsolidatedWidthInMm);
 			Assert.Null(vehicleViewModel_v2_8.ConsolidatedEntranceHeightInMm);
 
+
+			Assert.IsFalse(vehicleViewModel_v2_8.AirdragModifiedMultistageEditingEnabled);
+
+			Assert.IsNull(vehicleViewModel_v2_8.AirdragModifiedMultistage);
+			Assert.IsNull(vehicleViewModel_v2_8.ConsolidatedAirdragmodified);
+			Assert.IsNull(vehicleViewModel_v2_8.AirdragModifiedEnum);
+			
+
+
 			Assert.AreEqual(vehicleViewModel_v2_8.AirdragModifiedMultistageEditingEnabled, false);
 			Assert.Null(vehicleViewModel_v2_8.BusAuxiliaries);
 
@@ -121,6 +134,10 @@ namespace Vecto3GUI2020Test
 
 			Assert.Null(vifInputData.VehicleInputData.Components);
 		}
+
+
+	
+
 
 
 
@@ -199,9 +216,74 @@ namespace Vecto3GUI2020Test
 			Assert.NotNull(airdrag.AirDragViewModel.XMLSource);
 
 
+			TestADASInput(vehicle);
+			TestComponents(vehicle.Components);
+			TestAirdragComponent(vehicle.Components.AirdragInputData);
+			TestAuxiliariesComponent(vehicle.BusAuxiliaries);
+
+
 
 
 		}
+
+		private void TestADASInput(IVehicleDeclarationInputData vehicle)
+		{
+			Assert.AreEqual(true, vehicle.ADAS.EngineStopStart);
+			Assert.AreEqual(EcoRollType.None, vehicle.ADAS.EcoRoll);
+			Assert.AreEqual(PredictiveCruiseControlType.None, vehicle.ADAS.PredictiveCruiseControl);
+			Assert.AreEqual(true, vehicle.ADAS.ATEcoRollReleaseLockupClutch);
+		}
+
+		private void TestComponents(IVehicleComponentsDeclaration components)
+		{
+			TestAirdragComponent(components.AirdragInputData);
+			TestAuxiliariesComponent(components.BusAuxiliaries);
+		}
+
+		private void TestAirdragComponent(IAirdragDeclarationInputData airdrag)
+		{
+			Assert.AreEqual("Generic Manufacturer", airdrag.Manufacturer);
+			Assert.AreEqual("Generic Model", airdrag.Model);
+			Assert.AreEqual("e12*0815/8051*2017/05E0000*00", airdrag.CertificationNumber);
+			Assert.AreEqual(DateTime.Parse("2017-03-24T15:00:00Z").ToUniversalTime(), airdrag.Date);
+			Assert.AreEqual("Vecto AirDrag x.y", airdrag.AppVersion);
+			Assert.AreEqual(6.34, airdrag.AirDragArea.Value());
+		}
+
+		private void TestAuxiliariesComponent(IBusAuxiliariesDeclarationData busAux)
+		{
+			TestLedLightsComponent(busAux.ElectricConsumers);
+			TestHVACComponent(busAux.HVACAux);
+		}
+
+		private void TestLedLightsComponent(IElectricConsumersDeclarationData electricConsumer)
+		{
+			Assert.AreEqual(false, electricConsumer.InteriorLightsLED);
+			Assert.AreEqual(true, electricConsumer.DayrunninglightsLED);
+			Assert.AreEqual(true, electricConsumer.PositionlightsLED);
+			Assert.AreEqual(true, electricConsumer.BrakelightsLED);
+			Assert.AreEqual(false, electricConsumer.HeadlightsLED);
+		}
+
+		private void TestHVACComponent(IHVACBusAuxiliariesDeclarationData hvacAux)
+		{
+			Assert.AreEqual(BusHVACSystemConfiguration.Configuration0, hvacAux.SystemConfiguration);
+			Assert.AreEqual(HeatPumpType.none, hvacAux.HeatPumpTypeDriverCompartment);
+			Assert.AreEqual(HeatPumpMode.heating, hvacAux.HeatPumpModeDriverCompartment);
+			Assert.AreEqual(HeatPumpType.non_R_744_2_stage, hvacAux.HeatPumpTypePassengerCompartment);
+			Assert.AreEqual(HeatPumpMode.cooling, hvacAux.HeatPumpModePassengerCompartment);
+			Assert.AreEqual(50, hvacAux.AuxHeaterPower.Value());
+			Assert.AreEqual(false, hvacAux.DoubleGlazing);
+			Assert.AreEqual(true, hvacAux.AdjustableAuxiliaryHeater);
+			Assert.AreEqual(false, hvacAux.SeparateAirDistributionDucts);
+			Assert.AreEqual(true, hvacAux.WaterElectricHeater);
+			Assert.AreEqual(false, hvacAux.AirElectricHeater);
+			Assert.AreEqual(false, hvacAux.OtherHeatingTechnology);
+		}
+
+
+
+
 
 
 		#region Helper

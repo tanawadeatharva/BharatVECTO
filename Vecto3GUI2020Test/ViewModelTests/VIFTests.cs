@@ -32,12 +32,38 @@ namespace Vecto3GUI2020Test.ViewModelTests
 			var outputFile = primary_vehicle_only.Replace(".xml", "_vif_output_mandatory_fields.xml");
 
 			deleteFile(outputFile);
-			getMockDialogHelper(null, fileToSave: primary_vehicle_only.Replace(".xml", "_vif_output.xml"));
+			getMockDialogHelper(null, fileToSave: outputFile);
 			_kernel.Rebind<IDialogHelper>().ToConstant(getMockDialogHelper(null, outputFile).Object);
 
-			MultiStageJobViewModel_v0_1.SaveVif(multistagevm, outputFile);
-			
+			var multistageConcrete = multistagevm as MultiStageJobViewModel_v0_1;
+
+			multistageConcrete.SaveVIFCommand.Execute(null);
+
 			Assert.IsTrue(checkFileExists(outputFile));
+		}
+
+
+		[Test]
+		public void LoadPrimaryVehicleAndStageInputThenCreateVif()
+		{
+			var multistagevm = loadFile(primary_vehicle_only).MultiStageJobViewModel;
+
+			loadVehicleData(multistagevm as MultiStageJobViewModel_v0_1, stageInputFullSample);
+
+			var outputFile = "/output/loadPrimaryAndAddStageInput.xml";
+
+			//deleteFile(outputFile);
+			var mockDialogHelper = getMockDialogHelper(null, fileToSave: outputFile);
+			Debug.WriteLine($"Write to {mockDialogHelper.Object.SaveToXMLDialog()}");
+			var multistageVMConc = multistagevm as MultiStageJobViewModel_v0_1;
+
+			MultiStageJobViewModel_v0_1.SaveVif(multistageVMConc, mockDialogHelper.Object.SaveToXMLDialog());
+
+			//multistageVMConc.SaveVIFCommand.Execute(null);
+
+
+			//Assert.IsTrue(checkFileExists(outputFile));
+
 
 		}
 
