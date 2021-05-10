@@ -9,13 +9,14 @@ namespace TUGraz.VectoCore.OutputData.FileIO
 {
 	public class FileOutputVIFWriter : FileOutputWriter
 	{
+		public const string REPORT_ENDING_PREFIX = "VIF_Report_";
+
 		private string _jobFile;
 		private readonly int _numberOfManufacturingStages;
-		private string _reportEndingPrefix = "VIF_Report_";
 		
 		public string XMLMultistageReportFileName
 		{
-			get { return Path.ChangeExtension(_jobFile, $"{_reportEndingPrefix}{_numberOfManufacturingStages + 2}.xml"); }
+			get { return Path.ChangeExtension(_jobFile, $"{REPORT_ENDING_PREFIX}{_numberOfManufacturingStages + 2}.xml"); }
 		}
 		
 		public FileOutputVIFWriter(string jobFile, int numberOfManufacturingStages) : base(jobFile)
@@ -27,11 +28,11 @@ namespace TUGraz.VectoCore.OutputData.FileIO
 		
 		private void RemoveExistingEndingPrefix()
 		{
-			var vifReportIndex = _jobFile.IndexOf(_reportEndingPrefix, StringComparison.Ordinal);
+			var vifReportIndex = _jobFile.IndexOf(REPORT_ENDING_PREFIX, StringComparison.Ordinal);
 			if (vifReportIndex == -1)
 				return;
 
-			if (!_jobFile.Contains(_reportEndingPrefix))
+			if (!_jobFile.Contains(REPORT_ENDING_PREFIX))
 				return;
 
 			_jobFile = $"{_jobFile.Substring(0, vifReportIndex - 1)}.xml";
