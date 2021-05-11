@@ -74,12 +74,18 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 			}
 		}
 
-		public static void SaveVif(IMultistageVIFInputData vifData, string outputFile)
+		public static void SaveVif(IMultistageVIFInputData vifData, FileOutputVIFWriter writer)
 		{
-			var numberOfManufacturingStages =
-				vifData.MultistageJobInputData.JobInputData.ManufacturingStages?.Count ?? 0;
+			SaveVif(vifData, null, writer);
+		}
+		
+		public static void SaveVif(IMultistageVIFInputData vifData, string outputFile, FileOutputVIFWriter writer = null)
+		{
+			if (writer == null) {
+				var numberOfManufacturingStages = vifData.MultistageJobInputData.JobInputData.ManufacturingStages?.Count ?? 0;
+				writer = new FileOutputVIFWriter(outputFile, numberOfManufacturingStages);
+			}
 
-			var writer = new FileOutputVIFWriter(outputFile, numberOfManufacturingStages);
 			var inputData = new XMLDeclarationVIFInputData(vifData.MultistageJobInputData, vifData.VehicleInputData);
 
 			var factory = new SimulatorFactory(ExecutionMode.Declaration, inputData, writer);
@@ -94,23 +100,14 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 
 			jobContainer.Execute();
 			jobContainer.WaitFinished();
-			var progress = jobContainer.GetProgress();
 			
-
 			var validator = new XMLValidator(XmlReader.Create(writer.XMLMultistageReportFileName));
-
-
-
 			var valid = validator.ValidateXML(XmlDocumentType.MultistageOutputData);
 			if (!valid) {
 				Debug.WriteLine("Invalid Outputfile");
 			}
 
 			Debug.WriteLine($"Written to {writer.XMLMultistageReportFileName}");
-
-
-
-
 		}
 
 		private ICommand _saveInputDataCommand;
