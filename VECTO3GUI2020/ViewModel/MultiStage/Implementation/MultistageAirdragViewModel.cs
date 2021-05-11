@@ -93,7 +93,7 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 
 		public void LoadAirdragFileCommandExecute()
 		{
-			var fileName =_dependencies.DialogHelper.OpenXMLFileDialog(Settings.Default.DefaultFilePath);
+			var fileName =_dependencies.DialogHelper.OpenXMLFileDialog();
 			if (fileName == null) {
 				return;
 			}

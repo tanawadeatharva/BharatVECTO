@@ -115,7 +115,7 @@ namespace Vecto3GUI2020Test
 		public void loadInputFilePrimaryOnly()
 		{
 			var vm = loadFile(primary_vehicle_only);
-			Assert.AreEqual(1, vm.MultiStageJobViewModel.ManufacturingStageViewModel.StageCount);
+			Assert.AreEqual(2, vm.MultiStageJobViewModel.ManufacturingStageViewModel.StageCount);
 
 			var primaryVehicle = vm.MultiStageJobViewModel.PrimaryVehicle;
 			Assert.NotNull(primaryVehicle);

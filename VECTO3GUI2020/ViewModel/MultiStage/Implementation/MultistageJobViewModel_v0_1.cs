@@ -185,7 +185,7 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 
 		private void LoadVehicleDataExecute()
 		{
-			var fileName = _dialogHelper.Value.OpenXMLFileDialog(Settings.Default.DefaultFilePath);
+			var fileName = _dialogHelper.Value.OpenXMLFileDialog();
 			if (fileName == null) {
 				return;
 			}

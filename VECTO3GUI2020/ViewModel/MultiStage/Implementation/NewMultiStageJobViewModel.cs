@@ -62,7 +62,7 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 		private void AddVifFileExecute()
 		{
 			
-			var fileName = _dialogHelper.OpenXMLFileDialog(_settings.DefaultFilePath);
+			var fileName = _dialogHelper.OpenXMLFileDialog();
 			if (fileName == null) {
 				return;
 			}

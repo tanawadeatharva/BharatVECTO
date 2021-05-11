@@ -122,9 +122,7 @@ namespace VECTO3GUI2020.ViewModel.Implementation
         private void AddJobExecute()
         {
             IsLoading = true;
-			string path = _settings.DefaultFilePath;
-			var filename = _dialogHelper.OpenXMLFileDialog(path);
-
+			var filename = _dialogHelper.OpenXMLFileDialog();
 			if (filename != null)
             {
                 fileReadingBackgroundWorker.RunWorkerAsync(filename);
