@@ -692,8 +692,7 @@ xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:DeclarationOutput:VehicleInterimFile
 				<v2.8:Manufacturer>Intermediate Manufacturer 2</v2.8:Manufacturer>
 				<v2.8:ManufacturerAddress></v2.8:ManufacturerAddress>
 				<v2.8:VIN>VEH-2234567890</v2.8:VIN>
-				<v2.8:Date>2021-02-13T07:20:08.0187663Z</v2.8:Date>
-				<v2.8:AirdragModifiedMultistage>false</v2.8:AirdragModifiedMultistage>				
+				<v2.8:Date>2021-02-13T07:20:08.0187663Z</v2.8:Date>			
 				<v2.8:VehicleDeclarationType>final</v2.8:VehicleDeclarationType>
 				<v2.8:ADAS>
 					<v2.3:EngineStopStart>true</v2.3:EngineStopStart>
@@ -735,8 +734,7 @@ xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:DeclarationOutput:VehicleInterimFile
 				<SimulationToolVersion>!!NOT FOR CERTIFICATION!!</SimulationToolVersion>
 				<Date>2021-02-13T07:20:08.0187663Z</Date>
 			</ApplicationInformation>
-		</Data>
-		
+		</Data>		
 		<Signature>
 			<di:Reference URI="#RESULT-8f30c7fe665a47938f6b">
 				<di:Transforms>
