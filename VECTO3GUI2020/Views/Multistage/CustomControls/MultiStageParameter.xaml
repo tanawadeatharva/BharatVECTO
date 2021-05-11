@@ -32,8 +32,9 @@
             ElementName=MultistageParameterControl, 
             Mode=TwoWay}"/>
 
-            <TextBox x:Name="textBox" Grid.Column="2" VerticalAlignment="Center" Margin="2 0 2 0" IsReadOnly="True"
-                 Text="{Binding ElementName=MultistageParameterControl, Path=PreviousContent, Converter={StaticResource SIValueToStringConverter}}"
+            <TextBox x:Name="textBox" Grid.Column="2" VerticalAlignment="Center" Margin="2 0 2 0" IsReadOnly="True" IsTabStop="False"
+                 Text="{Binding ElementName=MultistageParameterControl, Path=PreviousContent, Converter={StaticResource SIValueToStringConverter}}" 
+                 
                  Style="{DynamicResource TextBoxStyle1}"
                  Visibility="{Binding Optional, 
                     ElementName=MultistageParameterControl, Converter={StaticResource BooleanToVisibilityConverter}, UpdateSourceTrigger=PropertyChanged}"/>
@@ -74,9 +75,9 @@
             ElementName=MultistageParameterControl, 
             Mode=TwoWay}"/>
 
-            <ComboBox x:Name="comboBox" Grid.Column="2" HorizontalAlignment="Stretch" VerticalAlignment="Center" Margin="2 0 2 0" Visibility="{Binding Optional, 
+            <ComboBox x:Name="comboBox" Grid.Column="2" HorizontalAlignment="Stretch" VerticalAlignment="Center" Margin="2 0 2 0" IsTabStop="False" Visibility="{Binding Optional, 
                     ElementName=MultistageParameterControl, 
-                    Converter={StaticResource BooleanToVisibilityConverter}}" IsHitTestVisible="True" Focusable="True" IsEditable="False"
+                    Converter={StaticResource BooleanToVisibilityConverter}}" IsHitTestVisible="False" Focusable="False" IsEditable="False"
                       SelectedValue="{Binding PreviousContent, Mode=TwoWay, ElementName=MultistageParameterControl}"
                       ItemsSource="{Binding GeneratedListItems, ElementName=MultistageParameterControl}">
                 <ComboBox.ItemTemplate>
@@ -123,7 +124,7 @@
             </Grid.ColumnDefinitions>
 
             <Label x:Name="label3" Content="{Binding LabelText, ElementName=MultistageParameterControl}"></Label>
-            <CheckBox Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center" Name="CheckBoxCheckBox"
+            <CheckBox Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center" Name="CheckBoxCheckBox" 
                   Visibility="{Binding ShowCheckBox, 
                     ElementName=MultistageParameterControl, 
                     Converter={StaticResource BooleanToVisibilityConverter}}"
@@ -131,7 +132,7 @@
             ElementName=MultistageParameterControl, 
             Mode=TwoWay}"/>
 
-            <CheckBox x:Name="checkBox" Grid.Column="2" VerticalAlignment="Center" HorizontalAlignment="Center" IsChecked="{Binding ElementName=MultistageParameterControl, 
+            <CheckBox x:Name="checkBox" Grid.Column="2" VerticalAlignment="Center" HorizontalAlignment="Center" IsTabStop="False" IsChecked="{Binding ElementName=MultistageParameterControl, 
                 Path=PreviousContent, 
                 Converter={StaticResource XToBoolConverter}}" IsEnabled="False">
             </CheckBox>
