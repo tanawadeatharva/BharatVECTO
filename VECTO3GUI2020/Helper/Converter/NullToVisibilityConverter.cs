@@ -7,13 +7,28 @@ namespace VECTO3GUI2020.Helper.Converter
 {
     class NullToVisibilityConverter : IValueConverter
     {
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="value"></param>
+        /// <param name="targetType"></param>
+        /// <param name="parameter">set to "invert" to invert the result</param>
+        /// <param name="culture"></param>
+        /// <returns></returns>
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
-        {
-            if(value == null)
+		{
+			bool invert = parameter as string == "invert";
+            if (value == null)
             {
+				if (invert) {
+					return Visibility.Visible;
+				}
                 return Visibility.Collapsed;
             }
             else {
+				if (invert) {
+					return Visibility.Collapsed;
+				}
 				return Visibility.Visible;
 			}
         }

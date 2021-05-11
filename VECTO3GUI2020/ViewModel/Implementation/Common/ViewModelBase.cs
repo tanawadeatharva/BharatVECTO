@@ -1,6 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
+using System.Windows;
+using VECTO3GUI2020.Helper;
 using VECTO3GUI2020.ViewModel.Interfaces.Common;
 
 namespace VECTO3GUI2020.ViewModel.Implementation.Common
@@ -40,5 +42,21 @@ namespace VECTO3GUI2020.ViewModel.Implementation.Common
         }
 
 		public virtual string Title { get; set; } = "No Title Set";
+
+		protected void CloseWindow(Window window, IDialogHelper dialogHelper, bool showDialog = true)
+		{
+			MessageBoxResult result;
+			if (showDialog) {
+				result = dialogHelper.ShowMessageBox("Do you really want to close?", "Close", MessageBoxButton.YesNo,
+					MessageBoxImage.Question);
+            } else {
+				result = MessageBoxResult.Yes;
+			}
+			
+
+			if (result == MessageBoxResult.Yes) {
+				window?.Close();
+			}
+		}
 	}
 }

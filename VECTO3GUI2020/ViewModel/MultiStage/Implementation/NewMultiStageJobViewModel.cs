@@ -86,7 +86,16 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 			VifPath = fileName;
 		}
 
-		
+
+		private ICommand _closeWindow;
+
+		public ICommand CloseWindow
+		{
+			get => _closeWindow ?? new RelayCommand<Window>(window => base.CloseWindow(window, _dialogHelper, false),
+				(window) => MultiStageJobViewModel == null);
+		}
+
+
 
 		#endregion
 

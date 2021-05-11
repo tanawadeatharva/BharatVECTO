@@ -58,6 +58,19 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 
 
 		#region Commands
+
+
+
+		private ICommand _closeWindowCommand;
+		public ICommand CloseWindowCommand
+		{
+			get
+			{
+				return _closeWindowCommand ?? new RelayCommand<Window>(window => CloseWindow(window, _dialogHelper.Value), window => true);
+			}
+		}
+
+
 		private ICommand _saveVifCommand;
 
 		public ICommand SaveVIFCommand
@@ -296,7 +309,6 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 			set => _inputComplete = value;
 		}
 
-	
 
 		#endregion
 	}
