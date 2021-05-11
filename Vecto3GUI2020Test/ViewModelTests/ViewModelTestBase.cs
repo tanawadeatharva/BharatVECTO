@@ -47,8 +47,8 @@ namespace Vecto3GUI2020Test
 				new MultistageModule()
 			);
 			xmlInputReader = _kernel.Get<IXMLInputDataReader>();
+			_kernel.Rebind<IDialogHelper>().ToConstant(_mockDialogHelper.Object);
 
-			
 		}
 
 		[TearDown]
@@ -80,15 +80,16 @@ namespace Vecto3GUI2020Test
 
 		public NewMultiStageJobViewModel loadFile(string fileName)
 		{
-			string filePath = "";
-			filePath = Path.GetFullPath(DirPath + fileName);
+			//string filePath = "";
+			//filePath = Path.GetFullPath(DirPath + fileName);
 
-			var dialogMock = new Mock<IDialogHelper>();
-			dialogMock.Setup(dialogHelper => dialogHelper.OpenXMLFileDialog(It.IsAny<string>())).Returns(filePath);
-			dialogMock.Setup(dialogHelper => dialogHelper.OpenXMLFileDialog()).Returns(filePath);
+			//var dialogMock = new Mock<IDialogHelper>();
+			//dialogMock.Setup(dialogHelper => dialogHelper.OpenXMLFileDialog(It.IsAny<string>())).Returns(filePath);
+			//dialogMock.Setup(dialogHelper => dialogHelper.OpenXMLFileDialog()).Returns(filePath);
 
-			var newMultistageJobViewModel = new NewMultiStageJobViewModel(dialogMock.Object, xmlInputReader,
-				_kernel.Get<IMultiStageViewModelFactory>());
+			var mockDialogHelper = getMockDialogHelper(fileName);
+
+			var newMultistageJobViewModel = _kernel.Get<NewMultiStageJobViewModel>();
 			newMultistageJobViewModel.AddVifFile.Execute(null);
 
 			Assert.NotNull(newMultistageJobViewModel.MultiStageJobViewModel);
@@ -105,7 +106,7 @@ namespace Vecto3GUI2020Test
 			var airdragViewModel = (manstageVehicleViewModel as DeclarationInterimStageBusVehicleViewModel_v2_8)?.MultistageAirdragViewModel;
 			Assert.NotNull(airdragViewModel);
 
-			Assert.AreEqual(filePath, newMultistageJobViewModel.VifPath);
+			Assert.AreEqual(mockDialogHelper.Object.OpenXMLFileDialog(), newMultistageJobViewModel.VifPath);
 
 
 

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
@@ -17,8 +18,10 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using Castle.Components.DictionaryAdapter.Xml;
+using Microsoft.Build.Framework;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Utils;
+using VECTO3GUI2020.Annotations;
 using VECTO3GUI2020.Properties;
 using VECTO3GUI2020.Views.CustomControls;
 
@@ -36,7 +39,7 @@ namespace VECTO3GUI2020.Views.Multistage.CustomControls
 	/// <summary>
 	/// Interaction logic for MultiStageParameter.xaml
 	/// </summary>
-	public partial class MultiStageParameter : UserControl
+	public partial class MultiStageParameter : UserControl, INotifyPropertyChanged
     {
 
 		#region Dependency Properties
@@ -139,7 +142,7 @@ namespace VECTO3GUI2020.Views.Multistage.CustomControls
 			DependencyProperty.Register("Content",
 				typeof(object),
 				typeof(MultiStageParameter),
-				new FrameworkPropertyMetadata("", FrameworkPropertyMetadataOptions.BindsTwoWayByDefault, new PropertyChangedCallback(ContentChanged))); //TODO Default value null breaks it for SIs default value "" for strings
+				new FrameworkPropertyMetadata("", FrameworkPropertyMetadataOptions.BindsTwoWayByDefault, ContentChanged)); //TODO Default value null breaks it for SIs default value "" for strings
 
 		public new object Content
 		{
@@ -151,13 +154,31 @@ namespace VECTO3GUI2020.Views.Multistage.CustomControls
 		}
 
 		public static readonly DependencyProperty ListItemsProperty = DependencyProperty.Register(
-			"ListItems", typeof(List<object>), typeof(MultiStageParameter), new PropertyMetadata(default(List<object>)));
+			"ListItems", typeof(ObservableCollection<Enum>), typeof(MultiStageParameter),
+			new FrameworkPropertyMetadata(default(ObservableCollection<Enum>), ListItemsChanged));
 
-		public List<object> ListItems
+		private static void ListItemsChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
 		{
-			get { return (List<object>)GetValue(ListItemsProperty); }
+			//throw new NotImplementedException();
+		}
+
+		public ObservableCollection<Enum> ListItems
+		{
+			get { return (ObservableCollection<Enum>)GetValue(ListItemsProperty); }
 			set { SetValue(ListItemsProperty, value); }
 		}
+		
+
+		public static readonly DependencyProperty GeneratedListItemsProperty = DependencyProperty.Register(
+			"GeneratedListItems", typeof(List<object>), typeof(MultiStageParameter), new PropertyMetadata(defaultValue:null));
+
+		public List<object> GeneratedListItems
+		{
+			get { return (List<object>)GetValue(GeneratedListItemsProperty); }
+			set { SetValue(GeneratedListItemsProperty, value); }
+		}
+
+
 
 #endregion
 
@@ -174,7 +195,8 @@ namespace VECTO3GUI2020.Views.Multistage.CustomControls
 			}
 
 			if (multiStageParameter.Mode == MultistageParameterViewMode.COMBOBOX) {
-				multiStageParameter.SetListItems();
+
+				multiStageParameter.GenerateListItemsAndSetComboboxValue();
 			}
 
 
@@ -185,20 +207,28 @@ namespace VECTO3GUI2020.Views.Multistage.CustomControls
 			}
 		}
 
-		private void SetListItems()
+		private void GenerateListItemsAndSetComboboxValue()
 		{
 			if (Mode != MultistageParameterViewMode.COMBOBOX) 
 				return;
 
-			if(DummyContent is Enum dummyEnum) {
-				var enType = dummyEnum.GetType();
-				ListItems = Enum.GetValues(enType).Cast<object>().ToList();
-			}
+			if (GeneratedListItems == null) {
+				if (DummyContent is Enum dummyEnum)
+				{
+					var enType = dummyEnum.GetType();
+					GeneratedListItems = Enum.GetValues(enType).Cast<object>().ToList();
 
-			if (Content is Enum contentEnum) {
-				var enType = contentEnum.GetType();
-				ListItems = Enum.GetValues(enType).Cast<object>().ToList();
 
+				}
+
+				if (Content is Enum contentEnum)
+				{
+					var enType = contentEnum.GetType();
+					GeneratedListItems = Enum.GetValues(enType).Cast<object>().ToList();
+
+				}
+
+				//ListItems = GeneratedListItems;
 			}
 		}
 
@@ -264,7 +294,16 @@ namespace VECTO3GUI2020.Views.Multistage.CustomControls
 				if (multiStageParameter.Content != null) {
 					multiStageParameter.DummyContent = multiStageParameter.Content;
 				}else if (multiStageParameter.DummyContent != null) {
-					multiStageParameter.Content = multiStageParameter.DummyContent;
+					if (multiStageParameter.Mode == MultistageParameterViewMode.COMBOBOX) {
+						if (multiStageParameter.ListItems != null && !multiStageParameter.ListItems.Contains(multiStageParameter.DummyContent)) {
+							multiStageParameter.Content = multiStageParameter.ListItems[0];
+						} else {
+							multiStageParameter.Content = multiStageParameter.DummyContent;
+						}
+					} else {
+						multiStageParameter.Content = multiStageParameter.DummyContent;
+					}
+					
 				}
 			}
 		}
@@ -283,6 +322,14 @@ namespace VECTO3GUI2020.Views.Multistage.CustomControls
 		private void Control_OnMouseDoubleClick(object sender, MouseButtonEventArgs e)
 		{
 			EditingEnabled = true;
+		}
+
+		public event PropertyChangedEventHandler PropertyChanged;
+
+		[NotifyPropertyChangedInvocator]
+		protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
+		{
+			PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
 		}
 	}
 }

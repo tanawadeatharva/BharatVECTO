@@ -1,0 +1,14 @@
+<SessionState ContinuousTestingMode="0" IsActive="True" Name="AllTestWithoutUI" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session">
+  <TestAncestor>
+    <TestId>NUnit3x::7F4FF473-96B3-461E-9CE6-76D3B75F87CB::.NETFramework,Version=v4.8::Vecto3GUI2020Test.ViewModelTests.VIFTests.LoadPrimaryVehicleAndStageInputThenCreateVif</TestId>
+    <TestId>NUnit3x::7F4FF473-96B3-461E-9CE6-76D3B75F87CB::.NETFramework,Version=v4.8::Vecto3GUI2020Test.ViewModelTests.VehicleViewModelTests.airdragNotModifiedInPreviousStages</TestId>
+    <TestId>NUnit3x::7F4FF473-96B3-461E-9CE6-76D3B75F87CB::.NETFramework,Version=v4.8::Vecto3GUI2020Test.ViewModelTests.VIFTests.loadPrimaryVehicleOnlyAndCreateNewVIF</TestId>
+    <TestId>NUnit3x::7F4FF473-96B3-461E-9CE6-76D3B75F87CB::.NETFramework,Version=v4.8::Vecto3GUI2020Test.ViewModelTests.VIFTests.TestAirdragLoad</TestId>
+    <TestId>NUnit3x::7F4FF473-96B3-461E-9CE6-76D3B75F87CB::.NETFramework,Version=v4.8::Vecto3GUI2020Test.LoadAndSaveVehicleData.SaveVehicleDataWithMissingFields</TestId>
+    <TestId>NUnit3x::7F4FF473-96B3-461E-9CE6-76D3B75F87CB::.NETFramework,Version=v4.8::Vecto3GUI2020Test.LoadAndSaveVehicleData.loadPrimaryAndSaveVehicleData</TestId>
+    <TestId>NUnit3x::7F4FF473-96B3-461E-9CE6-76D3B75F87CB::.NETFramework,Version=v4.8::Vecto3GUI2020Test.LoadAndSaveVehicleData.loadInputFileMultipleStage</TestId>
+    <TestId>NUnit3x::7F4FF473-96B3-461E-9CE6-76D3B75F87CB::.NETFramework,Version=v4.8::Vecto3GUI2020Test.LoadAndSaveVehicleData</TestId>
+    <TestId>NUnit3x::7F4FF473-96B3-461E-9CE6-76D3B75F87CB::.NETFramework,Version=v4.8::Vecto3GUI2020Test.ViewModelTests.VIFTests</TestId>
+    <TestId>NUnit3x::7F4FF473-96B3-461E-9CE6-76D3B75F87CB::.NETFramework,Version=v4.8::Vecto3GUI2020Test.ViewModelTests.VehicleViewModelTests</TestId>
+  </TestAncestor>
+</SessionState>

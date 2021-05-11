@@ -13,10 +13,10 @@
         <ScrollViewer>
             <DockPanel>
                 <StackPanel DockPanel.Dock="Top">
-                    <Label Background="{DynamicResource ButtonHighlightColor}" HorizontalAlignment="Stretch">AUXILIARIES</Label>
+                    <Label Background="{DynamicResource ButtonHighlightColor}" FontSize="15" HorizontalAlignment="Stretch">AUXILIARIES</Label>
                     <customControls:MultiStageParameter Mode="CHECKBOX" 
-                                                PreviousContent="{Binding ConsolidatedInputData.ElectricConsumers.InteriorLightsLED}" 
-                                                Content="{Binding InteriorLightsLED}"/>
+                                                        PreviousContent="{Binding ConsolidatedInputData.ElectricConsumers.InteriorLightsLED}" 
+                                                        Content="{Binding InteriorLightsLED}"/>
                     <customControls:MultiStageParameter Mode="CHECKBOX" 
                                                 PreviousContent="{Binding ConsolidatedInputData.ElectricConsumers.DayrunninglightsLED}" 
                                                 Content="{Binding DayrunninglightsLED}"/>
@@ -31,11 +31,10 @@
                                                 Content="{Binding HeadlightsLED}"/>
 
                     <Separator/>
-                    <Label Content="Add configuration check for complete vehicle"></Label>
                     <customControls:MultiStageParameter Mode="COMBOBOX" 
-                                                EditingEnabled="{Binding HeatPumpGroupEditingEnabled}" 
-                                                PreviousContent="{Binding ConsolidatedInputData.HVACAux.SystemConfiguration}"
-                                                Content="{Binding HVACAux.SystemConfiguration}"/>
+                                                        EditingEnabled="{Binding HeatPumpGroupEditingEnabled}" 
+                                                        PreviousContent="{Binding ConsolidatedInputData.HVACAux.SystemConfiguration}"
+                                                        Content="{Binding HVACAux.SystemConfiguration}"/>
 
                     <customControls:MultiStageParameter Mode="COMBOBOX"
                                                 EditingEnabled="{Binding HeatPumpGroupEditingEnabled}" 

@@ -457,7 +457,12 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 			set => SetProperty(ref _vehicleCode, value);
 		}
 
-		public bool? LowEntry
+		public ObservableCollection<Enum> VehicleCodeAllowedValues { get; } = 
+			new ObservableCollection<Enum>(Enum.GetValues(typeof(VehicleCode)).Cast<Enum>().ToList().Where(
+				(e => (VehicleCode)e != TUGraz.VectoCommon.Models.VehicleCode.NOT_APPLICABLE)));
+
+
+        public bool? LowEntry
 		{
 			get => _lowEntry;
 			set => SetProperty(ref _lowEntry, value);

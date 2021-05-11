@@ -27,10 +27,6 @@
                 <custom:MultiStageParameter 
                     PreviousContent="{Binding ConsolidatedVehicleData.Model}" 
                     Content="{Binding Model}"/>
-               
-                <custom:MultiStageParameter
-                    LabelText="Date"
-                    Content="Date - todo"/>
 
                 <custom:MultiStageParameter 
                     PreviousContent="{Binding ConsolidatedVehicleData.LegislativeClass}"
@@ -76,6 +72,7 @@
                 <Separator/>
                 <custom:MultiStageParameter 
                     PreviousContent="{Binding ConsolidatedVehicleData.VehicleCode}"
+                    ListItems="{Binding VehicleCodeAllowedValues}"
                     Content="{Binding VehicleCode}" 
                     Mode="COMBOBOX"
                     />

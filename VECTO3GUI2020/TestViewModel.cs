@@ -1,9 +1,11 @@
 ﻿using System;
 using System.CodeDom;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Castle.Components.DictionaryAdapter;
 using Castle.Core.Internal;
 using TUGraz.VectoCommon.BusAuxiliaries;
 using TUGraz.VectoCommon.Utils;
@@ -49,6 +51,24 @@ namespace VECTO3GUI2020
 		{
 			get => _heatpumpMode;
 			set => SetProperty(ref _heatpumpMode, value);
+		}
+
+		private IList<HeatPumpMode> allowedValues = new List<HeatPumpMode>(){
+			TUGraz.VectoCommon.BusAuxiliaries.HeatPumpMode.cooling,
+			TUGraz.VectoCommon.BusAuxiliaries.HeatPumpMode.heating_and_cooling
+		};
+
+		private HeatPumpMode? _heatpumpMode2;
+
+		public HeatPumpMode? HeatPumpMode2
+		{
+			get => _heatpumpMode2;
+			set => SetProperty(ref _heatpumpMode2, value);
+		}
+
+		public ObservableCollection<Enum> HeatPumpModeListItems
+		{
+			get => new ObservableCollection<Enum>(allowedValues.Cast<Enum>());
 		}
 
 		public String TestString

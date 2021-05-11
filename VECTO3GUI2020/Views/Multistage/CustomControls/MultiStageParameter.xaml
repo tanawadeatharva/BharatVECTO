@@ -76,9 +76,9 @@
 
             <ComboBox x:Name="comboBox" Grid.Column="2" HorizontalAlignment="Stretch" VerticalAlignment="Center" Margin="2 0 2 0" Visibility="{Binding Optional, 
                     ElementName=MultistageParameterControl, 
-                    Converter={StaticResource BooleanToVisibilityConverter}}" IsHitTestVisible="False" Focusable="False" IsEditable="False"
+                    Converter={StaticResource BooleanToVisibilityConverter}}" IsHitTestVisible="True" Focusable="True" IsEditable="False"
                       SelectedValue="{Binding PreviousContent, Mode=TwoWay, ElementName=MultistageParameterControl}"
-                      ItemsSource="{Binding ListItems, ElementName=MultistageParameterControl}">
+                      ItemsSource="{Binding GeneratedListItems, ElementName=MultistageParameterControl}">
                 <ComboBox.ItemTemplate>
                     <DataTemplate>
                         <TextBlock x:Name="textBlock" Text="{Binding Converter={StaticResource EnumConverter}}" />
@@ -86,12 +86,17 @@
                 </ComboBox.ItemTemplate>
             </ComboBox>
 
-
+            <!--ItemsSource="{Binding ListItems, ElementName=MultistageParameterControl}"-->
             <ComboBox x:Name="comboBox1" Grid.Column="3" HorizontalAlignment="Stretch" VerticalAlignment="Center" Margin="2 0 2 0" 
                           SelectedValue="{Binding Content, Mode=TwoWay, ElementName=MultistageParameterControl, ValidatesOnExceptions=True}" 
-                          ItemsSource="{Binding ListItems, ElementName=MultistageParameterControl}"
                           IsEnabled="{Binding EditingEnabled, ElementName=MultistageParameterControl}"
                           IsEditable="False" MouseDoubleClick="Control_OnMouseDoubleClick">
+                <ComboBox.ItemsSource>
+                    <PriorityBinding>
+                        <Binding Path="ListItems" ElementName="MultistageParameterControl" Converter="{StaticResource NullToUnsetValue}"/>
+                        <Binding Path="GeneratedListItems" ElementName="MultistageParameterControl"/>
+                    </PriorityBinding>
+                </ComboBox.ItemsSource>
                 <ComboBox.ItemTemplate>
                     <DataTemplate>
                         <TextBlock x:Name="textBlock" Text="{Binding Converter={StaticResource EnumConverter}}" />

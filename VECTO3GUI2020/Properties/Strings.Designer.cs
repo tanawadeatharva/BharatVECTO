@@ -124,7 +124,7 @@ namespace VECTO3GUI2020.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Brake Lights.
+        ///   Looks up a localized string similar to Brake Lights LED.
         /// </summary>
         public static string BrakelightsLED {
             get {
@@ -169,7 +169,7 @@ namespace VECTO3GUI2020.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Dayrunning Lights.
+        ///   Looks up a localized string similar to Dayrunning Lights LED.
         /// </summary>
         public static string DayrunninglightsLED {
             get {
@@ -259,7 +259,7 @@ namespace VECTO3GUI2020.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Head Lights.
+        ///   Looks up a localized string similar to Head Lights LED.
         /// </summary>
         public static string HeadlightsLED {
             get {
@@ -322,7 +322,7 @@ namespace VECTO3GUI2020.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Interior Lights.
+        ///   Looks up a localized string similar to Interior Lights LED.
         /// </summary>
         public static string InteriorLightsLED {
             get {
@@ -430,7 +430,7 @@ namespace VECTO3GUI2020.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Position Lights.
+        ///   Looks up a localized string similar to Position Lights LED.
         /// </summary>
         public static string PositionlightsLED {
             get {

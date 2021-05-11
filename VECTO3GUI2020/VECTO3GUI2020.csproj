@@ -128,6 +128,7 @@
     <Compile Include="Helper\Converter\JobTypeStringConverter.cs" />
     <Compile Include="Helper\Converter\LabledTextBoxLabelConverter.cs" />
     <Compile Include="Helper\Converter\MultistageParameterModeToVisibilityConverter.cs" />
+    <Compile Include="Helper\Converter\NullToUnsetValueConverter.cs" />
     <Compile Include="Helper\Converter\NullToVisibilityConverter.cs" />
     <Compile Include="Helper\Converter\LabledTextBoxConverter.cs" />
     <Compile Include="Helper\Converter\SIToUnitString.cs" />
@@ -146,6 +147,7 @@
     <Compile Include="Ninject\IMultistageDependencies.cs" />
     <Compile Include="Ninject\MultistageLazyDependencies.cs" />
     <Compile Include="Ninject\MultistageModule.cs" />
+    <Compile Include="Properties\Annotations.cs" />
     <Compile Include="Test.xaml.cs">
       <DependentUpon>Test.xaml</DependentUpon>
     </Compile>

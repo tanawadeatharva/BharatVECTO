@@ -236,10 +236,10 @@
     <value>Heater Power</value>
   </data>
   <data name="BrakelightsLED" xml:space="preserve">
-    <value>Brake Lights</value>
+    <value>Brake Lights LED</value>
   </data>
   <data name="DayrunninglightsLED" xml:space="preserve">
-    <value>Dayrunning Lights</value>
+    <value>Dayrunning Lights LED</value>
   </data>
   <data name="DoorDriveTechnology" xml:space="preserve">
     <value>Doordrive Technology</value>
@@ -251,7 +251,7 @@
     <value>Entrance Height</value>
   </data>
   <data name="HeadlightsLED" xml:space="preserve">
-    <value>Head Lights</value>
+    <value>Head Lights LED</value>
   </data>
   <data name="HeatPumpModeDriverCompartment" xml:space="preserve">
     <value>Heat Pump Mode Driver</value>
@@ -269,7 +269,7 @@
     <value>Height</value>
   </data>
   <data name="InteriorLightsLED" xml:space="preserve">
-    <value>Interior Lights</value>
+    <value>Interior Lights LED</value>
   </data>
   <data name="Length" xml:space="preserve">
     <value>Length</value>
@@ -287,7 +287,7 @@
     <value>Other Heating Technology</value>
   </data>
   <data name="PositionlightsLED" xml:space="preserve">
-    <value>Position Lights</value>
+    <value>Position Lights LED</value>
   </data>
   <data name="RegisteredClass" xml:space="preserve">
     <value>Registered Class</value>

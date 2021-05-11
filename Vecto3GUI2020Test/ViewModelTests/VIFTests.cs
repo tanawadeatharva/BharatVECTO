@@ -40,7 +40,7 @@ namespace Vecto3GUI2020Test.ViewModelTests
 
 
 			getMockDialogHelper(null, outputFilePath);
-			_kernel.Rebind<IDialogHelper>().ToConstant(getMockDialogHelper(null, outputFilePath).Object);
+			//_kernel.Rebind<IDialogHelper>().ToConstant(getMockDialogHelper(null, outputFilePath).Object);
 
 			MultiStageJobViewModel_v0_1.SaveVif(multistagevm, outputFilePath);
 

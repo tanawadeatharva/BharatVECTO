@@ -56,7 +56,7 @@ namespace Vecto3GUI2020Test
 
 
 
-
+		[Ignore("Validation is only performed with gui")]
 		[TestCase(primary_vehicle_only)]
 		[TestCase(consolidated_multiple_stages)]
 		[TestCase(consolidated_one_stage)]
@@ -75,6 +75,28 @@ namespace Vecto3GUI2020Test
 
 		}
 
+		[Test]
+		public void reloadInputFile()
+		{
+			var newMultistageJobViewModel = loadFile(consolidated_multiple_stages_airdrag) as NewMultiStageJobViewModel;
+
+			var vehicle = newMultistageJobViewModel.MultiStageJobViewModel.VehicleInputData as
+				DeclarationInterimStageBusVehicleViewModel_v2_8;
+
+			Assert.NotNull(vehicle);
+
+
+			Assert.True(vehicle.AirdragModifiedMultistageEditingEnabled);
+
+			var mockDialog = getMockDialogHelper(consolidated_multiple_stages);
+			newMultistageJobViewModel.AddVifFile.Execute(null);
+			Assert.AreEqual(mockDialog.Object.OpenXMLFileDialog(null), newMultistageJobViewModel.VifPath);
+			vehicle = newMultistageJobViewModel.MultiStageJobViewModel.VehicleInputData as DeclarationInterimStageBusVehicleViewModel_v2_8;
+			Assert.IsFalse(vehicle.AirdragModifiedMultistageEditingEnabled);
+
+
+
+		}
 
 
 		[Test]
