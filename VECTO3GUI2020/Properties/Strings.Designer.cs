@@ -61,6 +61,15 @@ namespace VECTO3GUI2020.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Adjustable Auxiliary Heater.
+        /// </summary>
+        public static string AdjustableAuxiliaryHeater {
+            get {
+                return ResourceManager.GetString("AdjustableAuxiliaryHeater", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Airdrag Area.
         /// </summary>
         public static string AirDragArea {
@@ -70,11 +79,29 @@ namespace VECTO3GUI2020.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Air Electric Heater.
+        /// </summary>
+        public static string AirElectricHeater {
+            get {
+                return ResourceManager.GetString("AirElectricHeater", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Angledrive Type.
         /// </summary>
         public static string AngledriveType {
             get {
                 return ResourceManager.GetString("AngledriveType", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Heater Power.
+        /// </summary>
+        public static string AuxHeaterPower {
+            get {
+                return ResourceManager.GetString("AuxHeaterPower", resourceCulture);
             }
         }
         
@@ -93,6 +120,15 @@ namespace VECTO3GUI2020.Properties {
         public static string AxleGearRatio {
             get {
                 return ResourceManager.GetString("AxleGearRatio", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Brake Lights LED.
+        /// </summary>
+        public static string BrakelightsLED {
+            get {
+                return ResourceManager.GetString("BrakelightsLED", resourceCulture);
             }
         }
         
@@ -133,6 +169,15 @@ namespace VECTO3GUI2020.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Dayrunning Lights LED.
+        /// </summary>
+        public static string DayrunninglightsLED {
+            get {
+                return ResourceManager.GetString("DayrunninglightsLED", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Dimension.
         /// </summary>
         public static string Dimension {
@@ -147,6 +192,24 @@ namespace VECTO3GUI2020.Properties {
         public static string Displacement {
             get {
                 return ResourceManager.GetString("Displacement", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Doordrive Technology.
+        /// </summary>
+        public static string DoorDriveTechnology {
+            get {
+                return ResourceManager.GetString("DoorDriveTechnology", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Double Glazing.
+        /// </summary>
+        public static string DoubleGlazing {
+            get {
+                return ResourceManager.GetString("DoubleGlazing", resourceCulture);
             }
         }
         
@@ -169,6 +232,15 @@ namespace VECTO3GUI2020.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Entrance Height.
+        /// </summary>
+        public static string EntranceHeight {
+            get {
+                return ResourceManager.GetString("EntranceHeight", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Gross Vehicle Mass.
         /// </summary>
         public static string GrossVehicleMass {
@@ -187,6 +259,60 @@ namespace VECTO3GUI2020.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Head Lights LED.
+        /// </summary>
+        public static string HeadlightsLED {
+            get {
+                return ResourceManager.GetString("HeadlightsLED", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Heat Pump Mode Driver.
+        /// </summary>
+        public static string HeatPumpModeDriverCompartment {
+            get {
+                return ResourceManager.GetString("HeatPumpModeDriverCompartment", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Heat Pump Mode Passenger.
+        /// </summary>
+        public static string HeatPumpModePassengerCompartment {
+            get {
+                return ResourceManager.GetString("HeatPumpModePassengerCompartment", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Heat Pump Type Driver.
+        /// </summary>
+        public static string HeatPumpTypeDriverCompartment {
+            get {
+                return ResourceManager.GetString("HeatPumpTypeDriverCompartment", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Heat Pump Type Passenger.
+        /// </summary>
+        public static string HeatPumpTypePassengerCompartment {
+            get {
+                return ResourceManager.GetString("HeatPumpTypePassengerCompartment", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Height.
+        /// </summary>
+        public static string Height {
+            get {
+                return ResourceManager.GetString("Height", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Idling Speed.
         /// </summary>
         public static string IdlingSpeed {
@@ -196,11 +322,38 @@ namespace VECTO3GUI2020.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Interior Lights LED.
+        /// </summary>
+        public static string InteriorLightsLED {
+            get {
+                return ResourceManager.GetString("InteriorLightsLED", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Legislative Class.
         /// </summary>
         public static string LegislativeClass {
             get {
                 return ResourceManager.GetString("LegislativeClass", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Length.
+        /// </summary>
+        public static string Length {
+            get {
+                return ResourceManager.GetString("Length", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Low Entry.
+        /// </summary>
+        public static string LowEntry {
+            get {
+                return ResourceManager.GetString("LowEntry", resourceCulture);
             }
         }
         
@@ -250,6 +403,42 @@ namespace VECTO3GUI2020.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Passengers Lower Deck.
+        /// </summary>
+        public static string NumberOfPassengersLowerDeck {
+            get {
+                return ResourceManager.GetString("NumberOfPassengersLowerDeck", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Passengers Upper Deck.
+        /// </summary>
+        public static string NumberOfPassengersUpperDeck {
+            get {
+                return ResourceManager.GetString("NumberOfPassengersUpperDeck", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Other Heating Technology.
+        /// </summary>
+        public static string OtherHeatingTechnology {
+            get {
+                return ResourceManager.GetString("OtherHeatingTechnology", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Position Lights LED.
+        /// </summary>
+        public static string PositionlightsLED {
+            get {
+                return ResourceManager.GetString("PositionlightsLED", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Predictive Cruise Control.
         /// </summary>
         public static string PredictiveCruiseControl {
@@ -295,6 +484,15 @@ namespace VECTO3GUI2020.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Registered Class.
+        /// </summary>
+        public static string RegisteredClass {
+            get {
+                return ResourceManager.GetString("RegisteredClass", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Retarder Ratio.
         /// </summary>
         public static string RetarderRatio {
@@ -332,6 +530,33 @@ namespace VECTO3GUI2020.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Seperate Air Distribution Ducts.
+        /// </summary>
+        public static string SeparateAirDistributionDucts {
+            get {
+                return ResourceManager.GetString("SeparateAirDistributionDucts", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to System Configuration.
+        /// </summary>
+        public static string SystemConfiguration {
+            get {
+                return ResourceManager.GetString("SystemConfiguration", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Tank System.
+        /// </summary>
+        public static string TankSystem {
+            get {
+                return ResourceManager.GetString("TankSystem", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Transmission Type.
         /// </summary>
         public static string TransmissionType {
@@ -359,6 +584,24 @@ namespace VECTO3GUI2020.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Vehicle Code.
+        /// </summary>
+        public static string VehicleCode {
+            get {
+                return ResourceManager.GetString("VehicleCode", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Declaration Type.
+        /// </summary>
+        public static string VehicleDeclarationType {
+            get {
+                return ResourceManager.GetString("VehicleDeclarationType", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Vehicle Identification Number.
         /// </summary>
         public static string VehicleViewModel_v1_0_VIN {
@@ -377,11 +620,29 @@ namespace VECTO3GUI2020.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Water Electric Heater.
+        /// </summary>
+        public static string WaterElectricHeater {
+            get {
+                return ResourceManager.GetString("WaterElectricHeater", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Waste Heat Recovery.
         /// </summary>
         public static string WHRType {
             get {
                 return ResourceManager.GetString("WHRType", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Width.
+        /// </summary>
+        public static string Width {
+            get {
+                return ResourceManager.GetString("Width", resourceCulture);
             }
         }
     }

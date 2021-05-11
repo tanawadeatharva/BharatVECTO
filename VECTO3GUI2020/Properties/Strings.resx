@@ -226,4 +226,91 @@
     <value>Do you want to overwrite 
  </value>
   </data>
+  <data name="AdjustableAuxiliaryHeater" xml:space="preserve">
+    <value>Adjustable Auxiliary Heater</value>
+  </data>
+  <data name="AirElectricHeater" xml:space="preserve">
+    <value>Air Electric Heater</value>
+  </data>
+  <data name="AuxHeaterPower" xml:space="preserve">
+    <value>Heater Power</value>
+  </data>
+  <data name="BrakelightsLED" xml:space="preserve">
+    <value>Brake Lights LED</value>
+  </data>
+  <data name="DayrunninglightsLED" xml:space="preserve">
+    <value>Dayrunning Lights LED</value>
+  </data>
+  <data name="DoorDriveTechnology" xml:space="preserve">
+    <value>Doordrive Technology</value>
+  </data>
+  <data name="DoubleGlazing" xml:space="preserve">
+    <value>Double Glazing</value>
+  </data>
+  <data name="EntranceHeight" xml:space="preserve">
+    <value>Entrance Height</value>
+  </data>
+  <data name="HeadlightsLED" xml:space="preserve">
+    <value>Head Lights LED</value>
+  </data>
+  <data name="HeatPumpModeDriverCompartment" xml:space="preserve">
+    <value>Heat Pump Mode Driver</value>
+  </data>
+  <data name="HeatPumpModePassengerCompartment" xml:space="preserve">
+    <value>Heat Pump Mode Passenger</value>
+  </data>
+  <data name="HeatPumpTypeDriverCompartment" xml:space="preserve">
+    <value>Heat Pump Type Driver</value>
+  </data>
+  <data name="HeatPumpTypePassengerCompartment" xml:space="preserve">
+    <value>Heat Pump Type Passenger</value>
+  </data>
+  <data name="Height" xml:space="preserve">
+    <value>Height</value>
+  </data>
+  <data name="InteriorLightsLED" xml:space="preserve">
+    <value>Interior Lights LED</value>
+  </data>
+  <data name="Length" xml:space="preserve">
+    <value>Length</value>
+  </data>
+  <data name="LowEntry" xml:space="preserve">
+    <value>Low Entry</value>
+  </data>
+  <data name="NumberOfPassengersLowerDeck" xml:space="preserve">
+    <value>Passengers Lower Deck</value>
+  </data>
+  <data name="NumberOfPassengersUpperDeck" xml:space="preserve">
+    <value>Passengers Upper Deck</value>
+  </data>
+  <data name="OtherHeatingTechnology" xml:space="preserve">
+    <value>Other Heating Technology</value>
+  </data>
+  <data name="PositionlightsLED" xml:space="preserve">
+    <value>Position Lights LED</value>
+  </data>
+  <data name="RegisteredClass" xml:space="preserve">
+    <value>Registered Class</value>
+  </data>
+  <data name="SeparateAirDistributionDucts" xml:space="preserve">
+    <value>Seperate Air Distribution Ducts</value>
+  </data>
+  <data name="SystemConfiguration" xml:space="preserve">
+    <value>System Configuration</value>
+  </data>
+  <data name="TankSystem" xml:space="preserve">
+    <value>Tank System</value>
+  </data>
+  <data name="VehicleCode" xml:space="preserve">
+    <value>Vehicle Code</value>
+  </data>
+  <data name="VehicleDeclarationType" xml:space="preserve">
+    <value>Declaration Type</value>
+  </data>
+  <data name="WaterElectricHeater" xml:space="preserve">
+    <value>Water Electric Heater</value>
+  </data>
+  <data name="Width" xml:space="preserve">
+    <value>Width</value>
+  </data>
 </root>

@@ -273,6 +273,22 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			}
 		}
 
+		public SquareMeter TransferredAirDragArea
+		{
+			get
+			{
+				return AirDragArea;
+			}
+		}
+
+		public SquareMeter AirDragArea_0
+		{
+			get
+			{
+				return AirDragArea;
+			}
+		}
+
 		public virtual CrossWindCorrectionMode CrossWindCorrectionMode
 		{
 			get { return CrossWindCorrectionModeHelper.Parse(Body.GetEx<string>("CdCorrMode")); }
@@ -592,7 +608,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
         #region Implementation of IPneumaticSupplyDeclarationData
 
-        public string Clutch { get; }
+		public CompressorDrive CompressorDrive { get; }
+		public string Clutch { get; }
         public virtual double Ratio { get { return Body["Aux"]?["PneumaticSupply"]?.GetEx<double>("Ratio") ?? 0.0; } }
         public virtual string CompressorSize
         {

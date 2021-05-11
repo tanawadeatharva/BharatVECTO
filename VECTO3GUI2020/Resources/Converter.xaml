@@ -3,13 +3,17 @@
                     xmlns:converter="clr-namespace:VECTO3GUI2020.Helper.Converter">
     <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
 
-    <converter:SIToUnitString x:Key="SIToUnitStringConverter"/>
-    <converter:SIValueToStringConverter x:Key="SIValueToStringConverter"/>
+    <converter:SIToUnitString x:Shared="False" x:Key="SIToUnitStringConverter"/>
+    <converter:SIValueToStringConverter  x:Shared="False" x:Key="SIValueToStringConverter"/>
     <converter:NullToVisibilityConverter x:Key="NullToVisibilityConverter"/>
     <converter:AlwaysVisibleConverter x:Key="AlwaysVisibleConverter"/>
     <converter:LabledTextBoxConverter x:Key="LabledTextBoxConverter" x:Shared="false" />
     <converter:LabledTextBoxLabelConverter x:Key="LabledTextBoxLabelConverter" />
     <converter:InvertBoolConverter x:Key="InvertBoolConverter"/>
-    <converter:InvertedBoolToVisibilityConverter x:Key="InvertedBoolToVisibilityConverter"></converter:InvertedBoolToVisibilityConverter>
+    <converter:InvertedBoolToVisibilityConverter x:Key="InvertedBoolToVisibilityConverter"/>
+    <converter:MultistageParameterModeToVisibilityConverter x:Key="ParameterModeToVisibilityConverter"/>
+    <converter:XToBoolConverter x:Key="XToBoolConverter"/>
+    <converter:EnumConverter x:Key="EnumConverter"></converter:EnumConverter>
+    <converter:NullToUnsetValueConverter x:Key="NullToUnsetValue"></converter:NullToUnsetValueConverter>
 </ResourceDictionary>
 

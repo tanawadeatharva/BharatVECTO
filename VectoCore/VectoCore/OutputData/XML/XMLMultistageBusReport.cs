@@ -7,6 +7,7 @@ using System.Text.RegularExpressions;
 using System.Xml;
 using System.Xml.Linq;
 using TUGraz.VectoCommon.BusAuxiliaries;
+using TUGraz.VectoCommon.Hashing;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Resources;
@@ -14,6 +15,7 @@ using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Utils;
+
 
 namespace TUGraz.VectoCore.OutputData.XML
 {
@@ -153,8 +155,8 @@ namespace TUGraz.VectoCore.OutputData.XML
 
 		private XElement GenerateInputManufacturingStage()
 		{
-			var multistageId = $"MST-{GetGUID()}";
-			var vehicleId = $"VEH-{GetGUID()}";
+			var multistageId = $"{VectoComponents.VectoManufacturingStage.HashIdPrefix()}{GetGUID()}";
+			var vehicleId = $"{VectoComponents.Vehicle.HashIdPrefix()}{GetGUID()}";
 
 			return new XElement(tns + XMLNames.ManufacturingStage,
 					new XAttribute("stageCount", GetStageNumber()),
@@ -239,6 +241,9 @@ namespace TUGraz.VectoCore.OutputData.XML
 
 		private XElement GetADAS(IAdvancedDriverAssistantSystemDeclarationInputData adasData)
 		{
+			if (adasData == null)
+				return null;
+			
 			return new XElement(
 				v28 + XMLNames.Vehicle_ADAS,
 				new XElement(v23 + XMLNames.Vehicle_ADAS_EngineStopStart, adasData.EngineStopStart),
@@ -253,6 +258,9 @@ namespace TUGraz.VectoCore.OutputData.XML
 
 		private XElement GetBusVehicleComponents(IVehicleComponentsDeclaration vehicleComponents)
 		{
+			if (vehicleComponents == null)
+				return null;
+
 			var busAirdrag = GetBusAirdrag(vehicleComponents.AirdragInputData);
 			var busAux = GetBusAuxiliaries(vehicleComponents.BusAuxiliaries);
 
@@ -269,11 +277,11 @@ namespace TUGraz.VectoCore.OutputData.XML
 
 		private XElement GetBusAirdrag(IAirdragDeclarationInputData airdrag)
 		{
-			if (airdrag != null) {
+			if (airdrag != null) 
 				return GetAirdragElement(airdrag);
-			}
-
-			switch (_vehicleInputData.AirdragModifiedMultistage) {
+			
+			switch (_vehicleInputData.AirdragModifiedMultistage)
+			{
 				case true:
 					return GetBusAirdragUseStandardValues();
 				case false:
@@ -285,12 +293,24 @@ namespace TUGraz.VectoCore.OutputData.XML
 		
 		private XElement GetAirdragElement(IAirdragDeclarationInputData airdrag)
 		{
-			var component = airdrag as AbstractCommonComponentType;
-			if (component == null)
+			if (airdrag == null)
+				return null;
+			
+			XmlNode airdragNode = null;
+			if (airdrag is AbstractCommonComponentType)
+				airdragNode = (airdrag as AbstractCommonComponentType).XMLSource;
+			else {
+				var type = airdrag.GetType();
+				var property = type.GetProperty(nameof(AbstractCommonComponentType.XMLSource));
+				if (property != null)
+					airdragNode = (XmlNode)property.GetValue(airdrag, null);
+			}
+
+			if (airdragNode == null)
 				return null;
 
-			var dataElement = XElement.Parse(component.XMLSource.FirstChild.OuterXml);
-			var signatureElement = XElement.Parse(component.XMLSource.LastChild.OuterXml);
+			var dataElement = XElement.Parse(airdragNode.FirstChild.OuterXml);
+			var signatureElement = XElement.Parse(airdragNode.LastChild.OuterXml);
 			dataElement.Attribute(XNamespace.Xmlns + "xsi")?.Remove();
 			
 			return new XElement(v28 + XMLNames.Component_AirDrag,
@@ -301,11 +321,13 @@ namespace TUGraz.VectoCore.OutputData.XML
 
 		private XElement GetBusAirdragUseStandardValues()
 		{
+			var id = $"{VectoComponents.Airdrag.HashIdPrefix()}{GetGUID()}";
+
 			return new XElement(v28 + XMLNames.Component_AirDrag,
 				new XElement(v20 + XMLNames.ComponentDataWrapper,
 					new XAttribute(XNamespace.Xmlns + "v2.0", v20),
 					new XAttribute(xsi + XMLNames.Attr_Type, "v2.8:AirDragModifiedUseStandardValueType"),
-					new XAttribute(XMLNames.Component_ID_Attr, "standard")
+					new XAttribute(XMLNames.Component_ID_Attr, id)
 				),
 				new XElement(v20 + XMLNames.DI_Signature, XMLHelper.CreateDummySig(di)));
 		}

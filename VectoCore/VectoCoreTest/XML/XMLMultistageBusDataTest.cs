@@ -71,6 +71,7 @@ namespace TUGraz.VectoCore.Tests.XML
 			Assert.AreEqual("Generic Model", vehicleData.Model);
 			Assert.AreEqual("VEH-1234567890_nonSmart-ESS", vehicleData.VIN);
 			Assert.AreEqual(DateTime.Parse("2017-02-15T11:00:00Z").ToUniversalTime(), vehicleData.Date);
+			Assert.AreEqual("M3", vehicleData.LegislativeCategory);
 			Assert.AreEqual("Bus", vehicleData.VehicleCategory.ToXMLFormat());
 			Assert.AreEqual(AxleConfiguration.AxleConfig_8x2, vehicleData.AxleConfiguration);
 			Assert.AreEqual(true, vehicleData.Articulated);
@@ -362,7 +363,8 @@ namespace TUGraz.VectoCore.Tests.XML
 			Assert.AreEqual(15000, aux.ElectricSupply.MaxAlternatorPower.Value());
 			Assert.AreEqual(50.SI(Unit.SI.Watt.Hour).Cast<WattSecond>(), aux.ElectricSupply.ElectricStorageCapacity);
 
-			Assert.AreEqual("Large Supply 2-stage", aux.PneumaticSupply.CompressorSize);
+			Assert.AreEqual("Large Supply 2-stage", aux.PneumaticSupply.CompressorSize);//SizeOfAirSupply
+			Assert.AreEqual(CompressorDrive.electrically, aux.PneumaticSupply.CompressorDrive);
 			Assert.AreEqual("none", aux.PneumaticSupply.Clutch);
 			Assert.AreEqual(1.000, aux.PneumaticSupply.Ratio);
 			Assert.AreEqual(true, aux.PneumaticSupply.SmartAirCompression);

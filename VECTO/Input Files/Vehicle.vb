@@ -362,6 +362,8 @@ Public Class Vehicle
 		End Get
 	End Property
 
+	Public ReadOnly Property LegislativeCategory As String Implements IVehicleDeclarationInputData.LegislativeCategory
+
 	Public ReadOnly Property LegislativeClass As LegislativeClass? Implements IVehicleEngineeringInputData.LegislativeClass
 		Get
 			Return legClass
@@ -405,6 +407,9 @@ Public Class Vehicle
 			Return If(Double.IsNaN(CdA0), Nothing, CdA0.SI(Of SquareMeter)())
 		End Get
 	End Property
+
+	Public ReadOnly Property TransferredAirDragArea As SquareMeter Implements IAirdragDeclarationInputData.TransferredAirDragArea
+	Public ReadOnly Property AirDragArea_0 As SquareMeter Implements IAirdragDeclarationInputData.AirDragArea_0
 
 	Public ReadOnly Property IVehicleEngineeringInputData_Axles As IList(Of IAxleEngineeringInputData) _
 		Implements IAxlesEngineeringInputData.AxlesEngineering

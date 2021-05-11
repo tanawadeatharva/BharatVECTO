@@ -50,7 +50,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup>
-    <ApplicationIcon>Resources\Icon2.ico</ApplicationIcon>
+    <ApplicationIcon>Resources\Icons\Icon2.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Castle.Core, Version=4.0.0.0, Culture=neutral, PublicKeyToken=407dd0808d44fbdc, processorArchitecture=MSIL">
@@ -59,6 +59,7 @@
     <Reference Include="InteractiveDataDisplay.WPF, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\InteractiveDataDisplay.WPF.1.0.0\lib\net452\InteractiveDataDisplay.WPF.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.Build.Framework" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="Microsoft.Maps.MapControl.WPF, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.Maps.MapControl.WPF.1.0.0.3\lib\net40-Client\Microsoft.Maps.MapControl.WPF.dll</HintPath>
@@ -119,24 +120,39 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Helper\ConvertedSIDummyCreator.cs" />
     <Compile Include="Helper\Converter\AlwaysVisibleConverter.cs" />
     <Compile Include="Helper\Converter\BoolToVisibilityConverter.cs" />
+    <Compile Include="Helper\Converter\EnumConverter.cs" />
     <Compile Include="Helper\Converter\InvertBoolConverter.cs" />
     <Compile Include="Helper\Converter\JobTypeStringConverter.cs" />
     <Compile Include="Helper\Converter\LabledTextBoxLabelConverter.cs" />
+    <Compile Include="Helper\Converter\MultistageParameterModeToVisibilityConverter.cs" />
+    <Compile Include="Helper\Converter\NullToUnsetValueConverter.cs" />
     <Compile Include="Helper\Converter\NullToVisibilityConverter.cs" />
     <Compile Include="Helper\Converter\LabledTextBoxConverter.cs" />
     <Compile Include="Helper\Converter\SIToUnitString.cs" />
     <Compile Include="Helper\Converter\SIValueToStringConverter.cs" />
     <Compile Include="Helper\Converter\VehicleCategoryToStringConverter.cs" />
+    <Compile Include="Helper\Converter\XToBoolConverter.cs" />
     <Compile Include="Helper\DoubleValidation.cs" />
+    <Compile Include="Helper\Exceptions.cs" />
     <Compile Include="Helper\Extension.cs" />
     <Compile Include="Helper\IWindowHelper.cs" />
     <Compile Include="Helper\DialogHelper.cs" />
     <Compile Include="Helper\WindowHelper.cs" />
     <Compile Include="Helper\XMLExtension.cs" />
+    <Compile Include="Helper\XmlHelper.cs" />
     <Compile Include="Ninject\FactoryModule.cs" />
+    <Compile Include="Ninject\IMultistageDependencies.cs" />
+    <Compile Include="Ninject\MultistageLazyDependencies.cs" />
     <Compile Include="Ninject\MultistageModule.cs" />
+    <Compile Include="Properties\Annotations.cs" />
+    <Compile Include="Test.xaml.cs">
+      <DependentUpon>Test.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="TestViewModel.cs" />
+    <Compile Include="Util\XML\Implementation\ComponentWriter\XMLBusAuxiliariesWriter.cs" />
     <Compile Include="Util\XML\Implementation\ComponentWriter\XMLPTOWriter.cs" />
     <Compile Include="ViewModel\Implementation\Document\DeclarationJobViewModel.cs" />
     <Compile Include="ViewModel\Implementation\Document\DeclarationTrailerJobDocumentViewModel.cs" />
@@ -242,11 +258,10 @@
     <Compile Include="ViewModel\Interfaces\JobEdit\Vehicle\Components\ITorqueConverterViewModel.cs" />
     <Compile Include="ViewModel\Interfaces\JobEdit\Vehicle\Components\ITyreViewModel.cs" />
     <Compile Include="ViewModel\Interfaces\JobEdit\Vehicle\IVehicleViewModel.cs" />
-    <Compile Include="ViewModel\MultiStage\Implementation\DeclarationInterimStageBusVehicleViewModel_v2_8.cs" />
-    <Compile Include="ViewModel\MultiStage\Implementation\InterimStageBusAuxiliariesViewModel_v2_8.cs" />
-    <Compile Include="ViewModel\MultiStage\Implementation\InterimStageViewModel.cs" />
+    <Compile Include="ViewModel\MultiStage\Implementation\InterimStageBusVehicleViewModel_v2_8.cs" />
     <Compile Include="ViewModel\MultiStage\Implementation\ManufacturingStageViewModel_v0_1.cs" />
     <Compile Include="ViewModel\MultiStage\Implementation\MultistageAirdragViewModel.cs" />
+    <Compile Include="ViewModel\MultiStage\Implementation\MultistageAuxiliariesViewModel.cs" />
     <Compile Include="ViewModel\MultiStage\Implementation\NewMultiStageJobViewModel.cs" />
     <Compile Include="ViewModel\MultiStage\Implementation\MultistageJobViewModel_v0_1.cs" />
     <Compile Include="ViewModel\MultiStage\Interfaces\IMultistageAirdragViewModel.cs" />
@@ -342,11 +357,20 @@
     <Compile Include="Views\MessageView.xaml.cs">
       <DependentUpon>MessageView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\Multistage\AirDragView_v2_8.xaml.cs">
+      <DependentUpon>AirDragView_v2_8.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\Multistage\CustomControls\FilePicker.xaml.cs">
       <DependentUpon>FilePicker.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\Multistage\CustomControls\LabledTextBoxMultistage.xaml.cs">
+      <DependentUpon>LabledTextBoxMultistage.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\Multistage\CustomControls\MultiStageParameter.xaml.cs">
       <DependentUpon>MultiStageParameter.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Multistage\ManufacturingStageAuxiliariesView.xaml.cs">
+      <DependentUpon>ManufacturingStageAuxiliariesView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\Multistage\MultistageAirDragView.xaml.cs">
       <DependentUpon>MultistageAirDragView.xaml</DependentUpon>
@@ -366,23 +390,32 @@
     <Compile Include="Views\SettingsView.xaml.cs">
       <DependentUpon>SettingsView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Test.xaml.cs">
-      <DependentUpon>Test.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Views\XMLViewer.xaml.cs">
       <DependentUpon>XMLViewer.xaml</DependentUpon>
     </Compile>
-    <Page Include="ButtonStyles.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="ButtonTemplates.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Page Include="DataGridStyles.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Resources\Icons\AddDocument_16x.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Resources\Icons\drawables.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Resources\Colors.xaml">
+    <Page Include="Resources\Icons\Trash_16x.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Resources\ObjectProvider.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Resources\Styles\ButtonStyles.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Resources\Styles\Colors.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -402,13 +435,21 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Resources\GlobalStyles.xaml">
+    <Page Include="Resources\Styles\GlobalStyles.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Resources\Templates\ErrorTemplates.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Resources\ViewModelBindings.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Test.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\CustomControls\ComboParameter.xaml">
       <SubType>Designer</SubType>
@@ -530,11 +571,23 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Views\Multistage\AirDragView_v2_8.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\Multistage\CustomControls\FilePicker.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Views\Multistage\CustomControls\LabledTextBoxMultistage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\Multistage\CustomControls\MultiStageParameter.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Multistage\ManufacturingStageAuxiliariesView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -559,10 +612,6 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\SettingsView.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Test.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -626,7 +675,7 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Resources\Icon2.ico" />
+    <Resource Include="Resources\Icons\Icon2.ico" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\VectoCommon\VectoCommon\VectoCommon.csproj">
@@ -637,16 +686,23 @@
       <Project>{B673E12F-D323-4C4C-8805-9915B2C72D3D}</Project>
       <Name>VectoHashing</Name>
     </ProjectReference>
+    <ProjectReference Include="..\VectoCore\VectoCoreTest\VectoCoreTest.csproj">
+      <Project>{6A27F93E-4A58-48F6-B00B-3908C5D3D5A2}</Project>
+      <Name>VectoCoreTest</Name>
+    </ProjectReference>
     <ProjectReference Include="..\VectoCore\VectoCore\VectoCore.csproj">
       <Project>{cd36938a-add9-4c65-96da-b397cdeea90a}</Project>
       <Name>VectoCore</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Resources\folderpicker.ico" />
+    <Resource Include="Resources\Icons\folderpicker.ico" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Model\Multistage\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Icons\Trash_16x.ico" />
   </ItemGroup>
   <!-- ItemGroup>
     <Analyzer Include="..\packages\Microsoft.DependencyValidation.Analyzers.0.11.0\analyzers\dotnet\cs\Microsoft.DependencyValidation.Analyzers.resources.dll" />

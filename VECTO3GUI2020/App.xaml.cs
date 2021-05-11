@@ -48,7 +48,7 @@ namespace VECTO3GUI2020
 
             container.Bind<ISettingsModel>().To<SettingsModel>();
 
-			container.Bind<IDialogHelper>().To<DialogHelper>();
+			container.Bind<IDialogHelper>().To<DialogHelper>().InSingletonScope();
 			container.Bind<IWindowHelper>().To<WindowHelper>();
 
 		}
@@ -63,6 +63,7 @@ namespace VECTO3GUI2020
 
             var mainwindow = container.Get<MainWindow>();
             this.MainWindow = mainwindow;
+			Application.Current.MainWindow = mainwindow;
             this.MainWindow.Show();
 
 

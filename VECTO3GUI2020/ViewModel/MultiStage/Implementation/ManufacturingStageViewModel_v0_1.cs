@@ -22,7 +22,7 @@ using VECTO3GUI2020.ViewModel.MultiStage.Interfaces;
 
 namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 {
-    public class ManufacturingStageViewModel_v0_1 : ViewModelBase, IManufacturingStageViewModel
+	public class ManufacturingStageViewModel_v0_1 : ViewModelBase, IManufacturingStageViewModel
 	{
 		public static readonly string INPUTPROVIDERTYPE = typeof(XMLDeclarationMultistageTypeInputDataV01).ToString();
 		public static readonly string QualifiedXSD = XMLDeclarationMultistageTypeInputDataV01.QUALIFIED_XSD_TYPE;
@@ -51,11 +51,11 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 		private IApplicationInformation _applicationInformation = new ApplicationInformation {
 			Date = DateTime.Today,
 		};
-		private IVehicleViewModel _vehicleViewModel;
+		private IMultistageVehicleViewModel _vehicleViewModel;
 		private IMultiStageViewModelFactory _viewModelFactory;
 		private IViewModelBase _currentview;
 
-		public IVehicleViewModel VehicleViewModel
+		public IMultistageVehicleViewModel VehicleViewModel
 		{
 			get => _vehicleViewModel;
 			set => SetProperty(ref _vehicleViewModel, value);
@@ -68,34 +68,47 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 		} 
 
 		public DigestData Signature => throw new NotImplementedException();
-
-
-		public ManufacturingStageViewModel_v0_1(IManufacturingStageInputData prevStageInputData, IMultiStageViewModelFactory viewModelFactory)
+		public void SetInputData(IVehicleDeclarationInputData vehicleInputData)
 		{
-			_viewModelFactory = viewModelFactory;
-			StageCount = prevStageInputData.StageCount + 1;
-			HashPreviousStage = prevStageInputData.Signature;
+			_vehicleViewModel.SetVehicleInputData(vehicleInputData);
+			_vehicleViewModel.MultistageAirdragViewModel.SetAirdragInputData(vehicleInputData?.Components?.AirdragInputData);
+			_vehicleViewModel.MultistageAuxiliariesViewModel.SetAuxiliariesInputData(vehicleInputData?.Components?.BusAuxiliaries);
 
-
-
-
-
-
-
-			VehicleViewModel =
-				_viewModelFactory.CreateInterimStageVehicleViewModel(prevStageInputData.Vehicle.GetType().ToString(), prevStageInputData.Vehicle);
-			CurrentView = VehicleViewModel as IViewModelBase;
-			Components.Add(VehicleViewModel.Name, VehicleViewModel as IViewModelBase);
-
-
-			var airDragEditViewModel = viewModelFactory.CreateMultistageAirdragViewModel();
-			Components.Add("Airdrag", airDragEditViewModel as IViewModelBase);
 		}
 
 
-		private ICommand _switchComponentViewCommand;
+		public ManufacturingStageViewModel_v0_1(IManufacturingStageInputData consolidatedManufacturingStageInputData, IMultiStageViewModelFactory viewModelFactory)
+		{
+			_viewModelFactory = viewModelFactory;
+			
+			_stageCount = consolidatedManufacturingStageInputData?.StageCount + 1 ?? 2;
+
+			_consolidatedManufacturingStageInputData = consolidatedManufacturingStageInputData;
+
+
+			VehicleViewModel = (IMultistageVehicleViewModel)_viewModelFactory.GetInterimStageVehicleViewModel(consolidatedManufacturingStageInputData?.Vehicle);
+			CurrentView = VehicleViewModel as IViewModelBase;
+
+
+			Components.Add(VehicleViewModel.Name, VehicleViewModel as IViewModelBase);
+
+
+			
+			Components.Add("Airdrag", VehicleViewModel.MultistageAirdragViewModel as IViewModelBase);
+
+			Components.Add("Auxiliaries", VehicleViewModel.MultistageAuxiliariesViewModel as IViewModelBase);
+		}
+
+
+		
 		private int _stageCount;
 		private DigestData _hashPreviousStage;
+		private IManufacturingStageInputData _consolidatedManufacturingStageInputData;
+
+		#region Commands
+
+		private ICommand _switchComponentViewCommand;
+
 
 		public ICommand SwitchComponentViewCommand
 		{
@@ -113,6 +126,8 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 			}
 		}
 
+		#endregion
+
 		private class ApplicationInformationMultistage : IApplicationInformation
 		{
 			public string SimulationToolVersion => "VECTO3";
@@ -123,9 +138,6 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 
 	public interface IManufacturingStageViewModel : IManufacturingStageInputData
 	{
-
-
-
-		
+		void SetInputData(IVehicleDeclarationInputData vehicleInputData);
 	}
 }

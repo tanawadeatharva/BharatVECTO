@@ -14,16 +14,32 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Interfaces
 {
     public interface IMultiStageViewModelFactory
 	{
-		IViewModelBase CreateNewMultiStageJobViewModel();
+		IViewModelBase GetNewMultistageJobViewModel();
 
-		IMultiStageJobViewModel CreateMultiStageJobViewModel(string inputProviderType, IMultistageBusInputDataProvider inputData);
+		IMultiStageJobViewModel GetMultiStageJobViewModel(IMultistageBusInputDataProvider inputData);
 
-		IVehicleViewModel CreateInterimStageVehicleViewModel(string inputProviderType);
+		IVehicleViewModel GetInterimStageVehicleViewModel();
 
-		IVehicleViewModel CreateInterimStageVehicleViewModel(string inputProviderType, IVehicleDeclarationInputData prevStageInputData);
+		IVehicleViewModel GetInterimStageVehicleViewModel(IVehicleDeclarationInputData consolidatedVehicleData);
 
-		IManufacturingStageViewModel CreateManufacturingStageViewModel(string inputProviderType, IManufacturingStageInputData prevStageInputData);
+		IManufacturingStageViewModel GetManufacturingStageViewModel(IManufacturingStageInputData consolidatedManufacturingStageInputData);
+		IMultistageAirdragViewModel GetMultistageAirdragViewModel();
 
-		IMultistageAirdragViewModel CreateMultistageAirdragViewModel();
+		IMultistageAirdragViewModel GetMultistageAirdragViewModel(
+			IAirdragDeclarationInputData consolidatedAirdragInputData);
+
+		IMultistageAuxiliariesViewModel GetAuxiliariesViewModel(
+			IBusAuxiliariesDeclarationData consolidatedAuxiliariesInputData);
+		//IViewModelBase CreateNewMultiStageJobViewModel();
+
+		//IMultiStageJobViewModel CreateMultiStageJobViewModel(string inputProviderType, IMultistageBusInputDataProvider inputData);
+
+		//IVehicleViewModel CreateInterimStageVehicleViewModel(string inputProviderType);
+
+		//IVehicleViewModel CreateInterimStageVehicleViewModel(string inputProviderType, IVehicleDeclarationInputData prevStageInputData);
+
+		//IManufacturingStageViewModel CreateManufacturingStageViewModel(string inputProviderType, IManufacturingStageInputData consolidatedManufacturingStageInputData);
+
+		//IMultistageAirdragViewModel CreateMultistageAirdragViewModel();
 	}
 }

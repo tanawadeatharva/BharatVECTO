@@ -18,8 +18,9 @@ namespace VECTO3GUI2020.Ninject
     {
 		public override void Load()
 		{
-			Bind<IXMLWriterFactory>().ToFactory(() => new UseFirstArgumentTypeAsNameInstanceProvider());
-			Bind<IMultiStageViewModelFactory>().ToFactory(() => new UseFirstArgumentAsNameInstanceProvider(skipFirstArgument: true, fallback: true));
+			Bind<IXMLWriterFactory>().ToFactory(() => new UseFirstArgumentTypeAsNameInstanceProvider(fallback:true));
+			//Bind<IMultiStageViewModelFactory>().ToFactory(() => new UseFirstArgumentAsNameInstanceProvider(skipFirstArgument: true, fallback: true));
+			Bind<IMultiStageViewModelFactory>().ToFactory();
 			Bind<IJobEditViewModelFactory>().ToFactory(() => new UseFirstArgumentTypeAsNameInstanceProvider());
 			Bind<IDocumentViewModelFactory>().ToFactory(() => new UseFirstArgumentAsNameInstanceProvider(false));
 			Bind<IComponentViewModelFactory>().ToFactory(

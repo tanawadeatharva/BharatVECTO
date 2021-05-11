@@ -99,6 +99,8 @@ namespace TUGraz.VectoCommon.InputData
 
 		string VIN { get; }
 
+		string LegislativeCategory { get; }
+
 		LegislativeClass? LegislativeClass { get; }
 
 		/// <summary>
@@ -255,8 +257,11 @@ namespace TUGraz.VectoCommon.InputData
 
 	public enum PredictiveCruiseControlType
 	{
+		[GuiLabel("None")]
 		None,
+		[GuiLabel("Option I + II")]
 		Option_1_2,
+		[GuiLabel("Option I + II + III")]
 		Option_1_2_3
 	}
 
@@ -288,8 +293,11 @@ namespace TUGraz.VectoCommon.InputData
 
 	public enum EcoRollType
 	{
+		[GuiLabel("None")]
 		None,
+		[GuiLabel("Without Engine Stop")]
 		WithoutEngineStop,
+		[GuiLabel("With Engine Stop")]
 		WithEngineStop
 	}
 
@@ -372,6 +380,9 @@ namespace TUGraz.VectoCommon.InputData
 		/// cf. VECTO Input Parameters.xlsx
 		/// </summary>
 		SquareMeter AirDragArea { get; } // without trailer
+		SquareMeter TransferredAirDragArea { get; } // P246
+
+		SquareMeter AirDragArea_0 { get; } // P245
 	}
 
 	public interface IRetarderInputData : IComponentInputData
@@ -844,6 +855,7 @@ namespace TUGraz.VectoCommon.InputData
 
 	public interface IPneumaticSupplyDeclarationData
 	{
+		CompressorDrive CompressorDrive { get; }
 		string Clutch { get; }
 		double Ratio { get; }
 
@@ -944,7 +956,9 @@ namespace TUGraz.VectoCommon.InputData
 
 	public enum VehicleDeclarationType
 	{
+		[GuiLabel("Interim")]
 		interim,
+		[GuiLabel("Final")]
 		final
 	}
 
@@ -973,4 +987,39 @@ namespace TUGraz.VectoCommon.InputData
 			}
 		}
 	}
+
+	public enum CompressorDrive
+	{
+		[GuiLabel("Electrically")]
+		electrically,
+		[GuiLabel("Mechanically")]
+		mechanically
+	}
+	
+	public static class CompressorDriveHelper
+	{
+		public static CompressorDrive Parse(string parse)
+		{
+			switch (parse)
+			{
+				case nameof(CompressorDrive.electrically):
+					return CompressorDrive.electrically;
+				case nameof(CompressorDrive.mechanically):
+					return CompressorDrive.mechanically;
+				default:
+					throw new ArgumentOutOfRangeException();
+			}
+		}
+
+		public static string GetLabel(this CompressorDrive type)
+		{
+			switch (type)
+			{
+				case CompressorDrive.electrically: return nameof(CompressorDrive.electrically);
+				case CompressorDrive.mechanically: return nameof(CompressorDrive.electrically);
+				default: return null;
+			}
+		}
+	}
+
 }

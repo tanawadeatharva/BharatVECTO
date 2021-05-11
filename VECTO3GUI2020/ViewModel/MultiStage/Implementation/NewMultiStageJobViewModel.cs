@@ -46,7 +46,7 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 			_inputDataReader = inputDataReader;
 			_dialogHelper = dialogHelper;
 			_vmFactory = vmFactory;
-			Title = "New Multistage file";
+			Title = "New Multistage File";
 			VifPath = "Select VIF File";
 		}
 
@@ -62,7 +62,10 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 		private void AddVifFileExecute()
 		{
 			
-			var fileName = _dialogHelper.OpenXMLFileDialog(_settings.DefaultFilePath);
+			var fileName = _dialogHelper.OpenXMLFileDialog();
+			if (fileName == null) {
+				return;
+			}
 			IMultistageBusInputDataProvider inputDataProvider = null;
 			try {
 				inputDataProvider = _inputDataReader.Create(fileName) as IMultistageBusInputDataProvider;
@@ -77,12 +80,22 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 				return;
 			}
 
+			MultiStageJobViewModel = null;
 			MultiStageJobViewModel =
-				_vmFactory.CreateMultiStageJobViewModel(inputDataProvider.GetType().ToString(), inputDataProvider);
+				_vmFactory.GetMultiStageJobViewModel(inputDataProvider);
 			VifPath = fileName;
 		}
 
-		
+
+		private ICommand _closeWindow;
+
+		public ICommand CloseWindow
+		{
+			get => _closeWindow ?? new RelayCommand<Window>(window => base.CloseWindow(window, _dialogHelper, false),
+				(window) => MultiStageJobViewModel == null);
+		}
+
+
 
 		#endregion
 

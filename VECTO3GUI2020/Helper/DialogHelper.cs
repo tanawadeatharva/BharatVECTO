@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -14,29 +15,47 @@ namespace VECTO3GUI2020.Helper
 {
     public class DialogHelper : IDialogHelper
 	{
-		private readonly string _defaultInitialDirectory = System.IO.Path.GetDirectoryName(
-			System.Reflection.Assembly.GetExecutingAssembly().Location);
-
+		private readonly string _defaultInitialDirectory = Settings.Default.DefaultFilePath;
 
 		#region File and Folder Dialogs
 		private string _xmlFilter = "XML Files (*.xml)|*.xml";
+
+		private Dictionary<string, string> lastUsedDirectories = new Dictionary<string, string>();
+
+		private string lastUsedDirectoryFolderPicker = null;
 		private string[] OpenFilesDialog(string filter, string initialDirectory, bool multiselect)
 		{
+			if (initialDirectory == null) {
+				initialDirectory = LookUpLastDir(filter);
+			}
 
+
+			
 			using (OpenFileDialog fd = new OpenFileDialog {
 				InitialDirectory = initialDirectory ?? _defaultInitialDirectory,
 				Multiselect = multiselect,
-				Filter = filter
+				Filter = filter,
+				RestoreDirectory = true
 			}) {
 				var result = fd.ShowDialog();
-				if (result == DialogResult.OK)
-				{
+				if (result == DialogResult.OK) {
+					lastUsedDirectories[filter] = Path.GetDirectoryName(fd.FileName);
 					return fd.FileNames;
 				}
 			}
 
 
 			return null;
+		}
+
+		private string LookUpLastDir(string filter)
+		{
+			string lastUsedDirectory = null;
+			if (lastUsedDirectories.TryGetValue(filter, out lastUsedDirectory)) {
+				return lastUsedDirectory;
+			} else {
+				return Settings.Default.DefaultFilePath;
+			}
 		}
 
 		public string OpenFileDialog(string filter = "All files (*.*)|*.*", string initialDirectory = null)
@@ -49,12 +68,19 @@ namespace VECTO3GUI2020.Helper
 			return OpenFilesDialog(filter, initialDirectory, true);
 		}
 
+		public string OpenXMLFileDialog()
+		{
+			return OpenXMLFileDialog(null);
+		}
+
+
+
 		public string[] OpenXMLFilesDialog(string initialDirectory)
 		{
 			return OpenFilesDialog(_xmlFilter, initialDirectory);
 		}
 
-		public string OpenXMLFileDialog(string initialDirectory = null)
+		public string OpenXMLFileDialog(string initialDirectory)
 		{
 			return OpenFilesDialog(_xmlFilter, initialDirectory, false)?[0];
 		}
@@ -62,14 +88,20 @@ namespace VECTO3GUI2020.Helper
 
 		public string OpenFolderDialog(string initialDirectory = null)
 		{
+
+			if (initialDirectory == null) {
+				initialDirectory = lastUsedDirectoryFolderPicker;
+			}
 			using (var dialog = new CommonOpenFileDialog())
 			{
 				dialog.InitialDirectory = initialDirectory;
 				dialog.IsFolderPicker = true;
+				dialog.Multiselect = false;
+				dialog.RestoreDirectory = true;
 
 				var result = dialog.ShowDialog();
-				if (result == CommonFileDialogResult.Ok)
-				{
+				if (result == CommonFileDialogResult.Ok) {
+					lastUsedDirectoryFolderPicker = Path.GetDirectoryName(dialog.FileName);
 					return dialog.FileName;
 				}
 			}
@@ -138,7 +170,9 @@ namespace VECTO3GUI2020.Helper
 		/// </summary>
 		/// <param name="initialDirectory">If no directory is specified the location of the assembly is used</param>
 		/// <returns></returns>
-		string OpenXMLFileDialog(string initialDirectory = null);
+		string OpenXMLFileDialog(string initialDirectory);
+
+		string OpenXMLFileDialog();
 
 
 		/// <summary>

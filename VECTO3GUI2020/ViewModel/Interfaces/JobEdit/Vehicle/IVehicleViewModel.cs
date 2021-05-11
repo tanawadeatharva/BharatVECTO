@@ -14,11 +14,11 @@ namespace VECTO3GUI2020.ViewModel.Interfaces.JobEdit.Vehicle
 		//TODO: Move to IVehicleDeclarationInputData
 		RetarderType RetarderType { get; }
 		double RetarderRatio { get; }
-
 		AngledriveType AngledriveType { get; }
-
 		IPTOTransmissionInputData PTOTransmissionInputData { get; }
 
+
 		ObservableCollection<IComponentViewModel> ComponentViewModels { get; set; }
+		
 	}
 }

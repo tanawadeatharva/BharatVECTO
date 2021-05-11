@@ -190,11 +190,22 @@ namespace TUGraz.VectoCommon.BusAuxiliaries
 
 	public enum HeatPumpType
 	{
+		[GuiLabel("None")]
 		none,
+
+		[GuiLabel("R 744")]
 		R_744,
+
+		[GuiLabel("non R 744: 2-stage")]
 		non_R_744_2_stage,
+
+		[GuiLabel("non R 744: 3-stage")]
 		non_R_744_3_stage,
+
+		[GuiLabel("non R 744: 4-stage")]
 		non_R_744_4_stage,
+
+		[GuiLabel("non R 744: continuous")]
 		non_R_744_continuous
 	}
 
@@ -238,9 +249,13 @@ namespace TUGraz.VectoCommon.BusAuxiliaries
 
 	public enum HeatPumpMode
 	{
+		[GuiLabel("Heating")]
 		heating,
+		[GuiLabel("Heating and cooling")]
 		heating_and_cooling,
+		[GuiLabel("Cooling")]
 		cooling,
+		[GuiLabel("N_A")]
 		N_A,
 	}
 

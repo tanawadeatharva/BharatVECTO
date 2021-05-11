@@ -238,6 +238,11 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			get { return Constants.NOT_AVailABLE; }
 		}
 
+		public string LegislativeCategory
+		{
+			get { return null; }
+		}
+
 		public virtual LegislativeClass? LegislativeClass
 		{
 			get {
