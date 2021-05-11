@@ -22,7 +22,7 @@ using VECTO3GUI2020.ViewModel.MultiStage.Interfaces;
 
 namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 {
-    public class ManufacturingStageViewModel_v0_1 : ViewModelBase, IManufacturingStageViewModel
+	public class ManufacturingStageViewModel_v0_1 : ViewModelBase, IManufacturingStageViewModel
 	{
 		public static readonly string INPUTPROVIDERTYPE = typeof(XMLDeclarationMultistageTypeInputDataV01).ToString();
 		public static readonly string QualifiedXSD = XMLDeclarationMultistageTypeInputDataV01.QUALIFIED_XSD_TYPE;
@@ -80,7 +80,9 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 		public ManufacturingStageViewModel_v0_1(IManufacturingStageInputData consolidatedManufacturingStageInputData, IMultiStageViewModelFactory viewModelFactory)
 		{
 			_viewModelFactory = viewModelFactory;
-			_stageCount = consolidatedManufacturingStageInputData?.StageCount?? + 1;
+			
+			_stageCount = consolidatedManufacturingStageInputData?.StageCount + 1 ?? 2;
+
 			_consolidatedManufacturingStageInputData = consolidatedManufacturingStageInputData;
 
 

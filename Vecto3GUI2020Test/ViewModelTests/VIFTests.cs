@@ -21,7 +21,7 @@ namespace Vecto3GUI2020Test.ViewModelTests
 			var multistagevm = loadFile(primary_vehicle_only).MultiStageJobViewModel;
 			var stage = multistagevm.ManufacturingStageViewModel.StageCount;
 
-			Assert.AreEqual(1, stage);
+			Assert.AreEqual(2, stage);
 
 			//Set Necessary Fields
 			var vehicle =
@@ -29,24 +29,18 @@ namespace Vecto3GUI2020Test.ViewModelTests
 			vehicle.ManufacturerAddress = "Address";
 			vehicle.Manufacturer = "Manufacturer";
 			vehicle.VIN = "VIN12345678";
+			
+			var writer = GetFileOutputVIFWriter(multistagevm);
+			
+			deleteFile(writer.XMLMultistageReportFileName);
+			getMockDialogHelper(null, writer.XMLMultistageReportFileName);
+			_kernel.Rebind<IDialogHelper>().ToConstant(getMockDialogHelper(null, writer.XMLMultistageReportFileName).Object);
 
+			MultiStageJobViewModel_v0_1.SaveVif(multistagevm, writer);
 
-			var outputFileName = primary_vehicle_only.Replace(".xml", "_vif_output_mandatory_fields.xml");
-			var outputFilePath = Path.Combine(DirPath, outputFileName);
+			Assert.IsTrue(File.Exists(writer.XMLMultistageReportFileName));
 
-			var nextStageNumber = multistagevm.ManufacturingStageViewModel?.StageCount + 2 ?? 2;
-			var expectedOutputFilePath = outputFilePath.Replace(".xml", $".{FileOutputVIFWriter.REPORT_ENDING_PREFIX}{nextStageNumber}.xml");
-			deleteFile(expectedOutputFilePath);
-
-
-			getMockDialogHelper(null, outputFilePath);
-			_kernel.Rebind<IDialogHelper>().ToConstant(getMockDialogHelper(null, outputFilePath).Object);
-
-			MultiStageJobViewModel_v0_1.SaveVif(multistagevm, outputFilePath);
-
-			Assert.IsTrue(File.Exists(expectedOutputFilePath));
-
-			var validator = new XMLValidator(XmlReader.Create(expectedOutputFilePath));
+			var validator = new XMLValidator(XmlReader.Create(writer.XMLMultistageReportFileName));
 			Assert.True(validator.ValidateXML(TUGraz.VectoCore.Utils.XmlDocumentType.MultistageOutputData));
 		}
 
@@ -83,7 +77,6 @@ namespace Vecto3GUI2020Test.ViewModelTests
 			_kernel.Rebind<IDialogHelper>().ToConstant(vehicleInputDataFiledialogMock.Object);
 
 			multiStageViewModel.LoadVehicleDataCommand.Execute(null);
-
 			
 			var vehicle =
 				multiStageViewModel.ManufacturingStageViewModel.Vehicle as DeclarationInterimStageBusVehicleViewModel_v2_8;
@@ -93,21 +86,26 @@ namespace Vecto3GUI2020Test.ViewModelTests
 			vehicle.AirdragModifiedMultistage = true;
 			vehicle.VehicleDeclarationType = VehicleDeclarationType.interim;
 			
+			var writer = GetFileOutputVIFWriter(multiStageViewModel);
+			
+			deleteFile(writer.XMLMultistageReportFileName);
+			getMockDialogHelper(null, writer.XMLMultistageReportFileName);
+			_kernel.Rebind<IDialogHelper>().ToConstant(getMockDialogHelper(null, writer.XMLMultistageReportFileName).Object);
+			
+			MultiStageJobViewModel_v0_1.SaveVif(multiStageViewModel, writer);
+			
+			var validator = new XMLValidator(XmlReader.Create(writer.XMLMultistageReportFileName));
+			Assert.True(validator.ValidateXML(TUGraz.VectoCore.Utils.XmlDocumentType.MultistageOutputData));
+		}
+
+
+		private FileOutputVIFWriter GetFileOutputVIFWriter(IMultiStageJobViewModel multistageViewModel)
+		{
 			var outputFileName = primary_vehicle_only.Replace(".xml", "_vif_output_mandatory_fields.xml");
 			var outputFilePath = Path.Combine(DirPath, outputFileName);
 
-			var nextStageNumber = multiStageViewModel.ManufacturingStages?.Count + 2 ?? 2;
-			var expectedOutputFilePath = outputFilePath.Replace(".xml", $".{FileOutputVIFWriter.REPORT_ENDING_PREFIX}{nextStageNumber}.xml");
-			deleteFile(expectedOutputFilePath);
-			
-			getMockDialogHelper(null, outputFilePath);
-			_kernel.Rebind<IDialogHelper>().ToConstant(getMockDialogHelper(null, outputFilePath).Object);
-			
-			MultiStageJobViewModel_v0_1.SaveVif(multiStageViewModel, outputFilePath);
-			
-			var validator = new XMLValidator(XmlReader.Create(expectedOutputFilePath));
-			Assert.True(validator.ValidateXML(TUGraz.VectoCore.Utils.XmlDocumentType.MultistageOutputData));
-
+			var currentStageCount = multistageViewModel.MultistageJobInputData.JobInputData.ManufacturingStages?.Count ?? 0;
+			return  new FileOutputVIFWriter(outputFilePath, currentStageCount);
 		}
 
 	}
