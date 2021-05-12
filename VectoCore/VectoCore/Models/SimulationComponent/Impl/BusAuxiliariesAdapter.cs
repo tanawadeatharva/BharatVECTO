@@ -131,7 +131,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			var signals = Auxiliaries.Signals;
 			// trick bus auxiliaries that ice is on - all auxiliaries are considered. ESS is corrected in post-processing
-			signals.EngineStopped = !DataBus.EngineCtl.CombustionEngineOn; //false; 
+			signals.EngineStopped = !DataBus.EngineCtl.CombustionEngineOn; //false;
+			signals.InNeutral = !DataBus.EngineCtl.CombustionEngineOn;																		   
 			signals.VehicleStopped = DataBus.VehicleInfo.VehicleStopped; // false; 
 
 			CurrentState.PowerDemand = GetBusAuxPowerDemand(absTime, dt, torquePowerTrain, angularSpeed, dryRun) +
@@ -156,12 +157,16 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			// if busAuxPwrICEOn and busAuxPwrICEOff are different the battery is empty and the mechanical power is the difference
 			// if both are equal we need to add the difference between ES ICE On and ES ICE Off power demand (the latter is corrected by ES correction) 
-			var esMech = (busAuxPwrICEOn - busAuxPwrICEOff).IsEqual(0) &&AuxCfg.ElectricalUserInputsConfig.AlternatorType != AlternatorType.None
+
+			var esSupplyNotFromICE = AuxCfg.ElectricalUserInputsConfig.AlternatorType == AlternatorType.None ||
+									(AuxCfg.ElectricalUserInputsConfig.ConnectESToREESS);
+
+			var esMech = (busAuxPwrICEOn - busAuxPwrICEOff).IsEqual(0) && !esSupplyNotFromICE
 				? (esICEOnLoad - esICEOffLoad) / AuxCfg.ElectricalUserInputsConfig.AlternatorGearEfficiency /
 				AuxCfg.ElectricalUserInputsConfig.AlternatorMap.GetEfficiency(0.RPMtoRad(), 0.SI<Ampere>())
 				: 0.SI<Watt>();
 
-			return busAuxPwrICEOff + esMech - Auxiliaries.ElectricPowerDemandMech + (busAuxPwrICEOn - busAuxPwrICEOff) +
+			return busAuxPwrICEOff - Auxiliaries.PSPowerDemandAirGenerated + esMech - Auxiliaries.ElectricPowerDemandMech + (busAuxPwrICEOn - busAuxPwrICEOff) +
 					(AdditionalAux?.PowerDemandESSEngineOn(0.SI<Second>(), 1.SI<Second>(), engineSpeed) ??
 					0.SI<Watt>());
 		}
@@ -201,6 +206,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			var signals = Auxiliaries.Signals;
 
 			signals.EngineStopped = !DataBus.EngineCtl.CombustionEngineOn;
+			signals.InNeutral = !DataBus.EngineCtl.CombustionEngineOn;
 			signals.VehicleStopped = DataBus.VehicleInfo.VehicleStopped;
 
 			var busAuxPowerDemand  = GetBusAuxPowerDemand(
@@ -218,7 +224,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
             //	absTime, dt, 0.SI<NewtonMeter>(), DataBus.EngineInfo.EngineIdleSpeed);
             //AdditionalAux = conventionalAux;
 
-            return EngineStopStartUtilityFactor * (busAuxPowerDemand + (AdditionalAux?.PowerDemandESSEngineOff(absTime, dt) ?? 0.SI<Watt>()));
+            return EngineStopStartUtilityFactor * (busAuxPowerDemand - Auxiliaries.PSPowerDemandAirGenerated + (AdditionalAux?.PowerDemandESSEngineOff(absTime, dt) ?? 0.SI<Watt>()));
 		}
 
 
@@ -234,6 +240,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
             var signals = Auxiliaries.Signals;
             signals.EngineStopped = !DataBus.EngineCtl.CombustionEngineOn;
+			signals.InNeutral = !DataBus.EngineCtl.CombustionEngineOn;
             signals.VehicleStopped = DataBus.VehicleInfo.VehicleStopped;
 
             // cycleStep has to be called here and not in DoCommit, write is called before Commit!
@@ -258,12 +265,14 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				container[ModalResultField.P_busAux_ES_generated] = Auxiliaries.ElectricPowerGenerated;
 				if (SmartElectricSystem) {
 					container[ModalResultField.BatterySOC] = ElectricStorage.SOC * 100.0;
+					container[ModalResultField.P_busAux_bat] = ElectricStorage.ConsumedEnergy / dt;
 				}
 			} else {
 				if (SmartElectricSystem) {
 					var batteryPwr = ElectricStorage.ConsumedEnergy / dt;
 
 					container[ModalResultField.BatterySOC] = ElectricStorage.SOC * 100.0;
+					container[ModalResultField.P_busAux_bat] = ElectricStorage.ConsumedEnergy / dt;
 
 					container[ModalResultField.P_busAux_ES_generated] = essUtilityFactor *
 																		(DataBus.VehicleInfo.VehicleStopped &&
@@ -337,7 +346,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			
 			signals.ExcessiveDragPower = CurrentState.ExcessiveDragPower;
 			signals.Idle = DataBus.VehicleInfo.VehicleStopped;
-			signals.InNeutral = DataBus.GearboxInfo.Gear.Gear == 0;
+			signals.InNeutral = DataBus.GearboxInfo.Gear.Gear == 0 || !DataBus.EngineCtl.CombustionEngineOn;
 
 
 

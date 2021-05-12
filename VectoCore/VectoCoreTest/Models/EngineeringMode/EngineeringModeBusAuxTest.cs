@@ -174,8 +174,10 @@ namespace TUGraz.VectoCore.Tests.Models.EngineeringMode
 		public const double P_ES_ICEOff_dr = I_ICEOff_dr * PowernetVoltage; // 566 W
 		public const double P_ES_ICEOff_stop = I_ICEOff_stop * PowernetVoltage; // 283 W
 
-		public const double P_PS_off_600 = 524.3 / 0.97; //540.5154639 W
-		public const double P_PS_off_1000 = 775.75 / 0.97; // 799.742268 W
+		public const double P_PS_600 = 1839.537986 / 0.97; //1896.430913 W
+		public const double P_PS_1000 = 2025.38602 / 0.97; // 2088.026824 W
+
+		public const double Nl_PS = 2.1;
 
 		public static WattSecond ElectricStorageCapacity = 28.3.SI(Unit.SI.Watt.Hour).Cast<WattSecond>();
 
@@ -184,28 +186,30 @@ namespace TUGraz.VectoCore.Tests.Models.EngineeringMode
 		public const double REESS_MaxSoC = 0.8;
 
 		[TestCase(DrivingBehavior.Driving, true, 0,
-			P_aux_m_Base + P_PS_off_1000 + P_ES_base / AlternatorEfficiency, P_ES_base, P_ES_base, P_ES_base / AlternatorEfficiency, 0, 0,
+			P_aux_m_Base + P_PS_1000 + P_ES_base / AlternatorEfficiency, P_ES_base, P_ES_base,
+			P_ES_base / AlternatorEfficiency, 0, 0, Nl_PS, Nl_PS, P_PS_1000,
 			TestName = "BusAux Case A (1); driving, ICE on")]
 		[TestCase(DrivingBehavior.Driving, false, 0,
-			0, 0, P_ES_ICEOff_dr, 0, P_aux_m_ICEOff_dr + P_PS_off_600,
-			P_aux_m_Base + P_PS_off_600 + (P_ES_base - P_ES_ICEOff_dr) / AlternatorEfficiency,
+			0, 0, P_ES_ICEOff_dr, 0, P_aux_m_ICEOff_dr,
+			P_aux_m_Base + (P_ES_base - P_ES_ICEOff_dr) / AlternatorEfficiency, 0, Nl_PS, 0,
 			TestName = "BusAux Case A (2); driving, ICE off")]
 		[TestCase(DrivingBehavior.Halted, true, 0,
-			P_aux_m_Base + P_PS_off_600 + P_ES_base / AlternatorEfficiency, P_ES_base, P_ES_base,
-			P_ES_base / AlternatorEfficiency, 0, 0,
+			P_aux_m_Base + P_PS_600 + P_ES_base / AlternatorEfficiency, P_ES_base, P_ES_base,
+			P_ES_base / AlternatorEfficiency, 0, 0, Nl_PS, Nl_PS, P_PS_600,
 			TestName = "BusAux Case A (3); standstill, ICE on")]
 		[TestCase(DrivingBehavior.Halted, false, 0,
-			0, 0, P_ES_ICEOff_stop, 0, P_aux_m_ICEOff_st + P_PS_off_600,
-			P_PS_off_600 + P_aux_m_Base + (P_ES_base - P_ES_ICEOff_stop) / AlternatorEfficiency,
+			0, 0, P_ES_ICEOff_stop, 0, P_aux_m_ICEOff_st,
+			P_aux_m_Base + (P_ES_base - P_ES_ICEOff_stop) / AlternatorEfficiency, 0, Nl_PS, 0,
 			TestName = "BusAux Case A (4); standstill, ICE off")]
 		[TestCase(DrivingBehavior.Braking, true, 0,
-			P_aux_m_Base + P_PS_off_1000 + P_ES_base / AlternatorEfficiency, P_ES_base, P_ES_base,
-			P_ES_base / AlternatorEfficiency, 0, 0,
+			P_aux_m_Base + P_PS_1000 + P_ES_base / AlternatorEfficiency, P_ES_base, P_ES_base,
+			P_ES_base / AlternatorEfficiency, 0, 0, Nl_PS, Nl_PS, P_PS_1000,
 			TestName = "BusAux Case A (5); braking, ICE on")]
 		public void TestBusAux_Case_A(DrivingBehavior drivingBehavior, bool iceOn, double batterySoC,
 			double P_auxMech_expected, double P_busAux_ES_gen_expected, double P_busAux_ES_consumer_sum_expected,
 			double P_busAux_ES_mech,
-			double P_aux_ESS_mech_ICE_off_expected, double P_aux_ESS_mech_ICE_on_expected)
+			double P_aux_ESS_mech_ICE_off_expected, double P_aux_ESS_mech_ICE_on_expected,
+			double Nl_PS_gen_expected, double Nl_PS_consumer_expected, double P_PS_expected)
 		{
 			var container = CreatePowerTrain(AlternatorType.Conventional, batterySoC, null, false);
 
@@ -222,55 +226,57 @@ namespace TUGraz.VectoCore.Tests.Models.EngineeringMode
 			Assert.AreEqual(AlternatorType.Conventional, container.RunData.BusAuxiliaries.ElectricalUserInputsConfig.AlternatorType);
 			Assert.IsFalse(container.RunData.BusAuxiliaries.ElectricalUserInputsConfig.ConnectESToREESS);
 
-			TestBusAux_Cases(container, drivingBehavior, iceOn, batterySoC,
-				P_auxMech_expected, P_busAux_ES_gen_expected, P_busAux_ES_consumer_sum_expected, P_busAux_ES_mech,
+			TestBusAux_Cases(container, drivingBehavior, iceOn, batterySoC, double.NaN,
+				P_auxMech_expected, P_busAux_ES_gen_expected, double.NaN, P_busAux_ES_consumer_sum_expected, P_busAux_ES_mech, 
+				Nl_PS_gen_expected, Nl_PS_consumer_expected, P_PS_expected,  double.NaN,
 				P_aux_ESS_mech_ICE_off_expected, P_aux_ESS_mech_ICE_on_expected, null, null, null);
 		}
 
 		// . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
 
 		[TestCase(DrivingBehavior.Driving, true, 0.5,
-			P_aux_m_Base + P_PS_off_1000, 0, P_ES_base, 0, 0, 0,
+			P_aux_m_Base + P_PS_1000, 0, P_ES_base, P_ES_base, 0, 0, 0, Nl_PS, Nl_PS, P_PS_1000,
 			TestName = "BusAux Case B (1); driving, ICE on, battery not empty")]
 		[TestCase(DrivingBehavior.Driving, true, 0,
-			P_aux_m_Base + P_PS_off_1000 + P_ES_base / AlternatorEfficiency, P_ES_base, P_ES_base,
-			P_ES_base / AlternatorEfficiency, 0, 0,
+			P_aux_m_Base + P_PS_1000 + P_ES_base / AlternatorEfficiency, P_ES_base, 0, P_ES_base,
+			P_ES_base / AlternatorEfficiency, 0, 0, Nl_PS, Nl_PS, P_PS_1000,
 			TestName = "BusAux Case B (2); driving, ICE on, battery empty")]
 		[TestCase(DrivingBehavior.Driving, false, 0.5,
-			0, 0, P_ES_ICEOff_dr, 0, P_aux_m_ICEOff_dr + P_PS_off_600,
-			P_aux_m_Base + P_PS_off_600 + (P_ES_base - P_ES_ICEOff_dr) / AlternatorEfficiency,
+			0, 0, P_ES_ICEOff_dr, P_ES_ICEOff_dr, 0, P_aux_m_ICEOff_dr,
+			P_aux_m_Base + (P_ES_base - P_ES_ICEOff_dr) / AlternatorEfficiency, 0, Nl_PS, 0,
 			TestName = "BusAux Case B (3); driving, ICE off, battery not empty")]
 		[TestCase(DrivingBehavior.Driving, false, 0,
-			0, 0, P_ES_ICEOff_dr, 0, P_aux_m_ICEOff_dr + P_PS_off_600,
-			P_aux_m_Base + P_PS_off_600 + (P_ES_base - P_ES_ICEOff_dr) / AlternatorEfficiency,
+			0, 0, 0, P_ES_ICEOff_dr, 0, P_aux_m_ICEOff_dr,
+			P_aux_m_Base + (P_ES_base - P_ES_ICEOff_dr) / AlternatorEfficiency, 0, Nl_PS, 0,
 			TestName = "BusAux Case B (4); driving, ICE off, battery empty")]
 		[TestCase(DrivingBehavior.Halted, true, 0.5,
-			P_aux_m_Base + P_PS_off_600, 0, P_ES_base, 0, 0, 0,
+			P_aux_m_Base + P_PS_600, 0, P_ES_base, P_ES_base, 0, 0, 0, Nl_PS, Nl_PS, P_PS_600,
 			TestName = "BusAux Case B (5); standstill, ICE on, battery not empty")]
 		[TestCase(DrivingBehavior.Halted, true, 0,
-			P_aux_m_Base + P_PS_off_600 + P_ES_base / AlternatorEfficiency, P_ES_base, P_ES_base,
-			P_ES_base / AlternatorEfficiency, 0, 0,
+			P_aux_m_Base + P_PS_600 + P_ES_base / AlternatorEfficiency, P_ES_base, 0, P_ES_base,
+			P_ES_base / AlternatorEfficiency, 0, 0, Nl_PS, Nl_PS, P_PS_600,
 			TestName = "BusAux Case B (6); standstill, ICE on, battery empty")]
 		[TestCase(DrivingBehavior.Halted, false, 0.5,
-			0, 0, P_ES_ICEOff_stop, 0, P_aux_m_ICEOff_st + P_PS_off_600,
-			P_PS_off_600 + P_aux_m_Base + (P_ES_base - P_ES_ICEOff_stop) / AlternatorEfficiency,
+			0, 0, P_ES_ICEOff_stop, P_ES_ICEOff_stop, 0, P_aux_m_ICEOff_st,
+			P_aux_m_Base + (P_ES_base - P_ES_ICEOff_stop) / AlternatorEfficiency, 0, Nl_PS, 0,
 			TestName = "BusAux Case B (7); standstill, ICE off, battery not empty")]
 		[TestCase(DrivingBehavior.Halted, false, 0,
-			0, 0, P_ES_ICEOff_stop, 0, P_aux_m_ICEOff_st + P_PS_off_600,
-			P_PS_off_600 + P_aux_m_Base + (P_ES_base - P_ES_ICEOff_stop) / AlternatorEfficiency,
+			0, 0, 0, P_ES_ICEOff_stop, 0, P_aux_m_ICEOff_st,
+			P_aux_m_Base + (P_ES_base - P_ES_ICEOff_stop) / AlternatorEfficiency, 0, Nl_PS, 0,
 			TestName = "BusAux Case B (8); standstill, ICE off, battery empty")]
-		[TestCase(DrivingBehavior.Braking, true, 0.5,
-			P_aux_m_Base + P_PS_off_1000 + MaxAlternatorPower / AlternatorEfficiency, MaxAlternatorPower, P_ES_base,
-			MaxAlternatorPower / AlternatorEfficiency, 0, 0,
+		[TestCase(DrivingBehavior.Braking, true, 0.5, 
+			P_aux_m_Base + P_PS_1000 + MaxAlternatorPower / AlternatorEfficiency, MaxAlternatorPower, P_ES_base - MaxAlternatorPower, P_ES_base,
+			MaxAlternatorPower / AlternatorEfficiency, 0, 0, Nl_PS, Nl_PS, P_PS_1000,
 			TestName = "BusAux Case B (9); braking, ICE on, battery not full")]
-		[TestCase(DrivingBehavior.Braking, true, 1,
-			P_aux_m_Base + P_PS_off_1000 + P_ES_base / AlternatorEfficiency, P_ES_base, P_ES_base,
-			P_ES_base / AlternatorEfficiency, 0, 0,
+		[TestCase(DrivingBehavior.Braking, true, 1, 
+			P_aux_m_Base + P_PS_1000 + P_ES_base / AlternatorEfficiency, P_ES_base, 0, P_ES_base,
+			P_ES_base / AlternatorEfficiency, 0, 0, Nl_PS, Nl_PS, P_PS_1000,
 			TestName = "BusAux Case B (10); braking, ICE on, battery full")]
 		public void TestBusAux_Case_B(DrivingBehavior drivingBehavior, bool iceOn, double batterySoC,
-			double P_auxMech_expected, double P_busAux_ES_gen_expected, double P_busAux_ES_consumer_sum_expected,
+			double P_auxMech_expected, double P_busAux_ES_gen_expected, double P_bat_P0, double P_busAux_ES_consumer_sum_expected,
 			double P_busAux_ES_mech,
-			double P_aux_ESS_mech_ICE_off_expected, double P_aux_ESS_mech_ICE_on_expected)
+			double P_aux_ESS_mech_ICE_off_expected, double P_aux_ESS_mech_ICE_on_expected,
+			double Nl_PS_gen_expected, double Nl_PS_consumer_expected, double P_PS_expected)
 		{
 			var container = CreatePowerTrain(AlternatorType.Smart, batterySoC, null, false);
 			
@@ -288,55 +294,57 @@ namespace TUGraz.VectoCore.Tests.Models.EngineeringMode
 			Assert.AreEqual(AlternatorType.Smart, container.RunData.BusAuxiliaries.ElectricalUserInputsConfig.AlternatorType);
 			Assert.IsFalse(container.RunData.BusAuxiliaries.ElectricalUserInputsConfig.ConnectESToREESS);
 
-			TestBusAux_Cases(container, drivingBehavior, iceOn, batterySoC,
-				P_auxMech_expected, P_busAux_ES_gen_expected, P_busAux_ES_consumer_sum_expected, P_busAux_ES_mech,
+			TestBusAux_Cases(container, drivingBehavior, iceOn, batterySoC, double.NaN,
+				P_auxMech_expected, P_busAux_ES_gen_expected, -P_bat_P0, P_busAux_ES_consumer_sum_expected, P_busAux_ES_mech, 
+				Nl_PS_gen_expected, Nl_PS_consumer_expected, P_PS_expected, double.NaN,
 				P_aux_ESS_mech_ICE_off_expected, P_aux_ESS_mech_ICE_on_expected, null, null, null);
 		}
 
 		// . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
 
 		[TestCase(DrivingBehavior.Driving, true, 0.5, 
-			P_aux_m_Base + P_PS_off_1000, 0, P_ES_base, 0, 0, 0, P_ES_base, 0, 0,
+			P_aux_m_Base + P_PS_1000, 0, P_ES_base, 0, 0, 0, P_ES_base, 0, 0, Nl_PS, Nl_PS, P_PS_1000,
 			TestName = "BusAux Case C1 (1); driving, ICE on, REESS not empty")]
 		[TestCase(DrivingBehavior.Driving, true, REESS_MinSoC,
-			P_aux_m_Base + P_PS_off_1000, 0, P_ES_base, 0, 0, 0, 0, P_ES_base, 0,
+			P_aux_m_Base + P_PS_1000, 0, P_ES_base, 0, 0, 0, 0, P_ES_base, 0, Nl_PS, Nl_PS, P_PS_1000,
 			TestName = "BusAux Case C1 (2); driving, ICE on, REESS empty")]
 		[TestCase(DrivingBehavior.Driving, false, 0.5,
-			0, 0, P_ES_ICEOff_dr, 0, P_aux_m_ICEOff_dr + P_PS_off_600, P_aux_m_Base + P_PS_off_600, P_ES_ICEOff_dr, 0, 0,
+			0, 0, P_ES_ICEOff_dr, 0, P_aux_m_ICEOff_dr , P_aux_m_Base , P_ES_ICEOff_dr, 0, 0, 0, Nl_PS, 0,
 			TestName = "BusAux Case C1 (3); driving, ICE off, REESS not empty")]
 		[TestCase(DrivingBehavior.Driving, false, REESS_MinSoC,
-			0, 0, P_ES_ICEOff_dr, 0, P_aux_m_ICEOff_dr + P_PS_off_600, P_aux_m_Base + P_PS_off_600, 0, P_ES_ICEOff_dr, P_ES_base - P_ES_ICEOff_dr,
+			0, 0, P_ES_ICEOff_dr, 0, P_aux_m_ICEOff_dr , P_aux_m_Base, 0, P_ES_ICEOff_dr, P_ES_base - P_ES_ICEOff_dr, 0, Nl_PS, 0,
 			TestName = "BusAux Case C1 (4); driving, ICE off, REESS empty")]
 
 		[TestCase(DrivingBehavior.Halted, true, 0.5,
-			P_aux_m_Base + P_PS_off_600, 0, P_ES_base, 0, 0, 0, P_ES_base, 0, 0,
+			P_aux_m_Base + P_PS_600, 0, P_ES_base, 0, 0, 0, P_ES_base, 0, 0, Nl_PS, Nl_PS, P_PS_600,
 			TestName = "BusAux Case C1 (5); standstill, ICE on, REESS not empty")]
-		[TestCase(DrivingBehavior.Halted, true, REESS_MinSoC,
-			P_aux_m_Base + P_PS_off_600, 0, P_ES_base, 0, 0, 0, 0, P_ES_base, 0,
+		[TestCase(DrivingBehavior.Halted, true, REESS_MinSoC, 
+			P_aux_m_Base + P_PS_600, 0, P_ES_base, 0, 0, 0, 0, P_ES_base, 0, Nl_PS, Nl_PS, P_PS_600,
 			TestName = "BusAux Case C1 (6); standstill, ICE on, REESS empty")]
 		[TestCase(DrivingBehavior.Halted, false, 0.5,
-			0, 0, P_ES_ICEOff_stop, 0, P_aux_m_ICEOff_st + P_PS_off_600, P_aux_m_Base + P_PS_off_600, P_ES_ICEOff_stop, 0, 0,
+			0, 0, P_ES_ICEOff_stop, 0, P_aux_m_ICEOff_st , P_aux_m_Base , P_ES_ICEOff_stop, 0, 0, 0, Nl_PS, 0,
 			TestName = "BusAux Case C1 (7); standstill, ICE off, REESS not empty")]
 		[TestCase(DrivingBehavior.Halted, false, REESS_MinSoC,
-			0, 0, P_ES_ICEOff_stop, 0, P_aux_m_ICEOff_st + P_PS_off_600, P_aux_m_Base + P_PS_off_600, 0, P_ES_ICEOff_stop, P_ES_base - P_ES_ICEOff_stop,
+			0, 0, P_ES_ICEOff_stop, 0, P_aux_m_ICEOff_st , P_aux_m_Base , 0, P_ES_ICEOff_stop, P_ES_base - P_ES_ICEOff_stop, 0, Nl_PS, 0,
 			TestName = "BusAux Case C1 (8); standstill, ICE off, REESS empty")]
 
 		[TestCase(DrivingBehavior.Braking, true, 0.5,
-			P_aux_m_Base + P_PS_off_1000, 0, P_ES_base, 0, 0, 0, P_ES_base, 0, 0,
+			P_aux_m_Base + P_PS_1000, 0, P_ES_base, 0, 0, 0, P_ES_base, 0, 0, Nl_PS, Nl_PS, P_PS_1000,
 			TestName = "BusAux Case C1 (9); braking, ICE on, REESS not empty")]
 		[TestCase(DrivingBehavior.Braking, true, REESS_MinSoC,
-			P_aux_m_Base + P_PS_off_1000, 0, P_ES_base, 0, 0, 0, 0, P_ES_base, 0,
+			P_aux_m_Base + P_PS_1000, 0, P_ES_base, 0, 0, 0, 0, P_ES_base, 0, Nl_PS, Nl_PS, P_PS_1000,
 			TestName = "BusAux Case C1 (10); braking, ICE on, REESS empty")]
 		[TestCase(DrivingBehavior.Braking, false, 0.5,
-			0, 0, P_ES_ICEOff_dr, 0, P_aux_m_ICEOff_dr + P_PS_off_600, P_aux_m_Base + P_PS_off_600, P_ES_ICEOff_dr, 0, 0,
+			0, 0, P_ES_ICEOff_dr, 0, P_aux_m_ICEOff_dr , P_aux_m_Base , P_ES_ICEOff_dr, 0, 0, 0, Nl_PS, 0,
 			TestName = "BusAux Case C1 (11); braking, ICE off, REESS not empty")]
 		[TestCase(DrivingBehavior.Braking, false, REESS_MinSoC,
-			0, 0, P_ES_ICEOff_dr, 0, P_aux_m_ICEOff_dr + P_PS_off_600, P_aux_m_Base + P_PS_off_600, 0, P_ES_ICEOff_dr, P_ES_base - P_ES_ICEOff_dr,
+			0, 0, P_ES_ICEOff_dr, 0, P_aux_m_ICEOff_dr , P_aux_m_Base , 0, P_ES_ICEOff_dr, P_ES_base - P_ES_ICEOff_dr, 0, Nl_PS, 0,
 			TestName = "BusAux Case C1 (12); braking, ICE off, REESS empty")]
 		public void TestBusAux_Case_C1(DrivingBehavior drivingBehavior, bool iceOn, double reessSoC,
 			double P_auxMech_expected, double P_busAux_ES_gen_expected, double P_busAux_ES_consumer_sum_expected,
 			double P_busAux_ES_mech,
-			double P_aux_ESS_mech_ICE_off_expected, double P_aux_ESS_mech_ICE_on_expected, double P_DCDC_out_expected, double P_DCDC_missing_expected, double P_DCDC_missing_ESS_ICE_on)
+			double P_aux_ESS_mech_ICE_off_expected, double P_aux_ESS_mech_ICE_on_expected, double P_DCDC_out_expected, double P_DCDC_missing_expected, double P_DCDC_missing_ESS_ICE_on,
+			double Nl_PS_gen_expected, double Nl_PS_consumer_expected, double P_PS_expected)
 		{
 			var container = CreatePowerTrain(AlternatorType.None, double.NaN, reessSoC, true);
 			
@@ -353,8 +361,9 @@ namespace TUGraz.VectoCore.Tests.Models.EngineeringMode
 			Assert.AreEqual(AlternatorType.None, container.RunData.BusAuxiliaries.ElectricalUserInputsConfig.AlternatorType);
 			Assert.IsTrue(container.RunData.BusAuxiliaries.ElectricalUserInputsConfig.ConnectESToREESS);
 
-			TestBusAux_Cases(container, drivingBehavior, iceOn, double.NaN,
-				P_auxMech_expected, P_busAux_ES_gen_expected, P_busAux_ES_consumer_sum_expected, P_busAux_ES_mech,
+			TestBusAux_Cases(container, drivingBehavior, iceOn, double.NaN, reessSoC,
+				P_auxMech_expected, P_busAux_ES_gen_expected, double.NaN, P_busAux_ES_consumer_sum_expected, P_busAux_ES_mech, 
+				Nl_PS_gen_expected, Nl_PS_consumer_expected, P_PS_expected, double.NaN,
 				P_aux_ESS_mech_ICE_off_expected, P_aux_ESS_mech_ICE_on_expected, P_DCDC_out_expected, P_DCDC_missing_expected, P_DCDC_missing_ESS_ICE_on);
 
 		}
@@ -363,47 +372,48 @@ namespace TUGraz.VectoCore.Tests.Models.EngineeringMode
 
 
 		[TestCase(DrivingBehavior.Driving, true, 0.5,
-			P_aux_m_Base + P_PS_off_1000, 0, P_ES_base, 0, 0, 0, P_ES_base, 0, 0,
+			P_aux_m_Base + P_PS_1000, 0, P_ES_base, 0, 0, 0, P_ES_base, 0, 0, Nl_PS, Nl_PS, P_PS_1000,
 			TestName = "BusAux Case C2a (1); driving, ICE on, REESS not empty")]
 		[TestCase(DrivingBehavior.Driving, true, REESS_MinSoC,
-			P_aux_m_Base + P_PS_off_1000, 0, P_ES_base, 0, 0, 0, 0, P_ES_base, 0,
+			P_aux_m_Base + P_PS_1000, 0, P_ES_base, 0, 0, 0, 0, P_ES_base, 0, Nl_PS, Nl_PS, P_PS_1000,
 			TestName = "BusAux Case C2a (2); driving, ICE on, REESS empty")]
 		[TestCase(DrivingBehavior.Driving, false, 0.5,
-			0, 0, P_ES_ICEOff_dr, 0, P_aux_m_ICEOff_dr + P_PS_off_600, P_aux_m_Base + P_PS_off_600, P_ES_ICEOff_dr, 0, 0,
+			0, 0, P_ES_ICEOff_dr, 0, P_aux_m_ICEOff_dr, P_aux_m_Base, P_ES_ICEOff_dr, 0, 0, 0, Nl_PS, 0,
 			TestName = "BusAux Case C2a (3); driving, ICE off, REESS not empty")]
 		[TestCase(DrivingBehavior.Driving, false, REESS_MinSoC,
-			0, 0, P_ES_ICEOff_dr, 0, P_aux_m_ICEOff_dr + P_PS_off_600, P_aux_m_Base + P_PS_off_600, 0, P_ES_ICEOff_dr, P_ES_base - P_ES_ICEOff_dr,
+			0, 0, P_ES_ICEOff_dr, 0, P_aux_m_ICEOff_dr, P_aux_m_Base, 0, P_ES_ICEOff_dr, P_ES_base - P_ES_ICEOff_dr, 0, Nl_PS, 0,
 			TestName = "BusAux Case C2a (4); driving, ICE off, REESS empty")]
 
 		[TestCase(DrivingBehavior.Halted, true, 0.5,
-			P_aux_m_Base + P_PS_off_600, 0, P_ES_base, 0, 0, 0, P_ES_base, 0, 0,
+			P_aux_m_Base + P_PS_600, 0, P_ES_base, 0, 0, 0, P_ES_base, 0, 0, Nl_PS, Nl_PS, P_PS_600,
 			TestName = "BusAux Case C2a (5); standstill, ICE on, REESS not empty")]
 		[TestCase(DrivingBehavior.Halted, true, REESS_MinSoC,
-			P_aux_m_Base + P_PS_off_600, 0, P_ES_base, 0, 0, 0, 0, P_ES_base, 0,
+			P_aux_m_Base + P_PS_600, 0, P_ES_base, 0, 0, 0, 0, P_ES_base, 0, Nl_PS, Nl_PS, P_PS_600,
 			TestName = "BusAux Case C2a (6); standstill, ICE on, REESS empty")]
 		[TestCase(DrivingBehavior.Halted, false, 0.5,
-			0, 0, P_ES_ICEOff_stop, 0, P_aux_m_ICEOff_st + P_PS_off_600, P_aux_m_Base + P_PS_off_600, P_ES_ICEOff_stop, 0, 0,
+			0, 0, P_ES_ICEOff_stop, 0, P_aux_m_ICEOff_st, P_aux_m_Base, P_ES_ICEOff_stop, 0, 0, 0, Nl_PS, 0,
 			TestName = "BusAux Case C2a (7); standstill, ICE off, REESS not empty")]
 		[TestCase(DrivingBehavior.Halted, false, REESS_MinSoC,
-			0, 0, P_ES_ICEOff_stop, 0, P_aux_m_ICEOff_st + P_PS_off_600, P_aux_m_Base + P_PS_off_600, 0, P_ES_ICEOff_stop, P_ES_base - P_ES_ICEOff_stop,
+			0, 0, P_ES_ICEOff_stop, 0, P_aux_m_ICEOff_st, P_aux_m_Base, 0, P_ES_ICEOff_stop, P_ES_base - P_ES_ICEOff_stop, 0, Nl_PS, 0,
 			TestName = "BusAux Case C2a (8); standstill, ICE off, REESS empty")]
 
 		[TestCase(DrivingBehavior.Braking, true, 0.5,
-			P_aux_m_Base + P_PS_off_1000, 0, P_ES_base, 0, 0, 0, P_ES_base, 0, 0,
+			P_aux_m_Base + P_PS_1000, 0, P_ES_base, 0, 0, 0, P_ES_base, 0, 0, Nl_PS, Nl_PS, P_PS_1000,
 			TestName = "BusAux Case C2a (9); braking, ICE on, REESS not empty")]
 		[TestCase(DrivingBehavior.Braking, true, REESS_MinSoC,
-			P_aux_m_Base + P_PS_off_1000, 0, P_ES_base, 0, 0, 0, 0, P_ES_base, 0,
+			P_aux_m_Base + P_PS_1000, 0, P_ES_base, 0, 0, 0, 0, P_ES_base, 0, Nl_PS, Nl_PS, P_PS_1000,
 			TestName = "BusAux Case C2a (10); braking, ICE on, REESS empty")]
 		[TestCase(DrivingBehavior.Braking, false, 0.5,
-			0, 0, P_ES_ICEOff_dr, 0, P_aux_m_ICEOff_dr + P_PS_off_600, P_aux_m_Base + P_PS_off_600, P_ES_ICEOff_dr, 0, 0,
+			0, 0, P_ES_ICEOff_dr, 0, P_aux_m_ICEOff_dr, P_aux_m_Base, P_ES_ICEOff_dr, 0, 0, 0, Nl_PS, 0,
 			TestName = "BusAux Case C2a (11); braking, ICE off, REESS not empty")]
 		[TestCase(DrivingBehavior.Braking, false, REESS_MinSoC,
-			0, 0, P_ES_ICEOff_dr, 0, P_aux_m_ICEOff_dr + P_PS_off_600, P_aux_m_Base + P_PS_off_600, 0, P_ES_ICEOff_dr, P_ES_base - P_ES_ICEOff_dr,
+			0, 0, P_ES_ICEOff_dr, 0, P_aux_m_ICEOff_dr, P_aux_m_Base, 0, P_ES_ICEOff_dr, P_ES_base - P_ES_ICEOff_dr, 0, Nl_PS, 0,
 			TestName = "BusAux Case C2a (12); braking, ICE off, REESS empty")]
 		public void TestBusAux_Case_C2A(DrivingBehavior drivingBehavior, bool iceOn, double reessSoC,
 			double P_auxMech_expected, double P_busAux_ES_gen_expected, double P_busAux_ES_consumer_sum_expected,
 			double P_busAux_ES_mech,
-			double P_aux_ESS_mech_ICE_off_expected, double P_aux_ESS_mech_ICE_on_expected, double P_DCDC_out_expected, double P_DCDC_missing_expected, double P_DCDC_missing_ESS_ICE_on)
+			double P_aux_ESS_mech_ICE_off_expected, double P_aux_ESS_mech_ICE_on_expected, double P_DCDC_out_expected, double P_DCDC_missing_expected, double P_DCDC_missing_ESS_ICE_on,
+			double Nl_PS_gen_expected, double Nl_PS_consumer_expected, double P_PS_expected)
 		{
 			var container = CreatePowerTrain(AlternatorType.Conventional, double.NaN, reessSoC, true);
 			
@@ -421,8 +431,8 @@ namespace TUGraz.VectoCore.Tests.Models.EngineeringMode
 			Assert.AreEqual(AlternatorType.None, container.RunData.BusAuxiliaries.ElectricalUserInputsConfig.AlternatorType);
 			Assert.IsTrue(container.RunData.BusAuxiliaries.ElectricalUserInputsConfig.ConnectESToREESS);
 
-			TestBusAux_Cases(container, drivingBehavior, iceOn, double.NaN,
-				P_auxMech_expected, P_busAux_ES_gen_expected, P_busAux_ES_consumer_sum_expected, P_busAux_ES_mech,
+			TestBusAux_Cases(container, drivingBehavior, iceOn, double.NaN, reessSoC,
+				P_auxMech_expected, P_busAux_ES_gen_expected, double.NaN, P_busAux_ES_consumer_sum_expected, P_busAux_ES_mech, Nl_PS_gen_expected, Nl_PS_consumer_expected, P_PS_expected, double.NaN,
 				P_aux_ESS_mech_ICE_off_expected, P_aux_ESS_mech_ICE_on_expected, P_DCDC_out_expected, P_DCDC_missing_expected, P_DCDC_missing_ESS_ICE_on);
 
 		}
@@ -431,28 +441,28 @@ namespace TUGraz.VectoCore.Tests.Models.EngineeringMode
 		// . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
 
 		[TestCase(DrivingBehavior.Driving, true, 0,
-			P_aux_m_Base + P_PS_off_1000 + P_ES_base / AlternatorEfficiency, P_ES_base, P_ES_base, P_ES_base / AlternatorEfficiency, 0, 0,
+			P_aux_m_Base + P_PS_1000 + P_ES_base / AlternatorEfficiency, P_ES_base, P_ES_base, P_ES_base / AlternatorEfficiency, 0, 0, Nl_PS, Nl_PS, P_PS_1000,
 			TestName = "BusAux Case C2b (1); driving, ICE on")]
-		[TestCase(DrivingBehavior.Driving, false, 0,
-			0, 0, P_ES_ICEOff_dr, 0, P_aux_m_ICEOff_dr + P_PS_off_600,
-			P_aux_m_Base + P_PS_off_600 + (P_ES_base - P_ES_ICEOff_dr) / AlternatorEfficiency,
+		[TestCase(DrivingBehavior.Driving, false, 0, 
+			0, 0, P_ES_ICEOff_dr, 0, P_aux_m_ICEOff_dr ,
+			P_aux_m_Base + (P_ES_base - P_ES_ICEOff_dr) / AlternatorEfficiency, 0, Nl_PS, 0,
 			TestName = "BusAux Case C2b (2); driving, ICE off")]
 		[TestCase(DrivingBehavior.Halted, true, 0,
-			P_aux_m_Base + P_PS_off_600 + P_ES_base / AlternatorEfficiency, P_ES_base, P_ES_base,
-			P_ES_base / AlternatorEfficiency, 0, 0,
+			P_aux_m_Base + P_PS_600 + P_ES_base / AlternatorEfficiency, P_ES_base, P_ES_base,
+			P_ES_base / AlternatorEfficiency, 0, 0, Nl_PS, Nl_PS, P_PS_600,
 			TestName = "BusAux Case C2b (3); standstill, ICE on")]
 		[TestCase(DrivingBehavior.Halted, false, 0,
-			0, 0, P_ES_ICEOff_stop, 0, P_aux_m_ICEOff_st + P_PS_off_600,
-			P_PS_off_600 + P_aux_m_Base + (P_ES_base - P_ES_ICEOff_stop) / AlternatorEfficiency,
+			0, 0, P_ES_ICEOff_stop, 0, P_aux_m_ICEOff_st,
+			P_aux_m_Base + (P_ES_base - P_ES_ICEOff_stop) / AlternatorEfficiency, 0, Nl_PS, 0,
 			TestName = "BusAux Case C2b (4); standstill, ICE off")]
 		[TestCase(DrivingBehavior.Braking, true, 0,
-			P_aux_m_Base + P_PS_off_1000 + P_ES_base / AlternatorEfficiency, P_ES_base, P_ES_base,
-			P_ES_base / AlternatorEfficiency, 0, 0,
+			P_aux_m_Base + P_PS_1000 + P_ES_base / AlternatorEfficiency, P_ES_base, P_ES_base,
+			P_ES_base / AlternatorEfficiency, 0, 0, Nl_PS, Nl_PS, P_PS_1000,
 			TestName = "BusAux Case C2b (5); braking, ICE on")]
 		public void TestBusAux_Case_C2B(DrivingBehavior drivingBehavior, bool iceOn, double batterySoC,
 			double P_auxMech_expected, double P_busAux_ES_gen_expected, double P_busAux_ES_consumer_sum_expected,
 			double P_busAux_ES_mech,
-			double P_aux_ESS_mech_ICE_off_expected, double P_aux_ESS_mech_ICE_on_expected)
+			double P_aux_ESS_mech_ICE_off_expected, double P_aux_ESS_mech_ICE_on_expected, double Nl_PS_gen_expected, double Nl_PS_consumer_expected, double P_PS_expected)
 		{
 			var container = CreatePowerTrain(AlternatorType.Conventional, batterySoC, 0.5, false);
 			
@@ -470,8 +480,8 @@ namespace TUGraz.VectoCore.Tests.Models.EngineeringMode
 			Assert.AreEqual(AlternatorType.Conventional, container.RunData.BusAuxiliaries.ElectricalUserInputsConfig.AlternatorType);
 			Assert.IsFalse(container.RunData.BusAuxiliaries.ElectricalUserInputsConfig.ConnectESToREESS);
 
-			TestBusAux_Cases(container, drivingBehavior, iceOn, batterySoC,
-				P_auxMech_expected, P_busAux_ES_gen_expected, P_busAux_ES_consumer_sum_expected, P_busAux_ES_mech,
+			TestBusAux_Cases(container, drivingBehavior, iceOn, batterySoC, double.NaN,
+				P_auxMech_expected, P_busAux_ES_gen_expected, double.NaN, P_busAux_ES_consumer_sum_expected, P_busAux_ES_mech, Nl_PS_gen_expected, Nl_PS_consumer_expected, P_PS_expected, double.NaN,
 				P_aux_ESS_mech_ICE_off_expected, P_aux_ESS_mech_ICE_on_expected, null, null, null);
 
 		}
@@ -479,88 +489,117 @@ namespace TUGraz.VectoCore.Tests.Models.EngineeringMode
 		// . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
 
 
-		[TestCase(DrivingBehavior.Driving, true, 0.5, 0.5,
-			0, 0, 0, 0, 0, 0,
+		[TestCase(DrivingBehavior.Driving, true, 0.5, 0.5, double.NaN,
+			P_aux_m_Base + P_PS_1000, 0, P_ES_base, P_ES_base, 0, 0, 0, 0, 0, 0, Nl_PS, Nl_PS, P_PS_1000,
 			TestName = "BusAux Case C3a (1); driving, ICE on, battery not empyt, REESS not empty")]
-		[TestCase(DrivingBehavior.Driving, true, 0.0, 0.5,
-			0, 0, 0, 0, 0, 0,
+		[TestCase(DrivingBehavior.Driving, true, 0.0, 0.5, double.NaN,
+			P_aux_m_Base + P_PS_1000, 0, 0, P_ES_base, 0, 0, 0, P_ES_base, 0, 0, Nl_PS, Nl_PS, P_PS_1000,
 			TestName = "BusAux Case C3a (2); driving, ICE on, battery empty, REESS not empty")]
-		[TestCase(DrivingBehavior.Driving, true, 0.5, REESS_MinSoC,
-			0, 0, 0, 0, 0, 0,
+		[TestCase(DrivingBehavior.Driving, true, 0.5, REESS_MinSoC, double.NaN,
+			P_aux_m_Base + P_PS_1000, 0, P_ES_base, P_ES_base, 0, 0, 0, 0, 0, 0, Nl_PS, Nl_PS, P_PS_1000,
 			TestName = "BusAux Case C3a (3); driving, ICE on, battery not empty, REESS empty")]
-		[TestCase(DrivingBehavior.Driving, true, 0.0, REESS_MinSoC,
-			0, 0, 0, 0, 0, 0,
+		[TestCase(DrivingBehavior.Driving, true, 0.0, REESS_MinSoC, double.NaN,
+			P_aux_m_Base + P_PS_1000, 0, 0, P_ES_base, 0, 0, 0, 0, P_ES_base, 0, Nl_PS, Nl_PS, P_PS_1000,
 			TestName = "BusAux Case C3a (4); driving, ICE on, battery empty, REESS empty")]
 
-		[TestCase(DrivingBehavior.Driving, false, 0.5, 0.5,
-			0, 0, 0, 0, 0, 0,
+		[TestCase(DrivingBehavior.Driving, false, 0.5, 0.5, double.NaN,
+			0, 0, P_ES_ICEOff_dr, P_ES_ICEOff_dr, 0, P_aux_m_ICEOff_dr, P_aux_m_Base, 0, 0, 0, 0, Nl_PS, 0,
 			TestName = "BusAux Case C3a (5); driving, ICE off, battery not empty, REESS not empty")]
-		[TestCase(DrivingBehavior.Driving, false, 0.0, 0.5,
-			0, 0, 0, 0, 0, 0,
+		[TestCase(DrivingBehavior.Driving, false, 0.0, 0.5, double.NaN,
+			0, 0, 0, P_ES_ICEOff_dr, 0, P_aux_m_ICEOff_dr, P_aux_m_Base, P_ES_ICEOff_dr, 0, 0, 0, Nl_PS, 0,
 			TestName = "BusAux Case C3a (6); driving, ICE off, battery empty, REESS not empty")]
-		[TestCase(DrivingBehavior.Driving, false, 0.5, REESS_MinSoC,
-			0, 0, 0, 0, 0, 0,
+		[TestCase(DrivingBehavior.Driving, false, 0.5, REESS_MinSoC, double.NaN,
+			0, 0, P_ES_ICEOff_dr, P_ES_ICEOff_dr, 0, P_aux_m_ICEOff_dr, P_aux_m_Base, 0, 0, 0, 0, Nl_PS, 0,
 			TestName = "BusAux Case C3a (7); driving, ICE off, battery not empty,  REESS empty")]
-		[TestCase(DrivingBehavior.Driving, false, 0.0, REESS_MinSoC,
-			0, 0, 0, 0, 0, 0,
+		[TestCase(DrivingBehavior.Driving, false, 0.0, REESS_MinSoC, double.NaN,
+			0, 0, 0, P_ES_ICEOff_dr, 0, P_aux_m_ICEOff_dr, P_aux_m_Base, 0, P_ES_ICEOff_dr, 0, 0, Nl_PS, 0,
 			TestName = "BusAux Case C3a (8); driving, ICE off, battery empty,  REESS empty")]
 
-		[TestCase(DrivingBehavior.Driving, true, 0.5, 0.5,
-			0, 0, 0, 0, 0, 0,
+		[TestCase(DrivingBehavior.Halted, true, 0.5, 0.5, double.NaN,
+			P_aux_m_Base + P_PS_600, 0, P_ES_base, P_ES_base, 0, 0, 0, 0, 0, 0, Nl_PS, Nl_PS, P_PS_600,
 			TestName = "BusAux Case C3a (9); standstill, ICE on, battery not empty, REESS not empty")]
-		[TestCase(DrivingBehavior.Driving, true, 0.0, 0.5,
-			0, 0, 0, 0, 0, 0,
+		[TestCase(DrivingBehavior.Halted, true, 0.0, 0.5, double.NaN,
+			P_aux_m_Base + P_PS_600, 0, 0, P_ES_base, 0, 0, 0, P_ES_base, 0, 0, Nl_PS, Nl_PS, P_PS_600,
 			TestName = "BusAux Case C3a (10); standstill, ICE on, battery empty, REESS not empty")]
-		[TestCase(DrivingBehavior.Driving, true, 0.5, REESS_MinSoC,
-			0, 0, 0, 0, 0, 0,
+		[TestCase(DrivingBehavior.Halted, true, 0.5, REESS_MinSoC, double.NaN,
+			P_aux_m_Base + P_PS_600, 0, P_ES_base, P_ES_base, 0, 0, 0, 0, 0, 0, Nl_PS, Nl_PS, P_PS_600,
 			TestName = "BusAux Case C3a (11); standstill, ICE on, battery not empty, REESS empty")]
-		[TestCase(DrivingBehavior.Driving, true, 0.0, REESS_MinSoC,
-			0, 0, 0, 0, 0, 0,
+		[TestCase(DrivingBehavior.Halted, true, 0.0, REESS_MinSoC, double.NaN,
+			P_aux_m_Base + P_PS_600, 0, 0, P_ES_base, 0, 0, 0, 0, P_ES_base, 0, Nl_PS, Nl_PS, P_PS_600,
 			TestName = "BusAux Case C3a (12); standstill, ICE on, battery empty, REESS empty")]
 
-		[TestCase(DrivingBehavior.Driving, false, 0.5, 0.5,
-			0, 0, 0, 0, 0, 0,
+		[TestCase(DrivingBehavior.Halted, false, 0.5, 0.5, double.NaN,
+			0, 0, P_ES_ICEOff_stop, P_ES_ICEOff_stop, 0, P_aux_m_ICEOff_st, P_aux_m_Base, 0, 0, (P_ES_base - P_ES_ICEOff_stop), 0, Nl_PS, 0,
 			TestName = "BusAux Case C3a (13); standstill, ICE off, battery not empty, REESS not empty")]
-		[TestCase(DrivingBehavior.Driving, false, 0.0, 0.5,
-			0, 0, 0, 0, 0, 0,
+		[TestCase(DrivingBehavior.Halted, false, 0.0, 0.5, double.NaN,
+			0, 0, 0, P_ES_ICEOff_stop, 0, P_aux_m_ICEOff_st, P_aux_m_Base, P_ES_ICEOff_stop, 0, (P_ES_base - P_ES_ICEOff_stop), 0, Nl_PS, 0,
 			TestName = "BusAux Case C3a (14); standstill, ICE off, battery empty, REESS not empty")]
-		[TestCase(DrivingBehavior.Driving, false, 0.5, REESS_MinSoC,
-			0, 0, 0, 0, 0, 0,
+		[TestCase(DrivingBehavior.Halted, false, 0.5, REESS_MinSoC, double.NaN,
+			0, 0, P_ES_ICEOff_stop, P_ES_ICEOff_stop, 0, P_aux_m_ICEOff_st, P_aux_m_Base, 0, 0, (P_ES_base - P_ES_ICEOff_stop), 0, Nl_PS, 0,
 			TestName = "BusAux Case C3a (15); standstill, ICE off, battery not empty, REESS empty")]
-		[TestCase(DrivingBehavior.Driving, false, 0.0, REESS_MinSoC,
-			0, 0, 0, 0, 0, 0,
+		[TestCase(DrivingBehavior.Halted, false, 0.0, REESS_MinSoC, double.NaN,
+			0, 0, 0, P_ES_ICEOff_stop, 0, P_aux_m_ICEOff_st, P_aux_m_Base, 0, P_ES_ICEOff_stop, (P_ES_base - P_ES_ICEOff_stop), 0, Nl_PS, 0,
 			TestName = "BusAux Case C3a (16); standstill, ICE off, battery empty, REESS empty")]
 
-		[TestCase(DrivingBehavior.Driving, true, 0.5, 0.5,
-			0, 0, 0, 0, 0, 0,
-			TestName = "BusAux Case C3a (17); braking, ICE on, battery not empty, REESS not empty")]
-		[TestCase(DrivingBehavior.Driving, true, 0.0, 0.5,
-			0, 0, 0, 0, 0, 0,
-			TestName = "BusAux Case C3a (18); braking, ICE on, battery empty, REESS not empty")]
-		[TestCase(DrivingBehavior.Driving, true, 0.5, REESS_MinSoC,
-			0, 0, 0, 0, 0, 0,
-			TestName = "BusAux Case C3a (19); braking, ICE on, battery not empty, REESS empty")]
-		[TestCase(DrivingBehavior.Driving, true, 0.0, REESS_MinSoC,
-			0, 0, 0, 0, 0, 0,
-			TestName = "BusAux Case C3a (20); braking, ICE on, battery empty, REESS empty")]
+		[TestCase(DrivingBehavior.Braking, true, 0.5, 0.5, 0.5,
+			P_aux_m_Base + P_PS_1000, 0, P_ES_base, P_ES_base, 0, 0, 0, 0, 0, 0, Nl_PS, Nl_PS, P_PS_1000,
+			TestName = "BusAux Case C3a (17); braking, ICE on, battery not empty, REESS not empty, P1 recup 0.5")]
+		[TestCase(DrivingBehavior.Braking, true, 0.0, 0.5, 0.5,
+			P_aux_m_Base + P_PS_1000, 0, 0, P_ES_base, 0, 0, 0, P_ES_base, 0, 0, Nl_PS, Nl_PS, P_PS_1000,
+			TestName = "BusAux Case C3a (18); braking, ICE on, battery empty, REESS not empty, P1 recup 0.5")]
+		[TestCase(DrivingBehavior.Braking, true, 0.5, REESS_MinSoC, 0.5,
+			P_aux_m_Base + P_PS_1000, 0, P_ES_base, P_ES_base, 0, 0, 0, 0, 0, 0, Nl_PS, Nl_PS, P_PS_1000,
+			TestName = "BusAux Case C3a (19); braking, ICE on, battery not empty, REESS empty, P1 recup 0.5")]
+		[TestCase(DrivingBehavior.Braking, true, 0.0, REESS_MinSoC, 0.5,
+			P_aux_m_Base + P_PS_1000, 0, 0, P_ES_base, 0, 0, 0, 0, P_ES_base, 0, Nl_PS, Nl_PS, P_PS_1000,
+			TestName = "BusAux Case C3a (20); braking, ICE on, battery empty, REESS empty, P1 recup 0.5")]
 
-		[TestCase(DrivingBehavior.Driving, false, 0.5, 0.5,
-			0, 0, 0, 0, 0, 0,
-			TestName = "BusAux Case C3a (21); braking, ICE off, battery not empty, REESS not empty")]
-		[TestCase(DrivingBehavior.Driving, false, 0.0, 0.5,
-			0, 0, 0, 0, 0, 0,
-			TestName = "BusAux Case C3a (22); braking, ICE off, battery empty, REESS not empty")]
-		[TestCase(DrivingBehavior.Driving, false, 0.5, REESS_MinSoC,
-			0, 0, 0, 0, 0, 0,
-			TestName = "BusAux Case C3a (23); braking, ICE off, battery not empty, REESS empty")]
-		[TestCase(DrivingBehavior.Driving, false, 0.0, REESS_MinSoC,
-			0, 0, 0, 0, 0, 0,
-			TestName = "BusAux Case C3a (24); braking, ICE off, battery empty, REESS empty")]
+		[TestCase(DrivingBehavior.Braking, false, 0.5, 0.5, 0.5,
+			0, 0, P_ES_ICEOff_dr, P_ES_ICEOff_dr, 0, P_aux_m_ICEOff_dr, P_aux_m_Base, 0, 0, (P_ES_base - P_ES_ICEOff_dr), 0, Nl_PS, 0,
+			TestName = "BusAux Case C3a (21); braking, ICE off, battery not empty, REESS not empty, P1 recup 0.5")]
+		[TestCase(DrivingBehavior.Braking, false, 0.0, 0.5, 0.5,
+			0, 0, 0, P_ES_ICEOff_dr, 0, P_aux_m_ICEOff_dr, P_aux_m_Base, P_ES_ICEOff_dr, 0, (P_ES_base - P_ES_ICEOff_dr), 0, Nl_PS, 0,
+			TestName = "BusAux Case C3a (22); braking, ICE off, battery empty, REESS not empty, P1 recup 0.5")]
+		[TestCase(DrivingBehavior.Braking, false, 0.5, REESS_MinSoC, 0.5,
+			0, 0, P_ES_ICEOff_dr, P_ES_ICEOff_dr, 0, P_aux_m_ICEOff_dr, P_aux_m_Base, 0, 0, (P_ES_base - P_ES_ICEOff_dr), 0, Nl_PS, 0,
+			TestName = "BusAux Case C3a (23); braking, ICE off, battery not empty, REESS empty, P1 recup 0.5")]
+		[TestCase(DrivingBehavior.Braking, false, 0.0, REESS_MinSoC, 0.5,
+			0, 0, 0, P_ES_ICEOff_dr, 0, P_aux_m_ICEOff_dr, P_aux_m_Base, 0, P_ES_ICEOff_dr, (P_ES_base - P_ES_ICEOff_dr), 0, Nl_PS, 0,
+			TestName = "BusAux Case C3a (24); braking, ICE off, battery empty, REESS empty, P1 recup 0.5")]
 
-		public void TestBusAux_Case_C3A(DrivingBehavior drivingBehavior, bool iceOn, double batterySoC, double reessSoC,
-			double P_auxMech_expected, double P_busAux_ES_gen_expected, double P_busAux_ES_consumer_sum_expected,
+		[TestCase(DrivingBehavior.Braking, true, 0.5, 0.5, 1,
+			P_aux_m_Base + P_PS_1000 + MaxAlternatorPower / AlternatorEfficiency, MaxAlternatorPower, P_ES_base - MaxAlternatorPower, P_ES_base, MaxAlternatorPower / AlternatorEfficiency, 0, 0, 0, 0, 0, Nl_PS, Nl_PS, P_PS_1000,
+			TestName = "BusAux Case C3a (25); braking, ICE on, battery not empty, REESS not empty, P1 recup 1")]
+		[TestCase(DrivingBehavior.Braking, true, 0.0, 0.5, 1,
+			P_aux_m_Base + P_PS_1000 + MaxAlternatorPower / AlternatorEfficiency, MaxAlternatorPower, P_ES_base - MaxAlternatorPower, P_ES_base, MaxAlternatorPower / AlternatorEfficiency, 0, 0, 0, 0, 0, Nl_PS, Nl_PS, P_PS_1000,
+			TestName = "BusAux Case C3a (26); braking, ICE on, battery empty, REESS not empty, P1 recup 1")]
+		[TestCase(DrivingBehavior.Braking, true, 0.5, REESS_MinSoC, 1,
+			P_aux_m_Base + P_PS_1000 + MaxAlternatorPower / AlternatorEfficiency, MaxAlternatorPower, P_ES_base - MaxAlternatorPower, P_ES_base, MaxAlternatorPower / AlternatorEfficiency, 0, 0, 0, 0, 0, Nl_PS, Nl_PS, P_PS_1000,
+			TestName = "BusAux Case C3a (27); braking, ICE on, battery not empty, REESS empty, P1 recup 1")]
+		[TestCase(DrivingBehavior.Braking, true, 0.0, REESS_MinSoC, 1,
+			P_aux_m_Base + P_PS_1000 + MaxAlternatorPower / AlternatorEfficiency, MaxAlternatorPower, P_ES_base - MaxAlternatorPower, P_ES_base, MaxAlternatorPower / AlternatorEfficiency, 0, 0, 0, 0, 0, Nl_PS, Nl_PS, P_PS_1000,
+			TestName = "BusAux Case C3a (28); braking, ICE on, battery empty, REESS empty, P1 recup 1")]
+
+		[TestCase(DrivingBehavior.Braking, false, 0.5, 0.5, 1,
+			0, 0, P_ES_ICEOff_dr, P_ES_ICEOff_dr, 0, P_aux_m_ICEOff_dr, P_aux_m_Base, 0, 0, (P_ES_base - P_ES_ICEOff_dr), 0, Nl_PS, 0,
+			TestName = "BusAux Case C3a (29); braking, ICE off, battery not empty, REESS not empty, P1 recup 1")]
+		[TestCase(DrivingBehavior.Braking, false, 0.0, 0.5, 1,
+			0, 0, 0, P_ES_ICEOff_dr, 0, P_aux_m_ICEOff_dr, P_aux_m_Base, P_ES_ICEOff_dr, 0, (P_ES_base - P_ES_ICEOff_dr), 0, Nl_PS, 0,
+			TestName = "BusAux Case C3a (30); braking, ICE off, battery empty, REESS not empty, P1 recup 1")]
+		[TestCase(DrivingBehavior.Braking, false, 0.5, REESS_MinSoC, 1,
+			0, 0, P_ES_ICEOff_dr, P_ES_ICEOff_dr, 0, P_aux_m_ICEOff_dr, P_aux_m_Base, 0, 0, (P_ES_base - P_ES_ICEOff_dr), 0, Nl_PS, 0,
+			TestName = "BusAux Case C3a (31); braking, ICE off, battery not empty, REESS empty, P1 recup 1")]
+		[TestCase(DrivingBehavior.Braking, false, 0.0, REESS_MinSoC, 1,
+			0, 0, 0, P_ES_ICEOff_dr, 0, P_aux_m_ICEOff_dr, P_aux_m_Base, 0, P_ES_ICEOff_dr, (P_ES_base - P_ES_ICEOff_dr), 0, Nl_PS, 0
+			,
+			TestName = "BusAux Case C3a (32); braking, ICE off, battery empty, REESS empty, P1 recup 1")]
+
+		public void TestBusAux_Case_C3A(DrivingBehavior drivingBehavior, bool iceOn, double batterySoC, double reessSoC, double P1recupPct,
+			double P_auxMech_expected, double P_busAux_ES_gen_expected, double P_bat_P0, double P_busAux_ES_consumer_sum_expected,
 			double P_busAux_ES_mech,
-			double P_aux_ESS_mech_ICE_off_expected, double P_aux_ESS_mech_ICE_on_expected)
+			double P_aux_ESS_mech_ICE_off_expected, double P_aux_ESS_mech_ICE_on_expected,
+			double P_DCDC_out_expected, double P_DCDC_missing_expected, double P_DCDC_missing_ESS_ICE_on,
+			double Nl_PS_gen_expected, double Nl_PS_consumer_expected, double P_PS_expected)
 		{
 			var container = CreatePowerTrain(AlternatorType.Smart, batterySoC, reessSoC, true);
 			
@@ -579,55 +618,81 @@ namespace TUGraz.VectoCore.Tests.Models.EngineeringMode
 			Assert.AreEqual(AlternatorType.Smart, container.RunData.BusAuxiliaries.ElectricalUserInputsConfig.AlternatorType);
 			Assert.IsTrue(container.RunData.BusAuxiliaries.ElectricalUserInputsConfig.ConnectESToREESS);
 
-			TestBusAux_Cases(container, drivingBehavior, iceOn, batterySoC,
-				P_auxMech_expected, P_busAux_ES_gen_expected, P_busAux_ES_consumer_sum_expected, P_busAux_ES_mech,
+			TestBusAux_Cases(container, drivingBehavior, iceOn, batterySoC, double.NaN,
+				P_auxMech_expected, P_busAux_ES_gen_expected, -P_bat_P0, P_busAux_ES_consumer_sum_expected, P_busAux_ES_mech, Nl_PS_gen_expected, Nl_PS_consumer_expected, P_PS_expected, P1recupPct,
 				P_aux_ESS_mech_ICE_off_expected, P_aux_ESS_mech_ICE_on_expected, null, null, null);
 		}
 
 		// . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
 
 
-		[TestCase(DrivingBehavior.Driving, true, 0.5,
-			0, 0, 0, 0, 0, 0, 
-			TestName = "BusAux Case C3b (1); driving, ICE on, battery not empty")]
-		[TestCase(DrivingBehavior.Driving, true, REESS_MinSoC,
-			0, 0, 0, 0, 0, 0,
-			TestName = "BusAux Case C3b (2); driving, ICE on, battery empty")]
-		[TestCase(DrivingBehavior.Driving, false, 0.5,
-			0, 0, 0, 0, 0, 0,
-			TestName = "BusAux Case C3b (3); driving, ICE off, battery not empty")]
-		[TestCase(DrivingBehavior.Driving, false, REESS_MinSoC,
-			0, 0, 0, 0, 0, 0,
-			TestName = "BusAux Case C3b (4); driving, ICE off, battery empty")]
+		[TestCase(DrivingBehavior.Driving, true, 0.5, double.NaN,
+			P_aux_m_Base + P_PS_1000, 0, P_ES_base, P_ES_base, 0, 0, 0, Nl_PS, Nl_PS, P_PS_1000,
+			TestName = "BusAux Case C3b (1); driving, ICE on, P0 battery not empty")]
+		[TestCase(DrivingBehavior.Driving, true, 0, double.NaN,
+			P_aux_m_Base + P_PS_1000 + P_ES_base /  AlternatorEfficiency, P_ES_base, 0, P_ES_base, P_ES_base / AlternatorEfficiency, 0, 0, Nl_PS, Nl_PS, P_PS_1000,
+		TestName = "BusAux Case C3b (2); driving, ICE on, P0 battery empty")]
+		[TestCase(DrivingBehavior.Driving, false, 0.5, double.NaN,
+			0, 0, P_ES_ICEOff_dr, P_ES_ICEOff_dr, 0, P_aux_m_ICEOff_dr, P_aux_m_Base + (P_ES_base - P_ES_ICEOff_dr) / AlternatorEfficiency, 0, Nl_PS, 0,
+			TestName = "BusAux Case C3b (3); driving, ICE off, P0 battery not empty")]
+		[TestCase(DrivingBehavior.Driving, false, 0, double.NaN,
+			0, 0, 0, P_ES_ICEOff_dr, 0, P_aux_m_ICEOff_dr, P_aux_m_Base + (P_ES_base - P_ES_ICEOff_dr) / AlternatorEfficiency, 0, Nl_PS, 0,
+			TestName = "BusAux Case C3b (4); driving, ICE off, P0 battery empty")]
 
-		[TestCase(DrivingBehavior.Halted, true, 0.5,
-			0, 0, 0, 0, 0, 0,
-			TestName = "BusAux Case C3b (5); standstill, ICE on, battery not empty")]
-		[TestCase(DrivingBehavior.Halted, true, REESS_MinSoC,
-			0, 0, 0, 0, 0, 0,
-			TestName = "BusAux Case C3b (6); standstill, ICE on, battery empty")]
-		[TestCase(DrivingBehavior.Halted, false, 0.5,
-			0, 0, 0, 0, 0, 0,
-			TestName = "BusAux Case C3b (7); standstill, ICE off, battery not empty")]
-		[TestCase(DrivingBehavior.Halted, false, REESS_MinSoC,
-			0, 0, 0, 0, 0, 0,
-			TestName = "BusAux Case C3b (8); standstill, ICE off, battery empty")]
+		[TestCase(DrivingBehavior.Halted, true, 0.5, double.NaN,
+			P_aux_m_Base + P_PS_600, 0, P_ES_base, P_ES_base, 0, 0, 0, Nl_PS, Nl_PS, P_PS_600,
+			TestName = "BusAux Case C3b (5); standstill, ICE on, P0 battery not empty")]
+		[TestCase(DrivingBehavior.Halted, true, 0, double.NaN,
+			P_aux_m_Base + P_PS_600 + P_ES_base / AlternatorEfficiency, P_ES_base, 0, P_ES_base, P_ES_base / AlternatorEfficiency, 0, 0, Nl_PS, Nl_PS, P_PS_600,
+			TestName = "BusAux Case C3b (6); standstill, ICE on, P0 battery empty")]
+		[TestCase(DrivingBehavior.Halted, false, 0.5, double.NaN,
+			0, 0, P_ES_ICEOff_stop, P_ES_ICEOff_stop, 0, P_aux_m_ICEOff_st, P_aux_m_Base + (P_ES_base - P_ES_ICEOff_stop) / AlternatorEfficiency, 0, Nl_PS, 0,
+			TestName = "BusAux Case C3b (7); standstill, ICE off, P0 battery not empty")]
+		[TestCase(DrivingBehavior.Halted, false, 0, double.NaN,
+			0, 0, 0, P_ES_ICEOff_stop, 0, P_aux_m_ICEOff_st, P_aux_m_Base + (P_ES_base - P_ES_ICEOff_stop) / AlternatorEfficiency, 0, Nl_PS, 0,
+			TestName = "BusAux Case C3b (8); standstill, ICE off, P0 battery empty")]
 
-		[TestCase(DrivingBehavior.Braking, true, 0.5,
-			0, 0, 0, 0, 0, 0,
-			TestName = "BusAux Case C3b (9); braking, ICE on, battery not empty")]
-		[TestCase(DrivingBehavior.Braking, true, REESS_MinSoC,
-			0, 0, 0, 0, 0, 0,
-			TestName = "BusAux Case C3b (10); braking, ICE on, battery empty")]
-		[TestCase(DrivingBehavior.Braking, false, 0.5,
-			0, 0, 0, 0, 0, 0,
-			TestName = "BusAux Case C3b (11); braking, ICE off, battery not empty")]
-		[TestCase(DrivingBehavior.Braking, false, REESS_MinSoC,
-			0, 0, 0, 0, 0, 0,
-			TestName = "BusAux Case C3b (12); braking, ICE off, battery empty")]
-		public void TestBusAux_Case_C3B(DrivingBehavior drivingBehavior, bool iceOn, double batterySoC,
-			double P_auxMech_expected, double P_busAux_ES_gen_expected, double P_busAux_ES_consumer_sum_expected,
-			double P_busAux_ES_mech, double P_aux_ESS_mech_ICE_off_expected, double P_aux_ESS_mech_ICE_on_expected)
+		[TestCase(DrivingBehavior.Braking, true, 0.5, 0.5,
+			P_aux_m_Base + P_PS_1000, 0, P_ES_base, P_ES_base, 0, 0, 0, Nl_PS, Nl_PS, P_PS_1000,
+			TestName = "BusAux Case C3b (9); braking, ICE on, P0 battery not empty, P1 recup 0.5")]
+		[TestCase(DrivingBehavior.Braking, true, 1, 0.5,
+			P_aux_m_Base + P_PS_1000, 0, P_ES_base, P_ES_base, 0, 0, 0, Nl_PS, Nl_PS, P_PS_1000,
+			TestName = "BusAux Case C3b (10); braking, ICE on, P0 battery full, P1 recup 0.5")]
+		[TestCase(DrivingBehavior.Braking, true, 0, 0.5,
+			P_aux_m_Base + P_PS_1000 + P_ES_base / AlternatorEfficiency, P_ES_base, 0, P_ES_base, P_ES_base / AlternatorEfficiency, 0, 0, Nl_PS, Nl_PS, P_PS_1000,
+			TestName = "BusAux Case C3b (11); braking, ICE on, P0 battery empty, P1 recup 0.5")]
+		[TestCase(DrivingBehavior.Braking, false, 0.5, 0.5,
+			0, 0, P_ES_ICEOff_dr, P_ES_ICEOff_dr, 0, P_aux_m_ICEOff_dr, P_aux_m_Base + (P_ES_base - P_ES_ICEOff_dr) / AlternatorEfficiency, 0, Nl_PS, 0,
+			TestName = "BusAux Case C3b (12); braking, ICE off, P0 battery not empty, P1 recup 0.5")]
+		[TestCase(DrivingBehavior.Braking, false, 1, 0.5,
+			0, 0, P_ES_ICEOff_dr, P_ES_ICEOff_dr, 0, P_aux_m_ICEOff_dr, P_aux_m_Base + (P_ES_base - P_ES_ICEOff_dr) / AlternatorEfficiency, 0, Nl_PS, 0,
+			TestName = "BusAux Case C3b (13); braking, ICE off, P0 battery full, P1 recup 0.5")]
+		[TestCase(DrivingBehavior.Braking, false, 0, 0.5,
+			0, 0, 0, P_ES_ICEOff_dr, 0, P_aux_m_ICEOff_dr, P_aux_m_Base + (P_ES_base - P_ES_ICEOff_dr) / AlternatorEfficiency, 0, Nl_PS, 0,
+			TestName = "BusAux Case C3b (14); braking, ICE off, P0 battery empty, P1 recup 0.5")]
+
+		[TestCase(DrivingBehavior.Braking, true, 0.5, 1,
+			P_aux_m_Base + P_PS_1000 + MaxAlternatorPower / AlternatorEfficiency, MaxAlternatorPower, P_ES_base - MaxAlternatorPower, P_ES_base, MaxAlternatorPower / AlternatorEfficiency, 0, 0, Nl_PS, Nl_PS, P_PS_1000,
+			TestName = "BusAux Case C3b (15); braking, ICE on, P0 battery not empty, P1 recup 1")]
+		[TestCase(DrivingBehavior.Braking, true, 1, 1,
+			P_aux_m_Base + P_PS_1000 + P_ES_base / AlternatorEfficiency, P_ES_base, 0, P_ES_base, P_ES_base / AlternatorEfficiency, 0, 0, Nl_PS, Nl_PS, P_PS_1000,
+			TestName = "BusAux Case C3b (16); braking, ICE on, P0 battery full, P1 recup 1")]
+		[TestCase(DrivingBehavior.Braking, true, 0, 1,
+			P_aux_m_Base + P_PS_1000 + MaxAlternatorPower / AlternatorEfficiency, MaxAlternatorPower, P_ES_base - MaxAlternatorPower, P_ES_base, MaxAlternatorPower / AlternatorEfficiency, 0, 0, Nl_PS, Nl_PS, P_PS_1000,
+			TestName = "BusAux Case C3b (17); braking, ICE on, P0 battery empty, P1 recup 1")]
+		[TestCase(DrivingBehavior.Braking, false, 0.5, 1,
+			0, 0, P_ES_ICEOff_dr, P_ES_ICEOff_dr, 0, P_aux_m_ICEOff_dr, P_aux_m_Base + (P_ES_base - P_ES_ICEOff_dr) / AlternatorEfficiency, 0, Nl_PS, 0,
+			TestName = "BusAux Case C3b (18); braking, ICE off, P0 battery not empty, P1 recup 1")]
+		[TestCase(DrivingBehavior.Braking, false, 1, 1,
+			0, 0, P_ES_ICEOff_dr, P_ES_ICEOff_dr, 0, P_aux_m_ICEOff_dr, P_aux_m_Base + (P_ES_base - P_ES_ICEOff_dr) / AlternatorEfficiency, 0, Nl_PS, 0,
+			TestName = "BusAux Case C3b (19); braking, ICE off, P0 battery full, P1 recup 1")]
+		[TestCase(DrivingBehavior.Braking, false, 0, 1,
+			0, 0, 0, P_ES_ICEOff_dr, 0, P_aux_m_ICEOff_dr, P_aux_m_Base + (P_ES_base - P_ES_ICEOff_dr) / AlternatorEfficiency, 0, Nl_PS, 0,
+			TestName = "BusAux Case C3b (20); braking, ICE off, P0 battery empty, P1 recup 1")]
+		public void TestBusAux_Case_C3B(DrivingBehavior drivingBehavior, bool iceOn, double batterySoC, double P1recupPct,
+			double P_auxMech_expected, double P_busAux_ES_gen_expected, double P_bat_P0, double P_busAux_ES_consumer_sum_expected,
+			double P_busAux_ES_mech, double P_aux_ESS_mech_ICE_off_expected, double P_aux_ESS_mech_ICE_on_expected,
+			double Nl_PS_gen_expected, double Nl_PS_consumer_expected, double P_PS_expected)
 		{
 			var container = CreatePowerTrain(AlternatorType.Smart, batterySoC, 0.5, false);
 
@@ -645,15 +710,20 @@ namespace TUGraz.VectoCore.Tests.Models.EngineeringMode
 			Assert.AreEqual(AlternatorType.Smart, container.RunData.BusAuxiliaries.ElectricalUserInputsConfig.AlternatorType);
 			Assert.IsFalse(container.RunData.BusAuxiliaries.ElectricalUserInputsConfig.ConnectESToREESS);
 
-			TestBusAux_Cases(container, drivingBehavior, iceOn, batterySoC,
-				P_auxMech_expected, P_busAux_ES_gen_expected, P_busAux_ES_consumer_sum_expected, P_busAux_ES_mech,
+			TestBusAux_Cases(container, drivingBehavior, iceOn, batterySoC, double.NaN,
+				P_auxMech_expected, P_busAux_ES_gen_expected, -P_bat_P0, P_busAux_ES_consumer_sum_expected, P_busAux_ES_mech, Nl_PS_gen_expected, Nl_PS_consumer_expected, P_PS_expected, P1recupPct,
 				P_aux_ESS_mech_ICE_off_expected, P_aux_ESS_mech_ICE_on_expected, null, null, null);
 		}
 
 		// . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
 
-		public void TestBusAux_Cases(MockVehicleContainer container, DrivingBehavior drivingBehavior, bool iceOn, double batterySoC,
-			double P_auxMech_expected, double P_busAux_ES_gen_expected, double P_busAux_ES_consumer_sum_expected, double P_busAux_ES_mech,
+		public void TestBusAux_Cases(MockVehicleContainer container, DrivingBehavior drivingBehavior, bool iceOn,
+			double batterySoC, double reessSoC,
+			double P_auxMech_expected, double P_busAux_ES_gen_expected, double P_bat_P0,
+			double P_busAux_ES_consumer_sum_expected,
+			double P_busAux_ES_mech,
+			double Nl_gen_expected, double Nl_consumed_expected, double P_PS_m_expected,
+			double P1_recup_Pct,
 			double P_aux_ESS_mech_ICE_off_expected, double P_aux_ESS_mech_ICE_on_expected, double? P_DCDC_out_expected,
 			double? P_DCDC_missing_expected, double? P_DCDC_missing_ESS_ICE_on) 
 		{
@@ -692,7 +762,7 @@ namespace TUGraz.VectoCore.Tests.Models.EngineeringMode
 					break;
 				case DrivingBehavior.Braking:
 					container.Gear = new GearshiftPosition(3);
-					container.BrakePower = 50e3.SI<Watt>();
+					container.BrakePower = P1_recup_Pct.IsSmaller(1) ? 0.SI<Watt>() : 50e3.SI<Watt>();
 					ice.CombustionEngineOn = iceOn;
 					response = ice.Request(absTime, dt, 0.SI<NewtonMeter>(), iceOn ? 1000.RPMtoRad() : 600.RPMtoRad(), false);
 					break;
@@ -719,15 +789,25 @@ namespace TUGraz.VectoCore.Tests.Models.EngineeringMode
 			Assert.AreEqual(P_busAux_ES_consumer_sum_expected, row.Field<SI>(ModalResultField.P_busAux_ES_other.GetName()).Value(), 1e-3, ModalResultField.P_busAux_ES_other.GetName());
 			Assert.AreEqual(P_busAux_ES_mech, row.Field<SI>(ModalResultField.P_busAux_ES_sum_mech.GetName()).Value(), 1e-3, ModalResultField.P_busAux_ES_sum_mech.GetName());
 
+			Assert.AreEqual(Nl_consumed_expected, row.Field<SI>(ModalResultField.Nl_busAux_PS_consumer.GetName()).Value(), 1e-3, ModalResultField.Nl_busAux_PS_consumer.GetName());
+			Assert.AreEqual(Nl_gen_expected, row.Field<SI>(ModalResultField.Nl_busAux_PS_generated.GetName()).Value(), 1e-3, ModalResultField.Nl_busAux_PS_generated.GetName());
+			Assert.AreEqual(P_PS_m_expected, row.Field<SI>(ModalResultField.P_busAux_PS_generated.GetName()).Value(), 1e-3, ModalResultField.P_busAux_PS_generated.GetName());
+
 			Assert.AreEqual(P_aux_ESS_mech_ICE_off_expected, row.Field<SI>(ModalResultField.P_aux_ESS_mech_ice_off.GetName()).Value(), 1e-3, ModalResultField.P_aux_ESS_mech_ice_off.GetName());
 			Assert.AreEqual(P_aux_ESS_mech_ICE_on_expected, row.Field<SI>(ModalResultField.P_aux_ESS_mech_ice_on.GetName()).Value(), 1e-3, ModalResultField.P_aux_ESS_mech_ice_on.GetName());
+
+			if (!double.IsNaN(P_bat_P0)) {
+				Assert.AreEqual(P_bat_P0, row.Field<SI>(ModalResultField.P_busAux_bat.GetName()).Value(), 1e-3, ModalResultField.P_busAux_bat.GetName());
+			} else {
+				Assert.IsTrue(container.Components.Any(x => x is NoBattery));
+			}
 
 			if (P_DCDC_missing_expected.HasValue && P_DCDC_out_expected.HasValue && P_DCDC_missing_ESS_ICE_on.HasValue) {
 				var dcdcConverter = container.Components.FirstOrDefault(x => x is IDCDCConverter) as DCDCConverter;
 				Assert.NotNull(dcdcConverter);
 
 				// 'consumed' and 'missing' electric energy is applied in next simulation step - read out directly and perform additional step
-				if (batterySoC.IsEqual(REESS_MinSoC)) {
+				if (reessSoC.IsEqual(REESS_MinSoC)) {
 					Assert.AreEqual(P_DCDC_missing_expected.Value, (dcdcConverter.PreviousState.ConsumedEnergy / dt).Value(), 1e-3, ModalResultField.P_DCDC_missing.GetName());
                 } else {
                     Assert.AreEqual(P_busAux_ES_consumer_sum_expected, (dcdcConverter.PreviousState.ConsumedEnergy / dt).Value(), 1e-3, ModalResultField.P_DCDC_Out.GetName());
@@ -735,7 +815,7 @@ namespace TUGraz.VectoCore.Tests.Models.EngineeringMode
 
 				var dcdcDemand = dcdcConverter.PowerDemand(absTime, dt, false);
 
-				if (batterySoC.IsEqual(REESS_MinSoC)) {
+				if (reessSoC.IsEqual(REESS_MinSoC)) {
 					Assert.AreEqual(0, dcdcDemand.Value(), 1e-3, "DC/DC PowerDemand");
 				} else {
 					Assert.AreEqual(P_DCDC_out_expected.Value / DCDCEfficiency, dcdcDemand.Value(), 1e-3,
@@ -879,7 +959,7 @@ namespace TUGraz.VectoCore.Tests.Models.EngineeringMode
 			bool esSupplyFromHevreess)
 		{
 			var CompressorMap = "TestData/Integration/BusAuxiliaries/DEFAULT_2-Cylinder_1-Stage_650ccm.ACMP";
-			var AverageAirDemand = 0.0.SI<NormLiterPerSecond>();
+			var AverageAirDemand = Nl_PS.SI<NormLiterPerSecond>();
 			var SmartAirCompression = false;
 			var GearRatio = 1.0;
 

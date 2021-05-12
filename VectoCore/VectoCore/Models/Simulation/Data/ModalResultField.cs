@@ -299,6 +299,8 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 
 		[ModalResultField(typeof(double), caption:"Battery SoC")] BatterySOC,
 
+		[ModalResultField(typeof(SI), caption: "P_busAux_bat [kW]", outputFactor: 1e-3)] P_busAux_bat,
+
 
 		/// <summary>
 		///		[-]  true/false  indicate whether torque converter is locked or not (only applicable for gears with TC)
