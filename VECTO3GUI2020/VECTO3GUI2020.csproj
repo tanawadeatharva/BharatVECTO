@@ -137,7 +137,7 @@
     <Compile Include="Helper\Converter\XToBoolConverter.cs" />
     <Compile Include="Helper\DoubleValidation.cs" />
     <Compile Include="Helper\Exceptions.cs" />
-    <Compile Include="Helper\Extension.cs" />
+    <Compile Include="Helper\EnumHelper.cs" />
     <Compile Include="Helper\IWindowHelper.cs" />
     <Compile Include="Helper\DialogHelper.cs" />
     <Compile Include="Helper\WindowHelper.cs" />

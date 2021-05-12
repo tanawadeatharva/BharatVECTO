@@ -120,9 +120,9 @@ namespace VECTO3GUI2020.Helper
 			return MessageBox.Show(messageBoxText, caption, button, icon);
 		}
 
-		public MessageBoxResult ShowMessageBox(string messageBoxTest, string caption)
+		public MessageBoxResult ShowMessageBox(string messageBoxText, string caption)
 		{
-			return MessageBox.Show(messageBoxTest, caption);
+			return MessageBox.Show(messageBoxText, caption);
 		}
 
 		public string SaveToDialog(string initialDirectory, string filter)
@@ -205,10 +205,10 @@ namespace VECTO3GUI2020.Helper
 		/// <summary>
 		/// Displays a messagebox
 		/// </summary>
-		/// <param name="messageBoxTest"></param>
+		/// <param name="messageBoxText"></param>
 		/// <param name="caption"></param>
 		/// <returns></returns>
-		MessageBoxResult ShowMessageBox(string messageBoxTest, string caption);
+		MessageBoxResult ShowMessageBox(string messageBoxText, string caption);
 
 
 		string SaveToDialog(string initialDirectory = null, string filter = "All files (*.*|*.*");

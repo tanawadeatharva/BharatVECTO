@@ -255,7 +255,7 @@ namespace TUGraz.VectoCommon.BusAuxiliaries
 		heating_and_cooling,
 		[GuiLabel("Cooling")]
 		cooling,
-		[GuiLabel("N_A")]
+		[GuiLabel("not_applicable")]
 		N_A,
 	}
 
