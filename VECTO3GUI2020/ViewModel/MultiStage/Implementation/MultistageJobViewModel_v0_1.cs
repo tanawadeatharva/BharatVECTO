@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Windows;
@@ -163,17 +164,29 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 			var xDoc = xElement.CreateWrapperDocument(XMLNamespaces.V28);
 			Debug.WriteLine(xElement.CreateWrapperDocument(XMLNamespaces.V28).ToString());
 
-			var validator = new XMLValidator(xDoc.ToXmlDocument());
+			
 			var valid = false;
+			var validationError = "";
 			try {
+				var validator = new XMLValidator(xDoc.ToXmlDocument());
 				valid = validator.ValidateXML(XmlDocumentType.DeclarationJobData);
+				validationError = validator.ValidationError;
 			} catch (Exception e) {
-				_dialogHelper.Value.ShowMessageBox(e.Message, "Error");
+				_dialogHelper.Value.ShowMessageBox(messageBoxText:(e.Message + "\n" + e.InnerException), caption:"Error saving File");
 			}
 			if (!valid) {
-				_dialogHelper.Value.ShowMessageBox($"Invalid Document: {validator.ValidationError}", "Error");
-				//xDoc.Save(filename, SaveOptions.OmitDuplicateNamespaces);
-				//LoadVehicleData(filename);
+				_dialogHelper.Value.ShowMessageBox($"Invalid Document: {validationError}", "Error");
+				var tempFile = Path.GetTempFileName();
+				try {
+					xDoc.Save(tempFile, SaveOptions.OmitDuplicateNamespaces);
+					LoadVehicleData(tempFile);
+					File.Delete(tempFile);
+				} catch (Exception e) {
+					_dialogHelper.Value.ShowMessageBox(e.Message, "Error");
+					throw;
+				}
+		
+
 			} else {
 				xDoc.Save(filename, SaveOptions.OmitDuplicateNamespaces);
 				LoadVehicleData(filename);
@@ -183,7 +196,7 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 
 		private ICommand _loadVehicleDataCommand;
 		private readonly Lazy<IDialogHelper> _dialogHelper;
-		private readonly Lazy<IXMLInputDataReader> _inputDataReader;
+		private readonly IXMLInputDataReader _inputDataReader;
 		private string _vehicleInputDataFilePath = null;
 		private readonly IMultistageDependencies _multistageDependencies;
 		private readonly DataSource _dataSource;
@@ -209,20 +222,18 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 
 		private bool LoadVehicleData(string fileName)
 		{
-			IDeclarationInputDataProvider inputData;
-			IVehicleDeclarationInputData vehicleInputData;
 			try {
-				inputData = (IDeclarationInputDataProvider)_inputDataReader.Value.CreateDeclaration(fileName);
-				vehicleInputData = inputData.JobInputData.Vehicle;
+				var inputData = (IDeclarationInputDataProvider)_inputDataReader.Create(fileName);
+				var vehicleInputData = inputData.JobInputData.Vehicle;
 				_manufacturingStageViewModel.SetInputData(vehicleInputData);
 
 				VehicleInputDataFilePath = fileName;
 			} catch (Exception e) {
 				_dialogHelper.Value.ShowMessageBox(e.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-				return true;
+				return false;
 			}
 
-			return false;
+			return true;
 		}
 
 		public string VehicleInputDataFilePath
@@ -233,7 +244,7 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 		#endregion
 
 
-		public MultiStageJobViewModel_v0_1(IMultistageBusInputDataProvider inputData, IMultiStageViewModelFactory vmFactory, IMultistageDependencies multistageDependencies )
+		public MultiStageJobViewModel_v0_1(IMultistageBusInputDataProvider inputData, IMultiStageViewModelFactory vmFactory, IMultistageDependencies multistageDependencies, IXMLInputDataReader inputDataReader)
 		{
 			_dataSource = inputData.DataSource;
 			_jobInputData = inputData.JobInputData;
@@ -242,7 +253,7 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 			_manufacturingStages =_jobInputData.ManufacturingStages;
 			_primaryVehicle = _jobInputData.PrimaryVehicle;
 			_dialogHelper = multistageDependencies.DialogHelperLazy;
-			_inputDataReader = multistageDependencies.InputDataReaderLazy;
+			_inputDataReader = inputDataReader;
 			_manufacturingStageViewModel =
 				vmFactory.GetManufacturingStageViewModel(_consolidateManufacturingStage);
 			_multistageDependencies = multistageDependencies;

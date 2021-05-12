@@ -240,8 +240,7 @@ namespace VECTO3GUI2020.Util.XML.Implementation
 
 			_Xelement.Add(new XElement(_defaultNamespace + XMLNames.Bus_NumberPassengersLowerDeck, _inputData.NumberOfPassengersLowerDeck));
 			_Xelement.Add(new XElement(_defaultNamespace + XMLNames.Bus_NumberPassengersUpperDeck, _inputData.NumberOfPassengersUpperDeck));
-
-			_Xelement.Add(new XElement(_defaultNamespace + XMLNames.Vehicle_VehicleCode, _inputData.VehicleCode.ToXMLFormat()));
+			_Xelement.Add(new XElement(_defaultNamespace + XMLNames.Vehicle_BodyworkCode, _inputData.VehicleCode.ToXMLFormat()));
 
 			_Xelement.Add(new XElement(_defaultNamespace + XMLNames.Bus_LowEntry, _inputData.LowEntry));
 
@@ -257,7 +256,7 @@ namespace VECTO3GUI2020.Util.XML.Implementation
 					? _inputData.DoorDriveTechnology.ToXMLFormat()
 					: null));
 
-			_Xelement.Add(new XElement(_defaultNamespace + XMLNames.Bus_DeclarationType, _inputData.VehicleDeclarationType));
+			_Xelement.Add(new XElement(_defaultNamespace + XMLNames.Bus_VehicleDeclarationType, _inputData.VehicleDeclarationType));
 
 			if (_inputData.ADAS != null) {
 				var adasNamespace = XMLNamespaces.V23;

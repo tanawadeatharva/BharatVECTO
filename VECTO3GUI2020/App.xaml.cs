@@ -17,9 +17,8 @@ namespace VECTO3GUI2020
     {
 
         private IKernel container;
-		private IKernel multiStageChildContainer;
 
-        protected override void OnStartup(StartupEventArgs e)
+		protected override void OnStartup(StartupEventArgs e)
         {
             base.OnStartup(e);
             ConfigureContainer();
@@ -37,7 +36,7 @@ namespace VECTO3GUI2020
 				new XMLWriterFactoryModule(),
                 new FactoryModule(),
                 new MultistageModule()
-			) ;
+			);
 
 
 
@@ -55,20 +54,11 @@ namespace VECTO3GUI2020
 
         private void ConfigureMainWindow()
         {
-            //Windows to test controls
-            //var testwindow = container.Get<Test>();
-            //testwindow.Show();
-
-
-
-            var mainwindow = container.Get<MainWindow>();
+			var mainwindow = container.Get<MainWindow>();
             this.MainWindow = mainwindow;
 			Application.Current.MainWindow = mainwindow;
             this.MainWindow.Show();
-
-
-
-        }
+		}
 
     }
 

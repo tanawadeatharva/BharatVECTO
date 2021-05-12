@@ -12,10 +12,8 @@ namespace VECTO3GUI2020.Ninject
 	public interface IMultistageDependencies
 	{
 		Lazy<IDialogHelper> DialogHelperLazy { get; }
-		Lazy<IXMLInputDataReader> InputDataReaderLazy { get; }
 
 		IDialogHelper DialogHelper { get; }
-		IXMLInputDataReader InputDataReader { get; }
 		IDeclarationInjectFactory InjectFactory { get; }
 		IComponentViewModelFactory ComponentViewModelFactory { get; }
 
