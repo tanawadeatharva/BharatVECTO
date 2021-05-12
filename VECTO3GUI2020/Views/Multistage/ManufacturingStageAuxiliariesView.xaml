@@ -45,6 +45,7 @@
                                                 EditingEnabled="{Binding HeatPumpGroupEditingEnabled}"
                                                 PreviousContent="{Binding ConsolidatedInputData.HVACAux.HeatPumpModeDriverCompartment}" 
                                                 Content="{Binding HeatPumpModeDriverCompartment}"
+                                                ListItems="{Binding HeatPumpModeDriverCompartmentAllowedValues}"
                                                 ShowCheckBox="False"/>
                     <customControls:MultiStageParameter Mode="COMBOBOX" 
                                                 EditingEnabled="{Binding HeatPumpGroupEditingEnabled}" 
@@ -55,6 +56,7 @@
                                                 EditingEnabled="{Binding HeatPumpGroupEditingEnabled}"
                                                 PreviousContent="{Binding ConsolidatedInputData.HVACAux.HeatPumpModePassengerCompartment}"
                                                 Content="{Binding HeatPumpModePassengerCompartment}"
+                                                ListItems="{Binding HeatPumpModePassengerCompartmentAllowedValues}"
                                                 ShowCheckBox="False"/>
                     <Separator/>
                     <customControls:MultiStageParameter Mode="TEXTBOX" 
