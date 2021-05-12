@@ -146,7 +146,18 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 		public bool HeatPumpGroupEditingEnabled
 		{
 			get => _heatPumpGroupEditingEnabled;
-			set => SetProperty(ref _heatPumpGroupEditingEnabled, value);
+			set
+			{
+				
+				SetProperty(ref _heatPumpGroupEditingEnabled, value);
+				//if (value == false)
+				//{
+				//	HeatPumpTypePassengerCompartment = null;
+				//	HeatPumpModePassengerCompartment = null;
+				//	HeatPumpModeDriverCompartment = null;
+				//	HeatPumpTypeDriverCompartment = null;
+				//}
+			}
 		}
 
 		public BusHVACSystemConfiguration? SystemConfiguration
@@ -163,12 +174,12 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 				if (value == HeatPumpType.none) {
 					HeatPumpModeDriverCompartmentAllowedValues =
 						EnumHelper.GetValuesAsObservableCollectionIncluding<Enum, HeatPumpMode>(items:HeatPumpMode.N_A);
-					HeatPumpModeDriverCompartment = HeatPumpMode.N_A;
+					//HeatPumpModeDriverCompartment = HeatPumpMode.N_A;
 				} else {
 					HeatPumpModeDriverCompartmentAllowedValues =
 						EnumHelper.GetValuesAsObservableCollectionExcluding<Enum, HeatPumpMode>(
 							items: HeatPumpMode.N_A);
-					HeatPumpModeDriverCompartment = HeatPumpMode.cooling;
+					//HeatPumpModeDriverCompartment = HeatPumpMode.cooling;
 				}
 
 
@@ -213,14 +224,14 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 				{
 					HeatPumpModePassengerCompartmentAllowedValues =
 						EnumHelper.GetValuesAsObservableCollectionIncluding<Enum, HeatPumpMode>(items: HeatPumpMode.N_A);
-					HeatPumpModePassengerCompartment = HeatPumpMode.N_A;
+					//HeatPumpModePassengerCompartment = HeatPumpMode.N_A;
 				}
 				else
 				{
 					HeatPumpModePassengerCompartmentAllowedValues =
 						EnumHelper.GetValuesAsObservableCollectionExcluding<Enum, HeatPumpMode>(
 							items: HeatPumpMode.N_A);
-					HeatPumpModePassengerCompartment = HeatPumpMode.cooling;
+					//HeatPumpModePassengerCompartment = HeatPumpMode.cooling;
 				}
 			}
 		}
