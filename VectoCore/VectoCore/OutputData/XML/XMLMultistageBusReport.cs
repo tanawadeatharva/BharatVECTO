@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
-using System.Text.RegularExpressions;
 using System.Xml;
 using System.Xml.Linq;
 using TUGraz.VectoCommon.BusAuxiliaries;
+using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.Hashing;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
@@ -35,6 +35,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 		protected XNamespace v20 = "urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0";
 		protected XNamespace v23 = "urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:DEV:v2.3";
 		protected XNamespace v28 = "urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:DEV:v2.8";
+		protected XNamespace v10 = "urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v1.0";
 
 		private XElement _primaryVehicle;
 		private List<XElement> _manufacturingStages;
@@ -42,6 +43,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 		
 		private IPrimaryVehicleInformationInputDataProvider _primaryVehicleInputData;
 		private IList<IManufacturingStageInputData> _manufacturingStageInputData;
+		private IManufacturingStageInputData _consolidatedInputData;
 		private IVehicleDeclarationInputData _vehicleInputData;
 
 
@@ -57,6 +59,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 		{
 			_primaryVehicleInputData = modelData.MultistageVIFInputData.MultistageJobInputData.JobInputData.PrimaryVehicle;
 			_manufacturingStageInputData = modelData.MultistageVIFInputData.MultistageJobInputData.JobInputData.ManufacturingStages;
+			_consolidatedInputData = modelData.MultistageVIFInputData.MultistageJobInputData.JobInputData.ConsolidateManufacturingStage;
 			_vehicleInputData = modelData.MultistageVIFInputData.VehicleInputData;
 
 			SetInputXMLData(_primaryVehicleInputData.Vehicle.XMLSource);
@@ -120,9 +123,12 @@ namespace TUGraz.VectoCore.OutputData.XML
 				return;
 
 			foreach (XmlAttribute attribute in namespaceAttributes) {
-				_namespaceAttributes.Add(string.IsNullOrEmpty(attribute.Prefix)
-					? new XAttribute(attribute.LocalName, attribute.Value)
-					: new XAttribute(XNamespace.Xmlns + attribute.LocalName, attribute.Value));
+				if (string.IsNullOrEmpty(attribute.Prefix)) 
+					_namespaceAttributes.Add(new XAttribute(attribute.LocalName, attribute.Value));
+				else if(attribute.Prefix == "xmlns")
+					_namespaceAttributes.Add(new XAttribute(XNamespace.Xmlns + attribute.LocalName, attribute.Value));
+				else if(attribute.Prefix == "xsi")
+					_namespaceAttributes.Add(new XAttribute(xsi + attribute.LocalName, attribute.Value));
 			}
 		}
 		
@@ -134,6 +140,8 @@ namespace TUGraz.VectoCore.OutputData.XML
 			nodes.Add(currentNode.ParentNode);
 			NodeParentSearch(currentNode.ParentNode, nodes);
 		}
+
+
 
 		#endregion
 
@@ -190,7 +198,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 				   digitData.ToXML(di));
 		}
 
-
+		
 		private XElement GetVehicleElement(string vehicleId)
 		{
 			return new XElement(tns + XMLNames.Tag_Vehicle,
@@ -209,8 +217,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 					? new XElement(v28 + XMLNames.Bus_CorrectedActualMass, _vehicleInputData.CurbMassChassis.ToXMLFormat(0)) : null,
 				_vehicleInputData.GrossVehicleMassRating != null
 					? new XElement(v28 + XMLNames.TPMLM, _vehicleInputData.GrossVehicleMassRating.ToXMLFormat(0)) : null,
-				_vehicleInputData.AirdragModifiedMultistage != null 
-					? new XElement(v28 +  XMLNames.Bus_AirdragModifiedMultistage, _vehicleInputData.AirdragModifiedMultistage) : null,
+				GetAirdragModifiedMultistageEntry(),
 				_vehicleInputData.TankSystem != null 
 					? new XElement(v28 + XMLNames.Vehicle_NgTankSystem, _vehicleInputData.TankSystem.ToString()) : null,
 				_vehicleInputData.RegisteredClass != null
@@ -239,6 +246,20 @@ namespace TUGraz.VectoCore.OutputData.XML
 			);
 		}
 
+		private XElement GetAirdragModifiedMultistageEntry()
+		{
+			if (_consolidatedInputData?.Vehicle?.Components?.AirdragInputData == null)
+				return null;
+
+			switch (_vehicleInputData.AirdragModifiedMultistage) {
+				case null:
+					throw new VectoException("AirdragModifiedMultistage must be set if an airdrag component has been set in previous stages.");
+				case false:
+					return new XElement(v28 + XMLNames.Bus_AirdragModifiedMultistage, _vehicleInputData.AirdragModifiedMultistage);
+			}
+			return null;
+		}
+
 		private XElement GetADAS(IAdvancedDriverAssistantSystemDeclarationInputData adasData)
 		{
 			if (adasData == null)
@@ -258,11 +279,8 @@ namespace TUGraz.VectoCore.OutputData.XML
 
 		private XElement GetBusVehicleComponents(IVehicleComponentsDeclaration vehicleComponents)
 		{
-			if (vehicleComponents == null)
-				return null;
-
-			var busAirdrag = GetBusAirdrag(vehicleComponents.AirdragInputData);
-			var busAux = GetBusAuxiliaries(vehicleComponents.BusAuxiliaries);
+			var busAirdrag = GetBusAirdrag(vehicleComponents?.AirdragInputData);
+			var busAux = GetBusAuxiliaries(vehicleComponents?.BusAuxiliaries);
 
 			if (busAirdrag == null && busAux == null)
 				return null;
@@ -279,16 +297,10 @@ namespace TUGraz.VectoCore.OutputData.XML
 		{
 			if (airdrag != null) 
 				return GetAirdragElement(airdrag);
-			
-			switch (_vehicleInputData.AirdragModifiedMultistage)
-			{
-				case true:
-					return GetBusAirdragUseStandardValues();
-				case false:
-					return GetAirdragElement(_manufacturingStageInputData.Last().Vehicle.Components.AirdragInputData);
-				default:
-					return null;
-			}
+
+			return _vehicleInputData.AirdragModifiedMultistage == true
+				? GetBusAirdragUseStandardValues()
+				: null;
 		}
 		
 		private XElement GetAirdragElement(IAirdragDeclarationInputData airdrag)
@@ -308,17 +320,60 @@ namespace TUGraz.VectoCore.OutputData.XML
 
 			if (airdragNode == null)
 				return null;
-
-			var dataElement = XElement.Parse(airdragNode.FirstChild.OuterXml);
-			var signatureElement = XElement.Parse(airdragNode.LastChild.OuterXml);
-			dataElement.Attribute(XNamespace.Xmlns + "xsi")?.Remove();
 			
+			var dataNode = airdragNode.SelectSingleNode(".//*[local-name()='Data']");
+			var signatureNode = airdragNode.SelectSingleNode(".//*[local-name()='Signature']");
+
+			if (dataNode == null)
+				throw new VectoException("Data node of airdrag component is null!");
+			if(signatureNode == null) 
+				throw new VectoException("Signature node of the given airdrag component is null!");
+
+			return dataNode.NamespaceURI == v10.NamespaceName
+				? GetAirdragXMLElementV1(dataNode, signatureNode)
+				: GetAirdragXMLElementV2(dataNode, signatureNode);
+		}
+
+		private XElement GetAirdragXMLElementV1(XmlNode dataNode, XmlNode signatureNode)
+		{
+			return new XElement(v28 + XMLNames.Component_AirDrag,
+				new XElement(v20 + XMLNames.Report_DataWrap,
+					new XAttribute(xsi + XMLNames.Component_Type_Attr, XMLNames.AirDrag_Data_Type_Attr),
+					new XAttribute("xmlns", v10.NamespaceName),
+					dataNode.Attributes != null && dataNode.Attributes[XMLNames.Component_ID_Attr] != null ?
+						new XAttribute(XMLNames.Component_ID_Attr, dataNode.Attributes[XMLNames.Component_ID_Attr].InnerText) : null,
+					GetElements(dataNode.ChildNodes)
+				),
+				new XElement(v20 + XMLNames.DI_Signature,
+					GetElements(signatureNode.ChildNodes)
+				)
+			);
+		}
+
+		private XElement GetAirdragXMLElementV2(XmlNode dataNode, XmlNode signatureNode)
+		{
+			var dataElement = XElement.Parse(dataNode.OuterXml);
+			var signatureElement = XElement.Parse(signatureNode.OuterXml);
+			dataElement.Attribute(XNamespace.Xmlns + "xsi")?.Remove();
+
 			return new XElement(v28 + XMLNames.Component_AirDrag,
 				dataElement,
 				signatureElement);
 		}
+		
+		private List<XElement> GetElements(XmlNodeList list)
+		{
+			var res = new List<XElement>();
 
+			foreach (XmlNode node in list) {
+				var element = XElement.Parse(node.OuterXml);
+				element.Attribute("xmlns")?.Remove();
+				res.Add(element);
+			}
 
+			return res;
+		}
+		
 		private XElement GetBusAirdragUseStandardValues()
 		{
 			var id = $"{VectoComponents.Airdrag.HashIdPrefix()}{GetGUID()}";
@@ -335,6 +390,9 @@ namespace TUGraz.VectoCore.OutputData.XML
 
 		private XElement GetBusAuxiliaries(IBusAuxiliariesDeclarationData busAux)
 		{
+			if (busAux == null)
+				return null;
+
 			var electricSystemEntry = GetElectricSystem(busAux.ElectricConsumers);
 			var hvacEntry = GetHVAC(busAux.HVACAux);
 
@@ -355,6 +413,9 @@ namespace TUGraz.VectoCore.OutputData.XML
 
 		private XElement GetElectricSystem(IElectricConsumersDeclarationData electricConsumer)
 		{
+			if (electricConsumer == null)
+				return null;
+
 			if (electricConsumer.InteriorLightsLED == null && electricConsumer.DayrunninglightsLED == null &&
 				electricConsumer.PositionlightsLED == null && electricConsumer.BrakelightsLED == null &&
 				electricConsumer.HeadlightsLED == null)
@@ -377,6 +438,9 @@ namespace TUGraz.VectoCore.OutputData.XML
 
 		private XElement GetHVAC(IHVACBusAuxiliariesDeclarationData hvac)
 		{
+			if (hvac == null)
+				return null;
+
 			if (hvac.SystemConfiguration == null &&
 				hvac.HeatPumpModeDriverCompartment == null && hvac.HeatPumpTypeDriverCompartment == null &&
 				hvac.HeatPumpModePassengerCompartment == null && hvac.HeatPumpTypePassengerCompartment == null &&
@@ -456,15 +520,5 @@ namespace TUGraz.VectoCore.OutputData.XML
 
 
 		#endregion
-
-		private string GetNamespaceVersionNumber(XNamespace ns)
-		{
-			if (ns == null)
-				return null;
-
-			var pattern = @"(?<=:v)\d+\.\d+";
-			var versionNumber = Regex.Match(ns.NamespaceName, pattern);
-			return $"v{versionNumber}";
-		}
 	}
 }
