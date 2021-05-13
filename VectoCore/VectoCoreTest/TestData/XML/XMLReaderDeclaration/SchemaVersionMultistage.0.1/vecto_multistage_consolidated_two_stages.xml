@@ -702,8 +702,7 @@ xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:DeclarationOutput:VehicleInterimFile
 				<v2.8:ManufacturerAddress>Intermediate Manufacturer Address 2</v2.8:ManufacturerAddress>
 				<v2.8:VIN>VEH-2234567890</v2.8:VIN>
 				<v2.8:Date>2021-02-13T07:20:08.0187663Z</v2.8:Date>
-				<v2.8:CorrectedActualMass>15000</v2.8:CorrectedActualMass>	
-				<v2.8:AirdragModifiedMultistage>false</v2.8:AirdragModifiedMultistage>
+				<v2.8:CorrectedActualMass>15000</v2.8:CorrectedActualMass>
 				<v2.8:BodyworkCode>CB</v2.8:BodyworkCode>
 				<v2.8:DoorDriveTechnology>mixed</v2.8:DoorDriveTechnology>				
 				<v2.8:VehicleDeclarationType>interim</v2.8:VehicleDeclarationType>				

@@ -262,7 +262,7 @@ namespace TUGraz.VectoCommon.BusAuxiliaries
 	public static class HeatPumpModeHelper
 	{
 		private const string HEATING = "heating";
-		private const string HEATING_AND_COOLING = "heating_and_cooling";
+		private const string HEATING_AND_COOLING = "heating and cooling";
 		private const string COOLING = "cooling";
 		private const string N_A = "N.A.";
 
