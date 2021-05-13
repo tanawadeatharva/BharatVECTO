@@ -22,6 +22,7 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 	{
 		void SetAuxiliariesInputData(IBusAuxiliariesDeclarationData componentsAuxiliaryInputData);
 		bool HasValues { get; }
+		object PrimaryVehicleHybridElectric { get; set; }
 	}
 
 
@@ -66,6 +67,13 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 
 				return hasValues;
 			}
+		}
+
+		private object _primaryVehicleHybridElectric = false;
+		public object PrimaryVehicleHybridElectric
+		{
+			get => _primaryVehicleHybridElectric;
+			set => SetProperty(ref _primaryVehicleHybridElectric, value);
 		}
 
 
@@ -312,6 +320,7 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 		}
 
 		private CompressorDrive _compressorDrive;
+	
 
 
 		public CompressorDrive CompressorDrive

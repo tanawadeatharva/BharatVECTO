@@ -59,6 +59,9 @@
                                                 ListItems="{Binding HeatPumpModePassengerCompartmentAllowedValues}"
                                                 ShowCheckBox="False"/>
                     <Separator/>
+                    <customControls:MultiStageParameter Mode="COMBOBOX" 
+                                                        PreviousContent="{Binding ConsolidatedInputData.PneumaticSupply.CompressorDrive}"
+                                                        Content="{Binding CompressorDrive}"></customControls:MultiStageParameter>
                     <customControls:MultiStageParameter Mode="TEXTBOX" 
                                                         Validation.ErrorTemplate="{DynamicResource multistageParameterControlErrorTemplate}"
                                                 PreviousContent="{Binding ConsolidatedInputData.HVACAux.AuxHeaterPower}"
@@ -72,16 +75,18 @@
                     <customControls:MultiStageParameter Mode="CHECKBOX" 
                                                 PreviousContent="{Binding ConsolidatedInputData.HVACAux.SeparateAirDistributionDucts}" 
                                                 Content="{Binding SeparateAirDistributionDucts}"/>
+
+                    <StackPanel Visibility="{Binding PrimaryVehicleHybridElectric, Converter={StaticResource BooleanToVisibilityConverter}}">
                     <customControls:MultiStageParameter Mode="CHECKBOX" 
-                                                PreviousContent="{Binding ConsolidatedInputData.HVACAux.WaterElectricHeater}" 
-                                                Content="{Binding WaterElectricHeater}"/>
+                                                        PreviousContent="{Binding ConsolidatedInputData.HVACAux.WaterElectricHeater}" 
+                                                        Content="{Binding WaterElectricHeater}"/>
                     <customControls:MultiStageParameter Mode="CHECKBOX" 
                                                 PreviousContent="{Binding ConsolidatedInputData.HVACAux.AirElectricHeater}"
                                                 Content="{Binding AirElectricHeater}"/>
                     <customControls:MultiStageParameter Mode="CHECKBOX" 
                                                 PreviousContent="{Binding ConsolidatedInputData.HVACAux.OtherHeatingTechnology}" 
                                                 Content="{Binding OtherHeatingTechnology}"/>
-
+                    </StackPanel>
                     <Separator/>
                 </StackPanel>
             </DockPanel>

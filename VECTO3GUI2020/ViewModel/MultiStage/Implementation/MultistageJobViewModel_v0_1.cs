@@ -11,6 +11,7 @@ using System.Xml;
 using System.Xml.Linq;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
+using TUGraz.VectoCore.InputData.FileIO.JSON;
 using TUGraz.VectoCore.InputData.FileIO.XML;
 using TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider;
 using TUGraz.VectoCore.Models.Simulation.Impl;
@@ -55,6 +56,26 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 		{
 			get => _manufacturingStageViewModel;
 			set => SetProperty(ref _manufacturingStageViewModel, value);
+		}
+
+		public MultiStageJobViewModel_v0_1(IMultistageBusInputDataProvider inputData, IMultiStageViewModelFactory vmFactory, IMultistageDependencies multistageDependencies, IXMLInputDataReader inputDataReader)
+		{
+			
+			_dataSource = inputData.DataSource;
+			_jobInputData = inputData.JobInputData;
+			_vmFactory = vmFactory;
+			_consolidateManufacturingStage = _jobInputData.ConsolidateManufacturingStage;
+			_manufacturingStages = _jobInputData.ManufacturingStages;
+			_primaryVehicle = _jobInputData.PrimaryVehicle;
+			_dialogHelper = multistageDependencies.DialogHelperLazy;
+			_inputDataReader = inputDataReader;
+			_manufacturingStageViewModel =
+				vmFactory.GetManufacturingStageViewModel(_consolidateManufacturingStage);
+
+			// QUESTION: HEV/PEV ?
+			//var hybridElectric = inputData.PrimaryVehicleData.Vehicle.HybridElectricHDV;
+			//_manufacturingStageViewModel.VehicleViewModel.PrimaryVehicleHybridElectric = hybridElectric;
+			_multistageDependencies = multistageDependencies;
 		}
 
 
@@ -244,20 +265,7 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 		#endregion
 
 
-		public MultiStageJobViewModel_v0_1(IMultistageBusInputDataProvider inputData, IMultiStageViewModelFactory vmFactory, IMultistageDependencies multistageDependencies, IXMLInputDataReader inputDataReader)
-		{
-			_dataSource = inputData.DataSource;
-			_jobInputData = inputData.JobInputData;
-			_vmFactory = vmFactory;
-			_consolidateManufacturingStage = _jobInputData.ConsolidateManufacturingStage;
-			_manufacturingStages =_jobInputData.ManufacturingStages;
-			_primaryVehicle = _jobInputData.PrimaryVehicle;
-			_dialogHelper = multistageDependencies.DialogHelperLazy;
-			_inputDataReader = inputDataReader;
-			_manufacturingStageViewModel =
-				vmFactory.GetManufacturingStageViewModel(_consolidateManufacturingStage);
-			_multistageDependencies = multistageDependencies;
-		}
+
 
 
 		#region Implementation of IInputDataProvider
