@@ -388,7 +388,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 		}
 
 
-		private XElement GetBusAuxiliaries(IBusAuxiliariesDeclarationData busAux)
+		public XElement GetBusAuxiliaries(IBusAuxiliariesDeclarationData busAux)
 		{
 			if (busAux == null)
 				return null;

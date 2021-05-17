@@ -286,9 +286,11 @@
     <Compile Include="InputData\Reader\ComponentData\BatteryInternalResistanceReader.cs" />
     <Compile Include="InputData\Reader\ComponentData\BatteryMaxCurrentReader.cs" />
     <Compile Include="InputData\Reader\ComponentData\ElectricMotorMapReader.cs" />
+    <Compile Include="InputData\Reader\DataObjectAdapter\DeclarationDataAdapterMultistageBus.cs" />
     <Compile Include="InputData\Reader\DataObjectAdapter\DeclarationDataAdapterPrimaryBus.cs" />
     <Compile Include="InputData\Reader\ComponentData\ElectricFullLoadCurveReader.cs" />
     <Compile Include="InputData\Reader\Impl\AbstractDeclarationMultistageBusVectoRunDataFactory.cs" />
+    <Compile Include="InputData\Reader\Impl\DeclarationModeCompletedMultistageBusVectoRunDataFactory.cs" />
     <Compile Include="InputData\Reader\Impl\DeclarationModeMultistageBusVectoRunDataFactory.cs" />
     <Compile Include="Models\Connector\Ports\Impl\BatteryResponse.cs" />
     <Compile Include="Models\Connector\Ports\IElectricEnergyStoragePort.cs" />

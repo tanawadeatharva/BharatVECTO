@@ -12,7 +12,7 @@ using TUGraz.VectoCommon.Resources;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Factory;
 using TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Interfaces;
-using TUGraz.VectoCore.InputData.Reader.ComponentData;
+using TUGraz.VectoCore.OutputData.XML;
 using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
@@ -932,12 +932,16 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 	{
 		private ConsolidateElectricConsumerData _consolidateElectricConsumerData;
 		private ConsolidatedHVACBusAuxiliariesData _consolidatedHVACBusAuxiliariesData;
+		private XmlNode _xmlNode;
 
 
 		public ConsolidatedBusAuxiliariesData(IEnumerable<IManufacturingStageInputData> manufacturingStages)
 			: base(manufacturingStages) { }
 
-		public XmlNode XMLSource { get; }
+		public XmlNode XMLSource
+		{
+			get { return _xmlNode ?? (_xmlNode = GetBusAuxXMLSource()); }
+		}
 		public string FanTechnology
 		{
 			get { return null; }
@@ -1012,6 +1016,24 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 			return _consolidateElectricConsumerData != null && _consolidateElectricConsumerData.IsInputDataComplete(jobType) &&
 					_consolidatedHVACBusAuxiliariesData != null && _consolidatedHVACBusAuxiliariesData.IsInputDataComplete(jobType);
 		}
+
+
+		private XmlNode GetBusAuxXMLSource()
+		{
+			var multistageBusReport = new XMLMultistageBusReport();
+			var auxElement = multistageBusReport.GetBusAuxiliaries(this);
+			
+			if (auxElement == null)
+				return null;
+			
+			using (var xmlReader = auxElement.CreateReader())
+			{
+				var xmlDoc = new XmlDocument();
+				xmlDoc.Load(xmlReader);
+				return xmlDoc.FirstChild;
+			}
+		}
+
 	}
 
 	// ---------------------------------------------------------------------------------------
