@@ -32,32 +32,33 @@
             </Grid>
         </Border>
         <Grid Grid.Column="1">
-            <Border BorderBrush="{StaticResource AccentColorButton}" BorderThickness="1">
-                <StackPanel VerticalAlignment="Stretch">
-                    <DataGrid ItemsSource="{Binding Jobs}"
-                              Name="JobDataGrid"
-                              HorizontalAlignment="Stretch"
-                              IsReadOnly="True" 
-                              CanUserReorderColumns="False" 
-                              AutoGenerateColumns="False"
-                              SelectionMode="Single"
-                              GridLinesVisibility="None" 
-                              HorizontalScrollBarVisibility="Disabled" 
-                              RowHeaderWidth="0"
-                              ColumnHeaderHeight="30"     
-                              VerticalAlignment="Stretch"
-                              VerticalContentAlignment="Stretch"
-                              BorderThickness="0"
-                              ColumnHeaderStyle="{StaticResource JobListDataGridHeaderStyle}"
-                              Height="Auto"
-                              RowHeight="30"
-                              AlternatingRowBackground="LightGray" CellStyle="{DynamicResource DataGridCellStyle1}"
-                              >
+            <Border BorderBrush="{StaticResource AccentColorButton}" BorderThickness="0" >
+                <DataGrid ItemsSource="{Binding Jobs}"
+                          BorderBrush ="{StaticResource AccentColorButton}" BorderThickness="1"
+                          Name="JobDataGrid"
+                          HorizontalAlignment="Stretch"
+                          IsReadOnly="True" 
+                          CanUserReorderColumns="False" 
+                          AutoGenerateColumns="False"
+                          SelectionMode="Single"
+                          GridLinesVisibility="None" 
+                          HorizontalScrollBarVisibility="Disabled" 
+                          RowHeaderWidth="0"
+                          ColumnHeaderHeight="30"     
+                          VerticalAlignment="Stretch"
+                          VerticalContentAlignment="Stretch"
+                          AllowDrop="True"  Drop="JobDataGrid_OnDrop"
+                          PreviewDrop = "JobDataGrid_OnPreviewDrop"
+                          ColumnHeaderStyle="{StaticResource JobListDataGridHeaderStyle}"
+                              
+                          RowHeight="30"
+                          AlternatingRowBackground="LightGray" CellStyle="{DynamicResource DataGridCellStyle1}"
+                >
                         <DataGrid.Columns>
                             <DataGridTextColumn Header="Name" Binding="{Binding DocumentName}" Width="1*"></DataGridTextColumn>
                             <DataGridTextColumn Header="Type" Binding="{Binding DocumentType}" Width="1*"></DataGridTextColumn>
                         </DataGrid.Columns>
-                        <DataGrid.RowDetailsTemplate>
+                    <DataGrid.RowDetailsTemplate>
                             <DataTemplate>
                                 <StackPanel Orientation="Vertical">
                                     <Label x:Name="label" Content="Filename"/>
@@ -65,15 +66,14 @@
                                 </StackPanel>
                             </DataTemplate>
                         </DataGrid.RowDetailsTemplate>
-                        <DataGrid.InputBindings>
+                    <DataGrid.InputBindings>
                             <MouseBinding
                         MouseAction="LeftDoubleClick"
                         Command="{Binding EditJob}"
                         CommandParameter="{Binding ElementName=JobDataGrid, Path=SelectedItem}"></MouseBinding>
                         </DataGrid.InputBindings>
                     </DataGrid>
-                    <Label x:Name="label" Content="Loading . . ." Visibility="{Binding IsLoading, Converter={StaticResource BooleanToVisibilityConverter}}"/>
-                </StackPanel>
+                    <!--<Label x:Name="label" Content="Loading . . ." Visibility="{Binding IsLoading, Converter={StaticResource BooleanToVisibilityConverter}}"/>-->
             </Border>
         </Grid>
         <Grid Grid.Column="2">
@@ -81,7 +81,7 @@
                 <StackPanel >
                     <Button x:Name="button3" Margin="4" HorizontalAlignment="Stretch" 
                         Style="{StaticResource MultiStageButtonStyle1}"
-                        Command="{Binding AddJob}" Background="#FFDDDDDD">
+                        Command="{Binding AddJobAsyncCommand}" Background="#FFDDDDDD">
                         OpenFile</Button>
                     <Button x:Name="button4" Margin ="4" HorizontalAlignment="Stretch" 
                         Style="{StaticResource MultiStageButtonStyle1}"

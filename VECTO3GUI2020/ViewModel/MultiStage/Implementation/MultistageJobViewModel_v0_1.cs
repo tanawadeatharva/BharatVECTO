@@ -34,7 +34,7 @@ using XmlDocumentType = TUGraz.VectoCore.Utils.XmlDocumentType;
 namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 {
 
-	public interface IMultiStageJobViewModel : IDeclarationMultistageJobInputData, IMultistageVIFInputData, IMultistageBusInputDataProvider
+	public interface IMultiStageJobViewModel : IDeclarationMultistageJobInputData, IMultistageVIFInputData, IMultistageBusInputDataProvider, IJobViewModel, IEditViewModel
 	{
 		IManufacturingStageViewModel ManufacturingStageViewModel { get; }
 	}
@@ -63,6 +63,7 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 			
 			_dataSource = inputData.DataSource;
 			_jobInputData = inputData.JobInputData;
+			_inputData = inputData;
 			_vmFactory = vmFactory;
 			_consolidateManufacturingStage = _jobInputData.ConsolidateManufacturingStage;
 			_manufacturingStages = _jobInputData.ManufacturingStages;
@@ -221,6 +222,7 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 		private string _vehicleInputDataFilePath = null;
 		private readonly IMultistageDependencies _multistageDependencies;
 		private readonly DataSource _dataSource;
+		private readonly IMultistageBusInputDataProvider _inputData;
 
 		public ICommand LoadVehicleDataCommand
 		{
@@ -270,7 +272,13 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 
 		#region Implementation of IInputDataProvider
 
+		public string DocumentName => Path.GetFileNameWithoutExtension(_inputData.DataSource.SourceFile);
+
+		public XmlDocumentType DocumentType => XmlDocumentType.MultistageOutputData;
+
 		public DataSource DataSource => _dataSource;
+
+		public IEditViewModel EditViewModel => this;
 
 		#endregion
 
@@ -328,6 +336,12 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 			set => _inputComplete = value;
 		}
 
+
+		#endregion
+
+		#region Implementation of IEditViewModel
+
+		public string Name => "Multistage";
 
 		#endregion
 	}
