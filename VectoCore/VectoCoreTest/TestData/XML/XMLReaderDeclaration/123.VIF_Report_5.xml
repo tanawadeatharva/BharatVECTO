@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<VectoOutputMultistage xmlns="urn:tugraz:ivt:VectoAPI:DeclarationOutput:VehicleInterimFile:v0.1" xmlns:di="http://www.w3.org/2000/09/xmldsig#" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:v2.0="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0" xmlns:v2.1="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.1" xmlns:v2.3="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:DEV:v2.3" xmlns:v2.6="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:DEV:v2.6" xmlns:v2.8="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:DEV:v2.8" xmlns:schemaLocation="urn:tugraz:ivt:VectoAPI:DeclarationOutput:VehicleInterimFile:v0.1 E:\VECTO_DEV\fk_vecto-dev\VectoCore\VectoCore\Resources\XSD/VectoOutputMultistage.0.1.xsd">
+<VectoOutputMultistage xmlns="urn:tugraz:ivt:VectoAPI:DeclarationOutput:VehicleInterimFile:v0.1" xmlns:di="http://www.w3.org/2000/09/xmldsig#" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:v2.0="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0" xmlns:v2.1="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.1" xmlns:v2.3="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:DEV:v2.3" xmlns:v2.6="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:DEV:v2.6" xmlns:v2.8="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:DEV:v2.8" xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:DeclarationOutput:VehicleInterimFile:v0.1 E:\VECTO_DEV\fk_vecto-dev\VectoCore\VectoCore\Resources\XSD/VectoOutputMultistage.0.1.xsd">
   <PrimaryVehicle>
     <Data id="text" xsi:type="PrimaryVehicleDataType">
       <Vehicle xsi:type="VehiclePIFType">
@@ -809,7 +809,7 @@
     </Signature>
   </ManufacturingStage>
   <ManufacturingStage stageCount="5">
-    <Data xsi:type="BusManufacturingStageDataType" id="MST-8a622efa2f0145e684b7">
+    <Data xsi:type="BusManufacturingStageDataType" id="MST-076becd8299f4cd6b7ed">
       <HashPreviousStage>
         <di:Reference URI="#RESULT-8f30c7fe665a47938f7b">
           <di:Transforms>
@@ -820,78 +820,26 @@
           <di:DigestValue>GHpFCKh1bu/YPwYj38kJK1uCrv++BTLf2OUZcOt43Os=</di:DigestValue>
         </di:Reference>
       </HashPreviousStage>
-      <Vehicle xsi:type="v2.8:InterimStageInputType" id="VEH-5cc3b782c52a421d8636">
-        <v2.8:Manufacturer>Some Manufacturer</v2.8:Manufacturer>
-        <v2.8:ManufacturerAddress>Some Manufacturer Address</v2.8:ManufacturerAddress>
-        <v2.8:VIN>VEH-1234567890</v2.8:VIN>
-        <v2.8:Date>2021-05-09T22:00:00Z</v2.8:Date>
-        <v2.8:Model>Sample Bus Model</v2.8:Model>
-        <v2.8:LegislativeCategory>M3</v2.8:LegislativeCategory>
-        <v2.8:CorrectedActualMass>500</v2.8:CorrectedActualMass>
-        <v2.8:TechnicalPermissibleMaximumLadenMass>3500</v2.8:TechnicalPermissibleMaximumLadenMass>
-        <v2.8:AirdragModifiedMultistage>false</v2.8:AirdragModifiedMultistage>
-        <v2.8:NgTankSystem>Compressed</v2.8:NgTankSystem>
-        <v2.8:ClassBus>II+III</v2.8:ClassBus>
-        <v2.8:NumberPassengersLowerDeck>0</v2.8:NumberPassengersLowerDeck>
-        <v2.8:NumberPassengersUpperDeck>10</v2.8:NumberPassengersUpperDeck>
-        <v2.8:BodyworkCode>CB</v2.8:BodyworkCode>
-        <v2.8:LowEntry>false</v2.8:LowEntry>
-        <v2.8:HeightIntegratedBody>2500</v2.8:HeightIntegratedBody>
-        <v2.8:VehicleLength>0</v2.8:VehicleLength>
-        <v2.8:VehicleWidth>0</v2.8:VehicleWidth>
-        <v2.8:EntranceHeight>0</v2.8:EntranceHeight>
-        <v2.8:DoorDriveTechnology>electric</v2.8:DoorDriveTechnology>
-        <v2.8:VehicleDeclarationType>interim</v2.8:VehicleDeclarationType>
-        <v2.8:ADAS>
-          <v2.3:EngineStopStart>true</v2.3:EngineStopStart>
-          <v2.3:EcoRollWithoutEngineStop>false</v2.3:EcoRollWithoutEngineStop>
-          <v2.3:EcoRollWithEngineStop>false</v2.3:EcoRollWithEngineStop>
-          <v2.3:PredictiveCruiseControl>none</v2.3:PredictiveCruiseControl>
-          <v2.3:APTEcoRollReleaseLockupClutch>true</v2.3:APTEcoRollReleaseLockupClutch>
-        </v2.8:ADAS>
-        <v2.8:Components xmlns:v2.8="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:DEV:v2.8" xsi:type="v2.8:CompletedVehicleComponentsDeclarationType">
-          <v2.8:Auxiliaries>
-            <v2.8:Data xsi:type="v2.8:CompletedVehicleAuxiliaryDataDeclarationType">
-              <v2.8:ElectricSystem>
-                <v2.8:LEDLights>
-                  <v2.8:Interiorlights>false</v2.8:Interiorlights>
-                  <v2.8:Dayrunninglights>true</v2.8:Dayrunninglights>
-                  <v2.8:Positionlights>true</v2.8:Positionlights>
-                  <v2.8:Brakelights>true</v2.8:Brakelights>
-                  <v2.8:Headlights>false</v2.8:Headlights>
-                </v2.8:LEDLights>
-              </v2.8:ElectricSystem>
-              <v2.8:HVAC>
-                <v2.8:SystemConfiguration>0</v2.8:SystemConfiguration>
-                <v2.8:HeatPumpTypeDriverCompartment>none</v2.8:HeatPumpTypeDriverCompartment>
-                <v2.8:HeatPumpModeDriverCompartment>heating</v2.8:HeatPumpModeDriverCompartment>
-                <v2.8:HeatPumpTypePassengerCompartment>non R-744 2-stage</v2.8:HeatPumpTypePassengerCompartment>
-                <v2.8:HeatPumpModePassengerCompartment>cooling</v2.8:HeatPumpModePassengerCompartment>
-                <v2.8:AuxiliaryHeaterPower>50</v2.8:AuxiliaryHeaterPower>
-                <v2.8:DoubleGlazing>false</v2.8:DoubleGlazing>
-                <v2.8:AdjustableAuxiliaryHeater>true</v2.8:AdjustableAuxiliaryHeater>
-                <v2.8:SeparateAirDistributionDucts>false</v2.8:SeparateAirDistributionDucts>
-                <v2.8:WaterElectricHeater>true</v2.8:WaterElectricHeater>
-                <v2.8:AirElectricHeater>false</v2.8:AirElectricHeater>
-                <v2.8:OtherHeatingTechnology>false</v2.8:OtherHeatingTechnology>
-              </v2.8:HVAC>
-            </v2.8:Data>
-          </v2.8:Auxiliaries>
-        </v2.8:Components>
+      <Vehicle xsi:type="v2.8:InterimStageInputType" id="VEH-d76d03c792dc4a258381">
+        <v2.8:Manufacturer>Manufq</v2.8:Manufacturer>
+        <v2.8:ManufacturerAddress>asdflköj</v2.8:ManufacturerAddress>
+        <v2.8:VIN>sadsadf</v2.8:VIN>
+        <v2.8:Date>2021-05-16T22:00:00Z</v2.8:Date>
+        <v2.8:VehicleDeclarationType>final</v2.8:VehicleDeclarationType>
       </Vehicle>
       <ApplicationInformation>
         <SimulationToolVersion>0.7.3.2171-DEV</SimulationToolVersion>
-        <Date>2021-05-10T11:15:01.2883833Z</Date>
+        <Date>2021-05-17T07:22:26.5083903Z</Date>
       </ApplicationInformation>
     </Data>
     <Signature>
-      <di:Reference URI="#MST-8a622efa2f0145e684b7">
+      <di:Reference URI="#MST-076becd8299f4cd6b7ed">
         <di:Transforms>
           <di:Transform Algorithm="urn:vecto:xml:2017:canonicalization" />
           <di:Transform Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#" />
         </di:Transforms>
         <di:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256" />
-        <di:DigestValue>Ikl36H/utDgp3JX2g/rJOWb3+GhUeJ4h90gVNz8IUQQ=</di:DigestValue>
+        <di:DigestValue>OuOo05XjBzDuVaiSHqbLWrQbHy5xdFaDCzNQnCLymYE=</di:DigestValue>
       </di:Reference>
     </Signature>
   </ManufacturingStage>

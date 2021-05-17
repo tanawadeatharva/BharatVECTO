@@ -59,9 +59,9 @@
                                                 ListItems="{Binding HeatPumpModePassengerCompartmentAllowedValues}"
                                                 ShowCheckBox="False"/>
                     <Separator/>
-                    <customControls:MultiStageParameter Mode="COMBOBOX" 
+                    <!--<customControls:MultiStageParameter Mode="COMBOBOX" 
                                                         PreviousContent="{Binding ConsolidatedInputData.PneumaticSupply.CompressorDrive}"
-                                                        Content="{Binding CompressorDrive}"></customControls:MultiStageParameter>
+                                                        Content="{Binding CompressorDrive}"></customControls:MultiStageParameter>-->
                     <customControls:MultiStageParameter Mode="TEXTBOX" 
                                                         Validation.ErrorTemplate="{DynamicResource multistageParameterControlErrorTemplate}"
                                                 PreviousContent="{Binding ConsolidatedInputData.HVACAux.AuxHeaterPower}"

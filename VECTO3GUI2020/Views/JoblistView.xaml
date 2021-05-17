@@ -6,6 +6,7 @@
              xmlns:local="clr-namespace:VECTO3GUI2020.Views"
              xmlns:converter="clr-namespace:VECTO3GUI2020.Helper.Converter" xmlns:implementation="clr-namespace:VECTO3GUI2020.ViewModel.Implementation" d:DataContext="{d:DesignInstance Type=implementation:JobListViewModel}"
              mc:Ignorable="d" 
+             AutomationProperties.Name="JobListView"
              d:DesignHeight="450" d:DesignWidth="1000">
 
     <Grid>

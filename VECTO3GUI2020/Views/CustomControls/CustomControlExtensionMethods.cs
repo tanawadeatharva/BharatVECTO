@@ -2,26 +2,32 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Net.NetworkInformation;
 using System.Resources;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using TUGraz.VectoCommon.Utils;
+using VECTO3GUI2020.Annotations;
 
 namespace VECTO3GUI2020.Views.CustomControls
 {
     public static class CustomControlExtensionMethods
     {
+
+		private static string unresolved = "unresolved";
+		private static string _suffix = "_"; //used to mark properties;
+
 		/// <summary>
 		/// Looks up the Label by the name the Property that is used for the binding
 		/// </summary>
 		/// <param name="dependencyProperty"></param>
-		/// <param name="resourceManager"></param>
+		/// <param name="resourceManagers">The resourceManagers where the name of the property will be looked up if</param>
 		/// <returns></returns>
-		public static string GetLabelByPropertyName(this UserControl userControl, DependencyProperty dependencyProperty, ResourceManager resourceManager)
+		public static string GetLabelByPropertyName(this UserControl userControl, DependencyProperty dependencyProperty, params ResourceManager[] resourceManagers)
 		{
-			var name = "unresolved";
+			string name = null;
 			var binding = userControl.GetBindingExpression(dependencyProperty);
 			var propertyName = binding?.ResolvedSourcePropertyName;
 			
@@ -30,11 +36,27 @@ namespace VECTO3GUI2020.Views.CustomControls
 				return name;
 			}
 
+			foreach (var resourceManager in resourceManagers) {
+				var resolvedName = resourceManager?.GetString(propertyName);
+				if (resolvedName != null) {
+					name = resolvedName;
+					return name;
+				}
+			}
 
-			var extendedPropertyName = binding?.ResolvedSource.GetType().Name + "_" + propertyName;
-			name = resourceManager?.GetString(extendedPropertyName) ?? resourceManager?.GetString(propertyName) ?? (propertyName + "_"); //_Postfix to label Property Names that are not in strings.resx
+
+			name = propertyName + _suffix;
+
+			//var extendedPropertyName = binding?.ResolvedSource.GetType().Name + "_" + propertyName;
+			//name = resourceManager?.GetString(extendedPropertyName) ?? resourceManager?.GetString(propertyName) ?? (propertyName + "_"); //_Postfix to label Property Names that are not in strings.resx
 
 			return name;
+		}
+
+		public static string GetLabelByPropertyName(this UserControl userControl, DependencyProperty dependencyProperty,
+			[NotNull] ResourceManager resourceManager)
+		{
+			return GetLabelByPropertyName(userControl, dependencyProperty, resourceManagers:resourceManager);
 		}
 
 		public static Type GetPropertyType(this UserControl userControl, DependencyProperty dependencyProperty)
