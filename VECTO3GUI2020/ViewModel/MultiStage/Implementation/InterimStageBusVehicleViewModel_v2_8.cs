@@ -70,6 +70,7 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 		Dictionary<string, string> Errors { get; }
 		IMultistageAirdragViewModel MultistageAirdragViewModel { get; set; }
 		IMultistageAuxiliariesViewModel MultistageAuxiliariesViewModel { get; set; }
+		bool PrimaryVehicleHybridElectric { get; set; }
 		void SetAirdragData(IAirdragDeclarationInputData airdragData);
 		void SetVehicleInputData(IVehicleDeclarationInputData vehicleInputData);
 	}
@@ -94,6 +95,17 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 		{
 			get => _multistageAuxiliariesViewModel;
 			set => SetProperty(ref _multistageAuxiliariesViewModel, value);
+		}
+
+		private bool _primaryVehicleHybridElectric;
+		public bool PrimaryVehicleHybridElectric
+		{
+			get => _primaryVehicleHybridElectric;
+			set
+			{
+				SetProperty(ref _primaryVehicleHybridElectric, value);
+				MultistageAuxiliariesViewModel.PrimaryVehicleHybridElectric = value;
+			}
 		}
 
 		#endregion
@@ -543,7 +555,7 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 		private bool? _engineStopStartNullable;
 		private EcoRollType? _ecoRollTypeNullable;
 		private PredictiveCruiseControlType? _predictiveCruiseControlNullable;
-
+		
 
 
 		public IAdvancedDriverAssistantSystemDeclarationInputData ADAS
