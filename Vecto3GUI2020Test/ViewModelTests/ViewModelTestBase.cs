@@ -22,6 +22,9 @@ namespace Vecto3GUI2020Test
 		protected const string consolidated_multiple_stages_airdrag =
 			"vecto_multistage_consolidated_multiple_stages_airdrag.xml";
 
+		protected const string consolidated_multiple_stages_hev =
+			"vecto_multistage_consolidated_multiple_stages_hev.xml";
+
 		protected const string consolidated_one_stage = "vecto_multistage_consolidated_one_stage.xml";
 		protected const string primary_vehicle_only = "vecto_multistage_primary_vehicle_only.xml";
 

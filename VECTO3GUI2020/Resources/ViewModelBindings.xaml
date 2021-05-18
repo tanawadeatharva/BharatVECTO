@@ -12,28 +12,28 @@
                     xmlns:componentimpl="clr-namespace:VECTO3GUI2020.ViewModel.Implementation.JobEdit.Vehicle.Components"
                     xmlns:componentviews="clr-namespace:VECTO3GUI2020.Views.JobEditViews.Vehicle.Components"
                     xmlns:multistageimpl="clr-namespace:VECTO3GUI2020.ViewModel.MultiStage.Implementation">
-    <DataTemplate DataType="{x:Type impl:JobListViewModel}">
+    <DataTemplate x:Shared="False" DataType="{x:Type impl:JobListViewModel}">
         <views:JobListView />
     </DataTemplate>
-    <DataTemplate DataType="{x:Type impl:MessageViewModel}">
+    <DataTemplate x:Shared="False" DataType="{x:Type impl:MessageViewModel}">
         <views:MessageView />
     </DataTemplate>
 
-    <DataTemplate DataType="{x:Type impl:MainWindowViewModel}">
+    <DataTemplate x:Shared="False" DataType="{x:Type impl:MainWindowViewModel}">
         <local:MainWindow />
     </DataTemplate>
 
-    <DataTemplate DataType="{x:Type impl:SettingsViewModel}">
+    <DataTemplate x:Shared="False" DataType="{x:Type impl:SettingsViewModel}">
         <views:SettingsView/>
     </DataTemplate>
 
 
 
 
-    <DataTemplate DataType="{x:Type jobeditimpl:DeclarationJobEditViewModel_v1_0}">
+    <DataTemplate x:Shared="False" DataType="{x:Type jobeditimpl:DeclarationJobEditViewModel_v1_0}">
         <jobeditviews:DeclarationJobEditView/>
     </DataTemplate>
-    <DataTemplate DataType="{x:Type jobeditimpl:DeclarationJobEditViewModel_v2_0}">
+    <DataTemplate x:Shared="False" DataType="{x:Type jobeditimpl:DeclarationJobEditViewModel_v2_0}">
         <jobeditviews:DeclarationJobEditView/>
     </DataTemplate>
 
@@ -199,27 +199,27 @@
     </DataTemplate>
 
     <!--#region Multistage -->
-    <DataTemplate DataType="{x:Type multistageimpl:NewMultiStageJobViewModel}">
+    <DataTemplate x:Shared="False" DataType="{x:Type multistageimpl:NewMultiStageJobViewModel}">
         <multistageviews:NewMultistageFileView/>
     </DataTemplate>
 
-    <DataTemplate DataType="{x:Type multistageimpl:ManufacturingStageViewModel_v0_1}">
+    <DataTemplate x:Shared="False" DataType="{x:Type multistageimpl:ManufacturingStageViewModel_v0_1}">
         <multistageviews:ManufacturingStageView></multistageviews:ManufacturingStageView>
     </DataTemplate>
 
-    <DataTemplate DataType="{x:Type multistageimpl:DeclarationInterimStageBusVehicleViewModel_v2_8}">
+    <DataTemplate x:Shared="False" DataType="{x:Type multistageimpl:DeclarationInterimStageBusVehicleViewModel_v2_8}">
         <multistageviews:VehicleView_v2_8/>
     </DataTemplate>
 
-    <DataTemplate DataType="{x:Type multistageimpl:MultiStageJobViewModel_v0_1}">
+    <DataTemplate x:Shared="False" DataType="{x:Type multistageimpl:MultiStageJobViewModel_v0_1}">
         <multistageviews:MultiStageView/>
     </DataTemplate>
 
-    <DataTemplate DataType="{x:Type multistageimpl:MultistageAirdragViewModel}">
+    <DataTemplate x:Shared="False" DataType="{x:Type multistageimpl:MultistageAirdragViewModel}">
         <multistageviews:MultistageAirDragView/>
     </DataTemplate>
 
-    <DataTemplate DataType="{x:Type multistageimpl:MultistageAuxiliariesViewModel}">
+    <DataTemplate x:Shared="False" DataType="{x:Type multistageimpl:MultistageAuxiliariesViewModel}">
         <multistageviews:ManufacturingStageAuxiliariesView/>
     </DataTemplate>
     <!--#endregion-->

@@ -451,10 +451,7 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 				}
 				return _airdragModifiedEditingEnabled;
 			}
-			set{
-				SetProperty(ref _airdragModifiedEditingEnabled, value);
-			}
-				
+			set => SetProperty(ref _airdragModifiedEditingEnabled, value);
 		}
 		#endregion;
 

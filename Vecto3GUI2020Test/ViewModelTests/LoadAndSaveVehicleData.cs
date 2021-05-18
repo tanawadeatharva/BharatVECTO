@@ -91,7 +91,7 @@ namespace Vecto3GUI2020Test
 
 			Assert.True(vehicle.AirdragModifiedMultistageEditingEnabled);
 
-			var mockDialog = getMockDialogHelper(consolidated_multiple_stages);
+			var mockDialog = getMockDialogHelper(consolidated_multiple_stages_hev);
 			newMultistageJobViewModel.AddVifFile.Execute(null);
 			Assert.AreEqual(mockDialog.Object.OpenXMLFileDialog(null), newMultistageJobViewModel.VifPath);
 			vehicle = newMultistageJobViewModel.MultiStageJobViewModel.VehicleInputData as DeclarationInterimStageBusVehicleViewModel_v2_8;

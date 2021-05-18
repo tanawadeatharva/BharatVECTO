@@ -3,6 +3,7 @@ using System.CodeDom;
 using System.Diagnostics;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Threading;
 using System.Windows;
 using System.Windows.Input;
 using TUGraz.VectoCommon.InputData;
@@ -34,7 +35,11 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 		public IMultiStageJobViewModel MultiStageJobViewModel
 		{
 			get { return _multistageJobViewModel; }
-			set { SetProperty(ref _multistageJobViewModel, value); }
+			set
+			{
+				OnPropertyChanged(nameof(MultiStageJobViewModel));
+				SetProperty(ref _multistageJobViewModel, value);
+			}
 		}
 
 
