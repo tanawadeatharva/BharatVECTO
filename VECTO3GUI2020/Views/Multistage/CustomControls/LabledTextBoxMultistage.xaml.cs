@@ -63,13 +63,13 @@ namespace VECTO3GUI2020.Views.Multistage.CustomControls
 		}
 
 
-		public static readonly DependencyProperty LabelTextProperty = DependencyProperty.Register(
-			"LabelText", typeof(string), typeof(LabledTextBoxMultistage), new PropertyMetadata(null));
+		public static readonly DependencyProperty GeneratedLabelTextProperty = DependencyProperty.Register(
+			"GeneratedLabelText", typeof(string), typeof(LabledTextBoxMultistage), new PropertyMetadata(null));
 
-		public string LabelText
+		public string GeneratedLabelText
 		{
-			get { return (string)GetValue(LabelTextProperty); }
-			set { SetValue(LabelTextProperty, value); }
+			get { return (string)GetValue(GeneratedLabelTextProperty); }
+			set { SetValue(GeneratedLabelTextProperty, value); }
 		}
 
 		public static readonly DependencyProperty ModeProperty = DependencyProperty.Register(
@@ -91,11 +91,11 @@ namespace VECTO3GUI2020.Views.Multistage.CustomControls
 			labledTextBoxMultistage.DummyContent = labledTextBoxMultistage.CreateDummyContent(e, 
 				createEnum:labledTextBoxMultistage.Mode == MultistageParameterViewMode.COMBOBOX);
 
-			if (labledTextBoxMultistage.LabelText != null)
+			if (labledTextBoxMultistage.GeneratedLabelText != null)
 			{
 				return;
 			}
-			labledTextBoxMultistage.LabelText = labledTextBoxMultistage.GetLabelByPropertyName(
+			labledTextBoxMultistage.GeneratedLabelText = labledTextBoxMultistage.GetLabelByPropertyName(
 				LabledTextBoxMultistage.ContentProperty,
 				Strings.ResourceManager);
 		}

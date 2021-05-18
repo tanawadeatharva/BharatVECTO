@@ -24,6 +24,7 @@ using VECTO3GUI2020.ViewModel.Interfaces.JobEdit.Vehicle.Components;
 using VECTO3GUI2020.ViewModel.MultiStage.Implementation;
 using VECTO3GUI2020.ViewModel.MultiStage.Interfaces;
 using Convert = System.Convert;
+using EnumHelper = VECTO3GUI2020.Helper.EnumHelper;
 
 namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 {
@@ -69,6 +70,7 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 		Dictionary<string, string> Errors { get; }
 		IMultistageAirdragViewModel MultistageAirdragViewModel { get; set; }
 		IMultistageAuxiliariesViewModel MultistageAuxiliariesViewModel { get; set; }
+		bool PrimaryVehicleHybridElectric { get; set; }
 		void SetAirdragData(IAirdragDeclarationInputData airdragData);
 		void SetVehicleInputData(IVehicleDeclarationInputData vehicleInputData);
 	}
@@ -93,6 +95,17 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 		{
 			get => _multistageAuxiliariesViewModel;
 			set => SetProperty(ref _multistageAuxiliariesViewModel, value);
+		}
+
+		private bool _primaryVehicleHybridElectric;
+		public bool PrimaryVehicleHybridElectric
+		{
+			get => _primaryVehicleHybridElectric;
+			set
+			{
+				SetProperty(ref _primaryVehicleHybridElectric, value);
+				MultistageAuxiliariesViewModel.PrimaryVehicleHybridElectric = value;
+			}
 		}
 
 		#endregion
@@ -438,10 +451,7 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 				}
 				return _airdragModifiedEditingEnabled;
 			}
-			set{
-				SetProperty(ref _airdragModifiedEditingEnabled, value);
-			}
-				
+			set => SetProperty(ref _airdragModifiedEditingEnabled, value);
 		}
 		#endregion;
 
@@ -457,10 +467,9 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 			set => SetProperty(ref _vehicleCode, value);
 		}
 
-		public ObservableCollection<Enum> VehicleCodeAllowedValues { get; } = 
-			new ObservableCollection<Enum>(Enum.GetValues(typeof(VehicleCode)).Cast<Enum>().ToList().Where(
-				(e => (VehicleCode)e != TUGraz.VectoCommon.Models.VehicleCode.NOT_APPLICABLE)));
-
+		public ObservableCollection<Enum> VehicleCodeAllowedValues { get; } =
+			EnumHelper.GetValuesAsObservableCollectionExcluding<Enum, VehicleCode>((TUGraz.VectoCommon.Models.VehicleCode.NOT_APPLICABLE));
+			
 
         public bool? LowEntry
 		{
@@ -543,7 +552,7 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 		private bool? _engineStopStartNullable;
 		private EcoRollType? _ecoRollTypeNullable;
 		private PredictiveCruiseControlType? _predictiveCruiseControlNullable;
-
+		
 
 
 		public IAdvancedDriverAssistantSystemDeclarationInputData ADAS

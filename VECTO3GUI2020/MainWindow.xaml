@@ -7,11 +7,12 @@
         xmlns:Implementation="clr-namespace:VECTO3GUI2020.ViewModel.Implementation" d:DataContext="{d:DesignInstance Type=Implementation:MainWindowViewModel}" x:Class="VECTO3GUI2020.MainWindow"
         mc:Ignorable="d"
         Title="Vecto" Height="450" Width="820"
-        WindowStartupLocation="CenterScreen">
+        WindowStartupLocation="CenterScreen"
+        AutomationProperties.Name="MainWindow">
 
 
 
-    <Grid>
+    <Grid x:Name="Grid" >
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="1*"/>
         </Grid.ColumnDefinitions>
@@ -23,7 +24,7 @@
 
         <Grid Grid.Row="0">
             <StackPanel Orientation="Vertical">
-                <Menu IsMainMenu="True">
+                <Menu x:Name="menu" IsMainMenu="True">
                     <MenuItem Header="File" VerticalAlignment="Stretch">
                         <MenuItem Header="Settings" Command="{Binding OpenSettings}"/>
                         <MenuItem Header="New File" Command="{Binding NewInterimFile}"/>
@@ -38,7 +39,7 @@
         </Grid>
 
         <Grid Grid.Row="2" Margin="0,0,0,0">
-            <ContentControl Content="{Binding CurrentViewModelBottom}"/>
+            <ContentControl Name="ContentControlBottom" Content="{Binding CurrentViewModelBottom}" Visibility="Collapsed"/>
         </Grid>
 
     </Grid>

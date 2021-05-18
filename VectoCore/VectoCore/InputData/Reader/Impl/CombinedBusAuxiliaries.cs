@@ -79,8 +79,6 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl {
 		public HeatPumpMode? HeatPumpModeDriverCompartment { get; }
 		public HeatPumpType? HeatPumpTypePassengerCompartment { get; }
 		public HeatPumpMode? HeatPumpModePassengerCompartment { get; }
-		public ACCompressorType CompressorTypeDriver { get; }
-		public ACCompressorType CompressorTypePassenger { get; }
 		public Watt AuxHeaterPower { get; }
 		public bool? DoubleGlazing { get; }
 		public bool HeatPump { get; }

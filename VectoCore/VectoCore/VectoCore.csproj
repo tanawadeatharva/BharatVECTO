@@ -286,9 +286,11 @@
     <Compile Include="InputData\Reader\ComponentData\BatteryInternalResistanceReader.cs" />
     <Compile Include="InputData\Reader\ComponentData\BatteryMaxCurrentReader.cs" />
     <Compile Include="InputData\Reader\ComponentData\ElectricMotorMapReader.cs" />
+    <Compile Include="InputData\Reader\DataObjectAdapter\DeclarationDataAdapterMultistageBus.cs" />
     <Compile Include="InputData\Reader\DataObjectAdapter\DeclarationDataAdapterPrimaryBus.cs" />
     <Compile Include="InputData\Reader\ComponentData\ElectricFullLoadCurveReader.cs" />
     <Compile Include="InputData\Reader\Impl\AbstractDeclarationMultistageBusVectoRunDataFactory.cs" />
+    <Compile Include="InputData\Reader\Impl\DeclarationModeCompletedMultistageBusVectoRunDataFactory.cs" />
     <Compile Include="InputData\Reader\Impl\DeclarationModeMultistageBusVectoRunDataFactory.cs" />
     <Compile Include="Models\Connector\Ports\Impl\BatteryResponse.cs" />
     <Compile Include="Models\Connector\Ports\IElectricEnergyStoragePort.cs" />
@@ -934,9 +936,6 @@
     <EmbeddedResource Include="Resources\Declaration\VAUXBus\DEFAULT_2-Cylinder_2-Stage_398ccm.acmp" />
     <EmbeddedResource Include="Resources\Declaration\VAUXBus\DEFAULT_3-Cylinder_2-Stage_598ccm.acmp" />
     <EmbeddedResource Include="Resources\XSD\VectoOutputPrimaryBus.xsd">
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Resources\XSD\VectoOutputPrimaryVehicleInformation.xsd">
       <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Resources\XSD\VectoVTPReport.xsd">

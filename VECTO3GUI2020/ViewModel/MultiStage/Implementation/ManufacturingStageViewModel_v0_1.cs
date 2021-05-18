@@ -139,5 +139,6 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 	public interface IManufacturingStageViewModel : IManufacturingStageInputData
 	{
 		void SetInputData(IVehicleDeclarationInputData vehicleInputData);
+		IMultistageVehicleViewModel VehicleViewModel { get; }
 	}
 }

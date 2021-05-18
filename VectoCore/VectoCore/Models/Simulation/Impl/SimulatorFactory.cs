@@ -137,8 +137,23 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 			if (dataProvider is IMultistageVIFInputData) {
 				var declDataProvider = dataProvider as IMultistageVIFInputData;
-				var report = declarationReport ?? new XMLDeclarationReportMultistageBusVehicle(ModWriter);
-				DataReader = new DeclarationModeMultistageBusVectoRunDataFactory(declDataProvider, report);
+
+				//ToDo FK: check if data completed == true && final 
+				//declDataProvider.MultistageJobInputData.JobInputData.InputComplete
+				//declDataProvider.VehicleInputData.VehicleDeclarationType == VehicleDeclarationType.final
+				
+				if (declDataProvider.VehicleInputData == null) {
+					var reportCompleted = declarationReport ?? new XMLDeclarationReportCompletedVehicle(ModWriter, true) {
+						PrimaryVehicleReportInputData = declDataProvider.MultistageJobInputData.JobInputData.PrimaryVehicle,
+					};
+					DataReader = new DeclarationModeCompletedMultistageBusVectoRunDataFactory(
+						declDataProvider.MultistageJobInputData,
+						reportCompleted);
+				}
+				else if(declDataProvider.VehicleInputData != null) {
+					var report = declarationReport ?? new XMLDeclarationReportMultistageBusVehicle(ModWriter);
+					DataReader = new DeclarationModeMultistageBusVectoRunDataFactory(declDataProvider, report);
+				}
 				return;
 			}
 

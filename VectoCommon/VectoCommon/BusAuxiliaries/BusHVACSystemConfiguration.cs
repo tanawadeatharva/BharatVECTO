@@ -80,6 +80,9 @@ namespace TUGraz.VectoCommon.BusAuxiliaries {
 
 		public static bool RequiresDriverAC(this BusHVACSystemConfiguration? hvacConfig)
 		{
+			if (hvacConfig == null) {
+				return false;
+			}
 			switch (hvacConfig) {
 				case BusHVACSystemConfiguration.Configuration2: 
 				case BusHVACSystemConfiguration.Configuration4: 
@@ -91,8 +94,11 @@ namespace TUGraz.VectoCommon.BusAuxiliaries {
 			return false;
 		}
 
-		public static bool RequiresPassengerAC(this BusHVACSystemConfiguration hvacConfig)
+		public static bool RequiresPassengerAC(this BusHVACSystemConfiguration? hvacConfig)
 		{
+			if (hvacConfig == null) {
+				return false;
+			}
 			switch (hvacConfig) {
 				case BusHVACSystemConfiguration.Configuration1:
 				case BusHVACSystemConfiguration.Configuration2:

@@ -65,7 +65,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 				genInput.GetEx<double>("EC_Solar").SI<WattPerSquareMeter>(), 1.0);
 			//retVal.EnviromentalConditions_BatchFile = genInput.GetEx<string>("EC_EnviromentalConditions_BatchFile");
 			//retVal.BatchMode = genInput.GetEx<bool>("EC_EnviromentalConditions_BatchEnabled");
-			retVal.HVACCompressorType = ACCompressorTypeExtensions.ParseEnum(genInput.GetEx<string>("AC_CompressorType"));
+			retVal.HVACCompressorType = HeatPumpTypeHelper.Parse(genInput.GetEx<string>("AC_CompressorType"));
 			retVal.HVACMaxCoolingPower = genInput.GetEx<double>("AC_CompressorCapacitykW").SI(Unit.SI.Kilo.Watt).Cast<Watt>();
 			retVal.VentilationOnDuringHeating = genInput.GetEx<bool>("VEN_VentilationOnDuringHeating");
 			retVal.VentilationWhenBothHeatingAndACInactive = genInput.GetEx<bool>("VEN_VentilationWhenBothHeatingAndACInactive");

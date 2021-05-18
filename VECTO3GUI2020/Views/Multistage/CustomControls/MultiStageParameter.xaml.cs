@@ -87,22 +87,44 @@ namespace VECTO3GUI2020.Views.Multistage.CustomControls
 			set { SetValue(ModeProperty, value); }
 		}
 
+		public static readonly DependencyProperty LabelProperty = DependencyProperty.Register(
+			"Label", typeof(string), typeof(MultiStageParameter), new PropertyMetadata(default(string)));
 
-
-		public static readonly DependencyProperty LabelTextProperty = DependencyProperty.Register(
-			"LabelText", typeof(string), typeof(MultiStageParameter), new PropertyMetadata(null));
-
-		public string LabelText
+		public string Label
 		{
-			get { return (string)GetValue(LabelTextProperty); }
-			set { SetValue(LabelTextProperty, value); }
+			get { return (string)GetValue(LabelProperty); }
+			set { SetValue(LabelProperty, value); }
 		}
+
+
+		public static readonly DependencyProperty GeneratedLabelTextProperty = DependencyProperty.Register(
+			"GeneratedLabelText", typeof(string), typeof(MultiStageParameter), new PropertyMetadata(null));
+
+		public string GeneratedLabelText
+		{
+			get { return (string)GetValue(GeneratedLabelTextProperty); }
+			set { SetValue(GeneratedLabelTextProperty, value); }
+		}
+
+		public static readonly DependencyProperty NameLookUpResourceManagerProperty = DependencyProperty.Register(
+			"NameLookUpResourceManager", typeof(ResourceManager), typeof(MultiStageParameter), new PropertyMetadata(default(ResourceManager), NameLookUpResourceManagerChanged));
+
+		private static void NameLookUpResourceManagerChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+		{
+			var multistageParameter = (MultiStageParameter)d;
+			multistageParameter.SetLabelText();
+		}
+
+		public ResourceManager NameLookUpResourceManager
+		{
+			get { return (ResourceManager)GetValue(NameLookUpResourceManagerProperty); }
+			set { SetValue(NameLookUpResourceManagerProperty, value); }
+		}
+
 
 		public static readonly DependencyProperty EditingEnabledProperty = DependencyProperty.Register(
 			"EditingEnabled", typeof(bool), typeof(MultiStageParameter), new FrameworkPropertyMetadata(
 				false, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault, new PropertyChangedCallback(EditingEnabledChanged)));
-
-
 
 		public bool EditingEnabled
 		{
@@ -200,9 +222,17 @@ namespace VECTO3GUI2020.Views.Multistage.CustomControls
 			}
 
 
-			if (multiStageParameter.LabelText == null) {
-				multiStageParameter.LabelText = multiStageParameter.GetLabelByPropertyName(
+			if (multiStageParameter.GeneratedLabelText == null) {
+				multiStageParameter.SetLabelText();
+			}
+		}
+
+		public void SetLabelText()
+		{
+			if (Label == null) {
+				this.GeneratedLabelText = this.GetLabelByPropertyName(
 					MultiStageParameter.ContentProperty,
+					this.NameLookUpResourceManager,
 					Strings.ResourceManager);
 			}
 		}

@@ -4,9 +4,18 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:VECTO3GUI2020.Views.Multistage"
-             xmlns:custom="clr-namespace:VECTO3GUI2020.Views.Multistage.CustomControls" xmlns:implementation="clr-namespace:VECTO3GUI2020.ViewModel.MultiStage.Implementation" d:DataContext="{d:DesignInstance Type=implementation:DeclarationInterimStageBusVehicleViewModel_v2_8}"
+             xmlns:custom="clr-namespace:VECTO3GUI2020.Views.Multistage.CustomControls" xmlns:implementation="clr-namespace:VECTO3GUI2020.ViewModel.MultiStage.Implementation"
+             xmlns:properties="clr-namespace:VECTO3GUI2020.Properties"
+             xmlns:resources="clr-namespace:System.Resources;assembly=mscorlib"
+             d:DataContext="{d:DesignInstance Type=implementation:DeclarationInterimStageBusVehicleViewModel_v2_8}"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800" BorderBrush="{DynamicResource ButtonHighlightColor}" BorderThickness="2px" Margin="4px">
+    <UserControl.Resources>
+        <Style TargetType="custom:MultiStageParameter">
+            <!--<Setter Property="NameLookUpResourceManager" Value="{Binding Source=BusStringResourceManager}"></Setter>-->
+            <Setter Property="NameLookUpResourceManager" Value="{x:Static properties:BusStrings.ResourceManager}"></Setter>
+            </Style>
+    </UserControl.Resources>
     <Grid>
         <ScrollViewer>
             <DockPanel>
@@ -43,6 +52,7 @@
 
 
                 <custom:MultiStageParameter x:Name="AirdragModified"
+                                            Label="Airdrag modified"
                     Validation.ErrorTemplate="{StaticResource multistageParameterControlErrorTemplate}"
                                             EditingEnabled="{Binding AirdragModifiedMultistageEditingEnabled}"
                                             PreviousContent="{Binding ConsolidatedAirdragmodified}"

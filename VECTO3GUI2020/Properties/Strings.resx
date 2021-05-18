@@ -233,7 +233,7 @@
     <value>Air Electric Heater</value>
   </data>
   <data name="AuxHeaterPower" xml:space="preserve">
-    <value>Heater Power</value>
+    <value>Auxiliary Heater Power</value>
   </data>
   <data name="BrakelightsLED" xml:space="preserve">
     <value>Brake Lights LED</value>

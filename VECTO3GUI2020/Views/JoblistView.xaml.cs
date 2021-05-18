@@ -1,4 +1,7 @@
-﻿using System.Windows.Controls;
+﻿using System.Windows;
+using System.Windows.Controls;
+using VECTO3GUI2020.ViewModel.Implementation;
+using VECTO3GUI2020.ViewModel.Interfaces;
 
 namespace VECTO3GUI2020.Views
 {
@@ -7,9 +10,41 @@ namespace VECTO3GUI2020.Views
     /// </summary>
     public partial class JobListView : UserControl
     {
-        public JobListView()
-        {
-            InitializeComponent();
-        }
-    }
+
+		public JobListView()
+		{
+			InitializeComponent();
+		
+		}
+
+
+		private void JobDataGrid_OnDrop(object sender, DragEventArgs e)
+		{
+			var success = true;
+			if (e.Data.GetDataPresent(DataFormats.FileDrop)) {
+				
+
+				var fileNames = e.Data.GetData(DataFormats.FileDrop, true) as string[];
+				if (fileNames != null) {
+					foreach (var fileName in fileNames) {
+						((JobListViewModel)this.DataContext).AddJobAsync(fileName);
+					}
+				}
+
+			} else {
+				success = false;
+			}
+
+			if (!success) {
+				e.Effects = DragDropEffects.None; //DO NOT ACCEPT THE DROP
+			}
+		}
+
+		private void JobDataGrid_OnPreviewDrop(object sender, DragEventArgs e)
+		{
+			if (!e.Data.GetDataPresent(DataFormats.FileDrop)) {
+				e.Effects = DragDropEffects.None;
+			}
+		}
+	}
 }

@@ -75,7 +75,7 @@ Namespace UnitTests
 
             Dim mission As New Mission With {
                 .BusParameter = New BusParameters() With {
-                .HVACCompressorType = ACCompressorType.TwoStage,
+                .HVACCompressorType = HeatPumpType.non_R_744_2_stage,
                 .HVACAuxHeaterPower = 30000.0.SI(Of Watt),
                 .HVACConfiguration = BusHVACSystemConfiguration.Configuration6,
                 .DoubleDecker = False,
@@ -149,7 +149,7 @@ Namespace UnitTests
             If section = "AC-System" Then
                 'AC-SYSTEM
                 '*********
-                Assert.AreEqual(ACCompressorType.TwoStage, target.ACSystem.HVACCompressorType)
+                Assert.AreEqual(HeatPumpType.non_R_744_2_stage, target.ACSystem.HVACCompressorType)
                 Assert.AreEqual(15.5567, target.ACSystem.HVACMaxCoolingPower.Value()/1000.0, 1e-3)
                 Assert.AreEqual(3.5, target.ACSystem.COP)
             End If
@@ -583,7 +583,7 @@ Namespace UnitTests
             Dim mission As New Mission With {
                 .MissionType = MissionType.HeavyUrban,
                 .BusParameter = New BusParameters() With {
-                    .HVACCompressorType = ACCompressorType.TwoStage,
+                    .HVACCompressorType = HeatPumpType.non_R_744_2_stage,
                     .HVACAuxHeaterPower = 18000.0.SI(Of Watt),
                     .HVACConfiguration = BusHVACSystemConfiguration.Configuration6,
                     .DoubleDecker = False,

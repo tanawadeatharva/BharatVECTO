@@ -4,8 +4,10 @@
 
     <Color x:Key="SystemAccentColor">
     </Color>
-    <SolidColorBrush x:Key="AccentColorButton" Color="{x:Static SystemParameters.WindowGlassColor}"/>
-    <!-- <SolidColorBrush x:Key="AccentColorButton" Color="#FF10796B"/>-->
+    <!--SolidColorBrush x:Key="AccentColorButton" Color="{x:Static SystemParameters.WindowGlassColor}"/-->
+
+    <!--<SolidColorBrush x:Key="AccentColorButton" Color="}"></SolidColorBrush>-->
+    <SolidColorBrush x:Key="AccentColorButton" Color="#FF10796B"/>
     <Color x:Key="ButtonBackgroundColor">White</Color>
     <SolidColorBrush x:Key="ButtonHighlightColor" Opacity="0.3"
                      Color="{Binding Color, Source={StaticResource AccentColorButton}, Mode=OneWay}"  />

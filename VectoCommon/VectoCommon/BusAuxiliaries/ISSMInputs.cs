@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using TUGraz.VectoCommon.Utils;
 
 
@@ -84,7 +85,7 @@ namespace TUGraz.VectoCommon.BusAuxiliaries
 	public interface IACSystem
 	{
 		// AC-system				            
-		ACCompressorType HVACCompressorType { get; }
+		HeatPumpType HVACCompressorType { get; }
 
 		Watt HVACMaxCoolingPower { get; }
 
@@ -102,83 +103,83 @@ namespace TUGraz.VectoCommon.BusAuxiliaries
 	}
 
 
-	public enum ACCompressorType
-	{
-		Unknown,
-		None,
-		TwoStage,
-		ThreeStage,
-		FourStage,
-		Continuous
-	}
+	//public enum ACCompressorType
+	//{
+	//	Unknown,
+	//	None,
+	//	TwoStage,
+	//	ThreeStage,
+	//	FourStage,
+	//	Continuous
+	//}
 
-	public static class ACCompressorTypeExtensions
-	{
-		public static ACCompressorType ParseEnum(string txt)
-		{
-			switch (txt) {
-				case "2-stage": return ACCompressorType.TwoStage;
-				case "3-stage": return ACCompressorType.ThreeStage;
-				case "4-stage": return ACCompressorType.FourStage;
-				default: return txt.ParseEnum<ACCompressorType>();
-			}
-		}
+	//public static class ACCompressorTypeExtensions
+	//{
+	//	public static ACCompressorType ParseEnum(string txt)
+	//	{
+	//		switch (txt) {
+	//			case "2-stage": return ACCompressorType.TwoStage;
+	//			case "3-stage": return ACCompressorType.ThreeStage;
+	//			case "4-stage": return ACCompressorType.FourStage;
+	//			default: return txt.ParseEnum<ACCompressorType>();
+	//		}
+	//	}
 
-		public static string ToString(this ACCompressorType type)
-		{
-			switch (type) {
-				case ACCompressorType.TwoStage: return "2-stage";
-				case ACCompressorType.ThreeStage: return "3-stage";
-				case ACCompressorType.FourStage: return "4-stage";
-				default: return type.ToString().ToLowerInvariant();
-			}
-		}
+	//	public static string ToString(this ACCompressorType type)
+	//	{
+	//		switch (type) {
+	//			case ACCompressorType.TwoStage: return "2-stage";
+	//			case ACCompressorType.ThreeStage: return "3-stage";
+	//			case ACCompressorType.FourStage: return "4-stage";
+	//			default: return type.ToString().ToLowerInvariant();
+	//		}
+	//	}
 
-		public static string GetName(this ACCompressorType type)
-		{
-			return type.ToString();
-		}
+	//	public static string GetName(this ACCompressorType type)
+	//	{
+	//		return type.ToString();
+	//	}
 
-		public static string GetLabel(this ACCompressorType type)
-		{
-			switch (type)
-			{
-				case ACCompressorType.TwoStage: return "2-stage";
-				case ACCompressorType.ThreeStage: return "3-stage";
-				case ACCompressorType.FourStage: return "4-stage";
-				default: return type.ToString();
-			}
-		}
+	//	public static string GetLabel(this ACCompressorType type)
+	//	{
+	//		switch (type)
+	//		{
+	//			case ACCompressorType.TwoStage: return "2-stage";
+	//			case ACCompressorType.ThreeStage: return "3-stage";
+	//			case ACCompressorType.FourStage: return "4-stage";
+	//			default: return type.ToString();
+	//		}
+	//	}
 
 
-		public static bool IsElectrical(this ACCompressorType type)
-		{
-			return type == ACCompressorType.Continuous;
-		}
+	//	public static bool IsElectrical(this ACCompressorType type)
+	//	{
+	//		return type == ACCompressorType.Continuous;
+	//	}
 
-		public static bool IsMechanical(this ACCompressorType type)
-		{
-			return type != ACCompressorType.Continuous;
-		}
+	//	public static bool IsMechanical(this ACCompressorType type)
+	//	{
+	//		return type != ACCompressorType.Continuous;
+	//	}
 
-		public static double COP(this ACCompressorType type, FloorType floortype)
-		{
-			var cop = 3.5;
+	//	public static double COP(this ACCompressorType type, FloorType floortype)
+	//	{
+	//		var cop = 3.5;
 
-			switch (type) {
-				case ACCompressorType.None:
-				case ACCompressorType.Unknown: return 0;
-				case ACCompressorType.TwoStage: return cop;
-				case ACCompressorType.ThreeStage:
-				case ACCompressorType.FourStage: return cop * 1.02;
-				case ACCompressorType.Continuous:
-					return floortype == FloorType.LowFloor
-						? cop * 1.04
-						: cop * 1.06;
-				default: throw new ArgumentOutOfRangeException();
-			}
-		}
-	}
+	//		switch (type) {
+	//			case ACCompressorType.None:
+	//			case ACCompressorType.Unknown: return 0;
+	//			case ACCompressorType.TwoStage: return cop;
+	//			case ACCompressorType.ThreeStage:
+	//			case ACCompressorType.FourStage: return cop * 1.02;
+	//			case ACCompressorType.Continuous:
+	//				return floortype == FloorType.LowFloor
+	//					? cop * 1.04
+	//					: cop * 1.06;
+	//			default: throw new ArgumentOutOfRangeException();
+	//		}
+	//	}
+	//}
 
 	public interface IAuxHeater
 	{
@@ -218,7 +219,7 @@ namespace TUGraz.VectoCommon.BusAuxiliaries
 		private const string NON_R_744_4_STAGE = "non R-744 4-stage";
 		private const string NON_R_744_CONTINUOUS = "non R-744 continuous";
 		
-		public static HeatPumpType? Parse(string parse)
+		public static HeatPumpType Parse(string parse)
 		{
 			switch (parse)
 			{
@@ -228,12 +229,15 @@ namespace TUGraz.VectoCommon.BusAuxiliaries
 				case NON_R_744_3_STAGE: return HeatPumpType.non_R_744_3_stage;
 				case NON_R_744_4_STAGE: return HeatPumpType.non_R_744_4_stage;
 				case NON_R_744_CONTINUOUS: return HeatPumpType.non_R_744_continuous;
-				default: return null;
+				default: throw new InvalidEnumArgumentException("HeatPumpType");
 			}
 		}
 
 		public static string GetLabel(this HeatPumpType? type)
 		{
+			if (type == null) {
+				return "~null~";
+			}
 			switch (type) {
 				case HeatPumpType.none: return NONE;
 				case HeatPumpType.R_744: return R_744;
@@ -244,7 +248,45 @@ namespace TUGraz.VectoCommon.BusAuxiliaries
 				default: return null;
 			}
 		}
-	}
+
+        public static string GetName(this HeatPumpType type)
+        {
+            return type.ToString();
+        }
+
+        public static bool IsElectrical(this HeatPumpType type)
+        {
+            return type == HeatPumpType.R_744 || type == HeatPumpType.non_R_744_continuous;
+        }
+
+        public static bool IsMechanical(this HeatPumpType type)
+        {
+            return !type.IsElectrical();
+        }
+
+        public static double COP(this HeatPumpType type, FloorType floortype)
+        {
+            var cop = 3.5;
+
+            switch (type) {
+                case HeatPumpType.none:
+                //case HeatPumpType.Unknown:
+                    return 0;
+                case HeatPumpType.non_R_744_2_stage:
+                    return cop;
+                case HeatPumpType.non_R_744_3_stage:
+                case HeatPumpType.non_R_744_4_stage:
+                    return cop * 1.02;
+                case HeatPumpType.non_R_744_continuous:
+				case HeatPumpType.R_744:
+                    return floortype == FloorType.LowFloor
+                        ? cop * 1.04
+                        : cop * 1.06;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
+        }
+    }
 
 
 	public enum HeatPumpMode
@@ -255,14 +297,14 @@ namespace TUGraz.VectoCommon.BusAuxiliaries
 		heating_and_cooling,
 		[GuiLabel("Cooling")]
 		cooling,
-		[GuiLabel("N_A")]
+		[GuiLabel("not_applicable")]
 		N_A,
 	}
 
 	public static class HeatPumpModeHelper
 	{
 		private const string HEATING = "heating";
-		private const string HEATING_AND_COOLING = "heating_and_cooling";
+		private const string HEATING_AND_COOLING = "heating and cooling";
 		private const string COOLING = "cooling";
 		private const string N_A = "N.A.";
 

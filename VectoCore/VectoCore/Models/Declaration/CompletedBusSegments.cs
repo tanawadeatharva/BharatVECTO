@@ -144,7 +144,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 							PassengerDensityRef = row.ParseDouble(missionType.ToString()).SI<PerSquareMeter>(),
 							AirDragMeasurementAllowed = row.ParseBoolean(missionType == MissionType.Interurban ? "airdragmeasurementinterurban" : "airdragmeasurement"),
 							ElectricalConsumers = GetVehicleEquipment(row),
-							DoubleDecker =  row.Field<string>("vehiclecode").ParseEnum<VehicleCode?>().IsDoubleDeckerBus(),
+							DoubleDecker = ((VehicleCode?) row.Field<string>("vehiclecode").ParseEnum<VehicleCode>()).IsDoubleDeckerBus(),
 							DeltaHeight = row.ParseDouble("deltaheight").SI<Meter>(),
 							SeparateAirDistributionDuctsHVACCfg = row.Field<string>("sepairdistrductshvaccfg").Split('/').Select(BusHVACSystemConfigurationHelper.Parse).ToArray() 
 						}
