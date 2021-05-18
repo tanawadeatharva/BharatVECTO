@@ -17,7 +17,7 @@ xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:DeclarationOutput:VehicleInterimFile
 				<VIN>VEH-1234567890_nonSmart-ESS</VIN>
 				<Date>2017-02-15T11:00:00Z</Date>
 				<LegislativeCategory>M3</LegislativeCategory>
-				<VehicleCategory>Bus</VehicleCategory>
+				<ChassisConfiguration>Bus</ChassisConfiguration>
 				<AxleConfiguration>8x2</AxleConfiguration>
 				<Articulated>true</Articulated>
 				<TechnicalPermissibleMaximumLadenMass>4000</TechnicalPermissibleMaximumLadenMass>
@@ -271,8 +271,8 @@ xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:DeclarationOutput:VehicleInterimFile
 								<Technology axleNumber="1">Variable displacement elec. controlled</Technology>
 							</SteeringPump>
 							<ElectricSystem>
-								<AlternatorTechnology>default</AlternatorTechnology>
-								<SmartElectrics>true</SmartElectrics>
+								<AlternatorTechnology>conventional</AlternatorTechnology>
+								<SupplyFromHEVPossible>false</SupplyFromHEVPossible>								
 								<MaxAlternatorPower>15000</MaxAlternatorPower>
 								<ElectricStorageCapacity>50</ElectricStorageCapacity>
 							</ElectricSystem>
