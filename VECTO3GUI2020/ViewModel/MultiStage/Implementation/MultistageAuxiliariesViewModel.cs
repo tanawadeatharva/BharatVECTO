@@ -1,11 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Xml;
 using TUGraz.VectoCommon.BusAuxiliaries;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Models.BusAuxiliaries.Interfaces;
+using VECTO3GUI2020.Helper;
 using VECTO3GUI2020.ViewModel.Implementation.Common;
+using EnumHelper = VECTO3GUI2020.Helper.EnumHelper;
 
 namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 {
@@ -19,6 +22,7 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 	{
 		void SetAuxiliariesInputData(IBusAuxiliariesDeclarationData componentsAuxiliaryInputData);
 		bool HasValues { get; }
+		object PrimaryVehicleHybridElectric { get; set; }
 	}
 
 
@@ -63,6 +67,13 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 
 				return hasValues;
 			}
+		}
+
+		private object _primaryVehicleHybridElectric = false;
+		public object PrimaryVehicleHybridElectric
+		{
+			get => _primaryVehicleHybridElectric;
+			set => SetProperty(ref _primaryVehicleHybridElectric, value);
 		}
 
 
@@ -143,7 +154,18 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 		public bool HeatPumpGroupEditingEnabled
 		{
 			get => _heatPumpGroupEditingEnabled;
-			set => SetProperty(ref _heatPumpGroupEditingEnabled, value);
+			set
+			{
+				
+				SetProperty(ref _heatPumpGroupEditingEnabled, value);
+				//if (value == false)
+				//{
+				//	HeatPumpTypePassengerCompartment = null;
+				//	HeatPumpModePassengerCompartment = null;
+				//	HeatPumpModeDriverCompartment = null;
+				//	HeatPumpTypeDriverCompartment = null;
+				//}
+			}
 		}
 
 		public BusHVACSystemConfiguration? SystemConfiguration
@@ -155,28 +177,98 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 		public HeatPumpType? HeatPumpTypeDriverCompartment
 		{
 			get => _heatPumpTypeDriverCompartment;
-			set => SetProperty(ref _heatPumpTypeDriverCompartment, value);
+			set
+			{
+				if (value == HeatPumpType.none) {
+					HeatPumpModeDriverCompartmentAllowedValues =
+						EnumHelper.GetValuesAsObservableCollectionIncluding<Enum, HeatPumpMode>(items:HeatPumpMode.N_A);
+					//HeatPumpModeDriverCompartment = HeatPumpMode.N_A;
+				} else {
+					HeatPumpModeDriverCompartmentAllowedValues =
+						EnumHelper.GetValuesAsObservableCollectionExcluding<Enum, HeatPumpMode>(
+							items: HeatPumpMode.N_A);
+					//HeatPumpModeDriverCompartment = HeatPumpMode.cooling;
+				}
+
+
+				SetProperty(ref _heatPumpTypeDriverCompartment, value);
+			} 
 		}
+
 
 		public HeatPumpMode? HeatPumpModeDriverCompartment
 		{
 			get => _heatPumpModeDriverCompartment;
-			set => SetProperty(ref _heatPumpModeDriverCompartment, value);
+			set
+			{
+				SetProperty(ref _heatPumpModeDriverCompartment, value);
+			}
 		}
+
+		private ObservableCollection<Enum> _heatPumpModeDriverCompartmentAllowedValues =
+			EnumHelper.GetValuesAsObservableCollectionExcluding<Enum, HeatPumpMode>(HeatPumpMode.N_A);
+		public ObservableCollection<Enum> HeatPumpModeDriverCompartmentAllowedValues
+		{
+			get
+			{
+				return _heatPumpModeDriverCompartmentAllowedValues;
+			}
+			private set
+			{
+				SetProperty(ref _heatPumpModeDriverCompartmentAllowedValues, value);
+			}
+		}
+
+
+
 
 		public HeatPumpType? HeatPumpTypePassengerCompartment
 		{
 			get => _heatPumpTypePassengerCompartment;
-			set => SetProperty(ref _heatPumpTypePassengerCompartment, value);
+			set
+			{
+				SetProperty(ref _heatPumpTypePassengerCompartment, value);
+				if (value == HeatPumpType.none)
+				{
+					HeatPumpModePassengerCompartmentAllowedValues =
+						EnumHelper.GetValuesAsObservableCollectionIncluding<Enum, HeatPumpMode>(items: HeatPumpMode.N_A);
+					//HeatPumpModePassengerCompartment = HeatPumpMode.N_A;
+				}
+				else
+				{
+					HeatPumpModePassengerCompartmentAllowedValues =
+						EnumHelper.GetValuesAsObservableCollectionExcluding<Enum, HeatPumpMode>(
+							items: HeatPumpMode.N_A);
+					//HeatPumpModePassengerCompartment = HeatPumpMode.cooling;
+				}
+			}
 		}
 
 		public HeatPumpMode? HeatPumpModePassengerCompartment
 		{
 			get => _heatPumpModePassengerCompartment;
-			set => SetProperty(ref _heatPumpModePassengerCompartment, value);
+			set
+			{
+				SetProperty(ref _heatPumpModePassengerCompartment, value);
+				
+			}
 		}
 
-#endregion
+		private ObservableCollection<Enum> _heatPumpModePassengerCompartmentAllowedValues =
+			EnumHelper.GetValuesAsObservableCollectionExcluding<Enum, HeatPumpMode>(HeatPumpMode.N_A);
+		public ObservableCollection<Enum> HeatPumpModePassengerCompartmentAllowedValues
+		{
+			get
+			{
+				return _heatPumpModePassengerCompartmentAllowedValues;
+			}
+			private set
+			{
+				SetProperty(ref _heatPumpModePassengerCompartmentAllowedValues, value);
+			}
+		}
+
+		#endregion
 		#region IElectricConsumersDeclaration
 
 		//LED lights
@@ -228,6 +320,9 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 		}
 
 		private CompressorDrive _compressorDrive;
+	
+
+
 		public CompressorDrive CompressorDrive
 		{
 			get => _compressorDrive;

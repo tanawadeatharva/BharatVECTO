@@ -117,200 +117,55 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="AirDragArea" xml:space="preserve">
-    <value>Airdrag Area</value>
+  <data name="AirdragArea0" xml:space="preserve">
+    <value>Airdrag Area 0</value>
   </data>
-  <data name="AngledriveType" xml:space="preserve">
-    <value>Angledrive Type</value>
+  <data name="ATEcoRollReleaseLockupClutch" xml:space="preserve">
+    <value>ATP Eco Roll Release Lockup Clutch</value>
   </data>
-  <data name="AxleConfiguration" xml:space="preserve">
-    <value>Axle Configuration</value>
+  <data name="CompressorDrive" xml:space="preserve">
+    <value>Compressor Drive</value>
   </data>
-  <data name="AxleGearRatio" xml:space="preserve">
-    <value>Axlegear Ratio</value>
+  <data name="CurbmassChassis" xml:space="preserve">
+    <value>Corrected Actual Mass</value>
   </data>
-  <data name="Certification Number" xml:space="preserve">
-    <value>Certification Number</value>
+  <data name="EcoRollTypeNullable" xml:space="preserve">
+    <value>Eco Roll Type</value>
   </data>
-  <data name="CertificationMethod" xml:space="preserve">
-    <value>Certification Method</value>
+  <data name="EngineStopStartNullable" xml:space="preserve">
+    <value>Engine Stop Start</value>
   </data>
-  <data name="CertificationNumber" xml:space="preserve">
-    <value>Certification Number</value>
-  </data>
-  <data name="CurbMassChassis" xml:space="preserve">
-    <value>Curb Mass Chassis</value>
-  </data>
-  <data name="Dimension" xml:space="preserve">
-    <value>Dimension</value>
-  </data>
-  <data name="Displacement" xml:space="preserve">
-    <value>Displacement</value>
-  </data>
-  <data name="Efficiency" xml:space="preserve">
-    <value>Efficiency</value>
-  </data>
-  <data name="EngineIdleSpeed" xml:space="preserve">
-    <value>Engine Idle Speed</value>
-  </data>
-  <data name="GrossVehicleMass" xml:space="preserve">
-    <value>Gross Vehicle Mass</value>
+  <data name="EntranceHeightInMm" xml:space="preserve">
+    <value>Entrance Height</value>
   </data>
   <data name="GrossVehicleMassRating" xml:space="preserve">
-    <value>Gross Vehicle Mass Rating</value>
+    <value>Tech. Perm. Max. Laden Mass</value>
   </data>
-  <data name="IdlingSpeed" xml:space="preserve">
-    <value>Idling Speed</value>
+  <data name="HeightInMm" xml:space="preserve">
+    <value>Height</value>
   </data>
   <data name="LegislativeClass" xml:space="preserve">
-    <value>Legislative Class</value>
+    <value>Legislative Category</value>
+  </data>
+  <data name="LengthInMm" xml:space="preserve">
+    <value>Length</value>
   </data>
   <data name="Manufacturer" xml:space="preserve">
     <value>Manufacturer</value>
   </data>
-  <data name="ManufacturerAddress" xml:space="preserve">
-    <value>Manufacturer Address</value>
-  </data>
-  <data name="ManufacturerAdress" xml:space="preserve">
-    <value>Manufacturer Adress</value>
-  </data>
-  <data name="MaxTorqueDeclared" xml:space="preserve">
-    <value>Max. Torque Declared</value>
-  </data>
-  <data name="Model" xml:space="preserve">
-    <value>Model</value>
-  </data>
-  <data name="PredictiveCruiseControl" xml:space="preserve">
+  <data name="PredictiveCruiseControlNullable" xml:space="preserve">
     <value>Predictive Cruise Control</value>
   </data>
-  <data name="PTOTransmissionType" xml:space="preserve">
-    <value>Transmission Type</value>
-  </data>
-  <data name="RatedPowerDeclared" xml:space="preserve">
-    <value>Rated Power</value>
-  </data>
-  <data name="RatedSpeedDeclared" xml:space="preserve">
-    <value>Rated Speed Declared</value>
-  </data>
-  <data name="Ratio" xml:space="preserve">
-    <value>Ratio</value>
-  </data>
-  <data name="RetarderRatio" xml:space="preserve">
-    <value>Retarder Ratio</value>
-  </data>
-  <data name="RetarderType" xml:space="preserve">
-    <value>Retarder Type</value>
-  </data>
-  <data name="RRC" xml:space="preserve">
-    <value>Roll Resistance Coefficient</value>
-  </data>
-  <data name="TransmissionType" xml:space="preserve">
-    <value>Transmission Type</value>
-  </data>
-  <data name="TwinTyres" xml:space="preserve">
-    <value>Twin Tyres</value>
-  </data>
-  <data name="VehicleCategory" xml:space="preserve">
-    <value>Vehicle Category</value>
-  </data>
-  <data name="VehicleViewModel_v1_0_VIN" xml:space="preserve">
-    <value>Vehicle Identification Number</value>
-  </data>
-  <data name="VIN" xml:space="preserve">
-    <value>Vehicle Identification Number</value>
-  </data>
-  <data name="WHRType" xml:space="preserve">
-    <value>Waste Heat Recovery</value>
-  </data>
-  <data name="SaveExecute_Do_you_want_to_overwrite" xml:space="preserve">
-    <value>Do you want to overwrite 
- </value>
-  </data>
-  <data name="AdjustableAuxiliaryHeater" xml:space="preserve">
-    <value>Adjustable Auxiliary Heater</value>
-  </data>
-  <data name="AirElectricHeater" xml:space="preserve">
-    <value>Air Electric Heater</value>
-  </data>
-  <data name="AuxHeaterPower" xml:space="preserve">
-    <value>Auxiliary Heater Power</value>
-  </data>
-  <data name="BrakelightsLED" xml:space="preserve">
-    <value>Brake Lights LED</value>
-  </data>
-  <data name="DayrunninglightsLED" xml:space="preserve">
-    <value>Dayrunning Lights LED</value>
-  </data>
-  <data name="DoorDriveTechnology" xml:space="preserve">
-    <value>Doordrive Technology</value>
-  </data>
-  <data name="DoubleGlazing" xml:space="preserve">
-    <value>Double Glazing</value>
-  </data>
-  <data name="EntranceHeight" xml:space="preserve">
-    <value>Entrance Height</value>
-  </data>
-  <data name="HeadlightsLED" xml:space="preserve">
-    <value>Head Lights LED</value>
-  </data>
-  <data name="HeatPumpModeDriverCompartment" xml:space="preserve">
-    <value>Heat Pump Mode Driver</value>
-  </data>
-  <data name="HeatPumpModePassengerCompartment" xml:space="preserve">
-    <value>Heat Pump Mode Passenger</value>
-  </data>
-  <data name="HeatPumpTypeDriverCompartment" xml:space="preserve">
-    <value>Heat Pump Type Driver</value>
-  </data>
-  <data name="HeatPumpTypePassengerCompartment" xml:space="preserve">
-    <value>Heat Pump Type Passenger</value>
-  </data>
-  <data name="Height" xml:space="preserve">
-    <value>Height</value>
-  </data>
-  <data name="InteriorLightsLED" xml:space="preserve">
-    <value>Interior Lights LED</value>
-  </data>
-  <data name="Length" xml:space="preserve">
-    <value>Length</value>
-  </data>
-  <data name="LowEntry" xml:space="preserve">
-    <value>Low Entry</value>
-  </data>
-  <data name="NumberOfPassengersLowerDeck" xml:space="preserve">
-    <value>Passengers Lower Deck</value>
-  </data>
-  <data name="NumberOfPassengersUpperDeck" xml:space="preserve">
-    <value>Passengers Upper Deck</value>
-  </data>
-  <data name="OtherHeatingTechnology" xml:space="preserve">
-    <value>Other Heating Technology</value>
-  </data>
-  <data name="PositionlightsLED" xml:space="preserve">
-    <value>Position Lights LED</value>
-  </data>
-  <data name="RegisteredClass" xml:space="preserve">
-    <value>Registered Class</value>
-  </data>
-  <data name="SeparateAirDistributionDucts" xml:space="preserve">
-    <value>Seperate Air Distribution Ducts</value>
-  </data>
-  <data name="SystemConfiguration" xml:space="preserve">
-    <value>System Configuration</value>
-  </data>
   <data name="TankSystem" xml:space="preserve">
-    <value>Tank System</value>
+    <value>Ng Tank System</value>
+  </data>
+  <data name="TransferredAirDragArea" xml:space="preserve">
+    <value>Transferred Airdrag Area</value>
   </data>
   <data name="VehicleCode" xml:space="preserve">
-    <value>Vehicle Code</value>
+    <value>Bodywork Code</value>
   </data>
-  <data name="VehicleDeclarationType" xml:space="preserve">
-    <value>Declaration Type</value>
-  </data>
-  <data name="WaterElectricHeater" xml:space="preserve">
-    <value>Water Electric Heater</value>
-  </data>
-  <data name="Width" xml:space="preserve">
+  <data name="WidthInMm" xml:space="preserve">
     <value>Width</value>
   </data>
 </root>

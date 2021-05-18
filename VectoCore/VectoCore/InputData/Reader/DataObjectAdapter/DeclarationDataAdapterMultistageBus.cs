@@ -1,0 +1,66 @@
+﻿using System.Linq;
+using TUGraz.VectoCommon.BusAuxiliaries;
+using TUGraz.VectoCommon.InputData;
+using TUGraz.VectoCommon.Models;
+using TUGraz.VectoCommon.Utils;
+using TUGraz.VectoCore.Models.BusAuxiliaries;
+using TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.Electrics;
+using TUGraz.VectoCore.Models.Declaration;
+using TUGraz.VectoCore.Models.Simulation.Data;
+
+
+namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
+{
+	public class DeclarationDataAdapterMultistageBus : DeclarationDataAdapterCompletedBusSpecific
+	{
+
+		public override IAuxiliaryConfig CreateBusAuxiliariesData(Mission mission,
+			IVehicleDeclarationInputData primaryVehicle, IVehicleDeclarationInputData completedVehicle,
+			VectoRunData runData)
+		{
+			var actuations = DeclarationData.BusAuxiliaries.ActuationsMap.Lookup(runData.Mission.MissionType);
+			var primaryBusAuxiliaries = primaryVehicle.Components.BusAuxiliaries;
+
+			return new AuxiliaryConfig
+			{
+				InputData = completedVehicle.Components.BusAuxiliaries,
+				ElectricalUserInputsConfig = CreateElectricsUserInputsConfig(
+					primaryVehicle, completedVehicle, mission, actuations, runData.VehicleData.VehicleClass),
+				PneumaticUserInputsConfig = CreatePneumaticUserInputsConfig(
+					primaryBusAuxiliaries, completedVehicle),
+				PneumaticAuxillariesConfig = CreatePneumaticAuxConfig(runData.Retarder.Type),
+				Actuations = actuations,
+				SSMInputs = GetCompletedSSMInput(mission, completedVehicle, primaryVehicle, runData.Loading),
+				VehicleData = runData.VehicleData
+			};
+		}
+
+		protected override ElectricsUserInputsConfig CreateElectricsUserInputsConfig(IVehicleDeclarationInputData primaryVehicle,
+			IVehicleDeclarationInputData completedVehicle, Mission mission, IActuations actuations, VehicleClass vehicleClass)
+		{
+			var currentDemand = GetElectricConsumers(mission, completedVehicle, actuations, vehicleClass);
+
+			// add electrical steering pump or electric fan defined in primary vehicle
+			foreach (var entry in GetElectricAuxConsumersPrimary(mission, completedVehicle, vehicleClass, primaryVehicle.Components.BusAuxiliaries))
+			{
+				currentDemand[entry.Key] = entry.Value;
+			}
+
+			var retVal = GetDefaultElectricalUserConfig();
+
+			var primaryBusAuxiliaries = primaryVehicle.Components.BusAuxiliaries;
+			retVal.SmartElectrical = primaryBusAuxiliaries.ElectricSupply.SmartElectrics;
+			retVal.ElectricalConsumers = currentDemand;
+
+			retVal.AlternatorMap = new SimpleAlternator(
+				CalculateAlternatorEfficiency(primaryBusAuxiliaries.ElectricSupply.Alternators))
+			{
+				Technologies = primaryBusAuxiliaries.ElectricSupply.Alternators.Select(x => x.Technology).ToList()
+			};
+			retVal.MaxAlternatorPower = primaryBusAuxiliaries.ElectricSupply.MaxAlternatorPower;
+			retVal.ElectricStorageCapacity = primaryBusAuxiliaries.ElectricSupply.ElectricStorageCapacity ?? 0.SI<WattSecond>();
+
+			return retVal;
+		}
+	}
+}

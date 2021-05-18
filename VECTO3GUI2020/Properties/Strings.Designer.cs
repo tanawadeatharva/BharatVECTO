@@ -97,7 +97,7 @@ namespace VECTO3GUI2020.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Heater Power.
+        ///   Looks up a localized string similar to Auxiliary Heater Power.
         /// </summary>
         public static string AuxHeaterPower {
             get {

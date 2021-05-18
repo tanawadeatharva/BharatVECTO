@@ -23,7 +23,12 @@
                 <ColumnDefinition Width="1*" SharedSizeGroup="N"/>
             </Grid.ColumnDefinitions>
 
-            <Label x:Name="label" Content="{Binding LabelText, ElementName=MultistageParameterControl}"></Label>
+            <Label x:Name="label" >
+                <PriorityBinding>
+                    <Binding ElementName="MultistageParameterControl" Path="Label"  Converter="{StaticResource NullToUnsetValue}"></Binding>
+                    <Binding ElementName="MultistageParameterControl" Path="GeneratedLabelText"></Binding>
+                </PriorityBinding>
+            </Label>
             <CheckBox Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center" Name="CheckBox"
                   Visibility="{Binding ShowCheckBox, 
                     ElementName=MultistageParameterControl, 
@@ -66,7 +71,12 @@
                 <ColumnDefinition Width="1*" SharedSizeGroup="N"/>
             </Grid.ColumnDefinitions>
 
-            <Label x:Name="label1" Content="{Binding LabelText, ElementName=MultistageParameterControl}"></Label>
+            <Label x:Name="label1">
+                <PriorityBinding>
+                    <Binding ElementName="MultistageParameterControl" Path="Label" Converter="{StaticResource NullToUnsetValue}"></Binding>
+                    <Binding ElementName="MultistageParameterControl" Path="GeneratedLabelText"></Binding>
+                </PriorityBinding>
+            </Label>
             <CheckBox Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center" Name="CheckBoxCombo"
                   Visibility="{Binding ShowCheckBox, 
                     ElementName=MultistageParameterControl, 
@@ -123,7 +133,12 @@
                 <ColumnDefinition Width="1*" SharedSizeGroup="N"/>
             </Grid.ColumnDefinitions>
 
-            <Label x:Name="label3" Content="{Binding LabelText, ElementName=MultistageParameterControl}"></Label>
+            <Label x:Name="label3">
+                <PriorityBinding>
+                    <Binding ElementName="MultistageParameterControl" Path="Label"  Converter="{StaticResource NullToUnsetValue}"></Binding>
+                    <Binding ElementName="MultistageParameterControl" Path="GeneratedLabelText"></Binding>
+                </PriorityBinding>
+            </Label>
             <CheckBox Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center" Name="CheckBoxCheckBox" 
                   Visibility="{Binding ShowCheckBox, 
                     ElementName=MultistageParameterControl, 

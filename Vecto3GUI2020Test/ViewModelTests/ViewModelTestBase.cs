@@ -22,6 +22,9 @@ namespace Vecto3GUI2020Test
 		protected const string consolidated_multiple_stages_airdrag =
 			"vecto_multistage_consolidated_multiple_stages_airdrag.xml";
 
+		protected const string consolidated_multiple_stages_hev =
+			"vecto_multistage_consolidated_multiple_stages_hev.xml";
+
 		protected const string consolidated_one_stage = "vecto_multistage_consolidated_one_stage.xml";
 		protected const string primary_vehicle_only = "vecto_multistage_primary_vehicle_only.xml";
 
@@ -29,7 +32,7 @@ namespace Vecto3GUI2020Test
 
 		protected const string stageInputFullSample = "vecto_vehicle-stage_input_full-sample.xml";
 
-		protected IXMLInputDataReader xmlInputReader;
+		//protected IXMLInputDataReader xmlInputReader;
 		protected IKernel _kernel;
 		private Mock<IDialogHelper> _mockDialogHelper = new Mock<IDialogHelper>();
 
@@ -46,7 +49,7 @@ namespace Vecto3GUI2020Test
 				new FactoryModule(),
 				new MultistageModule()
 			);
-			xmlInputReader = _kernel.Get<IXMLInputDataReader>();
+			//xmlInputReader = _kernel.Get<IXMLInputDataReader>();
 			_kernel.Rebind<IDialogHelper>().ToConstant(_mockDialogHelper.Object);
 
 		}
@@ -58,14 +61,21 @@ namespace Vecto3GUI2020Test
 			_kernel = null;
 		}
 
-		public bool checkFileExists(string fileName)
+		public bool checkFileNameExists(string fileName)
 		{
 			var filePath = Path.GetFullPath(DirPath + fileName);
+			return checkFilePathExists(filePath);
+		}
+
+		public bool checkFilePathExists(string filePath)
+		{
 			var exists = File.Exists(filePath);
 			if (exists)
 			{
 				Console.WriteLine(filePath + @" exists");
-			} else {
+			}
+			else
+			{
 				Console.WriteLine(filePath + @" not existing");
 			}
 
@@ -80,13 +90,6 @@ namespace Vecto3GUI2020Test
 
 		public NewMultiStageJobViewModel loadFile(string fileName)
 		{
-			//string filePath = "";
-			//filePath = Path.GetFullPath(DirPath + fileName);
-
-			//var dialogMock = new Mock<IDialogHelper>();
-			//dialogMock.Setup(dialogHelper => dialogHelper.OpenXMLFileDialog(It.IsAny<string>())).Returns(filePath);
-			//dialogMock.Setup(dialogHelper => dialogHelper.OpenXMLFileDialog()).Returns(filePath);
-
 			var mockDialogHelper = getMockDialogHelper(fileName);
 
 			var newMultistageJobViewModel = _kernel.Get<NewMultiStageJobViewModel>();
@@ -112,21 +115,6 @@ namespace Vecto3GUI2020Test
 
 			return newMultistageJobViewModel;
 		}
-
-		protected void loadVehicleData(MultiStageJobViewModel_v0_1 multiStageViewModel, string inputFile)
-		{
-
-			var vehicleInputData = Path.GetFullPath(DirPath + inputFile);
-			Assert.IsTrue(File.Exists(vehicleInputData));
-
-			var vehicleInputDataFiledialogMock = new Mock<IDialogHelper>();
-			vehicleInputDataFiledialogMock.Setup(dialogHelper => dialogHelper.OpenXMLFileDialog(It.IsAny<string>())).Returns(vehicleInputData);
-			vehicleInputDataFiledialogMock.Setup(dialogHelper => dialogHelper.OpenXMLFileDialog()).Returns(vehicleInputData);
-			_kernel.Rebind<IDialogHelper>().ToConstant(vehicleInputDataFiledialogMock.Object);
-
-			multiStageViewModel.LoadVehicleDataCommand.Execute(null);
-		}
-
 
 		protected Mock<IDialogHelper> getMockDialogHelper(string fileToLoad = null, string fileToSave = null)
 		{

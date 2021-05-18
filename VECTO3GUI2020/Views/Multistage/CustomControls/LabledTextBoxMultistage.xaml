@@ -14,7 +14,13 @@
             <ColumnDefinition Width="1*" SharedSizeGroup="N"/>
         </Grid.ColumnDefinitions>
 
-        <Label Content="{Binding LabelText, ElementName=labledTextBoxMultistage}"/>
+        <Label>
+            <PriorityBinding>
+                <Binding ElementName="lableTextBoxMultistage" Path="Label"  Converter="{StaticResource NullToUnsetValue}"></Binding>
+                <Binding ElementName="labledTextBoxMultistage" Path="GeneratedLabelText"></Binding>
+            </PriorityBinding>
+        </Label>
+        
         <TextBox Grid.Column="1" Name ="TextBoxContent" VerticalAlignment="Center" Margin="2 0 2 0" 
                  Text="{Binding ElementName=labledTextBoxMultistage, Path=Content,
                     Converter={StaticResourceExtension SIValueToStringConverter}, 

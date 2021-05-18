@@ -310,6 +310,8 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 
 				MaxPossibleBenefitFromTechnologyList =
 					Constants.BusAuxiliaries.SteadyStateModel.MaxPossibleBenefitFromTechnologyList,
+
+				COP = 3.5
 			};
 		}
 

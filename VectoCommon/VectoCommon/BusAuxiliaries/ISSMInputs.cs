@@ -255,14 +255,14 @@ namespace TUGraz.VectoCommon.BusAuxiliaries
 		heating_and_cooling,
 		[GuiLabel("Cooling")]
 		cooling,
-		[GuiLabel("N_A")]
+		[GuiLabel("not_applicable")]
 		N_A,
 	}
 
 	public static class HeatPumpModeHelper
 	{
 		private const string HEATING = "heating";
-		private const string HEATING_AND_COOLING = "heating_and_cooling";
+		private const string HEATING_AND_COOLING = "heating and cooling";
 		private const string COOLING = "cooling";
 		private const string N_A = "N.A.";
 

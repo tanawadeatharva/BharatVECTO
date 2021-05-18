@@ -381,7 +381,12 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 					DoubleGlazing == null && AdjustableAuxiliaryHeater == null && SeparateAirDistributionDucts == null &&
 					WaterElectricHeater == null && AirElectricHeater == null && OtherHeatingTechnology == null ;
 		}
-		
+
+		public override XmlNode XMLSource
+		{
+			get { return BaseNode; }
+		}
+
 		public override IHVACBusAuxiliariesDeclarationData HVACAux
 		{
 			get { return IsBusHVACTagEmpty() ? null : this; }
