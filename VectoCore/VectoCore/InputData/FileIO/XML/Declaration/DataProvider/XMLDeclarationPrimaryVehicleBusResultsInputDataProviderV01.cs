@@ -48,7 +48,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 			foreach (XmlNode resultNode in _resultsNode.ChildNodes)
 			{
-				if (resultNode.Name == XMLNames.Report_Result_Result)
+				if (resultNode.LocalName == XMLNames.Report_Result_Result)
 					results.Add(GetResult(resultNode));
 			}
 

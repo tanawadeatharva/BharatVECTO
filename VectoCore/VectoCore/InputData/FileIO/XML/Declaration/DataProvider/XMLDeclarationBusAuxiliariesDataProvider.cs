@@ -185,16 +185,6 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		public virtual HeatPumpType? HeatPumpTypePassengerCompartment { get { return null; } }
 		public virtual HeatPumpMode? HeatPumpModePassengerCompartment { get { return null; } }
 
-		public virtual ACCompressorType CompressorTypeDriver
-		{
-			get { return ACCompressorType.None; }
-		}
-
-		public virtual ACCompressorType CompressorTypePassenger
-		{
-			get { return ACCompressorType.None; }
-		}
-
 		public virtual Watt AuxHeaterPower
 		{
 			get { return 0.SI<Watt>(); }
@@ -300,16 +290,6 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 			get { return BusHVACSystemConfigurationHelper.Parse(GetString(XMLNames.Bus_SystemConfiguration)); }
 		}
 
-		public override ACCompressorType CompressorTypeDriver
-		{
-			get { return ACCompressorTypeExtensions.ParseEnum(GetString(XMLNames.Bus_DriverAC)); }
-		}
-
-		public override ACCompressorType CompressorTypePassenger
-		{
-			get { return ACCompressorTypeExtensions.ParseEnum(GetString(XMLNames.Bus_PassengerAC)); }
-		}
-
 		public override Watt AuxHeaterPower
 		{
 			get { return GetDouble(XMLNames.Bus_AuxiliaryHeaterPower).SI<Watt>(); }
@@ -404,7 +384,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 			get
 			{
 				return ElementExists(XMLNames.Bus_HeatPumpTypeDriver)
-					? HeatPumpTypeHelper.Parse(GetString(XMLNames.Bus_HeatPumpTypeDriver)) : null;
+					? HeatPumpTypeHelper.Parse(GetString(XMLNames.Bus_HeatPumpTypeDriver)) : (HeatPumpType?)null;
 			}
 		}
 
@@ -425,7 +405,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 			get
 			{
 				return ElementExists(XMLNames.Bus_HeatPumpTypePassenger)
-					? HeatPumpTypeHelper.Parse(GetString(XMLNames.Bus_HeatPumpTypePassenger)) : null;
+					? HeatPumpTypeHelper.Parse(GetString(XMLNames.Bus_HeatPumpTypePassenger)) : (HeatPumpType?)null;
 			}
 		}
 

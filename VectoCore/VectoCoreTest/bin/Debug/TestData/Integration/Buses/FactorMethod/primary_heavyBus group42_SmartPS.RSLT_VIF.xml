@@ -456,7 +456,7 @@ xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:DeclarationOutput:VehicleInterimFile
         <Mission>Interurban</Mission>
         <SimulationParameters>
           <TotalVehicleMass unit="kg">16239.55</TotalVehicleMass>
-          <Payload unit="kg">1026.55</Payload>
+          <Payload unit="kg">1254.68</Payload>
           <PassengerCount>14.46</PassengerCount>
           <FuelMode>single fuel mode</FuelMode>
         </SimulationParameters>

@@ -350,11 +350,11 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			retVal.HVACCompressorType = busParams.HVACCompressorType; // use passenger compartment
 			retVal.COP = DeclarationData.BusAuxiliaries.CalculateCOP(
 			
-				coolingPower.Item1, ACCompressorType.None, coolingPower.Item2, busParams.HVACCompressorType,
+				coolingPower.Item1, HeatPumpType.none, coolingPower.Item2, busParams.HVACCompressorType,
 				busParams.VehicleCode.GetFloorType());
 			retVal.HVACTechnology = string.Format(
 				"{0} ({1})", busParams.HVACConfiguration.GetName(),
-				string.Join(", ", new[] { busParams.HVACCompressorType.GetName(), ACCompressorType.None.GetName() }));
+				string.Join(", ", new[] { busParams.HVACCompressorType.GetName(), HeatPumpType.none.GetName() }));
 			
 			//SetHVACParameters(retVal, vehicleData, mission);
 

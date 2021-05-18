@@ -652,8 +652,6 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 		public virtual HeatPumpMode? HeatPumpModeDriverCompartment { get { return null; } }
 		public virtual HeatPumpType? HeatPumpTypePassengerCompartment { get{ return null; } }
 		public virtual HeatPumpMode? HeatPumpModePassengerCompartment { get { return null; } }
-		public virtual ACCompressorType CompressorTypeDriver { get { return ACCompressorType.Unknown; } }
-        public virtual ACCompressorType CompressorTypePassenger { get { return ACCompressorType.Unknown; } }
         public virtual Watt AuxHeaterPower { get { return null; } }
         public virtual bool? DoubleGlazing { get { return false; } }
         public virtual bool HeatPump { get { return false; } }
