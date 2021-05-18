@@ -8,7 +8,7 @@ namespace TUGraz.VectoCore.Utils
 	public enum XmlDocumentType
 	{
 		DeclarationJobData = 1 << 1,
-		PrimaryVehicleBusOutputData = 1 << 2,
+		//PrimaryVehicleBusOutputData = 1 << 2,
 		DeclarationComponentData = 1 << 3,
 		EngineeringJobData = 1 << 4,
 		EngineeringComponentData = 1 << 5,
@@ -93,7 +93,7 @@ namespace TUGraz.VectoCore.Utils
 
 		private static Dictionary<XmlDocumentType, string> schemaFilenames = new Dictionary<XmlDocumentType, string>() {
 			{XmlDocumentType.DeclarationJobData, "VectoDeclarationJob.xsd"},
-			{XmlDocumentType.PrimaryVehicleBusOutputData, "VectoOutputPrimaryVehicleInformation.xsd"},
+			//{XmlDocumentType.PrimaryVehicleBusOutputData, "VectoOutputPrimaryVehicleInformation.xsd"},
 			{XmlDocumentType.DeclarationComponentData, "VectoDeclarationComponent.xsd"},
 			{XmlDocumentType.EngineeringJobData, "VectoEngineeringJob.xsd" },
 			{XmlDocumentType.EngineeringComponentData, "VectoEngineeringComponent.xsd" },
@@ -110,7 +110,7 @@ namespace TUGraz.VectoCore.Utils
 		public static string GetSchemaFilename(XmlDocumentType type)
 		{
 			if (!schemaFilenames.ContainsKey(type)) {
-				throw new Exception(string.Format("Invalid argument {0} - only use single flags", type));
+				throw new Exception(string.Format("Invalid argument '{0}' - only use single flags", type));
 			}
 			var entry = schemaFilenames[type];
 			

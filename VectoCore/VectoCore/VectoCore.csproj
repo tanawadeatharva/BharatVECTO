@@ -936,9 +936,6 @@
     <EmbeddedResource Include="Resources\XSD\VectoOutputPrimaryBus.xsd">
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="Resources\XSD\VectoOutputPrimaryVehicleInformation.xsd">
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
     <EmbeddedResource Include="Resources\XSD\VectoVTPReport.xsd">
       <SubType>Designer</SubType>
     </EmbeddedResource>
