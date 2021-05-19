@@ -96,7 +96,13 @@ namespace TUGraz.VectoCommon.Models
 	{
 		public PerSecond InputSpeed { get; set; }
 
+		public NewtonMeter InputTorque { get; set; }
+
 		public GearshiftPosition Gear { get; set; }
+
+		public PerSecond OutputSpeed { get; set; }
+
+		public NewtonMeter OutputTorque { get; set; }
 	}
 
 	public class TorqueConverterResponse : AbstractPowertrainComponentResponse
@@ -147,6 +153,8 @@ namespace TUGraz.VectoCommon.Models
 
 		public SIBase<Watt> InertiaPowerDemand { get; set; }
 		public NewtonMeter TotalTorqueDemand { get; set; }
+		public NewtonMeter TorqueRequest { get; set; }
+		public NewtonMeter InertiaTorque { get; set; }
 	}
 
 

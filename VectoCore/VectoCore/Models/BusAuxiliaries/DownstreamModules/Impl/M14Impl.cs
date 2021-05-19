@@ -3,7 +3,6 @@ using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.HVAC;
 using TUGraz.VectoCore.Models.BusAuxiliaries.Interfaces;
 using TUGraz.VectoCore.Models.BusAuxiliaries.Interfaces.DownstreamModules;
-using TUGraz.VectoCore.Models.BusAuxiliaries.Interfaces.DownstreamModules.HVAC;
 using TUGraz.VectoCore.Models.Declaration;
 
 namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl
@@ -74,6 +73,30 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl
 												_ssmTool.SSMInputs.AuxHeater.FuelEnergyToHeatToCoolant *
 												_ssmTool.SSMInputs.AuxHeater.CoolantHeatTransferredToAirCabinHeater;
 			return _ssmTool.AverageAuxHeaterPower(averageUsableEngineWasteHeat) * cycleTime;
+		}
+	}
+
+	public class M14bImpl
+	{
+		private ISSMEngineeringInputs _auxConfig;
+
+		public M14bImpl(ISSMEngineeringInputs auxConfigSsmInputs)
+		{
+			
+			_auxConfig = auxConfigSsmInputs;
+		}
+
+		public Joule AuxHeaterDemand(Second cycleTime, Joule engineWasteHeat)
+		{
+			var averageEngineWasteHeatPwr = engineWasteHeat;
+			var averageUsableEngineWasteHeat = averageEngineWasteHeatPwr *
+												_auxConfig.FuelEnergyToHeatToCoolant *
+												_auxConfig.CoolantHeatTransferredToAirCabinHeater;
+
+			var heatingDiff = VectoMath.Max(0.SI<Joule>(), _auxConfig.HeatingDemand - averageUsableEngineWasteHeat);
+			var auxHeaterEnergy = VectoMath.Min(heatingDiff , (_auxConfig.AuxHeaterPower * cycleTime).Cast<Joule>()) / _auxConfig.AuxHeaterEfficiency;
+
+			return auxHeaterEnergy;
 		}
 	}
 }

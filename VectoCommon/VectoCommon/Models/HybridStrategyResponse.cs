@@ -14,6 +14,8 @@ namespace TUGraz.VectoCommon.Models {
 	{
 		public Watt Delta { get; set; }
 		public PerSecond DeltaEngineSpeed { get; set; }
+		
+		public GearboxResponse GearboxResponse { get; set; }
 	}
 
 	public class HybridStrategyResponse : AbstractComponentResponse, IHybridStrategyResponse
@@ -28,6 +30,7 @@ namespace TUGraz.VectoCommon.Models {
 
 		public HybridResultEntry EvaluatedSolution { get; set; }
 		public bool GearboxEngaged { get; set; }
+		public bool ProhibitGearshift { get; set; }
 	}
 
 	[DebuggerDisplay("{U}: {Score} - G{Gear}")]
@@ -41,7 +44,14 @@ namespace TUGraz.VectoCommon.Models {
 
 		public IResponse Response { get; set; }
 
-		public double Score { get { return (FuelCosts + EqualityFactor * (BatCosts + ICEStartPenalty1) * SoCPenalty + ICEStartPenalty2) / GearshiftPenalty; } }
+		public double Score
+		{
+			get
+			{
+				return (FuelCosts + EquivalenceFactor * (BatCosts + ICEStartPenalty1) * SoCPenalty + ICEStartPenalty2 +
+						RampUpPenalty) / GearshiftPenalty;
+			}
+		}
 
 		public double FuelCosts { get; set; }
 
@@ -49,7 +59,7 @@ namespace TUGraz.VectoCommon.Models {
 
 		public double SoCPenalty { get; set; }
 
-		public double EqualityFactor { get; set; }
+		public double EquivalenceFactor { get; set; }
 
 		public double GearshiftPenalty { get; set; }
 
@@ -62,6 +72,8 @@ namespace TUGraz.VectoCommon.Models {
 		public bool ICEOff { get; set; }
 
 		public HybridConfigurationIgnoreReason IgnoreReason { get; set; }
+		public double RampUpPenalty { get; set; }
+		public bool ProhibitGearshift { get; set; }
 
 		public bool IsEqual(HybridResultEntry other)
 		{
@@ -88,8 +100,10 @@ namespace TUGraz.VectoCommon.Models {
 		BatteryBelowMinSoC = 1 << 8,
 		BatteryAboveMaxSoc = 1 << 9,
 		BatterySoCTooLow = 1 << 10,
-		NoResponseAvailable = 1 << 11,
-		Evaluated = 1 << 12,
+		VehicleSpeedBelowMinSpeedAfterGearshift = 1 << 11,
+		MaxPropulsionTorqueExceeded = 1 << 12,
+		NoResponseAvailable = 1 << 13,
+		Evaluated = 1 << 14,
 	}
 
 	public static class HybridConfigurationIgnoreReasonHelper
@@ -186,6 +200,12 @@ namespace TUGraz.VectoCommon.Models {
 			return (x & HybridConfigurationIgnoreReason.EngineTorqueDemandTooLow) != 0;
 		}
 
+		public static bool EngineTorqueOK(this HybridConfigurationIgnoreReason x)
+		{
+			return (x & (HybridConfigurationIgnoreReason.EngineTorqueDemandTooHigh |
+						HybridConfigurationIgnoreReason.EngineTorqueDemandTooLow)) == 0;
+		}
+
 		public static bool BatterySoCTooLow(this HybridConfigurationIgnoreReason x)
 		{
 			return (x & HybridConfigurationIgnoreReason.BatterySoCTooLow) != 0;
@@ -199,6 +219,11 @@ namespace TUGraz.VectoCommon.Models {
 		public static bool AllOK(this HybridConfigurationIgnoreReason x)
 		{
 			return (x & HybridConfigurationIgnoreReason.Evaluated) == HybridConfigurationIgnoreReason.Evaluated;
+		}
+
+		public static bool Evaluated(this HybridConfigurationIgnoreReason x)
+		{
+			return x != HybridConfigurationIgnoreReason.NotEvaluated;
 		}
 	}
 

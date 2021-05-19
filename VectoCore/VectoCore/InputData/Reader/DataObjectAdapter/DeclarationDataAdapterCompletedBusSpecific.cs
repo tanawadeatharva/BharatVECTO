@@ -29,7 +29,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 				mission, completedVehicle.Length, completedVehicle.Width,
 				(int)completedVehicle.NumberOfPassengersLowerDeck + (int)completedVehicle.NumberOfPassengersUpperDeck, loading.Key);
 
-			var vehicleData = base.CreateVehicleData(primaryVehicle, segment, mission, loading);
+			var vehicleData = base.CreateVehicleData(primaryVehicle, segment, mission, loading, false);
 			vehicleData.InputData = completedVehicle;
 			vehicleData.VIN = completedVehicle.VIN;
 			vehicleData.LegislativeClass = completedVehicle.LegislativeClass;
@@ -115,18 +115,22 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			var retVal = GetDefaultElectricalUserConfig();
 
 			var primaryBusAuxiliaries = primaryVehicle.Components.BusAuxiliaries;
-			retVal.SmartElectrical = primaryBusAuxiliaries.ElectricSupply.SmartElectrics;
+			retVal.AlternatorType = primaryBusAuxiliaries.ElectricSupply.AlternatorTechnology;
 			retVal.ElectricalConsumers = currentDemand;
 			retVal.AlternatorMap = new SimpleAlternator(
 				CalculateAlternatorEfficiency(
 					primaryBusAuxiliaries.ElectricSupply.Alternators
-										.Concat(completedVehicle.Components.BusAuxiliaries.ElectricSupply.Alternators).ToList())) {
-				Technologies = primaryBusAuxiliaries.ElectricSupply.Alternators
-													.Concat(completedVehicle.Components.BusAuxiliaries.ElectricSupply.Alternators).Select(x => x.Technology)
-													.ToList()
-			};
-			retVal.MaxAlternatorPower = primaryBusAuxiliaries.ElectricSupply.MaxAlternatorPower;
-			retVal.ElectricStorageCapacity = primaryBusAuxiliaries.ElectricSupply.ElectricStorageCapacity ?? 0.SI<WattSecond>();
+						.Concat(completedVehicle.Components.BusAuxiliaries.ElectricSupply?.Alternators ??
+								new List<IAlternatorDeclarationInputData>()).ToList()));
+			switch (retVal.AlternatorType) {
+				case AlternatorType.Smart when primaryBusAuxiliaries.ElectricSupply.Alternators.Count == 0:
+					throw new VectoException("at least one alternator is required when specifying smart electrics!");
+				case AlternatorType.Smart when primaryBusAuxiliaries.ElectricSupply.ElectricStorage.Count == 0:
+					throw new VectoException("at least one electric storage (battery or capacitor) is required when specifying smart electrics!");
+			}
+
+			retVal.MaxAlternatorPower = primaryBusAuxiliaries.ElectricSupply.Alternators.Sum(x => x.RatedVoltage * x.RatedCurrent);
+			retVal.ElectricStorageCapacity = primaryBusAuxiliaries.ElectricSupply.ElectricStorage.Sum(x => x.ElectricStorageCapacity) ?? 0.SI<WattSecond>();
 			
 			return retVal;
 		}
@@ -183,16 +187,53 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			var hvacConfiguration = completedVehicle.Components.BusAuxiliaries.HVACAux.SystemConfiguration;
 			var busAux = completedVehicle.Components.BusAuxiliaries.HVACAux;
 
+			if (hvacConfiguration.RequiresDriverAC() && (!busAux.HeatPumpTypeDriverCompartment.HasValue || busAux.HeatPumpTypeDriverCompartment == HeatPumpType.none)) {
+				throw new VectoException("HVAC System Configuration {0} requires DriverAC Technology", hvacConfiguration);
+			}
+
+			if (hvacConfiguration.RequiresPassengerAC() && (!busAux.HeatPumpTypePassengerCompartment.HasValue || busAux.HeatPumpTypePassengerCompartment == HeatPumpType.none)) {
+				throw new VectoException("HVAC System Configuration {0} requires PassengerAC Technology", hvacConfiguration);
+			}
+
 			if (mission.BusParameter.SeparateAirDistributionDuctsHVACCfg.Contains(hvacConfiguration) &&
-				!(bool)completedVehicle.Components.BusAuxiliaries.HVACAux.SeparateAirDistributionDucts) {
+				(busAux.SeparateAirDistributionDucts == null || !busAux.SeparateAirDistributionDucts.Value)) {
 				throw new VectoException("Input parameter 'separate air distribution ducts' has to be set to 'true' for vehicle group '{0}' and HVAC configuration '{1}'",
 					mission.BusParameter.BusGroup.GetClassNumber(), hvacConfiguration.GetName());
 			}
+
+			if (completedVehicle.NumberOfPassengersLowerDeck == null) {
+				throw new VectoException("NumberOfPassengersLowerDeck input parameter is required");
+			}
+			if (completedVehicle.NumberOfPassengersUpperDeck == null) {
+				throw new VectoException("NumberOfPassengersUpperDeck input parameter is required");
+			}
+			if (busAux.HeatPumpTypeDriverCompartment == null) {
+				throw new VectoException("HeatPumpTypeDriverCompartment input parameter is required");
+			}
+			if (busAux.HeatPumpTypePassengerCompartment == null) {
+				throw new VectoException("HeatPumpTypePassengerCompartment input parameter is required");
+			}
+			if (busAux.HeatPumpModeDriverCompartment == null || busAux.HeatPumpModeDriverCompartment.Value == HeatPumpMode.N_A) {
+				throw new VectoException("HeatPumpTypeDriverCompartment input parameter is required");
+			}
+			if (busAux.HeatPumpModePassengerCompartment == null || busAux.HeatPumpModePassengerCompartment.Value == HeatPumpMode.N_A) {
+				throw new VectoException("HeatPumpModePassengerCompartment input parameter is required");
+			}
+
+			var heatPumpTypeDriverCompartment =
+				busAux.HeatPumpModeDriverCompartment == HeatPumpMode.heating
+					? HeatPumpType.none
+					: busAux.HeatPumpTypeDriverCompartment.Value;
+			var heatPumpTypePassengerCompartment =
+				busAux.HeatPumpModePassengerCompartment == HeatPumpMode.heating
+					? HeatPumpType.none
+					: busAux.HeatPumpTypePassengerCompartment.Value;
+
 			var internalLength = hvacConfiguration == BusHVACSystemConfiguration.Configuration2
 				? 2 * Constants.BusParameters.DriverCompartmentLength // OK
 				: DeclarationData.BusAuxiliaries.CalculateInternalLength(
 					completedVehicle.Length, completedVehicle.VehicleCode,
-					(int)completedVehicle.NumberOfPassengersLowerDeck);
+					completedVehicle.NumberOfPassengersLowerDeck.Value);
 			var correctionLengthDrivetrainVolume = DeclarationData.BusAuxiliaries.CorrectionLengthDrivetrainVolume(
 				completedVehicle.VehicleCode, completedVehicle.LowEntry, primaryVehicle.AxleConfiguration.NumAxles(),
 				primaryVehicle.Articulated);
@@ -219,12 +260,19 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			ssmInputs.UValue = DeclarationData.BusAuxiliaries.UValue(completedVehicle.VehicleCode.GetFloorType());
 			ssmInputs.NumberOfPassengers = GetNumberOfPassengers(
 				mission, internalLength, correctedBusWidth,
-				(int)completedVehicle.NumberOfPassengersLowerDeck + (int)completedVehicle.NumberOfPassengersUpperDeck, loadingType) + 1; // add driver for 'heat input'
+				completedVehicle.NumberOfPassengersLowerDeck.Value + completedVehicle.NumberOfPassengersUpperDeck.Value, loadingType) + 1; // add driver for 'heat input'
 			ssmInputs.VentilationRate = DeclarationData.BusAuxiliaries.VentilationRate(hvacConfiguration, false);
 			ssmInputs.VentilationRateHeating = DeclarationData.BusAuxiliaries.VentilationRate(hvacConfiguration, true);
 
 			ssmInputs.HVACMaxCoolingPower = coolingPower.Item1 + coolingPower.Item2;
-
+			ssmInputs.HVACCompressorType = heatPumpTypePassengerCompartment; // use passenger compartment
+			ssmInputs.HVACTechnology = string.Format(
+				"{0} ({1})", busAux.SystemConfiguration.GetName(),
+				string.Join(", ", new[] { heatPumpTypePassengerCompartment.GetName(), heatPumpTypeDriverCompartment.GetName() }));
+			;
+			ssmInputs.COP = DeclarationData.BusAuxiliaries.CalculateCOP(
+				coolingPower.Item1, heatPumpTypeDriverCompartment, coolingPower.Item2, heatPumpTypePassengerCompartment,
+				floorType);
 
 			return ssmInputs;
 		}

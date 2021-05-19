@@ -1,4 +1,35 @@
-﻿using System;
+﻿/*
+* This file is part of VECTO.
+*
+* Copyright © 2012-2019 European Union
+*
+* Developed by Graz University of Technology,
+*              Institute of Internal Combustion Engines and Thermodynamics,
+*              Institute of Technical Informatics
+*
+* VECTO is licensed under the EUPL, Version 1.1 or - as soon they will be approved
+* by the European Commission - subsequent versions of the EUPL (the "Licence");
+* You may not use VECTO except in compliance with the Licence.
+* You may obtain a copy of the Licence at:
+*
+* https://joinup.ec.europa.eu/community/eupl/og_page/eupl
+*
+* Unless required by applicable law or agreed to in writing, VECTO
+* distributed under the Licence is distributed on an "AS IS" basis,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the Licence for the specific language governing permissions and
+* limitations under the Licence.
+*
+* Authors:
+*   Stefan Hausberger, hausberger@ivt.tugraz.at, IVT, Graz University of Technology
+*   Christian Kreiner, christian.kreiner@tugraz.at, ITI, Graz University of Technology
+*   Michael Krisper, michael.krisper@tugraz.at, ITI, Graz University of Technology
+*   Raphael Luz, luz@ivt.tugraz.at, IVT, Graz University of Technology
+*   Markus Quaritsch, markus.quaritsch@tugraz.at, IVT, Graz University of Technology
+*   Martin Rexeis, rexeis@ivt.tugraz.at, IVT, Graz University of Technology
+*/
+
+using System;
 using System.Collections.Generic;
 using System.Xml.Linq;
 
@@ -8,7 +39,7 @@ namespace TUGraz.VectoCore.Utils
 	public enum XmlDocumentType
 	{
 		DeclarationJobData = 1 << 1,
-		PrimaryVehicleBusOutputData = 1 << 2,
+		//PrimaryVehicleBusOutputData = 1 << 2,
 		DeclarationComponentData = 1 << 3,
 		EngineeringJobData = 1 << 4,
 		EngineeringComponentData = 1 << 5,
@@ -93,7 +124,7 @@ namespace TUGraz.VectoCore.Utils
 
 		private static Dictionary<XmlDocumentType, string> schemaFilenames = new Dictionary<XmlDocumentType, string>() {
 			{XmlDocumentType.DeclarationJobData, "VectoDeclarationJob.xsd"},
-			{XmlDocumentType.PrimaryVehicleBusOutputData, "VectoOutputPrimaryVehicleInformation.xsd"},
+			//{XmlDocumentType.PrimaryVehicleBusOutputData, "VectoOutputPrimaryVehicleInformation.xsd"},
 			{XmlDocumentType.DeclarationComponentData, "VectoDeclarationComponent.xsd"},
 			{XmlDocumentType.EngineeringJobData, "VectoEngineeringJob.xsd" },
 			{XmlDocumentType.EngineeringComponentData, "VectoEngineeringComponent.xsd" },
@@ -110,7 +141,7 @@ namespace TUGraz.VectoCore.Utils
 		public static string GetSchemaFilename(XmlDocumentType type)
 		{
 			if (!schemaFilenames.ContainsKey(type)) {
-				throw new Exception(string.Format("Invalid argument {0} - only use single flags", type));
+				throw new Exception(string.Format("Invalid argument '{0}' - only use single flags", type));
 			}
 			var entry = schemaFilenames[type];
 			

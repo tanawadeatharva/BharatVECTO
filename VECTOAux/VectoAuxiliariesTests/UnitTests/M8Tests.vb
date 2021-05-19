@@ -2,6 +2,7 @@
 Imports NUnit.Framework
 Imports Moq
 Imports TUGraz.VectoCommon.BusAuxiliaries
+Imports TUGraz.VectoCommon.Models
 Imports TUGraz.VectoCommon.Utils
 Imports TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl
 Imports TUGraz.VectoCore.Models.BusAuxiliaries.Interfaces.DownstreamModules
@@ -13,7 +14,7 @@ Namespace UnitTests
         Private Function GetAuxConfigDummy(smartElectrics As Boolean, smartPneumatics As Boolean) As IAuxiliaryConfig
             Dim auxCfg As New Mock(Of IAuxiliaryConfig)
             Dim elecCfg = New Mock(Of IElectricsUserInputsConfig)
-            elecCfg.Setup(Function(x) x.SmartElectrical).Returns(smartElectrics)
+            elecCfg.Setup(Function(x) x.AlternatorType()).Returns(If(smartElectrics, AlternatorType.Smart, AlternatorType.Conventional))
             Dim psconfig = New Mock(Of IPneumaticUserInputsConfig)
             psconfig.Setup(Function(x) x.SmartAirCompression).Returns(smartPneumatics)
             auxCfg.Setup(Function(x) x.ElectricalUserInputsConfig).Returns(elecCfg.Object)

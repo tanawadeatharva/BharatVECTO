@@ -123,12 +123,12 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox
 		{
 			var torqueLoss = _invertedLossMap.Interpolate(inAngularVelocity.Value(), inTorque.Value());
 			if (torqueLoss.HasValue) {
-				return (inTorque - torqueLoss.Value.SI<NewtonMeter>()) / _ratio;
+				return (inTorque - torqueLoss.Value.SI<NewtonMeter>()) * _ratio;
 			}
 
 			if (allowExtrapolation) {
 				torqueLoss = _invertedLossMap.Extrapolate(inAngularVelocity.Value(), inTorque.Value());
-				return (inTorque - torqueLoss.Value.SI<NewtonMeter>()) / _ratio;
+				return (inTorque - torqueLoss.Value.SI<NewtonMeter>()) * _ratio;
 			}
 
 			throw new VectoException("TransmissionLossMap {0}: Interpolation failed. inTorque: {1}, inAngularVelocity: {2}",

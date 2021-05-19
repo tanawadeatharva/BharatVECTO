@@ -357,11 +357,12 @@ namespace TUGraz.VectoCore.Tests.XML
 			Assert.AreEqual(1, aux.SteeringPumpTechnology.Count);
 			Assert.AreEqual("Variable displacement elec. controlled", aux.SteeringPumpTechnology[0]);
 
-			Assert.AreEqual(1, aux.ElectricSupply.Alternators.Count);
-			Assert.AreEqual("default", aux.ElectricSupply.Alternators[0].Technology);
-			Assert.AreEqual(true, aux.ElectricSupply.SmartElectrics);
-			Assert.AreEqual(15000, aux.ElectricSupply.MaxAlternatorPower.Value());
-			Assert.AreEqual(50.SI(Unit.SI.Watt.Hour).Cast<WattSecond>(), aux.ElectricSupply.ElectricStorageCapacity);
+			Assert.AreEqual(0, aux.ElectricSupply.Alternators.Count);
+			Assert.AreEqual(AlternatorType.Conventional, aux.ElectricSupply.AlternatorTechnology);
+			//Assert.AreEqual(true, aux.ElectricSupply.SmartElectrics);
+			//Assert.AreEqual(730, aux.ElectricSupply.Alternators.FirstOrDefault().RatedCurrent.Value());
+			//Assert.AreEqual(48, aux.ElectricSupply.Alternators.FirstOrDefault().RatedVoltage.Value());
+			//Assert.AreEqual(50.SI(Unit.SI.Watt.Hour).Cast<WattSecond>(), aux.ElectricSupply.ElectricStorage.FirstOrDefault().ElectricStorageCapacity);
 
 			Assert.AreEqual("Large Supply 2-stage", aux.PneumaticSupply.CompressorSize);//SizeOfAirSupply
 			Assert.AreEqual(CompressorDrive.electrically, aux.PneumaticSupply.CompressorDrive);
@@ -613,7 +614,7 @@ namespace TUGraz.VectoCore.Tests.XML
 			Assert.AreEqual("", vehicleData.ManufacturerAddress);
 			Assert.AreEqual("VEH-2234567890", vehicleData.VIN);
 			Assert.AreEqual(DateTime.Parse("2021-02-13T07:20:08.0187663Z").ToUniversalTime(), vehicleData.Date);
-			Assert.AreEqual(false, vehicleData.AirdragModifiedMultistage);
+			Assert.AreEqual(null, vehicleData.AirdragModifiedMultistage);
 			Assert.AreEqual(VehicleDeclarationType.final, vehicleData.VehicleDeclarationType);
 
 			Assert.AreEqual(true, vehicleData.ADAS.EngineStopStart);
@@ -703,7 +704,7 @@ namespace TUGraz.VectoCore.Tests.XML
 			Assert.AreEqual(LegislativeClass.M3, vehicleData.LegislativeClass);
 			Assert.AreEqual(25000.SI<Kilogram>(), vehicleData.CurbMassChassis);
 			Assert.AreEqual(30000.SI<Kilogram>(), vehicleData.GrossVehicleMassRating);
-			Assert.AreEqual(true, vehicleData.AirdragModifiedMultistage);
+			Assert.AreEqual(null, vehicleData.AirdragModifiedMultistage);
 			Assert.AreEqual(TankSystem.Liquefied, vehicleData.TankSystem);
 			Assert.AreEqual(RegistrationClass.B, vehicleData.RegisteredClass);
 			Assert.AreEqual(30, vehicleData.NumberOfPassengersLowerDeck);

@@ -103,10 +103,15 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			IResponse response;
 
 			if (Gear.Gear != 0) {
-				inAngularVelocity = outAngularVelocity * ModelData.Gears[Gear.Gear].Ratio;
-				var inTorqueLossResult = ModelData.Gears[Gear.Gear].LossMap.GetTorqueLoss(outAngularVelocity, outTorque);
+				var ratio = !Gear.IsLockedGear()
+					? ModelData.Gears[Gear.Gear].TorqueConverterRatio
+					: ModelData.Gears[Gear.Gear].Ratio;
+				inAngularVelocity = outAngularVelocity * ratio;
+				var inTorqueLossResult = !Gear.IsLockedGear()
+					? ModelData.Gears[Gear.Gear].TorqueConverterGearLossMap.GetTorqueLoss(outAngularVelocity, outTorque)
+					: ModelData.Gears[Gear.Gear].LossMap.GetTorqueLoss(outAngularVelocity, outTorque);
 				CurrentState.TorqueLossResult = inTorqueLossResult;
-				inTorque = outTorque / ModelData.Gears[Gear.Gear].Ratio + inTorqueLossResult.Value;
+				inTorque = outTorque / ratio + inTorqueLossResult.Value;
 
 				var torqueLossInertia = outAngularVelocity.IsEqual(0)
 					? 0.SI<NewtonMeter>()
@@ -320,6 +325,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					},
 					DeltaDragLoad = outTorque * avgOutAngularVelocity,
 					DeltaFullLoad = outTorque * avgOutAngularVelocity,
+					DeltaFullLoadTorque = outTorque,
+					DeltaDragLoadTorque = outTorque,
+
 				};
 			}
 
@@ -409,6 +417,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			container[ModalResultField.n_gbx_out_avg] = (PreviousState.OutAngularVelocity +
 														CurrentState.OutAngularVelocity) / 2.0;
 			container[ModalResultField.T_gbx_out] = CurrentState.OutTorque;
+			container[ModalResultField.T_gbx_in] = CurrentState.InTorque;
 
 			if (ModelData.Type.AutomaticTransmission()) {
 				container[ModalResultField.TC_Locked] = !CurrentState.TorqueConverterActive;

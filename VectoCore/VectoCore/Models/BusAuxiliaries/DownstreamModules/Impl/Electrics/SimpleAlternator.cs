@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using TUGraz.VectoCommon.BusAuxiliaries;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Models.BusAuxiliaries.Interfaces.DownstreamModules.Electrics;
@@ -22,8 +23,6 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.Electric
 		{
 			return _efficiency;
 		}
-
-		public IList<string> Technologies { get; set; }
 
 		public string Source { get { return null; } }
 

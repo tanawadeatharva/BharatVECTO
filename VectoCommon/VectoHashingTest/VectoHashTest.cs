@@ -48,6 +48,7 @@ namespace VectoHashingTest
 	
 
 	[TestFixture]
+	//[Parallelizable(ParallelScope.All)]
 	public class VectoHashTest
 	{
 		public const string ReferenceXMLEngine = @"Testdata\XML\Reference\vecto_engine-sample.xml";

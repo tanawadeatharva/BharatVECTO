@@ -1069,7 +1069,7 @@ namespace TUGraz.VectoCommon.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to SCRReagentDosing.
+        ///   Looks up a localized string similar to PneumaticSCRReagentDosing.
         /// </summary>
         public static string BusAux_PneumaticSystem_SCRReagentDosing {
             get {

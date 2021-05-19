@@ -101,6 +101,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent
         GearshiftPosition NextGear { get; }
 
 		bool CheckGearshiftRequired { get; }
+		GearshiftPosition MaxStartGear { get; }
 
 		void Request(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity);
 

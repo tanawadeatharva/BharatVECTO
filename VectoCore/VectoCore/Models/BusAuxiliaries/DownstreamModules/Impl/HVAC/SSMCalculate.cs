@@ -442,7 +442,7 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.HVAC
 			}
 		}
 
-		private Watt CalculateElectricalWBase(ISSMInputs genInputs, IEnvironmentalConditionsMapEntry env)
+		private Watt CalculateElectricalWBase(ISSMDeclarationInputs genInputs, IEnvironmentalConditionsMapEntry env)
 		{
 			// MIN(SUM(H94),C54*1000)/C59+SUM(I93:I95)
 
@@ -467,7 +467,7 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.HVAC
 			return electricalWBaseCurrentResult * env.Weighting;
 		}
 
-		private Watt CalculateMechanicalWBase(ISSMInputs genInputs, IEnvironmentalConditionsMapEntry env)
+		private Watt CalculateMechanicalWBase(ISSMDeclarationInputs genInputs, IEnvironmentalConditionsMapEntry env)
 		{
 			// =MIN(F94,C54*1000)/C59
 
@@ -504,7 +504,7 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.HVAC
 		//}
 
 		private Watt CalculateElectricalWAdjusted(
-			ISSMInputs genInputs, ISSMTechnologyBenefits tecList, IEnvironmentalConditionsMapEntry env)
+			ISSMDeclarationInputs genInputs, ISSMTechnologyBenefits tecList, IEnvironmentalConditionsMapEntry env)
 		{
 			// =(MIN((H94*(1-H100)),C54*1000)/C59)+(I93*(1-I99))+(I94*(1-I100))+(I95*(1-I101))
 
@@ -526,7 +526,7 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.HVAC
 			return ElectricalWAdjusted * env.Weighting;
 		}
 
-		private Watt CalculateMechanicalWBaseAdjusted(ISSMInputs genInputs, ISSMTechnologyBenefits tecList, IEnvironmentalConditionsMapEntry env)
+		private Watt CalculateMechanicalWBaseAdjusted(ISSMDeclarationInputs genInputs, ISSMTechnologyBenefits tecList, IEnvironmentalConditionsMapEntry env)
 		{
 			// =(MIN((F94*(1-F100)),C54*1000)/C59)
 
@@ -541,7 +541,7 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.HVAC
 		}
 
 		private Watt CalculateAverageAuxHeaterPower(
-			ISSMInputs genInputs, ISSMTechnologyBenefits tecList, IEnvironmentalConditionsMapEntry env)
+			ISSMDeclarationInputs genInputs, ISSMTechnologyBenefits tecList, IEnvironmentalConditionsMapEntry env)
 		{
 			// =MIN(ABS(IF(AND(M89<0,M90<0),VLOOKUP(MAX(M89:M90),M89:P90,4),0)/1000),C71)/C37*(1/(C39*C38))
 

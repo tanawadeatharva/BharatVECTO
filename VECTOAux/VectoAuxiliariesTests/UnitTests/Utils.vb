@@ -109,7 +109,7 @@ Public Class Utils
                 .AlternatorMap = AlternatorReader.ReadMap("TestFiles\testAlternatormap.aalt"),
                 .DoorActuationTimeSecond = Constants.BusAuxiliaries.ElectricalConsumers.DoorActuationTimeSecond,
                 .PowerNetVoltage = Constants.BusAuxiliaries.ElectricSystem.PowernetVoltage,
-                .SmartElectrical = false
+                .AlternatorType = AlternatorType.Conventional
                 },
                 .PneumaticAuxillariesConfig = CreatePneumaticAuxConfig(retarder),
                 .PneumaticUserInputsConfig = New PneumaticUserInputsConfig() With {
@@ -138,7 +138,7 @@ Public Class Utils
                 .HeatingBoundaryTemperature = 18.0.DegCelsiusToKelvin(),
                 .CoolingBoundaryTemperature = 23.0.DegCelsiusToKelvin(),
                 .SpecificVentilationPower = 0.56.SI(Unit.SI.Watt.Hour.Per.Cubic.Meter).Cast (Of JoulePerCubicMeter),
-                .HVACCompressorType = ACCompressorType.TwoStage, 
+                .HVACCompressorType = HeatPumpType.non_R_744_2_stage, 
                 .HVACMaxCoolingPower = 18.si(Unit.SI.kilo.watt).Cast (of Watt),
                 .AuxHeaterEfficiency =  0.84,
                 .FuelFiredHeaterPower = 30.SI(Unit.SI.kilo.watt).Cast (Of Watt),

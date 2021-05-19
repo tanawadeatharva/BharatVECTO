@@ -159,12 +159,11 @@ namespace TUGraz.VectoCore.InputData.Impl
 		public Meter DynamicTyreRadius { get; internal set; }
 	}
 
-	public class AuxiliaryDataInputData : IAuxiliaryEngineeringInputData, IAuxiliaryDeclarationInputData
+	public class DeclarationAuxiliaryDataInputData : IAuxiliaryDeclarationInputData
 	{
-		public AuxiliaryDataInputData()
+		public DeclarationAuxiliaryDataInputData()
 		{
-			AuxiliaryType = AuxiliaryDemandType.Mapping;
-			ConstantPowerDemand = 0.SI<Watt>();
+			AuxiliaryType = AuxiliaryDemandType.Constant;
 		}
 
 		public AuxiliaryDemandType AuxiliaryType { get; internal set; }
@@ -175,18 +174,27 @@ namespace TUGraz.VectoCore.InputData.Impl
 
 		public IList<string> Technology { get; set; }
 
-		public double TransmissionRatio { get; internal set; }
 
-		public double EfficiencyToEngine { get; internal set; }
+	}
 
-		public double EfficiencyToSupply { get; internal set; }
+	public class EngineeringAuxiliaryDataInputData : IAuxiliaryEngineeringInputData
+	{
+		public EngineeringAuxiliaryDataInputData()
+		{
+			AuxiliaryType = AuxiliaryDemandType.Constant;
+			ConstantPowerDemand = 0.SI<Watt>();
+		}
 
-		public TableData DemandMap { get; internal set; }
+		public AuxiliaryDemandType AuxiliaryType { get; internal set; }
+
+		public string ID { get; internal set; }
 
 		public Watt ConstantPowerDemand { get; internal set; }
-
-		public DataSource DataSource { get; internal set; }
+		public Watt PowerDemandICEOffDriving { get; internal set; }
+		public Watt PowerDemandICEOffStandstill { get; internal set; }
+		public Watt ElectricPowerDemand { get; internal set; }
 	}
+
 
 	public class TorqueLimitInputData : ITorqueLimitInputData
 	{
@@ -196,20 +204,72 @@ namespace TUGraz.VectoCore.InputData.Impl
 
 	public class AlternatorInputData : IAlternatorDeclarationInputData
 	{
-		public AlternatorInputData(string technology)
+		public AlternatorInputData(Volt ratedVoltage, Ampere ratedCurrent)
 		{
-			Technology = technology;
-			
+			RatedCurrent = ratedCurrent;
+			RatedVoltage = ratedVoltage;
+
 		}
 
 		#region Implementation of IAlternatorDeclarationInputData
-
-		public virtual string Technology { get; }
 		
+		public Ampere RatedCurrent { get; }
+		public Volt RatedVoltage { get; }
+
 		#endregion
 	}
 
-	
+	public class BusAuxBatteryInputData : IBusAuxElectricStorageDeclarationInputData
+	{
+		public BusAuxBatteryInputData(string technology, Volt voltage, AmpereSecond ratedCapacity)
+		{
+			Technology = technology;
+			Voltage = voltage;
+			Capacity = ratedCapacity;
+		}
+
+		public Volt Voltage { get; set; }
+
+		public AmpereSecond Capacity { get; set; }
+
+		#region Implementation of IBusAuxElectricStorageDeclarationInputData
+
+		public string Technology { get; }
+
+		public WattSecond ElectricStorageCapacity
+		{
+			get { return Capacity * Voltage; }
+		}
+
+		#endregion
+	}
+
+	public class BusAuxCapacitorInputData : IBusAuxElectricStorageDeclarationInputData
+	{
+		public BusAuxCapacitorInputData(string technology, Volt voltage, Farad ratedCapacity)
+		{
+			Technology = technology;
+			Voltage = voltage;
+			Capacity = ratedCapacity;
+		}
+
+		public Volt Voltage { get; set; }
+
+		public Farad Capacity { get; set; }
+
+		#region Implementation of IBusAuxElectricStorageDeclarationInputData
+
+		public string Technology { get; }
+		public WattSecond ElectricStorageCapacity
+		{
+			get { return Capacity * Voltage * Voltage / 2.0; }
+		}
+
+		#endregion
+	}
+
+
+
 	public class ResultInputData : IResultsInputData
 	{
 		public string Status { get; internal set; }

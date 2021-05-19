@@ -63,6 +63,8 @@ namespace TUGraz.VectoCommon.BusAuxiliaries
 					return "Mechanic";
 				case ConsumerTechnology.Pneumatically:
 					return "Pneumatic";
+				case ConsumerTechnology.Mixed:
+					return "Mixed";
 				default:
 					return ConsumerTechnology.Unknown.ToString();
 			}

@@ -41,16 +41,18 @@ using System.IO;
 namespace TUGraz.VectoCore.Tests.Integration.DriverStrategy
 {
 	[TestFixture]
+	[Parallelizable(ParallelScope.All)]
 	public class SimpleCycles
 	{
 		[OneTimeSetUp]
 		public void Init()
 		{
-			Directory.SetCurrentDirectory(TestContext.CurrentContext.TestDirectory);
 			//LogManager.DisableLogging();
+
+			Directory.SetCurrentDirectory(TestContext.CurrentContext.TestDirectory);
 		}
 
-		public GraphWriter GetGraphWriter()
+		protected GraphWriter GetGraphWriter()
 		{
 			var graphWriter = new GraphWriter();
 #if TRACE

@@ -38,6 +38,7 @@ using TUGraz.VectoCore.Tests.Utils;
 namespace TUGraz.VectoCore.Tests.Models.Simulation
 {
 	[TestFixture]
+	[Parallelizable(ParallelScope.All)]
 	public class VechicleContainerTests
 	{
 		private const string EngineFile = @"TestData\Components\24t Coach.veng";

@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.InteropServices.WindowsRuntime;
+using System.Xml;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Ninject;
@@ -17,6 +18,7 @@ using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.InputData.FileIO.JSON;
 using TUGraz.VectoCore.InputData.FileIO.XML;
+using TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider;
 using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.Impl;
@@ -27,7 +29,10 @@ using TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.HVAC;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Engine;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox;
 using TUGraz.VectoCore.OutputData;
+using TUGraz.VectoCore.Tests.Models.Simulation;
+using TUGraz.VectoCore.Tests.Utils;
 using TUGraz.VectoCore.Utils;
+using Formatting = Newtonsoft.Json.Formatting;
 
 namespace TUGraz.VectoCore.Tests.Integration.CompletedBus
 {
@@ -98,7 +103,9 @@ namespace TUGraz.VectoCore.Tests.Integration.CompletedBus
 		public void TestCompletedBus()
 		{
 			var writer = new FileOutputWriter(Path.Combine(Path.GetDirectoryName(JobFile_Group41), Path.GetFileName(JobFile_Group41)));
-			var inputData = JSONInputDataFactory.ReadJsonJob(JobFile_Group41);
+			var inputData = CompletedVIF.CreateCompletedVif(
+				JSONInputDataFactory.ReadJsonJob(JobFile_Group41) as JSONInputDataCompletedBusFactorMethodV7,
+				xmlInputReader);
 
 			var factory = new SimulatorFactory(ExecutionMode.Declaration, inputData, writer)
 			{
@@ -527,8 +534,8 @@ namespace TUGraz.VectoCore.Tests.Integration.CompletedBus
 			var specificElectric =
 				relatedRun.VectoRunDataSpezificBody.BusAuxiliaries.ElectricalUserInputsConfig;
 			
-			Assert.AreEqual(false, genericElectric.SmartElectrical);
-			Assert.AreEqual(genericElectric.SmartElectrical, specificElectric.SmartElectrical);
+			Assert.AreEqual(AlternatorType.Conventional, genericElectric.AlternatorType);
+			Assert.AreEqual(genericElectric.AlternatorType, specificElectric.AlternatorType);
 
 			Assert.AreEqual(null, genericElectric.MaxAlternatorPower);
 			Assert.AreEqual(genericElectric.MaxAlternatorPower, specificElectric.MaxAlternatorPower);
@@ -593,7 +600,7 @@ namespace TUGraz.VectoCore.Tests.Integration.CompletedBus
 			Assert.AreEqual(1.0, genericPneumaticUI.CompressorGearRatio);
 			Assert.AreEqual(genericPneumaticUI.CompressorGearRatio, specificPneumaticUI.CompressorGearRatio);
 
-			Assert.AreEqual(false, genericPneumaticUI.SmartAirCompression);
+			Assert.AreEqual(true, genericPneumaticUI.SmartAirCompression);
 			Assert.AreEqual(genericPneumaticUI.SmartAirCompression, specificPneumaticUI.SmartAirCompression);
 
 			Assert.AreEqual(false, genericPneumaticUI.SmartRegeneration);
@@ -654,8 +661,8 @@ namespace TUGraz.VectoCore.Tests.Integration.CompletedBus
 
 		private void AssertSSMBusParameters(RelatedRun relatedRun, int currentIndex)
 		{
-			var genericBusParam = relatedRun.VectoRunDataGenericBody.BusAuxiliaries.SSMInputs.BusParameters;
-			var specificBusParam = relatedRun.VectoRunDataSpezificBody.BusAuxiliaries.SSMInputs.BusParameters;
+			var genericBusParam = (relatedRun.VectoRunDataGenericBody.BusAuxiliaries.SSMInputs as ISSMDeclarationInputs).BusParameters;
+			var specificBusParam = (relatedRun.VectoRunDataSpezificBody.BusAuxiliaries.SSMInputs as ISSMDeclarationInputs).BusParameters;
 			
 			AssertPassengerCount(genericBusParam.NumberOfPassengers, 
 				specificBusParam.NumberOfPassengers, currentIndex);
@@ -703,8 +710,8 @@ namespace TUGraz.VectoCore.Tests.Integration.CompletedBus
 
 		private void AssertTechnologyBenefits(RelatedRun relatedRun)
 		{
-			var genericTechnolgyBenefit = relatedRun.VectoRunDataGenericBody.BusAuxiliaries.SSMInputs.Technologies;
-			var specificTechnolgyBenefit = relatedRun.VectoRunDataSpezificBody.BusAuxiliaries.SSMInputs.Technologies;
+			var genericTechnolgyBenefit = (relatedRun.VectoRunDataGenericBody.BusAuxiliaries.SSMInputs as ISSMDeclarationInputs).Technologies;
+			var specificTechnolgyBenefit = (relatedRun.VectoRunDataSpezificBody.BusAuxiliaries.SSMInputs as ISSMDeclarationInputs).Technologies;
 
 			Assert.AreEqual(0.0, genericTechnolgyBenefit.CValueVariation);
 			Assert.AreEqual(0.02, genericTechnolgyBenefit.HValueVariation);
@@ -725,8 +732,8 @@ namespace TUGraz.VectoCore.Tests.Integration.CompletedBus
 
 		private void AssertBoundaryConditions(RelatedRun relatedRun)
 		{
-			var genericBound = relatedRun.VectoRunDataGenericBody.BusAuxiliaries.SSMInputs.BoundaryConditions;
-			var specificBound = relatedRun.VectoRunDataGenericBody.BusAuxiliaries.SSMInputs.BoundaryConditions;
+			var genericBound = (relatedRun.VectoRunDataGenericBody.BusAuxiliaries.SSMInputs as ISSMDeclarationInputs).BoundaryConditions;
+			var specificBound = (relatedRun.VectoRunDataGenericBody.BusAuxiliaries.SSMInputs as ISSMDeclarationInputs).BoundaryConditions;
 		
 			Assert.AreEqual(Constants.BusAuxiliaries.SteadyStateModel.GFactor, genericBound.GFactor);
 			Assert.AreEqual(genericBound.GFactor, specificBound.GFactor);
@@ -759,8 +766,8 @@ namespace TUGraz.VectoCore.Tests.Integration.CompletedBus
 
 		private void AssertEnvironmentalConditions(RelatedRun relatedRun)
 		{
-			var genericEnv = relatedRun.VectoRunDataGenericBody.BusAuxiliaries.SSMInputs.EnvironmentalConditions;
-			var specificEnv = relatedRun.VectoRunDataSpezificBody.BusAuxiliaries.SSMInputs.EnvironmentalConditions;
+			var genericEnv = (relatedRun.VectoRunDataGenericBody.BusAuxiliaries.SSMInputs as ISSMDeclarationInputs).EnvironmentalConditions;
+			var specificEnv = (relatedRun.VectoRunDataSpezificBody.BusAuxiliaries.SSMInputs as ISSMDeclarationInputs).EnvironmentalConditions;
 
 			Assert.AreEqual(Constants.BusAuxiliaries.SteadyStateModel.DefaultSolar, genericEnv.DefaultConditions.Solar);
 			Assert.AreEqual(genericEnv.DefaultConditions.Solar, specificEnv.DefaultConditions.Solar);
@@ -899,7 +906,7 @@ namespace TUGraz.VectoCore.Tests.Integration.CompletedBus
 		{
 			Assert.AreEqual(DeclarationData.Driver.EngineStopStart.ActivationDelay, engineStopStart.EngineOffStandStillActivationDelay);
 			Assert.AreEqual(DeclarationData.Driver.EngineStopStart.MaxEngineOffTimespan, engineStopStart.MaxEngineOffTimespan);
-			Assert.AreEqual(DeclarationData.Driver.EngineStopStart.UtilityFactor, engineStopStart.UtilityFactor);
+			Assert.AreEqual(DeclarationData.Driver.EngineStopStart.UtilityFactor, engineStopStart.UtilityFactorStandstill);
 		}
 
 		private void AssertEcoRoll(DriverData.EcoRollData ecoRoll)
@@ -1010,9 +1017,25 @@ namespace TUGraz.VectoCore.Tests.Integration.CompletedBus
 		private List<VectoRunData> GetVectoRunData(string jobFile)
 		{
 			var writer = new FileOutputWriter(Path.Combine(Path.GetDirectoryName(JobFile_Group41), Path.GetFileName(JobFile_Group41)));
-			var inputData = Path.GetExtension(jobFile).Equals(".xml")
-				? xmlInputReader.CreateDeclaration(jobFile)
-				: JSONInputDataFactory.ReadJsonJob(jobFile);
+			IInputDataProvider inputData = null;
+			if (Path.GetExtension(jobFile).Equals(".xml")) {
+				// a complete VIF 
+				inputData = xmlInputReader.CreateDeclaration(jobFile);
+			} else {
+				// Primary VIF and completed XML separate
+				var tmp = JSONInputDataFactory.ReadJsonJob(jobFile);
+
+				switch (tmp) {
+					case JSONInputDataSingleBusV6 _:
+					case JSONVTPInputDataV4 _:
+						inputData = tmp;
+						break;
+					case JSONInputDataCompletedBusFactorMethodV7 completedJson: {
+						inputData = CompletedVIF.CreateCompletedVif(completedJson, xmlInputReader);
+						break;
+					}
+				}
+			}
 
 			var factory = new SimulatorFactory(ExecutionMode.Declaration, inputData, writer) {
 				WriteModalResults = true,
@@ -1024,6 +1047,8 @@ namespace TUGraz.VectoCore.Tests.Integration.CompletedBus
 			var runs = factory.DataReader.NextRun().ToList();
 			return runs;
 		}
+
+		
 
 		[TestCase(JobFile_Group41, TestName = "RunCompletedBusSimulation Group41/32b"),
 		TestCase(JobFile_Group42, TestName = "RunCompletedBusSimulation Group42/33b"),

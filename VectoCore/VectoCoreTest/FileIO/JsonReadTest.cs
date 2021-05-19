@@ -34,6 +34,7 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using NUnit.Framework;
 using System.IO;
+using TUGraz.VECTO;
 using TUGraz.VectoCommon.BusAuxiliaries;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
@@ -45,11 +46,12 @@ using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox;
 using TUGraz.VectoCore.Tests.Utils;
-using TUGraz.VECTO;
+
 
 namespace TUGraz.VectoCore.Tests.FileIO
 {
 	[TestFixture]
+	[Parallelizable(ParallelScope.All)]
 	public class JsonReadTest
 	{
 		private const string TestJobFile = @"Testdata\Jobs\40t_Long_Haul_Truck.vecto";
@@ -117,8 +119,11 @@ namespace TUGraz.VectoCore.Tests.FileIO
 			((JObject)json["Body"]).Property("Aux").Remove();
 
 			// MK,2016-01-20: Changed for PWheel: aux entry may be missing, and that is ok.
+			// MQ,2021-03-02: refactoring aux: remove mapping and only have 3 fixed values
 			var tmp = new JSONInputDataV2(json, TestJobFile).JobInputData.Vehicle.Components.AuxiliaryInputData.Auxiliaries;
-			Assert.IsTrue(tmp.Count == 0);
+			Assert.AreEqual(0, tmp.ConstantPowerDemand.Value());
+			Assert.AreEqual(0, tmp.PowerDemandICEOffDriving.Value());
+			Assert.AreEqual(0, tmp.PowerDemandICEOffStandstill.Value());
 		}
 
 		[TestCase]
@@ -489,8 +494,8 @@ namespace TUGraz.VectoCore.Tests.FileIO
 
 
 			Assert.AreEqual(1, busAux.ElectricSupply.Alternators.Count);
-			Assert.AreEqual("standard alternator", busAux.ElectricSupply.Alternators[0].Technology);
-			Assert.AreEqual(false, busAux.ElectricSupply.SmartElectrics);
+			//Assert.AreEqual("standard alternator", busAux.ElectricSupply.Alternators[0].Technology);
+			Assert.AreEqual(AlternatorType.Conventional, busAux.ElectricSupply.AlternatorTechnology);
 
 			Assert.AreEqual("", busAux.PneumaticSupply.CompressorSize);
 			Assert.AreEqual(1.0, busAux.PneumaticSupply.Ratio);

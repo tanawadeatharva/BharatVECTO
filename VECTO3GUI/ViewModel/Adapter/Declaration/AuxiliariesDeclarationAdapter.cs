@@ -26,23 +26,23 @@ namespace VECTO3GUI.ViewModel.Adapter.Declaration {
 				var retVal = new List<IAuxiliaryDeclarationInputData>();
 
 				retVal.Add(
-					new AuxiliaryDataInputData {
+					new DeclarationAuxiliaryDataInputData() {
 						Type = AuxiliaryType.Fan,
 						Technology = new List<string> { ViewModel.FanTechnology }
 					});
-				retVal.Add(new AuxiliaryDataInputData {
+				retVal.Add(new DeclarationAuxiliaryDataInputData {
 						Type = AuxiliaryType.ElectricSystem,
 						Technology = new List<string> { ViewModel.ElectricSystemTechnology }
 					});
-				retVal.Add(new AuxiliaryDataInputData {
+				retVal.Add(new DeclarationAuxiliaryDataInputData {
 						Type = AuxiliaryType.HVAC,
 						Technology = new List<string> { ViewModel.HVACTechnology }
 					});
-				retVal.Add(new AuxiliaryDataInputData {
+				retVal.Add(new DeclarationAuxiliaryDataInputData {
 						Type = AuxiliaryType.PneumaticSystem,
 						Technology = new List<string> { ViewModel.PneumaticSystemTechnology }
 					});
-				retVal.Add(new AuxiliaryDataInputData {
+				retVal.Add(new DeclarationAuxiliaryDataInputData {
 						Type = AuxiliaryType.SteeringPump,
 						Technology = ViewModel.SteeringPumpTechnologies
 							//.OrderBy(x => x.SteeredAxle)

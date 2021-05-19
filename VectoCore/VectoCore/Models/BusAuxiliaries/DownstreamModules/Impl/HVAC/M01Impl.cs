@@ -30,7 +30,7 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.HVAC
 						Constants.BusAuxiliaries.ElectricConstants.AlternatorPulleyEfficiencyMin, Constants.BusAuxiliaries.ElectricConstants.AlternatorPulleyEfficiencyMax));
 			}
 			
-			if (compressorGearEfficiency <= 0 || altGearEfficiency > 1) {
+			if (compressorGearEfficiency <= 0 || compressorGearEfficiency > 1) {
 				throw new ArgumentException(String.Format("Compressor Gear efficiency must be between {0} and {1}", 0, 1));
 			}
 

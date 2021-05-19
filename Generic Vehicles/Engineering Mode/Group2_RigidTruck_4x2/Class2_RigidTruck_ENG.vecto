@@ -1,7 +1,7 @@
-﻿{
+{
   "Header": {
     "CreatedBy": "",
-    "Date": "2019-12-03T16:37:15.1801162Z",
+    "Date": "2021-03-03T09:07:08.8607843Z",
     "AppVersion": "3",
     "FileVersion": 5
   },
@@ -13,11 +13,9 @@
     "GearboxFile": "MT_6.vgbx",
     "TCU": "MT_6.vgbx",
     "ShiftStrategy": "",
-    "AuxiliaryAssembly": "Classic",
-    "AuxiliaryVersion": "CLASSIC",
-    "AdvancedAuxiliaryFilePath": "",
-    "Aux": [],
     "Padd": 3540.0,
+    "Paux_ICEOff_Driving": 3540.0,
+    "Paux_ICEOff_Standstill": 3540.0,
     "VACC": "Truck.vacc",
     "EngineStopStartAtVehicleStopThreshold": 2.0,
     "EngineStopStartMaxOffTimespan": 120.0,

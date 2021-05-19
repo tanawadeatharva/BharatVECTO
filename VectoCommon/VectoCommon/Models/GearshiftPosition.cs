@@ -84,7 +84,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			return  p2.TorqueConverterLocked.Value && !p1.TorqueConverterLocked.Value;
 		}
 
-		
+
+		public bool IsLockedGear()
+		{
+			return !TorqueConverterLocked.HasValue || TorqueConverterLocked.Value;
+		}
 	}
 
 	public class GearList :IEnumerable<GearshiftPosition>

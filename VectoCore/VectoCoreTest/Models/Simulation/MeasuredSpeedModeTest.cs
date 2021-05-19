@@ -60,6 +60,7 @@ using TUGraz.VectoCore.Utils;
 namespace TUGraz.VectoCore.Tests.Models.Simulation
 {
 	[TestFixture]
+	[Parallelizable(ParallelScope.All)]
 	public class MeasuredSpeedModeTest
 	{
 
@@ -266,7 +267,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 				Retarder = new RetarderData(),
 				DriverData = new DriverData() {
 					EngineStopStart = new DriverData.EngineStopStartData() {
-						UtilityFactor = DeclarationData.Driver.EngineStopStart.UtilityFactor,
+						UtilityFactorStandstill = DeclarationData.Driver.EngineStopStart.UtilityFactor,
 						EngineOffStandStillActivationDelay = DeclarationData.Driver.EngineStopStart.ActivationDelay,
 						MaxEngineOffTimespan =  DeclarationData.Driver.EngineStopStart.MaxEngineOffTimespan
 					}
@@ -353,7 +354,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 				DriverData = new DriverData() {
 					EngineStopStart = new DriverData.EngineStopStartData() {
 						EngineOffStandStillActivationDelay = DeclarationData.Driver.EngineStopStart.ActivationDelay,
-						UtilityFactor = DeclarationData.Driver.EngineStopStart.UtilityFactor,
+						UtilityFactorStandstill = DeclarationData.Driver.EngineStopStart.UtilityFactor,
 						MaxEngineOffTimespan = DeclarationData.Driver.EngineStopStart.MaxEngineOffTimespan,
 					}
 				},

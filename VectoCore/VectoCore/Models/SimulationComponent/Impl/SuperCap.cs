@@ -52,12 +52,14 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		public Watt MaxDischargePower(Second dt)
 		{
+			var maxPower = -InternalVoltage / (4 * ModelData.InternalResistance) * InternalVoltage;
+			var maxPowerCurrent = maxPower / InternalVoltage;
 			var maxDischargeCurrent =
 				VectoMath.Max((ModelData.Capacity * ModelData.MinVoltage - PreviousState.Charge) / dt,
 					ModelData.MaxCurrentDischarge);
+			maxDischargeCurrent = VectoMath.Max(maxDischargeCurrent, maxPowerCurrent);
 			var maxDischargePower = InternalVoltage * maxDischargeCurrent +
 									maxDischargeCurrent * ModelData.InternalResistance * maxDischargeCurrent;
-			var maxPower = -InternalVoltage / (4 * ModelData.InternalResistance) * InternalVoltage;
 			return VectoMath.Max(maxDischargePower, maxPower);
 		}
 
@@ -81,8 +83,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			var maxChargePower = MaxChargePower(dt);
 			var maxDischargePower = MaxDischargePower(dt);
 
-			if (powerDemand.IsGreater(maxChargePower, Constants.SimulationSettings.InterpolateSearchTolerance) ||
-				powerDemand.IsSmaller(maxDischargePower, Constants.SimulationSettings.InterpolateSearchTolerance))
+			if (powerDemand.IsGreater(maxChargePower, Constants.SimulationSettings.LineSearchTolerance) ||
+				powerDemand.IsSmaller(maxDischargePower, Constants.SimulationSettings.LineSearchTolerance))
 			{
 				return PowerDemandExceeded(absTime, dt, powerDemand, maxDischargePower, maxChargePower, dryRun);
 			}

@@ -25,6 +25,7 @@ Imports TUGraz.VectoCore.InputData.Impl
 Imports TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 Imports TUGraz.VectoCore.Models.Declaration
 Imports TUGraz.VectoCore.Models.SimulationComponent.Data
+Imports TUGraz.VectoCore.Models.SimulationComponent.Impl
 Imports TUGraz.VectoCore.Utils
 
 <CustomValidation(GetType(Vehicle), "ValidateVehicle")>
@@ -47,6 +48,8 @@ Public Class Vehicle
 	<ValidateObject> Public RetarderType As RetarderType
 	Public RetarderRatio As Double = 0
 	Public ReadOnly RetarderLossMapFile As SubPath
+    Public ReadOnly EmTorqueLimitsFile As SubPath
+    public ReadOnly PropulsionTorqueFile as SubPath
 
 	Public DynamicTyreRadius As Double
 	Public ReadOnly Axles As List(Of AxleInputData)
@@ -64,7 +67,8 @@ Public Class Vehicle
 
 	Public PtoType As String
 	Public ReadOnly PtoLossMap As SubPath
-	Public ReadOnly PtoCycle As SubPath
+	Public ReadOnly PtoCycleStandstill As SubPath
+    Public ReadOnly PtoCycleDriving As SubPath
 	Public torqueLimitsList As List(Of ITorqueLimitInputData)
 	Public VehicleidlingSpeed As PerSecond
 	Public legClass As LegislativeClass
@@ -83,8 +87,12 @@ Public Class Vehicle
 	Public ElectricMotorPosition As PowertrainPosition
 	Public ElectricMotorCount As Integer
 	Public ElectricMotorRatio As Double
-	Public ElectricMotorMechEff As Double
-	Public MaxPower As Double
+    'Public ElectricMotorMechEff As Double
+    Public ElectricMotorMechLossMap As SubPath
+
+    public GearDuringPTODrive As UInteger?
+    Public EngineSpeedDuringPTODrive As PerSecond
+    Public ElectricMotorPerGearRatios As Double()
 
 	Public Sub New()
 		_path = ""
@@ -93,13 +101,17 @@ Public Class Vehicle
 
 		RetarderLossMapFile = New SubPath
 		AngledriveLossMapFile = New SubPath()
+        EmTorqueLimitsFile = new SubPath()
+        PropulsionTorqueFile = New SubPath()
 
 		Axles = New List(Of AxleInputData)
 		torqueLimitsList = New List(Of ITorqueLimitInputData)
 		PtoLossMap = New SubPath()
-		PtoCycle = New SubPath()
+		PtoCycleStandstill = New SubPath()
+        PtoCycleDriving = new SubPath()
 		BatteryFile = New SubPath()
 		ElectricMotorFile = New SubPath()
+		ElectricMotorMechLossMap = new SubPath()
 
 		SetDefault()
 	End Sub
@@ -130,7 +142,7 @@ Public Class Vehicle
 				Dim segment As Segment = DeclarationData.TruckSegments.Lookup(vehicle.VehicleCategory, vehicle.AxleConfiguration,
 																		vehicle.GrossVehicleMassRating, vehicle.CurbMassChassis, False)
 				vehicleData = doa.CreateVehicleData(vehicle, segment, segment.Missions.First(),
-													segment.Missions.First().Loadings.First())
+													segment.Missions.First().Loadings.First(), true)
 				airdragData = doa.CreateAirdragData(vehicle, segment.Missions.First(), segment)
 				retarderData = doa.CreateRetarderData(vehicle)
 				angledriveData = doa.CreateAngledriveData(vehicle)
@@ -205,6 +217,8 @@ Public Class Vehicle
 		RetarderRatio = 1
 		RetarderLossMapFile.Clear()
 		AngledriveLossMapFile.Clear()
+		EmTorqueLimitsFile.Clear()
+	    PropulsionTorqueFile.Clear()
 
 		AngledriveType = AngledriveType.None
 		AngledriveLossMapFile.Clear()
@@ -212,12 +226,16 @@ Public Class Vehicle
 
 		PtoType = PTOTransmission.NoPTO
 		PtoLossMap.Clear()
-		PtoCycle.Clear()
+		PtoCycleStandstill.Clear()
+	    PtoCycleDriving.Clear()
 
 		Axles.Clear()
 		VehicleCategory = VehicleCategory.RigidTruck
 		MassMax = 0
 		AxleConfiguration = AxleConfiguration.AxleConfig_4x2
+
+		ElectricMotorFile.Clear()
+		ElectricMotorMechLossMap.Clear()
 
 		SavedInDeclMode = False
 	End Sub
@@ -442,6 +460,23 @@ Public Class Vehicle
 		End Get
 	End Property
 
+    Public ReadOnly Property ElectricMotorTorqueLimits As TableData Implements IVehicleEngineeringInputData.ElectricMotorTorqueLimits
+	get
+		If (String.IsNullOrWhiteSpace(EmTorqueLimitsFile.FullPath))
+			return Nothing
+		End If
+		Return VectoCSVFile.Read(EmTorqueLimitsFile.FullPath)
+	End Get
+    End Property
+    Public ReadOnly Property MaxPropulsionTorque As TableData Implements IVehicleEngineeringInputData.MaxPropulsionTorque
+	get
+	    If (String.IsNullOrWhiteSpace(PropulsionTorqueFile.FullPath))
+	        return Nothing
+	    End If
+	    Return VectoCSVFile.Read(PropulsionTorqueFile.FullPath)
+	End Get
+    End Property
+
 	Public ReadOnly Property Length As Meter Implements IVehicleDeclarationInputData.Length
 	Public ReadOnly Property Width As Meter Implements IVehicleDeclarationInputData.Width
 	Public ReadOnly Property EntranceHeight As Meter Implements IVehicleDeclarationInputData.EntranceHeight
@@ -535,24 +570,34 @@ Public Class Vehicle
 		End Get
 	End Property
 
-	Public ReadOnly Property IPTOTransmissionInputData_PTOCycle As TableData Implements IPTOTransmissionInputData.PTOCycle
+	Public ReadOnly Property PTOCycleDuringStop As TableData Implements IPTOTransmissionInputData.PTOCycleDuringStop
 		Get
-			If String.IsNullOrWhiteSpace(PtoCycle.FullPath) Then
+			If String.IsNullOrWhiteSpace(PtoCycleStandstill.FullPath) Then
 				Return Nothing
 			End If
-			Return VectoCSVFile.Read(PtoCycle.FullPath)
+			Return VectoCSVFile.Read(PtoCycleStandstill.FullPath)
 		End Get
 	End Property
 
 	Public ReadOnly Property IPTOTransmissionInputData_PTOLossMap As TableData _
 		Implements IPTOTransmissionInputData.PTOLossMap
 		Get
-			If String.IsNullOrWhiteSpace(PtoCycle.FullPath) Then
+			If String.IsNullOrWhiteSpace(PtoLossMap.FullPath) Then
 				Return Nothing
 			End If
 			Return VectoCSVFile.Read(PtoLossMap.FullPath)
 		End Get
 	End Property
+
+    Public ReadOnly Property PTOCycleWhileDriving As TableData _
+        Implements IPTOTransmissionInputData.PTOCycleWhileDriving
+        Get
+            If String.IsNullOrWhiteSpace(PtoCycleDriving.FullPath) Then
+                Return Nothing
+            End If
+            Return VectoCSVFile.Read(PtoCycleDriving.FullPath)
+        End Get
+    End Property
 
 
 	Public ReadOnly Property IDeclarationInputDataProvider_AirdragInputData As IAirdragDeclarationInputData _
@@ -765,14 +810,21 @@ Public Class Vehicle
 		End Get
 	End Property
 
-	Public Property InitialSOC As Double Implements IVehicleEngineeringInputData.InitialSOC
-	Public ReadOnly Property MaxDrivetrainPower As Watt Implements IVehicleEngineeringInputData.MaxDrivetrainPower
-		Get
-			Return (MaxPower * 1000).SI(Of Watt)
-		End Get
-	End Property
-	Public Property VehicleType As VectoSimulationJobType Implements IVehicleEngineeringInputData.VehicleType
+    Public ReadOnly Property PTO_DriveGear As GearshiftPosition Implements IVehicleEngineeringInputData.PTO_DriveGear
+    get
+            return If(gearDuringPTODrive.HasValue, new GearshiftPosition(GearDuringPTODrive.Value), Nothing)
+    End Get
+end Property
 
+    Public Property InitialSOC As Double Implements IVehicleEngineeringInputData.InitialSOC
+    Public Property VehicleType As VectoSimulationJobType Implements IVehicleEngineeringInputData.VehicleType
+
+
+    Public ReadOnly Property PTO_DriveEngineSpeed As PerSecond Implements IVehicleEngineeringInputData.PTO_DriveEngineSpeed
+    get
+            Return EngineSpeedDuringPTODrive
+    End Get
+    End Property
 
 	Public ReadOnly Property ZeroEmissionVehicle As Boolean Implements IVehicleDeclarationInputData.ZeroEmissionVehicle
 		Get
@@ -926,7 +978,12 @@ Public Class ElectricMachineWrapper
 			Return New List(Of ElectricMachineEntry(Of IElectricMotorDeclarationInputData))(New ElectricMachineEntry(Of IElectricMotorDeclarationInputData)() {
 			New ElectricMachineEntry(Of IElectricMotorDeclarationInputData) With {
 					.ElectricMachine = Me,
-					.MechanicalEfficiency = Vehicle.ElectricMotorMechEff, .Position = Vehicle.ElectricMotorPosition, .Ratio = Vehicle.ElectricMotorRatio, .Count = Vehicle.ElectricMotorCount}})
+                    .MechanicalTransmissionEfficiency = If(IsNumeric(Vehicle.ElectricMotorMechLossMap.OriginalPath), Vehicle.ElectricMotorMechLossMap.OriginalPath.ToDouble(), double.NaN), 
+				    .MechanicalTransmissionLossMap = VectoCSVFile.Read(Vehicle.ElectricMotorMechLossMap.FullPath),
+                    .Position = Vehicle.ElectricMotorPosition, 
+                    .RatioADC = Vehicle.ElectricMotorRatio, 
+				    .RatioPerGear = vehicle.ElectricMotorPerGearRatios,
+                    .Count = Vehicle.ElectricMotorCount}})
 		End Get
 	End Property
 	Public ReadOnly Property IElectricMachinesEngineeringInputData_Entries As IList(Of ElectricMachineEntry(Of IElectricMotorEngineeringInputData)) Implements IElectricMachinesEngineeringInputData.Entries
@@ -934,7 +991,12 @@ Public Class ElectricMachineWrapper
 			Return New List(Of ElectricMachineEntry(Of IElectricMotorEngineeringInputData))(New ElectricMachineEntry(Of IElectricMotorEngineeringInputData)() {
 			New ElectricMachineEntry(Of IElectricMotorEngineeringInputData)() With {
 					.ElectricMachine = Me,
-					.MechanicalEfficiency = Vehicle.ElectricMotorMechEff, .Position = Vehicle.ElectricMotorPosition, .Ratio = Vehicle.ElectricMotorRatio, .Count = Vehicle.ElectricMotorCount}})
+                    .MechanicalTransmissionEfficiency = If(IsNumeric(Vehicle.ElectricMotorMechLossMap.OriginalPath), Vehicle.ElectricMotorMechLossMap.OriginalPath.ToDouble(), double.NaN), 
+                    .MechanicalTransmissionLossMap = If(IsNumeric(Vehicle.ElectricMotorMechLossMap.OriginalPath), Nothing, VectoCSVFile.Read(Vehicle.ElectricMotorMechLossMap.FullPath)),
+                    .Position = Vehicle.ElectricMotorPosition, 
+                    .RatioADC = Vehicle.ElectricMotorRatio, 
+				    .RatioPerGear = Vehicle.ElectricMotorPerGearRatios,
+                    .Count = Vehicle.ElectricMotorCount}})
 
 		End Get
 	End Property

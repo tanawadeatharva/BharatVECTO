@@ -135,12 +135,14 @@ Imports TUGraz.VectoCore.Utils
         RetarderLossMapFileBrowser = New FileBrowser("vrlm")
         TransmissionLossMapFileBrowser = New FileBrowser("vtlm")
         PtoLossMapFileBrowser = New FileBrowser("vptol")
-        PTODrivingCycleFileBrowser = New FileBrowser("vptoc")
+        PTODrivingCycleStandstillFileBrowser = New FileBrowser("vptoc")
+        PTODrivingCycleDrivingFileBrowser = New FileBrowser("vptor")
         TorqueConverterFileBrowser = New FileBrowser("vtcc")
         TorqueConverterShiftPolygonFileBrowser = New FileBrowser("vgbs")
         CrossWindCorrectionFileBrowser = New FileBrowser("vcdx")
         ElectricMotorFileBrowser = New FileBrowser("vem")
         REESSFileBrowser = New FileBrowser("vreess")
+        EmADCLossMapFileBrowser = new FileBrowser("vtlm")
         DriverDecisionFactorVelocityDropFileBrowser = New FileBrowser("DfVelocityDrop")
         DriverDecisionFactorTargetSpeedFileBrowser = New FileBrowser("DfTargetSpeed")
         DriverDecisionFactorVelocityDropFileBrowser.Extensions = New String() {"csv"}
@@ -150,11 +152,12 @@ Imports TUGraz.VectoCore.Utils
         ElectricMachineMaxTorqueFileBrowser = New FileBrowser("vemp")
         ElectricMachineEfficiencyMapFileBrowser = New FileBrowser("vemo")
         HCUFileBrowser = New FileBrowser("vhctl")
-
+        BusAuxFileBrowser = new FileBrowser(".vaux")
+        BusAuxCompressorMapFileBrowser = new FileBrowser(".acmp")
         BatteryMaxCurrentCurveFileBrowser = new FileBrowser("vimax")
         BatteryInternalResistanceCurveFileBrowser = New FileBrowser("vbatr")
         BatterySoCCurveFileBrowser = New FileBrowser("vbatv")
-
+        PropulsionTorqueLimitFileBrowser = new FileBrowser("vtqp")
         ModalResultsFileBrowser = New FileBrowser("vmod")
 
 
@@ -176,12 +179,14 @@ Imports TUGraz.VectoCore.Utils
         RetarderLossMapFileBrowser.Extensions = New String() {"vrlm"}
         TransmissionLossMapFileBrowser.Extensions = New String() {"vtlm"}
         PtoLossMapFileBrowser.Extensions = New String() {"vptol"}
-        PTODrivingCycleFileBrowser.Extensions = New String() {"vptoc"}
+        PTODrivingCycleStandstillFileBrowser.Extensions = New String() {"vptoc"}
+        PTODrivingCycleDrivingFileBrowser.Extensions = New String() { "vptor" }
         TorqueConverterFileBrowser.Extensions = New String() {"vtcc"}
         TorqueConverterShiftPolygonFileBrowser.Extensions = New String() {"vgbs"}
         CrossWindCorrectionFileBrowser.Extensions = New String() {"vcdv", "vcdb"}
         ElectricMotorFileBrowser.Extensions = New String() {"vem"}
         REESSFileBrowser.Extensions = New String() {"vreess"}
+        EmADCLossMapFileBrowser.Extensions = new String(){"vtlm"}
 
         ElectricMachineDragTorqueFileBrowser.Extensions = New String() {"vemd"}
         ElectricMachineMaxTorqueFileBrowser.Extensions = New String() {"vemp"}
@@ -191,6 +196,9 @@ Imports TUGraz.VectoCore.Utils
         BatteryInternalResistanceCurveFileBrowser.Extensions = New String() {"vbatr"}
         BatterySoCCurveFileBrowser.Extensions = New String() {"vbatv"}
         HCUFileBrowser.Extensions = New String() {"vhctl"}
+        BusAuxFileBrowser.Extensions = New String(){"vaux"}
+        BusAuxCompressorMapFileBrowser.Extensions = new String(){"acmp"}
+        PropulsionTorqueLimitFileBrowser.Extensions = new String(){"vtqp"}
 
         ModalResultsFileBrowser.Extensions = New String() {"vmod"}
     End Sub
@@ -213,7 +221,8 @@ Imports TUGraz.VectoCore.Utils
         RetarderLossMapFileBrowser.Close()
         TransmissionLossMapFileBrowser.Close()
         PtoLossMapFileBrowser.Close()
-        PTODrivingCycleFileBrowser.Close()
+        PTODrivingCycleStandstillFileBrowser.Close()
+        PTODrivingCycleDrivingFileBrowser.Close()
         TorqueConverterFileBrowser.Close()
         TorqueConverterShiftPolygonFileBrowser.Close()
         CrossWindCorrectionFileBrowser.Close()

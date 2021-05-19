@@ -22,6 +22,11 @@ Namespace UnitTests
         Private Const GOODTechListALLOFF As String = "TestFiles\testSSMTechBenefitsALLOFF.csv"
         Private Const GOODTechListEMPTYLIST As String = "TestFiles\testSSMTechBenefitsEMPTYLIST.csv"
 
+        <OneTimeSetUp>
+        Public Sub RunBeforeAnyTests()
+            Directory.SetCurrentDirectory(TestContext.CurrentContext.TestDirectory)
+        End Sub
+
         'Helpers
         Private Sub AddDefaultTechLine(source As ISSMTOOL)
 
@@ -58,10 +63,6 @@ Namespace UnitTests
             'CType(src.TechList, SSMTechList).TechLines = New List(Of SSMTechnology)({newItem})
         End Sub
 
-        <OneTimeSetUp>
-        Sub RunBeforeAnyTests()
-            Directory.SetCurrentDirectory(TestContext.CurrentContext.TestDirectory)
-        end Sub
 
         'SSMGenInputTests
         <Test()> _
@@ -75,7 +76,7 @@ Namespace UnitTests
 
             Dim mission As New Mission With {
                 .BusParameter = New BusParameters() With {
-                .HVACCompressorType = ACCompressorType.TwoStage,
+                .HVACCompressorType = HeatPumpType.non_R_744_2_stage,
                 .HVACAuxHeaterPower = 30000.0.SI(Of Watt),
                 .HVACConfiguration = BusHVACSystemConfiguration.Configuration6,
                 .DoubleDecker = False,
@@ -91,7 +92,7 @@ Namespace UnitTests
             Dim auxInput as IBusAuxiliariesDeclarationData = nothing
 
             Dim dao = New DeclarationDataAdapterCompletedBusGeneric()
-            Dim target As ISSMInputs = dao.CreateSSMModelParameters(auxInput, mission, FuelData.Diesel, LoadingType.ReferenceLoad)
+            Dim target As ISSMDeclarationInputs = dao.CreateSSMModelParameters(auxInput, mission, FuelData.Diesel, LoadingType.ReferenceLoad)
 
             If section = "BusParameterisation" Then
                 'BUS Parameterisation
@@ -149,7 +150,7 @@ Namespace UnitTests
             If section = "AC-System" Then
                 'AC-SYSTEM
                 '*********
-                Assert.AreEqual(ACCompressorType.TwoStage, target.ACSystem.HVACCompressorType)
+                Assert.AreEqual(HeatPumpType.non_R_744_2_stage, target.ACSystem.HVACCompressorType)
                 Assert.AreEqual(15.5567, target.ACSystem.HVACMaxCoolingPower.Value()/1000.0, 1e-3)
                 Assert.AreEqual(3.5, target.ACSystem.COP)
             End If
@@ -179,7 +180,7 @@ Namespace UnitTests
         Public Sub Instantiate_TechListTest()
 
 
-            Dim gen As ISSMInputs = New SSMInputs(Nothing)
+            Dim gen As ISSMDeclarationInputs = New SSMInputs(Nothing)
 
             'Dim target As ISSMTechList = New SSMTechList(gen.BusParameters.BusFloorType)
             'target.TechLines = SSMTechnologiesReader.ReadFromFile(GOODTechList).Items
@@ -192,7 +193,7 @@ Namespace UnitTests
         Public Sub Instantiate_TechListTestALLON()
 
 
-            Dim gen As ISSMInputs = New SSMInputs(Nothing)
+            Dim gen As ISSMDeclarationInputs = New SSMInputs(Nothing)
 
             'Dim target As ISSMTechList = New SSMTechList(gen.BusParameters.BusFloorType)
             'target.TechLines = SSMTechnologiesReader.ReadFromFile(GOODTechListALLON).Items
@@ -220,7 +221,7 @@ Namespace UnitTests
         Public Sub Instantiate_TechListTestEMPTYList()
 
 
-            Dim gen As ISSMInputs = New SSMInputs(Nothing)
+            Dim gen As ISSMDeclarationInputs = New SSMInputs(Nothing)
 
             'Dim target As ISSMTechList = New SSMTechList(gen.BusParameters.BusFloorType)
             'target.TechLines = SSMTechnologiesReader.ReadFromFile(GOODTechListEMPTYLIST).Items
@@ -234,7 +235,7 @@ Namespace UnitTests
         Public Sub Instantiate_TechListTestEMPTYListADD1()
 
 
-            Dim gen As ISSMInputs = New SSMInputs(Nothing)
+            Dim gen As ISSMDeclarationInputs = New SSMInputs(Nothing)
 
             'Dim target As ISSMTechList = New SSMTechList(gen.BusParameters.BusFloorType)
             'target.TechLines = SSMTechnologiesReader.ReadFromFile(GOODTechListEMPTYLIST).Items
@@ -275,7 +276,7 @@ Namespace UnitTests
         Public Sub Instantiate_TechListTestEMPTYListADD1Duplicate()
 
 
-            Dim gen As ISSMInputs = New SSMInputs(Nothing)
+            Dim gen As ISSMDeclarationInputs = New SSMInputs(Nothing)
 
             'Dim target As ISSMTechList = New SSMTechList(gen.BusParameters.BusFloorType)
             'target.TechLines = SSMTechnologiesReader.ReadFromFile(GOODTechListEMPTYLIST).Items
@@ -317,7 +318,7 @@ Namespace UnitTests
         Public Sub Instantiate_TechListTestEMPTYListADD1AndClear()
 
 
-            Dim gen As ISSMInputs = New SSMInputs(Nothing)
+            Dim gen As ISSMDeclarationInputs = New SSMInputs(Nothing)
 
             'Dim target As ISSMTechList = New SSMTechList(gen.BusParameters.BusFloorType)
             'target.TechLines = SSMTechnologiesReader.ReadFromFile(GOODTechListEMPTYLIST).Items
@@ -359,7 +360,7 @@ Namespace UnitTests
         Public Sub Instantiate_TechListTestEMPTYListADD1AndModify()
 
 
-            Dim gen As ISSMInputs = New SSMInputs(Nothing)
+            Dim gen As ISSMDeclarationInputs = New SSMInputs(Nothing)
 
             'Dim target As ISSMTechList = New SSMTechList(gen.BusParameters.BusFloorType)
             'target.TechLines = SSMTechnologiesReader.ReadFromFile(GOODTechListEMPTYLIST).Items
@@ -401,7 +402,7 @@ Namespace UnitTests
         Public Sub Instantiate_TechListTestEMPTYListADD1andDeleteIt()
 
 
-            Dim gen As ISSMInputs = New SSMInputs(Nothing)
+            Dim gen As ISSMDeclarationInputs = New SSMInputs(Nothing)
 
             'Dim target As SSMTechList = New SSMTechList()
             'target.TechLines = SSMTechnologiesReader.ReadFromFile(GOODTechListEMPTYLIST).Items
@@ -441,7 +442,7 @@ Namespace UnitTests
         Public Sub Instantiate_TechListTestEMPTYListandDeleteNonExistantItem()
 
 
-            Dim gen As ISSMInputs = New SSMInputs(Nothing)
+            Dim gen As ISSMDeclarationInputs = New SSMInputs(Nothing)
 
             'Dim target As SSMTechList = New SSMTechList()
             'target.TechLines = SSMTechnologiesReader.ReadFromFile(GOODTechListEMPTYLIST).Items
@@ -478,7 +479,7 @@ Namespace UnitTests
         <Test()>
         Public Sub Instantiate_NewTechListLine()
 
-            Dim gen As ISSMInputs = New SSMInputs(Nothing)
+            Dim gen As ISSMDeclarationInputs = New SSMInputs(Nothing)
 
             Dim ttl As SSMTechnology = New SSMTechnology()
             'ttl.BusFloorType = gen.BusParameters.BusFloorType
@@ -489,7 +490,7 @@ Namespace UnitTests
         <Test()>
         Public Sub TechBenefitLineCompareAsEqual()
 
-            Dim gen As ISSMInputs = New SSMInputs(Nothing)
+            Dim gen As ISSMDeclarationInputs = New SSMInputs(Nothing)
 
             Dim ttl1 As SSMTechnology = New SSMTechnology()
             'ttl1.BusFloorType = gen.BusParameters.BusFloorType
@@ -520,7 +521,7 @@ Namespace UnitTests
         <TestCase("OnVehicle")>
         Public Sub TechBenefitLineCompareAsUnequal(prop As String)
 
-            Dim gen As ISSMInputs = New SSMInputs(Nothing)
+            Dim gen As ISSMDeclarationInputs = New SSMInputs(Nothing)
 
             Dim ttl1 As SSMTechnology = New SSMTechnology()
             'ttl1.BusFloorType = gen.BusParameters.BusFloorType
@@ -583,7 +584,7 @@ Namespace UnitTests
             Dim mission As New Mission With {
                 .MissionType = MissionType.HeavyUrban,
                 .BusParameter = New BusParameters() With {
-                    .HVACCompressorType = ACCompressorType.TwoStage,
+                    .HVACCompressorType = HeatPumpType.non_R_744_2_stage,
                     .HVACAuxHeaterPower = 18000.0.SI(Of Watt),
                     .HVACConfiguration = BusHVACSystemConfiguration.Configuration6,
                     .DoubleDecker = False,

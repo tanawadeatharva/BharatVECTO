@@ -40,16 +40,17 @@ using System.IO;
 namespace TUGraz.VectoCore.Tests.Integration.BusAuxiliaries
 {
 	[TestFixture]
+	[Parallelizable(ParallelScope.All)]
 	public class DriverStrategyTestCoachAux
 	{
 		[OneTimeSetUp]
 		public void Init()
 		{
-			//LogManager.DisableLogging();
 			Directory.SetCurrentDirectory(TestContext.CurrentContext.TestDirectory);
 		}
 
-		private GraphWriter getGraphWriter() 
+
+		private GraphWriter GetGraphWriter() 
 		{
 			var graphWriter = new GraphWriter();
 #if TRACE
@@ -65,7 +66,6 @@ namespace TUGraz.VectoCore.Tests.Integration.BusAuxiliaries
 			};
 			graphWriter.Series1Label = "Vecto 3";
 			graphWriter.Series2Label = "Vecto 2.0_aux";
-
 			return graphWriter;
 		}
 
@@ -309,7 +309,7 @@ namespace TUGraz.VectoCore.Tests.Integration.BusAuxiliaries
 			run.Run();
 			Assert.IsTrue(run.FinishedWithoutErrors);
 
-			getGraphWriter().Write(modFileName, @"..\..\TestData\Integration\BusAuxiliaries\Vecto2.0\" + compareFileName);
+			GetGraphWriter().Write(modFileName, @"..\..\TestData\Integration\BusAuxiliaries\Vecto2.0\" + compareFileName);
 		}
 	}
 }

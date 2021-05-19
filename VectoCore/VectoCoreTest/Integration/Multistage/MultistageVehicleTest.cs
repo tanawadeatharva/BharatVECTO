@@ -40,9 +40,9 @@ namespace TUGraz.VectoCore.Tests.Integration.Multistage
 		protected IXMLInputDataReader xmlVIFInputReader;
 
 		private IKernel _kernel;
-		private string _generatedVIFFilepath;
+        private string _generatedVIFFilepath;
 
-		[OneTimeSetUp]
+        [OneTimeSetUp]
 		public void RunBeforeAnyTests()
 		{
 			Directory.SetCurrentDirectory(TestContext.CurrentContext.TestDirectory);
@@ -63,7 +63,7 @@ namespace TUGraz.VectoCore.Tests.Integration.Multistage
 			var vifReader = XmlReader.Create(vifFilename);
 			var vifDataProvider = xmlInputReader.Create(vifReader) as IMultistageBusInputDataProvider;
 
-			var numberOfManufacturingStages = vifDataProvider.JobInputData.ManufacturingStages?.Count ?? 0;
+			var numberOfManufacturingStages = vifDataProvider?.JobInputData.ManufacturingStages?.Count ?? 0;
 			var writer = new FileOutputVIFWriter(vifResult, numberOfManufacturingStages);
 			_generatedVIFFilepath = writer.XMLMultistageReportFileName;
 			

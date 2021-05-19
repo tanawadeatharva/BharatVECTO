@@ -4,6 +4,7 @@ Imports TUGraz.VectoCommon.Utils
 Imports TUGraz.VectoCore.InputData.FileIO.JSON
 Imports TUGraz.VectoCore.InputData.Reader.ComponentData
 Imports TUGraz.VectoCore.Models.BusAuxiliaries
+Imports TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.Electrics
 Imports TUGraz.VectoCore.Models.BusAuxiliaries.Interfaces
 
 Namespace IntegrationTests
@@ -25,7 +26,7 @@ Namespace IntegrationTests
             Dim engineFCMapFilePath = "TestFiles\Integration\24t Coach.vmap"
             Dim auxFilePath = "TestFiles\Integration\AdvAuxTest.aaux"
 
-            Dim aux As BusAuxiliaries = New BusAuxiliaries(Nothing)
+            Dim aux As BusAuxiliaries = New BusAuxiliaries(new NoBattery(Nothing))
 
             'aux.VectoInputs.Cycle = "Coach"
             'aux.VectoInputs.VehicleWeightKG = vehicleWeight.SI(Of Kilogram)()
@@ -75,7 +76,7 @@ Namespace IntegrationTests
             Dim engineFCMapFilePath = "TestFiles\Integration\24t Coach.vmap"
             Dim auxFilePath = "TestFiles\Integration\AdvAuxTest.aaux"
 
-            Dim aux As BusAuxiliaries = New BusAuxiliaries(Nothing)
+            Dim aux As BusAuxiliaries = New BusAuxiliaries(New NoBattery(Nothing))
 
             'aux.VectoInputs.Cycle = "Coach"
             'aux.VectoInputs.VehicleWeightKG = 12000.SI(Of Kilogram)()

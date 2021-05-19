@@ -1,5 +1,6 @@
 ﻿using System.Linq;
 using TUGraz.VectoCommon.BusAuxiliaries;
+using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
@@ -49,16 +50,21 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			var retVal = GetDefaultElectricalUserConfig();
 
 			var primaryBusAuxiliaries = primaryVehicle.Components.BusAuxiliaries;
-			retVal.SmartElectrical = primaryBusAuxiliaries.ElectricSupply.SmartElectrics;
+			retVal.AlternatorType = primaryBusAuxiliaries.ElectricSupply.AlternatorTechnology;
 			retVal.ElectricalConsumers = currentDemand;
 
 			retVal.AlternatorMap = new SimpleAlternator(
-				CalculateAlternatorEfficiency(primaryBusAuxiliaries.ElectricSupply.Alternators))
-			{
-				Technologies = primaryBusAuxiliaries.ElectricSupply.Alternators.Select(x => x.Technology).ToList()
-			};
-			retVal.MaxAlternatorPower = primaryBusAuxiliaries.ElectricSupply.MaxAlternatorPower;
-			retVal.ElectricStorageCapacity = primaryBusAuxiliaries.ElectricSupply.ElectricStorageCapacity ?? 0.SI<WattSecond>();
+				CalculateAlternatorEfficiency(primaryBusAuxiliaries.ElectricSupply.Alternators));
+
+			switch (retVal.AlternatorType) {
+				case AlternatorType.Smart when primaryBusAuxiliaries.ElectricSupply.Alternators.Count == 0:
+					throw new VectoException("at least one alternator is required when specifying smart electrics!");
+				case AlternatorType.Smart when primaryBusAuxiliaries.ElectricSupply.ElectricStorage.Count == 0:
+					throw new VectoException("at least one electric storage (battery or capacitor) is required when specifying smart electrics!");
+			}
+
+			retVal.MaxAlternatorPower = primaryBusAuxiliaries.ElectricSupply.Alternators.Sum(x => x.RatedVoltage * x.RatedCurrent);
+			retVal.ElectricStorageCapacity = primaryBusAuxiliaries.ElectricSupply.ElectricStorage.Sum(x => x.ElectricStorageCapacity) ?? 0.SI<WattSecond>();
 
 			return retVal;
 		}

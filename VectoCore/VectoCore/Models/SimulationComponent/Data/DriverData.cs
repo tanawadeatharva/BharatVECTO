@@ -34,6 +34,7 @@ using System.ComponentModel.DataAnnotations;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.Models.Declaration;
+using TUGraz.VectoCore.Models.SimulationComponent.Impl;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 {
@@ -48,6 +49,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 		[Required, ValidateObject] public EngineStopStartData EngineStopStart;
 
 		[Required, ValidateObject] public EcoRollData EcoRoll;
+		public MeterPerSecond PTODriveMinSpeed { get; set; }
+		public GearshiftPosition PTODriveRoadsweepingGear { get; set; }
+
 
 		public PCCData PCC;
 
@@ -113,8 +117,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 
 			[Required, SIRange(0, double.MaxValue)] public Second MaxEngineOffTimespan;
 
-			[Required, Range(0.0, 1.0)] public double UtilityFactor;
+			[Required, Range(0.0, 1.0)] public double UtilityFactorStandstill;
 
+			[Required, Range(0.0, 1.0)] public double UtilityFactorDriving;
 		}
 
 		public class PCCData

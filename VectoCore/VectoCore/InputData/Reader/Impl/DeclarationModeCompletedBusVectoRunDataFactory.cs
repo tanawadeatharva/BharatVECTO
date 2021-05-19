@@ -296,7 +296,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 
 			var simulationRunData = new VectoRunData {
 				Loading = loading.Key,
-				VehicleData = DataAdapterGeneric.CreateVehicleData(PrimaryVehicle, primarySegment, mission, loading),
+				VehicleData = DataAdapterGeneric.CreateVehicleData(PrimaryVehicle, primarySegment, mission, loading, false),
 				AirdragData = DataAdapterGeneric.CreateAirdragData(null, mission, new Segment()),
 				EngineData = DataAdapterGeneric.CreateEngineData(PrimaryVehicle, modeIdx, mission),
 				ElectricMachinesData = new List<Tuple<PowertrainPosition, ElectricMotorData>>(),

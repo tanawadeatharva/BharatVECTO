@@ -197,18 +197,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			var avgEngineSpeed = GetEngineSpeed(angularVelocity);
 
 			var engineSpeedLimit = GetEngineSpeedLimit(absTime);
-			if (!dryRun && !angularVelocity.IsSmallerOrEqual(engineSpeedLimit)) {
-				if (DataBus.HybridControllerInfo?.ICESpeed != null && DataBus.HybridControllerInfo.ICESpeed != angularVelocity) {
-					return new ResponseInvalidOperatingPoint(this);
-				}
-				return new ResponseEngineSpeedTooHigh(this) {
-					DeltaEngineSpeed = avgEngineSpeed - engineSpeedLimit,
-					Engine = {
-						EngineSpeed = angularVelocity
-					}
-				};
-			}
-
+			
 			var fullDragTorque = ModelData.FullLoadCurves[DataBus.GearboxInfo.Gear.Gear].DragLoadStationaryTorque(avgEngineSpeed);
 			var stationaryFullLoadTorque = ModelData.FullLoadCurves[DataBus.GearboxInfo.Gear.Gear].FullLoadStationaryTorque(avgEngineSpeed);
 			var dynamicFullLoadPower = ComputeFullLoadPower(avgEngineSpeed, stationaryFullLoadTorque, dt, dryRun);
@@ -236,12 +225,56 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			var deltaFull = totalTorqueDemand - dynamicFullLoadTorque;
 			//ComputeDelta(torqueOut, totalTorqueDemand, dynamicFullLoadTorque, gearboxFullLoad, true);
 			var deltaDrag = totalTorqueDemand - fullDragTorque; //ComputeDelta(torqueOut, totalTorqueDemand, fullDragTorque,
-			//gearboxFullLoad != null ? -gearboxFullLoad : null, false);
+																//gearboxFullLoad != null ? -gearboxFullLoad : null, false);
+
+			if (!dryRun && !angularVelocity.IsSmallerOrEqual(engineSpeedLimit)) {
+				if (DataBus.HybridControllerInfo?.ICESpeed != null && !DataBus.HybridControllerInfo.ICESpeed.IsEqual(angularVelocity, 1e-3.RPMtoRad())) {
+					return new ResponseInvalidOperatingPoint(this);
+				}
+				return new ResponseEngineSpeedTooHigh(this) {
+					DeltaEngineSpeed = avgEngineSpeed - engineSpeedLimit,
+					Engine = {
+						EngineSpeed = angularVelocity,
+						PowerRequest = torqueOut * avgEngineSpeed,
+						TorqueOutDemand = torqueOut,
+						TotalTorqueDemand = totalTorqueDemand,
+						DynamicFullLoadPower = dynamicFullLoadPower,
+						DynamicFullLoadTorque = dynamicFullLoadTorque,
+						StationaryFullLoadTorque = stationaryFullLoadTorque,
+						DragPower = fullDragTorque * avgEngineSpeed,
+						DragTorque = fullDragTorque,
+						AuxiliariesPowerDemand = auxTorqueDemand * avgEngineSpeed,
+					}
+				};
+			}
+
+			if (!dryRun && !angularVelocity.IsSmallerOrEqual(engineSpeedLimit)) {
+				if (DataBus.HybridControllerInfo?.ICESpeed != null && DataBus.HybridControllerInfo.ICESpeed != angularVelocity) {
+					return new ResponseInvalidOperatingPoint(this);
+				}
+				return new ResponseEngineSpeedTooHigh(this) {
+					DeltaEngineSpeed = avgEngineSpeed - engineSpeedLimit,
+					Engine = {
+						EngineSpeed = angularVelocity,
+						PowerRequest = torqueOut * avgEngineSpeed,
+						TorqueOutDemand = torqueOut,
+						TotalTorqueDemand = totalTorqueDemand,
+						DynamicFullLoadPower = dynamicFullLoadPower,
+						DynamicFullLoadTorque = dynamicFullLoadTorque,
+						StationaryFullLoadTorque = stationaryFullLoadTorque,
+						DragPower = fullDragTorque * avgEngineSpeed,
+						DragTorque = fullDragTorque,
+						AuxiliariesPowerDemand = auxTorqueDemand * avgEngineSpeed,
+					}
+				};
+			}
 
 			if (dryRun) {
 				return new ResponseDryRun(this) {
 					DeltaFullLoad = deltaFull * avgEngineSpeed,
 					DeltaDragLoad = deltaDrag * avgEngineSpeed,
+					DeltaFullLoadTorque = deltaFull,
+					DeltaDragLoadTorque = deltaDrag,
 					DeltaEngineSpeed = angularVelocity - engineSpeedLimit,
 					Engine = {
 						EngineSpeed = angularVelocity,
@@ -468,7 +501,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				//var fcAAUX = fcWHTC;
 				var advancedAux = EngineAux as BusAuxiliariesAdapter;
 				if (advancedAux != null) {
-					advancedAux.DoWriteModalResults(time, simulationInterval ,container);
+					advancedAux.DoWriteModalResultsICE(time, simulationInterval ,container);
 					//fcAAUX = advancedAux.AAuxFuelConsumption;
 				}
 				var fcFinal = fcWHTC; // fcAAUX;
@@ -726,7 +759,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 							criterion: result => ((ResponseDryRun)result).DeltaFullLoad.Value());
 						Log.Debug("Found operating point for idling. absTime: {0}, dt: {1}, torque: {2}, angularSpeed: {3}", absTime, dt,
 							0.SI<NewtonMeter>(), angularSpeed);
-						angularSpeed = angularSpeed.LimitTo(_engine.ModelData.IdleSpeed, _engine.EngineRatedSpeed);
+						angularSpeed = angularSpeed.LimitTo(_engine.ModelData.IdleSpeed, engineMaxSpeed);
 						retVal = RequestPort.Request(absTime, dt, 0.SI<NewtonMeter>(), angularSpeed, false);
 					}).
 					Default(r => { throw new UnexpectedResponseException("searching Idling point", r); });

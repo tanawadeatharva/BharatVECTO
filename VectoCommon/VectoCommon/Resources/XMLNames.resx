@@ -1489,7 +1489,7 @@
     <value>VehicleDeclarationType</value>
   </data>
   <data name="BusAux_PneumaticSystem_SCRReagentDosing" xml:space="preserve">
-    <value>SCRReagentDosing</value>
+    <value>PneumaticSCRReagentDosing</value>
   </data>
   <data name="AirDragArea_TransferredCdxA" xml:space="preserve">
     <value>TransferredCdxA</value>

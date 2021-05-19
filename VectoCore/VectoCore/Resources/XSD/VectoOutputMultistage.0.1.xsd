@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- edited with XMLSpy v2021 (x64) (http://www.altova.com) by Franz Josef Kober (Technische Universität Graz) -->
+<!-- edited with XMLSpy v2021 (x64) (http://www.altova.com) by Markus Quaritsch (Technische Universität Graz) -->
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:vif="urn:tugraz:ivt:VectoAPI:DeclarationOutput:VehicleInterimFile:v0.1" xmlns:v1.0="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v1.0" xmlns:v2.0="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0" xmlns:v2.1="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.1" xmlns:v2.3="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:DEV:v2.3" xmlns:v2.4="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:DEV:v2.4" xmlns:v2.6="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:DEV:v2.6" xmlns:v2.8="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:DEV:v2.8" xmlns:out="urn:tugraz:ivt:VectoAPI:DeclarationOutputDefinitions" xmlns:common="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions" targetNamespace="urn:tugraz:ivt:VectoAPI:DeclarationOutput:VehicleInterimFile:v0.1" elementFormDefault="qualified" attributeFormDefault="unqualified" xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:ParameterDocumentation ParameterDocumentation.xsd">
 	<xs:import namespace="urn:tugraz:ivt:VectoAPI:DeclarationOutputDefinitions" schemaLocation="VectoOutputDefinitions.xsd"/>
 	<xs:import namespace="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions" schemaLocation="VectoDeclarationDefinitions.xsd"/>
@@ -110,9 +110,9 @@
 					<xs:element name="ElectricSystem">
 						<xs:complexType>
 							<xs:sequence>
-								<xs:element name="AlternatorTechnology" maxOccurs="unbounded">
+								<xs:element name="AlternatorTechnology">
 									<xs:annotation>
-										<xs:documentation>PXXX</xs:documentation>
+										<xs:documentation>P294 - enum</xs:documentation>
 									</xs:annotation>
 									<xs:complexType>
 										<xs:simpleContent>
@@ -120,7 +120,80 @@
 										</xs:simpleContent>
 									</xs:complexType>
 								</xs:element>
-								<xs:element name="SmartElectrics" type="xs:boolean"/>
+								<xs:element name="SmartAlternator" minOccurs="0">
+									<xs:complexType>
+										<xs:sequence>
+											<xs:element name="RatedCurrent" type="xs:integer">
+												<xs:annotation>
+													<xs:documentation>P295 - [A]</xs:documentation>
+												</xs:annotation>
+											</xs:element>
+											<xs:element name="RatedVoltage">
+												<xs:annotation>
+													<xs:documentation>P296 - [V]</xs:documentation>
+												</xs:annotation>
+												<xs:simpleType>
+													<xs:restriction base="xs:integer">
+														<xs:enumeration value="12"/>
+														<xs:enumeration value="24"/>
+														<xs:enumeration value="48"/>
+													</xs:restriction>
+												</xs:simpleType>
+											</xs:element>
+											<xs:element name="BatteryTechnology">
+												<xs:annotation>
+													<xs:documentation>P296 - enum</xs:documentation>
+												</xs:annotation>
+												<xs:simpleType>
+													<xs:restriction base="xs:string">
+														<xs:enumeration value="lead-acid battery – conventional"/>
+														<xs:enumeration value="lead-acid battery – AGM"/>
+														<xs:enumeration value="lead-acid battery – gel"/>
+														<xs:enumeration value="li-ion battery - high power"/>
+														<xs:enumeration value="li-ion battery - high energy"/>
+													</xs:restriction>
+												</xs:simpleType>
+											</xs:element>
+											<xs:element name="BatteryNominalVoltage">
+												<xs:annotation>
+													<xs:documentation>P298 - [V]</xs:documentation>
+												</xs:annotation>
+												<xs:simpleType>
+													<xs:restriction base="xs:integer">
+														<xs:enumeration value="12"/>
+														<xs:enumeration value="24"/>
+														<xs:enumeration value="48"/>
+													</xs:restriction>
+												</xs:simpleType>
+											</xs:element>
+											<xs:element name="BatteryRatedCapacity" type="xs:integer">
+												<xs:annotation>
+													<xs:documentation>P299 - [Ah]</xs:documentation>
+												</xs:annotation>
+											</xs:element>
+											<xs:element name="CapacitorTechnology" type="xs:string">
+												<xs:annotation>
+													<xs:documentation>P300 - [-]</xs:documentation>
+												</xs:annotation>
+											</xs:element>
+											<xs:element name="CapacitorRatedCapacitance" type="xs:integer">
+												<xs:annotation>
+													<xs:documentation>P301 - [F]</xs:documentation>
+												</xs:annotation>
+											</xs:element>
+											<xs:element name="CapacitorRatedVoltage" type="xs:integer">
+												<xs:annotation>
+													<xs:documentation>P302 - [V]</xs:documentation>
+												</xs:annotation>
+											</xs:element>
+										</xs:sequence>
+									</xs:complexType>
+								</xs:element>
+								<xs:element name="SupplyFromHEVPossible" type="xs:boolean">
+									<xs:annotation>
+										<xs:documentation>P303 - bool</xs:documentation>
+									</xs:annotation>
+								</xs:element>
 								<xs:sequence minOccurs="0">
 									<xs:element name="MaxAlternatorPower">
 										<xs:simpleType>
@@ -167,7 +240,7 @@
 										</xs:restriction>
 									</xs:simpleType>
 								</xs:element>
-								<xs:element name="SCRReagentDosing" type="xs:boolean"/>
+								<xs:element name="PneumaticSCRReagentDosing" type="xs:boolean"/>
 							</xs:sequence>
 						</xs:complexType>
 					</xs:element>
@@ -672,10 +745,10 @@
 					<xs:element name="Date" type="v1.0:DateTimeWithTimezone"/>
 					<xs:element name="LegislativeCategory" type="xs:string">
 						<xs:annotation>
-								<xs:documentation>P251 - [-]</xs:documentation>
+							<xs:documentation>P251 - [-]</xs:documentation>
 						</xs:annotation>
 					</xs:element>
-					<xs:element name="VehicleCategory" type="v2.6:VehicleCategoryDeclarationType"/>
+					<xs:element name="ChassisConfiguration" type="v2.6:ChassisConfigurationDeclarationType"/>
 					<xs:element name="AxleConfiguration" type="v2.6:VehicleAxleConfigurationDeclarationType"/>
 					<xs:element name="Articulated" type="xs:boolean"/>
 					<xs:element name="TechnicalPermissibleMaximumLadenMass" type="v1.0:VehicleGrossVehicleMassType"/>

@@ -694,6 +694,7 @@ namespace TUGraz.VectoCommon.InputData
 
 	public interface IAuxiliaryDeclarationInputData
 	{
+
 		/// <summary>
 		/// P005  Aux-Type
 		/// cf. VECTO Input Parameters.xlsx
@@ -739,9 +740,13 @@ namespace TUGraz.VectoCommon.InputData
 
 		public PowertrainPosition Position { get; set; }
 
-		public double Ratio { get; set; }
+		public double RatioADC { get; set; }
 
-		public double MechanicalEfficiency { get; set; }
+		public double[] RatioPerGear { get; set; }
+
+		public double MechanicalTransmissionEfficiency { get; set; }
+
+		public TableData MechanicalTransmissionLossMap { get; set; }
 	}
 
 	public interface IElectricStorageDeclarationInputData
@@ -823,13 +828,11 @@ namespace TUGraz.VectoCommon.InputData
 
 	public interface IElectricSupplyDeclarationData
 	{
+		AlternatorType AlternatorTechnology { get; }
+
 		IList<IAlternatorDeclarationInputData> Alternators { get; }
 
-		bool SmartElectrics { get; }
-
-		Watt MaxAlternatorPower { get; }
-
-		WattSecond ElectricStorageCapacity { get; }
+		IList<IBusAuxElectricStorageDeclarationInputData> ElectricStorage { get; }
 	}
 
 	public interface IElectricConsumersDeclarationData
@@ -847,10 +850,19 @@ namespace TUGraz.VectoCommon.InputData
 
 	public interface IAlternatorDeclarationInputData
 	{
+		Ampere RatedCurrent { get; }
+
+		Volt RatedVoltage { get; }
+	}
+
+	public interface IBusAuxElectricStorageDeclarationInputData
+	{
 		string Technology { get; }
 
-		//double Ratio { get; }
+		WattSecond ElectricStorageCapacity { get; }
 	}
+
+
 
 
 	public interface IPneumaticSupplyDeclarationData

@@ -240,8 +240,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			foreach (var next in Gears.IterateGears(Gears.Successor(currentGear), Gears.Successor(currentGear, (uint)shiftStrategyParameters.AllowedGearRangeFC))) {
 				
 				if (next == null) {
-                    // no further gear
-                    continue;
+					// no further gear
+					continue;
 				}
 
 				if (current.TorqueConverterLocked != next.TorqueConverterLocked && current.Gear != next.Gear) {

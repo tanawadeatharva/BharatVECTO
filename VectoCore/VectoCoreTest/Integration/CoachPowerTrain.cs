@@ -95,10 +95,10 @@ namespace TUGraz.VectoCore.Tests.Integration
 				GearshiftParameters = CreateGearshiftData(),
 				EngineData = engineData,
 				ElectricMachinesData = new List<Tuple<PowertrainPosition, ElectricMotorData>>(),
-				DriverData = driverData,
 				AirdragData = airDragData,
 				SimulationType = SimulationType.DistanceCycle,
-				Cycle = cycleData
+				Cycle = cycleData, 
+				DriverData = driverData
 			};
 			var fileWriter = new FileOutputWriter(modFileName);
 			var modData = new ModalDataContainer(runData, fileWriter, null)
@@ -240,7 +240,7 @@ namespace TUGraz.VectoCore.Tests.Integration
 				EngineStopStart = new DriverData.EngineStopStartData() {
 					EngineOffStandStillActivationDelay = DeclarationData.Driver.EngineStopStart.ActivationDelay,
 					MaxEngineOffTimespan =  DeclarationData.Driver.EngineStopStart.MaxEngineOffTimespan,
-					UtilityFactor =  DeclarationData.Driver.EngineStopStart.UtilityFactor,
+					UtilityFactorStandstill =  DeclarationData.Driver.EngineStopStart.UtilityFactor,
 				},
 				OverSpeed = new DriverData.OverSpeedData {
 						Enabled = overspeed,

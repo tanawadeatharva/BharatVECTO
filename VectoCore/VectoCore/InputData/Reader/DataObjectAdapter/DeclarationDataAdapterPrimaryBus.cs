@@ -31,9 +31,9 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 		}
 
 
-		public override VehicleData CreateVehicleData(IVehicleDeclarationInputData data, Segment segment, Mission mission, KeyValuePair<LoadingType, Tuple<Kilogram, double?>> loading)
+		public override VehicleData CreateVehicleData(IVehicleDeclarationInputData data, Segment segment, Mission mission, KeyValuePair<LoadingType, Tuple<Kilogram, double?>> loading, bool allowVocational)
 		{
-			var retVal = base.CreateVehicleData(data, segment, mission, loading);
+			var retVal = base.CreateVehicleData(data, segment, mission, loading, allowVocational);
 			retVal.CurbMass = mission.CurbMass;
 			retVal.GrossVehicleMass = 40000.SI<Kilogram>();
 			return retVal;
@@ -101,14 +101,20 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 
 			var retVal = GetDefaultElectricalUserConfig();
 
-			retVal.SmartElectrical = busAux.ElectricSupply.SmartElectrics;
+			retVal.AlternatorType = busAux.ElectricSupply.AlternatorTechnology;
 			retVal.ElectricalConsumers = currentDemand;
-			retVal.AlternatorMap = new SimpleAlternator(CalculateAlternatorEfficiency(busAux.ElectricSupply.Alternators)) {
-				Technologies = busAux.ElectricSupply.Alternators.Select(x => x.Technology).ToList()
-			};
-			retVal.MaxAlternatorPower = busAux.ElectricSupply.MaxAlternatorPower;
-			retVal.ElectricStorageCapacity = busAux.ElectricSupply.ElectricStorageCapacity ?? 0.SI<WattSecond>();
-			
+			retVal.AlternatorMap = new SimpleAlternator(CalculateAlternatorEfficiency(busAux.ElectricSupply.Alternators));
+
+			switch (retVal.AlternatorType) {
+				case AlternatorType.Smart when busAux.ElectricSupply.Alternators.Count == 0:
+					throw new VectoException("at least one alternator is required when specifying smart electrics!");
+				case AlternatorType.Smart when busAux.ElectricSupply.ElectricStorage.Count == 0:
+					throw new VectoException("at least one electric storage (battery or capacitor) is required when specifying smart electrics!");
+			}
+
+			retVal.MaxAlternatorPower = busAux.ElectricSupply.Alternators.Sum(x => x.RatedVoltage * x.RatedCurrent);
+			retVal.ElectricStorageCapacity = busAux.ElectricSupply.ElectricStorage.Sum(x => x.ElectricStorageCapacity) ?? 0.SI<WattSecond>();
+
 			return retVal;
 		}
 
@@ -127,12 +133,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 
 		protected virtual double CalculateAlternatorEfficiency(IList<IAlternatorDeclarationInputData> alternators)
 		{
-			var sum = 0.0;
-			foreach (var entry in alternators) {
-				sum += DeclarationData.BusAuxiliaries.AlternatorTechnologies.Lookup(entry.Technology);
-			}
-
-			return sum / alternators.Count;
+			return  DeclarationData.BusAuxiliaries.AlternatorTechnologies.Lookup("default");
 		}
 
 		protected virtual Dictionary<string, ElectricConsumerEntry> GetElectricConsumers(Mission mission, IVehicleDeclarationInputData vehicleData, IActuations actuations, VehicleClass vehicleClass)
@@ -310,12 +311,10 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 
 				MaxPossibleBenefitFromTechnologyList =
 					Constants.BusAuxiliaries.SteadyStateModel.MaxPossibleBenefitFromTechnologyList,
-
-				COP = 3.5
 			};
 		}
 
-		public virtual ISSMInputs CreateSSMModelParameters(IBusAuxiliariesDeclarationData busAuxInputData, Mission mission, IFuelProperties heatingFuel, LoadingType loadingType)
+		public virtual ISSMDeclarationInputs CreateSSMModelParameters(IBusAuxiliariesDeclarationData busAuxInputData, Mission mission, IFuelProperties heatingFuel, LoadingType loadingType)
 		{
 			var busParams = mission.BusParameter;
 
@@ -350,11 +349,11 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			retVal.HVACCompressorType = busParams.HVACCompressorType; // use passenger compartment
 			retVal.COP = DeclarationData.BusAuxiliaries.CalculateCOP(
 			
-				coolingPower.Item1, ACCompressorType.None, coolingPower.Item2, busParams.HVACCompressorType,
+				coolingPower.Item1, HeatPumpType.none, coolingPower.Item2, busParams.HVACCompressorType,
 				busParams.VehicleCode.GetFloorType());
 			retVal.HVACTechnology = string.Format(
 				"{0} ({1})", busParams.HVACConfiguration.GetName(),
-				string.Join(", ", new[] { busParams.HVACCompressorType.GetName(), ACCompressorType.None.GetName() }));
+				string.Join(", ", new[] { busParams.HVACCompressorType.GetName(), HeatPumpType.none.GetName() }));
 			
 			//SetHVACParameters(retVal, vehicleData, mission);
 

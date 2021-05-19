@@ -4,6 +4,7 @@ using System.Collections.ObjectModel;
 using System.Xml;
 using TUGraz.VectoCommon.BusAuxiliaries;
 using TUGraz.VectoCommon.InputData;
+using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Models.BusAuxiliaries.Interfaces;
 using VECTO3GUI2020.Helper;
@@ -439,7 +440,9 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 
 		#region Implementation of IElectricSupplyDeclarationData
 
+		public AlternatorType AlternatorTechnology => throw new NotImplementedException();
 		public IList<IAlternatorDeclarationInputData> Alternators => throw new NotImplementedException();
+		public IList<IBusAuxElectricStorageDeclarationInputData> ElectricStorage => throw new NotImplementedException();
 
 		public bool SmartElectrics => throw new NotImplementedException();
 

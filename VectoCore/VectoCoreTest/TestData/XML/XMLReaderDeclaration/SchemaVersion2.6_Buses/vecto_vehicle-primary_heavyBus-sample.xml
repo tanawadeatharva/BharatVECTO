@@ -6,7 +6,7 @@
 		<Model>Generic Model</Model>
 		<VIN>VEH-1234567890</VIN>
 		<Date>2017-02-15T11:00:00Z</Date>
-		<VehicleCategory>Bus</VehicleCategory>
+		<ChassisConfiguration>Bus</ChassisConfiguration>
 		<AxleConfiguration>4x2</AxleConfiguration>
 		<Articulated>false</Articulated>
 		<TechnicalPermissibleMaximumLadenMass>25000</TechnicalPermissibleMaximumLadenMass>
@@ -3265,19 +3265,18 @@
 						<Technology axleNumber="1">Variable displacement elec. controlled</Technology>
 					</SteeringPump>
 					<ElectricSystem>
-						<AlternatorTechnology>default</AlternatorTechnology>
-						<SmartElectrics>false</SmartElectrics>
-						<MaxAlternatorPower>15000</MaxAlternatorPower>
-						<ElectricStorageCapacity>50</ElectricStorageCapacity>
+						<AlternatorTechnology>conventional</AlternatorTechnology>
+						<SupplyFromHEVPossible>false</SupplyFromHEVPossible>
 					</ElectricSystem>
 					<PneumaticSystem>
 						<SizeOfAirSupply>Large Supply 2-stage</SizeOfAirSupply>
+						<CompressorDrive>mechanically</CompressorDrive>
 						<Clutch>none</Clutch>
 						<CompressorRatio>1.000</CompressorRatio>
 						<SmartCompressionSystem>false</SmartCompressionSystem>
 						<SmartRegenerationSystem>false</SmartRegenerationSystem>
 						<AirsuspensionControl>electronically</AirsuspensionControl>
-						<AdBlueDosing>true</AdBlueDosing>
+						<PneumaticSCRReagentDosing>true</PneumaticSCRReagentDosing>
 					</PneumaticSystem>
 					<HVAC>
 						<AdjustableCoolantThermostat>true</AdjustableCoolantThermostat>

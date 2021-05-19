@@ -123,7 +123,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 
 		public Watt HVACAuxHeaterPower { get; internal set; }
 
-		public ACCompressorType HVACCompressorType { get; internal set; }
+		public HeatPumpType HVACCompressorType { get; internal set; }
 
 		public bool HVACDoubleGlasing { get; internal set; }
 

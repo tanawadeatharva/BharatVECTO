@@ -80,7 +80,7 @@ Module MainModule
         If (string.isnullOrempty(basePath)) Then
             Return filePath
         End If
-		If (Path.GetDirectoryName(filePath).StartsWith(basePath, StringComparison.OrdinalIgnoreCase)) Then
+		If (Path.GetDirectoryName(Path.GetFullPath(filePath)).StartsWith(basePath, StringComparison.OrdinalIgnoreCase)) Then
 			Return Path.GetFullPath(filePath).Substring(basePath.Length + If(basePath.EndsWith("\"), 0, 1))
 		End If
 		Return filePath

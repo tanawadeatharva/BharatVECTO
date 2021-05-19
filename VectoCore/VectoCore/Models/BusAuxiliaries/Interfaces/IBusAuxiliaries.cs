@@ -11,7 +11,9 @@
 
 using TUGraz.VectoCommon.BusAuxiliaries;
 using TUGraz.VectoCommon.Utils;
+using TUGraz.VectoCore.Models.BusAuxiliaries.Interfaces.DownstreamModules.Electrics;
 using TUGraz.VectoCore.Models.Simulation.Data;
+using TUGraz.VectoCore.Models.SimulationComponent;
 
 namespace TUGraz.VectoCore.Models.BusAuxiliaries.Interfaces
 {
@@ -26,8 +28,8 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.Interfaces
 		// Information
 		//bool Running { get; }
 
-		string AuxiliaryName { get; }
-		string AuxiliaryVersion { get; }
+		//string AuxiliaryName { get; }
+		//string AuxiliaryVersion { get; }
 
 		// Additional Permenent Monitoring Signals - Required by engineering
 		//double AA_NonSmartAlternatorsEfficiency { get; }
@@ -105,7 +107,8 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.Interfaces
 		Watt PSPowerCompressorDragOnly { get; }
 		Watt HVACMechanicalPowerConsumer { get; }
 		Watt HVACMechanicalPowerGenerated { get; }
-		double BatterySOC { get; }
+		
+		Joule AuxHeaterDemandCalculation(Second cycleTime, Joule engineWasteHeatTotal);
 
 
 		///// <summary>
@@ -136,23 +139,23 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.Interfaces
 		/// <remarks></remarks>
 		void CycleStep(Second seconds, double essFactor);
 
-		///// <summary>
-		///// Initialises AAUX Environment ( Begin Processs )
-		///// </summary>
-		///// <param name="auxcConfig"></param>
-		///// <param name="fuelProperties"></param>
-		///// <returns></returns>
-		///// <remarks></remarks>
-		//bool RunStart(IAuxiliaryConfig auxcConfig, IFuelProperties fuelProperties);
+        ///// <summary>
+        ///// Initialises AAUX Environment ( Begin Processs )
+        ///// </summary>
+        ///// <param name="auxcConfig"></param>
+        ///// <param name="fuelProperties"></param>
+        ///// <returns></returns>
+        ///// <remarks></remarks>
+        //bool RunStart(IAuxiliaryConfig auxcConfig, IFuelProperties fuelProperties);
 
-		///// <summary>
-		///// Any Termination Which Needs to be done ( Model depenent )
-		///// </summary>
-		///// <param name="message"></param>
-		///// <returns></returns>
-		///// <remarks></remarks>
-		//bool RunStop(ref string message);
+        ///// <summary>
+        ///// Any Termination Which Needs to be done ( Model depenent )
+        ///// </summary>
+        ///// <param name="message"></param>
+        ///// <returns></returns>
+        ///// <remarks></remarks>
+        //bool RunStop(ref string message);
 
-		void ResetCalculations();
+        void ResetCalculations();
 	}
 }

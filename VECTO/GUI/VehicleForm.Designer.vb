@@ -108,15 +108,6 @@ Partial Class VehicleForm
         Me.CmOpenFile = New System.Windows.Forms.ContextMenuStrip(Me.components)
         Me.OpenWithToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.ShowInFolderToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.gbPTO = New System.Windows.Forms.GroupBox()
-        Me.pnPTO = New System.Windows.Forms.Panel()
-        Me.btPTOCycle = New System.Windows.Forms.Button()
-        Me.Label16 = New System.Windows.Forms.Label()
-        Me.tbPTOCycle = New System.Windows.Forms.TextBox()
-        Me.btPTOLossMapBrowse = New System.Windows.Forms.Button()
-        Me.Label7 = New System.Windows.Forms.Label()
-        Me.tbPTOLossMap = New System.Windows.Forms.TextBox()
-        Me.cbPTOType = New System.Windows.Forms.ComboBox()
         Me.GroupBox3 = New System.Windows.Forms.GroupBox()
         Me.GroupBox2 = New System.Windows.Forms.GroupBox()
         Me.pnAngledriveFields = New System.Windows.Forms.Panel()
@@ -130,6 +121,10 @@ Partial Class VehicleForm
         Me.PicVehicle = New System.Windows.Forms.PictureBox()
         Me.Label8 = New System.Windows.Forms.Label()
         Me.ToolTip1 = New System.Windows.Forms.ToolTip(Me.components)
+        Me.cbPTOType = New System.Windows.Forms.ComboBox()
+        Me.tbPTOCycle = New System.Windows.Forms.TextBox()
+        Me.tbPTOLossMap = New System.Windows.Forms.TextBox()
+        Me.tbPTODrive = New System.Windows.Forms.TextBox()
         Me.tcVehicleComponents = New System.Windows.Forms.TabControl()
         Me.tpGeneral = New System.Windows.Forms.TabPage()
         Me.tpPowertrain = New System.Windows.Forms.TabPage()
@@ -142,9 +137,6 @@ Partial Class VehicleForm
         Me.cbTankSystem = New System.Windows.Forms.ComboBox()
         Me.Label23 = New System.Windows.Forms.Label()
         Me.tpElectricComponents = New System.Windows.Forms.TabPage()
-        Me.lblMaxDrivetrainPwrUnit = New System.Windows.Forms.Label()
-        Me.tbMaxDrivetrainPwr = New System.Windows.Forms.TextBox()
-        Me.lblMaxDrivetrainPwr = New System.Windows.Forms.Label()
         Me.gbBattery = New System.Windows.Forms.GroupBox()
         Me.lblInitialSoCUnit = New System.Windows.Forms.Label()
         Me.tbInitialSoC = New System.Windows.Forms.TextBox()
@@ -156,8 +148,16 @@ Partial Class VehicleForm
         Me.btnBrowseBattery = New System.Windows.Forms.Button()
         Me.tbBattery = New System.Windows.Forms.TextBox()
         Me.gpElectricMotor = New System.Windows.Forms.GroupBox()
-        Me.tbEmEfficiency = New System.Windows.Forms.TextBox()
-        Me.lblEmEfficiency = New System.Windows.Forms.Label()
+        Me.gbRatiosPerGear = New System.Windows.Forms.GroupBox()
+        Me.lvRatioPerGear = New System.Windows.Forms.ListView()
+        Me.ColumnHeader11 = CType(New System.Windows.Forms.ColumnHeader(),System.Windows.Forms.ColumnHeader)
+        Me.ColumnHeader12 = CType(New System.Windows.Forms.ColumnHeader(),System.Windows.Forms.ColumnHeader)
+        Me.Button1 = New System.Windows.Forms.Button()
+        Me.Label29 = New System.Windows.Forms.Label()
+        Me.Button2 = New System.Windows.Forms.Button()
+        Me.btnEmADCLossMap = New System.Windows.Forms.Button()
+        Me.tbEmADCLossMap = New System.Windows.Forms.TextBox()
+        Me.lblEmADCLossmap = New System.Windows.Forms.Label()
         Me.tbRatioEm = New System.Windows.Forms.TextBox()
         Me.lblRatioEm = New System.Windows.Forms.Label()
         Me.tbEmCount = New System.Windows.Forms.TextBox()
@@ -169,12 +169,19 @@ Partial Class VehicleForm
         Me.btnBrowseElectricMotor = New System.Windows.Forms.Button()
         Me.tbElectricMotor = New System.Windows.Forms.TextBox()
         Me.tpTorqueLimits = New System.Windows.Forms.TabPage()
+        Me.gbPropulsionTorque = New System.Windows.Forms.GroupBox()
+        Me.btnPropulsionTorqueLimit = New System.Windows.Forms.Button()
+        Me.tbPropulsionTorqueLimit = New System.Windows.Forms.TextBox()
+        Me.gbEMTorqueLimits = New System.Windows.Forms.GroupBox()
+        Me.btnEmTorqueLimits = New System.Windows.Forms.Button()
+        Me.tbEmTorqueLimits = New System.Windows.Forms.TextBox()
+        Me.bgVehicleTorqueLimits = New System.Windows.Forms.GroupBox()
         Me.lvTorqueLimits = New System.Windows.Forms.ListView()
         Me.ColumnHeader5 = CType(New System.Windows.Forms.ColumnHeader(),System.Windows.Forms.ColumnHeader)
         Me.ColumnHeader6 = CType(New System.Windows.Forms.ColumnHeader(),System.Windows.Forms.ColumnHeader)
+        Me.btAddMaxTorqueEntry = New System.Windows.Forms.Button()
         Me.Label17 = New System.Windows.Forms.Label()
         Me.btDelMaxTorqueEntry = New System.Windows.Forms.Button()
-        Me.btAddMaxTorqueEntry = New System.Windows.Forms.Button()
         Me.tpADAS = New System.Windows.Forms.TabPage()
         Me.GroupBox5 = New System.Windows.Forms.GroupBox()
         Me.cbAtEcoRollReleaseLockupClutch = New System.Windows.Forms.CheckBox()
@@ -183,6 +190,22 @@ Partial Class VehicleForm
         Me.Label22 = New System.Windows.Forms.Label()
         Me.cbEngineStopStart = New System.Windows.Forms.CheckBox()
         Me.lblPCC = New System.Windows.Forms.Label()
+        Me.tpRoadSweeper = New System.Windows.Forms.TabPage()
+        Me.gbPTODrive = New System.Windows.Forms.GroupBox()
+        Me.Label27 = New System.Windows.Forms.Label()
+        Me.tbPtoGear = New System.Windows.Forms.TextBox()
+        Me.Label26 = New System.Windows.Forms.Label()
+        Me.tbPtoEngineSpeed = New System.Windows.Forms.TextBox()
+        Me.Label25 = New System.Windows.Forms.Label()
+        Me.Label24 = New System.Windows.Forms.Label()
+        Me.pnPTO = New System.Windows.Forms.Panel()
+        Me.btPTOCycleDrive = New System.Windows.Forms.Button()
+        Me.Label28 = New System.Windows.Forms.Label()
+        Me.btPTOCycle = New System.Windows.Forms.Button()
+        Me.Label16 = New System.Windows.Forms.Label()
+        Me.btPTOLossMapBrowse = New System.Windows.Forms.Button()
+        Me.Label7 = New System.Windows.Forms.Label()
+        Me.gbPTO = New System.Windows.Forms.GroupBox()
         Me.cbLegislativeClass = New System.Windows.Forms.ComboBox()
         Me.Label21 = New System.Windows.Forms.Label()
         Me.lblTitle = New System.Windows.Forms.Label()
@@ -199,8 +222,6 @@ Partial Class VehicleForm
         Me.PnCdATrTr.SuspendLayout
         CType(Me.PictureBox1,System.ComponentModel.ISupportInitialize).BeginInit
         Me.CmOpenFile.SuspendLayout
-        Me.gbPTO.SuspendLayout
-        Me.pnPTO.SuspendLayout
         Me.GroupBox3.SuspendLayout
         Me.GroupBox2.SuspendLayout
         Me.pnAngledriveFields.SuspendLayout
@@ -215,91 +236,90 @@ Partial Class VehicleForm
         Me.gbBattery.SuspendLayout
         Me.Panel2.SuspendLayout
         Me.gpElectricMotor.SuspendLayout
+        Me.gbRatiosPerGear.SuspendLayout
         Me.pnElectricMotor.SuspendLayout
         Me.tpTorqueLimits.SuspendLayout
+        Me.gbPropulsionTorque.SuspendLayout
+        Me.gbEMTorqueLimits.SuspendLayout
+        Me.bgVehicleTorqueLimits.SuspendLayout
         Me.tpADAS.SuspendLayout
         Me.GroupBox5.SuspendLayout
+        Me.tpRoadSweeper.SuspendLayout
+        Me.gbPTODrive.SuspendLayout
+        Me.pnPTO.SuspendLayout
+        Me.gbPTO.SuspendLayout
         Me.SuspendLayout
         '
         'Label1
         '
         Me.Label1.AutoSize = true
-        Me.Label1.Location = New System.Drawing.Point(9, 34)
-        Me.Label1.Margin = New System.Windows.Forms.Padding(4, 0, 4, 0)
+        Me.Label1.Location = New System.Drawing.Point(6, 22)
         Me.Label1.Name = "Label1"
-        Me.Label1.Size = New System.Drawing.Size(264, 20)
+        Me.Label1.Size = New System.Drawing.Size(177, 13)
         Me.Label1.TabIndex = 0
         Me.Label1.Text = "Corrected Actual Curb Mass Vehicle"
         '
         'TbMass
         '
-        Me.TbMass.Location = New System.Drawing.Point(282, 29)
-        Me.TbMass.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
+        Me.TbMass.Location = New System.Drawing.Point(188, 19)
         Me.TbMass.Name = "TbMass"
-        Me.TbMass.Size = New System.Drawing.Size(84, 26)
+        Me.TbMass.Size = New System.Drawing.Size(57, 20)
         Me.TbMass.TabIndex = 0
         '
         'Label2
         '
         Me.Label2.AutoSize = true
-        Me.Label2.Location = New System.Drawing.Point(192, 48)
-        Me.Label2.Margin = New System.Windows.Forms.Padding(4, 0, 4, 0)
+        Me.Label2.Location = New System.Drawing.Point(128, 31)
         Me.Label2.Name = "Label2"
-        Me.Label2.Size = New System.Drawing.Size(66, 20)
+        Me.Label2.Size = New System.Drawing.Size(45, 13)
         Me.Label2.TabIndex = 2
         Me.Label2.Text = "Loading"
         '
         'TbLoad
         '
-        Me.TbLoad.Location = New System.Drawing.Point(273, 43)
-        Me.TbLoad.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
+        Me.TbLoad.Location = New System.Drawing.Point(182, 28)
         Me.TbLoad.Name = "TbLoad"
-        Me.TbLoad.Size = New System.Drawing.Size(84, 26)
+        Me.TbLoad.Size = New System.Drawing.Size(57, 20)
         Me.TbLoad.TabIndex = 1
         '
         'Label3
         '
         Me.Label3.AutoSize = true
-        Me.Label3.Location = New System.Drawing.Point(112, 9)
-        Me.Label3.Margin = New System.Windows.Forms.Padding(4, 0, 4, 0)
+        Me.Label3.Location = New System.Drawing.Point(75, 6)
         Me.Label3.Name = "Label3"
-        Me.Label3.Size = New System.Drawing.Size(55, 20)
+        Me.Label3.Size = New System.Drawing.Size(38, 13)
         Me.Label3.TabIndex = 8
         Me.Label3.Text = "Cd x A"
         '
         'TBcdA
         '
-        Me.TBcdA.Location = New System.Drawing.Point(178, 5)
-        Me.TBcdA.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
+        Me.TBcdA.Location = New System.Drawing.Point(119, 3)
         Me.TBcdA.Name = "TBcdA"
-        Me.TBcdA.Size = New System.Drawing.Size(84, 26)
+        Me.TBcdA.Size = New System.Drawing.Size(57, 20)
         Me.TBcdA.TabIndex = 0
         '
         'Label13
         '
         Me.Label13.AutoSize = true
-        Me.Label13.Location = New System.Drawing.Point(204, 9)
-        Me.Label13.Margin = New System.Windows.Forms.Padding(4, 0, 4, 0)
+        Me.Label13.Location = New System.Drawing.Point(136, 6)
         Me.Label13.Name = "Label13"
-        Me.Label13.Size = New System.Drawing.Size(59, 20)
+        Me.Label13.Size = New System.Drawing.Size(40, 13)
         Me.Label13.TabIndex = 6
         Me.Label13.Text = "Radius"
         '
         'TBrdyn
         '
-        Me.TBrdyn.Location = New System.Drawing.Point(278, 5)
-        Me.TBrdyn.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
+        Me.TBrdyn.Location = New System.Drawing.Point(185, 3)
         Me.TBrdyn.Name = "TBrdyn"
-        Me.TBrdyn.Size = New System.Drawing.Size(84, 26)
+        Me.TBrdyn.Size = New System.Drawing.Size(57, 20)
         Me.TBrdyn.TabIndex = 0
         '
         'ButOK
         '
         Me.ButOK.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right),System.Windows.Forms.AnchorStyles)
-        Me.ButOK.Location = New System.Drawing.Point(646, 862)
-        Me.ButOK.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
+        Me.ButOK.Location = New System.Drawing.Point(498, 560)
         Me.ButOK.Name = "ButOK"
-        Me.ButOK.Size = New System.Drawing.Size(112, 35)
+        Me.ButOK.Size = New System.Drawing.Size(75, 23)
         Me.ButOK.TabIndex = 5
         Me.ButOK.Text = "Save"
         Me.ButOK.UseVisualStyleBackColor = true
@@ -308,10 +328,9 @@ Partial Class VehicleForm
         '
         Me.ButCancel.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right),System.Windows.Forms.AnchorStyles)
         Me.ButCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel
-        Me.ButCancel.Location = New System.Drawing.Point(768, 862)
-        Me.ButCancel.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
+        Me.ButCancel.Location = New System.Drawing.Point(579, 560)
         Me.ButCancel.Name = "ButCancel"
-        Me.ButCancel.Size = New System.Drawing.Size(112, 35)
+        Me.ButCancel.Size = New System.Drawing.Size(75, 23)
         Me.ButCancel.TabIndex = 6
         Me.ButCancel.Text = "Cancel"
         Me.ButCancel.UseVisualStyleBackColor = true
@@ -319,30 +338,27 @@ Partial Class VehicleForm
         'Label14
         '
         Me.Label14.AutoSize = true
-        Me.Label14.Location = New System.Drawing.Point(370, 34)
-        Me.Label14.Margin = New System.Windows.Forms.Padding(4, 0, 4, 0)
+        Me.Label14.Location = New System.Drawing.Point(247, 22)
         Me.Label14.Name = "Label14"
-        Me.Label14.Size = New System.Drawing.Size(34, 20)
+        Me.Label14.Size = New System.Drawing.Size(25, 13)
         Me.Label14.TabIndex = 24
         Me.Label14.Text = "[kg]"
         '
         'Label31
         '
         Me.Label31.AutoSize = true
-        Me.Label31.Location = New System.Drawing.Point(362, 48)
-        Me.Label31.Margin = New System.Windows.Forms.Padding(4, 0, 4, 0)
+        Me.Label31.Location = New System.Drawing.Point(241, 31)
         Me.Label31.Name = "Label31"
-        Me.Label31.Size = New System.Drawing.Size(34, 20)
+        Me.Label31.Size = New System.Drawing.Size(25, 13)
         Me.Label31.TabIndex = 24
         Me.Label31.Text = "[kg]"
         '
         'Label35
         '
         Me.Label35.AutoSize = true
-        Me.Label35.Location = New System.Drawing.Point(366, 9)
-        Me.Label35.Margin = New System.Windows.Forms.Padding(4, 0, 4, 0)
+        Me.Label35.Location = New System.Drawing.Point(244, 6)
         Me.Label35.Name = "Label35"
-        Me.Label35.Size = New System.Drawing.Size(43, 20)
+        Me.Label35.Size = New System.Drawing.Size(29, 13)
         Me.Label35.TabIndex = 24
         Me.Label35.Text = "[mm]"
         '
@@ -351,20 +367,18 @@ Partial Class VehicleForm
         Me.CbCdMode.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
         Me.CbCdMode.FormattingEnabled = true
         Me.CbCdMode.Items.AddRange(New Object() {"No Correction", "Speed dependent (User-defined)", "Speed dependent (Declaration Mode)", "Vair & Beta Input"})
-        Me.CbCdMode.Location = New System.Drawing.Point(9, 29)
-        Me.CbCdMode.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
+        Me.CbCdMode.Location = New System.Drawing.Point(6, 19)
         Me.CbCdMode.Name = "CbCdMode"
-        Me.CbCdMode.Size = New System.Drawing.Size(398, 28)
+        Me.CbCdMode.Size = New System.Drawing.Size(267, 21)
         Me.CbCdMode.TabIndex = 0
         '
         'TbCdFile
         '
         Me.TbCdFile.Anchor = System.Windows.Forms.AnchorStyles.None
         Me.TbCdFile.Enabled = false
-        Me.TbCdFile.Location = New System.Drawing.Point(14, 100)
-        Me.TbCdFile.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
+        Me.TbCdFile.Location = New System.Drawing.Point(9, 65)
         Me.TbCdFile.Name = "TbCdFile"
-        Me.TbCdFile.Size = New System.Drawing.Size(313, 26)
+        Me.TbCdFile.Size = New System.Drawing.Size(210, 20)
         Me.TbCdFile.TabIndex = 1
         '
         'BtCdFileBrowse
@@ -372,10 +386,9 @@ Partial Class VehicleForm
         Me.BtCdFileBrowse.Anchor = System.Windows.Forms.AnchorStyles.None
         Me.BtCdFileBrowse.Enabled = false
         Me.BtCdFileBrowse.Image = Global.TUGraz.VECTO.My.Resources.Resources.Open_icon
-        Me.BtCdFileBrowse.Location = New System.Drawing.Point(338, 95)
-        Me.BtCdFileBrowse.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
+        Me.BtCdFileBrowse.Location = New System.Drawing.Point(225, 62)
         Me.BtCdFileBrowse.Name = "BtCdFileBrowse"
-        Me.BtCdFileBrowse.Size = New System.Drawing.Size(36, 37)
+        Me.BtCdFileBrowse.Size = New System.Drawing.Size(24, 24)
         Me.BtCdFileBrowse.TabIndex = 2
         Me.BtCdFileBrowse.UseVisualStyleBackColor = true
         '
@@ -386,11 +399,9 @@ Partial Class VehicleForm
         Me.GroupBox6.Controls.Add(Me.CbCdMode)
         Me.GroupBox6.Controls.Add(Me.BtCdFileBrowse)
         Me.GroupBox6.Controls.Add(Me.TbCdFile)
-        Me.GroupBox6.Location = New System.Drawing.Point(435, 129)
-        Me.GroupBox6.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
+        Me.GroupBox6.Location = New System.Drawing.Point(290, 84)
         Me.GroupBox6.Name = "GroupBox6"
-        Me.GroupBox6.Padding = New System.Windows.Forms.Padding(4, 5, 4, 5)
-        Me.GroupBox6.Size = New System.Drawing.Size(422, 148)
+        Me.GroupBox6.Size = New System.Drawing.Size(281, 96)
         Me.GroupBox6.TabIndex = 5
         Me.GroupBox6.TabStop = false
         Me.GroupBox6.Text = "Cross Wind Correction"
@@ -400,10 +411,9 @@ Partial Class VehicleForm
         Me.BtCdFileOpen.Anchor = System.Windows.Forms.AnchorStyles.None
         Me.BtCdFileOpen.Enabled = false
         Me.BtCdFileOpen.Image = Global.TUGraz.VECTO.My.Resources.Resources.application_export_icon_small
-        Me.BtCdFileOpen.Location = New System.Drawing.Point(374, 95)
-        Me.BtCdFileOpen.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
+        Me.BtCdFileOpen.Location = New System.Drawing.Point(249, 62)
         Me.BtCdFileOpen.Name = "BtCdFileOpen"
-        Me.BtCdFileOpen.Size = New System.Drawing.Size(36, 37)
+        Me.BtCdFileOpen.Size = New System.Drawing.Size(24, 24)
         Me.BtCdFileOpen.TabIndex = 3
         Me.BtCdFileOpen.TabStop = false
         Me.BtCdFileOpen.UseVisualStyleBackColor = true
@@ -411,10 +421,9 @@ Partial Class VehicleForm
         'LbCdMode
         '
         Me.LbCdMode.AutoSize = true
-        Me.LbCdMode.Location = New System.Drawing.Point(9, 72)
-        Me.LbCdMode.Margin = New System.Windows.Forms.Padding(4, 0, 4, 0)
+        Me.LbCdMode.Location = New System.Drawing.Point(6, 47)
         Me.LbCdMode.Name = "LbCdMode"
-        Me.LbCdMode.Size = New System.Drawing.Size(87, 20)
+        Me.LbCdMode.Size = New System.Drawing.Size(59, 13)
         Me.LbCdMode.TabIndex = 28
         Me.LbCdMode.Text = "LbCdMode"
         Me.LbCdMode.TextAlign = System.Drawing.ContentAlignment.TopRight
@@ -426,8 +435,8 @@ Partial Class VehicleForm
         Me.ToolStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.ToolStripBtNew, Me.ToolStripBtOpen, Me.ToolStripBtSave, Me.ToolStripBtSaveAs, Me.ToolStripSeparator3, Me.ToolStripBtSendTo, Me.ToolStripSeparator1, Me.ToolStripButton1})
         Me.ToolStrip1.Location = New System.Drawing.Point(0, 0)
         Me.ToolStrip1.Name = "ToolStrip1"
-        Me.ToolStrip1.Padding = New System.Windows.Forms.Padding(0, 0, 3, 0)
-        Me.ToolStrip1.Size = New System.Drawing.Size(898, 31)
+        Me.ToolStrip1.Padding = New System.Windows.Forms.Padding(0, 0, 2, 0)
+        Me.ToolStrip1.Size = New System.Drawing.Size(666, 31)
         Me.ToolStrip1.TabIndex = 29
         Me.ToolStrip1.Text = "ToolStrip1"
         '
@@ -504,11 +513,9 @@ Partial Class VehicleForm
         '
         Me.GroupBox7.Controls.Add(Me.PnRt)
         Me.GroupBox7.Controls.Add(Me.CbRtType)
-        Me.GroupBox7.Location = New System.Drawing.Point(9, 117)
-        Me.GroupBox7.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
+        Me.GroupBox7.Location = New System.Drawing.Point(6, 76)
         Me.GroupBox7.Name = "GroupBox7"
-        Me.GroupBox7.Padding = New System.Windows.Forms.Padding(4, 5, 4, 5)
-        Me.GroupBox7.Size = New System.Drawing.Size(418, 171)
+        Me.GroupBox7.Size = New System.Drawing.Size(279, 111)
         Me.GroupBox7.TabIndex = 3
         Me.GroupBox7.TabStop = false
         Me.GroupBox7.Text = "Retarder Losses"
@@ -521,18 +528,16 @@ Partial Class VehicleForm
         Me.PnRt.Controls.Add(Me.Label45)
         Me.PnRt.Controls.Add(Me.LbRtRatio)
         Me.PnRt.Controls.Add(Me.TbRtRatio)
-        Me.PnRt.Location = New System.Drawing.Point(4, 65)
-        Me.PnRt.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
+        Me.PnRt.Location = New System.Drawing.Point(3, 42)
         Me.PnRt.Name = "PnRt"
-        Me.PnRt.Size = New System.Drawing.Size(402, 97)
+        Me.PnRt.Size = New System.Drawing.Size(268, 63)
         Me.PnRt.TabIndex = 1
         '
         'Label15
         '
-        Me.Label15.Location = New System.Drawing.Point(9, 35)
-        Me.Label15.Margin = New System.Windows.Forms.Padding(4, 0, 4, 0)
+        Me.Label15.Location = New System.Drawing.Point(6, 23)
         Me.Label15.Name = "Label15"
-        Me.Label15.Size = New System.Drawing.Size(302, 25)
+        Me.Label15.Size = New System.Drawing.Size(201, 16)
         Me.Label15.TabIndex = 15
         Me.Label15.Text = "Retarder Loss Map"
         Me.Label15.TextAlign = System.Drawing.ContentAlignment.BottomLeft
@@ -541,39 +546,35 @@ Partial Class VehicleForm
         '
         Me.BtRtBrowse.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left),System.Windows.Forms.AnchorStyles)
         Me.BtRtBrowse.Image = Global.TUGraz.VECTO.My.Resources.Resources.Open_icon
-        Me.BtRtBrowse.Location = New System.Drawing.Point(354, 60)
-        Me.BtRtBrowse.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
+        Me.BtRtBrowse.Location = New System.Drawing.Point(236, 39)
         Me.BtRtBrowse.Name = "BtRtBrowse"
-        Me.BtRtBrowse.Size = New System.Drawing.Size(36, 37)
+        Me.BtRtBrowse.Size = New System.Drawing.Size(24, 24)
         Me.BtRtBrowse.TabIndex = 14
         Me.BtRtBrowse.UseVisualStyleBackColor = true
         '
         'TbRtPath
         '
         Me.TbRtPath.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left),System.Windows.Forms.AnchorStyles)
-        Me.TbRtPath.Location = New System.Drawing.Point(9, 63)
-        Me.TbRtPath.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
+        Me.TbRtPath.Location = New System.Drawing.Point(6, 41)
         Me.TbRtPath.Name = "TbRtPath"
-        Me.TbRtPath.Size = New System.Drawing.Size(334, 26)
+        Me.TbRtPath.Size = New System.Drawing.Size(224, 20)
         Me.TbRtPath.TabIndex = 13
         '
         'Label45
         '
         Me.Label45.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right),System.Windows.Forms.AnchorStyles)
         Me.Label45.AutoSize = true
-        Me.Label45.Location = New System.Drawing.Point(348, 8)
-        Me.Label45.Margin = New System.Windows.Forms.Padding(4, 0, 4, 0)
+        Me.Label45.Location = New System.Drawing.Point(232, 5)
         Me.Label45.Name = "Label45"
-        Me.Label45.Size = New System.Drawing.Size(22, 20)
+        Me.Label45.Size = New System.Drawing.Size(16, 13)
         Me.Label45.TabIndex = 10
         Me.Label45.Text = "[-]"
         '
         'LbRtRatio
         '
-        Me.LbRtRatio.Location = New System.Drawing.Point(6, 8)
-        Me.LbRtRatio.Margin = New System.Windows.Forms.Padding(4, 0, 4, 0)
+        Me.LbRtRatio.Location = New System.Drawing.Point(4, 5)
         Me.LbRtRatio.Name = "LbRtRatio"
-        Me.LbRtRatio.Size = New System.Drawing.Size(250, 26)
+        Me.LbRtRatio.Size = New System.Drawing.Size(167, 17)
         Me.LbRtRatio.TabIndex = 5
         Me.LbRtRatio.Text = "Ratio"
         Me.LbRtRatio.TextAlign = System.Drawing.ContentAlignment.TopRight
@@ -581,10 +582,9 @@ Partial Class VehicleForm
         'TbRtRatio
         '
         Me.TbRtRatio.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right),System.Windows.Forms.AnchorStyles)
-        Me.TbRtRatio.Location = New System.Drawing.Point(261, 5)
-        Me.TbRtRatio.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
+        Me.TbRtRatio.Location = New System.Drawing.Point(174, 3)
         Me.TbRtRatio.Name = "TbRtRatio"
-        Me.TbRtRatio.Size = New System.Drawing.Size(82, 26)
+        Me.TbRtRatio.Size = New System.Drawing.Size(56, 20)
         Me.TbRtRatio.TabIndex = 0
         '
         'CbRtType
@@ -592,38 +592,34 @@ Partial Class VehicleForm
         Me.CbRtType.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
         Me.CbRtType.FormattingEnabled = true
         Me.CbRtType.Items.AddRange(New Object() {"Included in Transmission Loss Maps", "Primary Retarder", "Secondary Retarder"})
-        Me.CbRtType.Location = New System.Drawing.Point(9, 29)
-        Me.CbRtType.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
+        Me.CbRtType.Location = New System.Drawing.Point(6, 19)
         Me.CbRtType.Name = "CbRtType"
-        Me.CbRtType.Size = New System.Drawing.Size(397, 28)
+        Me.CbRtType.Size = New System.Drawing.Size(266, 21)
         Me.CbRtType.TabIndex = 0
         '
         'Label46
         '
         Me.Label46.AutoSize = true
-        Me.Label46.Location = New System.Drawing.Point(48, 8)
-        Me.Label46.Margin = New System.Windows.Forms.Padding(4, 0, 4, 0)
+        Me.Label46.Location = New System.Drawing.Point(32, 5)
         Me.Label46.Name = "Label46"
-        Me.Label46.Size = New System.Drawing.Size(213, 20)
+        Me.Label46.Size = New System.Drawing.Size(145, 13)
         Me.Label46.TabIndex = 31
         Me.Label46.Text = "Curb Mass Extra Trailer/Body"
         '
         'Label50
         '
         Me.Label50.AutoSize = true
-        Me.Label50.Location = New System.Drawing.Point(362, 8)
-        Me.Label50.Margin = New System.Windows.Forms.Padding(4, 0, 4, 0)
+        Me.Label50.Location = New System.Drawing.Point(241, 5)
         Me.Label50.Name = "Label50"
-        Me.Label50.Size = New System.Drawing.Size(34, 20)
+        Me.Label50.Size = New System.Drawing.Size(25, 13)
         Me.Label50.TabIndex = 24
         Me.Label50.Text = "[kg]"
         '
         'TbMassExtra
         '
-        Me.TbMassExtra.Location = New System.Drawing.Point(273, 3)
-        Me.TbMassExtra.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
+        Me.TbMassExtra.Location = New System.Drawing.Point(182, 2)
         Me.TbMassExtra.Name = "TbMassExtra"
-        Me.TbMassExtra.Size = New System.Drawing.Size(84, 26)
+        Me.TbMassExtra.Size = New System.Drawing.Size(57, 20)
         Me.TbMassExtra.TabIndex = 0
         '
         'GroupBox8
@@ -632,11 +628,9 @@ Partial Class VehicleForm
         Me.GroupBox8.Controls.Add(Me.ButAxlRem)
         Me.GroupBox8.Controls.Add(Me.LvRRC)
         Me.GroupBox8.Controls.Add(Me.ButAxlAdd)
-        Me.GroupBox8.Location = New System.Drawing.Point(9, 286)
-        Me.GroupBox8.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
+        Me.GroupBox8.Location = New System.Drawing.Point(6, 186)
         Me.GroupBox8.Name = "GroupBox8"
-        Me.GroupBox8.Padding = New System.Windows.Forms.Padding(4, 5, 4, 5)
-        Me.GroupBox8.Size = New System.Drawing.Size(846, 232)
+        Me.GroupBox8.Size = New System.Drawing.Size(564, 151)
         Me.GroupBox8.TabIndex = 2
         Me.GroupBox8.TabStop = false
         Me.GroupBox8.Text = "Axles / Wheels"
@@ -644,20 +638,18 @@ Partial Class VehicleForm
         'Label6
         '
         Me.Label6.AutoSize = true
-        Me.Label6.Location = New System.Drawing.Point(675, 186)
-        Me.Label6.Margin = New System.Windows.Forms.Padding(4, 0, 4, 0)
+        Me.Label6.Location = New System.Drawing.Point(450, 121)
         Me.Label6.Name = "Label6"
-        Me.Label6.Size = New System.Drawing.Size(158, 20)
+        Me.Label6.Size = New System.Drawing.Size(106, 13)
         Me.Label6.TabIndex = 3
         Me.Label6.Text = "(Double-Click to Edit)"
         '
         'ButAxlRem
         '
         Me.ButAxlRem.Image = Global.TUGraz.VECTO.My.Resources.Resources.minus_circle_icon
-        Me.ButAxlRem.Location = New System.Drawing.Point(44, 188)
-        Me.ButAxlRem.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
+        Me.ButAxlRem.Location = New System.Drawing.Point(29, 122)
         Me.ButAxlRem.Name = "ButAxlRem"
-        Me.ButAxlRem.Size = New System.Drawing.Size(36, 37)
+        Me.ButAxlRem.Size = New System.Drawing.Size(24, 24)
         Me.ButAxlRem.TabIndex = 2
         Me.ButAxlRem.UseVisualStyleBackColor = true
         '
@@ -669,11 +661,10 @@ Partial Class VehicleForm
         Me.LvRRC.FullRowSelect = true
         Me.LvRRC.GridLines = true
         Me.LvRRC.HideSelection = false
-        Me.LvRRC.Location = New System.Drawing.Point(9, 29)
-        Me.LvRRC.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
+        Me.LvRRC.Location = New System.Drawing.Point(6, 19)
         Me.LvRRC.MultiSelect = false
         Me.LvRRC.Name = "LvRRC"
-        Me.LvRRC.Size = New System.Drawing.Size(826, 155)
+        Me.LvRRC.Size = New System.Drawing.Size(552, 102)
         Me.LvRRC.TabIndex = 0
         Me.LvRRC.TabStop = false
         Me.LvRRC.UseCompatibleStateImageBehavior = false
@@ -721,10 +712,9 @@ Partial Class VehicleForm
         'ButAxlAdd
         '
         Me.ButAxlAdd.Image = Global.TUGraz.VECTO.My.Resources.Resources.plus_circle_icon
-        Me.ButAxlAdd.Location = New System.Drawing.Point(8, 188)
-        Me.ButAxlAdd.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
+        Me.ButAxlAdd.Location = New System.Drawing.Point(5, 122)
         Me.ButAxlAdd.Name = "ButAxlAdd"
-        Me.ButAxlAdd.Size = New System.Drawing.Size(36, 37)
+        Me.ButAxlAdd.Size = New System.Drawing.Size(24, 24)
         Me.ButAxlAdd.TabIndex = 1
         Me.ButAxlAdd.UseVisualStyleBackColor = true
         '
@@ -734,10 +724,9 @@ Partial Class VehicleForm
         Me.PnWheelDiam.Controls.Add(Me.TBrdyn)
         Me.PnWheelDiam.Controls.Add(Me.Label35)
         Me.PnWheelDiam.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.PnWheelDiam.Location = New System.Drawing.Point(4, 24)
-        Me.PnWheelDiam.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
+        Me.PnWheelDiam.Location = New System.Drawing.Point(3, 16)
         Me.PnWheelDiam.Name = "PnWheelDiam"
-        Me.PnWheelDiam.Size = New System.Drawing.Size(409, 48)
+        Me.PnWheelDiam.Size = New System.Drawing.Size(272, 31)
         Me.PnWheelDiam.TabIndex = 5
         '
         'CbAxleConfig
@@ -745,10 +734,9 @@ Partial Class VehicleForm
         Me.CbAxleConfig.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
         Me.CbAxleConfig.FormattingEnabled = true
         Me.CbAxleConfig.Items.AddRange(New Object() {"-", "4x2", "4x4", "6x2", "6x4", "6x6", "8x2", "8x4", "8x6", "8x8"})
-        Me.CbAxleConfig.Location = New System.Drawing.Point(230, 123)
-        Me.CbAxleConfig.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
+        Me.CbAxleConfig.Location = New System.Drawing.Point(153, 80)
         Me.CbAxleConfig.Name = "CbAxleConfig"
-        Me.CbAxleConfig.Size = New System.Drawing.Size(88, 28)
+        Me.CbAxleConfig.Size = New System.Drawing.Size(60, 21)
         Me.CbAxleConfig.TabIndex = 1
         '
         'CbCat
@@ -756,49 +744,44 @@ Partial Class VehicleForm
         Me.CbCat.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
         Me.CbCat.FormattingEnabled = true
         Me.CbCat.Items.AddRange(New Object() {"-", "Rigid Truck", "Tractor", "City Bus", "Interurban Bus", "Coach"})
-        Me.CbCat.Location = New System.Drawing.Point(18, 123)
-        Me.CbCat.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
+        Me.CbCat.Location = New System.Drawing.Point(12, 80)
         Me.CbCat.Name = "CbCat"
-        Me.CbCat.Size = New System.Drawing.Size(200, 28)
+        Me.CbCat.Size = New System.Drawing.Size(135, 21)
         Me.CbCat.TabIndex = 0
         '
         'Label5
         '
         Me.Label5.AutoSize = true
-        Me.Label5.Location = New System.Drawing.Point(46, 166)
-        Me.Label5.Margin = New System.Windows.Forms.Padding(4, 0, 4, 0)
+        Me.Label5.Location = New System.Drawing.Point(31, 108)
         Me.Label5.Name = "Label5"
-        Me.Label5.Size = New System.Drawing.Size(170, 20)
+        Me.Label5.Size = New System.Drawing.Size(116, 13)
         Me.Label5.TabIndex = 2
         Me.Label5.Text = "Technically Permissible"
         '
         'Label9
         '
         Me.Label9.AutoSize = true
-        Me.Label9.Location = New System.Drawing.Point(296, 175)
-        Me.Label9.Margin = New System.Windows.Forms.Padding(4, 0, 4, 0)
+        Me.Label9.Location = New System.Drawing.Point(197, 114)
         Me.Label9.Name = "Label9"
-        Me.Label9.Size = New System.Drawing.Size(22, 20)
+        Me.Label9.Size = New System.Drawing.Size(16, 13)
         Me.Label9.TabIndex = 3
         Me.Label9.Text = "[t]"
         Me.Label9.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
         '
         'TbMassMass
         '
-        Me.TbMassMass.Location = New System.Drawing.Point(230, 171)
-        Me.TbMassMass.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
+        Me.TbMassMass.Location = New System.Drawing.Point(153, 111)
         Me.TbMassMass.Name = "TbMassMass"
-        Me.TbMassMass.Size = New System.Drawing.Size(61, 26)
+        Me.TbMassMass.Size = New System.Drawing.Size(42, 20)
         Me.TbMassMass.TabIndex = 2
         '
         'StatusStrip1
         '
         Me.StatusStrip1.ImageScalingSize = New System.Drawing.Size(24, 24)
         Me.StatusStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.LbStatus})
-        Me.StatusStrip1.Location = New System.Drawing.Point(0, 913)
+        Me.StatusStrip1.Location = New System.Drawing.Point(0, 586)
         Me.StatusStrip1.Name = "StatusStrip1"
-        Me.StatusStrip1.Padding = New System.Windows.Forms.Padding(2, 0, 21, 0)
-        Me.StatusStrip1.Size = New System.Drawing.Size(898, 22)
+        Me.StatusStrip1.Size = New System.Drawing.Size(666, 22)
         Me.StatusStrip1.SizingGrip = false
         Me.StatusStrip1.TabIndex = 36
         Me.StatusStrip1.Text = "StatusStrip1"
@@ -811,11 +794,10 @@ Partial Class VehicleForm
         '
         'TbHDVclass
         '
-        Me.TbHDVclass.Location = New System.Drawing.Point(230, 217)
-        Me.TbHDVclass.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
+        Me.TbHDVclass.Location = New System.Drawing.Point(153, 141)
         Me.TbHDVclass.Name = "TbHDVclass"
         Me.TbHDVclass.ReadOnly = true
-        Me.TbHDVclass.Size = New System.Drawing.Size(61, 26)
+        Me.TbHDVclass.Size = New System.Drawing.Size(42, 20)
         Me.TbHDVclass.TabIndex = 3
         Me.TbHDVclass.TabStop = false
         Me.TbHDVclass.TextAlign = System.Windows.Forms.HorizontalAlignment.Center
@@ -826,11 +808,9 @@ Partial Class VehicleForm
         Me.GroupBox1.Controls.Add(Me.TbMass)
         Me.GroupBox1.Controls.Add(Me.Label1)
         Me.GroupBox1.Controls.Add(Me.Label14)
-        Me.GroupBox1.Location = New System.Drawing.Point(9, 9)
-        Me.GroupBox1.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
+        Me.GroupBox1.Location = New System.Drawing.Point(6, 6)
         Me.GroupBox1.Name = "GroupBox1"
-        Me.GroupBox1.Padding = New System.Windows.Forms.Padding(4, 5, 4, 5)
-        Me.GroupBox1.Size = New System.Drawing.Size(417, 182)
+        Me.GroupBox1.Size = New System.Drawing.Size(278, 118)
         Me.GroupBox1.TabIndex = 0
         Me.GroupBox1.TabStop = false
         Me.GroupBox1.Text = "Masses / Loading"
@@ -843,20 +823,17 @@ Partial Class VehicleForm
         Me.PnLoad.Controls.Add(Me.TbMassExtra)
         Me.PnLoad.Controls.Add(Me.Label50)
         Me.PnLoad.Controls.Add(Me.Label46)
-        Me.PnLoad.Location = New System.Drawing.Point(9, 66)
-        Me.PnLoad.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
+        Me.PnLoad.Location = New System.Drawing.Point(6, 43)
         Me.PnLoad.Name = "PnLoad"
-        Me.PnLoad.Size = New System.Drawing.Size(404, 89)
+        Me.PnLoad.Size = New System.Drawing.Size(269, 58)
         Me.PnLoad.TabIndex = 1
         '
         'GrAirRes
         '
         Me.GrAirRes.Controls.Add(Me.PnCdATrTr)
-        Me.GrAirRes.Location = New System.Drawing.Point(435, 9)
-        Me.GrAirRes.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
+        Me.GrAirRes.Location = New System.Drawing.Point(290, 6)
         Me.GrAirRes.Name = "GrAirRes"
-        Me.GrAirRes.Padding = New System.Windows.Forms.Padding(4, 5, 4, 5)
-        Me.GrAirRes.Size = New System.Drawing.Size(420, 111)
+        Me.GrAirRes.Size = New System.Drawing.Size(280, 72)
         Me.GrAirRes.TabIndex = 1
         Me.GrAirRes.TabStop = false
         Me.GrAirRes.Text = "Air Resistance"
@@ -870,47 +847,42 @@ Partial Class VehicleForm
         Me.PnCdATrTr.Controls.Add(Me.Label38)
         Me.PnCdATrTr.Controls.Add(Me.Label3)
         Me.PnCdATrTr.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.PnCdATrTr.Location = New System.Drawing.Point(4, 24)
-        Me.PnCdATrTr.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
+        Me.PnCdATrTr.Location = New System.Drawing.Point(3, 16)
         Me.PnCdATrTr.Name = "PnCdATrTr"
-        Me.PnCdATrTr.Size = New System.Drawing.Size(412, 82)
+        Me.PnCdATrTr.Size = New System.Drawing.Size(274, 53)
         Me.PnCdATrTr.TabIndex = 0
         '
         'tbVehicleHeight
         '
-        Me.tbVehicleHeight.Location = New System.Drawing.Point(178, 45)
-        Me.tbVehicleHeight.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
+        Me.tbVehicleHeight.Location = New System.Drawing.Point(119, 29)
         Me.tbVehicleHeight.Name = "tbVehicleHeight"
-        Me.tbVehicleHeight.Size = New System.Drawing.Size(84, 26)
+        Me.tbVehicleHeight.Size = New System.Drawing.Size(57, 20)
         Me.tbVehicleHeight.TabIndex = 25
         '
         'Label11
         '
         Me.Label11.AutoSize = true
-        Me.Label11.Location = New System.Drawing.Point(273, 49)
-        Me.Label11.Margin = New System.Windows.Forms.Padding(4, 0, 4, 0)
+        Me.Label11.Location = New System.Drawing.Point(182, 32)
         Me.Label11.Name = "Label11"
-        Me.Label11.Size = New System.Drawing.Size(30, 20)
+        Me.Label11.Size = New System.Drawing.Size(21, 13)
         Me.Label11.TabIndex = 27
         Me.Label11.Text = "[m]"
         '
         'Label20
         '
         Me.Label20.AutoSize = true
-        Me.Label20.Location = New System.Drawing.Point(112, 49)
-        Me.Label20.Margin = New System.Windows.Forms.Padding(4, 0, 4, 0)
+        Me.Label20.Location = New System.Drawing.Point(75, 32)
         Me.Label20.Name = "Label20"
-        Me.Label20.Size = New System.Drawing.Size(56, 20)
+        Me.Label20.Size = New System.Drawing.Size(38, 13)
         Me.Label20.TabIndex = 26
         Me.Label20.Text = "Height"
         '
         'Label38
         '
         Me.Label38.AutoSize = true
-        Me.Label38.Location = New System.Drawing.Point(273, 9)
-        Me.Label38.Margin = New System.Windows.Forms.Padding(4, 0, 4, 0)
+        Me.Label38.Location = New System.Drawing.Point(182, 6)
         Me.Label38.Name = "Label38"
-        Me.Label38.Size = New System.Drawing.Size(35, 20)
+        Me.Label38.Size = New System.Drawing.Size(24, 13)
         Me.Label38.TabIndex = 24
         Me.Label38.Text = "[m²]"
         '
@@ -918,10 +890,9 @@ Partial Class VehicleForm
         '
         Me.PictureBox1.BackColor = System.Drawing.Color.White
         Me.PictureBox1.Image = Global.TUGraz.VECTO.My.Resources.Resources.VECTO_VEH
-        Me.PictureBox1.Location = New System.Drawing.Point(0, 43)
-        Me.PictureBox1.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
+        Me.PictureBox1.Location = New System.Drawing.Point(0, 28)
         Me.PictureBox1.Name = "PictureBox1"
-        Me.PictureBox1.Size = New System.Drawing.Size(906, 62)
+        Me.PictureBox1.Size = New System.Drawing.Size(604, 40)
         Me.PictureBox1.TabIndex = 37
         Me.PictureBox1.TabStop = false
         '
@@ -945,116 +916,12 @@ Partial Class VehicleForm
         Me.ShowInFolderToolStripMenuItem.Size = New System.Drawing.Size(127, 22)
         Me.ShowInFolderToolStripMenuItem.Text = "Show in Folder"
         '
-        'gbPTO
-        '
-        Me.gbPTO.Controls.Add(Me.pnPTO)
-        Me.gbPTO.Controls.Add(Me.cbPTOType)
-        Me.gbPTO.Location = New System.Drawing.Point(9, 297)
-        Me.gbPTO.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
-        Me.gbPTO.Name = "gbPTO"
-        Me.gbPTO.Padding = New System.Windows.Forms.Padding(4, 5, 4, 5)
-        Me.gbPTO.Size = New System.Drawing.Size(846, 132)
-        Me.gbPTO.TabIndex = 4
-        Me.gbPTO.TabStop = false
-        Me.gbPTO.Text = "PTO Transmission"
-        '
-        'pnPTO
-        '
-        Me.pnPTO.Controls.Add(Me.btPTOCycle)
-        Me.pnPTO.Controls.Add(Me.Label16)
-        Me.pnPTO.Controls.Add(Me.tbPTOCycle)
-        Me.pnPTO.Controls.Add(Me.btPTOLossMapBrowse)
-        Me.pnPTO.Controls.Add(Me.Label7)
-        Me.pnPTO.Controls.Add(Me.tbPTOLossMap)
-        Me.pnPTO.Dock = System.Windows.Forms.DockStyle.Bottom
-        Me.pnPTO.Location = New System.Drawing.Point(4, 64)
-        Me.pnPTO.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
-        Me.pnPTO.Name = "pnPTO"
-        Me.pnPTO.Size = New System.Drawing.Size(838, 63)
-        Me.pnPTO.TabIndex = 4
-        '
-        'btPTOCycle
-        '
-        Me.btPTOCycle.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left),System.Windows.Forms.AnchorStyles)
-        Me.btPTOCycle.Image = Global.TUGraz.VECTO.My.Resources.Resources.Open_icon
-        Me.btPTOCycle.Location = New System.Drawing.Point(794, 25)
-        Me.btPTOCycle.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
-        Me.btPTOCycle.Name = "btPTOCycle"
-        Me.btPTOCycle.Size = New System.Drawing.Size(36, 37)
-        Me.btPTOCycle.TabIndex = 17
-        Me.btPTOCycle.UseVisualStyleBackColor = true
-        '
-        'Label16
-        '
-        Me.Label16.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left),System.Windows.Forms.AnchorStyles)
-        Me.Label16.Location = New System.Drawing.Point(430, -2)
-        Me.Label16.Margin = New System.Windows.Forms.Padding(4, 0, 4, 0)
-        Me.Label16.Name = "Label16"
-        Me.Label16.Size = New System.Drawing.Size(302, 25)
-        Me.Label16.TabIndex = 18
-        Me.Label16.Text = "PTO Cycle (.vptoc)"
-        Me.Label16.TextAlign = System.Drawing.ContentAlignment.BottomLeft
-        '
-        'tbPTOCycle
-        '
-        Me.tbPTOCycle.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left),System.Windows.Forms.AnchorStyles)
-        Me.tbPTOCycle.Location = New System.Drawing.Point(435, 28)
-        Me.tbPTOCycle.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
-        Me.tbPTOCycle.Name = "tbPTOCycle"
-        Me.tbPTOCycle.Size = New System.Drawing.Size(356, 26)
-        Me.tbPTOCycle.TabIndex = 16
-        Me.ToolTip1.SetToolTip(Me.tbPTOCycle, "PTO Consumer Loss Map")
-        '
-        'btPTOLossMapBrowse
-        '
-        Me.btPTOLossMapBrowse.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left),System.Windows.Forms.AnchorStyles)
-        Me.btPTOLossMapBrowse.Image = Global.TUGraz.VECTO.My.Resources.Resources.Open_icon
-        Me.btPTOLossMapBrowse.Location = New System.Drawing.Point(368, 25)
-        Me.btPTOLossMapBrowse.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
-        Me.btPTOLossMapBrowse.Name = "btPTOLossMapBrowse"
-        Me.btPTOLossMapBrowse.Size = New System.Drawing.Size(36, 37)
-        Me.btPTOLossMapBrowse.TabIndex = 14
-        Me.btPTOLossMapBrowse.UseVisualStyleBackColor = true
-        '
-        'Label7
-        '
-        Me.Label7.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left),System.Windows.Forms.AnchorStyles)
-        Me.Label7.Location = New System.Drawing.Point(4, -2)
-        Me.Label7.Margin = New System.Windows.Forms.Padding(4, 0, 4, 0)
-        Me.Label7.Name = "Label7"
-        Me.Label7.Size = New System.Drawing.Size(302, 25)
-        Me.Label7.TabIndex = 15
-        Me.Label7.Text = "PTO Consumer Loss Map (.vptol)"
-        Me.Label7.TextAlign = System.Drawing.ContentAlignment.BottomLeft
-        '
-        'tbPTOLossMap
-        '
-        Me.tbPTOLossMap.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left),System.Windows.Forms.AnchorStyles)
-        Me.tbPTOLossMap.Location = New System.Drawing.Point(9, 28)
-        Me.tbPTOLossMap.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
-        Me.tbPTOLossMap.Name = "tbPTOLossMap"
-        Me.tbPTOLossMap.Size = New System.Drawing.Size(356, 26)
-        Me.tbPTOLossMap.TabIndex = 13
-        Me.ToolTip1.SetToolTip(Me.tbPTOLossMap, "PTO Consumer Loss Map")
-        '
-        'cbPTOType
-        '
-        Me.cbPTOType.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
-        Me.cbPTOType.Location = New System.Drawing.Point(9, 26)
-        Me.cbPTOType.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
-        Me.cbPTOType.Name = "cbPTOType"
-        Me.cbPTOType.Size = New System.Drawing.Size(823, 28)
-        Me.cbPTOType.TabIndex = 0
-        Me.ToolTip1.SetToolTip(Me.cbPTOType, "Transmission type to the PTO consumer")
-        '
         'GroupBox3
         '
         Me.GroupBox3.Controls.Add(Me.PnWheelDiam)
-        Me.GroupBox3.Location = New System.Drawing.Point(9, 200)
-        Me.GroupBox3.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
+        Me.GroupBox3.Location = New System.Drawing.Point(6, 130)
         Me.GroupBox3.Name = "GroupBox3"
-        Me.GroupBox3.Padding = New System.Windows.Forms.Padding(4, 5, 4, 5)
-        Me.GroupBox3.Size = New System.Drawing.Size(417, 77)
+        Me.GroupBox3.Size = New System.Drawing.Size(278, 50)
         Me.GroupBox3.TabIndex = 6
         Me.GroupBox3.TabStop = false
         Me.GroupBox3.Text = "Dynamic Tyre Radius"
@@ -1063,11 +930,9 @@ Partial Class VehicleForm
         '
         Me.GroupBox2.Controls.Add(Me.pnAngledriveFields)
         Me.GroupBox2.Controls.Add(Me.cbAngledriveType)
-        Me.GroupBox2.Location = New System.Drawing.Point(436, 117)
-        Me.GroupBox2.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
+        Me.GroupBox2.Location = New System.Drawing.Point(291, 76)
         Me.GroupBox2.Name = "GroupBox2"
-        Me.GroupBox2.Padding = New System.Windows.Forms.Padding(4, 5, 4, 5)
-        Me.GroupBox2.Size = New System.Drawing.Size(423, 171)
+        Me.GroupBox2.Size = New System.Drawing.Size(282, 111)
         Me.GroupBox2.TabIndex = 4
         Me.GroupBox2.TabStop = false
         Me.GroupBox2.Text = "Angledrive"
@@ -1080,39 +945,35 @@ Partial Class VehicleForm
         Me.pnAngledriveFields.Controls.Add(Me.tbAngledriveRatio)
         Me.pnAngledriveFields.Controls.Add(Me.btAngledriveLossMapBrowse)
         Me.pnAngledriveFields.Controls.Add(Me.tbAngledriveLossMapPath)
-        Me.pnAngledriveFields.Location = New System.Drawing.Point(4, 65)
-        Me.pnAngledriveFields.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
+        Me.pnAngledriveFields.Location = New System.Drawing.Point(3, 42)
         Me.pnAngledriveFields.Name = "pnAngledriveFields"
-        Me.pnAngledriveFields.Size = New System.Drawing.Size(408, 97)
+        Me.pnAngledriveFields.Size = New System.Drawing.Size(272, 63)
         Me.pnAngledriveFields.TabIndex = 6
         '
         'Label4
         '
         Me.Label4.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right),System.Windows.Forms.AnchorStyles)
         Me.Label4.AutoSize = true
-        Me.Label4.Location = New System.Drawing.Point(369, 9)
-        Me.Label4.Margin = New System.Windows.Forms.Padding(4, 0, 4, 0)
+        Me.Label4.Location = New System.Drawing.Point(246, 6)
         Me.Label4.Name = "Label4"
-        Me.Label4.Size = New System.Drawing.Size(22, 20)
+        Me.Label4.Size = New System.Drawing.Size(16, 13)
         Me.Label4.TabIndex = 16
         Me.Label4.Text = "[-]"
         '
         'Label12
         '
-        Me.Label12.Location = New System.Drawing.Point(9, 35)
-        Me.Label12.Margin = New System.Windows.Forms.Padding(4, 0, 4, 0)
+        Me.Label12.Location = New System.Drawing.Point(6, 23)
         Me.Label12.Name = "Label12"
-        Me.Label12.Size = New System.Drawing.Size(394, 25)
+        Me.Label12.Size = New System.Drawing.Size(263, 16)
         Me.Label12.TabIndex = 17
         Me.Label12.Text = "Transmission Loss Map or Efficiency Value [0..1]"
         Me.Label12.TextAlign = System.Drawing.ContentAlignment.BottomLeft
         '
         'Label10
         '
-        Me.Label10.Location = New System.Drawing.Point(208, 9)
-        Me.Label10.Margin = New System.Windows.Forms.Padding(4, 0, 4, 0)
+        Me.Label10.Location = New System.Drawing.Point(139, 6)
         Me.Label10.Name = "Label10"
-        Me.Label10.Size = New System.Drawing.Size(66, 28)
+        Me.Label10.Size = New System.Drawing.Size(44, 18)
         Me.Label10.TabIndex = 15
         Me.Label10.Text = "Ratio"
         Me.Label10.TextAlign = System.Drawing.ContentAlignment.TopRight
@@ -1120,50 +981,45 @@ Partial Class VehicleForm
         'tbAngledriveRatio
         '
         Me.tbAngledriveRatio.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right),System.Windows.Forms.AnchorStyles)
-        Me.tbAngledriveRatio.Location = New System.Drawing.Point(282, 6)
-        Me.tbAngledriveRatio.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
+        Me.tbAngledriveRatio.Location = New System.Drawing.Point(188, 4)
         Me.tbAngledriveRatio.Name = "tbAngledriveRatio"
-        Me.tbAngledriveRatio.Size = New System.Drawing.Size(82, 26)
+        Me.tbAngledriveRatio.Size = New System.Drawing.Size(56, 20)
         Me.tbAngledriveRatio.TabIndex = 12
         '
         'btAngledriveLossMapBrowse
         '
         Me.btAngledriveLossMapBrowse.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left),System.Windows.Forms.AnchorStyles)
         Me.btAngledriveLossMapBrowse.Image = Global.TUGraz.VECTO.My.Resources.Resources.Open_icon
-        Me.btAngledriveLossMapBrowse.Location = New System.Drawing.Point(368, 60)
-        Me.btAngledriveLossMapBrowse.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
+        Me.btAngledriveLossMapBrowse.Location = New System.Drawing.Point(245, 39)
         Me.btAngledriveLossMapBrowse.Name = "btAngledriveLossMapBrowse"
-        Me.btAngledriveLossMapBrowse.Size = New System.Drawing.Size(36, 37)
+        Me.btAngledriveLossMapBrowse.Size = New System.Drawing.Size(24, 24)
         Me.btAngledriveLossMapBrowse.TabIndex = 14
         Me.btAngledriveLossMapBrowse.UseVisualStyleBackColor = true
         '
         'tbAngledriveLossMapPath
         '
         Me.tbAngledriveLossMapPath.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left),System.Windows.Forms.AnchorStyles)
-        Me.tbAngledriveLossMapPath.Location = New System.Drawing.Point(9, 63)
-        Me.tbAngledriveLossMapPath.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
+        Me.tbAngledriveLossMapPath.Location = New System.Drawing.Point(6, 41)
         Me.tbAngledriveLossMapPath.Name = "tbAngledriveLossMapPath"
-        Me.tbAngledriveLossMapPath.Size = New System.Drawing.Size(356, 26)
+        Me.tbAngledriveLossMapPath.Size = New System.Drawing.Size(239, 20)
         Me.tbAngledriveLossMapPath.TabIndex = 13
         '
         'cbAngledriveType
         '
         Me.cbAngledriveType.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
         Me.cbAngledriveType.FormattingEnabled = true
-        Me.cbAngledriveType.Location = New System.Drawing.Point(9, 29)
-        Me.cbAngledriveType.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
+        Me.cbAngledriveType.Location = New System.Drawing.Point(6, 19)
         Me.cbAngledriveType.Name = "cbAngledriveType"
-        Me.cbAngledriveType.Size = New System.Drawing.Size(397, 28)
+        Me.cbAngledriveType.Size = New System.Drawing.Size(266, 21)
         Me.cbAngledriveType.TabIndex = 0
         '
         'PicVehicle
         '
         Me.PicVehicle.BackColor = System.Drawing.Color.LightGray
         Me.PicVehicle.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
-        Me.PicVehicle.Location = New System.Drawing.Point(422, 108)
-        Me.PicVehicle.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
+        Me.PicVehicle.Location = New System.Drawing.Point(281, 70)
         Me.PicVehicle.Name = "PicVehicle"
-        Me.PicVehicle.Size = New System.Drawing.Size(449, 134)
+        Me.PicVehicle.Size = New System.Drawing.Size(300, 88)
         Me.PicVehicle.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage
         Me.PicVehicle.TabIndex = 39
         Me.PicVehicle.TabStop = false
@@ -1171,12 +1027,44 @@ Partial Class VehicleForm
         'Label8
         '
         Me.Label8.AutoSize = true
-        Me.Label8.Location = New System.Drawing.Point(128, 222)
-        Me.Label8.Margin = New System.Windows.Forms.Padding(4, 0, 4, 0)
+        Me.Label8.Location = New System.Drawing.Point(85, 144)
         Me.Label8.Name = "Label8"
-        Me.Label8.Size = New System.Drawing.Size(93, 20)
+        Me.Label8.Size = New System.Drawing.Size(62, 13)
         Me.Label8.TabIndex = 10
         Me.Label8.Text = "HDV Group"
+        '
+        'cbPTOType
+        '
+        Me.cbPTOType.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
+        Me.cbPTOType.Location = New System.Drawing.Point(6, 17)
+        Me.cbPTOType.Name = "cbPTOType"
+        Me.cbPTOType.Size = New System.Drawing.Size(550, 21)
+        Me.cbPTOType.TabIndex = 0
+        Me.ToolTip1.SetToolTip(Me.cbPTOType, "Transmission type to the PTO consumer")
+        '
+        'tbPTOCycle
+        '
+        Me.tbPTOCycle.Location = New System.Drawing.Point(6, 71)
+        Me.tbPTOCycle.Name = "tbPTOCycle"
+        Me.tbPTOCycle.Size = New System.Drawing.Size(239, 20)
+        Me.tbPTOCycle.TabIndex = 16
+        Me.ToolTip1.SetToolTip(Me.tbPTOCycle, "PTO Consumer Loss Map")
+        '
+        'tbPTOLossMap
+        '
+        Me.tbPTOLossMap.Location = New System.Drawing.Point(6, 24)
+        Me.tbPTOLossMap.Name = "tbPTOLossMap"
+        Me.tbPTOLossMap.Size = New System.Drawing.Size(239, 20)
+        Me.tbPTOLossMap.TabIndex = 13
+        Me.ToolTip1.SetToolTip(Me.tbPTOLossMap, "PTO Consumer Loss Map")
+        '
+        'tbPTODrive
+        '
+        Me.tbPTODrive.Location = New System.Drawing.Point(6, 183)
+        Me.tbPTODrive.Name = "tbPTODrive"
+        Me.tbPTODrive.Size = New System.Drawing.Size(239, 20)
+        Me.tbPTODrive.TabIndex = 19
+        Me.ToolTip1.SetToolTip(Me.tbPTODrive, "PTO Consumer Loss Map")
         '
         'tcVehicleComponents
         '
@@ -1185,11 +1073,11 @@ Partial Class VehicleForm
         Me.tcVehicleComponents.Controls.Add(Me.tpElectricComponents)
         Me.tcVehicleComponents.Controls.Add(Me.tpTorqueLimits)
         Me.tcVehicleComponents.Controls.Add(Me.tpADAS)
-        Me.tcVehicleComponents.Location = New System.Drawing.Point(9, 266)
-        Me.tcVehicleComponents.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
+        Me.tcVehicleComponents.Controls.Add(Me.tpRoadSweeper)
+        Me.tcVehicleComponents.Location = New System.Drawing.Point(6, 173)
         Me.tcVehicleComponents.Name = "tcVehicleComponents"
         Me.tcVehicleComponents.SelectedIndex = 0
-        Me.tcVehicleComponents.Size = New System.Drawing.Size(880, 586)
+        Me.tcVehicleComponents.Size = New System.Drawing.Size(656, 381)
         Me.tcVehicleComponents.TabIndex = 40
         '
         'tpGeneral
@@ -1199,11 +1087,10 @@ Partial Class VehicleForm
         Me.tpGeneral.Controls.Add(Me.GroupBox6)
         Me.tpGeneral.Controls.Add(Me.GroupBox8)
         Me.tpGeneral.Controls.Add(Me.GrAirRes)
-        Me.tpGeneral.Location = New System.Drawing.Point(4, 29)
-        Me.tpGeneral.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
+        Me.tpGeneral.Location = New System.Drawing.Point(4, 22)
         Me.tpGeneral.Name = "tpGeneral"
-        Me.tpGeneral.Padding = New System.Windows.Forms.Padding(4, 5, 4, 5)
-        Me.tpGeneral.Size = New System.Drawing.Size(872, 553)
+        Me.tpGeneral.Padding = New System.Windows.Forms.Padding(3)
+        Me.tpGeneral.Size = New System.Drawing.Size(648, 355)
         Me.tpGeneral.TabIndex = 0
         Me.tpGeneral.Text = "General"
         Me.tpGeneral.UseVisualStyleBackColor = true
@@ -1212,14 +1099,12 @@ Partial Class VehicleForm
         '
         Me.tpPowertrain.Controls.Add(Me.GroupBox4)
         Me.tpPowertrain.Controls.Add(Me.GroupBox9)
-        Me.tpPowertrain.Controls.Add(Me.gbPTO)
         Me.tpPowertrain.Controls.Add(Me.GroupBox7)
         Me.tpPowertrain.Controls.Add(Me.GroupBox2)
-        Me.tpPowertrain.Location = New System.Drawing.Point(4, 29)
-        Me.tpPowertrain.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
+        Me.tpPowertrain.Location = New System.Drawing.Point(4, 22)
         Me.tpPowertrain.Name = "tpPowertrain"
-        Me.tpPowertrain.Padding = New System.Windows.Forms.Padding(4, 5, 4, 5)
-        Me.tpPowertrain.Size = New System.Drawing.Size(872, 553)
+        Me.tpPowertrain.Padding = New System.Windows.Forms.Padding(3)
+        Me.tpPowertrain.Size = New System.Drawing.Size(648, 355)
         Me.tpPowertrain.TabIndex = 1
         Me.tpPowertrain.Text = "Powertrain"
         Me.tpPowertrain.UseVisualStyleBackColor = true
@@ -1227,11 +1112,9 @@ Partial Class VehicleForm
         'GroupBox4
         '
         Me.GroupBox4.Controls.Add(Me.Panel1)
-        Me.GroupBox4.Location = New System.Drawing.Point(9, 11)
-        Me.GroupBox4.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
+        Me.GroupBox4.Location = New System.Drawing.Point(6, 7)
         Me.GroupBox4.Name = "GroupBox4"
-        Me.GroupBox4.Padding = New System.Windows.Forms.Padding(4, 5, 4, 5)
-        Me.GroupBox4.Size = New System.Drawing.Size(418, 97)
+        Me.GroupBox4.Size = New System.Drawing.Size(279, 63)
         Me.GroupBox4.TabIndex = 6
         Me.GroupBox4.TabStop = false
         Me.GroupBox4.Text = "Vehicle Idling Speed"
@@ -1242,37 +1125,33 @@ Partial Class VehicleForm
         Me.Panel1.Controls.Add(Me.Label18)
         Me.Panel1.Controls.Add(Me.Label19)
         Me.Panel1.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.Panel1.Location = New System.Drawing.Point(4, 24)
-        Me.Panel1.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
+        Me.Panel1.Location = New System.Drawing.Point(3, 16)
         Me.Panel1.Name = "Panel1"
-        Me.Panel1.Size = New System.Drawing.Size(410, 68)
+        Me.Panel1.Size = New System.Drawing.Size(273, 44)
         Me.Panel1.TabIndex = 0
         '
         'tbVehIdlingSpeed
         '
-        Me.tbVehIdlingSpeed.Location = New System.Drawing.Point(260, 5)
-        Me.tbVehIdlingSpeed.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
+        Me.tbVehIdlingSpeed.Location = New System.Drawing.Point(173, 3)
         Me.tbVehIdlingSpeed.Name = "tbVehIdlingSpeed"
-        Me.tbVehIdlingSpeed.Size = New System.Drawing.Size(84, 26)
+        Me.tbVehIdlingSpeed.Size = New System.Drawing.Size(57, 20)
         Me.tbVehIdlingSpeed.TabIndex = 0
         '
         'Label18
         '
         Me.Label18.AutoSize = true
-        Me.Label18.Location = New System.Drawing.Point(350, 9)
-        Me.Label18.Margin = New System.Windows.Forms.Padding(4, 0, 4, 0)
+        Me.Label18.Location = New System.Drawing.Point(233, 6)
         Me.Label18.Name = "Label18"
-        Me.Label18.Size = New System.Drawing.Size(44, 20)
+        Me.Label18.Size = New System.Drawing.Size(30, 13)
         Me.Label18.TabIndex = 24
         Me.Label18.Text = "[rpm]"
         '
         'Label19
         '
         Me.Label19.AutoSize = true
-        Me.Label19.Location = New System.Drawing.Point(110, 9)
-        Me.Label19.Margin = New System.Windows.Forms.Padding(4, 0, 4, 0)
+        Me.Label19.Location = New System.Drawing.Point(73, 6)
         Me.Label19.Name = "Label19"
-        Me.Label19.Size = New System.Drawing.Size(140, 20)
+        Me.Label19.Size = New System.Drawing.Size(94, 13)
         Me.Label19.TabIndex = 8
         Me.Label19.Text = "Engine Idle Speed"
         '
@@ -1280,11 +1159,9 @@ Partial Class VehicleForm
         '
         Me.GroupBox9.Controls.Add(Me.cbTankSystem)
         Me.GroupBox9.Controls.Add(Me.Label23)
-        Me.GroupBox9.Location = New System.Drawing.Point(436, 11)
-        Me.GroupBox9.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
+        Me.GroupBox9.Location = New System.Drawing.Point(306, 7)
         Me.GroupBox9.Name = "GroupBox9"
-        Me.GroupBox9.Padding = New System.Windows.Forms.Padding(4, 5, 4, 5)
-        Me.GroupBox9.Size = New System.Drawing.Size(418, 97)
+        Me.GroupBox9.Size = New System.Drawing.Size(264, 63)
         Me.GroupBox9.TabIndex = 5
         Me.GroupBox9.TabStop = false
         Me.GroupBox9.Text = "Tank System"
@@ -1292,18 +1169,16 @@ Partial Class VehicleForm
         'cbTankSystem
         '
         Me.cbTankSystem.FormattingEnabled = true
-        Me.cbTankSystem.Location = New System.Drawing.Point(14, 51)
-        Me.cbTankSystem.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
+        Me.cbTankSystem.Location = New System.Drawing.Point(9, 33)
         Me.cbTankSystem.Name = "cbTankSystem"
-        Me.cbTankSystem.Size = New System.Drawing.Size(368, 28)
+        Me.cbTankSystem.Size = New System.Drawing.Size(247, 21)
         Me.cbTankSystem.TabIndex = 1
         '
         'Label23
         '
         Me.Label23.AutoSize = true
         Me.Label23.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0,Byte))
-        Me.Label23.Location = New System.Drawing.Point(9, 25)
-        Me.Label23.Margin = New System.Windows.Forms.Padding(4, 0, 4, 0)
+        Me.Label23.Location = New System.Drawing.Point(6, 16)
         Me.Label23.Name = "Label23"
         Me.Label23.Size = New System.Drawing.Size(187, 13)
         Me.Label23.TabIndex = 0
@@ -1311,47 +1186,15 @@ Partial Class VehicleForm
         '
         'tpElectricComponents
         '
-        Me.tpElectricComponents.Controls.Add(Me.lblMaxDrivetrainPwrUnit)
-        Me.tpElectricComponents.Controls.Add(Me.tbMaxDrivetrainPwr)
-        Me.tpElectricComponents.Controls.Add(Me.lblMaxDrivetrainPwr)
         Me.tpElectricComponents.Controls.Add(Me.gbBattery)
         Me.tpElectricComponents.Controls.Add(Me.gpElectricMotor)
-        Me.tpElectricComponents.Location = New System.Drawing.Point(4, 29)
-        Me.tpElectricComponents.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
+        Me.tpElectricComponents.Location = New System.Drawing.Point(4, 22)
         Me.tpElectricComponents.Name = "tpElectricComponents"
-        Me.tpElectricComponents.Padding = New System.Windows.Forms.Padding(4, 5, 4, 5)
-        Me.tpElectricComponents.Size = New System.Drawing.Size(872, 553)
+        Me.tpElectricComponents.Padding = New System.Windows.Forms.Padding(3)
+        Me.tpElectricComponents.Size = New System.Drawing.Size(648, 355)
         Me.tpElectricComponents.TabIndex = 4
         Me.tpElectricComponents.Text = "Electric Components"
         Me.tpElectricComponents.UseVisualStyleBackColor = true
-        '
-        'lblMaxDrivetrainPwrUnit
-        '
-        Me.lblMaxDrivetrainPwrUnit.AutoSize = true
-        Me.lblMaxDrivetrainPwrUnit.Location = New System.Drawing.Point(414, 467)
-        Me.lblMaxDrivetrainPwrUnit.Margin = New System.Windows.Forms.Padding(4, 0, 4, 0)
-        Me.lblMaxDrivetrainPwrUnit.Name = "lblMaxDrivetrainPwrUnit"
-        Me.lblMaxDrivetrainPwrUnit.Size = New System.Drawing.Size(27, 13)
-        Me.lblMaxDrivetrainPwrUnit.TabIndex = 30
-        Me.lblMaxDrivetrainPwrUnit.Text = "[kW]"
-        '
-        'tbMaxDrivetrainPwr
-        '
-        Me.tbMaxDrivetrainPwr.Location = New System.Drawing.Point(316, 462)
-        Me.tbMaxDrivetrainPwr.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
-        Me.tbMaxDrivetrainPwr.Name = "tbMaxDrivetrainPwr"
-        Me.tbMaxDrivetrainPwr.Size = New System.Drawing.Size(86, 26)
-        Me.tbMaxDrivetrainPwr.TabIndex = 29
-        '
-        'lblMaxDrivetrainPwr
-        '
-        Me.lblMaxDrivetrainPwr.AutoSize = true
-        Me.lblMaxDrivetrainPwr.Location = New System.Drawing.Point(20, 467)
-        Me.lblMaxDrivetrainPwr.Margin = New System.Windows.Forms.Padding(4, 0, 4, 0)
-        Me.lblMaxDrivetrainPwr.Name = "lblMaxDrivetrainPwr"
-        Me.lblMaxDrivetrainPwr.Size = New System.Drawing.Size(161, 20)
-        Me.lblMaxDrivetrainPwr.TabIndex = 28
-        Me.lblMaxDrivetrainPwr.Text = "Max. Drivetrain Power"
         '
         'gbBattery
         '
@@ -1361,11 +1204,9 @@ Partial Class VehicleForm
         Me.gbBattery.Controls.Add(Me.tbBatteryPackCnt)
         Me.gbBattery.Controls.Add(Me.lblBatteryPackCnt)
         Me.gbBattery.Controls.Add(Me.Panel2)
-        Me.gbBattery.Location = New System.Drawing.Point(9, 269)
-        Me.gbBattery.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
+        Me.gbBattery.Location = New System.Drawing.Point(6, 175)
         Me.gbBattery.Name = "gbBattery"
-        Me.gbBattery.Padding = New System.Windows.Forms.Padding(4, 5, 4, 5)
-        Me.gbBattery.Size = New System.Drawing.Size(848, 182)
+        Me.gbBattery.Size = New System.Drawing.Size(633, 118)
         Me.gbBattery.TabIndex = 27
         Me.gbBattery.TabStop = false
         Me.gbBattery.Text = "Electric Energy Storage system"
@@ -1373,47 +1214,42 @@ Partial Class VehicleForm
         'lblInitialSoCUnit
         '
         Me.lblInitialSoCUnit.AutoSize = true
-        Me.lblInitialSoCUnit.Location = New System.Drawing.Point(404, 125)
-        Me.lblInitialSoCUnit.Margin = New System.Windows.Forms.Padding(4, 0, 4, 0)
+        Me.lblInitialSoCUnit.Location = New System.Drawing.Point(269, 81)
         Me.lblInitialSoCUnit.Name = "lblInitialSoCUnit"
-        Me.lblInitialSoCUnit.Size = New System.Drawing.Size(31, 20)
+        Me.lblInitialSoCUnit.Size = New System.Drawing.Size(21, 13)
         Me.lblInitialSoCUnit.TabIndex = 27
         Me.lblInitialSoCUnit.Text = "[%]"
         '
         'tbInitialSoC
         '
-        Me.tbInitialSoC.Location = New System.Drawing.Point(306, 120)
-        Me.tbInitialSoC.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
+        Me.tbInitialSoC.Location = New System.Drawing.Point(204, 78)
         Me.tbInitialSoC.Name = "tbInitialSoC"
-        Me.tbInitialSoC.Size = New System.Drawing.Size(86, 26)
+        Me.tbInitialSoC.Size = New System.Drawing.Size(59, 20)
         Me.tbInitialSoC.TabIndex = 26
         '
         'lblInitialSoC
         '
         Me.lblInitialSoC.AutoSize = true
-        Me.lblInitialSoC.Location = New System.Drawing.Point(10, 125)
-        Me.lblInitialSoC.Margin = New System.Windows.Forms.Padding(4, 0, 4, 0)
+        Me.lblInitialSoC.Location = New System.Drawing.Point(7, 81)
         Me.lblInitialSoC.Name = "lblInitialSoC"
         Me.lblInitialSoC.RightToLeft = System.Windows.Forms.RightToLeft.Yes
-        Me.lblInitialSoC.Size = New System.Drawing.Size(81, 20)
+        Me.lblInitialSoC.Size = New System.Drawing.Size(54, 13)
         Me.lblInitialSoC.TabIndex = 25
         Me.lblInitialSoC.Text = "Initial SoC"
         '
         'tbBatteryPackCnt
         '
-        Me.tbBatteryPackCnt.Location = New System.Drawing.Point(306, 80)
-        Me.tbBatteryPackCnt.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
+        Me.tbBatteryPackCnt.Location = New System.Drawing.Point(204, 52)
         Me.tbBatteryPackCnt.Name = "tbBatteryPackCnt"
-        Me.tbBatteryPackCnt.Size = New System.Drawing.Size(86, 26)
+        Me.tbBatteryPackCnt.Size = New System.Drawing.Size(59, 20)
         Me.tbBatteryPackCnt.TabIndex = 24
         '
         'lblBatteryPackCnt
         '
         Me.lblBatteryPackCnt.AutoSize = true
-        Me.lblBatteryPackCnt.Location = New System.Drawing.Point(10, 85)
-        Me.lblBatteryPackCnt.Margin = New System.Windows.Forms.Padding(4, 0, 4, 0)
+        Me.lblBatteryPackCnt.Location = New System.Drawing.Point(7, 55)
         Me.lblBatteryPackCnt.Name = "lblBatteryPackCnt"
-        Me.lblBatteryPackCnt.Size = New System.Drawing.Size(183, 20)
+        Me.lblBatteryPackCnt.Size = New System.Drawing.Size(124, 13)
         Me.lblBatteryPackCnt.TabIndex = 23
         Me.lblBatteryPackCnt.Text = "Number of RESS Packs:"
         '
@@ -1422,18 +1258,16 @@ Partial Class VehicleForm
         Me.Panel2.Controls.Add(Me.btnOpenBattery)
         Me.Panel2.Controls.Add(Me.btnBrowseBattery)
         Me.Panel2.Controls.Add(Me.tbBattery)
-        Me.Panel2.Location = New System.Drawing.Point(9, 29)
-        Me.Panel2.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
+        Me.Panel2.Location = New System.Drawing.Point(6, 19)
         Me.Panel2.Name = "Panel2"
-        Me.Panel2.Size = New System.Drawing.Size(830, 42)
+        Me.Panel2.Size = New System.Drawing.Size(553, 27)
         Me.Panel2.TabIndex = 19
         '
         'btnOpenBattery
         '
-        Me.btnOpenBattery.Location = New System.Drawing.Point(6, 5)
-        Me.btnOpenBattery.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
+        Me.btnOpenBattery.Location = New System.Drawing.Point(4, 3)
         Me.btnOpenBattery.Name = "btnOpenBattery"
-        Me.btnOpenBattery.Size = New System.Drawing.Size(141, 32)
+        Me.btnOpenBattery.Size = New System.Drawing.Size(94, 21)
         Me.btnOpenBattery.TabIndex = 0
         Me.btnOpenBattery.TabStop = false
         Me.btnOpenBattery.Text = "REESS Pack"
@@ -1443,10 +1277,9 @@ Partial Class VehicleForm
         '
         Me.btnBrowseBattery.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right),System.Windows.Forms.AnchorStyles)
         Me.btnBrowseBattery.Image = CType(resources.GetObject("btnBrowseBattery.Image"),System.Drawing.Image)
-        Me.btnBrowseBattery.Location = New System.Drawing.Point(790, 3)
-        Me.btnBrowseBattery.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
+        Me.btnBrowseBattery.Location = New System.Drawing.Point(527, 2)
         Me.btnBrowseBattery.Name = "btnBrowseBattery"
-        Me.btnBrowseBattery.Size = New System.Drawing.Size(36, 37)
+        Me.btnBrowseBattery.Size = New System.Drawing.Size(24, 24)
         Me.btnBrowseBattery.TabIndex = 2
         Me.btnBrowseBattery.TabStop = false
         Me.btnBrowseBattery.UseVisualStyleBackColor = true
@@ -1455,16 +1288,17 @@ Partial Class VehicleForm
         '
         Me.tbBattery.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left)  _
             Or System.Windows.Forms.AnchorStyles.Right),System.Windows.Forms.AnchorStyles)
-        Me.tbBattery.Location = New System.Drawing.Point(156, 6)
-        Me.tbBattery.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
+        Me.tbBattery.Location = New System.Drawing.Point(104, 4)
         Me.tbBattery.Name = "tbBattery"
-        Me.tbBattery.Size = New System.Drawing.Size(624, 26)
+        Me.tbBattery.Size = New System.Drawing.Size(417, 20)
         Me.tbBattery.TabIndex = 1
         '
         'gpElectricMotor
         '
-        Me.gpElectricMotor.Controls.Add(Me.tbEmEfficiency)
-        Me.gpElectricMotor.Controls.Add(Me.lblEmEfficiency)
+        Me.gpElectricMotor.Controls.Add(Me.gbRatiosPerGear)
+        Me.gpElectricMotor.Controls.Add(Me.btnEmADCLossMap)
+        Me.gpElectricMotor.Controls.Add(Me.tbEmADCLossMap)
+        Me.gpElectricMotor.Controls.Add(Me.lblEmADCLossmap)
         Me.gpElectricMotor.Controls.Add(Me.tbRatioEm)
         Me.gpElectricMotor.Controls.Add(Me.lblRatioEm)
         Me.gpElectricMotor.Controls.Add(Me.tbEmCount)
@@ -1472,85 +1306,152 @@ Partial Class VehicleForm
         Me.gpElectricMotor.Controls.Add(Me.lblEmCount)
         Me.gpElectricMotor.Controls.Add(Me.lblEmPosition)
         Me.gpElectricMotor.Controls.Add(Me.pnElectricMotor)
-        Me.gpElectricMotor.Location = New System.Drawing.Point(9, 9)
-        Me.gpElectricMotor.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
+        Me.gpElectricMotor.Location = New System.Drawing.Point(6, 6)
         Me.gpElectricMotor.Name = "gpElectricMotor"
-        Me.gpElectricMotor.Padding = New System.Windows.Forms.Padding(4, 5, 4, 5)
-        Me.gpElectricMotor.Size = New System.Drawing.Size(848, 251)
+        Me.gpElectricMotor.Size = New System.Drawing.Size(633, 163)
         Me.gpElectricMotor.TabIndex = 0
         Me.gpElectricMotor.TabStop = false
         Me.gpElectricMotor.Text = "Electric Motor"
         '
-        'tbEmEfficiency
+        'gbRatiosPerGear
         '
-        Me.tbEmEfficiency.Location = New System.Drawing.Point(306, 202)
-        Me.tbEmEfficiency.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
-        Me.tbEmEfficiency.Name = "tbEmEfficiency"
-        Me.tbEmEfficiency.Size = New System.Drawing.Size(86, 26)
-        Me.tbEmEfficiency.TabIndex = 26
+        Me.gbRatiosPerGear.Controls.Add(Me.lvRatioPerGear)
+        Me.gbRatiosPerGear.Controls.Add(Me.Button1)
+        Me.gbRatiosPerGear.Controls.Add(Me.Label29)
+        Me.gbRatiosPerGear.Controls.Add(Me.Button2)
+        Me.gbRatiosPerGear.Location = New System.Drawing.Point(444, 12)
+        Me.gbRatiosPerGear.Name = "gbRatiosPerGear"
+        Me.gbRatiosPerGear.Size = New System.Drawing.Size(181, 145)
+        Me.gbRatiosPerGear.TabIndex = 29
+        Me.gbRatiosPerGear.TabStop = false
+        Me.gbRatiosPerGear.Text = "Transmission Ratio per Gear"
         '
-        'lblEmEfficiency
+        'lvRatioPerGear
         '
-        Me.lblEmEfficiency.AutoSize = true
-        Me.lblEmEfficiency.Location = New System.Drawing.Point(10, 206)
-        Me.lblEmEfficiency.Margin = New System.Windows.Forms.Padding(4, 0, 4, 0)
-        Me.lblEmEfficiency.Name = "lblEmEfficiency"
-        Me.lblEmEfficiency.Size = New System.Drawing.Size(198, 20)
-        Me.lblEmEfficiency.TabIndex = 25
-        Me.lblEmEfficiency.Text = "Efficiency EM to Drivetrain:"
+        Me.lvRatioPerGear.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left)  _
+            Or System.Windows.Forms.AnchorStyles.Right),System.Windows.Forms.AnchorStyles)
+        Me.lvRatioPerGear.Columns.AddRange(New System.Windows.Forms.ColumnHeader() {Me.ColumnHeader11, Me.ColumnHeader12})
+        Me.lvRatioPerGear.FullRowSelect = true
+        Me.lvRatioPerGear.GridLines = true
+        Me.lvRatioPerGear.HideSelection = false
+        Me.lvRatioPerGear.Location = New System.Drawing.Point(6, 16)
+        Me.lvRatioPerGear.MultiSelect = false
+        Me.lvRatioPerGear.Name = "lvRatioPerGear"
+        Me.lvRatioPerGear.Size = New System.Drawing.Size(169, 94)
+        Me.lvRatioPerGear.TabIndex = 7
+        Me.lvRatioPerGear.TabStop = false
+        Me.lvRatioPerGear.UseCompatibleStateImageBehavior = false
+        Me.lvRatioPerGear.View = System.Windows.Forms.View.Details
+        '
+        'ColumnHeader11
+        '
+        Me.ColumnHeader11.Text = "Gear #"
+        Me.ColumnHeader11.Width = 59
+        '
+        'ColumnHeader12
+        '
+        Me.ColumnHeader12.Text = "Ratio"
+        Me.ColumnHeader12.Width = 172
+        '
+        'Button1
+        '
+        Me.Button1.Image = Global.TUGraz.VECTO.My.Resources.Resources.plus_circle_icon
+        Me.Button1.Location = New System.Drawing.Point(6, 116)
+        Me.Button1.Name = "Button1"
+        Me.Button1.Size = New System.Drawing.Size(24, 24)
+        Me.Button1.TabIndex = 4
+        Me.Button1.UseVisualStyleBackColor = true
+        '
+        'Label29
+        '
+        Me.Label29.AutoSize = true
+        Me.Label29.Location = New System.Drawing.Point(71, 121)
+        Me.Label29.Name = "Label29"
+        Me.Label29.Size = New System.Drawing.Size(106, 13)
+        Me.Label29.TabIndex = 6
+        Me.Label29.Text = "(Double-Click to Edit)"
+        '
+        'Button2
+        '
+        Me.Button2.Image = Global.TUGraz.VECTO.My.Resources.Resources.minus_circle_icon
+        Me.Button2.Location = New System.Drawing.Point(33, 116)
+        Me.Button2.Name = "Button2"
+        Me.Button2.Size = New System.Drawing.Size(24, 24)
+        Me.Button2.TabIndex = 5
+        Me.Button2.UseVisualStyleBackColor = true
+        '
+        'btnEmADCLossMap
+        '
+        Me.btnEmADCLossMap.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left),System.Windows.Forms.AnchorStyles)
+        Me.btnEmADCLossMap.Image = Global.TUGraz.VECTO.My.Resources.Resources.Open_icon
+        Me.btnEmADCLossMap.Location = New System.Drawing.Point(414, 127)
+        Me.btnEmADCLossMap.Name = "btnEmADCLossMap"
+        Me.btnEmADCLossMap.Size = New System.Drawing.Size(24, 24)
+        Me.btnEmADCLossMap.TabIndex = 28
+        Me.btnEmADCLossMap.UseVisualStyleBackColor = true
+        '
+        'tbEmADCLossMap
+        '
+        Me.tbEmADCLossMap.Location = New System.Drawing.Point(204, 131)
+        Me.tbEmADCLossMap.Name = "tbEmADCLossMap"
+        Me.tbEmADCLossMap.Size = New System.Drawing.Size(202, 20)
+        Me.tbEmADCLossMap.TabIndex = 26
+        '
+        'lblEmADCLossmap
+        '
+        Me.lblEmADCLossmap.AutoSize = true
+        Me.lblEmADCLossmap.Location = New System.Drawing.Point(7, 134)
+        Me.lblEmADCLossmap.Name = "lblEmADCLossmap"
+        Me.lblEmADCLossmap.Size = New System.Drawing.Size(100, 13)
+        Me.lblEmADCLossmap.TabIndex = 25
+        Me.lblEmADCLossmap.Text = "Loss Map EM ADC:"
         '
         'tbRatioEm
         '
-        Me.tbRatioEm.Location = New System.Drawing.Point(306, 162)
-        Me.tbRatioEm.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
+        Me.tbRatioEm.Location = New System.Drawing.Point(204, 105)
         Me.tbRatioEm.Name = "tbRatioEm"
-        Me.tbRatioEm.Size = New System.Drawing.Size(86, 26)
+        Me.tbRatioEm.Size = New System.Drawing.Size(59, 20)
         Me.tbRatioEm.TabIndex = 24
         '
         'lblRatioEm
         '
         Me.lblRatioEm.AutoSize = true
-        Me.lblRatioEm.Location = New System.Drawing.Point(10, 166)
-        Me.lblRatioEm.Margin = New System.Windows.Forms.Padding(4, 0, 4, 0)
+        Me.lblRatioEm.Location = New System.Drawing.Point(7, 108)
         Me.lblRatioEm.Name = "lblRatioEm"
-        Me.lblRatioEm.Size = New System.Drawing.Size(168, 20)
+        Me.lblRatioEm.Size = New System.Drawing.Size(79, 13)
         Me.lblRatioEm.TabIndex = 23
-        Me.lblRatioEm.Text = "Ratio EM to Drivetrain:"
+        Me.lblRatioEm.Text = "Ratio EM ADC:"
         '
         'tbEmCount
         '
-        Me.tbEmCount.Location = New System.Drawing.Point(306, 122)
-        Me.tbEmCount.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
+        Me.tbEmCount.Location = New System.Drawing.Point(204, 79)
         Me.tbEmCount.Name = "tbEmCount"
-        Me.tbEmCount.Size = New System.Drawing.Size(86, 26)
+        Me.tbEmCount.Size = New System.Drawing.Size(59, 20)
         Me.tbEmCount.TabIndex = 22
         '
         'cbEmPos
         '
         Me.cbEmPos.FormattingEnabled = true
-        Me.cbEmPos.Location = New System.Drawing.Point(213, 80)
-        Me.cbEmPos.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
+        Me.cbEmPos.Location = New System.Drawing.Point(142, 52)
         Me.cbEmPos.Name = "cbEmPos"
-        Me.cbEmPos.Size = New System.Drawing.Size(180, 28)
+        Me.cbEmPos.Size = New System.Drawing.Size(121, 21)
         Me.cbEmPos.TabIndex = 21
         '
         'lblEmCount
         '
         Me.lblEmCount.AutoSize = true
-        Me.lblEmCount.Location = New System.Drawing.Point(10, 126)
-        Me.lblEmCount.Margin = New System.Windows.Forms.Padding(4, 0, 4, 0)
+        Me.lblEmCount.Location = New System.Drawing.Point(7, 82)
         Me.lblEmCount.Name = "lblEmCount"
-        Me.lblEmCount.Size = New System.Drawing.Size(123, 20)
+        Me.lblEmCount.Size = New System.Drawing.Size(83, 13)
         Me.lblEmCount.TabIndex = 20
         Me.lblEmCount.Text = "Number of EMs:"
         '
         'lblEmPosition
         '
         Me.lblEmPosition.AutoSize = true
-        Me.lblEmPosition.Location = New System.Drawing.Point(10, 86)
-        Me.lblEmPosition.Margin = New System.Windows.Forms.Padding(4, 0, 4, 0)
+        Me.lblEmPosition.Location = New System.Drawing.Point(7, 56)
         Me.lblEmPosition.Name = "lblEmPosition"
-        Me.lblEmPosition.Size = New System.Drawing.Size(69, 20)
+        Me.lblEmPosition.Size = New System.Drawing.Size(47, 13)
         Me.lblEmPosition.TabIndex = 19
         Me.lblEmPosition.Text = "Position:"
         '
@@ -1559,18 +1460,16 @@ Partial Class VehicleForm
         Me.pnElectricMotor.Controls.Add(Me.btnOpenElectricMotor)
         Me.pnElectricMotor.Controls.Add(Me.btnBrowseElectricMotor)
         Me.pnElectricMotor.Controls.Add(Me.tbElectricMotor)
-        Me.pnElectricMotor.Location = New System.Drawing.Point(9, 29)
-        Me.pnElectricMotor.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
+        Me.pnElectricMotor.Location = New System.Drawing.Point(6, 19)
         Me.pnElectricMotor.Name = "pnElectricMotor"
-        Me.pnElectricMotor.Size = New System.Drawing.Size(830, 42)
+        Me.pnElectricMotor.Size = New System.Drawing.Size(432, 27)
         Me.pnElectricMotor.TabIndex = 18
         '
         'btnOpenElectricMotor
         '
-        Me.btnOpenElectricMotor.Location = New System.Drawing.Point(6, 5)
-        Me.btnOpenElectricMotor.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
+        Me.btnOpenElectricMotor.Location = New System.Drawing.Point(4, 3)
         Me.btnOpenElectricMotor.Name = "btnOpenElectricMotor"
-        Me.btnOpenElectricMotor.Size = New System.Drawing.Size(141, 32)
+        Me.btnOpenElectricMotor.Size = New System.Drawing.Size(94, 21)
         Me.btnOpenElectricMotor.TabIndex = 0
         Me.btnOpenElectricMotor.TabStop = false
         Me.btnOpenElectricMotor.Text = "Electric Motor"
@@ -1580,10 +1479,9 @@ Partial Class VehicleForm
         '
         Me.btnBrowseElectricMotor.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right),System.Windows.Forms.AnchorStyles)
         Me.btnBrowseElectricMotor.Image = CType(resources.GetObject("btnBrowseElectricMotor.Image"),System.Drawing.Image)
-        Me.btnBrowseElectricMotor.Location = New System.Drawing.Point(790, 3)
-        Me.btnBrowseElectricMotor.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
+        Me.btnBrowseElectricMotor.Location = New System.Drawing.Point(406, 2)
         Me.btnBrowseElectricMotor.Name = "btnBrowseElectricMotor"
-        Me.btnBrowseElectricMotor.Size = New System.Drawing.Size(36, 37)
+        Me.btnBrowseElectricMotor.Size = New System.Drawing.Size(24, 24)
         Me.btnBrowseElectricMotor.TabIndex = 2
         Me.btnBrowseElectricMotor.TabStop = false
         Me.btnBrowseElectricMotor.UseVisualStyleBackColor = true
@@ -1592,25 +1490,89 @@ Partial Class VehicleForm
         '
         Me.tbElectricMotor.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left)  _
             Or System.Windows.Forms.AnchorStyles.Right),System.Windows.Forms.AnchorStyles)
-        Me.tbElectricMotor.Location = New System.Drawing.Point(156, 6)
-        Me.tbElectricMotor.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
+        Me.tbElectricMotor.Location = New System.Drawing.Point(104, 4)
         Me.tbElectricMotor.Name = "tbElectricMotor"
-        Me.tbElectricMotor.Size = New System.Drawing.Size(624, 26)
+        Me.tbElectricMotor.Size = New System.Drawing.Size(296, 20)
         Me.tbElectricMotor.TabIndex = 1
         '
         'tpTorqueLimits
         '
-        Me.tpTorqueLimits.Controls.Add(Me.lvTorqueLimits)
-        Me.tpTorqueLimits.Controls.Add(Me.Label17)
-        Me.tpTorqueLimits.Controls.Add(Me.btDelMaxTorqueEntry)
-        Me.tpTorqueLimits.Controls.Add(Me.btAddMaxTorqueEntry)
-        Me.tpTorqueLimits.Location = New System.Drawing.Point(4, 29)
-        Me.tpTorqueLimits.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
+        Me.tpTorqueLimits.Controls.Add(Me.gbPropulsionTorque)
+        Me.tpTorqueLimits.Controls.Add(Me.gbEMTorqueLimits)
+        Me.tpTorqueLimits.Controls.Add(Me.bgVehicleTorqueLimits)
+        Me.tpTorqueLimits.Location = New System.Drawing.Point(4, 22)
         Me.tpTorqueLimits.Name = "tpTorqueLimits"
-        Me.tpTorqueLimits.Size = New System.Drawing.Size(872, 553)
+        Me.tpTorqueLimits.Size = New System.Drawing.Size(648, 355)
         Me.tpTorqueLimits.TabIndex = 2
         Me.tpTorqueLimits.Text = "Torque Limits"
         Me.tpTorqueLimits.UseVisualStyleBackColor = true
+        '
+        'gbPropulsionTorque
+        '
+        Me.gbPropulsionTorque.Controls.Add(Me.btnPropulsionTorqueLimit)
+        Me.gbPropulsionTorque.Controls.Add(Me.tbPropulsionTorqueLimit)
+        Me.gbPropulsionTorque.Location = New System.Drawing.Point(3, 236)
+        Me.gbPropulsionTorque.Name = "gbPropulsionTorque"
+        Me.gbPropulsionTorque.Size = New System.Drawing.Size(407, 52)
+        Me.gbPropulsionTorque.TabIndex = 17
+        Me.gbPropulsionTorque.TabStop = false
+        Me.gbPropulsionTorque.Text = "Propulsion Torque Limit"
+        '
+        'btnPropulsionTorqueLimit
+        '
+        Me.btnPropulsionTorqueLimit.Image = Global.TUGraz.VECTO.My.Resources.Resources.Open_icon
+        Me.btnPropulsionTorqueLimit.Location = New System.Drawing.Point(331, 17)
+        Me.btnPropulsionTorqueLimit.Name = "btnPropulsionTorqueLimit"
+        Me.btnPropulsionTorqueLimit.Size = New System.Drawing.Size(24, 24)
+        Me.btnPropulsionTorqueLimit.TabIndex = 16
+        Me.btnPropulsionTorqueLimit.UseVisualStyleBackColor = true
+        '
+        'tbPropulsionTorqueLimit
+        '
+        Me.tbPropulsionTorqueLimit.Location = New System.Drawing.Point(6, 20)
+        Me.tbPropulsionTorqueLimit.Name = "tbPropulsionTorqueLimit"
+        Me.tbPropulsionTorqueLimit.Size = New System.Drawing.Size(319, 20)
+        Me.tbPropulsionTorqueLimit.TabIndex = 15
+        '
+        'gbEMTorqueLimits
+        '
+        Me.gbEMTorqueLimits.Controls.Add(Me.btnEmTorqueLimits)
+        Me.gbEMTorqueLimits.Controls.Add(Me.tbEmTorqueLimits)
+        Me.gbEMTorqueLimits.Location = New System.Drawing.Point(3, 178)
+        Me.gbEMTorqueLimits.Name = "gbEMTorqueLimits"
+        Me.gbEMTorqueLimits.Size = New System.Drawing.Size(407, 52)
+        Me.gbEMTorqueLimits.TabIndex = 9
+        Me.gbEMTorqueLimits.TabStop = false
+        Me.gbEMTorqueLimits.Text = "Electric Machine Torque Limits"
+        '
+        'btnEmTorqueLimits
+        '
+        Me.btnEmTorqueLimits.Image = Global.TUGraz.VECTO.My.Resources.Resources.Open_icon
+        Me.btnEmTorqueLimits.Location = New System.Drawing.Point(331, 17)
+        Me.btnEmTorqueLimits.Name = "btnEmTorqueLimits"
+        Me.btnEmTorqueLimits.Size = New System.Drawing.Size(24, 24)
+        Me.btnEmTorqueLimits.TabIndex = 16
+        Me.btnEmTorqueLimits.UseVisualStyleBackColor = true
+        '
+        'tbEmTorqueLimits
+        '
+        Me.tbEmTorqueLimits.Location = New System.Drawing.Point(6, 20)
+        Me.tbEmTorqueLimits.Name = "tbEmTorqueLimits"
+        Me.tbEmTorqueLimits.Size = New System.Drawing.Size(319, 20)
+        Me.tbEmTorqueLimits.TabIndex = 15
+        '
+        'bgVehicleTorqueLimits
+        '
+        Me.bgVehicleTorqueLimits.Controls.Add(Me.lvTorqueLimits)
+        Me.bgVehicleTorqueLimits.Controls.Add(Me.btAddMaxTorqueEntry)
+        Me.bgVehicleTorqueLimits.Controls.Add(Me.Label17)
+        Me.bgVehicleTorqueLimits.Controls.Add(Me.btDelMaxTorqueEntry)
+        Me.bgVehicleTorqueLimits.Location = New System.Drawing.Point(3, 9)
+        Me.bgVehicleTorqueLimits.Name = "bgVehicleTorqueLimits"
+        Me.bgVehicleTorqueLimits.Size = New System.Drawing.Size(407, 163)
+        Me.bgVehicleTorqueLimits.TabIndex = 8
+        Me.bgVehicleTorqueLimits.TabStop = false
+        Me.bgVehicleTorqueLimits.Text = "ICE Torque Limits"
         '
         'lvTorqueLimits
         '
@@ -1620,11 +1582,10 @@ Partial Class VehicleForm
         Me.lvTorqueLimits.FullRowSelect = true
         Me.lvTorqueLimits.GridLines = true
         Me.lvTorqueLimits.HideSelection = false
-        Me.lvTorqueLimits.Location = New System.Drawing.Point(10, 12)
-        Me.lvTorqueLimits.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
+        Me.lvTorqueLimits.Location = New System.Drawing.Point(6, 19)
         Me.lvTorqueLimits.MultiSelect = false
         Me.lvTorqueLimits.Name = "lvTorqueLimits"
-        Me.lvTorqueLimits.Size = New System.Drawing.Size(421, 155)
+        Me.lvTorqueLimits.Size = New System.Drawing.Size(282, 102)
         Me.lvTorqueLimits.TabIndex = 7
         Me.lvTorqueLimits.TabStop = false
         Me.lvTorqueLimits.UseCompatibleStateImageBehavior = false
@@ -1633,51 +1594,47 @@ Partial Class VehicleForm
         'ColumnHeader5
         '
         Me.ColumnHeader5.Text = "Gear #"
-        Me.ColumnHeader5.Width = 67
+        Me.ColumnHeader5.Width = 83
         '
         'ColumnHeader6
         '
         Me.ColumnHeader6.Text = "Max. Torque"
-        Me.ColumnHeader6.Width = 146
+        Me.ColumnHeader6.Width = 172
+        '
+        'btAddMaxTorqueEntry
+        '
+        Me.btAddMaxTorqueEntry.Image = Global.TUGraz.VECTO.My.Resources.Resources.plus_circle_icon
+        Me.btAddMaxTorqueEntry.Location = New System.Drawing.Point(6, 127)
+        Me.btAddMaxTorqueEntry.Name = "btAddMaxTorqueEntry"
+        Me.btAddMaxTorqueEntry.Size = New System.Drawing.Size(24, 24)
+        Me.btAddMaxTorqueEntry.TabIndex = 4
+        Me.btAddMaxTorqueEntry.UseVisualStyleBackColor = true
         '
         'Label17
         '
         Me.Label17.AutoSize = true
-        Me.Label17.Location = New System.Drawing.Point(274, 174)
-        Me.Label17.Margin = New System.Windows.Forms.Padding(4, 0, 4, 0)
+        Me.Label17.Location = New System.Drawing.Point(182, 124)
         Me.Label17.Name = "Label17"
-        Me.Label17.Size = New System.Drawing.Size(158, 20)
+        Me.Label17.Size = New System.Drawing.Size(106, 13)
         Me.Label17.TabIndex = 6
         Me.Label17.Text = "(Double-Click to Edit)"
         '
         'btDelMaxTorqueEntry
         '
         Me.btDelMaxTorqueEntry.Image = Global.TUGraz.VECTO.My.Resources.Resources.minus_circle_icon
-        Me.btDelMaxTorqueEntry.Location = New System.Drawing.Point(46, 178)
-        Me.btDelMaxTorqueEntry.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
+        Me.btDelMaxTorqueEntry.Location = New System.Drawing.Point(30, 127)
         Me.btDelMaxTorqueEntry.Name = "btDelMaxTorqueEntry"
-        Me.btDelMaxTorqueEntry.Size = New System.Drawing.Size(36, 37)
+        Me.btDelMaxTorqueEntry.Size = New System.Drawing.Size(24, 24)
         Me.btDelMaxTorqueEntry.TabIndex = 5
         Me.btDelMaxTorqueEntry.UseVisualStyleBackColor = true
-        '
-        'btAddMaxTorqueEntry
-        '
-        Me.btAddMaxTorqueEntry.Image = Global.TUGraz.VECTO.My.Resources.Resources.plus_circle_icon
-        Me.btAddMaxTorqueEntry.Location = New System.Drawing.Point(10, 178)
-        Me.btAddMaxTorqueEntry.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
-        Me.btAddMaxTorqueEntry.Name = "btAddMaxTorqueEntry"
-        Me.btAddMaxTorqueEntry.Size = New System.Drawing.Size(36, 37)
-        Me.btAddMaxTorqueEntry.TabIndex = 4
-        Me.btAddMaxTorqueEntry.UseVisualStyleBackColor = true
         '
         'tpADAS
         '
         Me.tpADAS.Controls.Add(Me.GroupBox5)
-        Me.tpADAS.Location = New System.Drawing.Point(4, 29)
-        Me.tpADAS.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
+        Me.tpADAS.Location = New System.Drawing.Point(4, 22)
         Me.tpADAS.Name = "tpADAS"
-        Me.tpADAS.Padding = New System.Windows.Forms.Padding(4, 5, 4, 5)
-        Me.tpADAS.Size = New System.Drawing.Size(872, 553)
+        Me.tpADAS.Padding = New System.Windows.Forms.Padding(3)
+        Me.tpADAS.Size = New System.Drawing.Size(648, 355)
         Me.tpADAS.TabIndex = 3
         Me.tpADAS.Text = "ADAS"
         Me.tpADAS.UseVisualStyleBackColor = true
@@ -1690,11 +1647,9 @@ Partial Class VehicleForm
         Me.GroupBox5.Controls.Add(Me.Label22)
         Me.GroupBox5.Controls.Add(Me.cbEngineStopStart)
         Me.GroupBox5.Controls.Add(Me.lblPCC)
-        Me.GroupBox5.Location = New System.Drawing.Point(9, 9)
-        Me.GroupBox5.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
+        Me.GroupBox5.Location = New System.Drawing.Point(6, 6)
         Me.GroupBox5.Name = "GroupBox5"
-        Me.GroupBox5.Padding = New System.Windows.Forms.Padding(4, 5, 4, 5)
-        Me.GroupBox5.Size = New System.Drawing.Size(848, 209)
+        Me.GroupBox5.Size = New System.Drawing.Size(565, 136)
         Me.GroupBox5.TabIndex = 0
         Me.GroupBox5.TabStop = false
         Me.GroupBox5.Text = "ADAS Options"
@@ -1702,10 +1657,9 @@ Partial Class VehicleForm
         'cbAtEcoRollReleaseLockupClutch
         '
         Me.cbAtEcoRollReleaseLockupClutch.AutoSize = true
-        Me.cbAtEcoRollReleaseLockupClutch.Location = New System.Drawing.Point(398, 29)
-        Me.cbAtEcoRollReleaseLockupClutch.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
+        Me.cbAtEcoRollReleaseLockupClutch.Location = New System.Drawing.Point(265, 19)
         Me.cbAtEcoRollReleaseLockupClutch.Name = "cbAtEcoRollReleaseLockupClutch"
-        Me.cbAtEcoRollReleaseLockupClutch.Size = New System.Drawing.Size(349, 24)
+        Me.cbAtEcoRollReleaseLockupClutch.Size = New System.Drawing.Size(243, 17)
         Me.cbAtEcoRollReleaseLockupClutch.TabIndex = 9
         Me.cbAtEcoRollReleaseLockupClutch.Text = "AT Gearbox: Eco-Roll Release Lockup Clutch"
         Me.cbAtEcoRollReleaseLockupClutch.UseVisualStyleBackColor = true
@@ -1713,38 +1667,34 @@ Partial Class VehicleForm
         'cbPcc
         '
         Me.cbPcc.FormattingEnabled = true
-        Me.cbPcc.Location = New System.Drawing.Point(27, 160)
-        Me.cbPcc.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
+        Me.cbPcc.Location = New System.Drawing.Point(18, 104)
         Me.cbPcc.Name = "cbPcc"
-        Me.cbPcc.Size = New System.Drawing.Size(266, 28)
+        Me.cbPcc.Size = New System.Drawing.Size(179, 21)
         Me.cbPcc.TabIndex = 8
         '
         'cbEcoRoll
         '
         Me.cbEcoRoll.FormattingEnabled = true
-        Me.cbEcoRoll.Location = New System.Drawing.Point(27, 89)
-        Me.cbEcoRoll.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
+        Me.cbEcoRoll.Location = New System.Drawing.Point(18, 58)
         Me.cbEcoRoll.Name = "cbEcoRoll"
-        Me.cbEcoRoll.Size = New System.Drawing.Size(266, 28)
+        Me.cbEcoRoll.Size = New System.Drawing.Size(179, 21)
         Me.cbEcoRoll.TabIndex = 7
         '
         'Label22
         '
         Me.Label22.AutoSize = true
-        Me.Label22.Location = New System.Drawing.Point(9, 65)
-        Me.Label22.Margin = New System.Windows.Forms.Padding(4, 0, 4, 0)
+        Me.Label22.Location = New System.Drawing.Point(6, 42)
         Me.Label22.Name = "Label22"
-        Me.Label22.Size = New System.Drawing.Size(69, 20)
+        Me.Label22.Size = New System.Drawing.Size(47, 13)
         Me.Label22.TabIndex = 6
         Me.Label22.Text = "Eco-Roll"
         '
         'cbEngineStopStart
         '
         Me.cbEngineStopStart.AutoSize = true
-        Me.cbEngineStopStart.Location = New System.Drawing.Point(9, 29)
-        Me.cbEngineStopStart.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
+        Me.cbEngineStopStart.Location = New System.Drawing.Point(6, 19)
         Me.cbEngineStopStart.Name = "cbEngineStopStart"
-        Me.cbEngineStopStart.Size = New System.Drawing.Size(290, 24)
+        Me.cbEngineStopStart.Size = New System.Drawing.Size(203, 17)
         Me.cbEngineStopStart.TabIndex = 4
         Me.cbEngineStopStart.Text = "Engine Stop/Start during vehicle stop"
         Me.cbEngineStopStart.UseVisualStyleBackColor = true
@@ -1752,30 +1702,186 @@ Partial Class VehicleForm
         'lblPCC
         '
         Me.lblPCC.AutoSize = true
-        Me.lblPCC.Location = New System.Drawing.Point(9, 135)
-        Me.lblPCC.Margin = New System.Windows.Forms.Padding(4, 0, 4, 0)
+        Me.lblPCC.Location = New System.Drawing.Point(6, 88)
         Me.lblPCC.Name = "lblPCC"
-        Me.lblPCC.Size = New System.Drawing.Size(181, 20)
+        Me.lblPCC.Size = New System.Drawing.Size(122, 13)
         Me.lblPCC.TabIndex = 3
         Me.lblPCC.Text = "Predictive Cruise Control"
+        '
+        'tpRoadSweeper
+        '
+        Me.tpRoadSweeper.Controls.Add(Me.gbPTODrive)
+        Me.tpRoadSweeper.Controls.Add(Me.pnPTO)
+        Me.tpRoadSweeper.Controls.Add(Me.gbPTO)
+        Me.tpRoadSweeper.Location = New System.Drawing.Point(4, 22)
+        Me.tpRoadSweeper.Name = "tpRoadSweeper"
+        Me.tpRoadSweeper.Size = New System.Drawing.Size(648, 355)
+        Me.tpRoadSweeper.TabIndex = 4
+        Me.tpRoadSweeper.Text = "PTO"
+        Me.tpRoadSweeper.UseVisualStyleBackColor = true
+        '
+        'gbPTODrive
+        '
+        Me.gbPTODrive.Controls.Add(Me.Label27)
+        Me.gbPTODrive.Controls.Add(Me.tbPtoGear)
+        Me.gbPTODrive.Controls.Add(Me.Label26)
+        Me.gbPTODrive.Controls.Add(Me.tbPtoEngineSpeed)
+        Me.gbPTODrive.Controls.Add(Me.Label25)
+        Me.gbPTODrive.Controls.Add(Me.Label24)
+        Me.gbPTODrive.Location = New System.Drawing.Point(5, 172)
+        Me.gbPTODrive.Name = "gbPTODrive"
+        Me.gbPTODrive.Size = New System.Drawing.Size(566, 55)
+        Me.gbPTODrive.TabIndex = 0
+        Me.gbPTODrive.TabStop = false
+        Me.gbPTODrive.Text = "Working operation settings (PTO mode 2)"
+        '
+        'Label27
+        '
+        Me.Label27.AutoSize = true
+        Me.Label27.Location = New System.Drawing.Point(446, 24)
+        Me.Label27.Name = "Label27"
+        Me.Label27.Size = New System.Drawing.Size(20, 13)
+        Me.Label27.TabIndex = 6
+        Me.Label27.Text = "[#]"
+        Me.Label27.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
+        '
+        'tbPtoGear
+        '
+        Me.tbPtoGear.Location = New System.Drawing.Point(371, 21)
+        Me.tbPtoGear.Name = "tbPtoGear"
+        Me.tbPtoGear.Size = New System.Drawing.Size(70, 20)
+        Me.tbPtoGear.TabIndex = 5
+        '
+        'Label26
+        '
+        Me.Label26.AutoSize = true
+        Me.Label26.Location = New System.Drawing.Point(196, 24)
+        Me.Label26.Name = "Label26"
+        Me.Label26.Size = New System.Drawing.Size(30, 13)
+        Me.Label26.TabIndex = 4
+        Me.Label26.Text = "[rpm]"
+        Me.Label26.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
+        '
+        'tbPtoEngineSpeed
+        '
+        Me.tbPtoEngineSpeed.Location = New System.Drawing.Point(120, 21)
+        Me.tbPtoEngineSpeed.Name = "tbPtoEngineSpeed"
+        Me.tbPtoEngineSpeed.Size = New System.Drawing.Size(70, 20)
+        Me.tbPtoEngineSpeed.TabIndex = 2
+        '
+        'Label25
+        '
+        Me.Label25.AutoSize = true
+        Me.Label25.Location = New System.Drawing.Point(297, 24)
+        Me.Label25.Name = "Label25"
+        Me.Label25.Size = New System.Drawing.Size(68, 13)
+        Me.Label25.TabIndex = 1
+        Me.Label25.Text = "Gear number"
+        '
+        'Label24
+        '
+        Me.Label24.AutoSize = true
+        Me.Label24.Location = New System.Drawing.Point(7, 24)
+        Me.Label24.Name = "Label24"
+        Me.Label24.Size = New System.Drawing.Size(97, 13)
+        Me.Label24.TabIndex = 0
+        Me.Label24.Text = "Min. Engine Speed"
+        '
+        'pnPTO
+        '
+        Me.pnPTO.Controls.Add(Me.btPTOCycleDrive)
+        Me.pnPTO.Controls.Add(Me.Label28)
+        Me.pnPTO.Controls.Add(Me.tbPTODrive)
+        Me.pnPTO.Controls.Add(Me.btPTOCycle)
+        Me.pnPTO.Controls.Add(Me.Label16)
+        Me.pnPTO.Controls.Add(Me.tbPTOCycle)
+        Me.pnPTO.Controls.Add(Me.btPTOLossMapBrowse)
+        Me.pnPTO.Controls.Add(Me.Label7)
+        Me.pnPTO.Controls.Add(Me.tbPTOLossMap)
+        Me.pnPTO.Location = New System.Drawing.Point(5, 73)
+        Me.pnPTO.Name = "pnPTO"
+        Me.pnPTO.Size = New System.Drawing.Size(566, 211)
+        Me.pnPTO.TabIndex = 6
+        '
+        'btPTOCycleDrive
+        '
+        Me.btPTOCycleDrive.Image = Global.TUGraz.VECTO.My.Resources.Resources.Open_icon
+        Me.btPTOCycleDrive.Location = New System.Drawing.Point(245, 181)
+        Me.btPTOCycleDrive.Name = "btPTOCycleDrive"
+        Me.btPTOCycleDrive.Size = New System.Drawing.Size(24, 24)
+        Me.btPTOCycleDrive.TabIndex = 20
+        Me.btPTOCycleDrive.UseVisualStyleBackColor = true
+        '
+        'Label28
+        '
+        Me.Label28.Location = New System.Drawing.Point(3, 164)
+        Me.Label28.Name = "Label28"
+        Me.Label28.Size = New System.Drawing.Size(266, 16)
+        Me.Label28.TabIndex = 21
+        Me.Label28.Text = "PTO Cycle during driving (PTO mode 3) (.vptor)"
+        Me.Label28.TextAlign = System.Drawing.ContentAlignment.BottomLeft
+        '
+        'btPTOCycle
+        '
+        Me.btPTOCycle.Image = Global.TUGraz.VECTO.My.Resources.Resources.Open_icon
+        Me.btPTOCycle.Location = New System.Drawing.Point(245, 69)
+        Me.btPTOCycle.Name = "btPTOCycle"
+        Me.btPTOCycle.Size = New System.Drawing.Size(24, 24)
+        Me.btPTOCycle.TabIndex = 17
+        Me.btPTOCycle.UseVisualStyleBackColor = true
+        '
+        'Label16
+        '
+        Me.Label16.Location = New System.Drawing.Point(3, 52)
+        Me.Label16.Name = "Label16"
+        Me.Label16.Size = New System.Drawing.Size(266, 16)
+        Me.Label16.TabIndex = 18
+        Me.Label16.Text = "PTO Cycle during standstill (PTO mode 1) (.vptoc)"
+        Me.Label16.TextAlign = System.Drawing.ContentAlignment.BottomLeft
+        '
+        'btPTOLossMapBrowse
+        '
+        Me.btPTOLossMapBrowse.Image = Global.TUGraz.VECTO.My.Resources.Resources.Open_icon
+        Me.btPTOLossMapBrowse.Location = New System.Drawing.Point(245, 22)
+        Me.btPTOLossMapBrowse.Name = "btPTOLossMapBrowse"
+        Me.btPTOLossMapBrowse.Size = New System.Drawing.Size(24, 24)
+        Me.btPTOLossMapBrowse.TabIndex = 14
+        Me.btPTOLossMapBrowse.UseVisualStyleBackColor = true
+        '
+        'Label7
+        '
+        Me.Label7.Location = New System.Drawing.Point(3, 5)
+        Me.Label7.Name = "Label7"
+        Me.Label7.Size = New System.Drawing.Size(201, 16)
+        Me.Label7.TabIndex = 15
+        Me.Label7.Text = "PTO Consumer Loss Map (.vptoi)"
+        Me.Label7.TextAlign = System.Drawing.ContentAlignment.BottomLeft
+        '
+        'gbPTO
+        '
+        Me.gbPTO.Controls.Add(Me.cbPTOType)
+        Me.gbPTO.Location = New System.Drawing.Point(5, 10)
+        Me.gbPTO.Name = "gbPTO"
+        Me.gbPTO.Size = New System.Drawing.Size(564, 57)
+        Me.gbPTO.TabIndex = 5
+        Me.gbPTO.TabStop = false
+        Me.gbPTO.Text = "PTO Design Variant"
         '
         'cbLegislativeClass
         '
         Me.cbLegislativeClass.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
         Me.cbLegislativeClass.FormattingEnabled = true
-        Me.cbLegislativeClass.Location = New System.Drawing.Point(330, 215)
-        Me.cbLegislativeClass.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
+        Me.cbLegislativeClass.Location = New System.Drawing.Point(220, 140)
         Me.cbLegislativeClass.Name = "cbLegislativeClass"
-        Me.cbLegislativeClass.Size = New System.Drawing.Size(76, 28)
+        Me.cbLegislativeClass.Size = New System.Drawing.Size(52, 21)
         Me.cbLegislativeClass.TabIndex = 41
         '
         'Label21
         '
         Me.Label21.AutoSize = true
-        Me.Label21.Location = New System.Drawing.Point(48, 189)
-        Me.Label21.Margin = New System.Windows.Forms.Padding(4, 0, 4, 0)
+        Me.Label21.Location = New System.Drawing.Point(32, 123)
         Me.Label21.Name = "Label21"
-        Me.Label21.Size = New System.Drawing.Size(167, 20)
+        Me.Label21.Size = New System.Drawing.Size(112, 13)
         Me.Label21.TabIndex = 42
         Me.Label21.Text = "Maximum Laden Mass"
         '
@@ -1784,8 +1890,7 @@ Partial Class VehicleForm
         Me.lblTitle.AutoSize = true
         Me.lblTitle.BackColor = System.Drawing.Color.White
         Me.lblTitle.Font = New System.Drawing.Font("Microsoft Sans Serif", 18!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0,Byte))
-        Me.lblTitle.Location = New System.Drawing.Point(182, 52)
-        Me.lblTitle.Margin = New System.Windows.Forms.Padding(4, 0, 4, 0)
+        Me.lblTitle.Location = New System.Drawing.Point(121, 34)
         Me.lblTitle.Name = "lblTitle"
         Me.lblTitle.Size = New System.Drawing.Size(166, 29)
         Me.lblTitle.TabIndex = 43
@@ -1794,10 +1899,10 @@ Partial Class VehicleForm
         'VehicleForm
         '
         Me.AcceptButton = Me.ButOK
-        Me.AutoScaleDimensions = New System.Drawing.SizeF(9!, 20!)
+        Me.AutoScaleDimensions = New System.Drawing.SizeF(6!, 13!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.CancelButton = Me.ButCancel
-        Me.ClientSize = New System.Drawing.Size(898, 935)
+        Me.ClientSize = New System.Drawing.Size(666, 608)
         Me.Controls.Add(Me.lblTitle)
         Me.Controls.Add(Me.Label21)
         Me.Controls.Add(Me.cbLegislativeClass)
@@ -1817,7 +1922,6 @@ Partial Class VehicleForm
         Me.Controls.Add(Me.ToolStrip1)
         Me.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle
         Me.Icon = CType(resources.GetObject("$this.Icon"),System.Drawing.Icon)
-        Me.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
         Me.MaximizeBox = false
         Me.Name = "VehicleForm"
         Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen
@@ -1844,9 +1948,6 @@ Partial Class VehicleForm
         Me.PnCdATrTr.PerformLayout
         CType(Me.PictureBox1,System.ComponentModel.ISupportInitialize).EndInit
         Me.CmOpenFile.ResumeLayout(false)
-        Me.gbPTO.ResumeLayout(false)
-        Me.pnPTO.ResumeLayout(false)
-        Me.pnPTO.PerformLayout
         Me.GroupBox3.ResumeLayout(false)
         Me.GroupBox2.ResumeLayout(false)
         Me.pnAngledriveFields.ResumeLayout(false)
@@ -1861,20 +1962,32 @@ Partial Class VehicleForm
         Me.GroupBox9.ResumeLayout(false)
         Me.GroupBox9.PerformLayout
         Me.tpElectricComponents.ResumeLayout(false)
-        Me.tpElectricComponents.PerformLayout
         Me.gbBattery.ResumeLayout(false)
         Me.gbBattery.PerformLayout
         Me.Panel2.ResumeLayout(false)
         Me.Panel2.PerformLayout
         Me.gpElectricMotor.ResumeLayout(false)
         Me.gpElectricMotor.PerformLayout
+        Me.gbRatiosPerGear.ResumeLayout(false)
+        Me.gbRatiosPerGear.PerformLayout
         Me.pnElectricMotor.ResumeLayout(false)
         Me.pnElectricMotor.PerformLayout
         Me.tpTorqueLimits.ResumeLayout(false)
-        Me.tpTorqueLimits.PerformLayout
+        Me.gbPropulsionTorque.ResumeLayout(false)
+        Me.gbPropulsionTorque.PerformLayout
+        Me.gbEMTorqueLimits.ResumeLayout(false)
+        Me.gbEMTorqueLimits.PerformLayout
+        Me.bgVehicleTorqueLimits.ResumeLayout(false)
+        Me.bgVehicleTorqueLimits.PerformLayout
         Me.tpADAS.ResumeLayout(false)
         Me.GroupBox5.ResumeLayout(false)
         Me.GroupBox5.PerformLayout
+        Me.tpRoadSweeper.ResumeLayout(false)
+        Me.gbPTODrive.ResumeLayout(false)
+        Me.gbPTODrive.PerformLayout
+        Me.pnPTO.ResumeLayout(false)
+        Me.pnPTO.PerformLayout
+        Me.gbPTO.ResumeLayout(false)
         Me.ResumeLayout(false)
         Me.PerformLayout
 
@@ -1962,6 +2075,7 @@ End Sub
 	Friend WithEvents tbAngledriveLossMapPath As System.Windows.Forms.TextBox
 	Friend WithEvents ToolTip1 As System.Windows.Forms.ToolTip
 	Friend WithEvents GroupBox3 As System.Windows.Forms.GroupBox
+'<<<<<<< HEAD
 	Friend WithEvents Label7 As System.Windows.Forms.Label
 	Friend WithEvents tbPTOLossMap As System.Windows.Forms.TextBox
 	Friend WithEvents gbPTO As System.Windows.Forms.GroupBox
@@ -1975,6 +2089,12 @@ End Sub
 	Friend WithEvents tpGeneral As System.Windows.Forms.TabPage
 	Friend WithEvents tpPowertrain As System.Windows.Forms.TabPage
 	Friend WithEvents tpTorqueLimits As System.Windows.Forms.TabPage
+'=======
+'	Friend WithEvents TabControl1 As System.Windows.Forms.TabControl
+'	Friend WithEvents TabPage1 As System.Windows.Forms.TabPage
+'	Friend WithEvents TabPage2 As System.Windows.Forms.TabPage
+'	Friend WithEvents TabPage3 As System.Windows.Forms.TabPage
+'>>>>>>> VECTO_CERT/master
 	Friend WithEvents Label17 As System.Windows.Forms.Label
 	Friend WithEvents btDelMaxTorqueEntry As System.Windows.Forms.Button
 	Friend WithEvents btAddMaxTorqueEntry As System.Windows.Forms.Button
@@ -1997,12 +2117,13 @@ End Sub
     Friend WithEvents GroupBox9 As GroupBox
     Friend WithEvents cbTankSystem As ComboBox
     Friend WithEvents Label23 As Label
+'<<<<<<< HEAD
     Friend WithEvents cbAtEcoRollReleaseLockupClutch As CheckBox
     Friend WithEvents tpElectricComponents As TabPage
     Friend WithEvents gpElectricMotor As GroupBox
     Friend WithEvents gbBattery As GroupBox
-    Friend WithEvents tbEmEfficiency As TextBox
-    Friend WithEvents lblEmEfficiency As Label
+    Friend WithEvents tbEmADCLossMap As TextBox
+    Friend WithEvents lblEmADCLossmap As Label
     Friend WithEvents tbRatioEm As TextBox
     Friend WithEvents lblRatioEm As Label
     Friend WithEvents tbEmCount As TextBox
@@ -2028,7 +2149,41 @@ End Sub
     Friend WithEvents lblInitialSoCUnit As Label
     Friend WithEvents tbInitialSoC As TextBox
     Friend WithEvents lblInitialSoC As Label
-    Friend WithEvents lblMaxDrivetrainPwrUnit As Label
-    Friend WithEvents tbMaxDrivetrainPwr As TextBox
-    Friend WithEvents lblMaxDrivetrainPwr As Label
+    Friend WithEvents gbEMTorqueLimits As GroupBox
+    Friend WithEvents btnEmTorqueLimits As Button
+    Friend WithEvents tbEmTorqueLimits As TextBox
+    Friend WithEvents bgVehicleTorqueLimits As GroupBox
+    Friend WithEvents gbPropulsionTorque As GroupBox
+    Friend WithEvents btnPropulsionTorqueLimit As Button
+    Friend WithEvents tbPropulsionTorqueLimit As TextBox
+    Friend WithEvents btnEmADCLossMap As Button
+'=======
+    Friend WithEvents tpRoadSweeper As TabPage
+    Friend WithEvents gbPTODrive As GroupBox
+    Friend WithEvents tbPtoGear As TextBox
+    Friend WithEvents Label26 As Label
+    Friend WithEvents tbPtoEngineSpeed As TextBox
+    Friend WithEvents Label25 As Label
+    Friend WithEvents Label24 As Label
+    'Friend WithEvents gbPTO As GroupBox
+    'Friend WithEvents cbPTOType As ComboBox
+    'Friend WithEvents pnPTO As Panel
+    'Friend WithEvents btPTOCycle As Button
+    'Friend WithEvents Label16 As Label
+    'Friend WithEvents tbPTOCycle As TextBox
+    'Friend WithEvents btPTOLossMapBrowse As Button
+    'Friend WithEvents Label7 As Label
+    'Friend WithEvents tbPTOLossMap As TextBox
+    Friend WithEvents Label27 As Label
+    Friend WithEvents btPTOCycleDrive As Button
+    Friend WithEvents Label28 As Label
+    Friend WithEvents tbPTODrive As TextBox
+    Friend WithEvents gbRatiosPerGear As GroupBox
+    Friend WithEvents lvRatioPerGear As ListView
+    Friend WithEvents ColumnHeader11 As ColumnHeader
+    Friend WithEvents ColumnHeader12 As ColumnHeader
+    Friend WithEvents Button1 As Button
+    Friend WithEvents Label29 As Label
+    Friend WithEvents Button2 As Button
+    '>>>>>>> VECTO_CERT/master
 End Class

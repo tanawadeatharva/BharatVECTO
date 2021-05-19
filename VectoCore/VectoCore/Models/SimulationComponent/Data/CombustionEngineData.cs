@@ -48,6 +48,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 	{
 		[Required, SIRange(1, 5)] public Second EngineStartTime;
 
+
 		
 		[Required, SIRange(1000 * 1E-6, 20000 * 1E-6)]
 		public CubicMeter Displacement { get; internal set; }
@@ -74,6 +75,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 
 		[Required, ValidateObject]
 		public List<CombustionEngineFuelData> Fuels { get; internal set; }
+
+		public PerSecond PTORoadSweepEngineSpeed { get; internal set; }
 
 		[JsonIgnore]
 		public IEngineDeclarationInputData InputData { get; set; }
@@ -107,6 +110,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 
 		public WHRPowerMap WHRMap { get; internal set; }
 	}
+		
+
 
 	public class CombustionEngineFuelData
 	{

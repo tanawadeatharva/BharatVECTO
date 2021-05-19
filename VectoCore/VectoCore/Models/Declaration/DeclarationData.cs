@@ -51,6 +51,7 @@ using TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.Pneumatics;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.SimulationComponent;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
+using TUGraz.VectoCore.Models.SimulationComponent.Data.ElectricMotor;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Engine;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox;
 using TUGraz.VectoCore.Utils;
@@ -347,9 +348,9 @@ namespace TUGraz.VectoCore.Models.Declaration
 				}
 			}
 
-			public static double CalculateCOP(Watt coolingPwrDriver, ACCompressorType comprTypeDriver, Watt coolingPwrPass, ACCompressorType comprTypePass, FloorType floorType)
+			public static double CalculateCOP(Watt coolingPwrDriver, HeatPumpType comprTypeDriver, Watt coolingPwrPass, HeatPumpType comprTypePass, FloorType floorType)
 			{
-				if (coolingPwrDriver.IsGreater(0) && comprTypeDriver == ACCompressorType.None) {
+				if (coolingPwrDriver.IsGreater(0) && comprTypeDriver == HeatPumpType.none) {
 					comprTypeDriver = comprTypePass;
 				}
 				if (coolingPwrDriver.IsEqual(0) && coolingPwrPass.IsEqual(0)) {

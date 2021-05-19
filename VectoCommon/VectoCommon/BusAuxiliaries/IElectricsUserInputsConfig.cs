@@ -10,9 +10,9 @@
 // See the LICENSE.txt for the specific language governing permissions and limitations.
 
 
-
+using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
-using TUGraz.VectoCore.Models.BusAuxiliaries.Interfaces.DownstreamModules.Electrics;
+
 namespace TUGraz.VectoCommon.BusAuxiliaries
 {
 	public interface IElectricsUserInputsConfig
@@ -88,7 +88,7 @@ namespace TUGraz.VectoCommon.BusAuxiliaries
 		/// 	<value></value>
 		/// 	<returns>True For Smart Electrical Systems/ False For non Smart.</returns>
 		/// 	<remarks></remarks>
-		bool SmartElectrical { get; }
+		AlternatorType AlternatorType { get; }
 
 		/// <summary>
 		/// 	Stored Energy Efficiency
@@ -101,5 +101,9 @@ namespace TUGraz.VectoCommon.BusAuxiliaries
 		Watt MaxAlternatorPower { get; }
 
 		WattSecond ElectricStorageCapacity { get; }
+
+		bool ConnectESToREESS { get; }
+
+		double DCDCEfficiency { get; }
 	}
 }
