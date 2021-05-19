@@ -358,7 +358,7 @@ namespace TUGraz.VectoCore.Tests.XML
 			Assert.AreEqual("Variable displacement elec. controlled", aux.SteeringPumpTechnology[0]);
 
 			Assert.AreEqual(1, aux.ElectricSupply.Alternators.Count);
-			Assert.AreEqual("default", aux.ElectricSupply.Alternators[0].Technology);
+			Assert.AreEqual("conventional", aux.ElectricSupply.Alternators[0].Technology);
 			Assert.AreEqual(true, aux.ElectricSupply.SmartElectrics);
 			Assert.AreEqual(15000, aux.ElectricSupply.MaxAlternatorPower.Value());
 			Assert.AreEqual(50.SI(Unit.SI.Watt.Hour).Cast<WattSecond>(), aux.ElectricSupply.ElectricStorageCapacity);

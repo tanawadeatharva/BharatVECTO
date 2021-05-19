@@ -6,9 +6,9 @@
 		<Model>Generic Model</Model>
 		<VIN>VEH-1234567890_SmartES</VIN>
 		<Date>2017-02-15T11:00:00Z</Date>
-		<VehicleCategory>Bus</VehicleCategory>
+		<ChassisConfiguration>Bus</ChassisConfiguration>
 		<AxleConfiguration>4x2</AxleConfiguration>
-    <Articulated>false</Articulated>
+		<Articulated>false</Articulated>
 		<TechnicalPermissibleMaximumLadenMass>25000</TechnicalPermissibleMaximumLadenMass>
 		<IdlingSpeed>600</IdlingSpeed>
 		<RetarderType>Transmission Output Retarder</RetarderType>
@@ -3265,13 +3265,21 @@
 						<Technology axleNumber="1">Variable displacement elec. controlled</Technology>
 					</SteeringPump>
 					<ElectricSystem>
-						<AlternatorTechnology>default</AlternatorTechnology>
-						<SmartElectrics>true</SmartElectrics>
-						<MaxAlternatorPower>35000</MaxAlternatorPower>
-						<ElectricStorageCapacity>50</ElectricStorageCapacity>
+						<AlternatorTechnology>smart</AlternatorTechnology>
+						<SmartAlternator>
+							<RatedCurrent>730</RatedCurrent>
+							<RatedVoltage>48</RatedVoltage>
+						</SmartAlternator>
+						<Battery>
+							<BatteryTechnology>li-ion battery - high power</BatteryTechnology>
+							<RatedCapacity>50</RatedCapacity>
+							<NominalVoltage>48</NominalVoltage>
+						</Battery>
+						<SupplyFromHEVPossible>false</SupplyFromHEVPossible>
 					</ElectricSystem>
 					<PneumaticSystem>
 						<SizeOfAirSupply>Large Supply 2-stage</SizeOfAirSupply>
+						<CompressorDrive>mechanically</CompressorDrive>
 						<Clutch>none</Clutch>
 						<CompressorRatio>1.000</CompressorRatio>
 						<SmartCompressionSystem>false</SmartCompressionSystem>

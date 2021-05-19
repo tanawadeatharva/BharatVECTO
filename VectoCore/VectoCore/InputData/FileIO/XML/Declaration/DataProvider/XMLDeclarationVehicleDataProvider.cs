@@ -968,7 +968,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 		public VehicleCategory VehicleCategory
 		{
-			get { return VehicleCategoryHelper.Parse(GetString(XMLNames.Vehicle_VehicleCategory)); }
+			get { return VehicleCategoryHelper.Parse(GetString("ChassisConfiguration")); }
 		}
 
 		public AxleConfiguration AxleConfiguration

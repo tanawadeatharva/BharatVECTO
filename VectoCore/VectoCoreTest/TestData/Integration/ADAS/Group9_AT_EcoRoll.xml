@@ -35,7 +35,7 @@
 			<EcoRollWithoutEngineStop>true</EcoRollWithoutEngineStop>
 			<EcoRollWithEngineStop>false</EcoRollWithEngineStop>
 			<PredictiveCruiseControl>none</PredictiveCruiseControl>
-			<ATEcoRollReleaseLockupClutch>false</ATEcoRollReleaseLockupClutch>
+			<APTEcoRollReleaseLockupClutch>false</APTEcoRollReleaseLockupClutch>
 		</v2.1:ADAS>
     <Components xsi:type="v2.0:VehicleComponentsType">
       <Engine xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0" xsi:type="EngineComponentDeclarationType">

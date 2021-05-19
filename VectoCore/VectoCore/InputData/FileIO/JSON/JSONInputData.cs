@@ -1157,23 +1157,25 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 	}
 
 
-	public class JSONInputDataComptededBusFactorMethodV7 : JSONFile, IDeclarationInputDataProvider, IDeclarationJobInputData
+	public class JSONInputDataCompletedBusFactorMethodV7 : JSONFile, IDeclarationInputDataProvider, IDeclarationJobInputData
 	{
 		private readonly IXMLInputDataReader _xmlInputReader;
+		protected internal string PrimaryInputDataFile;
+		protected internal string CompletedInputDataFile;
 
-		public JSONInputDataComptededBusFactorMethodV7(JObject data, string filename, bool tolerateMissing = false) : base(
+		public JSONInputDataCompletedBusFactorMethodV7(JObject data, string filename, bool tolerateMissing = false) : base(
 			data, filename, tolerateMissing)
 		{
 			var kernel = new StandardKernel(new VectoNinjectModule());
 			_xmlInputReader = kernel.Get<IXMLInputDataReader>();
 
-			var primaryInputData = Path.Combine(BasePath, Body.GetEx<string>("PrimaryVehicleResults"));
-			var completedInputData = Path.Combine(BasePath, Body.GetEx<string>("CompletedVehicle"));
+			PrimaryInputDataFile = Path.Combine(BasePath, Body.GetEx<string>("PrimaryVehicleResults"));
+			CompletedInputDataFile = Path.Combine(BasePath, Body.GetEx<string>("CompletedVehicle"));
 
 			//PrimaryVehicle = CreateReader(primaryInputData);
 
-			Vehicle = _xmlInputReader.CreateDeclaration(completedInputData).JobInputData.Vehicle;
-			PrimaryVehicleData = (_xmlInputReader.Create(primaryInputData) as IPrimaryVehicleInformationInputDataProvider);
+			Vehicle = _xmlInputReader.CreateDeclaration(CompletedInputDataFile).JobInputData.Vehicle;
+			PrimaryVehicleData = (_xmlInputReader.Create(PrimaryInputDataFile) as IPrimaryVehicleInformationInputDataProvider);
 			JobName = Vehicle.VIN;
 		}
 

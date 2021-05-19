@@ -96,7 +96,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 				case 6:
 					return new JSONInputDataSingleBusV6(json, filename, tolerateMissing);
 				case 7:
-					return new JSONInputDataComptededBusFactorMethodV7(json, filename, tolerateMissing);
+					return new JSONInputDataCompletedBusFactorMethodV7(json, filename, tolerateMissing);
                 case 8:
 					return new JSONInputDataV8_Hybrid(json, filename, tolerateMissing);
                 case 9:

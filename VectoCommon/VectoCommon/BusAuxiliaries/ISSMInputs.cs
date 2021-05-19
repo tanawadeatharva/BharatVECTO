@@ -229,7 +229,11 @@ namespace TUGraz.VectoCommon.BusAuxiliaries
 				case NON_R_744_3_STAGE: return HeatPumpType.non_R_744_3_stage;
 				case NON_R_744_4_STAGE: return HeatPumpType.non_R_744_4_stage;
 				case NON_R_744_CONTINUOUS: return HeatPumpType.non_R_744_continuous;
-				default: throw new InvalidEnumArgumentException("HeatPumpType");
+                // to support old input parametersd
+				case "2-stage": return HeatPumpType.non_R_744_2_stage;
+                case "3-stage": return HeatPumpType.non_R_744_3_stage;
+                case "4-stage": return HeatPumpType.non_R_744_4_stage;
+                default: throw new InvalidEnumArgumentException("HeatPumpType");
 			}
 		}
 
