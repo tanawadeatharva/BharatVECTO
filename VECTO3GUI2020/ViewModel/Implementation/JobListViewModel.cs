@@ -4,6 +4,7 @@ using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
@@ -61,6 +62,8 @@ namespace VECTO3GUI2020.ViewModel.Implementation
 		private IMultiStageViewModelFactory _multiStageViewModelFactory;
 		private IAsyncRelayCommand _addJobAsync;
 		private readonly IXMLInputDataReader _inputDataReader;
+		private IAsyncRelayCommand _simulationCommand;
+		private readonly IOutputViewModel _outputViewModel;
 
 		#endregion
 
@@ -79,13 +82,14 @@ namespace VECTO3GUI2020.ViewModel.Implementation
             IXMLInputDataReader inputDataReader,
             IDialogHelper dialogHelper,
             IWindowHelper windowHelper,
-			IMultiStageViewModelFactory multiStageViewModelFactory) : this()
+			IMultiStageViewModelFactory multiStageViewModelFactory, IOutputViewModel outputViewModel) : this()
         {
             _documentViewModelFactory = documentViewModelFactory;
             _dialogHelper = dialogHelper;
             _windowHelper = windowHelper;
 			_inputDataReader = inputDataReader;
 			_multiStageViewModelFactory = multiStageViewModelFactory;
+			_outputViewModel = outputViewModel;
 		}
 
 
@@ -116,7 +120,21 @@ namespace VECTO3GUI2020.ViewModel.Implementation
 
         #region Commands
 
-        public ICommand NewManufacturingStageFile
+
+		public IAsyncRelayCommand SimulationCommand
+		{
+			get => _simulationCommand ?? new AsyncRelayCommand(RunSimulationAsync, () => true);
+		}
+
+		private Task RunSimulationAsync(CancellationToken arg)
+		{
+            
+            _outputViewModel.Messages.Add("hi");
+			return null;
+
+		}
+
+		public ICommand NewManufacturingStageFile
 		{
 			get
 			{

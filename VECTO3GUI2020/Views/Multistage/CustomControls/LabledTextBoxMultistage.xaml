@@ -16,8 +16,8 @@
 
         <Label>
             <PriorityBinding>
-                <Binding ElementName="lableTextBoxMultistage" Path="Label"  Converter="{StaticResource NullToUnsetValue}"></Binding>
-                <Binding ElementName="labledTextBoxMultistage" Path="GeneratedLabelText"></Binding>
+                <Binding Path="Label" ElementName="labledTextBoxMultistage" Converter="{StaticResource NullToUnsetValue}"></Binding>
+                <Binding Path="GeneratedLabelText" ElementName="labledTextBoxMultistage"></Binding>
             </PriorityBinding>
         </Label>
         

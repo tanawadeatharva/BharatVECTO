@@ -4,6 +4,7 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Configuration;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices.WindowsRuntime;
 using System.Text;
 using System.Threading.Tasks;
@@ -139,6 +140,8 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 				_multiStageViewModelFactory.GetAuxiliariesViewModel(consolidatedVehicleData?.Components?
 					.BusAuxiliaries);
 			AirdragModifiedMultistageEditingEnabled = false;
+
+			_editingEnabledDictionary = new IndexedStorage<bool>(() => OnPropertyChanged(nameof(EditingEnabledDictionary)));
 		}
 
 		public IVehicleDeclarationInputData ConsolidatedVehicleData
@@ -418,6 +421,7 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 			}
 			set {
 				AirdragModifiedMultistage = value?.toNullableBool();
+				
 			}
 		}
 
@@ -874,5 +878,21 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 			}
 		}
 		#endregion
+
+		private IndexedStorage<bool> _editingEnabledDictionary;
+		public IndexedStorage<bool> EditingEnabledDictionary
+		{
+			get
+			{
+				return _editingEnabledDictionary;
+			}
+		}
+
+		
+
+
+	
+		
+
 	}
 }

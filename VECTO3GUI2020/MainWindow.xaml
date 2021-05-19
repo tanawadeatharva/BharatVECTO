@@ -19,11 +19,11 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="40"/>
             <RowDefinition Height="1.5*"/>
+            <RowDefinition Height="5"></RowDefinition>
             <RowDefinition Height="1*"/>
         </Grid.RowDefinitions>
 
-        <Grid Grid.Row="0">
-            <StackPanel Orientation="Vertical">
+            <StackPanel Grid.Row="0" Orientation="Vertical">
                 <Menu x:Name="menu" IsMainMenu="True">
                     <MenuItem Header="File" VerticalAlignment="Stretch">
                         <MenuItem Header="Settings" Command="{Binding OpenSettings}"/>
@@ -32,15 +32,11 @@
                     </MenuItem>
                 </Menu>
             </StackPanel>
-        </Grid>
 
-        <Grid Grid.Row="1" Margin="0,4,0,0">
-            <ContentControl Content="{Binding CurrentViewModelTop}"/>
-        </Grid>
 
-        <Grid Grid.Row="2" Margin="0,0,0,0">
-            <ContentControl Name="ContentControlBottom" Content="{Binding CurrentViewModelBottom}" Visibility="Collapsed"/>
-        </Grid>
-
+        <ContentControl Grid.Row="1" Margin="0, 4, 0 0" Content="{Binding CurrentViewModelTop}"/>
+        <GridSplitter Grid.Row="2" HorizontalAlignment="Stretch" Height="5"/>
+        <ContentControl Grid.Row="3" Margin="0,0,0,0" Name="ContentControlBottom" Content="{Binding CurrentViewModelBottom}"/>
+    
     </Grid>
 </Window>

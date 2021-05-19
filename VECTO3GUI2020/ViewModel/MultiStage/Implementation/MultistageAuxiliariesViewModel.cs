@@ -76,6 +76,16 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 			set => SetProperty(ref _primaryVehicleHybridElectric, value);
 		}
 
+		private IndexedStorage<bool> _editingEnabledDictionary;
+		public IndexedStorage<bool> EditingEnabledDictionary
+		{
+			get
+			{
+				return _editingEnabledDictionary;
+			}
+		}
+
+
 
 		#region HVAC
 
@@ -182,12 +192,12 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 				if (value == HeatPumpType.none) {
 					HeatPumpModeDriverCompartmentAllowedValues =
 						EnumHelper.GetValuesAsObservableCollectionIncluding<Enum, HeatPumpMode>(items:HeatPumpMode.N_A);
-					//HeatPumpModeDriverCompartment = HeatPumpMode.N_A;
+					
 				} else {
 					HeatPumpModeDriverCompartmentAllowedValues =
 						EnumHelper.GetValuesAsObservableCollectionExcluding<Enum, HeatPumpMode>(
 							items: HeatPumpMode.N_A);
-					//HeatPumpModeDriverCompartment = HeatPumpMode.cooling;
+					
 				}
 
 
@@ -421,6 +431,10 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 		public MultistageAuxiliariesViewModel(IBusAuxiliariesDeclarationData consolidatedAuxiliariesInputData)
 		{
 			ConsolidatedInputData = consolidatedAuxiliariesInputData;
+			HeatPumpGroupEditingEnabled = true;
+			_editingEnabledDictionary = new IndexedStorage<bool>(() => {
+				OnPropertyChanged(nameof(EditingEnabledDictionary));
+			});
 		}
 
 		#region Implementation of IElectricSupplyDeclarationData

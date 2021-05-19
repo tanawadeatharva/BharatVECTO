@@ -59,7 +59,8 @@ namespace VECTO3GUI2020
 		};
 
 		private HeatPumpMode? _heatpumpMode2;
-
+		private bool _enabled;
+		public bool enabled { get => _enabled; set => SetProperty(ref _enabled, value); }
 		public HeatPumpMode? HeatPumpMode2
 		{
 			get => _heatpumpMode2;
@@ -86,7 +87,8 @@ namespace VECTO3GUI2020
 
 		public TestViewModel()
 		{
-			
+			_enabled = true;
+
 		}
     }
 }

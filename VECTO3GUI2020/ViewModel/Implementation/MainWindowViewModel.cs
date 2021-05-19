@@ -50,7 +50,7 @@ namespace VECTO3GUI2020.ViewModel.Implementation
         }
 
 
-        #region CommandImplementations
+		#region CommandImplementations
         #region CommandOpenSettings
         public ICommand OpenSettings
         {

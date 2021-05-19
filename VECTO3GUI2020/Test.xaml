@@ -13,12 +13,12 @@
 
         <!--https://www.thomasclaudiushuber.com/2008/01/10/bind-to-methods-with-objectdataprovider/-->
         <StackPanel>
-            <customControls:MultiStageParameter Content="{Binding ConvertedSI}" DummyContent="{Binding Source={StaticResource milimeterDummy}}"/>
+            <!--<customControls:MultiStageParameter Content="{Binding ConvertedSI}" DummyContent="{Binding Source={StaticResource milimeterDummy}}"/>
             <customControls:MultiStageParameter Content="{Binding ConvertedSI1}" DummyContent="{Binding Source={StaticResource milimeterDummy}}"/>
-            <customControls:MultiStageParameter Content="{Binding Meter}"/>
-            <customControls:MultiStageParameter Mode="COMBOBOX" Content="{Binding HeatPumpMode}" ListItems="{Binding HeatPumpModeListItems}"></customControls:MultiStageParameter>
-            <customControls:MultiStageParameter Mode="COMBOBOX" Content="{Binding HeatPumpMode2}"></customControls:MultiStageParameter>
-            <customControls:MultiStageParameter Mode="TEXTBOX" Content="{Binding TestString, ValidatesOnExceptions=True}"></customControls:MultiStageParameter>
+            <customControls:MultiStageParameter Content="{Binding Meter}"/>-->
+            <customControls:MultiStageParameter Mode="COMBOBOX" Content="{Binding HeatPumpMode}" EditingEnabled="{Binding enabled}" ListItems="{Binding HeatPumpModeListItems}"></customControls:MultiStageParameter>
+            <!--<customControls:MultiStageParameter Mode="COMBOBOX" Content="{Binding HeatPumpMode2}" EditingEnabled="{Binding enabled}"></customControls:MultiStageParameter>-->
+            <!--<customControls:MultiStageParameter Mode="TEXTBOX" Content="{Binding TestString, ValidatesOnExceptions=True}"></customControls:MultiStageParameter>-->
         </StackPanel>
     </Grid>
 </UserControl>

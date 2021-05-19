@@ -148,6 +148,7 @@
     <Compile Include="Helper\Converter\JobTypeStringConverter.cs" />
     <Compile Include="Helper\Converter\LabledTextBoxLabelConverter.cs" />
     <Compile Include="Helper\Converter\MultistageParameterModeToVisibilityConverter.cs" />
+    <Compile Include="Helper\Converter\BoolToIntConverter.cs" />
     <Compile Include="Helper\Converter\NullToUnsetValueConverter.cs" />
     <Compile Include="Helper\Converter\NullToVisibilityConverter.cs" />
     <Compile Include="Helper\Converter\LabledTextBoxConverter.cs" />
@@ -158,8 +159,10 @@
     <Compile Include="Helper\DoubleValidation.cs" />
     <Compile Include="Helper\Exceptions.cs" />
     <Compile Include="Helper\EnumHelper.cs" />
+    <Compile Include="Helper\IndexedStorage.cs" />
     <Compile Include="Helper\IWindowHelper.cs" />
     <Compile Include="Helper\DialogHelper.cs" />
+    <Compile Include="Helper\NameOfMarkUpExtension.cs" />
     <Compile Include="Helper\WindowHelper.cs" />
     <Compile Include="Helper\XMLExtension.cs" />
     <Compile Include="Helper\XmlHelper.cs" />
@@ -291,6 +294,7 @@
     <Compile Include="ViewModel\MultiStage\Implementation\MultistageJobViewModel_v0_1.cs" />
     <Compile Include="ViewModel\MultiStage\Interfaces\IMultistageAirdragViewModel.cs" />
     <Compile Include="ViewModel\MultiStage\Interfaces\IMultiStageViewModelFactory.cs" />
+    <Compile Include="ViewModel\Implementation\OutputViewModel.cs" />
     <Compile Include="Views\CustomControls\ComboParameter.xaml.cs">
       <DependentUpon>ComboParameter.xaml</DependentUpon>
     </Compile>

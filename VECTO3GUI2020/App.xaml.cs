@@ -10,6 +10,7 @@ using VECTO3GUI2020.Helper;
 using VECTO3GUI2020.Model.Implementation;
 using VECTO3GUI2020.Ninject;
 using VECTO3GUI2020.Ninject.Vehicle;
+using VECTO3GUI2020.ViewModel;
 
 namespace VECTO3GUI2020
 {
@@ -44,7 +45,7 @@ namespace VECTO3GUI2020
             container.Bind<IMainWindowViewModel>().To<MainWindowViewModel>();
             container.Bind<IMainViewModel>().To<JobListViewModel>();
             container.Bind<ISettingsViewModel>().To<SettingsViewModel>();
-
+			container.Bind<IOutputViewModel>().To<OutputViewModel>().InSingletonScope();
             container.Bind<ISettingsModel>().To<SettingsModel>();
 
 			container.Bind<IDialogHelper>().To<DialogHelper>().InSingletonScope();

@@ -15,5 +15,6 @@
     <converter:XToBoolConverter x:Key="XToBoolConverter"/>
     <converter:EnumConverter x:Key="EnumConverter"></converter:EnumConverter>
     <converter:NullToUnsetValueConverter x:Key="NullToUnsetValue"></converter:NullToUnsetValueConverter>
+    <converter:BoolToIntConverter x:Key="BoolToIntConverter"></converter:BoolToIntConverter>
 </ResourceDictionary>
 

@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.Utils;
 using VECTO3GUI2020.Annotations;
 
@@ -27,12 +28,15 @@ namespace VECTO3GUI2020.Views.CustomControls
 		/// <returns></returns>
 		public static string GetLabelByPropertyName(this UserControl userControl, DependencyProperty dependencyProperty, params ResourceManager[] resourceManagers)
 		{
+			
 			string name = null;
 			var binding = userControl.GetBindingExpression(dependencyProperty);
 			var propertyName = binding?.ResolvedSourcePropertyName;
 			
-			if (propertyName == null || binding == null)
-			{
+
+			if (propertyName == null || binding == null) {
+				var status = binding?.Status;
+				throw new VectoException("Could not resolve binding");
 				return name;
 			}
 

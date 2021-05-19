@@ -29,7 +29,7 @@
                 </StackPanel>
                
         </DockPanel>
-        <ContentControl  DockPanel.Dock="Top" Content="{Binding CurrentView}"/>
+            <ContentControl  DockPanel.Dock="Top" Content="{Binding CurrentView}"/>
         </DockPanel>
     </Grid>
 </UserControl>

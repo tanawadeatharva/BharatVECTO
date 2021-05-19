@@ -12,10 +12,12 @@
              d:DesignHeight="450" d:DesignWidth="800" BorderBrush="{DynamicResource ButtonHighlightColor}" BorderThickness="2px" Margin="4px">
     <UserControl.Resources>
         <Style TargetType="custom:MultiStageParameter">
-            <!--<Setter Property="NameLookUpResourceManager" Value="{Binding Source=BusStringResourceManager}"></Setter>-->
-            <Setter Property="NameLookUpResourceManager" Value="{x:Static properties:BusStrings.ResourceManager}"></Setter>
-            </Style>
+            <Setter Property="NameLookUpResourceManager" Value="{x:Static properties:BusStrings.ResourceManager}"/>
+        </Style>
     </UserControl.Resources>
+
+    <!--RelativeSource={x:Static RelativeSource.Self},  {Binding RelativeSource={x:Static RelativeSource.Self}, Path=Name}]
+    Path=(Validation.Errors)/ErrorContent}-->
     <Grid>
         <ScrollViewer>
             <DockPanel>
@@ -23,52 +25,65 @@
                 <Label Content="VEHICLE DATA" HorizontalAlignment="Stretch" FontSize="15" VerticalAlignment="Stretch"
                        Style="{DynamicResource LabelStyle1}"/>
 
-                <custom:MultiStageParameter Validation.ErrorTemplate="{StaticResource multistageParameterControlErrorTemplate}"
+                <custom:MultiStageParameter 
+                    Validation.ErrorTemplate="{StaticResource multistageParameterControlErrorTemplate}"
                     Optional="False" 
-                    Content="{Binding Manufacturer, ValidatesOnDataErrors=True}"/>
-                <custom:MultiStageParameter Validation.ErrorTemplate="{StaticResource multistageParameterControlErrorTemplate}"
+                    Content="{Binding Manufacturer, ValidatesOnDataErrors=True}"
+                    PreviousContent="{Binding }"/>
+                <custom:MultiStageParameter 
+                    Validation.ErrorTemplate="{StaticResource multistageParameterControlErrorTemplate}"
                     Optional="False"
                     Content="{Binding ManufacturerAddress, ValidatesOnDataErrors=True}"/>
-                <custom:MultiStageParameter Validation.ErrorTemplate="{StaticResource multistageParameterControlErrorTemplate}"
+                <custom:MultiStageParameter 
+                    Validation.ErrorTemplate="{StaticResource multistageParameterControlErrorTemplate}"
                     Optional="False" 
                     Content="{Binding VIN, ValidatesOnDataErrors=True}"/>
 
                 <custom:MultiStageParameter 
                     PreviousContent="{Binding ConsolidatedVehicleData.Model}" 
-                    Content="{Binding Model}"/>
+                    Content="{Binding Model}"
+                    Tag="{Binding RelativeSource={RelativeSource Self}, Path=Content}"
+                    EditingEnabled="{Binding EditingEnabledDictionary[Model]}"/>
 
                 <custom:MultiStageParameter 
                     PreviousContent="{Binding ConsolidatedVehicleData.LegislativeClass}"
+                    EditingEnabled="{Binding EditingEnabledDictionary[LegislativeClass]}"
                     Content="{Binding LegislativeClass}" 
                     Mode="COMBOBOX" />
 
-                <custom:MultiStageParameter Validation.ErrorTemplate="{StaticResource multistageParameterControlErrorTemplate}"
-                                            PreviousContent="{Binding ConsolidatedVehicleData.CurbMassChassis}"
-                                            Content="{Binding CurbMassChassis}"/>
-
-                <custom:MultiStageParameter Validation.ErrorTemplate="{StaticResource multistageParameterControlErrorTemplate}"
-                                            PreviousContent="{Binding ConsolidatedVehicleData.GrossVehicleMassRating}"
-                                            Content="{Binding GrossVehicleMassRating}"/>
-
-
-                <custom:MultiStageParameter x:Name="AirdragModified"
-                                            Label="Airdrag modified"
+                <custom:MultiStageParameter 
                     Validation.ErrorTemplate="{StaticResource multistageParameterControlErrorTemplate}"
-                                            EditingEnabled="{Binding AirdragModifiedMultistageEditingEnabled}"
-                                            PreviousContent="{Binding ConsolidatedAirdragmodified}"
-                                            Content="{Binding AirdragModifiedEnum, ValidatesOnDataErrors=True}" 
-                                            Mode="COMBOBOX"/>
+                    PreviousContent="{Binding ConsolidatedVehicleData.CurbMassChassis}"
+                    EditingEnabled="{Binding EditingEnabledDictionary[CurbMassChassis]}"
+                    Content="{Binding CurbMassChassis}"/>
+
+                <custom:MultiStageParameter 
+                    Validation.ErrorTemplate="{StaticResource multistageParameterControlErrorTemplate}"
+                    PreviousContent="{Binding ConsolidatedVehicleData.GrossVehicleMassRating}"
+                    EditingEnabled="{Binding EditingEnabledDictionary[GrossVehicleMassRating]}"
+                    Content="{Binding GrossVehicleMassRating}"/>
+
+
+                <custom:MultiStageParameter 
+                    Label="Airdrag modified"
+                    Validation.ErrorTemplate="{StaticResource multistageParameterControlErrorTemplate}"
+                    EditingEnabled="{Binding AirdragModifiedMultistageEditingEnabled}"
+                    PreviousContent="{Binding ConsolidatedAirdragmodified}"
+                    Content="{Binding AirdragModifiedEnum, ValidatesOnDataErrors=True}" 
+                    Mode="COMBOBOX"/>
 
                 <custom:MultiStageParameter 
                     PreviousContent="{Binding ConsolidatedVehicleData.TankSystem}"
-                    Content="{Binding TankSystem}" 
-                    Mode="COMBOBOX" />
+                    Content="{Binding TankSystem}"
+                    EditingEnabled="{Binding EditingEnabledDictionary[TankSystem]}"
+                    Mode="COMBOBOX">
+                </custom:MultiStageParameter>
 
                 <custom:MultiStageParameter 
                     PreviousContent="{Binding ConsolidatedVehicleData.RegisteredClass}"
                     Content="{Binding RegisteredClass}" 
+                    EditingEnabled="{Binding EditingEnabledDictionary[RegisteredClass]}"
                     Mode="COMBOBOX" />
-
                 <Separator/>
                 <custom:MultiStageParameter 
                     EditingEnabled="{Binding NumberOfPassengersEditingEnabled}" 
@@ -84,12 +99,14 @@
                     PreviousContent="{Binding ConsolidatedVehicleData.VehicleCode}"
                     ListItems="{Binding VehicleCodeAllowedValues}"
                     Content="{Binding VehicleCode}" 
+                    EditingEnabled="{Binding EditingEnabledDictionary[VehicleCode]}"
                     Mode="COMBOBOX"
                     />
 
                 <custom:MultiStageParameter 
                     PreviousContent="{Binding ConsolidatedVehicleData.LowEntry}"
                     Content="{Binding LowEntry}" 
+                    EditingEnabled="{Binding EditingEnabledDictionary[LowEntry]}"
                     Mode="CHECKBOX"
                     />
 
@@ -124,8 +141,9 @@
 
 
                 <custom:MultiStageParameter 
+                    x:Name="DoorDriveTechnology"
                     PreviousContent="{Binding ConsolidatedVehicleData.DoorDriveTechnology}"
-                                            
+                    EditingEnabled="{Binding EditingEnabledDictionary[DoorDriveTechnology]}"
                     Content="{Binding DoorDriveTechnology}" Mode="COMBOBOX" />
 
 
@@ -140,7 +158,6 @@
                     EditingEnabled="{Binding AdasEditingEnabled}"
                     PreviousContent="{Binding ConsolidatedVehicleData.ADAS.EngineStopStart}"
                     Content="{Binding EngineStopStartNullable}"
-                    
                     Mode="CHECKBOX"/>
                 <custom:MultiStageParameter 
                     EditingEnabled="{Binding AdasEditingEnabled}"
