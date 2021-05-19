@@ -137,10 +137,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Configuration\Constants.cs" />
-    <Compile Include="InputData\AuxiliaryFileHelper.cs" />
     <Compile Include="InputData\FileIO\JSON\BusAuxiliaryInputData.cs" />
     <Compile Include="InputData\FileIO\JSON\IJSONVehicleComponents.cs" />
     <Compile Include="InputData\FileIO\JSON\JSONBattery.cs" />
+    <Compile Include="InputData\FileIO\JSON\JSONBusAuxiliariesEngineeringData.cs" />
     <Compile Include="InputData\FileIO\JSON\JSONComponentInputData.cs" />
     <Compile Include="InputData\FileIO\JSON\JSONElectricMotor.cs" />
     <Compile Include="InputData\FileIO\JSON\JsonExtensionMethods.cs" />
@@ -285,8 +285,11 @@
     <Compile Include="InputData\FileIO\XML\XMLInputDataNinjectModule.cs" />
     <Compile Include="InputData\Reader\ComponentData\BatteryInternalResistanceReader.cs" />
     <Compile Include="InputData\Reader\ComponentData\BatteryMaxCurrentReader.cs" />
+    <Compile Include="Models\SimulationComponent\Impl\PTODriveAuxiliary.cs" />
+    <Compile Include="Models\SimulationComponent\Impl\RoadSweeperAuxiliary.cs" />
     <Compile Include="InputData\Reader\ComponentData\ElectricMotorMapReader.cs" />
     <Compile Include="InputData\Reader\DataObjectAdapter\DeclarationDataAdapterMultistageBus.cs" />
+    <Compile Include="InputData\Reader\ComponentData\MaxPropulsionTorqueReader.cs" />
     <Compile Include="InputData\Reader\DataObjectAdapter\DeclarationDataAdapterPrimaryBus.cs" />
     <Compile Include="InputData\Reader\ComponentData\ElectricFullLoadCurveReader.cs" />
     <Compile Include="InputData\Reader\Impl\AbstractDeclarationMultistageBusVectoRunDataFactory.cs" />
@@ -399,9 +402,11 @@
     <Compile Include="Models\SimulationComponent\Data\ElectricMotor\EfficiencyMap.cs" />
     <Compile Include="Models\SimulationComponent\Data\ElectricMotor\ElectricMotorFullLoadCurve.cs" />
     <Compile Include="Models\SimulationComponent\Data\ElectricMotor\ElectricMotorData.cs" />
+    <Compile Include="Models\SimulationComponent\Data\VehicleMaxPropulsionTorque.cs" />
     <Compile Include="Models\SimulationComponent\Data\Engine\WHRPowerMap.cs" />
     <Compile Include="InputData\Reader\ComponentData\WHRPowerReader.cs" />
     <Compile Include="Models\SimulationComponent\Data\HybridStrategyParameters.cs" />
+    <Compile Include="Models\SimulationComponent\DCDCConverter.cs" />
     <Compile Include="Models\SimulationComponent\ElectricSystem.cs" />
     <Compile Include="Models\SimulationComponent\IElectricEnergyStorage.cs" />
     <Compile Include="Models\SimulationComponent\IElectricMotor.cs" />
@@ -409,6 +414,7 @@
     <Compile Include="Models\SimulationComponent\IHybridControlledGearbox.cs" />
     <Compile Include="Models\SimulationComponent\Impl\PEVAMTShiftStrategy.cs" />
     <Compile Include="Models\SimulationComponent\Impl\ShiftLineSet.cs" />
+    <Compile Include="Models\Simulation\DataBus\IDCDCConverter.cs" />
     <Compile Include="Models\Simulation\DataBus\IHybridControllerInfo.cs" />
     <Compile Include="Models\SimulationComponent\IHybridControlStrategy.cs" />
     <Compile Include="Models\SimulationComponent\Impl\Battery.cs" />
@@ -439,6 +445,7 @@
     <Compile Include="OutputData\FileIO\BusAuxWriter.cs" />
     <Compile Include="OutputData\FileIO\FileOutputVIFWriter.cs" />
     <Compile Include="OutputData\FileIO\JSONFileWriter.cs" />
+    <Compile Include="OutputData\ModalDataPostprocessingCorrection.cs" />
     <Compile Include="OutputData\XML\AbstractXMLManufacturerReport.cs" />
     <Compile Include="OutputData\XML\DeclarationJobs\XMLCompletedBusWriter.cs" />
     <Compile Include="OutputData\XML\Engineering\Factory\EngineeringWriterFactory.cs" />
@@ -497,7 +504,6 @@
     <Compile Include="InputData\Impl\InputData.cs" />
     <Compile Include="InputData\IVectoRunDataFactory.cs" />
     <Compile Include="InputData\Reader\ComponentData\AccelerationCurveReader.cs" />
-    <Compile Include="InputData\Reader\ComponentData\AuxiliaryDataReader.cs" />
     <Compile Include="InputData\Reader\ComponentData\CrossWindCorrectionCurveReader.cs" />
     <Compile Include="InputData\Reader\ComponentData\PTOIdleLossMapReader.cs" />
     <Compile Include="InputData\Reader\ComponentData\RetarderLossMapReader.cs" />
@@ -601,7 +607,6 @@
     <Compile Include="Models\Declaration\Wheels.cs" />
     <Compile Include="Models\Declaration\WHTCCorrection.cs" />
     <Compile Include="Models\SimulationComponent\Data\CrosswindCorrectionCdxALookup.cs" />
-    <Compile Include="Models\SimulationComponent\Data\AuxiliaryData.cs" />
     <Compile Include="Models\SimulationComponent\Data\AuxSupplyPowerReader.cs" />
     <Compile Include="Models\SimulationComponent\Data\AxleGearData.cs" />
     <Compile Include="Models\SimulationComponent\Data\CycleData.cs" />

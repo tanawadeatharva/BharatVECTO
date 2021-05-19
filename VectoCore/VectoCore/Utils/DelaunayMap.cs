@@ -142,7 +142,7 @@ namespace TUGraz.VectoCore.Utils
 				// k...points on convex hull (exactly 3 --> supertriangle)
 				if (triangles.Count != 2 * (pointCount + 3) - 2 - 3) {
 					throw new VectoException(
-						"Delaunay-Triangulation invariant violated! Triangle count and point count doesn't fit together.");
+						"{0} Delaunay-Triangulation invariant violated! Triangle count and point count doesn't fit together.", _mapName);
 				}
 			}
 

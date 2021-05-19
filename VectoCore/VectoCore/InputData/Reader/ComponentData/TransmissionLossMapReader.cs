@@ -101,6 +101,38 @@ namespace TUGraz.VectoCore.InputData.Reader.ComponentData
 			return new TransmissionLossMap(entries, gearRatio, gearName);
 		}
 
+		public static TransmissionLossMap CreateEmADCLossMap(DataTable data, double gearRatio, string gearName)
+		{
+			if (data == null || data.Columns.Count < 3) {
+				throw new VectoException("TransmissionLossMap Data File for {0} must consist of 3 columns.", gearName);
+			}
+
+			if (data.Rows.Count < 4) {
+				throw new VectoException(
+					"TransmissionLossMap for {0} must consist of at least four lines with numeric values (below file header", gearName);
+			}
+
+			List<TransmissionLossMap.GearLossMapEntry> entries;
+			if (!HeaderIsValid(data.Columns)) {
+				LoggingObject.Logger<TransmissionLossMap>().Warn(
+					"TransmissionLossMap {5}: Header line is not valid. Expected: '{0}, {1}, {2}'. Got: '{4}'. Falling back to column index.",
+					Fields.InputSpeed, Fields.InputTorque, Fields.TorqeLoss,
+					string.Join(", ", data.Columns.Cast<DataColumn>().Select(c => c.ColumnName).Reverse()), gearName);
+
+				data.Columns[0].ColumnName = Fields.InputSpeed;
+				data.Columns[1].ColumnName = Fields.InputTorque;
+				data.Columns[2].ColumnName = Fields.TorqeLoss;
+			}
+			entries = (from DataRow row in data.Rows
+					select new TransmissionLossMap.GearLossMapEntry(
+						inputSpeed: row.ParseDouble(Fields.InputSpeed).RPMtoRad(),
+						inputTorque: -row.ParseDouble(Fields.InputTorque).SI<NewtonMeter>(),
+						torqueLoss: -row.ParseDouble(Fields.TorqeLoss).SI<NewtonMeter>()))
+				.ToList();
+
+			return new TransmissionLossMap(entries, gearRatio, gearName);
+		}
+
 		private static List<TransmissionLossMap.GearLossMapEntry> ExtendLossMap(
 			List<TransmissionLossMap.GearLossMapEntry> entries)
 		{
@@ -175,6 +207,37 @@ namespace TUGraz.VectoCore.InputData.Reader.ComponentData
 					(1 - efficiency) * 1e5.SI<NewtonMeter>()),
 				new TransmissionLossMap.GearLossMapEntry(10000.RPMtoRad(), 1e5.SI<NewtonMeter>(),
 					(1 - efficiency) * 1e5.SI<NewtonMeter>()),
+			};
+			return new TransmissionLossMap(entries, gearRatio, gearName);
+		}
+
+		public static TransmissionLossMap CreateEmADCLossMap(double efficiency, double gearRatio, string gearName)
+		{
+			if (double.IsNaN(efficiency)) {
+				throw new VectoException("TransmissionLossMap: Efficiency is not a number.");
+			}
+
+			if (efficiency <= 0) {
+				throw new VectoException("TransmissionLossMap: Efficiency for gear {0} must be greater than 0", gearName);
+			}
+			if (efficiency > 1) {
+				throw new VectoException("TransmissionLossMap: Efficiency for gear {1} must not be greater than 1", gearName);
+			}
+			// different signs due to e-motor: negative torque means EM propels the vehicle, positive torque means the EM recuperates energy
+			// to use the same equations as for other components (i.e. lookup methods of TransmissionLossMap) set losses to negative values
+			// for positive torque entries torque is transferred from drivetrain to EM -> drivetrain is reference for computing efficiency
+			// for negative torque entries torque is transferred from EM to drivetrain -> EM is reference for computing efficiency
+			var entries = new List<TransmissionLossMap.GearLossMapEntry> {
+				new TransmissionLossMap.GearLossMapEntry(0.RPMtoRad(), 1e5.SI<NewtonMeter>(),
+					(1 - 1/efficiency) * 1e5.SI<NewtonMeter>()),
+				new TransmissionLossMap.GearLossMapEntry(0.RPMtoRad(), -1e5.SI<NewtonMeter>(),
+					-(1 - efficiency) * 1e5.SI<NewtonMeter>()),
+				new TransmissionLossMap.GearLossMapEntry(0.RPMtoRad(), 0.SI<NewtonMeter>(), 0.SI<NewtonMeter>()),
+				new TransmissionLossMap.GearLossMapEntry(100000.RPMtoRad(), 0.SI<NewtonMeter>(), 0.SI<NewtonMeter>()),
+				new TransmissionLossMap.GearLossMapEntry(100000.RPMtoRad(), -1e5.SI<NewtonMeter>(),
+					-(1 - efficiency) * 1e5.SI<NewtonMeter>()),
+				new TransmissionLossMap.GearLossMapEntry(100000.RPMtoRad(), 1e5.SI<NewtonMeter>(),
+					(1 - 1/efficiency) * 1e5.SI<NewtonMeter>()),
 			};
 			return new TransmissionLossMap(entries, gearRatio, gearName);
 		}

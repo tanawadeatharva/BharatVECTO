@@ -1,9 +1,10 @@
 ﻿using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.Utils;
 
-namespace TUGraz.VectoCore.Models.SimulationComponent.Data {
+namespace TUGraz.VectoCore.Models.SimulationComponent.Data.ElectricMotor {
 	public class ElectricMotorFullLoadCurve
 	{
 		internal readonly List<FullLoadEntry> FullLoadEntries;
@@ -75,6 +76,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data {
 			get { return _maxSpeed ?? (_maxSpeed = FullLoadEntries.Max(x => x.MotorSpeed)); }
 		}
 
+		[DebuggerDisplay("{MotorSpeed.AsRPM}: {FullDriveTorque} / {FullGenerationTorque}")]
 		internal class FullLoadEntry
 		{
 			public PerSecond MotorSpeed { get; set; }

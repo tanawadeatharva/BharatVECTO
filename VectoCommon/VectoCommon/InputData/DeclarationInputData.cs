@@ -694,6 +694,7 @@ namespace TUGraz.VectoCommon.InputData
 
 	public interface IAuxiliaryDeclarationInputData
 	{
+
 		/// <summary>
 		/// P005  Aux-Type
 		/// cf. VECTO Input Parameters.xlsx
@@ -739,9 +740,13 @@ namespace TUGraz.VectoCommon.InputData
 
 		public PowertrainPosition Position { get; set; }
 
-		public double Ratio { get; set; }
+		public double RatioADC { get; set; }
 
-		public double MechanicalEfficiency { get; set; }
+		public double[] RatioPerGear { get; set; }
+
+		public double MechanicalTransmissionEfficiency { get; set; }
+
+		public TableData MechanicalTransmissionLossMap { get; set; }
 	}
 
 	public interface IElectricStorageDeclarationInputData

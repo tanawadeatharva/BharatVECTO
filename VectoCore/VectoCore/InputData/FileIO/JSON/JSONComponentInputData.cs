@@ -31,6 +31,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.IO;
 using System.Xml;
 using System.Xml.Linq;
@@ -40,7 +41,9 @@ using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Resources;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Configuration;
+using TUGraz.VectoCore.InputData.Impl;
 using TUGraz.VectoCore.Models.Declaration;
+using TUGraz.VectoCore.Models.SimulationComponent.Impl;
 using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.InputData.FileIO.JSON
@@ -48,7 +51,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 	public class JSONComponentInputData : IEngineeringInputDataProvider, IDeclarationInputDataProvider,
 		IEngineeringJobInputData, IVehicleEngineeringInputData, IAdvancedDriverAssistantSystemDeclarationInputData,
 		IAdvancedDriverAssistantSystemsEngineering, IVehicleComponentsDeclaration, IVehicleComponentsEngineering,
-		IDriverEngineeringInputData
+		IDriverEngineeringInputData, IAuxiliariesEngineeringInputData
 	{
 		protected IGearboxEngineeringInputData Gearbox;
 		protected IAxleGearInputData AxleGear;
@@ -65,6 +68,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 		private IAxlesEngineeringInputData _axleWheelsEng;
 		private IBatteryPackEngineeringInputData Battery;
 		private IElectricMotorEngineeringInputData ElectricMotor;
+		private IBusAuxiliariesEngineeringData BusAux;
 
 
 		public JSONComponentInputData(string filename, IJSONVehicleComponents job, bool tolerateMissing = false)
@@ -85,6 +89,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 					tmp = JSONInputDataFactory.ReadShiftParameters(filename, tolerateMissing);
 					break;
 				case Constants.FileExtensions.BatteryFile:
+				case ".vbat":
 					tmp = JSONInputDataFactory.ReadREESSData(filename, tolerateMissing);
 					break;
 				case Constants.FileExtensions.ElectricMotorFile:
@@ -92,6 +97,9 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 					break;
 				case Constants.FileExtensions.HybridStrategyParameters:
 					tmp = JSONInputDataFactory.ReadHybridStrategyParameters(filename, tolerateMissing);
+					break;
+				case ".vaux":
+					tmp = JSONInputDataFactory.ReadEngineeringBusAuxiliaries(filename, tolerateMissing);
 					break;
 			}
 
@@ -110,8 +118,9 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 				.If<IAxlesEngineeringInputData>(c => _axleWheelsEng = c)
 				.If<IBatteryPackEngineeringInputData>(c => Battery = c)
 				.If<IElectricMotorEngineeringInputData>(c => { ElectricMotor = c; })
-				.If<IHybridStrategyParameters>(c => HybridStrategyParameters = c);
-			;
+				.If<IHybridStrategyParameters>(c => HybridStrategyParameters = c)
+				.If<IBusAuxiliariesEngineeringData>(c => BusAux = c);
+
 			_filename = filename;
 		}
 
@@ -196,6 +205,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 		public VectoSimulationJobType JobType { get; private set; }
 
 		public IEngineEngineeringInputData EngineOnly { get; private set; }
+		public TableData PTOCycleWhileDrive { get; private set; }
 
 
 		public string JobName
@@ -283,7 +293,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 		{
 			return new JSONElectricMotors(new List<ElectricMachineEntry<IElectricMotorEngineeringInputData>>() {
 				new ElectricMachineEntry<IElectricMotorEngineeringInputData>() {
-					ElectricMachine = ElectricMotor, Count = 1, Ratio = 1, MechanicalEfficiency = 1,
+					ElectricMachine = ElectricMotor, Count = 1, RatioADC = 1, RatioPerGear = new double[] { },
+					MechanicalTransmissionEfficiency = 1,
 					Position = PowertrainPosition.HybridPositionNotSet
 				}
 			});
@@ -313,6 +324,22 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 		public Meter Height
 		{
 			get { return VehicleData.Height; }
+		}
+
+		public TableData ElectricMotorTorqueLimits
+		{
+			get
+			{
+				return Vehicle.ElectricMotorTorqueLimits;
+			}
+		}
+
+		public TableData MaxPropulsionTorque
+		{
+			get
+			{
+				return Vehicle.ElectricMotorTorqueLimits;
+			}
 		}
 
 		public bool? ATEcoRollReleaseLockupClutch
@@ -362,14 +389,19 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			get { return this; }
 		}
 
+		public GearshiftPosition PTO_DriveGear
+		{
+			get { return VehicleData.PTO_DriveGear; }
+		}
+
+		public PerSecond PTO_DriveEngineSpeed
+		{
+			get { return VehicleData.PTO_DriveEngineSpeed; }
+		}
+
 		public double InitialSOC
 		{
 			get { return VehicleData.InitialSOC; }
-		}
-
-		public Watt MaxDrivetrainPower
-		{
-			get { return VehicleData.MaxDrivetrainPower; }
 		}
 
 		public VectoSimulationJobType VehicleType
@@ -567,7 +599,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 		IAuxiliariesEngineeringInputData IVehicleComponentsEngineering.AuxiliaryInputData
 		{
-			get { throw new NotImplementedException(); }
+			get { return this; }
 		}
 
 		IRetarderInputData IVehicleComponentsDeclaration.RetarderInputData
@@ -595,6 +627,20 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 		public PredictiveCruiseControlType PredictiveCruiseControl
 		{
 			get { return DeclarationData.Vehicle.ADAS.PredictiveCruiseControlDefault; }
+		}
+
+		#endregion
+
+		#region Implementation of IAuxiliariesEngineeringInputData
+
+		public IAuxiliaryEngineeringInputData Auxiliaries { get { return new EngineeringAuxiliaryDataInputData();} }
+		public IBusAuxiliariesEngineeringData BusAuxiliariesData
+		{
+			get { return BusAux; }
+		}
+		public Watt ElectricAuxPower
+		{
+			get { return 0.SI<Watt>(); }
 		}
 
 		#endregion

@@ -31,8 +31,10 @@
 
 using System.Collections.Generic;
 using System.Data;
+using TUGraz.VectoCommon.BusAuxiliaries;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
+using TUGraz.VectoCore.Models.SimulationComponent.Impl;
 
 namespace TUGraz.VectoCommon.InputData
 {
@@ -43,11 +45,11 @@ namespace TUGraz.VectoCommon.InputData
 
 		IHybridStrategyParameters HybridStrategyParameters { get; }
 
-        /// <summary>
-        /// P008  Cycles
-        /// cf. VECTO Input Parameters.xlsx
-        /// </summary>
-        IList<ICycleData> Cycles { get; }
+		/// <summary>
+		/// P008  Cycles
+		/// cf. VECTO Input Parameters.xlsx
+		/// </summary>
+		IList<ICycleData> Cycles { get; }
 
 		//ToDo Remove use JobType
 		IEngineEngineeringInputData EngineOnly { get; }
@@ -64,7 +66,9 @@ namespace TUGraz.VectoCommon.InputData
 
 	public interface IHybridStrategyParameters
 	{
-		double EquivalenceFactor { get; }
+		double EquivalenceFactorDischarge { get; }
+		
+		double EquivalenceFactorCharge { get; }
 
 		double MinSoC { get; }
 
@@ -76,6 +80,9 @@ namespace TUGraz.VectoCommon.InputData
 		Second MinimumICEOnTime { get; }
 		Second AuxBufferTime { get; }
 		Second AuxBufferChargeTime { get; }
+		double ICEStartPenaltyFactor { get; }
+
+		double CostFactorSOCExpponent { get; }
 	}
 
 	public interface IVehicleEngineeringInputData : IVehicleDeclarationInputData
@@ -100,15 +107,23 @@ namespace TUGraz.VectoCommon.InputData
 
 		Meter Height { get; }
 
+		TableData ElectricMotorTorqueLimits { get; }
+
+		TableData MaxPropulsionTorque { get; }
+
 		new IVehicleComponentsEngineering Components { get; }
 
 		new IAdvancedDriverAssistantSystemsEngineering ADAS { get; }
+		
 		double InitialSOC { get; }
 
-		Watt MaxDrivetrainPower { get; }
+		// input parameters for road sweeper use case
 
 
 		VectoSimulationJobType VehicleType { get; }
+		GearshiftPosition PTO_DriveGear { get; }
+
+		PerSecond PTO_DriveEngineSpeed { get; }
 	}
 
 	public interface IAdvancedDriverAssistantSystemsEngineering : IAdvancedDriverAssistantSystemDeclarationInputData
@@ -191,7 +206,10 @@ namespace TUGraz.VectoCommon.InputData
 		/// </summary>
 		TableData PTOLossMap { get; }
 
-		TableData PTOCycle { get; }
+		TableData PTOCycleDuringStop { get; }
+
+		TableData PTOCycleWhileDriving { get; }
+
 	}
 
 	public interface IAxleEngineeringInputData : IAxleDeclarationInputData
@@ -392,15 +410,65 @@ namespace TUGraz.VectoCommon.InputData
 
 	public interface IAuxiliariesEngineeringInputData
 	{
-		IList<IAuxiliaryEngineeringInputData> Auxiliaries { get; }
+		IAuxiliaryEngineeringInputData Auxiliaries { get; }
 
-		// Advanced Auxiliaries
-		AuxiliaryModel AuxiliaryAssembly { get; }
+		IBusAuxiliariesEngineeringData BusAuxiliariesData { get; }
 
-		string AuxiliaryVersion { get; }
+	}
 
-		string AdvancedAuxiliaryFilePath { get; }
-		Watt ElectricAuxPower { get; }
+	public interface IBusAuxiliariesEngineeringData
+	{
+		DataSource DataSource { get; }
+
+		IBusAuxPneumaticSystemEngineeringData PneumaticSystem { get; }
+
+		IBusAuxElectricSystemEngineeringData ElectricSystem { get; }
+
+		IBusAuxHVACData HVACData { get; }
+	}
+
+	public interface IBusAuxPneumaticSystemEngineeringData
+	{
+		TableData CompressorMap { get; }
+
+		NormLiterPerSecond AverageAirConsumed { get; }
+
+		bool SmartAirCompression { get; }
+
+		double GearRatio { get; }
+	}
+
+	public interface IBusAuxElectricSystemEngineeringData
+	{
+		double AlternatorEfficiency { get; }
+
+		double DCDCConverterEfficiency { get; }
+
+		Ampere CurrentDemand { get; }
+
+		Ampere CurrentDemandEngineOffDriving { get; }
+
+		Ampere CurrentDemandEngineOffStandstill { get; }
+
+		AlternatorType AlternatorType { get; }
+
+		WattSecond ElectricStorageCapacity { get; }
+
+		Watt MaxAlternatorPower { get; }
+
+		bool ESSupplyFromHEVREESS { get; }
+		double ElectricStorageEfficiency { get; }
+	}
+
+	public interface IBusAuxHVACData
+	{
+		Watt ElectricalPowerDemand { get; }
+
+		Watt MechanicalPowerDemand { get; }
+
+		Joule AverageHeatingDemand { get; }
+
+		Watt AuxHeaterPower { get; }
 	}
 
 	public interface IElectricMotorEngineeringInputData : IElectricMotorDeclarationInputData
@@ -531,53 +599,25 @@ namespace TUGraz.VectoCommon.InputData
 	{
 		Second ActivationDelay { get; }
 		Second MaxEngineOffTimespan { get; }
-		double UtilityFactor { get; }
+		double UtilityFactorStandstill { get; }
+		double UtilityFactorDriving { get;}
 	}
 
 	public interface IAuxiliaryEngineeringInputData
 	{
-		/// <summary>
-		/// P006  Aux-ID
-		/// cf. VECTO Input Parameters.xlsx
-		/// </summary>
-		string ID { get; }
-
-		/// <summary>
-		/// either mapping or constant
-		/// </summary>
-		AuxiliaryDemandType AuxiliaryType { get; }
-
-		/// <summary>
-		/// P022  Aux-InputFile: transmission ratio
-		/// cf. VECTO Input Parameters.xlsx
-		/// </summary>
-		double TransmissionRatio { get; }
-
-		/// <summary>
-		/// P023  Aux-InputFile: efficiency to engine
-		/// cf. VECTO Input Parameters.xlsx
-		/// </summary>
-		double EfficiencyToEngine { get; }
-
-		/// <summary>
-		/// P024  Aux-InputFile: efficiency to supply
-		/// cf. VECTO Input Parameters.xlsx
-		/// </summary>
-		double EfficiencyToSupply { get; }
-
-		/// <summary>
-		/// P025, P026, P027  Aux-InputFile: map
-		/// cf. VECTO Input Parameters.xlsx
-		/// </summary>
-		TableData DemandMap { get; }
-
+		
 		/// <summary>
 		/// P178
 		/// additional constant auxiliary load, similar to Padd; not specified in the cycle but as auxiliary
 		/// </summary>
 		Watt ConstantPowerDemand { get; }
 
-		DataSource DataSource { get; }
+		Watt PowerDemandICEOffDriving { get; }
+		
+		Watt PowerDemandICEOffStandstill { get; }
+
+
+		Watt ElectricPowerDemand { get; }
 	}
 
 }

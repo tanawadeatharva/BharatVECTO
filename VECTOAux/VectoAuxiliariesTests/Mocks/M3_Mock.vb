@@ -15,11 +15,11 @@ Public Class M3_Mock
         Return _GetAveragePowerDemandAtCrankFromPneumatics
     End Function
 
-    Public ReadOnly Property TotalAirDemand As NormLiter Implements IM3_AveragePneumaticLoadDemand.TotalAirDemand
-        Get
-            Return _totalAirDemand
-        End Get
-    End Property
+    'Public ReadOnly Property TotalAirDemand As NormLiter Implements IM3_AveragePneumaticLoadDemand.TotalAirDemand
+    '    Get
+    '        Return _totalAirDemand
+    '    End Get
+    'End Property
 
     Public ReadOnly Property AverageAirConsumed() As NormLiterPerSecond _
         Implements IM3_AveragePneumaticLoadDemand.AverageAirConsumed

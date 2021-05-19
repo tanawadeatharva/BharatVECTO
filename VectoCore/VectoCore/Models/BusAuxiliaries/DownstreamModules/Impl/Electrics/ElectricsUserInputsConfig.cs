@@ -14,6 +14,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Newtonsoft.Json;
 using TUGraz.VectoCommon.BusAuxiliaries;
+using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter;
 using TUGraz.VectoCore.Models.BusAuxiliaries.Interfaces.DownstreamModules.Electrics;
@@ -36,7 +37,7 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.Electric
 		public IResultCard ResultCardTraction { get; set; }
 		public IResultCard ResultCardOverrun { get; set; }
 
-		public bool SmartElectrical { get; set; }
+		public AlternatorType AlternatorType { get; set; }
 
 		[JsonIgnore]
 		public Dictionary<string, ElectricConsumerEntry> ElectricalConsumers { get; set; }
@@ -102,7 +103,13 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.Electric
 		}
 
 		public Watt MaxAlternatorPower { get; set; }
+		
 		public WattSecond ElectricStorageCapacity { get; set; }
+		
+		public bool ConnectESToREESS { get; set; }
+		
+		public double DCDCEfficiency { get; set; }
+		
 	}
 
 }

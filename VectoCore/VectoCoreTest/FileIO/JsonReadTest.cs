@@ -50,6 +50,7 @@ using TUGraz.VECTO;
 namespace TUGraz.VectoCore.Tests.FileIO
 {
 	[TestFixture]
+	[Parallelizable(ParallelScope.All)]
 	public class JsonReadTest
 	{
 		private const string TestJobFile = @"Testdata\Jobs\40t_Long_Haul_Truck.vecto";
@@ -117,8 +118,11 @@ namespace TUGraz.VectoCore.Tests.FileIO
 			((JObject)json["Body"]).Property("Aux").Remove();
 
 			// MK,2016-01-20: Changed for PWheel: aux entry may be missing, and that is ok.
+			// MQ,2021-03-02: refactoring aux: remove mapping and only have 3 fixed values
 			var tmp = new JSONInputDataV2(json, TestJobFile).JobInputData.Vehicle.Components.AuxiliaryInputData.Auxiliaries;
-			Assert.IsTrue(tmp.Count == 0);
+			Assert.AreEqual(0, tmp.ConstantPowerDemand.Value());
+			Assert.AreEqual(0, tmp.PowerDemandICEOffDriving.Value());
+			Assert.AreEqual(0, tmp.PowerDemandICEOffStandstill.Value());
 		}
 
 		[TestCase]

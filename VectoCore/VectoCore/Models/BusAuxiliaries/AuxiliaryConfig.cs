@@ -108,7 +108,7 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries
 			}
 
 			// SmartElectrical
-			if (ElectricalUserInputsConfig.SmartElectrical != other.ElectricalUserInputsConfig.SmartElectrical) {
+			if (ElectricalUserInputsConfig.AlternatorType != other.ElectricalUserInputsConfig.AlternatorType) {
 				return false;
 			}
 

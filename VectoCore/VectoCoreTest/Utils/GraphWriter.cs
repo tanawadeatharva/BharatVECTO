@@ -72,12 +72,12 @@ namespace TUGraz.VectoCore.Tests.Utils
 			_enabled = true;
 		}
 
-		public  void Disable()
+		public void Disable()
 		{
 			_enabled = false;
 		}
 
-		public  void Write(string fileNameV3, string fileNameV22 = null)
+		public void Write(string fileNameV3, string fileNameV22 = null)
 		{
 			if (!_enabled) {
 				return;
@@ -212,7 +212,7 @@ namespace TUGraz.VectoCore.Tests.Utils
 			}
 		}
 
-		private static string TranslateFieldname(ModalResultField modalResultField)
+		private string TranslateFieldname(ModalResultField modalResultField)
 		{
 			switch (modalResultField) {
 				case ModalResultField.n_ice_avg:

@@ -47,7 +47,7 @@ Tool for plotting graphs comparing Vecto 2.2 and Vecto 3
         private static void Main(string[] args)
         {
 			var graphWriter = new GraphWriter();
-            if (args.Contains("--split")) {
+			if (args.Contains("--split")) {
 				Console.Error.WriteLine("plotting graphs splitted by distance");
                 var idx = Array.FindIndex(args, x => x == "--split");
                 var lenght = int.Parse(args[idx + 1]);
@@ -55,7 +55,7 @@ Tool for plotting graphs comparing Vecto 2.2 and Vecto 3
                 var start = 0;
                 do {
 					Console.Error.WriteLine("plotting {0} - {1}", start / 1000, (start + lenght) / 1000);
-					success = graphWriter.WriteDistanceSlice(args[0], args[1], start, start + lenght);
+                    success = graphWriter.WriteDistanceSlice(args[0], args[1], start, start + lenght);
                     start += lenght;
                 } while (success);
 				Console.Error.WriteLine("plotting full cycle");

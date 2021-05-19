@@ -36,6 +36,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl {
 					runData.Mission = new Mission() {
 						MissionType = MissionType.VerificationTest
 					};
+					runData.DriverData = Driverdata;
 					return runData;
 				});
 		}

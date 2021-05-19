@@ -108,8 +108,10 @@ namespace TUGraz.VectoCore.OutputData
 		private Dictionary<PowertrainPosition, WattSecond> _eEmRecuperateMot = new Dictionary<PowertrainPosition, WattSecond>();
 
 		protected VectoRunData _runData;
-		
-       
+		private ICorrectedModalData _correctedModalData;
+		public IModalDataPostProcessor PostProcessingCorrection { set; protected get; }
+
+
 		public ModalDataContainer(VectoRunData runData, IModalDataWriter writer, Action<ModalDataContainer> addReportResult, params IModalDataFilter[] filter)
 		{
 			_runData = runData;
@@ -125,6 +127,8 @@ namespace TUGraz.VectoCore.OutputData
 			if (runData.JobType == VectoSimulationJobType.BatteryElectricVehicle) {
 				return;
 			}
+
+			PostProcessingCorrection = new ModalDataPostprocessingCorrection();
 
 			var multipleEngineModes = runData.EngineData?.MultipleEngineFuelModes ?? false;
             var fuels = runData.EngineData?.Fuels ?? new List<CombustionEngineFuelData>();
@@ -506,6 +510,12 @@ namespace TUGraz.VectoCore.OutputData
 			return TimeIntegral<WattSecond>(ModalResultField.P_reess_loss);
 		}
 
+		public ICorrectedModalData CorrectedModalData
+		{
+			get { return _correctedModalData ?? (_correctedModalData = PostProcessingCorrection.ApplyCorrection(this, _runData)); }
+		}
+
+
 		public void CalculateAggregateValues()
 		{
 			var duration = Duration;
@@ -531,7 +541,8 @@ namespace TUGraz.VectoCore.OutputData
 
 				TimeIntegral<WattSecond>(ModalResultField.P_WHR_el_corr);
 				TimeIntegral<WattSecond>(ModalResultField.P_WHR_mech_corr);
-				TimeIntegral<WattSecond>(ModalResultField.P_aux_ice_off);
+				TimeIntegral<WattSecond>(ModalResultField.P_aux_ESS_mech_ice_off);
+				TimeIntegral<WattSecond>(ModalResultField.P_aux_ESS_mech_ice_on);
 				TimeIntegral<WattSecond>(ModalResultField.P_ice_start);
 			}
 
@@ -584,6 +595,7 @@ namespace TUGraz.VectoCore.OutputData
 			_duration = null;
 			_distance = null;
 			_timeIntegrals.Clear();
+			_correctedModalData = null;
 		}
 
 		protected virtual Second CalcDuration()
@@ -626,13 +638,15 @@ namespace TUGraz.VectoCore.OutputData
 
 			var dataColumns = GetOutputColumns();
 
-			var strCols = dataColumns.Concat(Auxiliaries.Values.Select(c => c.ColumnName))
-									.Concat(
-										new[] {
-											ModalResultField.P_WHR_el_map, ModalResultField.P_WHR_el_corr, ModalResultField.P_WHR_mech_map, ModalResultField.P_WHR_mech_corr, ModalResultField.P_aux_ice_off,
-											ModalResultField.P_ice_start//, ModalResultField.altitude
-										}.Select(x => x.GetName()))
-									.Concat(FuelColumns.SelectMany(kv => kv.Value.Select(kv2 => kv2.Value.ColumnName)));
+			var strCols = dataColumns.Concat(Auxiliaries.Values.Where(x => !x.ColumnName.Contains("P_aux_ENG_AUX_"))
+					.Select(c => c.ColumnName))
+				.Concat(
+					new[] {
+						ModalResultField.P_WHR_el_map, ModalResultField.P_WHR_el_corr, ModalResultField.P_WHR_mech_map,
+						ModalResultField.P_WHR_mech_corr, ModalResultField.P_aux_ESS_mech_ice_off, ModalResultField.P_aux_ESS_mech_ice_on,
+						ModalResultField.P_ice_start //, ModalResultField.altitude
+					}.Select(x => x.GetName()))
+				.Concat(FuelColumns.SelectMany(kv => kv.Value.Select(kv2 => kv2.Value.ColumnName)));
 
 			// TODO: 2018-11-20: Disable additional columns after testing gearshifting!
 //#if TRACE
@@ -758,7 +772,8 @@ namespace TUGraz.VectoCore.OutputData
 						ModalResultField.P_roll,
 						ModalResultField.P_veh_inertia,
 						ModalResultField.n_gbx_out_avg,
-						ModalResultField.T_gbx_out
+						ModalResultField.T_gbx_out,
+						ModalResultField.T_gbx_in
 					}.Select(x => x.GetName()));
 				if (_runData.BusAuxiliaries != null) {
 					dataColumns.AddRange(
@@ -778,6 +793,9 @@ namespace TUGraz.VectoCore.OutputData
 							ModalResultField.P_busAux_PS_generated,
 							ModalResultField.P_busAux_PS_generated_alwaysOn,
 							ModalResultField.P_busAux_PS_generated_dragOnly,
+							ModalResultField.P_DCDC_In,
+							ModalResultField.P_DCDC_Out,
+							ModalResultField.P_DCDC_missing,
 						}.Select(x => x.GetName()));
 				}
 				if (HasTorqueConverter) {
@@ -792,9 +810,12 @@ namespace TUGraz.VectoCore.OutputData
 						}.Select(x => x.GetName()));
 				}
 			}
-			//if (!_writeEngineOnly && WriteAdvancedAux) {
-			dataColumns.AddRange(new [] {ModalResultField.HybridStrategyScore, ModalResultField.HybridStrategySolution}.Select(x => x.GetName()));	
-			//}
+			if (_runData.HybridStrategyParameters != null) {
+				dataColumns.AddRange(new[] {
+					ModalResultField.HybridStrategyScore, ModalResultField.HybridStrategySolution,
+					ModalResultField.MaxPropulsionTorqe
+				}.Select(x => x.GetName()));
+			}
 			return dataColumns;
 		}
 

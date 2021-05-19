@@ -44,15 +44,15 @@ namespace TUGraz.VectoCore.Models.SimulationComponent
 		public override IResponse Request(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity, bool dryRun)
 		{
 			var avgOutSpeed = (PreviousState.OutAngularVelocity + outAngularVelocity) / 2.0;
-			if (ClutchOpen)
-			{
-
+			if (ClutchOpen) {
 				if (dryRun)
 				{
 					return new ResponseDryRun(this)
 					{
 						DeltaFullLoad = avgOutSpeed * outTorque,
 						DeltaDragLoad = avgOutSpeed * outTorque,
+						DeltaFullLoadTorque = outTorque,
+						DeltaDragLoadTorque = outTorque,
 						Clutch = {
 							PowerRequest = avgOutSpeed * outTorque,
 							OutputSpeed = outAngularVelocity
@@ -80,14 +80,15 @@ namespace TUGraz.VectoCore.Models.SimulationComponent
 			{
 				if (DataBus.DriverInfo.DriverBehavior == DrivingBehavior.Halted && !ClutchOpen)
 				{
-					return HandleClutchClosed(absTime, dt, outTorque, outAngularVelocity, dryRun);
+					//return HandleClutchClosed(absTime, dt, outTorque, outAngularVelocity, dryRun);
+					return base.HandleClutchOpen(absTime, dt, outTorque, outAngularVelocity, dryRun);
 				}
 				return base.Request(absTime, dt, outTorque, outAngularVelocity, dryRun);
 
 			}
 
 			var inAngularVelocity = 0.RPMtoRad();
-			var retVal = NextComponent.Request(absTime, dt, outTorque, inAngularVelocity, dryRun);
+			var retVal = NextComponent.Request(absTime, dt, outTorque, outAngularVelocity, dryRun);
 
 			//if (retVal is ResponseEngineSpeedTooLow)
 			//{
@@ -102,7 +103,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent
 
 			if (!dryRun)
 			{
-				CurrentState.SetState(outTorque, retVal.Engine.EngineSpeed, outTorque, outAngularVelocity);
+				CurrentState.SetState(outTorque, outAngularVelocity, outTorque, outAngularVelocity);
 				var avgInAngularVelocity = (PreviousState.InAngularVelocity + CurrentState.InAngularVelocity) / 2;
 				var avgOutAngularVelocity = (PreviousState.OutAngularVelocity + CurrentState.OutAngularVelocity) / 2;
 				var clutchLoss = outTorque * (avgInAngularVelocity - avgOutAngularVelocity);

@@ -109,7 +109,7 @@ Public Class Utils
                 .AlternatorMap = AlternatorReader.ReadMap("TestFiles\testAlternatormap.aalt"),
                 .DoorActuationTimeSecond = Constants.BusAuxiliaries.ElectricalConsumers.DoorActuationTimeSecond,
                 .PowerNetVoltage = Constants.BusAuxiliaries.ElectricSystem.PowernetVoltage,
-                .SmartElectrical = false
+                .AlternatorType = AlternatorType.Conventional
                 },
                 .PneumaticAuxillariesConfig = CreatePneumaticAuxConfig(retarder),
                 .PneumaticUserInputsConfig = New PneumaticUserInputsConfig() With {

@@ -44,11 +44,14 @@ using System.IO;
 using TUGraz.VectoCommon.BusAuxiliaries;
 using TUGraz.VectoCore.InputData.FileIO.JSON;
 using TUGraz.VectoCore.InputData.Reader.ComponentData;
+using TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.Electrics;
+using TUGraz.VectoCore.Models.BusAuxiliaries.Interfaces.DownstreamModules.Electrics;
 using TUGraz.VectoCore.Models.Declaration;
 
 namespace TUGraz.VectoCore.Tests.Integration.BusAuxiliaries
 {
 	[TestFixture]
+	[Parallelizable(ParallelScope.All)]
 	public class AuxDemandTest
 	{
 		[OneTimeSetUp]
@@ -95,7 +98,7 @@ namespace TUGraz.VectoCore.Tests.Integration.BusAuxiliaries
 			for (int i = 0; i < 10; i++) {
 				var torque = busAux.TorqueDemand(0.SI<Second>(), 1.SI<Second>(), engineDrivelinePower / engineSpeed, engineSpeed);
 				Assert.AreEqual(6087.03221, (torque * engineSpeed).Value(), 1e-3);
-				busAux.DoWriteModalResults(0.SI<Second>(), 1.SI<Second>(), modalData);
+				busAux.DoWriteModalResultsICE(0.SI<Second>(), 1.SI<Second>(), modalData);
 				busAux.DoCommitSimulationStep();
 			}
 
@@ -107,7 +110,7 @@ namespace TUGraz.VectoCore.Tests.Integration.BusAuxiliaries
 			for (int i = 0; i < 10; i++) {
 				var torque = busAux.TorqueDemand(0.SI<Second>(), 1.SI<Second>(), engineDrivelinePower / engineSpeed, engineSpeed);
 				Assert.AreEqual(8954.1429, (torque * engineSpeed).Value(), 1e-3);
-				busAux.DoWriteModalResults(0.SI<Second>(), 1.SI<Second>(), modalData);
+				busAux.DoWriteModalResultsICE(0.SI<Second>(), 1.SI<Second>(), modalData);
 				busAux.DoCommitSimulationStep();
 			}
 
@@ -119,7 +122,7 @@ namespace TUGraz.VectoCore.Tests.Integration.BusAuxiliaries
 			for (int i = 0; i < 10; i++) {
 				var torque = busAux.TorqueDemand(0.SI<Second>(), 1.SI<Second>(), engineDrivelinePower / engineSpeed, engineSpeed);
 				Assert.AreEqual(6087.03221, (torque * engineSpeed).Value(), 1e-3);
-				busAux.DoWriteModalResults(0.SI<Second>(), 1.SI<Second>(), modalData);
+				busAux.DoWriteModalResultsICE(0.SI<Second>(), 1.SI<Second>(), modalData);
 				busAux.DoCommitSimulationStep();
 			}
 
@@ -164,6 +167,10 @@ namespace TUGraz.VectoCore.Tests.Integration.BusAuxiliaries
 			var veh = new MockVehicle(vehicle) { MyVehicleSpeed = 50.KMPHtoMeterPerSecond() };
 			var auxConfig = BusAuxiliaryInputData.ReadBusAuxiliaries(auxFilePath, vehicle.RunData.VehicleData);
 			var busAux = new BusAuxiliariesAdapter(vehicle, auxConfig);
+			var electricStorage = auxConfig.ElectricalUserInputsConfig.AlternatorType == AlternatorType.Smart
+				? new SimpleBattery(vehicle, auxConfig.ElectricalUserInputsConfig.ElectricStorageCapacity, auxConfig.ElectricalUserInputsConfig.StoredEnergyEfficiency)
+				: (ISimpleBattery)new NoBattery(vehicle);
+			busAux.ElectricStorage = electricStorage;
 			return busAux;
 		}
 	}

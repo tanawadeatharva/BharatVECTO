@@ -29,7 +29,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 				mission, completedVehicle.Length, completedVehicle.Width,
 				(int)completedVehicle.NumberOfPassengersLowerDeck + (int)completedVehicle.NumberOfPassengersUpperDeck, loading.Key);
 
-			var vehicleData = base.CreateVehicleData(primaryVehicle, segment, mission, loading);
+			var vehicleData = base.CreateVehicleData(primaryVehicle, segment, mission, loading, false);
 			vehicleData.InputData = completedVehicle;
 			vehicleData.VIN = completedVehicle.VIN;
 			vehicleData.LegislativeClass = completedVehicle.LegislativeClass;
@@ -115,7 +115,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			var retVal = GetDefaultElectricalUserConfig();
 
 			var primaryBusAuxiliaries = primaryVehicle.Components.BusAuxiliaries;
-			retVal.SmartElectrical = primaryBusAuxiliaries.ElectricSupply.SmartElectrics;
+			retVal.AlternatorType = primaryBusAuxiliaries.ElectricSupply.SmartElectrics ? AlternatorType.Smart : AlternatorType.Conventional;
 			retVal.ElectricalConsumers = currentDemand;
 			retVal.AlternatorMap = new SimpleAlternator(
 				CalculateAlternatorEfficiency(

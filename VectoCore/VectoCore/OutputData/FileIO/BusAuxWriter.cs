@@ -24,14 +24,17 @@ namespace TUGraz.VectoCore.OutputData.FileIO
 				body["PneumaticUserInputsConfig"] = SavePneumaticUserConfig(auxCfg.PneumaticUserInputsConfig, basePath);
 				//body["HvacUserInputsConfig"] = SaveHVACUserConfig();
 
-				body["SSMFilePath"] = string.IsNullOrWhiteSpace(auxCfg.SSMInputs.Source)
-					? ""
-					: JSONFileWriter.GetRelativePath(auxCfg.SSMInputs.Source, basePath);
-				body["EnvironmentalConditions"] = string.IsNullOrWhiteSpace(auxCfg.SSMInputs.EnvironmentalConditions.Source)
-					? ""
-					: JSONFileWriter.GetRelativePath(auxCfg.SSMInputs.EnvironmentalConditions.Source, basePath);
-				
-					//string.IsNullOrWhiteSpace(auxCfg.SSMInputs.Technologies.Source)
+				if (auxCfg.SSMInputs is ISSMDeclarationInputs ssmInputs) {
+					body["SSMFilePath"] = string.IsNullOrWhiteSpace(ssmInputs.Source)
+						? ""
+						: JSONFileWriter.GetRelativePath(ssmInputs.Source, basePath);
+					body["EnvironmentalConditions"] =
+						string.IsNullOrWhiteSpace(ssmInputs.EnvironmentalConditions.Source)
+							? ""
+							: JSONFileWriter.GetRelativePath(ssmInputs.EnvironmentalConditions.Source, basePath);
+				}
+
+				//string.IsNullOrWhiteSpace(auxCfg.SSMInputs.Technologies.Source)
 					//? ""
 					//: JSONFileWriter.GetRelativePath(auxCfg.SSMInputs.Technologies.Source, basePath);
 				body["Actuations"] = new Dictionary<string, object>() {
@@ -106,7 +109,7 @@ namespace TUGraz.VectoCore.OutputData.FileIO
 			elData["ResultCardTraction"] = resultCard;
 
 			// SmartElectrical
-			elData["SmartElectrical"] = electricalUserCfg.SmartElectrical;
+			elData["SmartElectrical"] = electricalUserCfg.AlternatorType;
 
 			return elData;
 		}
@@ -152,7 +155,7 @@ namespace TUGraz.VectoCore.OutputData.FileIO
 
 
 
-		public static bool SaveSSMConfig(ISSMInputs ssmInput, string filePath)
+		public static bool SaveSSMConfig(ISSMDeclarationInputs ssmInput, string filePath)
 		{
 			var returnValue = true;
 			try {
@@ -177,7 +180,7 @@ namespace TUGraz.VectoCore.OutputData.FileIO
 			return returnValue;
 		}
 
-		private static Dictionary<string, object> SaveGenInputs(ISSMInputs ssmInputs)
+		private static Dictionary<string, object> SaveGenInputs(ISSMDeclarationInputs ssmInputs)
 		{
 			var retVal = new Dictionary<string, object>();
 

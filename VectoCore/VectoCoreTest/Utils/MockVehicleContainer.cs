@@ -55,7 +55,7 @@ namespace TUGraz.VectoCore.Tests.Utils
 		public List<VectoSimulationComponent> Components = new List<VectoSimulationComponent>();
 		private Watt _axlegearLoss = 0.SI<Watt>();
 		private bool _clutchClosed = true;
-		private ITorqueConverterControl _torqueConverter;
+		private ITorqueConverter _torqueConverter;
 		private IGearboxInfo _gearboxInfoImplementation;
 
 		public IAxlegearInfo AxlegearInfo
@@ -149,6 +149,11 @@ namespace TUGraz.VectoCore.Tests.Utils
 			get { throw new NotImplementedException(); }
 		}
 
+		public ITorqueConverterInfo TorqueConverterInfo
+		{
+			get { return _torqueConverter; }
+		}
+
 		public ITorqueConverterControl TorqueConverterCtl
 		{
 			get { return _torqueConverter; }
@@ -162,6 +167,12 @@ namespace TUGraz.VectoCore.Tests.Utils
 		public IHybridControllerInfo HybridControllerInfo { get; }
 		public IHybridControllerCtl HybridControllerCtl { get; }
 		public IAngledriveInfo AngledriveInfo { get; }
+		public IDCDCConverter DCDCConverter { get; }
+
+		public bool IsTestPowertrain
+		{
+			get { return false; }
+		}
 
 		public Watt GearboxLoss()
 		{

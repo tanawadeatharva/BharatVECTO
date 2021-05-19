@@ -38,6 +38,8 @@ using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.InputData.FileIO.JSON;
 using TUGraz.VectoCore.InputData.Reader.ComponentData;
 using TUGraz.VectoCore.InputData.Reader.Impl;
+using TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.Electrics;
+using TUGraz.VectoCore.Models.BusAuxiliaries.Interfaces.DownstreamModules.Electrics;
 using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.Impl;
@@ -94,7 +96,8 @@ namespace TUGraz.VectoCore.Tests.Integration
 				EngineData = engineData,
 				ElectricMachinesData = new List<Tuple<PowertrainPosition, ElectricMotorData>>(),
 				SimulationType = SimulationType.DistanceCycle,
-				Cycle = cycleData,
+				Cycle = cycleData, 
+				DriverData = driverData,
 				BusAuxiliaries = BusAuxiliaryInputData.ReadBusAuxiliaries(AdvancedAuxFile, vehicleData)
 			};
 			var fileWriter = new FileOutputWriter(modFileName);
@@ -118,7 +121,12 @@ namespace TUGraz.VectoCore.Tests.Integration
 				.AddComponent(engine);
 
 			var aux = new BusAuxiliariesAdapter(container, runData.BusAuxiliaries);
-
+			
+			var auxCfg = runData.BusAuxiliaries;
+			var electricStorage = auxCfg.ElectricalUserInputsConfig.AlternatorType == AlternatorType.Smart
+				? new SimpleBattery(container, auxCfg.ElectricalUserInputsConfig.ElectricStorageCapacity, auxCfg.ElectricalUserInputsConfig.StoredEnergyEfficiency)
+				: (ISimpleBattery)new NoBattery(container);
+			aux.ElectricStorage = electricStorage;
 			engine.Connect(aux.Port());
 
 			return container;

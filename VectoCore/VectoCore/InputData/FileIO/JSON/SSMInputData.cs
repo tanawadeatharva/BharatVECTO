@@ -9,7 +9,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 {
 	public static class SSMInputData
 	{
-		public static ISSMInputs ReadStream(Stream str, IVehicleData vehicleData, IEnvironmentalConditionsMap env)
+		public static ISSMDeclarationInputs ReadStream(Stream str, IVehicleData vehicleData, IEnvironmentalConditionsMap env)
 		{
 			var json = (JObject)JToken.ReadFrom(new JsonTextReader(new StreamReader(str)));
 			var body = (JObject)json["Body"];
@@ -18,7 +18,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			return retVal;
 		}
 
-		public static ISSMInputs ReadFile(string fileName, IVehicleData vehicleData, IEnvironmentalConditionsMap env)
+		public static ISSMDeclarationInputs ReadFile(string fileName, IVehicleData vehicleData, IEnvironmentalConditionsMap env)
 		{
 			var json = JSONInputDataFactory.ReadFile(fileName);
 			var body = (JObject)json["Body"];

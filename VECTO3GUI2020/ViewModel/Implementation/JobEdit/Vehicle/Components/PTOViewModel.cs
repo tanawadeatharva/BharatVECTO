@@ -49,7 +49,9 @@ namespace VECTO3GUI2020.ViewModel.Implementation.JobEdit.Vehicle.Components
 		protected TableData _ptoCycle;
         public virtual string PTOTransmissionType {get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
 
-		public virtual TableData PTOLossMap {get => throw new NotImplementedException(); set => throw new NotImplementedException(); } 
+		public virtual TableData PTOLossMap {get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+		public TableData PTOCycleDuringStop { get; }
+		public TableData PTOCycleWhileDriving { get; }
 		public virtual TableData PTOCycle {get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
 
 		public virtual DataView PTOLossMapDataView
@@ -77,7 +79,7 @@ namespace VECTO3GUI2020.ViewModel.Implementation.JobEdit.Vehicle.Components
 		protected override void SetProperties()
 		{
 			_ptoTransmissionType = _inputData.PTOTransmissionType;
-			_ptoCycle = _inputData.PTOCycle;
+			_ptoCycle = _inputData.PTOCycleDuringStop;
 			_ptoLossMap = _inputData.PTOLossMap;
 		}
 

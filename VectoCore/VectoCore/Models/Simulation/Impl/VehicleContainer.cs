@@ -67,6 +67,8 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 		public virtual IDriverInfo DriverInfo { get; protected set; }
 		public virtual IHybridController HybridController { get; protected set; }
 
+		public virtual IAuxInProvider BusAux { get; protected set; }
+
 		public virtual IMileageCounter MileageCounter { get; protected set; }
 
 		public virtual IClutchInfo ClutchInfo { get; protected set; }
@@ -74,7 +76,16 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 		public virtual IDrivingCycleInfo DrivingCycleInfo { get; protected set; }
 
 		public IRESSInfo BatteryInfo { get; protected set; }
+		public ITorqueConverterInfo TorqueConverterInfo { get; protected set; }
 
+		public virtual ITorqueConverterControl TorqueConverterCtl { get; private set; }
+
+		public IDCDCConverter DCDCConverter { get; private set; }
+
+		public virtual bool IsTestPowertrain
+		{
+			get { return false; }
+		}
 
 		internal ISimulationOutPort Cycle;
 
@@ -112,11 +123,10 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 		public virtual Second AbsTime { get; set; }
 		public IElectricMotorInfo ElectricMotorInfo(PowertrainPosition pos)
 		{
-			return ElectricMotors[pos];
+			return ElectricMotors.ContainsKey(pos) ?  ElectricMotors[pos] : null;
 		}
 
 
-		public virtual ITorqueConverterControl TorqueConverterCtl { get; private set; }
 
 		public IPowertainInfo PowertrainInfo
 		{
@@ -153,7 +163,8 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 					HasGearbox = true;
 				})
 				.If<IGearboxControl>(c => GearboxCtl = c)
-				.If<ITorqueConverterControl>(c => TorqueConverterCtl = c)
+				.If<ITorqueConverterInfo>(c => TorqueConverterInfo = c)
+				.If<ITorqueConverterControl>(c =>  TorqueConverterCtl = c)
 				.If<IAxlegearInfo>(c => AxlegearInfo = c)
 				.If<IAngledriveInfo>(c => AngledriveInfo = c)
 				.If<IWheelsInfo>(c => WheelsInfo = c)
@@ -185,7 +196,10 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 					HasElectricMotor = true;
 				})
 				.If<IHybridController>(c => { HybridController = c; })
-				.If<IRESSInfo>(c => BatteryInfo = c);
+				.If<IRESSInfo>(c => BatteryInfo = c)
+				.If<BusAuxiliariesAdapter>(c => BusAux = c)
+				.If<IDCDCConverter>(c => DCDCConverter = c);
+
 
 			if (ignoreComponent) {
 				return;
@@ -193,6 +207,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			_components.Add(Tuple.Create(commitPriority, component));
 			_components = _components.OrderBy(x => x.Item1).Reverse().ToList();
 		}
+
 
 
 		public virtual void CommitSimulationStep(Second time, Second simulationInterval)

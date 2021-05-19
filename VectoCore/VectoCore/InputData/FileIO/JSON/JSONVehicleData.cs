@@ -41,10 +41,12 @@ using TUGraz.VectoCommon.BusAuxiliaries;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
+using TUGraz.VectoCommon.Resources;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.InputData.Impl;
 using TUGraz.VectoCore.Models.Declaration;
+using TUGraz.VectoCore.Models.SimulationComponent.Impl;
 
 namespace TUGraz.VectoCore.InputData.FileIO.JSON
 {
@@ -93,30 +95,27 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			}
 		}
 
-		public override Watt MaxDrivetrainPower
-		{
-			get
-			{
-				if (Body[JsonKeys.HEV_Vehicle_MaxDrivetrainPower] != null) {
-					return Body.GetEx<double>(JsonKeys.HEV_Vehicle_MaxDrivetrainPower).SI(Unit.SI.Kilo.Watt).Cast<Watt>();
-				}
-
-				return null;
-			}
-		}
-
 		protected virtual JSONElectricMotors ReadMotors()
 		{
 			var retVal = new List<ElectricMachineEntry<IElectricMotorEngineeringInputData>>();
-			foreach (var entry in Body["ElectricMotors"])
-			{
-				var tmp = new ElectricMachineEntry<IElectricMotorEngineeringInputData>()
-				{
+			foreach (var entry in Body["ElectricMotors"]) {
+				var tmp = new ElectricMachineEntry<IElectricMotorEngineeringInputData>() {
 					Position = PowertrainPositionHelper.Parse(entry.GetEx<string>("Position")),
-					Ratio = entry.GetEx<double>("Ratio"),
-					MechanicalEfficiency = entry.GetEx<double>("MechanicalEfficiency"),
+					RatioADC = entry.GetEx<double>("Ratio"),
+					RatioPerGear = entry["RatioPerGear"] != null
+						? entry["RatioPerGear"].Select(x => x.Value<double>()).ToArray()
+						: new double[] { },
+					MechanicalTransmissionEfficiency = entry["MechanicalEfficiency"] != null
+						? entry.GetEx<double>("MechanicalEfficiency")
+						: double.NaN,
+					MechanicalTransmissionLossMap = entry["MechanicalTransmissionLossMap"] != null
+						? ReadTableData(Path.Combine(BasePath, entry.GetEx<string>("MechanicalTransmissionLossMap")),
+							"EM ADC LossMap")
+						: null,
 					Count = entry.GetEx<int>("Count"),
-					ElectricMachine = JSONInputDataFactory.ReadElectricMotorData(Path.Combine(BasePath, entry.GetEx<string>("MotorFile")), false)
+					ElectricMachine =
+						JSONInputDataFactory.ReadElectricMotorData(
+							Path.Combine(BasePath, entry.GetEx<string>("MotorFile")), false)
 				};
 				retVal.Add(tmp);
 			}
@@ -130,7 +129,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 				? new JSONADASInputDataV10BEV(this)
 				: base.GetADS()));
 		}
-
+		
 
 		protected virtual JSONElectricStorageEngineeringInputData ReadBatteries()
 		{
@@ -138,6 +137,28 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 				Count = Body["Battery"].GetEx<int>("NumPacks"),
 				REESSPack = JSONInputDataFactory.ReadREESSData(Path.Combine(BasePath, Body["Battery"].GetEx<string>("BatteryFile")), false)
 			};
+		}
+
+		public override TableData ElectricMotorTorqueLimits
+		{
+			get
+			{
+				return Body["EMTorqueLimits"] == null
+					? null
+					: ReadTableData(Path.Combine(BasePath, Body.GetEx<string>("EMTorqueLimits")),
+						"ElectricMotorTorqueLimits");
+			}
+		}
+
+		public override TableData MaxPropulsionTorque
+		{
+			get
+			{
+				return Body["MaxPropulsionTorque"] == null
+					? null
+					: ReadTableData(Path.Combine(BasePath, Body.GetEx<string>("MaxPropulsionTorque")),
+						"MaxPropulsionTorque");
+			}
 		}
 
 		#endregion
@@ -312,7 +333,17 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			get { return Body["VehicleHeight"] == null ? null : Body.GetEx<double>("VehicleHeight").SI<Meter>(); }
 		}
 
-		
+		public virtual TableData ElectricMotorTorqueLimits
+		{
+			get { return null; }
+		}
+
+		public virtual TableData MaxPropulsionTorque
+		{
+			get { return null; }
+		}
+
+
 		public virtual Meter Length
 		{
 			get { return null; }
@@ -338,6 +369,14 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			get { return null; }
 		}
 
+		public GearshiftPosition PTO_DriveGear { get {
+			return Body["GearDuringPTODrive"] != null ? new GearshiftPosition(Body["GearDuringPTODrive"].Value<uint>()) : null;
+		} }
+
+		public PerSecond PTO_DriveEngineSpeed { get {
+			return Body["EngineSpeedDuringPTODrive"] != null ? Body.GetEx<double>("EngineSpeedDuringPTODrive").RPMtoRad() : null;
+		} }
+
 		IAdvancedDriverAssistantSystemsEngineering IVehicleEngineeringInputData.ADAS
 		{
 			get { return GetADS(); }
@@ -356,11 +395,6 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 		public virtual double InitialSOC
 		{
 			get { return double.NaN; }
-		}
-
-		public virtual Watt MaxDrivetrainPower
-		{
-			get { return null; }
 		}
 
 		public virtual VectoSimulationJobType VehicleType
@@ -628,11 +662,51 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			get { return 0; }
 		}
 
-		public virtual CubicMeter CargoVolume
-		{
+		public virtual CubicMeter CargoVolume {
 			get { return 0.SI<CubicMeter>(); }
 		}
 
+		public virtual TableData PTOCycleDuringStop {
+			get {
+				var pto = Body[JsonKeys.Vehicle_PTO];
+				if (pto == null || pto[JsonKeys.Vehicle_PTO_Cycle] == null) {
+					return null;
+				}
+				var cycle = pto[JsonKeys.Vehicle_PTO_Cycle];
+				if (string.IsNullOrWhiteSpace(cycle.Value<string>())) {
+					return null;
+				}
+				try {
+					return ReadTableData(Body.GetEx(JsonKeys.Vehicle_PTO).GetEx<string>(JsonKeys.Vehicle_PTO_Cycle), "PTO Cycle Standstill");
+				} catch (Exception) {
+					if (!TolerateMissing) {
+						throw;
+					}
+					return new TableData(Path.Combine(BasePath, cycle.Value<string>()) + MissingFileSuffix, DataSourceType.Missing);
+				}
+			}
+		}
+
+		public virtual TableData PTOCycleWhileDriving {
+			get {
+				var pto = Body[JsonKeys.Vehicle_PTO];
+				if (pto == null || pto[JsonKeys.Vehicle_PTO_CycleDriving] == null) {
+					return null;
+				}
+				var cycle = pto[JsonKeys.Vehicle_PTO_CycleDriving];
+				if (string.IsNullOrWhiteSpace(cycle.Value<string>())) {
+					return null;
+				}
+				try {
+					return ReadTableData(Body.GetEx(JsonKeys.Vehicle_PTO).GetEx<string>(JsonKeys.Vehicle_PTO_CycleDriving), "PTO Cycle Driving");
+				} catch (Exception) {
+					if (!TolerateMissing) {
+						throw;
+					}
+					return new TableData(Path.Combine(BasePath, cycle.Value<string>()) + MissingFileSuffix, DataSourceType.Missing);
+				}
+			}
+		}
 		public virtual VehicleCode? VehicleCode
 		{
 			get { return  VectoCommon.Models.VehicleCode.NOT_APPLICABLE; }

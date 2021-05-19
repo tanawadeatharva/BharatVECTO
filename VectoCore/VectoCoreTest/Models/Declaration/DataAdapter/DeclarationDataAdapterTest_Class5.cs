@@ -37,6 +37,7 @@ using TUGraz.VectoCore.Models.Declaration;
 namespace TUGraz.VectoCore.Tests.Models.Declaration.DataAdapter
 {
 	[TestFixture]
+	[Parallelizable(ParallelScope.All)]
 	public class DeclarationDataAdapterTest_Class5
 	{
 		public const string Class5TractorPTOJob =

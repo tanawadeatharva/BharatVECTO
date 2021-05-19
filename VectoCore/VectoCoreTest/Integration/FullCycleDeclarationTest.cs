@@ -46,6 +46,7 @@ using NUnit.Framework;
 namespace TUGraz.VectoCore.Tests.Integration
 {
 	[TestFixture]
+	[Parallelizable(ParallelScope.All)]
 	public class FullCycleDeclarationTest
 	{
 		public const string LongHaulTruckDeclarationJob =

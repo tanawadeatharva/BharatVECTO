@@ -1,4 +1,5 @@
 ﻿using TUGraz.VectoCommon.BusAuxiliaries;
+using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.Models.BusAuxiliaries.Interfaces.DownstreamModules;
@@ -25,7 +26,9 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl
 		protected ISignals _signals;
 		private bool _smartElectrics;
 
-		public M06Impl(IElectricsUserInputsConfig electricConfig, IM1_AverageHVACLoadDemand m1, IM2_AverageElectricalLoadDemand m2, IM3_AveragePneumaticLoadDemand m3, IM4_AirCompressor m4, IM5_SmartAlternatorSetGeneration m5, ISignals signals)
+		public M06Impl(IElectricsUserInputsConfig electricConfig, IM1_AverageHVACLoadDemand m1,
+			IM2_AverageElectricalLoadDemand m2, IM3_AveragePneumaticLoadDemand m3, IM4_AirCompressor m4,
+			IM5_SmartAlternatorSetGeneration m5, ISignals signals)
 		{
 			_m1 = m1;
 			_m2 = m2;
@@ -33,7 +36,7 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl
 			_m4 = m4;
 			_m5 = m5;
 			_signals = signals;
-			_smartElectrics = electricConfig.SmartElectrical;
+			_smartElectrics = electricConfig.AlternatorType == AlternatorType.Smart;
 		}
 
 		protected override void DoCalculate()

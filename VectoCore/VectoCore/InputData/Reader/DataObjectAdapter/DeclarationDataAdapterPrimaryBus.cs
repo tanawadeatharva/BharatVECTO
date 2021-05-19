@@ -31,9 +31,9 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 		}
 
 
-		public override VehicleData CreateVehicleData(IVehicleDeclarationInputData data, Segment segment, Mission mission, KeyValuePair<LoadingType, Tuple<Kilogram, double?>> loading)
+		public override VehicleData CreateVehicleData(IVehicleDeclarationInputData data, Segment segment, Mission mission, KeyValuePair<LoadingType, Tuple<Kilogram, double?>> loading, bool allowVocational)
 		{
-			var retVal = base.CreateVehicleData(data, segment, mission, loading);
+			var retVal = base.CreateVehicleData(data, segment, mission, loading, allowVocational);
 			retVal.CurbMass = mission.CurbMass;
 			retVal.GrossVehicleMass = 40000.SI<Kilogram>();
 			return retVal;
@@ -101,7 +101,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 
 			var retVal = GetDefaultElectricalUserConfig();
 
-			retVal.SmartElectrical = busAux.ElectricSupply.SmartElectrics;
+			retVal.AlternatorType = busAux.ElectricSupply.SmartElectrics ? AlternatorType.Smart : AlternatorType.Conventional;
 			retVal.ElectricalConsumers = currentDemand;
 			retVal.AlternatorMap = new SimpleAlternator(CalculateAlternatorEfficiency(busAux.ElectricSupply.Alternators)) {
 				Technologies = busAux.ElectricSupply.Alternators.Select(x => x.Technology).ToList()
@@ -315,7 +315,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			};
 		}
 
-		public virtual ISSMInputs CreateSSMModelParameters(IBusAuxiliariesDeclarationData busAuxInputData, Mission mission, IFuelProperties heatingFuel, LoadingType loadingType)
+		public virtual ISSMDeclarationInputs CreateSSMModelParameters(IBusAuxiliariesDeclarationData busAuxInputData, Mission mission, IFuelProperties heatingFuel, LoadingType loadingType)
 		{
 			var busParams = mission.BusParameter;
 

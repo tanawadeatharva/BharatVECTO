@@ -40,6 +40,10 @@ using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.InputData.Reader.ComponentData;
 using TUGraz.VectoCore.InputData.Reader.ShiftStrategy;
+using TUGraz.VectoCore.Models.BusAuxiliaries;
+using TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.Electrics;
+using TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.HVAC;
+using TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.Pneumatics;
 using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.SimulationComponent;
@@ -185,7 +189,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			}
 			
 			var retVal = SetCommonCombustionEngineData(engine, tankSystem);
-			retVal.IdleSpeed = engineMode.IdleSpeed;
+			retVal.IdleSpeed = VectoMath.Max(engineMode.IdleSpeed, vehicle.EngineIdleSpeed);
 			retVal.Fuels = new List<CombustionEngineFuelData>();
 			foreach (var fuel in engineMode.Fuels) {
 				retVal.Fuels.Add(
@@ -405,49 +409,21 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 
 		public IList<VectoRunData.AuxData> CreateAuxiliaryData(IAuxiliariesEngineeringInputData auxInputData)
 		{
-			var auxList = new List<VectoRunData.AuxData>(auxInputData.Auxiliaries.Count + 1) {
-				new VectoRunData.AuxData { ID = Constants.Auxiliaries.Cycle, DemandType = AuxiliaryDemandType.Direct }
-			};
+			var pwrICEOn = auxInputData.Auxiliaries.ConstantPowerDemand;
+			var pwrICEOffDriving = auxInputData.Auxiliaries.PowerDemandICEOffDriving;
+			var pwrICEOffStandstill = auxInputData.Auxiliaries.PowerDemandICEOffStandstill;
 
-			foreach (var a in auxInputData.Auxiliaries) {
-				switch (a.AuxiliaryType) {
-					case AuxiliaryDemandType.Mapping:
-						auxList.Add(CreateMappingAuxiliary(a));
-						break;
-					case AuxiliaryDemandType.Constant:
-						auxList.Add(CreateConstantAuxiliary(a));
-						break;
-					default: throw new VectoException("Auxiliary type {0} not supported!", a.AuxiliaryType);
-				}
-			}
+			var baseDemand = pwrICEOffStandstill;
+			var stpDemand = pwrICEOffDriving - pwrICEOffStandstill;
+			var fanDemand = pwrICEOn - pwrICEOffDriving;
+
+			var auxList = new List<VectoRunData.AuxData>() {
+				new VectoRunData.AuxData { ID = Constants.Auxiliaries.IDs.ENG_AUX_MECH_BASE, DemandType = AuxiliaryDemandType.Constant, PowerDemand = baseDemand},
+				new VectoRunData.AuxData { ID = Constants.Auxiliaries.IDs.ENG_AUX_MECH_STP, DemandType = AuxiliaryDemandType.Constant, PowerDemand = stpDemand},
+				new VectoRunData.AuxData { ID = Constants.Auxiliaries.IDs.ENG_AUX_MECH_FAN, DemandType = AuxiliaryDemandType.Constant, PowerDemand = fanDemand},
+			};
 
 			return auxList;
-		}
-
-		private static VectoRunData.AuxData CreateMappingAuxiliary(IAuxiliaryEngineeringInputData a)
-		{
-			if (a.DemandMap == null) {
-				throw new VectoSimulationException("Demand Map for auxiliary {0} required", a.ID);
-			}
-			if (a.DemandMap.Columns.Count != 3 || a.DemandMap.Rows.Count < 4) {
-				throw new VectoSimulationException(
-					"Demand Map for auxiliary {0} has to contain exactly 3 columns and at least 4 rows", a.ID);
-			}
-
-			return new VectoRunData.AuxData {
-				ID = a.ID,
-				DemandType = AuxiliaryDemandType.Mapping,
-				Data = AuxiliaryDataReader.Create(a)
-			};
-		}
-
-		private static VectoRunData.AuxData CreateConstantAuxiliary(IAuxiliaryEngineeringInputData a)
-		{
-			return new VectoRunData.AuxData {
-				ID = a.ID,
-				DemandType = AuxiliaryDemandType.Constant,
-				PowerDemand = a.ConstantPowerDemand
-			};
 		}
 
 		internal DriverData CreateDriverData(IDriverEngineeringInputData driver)
@@ -490,7 +466,8 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 					EngineOffStandStillActivationDelay =
 						driver.EngineStopStartData?.ActivationDelay ?? DeclarationData.Driver.EngineStopStart.ActivationDelay,
 					MaxEngineOffTimespan = driver.EngineStopStartData?.MaxEngineOffTimespan ?? DeclarationData.Driver.EngineStopStart.MaxEngineOffTimespan,
-					UtilityFactor = driver.EngineStopStartData?.UtilityFactor ?? DeclarationData.Driver.EngineStopStart.UtilityFactor,
+					UtilityFactorStandstill = driver.EngineStopStartData?.UtilityFactorStandstill ?? DeclarationData.Driver.EngineStopStart.UtilityFactor,
+					UtilityFactorDriving = driver.EngineStopStartData?.UtilityFactorDriving ?? DeclarationData.Driver.EngineStopStart.UtilityFactor,
 				},
 				EcoRoll = new DriverData.EcoRollData() {
 					UnderspeedThreshold = driver.EcoRollData?.UnderspeedThreshold ?? DeclarationData.Driver.EcoRoll.UnderspeedThreshold,
@@ -522,10 +499,10 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			if (pto.PTOTransmissionType != "None") {
 				var ptoData = new PTOData {
 					TransmissionType = pto.PTOTransmissionType,
-					LossMap = PTOIdleLossMapReader.Create(pto.PTOLossMap),
+					LossMap = pto.PTOLossMap == null ? PTOIdleLossMapReader.GetZeroLossMap() : PTOIdleLossMapReader.Create(pto.PTOLossMap),
 				};
-				if (pto.PTOCycle != null) {
-					ptoData.PTOCycle = DrivingCycleDataReader.ReadFromDataTable(pto.PTOCycle, "PTO", false);
+				if (pto.PTOCycleDuringStop != null) {
+					ptoData.PTOCycle = DrivingCycleDataReader.ReadFromDataTable(pto.PTOCycleDuringStop, "PTO", false);
 				}
 				return ptoData;
 			}
@@ -533,10 +510,110 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			return null;
 		}
 
-		public IAuxiliaryConfig CreateAdvancedAuxData(IAuxiliariesEngineeringInputData auxInputData)
+		public IAuxiliaryConfig CreateBusAuxiliariesData(IAuxiliariesEngineeringInputData auxInputData, VehicleData vehicleData)
 		{
-			return null;
+			if (auxInputData == null || auxInputData.BusAuxiliariesData == null) {
+				return null;
+			}
+
+			var busAux = auxInputData.BusAuxiliariesData;
+			return new AuxiliaryConfig() {
+				//InputData = auxInputData.BusAuxiliariesData,
+				ElectricalUserInputsConfig = new ElectricsUserInputsConfig() {
+					PowerNetVoltage = Constants.BusAuxiliaries.ElectricSystem.PowernetVoltage,
+					//StoredEnergyEfficiency = Constants.BusAuxiliaries.ElectricSystem.StoredEnergyEfficiency,
+					ResultCardIdle = new DummyResultCard(),
+					ResultCardOverrun = new DummyResultCard(),
+					ResultCardTraction = new DummyResultCard(),
+					AlternatorGearEfficiency = Constants.BusAuxiliaries.ElectricSystem.AlternatorGearEfficiency,
+					DoorActuationTimeSecond = Constants.BusAuxiliaries.ElectricalConsumers.DoorActuationTimeSecond,
+					AlternatorMap = new SimpleAlternator(busAux.ElectricSystem.AlternatorEfficiency) {
+						Technologies = new List<string>() { "engineering mode" }
+					},
+					AlternatorType =
+						busAux.ElectricSystem.ESSupplyFromHEVREESS &&
+						busAux.ElectricSystem.AlternatorType != AlternatorType.Smart
+							? AlternatorType.None
+							: busAux.ElectricSystem.AlternatorType,
+					ConnectESToREESS = busAux.ElectricSystem.ESSupplyFromHEVREESS,
+					DCDCEfficiency = busAux.ElectricSystem.DCDCConverterEfficiency.LimitTo(0, 1),
+					MaxAlternatorPower = busAux.ElectricSystem.MaxAlternatorPower,
+					ElectricStorageCapacity = busAux.ElectricSystem.ElectricStorageCapacity ?? 0.SI<WattSecond>(),
+					StoredEnergyEfficiency = busAux.ElectricSystem.ElectricStorageEfficiency,
+					ElectricalConsumers = GetElectricConsumers(busAux.ElectricSystem)
+				},
+				PneumaticAuxillariesConfig = new PneumaticsConsumersDemand() {
+					AdBlueInjection = 0.SI<NormLiterPerSecond>(),
+					AirControlledSuspension = busAux.PneumaticSystem.AverageAirConsumed,
+					Braking = 0.SI<NormLiterPerKilogram>(),
+					BreakingWithKneeling = 0.SI<NormLiterPerKilogramMeter>(),
+					DeadVolBlowOuts = 0.SI<PerSecond>(),
+					DeadVolume = 0.SI<NormLiter>(),
+					NonSmartRegenFractionTotalAirDemand = 0,
+					SmartRegenFractionTotalAirDemand = 0,
+					OverrunUtilisationForCompressionFraction =
+						Constants.BusAuxiliaries.PneumaticConsumersDemands.OverrunUtilisationForCompressionFraction,
+					DoorOpening = 0.SI<NormLiter>(),
+					StopBrakeActuation = 0.SI<NormLiterPerKilogram>(),
+				},
+				PneumaticUserInputsConfig = new PneumaticUserInputsConfig() {
+					CompressorMap =
+						new CompressorMap(CompressorMapReader.Create(busAux.PneumaticSystem.CompressorMap, 1.0),
+							"engineering mode", busAux.PneumaticSystem.CompressorMap.Source),
+					CompressorGearEfficiency = Constants.BusAuxiliaries.PneumaticUserConfig.CompressorGearEfficiency,
+					CompressorGearRatio = busAux.PneumaticSystem.GearRatio,
+					SmartAirCompression = busAux.PneumaticSystem.SmartAirCompression,
+					SmartRegeneration = false,
+					KneelingHeight = 0.SI<Meter>(),
+					AirSuspensionControl = ConsumerTechnology.Pneumatically,
+					AdBlueDosing = ConsumerTechnology.Electrically,
+					Doors = ConsumerTechnology.Electrically
+				},
+				Actuations = new Actuations() {
+					Braking = 0,
+					Kneeling = 0,
+					ParkBrakeAndDoors = 0,
+					CycleTime = 1.SI<Second>()
+				},
+				SSMInputs = new SSMEngineeringInputs() {
+					MechanicalPower = busAux.HVACData.MechanicalPowerDemand,
+					ElectricPower = busAux.HVACData.ElectricalPowerDemand,
+					AuxHeaterPower = busAux.HVACData.AuxHeaterPower,
+					HeatingDemand = busAux.HVACData.AverageHeatingDemand,
+					AuxHeaterEfficiency = Constants.BusAuxiliaries.SteadyStateModel.AuxHeaterEfficiency,
+					FuelEnergyToHeatToCoolant = Constants.BusAuxiliaries.Heater.FuelEnergyToHeatToCoolant,
+					CoolantHeatTransferredToAirCabinHeater =
+						Constants.BusAuxiliaries.Heater.CoolantHeatTransferredToAirCabinHeater,
+				},
+				VehicleData = vehicleData,
+			};
 		}
+
+		private Dictionary<string, ElectricConsumerEntry> GetElectricConsumers(IBusAuxElectricSystemEngineeringData busAuxElectricSystem)
+		{
+			var retVal = new Dictionary<string, ElectricConsumerEntry>();
+
+			var iBase = busAuxElectricSystem.CurrentDemandEngineOffStandstill;
+			var iSP = busAuxElectricSystem.CurrentDemandEngineOffDriving -
+					busAuxElectricSystem.CurrentDemandEngineOffStandstill;
+			var iFan = busAuxElectricSystem.CurrentDemand - busAuxElectricSystem.CurrentDemandEngineOffDriving;
+
+			retVal["BaseLoad"] = new ElectricConsumerEntry() {
+				Current = iBase,
+				BaseVehicle = true
+			};
+			retVal[Constants.Auxiliaries.IDs.SteeringPump] = new ElectricConsumerEntry() {
+				Current = iSP,
+				ActiveDuringEngineStopStandstill = false,
+			};
+			retVal[Constants.Auxiliaries.IDs.Fan] = new ElectricConsumerEntry() {
+				Current = iFan,
+				ActiveDuringEngineStopStandstill = false,
+				ActiveDuringEngineStopDriving = false,
+			};
+			return retVal;
+		}
+
 
 		public ShiftStrategyParameters CreateGearshiftData(GearboxType gbxType, IGearshiftEngineeringInputData gsInputData, double axleRatio, PerSecond engineIdlingSpeed)
 		{
@@ -659,7 +736,8 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			};
 		}
 
-		public List<Tuple<PowertrainPosition, ElectricMotorData>> CreateElectricMachines(IElectricMachinesEngineeringInputData electricMachines)
+		public List<Tuple<PowertrainPosition, ElectricMotorData>> CreateElectricMachines(
+			IElectricMachinesEngineeringInputData electricMachines, TableData torqueLimits)
 		{
 			if (electricMachines == null) {
 				return null;
@@ -674,14 +752,25 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			}
 
 			return electricMachines.Entries
-				.Select(x => Tuple.Create(x.Position, CreateElectricMachine(x.ElectricMachine, x.Count, x.Ratio, x.MechanicalEfficiency))).ToList();
+				.Select(x => Tuple.Create(x.Position,
+					CreateElectricMachine(x.ElectricMachine, x.Count, x.RatioADC, x.RatioPerGear, x.MechanicalTransmissionEfficiency,
+						x.MechanicalTransmissionLossMap, torqueLimits))).ToList();
 		}
 
 		private ElectricMotorData CreateElectricMachine(IElectricMotorEngineeringInputData motorData, int count,
-			double ratio, double efficiency)
+			double ratio, double[] ratioPerGear, double efficiency, TableData adcLossMap, TableData torqueLimits)
 		{
+			var fullLoadCurve = ElectricFullLoadCurveReader.Create(motorData.FullLoadCurve, count);
+			var maxTorqueCurve = torqueLimits == null ? null : ElectricFullLoadCurveReader.Create(torqueLimits, count);
+
+			var fullLoadCurveCombined = IntersectEMFullLoadCurves(fullLoadCurve, maxTorqueCurve);
+
+			var lossMap = adcLossMap != null
+				? TransmissionLossMapReader.CreateEmADCLossMap(adcLossMap, ratio, "EM ADC LossMap")
+				: TransmissionLossMapReader.CreateEmADCLossMap(efficiency, ratio, "EM ADC LossMap Eff");
+
 			return new ElectricMotorData() {
-				FullLoadCurve = ElectricFullLoadCurveReader.Create(motorData.FullLoadCurve, count),
+				FullLoadCurve = fullLoadCurveCombined,
 				DragCurve = ElectricMotorDragCurveReader.Create(motorData.DragCurve, count),
 				EfficiencyMap = ElectricMotorMapReader.Create(motorData.EfficiencyMap, count),
 				Inertia = motorData.Inertia,
@@ -689,26 +778,64 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 				ContinuousPowerSpeed = motorData.ContinuousPowerSpeed,
 				OverloadTime = motorData.OverloadTime,
 				OverloadRegenerationFactor = motorData.OverloadRecoveryFactor,
-				Ratio = ratio,
-				TransmissionEfficiency = efficiency
+				RatioADC = ratio,
+				RatioPerGear = ratioPerGear,
+				TransmissionLossMap = lossMap
 			};
 		}
 
 		public HybridStrategyParameters CreateHybridStrategyParameters(
 			IHybridStrategyParameters hybridStrategyParameters,
-			IEngineeringInputDataProvider inputData)
+			TableData maxPropulsionTorque, CombustionEngineData combustionEngineData)
 		{
+			VehicleMaxPropulsionTorque torqueLimit = maxPropulsionTorque == null
+				? null
+				: CreateMaxPropulsionTorque(maxPropulsionTorque, combustionEngineData);
+			
 			var retVal = new HybridStrategyParameters() {
-				EquivalenceFactor = hybridStrategyParameters.EquivalenceFactor,
+				EquivalenceFactorDischarge = hybridStrategyParameters.EquivalenceFactorDischarge,
+				EquivalenceFactorCharge = hybridStrategyParameters.EquivalenceFactorCharge,
 				MinSoC = hybridStrategyParameters.MinSoC,
 				MaxSoC = hybridStrategyParameters.MaxSoC,
 				TargetSoC = hybridStrategyParameters.TargetSoC,
 				MinICEOnTime = hybridStrategyParameters.MinimumICEOnTime,
 				AuxReserveTime = hybridStrategyParameters.AuxBufferTime,
 				AuxReserveChargeTime = hybridStrategyParameters.AuxBufferChargeTime,
-				MaxDrivetrainPower = inputData.JobInputData.Vehicle.MaxDrivetrainPower,
+				MaxPropulsionTorque = torqueLimit,
+				ICEStartPenaltyFactor = hybridStrategyParameters.ICEStartPenaltyFactor,
+				CostFactorSOCExponent = double.IsNaN(hybridStrategyParameters.CostFactorSOCExpponent) ? 5 : hybridStrategyParameters.CostFactorSOCExpponent,
 			};
 			return retVal;
+		}
+
+		private VehicleMaxPropulsionTorque CreateMaxPropulsionTorque(TableData maxPropulsionTorque, CombustionEngineData engineData)
+		{
+			var offset = MaxPropulsionTorqueReader.Create(maxPropulsionTorque);
+			var belowIdle = offset.FullLoadEntries.Where(x => x.MotorSpeed < engineData.IdleSpeed).ToList();
+
+			var entries = belowIdle.Select(fullLoadEntry => new VehicleMaxPropulsionTorque.FullLoadEntry()
+					{ MotorSpeed = fullLoadEntry.MotorSpeed, FullDriveTorque = fullLoadEntry.FullDriveTorque })
+				.Concat(
+					engineData.FullLoadCurves[0].FullLoadEntries.Where(x => x.EngineSpeed > engineData.IdleSpeed)
+						.Select(fullLoadCurveEntry =>
+							new VehicleMaxPropulsionTorque.FullLoadEntry() {
+								MotorSpeed = fullLoadCurveEntry.EngineSpeed,
+								FullDriveTorque = fullLoadCurveEntry.TorqueFullLoad +
+												VectoMath.Max(
+													offset.FullLoadDriveTorque(fullLoadCurveEntry.EngineSpeed),
+													0.SI<NewtonMeter>())
+							}))
+				.Concat(
+					new[] { engineData.IdleSpeed, engineData.IdleSpeed - 0.1.RPMtoRad() }.Select(x =>
+						new VehicleMaxPropulsionTorque.FullLoadEntry() {
+							MotorSpeed = x,
+							FullDriveTorque = engineData.FullLoadCurves[0].FullLoadStationaryTorque(x) +
+											VectoMath.Max(offset.FullLoadDriveTorque(x),
+												0.SI<NewtonMeter>())
+						}))
+				.OrderBy(x => x.MotorSpeed).ToList();
+
+			return new VehicleMaxPropulsionTorque(entries);
 		}
 	}
 }

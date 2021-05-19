@@ -229,6 +229,8 @@ namespace TUGraz.VectoCore.OutputData.XML
 					: DeclarationData.VTPMode.SelectedMissionHeavyLorry);
 			const LoadingType selectedLoading = DeclarationData.VTPMode.SelectedLoading;
 			//var result = Results.OrderBy(x => x.FuelMode).FirstOrDefault(x => x.Mission == selectedMission && x.LoadingType == selectedLoading);
+			//var vtpFcSimulated = vtpResult.VTPFcFinalSimulated / vtpResult.FuelData.HeatingValueCorrection / vtpResult.VTPWorPWheelSimPos;
+			//var declaredCO2 = result.FuelConsumptionTotal * result.FuelData.CO2PerFuelWeight / result.Distance / result.Payload;
 
 
 			var result = ManufacturerRecord.Results.Results.Where(x => x.Mission == selectedMission)
@@ -241,10 +243,17 @@ namespace TUGraz.VectoCore.OutputData.XML
 			}
 
 			var vtpFcMeasured = vtpResult.VTPFcMeasured.Select(x => Tuple.Create(x.Key, x.Value / vtpResult.VTPWorkPWheelPos)).ToDictionary(x => x.Item1, x => x.Item2);
-			var vtpFcMeasuredCorr = vtpResult.VTPFcMeasured.Select(x => Tuple.Create(x.Key, x.Value /  vtpResult.VTPWorkPWheelPos * vtpResult.VTPFcCorrectionFactor)).ToDictionary(x => x.Item1, x => x.Item2);
-			var vtpFcSimulated = vtpResult.VTPFcFinalSimulated.Select(x => Tuple.Create(x.Key, x.Value / vtpResult.VTPWorPWheelSimPos)).ToDictionary(x => x.Item1, x => x.Item2);
+			var vtpFcMeasuredCorr = vtpResult.VTPFcMeasured
+				.Select(x =>
+					Tuple.Create(x.Key, x.Value / vtpResult.VTPWorkPWheelPos * vtpResult.VTPFcCorrectionFactor))
+				.ToDictionary(x => x.Item1, x => x.Item2);
+			var vtpFcSimulated = vtpResult.VTPFcFinalSimulated
+				.Select(x => Tuple.Create(x.Key, x.Value / vtpResult.VTPWorPWheelSimPos))
+				.ToDictionary(x => x.Item1, x => x.Item2);
 			var fuels = DeclarationData.FuelData;
-			var cVtp = vtpFcMeasuredCorr.Sum(e => e.Value * fuels.Lookup(e.Key, vtpResult.TankSystem).CO2PerFuelWeightVTP) / vtpFcSimulated.Sum(e => e.Value * fuels.Lookup(e.Key, vtpResult.TankSystem).CO2PerFuelWeightVTP);
+			var cVtp =
+				vtpFcMeasuredCorr.Sum(e => e.Value * fuels.Lookup(e.Key, vtpResult.TankSystem).CO2PerFuelWeightVTP) /
+				vtpFcSimulated.Sum(e => e.Value * fuels.Lookup(e.Key, vtpResult.TankSystem).CO2PerFuelWeightVTP);
 
 			//var declaredCO2 =
 			//	result.FuelConsumptionFinal.Sum(x => x.Value * fuels.Lookup(x.Key, vtpResult.TankSystem).CO2PerFuelWeightVTP) /

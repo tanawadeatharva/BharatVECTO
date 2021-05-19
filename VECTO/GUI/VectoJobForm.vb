@@ -49,15 +49,6 @@ Public Class VectoJobForm
     Public Property JobType As VectoSimulationJobType
 
 
-    'AA-TB
-    'Populate Advanced Auxiliaries
-    Private Sub PopulateAdvancedAuxiliaries()
-		'Scan the program directory for DLL's which are AdvancedAuxiliaries and display
-		Dim aList As Dictionary(Of String, AdvancedAuxiliary) = DiscoverAdvancedAuxiliaries()
-
-		cboAdvancedAuxiliaries.DataSource = aList.Select(Function(x) x.Value).ToList()
-		cboAdvancedAuxiliaries.DisplayMember = "AuxiliaryName"
-	End Sub
 
 
 	'Initialise form
@@ -80,15 +71,15 @@ Public Class VectoJobForm
 		Else
 			LvAux.Columns(AuxViewColumns.AuxInputOrTech).Text = "Input File"
 		End If
-		TbAuxPAdd.Enabled = Not Cfg.DeclMode
+	    pnAuxEngineering.Enabled = Not Cfg.DeclMode
+        pnAuxDeclarationMode.Enabled = cfg.DeclMode
+        gbBusAux.Enabled = Not cfg.DeclMode
 
         'CbEngOnly.Enabled = Not Cfg.DeclMode
         GrCycles.Enabled = Not Cfg.DeclMode
 		GrVACC.Enabled = Not Cfg.DeclMode
 		RdOff.Enabled = Not Cfg.DeclMode
 		GrLAC.Enabled = Not Cfg.DeclMode
-		ButAuxAdd.Enabled = Not Cfg.DeclMode
-		ButAuxRem.Enabled = Not Cfg.DeclMode
 		PnEcoRoll.Enabled = Not Cfg.DeclMode
 
 		gbEcoRoll.Enabled = not Cfg.DeclMode
@@ -96,8 +87,6 @@ Public Class VectoJobForm
 		gbPCC.Enabled = Not Cfg.DeclMode
 
 		_changed = False
-		'AA-TB
-		PopulateAdvancedAuxiliaries()
 
 		cbGearshiftStrategy.DataSource = PowertrainBuilder.GetRegisteredShiftStrategies(Nothing).Select(Function(entry) New With {.Value = entry.Item1, .Label = entry.Item2}).ToList()
 		cbGearshiftStrategy.DisplayMember = "Label"
@@ -154,7 +143,7 @@ Public Class VectoJobForm
         TbOverspeed.Text = DeclarationData.Driver.OverSpeed.AllowedOverSpeed.AsKmph.ToGUIFormat()    'cDeclaration.Overspeed
         ' cDeclaration.Underspeed
         TbVmin.Text = DeclarationData.Driver.OverSpeed.MinSpeed.AsKmph.ToGUIFormat()     'cDeclaration.ECvmin
-        TbAuxPAdd.Text = ""
+        TbAuxPAuxICEOn.Text = ""
         If _
             LvAux.Items.Count <> 5 OrElse
             (LvAux.Items(0).Text <> VectoCore.Configuration.Constants.Auxiliaries.IDs.Fan OrElse
@@ -493,15 +482,13 @@ Public Class VectoJobForm
         'Start/Stop
         Dim driver As IDriverEngineeringInputData = inputData.DriverInputData
 
-        If (Cfg.DeclMode) Then
+	    If (Cfg.DeclMode) Then
             TbDesMaxFile.Text = ""
             'AA-TB
             'Try and Select any previously selected Auxiliary Type
             Dim declarationInput As IDeclarationInputDataProvider = CType(inputData, IDeclarationInputDataProvider)
             Dim auxInput As IAuxiliariesDeclarationInputData = declarationInput.JobInputData.Vehicle.Components.AuxiliaryInputData
 
-            cboAdvancedAuxiliaries.SelectedIndex = 0
-            cboAdvancedAuxiliaries.Enabled = False
             LvAux.Items.Clear()
             Dim entry As IAuxiliaryDeclarationInputData
             For Each entry In auxInput.Auxiliaries
@@ -513,40 +500,18 @@ Public Class VectoJobForm
                 End Try
             Next
         Else
+            LvAux.Items.Clear()
+            
             'VACC
             TbDesMaxFile.Text =
                 If(driver.AccelerationCurve Is Nothing, "", GetRelativePath(driver.AccelerationCurve.AccelerationCurve.Source, _basePath))
 
-            cboAdvancedAuxiliaries.Enabled = True
             Dim auxInput As IAuxiliariesEngineeringInputData = inputData.JobInputData.Vehicle.Components.AuxiliaryInputData
-            For Each item As AdvancedAuxiliary In cboAdvancedAuxiliaries.Items
-                If _
-                    AuxiliaryModelHelper.Parse(item.AssemblyName) = auxInput.AuxiliaryAssembly AndAlso
-                    auxInput.AuxiliaryVersion = item.AuxiliaryVersion _
-                    Then
-                    cboAdvancedAuxiliaries.SelectedItem = item
-                    Exit For
-                End If
-            Next
-            tbElectricAuxConstant.Text = inputData.JobInputData.Vehicle.Components.AuxiliaryInputData.ElectricAuxPower.ToGUIFormat()
-            'AA-TB
-            'Assign any previously saved Axiliary FilePath
-            txtAdvancedAuxiliaryFile.Text =
-                If _
-                    (IO.File.Exists(auxInput.AdvancedAuxiliaryFilePath), GetRelativePath(auxInput.AdvancedAuxiliaryFilePath, _basePath),
-                    "")
 
-            LvAux.Items.Clear()
-            For Each entry As IAuxiliaryEngineeringInputData In auxInput.Auxiliaries
-                If entry.AuxiliaryType = AuxiliaryDemandType.Constant Then
-                    TbAuxPAdd.Text = entry.ConstantPowerDemand.ToGUIFormat()
-                    Continue For
-                End If
-
-                LvAux.Items.Add(CreateAuxListEntry(entry.ID, AuxiliaryTypeHelper.ParseKey(entry.ID).Name,
-                                                    If(entry.DemandMap Is Nothing, "", GetRelativePath(entry.DemandMap.Source, _basePath))))
-            Next
-
+            tbElectricAuxConstant.Text = auxInput.Auxiliaries.ElectricPowerDemand.ToGUIFormat()
+            TbAuxPAuxICEOn.Text = auxInput.Auxiliaries.ConstantPowerDemand.ToGUIFormat()
+            tbPAuxDrivingICEOff.Text = auxInput.Auxiliaries.PowerDemandICEOffDriving.ToGUIFormat()
+            tbPAuxStandstillICEOff.Text = auxInput.Auxiliaries.PowerDemandICEOffStandstill.ToGUIFormat()
         End If
 
         BtnShiftStrategyParams.Enabled = Not Cfg.DeclMode
@@ -588,7 +553,8 @@ Public Class VectoJobForm
 
         tbEngineStopStartActivationDelay.Text = If(driver.EngineStopStartData?.ActivationDelay?.ToGUIFormat(), DeclarationData.Driver.EngineStopStart.ActivationDelay.ToGUIFormat())
         tbMaxEngineOffTimespan.Text = If(driver.EngineStopStartData?.MaxEngineOffTimespan?.ToGUIFormat(), DeclarationData.Driver.EngineStopStart.MaxEngineOffTimespan.ToGUIFormat())
-        tbEssUtility.Text = If(driver.EngineStopStartData?.UtilityFactor.ToGUIFormat(), DeclarationData.Driver.EngineStopStart.UtilityFactor.ToGUIFormat())
+        tbEssUtility.Text = If(driver.EngineStopStartData?.UtilityFactorStandstill.ToGUIFormat(), DeclarationData.Driver.EngineStopStart.UtilityFactor.ToGUIFormat())
+        tbESSUtilityFactorDriving.Text = If(driver.EngineStopStartData?.UtilityFactorDriving.ToGUIFormat(), DeclarationData.Driver.EngineStopStart.UtilityFactor.ToGUIFormat())
 
         tbEcoRollActivationDelay.Text = If(driver.EcoRollData?.ActivationDelay?.ToGUIFormat(), DeclarationData.Driver.EcoRoll.ActivationDelay.ToGUIFormat())
         tbEcoRollMinSpeed.Text = If(driver.EcoRollData?.MinSpeed?.AsKmph().ToGUIFormat(), DeclarationData.Driver.EcoRoll.MinSpeed.AsKmph().ToGUIFormat())
@@ -613,6 +579,16 @@ Public Class VectoJobForm
         End If
         If (Not inputData.JobInputData.ShiftStrategy Is Nothing) Then
             cbGearshiftStrategy.SelectedValue = inputData.JobInputData.ShiftStrategy
+        End If
+
+        if (Not inputData.JobInputData.Vehicle.Components.AuxiliaryInputData.BusAuxiliariesData Is nothing) Then
+            cbEnableBusAux.Checked = True
+            tbBusAuxParams.Text = GetRelativePath(inputData.JobInputData.Vehicle.Components.AuxiliaryInputData.BusAuxiliariesData.DataSource.SourceFile, _basePath)
+            pnBusAux.Enabled = true
+        Else 
+            cbEnableBusAux.Checked = False
+            tbBusAuxParams.Text = ""
+            pnBusAux.Enabled = False
         End If
 
         DeclInit()
@@ -650,28 +626,6 @@ Public Class VectoJobForm
     Private Function VECTOsave(file As String) As Boolean
         Dim message As String = String.Empty
 
-        'AA-TB
-        'Validation of Auxiliary Types/Advanced Auxiliaries
-        'if not classic, check the file is valid, if not fail the operation and alert user.
-        If cboAdvancedAuxiliaries.SelectedIndex > 0 Then
-
-            'resolve absolute path for auxiliary file.
-            Dim absoluteAAUxFile As String = ResolveAAUXFilePath(GetPath(VectoFile), txtAdvancedAuxiliaryFile.Text)
-
-            Dim aaAssemblyName As String = DirectCast(cboAdvancedAuxiliaries.SelectedItem, AdvancedAuxiliary).AssemblyName
-            Dim aaAssemblyVersion As String = DirectCast(cboAdvancedAuxiliaries.SelectedItem, AdvancedAuxiliary).AuxiliaryVersion
-
-
-            If Not ValidateAAUXFile(absoluteAAUxFile, aaAssemblyName, aaAssemblyVersion, message) Then
-                MessageBox.Show(
-                    String.Format("You have selected an advanced auxiliary *Auxiliary Type*, but the file specified is invalid :{0}",
-                                message))
-                Return False
-            End If
-
-        End If
-
-
         Dim vectoJob As VectoJob = New VectoJob
         vectoJob.JobType = JobType
         vectoJob.FilePath = file
@@ -694,29 +648,29 @@ Public Class VectoJobForm
         'a_DesMax
         vectoJob.DesMaxFile = TbDesMaxFile.Text
 
-        'AA-TB
-        vectoJob.AuxiliaryAssembly = DirectCast(cboAdvancedAuxiliaries.SelectedItem, AdvancedAuxiliary).AssemblyName
-        vectoJob.AuxiliaryVersion = DirectCast(cboAdvancedAuxiliaries.SelectedItem, AdvancedAuxiliary).AuxiliaryVersion
-        vectoJob.AdvancedAuxiliaryFilePath = txtAdvancedAuxiliaryFile.Text
-
         For Each lv0 As ListViewItem In LvAux.Items
             Dim auxEntry As VectoJob.AuxEntry = New VectoJob.AuxEntry
 
-            If Cfg.DeclMode Then
-                auxEntry.TechnologyList.Clear()
-                auxEntry.TechnologyList.AddRange(
-                    lv0.SubItems(AuxViewColumns.AuxInputOrTech).Text.Split(";"c).Select(
-                        Function(x) Trim(x)))
-            Else
-                auxEntry.Path.Init(GetPath(file), lv0.SubItems(AuxViewColumns.AuxInputOrTech).Text)
-            End If
+            auxEntry.TechnologyList.Clear()
+            auxEntry.TechnologyList.AddRange(
+                lv0.SubItems(AuxViewColumns.AuxInputOrTech).Text.Split(";"c).Select(
+                    Function(x) Trim(x)))
 
             auxEntry.Type = AuxiliaryTypeHelper.ParseKey(lv0.SubItems(AuxViewColumns.AuxID).Text)
-            vectoJob.AuxPaths.Add(lv0.SubItems(AuxViewColumns.AuxID).Text, auxEntry)
+            
         Next
-        vectoJob.AuxPAdd = TbAuxPAdd.Text.ToDouble(0)
+        vectoJob.AuxPwrICEOn = TbAuxPAuxICEOn.Text.ToDouble(0)
+        vectoJob.AuxPwrDrivingICEOff = tbPAuxDrivingICEOff.Text.ToDouble(0)
+        vectoJob.AuxPwrStandstillICEOff = _tbPAuxStandstillICEOff.Text.ToDouble(0)
 
         vectoJob.AuxElPadd = tbElectricAuxConstant.Text.ToDouble(0)
+
+        if cbEnableBusAux.Checked AndAlso Not string.IsNullOrWhiteSpace(tbBusAuxParams.Text) Then
+            vectoJob.UseBusAux = true
+            vectoJob.PathBusAux = tbBusAuxParams.Text
+        Else 
+            vectoJob.UseBusAux = false
+        End If
 
         'vectoJob.EngineOnly = JobType = VectoSimulationJobType.EngineOnlySimulation
 
@@ -736,6 +690,7 @@ Public Class VectoJobForm
         vectoJob.EngineStopStartActivationThreshold = tbEngineStopStartActivationDelay.Text.ToDouble(0)
         vectoJob.EngineOffTimeLimit = tbMaxEngineOffTimespan.Text.ToDouble(0)
         vectoJob.EngineStStUtilityFactor = tbEssUtility.Text.ToDouble(0)
+        vectoJob.EngineStStUtilityFactorDriving = tbESSUtilityFactorDriving.Text.ToDouble(0)
 
         vectoJob.EcoRollActivationDelay = tbEcoRollActivationDelay.Text.ToDouble(0)
         vectoJob.EcoRollMinSpeed = tbEcoRollMinSpeed.Text.ToDouble(0)
@@ -802,7 +757,6 @@ Public Class VectoJobForm
         tbLacDfTargetSpeedFile.Text = ""
         tbLacDfVelocityDropFile.Text = ""
 
-        cboAdvancedAuxiliaries.Enabled = Not Cfg.DeclMode
         '---------------------------------------------------
 
         DeclInit()
@@ -907,47 +861,12 @@ Public Class VectoJobForm
 
 #Region "Aux Listview"
 
-    Private Sub ButAuxAdd_Click(sender As Object, e As EventArgs) Handles ButAuxAdd.Click
-        Dim id As String
-
-        _auxDialog.VehPath = GetPath(VectoFile)
-        _auxDialog.TbPath.Text = ""
-        '_auxDialog.CbType.SelectedIndex = -1
-        '_auxDialog.CbType.Text = ""
-        _auxDialog.TbID.Text = ""   '!!! Set Type before ID, because changing the type will overwrite the id !!!
-
-lbDlog:
-        If _auxDialog.ShowDialog = DialogResult.OK Then
-
-            id = UCase(Trim(_auxDialog.TbID.Text))
-
-            Dim lv0 As ListViewItem
-            For Each lv0 In LvAux.Items
-                If lv0.SubItems(AuxViewColumns.AuxID).Text = id Then
-                    MsgBox("ID '" & id & "' already defined!", MsgBoxStyle.Critical)
-                    _auxDialog.TbID.SelectAll()
-                    _auxDialog.TbID.Focus()
-                    GoTo lbDlog
-                End If
-            Next
-            LvAux.Items.Add(CreateAuxListEntry(UCase(Trim(_auxDialog.TbID.Text)), Trim(_auxDialog.CbType.Text),
-                                                Trim(_auxDialog.TbPath.Text)))
-            Change()
-        End If
-    End Sub
-
-    Private Sub ButAuxRem_Click(sender As Object, e As EventArgs) Handles ButAuxRem.Click
-        RemoveAuxItem()
-    End Sub
-
     Private Sub LvAux_DoubleClick(sender As Object, e As EventArgs) Handles LvAux.DoubleClick
         EditAuxItem()
     End Sub
 
     Private Sub LvAux_KeyDown(sender As Object, e As KeyEventArgs) Handles LvAux.KeyDown
         Select Case e.KeyCode
-            Case Keys.Delete, Keys.Back
-                If Not Cfg.DeclMode Then RemoveAuxItem()
             Case Keys.Enter
                 EditAuxItem()
         End Select
@@ -971,26 +890,20 @@ lbDlog:
         End If
 
         _auxDialog.CbType.SelectedValue = selItem.SubItems(AuxViewColumns.AuxID).Text   ' last call, updates GUI
-        If Cfg.DeclMode Then
-            If selItem.SubItems(AuxViewColumns.AuxID).Text = AuxiliaryTypeHelper.GetAuxKey(AuxiliaryType.SteeringPump) Then
-                Dim parts As String() = selItem.SubItems(AuxViewColumns.AuxInputOrTech).Text.Split(";"c)
-                _auxDialog.CbTech2.SelectedItem = VehicleAuxiliariesDialog.AxleNotSteered
-                _auxDialog.CbTech3.SelectedItem = VehicleAuxiliariesDialog.AxleNotSteered
-                _auxDialog.CbTech4.SelectedItem = VehicleAuxiliariesDialog.AxleNotSteered
-                If parts.Length > 0 Then _auxDialog.CbTech.SelectedValue = Trim(parts(0))
-                If parts.Length > 1 Then _auxDialog.CbTech2.SelectedValue = Trim(parts(1))
-                If parts.Length > 2 Then _auxDialog.CbTech3.SelectedValue = Trim(parts(2))
-                If parts.Length > 3 Then _auxDialog.CbTech4.SelectedValue = Trim(parts(3))
-            Else
-                _auxDialog.CbTech.SelectedValue = selItem.SubItems(AuxViewColumns.AuxInputOrTech).Text
-                _auxDialog.TbPath.Text = ""
-
-            End If
+        
+        If selItem.SubItems(AuxViewColumns.AuxID).Text = AuxiliaryTypeHelper.GetAuxKey(AuxiliaryType.SteeringPump) Then
+            Dim parts As String() = selItem.SubItems(AuxViewColumns.AuxInputOrTech).Text.Split(";"c)
+            _auxDialog.CbTech2.SelectedItem = VehicleAuxiliariesDialog.AxleNotSteered
+            _auxDialog.CbTech3.SelectedItem = VehicleAuxiliariesDialog.AxleNotSteered
+            _auxDialog.CbTech4.SelectedItem = VehicleAuxiliariesDialog.AxleNotSteered
+            If parts.Length > 0 Then _auxDialog.CbTech.SelectedValue = Trim(parts(0))
+            If parts.Length > 1 Then _auxDialog.CbTech2.SelectedValue = Trim(parts(1))
+            If parts.Length > 2 Then _auxDialog.CbTech3.SelectedValue = Trim(parts(2))
+            If parts.Length > 3 Then _auxDialog.CbTech4.SelectedValue = Trim(parts(3))
         Else
-            _auxDialog.CbTech.SelectedIndex = -1
-            _auxDialog.TbPath.Text = selItem.SubItems(AuxViewColumns.AuxInputOrTech).Text
+            _auxDialog.CbTech.SelectedValue = selItem.SubItems(AuxViewColumns.AuxInputOrTech).Text
         End If
-
+   
         '_auxDialog.TbID.Text = selItem.SubItems(AuxViewColumns.AuxID).Text	
 
         If _auxDialog.ShowDialog = DialogResult.OK Then
@@ -998,51 +911,19 @@ lbDlog:
             'UCase(Trim(_auxDialog.TbID.Text))
             selItem.SubItems(AuxViewColumns.AuxType).Text = _auxDialog.CbType.Text
 
-            If Cfg.DeclMode Then
-                If _auxDialog.TbID.Text = AuxiliaryTypeHelper.GetAuxKey(AuxiliaryType.SteeringPump) Then
-                    Dim techlist As List(Of String) = New List(Of String)
-                    techlist.Add(_auxDialog.CbTech.Text)
-                    If _auxDialog.CbTech2.Text <> VehicleAuxiliariesDialog.AxleNotSteered Then techlist.Add(_auxDialog.CbTech2.Text)
-                    If _auxDialog.CbTech3.Text <> VehicleAuxiliariesDialog.AxleNotSteered Then techlist.Add(_auxDialog.CbTech3.Text)
-                    If _auxDialog.CbTech4.Text <> VehicleAuxiliariesDialog.AxleNotSteered Then techlist.Add(_auxDialog.CbTech4.Text)
-                    selItem.SubItems(AuxViewColumns.AuxInputOrTech).Text = String.Join("; ", techlist)
-                Else
-                    selItem.SubItems(AuxViewColumns.AuxInputOrTech).Text = Trim(_auxDialog.CbTech.Text)
-                End If
-
+            If _auxDialog.TbID.Text = AuxiliaryTypeHelper.GetAuxKey(AuxiliaryType.SteeringPump) Then
+                Dim techlist As List(Of String) = New List(Of String)
+                techlist.Add(_auxDialog.CbTech.Text)
+                If _auxDialog.CbTech2.Text <> VehicleAuxiliariesDialog.AxleNotSteered Then techlist.Add(_auxDialog.CbTech2.Text)
+                If _auxDialog.CbTech3.Text <> VehicleAuxiliariesDialog.AxleNotSteered Then techlist.Add(_auxDialog.CbTech3.Text)
+                If _auxDialog.CbTech4.Text <> VehicleAuxiliariesDialog.AxleNotSteered Then techlist.Add(_auxDialog.CbTech4.Text)
+                selItem.SubItems(AuxViewColumns.AuxInputOrTech).Text = String.Join("; ", techlist)
             Else
-                selItem.SubItems(AuxViewColumns.AuxInputOrTech).Text = Trim(_auxDialog.TbPath.Text)
+                selItem.SubItems(AuxViewColumns.AuxInputOrTech).Text = Trim(_auxDialog.CbTech.Text)
             End If
 
             Change()
         End If
-    End Sub
-
-    Private Sub RemoveAuxItem()
-        Dim i As Integer
-
-        If LvAux.SelectedItems.Count = 0 Then
-            If LvAux.Items.Count = 0 Then
-                Exit Sub
-            Else
-                LvAux.Items(LvAux.Items.Count - 1).Selected = True
-            End If
-        End If
-
-        i = LvAux.SelectedItems(0).Index
-
-        LvAux.SelectedItems(0).Remove()
-
-        If LvAux.Items.Count > 0 Then
-            If i < LvAux.Items.Count Then
-                LvAux.Items(i).Selected = True
-            Else
-                LvAux.Items(LvAux.Items.Count - 1).Selected = True
-            End If
-            LvAux.Focus()
-        End If
-
-        Change()
     End Sub
 
 #End Region
@@ -1143,9 +1024,13 @@ lbDlog:
         pnEngine.Enabled = True
         pnShiftParams.Enabled = True
         pnHybridStrategy.Enabled = False
+        lblESSUtilityFactorDriving.Enabled  = false
+        tbESSUtilityFactorDriving.Enabled = false
         Select Case JobType
             Case VectoSimulationJobType.ConventionalVehicle
                 gbElectricAux.Enabled = False
+                lblESSUtilityFactorDriving.Enabled  = true
+                tbESSUtilityFactorDriving.Enabled = true
             Case VectoSimulationJobType.EngineOnlySimulation
                 pnVehicle.Enabled = False
                 pnGearbox.Enabled = False
@@ -1506,123 +1391,6 @@ lbDlog:
 #End Region
 
 
-	'AA-TB
-	Private Sub picAuxInfo_MouseEnter(sender As Object, e As EventArgs) Handles picAuxInfo.MouseEnter
-
-
-		If cboAdvancedAuxiliaries.SelectedIndex = -1 Then Exit Sub
-
-		'Get tooltip
-		Dim item As AdvancedAuxiliary
-
-		item = DirectCast(cboAdvancedAuxiliaries.SelectedItem, AdvancedAuxiliary)
-
-		If item.AuxiliaryVersion = "CLASSIC" Then
-
-			ToolTip1.ToolTipTitle = "Classic Vecto Auxiliaries"
-			ToolTip1.SetToolTip(picAuxInfo, "Uses original basic auxiliaries calculation")
-
-		Else
-
-			ToolTip1.ToolTipTitle = "Advanced Auxiliary Information"
-			ToolTip1.SetToolTip(picAuxInfo, item.AuxiliaryName & " : Version=" & item.AuxiliaryVersion)
-
-		End If
-	End Sub
-
-	'AA-TB
-	Private Sub btnBrowseAAUXFile_Click(sender As Object, e As EventArgs) Handles btnBrowseAAUXFile.Click
-
-		If String.IsNullOrEmpty(VectoFile) Then
-			MessageBox.Show(
-				"Please complete and save a valid new .vecto file before adding/configuring advanced bus auxiliaries.")
-			Return
-		End If
-
-		Dim aauxFileValidated As Boolean = False
-		Dim fbAux As New FileBrowser("aaux", False, False)
-		Dim message As String = String.Empty
-		Dim absoluteAuxPath As String
-		Dim assembly As AdvancedAuxiliary
-
-		'If Classic is selected, then bail
-		If cboAdvancedAuxiliaries.SelectedIndex = 0 Then Return
-
-		'Get Absolute Path for AAUX FILE.
-		absoluteAuxPath = ResolveAAUXFilePath(GetPath(VectoFile), txtAdvancedAuxiliaryFile.Text)
-
-		'Set Extensions
-		fbAux.Extensions = New String() {"AAUX"}
-
-		Try
-
-			assembly = DirectCast(cboAdvancedAuxiliaries.SelectedItem, AdvancedAuxiliary)
-
-			Dim validAAUXFile As Boolean = ValidateAAUXFile(absoluteAuxPath, assembly.AssemblyName,
-															assembly.AuxiliaryVersion, message)
-			Dim fileExists As Boolean = File.Exists(absoluteAuxPath)
-
-			If fileExists AndAlso validAAUXFile Then
-				ConfigureAdvancedAuxiliaries(assembly.AssemblyName, assembly.AuxiliaryVersion,
-											txtAdvancedAuxiliaryFile.Text, VectoFile)
-			Else
-
-				Dim needToFindOrCreateFile As Boolean = True
-
-				While needToFindOrCreateFile
-
-					'Find / Create  file and configure.
-					If fbAux.CustomDialog(absoluteAuxPath, False, False, FileBrowserFileExtensionMode.ForceExt, False, String.Empty) _
-						Then
-						txtAdvancedAuxiliaryFile.Text = GetFilenameWithoutDirectory(fbAux.Files(0), GetPath(VectoFile))
-						assembly = DirectCast(cboAdvancedAuxiliaries.SelectedItem, AdvancedAuxiliary)
-
-						If _
-							File.Exists(ResolveAAUXFilePath(GetPath(VectoFile), txtAdvancedAuxiliaryFile.Text)) OrElse
-							MsgBox("Do you want to create a new .AAUX file?", MsgBoxStyle.YesNo) = MsgBoxResult.Yes Then
-							needToFindOrCreateFile = False
-							ConfigureAdvancedAuxiliaries(assembly.AssemblyName, assembly.AuxiliaryVersion,
-														txtAdvancedAuxiliaryFile.Text, VectoFile)
-						End If
-					Else
-						needToFindOrCreateFile = False
-					End If
-
-				End While
-
-			End If
-
-		Catch ex As Exception
-			MessageBox.Show("There was an error configuring your Advanced Auxiliary File")
-		End Try
-	End Sub
-
-	'AA-TB
-	Private Sub cboAdvancedAuxiliaries_SelectedIndexChanged(sender As Object, e As EventArgs) _
-		Handles cboAdvancedAuxiliaries.SelectedIndexChanged
-
-		'Enable or otherwise the text box and browser button associated with Advanced Axuiliaries
-		If cboAdvancedAuxiliaries.SelectedIndex = 0 Then
-
-			btnBrowseAAUXFile.Enabled = False
-			txtAdvancedAuxiliaryFile.Enabled = False
-
-		Else
-
-			btnBrowseAAUXFile.Enabled = True
-			txtAdvancedAuxiliaryFile.Enabled = True
-
-		End If
-	End Sub
-
-
-	'AA-TB
-	Private Sub btnAAUXOpen_Click(sender As Object, e As EventArgs) Handles btnAAUXOpen.Click
-
-		OpenFiles(FileRepl(txtAdvancedAuxiliaryFile.Text, GetPath(VectoFile)))
-	End Sub
-
-
 	Private Sub btnDfTargetSpeed_Click(sender As Object, e As EventArgs) Handles btnDfTargetSpeed.Click
 		If DriverDecisionFactorTargetSpeedFileBrowser.OpenDialog(FileRepl(tbLacDfTargetSpeedFile.Text, GetPath(VectoFile))) _
 			Then _
@@ -1643,8 +1411,6 @@ lbDlog:
 		End If
 	End Sub
 
-	Private Sub LvAux_SelectedIndexChanged(sender As Object, e As EventArgs) Handles LvAux.SelectedIndexChanged
-	End Sub
 
 	Private Sub BtnShiftStrategyParams_Click(sender As Object, e As EventArgs) Handles BtnShiftStrategyParams.Click
 		If TCUFileBrowser.OpenDialog(FileRepl(TbShiftStrategyParams.Text, GetPath(VectoFile))) Then
@@ -1703,10 +1469,61 @@ lbDlog:
         Try
             If Not Trim(f) = "" Then HybridStrategyParamsForm.OpenHybridStrategyParametersFile(f)
         Catch ex As Exception
-            MsgBox("Failed to open Gearbox File: " + ex.Message)
+            MsgBox("Failed to open Hybrid strategy parameters File: " + ex.Message)
         End Try
 
     End Sub
+
+    Private Sub cbEnableBusAux_CheckedChanged(sender As Object, e As EventArgs) Handles cbEnableBusAux.CheckedChanged
+        pnBusAux.Enabled = not Cfg.DeclMode AndAlso cbEnableBusAux.Checked
+    End Sub
+
+    Private Sub btnBusAuxP_Click(sender As Object, e As EventArgs) Handles btnBusAuxP.Click 
+        Dim f As String
+        f = FileRepl(tbBusAuxParams.Text, GetPath(VectoFile))
+
+        'Thus Veh-file is returned
+        BusAuxiliariesEngParametersForm.JobDir = GetPath(VectoFile)
+        BusAuxiliariesEngParametersForm.AutoSendTo = True
+
+        If Not Trim(f) = "" Then
+            If Not File.Exists(f) Then
+                MsgBox("File not found!")
+                Exit Sub
+            End If
+        End If
+
+        If Not BusAuxiliariesEngParametersForm.Visible Then
+            BusAuxiliariesEngParametersForm.Show()
+        Else
+            If BusAuxiliariesEngParametersForm.WindowState = FormWindowState.Minimized Then BusAuxiliariesEngParametersForm.WindowState = FormWindowState.Normal
+            BusAuxiliariesEngParametersForm.BringToFront()
+        End If
+        Dim vehicleType As VehicleCategory
+        Try
+            If Not Trim(f) = "" Then
+                Dim vehInput As IVehicleDeclarationInputData =
+                        CType(JSONInputDataFactory.ReadComponentData(FileRepl(TbVEH.Text, GetPath(VectoFile))),
+                              IEngineeringInputDataProvider).JobInputData.Vehicle
+                vehicleType = vehInput.VehicleCategory
+            End If
+
+        Catch ex As Exception
+            vehicleType = VehicleCategory.RigidTruck
+        End Try
+        Try
+            If Not Trim(f) = "" Then BusAuxiliariesEngParametersForm.OpenBusAuxParametersFile(f)
+        Catch ex As Exception
+            MsgBox("Failed to open Gearbox File: " + ex.Message)
+        End Try
+    End Sub
+
+    Private Sub btnBrowsBusAuxParams_Click(sender As Object, e As EventArgs) Handles btnBrowsBusAuxParams.Click
+        If BusAuxFileBrowser.OpenDialog(FileRepl(tbBusAuxParams.Text, GetPath(VectoFile))) Then
+            tbBusAuxParams.Text = GetFilenameWithoutDirectory(BusAuxFileBrowser.Files(0), GetPath(VectoFile))
+        End If
+    End Sub
+
 End Class
 
 

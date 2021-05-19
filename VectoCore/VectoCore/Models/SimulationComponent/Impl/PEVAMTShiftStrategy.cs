@@ -13,6 +13,7 @@ using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.DataBus;
 using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
+using TUGraz.VectoCore.Models.SimulationComponent.Data.ElectricMotor;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Engine;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox;
 using TUGraz.VectoCore.OutputData;
@@ -49,6 +50,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		public PEVAMTShiftStrategy(IVehicleContainer dataBus)
 		{
+			MaxStartGear = GearList.Reverse().First();
 			var runData = dataBus.RunData;
 			if (runData.VehicleData == null) {
 				return;
@@ -322,7 +324,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			var minFc = results.MinBy(x => x.Item2);
 
-			if (minFc.Item2.IsGreater(fcCurrent * shiftStrategyParameters.RatingFactorCurrentGear)) {
+			var ratingFactor = outTorque < 0
+				? 1 / shiftStrategyParameters.RatingFactorCurrentGear
+				: shiftStrategyParameters.RatingFactorCurrentGear;
+
+			if (minFc.Item2.IsGreater(fcCurrent * ratingFactor)) {
 				return minFc.Item1;
 			}
 
@@ -342,7 +348,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				? VectoMath.Max(-GearboxModelData.Gears[currentGear.Gear].MaxTorque, response.ElectricMotor.MaxDriveTorque)
 				: response.ElectricMotor.MaxDriveTorque;
 
-			var tqCurrent = (response.ElectricMotor.ElectricMotorPowerMech / response.ElectricMotor.AngularVelocity).LimitTo(maxDriveTorque, maxGenTorque);
+			var tqCurrent = (response.ElectricMotor.ElectricMotorPowerMech / response.ElectricMotor.AngularVelocity);
+			if (!tqCurrent.IsBetween(maxDriveTorque, maxGenTorque)) {
+				return double.NaN;
+			}
 			var engineSpeed = response.ElectricMotor.AngularVelocity;
 
 			
@@ -511,8 +520,13 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			var fcCurrent = GetFCRating(responseCurrent);
 
 			var minFc = results.MinBy(x => x.Item2);
-			
-			if (minFc.Item2.IsGreater(fcCurrent * shiftStrategyParameters.RatingFactorCurrentGear)) {
+
+			var ratingFactor = outTorque < 0
+				? 1 / shiftStrategyParameters.RatingFactorCurrentGear
+				: shiftStrategyParameters.RatingFactorCurrentGear;
+
+
+			if (minFc.Item2.IsGreater(fcCurrent * ratingFactor)) {
 				return minFc.Item1;
 			}
 			
@@ -642,6 +656,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 
 		public bool CheckGearshiftRequired { get; protected set; }
+		public GearshiftPosition MaxStartGear { get; }
 
 		public void Request(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity) { }
 
@@ -650,7 +665,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		public ShiftPolygon ComputeDeclarationShiftPolygon(GearboxType gearboxType, int i, EngineFullLoadCurve engineDataFullLoadCurve, 
 			IList<ITransmissionInputData> gearboxGears, CombustionEngineData engineData, double axlegearRatio, Meter dynamicTyreRadius, ElectricMotorData electricMotorData)
 		{
-			return DeclarationData.Gearbox.ComputeElectricMotorShiftPolygon(i, electricMotorData.FullLoadCurve, electricMotorData.Ratio, gearboxGears, axlegearRatio, dynamicTyreRadius);
+			return DeclarationData.Gearbox.ComputeElectricMotorShiftPolygon(i, electricMotorData.FullLoadCurve, electricMotorData.RatioADC, gearboxGears, axlegearRatio, dynamicTyreRadius);
 		}
 
 	}
