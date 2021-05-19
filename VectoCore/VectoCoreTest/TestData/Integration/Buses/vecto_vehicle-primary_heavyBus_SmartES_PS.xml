@@ -3285,7 +3285,7 @@
 						<SmartCompressionSystem>true</SmartCompressionSystem>
 						<SmartRegenerationSystem>false</SmartRegenerationSystem>
 						<AirsuspensionControl>electronically</AirsuspensionControl>
-						<AdBlueDosing>true</AdBlueDosing>
+						<PneumaticSCRReagentDosing>true</PneumaticSCRReagentDosing>
 					</PneumaticSystem>
 					<HVAC>
 						<AdjustableCoolantThermostat>true</AdjustableCoolantThermostat>

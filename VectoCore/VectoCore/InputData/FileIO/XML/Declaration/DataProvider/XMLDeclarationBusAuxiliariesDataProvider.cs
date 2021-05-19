@@ -6,6 +6,7 @@ using System.Xml;
 using System.Xml.Linq;
 using TUGraz.VectoCommon.BusAuxiliaries;
 using TUGraz.VectoCommon.InputData;
+using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Resources;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.InputData.FileIO.XML.Common;
@@ -79,13 +80,49 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 		#region Implementation of IElectricSupplyDeclarationData
 
+		public AlternatorType AlternatorTechnology
+		{
+			get
+			{
+				return GetString(new[]
+						{ XMLNames.BusAux_ElectricSystem, XMLNames.BusAux_ElectricSystem_AlternatorTechnology })
+					.ParseEnum<AlternatorType>();
+			}
+		}
+
 		public virtual IList<IAlternatorDeclarationInputData> Alternators
 		{
 			get
 			{
-				return GetNodes(new[] { XMLNames.BusAux_ElectricSystem, XMLNames.BusAux_ElectricSystem_AlternatorTechnology })
-					.Cast<XmlNode>().Select(x => new AlternatorInputData(x.InnerText))
+				return GetNodes(new[] { XMLNames.BusAux_ElectricSystem, "SmartAlternator" })
+					.Cast<XmlNode>().Select(x => {
+						var ratedCurrent = GetNode("RatedCurrent", x).InnerText.ToDouble().SI<Ampere>();
+						var ratedVoltage = GetNode("RatedVoltage", x).InnerText.ToDouble().SI<Volt>();
+						return new AlternatorInputData(ratedVoltage, ratedCurrent);
+					})
 					.Cast<IAlternatorDeclarationInputData>().ToList();
+			}
+		}
+
+		public IList<IBusAuxElectricStorageDeclarationInputData> ElectricStorage
+		{
+			get
+			{
+				return GetNodes(new[] { XMLNames.BusAux_ElectricSystem, "Battery" })
+					.Cast<XmlNode>().Select(x => {
+						var ratedCapacity = GetNode("RatedCapacity", x).InnerText.ToDouble().SI(Unit.SI.Ampere.Hour).Cast<AmpereSecond>();
+						var voltage = GetNode("NominalVoltage", x).InnerText.ToDouble().SI<Volt>();
+						var technology = GetNode("BatteryTechnology", x).InnerText;
+						return new BusAuxBatteryInputData(technology, voltage, ratedCapacity);
+					})
+					.Concat(GetNodes(new [] { XMLNames.BusAux_ElectricSystem, "Capacitor" }).Cast<XmlNode>()
+						.Select(x => {
+							var ratedCapacity = GetNode("RatedCapacitance", x).InnerText.ToDouble().SI<Farad>();
+							var voltage = GetNode("RatedVoltage", x).InnerText.ToDouble().SI<Volt>();
+							var technology = GetNode("CapacitorTechnology", x).InnerText;
+							return new BusAuxCapacitorInputData(technology, voltage, ratedCapacity);
+						}).Cast<IBusAuxElectricStorageDeclarationInputData>())
+					.Cast<IBusAuxElectricStorageDeclarationInputData>().ToList();
 			}
 		}
 

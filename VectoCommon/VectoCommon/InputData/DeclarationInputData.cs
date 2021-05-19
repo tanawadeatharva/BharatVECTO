@@ -828,13 +828,11 @@ namespace TUGraz.VectoCommon.InputData
 
 	public interface IElectricSupplyDeclarationData
 	{
+		AlternatorType AlternatorTechnology { get; }
+
 		IList<IAlternatorDeclarationInputData> Alternators { get; }
 
-		bool SmartElectrics { get; }
-
-		Watt MaxAlternatorPower { get; }
-
-		WattSecond ElectricStorageCapacity { get; }
+		IList<IBusAuxElectricStorageDeclarationInputData> ElectricStorage { get; }
 	}
 
 	public interface IElectricConsumersDeclarationData
@@ -852,10 +850,19 @@ namespace TUGraz.VectoCommon.InputData
 
 	public interface IAlternatorDeclarationInputData
 	{
+		Ampere RatedCurrent { get; }
+
+		Volt RatedVoltage { get; }
+	}
+
+	public interface IBusAuxElectricStorageDeclarationInputData
+	{
 		string Technology { get; }
 
-		//double Ratio { get; }
+		WattSecond ElectricStorageCapacity { get; }
 	}
+
+
 
 
 	public interface IPneumaticSupplyDeclarationData

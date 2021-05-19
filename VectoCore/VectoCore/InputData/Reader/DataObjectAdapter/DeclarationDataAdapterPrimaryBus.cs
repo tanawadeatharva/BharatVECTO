@@ -101,14 +101,20 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 
 			var retVal = GetDefaultElectricalUserConfig();
 
-			retVal.AlternatorType = busAux.ElectricSupply.SmartElectrics ? AlternatorType.Smart : AlternatorType.Conventional;
+			retVal.AlternatorType = busAux.ElectricSupply.AlternatorTechnology;
 			retVal.ElectricalConsumers = currentDemand;
-			retVal.AlternatorMap = new SimpleAlternator(CalculateAlternatorEfficiency(busAux.ElectricSupply.Alternators)) {
-				Technologies = busAux.ElectricSupply.Alternators.Select(x => x.Technology).ToList()
-			};
-			retVal.MaxAlternatorPower = busAux.ElectricSupply.MaxAlternatorPower;
-			retVal.ElectricStorageCapacity = busAux.ElectricSupply.ElectricStorageCapacity ?? 0.SI<WattSecond>();
-			
+			retVal.AlternatorMap = new SimpleAlternator(CalculateAlternatorEfficiency(busAux.ElectricSupply.Alternators));
+
+			switch (retVal.AlternatorType) {
+				case AlternatorType.Smart when busAux.ElectricSupply.Alternators.Count == 0:
+					throw new VectoException("at least one alternator is required when specifying smart electrics!");
+				case AlternatorType.Smart when busAux.ElectricSupply.ElectricStorage.Count == 0:
+					throw new VectoException("at least one electric storage (battery or capacitor) is required when specifying smart electrics!");
+			}
+
+			retVal.MaxAlternatorPower = busAux.ElectricSupply.Alternators.Sum(x => x.RatedVoltage * x.RatedCurrent);
+			retVal.ElectricStorageCapacity = busAux.ElectricSupply.ElectricStorage.Sum(x => x.ElectricStorageCapacity) ?? 0.SI<WattSecond>();
+
 			return retVal;
 		}
 
@@ -127,12 +133,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 
 		protected virtual double CalculateAlternatorEfficiency(IList<IAlternatorDeclarationInputData> alternators)
 		{
-			var sum = 0.0;
-			foreach (var entry in alternators) {
-				sum += DeclarationData.BusAuxiliaries.AlternatorTechnologies.Lookup(entry.Technology);
-			}
-
-			return sum / alternators.Count;
+			return  DeclarationData.BusAuxiliaries.AlternatorTechnologies.Lookup("default");
 		}
 
 		protected virtual Dictionary<string, ElectricConsumerEntry> GetElectricConsumers(Mission mission, IVehicleDeclarationInputData vehicleData, IActuations actuations, VehicleClass vehicleClass)
@@ -310,8 +311,6 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 
 				MaxPossibleBenefitFromTechnologyList =
 					Constants.BusAuxiliaries.SteadyStateModel.MaxPossibleBenefitFromTechnologyList,
-
-				COP = 3.5
 			};
 		}
 

@@ -591,13 +591,41 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 		#region Implementation of IElectricSupplyDeclarationData
 
+		public virtual AlternatorType AlternatorTechnology
+		{
+			get
+			{
+				return Body["Aux"]?["ElectricSupply"]?.GetEx<string>("Technology").ParseEnum<AlternatorType>() ?? AlternatorType.Conventional;
+			}
+		}
+
 		public virtual IList<IAlternatorDeclarationInputData> Alternators
 		{
 			get
 			{
-				return Body["Aux"]?["ElectricSupply"]?["Alternators"]
-							.Select(x => new AlternatorInputData(x.GetEx<string>("Technology")))
-							.Cast<IAlternatorDeclarationInputData>().ToList() ?? new List<IAlternatorDeclarationInputData>();
+				var maxAlternatorPower =
+					Body["Aux"]?["ElectricSupply"]?.GetEx<double>("MaxAlternatorPower").SI<Watt>() ?? null;
+
+				if (maxAlternatorPower == null) {
+					return null;
+				}
+
+				return new[] { new AlternatorInputData(48.SI<Volt>(), maxAlternatorPower / 48.SI<Volt>()) }
+					.Cast<IAlternatorDeclarationInputData>().ToList();
+			}
+		}
+
+		public IList<IBusAuxElectricStorageDeclarationInputData> ElectricStorage
+		{
+			get
+			{
+				var batteryCapacity =  Body["Aux"]?["ElectricSupply"]?.GetEx<double>("ElectricStorageCapacity").SI(Unit.SI.Watt.Hour).Cast<WattSecond>() ?? null;
+				if (batteryCapacity == null) {
+					return null;
+				}
+
+				return new[] { new BusAuxBatteryInputData("none", 48.SI<Volt>(), batteryCapacity / 48.SI<Volt>()), }
+					.Cast<IBusAuxElectricStorageDeclarationInputData>().ToList();
 			}
 		}
 
@@ -633,11 +661,6 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 		public virtual bool SmartElectrics
 		{
 			get { return Body["Aux"]?["ElectricSupply"]?.GetEx<bool>("SmartElectrics") ?? false; }
-		}
-
-		public Watt MaxAlternatorPower
-		{
-			get { return Body["Aux"]?["ElectricSupply"]?.GetEx<double>("MaxAlternatorPower").SI<Watt>() ?? null; }
 		}
 
 		public WattSecond ElectricStorageCapacity

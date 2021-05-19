@@ -218,7 +218,7 @@
 								<SmartCompressionSystem>false</SmartCompressionSystem>
 								<SmartRegenerationSystem>false</SmartRegenerationSystem>
 								<AirsuspensionControl>electronically</AirsuspensionControl>
-								<SCRReagentDosing>true</SCRReagentDosing>
+								<PneumaticSCRReagentDosing>true</PneumaticSCRReagentDosing>
 							</PneumaticSystem>
 							<HVAC>
 								<AdjustableCoolantThermostat>true</AdjustableCoolantThermostat>
@@ -423,7 +423,7 @@
 					<Mission>Interurban</Mission>
 					<SimulationParameters>
 						<TotalVehicleMass unit="kg">14029.90</TotalVehicleMass>
-						<Payload unit="kg">879.90</Payload>
+						<Payload unit="kg">1075.44</Payload>
 						<PassengerCount>12.39</PassengerCount>
 						<FuelMode>single fuel mode</FuelMode>
 					</SimulationParameters>

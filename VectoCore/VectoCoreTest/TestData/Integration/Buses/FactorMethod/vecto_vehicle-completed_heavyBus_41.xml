@@ -17,6 +17,7 @@ xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:DeclarationJob v:\VectoCore\VectoCor
 		<CorrectedActualMass>8300</CorrectedActualMass>
 		<TechnicalPermissibleMaximumLadenMass>18000</TechnicalPermissibleMaximumLadenMass>
 		<AirdragModifiedMultistage>false</AirdragModifiedMultistage>
+		<NgTankSystem>Compressed</NgTankSystem>
 		<ClassBus>II+III</ClassBus>
 		<NumberPassengersLowerDeck>30</NumberPassengersLowerDeck>
 		<NumberPassengersUpperDeck>0</NumberPassengersUpperDeck>
@@ -66,7 +67,7 @@ xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:DeclarationJob v:\VectoCore\VectoCor
 						<SystemConfiguration>7</SystemConfiguration>
 						<HeatPumpTypeDriverCompartment>non R-744 2-stage</HeatPumpTypeDriverCompartment>
 						<HeatPumpModeDriverCompartment>cooling</HeatPumpModeDriverCompartment>
-						<HeatPumpTypePassengerCompartment>non R-744 2-stage</HeatPumpTypePassengerCompartment>
+						<HeatPumpTypePassengerCompartment>non R-744 4-stage</HeatPumpTypePassengerCompartment>
 						<HeatPumpModePassengerCompartment>cooling</HeatPumpModePassengerCompartment>
 						<AuxiliaryHeaterPower>0</AuxiliaryHeaterPower>
 						<DoubleGlazing>true</DoubleGlazing>

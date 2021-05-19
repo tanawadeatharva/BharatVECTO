@@ -245,7 +245,7 @@
 								<SmartCompressionSystem>true</SmartCompressionSystem>
 								<SmartRegenerationSystem>false</SmartRegenerationSystem>
 								<AirsuspensionControl>electronically</AirsuspensionControl>
-								<SCRReagentDosing>true</SCRReagentDosing>
+								<PneumaticSCRReagentDosing>true</PneumaticSCRReagentDosing>
 							</PneumaticSystem>
 							<HVAC>
 								<AdjustableCoolantThermostat>true</AdjustableCoolantThermostat>

@@ -7,7 +7,7 @@ xmlns:v2.1="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.1"
 xmlns:v2.3="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:DEV:v2.3" 
 xmlns:v2.6="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:DEV:v2.6" 
 xmlns:v2.8="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:DEV:v2.8"
-xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:DeclarationOutput:VehicleInterimFile:v0.1 E:\VECTO_DEV\fk_vecto-dev\VectoCore\VectoCore\Resources\XSD/VectoOutputMultistage.0.1.xsd">
+xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:DeclarationOutput:VehicleInterimFile:v0.1 v:\VectoCore\VectoCore\Resources\XSD/VectoOutputMultistage.0.1.xsd">
 	<PrimaryVehicle>
 		<Data id="text" xsi:type="PrimaryVehicleDataType">
 			<Vehicle xsi:type="VehiclePIFType">
@@ -284,7 +284,7 @@ xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:DeclarationOutput:VehicleInterimFile
 								<SmartCompressionSystem>true</SmartCompressionSystem>
 								<SmartRegenerationSystem>false</SmartRegenerationSystem>
 								<AirsuspensionControl>electronically</AirsuspensionControl>
-								<SCRReagentDosing>true</SCRReagentDosing>
+								<PneumaticSCRReagentDosing>true</PneumaticSCRReagentDosing>
 							</PneumaticSystem>
 							<HVAC>
 								<AdjustableCoolantThermostat>true</AdjustableCoolantThermostat>

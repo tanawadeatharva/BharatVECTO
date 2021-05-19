@@ -103,7 +103,9 @@ namespace TUGraz.VectoCore.Tests.Integration.CompletedBus
 		public void TestCompletedBus()
 		{
 			var writer = new FileOutputWriter(Path.Combine(Path.GetDirectoryName(JobFile_Group41), Path.GetFileName(JobFile_Group41)));
-			var inputData = CompletedVIF.CreateCompletedVif(JSONInputDataFactory.ReadJsonJob(JobFile_Group41) as JSONInputDataCompletedBusFactorMethodV7, xmlInputReader); // JSONInputDataFactory.ReadJsonJob(JobFile_Group41);
+			var inputData = CompletedVIF.CreateCompletedVif(
+				JSONInputDataFactory.ReadJsonJob(JobFile_Group41) as JSONInputDataCompletedBusFactorMethodV7,
+				xmlInputReader);
 
 			var factory = new SimulatorFactory(ExecutionMode.Declaration, inputData, writer)
 			{
@@ -598,7 +600,7 @@ namespace TUGraz.VectoCore.Tests.Integration.CompletedBus
 			Assert.AreEqual(1.0, genericPneumaticUI.CompressorGearRatio);
 			Assert.AreEqual(genericPneumaticUI.CompressorGearRatio, specificPneumaticUI.CompressorGearRatio);
 
-			Assert.AreEqual(false, genericPneumaticUI.SmartAirCompression);
+			Assert.AreEqual(true, genericPneumaticUI.SmartAirCompression);
 			Assert.AreEqual(genericPneumaticUI.SmartAirCompression, specificPneumaticUI.SmartAirCompression);
 
 			Assert.AreEqual(false, genericPneumaticUI.SmartRegeneration);
@@ -1029,8 +1031,7 @@ namespace TUGraz.VectoCore.Tests.Integration.CompletedBus
 						inputData = tmp;
 						break;
 					case JSONInputDataCompletedBusFactorMethodV7 completedJson: {
-						var completedVif = CompletedVIF.CreateCompletedVif(completedJson, xmlInputReader);
-						inputData = new XMLDeclarationVIFInputData(completedVif as IMultistageBusInputDataProvider, null);
+						inputData = CompletedVIF.CreateCompletedVif(completedJson, xmlInputReader);
 						break;
 					}
 				}

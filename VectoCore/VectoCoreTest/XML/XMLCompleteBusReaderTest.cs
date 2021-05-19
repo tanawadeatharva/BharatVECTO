@@ -96,7 +96,7 @@ namespace TUGraz.VectoCore.Tests.XML
 			var electricSupl = components.BusAuxiliaries.ElectricSupply;
 			Assert.IsNotNull(electricSupl.Alternators);
 			Assert.AreEqual(1, electricSupl.Alternators.Count);
-			Assert.AreEqual("default", electricSupl.Alternators.First().Technology);
+			Assert.AreEqual(AlternatorType.Conventional, electricSupl.AlternatorTechnology);
 
 			//Assert.AreEqual(ConsumerTechnology.Pneumatically, components.BusAuxiliaries.PneumaticConsumers.DoorDriveTechnology);
 

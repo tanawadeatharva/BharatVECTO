@@ -271,7 +271,7 @@
 										</xs:restriction>
 									</xs:simpleType>
 								</xs:element>
-								<xs:element name="AdBlueDosing" type="xs:boolean"/>
+								<xs:element name="PneumaticSCRReagentDosing" type="xs:boolean"/>
 							</xs:sequence>
 						</xs:complexType>
 					</xs:element>
