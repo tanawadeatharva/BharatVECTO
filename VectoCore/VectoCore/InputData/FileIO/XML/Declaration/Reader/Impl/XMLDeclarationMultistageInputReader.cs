@@ -322,6 +322,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 	public abstract class ConsolidatedDataBase 
 	{
 		protected readonly IEnumerable<IManufacturingStageInputData> _manufacturingStages;
+		protected string InvalidEntry { get; private set; }
 
 		public ConsolidatedDataBase(IEnumerable<IManufacturingStageInputData> manufacturingStages)
 		{
@@ -353,6 +354,17 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 		}
 
 		public abstract bool IsInputDataComplete(VectoSimulationJobType jobType);
+		
+		public abstract string GetInvalidEntry();
+
+		protected bool InputComplete<T>(T value, string variableName)
+		{
+			if (value != null)
+				return true;
+
+			InvalidEntry  = variableName; 
+			return false;
+		}
 	}
 
 	// ---------------------------------------------------------------------------------------
@@ -380,10 +392,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 
 		public IVehicleDeclarationInputData Vehicle
 		{
-			get
-			{
-				return GetConsolidatedVehicleData(); 
-			}
+			get { return GetConsolidatedVehicleData(); }
 		}
 
 		public IApplicationInformation ApplicationInformation
@@ -399,6 +408,11 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 		public override bool IsInputDataComplete(VectoSimulationJobType jobType)
 		{
 			return GetConsolidatedVehicleData().IsInputDataComplete(jobType);
+		}
+
+		public override string GetInvalidEntry()
+		{
+			return _consolidatedVehicleData.GetInvalidEntry();
 		}
 
 		private ConsolidatedVehicleData GetConsolidatedVehicleData()
@@ -648,28 +662,62 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 				return TankSystem != null;
 			return true;
 		}
-		
-		private bool WithoutAirdrag()
+
+		private bool IsAirdragEntriesValid()
 		{
-			foreach (var manufacturingStage in _manufacturingStages) {
-				if (manufacturingStage.Vehicle.AirdragModifiedMultistage != null ||
-					manufacturingStage.Vehicle.Components?.AirdragInputData != null) 
-					return false;
+			var checkAirdragModified = false;
+			var validAirdragEntries = true;
+
+			var stages = _manufacturingStages.Reverse();
+			foreach (var manufacturingStage in stages) {
+				if (manufacturingStage.Vehicle?.Components?.AirdragInputData != null && !checkAirdragModified ) {
+					checkAirdragModified = true;
+					continue;
+				}
+				if (checkAirdragModified && manufacturingStage.Vehicle?.AirdragModifiedMultistage == null) 
+					validAirdragEntries = false;
 			}
-			return true;
+
+			return validAirdragEntries;
 		}
 
 		public override bool IsInputDataComplete(VectoSimulationJobType jobType)
 		{
 			GetADAS();
 			GetComponents();
+			
+			return  InputComplete(Model, nameof(Model)) 
+					&& InputComplete(LegislativeClass, nameof(LegislativeClass)) 
+					&& InputComplete(CurbMassChassis, nameof(CurbMassChassis)) 
+					&& InputComplete(GrossVehicleMassRating, nameof(GrossVehicleMassRating))
+					&& InputComplete(IsAirdragEntriesValid(), nameof(IsAirdragEntriesValid)) 
+					&& InputComplete(IsTankSystemValid(), nameof(IsTankSystemValid))
+					&& InputComplete(RegisteredClass, nameof(RegisteredClass))
+					&& InputComplete(NumberOfPassengersLowerDeck, nameof(NumberOfPassengersLowerDeck))
+					&& InputComplete(NumberOfPassengersUpperDeck, nameof(NumberOfPassengersUpperDeck))
+					&& InputComplete(VehicleCode, nameof(VehicleCode))
+					&& InputComplete(LowEntry, nameof(LowEntry)) && InputComplete(Height, nameof(Height)) 
+					&& InputComplete(Length, nameof(Length)) && InputComplete(Width, nameof(Width)) 
+					&& InputComplete(EntranceHeight, nameof(EntranceHeight))  
+					&& InputComplete(DoorDriveTechnology, nameof(DoorDriveTechnology)) 
+					&& InputComplete(_consolidatedADAS, nameof(_consolidatedADAS))
+					&& _consolidatedADAS.IsInputDataComplete(jobType)
+					&& InputComplete(_consolidatedComponents, nameof(_consolidatedComponents))
+					&& _consolidatedComponents.IsInputDataComplete(jobType);
+		}
 
-			return Model != null && LegislativeClass != null && CurbMassChassis != null && GrossVehicleMassRating != null 
-					&& (WithoutAirdrag() || AirdragModifiedMultistage != null) && IsTankSystemValid() && RegisteredClass != null 
-					&& NumberOfPassengersLowerDeck != null && NumberOfPassengersUpperDeck != null && VehicleCode != null 
-					&& LowEntry != null && Height != null && Length != null && Width != null && EntranceHeight != null 
-					&& DoorDriveTechnology != null && _consolidatedADAS != null && _consolidatedADAS.IsInputDataComplete(jobType) 
-					&& _consolidatedComponents != null && _consolidatedComponents.IsInputDataComplete(jobType);
+		public override string GetInvalidEntry()
+		{
+			if (InvalidEntry != null)
+				return InvalidEntry;
+			
+			if (_consolidatedADAS?.GetInvalidEntry() != null)
+				return _consolidatedADAS.GetInvalidEntry();
+
+			if (_consolidatedComponents?.GetInvalidEntry() != null)
+				return _consolidatedComponents.GetInvalidEntry(); 
+
+			return null;
 		}
 	}
 
@@ -719,7 +767,12 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 
 		public override bool IsInputDataComplete(VectoSimulationJobType jobType)
 		{
-			return ATEcoRollReleaseLockupClutch != null;
+			return InputComplete(ATEcoRollReleaseLockupClutch, nameof(ATEcoRollReleaseLockupClutch));
+		}
+
+		public override string GetInvalidEntry()
+		{
+			return InvalidEntry;
 		}
 	}
 
@@ -830,7 +883,22 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 			GetAirdragInputData();
 			GetBusAuxiliaries();
 
-			return _consolidateBusAuxiliariesData != null && _consolidateBusAuxiliariesData.IsInputDataComplete(jobType);
+			return InputComplete(_consolidateBusAuxiliariesData, nameof(_consolidateBusAuxiliariesData)) 
+					&& _consolidateBusAuxiliariesData.IsInputDataComplete(jobType);
+		}
+
+		public override string GetInvalidEntry()
+		{
+			if (InvalidEntry != null)
+				return InvalidEntry;
+			
+			if (_consolidateAirdragData?.GetInvalidEntry() != null)
+				return _consolidateAirdragData.GetInvalidEntry();
+
+			if (_consolidateBusAuxiliariesData?.GetInvalidEntry() != null)
+				return _consolidateBusAuxiliariesData.GetInvalidEntry(); 
+
+			return InvalidEntry;
 		}
 	}
 
@@ -884,18 +952,12 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 
 		public SquareMeter TransferredAirDragArea
 		{
-			get
-			{
-				return AirdragEntry?.TransferredAirDragArea;
-			}
+			get { return AirdragEntry?.TransferredAirDragArea; }
 		}
 
 		public SquareMeter AirDragArea_0
 		{
-			get
-			{
-				return AirdragEntry.AirDragArea_0;
-			}
+			get { return AirdragEntry.AirDragArea_0; }
 		}
 
 		public DataSource DataSource
@@ -922,7 +984,12 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 
 		public override bool IsInputDataComplete(VectoSimulationJobType jobType)
 		{
-			return AirdragEntry != null;
+			return InputComplete(AirdragEntry, nameof(AirdragEntry));
+		}
+
+		public override string GetInvalidEntry()
+		{
+			return InvalidEntry;
 		}
 	}
 
@@ -1013,8 +1080,23 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 			GetElectricConsumers();
 			GetHVACAux();
 
-			return _consolidateElectricConsumerData != null && _consolidateElectricConsumerData.IsInputDataComplete(jobType) &&
-					_consolidatedHVACBusAuxiliariesData != null && _consolidatedHVACBusAuxiliariesData.IsInputDataComplete(jobType);
+			return InputComplete(_consolidateElectricConsumerData, nameof(_consolidateElectricConsumerData)) 
+					&& _consolidateElectricConsumerData.IsInputDataComplete(jobType)
+					&& InputComplete(_consolidatedHVACBusAuxiliariesData, nameof(_consolidatedHVACBusAuxiliariesData))
+					&& _consolidatedHVACBusAuxiliariesData.IsInputDataComplete(jobType);
+		}
+
+		public override string GetInvalidEntry()
+		{
+			if (InvalidEntry != null)
+				return InvalidEntry;
+
+			if (_consolidateElectricConsumerData?.GetInvalidEntry() != null)
+				return _consolidateElectricConsumerData.GetInvalidEntry(); 
+			if (_consolidatedHVACBusAuxiliariesData?.GetInvalidEntry() != null)
+				return _consolidatedHVACBusAuxiliariesData.GetInvalidEntry(); 
+			
+			return null;
 		}
 
 
@@ -1084,8 +1166,16 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 
 		public override bool IsInputDataComplete(VectoSimulationJobType jobType)
 		{
-			return InteriorLightsLED != null && DayrunninglightsLED != null && PositionlightsLED != null &&
-					HeadlightsLED != null && BrakelightsLED != null;
+			return InputComplete(InteriorLightsLED, nameof(InteriorLightsLED))
+				&& InputComplete(DayrunninglightsLED, nameof(DayrunninglightsLED))
+				&& InputComplete(PositionlightsLED, nameof(PositionlightsLED))
+				&& InputComplete(HeadlightsLED, nameof(HeadlightsLED))
+				&& InputComplete(BrakelightsLED, nameof(BrakelightsLED));
+		}
+
+		public override string GetInvalidEntry()
+		{
+			return InvalidEntry;
 		}
 	}
 
@@ -1252,10 +1342,19 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 		
 		public override bool IsInputDataComplete(VectoSimulationJobType jobType)
 		{
-			return IsCorrectSystemConfiguration() && IsCorrectDriverPumpTypeDriverPumpMode() &&
-					IsCorrectPassengerPumpTypeDriverPumpMode() && AuxHeaterPower != null && DoubleGlazing != null &&
-					AdjustableAuxiliaryHeater != null && SeparateAirDistributionDucts != null &&
-					RequiredParametersForJobType(jobType);
+			return InputComplete(IsCorrectSystemConfiguration(), nameof(IsCorrectSystemConfiguration))
+					&& InputComplete(IsCorrectDriverPumpTypeDriverPumpMode(), nameof(IsCorrectDriverPumpTypeDriverPumpMode))
+					&& InputComplete(IsCorrectPassengerPumpTypeDriverPumpMode(), nameof(IsCorrectPassengerPumpTypeDriverPumpMode))
+					&& InputComplete(AuxHeaterPower, nameof(AuxHeaterPower))
+					&& InputComplete(DoubleGlazing, nameof(DoubleGlazing))
+					&& InputComplete(AdjustableAuxiliaryHeater, nameof(AdjustableAuxiliaryHeater))
+					&& InputComplete(SeparateAirDistributionDucts, nameof(SeparateAirDistributionDucts))
+					&& InputComplete(RequiredParametersForJobType(jobType), nameof(RequiredParametersForJobType));
+		}
+
+		public override string GetInvalidEntry()
+		{
+			return InvalidEntry;
 		}
 	}
 
