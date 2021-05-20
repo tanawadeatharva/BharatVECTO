@@ -188,7 +188,9 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 			if(_manufacturingStageViewModel.Vehicle is IMultistageVehicleViewModel vehicleViewModel)
 			{
 				if (vehicleViewModel.HasErrors) {
-					_dialogHelper.Value.ShowMessageBox(string.Join("\n", vehicleViewModel.Errors.Values), "Error" );
+					_dialogHelper.Value.ShowMessageBox("Vehicle\n" + string.Join("\n", vehicleViewModel.Errors.Values)
+																	+ (vehicleViewModel.MultistageAuxiliariesViewModel.HasErrors ? ("\nAuxiliaries\n" + string.Join("\n", vehicleViewModel.MultistageAuxiliariesViewModel.Errors.Values)) : ""),
+						"Error");
 					return;
 				}
 			}

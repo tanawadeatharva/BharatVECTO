@@ -20,7 +20,8 @@
         <ScrollViewer>
             <DockPanel>
                 <StackPanel DockPanel.Dock="Top">
-                    <Label Background="{DynamicResource ButtonHighlightColor}" FontSize="15" HorizontalAlignment="Stretch">AUXILIARIES</Label>
+                    <Label Style="{DynamicResource LabelStyle1}" FontSize="15" HorizontalAlignment="Stretch">AUXILIARIES</Label>
+                    <Label Style="{DynamicResource LabelStyle1}">LED Lights</Label>
                     <customControls:MultiStageParameter Mode="CHECKBOX" 
                                                         PreviousContent="{Binding ConsolidatedInputData.ElectricConsumers.InteriorLightsLED}" 
                                                         Content="{Binding InteriorLightsLED, ValidatesOnDataErrors=True}"
@@ -42,7 +43,8 @@
                                                 Content="{Binding HeadlightsLED,ValidatesOnDataErrors=True}"
                                                 EditingEnabled="{Binding EditingEnabledDictionary[HeadlightsLED]}"/>
 
-                    <Separator/>
+                    <!--<Separator/>-->
+                    <Label  Style="{DynamicResource LabelStyle1}">Heating, Ventilation and Air Conditioning</Label>
                     <customControls:MultiStageParameter Mode="COMBOBOX" 
                                                         EditingEnabled="{Binding HeatPumpGroupEditingEnabled, Mode=TwoWay}" 
                                                         PreviousContent="{Binding ConsolidatedInputData.HVACAux.SystemConfiguration}"
