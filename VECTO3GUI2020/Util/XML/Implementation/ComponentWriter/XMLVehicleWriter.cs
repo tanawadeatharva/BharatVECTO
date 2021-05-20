@@ -271,7 +271,7 @@ namespace VECTO3GUI2020.Util.XML.Implementation
 				aDASElement.Add(new XElement(adasNamespace + XMLNames.Vehicle_ADAS_EcoRollWithEngineStopStart, ecoRollWithEngineStop));
 				aDASElement.Add(new XElement(adasNamespace + XMLNames.Vehicle_ADAS_PCC,
 					_inputData.ADAS.PredictiveCruiseControl.ToXMLFormat()));
-				aDASElement.Add(new XElement(adasNamespace + XMLNames.Vehicle_ADAS_ATEcoRollReleaseLockupClutch, _inputData.ADAS?.ATEcoRollReleaseLockupClutch ));
+				aDASElement.Add(new XElement(adasNamespace + XMLNames.Bus_ADAS_APTEcoRollReleaseLockupClutch, _inputData.ADAS?.ATEcoRollReleaseLockupClutch ));
 			}
 			_Xelement.DescendantsAndSelf().Where(e => e.Value.IsNullOrEmpty()).Remove();
 
