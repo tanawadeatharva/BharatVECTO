@@ -134,7 +134,9 @@ namespace TUGraz.VectoCore.Tests.Integration.Multistage
 			var inputData = xmlInputReader.Create(primaryFile);
 
 			var writer = new FileOutputWriter("vif_writing_test.xml");
-			var xmlreport = new XMLDeclarationReportPrimaryVehicle(writer);
+			
+			var xmlreport = new XMLDeclarationReportMultistageBusVehicle(writer);
+			//var xmlreport = new XMLDeclarationReportPrimaryVehicle(writer);
 			var factory = new SimulatorFactory(ExecutionMode.Declaration, inputData, writer, xmlreport) {
 				WriteModalResults = true,
 				//ActualModalData = true,
