@@ -1,18 +1,34 @@
 ﻿using Microsoft.Win32;
 using Ninject;
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.IO;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Data;
 using System.Windows.Input;
+using System.Xml;
+using System.Xml.Linq;
 using Microsoft.Toolkit.Mvvm.Input;
+using Microsoft.WindowsAPICodePack.Shell.Interop;
 using Microsoft.WindowsAPICodePack.Shell.PropertySystem;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
+using TUGraz.VectoCommon.Models;
+using TUGraz.VectoCommon.Resources;
+using TUGraz.VectoCore;
+using TUGraz.VectoCore.Configuration;
+using TUGraz.VectoCore.InputData.FileIO.JSON;
 using TUGraz.VectoCore.InputData.FileIO.XML;
+using TUGraz.VectoCore.InputData.Impl;
+using TUGraz.VectoCore.Models.Simulation.Impl;
+using TUGraz.VectoCore.OutputData;
+using TUGraz.VectoCore.OutputData.FileIO;
 using TUGraz.VectoCore.Utils;
 using VECTO3GUI2020.Annotations;
 using VECTO3GUI2020.Helper;
@@ -26,6 +42,7 @@ using VECTO3GUI2020.ViewModel.MultiStage.Interfaces;
 using VECTO3GUI2020.Views;
 using IDocumentViewModel = VECTO3GUI2020.ViewModel.Interfaces.Document.IDocumentViewModel;
 using RelayCommand = VECTO3GUI2020.Util.RelayCommand;
+using XmlDocumentType = TUGraz.VectoCore.Utils.XmlDocumentType;
 
 namespace VECTO3GUI2020.ViewModel.Implementation
 {
@@ -51,7 +68,7 @@ namespace VECTO3GUI2020.ViewModel.Implementation
 
         private BackgroundWorker fileReadingBackgroundWorker;
 
-
+		private object _jobsLock = new Object();
         private ObservableCollection<IDocumentViewModel> _jobs = new ObservableCollection<IDocumentViewModel>();
         public ObservableCollection<IDocumentViewModel> Jobs{ get => _jobs; set => SetProperty(ref _jobs, value);}
 
@@ -65,6 +82,10 @@ namespace VECTO3GUI2020.ViewModel.Implementation
 		private IAsyncRelayCommand _simulationCommand;
 		private readonly IOutputViewModel _outputViewModel;
 
+		
+
+
+        
 		#endregion
 
 
@@ -72,8 +93,9 @@ namespace VECTO3GUI2020.ViewModel.Implementation
 
         public JobListViewModel()
         {
-            
+			BindingOperations.EnableCollectionSynchronization(Jobs, _jobsLock);
             InitFileBackGroundWorker();
+            
             
         }
 
@@ -110,29 +132,244 @@ namespace VECTO3GUI2020.ViewModel.Implementation
 			Debug.WriteLine(e.ProgressPercentage);
 		}
 
-		public void JobDataGrid_OnDrop(object sender, DragEventArgs e)
+		private CancellationTokenSource cancellationTokenSource = new CancellationTokenSource();
+		private bool _simulationRunning = false;
+
+		public bool SimulationRunning
 		{
-			throw new System.NotImplementedException();
+			get => _simulationRunning;
+			set
+			{
+				SetProperty(ref _simulationRunning, value);
+                OnPropertyChanged(nameof(SimulationCommand));
+                OnPropertyChanged(nameof(CancelSimulation));
+			}
+		}
+
+		private ICommand _cancelSimulationCommand;
+
+
+		private async Task RunSimulationExecute()
+		{
+			cancellationTokenSource = new CancellationTokenSource();
+			SimulationRunning = true;
+			await RunSimulationAsync(cancellationTokenSource.Token,
+				new Progress<MessageEntry>((message) => { _outputViewModel.Messages.Add(message); }),
+				new Progress<int>((i) => _outputViewModel.Progress = i));
+			SimulationRunning = false;
+			_outputViewModel.Progress = 0;
+			cancellationTokenSource.Dispose();
+        }
+
+		private async Task RunSimulationAsync(CancellationToken ct, IProgress<MessageEntry> outputMessages, IProgress<int> progress)
+		{
+            progress.Report(0);
+			for (int i = 0; i <= 100; i++) {
+				await Task.Delay(0);
+				progress.Report(i);
+				if (ct.IsCancellationRequested) {
+					return;
+				}
+			}
+
+			IDocumentViewModel[] jobs;
+			lock (_jobsLock) {
+				jobs = Jobs.Where(x => x.Selected).ToArray();
+				if (jobs.Length == 0) {
+                    outputMessages.Report(new MessageEntry() {
+                        Message = "No Jobs Selected",
+                        Time = DateTime.Now,
+                        Type = MessageType.InfoMessage,
+					});
+				}
+			}
+
+            //TODO add output path to settings
+			var outputPath = Settings.Default.DefaultFilePath;
+			var sumFileWriter = new FileOutputWriter(outputPath);
+
+
+
+			var sumContainer = new SummaryDataContainer(sumFileWriter);
+			var jobContainer = new JobContainer(sumContainer);
+
+
+
+			var mode = ExecutionMode.Declaration;
+
+			var fileWriters = new Dictionary<int, FileOutputWriter>();
+			var finishedRuns = new List<int>();
+
+			var xmlReader = _inputDataReader;
+
+			
+
+
+			foreach (var jobEntry in jobs) {
+				try
+				{
+					var fullFileName = Path.GetFullPath(jobEntry.DataSource.SourceFile);
+					if (!File.Exists(fullFileName))
+					{
+						outputMessages.Report(new MessageEntry()
+							{
+								Type = MessageType.ErrorMessage,
+								Message =
+									$"File {Path.GetFileName(jobEntry.DataSource.SourceFile)} not found!"
+							});
+						continue;
+					}
+
+					outputMessages.Report(
+						new MessageEntry()
+						{
+							Type = MessageType.StatusMessage,
+							Message = $"Reading file {Path.GetFileName(fullFileName)}"
+						});
+
+
+
+					var extension = Path.GetExtension(jobEntry.DataSource.SourceFile);
+					IInputDataProvider input = null;
+					switch (extension)
+					{
+						case Constants.FileExtensions.VectoJobFile:
+							input = JSONInputDataFactory.ReadJsonJob(fullFileName);
+							var tmp = input as IDeclarationInputDataProvider;
+							mode = tmp?.JobInputData.SavedInDeclarationMode ?? false ? ExecutionMode.Declaration : ExecutionMode.Engineering;
+							break;
+						case ".xml":
+							var xdoc = XDocument.Load(fullFileName);
+							var rootNode = xdoc.Root?.Name.LocalName ?? "";
+							if (XMLNames.VectoInputEngineering.Equals(rootNode, StringComparison.InvariantCultureIgnoreCase))
+							{
+								input = xmlReader.CreateEngineering(fullFileName);
+								mode = ExecutionMode.Engineering;
+							}
+							else if (XMLNames.VectoInputDeclaration.Equals(rootNode, StringComparison.InvariantCultureIgnoreCase) 
+							|| XMLNames.VectoOutputMultistage.Equals(rootNode, StringComparison.InvariantCultureIgnoreCase))
+							{
+								using (var reader = XmlReader.Create(fullFileName))
+								{
+									input = xmlReader.CreateDeclaration(reader);
+								}
+								mode = ExecutionMode.Declaration;
+							}
+							break;
+					}
+
+					if (input == null)
+					{
+						outputMessages.Report(
+							new MessageEntry()
+							{
+								Type = MessageType.ErrorMessage,
+								Message = $"No input provider for job {Path.GetFileName(fullFileName)}"
+							});
+						continue;
+					}
+
+					var fileWriter = new FileOutputWriter(GetOutputDirectory(fullFileName));
+					var runsFactory = new SimulatorFactory(mode, input, fileWriter)
+					{
+						WriteModalResults = true,
+						ModalResults1Hz = true,
+						Validate = true,
+						ActualModalData = true,
+						SerializeVectoRunData = true
+						
+					};
+					foreach (var runId in jobContainer.AddRuns(runsFactory))
+					{
+						fileWriters.Add(runId, fileWriter);
+					}
+
+					// TODO MQ-20200525: Remove the following loop in production (or after evaluation of LAC!!
+
+					/*
+					if (!string.IsNullOrWhiteSpace(LookAheadMinSpeedOverride))
+					{
+						foreach (var run in jobContainer.Runs)
+						{
+							var tmpDriver = ((VectoRun)run.Run).GetContainer().RunData.DriverData;
+							tmpDriver.LookAheadCoasting.Enabled = true;
+							tmpDriver.LookAheadCoasting.MinSpeed = LookAheadMinSpeedOverride.ToDouble().KMPHtoMeterPerSecond();
+						}
+					}
+					*/
+
+					outputMessages.Report(
+						new MessageEntry()
+						{
+							Type = MessageType.StatusMessage,
+							Message = $"Finished reading data for job {Path.GetFileName(fullFileName)}"
+						});
+				}
+				catch (Exception ex)
+				{
+					/*
+					MessageBox.Show(
+						$"ERROR running job {Path.GetFileName(jobEntry.DataSource.SourceFile)}: {ex.Message}", "Error", MessageBoxButton.OK,
+						MessageBoxImage.Exclamation);
+					*/
+					outputMessages.Report(
+						new MessageEntry()
+						{
+							Type = MessageType.ErrorMessage, 
+							Message = ex.Message
+						});
+				}
+			}
+
+
+
+		}
+
+		private string GetOutputDirectory(string jobFilePath)
+		{
+			var outFile = jobFilePath;
+			var OutputDirectory = Settings.Default.DefaultFilePath;
+			if (!string.IsNullOrWhiteSpace(OutputDirectory))
+			{
+				if (Path.IsPathRooted(OutputDirectory))
+				{
+					outFile = Path.Combine(OutputDirectory, Path.GetFileName(jobFilePath) ?? "");
+				}
+				else
+				{
+					outFile = Path.Combine(Path.GetDirectoryName(jobFilePath) ?? "", OutputDirectory, Path.GetFileName(jobFilePath) ?? "");
+				}
+				if (!Directory.Exists(Path.GetDirectoryName(outFile)))
+				{
+					Directory.CreateDirectory(Path.GetDirectoryName(outFile));
+				}
+			}
+
+			return outFile;
 		}
 
 
+		#region Commands
 
-
-        #region Commands
+		public ICommand CancelSimulation
+		{
+			get
+			{
+				return _cancelSimulationCommand ?? new RelayCommand(() => { cancellationTokenSource.Cancel(); },
+					() => SimulationRunning);
+			}            
+		}
 
 
 		public IAsyncRelayCommand SimulationCommand
 		{
-			get => _simulationCommand ?? new AsyncRelayCommand(RunSimulationAsync, () => true);
+			get
+			{
+				return _simulationCommand ?? new AsyncRelayCommand(RunSimulationExecute, () => !SimulationRunning);
+			}
 		}
 
-		private Task RunSimulationAsync(CancellationToken arg)
-		{
-            
-            _outputViewModel.Messages.Add("hi");
-			return null;
 
-		}
 
 		public ICommand NewManufacturingStageFile
 		{
@@ -417,4 +654,25 @@ namespace VECTO3GUI2020.ViewModel.Implementation
 
         #endregion
     }
+
+
+	public class VectoSimulationProgress
+	{
+		public enum MsgType
+		{
+			StatusMessage,
+			InfoMessage,
+			Progress,
+			LogError,
+			LogWarning,
+
+		}
+
+		public string Message { get; set; }
+
+		public MsgType Type { get; set; }
+
+		public string Link { get; set; }
+	}
+
 }

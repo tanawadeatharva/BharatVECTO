@@ -1,20 +1,31 @@
 ﻿using TUGraz.VectoCommon.BusAuxiliaries;
+using TUGraz.VectoCommon.Utils;
 
 namespace TUGraz.VectoCommon.Models {
 	public enum VehicleCode
 	{
+		[GuiLabel("not applicable")]
 		NOT_APPLICABLE,
+		[GuiLabel("CA")]
 		CA,
-		CB, 
+		[GuiLabel("CB")]
+		CB,
+		[GuiLabel("CC")]
 		CC,
+		[GuiLabel("CD")]
 		CD,
+		[GuiLabel("CE")]
 		CE,
+		[GuiLabel("CF")]
 		CF,
+		[GuiLabel("CG")]
 		CG,
+		[GuiLabel("CH")]
 		CH,
+		[GuiLabel("CI")]
 		CI,
+		[GuiLabel("CJ")]
 		CJ
-
 	}
 
 	public static class VehicleCodeHelper

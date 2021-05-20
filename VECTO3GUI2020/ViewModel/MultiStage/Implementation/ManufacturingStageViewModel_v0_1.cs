@@ -70,9 +70,10 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 		public DigestData Signature => throw new NotImplementedException();
 		public void SetInputData(IVehicleDeclarationInputData vehicleInputData)
 		{
-			_vehicleViewModel.SetVehicleInputData(vehicleInputData);
-			_vehicleViewModel.MultistageAirdragViewModel.SetAirdragInputData(vehicleInputData?.Components?.AirdragInputData);
-			_vehicleViewModel.MultistageAuxiliariesViewModel.SetAuxiliariesInputData(vehicleInputData?.Components?.BusAuxiliaries);
+			VehicleViewModel.SetVehicleInputData(vehicleInputData);
+			VehicleViewModel.MultistageAirdragViewModel.SetAirdragInputData(vehicleInputData?.Components?.AirdragInputData);
+			VehicleViewModel.MultistageAuxiliariesViewModel.SetAuxiliariesInputData(vehicleInputData?.Components?.BusAuxiliaries);
+			OnPropertyChanged(nameof(CurrentView));
 
 		}
 

@@ -85,9 +85,11 @@ namespace TUGraz.VectoCore.Tests.Integration.Multistage
 			var progress = jobContainer.GetProgress();
 			Assert.IsTrue(progress.All(r => r.Value.Success), string.Concat<Exception>(progress.Select(r => r.Value.Error)));
 
+			using (var xmlReader = XmlReader.Create(writer.XMLMultistageReportFileName)) {
+				var validator = new XMLValidator(xmlReader);
+				Assert.IsTrue(validator.ValidateXML(VectoCore.Utils.XmlDocumentType.MultistageOutputData), validator.ValidationError);
+			}
 
-			var validator = new XMLValidator(XmlReader.Create(writer.XMLMultistageReportFileName));
-			Assert.IsTrue(validator.ValidateXML(VectoCore.Utils.XmlDocumentType.MultistageOutputData), validator.ValidationError);
 		}
 
 

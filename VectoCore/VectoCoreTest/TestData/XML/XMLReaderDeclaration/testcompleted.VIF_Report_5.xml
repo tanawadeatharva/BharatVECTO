@@ -660,30 +660,6 @@
         <v2.8:VehicleWidth>2500</v2.8:VehicleWidth>
         <v2.8:EntranceHeight>2500</v2.8:EntranceHeight>
         <v2.8:VehicleDeclarationType>interim</v2.8:VehicleDeclarationType>
-        <v2.8:Components xmlns:v2.8="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:DEV:v2.8" xsi:type="v2.8:CompletedVehicleComponentsDeclarationType">
-          <v2.8:AirDrag>
-            <v2.0:Data xsi:type="v2.0:AirDragDataDeclarationType" id="CabinX24h">
-              <v2.0:Manufacturer>Generic Manufacturer</v2.0:Manufacturer>
-              <v2.0:Model>Generic Model</v2.0:Model>
-              <v2.0:CertificationNumber>e12*0815/8051*2017/05E1000*00</v2.0:CertificationNumber>
-              <v2.0:Date>2018-03-24T15:00:00Z</v2.0:Date>
-              <v2.0:AppVersion>Vecto AirDrag x.y.z</v2.0:AppVersion>
-              <v2.0:CdxA_0>6.31</v2.0:CdxA_0>
-              <v2.0:TransferredCdxA>6.32</v2.0:TransferredCdxA>
-              <v2.0:DeclaredCdxA>6.36</v2.0:DeclaredCdxA>
-            </v2.0:Data>
-            <v2.0:Signature>
-              <di:Reference URI="#CabinX24h">
-                <di:Transforms>
-                  <di:Transform Algorithm="urn:vecto:xml:2017:canonicalization" />
-                  <di:Transform Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#" />
-                </di:Transforms>
-                <di:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256" />
-                <di:DigestValue>b9SHCfOoVrBxFQ8wwDK32OO+9bd85DuaUdgs6j/28N8=</di:DigestValue>
-              </di:Reference>
-            </v2.0:Signature>
-          </v2.8:AirDrag>
-        </v2.8:Components>
       </Vehicle>
       <ApplicationInformation>
         <SimulationToolVersion>!!NOT FOR CERTIFICATION!!</SimulationToolVersion>
@@ -719,7 +695,6 @@
         <v2.8:VIN>VEH-2234567890</v2.8:VIN>
         <v2.8:Date>2021-02-13T07:20:08.0187663Z</v2.8:Date>
         <v2.8:CorrectedActualMass>15000</v2.8:CorrectedActualMass>
-        <v2.8:AirdragModifiedMultistage>false</v2.8:AirdragModifiedMultistage>
         <v2.8:BodyworkCode>CB</v2.8:BodyworkCode>
         <v2.8:DoorDriveTechnology>mixed</v2.8:DoorDriveTechnology>
         <v2.8:VehicleDeclarationType>interim</v2.8:VehicleDeclarationType>
@@ -788,7 +763,6 @@
         <v2.8:Date>2021-02-13T07:20:08.0187663Z</v2.8:Date>
         <v2.8:LegislativeCategory>M3</v2.8:LegislativeCategory>
         <v2.8:TechnicalPermissibleMaximumLadenMass>20000</v2.8:TechnicalPermissibleMaximumLadenMass>
-        <v2.8:AirdragModifiedMultistage>false</v2.8:AirdragModifiedMultistage>
         <v2.8:NgTankSystem>Liquefied</v2.8:NgTankSystem>
         <v2.8:ClassBus>B</v2.8:ClassBus>
         <v2.8:VehicleDeclarationType>interim</v2.8:VehicleDeclarationType>
@@ -835,7 +809,7 @@
     </Signature>
   </ManufacturingStage>
   <ManufacturingStage stageCount="5">
-    <Data xsi:type="BusManufacturingStageDataType" id="MST-4da6983187dd418892e2">
+    <Data xsi:type="BusManufacturingStageDataType" id="MST-84eab2145359424cac96">
       <HashPreviousStage>
         <di:Reference URI="#RESULT-8f30c7fe665a47938f7b">
           <di:Transforms>
@@ -846,55 +820,97 @@
           <di:DigestValue>GHpFCKh1bu/YPwYj38kJK1uCrv++BTLf2OUZcOt43Os=</di:DigestValue>
         </di:Reference>
       </HashPreviousStage>
-      <Vehicle xsi:type="v2.8:InterimStageInputType" id="VEH-6835a68771164787a4e1">
+      <Vehicle xsi:type="v2.8:InterimStageInputType" id="VEH-1aea65a0eeac49b3ae31">
         <v2.8:Manufacturer>Some Manufacturer</v2.8:Manufacturer>
-        <v2.8:ManufacturerAddress>Infinite Loop</v2.8:ManufacturerAddress>
-        <v2.8:VIN>VEH-1234567891</v2.8:VIN>
+        <v2.8:ManufacturerAddress>Some Manufacturer Address</v2.8:ManufacturerAddress>
+        <v2.8:VIN>VEH-1234567890</v2.8:VIN>
         <v2.8:Date>2021-05-19T22:00:00Z</v2.8:Date>
-        <v2.8:Model>Sample Bus Model 2</v2.8:Model>
+        <v2.8:Model>Sample Bus Model</v2.8:Model>
         <v2.8:LegislativeCategory>M3</v2.8:LegislativeCategory>
-        <v2.8:CorrectedActualMass>7000</v2.8:CorrectedActualMass>
-        <v2.8:TechnicalPermissibleMaximumLadenMass>10000</v2.8:TechnicalPermissibleMaximumLadenMass>
+        <v2.8:CorrectedActualMass>500</v2.8:CorrectedActualMass>
+        <v2.8:TechnicalPermissibleMaximumLadenMass>3500</v2.8:TechnicalPermissibleMaximumLadenMass>
         <v2.8:NgTankSystem>Compressed</v2.8:NgTankSystem>
-        <v2.8:ClassBus>A</v2.8:ClassBus>
-        <v2.8:NumberPassengersLowerDeck>10</v2.8:NumberPassengersLowerDeck>
-        <v2.8:NumberPassengersUpperDeck>20</v2.8:NumberPassengersUpperDeck>
-        <v2.8:BodyworkCode>CC</v2.8:BodyworkCode>
-        <v2.8:LowEntry>true</v2.8:LowEntry>
+        <v2.8:ClassBus>II+III</v2.8:ClassBus>
+        <v2.8:NumberPassengersLowerDeck>0</v2.8:NumberPassengersLowerDeck>
+        <v2.8:NumberPassengersUpperDeck>10</v2.8:NumberPassengersUpperDeck>
+        <v2.8:BodyworkCode>CB</v2.8:BodyworkCode>
+        <v2.8:LowEntry>false</v2.8:LowEntry>
         <v2.8:HeightIntegratedBody>2500</v2.8:HeightIntegratedBody>
-        <v2.8:DoorDriveTechnology>unknown</v2.8:DoorDriveTechnology>
+        <v2.8:VehicleLength>9500</v2.8:VehicleLength>
+        <v2.8:VehicleWidth>2500</v2.8:VehicleWidth>
+        <v2.8:EntranceHeight>2000</v2.8:EntranceHeight>
+        <v2.8:DoorDriveTechnology>electric</v2.8:DoorDriveTechnology>
         <v2.8:VehicleDeclarationType>final</v2.8:VehicleDeclarationType>
         <v2.8:ADAS>
-          <v2.3:EngineStopStart>false</v2.3:EngineStopStart>
+          <v2.3:EngineStopStart>true</v2.3:EngineStopStart>
           <v2.3:EcoRollWithoutEngineStop>false</v2.3:EcoRollWithoutEngineStop>
           <v2.3:EcoRollWithEngineStop>false</v2.3:EcoRollWithEngineStop>
           <v2.3:PredictiveCruiseControl>none</v2.3:PredictiveCruiseControl>
+          <v2.3:APTEcoRollReleaseLockupClutch>true</v2.3:APTEcoRollReleaseLockupClutch>
         </v2.8:ADAS>
         <v2.8:Components xmlns:v2.8="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:DEV:v2.8" xsi:type="v2.8:CompletedVehicleComponentsDeclarationType">
           <v2.8:AirDrag>
-            <v2.0:Data xmlns:v2.0="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0" xsi:type="v2.8:AirDragModifiedUseStandardValueType" id="AD-4e740f2451ba4e99b0d2" />
-            <v2.0:Signature>
-              <di:Reference>
-                <di:DigestMethod Algorithm="null" />
-                <di:DigestValue>NOT AVAILABLE</di:DigestValue>
+            <v2.0:Data xsi:type="v2.0:AirDragDataDeclarationType" id="CabinX23h" xmlns:v2.0="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0">
+              <v2.0:Manufacturer>Generic Manufacturer</v2.0:Manufacturer>
+              <v2.0:Model>Generic Model</v2.0:Model>
+              <v2.0:CertificationNumber>e12*0815/8051*2017/05E0000*00</v2.0:CertificationNumber>
+              <v2.0:Date>2017-03-24T15:00:00Z</v2.0:Date>
+              <v2.0:AppVersion>Vecto AirDrag x.y</v2.0:AppVersion>
+              <v2.0:CdxA_0>6.31</v2.0:CdxA_0>
+              <v2.0:TransferredCdxA>6.32</v2.0:TransferredCdxA>
+              <v2.0:DeclaredCdxA>6.34</v2.0:DeclaredCdxA>
+            </v2.0:Data>
+            <v2.0:Signature xmlns:v2.0="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0">
+              <di:Reference URI="#CabinX23h" xmlns:di="http://www.w3.org/2000/09/xmldsig#">
+                <di:Transforms>
+                  <di:Transform Algorithm="urn:vecto:xml:2017:canonicalization" />
+                  <di:Transform Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#" />
+                </di:Transforms>
+                <di:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256" />
+                <di:DigestValue>b9SHCfOoVrBxFQ8wwDK32OO+9bd85DuaUdgs6j/29N8=</di:DigestValue>
               </di:Reference>
             </v2.0:Signature>
           </v2.8:AirDrag>
+          <v2.8:Auxiliaries>
+            <v2.8:Data xsi:type="v2.8:CompletedVehicleAuxiliaryDataDeclarationType">
+              <v2.8:ElectricSystem>
+                <v2.8:LEDLights>
+                  <v2.8:Interiorlights>false</v2.8:Interiorlights>
+                  <v2.8:Dayrunninglights>true</v2.8:Dayrunninglights>
+                  <v2.8:Positionlights>true</v2.8:Positionlights>
+                  <v2.8:Brakelights>true</v2.8:Brakelights>
+                  <v2.8:Headlights>false</v2.8:Headlights>
+                </v2.8:LEDLights>
+              </v2.8:ElectricSystem>
+              <v2.8:HVAC>
+                <v2.8:SystemConfiguration>0</v2.8:SystemConfiguration>
+                <v2.8:HeatPumpTypeDriverCompartment>none</v2.8:HeatPumpTypeDriverCompartment>
+                <v2.8:HeatPumpModeDriverCompartment>heating</v2.8:HeatPumpModeDriverCompartment>
+                <v2.8:HeatPumpTypePassengerCompartment>non R-744 2-stage</v2.8:HeatPumpTypePassengerCompartment>
+                <v2.8:HeatPumpModePassengerCompartment>cooling</v2.8:HeatPumpModePassengerCompartment>
+                <v2.8:AuxiliaryHeaterPower>50</v2.8:AuxiliaryHeaterPower>
+                <v2.8:DoubleGlazing>false</v2.8:DoubleGlazing>
+                <v2.8:AdjustableAuxiliaryHeater>true</v2.8:AdjustableAuxiliaryHeater>
+                <v2.8:SeparateAirDistributionDucts>false</v2.8:SeparateAirDistributionDucts>
+                <v2.8:WaterElectricHeater>true</v2.8:WaterElectricHeater>
+              </v2.8:HVAC>
+            </v2.8:Data>
+          </v2.8:Auxiliaries>
         </v2.8:Components>
       </Vehicle>
       <ApplicationInformation>
         <SimulationToolVersion>0.7.3.2247-DEV</SimulationToolVersion>
-        <Date>2021-05-20T07:27:20.0220853Z</Date>
+        <Date>2021-05-20T10:21:50.9468128Z</Date>
       </ApplicationInformation>
     </Data>
     <Signature>
-      <di:Reference URI="#MST-4da6983187dd418892e2">
+      <di:Reference URI="#MST-84eab2145359424cac96">
         <di:Transforms>
           <di:Transform Algorithm="urn:vecto:xml:2017:canonicalization" />
           <di:Transform Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#" />
         </di:Transforms>
         <di:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256" />
-        <di:DigestValue>XB7ZK6AYseDU3sMIqJFxUmDwJHkvcvsPRDwMGjKY6eA=</di:DigestValue>
+        <di:DigestValue>nzi/gaDHz6UkMgGJqbKjjN1p6lUiLf959S6CRFGcNss=</di:DigestValue>
       </di:Reference>
     </Signature>
   </ManufacturingStage>

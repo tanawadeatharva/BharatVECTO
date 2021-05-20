@@ -26,11 +26,19 @@ namespace VECTO3GUI2020.ViewModel.Implementation.Document
 			get => _jobEditViewModel as IEditViewModel;
 		}
 
-        #endregion
+		public bool Selected
+		{
+			get => _selected;
+			set => SetProperty(ref _selected, value);
+		}
+
+		#endregion
         #region Members
 
         public IXMLInputDataReader _xMLInputDataReader;
-        #endregion
+		private bool _selected;
+
+		#endregion
 
 
         public DeclarationJobViewModel(XmlDocumentType xmlDocumentType, string sourcefile, IXMLInputDataReader xMLInputDataReader,
