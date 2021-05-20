@@ -211,16 +211,23 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		protected override PerSecond GetMotorTargetSpeed(VectoRunData runData)
 		{
-			return 0.5 * runData.ElectricMachinesData
-				.FirstOrDefault(x => x.Item1 == PowertrainPosition.BatteryElectricE2)?.Item2.FullLoadCurve
-				.MaxSpeed;
+			var em = runData.ElectricMachinesData
+				.FirstOrDefault(x => x.Item1 == PowertrainPosition.BatteryElectricE2);
+			if (em == null) {
+				throw new VectoException("E2 EM required for PEV E2 GearshiftPreprocessing");
+			}
+			return 0.5 * em.Item2.FullLoadCurve
+				.MaxSpeed / em.Item2.RatioADC;
 		}
 
 		protected override PerSecond GetMaxMotorspeed(VectoRunData runData)
 		{
-			return runData.ElectricMachinesData
-                    .FirstOrDefault(x => x.Item1 == PowertrainPosition.BatteryElectricE2)?.Item2.FullLoadCurve
-                    .MaxSpeed;
+			var em = runData.ElectricMachinesData
+				.FirstOrDefault(x => x.Item1 == PowertrainPosition.BatteryElectricE2);
+			if (em == null) {
+				throw new VectoException("E2 EM required for PEV E2 GearshiftPreprocessing");
+			}
+			return em.Item2.FullLoadCurve.MaxSpeed / em.Item2.RatioADC;
         }
 	}
 }

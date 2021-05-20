@@ -164,7 +164,7 @@ namespace TUGraz.VectoCore.Tests.XML
 			Assert.AreEqual(null, vehicle.LegislativeClass);
 			Assert.AreEqual(15000, vehicle.CurbMassChassis.Value());//CorrectedActualMass
 			Assert.AreEqual(null, vehicle.GrossVehicleMassRating);//TechnicalPermissibleMaximumLadenMass
-			Assert.AreEqual(false, vehicle.AirdragModifiedMultistage);
+			Assert.AreEqual(null, vehicle.AirdragModifiedMultistage);
 			Assert.AreEqual(TankSystem.Compressed, vehicle.TankSystem);//NgTankSystem
 			Assert.AreEqual(null, vehicle.RegisteredClass);//ClassBus
 			Assert.AreEqual(10, vehicle.NumberOfPassengersLowerDeck);

@@ -5538,6 +5538,9 @@
     <Content Include="TestData\XML\XMLReaderDeclaration\SchemaVersion2.6_Buses\vecto_vehicle-primary_heavyBus-sample.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="TestData\XML\XMLReaderDeclaration\SchemaVersion2.6_Buses\vecto_vehicle-primary_heavyBusSmartES-sample.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="TestData\XML\XMLReaderDeclaration\SchemaVersion2.8\vecto_vehicle-exempted_input_full-sample.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
