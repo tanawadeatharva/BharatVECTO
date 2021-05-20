@@ -137,13 +137,14 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 			jobContainer.Execute();
 			jobContainer.WaitFinished();
 			
-			var validator = new XMLValidator(XmlReader.Create(writer.XMLMultistageReportFileName));
-			var valid = validator.ValidateXML(XmlDocumentType.MultistageOutputData);
-			if (!valid) {
-				Debug.WriteLine("Invalid Outputfile");
+			using (var reader = XmlReader.Create(writer.XMLMultistageReportFileName)) {
+				var validator = new XMLValidator(reader);
+				var valid = validator.ValidateXML(XmlDocumentType.MultistageOutputData);
+				if (!valid)
+					Debug.WriteLine("Invalid Outputfile");
+				Debug.WriteLine($"Written to {writer.XMLMultistageReportFileName}");
 			}
 
-			Debug.WriteLine($"Written to {writer.XMLMultistageReportFileName}");
 		}
 
 		private ICommand _saveInputDataCommand;
