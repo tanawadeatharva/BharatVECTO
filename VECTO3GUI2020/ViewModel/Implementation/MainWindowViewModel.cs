@@ -27,12 +27,13 @@ namespace VECTO3GUI2020.ViewModel.Implementation
 		#endregion
 
 
-        public MainWindowViewModel(IWindowHelper windowHelper, ISettingsViewModel settingsViewModel, IJobListViewModel jobListViewModel)
+        public MainWindowViewModel(IWindowHelper windowHelper, ISettingsViewModel settingsViewModel, IJobListViewModel jobListViewModel, IOutputViewModel outputViewModel)
 		{
 			_windowHelper = windowHelper;
 			_settingsViewModel = settingsViewModel;
 			_jobListVm = jobListViewModel;
-			_bottomView = new TestViewModel();
+			_bottomView = outputViewModel;
+			//_bottomView = new TestViewModel();
 		}
 
 		public IMainViewModel CurrentViewModelTop

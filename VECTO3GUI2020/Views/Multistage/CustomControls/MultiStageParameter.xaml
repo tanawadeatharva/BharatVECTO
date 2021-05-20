@@ -96,13 +96,13 @@
                     </DataTemplate>
                 </ComboBox.ItemTemplate>
             </ComboBox>
-           
-<!--ItemsSource="{Binding ListItems, ElementName=MultistageParameterControl}"-->
+
+            <!--SelectedIndex="{Binding EditingEnabled, ElementName=MultistageParameterControl, Converter={StaticResource BoolToIntConverter}}"-->
+            <!--ItemsSource="{Binding ListItems, ElementName=MultistageParameterControl}"-->
             <ComboBox x:Name="comboBoxCurrent" Grid.Column="3" HorizontalAlignment="Stretch" VerticalAlignment="Center" Margin="2 0 2 0" 
-                            SelectedIndex="{Binding EditingEnabled, ElementName=MultistageParameterControl, Converter={StaticResource BoolToIntConverter}}"
-                            SelectedItem="{Binding Content, Mode=TwoWay, ElementName=MultistageParameterControl, ValidatesOnExceptions=True, UpdateSourceTrigger=PropertyChanged}"
-                            IsEnabled="{Binding EditingEnabled, ElementName=MultistageParameterControl}"
-                            IsEditable="False" MouseDoubleClick="Control_OnMouseDoubleClick">
+                      SelectedItem="{Binding Content, Mode=TwoWay, ElementName=MultistageParameterControl, ValidatesOnExceptions=True, UpdateSourceTrigger=PropertyChanged}"
+                      IsEnabled="{Binding EditingEnabled, ElementName=MultistageParameterControl}"
+                      IsEditable="False" MouseDoubleClick="Control_OnMouseDoubleClick">
                 <ComboBox.ItemsSource>
                     <PriorityBinding>
                         <Binding Path="ListItems" ElementName="MultistageParameterControl" Converter="{StaticResource NullToUnsetValue}" UpdateSourceTrigger="PropertyChanged"/>
@@ -146,15 +146,20 @@
                     Converter={StaticResource BooleanToVisibilityConverter}}"
                   IsChecked="{Binding EditingEnabled, 
             ElementName=MultistageParameterControl, 
-            Mode=TwoWay}"/>
+            Mode=TwoWay}"
+                 />
 
             <CheckBox x:Name="checkBox" Grid.Column="2" VerticalAlignment="Center" HorizontalAlignment="Center" IsTabStop="False" IsChecked="{Binding ElementName=MultistageParameterControl, 
                 Path=PreviousContent, 
-                Converter={StaticResource XToBoolConverter}}" IsEnabled="False">
+                Converter={StaticResource XToBoolConverter}}" IsEnabled="False"
+                      >
             </CheckBox>
 
-            <CheckBox x:Name="checkBox1" Grid.Column="3" VerticalAlignment="Center" HorizontalAlignment="Center" IsEnabled="{Binding ElementName=MultistageParameterControl, 
-                Path=EditingEnabled, UpdateSourceTrigger=PropertyChanged}">
+            <CheckBox x:Name="checkBox1" Grid.Column="3" VerticalAlignment="Center" HorizontalAlignment="Center" 
+                      IsEnabled="{Binding ElementName=MultistageParameterControl, 
+                Path=EditingEnabled, UpdateSourceTrigger=PropertyChanged}"
+                      IsChecked="{Binding Content, ElementName=MultistageParameterControl, Mode=TwoWay, ValidatesOnExceptions=True, Converter={StaticResource XToBoolConverter},
+                UpdateSourceTrigger=PropertyChanged}">
 
             </CheckBox>
             <Label x:Name="label4" Grid.Column="4"

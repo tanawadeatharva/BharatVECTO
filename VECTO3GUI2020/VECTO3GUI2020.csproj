@@ -185,6 +185,7 @@
     <Compile Include="ViewModel\Implementation\Document\DeclarationJobViewModel.cs" />
     <Compile Include="ViewModel\Implementation\Document\DeclarationTrailerJobDocumentViewModel.cs" />
     <Compile Include="Model\Interfaces\IAuxiliaryModelFactory.cs" />
+    <Compile Include="ViewModel\Implementation\MessageEntry.cs" />
     <Compile Include="ViewModel\Interfaces\Document\IDocumentViewModel.cs" />
     <Compile Include="ViewModel\Interfaces\Document\IDocumentViewModelFactory.cs" />
     <Compile Include="ViewModel\Interfaces\Document\IJobViewModel.cs" />
@@ -416,6 +417,9 @@
     <Compile Include="Views\Multistage\VehicleView_v2_8.xaml.cs">
       <DependentUpon>VehicleView_v2_8.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\OutputView.xaml.cs">
+      <DependentUpon>OutputView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\SettingsView.xaml.cs">
       <DependentUpon>SettingsView.xaml</DependentUpon>
     </Compile>
@@ -637,6 +641,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\Multistage\VehicleView_v2_8.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\OutputView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

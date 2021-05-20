@@ -3,18 +3,34 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using TUGraz.VectoCommon.Utils;
 
 namespace TUGraz.VectoCommon.Models
 {
 	public enum RegistrationClass
 	{
+
+		[GuiLabel("unknown")]
 		unknown,
+		[GuiLabel("I")]
 		I,
+
+		[GuiLabel("I & II")]
 		I_II,
+
+		[GuiLabel("II")]
 		II,
+
+		[GuiLabel("II & III")]
 		II_III,
+
+		[GuiLabel("III")]
 		III,
+
+		[GuiLabel("A")]
 		A,
+
+		[GuiLabel("B")]
 		B,
 		
 	}
