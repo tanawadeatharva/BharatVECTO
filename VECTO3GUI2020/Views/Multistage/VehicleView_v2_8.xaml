@@ -13,6 +13,7 @@
     <UserControl.Resources>
         <Style TargetType="custom:MultiStageParameter">
             <Setter Property="NameLookUpResourceManager" Value="{x:Static properties:BusStrings.ResourceManager}"/>
+            <Setter Property="Validation.ErrorTemplate" Value="{StaticResource multistageParameterControlErrorTemplate}"/>
         </Style>
     </UserControl.Resources>
 
@@ -41,32 +42,28 @@
 
                 <custom:MultiStageParameter 
                     PreviousContent="{Binding ConsolidatedVehicleData.Model}" 
-                    Content="{Binding Model}"
-                    Tag="{Binding RelativeSource={RelativeSource Self}, Path=Content}"
+                    Content="{Binding Model,  ValidatesOnDataErrors=True}"
                     EditingEnabled="{Binding EditingEnabledDictionary[Model]}"/>
 
                 <custom:MultiStageParameter 
                     PreviousContent="{Binding ConsolidatedVehicleData.LegislativeClass}"
                     EditingEnabled="{Binding EditingEnabledDictionary[LegislativeClass]}"
-                    Content="{Binding LegislativeClass}" 
+                    Content="{Binding LegislativeClass,  ValidatesOnDataErrors=True}" 
                     Mode="COMBOBOX" />
 
                 <custom:MultiStageParameter 
-                    Validation.ErrorTemplate="{StaticResource multistageParameterControlErrorTemplate}"
                     PreviousContent="{Binding ConsolidatedVehicleData.CurbMassChassis}"
                     EditingEnabled="{Binding EditingEnabledDictionary[CurbMassChassis]}"
-                    Content="{Binding CurbMassChassis}"/>
+                    Content="{Binding CurbMassChassis,  ValidatesOnDataErrors=True}"/>
 
                 <custom:MultiStageParameter 
-                    Validation.ErrorTemplate="{StaticResource multistageParameterControlErrorTemplate}"
                     PreviousContent="{Binding ConsolidatedVehicleData.GrossVehicleMassRating}"
                     EditingEnabled="{Binding EditingEnabledDictionary[GrossVehicleMassRating]}"
-                    Content="{Binding GrossVehicleMassRating}"/>
+                    Content="{Binding GrossVehicleMassRating,  ValidatesOnDataErrors=True}"/>
 
 
                 <custom:MultiStageParameter 
                     Label="Airdrag modified"
-                    Validation.ErrorTemplate="{StaticResource multistageParameterControlErrorTemplate}"
                     EditingEnabled="{Binding AirdragModifiedMultistageEditingEnabled}"
                     PreviousContent="{Binding ConsolidatedAirdragmodified}"
                     Content="{Binding AirdragModifiedEnum, ValidatesOnDataErrors=True}" 
@@ -74,38 +71,38 @@
 
                 <custom:MultiStageParameter 
                     PreviousContent="{Binding ConsolidatedVehicleData.TankSystem}"
-                    Content="{Binding TankSystem}"
+                    Content="{Binding TankSystem, ValidatesOnDataErrors=True}"
                     EditingEnabled="{Binding EditingEnabledDictionary[TankSystem]}"
                     Mode="COMBOBOX">
                 </custom:MultiStageParameter>
 
-                <custom:MultiStageParameter 
+                <custom:MultiStageParameter
                     PreviousContent="{Binding ConsolidatedVehicleData.RegisteredClass}"
-                    Content="{Binding RegisteredClass}" 
+                    Content="{Binding RegisteredClass,  ValidatesOnDataErrors=True}" 
                     EditingEnabled="{Binding EditingEnabledDictionary[RegisteredClass]}"
                     Mode="COMBOBOX" />
                 <Separator/>
                 <custom:MultiStageParameter 
                     EditingEnabled="{Binding NumberOfPassengersEditingEnabled}" 
-                    PreviousContent="{Binding ConsolidatedVehicleData.NumberOfPassengersUpperDeck}"
+                    PreviousContent="{Binding ConsolidatedVehicleData.NumberOfPassengersUpperDeck, ValidatesOnDataErrors=True}"
                     Content="{Binding NumberOfPassengersUpperDeck}"/>
                 <custom:MultiStageParameter 
                     EditingEnabled="{Binding NumberOfPassengersEditingEnabled}" 
-                    PreviousContent="{Binding ConsolidatedVehicleData.NumberOfPassengersLowerDeck}"
+                    PreviousContent="{Binding ConsolidatedVehicleData.NumberOfPassengersLowerDeck,  ValidatesOnDataErrors=True}"
                     Content="{Binding NumberOfPassengersLowerDeck}"
                     ShowCheckBox="False"/>
                 <Separator/>
                 <custom:MultiStageParameter 
                     PreviousContent="{Binding ConsolidatedVehicleData.VehicleCode}"
                     ListItems="{Binding VehicleCodeAllowedValues}"
-                    Content="{Binding VehicleCode}" 
+                    Content="{Binding VehicleCode,  ValidatesOnDataErrors=True}" 
                     EditingEnabled="{Binding EditingEnabledDictionary[VehicleCode]}"
                     Mode="COMBOBOX"
                     />
 
                 <custom:MultiStageParameter 
                     PreviousContent="{Binding ConsolidatedVehicleData.LowEntry}"
-                    Content="{Binding LowEntry}" 
+                    Content="{Binding LowEntry,  ValidatesOnDataErrors=True}" 
                     EditingEnabled="{Binding EditingEnabledDictionary[LowEntry]}"
                     Mode="CHECKBOX"
                     />
@@ -120,20 +117,20 @@
                 <custom:MultiStageParameter Validation.ErrorTemplate="{StaticResource multistageParameterControlErrorTemplate}"
                                             EditingEnabled="{Binding MeasurementsGroupEditingEnabled}" 
                                             PreviousContent="{Binding ConsolidatedWidthInMm}"
-                                            Content="{Binding WidthInMm}"
+                                            Content="{Binding WidthInMm,  ValidatesOnDataErrors=True}"
                                             ShowCheckBox="False"
                                             DummyContent="{Binding Source={StaticResource milimeterDummy}}"/>
                 <custom:MultiStageParameter Validation.ErrorTemplate="{StaticResource multistageParameterControlErrorTemplate}"
                                             EditingEnabled="{Binding MeasurementsGroupEditingEnabled}" 
                                             PreviousContent="{Binding ConsolidatedLengthInMm}"
-                                            Content="{Binding LengthInMm}"
+                                            Content="{Binding LengthInMm, ValidatesOnDataErrors=True}"
                                             ShowCheckBox="False"
                                             DummyContent="{Binding Source={StaticResource milimeterDummy}}"/>
 
                 <custom:MultiStageParameter Validation.ErrorTemplate="{StaticResource multistageParameterControlErrorTemplate}"
                                             EditingEnabled="{Binding MeasurementsGroupEditingEnabled}"
                                             PreviousContent="{Binding ConsolidatedEntranceHeightInMm}"
-                                            Content="{Binding EntranceHeightInMm}" 
+                                            Content="{Binding EntranceHeightInMm,  ValidatesOnDataErrors=True}" 
                                             ShowCheckBox="False"
                                             DummyContent="{Binding Source={StaticResource milimeterDummy}}"/>
 
@@ -144,37 +141,37 @@
                     x:Name="DoorDriveTechnology"
                     PreviousContent="{Binding ConsolidatedVehicleData.DoorDriveTechnology}"
                     EditingEnabled="{Binding EditingEnabledDictionary[DoorDriveTechnology]}"
-                    Content="{Binding DoorDriveTechnology}" Mode="COMBOBOX" />
+                    Content="{Binding DoorDriveTechnology,  ValidatesOnDataErrors=True}" Mode="COMBOBOX" />
 
 
                 <custom:MultiStageParameter 
                     EditingEnabled="True"
                     ShowCheckBox="False"
                     PreviousContent="{Binding ConsolidatedVehicleData.VehicleDeclarationType}"
-                    Content="{Binding VehicleDeclarationType}" Mode="COMBOBOX" />
+                    Content="{Binding VehicleDeclarationType, ValidatesOnDataErrors=True}" Mode="COMBOBOX" />
 
                 <Label Content="ADAS" Style="{DynamicResource LabelStyle1}"/>
                 <custom:MultiStageParameter 
                     EditingEnabled="{Binding AdasEditingEnabled}"
                     PreviousContent="{Binding ConsolidatedVehicleData.ADAS.EngineStopStart}"
-                    Content="{Binding EngineStopStartNullable}"
+                    Content="{Binding EngineStopStartNullable,  ValidatesOnDataErrors=True}"
                     Mode="CHECKBOX"/>
                 <custom:MultiStageParameter 
                     EditingEnabled="{Binding AdasEditingEnabled}"
                     PreviousContent="{Binding ConsolidatedVehicleData.ADAS.EcoRoll}"
-                    Content="{Binding EcoRollTypeNullable}"
+                    Content="{Binding EcoRollTypeNullable,  ValidatesOnDataErrors=True}"
                     ShowCheckBox="False"
                     Mode="COMBOBOX"/>
                 <custom:MultiStageParameter 
                     EditingEnabled="{Binding AdasEditingEnabled}"
                     PreviousContent="{Binding ConsolidatedVehicleData.ADAS.PredictiveCruiseControl}"
-                    Content="{Binding PredictiveCruiseControlNullable}"
+                    Content="{Binding PredictiveCruiseControlNullable,  ValidatesOnDataErrors=True}"
                     ShowCheckBox="False"
                     Mode="COMBOBOX"/>
                 <custom:MultiStageParameter
                     EditingEnabled="{Binding AdasEditingEnabled}"
                     PreviousContent="{Binding ConsolidatedVehicleData.ADAS.ATEcoRollReleaseLockupClutch}"
-                    Content="{Binding ATEcoRollReleaseLockupClutch}"
+                    Content="{Binding ATEcoRollReleaseLockupClutch,  ValidatesOnDataErrors=True}"
                     ShowCheckBox="False"
                     Mode="CHECKBOX"/>
             </StackPanel>

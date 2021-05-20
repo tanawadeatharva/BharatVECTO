@@ -20,7 +20,13 @@ namespace VECTO3GUI2020.ViewModel.Implementation.Document
 
         public IJobEditViewModel EditViewModel { get => _jobEditViewModel; }
 
-        IEditViewModel IDocumentViewModel.EditViewModel => throw new System.NotImplementedException();
+		public bool Selected
+		{
+			get => throw new System.NotImplementedException();
+			set => throw new System.NotImplementedException();
+		}
+
+		IEditViewModel IDocumentViewModel.EditViewModel => throw new System.NotImplementedException();
 
         private IXMLInputDataReader _xMLInputDataReader;
 

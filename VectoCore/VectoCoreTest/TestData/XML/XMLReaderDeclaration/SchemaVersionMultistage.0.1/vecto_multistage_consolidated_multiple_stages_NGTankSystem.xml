@@ -274,8 +274,6 @@ xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:DeclarationOutput:VehicleInterimFile
 							<ElectricSystem>
 								<AlternatorTechnology>conventional</AlternatorTechnology>
 								<SupplyFromHEVPossible>false</SupplyFromHEVPossible>
-								<MaxAlternatorPower>15000</MaxAlternatorPower>
-								<ElectricStorageCapacity>50</ElectricStorageCapacity>
 							</ElectricSystem>
 							<PneumaticSystem>
 								<SizeOfAirSupply>Large Supply 2-stage</SizeOfAirSupply>

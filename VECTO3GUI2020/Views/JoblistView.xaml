@@ -20,7 +20,11 @@
             <Grid>
                 <StackPanel HorizontalAlignment="Stretch">
                     <Button x:Name="button" Margin="4" HorizontalAlignment="Stretch" 
-                        Style="{StaticResource MultiStageButtonStyle1}" >Simulation</Button>
+                        Style="{StaticResource MultiStageButtonStyle1}"
+                        Command="{Binding SimulationCommand}">Simulation</Button>
+                    <Button Margin="4" HorizontalAlignment="Stretch" 
+                            Style="{StaticResource MultiStageButtonStyle1}"
+                            Command="{Binding CancelSimulation}">Stop</Button>
                     <Button x:Name="button1" Margin="4"  HorizontalAlignment="Stretch" 
                         Style="{StaticResource MultiStageButtonStyle1}" 
                         Command="{Binding moveJobUp}"
@@ -38,7 +42,7 @@
                           BorderBrush ="{StaticResource AccentColorButton}" BorderThickness="1"
                           Name="JobDataGrid"
                           HorizontalAlignment="Stretch"
-                          IsReadOnly="True" 
+                         
                           CanUserReorderColumns="False" 
                           AutoGenerateColumns="False"
                           SelectionMode="Single"
@@ -56,8 +60,10 @@
                           AlternatingRowBackground="LightGray" CellStyle="{DynamicResource DataGridCellStyle1}"
                 >
                         <DataGrid.Columns>
-                            <DataGridTextColumn Header="Name" Binding="{Binding DocumentName}" Width="1*"></DataGridTextColumn>
-                            <DataGridTextColumn Header="Type" Binding="{Binding DocumentType}" Width="1*"></DataGridTextColumn>
+                            <DataGridCheckBoxColumn IsReadOnly="False" Header="Simulate" Binding="{Binding Selected}" Width="1*"></DataGridCheckBoxColumn>
+                            <DataGridTextColumn IsReadOnly="True" Header="Name" Binding="{Binding DocumentName}" Width="4*"></DataGridTextColumn>
+                            <DataGridTextColumn IsReadOnly ="True" Header="Type" Binding="{Binding DocumentType}" Width="4*"></DataGridTextColumn>
+                     
                         </DataGrid.Columns>
                     <DataGrid.RowDetailsTemplate>
                             <DataTemplate>

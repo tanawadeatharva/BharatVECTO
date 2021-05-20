@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Xml;
+using Castle.Core.Internal;
 using TUGraz.VectoCommon.BusAuxiliaries;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
@@ -24,10 +26,12 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 		void SetAuxiliariesInputData(IBusAuxiliariesDeclarationData componentsAuxiliaryInputData);
 		bool HasValues { get; }
 		object PrimaryVehicleHybridElectric { get; set; }
+		bool HasErrors { get; }
+		Dictionary<string, string> Errors { get; }
 	}
 
 
-	public class MultistageAuxiliariesViewModel : ViewModelBase, IMultistageAuxiliariesViewModel
+	public class MultistageAuxiliariesViewModel : ViewModelBase, IMultistageAuxiliariesViewModel, IDataErrorInfo
 	{
 
 		private IBusAuxiliariesDeclarationData _consolidatedInputData;
@@ -169,13 +173,11 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 			{
 				
 				SetProperty(ref _heatPumpGroupEditingEnabled, value);
-				//if (value == false)
-				//{
-				//	HeatPumpTypePassengerCompartment = null;
-				//	HeatPumpModePassengerCompartment = null;
-				//	HeatPumpModeDriverCompartment = null;
-				//	HeatPumpTypeDriverCompartment = null;
-				//}
+				OnPropertyChanged(nameof(HeatPumpModeDriverCompartment));
+				OnPropertyChanged(nameof(HeatPumpTypeDriverCompartment));
+				OnPropertyChanged(nameof(HeatPumpTypePassengerCompartment));
+				OnPropertyChanged(nameof(HeatPumpModePassengerCompartment));
+				OnPropertyChanged(nameof(SystemConfiguration));
 			}
 		}
 
@@ -403,6 +405,8 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 			PositionlightsLED = componentsAuxiliaryInputData.ElectricConsumers?.PositionlightsLED;
 			HeadlightsLED = componentsAuxiliaryInputData.ElectricConsumers?.HeadlightsLED;
 			BrakelightsLED = componentsAuxiliaryInputData.ElectricConsumers?.BrakelightsLED;
+
+			OnPropertyChanged(String.Empty);
 		}
 
 		private void ResetData()
@@ -427,14 +431,18 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 			PositionlightsLED = null;
 			HeadlightsLED = null;
 			BrakelightsLED = null;
+
+			OnPropertyChanged(String.Empty);
 		}
 
 		public MultistageAuxiliariesViewModel(IBusAuxiliariesDeclarationData consolidatedAuxiliariesInputData)
 		{
 			ConsolidatedInputData = consolidatedAuxiliariesInputData;
-			HeatPumpGroupEditingEnabled = true;
-			_editingEnabledDictionary = new IndexedStorage<bool>(() => {
+			_editingEnabledDictionary = new IndexedStorage<bool>((identifier) => {
+				
+				
 				OnPropertyChanged(nameof(EditingEnabledDictionary));
+				OnPropertyChanged(nameof(identifier));
 			});
 		}
 
@@ -474,6 +482,61 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 
 		public ConsumerTechnology AdBlueDosing => throw new NotImplementedException();
 
+		#endregion
+
+		#region Implementation of IDataErrorInfo
+
+		public Dictionary<string, string> Errors { get; private set; } = new Dictionary<string, string>();
+
+		public string this[string propertyName]
+		{
+			get
+			{
+				string result = null;
+				switch (propertyName)
+				{
+					case nameof(HeatPumpTypeDriverCompartment):
+					case nameof(HeatPumpModeDriverCompartment):
+					case nameof(HeatPumpModePassengerCompartment):
+					case nameof(HeatPumpTypePassengerCompartment):
+					case nameof(SystemConfiguration):
+						if (HeatPumpGroupEditingEnabled == true &&
+							this.GetType().GetProperty(propertyName).GetValue(this) == null) {
+							result = $"{propertyName} has to be set if editing is enabled}}";
+						}
+						break;
+					default:
+						if (EditingEnabledDictionary[propertyName] == true && this.GetType().GetProperty(propertyName).GetValue(this) == null)
+						{
+							result = $"{propertyName} has to be set if editing is enabled}}";
+						}
+						break;
+				}
+				//https://www.youtube.com/watch?v=5KF0GGObuAQ
+
+				if (result == null)
+				{
+					if (Errors.ContainsKey(propertyName))
+						Errors.Remove(propertyName);
+				}
+				else
+				{
+					Errors[propertyName] = result;
+				}
+
+
+				return result;
+			}
+		}
+
+		public string Error { get => String.Join(",", Errors.Values); }
+		public bool HasErrors
+		{
+			get
+			{
+				return !Error.IsNullOrEmpty();
+			}
+		}
 		#endregion
 	}
 }

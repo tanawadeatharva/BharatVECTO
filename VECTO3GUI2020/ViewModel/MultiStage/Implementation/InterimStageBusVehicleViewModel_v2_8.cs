@@ -141,7 +141,12 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 					.BusAuxiliaries);
 			AirdragModifiedMultistageEditingEnabled = false;
 
-			_editingEnabledDictionary = new IndexedStorage<bool>(() => OnPropertyChanged(nameof(EditingEnabledDictionary)));
+			_editingEnabledDictionary = new IndexedStorage<bool>((identifier) => {
+				
+				OnPropertyChanged(identifier);
+				OnPropertyChanged(nameof(EditingEnabledDictionary));
+				
+			});
 		}
 
 		public IVehicleDeclarationInputData ConsolidatedVehicleData
@@ -178,6 +183,11 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 			NumberOfPassengersLowerDeck = vehicleInputData.NumberOfPassengersLowerDeck;
 			VehicleCode = vehicleInputData.VehicleCode;
 			LowEntry = vehicleInputData.LowEntry;
+			MeasurementsGroupEditingEnabled =
+				vehicleInputData.Height != null || 
+				vehicleInputData.Width != null || 
+				vehicleInputData.Length != null || 
+				vehicleInputData.EntranceHeight != null;
 			Height = vehicleInputData.Height;
 			Width = vehicleInputData.Width;
 			Length = vehicleInputData.Length;
@@ -257,7 +267,14 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 		public bool MeasurementsGroupEditingEnabled
 		{
 			get { return _measurementsGroupEditingEnabled; }
-			set { SetProperty(ref _measurementsGroupEditingEnabled, value); }
+			set
+			{
+				SetProperty(ref _measurementsGroupEditingEnabled, value); 
+				OnPropertyChanged(nameof(HeightInMm));
+				OnPropertyChanged(nameof(WidthInMm));
+				OnPropertyChanged(nameof(EntranceHeightInMm));
+				OnPropertyChanged(nameof(LengthInMm));
+			}
 		}
 
 		public ConvertedSI HeightInMm
@@ -278,7 +295,7 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 			set
 			{
 				SetProperty(ref _height, value);
-				//OnPropertyChanged(nameof(HeightInMm));
+				OnPropertyChanged(nameof(HeightInMm));
 			}
 		}
 
@@ -301,7 +318,7 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 			set
 			{
 				SetProperty(ref _length, value);
-				//OnPropertyChanged(nameof(LengthInMm));
+				OnPropertyChanged(nameof(LengthInMm));
 			}
 		}
 
@@ -324,7 +341,7 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 			set
 			{
 				SetProperty(ref _width, value);
-				//OnPropertyChanged(nameof(WidthInMm));
+				OnPropertyChanged(nameof(WidthInMm));
 			}
 		}
 
@@ -351,7 +368,7 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 			set
 			{
 				SetProperty(ref _entranceHeight, value);
-				//OnPropertyChanged(nameof(EntranceHeightInMm));
+				OnPropertyChanged(nameof(EntranceHeightInMm));
 			}
 		}
 
@@ -584,6 +601,10 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 			set
 			{
 				SetProperty(ref _adasEditingEnabled, value);
+				OnPropertyChanged(nameof(EngineStopStartNullable));
+				OnPropertyChanged(nameof(EcoRollTypeNullable));
+				OnPropertyChanged(nameof(PredictiveCruiseControlNullable));
+				OnPropertyChanged(nameof(ATEcoRollReleaseLockupClutch));
 			}
 		}
 
@@ -854,6 +875,20 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 							result = "Air drag modified has to be set";
 						}
 						break;
+					case nameof(EcoRollTypeNullable):
+					case nameof(EngineStopStartNullable):
+					case nameof(PredictiveCruiseControlNullable):
+					case nameof(ATEcoRollReleaseLockupClutch):
+						if (AdasEditingEnabled == true && this.GetType().GetProperty(propertyName).GetValue(this) == null){
+							result = $"{propertyName} has to be set if editing is enabled}}";
+						}
+						break;
+					default:
+						if (EditingEnabledDictionary[propertyName] == true && this.GetType().GetProperty(propertyName).GetValue(this) == null) {
+							result = $"{propertyName} has to be set if editing is enabled}}";
+						}
+
+						break;
 				}
 				//https://www.youtube.com/watch?v=5KF0GGObuAQ
 
@@ -869,12 +904,15 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 			}
 		}
 
-		public string Error { get => String.Join(",", Errors.Values); }
+		public string Error
+		{
+			get => String.Join(",", Errors.Values);
+		}
 		public bool HasErrors
 		{
 			get
 			{
-				return !Error.IsNullOrEmpty();
+				return !Error.IsNullOrEmpty() || MultistageAuxiliariesViewModel.HasErrors;
 			}
 		}
 		#endregion

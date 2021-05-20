@@ -10,6 +10,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Controls.Primitives;
 using System.Windows.Data;
 using System.Windows.Documents;
 using System.Windows.Forms.VisualStyles;
@@ -23,6 +24,7 @@ using Microsoft.Build.Framework;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Utils;
 using VECTO3GUI2020.Annotations;
+using VECTO3GUI2020.Helper.Converter;
 using VECTO3GUI2020.Properties;
 using VECTO3GUI2020.Views.CustomControls;
 
@@ -80,9 +82,30 @@ namespace VECTO3GUI2020.Views.Multistage.CustomControls
 		}
 
 		public static readonly DependencyProperty ModeProperty = DependencyProperty.Register(
-            "Mode", typeof(MultistageParameterViewMode), typeof(MultiStageParameter), new PropertyMetadata(MultistageParameterViewMode.TEXTBOX));
+            "Mode", typeof(MultistageParameterViewMode), typeof(MultiStageParameter), 
+			new PropertyMetadata(MultistageParameterViewMode.TEXTBOX, propertyChangedCallback:ModeChanged));
 
-        public MultistageParameterViewMode Mode
+		private static void ModeChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+		{
+			var param = (MultiStageParameter)d;
+			if(param.GetBindingExpression(e.Property)?.Status != BindingStatus.Active)
+			{
+				return;
+			}
+			param.OnModeChanged((MultistageParameterViewMode)e.NewValue);
+		}
+
+		public void OnModeChanged(MultistageParameterViewMode mode)
+		{
+			if (mode != MultistageParameterViewMode.CHECKBOX) {
+				checkBox1.SetValue(CheckBox.IsCheckedProperty, DependencyProperty.UnsetValue);
+			}
+
+
+
+		}
+
+		public MultistageParameterViewMode Mode
 		{
 			get { return (MultistageParameterViewMode)GetValue(ModeProperty); }
 			set { SetValue(ModeProperty, value); }
@@ -147,7 +170,8 @@ namespace VECTO3GUI2020.Views.Multistage.CustomControls
 			}
 			set
 			{
-				SetValue(EditingEnabledProperty, value);
+				SetCurrentValue(EditingEnabledProperty, value);
+				OnPropertyChanged(nameof(EditingEnabled));
 			}
 		}
 
@@ -195,8 +219,48 @@ namespace VECTO3GUI2020.Views.Multistage.CustomControls
 
 		private static object ContentCoerced(DependencyObject d, object basevalue)
 		{
-			((MultiStageParameter)d).ContentChanged();
-			
+			var multiStageParameter = ((MultiStageParameter)d);
+			var binding = multiStageParameter.GetBindingExpression(ContentProperty);
+
+
+
+			if (binding?.Status != BindingStatus.Active)
+			{
+				return basevalue;
+			}
+
+
+			if (multiStageParameter.resolvedContentProperty == true)
+			{
+				return basevalue;
+			}
+
+			if (multiStageParameter.DummyContent == null)
+			{
+				multiStageParameter.DummyContent = multiStageParameter.CreateDummyContent();
+			}
+
+			if (multiStageParameter.Content != null && multiStageParameter.EditingEnabled == false)
+			{
+				multiStageParameter.EditingEnabled = true;
+			}
+
+			if (multiStageParameter.Mode == MultistageParameterViewMode.COMBOBOX)
+			{
+				multiStageParameter.GenerateListItemsAndSetComboboxValue();
+			}
+
+
+			if (multiStageParameter.GeneratedLabelText == null)
+			{
+				multiStageParameter.SetLabelText();
+			}
+
+			multiStageParameter.resolvedContentProperty = true;
+
+
+
+
 
 
 
@@ -267,30 +331,16 @@ namespace VECTO3GUI2020.Views.Multistage.CustomControls
 		{
 			var multiStageParameter = (CustomControls.MultiStageParameter)this;
 			var binding = multiStageParameter.GetBindingExpression(ContentProperty);
-			if (binding?.Status != BindingStatus.Active || resolvedContentProperty) {
+
+			if (binding?.Status != BindingStatus.Active) {
 				return;
 			}
 
-
-			if (multiStageParameter.DummyContent == null) {
-				multiStageParameter.DummyContent = multiStageParameter.CreateDummyContent();
-			}
-
-			if (multiStageParameter.Content != null) {
+			if (multiStageParameter.Content != null && multiStageParameter.EditingEnabled == false)
+			{
 				multiStageParameter.EditingEnabled = true;
 			}
 
-			if (multiStageParameter.Mode == MultistageParameterViewMode.COMBOBOX) {
-				multiStageParameter.GenerateListItemsAndSetComboboxValue();
-			}
-
-
-			if (multiStageParameter.GeneratedLabelText == null) {
-				multiStageParameter.SetLabelText();
-			}
-
-			resolvedContentProperty = true;
-			EditingEnabledChanged(EditingEnabled);
 		}
 
 
@@ -402,6 +452,7 @@ namespace VECTO3GUI2020.Views.Multistage.CustomControls
 				if (multistageParameter.Content != null) {
 					multistageParameter.Content = null;
 				}
+				
 			}
 			else
 			{
@@ -416,8 +467,8 @@ namespace VECTO3GUI2020.Views.Multistage.CustomControls
 						if (multistageParameter.Mode == MultistageParameterViewMode.COMBOBOX)
 						{
 							//Set default value;
-							multistageParameter.GetBindingExpression(ListItemsProperty)?.UpdateTarget();
-							multistageParameter.GetBindingExpression(ContentProperty)?.UpdateTarget();
+							//multistageParameter.GetBindingExpression(ListItemsProperty)?.UpdateTarget();
+							//multistageParameter.GetBindingExpression(ContentProperty)?.UpdateTarget();
 
 
 							/*

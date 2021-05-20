@@ -10,12 +10,13 @@ namespace VECTO3GUI2020.Helper
 	public class IndexedStorage<T> where T : IEquatable<T>
 	{
 		private Dictionary<string, T> indexedStorageDictionary = new Dictionary<string, T>();
-		private readonly Action _onValueChanged;
+		private readonly Action<string> _valueChangedCallback;
 
 
-		public IndexedStorage(Action onValueChanged = null)
+
+		public IndexedStorage(Action<string> valueChangedCallback = null)
 		{
-			_onValueChanged = onValueChanged;
+			_valueChangedCallback = valueChangedCallback;
 		}
 
 
@@ -41,9 +42,9 @@ namespace VECTO3GUI2020.Helper
 					indexedStorageDictionary.Add(identifier, default(T));
 				}
 				indexedStorageDictionary[identifier] = value;
-				if (value.Equals(oldValue))
+				if (!value.Equals(oldValue))
 				{
-					_onValueChanged?.Invoke();
+					_valueChangedCallback?.Invoke(identifier);
 				}
 			}
 		}

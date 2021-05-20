@@ -201,10 +201,15 @@
 									<xs:element name="Capacitor" minOccurs="0" maxOccurs="unbounded">
 										<xs:complexType>
 											<xs:sequence>
-												<xs:element name="CapacitorTechnology" type="xs:string">
+												<xs:element name="CapacitorTechnology">
 													<xs:annotation>
 														<xs:documentation>P300 - [-]</xs:documentation>
 													</xs:annotation>
+													<xs:simpleType>
+														<xs:restriction base="xs:string">
+															<xs:enumeration value="with DCDC converter"/>
+														</xs:restriction>
+													</xs:simpleType>
 												</xs:element>
 												<xs:element name="RatedCapacitance" type="xs:integer">
 													<xs:annotation>
@@ -225,22 +230,6 @@
 										<xs:documentation>P303 - bool</xs:documentation>
 									</xs:annotation>
 								</xs:element>
-								<xs:sequence minOccurs="0">
-									<xs:element name="MaxAlternatorPower">
-										<xs:simpleType>
-											<xs:restriction base="xs:int">
-												<xs:minExclusive value="0"/>
-											</xs:restriction>
-										</xs:simpleType>
-									</xs:element>
-									<xs:element name="ElectricStorageCapacity">
-										<xs:simpleType>
-											<xs:restriction base="xs:int">
-												<xs:minExclusive value="0"/>
-											</xs:restriction>
-										</xs:simpleType>
-									</xs:element>
-								</xs:sequence>
 							</xs:sequence>
 						</xs:complexType>
 					</xs:element>

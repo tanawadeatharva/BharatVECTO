@@ -1,4 +1,5 @@
 ﻿using System;
+using System.CodeDom;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
@@ -101,21 +102,36 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 			get
 			{
 				return _saveVifCommand ?? new RelayCommand(() => {
+					if (_manufacturingStageViewModel.Vehicle is IMultistageVehicleViewModel vehicleViewModel)
+					{
+						if (vehicleViewModel.HasErrors)
+						{
+							_dialogHelper.Value.ShowMessageBox("Vehicle\n" + string.Join("\n", vehicleViewModel.Errors.Values) 
+																			+ (vehicleViewModel.MultistageAuxiliariesViewModel.HasErrors ? ("\nAuxiliaries\n" + string.Join("\n", vehicleViewModel.MultistageAuxiliariesViewModel.Errors.Values)) : ""),
+								"Error");
+							return;
+						}
+					} else {
+						throw new NotImplementedException();
+					}
+
+
 					var outputFile = _multistageDependencies.DialogHelperLazy.Value.SaveToXMLDialog(Settings.Default.DefaultFilePath);
 					if (outputFile == null) {
 						return;
 					}
-					SaveVif(this, outputFile);
+					SaveVif(vifData:this, outputFile:outputFile, dialogHelper:_dialogHelper.Value);
 				}, () => true);
 			}
 		}
 
-		public static void SaveVif(IMultistageVIFInputData vifData, FileOutputVIFWriter writer)
+		public static void SaveVif(IMultistageVIFInputData vifData, FileOutputVIFWriter writer, IDialogHelper dialogHelper = null)
 		{
-			SaveVif(vifData, null, writer);
+			SaveVif(vifData, null, writer, dialogHelper);
 		}
-		
-		public static void SaveVif(IMultistageVIFInputData vifData, string outputFile, FileOutputVIFWriter writer = null)
+
+		public static void SaveVif(IMultistageVIFInputData vifData, string outputFile,
+			FileOutputVIFWriter writer = null, IDialogHelper dialogHelper = null)
 		{
 			if (writer == null) {
 				var numberOfManufacturingStages = vifData.MultistageJobInputData.JobInputData.ManufacturingStages?.Count ?? 0;
@@ -138,13 +154,21 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 			jobContainer.WaitFinished();
 			
 			using (var reader = XmlReader.Create(writer.XMLMultistageReportFileName)) {
-				var validator = new XMLValidator(reader);
-				var valid = validator.ValidateXML(XmlDocumentType.MultistageOutputData);
-				if (!valid)
-					Debug.WriteLine("Invalid Outputfile");
-				Debug.WriteLine($"Written to {writer.XMLMultistageReportFileName}");
+					var validator = new XMLValidator(reader);
+					var valid = validator.ValidateXML(XmlDocumentType.MultistageOutputData);
+					if (!valid){
+						dialogHelper?.ShowMessageBox($"Error writing file {validator.ValidationError}", "Error",
+							MessageBoxButton.OK, MessageBoxImage.Error);
+						Debug.WriteLine("Invalid Outputfile");
+						return;
+					} else {
+						dialogHelper?.ShowMessageBox($"Written to {writer.XMLMultistageReportFileName}", "Info",
+							MessageBoxButton.OK, MessageBoxImage.Information);
+						Debug.WriteLine($"Written to {writer.XMLMultistageReportFileName}");
+					}
 			}
 
+			
 		}
 
 		private ICommand _saveInputDataCommand;
@@ -165,7 +189,9 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 			if(_manufacturingStageViewModel.Vehicle is IMultistageVehicleViewModel vehicleViewModel)
 			{
 				if (vehicleViewModel.HasErrors) {
-					_dialogHelper.Value.ShowMessageBox(string.Join("\n", vehicleViewModel.Errors.Values), "Error" );
+					_dialogHelper.Value.ShowMessageBox("Vehicle\n" + string.Join("\n", vehicleViewModel.Errors.Values)
+																	+ (vehicleViewModel.MultistageAuxiliariesViewModel.HasErrors ? ("\nAuxiliaries\n" + string.Join("\n", vehicleViewModel.MultistageAuxiliariesViewModel.Errors.Values)) : ""),
+						"Error");
 					return;
 				}
 			}
@@ -224,6 +250,7 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 		private readonly IMultistageDependencies _multistageDependencies;
 		private readonly DataSource _dataSource;
 		private readonly IMultistageBusInputDataProvider _inputData;
+		private bool _selected;
 
 		public ICommand LoadVehicleDataCommand
 		{
@@ -280,6 +307,12 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 		public DataSource DataSource => _dataSource;
 
 		public IEditViewModel EditViewModel => this;
+
+		public bool Selected
+		{
+			get => _selected;
+			set => SetProperty(ref _selected, value);
+		}
 
 		#endregion
 
