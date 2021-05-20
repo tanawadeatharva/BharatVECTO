@@ -121,7 +121,7 @@
 									</xs:complexType>
 								</xs:element>
 								<xs:sequence minOccurs="0">
-									<xs:element name="SmartAlternator">
+									<xs:element name="SmartAlternator" maxOccurs="unbounded">
 										<xs:complexType>
 											<xs:sequence>
 												<xs:element name="RatedCurrent" type="xs:integer">
