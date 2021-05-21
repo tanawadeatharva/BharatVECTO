@@ -11,6 +11,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Data;
+using System.Windows.Forms;
 using System.Windows.Input;
 using System.Xml;
 using System.Xml.Linq;
@@ -335,7 +336,113 @@ namespace VECTO3GUI2020.ViewModel.Implementation
 						});
 				}
 			}
+			foreach (var cycle in jobContainer.GetCycleTypes())
+			{
+				outputMessages.Report(new MessageEntry()
+				{
+					Type = MessageType.StatusMessage, Message = $"Detected cycle {cycle.Name}: {cycle.CycleType}"
+				});
+			}
 
+			outputMessages.Report(new MessageEntry() {
+				Type = MessageType.StatusMessage,
+				Message = $"Starting simulation ({jobs.Length} jobs, {jobContainer.GetProgress().Count} runs)",
+			});
+
+			var start = Stopwatch.StartNew();
+			jobContainer.Execute(true);
+			while (!jobContainer.AllCompleted)
+			{
+				if (ct.IsCancellationRequested)
+				{
+					jobContainer.Cancel();
+					return;
+				}
+
+				var jobProgress = jobContainer.GetProgress();
+				var sumProgress = jobProgress.Sum(x => x.Value.Progress);
+				var duration = start.Elapsed.TotalSeconds;
+
+				progress.Report(Convert.ToInt32(sumProgress * 100 / jobProgress.Count));
+				//outputMessages.Report(
+				//	new MessageEntry()
+				//	{
+				//		Type = VectoSimulationProgress.MsgType.Progress,
+				//		Message = string.Format(
+				//			"Duration: {0:F1}s, Curernt Progress: {1:P} ({2})", duration, sumProgress / progress.Count,
+				//			string.Join(", ", progress.Select(x => string.Format("{0,4:P}", x.Value.Progress))))
+				//	});
+				var justFinished = jobProgress.Where(x => x.Value.Done & !finishedRuns.Contains(x.Key))
+					.ToDictionary(x => x.Key, x => x.Value);
+				//PrintRuns(justFinished, fileWriters);
+				finishedRuns.AddRange(justFinished.Select(x => x.Key));
+				Thread.Sleep(100);
+			}
+			start.Stop();
+
+			var remainingRuns = jobContainer.GetProgress().Where(x => x.Value.Done && !finishedRuns.Contains(x.Key))
+				.ToDictionary(x => x.Key, x => x.Value);
+			//PrintRuns(remainingRuns, fileWriters);
+
+			finishedRuns.Clear();
+			fileWriters.Clear();
+			foreach (var progressEntry in jobContainer.GetProgress())
+			{
+				outputMessages.Report(new MessageEntry()
+				{
+					Type = MessageType.StatusMessage,
+					Message =
+						string.Format("{0,-60} {1,8:P} {2,10:F2}s - {3}",
+							$"{progressEntry.Value.RunName} {progressEntry.Value.CycleName} {progressEntry.Value.RunSuffix}",
+							progressEntry.Value.Progress,
+							progressEntry.Value.ExecTime / 1000.0,
+							progressEntry.Value.Success ? "Success" : "Aborted")
+				});
+				if (!progressEntry.Value.Success)
+				{
+					outputMessages.Report(
+						new MessageEntry()
+						{
+							Type = MessageType.StatusMessage,
+							Message = progressEntry.Value.Error.Message
+						}
+					);
+				}
+			}
+			foreach (var jobEntry in jobs)
+			{
+				var w = new FileOutputWriter(GetOutputDirectory(jobEntry.DataSource.SourceFile));
+				foreach (var entry in new Dictionary<string, string>() { { w.XMLFullReportName, "XML ManufacturereReport" }, { w.XMLCustomerReportName, "XML Customer Report" }, { w.XMLVTPReportName, "VTP Report" }, { w.XMLPrimaryVehicleReportName, "Primary Vehicle Information File" } })
+				{
+					if (File.Exists(entry.Key))
+					{
+						outputMessages.Report(
+							new MessageEntry()
+							{
+								Type = MessageType.StatusMessage,
+								Message = string.Format(
+									"{2} for '{0}' written to {1}", Path.GetFileName(jobEntry.DataSource.SourceFile), entry.Key, entry.Value),
+								//Link = "<XML>" + entry.Key
+							});
+					}
+				}
+			}
+
+			if (File.Exists(sumFileWriter.SumFileName))
+			{
+				outputMessages.Report(new MessageEntry()
+				{
+					Type = MessageType.StatusMessage,
+					Message = string.Format("Sum file written to {0}", sumFileWriter.SumFileName),
+					//Link = "<CSV>" + sumFileWriter.SumFileName
+				});
+			}
+
+			outputMessages.Report(new MessageEntry()
+			{
+				Type = MessageType.StatusMessage,
+				Message = string.Format("Simulation finished in {0:F1}s", start.Elapsed.TotalSeconds)
+			});
 
 
 		}

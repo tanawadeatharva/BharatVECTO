@@ -14,7 +14,13 @@
                       IsReadOnly="True" HeadersVisibility="All"  RowHeaderWidth="5" Name="MessageList">
 
             <DataGrid.Columns>
-                <DataGridTextColumn Header="Message" Binding="{Binding Message}" Width="*" />
+                    <DataGridTextColumn Header="Message" Binding="{Binding Message}" Width="*">
+                        <DataGridTextColumn.ElementStyle>
+                            <Style>
+                                <Setter Property="TextBlock.TextWrapping" Value="Wrap" />
+                            </Style>
+                        </DataGridTextColumn.ElementStyle>
+                    </DataGridTextColumn>
                     <DataGridTextColumn Header="Time" Binding="{Binding Time}" Width="130" />
                 </DataGrid.Columns>
             <DataGrid.RowStyle>
