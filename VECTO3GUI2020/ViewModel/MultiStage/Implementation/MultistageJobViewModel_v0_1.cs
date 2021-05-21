@@ -153,19 +153,20 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 			jobContainer.Execute();
 			jobContainer.WaitFinished();
 			
-			var validator = new XMLValidator(XmlReader.Create(writer.XMLMultistageReportFileName));
-			var valid = validator.ValidateXML(XmlDocumentType.MultistageOutputData);
-			if (!valid) {
-				dialogHelper?.ShowMessageBox($"Error writing file {validator.ValidationError}", "Error",
-					MessageBoxButton.OK, MessageBoxImage.Error);
-				Debug.WriteLine("Invalid Outputfile");
-				return;
-			} else {
-				dialogHelper?.ShowMessageBox($"Written to {writer.XMLMultistageReportFileName}", "Info",
-					MessageBoxButton.OK, MessageBoxImage.Information);
-				Debug.WriteLine($"Written to {writer.XMLMultistageReportFileName}");
+			using (var reader = XmlReader.Create(writer.XMLMultistageReportFileName)) {
+					var validator = new XMLValidator(reader);
+					var valid = validator.ValidateXML(XmlDocumentType.MultistageOutputData);
+					if (!valid){
+						dialogHelper?.ShowMessageBox($"Error writing file {validator.ValidationError}", "Error",
+							MessageBoxButton.OK, MessageBoxImage.Error);
+						Debug.WriteLine("Invalid Outputfile");
+						return;
+					} else {
+						dialogHelper?.ShowMessageBox($"Written to {writer.XMLMultistageReportFileName}", "Info",
+							MessageBoxButton.OK, MessageBoxImage.Information);
+						Debug.WriteLine($"Written to {writer.XMLMultistageReportFileName}");
+					}
 			}
-
 
 			
 		}

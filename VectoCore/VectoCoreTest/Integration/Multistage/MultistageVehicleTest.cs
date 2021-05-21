@@ -11,6 +11,7 @@ using TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider;
 using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.OutputData;
 using TUGraz.VectoCore.OutputData.FileIO;
+using TUGraz.VectoCore.OutputData.XML;
 using TUGraz.VectoCore.Tests.Models.Simulation;
 using TUGraz.VectoCore.Utils;
 
@@ -84,9 +85,11 @@ namespace TUGraz.VectoCore.Tests.Integration.Multistage
 			var progress = jobContainer.GetProgress();
 			Assert.IsTrue(progress.All(r => r.Value.Success), string.Concat<Exception>(progress.Select(r => r.Value.Error)));
 
+			using (var xmlReader = XmlReader.Create(writer.XMLMultistageReportFileName)) {
+				var validator = new XMLValidator(xmlReader);
+				Assert.IsTrue(validator.ValidateXML(VectoCore.Utils.XmlDocumentType.MultistageOutputData), validator.ValidationError);
+			}
 
-			var validator = new XMLValidator(XmlReader.Create(writer.XMLMultistageReportFileName));
-			Assert.IsTrue(validator.ValidateXML(VectoCore.Utils.XmlDocumentType.MultistageOutputData), validator.ValidationError);
 		}
 
 
@@ -117,6 +120,35 @@ namespace TUGraz.VectoCore.Tests.Integration.Multistage
 			var progress = jobContainer.GetProgress();
 			Assert.IsTrue(progress.All(r => r.Value.Success), string.Concat<Exception>(progress.Select(r => r.Value.Error)));
 			Assert.IsTrue(jobContainer.Runs.All(r => r.Success), String.Concat<Exception>(jobContainer.Runs.Select(r => r.ExecException)));
+		}
+
+		public const string PrimaryBus =
+			@"TestData\XML\XMLReaderDeclaration\SchemaVersion2.6_Buses\vecto_vehicle-primary_heavyBus-sample.xml";
+		public const string PrimaryBus_SmartES =
+			@"TestData\XML\XMLReaderDeclaration\SchemaVersion2.6_Buses\vecto_vehicle-primary_heavyBusSmartES-sample.xml";
+
+
+		[TestCase(PrimaryBus, TestName = "Multistage Write VIF Primary"),
+		TestCase(PrimaryBus_SmartES, TestName = "Multistage Write VIF Primary SmartES")
+		]
+		public void TestMultistageWritingVif(string primaryFile)
+		{
+			var inputData = xmlInputReader.Create(primaryFile);
+
+			var writer = new FileOutputWriter("vif_writing_test.xml");
+			
+			var xmlreport = new XMLDeclarationReportMultistageBusVehicle(writer);
+			//var xmlreport = new XMLDeclarationReportPrimaryVehicle(writer);
+			var factory = new SimulatorFactory(ExecutionMode.Declaration, inputData, writer, xmlreport) {
+				WriteModalResults = true,
+				//ActualModalData = true,
+				Validate = false
+			};
+
+			var jobContainer = new JobContainer(new SummaryDataContainer(writer));
+			jobContainer.AddRuns(factory);
+
+			xmlreport.DoWriteReport();
 		}
 	}
 }
