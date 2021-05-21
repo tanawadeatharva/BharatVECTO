@@ -31,7 +31,7 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 {
 	public enum AIRDRAGMODIFIED
 	{
-		[GuiLabel("Unknown")]
+		[GuiLabel("")]
 		UNKNOWN = 0,
 		[GuiLabel("True")]
 		TRUE = 1,
@@ -382,7 +382,12 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 		public bool NumberOfPassengersEditingEnabled
 		{
 			get { return _numberOfPassengersEditingEnabled; }
-			set { SetProperty(ref _numberOfPassengersEditingEnabled, value); }
+			set
+			{
+				SetProperty(ref _numberOfPassengersEditingEnabled, value);
+				//OnPropertyChanged(nameof(NumberOfPassengersUpperDeck));
+				//OnPropertyChanged(nameof(NumberOfPassengersLowerDeck));
+			}
 		}
 
 

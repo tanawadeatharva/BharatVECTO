@@ -171,7 +171,7 @@ namespace VECTO3GUI2020.Views.Multistage.CustomControls
 			set
 			{
 				SetCurrentValue(EditingEnabledProperty, value);
-				OnPropertyChanged(nameof(EditingEnabled));
+				//OnPropertyChanged(nameof(EditingEnabled));
 			}
 		}
 

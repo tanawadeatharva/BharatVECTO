@@ -8,7 +8,8 @@
         mc:Ignorable="d"
         Title="Vecto" Height="450" Width="820"
         WindowStartupLocation="CenterScreen"
-        AutomationProperties.Name="MainWindow">
+        AutomationProperties.Name="="
+        x:Name="MainView">
 
 
 
@@ -24,8 +25,8 @@
         </Grid.RowDefinitions>
 
             <StackPanel Grid.Row="0" Orientation="Vertical">
-                <Menu x:Name="menu" IsMainMenu="True">
-                    <MenuItem Header="File" VerticalAlignment="Stretch">
+                <Menu x:Name="menu" AutomationProperties.Name="-" AutomationProperties.AutomationId="Test" IsMainMenu="True">
+                <MenuItem Header="File" x:Name="MenuItemFile"  AutomationProperties.Name="=" VerticalAlignment="Stretch">
                         <MenuItem Header="Settings" Command="{Binding OpenSettings}"/>
                         <MenuItem Header="New File" Command="{Binding NewInterimFile}"/>
                         <MenuItem Header="Open File" Command="{Binding AddJob}"/>

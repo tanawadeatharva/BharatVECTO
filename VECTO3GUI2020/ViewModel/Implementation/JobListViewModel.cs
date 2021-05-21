@@ -25,6 +25,8 @@ using TUGraz.VectoCore;
 using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.InputData.FileIO.JSON;
 using TUGraz.VectoCore.InputData.FileIO.XML;
+using TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider;
+using TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Interfaces;
 using TUGraz.VectoCore.InputData.Impl;
 using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.OutputData;
@@ -164,13 +166,13 @@ namespace VECTO3GUI2020.ViewModel.Implementation
 		private async Task RunSimulationAsync(CancellationToken ct, IProgress<MessageEntry> outputMessages, IProgress<int> progress)
 		{
             progress.Report(0);
-			for (int i = 0; i <= 100; i++) {
-				await Task.Delay(0);
-				progress.Report(i);
-				if (ct.IsCancellationRequested) {
-					return;
-				}
-			}
+			//for (int i = 0; i <= 100; i++) {
+			//	await Task.Delay(0);
+			//	progress.Report(i);
+			//	if (ct.IsCancellationRequested) {
+			//		return;
+			//	}
+			//}
 
 			IDocumentViewModel[] jobs;
 			lock (_jobsLock) {
@@ -186,6 +188,7 @@ namespace VECTO3GUI2020.ViewModel.Implementation
 
             //TODO add output path to settings
 			var outputPath = Settings.Default.DefaultFilePath;
+			
 			var sumFileWriter = new FileOutputWriter(outputPath);
 
 
@@ -231,34 +234,46 @@ namespace VECTO3GUI2020.ViewModel.Implementation
 
 					var extension = Path.GetExtension(jobEntry.DataSource.SourceFile);
 					IInputDataProvider input = null;
-					switch (extension)
-					{
+					IXMLMultistageInputDataProvider multistageInput = null;
+
+					var FileWriter = new FileOutputWriter(fullFileName);
+					switch (extension) {
 						case Constants.FileExtensions.VectoJobFile:
 							input = JSONInputDataFactory.ReadJsonJob(fullFileName);
 							var tmp = input as IDeclarationInputDataProvider;
-							mode = tmp?.JobInputData.SavedInDeclarationMode ?? false ? ExecutionMode.Declaration : ExecutionMode.Engineering;
+							mode = tmp?.JobInputData.SavedInDeclarationMode ?? false
+								? ExecutionMode.Declaration
+								: ExecutionMode.Engineering;
 							break;
 						case ".xml":
 							var xdoc = XDocument.Load(fullFileName);
 							var rootNode = xdoc.Root?.Name.LocalName ?? "";
-							if (XMLNames.VectoInputEngineering.Equals(rootNode, StringComparison.InvariantCultureIgnoreCase))
-							{
+							if (XMLNames.VectoInputEngineering.Equals(rootNode,
+								StringComparison.InvariantCultureIgnoreCase)) {
 								input = xmlReader.CreateEngineering(fullFileName);
 								mode = ExecutionMode.Engineering;
-							}
-							else if (XMLNames.VectoInputDeclaration.Equals(rootNode, StringComparison.InvariantCultureIgnoreCase) 
-							|| XMLNames.VectoOutputMultistage.Equals(rootNode, StringComparison.InvariantCultureIgnoreCase))
-							{
-								using (var reader = XmlReader.Create(fullFileName))
-								{
+							} else if (XMLNames.VectoInputDeclaration.Equals(rootNode,
+								StringComparison.InvariantCultureIgnoreCase)) {
+								using (var reader = XmlReader.Create(fullFileName)) {
 									input = xmlReader.CreateDeclaration(reader);
 								}
+
+								mode = ExecutionMode.Declaration;
+							} else if (XMLNames.VectoOutputMultistage.Equals(rootNode,
+								StringComparison.InvariantCultureIgnoreCase)) {
+								using (var reader = XmlReader.Create(fullFileName)) {
+									input = new XMLDeclarationVIFInputData(xmlReader.Create(fullFileName) as IMultistageBusInputDataProvider, null);
+									FileWriter = new FileOutputVIFWriter(fullFileName,
+										(jobEntry as MultiStageJobViewModel_v0_1).ManufacturingStages?.Count ?? 0);
+								}
+
 								mode = ExecutionMode.Declaration;
 							}
+
 							break;
 					}
 
-					if (input == null)
+					if (input == null && multistageInput == null)
 					{
 						outputMessages.Report(
 							new MessageEntry()
@@ -271,13 +286,13 @@ namespace VECTO3GUI2020.ViewModel.Implementation
 
 					var fileWriter = new FileOutputWriter(GetOutputDirectory(fullFileName));
 					var runsFactory = new SimulatorFactory(mode, input, fileWriter)
-					{
+					{/*
 						WriteModalResults = true,
 						ModalResults1Hz = true,
 						Validate = true,
 						ActualModalData = true,
 						SerializeVectoRunData = true
-						
+						*/
 					};
 					foreach (var runId in jobContainer.AddRuns(runsFactory))
 					{
