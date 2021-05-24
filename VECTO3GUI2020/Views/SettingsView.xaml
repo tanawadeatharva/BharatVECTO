@@ -7,9 +7,64 @@
         xmlns:customControls="clr-namespace:VECTO3GUI2020.Views.Multistage.CustomControls"
         xmlns:implementation="clr-namespace:VECTO3GUI2020.ViewModel.Implementation"
         mc:Ignorable="d" Height="450" Width="800" d:DataContext="{d:DesignInstance implementation:SettingsViewModel }">
+    <UserControl.Resources>
+        <Style TargetType="Label">
+            <Setter Property="Margin" Value="4 4 4 4"></Setter>
+            <Setter Property="Padding" Value="4 4 4 4"></Setter>
+        </Style>
+        <Style TargetType="CheckBox">
+            <Setter Property="Margin" Value="4 4 4 4"></Setter>
+            <Setter Property="Padding" Value="4 4 4 4"></Setter>
+            <Setter Property="VerticalAlignment" Value="Center"></Setter>
+        </Style>
+    </UserControl.Resources>
+
     <Grid>
-        <StackPanel>
-        <customControls:FilePicker Width="450" MinWidth="400" Text="{Binding DefaultFilePath}" HorizontalAlignment="Stretch" Command="{Binding ChangeFilePath}"/>
-        </StackPanel>
+        <DockPanel LastChildFill="False">
+            <Grid DockPanel.Dock="Top">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="1*"/>
+                    <ColumnDefinition Width="1*"></ColumnDefinition>
+                    <ColumnDefinition Width="1*"></ColumnDefinition>
+                    <ColumnDefinition Width="1*"></ColumnDefinition>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"></RowDefinition>
+                    <RowDefinition Height="30"></RowDefinition>
+                    <RowDefinition Height="30"></RowDefinition>
+                    <RowDefinition Height="30"></RowDefinition>
+                </Grid.RowDefinitions>
+          
+           
+                <Label Grid.Row="0" Grid.Column="0" DockPanel.Dock="Left">Default Path</Label>
+                <customControls:FilePicker Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="3" DockPanel.Dock="Right"
+                     Text="{Binding DefaultFilePath}"
+                    HorizontalAlignment="Stretch" Command="{Binding ChangeFilePath}"/>
+
+                <Label Grid.Row="1" Grid.Column="0">Serialize Vecto Run Data</Label>
+                <CheckBox Grid.Row="1" Grid.Column="1" IsChecked="{Binding SerializeVectoRunData}"></CheckBox>
+
+                <Label Grid.Row="1" Grid.Column="2">Write Modal Results</Label>
+                <CheckBox Grid.Row="1" Grid.Column="3" IsChecked="{Binding WriteModalResults}"></CheckBox>
+
+                <Label Grid.Row="2" Grid.Column="0">Validate</Label>
+                <CheckBox Grid.Row="2" Grid.Column="1" IsChecked="{Binding Validate}"></CheckBox>
+
+                <Label Grid.Row="2" Grid.Column="2">Actual Modal Data</Label>
+                <CheckBox Grid.Row="2" Grid.Column="3" IsChecked="{Binding ActualModalData}"></CheckBox>
+
+                <Label Grid.Row="3" Grid.Column="0">ModalResults1Hz</Label>
+                <CheckBox Grid.Row="3" Grid.Column="1" IsChecked="{Binding ModalResults1Hz}"></CheckBox>
+            </Grid>
+            <!--<DockPanel DockPanel.Dock="Bottom" LastChildFill="False">
+                <Button DockPanel.Dock="Right"
+                        Width="100"
+                        Command="{Binding CloseWindowCommand}" 
+                        CommandParameter="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}}"
+                        Style="{DynamicResource MultiStageButtonStyle1}"
+                        Margin="4"
+                        Padding="4">Close</Button>
+            </DockPanel>-->
+        </DockPanel>
     </Grid>
 </UserControl>

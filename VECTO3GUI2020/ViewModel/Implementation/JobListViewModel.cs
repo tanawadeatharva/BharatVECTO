@@ -289,13 +289,13 @@ namespace VECTO3GUI2020.ViewModel.Implementation
 
 					var fileWriter = new FileOutputWriter(GetOutputDirectory(fullFileName));
 					var runsFactory = new SimulatorFactory(mode, input, fileWriter)
-					{/*
-						WriteModalResults = true,
-						ModalResults1Hz = true,
-						Validate = true,
-						ActualModalData = true,
-						SerializeVectoRunData = true
-						*/
+					{
+						WriteModalResults = Settings.Default.WriteModalResults,
+						ModalResults1Hz = Settings.Default.ModalResults1Hz,
+						Validate = Settings.Default.Validate,
+						ActualModalData = Settings.Default.ActualModalData,
+						SerializeVectoRunData = Settings.Default.SerializeVectoRunData,
+						
 					};
 					foreach (var runId in jobContainer.AddRuns(runsFactory))
 					{
