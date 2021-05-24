@@ -162,7 +162,10 @@
     <Compile Include="Helper\IndexedStorage.cs" />
     <Compile Include="Helper\IWindowHelper.cs" />
     <Compile Include="Helper\DialogHelper.cs" />
+    <Compile Include="Helper\MultistageParameterDataTemplateSelector.cs" />
+    <Compile Include="Helper\MultistageParameterViewModel.cs" />
     <Compile Include="Helper\NameOfMarkUpExtension.cs" />
+    <Compile Include="Helper\NameResolver.cs" />
     <Compile Include="Helper\WindowHelper.cs" />
     <Compile Include="Helper\XMLExtension.cs" />
     <Compile Include="Helper\XmlHelper.cs" />
@@ -399,6 +402,15 @@
     <Compile Include="Views\Multistage\CustomControls\MultiStageParameter.xaml.cs">
       <DependentUpon>MultiStageParameter.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\Multistage\CustomControls\MultistageParameterCheckBoxView.xaml.cs">
+      <DependentUpon>MultistageParameterCheckBoxView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Multistage\CustomControls\MultistageParameterComboBoxView.xaml.cs">
+      <DependentUpon>MultistageParameterComboBoxView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Multistage\CustomControls\MultistageParameterTextView.xaml.cs">
+      <DependentUpon>MultistageParameterTextView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\Multistage\ManufacturingStageAuxiliariesView.xaml.cs">
       <DependentUpon>ManufacturingStageAuxiliariesView.xaml</DependentUpon>
     </Compile>
@@ -440,6 +452,10 @@
     <Page Include="Resources\Icons\Trash_16x.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Resources\MultistageParameterDataTemplates.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Resources\ObjectProvider.xaml">
       <SubType>Designer</SubType>
@@ -617,6 +633,18 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\Multistage\CustomControls\MultiStageParameter.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Multistage\CustomControls\MultistageParameterCheckBoxView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Multistage\CustomControls\MultistageParameterComboBoxView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Multistage\CustomControls\MultistageParameterTextView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
 using System.IO;
+using System.Windows;
 using System.Windows.Forms;
 using System.Windows.Input;
 using VECTO3GUI2020.Helper;
@@ -22,7 +23,13 @@ namespace VECTO3GUI2020.ViewModel.Implementation
 
 
 		private String _defaultFilePath;
-        public String DefaultFilePath
+		private bool _writeModalResults;
+		private bool _modalResults1Hz;
+		private bool _validate;
+		private bool _actualModalData;
+		private bool _serializeVectoRunData;
+
+		public String DefaultFilePath
         {
             get => _defaultFilePath;
             set
@@ -32,16 +39,41 @@ namespace VECTO3GUI2020.ViewModel.Implementation
                 SetProperty(ref _defaultFilePath, value, "DefaultFilePath");
             }
         }
-        public SettingsViewModel(IDialogHelper dialogHelper)
+
+
+
+		public SettingsViewModel(IDialogHelper dialogHelper)
 		{
 			base.Title = "Settings";
             _settings = Settings.Default;
             _defaultFilePath = _settings.DefaultFilePath;
+			_writeModalResults = _settings.WriteModalResults;
+			_modalResults1Hz = _settings.ModalResults1Hz;
+			_validate = _settings.Validate;
+			_actualModalData = _settings.ActualModalData;
+			_serializeVectoRunData = _settings.SerializeVectoRunData;
 			_dialogHelper = dialogHelper;
 		}
 
+		private ICommand _closeWindowCommand;
+		public ICommand CloseWindowCommand
+		{
+			get
+			{
+				return _closeWindowCommand ?? new RelayCommand<Window>(window => CloseWindow(window, _dialogHelper), window => true);
+			}
+		}
 
-        public ICommand ChangeFilePath
+		private void CloseWindow(Window window, bool ask)
+		{
+
+		}
+
+
+
+
+
+		public ICommand ChangeFilePath
         {
             get
             {
@@ -69,6 +101,71 @@ namespace VECTO3GUI2020.ViewModel.Implementation
             }
         }
 
+		public bool SerializeVectoRunData
+		{
+			get => _serializeVectoRunData;
+			set
+			{
+				if (SetProperty(ref _serializeVectoRunData, value)) {
+					_settings.SerializeVectoRunData = value;
+					_settings.Save();
+				}
+			}
+		}
 
-    }
+		public bool ActualModalData
+		{
+			get => _actualModalData;
+			set
+			{
+				if (SetProperty(ref _actualModalData, value)) {
+					_settings.ActualModalData = value;
+					_settings.Save();
+
+				}
+			}
+		}
+
+		public bool Validate
+		{
+			get => _validate;
+			set
+			{
+				if (SetProperty(ref _validate, value))
+				{
+					_settings.Validate = value;
+					_settings.Save();
+
+				}
+			}
+		}
+
+		public bool ModalResults1Hz
+		{
+			get => _modalResults1Hz;
+			set
+			{
+				if (SetProperty(ref _modalResults1Hz, value))
+				{
+					_settings.ModalResults1Hz = value;
+					_settings.Save();
+
+				}
+			}
+		}
+
+		public bool WriteModalResults
+		{
+			get => _writeModalResults;
+			set
+			{
+				if (SetProperty(ref _writeModalResults, value))
+				{
+					_settings.WriteModalResults = value;
+					_settings.Save();
+
+				}
+			}
+		}
+	}
 }

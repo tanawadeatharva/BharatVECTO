@@ -13,7 +13,11 @@
     <UserControl.Resources>
         <Style TargetType="customControls:MultiStageParameter">
             <Setter Property="NameLookUpResourceManager" Value="{x:Static properties:BusStrings.ResourceManager}"/>
-            <Setter Property="Validation.ErrorTemplate" Value="{StaticResource multistageParameterControlErrorTemplate}"/>
+            <Setter Property="Validation.ErrorTemplate" Value="{DynamicResource multistageParameterControlErrorTemplate}"/>
+        </Style>
+        <Style TargetType="ContentControl">
+            <Setter Property="ContentTemplateSelector" Value="{DynamicResource MultistageParameterTemplateSelector}"/>
+            <Setter Property="IsTabStop" Value="False"/>
         </Style>
     </UserControl.Resources>
     <Grid>
@@ -22,66 +26,63 @@
                 <StackPanel DockPanel.Dock="Top">
                     <Label Style="{DynamicResource LabelStyle1}" FontSize="15" HorizontalAlignment="Stretch">AUXILIARIES</Label>
                     <Label Style="{DynamicResource LabelStyle1}">LED Lights</Label>
-                    <customControls:MultiStageParameter Mode="CHECKBOX" 
-                                                        PreviousContent="{Binding ConsolidatedInputData.ElectricConsumers.InteriorLightsLED}" 
-                                                        Content="{Binding InteriorLightsLED, ValidatesOnDataErrors=True}"
-                                                        EditingEnabled="{Binding EditingEnabledDictionary[InteriorLightsLED]}"/>
-                    <customControls:MultiStageParameter Mode="CHECKBOX" 
-                                                PreviousContent="{Binding ConsolidatedInputData.ElectricConsumers.DayrunninglightsLED}" 
-                                                Content="{Binding DayrunninglightsLED,ValidatesOnDataErrors=True}"
-                                                EditingEnabled="{Binding EditingEnabledDictionary[DayrunninglightsLED]}"/>
-                    <customControls:MultiStageParameter Mode="CHECKBOX" 
-                                                PreviousContent="{Binding ConsolidatedInputData.ElectricConsumers.PositionlightsLED}" 
-                                                Content="{Binding PositionlightsLED,ValidatesOnDataErrors=True}"
-                                                EditingEnabled="{Binding EditingEnabledDictionary[PositionlightsLED]}"/>
-                    <customControls:MultiStageParameter Mode="CHECKBOX" 
-                                                PreviousContent="{Binding ConsolidatedInputData.ElectricConsumers.BrakelightsLED}" 
-                                                Content="{Binding BrakelightsLED,ValidatesOnDataErrors=True}"
-                                                EditingEnabled="{Binding EditingEnabledDictionary[BrakelightsLED]}"/>
-                    <customControls:MultiStageParameter Mode="CHECKBOX" 
-                                                PreviousContent="{Binding ConsolidatedInputData.ElectricConsumers.HeadlightsLED}" 
-                                                Content="{Binding HeadlightsLED,ValidatesOnDataErrors=True}"
-                                                EditingEnabled="{Binding EditingEnabledDictionary[HeadlightsLED]}"/>
+
+                    <ContentControl Content="{Binding ParameterViewModels[InteriorLightsLED]}"/>
+                    <ContentControl Content="{Binding ParameterViewModels[DayrunninglightsLED]}"/>
+                    <ContentControl Content="{Binding ParameterViewModels[PositionlightsLED]}"/>
+                    <ContentControl Content="{Binding ParameterViewModels[BrakelightsLED]}"/>
+                    <ContentControl Content="{Binding ParameterViewModels[HeadlightsLED]}"/>
+
 
                     <!--<Separator/>-->
                     <Label  Style="{DynamicResource LabelStyle1}">Heating, Ventilation and Air Conditioning</Label>
-                    <customControls:MultiStageParameter Mode="COMBOBOX" 
+                    <!--<customControls:MultiStageParameter Mode="COMBOBOX" 
                                                         EditingEnabled="{Binding HeatPumpGroupEditingEnabled, Mode=TwoWay}" 
                                                         PreviousContent="{Binding ConsolidatedInputData.HVACAux.SystemConfiguration}"
-                                                        Content="{Binding SystemConfiguration, ValidatesOnDataErrors=True}"/>
+                                                        Content="{Binding SystemConfiguration, ValidatesOnDataErrors=True}"
+                                                        ListItems="{Binding SystemConfigurationAllowedValues}"/>-->
+                    <ContentControl Content="{Binding ParameterViewModels[SystemConfiguration]}"/>
 
-                    <customControls:MultiStageParameter Mode="COMBOBOX"
+                    <!--<customControls:MultiStageParameter Mode="COMBOBOX"
                                                 EditingEnabled="{Binding HeatPumpGroupEditingEnabled, Mode=TwoWay}" 
                                                 PreviousContent="{Binding ConsolidatedInputData.HVACAux.HeatPumpTypeDriverCompartment}" 
                                                 Content="{Binding HeatPumpTypeDriverCompartment, ValidatesOnDataErrors=True}"
-                                                ShowCheckBox="False"/>
-                    <customControls:MultiStageParameter Mode="COMBOBOX" 
+                                                ShowCheckBox="False"/>-->
+
+                    <ContentControl Content="{Binding ParameterViewModels[HeatPumpTypeDriverCompartment]}"/>
+                    <!--<customControls:MultiStageParameter Mode="COMBOBOX" 
                                                 EditingEnabled="{Binding HeatPumpGroupEditingEnabled, Mode=TwoWay}"
                                                 PreviousContent="{Binding ConsolidatedInputData.HVACAux.HeatPumpModeDriverCompartment}" 
                                                 Content="{Binding HeatPumpModeDriverCompartment, ValidatesOnDataErrors=True}"
                                                 ListItems="{Binding HeatPumpModeDriverCompartmentAllowedValues}"
-                                                ShowCheckBox="False"/>
-                    <customControls:MultiStageParameter Mode="COMBOBOX" 
+                                                ShowCheckBox="False"/>-->
+
+                    <ContentControl Content="{Binding ParameterViewModels[HeatPumpModeDriverCompartment]}"/>
+                    <!--<customControls:MultiStageParameter Mode="COMBOBOX" 
                                                 EditingEnabled="{Binding HeatPumpGroupEditingEnabled, Mode=TwoWay}" 
                                                 PreviousContent="{Binding ConsolidatedInputData.HVACAux.HeatPumpTypePassengerCompartment}" 
                                                 Content="{Binding HeatPumpTypePassengerCompartment,ValidatesOnDataErrors=True}"
-                                                ShowCheckBox="False"/>
-                    <customControls:MultiStageParameter Mode="COMBOBOX" 
+                                                ShowCheckBox="False"/>-->
+
+                    <ContentControl Content="{Binding ParameterViewModels[HeatPumpTypePassengerCompartment]}"/>
+                    <!--<customControls:MultiStageParameter Mode="COMBOBOX" 
                                                 EditingEnabled="{Binding HeatPumpGroupEditingEnabled, Mode=TwoWay}"
                                                 PreviousContent="{Binding ConsolidatedInputData.HVACAux.HeatPumpModePassengerCompartment}"
                                                 Content="{Binding HeatPumpModePassengerCompartment,ValidatesOnDataErrors=True}"
                                                 ListItems="{Binding HeatPumpModePassengerCompartmentAllowedValues}"
-                                                ShowCheckBox="False"/>
+                                                ShowCheckBox="False"/>-->
+                    <ContentControl Content="{Binding ParameterViewModels[HeatPumpModePassengerCompartment]}"/>
                     <Separator/>
                     <!--<customControls:MultiStageParameter Mode="COMBOBOX" 
                                                         PreviousContent="{Binding ConsolidatedInputData.PneumaticSupply.CompressorDrive}"
                                                         Content="{Binding CompressorDrive}"></customControls:MultiStageParameter>-->
                    
-                    <customControls:MultiStageParameter Mode="TEXTBOX" 
+                    <!--<customControls:MultiStageParameter Mode="TEXTBOX" 
                                                         Validation.ErrorTemplate="{DynamicResource multistageParameterControlErrorTemplate}"
                                                 PreviousContent="{Binding ConsolidatedInputData.HVACAux.AuxHeaterPower}"
                                                 Content="{Binding AuxHeaterPower,ValidatesOnDataErrors=True}"
                                                         EditingEnabled="{Binding EditingEnabledDictionary[AuxHeaterPower]}"/>
+                    
                    
                     <customControls:MultiStageParameter Mode="CHECKBOX" 
                                                 PreviousContent="{Binding ConsolidatedInputData.HVACAux.DoubleGlazing}" 
@@ -95,9 +96,14 @@
                     <customControls:MultiStageParameter Mode="CHECKBOX" 
                                                 PreviousContent="{Binding ConsolidatedInputData.HVACAux.SeparateAirDistributionDucts}" 
                                                 EditingEnabled="{Binding EditingEnabledDictionary[SeparateAirDistributionDucts]}"
-                                                Content="{Binding SeparateAirDistributionDucts,ValidatesOnDataErrors=True}"/>
+                                                Content="{Binding SeparateAirDistributionDucts,ValidatesOnDataErrors=True}"/>-->
+                    <ContentControl Content="{Binding ParameterViewModels[AuxHeaterPower]}"/>
+                    <ContentControl Content="{Binding ParameterViewModels[DoubleGlazing]}"/>
+                    <ContentControl Content="{Binding ParameterViewModels[AdjustableAuxiliaryHeater]}"/>
+                    <ContentControl Content="{Binding ParameterViewModels[SeparateAirDistributionDucts]}"/>
 
-                    <StackPanel Visibility="{Binding PrimaryVehicleHybridElectric, Converter={StaticResource BooleanToVisibilityConverter}}">
+
+                    <!--<StackPanel Visibility="{Binding PrimaryVehicleHybridElectric, Converter={StaticResource BooleanToVisibilityConverter}}">
                     <customControls:MultiStageParameter Mode="CHECKBOX" 
                                                         PreviousContent="{Binding ConsolidatedInputData.HVACAux.WaterElectricHeater}" 
                                                         Content="{Binding WaterElectricHeater,ValidatesOnDataErrors=True}"
@@ -110,7 +116,7 @@
                                                 PreviousContent="{Binding ConsolidatedInputData.HVACAux.OtherHeatingTechnology}" 
                                                 EditingEnabled="{Binding OtherHeatingTechnology}"
                                                 Content="{Binding OtherHeatingTechnology,ValidatesOnDataErrors=True}"/>
-                    </StackPanel>
+                    </StackPanel>-->
                     <Separator/>
                 </StackPanel>
             </DockPanel>

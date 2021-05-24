@@ -171,7 +171,7 @@ namespace VECTO3GUI2020.Views.Multistage.CustomControls
 			set
 			{
 				SetCurrentValue(EditingEnabledProperty, value);
-				OnPropertyChanged(nameof(EditingEnabled));
+				//OnPropertyChanged(nameof(EditingEnabled));
 			}
 		}
 
@@ -336,7 +336,7 @@ namespace VECTO3GUI2020.Views.Multistage.CustomControls
 				return;
 			}
 
-			if (multiStageParameter.Content != null && multiStageParameter.EditingEnabled == false)
+			if (multiStageParameter.Content != null)
 			{
 				multiStageParameter.EditingEnabled = true;
 			}

@@ -213,3 +213,8 @@ Documentation/VehiclesReleaseComparisonDeclarationMode/tmp/
 **/dev/*.vmod
 **/dev/*.vsum
 /VectoCore/VectoCoreTest/TestData/XML/XMLReaderDeclaration/testVif.VIF_Report_5.xml
+/VectoCore/VectoCoreTest/TestData/XML/XMLReaderDeclaration/final.VIF_Report_5.xml
+/VectoCore/VectoCoreTest/TestData/XML/XMLReaderDeclaration/test+.xml
+/VectoCore/VectoCoreTest/TestData/XML/XMLReaderDeclaration/test.VIF_Report_5.xml
+/VectoCore/VectoCoreTest/TestData/XML/XMLReaderDeclaration/tests.xml
+/VectoCore/VectoCoreTest/TestData/XML/XMLReaderDeclaration/finalGroup41.VIF_Report_4.xml
