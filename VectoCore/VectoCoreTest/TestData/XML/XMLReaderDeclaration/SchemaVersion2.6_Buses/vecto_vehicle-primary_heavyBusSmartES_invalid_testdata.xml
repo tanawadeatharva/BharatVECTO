@@ -15,7 +15,7 @@ xmlns:di="http://www.w3.org/2000/09/xmldsig#" xsi:schemaLocation="urn:tugraz:ivt
 		<IdlingSpeed>600</IdlingSpeed>
 		<RetarderType>Transmission Output Retarder</RetarderType>
 		<RetarderRatio>1.000</RetarderRatio>
-		<AngledriveType>None</AngledriveType>
+		<AngledriveType>Separate Angledrive</AngledriveType>
 		<ZeroEmissionVehicle>false</ZeroEmissionVehicle>
 		<ADAS xsi:type="v2.3:AdvancedDriverAssistantSystemsType">
 			<v2.3:EngineStopStart>true</v2.3:EngineStopStart>
@@ -194,8 +194,8 @@ xmlns:di="http://www.w3.org/2000/09/xmldsig#" xsi:schemaLocation="urn:tugraz:ivt
 					<CertificationNumber>e12*0815/8051*2017/05E0000*00</CertificationNumber>
 					<Date>2017-01-11T11:00:00Z</Date>
 					<AppVersion>3.0.1</AppVersion>
-					<TransmissionType>AMT</TransmissionType>
-					<MainCertificationMethod>Standard values</MainCertificationMethod>
+					<TransmissionType>APT-S</TransmissionType>
+					<MainCertificationMethod>Option 1</MainCertificationMethod>
 					<Gears xsi:type="GearsDeclarationType">
 						<Gear number="1">
 							<Ratio>14.930</Ratio>
@@ -2594,7 +2594,7 @@ xmlns:di="http://www.w3.org/2000/09/xmldsig#" xsi:schemaLocation="urn:tugraz:ivt
 					<CertificationNumber>e12*0815/8051*2017/05E0000*00</CertificationNumber>
 					<Date>2017-02-15T11:00:00Z</Date>
 					<AppVersion>TC CalcApp 123</AppVersion>
-					<CertificationMethod>Standard values</CertificationMethod>
+					<CertificationMethod>Measured</CertificationMethod>
 					<Characteristics>
 						<Entry speedRatio="0.0000" torqueRatio="1.00" inputTorqueRef="300.00"/>
 						<Entry speedRatio="0.5000" torqueRatio="1.00" inputTorqueRef="200.00"/>
@@ -2616,7 +2616,7 @@ xmlns:di="http://www.w3.org/2000/09/xmldsig#" xsi:schemaLocation="urn:tugraz:ivt
 					<Date>2017-01-11T11:00:00Z</Date>
 					<AppVersion>3.0.1</AppVersion>
 					<Ratio>2.345</Ratio>
-					<CertificationMethod>Standard values</CertificationMethod>
+					<CertificationMethod>Option 1</CertificationMethod>
 					<TorqueLossMap>
 						<Entry inputSpeed="0.00" inputTorque="-10000.00" torqueLoss="100.00"/>
 						<Entry inputSpeed="1000.00" inputTorque="-1000.00" torqueLoss="100.00"/>
@@ -2692,7 +2692,7 @@ xmlns:di="http://www.w3.org/2000/09/xmldsig#" xsi:schemaLocation="urn:tugraz:ivt
 					<AppVersion>3.0.1</AppVersion>
 					<LineType>Single portal axle</LineType>
 					<Ratio>2.590</Ratio>
-					<CertificationMethod>Standard values</CertificationMethod>
+					<CertificationMethod>Measured</CertificationMethod>
 					<TorqueLossMap>
 						<Entry inputSpeed="0.00" inputTorque="-5000.00" torqueLoss="115.00"/>
 						<Entry inputSpeed="0.00" inputTorque="-4000.00" torqueLoss="100.00"/>
