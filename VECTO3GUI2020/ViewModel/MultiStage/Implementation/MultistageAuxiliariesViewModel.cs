@@ -2,14 +2,21 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Diagnostics;
+using System.Resources;
+using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices.WindowsRuntime;
+using System.Windows.Forms;
 using System.Xml;
 using Castle.Core.Internal;
 using TUGraz.VectoCommon.BusAuxiliaries;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
+using TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl;
 using TUGraz.VectoCore.Models.BusAuxiliaries.Interfaces;
 using VECTO3GUI2020.Helper;
+using VECTO3GUI2020.Properties;
 using VECTO3GUI2020.ViewModel.Implementation.Common;
 using EnumHelper = VECTO3GUI2020.Helper.EnumHelper;
 
@@ -171,15 +178,28 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 			get => _heatPumpGroupEditingEnabled;
 			set
 			{
-				
-				SetProperty(ref _heatPumpGroupEditingEnabled, value);
-				OnPropertyChanged(nameof(HeatPumpModeDriverCompartment));
-				OnPropertyChanged(nameof(HeatPumpTypeDriverCompartment));
-				OnPropertyChanged(nameof(HeatPumpTypePassengerCompartment));
-				OnPropertyChanged(nameof(HeatPumpModePassengerCompartment));
-				OnPropertyChanged(nameof(SystemConfiguration));
+				if (SetProperty(ref _heatPumpGroupEditingEnabled, value)) {
+					_parameterViewModels[nameof(HeatPumpModeDriverCompartment)].EditingEnabled = value;
+					_parameterViewModels[nameof(HeatPumpTypeDriverCompartment)].EditingEnabled = value;
+					_parameterViewModels[nameof(HeatPumpTypePassengerCompartment)].EditingEnabled = value;
+					_parameterViewModels[nameof(HeatPumpModePassengerCompartment)].EditingEnabled = value;
+					_parameterViewModels[nameof(SystemConfiguration)].EditingEnabled = value;
+				}
 			}
 		}
+
+		private ObservableCollection<Enum> _systemConfigurationAllowedValues;
+		public ObservableCollection<Enum> SystemConfigurationAllowedValues
+		{
+			get => _systemConfigurationAllowedValues;
+			set
+			{
+				if (SetProperty(ref _systemConfigurationAllowedValues, value)) {
+					_parameterViewModels[nameof(SystemConfiguration)].AllowedItems = value;
+				}
+			}
+		}
+
 
 		public BusHVACSystemConfiguration? SystemConfiguration
 		{
@@ -192,19 +212,22 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 			get => _heatPumpTypeDriverCompartment;
 			set
 			{
-				if (value == HeatPumpType.none) {
-					HeatPumpModeDriverCompartmentAllowedValues =
-						EnumHelper.GetValuesAsObservableCollectionIncluding<Enum, HeatPumpMode>(items:HeatPumpMode.N_A);
-					
-				} else {
-					HeatPumpModeDriverCompartmentAllowedValues =
-						EnumHelper.GetValuesAsObservableCollectionExcluding<Enum, HeatPumpMode>(
-							items: HeatPumpMode.N_A);
-					
+				if (SetProperty(ref _heatPumpTypeDriverCompartment, value)) {
+					if (value == HeatPumpType.none)
+					{
+						HeatPumpModeDriverCompartmentAllowedValues =
+							EnumHelper.GetValuesAsObservableCollectionIncluding<Enum, HeatPumpMode>(items: HeatPumpMode.N_A);
+
+					}
+					else
+					{
+						HeatPumpModeDriverCompartmentAllowedValues =
+							EnumHelper.GetValuesAsObservableCollectionExcluding<Enum, HeatPumpMode>(
+								items: HeatPumpMode.N_A);
+
+					}
+
 				}
-
-
-				SetProperty(ref _heatPumpTypeDriverCompartment, value);
 			} 
 		}
 
@@ -218,8 +241,8 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 			}
 		}
 
-		private ObservableCollection<Enum> _heatPumpModeDriverCompartmentAllowedValues =
-			EnumHelper.GetValuesAsObservableCollectionExcluding<Enum, HeatPumpMode>(HeatPumpMode.N_A);
+		private ObservableCollection<Enum> _heatPumpModeDriverCompartmentAllowedValues;
+	
 		public ObservableCollection<Enum> HeatPumpModeDriverCompartmentAllowedValues
 		{
 			get
@@ -228,7 +251,9 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 			}
 			private set
 			{
-				SetProperty(ref _heatPumpModeDriverCompartmentAllowedValues, value);
+				if (SetProperty(ref _heatPumpModeDriverCompartmentAllowedValues, value)) {
+					_parameterViewModels[nameof(HeatPumpModeDriverCompartment)].AllowedItems = value;
+				};
 			}
 		}
 
@@ -240,19 +265,17 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 			get => _heatPumpTypePassengerCompartment;
 			set
 			{
-				SetProperty(ref _heatPumpTypePassengerCompartment, value);
-				if (value == HeatPumpType.none)
-				{
-					HeatPumpModePassengerCompartmentAllowedValues =
-						EnumHelper.GetValuesAsObservableCollectionIncluding<Enum, HeatPumpMode>(items: HeatPumpMode.N_A);
-					//HeatPumpModePassengerCompartment = HeatPumpMode.N_A;
-				}
-				else
-				{
-					HeatPumpModePassengerCompartmentAllowedValues =
-						EnumHelper.GetValuesAsObservableCollectionExcluding<Enum, HeatPumpMode>(
-							items: HeatPumpMode.N_A);
-					//HeatPumpModePassengerCompartment = HeatPumpMode.cooling;
+				if (SetProperty(ref _heatPumpTypePassengerCompartment, value)) {
+					if (value == HeatPumpType.none) {
+						HeatPumpModePassengerCompartmentAllowedValues =
+							EnumHelper.GetValuesAsObservableCollectionIncluding<Enum, HeatPumpMode>(
+								items: HeatPumpMode.N_A);
+					} else {
+						HeatPumpModePassengerCompartmentAllowedValues =
+							EnumHelper.GetValuesAsObservableCollectionExcluding<Enum, HeatPumpMode>(
+								items: HeatPumpMode.N_A);
+						//HeatPumpModePassengerCompartment = HeatPumpMode.cooling;
+					}
 				}
 			}
 		}
@@ -267,8 +290,7 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 			}
 		}
 
-		private ObservableCollection<Enum> _heatPumpModePassengerCompartmentAllowedValues =
-			EnumHelper.GetValuesAsObservableCollectionExcluding<Enum, HeatPumpMode>(HeatPumpMode.N_A);
+		private ObservableCollection<Enum> _heatPumpModePassengerCompartmentAllowedValues;
 		public ObservableCollection<Enum> HeatPumpModePassengerCompartmentAllowedValues
 		{
 			get
@@ -277,7 +299,9 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 			}
 			private set
 			{
-				SetProperty(ref _heatPumpModePassengerCompartmentAllowedValues, value);
+				if (SetProperty(ref _heatPumpModePassengerCompartmentAllowedValues, value)) {
+					_parameterViewModels[nameof(HeatPumpModePassengerCompartment)].AllowedItems = value;
+				}
 			}
 		}
 
@@ -295,7 +319,13 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 		public bool? InteriorLightsLED
 		{
 			get => _interiorLightsLed;
-			set => SetProperty(ref _interiorLightsLed, value);
+			set
+			{
+				SetProperty(ref _interiorLightsLed, value);
+				if (value != null) {
+					OnPropertyChanged(nameof(EditingEnabledDictionary));
+				}
+			}
 		}
 
 		public bool? DayrunninglightsLED
@@ -333,7 +363,7 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 		}
 
 		private CompressorDrive _compressorDrive;
-	
+		private Dictionary<string, MultistageParameterViewModel> _parameterViewModels;
 
 
 		public CompressorDrive CompressorDrive
@@ -439,12 +469,136 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 		{
 			ConsolidatedInputData = consolidatedAuxiliariesInputData;
 			_editingEnabledDictionary = new IndexedStorage<bool>((identifier) => {
-				
-				
 				OnPropertyChanged(nameof(EditingEnabledDictionary));
 				OnPropertyChanged(nameof(identifier));
 			});
+
+
+			_parameterViewModels = new Dictionary<string, MultistageParameterViewModel>();
+			var properties = this.GetType().GetProperties();
+			var backedUpParameters = new HashSet<string>() {
+				nameof(InteriorLightsLED),
+				nameof(DayrunninglightsLED),
+				nameof(PositionlightsLED),
+				nameof(BrakelightsLED),
+				nameof(HeadlightsLED),
+
+				nameof(SystemConfiguration),
+				nameof(HeatPumpModeDriverCompartment),
+				nameof(HeatPumpModePassengerCompartment),
+				nameof(HeatPumpTypePassengerCompartment),
+				nameof(HeatPumpTypeDriverCompartment),
+				
+
+				nameof(AuxHeaterPower),
+				nameof(DoubleGlazing),
+				nameof(AirElectricHeater),
+				nameof(AdjustableAuxiliaryHeater),
+				nameof(SeparateAirDistributionDucts),
+				nameof(OtherHeatingTechnology),
+				nameof(WaterElectricHeater)
+
+				
+
+			};
+
+			foreach (var property in properties)
+			{
+				if (!backedUpParameters.Contains(property.Name))
+				{
+					continue;
+				}
+
+
+				object previousInputData = null;
+				try
+				{
+					previousInputData = ConsolidatedInputData?.GetType().GetProperty(nameof(property.Name))?
+						.GetValue(ConsolidatedInputData);
+
+				}
+				catch (Exception e)
+				{
+					Debug.WriteLine(e.Message);
+				}
+
+				_parameterViewModels.Add(property.Name, new MultistageParameterViewModel(property.Name, previousInputData, this, resourceManagers: new ResourceManager[] { BusStrings.ResourceManager, Strings.ResourceManager }
+				));
+			}
+
+			//Set consolidated Data
+			_parameterViewModels[nameof(InteriorLightsLED)].PreviousContent =
+				ConsolidatedInputData?.ElectricConsumers.InteriorLightsLED;
+			_parameterViewModels[nameof(DayrunninglightsLED)].PreviousContent =
+				ConsolidatedInputData?.ElectricConsumers.DayrunninglightsLED;
+			_parameterViewModels[nameof(PositionlightsLED)].PreviousContent =
+				ConsolidatedInputData?.ElectricConsumers.PositionlightsLED;
+			_parameterViewModels[nameof(BrakelightsLED)].PreviousContent =
+				ConsolidatedInputData?.ElectricConsumers.BrakelightsLED;
+			_parameterViewModels[nameof(HeadlightsLED)].PreviousContent =
+				ConsolidatedInputData?.ElectricConsumers.HeadlightsLED;
+			_parameterViewModels[nameof(SystemConfiguration)].PreviousContent =
+				ConsolidatedInputData?.HVACAux.SystemConfiguration;
+			_parameterViewModels[nameof(HeatPumpModeDriverCompartment)].PreviousContent =
+				ConsolidatedInputData?.HVACAux.HeatPumpModeDriverCompartment;
+			_parameterViewModels[nameof(HeatPumpTypePassengerCompartment)].PreviousContent =
+				ConsolidatedInputData?.HVACAux.HeatPumpTypePassengerCompartment;
+			_parameterViewModels[nameof(HeatPumpTypeDriverCompartment)].PreviousContent =
+				ConsolidatedInputData?.HVACAux.HeatPumpTypeDriverCompartment;
+			_parameterViewModels[nameof(HeatPumpModePassengerCompartment)].PreviousContent =
+				ConsolidatedInputData?.HVACAux.HeatPumpModePassengerCompartment;
+			_parameterViewModels[nameof(AuxHeaterPower)].PreviousContent =
+				ConsolidatedInputData?.HVACAux.AuxHeaterPower;
+			_parameterViewModels[nameof(DoubleGlazing)].PreviousContent =
+				ConsolidatedInputData?.HVACAux.DoubleGlazing;
+			_parameterViewModels[nameof(AdjustableAuxiliaryHeater)].PreviousContent =
+				ConsolidatedInputData?.HVACAux.AdjustableAuxiliaryHeater;
+			_parameterViewModels[nameof(SeparateAirDistributionDucts)].PreviousContent =
+				ConsolidatedInputData?.HVACAux.SeparateAirDistributionDucts;
+			_parameterViewModels[nameof(AirElectricHeater)].PreviousContent =
+				ConsolidatedInputData?.HVACAux.AirElectricHeater;
+			_parameterViewModels[nameof(OtherHeatingTechnology)].PreviousContent =
+				ConsolidatedInputData?.HVACAux.OtherHeatingTechnology;
+
+
+
+			//Set editinggroups
+			Action<MultistageParameterViewModel> HeatPumpGroupEditingEnabledCallback = model =>
+            {
+                HeatPumpGroupEditingEnabled = model.EditingEnabled;
+            };
+			_parameterViewModels[nameof(SystemConfiguration)].EditingChangedCallback =
+				HeatPumpGroupEditingEnabledCallback;
+			_parameterViewModels[nameof(HeatPumpModeDriverCompartment)].EditingChangedCallback =
+				HeatPumpGroupEditingEnabledCallback;
+			_parameterViewModels[nameof(HeatPumpTypePassengerCompartment)].EditingChangedCallback =
+				HeatPumpGroupEditingEnabledCallback;
+			_parameterViewModels[nameof(HeatPumpTypeDriverCompartment)].EditingChangedCallback =
+				HeatPumpGroupEditingEnabledCallback;
+			_parameterViewModels[nameof(HeatPumpModePassengerCompartment)].EditingChangedCallback =
+				HeatPumpGroupEditingEnabledCallback;
+
+			//Setup AllowedValues 
+			HeatPumpModeDriverCompartmentAllowedValues = EnumHelper.GetValuesAsObservableCollectionExcluding<Enum, HeatPumpMode>(HeatPumpMode.N_A);
+			HeatPumpModePassengerCompartmentAllowedValues =
+				EnumHelper.GetValuesAsObservableCollectionExcluding<Enum, HeatPumpMode>(HeatPumpMode.N_A);
+			SystemConfigurationAllowedValues =
+				EnumHelper.GetValuesAsObservableCollectionExcluding<Enum, BusHVACSystemConfiguration>(
+					BusHVACSystemConfiguration.Unknown);
+
 		}
+
+		protected override bool SetProperty<T>(ref T field, T value, [CallerMemberName] string propertyName = null)
+		{
+			var propertyChanged = base.SetProperty(ref field, value, propertyName);
+
+			if (propertyChanged && _parameterViewModels != null && _parameterViewModels.ContainsKey(propertyName))
+			{
+				_parameterViewModels[propertyName].CurrentContent = value;
+			}
+			return propertyChanged;
+		}
+
 
 		#region Implementation of IElectricSupplyDeclarationData
 
@@ -502,13 +656,13 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 					case nameof(SystemConfiguration):
 						if (HeatPumpGroupEditingEnabled == true &&
 							this.GetType().GetProperty(propertyName).GetValue(this) == null) {
-							result = $"{propertyName} has to be set if editing is enabled}}";
+							result = $"{NameResolver.ResolveName(propertyName, BusStrings.ResourceManager, Strings.ResourceManager)} has to be set if editing is enabled}}";
 						}
 						break;
 					default:
-						if (EditingEnabledDictionary[propertyName] == true && this.GetType().GetProperty(propertyName).GetValue(this) == null)
+						if (_parameterViewModels[propertyName].EditingEnabled == true && this.GetType().GetProperty(propertyName).GetValue(this) == null)
 						{
-							result = $"{propertyName} has to be set if editing is enabled}}";
+							result = $"{NameResolver.ResolveName(propertyName, BusStrings.ResourceManager, Strings.ResourceManager)} has to be set if editing is enabled}}";
 						}
 						break;
 				}
@@ -537,6 +691,19 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 				return !Error.IsNullOrEmpty();
 			}
 		}
+
+		public Dictionary<string, MultistageParameterViewModel> ParameterViewModels
+		{
+			get
+			{
+				return _parameterViewModels;
+			}
+			set
+			{
+				SetProperty(ref _parameterViewModels, value);
+			}
+		}
+
 		#endregion
 	}
 }

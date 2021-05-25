@@ -168,12 +168,14 @@ namespace VECTO3GUI2020.ViewModel.Implementation
 		{
             progress.Report(0);
 			//for (int i = 0; i <= 100; i++) {
-			//	await Task.Delay(0);
+			//	await Task.Delay(100);
 			//	progress.Report(i);
 			//	if (ct.IsCancellationRequested) {
 			//		return;
 			//	}
 			//}
+
+
 
 			IDocumentViewModel[] jobs;
 			lock (_jobsLock) {
@@ -287,13 +289,13 @@ namespace VECTO3GUI2020.ViewModel.Implementation
 
 					var fileWriter = new FileOutputWriter(GetOutputDirectory(fullFileName));
 					var runsFactory = new SimulatorFactory(mode, input, fileWriter)
-					{/*
-						WriteModalResults = true,
-						ModalResults1Hz = true,
-						Validate = true,
-						ActualModalData = true,
-						SerializeVectoRunData = true
-						*/
+					{
+						WriteModalResults = Settings.Default.WriteModalResults,
+						ModalResults1Hz = Settings.Default.ModalResults1Hz,
+						Validate = Settings.Default.Validate,
+						ActualModalData = Settings.Default.ActualModalData,
+						SerializeVectoRunData = Settings.Default.SerializeVectoRunData,
+						
 					};
 					foreach (var runId in jobContainer.AddRuns(runsFactory))
 					{
@@ -376,7 +378,7 @@ namespace VECTO3GUI2020.ViewModel.Implementation
 					.ToDictionary(x => x.Key, x => x.Value);
 				//PrintRuns(justFinished, fileWriters);
 				finishedRuns.AddRange(justFinished.Select(x => x.Key));
-				Thread.Sleep(100);
+				await Task.Delay(100);
 			}
 			start.Stop();
 

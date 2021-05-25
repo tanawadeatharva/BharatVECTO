@@ -15,6 +15,11 @@
             <Setter Property="NameLookUpResourceManager" Value="{x:Static properties:BusStrings.ResourceManager}"/>
             <Setter Property="Validation.ErrorTemplate" Value="{StaticResource multistageParameterControlErrorTemplate}"/>
         </Style>
+
+        <Style TargetType="ContentControl">
+            <Setter Property="ContentTemplateSelector" Value="{DynamicResource MultistageParameterTemplateSelector}"/>
+            <Setter Property="IsTabStop" Value="False"></Setter>
+        </Style>
     </UserControl.Resources>
 
     <!--RelativeSource={x:Static RelativeSource.Self},  {Binding RelativeSource={x:Static RelativeSource.Self}, Path=Name}]
@@ -26,155 +31,93 @@
                 <Label Content="VEHICLE DATA" HorizontalAlignment="Stretch" FontSize="15" VerticalAlignment="Stretch"
                        Style="{DynamicResource LabelStyle1}"/>
 
-                <custom:MultiStageParameter 
-                    Validation.ErrorTemplate="{StaticResource multistageParameterControlErrorTemplate}"
-                    Optional="False" 
-                    Content="{Binding Manufacturer, ValidatesOnDataErrors=True}"
-                    PreviousContent="{Binding }"/>
-                <custom:MultiStageParameter 
-                    Validation.ErrorTemplate="{StaticResource multistageParameterControlErrorTemplate}"
-                    Optional="False"
-                    Content="{Binding ManufacturerAddress, ValidatesOnDataErrors=True}"/>
-                <custom:MultiStageParameter 
-                    Validation.ErrorTemplate="{StaticResource multistageParameterControlErrorTemplate}"
-                    Optional="False" 
-                    Content="{Binding VIN, ValidatesOnDataErrors=True}"/>
 
-                <custom:MultiStageParameter 
-                    PreviousContent="{Binding ConsolidatedVehicleData.Model}" 
-                    Content="{Binding Model,  ValidatesOnDataErrors=True}"
-                    EditingEnabled="{Binding EditingEnabledDictionary[Model]}"/>
-
-                <custom:MultiStageParameter 
-                    PreviousContent="{Binding ConsolidatedVehicleData.LegislativeClass}"
-                    EditingEnabled="{Binding EditingEnabledDictionary[LegislativeClass]}"
-                    Content="{Binding LegislativeClass,  ValidatesOnDataErrors=True}" 
-                    Mode="COMBOBOX" />
-
-                <custom:MultiStageParameter 
-                    PreviousContent="{Binding ConsolidatedVehicleData.CurbMassChassis}"
-                    EditingEnabled="{Binding EditingEnabledDictionary[CurbMassChassis]}"
-                    Content="{Binding CurbMassChassis,  ValidatesOnDataErrors=True}"/>
-
-                <custom:MultiStageParameter 
-                    PreviousContent="{Binding ConsolidatedVehicleData.GrossVehicleMassRating}"
-                    EditingEnabled="{Binding EditingEnabledDictionary[GrossVehicleMassRating]}"
-                    Content="{Binding GrossVehicleMassRating,  ValidatesOnDataErrors=True}"/>
+                <ContentControl Content="{Binding ParameterViewModels[Manufacturer]}" >
+                </ContentControl>
 
 
-                <custom:MultiStageParameter 
-                    Label="Airdrag modified"
-                    EditingEnabled="{Binding AirdragModifiedMultistageEditingEnabled}"
-                    PreviousContent="{Binding ConsolidatedAirdragmodified}"
-                    Content="{Binding AirdragModifiedEnum, ValidatesOnDataErrors=True}" 
-                    Mode="COMBOBOX"/>
-
-                <custom:MultiStageParameter 
-                    PreviousContent="{Binding ConsolidatedVehicleData.TankSystem}"
-                    Content="{Binding TankSystem, ValidatesOnDataErrors=True}"
-                    EditingEnabled="{Binding EditingEnabledDictionary[TankSystem]}"
-                    Mode="COMBOBOX">
-                </custom:MultiStageParameter>
-
-                <custom:MultiStageParameter
-                    PreviousContent="{Binding ConsolidatedVehicleData.RegisteredClass}"
-                    Content="{Binding RegisteredClass,  ValidatesOnDataErrors=True}" 
-                    EditingEnabled="{Binding EditingEnabledDictionary[RegisteredClass]}"
-                    Mode="COMBOBOX" />
-                <Separator/>
-                <custom:MultiStageParameter 
-                    EditingEnabled="{Binding NumberOfPassengersEditingEnabled}" 
-                    PreviousContent="{Binding ConsolidatedVehicleData.NumberOfPassengersUpperDeck, ValidatesOnDataErrors=True}"
-                    Content="{Binding NumberOfPassengersUpperDeck}"/>
-                <custom:MultiStageParameter 
-                    EditingEnabled="{Binding NumberOfPassengersEditingEnabled}" 
-                    PreviousContent="{Binding ConsolidatedVehicleData.NumberOfPassengersLowerDeck,  ValidatesOnDataErrors=True}"
-                    Content="{Binding NumberOfPassengersLowerDeck}"
-                    ShowCheckBox="False"/>
-                <Separator/>
-                <custom:MultiStageParameter 
-                    PreviousContent="{Binding ConsolidatedVehicleData.VehicleCode}"
-                    ListItems="{Binding VehicleCodeAllowedValues}"
-                    Content="{Binding VehicleCode,  ValidatesOnDataErrors=True}" 
-                    EditingEnabled="{Binding EditingEnabledDictionary[VehicleCode]}"
-                    Mode="COMBOBOX"
-                    />
-
-                <custom:MultiStageParameter 
-                    PreviousContent="{Binding ConsolidatedVehicleData.LowEntry}"
-                    Content="{Binding LowEntry,  ValidatesOnDataErrors=True}" 
-                    EditingEnabled="{Binding EditingEnabledDictionary[LowEntry]}"
-                    Mode="CHECKBOX"
-                    />
-
-                <Separator/>
-                <custom:MultiStageParameter Validation.ErrorTemplate="{StaticResource multistageParameterControlErrorTemplate}"
-                                            EditingEnabled="{Binding 
-                                MeasurementsGroupEditingEnabled}" 
-                                            PreviousContent="{Binding ConsolidatedHeightInMm}"
-                                            Content="{Binding HeightInMm, ValidatesOnExceptions=True}"
-                                            DummyContent="{Binding Source={StaticResource milimeterDummy}}"/>
-                <custom:MultiStageParameter Validation.ErrorTemplate="{StaticResource multistageParameterControlErrorTemplate}"
-                                            EditingEnabled="{Binding MeasurementsGroupEditingEnabled}" 
-                                            PreviousContent="{Binding ConsolidatedWidthInMm}"
-                                            Content="{Binding WidthInMm,  ValidatesOnDataErrors=True}"
-                                            ShowCheckBox="False"
-                                            DummyContent="{Binding Source={StaticResource milimeterDummy}}"/>
-                <custom:MultiStageParameter Validation.ErrorTemplate="{StaticResource multistageParameterControlErrorTemplate}"
-                                            EditingEnabled="{Binding MeasurementsGroupEditingEnabled}" 
-                                            PreviousContent="{Binding ConsolidatedLengthInMm}"
-                                            Content="{Binding LengthInMm, ValidatesOnDataErrors=True}"
-                                            ShowCheckBox="False"
-                                            DummyContent="{Binding Source={StaticResource milimeterDummy}}"/>
-
-                <custom:MultiStageParameter Validation.ErrorTemplate="{StaticResource multistageParameterControlErrorTemplate}"
-                                            EditingEnabled="{Binding MeasurementsGroupEditingEnabled}"
-                                            PreviousContent="{Binding ConsolidatedEntranceHeightInMm}"
-                                            Content="{Binding EntranceHeightInMm,  ValidatesOnDataErrors=True}" 
-                                            ShowCheckBox="False"
-                                            DummyContent="{Binding Source={StaticResource milimeterDummy}}"/>
-
-                <Separator/>
+                <ContentControl Content="{Binding ParameterViewModels[ManufacturerAddress]}"/>
+   
+                <ContentControl Content="{Binding ParameterViewModels[VIN]}"/>
 
 
-                <custom:MultiStageParameter 
-                    x:Name="DoorDriveTechnology"
-                    PreviousContent="{Binding ConsolidatedVehicleData.DoorDriveTechnology}"
-                    EditingEnabled="{Binding EditingEnabledDictionary[DoorDriveTechnology]}"
-                    Content="{Binding DoorDriveTechnology,  ValidatesOnDataErrors=True}" Mode="COMBOBOX" />
+                <ContentControl Content="{Binding ParameterViewModels[Model]}"/>
 
 
-                <custom:MultiStageParameter 
-                    EditingEnabled="True"
-                    ShowCheckBox="False"
-                    PreviousContent="{Binding ConsolidatedVehicleData.VehicleDeclarationType}"
-                    Content="{Binding VehicleDeclarationType, ValidatesOnDataErrors=True}" Mode="COMBOBOX" />
+                <ContentControl Content="{Binding ParameterViewModels[LegislativeClass]}"/>
 
-                <Label Content="ADAS" Style="{DynamicResource LabelStyle1}"/>
-                <custom:MultiStageParameter 
-                    EditingEnabled="{Binding AdasEditingEnabled}"
-                    PreviousContent="{Binding ConsolidatedVehicleData.ADAS.EngineStopStart}"
-                    Content="{Binding EngineStopStartNullable,  ValidatesOnDataErrors=True}"
-                    Mode="CHECKBOX"/>
-                <custom:MultiStageParameter 
-                    EditingEnabled="{Binding AdasEditingEnabled}"
-                    PreviousContent="{Binding ConsolidatedVehicleData.ADAS.EcoRoll}"
-                    Content="{Binding EcoRollTypeNullable,  ValidatesOnDataErrors=True}"
-                    ShowCheckBox="False"
-                    Mode="COMBOBOX"/>
-                <custom:MultiStageParameter 
-                    EditingEnabled="{Binding AdasEditingEnabled}"
-                    PreviousContent="{Binding ConsolidatedVehicleData.ADAS.PredictiveCruiseControl}"
-                    Content="{Binding PredictiveCruiseControlNullable,  ValidatesOnDataErrors=True}"
-                    ShowCheckBox="False"
-                    Mode="COMBOBOX"/>
-                <custom:MultiStageParameter
-                    EditingEnabled="{Binding AdasEditingEnabled}"
-                    PreviousContent="{Binding ConsolidatedVehicleData.ADAS.ATEcoRollReleaseLockupClutch}"
-                    Content="{Binding ATEcoRollReleaseLockupClutch,  ValidatesOnDataErrors=True}"
-                    ShowCheckBox="False"
-                    Mode="CHECKBOX"/>
-            </StackPanel>
+                <ContentControl 
+                    Content="{Binding ParameterViewModels[CurbMassChassis]}"/>
+
+                <ContentControl Content="{Binding 
+                    ParameterViewModels[GrossVehicleMassRating]}"></ContentControl>
+
+
+                <ContentControl 
+                    Content="{Binding ParameterViewModels[AirdragModifiedEnum]}"/>
+
+                <ContentControl 
+                    Content="{Binding ParameterViewModels[TankSystem]}"/>
+
+                <ContentControl 
+                    Content="{Binding ParameterViewModels[RegisteredClass]}"/>
+
+                    <Separator/>
+                <ContentControl 
+                    Content="{Binding ParameterViewModels[NumberOfPassengersUpperDeck]}"/>
+
+                <ContentControl 
+                    Content="{Binding ParameterViewModels[NumberOfPassengersLowerDeck]}"/>
+                    <Separator/>
+
+                <ContentControl 
+                    Content="{Binding ParameterViewModels[VehicleCode]}"/>
+
+                <ContentControl 
+                    Content="{Binding ParameterViewModels[LowEntry]}"/>
+                    <Separator/>
+
+                <ContentControl 
+                    Content="{Binding ParameterViewModels[HeightInMm]}"/>
+
+
+
+                <ContentControl 
+                    Content="{Binding ParameterViewModels[WidthInMm]}"/>
+
+                <ContentControl 
+                    Content="{Binding ParameterViewModels[LengthInMm]}"/>
+
+
+
+
+                <ContentControl 
+                    Content="{Binding ParameterViewModels[EntranceHeightInMm]}"/>
+                    <Separator/>
+
+                <ContentControl 
+                    Content="{Binding ParameterViewModels[DoorDriveTechnology]}"/>
+
+                <ContentControl 
+                    Content="{Binding ParameterViewModels[VehicleDeclarationType]}"/>
+
+                    <Label Content="ADAS" Style="{DynamicResource LabelStyle1}"/>
+
+                <ContentControl 
+                    Content="{Binding ParameterViewModels[EngineStopStartNullable]}"/>
+
+
+
+                <ContentControl 
+                    Content="{Binding ParameterViewModels[EcoRollTypeNullable]}"/>
+
+
+                <ContentControl 
+                    Content="{Binding ParameterViewModels[PredictiveCruiseControlNullable]}"/>
+
+                <ContentControl 
+                    Content="{Binding ParameterViewModels[ATEcoRollReleaseLockupClutch]}"/>
+                </StackPanel>
         </DockPanel>
         </ScrollViewer>
     </Grid>

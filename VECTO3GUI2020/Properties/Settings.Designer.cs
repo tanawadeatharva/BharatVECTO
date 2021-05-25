@@ -12,7 +12,7 @@ namespace VECTO3GUI2020.Properties {
     
     
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "16.7.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "16.8.1.0")]
     public sealed partial class Settings : global::System.Configuration.ApplicationSettingsBase {
         
         private static Settings defaultInstance = ((Settings)(global::System.Configuration.ApplicationSettingsBase.Synchronized(new Settings())));
@@ -37,13 +37,73 @@ namespace VECTO3GUI2020.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("../../../VectoCore/VectoCoreTest/TestData/XML/XMLReaderDeclaration")]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
         public string DefaultFilePath {
             get {
                 return ((string)(this["DefaultFilePath"]));
             }
             set {
                 this["DefaultFilePath"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool WriteModalResults {
+            get {
+                return ((bool)(this["WriteModalResults"]));
+            }
+            set {
+                this["WriteModalResults"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool ModalResults1Hz {
+            get {
+                return ((bool)(this["ModalResults1Hz"]));
+            }
+            set {
+                this["ModalResults1Hz"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool Validate {
+            get {
+                return ((bool)(this["Validate"]));
+            }
+            set {
+                this["Validate"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool ActualModalData {
+            get {
+                return ((bool)(this["ActualModalData"]));
+            }
+            set {
+                this["ActualModalData"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool SerializeVectoRunData {
+            get {
+                return ((bool)(this["SerializeVectoRunData"]));
+            }
+            set {
+                this["SerializeVectoRunData"] = value;
             }
         }
     }

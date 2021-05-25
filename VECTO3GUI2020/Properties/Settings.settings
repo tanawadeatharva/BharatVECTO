@@ -6,7 +6,22 @@
       <Value Profile="(Default)">False</Value>
     </Setting>
     <Setting Name="DefaultFilePath" Type="System.String" Scope="User">
-      <Value Profile="(Default)">../../../VectoCore/VectoCoreTest/TestData/XML/XMLReaderDeclaration</Value>
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="WriteModalResults" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="ModalResults1Hz" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="Validate" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="ActualModalData" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="SerializeVectoRunData" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
     </Setting>
   </Settings>
 </SettingsFile>

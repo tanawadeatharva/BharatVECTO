@@ -35,15 +35,19 @@ namespace TUGraz.VectoCore.Tests.Integration.Multistage
 		private const string vifResult = VIFDirPath + "vif_vehicle-sample.VIF_Report_3.xml";
 
 
-		
+		public const string PrimaryBus =
+			@"TestData\XML\XMLReaderDeclaration\SchemaVersion2.6_Buses\vecto_vehicle-primary_heavyBus-sample.xml";
+		public const string PrimaryBus_SmartES =
+			@"TestData\XML\XMLReaderDeclaration\SchemaVersion2.6_Buses\vecto_vehicle-primary_heavyBusSmartES-sample.xml";
+
 
 		protected IXMLInputDataReader xmlInputReader;
 		protected IXMLInputDataReader xmlVIFInputReader;
 
 		private IKernel _kernel;
-        private string _generatedVIFFilepath;
+		private string _generatedVIFFilepath;
 
-        [OneTimeSetUp]
+		[OneTimeSetUp]
 		public void RunBeforeAnyTests()
 		{
 			Directory.SetCurrentDirectory(TestContext.CurrentContext.TestDirectory);
@@ -122,10 +126,8 @@ namespace TUGraz.VectoCore.Tests.Integration.Multistage
 			Assert.IsTrue(jobContainer.Runs.All(r => r.Success), String.Concat<Exception>(jobContainer.Runs.Select(r => r.ExecException)));
 		}
 
-		public const string PrimaryBus =
-			@"TestData\XML\XMLReaderDeclaration\SchemaVersion2.6_Buses\vecto_vehicle-primary_heavyBus-sample.xml";
-		public const string PrimaryBus_SmartES =
-			@"TestData\XML\XMLReaderDeclaration\SchemaVersion2.6_Buses\vecto_vehicle-primary_heavyBusSmartES-sample.xml";
+
+
 
 
 		[TestCase(PrimaryBus, TestName = "Multistage Write VIF Primary"),
@@ -137,8 +139,8 @@ namespace TUGraz.VectoCore.Tests.Integration.Multistage
 
 			var writer = new FileOutputWriter("vif_writing_test.xml");
 			
-			var xmlreport = new XMLDeclarationReportMultistageBusVehicle(writer);
-			//var xmlreport = new XMLDeclarationReportPrimaryVehicle(writer);
+			//var xmlreport = new XMLDeclarationReportMultistageBusVehicle(writer);
+			var xmlreport = new XMLDeclarationReportPrimaryVehicle(writer);
 			var factory = new SimulatorFactory(ExecutionMode.Declaration, inputData, writer, xmlreport) {
 				WriteModalResults = true,
 				//ActualModalData = true,
@@ -150,5 +152,30 @@ namespace TUGraz.VectoCore.Tests.Integration.Multistage
 
 			xmlreport.DoWriteReport();
 		}
+
+
+		[TestCase(PrimaryBus, "vif_primary_bus_writing_test.xml", TestName = "Multistage Write VIF Primary With Simulation"),
+		TestCase(PrimaryBus_SmartES, "vif_primary_bus_smart_writing_test.xml",  TestName = "Multistage Write VIF Primary SmartES With Simulation")]
+		public void TestMultistageWritingVifWithSimulation(string primaryFile, string outputFile)
+		{
+			var inputData = xmlInputReader.Create(primaryFile);
+
+			var writer = new FileOutputWriter(outputFile);
+			var factory = new SimulatorFactory(ExecutionMode.Declaration, inputData, writer)
+			{
+				WriteModalResults = true,
+				//ActualModalData = true,
+				Validate = false
+			};
+
+			var jobContainer = new JobContainer(new SummaryDataContainer(writer));
+			jobContainer.AddRuns(factory);
+			jobContainer.Execute();
+			jobContainer.WaitFinished();
+
+			var progress = jobContainer.GetProgress();
+			Assert.IsTrue(progress.All(r => r.Value.Success), string.Concat<Exception>(progress.Select(r => r.Value.Error)));
+			Assert.IsTrue(jobContainer.Runs.All(r => r.Success), String.Concat<Exception>(jobContainer.Runs.Select(r => r.ExecException))); }
+
 	}
 }

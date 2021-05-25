@@ -17,7 +17,7 @@ namespace VECTO3GUI2020.ViewModel.Implementation
 		
 
 		private string _message;
-		private DateTime _time = DateTime.Today;
+		private DateTime _time = DateTime.Now;
 		private string _source;
 		private MessageType _type;
 

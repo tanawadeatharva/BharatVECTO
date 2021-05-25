@@ -9,6 +9,7 @@
             <!-- Add new ResourceDictionaries here-->
                 <ResourceDictionary Source="Resources/ViewModelBindings.xaml"/>
                 <ResourceDictionary Source="Resources/Converter.xaml"/>
+                <ResourceDictionary Source="Resources/MultistageParameterDataTemplates.xaml"/>
                 <ResourceDictionary Source="Resources\Styles\ButtonStyles.xaml"/>
                 <ResourceDictionary Source="Resources/Styles/GlobalStyles.xaml"/>
                 <ResourceDictionary Source="Resources/Styles/Colors.xaml"/>
