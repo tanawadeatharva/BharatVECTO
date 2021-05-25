@@ -106,5 +106,17 @@ namespace VECTO3GUI2020.Properties {
                 this["SerializeVectoRunData"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string DefaultOutputPath {
+            get {
+                return ((string)(this["DefaultOutputPath"]));
+            }
+            set {
+                this["DefaultOutputPath"] = value;
+            }
+        }
     }
 }

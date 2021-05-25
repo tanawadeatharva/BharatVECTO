@@ -30,6 +30,7 @@
                 </Grid.ColumnDefinitions>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"></RowDefinition>
+                    <RowDefinition Height="Auto"></RowDefinition>
                     <RowDefinition Height="30"></RowDefinition>
                     <RowDefinition Height="30"></RowDefinition>
                     <RowDefinition Height="30"></RowDefinition>
@@ -41,20 +42,42 @@
                      Text="{Binding DefaultFilePath}"
                     HorizontalAlignment="Stretch" Command="{Binding ChangeFilePath}"/>
 
-                <Label Grid.Row="1" Grid.Column="0">Serialize Vecto Run Data</Label>
-                <CheckBox Grid.Row="1" Grid.Column="1" IsChecked="{Binding SerializeVectoRunData}"></CheckBox>
+                <Label Grid.Row="1" Grid.Column="0" DockPanel.Dock="Left">Default Path</Label>
+                <Grid Grid.Row="1" Grid.Column="1" Margin="4" VerticalAlignment="Stretch" Grid.ColumnSpan="3" DockPanel.Dock="Right">
+                    <Grid.RowDefinitions>
+                        <RowDefinition></RowDefinition>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition></ColumnDefinition>
+                        <ColumnDefinition Width="30px"></ColumnDefinition>
+                    </Grid.ColumnDefinitions>
+                    <TextBox x:Name="textBox" VerticalContentAlignment="Center" Padding="4" Margin = "0 0 0 0" IsReadOnly="false" 
+                             Text="{Binding DefaultOutputPath}" HorizontalAlignment="Stretch" TextWrapping="Wrap"
+                             Style="{DynamicResource TextBoxStyle1}"/>
+                    <Button x:Name="button" Padding="4" Margin="4 0 0 0" Grid.Column="1" ContentTemplate="{DynamicResource AddDocumentIcon}"
+                            Command="{Binding ChangeOutputPath}" Style="{DynamicResource FilePickerButtonStyle}">
 
-                <Label Grid.Row="1" Grid.Column="2">Write Modal Results</Label>
-                <CheckBox Grid.Row="1" Grid.Column="3" IsChecked="{Binding WriteModalResults}"></CheckBox>
+                    </Button>
+                </Grid>
+                <!--<customControls:FilePicker Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="3" DockPanel.Dock="Right"
+                                           Text="{Binding DefaultOutputPath}"
+                                           HorizontalAlignment="Stretch" Command="{Binding ChangeOutputPath}"/>-->
 
-                <Label Grid.Row="2" Grid.Column="0">Validate</Label>
-                <CheckBox Grid.Row="2" Grid.Column="1" IsChecked="{Binding Validate}"></CheckBox>
 
-                <Label Grid.Row="2" Grid.Column="2">Actual Modal Data</Label>
-                <CheckBox Grid.Row="2" Grid.Column="3" IsChecked="{Binding ActualModalData}"></CheckBox>
+                <Label Grid.Row="2" Grid.Column="0">Serialize Vecto Run Data</Label>
+                <CheckBox Grid.Row="2" Grid.Column="1" IsChecked="{Binding SerializeVectoRunData}"></CheckBox>
 
-                <Label Grid.Row="3" Grid.Column="0">ModalResults1Hz</Label>
-                <CheckBox Grid.Row="3" Grid.Column="1" IsChecked="{Binding ModalResults1Hz}"></CheckBox>
+                <Label Grid.Row="3" Grid.Column="2">Write Modal Results</Label>
+                <CheckBox Grid.Row="3" Grid.Column="3" IsChecked="{Binding WriteModalResults}"></CheckBox>
+
+                <Label Grid.Row="3" Grid.Column="0">Validate</Label>
+                <CheckBox Grid.Row="3" Grid.Column="1" IsChecked="{Binding Validate}"></CheckBox>
+
+                <Label Grid.Row="4" Grid.Column="2">Actual Modal Data</Label>
+                <CheckBox Grid.Row="4" Grid.Column="3" IsChecked="{Binding ActualModalData}"></CheckBox>
+
+                <Label Grid.Row="4" Grid.Column="0">ModalResults1Hz</Label>
+                <CheckBox Grid.Row="4" Grid.Column="1" IsChecked="{Binding ModalResults1Hz}"></CheckBox>
             </Grid>
             <!--<DockPanel DockPanel.Dock="Bottom" LastChildFill="False">
                 <Button DockPanel.Dock="Right"

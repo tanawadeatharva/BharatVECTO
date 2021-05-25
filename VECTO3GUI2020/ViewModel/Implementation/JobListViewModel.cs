@@ -187,13 +187,14 @@ namespace VECTO3GUI2020.ViewModel.Implementation
                         Time = DateTime.Now,
                         Type = MessageType.InfoMessage,
 					});
+					return;
 				}
 			}
 
             //TODO add output path to settings
 			var outputPath = Settings.Default.DefaultFilePath;
 			
-			var sumFileWriter = new FileOutputWriter(outputPath);
+			var sumFileWriter = new FileOutputWriter(GetOutputDirectory(Jobs.First(x => x.Selected).DataSource.SourceFile));
 
 
 
@@ -453,21 +454,17 @@ namespace VECTO3GUI2020.ViewModel.Implementation
 		private string GetOutputDirectory(string jobFilePath)
 		{
 			var outFile = jobFilePath;
-			var OutputDirectory = Settings.Default.DefaultFilePath;
-			if (!string.IsNullOrWhiteSpace(OutputDirectory))
-			{
-				if (Path.IsPathRooted(OutputDirectory))
-				{
-					outFile = Path.Combine(OutputDirectory, Path.GetFileName(jobFilePath) ?? "");
-				}
-				else
-				{
-					outFile = Path.Combine(Path.GetDirectoryName(jobFilePath) ?? "", OutputDirectory, Path.GetFileName(jobFilePath) ?? "");
-				}
-				if (!Directory.Exists(Path.GetDirectoryName(outFile)))
-				{
-					Directory.CreateDirectory(Path.GetDirectoryName(outFile));
-				}
+			var outputDirectory = Settings.Default.DefaultOutputPath;
+			if (string.IsNullOrWhiteSpace(outputDirectory)) {
+				return outFile;
+			}
+
+			outFile = Path.IsPathRooted(outputDirectory)
+				? Path.Combine(outputDirectory, Path.GetFileName(jobFilePath) ?? "")
+				: Path.Combine(Path.GetDirectoryName(jobFilePath) ?? "", outputDirectory,
+					Path.GetFileName(jobFilePath) ?? "");
+			if (!Directory.Exists(Path.GetDirectoryName(outFile))) {
+				Directory.CreateDirectory(Path.GetDirectoryName(outFile));
 			}
 
 			return outFile;
