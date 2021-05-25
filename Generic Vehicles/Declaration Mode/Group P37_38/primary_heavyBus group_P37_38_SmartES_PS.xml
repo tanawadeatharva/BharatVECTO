@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<tns:VectoInputDeclaration schemaVersion="2.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.1" xmlns:tns="urn:tugraz:ivt:VectoAPI:DeclarationInput:v2.0" xmlns:v2.6="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:DEV:v2.6" xmlns:v2.1="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.1" xmlns:v2.0="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0" xmlns:di="http://www.w3.org/2000/09/xmldsig#" xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:DeclarationJob https://webgate.ec.europa.eu/CITnet/svn/VECTO/trunk/Share/XML/XSD//DEV/VectoDeclarationJob.xsd">
+<tns:VectoInputDeclaration schemaVersion="2.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.1" xmlns:tns="urn:tugraz:ivt:VectoAPI:DeclarationInput:v2.0" xmlns:v2.6="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:DEV:v2.6" xmlns:v2.1="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.1" xmlns:v2.0="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0" xmlns:di="http://www.w3.org/2000/09/xmldsig#" xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:DeclarationJob https://citnet.tech.ec.europa.eu/CITnet/svn/VECTO/trunk/Share/XML/XSD//DEV/VectoDeclarationJob.xsd">
 	<v2.0:Vehicle id="VEH-PrimaryBus_SmartES-PS" xsi:type="PrimaryVehicleDeclarationType" xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:DEV:v2.6">
 		<Manufacturer>Generic Bus Manufacturer</Manufacturer>
 		<ManufacturerAddress>Street, ZIP City</ManufacturerAddress>
 		<Model>Generic Model</Model>
 		<VIN>VEH-1234567890_SmartES-PS</VIN>
 		<Date>2017-02-15T11:00:00Z</Date>
-		<VehicleCategory>Bus</VehicleCategory>
+		<ChassisConfiguration>Bus</ChassisConfiguration>
 		<AxleConfiguration>8x2</AxleConfiguration>
-    <Articulated>false</Articulated>
+		<Articulated>false</Articulated>
 		<TechnicalPermissibleMaximumLadenMass>29250</TechnicalPermissibleMaximumLadenMass>
 		<IdlingSpeed>600</IdlingSpeed>
 		<RetarderType>Transmission Output Retarder</RetarderType>
@@ -1283,7 +1283,6 @@
 								<Entry inputSpeed="1100.00" inputTorque="-350.00" torqueLoss="17.63"/>
 								<Entry inputSpeed="1100.00" inputTorque="-150.00" torqueLoss="13.63"/>
 								<Entry inputSpeed="1100.00" inputTorque="50.00" torqueLoss="11.63"/>
-
 								<Entry inputSpeed="1100.00" inputTorque="250.00" torqueLoss="15.63"/>
 								<Entry inputSpeed="1100.00" inputTorque="450.00" torqueLoss="19.63"/>
 								<Entry inputSpeed="1100.00" inputTorque="650.00" torqueLoss="23.63"/>
@@ -2449,7 +2448,6 @@
 								<Entry inputSpeed="700.00" inputTorque="1250.00" torqueLoss="14.85"/>
 								<Entry inputSpeed="700.00" inputTorque="1450.00" torqueLoss="15.85"/>
 								<Entry inputSpeed="700.00" inputTorque="1650.00" torqueLoss="16.85"/>
-
 								<Entry inputSpeed="700.00" inputTorque="1850.00" torqueLoss="17.85"/>
 								<Entry inputSpeed="700.00" inputTorque="2050.00" torqueLoss="18.85"/>
 								<Entry inputSpeed="700.00" inputTorque="2250.00" torqueLoss="19.85"/>
@@ -3321,19 +3319,27 @@
 						<Technology axleNumber="1">Variable displacement elec. controlled</Technology>
 					</SteeringPump>
 					<ElectricSystem>
-						<AlternatorTechnology>default</AlternatorTechnology>
-						<SmartElectrics>true</SmartElectrics>
-						<MaxAlternatorPower>15000</MaxAlternatorPower>
-						<ElectricStorageCapacity>50</ElectricStorageCapacity>
+						<AlternatorTechnology>smart</AlternatorTechnology>
+						<SmartAlternator>
+							<RatedCurrent>310</RatedCurrent>
+							<RatedVoltage>48</RatedVoltage>
+						</SmartAlternator>
+						<Battery>
+							<BatteryTechnology>li-ion battery - high power</BatteryTechnology>
+							<RatedCapacity>1</RatedCapacity>
+							<NominalVoltage>48</NominalVoltage>
+						</Battery>
+						<SupplyFromHEVPossible>false</SupplyFromHEVPossible>
 					</ElectricSystem>
 					<PneumaticSystem>
 						<SizeOfAirSupply>Large Supply 2-stage</SizeOfAirSupply>
+						<CompressorDrive>mechanically</CompressorDrive>
 						<Clutch>none</Clutch>
 						<CompressorRatio>1.000</CompressorRatio>
 						<SmartCompressionSystem>true</SmartCompressionSystem>
 						<SmartRegenerationSystem>false</SmartRegenerationSystem>
 						<AirsuspensionControl>electronically</AirsuspensionControl>
-						<AdBlueDosing>true</AdBlueDosing>
+						<PneumaticSCRReagentDosing>true</PneumaticSCRReagentDosing>
 					</PneumaticSystem>
 					<HVAC>
 						<AdjustableCoolantThermostat>true</AdjustableCoolantThermostat>
