@@ -15,6 +15,7 @@ namespace VECTO3GUI2020.ViewModel
 		private object _messageLock = new Object();
 		private ObservableCollection<MessageEntry> _messages = new ObservableCollection<MessageEntry>();
 		private int _progress;
+		private string _statusMessage;
 
 		public ObservableCollection<MessageEntry> Messages
 		{
@@ -28,6 +29,12 @@ namespace VECTO3GUI2020.ViewModel
 		{
 			get => _progress;
 			set => SetProperty(ref _progress, value);
+		}
+
+		public string StatusMessage
+		{
+			get { return _statusMessage; }
+			set { SetProperty(ref _statusMessage, value); }
 		}
 
 
@@ -45,5 +52,6 @@ namespace VECTO3GUI2020.ViewModel
 		ObservableCollection<MessageEntry> Messages { get; }
 
 		int Progress { get; set; }
+		string StatusMessage { get; set; }
 	}
 }
