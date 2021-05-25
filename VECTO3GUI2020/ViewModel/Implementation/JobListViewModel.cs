@@ -38,6 +38,7 @@ using VECTO3GUI2020.Helper;
 using VECTO3GUI2020.Model.Interfaces;
 using VECTO3GUI2020.Properties;
 using VECTO3GUI2020.ViewModel.Implementation.Common;
+using VECTO3GUI2020.ViewModel.Implementation.Document;
 using VECTO3GUI2020.ViewModel.Interfaces;
 using VECTO3GUI2020.ViewModel.Interfaces.Document;
 using VECTO3GUI2020.ViewModel.MultiStage.Implementation;
@@ -186,13 +187,14 @@ namespace VECTO3GUI2020.ViewModel.Implementation
                         Time = DateTime.Now,
                         Type = MessageType.InfoMessage,
 					});
+					return;
 				}
 			}
 
             //TODO add output path to settings
 			var outputPath = Settings.Default.DefaultFilePath;
 			
-			var sumFileWriter = new FileOutputWriter(outputPath);
+			var sumFileWriter = new FileOutputWriter(GetOutputDirectory(Jobs.First(x => x.Selected).DataSource.SourceFile));
 
 
 
@@ -452,21 +454,17 @@ namespace VECTO3GUI2020.ViewModel.Implementation
 		private string GetOutputDirectory(string jobFilePath)
 		{
 			var outFile = jobFilePath;
-			var OutputDirectory = Settings.Default.DefaultFilePath;
-			if (!string.IsNullOrWhiteSpace(OutputDirectory))
-			{
-				if (Path.IsPathRooted(OutputDirectory))
-				{
-					outFile = Path.Combine(OutputDirectory, Path.GetFileName(jobFilePath) ?? "");
-				}
-				else
-				{
-					outFile = Path.Combine(Path.GetDirectoryName(jobFilePath) ?? "", OutputDirectory, Path.GetFileName(jobFilePath) ?? "");
-				}
-				if (!Directory.Exists(Path.GetDirectoryName(outFile)))
-				{
-					Directory.CreateDirectory(Path.GetDirectoryName(outFile));
-				}
+			var outputDirectory = Settings.Default.DefaultOutputPath;
+			if (string.IsNullOrWhiteSpace(outputDirectory)) {
+				return outFile;
+			}
+
+			outFile = Path.IsPathRooted(outputDirectory)
+				? Path.Combine(outputDirectory, Path.GetFileName(jobFilePath) ?? "")
+				: Path.Combine(Path.GetDirectoryName(jobFilePath) ?? "", outputDirectory,
+					Path.GetFileName(jobFilePath) ?? "");
+			if (!Directory.Exists(Path.GetDirectoryName(outFile))) {
+				Directory.CreateDirectory(Path.GetDirectoryName(outFile));
 			}
 
 			return outFile;
@@ -556,7 +554,15 @@ namespace VECTO3GUI2020.ViewModel.Implementation
 			if (documentType == XmlDocumentType.MultistageOutputData) {
 				var inputDataProvider = _inputDataReader.Create(fileName) as IMultistageBusInputDataProvider;
 				return Task.FromResult(_multiStageViewModelFactory.GetMultiStageJobViewModel(inputDataProvider) as IDocumentViewModel);
-			} else {
+			} else if (documentType == XmlDocumentType.DeclarationJobData) {
+				//Remove
+				var inputDataProvider = _inputDataReader.CreateDeclaration(fileName);
+				var result = new SimulationOnlyDeclarationJob(inputDataProvider.DataSource,
+					inputDataProvider.JobInputData.JobName, XmlDocumentType.DeclarationJobData) as IDocumentViewModel;
+				return Task.FromResult(result);
+
+
+			}else {
 				throw new VectoXMLException($"{documentType.ToString()} not supported");
 			}
 
@@ -581,8 +587,7 @@ namespace VECTO3GUI2020.ViewModel.Implementation
 
         private void AddJobExecute()
         {
-            //Another possibility is to use IsAsync true property of Binding.
-            IsLoading = true;
+			IsLoading = true;
 			var filename = _dialogHelper.OpenXMLFileDialog();
 			if (filename != null)
             {
@@ -605,9 +610,9 @@ namespace VECTO3GUI2020.ViewModel.Implementation
             get
             {
                 return _editJobCommand ?? new Util.RelayCommand<IJobViewModel>(EditJobExecute,
-                    (IJobViewModel jobentry) =>
-                    {
-                        return (jobentry != null);
+                    (IJobViewModel jobentry) => {
+						var canExecute = jobentry != null && jobentry.CanBeEdited;
+                        return canExecute;
                     });
             }
             set

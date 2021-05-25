@@ -79,6 +79,15 @@ namespace VECTO3GUI2020.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Airdrag Area 0.
+        /// </summary>
+        public static string AirdragArea0 {
+            get {
+                return ResourceManager.GetString("AirdragArea0", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Air Electric Heater.
         /// </summary>
         public static string AirElectricHeater {
@@ -553,6 +562,15 @@ namespace VECTO3GUI2020.Properties {
         public static string TankSystem {
             get {
                 return ResourceManager.GetString("TankSystem", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Transferred Airdrag Area.
+        /// </summary>
+        public static string TransferredAirDragArea {
+            get {
+                return ResourceManager.GetString("TransferredAirDragArea", resourceCulture);
             }
         }
         

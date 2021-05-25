@@ -120,6 +120,9 @@
   <data name="AirdragArea0" xml:space="preserve">
     <value>Airdrag Area 0</value>
   </data>
+  <data name="AirdragModifiedEnum" xml:space="preserve">
+    <value>Airdrag modified</value>
+  </data>
   <data name="ATEcoRollReleaseLockupClutch" xml:space="preserve">
     <value>ATP Eco Roll Release Lockup Clutch</value>
   </data>

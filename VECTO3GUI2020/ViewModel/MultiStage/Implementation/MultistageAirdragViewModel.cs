@@ -34,6 +34,10 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 	{
 		private IAirDragViewModel _airdragViewModel;
 
+		private void OnAirdragViewModelChanged()
+		{
+			AirdragViewModelChanged?.Invoke(this, EventArgs.Empty);
+		}
 		public string AirdragFilePath
 		{
 			get
@@ -43,11 +47,19 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 			set => SetProperty(ref _airdragFilePath, value);
 		}
 
+		public EventHandler AirdragViewModelChanged { get; set; }
+
 		public IAirDragViewModel AirDragViewModel
 		{
 			get => _airdragViewModel;
-			set => SetProperty(ref _airdragViewModel, value);
+			set
+			{
+				if (SetProperty(ref _airdragViewModel, value)) {
+					OnAirdragViewModelChanged();
+				};
+			}
 		}
+
 
 		public void SetAirdragInputData(IAirdragDeclarationInputData airdragInputData)
 		{

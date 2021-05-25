@@ -188,6 +188,7 @@
     <Compile Include="ViewModel\Implementation\Document\DeclarationJobViewModel.cs" />
     <Compile Include="ViewModel\Implementation\Document\DeclarationTrailerJobDocumentViewModel.cs" />
     <Compile Include="Model\Interfaces\IAuxiliaryModelFactory.cs" />
+    <Compile Include="ViewModel\Implementation\Document\SimulationOnlyDeclarationJob.cs" />
     <Compile Include="ViewModel\Implementation\MessageEntry.cs" />
     <Compile Include="ViewModel\Interfaces\Document\IDocumentViewModel.cs" />
     <Compile Include="ViewModel\Interfaces\Document\IDocumentViewModelFactory.cs" />

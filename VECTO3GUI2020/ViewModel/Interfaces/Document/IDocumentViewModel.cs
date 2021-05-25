@@ -12,5 +12,7 @@ namespace VECTO3GUI2020.ViewModel.Interfaces.Document
 
         IEditViewModel EditViewModel { get; }
 		bool Selected { get; set; }
+
+        bool CanBeEdited { get; set; }
 	}
 }
