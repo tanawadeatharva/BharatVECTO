@@ -133,30 +133,34 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 		public static void SaveVif(IMultistageVIFInputData vifData, string outputFile,
 			FileOutputVIFWriter writer = null, IDialogHelper dialogHelper = null)
 		{
-			if (writer == null) {
-				var numberOfManufacturingStages = vifData.MultistageJobInputData.JobInputData.ManufacturingStages?.Count ?? 0;
-				writer = new FileOutputVIFWriter(outputFile, numberOfManufacturingStages);
-			}
+			try {
 
-			var inputData = new XMLDeclarationVIFInputData(vifData.MultistageJobInputData, vifData.VehicleInputData);
 
-			var factory = new SimulatorFactory(ExecutionMode.Declaration, inputData, writer);
+				if (writer == null) {
+					var numberOfManufacturingStages =
+						vifData.MultistageJobInputData.JobInputData.ManufacturingStages?.Count ?? 0;
+					writer = new FileOutputVIFWriter(outputFile, numberOfManufacturingStages);
+				}
 
-			var jobContainer = new JobContainer(new MockSumWriter()); //TODO: Replace with real sumwriter
+				var inputData =
+					new XMLDeclarationVIFInputData(vifData.MultistageJobInputData, vifData.VehicleInputData);
 
-			var runs = factory.SimulationRuns().ToList();
-			foreach (var run in runs)
-			{
-				jobContainer.AddRun(run);
-			}
+				var factory = new SimulatorFactory(ExecutionMode.Declaration, inputData, writer);
 
-			jobContainer.Execute();
-			jobContainer.WaitFinished();
-			
-			using (var reader = XmlReader.Create(writer.XMLMultistageReportFileName)) {
+				var jobContainer = new JobContainer(new MockSumWriter()); //TODO: Replace with real sumwriter
+
+				var runs = factory.SimulationRuns().ToList();
+				foreach (var run in runs) {
+					jobContainer.AddRun(run);
+				}
+
+				jobContainer.Execute();
+				jobContainer.WaitFinished();
+
+				using (var reader = XmlReader.Create(writer.XMLMultistageReportFileName)) {
 					var validator = new XMLValidator(reader);
 					var valid = validator.ValidateXML(XmlDocumentType.MultistageOutputData);
-					if (!valid){
+					if (!valid) {
 						dialogHelper?.ShowMessageBox($"Error writing file {validator.ValidationError}", "Error",
 							MessageBoxButton.OK, MessageBoxImage.Error);
 						Debug.WriteLine("Invalid Outputfile");
@@ -166,8 +170,13 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 							MessageBoxButton.OK, MessageBoxImage.Information);
 						Debug.WriteLine($"Written to {writer.XMLMultistageReportFileName}");
 					}
-			}
+				}
 
+			}catch (Exception e) {
+				dialogHelper?.ShowMessageBox($"{e.Message}", "Error writing VIF", MessageBoxButton.OK,
+					MessageBoxImage.Error);
+
+			}
 			
 		}
 

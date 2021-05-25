@@ -349,6 +349,7 @@ namespace VECTO3GUI2020.Helper
 			set => _editingChangedCallback = value;
 		}
 
+
 		#endregion
 	}
 }

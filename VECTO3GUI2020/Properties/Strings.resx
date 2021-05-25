@@ -313,4 +313,10 @@
   <data name="Width" xml:space="preserve">
     <value>Width</value>
   </data>
+  <data name="AirdragArea0" xml:space="preserve">
+    <value>Airdrag Area 0</value>
+  </data>
+  <data name="TransferredAirDragArea" xml:space="preserve">
+    <value>Transferred Airdrag Area</value>
+  </data>
 </root>

@@ -70,6 +70,15 @@ namespace VECTO3GUI2020.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Airdrag modified.
+        /// </summary>
+        public static string AirdragModifiedEnum {
+            get {
+                return ResourceManager.GetString("AirdragModifiedEnum", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to ATP Eco Roll Release Lockup Clutch.
         /// </summary>
         public static string ATEcoRollReleaseLockupClutch {
