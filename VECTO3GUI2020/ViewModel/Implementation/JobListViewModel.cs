@@ -38,6 +38,7 @@ using VECTO3GUI2020.Helper;
 using VECTO3GUI2020.Model.Interfaces;
 using VECTO3GUI2020.Properties;
 using VECTO3GUI2020.ViewModel.Implementation.Common;
+using VECTO3GUI2020.ViewModel.Implementation.Document;
 using VECTO3GUI2020.ViewModel.Interfaces;
 using VECTO3GUI2020.ViewModel.Interfaces.Document;
 using VECTO3GUI2020.ViewModel.MultiStage.Implementation;
@@ -556,7 +557,15 @@ namespace VECTO3GUI2020.ViewModel.Implementation
 			if (documentType == XmlDocumentType.MultistageOutputData) {
 				var inputDataProvider = _inputDataReader.Create(fileName) as IMultistageBusInputDataProvider;
 				return Task.FromResult(_multiStageViewModelFactory.GetMultiStageJobViewModel(inputDataProvider) as IDocumentViewModel);
-			} else {
+			} else if (documentType == XmlDocumentType.DeclarationJobData) {
+				//Remove
+				var inputDataProvider = _inputDataReader.CreateDeclaration(fileName);
+				var result = new SimulationOnlyDeclarationJob(inputDataProvider.DataSource,
+					inputDataProvider.JobInputData.JobName, XmlDocumentType.DeclarationJobData) as IDocumentViewModel;
+				return Task.FromResult(result);
+
+
+			}else {
 				throw new VectoXMLException($"{documentType.ToString()} not supported");
 			}
 
@@ -581,8 +590,7 @@ namespace VECTO3GUI2020.ViewModel.Implementation
 
         private void AddJobExecute()
         {
-            //Another possibility is to use IsAsync true property of Binding.
-            IsLoading = true;
+			IsLoading = true;
 			var filename = _dialogHelper.OpenXMLFileDialog();
 			if (filename != null)
             {
@@ -605,9 +613,9 @@ namespace VECTO3GUI2020.ViewModel.Implementation
             get
             {
                 return _editJobCommand ?? new Util.RelayCommand<IJobViewModel>(EditJobExecute,
-                    (IJobViewModel jobentry) =>
-                    {
-                        return (jobentry != null);
+                    (IJobViewModel jobentry) => {
+						var canExecute = jobentry != null && jobentry.CanBeEdited;
+                        return canExecute;
                     });
             }
             set
