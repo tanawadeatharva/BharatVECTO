@@ -48,8 +48,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox
 		protected internal readonly TorqueConverterEntry[] TorqueConverterEntries;
 
 		public string AppVersion { get; protected internal set; }
-		public DataTable TCData { get; protected internal set; }
-		
+
 		[Required, SIRange(0, double.MaxValue)]
 		public PerSecond ReferenceSpeed { get; protected internal set; }
 

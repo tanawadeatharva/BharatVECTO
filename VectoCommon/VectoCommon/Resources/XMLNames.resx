@@ -1512,4 +1512,7 @@
   <data name="CompressorDrive" xml:space="preserve">
     <value>CompressorDrive</value>
   </data>
+  <data name="Bus_ChassisConfiguration" xml:space="preserve">
+    <value>ChassisConfiguration</value>
+  </data>
 </root>
