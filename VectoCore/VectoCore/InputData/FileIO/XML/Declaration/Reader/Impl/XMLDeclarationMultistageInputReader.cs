@@ -517,18 +517,22 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 
 		public int? NumberOfPassengersUpperDeck
 		{
-			get
-			{
-				return GetVehiclePropertyValue<int?>(nameof(NumberOfPassengersUpperDeck));
-			}
+			get { return GetVehiclePropertyValue<int?>(nameof(NumberOfPassengersUpperDeck)); }
 		}
 
 		public int? NumberOfPassengersLowerDeck
 		{
-			get
-			{
-				return GetVehiclePropertyValue<int?>(nameof(NumberOfPassengersLowerDeck));
-			}
+			get { return GetVehiclePropertyValue<int?>(nameof(NumberOfPassengersLowerDeck)); }
+		}
+
+		public int? NumberOfPassengersStandingLowerDeck
+		{
+			get { return GetVehiclePropertyValue<int?>(nameof(NumberOfPassengersStandingLowerDeck)); }
+		}
+
+		public int? NumberOfPassengersStandingUpperDeck
+		{
+			get { return GetVehiclePropertyValue<int?>(nameof(NumberOfPassengersStandingUpperDeck)); }
 		}
 
 		public VehicleCode? VehicleCode
@@ -695,6 +699,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 					&& InputComplete(RegisteredClass, nameof(RegisteredClass))
 					&& InputComplete(NumberOfPassengersLowerDeck, nameof(NumberOfPassengersLowerDeck))
 					&& InputComplete(NumberOfPassengersUpperDeck, nameof(NumberOfPassengersUpperDeck))
+					&& InputComplete(NumberOfPassengersStandingLowerDeck, nameof(NumberOfPassengersStandingLowerDeck))
+					&& InputComplete(NumberOfPassengersStandingUpperDeck, nameof(NumberOfPassengersStandingUpperDeck))
 					&& InputComplete(VehicleCode, nameof(VehicleCode))
 					&& InputComplete(LowEntry, nameof(LowEntry)) && InputComplete(Height, nameof(Height)) 
 					&& InputComplete(Length, nameof(Length)) && InputComplete(Width, nameof(Width)) 

@@ -781,11 +781,47 @@ namespace TUGraz.VectoCommon.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to NumberPassengerSeatsLowerDeck.
+        /// </summary>
+        public static string Bus_NumberPassengerSeatsLowerDeck {
+            get {
+                return ResourceManager.GetString("Bus_NumberPassengerSeatsLowerDeck", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to NumberPassengerSeatsUpperDeck.
+        /// </summary>
+        public static string Bus_NumberPassengerSeatsUpperDeck {
+            get {
+                return ResourceManager.GetString("Bus_NumberPassengerSeatsUpperDeck", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to NumberPassengersLowerDeck.
         /// </summary>
         public static string Bus_NumberPassengersLowerDeck {
             get {
                 return ResourceManager.GetString("Bus_NumberPassengersLowerDeck", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to NumberPassengersStandingLowerDeck.
+        /// </summary>
+        public static string Bus_NumberPassengersStandingLowerDeck {
+            get {
+                return ResourceManager.GetString("Bus_NumberPassengersStandingLowerDeck", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to NumberPassengersStandingUpperDeck.
+        /// </summary>
+        public static string Bus_NumberPassengersStandingUpperDeck {
+            get {
+                return ResourceManager.GetString("Bus_NumberPassengersStandingUpperDeck", resourceCulture);
             }
         }
         

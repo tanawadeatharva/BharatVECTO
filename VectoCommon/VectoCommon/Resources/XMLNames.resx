@@ -1515,4 +1515,16 @@
   <data name="Bus_ChassisConfiguration" xml:space="preserve">
     <value>ChassisConfiguration</value>
   </data>
+  <data name="Bus_NumberPassengerSeatsLowerDeck" xml:space="preserve">
+    <value>NumberPassengerSeatsLowerDeck</value>
+  </data>
+  <data name="Bus_NumberPassengerSeatsUpperDeck" xml:space="preserve">
+    <value>NumberPassengerSeatsUpperDeck</value>
+  </data>
+  <data name="Bus_NumberPassengersStandingLowerDeck" xml:space="preserve">
+    <value>NumberPassengersStandingLowerDeck</value>
+  </data>
+  <data name="Bus_NumberPassengersStandingUpperDeck" xml:space="preserve">
+    <value>NumberPassengersStandingUpperDeck</value>
+  </data>
 </root>

@@ -223,9 +223,13 @@ namespace TUGraz.VectoCore.OutputData.XML
 				_vehicleInputData.RegisteredClass != null
 					? new XElement(v28 + XMLNames.Vehicle_RegisteredClass, _vehicleInputData.RegisteredClass.ToXMLFormat()) : null,
 				_vehicleInputData.NumberOfPassengersLowerDeck != null 
-					? new XElement(v28 + XMLNames.Bus_NumberPassengersLowerDeck, _vehicleInputData.NumberOfPassengersLowerDeck) : null,
+					? new XElement(v28 + XMLNames.Bus_NumberPassengerSeatsLowerDeck, _vehicleInputData.NumberOfPassengersLowerDeck) : null,
+				_vehicleInputData.NumberOfPassengersStandingLowerDeck != null
+					? new XElement(v28 + XMLNames.Bus_NumberPassengersStandingLowerDeck, _vehicleInputData.NumberOfPassengersStandingLowerDeck) : null,
 				_vehicleInputData.NumberOfPassengersUpperDeck != null
-					? new XElement(v28 + XMLNames.Bus_NumberPassengersUpperDeck, _vehicleInputData.NumberOfPassengersUpperDeck) : null,
+					? new XElement(v28 + XMLNames.Bus_NumberPassengerSeatsUpperDeck, _vehicleInputData.NumberOfPassengersUpperDeck) : null,
+				_vehicleInputData.NumberOfPassengersStandingUpperDeck != null
+					? new XElement(v28 + XMLNames.Bus_NumberPassengersStandingUpperDeck, _vehicleInputData.NumberOfPassengersStandingUpperDeck) : null,
 				_vehicleInputData.VehicleCode != null
 					? new XElement(v28 + XMLNames.Vehicle_BodyworkCode, _vehicleInputData.VehicleCode.ToXMLFormat()) : null,
 				_vehicleInputData.LowEntry != null

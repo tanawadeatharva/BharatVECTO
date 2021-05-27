@@ -51,8 +51,10 @@ namespace TUGraz.VectoCore.Tests.XML
 			Assert.AreEqual(false, vehicle.AirdragModifiedMultistage);
 			Assert.AreEqual(TankSystem.Compressed, vehicle.TankSystem);//NgTankSystem
 			Assert.AreEqual(RegistrationClass.II_III, vehicle.RegisteredClass);//ClassBus
-			Assert.AreEqual(0, vehicle.NumberOfPassengersLowerDeck);
-			Assert.AreEqual(10, vehicle.NumberOfPassengersUpperDeck);
+			Assert.AreEqual(1, vehicle.NumberOfPassengersLowerDeck);
+			Assert.AreEqual(10, vehicle.NumberOfPassengersStandingLowerDeck);
+			Assert.AreEqual(11, vehicle.NumberOfPassengersUpperDeck);
+			Assert.AreEqual(2, vehicle.NumberOfPassengersStandingUpperDeck);
 			Assert.AreEqual(VehicleCode.CB, vehicle.VehicleCode);
 			Assert.AreEqual(false, vehicle.LowEntry);
 			Assert.AreEqual(2.5, vehicle.Height.Value());//HeightIntegratedBody
@@ -194,6 +196,8 @@ namespace TUGraz.VectoCore.Tests.XML
 			Assert.AreEqual(null, vehicle.RegisteredClass);
 			Assert.AreEqual(null, vehicle.NumberOfPassengersLowerDeck);
 			Assert.AreEqual(null, vehicle.NumberOfPassengersUpperDeck);
+			Assert.AreEqual(null, vehicle.NumberOfPassengersStandingLowerDeck);
+			Assert.AreEqual(null, vehicle.NumberOfPassengersStandingUpperDeck);
 			Assert.AreEqual(null, vehicle.VehicleCode);
 			Assert.AreEqual(null, vehicle.LowEntry);
 			Assert.AreEqual(null, vehicle.Height);

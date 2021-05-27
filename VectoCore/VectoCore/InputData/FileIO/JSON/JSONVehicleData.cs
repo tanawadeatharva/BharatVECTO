@@ -662,6 +662,15 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			get { return 0; }
 		}
 
+		public int? NumberOfPassengersStandingLowerDeck
+		{
+			get { return 0; }
+		}
+		public int? NumberOfPassengersStandingUpperDeck
+		{
+			get { return 0; }
+		}
+
 		public virtual CubicMeter CargoVolume {
 			get { return 0.SI<CubicMeter>(); }
 		}

@@ -707,8 +707,10 @@ namespace TUGraz.VectoCore.Tests.XML
 			Assert.AreEqual(null, vehicleData.AirdragModifiedMultistage);
 			Assert.AreEqual(TankSystem.Liquefied, vehicleData.TankSystem);
 			Assert.AreEqual(RegistrationClass.B, vehicleData.RegisteredClass);
-			Assert.AreEqual(30, vehicleData.NumberOfPassengersLowerDeck);
-			Assert.AreEqual(24, vehicleData.NumberOfPassengersUpperDeck);
+			Assert.AreEqual(24, vehicleData.NumberOfPassengersLowerDeck);
+			Assert.AreEqual(30, vehicleData.NumberOfPassengersUpperDeck);
+			Assert.AreEqual(7, vehicleData.NumberOfPassengersStandingLowerDeck);
+			Assert.AreEqual(4, vehicleData.NumberOfPassengersStandingUpperDeck);
 			Assert.AreEqual(VehicleCode.CA, vehicleData.VehicleCode);
 			Assert.AreEqual(true, vehicleData.LowEntry);
 			Assert.AreEqual(2.5.SI<Meter>(), vehicleData.Height);

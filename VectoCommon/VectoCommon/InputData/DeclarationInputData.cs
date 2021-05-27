@@ -175,6 +175,10 @@ namespace TUGraz.VectoCommon.InputData
 
 		int? NumberOfPassengersLowerDeck { get; }
 
+		int? NumberOfPassengersStandingLowerDeck { get; }
+
+		int? NumberOfPassengersStandingUpperDeck { get; }
+
 		// only used for medium lorries type VAN
 		CubicMeter CargoVolume { get; }
 

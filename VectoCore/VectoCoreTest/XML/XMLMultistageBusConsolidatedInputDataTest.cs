@@ -61,8 +61,10 @@ namespace TUGraz.VectoCore.Tests.XML
 			Assert.AreEqual(null, vehicle.AirdragModifiedMultistage);
 			Assert.AreEqual(TankSystem.Liquefied, vehicle.TankSystem);//NgTankSystem
 			Assert.AreEqual(RegistrationClass.B, vehicle.RegisteredClass);//ClassBus
-			Assert.AreEqual(10, vehicle.NumberOfPassengersLowerDeck);
-			Assert.AreEqual(30, vehicle.NumberOfPassengersUpperDeck);
+			Assert.AreEqual(11, vehicle.NumberOfPassengersLowerDeck);
+			Assert.AreEqual(31, vehicle.NumberOfPassengersUpperDeck);
+			Assert.AreEqual(3, vehicle.NumberOfPassengersStandingLowerDeck);
+			Assert.AreEqual(1, vehicle.NumberOfPassengersStandingUpperDeck);
 			Assert.AreEqual(VehicleCode.CB, vehicle.VehicleCode);
 			Assert.AreEqual(true, vehicle.LowEntry);
 			Assert.AreEqual(3, vehicle.Height.Value());//HeightIntegratedBody
@@ -134,6 +136,8 @@ namespace TUGraz.VectoCore.Tests.XML
 			Assert.AreEqual(null, vehicle.RegisteredClass);//ClassBus
 			Assert.AreEqual(null, vehicle.NumberOfPassengersLowerDeck);
 			Assert.AreEqual(null, vehicle.NumberOfPassengersUpperDeck);
+			Assert.AreEqual(null, vehicle.NumberOfPassengersStandingLowerDeck);
+			Assert.AreEqual(null, vehicle.NumberOfPassengersStandingUpperDeck);
 			Assert.AreEqual(null, vehicle.VehicleCode);
 			Assert.AreEqual(null, vehicle.LowEntry);
 			Assert.AreEqual(null, vehicle.Height);//HeightIntegratedBody
@@ -167,8 +171,10 @@ namespace TUGraz.VectoCore.Tests.XML
 			Assert.AreEqual(null, vehicle.AirdragModifiedMultistage);
 			Assert.AreEqual(TankSystem.Compressed, vehicle.TankSystem);//NgTankSystem
 			Assert.AreEqual(null, vehicle.RegisteredClass);//ClassBus
-			Assert.AreEqual(10, vehicle.NumberOfPassengersLowerDeck);
+			Assert.AreEqual(12, vehicle.NumberOfPassengersLowerDeck);
+			Assert.AreEqual(5, vehicle.NumberOfPassengersStandingLowerDeck);
 			Assert.AreEqual(30, vehicle.NumberOfPassengersUpperDeck);
+			Assert.AreEqual(4, vehicle.NumberOfPassengersStandingUpperDeck);
 			Assert.AreEqual(VehicleCode.CB, vehicle.VehicleCode);
 			Assert.AreEqual(true, vehicle.LowEntry);
 			Assert.AreEqual(3, vehicle.Height.Value());//HeightIntegratedBody

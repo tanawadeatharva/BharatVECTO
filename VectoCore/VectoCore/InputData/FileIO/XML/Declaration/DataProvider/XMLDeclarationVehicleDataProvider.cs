@@ -293,6 +293,15 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 			get { return 0; }
 		}
 
+		public virtual int? NumberOfPassengersStandingLowerDeck
+		{
+			get { return 0; }
+		}
+		public virtual int? NumberOfPassengersStandingUpperDeck
+		{
+			get { return 0; }
+		}
+
 		public virtual CubicMeter CargoVolume
 		{
 			get { return 0.SI<CubicMeter>(); }
@@ -1064,6 +1073,9 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		public LegislativeClass? LegislativeClass { get; }
 		public int? NumberOfPassengersUpperDeck { get; }
 		public int? NumberOfPassengersLowerDeck { get; }
+		public int? NumberOfPassengersStandingLowerDeck { get; }
+		public int? NumberOfPassengersStandingUpperDeck { get; }
+
 		public CubicMeter CargoVolume
 		{
 			get { return 0.SI<CubicMeter>(); }
@@ -1221,9 +1233,9 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		{
 			get
 			{
-				if (!ElementExists(XMLNames.Bus_NumberPassengersLowerDeck))
+				if (!ElementExists(XMLNames.Bus_NumberPassengerSeatsLowerDeck))
 					return null;
-				var node = GetNode(XMLNames.Bus_NumberPassengersLowerDeck);
+				var node = GetNode(XMLNames.Bus_NumberPassengerSeatsLowerDeck);
 				return XmlConvert.ToInt32(node.InnerText);
 			}
 		}
@@ -1232,12 +1244,36 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		{
 			get
 			{
-				if (!ElementExists(XMLNames.Bus_NumberPassengersUpperDeck))
+				if (!ElementExists(XMLNames.Bus_NumberPassengerSeatsUpperDeck))
 					return null;
-				var node = GetNode(XMLNames.Bus_NumberPassengersUpperDeck);
+				var node = GetNode(XMLNames.Bus_NumberPassengerSeatsUpperDeck);
 				return XmlConvert.ToInt32(node.InnerText);
 			}
 		}
+
+		public override int? NumberOfPassengersStandingLowerDeck
+		{
+			get
+			{
+				if (!ElementExists(XMLNames.Bus_NumberPassengersStandingLowerDeck))
+					return null;
+				var node = GetNode(XMLNames.Bus_NumberPassengersStandingLowerDeck);
+				return XmlConvert.ToInt32(node.InnerText);
+			}
+		}
+
+		public override int? NumberOfPassengersStandingUpperDeck
+		{
+			get
+			{
+				if (!ElementExists(XMLNames.Bus_NumberPassengersStandingUpperDeck))
+					return null;
+				var node = GetNode(XMLNames.Bus_NumberPassengersStandingUpperDeck);
+				return XmlConvert.ToInt32(node.InnerText);
+			}
+		}
+
+
 
 		public override VehicleCode? VehicleCode
 		{
