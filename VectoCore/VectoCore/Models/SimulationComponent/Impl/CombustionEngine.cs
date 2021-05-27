@@ -657,7 +657,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			public bool EngineOn { get; set; }
 
-			public Watt AuxPowerEngineOff { get; set; }
+			//public Watt AuxPowerEngineOff { get; set; }
 		}
 
 		protected internal class CombustionEngineIdleController : LoggingObject, IIdleController

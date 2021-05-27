@@ -119,42 +119,76 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			AdditionalAux?.Initialize(torque, angularSpeed);
 			DCDCConverter?.Initialize();
 			PreviousState.PowerDemand = GetBusAuxPowerDemand(0.SI<Second>(), 1.SI<Second>(), torque, angularSpeed) +
-										(AdditionalAux?.PowerDemandEngineOn(0.SI<Second>(), 1.SI<Second>(), angularSpeed) ?? 0.SI<Watt>());
+										(AdditionalAux?.PowerDemandESSEngineOn(0.SI<Second>(), 1.SI<Second>(), angularSpeed) ?? 0.SI<Watt>());
 			return PreviousState.PowerDemand / angularSpeed;
 		}
 
 
-		public NewtonMeter TorqueDemand(Second absTime, Second dt, NewtonMeter torquePowerTrain, PerSecond angularSpeed, bool dryRun = false)
+		public virtual NewtonMeter TorqueDemand(Second absTime, Second dt, NewtonMeter torquePowerTrain, PerSecond angularSpeed, bool dryRun = false)
 		{
 			CurrentState.AngularSpeed = angularSpeed;
 			CurrentState.dt = dt;
 
 			var signals = Auxiliaries.Signals;
 			// trick bus auxiliaries that ice is on - all auxiliaries are considered. ESS is corrected in post-processing
-			signals.EngineStopped = false; 
-			signals.VehicleStopped = false; 
+			signals.EngineStopped = !DataBus.EngineCtl.CombustionEngineOn; //false;
+			signals.InNeutral = !DataBus.EngineCtl.CombustionEngineOn;																		   
+			signals.VehicleStopped = DataBus.VehicleInfo.VehicleStopped; // false; 
 
 			CurrentState.PowerDemand = GetBusAuxPowerDemand(absTime, dt, torquePowerTrain, angularSpeed, dryRun) +
-										(AdditionalAux?.PowerDemandEngineOn(0.SI<Second>(), 1.SI<Second>(), angularSpeed) ?? 0.SI<Watt>());
+										(AdditionalAux?.PowerDemandESSEngineOn(0.SI<Second>(), 1.SI<Second>(), angularSpeed) ?? 0.SI<Watt>());
 
 			var avgAngularSpeed = (CurrentState.AngularSpeed + PreviousState.AngularSpeed) / 2.0;
 			return CurrentState.PowerDemand / avgAngularSpeed;
 		}
 
-		public Watt PowerDemandEngineOn(Second time, Second simulationInterval, PerSecond engineSpeed)
+		public virtual Watt PowerDemandESSEngineOn(Second time, Second simulationInterval, PerSecond engineSpeed)
 		{
 			var signals = Auxiliaries.Signals;
-			signals.EngineStopped = false; 
-			signals.VehicleStopped = false;
+			signals.EngineStopped = false;
+			signals.VehicleStopped = DataBus.VehicleInfo.VehicleStopped;
+
+			var busAuxPwrICEOn = GetBusAuxPowerDemand(time, simulationInterval, 0.SI<NewtonMeter>(), engineSpeed, true);
+			var esICEOnLoad = Auxiliaries.ElectricPowerConsumerSum;
+
+			signals.EngineStopped = true;
+			var busAuxPwrICEOff = GetBusAuxPowerDemand(time, simulationInterval, 0.SI<NewtonMeter>(), engineSpeed, true);
+			var esICEOffLoad = Auxiliaries.ElectricPowerConsumerSum;
+
+			// if busAuxPwrICEOn and busAuxPwrICEOff are different the battery is empty and the mechanical power is the difference
+			// if both are equal we need to add the difference between ES ICE On and ES ICE Off power demand (the latter is corrected by ES correction) 
+
+			var esSupplyNotFromICE = AuxCfg.ElectricalUserInputsConfig.AlternatorType == AlternatorType.None ||
+									(AuxCfg.ElectricalUserInputsConfig.ConnectESToREESS);
+
+			var esMech = (busAuxPwrICEOn - busAuxPwrICEOff).IsEqual(0) && !esSupplyNotFromICE
+				? (esICEOnLoad - esICEOffLoad) / AuxCfg.ElectricalUserInputsConfig.AlternatorGearEfficiency /
+				AuxCfg.ElectricalUserInputsConfig.AlternatorMap.GetEfficiency(0.RPMtoRad(), 0.SI<Ampere>())
+				: 0.SI<Watt>();
+
+			return busAuxPwrICEOff - Auxiliaries.PSPowerDemandAirGenerated + esMech - Auxiliaries.ElectricPowerDemandMech + (busAuxPwrICEOn - busAuxPwrICEOff) +
+					(AdditionalAux?.PowerDemandESSEngineOn(0.SI<Second>(), 1.SI<Second>(), engineSpeed) ??
+					0.SI<Watt>());
+		}
+
+		protected virtual Watt ComputePowerDemand(Second time, Second simulationInterval, PerSecond engineSpeed, bool includeESBaseLoad = true)
+		{
+			var signals = Auxiliaries.Signals;
+			//signals.EngineStopped = true;
+			//signals.VehicleStopped = DataBus.VehicleInfo.VehicleStopped;
+			var esBaseLoad = Auxiliaries.ElectricPowerConsumerSum;
+
+			//signals.EngineStopped = false; 
+			//signals.VehicleStopped = false;
 			var retVal =  GetBusAuxPowerDemand(time, simulationInterval, 0.SI<NewtonMeter>(), engineSpeed, true) +
-						(AdditionalAux?.PowerDemandEngineOn(0.SI<Second>(), 1.SI<Second>(), engineSpeed) ?? 0.SI<Watt>());
+						(AdditionalAux?.PowerDemandESSEngineOn(0.SI<Second>(), 1.SI<Second>(), engineSpeed) ?? 0.SI<Watt>());
 
 			if (!SmartElectricSystem) {
 				return retVal;
 			}
 
 			//var batteryPwr = ElectricStorage.SOC * AuxCfg.ElectricalUserInputsConfig.ElectricStorageCapacity / simulationInterval;
-			var esSum = Auxiliaries.ElectricPowerConsumerSum;
+			var esSum = Auxiliaries.ElectricPowerConsumerSum - esBaseLoad;
 			//if (batteryPwr < esSum) {
 				retVal += (esSum ) / AuxCfg.ElectricalUserInputsConfig.AlternatorGearEfficiency /
 						AuxCfg.ElectricalUserInputsConfig.AlternatorMap.GetEfficiency(0.RPMtoRad(), 0.SI<Ampere>());
@@ -163,40 +197,34 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			return retVal;
 		}
 
-		public Watt PowerDemandEngineOff(Second absTime, Second dt)
+		public virtual Watt PowerDemandESSEngineOff(Second absTime, Second dt)
 		{
 			
-			CurrentState.AngularSpeed = DataBus.EngineInfo.EngineIdleSpeed;
-			CurrentState.dt = dt;
+			//CurrentState.AngularSpeed = DataBus.EngineInfo.EngineIdleSpeed;
+			//CurrentState.dt = dt;
 
 			var signals = Auxiliaries.Signals;
 
-			//// set internal state of power demand as if ICE is on - multiplied by (1-ESS_UF) 
-			//signals.EngineStopped = false;
-			//signals.VehicleStopped = false;
-
-			//// get busaux PowerDemand without additional Auxiliaries first.
-			//var conventionalAux = AdditionalAux;
-			//AdditionalAux = null;
 			signals.EngineStopped = !DataBus.EngineCtl.CombustionEngineOn;
+			signals.InNeutral = !DataBus.EngineCtl.CombustionEngineOn;
 			signals.VehicleStopped = DataBus.VehicleInfo.VehicleStopped;
 
 			var busAuxPowerDemand  = GetBusAuxPowerDemand(
-				absTime, dt, 0.SI<NewtonMeter>(), DataBus.EngineInfo.EngineIdleSpeed);
-			//AdditionalAux = conventionalAux;
+				absTime, dt, 0.SI<NewtonMeter>(), DataBus.EngineInfo.EngineIdleSpeed, true) - Auxiliaries.ElectricPowerDemandMech;
+            //AdditionalAux = conventionalAux;
 
-			CurrentState.PowerDemand = ((AdditionalAux?.PowerDemandEngineOn(absTime, dt, DataBus.EngineInfo.EngineIdleSpeed) ?? 0.SI<Watt>()) +
-										busAuxPowerDemand) * (1 - EngineStopStartUtilityFactor);
-			//CurrentState.ESPowerGeneratedICE_On = Auxiliaries.ElectricPowerGenerated;
-			//CurrentState.ESPowerMech = Auxiliaries.ElectricPowerDemandMech;
-			// 
-			
+            CurrentState.PowerDemand = ((AdditionalAux?.PowerDemandESSEngineOn(absTime, dt, DataBus.EngineInfo.EngineIdleSpeed) ?? 0.SI<Watt>()) +
+                                        busAuxPowerDemand) * (1 - EngineStopStartUtilityFactor);
+            //CurrentState.ESPowerGeneratedICE_On = Auxiliaries.ElectricPowerGenerated;
+            //CurrentState.ESPowerMech = Auxiliaries.ElectricPowerDemandMech;
+            // 
 
-			//busAuxPowerDemand = GetBusAuxPowerDemand(
-			//	absTime, dt, 0.SI<NewtonMeter>(), DataBus.EngineInfo.EngineIdleSpeed);
-			//AdditionalAux = conventionalAux;
 
-			return EngineStopStartUtilityFactor * (busAuxPowerDemand + (AdditionalAux?.PowerDemandEngineOff(absTime, dt) ?? 0.SI<Watt>()));
+            //busAuxPowerDemand = GetBusAuxPowerDemand(
+            //	absTime, dt, 0.SI<NewtonMeter>(), DataBus.EngineInfo.EngineIdleSpeed);
+            //AdditionalAux = conventionalAux;
+
+            return EngineStopStartUtilityFactor * (busAuxPowerDemand - Auxiliaries.PSPowerDemandAirGenerated + (AdditionalAux?.PowerDemandESSEngineOff(absTime, dt) ?? 0.SI<Watt>()));
 		}
 
 
@@ -210,13 +238,14 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				essUtilityFactor = 1 - EngineStopStartUtilityFactor;
 			}
 
-			//var signals = Auxiliaries.Signals;
-			//signals.EngineStopped = !DataBus.IgnitionOn;
-			//signals.VehicleStopped = DataBus.VehicleStopped;
+            var signals = Auxiliaries.Signals;
+            signals.EngineStopped = !DataBus.EngineCtl.CombustionEngineOn;
+			signals.InNeutral = !DataBus.EngineCtl.CombustionEngineOn;
+            signals.VehicleStopped = DataBus.VehicleInfo.VehicleStopped;
 
-			// cycleStep has to be called here and not in DoCommit, write is called before Commit!
-			//var oldSOC = Auxiliaries.BatterySOC;
-			Auxiliaries.CycleStep(CurrentState.dt, DataBus.EngineCtl.CombustionEngineOn ? 1.0 : EngineStopStartUtilityFactor);
+            // cycleStep has to be called here and not in DoCommit, write is called before Commit!
+            //var oldSOC = Auxiliaries.BatterySOC;
+            Auxiliaries.CycleStep(CurrentState.dt, DataBus.EngineCtl.CombustionEngineOn ? 1.0 : EngineStopStartUtilityFactor);
 			//var newSOC = Auxiliaries.BatterySOC;
 
 			//CurrentState.TotalFuelConsumption = Auxiliaries.TotalFuel;
@@ -236,12 +265,14 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				container[ModalResultField.P_busAux_ES_generated] = Auxiliaries.ElectricPowerGenerated;
 				if (SmartElectricSystem) {
 					container[ModalResultField.BatterySOC] = ElectricStorage.SOC * 100.0;
+					container[ModalResultField.P_busAux_bat] = ElectricStorage.ConsumedEnergy / dt;
 				}
 			} else {
 				if (SmartElectricSystem) {
 					var batteryPwr = ElectricStorage.ConsumedEnergy / dt;
 
 					container[ModalResultField.BatterySOC] = ElectricStorage.SOC * 100.0;
+					container[ModalResultField.P_busAux_bat] = ElectricStorage.ConsumedEnergy / dt;
 
 					container[ModalResultField.P_busAux_ES_generated] = essUtilityFactor *
 																		(DataBus.VehicleInfo.VehicleStopped &&
@@ -249,7 +280,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 																			? Auxiliaries.ElectricPowerConsumerSum
 																			: Auxiliaries.ElectricPowerGenerated);
 					container[ModalResultField.P_busAux_ES_sum_mech] =
-						essUtilityFactor * (Auxiliaries.ElectricPowerConsumerSum - batteryPwr) /
+						essUtilityFactor * (Auxiliaries.ElectricPowerConsumerSum + batteryPwr) /
 						AuxCfg.ElectricalUserInputsConfig.AlternatorGearEfficiency /
 						AuxCfg.ElectricalUserInputsConfig.AlternatorMap.GetEfficiency(0.RPMtoRad(), 0.SI<Ampere>());
 
@@ -315,7 +346,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			
 			signals.ExcessiveDragPower = CurrentState.ExcessiveDragPower;
 			signals.Idle = DataBus.VehicleInfo.VehicleStopped;
-			signals.InNeutral = DataBus.GearboxInfo.Gear.Gear == 0;
+			signals.InNeutral = DataBus.GearboxInfo.Gear.Gear == 0 || !DataBus.EngineCtl.CombustionEngineOn;
 
 
 
