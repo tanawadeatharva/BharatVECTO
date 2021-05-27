@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Windows.Data;
 using VECTO3GUI2020.ViewModel.Implementation;
@@ -15,6 +16,7 @@ namespace VECTO3GUI2020.ViewModel
 		private object _messageLock = new Object();
 		private ObservableCollection<MessageEntry> _messages = new ObservableCollection<MessageEntry>();
 		private int _progress;
+		private string _statusMessage;
 
 		public ObservableCollection<MessageEntry> Messages
 		{
@@ -24,10 +26,16 @@ namespace VECTO3GUI2020.ViewModel
 			}
 		}
 
-		public int Progress
+		public double SumProgress
 		{
-			get => _progress;
-			set => SetProperty(ref _progress, value);
+			get => _sumProgress;
+			set => SetProperty(ref _sumProgress, value);
+		}
+
+		public string StatusMessage
+		{
+			get { return _statusMessage; }
+			set { SetProperty(ref _statusMessage, value); }
 		}
 
 
@@ -36,14 +44,19 @@ namespace VECTO3GUI2020.ViewModel
 			BindingOperations.EnableCollectionSynchronization(Messages, _messageLock );
 		}
 
+		public void SetProgress(double sumProgress, IList<double> subProgress)
+		{
+			SumProgress = sumProgress;
 
+			SubProgress = subProgress;
 
-	}
+		}
 
 	public interface IOutputViewModel : IMainViewModel
 	{
 		ObservableCollection<MessageEntry> Messages { get; }
 
 		int Progress { get; set; }
+		string StatusMessage { get; set; }
 	}
 }

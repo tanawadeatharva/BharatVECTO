@@ -61,6 +61,7 @@ namespace VECTO3GUI2020.ViewModel.Implementation
 			_actualModalData = _settings.ActualModalData;
 			_serializeVectoRunData = _settings.SerializeVectoRunData;
 			_dialogHelper = dialogHelper;
+			_defaultOutputPath = _settings.DefaultOutputPath;
 		}
 
 		private ICommand _closeWindowCommand;

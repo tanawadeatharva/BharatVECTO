@@ -5,8 +5,9 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:VECTO3GUI2020.Views"
              xmlns:impl="clr-namespace:VECTO3GUI2020.ViewModel.Implementation"
+             xmlns:viewModel="clr-namespace:VECTO3GUI2020.ViewModel"
              mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="800">
+             d:DesignHeight="450" d:DesignWidth="800" d:DataContext="{d:DesignData Type=viewModel:IOutputViewModel}">
     <Grid>
         <DockPanel>
             <ProgressBar DockPanel.Dock="Top" Minimum="0" Maximum="100" Value="{Binding Progress}"></ProgressBar>
@@ -14,13 +15,18 @@
                       IsReadOnly="True" HeadersVisibility="All"  RowHeaderWidth="5" Name="MessageList">
 
             <DataGrid.Columns>
-                    <DataGridTextColumn Header="Message" Binding="{Binding Message}" Width="*">
-                        <DataGridTextColumn.ElementStyle>
-                            <Style>
-                                <Setter Property="TextBlock.TextWrapping" Value="Wrap" />
-                            </Style>
-                        </DataGridTextColumn.ElementStyle>
-                    </DataGridTextColumn>
+                    <DataGridTemplateColumn Header="Message" Width="*">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <StackPanel>
+                                    <TextBlock Text="{Binding Message}" Visibility="{Binding Message, Converter={StaticResource NullToVisibilityConverter}}"
+                                               TextWrapping="Wrap"/>
+                                    <TextBlock Text="{Binding Link}" Visibility="{Binding Message, Converter={StaticResource NullToVisibilityConverter}}"
+                                               TextWrapping="Wrap"/>
+                                </StackPanel>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
                     <DataGridTextColumn Header="Time" Binding="{Binding Time}" Width="130" />
                 </DataGrid.Columns>
             <DataGrid.RowStyle>
@@ -63,6 +69,7 @@
                 </Style>
             </DataGrid.CellStyle>
         </DataGrid>
+            <StatusBar DockPanel.Dock="Bottom" VerticalAlignment="Bottom"><TextBlock Text="{Binding StatusMessage}"/></StatusBar>
         </DockPanel>
     </Grid>
 </UserControl>

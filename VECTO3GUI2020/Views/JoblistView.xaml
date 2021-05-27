@@ -89,18 +89,18 @@
                     <Button x:Name="button3" Margin="4" HorizontalAlignment="Stretch" 
                         Style="{StaticResource MultiStageButtonStyle1}"
                         Command="{Binding AddJobAsyncCommand}" Background="#FFDDDDDD">
-                        OpenFile</Button>
+                        Add Job</Button>
                     <Button x:Name="button4" Margin ="4" HorizontalAlignment="Stretch" 
                         Style="{StaticResource MultiStageButtonStyle1}"
                         Command="{Binding EditJob}"
-                        CommandParameter="{Binding ElementName=JobDataGrid, Path=SelectedItem}">EditFile</Button>
+                        CommandParameter="{Binding ElementName=JobDataGrid, Path=SelectedItem}">Edit Job</Button>
                     <Button x:Name="button5" Margin="4" HorizontalAlignment="Stretch"
                         Style="{StaticResource MultiStageButtonStyle1}"
-                        Command="{Binding NewManufacturingStageFile}" AutomationProperties.AutomationId="JobListViewNewManufacturingStageFileButton">New Multistage File</Button>
+                        Command="{Binding NewManufacturingStageFile}" AutomationProperties.AutomationId="JobListViewNewManufacturingStageFileButton">New Multistage Job</Button>
                     <Button x:Name="button6" Margin="4" HorizontalAlignment="Stretch" 
                         Style="{StaticResource MultiStageButtonStyle1}"
                         Command="{Binding RemoveJob}"
-                        CommandParameter="{Binding ElementName=JobDataGrid, Path=SelectedItem}">DeleteFile</Button>
+                        CommandParameter="{Binding ElementName=JobDataGrid, Path=SelectedItem}">Remove Job</Button>
                 </StackPanel>
             </Border>
         </Grid>
