@@ -157,11 +157,21 @@ namespace VECTO3GUI2020.ViewModel.Implementation
 		{
 			cancellationTokenSource = new CancellationTokenSource();
 			SimulationRunning = true;
-			await RunSimulationAsync(cancellationTokenSource.Token,
-				new Progress<MessageEntry>((message) => { _outputViewModel.Messages.Add(message); }),
-				new Progress<int>((i) => _outputViewModel.Progress = i));
+			try {
+				await Task.Run(() => {
+					return RunSimulationAsync(cancellationTokenSource.Token,
+						new Progress<MessageEntry>((message) => { _outputViewModel.Messages.Add(message); }),
+						new Progress<int>((i) => _outputViewModel.SumProgress = i));
+				});
+			} catch (Exception e) {
+				_outputViewModel.Messages.Add(new MessageEntry() {
+					Message = e.Message,
+					Type = MessageType.ErrorMessage,
+				});
+			}
+
 			SimulationRunning = false;
-			_outputViewModel.Progress = 0;
+			_outputViewModel.SumProgress = 0;
 			cancellationTokenSource.Dispose();
         }
 
@@ -175,8 +185,7 @@ namespace VECTO3GUI2020.ViewModel.Implementation
 			//		return;
 			//	}
 			//}
-
-
+			
 
 			IDocumentViewModel[] jobs;
 			lock (_jobsLock) {
@@ -187,6 +196,7 @@ namespace VECTO3GUI2020.ViewModel.Implementation
                         Time = DateTime.Now,
                         Type = MessageType.InfoMessage,
 					});
+					
 				}
 			}
 
@@ -298,24 +308,37 @@ namespace VECTO3GUI2020.ViewModel.Implementation
 						SerializeVectoRunData = Settings.Default.SerializeVectoRunData,
 						
 					};
+
+					var stopwatch = new Stopwatch();
+					stopwatch.Start();
 					foreach (var runId in jobContainer.AddRuns(runsFactory))
 					{
+						if (ct.IsCancellationRequested) {
+							outputMessages.Report(new MessageEntry()
+							{
+								Message = "Simulation canceled",
+								Type = MessageType.StatusMessage,
+							});
+							return;
+						}
 						fileWriters.Add(runId, fileWriter);
 					}
+					stopwatch.Stop();
+
 
 					// TODO MQ-20200525: Remove the following loop in production (or after evaluation of LAC!!
 
-					/*
-					if (!string.IsNullOrWhiteSpace(LookAheadMinSpeedOverride))
-					{
-						foreach (var run in jobContainer.Runs)
-						{
-							var tmpDriver = ((VectoRun)run.Run).GetContainer().RunData.DriverData;
-							tmpDriver.LookAheadCoasting.Enabled = true;
-							tmpDriver.LookAheadCoasting.MinSpeed = LookAheadMinSpeedOverride.ToDouble().KMPHtoMeterPerSecond();
-						}
-					}
-					*/
+					
+					//if (!string.IsNullOrWhiteSpace(LookAheadMinSpeedOverride))
+					//{
+					//	foreach (var run in jobContainer.Runs)
+					//	{
+					//		var tmpDriver = ((VectoRun)run.Run).GetContainer().RunData.DriverData;
+					//		tmpDriver.LookAheadCoasting.Enabled = true;
+					//		tmpDriver.LookAheadCoasting.MinSpeed = LookAheadMinSpeedOverride.ToDouble().KMPHtoMeterPerSecond();
+					//	}
+					//}
+					
 
 					outputMessages.Report(
 						new MessageEntry()
@@ -359,12 +382,17 @@ namespace VECTO3GUI2020.ViewModel.Implementation
 				if (ct.IsCancellationRequested)
 				{
 					jobContainer.Cancel();
+					outputMessages.Report(new MessageEntry() {
+						Message = "Simulation canceled",
+						Type = MessageType.StatusMessage,
+					});
 					return;
 				}
 
 				var jobProgress = jobContainer.GetProgress();
 				var sumProgress = jobProgress.Sum(x => x.Value.Progress);
 				var duration = start.Elapsed.TotalSeconds;
+				jobProgress.Select(x => x.Value.Progress);
 
 				progress.Report(Convert.ToInt32(sumProgress * 100 / jobProgress.Count));
 				//outputMessages.Report(
@@ -379,7 +407,7 @@ namespace VECTO3GUI2020.ViewModel.Implementation
 					.ToDictionary(x => x.Key, x => x.Value);
 				//PrintRuns(justFinished, fileWriters);
 				finishedRuns.AddRange(justFinished.Select(x => x.Key));
-				await Task.Delay(100);
+				await Task.Delay(100, ct);
 			}
 			start.Stop();
 
@@ -446,9 +474,44 @@ namespace VECTO3GUI2020.ViewModel.Implementation
 				Type = MessageType.StatusMessage,
 				Message = string.Format("Simulation finished in {0:F1}s", start.Elapsed.TotalSeconds)
 			});
-
-
 		}
+		private void PrintRuns(Dictionary<int, JobContainer.ProgressEntry> progress, Dictionary<int, FileOutputWriter> fileWriters, IProgress<MessageEntry> outputMessages)
+		{ 
+			foreach (var p in progress) {
+				var modFilename = fileWriters[p.Key]
+					.GetModDataFileName(p.Value.RunName, p.Value.CycleName, p.Value.RunSuffix);
+				var runName = string.Format("{0} {1} {2}", p.Value.RunName, p.Value.CycleName, p.Value.RunSuffix);
+
+			//	if (p.Value.Error != null)
+			//	{
+			//		SimulationWorker.ReportProgress(0, new VectoSimulationProgress()
+			//		{
+			//			Type = VectoSimulationProgress.MsgType.StatusMessage,
+			//			Message = string.Format("Finished Run {0} with ERROR: {1}", runName,
+			//				p.Value.Error.Message),
+			//			Link = "<CSV>" + modFilename
+			//		});
+			//	}
+			//	else
+			//	{
+			//		SimulationWorker.ReportProgress(0, new VectoSimulationProgress()
+			//		{
+			//			Type = VectoSimulationProgress.MsgType.StatusMessage,
+			//			Message = string.Format("Finished run {0} successfully.", runName)
+			//		});
+			//	}
+			//	if (File.Exists(modFilename))
+			//	{
+			//		SimulationWorker.ReportProgress(0, new VectoSimulationProgress()
+			//		{
+			//			Type = VectoSimulationProgress.MsgType.StatusMessage,
+			//			Message = string.Format("Run {0}: Modal results written to {1}", runName, modFilename),
+			//			Link = "<CSV>" + modFilename
+			//		});
+			//	}
+			}
+		}
+
 
 		private string GetOutputDirectory(string jobFilePath)
 		{
@@ -480,7 +543,13 @@ namespace VECTO3GUI2020.ViewModel.Implementation
 		{
 			get
 			{
-				return _cancelSimulationCommand ?? new RelayCommand(() => { cancellationTokenSource.Cancel(); },
+				return _cancelSimulationCommand ?? new RelayCommand(() => {
+						_outputViewModel.Messages.Add(new MessageEntry() {
+							Message="Canceling Simulation",
+							Type=MessageType.StatusMessage,
+						});
+						cancellationTokenSource.Cancel();
+					},
 					() => SimulationRunning);
 			}            
 		}
