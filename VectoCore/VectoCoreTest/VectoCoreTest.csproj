@@ -1178,9 +1178,6 @@
     <None Include="TestData\Hybrids\GenericVehicle_Group5_P3_APT\Hybrid_Parameters.vhctl">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="TestData\Hybrids\GenericVehicle_Group5_P3_APT\LongHaul.vdri">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
     <None Include="TestData\Hybrids\GenericVehicle_Group5_P3_APT\MaxCurrent.vimax">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
@@ -1200,9 +1197,6 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="TestData\Hybrids\GenericVehicle_Group5_P3_APT\P3 APT Group 5_noESS.vecto">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="TestData\Hybrids\GenericVehicle_Group5_P3_APT\RegionalDelivery.vdri">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="TestData\Hybrids\GenericVehicle_Group5_P3_APT\ShiftParameters.vtcu">
