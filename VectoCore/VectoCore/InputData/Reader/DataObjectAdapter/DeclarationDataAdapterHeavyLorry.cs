@@ -425,7 +425,6 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 					retVal.TorqueConverterData.CertificationNumber = torqueConverter.CertificationNumber;
 					retVal.TorqueConverterData.Date = torqueConverter.Date;
 					retVal.TorqueConverterData.AppVersion = torqueConverter.AppVersion;
-					retVal.TorqueConverterData.TCData = torqueConverter.TCData;
 				}
 			}
 

@@ -583,6 +583,15 @@ namespace TUGraz.VectoCommon.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to ChassisConfiguration.
+        /// </summary>
+        public static string Bus_ChassisConfiguration {
+            get {
+                return ResourceManager.GetString("Bus_ChassisConfiguration", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to CompressorRatio.
         /// </summary>
         public static string Bus_CompressorRatio {

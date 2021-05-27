@@ -22,6 +22,7 @@ using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Resources;
+using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore;
 using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.InputData.FileIO.JSON;
@@ -157,36 +158,21 @@ namespace VECTO3GUI2020.ViewModel.Implementation
 		{
 			cancellationTokenSource = new CancellationTokenSource();
 			SimulationRunning = true;
-			try {
-				await Task.Run(() => {
-					return RunSimulationAsync(cancellationTokenSource.Token,
-						new Progress<MessageEntry>((message) => { _outputViewModel.Messages.Add(message); }),
-						new Progress<int>((i) => _outputViewModel.SumProgress = i));
-				});
-			} catch (Exception e) {
-				_outputViewModel.Messages.Add(new MessageEntry() {
-					Message = e.Message,
-					Type = MessageType.ErrorMessage,
-				});
-			}
-
+			await Task.Run(() => RunSimulationAsync(cancellationTokenSource.Token,
+				new Progress<MessageEntry>((message) => { _outputViewModel.Messages.Add(message); }),
+				new Progress<int>((i) => _outputViewModel.Progress = i),
+				new Progress<string>((msg) => _outputViewModel.StatusMessage = msg)));
 			SimulationRunning = false;
 			_outputViewModel.SumProgress = 0;
 			cancellationTokenSource.Dispose();
         }
 
-		private async Task RunSimulationAsync(CancellationToken ct, IProgress<MessageEntry> outputMessages, IProgress<int> progress)
+		private async Task RunSimulationAsync(CancellationToken ct, IProgress<MessageEntry> outputMessages,
+			IProgress<int> progress, IProgress<string> status)
 		{
             progress.Report(0);
-			//for (int i = 0; i <= 100; i++) {
-			//	await Task.Delay(100);
-			//	progress.Report(i);
-			//	if (ct.IsCancellationRequested) {
-			//		return;
-			//	}
-			//}
+			status.Report("starting...");
 			
-
 			IDocumentViewModel[] jobs;
 			lock (_jobsLock) {
 				jobs = Jobs.Where(x => x.Selected).ToArray();
@@ -196,31 +182,20 @@ namespace VECTO3GUI2020.ViewModel.Implementation
                         Time = DateTime.Now,
                         Type = MessageType.InfoMessage,
 					});
-					
+					status.Report("No jobs selected");
+					return;
 				}
 			}
 
-            //TODO add output path to settings
-			var outputPath = Settings.Default.DefaultFilePath;
-			
-			var sumFileWriter = new FileOutputWriter(outputPath);
-
-
-
+			var sumFileWriter = new FileOutputWriter(GetOutputDirectory(Jobs.First(x => x.Selected).DataSource.SourceFile));
 			var sumContainer = new SummaryDataContainer(sumFileWriter);
 			var jobContainer = new JobContainer(sumContainer);
-
-
-
 			var mode = ExecutionMode.Declaration;
 
 			var fileWriters = new Dictionary<int, FileOutputWriter>();
 			var finishedRuns = new List<int>();
 
 			var xmlReader = _inputDataReader;
-
-			
-
 
 			foreach (var jobEntry in jobs) {
 				try
@@ -395,15 +370,10 @@ namespace VECTO3GUI2020.ViewModel.Implementation
 				jobProgress.Select(x => x.Value.Progress);
 
 				progress.Report(Convert.ToInt32(sumProgress * 100 / jobProgress.Count));
-				//outputMessages.Report(
-				//	new MessageEntry()
-				//	{
-				//		Type = VectoSimulationProgress.MsgType.Progress,
-				//		Message = string.Format(
-				//			"Duration: {0:F1}s, Curernt Progress: {1:P} ({2})", duration, sumProgress / progress.Count,
-				//			string.Join(", ", progress.Select(x => string.Format("{0,4:P}", x.Value.Progress))))
-				//	});
-				var justFinished = jobProgress.Where(x => x.Value.Done & !finishedRuns.Contains(x.Key))
+				status.Report(string.Format(
+					"Duration: {0:F1}s, Current Progress: {1:P} ({2})", duration, sumProgress / jobProgress.Count,
+					string.Join(", ", jobProgress.Select(x => string.Format("{0,4:P}", x.Value.Progress)))));
+                var justFinished = jobProgress.Where(x => x.Value.Done & !finishedRuns.Contains(x.Key))
 					.ToDictionary(x => x.Key, x => x.Value);
 				//PrintRuns(justFinished, fileWriters);
 				finishedRuns.AddRange(justFinished.Select(x => x.Key));
@@ -516,21 +486,17 @@ namespace VECTO3GUI2020.ViewModel.Implementation
 		private string GetOutputDirectory(string jobFilePath)
 		{
 			var outFile = jobFilePath;
-			var OutputDirectory = Settings.Default.DefaultFilePath;
-			if (!string.IsNullOrWhiteSpace(OutputDirectory))
-			{
-				if (Path.IsPathRooted(OutputDirectory))
-				{
-					outFile = Path.Combine(OutputDirectory, Path.GetFileName(jobFilePath) ?? "");
-				}
-				else
-				{
-					outFile = Path.Combine(Path.GetDirectoryName(jobFilePath) ?? "", OutputDirectory, Path.GetFileName(jobFilePath) ?? "");
-				}
-				if (!Directory.Exists(Path.GetDirectoryName(outFile)))
-				{
-					Directory.CreateDirectory(Path.GetDirectoryName(outFile));
-				}
+			var outputDirectory = Settings.Default.DefaultOutputPath;
+			if (string.IsNullOrWhiteSpace(outputDirectory)) {
+				return outFile;
+			}
+
+			outFile = Path.IsPathRooted(outputDirectory)
+				? Path.Combine(outputDirectory, Path.GetFileName(jobFilePath) ?? "")
+				: Path.Combine(Path.GetDirectoryName(jobFilePath) ?? "", outputDirectory,
+					Path.GetFileName(jobFilePath) ?? "");
+			if (!Directory.Exists(Path.GetDirectoryName(outFile))) {
+				Directory.CreateDirectory(Path.GetDirectoryName(outFile));
 			}
 
 			return outFile;

@@ -17,19 +17,20 @@ namespace VECTO3GUI2020.ViewModel.Implementation
         private Settings _settings;
 
         private ICommand _changePath;
-
+		private ICommand _changeOutPath;
 
 		private IDialogHelper _dialogHelper;
 
 
-		private String _defaultFilePath;
+		private string _defaultFilePath;
+		private string _defaultOutputPath;
 		private bool _writeModalResults;
 		private bool _modalResults1Hz;
 		private bool _validate;
 		private bool _actualModalData;
 		private bool _serializeVectoRunData;
 
-		public String DefaultFilePath
+		public string DefaultFilePath
         {
             get => _defaultFilePath;
             set
@@ -40,7 +41,14 @@ namespace VECTO3GUI2020.ViewModel.Implementation
             }
         }
 
-
+		public string DefaultOutputPath {
+			get => _defaultOutputPath;
+			set {
+				_settings.DefaultOutputPath = value;
+				_settings.Save();
+				SetProperty(ref _defaultOutputPath, value, "DefaultOutputPath");
+			}
+		}
 
 		public SettingsViewModel(IDialogHelper dialogHelper)
 		{
@@ -53,9 +61,11 @@ namespace VECTO3GUI2020.ViewModel.Implementation
 			_actualModalData = _settings.ActualModalData;
 			_serializeVectoRunData = _settings.SerializeVectoRunData;
 			_dialogHelper = dialogHelper;
+			_defaultOutputPath = _settings.DefaultOutputPath;
 		}
 
 		private ICommand _closeWindowCommand;
+
 		public ICommand CloseWindowCommand
 		{
 			get
@@ -100,6 +110,21 @@ namespace VECTO3GUI2020.ViewModel.Implementation
                 OnPropertyChanged();
             }
         }
+
+		public ICommand ChangeOutputPath {
+			get {
+				return _changeOutPath ?? new RelayCommand(() => {
+					var new_path = _dialogHelper.OpenFolderDialog(DefaultFilePath);
+					if (new_path != null) {
+						DefaultOutputPath = new_path;
+					}
+				}, () => { return true; });
+			}
+			private set {
+				_changeOutPath = value;
+				OnPropertyChanged();
+			}
+		}
 
 		public bool SerializeVectoRunData
 		{
@@ -167,5 +192,7 @@ namespace VECTO3GUI2020.ViewModel.Implementation
 				}
 			}
 		}
+
+
 	}
 }

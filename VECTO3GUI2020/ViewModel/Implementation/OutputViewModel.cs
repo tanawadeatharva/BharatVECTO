@@ -15,8 +15,8 @@ namespace VECTO3GUI2020.ViewModel
 	{
 		private object _messageLock = new Object();
 		private ObservableCollection<MessageEntry> _messages = new ObservableCollection<MessageEntry>();
-		private double _sumProgress;
-		private IList<double> _subProgress;
+		private int _progress;
+		private string _statusMessage;
 
 		public ObservableCollection<MessageEntry> Messages
 		{
@@ -30,6 +30,12 @@ namespace VECTO3GUI2020.ViewModel
 		{
 			get => _sumProgress;
 			set => SetProperty(ref _sumProgress, value);
+		}
+
+		public string StatusMessage
+		{
+			get { return _statusMessage; }
+			set { SetProperty(ref _statusMessage, value); }
 		}
 
 
@@ -46,17 +52,11 @@ namespace VECTO3GUI2020.ViewModel
 
 		}
 
-		public IList<double> SubProgress
-		{
-			get => _subProgress;
-			set => SetProperty(ref _subProgress, value);
-		}
-	}
-
 	public interface IOutputViewModel : IMainViewModel
 	{
 		ObservableCollection<MessageEntry> Messages { get; }
 
-		double SumProgress { get; set; }
+		int Progress { get; set; }
+		string StatusMessage { get; set; }
 	}
 }

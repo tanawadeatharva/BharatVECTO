@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<tns:VectoInputDeclaration schemaVersion="2.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.1" xmlns:tns="urn:tugraz:ivt:VectoAPI:DeclarationInput:v2.0" xmlns:v2.6="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:DEV:v2.6" xmlns:v2.1="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.1" xmlns:v2.0="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0" xmlns:di="http://www.w3.org/2000/09/xmldsig#" xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:DeclarationJob V:\VectoCore\VectoCore\Resources\XSD/VectoDeclarationJob.xsd">
+<tns:VectoInputDeclaration schemaVersion="2.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.1" xmlns:tns="urn:tugraz:ivt:VectoAPI:DeclarationInput:v2.0" xmlns:v2.6="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:DEV:v2.6" xmlns:v2.1="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.1" xmlns:v2.0="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0" 
+xmlns:v2.3="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:DEV:v2.3" 
+xmlns:di="http://www.w3.org/2000/09/xmldsig#" xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:DeclarationJob V:\VectoCore\VectoCore\Resources\XSD/VectoDeclarationJob.xsd">
 	<v2.0:Vehicle id="VEH-1234567890" xsi:type="PrimaryVehicleDeclarationType" xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:DEV:v2.6">
 		<Manufacturer>Generic Truck Manufacturer</Manufacturer>
 		<ManufacturerAddress>Street, ZIP City</ManufacturerAddress>
@@ -13,14 +15,15 @@
 		<IdlingSpeed>600</IdlingSpeed>
 		<RetarderType>Transmission Output Retarder</RetarderType>
 		<RetarderRatio>1.000</RetarderRatio>
-		<AngledriveType>None</AngledriveType>
+		<AngledriveType>Separate Angledrive</AngledriveType>
 		<ZeroEmissionVehicle>false</ZeroEmissionVehicle>
-		<v2.6:ADAS xsi:type="v2.1:AdvancedDriverAssistantSystemsType" xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.1">
-			<EngineStopStart>false</EngineStopStart>
-			<EcoRollWithoutEngineStop>false</EcoRollWithoutEngineStop>
-			<EcoRollWithEngineStop>false</EcoRollWithEngineStop>
-			<PredictiveCruiseControl>none</PredictiveCruiseControl>
-		</v2.6:ADAS>
+		<ADAS xsi:type="v2.3:AdvancedDriverAssistantSystemsType">
+			<v2.3:EngineStopStart>true</v2.3:EngineStopStart>
+			<v2.3:EcoRollWithoutEngineStop>false</v2.3:EcoRollWithoutEngineStop>
+			<v2.3:EcoRollWithEngineStop>true</v2.3:EcoRollWithEngineStop>
+			<v2.3:PredictiveCruiseControl>1,2,3</v2.3:PredictiveCruiseControl>
+			<v2.3:APTEcoRollReleaseLockupClutch>false</v2.3:APTEcoRollReleaseLockupClutch>
+		</ADAS>
 		<v2.6:TorqueLimits xsi:type="TorqueLimitsType" xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0">
 			<Entry gear="6" maxTorque="1800"/>
 			<Entry gear="1" maxTorque="2500"/>
@@ -191,8 +194,8 @@
 					<CertificationNumber>e12*0815/8051*2017/05E0000*00</CertificationNumber>
 					<Date>2017-01-11T11:00:00Z</Date>
 					<AppVersion>3.0.1</AppVersion>
-					<TransmissionType>AMT</TransmissionType>
-					<MainCertificationMethod>Standard values</MainCertificationMethod>
+					<TransmissionType>APT-S</TransmissionType>
+					<MainCertificationMethod>Option 1</MainCertificationMethod>
 					<Gears xsi:type="GearsDeclarationType">
 						<Gear number="1">
 							<Ratio>14.930</Ratio>
@@ -2591,7 +2594,7 @@
 					<CertificationNumber>e12*0815/8051*2017/05E0000*00</CertificationNumber>
 					<Date>2017-02-15T11:00:00Z</Date>
 					<AppVersion>TC CalcApp 123</AppVersion>
-					<CertificationMethod>Standard values</CertificationMethod>
+					<CertificationMethod>Measured</CertificationMethod>
 					<Characteristics>
 						<Entry speedRatio="0.0000" torqueRatio="1.00" inputTorqueRef="300.00"/>
 						<Entry speedRatio="0.5000" torqueRatio="1.00" inputTorqueRef="200.00"/>
@@ -2613,7 +2616,7 @@
 					<Date>2017-01-11T11:00:00Z</Date>
 					<AppVersion>3.0.1</AppVersion>
 					<Ratio>2.345</Ratio>
-					<CertificationMethod>Standard values</CertificationMethod>
+					<CertificationMethod>Option 1</CertificationMethod>
 					<TorqueLossMap>
 						<Entry inputSpeed="0.00" inputTorque="-10000.00" torqueLoss="100.00"/>
 						<Entry inputSpeed="1000.00" inputTorque="-1000.00" torqueLoss="100.00"/>
@@ -2689,7 +2692,7 @@
 					<AppVersion>3.0.1</AppVersion>
 					<LineType>Single portal axle</LineType>
 					<Ratio>2.590</Ratio>
-					<CertificationMethod>Standard values</CertificationMethod>
+					<CertificationMethod>Measured</CertificationMethod>
 					<TorqueLossMap>
 						<Entry inputSpeed="0.00" inputTorque="-5000.00" torqueLoss="115.00"/>
 						<Entry inputSpeed="0.00" inputTorque="-4000.00" torqueLoss="100.00"/>

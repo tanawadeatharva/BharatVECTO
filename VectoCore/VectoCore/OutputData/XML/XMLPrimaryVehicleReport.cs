@@ -118,7 +118,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 				new XElement(tns + XMLNames.Vehicle_VIN, modelData.VehicleData.VIN),
 				new XElement(tns + XMLNames.Component_Date, XmlConvert.ToString(modelData.VehicleData.Date, XmlDateTimeSerializationMode.Utc)),
 				new XElement(tns + XMLNames.Bus_LegislativeCategory, modelData.VehicleData.LegislativeClass.ToXMLFormat()),
-				new XElement(tns + "ChassisConfiguration", modelData.VehicleData.VehicleCategory.ToXMLFormat()),
+				new XElement(tns + XMLNames.Bus_ChassisConfiguration, modelData.VehicleData.VehicleCategory.ToXMLFormat()),
 				new XElement(tns + XMLNames.Vehicle_AxleConfiguration, modelData.VehicleData.AxleConfiguration.GetName()),
 				new XElement(tns + XMLNames.Vehicle_Articulated, modelData.VehicleData.InputData.Articulated),
 				new XElement(tns + XMLNames.TPMLM, modelData.VehicleData.InputData.GrossVehicleMassRating.ToXMLFormat(0)),
@@ -195,29 +195,8 @@ namespace TUGraz.VectoCore.OutputData.XML
 				new XElement(tns + XMLNames.Report_DataWrap,
 					new XAttribute(xsi + "type", "TorqueConverterDataPIFType"),
 					GetCommonDescription(torqueConverter),
-					new XElement(tns + XMLNames.Component_AppVersion, torqueConverter.AppVersion), 
-					new XElement(tns + XMLNames.TorqueConverter_Characteristics,
-						GetTorqueConverterCharacteristics(torqueConverter.TCData))
+					new XElement(tns + XMLNames.Component_AppVersion, torqueConverter.AppVersion)
 				));
-		}
-
-		private List<XElement> GetTorqueConverterCharacteristics(DataTable tcData)
-		{
-			var characteristics = new List<XElement>();
-
-			foreach (DataRow row in tcData.Rows) {
-				var elementEntry = new XElement(tns + XMLNames.TorqueConverter_Characteristics_Entry,
-					new XAttribute(XMLNames.TorqueConverterData_SpeedRatio_Attr,
-						row[TorqueConverterDataReader.Fields.SpeedRatio].ToString()),
-					new XAttribute(XMLNames.TorqueConverterData_TorqueRatio_Attr,
-						row[TorqueConverterDataReader.Fields.TorqueRatio].ToString()),
-					new XAttribute(XMLNames.TorqueConverterDataMapping_InputTorqueRef_Attr,
-						row[TorqueConverterDataReader.Fields.CharacteristicTorque].ToString())
-				); 
-				characteristics.Add(elementEntry);
-			}
-
-			return characteristics;
 		}
 		
 		protected virtual XElement GetAxleWheelsDescription(VectoRunData modeldData)
