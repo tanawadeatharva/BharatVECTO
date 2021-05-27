@@ -112,8 +112,12 @@ namespace TUGraz.VectoCore.Tests.XML
 			Assert.AreEqual(BusHVACSystemConfiguration.Configuration0, hvacAux.SystemConfiguration);
 			Assert.AreEqual(HeatPumpType.none, hvacAux.HeatPumpTypeDriverCompartment);
 			Assert.AreEqual(HeatPumpMode.heating, hvacAux.HeatPumpModeDriverCompartment);
-			Assert.AreEqual(HeatPumpType.non_R_744_2_stage, hvacAux.HeatPumpTypePassengerCompartment);
-			Assert.AreEqual(HeatPumpMode.cooling, hvacAux.HeatPumpModePassengerCompartment);
+			Assert.AreEqual(2, hvacAux.HeatPumpTypePassengerCompartments.Count);
+			Assert.AreEqual(2, hvacAux.HeatPumpModePassengerCompartments.Count);
+			Assert.AreEqual(HeatPumpType.non_R_744_2_stage, hvacAux.HeatPumpTypePassengerCompartments[0]);
+			Assert.AreEqual(HeatPumpMode.cooling, hvacAux.HeatPumpModePassengerCompartments[0]);
+			Assert.AreEqual(HeatPumpType.non_R_744_3_stage, hvacAux.HeatPumpTypePassengerCompartments[1]);
+			Assert.AreEqual(HeatPumpMode.heating, hvacAux.HeatPumpModePassengerCompartments[1]);
 			Assert.AreEqual(50, hvacAux.AuxHeaterPower.Value());
 			Assert.AreEqual(false, hvacAux.DoubleGlazing);
 			Assert.AreEqual(true, hvacAux.AdjustableAuxiliaryHeater);

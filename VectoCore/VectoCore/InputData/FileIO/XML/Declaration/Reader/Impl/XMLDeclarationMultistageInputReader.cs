@@ -1215,19 +1215,20 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 			}
 		}
 
-		public HeatPumpType? HeatPumpTypePassengerCompartment
+		public IList<HeatPumpType> HeatPumpTypePassengerCompartments
 		{
 			get
 			{
-				return GetHVACBusAuxPropertyValue<HeatPumpType?>(nameof(HeatPumpTypePassengerCompartment));
+				return GetHVACBusAuxPropertyValue<IList<HeatPumpType>>(nameof(HeatPumpTypePassengerCompartments));
+
 			}
 		}
 
-		public HeatPumpMode? HeatPumpModePassengerCompartment
+		public IList<HeatPumpMode> HeatPumpModePassengerCompartments
 		{
 			get
 			{
-				return GetHVACBusAuxPropertyValue<HeatPumpMode?>(nameof(HeatPumpModePassengerCompartment));
+				return GetHVACBusAuxPropertyValue<IList<HeatPumpMode>>(nameof(HeatPumpModePassengerCompartments));
 			}
 		}
 
@@ -1310,28 +1311,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 		{
 			return SystemConfiguration != null && SystemConfiguration != BusHVACSystemConfiguration.Unknown;
 		}
-
-		private bool IsCorrectDriverPumpTypeDriverPumpMode()
-		{
-			if (HeatPumpModeDriverCompartment == null)
-				return false;
-
-			if (HeatPumpTypeDriverCompartment == HeatPumpType.none)
-				return HeatPumpModeDriverCompartment == null || HeatPumpModeDriverCompartment == HeatPumpMode.N_A;
-			
-			return HeatPumpTypeDriverCompartment != null && HeatPumpModeDriverCompartment != null;
-		}
-
-		private bool IsCorrectPassengerPumpTypeDriverPumpMode()
-		{
-			if (HeatPumpTypePassengerCompartment == null)
-				return false;
-			if (HeatPumpTypePassengerCompartment == HeatPumpType.none)
-				return HeatPumpModePassengerCompartment == null || HeatPumpModePassengerCompartment == HeatPumpMode.N_A;
-
-			return HeatPumpTypePassengerCompartment != null && HeatPumpModePassengerCompartment != null;
-		}
-
+		
 		private bool RequiredParametersForJobType(VectoSimulationJobType jobType)
 		{
 			switch (jobType) {
@@ -1349,8 +1329,6 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 		public override bool IsInputDataComplete(VectoSimulationJobType jobType)
 		{
 			return InputComplete(IsCorrectSystemConfiguration(), nameof(IsCorrectSystemConfiguration))
-					&& InputComplete(IsCorrectDriverPumpTypeDriverPumpMode(), nameof(IsCorrectDriverPumpTypeDriverPumpMode))
-					&& InputComplete(IsCorrectPassengerPumpTypeDriverPumpMode(), nameof(IsCorrectPassengerPumpTypeDriverPumpMode))
 					&& InputComplete(AuxHeaterPower, nameof(AuxHeaterPower))
 					&& InputComplete(DoubleGlazing, nameof(DoubleGlazing))
 					&& InputComplete(AdjustableAuxiliaryHeater, nameof(AdjustableAuxiliaryHeater))

@@ -714,8 +714,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
         public virtual BusHVACSystemConfiguration? SystemConfiguration { get; set; }
 		public virtual HeatPumpType? HeatPumpTypeDriverCompartment { get { return null; } }
 		public virtual HeatPumpMode? HeatPumpModeDriverCompartment { get { return null; } }
-		public virtual HeatPumpType? HeatPumpTypePassengerCompartment { get{ return null; } }
-		public virtual HeatPumpMode? HeatPumpModePassengerCompartment { get { return null; } }
+		public virtual IList<HeatPumpType> HeatPumpTypePassengerCompartments { get { return null; } }
+		public virtual IList<HeatPumpMode> HeatPumpModePassengerCompartments { get { return null; } }
 		public virtual Watt AuxHeaterPower { get { return null; } }
         public virtual bool? DoubleGlazing { get { return false; } }
 		public virtual bool HeatPump { get { return false; } }

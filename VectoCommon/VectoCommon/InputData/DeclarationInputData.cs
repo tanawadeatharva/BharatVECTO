@@ -896,9 +896,8 @@ namespace TUGraz.VectoCommon.InputData
 		
 		HeatPumpMode? HeatPumpModeDriverCompartment { get; }
 
-		HeatPumpType? HeatPumpTypePassengerCompartment { get; }
-		
-		HeatPumpMode? HeatPumpModePassengerCompartment { get; }
+		IList<HeatPumpType> HeatPumpTypePassengerCompartments { get; }
+		IList<HeatPumpMode> HeatPumpModePassengerCompartments { get; }
 
 		Watt AuxHeaterPower { get; }
 
