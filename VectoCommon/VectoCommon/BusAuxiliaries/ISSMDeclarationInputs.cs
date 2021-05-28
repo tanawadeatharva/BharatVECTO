@@ -232,11 +232,11 @@ namespace TUGraz.VectoCommon.BusAuxiliaries
 				case NON_R_744_3_STAGE: return HeatPumpType.non_R_744_3_stage;
 				case NON_R_744_4_STAGE: return HeatPumpType.non_R_744_4_stage;
 				case NON_R_744_CONTINUOUS: return HeatPumpType.non_R_744_continuous;
-                // to support old input parametersd
+				// to support old input parametersd
 				case "2-stage": return HeatPumpType.non_R_744_2_stage;
-                case "3-stage": return HeatPumpType.non_R_744_3_stage;
-                case "4-stage": return HeatPumpType.non_R_744_4_stage;
-                default: throw new InvalidEnumArgumentException("HeatPumpType");
+				case "3-stage": return HeatPumpType.non_R_744_3_stage;
+				case "4-stage": return HeatPumpType.non_R_744_4_stage;
+				default: throw new InvalidEnumArgumentException("HeatPumpType");
 			}
 		}
 
@@ -261,44 +261,44 @@ namespace TUGraz.VectoCommon.BusAuxiliaries
 			return GetLabel(type as HeatPumpType?);
 		}
 
-        public static string GetName(this HeatPumpType type)
-        {
-            return type.ToString();
-        }
+		public static string GetName(this HeatPumpType type)
+		{
+			return type.ToString();
+		}
 
-        public static bool IsElectrical(this HeatPumpType type)
-        {
-            return type == HeatPumpType.R_744 || type == HeatPumpType.non_R_744_continuous;
-        }
+		public static bool IsElectrical(this HeatPumpType type)
+		{
+			return type == HeatPumpType.R_744 || type == HeatPumpType.non_R_744_continuous;
+		}
 
-        public static bool IsMechanical(this HeatPumpType type)
-        {
-            return !type.IsElectrical();
-        }
+		public static bool IsMechanical(this HeatPumpType type)
+		{
+			return !type.IsElectrical();
+		}
 
-        public static double COP(this HeatPumpType type, FloorType floortype)
-        {
-            var cop = 3.5;
+		public static double COP(this HeatPumpType type, FloorType floortype)
+		{
+			var cop = 3.5;
 
-            switch (type) {
-                case HeatPumpType.none:
-                //case HeatPumpType.Unknown:
-                    return 0;
-                case HeatPumpType.non_R_744_2_stage:
-                    return cop;
-                case HeatPumpType.non_R_744_3_stage:
-                case HeatPumpType.non_R_744_4_stage:
-                    return cop * 1.02;
-                case HeatPumpType.non_R_744_continuous:
+			switch (type) {
+				case HeatPumpType.none:
+				//case HeatPumpType.Unknown:
+					return 0;
+				case HeatPumpType.non_R_744_2_stage:
+					return cop;
+				case HeatPumpType.non_R_744_3_stage:
+				case HeatPumpType.non_R_744_4_stage:
+					return cop * 1.02;
+				case HeatPumpType.non_R_744_continuous:
 				case HeatPumpType.R_744:
-                    return floortype == FloorType.LowFloor
-                        ? cop * 1.04
-                        : cop * 1.06;
-                default:
-                    throw new ArgumentOutOfRangeException();
-            }
-        }
-    }
+					return floortype == FloorType.LowFloor
+						? cop * 1.04
+						: cop * 1.06;
+				default:
+					throw new ArgumentOutOfRangeException();
+			}
+		}
+	}
 
 	public enum HeatPumpMode
 	{
@@ -320,7 +320,7 @@ namespace TUGraz.VectoCommon.BusAuxiliaries
 		private const string COOLING = "cooling";
 		private const string N_A = "N.A.";
 
-		public static HeatPumpMode? Parse(string parse)
+		public static HeatPumpMode Parse(string parse)
 		{
 			switch (parse)
 			{
@@ -328,7 +328,7 @@ namespace TUGraz.VectoCommon.BusAuxiliaries
 				case HEATING_AND_COOLING: return HeatPumpMode.heating_and_cooling;
 				case COOLING: return HeatPumpMode.cooling;
 				case N_A: return HeatPumpMode.N_A;
-				default: return null;
+				default: throw new InvalidEnumArgumentException("HeatPumpMode"); 
 			}
 		}
 

@@ -447,11 +447,9 @@ namespace TUGraz.VectoCore.OutputData.XML
 
 			if (hvac.SystemConfiguration == null &&
 				hvac.HeatPumpModeDriverCompartment == null && hvac.HeatPumpTypeDriverCompartment == null &&
-				hvac.HeatPumpModePassengerCompartments?.Any() != true && hvac.HeatPumpTypePassengerCompartments?.Any() != true &&
-				hvac.AuxHeaterPower == null && hvac.DoubleGlazing == null && hvac.AdjustableAuxiliaryHeater == null &&
-				hvac.SeparateAirDistributionDucts == null && hvac.WaterElectricHeater == null &&
-				hvac.AirElectricHeater == null &&
-				hvac.OtherHeatingTechnology == null)
+				hvac.HeatPumpPassengerCompartments?.Any() != true && hvac.AuxHeaterPower == null && hvac.DoubleGlazing == null && 
+				hvac.AdjustableAuxiliaryHeater == null && hvac.SeparateAirDistributionDucts == null &&
+				hvac.WaterElectricHeater == null && hvac.AirElectricHeater == null && hvac.OtherHeatingTechnology == null)
 				return null;
 
 			return new XElement(v28 + XMLNames.BusAux_HVAC,
@@ -461,7 +459,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 					? new XElement(v28 + XMLNames.Bus_HeatPumpTypeDriver, hvac.HeatPumpTypeDriverCompartment.GetLabel()) : null,
 				hvac.HeatPumpModeDriverCompartment != null
 					? new XElement(v28 + XMLNames.Bus_HeatPumpModeDriver, hvac.HeatPumpModeDriverCompartment.GetLabel()) : null,
-				GetHeatPumpPassengerCompartments(hvac.HeatPumpTypePassengerCompartments, hvac.HeatPumpModePassengerCompartments),
+				GetHeatPumpPassengerCompartments(hvac.HeatPumpPassengerCompartments),
 				hvac.AuxHeaterPower != null
 					? new XElement(v28 + XMLNames.Bus_AuxiliaryHeaterPower, hvac.AuxHeaterPower.ToXMLFormat(0)) : null,
 				hvac.DoubleGlazing != null
@@ -479,19 +477,16 @@ namespace TUGraz.VectoCore.OutputData.XML
 			);
 		}
 		
-		private IList<XElement> GetHeatPumpPassengerCompartments(IList<HeatPumpType> pumpTypes, IList<HeatPumpMode> pumpModes)
+		private IList<XElement> GetHeatPumpPassengerCompartments(IList<Tuple<HeatPumpType,HeatPumpMode>> heatPumps)
 		{
-			if (pumpTypes?.Any() != true || pumpModes?.Any() != true)
+			if (heatPumps?.Any() != true)
 				return null;
-
-			if (pumpTypes.Count != pumpModes.Count)
-				return null;
-
+			
 			var result = new List<XElement>();
 
-			for (int i = 0; i < pumpTypes.Count; i++) {
-				result.Add(new XElement(v28 + XMLNames.Bus_HeatPumpTypePassenger, pumpTypes[i].GetLabel()));
-				result.Add(new XElement(v28 + XMLNames.Bus_HeatPumpModePassenger, pumpModes[i].GetLabel()));
+			for (int i = 0; i < heatPumps.Count; i++) {
+				result.Add(new XElement(v28 + XMLNames.Bus_HeatPumpTypePassenger, heatPumps[i].Item1.GetLabel()));
+				result.Add(new XElement(v28 + XMLNames.Bus_HeatPumpModePassenger, heatPumps[i].Item2.GetLabel()));
 			}
 
 			return result;

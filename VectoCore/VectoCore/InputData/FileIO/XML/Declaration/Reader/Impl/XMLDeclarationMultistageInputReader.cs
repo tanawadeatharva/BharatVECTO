@@ -1215,20 +1215,12 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 			}
 		}
 
-		public IList<HeatPumpType> HeatPumpTypePassengerCompartments
+		public IList<Tuple<HeatPumpType, HeatPumpMode>> HeatPumpPassengerCompartments
 		{
 			get
 			{
-				return GetHVACBusAuxPropertyValue<IList<HeatPumpType>>(nameof(HeatPumpTypePassengerCompartments));
-
-			}
-		}
-
-		public IList<HeatPumpMode> HeatPumpModePassengerCompartments
-		{
-			get
-			{
-				return GetHVACBusAuxPropertyValue<IList<HeatPumpMode>>(nameof(HeatPumpModePassengerCompartments));
+				return GetHVACBusAuxPropertyValue<IList<Tuple<HeatPumpType, HeatPumpMode>>>(
+					nameof(HeatPumpPassengerCompartments));
 			}
 		}
 

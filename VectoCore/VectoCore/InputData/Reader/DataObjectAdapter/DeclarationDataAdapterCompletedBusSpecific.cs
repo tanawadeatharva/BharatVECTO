@@ -210,8 +210,8 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			if (busAux.HeatPumpTypeDriverCompartment == null) {
 				throw new VectoException("HeatPumpTypeDriverCompartment input parameter is required");
 			}
-			if (busAux.HeatPumpTypePassengerCompartments == null) {
-				throw new VectoException("HeatPumpTypePassengerCompartment input parameter is required");
+			if (busAux.HeatPumpPassengerCompartments == null) {
+				throw new VectoException("HeatPumpPassengerCompartments input parameter is required");
 			}
 			if (busAux.HeatPumpModeDriverCompartment == null || (busAux.HeatPumpTypeDriverCompartment != HeatPumpType.none && busAux.HeatPumpModeDriverCompartment.Value == HeatPumpMode.N_A)) {
 				throw new VectoException("HeatPumpTypeDriverCompartment input parameter is required");
