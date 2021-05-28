@@ -357,6 +357,15 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 		
 		public abstract string GetInvalidEntry();
 
+		protected bool MethodComplete(bool result, string methodName)
+		{
+			if (result)
+				return true;
+
+			InvalidEntry = methodName;
+			return false;
+		}
+
 		protected bool InputComplete<T>(T value, string variableName)
 		{
 			if (value != null)
@@ -678,8 +687,11 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 					checkAirdragModified = true;
 					continue;
 				}
-				if (checkAirdragModified && manufacturingStage.Vehicle?.AirdragModifiedMultistage == null) 
+
+				if (checkAirdragModified && manufacturingStage.Vehicle?.AirdragModifiedMultistage == null) {
 					validAirdragEntries = false;
+					break;
+				}
 			}
 
 			return validAirdragEntries;
@@ -694,8 +706,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 					&& InputComplete(LegislativeClass, nameof(LegislativeClass)) 
 					&& InputComplete(CurbMassChassis, nameof(CurbMassChassis)) 
 					&& InputComplete(GrossVehicleMassRating, nameof(GrossVehicleMassRating))
-					&& InputComplete(IsAirdragEntriesValid(), nameof(IsAirdragEntriesValid)) 
-					&& InputComplete(IsTankSystemValid(), nameof(IsTankSystemValid))
+					&& MethodComplete(IsAirdragEntriesValid(), nameof(IsAirdragEntriesValid)) 
+					&& MethodComplete(IsTankSystemValid(), nameof(IsTankSystemValid))
 					&& InputComplete(RegisteredClass, nameof(RegisteredClass))
 					&& InputComplete(NumberPassengerSeatsLowerDeck, nameof(NumberPassengerSeatsLowerDeck))
 					&& InputComplete(NumberPassengerSeatsUpperDeck, nameof(NumberPassengerSeatsUpperDeck))
@@ -1219,8 +1231,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 		{
 			get
 			{
-				return GetHVACBusAuxPropertyValue<IList<Tuple<HeatPumpType, HeatPumpMode>>>(
-					nameof(HeatPumpPassengerCompartments));
+				return GetHeatPumpPassengerCompartments();
 			}
 		}
 
@@ -1285,6 +1296,16 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 		public bool EngineWasteGasHeatExchanger { get; }
 
 
+		private IList<Tuple<HeatPumpType, HeatPumpMode>> GetHeatPumpPassengerCompartments()
+		{
+			if (_manufacturingStages?.Any() != true)
+				return null;
+
+			return _manufacturingStages?.First()?.Vehicle?.Components?.BusAuxiliaries?.HVACAux
+				?.HeatPumpPassengerCompartments;
+		}
+
+
 		private T GetHVACBusAuxPropertyValue<T>(string propertyName)
 		{
 			foreach (var manufacturingStage in _manufacturingStages) {
@@ -1320,12 +1341,12 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 		
 		public override bool IsInputDataComplete(VectoSimulationJobType jobType)
 		{
-			return InputComplete(IsCorrectSystemConfiguration(), nameof(IsCorrectSystemConfiguration))
+			return MethodComplete(IsCorrectSystemConfiguration(), nameof(IsCorrectSystemConfiguration))
 					&& InputComplete(AuxHeaterPower, nameof(AuxHeaterPower))
 					&& InputComplete(DoubleGlazing, nameof(DoubleGlazing))
 					&& InputComplete(AdjustableAuxiliaryHeater, nameof(AdjustableAuxiliaryHeater))
 					&& InputComplete(SeparateAirDistributionDucts, nameof(SeparateAirDistributionDucts))
-					&& InputComplete(RequiredParametersForJobType(jobType), nameof(RequiredParametersForJobType));
+					&& MethodComplete(RequiredParametersForJobType(jobType), nameof(RequiredParametersForJobType));
 		}
 
 		public override string GetInvalidEntry()
