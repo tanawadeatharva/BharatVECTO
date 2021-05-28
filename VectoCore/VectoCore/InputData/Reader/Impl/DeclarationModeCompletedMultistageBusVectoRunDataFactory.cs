@@ -205,14 +205,14 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 		protected virtual Segment GetCompletedSegment(IVehicleDeclarationInputData vehicle, AxleConfiguration axleConfiguration)
 		{
 			var segment = DeclarationData.CompletedBusSegments.Lookup(
-				axleConfiguration.NumAxles(), vehicle.VehicleCode, vehicle.RegisteredClass, vehicle.NumberOfPassengersLowerDeck,
+				axleConfiguration.NumAxles(), vehicle.VehicleCode, vehicle.RegisteredClass, vehicle.NumberPassengerSeatsLowerDeck,
 				vehicle.Height, vehicle.LowEntry);
 			if (!segment.Found)
 			{
 				throw new VectoException(
 					"no segment found for vehicle configruation: vehicle category: {0}, axle configuration: {1}, articulated: {2}, vehicle code: {3}, registered class: {4}, passengersLowerDeck: {5}, height: {6}, lowEntry: {7}. completed",
 					vehicle.VehicleCategory, axleConfiguration,
-					vehicle.Articulated, vehicle.VehicleCode, vehicle.RegisteredClass.GetLabel(), vehicle.NumberOfPassengersLowerDeck,
+					vehicle.Articulated, vehicle.VehicleCode, vehicle.RegisteredClass.GetLabel(), vehicle.NumberPassengerSeatsLowerDeck,
 					vehicle.Height, vehicle.LowEntry);
 			}
 

@@ -857,10 +857,10 @@ end Property
 	End Property
 
 	Public ReadOnly Property RegisteredClass As RegistrationClass? Implements IVehicleDeclarationInputData.RegisteredClass
-	Public ReadOnly Property NumberOfPassengersUpperDeck As Integer? Implements IVehicleDeclarationInputData.NumberOfPassengersUpperDeck
-	Public ReadOnly Property NumberOfPassengersLowerDeck As Integer? Implements IVehicleDeclarationInputData.NumberOfPassengersLowerDeck
-	Public ReadOnly Property NumberOfPassengersStandingLowerDeck As Integer? Implements IVehicleDeclarationInputData.NumberOfPassengersStandingLowerDeck
-	Public ReadOnly Property NumberOfPassengersStandingUpperDeck As Integer? Implements IVehicleDeclarationInputData.NumberOfPassengersStandingUpperDeck
+	Public ReadOnly Property NumberPassengerSeatsUpperDeck As Integer? Implements IVehicleDeclarationInputData.NumberPassengerSeatsUpperDeck
+	Public ReadOnly Property NumberPassengerSeatsLowerDeck As Integer? Implements IVehicleDeclarationInputData.NumberPassengerSeatsLowerDeck
+	Public ReadOnly Property NumberPassengersStandingLowerDeck As Integer? Implements IVehicleDeclarationInputData.NumberPassengersStandingLowerDeck
+	Public ReadOnly Property NumberPassengersStandingUpperDeck As Integer? Implements IVehicleDeclarationInputData.NumberPassengersStandingUpperDeck
 	Public ReadOnly Property CargoVolume As CubicMeter Implements IVehicleDeclarationInputData.CargoVolume
 	Public ReadOnly Property VehicleCode As VehicleCode? Implements IVehicleDeclarationInputData.VehicleCode
 	Public ReadOnly Property LowEntry As Boolean? Implements IVehicleDeclarationInputData.LowEntry

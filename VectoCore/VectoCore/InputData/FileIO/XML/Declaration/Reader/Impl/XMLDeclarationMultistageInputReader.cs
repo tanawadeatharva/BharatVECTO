@@ -515,24 +515,24 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 		}
 
 
-		public int? NumberOfPassengersUpperDeck
+		public int? NumberPassengerSeatsUpperDeck
 		{
-			get { return GetVehiclePropertyValue<int?>(nameof(NumberOfPassengersUpperDeck)); }
+			get { return GetVehiclePropertyValue<int?>(nameof(NumberPassengerSeatsUpperDeck)); }
 		}
 
-		public int? NumberOfPassengersLowerDeck
+		public int? NumberPassengerSeatsLowerDeck
 		{
-			get { return GetVehiclePropertyValue<int?>(nameof(NumberOfPassengersLowerDeck)); }
+			get { return GetVehiclePropertyValue<int?>(nameof(NumberPassengerSeatsLowerDeck)); }
 		}
 
-		public int? NumberOfPassengersStandingLowerDeck
+		public int? NumberPassengersStandingLowerDeck
 		{
-			get { return GetVehiclePropertyValue<int?>(nameof(NumberOfPassengersStandingLowerDeck)); }
+			get { return GetVehiclePropertyValue<int?>(nameof(NumberPassengersStandingLowerDeck)); }
 		}
 
-		public int? NumberOfPassengersStandingUpperDeck
+		public int? NumberPassengersStandingUpperDeck
 		{
-			get { return GetVehiclePropertyValue<int?>(nameof(NumberOfPassengersStandingUpperDeck)); }
+			get { return GetVehiclePropertyValue<int?>(nameof(NumberPassengersStandingUpperDeck)); }
 		}
 
 		public VehicleCode? VehicleCode
@@ -697,10 +697,10 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 					&& InputComplete(IsAirdragEntriesValid(), nameof(IsAirdragEntriesValid)) 
 					&& InputComplete(IsTankSystemValid(), nameof(IsTankSystemValid))
 					&& InputComplete(RegisteredClass, nameof(RegisteredClass))
-					&& InputComplete(NumberOfPassengersLowerDeck, nameof(NumberOfPassengersLowerDeck))
-					&& InputComplete(NumberOfPassengersUpperDeck, nameof(NumberOfPassengersUpperDeck))
-					&& InputComplete(NumberOfPassengersStandingLowerDeck, nameof(NumberOfPassengersStandingLowerDeck))
-					&& InputComplete(NumberOfPassengersStandingUpperDeck, nameof(NumberOfPassengersStandingUpperDeck))
+					&& InputComplete(NumberPassengerSeatsLowerDeck, nameof(NumberPassengerSeatsLowerDeck))
+					&& InputComplete(NumberPassengerSeatsUpperDeck, nameof(NumberPassengerSeatsUpperDeck))
+					&& InputComplete(NumberPassengersStandingLowerDeck, nameof(NumberPassengersStandingLowerDeck))
+					&& InputComplete(NumberPassengersStandingUpperDeck, nameof(NumberPassengersStandingUpperDeck))
 					&& InputComplete(VehicleCode, nameof(VehicleCode))
 					&& InputComplete(LowEntry, nameof(LowEntry)) && InputComplete(Height, nameof(Height)) 
 					&& InputComplete(Length, nameof(Length)) && InputComplete(Width, nameof(Width)) 

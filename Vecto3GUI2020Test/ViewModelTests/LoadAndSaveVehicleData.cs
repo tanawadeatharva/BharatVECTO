@@ -268,8 +268,8 @@ namespace Vecto3GUI2020Test
 			Assert.AreEqual(false, vehicle.AirdragModifiedMultistage);
 			Assert.AreEqual(TankSystem.Compressed, vehicle.TankSystem);//NgTankSystem
 			Assert.AreEqual(RegistrationClass.II_III, vehicle.RegisteredClass);//ClassBus
-			Assert.AreEqual(0, vehicle.NumberOfPassengersLowerDeck);
-			Assert.AreEqual(10, vehicle.NumberOfPassengersUpperDeck);
+			Assert.AreEqual(0, vehicle.NumberPassengerSeatsLowerDeck);
+			Assert.AreEqual(10, vehicle.NumberPassengerSeatsUpperDeck);
 			Assert.AreEqual(VehicleCode.CB, vehicle.VehicleCode);
 			Assert.AreEqual(false, vehicle.LowEntry);
 			Assert.AreEqual(2.5, vehicle.Height.Value());//HeightIntegratedBody

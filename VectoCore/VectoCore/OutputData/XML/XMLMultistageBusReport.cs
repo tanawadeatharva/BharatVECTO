@@ -222,14 +222,14 @@ namespace TUGraz.VectoCore.OutputData.XML
 					? new XElement(v28 + XMLNames.Vehicle_NgTankSystem, _vehicleInputData.TankSystem.ToString()) : null,
 				_vehicleInputData.RegisteredClass != null
 					? new XElement(v28 + XMLNames.Vehicle_RegisteredClass, _vehicleInputData.RegisteredClass.ToXMLFormat()) : null,
-				_vehicleInputData.NumberOfPassengersLowerDeck != null 
-					? new XElement(v28 + XMLNames.Bus_NumberPassengerSeatsLowerDeck, _vehicleInputData.NumberOfPassengersLowerDeck) : null,
-				_vehicleInputData.NumberOfPassengersStandingLowerDeck != null
-					? new XElement(v28 + XMLNames.Bus_NumberPassengersStandingLowerDeck, _vehicleInputData.NumberOfPassengersStandingLowerDeck) : null,
-				_vehicleInputData.NumberOfPassengersUpperDeck != null
-					? new XElement(v28 + XMLNames.Bus_NumberPassengerSeatsUpperDeck, _vehicleInputData.NumberOfPassengersUpperDeck) : null,
-				_vehicleInputData.NumberOfPassengersStandingUpperDeck != null
-					? new XElement(v28 + XMLNames.Bus_NumberPassengersStandingUpperDeck, _vehicleInputData.NumberOfPassengersStandingUpperDeck) : null,
+				_vehicleInputData.NumberPassengerSeatsLowerDeck != null 
+					? new XElement(v28 + XMLNames.Bus_NumberPassengerSeatsLowerDeck, _vehicleInputData.NumberPassengerSeatsLowerDeck) : null,
+				_vehicleInputData.NumberPassengersStandingLowerDeck != null
+					? new XElement(v28 + XMLNames.Bus_NumberPassengersStandingLowerDeck, _vehicleInputData.NumberPassengersStandingLowerDeck) : null,
+				_vehicleInputData.NumberPassengerSeatsUpperDeck != null
+					? new XElement(v28 + XMLNames.Bus_NumberPassengerSeatsUpperDeck, _vehicleInputData.NumberPassengerSeatsUpperDeck) : null,
+				_vehicleInputData.NumberPassengersStandingUpperDeck != null
+					? new XElement(v28 + XMLNames.Bus_NumberPassengersStandingUpperDeck, _vehicleInputData.NumberPassengersStandingUpperDeck) : null,
 				_vehicleInputData.VehicleCode != null
 					? new XElement(v28 + XMLNames.Vehicle_BodyworkCode, _vehicleInputData.VehicleCode.ToXMLFormat()) : null,
 				_vehicleInputData.LowEntry != null

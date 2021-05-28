@@ -578,8 +578,8 @@ namespace TUGraz.VectoCore.Tests.XML
 			Assert.AreEqual(null, vehicleData.AirdragModifiedMultistage);
 			Assert.AreEqual(null, vehicleData.TankSystem);
 			Assert.AreEqual(null, vehicleData.RegisteredClass);
-			Assert.AreEqual(null, vehicleData.NumberOfPassengersLowerDeck);
-			Assert.AreEqual(null, vehicleData.NumberOfPassengersUpperDeck);
+			Assert.AreEqual(null, vehicleData.NumberPassengerSeatsLowerDeck);
+			Assert.AreEqual(null, vehicleData.NumberPassengerSeatsUpperDeck);
 			Assert.AreEqual(null, vehicleData.VehicleCode);
 			Assert.AreEqual(null, vehicleData.LowEntry);
 			Assert.AreEqual(null, vehicleData.Height);
@@ -708,10 +708,10 @@ namespace TUGraz.VectoCore.Tests.XML
 			Assert.AreEqual(null, vehicleData.AirdragModifiedMultistage);
 			Assert.AreEqual(TankSystem.Liquefied, vehicleData.TankSystem);
 			Assert.AreEqual(RegistrationClass.B, vehicleData.RegisteredClass);
-			Assert.AreEqual(24, vehicleData.NumberOfPassengersLowerDeck);
-			Assert.AreEqual(30, vehicleData.NumberOfPassengersUpperDeck);
-			Assert.AreEqual(7, vehicleData.NumberOfPassengersStandingLowerDeck);
-			Assert.AreEqual(4, vehicleData.NumberOfPassengersStandingUpperDeck);
+			Assert.AreEqual(24, vehicleData.NumberPassengerSeatsLowerDeck);
+			Assert.AreEqual(30, vehicleData.NumberPassengerSeatsUpperDeck);
+			Assert.AreEqual(7, vehicleData.NumberPassengersStandingLowerDeck);
+			Assert.AreEqual(4, vehicleData.NumberPassengersStandingUpperDeck);
 			Assert.AreEqual(VehicleCode.CA, vehicleData.VehicleCode);
 			Assert.AreEqual(true, vehicleData.LowEntry);
 			Assert.AreEqual(2.5.SI<Meter>(), vehicleData.Height);

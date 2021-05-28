@@ -283,21 +283,21 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 			get { return RegistrationClass.unknown; }
 		}
 
-		public virtual int? NumberOfPassengersUpperDeck
+		public virtual int? NumberPassengerSeatsUpperDeck
 		{
 			get { return 0; }
 		}
 
-		public virtual int? NumberOfPassengersLowerDeck
+		public virtual int? NumberPassengerSeatsLowerDeck
 		{
 			get { return 0; }
 		}
 
-		public virtual int? NumberOfPassengersStandingLowerDeck
+		public virtual int? NumberPassengersStandingLowerDeck
 		{
 			get { return 0; }
 		}
-		public virtual int? NumberOfPassengersStandingUpperDeck
+		public virtual int? NumberPassengersStandingUpperDeck
 		{
 			get { return 0; }
 		}
@@ -855,7 +855,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 			}
 		}
 
-		public override int? NumberOfPassengersLowerDeck
+		public override int? NumberPassengerSeatsLowerDeck
 		{
 			get {
 				var node = GetNode(XMLNames.Bus_LowerDeck);
@@ -863,7 +863,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 			}
 		}
 
-		public override int? NumberOfPassengersUpperDeck
+		public override int? NumberPassengerSeatsUpperDeck
 		{
 			get {
 				var node = GetNode(XMLNames.Bus_UpperDeck);
@@ -1071,10 +1071,10 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		public string Identifier { get; }
 		public bool ExemptedVehicle { get; }
 		public LegislativeClass? LegislativeClass { get; }
-		public int? NumberOfPassengersUpperDeck { get; }
-		public int? NumberOfPassengersLowerDeck { get; }
-		public int? NumberOfPassengersStandingLowerDeck { get; }
-		public int? NumberOfPassengersStandingUpperDeck { get; }
+		public int? NumberPassengerSeatsUpperDeck { get; }
+		public int? NumberPassengerSeatsLowerDeck { get; }
+		public int? NumberPassengersStandingLowerDeck { get; }
+		public int? NumberPassengersStandingUpperDeck { get; }
 
 		public CubicMeter CargoVolume
 		{
@@ -1229,7 +1229,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		}
 
 
-		public override int? NumberOfPassengersLowerDeck
+		public override int? NumberPassengerSeatsLowerDeck
 		{
 			get
 			{
@@ -1240,7 +1240,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 			}
 		}
 
-		public override int? NumberOfPassengersUpperDeck
+		public override int? NumberPassengerSeatsUpperDeck
 		{
 			get
 			{
@@ -1251,7 +1251,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 			}
 		}
 
-		public override int? NumberOfPassengersStandingLowerDeck
+		public override int? NumberPassengersStandingLowerDeck
 		{
 			get
 			{
@@ -1262,7 +1262,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 			}
 		}
 
-		public override int? NumberOfPassengersStandingUpperDeck
+		public override int? NumberPassengersStandingUpperDeck
 		{
 			get
 			{
@@ -1488,7 +1488,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 			}
 		}
 
-		public override int? NumberOfPassengersLowerDeck
+		public override int? NumberPassengerSeatsLowerDeck
 		{
 			get
 			{
@@ -1499,7 +1499,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 			}
 		}
 
-		public override int? NumberOfPassengersUpperDeck
+		public override int? NumberPassengerSeatsUpperDeck
 		{
 			get
 			{

@@ -51,10 +51,10 @@ namespace TUGraz.VectoCore.Tests.XML
 			Assert.AreEqual(false, vehicle.AirdragModifiedMultistage);
 			Assert.AreEqual(TankSystem.Compressed, vehicle.TankSystem);//NgTankSystem
 			Assert.AreEqual(RegistrationClass.II_III, vehicle.RegisteredClass);//ClassBus
-			Assert.AreEqual(1, vehicle.NumberOfPassengersLowerDeck);
-			Assert.AreEqual(10, vehicle.NumberOfPassengersStandingLowerDeck);
-			Assert.AreEqual(11, vehicle.NumberOfPassengersUpperDeck);
-			Assert.AreEqual(2, vehicle.NumberOfPassengersStandingUpperDeck);
+			Assert.AreEqual(1, vehicle.NumberPassengerSeatsLowerDeck);
+			Assert.AreEqual(10, vehicle.NumberPassengersStandingLowerDeck);
+			Assert.AreEqual(11, vehicle.NumberPassengerSeatsUpperDeck);
+			Assert.AreEqual(2, vehicle.NumberPassengersStandingUpperDeck);
 			Assert.AreEqual(VehicleCode.CB, vehicle.VehicleCode);
 			Assert.AreEqual(false, vehicle.LowEntry);
 			Assert.AreEqual(2.5, vehicle.Height.Value());//HeightIntegratedBody
@@ -144,8 +144,8 @@ namespace TUGraz.VectoCore.Tests.XML
 			Assert.AreEqual(7000, vehicle.CurbMassChassis.Value());//CorrectedActualMass
 			Assert.AreEqual(10000, vehicle.GrossVehicleMassRating.Value());//TechnicalPermissibleMaximumLadenMass
 			Assert.AreEqual(RegistrationClass.A, vehicle.RegisteredClass);//ClassBus
-			Assert.AreEqual(10, vehicle.NumberOfPassengersLowerDeck);
-			Assert.AreEqual(20, vehicle.NumberOfPassengersUpperDeck);
+			Assert.AreEqual(10, vehicle.NumberPassengerSeatsLowerDeck);
+			Assert.AreEqual(20, vehicle.NumberPassengerSeatsUpperDeck);
 			Assert.AreEqual(VehicleCode.CC, vehicle.VehicleCode);
 			Assert.AreEqual(true, vehicle.LowEntry);
 			Assert.AreEqual(2.5, vehicle.Height.Value());
@@ -169,8 +169,8 @@ namespace TUGraz.VectoCore.Tests.XML
 			Assert.AreEqual(null, vehicle.CurbMassChassis);
 			Assert.AreEqual(null, vehicle.GrossVehicleMassRating);
 			Assert.AreEqual(null, vehicle.RegisteredClass);
-			Assert.AreEqual(null, vehicle.NumberOfPassengersLowerDeck);
-			Assert.AreEqual(null, vehicle.NumberOfPassengersUpperDeck);
+			Assert.AreEqual(null, vehicle.NumberPassengerSeatsLowerDeck);
+			Assert.AreEqual(null, vehicle.NumberPassengerSeatsUpperDeck);
 			Assert.AreEqual(null, vehicle.VehicleCode);
 			Assert.AreEqual(null, vehicle.LowEntry);
 			Assert.AreEqual(null, vehicle.Height);
@@ -197,10 +197,10 @@ namespace TUGraz.VectoCore.Tests.XML
 			Assert.AreEqual(null, vehicle.CurbMassChassis);
 			Assert.AreEqual(null, vehicle.GrossVehicleMassRating);
 			Assert.AreEqual(null, vehicle.RegisteredClass);
-			Assert.AreEqual(null, vehicle.NumberOfPassengersLowerDeck);
-			Assert.AreEqual(null, vehicle.NumberOfPassengersUpperDeck);
-			Assert.AreEqual(null, vehicle.NumberOfPassengersStandingLowerDeck);
-			Assert.AreEqual(null, vehicle.NumberOfPassengersStandingUpperDeck);
+			Assert.AreEqual(null, vehicle.NumberPassengerSeatsLowerDeck);
+			Assert.AreEqual(null, vehicle.NumberPassengerSeatsUpperDeck);
+			Assert.AreEqual(null, vehicle.NumberPassengersStandingLowerDeck);
+			Assert.AreEqual(null, vehicle.NumberPassengersStandingUpperDeck);
 			Assert.AreEqual(null, vehicle.VehicleCode);
 			Assert.AreEqual(null, vehicle.LowEntry);
 			Assert.AreEqual(null, vehicle.Height);

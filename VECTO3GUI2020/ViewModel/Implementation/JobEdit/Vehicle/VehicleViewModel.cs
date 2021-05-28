@@ -283,8 +283,8 @@ namespace VECTO3GUI2020.ViewModel.Implementation.JobEdit.Vehicle
 		}
 
 		RegistrationClass? IVehicleDeclarationInputData.RegisteredClass { get; }
-		int? IVehicleDeclarationInputData.NumberOfPassengersUpperDeck { get; }
-		int? IVehicleDeclarationInputData.NumberOfPassengersLowerDeck { get; }
+		int? IVehicleDeclarationInputData.NumberPassengerSeatsUpperDeck { get; }
+		int? IVehicleDeclarationInputData.NumberPassengerSeatsLowerDeck { get; }
 
 		public virtual RegistrationClass RegisteredClass
 		{
