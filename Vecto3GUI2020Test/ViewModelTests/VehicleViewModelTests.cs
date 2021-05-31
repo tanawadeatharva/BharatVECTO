@@ -182,45 +182,45 @@ namespace Vecto3GUI2020Test.ViewModelTests
 			
 		}
 
-		[Test]
-		public void groupEditing()
-		{
-			var vm = loadFile(primary_vehicle_only);
-			var vehicleVM =
-				vm.MultiStageJobViewModel.ManufacturingStageViewModel.Vehicle as
-					DeclarationInterimStageBusVehicleViewModel_v2_8;
+		//[Test]
+		//public void groupEditing()
+		//{
+		//	var vm = loadFile(primary_vehicle_only);
+		//	var vehicleVM =
+		//		vm.MultiStageJobViewModel.ManufacturingStageViewModel.Vehicle as
+		//			DeclarationInterimStageBusVehicleViewModel_v2_8;
 
-			vehicleVM.NumberOfPassengersUpperDeck = 2;
+		//	vehicleVM.NumberOfPassengersUpperDeck = 2;
 
-			Assert.IsTrue(vehicleVM.NumberOfPassengersEditingEnabled);
-			Assert.AreEqual(2, vehicleVM.NumberOfPassengersUpperDeck);
-			vehicleVM.NumberOfPassengersLowerDeck = 3;
-			Assert.AreEqual(3, vehicleVM.NumberOfPassengersLowerDeck);
-		}
+		//	Assert.IsTrue(vehicleVM.NumberOfPassengersEditingEnabled);
+		//	Assert.AreEqual(2, vehicleVM.NumberOfPassengersUpperDeck);
+		//	vehicleVM.NumberOfPassengersLowerDeck = 3;
+		//	Assert.AreEqual(3, vehicleVM.NumberOfPassengersLowerDeck);
+		//}
 
 
-		[Test]
-		public void automaticallyEnableEditingWhenContentIsSet()
-		{
-			var vm = loadFile(primary_vehicle_only);
-			var vehicleVM =
-				vm.MultiStageJobViewModel.ManufacturingStageViewModel.Vehicle as
-					DeclarationInterimStageBusVehicleViewModel_v2_8;
+		//[Test]
+		//public void automaticallyEnableEditingWhenContentIsSet()
+		//{
+		//	var vm = loadFile(primary_vehicle_only);
+		//	var vehicleVM =
+		//		vm.MultiStageJobViewModel.ManufacturingStageViewModel.Vehicle as
+		//			DeclarationInterimStageBusVehicleViewModel_v2_8;
 
 			
-			vehicleVM.NumberOfPassengersUpperDeck = 2;
-			Assert.IsTrue(vehicleVM.NumberOfPassengersEditingEnabled);
+		//	vehicleVM.NumberOfPassengersUpperDeck = 2;
+		//	Assert.IsTrue(vehicleVM.NumberOfPassengersEditingEnabled);
 
-			vehicleVM.NumberOfPassengersUpperDeck = null;
+		//	vehicleVM.NumberOfPassengersUpperDeck = null;
 
-			getMockDialogHelper(stageInputFullSample);
-			var vmConc = vm.MultiStageJobViewModel as MultiStageJobViewModel_v0_1;
-			vmConc.LoadVehicleDataCommand.Execute(null);
+		//	getMockDialogHelper(stageInputFullSample);
+		//	var vmConc = vm.MultiStageJobViewModel as MultiStageJobViewModel_v0_1;
+		//	vmConc.LoadVehicleDataCommand.Execute(null);
 
 
-			Assert.IsTrue(vehicleVM.ParameterViewModels[nameof(vehicleVM.NumberOfPassengersUpperDeck)].EditingEnabled);
-			Assert.IsTrue(vehicleVM.NumberOfPassengersEditingEnabled);
-		}
+		//	Assert.IsTrue(vehicleVM.ParameterViewModels[nameof(vehicleVM.NumberOfPassengersUpperDeck)].EditingEnabled);
+		//	Assert.IsTrue(vehicleVM.NumberOfPassengersEditingEnabled);
+		//}
 
 
 

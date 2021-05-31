@@ -156,6 +156,18 @@
   <data name="Manufacturer" xml:space="preserve">
     <value>Manufacturer</value>
   </data>
+  <data name="NumberPassengerSeatsLowerDeck" xml:space="preserve">
+    <value>Passenger Seats Lower Deck</value>
+  </data>
+  <data name="NumberPassengerSeatsUpperDeck" xml:space="preserve">
+    <value>Passenger Seats Upper Deck</value>
+  </data>
+  <data name="NumberPassengersStandingLowerDeck" xml:space="preserve">
+    <value>Passenger Standing Lower Deck</value>
+  </data>
+  <data name="NumberPassengersStandingUpperDeck" xml:space="preserve">
+    <value>Passenger Standing Upper Deck</value>
+  </data>
   <data name="PredictiveCruiseControlNullable" xml:space="preserve">
     <value>Predictive Cruise Control</value>
   </data>

@@ -62,12 +62,23 @@
                 <ContentControl 
                     Content="{Binding ParameterViewModels[RegisteredClass]}"/>
 
-                    <Separator/>
+
+                <Label Style="{DynamicResource LabelStyle1}">Number of Passengers</Label>
                 <ContentControl 
-                    Content="{Binding ParameterViewModels[NumberOfPassengersUpperDeck]}"/>
+                    Content="{Binding ParameterViewModels[NumberPassengerSeatsLowerDeck]}"/>
 
                 <ContentControl 
-                    Content="{Binding ParameterViewModels[NumberOfPassengersLowerDeck]}"/>
+                    Content="{Binding ParameterViewModels[NumberPassengerSeatsUpperDeck]}"/>
+
+
+
+                <ContentControl 
+                    Content="{Binding ParameterViewModels[NumberPassengersStandingLowerDeck]}"/>
+
+                <ContentControl 
+                    Content="{Binding ParameterViewModels[NumberPassengersStandingUpperDeck]}"/>
+
+
                     <Separator/>
 
                 <ContentControl 

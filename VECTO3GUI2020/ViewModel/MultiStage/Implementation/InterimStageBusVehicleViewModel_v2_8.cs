@@ -184,6 +184,8 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 				nameof(RegisteredClass),
 				nameof(NumberPassengerSeatsUpperDeck),
 				nameof(NumberPassengerSeatsLowerDeck),
+				nameof(NumberPassengersStandingLowerDeck),
+				nameof(NumberPassengersStandingUpperDeck),
 				nameof(VehicleCode),
 				nameof(LowEntry),
 				nameof(HeightInMm),
@@ -255,6 +257,10 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 			_parameterViewModels[nameof(NumberPassengerSeatsUpperDeck)].EditingChangedCallback =
 				PassengerGroupEditingCallback;
 			_parameterViewModels[nameof(NumberPassengerSeatsLowerDeck)].EditingChangedCallback =
+				PassengerGroupEditingCallback;
+			_parameterViewModels[nameof(NumberPassengersStandingLowerDeck)].EditingChangedCallback =
+				PassengerGroupEditingCallback;
+			_parameterViewModels[nameof(NumberPassengersStandingUpperDeck)].EditingChangedCallback =
 				PassengerGroupEditingCallback;
 
 			_parameterViewModels[nameof(AirdragModifiedEnum)].EditingChangedCallback = model => {
@@ -520,18 +526,20 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 		#endregion
 		public Kilogram CurbMassChassis //Corrected Actual Mass
 		{
-			get { return _curbMassChassis; }
-			set { SetProperty(ref _curbMassChassis, value); }
+			get => _curbMassChassis;
+			set => SetProperty(ref _curbMassChassis, value);
 		}
 
 		public bool NumberOfPassengersEditingEnabled
 		{
-			get { return _numberOfPassengersEditingEnabled; }
+			get => _numberOfPassengersEditingEnabled;
 			set
 			{
 				if (SetProperty(ref _numberOfPassengersEditingEnabled, value)) {
 					_parameterViewModels[nameof(NumberPassengerSeatsUpperDeck)].EditingEnabled = value;
 					_parameterViewModels[nameof(NumberPassengerSeatsLowerDeck)].EditingEnabled = value;
+					_parameterViewModels[nameof(NumberPassengersStandingUpperDeck)].EditingEnabled = value;
+					_parameterViewModels[nameof(NumberPassengersStandingLowerDeck)].EditingEnabled = value;
 				}
 				
 			}
@@ -540,14 +548,26 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 
 		public int? NumberPassengerSeatsUpperDeck
 		{
-			get { return _numberOfPassengersUpperDeck; }
-			set { SetProperty(ref _numberOfPassengersUpperDeck, value); }
+			get => _numberOfPassengersUpperDeck;
+			set => SetProperty(ref _numberOfPassengersUpperDeck, value);
 		}
 
 		public int? NumberPassengerSeatsLowerDeck
 		{
-			get { return _numberOfPassengersLowerDeck; }
-			set { SetProperty(ref _numberOfPassengersLowerDeck, value); }
+			get => _numberOfPassengersLowerDeck;
+			set => SetProperty(ref _numberOfPassengersLowerDeck, value);
+		}
+
+		public int? NumberPassengersStandingLowerDeck
+		{
+			get => _numberPassengersStandingLowerDeck;
+			set => SetProperty(ref _numberPassengersStandingLowerDeck, value);
+		}
+
+		public int? NumberPassengersStandingUpperDeck
+		{
+			get => _numberPassengersStandingUpperDeck;
+			set => SetProperty(ref _numberPassengersStandingUpperDeck, value);
 		}
 
 
@@ -1112,6 +1132,8 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 
 		private IndexedStorage<bool> _editingEnabledDictionary;
 		private bool _airdragModifiedMultistageMandatory;
+		private int? _numberPassengersStandingLowerDeck;
+		private int? _numberPassengersStandingUpperDeck;
 
 		public IndexedStorage<bool> EditingEnabledDictionary
 		{

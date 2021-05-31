@@ -286,6 +286,10 @@ namespace VECTO3GUI2020.ViewModel.Implementation.JobEdit.Vehicle
 		int? IVehicleDeclarationInputData.NumberPassengerSeatsUpperDeck { get; }
 		int? IVehicleDeclarationInputData.NumberPassengerSeatsLowerDeck { get; }
 
+		public int? NumberPassengersStandingLowerDeck => throw new NotImplementedException();
+
+		public int? NumberPassengersStandingUpperDeck => throw new NotImplementedException();
+
 		public virtual RegistrationClass RegisteredClass
 		{
 			get => throw new NotImplementedException();

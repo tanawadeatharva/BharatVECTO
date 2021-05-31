@@ -82,7 +82,7 @@ namespace VECTO3GUI2020.Helper
 			
 			_viewMode = viewMode;
 			_dummyContent = dummyContent;
-			_mandatory = mandatory;
+			Mandatory = mandatory;
 			_type = _propertyInfo.PropertyType;
 			_label = NameResolver.ResolveName(propertyName, resourceManagers);
 
