@@ -308,17 +308,22 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 					});
 				} else {
 					// segment intersects maxTorque line -> add new entry at intersection
-					var edgeFull = Edge.Create(new Point(entry.Item1.EngineSpeed.Value(), entry.Item1.TorqueFullLoad.Value()),
+					var edgeFull = Edge.Create(
+						new Point(entry.Item1.EngineSpeed.Value(), entry.Item1.TorqueFullLoad.Value()),
 						new Point(entry.Item2.EngineSpeed.Value(), entry.Item2.TorqueFullLoad.Value()));
-					var edgeDrag = Edge.Create(new Point(entry.Item1.EngineSpeed.Value(), entry.Item1.TorqueDrag.Value()),
+					var edgeDrag = Edge.Create(
+						new Point(entry.Item1.EngineSpeed.Value(), entry.Item1.TorqueDrag.Value()),
 						new Point(entry.Item2.EngineSpeed.Value(), entry.Item2.TorqueDrag.Value()));
 					var intersectionX = (maxTorque.Value() - edgeFull.OffsetXY) / edgeFull.SlopeXY;
-					entries.Add(new EngineFullLoadCurve.FullLoadCurveEntry {
-						EngineSpeed = intersectionX.SI<PerSecond>(),
-						TorqueFullLoad = maxTorque,
-						TorqueDrag = VectoMath.Interpolate(edgeDrag.P1, edgeDrag.P2, intersectionX).SI<NewtonMeter>()
-					});
-					entries.Add(new EngineFullLoadCurve.FullLoadCurveEntry {
+                    if (!entries.Any(x => x.EngineSpeed.IsEqual(intersectionX))) {
+                        entries.Add(new EngineFullLoadCurve.FullLoadCurveEntry {
+							EngineSpeed = intersectionX.SI<PerSecond>(),
+							TorqueFullLoad = maxTorque,
+							TorqueDrag = VectoMath.Interpolate(edgeDrag.P1, edgeDrag.P2, intersectionX).SI<NewtonMeter>()
+						});
+                    }
+
+                    entries.Add(new EngineFullLoadCurve.FullLoadCurveEntry {
 						EngineSpeed = entry.Item2.EngineSpeed,
 						TorqueFullLoad = entry.Item2.TorqueFullLoad > maxTorque ? maxTorque : entry.Item2.TorqueFullLoad,
 						TorqueDrag = entry.Item2.TorqueDrag
