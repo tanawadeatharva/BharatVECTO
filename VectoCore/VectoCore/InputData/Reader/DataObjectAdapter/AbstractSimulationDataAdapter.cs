@@ -315,7 +315,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 						new Point(entry.Item1.EngineSpeed.Value(), entry.Item1.TorqueDrag.Value()),
 						new Point(entry.Item2.EngineSpeed.Value(), entry.Item2.TorqueDrag.Value()));
 					var intersectionX = (maxTorque.Value() - edgeFull.OffsetXY) / edgeFull.SlopeXY;
-                    if (!entries.Any(x => x.EngineSpeed.IsEqual(intersectionX))) {
+                    if (!entries.Any(x => x.EngineSpeed.IsEqual(intersectionX)) && !intersectionX.IsEqual(entry.Item2.EngineSpeed.Value())) {
                         entries.Add(new EngineFullLoadCurve.FullLoadCurveEntry {
 							EngineSpeed = intersectionX.SI<PerSecond>(),
 							TorqueFullLoad = maxTorque,
