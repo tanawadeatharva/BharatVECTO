@@ -235,10 +235,7 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 		public HeatPumpMode? HeatPumpModeDriverCompartment
 		{
 			get => _heatPumpModeDriverCompartment;
-			set
-			{
-				SetProperty(ref _heatPumpModeDriverCompartment, value);
-			}
+			set => SetProperty(ref _heatPumpModeDriverCompartment, value);
 		}
 
 		private ObservableCollection<Enum> _heatPumpModeDriverCompartmentAllowedValues;
@@ -274,7 +271,6 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 						HeatPumpModePassengerCompartmentAllowedValues =
 							EnumHelper.GetValuesAsObservableCollectionExcluding<Enum, HeatPumpMode>(
 								items: HeatPumpMode.N_A);
-						//HeatPumpModePassengerCompartment = HeatPumpMode.cooling;
 					}
 				}
 			}
@@ -283,11 +279,7 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 		public HeatPumpMode? HeatPumpModePassengerCompartment
 		{
 			get => _heatPumpModePassengerCompartment;
-			set
-			{
-				SetProperty(ref _heatPumpModePassengerCompartment, value);
-				
-			}
+			set => SetProperty(ref _heatPumpModePassengerCompartment, value);
 		}
 
 		private ObservableCollection<Enum> _heatPumpModePassengerCompartmentAllowedValues;
@@ -436,32 +428,9 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 			HeadlightsLED = componentsAuxiliaryInputData.ElectricConsumers?.HeadlightsLED;
 			BrakelightsLED = componentsAuxiliaryInputData.ElectricConsumers?.BrakelightsLED;
 
-			OnPropertyChanged(String.Empty);
-		}
-
-		private void ResetData()
-		{
-			HeatPumpGroupEditingEnabled = false;
-			SystemConfiguration = null;
-			HeatPumpTypeDriverCompartment = null;
-			HeatPumpModeDriverCompartment = null;
-			HeatPumpTypePassengerCompartment = null;
-			HeatPumpModePassengerCompartment = null;
-
-			AuxHeaterPower = null;
-			DoubleGlazing = null;
-			AdjustableAuxiliaryHeater = null;
-			SeparateAirDistributionDucts = null;
-			WaterElectricHeater = null;
-			AirElectricHeater = null;
-			OtherHeatingTechnology = null;
-
-			InteriorLightsLED = null;
-			DayrunninglightsLED = null;
-			PositionlightsLED = null;
-			HeadlightsLED = null;
-			BrakelightsLED = null;
-
+			foreach (var multistageParameterViewModel in _parameterViewModels.Values) {
+				multistageParameterViewModel.UpdateEditingEnabled();
+			}
 			OnPropertyChanged(String.Empty);
 		}
 
@@ -582,6 +551,7 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 			HeatPumpModeDriverCompartmentAllowedValues = EnumHelper.GetValuesAsObservableCollectionExcluding<Enum, HeatPumpMode>(HeatPumpMode.N_A);
 			HeatPumpModePassengerCompartmentAllowedValues =
 				EnumHelper.GetValuesAsObservableCollectionExcluding<Enum, HeatPumpMode>(HeatPumpMode.N_A);
+
 			SystemConfigurationAllowedValues =
 				EnumHelper.GetValuesAsObservableCollectionExcluding<Enum, BusHVACSystemConfiguration>(
 					BusHVACSystemConfiguration.Unknown);
@@ -592,8 +562,7 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 		{
 			var propertyChanged = base.SetProperty(ref field, value, propertyName);
 
-			if (propertyChanged && _parameterViewModels != null && _parameterViewModels.ContainsKey(propertyName))
-			{
+			if (propertyChanged && _parameterViewModels != null && _parameterViewModels.ContainsKey(propertyName)) {
 				_parameterViewModels[propertyName].CurrentContent = value;
 			}
 			return propertyChanged;
