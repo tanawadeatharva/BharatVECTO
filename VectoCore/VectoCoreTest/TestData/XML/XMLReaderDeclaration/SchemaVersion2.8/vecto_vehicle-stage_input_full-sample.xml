@@ -18,8 +18,10 @@ xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:DeclarationJob v:\VectoCore\VectoCor
 		<AirdragModifiedMultistage>false</AirdragModifiedMultistage>
 		<NgTankSystem>Compressed</NgTankSystem>
 		<ClassBus>II+III</ClassBus>
-		<NumberPassengersLowerDeck>0</NumberPassengersLowerDeck>
-		<NumberPassengersUpperDeck>10</NumberPassengersUpperDeck>
+		<NumberPassengerSeatsLowerDeck>1</NumberPassengerSeatsLowerDeck>
+		<NumberPassengersStandingLowerDeck>10</NumberPassengersStandingLowerDeck>
+		<NumberPassengerSeatsUpperDeck>11</NumberPassengerSeatsUpperDeck>
+		<NumberPassengersStandingUpperDeck>2</NumberPassengersStandingUpperDeck>
 		<BodyworkCode>CB</BodyworkCode>
 		<LowEntry>false</LowEntry>
 		<HeightIntegratedBody>2500</HeightIntegratedBody>
@@ -75,6 +77,8 @@ xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:DeclarationJob v:\VectoCore\VectoCor
 						<HeatPumpModeDriverCompartment>heating</HeatPumpModeDriverCompartment>
 						<HeatPumpTypePassengerCompartment>non R-744 2-stage</HeatPumpTypePassengerCompartment>
 						<HeatPumpModePassengerCompartment>cooling</HeatPumpModePassengerCompartment>
+						<HeatPumpTypePassengerCompartment>non R-744 3-stage</HeatPumpTypePassengerCompartment>
+						<HeatPumpModePassengerCompartment>heating</HeatPumpModePassengerCompartment>
 						<AuxiliaryHeaterPower>50</AuxiliaryHeaterPower>
 						<DoubleGlazing>false</DoubleGlazing>
 						<AdjustableAuxiliaryHeater>true</AdjustableAuxiliaryHeater>

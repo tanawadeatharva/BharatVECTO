@@ -567,12 +567,21 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			get { return RegistrationClass.unknown; }
 		}
 
-		public int? NumberOfPassengersUpperDeck
+		public int? NumberPassengerSeatsUpperDeck
 		{
 			get { return 0; }
 		}
 
-		public int? NumberOfPassengersLowerDeck
+		public int? NumberPassengerSeatsLowerDeck
+		{
+			get { return 0; }
+		}
+
+		public int? NumberPassengersStandingLowerDeck
+		{
+			get { return 0; }
+		}
+		public int? NumberPassengersStandingUpperDeck
 		{
 			get { return 0; }
 		}

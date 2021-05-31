@@ -182,8 +182,8 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 				nameof(TankSystem),
 				nameof(AirdragModifiedEnum),
 				nameof(RegisteredClass),
-				nameof(NumberOfPassengersUpperDeck),
-				nameof(NumberOfPassengersLowerDeck),
+				nameof(NumberPassengerSeatsUpperDeck),
+				nameof(NumberPassengerSeatsLowerDeck),
 				nameof(VehicleCode),
 				nameof(LowEntry),
 				nameof(HeightInMm),
@@ -252,9 +252,9 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 				NumberOfPassengersEditingEnabled = param.EditingEnabled;
 			};
 
-			_parameterViewModels[nameof(NumberOfPassengersUpperDeck)].EditingChangedCallback =
+			_parameterViewModels[nameof(NumberPassengerSeatsUpperDeck)].EditingChangedCallback =
 				PassengerGroupEditingCallback;
-			_parameterViewModels[nameof(NumberOfPassengersLowerDeck)].EditingChangedCallback =
+			_parameterViewModels[nameof(NumberPassengerSeatsLowerDeck)].EditingChangedCallback =
 				PassengerGroupEditingCallback;
 
 			_parameterViewModels[nameof(AirdragModifiedEnum)].EditingChangedCallback = model => {
@@ -338,8 +338,8 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 			AirdragModifiedMultistage = vehicleInputData.AirdragModifiedMultistage;
 			TankSystem = vehicleInputData.TankSystem;
 			RegisteredClass = vehicleInputData.RegisteredClass;
-			NumberOfPassengersUpperDeck = vehicleInputData.NumberOfPassengersUpperDeck;
-			NumberOfPassengersLowerDeck = vehicleInputData.NumberOfPassengersLowerDeck;
+			NumberPassengerSeatsUpperDeck = vehicleInputData.NumberPassengerSeatsUpperDeck;
+			NumberPassengerSeatsLowerDeck = vehicleInputData.NumberPassengerSeatsLowerDeck;
 			VehicleCode = vehicleInputData.VehicleCode;
 			LowEntry = vehicleInputData.LowEntry;
 			MeasurementsGroupEditingEnabled =
@@ -530,21 +530,21 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 			set
 			{
 				if (SetProperty(ref _numberOfPassengersEditingEnabled, value)) {
-					_parameterViewModels[nameof(NumberOfPassengersUpperDeck)].EditingEnabled = value;
-					_parameterViewModels[nameof(NumberOfPassengersLowerDeck)].EditingEnabled = value;
+					_parameterViewModels[nameof(NumberPassengerSeatsUpperDeck)].EditingEnabled = value;
+					_parameterViewModels[nameof(NumberPassengerSeatsLowerDeck)].EditingEnabled = value;
 				}
 				
 			}
 		}
 
 
-		public int? NumberOfPassengersUpperDeck
+		public int? NumberPassengerSeatsUpperDeck
 		{
 			get { return _numberOfPassengersUpperDeck; }
 			set { SetProperty(ref _numberOfPassengersUpperDeck, value); }
 		}
 
-		public int? NumberOfPassengersLowerDeck
+		public int? NumberPassengerSeatsLowerDeck
 		{
 			get { return _numberOfPassengersLowerDeck; }
 			set { SetProperty(ref _numberOfPassengersLowerDeck, value); }

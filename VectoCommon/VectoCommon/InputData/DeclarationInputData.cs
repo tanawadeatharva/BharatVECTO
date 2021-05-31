@@ -171,9 +171,13 @@ namespace TUGraz.VectoCommon.InputData
 
 		RegistrationClass? RegisteredClass { get; }
 
-		int? NumberOfPassengersUpperDeck { get; }
+		int? NumberPassengerSeatsUpperDeck { get; }
 
-		int? NumberOfPassengersLowerDeck { get; }
+		int? NumberPassengerSeatsLowerDeck { get; }
+
+		int? NumberPassengersStandingLowerDeck { get; }
+
+		int? NumberPassengersStandingUpperDeck { get; }
 
 		// only used for medium lorries type VAN
 		CubicMeter CargoVolume { get; }
@@ -891,10 +895,8 @@ namespace TUGraz.VectoCommon.InputData
 		HeatPumpType? HeatPumpTypeDriverCompartment { get; }
 		
 		HeatPumpMode? HeatPumpModeDriverCompartment { get; }
-
-		HeatPumpType? HeatPumpTypePassengerCompartment { get; }
 		
-		HeatPumpMode? HeatPumpModePassengerCompartment { get; }
+		IList<Tuple<HeatPumpType, HeatPumpMode>> HeatPumpPassengerCompartments { get; }
 
 		Watt AuxHeaterPower { get; }
 

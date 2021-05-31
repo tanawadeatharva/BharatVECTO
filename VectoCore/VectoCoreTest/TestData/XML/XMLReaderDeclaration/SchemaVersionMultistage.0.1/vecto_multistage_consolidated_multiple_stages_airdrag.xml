@@ -658,8 +658,10 @@ xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:DeclarationOutput:VehicleInterimFile
 				<v2.8:Date>2018-02-15T11:00:00Z</v2.8:Date>
 				<v2.8:Model>Intermediate Model 1</v2.8:Model>
 				<v2.8:NgTankSystem>Compressed</v2.8:NgTankSystem>
-				<v2.8:NumberPassengersLowerDeck>10</v2.8:NumberPassengersLowerDeck>			
-				<v2.8:NumberPassengersUpperDeck>30</v2.8:NumberPassengersUpperDeck>	
+				<v2.8:NumberPassengerSeatsLowerDeck>12</v2.8:NumberPassengerSeatsLowerDeck>
+				<v2.8:NumberPassengersStandingLowerDeck>5</v2.8:NumberPassengersStandingLowerDeck>
+				<v2.8:NumberPassengerSeatsUpperDeck>30</v2.8:NumberPassengerSeatsUpperDeck>
+				<v2.8:NumberPassengersStandingUpperDeck>0</v2.8:NumberPassengersStandingUpperDeck>
 				<v2.8:LowEntry>true</v2.8:LowEntry>
 				<v2.8:HeightIntegratedBody>3000</v2.8:HeightIntegratedBody>
 				<v2.8:VehicleLength>12000</v2.8:VehicleLength>

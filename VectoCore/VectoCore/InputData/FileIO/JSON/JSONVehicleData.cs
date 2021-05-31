@@ -652,12 +652,21 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			get { return RegistrationClass.unknown; }
 		}
 
-		public virtual int? NumberOfPassengersUpperDeck
+		public virtual int? NumberPassengerSeatsUpperDeck
 		{
 			get { return 0; }
 		}
 
-		public virtual int? NumberOfPassengersLowerDeck
+		public virtual int? NumberPassengerSeatsLowerDeck
+		{
+			get { return 0; }
+		}
+
+		public int? NumberPassengersStandingLowerDeck
+		{
+			get { return 0; }
+		}
+		public int? NumberPassengersStandingUpperDeck
 		{
 			get { return 0; }
 		}

@@ -222,10 +222,14 @@ namespace TUGraz.VectoCore.OutputData.XML
 					? new XElement(v28 + XMLNames.Vehicle_NgTankSystem, _vehicleInputData.TankSystem.ToString()) : null,
 				_vehicleInputData.RegisteredClass != null
 					? new XElement(v28 + XMLNames.Vehicle_RegisteredClass, _vehicleInputData.RegisteredClass.ToXMLFormat()) : null,
-				_vehicleInputData.NumberOfPassengersLowerDeck != null 
-					? new XElement(v28 + XMLNames.Bus_NumberPassengersLowerDeck, _vehicleInputData.NumberOfPassengersLowerDeck) : null,
-				_vehicleInputData.NumberOfPassengersUpperDeck != null
-					? new XElement(v28 + XMLNames.Bus_NumberPassengersUpperDeck, _vehicleInputData.NumberOfPassengersUpperDeck) : null,
+				_vehicleInputData.NumberPassengerSeatsLowerDeck != null 
+					? new XElement(v28 + XMLNames.Bus_NumberPassengerSeatsLowerDeck, _vehicleInputData.NumberPassengerSeatsLowerDeck) : null,
+				_vehicleInputData.NumberPassengersStandingLowerDeck != null
+					? new XElement(v28 + XMLNames.Bus_NumberPassengersStandingLowerDeck, _vehicleInputData.NumberPassengersStandingLowerDeck) : null,
+				_vehicleInputData.NumberPassengerSeatsUpperDeck != null
+					? new XElement(v28 + XMLNames.Bus_NumberPassengerSeatsUpperDeck, _vehicleInputData.NumberPassengerSeatsUpperDeck) : null,
+				_vehicleInputData.NumberPassengersStandingUpperDeck != null
+					? new XElement(v28 + XMLNames.Bus_NumberPassengersStandingUpperDeck, _vehicleInputData.NumberPassengersStandingUpperDeck) : null,
 				_vehicleInputData.VehicleCode != null
 					? new XElement(v28 + XMLNames.Vehicle_BodyworkCode, _vehicleInputData.VehicleCode.ToXMLFormat()) : null,
 				_vehicleInputData.LowEntry != null
@@ -443,11 +447,9 @@ namespace TUGraz.VectoCore.OutputData.XML
 
 			if (hvac.SystemConfiguration == null &&
 				hvac.HeatPumpModeDriverCompartment == null && hvac.HeatPumpTypeDriverCompartment == null &&
-				hvac.HeatPumpModePassengerCompartment == null && hvac.HeatPumpTypePassengerCompartment == null &&
-				hvac.AuxHeaterPower == null && hvac.DoubleGlazing == null && hvac.AdjustableAuxiliaryHeater == null &&
-				hvac.SeparateAirDistributionDucts == null && hvac.WaterElectricHeater == null &&
-				hvac.AirElectricHeater == null &&
-				hvac.OtherHeatingTechnology == null)
+				hvac.HeatPumpPassengerCompartments?.Any() != true && hvac.AuxHeaterPower == null && hvac.DoubleGlazing == null && 
+				hvac.AdjustableAuxiliaryHeater == null && hvac.SeparateAirDistributionDucts == null &&
+				hvac.WaterElectricHeater == null && hvac.AirElectricHeater == null && hvac.OtherHeatingTechnology == null)
 				return null;
 
 			return new XElement(v28 + XMLNames.BusAux_HVAC,
@@ -457,10 +459,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 					? new XElement(v28 + XMLNames.Bus_HeatPumpTypeDriver, hvac.HeatPumpTypeDriverCompartment.GetLabel()) : null,
 				hvac.HeatPumpModeDriverCompartment != null
 					? new XElement(v28 + XMLNames.Bus_HeatPumpModeDriver, hvac.HeatPumpModeDriverCompartment.GetLabel()) : null,
-				hvac.HeatPumpTypePassengerCompartment != null
-					? new XElement(v28 + XMLNames.Bus_HeatPumpTypePassenger, hvac.HeatPumpTypePassengerCompartment.GetLabel()) : null,
-				hvac.HeatPumpModePassengerCompartment != null
-					? new XElement(v28 + XMLNames.Bus_HeatPumpModePassenger, hvac.HeatPumpModePassengerCompartment.GetLabel()) : null,
+				GetHeatPumpPassengerCompartments(hvac.HeatPumpPassengerCompartments),
 				hvac.AuxHeaterPower != null
 					? new XElement(v28 + XMLNames.Bus_AuxiliaryHeaterPower, hvac.AuxHeaterPower.ToXMLFormat(0)) : null,
 				hvac.DoubleGlazing != null
@@ -477,6 +476,22 @@ namespace TUGraz.VectoCore.OutputData.XML
 					? new XElement(v28 + XMLNames.Bus_OtherHeatingTechnology, hvac.OtherHeatingTechnology) : null
 			);
 		}
+		
+		private IList<XElement> GetHeatPumpPassengerCompartments(IList<Tuple<HeatPumpType,HeatPumpMode>> heatPumps)
+		{
+			if (heatPumps?.Any() != true)
+				return null;
+			
+			var result = new List<XElement>();
+
+			for (int i = 0; i < heatPumps.Count; i++) {
+				result.Add(new XElement(v28 + XMLNames.Bus_HeatPumpTypePassenger, heatPumps[i].Item1.GetLabel()));
+				result.Add(new XElement(v28 + XMLNames.Bus_HeatPumpModePassenger, heatPumps[i].Item2.GetLabel()));
+			}
+
+			return result;
+		}
+
 
 		private XElement GetApplicationInformation()
 		{

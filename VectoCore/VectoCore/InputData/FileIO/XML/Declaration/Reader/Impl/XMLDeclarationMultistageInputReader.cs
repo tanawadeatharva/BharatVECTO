@@ -357,6 +357,15 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 		
 		public abstract string GetInvalidEntry();
 
+		protected bool MethodComplete(bool result, string methodName)
+		{
+			if (result)
+				return true;
+
+			InvalidEntry = methodName;
+			return false;
+		}
+
 		protected bool InputComplete<T>(T value, string variableName)
 		{
 			if (value != null)
@@ -515,20 +524,24 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 		}
 
 
-		public int? NumberOfPassengersUpperDeck
+		public int? NumberPassengerSeatsUpperDeck
 		{
-			get
-			{
-				return GetVehiclePropertyValue<int?>(nameof(NumberOfPassengersUpperDeck));
-			}
+			get { return GetVehiclePropertyValue<int?>(nameof(NumberPassengerSeatsUpperDeck)); }
 		}
 
-		public int? NumberOfPassengersLowerDeck
+		public int? NumberPassengerSeatsLowerDeck
 		{
-			get
-			{
-				return GetVehiclePropertyValue<int?>(nameof(NumberOfPassengersLowerDeck));
-			}
+			get { return GetVehiclePropertyValue<int?>(nameof(NumberPassengerSeatsLowerDeck)); }
+		}
+
+		public int? NumberPassengersStandingLowerDeck
+		{
+			get { return GetVehiclePropertyValue<int?>(nameof(NumberPassengersStandingLowerDeck)); }
+		}
+
+		public int? NumberPassengersStandingUpperDeck
+		{
+			get { return GetVehiclePropertyValue<int?>(nameof(NumberPassengersStandingUpperDeck)); }
 		}
 
 		public VehicleCode? VehicleCode
@@ -674,8 +687,11 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 					checkAirdragModified = true;
 					continue;
 				}
-				if (checkAirdragModified && manufacturingStage.Vehicle?.AirdragModifiedMultistage == null) 
+
+				if (checkAirdragModified && manufacturingStage.Vehicle?.AirdragModifiedMultistage == null) {
 					validAirdragEntries = false;
+					break;
+				}
 			}
 
 			return validAirdragEntries;
@@ -690,11 +706,13 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 					&& InputComplete(LegislativeClass, nameof(LegislativeClass)) 
 					&& InputComplete(CurbMassChassis, nameof(CurbMassChassis)) 
 					&& InputComplete(GrossVehicleMassRating, nameof(GrossVehicleMassRating))
-					&& InputComplete(IsAirdragEntriesValid(), nameof(IsAirdragEntriesValid)) 
-					&& InputComplete(IsTankSystemValid(), nameof(IsTankSystemValid))
+					&& MethodComplete(IsAirdragEntriesValid(), nameof(IsAirdragEntriesValid)) 
+					&& MethodComplete(IsTankSystemValid(), nameof(IsTankSystemValid))
 					&& InputComplete(RegisteredClass, nameof(RegisteredClass))
-					&& InputComplete(NumberOfPassengersLowerDeck, nameof(NumberOfPassengersLowerDeck))
-					&& InputComplete(NumberOfPassengersUpperDeck, nameof(NumberOfPassengersUpperDeck))
+					&& InputComplete(NumberPassengerSeatsLowerDeck, nameof(NumberPassengerSeatsLowerDeck))
+					&& InputComplete(NumberPassengerSeatsUpperDeck, nameof(NumberPassengerSeatsUpperDeck))
+					&& InputComplete(NumberPassengersStandingLowerDeck, nameof(NumberPassengersStandingLowerDeck))
+					&& InputComplete(NumberPassengersStandingUpperDeck, nameof(NumberPassengersStandingUpperDeck))
 					&& InputComplete(VehicleCode, nameof(VehicleCode))
 					&& InputComplete(LowEntry, nameof(LowEntry)) && InputComplete(Height, nameof(Height)) 
 					&& InputComplete(Length, nameof(Length)) && InputComplete(Width, nameof(Width)) 
@@ -1209,19 +1227,11 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 			}
 		}
 
-		public HeatPumpType? HeatPumpTypePassengerCompartment
+		public IList<Tuple<HeatPumpType, HeatPumpMode>> HeatPumpPassengerCompartments
 		{
 			get
 			{
-				return GetHVACBusAuxPropertyValue<HeatPumpType?>(nameof(HeatPumpTypePassengerCompartment));
-			}
-		}
-
-		public HeatPumpMode? HeatPumpModePassengerCompartment
-		{
-			get
-			{
-				return GetHVACBusAuxPropertyValue<HeatPumpMode?>(nameof(HeatPumpModePassengerCompartment));
+				return GetHeatPumpPassengerCompartments();
 			}
 		}
 
@@ -1286,6 +1296,16 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 		public bool EngineWasteGasHeatExchanger { get; }
 
 
+		private IList<Tuple<HeatPumpType, HeatPumpMode>> GetHeatPumpPassengerCompartments()
+		{
+			if (_manufacturingStages?.Any() != true)
+				return null;
+
+			return _manufacturingStages?.First()?.Vehicle?.Components?.BusAuxiliaries?.HVACAux
+				?.HeatPumpPassengerCompartments;
+		}
+
+
 		private T GetHVACBusAuxPropertyValue<T>(string propertyName)
 		{
 			foreach (var manufacturingStage in _manufacturingStages) {
@@ -1304,28 +1324,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 		{
 			return SystemConfiguration != null && SystemConfiguration != BusHVACSystemConfiguration.Unknown;
 		}
-
-		private bool IsCorrectDriverPumpTypeDriverPumpMode()
-		{
-			if (HeatPumpModeDriverCompartment == null)
-				return false;
-
-			if (HeatPumpTypeDriverCompartment == HeatPumpType.none)
-				return HeatPumpModeDriverCompartment == null || HeatPumpModeDriverCompartment == HeatPumpMode.N_A;
-			
-			return HeatPumpTypeDriverCompartment != null && HeatPumpModeDriverCompartment != null;
-		}
-
-		private bool IsCorrectPassengerPumpTypeDriverPumpMode()
-		{
-			if (HeatPumpTypePassengerCompartment == null)
-				return false;
-			if (HeatPumpTypePassengerCompartment == HeatPumpType.none)
-				return HeatPumpModePassengerCompartment == null || HeatPumpModePassengerCompartment == HeatPumpMode.N_A;
-
-			return HeatPumpTypePassengerCompartment != null && HeatPumpModePassengerCompartment != null;
-		}
-
+		
 		private bool RequiredParametersForJobType(VectoSimulationJobType jobType)
 		{
 			switch (jobType) {
@@ -1342,14 +1341,12 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 		
 		public override bool IsInputDataComplete(VectoSimulationJobType jobType)
 		{
-			return InputComplete(IsCorrectSystemConfiguration(), nameof(IsCorrectSystemConfiguration))
-					&& InputComplete(IsCorrectDriverPumpTypeDriverPumpMode(), nameof(IsCorrectDriverPumpTypeDriverPumpMode))
-					&& InputComplete(IsCorrectPassengerPumpTypeDriverPumpMode(), nameof(IsCorrectPassengerPumpTypeDriverPumpMode))
+			return MethodComplete(IsCorrectSystemConfiguration(), nameof(IsCorrectSystemConfiguration))
 					&& InputComplete(AuxHeaterPower, nameof(AuxHeaterPower))
 					&& InputComplete(DoubleGlazing, nameof(DoubleGlazing))
 					&& InputComplete(AdjustableAuxiliaryHeater, nameof(AdjustableAuxiliaryHeater))
 					&& InputComplete(SeparateAirDistributionDucts, nameof(SeparateAirDistributionDucts))
-					&& InputComplete(RequiredParametersForJobType(jobType), nameof(RequiredParametersForJobType));
+					&& MethodComplete(RequiredParametersForJobType(jobType), nameof(RequiredParametersForJobType));
 		}
 
 		public override string GetInvalidEntry()
