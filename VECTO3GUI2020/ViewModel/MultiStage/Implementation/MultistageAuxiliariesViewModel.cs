@@ -555,10 +555,18 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 			SystemConfiguration = componentsAuxiliaryInputData.HVACAux?.SystemConfiguration;
 			HeatPumpTypeDriverCompartment = componentsAuxiliaryInputData.HVACAux?.HeatPumpTypeDriverCompartment;
 			HeatPumpModeDriverCompartment = componentsAuxiliaryInputData.HVACAux?.HeatPumpModeDriverCompartment;
-			//HeatPumpTypePassengerCompartment = componentsAuxiliaryInputData.HVACAux?.HeatPumpTypePassengerCompartment;
-			//HeatPumpModePassengerCompartment = componentsAuxiliaryInputData.HVACAux?.HeatPumpModePassengerCompartment;
+			PassengerHeatPumps.Clear();
+			if (componentsAuxiliaryInputData.HVACAux?.HeatPumpPassengerCompartments != null) {
+				foreach (var (heatPumpType, heatPumpMode) in componentsAuxiliaryInputData.HVACAux?.HeatPumpPassengerCompartments)
+				{
+					PassengerHeatPumps.Add(new HeatPumpConfiguration() {
+						HeatPumpType = heatPumpType,
+						HeatPumpMode = heatPumpMode
+					});
+				}
+			}
 
-			
+
 
 			AuxHeaterPower = componentsAuxiliaryInputData.HVACAux?.AuxHeaterPower;
 			DoubleGlazing = componentsAuxiliaryInputData.HVACAux?.DoubleGlazing;
