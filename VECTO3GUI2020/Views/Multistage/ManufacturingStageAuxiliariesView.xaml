@@ -39,15 +39,28 @@
                     <ContentControl Content="{Binding ParameterViewModels[HeatPumpTypeDriverCompartment]}"/>
                     <ContentControl Content="{Binding ParameterViewModels[HeatPumpModeDriverCompartment]}"/>
                     <Label Padding="10 4 0 4" Style="{DynamicResource LabelStyle1}">Consolidated Data</Label>
-                    <ListView>
-                        <ListView.ItemsSource>
-                            <Binding Path="ConsolidatedInputData.HVACAux.HeatPumpPassengerCompartments" FallbackValue="null"/>
-                        </ListView.ItemsSource>
-                        <ListView.Visibility>
-                            <Binding Path="ConsolidatedInputData.HVACAux.HeatPumpPassengerCompartments" FallbackValue="Collapsed" Converter="{StaticResource NullToVisibilityConverter}"/> 
-                        </ListView.Visibility>
-                    </ListView>
-                    <Separator></Separator>
+                    <ItemsControl 
+                        Visibility="{Binding ConsolidatedHeatPumpConfigurationsPassenger, Converter={StaticResource NullToVisibilityConverter}}" 
+                        ItemsSource="{Binding ConsolidatedHeatPumpConfigurationsPassenger}" 
+                        HorizontalContentAlignment="Stretch"
+                        Padding="5 5 29 5 " >
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <Border BorderThickness="1">
+                                    <DockPanel LastChildFill="true">
+                                        <UniformGrid DockPanel.Dock="Left" Columns="2">
+                                            <ContentControl Grid.Column="0" DockPanel.Dock="Top" Content="{Binding Path=HeatPumpTypeVM}"/>
+                                            <ContentControl Grid.Column="1" DockPanel.Dock="Top" Content="{Binding Path=HeatPumpModeVM}"/>
+                                        </UniformGrid>
+                                    </DockPanel>
+                                </Border>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                    <Label Visibility="{Binding ConsolidatedHeatPumpConfigurationsPassenger, 
+                        Converter={StaticResource NullToVisibilityConverter}, 
+                        ConverterParameter=invert}"
+                           HorizontalAlignment="Center"> No consolidated data available </Label>
                     <DockPanel LastChildFill="true">
                         <Button DockPanel.Dock="right"  ContentTemplate="{DynamicResource AddIcon}" Command="{Binding AddPassengerHeatpumpCommand}">
 
@@ -55,14 +68,15 @@
                         <Label Style="{DynamicResource LabelStyle1}" Padding="10 4 0 4">Current Stage</Label>
                     </DockPanel>
                     
-                    <ListView ItemsSource="{Binding PassengerHeatPumps}" HorizontalContentAlignment="Stretch">
-                        <ListView.ItemTemplate>
+                    <ItemsControl ItemsSource="{Binding HeatPumpConfigurationsPassenger}" HorizontalContentAlignment="Stretch"
+                                  Padding="5">
+                        <ItemsControl.ItemTemplate>
                             <DataTemplate>
                                 <Border BorderThickness="1">
                                     <DockPanel LastChildFill="true">
-                                        <Button DockPanel.Dock="Right" 
+                                        <Button DockPanel.Dock="Right" Height="24"
                                                 ContentTemplate="{DynamicResource TrashIcon}"
-                                                Command="{Binding RelativeSource={RelativeSource AncestorType=ListView}, 
+                                                Command="{Binding RelativeSource={RelativeSource AncestorType=ItemsControl}, 
                                                             Path=DataContext.RemovePassengerHeatpumpCommand}"
                                                 CommandParameter="{Binding }"/>
                                         <UniformGrid DockPanel.Dock="Left" Columns="2">
@@ -72,11 +86,9 @@
                                     </DockPanel>
                                 </Border>
                             </DataTemplate>
-                        </ListView.ItemTemplate>
-                    </ListView>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
 
-                   
-                    <Separator/>
 
                     <ContentControl Content="{Binding ParameterViewModels[AuxHeaterPower]}"/>
                     <ContentControl Content="{Binding ParameterViewModels[DoubleGlazing]}"/>

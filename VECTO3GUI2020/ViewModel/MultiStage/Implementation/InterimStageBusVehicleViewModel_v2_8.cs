@@ -162,13 +162,12 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 					.BusAuxiliaries);
 			_airdragModifiedEditingEnabled = false;
 
-			_editingEnabledDictionary = new IndexedStorage<bool>((identifier) => {
-				
-				OnPropertyChanged(identifier);
-				OnPropertyChanged(nameof(EditingEnabledDictionary));
-			});
 
+			CreateParameterViewModels();
+		}
 
+		private void CreateParameterViewModels()
+		{
 			_parameterViewModels = new Dictionary<string, MultistageParameterViewModel>();
 			var properties = this.GetType().GetProperties();
 			var backedUpParameters = new HashSet<string>() {
@@ -200,7 +199,7 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 				nameof(ATEcoRollReleaseLockupClutch),
 			};
 
-			foreach(var property in properties) {
+			foreach (var property in properties) {
 				if (!backedUpParameters.Contains(property.Name)) {
 					continue;
 				}
@@ -210,13 +209,13 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 				try {
 					previousInputData = ConsolidatedVehicleData?.GetType().GetProperty(property.Name)?
 						.GetValue(ConsolidatedVehicleData);
-
 				} catch (Exception e) {
 					Debug.WriteLine(e.Message);
 				}
 
-				_parameterViewModels.Add(property.Name, new MultistageParameterViewModel(property.Name, previousInputData, this, resourceManagers:new ResourceManager[]{BusStrings.ResourceManager, Strings.ResourceManager}
-					));
+				_parameterViewModels.Add(property.Name, new MultistageParameterViewModel(property.Name, previousInputData, this,
+					resourceManagers: new ResourceManager[] { BusStrings.ResourceManager, Strings.ResourceManager }
+				));
 			}
 
 			_parameterViewModels[nameof(WidthInMm)].PreviousContent = ConsolidatedWidthInMm;
@@ -271,10 +270,12 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 
 
 			_parameterViewModels[nameof(VehicleCode)].AllowedItems =
-				EnumHelper.GetValuesAsObservableCollectionExcluding<Enum, VehicleCode>((TUGraz.VectoCommon.Models.VehicleCode.NOT_APPLICABLE));
+				EnumHelper.GetValuesAsObservableCollectionExcluding<Enum, VehicleCode>((TUGraz.VectoCommon.Models.VehicleCode
+					.NOT_APPLICABLE));
 
 			_parameterViewModels[nameof(LegislativeClass)].AllowedItems =
-				EnumHelper.GetValuesAsObservableCollectionExcluding<Enum, LegislativeClass>((TUGraz.VectoCommon.Models.LegislativeClass.Unknown));
+				EnumHelper.GetValuesAsObservableCollectionExcluding<Enum, LegislativeClass>((TUGraz.VectoCommon.Models
+					.LegislativeClass.Unknown));
 
 			_parameterViewModels[nameof(RegisteredClass)].AllowedItems =
 				EnumHelper.GetValuesAsObservableCollectionExcluding<Enum, RegistrationClass>(RegistrationClass.unknown);
@@ -294,8 +295,6 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 			_parameterViewModels[nameof(Manufacturer)].Mandatory = true;
 			_parameterViewModels[nameof(ManufacturerAddress)].Mandatory = true;
 			_parameterViewModels[nameof(VIN)].Mandatory = true;
-
-
 		}
 
 		#region Overrides of ViewModelBase

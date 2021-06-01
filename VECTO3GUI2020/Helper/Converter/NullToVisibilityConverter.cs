@@ -17,7 +17,11 @@ namespace VECTO3GUI2020.Helper.Converter
         /// <returns></returns>
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
 		{
-			bool invert = parameter as string == "invert";
+			var invert = false;
+			if (parameter != null) {
+				invert = string.Equals("invert", (string) parameter, StringComparison.InvariantCultureIgnoreCase);
+            }
+			
             if (value == null)
             {
 				if (invert) {
