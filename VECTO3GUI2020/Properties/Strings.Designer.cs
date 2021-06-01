@@ -277,6 +277,15 @@ namespace VECTO3GUI2020.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Heat Pump Mode.
+        /// </summary>
+        public static string HeatPumpMode {
+            get {
+                return ResourceManager.GetString("HeatPumpMode", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Heat Pump Mode Driver.
         /// </summary>
         public static string HeatPumpModeDriverCompartment {
@@ -291,6 +300,15 @@ namespace VECTO3GUI2020.Properties {
         public static string HeatPumpModePassengerCompartment {
             get {
                 return ResourceManager.GetString("HeatPumpModePassengerCompartment", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Heat Pump Type.
+        /// </summary>
+        public static string HeatPumpType {
+            get {
+                return ResourceManager.GetString("HeatPumpType", resourceCulture);
             }
         }
         

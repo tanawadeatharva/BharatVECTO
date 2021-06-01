@@ -319,4 +319,10 @@
   <data name="TransferredAirDragArea" xml:space="preserve">
     <value>Transferred Airdrag Area</value>
   </data>
+  <data name="HeatPumpMode" xml:space="preserve">
+    <value>Heat Pump Mode</value>
+  </data>
+  <data name="HeatPumpType" xml:space="preserve">
+    <value>Heat Pump Type</value>
+  </data>
 </root>

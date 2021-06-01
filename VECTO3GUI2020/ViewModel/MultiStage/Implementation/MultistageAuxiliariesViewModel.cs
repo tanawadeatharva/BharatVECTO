@@ -47,7 +47,7 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 		{
 			ConsolidatedInputData = consolidatedAuxiliariesInputData;
 			if (ConsolidatedInputData?.HVACAux?.HeatPumpPassengerCompartments != null) {
-				ConsolidatedHeatPumpConfigurationsPassenger = new ObservableCollection<HeatPumpConfiguration>();
+				_consolidatedHeatPumpConfigurationsPassenger = new ObservableCollection<HeatPumpConfiguration>();
 				foreach (var (heatPumpType, heatPumpMode) in ConsolidatedInputData?.HVACAux?.HeatPumpPassengerCompartments) {
 					ConsolidatedHeatPumpConfigurationsPassenger.Add(new HeatPumpConfiguration()
 					{
@@ -361,7 +361,13 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 		public ICommand AddPassengerHeatpumpCommand
 		{
 			get => _addPassengerHeatpumpCommand ??
-					new RelayCommand(() => HeatPumpConfigurationsPassenger.Add(new HeatPumpConfiguration()),
+					new RelayCommand(() => {
+							HeatPumpGroupEditingEnabled = true;
+							if (HeatPumpConfigurationsPassenger == null) {
+								HeatPumpConfigurationsPassenger = new ObservableCollection<HeatPumpConfiguration>();
+							}
+							HeatPumpConfigurationsPassenger.Add(new HeatPumpConfiguration());
+						},
 						() => true);
 		}
 
@@ -370,7 +376,7 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 		public ICommand RemovePassengerHeatpumpCommand
 		{
 			get => _removePasssengerHeatpumpCommand ??
-					new RelayCommand<HeatPumpConfiguration>(hp => HeatPumpConfigurationsPassenger.Remove(hp), (hp) => true);
+					new RelayCommand<HeatPumpConfiguration>(hp => HeatPumpConfigurationsPassenger?.Remove(hp), (hp) => true);
 		}
 
 		public IList<Tuple<HeatPumpType, HeatPumpMode>> HeatPumpPassengerCompartments{
@@ -383,11 +389,19 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 				return list;
 			}
 		}
-		public ObservableCollection<HeatPumpConfiguration> ConsolidatedHeatPumpConfigurationsPassenger { get; }
+
+		public ObservableCollection<HeatPumpConfiguration> ConsolidatedHeatPumpConfigurationsPassenger
+		{
+			get => _consolidatedHeatPumpConfigurationsPassenger;
+			private set => SetProperty(ref _consolidatedHeatPumpConfigurationsPassenger, value);
+		}
 
 
-		public ObservableCollection<HeatPumpConfiguration> HeatPumpConfigurationsPassenger { get; } =
-			new ObservableCollection<HeatPumpConfiguration>();
+		public ObservableCollection<HeatPumpConfiguration> HeatPumpConfigurationsPassenger
+		{
+			get => _heatPumpConfigurationsPassenger;
+			private set => SetProperty(ref _heatPumpConfigurationsPassenger, value);
+		}
 
 		public class HeatPumpConfiguration : ViewModelBase, ITuple, IDataErrorInfo
 		{
@@ -505,6 +519,9 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 					_parameterViewModels[nameof(HeatPumpModeDriverCompartment)].EditingEnabled = value;
 					_parameterViewModels[nameof(HeatPumpTypeDriverCompartment)].EditingEnabled = value;
 					_parameterViewModels[nameof(SystemConfiguration)].EditingEnabled = value;
+					if (value == false) {
+						HeatPumpConfigurationsPassenger = null;
+					}
 				}
 			}
 		}
@@ -635,6 +652,8 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 
 		private CompressorDrive _compressorDrive;
 		private Dictionary<string, MultistageParameterViewModel> _parameterViewModels;
+		private ObservableCollection<HeatPumpConfiguration> _consolidatedHeatPumpConfigurationsPassenger;
+		private ObservableCollection<HeatPumpConfiguration> _heatPumpConfigurationsPassenger;
 
 
 		public CompressorDrive CompressorDrive

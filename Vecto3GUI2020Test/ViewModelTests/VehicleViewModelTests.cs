@@ -72,6 +72,9 @@ namespace Vecto3GUI2020Test.ViewModelTests
 			var vehicleVM =
 				vm.MultiStageJobViewModel.ManufacturingStageViewModel.Vehicle as
 					DeclarationInterimStageBusVehicleViewModel_v2_8;
+
+			
+
 		}
 		/// <summary>
 		/// airdrag component is in VIF set => AirdragModifiedMultistage is mandatory
