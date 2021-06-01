@@ -53,7 +53,7 @@
                     ParameterViewModels[GrossVehicleMassRating]}"></ContentControl>
 
 
-                <ContentControl 
+                <ContentControl Visibility="{Binding AirdragModifiedMultistageMandatory, Converter={StaticResource BooleanToVisibilityConverter}}"
                     Content="{Binding ParameterViewModels[AirdragModifiedEnum]}"/>
 
                 <ContentControl 

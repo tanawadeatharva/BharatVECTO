@@ -383,9 +383,13 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 			get
 			{
 				var list = new List<Tuple<HeatPumpType, HeatPumpMode>>();
-				foreach (var heatPumpConfiguration in HeatPumpConfigurationsPassenger) {
-					list.Add(new Tuple<HeatPumpType, HeatPumpMode>((HeatPumpType)heatPumpConfiguration.HeatPumpType, (HeatPumpMode)heatPumpConfiguration.HeatPumpMode));
+				if (HeatPumpConfigurationsPassenger != null) {
+					foreach (var heatPumpConfiguration in HeatPumpConfigurationsPassenger)
+					{
+						list.Add(new Tuple<HeatPumpType, HeatPumpMode>((HeatPumpType)heatPumpConfiguration.HeatPumpType, (HeatPumpMode)heatPumpConfiguration.HeatPumpMode));
+					}
 				}
+				
 				return list;
 			}
 		}
