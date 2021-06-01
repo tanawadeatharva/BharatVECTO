@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Xml.Linq;
 using Castle.Core.Internal;
 using TUGraz.VectoCommon.BusAuxiliaries;
@@ -87,8 +88,14 @@ namespace VECTO3GUI2020.Util.XML.Implementation.ComponentWriter
 				hvacElement.Add(new XElement(_defaultNamespace + XMLNames.Bus_HeatPumpTypeDriver, _inputData.HVACAux.HeatPumpTypeDriverCompartment.GetLabel()));
 				hvacElement.Add(new XElement(_defaultNamespace + XMLNames.Bus_HeatPumpModeDriver, _inputData.HVACAux.HeatPumpModeDriverCompartment.GetLabel()));
 				//TODO
-				//hvacElement.Add(new XElement(_defaultNamespace + XMLNames.Bus_HeatPumpTypePassenger, _inputData.HVACAux.HeatPumpTypePassengerCompartment.GetLabel()));
-				//hvacElement.Add(new XElement(_defaultNamespace + XMLNames.Bus_HeatPumpModePassenger, _inputData.HVACAux.HeatPumpModePassengerCompartment.GetLabel()));
+				if (_inputData.HVACAux.HeatPumpPassengerCompartments != null) {
+					foreach (var (heatPumpType, heatPumpMode) in _inputData.HVACAux.HeatPumpPassengerCompartments) {
+						hvacElement.Add(new XElement(_defaultNamespace + XMLNames.Bus_HeatPumpTypePassenger, heatPumpType.GetLabel()));
+						hvacElement.Add(new XElement(_defaultNamespace + XMLNames.Bus_HeatPumpModePassenger, heatPumpMode.GetLabel()));
+					}
+				}
+
+
 				hvacElement.Add(new XElement(_defaultNamespace + XMLNames.Bus_AuxiliaryHeaterPower, _inputData.HVACAux.AuxHeaterPower?.ToXMLFormat(0)));
 				hvacElement.Add(new XElement(_defaultNamespace + XMLNames.Bus_DoubleGlazing, _inputData.HVACAux.DoubleGlazing));
 				hvacElement.Add(new XElement(_defaultNamespace + XMLNames.Bus_AdjustableAuxiliaryHeater, _inputData.HVACAux.AdjustableAuxiliaryHeater));

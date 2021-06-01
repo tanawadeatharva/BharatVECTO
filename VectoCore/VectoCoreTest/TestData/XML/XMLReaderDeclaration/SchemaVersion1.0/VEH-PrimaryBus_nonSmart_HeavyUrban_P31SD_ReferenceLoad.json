@@ -2960,6 +2960,144 @@
     },
     "Type": 2,
     "TorqueConverterData": {
+      "AppVersion": "TC CalcApp 123",
+      "TCData": [
+        {
+          "Speed Ratio": "0.0000",
+          "Torque Ratio": "1.80",
+          "MP1000": "367.68"
+        },
+        {
+          "Speed Ratio": "0.1000",
+          "Torque Ratio": "1.71",
+          "MP1000": "355.43"
+        },
+        {
+          "Speed Ratio": "0.2000",
+          "Torque Ratio": "1.61",
+          "MP1000": "343.17"
+        },
+        {
+          "Speed Ratio": "0.3000",
+          "Torque Ratio": "1.52",
+          "MP1000": "330.92"
+        },
+        {
+          "Speed Ratio": "0.4000",
+          "Torque Ratio": "1.42",
+          "MP1000": "318.66"
+        },
+        {
+          "Speed Ratio": "0.5000",
+          "Torque Ratio": "1.33",
+          "MP1000": "306.40"
+        },
+        {
+          "Speed Ratio": "0.6000",
+          "Torque Ratio": "1.23",
+          "MP1000": "294.15"
+        },
+        {
+          "Speed Ratio": "0.6500",
+          "Torque Ratio": "1.19",
+          "MP1000": "275.76"
+        },
+        {
+          "Speed Ratio": "0.7000",
+          "Torque Ratio": "1.14",
+          "MP1000": "257.38"
+        },
+        {
+          "Speed Ratio": "0.7500",
+          "Torque Ratio": "1.09",
+          "MP1000": "238.99"
+        },
+        {
+          "Speed Ratio": "0.8000",
+          "Torque Ratio": "1.04",
+          "MP1000": "220.61"
+        },
+        {
+          "Speed Ratio": "0.8500",
+          "Torque Ratio": "1.00",
+          "MP1000": "202.23"
+        },
+        {
+          "Speed Ratio": "0.9000",
+          "Torque Ratio": "0.95",
+          "MP1000": "183.84"
+        },
+        {
+          "Speed Ratio": "0.9500",
+          "Torque Ratio": "0.95",
+          "MP1000": "91.92"
+        },
+        {
+          "Speed Ratio": "1.0000",
+          "Torque Ratio": "0.95",
+          "MP1000": "0.00"
+        },
+        {
+          "Speed Ratio": "1.1000",
+          "Torque Ratio": "1.00",
+          "MP1000": "-40.34"
+        },
+        {
+          "Speed Ratio": "1.2200",
+          "Torque Ratio": "1.00",
+          "MP1000": "-80.34"
+        },
+        {
+          "Speed Ratio": "1.3800",
+          "Torque Ratio": "1.00",
+          "MP1000": "-136.11"
+        },
+        {
+          "Speed Ratio": "1.5700",
+          "Torque Ratio": "1.00",
+          "MP1000": "-216.52"
+        },
+        {
+          "Speed Ratio": "1.8300",
+          "Torque Ratio": "1.00",
+          "MP1000": "-335.19"
+        },
+        {
+          "Speed Ratio": "2.2000",
+          "Torque Ratio": "1.00",
+          "MP1000": "-528.77"
+        },
+        {
+          "Speed Ratio": "2.5000",
+          "Torque Ratio": "1.00",
+          "MP1000": "-721.00"
+        },
+        {
+          "Speed Ratio": "3.0000",
+          "Torque Ratio": "1.00",
+          "MP1000": "-1122.00"
+        },
+        {
+          "Speed Ratio": "3.5000",
+          "Torque Ratio": "1.00",
+          "MP1000": "-1648.00"
+        },
+        {
+          "Speed Ratio": "4.0000",
+          "Torque Ratio": "1.00",
+          "MP1000": "-2326.00"
+        },
+        {
+          "Speed Ratio": "4.5000",
+          "Torque Ratio": "1.00",
+          "MP1000": "-3182.00"
+        },
+        {
+          "Speed Ratio": "5.0000",
+          "Torque Ratio": "1.00",
+          "MP1000": "-4242.00"
+        }
+      ],
       "ReferenceSpeed": {
         "AsRPM": 999.99999999999989,
         "SerializedValue": "104.7198 [1/s]"
@@ -2993,9 +3131,9 @@
         "5, 0,9, -1470.7200 [Nm]"
       ],
       "SavedInDeclarationMode": false,
-      "Manufacturer": null,
+      "Manufacturer": "Some Manufacturer",
       "ModelName": "Some Model",
-      "Date": "0001-01-01T00:00:00",
+      "Date": "2017-02-15T11:00:00Z",
       "CertificationMethod": 0,
       "CertificationNumber": "e12*0815/8051*2017/05E0000*00",
       "DigestValueInput": "q2sumDwsqQKLw4xwkEllgsygF5bHBwZPSS66UNaXXis="

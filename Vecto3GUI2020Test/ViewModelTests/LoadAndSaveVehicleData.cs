@@ -58,6 +58,17 @@ namespace Vecto3GUI2020Test
 			Assert.True(checkFileNameExists(fileName));
 		}
 
+		[Test]
+		public void loadPrimaryAndSave()
+		{
+			//load file
+			var newMultiStageJob = loadFile(primary_vehicle_only);
+			var vehicle = newMultiStageJob.MultiStageJobViewModel.ManufacturingStageViewModel.Vehicle as DeclarationInterimStageBusVehicleViewModel_v2_8;
+
+
+
+		}
+
 
 
 
@@ -351,8 +362,6 @@ namespace Vecto3GUI2020Test
 			Assert.AreEqual(BusHVACSystemConfiguration.Configuration0, hvacAux.SystemConfiguration);
 			Assert.AreEqual(HeatPumpType.none, hvacAux.HeatPumpTypeDriverCompartment);
 			Assert.AreEqual(HeatPumpMode.heating, hvacAux.HeatPumpModeDriverCompartment);
-			Assert.AreEqual(HeatPumpType.non_R_744_2_stage, hvacAux.HeatPumpTypePassengerCompartment);
-			Assert.AreEqual(HeatPumpMode.cooling, hvacAux.HeatPumpModePassengerCompartment);
 			Assert.AreEqual(50, hvacAux.AuxHeaterPower.Value());
 			Assert.AreEqual(false, hvacAux.DoubleGlazing);
 			Assert.AreEqual(true, hvacAux.AdjustableAuxiliaryHeater);
