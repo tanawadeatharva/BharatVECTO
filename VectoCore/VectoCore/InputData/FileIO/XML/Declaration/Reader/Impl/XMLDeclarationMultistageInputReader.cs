@@ -681,7 +681,9 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 			var checkAirdragModified = false;
 			var validAirdragEntries = true;
 
-			var stages = _manufacturingStages.Reverse();
+			var t = _manufacturingStages.ToList(); 
+
+			var stages = _manufacturingStages.Reverse().ToList();
 			foreach (var manufacturingStage in stages) {
 				if (manufacturingStage.Vehicle?.Components?.AirdragInputData != null && !checkAirdragModified ) {
 					checkAirdragModified = true;
@@ -1299,10 +1301,14 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 		private IList<Tuple<HeatPumpType, HeatPumpMode>> GetHeatPumpPassengerCompartments()
 		{
 			if (_manufacturingStages?.Any() != true)
-				return null;
+				return null; 
 
-			return _manufacturingStages?.First()?.Vehicle?.Components?.BusAuxiliaries?.HVACAux
-				?.HeatPumpPassengerCompartments;
+			foreach (var entry in _manufacturingStages) {
+				if (entry.Vehicle?.Components?.BusAuxiliaries?.HVACAux?.HeatPumpPassengerCompartments != null)
+					return entry.Vehicle.Components.BusAuxiliaries.HVACAux.HeatPumpPassengerCompartments;
+			}
+
+			return null;
 		}
 
 
@@ -1342,6 +1348,9 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 		public override bool IsInputDataComplete(VectoSimulationJobType jobType)
 		{
 			return MethodComplete(IsCorrectSystemConfiguration(), nameof(IsCorrectSystemConfiguration))
+					&& InputComplete(HeatPumpTypeDriverCompartment, nameof(HeatPumpTypeDriverCompartment))
+					&& InputComplete(HeatPumpModeDriverCompartment, nameof(HeatPumpModeDriverCompartment))
+					&& InputComplete(HeatPumpPassengerCompartments, nameof(HeatPumpPassengerCompartments))
 					&& InputComplete(AuxHeaterPower, nameof(AuxHeaterPower))
 					&& InputComplete(DoubleGlazing, nameof(DoubleGlazing))
 					&& InputComplete(AdjustableAuxiliaryHeater, nameof(AdjustableAuxiliaryHeater))

@@ -688,7 +688,7 @@ xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:DeclarationOutput:VehicleInterimFile
 			</HashPreviousStage>
 			<Vehicle xsi:type="v2.8:InterimStageInputType" id="MSTG-2-Vehicle">
 				<v2.8:Manufacturer>Intermediate Manufacturer 2</v2.8:Manufacturer>
-				<v2.8:ManufacturerAddress></v2.8:ManufacturerAddress>
+				<v2.8:ManufacturerAddress>Intermediate Manufacturer Address 2</v2.8:ManufacturerAddress>
 				<v2.8:VIN>VEH-2234567890</v2.8:VIN>
 				<v2.8:Date>2021-02-13T07:20:08.0187663Z</v2.8:Date>			
 				<v2.8:VehicleDeclarationType>final</v2.8:VehicleDeclarationType>
@@ -729,8 +729,8 @@ xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:DeclarationOutput:VehicleInterimFile
 				</v2.8:Components>		
 			</Vehicle>
 			<ApplicationInformation>
-				<SimulationToolVersion>!!NOT FOR CERTIFICATION!!</SimulationToolVersion>
-				<Date>2021-02-13T07:20:08.0187663Z</Date>
+				<SimulationToolVersion>!!NOT FOR CERTIFICATION!!!</SimulationToolVersion>
+				<Date>2021-03-13T07:20:08.0187663Z</Date>
 			</ApplicationInformation>
 		</Data>		
 		<Signature>

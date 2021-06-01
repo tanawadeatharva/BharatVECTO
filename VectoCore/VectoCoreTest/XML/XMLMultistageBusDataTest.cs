@@ -611,7 +611,7 @@ namespace TUGraz.VectoCore.Tests.XML
 		{
 			Assert.AreEqual("MSTG-2-Vehicle", vehicleData.Identifier);
 			Assert.AreEqual("Intermediate Manufacturer 2", vehicleData.Manufacturer);
-			Assert.AreEqual("", vehicleData.ManufacturerAddress);
+			Assert.AreEqual("Intermediate Manufacturer Address 2", vehicleData.ManufacturerAddress);
 			Assert.AreEqual("VEH-2234567890", vehicleData.VIN);
 			Assert.AreEqual(DateTime.Parse("2021-02-13T07:20:08.0187663Z").ToUniversalTime(), vehicleData.Date);
 			Assert.AreEqual(null, vehicleData.AirdragModifiedMultistage);
