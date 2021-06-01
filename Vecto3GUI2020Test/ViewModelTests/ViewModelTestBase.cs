@@ -32,6 +32,8 @@ namespace Vecto3GUI2020Test
 
 		protected const string stageInputFullSample = "vecto_vehicle-stage_input_full-sample.xml";
 
+		protected const string airdragComponent = "AidragComponent.xml";
+
 		//protected IXMLInputDataReader xmlInputReader;
 		protected IKernel _kernel;
 		private Mock<IDialogHelper> _mockDialogHelper = new Mock<IDialogHelper>();
@@ -143,6 +145,13 @@ namespace Vecto3GUI2020Test
 
 
 			return _mockDialogHelper;
+		}
+
+		protected string GetFullPath(string fileName)
+		{
+			var path = Path.GetFullPath(DirPath + fileName);
+			Debug.WriteLine(path);
+			return path;
 		}
 	}
 }

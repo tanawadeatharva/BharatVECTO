@@ -163,7 +163,7 @@ namespace VECTO3GUI2020.ViewModel.Implementation
 				new Progress<int>((i) => _outputViewModel.Progress = i),
 				new Progress<string>((msg) => _outputViewModel.StatusMessage = msg)));
 			SimulationRunning = false;
-			_outputViewModel.SumProgress = 0;
+			_outputViewModel.Progress = 0;
 			cancellationTokenSource.Dispose();
         }
 

@@ -178,6 +178,42 @@ namespace VECTO3GUI2020.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Passenger Seats Lower Deck.
+        /// </summary>
+        public static string NumberPassengerSeatsLowerDeck {
+            get {
+                return ResourceManager.GetString("NumberPassengerSeatsLowerDeck", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Passenger Seats Upper Deck.
+        /// </summary>
+        public static string NumberPassengerSeatsUpperDeck {
+            get {
+                return ResourceManager.GetString("NumberPassengerSeatsUpperDeck", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Passenger Standing Lower Deck.
+        /// </summary>
+        public static string NumberPassengersStandingLowerDeck {
+            get {
+                return ResourceManager.GetString("NumberPassengersStandingLowerDeck", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Passenger Standing Upper Deck.
+        /// </summary>
+        public static string NumberPassengersStandingUpperDeck {
+            get {
+                return ResourceManager.GetString("NumberPassengersStandingUpperDeck", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Predictive Cruise Control.
         /// </summary>
         public static string PredictiveCruiseControlNullable {

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Xml;
+using Castle.Core.Internal;
 using Castle.DynamicProxy.Generators.Emitters.SimpleAST;
 using Moq;
 using Ninject;
@@ -11,6 +12,7 @@ using NUnit.Framework;
 using TUGraz.VectoCommon.BusAuxiliaries;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
+using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.InputData.FileIO.XML;
 using TUGraz.VectoCore.InputData.FileIO.XML.Declaration;
 using TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider;
@@ -54,6 +56,17 @@ namespace Vecto3GUI2020Test
 			_kernel.Rebind<IDialogHelper>().ToConstant(getMockDialogHelper(fileToSave:fileName).Object);
 			manufacturingStage.SaveInputDataAsCommand.Execute(null);
 			Assert.True(checkFileNameExists(fileName));
+		}
+
+		[Test]
+		public void loadPrimaryAndSave()
+		{
+			//load file
+			var newMultiStageJob = loadFile(primary_vehicle_only);
+			var vehicle = newMultiStageJob.MultiStageJobViewModel.ManufacturingStageViewModel.Vehicle as DeclarationInterimStageBusVehicleViewModel_v2_8;
+
+
+
 		}
 
 
@@ -169,8 +182,10 @@ namespace Vecto3GUI2020Test
 			var vehicleViewModel =
 				vm.MultiStageJobViewModel.ManufacturingStageViewModel.Vehicle as IMultistageVehicleViewModel;
 			Assert.NotNull(vehicleViewModel);
-			Assert.Null(vehicleViewModel.Manufacturer);
-			Assert.Null(vehicleViewModel.ManufacturerAddress);
+			Assert.IsTrue(vehicleViewModel.Manufacturer.IsNullOrEmpty());
+			Assert.IsTrue(vehicleViewModel.ManufacturerAddress.IsNullOrEmpty());
+			Assert.IsTrue(vehicleViewModel.VIN.IsNullOrEmpty());
+			Assert.IsNull(vehicleViewModel.Model);
 
 			var vehicleViewModel_v2_8 = vehicleViewModel as DeclarationInterimStageBusVehicleViewModel_v2_8;
 			Assert.NotNull(vehicleViewModel_v2_8);
@@ -191,7 +206,7 @@ namespace Vecto3GUI2020Test
 			Assert.IsFalse(vehicleViewModel_v2_8.AirdragModifiedMultistageEditingEnabled);
 
 			Assert.IsNull(vehicleViewModel_v2_8.AirdragModifiedMultistage);
-			Assert.IsNull(vehicleViewModel_v2_8.ConsolidatedAirdragmodified);
+			Assert.IsNull(vehicleViewModel_v2_8.ConsolidatedAirdragModifiedEnum);
 			Assert.IsNull(vehicleViewModel_v2_8.AirdragModifiedEnum);
 			
 
@@ -265,7 +280,7 @@ namespace Vecto3GUI2020Test
 			Assert.AreEqual(LegislativeClass.M3, vehicle.LegislativeClass);
 			Assert.AreEqual(500, vehicle.CurbMassChassis.Value());//CorrectedActualMass
 			Assert.AreEqual(3500, vehicle.GrossVehicleMassRating.Value());//TechnicalPermissibleMaximumLadenMass
-			Assert.AreEqual(false, vehicle.AirdragModifiedMultistage);
+			//Assert.AreEqual(false, vehicle.AirdragModifiedMultistage);
 			Assert.AreEqual(TankSystem.Compressed, vehicle.TankSystem);//NgTankSystem
 			Assert.AreEqual(RegistrationClass.II_III, vehicle.RegisteredClass);//ClassBus
 			Assert.AreEqual(0, vehicle.NumberPassengerSeatsLowerDeck);
@@ -275,9 +290,11 @@ namespace Vecto3GUI2020Test
 			Assert.AreEqual(2.5, vehicle.Height.Value());//HeightIntegratedBody
 			Assert.AreEqual(9.5, vehicle.Length.Value());
 			Assert.AreEqual(2.5, vehicle.Width.Value());
-			Assert.AreEqual(2500, vehicle.HeightInMm.Value);
-			Assert.AreEqual(9500, vehicle.LengthInMm.Value);
-			Assert.AreEqual(2500, vehicle.WidthInMm.Value);
+
+			Assert.AreEqual(2500, (vehicle.ParameterViewModels[nameof(vehicle.HeightInMm)].CurrentContent as ConvertedSI).Value);
+			Assert.AreEqual(9500, (vehicle.ParameterViewModels[nameof(vehicle.LengthInMm)].CurrentContent as ConvertedSI).Value);
+			Assert.AreEqual(2500, (vehicle.ParameterViewModels[nameof(vehicle.WidthInMm)].CurrentContent as ConvertedSI).Value);
+			
 
 			Assert.AreEqual(2, vehicle.EntranceHeight.Value());
 			Assert.AreEqual(ConsumerTechnology.Electrically, vehicle.DoorDriveTechnology);
@@ -345,8 +362,6 @@ namespace Vecto3GUI2020Test
 			Assert.AreEqual(BusHVACSystemConfiguration.Configuration0, hvacAux.SystemConfiguration);
 			Assert.AreEqual(HeatPumpType.none, hvacAux.HeatPumpTypeDriverCompartment);
 			Assert.AreEqual(HeatPumpMode.heating, hvacAux.HeatPumpModeDriverCompartment);
-			Assert.AreEqual(HeatPumpType.non_R_744_2_stage, hvacAux.HeatPumpTypePassengerCompartment);
-			Assert.AreEqual(HeatPumpMode.cooling, hvacAux.HeatPumpModePassengerCompartment);
 			Assert.AreEqual(50, hvacAux.AuxHeaterPower.Value());
 			Assert.AreEqual(false, hvacAux.DoubleGlazing);
 			Assert.AreEqual(true, hvacAux.AdjustableAuxiliaryHeater);

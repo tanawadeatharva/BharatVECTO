@@ -76,7 +76,6 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 		IMultistageAirdragViewModel MultistageAirdragViewModel { get; set; }
 		IMultistageAuxiliariesViewModel MultistageAuxiliariesViewModel { get; set; }
 		bool PrimaryVehicleHybridElectric { get; set; }
-		void SetAirdragData(IAirdragDeclarationInputData airdragData);
 		void SetVehicleInputData(IVehicleDeclarationInputData vehicleInputData);
 	}
 
@@ -144,15 +143,22 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 			IMultiStageViewModelFactory multistageViewModelFactory)
 		{
 			ConsolidatedVehicleData = consolidatedVehicleData;
+			
 			_multiStageViewModelFactory = multistageViewModelFactory;
 
 			MultistageAirdragViewModel = _multiStageViewModelFactory.GetMultistageAirdragViewModel(consolidatedVehicleData?.Components?.AirdragInputData);
+			
 			MultistageAirdragViewModel.AirdragViewModelChanged += ((sender, args) => {
 				if (sender is IMultistageAirdragViewModel vm) {
-					if (vm.AirDragViewModel != null) {
-						AirdragModifiedMultistage = true;
-					} else {
-						AirdragModifiedMultistage = false;
+					if (AirdragModifiedMultistageMandatory) {
+						if (vm.AirDragViewModel != null)
+						{
+							AirdragModifiedMultistage = true;
+						}
+						else
+						{
+							AirdragModifiedMultistage = false;
+						}
 					}
 				}
 			});
@@ -160,15 +166,26 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 			MultistageAuxiliariesViewModel =
 				_multiStageViewModelFactory.GetAuxiliariesViewModel(consolidatedVehicleData?.Components?
 					.BusAuxiliaries);
-			_airdragModifiedEditingEnabled = false;
-
-			_editingEnabledDictionary = new IndexedStorage<bool>((identifier) => {
-				
-				OnPropertyChanged(identifier);
-				OnPropertyChanged(nameof(EditingEnabledDictionary));
-			});
 
 
+			CreateParameterViewModels();
+
+
+			if (consolidatedVehicleData?.AirdragModifiedMultistage != null)
+			{
+				_airdragModifiedMultistageMandatory = true;
+				AirdragModifiedMultistageEditingEnabled = true;
+			}
+
+			if (consolidatedVehicleData?.Components?.AirdragInputData != null)
+			{
+				_airdragModifiedMultistageMandatory = true;
+				AirdragModifiedMultistageEditingEnabled = true;
+			}
+		}
+
+		private void CreateParameterViewModels()
+		{
 			_parameterViewModels = new Dictionary<string, MultistageParameterViewModel>();
 			var properties = this.GetType().GetProperties();
 			var backedUpParameters = new HashSet<string>() {
@@ -184,6 +201,8 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 				nameof(RegisteredClass),
 				nameof(NumberPassengerSeatsUpperDeck),
 				nameof(NumberPassengerSeatsLowerDeck),
+				nameof(NumberPassengersStandingLowerDeck),
+				nameof(NumberPassengersStandingUpperDeck),
 				nameof(VehicleCode),
 				nameof(LowEntry),
 				nameof(HeightInMm),
@@ -198,7 +217,7 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 				nameof(ATEcoRollReleaseLockupClutch),
 			};
 
-			foreach(var property in properties) {
+			foreach (var property in properties) {
 				if (!backedUpParameters.Contains(property.Name)) {
 					continue;
 				}
@@ -208,13 +227,13 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 				try {
 					previousInputData = ConsolidatedVehicleData?.GetType().GetProperty(property.Name)?
 						.GetValue(ConsolidatedVehicleData);
-
 				} catch (Exception e) {
 					Debug.WriteLine(e.Message);
 				}
 
-				_parameterViewModels.Add(property.Name, new MultistageParameterViewModel(property.Name, previousInputData, this, resourceManagers:new ResourceManager[]{BusStrings.ResourceManager, Strings.ResourceManager}
-					));
+				_parameterViewModels.Add(property.Name, new MultistageParameterViewModel(property.Name, previousInputData, this,
+					resourceManagers: new ResourceManager[] { BusStrings.ResourceManager, Strings.ResourceManager }
+				));
 			}
 
 			_parameterViewModels[nameof(WidthInMm)].PreviousContent = ConsolidatedWidthInMm;
@@ -226,7 +245,7 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 			_parameterViewModels[nameof(EntranceHeightInMm)].PreviousContent = ConsolidatedEntranceHeightInMm;
 			_parameterViewModels[nameof(EntranceHeightInMm)].DummyContent = ConvertedSIDummyCreator.CreateMillimeterDummy();
 
-			_parameterViewModels[nameof(AirdragModifiedEnum)].PreviousContent = ConsolidatedAirdragmodified;
+			_parameterViewModels[nameof(AirdragModifiedEnum)].PreviousContent = ConsolidatedAirdragModifiedEnum;
 
 
 			///Set up editing groups
@@ -256,6 +275,10 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 				PassengerGroupEditingCallback;
 			_parameterViewModels[nameof(NumberPassengerSeatsLowerDeck)].EditingChangedCallback =
 				PassengerGroupEditingCallback;
+			_parameterViewModels[nameof(NumberPassengersStandingLowerDeck)].EditingChangedCallback =
+				PassengerGroupEditingCallback;
+			_parameterViewModels[nameof(NumberPassengersStandingUpperDeck)].EditingChangedCallback =
+				PassengerGroupEditingCallback;
 
 			_parameterViewModels[nameof(AirdragModifiedEnum)].EditingChangedCallback = model => {
 				AirdragModifiedMultistageEditingEnabled = model.EditingEnabled;
@@ -265,10 +288,12 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 
 
 			_parameterViewModels[nameof(VehicleCode)].AllowedItems =
-				EnumHelper.GetValuesAsObservableCollectionExcluding<Enum, VehicleCode>((TUGraz.VectoCommon.Models.VehicleCode.NOT_APPLICABLE));
+				EnumHelper.GetValuesAsObservableCollectionExcluding<Enum, VehicleCode>((TUGraz.VectoCommon.Models.VehicleCode
+					.NOT_APPLICABLE));
 
 			_parameterViewModels[nameof(LegislativeClass)].AllowedItems =
-				EnumHelper.GetValuesAsObservableCollectionExcluding<Enum, LegislativeClass>((TUGraz.VectoCommon.Models.LegislativeClass.Unknown));
+				EnumHelper.GetValuesAsObservableCollectionExcluding<Enum, LegislativeClass>((TUGraz.VectoCommon.Models
+					.LegislativeClass.Unknown));
 
 			_parameterViewModels[nameof(RegisteredClass)].AllowedItems =
 				EnumHelper.GetValuesAsObservableCollectionExcluding<Enum, RegistrationClass>(RegistrationClass.unknown);
@@ -288,8 +313,6 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 			_parameterViewModels[nameof(Manufacturer)].Mandatory = true;
 			_parameterViewModels[nameof(ManufacturerAddress)].Mandatory = true;
 			_parameterViewModels[nameof(VIN)].Mandatory = true;
-
-
 		}
 
 		#region Overrides of ViewModelBase
@@ -312,17 +335,6 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 		{
 			get { return _consolidatedVehicleData; }
 			set { SetProperty(ref _consolidatedVehicleData, value); }
-		}
-
-		public void SetAirdragData(IAirdragDeclarationInputData airdragData)
-		{
-			throw new NotImplementedException();
-			MultistageAirdragViewModel.SetAirdragInputData(airdragInputData: airdragData);
-		}
-
-		public void SetBusAuxiliaries(IBusAuxiliariesDeclarationData busAuxData)
-		{
-			throw new NotImplementedException();
 		}
 
 		public void SetVehicleInputData(IVehicleDeclarationInputData vehicleInputData)
@@ -359,10 +371,11 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 			PredictiveCruiseControlNullable = vehicleInputData.ADAS?.PredictiveCruiseControl;
 			ATEcoRollReleaseLockupClutch = vehicleInputData.ADAS?.ATEcoRollReleaseLockupClutch;
 			AirdragModifiedMultistage = vehicleInputData.AirdragModifiedMultistage;
-			AirdragModifiedMultistageEditingEnabled = false;
-			OnPropertyChanged(String.Empty);
-			
-
+			foreach (var multistageParameterViewModel in _parameterViewModels.Values)
+			{
+				multistageParameterViewModel.UpdateEditingEnabled();
+			}
+			OnPropertyChanged(string.Empty);
 		}
 
 
@@ -380,7 +393,7 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 		private int? _numberOfPassengersUpperDeck;
 		private int? _numberOfPassengersLowerDeck;
 		private Kilogram _grossVehicleMassRating;
-		private Meter _entranceHeight;
+
 		private bool? _lowEntry;
 		private VehicleCode? _vehicleCode;
 		private RegistrationClass? _registeredClass;
@@ -390,9 +403,11 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 		private ConsumerTechnology? _doorDriveTechnology;
 		private TankSystem? _tankSystem;
 		private Kilogram _curbMassChassis;
-		private Meter _length;
-		private Meter _height;
-		private Meter _width;
+		private ConvertedSI _lengthInMm;
+		private ConvertedSI _heightMm;
+		private ConvertedSI _widthInMm;
+		private ConvertedSI _entranceHeightInMm;
+
 
 
 		public string Manufacturer
@@ -435,36 +450,31 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 					_parameterViewModels[nameof(WidthInMm)].EditingEnabled = value;
 					_parameterViewModels[nameof(EntranceHeightInMm)].EditingEnabled = value;
 				}
-			
 			}
 		}
 
 		public ConvertedSI HeightInMm
 		{
-			get { return Height?.ConvertToMilliMeter(); }
-			set { Height = value?.ConvertToMeter(); }
+			get => _heightMm;
+			set => SetProperty(ref _heightMm, value);
 		}
 
 		public ConvertedSI ConsolidatedHeightInMm
 		{
-			get { return ConsolidatedVehicleData?.Height?.ConvertToMilliMeter(); }
-			set { throw new NotImplementedException(); }
+			get => ConsolidatedVehicleData?.Height?.ConvertToMilliMeter();
+			set => throw new NotImplementedException();
 		}
 
 		public Meter Height
 		{
-			get { return _height; }
-			set
-			{
-				SetProperty(ref _height, value);
-				OnPropertyChanged(nameof(HeightInMm));
-			}
+			get => HeightInMm?.ConvertToMeter();
+			set => HeightInMm = value?.ConvertToMilliMeter();
 		}
 
 		public ConvertedSI LengthInMm
 		{
-			get { return Length?.ConvertToMilliMeter(); }
-			set { Length = value?.ConvertToMeter(); }
+			get { return _lengthInMm; }
+			set => SetProperty(ref _lengthInMm, value);
 		}
 
 		public ConvertedSI ConsolidatedLengthInMm
@@ -476,18 +486,14 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 
 		public Meter Length
 		{
-			get { return _length; }
-			set
-			{
-				SetProperty(ref _length, value);
-				OnPropertyChanged(nameof(WidthInMm));
-			}
+			get => LengthInMm?.ConvertToMeter();
+			set => LengthInMm = value?.ConvertToMilliMeter();
 		}
 
 		public ConvertedSI WidthInMm
 		{
-			get { return Width?.ConvertToMilliMeter(); }
-			set { Width = value?.ConvertToMeter(); }
+			get => _widthInMm;
+			set => SetProperty(ref _widthInMm, value);
 		}
 
 		public ConvertedSI ConsolidatedWidthInMm
@@ -499,12 +505,8 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 
 		public Meter Width
 		{
-			get { return _width; }
-			set
-			{
-				SetProperty(ref _width, value);
-				OnPropertyChanged(nameof(WidthInMm));
-			}
+			get => WidthInMm?.ConvertToMeter();
+			set => WidthInMm = value?.ConvertToMilliMeter();
 		}
 
 		public ConvertedSI ConsolidatedEntranceHeightInMm
@@ -515,40 +517,34 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 
 		public ConvertedSI EntranceHeightInMm
 		{
-			get { return EntranceHeight?.ConvertToMilliMeter(); }
-			set
-			{
-				EntranceHeight = value?.ConvertToMeter(); 
-				
-			}
+			get => _entranceHeightInMm;
+			set => SetProperty(ref _entranceHeightInMm, value);
 		}
 
 
 		public Meter EntranceHeight
 		{
-			get => _entranceHeight;
-			set
-			{
-				SetProperty(ref _entranceHeight, value);
-				OnPropertyChanged(nameof(EntranceHeightInMm));
-			}
+			get => EntranceHeightInMm?.ConvertToMeter();
+			set => EntranceHeightInMm = value?.ConvertToMilliMeter();
 		}
 
 		#endregion
 		public Kilogram CurbMassChassis //Corrected Actual Mass
 		{
-			get { return _curbMassChassis; }
-			set { SetProperty(ref _curbMassChassis, value); }
+			get => _curbMassChassis;
+			set => SetProperty(ref _curbMassChassis, value);
 		}
 
 		public bool NumberOfPassengersEditingEnabled
 		{
-			get { return _numberOfPassengersEditingEnabled; }
+			get => _numberOfPassengersEditingEnabled;
 			set
 			{
 				if (SetProperty(ref _numberOfPassengersEditingEnabled, value)) {
 					_parameterViewModels[nameof(NumberPassengerSeatsUpperDeck)].EditingEnabled = value;
 					_parameterViewModels[nameof(NumberPassengerSeatsLowerDeck)].EditingEnabled = value;
+					_parameterViewModels[nameof(NumberPassengersStandingUpperDeck)].EditingEnabled = value;
+					_parameterViewModels[nameof(NumberPassengersStandingLowerDeck)].EditingEnabled = value;
 				}
 				
 			}
@@ -557,14 +553,26 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 
 		public int? NumberPassengerSeatsUpperDeck
 		{
-			get { return _numberOfPassengersUpperDeck; }
-			set { SetProperty(ref _numberOfPassengersUpperDeck, value); }
+			get => _numberOfPassengersUpperDeck;
+			set => SetProperty(ref _numberOfPassengersUpperDeck, value);
 		}
 
 		public int? NumberPassengerSeatsLowerDeck
 		{
-			get { return _numberOfPassengersLowerDeck; }
-			set { SetProperty(ref _numberOfPassengersLowerDeck, value); }
+			get => _numberOfPassengersLowerDeck;
+			set => SetProperty(ref _numberOfPassengersLowerDeck, value);
+		}
+
+		public int? NumberPassengersStandingLowerDeck
+		{
+			get => _numberPassengersStandingLowerDeck;
+			set => SetProperty(ref _numberPassengersStandingLowerDeck, value);
+		}
+
+		public int? NumberPassengersStandingUpperDeck
+		{
+			get => _numberPassengersStandingUpperDeck;
+			set => SetProperty(ref _numberPassengersStandingUpperDeck, value);
 		}
 
 
@@ -610,15 +618,21 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 					return null;
 				}
 			}
-			set {
-				AirdragModifiedMultistage = value?.toNullableBool();
-				if (_parameterViewModels.ContainsKey(nameof(AirdragModifiedEnum))) {
-					_parameterViewModels[nameof(AirdragModifiedEnum)].CurrentContent = value;
+			set
+			{
+				var prevVal = AirdragModifiedMultistage;
+				var newVal = value?.toNullableBool();
+				if (prevVal != newVal) {
+					AirdragModifiedMultistage = value?.toNullableBool();
+					if (_parameterViewModels.ContainsKey(nameof(AirdragModifiedEnum)))
+					{
+						_parameterViewModels[nameof(AirdragModifiedEnum)].CurrentContent = value;
+					}
 				}
 			}
 		}
 
-		public AIRDRAGMODIFIED? ConsolidatedAirdragmodified
+		public AIRDRAGMODIFIED? ConsolidatedAirdragModifiedEnum
 		{
 			get
 			{
@@ -631,6 +645,7 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 			set => throw new NotImplementedException();
 		}
 
+
 		public bool? AirdragModifiedMultistage
 		{
 			get => _airdragModifiedMultistage;
@@ -641,23 +656,25 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 				};
 			}
 		}
-
+		public bool AirdragModifiedMultistageMandatory
+		{
+			get => _airdragModifiedMultistageMandatory;
+			set => SetProperty(ref _airdragModifiedMultistageMandatory, value);
+		}
 
 		public bool AirdragModifiedMultistageEditingEnabled
 		{
 			get
 			{
-				//IF MODIFIED ONCE IT HAS TO BE SET
-				if (_consolidatedVehicleData?.AirdragModifiedMultistage != null) {
-					_airdragModifiedEditingEnabled = true;
-				}
 				return _airdragModifiedEditingEnabled;
 			}
 			set
 			{
 				var val = value;
-				if (_consolidatedVehicleData?.AirdragModifiedMultistage != null) {
+				if (AirdragModifiedMultistageMandatory) {
 					val = true;
+				} else {
+					val = false;
 				}
 				if (SetProperty(ref _airdragModifiedEditingEnabled, val)) {
 					
@@ -1075,8 +1092,18 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 						}
 						break;
 					default:
-						if (_parameterViewModels[propertyName].EditingEnabled == true && this.GetType().GetProperty(propertyName)?.GetValue(this) == null) {
-							result = $"{NameResolver.ResolveName(propertyName, BusStrings.ResourceManager, Strings.ResourceManager)} has to be set if editing is enabled}}";
+						if (_parameterViewModels[propertyName].EditingEnabled) {
+							var propertyValue = this.GetType().GetProperty(propertyName)?.GetValue(this);
+							if (propertyValue == null) {
+								result =
+									$"{NameResolver.ResolveName(propertyName, BusStrings.ResourceManager, Strings.ResourceManager)} has to be set if editing is enabled}}";
+							} else { 
+								if (propertyValue.GetType() == typeof(string) && string.IsNullOrWhiteSpace(propertyValue as string))
+								{
+									result =
+										$"{NameResolver.ResolveName(propertyName, BusStrings.ResourceManager, Strings.ResourceManager)} has to be set if editing is enabled}}";
+								}
+							}
 						}
 
 						break;
@@ -1108,15 +1135,10 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 		}
 		#endregion
 
-		private IndexedStorage<bool> _editingEnabledDictionary;
-		public IndexedStorage<bool> EditingEnabledDictionary
-		{
-			get
-			{
-				return _editingEnabledDictionary;
-			}
-		}
+		private bool _airdragModifiedMultistageMandatory;
+		private int? _numberPassengersStandingLowerDeck;
+		private int? _numberPassengersStandingUpperDeck;
 
-	
+
 	}
 }

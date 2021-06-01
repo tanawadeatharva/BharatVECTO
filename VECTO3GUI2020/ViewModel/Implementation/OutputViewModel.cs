@@ -10,7 +10,6 @@ using VECTO3GUI2020.ViewModel.Interfaces.Common;
 namespace VECTO3GUI2020.ViewModel
 {
 
-
 	public class OutputViewModel : ViewModelBase, IOutputViewModel
 	{
 		private object _messageLock = new Object();
@@ -20,16 +19,13 @@ namespace VECTO3GUI2020.ViewModel
 
 		public ObservableCollection<MessageEntry> Messages
 		{
-			get
-			{
-				return _messages;
-			}
+			get { return _messages; }
 		}
 
-		public double SumProgress
+		public int Progress
 		{
-			get => _sumProgress;
-			set => SetProperty(ref _sumProgress, value);
+			get => _progress;
+			set => SetProperty(ref _progress, value);
 		}
 
 		public string StatusMessage
@@ -41,16 +37,9 @@ namespace VECTO3GUI2020.ViewModel
 
 		public OutputViewModel()
 		{
-			BindingOperations.EnableCollectionSynchronization(Messages, _messageLock );
+			BindingOperations.EnableCollectionSynchronization(Messages, _messageLock);
 		}
-
-		public void SetProgress(double sumProgress, IList<double> subProgress)
-		{
-			SumProgress = sumProgress;
-
-			SubProgress = subProgress;
-
-		}
+	}
 
 	public interface IOutputViewModel : IMainViewModel
 	{

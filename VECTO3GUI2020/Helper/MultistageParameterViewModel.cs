@@ -11,6 +11,7 @@ using System.Runtime.InteropServices;
 using System.Windows;
 using System.Windows.Controls;
 using Castle.Core.Internal;
+using Castle.Core.Resource;
 using Castle.DynamicProxy.Internal;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.Utils;
@@ -29,8 +30,17 @@ namespace VECTO3GUI2020.Helper
 	}
 
 
+	public interface IMultistageParameterViewModel
+	{
+		bool EditingEnabled { get; set; }
+		object CurrentContent { get; set; }
+		object DummyContent { get; set; }
+		ObservableCollection<Enum> AllowedItems { get; set; }
+		object PreviousContent { get; set; }
+		Action<MultistageParameterViewModel> EditingChangedCallback { get; set; }
+	}
 
-	public class MultistageParameterViewModel : ViewModelBase, IDataErrorInfo
+	public class MultistageParameterViewModel : ViewModelBase, IDataErrorInfo, IMultistageParameterViewModel
 	{
 		private bool _editingEnabled;
 		private object _currentContent;
@@ -72,7 +82,7 @@ namespace VECTO3GUI2020.Helper
 			
 			_viewMode = viewMode;
 			_dummyContent = dummyContent;
-			_mandatory = mandatory;
+			Mandatory = mandatory;
 			_type = _propertyInfo.PropertyType;
 			_label = NameResolver.ResolveName(propertyName, resourceManagers);
 
@@ -85,13 +95,11 @@ namespace VECTO3GUI2020.Helper
 				if (DummyContent is Enum dummyEnum)
 				{
 					var enType = dummyEnum.GetType();
-					//GeneratedListItems = new ObservableCollection<typeof(enType)>(Enum.GetValues(enType).Cast<T>().ToList());
 					GeneratedListItems = new ObservableCollection<Enum>(Enum.GetValues(enType).Cast<Enum>().ToList());
 				}
 				else if (CurrentContent is Enum contentEnum)
 				{
 					var enType = contentEnum.GetType();
-					//GeneratedListItems = new ObservableCollection<T>(Enum.GetValues(enType).Cast<T>().ToList());
 					GeneratedListItems = new ObservableCollection<Enum>(Enum.GetValues(enType).Cast<Enum>().ToList());
 				}
 			}
@@ -165,6 +173,10 @@ namespace VECTO3GUI2020.Helper
 					var dummyContent = Convert.ChangeType(0, primitiveType);
 					return dummyContent;
 				}
+
+				if (type == typeof(string)) {
+					return "";
+				}
 				
 
 
@@ -193,11 +205,10 @@ namespace VECTO3GUI2020.Helper
 					_editingChangedCallback?.Invoke(this);
 					if (new_value == false)
 					{
-						if (StoredContent != null) {
+						if (StoredContent != CurrentContent) {
 							StoredContent = CurrentContent;
 						}
 						CurrentContent = null;
-						OnPropertyChanged(nameof(CurrentContent));
 					}
 					else
 					{
@@ -208,11 +219,9 @@ namespace VECTO3GUI2020.Helper
 								CurrentContent = DummyContent;
 							}
 						}
-						OnPropertyChanged(nameof(CurrentContent));
 					}
-
 				}
-				
+				OnPropertyChanged(nameof(CurrentContent));
 				OnPropertyChanged(nameof(EditingEnabled));
 			}
 		}
@@ -222,12 +231,11 @@ namespace VECTO3GUI2020.Helper
 			get => _currentContent;
 			set
 			{
-				if (value != null) {
+				if (value != null) { 
 					EditingEnabled = true;
-				}
+				} 
 
 				var convertedValue = value;
-
 
 				//Convert value if neccessary
 				if (value != null) {
@@ -235,16 +243,15 @@ namespace VECTO3GUI2020.Helper
 						convertedValue = Convert.ChangeType(value, DummyContent.GetType());
 					}
 				}
-				
-				
 
 				if (SetProperty(ref _currentContent, convertedValue)) {
 					_propertyInfo.SetValue(_parentViewModel, _currentContent);
 					_propertyChangedCallback?.Invoke(this);
 				};
-				
 			}
 		}
+
+
 
 		public object DummyContent
 		{
@@ -261,7 +268,6 @@ namespace VECTO3GUI2020.Helper
 			get => _storedContent;
 			set
 			{
-				//_propertyChangedCallback.Invoke(this);
 				SetProperty(ref _storedContent, value);
 			}
 		}
@@ -271,7 +277,6 @@ namespace VECTO3GUI2020.Helper
 			get => _label;
 			set
 			{
-				_propertyChangedCallback?.Invoke(this);
 				SetProperty(ref _label, value);
 			}
 		}
@@ -281,8 +286,8 @@ namespace VECTO3GUI2020.Helper
 			get => _allowedItems;
 			set
 			{
-				//_propertyChangedCallback?.Invoke(this);
 				SetProperty(ref _allowedItems, value);
+				OnPropertyChanged(nameof(CurrentContent));
 			}
 		}
 
@@ -332,12 +337,11 @@ namespace VECTO3GUI2020.Helper
 		{
 			get
 			{
-				var dataErrorinfo = _parentViewModel as IDataErrorInfo;
-				if (dataErrorinfo == null) {
+				if (!(_parentViewModel is IDataErrorInfo dataErrorInfo)) {
 					return null;
 				}
 
-				return dataErrorinfo[_propertyName];
+				return dataErrorInfo[_propertyName];
 			}
 		}
 
@@ -349,6 +353,21 @@ namespace VECTO3GUI2020.Helper
 			set => _editingChangedCallback = value;
 		}
 
+		/// <summary>
+		/// Sets Editing Enabled flag based on currentvalue
+		/// </summary>
+		/// <returns></returns>
+		public bool UpdateEditingEnabled()
+		{
+			if (CurrentContent == null) {
+				EditingEnabled = false;
+			} else {
+				EditingEnabled = true;
+			}
+
+			return EditingEnabled;
+		}
+		
 
 		#endregion
 	}

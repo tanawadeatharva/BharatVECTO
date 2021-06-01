@@ -120,9 +120,14 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 					if (outputFile == null) {
 						return;
 					}
-					SaveVif(vifData:this, outputFile:outputFile, dialogHelper:_dialogHelper.Value);
+					SaveVif(outputFile:outputFile);
 				}, () => true);
 			}
+		}
+
+		public void SaveVif(string outputFile)
+		{
+			SaveVif(vifData:this, outputFile:outputFile, dialogHelper:_dialogHelper.Value);
 		}
 
 		public static void SaveVif(IMultistageVIFInputData vifData, FileOutputVIFWriter writer, IDialogHelper dialogHelper = null)

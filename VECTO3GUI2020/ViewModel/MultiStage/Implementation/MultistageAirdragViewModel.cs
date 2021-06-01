@@ -109,49 +109,7 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 			if (fileName == null) {
 				return;
 			}
-			var success = true;
-			var errorStringBuilder = new StringBuilder();
-			try {
-				var xDoc = XDocument.Load(fileName);
-				var doc = new XmlDocument();
-				doc.Load(fileName);
-
-				var airdragElements = xDoc.Descendants().Where(e => e.Name.LocalName == XMLNames.Component_AirDrag);
-				if (airdragElements.Count() == 1) {
-
-					//GET FROM FILE
-					var dataProviderVersion = XMLDeclarationAirdragDataProviderV20.QUALIFIED_XSD_TYPE;
-					
-
-					var validator = new XMLValidator(doc);
-					var valid = validator.ValidateXML(TUGraz.VectoCore.Utils.XmlDocumentType
-						.DeclarationComponentData);
-					if (!valid) {
-						throw new VectoException("Invalid input file");
-					}
-					
-					//dataProviderVersion = XMLHelper.GetVersion(doc.Node);
-
-					XElement airdragElement = airdragElements.First();
-					XmlNode airdragNode = airdragElement.ToXmlNode();
-
-					var airDragInputData = _dependencies.InjectFactory.CreateAirdragData(dataProviderVersion, null, airdragNode, fileName);
-					AirDragViewModel = _dependencies.ComponentViewModelFactory.CreateComponentViewModel(airDragInputData) as IAirDragViewModel;
-					AirDragViewModel.IsReadOnly = true;
-					AirDragViewModel.LabelVisible = false;
-					success = true;
-				} else {
-					success = false;
-				}
-			}
-			catch (Exception e) {
-				_dependencies.DialogHelper.ShowMessageBox(e.Message, 
-					"Invalid File", 
-					MessageBoxButton.OK,
-					MessageBoxImage.Error);
-				success = false;
-				return;
-			}
+			var success = LoadAirdragFile(fileName);
 
 			if (success) {
 				AirdragFilePath = fileName;
@@ -162,7 +120,53 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 			
 		}
 
+		internal bool LoadAirdragFile(string fileName)
+		{
+			var success = true;
+			var errorStringBuilder = new StringBuilder();
+			try {
+				var xDoc = XDocument.Load(fileName);
+				var doc = new XmlDocument();
+				doc.Load(fileName);
 
+				var airdragElements = xDoc.Descendants().Where(e => e.Name.LocalName == XMLNames.Component_AirDrag);
+				if (airdragElements.Count() == 1) {
+					//GET FROM FILE
+					var dataProviderVersion = XMLDeclarationAirdragDataProviderV20.QUALIFIED_XSD_TYPE;
+
+
+					var validator = new XMLValidator(doc);
+					var valid = validator.ValidateXML(TUGraz.VectoCore.Utils.XmlDocumentType
+						.DeclarationComponentData);
+					if (!valid) {
+						throw new VectoException("Invalid input file");
+					}
+
+					//dataProviderVersion = XMLHelper.GetVersion(doc.Node);
+
+					XElement airdragElement = airdragElements.First();
+					XmlNode airdragNode = airdragElement.ToXmlNode();
+
+					var airDragInputData =
+						_dependencies.InjectFactory.CreateAirdragData(dataProviderVersion, null, airdragNode, fileName);
+					AirDragViewModel =
+						_dependencies.ComponentViewModelFactory.CreateComponentViewModel(airDragInputData) as IAirDragViewModel;
+					AirDragViewModel.IsReadOnly = true;
+					AirDragViewModel.LabelVisible = false;
+					success = true;
+				} else {
+					success = false;
+				}
+			} catch (Exception e) {
+				_dependencies.DialogHelper.ShowMessageBox(e.Message,
+					"Invalid File",
+					MessageBoxButton.OK,
+					MessageBoxImage.Error);
+				success = false;
+			}
+
+			return success;
+		}
 
 
 		private void ValidationErrorAction(XmlSeverityType arg1, ValidationEvent arg2)
