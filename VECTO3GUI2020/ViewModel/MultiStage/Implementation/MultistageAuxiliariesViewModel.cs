@@ -52,7 +52,8 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 					ConsolidatedHeatPumpConfigurationsPassenger.Add(new HeatPumpConfiguration()
 					{
 						HeatPumpMode = heatPumpMode,
-						HeatPumpType = heatPumpType
+						HeatPumpType = heatPumpType,
+						IsReadOnly = true,
 					});
 				}
 			}
@@ -193,7 +194,7 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 					HeatPumpConfigurationsPassenger.Add(new HeatPumpConfiguration()
 					{
 						HeatPumpType = heatPumpType,
-						HeatPumpMode = heatPumpMode
+						HeatPumpMode = heatPumpMode,
 					});
 				}
 			}
@@ -465,6 +466,16 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 						BusStrings.ResourceManager,
 						Strings.ResourceManager,
 					});
+			}
+
+			public bool IsReadOnly
+			{
+				get => HeatPumpModeVM.IsReadOnly && HeatPumpTypeVM.IsReadOnly;
+				set
+				{
+					HeatPumpTypeVM.IsReadOnly = value;
+					HeatPumpModeVM.IsReadOnly = value;
+				}
 			}
 
 			#region Implementation of ITuple

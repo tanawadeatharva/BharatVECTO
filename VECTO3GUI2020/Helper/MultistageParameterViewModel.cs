@@ -32,6 +32,7 @@ namespace VECTO3GUI2020.Helper
 
 	public interface IMultistageParameterViewModel
 	{
+		bool IsReadOnly { get; set; }
 		bool EditingEnabled { get; set; }
 		object CurrentContent { get; set; }
 		object DummyContent { get; set; }
@@ -63,6 +64,8 @@ namespace VECTO3GUI2020.Helper
 
 		private Type _underlyingTargetType;
 		private readonly string _propertyName;
+		private bool _isReadOnly;
+		private bool _valueFieldIsEditable;
 
 		public MultistageParameterViewModel (
 			string propertyName,
@@ -192,6 +195,15 @@ namespace VECTO3GUI2020.Helper
 		}
 
 
+		public bool IsReadOnly
+		{
+			get => _isReadOnly;
+			set
+			{
+				SetProperty(ref _isReadOnly, value);
+				UpdateValueFieldEditable();
+			}
+		}
 
 		public bool EditingEnabled
 		{
@@ -223,6 +235,24 @@ namespace VECTO3GUI2020.Helper
 				}
 				OnPropertyChanged(nameof(CurrentContent));
 				OnPropertyChanged(nameof(EditingEnabled));
+				UpdateValueFieldEditable();
+			}
+		}
+
+
+		public bool ValueFieldIsEditable
+		{
+			get => _valueFieldIsEditable;
+			private set => SetProperty(ref _valueFieldIsEditable, value);
+		}
+
+		private void UpdateValueFieldEditable()
+		{
+			if (IsReadOnly) {
+				ValueFieldIsEditable = false;
+				return;
+			} else {
+				ValueFieldIsEditable = EditingEnabled;
 			}
 		}
 

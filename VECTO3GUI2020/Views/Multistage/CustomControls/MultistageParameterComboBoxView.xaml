@@ -20,7 +20,7 @@
             <Label x:Name="label1">
                 <PriorityBinding>
                     <Binding Path="Label" Converter="{StaticResource NullToUnsetValue}"></Binding>
-                    <Binding Path="GeneratedLabelText"></Binding>
+                    <!--<Binding Path="GeneratedLabelText"></Binding>-->
                 </PriorityBinding>
             </Label>
             <CheckBox Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center" Name="CheckBoxCombo"
@@ -29,8 +29,9 @@
                   IsChecked="{Binding EditingEnabled, 
             Mode=TwoWay}" Checked="CheckBoxCombo_OnChecked"/>
 
-            <ComboBox x:Name="comboBox" Grid.Column="2" HorizontalAlignment="Stretch" VerticalAlignment="Center" Margin="2 0 2 0" IsTabStop="False" Visibility="{Binding Optional, 
-                    Converter={StaticResource BooleanToVisibilityConverter}}" IsHitTestVisible="False" Focusable="False" IsEditable="False"
+            <ComboBox x:Name="comboBox" Grid.Column="2" HorizontalAlignment="Stretch" VerticalAlignment="Center" Margin="2 0 2 0" IsTabStop="False" 
+                      Visibility="{Binding Optional, 
+                        Converter={StaticResource BooleanToVisibilityConverter}}" IsHitTestVisible="False" Focusable="False" IsEditable="False"
                       SelectedValue="{Binding PreviousContent, Mode=TwoWay}"
                       ItemsSource="{Binding GeneratedListItems}">
                 <ComboBox.ItemTemplate>
@@ -40,15 +41,13 @@
                 </ComboBox.ItemTemplate>
             </ComboBox>
 
-            <!--SelectedIndex="{Binding EditingEnabled, ElementName=MultistageParameterControl, Converter={StaticResource BoolToIntConverter}}"-->
-            <!--ItemsSource="{Binding ListItems, ElementName=MultistageParameterControl}"-->
             <ComboBox x:Name="comboBoxCurrent" Grid.Column="3" HorizontalAlignment="Stretch" VerticalAlignment="Center" Margin="2 0 2 0" 
                       SelectedValue="{Binding CurrentContent,
                             Mode=TwoWay, 
                             ValidatesOnExceptions=True, 
                             ValidatesOnDataErrors=True, 
                             UpdateSourceTrigger=PropertyChanged}"
-                      IsEnabled="{Binding EditingEnabled}"
+                      IsEnabled="{Binding ValueFieldIsEditable}"
                       IsEditable="False">
                 <ComboBox.ItemsSource>
                     <PriorityBinding>
@@ -63,9 +62,8 @@
                 </ComboBox.ItemTemplate>
             </ComboBox>
 
-
             <Label x:Name="label2" Grid.Column="4"
-               Content="{Binding DummyContent, Converter={StaticResource SIToUnitStringConverter}}">
+                   Content="{Binding DummyContent, Converter={StaticResource SIToUnitStringConverter}}">
             </Label>
         </Grid>
     </Grid>
