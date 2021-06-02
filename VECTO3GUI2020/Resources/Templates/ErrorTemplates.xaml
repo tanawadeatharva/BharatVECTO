@@ -5,7 +5,7 @@
 <ControlTemplate x:Key="multistageParameterControlErrorTemplate">
     <Grid>
         <AdornedElementPlaceholder></AdornedElementPlaceholder>
-            <TextBlock Text="!" Height="Auto" FontWeight="ExtraBold" Foreground="OrangeRed" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="4"></TextBlock>
+            <TextBlock Text="!" Height="Auto" FontWeight="ExtraBold" Foreground="OrangeRed" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0 0 -10 0"></TextBlock>
     </Grid>
 
 </ControlTemplate>

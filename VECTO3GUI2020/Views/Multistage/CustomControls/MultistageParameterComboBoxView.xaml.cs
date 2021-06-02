@@ -20,7 +20,53 @@ namespace VECTO3GUI2020.Views.Multistage.CustomControls
     /// </summary>
     public partial class MultistageParameterComboBoxView : UserControl
     {
-        public MultistageParameterComboBoxView()
+		public static readonly DependencyProperty SharedSizeGroupLabelColumnProperty = DependencyProperty.Register(
+			"SharedSizeGroupLabelColumn", typeof(string), typeof(MultistageParameterComboBoxView), new PropertyMetadata(default(string)));
+
+		//public string SharedSizeGroupLabelColumn
+		//{
+		//	get { return (string)GetValue(SharedSizeGroupLabelColumnProperty); }
+		//	set { SetValue(SharedSizeGroupLabelColumnProperty, value); }
+		//}
+
+		//public static readonly DependencyProperty SharedSizeGroupCheckboxColumnProperty = DependencyProperty.Register(
+		//	"SharedSizeGroupCheckboxColumn", typeof(string), typeof(MultistageParameterComboBoxView), new PropertyMetadata(default(string)));
+
+		//public string SharedSizeGroupCheckboxColumn
+		//{
+		//	get { return (string)GetValue(SharedSizeGroupCheckboxColumnProperty); }
+		//	set { SetValue(SharedSizeGroupCheckboxColumnProperty, value); }
+		//}
+
+		//public static readonly DependencyProperty SharedSizeGroupConsolidatedColumnProperty = DependencyProperty.Register(
+		//	"SharedSizeGroupConsolidatedColumn", typeof(string), typeof(MultistageParameterComboBoxView), new PropertyMetadata(default(string)));
+
+		//public string SharedSizeGroupConsolidatedColumn
+		//{
+		//	get { return (string)GetValue(SharedSizeGroupConsolidatedColumnProperty); }
+		//	set { SetValue(SharedSizeGroupConsolidatedColumnProperty, value); }
+		//}
+
+		//public static readonly DependencyProperty SharedSizeGroupContentColumnProperty = DependencyProperty.Register(
+		//	"SharedSizeGroupContentColumn", typeof(string), typeof(MultistageParameterComboBoxView), new PropertyMetadata(default(string)));
+
+		//public string SharedSizeGroupContentColumn
+		//{
+		//	get { return (string)GetValue(SharedSizeGroupContentColumnProperty); }
+		//	set { SetValue(SharedSizeGroupContentColumnProperty, value); }
+		//}
+
+		//public static readonly DependencyProperty SharedSizeGroupUnitColumnProperty = DependencyProperty.Register(
+		//	"SharedSizeGroupUnitColumn", typeof(string), typeof(MultistageParameterComboBoxView), new PropertyMetadata(default(string)));
+
+		//public string SharedSizeGroupUnitColumn
+		//{
+		//	get { return (string)GetValue(SharedSizeGroupUnitColumnProperty); }
+		//	set { SetValue(SharedSizeGroupUnitColumnProperty, value); }
+		//}
+
+
+		public MultistageParameterComboBoxView()
         {
             InitializeComponent();
         }

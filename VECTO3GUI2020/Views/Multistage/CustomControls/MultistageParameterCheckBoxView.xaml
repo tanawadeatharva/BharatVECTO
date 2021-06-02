@@ -7,27 +7,29 @@
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <Grid>
-        <Grid>
+        <UniformGrid Rows="1" Margin="0 0 10 2">
+        <!--<Grid>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="4*" SharedSizeGroup="W"/>
                 <ColumnDefinition Width="1*" SharedSizeGroup="N"/>
                 <ColumnDefinition Width="4*" SharedSizeGroup="W"/>
                 <ColumnDefinition Width="4*" SharedSizeGroup="W"/>
                 <ColumnDefinition Width="1*" SharedSizeGroup="N"/>
-            </Grid.ColumnDefinitions>
-
-            <Label x:Name="label3">
+            </Grid.ColumnDefinitions>-->
+            <DockPanel Margin="5 0 ">
+                <Label x:Name="label3">
                 <PriorityBinding>
                     <Binding Path="Label"  Converter="{StaticResource NullToUnsetValue}"></Binding>
                     <Binding Path="GeneratedLabelText"></Binding>
                 </PriorityBinding>
             </Label>
-            <CheckBox Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center" Name="CheckBoxCheckBox" 
+            <CheckBox Grid.Column="1" HorizontalAlignment="Right" VerticalAlignment="Center" Name="CheckBoxCheckBox" 
                   Visibility="{Binding ShowCheckBox, 
                     Converter={StaticResource BooleanToVisibilityConverter}}"
                   IsChecked="{Binding EditingEnabled, 
             Mode=TwoWay}"
                  />
+            </DockPanel>
 
             <CheckBox x:Name="checkBox" Grid.Column="2" VerticalAlignment="Center" HorizontalAlignment="Center" IsTabStop="False" IsChecked="{Binding 
                 Path=PreviousContent, 
@@ -41,10 +43,6 @@
                 UpdateSourceTrigger=PropertyChanged}">
 
             </CheckBox>
-            <!--<Label x:Name="label4" Grid.Column="4"
-                   Content="{Binding DummyContent, Converter={StaticResource SIToUnitStringConverter}}">
-            </Label>-->
-        </Grid>
-
+        </UniformGrid>
     </Grid>
 </UserControl>
