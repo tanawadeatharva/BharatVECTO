@@ -1,6 +1,7 @@
 ﻿using System;
 using System.CodeDom;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -10,6 +11,7 @@ using System.Windows.Input;
 using System.Windows.Navigation;
 using System.Xml;
 using System.Xml.Linq;
+using Castle.Core.Internal;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCore.InputData.FileIO.JSON;
@@ -104,11 +106,25 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 				return _saveVifCommand ?? new RelayCommand(() => {
 					if (_manufacturingStageViewModel.Vehicle is IMultistageVehicleViewModel vehicleViewModel)
 					{
-						if (vehicleViewModel.HasErrors)
-						{
-							_dialogHelper.Value.ShowMessageBox("Vehicle\n" + string.Join("\n", vehicleViewModel.Errors.Values) 
-																			+ (vehicleViewModel.MultistageAuxiliariesViewModel.HasErrors ? ("\nAuxiliaries\n" + string.Join("\n", vehicleViewModel.MultistageAuxiliariesViewModel.Errors.Values)) : ""),
-								"Error");
+						if (vehicleViewModel.HasErrors) {
+							var errorMessage = "Vehicle\n";
+							var vehicleErrorInfo = vehicleViewModel as IDataErrorInfo;
+							errorMessage += vehicleErrorInfo.Error.Replace(",", "\n");
+
+							var auxiliariesErrorInfo =
+								vehicleViewModel.MultistageAuxiliariesViewModel as IDataErrorInfo;
+							if (!auxiliariesErrorInfo.Error.IsNullOrEmpty()) {
+								errorMessage += "Auxiliaries\n";
+								errorMessage += auxiliariesErrorInfo.Error.Replace(",", "\n");
+							}
+
+
+							//_dialogHelper.Value.ShowMessageBox("Vehicle\n" + string.Join("\n", vehicleViewModel.Errors.Values) 
+							//												+ (vehicleViewModel.MultistageAuxiliariesViewModel.HasErrors ? ("\nAuxiliaries\n" + string.Join("\n", vehicleViewModel.MultistageAuxiliariesViewModel.Errors.Values)) : ""),
+								//"Error");
+
+							_dialogHelper.Value.ShowMessageBox(errorMessage, "Error", MessageBoxButton.OK,
+									MessageBoxImage.Error);
 							return;
 						}
 					} else {
@@ -203,9 +219,25 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 			if(_manufacturingStageViewModel.Vehicle is IMultistageVehicleViewModel vehicleViewModel)
 			{
 				if (vehicleViewModel.HasErrors) {
-					_dialogHelper.Value.ShowMessageBox("Vehicle\n" + string.Join("\n", vehicleViewModel.Errors.Values)
-																	+ (vehicleViewModel.MultistageAuxiliariesViewModel.HasErrors ? ("\nAuxiliaries\n" + string.Join("\n", vehicleViewModel.MultistageAuxiliariesViewModel.Errors.Values)) : ""),
-						"Error");
+					var errorMessage = "Vehicle\n";
+					var vehicleErrorInfo = vehicleViewModel as IDataErrorInfo;
+					errorMessage += vehicleErrorInfo.Error.Replace(",", "\n");
+
+					var auxiliariesErrorInfo =
+						vehicleViewModel.MultistageAuxiliariesViewModel as IDataErrorInfo;
+					if (!auxiliariesErrorInfo.Error.IsNullOrEmpty())
+					{
+						errorMessage += "\n Auxiliaries \n";
+						errorMessage += auxiliariesErrorInfo.Error.Replace(",", "\n");
+					}
+
+					_dialogHelper.Value.ShowMessageBox(errorMessage, "Error", MessageBoxButton.OK,
+						MessageBoxImage.Error);
+					return;
+
+					//_dialogHelper.Value.ShowMessageBox("Vehicle\n" + string.Join("\n", vehicleViewModel.Errors.Values)
+					//												+ (vehicleViewModel.MultistageAuxiliariesViewModel.HasErrors ? ("\nAuxiliaries\n" + string.Join("\n", vehicleViewModel.MultistageAuxiliariesViewModel.Errors.Values)) : ""),
+					//	"Error");
 					return;
 				}
 			}

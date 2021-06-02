@@ -515,12 +515,30 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 							break;
 					}
 
+					if (result == null)
+					{
+						if (Errors.ContainsKey(columnName))
+							Errors.Remove(columnName);
+					}
+					else
+					{
+						Errors[columnName] = result;
+					}
+
+
 
 					return result;
 				}
 			}
 
-			string IDataErrorInfo.Error => throw new NotImplementedException();
+			private Dictionary<string, string> Errors { get; } = new Dictionary<string, string>();
+
+			public bool HasErrors
+			{
+				get => !Errors.IsNullOrEmpty();
+
+			}
+			string IDataErrorInfo.Error => String.Join(",", Errors.Values);
 
 			#endregion
 		}
@@ -797,12 +815,41 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 			}
 		}
 
-		public string Error { get => String.Join(",", Errors.Values); }
+		public string Error
+		{
+			get
+			{
+				string result = string.Empty;
+				var auxVmError = String.Join(",", Errors.Values);
+				result = auxVmError;
+				if (HeatPumpConfigurationsPassenger != null) {
+					foreach (var heatPumpConfiguration in HeatPumpConfigurationsPassenger) {
+						if (heatPumpConfiguration.HasErrors) {
+							result += "," + ((IDataErrorInfo)heatPumpConfiguration).Error;
+						}
+					}
+				}
+
+				return result;
+			}
+		}
+
 		public bool HasErrors
 		{
 			get
 			{
-				return !Error.IsNullOrEmpty();
+				var auxVmHasErrors = !Error.IsNullOrEmpty();
+				var passengerHeatPumpsHaveError = false;
+				if (HeatPumpConfigurationsPassenger != null) {
+					foreach (var heatPump in HeatPumpConfigurationsPassenger) {
+						if (heatPump.HasErrors) {
+							passengerHeatPumpsHaveError = true;
+							break;
+						}
+					}
+				}
+
+				return auxVmHasErrors || passengerHeatPumpsHaveError;
 			}
 		}
 

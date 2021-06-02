@@ -1063,19 +1063,19 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 				switch (propertyName) {
 					case nameof(Manufacturer):
 						if (string.IsNullOrWhiteSpace(Manufacturer)) {
-							result = "Manufacturer cannot be empty";
+							result = "Manufacturer must not be empty";
 						}
 						
 						break;
 					case nameof(ManufacturerAddress):
 						if (string.IsNullOrWhiteSpace(ManufacturerAddress))
 						{
-							result = "Manufacturer address cannot be empty";
+							result = "Manufacturer address must not be empty";
 						}
 						break;
 					case nameof(VIN):
 						if (string.IsNullOrEmpty(VIN)) {
-							result = "VIN cannot be empty";
+							result = "VIN must not be empty";
 						}
 						break;
 					case nameof(AirdragModifiedEnum):
