@@ -42,7 +42,7 @@
                         <StackPanel Margin="0">
                             <Label Margin="0" Style="{DynamicResource LabelStyle1}">Heat Pumps Passenger Compartment</Label>
                             <Label Padding="10 4 0 4" Style="{DynamicResource LabelStyle1}">Consolidated Data</Label>
-                            <ItemsControl 
+                            <ItemsControl AlternationCount="2"
                         Visibility="{Binding ConsolidatedHeatPumpConfigurationsPassenger, Converter={StaticResource NullToVisibilityConverter}}" 
                         ItemsSource="{Binding ConsolidatedHeatPumpConfigurationsPassenger}" 
                         HorizontalContentAlignment="Stretch"
@@ -50,13 +50,21 @@
                                 <ItemsControl.ItemTemplate>
                                     <DataTemplate>
                                         <Border BorderThickness="1">
-                                            <DockPanel LastChildFill="true">
+                                            <DockPanel LastChildFill="true" x:Name="ItemsDockPanel">
                                                 <UniformGrid DockPanel.Dock="Left" Columns="2">
                                                     <ContentControl Grid.Column="0" DockPanel.Dock="Top" Content="{Binding Path=HeatPumpTypeVM}"/>
                                                     <ContentControl Grid.Column="1" DockPanel.Dock="Top" Content="{Binding Path=HeatPumpModeVM}"/>
                                                 </UniformGrid>
                                             </DockPanel>
                                         </Border>
+                                        <DataTemplate.Triggers>
+                                            <Trigger Property="ItemsControl.AlternationIndex" Value="0">
+                                                <Setter Property="Background" Value="White" TargetName="ItemsDockPanel"/>
+                                            </Trigger>
+                                            <Trigger Property="ItemsControl.AlternationIndex" Value="1">
+                                                <Setter Property="Background" Value="LightGray" TargetName="ItemsDockPanel"/>
+                                            </Trigger>
+                                        </DataTemplate.Triggers>
                                     </DataTemplate>
                                 </ItemsControl.ItemTemplate>
                             </ItemsControl>
@@ -72,11 +80,11 @@
                             </DockPanel>
 
                             <ItemsControl ItemsSource="{Binding HeatPumpConfigurationsPassenger}" HorizontalContentAlignment="Stretch"
-                                  Padding="5">
+                                  Padding="5" AlternationCount="2">
                                 <ItemsControl.ItemTemplate>
                                     <DataTemplate>
                                         <Border BorderThickness="1">
-                                            <DockPanel LastChildFill="true">
+                                            <DockPanel LastChildFill="true" x:Name="ItemsDockPanel">
                                                 <Button DockPanel.Dock="Right" Height="24"
                                                 ContentTemplate="{DynamicResource TrashIcon}"
                                                 Command="{Binding RelativeSource={RelativeSource AncestorType=ItemsControl}, 
@@ -88,6 +96,14 @@
                                                 </UniformGrid>
                                             </DockPanel>
                                         </Border>
+                                        <DataTemplate.Triggers>
+                                            <Trigger Property="ItemsControl.AlternationIndex" Value="0">
+                                                <Setter Property="Background" Value="White" TargetName="ItemsDockPanel"/>
+                                            </Trigger>
+                                            <Trigger Property="ItemsControl.AlternationIndex" Value="1">
+                                                <Setter Property="Background" Value="LightGray" TargetName="ItemsDockPanel"/>
+                                            </Trigger>
+                                        </DataTemplate.Triggers>
                                     </DataTemplate>
                                 </ItemsControl.ItemTemplate>
                             </ItemsControl>

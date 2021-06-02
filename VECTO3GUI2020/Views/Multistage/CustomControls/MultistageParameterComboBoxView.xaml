@@ -52,7 +52,7 @@
                 <Label DockPanel.Dock="Right" x:Name="label2" Grid.Column="4"
                        Content="{Binding DummyContent, Converter={StaticResource SIToUnitStringConverter}}">
                 </Label>
-                <ComboBox DockPanel.Dock="Left" x:Name="comboBoxCurrent"  HorizontalAlignment="Stretch" VerticalAlignment="Center" Margin="2 0 2 0" 
+                <ComboBox DockPanel.Dock="Left" x:Name="comboBoxCurrent"  HorizontalAlignment="Stretch" VerticalAlignment="Center" Margin="2 0 0 0" 
                           SelectedValue="{Binding CurrentContent,
                                 Mode=TwoWay, 
                                 ValidatesOnExceptions=True, 
