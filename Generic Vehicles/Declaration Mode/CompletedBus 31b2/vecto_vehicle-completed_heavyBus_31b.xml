@@ -1,12 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<tns:VectoInputDeclaration schemaVersion="2.8" xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:DEV:v2.8"
-xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
-xmlns:tns="urn:tugraz:ivt:VectoAPI:DeclarationInput:v2.0" 
-xmlns:v2.3="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:DEV:v2.3" 
-xmlns:v2.0="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0" 
-xmlns:v2.8="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:DEV:v2.8"
-xmlns:di="http://www.w3.org/2000/09/xmldsig#" 
-xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:DeclarationJob https://citnet.tech.ec.europa.eu/CITnet/svn/VECTO/trunk/Share/XML/XSD//DEV/VectoDeclarationJob.xsd">
+<tns:VectoInputDeclaration schemaVersion="2.8" xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:DEV:v2.8" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:tns="urn:tugraz:ivt:VectoAPI:DeclarationInput:v2.0" xmlns:v2.3="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:DEV:v2.3" xmlns:v2.0="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0" xmlns:v2.8="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:DEV:v2.8" xmlns:di="http://www.w3.org/2000/09/xmldsig#" xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:DeclarationJob https://citnet.tech.ec.europa.eu/CITnet/svn/VECTO/trunk/Share/XML/XSD//DEV/VectoDeclarationJob.xsd">
 	<v2.0:Vehicle id="VEH-1234567890" xsi:type="InterimStageInputType">
 		<Manufacturer>Some Manufacturer</Manufacturer>
 		<ManufacturerAddress>Infinite Loop 1</ManufacturerAddress>
@@ -19,8 +12,10 @@ xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:DeclarationJob https://citnet.tech.e
 		<AirdragModifiedMultistage>true</AirdragModifiedMultistage>
 		<NgTankSystem>Compressed</NgTankSystem>
 		<ClassBus>II</ClassBus>
-			<NumberPassengersLowerDeck>86</NumberPassengersLowerDeck>
-			<NumberPassengersUpperDeck>0</NumberPassengersUpperDeck>
+		<NumberPassengerSeatsLowerDeck>86</NumberPassengerSeatsLowerDeck>
+		<NumberPassengersStandingLowerDeck>0</NumberPassengersStandingLowerDeck>
+		<NumberPassengerSeatsUpperDeck>0</NumberPassengerSeatsUpperDeck>
+		<NumberPassengersStandingUpperDeck>0</NumberPassengersStandingUpperDeck>
 		<BodyworkCode>CE</BodyworkCode>
 		<LowEntry>true</LowEntry>
 		<HeightIntegratedBody>3000</HeightIntegratedBody>
@@ -31,7 +26,7 @@ xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:DeclarationJob https://citnet.tech.e
 		<VehicleDeclarationType>final</VehicleDeclarationType>
 		<Components xsi:type="CompletedVehicleComponentsDeclarationType">
 			<AirDrag>
-				<Data id="CabinX23h" xsi:type="AirDragDataDeclarationType"  xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0">
+				<Data id="CabinX23h" xsi:type="AirDragDataDeclarationType" xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0">
 					<Manufacturer>Generic Manufacturer</Manufacturer>
 					<Model>Generic Model</Model>
 					<CertificationNumber>e12*0815/8051*2017/05E0000*00</CertificationNumber>
