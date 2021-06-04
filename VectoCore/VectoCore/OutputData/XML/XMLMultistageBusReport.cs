@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
@@ -15,6 +16,7 @@ using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Utils;
+using TUGraz.VectoHashing;
 
 
 namespace TUGraz.VectoCore.OutputData.XML
@@ -161,20 +163,37 @@ namespace TUGraz.VectoCore.OutputData.XML
 
 		#region Generate new manfuacturing Stage
 
+		private XElement GetSignatureElement(XElement stage)
+		{
+			var stream = new MemoryStream();
+			var writer = new StreamWriter(stream);
+			writer.Write(stage);
+			writer.Flush();
+			stream.Seek(0, SeekOrigin.Begin);
+
+			return new XElement(tns + XMLNames.DI_Signature,
+						 VectoHash.Load(stream).ComputeXmlHash
+							(VectoHash.DefaultCanonicalizationMethod, VectoHash.DefaultDigestMethod));
+		}
+
+
 		private XElement GenerateInputManufacturingStage()
 		{
 			var multistageId = $"{VectoComponents.VectoManufacturingStage.HashIdPrefix()}{GetGUID()}";
 			var vehicleId = $"{VectoComponents.Vehicle.HashIdPrefix()}{GetGUID()}";
 
-			return new XElement(tns + XMLNames.ManufacturingStage,
-					new XAttribute("stageCount", GetStageNumber()),
-					new XElement(tns + XMLNames.Report_DataWrap,
-						new XAttribute(xsi + XMLNames.Attr_Type, "BusManufacturingStageDataType"),
-						new XAttribute(XMLNames.Component_ID_Attr, multistageId),
-						GetHashPreviousStageElement(),
-						GetVehicleElement(vehicleId),
-						GetApplicationInformation()),
-					GetInputdataSignature(multistageId));
+			var stage = new XElement(tns + XMLNames.ManufacturingStage,
+				new XAttribute("stageCount", GetStageNumber()),
+				new XElement(tns + XMLNames.Report_DataWrap,
+					new XAttribute(xsi + XMLNames.Attr_Type, "BusManufacturingStageDataType"),
+					new XAttribute(XMLNames.Component_ID_Attr, multistageId),
+					GetHashPreviousStageElement(),
+					GetVehicleElement(vehicleId),
+					GetApplicationInformation()));
+
+			var sigXElement = GetSignatureElement(stage);
+			stage.LastNode.Parent.Add(sigXElement);
+			return stage;
 		}
 		
 		private int GetStageNumber()

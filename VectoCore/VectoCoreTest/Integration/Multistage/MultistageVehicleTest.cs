@@ -691,7 +691,8 @@ namespace TUGraz.VectoCore.Tests.Integration.Multistage
 
 			Assert.AreEqual(1, aux.SteeringPumpTechnology.Count);
 			Assert.AreEqual("Variable displacement elec. controlled", aux.SteeringPumpTechnology[0]);
-			
+
+			//ToDo SupplyFromHEVPossible to interface and reader?
 			Assert.AreEqual(AlternatorType.Smart, aux.ElectricSupply.AlternatorTechnology);
 
 			Assert.AreEqual(1, aux.ElectricSupply.Alternators.Count);
@@ -713,7 +714,7 @@ namespace TUGraz.VectoCore.Tests.Integration.Multistage
 			Assert.AreEqual(3.SI<Volt>(), capacitor.Voltage);
 			
 			Assert.AreEqual("Large Supply 2-stage", aux.PneumaticSupply.CompressorSize);//SizeOfAirSupply
-			Assert.AreEqual(CompressorDrive.mechanically, aux.PneumaticSupply.CompressorDrive);
+			Assert.AreEqual(CompressorDrive.electrically, aux.PneumaticSupply.CompressorDrive);
 			Assert.AreEqual("none", aux.PneumaticSupply.Clutch);
 			Assert.AreEqual(1.000, aux.PneumaticSupply.Ratio);
 			Assert.AreEqual(false, aux.PneumaticSupply.SmartAirCompression);
