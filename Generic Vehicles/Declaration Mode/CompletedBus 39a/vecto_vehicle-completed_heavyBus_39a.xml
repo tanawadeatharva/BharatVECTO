@@ -12,8 +12,10 @@
 		<AirdragModifiedMultistage>true</AirdragModifiedMultistage>
 		<NgTankSystem>Compressed</NgTankSystem>
 		<ClassBus>II</ClassBus>
-		<NumberPassengersLowerDeck>181</NumberPassengersLowerDeck>
-		<NumberPassengersUpperDeck>0</NumberPassengersUpperDeck>
+		<NumberPassengerSeatsLowerDeck>181</NumberPassengerSeatsLowerDeck>
+		<NumberPassengersStandingLowerDeck>0</NumberPassengersStandingLowerDeck>
+		<NumberPassengerSeatsUpperDeck>0</NumberPassengerSeatsUpperDeck>
+		<NumberPassengersStandingUpperDeck>0</NumberPassengersStandingUpperDeck>
 		<BodyworkCode>CG</BodyworkCode>
 		<LowEntry>false</LowEntry>
 		<HeightIntegratedBody>3000</HeightIntegratedBody>

@@ -1527,4 +1527,49 @@
   <data name="Bus_NumberPassengersStandingUpperDeck" xml:space="preserve">
     <value>NumberPassengersStandingUpperDeck</value>
   </data>
+  <data name="BusAux_ElectricSystem_Battery" xml:space="preserve">
+    <value>Battery</value>
+  </data>
+  <data name="BusAux_ElectricSystem_BatteryTechnology" xml:space="preserve">
+    <value>BatteryTechnology</value>
+  </data>
+  <data name="BusAux_ElectricSystem_Capacitor" xml:space="preserve">
+    <value>Capacitor</value>
+  </data>
+  <data name="BusAux_ElectricSystem_CapacitorTechnology" xml:space="preserve">
+    <value>CapacitorTechnology</value>
+  </data>
+  <data name="BusAux_ElectricSystem_NominalVoltage" xml:space="preserve">
+    <value>NominalVoltage</value>
+  </data>
+  <data name="BusAux_ElectricSystem_RatedCapacitance" xml:space="preserve">
+    <value>RatedCapacitance</value>
+  </data>
+  <data name="BusAux_ElectricSystem_RatedCapacity" xml:space="preserve">
+    <value>RatedCapacity</value>
+  </data>
+  <data name="BusAux_ElectricSystem_RatedCurrent" xml:space="preserve">
+    <value>RatedCurrent</value>
+  </data>
+  <data name="BusAux_ElectricSystem_RatedRatedVoltage" xml:space="preserve">
+    <value>RatedVoltage</value>
+  </data>
+  <data name="BusAux_ElectricSystem_RatedVoltage" xml:space="preserve">
+    <value>RatedVoltage</value>
+  </data>
+  <data name="BusAux_ElectricSystem_SmartAlternator" xml:space="preserve">
+    <value>SmartAlternator</value>
+  </data>
+  <data name="BusAux_ElectricSystem_SupplyFromHEVPossible" xml:space="preserve">
+    <value>SupplyFromHEVPossible</value>
+  </data>
+  <data name="BusAux_Fan" xml:space="preserve">
+    <value>Fan</value>
+  </data>
+  <data name="BusAux_SteeringPump" xml:space="preserve">
+    <value>SteeringPump</value>
+  </data>
+  <data name="BusAux_Technology" xml:space="preserve">
+    <value>Technology</value>
+  </data>
 </root>
