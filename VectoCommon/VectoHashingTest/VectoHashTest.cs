@@ -32,6 +32,7 @@
 using System;
 using System.IO;
 using System.Linq;
+using System.Runtime.Remoting.Metadata.W3cXsd2001;
 using System.Text;
 using System.Xml;
 using System.Xml.XPath;
@@ -523,5 +524,75 @@ namespace VectoHashingTest
 			var h = VectoHash.Load(file);
 			Assert.IsTrue(h.ValidateHash());
 		}
+
+		public const string MultistageFile =
+			@"Testdata\XML\Multistage\vecto_multistage_primary_vehicle_stage_2_3_group41.xml";
+
+
+
+		[TestCase(MultistageFile)]
+		public void TestMultistageComputeHashPrimary(string file)
+		{
+			var h = VectoHash.Load(file);
+
+			var primaryHash = h.ComputeHash(VectoComponents.VectoPrimaryVehicleInformation);
+
+			Assert.AreEqual("VTu71FU/Sijqk2Z8sScROGolObZK/UNTycf4K2CAgEs=", primaryHash);
+		}
+
+		
+		[TestCase(MultistageFile)]
+		public void TestMultistageReadHashPrimary(string file)
+		{
+			var h = VectoHash.Load(file);
+
+			var existingHash = h.ReadHash(VectoComponents.VectoPrimaryVehicleInformation);
+			Assert.AreEqual("VTu71FU/Sijqk2Z8sScROGolObZK/UNTycf4K2CAgEs=", existingHash);
+		}
+
+
+		[TestCase(MultistageFile)]
+		public void TestMultistageComputeInterimStage2(string file)
+		{
+			var h = VectoHash.Load(file);
+
+			var primaryHash = h.ComputeHash(VectoComponents.VectoManufacturingStage, 0);
+
+			Assert.AreEqual("Muaefd8RS+EjtmMVbSejxbSy5Tgcpm/WqnoLk+YH8ho=", primaryHash);
+		}
+
+
+		[TestCase(MultistageFile)]
+		public void TestMultistageComputeInterimStage3(string file)
+		{
+			var h = VectoHash.Load(file);
+
+			var primaryHash = h.ComputeHash(VectoComponents.VectoManufacturingStage, 1);
+
+			Assert.AreEqual("l7Z22F1bPMaAD4+0WNY+cahbjDKE80gxYv6K91YTMcU=", primaryHash);
+		}
+
+
+		[TestCase(MultistageFile)]
+		public void TestMultistageReadInterimStage2(string file)
+		{
+			var h = VectoHash.Load(file);
+
+			var primaryHash = h.ReadHash(VectoComponents.VectoManufacturingStage, 0);
+
+			Assert.AreEqual("Muaefd8RS+EjtmMVbSejxbSy5Tgcpm/WqnoLk+YH8ho=", primaryHash);
+		}
+
+
+		[TestCase(MultistageFile)]
+		public void TestMultistageReadInterimStage3(string file)
+		{
+			var h = VectoHash.Load(file);
+
+			var primaryHash = h.ReadHash(VectoComponents.VectoManufacturingStage, 1);
+
+			Assert.AreEqual("l7Z22F1bPMaAD4+0WNY+cahbjDKE80gxYv6K91YTMcU=", primaryHash);
+		}
+
 	}
 }
