@@ -50,14 +50,15 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		public PEVAMTShiftStrategy(IVehicleContainer dataBus)
 		{
+			GearboxModelData = dataBus.RunData.GearboxData;
+			GearshiftParams = dataBus.RunData.GearshiftParameters;
+			GearList = GearboxModelData.GearList;
 			MaxStartGear = GearList.Reverse().First();
 			var runData = dataBus.RunData;
 			if (runData.VehicleData == null) {
 				return;
 			}
-			GearboxModelData = dataBus.RunData.GearboxData;
-			GearshiftParams = dataBus.RunData.GearshiftParameters;
-			GearList = GearboxModelData.GearList;
+			
 
 			PowerMap = dataBus.RunData.ElectricMachinesData
 				.FirstOrDefault(x => x.Item1 == PowertrainPosition.BatteryElectricE2)?.Item2.EfficiencyMap;
