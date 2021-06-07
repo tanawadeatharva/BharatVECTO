@@ -9,67 +9,83 @@
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800" d:DataContext="{d:DesignData Type=viewModel:IOutputViewModel}">
     <Grid>
-        <DockPanel>
-            <ProgressBar DockPanel.Dock="Top" Minimum="0" Maximum="100" Value="{Binding Progress}"></ProgressBar>
-            <DataGrid DockPanel.Dock="Top" ItemsSource="{Binding Messages}" BorderThickness="1" CanUserAddRows="False" AutoGenerateColumns="False" SelectionUnit="FullRow" 
-                      IsReadOnly="True" HeadersVisibility="All"  RowHeaderWidth="5" Name="MessageList">
+        <DockPanel LastChildFill="False">
+            <ProgressBar DockPanel.Dock="Top" 
+                         Minimum="0" 
+                         Maximum="100" 
+                         Value="{Binding Progress}"/>
+            <StatusBar DockPanel.Dock="Bottom" Height="30">
+                <TextBlock Text="{Binding StatusMessage}"/>
+            </StatusBar>
+            <DataGrid 
+                VerticalAlignment="Stretch"
+                VerticalScrollBarVisibility="Auto"
+                DockPanel.Dock="Top" 
+                ItemsSource="{Binding Messages}" 
+                BorderThickness="1" 
+                CanUserAddRows="False" 
+                AutoGenerateColumns="False" 
+                SelectionUnit="FullRow" 
+                IsReadOnly="True" 
+                HeadersVisibility="All"  
+                RowHeaderWidth="5" 
+                Name="MessageList">
+                <DataGrid.Columns>
+                        <DataGridTemplateColumn Header="Message" Width="*">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <StackPanel>
+                                        <TextBlock Text="{Binding Message}" Visibility="{Binding Message, Converter={StaticResource NullToVisibilityConverter}}"
+                                                   TextWrapping="Wrap"/>
+                                        <TextBlock Text="{Binding Link}" Visibility="{Binding Message, Converter={StaticResource NullToVisibilityConverter}}"
+                                                   TextWrapping="Wrap"/>
+                                    </StackPanel>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                        <DataGridTextColumn Header="Time" Binding="{Binding Time}" Width="130" />
+                    </DataGrid.Columns>
+                <DataGrid.RowStyle>
+                    <Style TargetType="DataGridRow">
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding Type}" Value="{x:Static impl:MessageType.StatusMessage}">
+                                <Setter Property="Background" Value="AliceBlue"/>
+                            </DataTrigger>
+                            <DataTrigger Binding="{Binding Type}" Value="{x:Static impl:MessageType.InfoMessage}">
+                                <Setter Property="Background" Value="LemonChiffon"/>
+                            </DataTrigger>
+                            <DataTrigger Binding="{Binding Type}" Value="{x:Static impl:MessageType.ErrorMessage}">
+                                <Setter Property="Background" Value="Red"/>
+                            </DataTrigger>
+                            <DataTrigger Binding="{Binding Type}" Value="{x:Static impl:MessageType.WarningMessage}">
+                                <Setter Property="Background" Value="Gold"/>
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </DataGrid.RowStyle>
+                <DataGrid.CellStyle>
+                    <Style TargetType="DataGridCell">
+                        <Setter Property="FontFamily" Value="Courier New"/>
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding Type}" Value="{x:Static impl:MessageType.StatusMessage}">
+                                <Setter Property="Foreground" Value="Black"/>
+                            </DataTrigger>
+                            <DataTrigger Binding="{Binding Type}" Value="{x:Static impl:MessageType.InfoMessage}">
+                                <Setter Property="Foreground" Value="DimGray"/>
+                            </DataTrigger>
+                            <DataTrigger Binding="{Binding Type}" Value="{x:Static impl:MessageType.ErrorMessage}">
+                                <Setter Property="Foreground" Value="White"/>
+                                <Setter Property="FontWeight" Value="Bold"/>
+                            </DataTrigger>
+                            <DataTrigger Binding="{Binding Type}" Value="{x:Static impl:MessageType.WarningMessage}">
+                                <Setter Property="Foreground" Value="Black"/>
+                                <Setter Property="FontWeight" Value="Bold"/>
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </DataGrid.CellStyle>
+            </DataGrid>
 
-            <DataGrid.Columns>
-                    <DataGridTemplateColumn Header="Message" Width="*">
-                        <DataGridTemplateColumn.CellTemplate>
-                            <DataTemplate>
-                                <StackPanel>
-                                    <TextBlock Text="{Binding Message}" Visibility="{Binding Message, Converter={StaticResource NullToVisibilityConverter}}"
-                                               TextWrapping="Wrap"/>
-                                    <TextBlock Text="{Binding Link}" Visibility="{Binding Message, Converter={StaticResource NullToVisibilityConverter}}"
-                                               TextWrapping="Wrap"/>
-                                </StackPanel>
-                            </DataTemplate>
-                        </DataGridTemplateColumn.CellTemplate>
-                    </DataGridTemplateColumn>
-                    <DataGridTextColumn Header="Time" Binding="{Binding Time}" Width="130" />
-                </DataGrid.Columns>
-            <DataGrid.RowStyle>
-                <Style TargetType="DataGridRow">
-                    <Style.Triggers>
-                        <DataTrigger Binding="{Binding Type}" Value="{x:Static impl:MessageType.StatusMessage}">
-                            <Setter Property="Background" Value="AliceBlue"/>
-                        </DataTrigger>
-                        <DataTrigger Binding="{Binding Type}" Value="{x:Static impl:MessageType.InfoMessage}">
-                            <Setter Property="Background" Value="LemonChiffon"/>
-                        </DataTrigger>
-                        <DataTrigger Binding="{Binding Type}" Value="{x:Static impl:MessageType.ErrorMessage}">
-                            <Setter Property="Background" Value="Red"/>
-                        </DataTrigger>
-                        <DataTrigger Binding="{Binding Type}" Value="{x:Static impl:MessageType.WarningMessage}">
-                            <Setter Property="Background" Value="Gold"/>
-                        </DataTrigger>
-                    </Style.Triggers>
-                </Style>
-            </DataGrid.RowStyle>
-            <DataGrid.CellStyle>
-                <Style TargetType="DataGridCell">
-                    <Setter Property="FontFamily" Value="Courier New"/>
-                    <Style.Triggers>
-                        <DataTrigger Binding="{Binding Type}" Value="{x:Static impl:MessageType.StatusMessage}">
-                            <Setter Property="Foreground" Value="Black"/>
-                        </DataTrigger>
-                        <DataTrigger Binding="{Binding Type}" Value="{x:Static impl:MessageType.InfoMessage}">
-                            <Setter Property="Foreground" Value="DimGray"/>
-                        </DataTrigger>
-                        <DataTrigger Binding="{Binding Type}" Value="{x:Static impl:MessageType.ErrorMessage}">
-                            <Setter Property="Foreground" Value="White"/>
-                            <Setter Property="FontWeight" Value="Bold"/>
-                        </DataTrigger>
-                        <DataTrigger Binding="{Binding Type}" Value="{x:Static impl:MessageType.WarningMessage}">
-                            <Setter Property="Foreground" Value="Black"/>
-                            <Setter Property="FontWeight" Value="Bold"/>
-                        </DataTrigger>
-                    </Style.Triggers>
-                </Style>
-            </DataGrid.CellStyle>
-        </DataGrid>
-            <StatusBar DockPanel.Dock="Bottom" VerticalAlignment="Bottom"><TextBlock Text="{Binding StatusMessage}"/></StatusBar>
         </DockPanel>
     </Grid>
 </UserControl>
