@@ -58,6 +58,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			var retVal = base.Request(absTime, dt, outTorque, outAngularVelocity, dryRun);
 			retVal.Axlegear.PowerRequest = outTorque * (PreviousState.OutAngularVelocity + outAngularVelocity) / 2.0;
 			retVal.Axlegear.CardanTorque = InTorque;
+			retVal.Axlegear.OutputTorque = outTorque;
+			retVal.Axlegear.OutputSpeed = outAngularVelocity;
 			return retVal;
 		}
 

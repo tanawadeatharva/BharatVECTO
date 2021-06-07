@@ -214,7 +214,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 							ElectricMotor = {
 								MaxDriveTorque = maxDriveTorqueDt,
 								MaxRecuperationTorque = maxRecuperationTorqueDt,
-								AngularVelocity = avgDtSpeed,
+								AngularVelocity = avgDtSpeed, // avgemspeed??
+								AvgDrivetrainSpeed = avgDtSpeed,
 								PowerRequest = outTorque * avgDtSpeed
 							}
 						};
@@ -333,6 +334,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			retVal.ElectricMotor.MaxDriveTorque = maxDriveTorqueDt;
 			retVal.ElectricMotor.MaxRecuperationTorque = maxRecuperationTorqueDt;
 			retVal.ElectricMotor.AngularVelocity = avgEmSpeed;
+			retVal.ElectricMotor.AvgDrivetrainSpeed = avgDtSpeed;
 
 			retVal.ElectricMotor.TorqueRequest = outTorque;
 			retVal.ElectricMotor.InertiaTorque =

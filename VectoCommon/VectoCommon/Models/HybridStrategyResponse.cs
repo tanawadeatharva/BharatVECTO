@@ -36,13 +36,13 @@ namespace TUGraz.VectoCommon.Models {
 	[DebuggerDisplay("{U}: {Score} - G{Gear}")]
 	public class HybridResultEntry
 	{
-		public Second SimulationInterval
-			;
+		public Second SimulationInterval;
 		public double U { get; set; }
 
 		public HybridStrategyResponse Setting { get; set; }
 
 		public IResponse Response { get; set; }
+
 
 		public double Score
 		{
