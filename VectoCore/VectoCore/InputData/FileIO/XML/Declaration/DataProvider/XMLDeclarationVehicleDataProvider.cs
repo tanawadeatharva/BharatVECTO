@@ -1164,8 +1164,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		{
 			get
 			{
-				return ElementExists(XMLNames.Component_Model)
-					? GetString(XMLNames.Component_Model) : null;
+				return ElementExists(new [] {XMLNames.Component_Vehicle, XMLNames.Component_Model})
+					? GetString(new[] { XMLNames.Component_Vehicle, XMLNames.Component_Model }) : null;
 			}
 		}
 
