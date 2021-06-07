@@ -33,8 +33,8 @@ namespace Vecto3GUI2020Test.ViewModelTests
 			var writer = GetFileOutputVIFWriter(multistagevm);
 			
 			deleteFile(writer.XMLMultistageReportFileName);
-			getMockDialogHelper(null, writer.XMLMultistageReportFileName);
-			_kernel.Rebind<IDialogHelper>().ToConstant(getMockDialogHelper(null, writer.XMLMultistageReportFileName).Object);
+			setMockDialogHelper(null, writer.XMLMultistageReportFileName);
+			_kernel.Rebind<IDialogHelper>().ToConstant(setMockDialogHelper(null, writer.XMLMultistageReportFileName).Object);
 
 			MultiStageJobViewModel_v0_1.SaveVif(multistagevm, writer);
 
@@ -46,14 +46,11 @@ namespace Vecto3GUI2020Test.ViewModelTests
 
 
 		[Test]
-		public void TestAirdragLoad()
+		public void TestAirdragLoadAndSave()
 		{
-			var multiplestages = Path.GetFullPath(DirPath + "vecto_multistage_consolidated_multiple_stages.xml");
+			
 
-			var dialogMockConsolidatedMultipleStage = new Mock<IDialogHelper>();
-			dialogMockConsolidatedMultipleStage.Setup(dialogHelper => dialogHelper.OpenXMLFileDialog(It.IsAny<string>())).Returns(multiplestages);
-			dialogMockConsolidatedMultipleStage.Setup(dialogHelper => dialogHelper.OpenXMLFileDialog()).Returns(multiplestages);
-			_kernel.Rebind<IDialogHelper>().ToConstant(dialogMockConsolidatedMultipleStage.Object);
+			setMockDialogHelper(consolidated_multiple_stages, null);
 			
 			var newMultistageJobViewModel = _kernel.Get<NewMultiStageJobViewModel>();
 			newMultistageJobViewModel.AddVifFile.Execute(null);
@@ -68,13 +65,7 @@ namespace Vecto3GUI2020Test.ViewModelTests
 			var multiStageViewModel = newMultistageJobViewModel.MultiStageJobViewModel as MultiStageJobViewModel_v0_1;
 			Assert.NotNull(multiStageViewModel);
 
-			var vehicleInputData = Path.GetFullPath(DirPath + "vecto_vehicle-stage_input_full-sample.xml");
-			Assert.IsTrue(File.Exists(vehicleInputData));
-
-			var vehicleInputDataFiledialogMock = new Mock<IDialogHelper>();
-			vehicleInputDataFiledialogMock.Setup(dialogHelper => dialogHelper.OpenXMLFileDialog(It.IsAny<string>())).Returns(vehicleInputData);
-			vehicleInputDataFiledialogMock.Setup(dialogHelper => dialogHelper.OpenXMLFileDialog()).Returns(vehicleInputData);
-			_kernel.Rebind<IDialogHelper>().ToConstant(vehicleInputDataFiledialogMock.Object);
+			setMockDialogHelper(stageInputFullSample, null);
 
 			multiStageViewModel.LoadVehicleDataCommand.Execute(null);
 			
@@ -89,9 +80,8 @@ namespace Vecto3GUI2020Test.ViewModelTests
 			var writer = GetFileOutputVIFWriter(multiStageViewModel);
 			
 			deleteFile(writer.XMLMultistageReportFileName);
-			getMockDialogHelper(null, writer.XMLMultistageReportFileName);
-			_kernel.Rebind<IDialogHelper>().ToConstant(getMockDialogHelper(null, writer.XMLMultistageReportFileName).Object);
-			
+			setMockDialogHelper(null, writer.XMLMultistageReportFileName);
+
 			MultiStageJobViewModel_v0_1.SaveVif(multiStageViewModel, writer);
 			
 			var validator = new XMLValidator(XmlReader.Create(writer.XMLMultistageReportFileName));

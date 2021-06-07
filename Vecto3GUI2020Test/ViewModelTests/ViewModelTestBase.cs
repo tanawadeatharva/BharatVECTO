@@ -1,6 +1,7 @@
 using System;
 using System.Diagnostics;
 using System.IO;
+using System.Windows;
 using Moq;
 using Ninject;
 using NUnit.Framework;
@@ -92,7 +93,7 @@ namespace Vecto3GUI2020Test
 
 		public NewMultiStageJobViewModel loadFile(string fileName)
 		{
-			var mockDialogHelper = getMockDialogHelper(fileName);
+			var mockDialogHelper = setMockDialogHelper(fileName);
 
 			var newMultistageJobViewModel = _kernel.Get<NewMultiStageJobViewModel>();
 			newMultistageJobViewModel.AddVifFile.Execute(null);
@@ -118,10 +119,18 @@ namespace Vecto3GUI2020Test
 			return newMultistageJobViewModel;
 		}
 
-		protected Mock<IDialogHelper> getMockDialogHelper(string fileToLoad = null, string fileToSave = null)
+		protected Mock<IDialogHelper> setMockDialogHelper(string fileToLoad = null, string fileToSave = null)
 		{
 			if (_mockDialogHelper == null) {
 				_mockDialogHelper = new Mock<IDialogHelper>();
+				_mockDialogHelper.Setup(dialogHelper => dialogHelper.ShowMessageBox(It.IsAny<string>(),
+						It.IsAny<string>(),
+						It.IsAny<MessageBoxButton>(),
+						It.IsAny<MessageBoxImage>())).Returns(MessageBoxResult.OK)
+					.Callback<string, string, MessageBoxButton, MessageBoxImage>((
+						(message, caption, button, image) => {
+							TestContext.WriteLine($"{caption}\n {message}");
+						}));
 			}
 			if (fileToLoad != null) {
 				var filePath = Path.GetFullPath(DirPath + fileToLoad);
@@ -130,7 +139,7 @@ namespace Vecto3GUI2020Test
 				_mockDialogHelper.Setup(dialogHelper => dialogHelper.OpenXMLFileDialog(It.IsAny<string>())).Returns(filePath);
 				_mockDialogHelper.Setup(dialogHelper => dialogHelper.OpenXMLFileDialog()).Returns(filePath);
 
-				Debug.WriteLine($"Created MOCKDIALOGHELPER, returns {filePath} for OpenXMLFileDialog()");
+				TestContext.WriteLine($"Created MOCKDIALOGHELPER, returns {filePath} for OpenXMLFileDialog()");
 			}
 
 			if (fileToSave != null) {
@@ -140,10 +149,15 @@ namespace Vecto3GUI2020Test
 				_mockDialogHelper.Setup(dialogHelper =>
 					dialogHelper.SaveToXMLDialog(null)).Returns(filePath);
 
-				Debug.WriteLine($"Created MOCKDIALOGHELPER, returns {filePath} for SaveToXMLFileDialog()");
+				TestContext.WriteLine($"Created MOCKDIALOGHELPER, returns {filePath} for SaveToXMLFileDialog()");
 			}
 
 
+			return _mockDialogHelper;
+		}
+
+		protected Mock<IDialogHelper> getMockDialogHelper()
+		{
 			return _mockDialogHelper;
 		}
 
