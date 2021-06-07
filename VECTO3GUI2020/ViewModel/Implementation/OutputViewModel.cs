@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Windows.Data;
+using Microsoft.WindowsAPICodePack.Shell.Interop;
 using VECTO3GUI2020.ViewModel.Implementation;
 using VECTO3GUI2020.ViewModel.Implementation.Common;
 using VECTO3GUI2020.ViewModel.Interfaces;
@@ -20,6 +21,13 @@ namespace VECTO3GUI2020.ViewModel
 		public ObservableCollection<MessageEntry> Messages
 		{
 			get { return _messages; }
+		}
+
+		public void AddMessage(MessageEntry messageEntry)
+		{
+			lock (_messageLock) {
+				Messages.Add(messageEntry);
+			}
 		}
 
 		public int Progress
@@ -43,9 +51,10 @@ namespace VECTO3GUI2020.ViewModel
 
 	public interface IOutputViewModel : IMainViewModel
 	{
-		ObservableCollection<MessageEntry> Messages { get; }
+		//ObservableCollection<MessageEntry> Messages { get; }
 
 		int Progress { get; set; }
 		string StatusMessage { get; set; }
+		void AddMessage(MessageEntry messageEntry);
 	}
 }
