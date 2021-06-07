@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
@@ -186,10 +187,11 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 			SystemConfiguration = componentsAuxiliaryInputData.HVACAux?.SystemConfiguration;
 			HeatPumpTypeDriverCompartment = componentsAuxiliaryInputData.HVACAux?.HeatPumpTypeDriverCompartment;
 			HeatPumpModeDriverCompartment = componentsAuxiliaryInputData.HVACAux?.HeatPumpModeDriverCompartment;
-			HeatPumpConfigurationsPassenger.Clear();
-			if (componentsAuxiliaryInputData.HVACAux?.HeatPumpPassengerCompartments != null)
+			HeatPumpConfigurationsPassenger = null;
+			HeatPumpConfigurationsPassenger = new ObservableCollection<HeatPumpConfiguration>();
+			if (componentsAuxiliaryInputData?.HVACAux?.HeatPumpPassengerCompartments != null)
 			{
-				foreach (var (heatPumpType, heatPumpMode) in componentsAuxiliaryInputData.HVACAux?.HeatPumpPassengerCompartments)
+				foreach (var (heatPumpType, heatPumpMode) in componentsAuxiliaryInputData.HVACAux.HeatPumpPassengerCompartments)
 				{
 					HeatPumpConfigurationsPassenger.Add(new HeatPumpConfiguration()
 					{
@@ -247,6 +249,7 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 					nameof(IHVACBusAuxiliariesDeclarationData.AdjustableCoolantThermostat),
 					nameof(IHVACBusAuxiliariesDeclarationData.EngineWasteGasHeatExchanger)
 				});
+
 				foreach (var propInfo in HVACinterfaceProperties) {
 					if (notImplemented.Contains(propInfo.Name)) continue;
 					hasValues = hasValues || propInfo.GetValue(this) != null;
@@ -383,14 +386,16 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 		public IList<Tuple<HeatPumpType, HeatPumpMode>> HeatPumpPassengerCompartments{
 			get
 			{
-				var list = new List<Tuple<HeatPumpType, HeatPumpMode>>();
+				IList<Tuple<HeatPumpType,HeatPumpMode>> list = null;
 				if (HeatPumpConfigurationsPassenger != null) {
+					list = new List<Tuple<HeatPumpType, HeatPumpMode>>();
 					foreach (var heatPumpConfiguration in HeatPumpConfigurationsPassenger)
 					{
 						list.Add(new Tuple<HeatPumpType, HeatPumpMode>((HeatPumpType)heatPumpConfiguration.HeatPumpType, (HeatPumpMode)heatPumpConfiguration.HeatPumpMode));
 					}
 				}
-				
+
+
 				return list;
 			}
 		}

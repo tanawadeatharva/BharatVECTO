@@ -25,7 +25,7 @@ namespace Vecto3GUI2020Test
             Setup(TestContext.CurrentContext);
 		}
 
-
+		[Ignore("ignored UI test")]
 		[Test]
 		public void LoadFileSession()
 		{
