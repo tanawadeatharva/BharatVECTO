@@ -352,6 +352,8 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 			RegisteredClass = vehicleInputData.RegisteredClass;
 			NumberPassengerSeatsUpperDeck = vehicleInputData.NumberPassengerSeatsUpperDeck;
 			NumberPassengerSeatsLowerDeck = vehicleInputData.NumberPassengerSeatsLowerDeck;
+			NumberPassengersStandingLowerDeck = vehicleInputData.NumberPassengersStandingLowerDeck;
+			NumberPassengersStandingUpperDeck = vehicleInputData.NumberPassengersStandingUpperDeck;
 			VehicleCode = vehicleInputData.VehicleCode;
 			LowEntry = vehicleInputData.LowEntry;
 			MeasurementsGroupEditingEnabled =

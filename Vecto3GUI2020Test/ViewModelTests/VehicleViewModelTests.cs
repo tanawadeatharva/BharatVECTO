@@ -231,7 +231,7 @@ namespace Vecto3GUI2020Test.ViewModelTests
 			var vehicleVM =
 				vm.MultiStageJobViewModel.ManufacturingStageViewModel.Vehicle as
 					DeclarationInterimStageBusVehicleViewModel_v2_8;
-			getMockDialogHelper(stageInputFullSample);
+			setMockDialogHelper(stageInputFullSample);
 			var vmConc = vm.MultiStageJobViewModel as MultiStageJobViewModel_v0_1;
 			vmConc.LoadVehicleDataCommand.Execute(null);
 			Assert.IsFalse(vmConc.ManufacturingStageViewModel.VehicleViewModel.HasErrors);
