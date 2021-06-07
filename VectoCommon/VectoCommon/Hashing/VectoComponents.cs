@@ -127,6 +127,7 @@ namespace TUGraz.VectoCommon.Hashing
 				case VectoComponents.VectoCustomerInformation:
 				case VectoComponents.VectoOutput:
 				case VectoComponents.VectoPrimaryVehicleInformation:
+				case VectoComponents.VectoManufacturingStage:
 					return true;
 				default:
 					return false;

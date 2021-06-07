@@ -1024,6 +1024,96 @@ namespace TUGraz.VectoCommon.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Battery.
+        /// </summary>
+        public static string BusAux_ElectricSystem_Battery {
+            get {
+                return ResourceManager.GetString("BusAux_ElectricSystem_Battery", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to BatteryTechnology.
+        /// </summary>
+        public static string BusAux_ElectricSystem_BatteryTechnology {
+            get {
+                return ResourceManager.GetString("BusAux_ElectricSystem_BatteryTechnology", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Capacitor.
+        /// </summary>
+        public static string BusAux_ElectricSystem_Capacitor {
+            get {
+                return ResourceManager.GetString("BusAux_ElectricSystem_Capacitor", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to CapacitorTechnology.
+        /// </summary>
+        public static string BusAux_ElectricSystem_CapacitorTechnology {
+            get {
+                return ResourceManager.GetString("BusAux_ElectricSystem_CapacitorTechnology", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to NominalVoltage.
+        /// </summary>
+        public static string BusAux_ElectricSystem_NominalVoltage {
+            get {
+                return ResourceManager.GetString("BusAux_ElectricSystem_NominalVoltage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to RatedCapacitance.
+        /// </summary>
+        public static string BusAux_ElectricSystem_RatedCapacitance {
+            get {
+                return ResourceManager.GetString("BusAux_ElectricSystem_RatedCapacitance", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to RatedCapacity.
+        /// </summary>
+        public static string BusAux_ElectricSystem_RatedCapacity {
+            get {
+                return ResourceManager.GetString("BusAux_ElectricSystem_RatedCapacity", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to RatedCurrent.
+        /// </summary>
+        public static string BusAux_ElectricSystem_RatedCurrent {
+            get {
+                return ResourceManager.GetString("BusAux_ElectricSystem_RatedCurrent", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to RatedVoltage.
+        /// </summary>
+        public static string BusAux_ElectricSystem_RatedRatedVoltage {
+            get {
+                return ResourceManager.GetString("BusAux_ElectricSystem_RatedRatedVoltage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to RatedVoltage.
+        /// </summary>
+        public static string BusAux_ElectricSystem_RatedVoltage {
+            get {
+                return ResourceManager.GetString("BusAux_ElectricSystem_RatedVoltage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to ResultCards.
         /// </summary>
         public static string BusAux_ElectricSystem_ResultCards {
@@ -1033,11 +1123,38 @@ namespace TUGraz.VectoCommon.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to SmartAlternator.
+        /// </summary>
+        public static string BusAux_ElectricSystem_SmartAlternator {
+            get {
+                return ResourceManager.GetString("BusAux_ElectricSystem_SmartAlternator", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to SmartElectrics.
         /// </summary>
         public static string BusAux_ElectricSystem_SmartElectrics {
             get {
                 return ResourceManager.GetString("BusAux_ElectricSystem_SmartElectrics", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to SupplyFromHEVPossible.
+        /// </summary>
+        public static string BusAux_ElectricSystem_SupplyFromHEVPossible {
+            get {
+                return ResourceManager.GetString("BusAux_ElectricSystem_SupplyFromHEVPossible", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Fan.
+        /// </summary>
+        public static string BusAux_Fan {
+            get {
+                return ResourceManager.GetString("BusAux_Fan", resourceCulture);
             }
         }
         
@@ -1173,6 +1290,24 @@ namespace TUGraz.VectoCommon.Resources {
         public static string BusAux_ResultCard_Traction {
             get {
                 return ResourceManager.GetString("BusAux_ResultCard_Traction", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to SteeringPump.
+        /// </summary>
+        public static string BusAux_SteeringPump {
+            get {
+                return ResourceManager.GetString("BusAux_SteeringPump", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Technology.
+        /// </summary>
+        public static string BusAux_Technology {
+            get {
+                return ResourceManager.GetString("BusAux_Technology", resourceCulture);
             }
         }
         
