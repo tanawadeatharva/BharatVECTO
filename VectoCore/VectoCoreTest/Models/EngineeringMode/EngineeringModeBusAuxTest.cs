@@ -117,7 +117,7 @@ namespace TUGraz.VectoCore.Tests.Models.EngineeringMode
 		]
 		public void InterurbanBus_BusAuxTest(string jobFile, int runIdx, string outPath = null)
 		{
-			var outFile = Path.Combine(Path.GetDirectoryName(jobFile), outPath, Path.GetFileName(jobFile));
+			var outFile = Path.Combine(Path.GetDirectoryName(jobFile), outPath ?? "dev", Path.GetFileName(jobFile));
 			if (!Directory.Exists(Path.GetDirectoryName(outFile))) {
 				Directory.CreateDirectory(Path.GetDirectoryName(outFile));
 			}

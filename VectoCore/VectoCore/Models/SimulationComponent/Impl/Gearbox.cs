@@ -54,7 +54,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		/// <summary>
 		/// Time when a gearbox shift engages a new gear (shift is finished). Is set when shifting is needed.
 		/// </summary>
-		protected internal Second EngageTime = 0.SI<Second>();
+		protected internal Second EngageTime { get; set; } //= 0.SI<Second>();
 
 		/// <summary>
 		/// True if gearbox is disengaged (no gear is set).
@@ -95,6 +95,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		public Gearbox(IVehicleContainer container, IShiftStrategy strategy) : base(container)
 		{
+			EngageTime = 0.SI<Second>();
 			_strategy = strategy;
 			if (_strategy != null) {
 				_strategy.Gearbox = this;
@@ -388,6 +389,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			response.Gearbox.PowerRequest = outTorque * avgAngularVelocity;
 			response.Gearbox.Gear = new GearshiftPosition(0);
+			response.Gearbox.InputSpeed = inAngularVelocity;
+			response.Gearbox.InputTorque = inTorque;
+			response.Gearbox.OutputTorque = outTorque;
+			response.Gearbox.OutputSpeed = outAngularVelocity;
 			return response;
 		}
 

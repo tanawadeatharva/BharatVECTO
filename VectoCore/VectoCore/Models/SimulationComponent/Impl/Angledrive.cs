@@ -47,6 +47,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		{
 			var retVal = base.Request(absTime, dt, outTorque, outAngularVelocity, dryRun);
 			retVal.Angledrive.PowerRequest = outTorque * (PreviousState.OutAngularVelocity + outAngularVelocity) / 2.0;
+			retVal.Angledrive.OutputTorque = outTorque;
+			retVal.Angledrive.OutputSpeed = outAngularVelocity;
 			return retVal;
 		}
 
