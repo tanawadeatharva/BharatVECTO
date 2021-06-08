@@ -4,12 +4,15 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Ninject;
 using NUnit.Framework;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Utils;
+using TUGraz.VectoCore.InputData.FileIO.XML;
 using VECTO3GUI2020.Annotations;
 using VECTO3GUI2020.ViewModel.Implementation.JobEdit.Vehicle.Components;
 using VECTO3GUI2020.ViewModel.MultiStage.Implementation;
+using VECTO3GUI2020.ViewModel.MultiStage.Interfaces;
 
 namespace Vecto3GUI2020Test.ViewModelTests
 {
@@ -115,6 +118,10 @@ namespace Vecto3GUI2020Test.ViewModelTests
 			Assert.IsNull(vehicleVM.AirdragModifiedMultistage);
 			Assert.IsFalse(vehicleVM.AirdragModifiedMultistageMandatory);
 
+			var airdragViewModel = vehicleVM.MultistageAirdragViewModel;
+			Assert.IsTrue(airdragViewModel.LoadAirdragFile(GetFullPath(airdragLoadTestFile)), "Airdrag file not loaded");
+			Assert.IsFalse(vehicleVM.AirdragModifiedMultistageMandatory);
+				
 			vehicleVM.AirdragModifiedMultistageEditingEnabled = true;
 			Assert.IsFalse(vehicleVM.AirdragModifiedMultistageEditingEnabled);
 

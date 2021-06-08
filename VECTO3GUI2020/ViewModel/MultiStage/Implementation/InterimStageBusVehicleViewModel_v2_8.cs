@@ -151,14 +151,7 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 			MultistageAirdragViewModel.AirdragViewModelChanged += ((sender, args) => {
 				if (sender is IMultistageAirdragViewModel vm) {
 					if (AirdragModifiedMultistageMandatory) {
-						if (vm.AirDragViewModel != null)
-						{
-							AirdragModifiedMultistage = true;
-						}
-						else
-						{
-							AirdragModifiedMultistage = false;
-						}
+						AirdragModifiedMultistage = vm.AirDragViewModel != null;
 					}
 				}
 			});
@@ -173,13 +166,13 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 
 			if (consolidatedVehicleData?.AirdragModifiedMultistage != null)
 			{
-				_airdragModifiedMultistageMandatory = true;
+				AirdragModifiedMultistageMandatory = true;
 				AirdragModifiedMultistageEditingEnabled = true;
 			}
 
 			if (consolidatedVehicleData?.Components?.AirdragInputData != null)
 			{
-				_airdragModifiedMultistageMandatory = true;
+				AirdragModifiedMultistageMandatory = true;
 				AirdragModifiedMultistageEditingEnabled = true;
 			}
 		}

@@ -225,13 +225,13 @@ namespace Vecto3GUI2020Test
 			Assert.Null(vifInputData.VehicleInputData.Components);
 		}
 
-		[TestCase(consolidated_multiple_stages_airdrag)]
-		[TestCase(consolidated_multiple_stages)]
-		[TestCase(consolidated_one_stage)]
-		[TestCase(primary_vehicle_only)]
-		public void loadAirdragComponentAndSaveVehicleData(string fileName)
+		[TestCase(consolidated_multiple_stages_airdrag, true)]
+		[TestCase(consolidated_multiple_stages, null)]
+		[TestCase(consolidated_one_stage, null)]
+		[TestCase(primary_vehicle_only, null)]
+		public void loadAirdragComponentAndSaveVehicleData(string fileName, object expectedAirdragModifiedValue)
 		{
-			var vm = loadFile(consolidated_multiple_stages_airdrag);
+			var vm = loadFile(fileName);
 
 			var vehicleVm =
 				vm.MultiStageJobViewModel.ManufacturingStageViewModel.VehicleViewModel as
@@ -261,17 +261,18 @@ namespace Vecto3GUI2020Test
 			Assert.IsTrue(File.Exists(savePath));
 			TestContext.WriteLine("Done!");
 			
-			TestContext.WriteLine("Checking saved File ...");
+			TestContext.WriteLine("Checking saved File ... ");
 			var inputData = (IDeclarationInputDataProvider)_kernel.Get<IXMLInputDataReader>().Create(savePath);
 
 			Assert.NotNull(inputData.JobInputData.Vehicle.Components.AirdragInputData, "No Airdrag Component loaded");
 			var airdragData = inputData.JobInputData.Vehicle.Components.AirdragInputData;
 			
-			Assert.IsTrue(vehicleVm.AirdragModifiedMultistage);
+			Assert.AreEqual(expectedAirdragModifiedValue, vehicleVm.AirdragModifiedMultistage);
 
 
 
 
+			TestContext.WriteLine("Done!");
 
 
 			File.Delete(savePath);
