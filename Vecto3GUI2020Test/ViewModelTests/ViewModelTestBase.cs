@@ -33,7 +33,7 @@ namespace Vecto3GUI2020Test
 
 		protected const string stageInputFullSample = "vecto_vehicle-stage_input_full-sample.xml";
 
-		protected const string airdragComponent = "AidragComponent.xml";
+		protected const string airdragLoadTestFile = "AirdragLoadTestFile.xml";
 
 		//protected IXMLInputDataReader xmlInputReader;
 		protected IKernel _kernel;

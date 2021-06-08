@@ -646,7 +646,10 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 
 		public bool? AirdragModifiedMultistage
 		{
-			get => _airdragModifiedMultistage;
+			get
+			{
+				return _airdragModifiedMultistage;
+			}
 			set
 			{
 				if (SetProperty(ref _airdragModifiedMultistage, value)) {
@@ -657,6 +660,7 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 				};
 			}
 		}
+
 		public bool AirdragModifiedMultistageMandatory
 		{
 			get => _airdragModifiedMultistageMandatory;

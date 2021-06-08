@@ -225,6 +225,61 @@ namespace Vecto3GUI2020Test
 			Assert.Null(vifInputData.VehicleInputData.Components);
 		}
 
+		[TestCase(consolidated_multiple_stages_airdrag)]
+		[TestCase(consolidated_multiple_stages)]
+		[TestCase(consolidated_one_stage)]
+		[TestCase(primary_vehicle_only)]
+		public void loadAirdragComponentAndSaveVehicleData(string fileName)
+		{
+			var vm = loadFile(consolidated_multiple_stages_airdrag);
+
+			var vehicleVm =
+				vm.MultiStageJobViewModel.ManufacturingStageViewModel.VehicleViewModel as
+					DeclarationInterimStageBusVehicleViewModel_v2_8;
+
+
+			var airdragLoadResult = vehicleVm.MultistageAirdragViewModel.LoadAirdragFile(GetFullPath(airdragLoadTestFile));
+			Assert.IsTrue(airdragLoadResult, "Airdrag file not loaded");
+
+
+            //TODO: Set mandatory fields
+            vehicleVm.Manufacturer = "TestManufacturer";
+			vehicleVm.ManufacturerAddress = "ManufacturerADDRESS";
+			vehicleVm.VIN = "1234567890";
+
+
+			
+			var fileToSave = "stageInput.xml";
+
+			var mockDialogHelper = setMockDialogHelper(null, fileToSave: fileToSave);
+
+			TestContext.Write("Saving file with loaded Airdrag Component ... ");
+			var multistageJobViewModel = vm.MultiStageJobViewModel as MultiStageJobViewModel_v0_1;
+			multistageJobViewModel.SaveInputDataAsCommand.Execute(null);
+
+			var savePath = mockDialogHelper.Object.SaveToXMLDialog();
+			Assert.IsTrue(File.Exists(savePath));
+			TestContext.WriteLine("Done!");
+			
+			TestContext.WriteLine("Checking saved File ...");
+			var inputData = (IDeclarationInputDataProvider)_kernel.Get<IXMLInputDataReader>().Create(savePath);
+
+			Assert.NotNull(inputData.JobInputData.Vehicle.Components.AirdragInputData, "No Airdrag Component loaded");
+			var airdragData = inputData.JobInputData.Vehicle.Components.AirdragInputData;
+			
+			Assert.IsTrue(vehicleVm.AirdragModifiedMultistage);
+
+
+
+
+
+
+			File.Delete(savePath);
+
+
+
+
+		}
 
 	
 
