@@ -17,6 +17,7 @@ using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.InputData.FileIO.XML;
 using TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider;
 using TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Factory;
+using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Utils;
 using VECTO3GUI2020.Helper;
 using VECTO3GUI2020.Ninject;
@@ -54,11 +55,28 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 			get => _airdragViewModel;
 			set
 			{
+				StoreAirdragViewModel();
 				if (SetProperty(ref _airdragViewModel, value)) {
 					OnAirdragViewModelChanged();
 				};
 			}
 		}
+
+		private void StoreAirdragViewModel()
+		{
+			if (AirDragViewModel != null && StoredAirdragViewModel != AirDragViewModel) {
+				StoredAirdragViewModel = AirDragViewModel;
+			}
+		}
+
+		public void RestoreAirdragViewModel()
+		{
+			if (AirDragViewModel == null) {
+				AirDragViewModel = StoredAirdragViewModel;
+			}
+		}
+
+		private IAirDragViewModel StoredAirdragViewModel { get; set; } = null;
 
 
 		public void SetAirdragInputData(IAirdragDeclarationInputData airdragInputData)
@@ -120,7 +138,7 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 			
 		}
 
-		internal bool LoadAirdragFile(string fileName)
+		public bool LoadAirdragFile(string fileName)
 		{
 			var success = true;
 			var errorStringBuilder = new StringBuilder();
@@ -185,13 +203,20 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 
 		public ICommand RemoveAirdragDataCommand{
 			get => _removeAirdragDataCommand ?? new RelayCommand(() => {
-				AirDragViewModel = null;
+				RemoveAirdragComponent();
 				OnPropertyChanged(nameof(AirdragFilePath));
 			},  () => AirDragViewModel != null);
 		}
 
 		#endregion
 
+		public void RemoveAirdragComponent()
+		{
+			AirDragViewModel = null;
+			StoredAirdragViewModel = null;
+            OnPropertyChanged(nameof(AirdragFilePath));
+
+		}
 
 
 

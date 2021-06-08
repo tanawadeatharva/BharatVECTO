@@ -63,7 +63,7 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 
 		public MultiStageJobViewModel_v0_1(IMultistageBusInputDataProvider inputData, IMultiStageViewModelFactory vmFactory, IMultistageDependencies multistageDependencies, IXMLInputDataReader inputDataReader)
 		{
-			
+			Title = "Edit Multistage Job";
 			_dataSource = inputData.DataSource;
 			_jobInputData = inputData.JobInputData;
 			_inputData = inputData;

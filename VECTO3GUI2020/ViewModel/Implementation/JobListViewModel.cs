@@ -159,7 +159,7 @@ namespace VECTO3GUI2020.ViewModel.Implementation
 			cancellationTokenSource = new CancellationTokenSource();
 			SimulationRunning = true;
 			await Task.Run(() => RunSimulationAsync(cancellationTokenSource.Token,
-				new Progress<MessageEntry>((message) => { _outputViewModel.Messages.Add(message); }),
+				new Progress<MessageEntry>((message) => { _outputViewModel.AddMessage(message); }),
 				new Progress<int>((i) => _outputViewModel.Progress = i),
 				new Progress<string>((msg) => _outputViewModel.StatusMessage = msg)));
 			SimulationRunning = false;
@@ -369,6 +369,8 @@ namespace VECTO3GUI2020.ViewModel.Implementation
 				var duration = start.Elapsed.TotalSeconds;
 				jobProgress.Select(x => x.Value.Progress);
 
+
+
 				progress.Report(Convert.ToInt32(sumProgress * 100 / jobProgress.Count));
 				status.Report(string.Format(
 					"Duration: {0:F1}s, Current Progress: {1:P} ({2})", duration, sumProgress / jobProgress.Count,
@@ -444,6 +446,9 @@ namespace VECTO3GUI2020.ViewModel.Implementation
 				Type = MessageType.StatusMessage,
 				Message = string.Format("Simulation finished in {0:F1}s", start.Elapsed.TotalSeconds)
 			});
+
+			status.Report($"Simulation finished in {start.Elapsed.TotalSeconds} s");
+
 		}
 		private void PrintRuns(Dictionary<int, JobContainer.ProgressEntry> progress, Dictionary<int, FileOutputWriter> fileWriters, IProgress<MessageEntry> outputMessages)
 		{ 
@@ -510,7 +515,7 @@ namespace VECTO3GUI2020.ViewModel.Implementation
 			get
 			{
 				return _cancelSimulationCommand ?? new RelayCommand(() => {
-						_outputViewModel.Messages.Add(new MessageEntry() {
+						_outputViewModel.AddMessage(new MessageEntry() {
 							Message="Canceling Simulation",
 							Type=MessageType.StatusMessage,
 						});

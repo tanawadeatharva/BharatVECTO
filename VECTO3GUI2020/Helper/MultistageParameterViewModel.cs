@@ -77,10 +77,12 @@ namespace VECTO3GUI2020.Helper
 			Action<MultistageParameterViewModel> propertyChangedCallback = null,
 			params ResourceManager[] resourceManagers)
 		{
+			
 			_propertyName = propertyName;
 			PreviousContent = previousContent;
 			_propertyChangedCallback = propertyChangedCallback;
 			_parentViewModel = parentViewModel;
+			//_parentViewModel.PropertyChanged += ParentViewModelPropertyChanged;
 			_propertyInfo = parentViewModel.GetType().GetProperty(propertyName);
 			
 			_viewMode = viewMode;
@@ -110,6 +112,20 @@ namespace VECTO3GUI2020.Helper
 			CurrentContent = _propertyInfo.GetValue(parentViewModel);
 		}
 
+		private void ParentViewModelPropertyChanged(object sender, PropertyChangedEventArgs e)
+		{
+			Debug.Assert((IViewModelBase)sender == _parentViewModel);
+			if (e.PropertyName != _propertyName) {
+				return;
+			}
+
+			var valueFromParent = _propertyInfo.GetValue(sender);
+			if (valueFromParent != CurrentContent) {
+				CurrentContent = valueFromParent;
+			}
+		}
+
+		
 		private object CreateDummyContent()
 		{
 			var type = _type;
@@ -278,6 +294,7 @@ namespace VECTO3GUI2020.Helper
 					_propertyInfo.SetValue(_parentViewModel, _currentContent);
 					_propertyChangedCallback?.Invoke(this);
 				};
+				OnPropertyChanged(nameof(CurrentContent));
 			}
 		}
 

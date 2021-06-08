@@ -151,13 +151,8 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 			MultistageAirdragViewModel.AirdragViewModelChanged += ((sender, args) => {
 				if (sender is IMultistageAirdragViewModel vm) {
 					if (AirdragModifiedMultistageMandatory) {
-						if (vm.AirDragViewModel != null)
-						{
+						if (vm.AirDragViewModel != null) {
 							AirdragModifiedMultistage = true;
-						}
-						else
-						{
-							AirdragModifiedMultistage = false;
 						}
 					}
 				}
@@ -173,13 +168,13 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 
 			if (consolidatedVehicleData?.AirdragModifiedMultistage != null)
 			{
-				_airdragModifiedMultistageMandatory = true;
+				AirdragModifiedMultistageMandatory = true;
 				AirdragModifiedMultistageEditingEnabled = true;
 			}
 
 			if (consolidatedVehicleData?.Components?.AirdragInputData != null)
 			{
-				_airdragModifiedMultistageMandatory = true;
+				AirdragModifiedMultistageMandatory = true;
 				AirdragModifiedMultistageEditingEnabled = true;
 			}
 		}
@@ -614,11 +609,7 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 		{
 			get
 			{
-				if (AirdragModifiedMultistageEditingEnabled) {
-					return _airdragModifiedMultistage.toAirdragModifiedEnum();
-				} else {
-					return null;
-				}
+				return _airdragModifiedMultistage.toAirdragModifiedEnum();
 			}
 			set
 			{
@@ -626,10 +617,10 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 				var newVal = value?.toNullableBool();
 				if (prevVal != newVal) {
 					AirdragModifiedMultistage = value?.toNullableBool();
-					if (_parameterViewModels.ContainsKey(nameof(AirdragModifiedEnum)))
-					{
-						_parameterViewModels[nameof(AirdragModifiedEnum)].CurrentContent = value;
-					}
+				}
+				if (_parameterViewModels.ContainsKey(nameof(AirdragModifiedEnum)))
+				{
+					_parameterViewModels[nameof(AirdragModifiedEnum)].CurrentContent = value;
 				}
 			}
 		}
@@ -650,14 +641,23 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 
 		public bool? AirdragModifiedMultistage
 		{
-			get => _airdragModifiedMultistage;
+			get
+			{
+				return _airdragModifiedMultistage;
+			}
 			set
 			{
 				if (SetProperty(ref _airdragModifiedMultistage, value)) {
+					if(value == false){
+						MultistageAirdragViewModel.AirDragViewModel = null;
+					} else {
+						MultistageAirdragViewModel.RestoreAirdragViewModel();
+					}
 					AirdragModifiedEnum = value.toAirdragModifiedEnum();
 				};
 			}
 		}
+
 		public bool AirdragModifiedMultistageMandatory
 		{
 			get => _airdragModifiedMultistageMandatory;

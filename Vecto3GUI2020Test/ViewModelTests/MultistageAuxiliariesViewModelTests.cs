@@ -57,11 +57,11 @@ namespace Vecto3GUI2020Test.ViewModelTests
 			Assert.IsTrue(auxVm.HeatPumpGroupEditingEnabled);
 
 			auxVm.HeatPumpGroupEditingEnabled = false;
-			auxVm.ParameterViewModels[nameof(auxVm.HeatPumpModeDriverCompartment)].CurrentContent =
+			auxVm.ParameterViewModels[nameof(auxVm.HeatPumpTypeDriverCompartment)].CurrentContent =
 				HeatPumpType.R_744;
 			Assert.IsTrue(auxVm.HeatPumpGroupEditingEnabled);
 
-			auxVm.ParameterViewModels[nameof(auxVm.HeatPumpModeDriverCompartment)].CurrentContent =
+			auxVm.ParameterViewModels[nameof(auxVm.HeatPumpTypeDriverCompartment)].CurrentContent =
 				HeatPumpType.none;
 
 

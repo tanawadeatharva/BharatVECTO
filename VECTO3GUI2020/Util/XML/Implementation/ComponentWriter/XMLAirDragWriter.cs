@@ -25,7 +25,10 @@ namespace VECTO3GUI2020.Util.XML.Implementation.ComponentWriter
 		public XMLAirDragWriter(IAirdragDeclarationInputData inputData)
 		{
 			_inputData = inputData;
-			_uri = inputData.DigestValue.Reference.Replace("#","");
+			_uri = inputData.DigestValue?.Reference?.Replace("#","");
+			if (_uri == null) {
+				_uri = "AirdragComponent" + Guid.NewGuid().ToString("n").Substring(0, 20);
+			}
 		}
 
 		public XElement GetElement()

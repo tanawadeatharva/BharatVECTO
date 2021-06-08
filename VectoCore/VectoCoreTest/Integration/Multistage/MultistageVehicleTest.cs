@@ -346,7 +346,8 @@ namespace TUGraz.VectoCore.Tests.Integration.Multistage
 			Assert.IsTrue(progress.All(r => r.Value.Success), string.Concat<Exception>(progress.Select(r => r.Value.Error)));
 			Assert.IsTrue(jobContainer.Runs.All(r => r.Success), string.Concat<Exception>(jobContainer.Runs.Select(r => r.ExecException)));
 		}
-		
+
+		[NonParallelizable]
 		[TestCase(PrimaryBus, TestName = "Multistage Write VIF Primary"),
 		TestCase(PrimaryBus_SmartES, TestName = "Multistage Write VIF Primary SmartES")]
 		public void TestMultistageWritingVif(string primaryFile)

@@ -211,11 +211,12 @@ namespace Vecto3GUI2020Test
 
 			Assert.IsNull(vehicleViewModel_v2_8.AirdragModifiedMultistage);
 			Assert.IsNull(vehicleViewModel_v2_8.ConsolidatedAirdragModifiedEnum);
-			Assert.IsNull(vehicleViewModel_v2_8.AirdragModifiedEnum);
+			Assert.IsTrue(vehicleViewModel_v2_8.AirdragModifiedEnum == AIRDRAGMODIFIED.UNKNOWN || vehicleViewModel_v2_8.AirdragModifiedEnum == null);
 			
 
 
 			Assert.AreEqual(vehicleViewModel_v2_8.AirdragModifiedMultistageEditingEnabled, false);
+
 			Assert.Null(vehicleViewModel_v2_8.BusAuxiliaries);
 
 
@@ -224,6 +225,62 @@ namespace Vecto3GUI2020Test
 			Assert.Null(vifInputData.VehicleInputData.Components);
 		}
 
+		[TestCase(consolidated_multiple_stages_airdrag, true)]
+		[TestCase(consolidated_multiple_stages, null)]
+		[TestCase(consolidated_one_stage, null)]
+		[TestCase(primary_vehicle_only, null)]
+		public void loadAirdragComponentAndSaveVehicleData(string fileName, object expectedAirdragModifiedValue)
+		{
+			var vm = loadFile(fileName);
+
+			var vehicleVm =
+				vm.MultiStageJobViewModel.ManufacturingStageViewModel.VehicleViewModel as
+					DeclarationInterimStageBusVehicleViewModel_v2_8;
+
+
+			var airdragLoadResult = vehicleVm.MultistageAirdragViewModel.LoadAirdragFile(GetFullPath(airdragLoadTestFile));
+			Assert.IsTrue(airdragLoadResult, "Airdrag file not loaded");
+
+
+            //TODO: Set mandatory fields
+            vehicleVm.Manufacturer = "TestManufacturer";
+			vehicleVm.ManufacturerAddress = "ManufacturerADDRESS";
+			vehicleVm.VIN = "1234567890";
+
+
+			
+			var fileToSave = "stageInput.xml";
+
+			var mockDialogHelper = setMockDialogHelper(null, fileToSave: fileToSave);
+
+			TestContext.Write("Saving file with loaded Airdrag Component ... ");
+			var multistageJobViewModel = vm.MultiStageJobViewModel as MultiStageJobViewModel_v0_1;
+			multistageJobViewModel.SaveInputDataAsCommand.Execute(null);
+
+			var savePath = mockDialogHelper.Object.SaveToXMLDialog();
+			Assert.IsTrue(File.Exists(savePath));
+			TestContext.WriteLine("Done!");
+			
+			TestContext.WriteLine("Checking saved File ... ");
+			var inputData = (IDeclarationInputDataProvider)_kernel.Get<IXMLInputDataReader>().Create(savePath);
+
+			Assert.NotNull(inputData.JobInputData.Vehicle.Components.AirdragInputData, "No Airdrag Component loaded");
+			var airdragData = inputData.JobInputData.Vehicle.Components.AirdragInputData;
+			
+			Assert.AreEqual(expectedAirdragModifiedValue, vehicleVm.AirdragModifiedMultistage);
+
+
+
+
+			TestContext.WriteLine("Done!");
+
+
+			File.Delete(savePath);
+
+
+
+
+		}
 
 	
 
@@ -294,6 +351,8 @@ namespace Vecto3GUI2020Test
 			Assert.AreEqual(500, vehicleViewModel.CurbMassChassis.Value());//CorrectedActualMass
 			Assert.AreEqual(3500, vehicleViewModel.GrossVehicleMassRating.Value());//TechnicalPermissibleMaximumLadenMass
 			Assert.AreEqual(false, vehicleViewModel.AirdragModifiedMultistage);
+			Assert.AreEqual(AIRDRAGMODIFIED.FALSE, vehicleViewModel.AirdragModifiedEnum);
+			Assert.AreEqual(AIRDRAGMODIFIED.FALSE, vehicleViewModel.ParameterViewModels[nameof(vehicleViewModel.AirdragModifiedEnum)].CurrentContent);
 			Assert.AreEqual(TankSystem.Compressed, vehicleViewModel.TankSystem);//NgTankSystem
 			Assert.AreEqual(RegistrationClass.II_III, vehicleViewModel.RegisteredClass);//ClassBus
 			Assert.AreEqual(1, vehicleViewModel.NumberPassengerSeatsLowerDeck);
