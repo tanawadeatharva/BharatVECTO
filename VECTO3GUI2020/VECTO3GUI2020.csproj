@@ -7,7 +7,7 @@
     <ProjectGuid>{7E9172D4-07E3-4077-814E-7117AB2B3E22}</ProjectGuid>
     <OutputType>WinExe</OutputType>
     <RootNamespace>VECTO3GUI2020</RootNamespace>
-    <AssemblyName>VECTO3GUI2020</AssemblyName>
+    <AssemblyName>VECTOMultistage</AssemblyName>
     <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
