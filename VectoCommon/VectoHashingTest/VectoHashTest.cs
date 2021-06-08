@@ -36,8 +36,13 @@ using System.Runtime.Remoting.Metadata.W3cXsd2001;
 using System.Text;
 using System.Xml;
 using System.Xml.XPath;
+using Ninject;
 using NUnit.Framework;
 using TUGraz.VectoCommon.Hashing;
+using TUGraz.VectoCommon.InputData;
+using TUGraz.VectoCore;
+using TUGraz.VectoCore.InputData.FileIO.XML;
+using TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider;
 using TUGraz.VectoCore.Utils;
 using TUGraz.VectoHashing;
 using VectoHashingTest.Utils;
@@ -55,12 +60,20 @@ namespace VectoHashingTest
 		public const string ReferenceXMLEngine = @"Testdata\XML\Reference\vecto_engine-sample.xml";
 		public const string ReferenceXMLVehicle = @"Testdata\XML\Reference\vecto_vehicle-sample_FULL.xml";
 
+
+		protected IXMLInputDataReader xmlInputReader;
+		private IKernel _kernel;
+
 		[OneTimeSetUp]
 		public void RunBeforeAnyTests()
 		{
 			Directory.SetCurrentDirectory(TestContext.CurrentContext.TestDirectory);
+
+			_kernel = new StandardKernel(new VectoNinjectModule());
+			xmlInputReader = _kernel.Get<IXMLInputDataReader>();
 		}
 
+		
 		[TestCase]
 		public void TestComponentsEngineFile()
 		{
@@ -594,5 +607,54 @@ namespace VectoHashingTest
 			Assert.AreEqual("l7Z22F1bPMaAD4+0WNY+cahbjDKE80gxYv6K91YTMcU=", primaryHash);
 		}
 
+
+		[TestCase(@"Testdata\XML\Multistage\final.VIF_Report_5.xml")]
+		public void TestMultistageVerifyHashStructure(string file)
+		{
+			var h = VectoHash.Load(file);
+
+			var hashCalcPrimary = h.ComputeHash(VectoComponents.VectoPrimaryVehicleInformation);
+			var hashReadPrimary = h.ReadHash(VectoComponents.VectoPrimaryVehicleInformation);
+
+            Assert.AreEqual(hashReadPrimary, hashCalcPrimary);
+
+            var hashCalcInterim1 = h.ComputeHash(VectoComponents.VectoManufacturingStage, 0);
+			var hashReadInterim1 = h.ReadHash(VectoComponents.VectoManufacturingStage, 0);
+
+			Assert.AreEqual(hashReadInterim1, hashCalcInterim1);
+
+			var hashCalcInterim2 = h.ComputeHash(VectoComponents.VectoManufacturingStage, 1);
+			var hashReadInterim2 = h.ReadHash(VectoComponents.VectoManufacturingStage, 1);
+
+			Assert.AreEqual(hashReadInterim2, hashCalcInterim2);
+
+			var hashCalcInterim3 = h.ComputeHash(VectoComponents.VectoManufacturingStage, 2);
+			var hashReadInterim3 = h.ReadHash(VectoComponents.VectoManufacturingStage, 2);
+
+			Assert.AreEqual(hashReadInterim3, hashCalcInterim3);
+
+			var hashCalcInterim4 = h.ComputeHash(VectoComponents.VectoManufacturingStage, 3);
+			var hashReadInterim4 = h.ReadHash(VectoComponents.VectoManufacturingStage, 3);
+
+			Assert.AreEqual(hashReadInterim4, hashCalcInterim4);
+
+
+			var reader = XmlReader.Create(file);
+
+			var vif = xmlInputReader.CreateDeclaration(reader) as IMultistageBusInputDataProvider;
+			var inputDataProvider = new XMLDeclarationVIFInputData(vif, null);
+
+
+			Assert.AreEqual(hashReadPrimary, inputDataProvider.MultistageJobInputData.JobInputData.PrimaryVehicle.VehicleSignatureHash.DigestValue);
+
+			Assert.AreEqual(hashReadPrimary, inputDataProvider.MultistageJobInputData.JobInputData.ManufacturingStages[0].HashPreviousStage.DigestValue);
+
+			Assert.AreEqual(hashReadInterim1, inputDataProvider.MultistageJobInputData.JobInputData.ManufacturingStages[1].HashPreviousStage.DigestValue);
+
+			Assert.AreEqual(hashReadInterim2, inputDataProvider.MultistageJobInputData.JobInputData.ManufacturingStages[2].HashPreviousStage.DigestValue);
+
+			Assert.AreEqual(hashReadInterim3, inputDataProvider.MultistageJobInputData.JobInputData.ManufacturingStages[3].HashPreviousStage.DigestValue);
+
+		}
 	}
 }
