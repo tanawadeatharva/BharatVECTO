@@ -261,9 +261,6 @@ namespace Vecto3GUI2020Test.ViewModelTests
 				AIRDRAGMODIFIED.TRUE,
 				vehicleViewModel.ParameterViewModels[nameof(vehicleViewModel.AirdragModifiedEnum)].CurrentContent);
 
-			//Airdrag modified set to false if the component is removed
-			vehicleViewModel.MultistageAirdragViewModel.RemoveAirdragComponent();
-			Assert.IsTrue(vehicleViewModel.AirdragModifiedMultistage);
 
 			//AirdragComponent is removed when airdragmodified is set to false;
 			//Load airdrag file
