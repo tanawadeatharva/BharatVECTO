@@ -614,11 +614,7 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 		{
 			get
 			{
-				if (AirdragModifiedMultistageEditingEnabled) {
-					return _airdragModifiedMultistage.toAirdragModifiedEnum();
-				} else {
-					return null;
-				}
+				return _airdragModifiedMultistage.toAirdragModifiedEnum();
 			}
 			set
 			{
@@ -626,10 +622,10 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 				var newVal = value?.toNullableBool();
 				if (prevVal != newVal) {
 					AirdragModifiedMultistage = value?.toNullableBool();
-					if (_parameterViewModels.ContainsKey(nameof(AirdragModifiedEnum)))
-					{
-						_parameterViewModels[nameof(AirdragModifiedEnum)].CurrentContent = value;
-					}
+				}
+				if (_parameterViewModels.ContainsKey(nameof(AirdragModifiedEnum)))
+				{
+					_parameterViewModels[nameof(AirdragModifiedEnum)].CurrentContent = value;
 				}
 			}
 		}
@@ -654,6 +650,9 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 			set
 			{
 				if (SetProperty(ref _airdragModifiedMultistage, value)) {
+					if(value == false){
+						MultistageAirdragViewModel.AirDragViewModel = null;
+					}
 					AirdragModifiedEnum = value.toAirdragModifiedEnum();
 				};
 			}

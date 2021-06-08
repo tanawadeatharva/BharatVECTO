@@ -10,5 +10,6 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Interfaces
 		IAirDragViewModel AirDragViewModel { get; set; }
 
 		void SetAirdragInputData(IAirdragDeclarationInputData airdragInputData);
+		bool LoadAirdragFile(string fileName);
 	}
 }

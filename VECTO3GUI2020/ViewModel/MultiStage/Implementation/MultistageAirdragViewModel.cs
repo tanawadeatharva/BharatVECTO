@@ -120,7 +120,7 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 			
 		}
 
-		internal bool LoadAirdragFile(string fileName)
+		public bool LoadAirdragFile(string fileName)
 		{
 			var success = true;
 			var errorStringBuilder = new StringBuilder();

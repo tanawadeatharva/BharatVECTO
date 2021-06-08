@@ -8,6 +8,7 @@ using NUnit.Framework;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Utils;
 using VECTO3GUI2020.Annotations;
+using VECTO3GUI2020.ViewModel.Implementation.JobEdit.Vehicle.Components;
 using VECTO3GUI2020.ViewModel.MultiStage.Implementation;
 
 namespace Vecto3GUI2020Test.ViewModelTests
@@ -71,6 +72,8 @@ namespace Vecto3GUI2020Test.ViewModelTests
 			vehicleVM.AirdragModifiedMultistageEditingEnabled = true;
 			Assert.IsFalse(vehicleVM.AirdragModifiedMultistageEditingEnabled);
 
+			Assert.IsNull(vehicleVM.AirdragModifiedMultistage);
+
 			//Set Mandatory Fields
 			vehicleVM.Manufacturer = "testManufacturer";
 			vehicleVM.ManufacturerAddress = "Address";
@@ -95,7 +98,6 @@ namespace Vecto3GUI2020Test.ViewModelTests
 			//try to disable AirdragModified
 			secondStageVehicleVM.AirdragModifiedMultistageEditingEnabled = false;
 			Assert.IsTrue(secondStageVehicleVM.AirdragModifiedMultistageEditingEnabled);
-
 		}
 		/// <summary>
 		///  no airdrag component set in VIF => AirdragModifiedMultistage is disabled
@@ -136,6 +138,42 @@ namespace Vecto3GUI2020Test.ViewModelTests
 
 			//vehicleVM.AirdragModifiedMultistageEditingEnabled = true;
 			//Assert.IsFalse(vehicleVM.AirdragModifiedMultistageEditingEnabled);
+
+		}
+
+		[Test]
+		public void airdragModifiedSetToTrueWhenComponentIsLoaded()
+		{
+			var vm = loadFile(consolidated_multiple_stages_airdrag);
+
+			var vehicleViewModel = vm.MultiStageJobViewModel.ManufacturingStageViewModel.VehicleViewModel as DeclarationInterimStageBusVehicleViewModel_v2_8;
+
+			Assert.IsNull(vehicleViewModel.AirdragModifiedMultistage);
+
+
+			//Load airdrag file
+			var airdragLoaded = vehicleViewModel.MultistageAirdragViewModel.LoadAirdragFile(GetFullPath(airdragComponent));
+			Assert.IsTrue(airdragLoaded, "Airdrag file was not loaded");
+
+			//Airdrag modified set to true if a component is loaded and the field is mandatory
+			Assert.IsTrue(vehicleViewModel.AirdragModifiedMultistage);
+			Assert.IsTrue(vehicleViewModel.AirdragModifiedMultistageMandatory);
+			Assert.AreEqual(
+				AIRDRAGMODIFIED.TRUE,
+				vehicleViewModel.ParameterViewModels[nameof(vehicleViewModel.AirdragModifiedEnum)].CurrentContent);
+
+			//Airdrag modified set to false if the component is removed
+			vehicleViewModel.MultistageAirdragViewModel.AirDragViewModel = null;
+			Assert.IsFalse(vehicleViewModel.AirdragModifiedMultistage);
+
+			//AirdragComponent is removed when airdragmodified is set to false;
+			//Load airdrag file
+			airdragLoaded = vehicleViewModel.MultistageAirdragViewModel.LoadAirdragFile(GetFullPath(airdragComponent));
+			Assert.IsTrue(airdragLoaded, "Airdrag file was not loaded");
+
+			vehicleViewModel.AirdragModifiedMultistage = false;
+			Assert.IsNull(vehicleViewModel.MultistageAirdragViewModel.AirDragViewModel);
+
 
 		}
 

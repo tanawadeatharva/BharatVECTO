@@ -211,11 +211,12 @@ namespace Vecto3GUI2020Test
 
 			Assert.IsNull(vehicleViewModel_v2_8.AirdragModifiedMultistage);
 			Assert.IsNull(vehicleViewModel_v2_8.ConsolidatedAirdragModifiedEnum);
-			Assert.IsNull(vehicleViewModel_v2_8.AirdragModifiedEnum);
+			Assert.IsTrue(vehicleViewModel_v2_8.AirdragModifiedEnum == AIRDRAGMODIFIED.UNKNOWN || vehicleViewModel_v2_8.AirdragModifiedEnum == null);
 			
 
 
 			Assert.AreEqual(vehicleViewModel_v2_8.AirdragModifiedMultistageEditingEnabled, false);
+
 			Assert.Null(vehicleViewModel_v2_8.BusAuxiliaries);
 
 
@@ -294,6 +295,8 @@ namespace Vecto3GUI2020Test
 			Assert.AreEqual(500, vehicleViewModel.CurbMassChassis.Value());//CorrectedActualMass
 			Assert.AreEqual(3500, vehicleViewModel.GrossVehicleMassRating.Value());//TechnicalPermissibleMaximumLadenMass
 			Assert.AreEqual(false, vehicleViewModel.AirdragModifiedMultistage);
+			Assert.AreEqual(AIRDRAGMODIFIED.FALSE, vehicleViewModel.AirdragModifiedEnum);
+			Assert.AreEqual(AIRDRAGMODIFIED.FALSE, vehicleViewModel.ParameterViewModels[nameof(vehicleViewModel.AirdragModifiedEnum)].CurrentContent);
 			Assert.AreEqual(TankSystem.Compressed, vehicleViewModel.TankSystem);//NgTankSystem
 			Assert.AreEqual(RegistrationClass.II_III, vehicleViewModel.RegisteredClass);//ClassBus
 			Assert.AreEqual(1, vehicleViewModel.NumberPassengerSeatsLowerDeck);
