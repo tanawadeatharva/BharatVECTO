@@ -151,7 +151,9 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 			MultistageAirdragViewModel.AirdragViewModelChanged += ((sender, args) => {
 				if (sender is IMultistageAirdragViewModel vm) {
 					if (AirdragModifiedMultistageMandatory) {
-						AirdragModifiedMultistage = vm.AirDragViewModel != null;
+						if (vm.AirDragViewModel != null) {
+							AirdragModifiedMultistage = true;
+						}
 					}
 				}
 			});
@@ -648,6 +650,8 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 				if (SetProperty(ref _airdragModifiedMultistage, value)) {
 					if(value == false){
 						MultistageAirdragViewModel.AirDragViewModel = null;
+					} else {
+						MultistageAirdragViewModel.RestoreAirdragViewModel();
 					}
 					AirdragModifiedEnum = value.toAirdragModifiedEnum();
 				};

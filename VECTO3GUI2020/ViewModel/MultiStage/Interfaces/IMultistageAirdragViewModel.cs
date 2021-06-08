@@ -11,5 +11,8 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Interfaces
 
 		void SetAirdragInputData(IAirdragDeclarationInputData airdragInputData);
 		bool LoadAirdragFile(string fileName);
+		void RestoreAirdragViewModel();
+
+		void RemoveAirdragComponent();
 	}
 }
