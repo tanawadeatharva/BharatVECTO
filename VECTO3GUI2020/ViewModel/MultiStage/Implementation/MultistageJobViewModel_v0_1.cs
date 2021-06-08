@@ -17,9 +17,10 @@ using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCore.InputData.FileIO.JSON;
 using TUGraz.VectoCore.InputData.FileIO.XML;
 using TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider;
+using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.Impl;
+using TUGraz.VectoCore.OutputData;
 using TUGraz.VectoCore.OutputData.FileIO;
-using TUGraz.VectoCore.Tests.Models.Simulation;
 using TUGraz.VectoCore.Utils;
 using VECTO3GUI2020.Helper;
 using VECTO3GUI2020.Ninject;
@@ -168,7 +169,7 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 
 				var factory = new SimulatorFactory(ExecutionMode.Declaration, inputData, writer);
 
-				var jobContainer = new JobContainer(new MockSumWriter()); //TODO: Replace with real sumwriter
+				var jobContainer = new JobContainer(new NullSumWriter()); //TODO: Replace with real sumwriter
 
 				var runs = factory.SimulationRuns().ToList();
 				foreach (var run in runs) {
@@ -432,5 +433,10 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 		#endregion
 	}
 
+	public class NullSumWriter : SummaryDataContainer
+	{
+		public override void Write(IModalDataContainer modData, int jobNr, int runNr, VectoRunData runData) { }
 
+		public override void Finish() { }
+	}
 }
