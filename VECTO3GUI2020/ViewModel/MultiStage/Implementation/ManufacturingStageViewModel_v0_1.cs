@@ -80,6 +80,7 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 
 		public ManufacturingStageViewModel_v0_1(IManufacturingStageInputData consolidatedManufacturingStageInputData, IMultiStageViewModelFactory viewModelFactory)
 		{
+			Title = "Edit Manufacturing Stage";
 			_viewModelFactory = viewModelFactory;
 			
 			_stageCount = consolidatedManufacturingStageInputData?.StageCount + 1 ?? 2;
