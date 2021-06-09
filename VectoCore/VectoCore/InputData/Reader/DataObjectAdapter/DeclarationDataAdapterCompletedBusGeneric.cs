@@ -93,7 +93,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 		protected override TorqueConverterData CreateTorqueConverterData(GearboxType gearboxType,
 			ITorqueConverterDeclarationInputData torqueConverter, double ratio, CombustionEngineData engineData)
 		{
-			if (torqueConverter != null) {
+			if (torqueConverter != null && torqueConverter.TCData != null) {
 				return TorqueConverterDataReader.Create(
 					torqueConverter.TCData,
 					DeclarationData.TorqueConverter.ReferenceRPM, DeclarationData.TorqueConverter.MaxInputSpeed,
