@@ -110,6 +110,16 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 		public XMLDeclarationMultistagePrimaryTorqueConverterDataProviderV01(IXMLDeclarationVehicleData vehicle, XmlNode componentNode, string sourceFile) : base(vehicle, componentNode, sourceFile) { }
 
+
+		#region Overrides of AbstractCommonComponentType
+
+		public override string CertificationNumber
+		{
+			get { return GetString(XMLNames.Component_CertificationNumber, required: false); }
+		}
+
+		#endregion
+
 		protected override XNamespace SchemaNamespace
 		{
 			get { return NAMESPACE_URI; }
