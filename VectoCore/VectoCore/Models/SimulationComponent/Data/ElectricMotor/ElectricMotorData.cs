@@ -20,7 +20,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 		public DragCurve DragCurve { get; internal set; }
 
 		[SIRange(double.MinValue, double.MaxValue)]
-		public Watt ContinuousPower { get; internal set; }
+		public NewtonMeter ContinuousTorque { get; internal set; }
 
 		[SIRange(0, double.MaxValue)]
 		public Second OverloadTime { get; internal set; }

@@ -6,19 +6,42 @@ using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Configuration;
 
 namespace TUGraz.VectoCore.InputData.FileIO.JSON {
+
+	public class JSONElectricMotorV2 : JSONElectricMotorV1
+	{
+		public JSONElectricMotorV2(JObject data, string filename, bool tolerateMissing = false) : base(data, filename, tolerateMissing) { }
+
+		public override NewtonMeter ContinuousTorque {
+			get { return Body.GetValueOrDefault<double>("ContinuousTorque")?.SI<NewtonMeter>() ?? 1e12.SI<NewtonMeter>(); }
+		}
+
+		public override PerSecond ContinuousTorqueSpeed {
+			get { return Body.GetValueOrDefault<double>("ContinuousTorqueSpeed")?.RPMtoRad() ?? 0.RPMtoRad(); }
+		}
+
+		public override NewtonMeter OverloadTorque {
+			get { return Body.GetValueOrDefault<double>("OverloadTorque")?.SI<NewtonMeter>() ?? 1e12.SI<NewtonMeter>(); }
+		}
+
+		public override PerSecond OverloadTestSpeed {
+			get { return Body.GetValueOrDefault<double>("OverloadTorqueSpeed")?.RPMtoRad() ?? 0.RPMtoRad(); }
+		}
+	}
+
+
 	public class JSONElectricMotorV1 : JSONFile, IElectricMotorEngineeringInputData
 	{
 		public JSONElectricMotorV1(JObject data, string filename, bool tolerateMissing = false) : base(data, filename, tolerateMissing) { }
-		public string Manufacturer
+		public virtual string Manufacturer
 		{
 			get { return Constants.NOT_AVailABLE; }
 		}
-		public string Model
+		public virtual string Model
 		{
 			get { return Body.GetEx<string>("Model"); }
 		}
-		public DateTime Date { get { return DateTime.MinValue; } }
-		public CertificationMethod CertificationMethod
+		public virtual DateTime Date { get { return DateTime.MinValue; } }
+		public virtual CertificationMethod CertificationMethod
 		{
 			get { return CertificationMethod.NotCertified; }
 		}
@@ -31,32 +54,32 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON {
 			get { return null; }
 		}
 
-		public TableData FullLoadCurve
+		public virtual TableData FullLoadCurve
 		{
 			get { return ReadTableData(Body.GetEx<string>("FullLoadCurve"), "ElectricMotor FullLoadCurve"); }
 		}
 
-		public TableData DragCurve
+		public virtual TableData DragCurve
 		{
 			get { return ReadTableData(Body.GetEx<string>("DragCurve"), "ElectricMotor DragCurve"); }
 		}
 
-		public TableData EfficiencyMap
+		public virtual TableData EfficiencyMap
 		{
 			get { return ReadTableData(Body.GetEx<string>("EfficiencyMap"), "ElectricMotor Map"); }
 		}
 
-		public KilogramSquareMeter Inertia
+		public virtual KilogramSquareMeter Inertia
 		{
 			get { return Body.GetEx<double>("Inertia").SI<KilogramSquareMeter>(); }
 		}
 
-		public Joule OverloadBuffer
+		public virtual Joule OverloadBuffer
 		{
 			get { return Body.GetValueOrDefault<double>("ThermalOverloadBuffer")?.SI(Unit.SI.Mega.Joule).Cast<Joule>() ?? 1e18.SI<Joule>(); }
 		}
 
-		public double OverloadRecoveryFactor
+		public virtual double OverloadRecoveryFactor
 		{
 			get
 			{
@@ -64,22 +87,28 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON {
 			}
 		}
 
-		public Watt ContinuousPower
+		public virtual NewtonMeter ContinuousTorque
 		{
-			get { return Body.GetValueOrDefault<double>("ContinuousPower")?.SI<Watt>() ?? 1e12.SI<Watt>(); }
+			get { return (Body.GetValueOrDefault<double>("ContinuousPower")?.SI<Watt>() ?? 1e12.SI<Watt>()) / (Body.GetValueOrDefault<double>("ContinuousPowerSpeed")?.RPMtoRad() ?? 1.SI<PerSecond>()) ; }
 		}
 
-		public PerSecond ContinuousPowerSpeed
+		public virtual PerSecond ContinuousTorqueSpeed
 		{
 			get { return Body.GetValueOrDefault<double>("ContinuousPowerSpeed")?.RPMtoRad() ?? 0.RPMtoRad(); }
 		}
 
-		public Second OverloadTime
+		public virtual NewtonMeter OverloadTorque {
+			get { return null; }
+		}
+
+		public virtual PerSecond OverloadTestSpeed
 		{
-			get
-			{
-				return Body.GetValueOrDefault<double>("OverloadTime")?.SI<Second>() ?? 0.SI<Second>();
-			}
+			get { return null; }
+		}
+
+		public virtual Second OverloadTime
+		{
+			get { return Body.GetValueOrDefault<double>("OverloadTime")?.SI<Second>() ?? 0.SI<Second>(); }
 		}
 
 	}

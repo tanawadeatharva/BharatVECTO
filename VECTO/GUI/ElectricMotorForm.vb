@@ -177,9 +177,11 @@ Public Class ElectricMotorForm
         tbMakeModel.Text = engine.Model
         tbInertia.Text = engine.Inertia.ToGUIFormat()
 
+        tbOverloadTq.Text = If(engine.OverloadTorque?.Value().ToGUIFormat(), "")
+        tbOvlSpeed.Text = If(engine.OverloadTestSpeed?.Value().ToGUIFormat(), "")
         tbOvlTime.Text = engine.OverloadTime.Value().ToGUIFormat()
-        tbContPwr.Text = engine.ContinuousPower.ToGUIFormat()
-        tbRatedSpeed.Text = engine.ContinuousPowerSpeed.AsRPM.ToGUIFormat()
+        tbContTq.Text = engine.ContinuousTorque.ToGUIFormat()
+        tbRatedSpeed.Text = engine.ContinuousTorqueSpeed.AsRPM.ToGUIFormat()
         tbOverloadRecoveryFactor.Text = engine.OverloadRecoveryFactor.ToGUIFormat()
 
         tbDragTorque.Text = GetRelativePath(engine.DragCurve.Source, basePath)
@@ -218,9 +220,12 @@ Public Class ElectricMotorForm
         em.ModelName = tbMakeModel.Text
         If Trim(em.ModelName) = "" Then em.ModelName = "Undefined"
         em.MotorInertia = tbInertia.Text.ToDouble(0)
+
+        em.OvlTq = tbOverloadTq.Text.ToDouble(0)
+        em.OvlSpeed = tbOvlSpeed.Text.ToDouble(0)
         em.PeakPowerTime = tbOvlTime.Text.ToDouble(0)
         em.RatedSpeed = tbRatedSpeed.Text.ToDouble(0)
-        em.ContPwr = tbContPwr.Text.ToDouble(0)
+        em.ContTq = tbContTq.Text.ToDouble(0)
         em.OverloadRecoveryFactor = tbOverloadRecoveryFactor.Text.ToDouble(0)
 
         em.PathMaxTorque = tbMaxTorque.Text

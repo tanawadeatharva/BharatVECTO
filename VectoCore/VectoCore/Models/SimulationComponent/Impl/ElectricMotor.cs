@@ -52,11 +52,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			container.AddComponent(this); // We have to do this again because in the base class the position is unknown!
 
-			ContinuousTorque = ModelData.ContinuousPower / ModelData.ContinuousPowerSpeed;
+			ContinuousTorque = ModelData.ContinuousTorque;
 			var contElPwr =
 				ModelData.EfficiencyMap.LookupElectricPower(ModelData.ContinuousPowerSpeed, -ContinuousTorque).ElectricalPower ??
 				ModelData.EfficiencyMap.LookupElectricPower(ModelData.ContinuousPowerSpeed, ModelData.FullLoadCurve.FullLoadDriveTorque(ModelData.ContinuousPowerSpeed), true).ElectricalPower;
-			ContinuousPowerLoss = -contElPwr - ModelData.ContinuousPower; // loss needs to be positive
+			ContinuousPowerLoss = -contElPwr - ModelData.ContinuousTorque * ModelData.ContinuousPowerSpeed; // loss needs to be positive
 			var maxTqDrive = ModelData.FullLoadCurve.FullLoadDriveTorque(ModelData.ContinuousPowerSpeed);
 			var peakElPwr = ModelData.EfficiencyMap.LookupElectricPower(ModelData.ContinuousPowerSpeed, maxTqDrive, true)
 				.ElectricalPower;
@@ -368,9 +368,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		private NewtonMeter GetMaxRecuperationTorque(Second dt, PerSecond avgSpeed)
 		{
 			var tqContinuousPwr = DeRatingActive ? ContinuousTorque : null;
-			if (!avgSpeed.IsEqual(0)) {
-				tqContinuousPwr = DeRatingActive ? ModelData.ContinuousPower / avgSpeed : null;
-			}
+			//if (!avgSpeed.IsEqual(0)) {
+			//	tqContinuousPwr = DeRatingActive ? ModelData.ContinuousTorque / avgSpeed : null;
+			//}
 			var maxEmTorque = VectoMath.Min(tqContinuousPwr, ModelData.FullLoadCurve.FullGenerationTorque(avgSpeed));
 			var electricSystemResponse = ElectricPower.Request(0.SI<Second>(), dt, 0.SI<Watt>(), true);
 			var maxBatPower = electricSystemResponse.MaxPowerDrag;
@@ -398,9 +398,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		private NewtonMeter GetMaxDriveTorque(Second dt, PerSecond avgSpeed)
 		{
 			var tqContinuousPwr = DeRatingActive ? -ContinuousTorque : null;
-			if (!avgSpeed.IsEqual(0)) {
-				tqContinuousPwr = DeRatingActive ? -ModelData.ContinuousPower / avgSpeed : null;
-			}
+			//if (!avgSpeed.IsEqual(0)) {
+			//	tqContinuousPwr = DeRatingActive ? -ModelData.ContinuousTorque / avgSpeed : null;
+			//}
 			var maxEmTorque = VectoMath.Max(tqContinuousPwr ,ModelData.FullLoadCurve.FullLoadDriveTorque(avgSpeed));
 			var electricSystemResponse = ElectricPower.Request(0.SI<Second>(), dt, 0.SI<Watt>(), true);
 			var maxBatPower = electricSystemResponse.MaxPowerDrive;
