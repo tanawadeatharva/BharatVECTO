@@ -23,6 +23,17 @@ namespace TUGraz.VectoCore.Tests.XML
 		const string VehicleComponentsEntriesNullable = DirPath + "vecto_vehicle-stage_input_only_component_nullable_entries.xml";
 		const string VehicleAirdragStandardValue = DirPath + "vecto_vehicle-stage_input_only_mandatory_standard_value_airdrag.xml";
 
+		const string ValdiationDirPath = @"TestData\XML\XMLReaderDeclaration\";
+		const string ExemptedInputFullSample = ValdiationDirPath + "vecto_vehicle-exempted_input_full-sample.xml";
+		const string ExemptedOnlyCertainEntries01 = ValdiationDirPath + "vecto_vehicle-exempted_input_only_certain_entries01-sample.xml";
+		const string ExemptedOnlyCertainEntries02 = ValdiationDirPath + "vecto_vehicle-exempted_input_only_certain_entries02-sample.xml";
+		const string ExemptedSample = ValdiationDirPath + "vecto_vehicle-exempted-sample.xml";
+		const string NewParamSample = ValdiationDirPath + "vecto_vehicle-new_parameters-sample.xml";
+		const string VehicleSample = ValdiationDirPath + "vecto_vehicle-sample.xml";
+		const string StageInputCertainEntriesEntries01 = ValdiationDirPath + "vecto_vehicle-stage_input_only_certain_entries01-sample.xml";
+		const string StageInputCertainEntriesEntries02 = ValdiationDirPath + "vecto_vehicle-stage_input_only_certain_entries02-sample.xml";
+		const string StageInputFullSample = ValdiationDirPath + "vecto_vehicle-stage_input_full-sample.xml";
+
 		[OneTimeSetUp]
 		public void RunBeforeAnyTests()
 		{
@@ -214,8 +225,7 @@ namespace TUGraz.VectoCore.Tests.XML
 			
 			Assert.AreEqual(null , vehicle.Components);
 		}
-
-
+		
 		[TestCase]
 		public void TestStandardValueAirdragComponent()
 		{
@@ -234,5 +244,44 @@ namespace TUGraz.VectoCore.Tests.XML
 			Assert.IsNotNull(airdrag);
 		}
 
+		[TestCase()]
+		public void TestValidateInputMultistageExampleFiles()
+		{
+			var reader = XmlReader.Create(ExemptedInputFullSample);
+			var inputDataProvider = xmlInputReader.CreateDeclaration(reader);
+			Assert.IsNotNull(inputDataProvider);
+
+			reader = XmlReader.Create(ExemptedOnlyCertainEntries01);
+			inputDataProvider = xmlInputReader.CreateDeclaration(reader);
+			Assert.IsNotNull(inputDataProvider);
+
+			reader = XmlReader.Create(ExemptedOnlyCertainEntries02);
+			inputDataProvider = xmlInputReader.CreateDeclaration(reader);
+			Assert.IsNotNull(inputDataProvider);
+
+			reader = XmlReader.Create(ExemptedSample);
+			inputDataProvider = xmlInputReader.CreateDeclaration(reader);
+			Assert.IsNotNull(inputDataProvider);
+
+			reader = XmlReader.Create(NewParamSample);
+			inputDataProvider = xmlInputReader.CreateDeclaration(reader);
+			Assert.IsNotNull(inputDataProvider);
+			
+			reader = XmlReader.Create(VehicleSample);
+			inputDataProvider = xmlInputReader.CreateDeclaration(reader);
+			Assert.IsNotNull(inputDataProvider);
+
+			reader = XmlReader.Create(StageInputFullSample);
+			inputDataProvider = xmlInputReader.CreateDeclaration(reader);
+			Assert.IsNotNull(inputDataProvider);
+
+			reader = XmlReader.Create(StageInputCertainEntriesEntries01);
+			inputDataProvider = xmlInputReader.CreateDeclaration(reader);
+			Assert.IsNotNull(inputDataProvider);
+
+			reader = XmlReader.Create(StageInputCertainEntriesEntries02);
+			inputDataProvider = xmlInputReader.CreateDeclaration(reader);
+			Assert.IsNotNull(inputDataProvider);
+		}
 	}
 }
