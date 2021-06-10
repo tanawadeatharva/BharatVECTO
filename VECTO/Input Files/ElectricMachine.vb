@@ -36,8 +36,10 @@ Public Class ElectricMachine
     Public ModelName As String
     Public MotorInertia As Double
     Public PeakPowerTime As Double
-    Public ContPwr As Double
+    Public ContTq As Double
     Public RatedSpeed As Double
+    Public OvlTq As Double
+    Public OvlSpeed As Double
 
     ''' <summary>
     ''' New instance. Initialise
@@ -229,7 +231,7 @@ Public Class ElectricMachine
     End Get
     End Property
 
-    Public ReadOnly Property ConinuousPowerSpeed As PerSecond Implements IElectricMotorDeclarationInputData.ContinuousPowerSpeed
+    Public ReadOnly Property ContinuousTorqueSpeed As PerSecond Implements IElectricMotorDeclarationInputData.ContinuousTorqueSpeed
     get
             Return RatedSpeed.RPMtoRad()
     End Get
@@ -237,9 +239,21 @@ Public Class ElectricMachine
 
     Public Property OverloadRecoveryFactor As Double Implements IElectricMotorDeclarationInputData.OverloadRecoveryFactor
 
-    Public ReadOnly Property ContinuousPower As Watt Implements IElectricMotorDeclarationInputData.ContinuousPower
+    Public ReadOnly Property ContinuousTorque As NewtonMeter Implements IElectricMotorDeclarationInputData.ContinuousTorque
     get
-        Return ContPwr.si(of Watt)
+        Return ContTq.si(of NewtonMeter)
+    End Get
+    End Property
+
+    Public ReadOnly Property OverloadTorque As NewtonMeter Implements IElectricMotorDeclarationInputData.OverloadTorque
+    get
+        Return OvlTq.SI(of NewtonMeter)
+    End Get
+    End Property
+
+    Public ReadOnly Property OverloadTestSpeed As PerSecond Implements IElectricMotorDeclarationInputData.OverloadTestSpeed
+    get
+        Return OvlSpeed.RPMtoRad()
     End Get
     End Property
 

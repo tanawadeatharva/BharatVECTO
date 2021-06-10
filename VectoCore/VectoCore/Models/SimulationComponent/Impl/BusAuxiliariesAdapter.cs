@@ -139,6 +139,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 										(AdditionalAux?.PowerDemandESSEngineOn(0.SI<Second>(), 1.SI<Second>(), angularSpeed) ?? 0.SI<Watt>());
 
 			var avgAngularSpeed = (CurrentState.AngularSpeed + PreviousState.AngularSpeed) / 2.0;
+			if (avgAngularSpeed.IsEqual(0)) {
+				return 0.SI<NewtonMeter>();
+            }
 			return CurrentState.PowerDemand / avgAngularSpeed;
 		}
 
