@@ -966,15 +966,16 @@ public class JSONFileWriter : IOutputFileWriter
 					auxOut.Add("Type", auxEntry.Type.Name());
 					auxOut.Add("Technology", new string[] { });
 				} else {
+					auxOut.Add("ID", auxEntry.Type.Key());
 					auxOut.Add("Type", auxEntry.Type.Name());
 					auxOut.Add("Technology", engineeringAuxEntry.Technology);
 				}
 
 				auxList.Add(auxOut);
-				body.Add("Aux", auxList);
+				
 			}
 
-			
+			body.Add("Aux", auxList);
 		}
 
 		if (!job.SavedInDeclarationMode && job.Vehicle is IVehicleEngineeringInputData engVehicle) {
