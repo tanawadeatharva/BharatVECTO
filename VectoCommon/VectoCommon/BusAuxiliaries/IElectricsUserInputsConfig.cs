@@ -12,7 +12,7 @@
 
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
-using TUGraz.VectoCore.Models.BusAuxiliaries.Interfaces.DownstreamModules.Electrics;
+
 namespace TUGraz.VectoCommon.BusAuxiliaries
 {
 	public interface IElectricsUserInputsConfig

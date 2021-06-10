@@ -57,8 +57,8 @@ namespace TUGraz.VectoCore.Tests.XML
 			Assert.AreEqual(15400, vehicle.GrossVehicleMassRating.Value());//TechnicalPermissibleMaximumLadenMass ?!?
 			//Assert.That(() => vehicle.TankSystem, Throws.InstanceOf<VectoException>());
 			Assert.IsNull(vehicle.TankSystem);
-			Assert.AreEqual(50, vehicle.NumberOfPassengersLowerDeck);
-			Assert.AreEqual(0, vehicle.NumberOfPassengersUpperDeck);
+			Assert.AreEqual(50, vehicle.NumberPassengerSeatsLowerDeck);
+			Assert.AreEqual(0, vehicle.NumberPassengerSeatsUpperDeck);
 			Assert.IsTrue(vehicle.LowEntry);
 			Assert.AreEqual(2.700, vehicle.Height.Value());
 			Assert.AreEqual(11.830, vehicle.Length.Value());
@@ -96,18 +96,15 @@ namespace TUGraz.VectoCore.Tests.XML
 			var electricSupl = components.BusAuxiliaries.ElectricSupply;
 			Assert.IsNotNull(electricSupl.Alternators);
 			Assert.AreEqual(1, electricSupl.Alternators.Count);
-			Assert.AreEqual("default", electricSupl.Alternators.First().Technology);
+			Assert.AreEqual(AlternatorType.Conventional, electricSupl.AlternatorTechnology);
 
 			//Assert.AreEqual(ConsumerTechnology.Pneumatically, components.BusAuxiliaries.PneumaticConsumers.DoorDriveTechnology);
 
 			var havacAux = components.BusAuxiliaries.HVACAux;
 			Assert.IsNotNull(havacAux);
 			Assert.AreEqual(BusHVACSystemConfiguration.Configuration7, havacAux.SystemConfiguration);
-			Assert.AreEqual(ACCompressorType.TwoStage, havacAux.CompressorTypeDriver);
-			Assert.AreEqual(ACCompressorType.FourStage, havacAux.CompressorTypePassenger);
 			Assert.AreEqual(0.SI<Watt>(), havacAux.AuxHeaterPower);
 			Assert.IsTrue(havacAux.DoubleGlazing);
-			Assert.IsFalse(havacAux.HeatPump);
 			Assert.IsTrue(havacAux.AdjustableAuxiliaryHeater);
 			Assert.IsTrue(havacAux.SeparateAirDistributionDucts);
 		}

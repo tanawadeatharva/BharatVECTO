@@ -160,9 +160,9 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering.DataProvider
 			get { return new[] { this }.Cast<IEngineFuelEngineeringInputData>().ToList(); }
 		}
 
-		public virtual IList<IEngineFuelDelcarationInputData> Fuels
+		public virtual IList<IEngineFuelDeclarationInputData> Fuels
 		{
-			get { return new[] { this }.Cast<IEngineFuelDelcarationInputData>().ToList(); }
+			get { return new[] { this }.Cast<IEngineFuelDeclarationInputData>().ToList(); }
 		}
 
 		public virtual IWHRData WasteHeatRecoveryDataElectrical
@@ -367,9 +367,9 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering.DataProvider
 
 			
 
-			IList<IEngineFuelDelcarationInputData> IEngineModeDeclarationInputData.Fuels
+			IList<IEngineFuelDeclarationInputData> IEngineModeDeclarationInputData.Fuels
 			{
-				get { return (_fuels ?? (_fuels = ReadFuels())).Cast<IEngineFuelDelcarationInputData>().ToList(); }
+				get { return (_fuels ?? (_fuels = ReadFuels())).Cast<IEngineFuelDeclarationInputData>().ToList(); }
 			}
 
 			public virtual IWHRData WasteHeatRecoveryDataElectrical

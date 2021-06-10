@@ -9,10 +9,9 @@
 // 
 // See the LICENSE.txt for the specific language governing permissions and limitations.
 
-using System.Collections.Generic;
 using TUGraz.VectoCommon.Utils;
 
-namespace TUGraz.VectoCore.Models.BusAuxiliaries.Interfaces.DownstreamModules.Electrics
+namespace TUGraz.VectoCommon.BusAuxiliaries
 {
 	public interface IAlternatorMap 
 	{
@@ -25,8 +24,6 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.Interfaces.DownstreamModules.El
 		/// <returns>Single</returns>
 		/// 	<remarks></remarks>
 		double GetEfficiency(PerSecond rpm, Ampere currentDemand);
-
-		IList<string> Technologies { get; }
 
 		string Source { get; }
 	}

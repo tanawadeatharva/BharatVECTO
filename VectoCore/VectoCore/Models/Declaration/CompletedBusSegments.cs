@@ -11,7 +11,7 @@ using TUGraz.VectoCore.Configuration;
 
 namespace TUGraz.VectoCore.Models.Declaration
 {
-	public sealed class CompletedBusSegments : LookupData<int , VehicleCode, RegistrationClass, int, Meter, bool, Segment>
+	public sealed class CompletedBusSegments : LookupData<int , VehicleCode?, RegistrationClass?, int?, Meter, bool?, Segment>
 	{
 		private const string COMPLETED_BUS_SEGMENTS_CSV = ".CompletedBusSegmentationTable.csv";
 
@@ -37,7 +37,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 			_segmentTable = table.Copy();
 		}
 
-		public override Segment Lookup(int numberOfAxles, VehicleCode vehicleCode, RegistrationClass registrationClass, int passengersLowerDeck, Meter bodyHeight, bool lowEntry)
+		public override Segment Lookup(int numberOfAxles, VehicleCode? vehicleCode, RegistrationClass? registrationClass, int? passengersLowerDeck, Meter bodyHeight, bool? lowEntry)
 		{
 			return LookupCompletedBusVehicle(numberOfAxles, vehicleCode, registrationClass, passengersLowerDeck, bodyHeight, lowEntry);
 		}
@@ -46,7 +46,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 		#endregion
 
 
-		private Segment LookupCompletedBusVehicle(int numberOfAxles, VehicleCode vehicleCode, RegistrationClass registrationClass, int passengersLowerDeck, Meter bodyHeight, bool lowEntry)
+		private Segment LookupCompletedBusVehicle(int numberOfAxles, VehicleCode? vehicleCode, RegistrationClass? registrationClass, int? passengersLowerDeck, Meter bodyHeight, bool? lowEntry)
 		{
 			var rows = _segmentTable.AsEnumerable().Where(
 				r => {
@@ -66,7 +66,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 					rows = rows.Where(
 						r => {
 							var limits = r.Field<string>("passengerslowerdeck").Split('-');
-							return passengersLowerDeck.IsBetween(limits[0].ToInt(), limits[1].ToInt());
+							return ((int)passengersLowerDeck).IsBetween(limits[0].ToInt(), limits[1].ToInt());
 						}).ToList();
 				} else if (rows.Any(r => r.Field<string>("bodyheight") != "-")) {
 					rows = rows.Where(
@@ -144,7 +144,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 							PassengerDensityRef = row.ParseDouble(missionType.ToString()).SI<PerSquareMeter>(),
 							AirDragMeasurementAllowed = row.ParseBoolean(missionType == MissionType.Interurban ? "airdragmeasurementinterurban" : "airdragmeasurement"),
 							ElectricalConsumers = GetVehicleEquipment(row),
-							DoubleDecker =  row.Field<string>("vehiclecode").ParseEnum<VehicleCode>().IsDoubleDeckerBus(),
+							DoubleDecker = ((VehicleCode?) row.Field<string>("vehiclecode").ParseEnum<VehicleCode>()).IsDoubleDeckerBus(),
 							DeltaHeight = row.ParseDouble("deltaheight").SI<Meter>(),
 							SeparateAirDistributionDuctsHVACCfg = row.Field<string>("sepairdistrductshvaccfg").Split('/').Select(BusHVACSystemConfigurationHelper.Parse).ToArray() 
 						}

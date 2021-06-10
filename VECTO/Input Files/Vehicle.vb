@@ -78,15 +78,15 @@ Public Class Vehicle
 	public PCC as PredictiveCruiseControlType
 	public EngineStop as Boolean
 
-    Public VehicleTankSystem As TankSystem?
+	Public VehicleTankSystem As TankSystem?
 
-    Public ReadOnly BatteryFile As SubPath
-    Public ReadOnly ElectricMotorFile As SubPath
+	Public ReadOnly BatteryFile As SubPath
+	Public ReadOnly ElectricMotorFile As SubPath
 
-    Public NumBatteryPacks As Integer
-    Public ElectricMotorPosition As PowertrainPosition
-    Public ElectricMotorCount As Integer
-    Public ElectricMotorRatio As Double
+	Public NumBatteryPacks As Integer
+	Public ElectricMotorPosition As PowertrainPosition
+	Public ElectricMotorCount As Integer
+	Public ElectricMotorRatio As Double
     'Public ElectricMotorMechEff As Double
     Public ElectricMotorMechLossMap As SubPath
 
@@ -94,7 +94,7 @@ Public Class Vehicle
     Public EngineSpeedDuringPTODrive As PerSecond
     Public ElectricMotorPerGearRatios As Double()
 
-    Public Sub New()
+	Public Sub New()
 		_path = ""
 		_filePath = ""
 		CrossWindCorrectionFile = New SubPath
@@ -109,11 +109,11 @@ Public Class Vehicle
 		PtoLossMap = New SubPath()
 		PtoCycleStandstill = New SubPath()
         PtoCycleDriving = new SubPath()
-        BatteryFile = New SubPath()
-        ElectricMotorFile = New SubPath()
+		BatteryFile = New SubPath()
+		ElectricMotorFile = New SubPath()
 		ElectricMotorMechLossMap = new SubPath()
 
-        SetDefault()
+		SetDefault()
 	End Sub
 
 
@@ -127,20 +127,20 @@ Public Class Vehicle
 		Dim angledriveData As AngledriveData
 
 		Dim modeService As VectoValidationModeServiceContainer =
-				TryCast(validationContext.GetService(GetType(VectoValidationModeServiceContainer)), 
+				TryCast(validationContext.GetService(GetType(VectoValidationModeServiceContainer)),
 						VectoValidationModeServiceContainer)
 		Dim mode As ExecutionMode = If(modeService Is Nothing, ExecutionMode.Declaration, modeService.Mode)
 		Dim emsCycle As Boolean = (modeService IsNot Nothing) AndAlso modeService.IsEMSCycle
 		Dim gbxType As GearboxType? = If(modeService Is Nothing, Nothing, modeService.GearboxType)
-	    Dim jobType as VectoSimulationJobType = If(modeService Is Nothing, VectoSimulationJobType.ConventionalVehicle, modeService.JobType)
-	    Dim emPos as PowertrainPosition? = If(modeService Is Nothing, PowertrainPosition.HybridPositionNotSet, modeService.EMPowertrainPosition)
+		Dim jobType As VectoSimulationJobType = If(modeService Is Nothing, VectoSimulationJobType.ConventionalVehicle, modeService.JobType)
+		Dim emPos As PowertrainPosition? = If(modeService Is Nothing, PowertrainPosition.HybridPositionNotSet, modeService.EMPowertrainPosition)
 
 
 		Try
 			If mode = ExecutionMode.Declaration Then
 				Dim doa As DeclarationDataAdapterHeavyLorry = New DeclarationDataAdapterHeavyLorry()
 				Dim segment As Segment = DeclarationData.TruckSegments.Lookup(vehicle.VehicleCategory, vehicle.AxleConfiguration,
-																		vehicle.GrossVehicleMassRating, vehicle.CurbMassChassis, false)
+																		vehicle.GrossVehicleMassRating, vehicle.CurbMassChassis, False)
 				vehicleData = doa.CreateVehicleData(vehicle, segment, segment.Missions.First(),
 													segment.Missions.First().Loadings.First(), true)
 				airdragData = doa.CreateAirdragData(vehicle, segment.Missions.First(), segment)
@@ -289,7 +289,7 @@ Public Class Vehicle
 
 	Public ReadOnly Property DataSource As DataSource Implements IComponentInputData.DataSource
 		Get
-			Dim retVal As DataSource =  New DataSource() 
+			Dim retVal As DataSource = New DataSource()
 			retVal.SourceType = DataSourceType.JSONFile
 			retVal.SourceFile = FilePath
 			Return retVal
@@ -323,13 +323,13 @@ Public Class Vehicle
 		End Get
 	End Property
 
-    Public ReadOnly Property AppVersion As String Implements IComponentInputData.AppVersion
-        get
-            Return "VECTO-GUI"
-        End Get
-    End Property
+	Public ReadOnly Property AppVersion As String Implements IComponentInputData.AppVersion
+		Get
+			Return "VECTO-GUI"
+		End Get
+	End Property
 
-    Public ReadOnly Property CertificationMethod As CertificationMethod Implements IComponentInputData.CertificationMethod
+	Public ReadOnly Property CertificationMethod As CertificationMethod Implements IComponentInputData.CertificationMethod
 		Get
 			Return CertificationMethod.NotCertified
 		End Get
@@ -363,15 +363,15 @@ Public Class Vehicle
 	End Property
 
 	Public ReadOnly Property Identifier As String Implements IVehicleDeclarationInputData.Identifier
-	get
+		Get
 			Return ""
-	End Get
+		End Get
 	End Property
 
 	Public ReadOnly Property ExemptedVehicle As Boolean Implements IVehicleDeclarationInputData.ExemptedVehicle
-	get
-			Return false
-	End Get
+		Get
+			Return False
+		End Get
 	End Property
 
 	Public ReadOnly Property VIN As String Implements IVehicleDeclarationInputData.VIN
@@ -380,7 +380,9 @@ Public Class Vehicle
 		End Get
 	End Property
 
-	Public ReadOnly Property LegislativeClass As LegislativeClass Implements IVehicleEngineeringInputData.LegislativeClass
+	Public ReadOnly Property LegislativeCategory As String Implements IVehicleDeclarationInputData.LegislativeCategory
+
+	Public ReadOnly Property LegislativeClass As LegislativeClass? Implements IVehicleEngineeringInputData.LegislativeClass
 		Get
 			Return legClass
 		End Get
@@ -395,7 +397,7 @@ Public Class Vehicle
 	Public ReadOnly Property GrossVehicleMassRating As Kilogram _
 		Implements IVehicleDeclarationInputData.GrossVehicleMassRating
 		Get
-					Return MassMax.SI(Unit.SI.Ton).Cast(Of Kilogram)()
+			Return MassMax.SI(Unit.SI.Ton).Cast(Of Kilogram)()
 		End Get
 	End Property
 
@@ -424,6 +426,9 @@ Public Class Vehicle
 		End Get
 	End Property
 
+	Public ReadOnly Property TransferredAirDragArea As SquareMeter Implements IAirdragDeclarationInputData.TransferredAirDragArea
+	Public ReadOnly Property AirDragArea_0 As SquareMeter Implements IAirdragDeclarationInputData.AirDragArea_0
+
 	Public ReadOnly Property IVehicleEngineeringInputData_Axles As IList(Of IAxleEngineeringInputData) _
 		Implements IAxlesEngineeringInputData.AxlesEngineering
 		Get
@@ -445,11 +450,11 @@ Public Class Vehicle
 		End Get
 	End Property
 
-    Public ReadOnly Property IVehicleDeclarationInputData_Height As Meter Implements IVehicleDeclarationInputData.Height
+	Public ReadOnly Property IVehicleDeclarationInputData_Height As Meter Implements IVehicleDeclarationInputData.Height
 
-    Public ReadOnly Property Articulated As Boolean Implements IVehicleDeclarationInputData.Articulated
+	Public ReadOnly Property Articulated As Boolean Implements IVehicleDeclarationInputData.Articulated
 
-    Public ReadOnly Property Height As Meter Implements IVehicleEngineeringInputData.Height
+	Public ReadOnly Property Height As Meter Implements IVehicleEngineeringInputData.Height
 		Get
 			Return VehicleHeight.SI(Of Meter)()
 		End Get
@@ -472,15 +477,16 @@ Public Class Vehicle
 	End Get
     End Property
 
-    Public ReadOnly Property Length As Meter Implements IVehicleDeclarationInputData.Length
-    Public ReadOnly Property Width As Meter Implements IVehicleDeclarationInputData.Width
-    Public ReadOnly Property EntranceHeight As Meter Implements IVehicleDeclarationInputData.EntranceHeight
-    Public ReadOnly Property DoorDriveTechnology As ConsumerTechnology Implements IVehicleDeclarationInputData.DoorDriveTechnology
+	Public ReadOnly Property Length As Meter Implements IVehicleDeclarationInputData.Length
+	Public ReadOnly Property Width As Meter Implements IVehicleDeclarationInputData.Width
+	Public ReadOnly Property EntranceHeight As Meter Implements IVehicleDeclarationInputData.EntranceHeight
+	Public ReadOnly Property DoorDriveTechnology As ConsumerTechnology? Implements IVehicleDeclarationInputData.DoorDriveTechnology
+	Public ReadOnly Property VehicleDeclarationType As VehicleDeclarationType Implements IVehicleDeclarationInputData.VehicleDeclarationType
 
-    Public ReadOnly Property IVehicleEngineeringInputData_Components As IVehicleComponentsEngineering Implements IVehicleEngineeringInputData.Components
-	get
-			Return me
-	End Get
+	Public ReadOnly Property IVehicleEngineeringInputData_Components As IVehicleComponentsEngineering Implements IVehicleEngineeringInputData.Components
+		Get
+			Return Me
+		End Get
 	End Property
 
 	Public ReadOnly Property CrosswindCorrectionMap As TableData _
@@ -500,7 +506,7 @@ Public Class Vehicle
 	Public ReadOnly Property IVehicleEngineeringInputData_DynamicTyreRadius As Meter _
 		Implements IVehicleEngineeringInputData.DynamicTyreRadius
 		Get
-				Return DynamicTyreRadius.SI(Unit.SI.Milli.Meter).Cast(Of Meter)()
+			Return DynamicTyreRadius.SI(Unit.SI.Milli.Meter).Cast(Of Meter)()
 		End Get
 	End Property
 
@@ -695,15 +701,15 @@ Public Class Vehicle
 	End Property
 
 	Public ReadOnly Property IVehicleComponentsDeclaration_AuxiliaryInputData As IAuxiliariesDeclarationInputData Implements IVehicleComponentsDeclaration.AuxiliaryInputData
-	get
-			return nothing
-	End Get
+		Get
+			Return Nothing
+		End Get
 	End Property
 
 	Public ReadOnly Property AuxiliaryInputData As IAuxiliariesEngineeringInputData Implements IVehicleComponentsEngineering.AuxiliaryInputData
-	get
+		Get
 			Return Nothing
-	End Get
+		End Get
 	End Property
 
 
@@ -744,56 +750,58 @@ Public Class Vehicle
 	End Property
 
 	Public ReadOnly Property IVehicleComponentsDeclaration_AxleWheels As IAxlesDeclarationInputData Implements IVehicleComponentsDeclaration.AxleWheels
-	get
+		Get
 			Return Me
-	End Get
+		End Get
 	End Property
 
 	Public ReadOnly Property AxleWheels As IAxlesEngineeringInputData Implements IVehicleComponentsEngineering.AxleWheels
-	get
-			Return me
-	End Get
+		Get
+			Return Me
+		End Get
 	End Property
 
-    Public ReadOnly Property ElectricStorage As IElectricStorageEngineeringInputData Implements IVehicleComponentsEngineering.ElectricStorage
-        Get
-            Return New ElectricStorageWrapper(Me)
-        End Get
-    End Property
+	Public ReadOnly Property ElectricStorage As IElectricStorageEngineeringInputData Implements IVehicleComponentsEngineering.ElectricStorage
+		Get
+			Return New ElectricStorageWrapper(Me)
+		End Get
+	End Property
 
-    Public ReadOnly Property IVehicleComponentsDeclaration_ElectricMachines As IElectricMachinesDeclarationInputData Implements IVehicleComponentsDeclaration.ElectricMachines
+	Public ReadOnly Property IVehicleComponentsDeclaration_ElectricMachines As IElectricMachinesDeclarationInputData Implements IVehicleComponentsDeclaration.ElectricMachines
 
-    Public ReadOnly Property IVehicleComponentsDeclaration_ElectricStorage As IElectricStorageDeclarationInputData Implements IVehicleComponentsDeclaration.ElectricStorage
-    Public ReadOnly Property ElectricMachines As IElectricMachinesEngineeringInputData Implements IVehicleComponentsEngineering.ElectricMachines
-        Get
-            Return New ElectricMachineWrapper(Me)
-        End Get
-    End Property
+	Public ReadOnly Property IVehicleComponentsDeclaration_ElectricStorage As IElectricStorageDeclarationInputData Implements IVehicleComponentsDeclaration.ElectricStorage
+	Public ReadOnly Property ElectricMachines As IElectricMachinesEngineeringInputData Implements IVehicleComponentsEngineering.ElectricMachines
+		Get
+			Return New ElectricMachineWrapper(Me)
+		End Get
+	End Property
 
-    Public ReadOnly Property BusAuxiliaries As IBusAuxiliariesDeclarationData Implements IVehicleComponentsDeclaration.BusAuxiliaries
+	Public ReadOnly Property BusAuxiliaries As IBusAuxiliariesDeclarationData Implements IVehicleComponentsDeclaration.BusAuxiliaries
 
-    Public ReadOnly Property VocationalVehicle As Boolean Implements IVehicleDeclarationInputData.VocationalVehicle
-	get
+	Public ReadOnly Property VocationalVehicle As Boolean Implements IVehicleDeclarationInputData.VocationalVehicle
+		Get
 			Return DeclarationData.Vehicle.VocationalVehicleDefault
-	End Get
+		End Get
 	End Property
 
 	Public ReadOnly Property SleeperCab As Boolean Implements IVehicleDeclarationInputData.SleeperCab
-	get
+		Get
 			Return DeclarationData.Vehicle.SleeperCabDefault
-	End Get
+		End Get
 	End Property
 
+	Public ReadOnly Property AirdragModifiedMultistage As Boolean? Implements IVehicleDeclarationInputData.AirdragModifiedMultistage
+
 	Public ReadOnly Property TankSystem As TankSystem? Implements IVehicleDeclarationInputData.TankSystem
-	get
-			Return vehicleTankSystem
-	End Get
+		Get
+			Return VehicleTankSystem
+		End Get
 	End Property
 
 	Public ReadOnly Property IVehicleEngineeringInputData_ADAS As IAdvancedDriverAssistantSystemsEngineering Implements IVehicleEngineeringInputData.ADAS
-	get
-			Return me
-	End Get
+		Get
+			Return Me
+		End Get
 	End Property
 
 	Public ReadOnly Property ADAS As IAdvancedDriverAssistantSystemDeclarationInputData Implements IVehicleDeclarationInputData.ADAS
@@ -818,171 +826,173 @@ end Property
     End Get
     End Property
 
-    Public ReadOnly Property ZeroEmissionVehicle As Boolean Implements IVehicleDeclarationInputData.ZeroEmissionVehicle
-        Get
-            Return DeclarationData.Vehicle.ZeroEmissionVehicleDefault
-        End Get
-    End Property
+	Public ReadOnly Property ZeroEmissionVehicle As Boolean Implements IVehicleDeclarationInputData.ZeroEmissionVehicle
+		Get
+			Return DeclarationData.Vehicle.ZeroEmissionVehicleDefault
+		End Get
+	End Property
 
-    Public ReadOnly Property HybridElectricHDV As Boolean Implements IVehicleDeclarationInputData.HybridElectricHDV
-	get
-			return DeclarationData.Vehicle.HybridElectricHDVDefault
-	End Get
+	Public ReadOnly Property HybridElectricHDV As Boolean Implements IVehicleDeclarationInputData.HybridElectricHDV
+		Get
+			Return DeclarationData.Vehicle.HybridElectricHDVDefault
+		End Get
 	End Property
 
 	Public ReadOnly Property DualFuelVehicle As Boolean Implements IVehicleDeclarationInputData.DualFuelVehicle
-	get
-			return DeclarationData.Vehicle.DualFuelVehicleDefault
-	End Get
+		Get
+			Return DeclarationData.Vehicle.DualFuelVehicleDefault
+		End Get
 	End Property
 
 	Public ReadOnly Property MaxNetPower1 As Watt Implements IVehicleDeclarationInputData.MaxNetPower1
-	get
+		Get
 			Return Nothing
-	End Get
+		End Get
 	End Property
 
 	Public ReadOnly Property MaxNetPower2 As Watt Implements IVehicleDeclarationInputData.MaxNetPower2
-	get
+		Get
 			Return Nothing
-	End Get
+		End Get
 	End Property
 
-    Public ReadOnly Property RegisteredClass As RegistrationClass Implements IVehicleDeclarationInputData.RegisteredClass
-    Public ReadOnly Property NumberOfPassengersUpperDeck As Integer Implements IVehicleDeclarationInputData.NumberOfPassengersUpperDeck
-    Public ReadOnly Property NumberOfPassengersLowerDeck As Integer Implements IVehicleDeclarationInputData.NumberOfPassengersLowerDeck
-    Public ReadOnly Property CargoVolume As CubicMeter Implements IVehicleDeclarationInputData.CargoVolume
-    Public ReadOnly Property VehicleCode As VehicleCode Implements IVehicleDeclarationInputData.VehicleCode
-    Public ReadOnly Property LowEntry As Boolean Implements IVehicleDeclarationInputData.LowEntry
+	Public ReadOnly Property RegisteredClass As RegistrationClass? Implements IVehicleDeclarationInputData.RegisteredClass
+	Public ReadOnly Property NumberPassengerSeatsUpperDeck As Integer? Implements IVehicleDeclarationInputData.NumberPassengerSeatsUpperDeck
+	Public ReadOnly Property NumberPassengerSeatsLowerDeck As Integer? Implements IVehicleDeclarationInputData.NumberPassengerSeatsLowerDeck
+	Public ReadOnly Property NumberPassengersStandingLowerDeck As Integer? Implements IVehicleDeclarationInputData.NumberPassengersStandingLowerDeck
+	Public ReadOnly Property NumberPassengersStandingUpperDeck As Integer? Implements IVehicleDeclarationInputData.NumberPassengersStandingUpperDeck
+	Public ReadOnly Property CargoVolume As CubicMeter Implements IVehicleDeclarationInputData.CargoVolume
+	Public ReadOnly Property VehicleCode As VehicleCode? Implements IVehicleDeclarationInputData.VehicleCode
+	Public ReadOnly Property LowEntry As Boolean? Implements IVehicleDeclarationInputData.LowEntry
 
-    Public ReadOnly Property Components As IVehicleComponentsDeclaration Implements IVehicleDeclarationInputData.Components
-	get
+	Public ReadOnly Property Components As IVehicleComponentsDeclaration Implements IVehicleDeclarationInputData.Components
+		Get
 			Return Me
-	End Get
+		End Get
 	End Property
 
-    Public ReadOnly Property IVehicleDeclarationInputData_XMLSource As XmlNode Implements IVehicleDeclarationInputData.XMLSource
+	Public ReadOnly Property IVehicleDeclarationInputData_XMLSource As XmlNode Implements IVehicleDeclarationInputData.XMLSource
 
-    Public ReadOnly Property EngineStopStart As Boolean Implements IAdvancedDriverAssistantSystemDeclarationInputData.EngineStopStart
-	get
-			return EngineStop
-	End Get
+	Public ReadOnly Property EngineStopStart As Boolean Implements IAdvancedDriverAssistantSystemDeclarationInputData.EngineStopStart
+		Get
+			Return EngineStop
+		End Get
 	End Property
 
 	Public ReadOnly Property EcoRoll As EcoRollType Implements IAdvancedDriverAssistantSystemDeclarationInputData.EcoRoll
-	get
-			return EcoRolltype
-	End Get
+		Get
+			Return EcoRolltype
+		End Get
 	End Property
 
-	
+
 	Public ReadOnly Property PredictiveCruiseControl As PredictiveCruiseControlType Implements IAdvancedDriverAssistantSystemDeclarationInputData.PredictiveCruiseControl
-	get
+		Get
 			Return PCC
-	End Get
+		End Get
 	End Property
 
-    Public ReadOnly Property ATEcoRollReleaseLockupClutch As Boolean? Implements IAdvancedDriverAssistantSystemDeclarationInputData.ATEcoRollReleaseLockupClutch
-    get
-            Return EcoRollReleaseLockupClutch
-    End Get
-    End Property
+	Public ReadOnly Property ATEcoRollReleaseLockupClutch As Boolean? Implements IAdvancedDriverAssistantSystemDeclarationInputData.ATEcoRollReleaseLockupClutch
+		Get
+			Return EcoRollReleaseLockupClutch
+		End Get
+	End Property
 
-    Public ReadOnly Property XMLSource As XmlNode Implements IAdvancedDriverAssistantSystemDeclarationInputData.XMLSource
+	Public ReadOnly Property XMLSource As XmlNode Implements IAdvancedDriverAssistantSystemDeclarationInputData.XMLSource
 
-    Public ReadOnly Property IAdvancedDriverAssistantSystemsEngineering_DataSource As DataSource Implements IAdvancedDriverAssistantSystemsEngineering.DataSource
-        get
-            Return New DataSource() With {.SourceType = DataSourceType.JSONFile}
-        End Get
-    End Property
+	Public ReadOnly Property IAdvancedDriverAssistantSystemsEngineering_DataSource As DataSource Implements IAdvancedDriverAssistantSystemsEngineering.DataSource
+		Get
+			Return New DataSource() With {.SourceType = DataSourceType.JSONFile}
+		End Get
+	End Property
 
 
 	Public ReadOnly Property IAxlesEngineeringInputData_DataSource As DataSource Implements IAxlesEngineeringInputData.DataSource
-	get
-		Return New DataSource() With {.SourceType = DataSourceType.JSONFile}
-	End Get
+		Get
+			Return New DataSource() With {.SourceType = DataSourceType.JSONFile}
+		End Get
 	End Property
 
-    Public Property EcoRollReleaseLockupClutch As Boolean
+	Public Property EcoRollReleaseLockupClutch As Boolean
 
-    Public ReadOnly Property IAxlesDeclarationInputData_XMLSource As XmlNode Implements IAxlesDeclarationInputData.XMLSource
+	Public ReadOnly Property IAxlesDeclarationInputData_XMLSource As XmlNode Implements IAxlesDeclarationInputData.XMLSource
 End Class
 
 Public Class ElectricStorageWrapper
-    Implements IElectricStorageEngineeringInputData, IBatteryPackEngineeringInputData
+	Implements IElectricStorageEngineeringInputData, IBatteryPackEngineeringInputData
 
-    Protected Vehicle As Vehicle
+	Protected Vehicle As Vehicle
 
-    Public Sub New(veh As Vehicle)
-        Vehicle = veh
-    End Sub
+	Public Sub New(veh As Vehicle)
+		Vehicle = veh
+	End Sub
 
-    
-    Public ReadOnly Property REESSPack As IREESSPackInputData Implements IElectricStorageEngineeringInputData.REESSPack
-        Get
-            return Me
-        End Get
-    End Property
 
-    Public ReadOnly Property Count As Integer Implements IElectricStorageEngineeringInputData.Count
-        Get
-            Return Vehicle.NumBatteryPacks
-        End Get
-    End Property
+	Public ReadOnly Property REESSPack As IREESSPackInputData Implements IElectricStorageEngineeringInputData.REESSPack
+		Get
+			Return Me
+		End Get
+	End Property
 
-    Public ReadOnly Property DataSource As DataSource Implements IComponentInputData.DataSource
-        Get
-            Dim retVal As DataSource = New DataSource()
-            retVal.SourceType = DataSourceType.JSONFile
-            retVal.SourceFile = Vehicle.BatteryFile.FullPath
-            Return retVal
-        End Get
-    End Property
-    Public ReadOnly Property SavedInDeclarationMode As Boolean Implements IComponentInputData.SavedInDeclarationMode
-    Public ReadOnly Property Manufacturer As String Implements IComponentInputData.Manufacturer
-    Public ReadOnly Property Model As String Implements IComponentInputData.Model
-    Public ReadOnly Property [Date] As Date Implements IComponentInputData.[Date]
-    Public ReadOnly Property AppVersion As String Implements IComponentInputData.AppVersion
-    Public ReadOnly Property CertificationMethod As CertificationMethod Implements IComponentInputData.CertificationMethod
-    Public ReadOnly Property CertificationNumber As String Implements IComponentInputData.CertificationNumber
-    Public ReadOnly Property DigestValue As DigestData Implements IComponentInputData.DigestValue
-    Public ReadOnly Property MinSOC As Double Implements IBatteryPackDeclarationInputData.MinSOC
-    Public ReadOnly Property MaxSOC As Double Implements IBatteryPackDeclarationInputData.MaxSOC
-    Public ReadOnly Property Capacity As AmpereSecond Implements IBatteryPackDeclarationInputData.Capacity
-    Public ReadOnly Property InternalResistanceCurve As TableData Implements IBatteryPackDeclarationInputData.InternalResistanceCurve
-    Public ReadOnly Property VoltageCurve As TableData Implements IBatteryPackDeclarationInputData.VoltageCurve
-    Public ReadOnly Property MaxCurrentMap As TableData Implements IBatteryPackDeclarationInputData.MaxCurrentMap
-    Public ReadOnly Property StorageType As REESSType Implements IREESSPackInputData.StorageType
+	Public ReadOnly Property Count As Integer Implements IElectricStorageEngineeringInputData.Count
+		Get
+			Return Vehicle.NumBatteryPacks
+		End Get
+	End Property
+
+	Public ReadOnly Property DataSource As DataSource Implements IComponentInputData.DataSource
+		Get
+			Dim retVal As DataSource = New DataSource()
+			retVal.SourceType = DataSourceType.JSONFile
+			retVal.SourceFile = Vehicle.BatteryFile.FullPath
+			Return retVal
+		End Get
+	End Property
+	Public ReadOnly Property SavedInDeclarationMode As Boolean Implements IComponentInputData.SavedInDeclarationMode
+	Public ReadOnly Property Manufacturer As String Implements IComponentInputData.Manufacturer
+	Public ReadOnly Property Model As String Implements IComponentInputData.Model
+	Public ReadOnly Property [Date] As Date Implements IComponentInputData.[Date]
+	Public ReadOnly Property AppVersion As String Implements IComponentInputData.AppVersion
+	Public ReadOnly Property CertificationMethod As CertificationMethod Implements IComponentInputData.CertificationMethod
+	Public ReadOnly Property CertificationNumber As String Implements IComponentInputData.CertificationNumber
+	Public ReadOnly Property DigestValue As DigestData Implements IComponentInputData.DigestValue
+	Public ReadOnly Property MinSOC As Double Implements IBatteryPackDeclarationInputData.MinSOC
+	Public ReadOnly Property MaxSOC As Double Implements IBatteryPackDeclarationInputData.MaxSOC
+	Public ReadOnly Property Capacity As AmpereSecond Implements IBatteryPackDeclarationInputData.Capacity
+	Public ReadOnly Property InternalResistanceCurve As TableData Implements IBatteryPackDeclarationInputData.InternalResistanceCurve
+	Public ReadOnly Property VoltageCurve As TableData Implements IBatteryPackDeclarationInputData.VoltageCurve
+	Public ReadOnly Property MaxCurrentMap As TableData Implements IBatteryPackDeclarationInputData.MaxCurrentMap
+	Public ReadOnly Property StorageType As REESSType Implements IREESSPackInputData.StorageType
 End Class
 
 Public Class ElectricMachineWrapper
-    Implements IElectricMachinesEngineeringInputData, IElectricMotorEngineeringInputData
+	Implements IElectricMachinesEngineeringInputData, IElectricMotorEngineeringInputData
 
-    Protected Vehicle As Vehicle
+	Protected Vehicle As Vehicle
 
-    Public Sub New(veh As Vehicle)
-        Vehicle = veh
-    End Sub
+	Public Sub New(veh As Vehicle)
+		Vehicle = veh
+	End Sub
 
 
-    Public ReadOnly Property Entries As IList(Of ElectricMachineEntry(Of IElectricMotorDeclarationInputData)) Implements IElectricMachinesDeclarationInputData.Entries
-        Get
-            Return New List(Of ElectricMachineEntry(Of IElectricMotorDeclarationInputData))(New ElectricMachineEntry(Of IElectricMotorDeclarationInputData)() {
-            New ElectricMachineEntry(Of IElectricMotorDeclarationInputData) With {
-                    .ElectricMachine = Me,
+	Public ReadOnly Property Entries As IList(Of ElectricMachineEntry(Of IElectricMotorDeclarationInputData)) Implements IElectricMachinesDeclarationInputData.Entries
+		Get
+			Return New List(Of ElectricMachineEntry(Of IElectricMotorDeclarationInputData))(New ElectricMachineEntry(Of IElectricMotorDeclarationInputData)() {
+			New ElectricMachineEntry(Of IElectricMotorDeclarationInputData) With {
+					.ElectricMachine = Me,
                     .MechanicalTransmissionEfficiency = If(IsNumeric(Vehicle.ElectricMotorMechLossMap.OriginalPath), Vehicle.ElectricMotorMechLossMap.OriginalPath.ToDouble(), double.NaN), 
 				    .MechanicalTransmissionLossMap = VectoCSVFile.Read(Vehicle.ElectricMotorMechLossMap.FullPath),
                     .Position = Vehicle.ElectricMotorPosition, 
                     .RatioADC = Vehicle.ElectricMotorRatio, 
 				    .RatioPerGear = vehicle.ElectricMotorPerGearRatios,
                     .Count = Vehicle.ElectricMotorCount}})
-        End Get
-    End Property
-    Public ReadOnly Property IElectricMachinesEngineeringInputData_Entries As IList(Of ElectricMachineEntry(Of IElectricMotorEngineeringInputData)) Implements IElectricMachinesEngineeringInputData.Entries
-        Get
-            Return New List(Of ElectricMachineEntry(Of IElectricMotorEngineeringInputData))(New ElectricMachineEntry(Of IElectricMotorEngineeringInputData)() {
-            New ElectricMachineEntry(Of IElectricMotorEngineeringInputData)() With {
-                    .ElectricMachine = Me,
+		End Get
+	End Property
+	Public ReadOnly Property IElectricMachinesEngineeringInputData_Entries As IList(Of ElectricMachineEntry(Of IElectricMotorEngineeringInputData)) Implements IElectricMachinesEngineeringInputData.Entries
+		Get
+			Return New List(Of ElectricMachineEntry(Of IElectricMotorEngineeringInputData))(New ElectricMachineEntry(Of IElectricMotorEngineeringInputData)() {
+			New ElectricMachineEntry(Of IElectricMotorEngineeringInputData)() With {
+					.ElectricMachine = Me,
                     .MechanicalTransmissionEfficiency = If(IsNumeric(Vehicle.ElectricMotorMechLossMap.OriginalPath), Vehicle.ElectricMotorMechLossMap.OriginalPath.ToDouble(), double.NaN), 
                     .MechanicalTransmissionLossMap = If(IsNumeric(Vehicle.ElectricMotorMechLossMap.OriginalPath), Nothing, VectoCSVFile.Read(Vehicle.ElectricMotorMechLossMap.FullPath)),
                     .Position = Vehicle.ElectricMotorPosition, 
@@ -990,31 +1000,31 @@ Public Class ElectricMachineWrapper
 				    .RatioPerGear = Vehicle.ElectricMotorPerGearRatios,
                     .Count = Vehicle.ElectricMotorCount}})
 
-        End Get
-    End Property
+		End Get
+	End Property
 
-    Public ReadOnly Property DataSource As DataSource Implements IComponentInputData.DataSource
-        Get
-            Return New DataSource() With {
-                                .SourceFile = Vehicle.ElectricMotorFile.FullPath}
-        End Get
-    End Property
-    Public ReadOnly Property SavedInDeclarationMode As Boolean Implements IComponentInputData.SavedInDeclarationMode
-    Public ReadOnly Property Manufacturer As String Implements IComponentInputData.Manufacturer
-    Public ReadOnly Property Model As String Implements IComponentInputData.Model
-    Public ReadOnly Property [Date] As Date Implements IComponentInputData.[Date]
-    Public ReadOnly Property AppVersion As String Implements IComponentInputData.AppVersion
-    Public ReadOnly Property CertificationMethod As CertificationMethod Implements IComponentInputData.CertificationMethod
-    Public ReadOnly Property CertificationNumber As String Implements IComponentInputData.CertificationNumber
-    Public ReadOnly Property DigestValue As DigestData Implements IComponentInputData.DigestValue
-    Public ReadOnly Property FullLoadCurve As TableData Implements IElectricMotorDeclarationInputData.FullLoadCurve
-    Public ReadOnly Property DragCurve As TableData Implements IElectricMotorDeclarationInputData.DragCurve
-    Public ReadOnly Property EfficiencyMap As TableData Implements IElectricMotorDeclarationInputData.EfficiencyMap
-    Public ReadOnly Property Inertia As KilogramSquareMeter Implements IElectricMotorDeclarationInputData.Inertia
-    Public ReadOnly Property OverloadTime As Second Implements IElectricMotorDeclarationInputData.OverloadTime
+	Public ReadOnly Property DataSource As DataSource Implements IComponentInputData.DataSource
+		Get
+			Return New DataSource() With {
+								.SourceFile = Vehicle.ElectricMotorFile.FullPath}
+		End Get
+	End Property
+	Public ReadOnly Property SavedInDeclarationMode As Boolean Implements IComponentInputData.SavedInDeclarationMode
+	Public ReadOnly Property Manufacturer As String Implements IComponentInputData.Manufacturer
+	Public ReadOnly Property Model As String Implements IComponentInputData.Model
+	Public ReadOnly Property [Date] As Date Implements IComponentInputData.[Date]
+	Public ReadOnly Property AppVersion As String Implements IComponentInputData.AppVersion
+	Public ReadOnly Property CertificationMethod As CertificationMethod Implements IComponentInputData.CertificationMethod
+	Public ReadOnly Property CertificationNumber As String Implements IComponentInputData.CertificationNumber
+	Public ReadOnly Property DigestValue As DigestData Implements IComponentInputData.DigestValue
+	Public ReadOnly Property FullLoadCurve As TableData Implements IElectricMotorDeclarationInputData.FullLoadCurve
+	Public ReadOnly Property DragCurve As TableData Implements IElectricMotorDeclarationInputData.DragCurve
+	Public ReadOnly Property EfficiencyMap As TableData Implements IElectricMotorDeclarationInputData.EfficiencyMap
+	Public ReadOnly Property Inertia As KilogramSquareMeter Implements IElectricMotorDeclarationInputData.Inertia
+	Public ReadOnly Property OverloadTime As Second Implements IElectricMotorDeclarationInputData.OverloadTime
 	Public ReadOnly Property ContinuousTorqueSpeed As PerSecond Implements IElectricMotorDeclarationInputData.ContinuousTorqueSpeed
     Public ReadOnly Property OverloadTorque As NewtonMeter Implements IElectricMotorDeclarationInputData.OverloadTorque
     Public ReadOnly Property OverloadTestSpeed As PerSecond Implements IElectricMotorDeclarationInputData.OverloadTestSpeed
-    Public ReadOnly Property OverloadRecoveryFactor As Double Implements IElectricMotorDeclarationInputData.OverloadRecoveryFactor
+	Public ReadOnly Property OverloadRecoveryFactor As Double Implements IElectricMotorDeclarationInputData.OverloadRecoveryFactor
     Public ReadOnly Property ContinuousTorque As NewtonMeter Implements IElectricMotorDeclarationInputData.ContinuousTorque
 End Class

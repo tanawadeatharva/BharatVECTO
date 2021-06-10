@@ -108,7 +108,12 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering.DataProvider
 			get { return GetString(XMLNames.Vehicle_VIN); }
 		}
 
-		public virtual LegislativeClass LegislativeClass
+		public string LegislativeCategory
+		{
+			get { return null; }
+		}
+
+		public virtual LegislativeClass? LegislativeClass
 		{
 			get { return GetString(XMLNames.Vehicle_LegislativeClass).ParseEnum<LegislativeClass>(); }
 		}
@@ -161,6 +166,11 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering.DataProvider
 			get { return false; }
 		}
 
+		public virtual bool? AirdragModifiedMultistage
+		{
+			get { return null; }
+		}
+
 		public TankSystem? TankSystem
 		{
 			get {
@@ -196,18 +206,21 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering.DataProvider
 			get { return null; }
 		}
 
-		public virtual RegistrationClass RegisteredClass { get { return RegistrationClass.unknown;} }
-		public virtual int NumberOfPassengersUpperDeck { get { return 0; } }
-		public virtual int NumberOfPassengersLowerDeck { get { return 0; } }
+		public virtual RegistrationClass? RegisteredClass { get { return RegistrationClass.unknown;} }
+		public virtual int? NumberPassengerSeatsUpperDeck { get { return 0; } }
+		public virtual int? NumberPassengerSeatsLowerDeck { get { return 0; } }
+		public int? NumberPassengersStandingLowerDeck { get { return 0; } }
+		public int? NumberPassengersStandingUpperDeck { get { return 0; } }
 		public CubicMeter CargoVolume { get; }
-		public virtual VehicleCode VehicleCode { get { return VehicleCode.NOT_APPLICABLE; } }
-		public virtual bool LowEntry { get { return false; } }
+		public virtual VehicleCode? VehicleCode { get { return VectoCommon.Models.VehicleCode.NOT_APPLICABLE; } }
+		public virtual bool? LowEntry { get { return false; } }
 		public virtual bool Articulated { get { return false; } }
 		
 
 		public virtual Meter Width { get { return null; } }
 		public virtual Meter EntranceHeight { get { return null; } }
-		public ConsumerTechnology DoorDriveTechnology { get { return ConsumerTechnology.Unknown; } }
+		public ConsumerTechnology? DoorDriveTechnology { get { return ConsumerTechnology.Unknown; } }
+		public virtual VehicleDeclarationType VehicleDeclarationType { get; }
 
 		public TableData MaxPropulsionTorque
 		{

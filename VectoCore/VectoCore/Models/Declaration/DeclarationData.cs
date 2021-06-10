@@ -241,7 +241,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 				get { return hvacMaxCoolingPower ?? (hvacMaxCoolingPower = new HVACCoolingPower()); }
 			}
 
-			public static PerSecond VentilationRate(BusHVACSystemConfiguration hvacSystemConfig, bool heating)
+			public static PerSecond VentilationRate(BusHVACSystemConfiguration? hvacSystemConfig, bool heating)
 			{
 
 				switch (hvacSystemConfig) {
@@ -279,7 +279,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 			}
 			 
 
-			public static Meter CalculateInternalLength(Meter vehicleLength, VehicleCode vehicleCode, double numPassLowFloor)
+			public static Meter CalculateInternalLength(Meter vehicleLength, VehicleCode? vehicleCode, double numPassLowFloor)
 				{
 				if (vehicleCode.GetFloorType()  == FloorType.LowFloor) {
 					return vehicleCode.IsDoubleDeckerBus() ? 2 * vehicleLength : vehicleLength;
@@ -296,12 +296,12 @@ namespace TUGraz.VectoCore.Models.Declaration
 			}
 
 			public static Meter CalculateLengthInteriorLights(
-				Meter vehicleLength, VehicleCode vehicleCode, double numPassLowFloor)
+				Meter vehicleLength, VehicleCode? vehicleCode, double numPassLowFloor)
 			{
 				return CalculateInternalLength(vehicleLength, vehicleCode, numPassLowFloor);
 			}
 
-			public static Meter CalculateInternalHeight(VehicleCode vehicleCode, RegistrationClass registrationClass, Meter bodyHeight)
+			public static Meter CalculateInternalHeight(VehicleCode? vehicleCode, RegistrationClass? registrationClass, Meter bodyHeight)
 			{
 				if (vehicleCode.IsDoubleDeckerBus()) {
 					return Constants.BusParameters.InternalHeightDoubleDecker;
@@ -348,9 +348,9 @@ namespace TUGraz.VectoCore.Models.Declaration
 				}
 			}
 
-			public static double CalculateCOP(Watt coolingPwrDriver, ACCompressorType comprTypeDriver, Watt coolingPwrPass, ACCompressorType comprTypePass, FloorType floorType)
+			public static double CalculateCOP(Watt coolingPwrDriver, HeatPumpType comprTypeDriver, Watt coolingPwrPass, HeatPumpType comprTypePass, FloorType floorType)
 			{
-				if (coolingPwrDriver.IsGreater(0) && comprTypeDriver == ACCompressorType.None) {
+				if (coolingPwrDriver.IsGreater(0) && comprTypeDriver == HeatPumpType.none) {
 					comprTypeDriver = comprTypePass;
 				}
 				if (coolingPwrDriver.IsEqual(0) && coolingPwrPass.IsEqual(0)) {
@@ -360,9 +360,9 @@ namespace TUGraz.VectoCore.Models.Declaration
 						(coolingPwrDriver + coolingPwrPass);
 			}
 
-			public static Meter CorrectionLengthDrivetrainVolume(VehicleCode vehicleCode, bool lowEntry, int numAxles, bool articulated)
+			public static Meter CorrectionLengthDrivetrainVolume(VehicleCode? vehicleCode, bool? lowEntry, int numAxles, bool articulated)
 			{
-				if ((vehicleCode == VehicleCode.CE || vehicleCode == VehicleCode.CG) && !lowEntry) {
+				if ((vehicleCode == VehicleCode.CE || vehicleCode == VehicleCode.CG) && !(bool)lowEntry) {
 					switch (numAxles) {
 						case 2: return 1.0.SI<Meter>();
 						case 3: return articulated ? 1.0.SI<Meter>() : 1.25.SI<Meter>();

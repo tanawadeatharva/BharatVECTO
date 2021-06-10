@@ -45,6 +45,11 @@ namespace TUGraz.VectoCommon.Utils
 			Units = units;
 		}
 
+		public string GetUnitString()
+		{
+			return Units;
+		}
+
 		public double Value { get { return _value; } }
 
 		protected bool Equals(ConvertedSI other)
@@ -250,6 +255,18 @@ namespace TUGraz.VectoCommon.Utils
 		public static ConvertedSI ConvertToMegaJouleperKilometer(this JoulePerMeter jpm)
 		{
 			return new ConvertedSI(jpm.Value() * 1e-3, "MJ/km");
+		}
+
+		public static Meter ConvertToMeter(this ConvertedSI mm)
+		{
+			if (mm.Units != "mm") {
+				return null;
+			}
+			//return ElementExists(XMLNames.Bus_HeighIntegratedBody)
+			//	? GetDouble(XMLNames.Bus_HeighIntegratedBody).SI(Unit.SI.Milli.Meter).Cast<Meter>()
+			//	: null;
+
+			return mm.Value.SI(Unit.SI.Milli.Meter).Cast<Meter>();
 		}
 	}
 }

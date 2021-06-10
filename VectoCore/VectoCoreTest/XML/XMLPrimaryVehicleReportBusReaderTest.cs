@@ -305,8 +305,8 @@ namespace TUGraz.VectoCore.Tests.XML
 			Assert.AreEqual("Variable displacement elec. controlled", auxiliaries.SteeringPumpTechnology[0]);
 			
 			Assert.AreEqual(1, auxiliaries.ElectricSupply.Alternators.Count);
-			Assert.AreEqual("default", auxiliaries.ElectricSupply.Alternators[0].Technology);
-			Assert.AreEqual(false, auxiliaries.ElectricSupply.SmartElectrics);
+			//Assert.AreEqual("default", auxiliaries.ElectricSupply.Alternators[0].Technology);
+			Assert.AreEqual(AlternatorType.Smart, auxiliaries.ElectricSupply.AlternatorTechnology);
 		}
 
 		private void TestPneumaticSystem(IPneumaticSupplyDeclarationData supply,

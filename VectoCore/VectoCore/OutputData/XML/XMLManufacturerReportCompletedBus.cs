@@ -1,17 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
+using System.Xml;
 using System.Xml.Linq;
 using TUGraz.VectoCommon.BusAuxiliaries;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Resources;
 using TUGraz.VectoCommon.Utils;
+using TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl;
 using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
-using TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox;
 using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.OutputData.XML {
@@ -51,8 +51,8 @@ namespace TUGraz.VectoCore.OutputData.XML {
 					new XElement(tns + XMLNames.Vehicle_SleeperCab, modelData.VehicleData.DualFuelVehicle),
 					
 					new XElement(tns + "RegisteredPassengers",
-						new XElement(tns + XMLNames.Bus_LowerDeck, modelData.VehicleData.InputData.NumberOfPassengersLowerDeck),
-						new XElement(tns + XMLNames.Bus_UpperDeck, modelData.VehicleData.InputData.NumberOfPassengersUpperDeck)
+						new XElement(tns + XMLNames.Bus_LowerDeck, modelData.VehicleData.InputData.NumberPassengerSeatsLowerDeck),
+						new XElement(tns + XMLNames.Bus_UpperDeck, modelData.VehicleData.InputData.NumberPassengerSeatsUpperDeck)
 					),
 					new XElement(tns +XMLNames.Bus_LowEntry, modelData.VehicleData.InputData.LowEntry),
 					new XElement(tns + XMLNames.Bus_HeighIntegratedBody, modelData.VehicleData.InputData.Height.ToXMLFormat(3)),
@@ -209,7 +209,7 @@ namespace TUGraz.VectoCore.OutputData.XML {
 		protected internal static double CalculateFactorMethodFactor(IResult primaryResult,
 			XMLDeclarationReport.ResultEntry specific, XMLDeclarationReport.ResultEntry generic)
 		{
-            return specific.EnergyConsumptionTotal.Value() / generic.EnergyConsumptionTotal.Value();
+			return specific.EnergyConsumptionTotal.Value() / generic.EnergyConsumptionTotal.Value();
    //         var energyConsumptionPrimary = primaryResult.EnergyConsumption.Sum(x => x.Value);
 			//var energyConsumptionCompeted = energyConsumptionPrimary +
 			//								specific.EnergyConsumptionTotal / specific.Distance -
@@ -372,8 +372,19 @@ namespace TUGraz.VectoCore.OutputData.XML {
 		{
 			var busAuxiliaries = modelData.BusAuxiliaries;
 			var busAuxXML = busAuxiliaries.InputData.XMLSource;
-			var ns = XNamespace.Get(busAuxXML.FirstChild.SchemaInfo.SchemaType.QualifiedName.Namespace);
 			const string auxPrefix = "aux";
+			
+			if (busAuxiliaries.InputData is ConsolidatedBusAuxiliariesData) {
+				var namespaceName = ((XmlElement)busAuxXML.FirstChild).NamespaceURI;
+				return new XElement(
+					tns + XMLNames.Component_Auxiliaries,
+					new XAttribute(XNamespace.Xmlns + auxPrefix, namespaceName),
+					new XAttribute(xsi + "type", $"{auxPrefix}:CompletedVehicleAuxiliaryDataDeclarationType"),
+					XElement.Parse(busAuxXML.InnerXml).Elements()
+				);
+			}
+			
+			var ns = XNamespace.Get(busAuxXML.FirstChild.SchemaInfo.SchemaType.QualifiedName.Namespace);
 			return new XElement(
 				tns + XMLNames.Component_Auxiliaries,
 				new XAttribute(XNamespace.Xmlns + auxPrefix, ns.NamespaceName),

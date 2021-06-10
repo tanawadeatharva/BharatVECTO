@@ -79,7 +79,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 		private LoggingRule cycleChecksRule;
 
 		protected VehicleClass VehicleClass = VehicleClass.Unknown;
-		protected VehicleCode VehicleCode = VehicleCode.NOT_APPLICABLE;
+		protected VehicleCode? VehicleCode = VectoCommon.Models.VehicleCode.NOT_APPLICABLE;
 
 		//protected XNamespace di;
 		//private bool allSuccess = true;

@@ -88,8 +88,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			get
 			{
 				switch (Body.GetEx<String>("PowertrainConfiguration")) {
-                    case "ParallelHybrid": return VectoSimulationJobType.ParallelHybridVehicle;
-                    case "BatteryElectric": return VectoSimulationJobType.BatteryElectricVehicle;
+					case "ParallelHybrid": return VectoSimulationJobType.ParallelHybridVehicle;
+					case "BatteryElectric": return VectoSimulationJobType.BatteryElectricVehicle;
 					default: throw new VectoException("Invalid parameter value {0}", Body.GetEx<String>("PowertrainConfiguration"));
 				}
 			}
@@ -131,7 +131,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 		}
 		
 
-        protected virtual JSONElectricStorageEngineeringInputData ReadBatteries()
+		protected virtual JSONElectricStorageEngineeringInputData ReadBatteries()
 		{
 			return new JSONElectricStorageEngineeringInputData() {
 				Count = Body["Battery"].GetEx<int>("NumPacks"),
@@ -194,9 +194,9 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			return _adasInputData ?? (_adasInputData = new JSONADASInputDataV9(this));
 		}
 
-        #endregion
+		#endregion
 
-        #endregion
+		#endregion
 	}
 
 	// ###################################################################
@@ -218,7 +218,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 		{
 			return _adasInputData ?? (_adasInputData = new JSONADASInputDataV8(this));
 		}
-    }
+	}
 
 	// ###################################################################
 	// ###################################################################
@@ -228,7 +228,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 		IVehicleComponentsDeclaration, IVehicleComponentsEngineering, IAxlesEngineeringInputData, IAxlesDeclarationInputData
 		//IAdvancedDriverAssistantSystemsEngineering, IAdvancedDriverAssistantSystemDeclarationInputData
 
-    {
+	{
 		public JSONVehicleDataV7(JObject data, string fileName, IJSONVehicleComponents job, bool tolerateMissing = false)
 			: base(data, fileName, tolerateMissing)
 		{
@@ -259,12 +259,17 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			get { return Constants.NOT_AVailABLE; }
 		}
 
-		public virtual LegislativeClass LegislativeClass
+		public string LegislativeCategory
+		{
+			get { return null; }
+		}
+
+		public virtual LegislativeClass? LegislativeClass
 		{
 			get {
 				return Body["LegislativeClass"] != null
 					? Body["LegislativeClass"].Value<string>().ParseEnum<LegislativeClass>()
-					: LegislativeClass.Unknown;
+					: VectoCommon.Models.LegislativeClass.Unknown;
 			}
 		}
 
@@ -350,7 +355,9 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 		}
 
 		public virtual Meter EntranceHeight { get { return null; } }
-		public virtual ConsumerTechnology DoorDriveTechnology { get { return ConsumerTechnology.Unknown; } }
+		public virtual ConsumerTechnology? DoorDriveTechnology { get { return ConsumerTechnology.Unknown; } }
+		public virtual VehicleDeclarationType VehicleDeclarationType { get; }
+
 
 		IVehicleComponentsEngineering IVehicleEngineeringInputData.Components
 		{
@@ -383,9 +390,9 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 		protected virtual IAdvancedDriverAssistantSystemsEngineering GetADS()
 		{
 			return _adasInputData ?? (_adasInputData = new JSONADASInputDataV7(this));
-        }
+		}
 
-        public virtual double InitialSOC
+		public virtual double InitialSOC
 		{
 			get { return double.NaN; }
 		}
@@ -541,7 +548,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			}
 		}
 
-        IPTOTransmissionInputData IVehicleComponentsEngineering.PTOTransmissionInputData
+		IPTOTransmissionInputData IVehicleComponentsEngineering.PTOTransmissionInputData
 		{
 			get { return _ptoInputData ?? (_ptoInputData = new JSONPTOTransmissioninputData(this)); }
 		}
@@ -552,7 +559,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 		}
 
 
-        IAxlesEngineeringInputData IVehicleComponentsEngineering.AxleWheels
+		IAxlesEngineeringInputData IVehicleComponentsEngineering.AxleWheels
 		{
 			get { return this; }
 		}
@@ -607,6 +614,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			get { return DeclarationData.Vehicle.SleeperCabDefault; }
 		}
 
+		public virtual bool? AirdragModifiedMultistage { get; }
+
 		public virtual TankSystem? TankSystem
 		{
 			get { return DeclarationData.Vehicle.TankSystemDefault; }
@@ -638,17 +647,26 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			get { return null; }
 		}
 
-		public virtual RegistrationClass RegisteredClass
+		public virtual RegistrationClass? RegisteredClass
 		{
 			get { return RegistrationClass.unknown; }
 		}
 
-		public virtual int NumberOfPassengersUpperDeck
+		public virtual int? NumberPassengerSeatsUpperDeck
 		{
 			get { return 0; }
 		}
 
-		public virtual int NumberOfPassengersLowerDeck
+		public virtual int? NumberPassengerSeatsLowerDeck
+		{
+			get { return 0; }
+		}
+
+		public int? NumberPassengersStandingLowerDeck
+		{
+			get { return 0; }
+		}
+		public int? NumberPassengersStandingUpperDeck
 		{
 			get { return 0; }
 		}
@@ -698,12 +716,12 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 				}
 			}
 		}
-		public virtual VehicleCode VehicleCode
+		public virtual VehicleCode? VehicleCode
 		{
-			get { return VehicleCode.NOT_APPLICABLE; }
+			get { return  VectoCommon.Models.VehicleCode.NOT_APPLICABLE; }
 		}
 
-		public virtual bool LowEntry { get { return false; } }
+		public virtual bool? LowEntry { get { return false; } }
 
 		IVehicleComponentsDeclaration IVehicleDeclarationInputData.Components
 		{
@@ -754,7 +772,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 		}
 
 		public virtual XmlNode XMLSource { get { return null; } }
-    }
+	}
 
 
 

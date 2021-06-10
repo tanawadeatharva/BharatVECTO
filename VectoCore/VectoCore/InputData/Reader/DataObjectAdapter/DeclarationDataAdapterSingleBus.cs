@@ -32,7 +32,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			var passengerCountRef = busFloorArea * (loading.Key == LoadingType.LowLoading
 				? mission.BusParameter.PassengerDensityLow
 				: mission.BusParameter.PassengerDensityRef);
-			var passengerCountDecl = CompletedVehicle.NumberOfPassengersUpperDeck + CompletedVehicle.NumberOfPassengersLowerDeck;
+			var passengerCountDecl = CompletedVehicle.NumberPassengerSeatsUpperDeck + CompletedVehicle.NumberPassengerSeatsLowerDeck;
 
 			//var refLoad = passengerCount * mission.MissionType.GetAveragePassengerMass();
 			if (loading.Key != LoadingType.ReferenceLoad && loading.Key != LoadingType.LowLoading) {
@@ -40,7 +40,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			}
 
 			var passengerCountCalc = loading.Key == LoadingType.ReferenceLoad
-				? VectoMath.Min(passengerCountRef, passengerCountDecl)
+				? VectoMath.Min(passengerCountRef, (int)passengerCountDecl)
 				: passengerCountRef * mission.MissionType.GetLowLoadFactorBus();
 			var payload = passengerCountCalc * mission.MissionType.GetAveragePassengerMass();
 

@@ -1,0 +1,43 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Globalization;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows;
+using System.Windows.Data;
+using Castle.Core.Internal;
+using TUGraz.VectoCommon.Utils;
+
+namespace VECTO3GUI2020.Helper.Converter
+{
+    class EnumConverter : IValueConverter
+    {
+		public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+		{
+			if (value == null) {
+				return Binding.DoNothing;
+			}
+
+			Type valueType = value.GetType();
+			if (!valueType.IsEnum) {
+				return value;
+			}
+
+			var attributes =
+				valueType.GetField(value.ToString())?.GetCustomAttributes( typeof(GuiLabelAttribute),false);
+
+			GuiLabelAttribute attribute = attributes.IsNullOrEmpty() ? null : attributes.First() as GuiLabelAttribute;
+			if (attribute == null) {
+				return value;
+			} else {
+				return attribute.Label;
+			}
+		}
+
+		public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+		{
+			return value;
+		}
+	}
+}

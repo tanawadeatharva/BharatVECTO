@@ -1377,4 +1377,199 @@
   <data name="Report_Result_PassengerCount" xml:space="preserve">
     <value>PassengerCount</value>
   </data>
+  <data name="Bus_LegislativeCategory" xml:space="preserve">
+    <value>LegislativeCategory</value>
+  </data>
+  <data name="Bus_ADAS_APTEcoRollReleaseLockupClutch" xml:space="preserve">
+    <value>APTEcoRollReleaseLockupClutch</value>
+  </data>
+  <data name="Bus_AirdragModifiedMultistage" xml:space="preserve">
+    <value>AirdragModifiedMultistage</value>
+  </data>
+  <data name="Bus_CorrectedActualMass" xml:space="preserve">
+    <value>CorrectedActualMass</value>
+  </data>
+  <data name="Bus_NumberPassengersLowerDeck" xml:space="preserve">
+    <value>NumberPassengersLowerDeck</value>
+  </data>
+  <data name="Bus_NumberPassengersUpperDeck" xml:space="preserve">
+    <value>NumberPassengersUpperDeck</value>
+  </data>
+  <data name="Bus_AirElectricHeater" xml:space="preserve">
+    <value>AirElectricHeater</value>
+  </data>
+  <data name="Bus_HeatPumpModeDriver" xml:space="preserve">
+    <value>HeatPumpModeDriverCompartment</value>
+  </data>
+  <data name="Bus_HeatPumpModePassenger" xml:space="preserve">
+    <value>HeatPumpModePassengerCompartment</value>
+  </data>
+  <data name="Bus_HeatPumpTypeDriver" xml:space="preserve">
+    <value>HeatPumpTypeDriverCompartment</value>
+  </data>
+  <data name="Bus_HeatPumpTypePassenger" xml:space="preserve">
+    <value>HeatPumpTypePassengerCompartment</value>
+  </data>
+  <data name="Bus_OtherHeatingTechnology" xml:space="preserve">
+    <value>OtherHeatingTechnology</value>
+  </data>
+  <data name="Bus_WaterElectricHeater" xml:space="preserve">
+    <value>WaterElectricHeater</value>
+  </data>
+  <data name="VectoOutputMultistage" xml:space="preserve">
+    <value>VectoOutputMultistage</value>
+  </data>
+  <data name="Bus_PrimaryVehicle" xml:space="preserve">
+    <value>PrimaryVehicle</value>
+  </data>
+  <data name="ManufacturingStage" xml:space="preserve">
+    <value>ManufacturingStage</value>
+  </data>
+  <data name="ManufacturingStage_StageCount" xml:space="preserve">
+    <value>stageCount</value>
+  </data>
+  <data name="Bus_DeclarationType" xml:space="preserve">
+    <value>DeclarationType</value>
+  </data>
+  <data name="AirDrag_CdxA_0" xml:space="preserve">
+    <value>CdxA_0</value>
+  </data>
+  <data name="AirDrag_Data_Type_Attr" xml:space="preserve">
+    <value>AirDragDataDeclarationType</value>
+  </data>
+  <data name="AirDrag_DeclaredCdxA1" xml:space="preserve">
+    <value>DeclaredCdxA</value>
+  </data>
+  <data name="AirDrag_TransferredCDxA" xml:space="preserve">
+    <value>TransferredCdxA</value>
+  </data>
+  <data name="Attr_Type" xml:space="preserve">
+    <value>type</value>
+  </data>
+  <data name="Auxiliaries_Type_Attr_DataDeclarationType" xml:space="preserve">
+    <value>AuxiliariesDataDeclarationType</value>
+  </data>
+  <data name="AxleGear_Type_Attr" xml:space="preserve">
+    <value>AxlegearDataDeclarationType</value>
+  </data>
+  <data name="AxleWheels_Type_Attr_AxleWheelsDeclarationType" xml:space="preserve">
+    <value>AxleWheelsDataDeclarationType</value>
+  </data>
+  <data name="Axle_Type_Attr_AxleDataDeclarationType" xml:space="preserve">
+    <value>AxleDataDeclarationType</value>
+  </data>
+  <data name="Components_type_attr" xml:space="preserve">
+    <value>VehicleComponentsType</value>
+  </data>
+  <data name="Component_Type_Attr" xml:space="preserve">
+    <value>type</value>
+  </data>
+  <data name="Component_Type_Attr_PTO" xml:space="preserve">
+    <value>PTOType</value>
+  </data>
+  <data name="Engine_Type_Attr" xml:space="preserve">
+    <value>EngineDataDeclarationType</value>
+  </data>
+  <data name="Gearbox_attr_GearboxDataDeclarationType" xml:space="preserve">
+    <value>GearboxDataDeclarationType</value>
+  </data>
+  <data name="Gearbox_Gears_Attr_GearsDeclarationType" xml:space="preserve">
+    <value>GearsDeclarationType</value>
+  </data>
+  <data name="Retarder_Attr_DataDeclarationType" xml:space="preserve">
+    <value>RetarderDataDeclarationType</value>
+  </data>
+  <data name="String" xml:space="preserve">
+    <value>Component_Type_Attr</value>
+  </data>
+  <data name="Tyre_Type_Attr_TyreDataDeclarationType" xml:space="preserve">
+    <value>TyreDataDeclarationType</value>
+  </data>
+  <data name="VehicleAttr_VehicleDeclarationType" xml:space="preserve">
+    <value>VehicleDeclarationType</value>
+  </data>
+  <data name="BusAux_PneumaticSystem_SCRReagentDosing" xml:space="preserve">
+    <value>PneumaticSCRReagentDosing</value>
+  </data>
+  <data name="AirDragArea_TransferredCdxA" xml:space="preserve">
+    <value>TransferredCdxA</value>
+  </data>
+  <data name="Bus_VehicleDeclarationType" xml:space="preserve">
+    <value>VehicleDeclarationType</value>
+  </data>
+  <data name="Vehicle_BodyworkCode" xml:space="preserve">
+    <value>BodyworkCode</value>
+  </data>
+  <data name="BusAux_LEDLights" xml:space="preserve">
+    <value>LEDLights</value>
+  </data>
+  <data name="Bus_DoorDriveTechnology" xml:space="preserve">
+    <value>DoorDriveTechnology</value>
+  </data>
+  <data name="BusAux_HVAC" xml:space="preserve">
+    <value>HVAC</value>
+  </data>
+  <data name="CompressorDrive" xml:space="preserve">
+    <value>CompressorDrive</value>
+  </data>
+  <data name="Bus_ChassisConfiguration" xml:space="preserve">
+    <value>ChassisConfiguration</value>
+  </data>
+  <data name="Bus_NumberPassengerSeatsLowerDeck" xml:space="preserve">
+    <value>NumberPassengerSeatsLowerDeck</value>
+  </data>
+  <data name="Bus_NumberPassengerSeatsUpperDeck" xml:space="preserve">
+    <value>NumberPassengerSeatsUpperDeck</value>
+  </data>
+  <data name="Bus_NumberPassengersStandingLowerDeck" xml:space="preserve">
+    <value>NumberPassengersStandingLowerDeck</value>
+  </data>
+  <data name="Bus_NumberPassengersStandingUpperDeck" xml:space="preserve">
+    <value>NumberPassengersStandingUpperDeck</value>
+  </data>
+  <data name="BusAux_ElectricSystem_Battery" xml:space="preserve">
+    <value>Battery</value>
+  </data>
+  <data name="BusAux_ElectricSystem_BatteryTechnology" xml:space="preserve">
+    <value>BatteryTechnology</value>
+  </data>
+  <data name="BusAux_ElectricSystem_Capacitor" xml:space="preserve">
+    <value>Capacitor</value>
+  </data>
+  <data name="BusAux_ElectricSystem_CapacitorTechnology" xml:space="preserve">
+    <value>CapacitorTechnology</value>
+  </data>
+  <data name="BusAux_ElectricSystem_NominalVoltage" xml:space="preserve">
+    <value>NominalVoltage</value>
+  </data>
+  <data name="BusAux_ElectricSystem_RatedCapacitance" xml:space="preserve">
+    <value>RatedCapacitance</value>
+  </data>
+  <data name="BusAux_ElectricSystem_RatedCapacity" xml:space="preserve">
+    <value>RatedCapacity</value>
+  </data>
+  <data name="BusAux_ElectricSystem_RatedCurrent" xml:space="preserve">
+    <value>RatedCurrent</value>
+  </data>
+  <data name="BusAux_ElectricSystem_RatedRatedVoltage" xml:space="preserve">
+    <value>RatedVoltage</value>
+  </data>
+  <data name="BusAux_ElectricSystem_RatedVoltage" xml:space="preserve">
+    <value>RatedVoltage</value>
+  </data>
+  <data name="BusAux_ElectricSystem_SmartAlternator" xml:space="preserve">
+    <value>SmartAlternator</value>
+  </data>
+  <data name="BusAux_ElectricSystem_SupplyFromHEVPossible" xml:space="preserve">
+    <value>SupplyFromHEVPossible</value>
+  </data>
+  <data name="BusAux_Fan" xml:space="preserve">
+    <value>Fan</value>
+  </data>
+  <data name="BusAux_SteeringPump" xml:space="preserve">
+    <value>SteeringPump</value>
+  </data>
+  <data name="BusAux_Technology" xml:space="preserve">
+    <value>Technology</value>
+  </data>
 </root>

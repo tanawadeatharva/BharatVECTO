@@ -44,7 +44,8 @@ namespace TUGraz.VectoCommon.Models
 		Coach,
 		HeavyBusPrimaryVehicle,
 		HeavyBusCompletedVehicle,
-		GenericBusVehicle
+		GenericBusVehicle,
+		HeavyBusInterimVehicle
 	}
 
 	public static class VehicleCategoryHelper

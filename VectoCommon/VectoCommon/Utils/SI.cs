@@ -605,6 +605,12 @@ namespace TUGraz.VectoCommon.Utils
 			return SIBase<Watt>.Create(wattSecond.Val / second.Value());
 		}
 
+		[DebuggerHidden]
+		public static AmpereSecond operator /(WattSecond wattSecond, Volt volt)
+		{
+			return SIBase<AmpereSecond>.Create(wattSecond.Val / volt.Value());
+		}
+
 		public static Kilogram operator *(WattSecond ws, KilogramPerWattSecond kpws)
 		{
 			return SIBase<Kilogram>.Create(ws.Val * kpws.Value());
