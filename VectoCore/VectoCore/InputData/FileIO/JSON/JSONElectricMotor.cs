@@ -16,7 +16,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON {
 		}
 
 		public override PerSecond ContinuousTorqueSpeed {
-			get { return Body.GetValueOrDefault<double>("ContinuousTorqueSpeed")?.RPMtoRad() ?? 0.RPMtoRad(); }
+			get { return Body.GetValueOrDefault<double>("ContinuousTorqueSpeed")?.RPMtoRad(); }
 		}
 
 		public override NewtonMeter OverloadTorque {
@@ -24,7 +24,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON {
 		}
 
 		public override PerSecond OverloadTestSpeed {
-			get { return Body.GetValueOrDefault<double>("OverloadTorqueSpeed")?.RPMtoRad() ?? 0.RPMtoRad(); }
+			get { return Body.GetValueOrDefault<double>("OverloadTorqueSpeed")?.RPMtoRad(); }
 		}
 	}
 

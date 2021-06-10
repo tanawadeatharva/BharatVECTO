@@ -23,11 +23,19 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 		public NewtonMeter ContinuousTorque { get; internal set; }
 
 		[SIRange(0, double.MaxValue)]
+		public PerSecond ContinuousTorqueSpeed { get; internal set; }
+
+
+		[SIRange(double.MinValue, double.MaxValue)]
+		public NewtonMeter OverloadTorque { get; set; }
+
+		[SIRange(0, double.MaxValue)]
+		public PerSecond OverloadTestSpeed { get; set; }
+
+
+		[SIRange(0, double.MaxValue)]
 		public Second OverloadTime { get; internal set; }
 		
-		[SIRange(0, double.MaxValue)]
-		public PerSecond ContinuousPowerSpeed { get; internal set; }
-
 		[SIRange(0, 1)]
 		public double OverloadRegenerationFactor { get; internal set; }
 

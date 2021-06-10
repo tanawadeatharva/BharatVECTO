@@ -54,13 +54,14 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			ContinuousTorque = ModelData.ContinuousTorque;
 			var contElPwr =
-				ModelData.EfficiencyMap.LookupElectricPower(ModelData.ContinuousPowerSpeed, -ContinuousTorque).ElectricalPower ??
-				ModelData.EfficiencyMap.LookupElectricPower(ModelData.ContinuousPowerSpeed, ModelData.FullLoadCurve.FullLoadDriveTorque(ModelData.ContinuousPowerSpeed), true).ElectricalPower;
-			ContinuousPowerLoss = -contElPwr - ModelData.ContinuousTorque * ModelData.ContinuousPowerSpeed; // loss needs to be positive
-			var maxTqDrive = ModelData.FullLoadCurve.FullLoadDriveTorque(ModelData.ContinuousPowerSpeed);
-			var peakElPwr = ModelData.EfficiencyMap.LookupElectricPower(ModelData.ContinuousPowerSpeed, maxTqDrive, true)
+				ModelData.EfficiencyMap.LookupElectricPower(ModelData.ContinuousTorqueSpeed, -ContinuousTorque).ElectricalPower ??
+				ModelData.EfficiencyMap.LookupElectricPower(ModelData.ContinuousTorqueSpeed, ModelData.FullLoadCurve.FullLoadDriveTorque(ModelData.ContinuousTorqueSpeed), true).ElectricalPower;
+			ContinuousPowerLoss = -contElPwr - ContinuousTorque * ModelData.ContinuousTorqueSpeed; // loss needs to be positive
+			
+			var peakElPwr = ModelData.EfficiencyMap.LookupElectricPower(ModelData.OverloadTestSpeed, -ModelData.OverloadTorque, true)
 				.ElectricalPower;
-			var peakPwrLoss = -peakElPwr + ModelData.ContinuousPowerSpeed * maxTqDrive; // losses need to be positive
+			var peakPwrLoss = -peakElPwr + ModelData.OverloadTorque * ModelData.OverloadTestSpeed; // losses need to be positive
+
 			OverloadBuffer = (peakPwrLoss - ContinuousPowerLoss) * ModelData.OverloadTime;
 			if (OverloadBuffer.IsSmallerOrEqual(0) && !(container is SimplePowertrainContainer)) {
 				Log.Error("Overload buffer for thermal de-rating is negative! Please check electric motor data!");
