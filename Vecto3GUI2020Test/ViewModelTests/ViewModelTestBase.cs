@@ -17,7 +17,7 @@ namespace Vecto3GUI2020Test
 {
 	public class ViewModelTestBase
 	{
-		protected const string DirPath = @"Testdata\";
+		protected const string TestDataDirPath = @"Testdata\";
 		protected const string consolidated_multiple_stages = "vecto_multistage_consolidated_multiple_stages.xml";
 
 		protected const string consolidated_multiple_stages_airdrag =
@@ -37,7 +37,7 @@ namespace Vecto3GUI2020Test
 
 		//protected IXMLInputDataReader xmlInputReader;
 		protected IKernel _kernel;
-		private Mock<IDialogHelper> _mockDialogHelper = new Mock<IDialogHelper>();
+		private Mock<IDialogHelper> _mockDialogHelper;
 
 
 		[SetUp]
@@ -50,10 +50,11 @@ namespace Vecto3GUI2020Test
 				new DocumentModule(),
 				new XMLWriterFactoryModule(),
 				new FactoryModule(),
-				new MultistageModule()
+				new MultistageModule(),
+				new Vecto3GUI2020Module()
 			);
 			//xmlInputReader = _kernel.Get<IXMLInputDataReader>();
-			_kernel.Rebind<IDialogHelper>().ToConstant(_mockDialogHelper.Object);
+			_kernel.Rebind<IDialogHelper>().ToConstant(setMockDialogHelper().Object);
 
 		}
 
@@ -66,7 +67,7 @@ namespace Vecto3GUI2020Test
 
 		public bool checkFileNameExists(string fileName)
 		{
-			var filePath = Path.GetFullPath(DirPath + fileName);
+			var filePath = Path.GetFullPath(TestDataDirPath + fileName);
 			return checkFilePathExists(filePath);
 		}
 
@@ -87,11 +88,11 @@ namespace Vecto3GUI2020Test
 
 		public void deleteFile(string fileName)
 		{
-			var filePath = Path.GetFullPath(DirPath + fileName);
+			var filePath = Path.GetFullPath(TestDataDirPath + fileName);
 			File.Delete(fileName);
 		}
 
-		public NewMultiStageJobViewModel loadFile(string fileName)
+		public virtual NewMultiStageJobViewModel loadFile(string fileName)
 		{
 			var mockDialogHelper = setMockDialogHelper(fileName);
 
@@ -119,7 +120,7 @@ namespace Vecto3GUI2020Test
 			return newMultistageJobViewModel;
 		}
 
-		protected Mock<IDialogHelper> setMockDialogHelper(string fileToLoad = null, string fileToSave = null)
+		protected virtual Mock<IDialogHelper> setMockDialogHelper(string fileToLoad = null, string fileToSave = null)
 		{
 			if (_mockDialogHelper == null) {
 				_mockDialogHelper = new Mock<IDialogHelper>();
@@ -133,7 +134,7 @@ namespace Vecto3GUI2020Test
 						}));
 			}
 			if (fileToLoad != null) {
-				var filePath = Path.GetFullPath(DirPath + fileToLoad);
+				var filePath = Path.GetFullPath(TestDataDirPath + fileToLoad);
 
 				Assert.NotNull(filePath);
 				_mockDialogHelper.Setup(dialogHelper => dialogHelper.OpenXMLFileDialog(It.IsAny<string>())).Returns(filePath);
@@ -143,7 +144,7 @@ namespace Vecto3GUI2020Test
 			}
 
 			if (fileToSave != null) {
-				var filePath = Path.GetFullPath(DirPath + fileToSave);
+				var filePath = Path.GetFullPath(TestDataDirPath + fileToSave);
 				_mockDialogHelper.Setup(dialogHelper =>
 					dialogHelper.SaveToXMLDialog(It.IsAny<string>())).Returns(filePath);
 				_mockDialogHelper.Setup(dialogHelper =>
@@ -161,9 +162,9 @@ namespace Vecto3GUI2020Test
 			return _mockDialogHelper;
 		}
 
-		protected string GetFullPath(string fileName)
+		protected virtual string GetFullPath(string fileName)
 		{
-			var path = Path.GetFullPath(DirPath + fileName);
+			var path = Path.GetFullPath(TestDataDirPath + fileName);
 			Debug.WriteLine(path);
 			return path;
 		}
