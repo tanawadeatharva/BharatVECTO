@@ -41,12 +41,12 @@ namespace TUGraz.VectoCommon.Models
 
 	public static class LegislativeClassHelper
 	{
-		public static string GetLabel(this LegislativeClass self)
+		public static string GetLabel(this LegislativeClass? self)
 		{
 			return self.ToString();
 		}
 
-		public static string ToXMLFormat(this LegislativeClass self)
+		public static string ToXMLFormat(this LegislativeClass? self)
 		{
 			return self.ToString();
 		}

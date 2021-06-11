@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.InteropServices.WindowsRuntime;
+using System.Xml;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Ninject;
@@ -17,6 +18,7 @@ using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.InputData.FileIO.JSON;
 using TUGraz.VectoCore.InputData.FileIO.XML;
+using TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider;
 using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.Impl;
@@ -27,7 +29,10 @@ using TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.HVAC;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Engine;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox;
 using TUGraz.VectoCore.OutputData;
+using TUGraz.VectoCore.Tests.Models.Simulation;
+using TUGraz.VectoCore.Tests.Utils;
 using TUGraz.VectoCore.Utils;
+using Formatting = Newtonsoft.Json.Formatting;
 
 namespace TUGraz.VectoCore.Tests.Integration.CompletedBus
 {
@@ -98,7 +103,9 @@ namespace TUGraz.VectoCore.Tests.Integration.CompletedBus
 		public void TestCompletedBus()
 		{
 			var writer = new FileOutputWriter(Path.Combine(Path.GetDirectoryName(JobFile_Group41), Path.GetFileName(JobFile_Group41)));
-			var inputData = JSONInputDataFactory.ReadJsonJob(JobFile_Group41);
+			var inputData = CompletedVIF.CreateCompletedVif(
+				JSONInputDataFactory.ReadJsonJob(JobFile_Group41) as JSONInputDataCompletedBusFactorMethodV7,
+				xmlInputReader);
 
 			var factory = new SimulatorFactory(ExecutionMode.Declaration, inputData, writer)
 			{
@@ -593,7 +600,7 @@ namespace TUGraz.VectoCore.Tests.Integration.CompletedBus
 			Assert.AreEqual(1.0, genericPneumaticUI.CompressorGearRatio);
 			Assert.AreEqual(genericPneumaticUI.CompressorGearRatio, specificPneumaticUI.CompressorGearRatio);
 
-			Assert.AreEqual(false, genericPneumaticUI.SmartAirCompression);
+			Assert.AreEqual(true, genericPneumaticUI.SmartAirCompression);
 			Assert.AreEqual(genericPneumaticUI.SmartAirCompression, specificPneumaticUI.SmartAirCompression);
 
 			Assert.AreEqual(false, genericPneumaticUI.SmartRegeneration);
@@ -1010,9 +1017,25 @@ namespace TUGraz.VectoCore.Tests.Integration.CompletedBus
 		private List<VectoRunData> GetVectoRunData(string jobFile)
 		{
 			var writer = new FileOutputWriter(Path.Combine(Path.GetDirectoryName(JobFile_Group41), Path.GetFileName(JobFile_Group41)));
-			var inputData = Path.GetExtension(jobFile).Equals(".xml")
-				? xmlInputReader.CreateDeclaration(jobFile)
-				: JSONInputDataFactory.ReadJsonJob(jobFile);
+			IInputDataProvider inputData = null;
+			if (Path.GetExtension(jobFile).Equals(".xml")) {
+				// a complete VIF 
+				inputData = xmlInputReader.CreateDeclaration(jobFile);
+			} else {
+				// Primary VIF and completed XML separate
+				var tmp = JSONInputDataFactory.ReadJsonJob(jobFile);
+
+				switch (tmp) {
+					case JSONInputDataSingleBusV6 _:
+					case JSONVTPInputDataV4 _:
+						inputData = tmp;
+						break;
+					case JSONInputDataCompletedBusFactorMethodV7 completedJson: {
+						inputData = CompletedVIF.CreateCompletedVif(completedJson, xmlInputReader);
+						break;
+					}
+				}
+			}
 
 			var factory = new SimulatorFactory(ExecutionMode.Declaration, inputData, writer) {
 				WriteModalResults = true,
@@ -1024,6 +1047,8 @@ namespace TUGraz.VectoCore.Tests.Integration.CompletedBus
 			var runs = factory.DataReader.NextRun().ToList();
 			return runs;
 		}
+
+		
 
 		[TestCase(JobFile_Group41, TestName = "RunCompletedBusSimulation Group41/32b"),
 		TestCase(JobFile_Group42, TestName = "RunCompletedBusSimulation Group42/33b"),

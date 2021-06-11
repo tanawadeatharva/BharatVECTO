@@ -9,12 +9,20 @@
 	<xs:complexType name="AdvancedDriverAssistantSystemsType">
 		<xs:complexContent>
 			<xs:extension base="v2.1:AbstractAdvancedDriverAssistantSystemsType">
+				<xs:annotation>
+					<xs:appinfo>
+						<vectoParam:description>
+							<vectoParam:parameterId component="Vehicle/ADAS">333</vectoParam:parameterId>
+							<vectoParam:unit>-</vectoParam:unit>
+						</vectoParam:description>
+					</xs:appinfo>
+				</xs:annotation>
 				<xs:sequence>
 					<xs:element name="EngineStopStart" type="v2.1:EngineStopStartType"/>
 					<xs:element name="EcoRollWithoutEngineStop" type="v2.1:EcoRollWithoutEngineStopType"/>
 					<xs:element name="EcoRollWithEngineStop" type="v2.1:EcoRollWithEngineStopType"/>
 					<xs:element name="PredictiveCruiseControl" type="v2.1:PredictiveCruiseControlType"/>
-					<xs:element name="ATEcoRollReleaseLockupClutch" type="xs:boolean" minOccurs="0"/>
+					<xs:element name="APTEcoRollReleaseLockupClutch" type="xs:boolean" minOccurs="0"/>
 				</xs:sequence>
 			</xs:extension>
 		</xs:complexContent>

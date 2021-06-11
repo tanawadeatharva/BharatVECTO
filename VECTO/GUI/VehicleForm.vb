@@ -143,7 +143,7 @@ Public Class VehicleForm
 		cbLegislativeClass.ValueMember = "Value"
 		cbLegislativeClass.DisplayMember = "Label"
 		cbLegislativeClass.DataSource = [Enum].GetValues(GetType(LegislativeClass)) _
-			.Cast(Of LegislativeClass).Select(Function(x) New With {Key .Value = x, .Label = x.GetLabel()}).Tolist()
+			.Cast(Of LegislativeClass?).Select(Function(x) New With {Key .Value = x, .Label = x.GetLabel()}).ToList()
 		'Items.AddRange(PtoTypeStrings.Values.Cast(Of Object).ToArray())
 
 		_changed = False

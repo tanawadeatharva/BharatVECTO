@@ -1,0 +1,43 @@
+﻿<Window
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:VECTO3GUI2020"
+        xmlns:Implementation="clr-namespace:VECTO3GUI2020.ViewModel.Implementation" d:DataContext="{d:DesignInstance Type=Implementation:MainWindowViewModel}" x:Class="VECTO3GUI2020.MainWindow"
+        mc:Ignorable="d"
+        Title="Vecto" Height="450" Width="820"
+        WindowStartupLocation="CenterScreen"
+        AutomationProperties.Name="="
+        x:Name="MainView">
+
+
+
+    <Grid x:Name="Grid" >
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="1*"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="40"/>
+            <RowDefinition Height="1.5*"/>
+            <RowDefinition Height="5"></RowDefinition>
+            <RowDefinition Height="1*"/>
+        </Grid.RowDefinitions>
+
+            <StackPanel Grid.Row="0" Orientation="Vertical">
+                <Menu x:Name="menu" AutomationProperties.Name="-" AutomationProperties.AutomationId="Test" IsMainMenu="True">
+                <MenuItem Header="File" x:Name="MenuItemFile"  AutomationProperties.Name="=" VerticalAlignment="Stretch">
+                        <MenuItem Header="Settings" Command="{Binding OpenSettings}"/>
+                        <MenuItem Header="New File" Command="{Binding NewInterimFile}"/>
+                        <MenuItem Header="Open File" Command="{Binding AddJob}"/>
+                    </MenuItem>
+                </Menu>
+            </StackPanel>
+
+
+        <ContentControl Grid.Row="1" Margin="0, 4, 0 0" Content="{Binding CurrentViewModelTop}"/>
+        <GridSplitter Grid.Row="2" HorizontalAlignment="Stretch" Height="5"/>
+        <ContentControl Grid.Row="3" Margin="0,0,0,0" Name="ContentControlBottom" Content="{Binding CurrentViewModelBottom}"/>
+    
+    </Grid>
+</Window>

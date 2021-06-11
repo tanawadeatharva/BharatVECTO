@@ -339,9 +339,9 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			get { return _fuels ?? (_fuels = ReadFuels()); }
 		}
 
-		public virtual IList<IEngineFuelDelcarationInputData> Fuels
+		public virtual IList<IEngineFuelDeclarationInputData> Fuels
 		{
-			get { return (_fuels ?? (_fuels = ReadFuels())).Cast<IEngineFuelDelcarationInputData>().ToList(); }
+			get { return (_fuels ?? (_fuels = ReadFuels())).Cast<IEngineFuelDeclarationInputData>().ToList(); }
 		}
 
 		protected virtual IList<IEngineFuelEngineeringInputData> ReadFuels()

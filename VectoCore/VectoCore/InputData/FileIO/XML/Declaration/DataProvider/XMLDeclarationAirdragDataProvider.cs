@@ -65,6 +65,26 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 			}
 		}
 
+		public virtual SquareMeter TransferredAirDragArea
+		{
+			get
+			{
+				return ElementExists(XMLNames.AirDrag_TransferredCDxA) 
+					? GetDouble(XMLNames.AirDrag_TransferredCDxA).SI<SquareMeter>() 
+					: null;
+			}
+		}
+
+		public virtual SquareMeter AirDragArea_0
+		{
+			get
+			{
+				return ElementExists(XMLNames.AirDrag_CdxA_0)
+					? GetDouble(XMLNames.AirDrag_CdxA_0).SI<SquareMeter>()
+					: null;
+			}
+		}
+
 		public override CertificationMethod CertificationMethod
 		{
 			get { return CertificationMethod.Measured; }
@@ -107,4 +127,24 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		}
 
 	}
+
+	// ---------------------------------------------------------------------------------------
+
+	public class XMLDeclarationAirdragDataProviderV28 : XMLDeclarationAirdragDataProviderV10
+	{
+		public new static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V28;
+
+		public new const string XSD_TYPE = "AirDragModifiedUseStandardValueType";
+
+		public new static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
+		
+		public XMLDeclarationAirdragDataProviderV28(IXMLDeclarationVehicleData vehicle, XmlNode componentNode,
+			string sourceFile) : base(vehicle, componentNode, sourceFile) { }
+
+		protected override XNamespace SchemaNamespace
+		{
+			get { return NAMESPACE_URI; }
+		}
+	}
+
 }

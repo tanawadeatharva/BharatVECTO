@@ -418,10 +418,13 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 				retVal.TorqueConverterData = CreateTorqueConverterData(gearbox.Type, torqueConverter, ratio, engine);
 				
 				if (torqueConverter != null) {
+					retVal.TorqueConverterData.Manufacturer = torqueConverter.Manufacturer;
 					retVal.TorqueConverterData.ModelName = torqueConverter.Model;
 					retVal.TorqueConverterData.DigestValueInput = torqueConverter.DigestValue?.DigestValue;
 					retVal.TorqueConverterData.CertificationMethod = torqueConverter.CertificationMethod;
 					retVal.TorqueConverterData.CertificationNumber = torqueConverter.CertificationNumber;
+					retVal.TorqueConverterData.Date = torqueConverter.Date;
+					retVal.TorqueConverterData.AppVersion = torqueConverter.AppVersion;
 				}
 			}
 

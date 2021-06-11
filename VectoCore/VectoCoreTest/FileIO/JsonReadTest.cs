@@ -34,6 +34,7 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using NUnit.Framework;
 using System.IO;
+using TUGraz.VECTO;
 using TUGraz.VectoCommon.BusAuxiliaries;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
@@ -45,7 +46,7 @@ using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox;
 using TUGraz.VectoCore.Tests.Utils;
-using TUGraz.VECTO;
+
 
 namespace TUGraz.VectoCore.Tests.FileIO
 {
@@ -493,8 +494,8 @@ namespace TUGraz.VectoCore.Tests.FileIO
 
 
 			Assert.AreEqual(1, busAux.ElectricSupply.Alternators.Count);
-			Assert.AreEqual("standard alternator", busAux.ElectricSupply.Alternators[0].Technology);
-			Assert.AreEqual(false, busAux.ElectricSupply.SmartElectrics);
+			//Assert.AreEqual("standard alternator", busAux.ElectricSupply.Alternators[0].Technology);
+			Assert.AreEqual(AlternatorType.Conventional, busAux.ElectricSupply.AlternatorTechnology);
 
 			Assert.AreEqual("", busAux.PneumaticSupply.CompressorSize);
 			Assert.AreEqual(1.0, busAux.PneumaticSupply.Ratio);

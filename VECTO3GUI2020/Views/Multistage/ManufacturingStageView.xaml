@@ -1,0 +1,35 @@
+﻿<UserControl x:Class="VECTO3GUI2020.Views.Multistage.ManufacturingStageView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:VECTO3GUI2020.Views.Multistage" 
+             xmlns:implementation="clr-namespace:VECTO3GUI2020.ViewModel.MultiStage.Implementation" 
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800" d:DataContext="{d:DesignInstance implementation:ManufacturingStageViewModel_v0_1 }">
+    <Grid>
+        <DockPanel>
+        <Grid Margin="4" DockPanel.Dock="Top">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition></ColumnDefinition>
+                <ColumnDefinition Width="30px"></ColumnDefinition>
+            </Grid.ColumnDefinitions>
+        </Grid>
+        <DockPanel Grid.Row="1" LastChildFill="False" DockPanel.Dock="Top" >
+            <Button Width="100" DockPanel.Dock="Left" Style="{DynamicResource MultiStageButtonStyle1}" 
+                    Margin="4" Command="{Binding SwitchComponentViewCommand}" CommandParameter="Vehicle">Vehicle</Button>
+            <Button Width="100" DockPanel.Dock="Left" Style="{DynamicResource MultiStageButtonStyle1}" 
+                    Margin="4" Command="{Binding SwitchComponentViewCommand}" CommandParameter="Airdrag">Airdrag</Button>
+            <Button  Width="100" DockPanel.Dock="Left" Style="{DynamicResource MultiStageButtonStyle1}" 
+                    Margin="4" Command="{Binding SwitchComponentViewCommand}" CommandParameter="Auxiliaries">Auxiliaries</Button>
+
+            <StackPanel Orientation="Horizontal" DockPanel.Dock="Right">
+                <Label>Manufacturing Stage</Label>
+                    <Label Content="{Binding StageCount}"/>
+                </StackPanel>
+               
+        </DockPanel>
+            <ContentControl  DockPanel.Dock="Top" Content="{Binding CurrentView}"/>
+        </DockPanel>
+    </Grid>
+</UserControl>

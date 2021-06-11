@@ -95,7 +95,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 				case Constants.FileExtensions.ElectricMotorFile:
 					tmp = JSONInputDataFactory.ReadElectricMotorData(filename, tolerateMissing);
 					break;
-                case Constants.FileExtensions.HybridStrategyParameters:
+				case Constants.FileExtensions.HybridStrategyParameters:
 					tmp = JSONInputDataFactory.ReadHybridStrategyParameters(filename, tolerateMissing);
 					break;
 				case ".vaux":
@@ -233,7 +233,12 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			get { return VehicleData.VIN; }
 		}
 
-		public LegislativeClass LegislativeClass
+		public string LegislativeCategory
+		{
+			get { return null; }
+		}
+
+		public LegislativeClass? LegislativeClass
 		{
 			get { return VehicleData.LegislativeClass; }
 		}
@@ -362,11 +367,13 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			get { return null; }
 		}
 
-		public ConsumerTechnology DoorDriveTechnology
+		public ConsumerTechnology? DoorDriveTechnology
 		{
 			get { return VehicleData.DoorDriveTechnology; }
 		}
 
+		public VehicleDeclarationType VehicleDeclarationType { get; }
+		
 		IVehicleComponentsEngineering IVehicleEngineeringInputData.Components
 		{
 			get { return this; }
@@ -518,6 +525,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			get { return DeclarationData.Vehicle.SleeperCabDefault; }
 		}
 
+		public bool? AirdragModifiedMultistage { get; }
+
 		public TankSystem? TankSystem
 		{
 			get { return DeclarationData.Vehicle.TankSystemDefault; }
@@ -553,17 +562,26 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			get { return null; }
 		}
 
-		public RegistrationClass RegisteredClass
+		public RegistrationClass? RegisteredClass
 		{
 			get { return RegistrationClass.unknown; }
 		}
 
-		public int NumberOfPassengersUpperDeck
+		public int? NumberPassengerSeatsUpperDeck
 		{
 			get { return 0; }
 		}
 
-		public int NumberOfPassengersLowerDeck
+		public int? NumberPassengerSeatsLowerDeck
+		{
+			get { return 0; }
+		}
+
+		public int? NumberPassengersStandingLowerDeck
+		{
+			get { return 0; }
+		}
+		public int? NumberPassengersStandingUpperDeck
 		{
 			get { return 0; }
 		}
@@ -573,12 +591,12 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			get { return VehicleData.CargoVolume; }
 		}
 
-		public VehicleCode VehicleCode
+		public VehicleCode? VehicleCode
 		{
-			get { return VehicleCode.NOT_APPLICABLE; }
+			get { return VectoCommon.Models.VehicleCode.NOT_APPLICABLE; }
 		}
 
-		public bool LowEntry
+		public bool? LowEntry
 		{
 			get { return VehicleData.LowEntry; }
 		}

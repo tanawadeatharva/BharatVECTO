@@ -280,8 +280,8 @@ namespace VECTO3GUI.ViewModel.Impl
 				CurbMassChassis = vehicle.CurbMassChassis;
 				TechnicalPermissibleMaximumLadenMass = vehicle.GrossVehicleMassRating;
 				NgTankSystem = vehicle.TankSystem;
-				NumberOfPassengersLowerDeck = vehicle.NumberOfPassengersLowerDeck;
-				NumberOfPassengersUpperDeck = vehicle.NumberOfPassengersUpperDeck;
+				NumberOfPassengersLowerDeck = vehicle.NumberPassengerSeatsLowerDeck;
+				NumberOfPassengersUpperDeck = vehicle.NumberPassengerSeatsUpperDeck;
 				LowEntry = vehicle.LowEntry;
 				HeightIntegratedBody = vehicle.Height;
 				VehicleLength = vehicle.Length;

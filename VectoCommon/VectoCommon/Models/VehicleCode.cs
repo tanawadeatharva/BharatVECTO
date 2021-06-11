@@ -1,36 +1,47 @@
 ﻿using TUGraz.VectoCommon.BusAuxiliaries;
+using TUGraz.VectoCommon.Utils;
 
 namespace TUGraz.VectoCommon.Models {
 	public enum VehicleCode
 	{
+		[GuiLabel("not applicable")]
 		NOT_APPLICABLE,
+		[GuiLabel("CA")]
 		CA,
-		CB, 
+		[GuiLabel("CB")]
+		CB,
+		[GuiLabel("CC")]
 		CC,
+		[GuiLabel("CD")]
 		CD,
+		[GuiLabel("CE")]
 		CE,
+		[GuiLabel("CF")]
 		CF,
+		[GuiLabel("CG")]
 		CG,
+		[GuiLabel("CH")]
 		CH,
+		[GuiLabel("CI")]
 		CI,
+		[GuiLabel("CJ")]
 		CJ
-
 	}
 
 	public static class VehicleCodeHelper
 	{
 
-		public static string GetLabel(this VehicleCode self)
+		public static string GetLabel(this VehicleCode? self)
 		{
 			return self.ToString();
 		}
 
-		public static string ToXMLFormat(this VehicleCode self)
+		public static string ToXMLFormat(this VehicleCode? self)
 		{
 			return self.ToString();
 		}
 
-		public static bool IsDoubleDeckerBus(this VehicleCode self)
+		public static bool IsDoubleDeckerBus(this VehicleCode? self)
 		{
 			switch (self) {
 				case VehicleCode.CF:
@@ -50,7 +61,7 @@ namespace TUGraz.VectoCommon.Models {
 			}
 		}
 
-		public static FloorType GetFloorType(this VehicleCode vehicleCode)
+		public static FloorType GetFloorType(this VehicleCode? vehicleCode)
 		{
 			switch (vehicleCode) {
 				case VehicleCode.CA:

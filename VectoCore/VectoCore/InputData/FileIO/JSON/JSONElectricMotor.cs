@@ -12,19 +12,19 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON {
 		public JSONElectricMotorV2(JObject data, string filename, bool tolerateMissing = false) : base(data, filename, tolerateMissing) { }
 
 		public override NewtonMeter ContinuousTorque {
-			get { return Body.GetValueOrDefault<double>("ContinuousTorque")?.SI<NewtonMeter>() ?? 1e12.SI<NewtonMeter>(); }
+			get { return Body.GetEx<double>("ContinuousTorque").SI<NewtonMeter>(); }
 		}
 
 		public override PerSecond ContinuousTorqueSpeed {
-			get { return Body.GetValueOrDefault<double>("ContinuousTorqueSpeed")?.RPMtoRad(); }
+			get { return Body.GetEx<double>("ContinuousTorqueSpeed").RPMtoRad(); }
 		}
 
 		public override NewtonMeter OverloadTorque {
-			get { return Body.GetValueOrDefault<double>("OverloadTorque")?.SI<NewtonMeter>() ?? 1e12.SI<NewtonMeter>(); }
+			get { return Body.GetEx<double>("OverloadTorque").SI<NewtonMeter>(); }
 		}
 
 		public override PerSecond OverloadTestSpeed {
-			get { return Body.GetValueOrDefault<double>("OverloadTorqueSpeed")?.RPMtoRad(); }
+			get { return Body.GetEx<double>("OverloadTorqueSpeed").RPMtoRad(); }
 		}
 	}
 

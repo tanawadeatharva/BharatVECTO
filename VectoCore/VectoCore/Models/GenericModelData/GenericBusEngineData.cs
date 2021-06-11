@@ -93,7 +93,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 		}
 
 
-		private bool UseDieselFuel(IList<IEngineFuelDelcarationInputData> fuels)
+		private bool UseDieselFuel(IList<IEngineFuelDeclarationInputData> fuels)
 		{
 			var fuelType = fuels.First().FuelType;
 			var isDualFuel = fuels.Count > 1;
@@ -111,24 +111,24 @@ namespace TUGraz.VectoCore.Models.Declaration
 			}
 		}
 
-		private string GetEngineRessourceId(IList<IEngineFuelDelcarationInputData> fuels)
+		private string GetEngineRessourceId(IList<IEngineFuelDeclarationInputData> fuels)
 		{
 			return UseDieselFuel(fuels) ? GenericEngineCM_Normed_CI : GenericEngineCM_Normed_PI;
 		}
 
-		private IFuelProperties GetFuelData(IList<IEngineFuelDelcarationInputData> fuels)
+		private IFuelProperties GetFuelData(IList<IEngineFuelDeclarationInputData> fuels)
 		{
 			return UseDieselFuel(fuels)
 				? FuelData.Diesel
 				: FuelData.Instance().Lookup(FuelType.NGPI, TankSystem.Compressed);
 		}
 
-		private double[] GetEngineCorrectionFactors(IList<IEngineFuelDelcarationInputData> fuels)
+		private double[] GetEngineCorrectionFactors(IList<IEngineFuelDeclarationInputData> fuels)
 		{
 			return UseDieselFuel(fuels) ? DieselCIFactors : PIFactors;
 		}
 
-		private CombustionEngineFuelData GetCombustionEngineFuelData(IList<IEngineFuelDelcarationInputData> fuels, PerSecond idleSpeed, EngineFullLoadCurve fullLoadCurve, Mission mission)
+		private CombustionEngineFuelData GetCombustionEngineFuelData(IList<IEngineFuelDeclarationInputData> fuels, PerSecond idleSpeed, EngineFullLoadCurve fullLoadCurve, Mission mission)
 		{
 			var ressourceId = GetEngineRessourceId(fuels);
 

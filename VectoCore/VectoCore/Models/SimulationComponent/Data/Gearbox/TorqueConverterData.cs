@@ -32,11 +32,13 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Data;
 using System.Diagnostics;
 using System.Linq;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
+
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox
 {
@@ -44,6 +46,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox
 	public class TorqueConverterData : SimulationComponentData
 	{
 		protected internal readonly TorqueConverterEntry[] TorqueConverterEntries;
+
+		public string AppVersion { get; protected internal set; }
 
 		[Required, SIRange(0, double.MaxValue)]
 		public PerSecond ReferenceSpeed { get; protected internal set; }

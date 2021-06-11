@@ -527,9 +527,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 					ResultCardTraction = new DummyResultCard(),
 					AlternatorGearEfficiency = Constants.BusAuxiliaries.ElectricSystem.AlternatorGearEfficiency,
 					DoorActuationTimeSecond = Constants.BusAuxiliaries.ElectricalConsumers.DoorActuationTimeSecond,
-					AlternatorMap = new SimpleAlternator(busAux.ElectricSystem.AlternatorEfficiency) {
-						Technologies = new List<string>() { "engineering mode" }
-					},
+					AlternatorMap = new SimpleAlternator(busAux.ElectricSystem.AlternatorEfficiency),
 					AlternatorType =
 						busAux.ElectricSystem.ESSupplyFromHEVREESS &&
 						busAux.ElectricSystem.AlternatorType != AlternatorType.Smart

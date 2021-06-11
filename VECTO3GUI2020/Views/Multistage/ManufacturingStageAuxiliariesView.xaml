@@ -1,0 +1,123 @@
+﻿<UserControl x:Class="VECTO3GUI2020.Views.Multistage.ManufacturingStageAuxiliariesView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:VECTO3GUI2020.Views.Multistage"
+             xmlns:customControls="clr-namespace:VECTO3GUI2020.Views.Multistage.CustomControls"
+             xmlns:impl="clr-namespace:VECTO3GUI2020.ViewModel.MultiStage.Implementation"
+             xmlns:properties="clr-namespace:VECTO3GUI2020.Properties"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800" BorderBrush="{DynamicResource ButtonHighlightColor}" BorderThickness="3" Margin="4"
+             d:DataContext="{d:DesignInstance impl:MultistageAuxiliariesViewModel}">
+    <UserControl.Resources>
+        <Style TargetType="customControls:MultiStageParameter">
+            <Setter Property="NameLookUpResourceManager" Value="{x:Static properties:BusStrings.ResourceManager}"/>
+            <Setter Property="Validation.ErrorTemplate" Value="{DynamicResource multistageParameterControlErrorTemplate}"/>
+        </Style>
+        <Style TargetType="ContentControl">
+            <Setter Property="ContentTemplateSelector" Value="{DynamicResource MultistageParameterTemplateSelector}"/>
+            <Setter Property="IsTabStop" Value="False"/>
+        </Style>
+    </UserControl.Resources>
+    <Grid>
+        <ScrollViewer>
+            <DockPanel>
+                <StackPanel DockPanel.Dock="Top">
+                    <Label Style="{DynamicResource LabelStyle1}" FontSize="15" HorizontalAlignment="Stretch">AUXILIARIES</Label>
+                    <Label Style="{DynamicResource LabelStyle1}">LED Lights</Label>
+
+                    <ContentControl Content="{Binding ParameterViewModels[InteriorLightsLED]}"/>
+                    <ContentControl Content="{Binding ParameterViewModels[DayrunninglightsLED]}"/>
+                    <ContentControl Content="{Binding ParameterViewModels[PositionlightsLED]}"/>
+                    <ContentControl Content="{Binding ParameterViewModels[BrakelightsLED]}"/>
+                    <ContentControl Content="{Binding ParameterViewModels[HeadlightsLED]}"/>
+                    
+
+                    <Label  Style="{DynamicResource LabelStyle1}">Heating, Ventilation and Air Conditioning</Label>
+                    <ContentControl Content="{Binding ParameterViewModels[SystemConfiguration]}"/>
+                    <ContentControl Content="{Binding ParameterViewModels[HeatPumpTypeDriverCompartment]}"/>
+                    <ContentControl Content="{Binding ParameterViewModels[HeatPumpModeDriverCompartment]}"/>
+                    <Border Margin="5 0" BorderBrush="{DynamicResource ButtonHighlightColor}" BorderThickness="2" >
+                        <StackPanel Margin="0">
+                            <Label Margin="0" Style="{DynamicResource LabelStyle1}">Heat Pumps Passenger Compartment</Label>
+                            <Label Padding="10 4 0 4" Style="{DynamicResource LabelStyle1}">Consolidated Data</Label>
+                            <ItemsControl AlternationCount="2"
+                        Visibility="{Binding ConsolidatedHeatPumpConfigurationsPassenger, Converter={StaticResource NullToVisibilityConverter}}" 
+                        ItemsSource="{Binding ConsolidatedHeatPumpConfigurationsPassenger}" 
+                        HorizontalContentAlignment="Stretch"
+                        Padding="5 5 29 5 " >
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+                                        <Border BorderThickness="1">
+                                            <DockPanel LastChildFill="true" x:Name="ItemsDockPanel">
+                                                <UniformGrid DockPanel.Dock="Left" Columns="2">
+                                                    <ContentControl Grid.Column="0" DockPanel.Dock="Top" Content="{Binding Path=HeatPumpTypeVM}"/>
+                                                    <ContentControl Grid.Column="1" DockPanel.Dock="Top" Content="{Binding Path=HeatPumpModeVM}"/>
+                                                </UniformGrid>
+                                            </DockPanel>
+                                        </Border>
+                                        <DataTemplate.Triggers>
+                                            <Trigger Property="ItemsControl.AlternationIndex" Value="0">
+                                                <Setter Property="Background" Value="White" TargetName="ItemsDockPanel"/>
+                                            </Trigger>
+                                            <Trigger Property="ItemsControl.AlternationIndex" Value="1">
+                                                <Setter Property="Background" Value="LightGray" TargetName="ItemsDockPanel"/>
+                                            </Trigger>
+                                        </DataTemplate.Triggers>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                            <Label Visibility="{Binding ConsolidatedHeatPumpConfigurationsPassenger, 
+                        Converter={StaticResource NullToVisibilityConverter}, 
+                        ConverterParameter=invert}"
+                           HorizontalAlignment="Center">No consolidated data available</Label>
+                            <DockPanel LastChildFill="true">
+                                <Button DockPanel.Dock="right"  ContentTemplate="{DynamicResource AddIcon}" Command="{Binding AddPassengerHeatpumpCommand}">
+
+                                </Button>
+                                <Label Style="{DynamicResource LabelStyle1}" Padding="10 4 0 4">Current Stage</Label>
+                            </DockPanel>
+
+                            <ItemsControl ItemsSource="{Binding HeatPumpConfigurationsPassenger}" HorizontalContentAlignment="Stretch"
+                                  Padding="5" AlternationCount="2">
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+                                        <Border BorderThickness="1">
+                                            <DockPanel LastChildFill="true" x:Name="ItemsDockPanel">
+                                                <Button DockPanel.Dock="Right" Height="24"
+                                                ContentTemplate="{DynamicResource TrashIcon}"
+                                                Command="{Binding RelativeSource={RelativeSource AncestorType=ItemsControl}, 
+                                                            Path=DataContext.RemovePassengerHeatpumpCommand}"
+                                                CommandParameter="{Binding }"/>
+                                                <UniformGrid DockPanel.Dock="Left" Columns="2">
+                                                    <ContentControl Grid.Column="0" DockPanel.Dock="Top" Content="{Binding Path=HeatPumpTypeVM}"/>
+                                                    <ContentControl Grid.Column="1" DockPanel.Dock="Top" Content="{Binding Path=HeatPumpModeVM}"/>
+                                                </UniformGrid>
+                                            </DockPanel>
+                                        </Border>
+                                        <DataTemplate.Triggers>
+                                            <Trigger Property="ItemsControl.AlternationIndex" Value="0">
+                                                <Setter Property="Background" Value="White" TargetName="ItemsDockPanel"/>
+                                            </Trigger>
+                                            <Trigger Property="ItemsControl.AlternationIndex" Value="1">
+                                                <Setter Property="Background" Value="LightGray" TargetName="ItemsDockPanel"/>
+                                            </Trigger>
+                                        </DataTemplate.Triggers>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                        </StackPanel>
+                    </Border>
+
+
+                    <ContentControl Content="{Binding ParameterViewModels[AuxHeaterPower]}"/>
+                    <ContentControl Content="{Binding ParameterViewModels[DoubleGlazing]}"/>
+                    <ContentControl Content="{Binding ParameterViewModels[AdjustableAuxiliaryHeater]}"/>
+                    <ContentControl Content="{Binding ParameterViewModels[SeparateAirDistributionDucts]}"/>
+                    <Separator/>
+                </StackPanel>
+            </DockPanel>
+        </ScrollViewer>
+    </Grid>
+</UserControl>

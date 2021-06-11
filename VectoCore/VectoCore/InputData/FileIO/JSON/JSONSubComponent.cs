@@ -273,6 +273,22 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			}
 		}
 
+		public SquareMeter TransferredAirDragArea
+		{
+			get
+			{
+				return AirDragArea;
+			}
+		}
+
+		public SquareMeter AirDragArea_0
+		{
+			get
+			{
+				return AirDragArea;
+			}
+		}
+
 		public virtual CrossWindCorrectionMode CrossWindCorrectionMode
 		{
 			get { return CrossWindCorrectionModeHelper.Parse(Body.GetEx<string>("CdCorrMode")); }
@@ -575,13 +591,41 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 		#region Implementation of IElectricSupplyDeclarationData
 
+		public virtual AlternatorType AlternatorTechnology
+		{
+			get
+			{
+				return Body["Aux"]?["ElectricSupply"]?.GetEx<string>("Technology").ParseEnum<AlternatorType>() ?? AlternatorType.Conventional;
+			}
+		}
+
 		public virtual IList<IAlternatorDeclarationInputData> Alternators
 		{
 			get
 			{
-				return Body["Aux"]?["ElectricSupply"]?["Alternators"]
-							.Select(x => new AlternatorInputData(x.GetEx<string>("Technology")))
-							.Cast<IAlternatorDeclarationInputData>().ToList() ?? new List<IAlternatorDeclarationInputData>();
+				var maxAlternatorPower =
+					Body["Aux"]?["ElectricSupply"]?.GetEx<double>("MaxAlternatorPower").SI<Watt>() ?? null;
+
+				if (maxAlternatorPower == null) {
+					return null;
+				}
+
+				return new[] { new AlternatorInputData(48.SI<Volt>(), maxAlternatorPower / 48.SI<Volt>()) }
+					.Cast<IAlternatorDeclarationInputData>().ToList();
+			}
+		}
+
+		public IList<IBusAuxElectricStorageDeclarationInputData> ElectricStorage
+		{
+			get
+			{
+				var batteryCapacity =  Body["Aux"]?["ElectricSupply"]?.GetEx<double>("ElectricStorageCapacity").SI(Unit.SI.Watt.Hour).Cast<WattSecond>() ?? null;
+				if (batteryCapacity == null) {
+					return null;
+				}
+
+				return new[] { new BusAuxBatteryInputData("none", 48.SI<Volt>(), batteryCapacity / 48.SI<Volt>()), }
+					.Cast<IBusAuxElectricStorageDeclarationInputData>().ToList();
 			}
 		}
 
@@ -589,27 +633,27 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 		#region Implementation of IElectricConsumersDeclarationData
 
-		public virtual bool InteriorLightsLED
+        public virtual bool? InteriorLightsLED
 		{
 			get { return false; }
 		}
 
-		public virtual bool DayrunninglightsLED
+        public virtual bool? DayrunninglightsLED
 		{
 			get { return false; }
 		}
 
-		public virtual bool PositionlightsLED
+        public virtual bool? PositionlightsLED
 		{
 			get { return false; }
 		}
 
-		public virtual bool HeadlightsLED
+        public virtual bool? HeadlightsLED
 		{
 			get { return false; }
 		}
 
-		public virtual bool BrakelightsLED
+        public virtual bool? BrakelightsLED
 		{
 			get { return false; }
 		}
@@ -617,11 +661,6 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 		public virtual bool SmartElectrics
 		{
 			get { return Body["Aux"]?["ElectricSupply"]?.GetEx<bool>("SmartElectrics") ?? false; }
-		}
-
-		public Watt MaxAlternatorPower
-		{
-			get { return Body["Aux"]?["ElectricSupply"]?.GetEx<double>("MaxAlternatorPower").SI<Watt>() ?? null; }
 		}
 
 		public WattSecond ElectricStorageCapacity
@@ -633,6 +672,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 		#region Implementation of IPneumaticSupplyDeclarationData
 
+		public CompressorDrive CompressorDrive { get; }
 		public string Clutch { get; }
 		public virtual double Ratio { get { return Body["Aux"]?["PneumaticSupply"]?.GetEx<double>("Ratio") ?? 0.0; } }
 		public virtual string CompressorSize
@@ -671,16 +711,23 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 		#region Implementation of IHVACBusAuxiliariesDeclarationData
 
-		public virtual BusHVACSystemConfiguration SystemConfiguration { get; set; }
-		public virtual ACCompressorType CompressorTypeDriver { get { return ACCompressorType.Unknown; } }
-		public virtual ACCompressorType CompressorTypePassenger { get { return ACCompressorType.Unknown; } }
+        public virtual BusHVACSystemConfiguration? SystemConfiguration { get; set; }
+		public virtual HeatPumpType? HeatPumpTypeDriverCompartment { get { return null; } }
+		public virtual HeatPumpMode? HeatPumpModeDriverCompartment { get { return null; } }
+		public virtual IList<Tuple<HeatPumpType, HeatPumpMode>> HeatPumpPassengerCompartments
+		{
+			get { return null; }
+		}
 		public virtual Watt AuxHeaterPower { get { return null; } }
-		public virtual bool DoubleGlazing { get { return false; } }
+        public virtual bool? DoubleGlazing { get { return false; } }
 		public virtual bool HeatPump { get { return false; } }
-		public virtual bool AdjustableCoolantThermostat { get { return Body["Aux"]?["HVAC"]?.GetEx<bool>("AdjustableCoolantThermostat") ?? false; } }
-		public virtual bool AdjustableAuxiliaryHeater { get { return false; } }
+		public bool? OtherHeatingTechnology { get; }
+		public virtual bool? AdjustableCoolantThermostat { get { return Body["Aux"]?["HVAC"]?.GetEx<bool>("AdjustableCoolantThermostat") ?? false; } }
+        public virtual bool? AdjustableAuxiliaryHeater { get { return false; } }
 		public virtual bool EngineWasteGasHeatExchanger { get { return Body["Aux"]?["HVAC"]?.GetEx<bool>("EngineWasteGasHeatExchanger") ?? false; } }
-		public virtual bool SeparateAirDistributionDucts { get { return false; } }
+        public virtual bool? SeparateAirDistributionDucts { get { return false; } }
+		public virtual bool? WaterElectricHeater { get; }
+		public virtual bool? AirElectricHeater { get; }
 
 		#endregion
 

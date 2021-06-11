@@ -29,7 +29,8 @@ namespace TUGraz.VectoCore.Tests.Utils {
 		public string Identifier { get; }
 		public bool ExemptedVehicle { get; }
 		public string VIN { get; }
-		public LegislativeClass LegislativeClass { get; }
+		public string LegislativeCategory { get; }
+		public LegislativeClass? LegislativeClass { get; }
 		public VehicleCategory VehicleCategory { get; }
 		public AxleConfiguration AxleConfiguration { get; }
 		public Kilogram CurbMassChassis { get; }
@@ -39,6 +40,7 @@ namespace TUGraz.VectoCore.Tests.Utils {
 		public PerSecond EngineIdleSpeed { get; }
 		public bool VocationalVehicle { get; }
 		public bool SleeperCab { get; }
+		public bool? AirdragModifiedMultistage { get; }
 		public TankSystem? TankSystem { get; }
 		public IAdvancedDriverAssistantSystemDeclarationInputData ADAS { get; }
 		public bool ZeroEmissionVehicle { get; }
@@ -46,18 +48,21 @@ namespace TUGraz.VectoCore.Tests.Utils {
 		public bool DualFuelVehicle { get; }
 		public Watt MaxNetPower1 { get; }
 		public Watt MaxNetPower2 { get; }
-		public RegistrationClass RegisteredClass { get; set; }
-		public int NumberOfPassengersUpperDeck { get; set; }
-		public int NumberOfPassengersLowerDeck { get; set; }
+		public RegistrationClass? RegisteredClass { get; set; }
+		public int? NumberPassengerSeatsUpperDeck { get; set; }
+		public int? NumberPassengerSeatsLowerDeck { get; set; }
+		public int? NumberPassengersStandingLowerDeck { get; set; }
+		public int? NumberPassengersStandingUpperDeck { get; set; }
 		public CubicMeter CargoVolume { get; }
-		public VehicleCode VehicleCode { get; set; }
-		public bool LowEntry { get; }
+		public VehicleCode? VehicleCode { get; set; }
+		public bool? LowEntry { get; }
 		public bool Articulated { get; }
 		public Meter Height { get; set; }
 		public Meter Length { get; set; }
 		public Meter Width { get; set; }
 		public Meter EntranceHeight { get; }
-		public ConsumerTechnology DoorDriveTechnology { get; }
+		public ConsumerTechnology? DoorDriveTechnology { get; }
+		public VehicleDeclarationType VehicleDeclarationType { get; }
 		public IVehicleComponentsDeclaration Components { get { return this; } }
 		public XmlNode XMLSource { get; }
 
@@ -113,14 +118,17 @@ namespace TUGraz.VectoCore.Tests.Utils {
 		public Meter Length { get; set; }
 		public Meter Width { get; set; }
 		public Meter EntranceHeight { get; }
-		public ConsumerTechnology DoorDriveTechnology { get; }
+		public ConsumerTechnology? DoorDriveTechnology { get; }
+		public VehicleDeclarationType VehicleDeclarationType { get; }
 		public Watt MaxNetPower2 { get; }
-		public RegistrationClass RegisteredClass { get; set; }
-		public int NumberOfPassengersUpperDeck { get; set; }
-		public int NumberOfPassengersLowerDeck { get; set; }
+		public RegistrationClass? RegisteredClass { get; set; }
+		public int? NumberPassengerSeatsUpperDeck { get; set; }
+		public int? NumberPassengerSeatsLowerDeck { get; set; }
+		public int? NumberPassengersStandingLowerDeck { get; set; }
+		public int? NumberPassengersStandingUpperDeck { get; set; }
 		public CubicMeter CargoVolume { get; }
-		public VehicleCode VehicleCode { get; set; }
-		public bool LowEntry { get; }
+		public VehicleCode? VehicleCode { get; set; }
+		public bool? LowEntry { get; }
 
 		IVehicleComponentsDeclaration IVehicleDeclarationInputData.Components
 		{
@@ -133,7 +141,8 @@ namespace TUGraz.VectoCore.Tests.Utils {
 		public string Identifier { get; }
 		public bool ExemptedVehicle { get; }
 		public string VIN { get; }
-		public LegislativeClass LegislativeClass { get; }
+		public string LegislativeCategory { get; }
+		public LegislativeClass? LegislativeClass { get; }
 		public VehicleCategory VehicleCategory { get; }
 		public AxleConfiguration AxleConfiguration { get; }
 		public Kilogram CurbMassChassis { get; }
@@ -143,6 +152,7 @@ namespace TUGraz.VectoCore.Tests.Utils {
 		public PerSecond EngineIdleSpeed { get; }
 		public bool VocationalVehicle { get; }
 		public bool SleeperCab { get; }
+		public bool? AirdragModifiedMultistage { get; }
 		public TankSystem? TankSystem { get; }
 
 		IAdvancedDriverAssistantSystemDeclarationInputData IVehicleDeclarationInputData.ADAS

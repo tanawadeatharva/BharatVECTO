@@ -1,11 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.Linq;
-using Castle.Components.DictionaryAdapter.Xml;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Resources;
@@ -13,23 +9,22 @@ using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.InputData.FileIO.XML.Common;
 using TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Interfaces;
 using TUGraz.VectoCore.InputData.Impl;
-using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 {
-	public class XMLDeclarationPrimaryVehicleBusResultsInputDataProviderV01 : AbstractXMLType, IXMLResultsInputData
+	public class XMLDeclarationMultistagePrimaryVehicleBusResultsInputDataProviderV01 : AbstractXMLType, IXMLResultsInputData
 	{
-		public static XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_PRIMARY_BUS_VEHICLE_URI_V01;
+		public static XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_MULTISTAGE_BUS_VEHICLE_NAMESPACE_VO1;
 
-		public const string XSD_TYPE = "ResultsPIFType";
+		public const string XSD_TYPE = "ResultsPrimaryVehicleType";
 
 		public static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
 
 		private XmlNode _resultsNode;
 		private IList<IResult> _results;
 
-		public XMLDeclarationPrimaryVehicleBusResultsInputDataProviderV01(XmlNode resultsNode) : base(resultsNode)
+		public XMLDeclarationMultistagePrimaryVehicleBusResultsInputDataProviderV01(XmlNode resultsNode) : base(resultsNode)
 		{
 			_resultsNode = resultsNode;
 		}
@@ -40,9 +35,9 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 		public IList<IResult> Results
 		{
-			get { return _results ?? (_results =  ReadResults()); }
+			get { return _results ?? (_results = ReadResults()); }
 		}
-		
+
 
 		private IList<IResult> ReadResults()
 		{
@@ -51,11 +46,12 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 			var results = new List<IResult>();
 
-			foreach (XmlNode resultNode in _resultsNode.ChildNodes) {
-				if(resultNode.Name == XMLNames.Report_Result_Result)
+			foreach (XmlNode resultNode in _resultsNode.ChildNodes)
+			{
+				if (resultNode.LocalName == XMLNames.Report_Result_Result)
 					results.Add(GetResult(resultNode));
 			}
-			
+
 			return results;
 		}
 
@@ -74,7 +70,9 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 												string.Format(".//*[local-name()='{0}' and @unit='MJ/km']", XMLNames.Report_Result_EnergyConsumption))?.InnerText
 													.ToDouble().SI(Unit.SI.Mega.Joule.Per.Kilo.Meter).Cast<JoulePerMeter>())).ToDictionary(x => x.Key, x => x.Value);
 
-			return new Result {
+
+			return new Result
+			{
 				ResultStatus = resultStatus,
 				Mission = mission,
 				VehicleGroup = VehicleClassHelper.Parse(vehicleGroup),
@@ -91,8 +89,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 			{
 				TotalVehicleMass = GetString(XMLNames.Report_ResultEntry_TotalVehicleMass, xmlNode).ToDouble().SI<Kilogram>(),
 				Payload = GetString(XMLNames.Report_Result_Payload, xmlNode).ToDouble().SI<Kilogram>(),
-				PassengerCount =  GetString(XMLNames.Bus_PassengerCount, xmlNode).ToDouble(),
-				FuelMode =  GetString(XMLNames.Report_Result_FuelMode, xmlNode)
+				PassengerCount = GetString(XMLNames.Bus_PassengerCount, xmlNode).ToDouble(),
+				FuelMode = GetString(XMLNames.Report_Result_FuelMode, xmlNode)
 			};
 		}
 	}
