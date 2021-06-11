@@ -45,26 +45,21 @@ namespace TUGraz.VectoCommon.InputData
 
 		IHybridStrategyParameters HybridStrategyParameters { get; }
 
-        /// <summary>
-        /// P008  Cycles
-        /// cf. VECTO Input Parameters.xlsx
-        /// </summary>
-        IList<ICycleData> Cycles { get; }
-
 		/// <summary>
-		/// P001
+		/// P008  Cycles
 		/// cf. VECTO Input Parameters.xlsx
 		/// </summary>
-		VectoSimulationJobType JobType { get; }
+		IList<ICycleData> Cycles { get; }
 
+		//ToDo Remove use JobType
 		IEngineEngineeringInputData EngineOnly { get; }
-
 	}
 
 	public enum VectoSimulationJobType
 	{
 		ConventionalVehicle,
 		ParallelHybridVehicle,
+		SerialHybridVehicle,
 		BatteryElectricVehicle,
 		EngineOnlySimulation,
 	}
@@ -87,8 +82,8 @@ namespace TUGraz.VectoCommon.InputData
 		Second AuxBufferChargeTime { get; }
 		double ICEStartPenaltyFactor { get; }
 
-        double CostFactorSOCExpponent { get; }
-    }
+		double CostFactorSOCExpponent { get; }
+	}
 
 	public interface IVehicleEngineeringInputData : IVehicleDeclarationInputData
 	{
@@ -405,7 +400,7 @@ namespace TUGraz.VectoCommon.InputData
 		new IList<IEngineFuelEngineeringInputData> Fuels { get; }
 	}
 
-	public interface IEngineFuelEngineeringInputData : IEngineFuelDelcarationInputData
+	public interface IEngineFuelEngineeringInputData : IEngineFuelDeclarationInputData
 	{
 		/// <summary>
 		/// P170

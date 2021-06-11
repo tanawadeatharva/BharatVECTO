@@ -102,6 +102,7 @@ namespace VECTO3GUI.ViewModel.Adapter.Declaration
 		public PerSecond EngineIdleSpeed { get { return ViewModel.IdlingSpeed; } }
 		public bool VocationalVehicle { get; }
 		public bool SleeperCab { get; }
+		public bool AirdragModifiedMultistage { get; }
 		public TankSystem? TankSystem { get; }
 		public IAdvancedDriverAssistantSystemDeclarationInputData ADAS { get; }
 		public bool ZeroEmissionVehicle { get; }
@@ -121,6 +122,7 @@ namespace VECTO3GUI.ViewModel.Adapter.Declaration
 		public Meter Width { get; }
 		public Meter EntranceHeight { get; }
 		public ConsumerTechnology DoorDriveTechnology { get; }
+		public StateOfCompletion StateOfCompletion { get; }
 
 		public IAirdragDeclarationInputData AirdragInputData { get {
 			return GetComponentViewModel<IAirdragViewModel>(Component.Airdrag)?.ModelData;

@@ -80,7 +80,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 	{
 		public string VIN { get; internal set; }
 
-		public LegislativeClass LegislativeClass { get; internal set; }
+		public LegislativeClass? LegislativeClass { get; internal set; }
 
 		public VehicleCategory VehicleCategory { get; internal set; }
 
@@ -253,8 +253,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 		[JsonIgnore]
 		public IVehicleDeclarationInputData InputData { get; internal set; }
 
-		public RegistrationClass RegisteredClass { get; internal set; }
-		public VehicleCode VehicleCode { get; internal  set; }
+		public RegistrationClass? RegisteredClass { get; internal set; }
+		public VehicleCode? VehicleCode { get; internal  set; }
 
 
 		//		#region "Bus Parameters"

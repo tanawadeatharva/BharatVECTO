@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- edited with XMLSpy v2016 rel. 2 sp1 (x64) (http://www.altova.com) by Helmut Eichlseder (TU Graz/Inst. f. VKM und THD) -->
+<!-- edited with XMLSpy v2021 (x64) (http://www.altova.com) by Franz Kober (Technische Universität Graz) -->
 <xs:schema xmlns="urn:tugraz:ivt:VectoAPI:DeclarationOutput:PrimaryVehicleInformation:HeavyBus:v0.1" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:v1.0="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v1.0" xmlns:v2.0="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0" xmlns:v2.1="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.1" xmlns:v2.3="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:DEV:v2.3" xmlns:v2.6="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:DEV:v2.6" xmlns:common="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions" xmlns:pif="urn:tugraz:ivt:VectoAPI:DeclarationOutput:PrimaryVehicleInformation" xmlns:out="urn:tugraz:ivt:VectoAPI:DeclarationOutputDefinitions" targetNamespace="urn:tugraz:ivt:VectoAPI:DeclarationOutput:PrimaryVehicleInformation:HeavyBus:v0.1" elementFormDefault="qualified" attributeFormDefault="unqualified">
 	<xs:import namespace="urn:tugraz:ivt:VectoAPI:DeclarationOutputDefinitions" schemaLocation="VectoOutputDefinitions.xsd"/>
 	<xs:import namespace="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions" schemaLocation="VectoDeclarationDefinitions.xsd"/>
@@ -15,7 +15,7 @@
 	<xs:complexType name="AbstractTransmissionDataPIFType" abstract="true"/>
 	<xs:complexType name="AbstractTransmissionGearsPIFType" abstract="true"/>
 	<xs:complexType name="AbstractVehicleComponentsPIFType" abstract="true"/>
-	<xs:complexType name="AbstractVehiclePIFType" abstract="true"/>
+	<xs:complexType name="AbstractPrimaryVehicleType" abstract="true"/>
 	<xs:complexType name="AngledriveDataPIFType">
 		<xs:complexContent>
 			<xs:extension base="AbstractAngledriveDataPIFType">
@@ -249,21 +249,21 @@
 			</xs:extension>
 		</xs:simpleContent>
 	</xs:complexType>
-	<xs:complexType name="PrimaryVehicleHeavyBusDataType">
+	<xs:complexType name="PrimaryVehicleDataType">
 		<xs:complexContent>
 			<xs:extension base="out:AbstractPrimaryVehicleDataPIFType">
 				<xs:sequence>
-					<xs:element name="Vehicle" type="AbstractVehiclePIFType"/>
+					<xs:element name="Vehicle" type="AbstractPrimaryVehicleType"/>
 					<xs:element name="InputDataSignature" type="v1.0:SignatureType"/>
 					<xs:element name="ManufacturerRecordSignature" type="v1.0:SignatureType"/>
-					<xs:element name="Results" type="ResultsPIFType"/>
+					<xs:element name="Results" type="ResultsPrimaryVehicleType"/>
 					<xs:element name="ApplicationInformation" type="ApplicationInformationPIFType"/>
 				</xs:sequence>
 				<xs:attribute name="id" use="required"/>
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
-	<xs:complexType name="ResultPIFType">
+	<xs:complexType name="ResultPrimaryVehicleType">
 		<xs:sequence>
 			<xs:element name="VehicleGroup">
 				<xs:simpleType>
@@ -306,10 +306,10 @@
 		</xs:sequence>
 		<xs:attribute name="status" use="required"/>
 	</xs:complexType>
-	<xs:complexType name="ResultsPIFType">
+	<xs:complexType name="ResultsPrimaryVehicleType">
 		<xs:sequence>
 			<xs:element name="Status"/>
-			<xs:element name="Result" type="ResultPIFType" maxOccurs="unbounded"/>
+			<xs:element name="Result" type="ResultPrimaryVehicleType" maxOccurs="unbounded"/>
 		</xs:sequence>
 	</xs:complexType>
 	<xs:complexType name="SimulationParametersType">
@@ -600,7 +600,7 @@
 	</xs:complexType>
 	<xs:complexType name="VehiclePIFType">
 		<xs:complexContent>
-			<xs:extension base="AbstractVehiclePIFType">
+			<xs:extension base="AbstractPrimaryVehicleType">
 				<xs:sequence>
 					<xs:element name="ManufacturerPrimaryVehicle" type="v1.0:ManufacturerType"/>
 					<xs:element name="ManufacturerAddressPrimaryVehicle" type="v1.0:ManufacturerAddressType"/>

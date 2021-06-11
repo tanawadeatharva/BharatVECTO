@@ -1,0 +1,31 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<tns:VectoInputDeclaration xmlns:tns="urn:tugraz:ivt:VectoAPI:DeclarationInput:v2.0" xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:DEV:v2.8" schemaVersion="2.8" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:v2.0="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0" xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:DeclarationJob V:\VectoCore\VectoCore\Resources\XSD\VectoDeclarationJob.xsd">
+  <v2.0:Vehicle id="TODO_ADDIDENTIFIER" xsi:type="InterimStageInputType">
+    <Manufacturer>IVT</Manufacturer>
+    <ManufacturerAddress>Inffeldgasse 19</ManufacturerAddress>
+    <VIN>VIN-1234</VIN>
+    <Date>2021-06-06T22:00:00Z</Date>
+    <AirdragModifiedMultistage>false</AirdragModifiedMultistage>
+    <VehicleDeclarationType>interim</VehicleDeclarationType>
+    <Components xsi:type="CompletedVehicleComponentsDeclarationType">
+      <Auxiliaries>
+        <Data xsi:type="CompletedVehicleAuxiliaryDataDeclarationType">
+          <ElectricSystem>
+            <LEDLights>
+              <Interiorlights>false</Interiorlights>
+              <Positionlights>false</Positionlights>
+              <Headlights>false</Headlights>
+            </LEDLights>
+          </ElectricSystem>
+          <HVAC>
+            <SystemConfiguration>0</SystemConfiguration>
+            <HeatPumpTypeDriverCompartment>non R-744 2-stage</HeatPumpTypeDriverCompartment>
+            <HeatPumpModeDriverCompartment>cooling</HeatPumpModeDriverCompartment>
+            <HeatPumpTypePassengerCompartment>non R-744 4-stage</HeatPumpTypePassengerCompartment>
+            <HeatPumpModePassengerCompartment>cooling</HeatPumpModePassengerCompartment>
+          </HVAC>
+        </Data>
+      </Auxiliaries>
+    </Components>
+  </v2.0:Vehicle>
+</tns:VectoInputDeclaration>

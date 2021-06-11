@@ -982,7 +982,7 @@ namespace TUGraz.VectoCore.Tests.Models.EngineeringMode
 					AlternatorGearEfficiency = Constants.BusAuxiliaries.ElectricSystem.AlternatorGearEfficiency,
 					DoorActuationTimeSecond = Constants.BusAuxiliaries.ElectricalConsumers.DoorActuationTimeSecond,
 					AlternatorMap = new SimpleAlternator(AlternatorEfficiency) {
-						Technologies = new List<string>() { "engineering mode" }
+						//Technologies = new List<string>() { "engineering mode" }
 					},
 					AlternatorType = esSupplyFromHevreess &&
 									alternatorType != AlternatorType.Smart

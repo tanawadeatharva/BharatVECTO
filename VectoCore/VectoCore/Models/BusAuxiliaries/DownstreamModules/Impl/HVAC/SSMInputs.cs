@@ -120,13 +120,8 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.HVAC
 
 
 		// C53 - "Continous/2-stage/3-stage/4-stage
-		public ACCompressorType HVACCompressorType { get; set; }
+		public HeatPumpType HVACCompressorType { get; set; }
 
-		// mechanical/electrical
-		public string CompressorTypeDerived
-		{
-			get { return HVACCompressorType == ACCompressorType.Continuous ? "Electrical" : "Mechanical"; }
-		}
 
 		// C54 -  ( KW )
 		public Watt HVACMaxCoolingPower { get; set; }

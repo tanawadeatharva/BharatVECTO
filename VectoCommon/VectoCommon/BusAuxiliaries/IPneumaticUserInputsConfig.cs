@@ -18,7 +18,7 @@ namespace TUGraz.VectoCommon.BusAuxiliaries
 
 		ConsumerTechnology AirSuspensionControl { get; } // mechanical or electrical
 		ConsumerTechnology AdBlueDosing { get; } // pnmeumatic or electric
-		ConsumerTechnology Doors { get; } // pneumatic or electric
+		ConsumerTechnology? Doors { get; } // pneumatic or electric
 	}
 
 	public enum ConsumerTechnology
@@ -47,14 +47,14 @@ namespace TUGraz.VectoCommon.BusAuxiliaries
 				case "pneumatically":
 				case "pneumatic":
 					return ConsumerTechnology.Pneumatically;
-                case "mixed":
+				case "mixed":
 					return ConsumerTechnology.Mixed;
 				default:
 					return ConsumerTechnology.Unknown;
 			}
 		}
 
-		public static string GetLabel(this ConsumerTechnology technology)
+		public static string GetLabel(this ConsumerTechnology? technology)
 		{
 			switch (technology) {
 				case ConsumerTechnology.Electrically:
@@ -63,12 +63,14 @@ namespace TUGraz.VectoCommon.BusAuxiliaries
 					return "Mechanic";
 				case ConsumerTechnology.Pneumatically:
 					return "Pneumatic";
+				case ConsumerTechnology.Mixed:
+					return "Mixed";
 				default:
 					return ConsumerTechnology.Unknown.ToString();
 			}
 		}
 
-		public static string ToXMLFormat(this ConsumerTechnology technology)
+		public static string ToXMLFormat(this ConsumerTechnology? technology)
 		{
 			return technology.GetLabel().ToLowerInvariant();
 		}

@@ -25,7 +25,8 @@
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>RELEASE_CANDIDATE</DefineConstants>
+    <DefineConstants>
+    </DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
@@ -78,9 +79,9 @@
     <Compile Include="BusAuxiliaries\SmartResult.cs" />
     <Compile Include="Hashing\IVectoHash.cs" />
     <Compile Include="Hashing\VectoComponents.cs" />
-    <Compile Include="Models\AlternatorType.cs" />
     <Compile Include="InputData\DataSourceType.cs" />
     <Compile Include="InputData\DigestData.cs" />
+    <Compile Include="Models\AlternatorType.cs" />
     <Compile Include="Models\GearshiftPosition.cs" />
     <Compile Include="Models\HybridStrategyResponse.cs" />
     <Compile Include="Models\PowertrainPosition.cs" />
@@ -127,13 +128,14 @@
       <DesignTime>True</DesignTime>
     </Compile>
     <Compile Include="Resources\XMLNames.Designer.cs">
-      <DependentUpon>XMLNames.resx</DependentUpon>
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
+      <DependentUpon>XMLNames.resx</DependentUpon>
     </Compile>
     <Compile Include="Utils\DoubleExtensionMethods.cs" />
     <Compile Include="Utils\EnumerableExtensionMethods.cs" />
     <Compile Include="Utils\EnumHelper.cs" />
+    <Compile Include="Utils\GuiLabelAttribute.cs" />
     <Compile Include="Utils\IntExtensionMethods.cs" />
     <Compile Include="Utils\SI.cs" />
     <Compile Include="Utils\SIConvertExtensionMethods.cs" />
@@ -153,8 +155,8 @@
   <ItemGroup>
     <EmbeddedResource Include="Resources\XMLNames.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
-      <LastGenOutput>XMLNames.Designer.cs</LastGenOutput>
       <SubType>Designer</SubType>
+      <LastGenOutput>XMLNames.Designer.cs</LastGenOutput>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

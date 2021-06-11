@@ -69,7 +69,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering.DataProvider
 			get { return AirDragArea; }
 		}
 
-		public virtual SquareMeter AirdragArea_0
+		public virtual SquareMeter AirDragArea_0
 		{
 			get { return AirDragArea; }
 		}

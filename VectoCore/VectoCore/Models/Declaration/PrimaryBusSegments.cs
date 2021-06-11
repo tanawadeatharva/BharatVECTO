@@ -138,7 +138,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 							VehicleCode = row.Field<string>("vehiclecode").ParseEnum<VehicleCode>(),
 							HVACConfiguration = BusHVACSystemConfigurationHelper.Parse(row.Field<string>("hvacsystemconfiguration")),
 							HVACAuxHeaterPower = row.ParseDouble("hvacauxheater").SI(Unit.SI.Kilo.Watt).Cast<Watt>(),
-							HVACCompressorType = ACCompressorTypeExtensions.ParseEnum(row.Field<string>("hvaccompressortype")),
+							HVACCompressorType = HeatPumpTypeHelper.Parse(row.Field<string>("hvaccompressortype")),
 							HVACDoubleGlasing = row.ParseBoolean("hvacdoubleglasing"),
 							HVACHeatpump = row.ParseBoolean("hvacheatpump"),
 							HVACAdjustableAuxHeater = row.ParseBoolean("hvacadjustableauxiliaryheater"),

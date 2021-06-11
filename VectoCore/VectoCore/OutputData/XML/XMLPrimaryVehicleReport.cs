@@ -1,20 +1,23 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data;
 using System.IO;
 using System.Linq;
 using System.Xml;
 using System.Xml.Linq;
-using TUGraz.IVT.VectoXML.Writer;
+using TUGraz.VectoCommon.BusAuxiliaries;
+using TUGraz.VectoCommon.Exceptions;
+using TUGraz.VectoCommon.Hashing;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Resources;
 using TUGraz.VectoCommon.Utils;
+using TUGraz.VectoCore.InputData.Impl;
 using TUGraz.VectoCore.InputData.Reader.ComponentData;
 using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
+using TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox;
 using TUGraz.VectoCore.Utils;
 using TUGraz.VectoHashing;
 
@@ -22,16 +25,19 @@ namespace TUGraz.VectoCore.OutputData.XML
 {
 	public class XMLPrimaryVehicleReport
 	{
-		protected XNamespace tns = "urn:tugraz:ivt:VectoAPI:DeclarationOutput:PrimaryVehicleInformation:HeavyBus:v0.1";
+		protected XNamespace tns = "urn:tugraz:ivt:VectoAPI:DeclarationOutput:VehicleInterimFile:v0.1";
 		protected XNamespace di = "http://www.w3.org/2000/09/xmldsig#";
 		protected XNamespace xsi = XNamespace.Get("http://www.w3.org/2001/XMLSchema-instance");
 
-		protected XNamespace RootNS = "urn:tugraz:ivt:VectoAPI:DeclarationOutput:PrimaryVehicleInformation";
-
+		protected XNamespace v20 = "urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0";
+		protected XNamespace v21 = "urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.1";
+		protected XNamespace v23 = "urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:DEV:v2.3";
+		protected XNamespace v26 = "urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:DEV:v2.6";
+		protected XNamespace v28 = "urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:DEV:v2.8";
+		protected XNamespace v10 = "urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v1.0";
+		
 		protected XElement VehiclePart;
-
 		protected XElement InputDataIntegrity;
-
 		protected XElement Results;
 
 		private bool _allSuccess = true;
@@ -48,43 +54,58 @@ namespace TUGraz.VectoCore.OutputData.XML
 
 		public void GenerateReport(XElement resultSignature)
 		{
-			var xsi = XNamespace.Get("http://www.w3.org/2001/XMLSchema-instance");
 			var retVal = new XDocument();
+			retVal.Add(
+				new XElement(XMLNames.VectoOutputMultistage,
+					new XAttribute("xmlns", tns),
+					new XAttribute(XNamespace.Xmlns + "di", di),
+					new XAttribute(XNamespace.Xmlns + "xsi", xsi.NamespaceName),
+					new XAttribute(XNamespace.Xmlns + "v2.0", v20),
+					new XAttribute(XNamespace.Xmlns + "v2.1", v21),
+					new XAttribute(XNamespace.Xmlns + "v2.3", v23),
+					new XAttribute(XNamespace.Xmlns + "v2.6", v26),
+					new XAttribute(XNamespace.Xmlns + "v2.8", v28),
+					new XAttribute(xsi + "schemaLocation", $"{tns.NamespaceName} "+ @"V:\VectoCore\VectoCore\Resources\XSD/VectoOutputMultistage.0.1.xsd"),
+					
+					GeneratePrimaryVehicle(resultSignature))
+				);
+
+			Report = retVal;
+		}
+		
+		private XElement GeneratePrimaryVehicle(XElement resultSignature)
+		{
 			var results = new XElement(Results);
 			results.AddFirst(new XElement(tns + XMLNames.Report_Result_Status, _allSuccess ? "success" : "error"));
+			var vehicleId = $"{VectoComponents.Vehicle.HashIdPrefix()}{GetGUID()}";
 
-			//retVal.Add(new XProcessingInstruction("xml-stylesheet", "href=\"https://webgate.ec.europa.eu/CITnet/svn/VECTO/trunk/Share/XML/CSS/VectoReports.css\""));
-			retVal.Add(
-				new XElement(
-					RootNS + XMLNames.VectoPrimaryVehicleReport,
-
-					//new XAttribute("schemaVersion", CURRENT_SCHEMA_VERSION),
-					new XAttribute(XNamespace.Xmlns + "xsi", xsi.NamespaceName),
-					new XAttribute("xmlns", tns),
-
-					//new XAttribute(XNamespace.Xmlns + "pbus", tns),
-					new XAttribute(XNamespace.Xmlns + "pif", RootNS),
-					new XAttribute(XNamespace.Xmlns + "di", di),
-					new XAttribute(
-						xsi + "schemaLocation",
-						string.Format("{0} {1}/DEV/VectoOutputPrimaryVehicleInformation.xsd", RootNS, AbstractXMLWriter.SchemaLocationBaseUrl)),
-					new XElement(
-						RootNS + XMLNames.Report_DataWrap,
-						new XAttribute(xsi + "type", "PrimaryVehicleHeavyBusDataType"),
-						VehiclePart,
-						InputDataIntegrity,
-						new XElement(tns + "ManufacturerRecordSignature", resultSignature),
-						results,
-						GetApplicationInfo())
-				)
+			var primaryVehicle = new XElement( tns + XMLNames.Bus_PrimaryVehicle,
+				new XElement(tns + XMLNames.Report_DataWrap,
+					new XAttribute(XMLNames.Component_ID_Attr, vehicleId),
+					new XAttribute(xsi + "type", "PrimaryVehicleDataType"),
+					VehiclePart,
+					InputDataIntegrity,
+					new XElement(tns + "ManufacturerRecordSignature", resultSignature),
+					results,
+					GetApplicationInfo())
 			);
+
+			var sigXElement = GetSignatureElement(primaryVehicle);
+			primaryVehicle.LastNode.Parent.Add(sigXElement);
+			return primaryVehicle;
+		}
+
+		private XElement GetSignatureElement(XElement stage)
+		{
 			var stream = new MemoryStream();
 			var writer = new StreamWriter(stream);
-			writer.Write(retVal);
+			writer.Write(stage);
 			writer.Flush();
 			stream.Seek(0, SeekOrigin.Begin);
-			var h = VectoHash.Load(stream);
-			Report = h.AddHash();
+
+			return new XElement(tns + XMLNames.DI_Signature,
+				VectoHash.Load(stream).ComputeXmlHash
+					(VectoHash.DefaultCanonicalizationMethod, VectoHash.DefaultDigestMethod));
 		}
 
 		private XElement GetApplicationInfo()
@@ -110,9 +131,9 @@ namespace TUGraz.VectoCore.OutputData.XML
 				new XElement(tns + XMLNames.ManufacturerAddressPrimaryVehicle, modelData.VehicleData.ManufacturerAddress),
 				new XElement(tns + XMLNames.Component_Model, modelData.VehicleData.ModelName),
 				new XElement(tns + XMLNames.Vehicle_VIN, modelData.VehicleData.VIN),
-				new XElement(
-					tns + XMLNames.Component_Date, XmlConvert.ToString(modelData.VehicleData.Date, XmlDateTimeSerializationMode.Utc)),
-				new XElement(tns + XMLNames.Vehicle_VehicleCategory, modelData.VehicleData.VehicleCategory.ToXMLFormat()),
+				new XElement(tns + XMLNames.Component_Date, XmlConvert.ToString(modelData.VehicleData.Date, XmlDateTimeSerializationMode.Utc)),
+				new XElement(tns + XMLNames.Bus_LegislativeCategory, modelData.VehicleData.LegislativeClass.ToXMLFormat()),
+				new XElement(tns + XMLNames.Bus_ChassisConfiguration, modelData.VehicleData.VehicleCategory.ToXMLFormat()),
 				new XElement(tns + XMLNames.Vehicle_AxleConfiguration, modelData.VehicleData.AxleConfiguration.GetName()),
 				new XElement(tns + XMLNames.Vehicle_Articulated, modelData.VehicleData.InputData.Articulated),
 				new XElement(tns + XMLNames.TPMLM, modelData.VehicleData.InputData.GrossVehicleMassRating.ToXMLFormat(0)),
@@ -121,8 +142,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 				modelData.Retarder.Type.IsDedicatedComponent()
 					? new XElement(tns + XMLNames.Vehicle_RetarderRatio, modelData.Retarder.Ratio.ToXMLFormat(3))
 					: null,
-				new XElement(
-					tns + XMLNames.Vehicle_AngledriveType, (modelData.AngledriveData?.Type ?? AngledriveType.None).ToXMLFormat()),
+				new XElement(tns + XMLNames.Vehicle_AngledriveType, (modelData.AngledriveData?.Type ?? AngledriveType.None).ToXMLFormat()),
 				new XElement(tns + XMLNames.Vehicle_ZeroEmissionVehicle, modelData.VehicleData.ZeroEmissionVehicle),
 				GetADAS(modelData.VehicleData.ADAS),
 				GetTorqueLimits(modelData),
@@ -173,6 +193,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 				new XAttribute(xsi + "type", "VehicleComponentsPIFType"),
 				GetEngineDescription(modelData.EngineData, fuelModes),
 				GetGearboxDescription(modelData.GearboxData),
+				GetTorqueConverterDescription(modelData.GearboxData.TorqueConverterData),
 				GetAngledriveDescription(modelData.AngledriveData),
 				GetAxlegearDescription(modelData.AxleGearData),
 				GetAxleWheelsDescription(modelData),
@@ -180,43 +201,178 @@ namespace TUGraz.VectoCore.OutputData.XML
 			);
 		}
 
+		private XElement GetTorqueConverterDescription(TorqueConverterData torqueConverter)
+		{
+			if (torqueConverter == null)
+				return null;
+			
+			return new XElement(tns + XMLNames.Component_TorqueConverter,
+				new XElement(tns + XMLNames.Report_DataWrap,
+					new XAttribute(xsi + "type", "TorqueConverterDataPIFType"),
+					GetCommonDescription(torqueConverter),
+					new XElement(tns + XMLNames.Component_AppVersion, torqueConverter.AppVersion)
+				));
+		}
+		
 		protected virtual XElement GetAxleWheelsDescription(VectoRunData modeldData)
 		{
 			var axles = modeldData.VehicleData.InputData.Components.AxleWheels.XMLSource;
+			var axlesNode = axles.SelectSingleNode(".//*[local-name()='Axles']");
+			var axlesNodes = axlesNode.SelectNodes(".//*[local-name()='Axle']");
+			
+			return new XElement(tns + XMLNames.Component_AxleWheels,
+					new XElement(tns + XMLNames.Report_DataWrap, 
+						new XAttribute(xsi + "type", "AxleWheelsDataPIFType"),
+						new XElement(tns + XMLNames.AxleWheels_Axles,
+							GetAxlesNodes(axlesNodes)
+						)));
+		}
 
-			var ns = XNamespace.Get(axles.SchemaInfo.SchemaType.QualifiedName.Namespace);
 
-			//const string adasPrefix = "axl";
-			return new XElement(
-				tns + XMLNames.Component_AxleWheels,
+		private List<XElement> GetAxlesNodes(XmlNodeList nodes)
+		{
+			var axles = new List<XElement>();
+			foreach (XmlNode axleNode in nodes) {
 
-				//new XAttribute(XNamespace.Xmlns + adasPrefix, ns.NamespaceName),
-				new XAttribute(XNamespace.Xmlns + "pbus", tns),
-				new XAttribute("xmlns", ns.NamespaceName),
-				new XAttribute(
-					xsi + "type", axles.SchemaInfo.SchemaType.QualifiedName.Name),
-				XElement.Parse(axles.OuterXml).Elements()
-			);
+				var axleNumber = axleNode.Attributes[XMLNames.AxleWheels_Axles_Axle_AxleNumber_Attr].Value;
+				var axle = new XElement(tns + XMLNames.AxleWheels_Axles_Axle,
+							new XAttribute(XMLNames.AxleWheels_Axles_Axle_AxleNumber_Attr, axleNumber),
+							new XAttribute(XNamespace.Xmlns + "v2.0", v20),
+							new XAttribute(xsi + "type", "v2.0:AxleDataDeclarationType"),
+								XElement.Parse(axleNode.OuterXml.Replace("xsi:type=\"TyreDataDeclarationType\"", "xsi:type=\"v2.0:TyreDataDeclarationType\"")).Elements());
+				
+				axles.Add(axle);
+			}
+
+			return axles;
 		}
 
 
 
 		private XElement GetAuxiliariesDescription(VectoRunData modelData)
 		{
-			var busAuxiliaries = modelData.BusAuxiliaries;
-			var busAuxXML = busAuxiliaries.InputData.XMLSource;
-			var ns = XNamespace.Get(busAuxXML.FirstChild.SchemaInfo.SchemaType.QualifiedName.Namespace);
-			const string auxPrefix = "aux";
-			return new XElement(
-				tns + XMLNames.Component_Auxiliaries,
-				new XElement(
-					tns + XMLNames.ComponentDataWrapper,
-					new XAttribute(XNamespace.Xmlns + auxPrefix, ns.NamespaceName),
-					new XAttribute(
-						xsi + "type", string.Format("{0}:{1}", auxPrefix, busAuxXML.FirstChild.SchemaInfo.SchemaType.QualifiedName.Name)),
-					XElement.Parse(busAuxXML.InnerXml).Elements()
-				));
+			var aux = modelData.BusAuxiliaries.InputData;
+			var supplyHevPossible = XmlConvert.ToBoolean(
+				aux.XMLSource.SelectSingleNode(
+					$".//*[local-name()='{XMLNames.BusAux_ElectricSystem_SupplyFromHEVPossible}']")?.InnerText);
+
+
+			return new XElement(tns + XMLNames.Component_Auxiliaries,
+				new XElement(tns + XMLNames.ComponentDataWrapper,
+					new XAttribute(xsi + "type", "AuxiliaryDataPIFType"),
+					new XAttribute("xmlns", tns.NamespaceName),
+					new XElement(tns + XMLNames.BusAux_Fan, new XElement(tns + XMLNames.BusAux_Technology,  aux.FanTechnology)),
+					GetSteeringPumpElement(aux.SteeringPumpTechnology),
+					GetElectricSystem(aux.ElectricSupply, supplyHevPossible),
+					GetPneumaticSystem(aux.PneumaticSupply, aux.PneumaticConsumers),
+					GetHvac(aux.HVACAux))
+				);
 		}
+
+
+		private XElement GetSteeringPumpElement(IList<string> steeringPumps)
+		{
+			var technologies = new List<XElement>();
+
+			for (int i = 0; i < steeringPumps.Count; i++)
+			{
+				var technology = new XElement(tns + XMLNames.BusAux_Technology,
+					new XAttribute(XMLNames.AxleWheels_Axles_Axle_AxleNumber_Attr, i + 1), steeringPumps[i]);
+				technologies.Add(technology);
+			}
+
+			return new XElement(tns + XMLNames.BusAux_SteeringPump,
+				technologies
+			);
+		}
+
+		private XElement GetElectricSystem(IElectricSupplyDeclarationData electricSupply, bool supplyHevPossible)
+		{
+			var alternatorTech = new XElement(tns + XMLNames.Bus_AlternatorTechnology, electricSupply.AlternatorTechnology.ToXMLFormat());
+
+			List<XElement> smartAlternators = null;
+			List<XElement> auxBattery = null;
+			List<XElement> auxCapacitor = null;
+
+			if (electricSupply.Alternators?.Any() == true) {
+				smartAlternators = new List<XElement>();
+
+				foreach (var alternator in electricSupply.Alternators) {
+					smartAlternators.Add(new XElement(tns + XMLNames.BusAux_ElectricSystem_SmartAlternator,
+									new XElement(tns + XMLNames.BusAux_ElectricSystem_RatedCurrent, alternator.RatedCurrent.Value()),
+									new XElement(tns + XMLNames.BusAux_ElectricSystem_RatedRatedVoltage, alternator.RatedVoltage.Value())));
+				}
+			}
+
+			if (electricSupply.ElectricStorage?.Any() == true) {
+				auxBattery = new List<XElement>();
+				auxCapacitor = new List<XElement>();
+
+				foreach (var electricStorage in electricSupply.ElectricStorage) {
+					if (electricStorage is BusAuxBatteryInputData) {
+						var battery = electricStorage as BusAuxBatteryInputData;
+						auxBattery.Add(new XElement(tns + XMLNames.BusAux_ElectricSystem_Battery,
+							new XElement(tns + XMLNames.BusAux_ElectricSystem_BatteryTechnology, battery.Technology),
+							new XElement(tns + XMLNames.BusAux_ElectricSystem_RatedCapacity, battery.Capacity.AsAmpHour),
+							new XElement(tns + XMLNames.BusAux_ElectricSystem_NominalVoltage, battery.Voltage.Value())));
+					}
+					else if (electricStorage is BusAuxCapacitorInputData) {
+						var capacitor = electricStorage as BusAuxCapacitorInputData;
+						auxCapacitor.Add(new XElement(tns + XMLNames.BusAux_ElectricSystem_Capacitor,
+							new XElement(tns + XMLNames.BusAux_ElectricSystem_CapacitorTechnology, capacitor.Technology),
+							new XElement(tns + XMLNames.BusAux_ElectricSystem_RatedCapacitance, capacitor.Capacity.Value()),
+							new XElement(tns + XMLNames.BusAux_ElectricSystem_RatedVoltage, capacitor.Voltage.Value())));
+					}
+				}
+
+				auxBattery = auxBattery.Any() ? auxBattery : null;
+				auxCapacitor = auxCapacitor.Any() ? auxCapacitor : null;
+			}
+			
+			return new XElement(tns + XMLNames.BusAux_ElectricSystem,
+						alternatorTech,
+						smartAlternators,
+						auxBattery,
+						auxCapacitor,
+						new XElement(tns + XMLNames.BusAux_ElectricSystem_SupplyFromHEVPossible, supplyHevPossible)
+			);
+		}
+
+
+		private XElement GetPneumaticSystem(IPneumaticSupplyDeclarationData supply, IPneumaticConsumersDeclarationData consumer)
+		{
+			return new XElement(tns + XMLNames.BusAux_PneumaticSystem,
+					new XElement(tns + XMLNames.Bus_SizeOfAirSupply, supply.CompressorSize),
+					new XElement(tns + XMLNames.CompressorDrive, supply.CompressorDrive.GetLabel()),
+					new XElement(tns + XMLNames.Vehicle_Clutch, supply.Clutch),
+					new XElement(tns + XMLNames.Bus_CompressorRatio, supply.Ratio.ToMinSignificantDigits(3)),
+					new XElement(tns + XMLNames.Bus_SmartCompressionSystem, supply.SmartAirCompression),
+					new XElement(tns + XMLNames.Bus_SmartRegenerationSystem, supply.SmartRegeneration),
+					new XElement(tns + XMLNames.Bus_AirsuspensionControl, GetXMLAirsuspensionControl(consumer.AirsuspensionControl)),
+					new XElement(tns + XMLNames.BusAux_PneumaticSystem_SCRReagentDosing, consumer.AdBlueDosing == ConsumerTechnology.Pneumatically)
+				);
+		}
+
+		private string GetXMLAirsuspensionControl(ConsumerTechnology airsuspensionControl)
+		{
+			switch (airsuspensionControl) {
+				case ConsumerTechnology.Electrically:
+					return "electronically";
+				case ConsumerTechnology.Mechanically:
+					return "mechanically";
+				default:
+					throw new VectoException("Unknown AirsuspensionControl!");
+			}
+		}
+
+
+		private XElement GetHvac(IHVACBusAuxiliariesDeclarationData hvac)
+		{
+			return new XElement(new XElement(tns + XMLNames.BusAux_HVAC,
+				new XElement(tns + XMLNames.Bus_AdjustableCoolantThermostat, hvac.AdjustableCoolantThermostat),
+				new XElement(tns + XMLNames.Bus_EngineWasteGasHeatExchanger, hvac.EngineWasteGasHeatExchanger)));
+		}
+
 
 		private XElement GetAxlegearDescription(AxleGearData axleGearData)
 		{
@@ -230,15 +386,14 @@ namespace TUGraz.VectoCore.OutputData.XML
 
 		private XElement GetAngledriveDescription(AngledriveData angledriveData)
 		{
-			if (angledriveData == null) {
+			if (angledriveData == null) 
 				return null;
-			}
-
-			return new XElement(
-				tns + XMLNames.Component_Angledrive,
+			
+			return WrapComponent(XMLNames.Component_Angledrive, "AngledriveDataPIFType",
 				GetCommonDescription(angledriveData),
-				new XElement(tns + XMLNames.Component_AppVersion, angledriveData.InputData.AppVersion),
-				new XElement(tns + XMLNames.AngleDrive_Ratio, angledriveData.Angledrive.Ratio.ToXMLFormat(3)));
+					new XElement(tns + XMLNames.Component_AppVersion, angledriveData.InputData.AppVersion),
+					new XElement(tns + XMLNames.AngleDrive_Ratio, angledriveData.Angledrive.Ratio.ToXMLFormat(3))
+				);
 		}
 
 		private XElement GetGearboxDescription(GearboxData gearboxData)
@@ -269,8 +424,6 @@ namespace TUGraz.VectoCore.OutputData.XML
 
 		private XElement GetEngineDescription(CombustionEngineData engineData, List<List<FuelData.Entry>> fuelModes)
 		{
-			XNamespace v23 = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V23;
-
 			var fuels = new List<XElement>();
 			foreach (var mode in engineData.InputData.EngineModes) {
 				fuels.Add(
@@ -288,7 +441,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 							)),
 						new XElement(
 							tns + "Fuels",
-							mode.Fuels.Select(x => new XElement(tns + "FuelType", x.FuelType.ToXMLFormat())))
+							mode.Fuels.Select(x => new XElement(tns + XMLNames.Engine_FuelType, x.FuelType.ToXMLFormat())))
 					)
 				);
 			}
@@ -440,6 +593,11 @@ namespace TUGraz.VectoCore.OutputData.XML
 					(result.CO2Total.ConvertToGramm() / result.Distance.ConvertToKiloMeter()).ToMinSignificantDigits(3, 2)));
 
 			return retVal.Cast<object>().ToArray();
+		}
+		
+		private string GetGUID()
+		{
+			return Guid.NewGuid().ToString("n").Substring(0, 20);
 		}
 	}
 

@@ -7,6 +7,6 @@
 	},
 	"Body": {
 		"CompletedVehicle": "vecto_vehicle-completed_heavyBus_41_mixed.xml",
-		"PrimaryVehicleResults":  "vecto_vehicle-primary_heavyBus_ESS_electricFanSTP.RSLT_PIF.xml"
+		"PrimaryVehicleResults":  "vecto_vehicle-primary_heavyBus_ESS_electricFanSTP.RSLT_VIF.xml"
 	}
 }

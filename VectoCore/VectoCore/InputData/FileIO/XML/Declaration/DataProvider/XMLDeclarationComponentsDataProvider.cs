@@ -33,6 +33,7 @@ using System.Xml;
 using System.Xml.Linq;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
+using TUGraz.VectoCommon.Resources;
 using TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Interfaces;
 using TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader;
 using TUGraz.VectoCore.Utils;
@@ -80,7 +81,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 			get { return _gearboxInputData ?? (_gearboxInputData = ComponentReader.GearboxInputData); }
 		}
 
-		
+
 		public virtual ITorqueConverterDeclarationInputData TorqueConverterInputData
 		{
 			get { return _torqueconverterInputData ?? (_torqueconverterInputData = ComponentReader.TorqueConverterInputData); }
@@ -158,7 +159,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 		public XMLDeclarationComponentsDataProviderV20(
 			IXMLDeclarationVehicleData vehicle, XmlNode componentNode, string sourceFile) : base(
-			vehicle, componentNode, sourceFile) { }
+			vehicle, componentNode, sourceFile)
+		{ }
 
 		protected override XNamespace SchemaNamespace
 		{
@@ -214,10 +216,14 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 		#region Overrides of XMLDeclarationComponentsDataProviderV10
 
-		public override IAxleGearInputData AxleGearInputData { get {
-			return null;
+		public override IAxleGearInputData AxleGearInputData
+		{
+			get
+			{
+				return null;
 				//throw new NotSupportedException("No Axlegeardata available"); 
-			} }
+			}
+		}
 
 		#endregion
 
@@ -249,7 +255,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		{
 			get { return null; }
 		}
-		
+
 		IAuxiliariesDeclarationInputData IVehicleComponentsDeclaration.AuxiliaryInputData
 		{
 			get { return null; }
@@ -267,11 +273,10 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 	// ---------------------------------------------------------------------------------------
 
 
-	public class XMLDeclarationComponentsPrimaryVehicleBusDataProviderV01 : XMLDeclarationComponentsDataProviderV10, IXMLVehicleComponentsDeclaration,
-		IRetarderInputData
-		
+	public class XMLDeclarationComponentsMultistagePrimaryVehicleBusDataProviderV01 : XMLDeclarationComponentsDataProviderV10,
+		IXMLVehicleComponentsDeclaration, IRetarderInputData
 	{
-		public new static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_PRIMARY_BUS_VEHICLE_URI_V01;
+		public new static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_MULTISTAGE_BUS_VEHICLE_NAMESPACE_VO1;
 
 		public new const string XSD_TYPE = "VehicleComponentsPIFType";
 
@@ -279,8 +284,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 		private IBusAuxiliariesDeclarationData _busAuxiliaries;
 
-
-		public XMLDeclarationComponentsPrimaryVehicleBusDataProviderV01(IXMLDeclarationVehicleData vehicle,
+		public XMLDeclarationComponentsMultistagePrimaryVehicleBusDataProviderV01(IXMLDeclarationVehicleData vehicle,
 			XmlNode componentNode, string sourceFile) : base(vehicle, componentNode, sourceFile) { }
 
 
@@ -293,7 +297,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		{
 			get { return null; }
 		}
-		
+
 		IAuxiliariesDeclarationInputData IVehicleComponentsDeclaration.AuxiliaryInputData
 		{
 			get { return null; }
@@ -311,10 +315,107 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 		#region IRetarderInputData Interface Implementation
 
-		public RetarderType Type { get{ return _vehicle.RetarderType; }}
-		public double Ratio { get { return _vehicle.RetarderRatio; }}
+		public RetarderType Type { get { return _vehicle.RetarderType; } }
+		public double Ratio { get { return _vehicle.RetarderRatio; } }
 		public TableData LossMap { get; }
 
 		#endregion
+	}
+
+
+	// ---------------------------------------------------------------------------------------
+
+	public class XMLDeclarationInterimStageBusComponentsDataProviderV28 : XMLDeclarationComponentsDataProviderV10,
+		IXMLVehicleComponentsDeclaration
+	{
+		public new static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V28;
+
+		public new const string XSD_TYPE = "CompletedVehicleComponentsDeclarationType";
+
+		public new static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
+
+
+		private IBusAuxiliariesDeclarationData _busAuxiliaries;
+
+
+		public XMLDeclarationInterimStageBusComponentsDataProviderV28(IXMLDeclarationVehicleData vehicle,
+				XmlNode componentNode, string sourceFile) : base(vehicle, componentNode, sourceFile) { }
+
+
+		public override IAirdragDeclarationInputData AirdragInputData
+		{
+			get
+			{
+				if (!ElementExists(XMLNames.Component_AirDrag))
+					return null;
+				
+				return _airdragInputData ?? (_airdragInputData = ComponentReader.AirdragInputData);
+			}
+		}
+
+
+		public override IGearboxDeclarationInputData GearboxInputData
+		{
+			get { return null; }
+		}
+
+		public override ITorqueConverterDeclarationInputData TorqueConverterInputData
+		{
+			get { return null; }
+		}
+
+		public override IAxleGearInputData AxleGearInputData
+		{
+			get { return null; }
+		}
+
+		public override IAngledriveInputData AngledriveInputData
+		{
+			get { return null; }
+		}
+
+		public override IEngineDeclarationInputData EngineInputData
+		{
+			get { return null; }
+		}
+
+		public override IRetarderInputData RetarderInputData
+		{
+			get { return null; }
+		}
+
+		public override IPTOTransmissionInputData PTOTransmissionInputData
+		{
+			get { return null; }
+		}
+
+		public override IAxlesDeclarationInputData AxleWheels
+		{
+			get { return null; }
+		}
+
+
+		public override IBusAuxiliariesDeclarationData BusAuxiliaries
+		{
+			get
+			{
+				if (!ElementExists(XMLNames.Component_Auxiliaries))
+					return null;
+
+				return _busAuxiliaries ?? (_busAuxiliaries = GetBusAuxiliaries());
+			}
+		}
+
+		private IBusAuxiliariesDeclarationData GetBusAuxiliaries()
+		{
+			var busAux = ComponentReader.BusAuxiliariesInputData;
+
+			if (busAux.ElectricConsumers == null && busAux.HVACAux == null &&
+				busAux.PneumaticConsumers == null && busAux.PneumaticSupply == null &&
+				busAux.ElectricSupply == null && busAux.FanTechnology == null &&
+				busAux.SteeringPumpTechnology == null)
+				return null;
+			return busAux;
+		}
 	}
 }

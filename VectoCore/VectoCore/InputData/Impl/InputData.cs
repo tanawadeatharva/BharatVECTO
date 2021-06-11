@@ -32,11 +32,14 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Runtime.CompilerServices;
 using TUGraz.VectoCommon.BusAuxiliaries;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Models.Declaration;
+
+[assembly: InternalsVisibleTo("VECTO3GUI2020")]
 
 namespace TUGraz.VectoCore.InputData.Impl
 {
@@ -201,20 +204,72 @@ namespace TUGraz.VectoCore.InputData.Impl
 
 	public class AlternatorInputData : IAlternatorDeclarationInputData
 	{
-		public AlternatorInputData(string technology)
+		public AlternatorInputData(Volt ratedVoltage, Ampere ratedCurrent)
 		{
-			Technology = technology;
-			
+			RatedCurrent = ratedCurrent;
+			RatedVoltage = ratedVoltage;
+
 		}
 
 		#region Implementation of IAlternatorDeclarationInputData
-
-		public virtual string Technology { get; }
 		
+		public Ampere RatedCurrent { get; }
+		public Volt RatedVoltage { get; }
+
 		#endregion
 	}
 
-	
+	public class BusAuxBatteryInputData : IBusAuxElectricStorageDeclarationInputData
+	{
+		public BusAuxBatteryInputData(string technology, Volt voltage, AmpereSecond ratedCapacity)
+		{
+			Technology = technology;
+			Voltage = voltage;
+			Capacity = ratedCapacity;
+		}
+
+		public Volt Voltage { get; set; }
+
+		public AmpereSecond Capacity { get; set; }
+
+		#region Implementation of IBusAuxElectricStorageDeclarationInputData
+
+		public string Technology { get; }
+
+		public WattSecond ElectricStorageCapacity
+		{
+			get { return Capacity * Voltage; }
+		}
+
+		#endregion
+	}
+
+	public class BusAuxCapacitorInputData : IBusAuxElectricStorageDeclarationInputData
+	{
+		public BusAuxCapacitorInputData(string technology, Volt voltage, Farad ratedCapacity)
+		{
+			Technology = technology;
+			Voltage = voltage;
+			Capacity = ratedCapacity;
+		}
+
+		public Volt Voltage { get; set; }
+
+		public Farad Capacity { get; set; }
+
+		#region Implementation of IBusAuxElectricStorageDeclarationInputData
+
+		public string Technology { get; }
+		public WattSecond ElectricStorageCapacity
+		{
+			get { return Capacity * Voltage * Voltage / 2.0; }
+		}
+
+		#endregion
+	}
+
+
+
 	public class ResultInputData : IResultsInputData
 	{
 		public string Status { get; internal set; }

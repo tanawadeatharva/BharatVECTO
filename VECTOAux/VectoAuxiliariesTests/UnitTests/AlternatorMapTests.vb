@@ -1,5 +1,6 @@
 ﻿Imports System.IO
 Imports NUnit.Framework
+Imports TUGraz.VectoCommon.BusAuxiliaries
 Imports TUGraz.VectoCommon.Utils
 Imports TUGraz.VectoCore.InputData.Reader.ComponentData
 Imports TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl

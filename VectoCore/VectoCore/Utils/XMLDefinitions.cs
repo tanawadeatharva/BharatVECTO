@@ -39,14 +39,15 @@ namespace TUGraz.VectoCore.Utils
 	public enum XmlDocumentType
 	{
 		DeclarationJobData = 1 << 1,
-		PrimaryVehicleBusOutputData = 1 << 2,
+		//PrimaryVehicleBusOutputData = 1 << 2,
 		DeclarationComponentData = 1 << 3,
 		EngineeringJobData = 1 << 4,
 		EngineeringComponentData = 1 << 5,
 		ManufacturerReport = 1 << 6,
 		CustomerReport = 1 << 7,
 		MonitoringReport = 1 << 8,
-		VTPReport = 1 << 9
+		VTPReport = 1 << 9,
+		MultistageOutputData = 1 << 10
 	}
 
 	
@@ -86,6 +87,8 @@ namespace TUGraz.VectoCore.Utils
 
 		public const string DECLARATION_DEFINITIONS_NAMESPACE_URI_V26 = DECLARATION_NAMESPACE + ":DEV:v2.6";
 
+		public const string DECLARATION_DEFINITIONS_NAMESPACE_URI_V28 = DECLARATION_NAMESPACE + ":DEV:v2.8";
+
 		public const string DECLARATION_INPUT_NAMESPACE = "urn:tugraz:ivt:VectoAPI:DeclarationInput";
 
 		public const string DECLARATION_INPUT_NAMESPACE_URI_V10 = DECLARATION_INPUT_NAMESPACE + ":v1.0";
@@ -98,6 +101,12 @@ namespace TUGraz.VectoCore.Utils
 
 		public const string DECLARATION_PRIMARY_BUS_VEHICLE_URI_V01 =
 			DECLARATION_PRIMARY_BUS_VEHICLE_NAMESPACE + ":HeavyBus:v0.1";
+
+		public const string DECLARATION_MULTISTAGE_BUS_VEHICLE_NAMESPACE =
+			"urn:tugraz:ivt:VectoAPI:DeclarationOutput:VehicleInterimFile";
+
+		public const string DECLARATION_MULTISTAGE_BUS_VEHICLE_NAMESPACE_VO1 =
+			DECLARATION_MULTISTAGE_BUS_VEHICLE_NAMESPACE + ":v0.1";
 
 
 		public const string DECLARATION_MANUFACTURER_REPORT_V05 = "urn:tugraz:ivt:VectoAPI:DeclarationOutput:v0.5";
@@ -115,7 +124,7 @@ namespace TUGraz.VectoCore.Utils
 
 		private static Dictionary<XmlDocumentType, string> schemaFilenames = new Dictionary<XmlDocumentType, string>() {
 			{XmlDocumentType.DeclarationJobData, "VectoDeclarationJob.xsd"},
-			{XmlDocumentType.PrimaryVehicleBusOutputData, "VectoOutputPrimaryVehicleInformation.xsd"},
+			//{XmlDocumentType.PrimaryVehicleBusOutputData, "VectoOutputPrimaryVehicleInformation.xsd"},
 			{XmlDocumentType.DeclarationComponentData, "VectoDeclarationComponent.xsd"},
 			{XmlDocumentType.EngineeringJobData, "VectoEngineeringJob.xsd" },
 			{XmlDocumentType.EngineeringComponentData, "VectoEngineeringComponent.xsd" },
@@ -123,6 +132,7 @@ namespace TUGraz.VectoCore.Utils
 			{XmlDocumentType.CustomerReport , "VectoOutputCustomer.xsd"},
 			{XmlDocumentType.MonitoringReport , "VectoMonitoring.xsd"},
 			{XmlDocumentType.VTPReport , "VTPReport.xsd"},
+			{XmlDocumentType.MultistageOutputData, "VectoOutputMultistage.0.1.xsd"}
 		};
 
 		public static XNamespace DECLARATION_OUTPUT_PRIMARY_HEAVY_BUS = "urn:tugraz:ivt:VectoAPI:DeclarationOutput:PrimaryVehicleInformation:HeavyBus:v0.1";
@@ -131,7 +141,7 @@ namespace TUGraz.VectoCore.Utils
 		public static string GetSchemaFilename(XmlDocumentType type)
 		{
 			if (!schemaFilenames.ContainsKey(type)) {
-				throw new Exception(string.Format("Invalid argument {0} - only use single flags", type));
+				throw new Exception(string.Format("Invalid argument '{0}' - only use single flags", type));
 			}
 			var entry = schemaFilenames[type];
 			

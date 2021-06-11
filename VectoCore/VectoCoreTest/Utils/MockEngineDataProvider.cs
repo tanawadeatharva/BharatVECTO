@@ -71,9 +71,9 @@ namespace TUGraz.VectoCore.Tests.Utils
 			get { return new[] { this }.Cast<IEngineFuelEngineeringInputData>().ToList(); }
 		}
 
-		public IList<IEngineFuelDelcarationInputData> Fuels
+		public IList<IEngineFuelDeclarationInputData> Fuels
 		{
-			get { return new[] { this }.Cast<IEngineFuelDelcarationInputData>().ToList(); }
+			get { return new[] { this }.Cast<IEngineFuelDeclarationInputData>().ToList(); }
 		}
 
 		public IWHRData WasteHeatRecoveryDataElectrical { get; }

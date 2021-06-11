@@ -47,7 +47,8 @@ namespace TUGraz.VectoCommon.Hashing
 		Vehicle,
 		VectoOutput,
 		VectoCustomerInformation,
-		VectoPrimaryVehicleInformation
+		VectoPrimaryVehicleInformation,
+		VectoManufacturingStage
 	}
 
 	public static class VectoComponentsExtensionMethods
@@ -78,7 +79,9 @@ namespace TUGraz.VectoCommon.Hashing
 				case VectoComponents.VectoCustomerInformation:
 					return "VectoCustomerInformation";
 				case VectoComponents.VectoPrimaryVehicleInformation:
-					return "VectoOutputPrimaryVehicle";
+					return "PrimaryVehicle";
+				case VectoComponents.VectoManufacturingStage:
+					return "ManufacturingStage";
 				default:
 					throw new ArgumentOutOfRangeException("VectoComponents", component, null);
 			}
@@ -109,6 +112,10 @@ namespace TUGraz.VectoCommon.Hashing
 					return "COC-";
 				case VectoComponents.VectoPrimaryVehicleInformation:
 					return "PIF-";
+				case VectoComponents.Vehicle:
+					return "VEH-";
+				case VectoComponents.VectoManufacturingStage:
+					return "MST-";
 				default:
 					throw new ArgumentOutOfRangeException("VectoComponents", component, null);
 			}
@@ -120,6 +127,7 @@ namespace TUGraz.VectoCommon.Hashing
 				case VectoComponents.VectoCustomerInformation:
 				case VectoComponents.VectoOutput:
 				case VectoComponents.VectoPrimaryVehicleInformation:
+				case VectoComponents.VectoManufacturingStage:
 					return true;
 				default:
 					return false;

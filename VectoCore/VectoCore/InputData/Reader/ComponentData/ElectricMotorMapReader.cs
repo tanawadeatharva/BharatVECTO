@@ -25,7 +25,7 @@ namespace TUGraz.VectoCore.InputData.Reader.ComponentData {
 			{
 				LoggingObject.Logger<FuelConsumptionMap>().Warn(
 					"Efficiencymap: Header Line is not valid. Expected: '{0}, {1}, {2}', Got: {3}",
-					FuelConsumptionMapReader.Fields.EngineSpeed, FuelConsumptionMapReader.Fields.Torque, FuelConsumptionMapReader.Fields.FuelConsumption,
+					Fields.MotorSpeed, Fields.Torque, Fields.PowerElectrical,
 					string.Join(", ", data.Columns.Cast<DataColumn>().Select(c => c.ColumnName)));
 				data.Columns[0].ColumnName = Fields.MotorSpeed;
 				data.Columns[1].ColumnName = Fields.Torque;
@@ -68,8 +68,8 @@ namespace TUGraz.VectoCore.InputData.Reader.ComponentData {
 
 		private static bool HeaderIsValid(DataColumnCollection columns)
 		{
-			return columns.Contains(FuelConsumptionMapReader.Fields.EngineSpeed) && columns.Contains(FuelConsumptionMapReader.Fields.Torque) &&
-					columns.Contains(FuelConsumptionMapReader.Fields.FuelConsumption);
+			return columns.Contains(Fields.MotorSpeed) && columns.Contains(Fields.Torque) &&
+					columns.Contains(Fields.PowerElectrical);
 		}
 
 		public static class Fields

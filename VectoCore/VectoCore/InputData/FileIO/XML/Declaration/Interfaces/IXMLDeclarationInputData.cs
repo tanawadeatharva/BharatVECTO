@@ -38,9 +38,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Interfaces
 	{
 		IXMLDeclarationInputDataReader Reader { set; }
 	}
-
-
-
+	
 	public interface IXMLPrimaryVehicleBusInputData : IPrimaryVehicleInformationInputDataProvider, IXMLResource
 	{
 		IXMLDeclarationPrimaryVehicleBusInputDataReader Reader { set; }
@@ -48,5 +46,15 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Interfaces
 		XmlNode ResultsNode { get; }
 
 		XmlNode ApplicationInformationNode { get; }
+	}
+
+	public interface IXMLMultistageInputDataProvider : IMultistageBusInputDataProvider, IXMLResource
+	{
+		IXMLDeclarationMultistageVehicleInputDataReader Reader { set; }
+	}
+
+	public interface IXMLMultistageEntryInputDataProvider : IMultiStageTypeInputData, IXMLResource
+	{
+		IXMLMultistageReader Reader { set; }
 	}
 }
