@@ -726,9 +726,13 @@ namespace TUGraz.VectoCommon.InputData
 
 		double OverloadRecoveryFactor { get; }
 
-		Watt ContinuousPower { get; }
+		NewtonMeter ContinuousTorque { get; }
 
-		PerSecond ContinuousPowerSpeed { get; }
+		PerSecond ContinuousTorqueSpeed { get; }
+
+		NewtonMeter OverloadTorque { get; }
+
+		PerSecond OverloadTestSpeed { get; }
 	}
 
 	public interface IElectricMachinesDeclarationInputData

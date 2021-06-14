@@ -648,6 +648,7 @@ Public Class VectoJobForm
         'a_DesMax
         vectoJob.DesMaxFile = TbDesMaxFile.Text
 
+        vectoJob.AuxEntries.Clear()
         For Each lv0 As ListViewItem In LvAux.Items
             Dim auxEntry As VectoJob.AuxEntry = New VectoJob.AuxEntry
 
@@ -657,7 +658,7 @@ Public Class VectoJobForm
                     Function(x) Trim(x)))
 
             auxEntry.Type = AuxiliaryTypeHelper.ParseKey(lv0.SubItems(AuxViewColumns.AuxID).Text)
-            
+            vectoJob.AuxEntries(AuxiliaryTypeHelper.GetAuxKey(auxEntry.Type)) = auxEntry
         Next
         vectoJob.AuxPwrICEOn = TbAuxPAuxICEOn.Text.ToDouble(0)
         vectoJob.AuxPwrDrivingICEOff = tbPAuxDrivingICEOff.Text.ToDouble(0)
@@ -671,6 +672,8 @@ Public Class VectoJobForm
         Else 
             vectoJob.UseBusAux = false
         End If
+
+        
 
         'vectoJob.EngineOnly = JobType = VectoSimulationJobType.EngineOnlySimulation
 

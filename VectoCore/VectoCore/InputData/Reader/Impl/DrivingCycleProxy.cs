@@ -46,7 +46,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 		}
 
 		[JsonIgnore]
-		public List<DrivingCycleData.DrivingCycleEntry> Entries { get; private set; }
+		public List<DrivingCycleData.DrivingCycleEntry> Entries { get; protected internal set; }
 
 		public string Name { get; private set; }
 

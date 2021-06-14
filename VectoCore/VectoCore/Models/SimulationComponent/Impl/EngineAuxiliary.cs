@@ -133,7 +133,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			return 0.SI<NewtonMeter>();
 		}
 
-		public Watt PowerDemandEngineOff(Second absTime, Second dt)
+		public Watt PowerDemandESSEngineOff(Second absTime, Second dt)
 		{
 
 			var auxiliarieIgnoredDuringVehicleStop = new[] {
@@ -169,7 +169,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			return engineOffDemand;  //powerDemands.Sum(kv => kv.Value); 
 		}
 
-		public Watt PowerDemandEngineOn(Second absTime, Second dt, PerSecond engineSpeed)
+		public Watt PowerDemandESSEngineOn(Second absTime, Second dt, PerSecond engineSpeed)
 		{
 			return ComputePowerDemand(engineSpeed, absTime, dt, true);
 		}

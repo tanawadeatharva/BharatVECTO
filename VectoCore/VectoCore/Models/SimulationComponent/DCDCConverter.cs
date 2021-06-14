@@ -1,5 +1,6 @@
 ﻿using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Models.Connector.Ports.Impl;
+using TUGraz.VectoCore.Models.Simulation;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.DataBus;
 using TUGraz.VectoCore.Models.Simulation.Impl;
@@ -11,7 +12,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent
 	{
 		public double Efficiency { get; protected set; }
 
-		public DCDCConverter(VehicleContainer container, double efficiency) : base(container)
+		public DCDCConverter(IVehicleContainer container, double efficiency) : base(container)
 		{
 			Efficiency = efficiency;
 			PreviousState.ConsumedEnergy = 0.SI<WattSecond>();

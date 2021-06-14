@@ -34,7 +34,7 @@ public class JSONFileWriter : IOutputFileWriter
 
 	private const int VectoVTPJobFormatVersion = 4;
 
-	private const int ElectricMotorFormatVersion = 1;
+	private const int ElectricMotorFormatVersion = 2;
 
 	private const int REESSFormatVersion = 1;
 
@@ -83,8 +83,10 @@ public class JSONFileWriter : IOutputFileWriter
 		body.Add("DragCurve", GetRelativePath(electricMachine.DragCurve.Source, Path.GetDirectoryName(filename)));
 		body.Add("EfficiencyMap", GetRelativePath(electricMachine.EfficiencyMap.Source, Path.GetDirectoryName(filename)));
 		body.Add("Inertia", electricMachine.Inertia.Value());
-		body.Add("ContinuousPower", electricMachine.ContinuousPower.Value());
-		body.Add("ContinuousPowerSpeed", electricMachine.ContinuousPowerSpeed.AsRPM);
+		body.Add("ContinuousTorque", electricMachine.ContinuousTorque.Value());
+		body.Add("ContinuousTorqueSpeed", electricMachine.ContinuousTorqueSpeed.AsRPM);
+		body.Add("OverloadTorque", electricMachine.OverloadTorque.Value());
+		body.Add("OverloadTorqueSpeed", electricMachine.OverloadTestSpeed.AsRPM);
 		body.Add("OverloadTime", electricMachine.OverloadTime.Value());
 		body.Add("ThermalOverloadRecoveryFactor", electricMachine.OverloadRecoveryFactor);
 		WriteFile(header, body, filename);
@@ -964,15 +966,16 @@ public class JSONFileWriter : IOutputFileWriter
 					auxOut.Add("Type", auxEntry.Type.Name());
 					auxOut.Add("Technology", new string[] { });
 				} else {
+					auxOut.Add("ID", auxEntry.Type.Key());
 					auxOut.Add("Type", auxEntry.Type.Name());
 					auxOut.Add("Technology", engineeringAuxEntry.Technology);
 				}
 
 				auxList.Add(auxOut);
-				body.Add("Aux", auxList);
+				
 			}
 
-			
+			body.Add("Aux", auxList);
 		}
 
 		if (!job.SavedInDeclarationMode && job.Vehicle is IVehicleEngineeringInputData engVehicle) {

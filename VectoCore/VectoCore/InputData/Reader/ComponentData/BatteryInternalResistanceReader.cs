@@ -1,4 +1,5 @@
 ﻿using System.Data;
+using System.IO;
 using System.Linq;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.Models;
@@ -38,6 +39,11 @@ namespace TUGraz.VectoCore.InputData.Reader.ComponentData
 			public const string StateOfCharge = "SoC";
 
 			public const string InternalResistance = "Ri";
+		}
+
+		public static InternalResistanceMap Create(Stream data, int packCount)
+		{
+			return Create(VectoCSVFile.ReadStream(data), packCount);
 		}
 	}
 }

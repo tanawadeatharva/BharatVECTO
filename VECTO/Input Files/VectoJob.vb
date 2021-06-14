@@ -35,6 +35,7 @@ Public Class VectoJob
                 IDeclarationJobInputData, IDriverEngineeringInputData, IDriverDeclarationInputData, IAuxiliariesEngineeringInputData, IAuxiliaryEngineeringInputData,
                 IAuxiliariesDeclarationInputData, IJSONVehicleComponents, IEngineStopStartEngineeringInputData, IEcoRollEngineeringInputData, IPCCEngineeringInputData
 
+
     
     Private _sFilePath As String
     Private _myPath As String
@@ -93,6 +94,8 @@ Public Class VectoJob
     Public AuxPwrDrivingICEOff As Double
     Public AuxPwrStandstillICEOff As Double
 
+    Public AuxEntries As Dictionary(Of String, AuxEntry )
+
     'Private _vehicleInputData As JSONComponentInputData
     'Private _engineInputData As JSONComponentInputData
     'Private _gearboxInputData As JSONComponentInputData
@@ -126,6 +129,8 @@ Public Class VectoJob
         _driverAccelerationFile = New SubPath
 
         CycleFiles = New List(Of SubPath)
+
+        AuxEntries = new Dictionary(Of String,AuxEntry)
     End Sub
 
     Public Function SaveFile() As Boolean
@@ -711,7 +716,7 @@ Public Class VectoJob
     Public ReadOnly Property Auxiliaries As IAuxiliaryEngineeringInputData _
         Implements IAuxiliariesEngineeringInputData.Auxiliaries
         Get
-            Return me
+            Return  Me 'AuxData().Cast(Of IAuxiliariesEngineeringInputData).ToList()
         End Get
     End Property
 
@@ -735,7 +740,9 @@ Public Class VectoJob
     Protected Function AuxData() As IList(Of DeclarationAuxiliaryDataInputData)
 
         Dim retVal As List(Of DeclarationAuxiliaryDataInputData) = New List(Of DeclarationAuxiliaryDataInputData)
-
+        For Each entry As KeyValuePair(Of string, AuxEntry) In AuxEntries
+            retVal.Add(New DeclarationAuxiliaryDataInputData() With{ .ID = entry.Key, .Technology = entry.Value.TechnologyList, .Type = AuxiliaryTypeHelper.ParseKey(entry.Key)})
+        Next
         Return retVal
     End Function
 
@@ -808,6 +815,8 @@ Public Class VectoJob
             Return AuxElPadd.SI(of Watt)
     End Get
     End Property
+
+
 End Class
 
 

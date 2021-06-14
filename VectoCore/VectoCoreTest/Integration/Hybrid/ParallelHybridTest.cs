@@ -11,6 +11,7 @@ using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.InputData.FileIO.JSON;
 using TUGraz.VectoCore.InputData.Impl;
 using TUGraz.VectoCore.InputData.Reader.ComponentData;
+using TUGraz.VectoCore.InputData.Reader.Impl;
 using TUGraz.VectoCore.InputData.Reader.ShiftStrategy;
 using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation.Data;
@@ -809,7 +810,7 @@ namespace TUGraz.VectoCore.Tests.Integration.Hybrid
 		{ RunHybridJob(jobFile, cycleIdx); }
 
 
-		public void RunHybridJob(string jobFile, int cycleIdx)
+		public void RunHybridJob(string jobFile, int cycleIdx, int? startDistance = null)
 		{
 			var inputProvider = JSONInputDataFactory.ReadJsonJob(jobFile);
 			
@@ -825,6 +826,14 @@ namespace TUGraz.VectoCore.Tests.Integration.Hybrid
 			factory.SumData = sumContainer;
 
 			var run = factory.SimulationRuns().ToArray()[cycleIdx];
+
+			if (startDistance != null) {
+				//(run.GetContainer().BatteryInfo as Battery).PreviousState.StateOfCharge = 0.317781;
+				(run.GetContainer().RunData.Cycle as DrivingCycleProxy).Entries = run.GetContainer().RunData.Cycle
+					.Entries.Where(x => x.Distance >= startDistance.Value ).ToList();
+				//run.GetContainer().MileageCounter.Distance = startDistance;
+				//run.GetContainer().DrivingCycleInfo.CycleStartDistance = startDistance;
+			}
 
 			Assert.NotNull(run);
 
@@ -1077,6 +1086,46 @@ namespace TUGraz.VectoCore.Tests.Integration.Hybrid
 			graphWriter.Write(modFilename);
 		}
 
+		public const string Group5_P3_AMT = @"TestData\Hybrids\GenericVehicle_Group5_P3\P3 Group 5.vecto";
+			
+		[
+			TestCase(Group5_P3_AMT, 0, TestName = "P3 Hybrid DriveCycle LongHaul"),
+			TestCase(Group5_P3_AMT, 1, TestName = "P3 Hybrid DriveCycle Coach"),
+			TestCase(Group5_P3_AMT, 2, TestName = "P3 Hybrid DriveCycle Construction"),
+			TestCase(Group5_P3_AMT, 3, TestName = "P3 Hybrid DriveCycle HeavyUrban"),
+			TestCase(Group5_P3_AMT, 4, TestName = "P3 Hybrid DriveCycle Interurban"),
+			TestCase(Group5_P3_AMT, 5, TestName = "P3 Hybrid DriveCycle MunicipalUtility"),
+			TestCase(Group5_P3_AMT, 6, TestName = "P3 Hybrid DriveCycle RegionalDelivery"),
+			TestCase(Group5_P3_AMT, 7, TestName = "P3 Hybrid DriveCycle Suburban"),
+			TestCase(Group5_P3_AMT, 8, TestName = "P3 Hybrid DriveCycle Urban"),
+			TestCase(Group5_P3_AMT, 9, TestName = "P3 Hybrid DriveCycle UrbanDelivery"),
+
+		]
+		public void P3HybridGroup5_DriveCycle(string jobFile, int cycleIdx)
+		{
+			RunHybridJob(jobFile, cycleIdx);
+		}
+
+		public const string Group5_P3_AMT_VehiclePropLimit = @"TestData\Hybrids\GenericVehicle_Group5_P3\P3 Group 5_LimitVehiclePropTq.vecto";
+
+		[
+			TestCase(Group5_P3_AMT_VehiclePropLimit, 0, TestName = "P3 Hybrid Limit Vehicle Prop.Tq DriveCycle LongHaul"),
+			TestCase(Group5_P3_AMT_VehiclePropLimit, 1, TestName = "P3 Hybrid Limit Vehicle Prop.Tq DriveCycle Coach"),
+			TestCase(Group5_P3_AMT_VehiclePropLimit, 2, TestName = "P3 Hybrid Limit Vehicle Prop.Tq DriveCycle Construction"),
+			TestCase(Group5_P3_AMT_VehiclePropLimit, 3, TestName = "P3 Hybrid Limit Vehicle Prop.Tq DriveCycle HeavyUrban"),
+			TestCase(Group5_P3_AMT_VehiclePropLimit, 4, TestName = "P3 Hybrid Limit Vehicle Prop.Tq DriveCycle Interurban"),
+			TestCase(Group5_P3_AMT_VehiclePropLimit, 5, TestName = "P3 Hybrid Limit Vehicle Prop.Tq DriveCycle MunicipalUtility"),
+			TestCase(Group5_P3_AMT_VehiclePropLimit, 6, TestName = "P3 Hybrid Limit Vehicle Prop.Tq DriveCycle RegionalDelivery"),
+			TestCase(Group5_P3_AMT_VehiclePropLimit, 7, TestName = "P3 Hybrid Limit Vehicle Prop.Tq DriveCycle Suburban"),
+			TestCase(Group5_P3_AMT_VehiclePropLimit, 8, TestName = "P3 Hybrid Limit Vehicle Prop.Tq DriveCycle Urban"),
+			TestCase(Group5_P3_AMT_VehiclePropLimit, 9, TestName = "P3 Hybrid Limit Vehicle Prop.Tq DriveCycle UrbanDelivery"),
+
+		]
+		public void P3HybridGroup5_VehilcePropLimit_DriveCycle(string jobFile, int cycleIdx)
+		{
+			RunHybridJob(jobFile, cycleIdx);
+		}
+		
 		public const string Group5_P3_APT = @"TestData\Hybrids\GenericVehicle_Group5_P3_APT\P3 APT Group 5.vecto";
 		public const string Group5_P4_APT = @"TestData\Hybrids\GenericVehicle_Group5_P4_APT\P4 APT Group 5.vecto";
 
@@ -1105,37 +1154,13 @@ namespace TUGraz.VectoCore.Tests.Integration.Hybrid
 			TestCase(Group5_P4_APT, 9, TestName = "P4 APT Hybrid Group 5 DriveCycle UrbanDelivery"),
 
 		]
-		public void P3APTHybridGroup5DriveCycle(string jobFile, int cycleIdx)
+		public void P4APTHybridGroup5DriveCycle(string jobFile, int cycleIdx)
 		{
-			var inputProvider = JSONInputDataFactory.ReadJsonJob(jobFile);
-
-			var writer = new FileOutputWriter(jobFile);
-			var factory = new SimulatorFactory(ExecutionMode.Engineering, inputProvider, writer) {
-				Validate = false,
-				WriteModalResults = true,
-			};
-
-			var sumContainer = new SummaryDataContainer(writer);
-			var jobContainer = new JobContainer(sumContainer);
-
-			factory.SumData = sumContainer;
-
-			var run = factory.SimulationRuns().ToArray()[cycleIdx];
-
-			Assert.NotNull(run);
-
-			var pt = run.GetContainer();
-
-			Assert.NotNull(pt);
-
-			run.Run();
-			Assert.IsTrue(run.FinishedWithoutErrors);
-
-			//jobContainer.AddRuns(factory);
-			//jobContainer.Execute();
-			//jobContainer.WaitFinished();
-			//Assert.IsTrue(jobContainer.GetProgress().All(x => x.Value.Success));
+			RunHybridJob(jobFile, cycleIdx);
 		}
+
+
+		
 
 		// - - - - - - - - - - - - - - - - - - - - - - - - - 
 
@@ -1305,6 +1330,46 @@ namespace TUGraz.VectoCore.Tests.Integration.Hybrid
 			
 			var graphWriter = GetGraphWriter(new[] { ModalResultField.P_electricMotor_mech_P4 });
 			graphWriter.Write(modFilename);
+		}
+
+		public const string Group5_P4_AMT = @"TestData\Hybrids\GenericVehicle_Group5_P3\P3 Group 5.vecto";
+
+		[
+			TestCase(Group5_P4_AMT, 0, TestName = "P4 Hybrid DriveCycle LongHaul"),
+			TestCase(Group5_P4_AMT, 1, TestName = "P4 Hybrid DriveCycle Coach"),
+			TestCase(Group5_P4_AMT, 2, TestName = "P4 Hybrid DriveCycle Construction"),
+			TestCase(Group5_P4_AMT, 3, TestName = "P4 Hybrid DriveCycle HeavyUrban"),
+			TestCase(Group5_P4_AMT, 4, TestName = "P4 Hybrid DriveCycle Interurban"),
+			TestCase(Group5_P4_AMT, 5, TestName = "P4 Hybrid DriveCycle MunicipalUtility"),
+			TestCase(Group5_P4_AMT, 6, TestName = "P4 Hybrid DriveCycle RegionalDelivery"),
+			TestCase(Group5_P4_AMT, 7, TestName = "P4 Hybrid DriveCycle Suburban"),
+			TestCase(Group5_P4_AMT, 8, TestName = "P4 Hybrid DriveCycle Urban"),
+			TestCase(Group5_P4_AMT, 9, TestName = "P4 Hybrid DriveCycle UrbanDelivery"),
+
+		]
+		public void P4HybridGroup5_DriveCycle(string jobFile, int cycleIdx)
+		{
+			RunHybridJob(jobFile, cycleIdx);
+		}
+
+		public const string Group5_P4_AMT_VehiclePropLimit = @"TestData\Hybrids\GenericVehicle_Group5_P4\P4 Group 5_LimitVehiclePropTq.vecto";
+
+		[
+			TestCase(Group5_P4_AMT_VehiclePropLimit, 0, TestName = "P4 Hybrid Limit Vehicle Prop.Tq DriveCycle LongHaul"),
+			TestCase(Group5_P4_AMT_VehiclePropLimit, 1, TestName = "P4 Hybrid Limit Vehicle Prop.Tq DriveCycle Coach"),
+			TestCase(Group5_P4_AMT_VehiclePropLimit, 2, TestName = "P4 Hybrid Limit Vehicle Prop.Tq DriveCycle Construction"),
+			TestCase(Group5_P4_AMT_VehiclePropLimit, 3, TestName = "P4 Hybrid Limit Vehicle Prop.Tq DriveCycle HeavyUrban"),
+			TestCase(Group5_P4_AMT_VehiclePropLimit, 4, TestName = "P4 Hybrid Limit Vehicle Prop.Tq DriveCycle Interurban"),
+			TestCase(Group5_P4_AMT_VehiclePropLimit, 5, TestName = "P4 Hybrid Limit Vehicle Prop.Tq DriveCycle MunicipalUtility"),
+			TestCase(Group5_P4_AMT_VehiclePropLimit, 6, TestName = "P4 Hybrid Limit Vehicle Prop.Tq DriveCycle RegionalDelivery"),
+			TestCase(Group5_P4_AMT_VehiclePropLimit, 7, TestName = "P4 Hybrid Limit Vehicle Prop.Tq DriveCycle Suburban"),
+			TestCase(Group5_P4_AMT_VehiclePropLimit, 8, TestName = "P4 Hybrid Limit Vehicle Prop.Tq DriveCycle Urban"),
+			TestCase(Group5_P4_AMT_VehiclePropLimit, 9, TestName = "P4 Hybrid Limit Vehicle Prop.Tq DriveCycle UrbanDelivery"),
+
+		]
+		public void P4HybridGroup5_VehilcePropLimit_DriveCycle(string jobFile, int cycleIdx)
+		{
+			RunHybridJob(jobFile, cycleIdx);
 		}
 
 		// =================================================
