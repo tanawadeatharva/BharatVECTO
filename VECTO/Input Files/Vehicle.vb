@@ -1022,7 +1022,9 @@ Public Class ElectricMachineWrapper
 	Public ReadOnly Property EfficiencyMap As TableData Implements IElectricMotorDeclarationInputData.EfficiencyMap
 	Public ReadOnly Property Inertia As KilogramSquareMeter Implements IElectricMotorDeclarationInputData.Inertia
 	Public ReadOnly Property OverloadTime As Second Implements IElectricMotorDeclarationInputData.OverloadTime
-	Public ReadOnly Property ContinuousPowerSpeed As PerSecond Implements IElectricMotorDeclarationInputData.ContinuousPowerSpeed
+	Public ReadOnly Property ContinuousTorqueSpeed As PerSecond Implements IElectricMotorDeclarationInputData.ContinuousTorqueSpeed
+    Public ReadOnly Property OverloadTorque As NewtonMeter Implements IElectricMotorDeclarationInputData.OverloadTorque
+    Public ReadOnly Property OverloadTestSpeed As PerSecond Implements IElectricMotorDeclarationInputData.OverloadTestSpeed
 	Public ReadOnly Property OverloadRecoveryFactor As Double Implements IElectricMotorDeclarationInputData.OverloadRecoveryFactor
-	Public ReadOnly Property ContinuousPower As Watt Implements IElectricMotorDeclarationInputData.ContinuousPower
+    Public ReadOnly Property ContinuousTorque As NewtonMeter Implements IElectricMotorDeclarationInputData.ContinuousTorque
 End Class

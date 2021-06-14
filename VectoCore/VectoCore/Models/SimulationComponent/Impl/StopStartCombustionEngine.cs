@@ -90,10 +90,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl {
 			CurrentState.EnginePower = 0.SI<Watt>();
 			CurrentState.dt = dt;
 
-			if (!dryRun) {
+			//if (!dryRun) {
 				//EngineAux.TorqueDemand(absTime, dt, 0.SI<NewtonMeter>(), 0.SI<NewtonMeter>(), ModelData.IdleSpeed);
-				CurrentState.AuxPowerEngineOff = EngineAux.PowerDemandEngineOff(absTime, dt);
-			} else {
+				//CurrentState.AuxPowerEngineOff = EngineAux.PowerDemandEngineOff(absTime, dt);
+			//} else {
+			if (dryRun) {
 				return new ResponseDryRun(this) {
 					DeltaFullLoad = 0.SI<Watt>(),
 					DeltaDragLoad = 0.SI<Watt>(),
@@ -113,6 +114,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl {
 				};
 			}
 
+			EngineAux?.TorqueDemand(absTime, dt, outTorque, outAngularVelocity, dryRun);
 			return new ResponseSuccess(this) {
 				Engine = {
 					TorqueOutDemand = outTorque,
@@ -182,11 +184,12 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl {
 
 			container[ModalResultField.ICEOn] = CurrentState.EngineOn;
 			
-			var auxDemandPwr = EngineAux.PowerDemandEngineOn(time, simulationInterval, ModelData.IdleSpeed);
-			var auxDemandTq = auxDemandPwr / ModelData.IdleSpeed;
+			var auxDemandPwrICEOn = EngineAux.PowerDemandESSEngineOn(time, simulationInterval, ModelData.IdleSpeed);
+			var auxDemandPwrICEOff = EngineAux.PowerDemandESSEngineOff(time, simulationInterval);
+			var auxDemandTq = auxDemandPwrICEOn / ModelData.IdleSpeed;
 			
-			container[ModalResultField.P_aux_ESS_mech_ice_off] = (CurrentState.AuxPowerEngineOff ?? 0.SI<Watt>());
-			container[ModalResultField.P_aux_ESS_mech_ice_on] = (auxDemandPwr ?? 0.SI<Watt>());
+			container[ModalResultField.P_aux_ESS_mech_ice_off] = (auxDemandPwrICEOff ?? 0.SI<Watt>());
+			container[ModalResultField.P_aux_ESS_mech_ice_on] = (auxDemandPwrICEOn ?? 0.SI<Watt>());
 
 			WriteWHRPowerEngineOff(container, ModelData.IdleSpeed, auxDemandTq);
 

@@ -214,12 +214,18 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			//}
 
 			if (CurrentDrivingMode == DrivingMode.DrivingModeBrake) {
+				var nextAction = GetNextDrivingAction(ds);
+				if (nextAction != null && !BrakeTrigger.HasEqualTrigger(nextAction) && nextAction.ActionDistance.IsSmallerOrEqual(BrakeTrigger.ActionDistance)) {
+					BrakeTrigger = nextAction;
+				}
 				if (Driver.DataBus.MileageCounter.Distance.IsGreaterOrEqual(BrakeTrigger.TriggerDistance, 1e-3.SI<Meter>())) {
 					CurrentDrivingMode = DrivingMode.DrivingModeDrive;
 					NextDrivingAction = null;
 					DrivingModes[CurrentDrivingMode].ResetMode();
 					Log.Debug("Switching to DrivingMode DRIVE");
 				}
+				
+
 			}
 			if (CurrentDrivingMode == DrivingMode.DrivingModeDrive) {
 				var currentDistance = Driver.DataBus.MileageCounter.Distance;

@@ -78,7 +78,8 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 						mission.DefaultCDxA,
 						GetDeclarationAirResistanceCurve(
 							mission.CrossWindCorrectionParameters, mission.DefaultCDxA, completedVehicle.Height + mission.BusParameter.DeltaHeight),
-						CrossWindCorrectionMode.DeclarationModeCorrection)
+						CrossWindCorrectionMode.DeclarationModeCorrection),
+					CrossWindCorrectionMode = CrossWindCorrectionMode.DeclarationModeCorrection
 				};
 			}
 

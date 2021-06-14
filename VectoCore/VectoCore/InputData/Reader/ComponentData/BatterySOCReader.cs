@@ -1,4 +1,5 @@
 ﻿using System.Data;
+using System.IO;
 using System.Linq;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.Models;
@@ -9,6 +10,11 @@ using TUGraz.VectoCore.Utils;
 namespace TUGraz.VectoCore.InputData.Reader.ComponentData {
 	public static class BatterySOCReader
 	{
+		public static SOCMap Create(Stream data)
+		{
+			return Create(VectoCSVFile.ReadStream(data));
+		}
+
 
 		public static SOCMap Create(DataTable data)
 		{
