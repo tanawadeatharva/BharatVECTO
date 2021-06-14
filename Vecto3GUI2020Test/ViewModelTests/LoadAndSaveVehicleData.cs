@@ -158,7 +158,7 @@ namespace Vecto3GUI2020Test
 		[Test]
 		public void loadVehicleInputDataOnly()
 		{
-			string inputPath = Path.Combine(DirPath, stageInputFullSample);
+			string inputPath = Path.Combine(TestDataDirPath, stageInputFullSample);
 			var inputDataReader = _kernel.Get<IXMLInputDataReader>();
 			var inputData = (IDeclarationInputDataProvider)inputDataReader.Create(inputPath);
 			var vehicleInputData = inputData.JobInputData.Vehicle;

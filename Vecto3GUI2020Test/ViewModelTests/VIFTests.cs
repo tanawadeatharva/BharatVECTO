@@ -92,7 +92,7 @@ namespace Vecto3GUI2020Test.ViewModelTests
 		private FileOutputVIFWriter GetFileOutputVIFWriter(IMultiStageJobViewModel multistageViewModel)
 		{
 			var outputFileName = primary_vehicle_only.Replace(".xml", "_vif_output_mandatory_fields.xml");
-			var outputFilePath = Path.Combine(DirPath, outputFileName);
+			var outputFilePath = Path.Combine(TestDataDirPath, outputFileName);
 
 			var currentStageCount = multistageViewModel.MultistageJobInputData.JobInputData.ManufacturingStages?.Count ?? 0;
 			return  new FileOutputVIFWriter(outputFilePath, currentStageCount);

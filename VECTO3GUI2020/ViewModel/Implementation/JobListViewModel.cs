@@ -18,6 +18,8 @@ using System.Xml.Linq;
 using Microsoft.Toolkit.Mvvm.Input;
 using Microsoft.WindowsAPICodePack.Shell.Interop;
 using Microsoft.WindowsAPICodePack.Shell.PropertySystem;
+using NLog;
+using NLog.Targets;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
@@ -117,6 +119,34 @@ namespace VECTO3GUI2020.ViewModel.Implementation
 			_inputDataReader = inputDataReader;
 			_multiStageViewModelFactory = multiStageViewModelFactory;
 			_outputViewModel = outputViewModel;
+
+			_outputMessage = new Progress<MessageEntry>((message) => {
+				_outputViewModel.AddMessage(message);
+			});
+			_progress = new Progress<int>((i) => {
+				_outputViewModel.Progress = i;
+			});
+			_status = new Progress<string>((msg) => {
+				_outputViewModel.StatusMessage = msg;
+			});
+
+
+			//configure Nlog
+			var target = new MethodCallTarget("VectoGuiTarget", (evtInfo, obj) => LogMethod(evtInfo, obj));
+			NLog.Config.SimpleConfigurator.ConfigureForTargetLogging(target);
+		}
+
+		private void LogMethod(LogEventInfo evtInfo, object[] objects)
+		{
+			if (!SimulationRunning) {
+				return;
+			}
+			if(evtInfo.Level == LogLevel.Error || evtInfo.Level == LogLevel.Warn || evtInfo.Level == LogLevel.Fatal)
+			_outputMessage.Report(new MessageEntry() {
+				Type = MessageType.ErrorMessage,
+				Message = evtInfo.FormattedMessage,
+				Source = evtInfo.CallerMemberName,
+			});
 		}
 
 
@@ -153,15 +183,20 @@ namespace VECTO3GUI2020.ViewModel.Implementation
 
 		private ICommand _cancelSimulationCommand;
 
+		private IProgress<MessageEntry> _outputMessage;
+		private IProgress<int> _progress;
+		private IProgress<string> _status;
 
-		private async Task RunSimulationExecute()
+
+		public async Task RunSimulationExecute()
 		{
 			cancellationTokenSource = new CancellationTokenSource();
 			SimulationRunning = true;
 			await Task.Run(() => RunSimulationAsync(cancellationTokenSource.Token,
-				new Progress<MessageEntry>((message) => { _outputViewModel.AddMessage(message); }),
-				new Progress<int>((i) => _outputViewModel.Progress = i),
-				new Progress<string>((msg) => _outputViewModel.StatusMessage = msg)));
+				outputMessages: _outputMessage, 
+				progress: _progress, 
+				status: _status));
+
 			SimulationRunning = false;
 			_outputViewModel.Progress = 0;
 			cancellationTokenSource.Dispose();
@@ -356,11 +391,18 @@ namespace VECTO3GUI2020.ViewModel.Implementation
 			{
 				if (ct.IsCancellationRequested)
 				{
-					jobContainer.Cancel();
-					outputMessages.Report(new MessageEntry() {
+					try {
+						await Task.Run(() => jobContainer.Cancel());
+					} catch (Exception e) {
+						Debug.WriteLine(e.Message);
+					}
+
+					outputMessages.Report(new MessageEntry()
+					{
 						Message = "Simulation canceled",
 						Type = MessageType.StatusMessage,
 					});
+
 					return;
 				}
 
@@ -379,7 +421,7 @@ namespace VECTO3GUI2020.ViewModel.Implementation
 					.ToDictionary(x => x.Key, x => x.Value);
 				//PrintRuns(justFinished, fileWriters);
 				finishedRuns.AddRange(justFinished.Select(x => x.Key));
-				await Task.Delay(100, ct);
+				await Task.Delay(100);
 			}
 			start.Stop();
 
@@ -558,7 +600,7 @@ namespace VECTO3GUI2020.ViewModel.Implementation
 			}
 		}
 
-		private async Task<IDocumentViewModel> AddJobExecuteAsync()
+		public async Task<IDocumentViewModel> AddJobExecuteAsync()
 		{
 			var fileName = _dialogHelper.OpenXMLFileDialog();
 			if (fileName != null) {
