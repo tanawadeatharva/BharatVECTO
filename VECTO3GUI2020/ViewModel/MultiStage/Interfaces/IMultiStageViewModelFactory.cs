@@ -20,9 +20,9 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Interfaces
 
 		IVehicleViewModel GetInterimStageVehicleViewModel();
 
-		IVehicleViewModel GetInterimStageVehicleViewModel(IVehicleDeclarationInputData consolidatedVehicleData);
+		IVehicleViewModel GetInterimStageVehicleViewModel(IVehicleDeclarationInputData consolidatedVehicleData, bool exempted);
 
-		IManufacturingStageViewModel GetManufacturingStageViewModel(IManufacturingStageInputData consolidatedManufacturingStageInputData);
+		IManufacturingStageViewModel GetManufacturingStageViewModel(IManufacturingStageInputData consolidatedManufacturingStageInputData, bool exempted);
 		IMultistageAirdragViewModel GetMultistageAirdragViewModel();
 
 		IMultistageAirdragViewModel GetMultistageAirdragViewModel(

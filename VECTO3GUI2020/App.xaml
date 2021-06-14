@@ -17,7 +17,8 @@
                 <ResourceDictionary Source="DataGridStyles.xaml"/>
                 <ResourceDictionary Source="Resources/Templates/ErrorTemplates.xaml"/>
                 <ResourceDictionary Source="Resources/ObjectProvider.xaml"/>
-                <ResourceDictionary Source="Resources/Icons/drawables.xaml"></ResourceDictionary>
+                <ResourceDictionary Source="Resources/Icons/drawables.xaml"/>
+                <ResourceDictionary Source="Resources/DataTemplateSelectors.xaml"/>
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Application.Resources>

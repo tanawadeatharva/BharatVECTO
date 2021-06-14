@@ -4,7 +4,7 @@ using System.Windows.Controls;
 using TUGraz.VectoCommon.Exceptions;
 using VECTO3GUI2020.Views.Multistage.CustomControls;
 
-namespace VECTO3GUI2020.Helper
+namespace VECTO3GUI2020.Helper.TemplateSelector
 {
 	public class MultistageParameterDataTemplateSelector : DataTemplateSelector
 	{

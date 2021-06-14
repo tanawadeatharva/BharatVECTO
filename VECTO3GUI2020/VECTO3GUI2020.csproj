@@ -170,10 +170,11 @@
     <Compile Include="Helper\IndexedStorage.cs" />
     <Compile Include="Helper\IWindowHelper.cs" />
     <Compile Include="Helper\DialogHelper.cs" />
-    <Compile Include="Helper\MultistageParameterDataTemplateSelector.cs" />
+    <Compile Include="Helper\TemplateSelector\MultistageParameterDataTemplateSelector.cs" />
     <Compile Include="Helper\MultistageParameterViewModel.cs" />
     <Compile Include="Helper\NameOfMarkUpExtension.cs" />
     <Compile Include="Helper\NameResolver.cs" />
+    <Compile Include="Helper\TemplateSelector\MultistageVehicleDataTemplateSelector.cs" />
     <Compile Include="Helper\WindowHelper.cs" />
     <Compile Include="Helper\XMLExtension.cs" />
     <Compile Include="Helper\XmlHelper.cs" />
@@ -444,6 +445,9 @@
     <Compile Include="Views\Multistage\VehicleView_v2_8.xaml.cs">
       <DependentUpon>VehicleView_v2_8.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\Multistage\VehicleView_v2_8_exempted.xaml.cs">
+      <DependentUpon>VehicleView_v2_8_exempted.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\OutputView.xaml.cs">
       <DependentUpon>OutputView.xaml</DependentUpon>
     </Compile>
@@ -454,6 +458,10 @@
       <DependentUpon>XMLViewer.xaml</DependentUpon>
     </Compile>
     <Page Include="DataGridStyles.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Resources\DataTemplateSelectors.xaml">
+      <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Resources\Icons\AddDocument_16x.xaml">
@@ -688,6 +696,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\Multistage\VehicleView_v2_8.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Multistage\VehicleView_v2_8_exempted.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
