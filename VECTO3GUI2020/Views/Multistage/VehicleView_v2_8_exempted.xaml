@@ -24,7 +24,7 @@
                     <ContentControl Content="{Binding ParameterViewModels[ManufacturerAddress]}"/>
                     <ContentControl Content="{Binding ParameterViewModels[VIN]}"/>
                     <ContentControl Content="{Binding ParameterViewModels[Model]}"/>
-                    <ContentControl Content="{Binding ParameterViewModels[LegislativeCategory]}"/>
+                    <ContentControl Content="{Binding ParameterViewModels[LegislativeClass]}"/>
                     <ContentControl Content="{Binding ParameterViewModels[CurbMassChassis]}"/>
                     <ContentControl Content="{Binding ParameterViewModels[GrossVehicleMassRating]}"/>
                     <ContentControl Content="{Binding ParameterViewModels[RegisteredClass]}"/>

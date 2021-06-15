@@ -1,5 +1,6 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Input;
 using VECTO3GUI2020.ViewModel.Implementation;
 using VECTO3GUI2020.ViewModel.Interfaces;
 
@@ -45,6 +46,11 @@ namespace VECTO3GUI2020.Views
 			if (!e.Data.GetDataPresent(DataFormats.FileDrop)) {
 				e.Effects = DragDropEffects.None;
 			}
+		}
+
+		private void JobDataGrid_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
+		{
+				CommandManager.InvalidateRequerySuggested();
 		}
 	}
 }
