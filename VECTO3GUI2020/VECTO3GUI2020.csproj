@@ -479,6 +479,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Resources\Icons\FolderClosed_16x.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Resources\Icons\Trash_16x.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
