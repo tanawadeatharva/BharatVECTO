@@ -28,7 +28,9 @@
         <views:SettingsView/>
     </DataTemplate>
 
-    
+    <DataTemplate x:Shared="False" DataType="{x:Type impl:AboutViewModel}">
+        <views:AboutView></views:AboutView>
+    </DataTemplate>
 
 
 

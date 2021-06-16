@@ -203,6 +203,7 @@
     <Compile Include="TestViewModel.cs" />
     <Compile Include="Util\XML\Implementation\ComponentWriter\XMLBusAuxiliariesWriter.cs" />
     <Compile Include="Util\XML\Implementation\ComponentWriter\XMLPTOWriter.cs" />
+    <Compile Include="ViewModel\Implementation\AboutViewModel.cs" />
     <Compile Include="ViewModel\Implementation\Document\DeclarationJobViewModel.cs" />
     <Compile Include="ViewModel\Implementation\Document\DeclarationTrailerJobDocumentViewModel.cs" />
     <Compile Include="Model\Interfaces\IAuxiliaryModelFactory.cs" />
@@ -318,6 +319,9 @@
     <Compile Include="ViewModel\MultiStage\Interfaces\IMultistageAirdragViewModel.cs" />
     <Compile Include="ViewModel\MultiStage\Interfaces\IMultiStageViewModelFactory.cs" />
     <Compile Include="ViewModel\Implementation\OutputViewModel.cs" />
+    <Compile Include="Views\AboutView.xaml.cs">
+      <DependentUpon>AboutView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\CustomControls\ComboParameter.xaml.cs">
       <DependentUpon>ComboParameter.xaml</DependentUpon>
     </Compile>
@@ -522,6 +526,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Resources\Templates\ButtonTemplates.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Resources\Templates\ErrorTemplates.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -531,6 +539,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Test.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\AboutView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -816,6 +828,12 @@
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>Version.cs</LastGenOutput>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Images\JRC-About.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Images\VECTO-About.png" />
   </ItemGroup>
   <!-- ItemGroup>
     <Analyzer Include="..\packages\Microsoft.DependencyValidation.Analyzers.0.11.0\analyzers\dotnet\cs\Microsoft.DependencyValidation.Analyzers.resources.dll" />
