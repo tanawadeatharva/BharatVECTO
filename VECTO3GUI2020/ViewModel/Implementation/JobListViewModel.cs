@@ -445,7 +445,7 @@ namespace VECTO3GUI2020.ViewModel.Implementation
 					string.Join(", ", jobProgress.Select(x => string.Format("{0,4:P}", x.Value.Progress)))));
                 var justFinished = jobProgress.Where(x => x.Value.Done & !finishedRuns.Contains(x.Key))
 					.ToDictionary(x => x.Key, x => x.Value);
-				//PrintRuns(justFinished, fileWriters);
+				PrintRuns(justFinished, fileWriters, outputMessages);
 				finishedRuns.AddRange(justFinished.Select(x => x.Key));
 				await Task.Delay(100);
 			}
@@ -453,7 +453,7 @@ namespace VECTO3GUI2020.ViewModel.Implementation
 
 			var remainingRuns = jobContainer.GetProgress().Where(x => x.Value.Done && !finishedRuns.Contains(x.Key))
 				.ToDictionary(x => x.Key, x => x.Value);
-			//PrintRuns(remainingRuns, fileWriters);
+			PrintRuns(remainingRuns, fileWriters, outputMessages);
 
 			finishedRuns.Clear();
 			fileWriters.Clear();
@@ -494,6 +494,7 @@ namespace VECTO3GUI2020.ViewModel.Implementation
 								Message = string.Format(
 									"{2} for '{0}' written to {1}", Path.GetFileName(jobEntry.DataSource.SourceFile), entry.Key, entry.Value),
 								//Link = "<XML>" + entry.Key
+								Link = entry.Key
 							});
 					}
 				}
@@ -505,6 +506,7 @@ namespace VECTO3GUI2020.ViewModel.Implementation
 				{
 					Type = MessageType.StatusMessage,
 					Message = string.Format("Sum file written to {0}", sumFileWriter.SumFileName),
+					Link = sumFileWriter.SumFileName,
 					//Link = "<CSV>" + sumFileWriter.SumFileName
 				});
 			}
@@ -525,34 +527,36 @@ namespace VECTO3GUI2020.ViewModel.Implementation
 					.GetModDataFileName(p.Value.RunName, p.Value.CycleName, p.Value.RunSuffix);
 				var runName = string.Format("{0} {1} {2}", p.Value.RunName, p.Value.CycleName, p.Value.RunSuffix);
 
-			//	if (p.Value.Error != null)
-			//	{
-			//		SimulationWorker.ReportProgress(0, new VectoSimulationProgress()
-			//		{
-			//			Type = VectoSimulationProgress.MsgType.StatusMessage,
-			//			Message = string.Format("Finished Run {0} with ERROR: {1}", runName,
-			//				p.Value.Error.Message),
-			//			Link = "<CSV>" + modFilename
-			//		});
-			//	}
-			//	else
-			//	{
-			//		SimulationWorker.ReportProgress(0, new VectoSimulationProgress()
-			//		{
-			//			Type = VectoSimulationProgress.MsgType.StatusMessage,
-			//			Message = string.Format("Finished run {0} successfully.", runName)
-			//		});
-			//	}
-			//	if (File.Exists(modFilename))
-			//	{
-			//		SimulationWorker.ReportProgress(0, new VectoSimulationProgress()
-			//		{
-			//			Type = VectoSimulationProgress.MsgType.StatusMessage,
-			//			Message = string.Format("Run {0}: Modal results written to {1}", runName, modFilename),
-			//			Link = "<CSV>" + modFilename
-			//		});
-			//	}
-			}
+                if (p.Value.Error != null)
+                {
+                    outputMessages.Report(new MessageEntry()
+                    {
+                        Type = MessageType.StatusMessage,
+                        Message = string.Format("Finished Run {0} with ERROR: {1}", runName,
+                            p.Value.Error.Message),
+                        Link = modFilename
+						//Link = "<CSV>" + modFilename
+					});
+                }
+                else
+                {
+					outputMessages.Report(new MessageEntry()
+					{
+                        Type = MessageType.StatusMessage,
+                        Message = string.Format("Finished run {0} successfully.", runName)
+                    });
+                }
+                if (File.Exists(modFilename))
+                {
+                    outputMessages.Report(new MessageEntry()
+                    {
+                        Type = MessageType.StatusMessage,
+                        Message = string.Format("Run {0}: Modal results written to {1}", runName, modFilename),
+                        Link = modFilename,
+						//Link = "<CSV>" + modFilename
+					});
+                }
+            }
 		}
 
 

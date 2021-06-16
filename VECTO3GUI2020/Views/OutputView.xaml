@@ -33,12 +33,24 @@
                 <DataGrid.Columns>
                         <DataGridTemplateColumn Header="Message" Width="*">
                             <DataGridTemplateColumn.CellTemplate>
-                                <DataTemplate>
+                                <DataTemplate DataType="impl:MessageEntry">
                                     <StackPanel>
                                         <TextBlock Text="{Binding Message}" Visibility="{Binding Message, Converter={StaticResource NullToVisibilityConverter}}"
                                                    TextWrapping="Wrap"/>
-                                        <TextBlock Text="{Binding Link}" Visibility="{Binding Message, Converter={StaticResource NullToVisibilityConverter}}"
-                                                   TextWrapping="Wrap"/>
+
+                                        <TextBlock Visibility="{Binding Link, Converter={StaticResource NullToVisibilityConverter}}">
+                                            <Hyperlink Command="{Binding Path=DataContext.OpenFolderCommand, 
+                                                             RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type DataGrid}}}" 
+                                                       CommandParameter="{Binding Link}">
+                                                Open Folder 
+                                            </Hyperlink>
+                                            
+                                            <Hyperlink Command="{Binding Path=DataContext.OpenFileCommand, 
+                                                             RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type DataGrid}}}" 
+                                                       CommandParameter="{Binding Link}">
+                                                Open File
+                                            </Hyperlink>
+                                        </TextBlock>
                                     </StackPanel>
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>

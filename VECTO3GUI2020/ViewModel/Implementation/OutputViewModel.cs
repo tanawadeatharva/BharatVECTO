@@ -1,7 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
+using System.IO;
 using System.Windows.Data;
+using System.Windows.Input;
+using Microsoft.Toolkit.Mvvm.Input;
 using Microsoft.WindowsAPICodePack.Shell.Interop;
 using VECTO3GUI2020.ViewModel.Implementation;
 using VECTO3GUI2020.ViewModel.Implementation.Common;
@@ -13,22 +17,20 @@ namespace VECTO3GUI2020.ViewModel
 
 	public class OutputViewModel : ViewModelBase, IOutputViewModel
 	{
+		#region MembersAndProperties
 		private object _messageLock = new Object();
 		private ObservableCollection<MessageEntry> _messages = new ObservableCollection<MessageEntry>();
 		private int _progress;
 		private string _statusMessage;
+		private ICommand _openFolderCommand;
+		private ICommand _openFileCommand;
 
 		public ObservableCollection<MessageEntry> Messages
 		{
 			get { return _messages; }
 		}
 
-		public void AddMessage(MessageEntry messageEntry)
-		{
-			lock (_messageLock) {
-				Messages.Add(messageEntry);
-			}
-		}
+
 
 		public int Progress
 		{
@@ -43,11 +45,73 @@ namespace VECTO3GUI2020.ViewModel
 		}
 
 
+
+		#endregion
+
+		public void AddMessage(MessageEntry messageEntry)
+		{
+			lock (_messageLock)
+			{
+				Messages.Add(messageEntry);
+			}
+		}
+
+
 		public OutputViewModel()
 		{
 			BindingOperations.EnableCollectionSynchronization(Messages, _messageLock);
 		}
+
+
+		#region Commands
+
+		public ICommand OpenFolderCommand =>
+			_openFolderCommand ?? (_openFolderCommand = new RelayCommand<string>(
+				OpenFolderExecute));
+
+		public ICommand OpenFileCommand =>
+			_openFileCommand ?? (_openFileCommand = new RelayCommand<string>(
+				OpenFileExecute));
+
+		private void OpenFolderExecute(string link)
+		{
+			if (link == null) {
+				return;
+			}
+
+
+			var directoryPath = Path.GetDirectoryName(link);
+
+			StartProcess(directoryPath);
+		}
+
+		private void OpenFileExecute(string link){
+			if (link == null) {
+				return;
+			}
+
+			StartProcess(link);
+
+		
+		}
+
+		private void StartProcess(string command)
+		{
+			try
+			{
+				Process.Start(command);
+			}
+			catch (Exception e)
+			{
+				Debug.WriteLine(e.Message);
+			}
+		}
+
+		#endregion
 	}
+
+
+
 
 	public interface IOutputViewModel : IMainViewModel
 	{

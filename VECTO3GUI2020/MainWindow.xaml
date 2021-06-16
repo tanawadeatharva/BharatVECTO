@@ -14,30 +14,99 @@
 
 
     <Grid x:Name="Grid" >
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="1*"/>
-        </Grid.ColumnDefinitions>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="40"/>
-            <RowDefinition Height="1.5*"/>
-            <RowDefinition Height="5"></RowDefinition>
-            <RowDefinition Height="1*"/>
-        </Grid.RowDefinitions>
-
-            <StackPanel Grid.Row="0" Orientation="Vertical">
-                <Menu x:Name="menu" AutomationProperties.Name="-" AutomationProperties.AutomationId="Test" IsMainMenu="True">
-                <MenuItem Header="File" x:Name="MenuItemFile"  AutomationProperties.Name="=" VerticalAlignment="Stretch">
+        <DockPanel>
+            <StackPanel DockPanel.Dock="Top" Grid.Row="0" Orientation="Vertical">
+                <Menu IsMainMenu="True">
+                    <MenuItem Header="File" x:Name="MenuItemFile"  AutomationProperties.Name="=" VerticalAlignment="Stretch">
                         <MenuItem Header="Settings" Command="{Binding OpenSettings}"/>
                         <MenuItem Header="New File" Command="{Binding NewInterimFile}"/>
-                        <MenuItem Header="Open File" Command="{Binding AddJob}"/>
+                        <!--<MenuItem Header="Open File" Command="{Binding AddJob}"/>-->
                     </MenuItem>
                 </Menu>
             </StackPanel>
+                <UniformGrid Rows="1" DockPanel.Dock="Top" Width="400" HorizontalAlignment="Left">
+                    <Border x:Name="JobsButtonBorder" BorderThickness ="0 0 0 3">
+                        <Border.Style>
+                            <Style TargetType="Border">
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding JobsSelected}" Value="true">
+                                        <Setter Property="BorderBrush" Value="{StaticResource AccentColorButton}"></Setter>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Border.Style>
+                        
+                 
+                        <Button x:Name="Jobs" Margin="0 0 0 0" 
+                                VerticalAlignment="Stretch"
+                                DockPanel.Dock="Top" 
+                                Content="Jobs"
+                                Command="{Binding SwitchTopView}"
+                                CommandParameter="Jobs"
+                                Style="{DynamicResource MultiStageButtonStyle1}">
+                        </Button>
+                    </Border>
+
+                <Border BorderThickness="{Binding ElementName=JobsButtonBorder, Path=BorderThickness}" >
+                    <Border.Style>
+                        <Style TargetType="Border">
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding SettingsSelected}" Value="true">
+                                    <Setter Property="BorderBrush" Value="{StaticResource AccentColorButton}"></Setter>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Border.Style>
+                    <Button Margin="0 0 0 0" 
+                            VerticalAlignment="Stretch"
+                            DockPanel.Dock="Top" 
+                            Content="Settings"
+                            Command="{Binding SwitchTopView}"
+                            CommandParameter="Settings"
+                            Style="{DynamicResource MultiStageButtonStyle1}">
+                    </Button>
+                    </Border>
+                <Border BorderThickness="{Binding ElementName=JobsButtonBorder, Path=BorderThickness}">
+                    <Border.Style>
+                        <Style TargetType="Border">
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding AboutSelected}" Value="true">
+                                    <Setter Property="BorderBrush" Value="{StaticResource AccentColorButton}"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Border.Style>
+                    <Button Margin="0 0 0 0" 
+                            VerticalAlignment="Stretch"
+                            DockPanel.Dock="Top" 
+                            Content="About"
+                            Command="{Binding SwitchTopView}"
+                            CommandParameter="About"
+                            Style="{DynamicResource MultiStageButtonStyle1}">
+                    </Button>
+                </Border>
+            </UniformGrid>
 
 
-        <ContentControl Grid.Row="1" Margin="0, 4, 0 0" Content="{Binding CurrentViewModelTop}"/>
-        <GridSplitter Grid.Row="2" HorizontalAlignment="Stretch" Height="5"/>
-        <ContentControl Grid.Row="3" Margin="0,0,0,0" Name="ContentControlBottom" Content="{Binding CurrentViewModelBottom}"/>
-    
+
+
+            <Border DockPanel.Dock="Top" BorderBrush="{DynamicResource AccentColorButton}" BorderThickness="3">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="1*"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="1.5*"/>
+                            <RowDefinition Height="5"></RowDefinition>
+                            <RowDefinition Height="1*"/>
+                        </Grid.RowDefinitions>
+
+                    <ContentControl Grid.Row="0" Margin="0, 4, 0 0" Content="{Binding CurrentViewModelTop}"/>
+                    <GridSplitter Grid.Row="1" HorizontalAlignment="Stretch" Height="5"/>
+                    <ContentControl Visibility="{Binding JobsSelected,
+                        Converter={StaticResource BooleanToVisibilityConverter}}"  Grid.Row="2" Margin="0,0,0,0" Name="ContentControlBottom" Content="{Binding CurrentViewModelBottom}"/>
+                    </Grid>
+            </Border>
+        </DockPanel>
     </Grid>
 </Window>

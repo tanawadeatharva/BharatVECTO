@@ -20,9 +20,10 @@ namespace VECTO3GUI2020.Ninject
 			Bind<IMainViewModel>().To<JobListViewModel>();
 			Bind<ISettingsViewModel>().To<SettingsViewModel>();
 			Bind<IOutputViewModel>().To<OutputViewModel>().InSingletonScope();
-			Bind<ISettingsModel>().To<SettingsModel>();
+			Bind<ISettingsModel>().To<SettingsModel>().InSingletonScope();
 			Bind<IDialogHelper>().To<DialogHelper>().InSingletonScope();
 			Bind<IWindowHelper>().To<WindowHelper>();
+			Bind<AboutViewModel>().ToSelf().InSingletonScope();
 		}
 
 		#endregion

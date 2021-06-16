@@ -1,6 +1,6 @@
 ﻿namespace VECTO3GUI2020.ViewModel.Interfaces
 {
-    public interface ISettingsViewModel
+    public interface ISettingsViewModel : IMainViewModel
     {
 
 
