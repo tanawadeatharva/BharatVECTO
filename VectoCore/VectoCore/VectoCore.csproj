@@ -446,9 +446,11 @@
     <Compile Include="OutputData\FileIO\JSONFileWriter.cs" />
     <Compile Include="OutputData\ModalDataPostprocessingCorrection.cs" />
     <Compile Include="OutputData\XML\DeclarationReports\CustomerInformationFile\IXMLCustomerReport.cs" />
+    <Compile Include="OutputData\XML\DeclarationReports\CustomerInformationFile\XMLCustomerReportExemptedCompletedBus.cs" />
     <Compile Include="OutputData\XML\DeclarationReports\ManufacturerReport\AbstractXMLManufacturerReport.cs" />
     <Compile Include="OutputData\XML\DeclarationJobs\XMLCompletedBusWriter.cs" />
     <Compile Include="OutputData\XML\DeclarationReports\ManufacturerReport\IXMLManufacturerReport.cs" />
+    <Compile Include="OutputData\XML\DeclarationReports\ManufacturerReport\XMLManufacturerReportExemptedCompletedBus.cs" />
     <Compile Include="OutputData\XML\DeclarationReports\VehicleInformationFile\IXMLMultistageReport.cs" />
     <Compile Include="OutputData\XML\DeclarationReports\VehicleInformationFile\IXMLPrimaryVehicleReport.cs" />
     <Compile Include="OutputData\XML\Engineering\Factory\EngineeringWriterFactory.cs" />
@@ -971,9 +973,6 @@
       <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Resources\XSD\VectoOutputMultistage.0.1.xsd">
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Resources\XSD\VectoOutputManufacturer.0.9.1.xsd">
       <SubType>Designer</SubType>
     </EmbeddedResource>
     <None Include="Utils\VectoVersionCore.tt">

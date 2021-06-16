@@ -20,6 +20,42 @@ using TUGraz.VectoHashing;
 
 namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationFile
 {
+	public class XMLMultistageExemptedBusReport : XMLMultistageBusReport
+	{
+		protected override XElement GetVehicleElement(string vehicleId)
+		{
+			return new XElement(tns + XMLNames.Tag_Vehicle,
+				new XAttribute(xsi + XMLNames.Attr_Type, "v2.8:ExemptedInterimStageInputType"),
+				new XAttribute(XMLNames.Component_ID_Attr, vehicleId),
+				new XElement(v28 + XMLNames.Component_Manufacturer, _vehicleInputData.Manufacturer),
+				new XElement(v28 + XMLNames.Component_ManufacturerAddress, _vehicleInputData.ManufacturerAddress),
+				new XElement(v28 + XMLNames.Vehicle_VIN, _vehicleInputData.VIN),
+				new XElement(v28 + XMLNames.Component_Date,
+					XmlConvert.ToString(_vehicleInputData.Date, XmlDateTimeSerializationMode.Utc)),
+				_vehicleInputData.Model != null
+					? new XElement(v28 + XMLNames.Component_Model, _vehicleInputData.Model) : null,
+				_vehicleInputData.LegislativeClass != null
+					? new XElement(v28 + XMLNames.Bus_LegislativeCategory, _vehicleInputData.LegislativeClass.ToXMLFormat()) : null,
+				_vehicleInputData.CurbMassChassis != null
+					? new XElement(v28 + XMLNames.Bus_CorrectedActualMass, _vehicleInputData.CurbMassChassis.ToXMLFormat(0)) : null,
+				_vehicleInputData.GrossVehicleMassRating != null
+					? new XElement(v28 + XMLNames.TPMLM, _vehicleInputData.GrossVehicleMassRating.ToXMLFormat(0)) : null,
+				_vehicleInputData.RegisteredClass != null
+					? new XElement(v28 + XMLNames.Vehicle_RegisteredClass, _vehicleInputData.RegisteredClass.ToXMLFormat()) : null,
+				_vehicleInputData.NumberPassengerSeatsLowerDeck != null
+					? new XElement(v28 + XMLNames.Bus_NumberPassengersLowerDeck, _vehicleInputData.NumberPassengerSeatsLowerDeck) : null,
+				_vehicleInputData.NumberPassengerSeatsUpperDeck != null
+					? new XElement(v28 + XMLNames.Bus_NumberPassengersUpperDeck, _vehicleInputData.NumberPassengerSeatsUpperDeck) : null,
+				_vehicleInputData.VehicleCode != null
+					? new XElement(v28 + XMLNames.Vehicle_BodyworkCode, _vehicleInputData.VehicleCode.ToXMLFormat()) : null,
+				_vehicleInputData.LowEntry != null
+					? new XElement(v28 + XMLNames.Bus_LowEntry, _vehicleInputData.LowEntry) : null,
+				_vehicleInputData.Height != null
+					? new XElement(v28 + XMLNames.Bus_HeighIntegratedBody, _vehicleInputData.Height.ConvertToMilliMeter().ToXMLFormat(0)) : null
+			);
+		}
+	}
+
 	public class XMLMultistageBusReport: IXMLMultistageReport 
 	{
 		protected XNamespace tns = "urn:tugraz:ivt:VectoAPI:DeclarationOutput:VehicleInterimFile:v0.1";
@@ -38,7 +74,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 		private IPrimaryVehicleInformationInputDataProvider _primaryVehicleInputData;
 		private IList<IManufacturingStageInputData> _manufacturingStageInputData;
 		private IManufacturingStageInputData _consolidatedInputData;
-		private IVehicleDeclarationInputData _vehicleInputData;
+		protected IVehicleDeclarationInputData _vehicleInputData;
 
 
 		public XDocument Report { get; protected set; }
@@ -49,7 +85,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 			_namespaceAttributes = new List<XAttribute>();
 		}
 		
-		public void Initialize(VectoRunData modelData)
+		public virtual void Initialize(VectoRunData modelData)
 		{
 			_primaryVehicleInputData = modelData.MultistageVIFInputData.MultistageJobInputData.JobInputData.PrimaryVehicle;
 			_manufacturingStageInputData = modelData.MultistageVIFInputData.MultistageJobInputData.JobInputData.ManufacturingStages;
@@ -139,7 +175,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 
 		#endregion
 
-		public void GenerateReport()
+		public virtual void GenerateReport()
 		{
 			var retVal = new XDocument();
 			retVal.Add(
@@ -210,7 +246,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 		}
 
 		
-		private XElement GetVehicleElement(string vehicleId)
+		protected virtual XElement GetVehicleElement(string vehicleId)
 		{
 			return new XElement(tns + XMLNames.Tag_Vehicle,
 				new XAttribute(xsi + XMLNames.Attr_Type, "v2.8:InterimStageInputType"),

@@ -11,16 +11,18 @@ namespace TUGraz.VectoCore.OutputData.XML
 {
 	public class XMLDeclarationReportMultistageBusVehicle : XMLDeclarationReport
 	{
-		private readonly IXMLMultistageReport _multistageBusReport;
+		private IXMLMultistageReport _multistageBusReport;
 
 		public XMLDeclarationReportMultistageBusVehicle(IReportWriter writer)
 			: base(writer)
 		{
-			_multistageBusReport = new XMLMultistageBusReport();
+			//_multistageBusReport = new XMLMultistageBusReport();
 		}
 		
 		public override void InitializeReport(VectoRunData modelData, List<List<FuelData.Entry>> fuelModes)
 		{
+			_multistageBusReport =
+				modelData.Exempted ? new XMLMultistageExemptedBusReport() : new XMLMultistageBusReport();
 			_multistageBusReport.Initialize(modelData);
 		}
 		

@@ -42,7 +42,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 			exempted.LegislativeClass = data.LegislativeClass;
 			exempted.ZeroEmissionVehicle = data.ZeroEmissionVehicle;
 			exempted.HybridElectricHDV = data.HybridElectricHDV;
-			exempted.DualFuelVehicle = true;
+			exempted.DualFuelVehicle = data.DualFuelVehicle;// true;
 			exempted.MaxNetPower1 = data.MaxNetPower1;
 			exempted.MaxNetPower2 = data.MaxNetPower2;
 

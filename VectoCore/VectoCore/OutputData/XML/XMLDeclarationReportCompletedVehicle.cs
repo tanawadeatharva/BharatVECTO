@@ -21,12 +21,20 @@ namespace TUGraz.VectoCore.OutputData.XML {
 
 		protected override void InstantiateReports(VectoRunData modelData)
 		{
-			ManufacturerRpt = new XMLManufacturerReportCompletedBus() {
-				PrimaryVehicleRecordFile = PrimaryVehicleReportInputData
-			};
-			CustomerRpt = new XMLCustomerReportCompletedBus() {
-				PrimaryVehicleRecordFile = PrimaryVehicleReportInputData
-			};
+			ManufacturerRpt = modelData.Exempted
+				? new XMLManufacturerReportExemptedCompletedBus() {
+					PrimaryVehicleRecordFile = PrimaryVehicleReportInputData
+				}
+				: new XMLManufacturerReportCompletedBus() {
+					PrimaryVehicleRecordFile = PrimaryVehicleReportInputData
+				};
+			CustomerRpt = modelData.Exempted
+				? new XMLCustomerReportExemptedCompletedBus() {
+					PrimaryVehicleRecordFile = PrimaryVehicleReportInputData
+				}
+				: new XMLCustomerReportCompletedBus() {
+					PrimaryVehicleRecordFile = PrimaryVehicleReportInputData
+				};
 		}
 
 		public override void InitializeReport(VectoRunData modelData, List<List<FuelData.Entry>> fuelModes)

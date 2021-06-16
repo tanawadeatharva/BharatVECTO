@@ -13,7 +13,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport
 
 		public XMLManufacturerReportExeptedPrimaryBus()
 		{
-            vns = "urn:tugraz:ivt:VectoAPI:DeclarationOutput:DEV:v0.9.1";
+            vns = "urn:tugraz:ivt:VectoAPI:DeclarationOutput:v0.8";
         }
 
 		public override void Initialize(VectoRunData modelData, List<List<FuelData.Entry>> fuelModes)

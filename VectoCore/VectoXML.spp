@@ -145,7 +145,6 @@
 			<File FilePath="VectoCore\Resources\XSD\VectoOutputManufacturer.0.6.xsd" HomeFolder="Yes"/>
 			<File FilePath="VectoCore\Resources\XSD\VectoOutputManufacturer.0.7.xsd" HomeFolder="Yes"/>
 			<File FilePath="VectoCore\Resources\XSD\VectoOutputManufacturer.0.8.xsd" HomeFolder="Yes"/>
-			<File FilePath="VectoCore\Resources\XSD\VectoOutputManufacturer.0.9.1.xsd" HomeFolder="Yes"/>
 			<File FilePath="VectoCore\Resources\XSD\VectoOutputManufacturer.xsd" HomeFolder="Yes"/>
 			<File FilePath="VectoCore\Resources\XSD\VectoOutputMultistage.0.1.xsd" HomeFolder="Yes"/>
 			<File FilePath="VectoCore\Resources\XSD\VectoOutputPrimaryBus.xsd" HomeFolder="Yes"/>

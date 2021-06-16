@@ -15,7 +15,8 @@ using TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport;
 using TUGraz.VectoCore.Utils;
 using TUGraz.VectoHashing;
 
-namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformationFile {
+namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformationFile 
+{
 	public class XMLCustomerReportCompletedBus : XMLCustomerReport
 	{
 		private int _resultCount = 0;
@@ -80,7 +81,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 				modelData.InputDataHash == null ? XMLHelper.CreateDummySig(di) : new XElement(modelData.InputDataHash));
 		}
 
-		internal void WriteResult(XMLDeclarationReport.ResultEntry genericResult, XMLDeclarationReport.ResultEntry specificResult, IResult primaryResult)
+		public virtual void WriteResult(XMLDeclarationReport.ResultEntry genericResult, XMLDeclarationReport.ResultEntry specificResult, IResult primaryResult)
 		{
 			_allSuccess &= genericResult.Status == VectoRun.Status.Success;
 			_allSuccess &= specificResult.Status == VectoRun.Status.Success;

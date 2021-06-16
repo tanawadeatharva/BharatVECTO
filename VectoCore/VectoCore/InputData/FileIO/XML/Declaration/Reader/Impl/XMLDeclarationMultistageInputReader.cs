@@ -616,7 +616,10 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 		public string CertificationNumber { get; }
 		public DigestData DigestValue { get; }
 		public string Identifier { get; }
-		public bool ExemptedVehicle { get; }
+		public bool ExemptedVehicle
+		{
+			get { return _manufacturingStages.Any(x => x.Vehicle.ExemptedVehicle); }
+		}
 		public VehicleCategory VehicleCategory { get; }
 		public AxleConfiguration AxleConfiguration { get; }
 		public IList<ITorqueLimitInputData> TorqueLimits { get; }

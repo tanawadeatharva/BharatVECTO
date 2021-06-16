@@ -66,7 +66,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport 
 			);
 		}
 
-		private XElement GetPrimaryVehicleInformation()
+		protected XElement GetPrimaryVehicleInformation()
 		{
 			return new XElement(
 				tns + "PrimaryVehicle",
@@ -75,8 +75,8 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport 
 				new XElement(tns + XMLNames.Vehicle_AxleConfiguration, PrimaryVehicle.AxleConfiguration.ToXMLFormat()),
 				new XElement(tns + XMLNames.Report_InputDataSignature, PrimaryVehicleRecordFile.PrimaryVehicleInputDataHash.ToXML(di)),
 				new XElement(tns + "ManufacturerRecordSignature", PrimaryVehicleRecordFile.ManufacturerRecordHash.ToXML(di)),
-				new XElement(tns + "VehicleInformationSignature", PrimaryVehicleRecordFile.XMLHash)
-			);
+				new XElement(tns + "VehicleInformationSignature", CreateDummySig()) // PrimaryVehicleRecordFile.XMLHash)
+            );
 		}
 
 		public virtual void WriteResult(XMLDeclarationReport.ResultEntry genericResult, XMLDeclarationReport.ResultEntry specificResult, IResult primaryResult)
