@@ -31,7 +31,7 @@ namespace VECTO3GUI2020.ViewModel.Implementation
 		public string Link
 		{
 			get { return _link; }
-			set {}
+			set { SetProperty(ref _link, value); }
 		}
 
 		public MessageType Type

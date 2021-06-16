@@ -75,7 +75,7 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 			_dialogHelper = multistageDependencies.DialogHelperLazy;
 			_inputDataReader = inputDataReader;
 
-			var exempted = true; //= PrimaryVehicle.Vehicle.ExemptedVehicle
+			var exempted = PrimaryVehicle.Vehicle.ExemptedVehicle;
 
 			_manufacturingStageViewModel =
 				vmFactory.GetManufacturingStageViewModel(_consolidateManufacturingStage, exempted);
