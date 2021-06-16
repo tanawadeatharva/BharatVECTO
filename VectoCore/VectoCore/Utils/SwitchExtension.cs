@@ -50,7 +50,7 @@ namespace TUGraz.VectoCore.Utils
 		/// <typeparam name="T"></typeparam>
 		/// <param name="self">The self.</param>
 		/// <returns></returns>
-		[DebuggerHidden]
+		[DebuggerHidden,Obsolete("replace by pattern matching",true)]
 		public static Switch<T> Switch<T>(this T self)
 		{
 			return new Switch<T>(self);
