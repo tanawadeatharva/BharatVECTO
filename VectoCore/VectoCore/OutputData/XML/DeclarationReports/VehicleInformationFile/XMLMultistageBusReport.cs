@@ -18,16 +18,8 @@ using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Utils;
 using TUGraz.VectoHashing;
 
-
-namespace TUGraz.VectoCore.OutputData.XML
+namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationFile
 {
-	public interface IXMLMultistageReport
-	{
-		void Initialize(VectoRunData modelData);
-		XDocument Report { get; }
-		void GenerateReport();
-	}
-
 	public class XMLMultistageBusReport: IXMLMultistageReport 
 	{
 		protected XNamespace tns = "urn:tugraz:ivt:VectoAPI:DeclarationOutput:VehicleInterimFile:v0.1";

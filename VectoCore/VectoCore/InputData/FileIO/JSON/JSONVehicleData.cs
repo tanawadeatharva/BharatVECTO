@@ -259,11 +259,6 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			get { return Constants.NOT_AVailABLE; }
 		}
 
-		public string LegislativeCategory
-		{
-			get { return null; }
-		}
-
 		public virtual LegislativeClass? LegislativeClass
 		{
 			get {
@@ -643,6 +638,11 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 		}
 
 		public virtual Watt MaxNetPower2
+		{
+			get { return null; }
+		}
+
+		public string ExemptedTechnology
 		{
 			get { return null; }
 		}

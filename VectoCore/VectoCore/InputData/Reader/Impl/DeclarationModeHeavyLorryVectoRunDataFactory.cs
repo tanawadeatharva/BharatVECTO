@@ -191,6 +191,6 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 			return simulationRunData;
 		}
 
-
+		
 	}
 }

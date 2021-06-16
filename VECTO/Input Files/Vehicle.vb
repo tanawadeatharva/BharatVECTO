@@ -380,8 +380,6 @@ Public Class Vehicle
 		End Get
 	End Property
 
-	Public ReadOnly Property LegislativeCategory As String Implements IVehicleDeclarationInputData.LegislativeCategory
-
 	Public ReadOnly Property LegislativeClass As LegislativeClass? Implements IVehicleEngineeringInputData.LegislativeClass
 		Get
 			Return legClass
@@ -856,7 +854,9 @@ end Property
 		End Get
 	End Property
 
-	Public ReadOnly Property RegisteredClass As RegistrationClass? Implements IVehicleDeclarationInputData.RegisteredClass
+    Public ReadOnly Property ExemptedTechnology As String Implements IVehicleDeclarationInputData.ExemptedTechnology
+
+    Public ReadOnly Property RegisteredClass As RegistrationClass? Implements IVehicleDeclarationInputData.RegisteredClass
 	Public ReadOnly Property NumberPassengerSeatsUpperDeck As Integer? Implements IVehicleDeclarationInputData.NumberPassengerSeatsUpperDeck
 	Public ReadOnly Property NumberPassengerSeatsLowerDeck As Integer? Implements IVehicleDeclarationInputData.NumberPassengerSeatsLowerDeck
 	Public ReadOnly Property NumberPassengersStandingLowerDeck As Integer? Implements IVehicleDeclarationInputData.NumberPassengersStandingLowerDeck

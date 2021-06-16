@@ -30,6 +30,7 @@
 */
 
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Xml;
 using System.Xml.Schema;
@@ -44,6 +45,7 @@ namespace TUGraz.VectoCore.Utils
 		private readonly Action<bool> _resultAction;
 		private bool _valid;
 		private  XmlDocument _doc;
+		private List<string> _validationErrors = new List<string>();
 
 		private XMLValidator(Action<bool> resultaction, Action<XmlSeverityType, ValidationEvent> validationErrorAction)
 		{
@@ -70,6 +72,7 @@ namespace TUGraz.VectoCore.Utils
 		public bool ValidateXML(XmlDocumentType docType)
 		{
 			_valid = true;
+			_validationErrors.Clear();
 			if (_doc.DocumentElement == null) {
 				throw new Exception("empty XML document");
 			}
@@ -91,11 +94,14 @@ namespace TUGraz.VectoCore.Utils
 		{
 			_resultAction(false);
 			_valid = false;
-			ValidationError = args?.Message ?? "no schema found";
+			_validationErrors.Add(args?.Message ?? "no schema found");
 			_validationErrorAction(args?.Severity ?? XmlSeverityType.Error, new ValidationEvent { ValidationEventArgs = args });
 		}
 
-		public string ValidationError { get; private set; }
+		public string ValidationError
+		{
+			get { return string.Join(Environment.NewLine, _validationErrors); }
+		}
 
 		public static void CallBackExceptionOnError(XmlSeverityType severity, ValidationEvent evt)
 		{

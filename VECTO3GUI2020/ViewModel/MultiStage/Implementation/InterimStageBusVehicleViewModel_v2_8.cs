@@ -687,6 +687,8 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 
 		#endregion;
 
+		public string ExemptedTechnology { get; }
+
 		public RegistrationClass? RegisteredClass
 		{
 			get => _registeredClass;
@@ -739,10 +741,6 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 
 		#region not implemented
 
-		public string LegislativeCategory
-		{
-			get => throw new NotImplementedException();
-		}
 		public IGearboxDeclarationInputData GearboxInputData => throw new NotImplementedException();
 
 		public ITorqueConverterDeclarationInputData TorqueConverterInputData => throw new NotImplementedException();

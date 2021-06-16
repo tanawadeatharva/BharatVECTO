@@ -451,7 +451,7 @@ namespace TUGraz.VectoCore.Tests.Integration.Multistage
 			Assert.AreEqual("Generic Model", vehicleData.Model);
 			Assert.AreEqual("VEH-1234567890", vehicleData.VIN);
 			Assert.AreEqual(DateTime.Parse("2017-02-15T11:00:00Z").ToUniversalTime(), vehicleData.Date);
-			Assert.AreEqual("M3", vehicleData.LegislativeCategory);
+			Assert.AreEqual(LegislativeClass.M3, vehicleData.LegislativeClass);
 			Assert.AreEqual("Bus", vehicleData.VehicleCategory.ToXMLFormat());
 			Assert.AreEqual(AxleConfiguration.AxleConfig_4x2, vehicleData.AxleConfiguration);
 			Assert.AreEqual(false, vehicleData.Articulated);

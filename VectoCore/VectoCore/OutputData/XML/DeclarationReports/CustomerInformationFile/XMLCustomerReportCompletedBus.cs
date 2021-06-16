@@ -4,7 +4,6 @@ using System.IO;
 using System.Linq;
 using System.Xml.Linq;
 using TUGraz.IVT.VectoXML.Writer;
-using TUGraz.VectoCommon.BusAuxiliaries;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Resources;
@@ -12,10 +11,11 @@ using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.Impl;
+using TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport;
 using TUGraz.VectoCore.Utils;
 using TUGraz.VectoHashing;
 
-namespace TUGraz.VectoCore.OutputData.XML {
+namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformationFile {
 	public class XMLCustomerReportCompletedBus : XMLCustomerReport
 	{
 		private int _resultCount = 0;
