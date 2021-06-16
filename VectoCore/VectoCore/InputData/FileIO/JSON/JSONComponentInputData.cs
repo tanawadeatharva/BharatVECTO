@@ -103,23 +103,22 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 					break;
 			}
 
-			tmp.Switch()
-				.If<IVehicleEngineeringInputData>(c => VehicleData = c)
-				.If<IAirdragEngineeringInputData>(c => AirdragData = c)
-				.If<IEngineEngineeringInputData>(c => Engine = c)
-				.If<IGearboxEngineeringInputData>(c => Gearbox = c)
-				.If<IAxleGearInputData>(c => AxleGear = c)
-				.If<IRetarderInputData>(c => Retarder = c)
-				.If<ITorqueConverterEngineeringInputData>(c => TorqueConverterData = c)
-				.If<IAngledriveInputData>(c => Angledrive = c)
-				.If<IPTOTransmissionInputData>(c => PTOTransmission = c)
-				.If<IGearshiftEngineeringInputData>(c => GearshiftData = c)
-				.If<IAxlesDeclarationInputData>(c => _axleWheelsDecl = c)
-				.If<IAxlesEngineeringInputData>(c => _axleWheelsEng = c)
-				.If<IBatteryPackEngineeringInputData>(c => Battery = c)
-				.If<IElectricMotorEngineeringInputData>(c => { ElectricMotor = c; })
-				.If<IHybridStrategyParameters>(c => HybridStrategyParameters = c)
-				.If<IBusAuxiliariesEngineeringData>(c => BusAux = c);
+			if(tmp is IVehicleEngineeringInputData x1) VehicleData = x1;
+			if(tmp is IAirdragEngineeringInputData x2) AirdragData = x2;
+			if(tmp is IEngineEngineeringInputData x3) Engine = x3;
+			if(tmp is IGearboxEngineeringInputData x4) Gearbox = x4;
+			if(tmp is IAxleGearInputData x5) AxleGear = x5;
+			if(tmp is IRetarderInputData x6) Retarder = x6;
+			if(tmp is ITorqueConverterEngineeringInputData x7) TorqueConverterData = x7;
+			if(tmp is IAngledriveInputData x8) Angledrive = x8;
+			if(tmp is IPTOTransmissionInputData x9) PTOTransmission = x9;
+			if(tmp is IGearshiftEngineeringInputData x10) GearshiftData = x10;
+			if(tmp is IAxlesDeclarationInputData x11) _axleWheelsDecl = x11;
+			if(tmp is IAxlesEngineeringInputData x12) _axleWheelsEng = x12;
+			if(tmp is IBatteryPackEngineeringInputData x13) Battery = x13;
+			if(tmp is IElectricMotorEngineeringInputData x14) ElectricMotor = x14;
+			if(tmp is IHybridStrategyParameters x15) HybridStrategyParameters = x15;
+			if(tmp is IBusAuxiliariesEngineeringData x16) BusAux = x16;
 
 			_filename = filename;
 		}
