@@ -317,12 +317,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			CurrentState.Gradient = ComputeGradient(ds);
 
 			var retVal = NextComponent.Request(absTime, ds, CurrentState.VehicleTargetSpeed, CurrentState.Gradient);
-			retVal.Switch()
-				.Case<ResponseFailTimeInterval>(
-					r => {
-						retVal = NextComponent.Request(absTime, r.DeltaT, 0.SI<MeterPerSecond>(), CurrentState.Gradient);
-						retVal = NextComponent.Request(absTime, ds, CurrentState.VehicleTargetSpeed, CurrentState.Gradient);
-					});
+			if (retVal is ResponseFailTimeInterval r) { 
+				// TODO mk20160616 the first assignment to retVal is overwritten. Remove assignment?
+				retVal = NextComponent.Request(absTime, r.DeltaT, 0.SI<MeterPerSecond>(), CurrentState.Gradient);
+				retVal = NextComponent.Request(absTime, ds, CurrentState.VehicleTargetSpeed, CurrentState.Gradient);
+			}
 			CurrentState.AbsTime = absTime;
 			if (retVal is ResponseSuccess) {
 				CurrentState.Distance = PreviousState.Distance + retVal.SimulationDistance;

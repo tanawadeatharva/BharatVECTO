@@ -230,14 +230,15 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				}
 				response = TorqueConverter.Initialize(inTorque, inAngularVelocity);
 			}
-
-			response.Switch().
-				Case<ResponseSuccess>(). // accept
-				Case<ResponseUnderload>(). // accept
-				Case<ResponseOverload>(). // accept
-				Default(r => {
-					throw new UnexpectedResponseException("AT-Gearbox.Initialize", r);
-				});
+			
+			switch (response) {
+				case ResponseSuccess _:
+				case ResponseUnderload _:
+				case ResponseOverload _:
+					break;
+				default:
+					throw new UnexpectedResponseException("AT-Gearbox.Initialize", response);
+			}
 
 			return new ResponseDryRun(this) {
 				Engine = {
