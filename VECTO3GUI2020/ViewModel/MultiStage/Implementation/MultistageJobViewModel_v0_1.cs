@@ -74,14 +74,20 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 			_primaryVehicle = _jobInputData.PrimaryVehicle;
 			_dialogHelper = multistageDependencies.DialogHelperLazy;
 			_inputDataReader = inputDataReader;
+
+			var exempted = true; //= PrimaryVehicle.Vehicle.ExemptedVehicle
+
 			_manufacturingStageViewModel =
-				vmFactory.GetManufacturingStageViewModel(_consolidateManufacturingStage);
+				vmFactory.GetManufacturingStageViewModel(_consolidateManufacturingStage, exempted);
 
 			// QUESTION: HEV/PEV ?
 			//var hybridElectric = inputData.PrimaryVehicleData.Vehicle.HybridElectricHDV;
 			//_manufacturingStageViewModel.VehicleViewModel.PrimaryVehicleHybridElectric = hybridElectric;
 			_multistageDependencies = multistageDependencies;
 		}
+
+
+
 
 
 		#region Commands
@@ -224,9 +230,11 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 					var vehicleErrorInfo = vehicleViewModel as IDataErrorInfo;
 					errorMessage += vehicleErrorInfo.Error.Replace(",", "\n");
 
+					
 					var auxiliariesErrorInfo =
 						vehicleViewModel.MultistageAuxiliariesViewModel as IDataErrorInfo;
-					if (!auxiliariesErrorInfo.Error.IsNullOrEmpty())
+					if (auxiliariesErrorInfo != null && 
+						!auxiliariesErrorInfo.Error.IsNullOrEmpty())
 					{
 						errorMessage += "\n Auxiliaries \n";
 						errorMessage += auxiliariesErrorInfo.Error.Replace(",", "\n");
@@ -340,10 +348,6 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 			set => SetProperty(ref _vehicleInputDataFilePath, value);
 		}
 		#endregion
-
-
-
-
 
 		#region Implementation of IInputDataProvider
 

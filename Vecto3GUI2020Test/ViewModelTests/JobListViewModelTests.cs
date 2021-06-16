@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Diagnostics;
+using System.Threading.Tasks;
 using Ninject;
 using NUnit.Framework;
 using NUnit.Framework.Internal;
@@ -19,7 +20,8 @@ namespace Vecto3GUI2020Test.ViewModelTests
 		public async Task CancelSimulationWhileLoadingFiles()
 		{
 			var jobListViewModel = _kernel.Get<IJobListViewModel>() as JobListViewModel;
-
+			var watch = new Stopwatch();
+			watch.Start();
 			//load final vif
 			var loadedFile = await jobListViewModel.AddJobAsync(GetFullPath(finalVIF)).ConfigureAwait(false);
 
@@ -39,6 +41,8 @@ namespace Vecto3GUI2020Test.ViewModelTests
 			Assert.That(() => jobListViewModel.SimulationRunning == false, constraint);
 			TestContext.WriteLine("Done!");
 
+			watch.Stop();
+			TestContext.WriteLine($"ExecutionTime {watch.Elapsed.TotalSeconds}s");
 		}
 
 
@@ -46,6 +50,8 @@ namespace Vecto3GUI2020Test.ViewModelTests
 		public async Task CancelSimulationWhenJobContainerIsRunning()
 		{
 			var jobListViewModel = _kernel.Get<IJobListViewModel>() as JobListViewModel;
+			var watch = new Stopwatch();
+			watch.Start();
 
 			//load final vif
 			var loadedFile = await jobListViewModel.AddJobAsync(GetFullPath(finalVIF)).ConfigureAwait(false);
@@ -72,6 +78,9 @@ namespace Vecto3GUI2020Test.ViewModelTests
 			jobListViewModel.CancelSimulation.Execute(null);
 			Assert.That(() => jobListViewModel.SimulationRunning == false, constraint);
 			TestContext.WriteLine("Done!");
+
+			watch.Stop();
+			TestContext.WriteLine($"ExecutionTime {watch.Elapsed.TotalSeconds}s");
 		}
 	}
 }

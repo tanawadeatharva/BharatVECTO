@@ -80,7 +80,6 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 			}
 
 			if (inputDataProvider == null) {
-
 				_dialogHelper.ShowMessageBox("invalid input file", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
 				return;
 			}

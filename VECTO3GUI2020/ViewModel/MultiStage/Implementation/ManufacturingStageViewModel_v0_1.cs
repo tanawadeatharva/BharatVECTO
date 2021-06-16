@@ -71,14 +71,14 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 		public void SetInputData(IVehicleDeclarationInputData vehicleInputData)
 		{
 			VehicleViewModel.SetVehicleInputData(vehicleInputData);
-			VehicleViewModel.MultistageAirdragViewModel.SetAirdragInputData(vehicleInputData?.Components?.AirdragInputData);
-			VehicleViewModel.MultistageAuxiliariesViewModel.SetAuxiliariesInputData(vehicleInputData?.Components?.BusAuxiliaries);
+
 			OnPropertyChanged(nameof(CurrentView));
 
 		}
 
 
-		public ManufacturingStageViewModel_v0_1(IManufacturingStageInputData consolidatedManufacturingStageInputData, IMultiStageViewModelFactory viewModelFactory)
+		public ManufacturingStageViewModel_v0_1(IManufacturingStageInputData consolidatedManufacturingStageInputData, bool exempted,
+			IMultiStageViewModelFactory viewModelFactory)
 		{
 			Title = "Edit Manufacturing Stage";
 			_viewModelFactory = viewModelFactory;
@@ -88,16 +88,12 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 			_consolidatedManufacturingStageInputData = consolidatedManufacturingStageInputData;
 
 
-			VehicleViewModel = (IMultistageVehicleViewModel)_viewModelFactory.GetInterimStageVehicleViewModel(consolidatedManufacturingStageInputData?.Vehicle);
+			VehicleViewModel = (IMultistageVehicleViewModel)_viewModelFactory.GetInterimStageVehicleViewModel(consolidatedManufacturingStageInputData?.Vehicle, exempted);
 			CurrentView = VehicleViewModel as IViewModelBase;
 
 
 			Components.Add(VehicleViewModel.Name, VehicleViewModel as IViewModelBase);
-
-
-			
 			Components.Add("Airdrag", VehicleViewModel.MultistageAirdragViewModel as IViewModelBase);
-
 			Components.Add("Auxiliaries", VehicleViewModel.MultistageAuxiliariesViewModel as IViewModelBase);
 		}
 
@@ -115,7 +111,7 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 		public ICommand SwitchComponentViewCommand
 		{
 			get {
-				return _switchComponentViewCommand ?? new RelayCommand<string>(SwitchViewExecute, (string s) => true);
+				return _switchComponentViewCommand ?? new RelayCommand<string>(SwitchViewExecute, (string s) => SwitchViewCanExecute(s));
 			}
 		}
 
@@ -126,6 +122,12 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 			if (success) {
 				CurrentView = newView;
 			}
+		}
+
+		private bool SwitchViewCanExecute(string viewToShow)
+		{
+			return Components[viewToShow] != null;
+
 		}
 
 		#endregion

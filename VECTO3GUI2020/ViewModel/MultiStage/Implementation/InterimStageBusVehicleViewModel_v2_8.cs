@@ -140,27 +140,33 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 
 
 		public DeclarationInterimStageBusVehicleViewModel_v2_8(IVehicleDeclarationInputData consolidatedVehicleData,
-			IMultiStageViewModelFactory multistageViewModelFactory)
+			IMultiStageViewModelFactory multistageViewModelFactory, bool exempted)
 		{
 			ConsolidatedVehicleData = consolidatedVehicleData;
-			
+			_exemptedVehicle = exempted;
 			_multiStageViewModelFactory = multistageViewModelFactory;
 
-			MultistageAirdragViewModel = _multiStageViewModelFactory.GetMultistageAirdragViewModel(consolidatedVehicleData?.Components?.AirdragInputData);
-			
-			MultistageAirdragViewModel.AirdragViewModelChanged += ((sender, args) => {
-				if (sender is IMultistageAirdragViewModel vm) {
-					if (AirdragModifiedMultistageMandatory) {
-						if (vm.AirDragViewModel != null) {
-							AirdragModifiedMultistage = true;
+
+			if (!exempted) {
+				MultistageAirdragViewModel = _multiStageViewModelFactory.GetMultistageAirdragViewModel(consolidatedVehicleData?.Components?.AirdragInputData);
+
+				MultistageAirdragViewModel.AirdragViewModelChanged += ((sender, args) => {
+					if (sender is IMultistageAirdragViewModel vm)
+					{
+						if (AirdragModifiedMultistageMandatory)
+						{
+							if (vm.AirDragViewModel != null)
+							{
+								AirdragModifiedMultistage = true;
+							}
 						}
 					}
-				}
-			});
+				});
 
-			MultistageAuxiliariesViewModel =
-				_multiStageViewModelFactory.GetAuxiliariesViewModel(consolidatedVehicleData?.Components?
-					.BusAuxiliaries);
+				MultistageAuxiliariesViewModel =
+					_multiStageViewModelFactory.GetAuxiliariesViewModel(consolidatedVehicleData?.Components?
+						.BusAuxiliaries);
+			}
 
 
 			CreateParameterViewModels();
@@ -372,6 +378,8 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 			{
 				multistageParameterViewModel.UpdateEditingEnabled();
 			}
+			MultistageAirdragViewModel.SetAirdragInputData(vehicleInputData?.Components?.AirdragInputData);
+			MultistageAuxiliariesViewModel.SetAuxiliariesInputData(vehicleInputData?.Components?.BusAuxiliaries);
 			OnPropertyChanged(string.Empty);
 		}
 
@@ -922,9 +930,9 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 
 		public bool ExemptedVehicle
 		{
-			get { throw new NotImplementedException(); }
+			get => _exemptedVehicle;
+			//set => SetProperty(ref _exemptedVehicle, value);
 		}
-
 
 
 		public VehicleCategory VehicleCategory
@@ -1138,7 +1146,6 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 		private bool _airdragModifiedMultistageMandatory;
 		private int? _numberPassengersStandingLowerDeck;
 		private int? _numberPassengersStandingUpperDeck;
-
-
+		private bool _exemptedVehicle;
 	}
 }

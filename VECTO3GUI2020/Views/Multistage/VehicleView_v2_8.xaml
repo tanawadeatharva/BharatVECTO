@@ -11,11 +11,6 @@
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800" BorderBrush="{DynamicResource ButtonHighlightColor}" BorderThickness="2px" Margin="4px">
     <UserControl.Resources>
-        <Style TargetType="custom:MultiStageParameter">
-            <Setter Property="NameLookUpResourceManager" Value="{x:Static properties:BusStrings.ResourceManager}"/>
-            <Setter Property="Validation.ErrorTemplate" Value="{StaticResource multistageParameterControlErrorTemplate}"/>
-        </Style>
-
         <Style TargetType="ContentControl">
             <Setter Property="ContentTemplateSelector" Value="{DynamicResource MultistageParameterTemplateSelector}"/>
             <Setter Property="IsTabStop" Value="False"></Setter>
@@ -32,12 +27,8 @@
                        Style="{DynamicResource LabelStyle1}"/>
 
 
-                <ContentControl Content="{Binding ParameterViewModels[Manufacturer]}" >
-                </ContentControl>
-
-
+                <ContentControl Content="{Binding ParameterViewModels[Manufacturer]}"/>
                 <ContentControl Content="{Binding ParameterViewModels[ManufacturerAddress]}"/>
-   
                 <ContentControl Content="{Binding ParameterViewModels[VIN]}"/>
 
 

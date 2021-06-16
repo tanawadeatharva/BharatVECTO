@@ -77,6 +77,9 @@
     <Reference Include="Microsoft.WindowsAPICodePack.Shell, Version=1.1.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\WindowsAPICodePack-Shell.1.1.1\lib\Microsoft.WindowsAPICodePack.Shell.dll</HintPath>
     </Reference>
+    <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.12.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="Ninject, Version=3.3.4.0, Culture=neutral, PublicKeyToken=c7192dc5380945e7, processorArchitecture=MSIL">
       <HintPath>..\packages\Ninject.3.3.4\lib\net45\Ninject.dll</HintPath>
     </Reference>
@@ -170,10 +173,11 @@
     <Compile Include="Helper\IndexedStorage.cs" />
     <Compile Include="Helper\IWindowHelper.cs" />
     <Compile Include="Helper\DialogHelper.cs" />
-    <Compile Include="Helper\MultistageParameterDataTemplateSelector.cs" />
+    <Compile Include="Helper\TemplateSelector\MultistageParameterDataTemplateSelector.cs" />
     <Compile Include="Helper\MultistageParameterViewModel.cs" />
     <Compile Include="Helper\NameOfMarkUpExtension.cs" />
     <Compile Include="Helper\NameResolver.cs" />
+    <Compile Include="Helper\TemplateSelector\MultistageVehicleDataTemplateSelector.cs" />
     <Compile Include="Helper\WindowHelper.cs" />
     <Compile Include="Helper\XMLExtension.cs" />
     <Compile Include="Helper\XmlHelper.cs" />
@@ -444,6 +448,9 @@
     <Compile Include="Views\Multistage\VehicleView_v2_8.xaml.cs">
       <DependentUpon>VehicleView_v2_8.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\Multistage\VehicleView_v2_8_exempted.xaml.cs">
+      <DependentUpon>VehicleView_v2_8_exempted.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\OutputView.xaml.cs">
       <DependentUpon>OutputView.xaml</DependentUpon>
     </Compile>
@@ -454,6 +461,10 @@
       <DependentUpon>XMLViewer.xaml</DependentUpon>
     </Compile>
     <Page Include="DataGridStyles.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Resources\DataTemplateSelectors.xaml">
+      <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Resources\Icons\AddDocument_16x.xaml">
@@ -467,6 +478,10 @@
     <Page Include="Resources\Icons\drawables.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Resources\Icons\FolderClosed_16x.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="Resources\Icons\Trash_16x.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -688,6 +703,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\Multistage\VehicleView_v2_8.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Multistage\VehicleView_v2_8_exempted.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

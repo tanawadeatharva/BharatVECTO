@@ -58,6 +58,7 @@
                               
                           RowHeight="30"
                           AlternatingRowBackground="LightGray" CellStyle="{DynamicResource DataGridCellStyle1}"
+                          SelectedItem = "{Binding SelectedJob}"
                 >
                         <DataGrid.Columns>
                             <DataGridCheckBoxColumn IsReadOnly="False" Header="Simulate" Binding="{Binding Selected}" Width="1*"></DataGridCheckBoxColumn>
@@ -88,7 +89,7 @@
                 <StackPanel >
                     <Button x:Name="button3" Margin="4" HorizontalAlignment="Stretch" 
                         Style="{StaticResource MultiStageButtonStyle1}"
-                        Command="{Binding AddJobAsyncCommand}" Background="#FFDDDDDD">
+                        Command="{Binding AddJobAsyncCommand, IsAsync=True}" Background="#FFDDDDDD">
                         Add Job</Button>
                     <Button x:Name="button4" Margin ="4" HorizontalAlignment="Stretch" 
                         Style="{StaticResource MultiStageButtonStyle1}"
@@ -99,7 +100,7 @@
                         Command="{Binding NewManufacturingStageFile}" AutomationProperties.AutomationId="JobListViewNewManufacturingStageFileButton">New Multistage Job</Button>
                     <Button x:Name="button6" Margin="4" HorizontalAlignment="Stretch" 
                         Style="{StaticResource MultiStageButtonStyle1}"
-                        Command="{Binding RemoveJob}"
+                        Command="{Binding RemoveJob, IsAsync=True}"
                         CommandParameter="{Binding ElementName=JobDataGrid, Path=SelectedItem}">Remove Job</Button>
                 </StackPanel>
             </Border>

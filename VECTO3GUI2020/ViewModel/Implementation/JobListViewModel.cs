@@ -18,6 +18,7 @@ using System.Xml.Linq;
 using Microsoft.Toolkit.Mvvm.Input;
 using Microsoft.WindowsAPICodePack.Shell.Interop;
 using Microsoft.WindowsAPICodePack.Shell.PropertySystem;
+using Newtonsoft.Json;
 using NLog;
 using NLog.Targets;
 using TUGraz.VectoCommon.Exceptions;
@@ -59,39 +60,40 @@ namespace VECTO3GUI2020.ViewModel.Implementation
         private readonly Settings _settings = Settings.Default;
 
 
-        private ICommand _addJobCommand;
-        private ICommand _editJobCommand;
-        private ICommand _removeJobCommand;
-        private ICommand _moveJobUpCommand;
-        private ICommand _moveJobDownCommand;
-        private ICommand _viewXMLCommand;
 
-        private bool _isLoading = false;
-        public bool IsLoading
-        {
-            get => _isLoading;
-            set => SetProperty(ref _isLoading, value);
-        }
 
-        private BackgroundWorker fileReadingBackgroundWorker;
+		private BackgroundWorker fileReadingBackgroundWorker;
 
 		private object _jobsLock = new Object();
         private ObservableCollection<IDocumentViewModel> _jobs = new ObservableCollection<IDocumentViewModel>();
         public ObservableCollection<IDocumentViewModel> Jobs{ get => _jobs; set => SetProperty(ref _jobs, value);}
 
-        private IDialogHelper _dialogHelper;
+		public IDocumentViewModel SelectedJob
+		{
+			get => _selectedJob;
+			set
+			{
+				if(SetProperty(ref _selectedJob, value)) {
+					RemoveJob.NotifyCanExecuteChanged();
+				};
+
+			}
+		}
+
+
+		private IDialogHelper _dialogHelper;
         private IWindowHelper _windowHelper;
         private IDocumentViewModelFactory _documentViewModelFactory;
 		private ICommand _newMultiStageFileCommand;
 		private IMultiStageViewModelFactory _multiStageViewModelFactory;
-		private IAsyncRelayCommand _addJobAsync;
 		private readonly IXMLInputDataReader _inputDataReader;
-		private IAsyncRelayCommand _simulationCommand;
 		private readonly IOutputViewModel _outputViewModel;
+		private IAsyncRelayCommand _addJobAsync;
+		private IAsyncRelayCommand _simulationCommand;
+
+		private readonly string StoredJobsFileName = "storedJobs.json";
 
 		
-
-
         
 		#endregion
 
@@ -101,10 +103,7 @@ namespace VECTO3GUI2020.ViewModel.Implementation
         public JobListViewModel()
         {
 			BindingOperations.EnableCollectionSynchronization(Jobs, _jobsLock);
-            InitFileBackGroundWorker();
-            
-            
-        }
+		}
 
 
         public JobListViewModel(IDocumentViewModelFactory documentViewModelFactory,
@@ -134,7 +133,51 @@ namespace VECTO3GUI2020.ViewModel.Implementation
 			//configure Nlog
 			var target = new MethodCallTarget("VectoGuiTarget", (evtInfo, obj) => LogMethod(evtInfo, obj));
 			NLog.Config.SimpleConfigurator.ConfigureForTargetLogging(target);
+
+
+			System.Windows.Application.Current.Exit += new ExitEventHandler(this.OnApplicationExit);
+			var filesToRead = ReadFileNamesFromFile();
+			if (filesToRead != null) {
+				foreach (var fileName in filesToRead) { 
+					Task.Run(() => AddJobAsync(fileName));
+				}
+			}
 		}
+
+		#region Store and Restore JobList
+		private void OnApplicationExit(object sender, EventArgs e)
+		{
+			SaveFileNamesToFile();
+		}
+
+
+		private string[] ReadFileNamesFromFile()
+		{
+			try {
+				var filesJson = File.ReadAllText(StoredJobsFileName);
+				IList<string> filesToRead = JsonConvert.DeserializeObject<List<string>>(filesJson);
+				return filesToRead.ToArray();
+			} catch (Exception e) {
+				Debug.WriteLine(e.Message);
+			}
+
+			return null;
+		}
+
+		private void SaveFileNamesToFile()
+		{
+			
+			var filesToStore = Jobs.Select(job => job.DataSource.SourceFile).ToList();
+			string jsonString = JsonConvert.SerializeObject(filesToStore);
+			Debug.WriteLine(jsonString);
+			File.WriteAllText(StoredJobsFileName, jsonString);
+
+		}
+
+
+
+		#endregion
+
 
 		private void LogMethod(LogEventInfo evtInfo, object[] objects)
 		{
@@ -149,24 +192,7 @@ namespace VECTO3GUI2020.ViewModel.Implementation
 			});
 		}
 
-
-
-        private void InitFileBackGroundWorker()
-        {
-            fileReadingBackgroundWorker = new BackgroundWorker
-            {
-                WorkerReportsProgress = true
-            };
-            fileReadingBackgroundWorker.DoWork += fileworker_DoWork;
-            fileReadingBackgroundWorker.ProgressChanged += fileworker_ProgressChanged;
-            fileReadingBackgroundWorker.RunWorkerCompleted += fileworker_RunWorkerCompleted;
-        }
-
-		private void fileworker_ProgressChanged(object sender, ProgressChangedEventArgs e)
-		{
-			Debug.WriteLine(e.ProgressPercentage);
-		}
-
+		#region Simulation
 		private CancellationTokenSource cancellationTokenSource = new CancellationTokenSource();
 		private bool _simulationRunning = false;
 
@@ -549,8 +575,14 @@ namespace VECTO3GUI2020.ViewModel.Implementation
 			return outFile;
 		}
 
-
+		#endregion
 		#region Commands
+		private ICommand _editJobCommand;
+		private IAsyncRelayCommand _removeJobCommand;
+		private ICommand _moveJobUpCommand;
+		private ICommand _moveJobDownCommand;
+		private ICommand _viewXMLCommand;
+		private IDocumentViewModel _selectedJob;
 
 		public ICommand CancelSimulation
 		{
@@ -616,7 +648,9 @@ namespace VECTO3GUI2020.ViewModel.Implementation
 			if (fileName != null) {
 				try {
 					var result = await LoadFileAsync(fileName);
-					Jobs.Add(result);
+					lock (_jobsLock) {
+						Jobs.Add(result);
+					}
 					return result;
 				} catch (Exception e) {
 					var errorString = "";
@@ -655,51 +689,16 @@ namespace VECTO3GUI2020.ViewModel.Implementation
 		}
 
 
-
-		public ICommand AddJob
+		public ICommand EditJob
         {
             get
-            {
-                return _addJobCommand ?? new RelayCommand(AddJobExecute, () => { return true; });
-            }
-            private set
-            {
-                _addJobCommand = value;
-                OnPropertyChanged();
-            }
-        }
-
-
-        private void AddJobExecute()
-        {
-			IsLoading = true;
-			var filename = _dialogHelper.OpenXMLFileDialog();
-			if (filename != null)
-            {
-               LoadJob(filename);
-			}
-            else
-            {
-                IsLoading = false;
-            }
-        }
-
-		public void LoadJob([NotNull] string fileName)
-		{
-			fileReadingBackgroundWorker.RunWorkerAsync(fileName);
-        }
-
-
-        public ICommand EditJob
-        {
-            get
-            {
-                return _editJobCommand ?? new Util.RelayCommand<IJobViewModel>(EditJobExecute,
-                    (IJobViewModel jobentry) => {
+			{
+				return _editJobCommand ?? (_editJobCommand = new Util.RelayCommand<IJobViewModel>(EditJobExecute,
+					(IJobViewModel jobentry) => {
 						var canExecute = jobentry != null && jobentry.CanBeEdited;
-                        return canExecute;
-                    });
-            }
+						return canExecute;
+					}));
+			}
             set
             {
                 _editJobCommand = value;
@@ -744,14 +743,14 @@ namespace VECTO3GUI2020.ViewModel.Implementation
         }
 
 
-        public ICommand RemoveJob
+        public IAsyncRelayCommand RemoveJob
         {
             get
             {
-                return _removeJobCommand ?? new Util.RelayCommand<IDocumentViewModel>(RemoveJobExecute, (IDocumentViewModel jobentry) =>
-                {
-                    return (jobentry != null);
-                });
+                return _removeJobCommand ?? (_removeJobCommand = new AsyncRelayCommand<IDocumentViewModel>(RemoveJobExecute, 
+					(IDocumentViewModel jobEntry) => {
+						return (SelectedJob != null);
+					}));
             }
             set
             {
@@ -760,14 +759,28 @@ namespace VECTO3GUI2020.ViewModel.Implementation
             }
         }
 
-        private void RemoveJobExecute(IDocumentViewModel selectedDocument)
+		public void OnJobSelectionChanged()
+		{
+			RemoveJob.NotifyCanExecuteChanged();
+		}
+
+
+        private async Task RemoveJobExecute(IDocumentViewModel selectedDocument)
         {
-            if (selectedDocument == null) return;
+			if (selectedDocument == null) {
+				return;
+			}
 
-
-            Jobs.Remove(selectedDocument);
+			await Task.Run(() => {
+				lock (_jobsLock) {
+					Jobs.Remove(selectedDocument);
+				}
+			});
+			
+          
             OnPropertyChanged();
-        }
+
+		}
 
         public ICommand moveJobUp
         {
@@ -824,50 +837,10 @@ namespace VECTO3GUI2020.ViewModel.Implementation
         }
 
         #endregion Commands
-
-        #region BackgroundworkerXMLreading
-
-        void fileworker_DoWork(object sender, DoWorkEventArgs e)
-        {
-            string filename = e.Argument as string;
-            Debug.Assert(filename != null);
-
-            try
-            {
-                var xElement = new System.Xml.XmlDocument();
-                xElement.Load(filename);
-
-                var documentType = XMLHelper.GetDocumentType(xElement?.DocumentElement?.LocalName);
-                if (documentType == null)
-                {
-					Debug.WriteLine("Unknown Document Type");
-                    e.Cancel = true;
-                    return;
-                }
-
-				
+	}
 
 
-				var result = _documentViewModelFactory.CreateDocumentViewModel((XmlDocumentType)documentType, filename);
-                e.Result = result;
-            }
-            catch (Exception)
-            {
-				e.Cancel = true;
-                throw;
-            }
-        }
 
-
-        void fileworker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
-        {
-            Debug.Assert(e.Result is IDocumentViewModel);
-            Jobs.Add(e.Result as IDocumentViewModel);
-            IsLoading = false;
-        }
-
-        #endregion
-    }
 
 
 	public class VectoSimulationProgress
@@ -888,5 +861,7 @@ namespace VECTO3GUI2020.ViewModel.Implementation
 
 		public string Link { get; set; }
 	}
+
+
 
 }
