@@ -21,9 +21,9 @@ using TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox;
 using TUGraz.VectoCore.Utils;
 using TUGraz.VectoHashing;
 
-namespace TUGraz.VectoCore.OutputData.XML
+namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationFile
 {
-	public class XMLPrimaryVehicleReport
+	public class XMLPrimaryBusVehicleReport : IXMLPrimaryVehicleReport
 	{
 		protected XNamespace tns = "urn:tugraz:ivt:VectoAPI:DeclarationOutput:VehicleInterimFile:v0.1";
 		protected XNamespace di = "http://www.w3.org/2000/09/xmldsig#";
@@ -40,19 +40,19 @@ namespace TUGraz.VectoCore.OutputData.XML
 		protected XElement InputDataIntegrity;
 		protected XElement Results;
 
-		private bool _allSuccess = true;
+		protected bool _allSuccess = true;
 
 
-		public XMLPrimaryVehicleReport()
+		public XMLPrimaryBusVehicleReport()
 		{
 			VehiclePart = new XElement(tns + XMLNames.Component_Vehicle);
 			Results = new XElement(tns + XMLNames.Report_Results);
 		}
 
-		public XDocument Report { get; private set; }
+		public XDocument Report { get; protected set; }
 
 
-		public void GenerateReport(XElement resultSignature)
+		public virtual void GenerateReport(XElement resultSignature)
 		{
 			var retVal = new XDocument();
 			retVal.Add(
@@ -73,7 +73,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 			Report = retVal;
 		}
 		
-		private XElement GeneratePrimaryVehicle(XElement resultSignature)
+		protected virtual XElement GeneratePrimaryVehicle(XElement resultSignature)
 		{
 			var results = new XElement(Results);
 			results.AddFirst(new XElement(tns + XMLNames.Report_Result_Status, _allSuccess ? "success" : "error"));
@@ -95,7 +95,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 			return primaryVehicle;
 		}
 
-		private XElement GetSignatureElement(XElement stage)
+		protected XElement GetSignatureElement(XElement stage)
 		{
 			var stream = new MemoryStream();
 			var writer = new StreamWriter(stream);
@@ -108,7 +108,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 					(VectoHash.DefaultCanonicalizationMethod, VectoHash.DefaultDigestMethod));
 		}
 
-		private XElement GetApplicationInfo()
+		protected XElement GetApplicationInfo()
 		{
 			var versionNumber = VectoSimulationCore.VersionNumber;
 #if CERTIFICATION_RELEASE // add nothing to version number
@@ -518,7 +518,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 			};
 		}
 
-		public void WriteResult(XMLDeclarationReport.ResultEntry resultEntry)
+		public virtual void WriteResult(XMLDeclarationReport.ResultEntry resultEntry)
 		{
 			_allSuccess &= resultEntry.Status == VectoRun.Status.Success;
 
@@ -594,11 +594,10 @@ namespace TUGraz.VectoCore.OutputData.XML
 
 			return retVal.Cast<object>().ToArray();
 		}
-		
-		private string GetGUID()
+
+		protected string GetGUID()
 		{
 			return Guid.NewGuid().ToString("n").Substring(0, 20);
 		}
 	}
-
 }

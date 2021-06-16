@@ -120,14 +120,9 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 			get { return GetString(XMLNames.Vehicle_VIN); }
 		}
 
-		public virtual string LegislativeCategory
-		{
-			get { return null; }
-		}
-
 		public virtual LegislativeClass? LegislativeClass
 		{
-			get { return GetString(XMLNames.Vehicle_LegislativeClass).ParseEnum<LegislativeClass>(); }
+			get { return GetString("LegislativeCategory").ParseEnum<LegislativeClass>(); }
 		}
 
 		public virtual VehicleCategory VehicleCategory
@@ -150,7 +145,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 		public virtual Kilogram GrossVehicleMassRating
 		{
-			get { return GetDouble(XMLNames.Vehicle_GrossVehicleMass).SI<Kilogram>(); }
+			get { return GetDouble(XMLNames.Vehicle_TPMLM).SI<Kilogram>(); }
 		}
 
 		public virtual IList<ITorqueLimitInputData> TorqueLimits
@@ -276,6 +271,11 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 					? GetDouble(XMLNames.Vehicle_MaxNetPower2).SI<Watt>()
 					: null;
 			}
+		}
+
+		public virtual string ExemptedTechnology
+		{
+			get { return null; }
 		}
 
 		public virtual RegistrationClass? RegisteredClass
@@ -741,6 +741,123 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		#endregion
 	}
 
+	public class XMLDeclarationExemptedPrimaryBusDataProviderV26 : XMLDeclarationVehicleDataProviderV20
+	{
+		public new static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V26;
+
+		public new const string XSD_TYPE = "ExemptedPrimaryHeavyBusType";
+
+		public new static readonly string QUALIFIED_XSD_TYPE =
+			XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
+
+		public XMLDeclarationExemptedPrimaryBusDataProviderV26(
+			IXMLDeclarationJobInputData jobData, XmlNode xmlNode, string sourceFile) : base(jobData, xmlNode, sourceFile)
+		{
+			SourceType = DataSourceType.XMLEmbedded;
+
+		}
+
+		#region Overrides of AbstractXMLResource
+
+		protected override XNamespace SchemaNamespace {
+			get { return NAMESPACE_URI; }
+		}
+
+		protected override DataSourceType SourceType { get; }
+
+		#endregion
+
+		public override VehicleCategory VehicleCategory {
+			get { return VehicleCategory.HeavyBusPrimaryVehicle; }
+		}
+
+		public override bool ExemptedVehicle {
+			get { return true; }
+		}
+
+
+		public override IList<ITorqueLimitInputData> TorqueLimits {
+			get { return new List<ITorqueLimitInputData>(); }
+		}
+
+		public override PerSecond EngineIdleSpeed {
+			get { return null; }
+		}
+
+		public override bool VocationalVehicle {
+			get { return false; }
+		}
+
+		public override bool SleeperCab {
+			get { return false; }
+		}
+
+		public override TankSystem? TankSystem {
+			get { return null; }
+		}
+
+		public override IAdvancedDriverAssistantSystemDeclarationInputData ADAS {
+			get { return null; }
+		}
+
+		public override bool ZeroEmissionVehicle {
+			get { return XmlConvert.ToBoolean(GetString(XMLNames.Vehicle_ZeroEmissionVehicle)); }
+		}
+
+		public override bool HybridElectricHDV {
+			get { return false; }
+		}
+
+		public override bool DualFuelVehicle {
+			get { return false; }
+		}
+
+		public override Watt MaxNetPower1 {
+			get { return GetDouble("SumNetPower").SI<Watt>(); }
+		}
+
+		public override Watt MaxNetPower2 {
+			get { return null; }
+		}
+
+		public override string ExemptedTechnology
+		{
+			get { return GetString("Technology"); }
+		}
+
+		public override IVehicleComponentsDeclaration Components {
+			get { return null; }
+		}
+
+		public override XmlElement ComponentNode {
+			get { return null; }
+		}
+
+		public override XmlElement PTONode {
+			get { return null; }
+		}
+
+		public override XmlElement ADASNode {
+			get { return null; }
+		}
+
+		public override AngledriveType AngledriveType {
+			get { return AngledriveType.None; }
+		}
+
+		public override RetarderType RetarderType {
+			get { return RetarderType.None; }
+		}
+
+		public override double RetarderRatio {
+			get { return 0; }
+		}
+
+		public override IPTOTransmissionInputData PTOTransmissionInputData {
+			get { return null; }
+		}
+	}
+
 	public class XMLDeclarationMediumLorryVehicleDataProviderV26 : XMLDeclarationVehicleDataProviderV21
 	{
 		public new static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V26;
@@ -804,6 +921,28 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		protected override DataSourceType SourceType { get; }
 
 		#endregion
+
+		public override XmlElement ComponentNode {
+			get { return null; }
+		}
+
+
+		public override XmlElement ADASNode {
+			get { return null; }
+		}
+
+		public override AngledriveType AngledriveType {
+			get { return AngledriveType.None; }
+		}
+
+		public override RetarderType RetarderType {
+			get { return RetarderType.None; }
+		}
+
+		public override double RetarderRatio {
+			get { return 0; }
+		}
+
 	}
 
 	public class XMLDeclarationCompletedBusDataProviderV26 : XMLDeclarationVehicleDataProviderV20
@@ -970,9 +1109,9 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 			get { return GetString(XMLNames.Vehicle_VIN); }
 		}
 
-		public string LegislativeCategory
+		public LegislativeClass? LegislativeClass
 		{
-			get { return GetString(XMLNames.Bus_LegislativeCategory); }
+			get { return GetString(XMLNames.Bus_LegislativeCategory)?.ParseEnum<LegislativeClass>(); }
 		}
 
 		public VehicleCategory VehicleCategory
@@ -1070,7 +1209,6 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 		public string Identifier { get; }
 		public bool ExemptedVehicle { get; }
-		public LegislativeClass? LegislativeClass { get; }
 		public int? NumberPassengerSeatsUpperDeck { get; }
 		public int? NumberPassengerSeatsLowerDeck { get; }
 		public int? NumberPassengersStandingLowerDeck { get; }
@@ -1090,6 +1228,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		public bool DualFuelVehicle { get; }
 		public Watt MaxNetPower1 { get; }
 		public Watt MaxNetPower2 { get; }
+		public string ExemptedTechnology { get; }
 		public RegistrationClass? RegisteredClass { get; }
 		public VehicleCode? VehicleCode { get; }
 		public bool? LowEntry { get; }

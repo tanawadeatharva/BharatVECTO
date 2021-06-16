@@ -99,8 +99,6 @@ namespace TUGraz.VectoCommon.InputData
 
 		string VIN { get; }
 
-		string LegislativeCategory { get; }
-
 		LegislativeClass? LegislativeClass { get; }
 
 		/// <summary>
@@ -168,6 +166,9 @@ namespace TUGraz.VectoCommon.InputData
 		Watt MaxNetPower1 { get; }
 
 		Watt MaxNetPower2 { get; }
+
+		string ExemptedTechnology { get; }
+
 
 		RegistrationClass? RegisteredClass { get; }
 

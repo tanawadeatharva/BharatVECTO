@@ -34,9 +34,39 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 		public override VehicleData CreateVehicleData(IVehicleDeclarationInputData data, Segment segment, Mission mission, KeyValuePair<LoadingType, Tuple<Kilogram, double?>> loading, bool allowVocational)
 		{
 			var retVal = base.CreateVehicleData(data, segment, mission, loading, allowVocational);
+			if (data.ExemptedVehicle) {
+				return retVal;
+			}
 			retVal.CurbMass = mission.CurbMass;
 			retVal.GrossVehicleMass = 40000.SI<Kilogram>();
 			return retVal;
+		}
+
+		protected override VehicleData CreateExemptedVehicleData(IVehicleDeclarationInputData data)
+		{
+			var exempted = new VehicleData {
+				InputData = data,
+				SavedInDeclarationMode = data.SavedInDeclarationMode,
+				Manufacturer = data.Manufacturer,
+				ModelName = data.Model,
+				Date = data.Date,
+				//CertificationNumber = data.CertificationNumber,
+				DigestValueInput = data.DigestValue != null ? data.DigestValue.DigestValue : "",
+				VehicleCategory = data.VehicleCategory,
+				//CurbMass = data.CurbMassChassis,
+				GrossVehicleMass = data.GrossVehicleMassRating,
+				AirDensity = Physics.AirDensity,
+			};
+			exempted.VIN = data.VIN;
+			exempted.ManufacturerAddress = data.ManufacturerAddress;
+			exempted.LegislativeClass = data.LegislativeClass;
+			exempted.ZeroEmissionVehicle = data.ZeroEmissionVehicle;
+			exempted.HybridElectricHDV = data.HybridElectricHDV;
+			exempted.DualFuelVehicle = data.DualFuelVehicle;
+			exempted.MaxNetPower1 = data.MaxNetPower1;
+			exempted.MaxNetPower2 = data.MaxNetPower2;
+			exempted.AxleConfiguration = data.AxleConfiguration;
+			return exempted;
 		}
 
 		public override PTOData CreatePTOTransmissionData(IPTOTransmissionInputData pto)

@@ -13,6 +13,7 @@ using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Factory;
 using TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Interfaces;
 using TUGraz.VectoCore.OutputData.XML;
+using TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationFile;
 using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
@@ -468,11 +469,6 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 			get { return _manufacturingStages.First().Vehicle.VIN; }
 		}
 
-		public string LegislativeCategory
-		{
-			get { return null; }
-		}
-
 		public VehicleDeclarationType VehicleDeclarationType
 		{
 			get { return _manufacturingStages.First().Vehicle.VehicleDeclarationType; }
@@ -633,6 +629,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 		public bool DualFuelVehicle { get; }
 		public Watt MaxNetPower1 { get; }
 		public Watt MaxNetPower2 { get; }
+		public string ExemptedTechnology { get; }
+
 		public CubicMeter CargoVolume { get; }
 		public bool Articulated { get; }
 

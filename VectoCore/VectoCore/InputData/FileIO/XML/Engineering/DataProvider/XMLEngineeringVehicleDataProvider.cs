@@ -108,11 +108,6 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering.DataProvider
 			get { return GetString(XMLNames.Vehicle_VIN); }
 		}
 
-		public string LegislativeCategory
-		{
-			get { return null; }
-		}
-
 		public virtual LegislativeClass? LegislativeClass
 		{
 			get { return GetString(XMLNames.Vehicle_LegislativeClass).ParseEnum<LegislativeClass>(); }
@@ -205,6 +200,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering.DataProvider
 		{
 			get { return null; }
 		}
+
+		public string ExemptedTechnology { get; }
 
 		public virtual RegistrationClass? RegisteredClass { get { return RegistrationClass.unknown;} }
 		public virtual int? NumberPassengerSeatsUpperDeck { get { return 0; } }

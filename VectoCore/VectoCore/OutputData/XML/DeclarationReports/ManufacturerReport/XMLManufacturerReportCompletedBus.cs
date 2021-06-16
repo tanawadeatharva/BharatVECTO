@@ -14,7 +14,7 @@ using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Utils;
 
-namespace TUGraz.VectoCore.OutputData.XML {
+namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport {
 	public class XMLManufacturerReportCompletedBus : AbstractXMLManufacturerReport
 	{
 

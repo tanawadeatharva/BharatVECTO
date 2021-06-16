@@ -18,16 +18,8 @@ using TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox;
 using TUGraz.VectoCore.Utils;
 using TUGraz.VectoHashing;
 
-namespace TUGraz.VectoCore.OutputData.XML
+namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport
 {
-	public interface IXMLManufacturerReport
-	{
-		void Initialize(VectoRunData modelData, List<List<FuelData.Entry>> fuelModes);
-		XDocument Report { get; }
-		void WriteResult(XMLDeclarationReport.ResultEntry resultValue);
-		void GenerateReport();
-	}
-
 	public abstract class AbstractXMLManufacturerReport : IXMLManufacturerReport
 	{
 		protected XElement VehiclePart;
@@ -38,10 +30,12 @@ namespace TUGraz.VectoCore.OutputData.XML
 
 		protected XNamespace xsi = XNamespace.Get("http://www.w3.org/2001/XMLSchema-instance");
 		protected XNamespace tns = "urn:tugraz:ivt:VectoAPI:DeclarationOutput:v0.8";
+		protected XNamespace vns;
 		protected XNamespace di = "http://www.w3.org/2000/09/xmldsig#";
 
 		protected AbstractXMLManufacturerReport()
 		{
+			vns = "urn:tugraz:ivt:VectoAPI:DeclarationOutput:v0.8";
 			VehiclePart = new XElement(tns + XMLNames.Component_Vehicle);
 			Results = new XElement(tns + XMLNames.Report_Results);
 		}
@@ -67,16 +61,17 @@ namespace TUGraz.VectoCore.OutputData.XML
 
 					//new XAttribute("schemaVersion", CURRENT_SCHEMA_VERSION),
 					new XAttribute(XNamespace.Xmlns + "xsi", xsi.NamespaceName),
-					new XAttribute("xmlns", tns),
+					new XAttribute("xmlns", vns),
 					new XAttribute(XNamespace.Xmlns + "di", di),
-					//new XAttribute(XNamespace.Xmlns + "tns", tns),
-					new XAttribute(XNamespace.Xmlns + "mrf", mrf),
+                    new XAttribute(XNamespace.Xmlns + "tns", tns),
+					new XAttribute(XNamespace.Xmlns + "vns", vns),
+                    new XAttribute(XNamespace.Xmlns + "mrf", mrf),
 					new XAttribute(
 						xsi + "schemaLocation",
 						string.Format("{0} {1}/DEV/VectoOutputManufacturer.xsd", mrf, AbstractXMLWriter.SchemaLocationBaseUrl)),
 					new XElement(
 						mrf + XMLNames.Report_DataWrap,
-						new XAttribute(xsi + "type", "VectoOutputDataType"),
+						new XAttribute(xsi + "type", "tns:VectoOutputDataType"),
 						vehicle,
 						results,
 						GetApplicationInfo())
@@ -229,7 +224,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 		protected virtual XElement GetInputDataSignature(VectoRunData modelData)
 		{
 			return new XElement(
-				tns + XMLNames.Report_Input_Signature,
+				vns + XMLNames.Report_Input_Signature,
 				modelData.InputDataHash == null ? CreateDummySig() : new XElement(modelData.InputDataHash));
 		}
 

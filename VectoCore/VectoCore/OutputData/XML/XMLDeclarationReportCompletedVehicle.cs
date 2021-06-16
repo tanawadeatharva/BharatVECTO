@@ -7,6 +7,8 @@ using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation.Data;
+using TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformationFile;
+using TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport;
 
 namespace TUGraz.VectoCore.OutputData.XML {
 	public class XMLDeclarationReportCompletedVehicle : XMLDeclarationReport

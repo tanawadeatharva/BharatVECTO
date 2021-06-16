@@ -46,6 +46,8 @@ using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.Impl;
+using TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformationFile;
+using TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport;
 
 namespace TUGraz.VectoCore.OutputData.XML
 {
@@ -53,7 +55,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 	{
 		protected IXMLManufacturerReport ManufacturerRpt;
 
-		protected XMLCustomerReport CustomerRpt;
+		protected IXMLCustomerReport CustomerRpt;
 
 
 		protected IDictionary<Tuple<MissionType, LoadingType>, double> _weightingFactors;

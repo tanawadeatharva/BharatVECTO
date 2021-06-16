@@ -6,7 +6,8 @@ using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Utils;
 
-namespace TUGraz.VectoCore.OutputData.XML {
+namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport 
+{
 	public class XMLManufacturerReportExemptedTruck : AbstractXMLManufacturerReport
 	{
 		public override void Initialize(VectoRunData modelData, List<List<FuelData.Entry>> fuelModes)

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- edited with XMLSpy v2021 (x64) (http://www.altova.com) by Franz Josef Kober (Technische Universität Graz) -->
+<!-- edited with XMLSpy v2021 (x64) (http://www.altova.com) by Markus Quaritsch (Technische Universität Graz) -->
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:vif="urn:tugraz:ivt:VectoAPI:DeclarationOutput:VehicleInterimFile:v0.1" xmlns:v1.0="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v1.0" xmlns:v2.0="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0" xmlns:v2.1="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.1" xmlns:v2.3="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:DEV:v2.3" xmlns:v2.4="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:DEV:v2.4" xmlns:v2.6="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:DEV:v2.6" xmlns:v2.8="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:DEV:v2.8" xmlns:out="urn:tugraz:ivt:VectoAPI:DeclarationOutputDefinitions" xmlns:common="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions" targetNamespace="urn:tugraz:ivt:VectoAPI:DeclarationOutput:VehicleInterimFile:v0.1" elementFormDefault="qualified" attributeFormDefault="unqualified" xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:ParameterDocumentation ParameterDocumentation.xsd">
 	<xs:import namespace="urn:tugraz:ivt:VectoAPI:DeclarationOutputDefinitions" schemaLocation="VectoOutputDefinitions.xsd"/>
 	<xs:import namespace="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions" schemaLocation="VectoDeclarationDefinitions.xsd"/>
@@ -9,47 +9,88 @@
 	<xs:import namespace="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:DEV:v2.3" schemaLocation="VectoDeclarationDefinitions.2.3_DEV.xsd"/>
 	<xs:import namespace="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:DEV:v2.6" schemaLocation="VectoDeclarationDefinitions.2.6_Buses.xsd"/>
 	<xs:import namespace="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:DEV:v2.8" schemaLocation="VectoDeclarationDefinitions.2.8_Stage.xsd"/>
-	<xs:complexType name="AbstractAxleWheelsComponentPIFType" abstract="true"/>
-	<xs:complexType name="AbstractAxleWheelsDataPIFType" abstract="true"/>
-	<xs:complexType name="AxleWheelsComponentPIFType">
-		<xs:complexContent>
-			<xs:extension base="vif:AbstractAxleWheelsComponentPIFType">
-				<xs:sequence>
-					<xs:element name="Data" type="vif:AbstractAxleWheelsDataPIFType"/>
-				</xs:sequence>
-			</xs:extension>
-		</xs:complexContent>
-	</xs:complexType>
-	<xs:complexType name="AxleWheelsDataPIFType">
-		<xs:annotation>
-			<xs:documentation>Axles &amp; Wheels Component</xs:documentation>
-		</xs:annotation>
-		<xs:complexContent>
-			<xs:extension base="vif:AbstractAxleWheelsDataPIFType">
-				<xs:sequence>
-					<xs:element name="Axles">
-						<xs:complexType>
-							<xs:sequence>
-								<xs:element name="Axle" type="v2.0:AbstractAxleDataDeclarationType" minOccurs="2" maxOccurs="4"/>
-							</xs:sequence>
-						</xs:complexType>
-					</xs:element>
-				</xs:sequence>
-			</xs:extension>
-		</xs:complexContent>
-	</xs:complexType>
 	<xs:element name="VectoOutputMultistage" type="vif:VectoOutputMultistageType">
 		<xs:annotation>
 			<xs:documentation>Comment describing your root element</xs:documentation>
 		</xs:annotation>
 	</xs:element>
 	<xs:complexType name="AbstractAngledriveDataPIFType" abstract="true"/>
+	<xs:complexType name="AbstractAuxiliaryDataPIFType" abstract="true"/>
 	<xs:complexType name="AbstractAxlegearDataPIFType" abstract="true"/>
+	<xs:complexType name="AbstractAxleWheelsComponentPIFType" abstract="true"/>
+	<xs:complexType name="AbstractAxleWheelsDataPIFType" abstract="true"/>
 	<xs:complexType name="AbstractEngineDataPIFType" abstract="true"/>
 	<xs:complexType name="AbstractManufacturingStageDataType" abstract="true">
 		<xs:attribute name="id" type="xs:NCName" use="required"/>
 	</xs:complexType>
-	<xs:complexType name="AbstractAuxiliaryDataPIFType" abstract="true"/>
+	<xs:complexType name="AbstractPrimaryVehicleType" abstract="true"/>
+	<xs:complexType name="AbstractTorqueConverterDataPIFType" abstract="true"/>
+	<xs:complexType name="AbstractTransmissionDataPIFType" abstract="true"/>
+	<xs:complexType name="AbstractTransmissionGearsPIFType" abstract="true"/>
+	<xs:complexType name="AbstractVehicleComponentsPIFType" abstract="true"/>
+	<xs:complexType name="AngledriveDataPIFType">
+		<xs:complexContent>
+			<xs:extension base="vif:AbstractAngledriveDataPIFType">
+				<xs:sequence>
+					<xs:element name="Manufacturer" type="v1.0:ManufacturerType">
+						<xs:annotation>
+							<xs:documentation>P220</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="Model" type="v1.0:ModelType">
+						<xs:annotation>
+							<xs:documentation>P221</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="CertificationMethod" type="v1.0:AngledriveCertificationOptionType">
+						<xs:annotation>
+							<xs:documentation>P258 - [-]</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="CertificationNumber" type="v1.0:CertificationNumberType" minOccurs="0">
+						<xs:annotation>
+							<xs:documentation>P265</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="Date" type="v1.0:DateTimeWithTimezone">
+						<xs:annotation>
+							<xs:documentation>P223</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="AppVersion" type="v1.0:AppVersionType">
+						<xs:annotation>
+							<xs:documentation>P224</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="Ratio"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="AngledrivePIFType">
+		<xs:sequence>
+			<xs:element name="Data" type="vif:AbstractAngledriveDataPIFType"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="ApplicationInformationPrimaryVehicleType">
+		<xs:sequence>
+			<xs:element name="SimulationToolVersion" type="xs:string">
+				<xs:annotation>
+					<xs:documentation>II.2.5</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Date" type="v1.0:DateTimeWithTimezone">
+				<xs:annotation>
+					<xs:documentation>II.2.5</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="AuxiliaryComponentPIFType">
+		<xs:sequence>
+			<xs:element name="Data" type="vif:AbstractAuxiliaryDataPIFType"/>
+		</xs:sequence>
+	</xs:complexType>
 	<xs:complexType name="AuxiliaryDataPIFType">
 		<xs:complexContent>
 			<xs:extension base="vif:AbstractAuxiliaryDataPIFType">
@@ -254,72 +295,9 @@
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
-	<xs:complexType name="AbstractPrimaryVehicleType" abstract="true"/>
-	<xs:complexType name="AbstractTorqueConverterDataPIFType" abstract="true"/>
-	<xs:complexType name="AbstractTransmissionDataPIFType" abstract="true"/>
-	<xs:complexType name="AbstractTransmissionGearsPIFType" abstract="true"/>
-	<xs:complexType name="AbstractVehicleComponentsPIFType" abstract="true"/>
-	<xs:complexType name="AngledriveDataPIFType">
-		<xs:complexContent>
-			<xs:extension base="vif:AbstractAngledriveDataPIFType">
-				<xs:sequence>
-					<xs:element name="Manufacturer" type="v1.0:ManufacturerType">
-						<xs:annotation>
-							<xs:documentation>P220</xs:documentation>
-						</xs:annotation>
-					</xs:element>
-					<xs:element name="Model" type="v1.0:ModelType">
-						<xs:annotation>
-							<xs:documentation>P221</xs:documentation>
-						</xs:annotation>
-					</xs:element>
-					<xs:element name="CertificationMethod" type="v1.0:AngledriveCertificationOptionType">
-						<xs:annotation>
-							<xs:documentation>P258 - [-]</xs:documentation>
-						</xs:annotation>
-					</xs:element>
-					<xs:element name="CertificationNumber" type="v1.0:CertificationNumberType" minOccurs="0">
-						<xs:annotation>
-							<xs:documentation>P265</xs:documentation>
-						</xs:annotation>
-					</xs:element>
-					<xs:element name="Date" type="v1.0:DateTimeWithTimezone">
-						<xs:annotation>
-							<xs:documentation>P223</xs:documentation>
-						</xs:annotation>
-					</xs:element>
-					<xs:element name="AppVersion" type="v1.0:AppVersionType">
-						<xs:annotation>
-							<xs:documentation>P224</xs:documentation>
-						</xs:annotation>
-					</xs:element>
-					<xs:element name="Ratio"/>
-				</xs:sequence>
-			</xs:extension>
-		</xs:complexContent>
-	</xs:complexType>
-	<xs:complexType name="AngledrivePIFType">
+	<xs:complexType name="AxlegearComponentPIFType">
 		<xs:sequence>
-			<xs:element name="Data" type="vif:AbstractAngledriveDataPIFType"/>
-		</xs:sequence>
-	</xs:complexType>
-	<xs:complexType name="ApplicationInformationPrimaryVehicleType">
-		<xs:sequence>
-			<xs:element name="SimulationToolVersion" type="xs:string">
-				<xs:annotation>
-					<xs:documentation>II.2.5</xs:documentation>
-				</xs:annotation>
-			</xs:element>
-			<xs:element name="Date" type="v1.0:DateTimeWithTimezone">
-				<xs:annotation>
-					<xs:documentation>II.2.5</xs:documentation>
-				</xs:annotation>
-			</xs:element>
-		</xs:sequence>
-	</xs:complexType>
-	<xs:complexType name="AuxiliaryComponentPIFType">
-		<xs:sequence>
-			<xs:element name="Data" type="vif:AbstractAuxiliaryDataPIFType"/>
+			<xs:element name="Data" type="vif:AbstractAxlegearDataPIFType"/>
 		</xs:sequence>
 	</xs:complexType>
 	<xs:complexType name="AxlegearDataPIFType">
@@ -362,10 +340,32 @@
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
-	<xs:complexType name="AxlegearComponentPIFType">
-		<xs:sequence>
-			<xs:element name="Data" type="vif:AbstractAxlegearDataPIFType"/>
-		</xs:sequence>
+	<xs:complexType name="AxleWheelsComponentPIFType">
+		<xs:complexContent>
+			<xs:extension base="vif:AbstractAxleWheelsComponentPIFType">
+				<xs:sequence>
+					<xs:element name="Data" type="vif:AbstractAxleWheelsDataPIFType"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="AxleWheelsDataPIFType">
+		<xs:annotation>
+			<xs:documentation>Axles &amp; Wheels Component</xs:documentation>
+		</xs:annotation>
+		<xs:complexContent>
+			<xs:extension base="vif:AbstractAxleWheelsDataPIFType">
+				<xs:sequence>
+					<xs:element name="Axles">
+						<xs:complexType>
+							<xs:sequence>
+								<xs:element name="Axle" type="v2.0:AbstractAxleDataDeclarationType" minOccurs="2" maxOccurs="4"/>
+							</xs:sequence>
+						</xs:complexType>
+					</xs:element>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
 	</xs:complexType>
 	<xs:complexType name="BusManufacturingStageDataType">
 		<xs:complexContent>
@@ -551,7 +551,12 @@
 	<xs:complexType name="ResultsPrimaryVehicleType">
 		<xs:sequence>
 			<xs:element name="Status"/>
-			<xs:element name="Result" type="vif:ResultPrimaryVehicleType" maxOccurs="unbounded"/>
+			<xs:choice>
+				<xs:element name="Result" type="vif:ResultPrimaryVehicleType" maxOccurs="unbounded"/>
+				<xs:element name="ExemptedVehicle">
+					<xs:complexType/>
+				</xs:element>
+			</xs:choice>
 		</xs:sequence>
 	</xs:complexType>
 	<xs:complexType name="SimulationParametersType">
@@ -717,6 +722,12 @@
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
+	<xs:complexType name="VectoOutputMultistageType">
+		<xs:sequence>
+			<xs:element name="PrimaryVehicle" type="vif:PrimaryVehicleType"/>
+			<xs:element name="ManufacturingStage" type="vif:ManufacturingStageType" minOccurs="0" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
 	<xs:complexType name="VehicleComponentsPIFType">
 		<xs:complexContent>
 			<xs:extension base="vif:AbstractVehicleComponentsPIFType">
@@ -728,6 +739,101 @@
 					<xs:element name="Axlegear" type="vif:AxlegearComponentPIFType"/>
 					<xs:element name="AxleWheels" type="vif:AxleWheelsComponentPIFType"/>
 					<xs:element name="Auxiliaries" type="vif:AuxiliaryComponentPIFType"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="VehicleExemptedPrimaryBusType">
+		<xs:complexContent>
+			<xs:extension base="vif:AbstractPrimaryVehicleType">
+				<xs:sequence>
+					<xs:element name="Manufacturer" type="v1.0:ManufacturerType">
+						<xs:annotation>
+							<xs:documentation>P235 / I.1.1.1 / #14</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="ManufacturerAddress" type="v1.0:ManufacturerAddressType">
+						<xs:annotation>
+							<xs:documentation>P252 / I.1.1.1 / #14</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="Model" type="v1.0:ModelType">
+						<xs:annotation>
+							<xs:documentation>P236 / I.1.1.2</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="VIN" type="v1.0:VINType">
+						<xs:annotation>
+							<xs:documentation>P238 / I.1.1.3 / #1</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="LegislativeCategory">
+						<xs:annotation>
+							<xs:documentation>P251 / I.1.1.4 / #10</xs:documentation>
+						</xs:annotation>
+						<xs:simpleType>
+							<xs:restriction base="xs:string">
+								<xs:minLength value="1"/>
+							</xs:restriction>
+						</xs:simpleType>
+					</xs:element>
+					<xs:element name="ChassisConfiguration" type="v2.6:ChassisConfigurationDeclarationType">
+						<xs:annotation>
+							<xs:documentation>P036 - enum</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="AxleConfiguration" type="v2.6:VehicleAxleConfigurationDeclarationType">
+						<xs:annotation>
+							<xs:documentation>P037 - enum</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="Articulated" type="xs:boolean"/>
+					<xs:element name="TechnicalPermissibleMaximumLadenMass">
+						<xs:annotation>
+							<xs:documentation>P041 / I.1.1.6 / #12</xs:documentation>
+						</xs:annotation>
+						<xs:complexType>
+							<xs:simpleContent>
+								<xs:extension base="xs:double">
+									<xs:attribute name="unit" type="out:MassUnitType" use="required"/>
+								</xs:extension>
+							</xs:simpleContent>
+						</xs:complexType>
+					</xs:element>
+					<xs:element name="ZeroEmissionVehicle" type="xs:boolean">
+						<xs:annotation>
+							<xs:documentation>P269 / I.1.1.10</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="SumNetPower">
+						<xs:annotation>
+							<xs:documentation>P277</xs:documentation>
+						</xs:annotation>
+						<xs:complexType>
+							<xs:simpleContent>
+								<xs:extension base="xs:double">
+									<xs:attribute name="unit" type="out:PowerUnitType" use="required"/>
+								</xs:extension>
+							</xs:simpleContent>
+						</xs:complexType>
+					</xs:element>
+					<xs:element name="Technology">
+						<xs:annotation>
+							<xs:documentation>P332 - enum</xs:documentation>
+						</xs:annotation>
+						<xs:simpleType>
+							<xs:restriction base="xs:string">
+								<xs:enumeration value="HEV Article 9 exempted"/>
+								<xs:enumeration value="PEV Article 9 exempted"/>
+								<xs:enumeration value="HV Article 9 exempted"/>
+								<xs:enumeration value="Fuel cell vehicle"/>
+								<xs:enumeration value="H2 ICE"/>
+								<xs:enumeration value="Dual fuel vehicle Article 9 exempted"/>
+								<xs:enumeration value="In-motion charging Article 9 exempted"/>
+								<xs:enumeration value="Other technology Article 9 exempted"/>
+							</xs:restriction>
+						</xs:simpleType>
+					</xs:element>
 				</xs:sequence>
 			</xs:extension>
 		</xs:complexContent>
@@ -805,10 +911,4 @@
 			<xs:enumeration value="Coach"/>
 		</xs:restriction>
 	</xs:simpleType>
-	<xs:complexType name="VectoOutputMultistageType">
-		<xs:sequence>
-			<xs:element name="PrimaryVehicle" type="vif:PrimaryVehicleType"/>
-			<xs:element name="ManufacturingStage" type="vif:ManufacturingStageType" minOccurs="0" maxOccurs="unbounded"/>
-		</xs:sequence>
-	</xs:complexType>
 </xs:schema>

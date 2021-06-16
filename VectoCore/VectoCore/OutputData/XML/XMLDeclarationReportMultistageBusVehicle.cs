@@ -5,12 +5,13 @@ using System.Text;
 using System.Threading.Tasks;
 using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation.Data;
+using TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationFile;
 
 namespace TUGraz.VectoCore.OutputData.XML
 {
 	public class XMLDeclarationReportMultistageBusVehicle : XMLDeclarationReport
 	{
-		private readonly XMLMultistageBusReport _multistageBusReport;
+		private readonly IXMLMultistageReport _multistageBusReport;
 
 		public XMLDeclarationReportMultistageBusVehicle(IReportWriter writer)
 			: base(writer)
