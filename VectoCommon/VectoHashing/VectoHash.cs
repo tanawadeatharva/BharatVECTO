@@ -245,7 +245,7 @@ namespace TUGraz.VectoHashing
 			}
 
 			query = component.IsReport()
-				? string.Format("*/*[local-name()='Data']/*[local-name()='ApplicationInformation']/*[local-name()='Date']")
+				? "*/*[local-name()='Data']/*[local-name()='ApplicationInformation']/*[local-name()='Date']"
 				: string.Format("*/*[local-name()='{0}']/*/*[local-name()='Date']", component.XMLElementName());
 			var dateNode = Document.SelectSingleNode(query);
 			if (dateNode == null) {

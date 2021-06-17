@@ -63,7 +63,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 
 				var lookup = SimulationRunPreprocessingEcoRoll(jobContainer.Runs[i].Run);
 
-				Console.WriteLine(string.Format("run: {0}{1} vehicle mass: {2}", jobContainer.Runs[i].Run.RunName, jobContainer.Runs[i].Run.RunSuffix, jobContainer.Runs[i].Run.GetContainer().RunData.VehicleData.TotalVehicleMass));
+				Console.WriteLine("run: {0}{1} vehicle mass: {2}", jobContainer.Runs[i].Run.RunName, jobContainer.Runs[i].Run.RunSuffix, jobContainer.Runs[i].Run.GetContainer().RunData.VehicleData.TotalVehicleMass);
 				foreach (var tuple in lookup) {
 					Console.WriteLine("velocity: {0}, slope: {1},", tuple.Key, tuple.Value);
 				}
@@ -104,7 +104,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 
 			var lookup = SimulationRunPreprocessingEcoRoll(jobContainer.Runs[i].Run);
 
-			Console.WriteLine(string.Format("run: {0}{1} vehicle mass: {2}", jobContainer.Runs[i].Run.RunName, jobContainer.Runs[i].Run.RunSuffix, jobContainer.Runs[i].Run.GetContainer().RunData.VehicleData.TotalVehicleMass));
+			Console.WriteLine("run: {0}{1} vehicle mass: {2}", jobContainer.Runs[i].Run.RunName, jobContainer.Runs[i].Run.RunSuffix, jobContainer.Runs[i].Run.GetContainer().RunData.VehicleData.TotalVehicleMass);
 			foreach (var tuple in lookup) {
 				Console.WriteLine("velocity: {0}, slope: {1},", tuple.Key, tuple.Value);
 			}
@@ -136,7 +136,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 
 			var segments = SimulationRunPreprocessingPCCSegments(jobContainer.Runs[i].Run);
 
-			Console.WriteLine(string.Format("run: {0}{1} vehicle mass: {2}", jobContainer.Runs[i].Run.RunName, jobContainer.Runs[i].Run.RunSuffix, jobContainer.Runs[i].Run.GetContainer().RunData.VehicleData.TotalVehicleMass));
+			Console.WriteLine("run: {0}{1} vehicle mass: {2}", jobContainer.Runs[i].Run.RunName, jobContainer.Runs[i].Run.RunSuffix, jobContainer.Runs[i].Run.GetContainer().RunData.VehicleData.TotalVehicleMass);
 			foreach (var entry in segments.Segments) {
 				Console.WriteLine("x_start: {0}, x_vLow: {1}, x_end: {2}", entry.StartDistance, entry.DistanceMinSpeed, entry.EndDistance);
 			}

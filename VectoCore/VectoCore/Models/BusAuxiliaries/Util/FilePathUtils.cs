@@ -61,7 +61,7 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.Util {
 
 			// Illegal characters
 			if (!fileNameLegal(fileNameOnlyWithExtension)) {
-				message = string.Format("The filenames have one or more illegal characters");
+				message = "The filenames have one or more illegal characters";
 				return false;
 			}
 
