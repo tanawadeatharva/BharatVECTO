@@ -13,14 +13,12 @@
 Imports System.Collections.Generic
 Imports System.IO
 Imports System.Linq
-Imports System.Text.RegularExpressions
 Imports TUGraz.VectoCommon.InputData
 Imports TUGraz.VectoCommon.Models
 Imports TUGraz.VectoCommon.Utils
 Imports TUGraz.VectoCore.InputData.FileIO.JSON
 Imports TUGraz.VectoCore.InputData.Impl
 Imports TUGraz.VectoCore.Models.Declaration
-Imports TUGraz.VectoCore.Models.SimulationComponent.Data
 
 ''' <summary>
 ''' Vehicle Editor.

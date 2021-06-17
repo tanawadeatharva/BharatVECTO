@@ -9,7 +9,6 @@
 '
 ' See the LICENSE.txt for the specific language governing permissions and limitations.
 Imports System.IO
-Imports System.Text.RegularExpressions
 Imports TUGraz.VectoCommon.Utils
 
 ''' <summary>

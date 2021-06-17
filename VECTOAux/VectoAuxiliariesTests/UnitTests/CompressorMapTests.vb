@@ -4,7 +4,6 @@ Imports TUGraz.VectoCommon.BusAuxiliaries
 Imports TUGraz.VectoCommon.Exceptions
 Imports TUGraz.VectoCommon.Utils
 Imports TUGraz.VectoCore.InputData.Reader.ComponentData
-Imports TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.Pneumatics
 
 
 Namespace UnitTests

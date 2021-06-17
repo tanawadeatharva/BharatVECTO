@@ -13,7 +13,6 @@ Imports System.Collections.Generic
 Imports System.Drawing.Imaging
 Imports System.IO
 Imports System.Linq
-Imports System.Text.RegularExpressions
 Imports System.Windows.Forms.DataVisualization.Charting
 Imports TUGraz.VectoCommon.InputData
 Imports TUGraz.VectoCommon.Utils

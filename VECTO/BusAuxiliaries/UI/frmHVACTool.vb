@@ -4,12 +4,9 @@ Imports System.ComponentModel
 Imports System.Drawing
 Imports System.Globalization
 Imports System.IO
-Imports System.Linq
-Imports TUGraz.VectoCommon.BusAuxiliaries
 Imports TUGraz.VectoCommon.Utils
 Imports TUGraz.VectoCore.InputData.FileIO.JSON
 Imports TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.HVAC
-Imports TUGraz.VectoCore.Models.BusAuxiliaries.Interfaces.DownstreamModules.HVAC
 Imports TUGraz.VectoCore.Models.BusAuxiliaries.Util
 Imports TUGraz.VectoCore.Models.Declaration
 Imports TUGraz.VectoCore.OutputData.FileIO

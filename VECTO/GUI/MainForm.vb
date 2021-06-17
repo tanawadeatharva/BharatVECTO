@@ -33,7 +33,6 @@ Imports System.Collections.Generic
 Imports System.ComponentModel
 Imports System.IO
 Imports System.Linq
-Imports System.Reflection
 Imports TUGraz.VectoCore.Models.Simulation.Impl
 Imports TUGraz.VectoCore.InputData.FileIO.JSON
 Imports System.Text
@@ -49,10 +48,6 @@ Imports TUGraz.VectoCommon.Resources
 Imports TUGraz.VectoCommon.Utils
 Imports TUGraz.VectoCore
 Imports TUGraz.VectoCore.InputData.FileIO.XML
-Imports TUGraz.VectoCore.InputData.FileIO.XML.Declaration
-Imports TUGraz.VectoCore.InputData.FileIO.XML.Engineering
-Imports TUGraz.VectoCore.Models.Simulation
-Imports TUGraz.VectoCore.Models.Declaration
 Imports TUGraz.VectoCore.Models.SimulationComponent.Data
 Imports TUGraz.VectoCore.OutputData
 Imports TUGraz.VectoCore.OutputData.FileIO

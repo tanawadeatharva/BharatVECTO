@@ -11,7 +11,6 @@
 Option Infer On
 
 Imports System.IO
-Imports System.Linq
 Imports System.Text
 Imports Microsoft.VisualBasic.FileIO
 Imports System.Runtime.InteropServices

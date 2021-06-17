@@ -1,8 +1,6 @@
 ﻿
 Imports TUGraz.VectoCommon.BusAuxiliaries
 Imports TUGraz.VectoCommon.Utils
-Imports TUGraz.VectoCore.Models.BusAuxiliaries.Interfaces
-Imports TUGraz.VectoCore.Models.BusAuxiliaries.Interfaces.DownstreamModules.Electrics
 
 Namespace Mocks
 
