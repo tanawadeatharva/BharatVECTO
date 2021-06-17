@@ -512,8 +512,8 @@ namespace TUGraz.VectoCore.Tests.Integration.CompletedBus
 
 		private void AssertAuxiliaryData(RelatedRun relatedRun)
 		{
-			var genericAuxiliaryData = relatedRun.VectoRunDataGenericBody.Aux;
-			var specificAuxiliaryData = relatedRun.VectoRunDataSpezificBody.Aux;
+			var genericAuxiliaryData = relatedRun.VectoRunDataGenericBody.Aux.ToList();
+			var specificAuxiliaryData = relatedRun.VectoRunDataSpezificBody.Aux.ToList();
 
 			Assert.AreEqual(2, genericAuxiliaryData.Count());
 			Assert.AreEqual("Hydraulic driven - Constant displacement pump", genericAuxiliaryData.First().Technology.First());
