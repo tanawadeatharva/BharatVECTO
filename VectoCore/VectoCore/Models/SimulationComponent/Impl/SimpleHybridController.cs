@@ -24,7 +24,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl {
 
 		public SimpleHybridController(VehicleContainer container, ElectricSystem es, SwitchableClutch clutch) : base(container)
 		{
-			this.ElectricSystem = es;
+			ElectricSystem = es;
 			//this.clutch = clutch;
 		}
 
@@ -64,7 +64,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl {
 
 		public IShiftStrategy ShiftStrategy => null;
 
-		public SimpleComponentState PreviousState => throw new System.NotImplementedException();
+		public SimpleComponentState PreviousState => throw new NotImplementedException();
 
 		public IElectricMotorControl ElectricMotorControl(PowertrainPosition pos)
 		{

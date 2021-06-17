@@ -451,14 +451,14 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		public override Second LastUpshift
 		{
-			get => throw new System.NotImplementedException();
-			protected internal set => throw new System.NotImplementedException();
+			get => throw new NotImplementedException();
+			protected internal set => throw new NotImplementedException();
 		}
 
 		public override Second LastDownshift
 		{
-			get => throw new System.NotImplementedException();
-			protected internal set => throw new System.NotImplementedException();
+			get => throw new NotImplementedException();
+			protected internal set => throw new NotImplementedException();
 		}
 
 		public override GearshiftPosition NextGear
@@ -533,7 +533,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		public override bool DisengageGearbox
 		{
 			get => false;
-			set => throw new System.NotImplementedException();
+			set => throw new NotImplementedException();
 		}
 
 		public override void TriggerGearshift(Second absTime, Second dt)
@@ -564,20 +564,20 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			public override GearshiftPosition InitGear(Second absTime, Second dt, NewtonMeter torque, PerSecond outAngularVelocity)
 			{
-				throw new System.NotImplementedException();
+				throw new NotImplementedException();
 			}
 
 			public override GearshiftPosition Engage(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity)
 			{
-				throw new System.NotImplementedException();
+				throw new NotImplementedException();
 			}
 
 			public override void Disengage(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity)
 			{
-				throw new System.NotImplementedException();
+				throw new NotImplementedException();
 			}
 
-			public override GearshiftPosition NextGear => throw new System.NotImplementedException();
+			public override GearshiftPosition NextGear => throw new NotImplementedException();
 
 			public override ShiftPolygon ComputeDeclarationShiftPolygon(
 				GearboxType gearboxType, int i, EngineFullLoadCurve engineDataFullLoadCurve, IList<ITransmissionInputData> gearboxGears,

@@ -1214,32 +1214,32 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 		public MeterPerSecond VehicleSpeed => 0.SI<MeterPerSecond>();
 
-		public bool VehicleStopped => throw new System.NotImplementedException();
+		public bool VehicleStopped => throw new NotImplementedException();
 
-		public Kilogram VehicleMass => throw new System.NotImplementedException();
+		public Kilogram VehicleMass => throw new NotImplementedException();
 
-		public Kilogram VehicleLoading => throw new System.NotImplementedException();
+		public Kilogram VehicleLoading => throw new NotImplementedException();
 
-		public Kilogram TotalMass => throw new System.NotImplementedException();
+		public Kilogram TotalMass => throw new NotImplementedException();
 
-		public CubicMeter CargoVolume => throw new System.NotImplementedException();
+		public CubicMeter CargoVolume => throw new NotImplementedException();
 
 		public Newton AirDragResistance(MeterPerSecond previousVelocity, MeterPerSecond nextVelocity)
 		{
-			throw new System.NotImplementedException();
+			throw new NotImplementedException();
 		}
 
 		public Newton RollingResistance(Radian gradient)
 		{
-			throw new System.NotImplementedException();
+			throw new NotImplementedException();
 		}
 
 		public Newton SlopeResistance(Radian gradient)
 		{
-			throw new System.NotImplementedException();
+			throw new NotImplementedException();
 		}
 
-		public MeterPerSecond MaxVehicleSpeed => throw new System.NotImplementedException();
+		public MeterPerSecond MaxVehicleSpeed => throw new NotImplementedException();
 
 		#endregion
 	}

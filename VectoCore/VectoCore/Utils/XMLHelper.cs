@@ -228,7 +228,7 @@ namespace TUGraz.VectoCore.Utils
 		public static TableData ReadCSVResource(XmlNode baseNode, string xmlElement, string basePath)
 		{
 			var resourceNode = baseNode.SelectSingleNode(
-				XMLHelper.QueryLocalName(xmlElement) + ExtCSVResourceQuery);
+				QueryLocalName(xmlElement) + ExtCSVResourceQuery);
 			var filename = string.Empty;
 			if (resourceNode != null) {
 				filename = resourceNode.Attributes?.GetNamedItem(XMLNames.ExtResource_File_Attr).InnerText;

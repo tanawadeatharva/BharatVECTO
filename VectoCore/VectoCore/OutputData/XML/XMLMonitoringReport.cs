@@ -79,7 +79,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 					errors.Add(e.Message);
 				}, true);
 				if (mrfErrors) {
-					LogManager.GetLogger(typeof(XMLMonitoringReport).FullName).Warn("XML Validation of manufacturer record failed! errors: {0}", string.Join(System.Environment.NewLine, errors));
+					LogManager.GetLogger(typeof(XMLMonitoringReport).FullName).Warn("XML Validation of manufacturer record failed! errors: {0}", string.Join(Environment.NewLine, errors));
 				}
 
 				var mrfType = mrf.Root?.GetSchemaInfo()?.SchemaType?.QualifiedName ?? new XmlQualifiedName("urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:AbstractVectoOutputManufacturerType");

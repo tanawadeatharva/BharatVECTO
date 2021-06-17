@@ -188,7 +188,7 @@ namespace TUGraz.VectoCore.Tests.Utils
 
 		public void SetDataValue(string fieldName, object value)
 		{
-			throw new System.NotImplementedException();
+			throw new NotImplementedException();
 		}
 
 		public void AddAuxiliary(string id, string columnName = null)

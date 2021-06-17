@@ -197,7 +197,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 				}
 
 				return CompressorMapReader.ReadStream(
-					RessourceHelper.ReadStream(DeclarationData.DeclarationDataResourcePrefix + ".VAUXBus." + resource), dragCurveFactorClutch, $"{compressorSize} - {clutchType}");
+					RessourceHelper.ReadStream(DeclarationDataResourcePrefix + ".VAUXBus." + resource), dragCurveFactorClutch, $"{compressorSize} - {clutchType}");
 			}
 
 			public static BusAlternatorTechnologies AlternatorTechnologies = new BusAlternatorTechnologies();

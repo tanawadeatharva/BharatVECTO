@@ -494,7 +494,7 @@ namespace TUGraz.VectoCommon.Utils
 			var q = 1.0 / 8.0 * a * a * a - a * b / 2.0 + c;
 			var r = -3.0 / 256.0 * a * a * a * a + a * a * b / 16.0 - a * c / 4.0 + d;
 			if (q.IsEqual(0, 1e-12)) {
-				var solY = VectoMath.QuadraticEquationSolver(1, b, d);
+				var solY = QuadraticEquationSolver(1, b, d);
 				var retVal = new List<double>();
 				foreach (var s in solY) {
 					if (s < 0) {
@@ -508,7 +508,7 @@ namespace TUGraz.VectoCommon.Utils
 				return retVal.ToArray();
 			}
 
-			var solZ = VectoMath.Polynom3Solver(8.0, 20.0 * p, 16.0 * p * p - 8.0 * r, 4.0 * p * p * p - 4.0 * p * r - q * q);
+			var solZ = Polynom3Solver(8.0, 20.0 * p, 16.0 * p * p - 8.0 * r, 4.0 * p * p * p - 4.0 * p * r - q * q);
 			if (solZ.Length == 0) {
 				return new double[0];
 
@@ -521,8 +521,8 @@ namespace TUGraz.VectoCommon.Utils
 				// no real-valued solution
 				return new double[0];
 			}
-			var solY1 = VectoMath.QuadraticEquationSolver(1, -Math.Sqrt(u), q / (2.0 * Math.Sqrt(u)) + p + z);
-			var solY2 = VectoMath.QuadraticEquationSolver(1, Math.Sqrt(u), -q / (2.0 * Math.Sqrt(u)) + p + z);
+			var solY1 = QuadraticEquationSolver(1, -Math.Sqrt(u), q / (2.0 * Math.Sqrt(u)) + p + z);
+			var solY2 = QuadraticEquationSolver(1, Math.Sqrt(u), -q / (2.0 * Math.Sqrt(u)) + p + z);
 			return solY1.Select(s => s - a / 4.0).Concat(solY2.Select(s => s - a / 4.0)).ToArray();
 		}
 	}

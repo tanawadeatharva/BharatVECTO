@@ -126,7 +126,7 @@ namespace TUGraz.VectoCore.Tests.Utils
 
 		public Watt GearboxLoss()
 		{
-			throw new System.NotImplementedException();
+			throw new NotImplementedException();
 		}
 
 		public Second LastShift { get;  set; }
@@ -136,7 +136,7 @@ namespace TUGraz.VectoCore.Tests.Utils
 
 		public GearData GetGearData(uint gear)
 		{
-			throw new System.NotImplementedException();
+			throw new NotImplementedException();
 		}
 
 		public PerSecond EngineSpeed { get; set; }
@@ -217,12 +217,12 @@ namespace TUGraz.VectoCore.Tests.Utils
 
 		public IReadOnlyList<DrivingCycleData.DrivingCycleEntry> LookAhead(Meter lookaheadDistance)
 		{
-			throw new System.NotImplementedException();
+			throw new NotImplementedException();
 		}
 
 		public IReadOnlyList<DrivingCycleData.DrivingCycleEntry> LookAhead(Second time)
 		{
-			throw new System.NotImplementedException();
+			throw new NotImplementedException();
 		}
 
 		public SpeedChangeEntry LastTargetspeedChange { get; set; }
@@ -252,7 +252,7 @@ namespace TUGraz.VectoCore.Tests.Utils
 
 		public ISimulationOutPort GetCycleOutPort()
 		{
-			throw new System.NotImplementedException();
+			throw new NotImplementedException();
 		}
 
 		public VectoRun.Status RunStatus { get; set; }

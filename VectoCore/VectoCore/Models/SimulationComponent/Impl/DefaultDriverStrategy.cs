@@ -103,7 +103,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			ATEcoRollReleaseLockupClutch = data?.GearboxData?.ATEcoRollReleaseLockupClutch ?? false;
 
 			EcoRollState = new EcoRoll() {
-				State = Impl.EcoRollStates.EcoRollOff,
+				State = EcoRollStates.EcoRollOff,
 				Gear = new GearshiftPosition(0),
 				StateChangeTstmp = -double.MaxValue.SI<Second>(),
 				PreviousBrakePower = 0.SI<Watt>(),

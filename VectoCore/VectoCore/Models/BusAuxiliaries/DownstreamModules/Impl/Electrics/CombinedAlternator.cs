@@ -196,10 +196,10 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.Electric
 		{
 
 			// Count Check.
-			if (this.Alternators.Count != other.Alternators.Count)
+			if (Alternators.Count != other.Alternators.Count)
 				return false;
 
-			foreach (var alt in this.Alternators) {
+			foreach (var alt in Alternators) {
 
 				// Can we find the same alternatorName in other
 				if (other.Alternators.Count(f => f.AlternatorName == alt.AlternatorName) != 1)

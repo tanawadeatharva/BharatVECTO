@@ -164,7 +164,7 @@ namespace HashingTool.ViewModel
 										: e.ValidationEventArgs.Message,
 									e.ValidationEventArgs == null ? 0 : e.ValidationEventArgs.Exception.LineNumber)));
 						});
-					await validator.ValidateXML(TUGraz.VectoCore.Utils.XmlDocumentType.DeclarationComponentData);
+					await validator.ValidateXML(XmlDocumentType.DeclarationComponentData);
 				}
 				if (ComponentDataValid != null && ComponentDataValid.Value) {
 					//var c14N = XMLHashProvider.DefaultCanonicalizationMethod.ToArray();
