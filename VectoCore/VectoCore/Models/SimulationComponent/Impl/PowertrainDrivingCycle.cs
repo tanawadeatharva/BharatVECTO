@@ -118,10 +118,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				CurrentState.InAngularVelocity = angularVelocity;
 				CurrentState.InTorque = CycleIterator.LeftSample.Torque;
 				debug.Add(response);
-				response.Switch()
-					.Case<ResponseGearShift>(
-						() => response = NextComponent.Request(absTime, dt, CurrentState.InTorque, angularVelocity, false))
-					.Case<ResponseUnderload>(r => {
+				switch (response) {
+					case ResponseGearShift _:
+						response = NextComponent.Request(absTime, dt, CurrentState.InTorque, angularVelocity, false);
+						break;
+					case ResponseUnderload r:
 						var torqueInterval = -r.Delta / (angularVelocity.IsEqual(0) ? 10.RPMtoRad() : angularVelocity);
 						var torque = SearchAlgorithm.Search(CycleIterator.LeftSample.Torque, r.Delta, torqueInterval,
 							getYValue: result => ((ResponseDryRun)result).DeltaDragLoad,
@@ -129,31 +130,31 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 							criterion: y => ((ResponseDryRun)y).DeltaDragLoad.Value());
 						response = NextComponent.Request(absTime, dt, torque, angularVelocity, false);
 						CurrentState.InTorque = torque;
-					})
-					.Case<ResponseOverload>(r => {
-						var torque = SearchAlgorithm.Search(CycleIterator.LeftSample.Torque, r.Delta,
-							50.SI<NewtonMeter>(),
+						break;
+					case ResponseOverload r:
+						var torque2 = SearchAlgorithm.Search(CycleIterator.LeftSample.Torque, r.Delta, 50.SI<NewtonMeter>(),
 							getYValue: result => ((ResponseDryRun)result).DeltaFullLoad,
 							evaluateFunction: t => NextComponent.Request(absTime, dt, t, angularVelocity, true),
 							criterion: y => ((ResponseDryRun)y).DeltaFullLoad.Value());
-						response = NextComponent.Request(absTime, dt, torque, angularVelocity, false);
+						response = NextComponent.Request(absTime, dt, torque2, angularVelocity, false);
 						CurrentState.InAngularVelocity = angularVelocity;
-						CurrentState.InTorque = torque;
-					})
-					.Case<ResponseEngineSpeedTooHigh>(r => {
+						CurrentState.InTorque = torque2;
+						break;
+					case ResponseEngineSpeedTooHigh r:
 						angularVelocity = SearchAlgorithm.Search(angularVelocity, r.DeltaEngineSpeed,
 							1.RPMtoRad(),
 							getYValue: result => ((ResponseDryRun)result).DeltaEngineSpeed,
 							evaluateFunction: x => NextComponent.Request(absTime, dt, CurrentState.InTorque, x, true),
 							criterion: y => ((ResponseDryRun)y).DeltaEngineSpeed.Value());
-					})
-					.Case<ResponseFailTimeInterval>(r => { dt = r.DeltaT; })
-					.Case<ResponseSuccess>(() => { })
-					.Default(
-						r => {
-							throw new UnexpectedResponseException(
-								"PowertrainDrivingCycle received an unexpected response.", r);
-						});
+						break;
+					case ResponseFailTimeInterval r:
+						dt = r.DeltaT;
+						break;
+					case ResponseSuccess _:
+						break;
+					default:
+						throw new UnexpectedResponseException("PowertrainDrivingCycle received an unexpected response.", response);
+				}
 			} while (!(response is ResponseSuccess || response is ResponseFailTimeInterval) && (++responseCount < 10));
 
 			AbsTime = absTime + dt;
@@ -162,17 +163,14 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			return response;
 		}
 
-		public double Progress
-		{
-			get { return Math.Max(0, AbsTime.Value() / Data.Entries.Last().Time.Value()); }
-		}
+		public double Progress => Math.Max(0, AbsTime.Value() / Data.Entries.Last().Time.Value());
 
 		#endregion
 
 		#region VectoSimulationComponent
 
-		protected override void DoWriteModalResults(Second time, Second simulationInterval,
-			IModalDataContainer container) { }
+		protected override void DoWriteModalResults(Second time, Second simulationInterval, IModalDataContainer container)
+		{ }
 
 		protected override void DoCommitSimulationStep(Second time, Second simulationInterval)
 		{
@@ -182,60 +180,34 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		#endregion
 
-		public CycleData CycleData
-		{
-			get
-			{
-				return new CycleData {
-					AbsTime = CycleIterator.LeftSample.Time,
-					AbsDistance = null,
-					LeftSample = CycleIterator.LeftSample,
-					RightSample = CycleIterator.RightSample,
-				};
-			}
-		}
+		public CycleData CycleData =>
+			new CycleData {
+				AbsTime = CycleIterator.LeftSample.Time,
+				AbsDistance = null,
+				LeftSample = CycleIterator.LeftSample,
+				RightSample = CycleIterator.RightSample,
+			};
 
-		public bool PTOActive
-		{
-			get { return true; }
-		}
+		public bool PTOActive => true;
 
 		public DrivingCycleData.DrivingCycleEntry CycleLookAhead(Meter distance)
 		{
-			return new DrivingCycleData.DrivingCycleEntry() {
+			return new DrivingCycleData.DrivingCycleEntry {
 				Altitude = 0.SI<Meter>()
 			};
 		}
 
-		public Meter Altitude
-		{
-			get { return 0.SI<Meter>(); }
-		}
+		public Meter Altitude => 0.SI<Meter>();
 
-		public Radian RoadGradient
-		{
-			get { return 0.SI<Radian>(); }
-		}
+		public Radian RoadGradient => 0.SI<Radian>();
 
-		public MeterPerSecond TargetSpeed
-		{
-			get { throw new NotImplementedException("Targetspeed in Powertrain not available?"); }
-		}
+		public MeterPerSecond TargetSpeed => throw new NotImplementedException("Targetspeed in Powertrain not available?");
 
-		public Second StopTime
-		{
-			get { return CycleIterator.LeftSample.StoppingTime; }
-		}
+		public Second StopTime => CycleIterator.LeftSample.StoppingTime;
 
-		public Meter CycleStartDistance
-		{
-			get { return 0.SI<Meter>(); }
-		}
+		public Meter CycleStartDistance => 0.SI<Meter>();
 
-		public IReadOnlyList<DrivingCycleData.DrivingCycleEntry> LookAhead(Meter lookaheadDistance)
-		{
-			throw new NotImplementedException();
-		}
+		public IReadOnlyList<DrivingCycleData.DrivingCycleEntry> LookAhead(Meter lookaheadDistance) => throw new NotImplementedException();
 
 		public IReadOnlyList<DrivingCycleData.DrivingCycleEntry> LookAhead(Second time)
 		{
@@ -249,14 +221,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			return retVal;
 		}
 
-		public SpeedChangeEntry LastTargetspeedChange
-		{
-			get { return null; }
-		}
+		public SpeedChangeEntry LastTargetspeedChange => null;
 
-		public void FinishSimulation()
-		{
-			Data.Finish();
-		}
+		public void FinishSimulation() => Data.Finish();
 	}
 }

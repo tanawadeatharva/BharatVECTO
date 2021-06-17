@@ -98,7 +98,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 		internal readonly Dictionary<PowertrainPosition, IElectricMotorInfo> ElectricMotors =
 			new Dictionary<PowertrainPosition, IElectricMotorInfo>();
 
-		
+
 		public VehicleContainer(ExecutionMode executionMode, IModalDataContainer modData = null,
 			WriteSumData writeSumData = null)
 		{
@@ -123,7 +123,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 		public virtual Second AbsTime { get; set; }
 		public IElectricMotorInfo ElectricMotorInfo(PowertrainPosition pos)
 		{
-			return ElectricMotors.ContainsKey(pos) ?  ElectricMotors[pos] : null;
+			return ElectricMotors.ContainsKey(pos) ? ElectricMotors[pos] : null;
 		}
 
 
@@ -143,68 +143,65 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			get { return HybridController; }
 		}
 
-		
+
 
 		public virtual void AddComponent(VectoSimulationComponent component)
 		{
 			var commitPriority = 0;
-			var ignoreComponent = false;
-			component.Switch()
-				.If<IEngineInfo>(c => {
-					EngineInfo = c;
-					commitPriority = 2;
-					HasCombustionEngine = true;
-				})
-				.If<IEngineControl>(c => { EngineCtl = c; })
-				.If<IDriverInfo>(c => DriverInfo = c)
-				.If<IGearboxInfo>(c => {
-					GearboxInfo = c;
-					commitPriority = 4;
-					HasGearbox = true;
-				})
-				.If<IGearboxControl>(c => GearboxCtl = c)
-				.If<ITorqueConverterInfo>(c => TorqueConverterInfo = c)
-				.If<ITorqueConverterControl>(c =>  TorqueConverterCtl = c)
-				.If<IAxlegearInfo>(c => AxlegearInfo = c)
-				.If<IAngledriveInfo>(c => AngledriveInfo = c)
-				.If<IWheelsInfo>(c => WheelsInfo = c)
-				.If<IVehicleInfo>(c => {
-					VehicleInfo = c;
-					commitPriority = 5;
-				})
-				.If<ISimulationOutPort>(c => Cycle = c)
-				.If<IMileageCounter>(c => MileageCounter = c)
-				.If<IBrakes>(c => Brakes = c)
-				.If<IClutchInfo>(c => ClutchInfo = c)
-				.If<IDrivingCycleInfo>(c => {
-					DrivingCycleInfo = c;
-					commitPriority = 6;
-				})
-				.If<PTOCycleController>(c => { commitPriority = 99; })
-				.If<VTPCycle>(_ => { commitPriority = 0; })
-				.If<IElectricMotorInfo>(c => {
-					if (c.Position == PowertrainPosition.HybridPositionNotSet) {
-						ignoreComponent = true;
-						return;
-					}
-					if (ElectricMotors.ContainsKey(c.Position)) {
-						throw new VectoException("There is already an electric machine at position {0}",
-							c.Position);
-					}
 
-					ElectricMotors[c.Position] = c;
-					HasElectricMotor = true;
-				})
-				.If<IHybridController>(c => { HybridController = c; })
-				.If<IRESSInfo>(c => BatteryInfo = c)
-				.If<BusAuxiliariesAdapter>(c => BusAux = c)
-				.If<IDCDCConverter>(c => DCDCConverter = c);
-
-
-			if (ignoreComponent) {
-				return;
+			if (component is IEngineControl c1) { EngineCtl = c1; }
+			if (component is IDriverInfo c2) { DriverInfo = c2; }
+			if (component is IGearboxControl c3) { GearboxCtl = c3; }
+			if (component is ITorqueConverterInfo c4) { TorqueConverterInfo = c4; }
+			if (component is ITorqueConverterControl c5) { TorqueConverterCtl = c5; }
+			if (component is IAxlegearInfo c6) { AxlegearInfo = c6; }
+			if (component is IAngledriveInfo c7) { AngledriveInfo = c7; }
+			if (component is IWheelsInfo c8) { WheelsInfo = c8; }
+			if (component is ISimulationOutPort c9) { Cycle = c9; }
+			if (component is IMileageCounter c10) { MileageCounter = c10; }
+			if (component is IBrakes c11) { Brakes = c11; }
+			if (component is IClutchInfo c12) { ClutchInfo = c12; }
+			if (component is IHybridController c13) { HybridController = c13; }
+			if (component is IRESSInfo c14) { BatteryInfo = c14; }
+			if (component is BusAuxiliariesAdapter c15) { BusAux = c15; }
+			if (component is IDCDCConverter c16) { DCDCConverter = c16; }
+			
+			if (component is IEngineInfo c17){
+				EngineInfo = c17;
+				commitPriority = 2;
+				HasCombustionEngine = true;
 			}
+			if (component is IGearboxInfo c18) {
+				GearboxInfo = c18;
+				commitPriority = 4;
+				HasGearbox = true;
+			}
+
+			if (component is IVehicleInfo c19) {
+				VehicleInfo = c19;
+				commitPriority = 5;
+			}
+
+			if (component is IDrivingCycleInfo c20) {
+				DrivingCycleInfo = c20;
+				commitPriority = 6;
+			}
+			if (component is PTOCycleController c21) { commitPriority = 99; }
+			if (component is VTPCycle c22) { commitPriority = 0; }
+			if (component is IElectricMotorInfo c23) {
+				if (c23.Position == PowertrainPosition.HybridPositionNotSet) {
+					return;
+				}
+				if (ElectricMotors.ContainsKey(c23.Position)) {
+					throw new VectoException("There is already an electric machine at position {0}", c23.Position);
+				}
+
+				ElectricMotors[c23.Position] = c23;
+				HasElectricMotor = true;
+			}
+			
 			_components.Add(Tuple.Create(commitPriority, component));
+			//todo mk20210617 use sorted list with inverse commitPriority (-commitPriority)
 			_components = _components.OrderBy(x => x.Item1).Reverse().ToList();
 		}
 
@@ -274,12 +271,12 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 		public virtual bool HasGearbox { get; private set; }
 
-		
+
 		public virtual VectoRunData RunData { get; set; }
 		public virtual ExecutionMode ExecutionMode { get; }
 
 
-		
+
 	}
 
 	public class ExemptedRunContainer : VehicleContainer
@@ -303,7 +300,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 		public override IMileageCounter MileageCounter
 		{
 			get { return _mileageCounter; }
-			
+
 		}
 
 		#endregion
