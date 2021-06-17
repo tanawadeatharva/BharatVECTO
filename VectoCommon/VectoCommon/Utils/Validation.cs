@@ -62,7 +62,7 @@ namespace TUGraz.VectoCommon.Utils
 			bool emsCycle)
 		{
 			if (entity == null) {
-				return new[] { new ValidationResult(string.Format("null value given for {0}", typeof(T))) };
+				return new[] { new ValidationResult($"null value given for {typeof(T)}") };
 			}
 			var context = new ValidationContext(entity);
 			context.ServiceContainer.AddService(typeof(VectoValidationModeServiceContainer),
@@ -231,7 +231,7 @@ namespace TUGraz.VectoCommon.Utils
 					return new ValidationResult(string.Join("\n", results), messages);
 				}
 				return new ValidationResult(
-					string.Format("{{{0}}} invalid: {1}", validationContext.DisplayName, string.Join("\n", results)), messages);
+					$"{{{validationContext.DisplayName}}} invalid: {string.Join("\n", results)}", messages);
 			}
 
 			return ValidationResult.Success;

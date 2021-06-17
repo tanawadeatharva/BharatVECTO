@@ -70,7 +70,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 				}
 
 				var otherElements = GetString(XMLNames.Vehicle_PTO_OtherElements);
-				var ptoTech = string.Format("{0} - {1}", shaftGearWheels, otherElements);
+				var ptoTech = $"{shaftGearWheels} - {otherElements}";
 				if (DeclarationData.PTOTransmission.GetTechnologies().Contains(ptoTech)) {
 					return ptoTech;
 				}

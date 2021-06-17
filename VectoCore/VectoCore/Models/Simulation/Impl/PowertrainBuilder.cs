@@ -1011,7 +1011,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 					//return new ATShiftStrategy(runData, container);
 					default:
 						throw new ArgumentOutOfRangeException("GearboxType",
-							string.Format("Unknown Gearbox Type {0}", runData.GearboxData.Type.ToString()));
+							$"Unknown Gearbox Type {runData.GearboxData.Type.ToString()}");
 				}
 			}
 
@@ -1020,8 +1020,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 				x.Item2.Equals(shiftStrategy, StringComparison.InvariantCultureIgnoreCase));
 			if (selected == null) {
 				throw new ArgumentOutOfRangeException("ShiftStrategy",
-					string.Format("Unknown Shiftstrategy {0} for Gearbox Type {1}", shiftStrategy,
-						runData.GearboxData.Type.ToString()));
+					$"Unknown Shiftstrategy {shiftStrategy} for Gearbox Type {runData.GearboxData.Type.ToString()}");
 			}
 
 			runData.ShiftStrategy = selected.Item3;

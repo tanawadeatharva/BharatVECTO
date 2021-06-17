@@ -92,8 +92,7 @@ namespace TUGraz.VectoCore.Utils
 		public void Triangulate()
 		{
 			if (_points.Count < 3) {
-				throw new ArgumentException(string.Format("{0}: Triangulation needs at least 3 Points. Got {1} Points.", _mapName,
-					_points.Count));
+				throw new ArgumentException($"{_mapName}: Triangulation needs at least 3 Points. Got {_points.Count} Points.");
 			}
 
 			SanitycheckInputPoints();
@@ -165,7 +164,7 @@ namespace TUGraz.VectoCore.Utils
 			}
 			if (duplicates.Any()) {
 				throw new VectoException("{0}: Input Data for Delaunay map contains duplicates! \n{1}", _mapName,
-					string.Join("\n", duplicates.Select(pt => string.Format("{0} / {1}", pt.Key.X, pt.Key.Y))));
+					string.Join("\n", duplicates.Select(pt => $"{pt.Key.X} / {pt.Key.Y}")));
 			}
 		}
 
@@ -225,7 +224,7 @@ namespace TUGraz.VectoCore.Utils
 				var type = string.Join("", method.DeclaringType.Name.Split(Path.GetInvalidFileNameChars()));
 				var methodName = string.Join("", method.Name.Split(Path.GetInvalidFileNameChars()));
 				Directory.CreateDirectory("delaunay");
-				chart.SaveImage(string.Format("delaunay\\{0}_{1}_{2}_{3}.png", type, methodName, superTriangle.GetHashCode(), i),
+				chart.SaveImage($"delaunay\\{type}_{methodName}_{superTriangle.GetHashCode()}_{i}.png",
 					ChartImageFormat.Png);
 			}
 		}

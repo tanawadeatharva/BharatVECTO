@@ -65,7 +65,7 @@ namespace HashingTool
 			var myAppPath = AppDomain.CurrentDomain.BaseDirectory;
 			if (File.Exists(myAppPath + @"User Manual\HashingToolHelp.html")) {
 				var defaultBrowserPath = BrowserHelper.GetDefaultBrowserPath();
-				Process.Start(defaultBrowserPath, string.Format("\"file://{0}{1}\"", myAppPath, @"User Manual\HashingToolHelp.html"));
+				Process.Start(defaultBrowserPath, $"\"file://{myAppPath}{@"User Manual\HashingToolHelp.html"}\"");
 			} else {
 				MessageBox.Show("User Manual not found!", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
 			}

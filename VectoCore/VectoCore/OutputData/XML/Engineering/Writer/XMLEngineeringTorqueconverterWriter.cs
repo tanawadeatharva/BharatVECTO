@@ -64,7 +64,7 @@ namespace TUGraz.VectoCore.OutputData.XML.Engineering.Writer
 			var tns = ComponentDataNamespace;
 			return new object[] {
 				GetXMLTypeAttribute(),
-				new XAttribute(XMLNames.Component_ID_Attr, string.Format("TC-{0}", data.Model)),
+				new XAttribute(XMLNames.Component_ID_Attr, $"TC-{data.Model}"),
 				GetDefaultComponentElements(data),
 				new XElement(tns + XMLNames.TorqueConverter_ReferenceRPM, data.ReferenceRPM.AsRPM.ToXMLFormat()),
 				new XElement(

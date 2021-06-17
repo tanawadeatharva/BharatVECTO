@@ -19,7 +19,7 @@ namespace TUGraz.VectoCore.InputData.Reader.ComponentData
 				var data = VectoCSVFile.Read(fileName);
 				return Create(data, type);
 			} catch (Exception e) {
-				throw new VectoException(string.Format("File {0}: {1}", fileName, e.Message), e);
+				throw new VectoException($"File {fileName}: {e.Message}", e);
 			}
 		}
 
@@ -65,7 +65,7 @@ namespace TUGraz.VectoCore.InputData.Reader.ComponentData
 
 					delaunayMap?.AddPoint(torque.Value(),engineSpeed.Value(),electricPower.Value());
 				} catch (Exception e) {
-					throw new VectoException(string.Format("WHR Map - Line {0}: {1}", data.Rows.IndexOf(row), e.Message), e);
+					throw new VectoException($"WHR Map - Line {data.Rows.IndexOf(row)}: {e.Message}", e);
 				}
 			}
 

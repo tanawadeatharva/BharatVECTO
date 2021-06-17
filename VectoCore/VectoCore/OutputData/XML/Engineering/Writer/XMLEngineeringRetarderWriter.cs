@@ -70,7 +70,7 @@ namespace TUGraz.VectoCore.OutputData.XML.Engineering.Writer
 							data.LossMap,
 							Path.Combine(
 								Writer.Configuration.BasePath,
-								Writer.RemoveInvalidFileCharacters(string.Format("RET_{0}.vrlm", data.Model)))))
+								Writer.RemoveInvalidFileCharacters($"RET_{data.Model}.vrlm"))))
 			};
 			return retarder;
 		}

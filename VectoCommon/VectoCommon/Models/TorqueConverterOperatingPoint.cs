@@ -15,8 +15,7 @@ namespace TUGraz.VectoCommon.Models {
 
 		public override string ToString()
 		{
-			return string.Format("n_out: {0}, n_in: {1}, tq_out: {2}, tq_in {3}, nu: {4}, my: {5}", OutAngularVelocity,
-								InAngularVelocity, OutTorque, InTorque, SpeedRatio, TorqueRatio);
+			return $"n_out: {OutAngularVelocity}, n_in: {InAngularVelocity}, tq_out: {OutTorque}, tq_in {InTorque}, nu: {SpeedRatio}, my: {TorqueRatio}";
 		}
 	}
 }

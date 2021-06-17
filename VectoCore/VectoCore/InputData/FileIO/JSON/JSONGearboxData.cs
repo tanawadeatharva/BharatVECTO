@@ -262,12 +262,12 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 				Ratio = nextRatio,
 				LossMap = nextGear[JsonKeys.Gearbox_Gear_LossMapFile] != null
 					? ReadTableData(nextGear.GetEx<string>(JsonKeys.Gearbox_Gear_LossMapFile),
-						string.Format("Gear {0} LossMap", gearNr))
+						$"Gear {gearNr} LossMap")
 					: null,
 				Efficiency = nextEfficiency,
 				MaxTorque = gear["MaxTorque"] != null ? gear["MaxTorque"].Value<double>().SI<NewtonMeter>() : null,
 				ShiftPolygon = ReadTableData(gear.GetEx<string>(JsonKeys.Gearbox_Gear_ShiftPolygonFile),
-					string.Format("Gear {0} shiftPolygon", gearNr), false),
+					$"Gear {gearNr} shiftPolygon", false),
 			};
 		}
 
@@ -288,7 +288,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			if (lossMap != null) {
 				try {
 					retVal.LossMap = ReadTableData(gear.GetEx<string>(JsonKeys.Gearbox_Gear_LossMapFile),
-						string.Format("Gear {0} LossMap", gearNumber));
+						$"Gear {gearNumber} LossMap");
 				} catch (Exception) {
 					if (!TolerateMissing) {
 						throw;
@@ -305,7 +305,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			if (shiftPolygonFile != null && !string.IsNullOrWhiteSpace(shiftPolygonFile.Value<string>())) {
 				try {
 					retVal.ShiftPolygon = ReadTableData(gear.GetEx<string>(JsonKeys.Gearbox_Gear_ShiftPolygonFile),
-						string.Format("Gear {0} shiftPolygon", gearNumber));
+						$"Gear {gearNumber} shiftPolygon");
 				} catch (Exception) {
 					retVal.ShiftPolygon = new TableData(Path.Combine(BasePath, shiftPolygonFile.Value<string>()) + MissingFileSuffix,
 						DataSourceType.Missing);

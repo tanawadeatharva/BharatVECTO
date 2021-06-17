@@ -70,7 +70,7 @@ namespace TUGraz.VectoCore.OutputData.XML.Engineering.Writer
 
 			return new object[] {
 				GetXMLTypeAttribute(),
-				new XAttribute(XMLNames.Component_ID_Attr, string.Format("GBX-{0}", data.Model)),
+				new XAttribute(XMLNames.Component_ID_Attr, $"GBX-{data.Model}"),
 
 				GetDefaultComponentElements(data),
 				new XElement(tns + XMLNames.Gearbox_TransmissionType, data.Type.ToXMLFormat()),

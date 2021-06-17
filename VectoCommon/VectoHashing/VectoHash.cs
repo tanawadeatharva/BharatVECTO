@@ -149,11 +149,10 @@ namespace TUGraz.VectoHashing
 			var nodes = Document.SelectNodes(GetComponentQueryString(component));
 
 			if (nodes == null || nodes.Count == 0) {
-				throw new Exception(string.Format("Component {0} not found", component.XMLElementName()));
+				throw new Exception($"Component {component.XMLElementName()} not found");
 			}
 			if (index >= nodes.Count) {
-				throw new Exception(string.Format("index exceeds number of components found! index: {0}, #components: {1}", index,
-					nodes.Count));
+				throw new Exception($"index exceeds number of components found! index: {index}, #components: {nodes.Count}");
 			}
 			var componentId = nodes[index].Attributes[XMLNames.Component_ID_Attr].Value;
 			return GetHashValueFromSig(DoComputeHash(nodes[index], canonicalization, digestMethod), componentId);
@@ -213,12 +212,12 @@ namespace TUGraz.VectoHashing
 		public XDocument AddHash()
 		{
 			var component = GetComponentToHash();
-			var query = string.Format("//*[local-name()='{0}']/*[local-name()='Data']", component.XMLElementName());
+			var query = $"//*[local-name()='{component.XMLElementName()}']/*[local-name()='Data']";
 			var node = Document.SelectSingleNode(query);
 			if (node == null) {
-				throw new Exception(string.Format("'Data' element for component '{0}' not found!", component.XMLElementName()));
+				throw new Exception($"'Data' element for component '{component.XMLElementName()}' not found!");
 			}
-			query = string.Format("//*[local-name()='{0}']/*[local-name()='Signature']", component.XMLElementName());
+			query = $"//*[local-name()='{component.XMLElementName()}']/*[local-name()='Signature']";
 			var sigNodes = Document.SelectNodes(query);
 			if (sigNodes != null && sigNodes.Count > 0) {
 				throw new Exception("input data already contains a signature element");
@@ -246,7 +245,7 @@ namespace TUGraz.VectoHashing
 
 			query = component.IsReport()
 				? "*/*[local-name()='Data']/*[local-name()='ApplicationInformation']/*[local-name()='Date']"
-				: string.Format("*/*[local-name()='{0}']/*/*[local-name()='Date']", component.XMLElementName());
+				: $"*/*[local-name()='{component.XMLElementName()}']/*/*[local-name()='Date']";
 			var dateNode = Document.SelectSingleNode(query);
 			if (dateNode == null) {
 				throw new Exception("Date-Element not found in input!");
@@ -361,9 +360,9 @@ namespace TUGraz.VectoHashing
 
 		private string ReadElementValue(XmlNode xmlNode, string elementName)
 		{
-			var node = xmlNode.SelectSingleNode(string.Format("./*[local-name()='{0}']", elementName));
+			var node = xmlNode.SelectSingleNode($"./*[local-name()='{elementName}']");
 			if (node == null) {
-				throw new Exception(string.Format("Node '{0}' not found!", elementName));
+				throw new Exception($"Node '{elementName}' not found!");
 			}
 			return node.InnerText;
 		}
@@ -380,11 +379,10 @@ namespace TUGraz.VectoHashing
 			if (nodes == null || nodes.Count == 0) {
 				throw new Exception(component == null
 					? "No component found"
-					: string.Format("Component {0} not found", component.Value.XMLElementName()));
+					: $"Component {component.Value.XMLElementName()} not found");
 			}
 			if (index >= nodes.Count) {
-				throw new Exception(string.Format("index exceeds number of components found! index: {0}, #components: {1}", index,
-					nodes.Count));
+				throw new Exception($"index exceeds number of components found! index: {index}, #components: {nodes.Count}");
 			}
 			return nodes;
 		}
@@ -408,8 +406,8 @@ namespace TUGraz.VectoHashing
 				return "(//*[@id])[1]";
 			}
 			return component == VectoComponents.Vehicle
-				? string.Format("//*[local-name()='{0}']", component.Value.XMLElementName())
-				: string.Format("//*[local-name()='{0}']/*[local-name()='Data']", component.Value.XMLElementName());
+				? $"//*[local-name()='{component.Value.XMLElementName()}']"
+				: $"//*[local-name()='{component.Value.XMLElementName()}']/*[local-name()='Data']";
 		}
 
 		private static string GetHashValueFromSig(XmlDocument hashed, string elementId)

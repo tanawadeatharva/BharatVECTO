@@ -176,10 +176,10 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 		protected virtual TransmissionLossMap CreateGearLossMap(ITransmissionInputData gear, uint i, bool useEfficiencyFallback, VehicleCategory vehicleCategory, GearboxType gearboxType)
 		{
 			if (gear.LossMap != null) {
-				return TransmissionLossMapReader.Create(gear.LossMap, gear.Ratio, string.Format("Gear {0}", i + 1), true);
+				return TransmissionLossMapReader.Create(gear.LossMap, gear.Ratio, $"Gear {i + 1}", true);
 			}
 			if (useEfficiencyFallback) {
-				return TransmissionLossMapReader.Create(gear.Efficiency, gear.Ratio, string.Format("Gear {0}", i + 1));
+				return TransmissionLossMapReader.Create(gear.Efficiency, gear.Ratio, $"Gear {i + 1}");
 			}
 			throw new InvalidFileFormatException("Gear {0} LossMap missing.", i + 1);
 		}
@@ -203,7 +203,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 		protected virtual void CretateTCFirstGearATPowerSplit(GearData gearData, uint i, ShiftPolygon shiftPolygon)
 		{
 			gearData.TorqueConverterRatio = 1;
-			gearData.TorqueConverterGearLossMap = TransmissionLossMapReader.Create(1, 1, string.Format("TCGear {0}", i + 1));
+			gearData.TorqueConverterGearLossMap = TransmissionLossMapReader.Create(1, 1, $"TCGear {i + 1}");
 			gearData.TorqueConverterShiftPolygon = shiftPolygon;
 		}
 

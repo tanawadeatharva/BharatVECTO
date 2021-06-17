@@ -144,7 +144,7 @@ namespace TUGraz.VectoCore.OutputData
 					var col = new DataColumn(
 						fuels.Count == 1 && !multipleEngineModes
 							? fcCol.GetName()
-							: string.Format("{0}_{1}", fcCol.GetName(), entry.FuelType.GetLabel()), typeof(SI)) {
+							: $"{fcCol.GetName()}_{entry.FuelType.GetLabel()}", typeof(SI)) {
 						Caption = string.Format(fcCol.GetCaption(),
 							fuels.Count == 1 && !multipleEngineModes ? "" : "_" + entry.FuelType.GetLabel())
 					};

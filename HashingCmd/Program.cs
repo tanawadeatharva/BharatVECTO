@@ -258,7 +258,7 @@ hashingcmd.exe
 		{
 			var hashingLib = Assembly.LoadFile(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "VectoHashing.dll"))
 				.GetName();
-			WriteLine(string.Format(@"HashingLibrary: {0}", hashingLib.Version));
+			WriteLine($@"HashingLibrary: {hashingLib.Version}");
 		}
 	}
 }

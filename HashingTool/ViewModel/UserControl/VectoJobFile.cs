@@ -129,7 +129,7 @@ namespace HashingTool.ViewModel.UserControl
 				!_xmlFile.ContentValid.Value) {
 				return null;
 			}
-			var nodes = _xmlFile.Document.SelectNodes(string.Format("//*[local-name()='{0}']", XMLNames.Component_Date));
+			var nodes = _xmlFile.Document.SelectNodes($"//*[local-name()='{XMLNames.Component_Date}']");
 			if (nodes == null || nodes.Count == 0) {
 				return null;
 			}
@@ -142,7 +142,7 @@ namespace HashingTool.ViewModel.UserControl
 				!_xmlFile.ContentValid.Value) {
 				return "";
 			}
-			var node = _xmlFile.Document.SelectSingleNode(string.Format("//*[local-name()='{0}']", XMLNames.Vehicle_VIN));
+			var node = _xmlFile.Document.SelectSingleNode($"//*[local-name()='{XMLNames.Vehicle_VIN}']");
 			if (node == null) {
 				return "";
 			}
@@ -175,7 +175,7 @@ namespace HashingTool.ViewModel.UserControl
 						var entry = new ComponentEntry();
 						entry.Component = component.Count == 1
 							? component.Entry.XMLElementName()
-							: string.Format("{0} ({1})", component.Entry.XMLElementName(), i + 1);
+							: $"{component.Entry.XMLElementName()} ({i + 1})";
 						entry.Valid = h.ValidateHash(component.Entry, i);
 						entry.CanonicalizationMethod = h.GetCanonicalizationMethods(component.Entry, i).ToArray();
 						entry.DigestMethod = h.GetDigestMethod(component.Entry, i);

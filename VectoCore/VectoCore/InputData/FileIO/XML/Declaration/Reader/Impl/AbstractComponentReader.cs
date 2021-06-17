@@ -57,7 +57,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 				? BaseNode
 				: BaseNode.SelectSingleNode(XMLHelper.QueryLocalName(component));
 			var dataNode =
-				componentNode?.SelectSingleNode(string.Format("./*[local-name()='{0}']", XMLNames.ComponentDataWrapper));
+				componentNode?.SelectSingleNode($"./*[local-name()='{XMLNames.ComponentDataWrapper}']");
 			if (componentNode != null) {
 				var type =  (dataNode ?? componentNode).SchemaInfo.SchemaType;
 				var version = XMLHelper.GetXsdType(type);

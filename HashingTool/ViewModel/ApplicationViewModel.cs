@@ -103,6 +103,6 @@ namespace HashingTool.ViewModel
 			CurrentViewModel = MainViewModels.FirstOrDefault(mv => mv == mainView);
 		}
 
-		public string VersionInformation => string.Format("Vecto Hashing Tool {0} / Hashing Library {1}", _myVersion, _hashingLib);
+		public string VersionInformation => $"Vecto Hashing Tool {_myVersion} / Hashing Library {_hashingLib}";
 	}
 }

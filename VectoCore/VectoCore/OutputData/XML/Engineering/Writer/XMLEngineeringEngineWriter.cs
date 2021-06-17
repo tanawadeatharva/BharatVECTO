@@ -78,7 +78,7 @@ namespace TUGraz.VectoCore.OutputData.XML.Engineering.Writer
 			}
 
 			var filename = Path.Combine(
-				Writer.Configuration.BasePath, Writer.RemoveInvalidFileCharacters(string.Format("ENG_{0}.vfld", data.Model)));
+				Writer.Configuration.BasePath, Writer.RemoveInvalidFileCharacters($"ENG_{data.Model}.vfld"));
 			return ExtCSVResource(data.EngineModes.First().FullLoadCurve, filename);
 		}
 
@@ -89,7 +89,7 @@ namespace TUGraz.VectoCore.OutputData.XML.Engineering.Writer
 			}
 
 			var filename = Path.Combine(
-				Writer.Configuration.BasePath, Writer.RemoveInvalidFileCharacters(string.Format("ENG_{0}.vmap", data.Model)));
+				Writer.Configuration.BasePath, Writer.RemoveInvalidFileCharacters($"ENG_{data.Model}.vmap"));
 			return ExtCSVResource(data.EngineModes.First().Fuels.First().FuelConsumptionMap, filename);
 		}
 

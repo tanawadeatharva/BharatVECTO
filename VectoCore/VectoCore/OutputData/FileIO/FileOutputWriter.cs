@@ -79,9 +79,9 @@ namespace TUGraz.VectoCore.OutputData.FileIO
 		{
 			string modFileName;
 			if (!string.IsNullOrWhiteSpace(cycleName) || !string.IsNullOrWhiteSpace(runSuffix)) {
-				modFileName = string.Format("{0}_{1}{2}{3}", runName, cycleName, runSuffix, Constants.FileExtensions.ModDataFile);
+				modFileName = $"{runName}_{cycleName}{runSuffix}{Constants.FileExtensions.ModDataFile}";
 			} else {
-				modFileName = string.Format("{0}{1}", runName, Constants.FileExtensions.ModDataFile);
+				modFileName = $"{runName}{Constants.FileExtensions.ModDataFile}";
 			}
 
 			return Path.Combine(BasePath, string.Concat(modFileName.Split(Path.GetInvalidFileNameChars())));

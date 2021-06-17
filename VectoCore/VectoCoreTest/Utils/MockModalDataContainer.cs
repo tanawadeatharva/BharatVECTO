@@ -89,7 +89,7 @@ namespace TUGraz.VectoCore.Tests.Utils
 				FuelColumns[entry] = new Dictionary<ModalResultField, DataColumn>();
 				foreach (var fcCol in ModalDataContainer.FuelConsumptionSignals) {
 					var col = Data.Columns.Add(
-						fuels.Count == 1 ? fcCol.GetName() : string.Format("{0}_{1}", fcCol.GetName(), entry.FuelType.GetLabel()),
+						fuels.Count == 1 ? fcCol.GetName() : $"{fcCol.GetName()}_{entry.FuelType.GetLabel()}",
 						typeof(SI));
 					col.ExtendedProperties[ModalResults.ExtendedPropertyNames.Decimals] =
 						fcCol.GetAttribute().Decimals;

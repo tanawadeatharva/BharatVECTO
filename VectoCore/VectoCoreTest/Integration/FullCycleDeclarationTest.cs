@@ -231,14 +231,14 @@ namespace TUGraz.VectoCore.Tests.Integration
 			var i = 5;
 			jobContainer.Runs[i].Run.Run();
 			Assert.IsTrue(jobContainer.Runs[i].Run.FinishedWithoutErrors,
-				string.Format("{0}", jobContainer.Runs[i].ExecException));
+				$"{jobContainer.Runs[i].ExecException}");
 
 			jobContainer = new JobContainer(sumData);
 			jobContainer.AddRuns(factory1Hz);
 
 			jobContainer.Runs[i].Run.Run();
 			Assert.IsTrue(jobContainer.Runs[i].Run.FinishedWithoutErrors,
-				string.Format("{0}", jobContainer.Runs[i].ExecException));
+				$"{jobContainer.Runs[i].ExecException}");
 
 			var modFile = VectoCSVFile.Read(modFileName);
 			var modFile1Hz = VectoCSVFile.Read(modFileName1Hz);
@@ -248,8 +248,7 @@ namespace TUGraz.VectoCore.Tests.Integration
 			var lineCount1Hz = modFile1Hz.Rows.Count;
 
 			AssertHelper.AreRelativeEqual(lineCount1Hz, maxSeconds,
-				string.Format("LineCount must equal max seconds. Lines={0}, MaxSeconds={1}", lineCount1Hz,
-					maxSeconds), 1);
+				$"LineCount must equal max seconds. Lines={lineCount1Hz}, MaxSeconds={maxSeconds}", 1);
 
 			// test max distance
 			var maxDistance = modFile.Rows.Cast<DataRow>().Last().ParseDouble(ModalResultField.dist.GetShortCaption());

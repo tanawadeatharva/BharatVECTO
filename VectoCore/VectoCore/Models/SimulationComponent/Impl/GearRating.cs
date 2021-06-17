@@ -44,7 +44,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl {
 
 		public override string ToString()
 		{
-			return string.Format("{0} / {1} ({2})", RatingCase, Rating, NumericValue);
+			return $"{RatingCase} / {Rating} ({NumericValue})";
 		}
 
 		public int CompareTo(object obj)

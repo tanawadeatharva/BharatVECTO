@@ -165,7 +165,7 @@ namespace TUGraz.VectoCore.OutputData.XML.Engineering.Writer
 		{
 			var xsns = Writer.RegisterNamespace(XMLDefinitions.XML_SCHEMA_NAMESPACE);
 			return new XAttribute(
-				xsns + "type", string.Format("{0}:{1}", Writer.GetNSPrefix(ComponentDataNamespace.NamespaceName), XMLDataType));
+				xsns + "type", $"{Writer.GetNSPrefix(ComponentDataNamespace.NamespaceName)}:{XMLDataType}");
 		}
 
 		public virtual object[] WriteXML(IAdvancedDriverAssistantSystemsEngineering inputData)

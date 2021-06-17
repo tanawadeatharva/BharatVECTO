@@ -83,7 +83,7 @@ namespace TUGraz.VectoCore.Utils
 				case "kg": return GetValueAsUnit(mass.Value(), unit, decimals);
 			}
 
-			throw new NotImplementedException(string.Format("unknown unit '{0}'", unit));
+			throw new NotImplementedException($"unknown unit '{unit}'");
 		}
 
 		public static object[] ValueAsUnit(Watt power, string unit, uint? decimals = 0)
@@ -93,7 +93,7 @@ namespace TUGraz.VectoCore.Utils
 				case "W": return GetValueAsUnit(power?.Value(), unit, decimals);
 			}
 
-			throw new NotImplementedException(string.Format("unknown unit '{0}'", unit));
+			throw new NotImplementedException($"unknown unit '{unit}'");
 		}
 
 		public static object[] ValueAsUnit(CubicMeter volume, string unit, uint? decimals = 0)
@@ -104,7 +104,7 @@ namespace TUGraz.VectoCore.Utils
 				case "m3": return GetValueAsUnit(volume.Value(), unit, decimals);
 			}
 
-			throw new NotImplementedException(string.Format("unknown unit '{0}'", unit));
+			throw new NotImplementedException($"unknown unit '{unit}'");
 		}
 
 		public static object[] ValueAsUnit(PerSecond angSpeed, string unit, uint? decimals = 0)
@@ -113,7 +113,7 @@ namespace TUGraz.VectoCore.Utils
 				case "rpm": return GetValueAsUnit(angSpeed.ConvertToRoundsPerMinute(), unit, decimals);
 			}
 
-			throw new NotImplementedException(string.Format("unknown unit '{0}'", unit));
+			throw new NotImplementedException($"unknown unit '{unit}'");
 		}
 
 
@@ -123,7 +123,7 @@ namespace TUGraz.VectoCore.Utils
 				case "km/h": return GetValueAsUnit(speed.ConvertToKiloMeterPerHour(), unit, decimals);
 			}
 
-			throw new NotImplementedException(string.Format("unknown unit '{0}'", unit));
+			throw new NotImplementedException($"unknown unit '{unit}'");
 		}
 
 		public static object[] ValueAsUnit(MeterPerSquareSecond acc, string unit, uint? decimals)
@@ -132,7 +132,7 @@ namespace TUGraz.VectoCore.Utils
 				case "m/s²": return GetValueAsUnit(acc.Value(), unit, decimals);
 			}
 
-			throw new NotImplementedException(string.Format("unknown unit '{0}'", unit));
+			throw new NotImplementedException($"unknown unit '{unit}'");
 		}
 
 		public static object[] ValueAsUnit(Meter m, string unit, uint? decimals)
@@ -142,7 +142,7 @@ namespace TUGraz.VectoCore.Utils
 				case "km": return GetValueAsUnit(m.ConvertToKiloMeter(), unit, decimals);
 			}
 
-			throw new NotImplementedException(string.Format("unknown unit '{0}'", unit));
+			throw new NotImplementedException($"unknown unit '{unit}'");
 		}
 
 		public static object[] ValueAsUnit(double value, string unit, uint? decimals)
@@ -182,7 +182,7 @@ namespace TUGraz.VectoCore.Utils
 
 		public static string QueryLocalName(string nodeName)
 		{
-			return string.Format(".//*[local-name()='{0}']", nodeName);
+			return $".//*[local-name()='{nodeName}']";
 		}
 
 		public static string QueryLocalName(params string[] nodePath)
@@ -252,9 +252,7 @@ namespace TUGraz.VectoCore.Utils
 		}
 
 		private static string ExtCSVResourceQuery =>
-			string.Format(
-				"/*[local-name()='{0}' and @{1}='{2}']", XMLNames.ExternalResource, XMLNames.ExtResource_Type_Attr,
-				XMLNames.ExtResource_Type_Value_CSV);
+			$"/*[local-name()='{XMLNames.ExternalResource}' and @{XMLNames.ExtResource_Type_Attr}='{XMLNames.ExtResource_Type_Value_CSV}']";
 
 		private static IEnumerable<T> Shim<T>(XmlNodeList nodes)
 		{

@@ -175,7 +175,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 				DriverData = _driverdata,
 				ExecutionMode = ExecutionMode.Declaration,
 				JobName = InputDataProvider.JobInputData.JobName,
-				ModFileSuffix = (engineModes.Count > 1 ? string.Format("_EngineMode{0}_", modeIdx) : "") + loading.Key.ToString(),
+				ModFileSuffix = (engineModes.Count > 1 ? $"_EngineMode{modeIdx}_" : "") + loading.Key.ToString(),
 				Report = Report,
 				Mission = mission,
 				PTO = mission.MissionType == MissionType.MunicipalUtility

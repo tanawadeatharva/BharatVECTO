@@ -321,19 +321,17 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 			var weightShareSum = vehicleData.AxleData.Sum(axle => axle.AxleWeightShare);
 			if (!weightShareSum.IsEqual(1.0, 1E-10)) {
 				return new ValidationResult(
-					string.Format("Sum of axle weight share is not 1! sum: {0}, difference: {1}",
-						weightShareSum, 1 - weightShareSum));
+					$"Sum of axle weight share is not 1! sum: {weightShareSum}, difference: {1 - weightShareSum}");
 			}
 			for (var i = 0; i < vehicleData.AxleData.Count; i++) {
 				if (vehicleData.AxleData[i].TyreTestLoad.IsSmallerOrEqual(0)) {
-					return new ValidationResult(string.Format("Tyre test load (FzISO) for axle {0} must be greater than 0.", i));
+					return new ValidationResult($"Tyre test load (FzISO) for axle {i} must be greater than 0.");
 				}
 			}
 
 			if (vehicleData.TotalRollResistanceCoefficient <= 0) {
 				return
-					new ValidationResult(string.Format("Total rolling resistance must be greater than 0! {0}",
-						vehicleData.TotalRollResistanceCoefficient));
+					new ValidationResult($"Total rolling resistance must be greater than 0! {vehicleData.TotalRollResistanceCoefficient}");
 			}
 
 			// total gvw is limited by max gvw (40t)
@@ -355,8 +353,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 
 			if (vehicleData.TotalVehicleMass > gvwTotal) {
 				return new ValidationResult(
-					string.Format("Total Vehicle mass is greater than GrossVehicleMass! Mass: {0},  GVM: {1}",
-						vehicleData.TotalVehicleMass, gvwTotal));
+					$"Total Vehicle mass is greater than GrossVehicleMass! Mass: {vehicleData.TotalVehicleMass},  GVM: {gvwTotal}");
 			}
 
 			var numDrivenAxles = vehicleData._axleData.Count(x => x.AxleType == AxleType.VehicleDriven);

@@ -31,7 +31,7 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.HVAC
 			}
 			
 			if (compressorGearEfficiency <= 0 || compressorGearEfficiency > 1) {
-				throw new ArgumentException(String.Format("Compressor Gear efficiency must be between {0} and {1}", 0, 1));
+				throw new ArgumentException($"Compressor Gear efficiency must be between {0} and {1}");
 			}
 
 			//'Assign

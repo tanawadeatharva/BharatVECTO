@@ -835,7 +835,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 												x => new KeyValuePair<FuelType, JoulePerMeter>(
 													x.Attributes.GetNamedItem(XMLNames.Report_Results_Fuel_Type_Attr).InnerText.ParseEnum<FuelType>(),
 													x.SelectSingleNode(
-														string.Format("./*[local-name()='{0}' and @unit='MJ/km']", XMLNames.Report_Result_EnergyConsumption))
+															$"./*[local-name()='{XMLNames.Report_Result_EnergyConsumption}' and @unit='MJ/km']")
 													?.InnerText
 													.ToDouble().SI(Unit.SI.Mega.Joule.Per.Kilo.Meter).Cast<JoulePerMeter>()))
 											.ToDictionary(x => x.Key, x => x.Value),

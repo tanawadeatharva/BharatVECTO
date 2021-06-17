@@ -286,7 +286,7 @@ namespace TUGraz.VectoCore.OutputData
 			var row = GetResultRow(modData, runData);
 
 			row[Fields.SORT] = jobNr * 1000 + runNr;
-			row[Fields.JOB] = string.Format("{0}-{1}", jobNr, runNr); //ReplaceNotAllowedCharacters(current);
+			row[Fields.JOB] = $"{jobNr}-{runNr}"; //ReplaceNotAllowedCharacters(current);
 			row[Fields.INPUTFILE] = ReplaceNotAllowedCharacters(runData.JobName);
 			row[Fields.CYCLE] = ReplaceNotAllowedCharacters(runData.Cycle.Name + Constants.FileExtensions.CycleFile);
 

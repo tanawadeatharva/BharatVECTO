@@ -100,7 +100,7 @@ namespace HashingTool.ViewModel.UserControl
 					var entry = new ComponentEntry {
 						Component = component.Count == 1
 							? component.Entry.XMLElementName()
-							: string.Format("{0} ({1})", component.Entry.XMLElementName(), i + 1),
+							: $"{component.Entry.XMLElementName()} ({i + 1})",
 						DigestValue = ReadElementValue(node, XMLNames.DI_Signature_Reference_DigestValue),
 						CertificationMethod = ReadElementValue(node, XMLNames.Report_Component_CertificationMethod),
 					};
@@ -167,7 +167,7 @@ namespace HashingTool.ViewModel.UserControl
 
 		private string ReadElementValue(XmlNode xmlNode, string elementName)
 		{
-			var node = xmlNode.SelectSingleNode(string.Format("./*[local-name()='{0}']", elementName));
+			var node = xmlNode.SelectSingleNode($"./*[local-name()='{elementName}']");
 			if (node == null) {
 				return null;
 			}

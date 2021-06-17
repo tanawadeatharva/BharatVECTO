@@ -254,7 +254,7 @@ namespace TUGraz.VectoCore.Tests.XML
 				XMLNames.Component_AxleWheels,
 				XMLNames.ComponentDataWrapper,
 				XMLNames.AxleWheels_Axles) +
-				string.Format("/*[@{0}={1}]", XMLNames.AxleWheels_Axles_Axle_AxleNumber_Attr, "1")
+												$"/*[@{XMLNames.AxleWheels_Axles_Axle_AxleNumber_Attr}={"1"}]"
 				);
 			firstAxle.MoveToAttribute(XMLNames.AxleWheels_Axles_Axle_AxleNumber_Attr, string.Empty);
 			firstAxle.SetTypedValue(2);
@@ -290,7 +290,7 @@ namespace TUGraz.VectoCore.Tests.XML
 				XMLNames.Component_AxleWheels,
 				XMLNames.ComponentDataWrapper,
 				XMLNames.AxleWheels_Axles) +
-				string.Format("/*[@{0}={1}]", XMLNames.AxleWheels_Axles_Axle_AxleNumber_Attr, "1")
+												$"/*[@{XMLNames.AxleWheels_Axles_Axle_AxleNumber_Attr}={"1"}]"
 				);
 			firstAxle.MoveToAttribute(XMLNames.AxleWheels_Axles_Axle_AxleNumber_Attr, string.Empty);
 			firstAxle.SetTypedValue(0);
@@ -323,8 +323,7 @@ namespace TUGraz.VectoCore.Tests.XML
 				XMLNames.Vehicle_Components,
 				XMLNames.Component_AxleWheels,
 				XMLNames.ComponentDataWrapper,
-				XMLNames.AxleWheels_Axles) + 
-				string.Format("/*[@{0}={1}]", XMLNames.AxleWheels_Axles_Axle_AxleNumber_Attr, "1")
+				XMLNames.AxleWheels_Axles) + $"/*[@{XMLNames.AxleWheels_Axles_Axle_AxleNumber_Attr}={"1"}]"
 				);
 			firstAxle.MoveToAttribute(XMLNames.AxleWheels_Axles_Axle_AxleNumber_Attr, string.Empty);
 			firstAxle.SetTypedValue(3);

@@ -67,7 +67,7 @@ namespace TUGraz.VectoCore.Utils
 
 		public string QueryAbs(params string[] xPathSections)
 		{
-			return string.Format("/{0}", Query(xPathSections));
+			return $"/{Query(xPathSections)}";
 		}
 
 		public string NSPrefix(string element, string prefix = null)

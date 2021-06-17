@@ -164,7 +164,7 @@ namespace TUGraz.VectoCore.Utils
 					table.Rows.Add(cells);
 				} catch (InvalidCastException e) {
 					throw new CSVReadException(
-						string.Format("Line {0}: The data format of a value is not correct. {1}", lineNumber, e.Message), e);
+						$"Line {lineNumber}: The data format of a value is not correct. {e.Message}", e);
 				}
 				lineNumber++;
 			}
@@ -240,7 +240,7 @@ namespace TUGraz.VectoCore.Utils
 
 					// if a string contains a "," then it has to be contained in quotes in order to be correctly recognized in a CSV file.
 					if (formattedList[i].Contains(Delimiter)) {
-						formattedList[i] = string.Format("\"{0}\"", formattedList[i]);
+						formattedList[i] = $"\"{formattedList[i]}\"";
 					}
 				}
 				entries.Add(string.Join(Delimiter, formattedList));
@@ -248,7 +248,7 @@ namespace TUGraz.VectoCore.Utils
 
 			if (addDigest) {
 				var digest = DataIntegrityHelper.ComputeDigestValue(entries.Where(x => !x.StartsWith(DigestValuePrefix)).ToArray());
-				entries.Add(string.Format("{0} {1}", DigestValuePrefix, digest));
+				entries.Add($"{DigestValuePrefix} {digest}");
 			}
 
 			foreach (var entry in entries) {

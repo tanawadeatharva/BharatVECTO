@@ -595,11 +595,11 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 				shiftLines += "Gear " + gear + "\n";
 				shiftLines += "Upshift\n";
 				foreach (var shiftPolygonEntry in shiftPolygon.Upshift) {
-					shiftLines += string.Format("{0} {1}\n", shiftPolygonEntry.AngularSpeed.AsRPM, shiftPolygonEntry.Torque.Value());
+					shiftLines += $"{shiftPolygonEntry.AngularSpeed.AsRPM} {shiftPolygonEntry.Torque.Value()}\n";
 				}
 				shiftLines += "Downshift\n";
 				foreach (var shiftPolygonEntry in shiftPolygon.Downshift) {
-					shiftLines += string.Format("{0} {1}\n", shiftPolygonEntry.AngularSpeed.AsRPM, shiftPolygonEntry.Torque.Value());
+					shiftLines += $"{shiftPolygonEntry.AngularSpeed.AsRPM} {shiftPolygonEntry.Torque.Value()}\n";
 				}
 			}
 		}
@@ -654,11 +654,11 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 				shiftLines += "Gear " + gear + "\n";
 				shiftLines += "Upshift\n";
 				foreach (var shiftPolygonEntry in shiftPolygon.Upshift) {
-					shiftLines += string.Format("{0} {1}\n", shiftPolygonEntry.AngularSpeed.AsRPM, shiftPolygonEntry.Torque.Value());
+					shiftLines += $"{shiftPolygonEntry.AngularSpeed.AsRPM} {shiftPolygonEntry.Torque.Value()}\n";
 				}
 				shiftLines += "Downshift\n";
 				foreach (var shiftPolygonEntry in shiftPolygon.Downshift) {
-					shiftLines += string.Format("{0} {1}\n", shiftPolygonEntry.AngularSpeed.AsRPM, shiftPolygonEntry.Torque.Value());
+					shiftLines += $"{shiftPolygonEntry.AngularSpeed.AsRPM} {shiftPolygonEntry.Torque.Value()}\n";
 				}
 			}
 		}
@@ -756,11 +756,11 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 				str += "Gear " + g + "\n";
 				str += "downshift\n";
 				foreach (var entry in shiftPolygon.Downshift) {
-					str += string.Format("{0} {1}\n", entry.AngularSpeed.AsRPM, entry.Torque.Value());
+					str += $"{entry.AngularSpeed.AsRPM} {entry.Torque.Value()}\n";
 				}
 				str += "upshift\n";
 				foreach (var entry in shiftPolygon.Upshift) {
-					str += string.Format("{0} {1}\n", entry.AngularSpeed.AsRPM, entry.Torque.Value());
+					str += $"{entry.AngularSpeed.AsRPM} {entry.Torque.Value()}\n";
 				}
 				g++;
 			}
@@ -911,11 +911,11 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 				str += "Gear " + g + "\n";
 				str += "downshift\n";
 				foreach (var entry in shiftPolygon.Downshift) {
-					str += string.Format("{0} {1}\n", entry.AngularSpeed.AsRPM, entry.Torque.Value());
+					str += $"{entry.AngularSpeed.AsRPM} {entry.Torque.Value()}\n";
 				}
 				str += "upshift\n";
 				foreach (var entry in shiftPolygon.Upshift) {
-					str += string.Format("{0} {1}\n", entry.AngularSpeed.AsRPM, entry.Torque.Value());
+					str += $"{entry.AngularSpeed.AsRPM} {entry.Torque.Value()}\n";
 				}
 				g++;
 			}

@@ -61,7 +61,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering.Reader
 				? BaseNode
 				: BaseNode.SelectSingleNode(XMLHelper.QueryLocalName(component));
 			var dataNode = requireDataNode
-				? componentNode?.SelectSingleNode(string.Format("./*[local-name()='{0}']", XMLNames.ComponentDataWrapper))
+				? componentNode?.SelectSingleNode($"./*[local-name()='{XMLNames.ComponentDataWrapper}']")
 				: componentNode;
 			var componentResourceNode = componentNode?.SelectSingleNode(
 											string.Format(
@@ -113,7 +113,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering.Reader
 						? componentDocument.DocumentElement
 						: componentDocument.DocumentElement.SelectSingleNode(XMLHelper.QueryLocalName(component));
 					var docDataNode =
-						docComponentNode?.SelectSingleNode(string.Format("./*[local-name()='{0}']", XMLNames.ComponentDataWrapper)) ??
+						docComponentNode?.SelectSingleNode($"./*[local-name()='{XMLNames.ComponentDataWrapper}']") ??
 						docComponentNode;
 
 					var type = (docDataNode)?.SchemaInfo.SchemaType;

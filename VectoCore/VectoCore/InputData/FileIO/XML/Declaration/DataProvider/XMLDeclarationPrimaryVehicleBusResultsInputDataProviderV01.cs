@@ -61,7 +61,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 				.Cast<XmlNode>().Select(x => new KeyValuePair<FuelType, JoulePerMeter>(
 											GetAttribute(x, XMLNames.Report_Results_Fuel_Type_Attr).ParseEnum<FuelType>(),
 											x.SelectSingleNode(
-												string.Format(".//*[local-name()='{0}' and @unit='MJ/km']", XMLNames.Report_Result_EnergyConsumption))?.InnerText
+													$".//*[local-name()='{XMLNames.Report_Result_EnergyConsumption}' and @unit='MJ/km']")?.InnerText
 													.ToDouble().SI(Unit.SI.Mega.Joule.Per.Kilo.Meter).Cast<JoulePerMeter>())).ToDictionary(x => x.Key, x => x.Value);
 
 

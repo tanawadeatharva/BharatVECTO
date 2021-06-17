@@ -213,7 +213,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 				engine.CommitSimulationStep(t, dt, modalData);
 				Assert.AreEqual(expectedResults.Rows[i].ParseDouble(0), t.Value(), 0.001, "Time");
 				Assert.AreEqual(expectedResults.Rows[i].ParseDouble(1), ((SI)modalData[ModalResultField.P_ice_full]).Value(), 0.1,
-					string.Format("Load in timestep {0}", t));
+					$"Load in timestep {t}");
 				modalData.CommitSimulationStep();
 			}
 			modalData.Finish(VectoRun.Status.Success);
@@ -270,7 +270,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 				engine.CommitSimulationStep(t, dt, modalData);
 				Assert.AreEqual(expectedResults.Rows[i].ParseDouble(0), t.Value(), 0.001, "Time");
 				Assert.AreEqual(expectedResults.Rows[i].ParseDouble(1), ((SI)modalData[ModalResultField.P_ice_full]).Value(), 0.1,
-					string.Format("Load in timestep {0}", t));
+					$"Load in timestep {t}");
 				modalData.CommitSimulationStep();
 			}
 			modalData.Finish(VectoRun.Status.Success);
@@ -440,8 +440,8 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 				container.CommitSimulationStep(absTime, dt);
 
 				engSpeedResults.Add(new { absTime, engine.PreviousState.EngineSpeed, engine.PreviousState.EnginePower });
-				Assert.AreEqual(engineSpeed[i], engine.PreviousState.EngineSpeed.AsRPM, Tolerance, string.Format("entry {0}", i));
-				Assert.AreEqual(enginePower[i], engine.PreviousState.EnginePower.Value(), Tolerance, string.Format("entry {0}", i));
+				Assert.AreEqual(engineSpeed[i], engine.PreviousState.EngineSpeed.AsRPM, Tolerance, $"entry {i}");
+				Assert.AreEqual(enginePower[i], engine.PreviousState.EnginePower.Value(), Tolerance, $"entry {i}");
 				absTime += dt;
 			}
 			//dataWriter.Finish();

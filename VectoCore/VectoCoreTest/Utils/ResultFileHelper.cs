@@ -117,7 +117,7 @@ namespace TUGraz.VectoCore.Tests.Utils
 
 					foreach (var field in testColumns ?? new string[0]) {
 						Assert.AreEqual(expectedRow.ParseDoubleOrGetDefault(field), actualRow.ParseDoubleOrGetDefault(field), 1e-4,
-							string.Format("t: {0}  field: {1}", i, field));
+							$"t: {i}  field: {field}");
 					}
 				}
 			}
@@ -150,7 +150,7 @@ namespace TUGraz.VectoCore.Tests.Utils
 
 				foreach (var field in testColumns ?? new string[0]) {
 					AssertHelper.AreRelativeEqual(expectedRow.ParseDoubleOrGetDefault(field), actualRow.ParseDoubleOrGetDefault(field),
-						string.Format("t: {0}  field: {1}", i, field));
+						$"t: {i}  field: {field}");
 				}
 			}
 		}

@@ -1523,9 +1523,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		public override string ToString()
 		{
-			return string.Format(
-				"action: {0} @ {1} / {2}. trigger: {3} targetSpeed: {4}", Action, CoastingStartDistance,
-				BrakingStartDistance, TriggerDistance, NextTargetSpeed);
+			return $"action: {Action} @ {CoastingStartDistance} / {BrakingStartDistance}. trigger: {TriggerDistance} targetSpeed: {NextTargetSpeed}";
 		}
 	}
 }

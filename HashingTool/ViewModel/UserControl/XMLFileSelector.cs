@@ -251,7 +251,7 @@ namespace HashingTool.ViewModel.UserControl
 
 		public void LogError(string message) 
 		{
-			XMLValidationErrors.Add(String.Format("{0}: {1}", _prefix, message));
+			XMLValidationErrors.Add($"{_prefix}: {message}");
 		}
 
 		public bool HasContentValidation { get; private set; }
@@ -278,9 +278,7 @@ namespace HashingTool.ViewModel.UserControl
 															() => {
 																if (e.ValidationEventArgs == null) {
 																	LogError(
-																		string.Format(
-																			"XML file does not validate against a supported version of {0}",
-																			_expectedDocumentType.ToString()));
+																		$"XML file does not validate against a supported version of {_expectedDocumentType.ToString()}");
 																} else {
 																	LogError(
 																		string.Format(
