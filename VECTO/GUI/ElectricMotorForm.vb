@@ -178,7 +178,7 @@ Public Class ElectricMotorForm
         tbInertia.Text = engine.Inertia.ToGUIFormat()
 
         tbOverloadTq.Text = If(engine.OverloadTorque?.Value().ToGUIFormat(), "")
-        tbOvlSpeed.Text = If(engine.OverloadTestSpeed?.Value().ToGUIFormat(), "")
+        tbOvlSpeed.Text = If(engine.OverloadTestSpeed?.AsRPM.ToGUIFormat(), "")
         tbOvlTime.Text = engine.OverloadTime.Value().ToGUIFormat()
         tbContTq.Text = engine.ContinuousTorque.ToGUIFormat()
         tbRatedSpeed.Text = engine.ContinuousTorqueSpeed.AsRPM.ToGUIFormat()
