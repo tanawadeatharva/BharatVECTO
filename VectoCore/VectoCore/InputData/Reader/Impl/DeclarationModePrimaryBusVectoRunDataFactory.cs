@@ -108,7 +108,8 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 				DriverData = _driverdata,
 				ExecutionMode = ExecutionMode.Declaration,
 				JobName = InputDataProvider.JobInputData.JobName,
-				ModFileSuffix = (engineModes.Count > 1 ? string.Format("_EngineMode{0}_", modeIdx) : "") + "_" + mission.BusParameter.BusGroup.GetClassNumber() + "_" + loading.Key.ToString(),
+				ModFileSuffix = $"{(engineModes.Count > 1 ? $"_EngineMode{modeIdx}_" : "")}" +
+								$"_{mission.BusParameter.BusGroup.GetClassNumber()}_{loading.Key}",
 				Report = Report,
 				Mission = mission,
 				InputDataHash = InputDataProvider.XMLHash,

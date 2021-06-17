@@ -322,9 +322,8 @@ namespace TUGraz.VectoCore.Tests.Integration
 			jobContainer.Execute();
 			jobContainer.WaitFinished();
 			Assert.IsTrue(jobContainer.Runs.All(r => r.Success),
-				string.Format("folowing runs failed: {0}\n{1}",
-					string.Concat(jobContainer.Runs.Where(r => !r.Success).Select(r => r.Run.RunName + " - " + r.Run.CycleName)),
-					string.Concat(jobContainer.Runs.Select(r => r.ExecException))));
+				$"folowing runs failed: {string.Concat(jobContainer.Runs.Where(r => !r.Success).Select(r => r.Run.RunName + " - " + r.Run.CycleName))}\n" +
+				$"{string.Concat(jobContainer.Runs.Select(r => r.ExecException))}");
 		}
 
 		[TestCase, Category("LongRunning")]

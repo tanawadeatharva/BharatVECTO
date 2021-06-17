@@ -107,13 +107,15 @@ namespace HashingTool.ViewModel.UserControl
 				var vinMatch = _jobData.VehicleIdentificationNumber == ReportVIN;
 
 				if (!digestMatch) {
-					_validationErrors.Add(string.Format("Job Digest Value mismatch! Computed job digest: '{0}', digest read: '{1}'",
-						_jobDigestComputed, JobDigestValueRead));
+					_validationErrors.Add("Job Digest Value mismatch! " +
+										$"Computed job digest: '{_jobDigestComputed}', " +
+										$"digest read: '{JobDigestValueRead}'");
 				}
 
 				if (!vinMatch) {
-					_validationErrors.Add(string.Format("VIN mismatch! VIN from job data: '{0}', VIN from report: '{1}'",
-						_jobData.VehicleIdentificationNumber, ReportVIN));
+					_validationErrors.Add("VIN mismatch! " +
+										$"VIN from job data: '{_jobData.VehicleIdentificationNumber}', " +
+										$"VIN from report: '{ReportVIN}'");
 				}
 
 				JobDigestMatchesReport = vinMatch

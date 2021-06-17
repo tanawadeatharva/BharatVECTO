@@ -257,8 +257,8 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 			if (gearboxData.Gears.Count + 1 != engineData.FullLoadCurves.Count) {
 				return
 					new ValidationResult(
-						string.Format("number of full-load curves in engine does not match gear count. engine fld: {0}, gears: {1}",
-							engineData.FullLoadCurves.Count, gearboxData.Gears.Count));
+						$"number of full-load curves in engine does not match gear count. " +
+						$"engine fld: {engineData.FullLoadCurves.Count}, gears: {gearboxData.Gears.Count}");
 			}
 
 			foreach (var gear in gearboxData.Gears) {
@@ -299,9 +299,9 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 
 			var tqLoss = gear.Value.LossMap.GetTorqueLoss(engineSpeed / gear.Value.Ratio, inTorque * gear.Value.Ratio);
 			if (tqLoss.Extrapolated) {
-				return new ValidationResult(
-					string.Format("Interpolation of Gear-{0}-LossMap failed with torque={1} and angularSpeed={2}", gear.Key,
-								inTorque, engineSpeed.ConvertToRoundsPerMinute()));
+				return new ValidationResult($"Interpolation of Gear-{gear.Key}-LossMap failed " +
+											$"with torque={inTorque} " +
+											$"and angularSpeed={engineSpeed.ConvertToRoundsPerMinute()}");
 
 			}
 			var angledriveTorque = (inTorque - tqLoss.Value) / gear.Value.Ratio;
@@ -313,10 +313,9 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 					engineSpeed / gear.Value.Ratio / angledriveRatio,
 					angledriveTorque * angledriveRatio);
 				if (anglTqLoss.Extrapolated) {
-					return new ValidationResult(
-						string.Format(
-							"Interpolation of Angledrive-LossMap failed with torque={0} and angularSpeed={1}",
-							angledriveTorque, (engineSpeed / gear.Value.Ratio).ConvertToRoundsPerMinute()));
+					return new ValidationResult("Interpolation of Angledrive-LossMap failed " +
+												$"with torque={angledriveTorque} " +
+												$"and angularSpeed={(engineSpeed / gear.Value.Ratio).ConvertToRoundsPerMinute()}");
 				}
 			}
 
@@ -325,11 +324,10 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 				
 				var axlTqLoss = axleGearData.AxleGear.LossMap.GetTorqueLoss(axleAngularVelocity, axlegearTorque * axleGearData.AxleGear.Ratio);
 				if (axlTqLoss.Extrapolated) { 
-				return
-						new ValidationResult(
-							string.Format(
-								"Interpolation of AxleGear-LossMap failed with torque={0} and angularSpeed={1} (gear={2}, velocity={3})",
-								axlegearTorque, axleAngularVelocity.ConvertToRoundsPerMinute(), gear.Key, velocity));
+				return new ValidationResult("Interpolation of AxleGear-LossMap failed " +
+											$"with torque={axlegearTorque} " +
+											$"and angularSpeed={axleAngularVelocity.ConvertToRoundsPerMinute()} " +
+											$"(gear={gear.Key}, velocity={velocity})");
 				}
 			}
 			return null;

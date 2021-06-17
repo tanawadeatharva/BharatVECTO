@@ -341,9 +341,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 						string.Join(
 							"; ",
 							missing.Select(
-								x => string.Format(
-									"n: {0}, T: {1}", x.Attributes?[XMLNames.Engine_FuelConsumptionMap_EngineSpeed_Attr]?.Value,
-									x.Attributes?[XMLNames.Engine_FuelConsumptionMap_Torque_Attr]?.Value))));
+								x => $"n: {x.Attributes?[XMLNames.Engine_FuelConsumptionMap_EngineSpeed_Attr]?.Value}, " +
+									$"T: {x.Attributes?[XMLNames.Engine_FuelConsumptionMap_Torque_Attr]?.Value}")));
 				}
 
 				if (correctionFactorNodes[0].ParentNode.ParentNode != whrFuelNode) {

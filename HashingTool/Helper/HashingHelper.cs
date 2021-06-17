@@ -56,8 +56,8 @@ namespace HashingTool.Helper
 			}
 			var valid = x.DocumentElement.LocalName == XMLNames.VectoManufacturerReport;
 			if (!valid) {
-				errorLog.LogError(String.Format("Invalid XML file given ({0}). Expected Manufacturer Report XML ({1})!",
-					x.DocumentElement.LocalName, XMLNames.VectoManufacturerReport));
+				errorLog.LogError($"Invalid XML file given ({x.DocumentElement.LocalName}). " +
+								$"Expected Manufacturer Report XML ({XMLNames.VectoManufacturerReport})!");
 			}
 			return valid;
 		}
@@ -69,8 +69,8 @@ namespace HashingTool.Helper
 			}
 			var valid = x.DocumentElement != null && x.DocumentElement.LocalName == XMLNames.VectoCustomerReport;
 			if (!valid) {
-				errorLog.LogError(String.Format("Invalid XML file given ({0}). Expected Customer Report XML ({1})!",
-					x.DocumentElement.LocalName, XMLNames.VectoCustomerReport));
+				errorLog.LogError($"Invalid XML file given ({x.DocumentElement.LocalName}). " +
+								$"Expected Customer Report XML ({XMLNames.VectoCustomerReport})!");
 			}
 			return valid;
 		}
@@ -83,9 +83,8 @@ namespace HashingTool.Helper
 			var valid = x.DocumentElement.LocalName == XMLNames.VectoInputDeclaration &&
 						x.DocumentElement.FirstChild.LocalName == XMLNames.Component_Vehicle;
 			if (!valid) {
-				errorLog.LogError(String.Format("Invalid XML file given ({0}/{1}). Expected Vehicle XML ({2}/{3})!",
-					x.DocumentElement.LocalName, x.DocumentElement.FirstChild.LocalName, XMLNames.VectoInputDeclaration,
-					XMLNames.Component_Vehicle));
+				errorLog.LogError($"Invalid XML file given ({x.DocumentElement.LocalName}/{x.DocumentElement.FirstChild.LocalName}). " +
+								$"Expected Vehicle XML ({XMLNames.VectoInputDeclaration}/{XMLNames.Component_Vehicle})!");
 			}
 			return valid;
 		}
@@ -97,8 +96,8 @@ namespace HashingTool.Helper
 			}
 
 			if (x.DocumentElement.LocalName != XMLNames.VectoInputDeclaration) {
-				errorLog.LogError(String.Format("Invalid XML file given ({0}). Expected Component XML ({1})!",
-					x.DocumentElement.LocalName, XMLNames.VectoInputDeclaration));
+				errorLog.LogError($"Invalid XML file given ({x.DocumentElement.LocalName}). " +
+								$"Expected Component XML ({XMLNames.VectoInputDeclaration})!");
 
 				return false;
 			}
@@ -110,8 +109,8 @@ namespace HashingTool.Helper
 			};
 			var valid = components.Where(c => c.XMLElementName() == localName).Any();
 			if (!valid) {
-				errorLog.LogError(String.Format("Invalid XML file given ({0}). Expected Component XML ({1})!",
-					localName, String.Join(", ", components.Select(c => c.XMLElementName()))));
+				errorLog.LogError($"Invalid XML file given ({localName}). " +
+								$"Expected Component XML ({String.Join(", ", components.Select(c => c.XMLElementName()))})!");
 			}
 			return valid;
 		}

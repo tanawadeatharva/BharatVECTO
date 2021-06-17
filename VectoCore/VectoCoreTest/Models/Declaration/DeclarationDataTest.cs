@@ -629,7 +629,10 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
                     weight.SI<Kilogram>(),
                     0.SI<Kilogram>(),
                     false),
-                string.Format("ERROR: Could not find the declaration segment for vehicle. Category: {0}, AxleConfiguration: {1}, GrossVehicleWeight: {2}", VehicleCategory.RigidTruck, AxleConfiguration.AxleConfig_4x2.GetName(), weight.SI<Kilogram>()));
+                $"ERROR: Could not find the declaration segment for vehicle. " +
+                $"Category: {VehicleCategory.RigidTruck}, " +
+                $"AxleConfiguration: {AxleConfiguration.AxleConfig_4x2.GetName()}, " +
+                $"GrossVehicleWeight: {weight.SI<Kilogram>()}");
         }
 
         [
@@ -647,7 +650,10 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
                     weight.SI<Kilogram>(),
                     0.SI<Kilogram>(),
                     false),
-                    string.Format("ERROR: Could not find the declaration segment for vehicle. Category: {0}, AxleConfiguration: {1}, GrossVehicleWeight: {2}", VehicleCategory.RigidTruck, AxleConfiguration.AxleConfig_4x4.GetName(), weight.SI<Kilogram>()));
+                $"ERROR: Could not find the declaration segment for vehicle. " +
+                $"Category: {VehicleCategory.RigidTruck}, " +
+                $"AxleConfiguration: {AxleConfiguration.AxleConfig_4x4.GetName()}, " +
+                $"GrossVehicleWeight: {weight.SI<Kilogram>()}");
         }
         
         [Test,

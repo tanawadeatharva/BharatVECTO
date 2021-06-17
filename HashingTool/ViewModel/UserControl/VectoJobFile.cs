@@ -184,10 +184,9 @@ namespace HashingTool.ViewModel.UserControl
 						entry.CertificationNumber = h.GetCertificationNumber(component.Entry, i);
 						entry.CertificationDate = h.GetCertificationDate(component.Entry, i);
 						if (!entry.Valid) {
-							_xmlFile.LogError(
-								string.Format(
-									"Digest Value mismatch for component \"{0}\". Read digest value: \"{1}\", computed digest value \"{2}\"",
-									entry.Component, entry.DigestValueRead, entry.DigestValueComputed));
+							_xmlFile.LogError($"Digest Value mismatch for component \"{entry.Component}\". " +
+											$"Read digest value: \"{entry.DigestValueRead}\", " +
+											$"computed digest value \"{entry.DigestValueComputed}\"");
 						}
 						Components.Add(entry);
 						allValid &= entry.Valid;

@@ -137,16 +137,16 @@ namespace HashingTool.ViewModel.UserControl
 			var digestMismatch = componentData.Where(x => x.DigestValueMatchesJobComponent == null || !x.DigestValueMatchesJobComponent.Value).ToArray();
 			if (jobComponents.Any()) {
 				foreach (var entry in certificationNumberMismatch) {
-					_validationErrors.Add(
-						string.Format(
-							"Verifying Manufacturer Report: Certification number for component '{0}' does not match! Job-file: '{1}', Report: '{2}'",
-							entry.Component, entry.CertificationNumberExpected, entry.CertificationNumber));
+					_validationErrors.Add("Verifying Manufacturer Report: " +
+										$"Certification number for component '{entry.Component}' does not match! " +
+										$"Job-file: '{entry.CertificationNumberExpected}', " +
+										$"Report: '{entry.CertificationNumber}'");
 				}
 				foreach (var entry in digestMismatch) {
-					_validationErrors.Add(
-						string.Format(
-							"Verifying Manufacturer Report: Digest Value for component '{0}' does not match! Job-file: '{1}', Report: '{2}'",
-							entry.Component, entry.DigestValueExpected, entry.DigestValue));
+					_validationErrors.Add("Verifying Manufacturer Report: " +
+										$"Digest Value for component '{entry.Component}' does not match! " +
+										$"Job-file: '{entry.DigestValueExpected}', " +
+										$"Report: '{entry.DigestValue}'");
 				}
 			}
 

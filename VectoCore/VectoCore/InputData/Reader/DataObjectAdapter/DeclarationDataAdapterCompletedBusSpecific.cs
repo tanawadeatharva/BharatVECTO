@@ -62,7 +62,8 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 
 			vehicleData.VehicleCode = completedVehicle.VehicleCode;
 			if (vehicleData.TotalVehicleMass.IsGreater(vehicleData.GrossVehicleMass)) {
-				throw new VectoException("Total Vehicle Mass exceeds Gross Vehicle Mass for completed bus specific ({0}/{1})", vehicleData.TotalVehicleMass, vehicleData.GrossVehicleMass);
+				throw new VectoException("Total Vehicle Mass exceeds Gross Vehicle Mass for completed bus specific ({0}/{1})", 
+					vehicleData.TotalVehicleMass, vehicleData.GrossVehicleMass);
 			}
 			return vehicleData;
 		}
@@ -294,9 +295,8 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 
             //ToDo FK COP calculation
             ssmInputs.HVACCompressorType = heatPumpTypePassengerCompartment; // use passenger compartment
-            ssmInputs.HVACTechnology = string.Format(
-                "{0} ({1})", busAux.SystemConfiguration.GetName(),
-                string.Join(", ", new[] { heatPumpTypePassengerCompartment.GetName(), heatPumpTypeDriverCompartment.GetName() }));
+            ssmInputs.HVACTechnology = $"{busAux.SystemConfiguration.GetName()} " + 
+									   $"({string.Join(", ", heatPumpTypePassengerCompartment.GetName(), heatPumpTypeDriverCompartment.GetName())})";
 			ssmInputs.COP = DeclarationData.BusAuxiliaries.CalculateCOP(
                 coolingPower.Item1, heatPumpTypeDriverCompartment, coolingPower.Item2, heatPumpTypePassengerCompartment /* average */,
                 floorType);

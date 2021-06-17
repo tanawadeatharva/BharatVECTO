@@ -270,15 +270,15 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			public MeterPerSecond Velocity = 0.SI<MeterPerSecond>();
 			public MeterPerSquareSecond Acceleration = 0.SI<MeterPerSquareSecond>();
 
-			public override string ToString()
-			{
-				return
-					string.Format(
-						"v: {0}  a: {1}, dt: {2}, driver_acc: {3}, roll_res: {4}, slope_res: {5}, air_drag: {6}, traction force: {7}",
-						Velocity, Acceleration, SimulationInterval, DriverAcceleration, RollingResistance, SlopeResistance,
-						AirDragResistance,
-						VehicleTractionForce);
-			}
+			public override string ToString() =>
+				$"v: {Velocity}  " +
+				$"a: {Acceleration}, " +
+				$"dt: {SimulationInterval}, " +
+				$"driver_acc: {DriverAcceleration}, " +
+				$"roll_res: {RollingResistance}, " +
+				$"slope_res: {SlopeResistance}, " +
+				$"air_drag: {AirDragResistance}, " +
+				$"traction force: {VehicleTractionForce}";
 		}
 	}
 }

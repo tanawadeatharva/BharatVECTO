@@ -76,7 +76,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration
 				throw new Exception($"Component {component} not found");
 			}
 			if (index >= nodes.Count) {
-				throw new Exception($"index exceeds number of components found! index: {index}, #components: {nodes.Count}");
+				throw new Exception($"index exceeds number of components found! index: {index}, " +
+									$"#components: {nodes.Count}");
 			}
 			return nodes[index];
 		}

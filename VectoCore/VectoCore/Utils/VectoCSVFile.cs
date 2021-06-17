@@ -155,8 +155,8 @@ namespace TUGraz.VectoCore.Utils
 				firstLineIsData = false;
 				if (table.Columns.Count != cells.Length && !ignoreEmptyColumns) {
 					throw new CSVReadException(
-						string.Format("Line {0}: The number of values is not correct. Expected {1} Columns, Got {2} Columns",
-							lineNumber, table.Columns.Count, cells.Length));
+						$"Line {lineNumber}: The number of values is not correct. " +
+						$"Expected {table.Columns.Count} Columns, Got {cells.Length} Columns");
 				}
 
 				try {
@@ -203,10 +203,9 @@ namespace TUGraz.VectoCore.Utils
 			var entries = new List<string>();
 			if (addVersionHeader) {
 				try {
-					entries.Add(string.Format("# VECTO{0} {1} - {2}", VectoSimulationCore.BranchSuffix, VectoSimulationCore.VersionNumber,
-						DateTime.Now.ToString("dd.MM.yyyy HH:mm")));
+					entries.Add($"# VECTO{VectoSimulationCore.BranchSuffix} {VectoSimulationCore.VersionNumber} - {DateTime.Now:dd.MM.yyyy HH:mm}");
 				} catch (Exception) {
-					entries.Add(string.Format("# VECTO {0} - {1}", "Unknown", DateTime.Now.ToString("dd.MM.yyyy HH:mm")));
+					entries.Add($"# VECTO Unknown - {DateTime.Now:dd.MM.yyyy HH:mm}");
 				}
 			}
 			var header = table.Columns.Cast<DataColumn>().Select(col => col.Caption ?? col.ColumnName);
