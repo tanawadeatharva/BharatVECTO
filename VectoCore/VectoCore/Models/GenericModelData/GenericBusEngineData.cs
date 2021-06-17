@@ -32,10 +32,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 
 		private static GenericBusEngineData _instance;
 
-		public static GenericBusEngineData Instance
-		{
-			get { return _instance ?? (_instance = new GenericBusEngineData()); }
-		}
+		public static GenericBusEngineData Instance => _instance ?? (_instance = new GenericBusEngineData());
 
 		#endregion
 

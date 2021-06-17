@@ -60,10 +60,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 			DataBus = dataBus;
 		}
 
-		public CrossWindCorrectionMode CorrectionMode
-		{
-			get { return CrossWindCorrectionMode.VAirBetaLookupTable; }
-		}
+		public CrossWindCorrectionMode CorrectionMode => CrossWindCorrectionMode.VAirBetaLookupTable;
 
 		public Watt AverageAirDragPowerLoss(MeterPerSecond v1, MeterPerSecond v2, KilogramPerCubicMeter airDensity)
 		{

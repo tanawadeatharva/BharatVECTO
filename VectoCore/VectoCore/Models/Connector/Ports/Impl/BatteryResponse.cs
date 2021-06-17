@@ -72,25 +72,15 @@ namespace TUGraz.VectoCore.Models.Connector.Ports.Impl
 
 		public IRESSResponse RESSResponse { get; set; }
 
-		public Watt MaxPowerDrive
-		{
-			get
-			{
-				return (RESSResponse != null && RESSResponse.MaxDischargePower != null ? RESSResponse.MaxDischargePower : 0.SI<Watt>()) -
-						(ChargingPower != null ? ChargingPower : 0.SI<Watt>()) +
-						(AuxPower != null ? AuxPower : 0.SI<Watt>());
-			}
-		}
+		public Watt MaxPowerDrive =>
+			(RESSResponse != null && RESSResponse.MaxDischargePower != null ? RESSResponse.MaxDischargePower : 0.SI<Watt>()) -
+			(ChargingPower != null ? ChargingPower : 0.SI<Watt>()) +
+			(AuxPower != null ? AuxPower : 0.SI<Watt>());
 
-		public Watt MaxPowerDrag
-		{
-			get
-			{
-				return (RESSResponse != null && RESSResponse.MaxChargePower != null ? RESSResponse.MaxChargePower : 0.SI<Watt>()) -
-						(ChargingPower != null ? ChargingPower : 0.SI<Watt>()) +
-						(AuxPower != null ? AuxPower : 0.SI<Watt>());
-			}
-		}
+		public Watt MaxPowerDrag =>
+			(RESSResponse != null && RESSResponse.MaxChargePower != null ? RESSResponse.MaxChargePower : 0.SI<Watt>()) -
+			(ChargingPower != null ? ChargingPower : 0.SI<Watt>()) +
+			(AuxPower != null ? AuxPower : 0.SI<Watt>());
 
 		public Watt RESSPowerDemand { get; set; }
 

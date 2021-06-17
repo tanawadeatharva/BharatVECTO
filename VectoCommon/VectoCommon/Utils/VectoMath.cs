@@ -793,20 +793,11 @@ namespace TUGraz.VectoCommon.Utils
 			P2 = p2;
 		}
 
-		public Point Vector
-		{
-			get { return _vector ?? (_vector = P2 - P1); }
-		}
+		public Point Vector => _vector ?? (_vector = P2 - P1);
 
-		public double SlopeXY
-		{
-			get { return Vector.Y / Vector.X; }
-		}
+		public double SlopeXY => Vector.Y / Vector.X;
 
-		public double OffsetXY
-		{
-			get { return P2.Y - SlopeXY * P2.X; }
-		}
+		public double OffsetXY => P2.Y - SlopeXY * P2.X;
 
 		#region Equality members
 

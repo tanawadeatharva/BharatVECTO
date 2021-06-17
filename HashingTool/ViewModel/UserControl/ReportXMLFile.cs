@@ -57,10 +57,7 @@ namespace HashingTool.ViewModel.UserControl
 			_xmlFile.PropertyChanged += ReportChanged;
 		}
 
-		public ObservableCollection<string> ValidationErrors
-		{
-			get { return _validationErrors; }
-		}
+		public ObservableCollection<string> ValidationErrors => _validationErrors;
 
 		public VectoJobFile JobData
 		{
@@ -150,7 +147,7 @@ namespace HashingTool.ViewModel.UserControl
 
 		public string ReportVIN
 		{
-			get { return _reportVin; }
+			get => _reportVin;
 			set {
 				if (_reportVin == value) {
 					return;
@@ -162,7 +159,7 @@ namespace HashingTool.ViewModel.UserControl
 
 		public string JobDigestMethodRead
 		{
-			get { return _jobDigestMethodRead; }
+			get => _jobDigestMethodRead;
 			set {
 				if (_jobDigestMethodRead == value) {
 					return;
@@ -174,7 +171,7 @@ namespace HashingTool.ViewModel.UserControl
 
 		public string[] JobCanonicalizationMethodRead
 		{
-			get { return _jobCanonicalizationMethodRead; }
+			get => _jobCanonicalizationMethodRead;
 			set {
 				if (_jobCanonicalizationMethodRead == value) {
 					return;
@@ -186,7 +183,7 @@ namespace HashingTool.ViewModel.UserControl
 
 		public string JobDigestValueRead
 		{
-			get { return _jobDigestValueReadRead; }
+			get => _jobDigestValueReadRead;
 			internal set {
 				if (_jobDigestValueReadRead == value) {
 					return;
@@ -198,7 +195,7 @@ namespace HashingTool.ViewModel.UserControl
 
 		public string JobDigestValueComputed
 		{
-			get { return _jobDigestComputed; }
+			get => _jobDigestComputed;
 			protected set {
 				if (_jobDigestComputed == value) {
 					return;
@@ -210,7 +207,7 @@ namespace HashingTool.ViewModel.UserControl
 
 		public bool JobDigestMatchesReport
 		{
-			get { return _jobDigestMatchesReport; }
+			get => _jobDigestMatchesReport;
 			protected set {
 				if (_jobDigestMatchesReport == value) {
 					return;

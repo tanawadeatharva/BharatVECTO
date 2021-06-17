@@ -30,10 +30,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl {
 		public GearRatingCase RatingCase { get; }
 		public PerSecond MaxEngineSpeed { get;  }
 
-		public double NumericValue
-		{
-			get { return ((int)RatingCase - 1) * CaseSeparationInterval + Rating.LimitTo(0, CaseSeparationInterval-1); }
-		}
+		public double NumericValue => ((int)RatingCase - 1) * CaseSeparationInterval + Rating.LimitTo(0, CaseSeparationInterval-1);
 
 		public static bool operator <(GearRating first, GearRating second)
 		{

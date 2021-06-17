@@ -402,12 +402,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			#region Implementation of ISimpleBatteryInfo
 
-			public double SOC {
-				get { return busAuxAdapter.ElectricStorage.SOC; }
-			}
-			public WattSecond Capacity {
-				get { return busAuxAdapter.ElectricStorage.Capacity; }
-			}
+			public double SOC => busAuxAdapter.ElectricStorage.SOC;
+
+			public WattSecond Capacity => busAuxAdapter.ElectricStorage.Capacity;
 
 			#endregion
 		}
@@ -424,9 +421,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			#region Implementation of ISimpleBatteryInfo
 
-			public double SOC {
-				get { return ElectricStorage.SOC.IsEqual(1, 1e-2) ? 1 : 0.5; }
-			}
+			public double SOC => ElectricStorage.SOC.IsEqual(1, 1e-2) ? 1 : 0.5;
 			public WattSecond Capacity { get; }
 
 			#endregion

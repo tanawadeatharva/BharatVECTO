@@ -29,7 +29,7 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.Pneumati
 
 		public double PulleyGearRatio
 		{
-			get { return _pulleyGearRatio; }
+			get => _pulleyGearRatio;
 			set {
 				if (value < MinRatio || value > MaxRatio) {
 					throw new ArgumentOutOfRangeException(
@@ -43,7 +43,7 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.Pneumati
 
 		public double PulleyGearEfficiency
 		{
-			get { return _pulleyGearEfficiency; }
+			get => _pulleyGearEfficiency;
 			set {
 				if (value < MinEff || value > MaxEff) {
 					throw new ArgumentOutOfRangeException(

@@ -26,75 +26,39 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		#region Implementation of IGearboxInfo
 
-		public GearboxType GearboxType
-		{
-			get { return GearboxType.AMT; }
-		}
+		public GearboxType GearboxType => GearboxType.AMT;
 
-		public GearshiftPosition Gear
-		{
-			get { return new GearshiftPosition(1); }
-		}
+		public GearshiftPosition Gear => new GearshiftPosition(1);
 
-		public bool TCLocked
-		{
-			get { return true; }
-		}
+		public bool TCLocked => true;
 
-		public MeterPerSecond StartSpeed
-		{
-			get { return DeclarationData.GearboxTCU.StartSpeed; }
-		}
+		public MeterPerSecond StartSpeed => DeclarationData.GearboxTCU.StartSpeed;
 
-		public MeterPerSquareSecond StartAcceleration
-		{
-			get { return DeclarationData.GearboxTCU.StartAcceleration; }
-		}
+		public MeterPerSquareSecond StartAcceleration => DeclarationData.GearboxTCU.StartAcceleration;
 
 		public Watt GearboxLoss()
 		{
 			return 0.SI<Watt>();
 		}
 
-		public Second LastShift
-		{
-			get { return -double.MaxValue.SI<Second>(); }
-		}
+		public Second LastShift => -double.MaxValue.SI<Second>();
 
-		public Second LastUpshift
-		{
-			get { return -double.MaxValue.SI<Second>(); }
-		}
+		public Second LastUpshift => -double.MaxValue.SI<Second>();
 
-		public Second LastDownshift
-		{
-			get { return -double.MaxValue.SI<Second>(); }
-		}
+		public Second LastDownshift => -double.MaxValue.SI<Second>();
 
 		public GearData GetGearData(uint gear)
 		{
 			throw new NotImplementedException();
 		}
 
-		public GearshiftPosition NextGear
-		{
-			get { throw new NotImplementedException(); }
-		}
+		public GearshiftPosition NextGear => throw new NotImplementedException();
 
-		public Second TractionInterruption
-		{
-			get { return 0.SI<Second>(); }
-		}
+		public Second TractionInterruption => 0.SI<Second>();
 
-		public uint NumGears
-		{
-			get { return 1; }
-		}
+		public uint NumGears => 1;
 
-		public bool DisengageGearbox
-		{
-			get { return false; }
-		}
+		public bool DisengageGearbox => false;
 
 		public bool GearEngaged(Second absTime)
 		{

@@ -54,15 +54,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox
 			TorqueConverterRatio = double.NaN;
 		}
 
-		public bool HasTorqueConverter
-		{
-			get { return !double.IsNaN(TorqueConverterRatio) && TorqueConverterGearLossMap != null; }
-		}
+		public bool HasTorqueConverter => !double.IsNaN(TorqueConverterRatio) && TorqueConverterGearLossMap != null;
 
-		public bool HasLockedGear
-		{
-			get { return !double.IsNaN(Ratio) && LossMap != null; }
-		}
+		public bool HasLockedGear => !double.IsNaN(Ratio) && LossMap != null;
 
 		[ValidateObject]
 		public ShiftPolygon ShiftPolygon { get; internal set; }

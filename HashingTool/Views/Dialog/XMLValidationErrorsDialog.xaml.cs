@@ -55,8 +55,8 @@ namespace HashingTool.Views
 
 		public ICollection XMLErrors
 		{
-			get { return (ICollection)GetValue(XMLErrorsProperty); }
-			set { SetValue(XMLErrorsProperty, value); }
+			get => (ICollection)GetValue(XMLErrorsProperty);
+			set => SetValue(XMLErrorsProperty, value);
 		}
 
 		public int ErrorCount
@@ -68,7 +68,7 @@ namespace HashingTool.Views
 				}
 				return 0;
 			}
-			set { SetValue(ErrorCountProperty, value); }
+			set => SetValue(ErrorCountProperty, value);
 		}
 
 		private void btnCopy_Click(object sender, RoutedEventArgs e)

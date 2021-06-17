@@ -44,9 +44,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		public bool SkipGears { get; }
 
-		public static string Name {
-			get { return "AMT - EffShift (BEV)"; }
-		}
+		public static string Name => "AMT - EffShift (BEV)";
 
 
 		public PEVAMTShiftStrategy(IVehicleContainer dataBus)
@@ -641,7 +639,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		public void Disengage(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity) { }
 
 		public IGearbox Gearbox {
-			get { return _gearbox; }
+			get => _gearbox;
 			set {
 				var myGearbox = value as Gearbox;
 				if (myGearbox == null) {
@@ -651,9 +649,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			}
 		}
 
-		public GearshiftPosition NextGear {
-			get { return _nextGear; }
-		}
+		public GearshiftPosition NextGear => _nextGear;
 
 
 		public bool CheckGearshiftRequired { get; protected set; }

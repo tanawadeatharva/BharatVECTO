@@ -59,8 +59,9 @@ namespace TUGraz.VectoCore.Models.Declaration {
 		{
 			#region Overrides of LookupData
 
-			protected override string ResourceId { get { return DeclarationData.DeclarationDataResourcePrefix + ".VAUXBus.SP-Axles_Bus.csv"; } }
-			protected override string ErrorMessage { get { return "Auxiliary Lookup Error: No value found for Steering Pump. Mission: '{0}', HDVClass: '{1}'"; } }
+			protected override string ResourceId => DeclarationData.DeclarationDataResourcePrefix + ".VAUXBus.SP-Axles_Bus.csv";
+			protected override string ErrorMessage => "Auxiliary Lookup Error: No value found for Steering Pump. Mission: '{0}', HDVClass: '{1}'";
+
 			protected override void ParseData(DataTable table)
 			{
 				foreach (DataRow row in table.Rows) {
@@ -83,8 +84,9 @@ namespace TUGraz.VectoCore.Models.Declaration {
 		{
 			#region Overrides of LookupData
 
-			protected override string ResourceId { get { return DeclarationData.DeclarationDataResourcePrefix + ".VAUXBus.SP-Factors_Bus.csv"; } }
-			protected override string ErrorMessage { get { return "Auxiliary Lookup Error: No value found for Steering Pump. Mission: '{0}', HDVClass: '{1}'"; } }
+			protected override string ResourceId => DeclarationData.DeclarationDataResourcePrefix + ".VAUXBus.SP-Factors_Bus.csv";
+			protected override string ErrorMessage => "Auxiliary Lookup Error: No value found for Steering Pump. Mission: '{0}', HDVClass: '{1}'";
+
 			protected override void ParseData(DataTable table)
 			{
 				var missionTypes = Enum.GetValues(typeof(MissionType)).Cast<MissionType>().Where(

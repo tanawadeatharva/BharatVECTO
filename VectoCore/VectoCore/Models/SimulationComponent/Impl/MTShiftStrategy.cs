@@ -43,6 +43,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			SkipGears = true;
 		}
 
-		public new static string Name { get { return "MT Shift Strategy"; } }
+		public new static string Name => "MT Shift Strategy";
 	}
 }

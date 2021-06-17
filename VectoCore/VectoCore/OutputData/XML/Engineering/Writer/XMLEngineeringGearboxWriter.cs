@@ -83,10 +83,7 @@ namespace TUGraz.VectoCore.OutputData.XML.Engineering.Writer
 
 		#region Overrides of AbstractXMLWriter
 
-		public override XNamespace ComponentDataNamespace
-		{
-			get { return _componentNamespace ?? (_componentNamespace = Writer.RegisterNamespace(NAMESPACE_URI)); }
-		}
+		public override XNamespace ComponentDataNamespace => _componentNamespace ?? (_componentNamespace = Writer.RegisterNamespace(NAMESPACE_URI));
 
 		#endregion
 

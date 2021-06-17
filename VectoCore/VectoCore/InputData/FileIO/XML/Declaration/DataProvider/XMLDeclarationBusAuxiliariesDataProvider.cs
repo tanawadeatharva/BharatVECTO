@@ -31,10 +31,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 		#region Implementation of IBusAuxiliariesDeclarationData
 
-		public virtual XmlNode XMLSource
-		{
-			get { return BaseNode; }
-		}
+		public virtual XmlNode XMLSource => BaseNode;
 
 		public virtual string FanTechnology
 		{
@@ -50,30 +47,15 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 			}
 		}
 
-		public virtual IElectricSupplyDeclarationData ElectricSupply
-		{
-			get { return this; }
-		}
+		public virtual IElectricSupplyDeclarationData ElectricSupply => this;
 
-		public virtual IElectricConsumersDeclarationData ElectricConsumers
-		{
-			get { return null; }
-		}
+		public virtual IElectricConsumersDeclarationData ElectricConsumers => null;
 
-		public virtual IPneumaticSupplyDeclarationData PneumaticSupply
-		{
-			get { return this; }
-		}
+		public virtual IPneumaticSupplyDeclarationData PneumaticSupply => this;
 
-		public virtual IPneumaticConsumersDeclarationData PneumaticConsumers
-		{
-			get { return this; }
-		}
+		public virtual IPneumaticConsumersDeclarationData PneumaticConsumers => this;
 
-		public virtual IHVACBusAuxiliariesDeclarationData HVACAux
-		{
-			get { return this; }
-		}
+		public virtual IHVACBusAuxiliariesDeclarationData HVACAux => this;
 
 		#endregion
 
@@ -130,20 +112,12 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 			get { return GetBool(new[] { XMLNames.BusAux_ElectricSystem, XMLNames.BusAux_ElectricSystem_SmartElectrics }); }
 		}
 
-		public virtual Watt MaxAlternatorPower
-		{
-			get { return ElementExists("MaxAlternatorPower") ? GetDouble("MaxAlternatorPower").SI<Watt>() : null; }
-		}
+		public virtual Watt MaxAlternatorPower => ElementExists("MaxAlternatorPower") ? GetDouble("MaxAlternatorPower").SI<Watt>() : null;
 
-		public virtual WattSecond ElectricStorageCapacity
-		{
-			get
-			{
-				return ElementExists("ElectricStorageCapacity")
-					? GetDouble("ElectricStorageCapacity").SI(Unit.SI.Watt.Hour).Cast<WattSecond>()
-					: null;
-			}
-		}
+		public virtual WattSecond ElectricStorageCapacity =>
+			ElementExists("ElectricStorageCapacity")
+				? GetDouble("ElectricStorageCapacity").SI(Unit.SI.Watt.Hour).Cast<WattSecond>()
+				: null;
 
 		#endregion
 
@@ -174,10 +148,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 		#region Implementation of IPneumaticSupplyDeclarationData
 
-		public CompressorDrive CompressorDrive
-		{
-			get { return CompressorDriveHelper.Parse(GetString(XMLNames.CompressorDrive)); }
-		}
+		public CompressorDrive CompressorDrive => CompressorDriveHelper.Parse(GetString(XMLNames.CompressorDrive));
 
 		public virtual string Clutch { get { return GetString(new[] { XMLNames.BusAux_PneumaticSystem, "Clutch" }); } }
 
@@ -211,66 +182,38 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 		#region Implementation of IHVACBusAuxiliariesDeclarationData
 
-		public virtual BusHVACSystemConfiguration? SystemConfiguration
-		{
-			get { return BusHVACSystemConfiguration.Unknown; }
-		}
+		public virtual BusHVACSystemConfiguration? SystemConfiguration => BusHVACSystemConfiguration.Unknown;
 
-		public virtual HeatPumpType? HeatPumpTypeDriverCompartment { get { return null; } }
-		public virtual HeatPumpMode? HeatPumpModeDriverCompartment { get { return null; } }
-		public virtual IList<Tuple<HeatPumpType, HeatPumpMode>> HeatPumpPassengerCompartments
-		{
-			get { return null; }
-		}
+		public virtual HeatPumpType? HeatPumpTypeDriverCompartment => null;
+		public virtual HeatPumpMode? HeatPumpModeDriverCompartment => null;
 
-		public virtual Watt AuxHeaterPower
-		{
-			get { return 0.SI<Watt>(); }
-		}
+		public virtual IList<Tuple<HeatPumpType, HeatPumpMode>> HeatPumpPassengerCompartments => null;
 
-		public virtual bool? DoubleGlazing
-		{
-			get { return false; }
-		}
+		public virtual Watt AuxHeaterPower => 0.SI<Watt>();
 
-		public virtual bool HeatPump
-		{
-			get { return false; }
-		}
+		public virtual bool? DoubleGlazing => false;
 
-		public virtual bool? OtherHeatingTechnology
-		{
-			get { return false; }
-		}
+		public virtual bool HeatPump => false;
+
+		public virtual bool? OtherHeatingTechnology => false;
 
 		public virtual bool? AdjustableCoolantThermostat
 		{
 			get { return GetBool(new[] { "HVAC", "AdjustableCoolantThermostat" }); }
 		}
 
-		public virtual bool? AdjustableAuxiliaryHeater
-		{
-			get { return false; }
-		}
+		public virtual bool? AdjustableAuxiliaryHeater => false;
 
 		public virtual bool EngineWasteGasHeatExchanger
 		{
 			get { return GetBool(new[] { "HVAC", "EngineWasteGasHeatExchanger" }); }
 		}
 
-		public virtual bool? SeparateAirDistributionDucts
-		{
-			get { return false; }
-		}
+		public virtual bool? SeparateAirDistributionDucts => false;
 
-		public virtual bool? WaterElectricHeater
-		{
-			get { return false; }
-		}
-		public virtual bool? AirElectricHeater
-		{
-			get { return false; }
-		}
+		public virtual bool? WaterElectricHeater => false;
+
+		public virtual bool? AirElectricHeater => false;
 
 		#endregion
 	}
@@ -287,10 +230,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 			: base(vehicle, componentNode, sourceFile) { }
 
 
-		public override XmlNode XMLSource
-		{
-			get { return BaseNode; }
-		}
+		public override XmlNode XMLSource => BaseNode;
 	}
 
 	public class XMLDeclarationCompleteBusAuxiliariesDataProviderV26 : XMLDeclarationPrimaryBusAuxiliariesDataProviderV26, IElectricConsumersDeclarationData
@@ -308,60 +248,33 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 
 
-		public override IList<string> SteeringPumpTechnology { get { return null; } }
+		public override IList<string> SteeringPumpTechnology => null;
 
 
-		public override IElectricConsumersDeclarationData ElectricConsumers
-		{
-			get
-			{
-				return this;
-			}
-		}
+		public override IElectricConsumersDeclarationData ElectricConsumers => this;
 
-		public override IPneumaticSupplyDeclarationData PneumaticSupply { get { return null; } }
+		public override IPneumaticSupplyDeclarationData PneumaticSupply => null;
 
 		//public override IPneumaticConsumersDeclarationData PneumaticConsumers { get { return null; } }
 
-		public override BusHVACSystemConfiguration? SystemConfiguration
-		{
-			get { return BusHVACSystemConfigurationHelper.Parse(GetString(XMLNames.Bus_SystemConfiguration)); }
-		}
+		public override BusHVACSystemConfiguration? SystemConfiguration => BusHVACSystemConfigurationHelper.Parse(GetString(XMLNames.Bus_SystemConfiguration));
 
-		public override Watt AuxHeaterPower
-		{
-			get { return GetDouble(XMLNames.Bus_AuxiliaryHeaterPower).SI<Watt>(); }
-		}
+		public override Watt AuxHeaterPower => GetDouble(XMLNames.Bus_AuxiliaryHeaterPower).SI<Watt>();
 
-		public override bool? DoubleGlazing
-		{
-			get { return GetBool(XMLNames.Bus_DoubleGlazing); }
-		}
+		public override bool? DoubleGlazing => GetBool(XMLNames.Bus_DoubleGlazing);
 
-		public override bool HeatPump
-		{
-			get { return GetBool(XMLNames.Bus_HeatPump); }
-		}
+		public override bool HeatPump => GetBool(XMLNames.Bus_HeatPump);
 
 		public override bool? AdjustableCoolantThermostat
 		{
 			get { return GetBool(new[] { "HVAC", XMLNames.Bus_AdjustableCoolantThermostat }); }
 		}
 
-		public override bool? AdjustableAuxiliaryHeater
-		{
-			get { return GetBool(XMLNames.Bus_AdjustableAuxiliaryHeater); }
-		}
+		public override bool? AdjustableAuxiliaryHeater => GetBool(XMLNames.Bus_AdjustableAuxiliaryHeater);
 
-		public override bool EngineWasteGasHeatExchanger
-		{
-			get { return false; }
-		}
+		public override bool EngineWasteGasHeatExchanger => false;
 
-		public override bool? SeparateAirDistributionDucts
-		{
-			get { return GetBool(XMLNames.Bus_SeparateAirDistributionDucts); }
-		}
+		public override bool? SeparateAirDistributionDucts => GetBool(XMLNames.Bus_SeparateAirDistributionDucts);
 
 		#endregion
 
@@ -400,31 +313,18 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 					AirElectricHeater == null && OtherHeatingTechnology == null ;
 		}
 
-		public override XmlNode XMLSource
-		{
-			get { return BaseNode; }
-		}
+		public override XmlNode XMLSource => BaseNode;
 
-		public override IHVACBusAuxiliariesDeclarationData HVACAux
-		{
-			get { return IsBusHVACTagEmpty() ? null : this; }
-		}
+		public override IHVACBusAuxiliariesDeclarationData HVACAux => IsBusHVACTagEmpty() ? null : this;
 
 
-		public override BusHVACSystemConfiguration? SystemConfiguration
-		{
-			get { return ElementExists(XMLNames.Bus_SystemConfiguration) 
-				? BusHVACSystemConfigurationHelper.Parse(GetString(XMLNames.Bus_SystemConfiguration)) : null; }
-		}
+		public override BusHVACSystemConfiguration? SystemConfiguration =>
+			ElementExists(XMLNames.Bus_SystemConfiguration) 
+				? BusHVACSystemConfigurationHelper.Parse(GetString(XMLNames.Bus_SystemConfiguration)) : null;
 
-		public override HeatPumpType? HeatPumpTypeDriverCompartment
-		{
-			get
-			{
-				return ElementExists(XMLNames.Bus_HeatPumpTypeDriver)
-					? HeatPumpTypeHelper.Parse(GetString(XMLNames.Bus_HeatPumpTypeDriver)) : (HeatPumpType?)null;
-			}
-		}
+		public override HeatPumpType? HeatPumpTypeDriverCompartment =>
+			ElementExists(XMLNames.Bus_HeatPumpTypeDriver)
+				? HeatPumpTypeHelper.Parse(GetString(XMLNames.Bus_HeatPumpTypeDriver)) : (HeatPumpType?)null;
 
 		public override HeatPumpMode? HeatPumpModeDriverCompartment
 		{
@@ -440,15 +340,10 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 
 
-		public override IList<Tuple<HeatPumpType, HeatPumpMode>> HeatPumpPassengerCompartments
-		{
-			get
-			{
-				return ElementExists(XMLNames.Bus_HeatPumpTypePassenger) 
-						&& ElementExists(XMLNames.Bus_HeatPumpModePassenger) 
-							? GetHeatPumpPassengerCompartments() : null;
-			}
-		}
+		public override IList<Tuple<HeatPumpType, HeatPumpMode>> HeatPumpPassengerCompartments =>
+			ElementExists(XMLNames.Bus_HeatPumpTypePassenger) 
+			&& ElementExists(XMLNames.Bus_HeatPumpModePassenger) 
+				? GetHeatPumpPassengerCompartments() : null;
 
 		private IList<Tuple<HeatPumpType, HeatPumpMode>> GetHeatPumpPassengerCompartments()
 		{
@@ -471,69 +366,34 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 			return heatPumps.Any() != true ? null : heatPumps;
 		}
 
-		public override Watt AuxHeaterPower
-		{
-			get
-			{
-				return ElementExists(XMLNames.Bus_AuxiliaryHeaterPower)
-					? GetDouble(XMLNames.Bus_AuxiliaryHeaterPower).SI<Watt>() : null;
-			}
-		}
+		public override Watt AuxHeaterPower =>
+			ElementExists(XMLNames.Bus_AuxiliaryHeaterPower)
+				? GetDouble(XMLNames.Bus_AuxiliaryHeaterPower).SI<Watt>() : null;
 
-		public override bool? DoubleGlazing
-		{
-			get
-			{
-				return ElementExists(XMLNames.Bus_DoubleGlazing)
-					? GetBool(XMLNames.Bus_DoubleGlazing) : (bool?)null;
-			}
-		}
+		public override bool? DoubleGlazing =>
+			ElementExists(XMLNames.Bus_DoubleGlazing)
+				? GetBool(XMLNames.Bus_DoubleGlazing) : (bool?)null;
 
-		public override bool? AdjustableAuxiliaryHeater
-		{
-			get
-			{
-				return ElementExists(XMLNames.Bus_AdjustableAuxiliaryHeater)
-					? GetBool(XMLNames.Bus_AdjustableAuxiliaryHeater) : (bool?)null;
-			}
-		}
+		public override bool? AdjustableAuxiliaryHeater =>
+			ElementExists(XMLNames.Bus_AdjustableAuxiliaryHeater)
+				? GetBool(XMLNames.Bus_AdjustableAuxiliaryHeater) : (bool?)null;
 
-		public override bool? SeparateAirDistributionDucts
-		{
-			get
-			{
-				return ElementExists(XMLNames.Bus_SeparateAirDistributionDucts)
-					? GetBool(XMLNames.Bus_SeparateAirDistributionDucts) : (bool?)null;
-			}
-		}
+		public override bool? SeparateAirDistributionDucts =>
+			ElementExists(XMLNames.Bus_SeparateAirDistributionDucts)
+				? GetBool(XMLNames.Bus_SeparateAirDistributionDucts) : (bool?)null;
 
 
-		public override bool? WaterElectricHeater
-		{
-			get
-			{
-				return ElementExists(XMLNames.Bus_WaterElectricHeater)
-					? GetBool(XMLNames.Bus_WaterElectricHeater) : (bool?)null;
-			}
-		}
+		public override bool? WaterElectricHeater =>
+			ElementExists(XMLNames.Bus_WaterElectricHeater)
+				? GetBool(XMLNames.Bus_WaterElectricHeater) : (bool?)null;
 
-		public override bool? AirElectricHeater
-		{
-			get
-			{
-				return ElementExists(XMLNames.Bus_AirElectricHeater)
-					? GetBool(XMLNames.Bus_AirElectricHeater) : (bool?)null;
-			}
-		}
+		public override bool? AirElectricHeater =>
+			ElementExists(XMLNames.Bus_AirElectricHeater)
+				? GetBool(XMLNames.Bus_AirElectricHeater) : (bool?)null;
 
-		public override bool? OtherHeatingTechnology
-		{
-			get
-			{
-				return ElementExists(XMLNames.Bus_OtherHeatingTechnology)
-				  ? GetBool(XMLNames.Bus_OtherHeatingTechnology) : (bool?)null;
-			}
-		}
+		public override bool? OtherHeatingTechnology =>
+			ElementExists(XMLNames.Bus_OtherHeatingTechnology)
+				? GetBool(XMLNames.Bus_OtherHeatingTechnology) : (bool?)null;
 
 		private bool IsElectricConsumersTagEmpty()
 		{
@@ -542,10 +402,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		}
 
 
-		public override IElectricConsumersDeclarationData ElectricConsumers
-		{
-			get { return IsElectricConsumersTagEmpty() ? null : this; }
-		}
+		public override IElectricConsumersDeclarationData ElectricConsumers => IsElectricConsumersTagEmpty() ? null : this;
 
 		public override bool? InteriorLightsLED
 		{
@@ -598,29 +455,14 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		}
 
 
-		public override IPneumaticSupplyDeclarationData PneumaticSupply
-		{
-			get { return null; }
-		}
+		public override IPneumaticSupplyDeclarationData PneumaticSupply => null;
 
-		public override IElectricSupplyDeclarationData ElectricSupply
-		{
-			get { return null; }
-		}
+		public override IElectricSupplyDeclarationData ElectricSupply => null;
 
-		public override IPneumaticConsumersDeclarationData PneumaticConsumers
-		{
-			get { return null; }
-		}
+		public override IPneumaticConsumersDeclarationData PneumaticConsumers => null;
 
-		public override string FanTechnology
-		{
-			get { return null; }
-		}
+		public override string FanTechnology => null;
 
-		public override IList<string> SteeringPumpTechnology
-		{
-			get { return null; }
-		}
+		public override IList<string> SteeringPumpTechnology => null;
 	}
 }

@@ -27,14 +27,9 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.HVAC
 
 		#region Implementation of ISSMPowerDemand
 
-		public Watt ElectricalWAdjusted
-		{
-			get { return _ssmInput.ElectricPower; }
-		}
-		public Watt MechanicalWBaseAdjusted
-		{
-			get { return _ssmInput.MechanicalPower; }
-		}
+		public Watt ElectricalWAdjusted => _ssmInput.ElectricPower;
+
+		public Watt MechanicalWBaseAdjusted => _ssmInput.MechanicalPower;
 
 		public Watt AverageAuxHeaterPower(Watt averageUseableEngineWasteHeat)
 		{
@@ -75,19 +70,9 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.HVAC
 		private bool CompressorCapacityInsufficientWarned;
 
 		// Base Values
-		public Watt ElectricalWBase
-		{
-			get {
-				return Calculate.ElectricalWBase; // .SI(Of Watt)()
-			}
-		}
+		public Watt ElectricalWBase => Calculate.ElectricalWBase; // .SI(Of Watt)()
 
-		public Watt MechanicalWBase
-		{
-			get {
-				return Calculate.MechanicalWBase; // .SI(Of Watt)()
-			}
-		}
+		public Watt MechanicalWBase => Calculate.MechanicalWBase; // .SI(Of Watt)()
 
 		//public KilogramPerSecond FuelPerHBase
 		//{
@@ -97,12 +82,7 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.HVAC
 		//}
 
 		// Adjusted Values
-		public Watt ElectricalWAdjusted
-		{
-			get {
-				return Calculate.ElectricalWAdjusted; // .SI(Of Watt)()
-			}
-		}
+		public Watt ElectricalWAdjusted => Calculate.ElectricalWAdjusted; // .SI(Of Watt)()
 
 		public Watt MechanicalWBaseAdjusted
 		{

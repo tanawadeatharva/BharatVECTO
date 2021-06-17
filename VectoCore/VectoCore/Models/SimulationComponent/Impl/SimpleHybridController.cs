@@ -62,15 +62,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl {
 
 		#region Implementation of IHybridController
 
-		public IShiftStrategy ShiftStrategy
-		{
-			get { return null; }
-		}
+		public IShiftStrategy ShiftStrategy => null;
 
-		public SimpleComponentState PreviousState
-		{
-			get { throw new System.NotImplementedException(); }
-		}
+		public SimpleComponentState PreviousState => throw new System.NotImplementedException();
 
 		public IElectricMotorControl ElectricMotorControl(PowertrainPosition pos)
 		{

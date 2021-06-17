@@ -110,15 +110,9 @@ namespace TUGraz.VectoCore.Tests.Utils
 			AngularVelocity = null;
 		}
 
-		public PerSecond EngineSpeed
-		{
-			get { return AngularVelocity; }
-		}
+		public PerSecond EngineSpeed => AngularVelocity;
 
-		public NewtonMeter EngineTorque
-		{
-			get { return Torque; }
-		}
+		public NewtonMeter EngineTorque => Torque;
 
 		public Watt EngineStationaryFullPower(PerSecond angularSpeed)
 		{
@@ -140,24 +134,16 @@ namespace TUGraz.VectoCore.Tests.Utils
 			throw new NotImplementedException();
 		}
 
-		public PerSecond EngineIdleSpeed
-		{
-			get { return 560.RPMtoRad(); }
-		}
+		public PerSecond EngineIdleSpeed => 560.RPMtoRad();
 
-		public PerSecond EngineRatedSpeed
-		{
+		public PerSecond EngineRatedSpeed =>
 			// just a test value. not real.
-			get { return 1600.SI<PerSecond>(); }
-		}
+			1600.SI<PerSecond>();
 
 		public PerSecond EngineN95hSpeed { get; set; }
 		public PerSecond EngineN80hSpeed { get; set; }
 
-		public bool EngineOn
-		{
-			get { throw new NotImplementedException(); }
-		}
+		public bool EngineOn => throw new NotImplementedException();
 	}
 
 	public class MockDrivingCycleOutPort : LoggingObject, IDrivingCycleOutPort

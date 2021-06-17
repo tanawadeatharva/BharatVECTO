@@ -69,18 +69,15 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		#region IGearboxCockpit
 
-		public GearboxType GearboxType
-		{
-			get { return ModelData.Type; }
-		}
+		public GearboxType GearboxType => ModelData.Type;
 
 		/// <summary>
 		/// The current gear.
 		/// </summary>
 		public virtual GearshiftPosition Gear
 		{
-			get { return _gear; }
-			protected internal set { _gear = value; }
+			get => _gear;
+			protected internal set => _gear = value;
 		}
 
 		public abstract bool TCLocked { get; }
@@ -120,15 +117,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		public abstract GearshiftPosition NextGear { get; }
 
-		public virtual Second TractionInterruption
-		{
-			get { return ModelData.TractionInterruption; }
-		}
+		public virtual Second TractionInterruption => ModelData.TractionInterruption;
 
-		public uint NumGears
-		{
-			get { return (uint)ModelData.Gears.Count; }
-		}
+		public uint NumGears => (uint)ModelData.Gears.Count;
 
 		#endregion
 

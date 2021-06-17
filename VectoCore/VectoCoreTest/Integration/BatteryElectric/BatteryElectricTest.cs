@@ -939,10 +939,8 @@ namespace TUGraz.VectoCore.Tests.Integration.BatteryElectric
 			get;
 			set;
 		}
-		public NewtonMeter EngineTorque
-		{
-			get { return null; }
-		}
+		public NewtonMeter EngineTorque => null;
+
 		public Watt EngineStationaryFullPower(PerSecond angularSpeed)
 		{
 			throw new NotImplementedException();
@@ -967,10 +965,7 @@ namespace TUGraz.VectoCore.Tests.Integration.BatteryElectric
 		public PerSecond EngineRatedSpeed { get; }
 		public PerSecond EngineN95hSpeed { get; }
 		public PerSecond EngineN80hSpeed { get; }
-		public bool EngineOn
-		{
-			get { return true; }
-		}
+		public bool EngineOn => true;
 	}
 
 	

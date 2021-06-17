@@ -52,20 +52,11 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.Electric
 			}
 		}
 
-		public Ampere AverageCurrentDemand
-		{
-			get { return AverageCurrentDemandInclBaseLoad(false, false); }
-		}
+		public Ampere AverageCurrentDemand => AverageCurrentDemandInclBaseLoad(false, false);
 
-		public Ampere AverageCurrentDemandEngineOffStandstill
-		{
-			get { return AverageCurrentDemandInclBaseLoad(true, true); }
-		}
+		public Ampere AverageCurrentDemandEngineOffStandstill => AverageCurrentDemandInclBaseLoad(true, true);
 
-		public Ampere AverageCurrentDemandEngineOffDriving
-		{
-			get { return AverageCurrentDemandInclBaseLoad(true, false); }
-		}
+		public Ampere AverageCurrentDemandEngineOffDriving => AverageCurrentDemandInclBaseLoad(true, false);
 
 		public Ampere AverageCurrentDemandWithoutBaseLoad(bool engineOff, bool vehicleStopped)
 		{

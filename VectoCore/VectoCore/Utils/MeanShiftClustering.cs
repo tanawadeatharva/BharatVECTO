@@ -116,7 +116,7 @@ namespace TUGraz.VectoCore.Utils
 				_count++;
 			}
 
-			public double? Mean { get { return _count > 0 ? _sum / _count : (double?)null; } }
+			public double? Mean => _count > 0 ? _sum / _count : (double?)null;
 
 			public override string ToString()
 			{

@@ -244,6 +244,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl {
 			IVehicleContainer container, CombustionEngineData modelData, bool pt1Disabled = false) : base(
 			container, modelData, pt1Disabled) { }
 
-		public EngineState EnginePreviousState { get { return PreviousState; } }
+		public EngineState EnginePreviousState => PreviousState;
 	}
 }

@@ -244,40 +244,19 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			return AirdragData.CrossWindCorrectionCurve.AverageAirDragPowerLoss(v1, v2, ModelData.AirDensity);
 		}
 
-		public Meter Distance
-		{
-			get { return PreviousState.Distance; }
-		}
+		public Meter Distance => PreviousState.Distance;
 
-		public MeterPerSecond VehicleSpeed
-		{
-			get { return PreviousState.Velocity; }
-		}
+		public MeterPerSecond VehicleSpeed => PreviousState.Velocity;
 
-		public bool VehicleStopped
-		{
-			get { return PreviousState.Velocity.IsEqual(0.SI<MeterPerSecond>(), 0.01.SI<MeterPerSecond>()); }
-		}
+		public bool VehicleStopped => PreviousState.Velocity.IsEqual(0.SI<MeterPerSecond>(), 0.01.SI<MeterPerSecond>());
 
-		public Kilogram VehicleMass
-		{
-			get { return ModelData.TotalCurbMass; }
-		}
+		public Kilogram VehicleMass => ModelData.TotalCurbMass;
 
-		public Kilogram VehicleLoading
-		{
-			get { return ModelData.Loading; }
-		}
+		public Kilogram VehicleLoading => ModelData.Loading;
 
-		public Kilogram TotalMass
-		{
-			get { return ModelData.TotalVehicleMass; }
-		}
+		public Kilogram TotalMass => ModelData.TotalVehicleMass;
 
-		public CubicMeter CargoVolume
-		{
-			get { return ModelData.CargoVolume; }
-		}
+		public CubicMeter CargoVolume => ModelData.CargoVolume;
 
 		public class VehicleState
 		{

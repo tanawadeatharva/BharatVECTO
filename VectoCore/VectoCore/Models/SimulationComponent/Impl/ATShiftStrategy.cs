@@ -56,7 +56,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		public override IGearbox Gearbox
 		{
-			get { return _gearbox; }
+			get => _gearbox;
 			set {
 				_gearbox = value as ATGearbox;
 				if (_gearbox == null) {
@@ -65,10 +65,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			}
 		}
 
-		public override GearshiftPosition NextGear
-		{
-			get { return _nextGear.Gear; }
-		}
+		public override GearshiftPosition NextGear => _nextGear.Gear;
 
 		public override ShiftPolygon ComputeDeclarationShiftPolygon(
 			GearboxType gearboxType, int i, EngineFullLoadCurve engineDataFullLoadCurve,
@@ -79,10 +76,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				engineDataFullLoadCurve, i == 0, i >= gearboxGears.Count - 1);
 		}
 
-		public static string Name
-		{
-			get { return "AT - Classic"; }
-		}
+		public static string Name => "AT - Classic";
 
 		public ATShiftStrategy(IVehicleContainer dataBus) : base(dataBus)
 		{

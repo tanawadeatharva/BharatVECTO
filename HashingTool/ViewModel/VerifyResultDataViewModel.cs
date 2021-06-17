@@ -87,31 +87,16 @@ namespace HashingTool.ViewModel
 		}
 
 
-		public string Name
-		{
-			get { return "Verify Result Data"; }
-		}
+		public string Name => "Verify Result Data";
 
-		public ICommand ShowHomeViewCommand
-		{
-			get { return ApplicationViewModel.HomeView; }
-		}
+		public ICommand ShowHomeViewCommand => ApplicationViewModel.HomeView;
 
-		public VectoJobFile JobFile
-		{
-			get { return _jobFile; }
-		}
+		public VectoJobFile JobFile => _jobFile;
 
 
-		public CustomerReportXMLFile CustomerReport
-		{
-			get { return _customerReport; }
-		}
+		public CustomerReportXMLFile CustomerReport => _customerReport;
 
-		public ManufacturerReportXMLFile ManufacturerReport
-		{
-			get { return _manufacturerReport; }
-		}
+		public ManufacturerReportXMLFile ManufacturerReport => _manufacturerReport;
 
 		public ObservableCollection<VectoXMLFile> Files { get; private set; }
 

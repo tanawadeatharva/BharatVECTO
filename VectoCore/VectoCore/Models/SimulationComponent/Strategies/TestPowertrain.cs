@@ -114,45 +114,24 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies {
 
 		#region Implementation of IDrivingCycleInfo
 
-		public CycleData CycleData
-		{
-			get { return realContainer.DrivingCycleInfo.CycleData; }
-		}
+		public CycleData CycleData => realContainer.DrivingCycleInfo.CycleData;
 
-		public bool PTOActive
-		{
-			get { return realContainer.DrivingCycleInfo.PTOActive; }
-		}
+		public bool PTOActive => realContainer.DrivingCycleInfo.PTOActive;
 
 		public DrivingCycleData.DrivingCycleEntry CycleLookAhead(Meter distance)
 		{
 			return realContainer.DrivingCycleInfo.CycleLookAhead(distance);
 		}
 
-		public Meter Altitude
-		{
-			get { return realContainer.DrivingCycleInfo.Altitude; }
-		}
+		public Meter Altitude => realContainer.DrivingCycleInfo.Altitude;
 
-		public Radian RoadGradient
-		{
-			get { return realContainer.DrivingCycleInfo.RoadGradient; }
-		}
+		public Radian RoadGradient => realContainer.DrivingCycleInfo.RoadGradient;
 
-		public MeterPerSecond TargetSpeed
-		{
-			get { return realContainer.DrivingCycleInfo.TargetSpeed; }
-		}
+		public MeterPerSecond TargetSpeed => realContainer.DrivingCycleInfo.TargetSpeed;
 
-		public Second StopTime
-		{
-			get { return realContainer.DrivingCycleInfo.StopTime; }
-		}
+		public Second StopTime => realContainer.DrivingCycleInfo.StopTime;
 
-		public Meter CycleStartDistance
-		{
-			get { return realContainer?.DrivingCycleInfo?.CycleStartDistance ?? 0.SI<Meter>(); }
-		}
+		public Meter CycleStartDistance => realContainer?.DrivingCycleInfo?.CycleStartDistance ?? 0.SI<Meter>();
 
 		public IReadOnlyList<DrivingCycleData.DrivingCycleEntry> LookAhead(Meter lookaheadDistance)
 		{
@@ -164,10 +143,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies {
 			return realContainer.DrivingCycleInfo.LookAhead(time);
 		}
 
-		public SpeedChangeEntry LastTargetspeedChange
-		{
-			get { return realContainer.DrivingCycleInfo.LastTargetspeedChange; }
-		}
+		public SpeedChangeEntry LastTargetspeedChange => realContainer.DrivingCycleInfo.LastTargetspeedChange;
 
 		public void FinishSimulation()
 		{
@@ -201,20 +177,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies {
 
 		#region Implementation of IDriverInfo
 
-		public DrivingBehavior DriverBehavior
-		{
-			get { return realContainer?.DriverInfo?.DriverBehavior ?? DrivingBehavior.Accelerating; }
-		}
+		public DrivingBehavior DriverBehavior => realContainer?.DriverInfo?.DriverBehavior ?? DrivingBehavior.Accelerating;
 
-		public DrivingAction DrivingAction
-		{
-			get { return realContainer?.DriverInfo?.DrivingAction ?? DrivingAction.Accelerate; }
-		}
+		public DrivingAction DrivingAction => realContainer?.DriverInfo?.DrivingAction ?? DrivingAction.Accelerate;
 
-		public MeterPerSquareSecond DriverAcceleration
-		{
-			get { return realContainer?.DriverInfo.DriverAcceleration; }
-		}
+		public MeterPerSquareSecond DriverAcceleration => realContainer?.DriverInfo.DriverAcceleration;
 
 		#endregion
 

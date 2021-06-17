@@ -170,10 +170,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 			/// <summary>
 			/// [%] Optional.
 			/// </summary>
-			public Scalar RoadGradientPercent
-			{
-				get { return (Math.Tan(RoadGradient.Value()) * 100).SI<Scalar>(); }
-			}
+			public Scalar RoadGradientPercent => (Math.Tan(RoadGradient.Value()) * 100).SI<Scalar>();
 
 			public Dictionary<FuelType, KilogramPerSecond> VTPFuelconsumption;
 

@@ -45,46 +45,22 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering.DataProvider
 		public AbstractCommonComponentType(XmlNode node, string source) : base(node, source) { }
 
 		
-		public bool SavedInDeclarationMode
-		{
-			get { return false; }
-		}
+		public bool SavedInDeclarationMode => false;
 
-		public string Manufacturer
-		{
-			get { return GetString(XMLNames.Component_Manufacturer); }
-		}
+		public string Manufacturer => GetString(XMLNames.Component_Manufacturer);
 
-		public string Model
-		{
-			get { return GetString(XMLNames.Component_Model); }
-		}
+		public string Model => GetString(XMLNames.Component_Model);
 
-		public DateTime Date
-		{
-			get { return XmlConvert.ToDateTime(GetString(XMLNames.Component_Date), XmlDateTimeSerializationMode.Utc); }
-		}
+		public DateTime Date => XmlConvert.ToDateTime(GetString(XMLNames.Component_Date), XmlDateTimeSerializationMode.Utc);
 
-		public virtual string AppVersion
-		{
-			get { return GetString(XMLNames.Component_AppVersion); }
-		}
+		public virtual string AppVersion => GetString(XMLNames.Component_AppVersion);
 
-		public virtual CertificationMethod CertificationMethod
-		{
-			get { return CertificationMethod.NotCertified; }
-		}
+		public virtual CertificationMethod CertificationMethod => CertificationMethod.NotCertified;
 
-		public virtual string CertificationNumber
-		{
-			get { return Constants.NOT_AVailABLE; }
-		}
+		public virtual string CertificationNumber => Constants.NOT_AVailABLE;
 
-		public virtual DigestData DigestValue
-		{
-			get { return null; }
-		}
+		public virtual DigestData DigestValue => null;
 
-		public virtual XmlNode XMLSource { get { return BaseNode; } }
+		public virtual XmlNode XMLSource => BaseNode;
 	}
 }

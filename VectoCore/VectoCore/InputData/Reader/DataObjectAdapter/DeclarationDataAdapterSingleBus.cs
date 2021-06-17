@@ -88,10 +88,6 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 
 		public ISingleBusInputDataProvider SingleBusInputData { get; set; }
 
-		protected IVehicleDeclarationInputData CompletedVehicle
-		{
-			get { return SingleBusInputData?.CompletedVehicle; }
-		}
-
+		protected IVehicleDeclarationInputData CompletedVehicle => SingleBusInputData?.CompletedVehicle;
 	}
 }

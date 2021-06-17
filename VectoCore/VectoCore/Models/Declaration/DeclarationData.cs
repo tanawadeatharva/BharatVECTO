@@ -203,43 +203,24 @@ namespace TUGraz.VectoCore.Models.Declaration
 			public static BusAlternatorTechnologies AlternatorTechnologies = new BusAlternatorTechnologies();
 			private static HVACCoolingPower hvacMaxCoolingPower;
 
-			public static List<SSMTechnology> SSMTechnologyList
-			{
-				get {
-					return ssmTechnologies ?? (ssmTechnologies = SSMTechnologiesReader.ReadFromStream(
-								RessourceHelper.ReadStream(DeclarationDataResourcePrefix + ".Buses.SSMTechList.csv")));
-				}
-			}
+			public static List<SSMTechnology> SSMTechnologyList =>
+				ssmTechnologies ?? (ssmTechnologies = SSMTechnologiesReader.ReadFromStream(
+					RessourceHelper.ReadStream(DeclarationDataResourcePrefix + ".Buses.SSMTechList.csv")));
 
-			public static IEnvironmentalConditionsMap DefaultEnvironmentalConditions
-			{
-				get {
-					return envMap ?? (envMap = EnvironmentalContidionsMapReader.ReadStream(
-								RessourceHelper.ReadStream(DeclarationDataResourcePrefix + ".Buses.DefaultClimatic.aenv")));
-				}
-			}
+			public static IEnvironmentalConditionsMap DefaultEnvironmentalConditions =>
+				envMap ?? (envMap = EnvironmentalContidionsMapReader.ReadStream(
+					RessourceHelper.ReadStream(DeclarationDataResourcePrefix + ".Buses.DefaultClimatic.aenv")));
 
-			public static ElectricalConsumerList DefaultElectricConsumerList
-			{
-				get {
-					return elUserConfig ?? (elUserConfig = ElectricConsumerReader.ReadStream(
-								RessourceHelper.ReadStream(DeclarationDataResourcePrefix + ".Buses.ElectricConsumers.csv")));
-				}
-			}
+			public static ElectricalConsumerList DefaultElectricConsumerList =>
+				elUserConfig ?? (elUserConfig = ElectricConsumerReader.ReadStream(
+					RessourceHelper.ReadStream(DeclarationDataResourcePrefix + ".Buses.ElectricConsumers.csv")));
 
 
-			public static IActuationsMap ActuationsMap
-			{
-				get {
-					return actuationsMap ?? (actuationsMap = ActuationsMapReader.ReadStream(
-									RessourceHelper.ReadStream(DeclarationDataResourcePrefix + ".Buses.DefaultActuationsMap.apac")));
-				}
-			}
+			public static IActuationsMap ActuationsMap =>
+				actuationsMap ?? (actuationsMap = ActuationsMapReader.ReadStream(
+					RessourceHelper.ReadStream(DeclarationDataResourcePrefix + ".Buses.DefaultActuationsMap.apac")));
 
-			public static HVACCoolingPower HVACMaxCoolingPower
-			{
-				get { return hvacMaxCoolingPower ?? (hvacMaxCoolingPower = new HVACCoolingPower()); }
-			}
+			public static HVACCoolingPower HVACMaxCoolingPower => hvacMaxCoolingPower ?? (hvacMaxCoolingPower = new HVACCoolingPower());
 
 			public static PerSecond VentilationRate(BusHVACSystemConfiguration? hvacSystemConfig, bool heating)
 			{

@@ -61,24 +61,11 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 		#region Implementation of IAxleDeclarationInputData
 
-		public virtual bool TwinTyres
-		{
-			get {
-				return _twinTyre ?? (_twinTyre = XmlConvert.ToBoolean(GetString(XMLNames.AxleWheels_Axles_Axle_TwinTyres))).Value;
-			}
-		}
+		public virtual bool TwinTyres => _twinTyre ?? (_twinTyre = XmlConvert.ToBoolean(GetString(XMLNames.AxleWheels_Axles_Axle_TwinTyres))).Value;
 
-		public virtual AxleType AxleType
-		{
-			get {
-				return _axleType ?? (_axleType = GetString(XMLNames.AxleWheels_Axles_Axle_AxleType).ParseEnum<AxleType>()).Value;
-			}
-		}
+		public virtual AxleType AxleType => _axleType ?? (_axleType = GetString(XMLNames.AxleWheels_Axles_Axle_AxleType).ParseEnum<AxleType>()).Value;
 
-		public virtual ITyreDeclarationInputData Tyre
-		{
-			get { return _tyre ?? (_tyre = Reader.Tyre); }
-		}
+		public virtual ITyreDeclarationInputData Tyre => _tyre ?? (_tyre = Reader.Tyre);
 
 		#endregion
 
@@ -91,10 +78,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 		#region Overrides of AbstractXMLResource
 
-		protected override XNamespace SchemaNamespace
-		{
-			get { return NAMESPACE_URI; }
-		}
+		protected override XNamespace SchemaNamespace => NAMESPACE_URI;
 
 		protected override DataSourceType SourceType { get; }
 
@@ -119,10 +103,6 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		public XMLDeclarationAxleDataProviderV20(IXMLDeclarationVehicleData vehicle, XmlNode componentNode, string sourceFile)
 			: base(vehicle, componentNode, sourceFile) { }
 
-		protected override XNamespace SchemaNamespace
-		{
-			get { return NAMESPACE_URI; }
-		}
-
+		protected override XNamespace SchemaNamespace => NAMESPACE_URI;
 	}
 }

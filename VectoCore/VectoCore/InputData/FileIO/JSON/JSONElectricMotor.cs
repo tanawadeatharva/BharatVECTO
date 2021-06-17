@@ -11,105 +11,50 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON {
 	{
 		public JSONElectricMotorV2(JObject data, string filename, bool tolerateMissing = false) : base(data, filename, tolerateMissing) { }
 
-		public override NewtonMeter ContinuousTorque {
-			get { return Body.GetEx<double>("ContinuousTorque").SI<NewtonMeter>(); }
-		}
+		public override NewtonMeter ContinuousTorque => Body.GetEx<double>("ContinuousTorque").SI<NewtonMeter>();
 
-		public override PerSecond ContinuousTorqueSpeed {
-			get { return Body.GetEx<double>("ContinuousTorqueSpeed").RPMtoRad(); }
-		}
+		public override PerSecond ContinuousTorqueSpeed => Body.GetEx<double>("ContinuousTorqueSpeed").RPMtoRad();
 
-		public override NewtonMeter OverloadTorque {
-			get { return Body.GetEx<double>("OverloadTorque").SI<NewtonMeter>(); }
-		}
+		public override NewtonMeter OverloadTorque => Body.GetEx<double>("OverloadTorque").SI<NewtonMeter>();
 
-		public override PerSecond OverloadTestSpeed {
-			get { return Body.GetEx<double>("OverloadTorqueSpeed").RPMtoRad(); }
-		}
+		public override PerSecond OverloadTestSpeed => Body.GetEx<double>("OverloadTorqueSpeed").RPMtoRad();
 	}
 
 
 	public class JSONElectricMotorV1 : JSONFile, IElectricMotorEngineeringInputData
 	{
 		public JSONElectricMotorV1(JObject data, string filename, bool tolerateMissing = false) : base(data, filename, tolerateMissing) { }
-		public virtual string Manufacturer
-		{
-			get { return Constants.NOT_AVailABLE; }
-		}
-		public virtual string Model
-		{
-			get { return Body.GetEx<string>("Model"); }
-		}
-		public virtual DateTime Date { get { return DateTime.MinValue; } }
-		public virtual CertificationMethod CertificationMethod
-		{
-			get { return CertificationMethod.NotCertified; }
-		}
-		public string CertificationNumber
-		{
-			get { return Constants.NOT_AVailABLE; }
-		}
-		public DigestData DigestValue
-		{
-			get { return null; }
-		}
+		public virtual string Manufacturer => Constants.NOT_AVailABLE;
 
-		public virtual TableData FullLoadCurve
-		{
-			get { return ReadTableData(Body.GetEx<string>("FullLoadCurve"), "ElectricMotor FullLoadCurve"); }
-		}
+		public virtual string Model => Body.GetEx<string>("Model");
+		public virtual DateTime Date => DateTime.MinValue;
 
-		public virtual TableData DragCurve
-		{
-			get { return ReadTableData(Body.GetEx<string>("DragCurve"), "ElectricMotor DragCurve"); }
-		}
+		public virtual CertificationMethod CertificationMethod => CertificationMethod.NotCertified;
 
-		public virtual TableData EfficiencyMap
-		{
-			get { return ReadTableData(Body.GetEx<string>("EfficiencyMap"), "ElectricMotor Map"); }
-		}
+		public string CertificationNumber => Constants.NOT_AVailABLE;
 
-		public virtual KilogramSquareMeter Inertia
-		{
-			get { return Body.GetEx<double>("Inertia").SI<KilogramSquareMeter>(); }
-		}
+		public DigestData DigestValue => null;
 
-		public virtual Joule OverloadBuffer
-		{
-			get { return Body.GetValueOrDefault<double>("ThermalOverloadBuffer")?.SI(Unit.SI.Mega.Joule).Cast<Joule>() ?? 1e18.SI<Joule>(); }
-		}
+		public virtual TableData FullLoadCurve => ReadTableData(Body.GetEx<string>("FullLoadCurve"), "ElectricMotor FullLoadCurve");
 
-		public virtual double OverloadRecoveryFactor
-		{
-			get
-			{
-				return Body.GetValueOrDefault<double>("ThermalOverloadRecoveryFactor") ?? 0.9;
-			}
-		}
+		public virtual TableData DragCurve => ReadTableData(Body.GetEx<string>("DragCurve"), "ElectricMotor DragCurve");
 
-		public virtual NewtonMeter ContinuousTorque
-		{
-			get { return (Body.GetValueOrDefault<double>("ContinuousPower")?.SI<Watt>() ?? 1e12.SI<Watt>()) / (Body.GetValueOrDefault<double>("ContinuousPowerSpeed")?.RPMtoRad() ?? 1.SI<PerSecond>()) ; }
-		}
+		public virtual TableData EfficiencyMap => ReadTableData(Body.GetEx<string>("EfficiencyMap"), "ElectricMotor Map");
 
-		public virtual PerSecond ContinuousTorqueSpeed
-		{
-			get { return Body.GetValueOrDefault<double>("ContinuousPowerSpeed")?.RPMtoRad() ?? 0.RPMtoRad(); }
-		}
+		public virtual KilogramSquareMeter Inertia => Body.GetEx<double>("Inertia").SI<KilogramSquareMeter>();
 
-		public virtual NewtonMeter OverloadTorque {
-			get { return null; }
-		}
+		public virtual Joule OverloadBuffer => Body.GetValueOrDefault<double>("ThermalOverloadBuffer")?.SI(Unit.SI.Mega.Joule).Cast<Joule>() ?? 1e18.SI<Joule>();
 
-		public virtual PerSecond OverloadTestSpeed
-		{
-			get { return null; }
-		}
+		public virtual double OverloadRecoveryFactor => Body.GetValueOrDefault<double>("ThermalOverloadRecoveryFactor") ?? 0.9;
 
-		public virtual Second OverloadTime
-		{
-			get { return Body.GetValueOrDefault<double>("OverloadTime")?.SI<Second>() ?? 0.SI<Second>(); }
-		}
+		public virtual NewtonMeter ContinuousTorque => (Body.GetValueOrDefault<double>("ContinuousPower")?.SI<Watt>() ?? 1e12.SI<Watt>()) / (Body.GetValueOrDefault<double>("ContinuousPowerSpeed")?.RPMtoRad() ?? 1.SI<PerSecond>());
 
+		public virtual PerSecond ContinuousTorqueSpeed => Body.GetValueOrDefault<double>("ContinuousPowerSpeed")?.RPMtoRad() ?? 0.RPMtoRad();
+
+		public virtual NewtonMeter OverloadTorque => null;
+
+		public virtual PerSecond OverloadTestSpeed => null;
+
+		public virtual Second OverloadTime => Body.GetValueOrDefault<double>("OverloadTime")?.SI<Second>() ?? 0.SI<Second>();
 	}
 }

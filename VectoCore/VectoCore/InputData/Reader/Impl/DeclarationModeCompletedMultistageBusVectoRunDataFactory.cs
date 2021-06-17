@@ -50,17 +50,9 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 
 
 
-		protected IVehicleDeclarationInputData PrimaryVehicle
-		{
-			get { return InputDataProvider.JobInputData.PrimaryVehicle.Vehicle; }
-		}
+		protected IVehicleDeclarationInputData PrimaryVehicle => InputDataProvider.JobInputData.PrimaryVehicle.Vehicle;
 
-		protected IVehicleDeclarationInputData CompletedVehicle
-		{
-			get { return InputDataProvider.JobInputData.ConsolidateManufacturingStage.Vehicle; }
-		}
-
-
+		protected IVehicleDeclarationInputData CompletedVehicle => InputDataProvider.JobInputData.ConsolidateManufacturingStage.Vehicle;
 
 
 		public IEnumerable<VectoRunData> NextRun()

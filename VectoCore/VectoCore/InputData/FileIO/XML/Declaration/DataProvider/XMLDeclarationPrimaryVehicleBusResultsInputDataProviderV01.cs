@@ -28,15 +28,9 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		{
 			_resultsNode = resultsNode;
 		}
-		public string Status
-		{
-			get { return GetString(XMLNames.Bus_Status); }
-		}
+		public string Status => GetString(XMLNames.Bus_Status);
 
-		public IList<IResult> Results
-		{
-			get { return _results ?? (_results = ReadResults()); }
-		}
+		public IList<IResult> Results => _results ?? (_results = ReadResults());
 
 
 		private IList<IResult> ReadResults()

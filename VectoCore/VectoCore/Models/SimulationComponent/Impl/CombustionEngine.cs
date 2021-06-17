@@ -86,20 +86,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		#region IEngineCockpit
 
-		public virtual bool EngineOn
-		{
-			get { return PreviousState.EngineOn; }
-		}
+		public virtual bool EngineOn => PreviousState.EngineOn;
 
-		public PerSecond EngineSpeed
-		{
-			get { return PreviousState.EngineSpeed; }
-		}
+		public PerSecond EngineSpeed => PreviousState.EngineSpeed;
 
-		public NewtonMeter EngineTorque
-		{
-			get { return PreviousState.EngineTorque; }
-		}
+		public NewtonMeter EngineTorque => PreviousState.EngineTorque;
 
 		public Watt EngineStationaryFullPower(PerSecond angularSpeed)
 		{
@@ -125,31 +116,15 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					0.SI<Second>(), dt, 0.SI<NewtonMeter>(), avgEngineSpeed, true) * avgEngineSpeed;
 		}
 
-		public PerSecond EngineIdleSpeed
-		{
-			get { return ModelData.IdleSpeed; }
-		}
+		public PerSecond EngineIdleSpeed => ModelData.IdleSpeed;
 
-		public PerSecond EngineRatedSpeed
-		{
-			get { return ModelData.FullLoadCurves[0].RatedSpeed; }
-		}
+		public PerSecond EngineRatedSpeed => ModelData.FullLoadCurves[0].RatedSpeed;
 
-		public PerSecond EngineN95hSpeed
-		{
-			get { return ModelData.FullLoadCurves[0].N95hSpeed; }
-		}
+		public PerSecond EngineN95hSpeed => ModelData.FullLoadCurves[0].N95hSpeed;
 
-		public PerSecond EngineN80hSpeed
+		public PerSecond EngineN80hSpeed => ModelData.FullLoadCurves[0].N80hSpeed;
 
-		{
-			get { return ModelData.FullLoadCurves[0].N80hSpeed; }
-		}
-
-		public IIdleController IdleController
-		{
-			get { return EngineIdleController ?? (EngineIdleController = new CombustionEngineIdleController(this, DataBus)); }
-		}
+		public IIdleController IdleController => EngineIdleController ?? (EngineIdleController = new CombustionEngineIdleController(this, DataBus));
 
 		protected CombustionEngineIdleController EngineIdleController { get; set; }
 
@@ -840,7 +815,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		public virtual bool CombustionEngineOn
 		{
-			get { return true; }
+			get => true;
 			set {  }
 		}
 

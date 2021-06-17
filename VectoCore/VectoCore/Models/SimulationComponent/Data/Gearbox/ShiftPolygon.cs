@@ -54,16 +54,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox
 		}
 
 		[JsonIgnore]
-		public ReadOnlyCollection<ShiftPolygonEntry> Upshift
-		{
-			get { return _upShiftPolygon.AsReadOnly(); }
-		}
+		public ReadOnlyCollection<ShiftPolygonEntry> Upshift => _upShiftPolygon.AsReadOnly();
 
 		[JsonIgnore]
-		public ReadOnlyCollection<ShiftPolygonEntry> Downshift
-		{
-			get { return _downShiftPolygon.AsReadOnly(); }
-		}
+		public ReadOnlyCollection<ShiftPolygonEntry> Downshift => _downShiftPolygon.AsReadOnly();
 
 		public string[] DownshiftSerialized
 		{

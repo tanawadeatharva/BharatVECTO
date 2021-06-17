@@ -78,29 +78,15 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 		protected internal bool TolerateMissing { get; set; }
 
-		public DataSource DataSource
-		{
-			get {
-				return new DataSource { SourceType = DataSourceType.JSONFile, SourceFile = _sourceFile, SourceVersion = Version };
-			}
-		}
+		public DataSource DataSource => new DataSource { SourceType = DataSourceType.JSONFile, SourceFile = _sourceFile, SourceVersion = Version };
 
-		public string Source
-		{
-			get { return _sourceFile; }
-		}
+		public string Source => _sourceFile;
 
-		public virtual bool SavedInDeclarationMode
-		{
-			get { return Body.GetEx(JsonKeys.SavedInDeclMode).Value<bool>(); }
-		}
+		public virtual bool SavedInDeclarationMode => Body.GetEx(JsonKeys.SavedInDeclMode).Value<bool>();
 
-		public virtual string AppVersion { get { return "VECTO-JSON"; } }
+		public virtual string AppVersion => "VECTO-JSON";
 
-		internal string BasePath
-		{
-			get { return Path.GetDirectoryName(_sourceFile); }
-		}
+		internal string BasePath => Path.GetDirectoryName(_sourceFile);
 
 		protected internal TableData ReadTableData(string filename, string tableType, bool required = true)
 		{
@@ -156,20 +142,11 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 		public virtual IGearshiftEngineeringInputData GearshiftInputData { get; internal set; }
 
-		public virtual IEngineStopStartEngineeringInputData EngineStopStartData
-		{
-			get { return null; }
-		}
+		public virtual IEngineStopStartEngineeringInputData EngineStopStartData => null;
 
-		public virtual IEcoRollEngineeringInputData EcoRollData
-		{
-			get { return null; }
-		}
+		public virtual IEcoRollEngineeringInputData EcoRollData => null;
 
-		public virtual IPCCEngineeringInputData PCCData
-		{
-			get { return null; }
-		}
+		public virtual IPCCEngineeringInputData PCCData => null;
 
 
 		public IAxleGearInputData AxleGear { get; internal set; }
@@ -183,15 +160,9 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 		private IBusAuxiliariesEngineeringData _busAux;
 
 
-		public IAuxiliariesEngineeringInputData EngineeringAuxiliaries
-		{
-			get { return this; }
-		}
+		public IAuxiliariesEngineeringInputData EngineeringAuxiliaries => this;
 
-		public IAuxiliariesDeclarationInputData DeclarationAuxiliaries
-		{
-			get { return this; }
-		}
+		public IAuxiliariesDeclarationInputData DeclarationAuxiliaries => this;
 
 		protected IVehicleEngineeringInputData ReadVehicle()
 		{
@@ -258,34 +229,17 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 		#region IInputDataProvider
 
-		IVehicleDeclarationInputData IDeclarationJobInputData.Vehicle
-		{
-			get { return VehicleInputData; }
-		}
+		IVehicleDeclarationInputData IDeclarationJobInputData.Vehicle => VehicleInputData;
 
-		public virtual IHybridStrategyParameters HybridStrategyParameters
-		{
-			get { return null; }
-		}
+		public virtual IHybridStrategyParameters HybridStrategyParameters => null;
 
-		public virtual IEngineeringJobInputData JobInputData
-		{
-			get { return this; }
-		}
+		public virtual IEngineeringJobInputData JobInputData => this;
 
-		public virtual IPrimaryVehicleInformationInputDataProvider PrimaryVehicleData {
-			get { return null; }
-		}
+		public virtual IPrimaryVehicleInformationInputDataProvider PrimaryVehicleData => null;
 
-		public XElement XMLHash
-		{
-			get { return new XElement(XMLNames.DI_Signature); }
-		}
+		public XElement XMLHash => new XElement(XMLNames.DI_Signature);
 
-		IDeclarationJobInputData IDeclarationInputDataProvider.JobInputData
-		{
-			get { return this; }
-		}
+		IDeclarationJobInputData IDeclarationInputDataProvider.JobInputData => this;
 
 		public virtual IVehicleEngineeringInputData VehicleInputData
 		{
@@ -315,25 +269,15 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			}
 		}
 
-		public virtual TableData PTOCycleWhileDrive
-		{
-			get { return null; }
-		}
+		public virtual TableData PTOCycleWhileDrive => null;
 
-		IDriverEngineeringInputData IEngineeringInputDataProvider.DriverInputData
-		{
-			get { return this; }
-		}
+		IDriverEngineeringInputData IEngineeringInputDataProvider.DriverInputData => this;
 
-		
 		#endregion
 
 		#region IJobInputData
 
-		public virtual IVehicleEngineeringInputData Vehicle
-		{
-			get { return VehicleData; }
-		}
+		public virtual IVehicleEngineeringInputData Vehicle => VehicleData;
 
 		public virtual IList<ICycleData> Cycles
 		{
@@ -380,15 +324,9 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			}
 		}
 
-		public virtual VectoSimulationJobType JobType
-		{
-			get { return Body.GetEx(JsonKeys.Job_EngineOnlyMode).Value<bool>() ? VectoSimulationJobType.EngineOnlySimulation : VectoSimulationJobType.ConventionalVehicle; }
-		}
+		public virtual VectoSimulationJobType JobType => Body.GetEx(JsonKeys.Job_EngineOnlyMode).Value<bool>() ? VectoSimulationJobType.EngineOnlySimulation : VectoSimulationJobType.ConventionalVehicle;
 
-		public virtual string JobName
-		{
-			get { return _jobname; }
-		}
+		public virtual string JobName => _jobname;
 
 		public string ShiftStrategy
 		{
@@ -547,15 +485,13 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 		#region IAuxiliariesEngineeringInputData
 
-		IAuxiliaryEngineeringInputData IAuxiliariesEngineeringInputData.Auxiliaries
-		{
-			get { return new EngineeringAuxiliaryDataInputData() {
+		IAuxiliaryEngineeringInputData IAuxiliariesEngineeringInputData.Auxiliaries =>
+			new EngineeringAuxiliaryDataInputData() {
 				ElectricPowerDemand = Body["Padd_electric"] != null ? Body.GetEx<double>("Padd_electric").SI<Watt>() : 0.SI<Watt>(),
 				ConstantPowerDemand = Body["Padd"] != null ? Body.GetEx<double>("Padd").SI<Watt>() : 0.SI<Watt>(),
 				PowerDemandICEOffDriving = Body["Paux_ICEOff_Driving"] != null ? Body.GetEx<double>("Paux_ICEOff_Driving").SI<Watt>() : 0.SI<Watt>(),
 				PowerDemandICEOffStandstill = Body["Paux_ICEOff_Standstill"] != null ? Body.GetEx<double>("Paux_ICEOff_Standstill").SI<Watt>() : 0.SI<Watt>()
-			}; }
-		}
+			};
 
 		public IBusAuxiliariesEngineeringData BusAuxiliariesData
 		{
@@ -569,10 +505,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			}
 		}
 
-		IList<IAuxiliaryDeclarationInputData> IAuxiliariesDeclarationInputData.Auxiliaries
-		{
-			get { return AuxData().Cast<IAuxiliaryDeclarationInputData>().ToList(); }
-		}
+		IList<IAuxiliaryDeclarationInputData> IAuxiliariesDeclarationInputData.Auxiliaries => AuxData().Cast<IAuxiliaryDeclarationInputData>().ToList();
 
 		protected virtual IList<IAuxiliaryDeclarationInputData> AuxData()
 		{
@@ -696,15 +629,12 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 		public JSONInputDataV4(JObject data, string filename, bool tolerateMissing = false)
 			: base(data, filename, tolerateMissing) { }
 
-		public override TableData PTOCycleWhileDrive
-		{
-			get { return Body["PTOCycleDuringDrive"] != null ? VectoCSVFile.Read(Path.Combine(BasePath, Body.GetEx<string>("PTOCycleDuringDrive"))) : null; }
-		}
-		public override IGearshiftEngineeringInputData GearshiftInputData { get {
-			return Body["TCU"] == null
+		public override TableData PTOCycleWhileDrive => Body["PTOCycleDuringDrive"] != null ? VectoCSVFile.Read(Path.Combine(BasePath, Body.GetEx<string>("PTOCycleDuringDrive"))) : null;
+
+		public override IGearshiftEngineeringInputData GearshiftInputData =>
+			Body["TCU"] == null
 				? null
 				: JSONInputDataFactory.ReadShiftParameters(Path.Combine(BasePath, Body.GetEx<string>("TCU")), false);
-		} }
 	}
 
 	public class JSONVTPInputDataV4 : JSONFile, IVTPEngineeringInputDataProvider, IVTPEngineeringJobInputData,
@@ -732,37 +662,21 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			_inputReader = kernel.Get<IXMLInputDataReader>();
 		}
 
-		public IVTPEngineeringJobInputData JobInputData
-		{
-			get { return this; }
-		}
+		public IVTPEngineeringJobInputData JobInputData => this;
 
-		public IManufacturerReport ManufacturerReportInputData
-		{
-			get { return this; }
-		}
+		public IManufacturerReport ManufacturerReportInputData => this;
 
-		public IVehicleDeclarationInputData Vehicle
-		{
-			get {
-				return _inputReader.CreateDeclaration(
-					Path.Combine(Path.GetFullPath(BasePath), Body["DeclarationVehicle"].Value<string>())).JobInputData.Vehicle;
-			}
-		}
+		public IVehicleDeclarationInputData Vehicle =>
+			_inputReader.CreateDeclaration(
+				Path.Combine(Path.GetFullPath(BasePath), Body["DeclarationVehicle"].Value<string>())).JobInputData.Vehicle;
 
 		public IVectoHash VectoJobHash { get; }
 
 		public IVectoHash VectoManufacturerReportHash { get; }
 
-		public Meter Mileage
-		{
-			get { return Body.GetEx<double>("Mileage").SI(Unit.SI.Kilo.Meter).Cast<Meter>(); }
-		}
+		public Meter Mileage => Body.GetEx<double>("Mileage").SI(Unit.SI.Kilo.Meter).Cast<Meter>();
 
-		string IManufacturerReport.Source
-		{
-			get { return Body["ManufacturerRecord"].Value<string>(); }
-		}
+		string IManufacturerReport.Source => Body["ManufacturerRecord"].Value<string>();
 
 		public IResultsInputData Results
 		{
@@ -803,17 +717,11 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			get { return Body.GetEx("FanPowerCoefficients").Select(entry => entry.ToString().ToDouble()).ToList(); }
 		}
 
-		public Meter FanDiameter
-		{
-			get { return Body.GetEx<double>("FanDiameter").SI<Meter>(); }
-		}
+		public Meter FanDiameter => Body.GetEx<double>("FanDiameter").SI<Meter>();
 
 		#region Implementation of IVTPDeclarationInputDataProvider
 
-		IVTPDeclarationJobInputData IVTPDeclarationInputDataProvider.JobInputData
-		{
-			get { return JobInputData; }
-		}
+		IVTPDeclarationJobInputData IVTPDeclarationInputDataProvider.JobInputData => JobInputData;
 
 		#endregion
 
@@ -970,58 +878,48 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 		#region Overrides of JSONInputDataV2
 
-		public override IEngineStopStartEngineeringInputData EngineStopStartData
-		{
-			get {
-				return engineStopStartData ?? (engineStopStartData = new EngineStopStartInputData {
-					MaxEngineOffTimespan = Body["EngineStopStartMaxOffTimespan"] == null
-						? null
-						: Body.GetEx<double>("EngineStopStartMaxOffTimespan").SI<Second>(),
-					UtilityFactorStandstill = Body["EngineStopStartUtilityFactor"] == null
+		public override IEngineStopStartEngineeringInputData EngineStopStartData =>
+			engineStopStartData ?? (engineStopStartData = new EngineStopStartInputData {
+				MaxEngineOffTimespan = Body["EngineStopStartMaxOffTimespan"] == null
+					? null
+					: Body.GetEx<double>("EngineStopStartMaxOffTimespan").SI<Second>(),
+				UtilityFactorStandstill = Body["EngineStopStartUtilityFactor"] == null
+					? DeclarationData.Driver.EngineStopStart.UtilityFactor
+					: Body.GetEx<double>("EngineStopStartUtilityFactor"),
+				UtilityFactorDriving = Body["EngineStopStartUtilityFactorDriving"] == null
+					? (Body["EngineStopStartUtilityFactor"] == null
 						? DeclarationData.Driver.EngineStopStart.UtilityFactor
-						: Body.GetEx<double>("EngineStopStartUtilityFactor"),
-					UtilityFactorDriving = Body["EngineStopStartUtilityFactorDriving"] == null
-						? (Body["EngineStopStartUtilityFactor"] == null
-							? DeclarationData.Driver.EngineStopStart.UtilityFactor
-							: Body.GetEx<double>("EngineStopStartUtilityFactor"))
-						: Body.GetEx<double>("EngineStopStartUtilityFactorDriving"),
-					ActivationDelay = Body["EngineStopStartAtVehicleStopThreshold"] == null
-						? null
-						: Body.GetEx<double>("EngineStopStartAtVehicleStopThreshold").SI<Second>()
-				});
-			}
-		}
+						: Body.GetEx<double>("EngineStopStartUtilityFactor"))
+					: Body.GetEx<double>("EngineStopStartUtilityFactorDriving"),
+				ActivationDelay = Body["EngineStopStartAtVehicleStopThreshold"] == null
+					? null
+					: Body.GetEx<double>("EngineStopStartAtVehicleStopThreshold").SI<Second>()
+			});
 
 
-		public override IEcoRollEngineeringInputData EcoRollData
-		{
-			get {
-				return ecoRollData ?? (ecoRollData = new EcoRollInputData {
-					UnderspeedThreshold = Body["EcoRollUnderspeedThreshold"] == null
-						? null
-						: Body.GetEx<double>("EcoRollUnderspeedThreshold").KMPHtoMeterPerSecond(),
-					MinSpeed = Body["EcoRollMinSpeed"] == null
-						? null
-						: Body.GetEx<double>("EcoRollMinSpeed").KMPHtoMeterPerSecond(),
-					ActivationDelay = Body["EcoRollActivationDelay"] == null
-						? null
-						: Body.GetEx<double>("EcoRollActivationDelay").SI<Second>(),
-					AccelerationUpperLimit = Body["EcoRollMaxAcceleration"] == null? null : Body.GetEx<double>("EcoRollMaxAcceleration").SI<MeterPerSquareSecond>()
-				});
-			}
-		}
+		public override IEcoRollEngineeringInputData EcoRollData =>
+			ecoRollData ?? (ecoRollData = new EcoRollInputData {
+				UnderspeedThreshold = Body["EcoRollUnderspeedThreshold"] == null
+					? null
+					: Body.GetEx<double>("EcoRollUnderspeedThreshold").KMPHtoMeterPerSecond(),
+				MinSpeed = Body["EcoRollMinSpeed"] == null
+					? null
+					: Body.GetEx<double>("EcoRollMinSpeed").KMPHtoMeterPerSecond(),
+				ActivationDelay = Body["EcoRollActivationDelay"] == null
+					? null
+					: Body.GetEx<double>("EcoRollActivationDelay").SI<Second>(),
+				AccelerationUpperLimit = Body["EcoRollMaxAcceleration"] == null? null : Body.GetEx<double>("EcoRollMaxAcceleration").SI<MeterPerSquareSecond>()
+			});
 
-		public override IPCCEngineeringInputData PCCData
-		{
-			get { return pccData ?? (pccData = new PCCInputData() {
+		public override IPCCEngineeringInputData PCCData =>
+			pccData ?? (pccData = new PCCInputData() {
 				PCCEnabledSpeed = Body["PCCEnableSpeed"] == null ? null : Body.GetEx<double>("PCCEnableSpeed").KMPHtoMeterPerSecond(),
 				MinSpeed = Body["PCCMinSpeed"] == null ? null : Body.GetEx<double>("PCCMinSpeed").KMPHtoMeterPerSecond(),
 				Underspeed = Body["PCCUnderspeed"] == null ? null : Body.GetEx<double>("PCCUnderspeed").KMPHtoMeterPerSecond(),
 				OverspeedUseCase3 = Body["PCCOverspeed"] == null ? null : Body.GetEx<double>("PCCOverspeed").KMPHtoMeterPerSecond(),
 				PreviewDistanceUseCase1 = Body["PCCPreviewDistanceUC1"] == null ? null : Body.GetEx<double>("PCCPreviewDistanceUC1").SI<Meter>(),
 				PreviewDistanceUseCase2 = Body["PCCPreviewDistanceUC2"] == null ? null : Body.GetEx<double>("PCCPreviewDistanceUC2").SI<Meter>()
-			}); }
-		}
+			});
 
 		#endregion
 	}
@@ -1101,7 +999,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 		#region Overrides of JSONFile
 
-		public override bool SavedInDeclarationMode { get { return true; } }
+		public override bool SavedInDeclarationMode => true;
 
 		#endregion
 
@@ -1114,21 +1012,19 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 		#region Implementation of IDeclarationInputDataProvider
 
-		public IDeclarationJobInputData JobInputData { get { return this; } }
-		public virtual IPrimaryVehicleInformationInputDataProvider PrimaryVehicleData { get { return null; } }
-		public XElement XMLHash { get { return new XElement(XMLNames.DI_Signature); } }
+		public IDeclarationJobInputData JobInputData => this;
+		public virtual IPrimaryVehicleInformationInputDataProvider PrimaryVehicleData => null;
+		public XElement XMLHash => new XElement(XMLNames.DI_Signature);
 
 		#endregion
 
 		#region Implementation of IDeclarationJobInputData
 
-		public IVehicleDeclarationInputData Vehicle { get { return PrimaryVehicle; } }
+		public IVehicleDeclarationInputData Vehicle => PrimaryVehicle;
 		public string JobName { get; }
-		public string ShiftStrategy { get { return ""; } }
-		public VectoSimulationJobType JobType
-		{
-			get { return VectoSimulationJobType.ConventionalVehicle; }
-		}
+		public string ShiftStrategy => "";
+
+		public VectoSimulationJobType JobType => VectoSimulationJobType.ConventionalVehicle;
 
 		#endregion
 	}
@@ -1168,13 +1064,13 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 		#region Overrides of JSONFile
 
-		public override bool SavedInDeclarationMode { get { return true; } }
+		public override bool SavedInDeclarationMode => true;
 
 		#endregion
 
 		#region Implementation of IDeclarationInputDataProvider
 
-		public IDeclarationJobInputData JobInputData { get { return this; } }
+		public IDeclarationJobInputData JobInputData => this;
 		public IPrimaryVehicleInformationInputDataProvider PrimaryVehicleData { get; }
 		public XElement XMLHash { get; }
 
@@ -1184,11 +1080,9 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 		public IVehicleDeclarationInputData Vehicle { get; }
 		public string JobName { get; }
-		public string ShiftStrategy { get { return ""; } }
-		public VectoSimulationJobType JobType
-		{
-			get { return VectoSimulationJobType.ConventionalVehicle; }
-		}
+		public string ShiftStrategy => "";
+
+		public VectoSimulationJobType JobType => VectoSimulationJobType.ConventionalVehicle;
 
 		#endregion
 	}
@@ -1197,24 +1091,12 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 	{
 		public JSONInputDataV8_Hybrid(JObject data, string filename, bool tolerateMissing = false) : base(data, filename, tolerateMissing) { }
 
-		public override VectoSimulationJobType JobType
-		{
-			get
-			{
-				return VectoSimulationJobType.ParallelHybridVehicle;
-			}
-		}
+		public override VectoSimulationJobType JobType => VectoSimulationJobType.ParallelHybridVehicle;
 
-		public override IHybridStrategyParameters HybridStrategyParameters
-		{
-			get
-			{
-				return Body["HybridStrategyParams"] == null
-					? null : JSONInputDataFactory.ReadHybridStrategyParameters(
-						Path.Combine(BasePath, Body.GetEx<string>("HybridStrategyParams")), false);
-			}
-		}
-
+		public override IHybridStrategyParameters HybridStrategyParameters =>
+			Body["HybridStrategyParams"] == null
+				? null : JSONInputDataFactory.ReadHybridStrategyParameters(
+					Path.Combine(BasePath, Body.GetEx<string>("HybridStrategyParams")), false);
 	}
 
 	public class JSONInputDataV9_BEV : AbstractJSONInputData
@@ -1233,17 +1115,11 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			}
 		}
 
-		public override VectoSimulationJobType JobType
-		{
-			get { return VectoSimulationJobType.BatteryElectricVehicle; }
-		}
+		public override VectoSimulationJobType JobType => VectoSimulationJobType.BatteryElectricVehicle;
 
-		public override IGearshiftEngineeringInputData GearshiftInputData {
-			get {
-				return Body["TCU"] == null
-					? null
-					: JSONInputDataFactory.ReadShiftParameters(Path.Combine(BasePath, Body.GetEx<string>("TCU")), false);
-			}
-		}
+		public override IGearshiftEngineeringInputData GearshiftInputData =>
+			Body["TCU"] == null
+				? null
+				: JSONInputDataFactory.ReadShiftParameters(Path.Combine(BasePath, Body.GetEx<string>("TCU")), false);
 	}
 }

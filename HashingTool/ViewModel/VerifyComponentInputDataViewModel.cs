@@ -54,14 +54,11 @@ namespace HashingTool.ViewModel
 			_xmlFile.PropertyChanged += ComponentFilechanged;
 		}
 
-		public ICommand ShowHomeViewCommand
-		{
-			get { return ApplicationViewModel.HomeView; }
-		}
+		public ICommand ShowHomeViewCommand => ApplicationViewModel.HomeView;
 
 		public string CertificationNumber
 		{
-			get { return _certificationNumber; }
+			get => _certificationNumber;
 			private set {
 				if (_certificationNumber == value)
 					return;

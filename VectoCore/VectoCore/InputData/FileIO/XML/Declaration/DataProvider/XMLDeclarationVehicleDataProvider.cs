@@ -96,39 +96,21 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 		public virtual IXMLPTOReader PTOReader { protected get; set; }
 
-		public virtual XmlElement ADASNode
-		{
-			get { return _adasNode ?? (_adasNode = GetNode(XMLNames.Vehicle_ADAS, required: false) as XmlElement); }
-		}
+		public virtual XmlElement ADASNode => _adasNode ?? (_adasNode = GetNode(XMLNames.Vehicle_ADAS, required: false) as XmlElement);
 
 		public virtual IXMLADASReader ADASReader { protected get; set; }
 
 		public virtual IXMLDeclarationJobInputData Job { get; }
 
-		public virtual string Identifier
-		{
-			get { return GetAttribute(BaseNode, XMLNames.Component_ID_Attr); }
-		}
+		public virtual string Identifier => GetAttribute(BaseNode, XMLNames.Component_ID_Attr);
 
-		public virtual bool ExemptedVehicle
-		{
-			get { return ElementExists(XMLNames.Vehicle_HybridElectricHDV) && ElementExists(XMLNames.Vehicle_DualFuelVehicle); }
-		}
+		public virtual bool ExemptedVehicle => ElementExists(XMLNames.Vehicle_HybridElectricHDV) && ElementExists(XMLNames.Vehicle_DualFuelVehicle);
 
-		public virtual string VIN
-		{
-			get { return GetString(XMLNames.Vehicle_VIN); }
-		}
+		public virtual string VIN => GetString(XMLNames.Vehicle_VIN);
 
-		public virtual string LegislativeCategory
-		{
-			get { return null; }
-		}
+		public virtual string LegislativeCategory => null;
 
-		public virtual LegislativeClass? LegislativeClass
-		{
-			get { return GetString(XMLNames.Vehicle_LegislativeClass).ParseEnum<LegislativeClass>(); }
-		}
+		public virtual LegislativeClass? LegislativeClass => GetString(XMLNames.Vehicle_LegislativeClass).ParseEnum<LegislativeClass>();
 
 		public virtual VehicleCategory VehicleCategory
 		{
@@ -142,16 +124,10 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 			}
 		}
 
-		public virtual Kilogram CurbMassChassis
-		{
-			get { return GetDouble(XMLNames.Vehicle_CurbMassChassis).SI<Kilogram>(); }
-		}
+		public virtual Kilogram CurbMassChassis => GetDouble(XMLNames.Vehicle_CurbMassChassis).SI<Kilogram>();
 
 
-		public virtual Kilogram GrossVehicleMassRating
-		{
-			get { return GetDouble(XMLNames.Vehicle_GrossVehicleMass).SI<Kilogram>(); }
-		}
+		public virtual Kilogram GrossVehicleMassRating => GetDouble(XMLNames.Vehicle_GrossVehicleMass).SI<Kilogram>();
 
 		public virtual IList<ITorqueLimitInputData> TorqueLimits
 		{
@@ -173,30 +149,15 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 			}
 		}
 
-		public virtual AxleConfiguration AxleConfiguration
-		{
-			get { return AxleConfigurationHelper.Parse(GetString(XMLNames.Vehicle_AxleConfiguration)); }
-		}
+		public virtual AxleConfiguration AxleConfiguration => AxleConfigurationHelper.Parse(GetString(XMLNames.Vehicle_AxleConfiguration));
 
-		public virtual string ManufacturerAddress
-		{
-			get { return GetString(XMLNames.Component_ManufacturerAddress); }
-		}
+		public virtual string ManufacturerAddress => GetString(XMLNames.Component_ManufacturerAddress);
 
-		public virtual PerSecond EngineIdleSpeed
-		{
-			get { return GetDouble(XMLNames.Vehicle_IdlingSpeed).RPMtoRad(); }
-		}
+		public virtual PerSecond EngineIdleSpeed => GetDouble(XMLNames.Vehicle_IdlingSpeed).RPMtoRad();
 
-		public virtual double RetarderRatio
-		{
-			get { return GetDouble(XMLNames.Vehicle_RetarderRatio); }
-		}
+		public virtual double RetarderRatio => GetDouble(XMLNames.Vehicle_RetarderRatio);
 
-		public virtual IPTOTransmissionInputData PTOTransmissionInputData
-		{
-			get { return _ptoData ?? (_ptoData = PTOReader.PTOInputData); }
-		}
+		public virtual IPTOTransmissionInputData PTOTransmissionInputData => _ptoData ?? (_ptoData = PTOReader.PTOInputData);
 
 		public virtual RetarderType RetarderType
 		{
@@ -214,142 +175,68 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 			}
 		}
 
-		public virtual AngledriveType AngledriveType
-		{
-			get { return GetString(XMLNames.Vehicle_AngledriveType).ParseEnum<AngledriveType>(); }
-		}
+		public virtual AngledriveType AngledriveType => GetString(XMLNames.Vehicle_AngledriveType).ParseEnum<AngledriveType>();
 
-		public virtual bool VocationalVehicle
-		{
-			get { return XmlConvert.ToBoolean(GetString(XMLNames.Vehicle_VocationalVehicle)); }
-		}
+		public virtual bool VocationalVehicle => XmlConvert.ToBoolean(GetString(XMLNames.Vehicle_VocationalVehicle));
 
-		public virtual bool SleeperCab
-		{
-			get { return XmlConvert.ToBoolean(GetString(XMLNames.Vehicle_SleeperCab)); }
-		}
+		public virtual bool SleeperCab => XmlConvert.ToBoolean(GetString(XMLNames.Vehicle_SleeperCab));
 
 		public virtual bool? AirdragModifiedMultistage { get; }
 
-		public virtual TankSystem? TankSystem
-		{
-			get {
-				return ElementExists(XMLNames.Vehicle_NgTankSystem)
-					? EnumHelper.ParseEnum<TankSystem>(GetString(XMLNames.Vehicle_NgTankSystem))
-					: (TankSystem?)null;
-			}
-		}
+		public virtual TankSystem? TankSystem =>
+			ElementExists(XMLNames.Vehicle_NgTankSystem)
+				? EnumHelper.ParseEnum<TankSystem>(GetString(XMLNames.Vehicle_NgTankSystem))
+				: (TankSystem?)null;
 
-		public virtual IAdvancedDriverAssistantSystemDeclarationInputData ADAS
-		{
-			get { return ADASReader.ADASInputData; }
-		}
+		public virtual IAdvancedDriverAssistantSystemDeclarationInputData ADAS => ADASReader.ADASInputData;
 
-		public virtual bool ZeroEmissionVehicle
-		{
-			get { return XmlConvert.ToBoolean(GetString(XMLNames.Vehicle_ZeroEmissionVehicle)); }
-		}
+		public virtual bool ZeroEmissionVehicle => XmlConvert.ToBoolean(GetString(XMLNames.Vehicle_ZeroEmissionVehicle));
 
-		public virtual bool HybridElectricHDV
-		{
-			get { return XmlConvert.ToBoolean(GetString(XMLNames.Vehicle_HybridElectricHDV)); }
-		}
+		public virtual bool HybridElectricHDV => XmlConvert.ToBoolean(GetString(XMLNames.Vehicle_HybridElectricHDV));
 
-		public virtual bool DualFuelVehicle
-		{
-			get { return XmlConvert.ToBoolean(GetString(XMLNames.Vehicle_DualFuelVehicle)); }
-		}
+		public virtual bool DualFuelVehicle => XmlConvert.ToBoolean(GetString(XMLNames.Vehicle_DualFuelVehicle));
 
-		public virtual Watt MaxNetPower1
-		{
-			get {
-				return ElementExists(XMLNames.Vehicle_MaxNetPower1)
-					? GetDouble(XMLNames.Vehicle_MaxNetPower1).SI<Watt>()
-					: null;
-			}
-		}
+		public virtual Watt MaxNetPower1 =>
+			ElementExists(XMLNames.Vehicle_MaxNetPower1)
+				? GetDouble(XMLNames.Vehicle_MaxNetPower1).SI<Watt>()
+				: null;
 
-		public virtual Watt MaxNetPower2
-		{
-			get {
-				return ElementExists(XMLNames.Vehicle_MaxNetPower2)
-					? GetDouble(XMLNames.Vehicle_MaxNetPower2).SI<Watt>()
-					: null;
-			}
-		}
+		public virtual Watt MaxNetPower2 =>
+			ElementExists(XMLNames.Vehicle_MaxNetPower2)
+				? GetDouble(XMLNames.Vehicle_MaxNetPower2).SI<Watt>()
+				: null;
 
-		public virtual RegistrationClass? RegisteredClass
-		{
-			get { return RegistrationClass.unknown; }
-		}
+		public virtual RegistrationClass? RegisteredClass => RegistrationClass.unknown;
 
-		public virtual int? NumberPassengerSeatsUpperDeck
-		{
-			get { return 0; }
-		}
+		public virtual int? NumberPassengerSeatsUpperDeck => 0;
 
-		public virtual int? NumberPassengerSeatsLowerDeck
-		{
-			get { return 0; }
-		}
+		public virtual int? NumberPassengerSeatsLowerDeck => 0;
 
-		public virtual int? NumberPassengersStandingLowerDeck
-		{
-			get { return 0; }
-		}
-		public virtual int? NumberPassengersStandingUpperDeck
-		{
-			get { return 0; }
-		}
+		public virtual int? NumberPassengersStandingLowerDeck => 0;
 
-		public virtual CubicMeter CargoVolume
-		{
-			get { return 0.SI<CubicMeter>(); }
-		}
+		public virtual int? NumberPassengersStandingUpperDeck => 0;
 
-		public virtual VehicleCode? VehicleCode
-		{
-			get { return VectoCommon.Models.VehicleCode.NOT_APPLICABLE; }
-		}
+		public virtual CubicMeter CargoVolume => 0.SI<CubicMeter>();
 
-		public virtual bool? LowEntry
-		{
-			get { return false; }
-		}
+		public virtual VehicleCode? VehicleCode => VectoCommon.Models.VehicleCode.NOT_APPLICABLE;
 
-		public virtual bool Articulated
-		{
-			get { return false; }
-		}
+		public virtual bool? LowEntry => false;
 
-		public virtual Meter Height
-		{
-			get { return null; }
-		}
+		public virtual bool Articulated => false;
 
-		public virtual Meter Length
-		{
-			get { return null; }
-		}
+		public virtual Meter Height => null;
 
-		public virtual Meter Width
-		{
-			get { return null; }
-		}
+		public virtual Meter Length => null;
 
-		public virtual Meter EntranceHeight
-		{
-			get { return null; }
-		}
+		public virtual Meter Width => null;
 
-		public virtual ConsumerTechnology? DoorDriveTechnology { get { return ConsumerTechnology.Unknown; } }
+		public virtual Meter EntranceHeight => null;
+
+		public virtual ConsumerTechnology? DoorDriveTechnology => ConsumerTechnology.Unknown;
 		public virtual VehicleDeclarationType VehicleDeclarationType { get; }
 
 
-		public virtual IVehicleComponentsDeclaration Components
-		{
-			get { return _components ?? (_components = ComponentReader.ComponentInputData); }
-		}
+		public virtual IVehicleComponentsDeclaration Components => _components ?? (_components = ComponentReader.ComponentInputData);
 
 		#region Implementation of IAdvancedDriverAssistantSystemDeclarationInputData
 
@@ -357,10 +244,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 		#region Overrides of AbstractXMLResource
 
-		protected override XNamespace SchemaNamespace
-		{
-			get { return NAMESPACE_URI; }
-		}
+		protected override XNamespace SchemaNamespace => NAMESPACE_URI;
 
 		protected override DataSourceType SourceType { get; }
 
@@ -385,84 +269,39 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		public XMLDeclarationVehicleDataProviderV20(IXMLDeclarationJobInputData jobData, XmlNode xmlNode, string sourceFile) :
 			base(jobData, xmlNode, sourceFile) { }
 
-		protected override XNamespace SchemaNamespace
-		{
-			get { return NAMESPACE_URI; }
-		}
+		protected override XNamespace SchemaNamespace => NAMESPACE_URI;
 
-		public override bool VocationalVehicle
-		{
-			get { return false; }
-		}
+		public override bool VocationalVehicle => false;
 
-		public override bool SleeperCab
-		{
-			get { return true; }
-		}
+		public override bool SleeperCab => true;
 
-		public override TankSystem? TankSystem
-		{
-			get { return VectoCommon.InputData.TankSystem.Compressed; }
-		}
+		public override TankSystem? TankSystem => VectoCommon.InputData.TankSystem.Compressed;
 
-		public override IAdvancedDriverAssistantSystemDeclarationInputData ADAS
-		{
-			get { return new ADASDefaultValues(); }
-		}
+		public override IAdvancedDriverAssistantSystemDeclarationInputData ADAS => new ADASDefaultValues();
 
-		public override bool ZeroEmissionVehicle
-		{
-			get { return false; }
-		}
+		public override bool ZeroEmissionVehicle => false;
 
-		public override bool HybridElectricHDV
-		{
-			get { return false; }
-		}
+		public override bool HybridElectricHDV => false;
 
-		public override bool DualFuelVehicle
-		{
-			get { return false; }
-		}
+		public override bool DualFuelVehicle => false;
 
-		public override Watt MaxNetPower1
-		{
-			get { return null; }
-		}
+		public override Watt MaxNetPower1 => null;
 
-		public override Watt MaxNetPower2
-		{
-			get { return null; }
-		}
+		public override Watt MaxNetPower2 => null;
 
 		public class ADASDefaultValues : IAdvancedDriverAssistantSystemDeclarationInputData
 		{
 			#region Implementation of IAdvancedDriverAssistantSystemDeclarationInputData
 
-			public bool EngineStopStart
-			{
-				get { return false; }
-			}
+			public bool EngineStopStart => false;
 
-			public EcoRollType EcoRoll
-			{
-				get { return EcoRollType.None; }
-			}
+			public EcoRollType EcoRoll => EcoRollType.None;
 
-			public PredictiveCruiseControlType PredictiveCruiseControl
-			{
-				get { return PredictiveCruiseControlType.None; }
-			}
+			public PredictiveCruiseControlType PredictiveCruiseControl => PredictiveCruiseControlType.None;
 
-			public bool? ATEcoRollReleaseLockupClutch
-			{
-				get { return null; }
-			}
+			public bool? ATEcoRollReleaseLockupClutch => null;
 
-			public XmlNode XMLSource
-			{
-				get { return null; }
-			}
+			public XmlNode XMLSource => null;
 
 			#endregion
 		}
@@ -503,10 +342,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 			}
 		}
 
-		protected override XNamespace SchemaNamespace
-		{
-			get { return NAMESPACE_URI; }
-		}
+		protected override XNamespace SchemaNamespace => NAMESPACE_URI;
 	}
 
 	// ---------------------------------------------------------------------------------------
@@ -528,10 +364,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 		#region Overrides of AbstractXMLResource
 
-		protected override XNamespace SchemaNamespace
-		{
-			get { return NAMESPACE_URI; }
-		}
+		protected override XNamespace SchemaNamespace => NAMESPACE_URI;
 
 		protected override DataSourceType SourceType { get; }
 
@@ -539,114 +372,51 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 		#region Implementation of IVehicleDeclarationInputData
 
-		public override bool ExemptedVehicle
-		{
-			get { return true; }
-		}
+		public override bool ExemptedVehicle => true;
 
-		public override AxleConfiguration AxleConfiguration
-		{
-			get { return AxleConfiguration.AxleConfig_Undefined; }
-		}
+		public override AxleConfiguration AxleConfiguration => AxleConfiguration.AxleConfig_Undefined;
 
-		public override IList<ITorqueLimitInputData> TorqueLimits
-		{
-			get { return new List<ITorqueLimitInputData>(); }
-		}
+		public override IList<ITorqueLimitInputData> TorqueLimits => new List<ITorqueLimitInputData>();
 
-		public override PerSecond EngineIdleSpeed
-		{
-			get { return null; }
-		}
+		public override PerSecond EngineIdleSpeed => null;
 
-		public override bool VocationalVehicle
-		{
-			get { return false; }
-		}
+		public override bool VocationalVehicle => false;
 
-		public override bool SleeperCab
-		{
-			get { return false; }
-		}
+		public override bool SleeperCab => false;
 
-		public override TankSystem? TankSystem
-		{
-			get { return null; }
-		}
+		public override TankSystem? TankSystem => null;
 
-		public override IAdvancedDriverAssistantSystemDeclarationInputData ADAS
-		{
-			get { return null; }
-		}
+		public override IAdvancedDriverAssistantSystemDeclarationInputData ADAS => null;
 
-		public override bool ZeroEmissionVehicle
-		{
-			get { return XmlConvert.ToBoolean(GetString(XMLNames.Vehicle_ZeroEmissionVehicle)); }
-		}
+		public override bool ZeroEmissionVehicle => XmlConvert.ToBoolean(GetString(XMLNames.Vehicle_ZeroEmissionVehicle));
 
-		public override bool HybridElectricHDV
-		{
-			get { return XmlConvert.ToBoolean(GetString(XMLNames.Vehicle_HybridElectricHDV)); }
-		}
+		public override bool HybridElectricHDV => XmlConvert.ToBoolean(GetString(XMLNames.Vehicle_HybridElectricHDV));
 
-		public override bool DualFuelVehicle
-		{
-			get { return XmlConvert.ToBoolean(GetString(XMLNames.Vehicle_DualFuelVehicle)); }
-		}
+		public override bool DualFuelVehicle => XmlConvert.ToBoolean(GetString(XMLNames.Vehicle_DualFuelVehicle));
 
-		public override Watt MaxNetPower1
-		{
-			get { return GetDouble(XMLNames.Vehicle_MaxNetPower1).SI<Watt>(); }
-		}
+		public override Watt MaxNetPower1 => GetDouble(XMLNames.Vehicle_MaxNetPower1).SI<Watt>();
 
-		public override Watt MaxNetPower2
-		{
-			get { return GetDouble(XMLNames.Vehicle_MaxNetPower2).SI<Watt>(); }
-		}
+		public override Watt MaxNetPower2 => GetDouble(XMLNames.Vehicle_MaxNetPower2).SI<Watt>();
 
-		public override IVehicleComponentsDeclaration Components
-		{
-			get { return null; }
-		}
+		public override IVehicleComponentsDeclaration Components => null;
 
 		#endregion
 
 		#region Implementation of IXMLDeclarationVehicleData
 
-		public override XmlElement ComponentNode
-		{
-			get { return null; }
-		}
+		public override XmlElement ComponentNode => null;
 
-		public override XmlElement PTONode
-		{
-			get { return null; }
-		}
+		public override XmlElement PTONode => null;
 
-		public override XmlElement ADASNode
-		{
-			get { return null; }
-		}
+		public override XmlElement ADASNode => null;
 
-		public override AngledriveType AngledriveType
-		{
-			get { return AngledriveType.None; }
-		}
+		public override AngledriveType AngledriveType => AngledriveType.None;
 
-		public override RetarderType RetarderType
-		{
-			get { return RetarderType.None; }
-		}
+		public override RetarderType RetarderType => RetarderType.None;
 
-		public override double RetarderRatio
-		{
-			get { return 0; }
-		}
+		public override double RetarderRatio => 0;
 
-		public override IPTOTransmissionInputData PTOTransmissionInputData
-		{
-			get { return null; }
-		}
+		public override IPTOTransmissionInputData PTOTransmissionInputData => null;
 
 		#endregion
 	}
@@ -673,68 +443,35 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 		#region Overrides of XMLDeclarationVehicleDataProviderV10
 
-		public override bool SleeperCab
-		{
-			get { return false; }
-		}
+		public override bool SleeperCab => false;
 
-		public override IAdvancedDriverAssistantSystemDeclarationInputData ADAS
-		{
-			get { return ADASReader.ADASInputData; }
-		}
+		public override IAdvancedDriverAssistantSystemDeclarationInputData ADAS => ADASReader.ADASInputData;
 
-		public override XmlElement PTONode
-		{
-			get { return null; }
-		}
+		public override XmlElement PTONode => null;
 
 		#region Overrides of XMLDeclarationVehicleDataProviderV10
 
-		public override LegislativeClass? LegislativeClass
-		{
-			get { return VectoCommon.Models.LegislativeClass.M3; }
-		}
+		public override LegislativeClass? LegislativeClass => VectoCommon.Models.LegislativeClass.M3;
 
 		#endregion
 
-		public override IPTOTransmissionInputData PTOTransmissionInputData
-		{
-			get { return null; }
-		}
+		public override IPTOTransmissionInputData PTOTransmissionInputData => null;
 
-		public override VehicleCategory VehicleCategory
-		{
-			get { return VehicleCategory.HeavyBusPrimaryVehicle; }
-		}
+		public override VehicleCategory VehicleCategory => VehicleCategory.HeavyBusPrimaryVehicle;
 
-		public override bool Articulated
-		{
-			get { return GetBool(XMLNames.Vehicle_Articulated); }
-		}
+		public override bool Articulated => GetBool(XMLNames.Vehicle_Articulated);
 
-		public override Kilogram CurbMassChassis
-		{
-			get { return null; }
-		}
+		public override Kilogram CurbMassChassis => null;
 
-		public override Kilogram GrossVehicleMassRating
-		{
-			get { return GetDouble(XMLNames.Vehicle_TPMLM).SI<Kilogram>(); }
-		}
+		public override Kilogram GrossVehicleMassRating => GetDouble(XMLNames.Vehicle_TPMLM).SI<Kilogram>();
 
-		public override Meter EntranceHeight
-		{
-			get { return null; }
-		}
+		public override Meter EntranceHeight => null;
 
 		#endregion
 
 		#region Overrides of AbstractXMLResource
 
-		protected override XNamespace SchemaNamespace
-		{
-			get { return NAMESPACE_URI; }
-		}
+		protected override XNamespace SchemaNamespace => NAMESPACE_URI;
 
 		protected override DataSourceType SourceType { get; }
 
@@ -755,30 +492,15 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 		#region Overrides of XMLDeclarationVehicleDataProviderV10
 
-		public override bool SleeperCab
-		{
-			get { return false; }
-		}
+		public override bool SleeperCab => false;
 
-		public override bool VocationalVehicle
-		{
-			get { return false; }
-		}
+		public override bool VocationalVehicle => false;
 
-		public override IPTOTransmissionInputData PTOTransmissionInputData
-		{
-			get { return null; }
-		}
+		public override IPTOTransmissionInputData PTOTransmissionInputData => null;
 
-		public override XmlElement PTONode
-		{
-			get { return null; }
-		}
+		public override XmlElement PTONode => null;
 
-		public override Kilogram GrossVehicleMassRating
-		{
-			get { return GetDouble(XMLNames.Vehicle_TPMLM).SI<Kilogram>(); }
-		}
+		public override Kilogram GrossVehicleMassRating => GetDouble(XMLNames.Vehicle_TPMLM).SI<Kilogram>();
 
 		public override CubicMeter CargoVolume
 		{
@@ -796,10 +518,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 		#region Overrides of AbstractXMLResource
 
-		protected override XNamespace SchemaNamespace
-		{
-			get { return NAMESPACE_URI; }
-		}
+		protected override XNamespace SchemaNamespace => NAMESPACE_URI;
 
 		protected override DataSourceType SourceType { get; }
 
@@ -824,36 +543,19 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 		#region Overrides of XMLDeclarationVehicleDataProviderV10
 
-		public override VehicleCategory VehicleCategory
-		{
-			get { return VehicleCategory.HeavyBusCompletedVehicle; }
-		}
+		public override VehicleCategory VehicleCategory => VehicleCategory.HeavyBusCompletedVehicle;
 
-		public override RegistrationClass? RegisteredClass
-		{
-			get { return RegistrationClassHelper.Parse(GetString(XMLNames.Vehicle_RegisteredClass)).First(); }
-		}
+		public override RegistrationClass? RegisteredClass => RegistrationClassHelper.Parse(GetString(XMLNames.Vehicle_RegisteredClass)).First();
 
-		public override VehicleCode? VehicleCode
-		{
-			get { return GetString(XMLNames.Vehicle_VehicleCode).ParseEnum<VehicleCode>(); }
-		}
+		public override VehicleCode? VehicleCode => GetString(XMLNames.Vehicle_VehicleCode).ParseEnum<VehicleCode>();
 
 		//TechnicalPermissibleMaximumLadenMass
-		public override Kilogram GrossVehicleMassRating
-		{
-			get { return GetDouble(XMLNames.TPMLM).SI<Kilogram>(); }
-		}
+		public override Kilogram GrossVehicleMassRating => GetDouble(XMLNames.TPMLM).SI<Kilogram>();
 
-		public override TankSystem? TankSystem
-		{
-			get
-			{
-				return ElementExists(XMLNames.Vehicle_NgTankSystem)
-						? EnumHelper.ParseEnum<TankSystem>(GetString(XMLNames.Vehicle_NgTankSystem))
-						: (TankSystem?)null;
-			}
-		}
+		public override TankSystem? TankSystem =>
+			ElementExists(XMLNames.Vehicle_NgTankSystem)
+				? EnumHelper.ParseEnum<TankSystem>(GetString(XMLNames.Vehicle_NgTankSystem))
+				: (TankSystem?)null;
 
 		public override int? NumberPassengerSeatsLowerDeck
 		{
@@ -872,53 +574,29 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		}
 
 		//HeightIntegratedBody
-		public override Meter Height
-		{
-			get { return GetDouble(XMLNames.Bus_HeighIntegratedBody).SI<Meter>(); }
-		}
+		public override Meter Height => GetDouble(XMLNames.Bus_HeighIntegratedBody).SI<Meter>();
 
 		//VehicleLength
-		public override Meter Length
-		{
-			get { return GetDouble(XMLNames.Bus_VehicleLength).SI<Meter>(); }
-		}
+		public override Meter Length => GetDouble(XMLNames.Bus_VehicleLength).SI<Meter>();
 
 		//VehicleWidth
-		public override Meter Width
-		{
-			get { return GetDouble(XMLNames.Bus_VehicleWidth).SI<Meter>(); }
-		}
+		public override Meter Width => GetDouble(XMLNames.Bus_VehicleWidth).SI<Meter>();
 
-		public override XmlElement PTONode
-		{
-			get { return null; }
-		}
+		public override XmlElement PTONode => null;
 
 		#endregion
 
 		
-		public override bool? LowEntry
-		{
-			get { return GetBool(XMLNames.Bus_LowEntry); }
-		}
+		public override bool? LowEntry => GetBool(XMLNames.Bus_LowEntry);
 
-		public override Meter EntranceHeight
-		{
-			get { return GetDouble(XMLNames.Bus_EntranceHeight).SI<Meter>(); }
-		}
+		public override Meter EntranceHeight => GetDouble(XMLNames.Bus_EntranceHeight).SI<Meter>();
 
-		public override ConsumerTechnology? DoorDriveTechnology
-		{
-			get { return ConsumerTechnologyHelper.Parse(GetString(XMLNames.BusAux_PneumaticSystem_DoorDriveTechnology)); }
-		}
-		
+		public override ConsumerTechnology? DoorDriveTechnology => ConsumerTechnologyHelper.Parse(GetString(XMLNames.BusAux_PneumaticSystem_DoorDriveTechnology));
+
 
 		#region Overrides of AbstractXMLResource
 
-		protected override XNamespace SchemaNamespace
-		{
-			get { return NAMESPACE_URI; }
-		}
+		protected override XNamespace SchemaNamespace => NAMESPACE_URI;
 
 		protected override DataSourceType SourceType { get; }
 
@@ -950,90 +628,45 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 		#region Overrides of AbstractCommonComponentType
 
-		public override string Manufacturer
-		{
-			get { return GetString(XMLNames.ManufacturerPrimaryVehicle); }
-		}
+		public override string Manufacturer => GetString(XMLNames.ManufacturerPrimaryVehicle);
 
-		public string ManufacturerAddress
-		{
-			get { return GetString(XMLNames.ManufacturerAddressPrimaryVehicle); }
-		}
+		public string ManufacturerAddress => GetString(XMLNames.ManufacturerAddressPrimaryVehicle);
 
 		#endregion
 
 
 		#region IXMLDeclarationVehicleData interface
 
-		public string VIN
-		{
-			get { return GetString(XMLNames.Vehicle_VIN); }
-		}
+		public string VIN => GetString(XMLNames.Vehicle_VIN);
 
-		public string LegislativeCategory
-		{
-			get { return GetString(XMLNames.Bus_LegislativeCategory); }
-		}
+		public string LegislativeCategory => GetString(XMLNames.Bus_LegislativeCategory);
 
-		public VehicleCategory VehicleCategory
-		{
-			get { return VehicleCategoryHelper.Parse(GetString("ChassisConfiguration")); }
-		}
+		public VehicleCategory VehicleCategory => VehicleCategoryHelper.Parse(GetString("ChassisConfiguration"));
 
-		public AxleConfiguration AxleConfiguration
-		{
-			get { return AxleConfigurationHelper.Parse(GetString(XMLNames.Vehicle_AxleConfiguration)); }
-		}
+		public AxleConfiguration AxleConfiguration => AxleConfigurationHelper.Parse(GetString(XMLNames.Vehicle_AxleConfiguration));
 
 		//TechnicalPermissibleMaximumLadenMass
-		public Kilogram GrossVehicleMassRating
-		{
-			get { return GetDouble(XMLNames.TPMLM).SI<Kilogram>(); }
-		}
+		public Kilogram GrossVehicleMassRating => GetDouble(XMLNames.TPMLM).SI<Kilogram>();
 
 		//IdlingSpeed
-		public PerSecond EngineIdleSpeed
-		{
-			get { return GetDouble(XMLNames.Engine_IdlingSpeed).RPMtoRad(); }
-		}
+		public PerSecond EngineIdleSpeed => GetDouble(XMLNames.Engine_IdlingSpeed).RPMtoRad();
 
-		public RetarderType RetarderType
-		{
-			get { return GetString(XMLNames.Vehicle_RetarderType).ParseEnum<RetarderType>(); }
-		}
+		public RetarderType RetarderType => GetString(XMLNames.Vehicle_RetarderType).ParseEnum<RetarderType>();
 
-		public double RetarderRatio
-		{
-			get { return GetDouble(XMLNames.Vehicle_RetarderRatio); }
-		}
+		public double RetarderRatio => GetDouble(XMLNames.Vehicle_RetarderRatio);
 
-		public AngledriveType AngledriveType
-		{
-			get { return GetString(XMLNames.Vehicle_AngledriveType).ParseEnum<AngledriveType>(); }
-		}
+		public AngledriveType AngledriveType => GetString(XMLNames.Vehicle_AngledriveType).ParseEnum<AngledriveType>();
 
-		public bool ZeroEmissionVehicle
-		{
-			get { return GetBool(XMLNames.Vehicle_ZeroEmissionVehicle); }
-		}
+		public bool ZeroEmissionVehicle => GetBool(XMLNames.Vehicle_ZeroEmissionVehicle);
 
-		public XmlElement ADASNode
-		{
-			get { return _adasNode ?? (_adasNode = GetNode(XMLNames.Vehicle_ADAS, required: false) as XmlElement); }
-		}
+		public XmlElement ADASNode => _adasNode ?? (_adasNode = GetNode(XMLNames.Vehicle_ADAS, required: false) as XmlElement);
 
 		public IXMLADASReader ADASReader { get; set; }
 
-		public IAdvancedDriverAssistantSystemDeclarationInputData ADAS
-		{
-			get { return _adas ?? (_adas = ADASReader.ADASInputData); }
-		}
+		public IAdvancedDriverAssistantSystemDeclarationInputData ADAS => _adas ?? (_adas = ADASReader.ADASInputData);
 
 
-		public IList<ITorqueLimitInputData> TorqueLimits
-		{
-			get { return ReadTorqueLimits(); }
-		}
+		public IList<ITorqueLimitInputData> TorqueLimits => ReadTorqueLimits();
 
 		public XmlElement ComponentNode
 		{
@@ -1052,18 +685,12 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 		public Meter EntranceHeight { get; }
 
-		public virtual ConsumerTechnology? DoorDriveTechnology
-		{
-			get { return ConsumerTechnology.Unknown; }
-		}
+		public virtual ConsumerTechnology? DoorDriveTechnology => ConsumerTechnology.Unknown;
 
 		public virtual VehicleDeclarationType VehicleDeclarationType { get; }
 
 
-		public IVehicleComponentsDeclaration Components
-		{
-			get { return _components ?? (_components = ComponentReader.ComponentInputData); }
-		}
+		public IVehicleComponentsDeclaration Components => _components ?? (_components = ComponentReader.ComponentInputData);
 
 
 		#region  Non seeded Properties
@@ -1076,10 +703,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		public int? NumberPassengersStandingLowerDeck { get; }
 		public int? NumberPassengersStandingUpperDeck { get; }
 
-		public CubicMeter CargoVolume
-		{
-			get { return 0.SI<CubicMeter>(); }
-		}
+		public CubicMeter CargoVolume => 0.SI<CubicMeter>();
 		public Kilogram CurbMassChassis { get; }
 		public bool VocationalVehicle { get; }
 		public bool SleeperCab { get; }
@@ -1093,7 +717,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		public RegistrationClass? RegisteredClass { get; }
 		public VehicleCode? VehicleCode { get; }
 		public bool? LowEntry { get; }
-		public bool Articulated { get { return GetBool(XMLNames.Vehicle_Articulated); } }
+		public bool Articulated => GetBool(XMLNames.Vehicle_Articulated);
 		public Meter Height { get; }
 		public Meter Length { get; }
 		public Meter Width { get; }
@@ -1108,15 +732,9 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 		#region Overrides of AbstractXMLResource
 
-		protected override XNamespace SchemaNamespace
-		{
-			get { return NAMESPACE_URI; }
-		}
+		protected override XNamespace SchemaNamespace => NAMESPACE_URI;
 
-		protected override DataSourceType SourceType
-		{
-			get { return DataSourceType.XMLFile; }
-		}
+		protected override DataSourceType SourceType => DataSourceType.XMLFile;
 
 		#endregion
 
@@ -1169,64 +787,35 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 			}
 		}
 
-		public override LegislativeClass? LegislativeClass
-		{
-			get
-			{
-				return ElementExists(XMLNames.Bus_LegislativeCategory)
-					? GetString(XMLNames.Bus_LegislativeCategory).ParseEnum<LegislativeClass>()
-					:  (LegislativeClass?)null;
-			}
-		}
-		
-		public override Kilogram CurbMassChassis
-		{
-			get
-			{
-				return ElementExists(XMLNames.Bus_CorrectedActualMass)
-					? GetDouble(XMLNames.Bus_CorrectedActualMass).SI<Kilogram>()
-					: null;
-			}
-		}
-		
-		public override Kilogram GrossVehicleMassRating
-		{
-			get { 
-				return ElementExists(XMLNames.Vehicle_TPMLM)
-					? GetDouble(XMLNames.Vehicle_TPMLM).SI<Kilogram>()
-					: null;
-			}
-		}
+		public override LegislativeClass? LegislativeClass =>
+			ElementExists(XMLNames.Bus_LegislativeCategory)
+				? GetString(XMLNames.Bus_LegislativeCategory).ParseEnum<LegislativeClass>()
+				:  (LegislativeClass?)null;
 
-		public override bool? AirdragModifiedMultistage
-		{
-			get
-			{
-				return ElementExists(XMLNames.Bus_AirdragModifiedMultistage)
-					? GetBool(XMLNames.Bus_AirdragModifiedMultistage)
-					: (bool?)null;
-			}
-		}
+		public override Kilogram CurbMassChassis =>
+			ElementExists(XMLNames.Bus_CorrectedActualMass)
+				? GetDouble(XMLNames.Bus_CorrectedActualMass).SI<Kilogram>()
+				: null;
 
-		public override RegistrationClass? RegisteredClass
-		{
-			get
-			{
-				return ElementExists(XMLNames.Vehicle_RegisteredClass)
-					? RegistrationClassHelper.Parse(GetString(XMLNames.Vehicle_RegisteredClass)).First()
-					: null;
-			}
-		}
+		public override Kilogram GrossVehicleMassRating =>
+			ElementExists(XMLNames.Vehicle_TPMLM)
+				? GetDouble(XMLNames.Vehicle_TPMLM).SI<Kilogram>()
+				: null;
 
-		public override TankSystem? TankSystem
-		{
-			get
-			{
-				return ElementExists(XMLNames.Vehicle_NgTankSystem)
-					? EnumHelper.ParseEnum<TankSystem>(GetString(XMLNames.Vehicle_NgTankSystem))
-					: (TankSystem?)null;
-			}
-		}
+		public override bool? AirdragModifiedMultistage =>
+			ElementExists(XMLNames.Bus_AirdragModifiedMultistage)
+				? GetBool(XMLNames.Bus_AirdragModifiedMultistage)
+				: (bool?)null;
+
+		public override RegistrationClass? RegisteredClass =>
+			ElementExists(XMLNames.Vehicle_RegisteredClass)
+				? RegistrationClassHelper.Parse(GetString(XMLNames.Vehicle_RegisteredClass)).First()
+				: null;
+
+		public override TankSystem? TankSystem =>
+			ElementExists(XMLNames.Vehicle_NgTankSystem)
+				? EnumHelper.ParseEnum<TankSystem>(GetString(XMLNames.Vehicle_NgTankSystem))
+				: (TankSystem?)null;
 
 
 		public override int? NumberPassengerSeatsLowerDeck
@@ -1275,89 +864,45 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 
 
-		public override VehicleCode? VehicleCode
-		{
-			get
-			{
-				return ElementExists(XMLNames.Vehicle_BodyworkCode)
-					? GetString(XMLNames.Vehicle_BodyworkCode).ParseEnum<VehicleCode>()
-					: (VehicleCode?)null;
-			}
-		}
+		public override VehicleCode? VehicleCode =>
+			ElementExists(XMLNames.Vehicle_BodyworkCode)
+				? GetString(XMLNames.Vehicle_BodyworkCode).ParseEnum<VehicleCode>()
+				: (VehicleCode?)null;
 
-		public override bool? LowEntry
-		{
-			get 
-			{ 
-				return ElementExists(XMLNames.Bus_LowEntry) 
-					? GetBool(XMLNames.Bus_LowEntry)
-					: (bool?)null;
-			}
-		}
+		public override bool? LowEntry =>
+			ElementExists(XMLNames.Bus_LowEntry) 
+				? GetBool(XMLNames.Bus_LowEntry)
+				: (bool?)null;
 
-		public override Meter Height
-		{
-			get
-			{
-				return ElementExists(XMLNames.Bus_HeighIntegratedBody)
-					? GetDouble(XMLNames.Bus_HeighIntegratedBody).SI(Unit.SI.Milli.Meter).Cast<Meter>()
-					: null;
-			}
-		}
+		public override Meter Height =>
+			ElementExists(XMLNames.Bus_HeighIntegratedBody)
+				? GetDouble(XMLNames.Bus_HeighIntegratedBody).SI(Unit.SI.Milli.Meter).Cast<Meter>()
+				: null;
 
-		public override Meter Length
-		{
-			get
-			{
-				return ElementExists(XMLNames.Bus_VehicleLength)
-					? GetDouble(XMLNames.Bus_VehicleLength).SI(Unit.SI.Milli.Meter).Cast<Meter>()
-					: null;
-			}
-		}
+		public override Meter Length =>
+			ElementExists(XMLNames.Bus_VehicleLength)
+				? GetDouble(XMLNames.Bus_VehicleLength).SI(Unit.SI.Milli.Meter).Cast<Meter>()
+				: null;
 
-		public override Meter Width
-		{
-			get
-			{
-				return ElementExists(XMLNames.Bus_VehicleWidth)
-					? GetDouble(XMLNames.Bus_VehicleWidth).SI(Unit.SI.Milli.Meter).Cast<Meter>()
-					: null;
-			}
-		}
+		public override Meter Width =>
+			ElementExists(XMLNames.Bus_VehicleWidth)
+				? GetDouble(XMLNames.Bus_VehicleWidth).SI(Unit.SI.Milli.Meter).Cast<Meter>()
+				: null;
 
-		public override Meter EntranceHeight
-		{
-			get
-			{
-				return ElementExists(XMLNames.Bus_EntranceHeight)
-					? GetDouble(XMLNames.Bus_EntranceHeight).SI(Unit.SI.Milli.Meter).Cast<Meter>()
-					: null;
-			}
-		}
+		public override Meter EntranceHeight =>
+			ElementExists(XMLNames.Bus_EntranceHeight)
+				? GetDouble(XMLNames.Bus_EntranceHeight).SI(Unit.SI.Milli.Meter).Cast<Meter>()
+				: null;
 
-		public override ConsumerTechnology? DoorDriveTechnology
-		{
-			get
-			{
-				return ElementExists(XMLNames.BusAux_PneumaticSystem_DoorDriveTechnology)
-					? ConsumerTechnologyHelper.Parse(GetString(XMLNames.BusAux_PneumaticSystem_DoorDriveTechnology))
-					: (ConsumerTechnology?)null;
-			}
-		}
+		public override ConsumerTechnology? DoorDriveTechnology =>
+			ElementExists(XMLNames.BusAux_PneumaticSystem_DoorDriveTechnology)
+				? ConsumerTechnologyHelper.Parse(GetString(XMLNames.BusAux_PneumaticSystem_DoorDriveTechnology))
+				: (ConsumerTechnology?)null;
 
-		public override VehicleDeclarationType VehicleDeclarationType
-		{
-			get { return VehicleDeclarationTypeHelper.Parse(GetString(XMLNames.Bus_VehicleDeclarationType)); }
-		}
+		public override VehicleDeclarationType VehicleDeclarationType => VehicleDeclarationTypeHelper.Parse(GetString(XMLNames.Bus_VehicleDeclarationType));
 
 
-		public override XmlElement ADASNode
-		{
-			get
-			{
-				return _adasNode ?? (_adasNode = GetNode(XMLNames.Vehicle_ADAS, required: false) as XmlElement);
-			}
-		}
+		public override XmlElement ADASNode => _adasNode ?? (_adasNode = GetNode(XMLNames.Vehicle_ADAS, required: false) as XmlElement);
 
 
 		public override XmlElement ComponentNode
@@ -1401,26 +946,15 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 			}
 		}
 		
-		public override XmlElement PTONode
-		{
-			get { return null; }
-		}
-
-
+		public override XmlElement PTONode => null;
 
 
 		#region Overrides of AbstractXMLResource
 
-		protected override DataSourceType SourceType
-		{
-			get { return DataSourceType.XMLFile; }
-		}
-		
-		protected override XNamespace SchemaNamespace
-		{
-			get { return NAMESPACE_URI; }
-		}
-		
+		protected override DataSourceType SourceType => DataSourceType.XMLFile;
+
+		protected override XNamespace SchemaNamespace => NAMESPACE_URI;
+
 		#endregion
 
 	}
@@ -1439,54 +973,29 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 			: base(jobData, xmlNode, sourceFile) {}
 
 
-		public override string Model
-		{
-			get
-			{
-				return ElementExists(XMLNames.Component_Model)
-					? GetString(XMLNames.Component_Model) : null;
-			}
-		}
+		public override string Model =>
+			ElementExists(XMLNames.Component_Model)
+				? GetString(XMLNames.Component_Model) : null;
 
-		public override LegislativeClass? LegislativeClass
-		{
-			get
-			{
-				return ElementExists(XMLNames.Bus_LegislativeCategory)
-					? GetString(XMLNames.Bus_LegislativeCategory).ParseEnum<LegislativeClass>()
-					: (LegislativeClass?)null;
-			}
-		}
+		public override LegislativeClass? LegislativeClass =>
+			ElementExists(XMLNames.Bus_LegislativeCategory)
+				? GetString(XMLNames.Bus_LegislativeCategory).ParseEnum<LegislativeClass>()
+				: (LegislativeClass?)null;
 
-		public override Kilogram CurbMassChassis
-		{
-			get
-			{
-				return ElementExists(XMLNames.Bus_CorrectedActualMass)
-					? GetDouble(XMLNames.Bus_CorrectedActualMass).SI<Kilogram>()
-					: null;
-			}
-		}
+		public override Kilogram CurbMassChassis =>
+			ElementExists(XMLNames.Bus_CorrectedActualMass)
+				? GetDouble(XMLNames.Bus_CorrectedActualMass).SI<Kilogram>()
+				: null;
 
-		public override Kilogram GrossVehicleMassRating
-		{
-			get
-			{
-				return ElementExists(XMLNames.Vehicle_TPMLM)
-					? GetDouble(XMLNames.Vehicle_TPMLM).SI<Kilogram>()
-					: null;
-			}
-		}
-		
-		public override RegistrationClass? RegisteredClass
-		{
-			get
-			{
-				return ElementExists(XMLNames.Vehicle_RegisteredClass)
-					? RegistrationClassHelper.Parse(GetString(XMLNames.Vehicle_RegisteredClass)).First()
-					: null;
-			}
-		}
+		public override Kilogram GrossVehicleMassRating =>
+			ElementExists(XMLNames.Vehicle_TPMLM)
+				? GetDouble(XMLNames.Vehicle_TPMLM).SI<Kilogram>()
+				: null;
+
+		public override RegistrationClass? RegisteredClass =>
+			ElementExists(XMLNames.Vehicle_RegisteredClass)
+				? RegistrationClassHelper.Parse(GetString(XMLNames.Vehicle_RegisteredClass)).First()
+				: null;
 
 		public override int? NumberPassengerSeatsLowerDeck
 		{
@@ -1510,63 +1019,32 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 			}
 		}
 
-		public override VehicleCode? VehicleCode
-		{
-			get
-			{
-				return ElementExists(XMLNames.Vehicle_BodyworkCode)
-					? GetString(XMLNames.Vehicle_BodyworkCode).ParseEnum<VehicleCode>()
-					: (VehicleCode?)null;
-			}
-		}
+		public override VehicleCode? VehicleCode =>
+			ElementExists(XMLNames.Vehicle_BodyworkCode)
+				? GetString(XMLNames.Vehicle_BodyworkCode).ParseEnum<VehicleCode>()
+				: (VehicleCode?)null;
 
-		public override bool? LowEntry
-		{
-			get
-			{
-				return ElementExists(XMLNames.Bus_LowEntry)
-					? GetBool(XMLNames.Bus_LowEntry)
-					: (bool?)null;
-			}
-		}
+		public override bool? LowEntry =>
+			ElementExists(XMLNames.Bus_LowEntry)
+				? GetBool(XMLNames.Bus_LowEntry)
+				: (bool?)null;
 
-		public override Meter Height
-		{
-			get
-			{
-				return ElementExists(XMLNames.Bus_HeighIntegratedBody)
-					? GetDouble(XMLNames.Bus_HeighIntegratedBody).SI(Unit.SI.Milli.Meter).Cast<Meter>()
-					: null;
-			}
-		}
-		
-		public override XmlElement PTONode
-		{
-			get { return null; }
-		}
+		public override Meter Height =>
+			ElementExists(XMLNames.Bus_HeighIntegratedBody)
+				? GetDouble(XMLNames.Bus_HeighIntegratedBody).SI(Unit.SI.Milli.Meter).Cast<Meter>()
+				: null;
 
-		public override XmlElement ComponentNode
-		{
-			get{ return null; }
-		}
+		public override XmlElement PTONode => null;
 
-		public override IVehicleComponentsDeclaration Components
-		{
-			get { return null; }
-		}
+		public override XmlElement ComponentNode => null;
+
+		public override IVehicleComponentsDeclaration Components => null;
 
 		#region Overrides of AbstractXMLResource
 
-		protected override XNamespace SchemaNamespace
-		{
-			get { return NAMESPACE_URI; }
-		}
+		protected override XNamespace SchemaNamespace => NAMESPACE_URI;
 
-		protected override DataSourceType SourceType
-		{
-			get { return DataSourceType.XMLFile; }
-		}
-
+		protected override DataSourceType SourceType => DataSourceType.XMLFile;
 
 		#endregion
 	}

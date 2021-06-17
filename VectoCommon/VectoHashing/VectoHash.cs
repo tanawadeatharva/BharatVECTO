@@ -90,34 +90,22 @@ namespace TUGraz.VectoHashing
 		/// <summary>
 		/// Get a list of all supported digest methods
 		/// </summary>
-		public static ICollection<string> SupportedDigestMehods
-		{
-			get { return XMLHashProvider.SupportedDigestMethods; }
-		}
+		public static ICollection<string> SupportedDigestMehods => XMLHashProvider.SupportedDigestMethods;
 
 		/// <summary>
 		/// get the identifier of the default digest method
 		/// </summary>
-		public static string DefaultDigestMethod
-		{
-			get { return XMLHashProvider.DefaultDigestMethod; }
-		}
+		public static string DefaultDigestMethod => XMLHashProvider.DefaultDigestMethod;
 
 		/// <summary>
 		/// get a list of all supported canonicalization methods
 		/// </summary>
-		public static ICollection<string> SupportedCanonicalizationMethods
-		{
-			get { return XMLHashProvider.SupportedCanonicalizationMethods; }
-		}
+		public static ICollection<string> SupportedCanonicalizationMethods => XMLHashProvider.SupportedCanonicalizationMethods;
 
 		/// <summary>
 		/// get the sequence of the default canonicalization methods
 		/// </summary>
-		public static IEnumerable<string> DefaultCanonicalizationMethod
-		{
-			get { return XMLHashProvider.DefaultCanonicalizationMethod; }
-		}
+		public static IEnumerable<string> DefaultCanonicalizationMethod => XMLHashProvider.DefaultCanonicalizationMethod;
 
 		public IList<VectoComponents> GetContainigComponents()
 		{

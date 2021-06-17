@@ -79,20 +79,11 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 			}
 		}
 
-		public virtual TableData PTOLossMap
-		{
-			get { return null; }
-		}
+		public virtual TableData PTOLossMap => null;
 
-		public virtual TableData PTOCycleDuringStop
-		{
-			get { return null; }
-		}
+		public virtual TableData PTOCycleDuringStop => null;
 
-		public TableData PTOCycleWhileDriving
-		{
-			get { return null; }
-		}
+		public TableData PTOCycleWhileDriving => null;
 
 		#endregion
 	}

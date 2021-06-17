@@ -68,27 +68,15 @@ namespace TUGraz.VectoCore.Tests.Utils
 		public bool TCLocked { get; set; }
 		public GearshiftPosition NextGear { get; private set; }
 
-		public Second TractionInterruption
-		{
-			get { return 1.SI<Second>(); }
-		}
+		public Second TractionInterruption => 1.SI<Second>();
 
 		public uint NumGears { get; set; }
 
-		public MeterPerSecond StartSpeed
-		{
-			get { return 2.SI<MeterPerSecond>(); }
-		}
+		public MeterPerSecond StartSpeed => 2.SI<MeterPerSecond>();
 
-		public MeterPerSquareSecond StartAcceleration
-		{
-			get { return 0.6.SI<MeterPerSquareSecond>(); }
-		}
+		public MeterPerSquareSecond StartAcceleration => 0.6.SI<MeterPerSquareSecond>();
 
-		public NewtonMeter GearMaxTorque
-		{
-			get { return null; }
-		}
+		public NewtonMeter GearMaxTorque => null;
 
 		public Watt GearboxLoss()
 		{
@@ -97,15 +85,9 @@ namespace TUGraz.VectoCore.Tests.Utils
 
 		public Second LastShift { get; private set; }
 
-		public Second LastUpshift
-		{
-			get { throw new NotImplementedException(); }
-		}
+		public Second LastUpshift => throw new NotImplementedException();
 
-		public Second LastDownshift
-		{
-			get { throw new NotImplementedException(); }
-		}
+		public Second LastDownshift => throw new NotImplementedException();
 
 		public GearData GetGearData(uint gear)
 		{
@@ -154,10 +136,7 @@ namespace TUGraz.VectoCore.Tests.Utils
 			return _clutchClosed;
 		}
 
-		public Watt ClutchLosses
-		{
-			get { throw new NotImplementedException(); }
-		}
+		public Watt ClutchLosses => throw new NotImplementedException();
 
 		public void SetClutch(bool closed)
 		{
@@ -200,10 +179,7 @@ namespace TUGraz.VectoCore.Tests.Utils
 		}
 
 		public Tuple<PerSecond, NewtonMeter> CurrentAxleDemand { get; }
-		public double Ratio
-		{
-			get { return 1; }
-		}
+		public double Ratio => 1;
 
 		protected override void DoWriteModalResults(Second time, Second simulationInterval, IModalDataContainer container)
 		{

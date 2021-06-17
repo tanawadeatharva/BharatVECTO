@@ -251,14 +251,10 @@ namespace TUGraz.VectoCore.Utils
 			return null;// new TableData(Path.Combine(basePath ?? "", filename), DataSourceType.Missing);
 		}
 
-		private static string ExtCSVResourceQuery
-		{
-			get {
-				return string.Format(
-					"/*[local-name()='{0}' and @{1}='{2}']", XMLNames.ExternalResource, XMLNames.ExtResource_Type_Attr,
-					XMLNames.ExtResource_Type_Value_CSV);
-			}
-		}
+		private static string ExtCSVResourceQuery =>
+			string.Format(
+				"/*[local-name()='{0}' and @{1}='{2}']", XMLNames.ExternalResource, XMLNames.ExtResource_Type_Attr,
+				XMLNames.ExtResource_Type_Value_CSV);
 
 		private static IEnumerable<T> Shim<T>(XmlNodeList nodes)
 		{

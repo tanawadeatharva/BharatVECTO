@@ -82,10 +82,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 		public IDCDCConverter DCDCConverter { get; private set; }
 
-		public virtual bool IsTestPowertrain
-		{
-			get { return false; }
-		}
+		public virtual bool IsTestPowertrain => false;
 
 		internal ISimulationOutPort Cycle;
 
@@ -109,10 +106,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 		#region IVehicleContainer
 
-		public virtual IModalDataContainer ModalData
-		{
-			get { return ModData; }
-		}
+		public virtual IModalDataContainer ModalData => ModData;
 
 		public virtual ISimulationOutPort GetCycleOutPort()
 		{
@@ -128,21 +122,11 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 
 
-		public IPowertainInfo PowertrainInfo
-		{
-			get { return this; }
-		}
+		public IPowertainInfo PowertrainInfo => this;
 
-		public IHybridControllerInfo HybridControllerInfo
-		{
-			get { return HybridController; }
-		}
+		public IHybridControllerInfo HybridControllerInfo => HybridController;
 
-		public IHybridControllerCtl HybridControllerCtl
-		{
-			get { return HybridController; }
-		}
-
+		public IHybridControllerCtl HybridControllerCtl => HybridController;
 
 
 		public virtual void AddComponent(VectoSimulationComponent component)
@@ -236,10 +220,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			DrivingCycleInfo?.FinishSimulation();
 		}
 
-		public virtual IEnumerable<ISimulationPreprocessor> GetPreprocessingRuns
-		{
-			get { return new ReadOnlyCollection<ISimulationPreprocessor>(Preprocessors); }
-		}
+		public virtual IEnumerable<ISimulationPreprocessor> GetPreprocessingRuns => new ReadOnlyCollection<ISimulationPreprocessor>(Preprocessors);
 
 		public virtual void AddPreprocessor(ISimulationPreprocessor simulationPreprocessor)
 		{
@@ -262,10 +243,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 		public virtual bool HasElectricMotor { get; private set; }
 
-		public PowertrainPosition[] ElectricMotorPositions
-		{
-			get { return ElectricMotors.Keys.ToArray(); }
-		}
+		public PowertrainPosition[] ElectricMotorPositions => ElectricMotors.Keys.ToArray();
 
 		public virtual bool HasCombustionEngine { get; private set; }
 
@@ -297,29 +275,19 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 		#region Overrides of VehicleContainer
 
-		public override IMileageCounter MileageCounter
-		{
-			get { return _mileageCounter; }
-
-		}
+		public override IMileageCounter MileageCounter => _mileageCounter;
 
 		#endregion
 
 		#region Overrides of VehicleContainer
 
-		public override IVehicleInfo VehicleInfo
-		{
-			get { return _vehicleInfo; }
-		}
+		public override IVehicleInfo VehicleInfo => _vehicleInfo;
 
 		#endregion
 
 		#region Overrides of VehicleContainer
 
-		public override IGearboxInfo GearboxInfo
-		{
-			get { return _gearboxInfo; }
-		}
+		public override IGearboxInfo GearboxInfo => _gearboxInfo;
 
 		#endregion
 	}

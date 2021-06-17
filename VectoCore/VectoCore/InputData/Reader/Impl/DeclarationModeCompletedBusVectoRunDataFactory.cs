@@ -69,15 +69,9 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 			Report = report;
 		}
 
-		protected IVehicleDeclarationInputData PrimaryVehicle
-		{
-			get { return InputDataProvider.PrimaryVehicleData.Vehicle; }
-		}
+		protected IVehicleDeclarationInputData PrimaryVehicle => InputDataProvider.PrimaryVehicleData.Vehicle;
 
-		protected IVehicleDeclarationInputData CompletedVehicle
-		{
-			get { return InputDataProvider.JobInputData.Vehicle; }
-		}
+		protected IVehicleDeclarationInputData CompletedVehicle => InputDataProvider.JobInputData.Vehicle;
 
 		public IEnumerable<VectoRunData> NextRun()
 		{

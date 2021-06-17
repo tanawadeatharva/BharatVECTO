@@ -15,14 +15,9 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.Electric
 
 		#region Implementation of ISimpleBatteryInfo
 
-		public double SOC
-		{
-			get { return 0; }
-		}
-		public WattSecond Capacity
-		{
-			get { return 0.SI<WattSecond>(); }
-		}
+		public double SOC => 0;
+
+		public WattSecond Capacity => 0.SI<WattSecond>();
 
 		#endregion
 
@@ -80,10 +75,7 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.Electric
 
 		public double SOC { get; internal set; }
 		public WattSecond Capacity { get; }
-		public WattSecond ConsumedEnergy
-		{
-			get { return CurrentState.ConsumedEnergy; }
-		}
+		public WattSecond ConsumedEnergy => CurrentState.ConsumedEnergy;
 
 		public void ConsumeEnergy(WattSecond energy, bool dryRun)
 		{

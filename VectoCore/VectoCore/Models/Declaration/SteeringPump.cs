@@ -73,15 +73,9 @@ namespace TUGraz.VectoCore.Models.Declaration
 
 		private sealed class SteeringPumpBaseLine : LookupData<MissionType, VehicleClass, SteeringPumpValues<Watt>>
 		{
-			protected override string ResourceId
-			{
-				get { return DeclarationData.DeclarationDataResourcePrefix + ".VAUX.SP-Table.csv"; }
-			}
+			protected override string ResourceId => DeclarationData.DeclarationDataResourcePrefix + ".VAUX.SP-Table.csv";
 
-			protected override string ErrorMessage
-			{
-				get { return "Auxiliary Lookup Error: No value found for Steering Pump. Mission: '{0}', HDVClass: '{1}'"; }
-			}
+			protected override string ErrorMessage => "Auxiliary Lookup Error: No value found for Steering Pump. Mission: '{0}', HDVClass: '{1}'";
 
 			protected override void ParseData(DataTable table)
 			{
@@ -102,15 +96,9 @@ namespace TUGraz.VectoCore.Models.Declaration
 
 		private sealed class SteeringPumpTechnologies : LookupData<string, SteeringPumpValues<double>>
 		{
-			protected override string ResourceId
-			{
-				get { return DeclarationData.DeclarationDataResourcePrefix + ".VAUX.SP-Tech.csv"; }
-			}
+			protected override string ResourceId => DeclarationData.DeclarationDataResourcePrefix + ".VAUX.SP-Tech.csv";
 
-			protected override string ErrorMessage
-			{
-				get { return "Auxiliary Lookup Error: No value found for SteeringPump Technology. Key: '{0}'"; }
-			}
+			protected override string ErrorMessage => "Auxiliary Lookup Error: No value found for SteeringPump Technology. Key: '{0}'";
 
 			protected override void ParseData(DataTable table)
 			{
@@ -149,15 +137,9 @@ namespace TUGraz.VectoCore.Models.Declaration
 
 		private sealed class SteeringPumpAxles : LookupData<MissionType, int, SteeringPumpValues<double>>
 		{
-			protected override string ResourceId
-			{
-				get { return DeclarationData.DeclarationDataResourcePrefix + ".VAUX.SP-Axles.csv"; }
-			}
+			protected override string ResourceId => DeclarationData.DeclarationDataResourcePrefix + ".VAUX.SP-Axles.csv";
 
-			protected override string ErrorMessage
-			{
-				get { return "Auxiliary Lookup Error: No value found for SteeringPump Axle. Mission: '{0}', Axle Count: '{1}'"; }
-			}
+			protected override string ErrorMessage => "Auxiliary Lookup Error: No value found for SteeringPump Axle. Mission: '{0}', Axle Count: '{1}'";
 
 			protected override void ParseData(DataTable table)
 			{

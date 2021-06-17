@@ -55,10 +55,7 @@ namespace TUGraz.VectoHashing.Impl
 			}
 		}
 
-		public static string DefaultDigestMethod
-		{
-			get { return DigestMethodSha256; }
-		}
+		public static string DefaultDigestMethod => DigestMethodSha256;
 
 		public static ICollection<string> SupportedCanonicalizationMethods
 		{

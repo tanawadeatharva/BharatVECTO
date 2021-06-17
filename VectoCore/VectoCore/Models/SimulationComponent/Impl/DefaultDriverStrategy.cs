@@ -777,20 +777,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		public DefaultDriverStrategy DriverStrategy { get; set; }
 
-		protected IDriverActions Driver
-		{
-			get { return _driver ?? (_driver = DriverStrategy.Driver); }
-		}
+		protected IDriverActions Driver => _driver ?? (_driver = DriverStrategy.Driver);
 
-		protected DriverData DriverData
-		{
-			get { return _driverData ?? (_driverData = Driver.DriverData); }
-		}
+		protected DriverData DriverData => _driverData ?? (_driverData = Driver.DriverData);
 
-		protected IDataBus DataBus
-		{
-			get { return _dataBus ?? (_dataBus = Driver.DataBus); }
-		}
+		protected IDataBus DataBus => _dataBus ?? (_dataBus = Driver.DataBus);
 
 		public IResponse Request(Second absTime, Meter ds, MeterPerSecond targetVelocity, Radian gradient)
 		{

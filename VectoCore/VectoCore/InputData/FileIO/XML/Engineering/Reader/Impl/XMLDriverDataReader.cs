@@ -109,13 +109,9 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering.Reader.Impl {
 			}
 		}
 
-		public IGearshiftEngineeringInputData ShiftParameters
-		{
-			get {
-				return CreateData(
-					XMLNames.DriverModel_ShiftStrategyParameters, ShiftParametersCreator, false);
-			}
-		}
+		public IGearshiftEngineeringInputData ShiftParameters =>
+			CreateData(
+				XMLNames.DriverModel_ShiftStrategyParameters, ShiftParametersCreator, false);
 
 		public IEngineStopStartEngineeringInputData EngineStopStartData
 		{

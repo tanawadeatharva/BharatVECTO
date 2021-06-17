@@ -71,10 +71,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		public override Second LastDownshift { get; protected internal set; }
 
-		public override GearshiftPosition NextGear
-		{
-			get { return _strategy?.NextGear ?? _nextGear; }
-		}
+		public override GearshiftPosition NextGear => _strategy?.NextGear ?? _nextGear;
 
 		public override bool GearEngaged(Second absTime)
 		{
@@ -135,10 +132,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			return response;
 		}
 
-		public override bool TCLocked
-		{
-			get { return true; }
-		}
+		public override bool TCLocked => true;
 
 		protected internal virtual ResponseDryRun Initialize(Second absTime, GearshiftPosition gear, NewtonMeter outTorque, PerSecond outAngularVelocity)
 		{
@@ -575,17 +569,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		public bool SwitchToNeutral
 		{
-			set
-			{
-				_overrideDisengage = value ? DataBus.AbsTime : null;
-				//Disengaged = value;
-			}
+			set => _overrideDisengage = value ? DataBus.AbsTime : null;
+			//Disengaged = value;
 		}
 
-		public override Second LastShift
-		{
-			get { return EngageTime; }
-		}
+		public override Second LastShift => EngageTime;
 	}
 
 	public class PEVGearbox : Gearbox

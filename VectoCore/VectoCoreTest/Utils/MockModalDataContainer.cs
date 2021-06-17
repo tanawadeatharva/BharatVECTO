@@ -105,10 +105,7 @@ namespace TUGraz.VectoCore.Tests.Utils
 		public ModalResults Data { get; set; }
 		public DataRow CurrentRow { get; set; }
 
-		public string ModFileName
-		{
-			get { return ""; }
-		}
+		public string ModFileName => "";
 
 		public object this[ModalResultField key, IFuelProperties fuel]
 		{
@@ -130,14 +127,14 @@ namespace TUGraz.VectoCore.Tests.Utils
 
 		public object this[ModalResultField key, PowertrainPosition pos]
 		{
-			get { throw new NotImplementedException(); }
-			set { throw new NotImplementedException(); }
+			get => throw new NotImplementedException();
+			set => throw new NotImplementedException();
 		}
 
 		public object this[string auxId]
 		{
-			get { return CurrentRow[Auxiliaries[auxId]]; }
-			set { CurrentRow[Auxiliaries[auxId]] = value; }
+			get => CurrentRow[Auxiliaries[auxId]];
+			set => CurrentRow[Auxiliaries[auxId]] = value;
 		}
 
 		public bool HasTorqueConverter { get; set; }
@@ -148,27 +145,15 @@ namespace TUGraz.VectoCore.Tests.Utils
 			CurrentRow = Data.NewRow();
 		}
 
-		IList<IFuelProperties> IModalDataContainer.FuelData { get { return FuelColumns.Keys.ToList(); } }
+		IList<IFuelProperties> IModalDataContainer.FuelData => FuelColumns.Keys.ToList();
 
-		public FuelData.Entry FuelData
-		{
-			get { return VectoCore.Models.Declaration.FuelData.Diesel; }
-		}
+		public FuelData.Entry FuelData => VectoCore.Models.Declaration.FuelData.Diesel;
 
-		public VectoRun.Status RunStatus
-		{
-			get { return VectoRun.Status.Success; }
-		}
+		public VectoRun.Status RunStatus => VectoRun.Status.Success;
 
-		public string Error
-		{
-			get { return null; }
-		}
+		public string Error => null;
 
-		public string StackTrace
-		{
-			get { return null; }
-		}
+		public string StackTrace => null;
 
 		public void Finish(VectoRun.Status runStatus, Exception exception = null) {}
 		
@@ -239,15 +224,9 @@ namespace TUGraz.VectoCore.Tests.Utils
 			
 		}
 
-		public Second Duration
-		{
-			get { return _duration; }
-		}
+		public Second Duration => _duration;
 
-		public Meter Distance
-		{
-			get { return _distance; }
-		}
+		public Meter Distance => _distance;
 
 		public Func<Second, Joule, Joule> AuxHeaterDemandCalc { get; set; }
 
@@ -365,8 +344,8 @@ namespace TUGraz.VectoCore.Tests.Utils
 
 		public object this[ModalResultField key]
 		{
-			get { return CurrentRow[key.GetName()]; }
-			set { CurrentRow[key.GetName()] = value; }
+			get => CurrentRow[key.GetName()];
+			set => CurrentRow[key.GetName()] = value;
 		}
 
 		public void CommitSimulationStep(Second absTime, Second simulationInterval)

@@ -60,7 +60,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl {
 
 		#endregion
 
-		protected override IDeclarationDataAdapter DataAdapter { get { return _dao; } }
+		protected override IDeclarationDataAdapter DataAdapter => _dao;
 
 
 		protected override VectoRunData CreateVectoRunData(IVehicleDeclarationInputData vehicle, int modeIdx, Mission mission, KeyValuePair<LoadingType, Tuple<Kilogram, double?>> loading)

@@ -62,7 +62,7 @@ namespace TUGraz.VectoCore.Utils
 			_mapName = name;
 		}
 
-		public string Name { get { return _mapName; } }
+		public string Name => _mapName;
 
 		public void AddPoint(double x, double y, double z)
 		{

@@ -59,139 +59,92 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering.DataProvider
 		//	get { return GetNode(XMLNames.Gearbox_TractionInterruption)?.InnerText.ToDouble().SI<Second>(); }
 		//}
 
-		public virtual Second MinTimeBetweenGearshift
-		{
-			get {
-				return GetNode(XMLNames.DriverModel_ShiftStrategyParameters_TimeBetweenGearshift, required: false)
-							?.InnerText.ToDouble().SI<Second>() ?? DeclarationData.Gearbox.MinTimeBetweenGearshifts;
-			}
-		}
+		public virtual Second MinTimeBetweenGearshift =>
+			GetNode(XMLNames.DriverModel_ShiftStrategyParameters_TimeBetweenGearshift, required: false)
+				?.InnerText.ToDouble().SI<Second>() ?? DeclarationData.Gearbox.MinTimeBetweenGearshifts;
 
-		public virtual double TorqueReserve
-		{
-			get {
-				return GetNode(XMLNames.DriverModel_ShiftStrategyParameters_TorqueReserve, required: false)?.InnerText.ToDouble() ??
-						DeclarationData.GearboxTCU.TorqueReserve;
-			}
-		}
+		public virtual double TorqueReserve =>
+			GetNode(XMLNames.DriverModel_ShiftStrategyParameters_TorqueReserve, required: false)?.InnerText.ToDouble() ??
+			DeclarationData.GearboxTCU.TorqueReserve;
 
-		public virtual MeterPerSecond StartSpeed
-		{
-			get {
-				return GetNode(XMLNames.DriverModel_ShiftStrategyParameters_StartSpeed, required: false)
-							?.InnerText.ToDouble().SI<MeterPerSecond>() ?? DeclarationData.GearboxTCU.StartSpeed;
-			}
-		}
+		public virtual MeterPerSecond StartSpeed =>
+			GetNode(XMLNames.DriverModel_ShiftStrategyParameters_StartSpeed, required: false)
+				?.InnerText.ToDouble().SI<MeterPerSecond>() ?? DeclarationData.GearboxTCU.StartSpeed;
 
-		public virtual MeterPerSquareSecond StartAcceleration
-		{
-			get {
-				return GetNode(XMLNames.DriverModel_ShiftStrategyParameters_StartAcceleration, required: false)
-							?.InnerText.ToDouble().SI<MeterPerSquareSecond>() ?? DeclarationData.GearboxTCU.StartAcceleration;
-			}
-		}
+		public virtual MeterPerSquareSecond StartAcceleration =>
+			GetNode(XMLNames.DriverModel_ShiftStrategyParameters_StartAcceleration, required: false)
+				?.InnerText.ToDouble().SI<MeterPerSquareSecond>() ?? DeclarationData.GearboxTCU.StartAcceleration;
 
-		public virtual double StartTorqueReserve
-		{
-			get {
-				return GetNode(XMLNames.DriverModel_ShiftStrategyParameters_StartTorqueReserve, required: false)
-							?.InnerText.ToDouble() ??
-						DeclarationData.GearboxTCU.TorqueReserveStart;
-			}
-		}
+		public virtual double StartTorqueReserve =>
+			GetNode(XMLNames.DriverModel_ShiftStrategyParameters_StartTorqueReserve, required: false)
+				?.InnerText.ToDouble() ??
+			DeclarationData.GearboxTCU.TorqueReserveStart;
 
-		public virtual Second DownshiftAfterUpshiftDelay
-		{
-			get {
-				return GetNode(XMLNames.DriverModel_ShiftStrategyParameters_DownshiftAfterUpshiftDelay, required: false)
-							?.InnerText.ToDouble().SI<Second>() ??
-						DeclarationData.Gearbox.DownshiftAfterUpshiftDelay;
-			}
-		}
+		public virtual Second DownshiftAfterUpshiftDelay =>
+			GetNode(XMLNames.DriverModel_ShiftStrategyParameters_DownshiftAfterUpshiftDelay, required: false)
+				?.InnerText.ToDouble().SI<Second>() ??
+			DeclarationData.Gearbox.DownshiftAfterUpshiftDelay;
 
-		public virtual Second UpshiftAfterDownshiftDelay
-		{
-			get {
-				return GetNode(XMLNames.DriverModel_ShiftStrategyParameters_UpshiftAfterDownshiftDelay, required: false)
-							?.InnerText.ToDouble().SI<Second>() ?? DeclarationData.Gearbox.UpshiftAfterDownshiftDelay;
-			}
-		}
+		public virtual Second UpshiftAfterDownshiftDelay =>
+			GetNode(XMLNames.DriverModel_ShiftStrategyParameters_UpshiftAfterDownshiftDelay, required: false)
+				?.InnerText.ToDouble().SI<Second>() ?? DeclarationData.Gearbox.UpshiftAfterDownshiftDelay;
 
-		public virtual MeterPerSquareSecond UpshiftMinAcceleration
-		{
-			get {
-				return GetNode(XMLNames.DriverModel_ShiftStrategyParameters_UpshiftMinAcceleration, required: false)
-							?.InnerText.ToDouble().SI<MeterPerSquareSecond>() ?? DeclarationData.Gearbox.UpshiftMinAcceleration;
-			}
-		}
+		public virtual MeterPerSquareSecond UpshiftMinAcceleration =>
+			GetNode(XMLNames.DriverModel_ShiftStrategyParameters_UpshiftMinAcceleration, required: false)
+				?.InnerText.ToDouble().SI<MeterPerSquareSecond>() ?? DeclarationData.Gearbox.UpshiftMinAcceleration;
 
-		public virtual Second GearResidenceTime { get { return null; } }
-		public virtual double? DnT99LHMin1 { get { return null; } }
-		public virtual double? DnT99LHMin2 { get { return null; } }
-		public virtual int? AllowedGearRangeUp { get { return null; } }
-		public virtual int? AllowedGearRangeDown { get { return null; } }
-		public virtual Second LookBackInterval { get { return null; } }
-		public virtual Watt AvgCardanPowerThresholdPropulsion { get { return null; } }
-		public virtual Watt CurrCardanPowerThresholdPropulsion { get { return null; } }
-		public virtual double? TargetSpeedDeviationFactor { get { return null; } }
-		public virtual double? EngineSpeedHighDriveOffFactor { get { return null; } }
-		public virtual double? RatingFactorCurrentGear { get { return null; } }
-		public virtual TableData AccelerationReserveLookup { get { return null; } }
-		public virtual TableData ShareTorque99L { get { return null; } }
-		public virtual TableData PredictionDurationLookup { get { return null; } }
-		public virtual TableData ShareIdleLow { get { return null; } }
-		public virtual TableData ShareEngineHigh { get { return null; } }
-		public virtual string Source { get { return null; } }
-		public virtual Second DriverAccelerationLookBackInterval { get { return null; } }
-		public virtual MeterPerSquareSecond DriverAccelerationThresholdLow { get { return null; } }
-		public virtual double? RatioEarlyUpshiftFC { get { return null; } }
-		public virtual double? RatioEarlyDownshiftFC { get { return null; } }
-		public int? AllowedGearRangeFC { get { return null; } }
+		public virtual Second GearResidenceTime => null;
+		public virtual double? DnT99LHMin1 => null;
+		public virtual double? DnT99LHMin2 => null;
+		public virtual int? AllowedGearRangeUp => null;
+		public virtual int? AllowedGearRangeDown => null;
+		public virtual Second LookBackInterval => null;
+		public virtual Watt AvgCardanPowerThresholdPropulsion => null;
+		public virtual Watt CurrCardanPowerThresholdPropulsion => null;
+		public virtual double? TargetSpeedDeviationFactor => null;
+		public virtual double? EngineSpeedHighDriveOffFactor => null;
+		public virtual double? RatingFactorCurrentGear => null;
+		public virtual TableData AccelerationReserveLookup => null;
+		public virtual TableData ShareTorque99L => null;
+		public virtual TableData PredictionDurationLookup => null;
+		public virtual TableData ShareIdleLow => null;
+		public virtual TableData ShareEngineHigh => null;
+		public virtual string Source => null;
+		public virtual Second DriverAccelerationLookBackInterval => null;
+		public virtual MeterPerSquareSecond DriverAccelerationThresholdLow => null;
+		public virtual double? RatioEarlyUpshiftFC => null;
+		public virtual double? RatioEarlyDownshiftFC => null;
+		public int? AllowedGearRangeFC => null;
 
-		public double? VeloictyDropFactor { get { return null; } }
+		public double? VeloictyDropFactor => null;
 
-		public PerSecond MinEngineSpeedPostUpshift { get { return null; } }
-		public Second ATLookAheadTime { get { return null; } }
-		public double[][] ShiftSpeedsTCToLocked { get { return null; } }
+		public PerSecond MinEngineSpeedPostUpshift => null;
+		public Second ATLookAheadTime => null;
+		public double[][] ShiftSpeedsTCToLocked => null;
 
-		public double? AccelerationFactor
-		{
-			get { return null; }
-		}
+		public double? AccelerationFactor => null;
 
-		public virtual TableData LoadStageShiftLines { get { return null; } }
-		public virtual IList<double> LoadStageThresholdsUp { get { return null; } }
-		public virtual IList<double> LoadStageThresholdsDown { get { return null; } }
+		public virtual TableData LoadStageShiftLines => null;
+		public virtual IList<double> LoadStageThresholdsUp => null;
+		public virtual IList<double> LoadStageThresholdsDown => null;
 
-		public virtual Second PowershiftShiftTime
-		{
-			get {
-				return GetNode(XMLNames.DriverModel_ShiftStrategyParameters_PowershiftShiftTime, required: false)
-							?.InnerText.ToDouble().SI<Second>() ?? 0.8.SI<Second>();
-			}
-		}
+		public virtual Second PowershiftShiftTime =>
+			GetNode(XMLNames.DriverModel_ShiftStrategyParameters_PowershiftShiftTime, required: false)
+				?.InnerText.ToDouble().SI<Second>() ?? 0.8.SI<Second>();
 
 		#endregion
 
 		#region Implementation of ITorqueConverterEngineeringShiftParameterInputData
 
-		public virtual MeterPerSquareSecond CLUpshiftMinAcceleration
-		{
-			get {
-				return GetNode(XMLNames.TorqueConverter_CLUpshiftMinAcceleration, required: false)
-							?.InnerText.ToDouble().SI<MeterPerSquareSecond>() ??
-						DeclarationData.Gearbox.UpshiftMinAcceleration;
-			}
-		}
+		public virtual MeterPerSquareSecond CLUpshiftMinAcceleration =>
+			GetNode(XMLNames.TorqueConverter_CLUpshiftMinAcceleration, required: false)
+				?.InnerText.ToDouble().SI<MeterPerSquareSecond>() ??
+			DeclarationData.Gearbox.UpshiftMinAcceleration;
 
-		public virtual MeterPerSquareSecond CCUpshiftMinAcceleration
-		{
-			get {
-				return GetNode(XMLNames.TorqueConverter_CCUpshiftMinAcceleration, required: false)
-							?.InnerText.ToDouble().SI<MeterPerSquareSecond>() ??
-						DeclarationData.Gearbox.UpshiftMinAcceleration;
-			}
-		}
+		public virtual MeterPerSquareSecond CCUpshiftMinAcceleration =>
+			GetNode(XMLNames.TorqueConverter_CCUpshiftMinAcceleration, required: false)
+				?.InnerText.ToDouble().SI<MeterPerSquareSecond>() ??
+			DeclarationData.Gearbox.UpshiftMinAcceleration;
 
 		#endregion
 	}

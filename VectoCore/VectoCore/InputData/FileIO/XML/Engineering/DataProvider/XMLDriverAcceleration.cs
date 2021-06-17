@@ -62,18 +62,14 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering.DataProvider
 			_accelerationCurve = new DriverAccelerationInputData() { AccelerationCurve = accCurve };
 		}
 
-		public virtual IDriverAccelerationData AccelerationCurve
-		{
-			get {
-				return BaseNode == null
-					? _accelerationCurve
-					: new DriverAccelerationInputData() {
-						AccelerationCurve = XMLHelper.ReadEntriesOrResource(
-							BaseNode, DriverData.DataSource.SourcePath, null, XMLNames.DriverModel_DriverAccelerationCurve_Entry,
-							AttributeMappings.DriverAccelerationCurveMapping)
-					};
-			}
-		}
+		public virtual IDriverAccelerationData AccelerationCurve =>
+			BaseNode == null
+				? _accelerationCurve
+				: new DriverAccelerationInputData() {
+					AccelerationCurve = XMLHelper.ReadEntriesOrResource(
+						BaseNode, DriverData.DataSource.SourcePath, null, XMLNames.DriverModel_DriverAccelerationCurve_Entry,
+						AttributeMappings.DriverAccelerationCurveMapping)
+				};
 	}
 
 	internal class XMLDriverAccelerationV10 : XMLDriverAccelerationV07

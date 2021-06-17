@@ -6,10 +6,7 @@ using TUGraz.VectoCore.Models.SimulationComponent;
 namespace TUGraz.VectoCore.Tests.Utils {
 	public class MockBattery : IElectricEnergyStorage, IElectricEnergyStoragePort, IElectricAuxConnecor
 	{
-		public Volt InternalVoltage
-		{
-			get { return 640.SI<Volt>(); }
-		}
+		public Volt InternalVoltage => 640.SI<Volt>();
 
 		public IRESSResponse Request(Second absTime, Second dt, Watt powerdemand, bool dryRun = false)
 		{
@@ -26,15 +23,9 @@ namespace TUGraz.VectoCore.Tests.Utils {
 
 		public double StateOfCharge { get; set; }
 
-		public WattSecond StoredEnergy
-		{
-			get { throw new System.NotImplementedException(); }
-		}
+		public WattSecond StoredEnergy => throw new System.NotImplementedException();
 
-		public Ampere MaxCurrent
-		{
-			get { return 375.SI<Ampere>(); }
-		}
+		public Ampere MaxCurrent => 375.SI<Ampere>();
 
 		public Watt MaxChargePower(Second dt)
 		{
@@ -46,19 +37,11 @@ namespace TUGraz.VectoCore.Tests.Utils {
 			throw new System.NotImplementedException();
 		}
 
-		public double MinSoC
-		{
-			get { return 0; }
-		}
-		public double MaxSoC
-		{
-			get { return 1; }
-		}
+		public double MinSoC => 0;
 
-		public IElectricEnergyStoragePort MainBatteryPort
-		{
-			get { return this; }
-		}
+		public double MaxSoC => 1;
+
+		public IElectricEnergyStoragePort MainBatteryPort => this;
 
 		public IElectricAuxConnecor AuxBatteryPort()
 		{

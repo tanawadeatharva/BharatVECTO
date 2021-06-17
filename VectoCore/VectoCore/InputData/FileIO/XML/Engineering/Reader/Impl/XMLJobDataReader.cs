@@ -68,10 +68,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering.Reader
 			get { return _engine ?? (_engine = CreateComponent(XMLNames.Component_Engine, (version, node, sourceFile) => Factory.CreateEngineOnlyEngine(version, node, sourceFile))); }
 		}
 
-		public IVehicleEngineeringInputData CreateVehicle
-		{
-			get { return _vehicle ?? (_vehicle = CreateComponent(XMLNames.Component_Vehicle, VehicleCreator, requireDataNode: false)); }
-		}
+		public IVehicleEngineeringInputData CreateVehicle => _vehicle ?? (_vehicle = CreateComponent(XMLNames.Component_Vehicle, VehicleCreator, requireDataNode: false));
 
 
 		public IXMLCyclesDataProvider CreateCycles

@@ -45,46 +45,22 @@ namespace TUGraz.VectoCore.OutputData.FileIO
 	{
 		private readonly string _jobFile;
 
-		public string BasePath
-		{
-			get { return Path.GetDirectoryName(_jobFile); }
-		}
+		public string BasePath => Path.GetDirectoryName(_jobFile);
 
-		public string PDFReportName
-		{
-			get { return Path.ChangeExtension(_jobFile, Constants.FileExtensions.PDFReport); }
-		}
+		public string PDFReportName => Path.ChangeExtension(_jobFile, Constants.FileExtensions.PDFReport);
 
-		public string XMLFullReportName
-		{
-			get { return Path.ChangeExtension(_jobFile, "RSLT_MANUFACTURER.xml"); }
-		}
+		public string XMLFullReportName => Path.ChangeExtension(_jobFile, "RSLT_MANUFACTURER.xml");
 
-		public string XMLCustomerReportName
-		{
-			get { return Path.ChangeExtension(_jobFile, "RSLT_CUSTOMER.xml"); }
-		}
+		public string XMLCustomerReportName => Path.ChangeExtension(_jobFile, "RSLT_CUSTOMER.xml");
 
-		public string XMLPrimaryVehicleReportName
-		{
-			get { return Path.ChangeExtension(_jobFile, "RSLT_VIF.xml"); }
-		}
+		public string XMLPrimaryVehicleReportName => Path.ChangeExtension(_jobFile, "RSLT_VIF.xml");
 
-		public string XMLMonitoringReportName
-		{
-			get { return Path.ChangeExtension(_jobFile, "RSLT_MONITORING.xml"); }
-		}
+		public string XMLMonitoringReportName => Path.ChangeExtension(_jobFile, "RSLT_MONITORING.xml");
 
-		public string XMLVTPReportName
-		{
-			get { return Path.ChangeExtension(_jobFile, "VTP_Report.xml"); }
-		}
+		public string XMLVTPReportName => Path.ChangeExtension(_jobFile, "VTP_Report.xml");
 
-		public string SumFileName
-		{
-			get { return Path.ChangeExtension(_jobFile, Constants.FileExtensions.SumFile); }
-		}
-		
+		public string SumFileName => Path.ChangeExtension(_jobFile, Constants.FileExtensions.SumFile);
+
 		/// <summary>
 		/// 
 		/// </summary>

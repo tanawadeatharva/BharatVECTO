@@ -62,7 +62,7 @@ namespace HashingTool.ViewModel.UserControl
 
 		public bool? JobDataValid
 		{
-			get { return _componentDataValid; }
+			get => _componentDataValid;
 			set {
 				if (_componentDataValid == value) {
 					return;
@@ -77,7 +77,7 @@ namespace HashingTool.ViewModel.UserControl
 
 		public string JobValidToolTip
 		{
-			get { return _jobValidToolTip; }
+			get => _jobValidToolTip;
 			set {
 				if (_jobValidToolTip == value) {
 					return;
@@ -89,7 +89,7 @@ namespace HashingTool.ViewModel.UserControl
 
 		public string VehicleIdentificationNumber
 		{
-			get { return _vin; }
+			get => _vin;
 			set {
 				if (_vin == value) {
 					return;
@@ -101,7 +101,7 @@ namespace HashingTool.ViewModel.UserControl
 
 		public DateTime? JobCreationDate
 		{
-			get { return _jobDate; }
+			get => _jobDate;
 			set {
 				if (_jobDate == value) {
 					return;

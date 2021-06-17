@@ -50,7 +50,7 @@ namespace TUGraz.VectoCommon.Utils
 			return Units;
 		}
 
-		public double Value { get { return _value; } }
+		public double Value => _value;
 
 		protected bool Equals(ConvertedSI other)
 		{

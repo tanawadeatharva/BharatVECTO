@@ -54,7 +54,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		public IIdleController IdleController
 		{
-			get { return _idleController; }
+			get => _idleController;
 			set
 			{
 				_idleController = value;
@@ -244,10 +244,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			return DataBus.GearboxInfo.GearEngaged(absTime);
 		}
 
-		public Watt ClutchLosses
-		{
-			get { return PreviousState.ClutchLoss; }
-		}
+		public Watt ClutchLosses => PreviousState.ClutchLoss;
 
 		public class ClutchState : SimpleComponentState
 		{

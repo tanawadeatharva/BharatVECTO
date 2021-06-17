@@ -155,7 +155,7 @@ namespace HashingTool.ViewModel.UserControl
 
 		public bool ManufacturerReportValid
 		{
-			get { return _manufacturerReportValid; }
+			get => _manufacturerReportValid;
 			set {
 				if (_manufacturerReportValid == value) {
 					return;

@@ -131,10 +131,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			return retVal;
 		}
 
-		public new IDataBus DataBus
-		{
-			get { return base.DataBus; }
-		}
+		public new IDataBus DataBus => base.DataBus;
 
 		/// <summary>
 		/// see documentation of IDriverActions

@@ -331,10 +331,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			return response;
 		}
 
-		public new static string Name
-		{
-			get { return "AMT - EffShift"; }
-		}
+		public new static string Name => "AMT - EffShift";
 
 		#region Overrides of AMTShiftStrategy
 

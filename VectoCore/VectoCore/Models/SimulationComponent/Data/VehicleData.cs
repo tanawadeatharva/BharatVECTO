@@ -100,7 +100,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 
 		public List<Axle> AxleData
 		{
-			get { return _axleData; }
+			get => _axleData;
 			internal set {
 				_axleData = value;
 				_wheelsInertia = null;
@@ -163,7 +163,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 				}
 				return _wheelsInertia;
 			}
-			internal set { _wheelsInertia = value; }
+			internal set => _wheelsInertia = value;
 		}
 
 		//[Required, SIRange(0, 1E12)]
@@ -175,7 +175,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 				}
 				return _totalRollResistanceCoefficient.GetValueOrDefault();
 			}
-			protected internal set { _totalRollResistanceCoefficient = value; }
+			protected internal set => _totalRollResistanceCoefficient = value;
 		}
 
 		public double RollResistanceCoefficientWithoutTrailer
@@ -186,7 +186,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 				}
 				return _rollResistanceCoefficientWithoutTrailer.GetValueOrDefault();
 			}
-			protected internal set { _rollResistanceCoefficientWithoutTrailer = value; }
+			protected internal set => _rollResistanceCoefficientWithoutTrailer = value;
 		}
 
 		public Kilogram TotalVehicleMass
@@ -200,10 +200,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 			}
 		}
 
-		public Kilogram TotalCurbMass
-		{
-			get { return (CurbMass ?? 0.SI<Kilogram>()) + (BodyAndTrailerMass ?? 0.SI<Kilogram>()); }
-		}
+		public Kilogram TotalCurbMass => (CurbMass ?? 0.SI<Kilogram>()) + (BodyAndTrailerMass ?? 0.SI<Kilogram>());
 
 		public Kilogram MinimumVehicleMass
 		{
@@ -215,10 +212,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 			}
 		}
 
-		public Kilogram MaximumVehicleMass
-		{
-			get { return GrossVehicleMass; }
-		}
+		public Kilogram MaximumVehicleMass => GrossVehicleMass;
 
 		public double AverageRollingResistanceTruck
 		{
@@ -228,7 +222,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 				}
 				return _averageRollingResistanceTruck.GetValueOrDefault();
 			}
-			protected internal set { _averageRollingResistanceTruck = value; }
+			protected internal set => _averageRollingResistanceTruck = value;
 		}
 
 		public bool ZeroEmissionVehicle { get; internal set; }

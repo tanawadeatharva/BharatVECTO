@@ -111,10 +111,7 @@ namespace TUGraz.VectoCore.InputData.Impl
 
 		public AxleType AxleType { get; internal set; }
 
-		ITyreDeclarationInputData IAxleDeclarationInputData.Tyre
-		{
-			get { return Tyre; }
-		}
+		ITyreDeclarationInputData IAxleDeclarationInputData.Tyre => Tyre;
 
 		public ITyreEngineeringInputData Tyre { get; internal set; }
 
@@ -236,10 +233,7 @@ namespace TUGraz.VectoCore.InputData.Impl
 
 		public string Technology { get; }
 
-		public WattSecond ElectricStorageCapacity
-		{
-			get { return Capacity * Voltage; }
-		}
+		public WattSecond ElectricStorageCapacity => Capacity * Voltage;
 
 		#endregion
 	}
@@ -260,10 +254,7 @@ namespace TUGraz.VectoCore.InputData.Impl
 		#region Implementation of IBusAuxElectricStorageDeclarationInputData
 
 		public string Technology { get; }
-		public WattSecond ElectricStorageCapacity
-		{
-			get { return Capacity * Voltage * Voltage / 2.0; }
-		}
+		public WattSecond ElectricStorageCapacity => Capacity * Voltage * Voltage / 2.0;
 
 		#endregion
 	}

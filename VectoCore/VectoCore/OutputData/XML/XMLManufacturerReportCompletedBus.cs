@@ -20,9 +20,8 @@ namespace TUGraz.VectoCore.OutputData.XML {
 
 		public IPrimaryVehicleInformationInputDataProvider PrimaryVehicleRecordFile { get; set; }
 
-		public IVehicleDeclarationInputData PrimaryVehicle { get { return PrimaryVehicleRecordFile.Vehicle; } }
+		public IVehicleDeclarationInputData PrimaryVehicle => PrimaryVehicleRecordFile.Vehicle;
 
-	
 
 		#region Overrides of AbstractXMLManufacturerReport
 

@@ -54,15 +54,9 @@ namespace TUGraz.VectoCore.Models.Declaration
 
 		private FuelData() { }
 
-		protected override string ResourceId
-		{
-			get { return DeclarationData.DeclarationDataResourcePrefix + ".FuelTypes.csv"; }
-		}
+		protected override string ResourceId => DeclarationData.DeclarationDataResourcePrefix + ".FuelTypes.csv";
 
-		protected override string ErrorMessage
-		{
-			get { return "FuelType {0} {1} not found!"; }
-		}
+		protected override string ErrorMessage => "FuelType {0} {1} not found!";
 
 		public Entry Lookup(FuelType fuelType, TankSystem? tankSystem = null)
 		{
@@ -81,10 +75,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 			return entries.First();
 		}
 
-		public static Entry Diesel
-		{
-			get { return Instance().Lookup(FuelType.DieselCI, null); }
-		}
+		public static Entry Diesel => Instance().Lookup(FuelType.DieselCI, null);
 
 		protected override void ParseData(DataTable table)
 		{
@@ -166,10 +157,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 
 			public JoulePerKilogramm LowerHeatingValueVectoEngine { get; }
 
-			public double HeatingValueCorrection
-			{
-				get { return LowerHeatingValueVectoEngine / LowerHeatingValueVecto; }
-			}
+			public double HeatingValueCorrection => LowerHeatingValueVectoEngine / LowerHeatingValueVecto;
 
 			public string GetLabel()
 			{

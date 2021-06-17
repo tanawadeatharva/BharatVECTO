@@ -22,10 +22,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 
 		#region Overrides of AbstractDeclarationVectoRunDataFactory
 
-		protected override IDeclarationDataAdapter DataAdapter
-		{
-			get { return _dao; }
-		}
+		protected override IDeclarationDataAdapter DataAdapter => _dao;
 
 		#endregion
 

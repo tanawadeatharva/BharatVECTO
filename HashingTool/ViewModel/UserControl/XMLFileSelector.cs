@@ -90,7 +90,7 @@ namespace HashingTool.ViewModel.UserControl
 
 		public XmlDocument Document
 		{
-			get { return _document; }
+			get => _document;
 			private set {
 				if (_document == value) {
 					return;
@@ -102,7 +102,7 @@ namespace HashingTool.ViewModel.UserControl
 
 		public string Source
 		{
-			get { return _source; }
+			get => _source;
 			private set {
 				if (_source == value) {
 					return;
@@ -113,14 +113,11 @@ namespace HashingTool.ViewModel.UserControl
 			}
 		}
 
-		public bool ValidateInput
-		{
-			get { return _validate; }
-		}
+		public bool ValidateInput => _validate;
 
 		public XmlFileStatus IsValid
 		{
-			get { return _isValid; }
+			get => _isValid;
 			private set {
 				if (_isValid == value) {
 					return;
@@ -162,10 +159,7 @@ namespace HashingTool.ViewModel.UserControl
 
 		public ObservableCollection<string> XMLValidationErrors { get; set; }
 
-		public ICommand BrowseFileCommand
-		{
-			get { return _browseFileCommand; }
-		}
+		public ICommand BrowseFileCommand => _browseFileCommand;
 
 		public ICommand SetXMLFileCommnd
 		{
@@ -265,7 +259,7 @@ namespace HashingTool.ViewModel.UserControl
 
 		public bool? ContentValid
 		{
-			get { return _contentValid; }
+			get => _contentValid;
 			set {
 				if (_contentValid == value) {
 					return;

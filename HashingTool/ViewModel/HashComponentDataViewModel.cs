@@ -69,14 +69,11 @@ namespace HashingTool.ViewModel
 		}
 
 
-		public ICommand ShowHomeViewCommand
-		{
-			get { return ApplicationViewModel.HomeView; }
-		}
+		public ICommand ShowHomeViewCommand => ApplicationViewModel.HomeView;
 
 		public string DigestValue
 		{
-			get { return _digestValue; }
+			get => _digestValue;
 			set {
 				if (_digestValue == value) {
 					return;
@@ -86,10 +83,7 @@ namespace HashingTool.ViewModel
 			}
 		}
 
-		public ICommand SaveHashedDocument
-		{
-			get { return _saveCommand; }
-		}
+		public ICommand SaveHashedDocument => _saveCommand;
 
 		private void SourceChanged(object sender, PropertyChangedEventArgs e)
 		{
@@ -117,7 +111,7 @@ namespace HashingTool.ViewModel
 
 		public bool? ComponentDataValid
 		{
-			get { return _componentDataValid; }
+			get => _componentDataValid;
 			private set {
 				if (_componentDataValid == value) {
 					return;
@@ -204,7 +198,7 @@ namespace HashingTool.ViewModel
 
 		public DateTime? Date
 		{
-			get { return _date; }
+			get => _date;
 			set
 			{
 				if (_date == value) {

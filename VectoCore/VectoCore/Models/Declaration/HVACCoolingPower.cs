@@ -33,7 +33,8 @@ namespace TUGraz.VectoCore.Models.Declaration {
 			#region Overrides of LookupData
 
 			protected override string ResourceId { get; }
-			protected override string ErrorMessage { get { return "No entry found for configuration {0}, mission {1}"; } }
+			protected override string ErrorMessage => "No entry found for configuration {0}, mission {1}";
+
 			protected override void ParseData(DataTable table)
 			{
 				var missionTypes = Enum.GetValues(typeof(MissionType)).Cast<MissionType>().Where(

@@ -61,10 +61,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 		#region Overrides of AbstractXMLResource
 
-		protected override XNamespace SchemaNamespace
-		{
-			get { return NAMESPACE_URI; }
-		}
+		protected override XNamespace SchemaNamespace => NAMESPACE_URI;
 
 		protected override DataSourceType SourceType { get; }
 
@@ -72,22 +69,13 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 		#region Implementation of ITyreDeclarationInputData
 
-		public virtual string Dimension
-		{
-			get { return _dimension ?? (_dimension = GetString(XMLNames.AxleWheels_Axles_Axle_Dimension)); }
-		}
+		public virtual string Dimension => _dimension ?? (_dimension = GetString(XMLNames.AxleWheels_Axles_Axle_Dimension));
 
-		public virtual double RollResistanceCoefficient
-		{
-			get { return _rrc ?? (_rrc = GetDouble(XMLNames.AxleWheels_Axles_Axle_RRCDeclared)).Value; }
-		}
+		public virtual double RollResistanceCoefficient => _rrc ?? (_rrc = GetDouble(XMLNames.AxleWheels_Axles_Axle_RRCDeclared)).Value;
 
-		public virtual Newton TyreTestLoad
-		{
-			get { return _fzIso ?? (_fzIso = GetDouble(XMLNames.AxleWheels_Axles_Axle_FzISO).SI<Newton>()); }
-		}
+		public virtual Newton TyreTestLoad => _fzIso ?? (_fzIso = GetDouble(XMLNames.AxleWheels_Axles_Axle_FzISO).SI<Newton>());
 
-		public virtual string FuelEfficiencyClass { get { return DeclarationData.Wheels.TyreClass.Lookup(RollResistanceCoefficient); } }
+		public virtual string FuelEfficiencyClass => DeclarationData.Wheels.TyreClass.Lookup(RollResistanceCoefficient);
 
 		#endregion
 	}
@@ -105,10 +93,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		public XMLDeclarationTyreDataProviderV20(IXMLDeclarationVehicleData vehicle, XmlNode componentNode, string sourceFile)
 			: base(vehicle, componentNode, sourceFile) { }
 
-		protected override XNamespace SchemaNamespace
-		{
-			get { return NAMESPACE_URI; }
-		}
+		protected override XNamespace SchemaNamespace => NAMESPACE_URI;
 	}
 
 	// ---------------------------------------------------------------------------------------
@@ -124,10 +109,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		public XMLDeclarationTyreDataProviderV22(IXMLDeclarationVehicleData vehicle, XmlNode componentNode, string sourceFile)
 			: base(vehicle, componentNode, sourceFile) { }
 
-		protected override XNamespace SchemaNamespace
-		{
-			get { return NAMESPACE_URI; }
-		}
+		protected override XNamespace SchemaNamespace => NAMESPACE_URI;
 	}
 
 	// ---------------------------------------------------------------------------------------
@@ -143,11 +125,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		public XMLDeclarationTyreDataProviderV23(IXMLDeclarationVehicleData vehicle, XmlNode componentNode, string sourceFile)
 			: base(vehicle, componentNode, sourceFile) { }
 
-		protected override XNamespace SchemaNamespace
-		{
-			get { return NAMESPACE_URI; }
-		}
+		protected override XNamespace SchemaNamespace => NAMESPACE_URI;
 
-		public override string FuelEfficiencyClass { get { return GetString("FuelEfficiencyClass"); } }
+		public override string FuelEfficiencyClass => GetString("FuelEfficiencyClass");
 	}
 }

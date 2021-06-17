@@ -262,13 +262,13 @@ namespace TUGraz.VectoCore.Tests.Integration.RoadSweepers
 
 			#region Implementation of IInputDataProvider
 
-			public DataSource DataSource { get { return new DataSource(); } }
+			public DataSource DataSource => new DataSource();
 
 			#endregion
 
 			#region Implementation of IEngineeringInputDataProvider
 
-			public IEngineeringJobInputData JobInputData { get { return this; } }
+			public IEngineeringJobInputData JobInputData => this;
 			public IDriverEngineeringInputData DriverInputData { get; set; }
 
 			#endregion
@@ -281,14 +281,11 @@ namespace TUGraz.VectoCore.Tests.Integration.RoadSweepers
 			public IHybridStrategyParameters HybridStrategyParameters { get; }
 			public IList<ICycleData> Cycles { get; set; }
 			public VectoSimulationJobType JobType { get; }
-			public bool EngineOnlyMode { get { return false; } }
-			public IEngineEngineeringInputData EngineOnly { get { return null; } }
+			public bool EngineOnlyMode => false;
+			public IEngineEngineeringInputData EngineOnly => null;
 			public TableData PTOCycleWhileDrive { get; set; }
 
-			IVehicleDeclarationInputData IDeclarationJobInputData.Vehicle
-			{
-				get { return Vehicle; }
-			}
+			IVehicleDeclarationInputData IDeclarationJobInputData.Vehicle => Vehicle;
 
 			public string JobName { get; set; }
 			public string ShiftStrategy { get; }
@@ -297,10 +294,7 @@ namespace TUGraz.VectoCore.Tests.Integration.RoadSweepers
 
 			#region Implementation of IDeclarationJobInputData
 
-			bool IDeclarationJobInputData.SavedInDeclarationMode
-			{
-				get { return _savedInDeclarationMode; }
-			}
+			bool IDeclarationJobInputData.SavedInDeclarationMode => _savedInDeclarationMode;
 
 			#endregion
 		}

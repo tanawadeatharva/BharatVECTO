@@ -315,14 +315,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			return DoHandleRequest(absTime, dt, CycleIterator.LeftSample.WheelAngularVelocity);
 		}
 
-		public override bool VehicleStopped
-		{
-			get
-			{
-				return CycleIterator.Previous().LeftSample.VehicleTargetSpeed
-					.IsEqual(0.KMPHtoMeterPerSecond(), 0.3.KMPHtoMeterPerSecond());
-			}
-		}
+		public override bool VehicleStopped =>
+			CycleIterator.Previous().LeftSample.VehicleTargetSpeed
+				.IsEqual(0.KMPHtoMeterPerSecond(), 0.3.KMPHtoMeterPerSecond());
 
 		protected override void DoCommitSimulationStep(Second time, Second simulationInterval)
 		{

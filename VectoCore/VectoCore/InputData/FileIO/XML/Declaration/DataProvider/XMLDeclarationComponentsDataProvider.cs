@@ -71,60 +71,30 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 		#region Implementation of IVehicleComponentsDeclaration
 
-		public virtual IAirdragDeclarationInputData AirdragInputData
-		{
-			get { return _airdragInputData ?? (_airdragInputData = ComponentReader.AirdragInputData); }
-		}
+		public virtual IAirdragDeclarationInputData AirdragInputData => _airdragInputData ?? (_airdragInputData = ComponentReader.AirdragInputData);
 
-		public virtual IGearboxDeclarationInputData GearboxInputData
-		{
-			get { return _gearboxInputData ?? (_gearboxInputData = ComponentReader.GearboxInputData); }
-		}
+		public virtual IGearboxDeclarationInputData GearboxInputData => _gearboxInputData ?? (_gearboxInputData = ComponentReader.GearboxInputData);
 
 
-		public virtual ITorqueConverterDeclarationInputData TorqueConverterInputData
-		{
-			get { return _torqueconverterInputData ?? (_torqueconverterInputData = ComponentReader.TorqueConverterInputData); }
-		}
+		public virtual ITorqueConverterDeclarationInputData TorqueConverterInputData => _torqueconverterInputData ?? (_torqueconverterInputData = ComponentReader.TorqueConverterInputData);
 
-		public virtual IAxleGearInputData AxleGearInputData
-		{
-			get { return _axleGearInputData ?? (_axleGearInputData = ComponentReader.AxleGearInputData); }
-		}
+		public virtual IAxleGearInputData AxleGearInputData => _axleGearInputData ?? (_axleGearInputData = ComponentReader.AxleGearInputData);
 
-		public virtual IAngledriveInputData AngledriveInputData
-		{
-			get { return _angledriveInputData ?? (_angledriveInputData = ComponentReader.AngledriveInputData); }
-		}
+		public virtual IAngledriveInputData AngledriveInputData => _angledriveInputData ?? (_angledriveInputData = ComponentReader.AngledriveInputData);
 
-		public virtual IEngineDeclarationInputData EngineInputData
-		{
-			get { return _engineInputData ?? (_engineInputData = ComponentReader.EngineInputData); }
-		}
+		public virtual IEngineDeclarationInputData EngineInputData => _engineInputData ?? (_engineInputData = ComponentReader.EngineInputData);
 
-		IAuxiliariesDeclarationInputData IVehicleComponentsDeclaration.AuxiliaryInputData
-		{
-			get { return _auxInputData ?? (_auxInputData = ComponentReader.AuxiliaryData); }
-		}
+		IAuxiliariesDeclarationInputData IVehicleComponentsDeclaration.AuxiliaryInputData => _auxInputData ?? (_auxInputData = ComponentReader.AuxiliaryData);
 
-		public virtual IRetarderInputData RetarderInputData
-		{
-			get { return _retarderInputData ?? (_retarderInputData = ComponentReader.RetarderInputData); }
-		}
+		public virtual IRetarderInputData RetarderInputData => _retarderInputData ?? (_retarderInputData = ComponentReader.RetarderInputData);
 
-		public virtual IPTOTransmissionInputData PTOTransmissionInputData
-		{
-			get { return _vehicle.PTOTransmissionInputData; }
-		}
+		public virtual IPTOTransmissionInputData PTOTransmissionInputData => _vehicle.PTOTransmissionInputData;
 
-		public virtual IAxlesDeclarationInputData AxleWheels
-		{
-			get { return _axleWheels ?? (_axleWheels = ComponentReader.AxlesDeclarationInputData); }
-		}
+		public virtual IAxlesDeclarationInputData AxleWheels => _axleWheels ?? (_axleWheels = ComponentReader.AxlesDeclarationInputData);
 
-		public virtual IBusAuxiliariesDeclarationData BusAuxiliaries { get { return null; } }
-		public virtual IElectricStorageDeclarationInputData ElectricStorage { get { return null; } }
-		public virtual IElectricMachinesDeclarationInputData ElectricMachines { get { return null; } }
+		public virtual IBusAuxiliariesDeclarationData BusAuxiliaries => null;
+		public virtual IElectricStorageDeclarationInputData ElectricStorage => null;
+		public virtual IElectricMachinesDeclarationInputData ElectricMachines => null;
 
 		#endregion
 
@@ -137,10 +107,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 		#region Overrides of AbstractXMLResource
 
-		protected override XNamespace SchemaNamespace
-		{
-			get { return NAMESPACE_URI; }
-		}
+		protected override XNamespace SchemaNamespace => NAMESPACE_URI;
 
 		protected override DataSourceType SourceType { get; }
 
@@ -162,10 +129,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 			vehicle, componentNode, sourceFile)
 		{ }
 
-		protected override XNamespace SchemaNamespace
-		{
-			get { return NAMESPACE_URI; }
-		}
+		protected override XNamespace SchemaNamespace => NAMESPACE_URI;
 	}
 
 	// ---------------------------------------------------------------------------------------
@@ -186,17 +150,11 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		{ }
 
 
-		IAuxiliariesDeclarationInputData IVehicleComponentsDeclaration.AuxiliaryInputData
-		{
-			get { return null; }
-		}
+		IAuxiliariesDeclarationInputData IVehicleComponentsDeclaration.AuxiliaryInputData => null;
 
-		public override IBusAuxiliariesDeclarationData BusAuxiliaries { get { return _busAuxiliaries ?? (_busAuxiliaries = ComponentReader.BusAuxiliariesInputData); } }
+		public override IBusAuxiliariesDeclarationData BusAuxiliaries => _busAuxiliaries ?? (_busAuxiliaries = ComponentReader.BusAuxiliariesInputData);
 
-		protected override XNamespace SchemaNamespace
-		{
-			get { return NAMESPACE_URI; }
-		}
+		protected override XNamespace SchemaNamespace => NAMESPACE_URI;
 	}
 
 	// ---------------------------------------------------------------------------------------
@@ -216,21 +174,12 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 		#region Overrides of XMLDeclarationComponentsDataProviderV10
 
-		public override IAxleGearInputData AxleGearInputData
-		{
-			get
-			{
-				return null;
-				//throw new NotSupportedException("No Axlegeardata available"); 
-			}
-		}
+		public override IAxleGearInputData AxleGearInputData => null;
+		//throw new NotSupportedException("No Axlegeardata available"); 
 
 		#endregion
 
-		protected override XNamespace SchemaNamespace
-		{
-			get { return NAMESPACE_URI; }
-		}
+		protected override XNamespace SchemaNamespace => NAMESPACE_URI;
 	}
 
 	// ---------------------------------------------------------------------------------------
@@ -251,22 +200,13 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 			vehicle, componentNode, sourceFile)
 		{ }
 
-		IGearboxDeclarationInputData IVehicleComponentsDeclaration.GearboxInputData
-		{
-			get { return null; }
-		}
+		IGearboxDeclarationInputData IVehicleComponentsDeclaration.GearboxInputData => null;
 
-		IAuxiliariesDeclarationInputData IVehicleComponentsDeclaration.AuxiliaryInputData
-		{
-			get { return null; }
-		}
+		IAuxiliariesDeclarationInputData IVehicleComponentsDeclaration.AuxiliaryInputData => null;
 
-		public override IBusAuxiliariesDeclarationData BusAuxiliaries { get { return _busAuxiliaries ?? (_busAuxiliaries = ComponentReader.BusAuxiliariesInputData); } }
+		public override IBusAuxiliariesDeclarationData BusAuxiliaries => _busAuxiliaries ?? (_busAuxiliaries = ComponentReader.BusAuxiliariesInputData);
 
-		protected override XNamespace SchemaNamespace
-		{
-			get { return NAMESPACE_URI; }
-		}
+		protected override XNamespace SchemaNamespace => NAMESPACE_URI;
 	}
 
 
@@ -288,35 +228,20 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 			XmlNode componentNode, string sourceFile) : base(vehicle, componentNode, sourceFile) { }
 
 
-		IRetarderInputData IVehicleComponentsDeclaration.RetarderInputData
-		{
-			get { return this; }
-		}
+		IRetarderInputData IVehicleComponentsDeclaration.RetarderInputData => this;
 
-		IAirdragDeclarationInputData IVehicleComponentsDeclaration.AirdragInputData
-		{
-			get { return null; }
-		}
+		IAirdragDeclarationInputData IVehicleComponentsDeclaration.AirdragInputData => null;
 
-		IAuxiliariesDeclarationInputData IVehicleComponentsDeclaration.AuxiliaryInputData
-		{
-			get { return null; }
-		}
+		IAuxiliariesDeclarationInputData IVehicleComponentsDeclaration.AuxiliaryInputData => null;
 
-		public override IBusAuxiliariesDeclarationData BusAuxiliaries
-		{
-			get { return _busAuxiliaries ?? (_busAuxiliaries = ComponentReader.BusAuxiliariesInputData); }
-		}
+		public override IBusAuxiliariesDeclarationData BusAuxiliaries => _busAuxiliaries ?? (_busAuxiliaries = ComponentReader.BusAuxiliariesInputData);
 
-		protected override XNamespace SchemaNamespace
-		{
-			get { return NAMESPACE_URI; }
-		}
+		protected override XNamespace SchemaNamespace => NAMESPACE_URI;
 
 		#region IRetarderInputData Interface Implementation
 
-		public RetarderType Type { get { return _vehicle.RetarderType; } }
-		public double Ratio { get { return _vehicle.RetarderRatio; } }
+		public RetarderType Type => _vehicle.RetarderType;
+		public double Ratio => _vehicle.RetarderRatio;
 		public TableData LossMap { get; }
 
 		#endregion
@@ -354,45 +279,21 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		}
 
 
-		public override IGearboxDeclarationInputData GearboxInputData
-		{
-			get { return null; }
-		}
+		public override IGearboxDeclarationInputData GearboxInputData => null;
 
-		public override ITorqueConverterDeclarationInputData TorqueConverterInputData
-		{
-			get { return null; }
-		}
+		public override ITorqueConverterDeclarationInputData TorqueConverterInputData => null;
 
-		public override IAxleGearInputData AxleGearInputData
-		{
-			get { return null; }
-		}
+		public override IAxleGearInputData AxleGearInputData => null;
 
-		public override IAngledriveInputData AngledriveInputData
-		{
-			get { return null; }
-		}
+		public override IAngledriveInputData AngledriveInputData => null;
 
-		public override IEngineDeclarationInputData EngineInputData
-		{
-			get { return null; }
-		}
+		public override IEngineDeclarationInputData EngineInputData => null;
 
-		public override IRetarderInputData RetarderInputData
-		{
-			get { return null; }
-		}
+		public override IRetarderInputData RetarderInputData => null;
 
-		public override IPTOTransmissionInputData PTOTransmissionInputData
-		{
-			get { return null; }
-		}
+		public override IPTOTransmissionInputData PTOTransmissionInputData => null;
 
-		public override IAxlesDeclarationInputData AxleWheels
-		{
-			get { return null; }
-		}
+		public override IAxlesDeclarationInputData AxleWheels => null;
 
 
 		public override IBusAuxiliariesDeclarationData BusAuxiliaries
