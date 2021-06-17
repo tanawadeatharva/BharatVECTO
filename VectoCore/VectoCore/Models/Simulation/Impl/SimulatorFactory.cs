@@ -73,9 +73,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			ModWriter = writer;
 			Validate = validate;
 
-			int workerThreads;
-			int completionThreads;
-			ThreadPool.GetMinThreads(out workerThreads, out completionThreads);
+			ThreadPool.GetMinThreads(out var workerThreads, out var completionThreads);
 			if (workerThreads < 12) {
 				workerThreads = 12;
 			}

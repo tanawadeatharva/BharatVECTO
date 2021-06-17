@@ -576,10 +576,9 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 				shiftPolygons.Add(DeclarationData.Gearbox.ComputeShiftPolygon(GearboxType.AMT, i, fullLoadCurves[(uint)(i + 1)],
 					gearboxData.Gears,
 					engineData, axlegearRatio, rdyn, null));
-				List<Point> tmp1, tmp2, tmp3;
 
 				ShiftPolygonComparison.ComputShiftPolygonPoints(i, fullLoadCurves[(uint)(i + 1)], gearboxData.Gears,
-					engineData, axlegearRatio, rdyn, out tmp1, out tmp2, out tmp3);
+					engineData, axlegearRatio, rdyn, out var tmp1, out var tmp2, out var tmp3);
 				upshiftOrig.Add(tmp1);
 				downshiftTransformed.Add(tmp2);
 				downshiftOrig.Add(tmp3);
@@ -636,10 +635,9 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 				shiftPolygons.Add(DeclarationData.Gearbox.ComputeShiftPolygon(GearboxType.AMT, i, fullLoadCurves[(uint)(i + 1)],
 					gearboxData.Gears,
 					engineData, axlegearRatio, rdyn, null));
-				List<Point> tmp1, tmp2, tmp3;
 
 				ShiftPolygonComparison.ComputShiftPolygonPoints(i, fullLoadCurves[(uint)(i + 1)], gearboxData.Gears,
-					engineData, axlegearRatio, rdyn, out tmp1, out tmp2, out tmp3);
+					engineData, axlegearRatio, rdyn, out var tmp1, out var tmp2, out var tmp3);
 				upshiftOrig.Add(tmp1);
 				downshiftTransformed.Add(tmp2);
 				downshiftOrig.Add(tmp3);
@@ -739,9 +737,8 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 					DeclarationData.Gearbox.ComputeShiftPolygon(gearboxData.Type, i, fullLoadCurves[(uint)(i + 1)], gearboxData.Gears,
 						engineData, axlegearRatio, rdyn.SI<Meter>(), null)
 					);
-				List<Point> tmp1, tmp2, tmp3;
 				ComputShiftPolygonPoints(i, fullLoadCurves[(uint)(i + 1)], gearboxData.Gears,
-					engineData, axlegearRatio, rdyn.SI<Meter>(), out tmp1, out tmp2, out tmp3);
+					engineData, axlegearRatio, rdyn.SI<Meter>(), out var tmp1, out var tmp2, out var tmp3);
 				upshiftOrig.Add(tmp1);
 				downshiftTransformed.Add(tmp2);
 			}
@@ -897,9 +894,8 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 					DeclarationData.Gearbox.ComputeShiftPolygon(gearboxData.Type, i, fullLoadCurves[(uint)(i + 1)], gearboxData.Gears,
 						engineData, axlegearRatio, rdyn, null)
 					);
-				List<Point> tmp1, tmp2, tmp3;
 				ComputShiftPolygonPoints(i, fullLoadCurves[(uint)(i + 1)], gearboxData.Gears,
-					engineData, axlegearRatio, rdyn, out tmp1, out tmp2, out tmp3);
+					engineData, axlegearRatio, rdyn, out var tmp1, out var tmp2, out var tmp3);
 				upshiftOrig.Add(tmp1);
 				downshiftTransformed.Add(tmp2);
 			}

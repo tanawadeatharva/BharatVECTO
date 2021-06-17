@@ -44,8 +44,7 @@ namespace TUGraz.VectoCore.Utils
 			double defaultValue = default(double))
 		{
 			if (row.Table.Columns.Contains(columnName)) {
-				double result;
-				if (double.TryParse(row.Field<string>(columnName), NumberStyles.Any, CultureInfo.InvariantCulture, out result)) {
+				if (double.TryParse(row.Field<string>(columnName), NumberStyles.Any, CultureInfo.InvariantCulture, out var result)) {
 					return result;
 				}
 			}

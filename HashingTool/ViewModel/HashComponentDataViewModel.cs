@@ -94,8 +94,7 @@ namespace HashingTool.ViewModel
 
 		private void SaveDocument()
 		{
-			string filename;
-			var stream = IoService.SaveData(null, ".xml", "VECTO XML file|*.xml", out filename);
+			var stream = IoService.SaveData(null, ".xml", "VECTO XML file|*.xml", out var filename);
 			if (stream == null) {
 				return;
 			}

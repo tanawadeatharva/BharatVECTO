@@ -201,7 +201,6 @@ namespace TUGraz.VectoCore.OutputData
 				return _engLine[fuel.FuelType];
 			}
 
-			double k, d, r;
 			VectoMath.LeastSquaresFitting(
 				GetValues(
 					x => x.Field<bool>(ModalResultField.ICEOn.GetName())
@@ -209,7 +208,7 @@ namespace TUGraz.VectoCore.OutputData
 							x.Field<SI>(ModalResultField.P_ice_fcmap.GetName()).Value(),
 							x.Field<SI>(GetColumnName(fuel, ModalResultField.FCFinal)).Value())
 						: null).Where(x => x != null && x.Y > 0),
-				out k, out d, out r);
+				out var k, out var d, out var r);
 			if (double.IsInfinity(k) || double.IsNaN(k)) {
 				LogManager.GetLogger(typeof(ModalDataContainer).FullName).Warn("could not calculate engine correction line - k: {0}", k);
 				k = 0;
@@ -226,7 +225,6 @@ namespace TUGraz.VectoCore.OutputData
 			}
 
 			if (Data.AsEnumerable().Any(r => r.Field<SI>(ModalResultField.P_wheel_in.GetName()) != null)) {
-				double k, d, r;
 				VectoMath.LeastSquaresFitting(
 					GetValues(
 							row => row.Field<bool>(ModalResultField.ICEOn.GetName())
@@ -234,7 +232,7 @@ namespace TUGraz.VectoCore.OutputData
 									row.Field<SI>(ModalResultField.P_wheel_in.GetName()).Value(),
 									row.Field<SI>(GetColumnName(fuel, ModalResultField.FCFinal)).Value())
 								: null)
-						.Where(x => x != null && x.X > 0 && x.Y > 0), out k, out d, out r);
+						.Where(x => x != null && x.X > 0 && x.Y > 0), out var k, out var d, out var r);
 				if (double.IsInfinity(k) || double.IsNaN(k)) {
 					LogManager.GetLogger(typeof(ModalDataContainer).FullName).Warn("could not calculate vehicle correction line - k: {0}", k);
 					k = 0;

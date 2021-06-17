@@ -95,8 +95,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 			if (beta > AirDragEntries.Last().Beta) {
 				throw new VectoSimulationException("Beta / CdxA Lookup table does not cover beta={0}", beta);
 			}
-			int index;
-			AirDragEntries.GetSection(x => x.Beta < beta, out index);
+
+			AirDragEntries.GetSection(x => x.Beta < beta, out var index);
 			return index + 1;
 		}
 	}

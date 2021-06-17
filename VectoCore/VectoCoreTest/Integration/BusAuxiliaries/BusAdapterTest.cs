@@ -61,8 +61,7 @@ namespace TUGraz.VectoCore.Tests.Integration.BusAuxiliaries
 		public void TestNoSmartAuxDuringDrive(double vehicleWeight, double engineSpeedRpm, double driveLinePower,
 			double internalPower, double expectedPowerDemand)
 		{
-			MockDriver driver;
-			var busAux = AuxDemandTest.CreateBusAuxAdapterForTesting(vehicleWeight, out driver);
+			var busAux = AuxDemandTest.CreateBusAuxAdapterForTesting(vehicleWeight, out var driver);
 
 			driver.DriverBehavior = DrivingBehavior.Driving;
 			driver.DrivingAction = DrivingAction.Accelerate;
@@ -93,8 +92,7 @@ namespace TUGraz.VectoCore.Tests.Integration.BusAuxiliaries
 			// this test is to make sure that the aux power-demand does not jump between average and smart power demand
 			// when searching for the operating point for coasting (i.e. power demand (internal Power) is close to the motoring curve, 
 			// intependent of power demand of power train)
-			MockDriver driver;
-			var busAux = AuxDemandTest.CreateBusAuxAdapterForTesting(vehicleWeight, out driver);
+			var busAux = AuxDemandTest.CreateBusAuxAdapterForTesting(vehicleWeight, out var driver);
 
 			driver.DriverBehavior = DrivingBehavior.Coasting;
 			driver.DrivingAction = DrivingAction.Coast;
@@ -116,8 +114,7 @@ namespace TUGraz.VectoCore.Tests.Integration.BusAuxiliaries
 		public void TestSmartAuxDuringBrake(double vehicleWeight, double engineSpeedRpm, double driveLinePower,
 			double internalPower, double expectedPowerDemand)
 		{
-			MockDriver driver;
-			var busAux = AuxDemandTest.CreateBusAuxAdapterForTesting(vehicleWeight, out driver);
+			var busAux = AuxDemandTest.CreateBusAuxAdapterForTesting(vehicleWeight, out var driver);
 
 			driver.DriverBehavior = DrivingBehavior.Braking;
 			driver.DrivingAction = DrivingAction.Brake;
@@ -135,8 +132,7 @@ namespace TUGraz.VectoCore.Tests.Integration.BusAuxiliaries
 		TestCase(19000)]
 		public void AuxDemandContinuityTest(double vehicleWeight)
 		{
-			MockDriver driver;
-			var busAux = AuxDemandTest.CreateBusAuxAdapterForTesting(vehicleWeight, out driver);
+			var busAux = AuxDemandTest.CreateBusAuxAdapterForTesting(vehicleWeight, out var driver);
 
 			driver.DriverBehavior = DrivingBehavior.Driving;
 

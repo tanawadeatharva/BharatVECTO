@@ -157,9 +157,9 @@ namespace TUGraz.VectoCore.InputData.Reader.ComponentData
 				if (speedBucket.Value.Count < 2) {
 					continue;
 				}
-				double k, d, r;
-				VectoMath.LeastSquaresFitting(speedBucket.Value, x => x.InputTorque.Value(), x => x.TorqueLoss.Value(), out k, out d,
-					out r);
+
+				VectoMath.LeastSquaresFitting(speedBucket.Value, x => x.InputTorque.Value(), x => x.TorqueLoss.Value(), out var k, out var d,
+					out var r);
 
 				for (var i = 2; i <= DeclarationData.LossMapExtrapolationFactor; i++) {
 					var inTq = i * maxTorque;

@@ -188,9 +188,8 @@ namespace HashingTool.ViewModel.UserControl
 
 		private async void BrowseXMLFile()
 		{
-			string filename;
 			try {
-				using (var stream = IoService.OpenFileDialog(null, ".xml", "VECTO XML file|*.xml", out filename)) {
+				using (var stream = IoService.OpenFileDialog(null, ".xml", "VECTO XML file|*.xml", out var filename)) {
 					if (stream == null) {
 						return;
 					}

@@ -349,11 +349,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 		[TestCase]
 		public void EngineIdleControllerTestCoach()
 		{
-			VehicleContainer container;
-			CombustionEngine engine;
-			ITnOutPort requestPort;
-			MockGearbox gearbox;
-			VehicleContainer(CoachEngine, out container, out engine, out requestPort, out gearbox);
+			VehicleContainer(CoachEngine, out var container, out var engine, out var requestPort, out var gearbox);
 
 			var absTime = 0.SI<Second>();
 			var dt = Constants.SimulationSettings.TargetTimeInterval;
@@ -404,11 +400,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 		[TestCase]
 		public void EngineIdleControllerTestTruck()
 		{
-			VehicleContainer container;
-			CombustionEngine engine;
-			ITnOutPort requestPort;
-			MockGearbox gearbox;
-			VehicleContainer(TruckEngine, out container, out engine, out requestPort, out gearbox);
+			VehicleContainer(TruckEngine, out var container, out var engine, out var requestPort, out var gearbox);
 
 			//var dataWriter = new ModalDataWriter("EngineIdle.vmod");
 			//container.DataWriter = dataWriter;
@@ -458,11 +450,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 		[TestCase]
 		public void EngineIdleControllerTest2Truck()
 		{
-			VehicleContainer container;
-			CombustionEngine engine;
-			ITnOutPort requestPort;
-			MockGearbox gearbox;
-			VehicleContainer(TruckEngine, out container, out engine, out requestPort, out gearbox);
+			VehicleContainer(TruckEngine, out var container, out var engine, out var requestPort, out var gearbox);
 
 			//var dataWriter = new ModalDataWriter("EngienIdle.vmod");
 			//container.DataWriter = dataWriter;
