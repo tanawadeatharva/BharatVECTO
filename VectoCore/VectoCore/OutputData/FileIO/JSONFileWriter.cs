@@ -654,7 +654,7 @@ public class JSONFileWriter : IOutputFileWriter
 			foreach (var auxEntry in aux.Auxiliaries) {
 				
 				var auxOut = new Dictionary<string, object>();
-				var engineeringAuxEntry = auxEntry as IAuxiliaryDeclarationInputData;
+				var engineeringAuxEntry = auxEntry;
 				if (!job.SavedInDeclarationMode) {
 					auxOut.Add("Type", auxEntry.Type.Name());
 					auxOut.Add("Technology", new string[] { });

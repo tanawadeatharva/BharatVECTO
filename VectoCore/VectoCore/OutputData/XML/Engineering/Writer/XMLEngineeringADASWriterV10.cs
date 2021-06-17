@@ -48,7 +48,7 @@ namespace TUGraz.VectoCore.OutputData.XML.Engineering.Writer {
 
 		public override object[] WriteXML(IAdvancedDriverAssistantSystemsEngineering inputData)
 		{
-			var adas = inputData as IAdvancedDriverAssistantSystemsEngineering;
+			var adas = inputData;
 			if (adas == null) {
 				return null;
 			}
