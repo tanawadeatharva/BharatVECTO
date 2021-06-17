@@ -13,7 +13,8 @@
             <customControls:FilePicker 
                 DockPanel.Dock="Top" 
                 Command="{Binding LoadVehicleDataCommand}" 
-                Text="{Binding VehicleInputDataFilePath, TargetNullValue=Select Vehicle Input Data . . .}"></customControls:FilePicker>
+                Text="{Binding VehicleInputDataFilePath, TargetNullValue=Select Vehicle Input Data . . .}"/>
+            <Label DockPanel.Dock="Top" HorizontalAlignment="Center"  Visibility="{Binding Exempted}">Exempted Vehicle</Label>
             <Border BorderThickness="1" BorderBrush="{DynamicResource ButtonHighlightColor}" Height="40" DockPanel.Dock="Bottom">
                 <DockPanel LastChildFill="False">
                     <Button DockPanel.Dock="Right"
@@ -46,7 +47,6 @@
                 </DockPanel>
             </Border>
             <ContentControl DockPanel.Dock="Top" Content="{Binding ManufacturingStageViewModel}"/>
-
         </DockPanel>
     </Grid>
 </UserControl>

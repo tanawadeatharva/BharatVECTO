@@ -41,6 +41,7 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 	public interface IMultiStageJobViewModel : IDeclarationMultistageJobInputData, IMultistageVIFInputData, IMultistageBusInputDataProvider, IJobViewModel, IEditViewModel
 	{
 		IManufacturingStageViewModel ManufacturingStageViewModel { get; }
+		bool Exempted { get; }
 	}
 
 
@@ -75,10 +76,10 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 			_dialogHelper = multistageDependencies.DialogHelperLazy;
 			_inputDataReader = inputDataReader;
 
-			var exempted = PrimaryVehicle.Vehicle.ExemptedVehicle;
+			_exempted = PrimaryVehicle.Vehicle.ExemptedVehicle;
 
 			_manufacturingStageViewModel =
-				vmFactory.GetManufacturingStageViewModel(_consolidateManufacturingStage, exempted);
+				vmFactory.GetManufacturingStageViewModel(_consolidateManufacturingStage, _exempted);
 
 			// QUESTION: HEV/PEV ?
 			//var hybridElectric = inputData.PrimaryVehicleData.Vehicle.HybridElectricHDV;
@@ -221,7 +222,7 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 				SaveInputDataExecute(filename:null);
 			}, () => true);
 
-		private void SaveInputDataExecute(string filename)
+		public void SaveInputDataExecute(string filename)
 		{
 			if(_manufacturingStageViewModel.Vehicle is IMultistageVehicleViewModel vehicleViewModel)
 			{
@@ -306,6 +307,7 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 		private readonly DataSource _dataSource;
 		private readonly IMultistageBusInputDataProvider _inputData;
 		private bool _selected;
+		private readonly bool _exempted;
 
 		public ICommand LoadVehicleDataCommand
 		{
@@ -433,6 +435,8 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 		#region Implementation of IEditViewModel
 
 		public string Name => "Multistage";
+
+		public bool Exempted => _exempted;
 
 		#endregion
 	}

@@ -28,31 +28,18 @@
                     <ContentControl Content="{Binding ParameterViewModels[CurbMassChassis]}"/>
                     <ContentControl Content="{Binding ParameterViewModels[GrossVehicleMassRating]}"/>
                     <ContentControl Content="{Binding ParameterViewModels[RegisteredClass]}"/>
-
-
-
-                    <Separator/>
-
                     <ContentControl 
                         Content="{Binding ParameterViewModels[VehicleCode]}"/>
-
                     <ContentControl 
                         Content="{Binding ParameterViewModels[LowEntry]}"/>
-                    <Separator/>
-
                     <ContentControl 
                         Content="{Binding ParameterViewModels[HeightInMm]}"/>
-                    <Separator/>
 
                     <Label Style="{DynamicResource LabelStyle1}">Number of Passengers</Label>
                     <ContentControl 
                         Content="{Binding ParameterViewModels[NumberPassengerSeatsLowerDeck]}"/>
                     <ContentControl 
                         Content="{Binding ParameterViewModels[NumberPassengerSeatsUpperDeck]}"/>
-                    <ContentControl 
-                        Content="{Binding ParameterViewModels[NumberPassengersStandingLowerDeck]}"/>
-                    <ContentControl 
-                        Content="{Binding ParameterViewModels[NumberPassengersStandingUpperDeck]}"/>
 
 
 

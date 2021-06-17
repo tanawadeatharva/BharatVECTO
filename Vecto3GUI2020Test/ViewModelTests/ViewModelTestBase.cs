@@ -104,16 +104,18 @@ namespace Vecto3GUI2020Test
 			var manstageVehicleViewModel = newMultistageJobViewModel.MultiStageJobViewModel.ManufacturingStageViewModel.Vehicle as DeclarationInterimStageBusVehicleViewModel_v2_8;
 			Assert.NotNull(manstageVehicleViewModel);
 
-			var auxiliariesViewModel = manstageVehicleViewModel.MultistageAuxiliariesViewModel;
-			Assert.NotNull(auxiliariesViewModel);
-
-
-
-
-			var airdragViewModel = (manstageVehicleViewModel as DeclarationInterimStageBusVehicleViewModel_v2_8)?.MultistageAirdragViewModel;
-			Assert.NotNull(airdragViewModel);
-
 			Assert.AreEqual(mockDialogHelper.Object.OpenXMLFileDialog(), newMultistageJobViewModel.VifPath);
+
+			if (!manstageVehicleViewModel.ExemptedVehicle) {
+				var auxiliariesViewModel = manstageVehicleViewModel.MultistageAuxiliariesViewModel;
+				Assert.NotNull(auxiliariesViewModel);
+
+				var airdragViewModel = (manstageVehicleViewModel as DeclarationInterimStageBusVehicleViewModel_v2_8)?.MultistageAirdragViewModel;
+				Assert.NotNull(airdragViewModel);
+			}
+			
+
+
 
 
 
@@ -132,6 +134,11 @@ namespace Vecto3GUI2020Test
 						(message, caption, button, image) => {
 							TestContext.WriteLine($"{caption}\n {message}");
 						}));
+
+				_mockDialogHelper.Setup(dialogHelper =>
+						dialogHelper.ShowMessageBox(It.IsAny<string>(), It.IsAny<string>()))
+					.Callback<string, string>((message, caption) => 
+						TestContext.WriteLine($"{{caption}}\n {message}"));
 			}
 			if (fileToLoad != null) {
 				var filePath = Path.GetFullPath(TestDataDirPath + fileToLoad);
