@@ -150,7 +150,6 @@ namespace TUGraz.VectoCore.Models.Declaration
 				denormalizedData.Rows.Add(newRow2);
 			}
 
-			;
 			var fcMap = FuelConsumptionMapReader.Create(denormalizedData.AsEnumerable().OrderBy(r => r.Field<string>(FuelConsumptionMapReader.Fields.EngineSpeed).ToDouble())
 																		.ThenBy(r => r.Field<string>(FuelConsumptionMapReader.Fields.Torque).ToDouble()).CopyToDataTable());
 			var engineCF = GetEngineCorrectionFactors(fuels);

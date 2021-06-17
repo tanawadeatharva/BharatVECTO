@@ -297,8 +297,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
             ssmInputs.HVACTechnology = string.Format(
                 "{0} ({1})", busAux.SystemConfiguration.GetName(),
                 string.Join(", ", new[] { heatPumpTypePassengerCompartment.GetName(), heatPumpTypeDriverCompartment.GetName() }));
-            ;
-            ssmInputs.COP = DeclarationData.BusAuxiliaries.CalculateCOP(
+			ssmInputs.COP = DeclarationData.BusAuxiliaries.CalculateCOP(
                 coolingPower.Item1, heatPumpTypeDriverCompartment, coolingPower.Item2, heatPumpTypePassengerCompartment /* average */,
                 floorType);
 

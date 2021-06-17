@@ -284,7 +284,7 @@ namespace TUGraz.VectoCore.OutputData
 
 			if (!_eEmRecuperate.ContainsKey(emPos)) {
 				_eEmRecuperate[emPos] = TimeIntegral<WattSecond>(
-					string.Format(ModalResultField.P_EM_mech_.GetCaption(), emPos.GetName()), x => x > 0); ;
+					string.Format(ModalResultField.P_EM_mech_.GetCaption(), emPos.GetName()), x => x > 0);
 			}
 
 			return _eEmRecuperate[emPos];
@@ -299,7 +299,6 @@ namespace TUGraz.VectoCore.OutputData
 			if (!_eEmRecuperateMot.ContainsKey(emPos)) {
 				_eEmRecuperateMot[emPos] = TimeIntegral<WattSecond>(
 					string.Format(ModalResultField.P_EM_electricMotor_em_mech_.GetCaption(), emPos.GetName()), x => x > 0);
-				;
 			}
 
 			return _eEmRecuperateMot[emPos];
@@ -818,7 +817,6 @@ namespace TUGraz.VectoCore.OutputData
 			}
 
 			var retVal = result.SI<T>();
-			;
 			if (filter == null) {
 				_timeIntegrals[field] = retVal;
 			}

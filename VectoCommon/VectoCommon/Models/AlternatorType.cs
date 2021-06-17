@@ -24,7 +24,7 @@ namespace TUGraz.VectoCommon.Models
 					return "no alternator";
 				default:
 					throw new ArgumentOutOfRangeException(nameof(type), type, null);
-			};
+			}
 		}
 
 		public static string GetLabel(this AlternatorType type)
