@@ -700,7 +700,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 
 		private string GetTagName(AuxiliaryType auxId)
 		{
-			return auxId.ToString() + "Technology";
+			return auxId + "Technology";
 		}
 
 		private object[] GetCommonDescription(CombustionEngineData data)

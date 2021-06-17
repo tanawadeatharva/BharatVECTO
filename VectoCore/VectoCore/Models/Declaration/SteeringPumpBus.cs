@@ -91,7 +91,7 @@ namespace TUGraz.VectoCore.Models.Declaration {
 			{
 				var missionTypes = Enum.GetValues(typeof(MissionType)).Cast<MissionType>().Where(
 					m => ((m.IsDeclarationMission() && m != MissionType.ExemptedMission) || m == MissionType.VerificationTest) &&
-						table.Columns.Contains("tubing-" + m.ToString())).ToList();
+						table.Columns.Contains("tubing-" + m)).ToList();
 
 				foreach (DataRow row in table.Rows) {
 					var axleNumber = row.Field<string>("technology");
