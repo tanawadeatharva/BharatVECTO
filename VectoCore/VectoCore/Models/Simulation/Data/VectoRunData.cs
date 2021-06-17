@@ -134,12 +134,14 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 		public SuperCapData SuperCapData { get; internal set; }
 
 
-		public SimulationType SimulationType { get; set; }
+		public SimulationType SimulationType { get; internal set; }
 
-		public VTPData VTPData { get; set; }
+		public VTPData VTPData { get; internal set; }
 
-		public ShiftStrategyParameters GearshiftParameters { get; set; }
-		public bool Exempted { get; set; }
+		public ShiftStrategyParameters GearshiftParameters { get; internal set; }
+		public bool Exempted { get; internal set; }
+
+		public bool MultistageRun { get; internal set; }
 
 		public IDrivingCycleData PTOCycleWhileDrive { get; internal set; }
 

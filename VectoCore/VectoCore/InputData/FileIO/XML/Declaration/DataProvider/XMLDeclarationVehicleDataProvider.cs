@@ -1337,7 +1337,10 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		{
 			get
 			{
-				return ElementExists(new [] {XMLNames.Component_Vehicle, XMLNames.Component_Model})
+				if (BaseNode.LocalName == XMLNames.Component_Vehicle) {
+					return BaseNode.SelectSingleNode($"./*[local-name()='{XMLNames.Component_Model}']")?.InnerText;
+				}
+				return ElementExists(new [] { XMLNames.Component_Vehicle, XMLNames.Component_Model})
 					? GetString(new[] { XMLNames.Component_Vehicle, XMLNames.Component_Model }) : null;
 			}
 		}

@@ -214,7 +214,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 				var current = i++;
 				var d = data;
 				data.JobRunId = current;
-				yield return data.Exempted ? GetExemptedRun(data) : GetNonExemptedRun(data, current, d, ref warning1Hz);
+				yield return data.Exempted || data.MultistageRun ? GetExemptedRun(data) : GetNonExemptedRun(data, current, d, ref warning1Hz);
 			}
 		}
 
