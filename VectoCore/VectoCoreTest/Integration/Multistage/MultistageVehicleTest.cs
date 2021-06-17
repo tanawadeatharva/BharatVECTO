@@ -97,7 +97,7 @@ namespace TUGraz.VectoCore.Tests.Integration.Multistage
 			jobContainer.Execute();
 			jobContainer.WaitFinished();
 			var progress = jobContainer.GetProgress();
-			Assert.IsTrue(progress.All(r => r.Value.Success), string.Concat<Exception>(progress.Select(r => r.Value.Error)));
+			Assert.IsTrue(progress.All(r => r.Value.Success), string.Concat(progress.Select(r => r.Value.Error)));
 
 			using (var xmlReader = XmlReader.Create(writer.XMLMultistageReportFileName)) {
 				var validator = new XMLValidator(xmlReader);
@@ -135,7 +135,7 @@ namespace TUGraz.VectoCore.Tests.Integration.Multistage
 			jobContainer.Execute();
 			jobContainer.WaitFinished();
 			var progress = jobContainer.GetProgress();
-			Assert.IsTrue(progress.All(r => r.Value.Success), string.Concat<Exception>(progress.Select(r => r.Value.Error)));
+			Assert.IsTrue(progress.All(r => r.Value.Success), string.Concat(progress.Select(r => r.Value.Error)));
 
 			using (var xmlReader = XmlReader.Create(writer.XMLMultistageReportFileName))
 			{
@@ -343,8 +343,8 @@ namespace TUGraz.VectoCore.Tests.Integration.Multistage
 			jobContainer.Execute();
 			jobContainer.WaitFinished();
 			var progress = jobContainer.GetProgress();
-			Assert.IsTrue(progress.All(r => r.Value.Success), string.Concat<Exception>(progress.Select(r => r.Value.Error)));
-			Assert.IsTrue(jobContainer.Runs.All(r => r.Success), string.Concat<Exception>(jobContainer.Runs.Select(r => r.ExecException)));
+			Assert.IsTrue(progress.All(r => r.Value.Success), string.Concat(progress.Select(r => r.Value.Error)));
+			Assert.IsTrue(jobContainer.Runs.All(r => r.Success), string.Concat(jobContainer.Runs.Select(r => r.ExecException)));
 		}
 
 		[NonParallelizable]
@@ -391,8 +391,8 @@ namespace TUGraz.VectoCore.Tests.Integration.Multistage
 			jobContainer.WaitFinished();
 
 			var progress = jobContainer.GetProgress();
-			Assert.IsTrue(progress.All(r => r.Value.Success), string.Concat<Exception>(progress.Select(r => r.Value.Error)));
-			Assert.IsTrue(jobContainer.Runs.All(r => r.Success), string.Concat<Exception>(jobContainer.Runs.Select(r => r.ExecException)));
+			Assert.IsTrue(progress.All(r => r.Value.Success), string.Concat(progress.Select(r => r.Value.Error)));
+			Assert.IsTrue(jobContainer.Runs.All(r => r.Success), string.Concat(jobContainer.Runs.Select(r => r.ExecException)));
 		}
 
 		

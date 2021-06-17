@@ -214,7 +214,7 @@ namespace TUGraz.VectoCore.Tests.Integration.RoadSweepers
 			jobContainer.WaitFinished();
 
 			var progress = jobContainer.GetProgress();
-			Assert.IsTrue(progress.All(r => r.Value.Success), string.Concat<Exception>(progress.Select(r => r.Value.Error)));
+			Assert.IsTrue(progress.All(r => r.Value.Success), string.Concat(progress.Select(r => r.Value.Error)));
 		}
 
 
@@ -253,7 +253,7 @@ namespace TUGraz.VectoCore.Tests.Integration.RoadSweepers
 			jobContainer.WaitFinished();
 
 			var progress = jobContainer.GetProgress();
-			Assert.IsTrue(progress.All(r => r.Value.Success), string.Concat<Exception>(progress.Select(r => r.Value.Error)));
+			Assert.IsTrue(progress.All(r => r.Value.Success), string.Concat(progress.Select(r => r.Value.Error)));
 		}
 
 		public class EngineeringJobInputData : IEngineeringInputDataProvider, IEngineeringJobInputData
