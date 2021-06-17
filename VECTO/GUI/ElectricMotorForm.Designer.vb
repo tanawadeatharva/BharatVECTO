@@ -464,9 +464,9 @@ Partial Class ElectricMotorForm
         Me.lblContTqUnit.AutoSize = true
         Me.lblContTqUnit.Location = New System.Drawing.Point(182, 8)
         Me.lblContTqUnit.Name = "lblContTqUnit"
-        Me.lblContTqUnit.Size = New System.Drawing.Size(24, 13)
+        Me.lblContTqUnit.Size = New System.Drawing.Size(29, 13)
         Me.lblContTqUnit.TabIndex = 24
-        Me.lblContTqUnit.Text = "[W]"
+        Me.lblContTqUnit.Text = "[Nm]"
         '
         'tbContTq
         '
@@ -604,9 +604,9 @@ Partial Class ElectricMotorForm
         Me.lblOverloadTqUnit.AutoSize = true
         Me.lblOverloadTqUnit.Location = New System.Drawing.Point(182, 8)
         Me.lblOverloadTqUnit.Name = "lblOverloadTqUnit"
-        Me.lblOverloadTqUnit.Size = New System.Drawing.Size(24, 13)
+        Me.lblOverloadTqUnit.Size = New System.Drawing.Size(29, 13)
         Me.lblOverloadTqUnit.TabIndex = 24
-        Me.lblOverloadTqUnit.Text = "[W]"
+        Me.lblOverloadTqUnit.Text = "[Nm]"
         '
         'tbOverloadTq
         '
