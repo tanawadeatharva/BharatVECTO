@@ -14,6 +14,7 @@ using System.Xml;
 using Castle.Core.Internal;
 using Microsoft.Build.Framework;
 using TUGraz.VectoCommon.BusAuxiliaries;
+using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
@@ -340,6 +341,16 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 
 		public void SetVehicleInputData(IVehicleDeclarationInputData vehicleInputData)
 		{
+			if (vehicleInputData.ExemptedVehicle != ExemptedVehicle) {
+				throw new VectoException("Only exempted stage inputs are allowed");
+			}
+
+			if (ExemptedVehicle) {
+				SetExemptedVehicleInputData(vehicleInputData);
+				return;
+			}
+
+
 			Manufacturer = vehicleInputData.Manufacturer;
 			Identifier = vehicleInputData.Identifier;
 			ManufacturerAddress = vehicleInputData.ManufacturerAddress;
@@ -383,6 +394,23 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 			OnPropertyChanged(string.Empty);
 		}
 
+		private void SetExemptedVehicleInputData(IVehicleDeclarationInputData vehicleInputData)
+		{
+			Debug.Assert(vehicleInputData.ExemptedVehicle);
+			Manufacturer = vehicleInputData.Manufacturer;
+			Identifier = vehicleInputData.Identifier;
+			ManufacturerAddress = vehicleInputData.ManufacturerAddress;
+			VIN = vehicleInputData.VIN;
+			Model = vehicleInputData.Model;
+			LegislativeClass = vehicleInputData.LegislativeClass;
+			CurbMassChassis = vehicleInputData.CurbMassChassis;
+			GrossVehicleMassRating = vehicleInputData.GrossVehicleMassRating;
+			RegisteredClass = vehicleInputData.RegisteredClass;
+			NumberPassengerSeatsUpperDeck = vehicleInputData.NumberPassengerSeatsUpperDeck;
+			NumberPassengerSeatsLowerDeck = vehicleInputData.NumberPassengerSeatsLowerDeck;
+			VehicleCode = vehicleInputData.VehicleCode;
+			Height = vehicleInputData.Height;
+		}
 
 
 
@@ -739,12 +767,12 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 
 		public IAirdragDeclarationInputData AirdragInputData
 		{
-			get => MultistageAirdragViewModel.AirDragViewModel;
+			get => MultistageAirdragViewModel?.AirDragViewModel;
 		}
 
 		public IBusAuxiliariesDeclarationData BusAuxiliaries
 		{
-			get => MultistageAuxiliariesViewModel.HasValues ? MultistageAuxiliariesViewModel : null;
+			get => MultistageAuxiliariesViewModel != null &&  MultistageAuxiliariesViewModel.HasValues ? MultistageAuxiliariesViewModel : null;
 		}
 
 		#region not implemented
@@ -1138,7 +1166,8 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 		{
 			get
 			{
-				return !Error.IsNullOrEmpty() || MultistageAuxiliariesViewModel.HasErrors;
+				return !Error.IsNullOrEmpty() || 
+						(MultistageAuxiliariesViewModel != null && MultistageAuxiliariesViewModel.HasErrors);
 			}
 		}
 		#endregion
