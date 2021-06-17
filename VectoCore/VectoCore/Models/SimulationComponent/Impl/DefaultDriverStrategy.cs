@@ -1038,7 +1038,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			IResponse first;
 			if (DriverStrategy.OverspeedAllowed(targetVelocity, prohibitOverspeed) &&
-				DataBus.VehicleInfo.VehicleSpeed.IsEqual(targetVelocity)) {
+				DataBus.VehicleInfo.VehicleSpeed.IsGreaterOrEqual(targetVelocity)) {
 				first = Driver.DrivingActionCoast(absTime, ds, velocityWithOverspeed, gradient);
 				debug.Add(new { action = "Coast", first });
 				if (first is ResponseSuccess && first.Driver.Acceleration < 0) {
