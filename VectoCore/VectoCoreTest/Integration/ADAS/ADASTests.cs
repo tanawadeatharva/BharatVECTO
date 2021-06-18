@@ -15,6 +15,7 @@ using TUGraz.VectoCore.Tests.Utils;
 namespace TUGraz.VectoCore.Tests.Integration.ADAS
 {
 	[TestFixture]
+	[Parallelizable(ParallelScope.All)]
 	public class ADASTests
 	{
 
