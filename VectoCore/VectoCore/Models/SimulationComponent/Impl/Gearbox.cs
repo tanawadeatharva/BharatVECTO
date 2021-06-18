@@ -410,69 +410,69 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				dryRunResponse.Gearbox.OutputTorque = outTorque;
 				dryRunResponse.Gearbox.OutputSpeed = outAngularVelocity;
 				return dryRunResponse;
-			}
+			} else {
+				var response = NextComponent.Request(absTime, dt, inTorque, inAngularVelocity, false);
+				response.Gearbox.InputSpeed = inAngularVelocity;
+				response.Gearbox.InputTorque = inTorque;
+				response.Gearbox.OutputTorque = outTorque;
+				response.Gearbox.OutputSpeed = outAngularVelocity;
 
-			var response = NextComponent.Request(absTime, dt, inTorque, inAngularVelocity, false);
-			response.Gearbox.InputSpeed = inAngularVelocity;
-			response.Gearbox.InputTorque = inTorque;
-			response.Gearbox.OutputTorque = outTorque;
-			response.Gearbox.OutputSpeed = outAngularVelocity;
+				var shiftAllowed = !inAngularVelocity.IsEqual(0) && !DataBus.VehicleInfo.VehicleSpeed.IsEqual(0);
 
-			var shiftAllowed = !inAngularVelocity.IsEqual(0) && !DataBus.VehicleInfo.VehicleSpeed.IsEqual(0);
+				if (response is ResponseSuccess && shiftAllowed) {
+					var shiftRequired = _strategy?.ShiftRequired(absTime, dt, outTorque, outAngularVelocity, inTorque,
+						response.Engine.EngineSpeed, Gear, EngageTime, response) ?? false;
 
-			if (response is ResponseSuccess && shiftAllowed) {
-				var shiftRequired = _strategy?.ShiftRequired(absTime, dt, outTorque, outAngularVelocity, inTorque,
-					response.Engine.EngineSpeed, Gear, EngageTime, response) ?? false;
+					if (shiftRequired) {
+						if (_overrideDisengage != null) {
+							EngageTime = absTime;
+							return RequestGearEngaged(absTime, dt, outTorque, outAngularVelocity, inTorque,
+								inTorqueLossResult, inertiaTorqueLossOut, false);
+						}
 
-				if (shiftRequired) {
-					if (_overrideDisengage != null) {
-						EngageTime = absTime;
-						return RequestGearEngaged(absTime, dt, outTorque, outAngularVelocity, inTorque,
-							inTorqueLossResult, inertiaTorqueLossOut, dryRun);
-					}
+						EngageTime = absTime + ModelData.TractionInterruption;
 
-					EngageTime = absTime + ModelData.TractionInterruption;
+						Log.Debug(
+							"Gearbox is shifting. absTime: {0}, dt: {1}, interuptionTime: {2}, out: ({3}, {4}), in: ({5}, {6})",
+							absTime,
+							dt, EngageTime, outTorque, outAngularVelocity, inTorque, inAngularVelocity);
 
-					Log.Debug(
-						"Gearbox is shifting. absTime: {0}, dt: {1}, interuptionTime: {2}, out: ({3}, {4}), in: ({5}, {6})",
-						absTime,
-						dt, EngageTime, outTorque, outAngularVelocity, inTorque, inAngularVelocity);
+						Disengaged = true;
+						_strategy.Disengage(absTime, dt, outTorque, outAngularVelocity);
+						Log.Info("Gearbox disengaged");
 
-					Disengaged = true;
-					_strategy.Disengage(absTime, dt, outTorque, outAngularVelocity);
-					Log.Info("Gearbox disengaged");
-
-					return new ResponseGearShift(this, response) {
-						SimulationInterval = ModelData.TractionInterruption,
-						Gearbox = {
+						return new ResponseGearShift(this, response) {
+							SimulationInterval = ModelData.TractionInterruption,
+							Gearbox = {
 							PowerRequest =
 								outTorque * (PreviousState.OutAngularVelocity + outAngularVelocity) / 2.0,
 							Gear = Gear
 						},
 
-					};
+						};
+					}
 				}
+
+				// this code has to be _after_ the check for a potential gear-shift!
+				// (the above block issues dry-run requests and thus may update the CurrentState!)
+				// begin critical section
+				CurrentState.TransmissionTorqueLoss = inTorque * ModelData.Gears[Gear.Gear].Ratio - outTorque;
+				// MQ 19.2.2016: check! inertia is related to output side, torque loss accounts to input side
+				CurrentState.InertiaTorqueLossOut = inertiaTorqueLossOut;
+
+
+				CurrentState.TorqueLossResult = inTorqueLossResult;
+				CurrentState.SetState(inTorque, inAngularVelocity, outTorque, outAngularVelocity);
+				CurrentState.Gear = Gear;
+				// end critical section
+
+
+				response.Gearbox.PowerRequest =
+					outTorque * (PreviousState.OutAngularVelocity + CurrentState.OutAngularVelocity) / 2.0;
+				response.Gearbox.Gear = Gear;
+
+				return response;
 			}
-
-			// this code has to be _after_ the check for a potential gear-shift!
-			// (the above block issues dry-run requests and thus may update the CurrentState!)
-			// begin critical section
-			CurrentState.TransmissionTorqueLoss = inTorque * ModelData.Gears[Gear.Gear].Ratio - outTorque;
-			// MQ 19.2.2016: check! inertia is related to output side, torque loss accounts to input side
-			CurrentState.InertiaTorqueLossOut = inertiaTorqueLossOut;
-
-
-			CurrentState.TorqueLossResult = inTorqueLossResult;
-			CurrentState.SetState(inTorque, inAngularVelocity, outTorque, outAngularVelocity);
-			CurrentState.Gear = Gear;
-			// end critical section
-
-
-			response.Gearbox.PowerRequest =
-				outTorque * (PreviousState.OutAngularVelocity + CurrentState.OutAngularVelocity) / 2.0;
-			response.Gearbox.Gear = Gear;
-
-			return response;
 		}
 
 		private void ReEngageGear(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity)

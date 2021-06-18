@@ -209,7 +209,7 @@ Examples:
 							break;
 						case ".xml":
 							var xDocument = XDocument.Load(file);
-							var rootNode = xDocument == null ? "" : xDocument.Root.Name.LocalName;
+							var rootNode = xDocument?.Root.Name.LocalName ?? "";
 							switch (rootNode) {
 								case "VectoInputEngineering":
 									dataProvider = inputReader.CreateEngineering(file);

@@ -9,7 +9,8 @@ using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.OutputData;
 using TUGraz.VectoCore.Utils;
 
-namespace TUGraz.VectoCore.Models.SimulationComponent.Impl {
+namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
+{
 	public class StopStartCombustionEngine : CombustionEngine
 	{
 		protected double EngineStopStartUtilityFactor;
@@ -91,8 +92,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl {
 			CurrentState.dt = dt;
 
 			//if (!dryRun) {
-				//EngineAux.TorqueDemand(absTime, dt, 0.SI<NewtonMeter>(), 0.SI<NewtonMeter>(), ModelData.IdleSpeed);
-				//CurrentState.AuxPowerEngineOff = EngineAux.PowerDemandEngineOff(absTime, dt);
+			//EngineAux.TorqueDemand(absTime, dt, 0.SI<NewtonMeter>(), 0.SI<NewtonMeter>(), ModelData.IdleSpeed);
+			//CurrentState.AuxPowerEngineOff = EngineAux.PowerDemandEngineOff(absTime, dt);
 			//} else {
 			if (dryRun) {
 				return new ResponseDryRun(this) {
@@ -112,11 +113,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl {
 					},
 					DeltaEngineSpeed = 0.RPMtoRad(),
 				};
-			}
-
-			EngineAux?.TorqueDemand(absTime, dt, outTorque, outAngularVelocity, dryRun);
-			return new ResponseSuccess(this) {
-				Engine = {
+			} else {
+				EngineAux?.TorqueDemand(absTime, dt, outTorque, outAngularVelocity);
+				return new ResponseSuccess(this) {
+					Engine = {
 					TorqueOutDemand = outTorque,
 					PowerRequest = 0.SI<Watt>(),
 					DynamicFullLoadPower = 0.SI<Watt>(),
@@ -126,7 +126,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl {
 					EngineSpeed = 0.RPMtoRad(),
 					AuxiliariesPowerDemand = 0.SI<Watt>(),
 				},
-			};
+				};
+			}
 		}
 
 		#region Overrides of CombustionEngine
@@ -153,7 +154,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl {
 						(EngineStartEnergy + (engineRampUpEnergy + engineDragEnergy) * EngineStopStartUtilityFactor) /
 						CurrentState.dt;
 				} else {
-					container[ModalResultField.P_ice_start] =  0.SI<Watt>();
+					container[ModalResultField.P_ice_start] = 0.SI<Watt>();
 				}
 
 				container[ModalResultField.P_aux_ESS_mech_ice_off] = 0.SI<Watt>();
@@ -183,11 +184,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl {
 			container[ModalResultField.T_ice_drag] = 0.SI<NewtonMeter>();
 
 			container[ModalResultField.ICEOn] = CurrentState.EngineOn;
-			
+
 			var auxDemandPwrICEOn = EngineAux.PowerDemandESSEngineOn(time, simulationInterval, ModelData.IdleSpeed);
 			var auxDemandPwrICEOff = EngineAux.PowerDemandESSEngineOff(time, simulationInterval);
 			var auxDemandTq = auxDemandPwrICEOn / ModelData.IdleSpeed;
-			
+
 			container[ModalResultField.P_aux_ESS_mech_ice_off] = (auxDemandPwrICEOff ?? 0.SI<Watt>());
 			container[ModalResultField.P_aux_ESS_mech_ice_on] = (auxDemandPwrICEOn ?? 0.SI<Watt>());
 
@@ -206,7 +207,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl {
 					//fcAAUX = advancedAux.AAuxFuelConsumption;
 				}
 
-				
+
 				var result = fuel.ConsumptionMap.GetFuelConsumption(auxDemandTq, ModelData.IdleSpeed);
 
 				var fcESS = result.Value * (1 - EngineStopStartUtilityFactor) * fuel.FuelData.HeatingValueCorrection * WHTCCorrectionFactor(fuel.FuelData);
@@ -242,7 +243,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl {
 	{
 		public SimplePowerrtrainCombustionEngine(
 			IVehicleContainer container, CombustionEngineData modelData, bool pt1Disabled = false) : base(
-			container, modelData, pt1Disabled) { }
+			container, modelData, pt1Disabled)
+		{ }
 
 		public EngineState EnginePreviousState => PreviousState;
 	}

@@ -28,7 +28,7 @@ namespace TUGraz.VectoCore.InputData.Reader.ComponentData
 			string whrColumn = null;
 			type = type & (WHRType.ElectricalOutput | WHRType.MechanicalOutputDrivetrain);
 			switch (type) {
-				case WHRType.MechanicalOutputDrivetrain: 
+				case WHRType.MechanicalOutputDrivetrain:
 					whrColumn = Fields.MechanicalPower;
 					break;
 				case WHRType.ElectricalOutput:
@@ -46,31 +46,30 @@ namespace TUGraz.VectoCore.InputData.Reader.ComponentData
 			}
 
 			if (!headerValid && (type == WHRType.ElectricalOutput || type == WHRType.MechanicalOutputDrivetrain)) {
-				
-					throw new VectoException("expected column headers: {0}", string.Join(", ", whrColumn));
-				}
+				throw new VectoException("expected column headers: {0}", string.Join(", ", whrColumn));
+			}
 
-			if (!headerValid) { 
+			if (!headerValid) {
 				data.Columns[0].ColumnName = Fields.EngineSpeed;
 				data.Columns[1].ColumnName = Fields.Torque;
 			}
 
 			var delaunayMap = new DelaunayMap(type.IsElectrical() ? "WHRMapEl" : "WHRMapMech");
-			
+
 			foreach (DataRow row in data.Rows) {
 				try {
 					var engineSpeed = row.ParseDouble(Fields.EngineSpeed).RPMtoRad();
 					var torque = row.ParseDouble(Fields.Torque).SI<NewtonMeter>();
-					var electricPower =  row.ParseDouble(whrColumn).SI<Watt>();
+					var electricPower = row.ParseDouble(whrColumn).SI<Watt>();
 
-					delaunayMap?.AddPoint(torque.Value(),engineSpeed.Value(),electricPower.Value());
+					delaunayMap?.AddPoint(torque.Value(), engineSpeed.Value(), electricPower.Value());
 				} catch (Exception e) {
 					throw new VectoException($"WHR Map - Line {data.Rows.IndexOf(row)}: {e.Message}", e);
 				}
 			}
 
 			delaunayMap.Triangulate();
-			
+
 			return new WHRPowerMap(delaunayMap);
 		}
 

@@ -177,8 +177,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					Strategy.AllowEmergencyShift = true;
 					retryCount++;
 					retry = true;
-					Strategy.OperatingpointChangedDuringRequest(absTime, dt, outTorque, outAngularVelocity, dryRun,
-						retVal);
+					Strategy.OperatingpointChangedDuringRequest(absTime, dt, outTorque, outAngularVelocity, false, retVal);
 					continue;
 				}
 
@@ -186,8 +185,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					retryCount++;
 					retry = true;
 					Strategy.AllowEmergencyShift = true;
-					Strategy.OperatingpointChangedDuringRequest(absTime, dt, outTorque, outAngularVelocity, dryRun,
-						retVal);
+					Strategy.OperatingpointChangedDuringRequest(absTime, dt, outTorque, outAngularVelocity, false, retVal);
 					continue;
 				}
 

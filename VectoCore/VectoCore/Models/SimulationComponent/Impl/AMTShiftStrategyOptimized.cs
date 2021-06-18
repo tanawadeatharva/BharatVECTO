@@ -204,6 +204,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				return minFcGear;
 			}
 
+			//todo mk20210618 fcUpshiftPossible is always true! Maybe this statement can be simplified?
 			return fcUpshiftPossible
 				? currentGear
 				: base.CheckEarlyUpshift(absTime, dt, outTorque, outAngularVelocity, currentGear, response1);
