@@ -121,7 +121,7 @@
 		<ZipFiles Include="$(OutputPath)VECTO.exe*" />
 		<ZipFiles Include="$(OutputPath)VECTOMultistage.exe*" />
 		<ZipFiles Include="$(OutputPath)vectocmd.exe*"/>
-		<ZipFiles Include="$(OutputPath)VECTO3.exe*" />
+		<!-- <ZipFiles Include="$(OutputPath)VECTO3.exe*" /> -->
 		<ZipFiles Include="$(OutputPath)HashingTool.exe*"/>
 		<ZipFiles Include="$(OutputPath)hashingcmd.exe*"/>
 	</ItemGroup>
