@@ -290,7 +290,7 @@ namespace HashingTool.ViewModel.UserControl
 																					? Environment.NewLine + e.Exception.InnerException.Message
 																					: "")
 																				: e.ValidationEventArgs.Message,
-																			e.ValidationEventArgs == null ? 0 : e.ValidationEventArgs.Exception.LineNumber));
+																			e.ValidationEventArgs?.Exception.LineNumber ?? 0));
 																}
 															}
 														);

@@ -246,7 +246,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 			var angledriveRatio = hasAngleDrive && angledriveData.Type == AngledriveType.SeparateAngledrive
 				? angledriveData.Angledrive.Ratio
 				: 1.0;
-			var axlegearRatio = axleGearData != null ? axleGearData.AxleGear.Ratio : 1.0;
+			var axlegearRatio = axleGearData?.AxleGear.Ratio ?? 1.0;
 			var dynamicTyreRadius = runData.VehicleData != null ? runData.VehicleData.DynamicTyreRadius : 0.0.SI<Meter>();
 
 			var vehicleMaxSpeed = runData.EngineData.FullLoadCurves[0].N95hSpeed /

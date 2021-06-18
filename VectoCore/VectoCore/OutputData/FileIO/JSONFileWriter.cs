@@ -390,7 +390,7 @@ public class JSONFileWriter : IOutputFileWriter
 			{ "EcoRoll", vehicle.ADAS.EcoRoll.ToString() },
 			{ "PredictiveCruiseControl", vehicle.ADAS.PredictiveCruiseControl.ToString() }, {
 				"ATEcoRollReleaseLockupClutch",
-				vehicle.ADAS.ATEcoRollReleaseLockupClutch.HasValue ? vehicle.ADAS.ATEcoRollReleaseLockupClutch.Value : false
+				vehicle.ADAS.ATEcoRollReleaseLockupClutch ?? false
 			}
 		};
 		if (airdrag.AirDragArea != null)

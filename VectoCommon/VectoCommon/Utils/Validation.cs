@@ -185,11 +185,11 @@ namespace TUGraz.VectoCommon.Utils
 
 			var validationService =
 				validationContext.GetService(typeof(VectoValidationModeServiceContainer)) as VectoValidationModeServiceContainer;
-			var mode = validationService != null ? validationService.Mode : ExecutionMode.Declaration;
+			var mode = validationService?.Mode ?? ExecutionMode.Declaration;
 			var gbxType = validationService != null ? validationService.GearboxType : GearboxType.MT;
 			var isEmsCycle = validationService != null && validationService.IsEMSCycle;
-			var jobType = validationService != null ? validationService.JobType : VectoSimulationJobType.ConventionalVehicle;
-			var emPos = validationService != null ? validationService.EMPowertrainPosition : (PowertrainPosition?)null;
+			var jobType = validationService?.JobType ?? VectoSimulationJobType.ConventionalVehicle;
+			var emPos = validationService?.EMPowertrainPosition;
 
 			var enumerable = value as IEnumerable;
 			if (enumerable != null) {
@@ -411,7 +411,7 @@ namespace TUGraz.VectoCommon.Utils
 			}
 			var validationService =
 				validationContext.GetService(typeof(VectoValidationModeServiceContainer)) as VectoValidationModeServiceContainer;
-			var mode = validationService != null ? validationService.Mode : (ExecutionMode?)null;
+			var mode = validationService?.Mode;
 			var emsMode = validationService != null && validationService.IsEMSCycle;
 
 			if (!_emsMission.HasValue || _emsMission.Value == emsMode) {

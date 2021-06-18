@@ -174,12 +174,12 @@ namespace TUGraz.VectoCore.OutputData
 
 		public VectoRun.Status RunStatus { get; protected set; }
 
-		public string Error => SimException == null ? null : SimException.Message;
+		public string Error => SimException?.Message;
 
 		public string StackTrace =>
 			SimException == null
 				? null
-				: (SimException.StackTrace ?? (SimException.InnerException != null ? SimException.InnerException.StackTrace : null));
+				: (SimException.StackTrace ?? SimException.InnerException?.StackTrace);
 
 
 		public void Reset()

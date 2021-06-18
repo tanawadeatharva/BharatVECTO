@@ -225,9 +225,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 		public string LegislativeCategory => null;
 
 		public virtual LegislativeClass? LegislativeClass =>
-			Body["LegislativeClass"] != null
-				? Body["LegislativeClass"].Value<string>().ParseEnum<LegislativeClass>()
-				: VectoCommon.Models.LegislativeClass.Unknown;
+			Body["LegislativeClass"]?.Value<string>().ParseEnum<LegislativeClass>() ?? VectoCommon.Models.LegislativeClass.Unknown;
 
 		public virtual VehicleCategory VehicleCategory => (VehicleCategory)Enum.Parse(typeof(VehicleCategory), Body[JsonKeys.Vehicle_VehicleCategory].Value<string>(), true);
 

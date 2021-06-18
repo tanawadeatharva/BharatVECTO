@@ -265,7 +265,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 						$"Gear {gearNr} LossMap")
 					: null,
 				Efficiency = nextEfficiency,
-				MaxTorque = gear["MaxTorque"] != null ? gear["MaxTorque"].Value<double>().SI<NewtonMeter>() : null,
+				MaxTorque = gear["MaxTorque"]?.Value<double>().SI<NewtonMeter>(),
 				ShiftPolygon = ReadTableData(gear.GetEx<string>(JsonKeys.Gearbox_Gear_ShiftPolygonFile),
 					$"Gear {gearNr} shiftPolygon", false),
 			};

@@ -180,10 +180,10 @@ namespace TUGraz.VectoCore.Utils
 		private static void DrawGraph(int i, IEnumerable<Triangle> triangles, Triangle superTriangle, Point[] points,
 			Point lastPoint = null)
 		{
-			var xmin = Math.Min(points.Min(p => p.X), lastPoint != null ? lastPoint.X : double.NaN);
-			var xmax = Math.Max(points.Max(p => p.X), lastPoint != null ? lastPoint.X : double.NaN);
-			var ymin = Math.Min(points.Min(p => p.Y), lastPoint != null ? lastPoint.Y : double.NaN);
-			var ymax = Math.Max(points.Max(p => p.Y), lastPoint != null ? lastPoint.Y : double.NaN);
+			var xmin = Math.Min(points.Min(p => p.X), lastPoint?.X ?? double.NaN);
+			var xmax = Math.Max(points.Max(p => p.X), lastPoint?.X ?? double.NaN);
+			var ymin = Math.Min(points.Min(p => p.Y), lastPoint?.Y ?? double.NaN);
+			var ymax = Math.Max(points.Max(p => p.Y), lastPoint?.Y ?? double.NaN);
 
 			using (var chart = new Chart { Width = 1000, Height = 1000 }) {
 				chart.ChartAreas.Add(new ChartArea("main") {

@@ -46,7 +46,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration
 			foreach (var component in EnumHelper.GetValues<VectoComponents>()) {
 				var nodes = xmlDocument.SelectNodes(string.Format("//*[local-name()='{0}']//*[local-name()='{1}']/*[local-name()='Model']",
 																XMLNames.VectoManufacturerReport, component.XMLElementName()));
-				var count = nodes == null ? 0 : nodes.Count;
+				var count = nodes?.Count ?? 0;
 				for (var i = 0; i < count; i++) {
 					retVal.Add(component);
 				}
@@ -54,7 +54,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration
 			foreach (var component in new[] { XMLNames.AxleWheels_Axles_Axle }) {
 				var nodes = xmlDocument.SelectNodes(string.Format("//*[local-name()='{0}']//*[local-name()='{1}']",
 																XMLNames.VectoManufacturerReport, component));
-				var count = nodes == null ? 0 : nodes.Count;
+				var count = nodes?.Count ?? 0;
 				for (var i = 0; i < count; i++) {
 					retVal.Add(VectoComponents.Tyre);
 				}

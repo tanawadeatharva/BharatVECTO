@@ -158,7 +158,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox
 		{
 			var validationService =
 				validationContext.GetService(typeof(VectoValidationModeServiceContainer)) as VectoValidationModeServiceContainer;
-			var gbxType = validationService != null ? validationService.GearboxType : null;
+			var gbxType = validationService?.GearboxType;
 
 			if (gbxType == null || gbxType.Value.AutomaticTransmission()) {
 				return ValidationResult.Success;

@@ -89,9 +89,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		{
 			var dt = Constants.SimulationSettings.TargetTimeInterval;
 
-			var tcLocked = DataBus.DrivingCycleInfo.CycleData.LeftSample.TorqueConverterActive != null
-				? !DataBus.DrivingCycleInfo.CycleData.LeftSample.TorqueConverterActive
-				: null;
+			var tcLocked = !DataBus.DrivingCycleInfo.CycleData.LeftSample.TorqueConverterActive;
 			Gear = new GearshiftPosition(GetGearFromCycle(), tcLocked);
 
 			if (TorqueConverter != null && Gear.TorqueConverterLocked == null) {
@@ -206,9 +204,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		{
 			Disengaged = null;
 
-			var tcLocked = DataBus.DrivingCycleInfo.CycleData.LeftSample.TorqueConverterActive != null
-				? !DataBus.DrivingCycleInfo.CycleData.LeftSample.TorqueConverterActive
-				: null;
+			var tcLocked = !DataBus.DrivingCycleInfo.CycleData.LeftSample.TorqueConverterActive;
 			Gear = new GearshiftPosition(GetGearFromCycle(), tcLocked);
 
 

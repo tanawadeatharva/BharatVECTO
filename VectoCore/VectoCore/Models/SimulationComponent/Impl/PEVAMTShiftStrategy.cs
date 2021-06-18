@@ -68,7 +68,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			SkipGears = true;
 
 			TransmissionRatio = runData.AxleGearData.AxleGear.Ratio *
-									(runData.AngledriveData == null ? 1.0 : runData.AngledriveData.Angledrive.Ratio) /
+									(runData.AngledriveData?.Angledrive.Ratio ?? 1.0) /
 									runData.VehicleData.DynamicTyreRadius;
 			//var minEngineSpeed = (runData.EngineData.FullLoadCurves[0].RatedSpeed - runData.EngineData.IdleSpeed) *
 			//	Constants.SimulationSettings.ClutchClosingSpeedNorm + runData.EngineData.IdleSpeed;

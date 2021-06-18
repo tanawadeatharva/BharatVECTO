@@ -113,7 +113,7 @@ namespace TUGraz.VectoHashing
 			foreach (var component in EnumHelper.GetValues<VectoComponents>()) {
 				var nodes = Document.SelectNodes(string.Format("//*[local-name()='{0}']//*[local-name()='{1}']",
 					XMLNames.VectoInputDeclaration, component.XMLElementName()));
-				var count = nodes == null ? 0 : nodes.Count;
+				var count = nodes?.Count ?? 0;
 				for (var i = 0; i < count; i++) {
 					retVal.Add(component);
 				}

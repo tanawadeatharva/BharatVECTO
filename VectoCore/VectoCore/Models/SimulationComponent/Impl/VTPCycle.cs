@@ -174,7 +174,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
                 return;
             }
             var transmissionRatio = RunData.AxleGearData.AxleGear.Ratio *
-									(RunData.AngledriveData == null ? 1.0 : RunData.AngledriveData.Angledrive.Ratio) /
+									(RunData.AngledriveData?.Angledrive.Ratio ?? 1.0) /
 									RunData.VehicleData.DynamicTyreRadius;
 			var cardanStartSpeed = (RunData.GearshiftParameters.StartSpeed * transmissionRatio).Cast<PerSecond>();
 			var minEngineSpeed = (RunData.EngineData.FullLoadCurves[0].RatedSpeed - RunData.EngineData.IdleSpeed) *
