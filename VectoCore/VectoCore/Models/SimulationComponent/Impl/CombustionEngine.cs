@@ -676,7 +676,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					throw new VectoException("Torque has to be 0 for idle requests! {0}", outTorque);
 				}
 
-				return DoHandleRequest(absTime, dt, outTorque, outAngularVelocity);
+				return DoHandleRequest(absTime, dt, outTorque, null);
 			}
 
 			protected virtual IResponse DoHandleRequest(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity) { 
