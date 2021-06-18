@@ -74,7 +74,7 @@ Public Class Settings
 		If File.Exists(Path.Combine(MyAppPath, "User Manual\help.html")) Then
 			Dim defaultBrowserPath As String = BrowserUtils.GetDefaultBrowserPath()
 			Process.Start(defaultBrowserPath,
-						String.Format("""file://{0}""", Path.Combine(MyAppPath,"User Manual\help.html#settings")))
+						$"""file://{Path.Combine(MyAppPath, "User Manual\help.html#settings")}""")
 		Else
 			MsgBox("User Manual not found!", MsgBoxStyle.Critical)
 		End If

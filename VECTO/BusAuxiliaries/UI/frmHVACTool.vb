@@ -1062,7 +1062,7 @@ Public Class frmHVACTool
 
 
 				Case "Delete"
-					Dim dr As DialogResult = MessageBox.Show(String.Format("Do you want to delete benefit '{0}' ?", benefit), "",
+					Dim dr As DialogResult = MessageBox.Show($"Do you want to delete benefit '{benefit}' ?", "",
 															MessageBoxButtons.YesNo)
 					If dr = Windows.Forms.DialogResult.Yes Then
 						'If ssmTOOL.TechList.Delete(New TechListBenefitLine With {.BenefitName = benefit, .Category = category}, feedback) _

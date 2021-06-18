@@ -165,7 +165,7 @@ Public Class EngineForm
 		If File.Exists(Path.Combine(MyAppPath, "User Manual\help.html")) Then
 			Dim defaultBrowserPath As String = BrowserUtils.GetDefaultBrowserPath()
 			Process.Start(defaultBrowserPath,
-						String.Format("""file://{0}""", path.Combine(MyAppPath, "User Manual\help.html#engine-editor")))
+						$"""file://{path.Combine(MyAppPath, "User Manual\help.html#engine-editor")}""")
 		Else
 			MsgBox("User Manual not found!", MsgBoxStyle.Critical)
 		End If
@@ -594,9 +594,8 @@ Public Class EngineForm
 			chart.Series.Add(series)
 
 			engineCharacteristics +=
-				String.Format("Max. Torque: {0:F0} Nm; Max. Power: {1:F1} kW; n_rated: {2:F0} rpm; n_95h: {3:F0} rpm",
-							fullLoadCurve.MaxTorque.Value(), fullLoadCurve.MaxPower.Value() / 1000, fullLoadCurve.RatedSpeed.AsRPM,
-							fullLoadCurve.N95hSpeed.AsRPM)
+				$"Max. Torque: {fullLoadCurve.MaxTorque.Value():F0} Nm; Max. Power: {(fullLoadCurve.MaxPower.Value()/1000):F1 _
+					} kW; n_rated: {fullLoadCurve.RatedSpeed.AsRPM:F0} rpm; n_95h: {fullLoadCurve.N95hSpeed.AsRPM:F0} rpm"
 		End If
 
 	    If Not fcMap2 Is Nothing Then

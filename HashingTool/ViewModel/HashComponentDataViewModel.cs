@@ -156,12 +156,12 @@ namespace HashingTool.ViewModel
 					var validator = new AsyncXMLValidator(XmlReader.Create(ms), r => { ComponentDataValid = r; },
 						(s, e) => {
 							Application.Current.Dispatcher.Invoke(() => _xmlFile.LogError(
-								string.Format("Validation {0} Line {2}: {1}", s == XmlSeverityType.Warning ? "WARNING" : "ERROR",
+								string.Format("Validation {0} Line {2}: {1}", 
+									s == XmlSeverityType.Warning ? "WARNING" : "ERROR",
 									e.ValidationEventArgs == null
-										? e.Exception.Message +
-										(e.Exception.InnerException != null ? Environment.NewLine + e.Exception.InnerException.Message : "")
+										? e.Exception.Message + (e.Exception.InnerException != null ? Environment.NewLine + e.Exception.InnerException.Message : "")
 										: e.ValidationEventArgs.Message,
-									e.ValidationEventArgs == null ? 0 : e.ValidationEventArgs.Exception.LineNumber)));
+									e.ValidationEventArgs?.Exception.LineNumber ?? 0)));
 						});
 					await validator.ValidateXML(XmlDocumentType.DeclarationComponentData);
 				}

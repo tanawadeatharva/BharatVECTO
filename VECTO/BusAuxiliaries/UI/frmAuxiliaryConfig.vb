@@ -800,7 +800,7 @@ Public Class frmAuxiliaryConfig
 
         result = BusAuxWriter.SaveAuxConfig(auxConfig, FilePathUtils.ResolveFilePath(aauxPath, auxFile)) ' auxConfig.Save(FilePathUtils.ResolveFilePath(aauxPath, auxFile))
 
-        If Not result Then MessageBox.Show(String.Format("Unable to Save the file '{0}'", auxFile))
+        If Not result Then MessageBox.Show($"Unable to Save the file '{auxFile}'")
 
         Return result
     End Function
