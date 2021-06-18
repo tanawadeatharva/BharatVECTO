@@ -47,7 +47,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 	{
 		public ITnOutPort RequestPort
 		{
-			set { NextComponent = value; }
+			set => NextComponent = value;
 		}
 
 		public readonly Second Duration;

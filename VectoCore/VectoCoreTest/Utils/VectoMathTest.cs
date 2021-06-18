@@ -140,8 +140,7 @@ namespace TUGraz.VectoCore.Tests.Utils
 				new { X = 20, Y = 12 }
 			};
 
-			double k, d, r;
-			VectoMath.LeastSquaresFitting(entries, x => x.X, x => x.Y, out k, out d, out r);
+			VectoMath.LeastSquaresFitting(entries, x => x.X, x => x.Y, out var k, out var d, out var r);
 
 			Assert.AreEqual(4, d, 1e-6);
 			Assert.AreEqual(0.4, k, 1e-6);
@@ -164,8 +163,7 @@ namespace TUGraz.VectoCore.Tests.Utils
 				new { X = 11, Y = 30.55 },
 			};
 
-			double k, d, r;
-			VectoMath.LeastSquaresFitting(entries, x => x.X, x => x.Y, out k, out d, out r);
+			VectoMath.LeastSquaresFitting(entries, x => x.X, x => x.Y, out var k, out var d, out var r);
 
 			Assert.AreEqual(27.003529, d, 1e-6);
 			Assert.AreEqual(0.431535, k, 1e-6);

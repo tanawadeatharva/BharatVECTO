@@ -63,10 +63,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 
 		#region Implementation of IXMLPTOReader
 
-		public virtual IPTOTransmissionInputData PTOInputData
-		{
-			get { return _ptoInputData ?? (_ptoInputData = CreateComponent(XMLNames.Vehicle_PTO, PTOCreator)); }
-		}
+		public virtual IPTOTransmissionInputData PTOInputData => _ptoInputData ?? (_ptoInputData = CreateComponent(XMLNames.Vehicle_PTO, PTOCreator));
 
 		#endregion
 

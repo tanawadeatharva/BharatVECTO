@@ -23,10 +23,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		}
 
 		#region Implementation of IBatteryProvider
-		public IElectricEnergyStoragePort MainBatteryPort
-		{
-			get { return this; }
-		}
+		public IElectricEnergyStoragePort MainBatteryPort => this;
 
 		#endregion
 
@@ -169,23 +166,12 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		#region Implementation of IRESSInfo
 
-		public Volt InternalVoltage
-		{
-			get { return ModelData.SOCMap.Lookup(PreviousState.StateOfCharge); }
-		}
+		public Volt InternalVoltage => ModelData.SOCMap.Lookup(PreviousState.StateOfCharge);
 
 
-		public double StateOfCharge
-		{
-			get { return PreviousState.StateOfCharge; }
-		}
+		public double StateOfCharge => PreviousState.StateOfCharge;
 
-		public WattSecond StoredEnergy
-		{
-			get {
-				return PreviousState.StateOfCharge * ModelData.Capacity * ModelData.SOCMap.Lookup(PreviousState.StateOfCharge);
-			}
-		}
+		public WattSecond StoredEnergy => PreviousState.StateOfCharge * ModelData.Capacity * ModelData.SOCMap.Lookup(PreviousState.StateOfCharge);
 
 		public Watt MaxChargePower(Second dt)
 		{
@@ -207,14 +193,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			return VectoMath.Max(maxDischargePower, maxPower);
 		}
 
-		public double MinSoC
-		{
-			get { return ModelData.MinSOC; }
-		}
-		public double MaxSoC
-		{
-			get { return ModelData.MaxSOC; }
-		}
+		public double MinSoC => ModelData.MinSOC;
+
+		public double MaxSoC => ModelData.MaxSOC;
 
 		//public Ampere MaxCurrent
 		//{

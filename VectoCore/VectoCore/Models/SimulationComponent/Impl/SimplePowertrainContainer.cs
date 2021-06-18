@@ -13,46 +13,25 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl {
 			RunData = runData;
 		}
 
-		public IDriverDemandOutPort VehiclePort
-		{
-			get { return (VehicleInfo as Vehicle)?.OutPort(); }
-		}
+		public IDriverDemandOutPort VehiclePort => (VehicleInfo as Vehicle)?.OutPort();
 
-		public ITnOutPort GearboxOutPort
-		{
-			get { return (GearboxInfo as IGearbox)?.OutPort(); }
-		}
+		public ITnOutPort GearboxOutPort => (GearboxInfo as IGearbox)?.OutPort();
 
-		public IGearbox GearboxCtlTest
-		{
-			get { return GearboxInfo as IGearbox; }
-		}
+		public IGearbox GearboxCtlTest => GearboxInfo as IGearbox;
 
-		public override Second AbsTime { get { return 0.SI<Second>(); } }
+		public override Second AbsTime => 0.SI<Second>();
 
-		public override IDriverInfo DriverInfo { get { return base.DriverInfo ?? this; } }
+		public override IDriverInfo DriverInfo => base.DriverInfo ?? this;
 
-		public override bool IsTestPowertrain
-		{
-			get { return true; }
-		}
+		public override bool IsTestPowertrain => true;
 
 		#region Implementation of IDriverInfo
 
-		public DrivingBehavior DriverBehavior
-		{
-			get { return  DrivingBehavior.Driving; }
-		}
+		public DrivingBehavior DriverBehavior => DrivingBehavior.Driving;
 
-		public DrivingAction DrivingAction
-		{
-			get { return DrivingAction.Accelerate; }
-		}
+		public DrivingAction DrivingAction => DrivingAction.Accelerate;
 
-		public MeterPerSquareSecond DriverAcceleration
-		{
-			get { return 0.SI<MeterPerSquareSecond>(); }
-		}
+		public MeterPerSquareSecond DriverAcceleration => 0.SI<MeterPerSquareSecond>();
 
 		#endregion
 	}

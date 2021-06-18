@@ -571,13 +571,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 
 		public virtual IHybridController Controller { protected get; set; }
 
-		public PerSecond MinICESpeed
-		{
-			get
-			{
-				return ModelData.EngineData.IdleSpeed;
-			}
-		}
+		public PerSecond MinICESpeed => ModelData.EngineData.IdleSpeed;
 
 		public bool AllowEmergencyShift { protected get; set; }
 

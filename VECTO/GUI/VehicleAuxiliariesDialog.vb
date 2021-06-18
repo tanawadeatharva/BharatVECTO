@@ -13,7 +13,6 @@ Option Infer On
 Imports System.Linq
 Imports System.Windows.Forms
 Imports TUGraz.VectoCommon.Models
-Imports TUGraz.VectoCommon.Utils
 Imports TUGraz.VectoCore.Models.Declaration
 
 

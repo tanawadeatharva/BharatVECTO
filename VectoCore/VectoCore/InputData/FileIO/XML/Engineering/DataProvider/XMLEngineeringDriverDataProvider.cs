@@ -63,45 +63,24 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering.DataProvider
 
 		public IXMLDriverDataReader Reader { protected get; set; }
 
-		public virtual IDriverAccelerationData AccelerationCurve
-		{
-			get { return (_accCurve ?? (_accCurve = Reader.AccelerationCurveData)).AccelerationCurve; }
-		}
+		public virtual IDriverAccelerationData AccelerationCurve => (_accCurve ?? (_accCurve = Reader.AccelerationCurveData)).AccelerationCurve;
 
-		public virtual ILookaheadCoastingInputData Lookahead
-		{
-			get { return _lookahead ?? (_lookahead = Reader.LookAheadData); }
-		}
+		public virtual ILookaheadCoastingInputData Lookahead => _lookahead ?? (_lookahead = Reader.LookAheadData);
 
-		public virtual IGearshiftEngineeringInputData GearshiftInputData
-		{
-			get { return _shiftParameters ?? (_shiftParameters = Reader.ShiftParameters); }
-		}
+		public virtual IGearshiftEngineeringInputData GearshiftInputData => _shiftParameters ?? (_shiftParameters = Reader.ShiftParameters);
 
-		public virtual IEngineStopStartEngineeringInputData EngineStopStartData { get { return null; } }
+		public virtual IEngineStopStartEngineeringInputData EngineStopStartData => null;
 
 
-		public virtual IEcoRollEngineeringInputData EcoRollData
-		{
-			get { return null; }
-		}
+		public virtual IEcoRollEngineeringInputData EcoRollData => null;
 
-		public virtual IPCCEngineeringInputData PCCData
-		{
-			get { return null; }
-		}
+		public virtual IPCCEngineeringInputData PCCData => null;
 
-		public virtual IOverSpeedEngineeringInputData OverSpeedData
-		{
-			get { return _overspeed ?? (_overspeed = Reader.OverspeedData); }
-		}
+		public virtual IOverSpeedEngineeringInputData OverSpeedData => _overspeed ?? (_overspeed = Reader.OverspeedData);
 
 		#region Overrides of AbstractXMLResource
 
-		protected override XNamespace SchemaNamespace
-		{
-			get { return NAMESPACE_URI; }
-		}
+		protected override XNamespace SchemaNamespace => NAMESPACE_URI;
 
 		protected override DataSourceType SourceType { get; }
 
@@ -128,26 +107,14 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering.DataProvider
 			inputData, driverDataNode, fsBasePath) { }
 
 
-		protected override XNamespace SchemaNamespace
-		{
-			get { return NAMESPACE_URI; }
-		}
+		protected override XNamespace SchemaNamespace => NAMESPACE_URI;
 
-		public override IEngineStopStartEngineeringInputData EngineStopStartData
-		{
-			get { return _engineStopStart ?? (_engineStopStart = Reader.EngineStopStartData); }
-		}
+		public override IEngineStopStartEngineeringInputData EngineStopStartData => _engineStopStart ?? (_engineStopStart = Reader.EngineStopStartData);
 
-		public override IEcoRollEngineeringInputData EcoRollData
-		{
-			get { return _ecoRollData ?? (_ecoRollData = Reader.EcoRollData); }
-		}
+		public override IEcoRollEngineeringInputData EcoRollData => _ecoRollData ?? (_ecoRollData = Reader.EcoRollData);
 
-		
-		public override IPCCEngineeringInputData PCCData
-		{
-			get { return _pccData ?? (_pccData = Reader.PCCData); }
-		}
+
+		public override IPCCEngineeringInputData PCCData => _pccData ?? (_pccData = Reader.PCCData);
 	}
 
 	

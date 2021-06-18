@@ -209,7 +209,7 @@ Examples:
 							break;
 						case ".xml":
 							var xDocument = XDocument.Load(file);
-							var rootNode = xDocument == null ? "" : xDocument.Root.Name.LocalName;
+							var rootNode = xDocument?.Root.Name.LocalName ?? "";
 							switch (rootNode) {
 								case "VectoInputEngineering":
 									dataProvider = inputReader.CreateEngineering(file);
@@ -222,7 +222,7 @@ Examples:
 					}
 
 					if (dataProvider == null) {
-						WriteLine(string.Format(@"failed to read job: '{0}'", file));
+						WriteLine($@"failed to read job: '{file}'");
 						continue;
 					}
 
@@ -241,7 +241,7 @@ Examples:
 				WriteLine(@"Detected cycles:", ConsoleColor.White);
 
 				foreach (var cycle in _jobContainer.GetCycleTypes()) {
-					WriteLineStdOut(string.Format(@"  {0}: {1}", cycle.Name, cycle.CycleType));
+					WriteLineStdOut($@"  {cycle.Name}: {cycle.CycleType}");
 				}
 				WriteLine();
 
@@ -355,8 +355,8 @@ Examples:
 
 		private static void ShowVersionInformation()
 		{
-			WriteLine(string.Format(@"VectoConsole: {0}", Assembly.GetExecutingAssembly().GetName().Version));
-			WriteLine(string.Format(@"VectoCore: {0}", VectoSimulationCore.VersionNumber));
+			WriteLine($@"VectoConsole: {Assembly.GetExecutingAssembly().GetName().Version}");
+			WriteLine($@"VectoCore: {VectoSimulationCore.VersionNumber}");
 		}
 
 		private static void PrintProgress(Dictionary<int, JobContainer.ProgressEntry> progessData,
@@ -381,10 +381,9 @@ Examples:
 					}
 					var timingString = "";
 					if (showTiming && progressEntry.Value.ExecTime > 0) {
-						timingString = string.Format("{0,9:F2}s", progressEntry.Value.ExecTime / 1000.0);
+						timingString = $"{progressEntry.Value.ExecTime / 1000.0,9:F2}s";
 					}
-					var runName = string.Format("{0} {1} {2}", progressEntry.Value.RunName, progressEntry.Value.CycleName,
-						progressEntry.Value.RunSuffix);
+					var runName = $"{progressEntry.Value.RunName} {progressEntry.Value.CycleName} {progressEntry.Value.RunSuffix}";
 					Console.WriteLine(@"{0,-60} {1,8:P}{2}", runName, progressEntry.Value.Progress, timingString);
 					Console.ResetColor();
 					sumProgress += progressEntry.Value.Progress;

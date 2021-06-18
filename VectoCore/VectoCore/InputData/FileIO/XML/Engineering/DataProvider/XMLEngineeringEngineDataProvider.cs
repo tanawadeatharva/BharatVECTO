@@ -71,89 +71,40 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering.DataProvider
 
 		public XMLEngineeringEngineDataProviderV07(XmlNode node, string sourceFile) : base(null, node, sourceFile) { }
 
-		public virtual CubicMeter Displacement
-		{
-			get { return GetDouble(XMLNames.Engine_Displacement).SI(Unit.SI.Cubic.Centi.Meter).Cast<CubicMeter>(); }
-		}
+		public virtual CubicMeter Displacement => GetDouble(XMLNames.Engine_Displacement).SI(Unit.SI.Cubic.Centi.Meter).Cast<CubicMeter>();
 
-		public virtual PerSecond IdleSpeed
-		{
-			get { return GetDouble(XMLNames.Engine_IdlingSpeed).RPMtoRad(); }
-		}
+		public virtual PerSecond IdleSpeed => GetDouble(XMLNames.Engine_IdlingSpeed).RPMtoRad();
 
-		public virtual double WHTCEngineering
-		{
-			get { return GetDouble(XMLNames.Engine_WHTCEngineering); }
-		}
+		public virtual double WHTCEngineering => GetDouble(XMLNames.Engine_WHTCEngineering);
 
-		IList<IEngineModeEngineeringInputData> IEngineEngineeringInputData.EngineModes
-		{
-			get { return _modes ?? (_modes = ReadEngineModes()); }
-		}
+		IList<IEngineModeEngineeringInputData> IEngineEngineeringInputData.EngineModes => _modes ?? (_modes = ReadEngineModes());
 
-		public virtual Second EngineStartTime
-		{
-			get { return null; }
-		}
+		public virtual Second EngineStartTime => null;
 
-		public virtual double WHTCMotorway
-		{
-			get { throw new VectoException("Property not available in Engineering Mode"); }
-		}
+		public virtual double WHTCMotorway => throw new VectoException("Property not available in Engineering Mode");
 
-		public virtual double WHTCRural
-		{
-			get { throw new VectoException("Property not available in Engineering Mode"); }
-		}
+		public virtual double WHTCRural => throw new VectoException("Property not available in Engineering Mode");
 
-		public virtual double WHTCUrban
-		{
-			get { throw new VectoException("Property not available in Engineering Mode"); }
-		}
+		public virtual double WHTCUrban => throw new VectoException("Property not available in Engineering Mode");
 
-		public virtual double ColdHotBalancingFactor
-		{
-			get { throw new VectoException("Property not available in Engineering Mode"); }
-		}
+		public virtual double ColdHotBalancingFactor => throw new VectoException("Property not available in Engineering Mode");
 
-		public virtual double CorrectionFactorRegPer
-		{
-			get {
-				return 1;
+		public virtual double CorrectionFactorRegPer => 1;
 
-				//GetDoubleElementValue(XMLNames.Engine_CorrectionFactor_RegPer); 
-			}
-		}
+		//GetDoubleElementValue(XMLNames.Engine_CorrectionFactor_RegPer); 
+		public virtual double CorrectionFactorNCV => 1;
 
-		public virtual double CorrectionFactorNCV
-		{
-			get { return 1; }
-		}
+		public virtual FuelType FuelType => FuelType.DieselCI; //GetElementValue(XMLNames.Engine_FuelType).ParseEnum<FuelType>();
 
-		public virtual FuelType FuelType
-		{
-			get {
-				return FuelType.DieselCI; //GetElementValue(XMLNames.Engine_FuelType).ParseEnum<FuelType>();
-			}
-		}
+		public virtual TableData FuelConsumptionMap =>
+			XMLHelper.ReadEntriesOrResource(
+				BaseNode, DataSource.SourcePath, XMLNames.Engine_FuelConsumptionMap, XMLNames.Engine_FuelConsumptionMap_Entry,
+				AttributeMappings.FuelConsumptionMapMapping);
 
-		public virtual TableData FuelConsumptionMap
-		{
-			get {
-				return XMLHelper.ReadEntriesOrResource(
-					BaseNode, DataSource.SourcePath, XMLNames.Engine_FuelConsumptionMap, XMLNames.Engine_FuelConsumptionMap_Entry,
-					AttributeMappings.FuelConsumptionMapMapping);
-			}
-		}
-
-		public virtual TableData FullLoadCurve
-		{
-			get {
-				return XMLHelper.ReadEntriesOrResource(
-					BaseNode, DataSource.SourcePath, XMLNames.Engine_FullLoadAndDragCurve, XMLNames.Engine_FullLoadCurve_Entry,
-					AttributeMappings.EngineFullLoadCurveMapping);
-			}
-		}
+		public virtual TableData FullLoadCurve =>
+			XMLHelper.ReadEntriesOrResource(
+				BaseNode, DataSource.SourcePath, XMLNames.Engine_FullLoadAndDragCurve, XMLNames.Engine_FullLoadCurve_Entry,
+				AttributeMappings.EngineFullLoadCurveMapping);
 
 		IList<IEngineFuelEngineeringInputData> IEngineModeEngineeringInputData.Fuels
 		{
@@ -165,65 +116,32 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering.DataProvider
 			get { return new[] { this }.Cast<IEngineFuelDeclarationInputData>().ToList(); }
 		}
 
-		public virtual IWHRData WasteHeatRecoveryDataElectrical
-		{
-			get { return null; }
-		}
+		public virtual IWHRData WasteHeatRecoveryDataElectrical => null;
 
 
-		public virtual IWHRData WasteHeatRecoveryDataMechanical
-		{
-			get { return null; }
-		}
+		public virtual IWHRData WasteHeatRecoveryDataMechanical => null;
 
 
-		public virtual Watt RatedPowerDeclared
-		{
-			get {
-				return null; //GetDoubleElementValue(XMLNames.Engine_RatedPower).SI<Watt>(); 
-			}
-		}
+		public virtual Watt RatedPowerDeclared => null; //GetDoubleElementValue(XMLNames.Engine_RatedPower).SI<Watt>(); 
 
-		public virtual PerSecond RatedSpeedDeclared
-		{
-			get {
-				return null; //GetDoubleElementValue(XMLNames.Engine_RatedSpeed).RPMtoRad(); 
-			}
-		}
+		public virtual PerSecond RatedSpeedDeclared => null; //GetDoubleElementValue(XMLNames.Engine_RatedSpeed).RPMtoRad(); 
 
-		public virtual NewtonMeter MaxTorqueDeclared
-		{
-			get {
-				return null; //GetDoubleElementValue(XMLNames.Engine_MaxTorque).SI<NewtonMeter>(); 
-			}
-		}
+		public virtual NewtonMeter MaxTorqueDeclared => null; //GetDoubleElementValue(XMLNames.Engine_MaxTorque).SI<NewtonMeter>(); 
 
-		public virtual IList<IEngineModeDeclarationInputData> EngineModes
-		{
-			get { return (_modes ?? (_modes = ReadEngineModes())).Cast<IEngineModeDeclarationInputData>().ToList(); }
-		}
+		public virtual IList<IEngineModeDeclarationInputData> EngineModes => (_modes ?? (_modes = ReadEngineModes())).Cast<IEngineModeDeclarationInputData>().ToList();
 
 		protected virtual IList<IEngineModeEngineeringInputData> ReadEngineModes()
 		{
 			return new IEngineModeEngineeringInputData[] { this };
 		}
 
-		public virtual WHRType WHRType
-		{
-			get { return WHRType.None; }
-		}
+		public virtual WHRType WHRType => WHRType.None;
 
-		public virtual KilogramSquareMeter Inertia
-		{
-			get { return GetString(XMLNames.Engine_Inertia, required: false)?.ToDouble().SI<KilogramSquareMeter>(); }
-		}
+		public virtual KilogramSquareMeter Inertia => GetString(XMLNames.Engine_Inertia, required: false)?.ToDouble().SI<KilogramSquareMeter>();
 
 		#region Overrides of AbstractXMLResource
 
-		protected override XNamespace SchemaNamespace
-		{
-			get { return NAMESPACE_URI; }
-		}
+		protected override XNamespace SchemaNamespace => NAMESPACE_URI;
 
 		protected override DataSourceType SourceType { get; }
 
@@ -245,17 +163,11 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering.DataProvider
 		// engine-only constructor
 		public XMLEngineeringEngineDataProviderV10(XmlNode node, string sourceFile) : base(node, sourceFile) { }
 
-		public override double WHTCEngineering
-		{
-			get { return GetDouble(XMLNames.Engine_FCCorrection, 1.0); }
-		}
+		public override double WHTCEngineering => GetDouble(XMLNames.Engine_FCCorrection, 1.0);
 
 		#region Overrides of XMLEngineeringEngineDataProviderV07
 
-		protected override XNamespace SchemaNamespace
-		{
-			get { return NAMESPACE_URI; }
-		}
+		protected override XNamespace SchemaNamespace => NAMESPACE_URI;
 
 		#endregion
 	}
@@ -278,15 +190,9 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering.DataProvider
 
 		#region Overrides of XMLEngineeringEngineDataProviderV07
 
-		public override PerSecond RatedSpeedDeclared
-		{
-			get { return GetString(XMLNames.Engine_RatedSpeed).Replace("rpm", "").ToDouble(0).RPMtoRad(); }
-		}
+		public override PerSecond RatedSpeedDeclared => GetString(XMLNames.Engine_RatedSpeed).Replace("rpm", "").ToDouble(0).RPMtoRad();
 
-		protected override XNamespace SchemaNamespace
-		{
-			get { return NAMESPACE_URI; }
-		}
+		protected override XNamespace SchemaNamespace => NAMESPACE_URI;
 
 		#endregion
 	}
@@ -349,38 +255,21 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering.DataProvider
 
 			#region Implementation of IEngineModeDeclarationInputData
 
-			public PerSecond IdleSpeed {
-				get { return GetDouble(XMLNames.Engine_IdlingSpeed).RPMtoRad(); }
-			}
-			public TableData FullLoadCurve {
-				get {
-					return XMLHelper.ReadEntriesOrResource(
-						BaseNode, Source.SourcePath, XMLNames.Engine_FullLoadAndDragCurve, XMLNames.Engine_FullLoadCurve_Entry,
-						AttributeMappings.EngineFullLoadCurveMapping);
-				}
-			}
+			public PerSecond IdleSpeed => GetDouble(XMLNames.Engine_IdlingSpeed).RPMtoRad();
 
-			IList<IEngineFuelEngineeringInputData> IEngineModeEngineeringInputData.Fuels
-			{
-				get { return _fuels ?? (_fuels = ReadFuels()); }
-			}
+			public TableData FullLoadCurve =>
+				XMLHelper.ReadEntriesOrResource(
+					BaseNode, Source.SourcePath, XMLNames.Engine_FullLoadAndDragCurve, XMLNames.Engine_FullLoadCurve_Entry,
+					AttributeMappings.EngineFullLoadCurveMapping);
 
-			
+			IList<IEngineFuelEngineeringInputData> IEngineModeEngineeringInputData.Fuels => _fuels ?? (_fuels = ReadFuels());
 
-			IList<IEngineFuelDeclarationInputData> IEngineModeDeclarationInputData.Fuels
-			{
-				get { return (_fuels ?? (_fuels = ReadFuels())).Cast<IEngineFuelDeclarationInputData>().ToList(); }
-			}
 
-			public virtual IWHRData WasteHeatRecoveryDataElectrical
-			{
-				get { return WHRData ?? (WHRData = ReadWHRData("Electrical")); }
-			}
+			IList<IEngineFuelDeclarationInputData> IEngineModeDeclarationInputData.Fuels => (_fuels ?? (_fuels = ReadFuels())).Cast<IEngineFuelDeclarationInputData>().ToList();
 
-			public virtual IWHRData WasteHeatRecoveryDataMechanical
-			{
-				get { return WHRData ?? (WHRData = ReadWHRData("Mechanical")); }
-			}
+			public virtual IWHRData WasteHeatRecoveryDataElectrical => WHRData ?? (WHRData = ReadWHRData("Electrical"));
+
+			public virtual IWHRData WasteHeatRecoveryDataMechanical => WHRData ?? (WHRData = ReadWHRData("Mechanical"));
 
 			#endregion
 
@@ -423,29 +312,26 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering.DataProvider
 				}
 			}
 
-			public virtual double WHTCMotorway { get { return 1; } }
+			public virtual double WHTCMotorway => 1;
 
-			public virtual double WHTCRural { get { return 1; } }
+			public virtual double WHTCRural => 1;
 
-			public virtual double WHTCUrban { get { return 1; } }
+			public virtual double WHTCUrban => 1;
 
-			public virtual double ColdHotBalancingFactor { get { return 1; } }
+			public virtual double ColdHotBalancingFactor => 1;
 
-			public virtual double CorrectionFactorRegPer { get { return 1; } }
+			public virtual double CorrectionFactorRegPer => 1;
 
-			public virtual TableData FuelConsumptionMap {
-				get {
-					return XMLHelper.ReadEntriesOrResource(
-						BaseNode, Source.SourcePath, XMLNames.Engine_FuelConsumptionMap, XMLNames.Engine_FuelConsumptionMap_Entry,
-						AttributeMappings.FuelConsumptionMapMapping);
-				}
-			}
+			public virtual TableData FuelConsumptionMap =>
+				XMLHelper.ReadEntriesOrResource(
+					BaseNode, Source.SourcePath, XMLNames.Engine_FuelConsumptionMap, XMLNames.Engine_FuelConsumptionMap_Entry,
+					AttributeMappings.FuelConsumptionMapMapping);
 
 			#endregion
 
 			#region Implementation of IEngineFuelEngineeringInputData
 
-			public double WHTCEngineering { get { return GetDouble(XMLNames.Engine_FCCorrection); } }
+			public double WHTCEngineering => GetDouble(XMLNames.Engine_FCCorrection);
 
 			#endregion
 		}
@@ -462,21 +348,17 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering.DataProvider
 			
 			#region Implementation of IWHRData
 
-			public virtual double UrbanCorrectionFactor { get { return 1; } }
-			public virtual double RuralCorrectionFactor { get { return 1; } }
-			public virtual double MotorwayCorrectionFactor { get { return 1; } }
-			public virtual double BFColdHot { get { return 1; } }
-			public virtual double CFRegPer { get { return 1; } }
-			public virtual double EngineeringCorrectionFactor { get { return GetDouble(XMLNames.Engine_WHRCorrectionFactor); } }
+			public virtual double UrbanCorrectionFactor => 1;
+			public virtual double RuralCorrectionFactor => 1;
+			public virtual double MotorwayCorrectionFactor => 1;
+			public virtual double BFColdHot => 1;
+			public virtual double CFRegPer => 1;
+			public virtual double EngineeringCorrectionFactor => GetDouble(XMLNames.Engine_WHRCorrectionFactor);
 
-			public virtual TableData GeneratedPower
-			{
-				get {
-					return XMLHelper.ReadEntriesOrResource(
-						BaseNode, Source.SourcePath, XMLNames.Engine_WHRMap, XMLNames.Engine_WHRMap_Entry,
-						AttributeMappings.WHRPowerMapMapping);
-				}
-			}
+			public virtual TableData GeneratedPower =>
+				XMLHelper.ReadEntriesOrResource(
+					BaseNode, Source.SourcePath, XMLNames.Engine_WHRMap, XMLNames.Engine_WHRMap_Entry,
+					AttributeMappings.WHRPowerMapMapping);
 
 			#endregion
 		}
@@ -484,10 +366,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering.DataProvider
 
 		#region Overrides of XMLEngineeringEngineDataProviderV07
 
-		protected override XNamespace SchemaNamespace
-		{
-			get { return NAMESPACE_URI; }
-		}
+		protected override XNamespace SchemaNamespace => NAMESPACE_URI;
 
 		#endregion
 	}

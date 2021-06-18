@@ -313,35 +313,17 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 
 		#region Implementation of IVehicleInfo
 
-		public MeterPerSecond VehicleSpeed
-		{
-			get { return 0.SI<MeterPerSecond>(); }
-		}
+		public MeterPerSecond VehicleSpeed => 0.SI<MeterPerSecond>();
 
-		public bool VehicleStopped
-		{
-			get { throw new System.NotImplementedException(); }
-		}
+		public bool VehicleStopped => throw new System.NotImplementedException();
 
-		public Kilogram VehicleMass
-		{
-			get { throw new System.NotImplementedException(); }
-		}
+		public Kilogram VehicleMass => throw new System.NotImplementedException();
 
-		public Kilogram VehicleLoading
-		{
-			get { throw new System.NotImplementedException(); }
-		}
+		public Kilogram VehicleLoading => throw new System.NotImplementedException();
 
-		public Kilogram TotalMass
-		{
-			get { throw new System.NotImplementedException(); }
-		}
+		public Kilogram TotalMass => throw new System.NotImplementedException();
 
-		public CubicMeter CargoVolume
-		{
-			get { throw new System.NotImplementedException(); }
-		}
+		public CubicMeter CargoVolume => throw new System.NotImplementedException();
 
 		public Newton AirDragResistance(MeterPerSecond previousVelocity, MeterPerSecond nextVelocity)
 		{
@@ -358,10 +340,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			throw new System.NotImplementedException();
 		}
 
-		public MeterPerSecond MaxVehicleSpeed
-		{
-			get { throw new System.NotImplementedException(); }
-		}
+		public MeterPerSecond MaxVehicleSpeed => throw new System.NotImplementedException();
 
 		#endregion
 	}

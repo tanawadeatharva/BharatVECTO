@@ -170,11 +170,11 @@ hashingcmd.exe
 		{
 			var args = evt.ValidationEventArgs;
 			if (severity == XmlSeverityType.Error) {
-				throw new Exception(string.Format("Validation error: {0}" + Environment.NewLine +
-										"Line: {1}", args.Message, args.Exception.LineNumber), evt.Exception);
+				throw new Exception($"Validation error: {args.Message}{Environment.NewLine}" +
+									$"Line: {args.Exception.LineNumber}", evt.Exception);
 			} else {
-				Console.Error.WriteLine("Validation warning: {0}" + Environment.NewLine +
-										"Line: {1}", args.Message, args.Exception.LineNumber);
+				Console.Error.WriteLine("Validation warning: {0}{2}Line: {1}", 
+					args.Message, args.Exception.LineNumber, Environment.NewLine);
 			}
 		}
 
@@ -258,7 +258,7 @@ hashingcmd.exe
 		{
 			var hashingLib = Assembly.LoadFile(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "VectoHashing.dll"))
 				.GetName();
-			WriteLine(string.Format(@"HashingLibrary: {0}", hashingLib.Version));
+			WriteLine($@"HashingLibrary: {hashingLib.Version}");
 		}
 	}
 }

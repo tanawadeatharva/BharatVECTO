@@ -57,10 +57,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 		#region Implementation of IAuxiliariesDeclarationInputData
 
-		public virtual bool SavedInDeclarationMode
-		{
-			get { return true; }
-		}
+		public virtual bool SavedInDeclarationMode => true;
 
 		public virtual IList<IAuxiliaryDeclarationInputData> Auxiliaries
 		{

@@ -11,7 +11,6 @@
 Option Infer On
 
 Imports System.IO
-Imports System.Linq
 Imports System.Text
 Imports Microsoft.VisualBasic.FileIO
 Imports System.Runtime.InteropServices
@@ -499,7 +498,7 @@ Public Class FileBrowserDialog
 			TextBoxPath.Text = ""
 		Else
 			If ListViewFiles.SelectedItems.Count > 1 Then
-				TextBoxPath.Text = String.Format("<{0} Files selected>", ListViewFiles.SelectedItems.Count)
+				TextBoxPath.Text = $"<{ListViewFiles.SelectedItems.Count} Files selected>"
 			Else
 				TextBoxPath.Text = ListViewFiles.SelectedItems.Item(0).Text
 				TextBoxPath.SelectionStart = TextBoxPath.Text.Length

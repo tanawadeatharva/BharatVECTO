@@ -29,12 +29,12 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.Pneumati
 
 		public double PulleyGearRatio
 		{
-			get { return _pulleyGearRatio; }
+			get => _pulleyGearRatio;
 			set {
 				if (value < MinRatio || value > MaxRatio) {
 					throw new ArgumentOutOfRangeException(
 						"pulleyGearRatio", value,
-						string.Format("Invalid value, should be in the range {0} to {1}", MinRatio, MaxRatio));
+						$"Invalid value, should be in the range {MinRatio} to {MaxRatio}");
 				}
 
 				_pulleyGearRatio = value;
@@ -43,12 +43,12 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.Pneumati
 
 		public double PulleyGearEfficiency
 		{
-			get { return _pulleyGearEfficiency; }
+			get => _pulleyGearEfficiency;
 			set {
 				if (value < MinEff || value > MaxEff) {
 					throw new ArgumentOutOfRangeException(
 						"pulleyGearEfficiency", value,
-						String.Format("Invalid value, should be in the range {0} to {1}", MinEff, MaxEff)
+						$"Invalid value, should be in the range {MinEff} to {MaxEff}"
 					);
 				}
 

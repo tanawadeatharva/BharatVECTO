@@ -144,7 +144,7 @@ namespace TUGraz.VectoCore.OutputData
 					var col = new DataColumn(
 						fuels.Count == 1 && !multipleEngineModes
 							? fcCol.GetName()
-							: string.Format("{0}_{1}", fcCol.GetName(), entry.FuelType.GetLabel()), typeof(SI)) {
+							: $"{fcCol.GetName()}_{entry.FuelType.GetLabel()}", typeof(SI)) {
 						Caption = string.Format(fcCol.GetCaption(),
 							fuels.Count == 1 && !multipleEngineModes ? "" : "_" + entry.FuelType.GetLabel())
 					};
@@ -162,59 +162,36 @@ namespace TUGraz.VectoCore.OutputData
 
 		}
 
-		public int JobRunId
-		{
-			get { return _runData.JobRunId; }
-		}
-		public string RunName
-		{
-			get { return _runData.JobName; }
-		}
-		public string CycleName
-		{
-			get { return _runData.Cycle?.Name ?? ""; }
-		}
-		public string RunSuffix
-		{
-			get { return _runData.ModFileSuffix; }
-		}
+		public int JobRunId => _runData.JobRunId;
+
+		public string RunName => _runData.JobName;
+
+		public string CycleName => _runData.Cycle?.Name ?? "";
+
+		public string RunSuffix => _runData.ModFileSuffix;
 
 		public bool WriteModalResults { get; set; }
 
 		public VectoRun.Status RunStatus { get; protected set; }
 
-		public string Error
-		{
-			get { return SimException == null ? null : SimException.Message; }
-		}
+		public string Error => SimException?.Message;
 
-		public string StackTrace
-		{
-			get
-			{
-				return SimException == null
-					? null
-					: (SimException.StackTrace ?? (SimException.InnerException != null ? SimException.InnerException.StackTrace : null));
-			}
-		}
-		
+		public string StackTrace =>
+			SimException == null
+				? null
+				: (SimException.StackTrace ?? SimException.InnerException?.StackTrace);
 
-        public void Reset()
+
+		public void Reset()
 		{
 			Data.Rows.Clear();
 			CurrentRow = Data.NewRow();
 			ClearAggregateResults();
 		}
 
-		public Second Duration
-		{
-			get { return _duration ?? (_duration = CalcDuration()); }
-		}
+		public Second Duration => _duration ?? (_duration = CalcDuration());
 
-		public Meter Distance
-		{
-			get { return _distance ?? (_distance = CalcDistance()); }
-		}
+		public Meter Distance => _distance ?? (_distance = CalcDistance());
 
 		public Func<Second, Joule, Joule> AuxHeaterDemandCalc { get; set; }
 
@@ -224,7 +201,6 @@ namespace TUGraz.VectoCore.OutputData
 				return _engLine[fuel.FuelType];
 			}
 
-			double k, d, r;
 			VectoMath.LeastSquaresFitting(
 				GetValues(
 					x => x.Field<bool>(ModalResultField.ICEOn.GetName())
@@ -232,7 +208,7 @@ namespace TUGraz.VectoCore.OutputData
 							x.Field<SI>(ModalResultField.P_ice_fcmap.GetName()).Value(),
 							x.Field<SI>(GetColumnName(fuel, ModalResultField.FCFinal)).Value())
 						: null).Where(x => x != null && x.Y > 0),
-				out k, out d, out r);
+				out var k, out var d, out var r);
 			if (double.IsInfinity(k) || double.IsNaN(k)) {
 				LogManager.GetLogger(typeof(ModalDataContainer).FullName).Warn("could not calculate engine correction line - k: {0}", k);
 				k = 0;
@@ -249,7 +225,6 @@ namespace TUGraz.VectoCore.OutputData
 			}
 
 			if (Data.AsEnumerable().Any(r => r.Field<SI>(ModalResultField.P_wheel_in.GetName()) != null)) {
-				double k, d, r;
 				VectoMath.LeastSquaresFitting(
 					GetValues(
 							row => row.Field<bool>(ModalResultField.ICEOn.GetName())
@@ -257,7 +232,7 @@ namespace TUGraz.VectoCore.OutputData
 									row.Field<SI>(ModalResultField.P_wheel_in.GetName()).Value(),
 									row.Field<SI>(GetColumnName(fuel, ModalResultField.FCFinal)).Value())
 								: null)
-						.Where(x => x != null && x.X > 0 && x.Y > 0), out k, out d, out r);
+						.Where(x => x != null && x.X > 0 && x.Y > 0), out var k, out var d, out var r);
 				if (double.IsInfinity(k) || double.IsNaN(k)) {
 					LogManager.GetLogger(typeof(ModalDataContainer).FullName).Warn("could not calculate vehicle correction line - k: {0}", k);
 					k = 0;
@@ -269,10 +244,7 @@ namespace TUGraz.VectoCore.OutputData
 			return null;
 		}
 
-		public bool HasCombustionEngine
-		{
-			get { return _runData.JobType != VectoSimulationJobType.BatteryElectricVehicle; }
-		}
+		public bool HasCombustionEngine => _runData.JobType != VectoSimulationJobType.BatteryElectricVehicle;
 
 		public WattSecond TotalElectricMotorWorkDrive(PowertrainPosition emPos)
 		{
@@ -310,7 +282,7 @@ namespace TUGraz.VectoCore.OutputData
 
 			if (!_eEmRecuperate.ContainsKey(emPos)) {
 				_eEmRecuperate[emPos] = TimeIntegral<WattSecond>(
-					string.Format(ModalResultField.P_EM_mech_.GetCaption(), emPos.GetName()), x => x > 0); ;
+					string.Format(ModalResultField.P_EM_mech_.GetCaption(), emPos.GetName()), x => x > 0);
 			}
 
 			return _eEmRecuperate[emPos];
@@ -325,7 +297,6 @@ namespace TUGraz.VectoCore.OutputData
 			if (!_eEmRecuperateMot.ContainsKey(emPos)) {
 				_eEmRecuperateMot[emPos] = TimeIntegral<WattSecond>(
 					string.Format(ModalResultField.P_EM_electricMotor_em_mech_.GetCaption(), emPos.GetName()), x => x > 0);
-				;
 			}
 
 			return _eEmRecuperateMot[emPos];
@@ -510,10 +481,7 @@ namespace TUGraz.VectoCore.OutputData
 			return TimeIntegral<WattSecond>(ModalResultField.P_reess_loss);
 		}
 
-		public ICorrectedModalData CorrectedModalData
-		{
-			get { return _correctedModalData ?? (_correctedModalData = PostProcessingCorrection.ApplyCorrection(this, _runData)); }
-		}
+		public ICorrectedModalData CorrectedModalData => _correctedModalData ?? (_correctedModalData = PostProcessingCorrection.ApplyCorrection(this, _runData));
 
 
 		public void CalculateAggregateValues()
@@ -578,10 +546,7 @@ namespace TUGraz.VectoCore.OutputData
 			}
 		}
 
-		public bool HasTorqueConverter
-		{
-			get { return _runData.GearboxData?.TorqueConverterData != null; }
-		}
+		public bool HasTorqueConverter => _runData.GearboxData?.TorqueConverterData != null;
 
 		public void CommitSimulationStep()
 		{
@@ -626,10 +591,7 @@ namespace TUGraz.VectoCore.OutputData
 			return max == null || min == null ? null : max - min;
 		}
 
-		public IList<IFuelProperties> FuelData
-		{
-			get { return FuelColumns.Keys.ToList(); }
-		}
+		public IList<IFuelProperties> FuelData => FuelColumns.Keys.ToList();
 
 		public void Finish(VectoRun.Status runStatus, Exception exception = null)
 		{
@@ -853,7 +815,6 @@ namespace TUGraz.VectoCore.OutputData
 			}
 
 			var retVal = result.SI<T>();
-			;
 			if (filter == null) {
 				_timeIntegrals[field] = retVal;
 			}
@@ -867,8 +828,8 @@ namespace TUGraz.VectoCore.OutputData
 
 		public object this[ModalResultField key]
 		{
-			get { return CurrentRow[key.GetName()]; }
-			set { CurrentRow[key.GetName()] = value; }
+			get => CurrentRow[key.GetName()];
+			set => CurrentRow[key.GetName()] = value;
 		}
 
 		public string GetColumnName(IFuelProperties fuelData, ModalResultField mrf)
@@ -904,14 +865,14 @@ namespace TUGraz.VectoCore.OutputData
 
 		public object this[ModalResultField key, PowertrainPosition pos]
 		{
-			get { return CurrentRow[string.Format(key.GetCaption(), pos.GetName())]; }
-			set { CurrentRow[string.Format(key.GetCaption(), pos.GetName())] = value; }
+			get => CurrentRow[string.Format(key.GetCaption(), pos.GetName())];
+			set => CurrentRow[string.Format(key.GetCaption(), pos.GetName())] = value;
 		}
 
 		public object this[string auxId]
 		{
-			get { return CurrentRow[Auxiliaries[auxId]]; }
-			set { CurrentRow[Auxiliaries[auxId]] = value; }
+			get => CurrentRow[Auxiliaries[auxId]];
+			set => CurrentRow[Auxiliaries[auxId]] = value;
 		}
 
 		[MethodImpl(MethodImplOptions.Synchronized)]

@@ -717,7 +717,8 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 			}
 			if (kitchenStandard.HasValue) {
 				retVal["Kitchen Standard"] = kitchenStandard.Value;
-			};
+			}
+
 			return retVal;
 		}
 

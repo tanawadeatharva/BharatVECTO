@@ -155,8 +155,8 @@ namespace TUGraz.VectoCore.Utils
 				firstLineIsData = false;
 				if (table.Columns.Count != cells.Length && !ignoreEmptyColumns) {
 					throw new CSVReadException(
-						string.Format("Line {0}: The number of values is not correct. Expected {1} Columns, Got {2} Columns",
-							lineNumber, table.Columns.Count, cells.Length));
+						$"Line {lineNumber}: The number of values is not correct. " +
+						$"Expected {table.Columns.Count} Columns, Got {cells.Length} Columns");
 				}
 
 				try {
@@ -164,7 +164,7 @@ namespace TUGraz.VectoCore.Utils
 					table.Rows.Add(cells);
 				} catch (InvalidCastException e) {
 					throw new CSVReadException(
-						string.Format("Line {0}: The data format of a value is not correct. {1}", lineNumber, e.Message), e);
+						$"Line {lineNumber}: The data format of a value is not correct. {e.Message}", e);
 				}
 				lineNumber++;
 			}
@@ -203,10 +203,9 @@ namespace TUGraz.VectoCore.Utils
 			var entries = new List<string>();
 			if (addVersionHeader) {
 				try {
-					entries.Add(string.Format("# VECTO{0} {1} - {2}", VectoSimulationCore.BranchSuffix, VectoSimulationCore.VersionNumber,
-						DateTime.Now.ToString("dd.MM.yyyy HH:mm")));
+					entries.Add($"# VECTO{VectoSimulationCore.BranchSuffix} {VectoSimulationCore.VersionNumber} - {DateTime.Now:dd.MM.yyyy HH:mm}");
 				} catch (Exception) {
-					entries.Add(string.Format("# VECTO {0} - {1}", "Unknown", DateTime.Now.ToString("dd.MM.yyyy HH:mm")));
+					entries.Add($"# VECTO Unknown - {DateTime.Now:dd.MM.yyyy HH:mm}");
 				}
 			}
 			var header = table.Columns.Cast<DataColumn>().Select(col => col.Caption ?? col.ColumnName);
@@ -240,7 +239,7 @@ namespace TUGraz.VectoCore.Utils
 
 					// if a string contains a "," then it has to be contained in quotes in order to be correctly recognized in a CSV file.
 					if (formattedList[i].Contains(Delimiter)) {
-						formattedList[i] = string.Format("\"{0}\"", formattedList[i]);
+						formattedList[i] = $"\"{formattedList[i]}\"";
 					}
 				}
 				entries.Add(string.Join(Delimiter, formattedList));
@@ -248,7 +247,7 @@ namespace TUGraz.VectoCore.Utils
 
 			if (addDigest) {
 				var digest = DataIntegrityHelper.ComputeDigestValue(entries.Where(x => !x.StartsWith(DigestValuePrefix)).ToArray());
-				entries.Add(string.Format("{0} {1}", DigestValuePrefix, digest));
+				entries.Add($"{DigestValuePrefix} {digest}");
 			}
 
 			foreach (var entry in entries) {

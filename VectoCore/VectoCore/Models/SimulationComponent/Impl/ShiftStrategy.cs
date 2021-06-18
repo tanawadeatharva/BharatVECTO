@@ -49,7 +49,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		public override IGearbox Gearbox
 		{
-			get { return _gearbox; }
+			get => _gearbox;
 			set {
 				var myGearbox = value as Gearbox;
 				if (myGearbox == null) {

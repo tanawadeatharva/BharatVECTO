@@ -55,9 +55,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.ElectricMotor
 			var response = LookupElectricPower(angularSpeed, torque, true);
 			var delta = response.ElectricalPower - electricPower;
 			torque = SearchAlgorithm.Search(torque, delta, torque * 0.1,
-				getYValue: result => ((EfficiencyMap.EfficiencyResult)result).ElectricalPower - electricPower,
+				getYValue: result => ((EfficiencyResult)result).ElectricalPower - electricPower,
 				evaluateFunction: x => LookupElectricPower(angularSpeed, x, true),
-				criterion: result => (((EfficiencyMap.EfficiencyResult)result).ElectricalPower - electricPower).Value());
+				criterion: result => (((EfficiencyResult)result).ElectricalPower - electricPower).Value());
 
 			return new EfficiencyResult
 			{
@@ -76,16 +76,16 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.ElectricMotor
 		}
 
 		[JsonIgnore]
-		public IReadOnlyCollection<EfficiencyMap.Entry> Entries
+		public IReadOnlyCollection<Entry> Entries
 		{
 			get
 			{
 				var entries = _efficiencyMapMech2El.Entries;
-				var retVal = new EfficiencyMap.Entry[entries.Count];
+				var retVal = new Entry[entries.Count];
 				var i = 0;
 				foreach (var entry in entries)
 				{
-					retVal[i++] = new EfficiencyMap.Entry(entry.Y.SI<PerSecond>(), entry.X.SI<NewtonMeter>(), entry.Z.SI<Watt>());
+					retVal[i++] = new Entry(entry.Y.SI<PerSecond>(), entry.X.SI<NewtonMeter>(), entry.Z.SI<Watt>());
 				}
 				return retVal;
 			}

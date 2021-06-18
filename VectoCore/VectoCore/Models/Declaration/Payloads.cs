@@ -39,15 +39,9 @@ namespace TUGraz.VectoCore.Models.Declaration
 {
 	public sealed class Payloads : LookupData<Kilogram, Payloads.PayloadEntry>
 	{
-		protected override string ResourceId
-		{
-			get { return DeclarationData.DeclarationDataResourcePrefix + ".Payloads.csv"; }
-		}
+		protected override string ResourceId => DeclarationData.DeclarationDataResourcePrefix + ".Payloads.csv";
 
-		protected override string ErrorMessage
-		{
-			get { throw new InvalidOperationException("ErrorMessage not applicable."); }
-		}
+		protected override string ErrorMessage => throw new InvalidOperationException("ErrorMessage not applicable.");
 
 		public Kilogram Lookup10Percent(Kilogram grossVehicleWeight)
 		{

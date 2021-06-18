@@ -162,7 +162,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 				new XAttribute(XNamespace.Xmlns + adasPrefix, ns.NamespaceName),
 				new XAttribute(
 					xsi + "type",
-					string.Format("{0}:{1}", adasPrefix, adasData.InputData.XMLSource.SchemaInfo.SchemaType.QualifiedName.Name)),
+					$"{adasPrefix}:{adasData.InputData.XMLSource.SchemaInfo.SchemaType.QualifiedName.Name}"),
 				XElement.Parse(adasData.InputData.XMLSource.OuterXml).Elements()
 			);
 		}
@@ -181,7 +181,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 				tns + XMLNames.Vehicle_TorqueLimits,
 				new XAttribute(XNamespace.Xmlns + adasPrefix, ns.NamespaceName),
 				new XAttribute(
-					xsi + "type", string.Format("{0}:{1}", adasPrefix, tcLimits.SchemaInfo.SchemaType.QualifiedName.Name)),
+					xsi + "type", $"{adasPrefix}:{tcLimits.SchemaInfo.SchemaType.QualifiedName.Name}"),
 				XElement.Parse(tcLimits.OuterXml).Elements()
 			);
 		}

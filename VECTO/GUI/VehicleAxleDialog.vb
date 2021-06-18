@@ -18,7 +18,6 @@ Imports System.Linq
 Imports TUGraz.VectoCommon.InputData
 Imports TUGraz.VectoCommon.Models
 Imports TUGraz.VectoCommon.Utils
-Imports TUGraz.VectoCore.InputData.Impl
 Imports TUGraz.VectoCore.Models.Declaration
 
 

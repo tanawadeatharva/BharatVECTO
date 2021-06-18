@@ -312,10 +312,7 @@ namespace TUGraz.VectoCommon.Utils
 		/// <summary>
 		/// [-]. Defines radian. Only virtual. Has no real SI unit.
 		/// </summary>
-		public UnitInstance Radian
-		{
-			get { return this; }
-		}
+		public UnitInstance Radian => this;
 
 		/// <summary>
 		/// [-]. Converts to/from Radiant. Internally everything is stored in radian.

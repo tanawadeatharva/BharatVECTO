@@ -55,10 +55,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 		#region Overrides of AbstractXMLResource
 
-		protected override XNamespace SchemaNamespace
-		{
-			get { return NAMESPACE_URI; }
-		}
+		protected override XNamespace SchemaNamespace => NAMESPACE_URI;
 
 		protected override DataSourceType SourceType { get; }
 
@@ -66,27 +63,16 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 		#region Implementation of IAdvancedDriverAssistantSystemDeclarationInputData
 
-		public virtual bool EngineStopStart
-		{
-			get { return XmlConvert.ToBoolean(GetString(XMLNames.Vehicle_ADAS_EngineStopStart)); }
-		}
+		public virtual bool EngineStopStart => XmlConvert.ToBoolean(GetString(XMLNames.Vehicle_ADAS_EngineStopStart));
 
-		public virtual EcoRollType EcoRoll
-		{
-			get {
-				return EcorollTypeHelper.Get(
-					XmlConvert.ToBoolean(GetString(XMLNames.Vehicle_ADAS_EcoRollWithoutEngineStop)),
-					XmlConvert.ToBoolean(GetString(XMLNames.Vehicle_ADAS_EcoRollWithEngineStopStart)));
-			}
-		}
+		public virtual EcoRollType EcoRoll =>
+			EcorollTypeHelper.Get(
+				XmlConvert.ToBoolean(GetString(XMLNames.Vehicle_ADAS_EcoRollWithoutEngineStop)),
+				XmlConvert.ToBoolean(GetString(XMLNames.Vehicle_ADAS_EcoRollWithEngineStopStart)));
 
-		public virtual PredictiveCruiseControlType PredictiveCruiseControl
-		{
-			get { return PredictiveCruiseControlTypeHelper.Parse(GetString(XMLNames.Vehicle_ADAS_PCC)); }
-		}
+		public virtual PredictiveCruiseControlType PredictiveCruiseControl => PredictiveCruiseControlTypeHelper.Parse(GetString(XMLNames.Vehicle_ADAS_PCC));
 
-		public virtual bool? ATEcoRollReleaseLockupClutch { get { return null; } }
-		
+		public virtual bool? ATEcoRollReleaseLockupClutch => null;
 
 		#endregion
 	}
@@ -109,10 +95,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		public XMLDeclarationADASDataProviderV21(IXMLDeclarationVehicleData vehicle, XmlNode componentNode, string sourceFile)
 			: base(vehicle, componentNode, sourceFile) { }
 
-		protected override XNamespace SchemaNamespace
-		{
-			get { return NAMESPACE_URI; }
-		}
+		protected override XNamespace SchemaNamespace => NAMESPACE_URI;
 	}
 
 	// ---------------------------------------------------------------------------------------
@@ -150,9 +133,6 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 		#endregion
 
-		protected override XNamespace SchemaNamespace
-		{
-			get { return NAMESPACE_URI; }
-		}
+		protected override XNamespace SchemaNamespace => NAMESPACE_URI;
 	}
 }

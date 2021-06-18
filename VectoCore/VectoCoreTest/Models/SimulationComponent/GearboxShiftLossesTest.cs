@@ -86,11 +86,8 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 		public void TestShiftLossComputation(double torqueDemand, uint gear, double preShiftRpm,
 			double postShiftRpm, double expectedShiftLoss, double expectedShiftLossEnergy)
 		{
-			AxleGear axleGear;
-			ATGearbox gbx;
-			CombustionEngine engine;
 			var cycleDataStr = "0, 0, 0, 2\n100, 20, 0, 0\n1000, 50, 0, 0";
-			var container = CreateVehicle(cycleDataStr, preShiftRpm, out axleGear, out gbx, out engine);
+			var container = CreateVehicle(cycleDataStr, preShiftRpm, out var axleGear, out var gbx, out var engine);
 			new ATClutchInfo(container);
 			gbx.Gear = new GearshiftPosition(gear, true);
 			
@@ -138,11 +135,8 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 		public void TestSplittingShiftLossesTwoIntervals(double torqueDemand, uint gear, double preShiftRpm,
 			double postShiftRpm, double expectedShiftLoss, double expectedShiftLossEnergy)
 		{
-			AxleGear axleGear;
-			ATGearbox gbx;
-			CombustionEngine engine;
 			var cycleDataStr = "0, 0, 0, 2\n100, 20, 0, 0\n1000, 50, 0, 0";
-			var container = CreateVehicle(cycleDataStr, preShiftRpm, out axleGear, out gbx, out engine);
+			var container = CreateVehicle(cycleDataStr, preShiftRpm, out var axleGear, out var gbx, out var engine);
 			var modData = new MockModalDataContainer();
 			
 			gbx.Gear = new GearshiftPosition(gear, true);

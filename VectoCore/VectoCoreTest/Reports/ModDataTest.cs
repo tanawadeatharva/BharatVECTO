@@ -267,7 +267,7 @@ namespace TUGraz.VectoCore.Tests.Reports
 						continue;
 					}
 					var numParts = parts[i].Split('.');
-					Assert.AreEqual(2, numParts.Length, string.Format("Line {0}: column {1}: value {2}", lineCnt, i, parts[i]));
+					Assert.AreEqual(2, numParts.Length, $"Line {lineCnt}: column {i}: value {parts[i]}");
 					Assert.IsTrue(numParts[0].Length > 0);
 					Assert.AreEqual(4, numParts[1].Length);
 				} 

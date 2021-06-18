@@ -37,40 +37,19 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl
 
 		#region Implementation of IM11
 
-		public Joule SmartElectricalTotalCycleElectricalEnergyGeneratedDuringOverrunOnly
-		{
-			get { return AG1; }
-		}
+		public Joule SmartElectricalTotalCycleElectricalEnergyGeneratedDuringOverrunOnly => AG1;
 
-		public Joule SmartElectricalTotalCycleEletricalEnergyGenerated
-		{
-			get { return AG2; }
-		}
+		public Joule SmartElectricalTotalCycleEletricalEnergyGenerated => AG2;
 
-		public Joule TotalCycleElectricalDemand
-		{
-			get { return AG3; }
-		}
+		public Joule TotalCycleElectricalDemand => AG3;
 
-		public Kilogram TotalCycleFuelConsumptionSmartElectricalLoad
-		{
-			get { return AG4; }
-		}
+		public Kilogram TotalCycleFuelConsumptionSmartElectricalLoad => AG4;
 
-		public Kilogram TotalCycleFuelConsumptionZeroElectricalLoad
-		{
-			get { return AG5; }
-		}
+		public Kilogram TotalCycleFuelConsumptionZeroElectricalLoad => AG5;
 
-		public Joule StopStartSensitiveTotalCycleElectricalDemand
-		{
-			get { return AG6; }
-		}
+		public Joule StopStartSensitiveTotalCycleElectricalDemand => AG6;
 
-		public Kilogram TotalCycleFuelConsuptionAverageLoads
-		{
-			get { return AG7; }
-		}
+		public Kilogram TotalCycleFuelConsuptionAverageLoads => AG7;
 
 		public void ClearAggregates()
 		{

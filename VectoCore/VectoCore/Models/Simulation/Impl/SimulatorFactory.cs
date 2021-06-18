@@ -73,9 +73,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			ModWriter = writer;
 			Validate = validate;
 
-			int workerThreads;
-			int completionThreads;
-			ThreadPool.GetMinThreads(out workerThreads, out completionThreads);
+			ThreadPool.GetMinThreads(out var workerThreads, out var completionThreads);
 			if (workerThreads < 12) {
 				workerThreads = 12;
 			}
@@ -266,7 +264,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 			if (Validate) {
 				ValidateVectoRunData(
-					run, data.JobType, data.ElectricMachinesData.FirstOrDefault()?.Item1, data.GearboxData == null ? (GearboxType?)null : data.GearboxData.Type,
+					run, data.JobType, data.ElectricMachinesData.FirstOrDefault()?.Item1, data.GearboxData?.Type,
 					data.Mission != null && data.Mission.MissionType.IsEMS());
 			}
 			return run;

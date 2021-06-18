@@ -40,7 +40,7 @@ namespace TUGraz.VectoCore.Utils
 		{
 			var hash = System.Convert.ToBase64String(GetHash(string.Join("\n", lines)));
 
-			return string.Format("SHA256: {0}", hash);
+			return $"SHA256: {hash}";
 		}
 
 		public static byte[] GetHash(string inputString)

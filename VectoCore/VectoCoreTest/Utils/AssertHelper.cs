@@ -69,7 +69,7 @@ namespace TUGraz.VectoCore.Tests.Utils
 			double toleranceFactor = DoubleExtensionMethods.ToleranceFactor, string message = null)
 		{
 			Assert.IsTrue(actual.HasEqualUnit(expected),
-				string.Format("Wrong SI Units: expected: {0}, actual: {1}", expected.ToBasicUnits(), actual.ToBasicUnits()));
+				$"Wrong SI Units: expected: {expected.ToBasicUnits()}, actual: {actual.ToBasicUnits()}");
 			AreRelativeEqual(expected.Value(), actual.Value(), toleranceFactor: toleranceFactor, message: message);
 		}
 
@@ -105,7 +105,7 @@ namespace TUGraz.VectoCore.Tests.Utils
 
 			if (double.IsNaN(expected.Value)) {
 				Assert.IsTrue(double.IsNaN(actual.Value),
-					string.Format("Actual value is not NaN. Expected: {0}, Actual: {1}{2}", expected, actual, message));
+					$"Actual value is not NaN. Expected: {expected}, Actual: {actual}{message}");
 				return;
 			}
 

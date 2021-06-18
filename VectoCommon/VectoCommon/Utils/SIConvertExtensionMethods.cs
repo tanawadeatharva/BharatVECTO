@@ -50,7 +50,7 @@ namespace TUGraz.VectoCommon.Utils
 			return Units;
 		}
 
-		public double Value { get { return _value; } }
+		public double Value => _value;
 
 		protected bool Equals(ConvertedSI other)
 		{
@@ -63,7 +63,7 @@ namespace TUGraz.VectoCommon.Utils
 				return false;
 			if (ReferenceEquals(this, obj))
 				return true;
-			if (obj.GetType() != this.GetType())
+			if (obj.GetType() != GetType())
 				return false;
 			return Equals((ConvertedSI)obj);
 		}

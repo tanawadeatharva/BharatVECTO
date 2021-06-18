@@ -50,9 +50,9 @@ namespace TUGraz.VectoCore.Tests.Utils
 		public string Model { get; set; }
 		public string Creator { get; set; }
 		public DateTime Date { get; set; }
-		public string AppVersion { get { return "Mock-Class"; } }
+		public string AppVersion => "Mock-Class";
 		public string TechnicalReportId { get; set; }
-		public CertificationMethod CertificationMethod { get{return CertificationMethod.NotCertified;} }
+		public CertificationMethod CertificationMethod => CertificationMethod.NotCertified;
 		public string CertificationNumber { get; set; }
 		public DigestData DigestValue { get; set; }
 		public CubicMeter Displacement { get; set; }
@@ -95,9 +95,6 @@ namespace TUGraz.VectoCore.Tests.Utils
 		public KilogramSquareMeter Inertia { get; set; }
 		public double WHTCEngineering { get; set; }
 
-		public Second EngineStartTime
-		{
-			get { return DeclarationData.Engine.DefaultEngineStartTime; }
-		}
+		public Second EngineStartTime => DeclarationData.Engine.DefaultEngineStartTime;
 	}
 }

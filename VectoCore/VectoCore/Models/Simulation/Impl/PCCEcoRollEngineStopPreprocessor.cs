@@ -166,9 +166,9 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 		public int CurrentIdx { get; private set; }
 
-		public int Count {  get { return Segments.Count; } }
+		public int Count => Segments.Count;
 
-		public PCCSegment Current { get { return Segments.Any() ? Segments[CurrentIdx] : null; } }
+		public PCCSegment Current => Segments.Any() ? Segments[CurrentIdx] : null;
 
 		public List<PCCSegment> Segments { get; }
 	}

@@ -86,20 +86,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		#region IEngineCockpit
 
-		public virtual bool EngineOn
-		{
-			get { return PreviousState.EngineOn; }
-		}
+		public virtual bool EngineOn => PreviousState.EngineOn;
 
-		public PerSecond EngineSpeed
-		{
-			get { return PreviousState.EngineSpeed; }
-		}
+		public PerSecond EngineSpeed => PreviousState.EngineSpeed;
 
-		public NewtonMeter EngineTorque
-		{
-			get { return PreviousState.EngineTorque; }
-		}
+		public NewtonMeter EngineTorque => PreviousState.EngineTorque;
 
 		public Watt EngineStationaryFullPower(PerSecond angularSpeed)
 		{
@@ -125,31 +116,15 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					0.SI<Second>(), dt, 0.SI<NewtonMeter>(), avgEngineSpeed, true) * avgEngineSpeed;
 		}
 
-		public PerSecond EngineIdleSpeed
-		{
-			get { return ModelData.IdleSpeed; }
-		}
+		public PerSecond EngineIdleSpeed => ModelData.IdleSpeed;
 
-		public PerSecond EngineRatedSpeed
-		{
-			get { return ModelData.FullLoadCurves[0].RatedSpeed; }
-		}
+		public PerSecond EngineRatedSpeed => ModelData.FullLoadCurves[0].RatedSpeed;
 
-		public PerSecond EngineN95hSpeed
-		{
-			get { return ModelData.FullLoadCurves[0].N95hSpeed; }
-		}
+		public PerSecond EngineN95hSpeed => ModelData.FullLoadCurves[0].N95hSpeed;
 
-		public PerSecond EngineN80hSpeed
+		public PerSecond EngineN80hSpeed => ModelData.FullLoadCurves[0].N80hSpeed;
 
-		{
-			get { return ModelData.FullLoadCurves[0].N80hSpeed; }
-		}
-
-		public IIdleController IdleController
-		{
-			get { return EngineIdleController ?? (EngineIdleController = new CombustionEngineIdleController(this, DataBus)); }
-		}
+		public IIdleController IdleController => EngineIdleController ?? (EngineIdleController = new CombustionEngineIdleController(this, DataBus));
 
 		protected CombustionEngineIdleController EngineIdleController { get; set; }
 
@@ -701,7 +676,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					throw new VectoException("Torque has to be 0 for idle requests! {0}", outTorque);
 				}
 
-				return DoHandleRequest(absTime, dt, outTorque, outAngularVelocity);
+				return DoHandleRequest(absTime, dt, outTorque, null);
 			}
 
 			protected virtual IResponse DoHandleRequest(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity) { 
@@ -735,35 +710,37 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 
 				var retVal = RequestPort.Request(absTime, dt, 0.SI<NewtonMeter>(), nextAngularSpeed, false);
-				retVal.Switch().
-					Case<ResponseSuccess>().
-					Case<ResponseUnderload>(r => {
+				switch(retVal) { 
+					case ResponseSuccess _:
+						break;
+					case ResponseUnderload r:
 						var angularSpeed = SearchAlgorithm.Search(nextAngularSpeed, r.Delta,
 							Constants.SimulationSettings.EngineIdlingSearchInterval,
 							getYValue: result => ((ResponseDryRun)result).DeltaDragLoad,
 							evaluateFunction: n => RequestPort.Request(absTime, dt, 0.SI<NewtonMeter>(), n, true),
 							criterion: result => ((ResponseDryRun)result).DeltaDragLoad.Value());
-						Log.Debug("Found operating point for idling. absTime: {0}, dt: {1}, torque: {2}, angularSpeed: {3}", absTime, dt,
-							0.SI<NewtonMeter>(), angularSpeed);
+						Log.Debug("Found operating point for idling. absTime: {0}, dt: {1}, torque: {2}, angularSpeed: {3}", 
+							absTime, dt, 0.SI<NewtonMeter>(), angularSpeed);
 						if (angularSpeed < _engine.ModelData.IdleSpeed) {
 							angularSpeed = _engine.ModelData.IdleSpeed;
 						}
 
 						retVal = RequestPort.Request(absTime, dt, 0.SI<NewtonMeter>(), angularSpeed, false);
-					}).
-					Case<ResponseOverload>(r => {
-						var angularSpeed = SearchAlgorithm.Search(nextAngularSpeed, r.Delta,
+						break;
+					case ResponseOverload r:
+						var angularSpeed2 = SearchAlgorithm.Search(nextAngularSpeed, r.Delta,
 							Constants.SimulationSettings.EngineIdlingSearchInterval,
 							getYValue: result => ((ResponseDryRun)result).DeltaFullLoad,
 							evaluateFunction: n => RequestPort.Request(absTime, dt, 0.SI<NewtonMeter>(), n, true),
 							criterion: result => ((ResponseDryRun)result).DeltaFullLoad.Value());
-						Log.Debug("Found operating point for idling. absTime: {0}, dt: {1}, torque: {2}, angularSpeed: {3}", absTime, dt,
-							0.SI<NewtonMeter>(), angularSpeed);
-						angularSpeed = angularSpeed.LimitTo(_engine.ModelData.IdleSpeed, engineMaxSpeed);
-						retVal = RequestPort.Request(absTime, dt, 0.SI<NewtonMeter>(), angularSpeed, false);
-					}).
-					Default(r => { throw new UnexpectedResponseException("searching Idling point", r); });
-
+						Log.Debug("Found operating point for idling. absTime: {0}, dt: {1}, torque: {2}, angularSpeed: {3}", 
+							absTime, dt, 0.SI<NewtonMeter>(), angularSpeed2);
+						angularSpeed2 = angularSpeed2.LimitTo(_engine.ModelData.IdleSpeed, engineMaxSpeed);
+						retVal = RequestPort.Request(absTime, dt, 0.SI<NewtonMeter>(), angularSpeed2, false);
+					break;
+					default:
+						throw new UnexpectedResponseException("searching Idling point", retVal);
+				}
 				return retVal;
 			}
 
@@ -802,20 +779,22 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					.LimitTo(_engine.ModelData.IdleSpeed, _engine.EngineRatedSpeed);
 
 				retVal = RequestPort.Request(absTime, dt, 0.SI<NewtonMeter>(), nextAngularSpeed, false);
-				retVal.Switch().
-					Case<ResponseSuccess>().
-					Case<ResponseUnderload>(r => {
+				switch (retVal) { 
+					case ResponseSuccess _:
+						break;
+					case ResponseUnderload r:
 						var angularSpeed = SearchAlgorithm.Search(nextAngularSpeed, r.Delta,
 							Constants.SimulationSettings.EngineIdlingSearchInterval,
 							getYValue: result => ((ResponseDryRun)result).DeltaDragLoad,
 							evaluateFunction: n => RequestPort.Request(absTime, dt, 0.SI<NewtonMeter>(), n, true),
 							criterion: result => ((ResponseDryRun)result).DeltaDragLoad.Value());
-						Log.Debug("Found operating point for idling. absTime: {0}, dt: {1}, torque: {2}, angularSpeed: {3}", absTime, dt,
-							0.SI<NewtonMeter>(), angularSpeed);
+						Log.Debug("Found operating point for idling. absTime: {0}, dt: {1}, torque: {2}, angularSpeed: {3}", 
+							absTime, dt, 0.SI<NewtonMeter>(), angularSpeed);
 						retVal = RequestPort.Request(absTime, dt, 0.SI<NewtonMeter>(), angularSpeed, false);
-					}).
-					Default(r => { throw new UnexpectedResponseException("searching Idling point", r); });
-
+						break;
+					default:
+						throw new UnexpectedResponseException("searching Idling point", retVal);
+				}
 				return retVal;
 			}
 		}
@@ -836,7 +815,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		public virtual bool CombustionEngineOn
 		{
-			get { return true; }
+			get => true;
 			set {  }
 		}
 

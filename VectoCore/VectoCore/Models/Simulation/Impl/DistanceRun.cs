@@ -61,24 +61,27 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 				Container.Brakes.BrakePower = 0.SI<Watt>();
 				response = CyclePort.Request(AbsTime, ds);
-				response.Switch().
-					Case<ResponseSuccess>(r => { dt = r.SimulationInterval; }).
-					Case<ResponseDrivingCycleDistanceExceeded>(r => {
+				switch (response) {
+					case ResponseSuccess r: 
+						dt = r.SimulationInterval;
+						break;
+					case ResponseDrivingCycleDistanceExceeded r:
 						if (r.MaxDistance.IsSmallerOrEqual(0)) {
 							throw new VectoSimulationException("DistanceExceeded, MaxDistance is invalid: {0}", r.MaxDistance);
 						}
 						ds = r.MaxDistance;
-					}).
-					Case<ResponseCycleFinished>(r => {
+						break;
+					case ResponseCycleFinished _:
 						FinishedWithoutErrors = true;
 						Log.Info("========= Driving Cycle Finished");
-					}).
-					Case<ResponseBatteryEmpty>(
-							r => {
-								FinishedWithoutErrors = true;
-								Log.Info("========= REESS empty");
-							}).
-					Default(r => { throw new VectoException("DistanceRun got an unexpected response: {0}", r); });
+						break;
+					case ResponseBatteryEmpty _:
+						FinishedWithoutErrors = true;
+						Log.Info("========= REESS empty");
+						break;
+					default:
+						throw new VectoException("DistanceRun got an unexpected response: {0}", response);
+				}
 				if (loopCount++ > Constants.SimulationSettings.MaximumIterationCountForSimulationStep) {
 					throw new VectoSimulationException("Maximum iteration count for a single simulation interval reached! Aborting!");
 				}

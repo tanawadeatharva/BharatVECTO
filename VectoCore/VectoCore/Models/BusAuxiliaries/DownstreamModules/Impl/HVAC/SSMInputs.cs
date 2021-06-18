@@ -69,10 +69,7 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.HVAC
 		public Kelvin CoolingBoundaryTemperature { get; set; }
 
 		// C28 - ( oC )
-		public Kelvin TemperatureCoolingTurnsOff
-		{
-			get { return 17.0.DegCelsiusToKelvin(); }
-		}
+		public Kelvin TemperatureCoolingTurnsOff => 17.0.DegCelsiusToKelvin();
 
 		// C29 - ( L/H )  --- !! 1/h
 		public PerSecond VentilationRate { get; set; }
@@ -93,16 +90,10 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.HVAC
 		public double AuxHeaterEfficiency { get; set; }
 
 		// C38 - ( KW/HKG )
-		public JoulePerKilogramm GCVDieselOrHeatingOil
-		{
-			get { return HeatingFuel.LowerHeatingValueVecto; }
-		}
+		public JoulePerKilogramm GCVDieselOrHeatingOil => HeatingFuel.LowerHeatingValueVecto;
 
 		// C42 - ( K )
-		public Kelvin MaxTemperatureDeltaForLowFloorBusses
-		{
-			get { return Constants.BusAuxiliaries.SteadyStateModel.MaxTemperatureDeltaForLowFloorBusses; }
-		}
+		public Kelvin MaxTemperatureDeltaForLowFloorBusses => Constants.BusAuxiliaries.SteadyStateModel.MaxTemperatureDeltaForLowFloorBusses;
 
 		// C43 - ( Fraction )
 		public double MaxPossibleBenefitFromTechnologyList { get; set; }
@@ -113,10 +104,7 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.HVAC
 		// ( EC_EnviromentalTemperature and  EC_Solar) (Batch Mode)
 		public IEnvironmentalConditionsMap EnvironmentalConditionsMap { get; set; }
 
-		public bool BatchMode
-		{
-			get { return EnvironmentalConditionsMap != null && EnvironmentalConditionsMap.GetEnvironmentalConditions().Any(); }
-		}
+		public bool BatchMode => EnvironmentalConditionsMap != null && EnvironmentalConditionsMap.GetEnvironmentalConditions().Any();
 
 
 		// C53 - "Continous/2-stage/3-stage/4-stage
@@ -150,40 +138,22 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.HVAC
 		#region Implementation of ISSMInputs
 
 		[JsonIgnore]
-		public ISSMBusParameters BusParameters
-		{
-			get { return this; }
-		}
+		public ISSMBusParameters BusParameters => this;
 
 		[JsonIgnore]
-		public ISSMBoundaryConditions BoundaryConditions
-		{
-			get { return this; }
-		}
+		public ISSMBoundaryConditions BoundaryConditions => this;
 
 		[JsonIgnore]
-		public IEnvironmentalConditions EnvironmentalConditions
-		{
-			get { return this; }
-		}
+		public IEnvironmentalConditions EnvironmentalConditions => this;
 
 		[JsonIgnore]
-		public IACSystem ACSystem
-		{
-			get { return this; }
-		}
+		public IACSystem ACSystem => this;
 
 		[JsonIgnore]
-		public IVentilation Ventilation
-		{
-			get { return this; }
-		}
+		public IVentilation Ventilation => this;
 
 		[JsonIgnore]
-		public IAuxHeater AuxHeater
-		{
-			get { return this; }
-		}
+		public IAuxHeater AuxHeater => this;
 
 		public ISSMTechnologyBenefits Technologies { get; set; }
 		public string HVACTechnology { get; set; }

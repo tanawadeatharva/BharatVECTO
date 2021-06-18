@@ -81,7 +81,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent
 				if (DataBus.DriverInfo.DriverBehavior == DrivingBehavior.Halted && !ClutchOpen)
 				{
 					//return HandleClutchClosed(absTime, dt, outTorque, outAngularVelocity, dryRun);
-					return base.HandleClutchOpen(absTime, dt, outTorque, outAngularVelocity, dryRun);
+					return HandleClutchOpen(absTime, dt, outTorque, outAngularVelocity, dryRun);
 				}
 				return base.Request(absTime, dt, outTorque, outAngularVelocity, dryRun);
 

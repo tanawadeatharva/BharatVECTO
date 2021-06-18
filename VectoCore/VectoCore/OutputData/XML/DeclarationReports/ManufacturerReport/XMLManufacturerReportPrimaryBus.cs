@@ -64,7 +64,7 @@ namespace TUGraz.VectoCore.OutputData.XML {
 			return new XElement(
 				tns + XMLNames.Component_Auxiliaries,
 				new XAttribute(XNamespace.Xmlns + auxPrefix, ns.NamespaceName),
-				new XAttribute(xsi + "type", string.Format("{0}:{1}", auxPrefix, busAuxXML.FirstChild.SchemaInfo.SchemaType.QualifiedName.Name)),
+				new XAttribute(xsi + "type", $"{auxPrefix}:{busAuxXML.FirstChild.SchemaInfo.SchemaType.QualifiedName.Name}"),
 				XElement.Parse(busAuxXML.InnerXml).Elements()
 			);
 		}

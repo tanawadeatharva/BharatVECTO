@@ -67,8 +67,7 @@ namespace TUGraz.VectoCore.Tests.Integration.BusAuxiliaries
 		public void AuxDemandtest(double vehicleWeight, double engineSpeedRpm, double driveLinePower, double internalPower,
 			double expectedPowerDemand)
 		{
-			MockDriver driver;
-			var busAux = CreateBusAuxAdapterForTesting(vehicleWeight, out driver);
+			var busAux = CreateBusAuxAdapterForTesting(vehicleWeight, out var driver);
 
 			var engineDrivelinePower = (driveLinePower * 1000).SI<Watt>();
 			var engineSpeed = engineSpeedRpm.RPMtoRad();
@@ -86,8 +85,7 @@ namespace TUGraz.VectoCore.Tests.Integration.BusAuxiliaries
 			var engineSpeedRpm = 1256;
 			var internalPower = 148;
 
-			MockDriver driver;
-			var busAux = CreateBusAuxAdapterForTesting(12000, out driver);
+			var busAux = CreateBusAuxAdapterForTesting(12000, out var driver);
 
 			var engineDrivelinePower = (driveLinePower * 1000).SI<Watt>();
 			var engineSpeed = engineSpeedRpm.RPMtoRad();

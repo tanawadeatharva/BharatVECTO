@@ -93,10 +93,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			container[ModalResultField.P_wheel_inertia] = CurrentState.InertiaTorqueLoss * avgAngularSpeed;
 		}
 
-		public Kilogram ReducedMassWheels
-		{
-			get { return (_totalWheelsInertia / DynamicTyreRadius / DynamicTyreRadius).Cast<Kilogram>(); }
-		}
+		public Kilogram ReducedMassWheels => (_totalWheelsInertia / DynamicTyreRadius / DynamicTyreRadius).Cast<Kilogram>();
 
 		public Meter DynamicTyreRadius { get; }
 	}

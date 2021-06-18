@@ -61,30 +61,15 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 		public int RunIdentifier { get; protected set; }
 
-		public virtual string RunName
-		{
-			get { return Container.RunData.JobName; }
-		}
+		public virtual string RunName => Container.RunData.JobName;
 
-		public virtual string CycleName
-		{
-			get { return Container.RunData.Cycle.Name; }
-		}
+		public virtual string CycleName => Container.RunData.Cycle.Name;
 
-		public virtual string RunSuffix
-		{
-			get { return Container.RunData.ModFileSuffix; }
-		}
+		public virtual string RunSuffix => Container.RunData.ModFileSuffix;
 
-		public int JobRunIdentifier
-		{
-			get { return Container.RunData.JobRunId; }
-		}
+		public int JobRunIdentifier => Container.RunData.JobRunId;
 
-		public virtual double Progress
-		{
-			get { return CyclePort.Progress * (PostProcessingDone ? 1.0 : 0.99) * (WritingResultsDone ? 1.0 : 0.99); }
-		}
+		public virtual double Progress => CyclePort.Progress * (PostProcessingDone ? 1.0 : 0.99) * (WritingResultsDone ? 1.0 : 0.99);
 
 		protected VectoRun(IVehicleContainer container)
 		{

@@ -88,7 +88,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 	{
 		protected Dictionary<TKey, TValue> Data = new Dictionary<TKey, TValue>();
 
-		protected override string ErrorMessage {  get { return "key {0} not found in lookup data"; } }
+		protected override string ErrorMessage => "key {0} not found in lookup data";
 
 		public virtual TValue Lookup(TKey key)
 		{
@@ -99,10 +99,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 			}
 		}
 
-		public Dictionary<TKey, TValue> Entries
-		{
-			get { return Data; }
-		}
+		public Dictionary<TKey, TValue> Entries => Data;
 	}
 
 	public abstract class LookupData<TKey1, TKey2, TValue> : LookupData where TValue : struct

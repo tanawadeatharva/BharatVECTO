@@ -81,13 +81,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 
 
 		[JsonIgnore]
-		public GearList GearList
-		{
-			get
-			{
-				return _gearlist ?? (_gearlist = CreateGearList());
-			}
-		}
+		public GearList GearList => _gearlist ?? (_gearlist = CreateGearList());
 
 		private GearList CreateGearList()
 		{

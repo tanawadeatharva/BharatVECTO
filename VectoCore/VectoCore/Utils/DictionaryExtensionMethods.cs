@@ -39,15 +39,13 @@ namespace TUGraz.VectoCore.Utils
 	{
 		public static object GetValueOrNull<TKey, TValue>(this IDictionary<TKey, TValue> dictionary, TKey key)
 		{
-			TValue value;
-			return dictionary.TryGetValue(key, out value) ? (object)value : DBNull.Value;
+			return dictionary.TryGetValue(key, out var value) ? (object)value : DBNull.Value;
 		}
 
 		public static TValue GetValueOrZero<TKey, TValue>(this IDictionary<TKey, TValue> dictionary, TKey key)
 			where TValue : SIBase<TValue>
 		{
-			TValue value;
-			return dictionary.TryGetValue(key, out value) ? value : 0.SI<TValue>();
+			return dictionary.TryGetValue(key, out var value) ? value : 0.SI<TValue>();
 		}
 	}
 }

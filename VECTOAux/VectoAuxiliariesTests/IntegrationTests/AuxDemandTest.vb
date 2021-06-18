@@ -5,7 +5,6 @@ Imports TUGraz.VectoCore.InputData.FileIO.JSON
 Imports TUGraz.VectoCore.InputData.Reader.ComponentData
 Imports TUGraz.VectoCore.Models.BusAuxiliaries
 Imports TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.Electrics
-Imports TUGraz.VectoCore.Models.BusAuxiliaries.Interfaces
 
 Namespace IntegrationTests
     <TestFixture>

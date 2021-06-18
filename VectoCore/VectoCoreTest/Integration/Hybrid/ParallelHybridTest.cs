@@ -132,7 +132,7 @@ namespace TUGraz.VectoCore.Tests.Integration.Hybrid
 
 			const bool largeMotor = true;
 
-			var modFilename = string.Format("SimpleParallelHybrid-P1_constant_{0}-{1}_{2}_{3}.vmod", vmax, initialSoC, slope, gbxType.ToXMLFormat());
+			var modFilename = $"SimpleParallelHybrid-P1_constant_{vmax}-{initialSoC}_{slope}_{gbxType.ToXMLFormat()}.vmod";
 			const PowertrainPosition pos = PowertrainPosition.HybridP1;
 			var job = CreateEngineeringRun(
 				cycle, modFilename, initialSoC, pos, 1.0, largeMotor: false, gearboxType: gbxType);
@@ -178,7 +178,7 @@ namespace TUGraz.VectoCore.Tests.Integration.Hybrid
 
 			const bool largeMotor = true;
 
-			var modFilename = string.Format("SimpleParallelHybrid-P1_acc_{0}-{1}_{2}_{3}.vmod", vmax, initialSoC, slope, gbxType.ToXMLFormat());
+			var modFilename = $"SimpleParallelHybrid-P1_acc_{vmax}-{initialSoC}_{slope}_{gbxType.ToXMLFormat()}.vmod";
 			const PowertrainPosition pos = PowertrainPosition.HybridP1;
 			var job = CreateEngineeringRun(
 				cycle, modFilename, initialSoC, pos, 1.0, largeMotor: false, gearboxType: gbxType);
@@ -216,7 +216,7 @@ namespace TUGraz.VectoCore.Tests.Integration.Hybrid
 
 			const bool largeMotor = true;
 
-			var modFilename = string.Format("SimpleParallelHybrid-P1_stop_{0}-{1}_{2}_{3}.vmod", vmax, initialSoC, slope, gbxType.ToXMLFormat());
+			var modFilename = $"SimpleParallelHybrid-P1_stop_{vmax}-{initialSoC}_{slope}_{gbxType.ToXMLFormat()}.vmod";
 			const PowertrainPosition pos = PowertrainPosition.HybridP1;
 			var job = CreateEngineeringRun(
 				cycle, modFilename, initialSoC, pos, 1.0, largeMotor: false, gearboxType: gbxType);
@@ -336,7 +336,7 @@ namespace TUGraz.VectoCore.Tests.Integration.Hybrid
 
 			const bool largeMotor = true;
 
-			var modFilename = string.Format("SimpleParallelHybrid-P2_acc_{0}-{1}_{2}.vmod", vmax, initialSoC, slope);
+			var modFilename = $"SimpleParallelHybrid-P2_acc_{vmax}-{initialSoC}_{slope}.vmod";
 			const PowertrainPosition pos = PowertrainPosition.HybridP2;
 			var job = CreateEngineeringRun(
 				cycle, modFilename, initialSoC, pos, 1.0, largeMotor: true);
@@ -371,7 +371,7 @@ namespace TUGraz.VectoCore.Tests.Integration.Hybrid
 
 			const bool largeMotor = true;
 
-			var modFilename = string.Format("SimpleParallelHybrid-P2_acc_{0}-{1}_{2}_maxPwr-{3}.vmod", vmax, initialSoC, slope, maxPwrkW);
+			var modFilename = $"SimpleParallelHybrid-P2_acc_{vmax}-{initialSoC}_{slope}_maxPwr-{maxPwrkW}.vmod";
 			const PowertrainPosition pos = PowertrainPosition.HybridP2;
 			var job = CreateEngineeringRun(
 				cycle, modFilename, initialSoC, pos, 1.0, largeMotor: true, maxDriveTrainPower: (maxPwrkW * 1000).SI<Watt>());
@@ -420,7 +420,7 @@ namespace TUGraz.VectoCore.Tests.Integration.Hybrid
 
 			const bool largeMotor = true;
 
-			var modFilename = string.Format("SimpleParallelHybrid-P2_constant_{0}-{1}_{2}_{3}.vmod", vmax, initialSoC, slope, pAuxEl);
+			var modFilename = $"SimpleParallelHybrid-P2_constant_{vmax}-{initialSoC}_{slope}_{pAuxEl}.vmod";
 			const PowertrainPosition pos = PowertrainPosition.HybridP2;
 			var job = CreateEngineeringRun(
 				cycle, modFilename, initialSoC, pos, 1.0, largeMotor: true, pAuxEl: pAuxEl);
@@ -519,7 +519,7 @@ namespace TUGraz.VectoCore.Tests.Integration.Hybrid
 
 			const bool largeMotor = true;
 
-			var modFilename = string.Format("SimpleParallelHybrid-P2_cycle_{0}-{1}_{2}_{3}.vmod", declarationMission, initialSoC, payload, pAuxEl);
+			var modFilename = $"SimpleParallelHybrid-P2_cycle_{declarationMission}-{initialSoC}_{payload}_{pAuxEl}.vmod";
 			const PowertrainPosition pos = PowertrainPosition.HybridP2;
 			var job = CreateEngineeringRun(
 				cycle, modFilename, initialSoC, pos, 1.0, largeMotor: true, pAuxEl: pAuxEl, payload: payload.SI<Kilogram>());
@@ -864,7 +864,7 @@ namespace TUGraz.VectoCore.Tests.Integration.Hybrid
 
 			//const PowertrainPosition pos = PowertrainPosition.HybridP2;
 			var run = CreateConventionalEngineeringRun(
-				cycle, string.Format("ConventionalVehicle_acc_{0}_{1}.vmod", vmax, slope));
+				cycle, $"ConventionalVehicle_acc_{vmax}_{slope}.vmod");
 
 			//var hybridController = (HybridController)((VehicleContainer)run.GetContainer()).HybridController;
 			//Assert.NotNull(hybridController);
@@ -893,7 +893,7 @@ namespace TUGraz.VectoCore.Tests.Integration.Hybrid
 
 			const bool largeMotor = true;
 
-			var modFilename = string.Format("SimpleParallelHybrid-P2_stop_{0}-{1}_{2}.vmod", vmax, initialSoC, slope);
+			var modFilename = $"SimpleParallelHybrid-P2_stop_{vmax}-{initialSoC}_{slope}.vmod";
 			const PowertrainPosition pos = PowertrainPosition.HybridP2;
 			var job = CreateEngineeringRun(
 				cycle, modFilename, initialSoC, pos, 1.0, largeMotor: true);
@@ -946,7 +946,7 @@ namespace TUGraz.VectoCore.Tests.Integration.Hybrid
 
 			const bool largeMotor = true;
 
-			var modFilename = string.Format("SimpleParallelHybrid-P3_constant_{0}-{1}_{2}_{3}.vmod", vmax, initialSoC, slope, pAuxEl);
+			var modFilename = $"SimpleParallelHybrid-P3_constant_{vmax}-{initialSoC}_{slope}_{pAuxEl}.vmod";
 			const PowertrainPosition pos = PowertrainPosition.HybridP3;
 			var job = CreateEngineeringRun(
 				cycle, modFilename, initialSoC, pos, 1.0, largeMotor: true, pAuxEl: pAuxEl);
@@ -984,7 +984,7 @@ namespace TUGraz.VectoCore.Tests.Integration.Hybrid
 
 			const bool largeMotor = true;
 
-			var modFilename = string.Format("SimpleParallelHybrid-P3_acc_{0}-{1}_{2}.vmod", vmax, initialSoC, slope);
+			var modFilename = $"SimpleParallelHybrid-P3_acc_{vmax}-{initialSoC}_{slope}.vmod";
 			const PowertrainPosition pos = PowertrainPosition.HybridP3;
 			var job = CreateEngineeringRun(
 				cycle, modFilename, initialSoC, pos, 1.0, largeMotor: true);
@@ -1018,7 +1018,7 @@ namespace TUGraz.VectoCore.Tests.Integration.Hybrid
 
 			const bool largeMotor = true;
 
-			var modFilename = string.Format("SimpleParallelHybrid-P3_stop_{0}-{1}_{2}.vmod", vmax, initialSoC, slope);
+			var modFilename = $"SimpleParallelHybrid-P3_stop_{vmax}-{initialSoC}_{slope}.vmod";
 			const PowertrainPosition pos = PowertrainPosition.HybridP3;
 			var job = CreateEngineeringRun(
 				cycle, modFilename, initialSoC, pos, 1.0, largeMotor: true);
@@ -1061,7 +1061,7 @@ namespace TUGraz.VectoCore.Tests.Integration.Hybrid
 
 			const bool largeMotor = true;
 
-			var modFilename = string.Format("SimpleParallelHybrid-P3_cycle_{0}-{1}_{2}_{3}.vmod", declarationMission, initialSoC, payload, pAuxEl);
+			var modFilename = $"SimpleParallelHybrid-P3_cycle_{declarationMission}-{initialSoC}_{payload}_{pAuxEl}.vmod";
 			const PowertrainPosition pos = PowertrainPosition.HybridP3;
 			var job = CreateEngineeringRun(
 				cycle, modFilename, initialSoC, pos, 1.0, largeMotor: true, pAuxEl: pAuxEl, payload: payload.SI<Kilogram>());
@@ -1193,7 +1193,7 @@ namespace TUGraz.VectoCore.Tests.Integration.Hybrid
 
 			const bool largeMotor = true;
 
-			var modFilename = string.Format("SimpleParallelHybrid-P4_constant_{0}-{1}_{2}_{3}.vmod", vmax, initialSoC, slope, pAuxEl);
+			var modFilename = $"SimpleParallelHybrid-P4_constant_{vmax}-{initialSoC}_{slope}_{pAuxEl}.vmod";
 			const PowertrainPosition pos = PowertrainPosition.HybridP4;
 			var job = CreateEngineeringRun(
 				cycle, modFilename, initialSoC, pos, 1.0, largeMotor: true, pAuxEl: pAuxEl);
@@ -1232,7 +1232,7 @@ namespace TUGraz.VectoCore.Tests.Integration.Hybrid
 
 			const bool largeMotor = true;
 
-			var modFilename = string.Format("SimpleParallelHybrid-P4_acc_{0}-{1}_{2}.vmod", vmax, initialSoC, slope);
+			var modFilename = $"SimpleParallelHybrid-P4_acc_{vmax}-{initialSoC}_{slope}.vmod";
 			const PowertrainPosition pos = PowertrainPosition.HybridP4;
 			var job = CreateEngineeringRun(
 				cycle, modFilename, initialSoC, pos, 1.0, largeMotor: true);
@@ -1265,7 +1265,7 @@ namespace TUGraz.VectoCore.Tests.Integration.Hybrid
 
 			const bool largeMotor = true;
 
-			var modFilename = string.Format("SimpleParallelHybrid-P4_stop_{0}-{1}_{2}.vmod", vmax, initialSoC, slope);
+			var modFilename = $"SimpleParallelHybrid-P4_stop_{vmax}-{initialSoC}_{slope}.vmod";
 			const PowertrainPosition pos = PowertrainPosition.HybridP4;
 			var job = CreateEngineeringRun(
 				cycle, modFilename, initialSoC, pos, 1.0, largeMotor: true);
@@ -1307,7 +1307,7 @@ namespace TUGraz.VectoCore.Tests.Integration.Hybrid
 
 			const bool largeMotor = true;
 
-			var modFilename = string.Format("SimpleParallelHybrid-P4_cycle_{0}-{1}_{2}_{3}.vmod", declarationMission, initialSoC, payload, pAuxEl);
+			var modFilename = $"SimpleParallelHybrid-P4_cycle_{declarationMission}-{initialSoC}_{payload}_{pAuxEl}.vmod";
 			const PowertrainPosition pos = PowertrainPosition.HybridP4;
 			var job = CreateEngineeringRun(
 				cycle, modFilename, initialSoC, pos, 1.0, largeMotor: true, pAuxEl: pAuxEl, payload: payload.SI<Kilogram>());
@@ -1717,7 +1717,7 @@ namespace TUGraz.VectoCore.Tests.Integration.Hybrid
 							LossMap =
 								TransmissionLossMapReader.ReadFromFile(
 									ratio.IsEqual(1) ? GearboxIndirectLoss : GearboxDirectLoss, ratio,
-									string.Format("Gear {0}", i)),
+									$"Gear {i}"),
 							Ratio = ratio,
 							//ShiftPolygon = DeclarationData.Gearbox.ComputeEfficiencyShiftPolygon(i,)
 						})).ToDictionary(k => k.Item1 + 1, v => v.Item2),
@@ -1743,12 +1743,12 @@ namespace TUGraz.VectoCore.Tests.Integration.Hybrid
 							LossMap =
 								TransmissionLossMapReader.ReadFromFile(
 									ratio.IsEqual(1) ? GearboxIndirectLoss : GearboxDirectLoss, ratio,
-									string.Format("Gear {0}", i)),
+									$"Gear {i}"),
 							Ratio = ratio,
 							//ShiftPolygon = ShiftPolygonReader.ReadFromFile(GearboxShiftPolygonFile),
 							TorqueConverterRatio = i == 0 ? ratio : double.NaN,
 							TorqueConverterGearLossMap = i == 0
-								? TransmissionLossMapReader.Create( 0.98, ratio, string.Format("Gear {0}", i))
+								? TransmissionLossMapReader.Create( 0.98, ratio, $"Gear {i}")
 								: null,
 							//TorqueConverterShiftPolygon = i == 0 ? ShiftPolygonReader.ReadFromFile(GearboxShiftPolygonFile) : null
 						})).ToDictionary(k => k.Item1 + 1, v => v.Item2),
@@ -1773,12 +1773,12 @@ namespace TUGraz.VectoCore.Tests.Integration.Hybrid
 							LossMap =
 								TransmissionLossMapReader.ReadFromFile(
 									ratio.IsEqual(1) ? GearboxIndirectLoss : GearboxDirectLoss, ratio,
-									string.Format("Gear {0}", i)),
+									$"Gear {i}"),
 							Ratio = ratio,
 							//ShiftPolygon = ShiftPolygonReader.ReadFromFile(GearboxShiftPolygonFile),
 							TorqueConverterRatio = i == 0 ? 1.0 : double.NaN,
 							TorqueConverterGearLossMap = i == 0
-								? TransmissionLossMapReader.Create(1.0, ratio, string.Format("Gear {0}", i))
+								? TransmissionLossMapReader.Create(1.0, ratio, $"Gear {i}")
 								: null,
 							//TorqueConverterShiftPolygon = i == 0 ? ShiftPolygonReader.ReadFromFile(GearboxShiftPolygonFile) : null
 						})).ToDictionary(k => k.Item1 + 1, v => v.Item2),

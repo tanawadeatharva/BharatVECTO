@@ -56,7 +56,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 
 		#region Overrides of AbstractDeclarationVectoRunDataFactory
 
-		protected override IDeclarationDataAdapter DataAdapter { get { return _dao; } }
+		protected override IDeclarationDataAdapter DataAdapter => _dao;
 
 		#endregion
 
@@ -175,7 +175,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 				DriverData = _driverdata,
 				ExecutionMode = ExecutionMode.Declaration,
 				JobName = InputDataProvider.JobInputData.JobName,
-				ModFileSuffix = (engineModes.Count > 1 ? string.Format("_EngineMode{0}_", modeIdx) : "") + loading.Key.ToString(),
+				ModFileSuffix = (engineModes.Count > 1 ? $"_EngineMode{modeIdx}_" : "") + loading.Key,
 				Report = Report,
 				Mission = mission,
 				PTO = mission.MissionType == MissionType.MunicipalUtility

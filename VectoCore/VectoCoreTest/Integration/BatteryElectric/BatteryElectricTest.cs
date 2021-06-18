@@ -113,7 +113,7 @@ namespace TUGraz.VectoCore.Tests.Integration.BatteryElectric
 
 			const bool largeMotor = true;
 
-			var modFilename = string.Format("SimpleBatteryElectric-B4_constant_{0}-{1}_{2}_{3}", vmax, initialSoC, slope, pAuxEl);
+			var modFilename = $"SimpleBatteryElectric-B4_constant_{vmax}-{initialSoC}_{slope}_{pAuxEl}";
 			const PowertrainPosition pos = PowertrainPosition.BatteryElectricE4;
 			var job = CreateEngineeringRun(
 				cycle, modFilename, initialSoC, pos, 2, 22.6, largeMotor: true, pAuxEl: pAuxEl);
@@ -149,7 +149,7 @@ namespace TUGraz.VectoCore.Tests.Integration.BatteryElectric
 
 			const bool largeMotor = true;
 
-			var modFilename = string.Format("SimpleBatteryElectric-B4_acc_{0}-{1}_{2}", vmax, initialSoC, slope);
+			var modFilename = $"SimpleBatteryElectric-B4_acc_{vmax}-{initialSoC}_{slope}";
 			const PowertrainPosition pos = PowertrainPosition.BatteryElectricE4;
 			var job = CreateEngineeringRun(
 				cycle, modFilename, initialSoC, pos, 2, 22.6, largeMotor: true);
@@ -185,7 +185,7 @@ namespace TUGraz.VectoCore.Tests.Integration.BatteryElectric
 
 			const bool largeMotor = true;
 
-			var modFilename = string.Format("SimpleParallelHybrid-B4_cycle_{0}-{1}_{2}_{3}", declarationMission, initialSoC, payload, pAuxEl);
+			var modFilename = $"SimpleParallelHybrid-B4_cycle_{declarationMission}-{initialSoC}_{payload}_{pAuxEl}";
 			const PowertrainPosition pos = PowertrainPosition.BatteryElectricE4;
 			var job = CreateEngineeringRun(
 				cycle, modFilename, initialSoC, pos, 2, 22.6, largeMotor: true);
@@ -270,7 +270,7 @@ namespace TUGraz.VectoCore.Tests.Integration.BatteryElectric
 
 			const bool largeMotor = true;
 
-			var modFilename = string.Format("SimpleBatteryElectric-B3_constant_{0}-{1}_{2}_{3}", vmax, initialSoC, slope, pAuxEl);
+			var modFilename = $"SimpleBatteryElectric-B3_constant_{vmax}-{initialSoC}_{slope}_{pAuxEl}";
 			const PowertrainPosition pos = PowertrainPosition.BatteryElectricE3;
 			var job = CreateEngineeringRun(
 				cycle, modFilename, initialSoC, pos, 2, 22.6, largeMotor: true, pAuxEl: pAuxEl);
@@ -306,7 +306,7 @@ namespace TUGraz.VectoCore.Tests.Integration.BatteryElectric
 
 			const bool largeMotor = true;
 
-			var modFilename = string.Format("SimpleBatteryElectric-B3_acc_{0}-{1}_{2}", vmax, initialSoC, slope);
+			var modFilename = $"SimpleBatteryElectric-B3_acc_{vmax}-{initialSoC}_{slope}";
 			const PowertrainPosition pos = PowertrainPosition.BatteryElectricE3;
 			var job = CreateEngineeringRun(
 				cycle, modFilename, initialSoC, pos, 2, 22.6, largeMotor: true);
@@ -342,7 +342,7 @@ namespace TUGraz.VectoCore.Tests.Integration.BatteryElectric
 
 			const bool largeMotor = true;
 
-			var modFilename = string.Format("SimpleParallelHybrid-B3_cycle_{0}-{1}_{2}_{3}", declarationMission, initialSoC, payload, pAuxEl);
+			var modFilename = $"SimpleParallelHybrid-B3_cycle_{declarationMission}-{initialSoC}_{payload}_{pAuxEl}";
 			const PowertrainPosition pos = PowertrainPosition.BatteryElectricE3;
 			var job = CreateEngineeringRun(
 				cycle, modFilename, initialSoC, pos, 2, 22.6, largeMotor: true);
@@ -427,7 +427,7 @@ namespace TUGraz.VectoCore.Tests.Integration.BatteryElectric
 
 			const bool largeMotor = true;
 
-			var modFilename = string.Format("SimpleBatteryElectric-B2_constant_{0}-{1}_{2}_{3}", vmax, initialSoC, slope, pAuxEl);
+			var modFilename = $"SimpleBatteryElectric-B2_constant_{vmax}-{initialSoC}_{slope}_{pAuxEl}";
 			const PowertrainPosition pos = PowertrainPosition.BatteryElectricE2;
 			var job = CreateEngineeringRun(
 				cycle, modFilename, initialSoC, pos, 2, 2, largeMotor: true, pAuxEl: pAuxEl);
@@ -465,7 +465,7 @@ namespace TUGraz.VectoCore.Tests.Integration.BatteryElectric
 
 			const bool largeMotor = true;
 
-			var modFilename = string.Format("SimpleBatteryElectric-B2_stop_{0}-{1}_{2}", vmax, initialSoC, slope);
+			var modFilename = $"SimpleBatteryElectric-B2_stop_{vmax}-{initialSoC}_{slope}";
 			const PowertrainPosition pos = PowertrainPosition.BatteryElectricE2;
 			var job = CreateEngineeringRun(
 				cycle, modFilename, initialSoC, pos, 2, 2, largeMotor: true);
@@ -495,7 +495,7 @@ namespace TUGraz.VectoCore.Tests.Integration.BatteryElectric
 
 			const bool largeMotor = true;
 
-			var modFilename = string.Format("SimpleBatteryElectric-B2_acc_{0}-{1}_{2}", vmax, initialSoC, slope);
+			var modFilename = $"SimpleBatteryElectric-B2_acc_{vmax}-{initialSoC}_{slope}";
 			const PowertrainPosition pos = PowertrainPosition.BatteryElectricE2;
 			var job = CreateEngineeringRun(
 				cycle, modFilename, initialSoC, pos, 2, 2, largeMotor: true);
@@ -531,7 +531,7 @@ namespace TUGraz.VectoCore.Tests.Integration.BatteryElectric
 
 			const bool largeMotor = true;
 
-			var modFilename = string.Format("SimpleBatteryElectric-B2_cycle_{0}-{1}_{2}_{3}", declarationMission, initialSoC, payload, pAuxEl);
+			var modFilename = $"SimpleBatteryElectric-B2_cycle_{declarationMission}-{initialSoC}_{payload}_{pAuxEl}";
 			const PowertrainPosition pos = PowertrainPosition.BatteryElectricE2;
 			var job = CreateEngineeringRun(
 				cycle, modFilename, initialSoC, pos, 2, 2, largeMotor: true);
@@ -781,7 +781,7 @@ namespace TUGraz.VectoCore.Tests.Integration.BatteryElectric
 							LossMap =
 								TransmissionLossMapReader.ReadFromFile(
 									ratio.IsEqual(1) ? GearboxIndirectLoss : GearboxDirectLoss, ratio,
-									string.Format("Gear {0}", i)),
+									$"Gear {i}"),
 							Ratio = ratio,
 							//ShiftPolygon = shiftStrategy.ComputeDeclarationShiftPolygon(GearboxType.AMT, i, null, )
 						})).ToDictionary(k => k.Item1 + 1, v => v.Item2),
@@ -939,10 +939,8 @@ namespace TUGraz.VectoCore.Tests.Integration.BatteryElectric
 			get;
 			set;
 		}
-		public NewtonMeter EngineTorque
-		{
-			get { return null; }
-		}
+		public NewtonMeter EngineTorque => null;
+
 		public Watt EngineStationaryFullPower(PerSecond angularSpeed)
 		{
 			throw new NotImplementedException();
@@ -967,10 +965,7 @@ namespace TUGraz.VectoCore.Tests.Integration.BatteryElectric
 		public PerSecond EngineRatedSpeed { get; }
 		public PerSecond EngineN95hSpeed { get; }
 		public PerSecond EngineN80hSpeed { get; }
-		public bool EngineOn
-		{
-			get { return true; }
-		}
+		public bool EngineOn => true;
 	}
 
 	

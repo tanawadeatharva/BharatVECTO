@@ -8,7 +8,6 @@ Imports TUGraz.VectoCommon.Exceptions
 Imports TUGraz.VectoCommon.InputData
 Imports TUGraz.VectoCommon.Models
 Imports TUGraz.VectoCommon.Utils
-Imports TUGraz.VectoCore.Models.SimulationComponent.Data
 Imports TUGraz.VectoCore.Models.SimulationComponent.Data.Battery
 Imports TUGraz.VectoCore.Utils
 
@@ -203,7 +202,7 @@ Public Class Battery
     End Property
     Public ReadOnly Property CertificationNumber As String Implements IComponentInputData.CertificationNumber
         Get
-            Return TUGraz.VectoCore.Configuration.Constants.NOT_AVailABLE
+            Return TUGraz.VectoCore.Configuration.Constants.NOT_AVAILABLE
         End Get
     End Property
     Public ReadOnly Property DigestValue As DigestData Implements IComponentInputData.DigestValue

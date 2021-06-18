@@ -54,7 +54,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 
 		protected override TransmissionLossMap CreateGearLossMap(ITransmissionInputData gear, uint i, bool useEfficiencyFallback, VehicleCategory vehicleCategory, GearboxType gearboxType)
 		{
-			return TransmissionLossMapReader.Create(gear.LossMap, gear.Ratio, string.Format("Gear {0}", i + 1), true);
+			return TransmissionLossMapReader.Create(gear.LossMap, gear.Ratio, $"Gear {i + 1}", true);
 		}
 
 
@@ -88,10 +88,6 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 
 		public ISingleBusInputDataProvider SingleBusInputData { get; set; }
 
-		protected IVehicleDeclarationInputData CompletedVehicle
-		{
-			get { return SingleBusInputData?.CompletedVehicle; }
-		}
-
+		protected IVehicleDeclarationInputData CompletedVehicle => SingleBusInputData?.CompletedVehicle;
 	}
 }

@@ -65,10 +65,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 
 		#region Implementation of IXMLDeclarationInputReader
 
-		public virtual IDeclarationJobInputData JobData
-		{
-			get { return _jobData ?? (_jobData = CreateComponent(XMLNames.VectoInputDeclaration, JobCreator)); }
-		}
+		public virtual IDeclarationJobInputData JobData => _jobData ?? (_jobData = CreateComponent(XMLNames.VectoInputDeclaration, JobCreator));
 
 		#endregion
 

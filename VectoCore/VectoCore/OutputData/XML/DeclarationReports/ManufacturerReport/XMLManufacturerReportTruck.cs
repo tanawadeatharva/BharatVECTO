@@ -129,7 +129,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport
 
 		private string GetTagName(AuxiliaryType auxId)
 		{
-			return auxId.ToString() + "Technology";
+			return auxId + "Technology";
 		}
 
 		

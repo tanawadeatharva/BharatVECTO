@@ -128,7 +128,7 @@ namespace TUGraz.VectoCore.Utils
 					resource = RessourceHelper.LoadResourceAsStream(RessourceHelper.ResourceType.XMLSchema, schemaFile);
 				} catch (Exception e) {
 					throw new Exception(
-						string.Format("Missing resource {0} for XML document type: {1} ({2})", schemaFile, entry, docType.ToString()), e);
+						$"Missing resource {schemaFile} for XML document type: {entry} ({docType.ToString()})", e);
 				}
 
 				var reader = XmlReader.Create(resource, new XmlReaderSettings(), "schema://");

@@ -762,7 +762,7 @@ namespace TUGraz.VectoCore.Tests.XML
 						Assert.AreEqual(ptoGearWheel,
 							inputDataProvider.JobInputData.Vehicle.Components.PTOTransmissionInputData.PTOTransmissionType);
 					} else {
-						Assert.AreEqual(string.Format("{0} - {1}", ptoGearWheel, ptoOther),
+						Assert.AreEqual($"{ptoGearWheel} - {ptoOther}",
 							inputDataProvider.JobInputData.Vehicle.Components.PTOTransmissionInputData.PTOTransmissionType);
 					}
 					Assert.NotNull(DeclarationData.PTOTransmission.Lookup(inputDataProvider.JobInputData.Vehicle.Components
@@ -1041,16 +1041,16 @@ namespace TUGraz.VectoCore.Tests.XML
 		public static string[] GetEnumOptions(string xmlType, string schemaVersion)
 		{
 			Stream resource;
-			var schemaFile = string.Format("VectoDeclarationDefinitions{0}.xsd", "." + schemaVersion);
+			var schemaFile = $"VectoDeclarationDefinitions{"." + schemaVersion}.xsd";
 			try {
 				resource = RessourceHelper.LoadResourceAsStream(RessourceHelper.ResourceType.XMLSchema, schemaFile);
 			} catch (Exception e) {
-				throw new Exception(string.Format("Unknown XML schema! version: {0}, xsd: {1}", schemaVersion, schemaFile), e);
+				throw new Exception($"Unknown XML schema! version: {schemaVersion}, xsd: {schemaFile}", e);
 			}
 			var reader = new XPathDocument(resource);
 			var nav = reader.CreateNavigator();
 			var nodes = nav.Select(
-				string.Format("//*[local-name()='simpleType' and @name='{0}']//*[local-name()='enumeration']/@value", xmlType));
+				$"//*[local-name()='simpleType' and @name='{xmlType}']//*[local-name()='enumeration']/@value");
 			var retVal = new List<string>();
 			foreach (var node in nodes) {
 				retVal.Add(node.ToString());

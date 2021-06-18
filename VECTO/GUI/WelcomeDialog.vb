@@ -9,7 +9,6 @@
 '
 ' See the LICENSE.txt for the specific language governing permissions and limitations.
 Imports System.IO
-Imports TUGraz.VectoCommon.Utils
 Imports TUGraz.VectoCore.Utils
 
 ''' <summary>
@@ -41,7 +40,7 @@ Public Class WelcomeDialog
 	Private Sub Button2_Click(sender As Object, e As EventArgs) Handles Button2.Click
 		If File.Exists(Path.Combine(MyAppPath, "User Manual\help.html")) Then
 			Dim defaultBrowserPath As String = BrowserUtils.GetDefaultBrowserPath()
-			Process.Start(defaultBrowserPath, String.Format("""file://{0}""", Path.Combine(MyAppPath, "User Manual\help.html")))
+			Process.Start(defaultBrowserPath, $"""file://{Path.Combine(MyAppPath, "User Manual\help.html")}""")
 		Else
 			MsgBox("User Manual not found!", MsgBoxStyle.Critical)
 		End If

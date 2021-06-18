@@ -60,33 +60,20 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 		#region Implementation of IRetarderInputData
 
-		public virtual RetarderType Type
-		{
-			get { return Vehicle.RetarderType; }
-		}
+		public virtual RetarderType Type => Vehicle.RetarderType;
 
-		public virtual double Ratio
-		{
-			get { return Vehicle.RetarderRatio; }
-		}
+		public virtual double Ratio => Vehicle.RetarderRatio;
 
-		public virtual TableData LossMap
-		{
-			get {
-				return ReadTableData(
-					XMLNames.Retarder_RetarderLossMap, XMLNames.Retarder_RetarderLossMap_Entry,
-					AttributeMappings.RetarderLossmapMapping);
-			}
-		}
+		public virtual TableData LossMap =>
+			ReadTableData(
+				XMLNames.Retarder_RetarderLossMap, XMLNames.Retarder_RetarderLossMap_Entry,
+				AttributeMappings.RetarderLossmapMapping);
 
 		#endregion
 
 		#region Overrides of AbstractXMLResource
 
-		protected override XNamespace SchemaNamespace
-		{
-			get { return NAMESPACE_URI; }
-		}
+		protected override XNamespace SchemaNamespace => NAMESPACE_URI;
 
 		protected override DataSourceType SourceType { get; }
 
@@ -107,9 +94,6 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 			IXMLDeclarationVehicleData vehicle, XmlNode componentNode, string sourceFile) : base(
 			vehicle, componentNode, sourceFile) { }
 
-		protected override XNamespace SchemaNamespace
-		{
-			get { return NAMESPACE_URI; }
-		}
+		protected override XNamespace SchemaNamespace => NAMESPACE_URI;
 	}
 }
