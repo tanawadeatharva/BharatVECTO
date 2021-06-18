@@ -547,7 +547,7 @@ Public Class GraphForm
 		If File.Exists(Path.Combine(MyAppPath, "User Manual\help.html")) Then
 			Dim defaultBrowserPath As String = BrowserUtils.GetDefaultBrowserPath()
 			Process.Start(defaultBrowserPath,
-						String.Format("""file://{0}""", Path.Combine(MyAppPath,"User Manual\help.html#graph-window")))
+						$"""file://{Path.Combine(MyAppPath, "User Manual\help.html#graph-window")}""")
 		Else
 			MsgBox("User Manual not found!", MsgBoxStyle.Critical)
 		End If

@@ -182,7 +182,7 @@ Public Class GearboxForm
 		If File.Exists(Path.Combine(MyAppPath,"User Manual\help.html")) Then
             Dim defaultBrowserPath As String = BrowserUtils.GetDefaultBrowserPath()
             Process.Start(defaultBrowserPath,
-						String.Format("""file://{0}""", Path.Combine(MyAppPath,"User Manual\help.html#gearbox-editor")))
+                          $"""file://{Path.Combine(MyAppPath, "User Manual\help.html#gearbox-editor")}""")
         Else
             MsgBox("User Manual not found!", MsgBoxStyle.Critical)
         End If

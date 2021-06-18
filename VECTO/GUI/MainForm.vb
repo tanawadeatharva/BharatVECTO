@@ -687,7 +687,7 @@ Imports TUGraz.VectoCore.Utils
     Private Sub UpdateJobTabText()
         Dim count As Integer = LvGEN.Items.Count
 
-        TabPageGEN.Text = String.Format("Job Files ( {0} / {1} )", _genChecked, count)
+        TabPageGEN.Text = $"Job Files ( {_genChecked} / {count} )"
 
         _genCheckAllLock = True
 
@@ -773,7 +773,7 @@ Imports TUGraz.VectoCore.Utils
         Handles UserManualToolStripMenuItem.Click
         If File.Exists(Path.Combine(MyAppPath, "User Manual\help.html")) Then
             Dim defaultBrowserPath As String = BrowserUtils.GetDefaultBrowserPath()
-            Process.Start(defaultBrowserPath, String.Format("""file://{0}""", Path.Combine(MyAppPath, "User Manual\help.html")))
+            Process.Start(defaultBrowserPath, $"""file://{Path.Combine(MyAppPath, "User Manual\help.html")}""")
         Else
             MsgBox("User Manual not found!", MsgBoxStyle.Critical)
         End If
@@ -1050,7 +1050,7 @@ Imports TUGraz.VectoCore.Utils
                                          .Message = "Finished Reading Data for job: " + jobFile})
 
             Catch ex As Exception
-                MsgBox(String.Format("ERROR running job {0}: {1}", jobFile, ex.Message), MsgBoxStyle.Critical)
+                MsgBox($"ERROR running job {jobFile}: {ex.Message}", MsgBoxStyle.Critical)
                 sender.ReportProgress(0, New VectoProgress With {.Target = "ListBoxError", .Message = ex.Message})
                 Return
             End Try
@@ -1061,13 +1061,13 @@ Imports TUGraz.VectoCore.Utils
             sender.ReportProgress(0,
                                   New VectoProgress _
                                      With {.Target = "ListBox",
-                                     .Message = String.Format("Detected Cycle {0}: {1}", cycle.Name, cycle.CycleType)})
+                                     .Message = $"Detected Cycle {cycle.Name}: {cycle.CycleType}"})
         Next
 
         sender.ReportProgress(0, New VectoProgress With {.Target = "ListBox",
                                  .Message = _
-                                 String.Format("Starting Simulation ({0} Jobs, {1} Runs)", JobFileList.Count,
-                                               jobContainer.GetProgress().Count)})
+                                 $"Starting Simulation ({JobFileList.Count} Jobs, {jobContainer.GetProgress().Count _
+                                 } Runs)"})
 
         jobContainer.Execute(True)
 
@@ -1086,14 +1086,8 @@ Imports TUGraz.VectoCore.Utils
 
             sender.ReportProgress(Convert.ToInt32((sumProgress*100.0)/progress.Count),
                                   New VectoProgress With {.Target = "Status",
-                                     .Message = _
-                                     String.Format("Duration: {0:0}s, Current Progress: {1:P} ({2})", duration,
-                                                   sumProgress/progress.Count,
-                                                   String.Join(", ",
-                                                               progress.Select(
-                                                                   Function(pair) _
-                                                                                  String.Format("{0,4:P}",
-                                                                                                pair.Value.Progress))))})
+                                     .Message = $"Duration: {duration:0}s, Current Progress: {(sumProgress/progress.Count):P} ({ _
+                                     String.Join(", ", progress.Select(Function(pair) $"{pair.Value.Progress,4:P}"))})"})
 
             Dim justFinished As Dictionary(Of Integer, JobContainer.ProgressEntry) =
                     progress.Where(Function(proc) proc.Value.Done AndAlso Not finishedRuns.Contains(proc.Key)).
@@ -1116,9 +1110,7 @@ Imports TUGraz.VectoCore.Utils
         For Each progressEntry As KeyValuePair(Of Integer, JobContainer.ProgressEntry) In jobContainer.GetProgress()
             sender.ReportProgress(100, New VectoProgress With {.Target = "ListBox",
                                      .Message = String.Format("{0,-60} {1,8:P} {2,10:F2}s - {3}",
-                                                              String.Format("{0} {1} {2}", progressEntry.Value.RunName,
-                                                                            progressEntry.Value.CycleName,
-                                                                            progressEntry.Value.RunSuffix),
+                                                              $"{progressEntry.Value.RunName} {progressEntry.Value.CycleName} {progressEntry.Value.RunSuffix}",
                                                               progressEntry.Value.Progress,
                                                               progressEntry.Value.ExecTime/1000.0,
                                                               IIf(progressEntry.Value.Success, "Success", "Aborted"))})
@@ -1138,9 +1130,7 @@ Imports TUGraz.VectoCore.Utils
                         {w.XMLVTPReportName, "VTP Report"}, {w.XMLMonitoringReportName, "XML Monitoring Report"}}
                 If File.Exists(entry.Key) Then
                     sender.ReportProgress(100, New VectoProgress With {.Target = "ListBox",
-                                             .Message =
-                                             String.Format("{2} for '{0}' written to {1}", Path.GetFileName(job),
-                                                           entry.Key, entry.Value),
+                                             .Message = String.Format("{2} for '{0}' written to {1}", Path.GetFileName(job),entry.Key, entry.Value),
                                              .Link = "<XML>" + entry.Key})
                 End If
             Next
@@ -1148,13 +1138,12 @@ Imports TUGraz.VectoCore.Utils
 
         If File.Exists(sumFileWriter.SumFileName) Then
             sender.ReportProgress(100, New VectoProgress With {.Target = "ListBox",
-                                     .Message = String.Format("Sum File written to {0}", sumFileWriter.SumFileName),
+                                     .Message = $"Sum File written to {sumFileWriter.SumFileName}",
                                      .Link = sumFileWriter.SumFileName})
         End If
 
         sender.ReportProgress(100, New VectoProgress With {.Target = "ListBox",
-                                 .Message =
-                                 String.Format("Simulation Finished in {0:0}s", (DateTime.Now() - start).TotalSeconds)})
+                                 .Message = $"Simulation Finished in {(DateTime.Now() - start).TotalSeconds:0}s"})
 
 #if CERTIFICATION_RELEASE
         dim message as string = nothing
@@ -1196,27 +1185,21 @@ Imports TUGraz.VectoCore.Utils
                                                                               p.Value.RunSuffix +
                                                                               If(Cfg.Mod1Hz, "_1Hz", ""))
 
-            Dim runName As String = String.Format("{0} {1} {2}", p.Value.RunName, p.Value.CycleName, p.Value.RunSuffix)
+            Dim runName As String = $"{p.Value.RunName} {p.Value.CycleName} {p.Value.RunSuffix}"
 
             If Not p.Value.Error Is Nothing Then
                 VectoWorkerV3.ReportProgress(0, New VectoProgress With {.Target = "ListBoxError",
-                                                .Message =
-                                                String.Format("Finished Run {0} with ERROR: {1}", runName,
-                                                              p.Value.Error.Message),
+                                                .Message = $"Finished Run {runName} with ERROR: {p.Value.Error.Message}",
                                                 .Link = modFilename})
             Else
                 VectoWorkerV3.ReportProgress(0,
-                                             New VectoProgress _
-                                                With {.Target = "ListBox",
-                                                .Message = String.Format("Finished Run {0} successfully.", runName)})
+                                             New VectoProgress With {.Target = "ListBox",
+                                                .Message = $"Finished Run {runName} successfully."})
             End If
 
             If (File.Exists(modFilename)) Then
                 VectoWorkerV3.ReportProgress(0, New VectoProgress With {.Target = "ListBox",
-                                                .Message =
-                                                String.Format("Run {0}: Modal Results written to {1}", runName,
-                                                              modFilename), .Link = modFilename
-                                                })
+                                                .Message = $"Run {runName}: Modal Results written to {modFilename}", .Link = modFilename})
             End If
         Next
     End Sub
