@@ -113,10 +113,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					},
 					DeltaEngineSpeed = 0.RPMtoRad(),
 				};
-			} else {
-				EngineAux?.TorqueDemand(absTime, dt, outTorque, outAngularVelocity);
-				return new ResponseSuccess(this) {
-					Engine = {
+			}
+
+			EngineAux?.TorqueDemand(absTime, dt, outTorque, outAngularVelocity);
+			return new ResponseSuccess(this) {
+				Engine = {
 					TorqueOutDemand = outTorque,
 					PowerRequest = 0.SI<Watt>(),
 					DynamicFullLoadPower = 0.SI<Watt>(),
@@ -126,8 +127,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					EngineSpeed = 0.RPMtoRad(),
 					AuxiliariesPowerDemand = 0.SI<Watt>(),
 				},
-				};
-			}
+			};
 		}
 
 		#region Overrides of CombustionEngine
