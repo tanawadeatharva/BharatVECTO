@@ -335,48 +335,48 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					DeltaDragLoadTorque = inTorque,
 					DeltaFullLoadTorque = inTorque,
 				};
-			} else {
-				var shiftTimeExceeded = absTime.IsSmaller(EngageTime) &&
-										EngageTime.IsSmaller(absTime + dt, Constants.SimulationSettings.LowerBoundTimeInterval);
-				// allow 5% tolerance of shift time
-				if (shiftTimeExceeded && EngageTime - absTime > Constants.SimulationSettings.LowerBoundTimeInterval / 2) {
-					return new ResponseFailTimeInterval(this) {
-						DeltaT = EngageTime - absTime,
-						Gearbox = {
+			}
+
+			var shiftTimeExceeded = absTime.IsSmaller(EngageTime) &&
+									EngageTime.IsSmaller(absTime + dt, Constants.SimulationSettings.LowerBoundTimeInterval);
+			// allow 5% tolerance of shift time
+			if (shiftTimeExceeded && EngageTime - absTime > Constants.SimulationSettings.LowerBoundTimeInterval / 2) {
+				return new ResponseFailTimeInterval(this) {
+					DeltaT = EngageTime - absTime,
+					Gearbox = {
 						PowerRequest = outTorque * (PreviousState.OutAngularVelocity + outAngularVelocity) / 2.0,
 						Gear = new GearshiftPosition(0)
 					}
-					};
-				}
-
-				var remainingTime = EngageTime - (absTime + dt);
-				var withinTractionInterruption = absTime.IsSmaller(EngageTime) && (absTime + dt).IsSmaller(EngageTime);
-				if (withinTractionInterruption &&
-					remainingTime.IsSmaller(Constants.SimulationSettings.LowerBoundTimeInterval) &&
-					remainingTime.IsSmaller(ModelData.TractionInterruption * 0.1)) {
-					// interval has already been prolonged, but has been overruled. if remaining time is less than 10%, reduce traction interruption time 
-					EngageTime = absTime + dt;
-				}
-
-				//var inTorque = 0.SI<NewtonMeter>();
-				if (avgInAngularVelocity.Equals(0.SI<PerSecond>())) {
-					inTorque = 0.SI<NewtonMeter>();
-				}
-
-				CurrentState.SetState(inTorque, inAngularVelocity, outTorque, outAngularVelocity);
-				CurrentState.Gear = gear;
-				CurrentState.TransmissionTorqueLoss = inTorque * ModelData.Gears[gear.Gear].Ratio - outTorque;
-
-				var response = NextComponent.Request(absTime, dt, inTorque, inAngularVelocity, false);
-
-				response.Gearbox.PowerRequest = outTorque * avgAngularVelocity;
-				response.Gearbox.Gear = new GearshiftPosition(0);
-				response.Gearbox.InputSpeed = inAngularVelocity;
-				response.Gearbox.InputTorque = inTorque;
-				response.Gearbox.OutputTorque = outTorque;
-				response.Gearbox.OutputSpeed = outAngularVelocity;
-				return response;
+				};
 			}
+
+			var remainingTime = EngageTime - (absTime + dt);
+			var withinTractionInterruption = absTime.IsSmaller(EngageTime) && (absTime + dt).IsSmaller(EngageTime);
+			if (withinTractionInterruption &&
+				remainingTime.IsSmaller(Constants.SimulationSettings.LowerBoundTimeInterval) &&
+				remainingTime.IsSmaller(ModelData.TractionInterruption * 0.1)) {
+				// interval has already been prolonged, but has been overruled. if remaining time is less than 10%, reduce traction interruption time 
+				EngageTime = absTime + dt;
+			}
+
+			//var inTorque = 0.SI<NewtonMeter>();
+			if (avgInAngularVelocity.Equals(0.SI<PerSecond>())) {
+				inTorque = 0.SI<NewtonMeter>();
+			}
+
+			CurrentState.SetState(inTorque, inAngularVelocity, outTorque, outAngularVelocity);
+			CurrentState.Gear = gear;
+			CurrentState.TransmissionTorqueLoss = inTorque * ModelData.Gears[gear.Gear].Ratio - outTorque;
+
+			var response = NextComponent.Request(absTime, dt, inTorque, inAngularVelocity, false);
+
+			response.Gearbox.PowerRequest = outTorque * avgAngularVelocity;
+			response.Gearbox.Gear = new GearshiftPosition(0);
+			response.Gearbox.InputSpeed = inAngularVelocity;
+			response.Gearbox.InputTorque = inTorque;
+			response.Gearbox.OutputTorque = outTorque;
+			response.Gearbox.OutputSpeed = outAngularVelocity;
+			return response;
 		}
 
 		/// <summary>

@@ -112,7 +112,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 				AssertBusParameters(
 					missionType: mission.MissionType,
 					passengerDensity: new[] { mission.MissionType == MissionType.Interurban ? 2.2 : 3 },
-					airDragAllowed: mission.MissionType == MissionType.Interurban,
+					airDragAllowed: mission.MissionType == MissionType.Interurban ? true : false,
 					doubleDecker: false,
 					busParameters: mission.BusParameter
 				);
@@ -461,7 +461,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 				AssertBusParameters(
 					missionType: mission.MissionType,
 					passengerDensity: new[] { mission.MissionType == MissionType.Interurban ? 2.2 : 3 },
-					airDragAllowed: mission.MissionType == MissionType.Interurban,
+					airDragAllowed: mission.MissionType == MissionType.Interurban ? true : false,
 					doubleDecker: false,
 					busParameters: mission.BusParameter
 				);
