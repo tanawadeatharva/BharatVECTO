@@ -77,7 +77,7 @@ namespace TUGraz.VectoCommon.Utils
 		[DebuggerStepThrough]
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static bool IsRelativeEqual(this double expected, double actual,
-			double toleranceFactor = DoubleExtensionMethods.ToleranceFactor)
+			double toleranceFactor = ToleranceFactor)
 		{
 			if (double.IsNaN(expected)) {
 				return double.IsNaN(actual);

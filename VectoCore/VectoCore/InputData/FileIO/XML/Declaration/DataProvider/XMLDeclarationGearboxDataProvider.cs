@@ -66,10 +66,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 		#region Overrides of AbstractXMLResource
 
-		protected override XNamespace SchemaNamespace
-		{
-			get { return NAMESPACE_URI; }
-		}
+		protected override XNamespace SchemaNamespace => NAMESPACE_URI;
 
 		protected override DataSourceType SourceType { get; }
 
@@ -115,9 +112,9 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 			}
 		}
 
-		public virtual bool DifferentialIncluded { get { return false; } }
+		public virtual bool DifferentialIncluded => false;
 
-		public virtual double AxlegearRatio { get { return double.NaN; } }
+		public virtual double AxlegearRatio => double.NaN;
 
 		//public virtual ITorqueConverterDeclarationInputData TorqueConverter
 		//{
@@ -145,10 +142,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 			IXMLDeclarationVehicleData vehicle, XmlNode componentNode, string sourceFile) : base(
 			vehicle, componentNode, sourceFile) { }
 
-		protected override XNamespace SchemaNamespace
-		{
-			get { return NAMESPACE_URI; }
-		}
+		protected override XNamespace SchemaNamespace => NAMESPACE_URI;
 	}
 
 	// ---------------------------------------------------------------------------------------
@@ -166,16 +160,13 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 		#region Overrides of XMLDeclarationGearboxDataProviderV10
 
-		public override bool DifferentialIncluded { get { return GetBool(XMLNames.Gearbox_DifferentialIncluded); } }
+		public override bool DifferentialIncluded => GetBool(XMLNames.Gearbox_DifferentialIncluded);
 
-		public override double AxlegearRatio { get { return DifferentialIncluded ? GetDouble(XMLNames.Gearbox_AxlegearRatio) : double.NaN; } }
+		public override double AxlegearRatio => DifferentialIncluded ? GetDouble(XMLNames.Gearbox_AxlegearRatio) : double.NaN;
 
 		#endregion
 		
-		protected override XNamespace SchemaNamespace
-		{
-			get { return NAMESPACE_URI; }
-		}
+		protected override XNamespace SchemaNamespace => NAMESPACE_URI;
 	}
 	
 	// ---------------------------------------------------------------------------------------
@@ -193,16 +184,10 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		
 		#region Overrides of AbstractCommonComponentType
 
-		public override string CertificationNumber
-		{
-			get { return GetString(XMLNames.Component_CertificationNumber, required: false); }
-		}
+		public override string CertificationNumber => GetString(XMLNames.Component_CertificationNumber, required: false);
 
 		#endregion
 		
-		protected override XNamespace SchemaNamespace
-		{
-			get { return NAMESPACE_URI; }
-		}
+		protected override XNamespace SchemaNamespace => NAMESPACE_URI;
 	}
 }

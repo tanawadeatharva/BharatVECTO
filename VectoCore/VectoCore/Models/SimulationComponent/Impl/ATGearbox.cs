@@ -55,12 +55,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		internal WattSecond _powershiftLossEnergy;
 		protected internal KilogramSquareMeter EngineInertia;
 
-		public bool TorqueConverterLocked {
-			get { return CurrentState.Gear.TorqueConverterLocked.Value; }
-			//set { CurrentState.TorqueConverterLocked = value; }
-		}
+		public bool TorqueConverterLocked => CurrentState.Gear.TorqueConverterLocked.Value;
 
-		public override bool TCLocked { get { return Gear.TorqueConverterLocked.Value; } }
+		//set { CurrentState.TorqueConverterLocked = value; }
+		public override bool TCLocked => Gear.TorqueConverterLocked.Value;
 
 		public ATGearbox(IVehicleContainer container, IShiftStrategy strategy)
 			: base(container)
@@ -77,7 +75,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		public IIdleController IdleController
 		{
-			get { return _idleController; }
+			get => _idleController;
 			set
 			{
 				_idleController = value;
@@ -85,18 +83,14 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			}
 		}
 
-		public bool ShiftToLocked
-		{
-			get {
-				return PreviousState.Gear.Gear == Gear.Gear && !PreviousState.Gear.TorqueConverterLocked.Value &&
-						Gear.TorqueConverterLocked.Value;
-			}
-		}
+		public bool ShiftToLocked =>
+			PreviousState.Gear.Gear == Gear.Gear && !PreviousState.Gear.TorqueConverterLocked.Value &&
+			Gear.TorqueConverterLocked.Value;
 
 		public bool Disengaged
 		{
-			get { return CurrentState.Disengaged; }
-			set { CurrentState.Disengaged = value; }
+			get => CurrentState.Disengaged;
+			set => CurrentState.Disengaged = value;
 		}
 
 		public override void Connect(ITnOutPort other)
@@ -107,41 +101,29 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		public override Second LastUpshift
 		{
-			get
-			{
-				return -double.MaxValue.SI<Second>();
-				//throw new System.NotImplementedException();
-			}
-			protected internal set { throw new System.NotImplementedException(); }
+			get => -double.MaxValue.SI<Second>();
+			//throw new System.NotImplementedException();
+			protected internal set => throw new System.NotImplementedException();
 		}
 
 		public override Second LastDownshift
 		{
-			get
-			{
-				return -double.MaxValue.SI<Second>();
-				//throw new System.NotImplementedException();
-			}
-			protected internal set { throw new System.NotImplementedException(); }
+			get => -double.MaxValue.SI<Second>();
+			//throw new System.NotImplementedException();
+			protected internal set => throw new System.NotImplementedException();
 		}
 
-		public override GearshiftPosition NextGear
-		{
-			get { return _strategy.NextGear; }
-		}
+		public override GearshiftPosition NextGear => _strategy.NextGear;
 
 		#region Overrides of AbstractGearbox<ATGearboxState>
 
 		public override GearshiftPosition Gear
 		{
-			get { return _gear; }
-			protected internal set
-			{
-				_gear = value;
-				//if (PreviousState.Gear == value) {
-				//	RequestAfterGearshift = false;
-				//}
-			}
+			get => _gear;
+			protected internal set => _gear = value;
+			//if (PreviousState.Gear == value) {
+			//	RequestAfterGearshift = false;
+			//}
 		}
 
 		#endregion
@@ -230,14 +212,15 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				}
 				response = TorqueConverter.Initialize(inTorque, inAngularVelocity);
 			}
-
-			response.Switch().
-				Case<ResponseSuccess>(). // accept
-				Case<ResponseUnderload>(). // accept
-				Case<ResponseOverload>(). // accept
-				Default(r => {
-					throw new UnexpectedResponseException("AT-Gearbox.Initialize", r);
-				});
+			
+			switch (response) {
+				case ResponseSuccess _:
+				case ResponseUnderload _:
+				case ResponseOverload _:
+					break;
+				default:
+					throw new UnexpectedResponseException("AT-Gearbox.Initialize", response);
+			}
 
 			return new ResponseDryRun(this) {
 				Engine = {
@@ -434,7 +417,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			if (dryRun) {
 				// if gearbox is disengaged the 0[W]-line is the limit for drag and full load.
-				var engResponse = NextComponent.Request(absTime, dt, 0.SI<NewtonMeter>(), 0.RPMtoRad(), dryRun);
+				var engResponse = NextComponent.Request(absTime, dt, 0.SI<NewtonMeter>(), 0.RPMtoRad(), true);
 				return new ResponseDryRun(this, engResponse) {
 					Gearbox = {
 						PowerRequest = outTorque * avgAngularVelocity,

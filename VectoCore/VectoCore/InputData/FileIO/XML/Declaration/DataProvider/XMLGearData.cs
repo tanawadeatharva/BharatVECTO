@@ -54,33 +54,22 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		public virtual string SourceFile { get; }
 
 
-		public virtual DataSource DataSource
-		{
-			get {
-				return _dataSource ?? (_dataSource = new DataSource() {
-					SourceFile = SourceFile,
-					SourceType = DataSourceType.XMLEmbedded,
-					SourceVersion = XMLHelper.GetVersionFromNamespaceUri(SchemaNamespace)
-				});
-			}
-		}
+		public virtual DataSource DataSource =>
+			_dataSource ?? (_dataSource = new DataSource() {
+				SourceFile = SourceFile,
+				SourceType = DataSourceType.XMLEmbedded,
+				SourceVersion = XMLHelper.GetVersionFromNamespaceUri(SchemaNamespace)
+			});
 
 		protected abstract XNamespace SchemaNamespace { get; }
 
 		#region Implementation of ITransmissionInputData
 
-		public virtual int Gear
-		{
-			get {
-				return XmlConvert.ToUInt16(
-					BaseNode.Attributes?.GetNamedItem(XMLNames.Gearbox_Gear_GearNumber_Attr).InnerText ?? "0");
-			}
-		}
+		public virtual int Gear =>
+			XmlConvert.ToUInt16(
+				BaseNode.Attributes?.GetNamedItem(XMLNames.Gearbox_Gear_GearNumber_Attr).InnerText ?? "0");
 
-		public virtual double Ratio
-		{
-			get { return GetString(XMLNames.Gearbox_Gear_Ratio).ToDouble(double.NaN); }
-		}
+		public virtual double Ratio => GetString(XMLNames.Gearbox_Gear_Ratio).ToDouble(double.NaN);
 
 		public virtual TableData LossMap
 		{
@@ -91,25 +80,13 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 			}
 		}
 
-		public virtual double Efficiency
-		{
-			get { return double.NaN; }
-		}
+		public virtual double Efficiency => double.NaN;
 
-		public virtual NewtonMeter MaxTorque
-		{
-			get { return GetNode(XMLNames.Gearbox_Gears_MaxTorque, required: false)?.InnerText.ToDouble().SI<NewtonMeter>(); }
-		}
+		public virtual NewtonMeter MaxTorque => GetNode(XMLNames.Gearbox_Gears_MaxTorque, required: false)?.InnerText.ToDouble().SI<NewtonMeter>();
 
-		public virtual PerSecond MaxInputSpeed
-		{
-			get { return GetNode(XMLNames.Gearbox_Gear_MaxSpeed, required: false)?.InnerText.ToDouble().RPMtoRad(); }
-		}
+		public virtual PerSecond MaxInputSpeed => GetNode(XMLNames.Gearbox_Gear_MaxSpeed, required: false)?.InnerText.ToDouble().RPMtoRad();
 
-		public virtual TableData ShiftPolygon
-		{
-			get { return null; }
-		}
+		public virtual TableData ShiftPolygon => null;
 
 		#endregion
 	}
@@ -128,10 +105,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 		#region Overrides of XMLAbstractGearData
 
-		protected override XNamespace SchemaNamespace
-		{
-			get { return NAMESPACE_URI; }
-		}
+		protected override XNamespace SchemaNamespace => NAMESPACE_URI;
 
 		#endregion
 	}
@@ -149,10 +123,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 		public XMLGearDataV20(XmlNode gearNode, string sourceFile) : base(gearNode, sourceFile) { }
 
-		protected override XNamespace SchemaNamespace
-		{
-			get { return NAMESPACE_URI; }
-		}
+		protected override XNamespace SchemaNamespace => NAMESPACE_URI;
 	}
 
 
@@ -169,10 +140,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		public XMLMultistagePrimaryVehicleBusTransmissionDataV01(XmlNode gearNode, string sourceFile)
 			: base(gearNode, sourceFile) { }
 
-		protected override XNamespace SchemaNamespace
-		{
-			get { return NAMESPACE_URI; }
-		}
+		protected override XNamespace SchemaNamespace => NAMESPACE_URI;
 	}
 
 }

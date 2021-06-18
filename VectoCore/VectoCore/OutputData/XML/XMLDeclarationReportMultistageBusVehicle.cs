@@ -33,11 +33,11 @@ namespace TUGraz.VectoCore.OutputData.XML
 			Writer.WriteReport(ReportType.DeclarationReportMultistageVehicleXML, _multistageBusReport.Report);
 		}
 		
-		protected override void DoStoreResult(XMLDeclarationReport.ResultEntry entry, VectoRunData runData, IModalDataContainer modData)
+		protected override void DoStoreResult(ResultEntry entry, VectoRunData runData, IModalDataContainer modData)
 		{
 			throw new NotSupportedException();
 		}
-		protected override void WriteResult(XMLDeclarationReport.ResultEntry result)
+		protected override void WriteResult(ResultEntry result)
 		{
 			throw new NotSupportedException();
 		}

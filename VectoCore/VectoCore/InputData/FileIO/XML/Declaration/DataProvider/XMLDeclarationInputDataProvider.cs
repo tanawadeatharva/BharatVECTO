@@ -71,10 +71,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration
 
 		#region Overrides of AbstractXMLResource
 
-		protected override XNamespace SchemaNamespace
-		{
-			get { return NAMESPACE_URI; }
-		}
+		protected override XNamespace SchemaNamespace => NAMESPACE_URI;
 
 		protected override DataSourceType SourceType { get; }
 
@@ -87,12 +84,9 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration
 		#endregion
 
 
-		public virtual IDeclarationJobInputData JobInputData
-		{
-			get { return JobData ?? (JobData = Reader.JobData); }
-		}
+		public virtual IDeclarationJobInputData JobInputData => JobData ?? (JobData = Reader.JobData);
 
-		public virtual IPrimaryVehicleInformationInputDataProvider PrimaryVehicleData { get { return null; } }
+		public virtual IPrimaryVehicleInformationInputDataProvider PrimaryVehicleData => null;
 
 
 		public virtual XElement XMLHash { get; private set; }

@@ -40,15 +40,9 @@ namespace TUGraz.VectoCore.Models.Declaration
 	{
 		public const string NoPTO = "None";
 
-		protected override string ResourceId
-		{
-			get { return DeclarationData.DeclarationDataResourcePrefix + ".VAUX.PTO-tech.csv"; }
-		}
+		protected override string ResourceId => DeclarationData.DeclarationDataResourcePrefix + ".VAUX.PTO-tech.csv";
 
-		protected override string ErrorMessage
-		{
-			get { return "PTO Transmission Lookup Error: No value found for PTO Transmission. Technology: '{0}'"; }
-		}
+		protected override string ErrorMessage => "PTO Transmission Lookup Error: No value found for PTO Transmission. Technology: '{0}'";
 
 		protected override void ParseData(DataTable table)
 		{

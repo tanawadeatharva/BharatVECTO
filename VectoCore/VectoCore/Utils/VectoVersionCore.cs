@@ -44,25 +44,10 @@ namespace TUGraz.VectoCore.Utils
 #endif
 #endif
 
-		public static string VersionNumber
-		{
-			get {
-				return "0.7.3.2247" + SUFFIX;
-			}
-		}
+		public static string VersionNumber => "0.7.3.2247" + SUFFIX;
 
-		public static string BranchSuffix
-		{
-			get {
-				return "-DEV";
-			}
-		}
+		public static string BranchSuffix => "-DEV";
 
-		public static string FullVersion
-		{
-			get {
-				return string.Format("VectoCore{1} {0}", VersionNumber, BranchSuffix);
-			}
-		}
+		public static string FullVersion => string.Format("VectoCore{1} {0}", VersionNumber, BranchSuffix);
 	}
 }

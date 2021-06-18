@@ -59,38 +59,22 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering.DataProvider
 			SourceType = (vehicle as IXMLResource).DataSource.SourceFile == fsBasePath ? DataSourceType.XMLEmbedded : DataSourceType.XMLFile;
 		}
 
-		public virtual SquareMeter AirDragArea
-		{
-			get { return GetDouble(XMLNames.Vehicle_AirDragArea).SI<SquareMeter>(); }
-		}
+		public virtual SquareMeter AirDragArea => GetDouble(XMLNames.Vehicle_AirDragArea).SI<SquareMeter>();
 
-		public virtual SquareMeter TransferredAirDragArea
-		{
-			get { return AirDragArea; }
-		}
+		public virtual SquareMeter TransferredAirDragArea => AirDragArea;
 
-		public virtual SquareMeter AirDragArea_0
-		{
-			get { return AirDragArea; }
-		}
+		public virtual SquareMeter AirDragArea_0 => AirDragArea;
 
-		public virtual CrossWindCorrectionMode CrossWindCorrectionMode
-		{
-			get { return GetString(XMLNames.Vehicle_CrossWindCorrectionMode).ParseEnum<CrossWindCorrectionMode>(); }
-		}
+		public virtual CrossWindCorrectionMode CrossWindCorrectionMode => GetString(XMLNames.Vehicle_CrossWindCorrectionMode).ParseEnum<CrossWindCorrectionMode>();
 
-		public virtual TableData CrosswindCorrectionMap
-		{
-			get {
-				return XMLHelper.ReadEntriesOrResource(
-					BaseNode, DataSource.SourcePath, XMLNames.Vehicle_CrosswindCorrectionData, XMLNames.Vehicle_CrosswindCorrectionData_Entry,
-					AttributeMappings.CrossWindCorrectionMapping);
-			}
-		}
+		public virtual TableData CrosswindCorrectionMap =>
+			XMLHelper.ReadEntriesOrResource(
+				BaseNode, DataSource.SourcePath, XMLNames.Vehicle_CrosswindCorrectionData, XMLNames.Vehicle_CrosswindCorrectionData_Entry,
+				AttributeMappings.CrossWindCorrectionMapping);
 
 		#region Overrides of AbstractXMLResource
 
-		protected override XNamespace SchemaNamespace { get { return NAMESPACE_URI; } }
+		protected override XNamespace SchemaNamespace => NAMESPACE_URI;
 
 		protected override DataSourceType SourceType { get; }
 
@@ -110,6 +94,6 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering.DataProvider
 			IXMLEngineeringVehicleData vehicle, XmlNode axlegearNode, string fsBasePath) : base(
 			vehicle, axlegearNode, fsBasePath) { }
 
-		protected override XNamespace SchemaNamespace { get { return NAMESPACE_URI; } }
+		protected override XNamespace SchemaNamespace => NAMESPACE_URI;
 	}
 }

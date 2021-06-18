@@ -45,7 +45,7 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.Util {
 			// Extension Expected, but not match
 			if (expectedExtension.Trim().Length > 0) {
 				if (string.Compare(expectedExtension, detectedExtention, true) != 0) {
-					message = string.Format("The file extension type does not match the expected type of {0}", expectedExtension);
+					message = $"The file extension type does not match the expected type of {expectedExtension}";
 					return false;
 				}
 			}
@@ -53,7 +53,7 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.Util {
 			// Extension Not Expected, but was supplied
 			if (expectedExtension.Trim().Length > 0) {
 				if (detectedExtention.Length == 0) {
-					message = string.Format("No Extension was supplied, but an extension of {0}, this is not required", detectedExtention);
+					message = $"No Extension was supplied, but an extension of {detectedExtention}, this is not required";
 					return false;
 				}
 			}
@@ -61,7 +61,7 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.Util {
 
 			// Illegal characters
 			if (!fileNameLegal(fileNameOnlyWithExtension)) {
-				message = string.Format("The filenames have one or more illegal characters");
+				message = "The filenames have one or more illegal characters";
 				return false;
 			}
 

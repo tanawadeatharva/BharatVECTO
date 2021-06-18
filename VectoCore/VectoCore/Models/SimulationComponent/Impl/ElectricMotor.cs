@@ -526,10 +526,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 
 
-		public PerSecond ElectricMotorSpeed
-		{
-			get { return PreviousState.EMSpeed; }
-		}
+		public PerSecond ElectricMotorSpeed => PreviousState.EMSpeed;
 
 		public void Connect(IElectricSystem powersupply)
 		{

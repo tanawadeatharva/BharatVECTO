@@ -57,44 +57,27 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering.DataProvider
 
 		#region Implementation of ITyreDeclarationInputData
 
-		public virtual string Dimension
-		{
-			get { return GetNode(XMLNames.AxleWheels_Axles_Axle_Dimension, required:false)?.InnerText; }
-		}
+		public virtual string Dimension => GetNode(XMLNames.AxleWheels_Axles_Axle_Dimension, required:false)?.InnerText;
 
-		public virtual double RollResistanceCoefficient
-		{
-			get { return GetNode(XMLNames.AxleWheels_Axles_Axle_RRCISO, required: false)?.InnerText.ToDouble() ?? double.NaN; }
-		}
+		public virtual double RollResistanceCoefficient => GetNode(XMLNames.AxleWheels_Axles_Axle_RRCISO, required: false)?.InnerText.ToDouble() ?? double.NaN;
 
-		public virtual Newton TyreTestLoad
-		{
-			get { return GetNode(XMLNames.AxleWheels_Axles_Axle_FzISO, required: false)?.InnerText.ToDouble().SI<Newton>(); }
-		}
+		public virtual Newton TyreTestLoad => GetNode(XMLNames.AxleWheels_Axles_Axle_FzISO, required: false)?.InnerText.ToDouble().SI<Newton>();
 
-		public virtual string FuelEfficiencyClass { get { return DeclarationData.Wheels.TyreClass.Lookup(RollResistanceCoefficient); } }
+		public virtual string FuelEfficiencyClass => DeclarationData.Wheels.TyreClass.Lookup(RollResistanceCoefficient);
 
 		#endregion
 
 		#region Implementation of ITyreEngineeringInputData
 
-		public virtual KilogramSquareMeter Inertia
-		{
-			get { return GetNode(XMLNames.AxleWheels_Axles_Axle_Inertia, required: false)?.InnerText.ToDouble().SI<KilogramSquareMeter>(); }
-		}
+		public virtual KilogramSquareMeter Inertia => GetNode(XMLNames.AxleWheels_Axles_Axle_Inertia, required: false)?.InnerText.ToDouble().SI<KilogramSquareMeter>();
 
-		public virtual Meter DynamicTyreRadius
-		{
-			get {
-				return GetNode(XMLNames.AxleWheels_Axles_Axle_DynamicTyreRadius, required: false)?.InnerText.ToDouble().SI(Unit.SI.Milli.Meter).Cast<Meter>();
-			}
-		}
+		public virtual Meter DynamicTyreRadius => GetNode(XMLNames.AxleWheels_Axles_Axle_DynamicTyreRadius, required: false)?.InnerText.ToDouble().SI(Unit.SI.Milli.Meter).Cast<Meter>();
 
 		#endregion
 
 		#region Overrides of AbstractXMLResource
 
-		protected override XNamespace SchemaNamespace { get { return NAMESPACE_URI; } }
+		protected override XNamespace SchemaNamespace => NAMESPACE_URI;
 
 		protected override DataSourceType SourceType { get; }
 
@@ -112,6 +95,6 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering.DataProvider
 
 		public XMLTyreEngineeringDataProviderV10TEST(IXMLEngineeringVehicleData vehicle, XmlNode baseNode, string source) : base(vehicle, baseNode, source) { }
 
-		protected override XNamespace SchemaNamespace { get { return NAMESPACE_URI; } }
+		protected override XNamespace SchemaNamespace => NAMESPACE_URI;
 	}
 }

@@ -67,14 +67,9 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering.DataProvider
 			get;
 		}
 
-		public IBusAuxiliariesEngineeringData BusAuxiliariesData
-		{
-			get
-			{
-				// TODO: MQ 20210211 - implement...
-				return null;
-			}
-		}
+		public IBusAuxiliariesEngineeringData BusAuxiliariesData =>
+			// TODO: MQ 20210211 - implement...
+			null;
 
 		public Watt ElectricAuxPower { get; }
 
@@ -113,7 +108,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering.DataProvider
 
 		}
 
-		protected virtual XNamespace SchemaNamespace {  get { return NAMESPACE_URI; } }
+		protected virtual XNamespace SchemaNamespace => NAMESPACE_URI;
 
 		#region Implementation of IAuxiliaryEngineeringInputData
 
@@ -142,6 +137,6 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering.DataProvider
 
 		public XMLAuxiliaryEngineeringDataV10(XmlNode node, string basePath) : base(node, basePath) { }
 
-		protected override XNamespace SchemaNamespace { get { return NAMESPACE_URI; } }
+		protected override XNamespace SchemaNamespace => NAMESPACE_URI;
 	}
 }

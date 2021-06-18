@@ -22,63 +22,36 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			Base = jsonFile;
 		}
 
-		protected JObject Body
-		{
-			get { return Base.Body; }
-		}
+		protected JObject Body => Base.Body;
 
 		protected TableData ReadTableData(string filename, string tableType, bool required = true)
 		{
 			return Base.ReadTableData(filename, tableType, required);
 		}
 
-		protected string BasePath
-		{
-			get { return Base.BasePath; }
-		}
-		protected bool TolerateMissing
-		{
-			get { return Base.TolerateMissing; }
-		}
+		protected string BasePath => Base.BasePath;
 
-		public DataSource DataSource
-		{
-			get { return Base.DataSource; }
-		}
-		public bool SavedInDeclarationMode
-		{
-			get { return Base.SavedInDeclarationMode; }
-		}
-		public string Manufacturer
-		{
-			get { return Base.Manufacturer; }
-		}
-		public string Model
-		{
-			get { return Base.Model; }
-		}
-		public DateTime Date
-		{
-			get { return Base.Date; }
-		}
-		public string AppVersion
-		{
-			get { return Base.AppVersion; }
-		}
-		public CertificationMethod CertificationMethod
-		{
-			get { return Base.CertificationMethod; }
-		}
-		public string CertificationNumber
-		{
-			get { return Base.CertificationNumber; }
-		}
-		public DigestData DigestValue
-		{
-			get { return Base.DigestValue; }
-		}
+		protected bool TolerateMissing => Base.TolerateMissing;
 
-		public virtual XmlNode XMLSource { get { return Base.XMLSource; } }
+		public DataSource DataSource => Base.DataSource;
+
+		public bool SavedInDeclarationMode => Base.SavedInDeclarationMode;
+
+		public string Manufacturer => Base.Manufacturer;
+
+		public string Model => Base.Model;
+
+		public DateTime Date => Base.Date;
+
+		public string AppVersion => Base.AppVersion;
+
+		public CertificationMethod CertificationMethod => Base.CertificationMethod;
+
+		public string CertificationNumber => Base.CertificationNumber;
+
+		public DigestData DigestValue => Base.DigestValue;
+
+		public virtual XmlNode XMLSource => Base.XMLSource;
 	}
 
 	// ###################################################################
@@ -100,10 +73,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			}
 		}
 
-		public virtual double Ratio
-		{
-			get { return Body.GetEx(JsonKeys.Vehicle_Retarder).GetEx<double>(JsonKeys.Vehicle_Retarder_Ratio); }
-		}
+		public virtual double Ratio => Body.GetEx(JsonKeys.Vehicle_Retarder).GetEx<double>(JsonKeys.Vehicle_Retarder_Ratio);
 
 		public virtual TableData LossMap
 		{
@@ -246,10 +216,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			}
 		}
 
-		public virtual double Efficiency
-		{
-			get { return Body.GetEx(JsonKeys.Vehicle_Angledrive).GetEx<double>(JsonKeys.Vehicle_Angledrive_Efficiency); }
-		}
+		public virtual double Efficiency => Body.GetEx(JsonKeys.Vehicle_Angledrive).GetEx<double>(JsonKeys.Vehicle_Angledrive_Efficiency);
 
 		#endregion
 	}
@@ -263,36 +230,16 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 		#region Airdrag
 
-		public virtual SquareMeter AirDragArea
-		{
-			get
-			{
-				return Body[JsonKeys.Vehicle_DragCoefficient] == null
-					? null
-					: Body.GetEx<double>(JsonKeys.Vehicle_DragCoefficient).SI<SquareMeter>();
-			}
-		}
+		public virtual SquareMeter AirDragArea =>
+			Body[JsonKeys.Vehicle_DragCoefficient] == null
+				? null
+				: Body.GetEx<double>(JsonKeys.Vehicle_DragCoefficient).SI<SquareMeter>();
 
-		public SquareMeter TransferredAirDragArea
-		{
-			get
-			{
-				return AirDragArea;
-			}
-		}
+		public SquareMeter TransferredAirDragArea => AirDragArea;
 
-		public SquareMeter AirDragArea_0
-		{
-			get
-			{
-				return AirDragArea;
-			}
-		}
+		public SquareMeter AirDragArea_0 => AirDragArea;
 
-		public virtual CrossWindCorrectionMode CrossWindCorrectionMode
-		{
-			get { return CrossWindCorrectionModeHelper.Parse(Body.GetEx<string>("CdCorrMode")); }
-		}
+		public virtual CrossWindCorrectionMode CrossWindCorrectionMode => CrossWindCorrectionModeHelper.Parse(Body.GetEx<string>("CdCorrMode"));
 
 		public virtual TableData CrosswindCorrectionMap
 		{
@@ -462,25 +409,13 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 		#region Implementation of IAdvancedDriverAssistantSystemDeclarationInputData
 
-		public virtual bool EngineStopStart
-		{
-			get { return DeclarationData.Vehicle.ADAS.EngineStopStartDefault; }
-		}
+		public virtual bool EngineStopStart => DeclarationData.Vehicle.ADAS.EngineStopStartDefault;
 
-		public virtual EcoRollType EcoRoll
-		{
-			get { return DeclarationData.Vehicle.ADAS.EcoRoll; }
-		}
+		public virtual EcoRollType EcoRoll => DeclarationData.Vehicle.ADAS.EcoRoll;
 
-		public virtual PredictiveCruiseControlType PredictiveCruiseControl
-		{
-			get { return DeclarationData.Vehicle.ADAS.PredictiveCruiseControlDefault; }
-		}
+		public virtual PredictiveCruiseControlType PredictiveCruiseControl => DeclarationData.Vehicle.ADAS.PredictiveCruiseControlDefault;
 
-		public virtual bool? ATEcoRollReleaseLockupClutch
-		{
-			get { return null; }
-		}
+		public virtual bool? ATEcoRollReleaseLockupClutch => null;
 
 		#endregion
 
@@ -494,20 +429,11 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 		#region Overrides of JSONADASInputDataV7
 
-		public override bool EngineStopStart
-		{
-			get { return Body.GetEx<bool>("EngineStopStart"); }
-		}
+		public override bool EngineStopStart => Body.GetEx<bool>("EngineStopStart");
 
-		public override EcoRollType EcoRoll
-		{
-			get { return EcorollTypeHelper.Parse(Body.GetEx<string>("EcoRoll")); }
-		}
+		public override EcoRollType EcoRoll => EcorollTypeHelper.Parse(Body.GetEx<string>("EcoRoll"));
 
-		public override PredictiveCruiseControlType PredictiveCruiseControl
-		{
-			get { return Body.GetEx<string>("PredictiveCruiseControl").ParseEnum<PredictiveCruiseControlType>(); }
-		}
+		public override PredictiveCruiseControlType PredictiveCruiseControl => Body.GetEx<string>("PredictiveCruiseControl").ParseEnum<PredictiveCruiseControlType>();
 
 		#endregion
 	}
@@ -518,10 +444,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 	{
 		public JSONADASInputDataV9(JSONVehicleDataV7 vehicle) : base(vehicle) { }
 
-		public override bool? ATEcoRollReleaseLockupClutch
-		{
-			get { return Body["ATEcoRollReleaseLockupClutch"]?.Value<bool>(); }
-		}
+		public override bool? ATEcoRollReleaseLockupClutch => Body["ATEcoRollReleaseLockupClutch"]?.Value<bool>();
 	}
 
 	// -------------------------------------------------------------------
@@ -530,15 +453,9 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 	{
 		public JSONADASInputDataV10BEV(JSONVehicleDataV7 vehicle) : base(vehicle) { }
 
-		public override bool EngineStopStart
-		{
-			get { return false; }
-		}
+		public override bool EngineStopStart => false;
 
-		public override EcoRollType EcoRoll
-		{
-			get { return EcoRollType.None; }
-		}
+		public override EcoRollType EcoRoll => EcoRollType.None;
 	}
 
 	// ###################################################################
@@ -552,52 +469,28 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 		#region Implementation of IBusAuxiliariesDeclarationData
 
-		public virtual string FanTechnology
-		{
-			get { return Body["Aux"]?.Value<string>("FanTechnology"); }
-		}
+		public virtual string FanTechnology => Body["Aux"]?.Value<string>("FanTechnology");
 
 		public virtual IList<string> SteeringPumpTechnology
 		{
 			get { return Body["Aux"]?["SteeringPumpTechnology"].Select(x => x.Value<string>()).ToList(); }
 		}
 
-		public virtual IElectricSupplyDeclarationData ElectricSupply
-		{
-			get { return this; }
-		}
+		public virtual IElectricSupplyDeclarationData ElectricSupply => this;
 
-		public virtual IElectricConsumersDeclarationData ElectricConsumers
-		{
-			get { return this; }
-		}
+		public virtual IElectricConsumersDeclarationData ElectricConsumers => this;
 
-		public virtual IPneumaticSupplyDeclarationData PneumaticSupply
-		{
-			get { return this; }
-		}
+		public virtual IPneumaticSupplyDeclarationData PneumaticSupply => this;
 
-		public virtual IPneumaticConsumersDeclarationData PneumaticConsumers
-		{
-			get { return this; }
-		}
+		public virtual IPneumaticConsumersDeclarationData PneumaticConsumers => this;
 
-		public virtual IHVACBusAuxiliariesDeclarationData HVACAux
-		{
-			get { return this; }
-		}
+		public virtual IHVACBusAuxiliariesDeclarationData HVACAux => this;
 
 		#endregion
 
 		#region Implementation of IElectricSupplyDeclarationData
 
-		public virtual AlternatorType AlternatorTechnology
-		{
-			get
-			{
-				return Body["Aux"]?["ElectricSupply"]?.GetEx<string>("Technology").ParseEnum<AlternatorType>() ?? AlternatorType.Conventional;
-			}
-		}
+		public virtual AlternatorType AlternatorTechnology => Body["Aux"]?["ElectricSupply"]?.GetEx<string>("Technology").ParseEnum<AlternatorType>() ?? AlternatorType.Conventional;
 
 		public virtual IList<IAlternatorDeclarationInputData> Alternators
 		{
@@ -633,40 +526,19 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 		#region Implementation of IElectricConsumersDeclarationData
 
-        public virtual bool? InteriorLightsLED
-		{
-			get { return false; }
-		}
+        public virtual bool? InteriorLightsLED => false;
 
-        public virtual bool? DayrunninglightsLED
-		{
-			get { return false; }
-		}
+		public virtual bool? DayrunninglightsLED => false;
 
-        public virtual bool? PositionlightsLED
-		{
-			get { return false; }
-		}
+		public virtual bool? PositionlightsLED => false;
 
-        public virtual bool? HeadlightsLED
-		{
-			get { return false; }
-		}
+		public virtual bool? HeadlightsLED => false;
 
-        public virtual bool? BrakelightsLED
-		{
-			get { return false; }
-		}
+		public virtual bool? BrakelightsLED => false;
 
-		public virtual bool SmartElectrics
-		{
-			get { return Body["Aux"]?["ElectricSupply"]?.GetEx<bool>("SmartElectrics") ?? false; }
-		}
+		public virtual bool SmartElectrics => Body["Aux"]?["ElectricSupply"]?.GetEx<bool>("SmartElectrics") ?? false;
 
-		public WattSecond ElectricStorageCapacity
-		{
-			get { return Body["Aux"]?["ElectricSupply"]?.GetEx<double>("ElectricStorageCapacity").SI(Unit.SI.Watt.Hour).Cast<WattSecond>() ?? null; }
-		}
+		public WattSecond ElectricStorageCapacity => Body["Aux"]?["ElectricSupply"]?.GetEx<double>("ElectricStorageCapacity").SI(Unit.SI.Watt.Hour).Cast<WattSecond>() ?? null;
 
 		#endregion
 
@@ -674,14 +546,9 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 		public CompressorDrive CompressorDrive { get; }
 		public string Clutch { get; }
-		public virtual double Ratio { get { return Body["Aux"]?["PneumaticSupply"]?.GetEx<double>("Ratio") ?? 0.0; } }
-		public virtual string CompressorSize
-		{
-			get
-			{
-				return Body["Aux"]?["PneumaticSupply"]?.GetEx<string>("CompressorSize");
-			}
-		}
+		public virtual double Ratio => Body["Aux"]?["PneumaticSupply"]?.GetEx<double>("Ratio") ?? 0.0;
+
+		public virtual string CompressorSize => Body["Aux"]?["PneumaticSupply"]?.GetEx<string>("CompressorSize");
 
 		public bool SmartAirCompression { get; }
 		public bool SmartRegeneration { get; }
@@ -690,42 +557,31 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 		#region Implementation of IPneumaticConsumersDeclarationData
 
-		public virtual ConsumerTechnology AirsuspensionControl
-		{
-			get
-			{
-				return Body["Aux"]?["PneumaticConsumers"]?.GetEx<string>("AirsuspensionControl").ParseEnum<ConsumerTechnology>() ??
-						ConsumerTechnology.Unknown;
-			}
-		}
-		public virtual ConsumerTechnology AdBlueDosing
-		{
-			get
-			{
-				return Body["Aux"]?["PneumaticConsumers"]?.GetEx<string>("AdBlueDosing").ParseEnum<ConsumerTechnology>() ??
-						ConsumerTechnology.Unknown;
-			}
-		}
+		public virtual ConsumerTechnology AirsuspensionControl =>
+			Body["Aux"]?["PneumaticConsumers"]?.GetEx<string>("AirsuspensionControl").ParseEnum<ConsumerTechnology>() ??
+			ConsumerTechnology.Unknown;
+
+		public virtual ConsumerTechnology AdBlueDosing =>
+			Body["Aux"]?["PneumaticConsumers"]?.GetEx<string>("AdBlueDosing").ParseEnum<ConsumerTechnology>() ??
+			ConsumerTechnology.Unknown;
 
 		#endregion
 
 		#region Implementation of IHVACBusAuxiliariesDeclarationData
 
         public virtual BusHVACSystemConfiguration? SystemConfiguration { get; set; }
-		public virtual HeatPumpType? HeatPumpTypeDriverCompartment { get { return null; } }
-		public virtual HeatPumpMode? HeatPumpModeDriverCompartment { get { return null; } }
-		public virtual IList<Tuple<HeatPumpType, HeatPumpMode>> HeatPumpPassengerCompartments
-		{
-			get { return null; }
-		}
-		public virtual Watt AuxHeaterPower { get { return null; } }
-        public virtual bool? DoubleGlazing { get { return false; } }
-		public virtual bool HeatPump { get { return false; } }
+		public virtual HeatPumpType? HeatPumpTypeDriverCompartment => null;
+		public virtual HeatPumpMode? HeatPumpModeDriverCompartment => null;
+
+		public virtual IList<Tuple<HeatPumpType, HeatPumpMode>> HeatPumpPassengerCompartments => null;
+		public virtual Watt AuxHeaterPower => null;
+		public virtual bool? DoubleGlazing => false;
+		public virtual bool HeatPump => false;
 		public bool? OtherHeatingTechnology { get; }
-		public virtual bool? AdjustableCoolantThermostat { get { return Body["Aux"]?["HVAC"]?.GetEx<bool>("AdjustableCoolantThermostat") ?? false; } }
-        public virtual bool? AdjustableAuxiliaryHeater { get { return false; } }
-		public virtual bool EngineWasteGasHeatExchanger { get { return Body["Aux"]?["HVAC"]?.GetEx<bool>("EngineWasteGasHeatExchanger") ?? false; } }
-        public virtual bool? SeparateAirDistributionDucts { get { return false; } }
+		public virtual bool? AdjustableCoolantThermostat => Body["Aux"]?["HVAC"]?.GetEx<bool>("AdjustableCoolantThermostat") ?? false;
+		public virtual bool? AdjustableAuxiliaryHeater => false;
+		public virtual bool EngineWasteGasHeatExchanger => Body["Aux"]?["HVAC"]?.GetEx<bool>("EngineWasteGasHeatExchanger") ?? false;
+		public virtual bool? SeparateAirDistributionDucts => false;
 		public virtual bool? WaterElectricHeater { get; }
 		public virtual bool? AirElectricHeater { get; }
 
@@ -745,15 +601,9 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			_entries = entries;
 		}
 
-		IList<ElectricMachineEntry<IElectricMotorDeclarationInputData>> IElectricMachinesDeclarationInputData.Entries
-		{
-			get { return _entries.Cast<ElectricMachineEntry<IElectricMotorDeclarationInputData>>().ToList(); }
-		}
+		IList<ElectricMachineEntry<IElectricMotorDeclarationInputData>> IElectricMachinesDeclarationInputData.Entries => _entries.Cast<ElectricMachineEntry<IElectricMotorDeclarationInputData>>().ToList();
 
-		public virtual IList<ElectricMachineEntry<IElectricMotorEngineeringInputData>> Entries
-		{
-			get { return _entries; }
-		}
+		public virtual IList<ElectricMachineEntry<IElectricMotorEngineeringInputData>> Entries => _entries;
 	}
 
 	// ###################################################################

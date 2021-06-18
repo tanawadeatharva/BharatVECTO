@@ -1,7 +1,6 @@
 ﻿
 Imports TUGraz.VectoCommon.BusAuxiliaries
 Imports TUGraz.VectoCommon.Utils
-Imports TUGraz.VectoCore.Models.Declaration
 
 Public Class MockFuel50PC
 	Implements IFuelConsumptionMap

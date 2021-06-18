@@ -45,17 +45,11 @@ namespace TUGraz.VectoCore.Utils
 		private static readonly ThreadLocal<List<DataEntry>> DataLocal =
 			new ThreadLocal<List<DataEntry>>(() => new List<DataEntry>());
 
-		public static List<DataEntry> Data
-		{
-			get { return DataLocal.Value; }
-		}
+		public static List<DataEntry> Data => DataLocal.Value;
 
 		private static readonly ThreadLocal<Stopwatch> TimerLocal = new ThreadLocal<Stopwatch>(Stopwatch.StartNew);
 
-		private static Stopwatch Timer
-		{
-			get { return TimerLocal.Value; }
-		}
+		private static Stopwatch Timer => TimerLocal.Value;
 
 		private static readonly ThreadLocal<Dictionary<string, Dictionary<string, double>>> CurrentLocal =
 			new ThreadLocal<Dictionary<string, Dictionary<string, double>>>(
@@ -63,8 +57,8 @@ namespace TUGraz.VectoCore.Utils
 
 		private static Dictionary<string, Dictionary<string, double>> Current
 		{
-			get { return CurrentLocal.Value; }
-			set { CurrentLocal.Value = value; }
+			get => CurrentLocal.Value;
+			set => CurrentLocal.Value = value;
 		}
 
 		[Conditional("TRACE")]

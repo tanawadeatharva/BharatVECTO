@@ -310,7 +310,7 @@ Public Class frmCombinedAlternators
             Select Case gvAlternators.Columns(e.ColumnIndex).Name
 
                 Case "Delete"
-                    Dim dr As DialogResult = MessageBox.Show(String.Format("Do you want to delete  '{0}' ?", alternatorName), "",
+                    Dim dr As DialogResult = MessageBox.Show($"Do you want to delete  '{alternatorName}' ?", "",
                                                             MessageBoxButtons.YesNo)
                     If dr = Windows.Forms.DialogResult.Yes Then
                         'If combinedAlt.DeleteAlternator(alternatorName, feedback, True) Then
@@ -411,9 +411,7 @@ Public Class frmCombinedAlternators
                 combinedAlt.Alternators.Where(
                     Function(f) f.AlternatorName <> altName AndAlso f.AlternatorName = txtAlternatorName.Text).Count > 0 Then
                 MessageBox.Show(
-                    String.Format(
-                        "The lternator '{0}' name you are using to update the alternator '{1}' already exists, operation aborted",
-                        txtAlternatorName.Text, altName))
+                    $"The alternator '{txtAlternatorName.Text}' name you are using to update the alternator '{altName}' already exists, operation aborted")
                 Return
             End If
 

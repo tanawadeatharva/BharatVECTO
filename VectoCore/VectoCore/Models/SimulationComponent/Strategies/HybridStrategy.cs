@@ -571,13 +571,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 
 		public virtual IHybridController Controller { protected get; set; }
 
-		public PerSecond MinICESpeed
-		{
-			get
-			{
-				return ModelData.EngineData.IdleSpeed;
-			}
-		}
+		public PerSecond MinICESpeed => ModelData.EngineData.IdleSpeed;
 
 		public bool AllowEmergencyShift { protected get; set; }
 
@@ -1868,7 +1862,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 							},
 							evaluateFunction: emTq => {
 								var cfg = new HybridStrategyResponse() {
-									CombustionEngineOn = nextGear.IsLockedGear() ? true : false,
+									CombustionEngineOn = nextGear.IsLockedGear(),
 									GearboxInNeutral = false,
 									MechanicalAssistPower = new Dictionary<PowertrainPosition, Tuple<PerSecond, NewtonMeter>>() {
 										{ emPos, Tuple.Create(firstResponse.ElectricMotor.AngularVelocity, emTq) }
@@ -1907,7 +1901,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 							},
 							evaluateFunction: emTq => {
 								var cfg = new HybridStrategyResponse() {
-									CombustionEngineOn = nextGear.IsLockedGear() ? true : false,
+									CombustionEngineOn = nextGear.IsLockedGear(),
 									GearboxInNeutral = false,
 									MechanicalAssistPower = new Dictionary<PowertrainPosition, Tuple<PerSecond, NewtonMeter>>() {
 										{ emPos, Tuple.Create(firstResponse.ElectricMotor.AngularVelocity, emTq) }
@@ -1963,7 +1957,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 								},
 								evaluateFunction: emTq => {
 									var cfg = new HybridStrategyResponse() {
-										CombustionEngineOn = nextGear.IsLockedGear() ? true : false,
+										CombustionEngineOn = nextGear.IsLockedGear(),
 										GearboxInNeutral = false,
 										MechanicalAssistPower = new Dictionary<PowertrainPosition, Tuple<PerSecond, NewtonMeter>>() {
 											{ emPos, Tuple.Create(firstResponse.ElectricMotor.AngularVelocity, emTq) }

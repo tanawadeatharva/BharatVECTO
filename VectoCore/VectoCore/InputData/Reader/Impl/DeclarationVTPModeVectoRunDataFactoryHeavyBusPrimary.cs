@@ -31,12 +31,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl {
 
 		#region Implementation of IVectoRunDataFactory
 
-		protected override IDeclarationDataAdapter Dao { get {
-			return _dao ?? (_dao = new DeclarationDataAdapterPrimaryBus());
-		} }
-
-
-		
+		protected override IDeclarationDataAdapter Dao => _dao ?? (_dao = new DeclarationDataAdapterPrimaryBus());
 
 		#endregion
 

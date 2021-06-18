@@ -390,7 +390,7 @@ public class JSONFileWriter : IOutputFileWriter
 			{ "EcoRoll", vehicle.ADAS.EcoRoll.ToString() },
 			{ "PredictiveCruiseControl", vehicle.ADAS.PredictiveCruiseControl.ToString() }, {
 				"ATEcoRollReleaseLockupClutch",
-				vehicle.ADAS.ATEcoRollReleaseLockupClutch.HasValue ? vehicle.ADAS.ATEcoRollReleaseLockupClutch.Value : false
+				vehicle.ADAS.ATEcoRollReleaseLockupClutch ?? false
 			}
 		};
 		if (airdrag.AirDragArea != null)
@@ -654,7 +654,7 @@ public class JSONFileWriter : IOutputFileWriter
 			foreach (var auxEntry in aux.Auxiliaries) {
 				
 				var auxOut = new Dictionary<string, object>();
-				var engineeringAuxEntry = auxEntry as IAuxiliaryDeclarationInputData;
+				var engineeringAuxEntry = auxEntry;
 				if (!job.SavedInDeclarationMode) {
 					auxOut.Add("Type", auxEntry.Type.Name());
 					auxOut.Add("Technology", new string[] { });

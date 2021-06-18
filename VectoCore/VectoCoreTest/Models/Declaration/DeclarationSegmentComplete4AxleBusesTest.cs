@@ -107,7 +107,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 				AssertBusParameters(
 					missionType: mission.MissionType,
 					passengerDensity: new[] { mission.MissionType == MissionType.Interurban ? 2.2 : 3 },
-					airDragAllowed: mission.MissionType == MissionType.Interurban ? true : false,
+					airDragAllowed: mission.MissionType == MissionType.Interurban,
 					doubleDecker: false,
 					busParameters: mission.BusParameter
 				);

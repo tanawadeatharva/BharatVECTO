@@ -60,9 +60,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			container[ModalResultField.P_angle_in] = CurrentState.InTorque * avgAngularVelocity;
 		}
 
-		public double Ratio
-		{
-			get { return ModelData.Ratio; }
-		}
+		public double Ratio => ModelData.Ratio;
 	}
 }

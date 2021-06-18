@@ -71,66 +71,38 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering.DataProvider
 		}
 
 
-		public virtual IHybridStrategyParameters HybridStrategyParameters
-		{
-			get { return null; }
-		}
+		public virtual IHybridStrategyParameters HybridStrategyParameters => null;
 
-		public virtual IList<ICycleData> Cycles
-		{
-			get { return (_cycles ?? (_cycles = Reader.CreateCycles)).Cycles; }
-		}
+		public virtual IList<ICycleData> Cycles => (_cycles ?? (_cycles = Reader.CreateCycles)).Cycles;
 
-		public virtual IEngineEngineeringInputData EngineOnly
-		{
-			get { return _engineOnly ?? (_engineOnly = Reader.CreateEngineOnly); }
-		}
+		public virtual IEngineEngineeringInputData EngineOnly => _engineOnly ?? (_engineOnly = Reader.CreateEngineOnly);
 
-		public virtual TableData PTOCycleWhileDrive { get { return null; } }
+		public virtual TableData PTOCycleWhileDrive => null;
 
-		public string ShiftStrategy { get { return null; } }
+		public string ShiftStrategy => null;
 
 		public virtual VectoSimulationJobType JobType { get; }
 
 
-		public virtual string JobName
-		{
-			get {
-				return JobType == VectoSimulationJobType.EngineOnlySimulation
-					? EngineOnly.Model
-					: (GetAttribute(BaseNode.SelectSingleNode(XMLHelper.QueryLocalName(XMLNames.Component_Vehicle)), "id") ??
-						Vehicle.Model + " " + Vehicle.Manufacturer);
-			}
-		}
+		public virtual string JobName =>
+			JobType == VectoSimulationJobType.EngineOnlySimulation
+				? EngineOnly.Model
+				: (GetAttribute(BaseNode.SelectSingleNode(XMLHelper.QueryLocalName(XMLNames.Component_Vehicle)), "id") ??
+					Vehicle.Model + " " + Vehicle.Manufacturer);
 
-		public virtual bool SavedInDeclarationMode
-		{
-			get { return false; }
-		}
+		public virtual bool SavedInDeclarationMode => false;
 
-		public virtual IVehicleEngineeringInputData Vehicle
-		{
-			get { return _vehicle ?? (_vehicle = Reader.CreateVehicle); }
-		}
+		public virtual IVehicleEngineeringInputData Vehicle => _vehicle ?? (_vehicle = Reader.CreateVehicle);
 
-		IVehicleDeclarationInputData IDeclarationJobInputData.Vehicle
-		{
-			get { return Vehicle; }
-		}
+		IVehicleDeclarationInputData IDeclarationJobInputData.Vehicle => Vehicle;
 
-		public string SourePath
-		{
-			get { return FileName == null ? null : Path.GetDirectoryName(Path.GetFullPath(FileName)); }
-		}
+		public string SourePath => FileName == null ? null : Path.GetDirectoryName(Path.GetFullPath(FileName));
 
-		public IXMLEngineeringInputData InputData
-		{
-			get { return InputProvider; }
-		}
+		public IXMLEngineeringInputData InputData => InputProvider;
 
 		#region Overrides of AbstractXMLResource
 
-		protected override XNamespace SchemaNamespace { get { return NAMESPACE_URI; } }
+		protected override XNamespace SchemaNamespace => NAMESPACE_URI;
 		protected override DataSourceType SourceType { get; }
 
 		#endregion
@@ -151,7 +123,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering.DataProvider
 
 		#region Overrides of XMLEngineeringJobInputDataProviderV07
 
-		protected override XNamespace SchemaNamespace { get { return NAMESPACE_URI; } }
+		protected override XNamespace SchemaNamespace => NAMESPACE_URI;
 
 		#endregion
 	}

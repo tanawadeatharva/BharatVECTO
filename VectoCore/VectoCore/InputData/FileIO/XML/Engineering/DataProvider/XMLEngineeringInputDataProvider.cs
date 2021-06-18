@@ -74,15 +74,9 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering.DataProvider
 
 		#region Implementation of IEngineeringInputDataProvider
 
-		public virtual IEngineeringJobInputData JobInputData
-		{
-			get { return JobData ?? (JobData = Reader.JobData); }
-		}
+		public virtual IEngineeringJobInputData JobInputData => JobData ?? (JobData = Reader.JobData);
 
-		public virtual IDriverEngineeringInputData DriverInputData
-		{
-			get { return DriverData ?? (DriverData = Reader.DriverModel); }
-		}
+		public virtual IDriverEngineeringInputData DriverInputData => DriverData ?? (DriverData = Reader.DriverModel);
 
 		//public virtual IGearshiftEngineeringInputData GearshiftInputData { get { return DriverInputData.GearshiftInputData; } }
 
@@ -93,7 +87,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering.DataProvider
 
 		#region Overrides of AbstractXMLResource
 
-		protected override XNamespace SchemaNamespace { get { return NAMESPACE_URI; } }
+		protected override XNamespace SchemaNamespace => NAMESPACE_URI;
 		protected override DataSourceType SourceType { get; }
 
 		#endregion
@@ -110,7 +104,6 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering.DataProvider
 
 		public XMLEngineeringInputDataProviderV10(XmlDocument xmldoc, string fileName) : base(xmldoc, fileName) { }
 
-		protected override XNamespace SchemaNamespace { get { return NAMESPACE_URI; } }
-
+		protected override XNamespace SchemaNamespace => NAMESPACE_URI;
 	}
 }

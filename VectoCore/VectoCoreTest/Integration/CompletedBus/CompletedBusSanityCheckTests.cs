@@ -178,42 +178,23 @@ namespace TUGraz.VectoCore.Tests.Integration.CompletedBus
 			//JobName = Vehicle.VIN;
 		}
 
-		public IDeclarationMultistageJobInputData JobInputData
-		{
-			get { return input.JobInputData; }
-		}
+		public IDeclarationMultistageJobInputData JobInputData => input.JobInputData;
 
 
 		IDeclarationJobInputData IDeclarationInputDataProvider.JobInputData => null;
 
-		public IPrimaryVehicleInformationInputDataProvider PrimaryVehicleData
-		{
-			get { return input.PrimaryVehicleData; }
-		}
-        public XElement XMLHash { get; }
+		public IPrimaryVehicleInformationInputDataProvider PrimaryVehicleData => input.PrimaryVehicleData;
+		public XElement XMLHash { get; }
 
-		public bool SavedInDeclarationMode
-		{
-			get { return true; }
-		}
+		public bool SavedInDeclarationMode => true;
 
-		public IPrimaryVehicleInformationInputDataProvider PrimaryVehicle
-		{
-			get { return PrimaryVehicleData; }
-		}
-        public IList<IManufacturingStageInputData> ManufacturingStages
-		{
-			get { return input.JobInputData.ManufacturingStages; }
-		}
-        public IManufacturingStageInputData ConsolidateManufacturingStage
-		{
-			get { return input.JobInputData.ConsolidateManufacturingStage; }
-		}
+		public IPrimaryVehicleInformationInputDataProvider PrimaryVehicle => PrimaryVehicleData;
 
-		public VectoSimulationJobType JobType
-		{
-			get { return VectoSimulationJobType.ConventionalVehicle; }
-		}
+		public IList<IManufacturingStageInputData> ManufacturingStages => input.JobInputData.ManufacturingStages;
+
+		public IManufacturingStageInputData ConsolidateManufacturingStage => input.JobInputData.ConsolidateManufacturingStage;
+
+		public VectoSimulationJobType JobType => VectoSimulationJobType.ConventionalVehicle;
 
 		public bool InputComplete { get; }
 

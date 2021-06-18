@@ -22,7 +22,7 @@ namespace TUGraz.VectoCore.OutputData.XML {
 
 		public IPrimaryVehicleInformationInputDataProvider PrimaryVehicleRecordFile { get; set; }
 
-		public IVehicleDeclarationInputData PrimaryVehicle { get { return PrimaryVehicleRecordFile.Vehicle; } }
+		public IVehicleDeclarationInputData PrimaryVehicle => PrimaryVehicleRecordFile.Vehicle;
 
 		public override void Initialize(VectoRunData modelData, List<List<FuelData.Entry>> fuelModes)
 		{
@@ -100,7 +100,7 @@ namespace TUGraz.VectoCore.OutputData.XML {
 				content = new object[] {
 					new XElement(
 						tns + XMLNames.Report_Results_Error,
-						string.Format("Simulation not finished! Status: {0} / {1}", genericResult.Status, specificResult.Status)),
+						$"Simulation not finished! Status: {genericResult.Status} / {specificResult.Status}"),
 					new XElement(tns + XMLNames.Report_Results_ErrorDetails, ""),
 				}; // should not happen!
 			}
@@ -283,7 +283,7 @@ namespace TUGraz.VectoCore.OutputData.XML {
                 new XAttribute(XNamespace.Xmlns + "tns", rootNS),
                 new XAttribute(XNamespace.Xmlns + "di", di),
                 new XAttribute(xsi + "schemaLocation",
-                    string.Format("{0} {1}DEV/VectoOutputCustomer.xsd", rootNS, AbstractXMLWriter.SchemaLocationBaseUrl)),
+					$"{rootNS} {AbstractXMLWriter.SchemaLocationBaseUrl}DEV/VectoOutputCustomer.xsd"),
                 new XElement(rootNS + XMLNames.Report_DataWrap,
                     new XAttribute(xsi + "type", "VectoOutputDataType"),
                     vehicle,

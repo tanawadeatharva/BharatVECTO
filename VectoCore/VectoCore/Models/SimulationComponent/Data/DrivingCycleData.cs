@@ -114,7 +114,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 				}
 			}
 			if (result.Any()) {
-				return new ValidationResult(string.Format("Validation of Cycle {0} failed", cycleData.Name), result);
+				return new ValidationResult($"Validation of Cycle {cycleData.Name} failed", result);
 			}
 			return ValidationResult.Success;
 		}
@@ -170,10 +170,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 			/// <summary>
 			/// [%] Optional.
 			/// </summary>
-			public Scalar RoadGradientPercent
-			{
-				get { return (Math.Tan(RoadGradient.Value()) * 100).SI<Scalar>(); }
-			}
+			public Scalar RoadGradientPercent => (Math.Tan(RoadGradient.Value()) * 100).SI<Scalar>();
 
 			public Dictionary<FuelType, KilogramPerSecond> VTPFuelconsumption;
 

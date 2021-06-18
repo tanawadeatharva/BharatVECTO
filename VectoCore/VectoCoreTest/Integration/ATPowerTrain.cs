@@ -151,14 +151,14 @@ namespace TUGraz.VectoCore.Tests.Integration
 						new GearData {
 							//MaxTorque = 2300.SI<NewtonMeter>(),
 							LossMap = ratio.IsEqual(1)
-								? TransmissionLossMapReader.Create(0.96, ratio, string.Format("Gear {0}", i))
-								: TransmissionLossMapReader.Create(0.98, ratio, string.Format("Gear {0}", i)),
+								? TransmissionLossMapReader.Create(0.96, ratio, $"Gear {i}")
+								: TransmissionLossMapReader.Create(0.98, ratio, $"Gear {i}"),
 							Ratio = ratio,
 							ShiftPolygon = ShiftPolygonReader.ReadFromFile(GearboxShiftPolygonFile),
 							TorqueConverterRatio = i == 0 ? (gbxType == GearboxType.ATPowerSplit ? 1.0 : ratio) : double.NaN,
 							TorqueConverterGearLossMap = i == 0
 								? TransmissionLossMapReader.Create(gbxType == GearboxType.ATPowerSplit ? 1.0 : 0.98, ratio,
-									string.Format("Gear {0}", i))
+									$"Gear {i}")
 								: null,
 							TorqueConverterShiftPolygon = i == 0 ? ShiftPolygonReader.ReadFromFile(GearboxShiftPolygonFile) : null
 						}))

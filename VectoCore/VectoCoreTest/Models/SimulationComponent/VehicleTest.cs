@@ -256,45 +256,24 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 
 		#region Implementation of IDrivingCycleInfo
 
-		public CycleData CycleData
-		{
-			get { throw new NotImplementedException(); }
-		}
+		public CycleData CycleData => throw new NotImplementedException();
 
-		public bool PTOActive
-		{
-			get { throw new NotImplementedException(); }
-		}
+		public bool PTOActive => throw new NotImplementedException();
 
 		public DrivingCycleData.DrivingCycleEntry CycleLookAhead(Meter distance)
 		{
 			throw new NotImplementedException();
 		}
 
-		public Meter Altitude
-		{
-			get { throw new NotImplementedException(); }
-		}
+		public Meter Altitude => throw new NotImplementedException();
 
-		public Radian RoadGradient
-		{
-			get { throw new NotImplementedException(); }
-		}
+		public Radian RoadGradient => throw new NotImplementedException();
 
-		public MeterPerSecond TargetSpeed
-		{
-			get { throw new NotImplementedException(); }
-		}
+		public MeterPerSecond TargetSpeed => throw new NotImplementedException();
 
-		public Second StopTime
-		{
-			get { throw new NotImplementedException(); }
-		}
+		public Second StopTime => throw new NotImplementedException();
 
-		public Meter CycleStartDistance
-		{
-			get { return 0.SI<Meter>(); }
-		}
+		public Meter CycleStartDistance => 0.SI<Meter>();
 
 		public IReadOnlyList<DrivingCycleData.DrivingCycleEntry> LookAhead(Meter lookaheadDistance)
 		{
@@ -306,10 +285,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			throw new NotImplementedException();
 		}
 
-		public SpeedChangeEntry LastTargetspeedChange
-		{
-			get { throw new NotImplementedException(); }
-		}
+		public SpeedChangeEntry LastTargetspeedChange => throw new NotImplementedException();
 
 		public void FinishSimulation()
 		{

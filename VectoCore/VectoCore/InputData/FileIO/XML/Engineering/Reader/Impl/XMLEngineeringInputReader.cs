@@ -62,15 +62,9 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering.Reader
 			InputData = inputData;
 		}
 
-		public IEngineeringJobInputData JobData
-		{
-			get { return _jobData ?? (_jobData = CreateComponent(XMLNames.VectoInputEngineering, JobCreator, false, requireDataNode: false)); }
-		}
+		public IEngineeringJobInputData JobData => _jobData ?? (_jobData = CreateComponent(XMLNames.VectoInputEngineering, JobCreator, false, requireDataNode: false));
 
-		public IDriverEngineeringInputData DriverModel
-		{
-			get { return _driverModel ?? (_driverModel = CreateComponent(XMLNames.Component_DriverModel, DriverModelCreator, requireDataNode:false)); }
-		}
+		public IDriverEngineeringInputData DriverModel => _driverModel ?? (_driverModel = CreateComponent(XMLNames.Component_DriverModel, DriverModelCreator, requireDataNode:false));
 
 		public IEngineeringJobInputData JobCreator(string version, XmlNode baseNode, string filename)
 		{

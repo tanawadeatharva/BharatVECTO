@@ -203,7 +203,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 						new GearData {
 //								MaxTorque = 2300.SI<NewtonMeter>(),
 							LossMap = TransmissionLossMapReader.ReadFromFile(!ratio.IsEqual(1.0) ? directlossMap : indirectLossMap, ratio,
-								string.Format("Gear {0}", i)),
+								$"Gear {i}"),
 							Ratio = ratio,
 							ShiftPolygon = ShiftPolygonReader.ReadFromFile(ShiftPolygonFile)
 						}))
@@ -284,7 +284,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 			jobContainer.WaitFinished();
 
 			foreach (var r in jobContainer.Runs) {
-				Assert.IsTrue(r.Run.FinishedWithoutErrors, string.Format("{0}", r.ExecException));
+				Assert.IsTrue(r.Run.FinishedWithoutErrors, $"{r.ExecException}");
 			}
 		}
 

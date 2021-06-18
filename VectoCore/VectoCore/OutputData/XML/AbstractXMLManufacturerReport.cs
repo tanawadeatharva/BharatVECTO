@@ -73,7 +73,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 					new XAttribute(XNamespace.Xmlns + "mrf", mrf),
 					new XAttribute(
 						xsi + "schemaLocation",
-						string.Format("{0} {1}/DEV/VectoOutputManufacturer.xsd", mrf, AbstractXMLWriter.SchemaLocationBaseUrl)),
+						$"{mrf} {AbstractXMLWriter.SchemaLocationBaseUrl}/DEV/VectoOutputManufacturer.xsd"),
 					new XElement(
 						mrf + XMLNames.Report_DataWrap,
 						new XAttribute(xsi + "type", "VectoOutputDataType"),
@@ -124,7 +124,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 						GetSimulationParameters(resultEntry),
 						new XElement(
 							tns + XMLNames.Report_Results_Error,
-							string.Format("Simulation not finished! Status: {0}", resultEntry.Status)),
+							$"Simulation not finished! Status: {resultEntry.Status}"),
 						new XElement(tns + XMLNames.Report_Results_ErrorDetails, ""),
 					}; // should not happen!
 					break;
@@ -257,7 +257,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 			return new XElement(
 				tns + XMLNames.Vehicle_ADAS,
 				new XAttribute(XNamespace.Xmlns + adasPrefix, ns.NamespaceName),
-				new XAttribute(xsi + "type", string.Format("{0}:{1}", adasPrefix, type)),
+				new XAttribute(xsi + "type", $"{adasPrefix}:{type}"),
 				XElement.Parse(adasData.InputData.XMLSource.OuterXml).Elements()
 			);
 		}
@@ -271,7 +271,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 			return new XElement(
 				tns + XMLNames.Vehicle_ADAS,
 				new XAttribute(XNamespace.Xmlns + adasPrefix, ns.NamespaceName),
-				new XAttribute(xsi + "type", string.Format("{0}:{1}", adasPrefix, type)),
+				new XAttribute(xsi + "type", $"{adasPrefix}:{type}"),
 					new XElement(ns + XMLNames.Vehicle_ADAS_EngineStopStart, adasData.EngineStopStart),
 					new XElement(ns + XMLNames.Vehicle_ADAS_EcoRollWithoutEngineStop, adasData.EcoRoll.WithoutEngineStop()),
 					new XElement(ns + XMLNames.Vehicle_ADAS_EcoRollWithEngineStopStart, adasData.EcoRoll.WithEngineStop()),

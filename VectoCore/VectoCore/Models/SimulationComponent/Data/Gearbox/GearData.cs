@@ -54,15 +54,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox
 			TorqueConverterRatio = double.NaN;
 		}
 
-		public bool HasTorqueConverter
-		{
-			get { return !double.IsNaN(TorqueConverterRatio) && TorqueConverterGearLossMap != null; }
-		}
+		public bool HasTorqueConverter => !double.IsNaN(TorqueConverterRatio) && TorqueConverterGearLossMap != null;
 
-		public bool HasLockedGear
-		{
-			get { return !double.IsNaN(Ratio) && LossMap != null; }
-		}
+		public bool HasLockedGear => !double.IsNaN(Ratio) && LossMap != null;
 
 		[ValidateObject]
 		public ShiftPolygon ShiftPolygon { get; internal set; }
@@ -82,11 +76,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox
 		{
 			var validationService =
 				context.GetService(typeof(VectoValidationModeServiceContainer)) as VectoValidationModeServiceContainer;
-			var mode = validationService != null ? validationService.Mode : ExecutionMode.Declaration;
+			var mode = validationService?.Mode ?? ExecutionMode.Declaration;
 			var gbxType = validationService != null ? validationService.GearboxType : GearboxType.MT;
 			var emsMission = validationService != null && validationService.IsEMSCycle;
-			var jobType = validationService != null ? validationService.JobType : VectoSimulationJobType.ConventionalVehicle;
-			var emPos = validationService != null ? validationService.EMPowertrainPosition : (PowertrainPosition?)null;
+			var jobType = validationService?.JobType ?? VectoSimulationJobType.ConventionalVehicle;
+			var emPos = validationService?.EMPowertrainPosition;
 
 			if (gearData.HasTorqueConverter) {
 				if (gearData.TorqueConverterShiftPolygon == null) {

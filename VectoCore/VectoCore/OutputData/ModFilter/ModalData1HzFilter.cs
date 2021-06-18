@@ -184,14 +184,12 @@ namespace TUGraz.VectoCore.OutputData.ModFilter
 		private static IEnumerable<object> MultiplyRow(IEnumerable<object> row, SI dt)
 		{
 			return row.Select(val => {
-				if (val is SI) {
-					val = (SI)val * dt.Value();
-				} else {
-					val.Switch()
-						.Case<int>(i => val = i * dt.Value())
-						.Case<double>(d => val = d * dt.Value())
-						.Case<float>(f => val = f * dt.Value())
-						.Case<uint>(ui => val = ui * dt.Value());
+				switch (val) {
+					case SI si: val = si * dt.Value(); break;
+					case int i: val = i * dt.Value(); break;
+					case double d: val = d * dt.Value(); break;
+					case float f: val = f * dt.Value(); break;
+					case uint ui: val = ui * dt.Value(); break;
 				}
 				return val;
 			});
@@ -214,19 +212,17 @@ namespace TUGraz.VectoCore.OutputData.ModFilter
 						val = (SI)val + (SI)addVal;
 					}
 				} else {
-					val.Switch()
-						.Case<int>(i => val = i + (int)addVal)
-						.Case<double>(d => val = d + (double)addVal)
-						.Case<float>(f => val = f + (float)addVal)
-						.Case<uint>(ui => val = ui + (uint)addVal);
+					switch (val) {
+						case int x: val = x + (int)addVal; break;
+						case double x: val = x + (double)addVal; break;
+						case float x: val = x + (float)addVal; break;
+						case uint x: val = x + (uint)addVal; break;
+					}
 				}
 				return val;
 			}).ToArray();
 		}
 
-		public string ID
-		{
-			get { return "1Hz"; }
-		}
+		public string ID => "1Hz";
 	}
 }

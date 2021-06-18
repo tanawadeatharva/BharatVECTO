@@ -43,30 +43,15 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider {
 	{
 		protected AbstractCommonComponentType(XmlNode node, string source) : base(node, source) { }
 
-		public bool SavedInDeclarationMode
-		{
-			get { return true; }
-		}
+		public bool SavedInDeclarationMode => true;
 
-		public virtual string Manufacturer
-		{
-			get { return GetString(XMLNames.Component_Manufacturer); }
-		}
+		public virtual string Manufacturer => GetString(XMLNames.Component_Manufacturer);
 
-		public virtual string Model
-		{
-			get { return GetString(XMLNames.Component_Model); }
-		}
+		public virtual string Model => GetString(XMLNames.Component_Model);
 
-		public virtual DateTime Date
-		{
-			get { return XmlConvert.ToDateTime(GetString(XMLNames.Component_Date), XmlDateTimeSerializationMode.Utc); }
-		}
+		public virtual DateTime Date => XmlConvert.ToDateTime(GetString(XMLNames.Component_Date), XmlDateTimeSerializationMode.Utc);
 
-		public virtual string AppVersion
-		{
-			get { return GetString(XMLNames.Component_AppVersion); }
-		}
+		public virtual string AppVersion => GetString(XMLNames.Component_AppVersion);
 
 		public virtual CertificationMethod CertificationMethod
 		{
@@ -76,16 +61,10 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider {
 			}
 		}
 
-		public virtual string CertificationNumber
-		{
-			get { return GetString(XMLNames.Component_CertificationNumber); }
-		}
+		public virtual string CertificationNumber => GetString(XMLNames.Component_CertificationNumber);
 
-		public virtual DigestData DigestValue
-		{
-			get { return new DigestData(GetNode(XMLNames.DI_Signature, required:false)); }
-		}
+		public virtual DigestData DigestValue => new DigestData(GetNode(XMLNames.DI_Signature, required:false));
 
-		public virtual XmlNode XMLSource { get { return BaseNode; } }
+		public virtual XmlNode XMLSource => BaseNode;
 	}
 }

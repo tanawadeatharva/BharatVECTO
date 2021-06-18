@@ -60,10 +60,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 			DataBus = dataBus;
 		}
 
-		public CrossWindCorrectionMode CorrectionMode
-		{
-			get { return CrossWindCorrectionMode.VAirBetaLookupTable; }
-		}
+		public CrossWindCorrectionMode CorrectionMode => CrossWindCorrectionMode.VAirBetaLookupTable;
 
 		public Watt AverageAirDragPowerLoss(MeterPerSecond v1, MeterPerSecond v2, KilogramPerCubicMeter airDensity)
 		{
@@ -98,8 +95,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 			if (beta > AirDragEntries.Last().Beta) {
 				throw new VectoSimulationException("Beta / CdxA Lookup table does not cover beta={0}", beta);
 			}
-			int index;
-			AirDragEntries.GetSection(x => x.Beta < beta, out index);
+
+			AirDragEntries.GetSection(x => x.Beta < beta, out var index);
 			return index + 1;
 		}
 	}

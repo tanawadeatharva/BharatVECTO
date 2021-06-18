@@ -44,13 +44,10 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Common {
 			SourceFile = source;
 		}
 
-		public virtual DataSource DataSource
-		{
-			get { return new DataSource() { SourceFile = SourceFile, SourceVersion = SourceVersion, SourceType = SourceType }; }
-		}
+		public virtual DataSource DataSource => new DataSource() { SourceFile = SourceFile, SourceVersion = SourceVersion, SourceType = SourceType };
 
 
-		protected string SourceVersion { get { return XMLHelper.GetVersionFromNamespaceUri(SchemaNamespace); } }
+		protected string SourceVersion => XMLHelper.GetVersionFromNamespaceUri(SchemaNamespace);
 
 		protected abstract XNamespace SchemaNamespace { get; }
 

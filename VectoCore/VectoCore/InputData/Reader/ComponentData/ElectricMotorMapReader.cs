@@ -49,7 +49,7 @@ namespace TUGraz.VectoCore.InputData.Reader.ComponentData {
 				}
                 catch (Exception e)
 				{
-					throw new VectoException(string.Format("EfficiencyMap - Line {0}: {1}", data.Rows.IndexOf(row), e.Message), e);
+					throw new VectoException($"EfficiencyMap - Line {data.Rows.IndexOf(row)}: {e.Message}", e);
 				}
 			}
 

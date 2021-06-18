@@ -5,14 +5,10 @@ Imports System.IO
 Imports System.Linq
 Imports System.Windows.Forms.DataVisualization.Charting
 Imports TUGraz.VectoCommon.InputData
-Imports TUGraz.VectoCommon.Models
 Imports TUGraz.VectoCommon.Utils
 Imports TUGraz.VectoCore.InputData.FileIO.JSON
 Imports TUGraz.VectoCore.InputData.Reader.ComponentData
-Imports TUGraz.VectoCore.Models.Declaration
-Imports TUGraz.VectoCore.Models.SimulationComponent.Data
 Imports TUGraz.VectoCore.Models.SimulationComponent.Data.Battery
-Imports TUGraz.VectoCore.Models.SimulationComponent.Data.Engine
 Imports TUGraz.VectoCore.Utils
 ' Copyright 2017 European Union.
 ' Licensed under the EUPL (the 'Licence');
@@ -129,8 +125,7 @@ Public Class BatteryForm
     Private Sub ToolStripButton1_Click(sender As Object, e As EventArgs) Handles ToolStripButton1.Click
         If File.Exists(Path.Combine(MyAppPath, "User Manual\help.html")) Then
             Dim defaultBrowserPath As String = BrowserUtils.GetDefaultBrowserPath()
-            Process.Start(defaultBrowserPath,
-                        String.Format("""file://{0}""", Path.Combine(MyAppPath, "User Manual\help.html#engine-editor")))
+            Process.Start(defaultBrowserPath,$"""file://{Path.Combine(MyAppPath, "User Manual\help.html#engine-editor")}""")
         Else
             MsgBox("User Manual not found!", MsgBoxStyle.Critical)
         End If

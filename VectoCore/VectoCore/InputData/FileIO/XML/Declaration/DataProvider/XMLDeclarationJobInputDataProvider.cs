@@ -57,40 +57,23 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 		#region Overrides of AbstractXMLResource
 
-		protected override XNamespace SchemaNamespace
-		{
-			get { return NAMESPACE_URI; }
-		}
+		protected override XNamespace SchemaNamespace => NAMESPACE_URI;
 
-		protected override DataSourceType SourceType
-		{
-			get { return DataSourceType.XMLFile; }
-		}
+		protected override DataSourceType SourceType => DataSourceType.XMLFile;
 
 		#endregion
 
 		#region Implementation of IDeclarationJobInputData
 
-		public virtual bool SavedInDeclarationMode
-		{
-			get { return true; }
-		}
+		public virtual bool SavedInDeclarationMode => true;
 
-		public virtual IVehicleDeclarationInputData Vehicle
-		{
-			get { return _vehicle ?? (_vehicle = Reader.CreateVehicle); }
-		}
+		public virtual IVehicleDeclarationInputData Vehicle => _vehicle ?? (_vehicle = Reader.CreateVehicle);
 
-		public virtual string JobName
-		{
-			get { return Vehicle.Identifier; }
-		}
+		public virtual string JobName => Vehicle.Identifier;
 
-		public virtual string ShiftStrategy { get { return null; } }
-		public VectoSimulationJobType JobType
-		{
-			get { return VectoSimulationJobType.ConventionalVehicle; }
-		}
+		public virtual string ShiftStrategy => null;
+
+		public VectoSimulationJobType JobType => VectoSimulationJobType.ConventionalVehicle;
 
 		#endregion
 
@@ -115,10 +98,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		public XMLDeclarationJobInputDataProviderV20(XmlNode node, IXMLDeclarationInputData inputProvider, string fileName) :
 			base(node, inputProvider, fileName) { }
 
-		protected override XNamespace SchemaNamespace
-		{
-			get { return NAMESPACE_URI; }
-		}
+		protected override XNamespace SchemaNamespace => NAMESPACE_URI;
 	}
 	
 	// ---------------------------------------------------------------------------------------
@@ -139,24 +119,16 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		{
 			InputData = inputProvider;
 		}
-		protected override XNamespace SchemaNamespace
-		{
-			get { return NAMESPACE_URI; }
-		}
+		protected override XNamespace SchemaNamespace => NAMESPACE_URI;
 
-		public IVehicleDeclarationInputData Vehicle
-		{
-			get { return _vehicle ?? (_vehicle = Reader.CreateVehicle); }
-		}
+		public IVehicleDeclarationInputData Vehicle => _vehicle ?? (_vehicle = Reader.CreateVehicle);
 
 		protected override DataSourceType SourceType { get; }
 		public bool SavedInDeclarationMode { get; }
 		public string JobName { get; }
-		public string ShiftStrategy { get{ return null; } }
-		public VectoSimulationJobType JobType
-		{
-			get { return VectoSimulationJobType.ConventionalVehicle; }
-		}
+		public string ShiftStrategy => null;
+
+		public VectoSimulationJobType JobType => VectoSimulationJobType.ConventionalVehicle;
 		public IXMLJobDataReader Reader { protected get; set; }
 		public IXMLPrimaryVehicleBusInputData InputData { get; }
 	}

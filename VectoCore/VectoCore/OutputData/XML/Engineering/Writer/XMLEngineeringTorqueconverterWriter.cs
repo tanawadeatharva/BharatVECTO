@@ -53,10 +53,7 @@ namespace TUGraz.VectoCore.OutputData.XML.Engineering.Writer
 
 		#region Overrides of AbstractXMLWriter
 
-		public override XNamespace ComponentDataNamespace
-		{
-			get { return _componentDataNamespace ?? (_componentDataNamespace = Writer.RegisterNamespace(NAMESPACE_URI)); }
-		}
+		public override XNamespace ComponentDataNamespace => _componentDataNamespace ?? (_componentDataNamespace = Writer.RegisterNamespace(NAMESPACE_URI));
 
 		#endregion
 
@@ -67,7 +64,7 @@ namespace TUGraz.VectoCore.OutputData.XML.Engineering.Writer
 			var tns = ComponentDataNamespace;
 			return new object[] {
 				GetXMLTypeAttribute(),
-				new XAttribute(XMLNames.Component_ID_Attr, string.Format("TC-{0}", data.Model)),
+				new XAttribute(XMLNames.Component_ID_Attr, $"TC-{data.Model}"),
 				GetDefaultComponentElements(data),
 				new XElement(tns + XMLNames.TorqueConverter_ReferenceRPM, data.ReferenceRPM.AsRPM.ToXMLFormat()),
 				new XElement(

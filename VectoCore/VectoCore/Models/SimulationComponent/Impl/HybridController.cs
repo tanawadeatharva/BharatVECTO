@@ -49,10 +49,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			ElectricSystem = es;
 		}
 
-		public IHybridControlStrategy Strategy
-		{
-			get { return _hybridStrategy; }
-		}
+		public IHybridControlStrategy Strategy => _hybridStrategy;
 
 		public IElectricSystem ElectricSystem { get; }
 
@@ -86,45 +83,27 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			//}
 		}
 
-		SimpleComponentState IHybridController.PreviousState
-		{
-			get { return PreviousState; }
-		}
+		SimpleComponentState IHybridController.PreviousState => PreviousState;
 
 		public virtual IElectricMotorControl ElectricMotorControl(PowertrainPosition pos)
 		{
 			return _electricMotorCtl[pos];
 		}
 
-		public virtual IShiftStrategy ShiftStrategy
-		{
-			get { return _shiftStrategy; }
-		}
+		public virtual IShiftStrategy ShiftStrategy => _shiftStrategy;
 
 		public GearshiftPosition SelectedGear { get; protected set; }
 
-		public bool GearboxEngaged
-		{
-			get { return CurrentStrategySettings.GearboxEngaged; }
-		}
+		public bool GearboxEngaged => CurrentStrategySettings.GearboxEngaged;
 
 		public PerSecond ElectricMotorSpeed(PowertrainPosition pos)
 		{
 			return CurrentStrategySettings.MechanicalAssistPower[pos].Item1;
 		}
 
-		public Second SimulationInterval
-		{
-			get
-			{
-				return CurrentStrategySettings.SimulationInterval;
-			}
-		}
+		public Second SimulationInterval => CurrentStrategySettings.SimulationInterval;
 
-		public PerSecond ICESpeed
-		{
-			get { return CurrentStrategySettings.EvaluatedSolution.Response?.Engine.EngineSpeed; }
-		}
+		public PerSecond ICESpeed => CurrentStrategySettings.EvaluatedSolution.Response?.Engine.EngineSpeed;
 
 
 		public IResponse Request(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity,
@@ -198,8 +177,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					Strategy.AllowEmergencyShift = true;
 					retryCount++;
 					retry = true;
-					Strategy.OperatingpointChangedDuringRequest(absTime, dt, outTorque, outAngularVelocity, dryRun,
-						retVal);
+					Strategy.OperatingpointChangedDuringRequest(absTime, dt, outTorque, outAngularVelocity, false, retVal);
 					continue;
 				}
 
@@ -207,8 +185,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					retryCount++;
 					retry = true;
 					Strategy.AllowEmergencyShift = true;
-					Strategy.OperatingpointChangedDuringRequest(absTime, dt, outTorque, outAngularVelocity, dryRun,
-						retVal);
+					Strategy.OperatingpointChangedDuringRequest(absTime, dt, outTorque, outAngularVelocity, false, retVal);
 					continue;
 				}
 
@@ -274,15 +251,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			//return CurrentState.StrategyResponse.MechanicalAssistPower[pos];
 		}
 
-		public GearshiftPosition NextGear
-		{
-			get { return CurrentState.StrategyResponse.NextGear; }
-		}
+		public GearshiftPosition NextGear => CurrentState.StrategyResponse.NextGear;
 
-		public bool ShiftRequired
-		{
-			get { return CurrentState.StrategyResponse.ShiftRequired; }
-		}
+		public bool ShiftRequired => CurrentState.StrategyResponse.ShiftRequired;
 
 		public IHybridControlledGearbox Gearbox { protected get; set; }
 		public ICombustionEngine Engine { protected get; set; }
@@ -531,7 +502,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			public override IGearbox Gearbox
 			{
-				get { return _gearbox; }
+				get => _gearbox;
 				set
 				{
 					var myGearbox = value as Gearbox;
@@ -544,10 +515,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				}
 			}
 
-			public override GearshiftPosition NextGear
-			{
-				get { return _nextGear; }
-			}
+			public override GearshiftPosition NextGear => _nextGear;
 
 			public void SetNextGear(GearshiftPosition nextGear)
 			{
@@ -567,7 +535,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			public override IGearbox Gearbox
 			{
-				get { return _gearbox; }
+				get => _gearbox;
 				set
 				{
 					var myGearbox = value as ATGearbox;
@@ -628,7 +596,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			public override void Disengage(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity)
 			{
-				throw new System.NotImplementedException("AT Shift Strategy does not support disengaging.");
+				throw new NotImplementedException("AT Shift Strategy does not support disengaging.");
 			}
 
 			protected override bool SpeedTooLowForEngine(GearshiftPosition gear, PerSecond outAngularSpeed)

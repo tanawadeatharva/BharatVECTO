@@ -70,7 +70,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 				}
 
 				var otherElements = GetString(XMLNames.Vehicle_PTO_OtherElements);
-				var ptoTech = string.Format("{0} - {1}", shaftGearWheels, otherElements);
+				var ptoTech = $"{shaftGearWheels} - {otherElements}";
 				if (DeclarationData.PTOTransmission.GetTechnologies().Contains(ptoTech)) {
 					return ptoTech;
 				}
@@ -79,20 +79,11 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 			}
 		}
 
-		public virtual TableData PTOLossMap
-		{
-			get { return null; }
-		}
+		public virtual TableData PTOLossMap => null;
 
-		public virtual TableData PTOCycleDuringStop
-		{
-			get { return null; }
-		}
+		public virtual TableData PTOCycleDuringStop => null;
 
-		public TableData PTOCycleWhileDriving
-		{
-			get { return null; }
-		}
+		public TableData PTOCycleWhileDriving => null;
 
 		#endregion
 	}

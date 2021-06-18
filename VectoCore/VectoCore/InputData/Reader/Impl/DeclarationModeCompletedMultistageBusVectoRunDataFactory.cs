@@ -50,17 +50,9 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 
 
 
-		protected IVehicleDeclarationInputData PrimaryVehicle
-		{
-			get { return InputDataProvider.JobInputData.PrimaryVehicle.Vehicle; }
-		}
+		protected IVehicleDeclarationInputData PrimaryVehicle => InputDataProvider.JobInputData.PrimaryVehicle.Vehicle;
 
-		protected IVehicleDeclarationInputData CompletedVehicle
-		{
-			get { return InputDataProvider.JobInputData.ConsolidateManufacturingStage.Vehicle; }
-		}
-
-
+		protected IVehicleDeclarationInputData CompletedVehicle => InputDataProvider.JobInputData.ConsolidateManufacturingStage.Vehicle;
 
 
 		public IEnumerable<VectoRunData> NextRun()
@@ -254,7 +246,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 				DriverData = _driverData,
 				ExecutionMode = ExecutionMode.Declaration,
 				JobName = InputDataProvider.JobInputData.ManufacturingStages.Last().Vehicle.Identifier,//?!? Jobname
-				ModFileSuffix = "_" + _segmentCompletedBus.VehicleClass.GetClassNumber() + "-Specific_" + loading.Key.ToString(),
+				ModFileSuffix = $"_{_segmentCompletedBus.VehicleClass.GetClassNumber()}-Specific_{loading.Key}",
 				Report = Report,
 				Mission = mission,
 				InputDataHash = InputDataProvider.XMLHash,// right hash?!?
@@ -301,7 +293,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 				DriverData = _driverData,
 				ExecutionMode = ExecutionMode.Declaration,
 				JobName = InputDataProvider.JobInputData.ManufacturingStages.Last().Vehicle.Identifier,
-				ModFileSuffix = "_" + _segmentCompletedBus.VehicleClass.GetClassNumber() + "-Generic_" + loading.Key.ToString(),
+				ModFileSuffix = $"_{_segmentCompletedBus.VehicleClass.GetClassNumber()}-Generic_{loading.Key}",
 				Report = Report,
 				Mission = mission,
 				InputDataHash = InputDataProvider.XMLHash,

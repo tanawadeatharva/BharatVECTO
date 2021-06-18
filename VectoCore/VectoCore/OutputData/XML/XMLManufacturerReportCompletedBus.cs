@@ -20,9 +20,8 @@ namespace TUGraz.VectoCore.OutputData.XML {
 
 		public IPrimaryVehicleInformationInputDataProvider PrimaryVehicleRecordFile { get; set; }
 
-		public IVehicleDeclarationInputData PrimaryVehicle { get { return PrimaryVehicleRecordFile.Vehicle; } }
+		public IVehicleDeclarationInputData PrimaryVehicle => PrimaryVehicleRecordFile.Vehicle;
 
-	
 
 		#region Overrides of AbstractXMLManufacturerReport
 
@@ -99,7 +98,7 @@ namespace TUGraz.VectoCore.OutputData.XML {
 				content =  new object[] {
 					new XElement(
 						tns + XMLNames.Report_Results_Error,
-						string.Format("Simulation not finished! Status: {0} / {1}", genericResult.Status, specificResult.Status)),
+						$"Simulation not finished! Status: {genericResult.Status} / {specificResult.Status}"),
 					new XElement(tns + XMLNames.Report_Results_ErrorDetails, ""),
 				}; // should not happen!
 			}
@@ -388,7 +387,7 @@ namespace TUGraz.VectoCore.OutputData.XML {
 			return new XElement(
 				tns + XMLNames.Component_Auxiliaries,
 				new XAttribute(XNamespace.Xmlns + auxPrefix, ns.NamespaceName),
-				new XAttribute(xsi + "type", string.Format("{0}:{1}", auxPrefix, busAuxXML.FirstChild.SchemaInfo.SchemaType.QualifiedName.Name)),
+				new XAttribute(xsi + "type", $"{auxPrefix}:{busAuxXML.FirstChild.SchemaInfo.SchemaType.QualifiedName.Name}"),
 				XElement.Parse(busAuxXML.InnerXml).Elements()
 			);
 		}

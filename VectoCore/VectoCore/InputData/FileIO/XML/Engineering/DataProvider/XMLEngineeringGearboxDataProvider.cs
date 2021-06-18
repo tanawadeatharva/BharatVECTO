@@ -62,30 +62,17 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering.DataProvider
 			SourceType = (vehicle as IXMLResource).DataSource.SourceFile == fsBasePath ? DataSourceType.XMLEmbedded : DataSourceType.XMLFile;
 		}
 
-		public virtual GearboxType Type
-		{
-			get { return GetString(XMLNames.Gearbox_TransmissionType).ParseEnum<GearboxType>(); }
-		}
+		public virtual GearboxType Type => GetString(XMLNames.Gearbox_TransmissionType).ParseEnum<GearboxType>();
 
 
-		public virtual KilogramSquareMeter Inertia
-		{
-			get { return GetDouble(XMLNames.Gearbox_Inertia).SI<KilogramSquareMeter>(); }
-		}
+		public virtual KilogramSquareMeter Inertia => GetDouble(XMLNames.Gearbox_Inertia).SI<KilogramSquareMeter>();
 
-		public virtual Second TractionInterruption
-		{
-			get { return GetDouble(XMLNames.Gearbox_TractionInterruption).SI<Second>(); }
-		}
+		public virtual Second TractionInterruption => GetDouble(XMLNames.Gearbox_TractionInterruption).SI<Second>();
 
-		public virtual Second PowershiftShiftTime
-		{
-			get {
-				return GetNode(XMLNames.DriverModel_ShiftStrategyParameters_PowershiftShiftTime,
-								((XMLEngineeringInputDataProviderV07)Vehicle.Job.InputData).Document.DocumentElement, required: false)
-							?.InnerText.ToDouble().SI<Second>() ?? Constants.DefaultPowerShiftTime;
-			}
-		}
+		public virtual Second PowershiftShiftTime =>
+			GetNode(XMLNames.DriverModel_ShiftStrategyParameters_PowershiftShiftTime,
+					((XMLEngineeringInputDataProviderV07)Vehicle.Job.InputData).Document.DocumentElement, required: false)
+				?.InnerText.ToDouble().SI<Second>() ?? Constants.DefaultPowerShiftTime;
 
 		public virtual IList<ITransmissionInputData> Gears
 		{
@@ -104,15 +91,15 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering.DataProvider
 			}
 		}
 
-		public virtual bool DifferentialIncluded { get { return false; } }
-		public virtual double AxlegearRatio { get { return double.NaN; } }
+		public virtual bool DifferentialIncluded => false;
+		public virtual double AxlegearRatio => double.NaN;
 
 
 		public IXMLGearboxReader Reader { protected get; set; }
 
 		#region Overrides of AbstractXMLResource
 
-		protected override XNamespace SchemaNamespace { get { return NAMESPACE_URI; } }
+		protected override XNamespace SchemaNamespace => NAMESPACE_URI;
 		protected override DataSourceType SourceType { get; }
 
 		#endregion
@@ -134,12 +121,9 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering.DataProvider
 
 		#region Overrides of XMLEngineeringGearboxDataProviderV07
 
-		public override Second PowershiftShiftTime
-		{
-			get { return GetNode(XMLNames.DriverModel_ShiftStrategyParameters_PowershiftShiftTime, required: false)?.InnerText.ToDouble().SI<Second>() ?? Constants.DefaultPowerShiftTime; }
-		}
+		public override Second PowershiftShiftTime => GetNode(XMLNames.DriverModel_ShiftStrategyParameters_PowershiftShiftTime, required: false)?.InnerText.ToDouble().SI<Second>() ?? Constants.DefaultPowerShiftTime;
 
-		protected override XNamespace SchemaNamespace { get { return NAMESPACE_URI; } }
+		protected override XNamespace SchemaNamespace => NAMESPACE_URI;
 
 		#endregion
 	}
@@ -155,30 +139,18 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering.DataProvider
 			BasePath = basePath;
 		}
 
-		public virtual int Gear
-		{
-			get {
-				return XmlConvert.ToUInt16(
-					BaseNode.Attributes?.GetNamedItem(XMLNames.Gearbox_Gear_GearNumber_Attr).InnerText ?? "0");
-			}
-		}
+		public virtual int Gear =>
+			XmlConvert.ToUInt16(
+				BaseNode.Attributes?.GetNamedItem(XMLNames.Gearbox_Gear_GearNumber_Attr).InnerText ?? "0");
 
-		public virtual double Ratio
-		{
-			get {
-				return BaseNode.SelectSingleNode(XMLHelper.QueryLocalName(XMLNames.Gearbox_Gear_Ratio))?.InnerText.ToDouble() ??
-						double.NaN;
-			}
-		}
+		public virtual double Ratio =>
+			BaseNode.SelectSingleNode(XMLHelper.QueryLocalName(XMLNames.Gearbox_Gear_Ratio))?.InnerText.ToDouble() ??
+			double.NaN;
 
-		public virtual TableData LossMap
-		{
-			get {
-				return XMLHelper.ReadEntriesOrResource(
-					BaseNode, BasePath, XMLNames.Gearbox_Gear_TorqueLossMap, XMLNames.Gearbox_Gear_TorqueLossMap_Entry,
-					AttributeMappings.TransmissionLossmapMapping);
-			}
-		}
+		public virtual TableData LossMap =>
+			XMLHelper.ReadEntriesOrResource(
+				BaseNode, BasePath, XMLNames.Gearbox_Gear_TorqueLossMap, XMLNames.Gearbox_Gear_TorqueLossMap_Entry,
+				AttributeMappings.TransmissionLossmapMapping);
 
 		public virtual double Efficiency
 		{
@@ -188,10 +160,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering.DataProvider
 			}
 		}
 
-		public virtual DataSource DataSource
-		{
-			get { return _dataSource ?? (_dataSource = new DataSource() { SourceFile = BasePath, SourceType = DataSourceType.XMLEmbedded, SourceVersion = XMLHelper.GetVersionFromNamespaceUri(SchemaNamespace) }); }
-		}
+		public virtual DataSource DataSource => _dataSource ?? (_dataSource = new DataSource() { SourceFile = BasePath, SourceType = DataSourceType.XMLEmbedded, SourceVersion = XMLHelper.GetVersionFromNamespaceUri(SchemaNamespace) });
 
 		protected abstract XNamespace SchemaNamespace { get; }
 	}
@@ -210,33 +179,20 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering.DataProvider
 
 		#region Implementation of ITransmissionInputData
 
-		public virtual NewtonMeter MaxTorque
-		{
-			get {
-				return GetNode(XMLNames.Gearbox_Gears_MaxTorque, required: false)?.InnerText
-																				.ToDouble().SI<NewtonMeter>();
-			}
-		}
+		public virtual NewtonMeter MaxTorque =>
+			GetNode(XMLNames.Gearbox_Gears_MaxTorque, required: false)?.InnerText
+				.ToDouble().SI<NewtonMeter>();
 
-		public virtual PerSecond MaxInputSpeed
-		{
-			get { return GetNode(XMLNames.Gearbox_Gear_MaxSpeed, required: false)?.InnerText.ToDouble().RPMtoRad(); }
-		}
+		public virtual PerSecond MaxInputSpeed => GetNode(XMLNames.Gearbox_Gear_MaxSpeed, required: false)?.InnerText.ToDouble().RPMtoRad();
 
-		public virtual TableData ShiftPolygon
-		{
-			get {
-				return XMLHelper.ReadEntriesOrResource(
-					BaseNode, BasePath, XMLNames.Gearbox_Gears_Gear_ShiftPolygon, XMLNames.TorqueConverter_ShiftPolygon_Entry,
-					AttributeMappings.ShiftPolygonMapping);
-			}
-		}
-
+		public virtual TableData ShiftPolygon =>
+			XMLHelper.ReadEntriesOrResource(
+				BaseNode, BasePath, XMLNames.Gearbox_Gears_Gear_ShiftPolygon, XMLNames.TorqueConverter_ShiftPolygon_Entry,
+				AttributeMappings.ShiftPolygonMapping);
 
 		#endregion
 
-		protected override XNamespace SchemaNamespace { get { return NAMESPACE_URI; } }
-
+		protected override XNamespace SchemaNamespace => NAMESPACE_URI;
 	}
 
 	internal class XMLGearDataV10 : XMLGearDataV07
@@ -251,7 +207,6 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering.DataProvider
 		public XMLGearDataV10(XmlNode gearNode, string basePath) : base(gearNode, basePath) { }
 
 
-		protected override XNamespace SchemaNamespace { get { return NAMESPACE_URI; } }
-
+		protected override XNamespace SchemaNamespace => NAMESPACE_URI;
 	}
 }

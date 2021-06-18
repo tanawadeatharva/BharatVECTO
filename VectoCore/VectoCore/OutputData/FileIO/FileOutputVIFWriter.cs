@@ -14,11 +14,8 @@ namespace TUGraz.VectoCore.OutputData.FileIO
 		private string _jobFile;
 		private readonly int _numberOfManufacturingStages;
 		
-		public string XMLMultistageReportFileName
-		{
-			get { return Path.ChangeExtension(_jobFile, $"{REPORT_ENDING_PREFIX}{_numberOfManufacturingStages + 2}.xml"); }
-		}
-		
+		public string XMLMultistageReportFileName => Path.ChangeExtension(_jobFile, $"{REPORT_ENDING_PREFIX}{_numberOfManufacturingStages + 2}.xml");
+
 		public FileOutputVIFWriter(string jobFile, int numberOfManufacturingStages) : base(jobFile)
 		{
 			_jobFile = jobFile;

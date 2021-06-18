@@ -58,47 +58,23 @@ namespace TUGraz.VectoCore.Tests.Utils
 		private ITorqueConverter _torqueConverter;
 		private IGearboxInfo _gearboxInfoImplementation;
 
-		public IAxlegearInfo AxlegearInfo
-		{
-			get { return this; }
-		}
+		public IAxlegearInfo AxlegearInfo => this;
 
 		public IEngineInfo EngineInfo { get; set; }
 
-		public IEngineControl EngineCtl
-		{
-			get { return this; }
-		}
+		public IEngineControl EngineCtl => this;
 
-		public IVehicleInfo VehicleInfo
-		{
-			get { return this; }
-		}
+		public IVehicleInfo VehicleInfo => this;
 
-		public IClutchInfo ClutchInfo
-		{
-			get { return this; }
-		}
+		public IClutchInfo ClutchInfo => this;
 
-		public IBrakes Brakes
-		{
-			get { return this; }
-		}
+		public IBrakes Brakes => this;
 
-		public IWheelsInfo WheelsInfo
-		{
-			get { return this; }
-		}
+		public IWheelsInfo WheelsInfo => this;
 
-		public IDriverInfo DriverInfo
-		{
-			get { return this; }
-		}
+		public IDriverInfo DriverInfo => this;
 
-		public IDrivingCycleInfo DrivingCycleInfo
-		{
-			get { return this; }
-		}
+		public IDrivingCycleInfo DrivingCycleInfo => this;
 
 		public GearboxType GearboxType { get; set; }
 
@@ -106,10 +82,7 @@ namespace TUGraz.VectoCore.Tests.Utils
 		public bool TCLocked { get; set; }
 		public GearshiftPosition NextGear { get; private set; }
 
-		public Second TractionInterruption
-		{
-			get { return 1.SI<Second>(); }
-		}
+		public Second TractionInterruption => 1.SI<Second>();
 
 		public uint NumGears { get; set; }
 
@@ -117,27 +90,15 @@ namespace TUGraz.VectoCore.Tests.Utils
 		public MeterPerSquareSecond StartAcceleration { get; set; }
 		public NewtonMeter GearMaxTorque { get; set; }
 
-		public FuelType FuelType
-		{
-			get { return FuelType.DieselCI; }
-		}
+		public FuelType FuelType => FuelType.DieselCI;
 
 		public Second AbsTime { get; set; }
 
-		public IMileageCounter MileageCounter
-		{
-			get { return this; }
-		}
+		public IMileageCounter MileageCounter => this;
 
-		public IGearboxInfo GearboxInfo
-		{
-			get { return this; }
-		}
+		public IGearboxInfo GearboxInfo => this;
 
-		public IGearboxControl GearboxCtl
-		{
-			get { return this; }
-		}
+		public IGearboxControl GearboxCtl => this;
 
 		public IElectricMotorInfo ElectricMotorInfo(PowertrainPosition pos)
 		{
@@ -150,50 +111,32 @@ namespace TUGraz.VectoCore.Tests.Utils
 			set;
 		}
 
-		public ITorqueConverterInfo TorqueConverterInfo
-		{
-			get { return _torqueConverter; }
-		}
+		public ITorqueConverterInfo TorqueConverterInfo => _torqueConverter;
 
-		public ITorqueConverterControl TorqueConverterCtl
-		{
-			get { return _torqueConverter; }
-		}
+		public ITorqueConverterControl TorqueConverterCtl => _torqueConverter;
 
-		public IPowertainInfo PowertrainInfo
-		{
-			get { return this; }
-		}
+		public IPowertainInfo PowertrainInfo => this;
 
 		public IHybridControllerInfo HybridControllerInfo { get; }
 		public IHybridControllerCtl HybridControllerCtl { get; }
 		public IAngledriveInfo AngledriveInfo { get; }
 		public IDCDCConverter DCDCConverter { get; }
 
-		public bool IsTestPowertrain
-		{
-			get { return false; }
-		}
+		public bool IsTestPowertrain => false;
 
 		public Watt GearboxLoss()
 		{
-			throw new System.NotImplementedException();
+			throw new NotImplementedException();
 		}
 
 		public Second LastShift { get;  set; }
-		public Second LastUpshift
-		{
-			get { return _gearboxInfoImplementation.LastUpshift; }
-		}
+		public Second LastUpshift => _gearboxInfoImplementation.LastUpshift;
 
-		public Second LastDownshift
-		{
-			get { return _gearboxInfoImplementation.LastDownshift; }
-		}
+		public Second LastDownshift => _gearboxInfoImplementation.LastDownshift;
 
 		public GearData GetGearData(uint gear)
 		{
-			throw new System.NotImplementedException();
+			throw new NotImplementedException();
 		}
 
 		public PerSecond EngineSpeed { get; set; }
@@ -219,30 +162,15 @@ namespace TUGraz.VectoCore.Tests.Utils
 			throw new NotImplementedException();
 		}
 
-		public PerSecond EngineIdleSpeed
-		{
-			get { return EngineInfo.EngineIdleSpeed; }
-		}
+		public PerSecond EngineIdleSpeed => EngineInfo.EngineIdleSpeed;
 
-		public PerSecond EngineRatedSpeed
-		{
-			get { return EngineInfo.EngineRatedSpeed; }
-		}
+		public PerSecond EngineRatedSpeed => EngineInfo.EngineRatedSpeed;
 
-		public PerSecond EngineN95hSpeed
-		{
-			get { return EngineInfo.EngineN95hSpeed; }
-		}
+		public PerSecond EngineN95hSpeed => EngineInfo.EngineN95hSpeed;
 
-		public PerSecond EngineN80hSpeed
-		{
-			get { return EngineInfo.EngineN80hSpeed; }
-		}
+		public PerSecond EngineN80hSpeed => EngineInfo.EngineN80hSpeed;
 
-		public bool EngineOn
-		{
-			get { return EngineInfo.EngineOn; }
-		}
+		public bool EngineOn => EngineInfo.EngineOn;
 
 		public MeterPerSecond VehicleSpeed { get; set; }
 		public Kilogram VehicleMass { get; set; }
@@ -265,13 +193,13 @@ namespace TUGraz.VectoCore.Tests.Utils
 			return 0.SI<Newton>();
 		}
 
-		public MeterPerSecond MaxVehicleSpeed { get { return null; } }
+		public MeterPerSecond MaxVehicleSpeed => null;
 
 		public Meter Distance { get; set; }
 
 		public bool SetClutchClosed
 		{
-			set { _clutchClosed = value; }
+			set => _clutchClosed = value;
 		}
 
 		public bool ClutchClosed(Second absTime)
@@ -279,10 +207,7 @@ namespace TUGraz.VectoCore.Tests.Utils
 			return _clutchClosed;
 		}
 
-		public Watt ClutchLosses
-		{
-			get { throw new NotImplementedException(); }
-		}
+		public Watt ClutchLosses => throw new NotImplementedException();
 
 		public Watt BrakePower { get; set; }
 		public Radian RoadGradient { get; set; }
@@ -292,12 +217,12 @@ namespace TUGraz.VectoCore.Tests.Utils
 
 		public IReadOnlyList<DrivingCycleData.DrivingCycleEntry> LookAhead(Meter lookaheadDistance)
 		{
-			throw new System.NotImplementedException();
+			throw new NotImplementedException();
 		}
 
 		public IReadOnlyList<DrivingCycleData.DrivingCycleEntry> LookAhead(Second time)
 		{
-			throw new System.NotImplementedException();
+			throw new NotImplementedException();
 		}
 
 		public SpeedChangeEntry LastTargetspeedChange { get; set; }
@@ -327,7 +252,7 @@ namespace TUGraz.VectoCore.Tests.Utils
 
 		public ISimulationOutPort GetCycleOutPort()
 		{
-			throw new System.NotImplementedException();
+			throw new NotImplementedException();
 		}
 
 		public VectoRun.Status RunStatus { get; set; }
@@ -354,7 +279,7 @@ namespace TUGraz.VectoCore.Tests.Utils
 
 		public Watt SetAxlegearLoss
 		{
-			set { _axlegearLoss = value; }
+			set => _axlegearLoss = value;
 		}
 
 		public Watt AxlegearLoss()

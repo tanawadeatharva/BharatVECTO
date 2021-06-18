@@ -57,7 +57,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 		{
 			var validationService =
 				context.GetService(typeof(VectoValidationModeServiceContainer)) as VectoValidationModeServiceContainer;
-			return validationService == null ? ExecutionMode.Declaration : validationService.Mode;
+			return validationService?.Mode ?? ExecutionMode.Declaration;
 		}
 
 		protected static bool GetEmsMode(ValidationContext context)
@@ -71,7 +71,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 		{
 			var validationService =
 				context.GetService(typeof(VectoValidationModeServiceContainer)) as VectoValidationModeServiceContainer;
-			return validationService != null ? validationService.JobType : VectoSimulationJobType.ConventionalVehicle;
+			return validationService?.JobType ?? VectoSimulationJobType.ConventionalVehicle;
 
 		}
 
@@ -79,7 +79,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 		{
 			var validationService =
 				context.GetService(typeof(VectoValidationModeServiceContainer)) as VectoValidationModeServiceContainer;
-			return validationService != null ? validationService.EMPowertrainPosition : (PowertrainPosition?)null;
+			return validationService?.EMPowertrainPosition;
 		}
 
 	}

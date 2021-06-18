@@ -15,10 +15,7 @@ namespace TUGraz.VectoCore.InputData.Reader.ComponentData
 			WHRMap = whrMap;
 		}
 
-		public string Name
-		{
-			get { return WHRMap.Name; }
-		}
+		public string Name => WHRMap.Name;
 
 		public class Entry
 		{

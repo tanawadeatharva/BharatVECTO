@@ -87,17 +87,7 @@ namespace TUGraz.VectoCore.InputData.Reader.ComponentData
 			if (!extendLossMap) {
 				return new TransmissionLossMap(entries, gearRatio, gearName);
 			}
-			var orig = "";
-			entries.ForEach(
-				x =>
-					orig +=
-						string.Format("{0},{1},{2}" + Environment.NewLine, x.InputSpeed.AsRPM, x.InputTorque.Value(), x.TorqueLoss.Value()));
 			entries = ExtendLossMap(entries);
-			var extended = "";
-			entries.ForEach(
-				x =>
-					extended +=
-						string.Format("{0},{1},{2}" + Environment.NewLine, x.InputSpeed.AsRPM, x.InputTorque.Value(), x.TorqueLoss.Value()));
 			return new TransmissionLossMap(entries, gearRatio, gearName);
 		}
 
@@ -157,9 +147,9 @@ namespace TUGraz.VectoCore.InputData.Reader.ComponentData
 				if (speedBucket.Value.Count < 2) {
 					continue;
 				}
-				double k, d, r;
-				VectoMath.LeastSquaresFitting(speedBucket.Value, x => x.InputTorque.Value(), x => x.TorqueLoss.Value(), out k, out d,
-					out r);
+
+				VectoMath.LeastSquaresFitting(speedBucket.Value, x => x.InputTorque.Value(), x => x.TorqueLoss.Value(), out var k, out var d,
+					out var r);
 
 				for (var i = 2; i <= DeclarationData.LossMapExtrapolationFactor; i++) {
 					var inTq = i * maxTorque;

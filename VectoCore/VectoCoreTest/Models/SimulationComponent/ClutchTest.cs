@@ -196,10 +196,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 		public PerSecond EngineN95hSpeed { get; set; }
 		public PerSecond EngineN80hSpeed { get; set; }
 
-		public bool EngineOn
-		{
-			get { throw new System.NotImplementedException(); }
-		}
+		public bool EngineOn => throw new System.NotImplementedException();
 
 		protected override void DoWriteModalResults(Second time, Second simulationInterval, IModalDataContainer container)
 		{

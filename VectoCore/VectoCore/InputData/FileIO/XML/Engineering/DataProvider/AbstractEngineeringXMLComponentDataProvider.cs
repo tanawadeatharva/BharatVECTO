@@ -49,19 +49,10 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering.DataProvider
 		}
 
 
-		public override DigestData DigestValue
-		{
-			get { return null; }
-		}
+		public override DigestData DigestValue => null;
 
-		public override string CertificationNumber
-		{
-			get { return "N.A."; }
-		}
+		public override string CertificationNumber => "N.A.";
 
-		public override CertificationMethod CertificationMethod
-		{
-			get { return CertificationMethod.NotCertified; }
-		}
+		public override CertificationMethod CertificationMethod => CertificationMethod.NotCertified;
 	}
 }

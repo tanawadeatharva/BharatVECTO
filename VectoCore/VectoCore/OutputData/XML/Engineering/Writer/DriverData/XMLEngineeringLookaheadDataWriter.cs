@@ -95,10 +95,7 @@ namespace TUGraz.VectoCore.OutputData.XML.Engineering.Writer.DriverData
 		}
 
 
-		public override XNamespace ComponentDataNamespace
-		{
-			get { return _componentDataNamespace ?? (_componentDataNamespace = Writer.RegisterNamespace(NAMESPACE_URI)); }
-		}
+		public override XNamespace ComponentDataNamespace => _componentDataNamespace ?? (_componentDataNamespace = Writer.RegisterNamespace(NAMESPACE_URI));
 
 		#endregion
 	}

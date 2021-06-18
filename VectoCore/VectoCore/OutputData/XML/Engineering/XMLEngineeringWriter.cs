@@ -113,7 +113,7 @@ namespace TUGraz.VectoCore.OutputData.XML.Engineering
 				new XElement(
 					v10Inp + XMLNames.VectoComponentEngineering,
 					new XAttribute(
-						xsns + "type", string.Format("{0}:VectoComponentEngineeringType", GetNSPrefix(v10Def.NamespaceName))),
+						xsns + "type", $"{GetNSPrefix(v10Def.NamespaceName)}:VectoComponentEngineeringType"),
 					GetNamespaceAttributes(),
 					GetSchemaLocations(),
 					new XElement(
@@ -190,17 +190,14 @@ namespace TUGraz.VectoCore.OutputData.XML.Engineering
 
 		public string GetComponentFilename(IComponentInputData component)
 		{
-			string formatString = null;
-			component.Switch()
-					.Case<IEngineEngineeringInputData>(c => formatString = "ENG_{0}.xml");
-
-			return RemoveInvalidFileCharacters(string.Format(formatString ?? "{0}", component.Model));
+			var formatString = component is IEngineEngineeringInputData ? "ENG_{0}.xml" : "{0}";
+			return RemoveInvalidFileCharacters(string.Format(formatString, component.Model));
 		}
 
 		public string RemoveInvalidFileCharacters(string filename)
 		{
-			string regexSearch = new string(Path.GetInvalidFileNameChars()) + new string(Path.GetInvalidPathChars());
-			Regex r = new Regex(string.Format("[{0}]", Regex.Escape(regexSearch)));
+			var regexSearch = new string(Path.GetInvalidFileNameChars()) + new string(Path.GetInvalidPathChars());
+			var r = new Regex($"[{Regex.Escape(regexSearch)}]");
 			return r.Replace(filename, "");
 		}
 	}

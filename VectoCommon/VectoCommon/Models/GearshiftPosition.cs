@@ -24,17 +24,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			return Name;
 		}
 
-		public string Name
-		{
-			get {
-				return $"{Gear}{(Gear == 0 ? "" : (TorqueConverterLocked.HasValue ? (TorqueConverterLocked.Value ? "L" : "C") : ""))}";
-			}
-		}
+		public string Name => $"{Gear}{(Gear == 0 ? "" : (TorqueConverterLocked.HasValue ? (TorqueConverterLocked.Value ? "L" : "C") : ""))}";
 
-		public bool Engaged
-		{
-			get { return Gear != 0; }
-		}
+		public bool Engaged => Gear != 0;
 
 		public override bool Equals(object x)
 		{

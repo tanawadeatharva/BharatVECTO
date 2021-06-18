@@ -49,10 +49,7 @@ namespace TUGraz.VectoCore.OutputData.XML.Engineering.Writer
 
 		#region Overrides of AbstractXMLWriter
 
-		public override XNamespace ComponentDataNamespace
-		{
-			get { return _componentDataNamespace ?? (_componentDataNamespace = Writer.RegisterNamespace(NAMESPACE_URI)); }
-		}
+		public override XNamespace ComponentDataNamespace => _componentDataNamespace ?? (_componentDataNamespace = Writer.RegisterNamespace(NAMESPACE_URI));
 
 		#endregion
 
@@ -73,7 +70,7 @@ namespace TUGraz.VectoCore.OutputData.XML.Engineering.Writer
 							data.LossMap,
 							Path.Combine(
 								Writer.Configuration.BasePath,
-								Writer.RemoveInvalidFileCharacters(string.Format("RET_{0}.vrlm", data.Model)))))
+								Writer.RemoveInvalidFileCharacters($"RET_{data.Model}.vrlm"))))
 			};
 			return retarder;
 		}

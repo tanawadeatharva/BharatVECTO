@@ -48,7 +48,7 @@ namespace HashingTool.ViewModel.UserControl
 
 		public string DigestValueRead
 		{
-			get { return _digestValueRead; }
+			get => _digestValueRead;
 			internal set {
 				if (_digestValueRead == value) {
 					return;
@@ -78,7 +78,7 @@ namespace HashingTool.ViewModel.UserControl
 
 		public DateTime? Date
 		{
-			get { return _date; }
+			get => _date;
 			internal set {
 				if (_date == value) {
 					return;

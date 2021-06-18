@@ -118,9 +118,9 @@ namespace TUGraz.VectoCore.Tests.Integration.Declaration
 			}
 
 			var fcNode = manufacturerReport.XPathSelectElement(
-				string.Format("//*[local-name()='Results']/*[local-name()='Result'][{0}]//*[local-name()='FuelConsumption' and @unit='g/km']", runIdx));
+				$"//*[local-name()='Results']/*[local-name()='Result'][{runIdx}]//*[local-name()='FuelConsumption' and @unit='g/km']");
 			var co2Node = manufacturerReport.XPathSelectElement(
-				string.Format("//*[local-name()='Results']/*[local-name()='Result'][{0}]//*[local-name()='CO2' and @unit='g/km']", runIdx));
+				$"//*[local-name()='Results']/*[local-name()='Result'][{runIdx}]//*[local-name()='CO2' and @unit='g/km']");
 
 			Console.WriteLine("fc: {0}  co2: {1}", fcNode.Value, co2Node.Value);
 

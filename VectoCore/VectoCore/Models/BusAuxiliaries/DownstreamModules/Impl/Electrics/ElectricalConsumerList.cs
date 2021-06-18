@@ -28,12 +28,6 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.Electric
 
 		// Interface implementation
 		
-		public IReadOnlyList<ElectricalConsumer> Items
-		{
-			get {
-				return _items;
-			}
-		}
-		
+		public IReadOnlyList<ElectricalConsumer> Items => _items;
 	}
 }

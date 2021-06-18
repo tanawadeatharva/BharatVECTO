@@ -84,10 +84,10 @@ namespace TUGraz.VectoCore.Models.Declaration
 
 		#region Overrides of LookupData
 
-		protected override string ResourceId { get { return DeclarationData.DeclarationDataResourcePrefix + ".CO2Standards.WeightingGroups.csv"; } }
-		protected override string ErrorMessage { get {
-			return "WeightingGroup Lookup Error: no entry found for group {0}, sleeper cab: {1}, engine rated power {2}";
-		} }
+		protected override string ResourceId => DeclarationData.DeclarationDataResourcePrefix + ".CO2Standards.WeightingGroups.csv";
+
+		protected override string ErrorMessage => "WeightingGroup Lookup Error: no entry found for group {0}, sleeper cab: {1}, engine rated power {2}";
+
 		protected override void ParseData(DataTable table)
 		{
 			foreach (DataRow row in table.Rows) {

@@ -79,7 +79,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 					errors.Add(e.Message);
 				}, true);
 				if (mrfErrors) {
-					LogManager.GetLogger(typeof(XMLMonitoringReport).FullName).Warn("XML Validation of manufacturer record failed! errors: {0}", string.Join(System.Environment.NewLine, errors));
+					LogManager.GetLogger(typeof(XMLMonitoringReport).FullName).Warn("XML Validation of manufacturer record failed! errors: {0}", string.Join(Environment.NewLine, errors));
 				}
 
 				var mrfType = mrf.Root?.GetSchemaInfo()?.SchemaType?.QualifiedName ?? new XmlQualifiedName("urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:AbstractVectoOutputManufacturerType");
@@ -93,7 +93,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 					new XAttribute(XNamespace.Xmlns + prefix, mrfType.Namespace),
 					new XElement(
 						tns + "ManufacturerRecord",
-						new XAttribute(xsi + "type", string.Format("{0}:{1}", prefix, mrfType.Name)),
+						new XAttribute(xsi + "type", $"{prefix}:{mrfType.Name}"),
 						new XAttribute("xmlns", mrfType.Namespace),
 						new XAttribute(XNamespace.Xmlns + "m", tns),
 						GetManufacturerData(mrf)),
@@ -133,8 +133,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 					new XAttribute(XNamespace.Xmlns + "di", di),
 					new XAttribute(
 						xsi + "schemaLocation",
-						string.Format(
-							"{0} {1}VectoMonitoring.xsd", NAMESPACE_BASE_URI, AbstractXMLWriter.SchemaLocationBaseUrl))
+						$"{NAMESPACE_BASE_URI} {AbstractXMLWriter.SchemaLocationBaseUrl}VectoMonitoring.xsd")
 				)
 			);
 			return retVal;
@@ -147,7 +146,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 			for (var i = 0; i < axleData.Length; i++) {
 				axleData[i] = new XElement(tns + "Axle",
 					new XAttribute("axleNumber", i+1),
-					new XElement(tns + "Tyre", GetStandardFields(string.Format("TYRE_{0}", i+1))
+					new XElement(tns + "Tyre", GetStandardFields($"TYRE_{i + 1}")
 					));
 			}
 
@@ -185,9 +184,9 @@ namespace TUGraz.VectoCore.OutputData.XML
 		private object[] GetStandardFields(string prefix)
 		{
 			return new[] {
-				new XElement(tns + "Manufacturer", string.Format("##{0}_MANUFACTURER##", prefix)),
-				new XElement(tns + "ManufacturerAddress", string.Format("##{0}_MANUFACTURERADDRESS##", prefix)),
-				new XElement(tns + "Make", string.Format("##{0}_MAKE##", prefix))
+				new XElement(tns + "Manufacturer", $"##{prefix}_MANUFACTURER##"),
+				new XElement(tns + "ManufacturerAddress", $"##{prefix}_MANUFACTURERADDRESS##"),
+				new XElement(tns + "Make", $"##{prefix}_MAKE##")
 			};
 		}
 

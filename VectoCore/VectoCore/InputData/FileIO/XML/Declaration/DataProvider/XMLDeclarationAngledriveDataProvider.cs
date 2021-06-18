@@ -62,38 +62,22 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 		#region Implementation of IAngledriveInputData
 
-		public virtual AngledriveType Type
-		{
-			get { return Vehicle.AngledriveType; }
-		}
+		public virtual AngledriveType Type => Vehicle.AngledriveType;
 
-		public virtual double Ratio
-		{
-			get { return GetDouble(XMLNames.AngleDrive_Ratio); }
-		}
+		public virtual double Ratio => GetDouble(XMLNames.AngleDrive_Ratio);
 
-		public virtual TableData LossMap
-		{
-			get {
-				return ReadTableData(
-					XMLNames.AngleDrive_TorqueLossMap, XMLNames.Angledrive_LossMap_Entry,
-					AttributeMappings.TransmissionLossmapMapping);
-			}
-		}
+		public virtual TableData LossMap =>
+			ReadTableData(
+				XMLNames.AngleDrive_TorqueLossMap, XMLNames.Angledrive_LossMap_Entry,
+				AttributeMappings.TransmissionLossmapMapping);
 
-		public virtual double Efficiency
-		{
-			get { throw new VectoException("Efficiency not supported in Declaration Mode!"); }
-		}
+		public virtual double Efficiency => throw new VectoException("Efficiency not supported in Declaration Mode!");
 
 		#endregion
 
 		#region Overrides of AbstractXMLResource
 
-		protected override XNamespace SchemaNamespace
-		{
-			get { return NAMESPACE_URI; }
-		}
+		protected override XNamespace SchemaNamespace => NAMESPACE_URI;
 
 		protected override DataSourceType SourceType { get; }
 
@@ -119,10 +103,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 			IXMLDeclarationVehicleData vehicle, XmlNode componentNode, string sourceFile) : base(
 			vehicle, componentNode, sourceFile) { }
 
-		protected override XNamespace SchemaNamespace
-		{
-			get { return NAMESPACE_URI; }
-		}
+		protected override XNamespace SchemaNamespace => NAMESPACE_URI;
 	}
 
 	// ---------------------------------------------------------------------------------------
@@ -141,17 +122,11 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 		#region Overrides of AbstractCommonComponentType
 
-		public override string CertificationNumber
-		{
-			get { return GetString(XMLNames.Component_CertificationNumber, required: false); }
-		}
+		public override string CertificationNumber => GetString(XMLNames.Component_CertificationNumber, required: false);
 
 		#endregion
 
 
-		protected override XNamespace SchemaNamespace
-		{
-			get { return NAMESPACE_URI; }
-		}
+		protected override XNamespace SchemaNamespace => NAMESPACE_URI;
 	}
 }

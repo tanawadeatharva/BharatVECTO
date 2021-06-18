@@ -66,10 +66,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 
 		#region Implementation of IXMLJobDataReader
 
-		public virtual IVehicleDeclarationInputData CreateVehicle
-		{
-			get { return _vehicle ?? (_vehicle = CreateComponent(XMLNames.Component_Vehicle, VehicleCreator)); }
-		}
+		public virtual IVehicleDeclarationInputData CreateVehicle => _vehicle ?? (_vehicle = CreateComponent(XMLNames.Component_Vehicle, VehicleCreator));
 
 		#endregion
 
@@ -130,7 +127,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 			var vehicle = Factory.CreateVehicleData(version, JobData, vehicleNode, sourceFile);
 
 			vehicle.ComponentReader = GetReader(vehicle, vehicle.ComponentNode, Factory.CreateComponentReader);
-			vehicle.ADASReader = GetReader(vehicle, vehicle.ADASNode, Factory.CreateADASReader); ;
+			vehicle.ADASReader = GetReader(vehicle, vehicle.ADASNode, Factory.CreateADASReader);
 			vehicle.PTOReader = GetReader(vehicle, vehicle.PTONode, Factory.CreatePTOReader);
 
 			return vehicle;
@@ -162,10 +159,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 			_primaryBusJobData = busJobData;
 		}
 
-		public IVehicleDeclarationInputData CreateVehicle
-		{
-			get { return _vehicle ?? (_vehicle = CreateComponent(XMLNames.Component_Vehicle, VehicleCreator)); }
-		}
+		public IVehicleDeclarationInputData CreateVehicle => _vehicle ?? (_vehicle = CreateComponent(XMLNames.Component_Vehicle, VehicleCreator));
 
 		protected IVehicleDeclarationInputData VehicleCreator(string version, XmlNode vehicleNode, string sourceFile)
 		{

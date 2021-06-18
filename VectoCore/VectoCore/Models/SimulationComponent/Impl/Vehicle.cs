@@ -244,40 +244,19 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			return AirdragData.CrossWindCorrectionCurve.AverageAirDragPowerLoss(v1, v2, ModelData.AirDensity);
 		}
 
-		public Meter Distance
-		{
-			get { return PreviousState.Distance; }
-		}
+		public Meter Distance => PreviousState.Distance;
 
-		public MeterPerSecond VehicleSpeed
-		{
-			get { return PreviousState.Velocity; }
-		}
+		public MeterPerSecond VehicleSpeed => PreviousState.Velocity;
 
-		public bool VehicleStopped
-		{
-			get { return PreviousState.Velocity.IsEqual(0.SI<MeterPerSecond>(), 0.01.SI<MeterPerSecond>()); }
-		}
+		public bool VehicleStopped => PreviousState.Velocity.IsEqual(0.SI<MeterPerSecond>(), 0.01.SI<MeterPerSecond>());
 
-		public Kilogram VehicleMass
-		{
-			get { return ModelData.TotalCurbMass; }
-		}
+		public Kilogram VehicleMass => ModelData.TotalCurbMass;
 
-		public Kilogram VehicleLoading
-		{
-			get { return ModelData.Loading; }
-		}
+		public Kilogram VehicleLoading => ModelData.Loading;
 
-		public Kilogram TotalMass
-		{
-			get { return ModelData.TotalVehicleMass; }
-		}
+		public Kilogram TotalMass => ModelData.TotalVehicleMass;
 
-		public CubicMeter CargoVolume
-		{
-			get { return ModelData.CargoVolume; }
-		}
+		public CubicMeter CargoVolume => ModelData.CargoVolume;
 
 		public class VehicleState
 		{
@@ -291,15 +270,15 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			public MeterPerSecond Velocity = 0.SI<MeterPerSecond>();
 			public MeterPerSquareSecond Acceleration = 0.SI<MeterPerSquareSecond>();
 
-			public override string ToString()
-			{
-				return
-					string.Format(
-						"v: {0}  a: {1}, dt: {2}, driver_acc: {3}, roll_res: {4}, slope_res: {5}, air_drag: {6}, traction force: {7}",
-						Velocity, Acceleration, SimulationInterval, DriverAcceleration, RollingResistance, SlopeResistance,
-						AirDragResistance,
-						VehicleTractionForce);
-			}
+			public override string ToString() =>
+				$"v: {Velocity}  " +
+				$"a: {Acceleration}, " +
+				$"dt: {SimulationInterval}, " +
+				$"driver_acc: {DriverAcceleration}, " +
+				$"roll_res: {RollingResistance}, " +
+				$"slope_res: {SlopeResistance}, " +
+				$"air_drag: {AirDragResistance}, " +
+				$"traction force: {VehicleTractionForce}";
 		}
 	}
 }

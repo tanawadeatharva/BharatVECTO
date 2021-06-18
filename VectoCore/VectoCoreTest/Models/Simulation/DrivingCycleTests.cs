@@ -138,9 +138,11 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 
 			for (var i = 0; i < 100; i++) {
 				response = cycle.OutPort().Request(absTime, dt);
-				response.Switch()
-					.Case<ResponseFailTimeInterval>(r => dt = r.DeltaT)
-					.Case<ResponseSuccess>(r => {
+				switch (response) {
+					case ResponseFailTimeInterval r: 
+						dt = r.DeltaT; 
+						break;
+					case ResponseSuccess _:
 						container.CommitSimulationStep(absTime, dt);
 						Assert.AreEqual(absTime, outPort.AbsTime);
 						Assert.AreEqual(dt, outPort.Dt);
@@ -158,8 +160,10 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 
 						absTime += dt;
 						dt = 1.SI<Second>();
-					})
-					.Default(r => { throw new UnexpectedResponseException("Got an unexpected response", r); });
+						break;
+					default:
+						throw new UnexpectedResponseException("Got an unexpected response", response);
+				}
 			}
 		}
 

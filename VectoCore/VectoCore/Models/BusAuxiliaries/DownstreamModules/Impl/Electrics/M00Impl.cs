@@ -56,10 +56,7 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.Electric
 
 		#region Implementation of IM0_NonSmart_AlternatorsSetEfficiency
 
-		public Ampere GetHVACElectricalCurrentDemand
-		{
-			get { return _ElectricalPowerW / _powernetVoltage; }
-		}
+		public Ampere GetHVACElectricalCurrentDemand => _ElectricalPowerW / _powernetVoltage;
 
 		public double AlternatorsEfficiency
 		{

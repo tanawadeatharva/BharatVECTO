@@ -44,8 +44,7 @@ namespace TUGraz.VectoCore.Utils
 			double defaultValue = default(double))
 		{
 			if (row.Table.Columns.Contains(columnName)) {
-				double result;
-				if (double.TryParse(row.Field<string>(columnName), NumberStyles.Any, CultureInfo.InvariantCulture, out result)) {
+				if (double.TryParse(row.Field<string>(columnName), NumberStyles.Any, CultureInfo.InvariantCulture, out var result)) {
 					return result;
 				}
 			}
@@ -70,7 +69,7 @@ namespace TUGraz.VectoCore.Utils
 		public static double ParseDouble(this DataRow row, string columnName)
 		{
 			if (!row.Table.Columns.Contains(columnName)) {
-				throw new KeyNotFoundException(string.Format("Column {0} was not found in DataRow.", columnName));
+				throw new KeyNotFoundException($"Column {columnName} was not found in DataRow.");
 			}
 			return row.ParseDouble(row.Table.Columns[columnName]);
 		}
@@ -80,27 +79,25 @@ namespace TUGraz.VectoCore.Utils
 			try {
 				return row.Field<string>(column).ToDouble();
 			} catch (IndexOutOfRangeException e) {
-				throw new VectoException(string.Format("Field {0} was not found in DataRow.", column), e);
+				throw new VectoException($"Field {column} was not found in DataRow.", e);
 			} catch (NullReferenceException e) {
-				throw new VectoException(string.Format("Field {0} must not be null.", column), e);
+				throw new VectoException($"Field {column} must not be null.", e);
 			} catch (FormatException e) {
-				throw new VectoException(string.Format("Field {0} is not in a valid number format: {1}", column,
-					row.Field<string>(column)), e);
+				throw new VectoException($"Field {column} is not in a valid number format: {row.Field<string>(column)}", e);
 			} catch (OverflowException e) {
-				throw new VectoException(string.Format("Field {0} has a value too high or too low: {1}", column,
-					row.Field<string>(column)), e);
+				throw new VectoException($"Field {column} has a value too high or too low: {row.Field<string>(column)}", e);
 			} catch (ArgumentNullException e) {
-				throw new VectoException(string.Format("Field {0} contains null which cannot be converted to a number.", column),
+				throw new VectoException($"Field {column} contains null which cannot be converted to a number.",
 					e);
 			} catch (Exception e) {
-				throw new VectoException(string.Format("Field {0}: {1}", column, e.Message), e);
+				throw new VectoException($"Field {column}: {e.Message}", e);
 			}
 		}
 
 		public static bool ParseBoolean(this DataRow row, string columnName)
 		{
 			if (!row.Table.Columns.Contains(columnName)) {
-				throw new KeyNotFoundException(string.Format("Column {0} was not found in DataRow.", columnName));
+				throw new KeyNotFoundException($"Column {columnName} was not found in DataRow.");
 			}
 			return row.Field<string>(row.Table.Columns[columnName]).ToBoolean();
 		}

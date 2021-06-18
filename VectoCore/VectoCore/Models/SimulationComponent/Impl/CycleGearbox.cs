@@ -89,9 +89,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		{
 			var dt = Constants.SimulationSettings.TargetTimeInterval;
 
-			var tcLocked = DataBus.DrivingCycleInfo.CycleData.LeftSample.TorqueConverterActive != null
-				? !DataBus.DrivingCycleInfo.CycleData.LeftSample.TorqueConverterActive
-				: null;
+			var tcLocked = !DataBus.DrivingCycleInfo.CycleData.LeftSample.TorqueConverterActive;
 			Gear = new GearshiftPosition(GetGearFromCycle(), tcLocked);
 
 			if (TorqueConverter != null && Gear.TorqueConverterLocked == null) {
@@ -135,7 +133,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			return response;
 		}
 
-		public override bool TCLocked { get { return Gear.TorqueConverterLocked ?? false; } }
+		public override bool TCLocked => Gear.TorqueConverterLocked ?? false;
 
 		/// <summary>
 		/// Requests the Gearbox to deliver torque and angularVelocity
@@ -206,9 +204,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		{
 			Disengaged = null;
 
-			var tcLocked = DataBus.DrivingCycleInfo.CycleData.LeftSample.TorqueConverterActive != null
-				? !DataBus.DrivingCycleInfo.CycleData.LeftSample.TorqueConverterActive
-				: null;
+			var tcLocked = !DataBus.DrivingCycleInfo.CycleData.LeftSample.TorqueConverterActive;
 			Gear = new GearshiftPosition(GetGearFromCycle(), tcLocked);
 
 
@@ -451,14 +447,14 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		public override Second LastUpshift
 		{
-			get { throw new System.NotImplementedException(); }
-			protected internal set { throw new System.NotImplementedException(); }
+			get => throw new NotImplementedException();
+			protected internal set => throw new NotImplementedException();
 		}
 
 		public override Second LastDownshift
 		{
-			get { throw new System.NotImplementedException(); }
-			protected internal set { throw new System.NotImplementedException(); }
+			get => throw new NotImplementedException();
+			protected internal set => throw new NotImplementedException();
 		}
 
 		public override GearshiftPosition NextGear
@@ -532,8 +528,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		public override bool DisengageGearbox
 		{
-			get { return false; }
-			set { throw new System.NotImplementedException(); }
+			get => false;
+			set => throw new NotImplementedException();
 		}
 
 		public override void TriggerGearshift(Second absTime, Second dt)
@@ -564,23 +560,20 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			public override GearshiftPosition InitGear(Second absTime, Second dt, NewtonMeter torque, PerSecond outAngularVelocity)
 			{
-				throw new System.NotImplementedException();
+				throw new NotImplementedException();
 			}
 
 			public override GearshiftPosition Engage(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity)
 			{
-				throw new System.NotImplementedException();
+				throw new NotImplementedException();
 			}
 
 			public override void Disengage(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity)
 			{
-				throw new System.NotImplementedException();
+				throw new NotImplementedException();
 			}
 
-			public override GearshiftPosition NextGear
-			{
-				get { throw new System.NotImplementedException(); }
-			}
+			public override GearshiftPosition NextGear => throw new NotImplementedException();
 
 			public override ShiftPolygon ComputeDeclarationShiftPolygon(
 				GearboxType gearboxType, int i, EngineFullLoadCurve engineDataFullLoadCurve, IList<ITransmissionInputData> gearboxGears,

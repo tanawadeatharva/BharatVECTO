@@ -109,25 +109,13 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl
 			_TotalCycleFuelConsumptionCompressorOffContinuouslyAggregate += s12 * stepTimeInSeconds;
 		}
 
-		public NormLiter LitresOfAirCompressorOnContinually
-		{
-			get { return _LitresOfAirCompressorOnContinuallyAggregate; }
-		}
+		public NormLiter LitresOfAirCompressorOnContinually => _LitresOfAirCompressorOnContinuallyAggregate;
 
-		public NormLiter LitresOfAirCompressorOnOnlyInOverrun
-		{
-			get { return _LitresOfAirCompressorOnOnlyInOverrunAggregate; }
-		}
+		public NormLiter LitresOfAirCompressorOnOnlyInOverrun => _LitresOfAirCompressorOnOnlyInOverrunAggregate;
 
-		public Kilogram TotalCycleFuelConsumptionCompressorOnContinuously
-		{
-			get { return _TotalCycleFuelConsumptionCompressorOnContinuouslyAggregate; }
-		}
+		public Kilogram TotalCycleFuelConsumptionCompressorOnContinuously => _TotalCycleFuelConsumptionCompressorOnContinuouslyAggregate;
 
-		public Kilogram TotalCycleFuelConsumptionCompressorOffContinuously
-		{
-			get { return _TotalCycleFuelConsumptionCompressorOffContinuouslyAggregate; }
-		}
+		public Kilogram TotalCycleFuelConsumptionCompressorOffContinuously => _TotalCycleFuelConsumptionCompressorOffContinuouslyAggregate;
 
 		#endregion
 	}

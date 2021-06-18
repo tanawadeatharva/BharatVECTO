@@ -57,10 +57,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent
 			return response;
 		}
 
-		public Watt ElectricAuxPower { get { return PreviousState.AuxPower; } }
-		public Watt ChargePower { get { return PreviousState.ChargePower; } }
-		public Watt BatteryPower { get { return PreviousState.BatteryPower; } }
-		public Watt ConsumerPower { get { return PreviousState.ConsumerPower; } }
+		public Watt ElectricAuxPower => PreviousState.AuxPower;
+		public Watt ChargePower => PreviousState.ChargePower;
+		public Watt BatteryPower => PreviousState.BatteryPower;
+		public Watt ConsumerPower => PreviousState.ConsumerPower;
 
 		protected override void DoWriteModalResults(Second absTime, Second dt, IModalDataContainer container)
 		{
@@ -107,15 +107,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent
 
 		#region Implementation of IRESSInfo
 
-		public Volt InternalCellVoltage
-		{
-			get { return Battery.InternalVoltage; }
-		}
+		public Volt InternalCellVoltage => Battery.InternalVoltage;
 
-		public double StateOfCharge
-		{
-			get { return Battery.StateOfCharge; }
-		}
+		public double StateOfCharge => Battery.StateOfCharge;
 
 		public Watt MaxChargePower(Second dt)
 		{

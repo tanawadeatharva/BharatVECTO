@@ -72,18 +72,9 @@ namespace TUGraz.VectoCore.Models.Declaration
 			}
 		}
 
-		protected override string ResourceId
-		{
-			get { return DeclarationData.DeclarationDataResourcePrefix + ".ADAS.ADAS_Combinations.csv"; }
-		}
+		protected override string ResourceId => DeclarationData.DeclarationDataResourcePrefix + ".ADAS.ADAS_Combinations.csv";
 
-		protected override string ErrorMessage
-		{
-			get {
-				return
-					"ADAS Combination Lookup Error: No entry found for engine stop/start: {0}, eco roll: {1}, PCC: {2}";
-			}
-		}
+		protected override string ErrorMessage => "ADAS Combination Lookup Error: No entry found for engine stop/start: {0}, eco roll: {1}, PCC: {2}";
 
 		protected override void ParseData(DataTable table)
 		{

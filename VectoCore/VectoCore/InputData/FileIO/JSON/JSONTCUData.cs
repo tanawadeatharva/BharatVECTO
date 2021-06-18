@@ -18,142 +18,73 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 		#region Implementation of IGearshiftEngineeringInputData
 
-		public virtual Second MinTimeBetweenGearshift
-		{
-			get {
-				return Body[JsonKeys.Gearbox_ShiftTime] == null
-					? DeclarationData.Gearbox.MinTimeBetweenGearshifts
-					: Body.GetEx<double>(JsonKeys.Gearbox_ShiftTime).SI<Second>();
-			}
-		}
+		public virtual Second MinTimeBetweenGearshift =>
+			Body[JsonKeys.Gearbox_ShiftTime] == null
+				? DeclarationData.Gearbox.MinTimeBetweenGearshifts
+				: Body.GetEx<double>(JsonKeys.Gearbox_ShiftTime).SI<Second>();
 
-		public virtual double TorqueReserve
-		{
-			get { return Body[JsonKeys.Gearbox_TorqueReserve] == null ?
-					DeclarationData.GearboxTCU.TorqueReserve
-					:Body.GetEx<double>(JsonKeys.Gearbox_TorqueReserve) / 100.0; }
-		}
+		public virtual double TorqueReserve =>
+			Body[JsonKeys.Gearbox_TorqueReserve] == null ?
+				DeclarationData.GearboxTCU.TorqueReserve
+				:Body.GetEx<double>(JsonKeys.Gearbox_TorqueReserve) / 100.0;
 
-		public Second DownshiftAfterUpshiftDelay
-		{
-			get {
-				return Body["DownshiftAfterUpshiftDelay"] == null
-					? DeclarationData.Gearbox.DownshiftAfterUpshiftDelay
-					: Body.GetEx<double>("DownshiftAfterUpshiftDelay").SI<Second>();
-			}
-		}
+		public Second DownshiftAfterUpshiftDelay =>
+			Body["DownshiftAfterUpshiftDelay"] == null
+				? DeclarationData.Gearbox.DownshiftAfterUpshiftDelay
+				: Body.GetEx<double>("DownshiftAfterUpshiftDelay").SI<Second>();
 
-		public Second UpshiftAfterDownshiftDelay
-		{
-			get {
-				return Body["UpshiftAfterDownshiftDelay"] == null
-					? DeclarationData.Gearbox.UpshiftAfterDownshiftDelay
-					: Body.GetEx<double>("UpshiftAfterDownshiftDelay").SI<Second>();
-			}
-		}
+		public Second UpshiftAfterDownshiftDelay =>
+			Body["UpshiftAfterDownshiftDelay"] == null
+				? DeclarationData.Gearbox.UpshiftAfterDownshiftDelay
+				: Body.GetEx<double>("UpshiftAfterDownshiftDelay").SI<Second>();
 
-		public MeterPerSquareSecond UpshiftMinAcceleration
-		{
-			get {
-				return Body["UpshiftMinAcceleration"] == null
-					? DeclarationData.Gearbox.UpshiftMinAcceleration
-					: Body.GetEx<double>("UpshiftMinAcceleration").SI<MeterPerSquareSecond>();
-			}
-		}
+		public MeterPerSquareSecond UpshiftMinAcceleration =>
+			Body["UpshiftMinAcceleration"] == null
+				? DeclarationData.Gearbox.UpshiftMinAcceleration
+				: Body.GetEx<double>("UpshiftMinAcceleration").SI<MeterPerSquareSecond>();
 
-		public MeterPerSquareSecond CLUpshiftMinAcceleration
-		{
-			get {
-				return Body[JsonKeys.Gearbox_TorqueConverter] != null &&
-						Body[JsonKeys.Gearbox_TorqueConverter]["CLUpshiftMinAcceleration"] != null
-					? Body.GetEx(JsonKeys.Gearbox_TorqueConverter).GetEx<double>("CLUpshiftMinAcceleration").SI<MeterPerSquareSecond>()
-					: UpshiftMinAcceleration;
-			}
-		}
+		public MeterPerSquareSecond CLUpshiftMinAcceleration =>
+			Body[JsonKeys.Gearbox_TorqueConverter] != null &&
+			Body[JsonKeys.Gearbox_TorqueConverter]["CLUpshiftMinAcceleration"] != null
+				? Body.GetEx(JsonKeys.Gearbox_TorqueConverter).GetEx<double>("CLUpshiftMinAcceleration").SI<MeterPerSquareSecond>()
+				: UpshiftMinAcceleration;
 
-		public MeterPerSquareSecond CCUpshiftMinAcceleration
-		{
-			get {
-				return Body[JsonKeys.Gearbox_TorqueConverter] != null &&
-						Body[JsonKeys.Gearbox_TorqueConverter]["CCUpshiftMinAcceleration"] != null
-					? Body.GetEx(JsonKeys.Gearbox_TorqueConverter).GetEx<double>("CCUpshiftMinAcceleration").SI<MeterPerSquareSecond>()
-					: UpshiftMinAcceleration;
-			}
-		}
+		public MeterPerSquareSecond CCUpshiftMinAcceleration =>
+			Body[JsonKeys.Gearbox_TorqueConverter] != null &&
+			Body[JsonKeys.Gearbox_TorqueConverter]["CCUpshiftMinAcceleration"] != null
+				? Body.GetEx(JsonKeys.Gearbox_TorqueConverter).GetEx<double>("CCUpshiftMinAcceleration").SI<MeterPerSquareSecond>()
+				: UpshiftMinAcceleration;
 
-		public virtual double StartTorqueReserve
-		{
-			get {
-				return Body[JsonKeys.Gearbox_StartTorqueReserve] == null
-					? DeclarationData.GearboxTCU.TorqueReserveStart
-					: Body.GetEx<double>(JsonKeys.Gearbox_StartTorqueReserve) / 100.0;
-			}
-		}
+		public virtual double StartTorqueReserve =>
+			Body[JsonKeys.Gearbox_StartTorqueReserve] == null
+				? DeclarationData.GearboxTCU.TorqueReserveStart
+				: Body.GetEx<double>(JsonKeys.Gearbox_StartTorqueReserve) / 100.0;
 
-		public MeterPerSecond StartSpeed
-		{
-			get { return Body.GetValueOrDefault<double>(JsonKeys.Gearbox_StartSpeed)?.KMPHtoMeterPerSecond() ?? DeclarationData.GearboxTCU.StartSpeed; }
-		}
+		public MeterPerSecond StartSpeed => Body.GetValueOrDefault<double>(JsonKeys.Gearbox_StartSpeed)?.KMPHtoMeterPerSecond() ?? DeclarationData.GearboxTCU.StartSpeed;
 
-		public MeterPerSquareSecond StartAcceleration
-		{
-			get { return Body.GetValueOrDefault<double>(JsonKeys.Gearbox_StartAcceleration)?.SI<MeterPerSquareSecond>() ?? DeclarationData.GearboxTCU.StartAcceleration; }
-		}
+		public MeterPerSquareSecond StartAcceleration => Body.GetValueOrDefault<double>(JsonKeys.Gearbox_StartAcceleration)?.SI<MeterPerSquareSecond>() ?? DeclarationData.GearboxTCU.StartAcceleration;
 
-		public Second GearResidenceTime
-		{
-			get { return Body.GetValueOrDefault<double>("GearResidenceTime")?.SI<Second>(); }
-		}
+		public Second GearResidenceTime => Body.GetValueOrDefault<double>("GearResidenceTime")?.SI<Second>();
 
-		public double? DnT99LHMin1
-		{
-			get { return Body.GetValueOrDefault<double>("Dn_Tq99L_high_min_1"); }
-		}
+		public double? DnT99LHMin1 => Body.GetValueOrDefault<double>("Dn_Tq99L_high_min_1");
 
-		public double? DnT99LHMin2
-		{
-			get { return Body.GetValueOrDefault<double>("Dn_Tq99L_high_min_2"); }
-		}
+		public double? DnT99LHMin2 => Body.GetValueOrDefault<double>("Dn_Tq99L_high_min_2");
 
-		public int? AllowedGearRangeUp
-		{
-			get { return Body.GetValueOrDefault<int>("GearRangeUp"); }
-		}
+		public int? AllowedGearRangeUp => Body.GetValueOrDefault<int>("GearRangeUp");
 
-		public int? AllowedGearRangeDown
-		{
-			get { return Body.GetValueOrDefault<int>("GearRangeDown"); }
-		}
+		public int? AllowedGearRangeDown => Body.GetValueOrDefault<int>("GearRangeDown");
 
-		public Second LookBackInterval
-		{
-			get { return Body.GetValueOrDefault<double>("LookBackDriver")?.SI<Second>(); }
-		}
+		public Second LookBackInterval => Body.GetValueOrDefault<double>("LookBackDriver")?.SI<Second>();
 
-		public Watt AvgCardanPowerThresholdPropulsion
-		{
-			get { return Body.GetValueOrDefault<double>("P_card_avg_threshold")?.SI<Watt>(); }
-		}
+		public Watt AvgCardanPowerThresholdPropulsion => Body.GetValueOrDefault<double>("P_card_avg_threshold")?.SI<Watt>();
 
-		public Watt CurrCardanPowerThresholdPropulsion
-		{
-			get { return Body.GetValueOrDefault<double>("P_card_curr_threshold")?.SI<Watt>(); }
-		}
+		public Watt CurrCardanPowerThresholdPropulsion => Body.GetValueOrDefault<double>("P_card_curr_threshold")?.SI<Watt>();
 
-		public double? TargetSpeedDeviationFactor
-		{
-			get { return Body.GetValueOrDefault<double>("Diff_curr_targ_vel"); }
-		}
+		public double? TargetSpeedDeviationFactor => Body.GetValueOrDefault<double>("Diff_curr_targ_vel");
 
-		public double? EngineSpeedHighDriveOffFactor
-		{
-			get { return Body.GetValueOrDefault<double>("EngineSpeedHighDriveOffFactor"); }
-		}
+		public double? EngineSpeedHighDriveOffFactor => Body.GetValueOrDefault<double>("EngineSpeedHighDriveOffFactor");
 
-		public double? RatingFactorCurrentGear
-		{
-			get { return Body.GetValueOrDefault<double>("Rating_current_gear"); }
-		}
+		public double? RatingFactorCurrentGear => Body.GetValueOrDefault<double>("Rating_current_gear");
 
 		public TableData AccelerationReserveLookup
 		{
@@ -240,22 +171,12 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			}
 		}
 
-		public Second DriverAccelerationLookBackInterval { get {return Body.GetValueOrDefault<double>("DriverAccelerationLookBackInterval")?.SI<Second>();} }
-		public MeterPerSquareSecond DriverAccelerationThresholdLow { get { return Body.GetValueOrDefault<double>("DriverAccelerationThresholdLow")?.SI<MeterPerSquareSecond>(); } }
+		public Second DriverAccelerationLookBackInterval => Body.GetValueOrDefault<double>("DriverAccelerationLookBackInterval")?.SI<Second>();
+		public MeterPerSquareSecond DriverAccelerationThresholdLow => Body.GetValueOrDefault<double>("DriverAccelerationThresholdLow")?.SI<MeterPerSquareSecond>();
 
-		public double? RatioEarlyUpshiftFC
-		{
-			get {
-				return Body.GetValueOrDefault<double>("RatioEarlyUpshiftFC");
-			}
-		}
+		public double? RatioEarlyUpshiftFC => Body.GetValueOrDefault<double>("RatioEarlyUpshiftFC");
 
-		public double? RatioEarlyDownshiftFC
-		{
-			get {
-				return Body.GetValueOrDefault<double>("RatioEarlyDownshiftFC");
-			}
-		}
+		public double? RatioEarlyDownshiftFC => Body.GetValueOrDefault<double>("RatioEarlyDownshiftFC");
 
 		public int? AllowedGearRangeFC
 		{

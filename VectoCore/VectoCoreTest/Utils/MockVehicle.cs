@@ -66,30 +66,15 @@ namespace TUGraz.VectoCore.Tests.Utils
 			return this;
 		}
 
-		public MeterPerSecond VehicleSpeed
-		{
-			get { return MyVehicleSpeed; }
-		}
+		public MeterPerSecond VehicleSpeed => MyVehicleSpeed;
 
-		public bool VehicleStopped
-		{
-			get { return MyVehicleSpeed.IsEqual(0.SI<MeterPerSecond>(), 0.01.SI<MeterPerSecond>()); }
-		}
+		public bool VehicleStopped => MyVehicleSpeed.IsEqual(0.SI<MeterPerSecond>(), 0.01.SI<MeterPerSecond>());
 
-		public Kilogram VehicleMass
-		{
-			get { return 7500.SI<Kilogram>(); }
-		}
+		public Kilogram VehicleMass => 7500.SI<Kilogram>();
 
-		public Kilogram VehicleLoading
-		{
-			get { return 0.SI<Kilogram>(); }
-		}
+		public Kilogram VehicleLoading => 0.SI<Kilogram>();
 
-		public Kilogram TotalMass
-		{
-			get { return VehicleMass; }
-		}
+		public Kilogram TotalMass => VehicleMass;
 
 		public CubicMeter CargoVolume { get;  set; }
 
@@ -108,7 +93,7 @@ namespace TUGraz.VectoCore.Tests.Utils
 			return 0.SI<Newton>();
 		}
 
-		public MeterPerSecond MaxVehicleSpeed { get { return null; } }
+		public MeterPerSecond MaxVehicleSpeed => null;
 
 		public void Connect(IFvOutPort other)
 		{
@@ -144,9 +129,6 @@ namespace TUGraz.VectoCore.Tests.Utils
 			public Radian gradient;
 		}
 
-		public Meter Distance
-		{
-			get { return 0.SI<Meter>(); }
-		}
+		public Meter Distance => 0.SI<Meter>();
 	}
 }

@@ -2,7 +2,6 @@
 Imports System.ComponentModel.DataAnnotations
 Imports System.IO
 Imports System.Linq
-Imports TUGraz.VECTO.Input_Files
 Imports TUGraz.VectoCommon.InputData
 Imports TUGraz.VectoCommon.Models
 Imports TUGraz.VectoCommon.Utils

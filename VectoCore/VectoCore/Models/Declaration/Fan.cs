@@ -95,12 +95,9 @@ namespace TUGraz.VectoCore.Models.Declaration
     {
         //private readonly List<string> FullyElectricFanTechnologies = new List<string>();
 
-        protected override string ErrorMessage
-        {
-            get { return "Auxiliary Lookup Error: No value found for Fan. Mission: '{0}', Technology: '{1}'"; }
-        }
+        protected override string ErrorMessage => "Auxiliary Lookup Error: No value found for Fan. Mission: '{0}', Technology: '{1}'";
 
-        protected override void ParseData(DataTable table)
+		protected override void ParseData(DataTable table)
         {
             foreach (DataRow row in table.Rows)
             {
@@ -146,17 +143,11 @@ namespace TUGraz.VectoCore.Models.Declaration
 
 	public sealed class FanMediumLorries : AbstractFan
     {
-		protected override string ResourceId
-		{
-			get { return DeclarationData.DeclarationDataResourcePrefix + ".VAUX.Fan-Tech-Medium.csv"; }
-		}
-    }
+		protected override string ResourceId => DeclarationData.DeclarationDataResourcePrefix + ".VAUX.Fan-Tech-Medium.csv";
+	}
 
 	public sealed class FanHeavyLorries : AbstractFan
     {
-		protected override string ResourceId
-		{
-			get { return DeclarationData.DeclarationDataResourcePrefix + ".VAUX.Fan-Tech.csv"; }
-		}
-    }
+		protected override string ResourceId => DeclarationData.DeclarationDataResourcePrefix + ".VAUX.Fan-Tech.csv";
+	}
 }

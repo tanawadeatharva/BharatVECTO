@@ -351,9 +351,8 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			
 				coolingPower.Item1, HeatPumpType.none, coolingPower.Item2, busParams.HVACCompressorType,
 				busParams.VehicleCode.GetFloorType());
-			retVal.HVACTechnology = string.Format(
-				"{0} ({1})", busParams.HVACConfiguration.GetName(),
-				string.Join(", ", new[] { busParams.HVACCompressorType.GetName(), HeatPumpType.none.GetName() }));
+			retVal.HVACTechnology = $"{busParams.HVACConfiguration.GetName()} " +
+									$"({string.Join(", ", busParams.HVACCompressorType.GetName(), HeatPumpType.none.GetName())})";
 			
 			//SetHVACParameters(retVal, vehicleData, mission);
 
