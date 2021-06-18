@@ -51,14 +51,13 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 		public virtual string Manufacturer => Constants.NOT_AVAILABLE;
 
 		public virtual string Model => Body.GetEx<string>("Model");
-		public virtual IList<IElectricMotorVoltageLevel> VoltageLevels
+		public virtual IList<IElectricMotorVoltageLevel> VoltageLevels => _voltageLevels ?? (_voltageLevels = ReadVoltageLevels());
 		public virtual DateTime Date => DateTime.MinValue;
-			get
-			{
-				return _voltageLevels ?? (_voltageLevels = ReadVoltageLevels());
-			}
+
+		public CertificationMethod CertificationMethod => CertificationMethod.NotCertified;
 
 		public string CertificationNumber => Constants.NOT_AVAILABLE;
+
 		protected virtual IList<IElectricMotorVoltageLevel> ReadVoltageLevels()
 		{
 			return new List<IElectricMotorVoltageLevel>() {
@@ -75,6 +74,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 					FullLoadCurve = ReadTableData(Body.GetEx<string>("FullLoadCurve"), "ElectricMotor FullLoadCurve")
 				},
 			};
+		}
 
 		public DigestData DigestValue => null;
 
