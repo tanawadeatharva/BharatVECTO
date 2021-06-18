@@ -87,17 +87,7 @@ namespace TUGraz.VectoCore.InputData.Reader.ComponentData
 			if (!extendLossMap) {
 				return new TransmissionLossMap(entries, gearRatio, gearName);
 			}
-			var orig = "";
-			entries.ForEach(
-				x =>
-					orig +=
-						string.Format("{0},{1},{2}" + Environment.NewLine, x.InputSpeed.AsRPM, x.InputTorque.Value(), x.TorqueLoss.Value()));
 			entries = ExtendLossMap(entries);
-			var extended = "";
-			entries.ForEach(
-				x =>
-					extended +=
-						string.Format("{0},{1},{2}" + Environment.NewLine, x.InputSpeed.AsRPM, x.InputTorque.Value(), x.TorqueLoss.Value()));
 			return new TransmissionLossMap(entries, gearRatio, gearName);
 		}
 
