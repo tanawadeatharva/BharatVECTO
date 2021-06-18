@@ -372,12 +372,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				inTorque = 0.SI<NewtonMeter>();
 			}
 
-			if (!dryRun) {
-				CurrentState.SetState(inTorque, inAngularVelocity, outTorque,
-					outAngularVelocity);
+				CurrentState.SetState(inTorque, inAngularVelocity, outTorque, outAngularVelocity);
 				CurrentState.Gear = gear;
 				CurrentState.TransmissionTorqueLoss = inTorque * ModelData.Gears[gear.Gear].Ratio - outTorque;
-			}
 
 			var response = NextComponent.Request(absTime, dt, inTorque, inAngularVelocity, false);
 
