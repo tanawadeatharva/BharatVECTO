@@ -593,9 +593,7 @@ Public Class EngineForm
 			series.Name = "Motoring (" & Path.GetFileNameWithoutExtension(TbMAP.Text) & ")"
 			chart.Series.Add(series)
 
-			engineCharacteristics +=
-				$"Max. Torque: {fullLoadCurve.MaxTorque.Value():F0} Nm; Max. Power: {(fullLoadCurve.MaxPower.Value()/1000):F1 _
-					} kW; n_rated: {fullLoadCurve.RatedSpeed.AsRPM:F0} rpm; n_95h: {fullLoadCurve.N95hSpeed.AsRPM:F0} rpm"
+			engineCharacteristics += $"Max. Torque: {fullLoadCurve.MaxTorque.Value():F0} Nm; Max. Power: {(fullLoadCurve.MaxPower.Value()/1000):F1} kW; n_rated: {fullLoadCurve.RatedSpeed.AsRPM:F0} rpm; n_95h: {fullLoadCurve.N95hSpeed.AsRPM:F0} rpm"
 		End If
 
 	    If Not fcMap2 Is Nothing Then
