@@ -24,14 +24,14 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON {
 	public class JSONElectricMotorV1 : JSONFile, IElectricMotorEngineeringInputData
 	{
 		public JSONElectricMotorV1(JObject data, string filename, bool tolerateMissing = false) : base(data, filename, tolerateMissing) { }
-		public virtual string Manufacturer => Constants.NOT_AVailABLE;
+		public virtual string Manufacturer => Constants.NOT_AVAILABLE;
 
 		public virtual string Model => Body.GetEx<string>("Model");
 		public virtual DateTime Date => DateTime.MinValue;
 
 		public virtual CertificationMethod CertificationMethod => CertificationMethod.NotCertified;
 
-		public string CertificationNumber => Constants.NOT_AVailABLE;
+		public string CertificationNumber => Constants.NOT_AVAILABLE;
 
 		public DigestData DigestValue => null;
 

@@ -57,7 +57,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering.DataProvider
 
 		public virtual CertificationMethod CertificationMethod => CertificationMethod.NotCertified;
 
-		public virtual string CertificationNumber => Constants.NOT_AVailABLE;
+		public virtual string CertificationNumber => Constants.NOT_AVAILABLE;
 
 		public virtual DigestData DigestValue => null;
 

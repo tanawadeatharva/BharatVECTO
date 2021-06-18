@@ -348,7 +348,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 		public virtual double CorrectionFactorRegPer => 1;
 
 
-		public virtual string Manufacturer => Constants.NOT_AVailABLE;
+		public virtual string Manufacturer => Constants.NOT_AVAILABLE;
 
 		public virtual string Model => Body.GetEx<string>(JsonKeys.Engine_ModelName);
 
@@ -357,7 +357,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 		public virtual CertificationMethod CertificationMethod => CertificationMethod.NotCertified;
 
-		public virtual string CertificationNumber => Constants.NOT_AVailABLE;
+		public virtual string CertificationNumber => Constants.NOT_AVAILABLE;
 
 		public virtual DigestData DigestValue => null;
 	}

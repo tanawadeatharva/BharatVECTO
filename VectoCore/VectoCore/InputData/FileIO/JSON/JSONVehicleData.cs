@@ -220,7 +220,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 		public virtual bool ExemptedVehicle => false;
 
-		public virtual string VIN => Constants.NOT_AVailABLE;
+		public virtual string VIN => Constants.NOT_AVAILABLE;
 
 		public string LegislativeCategory => null;
 
@@ -306,7 +306,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 		public virtual IList<IAxleEngineeringInputData> AxlesEngineering => AxleWheels().Cast<IAxleEngineeringInputData>().ToList();
 
-		public virtual string ManufacturerAddress => Constants.NOT_AVailABLE;
+		public virtual string ManufacturerAddress => Constants.NOT_AVAILABLE;
 
 		public virtual PerSecond EngineIdleSpeed => Body["IdlingSpeed"] != null ? Body.GetEx<double>("IdlingSpeed").RPMtoRad() : null;
 
@@ -488,15 +488,15 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 		#endregion
 
 		
-		public virtual string Manufacturer => Constants.NOT_AVailABLE;
+		public virtual string Manufacturer => Constants.NOT_AVAILABLE;
 
-		public virtual string Model => Constants.NOT_AVailABLE;
+		public virtual string Model => Constants.NOT_AVAILABLE;
 
 		public virtual DateTime Date => DateTime.MinValue;
 
 		public CertificationMethod CertificationMethod => CertificationMethod.NotCertified;
 
-		public virtual string CertificationNumber => Constants.NOT_AVailABLE;
+		public virtual string CertificationNumber => Constants.NOT_AVAILABLE;
 
 		public virtual DigestData DigestValue => null;
 

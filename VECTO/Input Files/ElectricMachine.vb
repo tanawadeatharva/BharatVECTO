@@ -186,7 +186,7 @@ Public Class ElectricMachine
     End Property
     Public ReadOnly Property CertificationNumber As String Implements IComponentInputData.CertificationNumber
         Get
-            Return TUGraz.VectoCore.Configuration.Constants.NOT_AVailABLE
+            Return TUGraz.VectoCore.Configuration.Constants.NOT_AVAILABLE
         End Get
     End Property
     Public ReadOnly Property DigestValue As DigestData Implements IComponentInputData.DigestValue

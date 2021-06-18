@@ -14,7 +14,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 		public JSONBatteryV1(JObject data, string filename, bool tolerateMissing = false) : base(data, filename,
 			tolerateMissing) { }
 
-		public string Manufacturer => Constants.NOT_AVailABLE;
+		public string Manufacturer => Constants.NOT_AVAILABLE;
 
 		public string Model => Body.GetEx<string>("Model");
 
@@ -22,7 +22,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 		public CertificationMethod CertificationMethod => CertificationMethod.NotCertified;
 
-		public string CertificationNumber => Constants.NOT_AVailABLE;
+		public string CertificationNumber => Constants.NOT_AVAILABLE;
 
 		public DigestData DigestValue => null;
 

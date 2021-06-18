@@ -445,7 +445,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 		#endregion
 
-		public string Manufacturer => Constants.NOT_AVailABLE;
+		public string Manufacturer => Constants.NOT_AVAILABLE;
 
 		public string Model => Body.GetEx<string>(JsonKeys.Gearbox_ModelName);
 
@@ -453,7 +453,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 		public CertificationMethod CertificationMethod => CertificationMethod.NotCertified;
 
-		public string CertificationNumber => Constants.NOT_AVailABLE;
+		public string CertificationNumber => Constants.NOT_AVAILABLE;
 
 		public DigestData DigestValue => null;
 	}
