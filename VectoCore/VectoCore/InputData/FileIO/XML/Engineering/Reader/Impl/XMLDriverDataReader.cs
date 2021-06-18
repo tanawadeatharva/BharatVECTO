@@ -135,7 +135,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering.Reader.Impl {
 			var node = GetNode(elementName, required);
 			if (!required && node == null) {
 				try {
-					return creator(null, node);
+					return creator(null, null);
 				} catch (Exception e) {
 					throw new VectoException("Failed to create dummy data provider", e);
 				}

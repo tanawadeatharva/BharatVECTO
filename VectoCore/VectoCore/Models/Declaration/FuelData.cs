@@ -75,7 +75,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 			return entries.First();
 		}
 
-		public static Entry Diesel => Instance().Lookup(FuelType.DieselCI, null);
+		public static Entry Diesel => Instance().Lookup(FuelType.DieselCI);
 
 		protected override void ParseData(DataTable table)
 		{
