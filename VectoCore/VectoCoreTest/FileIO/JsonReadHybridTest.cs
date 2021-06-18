@@ -59,7 +59,7 @@ namespace TUGraz.VectoCore.Tests.FileIO
 
 			Assert.AreEqual(0.15, inputProvider.Inertia.Value(), 1e-6);
 
-			var fld = inputProvider.FullLoadCurve;
+			var fld = inputProvider.VoltageLevels.First().FullLoadCurve;
 			Assert.AreEqual("0", fld.Rows[0][ElectricFullLoadCurveReader.Fields.MotorSpeed]);
 			Assert.AreEqual("401.07", fld.Rows[0][ElectricFullLoadCurveReader.Fields.DrivingTorque]);
 			Assert.AreEqual("-401.07", fld.Rows[0][ElectricFullLoadCurveReader.Fields.GenerationTorque]);
@@ -68,7 +68,7 @@ namespace TUGraz.VectoCore.Tests.FileIO
 			Assert.AreEqual(-401.07, fldMap.FullLoadDriveTorque(0.RPMtoRad()).Value());
 			Assert.AreEqual(401.07, fldMap.FullGenerationTorque(0.RPMtoRad()).Value());
 
-			var pwr = inputProvider.EfficiencyMap;
+			var pwr = inputProvider.VoltageLevels.First().EfficiencyMap;
 			Assert.AreEqual("0", pwr.Rows[0][ElectricMotorMapReader.Fields.MotorSpeed]);
 			Assert.AreEqual("-800", pwr.Rows[0][ElectricMotorMapReader.Fields.Torque]);
 			Assert.AreEqual("9.8449", pwr.Rows[0][ElectricMotorMapReader.Fields.PowerElectrical]);
@@ -88,7 +88,7 @@ namespace TUGraz.VectoCore.Tests.FileIO
 
 			Assert.AreEqual(0.15, inputProvider.Inertia.Value(), 1e-6);
 
-			var fld = inputProvider.FullLoadCurve;
+			var fld = inputProvider.VoltageLevels.First().FullLoadCurve;
 			Assert.AreEqual("0", fld.Rows[0][ElectricFullLoadCurveReader.Fields.MotorSpeed]);
 			Assert.AreEqual("401.07", fld.Rows[0][ElectricFullLoadCurveReader.Fields.DrivingTorque]);
 			Assert.AreEqual("-401.07", fld.Rows[0][ElectricFullLoadCurveReader.Fields.GenerationTorque]);
@@ -100,7 +100,7 @@ namespace TUGraz.VectoCore.Tests.FileIO
 			Assert.AreEqual(-802.14, fldMap.FullLoadDriveTorque(50.RPMtoRad()).Value(), 1e-3);
 			Assert.AreEqual(802.14, fldMap.FullGenerationTorque(50.RPMtoRad()).Value(), 1e-3);
 
-            var pwr = inputProvider.EfficiencyMap;
+            var pwr = inputProvider.VoltageLevels.First().EfficiencyMap;
 			Assert.AreEqual("0", pwr.Rows[0][ElectricMotorMapReader.Fields.MotorSpeed]);
 			Assert.AreEqual("-800", pwr.Rows[0][ElectricMotorMapReader.Fields.Torque]);
 			Assert.AreEqual("9.8449", pwr.Rows[0][ElectricMotorMapReader.Fields.PowerElectrical]);

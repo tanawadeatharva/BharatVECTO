@@ -34,8 +34,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		private SimplePowertrainContainer TestContainer;
 		private Gearbox TestContainerGbx;
 		private Kilogram vehicleMass;
-		private EfficiencyMap PowerMap;
-		private ElectricMotorFullLoadCurve FullLoadCurve;
+		private VoltageLevelData VoltageLevels;
 		private SI TransmissionRatio;
 		private ShiftStrategyParameters GearshiftParams;
 		private GearList GearList;
@@ -58,10 +57,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			GearList = GearboxModelData.GearList;
 			MaxStartGear = GearList.Reverse().First();
 
-			PowerMap = dataBus.RunData.ElectricMachinesData
-				.FirstOrDefault(x => x.Item1 == PowertrainPosition.BatteryElectricE2)?.Item2.EfficiencyMap;
-			FullLoadCurve = dataBus.RunData.ElectricMachinesData
-				.FirstOrDefault(x => x.Item1 == PowertrainPosition.BatteryElectricE2)?.Item2.FullLoadCurve;
+			VoltageLevels = dataBus.RunData.ElectricMachinesData
+				.FirstOrDefault(x => x.Item1 == PowertrainPosition.BatteryElectricE2)?.Item2.EfficiencyData;
+			
 			DataBus = dataBus;
 
 			EarlyShiftUp = true;
@@ -354,7 +352,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			var engineSpeed = response.ElectricMotor.AngularVelocity;
 
 			
-			var fcCurRes = PowerMap.LookupElectricPower(engineSpeed, tqCurrent, true);
+			var fcCurRes = VoltageLevels.LookupElectricPower(DataBus.BatteryInfo.InternalVoltage, engineSpeed, tqCurrent, true);
 			if (fcCurRes.Extrapolated) {
 				Log.Warn(
 					"EffShift Strategy: Extrapolation of power consumption for current gear! n: {0}, Tq: {1}",
@@ -389,7 +387,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			var vehicleSpeed = DataBus.VehicleInfo.VehicleSpeed;
 
 			var nextEngineSpeed = gbxAngularVelocityOut * GearboxModelData.Gears[gear.Gear].Ratio;
-			var maxEnginePower = -(FullLoadCurve.FullLoadDriveTorque(nextEngineSpeed) * nextEngineSpeed);
+			var maxEnginePower = -(VoltageLevels.FullLoadDriveTorque(DataBus.BatteryInfo.InternalVoltage, nextEngineSpeed) * nextEngineSpeed);
 			
 			var avgSlope =
 				((DataBus.DrivingCycleInfo.CycleLookAhead(Constants.SimulationSettings.GearboxLookaheadForAccelerationEstimation).Altitude -
@@ -565,7 +563,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				//for (var gear = (uint)GearboxModelData.Gears.Count; gear >= 1; gear--) {
 				var inAngularSpeed = outAngularVelocity * GearboxModelData.Gears[gear.Gear].Ratio;
 
-				var ratedSpeed = FullLoadCurve.MaxSpeed * 0.9;
+				var ratedSpeed = VoltageLevels.MaxSpeed * 0.9;
 				if (inAngularSpeed > ratedSpeed || inAngularSpeed.IsEqual(0)) {
 					continue;
 				}
@@ -662,7 +660,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		public ShiftPolygon ComputeDeclarationShiftPolygon(GearboxType gearboxType, int i, EngineFullLoadCurve engineDataFullLoadCurve, 
 			IList<ITransmissionInputData> gearboxGears, CombustionEngineData engineData, double axlegearRatio, Meter dynamicTyreRadius, ElectricMotorData electricMotorData)
 		{
-			return DeclarationData.Gearbox.ComputeElectricMotorShiftPolygon(i, electricMotorData.FullLoadCurve, electricMotorData.RatioADC, gearboxGears, axlegearRatio, dynamicTyreRadius);
+			return DeclarationData.Gearbox.ComputeElectricMotorShiftPolygon(i, electricMotorData.EfficiencyData.VoltageLevels.First().FullLoadCurve, electricMotorData.RatioADC, gearboxGears, axlegearRatio, dynamicTyreRadius);
 		}
 
 	}

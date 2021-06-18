@@ -267,7 +267,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			var response = motor.Request(absTime, dt, torque.SI<NewtonMeter>(), speed.RPMtoRad());
 
 			Assert.IsInstanceOf<ResponseSuccess>(response);
-			var dragTorque = data.First().Item2.DragCurve.Lookup(speed.RPMtoRad());
+			var dragTorque = data.First().Item2.EfficiencyData.VoltageLevels.First().DragCurve.Lookup(speed.RPMtoRad());
 			var enginePower = speed.RPMtoRad() * (torque.SI<NewtonMeter>() + dragTorque);
 			var motorMechPower = dragTorque * speed.RPMtoRad();
 			Assert.AreEqual(enginePower.Value(), response.Engine.PowerRequest.Value(), 1e-6);

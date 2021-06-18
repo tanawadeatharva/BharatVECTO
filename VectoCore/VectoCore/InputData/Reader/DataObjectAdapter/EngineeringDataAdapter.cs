@@ -758,19 +758,29 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 		private ElectricMotorData CreateElectricMachine(IElectricMotorEngineeringInputData motorData, int count,
 			double ratio, double[] ratioPerGear, double efficiency, TableData adcLossMap, TableData torqueLimits)
 		{
-			var fullLoadCurve = ElectricFullLoadCurveReader.Create(motorData.FullLoadCurve, count);
-			var maxTorqueCurve = torqueLimits == null ? null : ElectricFullLoadCurveReader.Create(torqueLimits, count);
+			var voltageLevels = new List<ElectricMotorVoltageLevelData>();
 
-			var fullLoadCurveCombined = IntersectEMFullLoadCurves(fullLoadCurve, maxTorqueCurve);
+			foreach (var entry in motorData.VoltageLevels.OrderBy(x => x.VoltageLevel)) {
+				var fullLoadCurve = ElectricFullLoadCurveReader.Create(entry.FullLoadCurve, count);
+				var maxTorqueCurve = torqueLimits == null ? null : ElectricFullLoadCurveReader.Create(torqueLimits, count);
+
+				var fullLoadCurveCombined = IntersectEMFullLoadCurves(fullLoadCurve, maxTorqueCurve);
+
+				voltageLevels.Add(new ElectricMotorVoltageLevelData() {
+					Voltage = entry.VoltageLevel,
+					FullLoadCurve = fullLoadCurveCombined,
+					DragCurve = ElectricMotorDragCurveReader.Create(entry.DragCurve, count),
+					EfficiencyMap = ElectricMotorMapReader.Create(entry.EfficiencyMap, count),
+				});
+			}
+
 
 			var lossMap = adcLossMap != null
 				? TransmissionLossMapReader.CreateEmADCLossMap(adcLossMap, ratio, "EM ADC LossMap")
 				: TransmissionLossMapReader.CreateEmADCLossMap(efficiency, ratio, "EM ADC LossMap Eff");
 
 			return new ElectricMotorData() {
-				FullLoadCurve = fullLoadCurveCombined,
-				DragCurve = ElectricMotorDragCurveReader.Create(motorData.DragCurve, count),
-				EfficiencyMap = ElectricMotorMapReader.Create(motorData.EfficiencyMap, count),
+				EfficiencyData = new VoltageLevelData() { VoltageLevels = voltageLevels},
 				Inertia = motorData.Inertia,
 				ContinuousTorque = motorData.ContinuousTorque * count,
 				ContinuousTorqueSpeed = motorData.ContinuousTorqueSpeed,

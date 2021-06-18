@@ -216,7 +216,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			if (em == null) {
 				throw new VectoException("E2 EM required for PEV E2 GearshiftPreprocessing");
 			}
-			return 0.5 * em.Item2.FullLoadCurve
+			return 0.5 * em.Item2.EfficiencyData.VoltageLevels.First().FullLoadCurve
 				.MaxSpeed / em.Item2.RatioADC;
 		}
 
@@ -227,7 +227,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			if (em == null) {
 				throw new VectoException("E2 EM required for PEV E2 GearshiftPreprocessing");
 			}
-			return em.Item2.FullLoadCurve.MaxSpeed / em.Item2.RatioADC;
+			return em.Item2.EfficiencyData.VoltageLevels.First().FullLoadCurve.MaxSpeed / em.Item2.RatioADC;
         }
 	}
 }

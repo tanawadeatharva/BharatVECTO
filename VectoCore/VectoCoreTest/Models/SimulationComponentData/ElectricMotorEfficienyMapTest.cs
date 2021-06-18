@@ -1,4 +1,5 @@
 ﻿using System.IO;
+using System.Linq;
 using NUnit.Framework;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.InputData.FileIO.JSON;
@@ -25,10 +26,10 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData {
 			var inputProvider =
 				JSONInputDataFactory.ReadElectricMotorData(@"TestData\Hybrids\ElectricMotor\GenericEMotor.vem", false);
 
-			var fld = inputProvider.FullLoadCurve;
+			var fld = inputProvider.VoltageLevels.First().FullLoadCurve;
 			var fldMap = ElectricFullLoadCurveReader.Create(fld, 1);
 
-			var pwr = inputProvider.EfficiencyMap;
+			var pwr = inputProvider.VoltageLevels.First().EfficiencyMap;
 			var pwrMap = ElectricMotorMapReader.Create(pwr, 1);
 
 			var maxEmPwr = batPwr < 0
@@ -50,10 +51,10 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData {
 			var inputProvider =
 				JSONInputDataFactory.ReadElectricMotorData(@"TestData\Hybrids\ElectricMotor\GenericEMotor.vem", false);
 
-			var fld = inputProvider.FullLoadCurve;
+			var fld = inputProvider.VoltageLevels.First().FullLoadCurve;
 			var fldMap = ElectricFullLoadCurveReader.Create(fld, 1);
 
-			var pwr = inputProvider.EfficiencyMap;
+			var pwr = inputProvider.VoltageLevels.First().EfficiencyMap;
 			var pwrMap = ElectricMotorMapReader.Create(pwr, 1);
 
 			var maxEmPwr = batPwr < 0
