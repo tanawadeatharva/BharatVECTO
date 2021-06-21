@@ -47,7 +47,7 @@
                         </Button>
                     </Border>
 
-                <Border BorderThickness="{Binding ElementName=JobsButtonBorder, Path=BorderThickness}" >
+                <Border BorderThickness="{Binding ElementName=JobsButtonBorder, Path=BorderThickness}">
                     <Border.Style>
                         <Style TargetType="Border">
                             <Style.Triggers>
@@ -90,7 +90,8 @@
 
 
 
-            <Border DockPanel.Dock="Top" BorderBrush="{DynamicResource AccentColorButton}" BorderThickness="3">
+            <!--<Border DockPanel.Dock="Top" BorderBrush="{DynamicResource AccentColorButton}" BorderThickness="3" VerticalAlignment="Stretch"
+                    Visibility="{Binding JobsSelected, Converter={StaticResource BooleanToVisibilityConverter}}">
                     <Grid>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="1*"/>
@@ -106,6 +107,10 @@
                     <ContentControl Visibility="{Binding JobsSelected,
                         Converter={StaticResource BooleanToVisibilityConverter}}"  Grid.Row="2" Margin="0,0,0,0" Name="ContentControlBottom" Content="{Binding CurrentViewModelBottom}"/>
                     </Grid>
+            </Border>-->
+
+            <Border DockPanel.Dock="Top" BorderBrush="{DynamicResource AccentColorButton}" BorderThickness="3" VerticalAlignment="Stretch">
+                <ContentControl Content="{Binding CurrentViewModelTop}"></ContentControl>
             </Border>
         </DockPanel>
     </Grid>

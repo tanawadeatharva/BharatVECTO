@@ -13,6 +13,7 @@ using System.Windows;
 using System.Windows.Data;
 using System.Windows.Forms;
 using System.Windows.Input;
+using System.Windows.Threading;
 using System.Xml;
 using System.Xml.Linq;
 using Microsoft.Toolkit.Mvvm.Input;
@@ -87,7 +88,7 @@ namespace VECTO3GUI2020.ViewModel.Implementation
 		private ICommand _newMultiStageFileCommand;
 		private IMultiStageViewModelFactory _multiStageViewModelFactory;
 		private readonly IXMLInputDataReader _inputDataReader;
-		private readonly IOutputViewModel _outputViewModel;
+		private IOutputViewModel _outputViewModel;
 		private IAsyncRelayCommand _addJobAsync;
 		private IAsyncRelayCommand _simulationCommand;
 
@@ -185,10 +186,10 @@ namespace VECTO3GUI2020.ViewModel.Implementation
 				return;
 			}
 			if(evtInfo.Level == LogLevel.Error || evtInfo.Level == LogLevel.Warn || evtInfo.Level == LogLevel.Fatal)
-			_outputMessage.Report(new MessageEntry() {
-				Type = MessageType.ErrorMessage,
-				Message = evtInfo.FormattedMessage,
-				Source = evtInfo.CallerMemberName,
+				_outputMessage.Report(new MessageEntry() {
+					Type = MessageType.ErrorMessage,
+					Message = evtInfo.FormattedMessage,
+					Source = evtInfo.CallerMemberName,
 			});
 		}
 
@@ -829,7 +830,13 @@ namespace VECTO3GUI2020.ViewModel.Implementation
 
         }
 
-        private void MoveJobDownExecute(IDocumentViewModel selectedJob)
+		public IOutputViewModel OutputViewModel
+		{
+			get => _outputViewModel;
+			set => SetProperty(ref _outputViewModel, value);
+		}
+
+		private void MoveJobDownExecute(IDocumentViewModel selectedJob)
         {
             Debug.WriteLine("move down command");
 

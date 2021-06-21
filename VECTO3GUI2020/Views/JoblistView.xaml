@@ -9,36 +9,47 @@
              AutomationProperties.Name="JobListView"
              d:DesignHeight="450" d:DesignWidth="1000">
 
+
     <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition MinWidth="140" Width="1*"/>
-            <ColumnDefinition Name="MiddleColumn" Width="6*"/>
-            <ColumnDefinition MinWidth="140" Width="1*"/>
+            <ColumnDefinition Width="1*"/>
         </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="1.5*"/>
+            <RowDefinition Height="5"></RowDefinition>
+            <RowDefinition Height="1*"/>
+        </Grid.RowDefinitions>
 
-        <Border  BorderBrush="Transparent" BorderThickness="1">
-            <Grid>
-                <StackPanel HorizontalAlignment="Stretch">
-                    <Button x:Name="button" Margin="4" HorizontalAlignment="Stretch" 
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition MinWidth="140" Width="1*"/>
+                <ColumnDefinition Name="MiddleColumn" Width="6*"/>
+                <ColumnDefinition MinWidth="140" Width="1*"/>
+            </Grid.ColumnDefinitions>
+
+            <Border  BorderBrush="Transparent" BorderThickness="1">
+                <Grid>
+                    <StackPanel HorizontalAlignment="Stretch">
+                        <Button x:Name="button" Margin="4" HorizontalAlignment="Stretch" 
                         Style="{StaticResource MultiStageButtonStyle1}"
                         Command="{Binding SimulationCommand}">Simulation</Button>
-                    <Button Margin="4" HorizontalAlignment="Stretch" 
+                        <Button Margin="4" HorizontalAlignment="Stretch" 
                             Style="{StaticResource MultiStageButtonStyle1}"
                             Command="{Binding CancelSimulation}">Stop</Button>
-                    <Button x:Name="button1" Margin="4"  HorizontalAlignment="Stretch" 
+                        <Button x:Name="button1" Margin="4"  HorizontalAlignment="Stretch" 
                         Style="{StaticResource MultiStageButtonStyle1}" 
                         Command="{Binding moveJobUp}"
                         CommandParameter="{Binding ElementName=JobDataGrid, Path=SelectedItem}">Up</Button>
-                    <Button x:Name="button2" Margin="4" HorizontalAlignment="Stretch" 
+                        <Button x:Name="button2" Margin="4" HorizontalAlignment="Stretch" 
                         Style="{StaticResource MultiStageButtonStyle1}" 
                         Command="{Binding moveJobDown}"
                         CommandParameter="{Binding ElementName=JobDataGrid, Path=SelectedItem}">Down</Button>
-                </StackPanel>
-            </Grid>
-        </Border>
-        <Grid Grid.Column="1">
-            <Border BorderBrush="{StaticResource AccentColorButton}" BorderThickness="0" >
-                <DataGrid ItemsSource="{Binding Jobs}"
+                    </StackPanel>
+                </Grid>
+            </Border>
+            <Grid Grid.Column="1">
+                <Border BorderBrush="{StaticResource AccentColorButton}" BorderThickness="0" >
+                    <DataGrid ItemsSource="{Binding Jobs}"
                           BorderBrush ="{StaticResource AccentColorButton}" BorderThickness="1"
                           Name="JobDataGrid"
                           HorizontalAlignment="Stretch"
@@ -64,9 +75,9 @@
                             <DataGridCheckBoxColumn IsReadOnly="False" Header="Simulate" Binding="{Binding Selected}" Width="1*"></DataGridCheckBoxColumn>
                             <DataGridTextColumn IsReadOnly="True" Header="Name" Binding="{Binding DocumentName}" Width="4*"></DataGridTextColumn>
                             <DataGridTextColumn IsReadOnly ="True" Header="Type" Binding="{Binding DocumentType}" Width="4*"></DataGridTextColumn>
-                     
+
                         </DataGrid.Columns>
-                    <DataGrid.RowDetailsTemplate>
+                        <DataGrid.RowDetailsTemplate>
                             <DataTemplate>
                                 <StackPanel Orientation="Vertical">
                                     <Label x:Name="label" Content="Filename"/>
@@ -74,7 +85,7 @@
                                 </StackPanel>
                             </DataTemplate>
                         </DataGrid.RowDetailsTemplate>
-                    <DataGrid.InputBindings>
+                        <DataGrid.InputBindings>
                             <MouseBinding
                         MouseAction="LeftDoubleClick"
                         Command="{Binding EditJob}"
@@ -82,28 +93,32 @@
                         </DataGrid.InputBindings>
                     </DataGrid>
                     <!--<Label x:Name="label" Content="Loading . . ." Visibility="{Binding IsLoading, Converter={StaticResource BooleanToVisibilityConverter}}"/>-->
-            </Border>
-        </Grid>
-        <Grid Grid.Column="2">
-            <Border  BorderBrush="Transparent" BorderThickness="1">
-                <StackPanel >
-                    <Button x:Name="button3" Margin="4" HorizontalAlignment="Stretch" 
+                </Border>
+            </Grid>
+            <Grid Grid.Column="2">
+                <Border  BorderBrush="Transparent" BorderThickness="1">
+                    <StackPanel >
+                        <Button x:Name="button3" Margin="4" HorizontalAlignment="Stretch" 
                         Style="{StaticResource MultiStageButtonStyle1}"
                         Command="{Binding AddJobAsyncCommand, IsAsync=True}" Background="#FFDDDDDD">
-                        Add Job</Button>
-                    <Button x:Name="button4" Margin ="4" HorizontalAlignment="Stretch" 
+                            Add Job</Button>
+                        <Button x:Name="button4" Margin ="4" HorizontalAlignment="Stretch" 
                         Style="{StaticResource MultiStageButtonStyle1}"
                         Command="{Binding EditJob}"
                         CommandParameter="{Binding ElementName=JobDataGrid, Path=SelectedItem}">Edit Job</Button>
-                    <Button x:Name="button5" Margin="4" HorizontalAlignment="Stretch"
+                        <Button x:Name="button5" Margin="4" HorizontalAlignment="Stretch"
                         Style="{StaticResource MultiStageButtonStyle1}"
                         Command="{Binding NewManufacturingStageFile}" AutomationProperties.AutomationId="JobListViewNewManufacturingStageFileButton">New Multistage Job</Button>
-                    <Button x:Name="button6" Margin="4" HorizontalAlignment="Stretch" 
+                        <Button x:Name="button6" Margin="4" HorizontalAlignment="Stretch" 
                         Style="{StaticResource MultiStageButtonStyle1}"
                         Command="{Binding RemoveJob, IsAsync=True}"
                         CommandParameter="{Binding ElementName=JobDataGrid, Path=SelectedItem}">Remove Job</Button>
-                </StackPanel>
-            </Border>
+                    </StackPanel>
+                </Border>
+            </Grid>
         </Grid>
+        <GridSplitter Grid.Row="1" HorizontalAlignment="Stretch" Height="5"/>
+        <ContentControl Grid.Row="2" Margin="0,0,0,0" Name="ContentControlBottom" Content="{Binding OutputViewModel }"/>
     </Grid>
+   
 </UserControl>
