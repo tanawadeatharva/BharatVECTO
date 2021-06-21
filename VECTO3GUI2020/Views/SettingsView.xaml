@@ -53,9 +53,9 @@
             <Border BorderBrush="{DynamicResource ButtonHighlightColor}" BorderThickness="1" DockPanel.Dock="Top">
                 <StackPanel>
 
-                <Label DockPanel.Dock="Top" Style="{DynamicResource LabelStyle1}">Simulation Settings</Label>
-            
-                <Grid>
+                <Label Style="{DynamicResource LabelStyle1}" HorizontalAlignment="Stretch">Simulation Settings</Label>
+
+                    <Grid HorizontalAlignment="Left" MaxWidth="500" >
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="2*"/>
                         <ColumnDefinition Width="1*"/>
