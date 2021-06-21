@@ -15,7 +15,6 @@ Imports System.Collections.Generic
 Imports System.ComponentModel.DataAnnotations
 Imports System.IO
 Imports System.Linq
-Imports System.Text
 Imports System.Xml.Linq
 Imports TUGraz.VECTO.Input_Files
 Imports TUGraz.VectoCommon.Exceptions

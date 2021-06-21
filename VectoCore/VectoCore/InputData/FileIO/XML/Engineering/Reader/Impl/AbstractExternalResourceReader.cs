@@ -61,18 +61,15 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering.Reader
 				? BaseNode
 				: BaseNode.SelectSingleNode(XMLHelper.QueryLocalName(component));
 			var dataNode = requireDataNode
-				? componentNode?.SelectSingleNode(string.Format("./*[local-name()='{0}']", XMLNames.ComponentDataWrapper))
+				? componentNode?.SelectSingleNode($"./*[local-name()='{XMLNames.ComponentDataWrapper}']")
 				: componentNode;
 			var componentResourceNode = componentNode?.SelectSingleNode(
-											string.Format(
-												"./*[local-name()='{0}' and @{3}='{4}']", XMLNames.ExternalResource,
-												XMLNames.ExtResource_Component_Attr, component, XMLNames.ExtResource_Type_Attr,
-												XMLNames.ExtResource_Type_Value_XML)) ??
+											$"./*[local-name()='{XMLNames.ExternalResource}'" +
+											$" and @{XMLNames.ExtResource_Type_Attr}='{XMLNames.ExtResource_Type_Value_XML}']") ??
 										BaseNode?.SelectSingleNode(
-											string.Format(
-												"./*[local-name()='{0}' and @{1}='{2}' and @{3}='{4}']", XMLNames.ExternalResource,
-												XMLNames.ExtResource_Component_Attr, component, XMLNames.ExtResource_Type_Attr,
-												XMLNames.ExtResource_Type_Value_XML));
+											$"./*[local-name()='{XMLNames.ExternalResource}'" +
+											$" and @{XMLNames.ExtResource_Component_Attr}='{component}'" +
+											$" and @{XMLNames.ExtResource_Type_Attr}='{XMLNames.ExtResource_Type_Value_XML}']");
 			if (dataNode != null && componentResourceNode == null) {
 				var type = dataNode.SchemaInfo.SchemaType;
 				var version = XMLHelper.GetXsdType(type);
@@ -113,7 +110,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering.Reader
 						? componentDocument.DocumentElement
 						: componentDocument.DocumentElement.SelectSingleNode(XMLHelper.QueryLocalName(component));
 					var docDataNode =
-						docComponentNode?.SelectSingleNode(string.Format("./*[local-name()='{0}']", XMLNames.ComponentDataWrapper)) ??
+						docComponentNode?.SelectSingleNode($"./*[local-name()='{XMLNames.ComponentDataWrapper}']") ??
 						docComponentNode;
 
 					var type = (docDataNode)?.SchemaInfo.SchemaType;

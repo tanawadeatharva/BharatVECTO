@@ -1,7 +1,5 @@
 ﻿
-Imports System.ComponentModel
-Imports TUGraz.VectoCommon.BusAuxiliaries
-Imports TUGraz.VectoCommon.Utils
+
 
 Namespace Mocks
 	'Public Class ElectricalConsumerMock

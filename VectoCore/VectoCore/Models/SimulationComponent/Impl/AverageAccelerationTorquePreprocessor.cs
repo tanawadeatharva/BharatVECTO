@@ -44,7 +44,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl {
 					engineSpeed >= Data.EngineData.IdleSpeed;
 					engineSpeed -= speedStepSize) {
 
-					sum += VectoMath.Min(torque, maxTorque[engineSpeed]); ;
+					sum += VectoMath.Min(torque, maxTorque[engineSpeed]);
 					var tmp = engineSpeed.IsEqual(UpperLimit, speedStepSize / 2)
 						? 0.SI<NewtonMeter>()
 						: sum * speedStepSize / (UpperLimit - engineSpeed);

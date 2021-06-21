@@ -3,7 +3,6 @@ Imports System.Collections.Generic
 Imports System.ComponentModel.DataAnnotations
 Imports System.IO
 Imports System.Linq
-Imports System.Xml
 Imports Ninject
 Imports TUGraz.VECTO.Input_Files
 Imports TUGraz.VectoCommon.Exceptions
@@ -12,9 +11,7 @@ Imports TUGraz.VectoCommon.InputData
 Imports TUGraz.VectoCommon.Models
 Imports TUGraz.VectoCommon.Utils
 Imports TUGraz.VectoCore
-Imports TUGraz.VectoCore.InputData.FileIO.JSON
 Imports TUGraz.VectoCore.InputData.FileIO.XML
-Imports TUGraz.VectoCore.InputData.FileIO.XML.Declaration
 Imports TUGraz.VectoCore.InputData.Impl
 Imports TUGraz.VectoCore.Models.Declaration
 Imports TUGraz.VectoCore.Utils

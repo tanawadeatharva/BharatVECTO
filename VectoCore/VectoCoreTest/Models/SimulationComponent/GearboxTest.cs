@@ -98,7 +98,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 						new GearData {
 //								MaxTorque = 2300.SI<NewtonMeter>(),
 							LossMap = TransmissionLossMapReader.ReadFromFile(i != 6 ? IndirectLossMap : DirectLossMap, ratio,
-								string.Format("Gear {0}", i)),
+								$"Gear {i}"),
 							Ratio = ratio,
 							ShiftPolygon = ShiftPolygonReader.ReadFromFile(GearboxShiftPolygonFile)
 						}))

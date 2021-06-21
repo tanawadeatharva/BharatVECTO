@@ -183,20 +183,11 @@ namespace TUGraz.VectoCore.OutputData.XML
 
 		
 
-		public virtual XDocument FullReport
-		{
-			get { return ManufacturerRpt.Report; }
-		}
+		public virtual XDocument FullReport => ManufacturerRpt.Report;
 
-		public virtual XDocument CustomerReport
-		{
-			get { return CustomerRpt.Report; }
-		}
+		public virtual XDocument CustomerReport => CustomerRpt.Report;
 
-		public virtual XDocument PrimaryVehicleReport
-		{
-			get { return null; }
-		}
+		public virtual XDocument PrimaryVehicleReport => null;
 
 
 		protected override void DoStoreResult(ResultEntry entry, VectoRunData runData, IModalDataContainer modData)
@@ -264,38 +255,34 @@ namespace TUGraz.VectoCore.OutputData.XML
 			CustomerRpt = new XMLCustomerReport();
 		}
 
-		private static IDictionary<Tuple<MissionType, LoadingType>, double> ZeroWeighting
-		{
-			get {
-				return new ReadOnlyDictionary<Tuple<MissionType, LoadingType>, double>(
-					new Dictionary<Tuple<MissionType, LoadingType>, double>() {
-						{ Tuple.Create(MissionType.LongHaul, LoadingType.LowLoading), 0 },
-						{ Tuple.Create(MissionType.LongHaul, LoadingType.ReferenceLoad), 0 },
-						{ Tuple.Create(MissionType.RegionalDelivery, LoadingType.LowLoading), 0 },
-						{ Tuple.Create(MissionType.RegionalDelivery, LoadingType.ReferenceLoad), 0 },
-						{ Tuple.Create(MissionType.UrbanDelivery, LoadingType.LowLoading), 0 },
-						{ Tuple.Create(MissionType.UrbanDelivery, LoadingType.ReferenceLoad), 0 },
-						{ Tuple.Create(MissionType.LongHaulEMS, LoadingType.LowLoading), 0 },
-						{ Tuple.Create(MissionType.LongHaulEMS, LoadingType.ReferenceLoad), 0 },
-						{ Tuple.Create(MissionType.RegionalDeliveryEMS, LoadingType.LowLoading), 0 },
-						{ Tuple.Create(MissionType.RegionalDeliveryEMS, LoadingType.ReferenceLoad), 0 },
-						{ Tuple.Create(MissionType.MunicipalUtility, LoadingType.LowLoading), 0 },
-						{ Tuple.Create(MissionType.MunicipalUtility, LoadingType.ReferenceLoad), 0 },
-						{ Tuple.Create(MissionType.Construction, LoadingType.LowLoading), 0 },
-						{ Tuple.Create(MissionType.Construction, LoadingType.ReferenceLoad), 0 },
-						{ Tuple.Create(MissionType.HeavyUrban, LoadingType.LowLoading), 0 },
-						{ Tuple.Create(MissionType.HeavyUrban, LoadingType.ReferenceLoad), 0 },
-						{ Tuple.Create(MissionType.Urban, LoadingType.LowLoading), 0 },
-						{ Tuple.Create(MissionType.Urban, LoadingType.ReferenceLoad), 0 },
-						{ Tuple.Create(MissionType.Suburban, LoadingType.LowLoading), 0 },
-						{ Tuple.Create(MissionType.Suburban, LoadingType.ReferenceLoad), 0 },
-						{ Tuple.Create(MissionType.Interurban, LoadingType.LowLoading), 0 },
-						{ Tuple.Create(MissionType.Interurban, LoadingType.ReferenceLoad), 0 },
-						{ Tuple.Create(MissionType.Coach, LoadingType.LowLoading), 0 },
-						{ Tuple.Create(MissionType.Coach, LoadingType.ReferenceLoad), 0 },
-					});
-			}
-		}
+		private static IDictionary<Tuple<MissionType, LoadingType>, double> ZeroWeighting =>
+			new ReadOnlyDictionary<Tuple<MissionType, LoadingType>, double>(
+				new Dictionary<Tuple<MissionType, LoadingType>, double>() {
+					{ Tuple.Create(MissionType.LongHaul, LoadingType.LowLoading), 0 },
+					{ Tuple.Create(MissionType.LongHaul, LoadingType.ReferenceLoad), 0 },
+					{ Tuple.Create(MissionType.RegionalDelivery, LoadingType.LowLoading), 0 },
+					{ Tuple.Create(MissionType.RegionalDelivery, LoadingType.ReferenceLoad), 0 },
+					{ Tuple.Create(MissionType.UrbanDelivery, LoadingType.LowLoading), 0 },
+					{ Tuple.Create(MissionType.UrbanDelivery, LoadingType.ReferenceLoad), 0 },
+					{ Tuple.Create(MissionType.LongHaulEMS, LoadingType.LowLoading), 0 },
+					{ Tuple.Create(MissionType.LongHaulEMS, LoadingType.ReferenceLoad), 0 },
+					{ Tuple.Create(MissionType.RegionalDeliveryEMS, LoadingType.LowLoading), 0 },
+					{ Tuple.Create(MissionType.RegionalDeliveryEMS, LoadingType.ReferenceLoad), 0 },
+					{ Tuple.Create(MissionType.MunicipalUtility, LoadingType.LowLoading), 0 },
+					{ Tuple.Create(MissionType.MunicipalUtility, LoadingType.ReferenceLoad), 0 },
+					{ Tuple.Create(MissionType.Construction, LoadingType.LowLoading), 0 },
+					{ Tuple.Create(MissionType.Construction, LoadingType.ReferenceLoad), 0 },
+					{ Tuple.Create(MissionType.HeavyUrban, LoadingType.LowLoading), 0 },
+					{ Tuple.Create(MissionType.HeavyUrban, LoadingType.ReferenceLoad), 0 },
+					{ Tuple.Create(MissionType.Urban, LoadingType.LowLoading), 0 },
+					{ Tuple.Create(MissionType.Urban, LoadingType.ReferenceLoad), 0 },
+					{ Tuple.Create(MissionType.Suburban, LoadingType.LowLoading), 0 },
+					{ Tuple.Create(MissionType.Suburban, LoadingType.ReferenceLoad), 0 },
+					{ Tuple.Create(MissionType.Interurban, LoadingType.LowLoading), 0 },
+					{ Tuple.Create(MissionType.Interurban, LoadingType.ReferenceLoad), 0 },
+					{ Tuple.Create(MissionType.Coach, LoadingType.LowLoading), 0 },
+					{ Tuple.Create(MissionType.Coach, LoadingType.ReferenceLoad), 0 },
+				});
 
 
 		public static IEnumerable<XElement> GetResults(ResultEntry result, XNamespace tns, bool fullOutput)

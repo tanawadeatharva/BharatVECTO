@@ -86,8 +86,9 @@ namespace TUGraz.VectoCore.Tests.Utils
 
 				if (testRowcount) {
 					Assert.AreEqual(expected.Rows.Count, actual.Rows.Count,
-						string.Format("Moddata: Row count differs.\nExpected {0} Rows in {1}\nGot {2} Rows in {3}", expected.Rows.Count,
-							result.expectedFile, actual.Rows.Count, result.actualFile));
+						$"Moddata: Row count differs.\n" +
+						$"Expected {expected.Rows.Count} Rows in {result.expectedFile}\n" +
+						$"Got {actual.Rows.Count} Rows in {result.actualFile}");
 				}
 
 				var actualCols = actual.Columns.Cast<DataColumn>().Select(x => x.ColumnName).OrderBy(x => x).ToList();
@@ -117,7 +118,7 @@ namespace TUGraz.VectoCore.Tests.Utils
 
 					foreach (var field in testColumns ?? new string[0]) {
 						Assert.AreEqual(expectedRow.ParseDoubleOrGetDefault(field), actualRow.ParseDoubleOrGetDefault(field), 1e-4,
-							string.Format("t: {0}  field: {1}", i, field));
+							$"t: {i}  field: {field}");
 					}
 				}
 			}
@@ -131,8 +132,7 @@ namespace TUGraz.VectoCore.Tests.Utils
 			var actual = VectoCSVFile.Read(actualFile, fullHeader: true);
 
 			Assert.AreEqual(expected.Rows.Count, actual.Rows.Count,
-				string.Format("SUM File row count differs.\nExpected {0} Rows in {1}\nGot {2} Rows in {3}", expected.Rows.Count,
-					expectedFile, actual.Rows.Count, actualFile));
+				$"SUM File row count differs.\nExpected {expected.Rows.Count} Rows in {expectedFile}\nGot {actual.Rows.Count} Rows in {actualFile}");
 
 			var actualCols = actual.Columns.Cast<DataColumn>().Select(x => x.ColumnName).OrderBy(x => x).ToList();
 			var expectedCols = expected.Columns.Cast<DataColumn>().Select(x => x.ColumnName).OrderBy(x => x).ToList();
@@ -150,7 +150,7 @@ namespace TUGraz.VectoCore.Tests.Utils
 
 				foreach (var field in testColumns ?? new string[0]) {
 					AssertHelper.AreRelativeEqual(expectedRow.ParseDoubleOrGetDefault(field), actualRow.ParseDoubleOrGetDefault(field),
-						string.Format("t: {0}  field: {1}", i, field));
+						$"t: {i}  field: {field}");
 				}
 			}
 		}

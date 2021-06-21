@@ -141,7 +141,7 @@ namespace TUGraz.VectoCore.Utils
 		public static string GetSchemaFilename(XmlDocumentType type)
 		{
 			if (!schemaFilenames.ContainsKey(type)) {
-				throw new Exception(string.Format("Invalid argument '{0}' - only use single flags", type));
+				throw new Exception($"Invalid argument '{type}' - only use single flags");
 			}
 			var entry = schemaFilenames[type];
 			

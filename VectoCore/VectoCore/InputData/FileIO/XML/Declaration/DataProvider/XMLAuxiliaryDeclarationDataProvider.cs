@@ -57,10 +57,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		#region Implementation of IAuxiliaryDeclarationInputData
 
 
-		public virtual AuxiliaryType Type
-		{
-			get { return _type ?? (_type = BaseNode.LocalName.ParseEnum<AuxiliaryType>()).Value; }
-		}
+		public virtual AuxiliaryType Type => _type ?? (_type = BaseNode.LocalName.ParseEnum<AuxiliaryType>()).Value;
 
 		public virtual IList<string> Technology
 		{

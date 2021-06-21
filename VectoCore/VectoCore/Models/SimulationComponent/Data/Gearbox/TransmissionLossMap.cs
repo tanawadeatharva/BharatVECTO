@@ -136,10 +136,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox
 				inAngularVelocity.AsRPM);
 		}
 
-		public GearLossMapEntry this[int i]
-		{
-			get { return _entries[i]; }
-		}
+		public GearLossMapEntry this[int i] => _entries[i];
 
 #if DEBUG
 		public void DrawGraph()

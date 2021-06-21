@@ -58,31 +58,17 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering.DataProvider
 
 		#region Implementation of IOverSpeedEcoRollDeclarationInputData
 
-		public virtual bool Enabled
-		{
-			get { return GetNode(XMLNames.DriverModel_Overspeed_Mode, required: false)?.InnerText.Equals("Overspeed", StringComparison.InvariantCultureIgnoreCase) ?? false; }
-		}
+		public virtual bool Enabled => GetNode(XMLNames.DriverModel_Overspeed_Mode, required: false)?.InnerText.Equals("Overspeed", StringComparison.InvariantCultureIgnoreCase) ?? false;
 
 		#endregion
 
 		#region Implementation of IOverSpeedEcoRollEngineeringInputData
 
-		public virtual MeterPerSecond MinSpeed
-		{
-			get { return GetNode(XMLNames.DriverModel_Overspeed_MinSpeed, required: false)?.InnerText.ToDouble().KMPHtoMeterPerSecond(); }
-		}
+		public virtual MeterPerSecond MinSpeed => GetNode(XMLNames.DriverModel_Overspeed_MinSpeed, required: false)?.InnerText.ToDouble().KMPHtoMeterPerSecond();
 
-		public virtual MeterPerSecond OverSpeed
-		{
-			get { return GetNode(XMLNames.DriverModel_Overspeed_AllowedOverspeed, required: false)?.InnerText.ToDouble().KMPHtoMeterPerSecond(); }
-		}
+		public virtual MeterPerSecond OverSpeed => GetNode(XMLNames.DriverModel_Overspeed_AllowedOverspeed, required: false)?.InnerText.ToDouble().KMPHtoMeterPerSecond();
 
-		public virtual MeterPerSecond UnderSpeed
-		{
-			get {
-				return GetNode(XMLNames.DriverModel_Overspeed_AllowedUnderspeed, required: false)?.InnerText.ToDouble().KMPHtoMeterPerSecond();
-			}
-		}
+		public virtual MeterPerSecond UnderSpeed => GetNode(XMLNames.DriverModel_Overspeed_AllowedUnderspeed, required: false)?.InnerText.ToDouble().KMPHtoMeterPerSecond();
 
 		#endregion
 	}
@@ -99,10 +85,6 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering.DataProvider
 
 		public XMLEngineeringOverspeedV10(IXMLEngineeringDriverData driverData, XmlNode node) : base(driverData, node) { }
 
-		public override bool Enabled
-		{
-			get { return XmlConvert.ToBoolean(GetNode(XMLNames.DriverModel_Overspeed_Enabled, required: false)?.InnerText ?? "false"); }
-		}
-
+		public override bool Enabled => XmlConvert.ToBoolean(GetNode(XMLNames.DriverModel_Overspeed_Enabled, required: false)?.InnerText ?? "false");
 	}
 }

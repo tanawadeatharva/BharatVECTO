@@ -22,25 +22,15 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			ModelData = modelData;
 		}
 
-		public IElectricEnergyStoragePort MainBatteryPort
-		{
-			get { return this; }
-		}
-		public Volt InternalVoltage
-		{
-			get { return PreviousState.Charge / ModelData.Capacity; }
-		}
+		public IElectricEnergyStoragePort MainBatteryPort => this;
 
-		public double StateOfCharge
-		{
-			get { return PreviousState.Charge / (ModelData.Capacity * ModelData.MaxVoltage); }
-		}
+		public Volt InternalVoltage => PreviousState.Charge / ModelData.Capacity;
 
-		public WattSecond StoredEnergy
-		{
+		public double StateOfCharge => PreviousState.Charge / (ModelData.Capacity * ModelData.MaxVoltage);
+
+		public WattSecond StoredEnergy =>
 			// E = 1/2 C * U^2 = 1/2 Q^2/C
-			get { return PreviousState.Charge * InternalVoltage / 2.0; }
-		}
+			PreviousState.Charge * InternalVoltage / 2.0;
 
 		public Watt MaxChargePower(Second dt)
 		{
@@ -63,14 +53,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			return VectoMath.Max(maxDischargePower, maxPower);
 		}
 
-		public double MinSoC
-		{
-			get { return ModelData.MinVoltage / ModelData.MaxVoltage; }
-		}
-		public double MaxSoC
-		{
-			get { return 1; }
-		}
+		public double MinSoC => ModelData.MinVoltage / ModelData.MaxVoltage;
+
+		public double MaxSoC => 1;
 
 		public void Initialize(double initialSoC)
 		{

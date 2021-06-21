@@ -125,7 +125,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			var cycle = SimpleDrivingCycles.CreateCycleData(cycleData);
 			var run = ATPowerTrain.CreateEngineeringRun(
 				cycle, gbxType,
-				string.Format("AT_Vehicle_Drive-TC-{0}.vmod", gbxType == GearboxType.ATSerial ? "ser" : "ps"));
+				$"AT_Vehicle_Drive-TC-{(gbxType == GearboxType.ATSerial ? "ser" : "ps")}.vmod");
 
 			run.Run();
 			Assert.IsTrue(run.FinishedWithoutErrors);
@@ -141,7 +141,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			var cycle = SimpleDrivingCycles.CreateCycleData(cycleData);
 			var run = ATPowerTrain.CreateEngineeringRun(
 				cycle, gbxType,
-				string.Format("AT_Vehicle_Drive-TC_shiftup-{0}.vmod", gbxType == GearboxType.ATSerial ? "ser" : "ps"));
+				$"AT_Vehicle_Drive-TC_shiftup-{(gbxType == GearboxType.ATSerial ? "ser" : "ps")}.vmod");
 
 			run.Run();
 			Assert.IsTrue(run.FinishedWithoutErrors);
@@ -157,7 +157,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			var cycle = SimpleDrivingCycles.CreateCycleData(cycleData);
 			var run = ATPowerTrain.CreateEngineeringRun(
 				cycle, gbxType,
-				string.Format("AT_Vehicle_Drive-TC_shiftdown-{0}.vmod", gbxType == GearboxType.ATSerial ? "ser" : "ps"));
+				$"AT_Vehicle_Drive-TC_shiftdown-{(gbxType == GearboxType.ATSerial ? "ser" : "ps")}.vmod");
 
 			run.Run();
 			Assert.IsTrue(run.FinishedWithoutErrors);
@@ -181,14 +181,12 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			var cycle = SimpleDrivingCycles.ReadDeclarationCycle(cycleName);
 			var run = ATPowerTrain.CreateEngineeringRun(
 				cycle, gbxType,
-				string.Format("AT_Vehicle_Drive-TC_{0}-{1}.vmod", cycleName, gbxType == GearboxType.ATSerial ? "ser" : "ps"));
+				$"AT_Vehicle_Drive-TC_{cycleName}-{(gbxType == GearboxType.ATSerial ? "ser" : "ps")}.vmod");
 
 			var sumWriter =
 				new SummaryDataContainer(
 					new FileOutputWriter(
-						string.Format(
-							"AT_Vehicle_Drive-TC_{0}-{1}", cycleName,
-							gbxType == GearboxType.ATSerial ? "ser" : "ps")));
+						$"AT_Vehicle_Drive-TC_{cycleName}-{(gbxType == GearboxType.ATSerial ? "ser" : "ps")}"));
 			((VehicleContainer)run.GetContainer()).WriteSumData = (modData) =>
 				sumWriter.Write(run.GetContainer().ModalData, 0, 0, run.GetContainer().RunData);
 			run.Run();

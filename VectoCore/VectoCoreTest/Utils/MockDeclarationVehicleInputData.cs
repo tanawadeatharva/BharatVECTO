@@ -17,7 +17,7 @@ namespace TUGraz.VectoCore.Tests.Utils {
 		public string Manufacturer { get; }
 		public string Model { get; }
 		public DateTime Date { get; }
-		public string AppVersion { get { return "Mock-Class"; } }
+		public string AppVersion => "Mock-Class";
 		public CertificationMethod CertificationMethod { get; }
 		public string CertificationNumber { get; }
 		public DigestData DigestValue { get; }
@@ -34,7 +34,7 @@ namespace TUGraz.VectoCore.Tests.Utils {
 		public AxleConfiguration AxleConfiguration { get; }
 		public Kilogram CurbMassChassis { get; }
 		public Kilogram GrossVehicleMassRating { get; }
-		public IList<ITorqueLimitInputData> TorqueLimits { get { return new List<ITorqueLimitInputData>(); } }
+		public IList<ITorqueLimitInputData> TorqueLimits => new List<ITorqueLimitInputData>();
 		public string ManufacturerAddress { get; }
 		public PerSecond EngineIdleSpeed { get; }
 		public bool VocationalVehicle { get; }
@@ -63,7 +63,7 @@ namespace TUGraz.VectoCore.Tests.Utils {
 		public Meter EntranceHeight { get; }
 		public ConsumerTechnology? DoorDriveTechnology { get; }
 		public VehicleDeclarationType VehicleDeclarationType { get; }
-		public IVehicleComponentsDeclaration Components { get { return this; } }
+		public IVehicleComponentsDeclaration Components => this;
 		public XmlNode XMLSource { get; }
 
 		#endregion
@@ -99,7 +99,7 @@ namespace TUGraz.VectoCore.Tests.Utils {
 		public string Manufacturer { get; }
 		public string Model { get; }
 		public DateTime Date { get; }
-		public string AppVersion { get { return "Mock-Class"; } }
+		public string AppVersion => "Mock-Class";
 		public CertificationMethod CertificationMethod { get; }
 		public string CertificationNumber { get; }
 		public DigestData DigestValue { get; }
@@ -131,14 +131,11 @@ namespace TUGraz.VectoCore.Tests.Utils {
 		public VehicleCode? VehicleCode { get; set; }
 		public bool? LowEntry { get; }
 
-		IVehicleComponentsDeclaration IVehicleDeclarationInputData.Components
-		{
-			get { return _components; }
-		}
+		IVehicleComponentsDeclaration IVehicleDeclarationInputData.Components => _components;
 
 		public XmlNode XMLSource { get; }
 
-		public IVehicleComponentsEngineering Components { get { return this; } }
+		public IVehicleComponentsEngineering Components => this;
 		public string Identifier { get; }
 		public bool ExemptedVehicle { get; }
 		public string VIN { get; }
@@ -147,7 +144,7 @@ namespace TUGraz.VectoCore.Tests.Utils {
 		public AxleConfiguration AxleConfiguration { get; }
 		public Kilogram CurbMassChassis { get; }
 		public Kilogram GrossVehicleMassRating { get; }
-		public IList<ITorqueLimitInputData> TorqueLimits { get { return new List<ITorqueLimitInputData>(); } }
+		public IList<ITorqueLimitInputData> TorqueLimits => new List<ITorqueLimitInputData>();
 		public string ManufacturerAddress { get; }
 		public PerSecond EngineIdleSpeed { get; }
 		public bool VocationalVehicle { get; }
@@ -155,10 +152,7 @@ namespace TUGraz.VectoCore.Tests.Utils {
 		public bool? AirdragModifiedMultistage { get; }
 		public TankSystem? TankSystem { get; }
 
-		IAdvancedDriverAssistantSystemDeclarationInputData IVehicleDeclarationInputData.ADAS
-		{
-			get { return _adas; }
-		}
+		IAdvancedDriverAssistantSystemDeclarationInputData IVehicleDeclarationInputData.ADAS => _adas;
 
 		public double InitialSOC { get; }
 		public VectoSimulationJobType VehicleType { get; }

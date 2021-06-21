@@ -96,8 +96,7 @@ namespace TUGraz.VectoCore.Tests.Utils
 			var titleHeight = (50 * 100.0f) / (_diagramSize.Height * Yfields.Length);
 
 			foreach (var xfield in Xfields) {
-				var fileName = string.Format("{0}_{1}.png", Path.GetFileNameWithoutExtension(fileNameV3),
-					xfield.GetName());
+				var fileName = $"{Path.GetFileNameWithoutExtension(fileNameV3)}_{xfield.GetName()}.png";
 
 				var x = LoadData(modDataV3, xfield.GetName());
 				var x2 = new[] { double.NegativeInfinity };
@@ -282,8 +281,7 @@ namespace TUGraz.VectoCore.Tests.Utils
 			var titleHeight = (50 * 100.0f) / (_diagramSize.Height * yfields.Length);
 
 			//foreach (var xfield in xfields) {
-			var fileName = string.Format("{0}_{1}-{2:D3}_{3:D3}.png", Path.GetFileNameWithoutExtension(fileNameV3),
-				xfield.GetName(), (int)(start / 1000), (int)(end / 1000));
+			var fileName = $"{Path.GetFileNameWithoutExtension(fileNameV3)}_{xfield.GetName()}-{(int)(start / 1000):D3}_{(int)(end / 1000):D3}.png";
 
 			var x = LoadData(modDataV3, xfield.GetName());
 			var x2 = new[] { double.NegativeInfinity };
@@ -327,12 +325,12 @@ namespace TUGraz.VectoCore.Tests.Utils
 					seriesGrad.YAxisType = AxisType.Secondary;
 				}
 
-				var series1 = CreateSeries(string.Format("Vecto 3 - {0}", yfield), legend, chartArea, chart,
+				var series1 = CreateSeries($"Vecto 3 - {yfield}", legend, chartArea, chart,
 					Color.Blue, x, y);
 
 				if (fileNameV22 != null) {
 					var y2 = LoadData(modDataV22, yfield.GetName());
-					var series2 = CreateSeries(string.Format("Vecto 2.2 - {0}", yfield), legend, chartArea, chart,
+					var series2 = CreateSeries($"Vecto 2.2 - {yfield}", legend, chartArea, chart,
 						Color.Red, x2, y2);
 				}
 

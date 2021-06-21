@@ -9,12 +9,10 @@ namespace TUGraz.VectoCore.Models.Declaration {
 	{
 		#region Overrides of LookupData
 
-		protected override string ResourceId { get { return DeclarationData.DeclarationDataResourcePrefix + ".Buses.AlternatorTechnologies.csv"; } }
+		protected override string ResourceId => DeclarationData.DeclarationDataResourcePrefix + ".Buses.AlternatorTechnologies.csv";
 
-		protected override string ErrorMessage
-		{
-			get { return "Bus-Alternator Technology Lookup Error: No value found for Technology. Key: '{0}'"; }
-		}
+		protected override string ErrorMessage => "Bus-Alternator Technology Lookup Error: No value found for Technology. Key: '{0}'";
+
 		protected override void ParseData(DataTable table)
 		{
 			Data = table.Rows.Cast<DataRow>()

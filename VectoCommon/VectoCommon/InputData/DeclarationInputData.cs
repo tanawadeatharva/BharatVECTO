@@ -85,10 +85,7 @@ namespace TUGraz.VectoCommon.InputData
 
 		public string SourceVersion { get; set; }
 
-		public string SourcePath
-		{
-			get { return SourceFile != null ? Path.GetDirectoryName(Path.GetFullPath(SourceFile)) : null; }
-		}
+		public string SourcePath => SourceFile != null ? Path.GetDirectoryName(Path.GetFullPath(SourceFile)) : null;
 	}
 
 	public interface IVehicleDeclarationInputData : IComponentInputData

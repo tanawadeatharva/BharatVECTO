@@ -135,7 +135,7 @@ Public Class VectoVTPJobForm
         If File.Exists(Path.Combine(MyAppPath, "User Manual\help.html")) Then
             Dim defaultBrowserPath As String = BrowserUtils.GetDefaultBrowserPath()
             Process.Start(defaultBrowserPath,
-                          String.Format("""file://{0}""", Path.Combine(MyAppPath,"User Manual\help.html#job-editor")))
+                          $"""file://{Path.Combine(MyAppPath, "User Manual\help.html#job-editor")}""")
         Else
             MsgBox("User Manual not found!", MsgBoxStyle.Critical)
         End If
@@ -583,7 +583,7 @@ Public Class VectoVTPJobForm
 
         If gearbox Is Nothing Then Return
 
-        TbGbxTxt.Text = String.Format("{0}-Speed {1} {2}", gearbox.Gears.Count, gearbox.Type.ShortName(), gearbox.Model)
+        TbGbxTxt.Text = $"{gearbox.Gears.Count}-Speed {gearbox.Type.ShortName()} {gearbox.Model}"
     End Sub
 
     Private Sub UpdateEnginePic(ByRef chart As Chart)
@@ -644,8 +644,7 @@ Public Class VectoVTPJobForm
         pmax = fullLoadCurve.MaxPower.Value()/1000 'FLD0.Pfull(FLD0.EngineRatedSpeed)
 
 
-        TbEngTxt.Text = String.Format("{0} l {1} kw {2}", (engine.Displacement.Value()*1000).ToString("0.0"),
-                                      pmax.ToString("#"), engine.Model)
+        TbEngTxt.Text = $"{(engine.Displacement.Value()*1000).ToString("0.0")} l {pmax.ToString("#")} kw {engine.Model}"
 
         Dim fuelConsumptionMap As FuelConsumptionMap = FuelConsumptionMapReader.Create(engine.EngineModes.First().Fuels.First().FuelConsumptionMap)
 
@@ -659,10 +658,9 @@ Public Class VectoVTPJobForm
         chart.Series.Add(s)
 
         Dim engineCharacteristics As String =
-                String.Format("Max. Torque: {0:F0} Nm; Max. Power: {1:F1} kW; n_rated: {2:F0} rpm; n_95h: {3:F0} rpm",
-                              fullLoadCurve.MaxTorque.Value(), fullLoadCurve.MaxPower.Value()/1000,
-                              fullLoadCurve.RatedSpeed.AsRPM,
-                              fullLoadCurve.N95hSpeed.AsRPM)
+                $"Max. Torque: {fullLoadCurve.MaxTorque.Value():F0} Nm; Max. Power: { _
+                (fullLoadCurve.MaxPower.Value()/1000):F1} kW; n_rated: {fullLoadCurve.RatedSpeed.AsRPM:F0} rpm; n_95h: { _
+                fullLoadCurve.N95hSpeed.AsRPM:F0} rpm"
         lblEngineCharacteristics.Text = engineCharacteristics
     End Sub
 
@@ -703,7 +701,7 @@ Public Class VectoVTPJobForm
         PicVehicle.Image = ConvPicPath(HDVclass, False) _
         'Image.FromFile(cDeclaration.ConvPicPath(HDVclass, False))
 
-        TbHVCclass.Text = String.Format("HDV Group {0}", HDVclass)
+        TbHVCclass.Text = $"HDV Group {HDVclass}"
         TbVehCat.Text = vehicle.VehicleCategory.GetCategoryName()   'ConvVehCat(VEH0.VehCat, True)
         TbMass.Text = (vehicle.GrossVehicleMassRating.Value()/1000) & " t"
         TbAxleConf.Text = vehicle.AxleConfiguration.GetName()   'ConvAxleConf(VEH0.AxleConf)

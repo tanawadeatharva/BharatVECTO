@@ -24,7 +24,7 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.Electric
 			return _efficiency;
 		}
 
-		public string Source { get { return null; } }
+		public string Source => null;
 
 		#endregion
 	}

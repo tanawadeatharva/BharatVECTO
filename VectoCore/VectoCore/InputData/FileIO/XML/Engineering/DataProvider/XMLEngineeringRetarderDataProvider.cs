@@ -57,28 +57,18 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering.DataProvider
 			SourceType = (vehicle as IXMLResource).DataSource.SourceFile == fsBasePath ? DataSourceType.XMLEmbedded : DataSourceType.XMLFile;
 		}
 
-		public virtual RetarderType Type
-		{
-			get { return Vehicle.RetarderType; }
-		}
+		public virtual RetarderType Type => Vehicle.RetarderType;
 
-		public virtual double Ratio
-		{
-			get { return Vehicle.RetarderRatio; }
-		}
+		public virtual double Ratio => Vehicle.RetarderRatio;
 
-		public virtual TableData LossMap
-		{
-			get {
-				return XMLHelper.ReadEntriesOrResource(
-					BaseNode, DataSource.SourcePath, XMLNames.Retarder_RetarderLossMap, XMLNames.Retarder_RetarderLossMap_Entry,
-					AttributeMappings.RetarderLossmapMapping);
-			}
-		}
+		public virtual TableData LossMap =>
+			XMLHelper.ReadEntriesOrResource(
+				BaseNode, DataSource.SourcePath, XMLNames.Retarder_RetarderLossMap, XMLNames.Retarder_RetarderLossMap_Entry,
+				AttributeMappings.RetarderLossmapMapping);
 
 		#region Overrides of AbstractXMLResource
 
-		protected override XNamespace SchemaNamespace { get { return NAMESPACE_URI; } }
+		protected override XNamespace SchemaNamespace => NAMESPACE_URI;
 		protected override DataSourceType SourceType { get; }
 
 		#endregion
@@ -99,7 +89,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering.DataProvider
 
 		#region Overrides of XMLEngineeringRetarderDataProviderV07
 
-		protected override XNamespace SchemaNamespace { get { return NAMESPACE_URI; } }
+		protected override XNamespace SchemaNamespace => NAMESPACE_URI;
 
 		#endregion
 	}

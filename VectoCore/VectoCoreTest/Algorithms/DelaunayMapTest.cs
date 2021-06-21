@@ -215,7 +215,7 @@ namespace TUGraz.VectoCore.Tests.Algorithms
 
 				// test one arbitrary point in the middle
 				AssertHelper.AreRelativeEqual(37681, map.Interpolate(1500 * xfactor, 1300 * yfactor),
-					string.Format("{0}, {1}", xfactor, yfactor));
+					$"{xfactor}, {yfactor}");
 			}
 		}
 	}

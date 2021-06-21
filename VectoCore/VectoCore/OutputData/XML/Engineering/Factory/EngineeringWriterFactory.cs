@@ -112,8 +112,7 @@ namespace TUGraz.VectoCore.OutputData.XML.Engineering.Factory
 				var bindings = Kernel.GetBindings(writerType).ToArray();
 				if (bindings.Any()) {
 					var mostRecent = bindings.MaxBy(b => {
-						double retVal;
-						var success = double.TryParse(b.Metadata.Name, NumberStyles.Float, CultureInfo.InvariantCulture, out retVal);
+						var success = double.TryParse(b.Metadata.Name, NumberStyles.Float, CultureInfo.InvariantCulture, out var retVal);
 						return success ? retVal : -1;
 					}).Metadata.Name;
 					return GetEngineeringWriter(inputDataType, mostRecent, writerType, xmlEngineeringWriter);

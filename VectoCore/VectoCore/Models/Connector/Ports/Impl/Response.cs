@@ -110,8 +110,7 @@ namespace TUGraz.VectoCore.Models.Connector.Ports.Impl
 		public override string ToString()
 		{
 			var t = GetType();
-			return string.Format("{0}{{{1}}}", t.Name,
-				string.Join(", ", t.GetProperties().Select(p => string.Format("{0}: {1}", p.Name, p.GetValue(this)))));
+			return $"{t.Name}{{{string.Join(", ", t.GetProperties().Select(p => $"{p.Name}: {p.GetValue(this)}"))}}}";
 		}
 	}
 

@@ -183,7 +183,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 					case "Large Supply 2-stage":
 						resource = "DEFAULT_3-Cylinder_2-Stage_598ccm.acmp";
 						break;
-					default: throw new ArgumentException(string.Format("unkown compressor size {0}", compressorSize), compressorSize);
+					default: throw new ArgumentException($"unkown compressor size {compressorSize}", compressorSize);
 				}
 
 				var dragCurveFactorClutch = 1.0;
@@ -197,49 +197,30 @@ namespace TUGraz.VectoCore.Models.Declaration
 				}
 
 				return CompressorMapReader.ReadStream(
-					RessourceHelper.ReadStream(DeclarationData.DeclarationDataResourcePrefix + ".VAUXBus." + resource), dragCurveFactorClutch, $"{compressorSize} - {clutchType}");
+					RessourceHelper.ReadStream(DeclarationDataResourcePrefix + ".VAUXBus." + resource), dragCurveFactorClutch, $"{compressorSize} - {clutchType}");
 			}
 
 			public static BusAlternatorTechnologies AlternatorTechnologies = new BusAlternatorTechnologies();
 			private static HVACCoolingPower hvacMaxCoolingPower;
 
-			public static List<SSMTechnology> SSMTechnologyList
-			{
-				get {
-					return ssmTechnologies ?? (ssmTechnologies = SSMTechnologiesReader.ReadFromStream(
-								RessourceHelper.ReadStream(DeclarationDataResourcePrefix + ".Buses.SSMTechList.csv")));
-				}
-			}
+			public static List<SSMTechnology> SSMTechnologyList =>
+				ssmTechnologies ?? (ssmTechnologies = SSMTechnologiesReader.ReadFromStream(
+					RessourceHelper.ReadStream(DeclarationDataResourcePrefix + ".Buses.SSMTechList.csv")));
 
-			public static IEnvironmentalConditionsMap DefaultEnvironmentalConditions
-			{
-				get {
-					return envMap ?? (envMap = EnvironmentalContidionsMapReader.ReadStream(
-								RessourceHelper.ReadStream(DeclarationDataResourcePrefix + ".Buses.DefaultClimatic.aenv")));
-				}
-			}
+			public static IEnvironmentalConditionsMap DefaultEnvironmentalConditions =>
+				envMap ?? (envMap = EnvironmentalContidionsMapReader.ReadStream(
+					RessourceHelper.ReadStream(DeclarationDataResourcePrefix + ".Buses.DefaultClimatic.aenv")));
 
-			public static ElectricalConsumerList DefaultElectricConsumerList
-			{
-				get {
-					return elUserConfig ?? (elUserConfig = ElectricConsumerReader.ReadStream(
-								RessourceHelper.ReadStream(DeclarationDataResourcePrefix + ".Buses.ElectricConsumers.csv")));
-				}
-			}
+			public static ElectricalConsumerList DefaultElectricConsumerList =>
+				elUserConfig ?? (elUserConfig = ElectricConsumerReader.ReadStream(
+					RessourceHelper.ReadStream(DeclarationDataResourcePrefix + ".Buses.ElectricConsumers.csv")));
 
 
-			public static IActuationsMap ActuationsMap
-			{
-				get {
-					return actuationsMap ?? (actuationsMap = ActuationsMapReader.ReadStream(
-									RessourceHelper.ReadStream(DeclarationDataResourcePrefix + ".Buses.DefaultActuationsMap.apac")));
-				}
-			}
+			public static IActuationsMap ActuationsMap =>
+				actuationsMap ?? (actuationsMap = ActuationsMapReader.ReadStream(
+					RessourceHelper.ReadStream(DeclarationDataResourcePrefix + ".Buses.DefaultActuationsMap.apac")));
 
-			public static HVACCoolingPower HVACMaxCoolingPower
-			{
-				get { return hvacMaxCoolingPower ?? (hvacMaxCoolingPower = new HVACCoolingPower()); }
-			}
+			public static HVACCoolingPower HVACMaxCoolingPower => hvacMaxCoolingPower ?? (hvacMaxCoolingPower = new HVACCoolingPower());
 
 			public static PerSecond VentilationRate(BusHVACSystemConfiguration? hvacSystemConfig, bool heating)
 			{

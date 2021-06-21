@@ -3,17 +3,13 @@ Imports System.IO
 Imports NUnit.Framework
 Imports TUGraz.VectoCommon.BusAuxiliaries
 Imports TUGraz.VectoCommon.Utils
-Imports TUGraz.VectoCore.InputData.FileIO.JSON
 Imports TUGraz.VectoCore.InputData.Reader.ComponentData
-Imports TUGraz.VectoCore.Models.BusAuxiliaries
-Imports TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl
 Imports TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.Electrics
 Imports TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.HVAC
 Imports TUGraz.VectoCore.Models.BusAuxiliaries.Interfaces
 Imports TUGraz.VectoCore.Models.BusAuxiliaries.Interfaces.DownstreamModules
 Imports TUGraz.VectoCore.Models.BusAuxiliaries.Interfaces.DownstreamModules.HVAC
 Imports TUGraz.VectoCore.Models.Declaration
-Imports TUGraz.VectoCore.Models.SimulationComponent.Data
 
 Namespace UnitTests
 	<TestFixture()>

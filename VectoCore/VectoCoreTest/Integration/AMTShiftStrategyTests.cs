@@ -78,8 +78,8 @@ namespace TUGraz.VectoCore.Tests.Integration
 			jobContainer.Execute();
 			jobContainer.WaitFinished();
 			var progress = jobContainer.GetProgress();
-			Assert.IsTrue(progress.All(r => r.Value.Success), string.Concat<Exception>(progress.Select(r => r.Value.Error)));
-			Assert.IsTrue(jobContainer.Runs.All(r => r.Success), String.Concat<Exception>(jobContainer.Runs.Select(r => r.ExecException)));
+			Assert.IsTrue(progress.All(r => r.Value.Success), string.Concat(progress.Select(r => r.Value.Error)));
+			Assert.IsTrue(jobContainer.Runs.All(r => r.Success), String.Concat(jobContainer.Runs.Select(r => r.ExecException)));
 		}
 
 	}

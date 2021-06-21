@@ -1011,7 +1011,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 					//return new ATShiftStrategy(runData, container);
 					default:
 						throw new ArgumentOutOfRangeException("GearboxType",
-							string.Format("Unknown Gearbox Type {0}", runData.GearboxData.Type.ToString()));
+							$"Unknown Gearbox Type {runData.GearboxData.Type.ToString()}");
 				}
 			}
 
@@ -1020,8 +1020,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 				x.Item2.Equals(shiftStrategy, StringComparison.InvariantCultureIgnoreCase));
 			if (selected == null) {
 				throw new ArgumentOutOfRangeException("ShiftStrategy",
-					string.Format("Unknown Shiftstrategy {0} for Gearbox Type {1}", shiftStrategy,
-						runData.GearboxData.Type.ToString()));
+					$"Unknown Shiftstrategy {shiftStrategy} for Gearbox Type {runData.GearboxData.Type.ToString()}");
 			}
 
 			runData.ShiftStrategy = selected.Item3;
@@ -1087,20 +1086,11 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 		#region Implementation of IDriverInfo
 
-		public DrivingBehavior DriverBehavior
-		{
-			get { return DrivingBehavior.Accelerating; }
-		}
+		public DrivingBehavior DriverBehavior => DrivingBehavior.Accelerating;
 
-		public DrivingAction DrivingAction
-		{
-			get { return DrivingAction.Accelerate; }
-		}
+		public DrivingAction DrivingAction => DrivingAction.Accelerate;
 
-		public MeterPerSquareSecond DriverAcceleration
-		{
-			get { return 0.SI<MeterPerSquareSecond>(); }
-		}
+		public MeterPerSquareSecond DriverAcceleration => 0.SI<MeterPerSquareSecond>();
 
 		#endregion
 	}
@@ -1128,75 +1118,39 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 		#region Implementation of IGearboxInfo
 
-		public GearboxType GearboxType
-		{
-			get {return GearboxType.DrivingCycle; }
-		}
+		public GearboxType GearboxType => GearboxType.DrivingCycle;
 
-		public GearshiftPosition Gear
-		{
-			get { return new GearshiftPosition(0); }
-		}
+		public GearshiftPosition Gear => new GearshiftPosition(0);
 
-		public bool TCLocked
-		{
-			get { return true; }
-		}
+		public bool TCLocked => true;
 
-		public MeterPerSecond StartSpeed
-		{
-			get { throw new VectoException("No Gearbox available. StartSpeed unknown."); }
-		}
+		public MeterPerSecond StartSpeed => throw new VectoException("No Gearbox available. StartSpeed unknown.");
 
-		public MeterPerSquareSecond StartAcceleration
-		{
-			get { throw new VectoException("No Gearbox available. StartAcceleration unknown."); }
-		}
+		public MeterPerSquareSecond StartAcceleration => throw new VectoException("No Gearbox available. StartAcceleration unknown.");
 
 		public Watt GearboxLoss()
 		{
 			throw new VectoException("No Gearbox available.");
 		}
 
-		public Second LastShift
-		{
-			get { throw new VectoException("No Gearbox available."); }
-		}
+		public Second LastShift => throw new VectoException("No Gearbox available.");
 
-		public Second LastUpshift
-		{
-			get { throw new VectoException("No Gearbox available."); }
-		}
+		public Second LastUpshift => throw new VectoException("No Gearbox available.");
 
-		public Second LastDownshift
-		{
-			get { throw new VectoException("No Gearbox available."); }
-		}
+		public Second LastDownshift => throw new VectoException("No Gearbox available.");
 
 		public GearData GetGearData(uint gear)
 		{
 			throw new VectoException("No Gearbox available.");
 		}
 
-		public GearshiftPosition NextGear
-		{
-			get { throw new VectoException("No Gearbox available."); }
-		}
+		public GearshiftPosition NextGear => throw new VectoException("No Gearbox available.");
 
-		public Second TractionInterruption
-		{
-			get { throw new NotImplementedException(); }
-		}
+		public Second TractionInterruption => throw new NotImplementedException();
 
-		public uint NumGears
-		{
-			get { throw new NotImplementedException(); }
-		}
+		public uint NumGears => throw new NotImplementedException();
 
-		public bool DisengageGearbox
-		{
-			get { throw new VectoException("No Gearbox available."); }
-		}
+		public bool DisengageGearbox => throw new VectoException("No Gearbox available.");
 
 		public bool GearEngaged(Second absTime)
 		{
@@ -1229,10 +1183,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 		#region Implementation of IMileageCounter
 
-		public Meter Distance
-		{
-			get { return 0.SI<Meter>(); }
-		}
+		public Meter Distance => 0.SI<Meter>();
 
 		#endregion
 	}
@@ -1260,55 +1211,34 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 		#region Implementation of IVehicleInfo
 
-		public MeterPerSecond VehicleSpeed
-		{
-			get { return 0.SI<MeterPerSecond>(); }
-		}
+		public MeterPerSecond VehicleSpeed => 0.SI<MeterPerSecond>();
 
-		public bool VehicleStopped
-		{
-			get { throw new System.NotImplementedException(); }
-		}
+		public bool VehicleStopped => throw new NotImplementedException();
 
-		public Kilogram VehicleMass
-		{
-			get { throw new System.NotImplementedException(); }
-		}
+		public Kilogram VehicleMass => throw new NotImplementedException();
 
-		public Kilogram VehicleLoading
-		{
-			get { throw new System.NotImplementedException(); }
-		}
+		public Kilogram VehicleLoading => throw new NotImplementedException();
 
-		public Kilogram TotalMass
-		{
-			get { throw new System.NotImplementedException(); }
-		}
+		public Kilogram TotalMass => throw new NotImplementedException();
 
-		public CubicMeter CargoVolume
-		{
-			get { throw new System.NotImplementedException(); }
-		}
+		public CubicMeter CargoVolume => throw new NotImplementedException();
 
 		public Newton AirDragResistance(MeterPerSecond previousVelocity, MeterPerSecond nextVelocity)
 		{
-			throw new System.NotImplementedException();
+			throw new NotImplementedException();
 		}
 
 		public Newton RollingResistance(Radian gradient)
 		{
-			throw new System.NotImplementedException();
+			throw new NotImplementedException();
 		}
 
 		public Newton SlopeResistance(Radian gradient)
 		{
-			throw new System.NotImplementedException();
+			throw new NotImplementedException();
 		}
 
-		public MeterPerSecond MaxVehicleSpeed
-		{
-			get { throw new System.NotImplementedException(); }
-		}
+		public MeterPerSecond MaxVehicleSpeed => throw new NotImplementedException();
 
 		#endregion
 	}

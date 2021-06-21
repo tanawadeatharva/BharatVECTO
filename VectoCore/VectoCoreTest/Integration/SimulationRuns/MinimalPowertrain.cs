@@ -91,7 +91,7 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 			};
 			var modData = new ModalDataContainer(runData, fileWriter, null);
 			var container = new VehicleContainer(ExecutionMode.Engineering, modData) {
-				RunData =  new VectoRunData() {
+				RunData = new VectoRunData() {
 					VehicleData = vehicleData,
 					DriverData = driverData
 				}
@@ -106,6 +106,7 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 				.AddComponent(engine);
 
 			var gbx = new MockGearbox(container);
+			// ReSharper disable once ObjectCreationAsStatement
 			new DummyCycle(container);
 			var driverPort = driver.OutPort();
 
@@ -140,8 +141,7 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 			var driverData = CreateDriverData(AccelerationFile);
 
 			var fileWriter = new FileOutputWriter("Coach_MinimalPowertrain");
-			var runData = new VectoRunData()
-			{
+			var runData = new VectoRunData() {
 				JobName = "Coach_MinimalPowertrain",
 				VehicleData = vehicleData,
 				EngineData = engineData,
@@ -170,13 +170,10 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 				.AddComponent(new CombustionEngine(container, engineData));
 			//engine.IdleController.RequestPort = clutch.IdleControlPort;
 
-			var gbx = new MockGearbox(container);
-			gbx.Gear = new GearshiftPosition(0);
+			var gbx = new MockGearbox(container) { Gear = new GearshiftPosition(0) };
 
 			var cyclePort = cycle.OutPort();
-
 			cyclePort.Initialize();
-
 			gbx.Gear = new GearshiftPosition(0);
 
 			var absTime = 0.SI<Second>();
@@ -190,29 +187,30 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 			var cnt = 0;
 			while (!(response is ResponseCycleFinished) && container.MileageCounter.Distance < 17000) {
 				response = cyclePort.Request(absTime, ds);
-				response.Switch().
-					Case<ResponseDrivingCycleDistanceExceeded>(r => ds = r.MaxDistance).
-					Case<ResponseCycleFinished>(r => { }).
-					Case<ResponseSuccess>(r => {
+				switch (response) {
+					case ResponseCycleFinished _:
+						break;
+					case ResponseDrivingCycleDistanceExceeded r:
+						ds = r.MaxDistance;
+						break;
+					case ResponseSuccess r:
 						container.CommitSimulationStep(absTime, r.SimulationInterval);
 						absTime += r.SimulationInterval;
-
 						ds = container.VehicleInfo.VehicleSpeed.IsEqual(0)
 							? Constants.SimulationSettings.DriveOffDistance
-							: (Constants.SimulationSettings.TargetTimeInterval * container.VehicleInfo.VehicleSpeed)
-								.Cast<Meter>();
-
+							: (Constants.SimulationSettings.TargetTimeInterval * container.VehicleInfo.VehicleSpeed).Cast<Meter>();
 						if (cnt++ % 100 == 0) {
 							modData.Finish(VectoRun.Status.Success);
 						}
-					}).
-					Default(r => Assert.Fail("Unexpected Response: {0}", r));
+						break;
+					default:
+						Assert.Fail("Unexpected Response: {0}", response);
+						break;
+				}
 			}
 
 			Assert.IsInstanceOf<ResponseCycleFinished>(response);
-
 			modData.Finish(VectoRun.Status.Success);
-
 			NLog.LogManager.EnableLogging();
 		}
 
@@ -229,8 +227,7 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 			var driverData = CreateDriverData(AccelerationFile2);
 
 			var fileWriter = new FileOutputWriter("Coach_MinimalPowertrainOverload");
-			var runData = new VectoRunData()
-			{
+			var runData = new VectoRunData() {
 				JobName = "Coach_MinimalPowertrain",
 				SimulationType = SimulationType.DistanceCycle,
 				VehicleData = vehicleData,
@@ -269,19 +266,19 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 			var ds = Constants.SimulationSettings.DriveOffDistance;
 			while (container.MileageCounter.Distance < 100) {
 				var response = cyclePort.Request(absTime, ds);
-				response.Switch().
-					Case<ResponseDrivingCycleDistanceExceeded>(r => ds = r.MaxDistance).
-					Case<ResponseSuccess>(r => {
+				switch (response) {
+					case ResponseDrivingCycleDistanceExceeded r:
+						ds = r.MaxDistance;
+						break;
+					case ResponseSuccess r:
 						container.CommitSimulationStep(absTime, r.SimulationInterval);
 						absTime += r.SimulationInterval;
-
 						ds = container.VehicleInfo.VehicleSpeed.IsEqual(0)
 							? Constants.SimulationSettings.DriveOffDistance
-							: (Constants.SimulationSettings.TargetTimeInterval * container.VehicleInfo.VehicleSpeed)
-								.Cast<Meter>();
-
+							: (Constants.SimulationSettings.TargetTimeInterval * container.VehicleInfo.VehicleSpeed).Cast<Meter>();
 						modData.Finish(VectoRun.Status.Success);
-					});
+						break;
+				}
 			}
 
 			modData.Finish(VectoRun.Status.Success);

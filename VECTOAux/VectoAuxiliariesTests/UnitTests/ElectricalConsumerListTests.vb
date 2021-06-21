@@ -1,11 +1,6 @@
 ﻿
 Imports System.IO
 Imports NUnit.Framework
-Imports TUGraz.VectoCommon.BusAuxiliaries
-Imports TUGraz.VectoCommon.Utils
-Imports TUGraz.VectoCore.Models.BusAuxiliaries
-Imports TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.Electrics
-Imports TUGraz.VectoCore.Models.Declaration
 
 
 <TestFixture()>

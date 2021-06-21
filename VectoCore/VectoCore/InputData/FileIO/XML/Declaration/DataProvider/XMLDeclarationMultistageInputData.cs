@@ -37,26 +37,14 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 			XMLHash = h.ComputeXmlHash();
 		}
 
-		protected override XNamespace SchemaNamespace
-		{
-			get { return NAMESPACE_URI; }
-		}
+		protected override XNamespace SchemaNamespace => NAMESPACE_URI;
 
-		protected override DataSourceType SourceType
-		{
-			get { return DataSourceType.XMLFile; }
-		}
+		protected override DataSourceType SourceType => DataSourceType.XMLFile;
 
-		public IDeclarationMultistageJobInputData JobInputData
-		{
-			get { return JobData ?? (JobData = Reader.JobData); }
-		}
+		public IDeclarationMultistageJobInputData JobInputData => JobData ?? (JobData = Reader.JobData);
 
 
-		IDeclarationJobInputData IDeclarationInputDataProvider.JobInputData
-		{
-			get { throw new NotImplementedException(); }
-		}
+		IDeclarationJobInputData IDeclarationInputDataProvider.JobInputData => throw new NotImplementedException();
 
 		public IPrimaryVehicleInformationInputDataProvider PrimaryVehicleData { get; }
 		public XElement XMLHash { get; }
@@ -90,39 +78,21 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 			SourceType = DataSourceType.XMLFile;
 		}
 
-		public IPrimaryVehicleInformationInputDataProvider PrimaryVehicle
-		{
-			get { return _primaryVehicle ?? (_primaryVehicle = Reader.PrimaryVehicle); }
-		}
+		public IPrimaryVehicleInformationInputDataProvider PrimaryVehicle => _primaryVehicle ?? (_primaryVehicle = Reader.PrimaryVehicle);
 
-		public IList<IManufacturingStageInputData> ManufacturingStages
-		{
-			get { return _manufacturingStages ?? (_manufacturingStages = Reader.ManufacturingStages); }
-		}
+		public IList<IManufacturingStageInputData> ManufacturingStages => _manufacturingStages ?? (_manufacturingStages = Reader.ManufacturingStages);
 
-		public IManufacturingStageInputData ConsolidateManufacturingStage
-		{
-			get { return _concolidateManfacturingStage ?? (_concolidateManfacturingStage = Reader.ConsolidateManufacturingStage); }
-		}
+		public IManufacturingStageInputData ConsolidateManufacturingStage => _concolidateManfacturingStage ?? (_concolidateManfacturingStage = Reader.ConsolidateManufacturingStage);
 
-		public VectoSimulationJobType JobType
-		{
-			get { return VectoSimulationJobType.ConventionalVehicle; }
-		}
+		public VectoSimulationJobType JobType => VectoSimulationJobType.ConventionalVehicle;
 
-		public bool InputComplete
-		{
-			get { return Reader.InputComplete; }
-		}
-		
+		public bool InputComplete => Reader.InputComplete;
+
 		public IXMLMultistageJobReader Reader { protected get; set; }
 
 		public IXMLMultistageInputDataProvider InputData { get; }
 
-		protected override XNamespace SchemaNamespace
-		{
-			get { return NAMESPACE_URI; }
-		}
+		protected override XNamespace SchemaNamespace => NAMESPACE_URI;
 
 		protected override DataSourceType SourceType { get; }
 	}
@@ -156,44 +126,26 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 			_signatureNode = xmlNode.LastChild;
 		}
 
-		protected override XNamespace SchemaNamespace
-		{
-			get { return NAMESPACE_URI; }
-		}
+		protected override XNamespace SchemaNamespace => NAMESPACE_URI;
 
-		protected override DataSourceType SourceType
-		{
-			get { return DataSourceType.XMLFile; }
-		}
+		protected override DataSourceType SourceType => DataSourceType.XMLFile;
 
 
-		public IVehicleDeclarationInputData Vehicle
-		{
-			get { return _vehicle ?? (_vehicle = Reader.JobData.Vehicle); }
-		}
+		public IVehicleDeclarationInputData Vehicle => _vehicle ?? (_vehicle = Reader.JobData.Vehicle);
 
-		public DigestData PrimaryVehicleInputDataHash
-		{
-			get { return _primaryVehicleInputDataHash ?? 
-						(_primaryVehicleInputDataHash =  Reader.GetDigestData(GetNode("InputDataSignature")));}
-		}
+		public DigestData PrimaryVehicleInputDataHash =>
+			_primaryVehicleInputDataHash ?? 
+			(_primaryVehicleInputDataHash =  Reader.GetDigestData(GetNode("InputDataSignature")));
 
-		public DigestData VehicleSignatureHash
-		{
-			get { return _vehicleSignatureHash ?? 
-						(_vehicleSignatureHash = Reader.GetDigestData(_signatureNode));}
-		}
+		public DigestData VehicleSignatureHash =>
+			_vehicleSignatureHash ?? 
+			(_vehicleSignatureHash = Reader.GetDigestData(_signatureNode));
 
-		public DigestData ManufacturerRecordHash
-		{
-			get { return _manufacturerRecordHash ??
-						(_manufacturerRecordHash =  Reader.GetDigestData(GetNode("ManufacturerRecordSignature"))); }
-		}
+		public DigestData ManufacturerRecordHash =>
+			_manufacturerRecordHash ??
+			(_manufacturerRecordHash =  Reader.GetDigestData(GetNode("ManufacturerRecordSignature")));
 
-		public IResultsInputData ResultsInputData
-		{
-			get { return _resultsInputData ?? (_resultsInputData = Reader.ResultsInputData); }
-		}
+		public IResultsInputData ResultsInputData => _resultsInputData ?? (_resultsInputData = Reader.ResultsInputData);
 
 		public IResult GetResult(VehicleClass vehicleClass, MissionType mission, string fuelMode, Kilogram payload)
 		{
@@ -203,20 +155,11 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 					x.SimulationParameter.FuelMode.Equals(fuelMode, StringComparison.InvariantCultureIgnoreCase));
 		}
 
-		public XmlNode ResultsNode
-		{
-			get { return GetNode(XMLNames.Report_Results); }
-		}
+		public XmlNode ResultsNode => GetNode(XMLNames.Report_Results);
 
-		public IApplicationInformation ApplicationInformation
-		{
-			get { return _applicationInformation ?? (_applicationInformation = Reader.ApplicationInformation); }
-		}
+		public IApplicationInformation ApplicationInformation => _applicationInformation ?? (_applicationInformation = Reader.ApplicationInformation);
 
-		public XmlNode ApplicationInformationNode
-		{
-			get { return GetNode(XMLNames.Tag_ApplicationInformation); }
-		}
+		public XmlNode ApplicationInformationNode => GetNode(XMLNames.Tag_ApplicationInformation);
 
 		public XElement XMLHash { get; }
 
@@ -248,43 +191,21 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 			_signatureXmlNode = xmlNode.LastChild;
 		}
 		
-		protected override XNamespace SchemaNamespace
-		{
-			get { return NAMESPACE_URI; }
-		}
-		protected override DataSourceType SourceType
-		{
-			get { return DataSourceType.XMLFile; }
-		}
+		protected override XNamespace SchemaNamespace => NAMESPACE_URI;
 
-		public DigestData HashPreviousStage
-		{
-			get { return _hashPreviousStage ??
-						(_hashPreviousStage = Reader.GetDigestData(GetNode("HashPreviousStage"))); }
-		}
+		protected override DataSourceType SourceType => DataSourceType.XMLFile;
 
-		public int StageCount
-		{
-			get { return Convert.ToInt32(GetAttribute(BaseNode, XMLNames.ManufacturingStage_StageCount)); }
-		}
+		public DigestData HashPreviousStage =>
+			_hashPreviousStage ??
+			(_hashPreviousStage = Reader.GetDigestData(GetNode("HashPreviousStage")));
 
-		public IVehicleDeclarationInputData Vehicle
-		{
-			get { return _vehicle ?? (_vehicle = Reader.Vehicle); }
-		}
+		public int StageCount => Convert.ToInt32(GetAttribute(BaseNode, XMLNames.ManufacturingStage_StageCount));
 
-		public IApplicationInformation ApplicationInformation
-		{
-			get
-			{
-				return _applicationInformation ?? (_applicationInformation = Reader.ApplicationInformation);
-			}
-		}
+		public IVehicleDeclarationInputData Vehicle => _vehicle ?? (_vehicle = Reader.Vehicle);
 
-		public DigestData Signature
-		{
-			get { return _signature ?? (_signature = Reader.GetDigestData(_signatureXmlNode)); }
-		}
+		public IApplicationInformation ApplicationInformation => _applicationInformation ?? (_applicationInformation = Reader.ApplicationInformation);
+
+		public DigestData Signature => _signature ?? (_signature = Reader.GetDigestData(_signatureXmlNode));
 
 		public IXMLMultistageReader Reader { protected get; set; }
 	}
@@ -304,14 +225,9 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 			_vehicleInput = vehicleInput;
 		}
 
-		public IVehicleDeclarationInputData VehicleInputData
-		{
-			get { return _vehicleInput; }
-		}
-		public IMultistageBusInputDataProvider MultistageJobInputData
-		{
-			get { return _multistageJobInputData; }
-		}
+		public IVehicleDeclarationInputData VehicleInputData => _vehicleInput;
+
+		public IMultistageBusInputDataProvider MultistageJobInputData => _multistageJobInputData;
 
 		public DataSource DataSource { get; }
 	}

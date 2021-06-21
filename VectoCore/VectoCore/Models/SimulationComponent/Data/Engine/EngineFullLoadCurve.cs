@@ -106,19 +106,13 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Engine
 		/// Get the rated speed from the given full-load curve (i.e. speed with max. power)
 		/// </summary>
 		[Required, SIRange(0, 5000 * Constants.RPMToRad)]
-		public PerSecond RatedSpeed
-		{
-			get { return _ratedSpeed ?? ComputeRatedSpeed().Item1; }
-		}
+		public PerSecond RatedSpeed => _ratedSpeed ?? ComputeRatedSpeed().Item1;
 
 		/// <summary>
 		/// Gets the maximum power.
 		/// </summary>
 		[Required, SIRange(0, 10000 * 5000 * Constants.RPMToRad)]
-		public Watt MaxPower
-		{
-			get { return _maxPower ?? ComputeRatedSpeed().Item2; }
-		}
+		public Watt MaxPower => _maxPower ?? ComputeRatedSpeed().Item2;
 
 		public NewtonMeter MaxTorque
 		{
@@ -277,30 +271,15 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Engine
 			}
 		}
 
-		public PerSecond NTq99hSpeed
-		{
-			get { return _nTq99hSpeed ?? (_nTq99hSpeed = FindEnginSpeedForTorque(0.99 * MaxTorque).Last()); }
-		}
+		public PerSecond NTq99hSpeed => _nTq99hSpeed ?? (_nTq99hSpeed = FindEnginSpeedForTorque(0.99 * MaxTorque).Last());
 
-		public PerSecond NTq99lSpeed
-		{
-			get { return _nTq99lSpeed ?? (_nTq99lSpeed = FindEnginSpeedForTorque(0.99 * MaxTorque).First()); }
-		}
+		public PerSecond NTq99lSpeed => _nTq99lSpeed ?? (_nTq99lSpeed = FindEnginSpeedForTorque(0.99 * MaxTorque).First());
 
-		public PerSecond NP99hSpeed
-		{
-			get { return _nP99hSpeed ?? (_nP99hSpeed = ComputeNP99HSpeed()); }
-		}
+		public PerSecond NP99hSpeed => _nP99hSpeed ?? (_nP99hSpeed = ComputeNP99HSpeed());
 
-		public PerSecond NTq98hSpeed
-		{
-			get { return _nTq98hSpeed ?? (_nTq98hSpeed = FindEnginSpeedForTorque(0.98 * MaxTorque).Last()); }
-		}
+		public PerSecond NTq98hSpeed => _nTq98hSpeed ?? (_nTq98hSpeed = FindEnginSpeedForTorque(0.98 * MaxTorque).Last());
 
-		public PerSecond NP98hSpeed
-		{
-			get { return _nP98hSpeed ?? (_nP98hSpeed = ComputeNP98HSpeed()); }
-		}
+		public PerSecond NP98hSpeed => _nP98hSpeed ?? (_nP98hSpeed = ComputeNP98HSpeed());
 
 		private PerSecond ComputeNP99HSpeed()
 		{
@@ -322,10 +301,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Engine
 			return retVal;
 		}
 
-		public PerSecond LoSpeed
-		{
-			get { return _engineSpeedLo ?? (_engineSpeedLo = FindEngineSpeedForPower(0.55 * MaxPower).First()); }
-		}
+		public PerSecond LoSpeed => _engineSpeedLo ?? (_engineSpeedLo = FindEngineSpeedForPower(0.55 * MaxPower).First());
 
 		//public PerSecond HiSpeed
 		//{

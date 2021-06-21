@@ -49,7 +49,7 @@ namespace TUGraz.VectoCore.InputData.Reader.ComponentData
 				var data = VectoCSVFile.Read(fileName);
 				return Create(data);
 			} catch (Exception e) {
-				throw new VectoException(string.Format("File {0}: {1}", fileName, e.Message), e);
+				throw new VectoException($"File {fileName}: {e.Message}", e);
 			}
 		}
 
@@ -71,7 +71,7 @@ namespace TUGraz.VectoCore.InputData.Reader.ComponentData
 						(headerValid ? row.ParseDouble(Fields.EngineSpeed) : row.ParseDouble(0)).RPMtoRad().Value(),
 						entry.FuelConsumption.Value());
 				} catch (Exception e) {
-					throw new VectoException(string.Format("FuelConsumptionMap - Line {0}: {1}", data.Rows.IndexOf(row), e.Message), e);
+					throw new VectoException($"FuelConsumptionMap - Line {data.Rows.IndexOf(row)}: {e.Message}", e);
 				}
 			}
 

@@ -17,17 +17,11 @@ namespace TUGraz.VectoCore.OutputData.XML {
 		{
 		}
 
-		public override XDocument CustomerReport
-		{
-			get { return null; }
-		}
+		public override XDocument CustomerReport => null;
 
-		public override XDocument PrimaryVehicleReport
-		{
-			get { return PrimaryReport?.Report; }
-		}
+		public override XDocument PrimaryVehicleReport => PrimaryReport?.Report;
 
-		
+
 		#region Overrides of XMLDeclarationReport
 
 		protected override void InstantiateReports(VectoRunData modelData)

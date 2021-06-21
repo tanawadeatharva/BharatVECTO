@@ -55,10 +55,7 @@ namespace TUGraz.VectoHashing.Impl
 			}
 		}
 
-		public static string DefaultDigestMethod
-		{
-			get { return DigestMethodSha256; }
-		}
+		public static string DefaultDigestMethod => DigestMethodSha256;
 
 		public static ICollection<string> SupportedCanonicalizationMethods
 		{
@@ -89,11 +86,11 @@ namespace TUGraz.VectoHashing.Impl
 			var c14N = (canonicalization ?? DefaultCanonicalizationMethod).ToArray();
 			digestMethod = digestMethod ?? DefaultDigestMethod;
 			if (!SupportedDigestMethods.Contains(digestMethod)) {
-				throw new Exception(string.Format("DigestMethod '{0}' not supported.", digestMethod));
+				throw new Exception($"DigestMethod '{digestMethod}' not supported.");
 			}
 			var unsupported = c14N.Where(c => !SupportedCanonicalizationMethods.Contains(c)).ToArray();
 			if (unsupported.Any()) {
-				throw new Exception(string.Format("CanonicalizationMethod(s) {0} not supported!", string.Join(", ", unsupported)));
+				throw new Exception($"CanonicalizationMethod(s) {string.Join(", ", unsupported)} not supported!");
 			}
 
 			var signedXml = new SignedXml(doc);
@@ -123,7 +120,7 @@ namespace TUGraz.VectoHashing.Impl
 				case DsigExcC14NTransform:
 					return new XmlDsigExcC14NTransform();
 			}
-			throw new Exception(string.Format("Unsupported CanonicalizationMethod {0}", transformUrn));
+			throw new Exception($"Unsupported CanonicalizationMethod {transformUrn}");
 		}
 	}
 }

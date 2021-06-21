@@ -60,7 +60,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		public IResponse Initialize(NewtonMeter outTorque, PerSecond outAngularVelocity)
 		{
-			throw new InvalidOperationException(string.Format("{0} cannot initialize.", GetType().FullName));
+			throw new InvalidOperationException($"{GetType().FullName} cannot initialize.");
 		}
 
 		public ITnOutPort RequestPort

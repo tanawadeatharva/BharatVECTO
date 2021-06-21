@@ -204,7 +204,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 							(gbx != null && gbx.Type.AutomaticTransmission() ? torqueConverter.Inertia : 0.SI<KilogramSquareMeter>());
 			retVal.EngineStartTime = engine.EngineStartTime ?? DeclarationData.Engine.DefaultEngineStartTime;
 			var limits = torqueLimits.ToDictionary(e => e.Gear);
-			var numGears = gbx == null ? 0 : gbx.Gears.Count;
+			var numGears = gbx?.Gears.Count ?? 0;
 			var fullLoadCurves = new Dictionary<uint, EngineFullLoadCurve>(numGears + 1);
 			fullLoadCurves[0] = FullLoadCurveReader.Create(engine.EngineModes.First().FullLoadCurve);
 			fullLoadCurves[0].EngineData = retVal;

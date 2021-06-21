@@ -43,10 +43,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 			InputData = inputData;
 		}
 
-		public IDeclarationMultistageJobInputData JobData
-		{
-			get { return _jobData ?? (_jobData = CreateComponent(XMLNames.VectoOutputMultistage, JobCreator)); }
-		}
+		public IDeclarationMultistageJobInputData JobData => _jobData ?? (_jobData = CreateComponent(XMLNames.VectoOutputMultistage, JobCreator));
 
 		protected virtual IDeclarationMultistageJobInputData JobCreator(string version, XmlNode node, string arg3)
 		{
@@ -86,10 +83,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 			SetManufacturingStageNodes();
 		}
 
-		public IPrimaryVehicleInformationInputDataProvider PrimaryVehicle
-		{
-			get { return _primaryVehicle ?? (_primaryVehicle = CreateComponent(XMLNames.Bus_PrimaryVehicle, PrimaryVehicleCreator)); }
-		}
+		public IPrimaryVehicleInformationInputDataProvider PrimaryVehicle => _primaryVehicle ?? (_primaryVehicle = CreateComponent(XMLNames.Bus_PrimaryVehicle, PrimaryVehicleCreator));
 
 		protected IPrimaryVehicleInformationInputDataProvider PrimaryVehicleCreator(string version, XmlNode node,
 			string arg3)
@@ -141,10 +135,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 			}
 		}
 
-		public VectoSimulationJobType JobType
-		{
-			get { return InputData.JobType; }
-		}
+		public VectoSimulationJobType JobType => InputData.JobType;
 
 		public bool InputComplete
 		{
@@ -198,10 +189,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 			_multistageData = multistageData;
 		}
 
-		public IVehicleDeclarationInputData Vehicle
-		{
-			get { return _vehicle ?? (_vehicle = CreateComponent(XMLNames.Tag_Vehicle, VehicleCreator)); }
-		}
+		public IVehicleDeclarationInputData Vehicle => _vehicle ?? (_vehicle = CreateComponent(XMLNames.Tag_Vehicle, VehicleCreator));
 
 		private IVehicleDeclarationInputData VehicleCreator(string version, XmlNode node, string arg3)
 		{
@@ -216,14 +204,9 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 			return vehicle;
 		}
 
-		public IApplicationInformation ApplicationInformation
-		{
-			get
-			{
-				return _applicationInformation ??
-						(_applicationInformation = CreateComponent(XMLNames.Tag_ApplicationInformation, ApplicationCreator));
-			}
-		}
+		public IApplicationInformation ApplicationInformation =>
+			_applicationInformation ??
+			(_applicationInformation = CreateComponent(XMLNames.Tag_ApplicationInformation, ApplicationCreator));
 
 		protected IApplicationInformation ApplicationCreator(string version, XmlNode node, string agr3)
 		{
@@ -264,13 +247,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 			_primaryInputData = inputData;
 		}
 
-		public virtual IDeclarationJobInputData JobData
-		{
-			get
-			{
-				return _jobData ?? (_jobData = CreateComponent(XMLNames.Tag_Vehicle, JobCreator));
-			}
-		}
+		public virtual IDeclarationJobInputData JobData => _jobData ?? (_jobData = CreateComponent(XMLNames.Tag_Vehicle, JobCreator));
 
 
 		protected IDeclarationJobInputData JobCreator(string version, XmlNode node, string arg3)
@@ -281,14 +258,9 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 			return job;
 		}
 
-		public IResultsInputData ResultsInputData
-		{
-			get
-			{
-				return _resultsInputData ??
-					   (_resultsInputData = CreateComponent(XMLNames.Report_Results, ResultsInputDataCreator));
-			}
-		}
+		public IResultsInputData ResultsInputData =>
+			_resultsInputData ??
+			(_resultsInputData = CreateComponent(XMLNames.Report_Results, ResultsInputDataCreator));
 
 		protected IResultsInputData ResultsInputDataCreator(string version, XmlNode node, string arg3)
 		{
@@ -305,14 +277,9 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 			return Factory.CreateApplicationInformationReader(version, node);
 		}
 
-		public IApplicationInformation ApplicationInformation
-		{
-			get
-			{
-				return _applicationInformation ??
-					  (_applicationInformation = CreateComponent(XMLNames.Tag_ApplicationInformation, ApplicationCreator));
-			}
-		}
+		public IApplicationInformation ApplicationInformation =>
+			_applicationInformation ??
+			(_applicationInformation = CreateComponent(XMLNames.Tag_ApplicationInformation, ApplicationCreator));
 	}
 
 	// ---------------------------------------------------------------------------------------
@@ -390,30 +357,15 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 			_primaryVehicle = primaryVehicle;
 		}
 
-		public DigestData HashPreviousStage
-		{
-			get { return _manufacturingStages.First().HashPreviousStage; }
-		}
+		public DigestData HashPreviousStage => _manufacturingStages.First().HashPreviousStage;
 
-		public int StageCount
-		{
-			get { return _manufacturingStages.First().StageCount; }
-		}
+		public int StageCount => _manufacturingStages.First().StageCount;
 
-		public IVehicleDeclarationInputData Vehicle
-		{
-			get { return GetConsolidatedVehicleData(); }
-		}
+		public IVehicleDeclarationInputData Vehicle => GetConsolidatedVehicleData();
 
-		public IApplicationInformation ApplicationInformation
-		{
-			get { return _manufacturingStages.First().ApplicationInformation; }
-		}
+		public IApplicationInformation ApplicationInformation => _manufacturingStages.First().ApplicationInformation;
 
-		public DigestData Signature
-		{
-			get { return _manufacturingStages.First().Signature; }
-		}
+		public DigestData Signature => _manufacturingStages.First().Signature;
 
 		public override bool IsInputDataComplete(VectoSimulationJobType jobType)
 		{
@@ -449,137 +401,58 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 
 		#region ManufacturingStage mandatory properties
 
-		public string Manufacturer
-		{
-			get { return _manufacturingStages.First().Vehicle.Manufacturer; }
-		}
+		public string Manufacturer => _manufacturingStages.First().Vehicle.Manufacturer;
 
-		public string ManufacturerAddress
-		{
-			get { return _manufacturingStages.First().Vehicle.ManufacturerAddress; }
-		}
-		
-		public DateTime Date
-		{
-			get { return _manufacturingStages.First().Vehicle.Date; }
-		}
+		public string ManufacturerAddress => _manufacturingStages.First().Vehicle.ManufacturerAddress;
 
-		public string VIN
-		{
-			get { return _manufacturingStages.First().Vehicle.VIN; }
-		}
+		public DateTime Date => _manufacturingStages.First().Vehicle.Date;
 
-		public VehicleDeclarationType VehicleDeclarationType
-		{
-			get { return _manufacturingStages.First().Vehicle.VehicleDeclarationType; }
-		}
+		public string VIN => _manufacturingStages.First().Vehicle.VIN;
+
+		public VehicleDeclarationType VehicleDeclarationType => _manufacturingStages.First().Vehicle.VehicleDeclarationType;
 
 		#endregion
 
 		#region ManufacturingStage optional properties
 
-		public string Model
-		{
-			get { return GetVehiclePropertyValue<string>(nameof(Model)); }
-		}
+		public string Model => GetVehiclePropertyValue<string>(nameof(Model));
 
-		public LegislativeClass? LegislativeClass
-		{
-			get { return GetVehiclePropertyValue<LegislativeClass?>(nameof(LegislativeClass)); }
-		}
+		public LegislativeClass? LegislativeClass => GetVehiclePropertyValue<LegislativeClass?>(nameof(LegislativeClass));
 
-		public Kilogram CurbMassChassis
-		{
-			get { return GetVehiclePropertyValue<Kilogram>(nameof(CurbMassChassis)); }
-		}
+		public Kilogram CurbMassChassis => GetVehiclePropertyValue<Kilogram>(nameof(CurbMassChassis));
 
-		public Kilogram GrossVehicleMassRating
-		{
-			get
-			{
-				return GetVehiclePropertyValue<Kilogram>(nameof(GrossVehicleMassRating));
-			}
-		}
+		public Kilogram GrossVehicleMassRating => GetVehiclePropertyValue<Kilogram>(nameof(GrossVehicleMassRating));
 
-		public bool? AirdragModifiedMultistage
-		{
-			get
-			{
-				return GetVehiclePropertyValue<bool?>(nameof(AirdragModifiedMultistage));
-			}
-		}
+		public bool? AirdragModifiedMultistage => GetVehiclePropertyValue<bool?>(nameof(AirdragModifiedMultistage));
 
-		public TankSystem? TankSystem
-		{
-			get { return GetVehiclePropertyValue<TankSystem?>(nameof(TankSystem)); }
-		}
+		public TankSystem? TankSystem => GetVehiclePropertyValue<TankSystem?>(nameof(TankSystem));
 
-		public RegistrationClass? RegisteredClass
-		{
-			get { return GetVehiclePropertyValue<RegistrationClass?>(nameof(RegisteredClass)); }
-		}
+		public RegistrationClass? RegisteredClass => GetVehiclePropertyValue<RegistrationClass?>(nameof(RegisteredClass));
 
 
-		public int? NumberPassengerSeatsUpperDeck
-		{
-			get { return GetVehiclePropertyValue<int?>(nameof(NumberPassengerSeatsUpperDeck)); }
-		}
+		public int? NumberPassengerSeatsUpperDeck => GetVehiclePropertyValue<int?>(nameof(NumberPassengerSeatsUpperDeck));
 
-		public int? NumberPassengerSeatsLowerDeck
-		{
-			get { return GetVehiclePropertyValue<int?>(nameof(NumberPassengerSeatsLowerDeck)); }
-		}
+		public int? NumberPassengerSeatsLowerDeck => GetVehiclePropertyValue<int?>(nameof(NumberPassengerSeatsLowerDeck));
 
-		public int? NumberPassengersStandingLowerDeck
-		{
-			get { return GetVehiclePropertyValue<int?>(nameof(NumberPassengersStandingLowerDeck)); }
-		}
+		public int? NumberPassengersStandingLowerDeck => GetVehiclePropertyValue<int?>(nameof(NumberPassengersStandingLowerDeck));
 
-		public int? NumberPassengersStandingUpperDeck
-		{
-			get { return GetVehiclePropertyValue<int?>(nameof(NumberPassengersStandingUpperDeck)); }
-		}
+		public int? NumberPassengersStandingUpperDeck => GetVehiclePropertyValue<int?>(nameof(NumberPassengersStandingUpperDeck));
 
-		public VehicleCode? VehicleCode
-		{
-			get { return GetVehiclePropertyValue<VehicleCode?>(nameof(VehicleCode)); }
-		}
+		public VehicleCode? VehicleCode => GetVehiclePropertyValue<VehicleCode?>(nameof(VehicleCode));
 
-		public bool? LowEntry
-		{
-			get { return GetVehiclePropertyValue<bool?>(nameof(LowEntry)); }
-		}
+		public bool? LowEntry => GetVehiclePropertyValue<bool?>(nameof(LowEntry));
 
-		public Meter Height
-		{
-			get { return GetVehiclePropertyValue<Meter>(nameof(Height)); }
-		}
+		public Meter Height => GetVehiclePropertyValue<Meter>(nameof(Height));
 
-		public Meter Length
-		{
-			get { return GetVehiclePropertyValue<Meter>(nameof(Length)); }
-		}
+		public Meter Length => GetVehiclePropertyValue<Meter>(nameof(Length));
 
-		public Meter Width
-		{
-			get { return GetVehiclePropertyValue<Meter>(nameof(Width)); }
-		}
+		public Meter Width => GetVehiclePropertyValue<Meter>(nameof(Width));
 
-		public Meter EntranceHeight
-		{
-			get { return GetVehiclePropertyValue<Meter>(nameof(EntranceHeight)); }
-		}
+		public Meter EntranceHeight => GetVehiclePropertyValue<Meter>(nameof(EntranceHeight));
 
-		public ConsumerTechnology? DoorDriveTechnology
-		{
-			get { return GetVehiclePropertyValue<ConsumerTechnology?>(nameof(DoorDriveTechnology)); }
+		public ConsumerTechnology? DoorDriveTechnology => GetVehiclePropertyValue<ConsumerTechnology?>(nameof(DoorDriveTechnology));
 
-		}
-
-		public IAdvancedDriverAssistantSystemDeclarationInputData ADAS
-		{
-			get { return GetADAS(); }
-		}
+		public IAdvancedDriverAssistantSystemDeclarationInputData ADAS => GetADAS();
 
 		private IAdvancedDriverAssistantSystemDeclarationInputData GetADAS()
 		{
@@ -591,10 +464,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 		}
 
 
-		public IVehicleComponentsDeclaration Components
-		{
-			get { return GetComponents(); }
-		}
+		public IVehicleComponentsDeclaration Components => GetComponents();
 
 		private IVehicleComponentsDeclaration GetComponents()
 		{
@@ -749,25 +619,13 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 		public ConsolidatedADASData(IEnumerable<IManufacturingStageInputData> manufacturingStages)
 			: base(manufacturingStages) { }
 
-		public bool EngineStopStart
-		{
-			get { return GetADASPropertyValue<bool>(nameof(EngineStopStart)); }
-		}
+		public bool EngineStopStart => GetADASPropertyValue<bool>(nameof(EngineStopStart));
 
-		public EcoRollType EcoRoll
-		{
-			get { return GetADASPropertyValue<EcoRollType>(nameof(EcoRoll)); }
-		}
+		public EcoRollType EcoRoll => GetADASPropertyValue<EcoRollType>(nameof(EcoRoll));
 
-		public PredictiveCruiseControlType PredictiveCruiseControl
-		{
-			get { return GetADASPropertyValue<PredictiveCruiseControlType>(nameof(PredictiveCruiseControl)); }
-		}
+		public PredictiveCruiseControlType PredictiveCruiseControl => GetADASPropertyValue<PredictiveCruiseControlType>(nameof(PredictiveCruiseControl));
 
-		public bool? ATEcoRollReleaseLockupClutch
-		{
-			get { return GetADASPropertyValue<bool?>(nameof(ATEcoRollReleaseLockupClutch)); }
-		}
+		public bool? ATEcoRollReleaseLockupClutch => GetADASPropertyValue<bool?>(nameof(ATEcoRollReleaseLockupClutch));
 
 		public XmlNode XMLSource { get; }
 
@@ -808,10 +666,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 			: base(manufacturingStages) { }
 
 
-		public IAirdragDeclarationInputData AirdragInputData
-		{
-			get { return GetAirdragInputData(); }
-		}
+		public IAirdragDeclarationInputData AirdragInputData => GetAirdragInputData();
 
 		private IAirdragDeclarationInputData GetAirdragInputData()
 		{
@@ -822,47 +677,25 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 					(_consolidateAirdragData = new ConsolidatedAirdragData(_manufacturingStages));
 		}
 
-		public IGearboxDeclarationInputData GearboxInputData
-		{
-			get { return null; }
-		}
-		public ITorqueConverterDeclarationInputData TorqueConverterInputData
-		{
-			get { return null; }
-		}
-		public IAxleGearInputData AxleGearInputData
-		{
-			get { return null; }
-		}
-		public IAngledriveInputData AngledriveInputData
-		{
-			get { return null; }
-		}
-		public IEngineDeclarationInputData EngineInputData
-		{
-			get { return null; }
-		}
-		public IAuxiliariesDeclarationInputData AuxiliaryInputData
-		{
-			get { return null; }
-		}
-		public IRetarderInputData RetarderInputData
-		{
-			get { return null; }
-		}
-		public IPTOTransmissionInputData PTOTransmissionInputData
-		{
-			get { return null; }
-		}
-		public IAxlesDeclarationInputData AxleWheels
-		{
-			get { return null; }
-		}
-		
-		public IBusAuxiliariesDeclarationData BusAuxiliaries
-		{
-			get { return GetBusAuxiliaries(); }
-		}
+		public IGearboxDeclarationInputData GearboxInputData => null;
+
+		public ITorqueConverterDeclarationInputData TorqueConverterInputData => null;
+
+		public IAxleGearInputData AxleGearInputData => null;
+
+		public IAngledriveInputData AngledriveInputData => null;
+
+		public IEngineDeclarationInputData EngineInputData => null;
+
+		public IAuxiliariesDeclarationInputData AuxiliaryInputData => null;
+
+		public IRetarderInputData RetarderInputData => null;
+
+		public IPTOTransmissionInputData PTOTransmissionInputData => null;
+
+		public IAxlesDeclarationInputData AxleWheels => null;
+
+		public IBusAuxiliariesDeclarationData BusAuxiliaries => GetBusAuxiliaries();
 
 		private IBusAuxiliariesDeclarationData GetBusAuxiliaries()
 		{
@@ -874,14 +707,9 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 		}
 
 
-		public IElectricStorageDeclarationInputData ElectricStorage
-		{
-			get { return null; }
-		}
-		public IElectricMachinesDeclarationInputData ElectricMachines
-		{
-			get { return null; }
-		}
+		public IElectricStorageDeclarationInputData ElectricStorage => null;
+
+		public IElectricMachinesDeclarationInputData ElectricMachines => null;
 
 		private T GetComponentPropertyValue<T>(string propertyName)
 		{
@@ -935,56 +763,27 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 			SetLastValidAirdragEntry();
 		}
 
-		public string Manufacturer
-		{
-			get { return AirdragEntry?.Manufacturer; }
-		}
+		public string Manufacturer => AirdragEntry?.Manufacturer;
 
-		public string Model
-		{
-			get { return AirdragEntry?.Model; }
-		}
+		public string Model => AirdragEntry?.Model;
 
-		public DateTime Date
-		{
-			get { return AirdragEntry.Date; }
-		}
+		public DateTime Date => AirdragEntry.Date;
 
-		public string AppVersion
-		{
-			get { return AirdragEntry?.AppVersion; }
-		}
-		public CertificationMethod CertificationMethod
-		{
-			get { return AirdragEntry.CertificationMethod; }
-		}
-		public string CertificationNumber
-		{
-			get { return AirdragEntry?.CertificationNumber; }
-		}
-		public DigestData DigestValue
-		{
-			get { return AirdragEntry?.DigestValue; }
-		}
-		public SquareMeter AirDragArea
-		{
-			get { return AirdragEntry?.AirDragArea; }
-		}
+		public string AppVersion => AirdragEntry?.AppVersion;
 
-		public SquareMeter TransferredAirDragArea
-		{
-			get { return AirdragEntry?.TransferredAirDragArea; }
-		}
+		public CertificationMethod CertificationMethod => AirdragEntry.CertificationMethod;
 
-		public SquareMeter AirDragArea_0
-		{
-			get { return AirdragEntry.AirDragArea_0; }
-		}
+		public string CertificationNumber => AirdragEntry?.CertificationNumber;
 
-		public DataSource DataSource
-		{
-			get { return AirdragEntry?.DataSource; }
-		}
+		public DigestData DigestValue => AirdragEntry?.DigestValue;
+
+		public SquareMeter AirDragArea => AirdragEntry?.AirDragArea;
+
+		public SquareMeter TransferredAirDragArea => AirdragEntry?.TransferredAirDragArea;
+
+		public SquareMeter AirDragArea_0 => AirdragEntry.AirDragArea_0;
+
+		public DataSource DataSource => AirdragEntry?.DataSource;
 		public bool SavedInDeclarationMode { get; }
 
 		private void SetLastValidAirdragEntry()
@@ -1026,27 +825,15 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 		public ConsolidatedBusAuxiliariesData(IEnumerable<IManufacturingStageInputData> manufacturingStages)
 			: base(manufacturingStages) { }
 
-		public XmlNode XMLSource
-		{
-			get { return _xmlNode ?? (_xmlNode = GetBusAuxXMLSource()); }
-		}
-		public string FanTechnology
-		{
-			get { return null; }
-		}
-		public IList<string> SteeringPumpTechnology
-		{
-			get { return null; }
-		}
-		public IElectricSupplyDeclarationData ElectricSupply
-		{
-			get { return null; }
-		}
+		public XmlNode XMLSource => _xmlNode ?? (_xmlNode = GetBusAuxXMLSource());
 
-		public IElectricConsumersDeclarationData ElectricConsumers
-		{
-			get { return GetElectricConsumers(); }
-		}
+		public string FanTechnology => null;
+
+		public IList<string> SteeringPumpTechnology => null;
+
+		public IElectricSupplyDeclarationData ElectricSupply => null;
+
+		public IElectricConsumersDeclarationData ElectricConsumers => GetElectricConsumers();
 
 		private IElectricConsumersDeclarationData GetElectricConsumers()
 		{
@@ -1057,20 +844,11 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 					(_consolidateElectricConsumerData = new ConsolidateElectricConsumerData(_manufacturingStages));
 		}
 
-		public IPneumaticSupplyDeclarationData PneumaticSupply
-		{
-			get { return null; }
-		}
+		public IPneumaticSupplyDeclarationData PneumaticSupply => null;
 
-		public IPneumaticConsumersDeclarationData PneumaticConsumers
-		{
-			get { return null; }
-		}
+		public IPneumaticConsumersDeclarationData PneumaticConsumers => null;
 
-		public IHVACBusAuxiliariesDeclarationData HVACAux
-		{
-			get { return GetHVACAux(); }
-		}
+		public IHVACBusAuxiliariesDeclarationData HVACAux => GetHVACAux();
 
 		private IHVACBusAuxiliariesDeclarationData GetHVACAux()
 		{
@@ -1146,30 +924,15 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 		public ConsolidateElectricConsumerData(IEnumerable<IManufacturingStageInputData> manufacturingStages)
 			: base(manufacturingStages) { }
 
-		public bool? InteriorLightsLED
-		{
-			get { return GetElectricConsumerPropertyValue<bool?>(nameof(InteriorLightsLED)); }
-		}
+		public bool? InteriorLightsLED => GetElectricConsumerPropertyValue<bool?>(nameof(InteriorLightsLED));
 
-		public bool? DayrunninglightsLED
-		{
-			get { return GetElectricConsumerPropertyValue<bool?>(nameof(DayrunninglightsLED)); }
-		}
+		public bool? DayrunninglightsLED => GetElectricConsumerPropertyValue<bool?>(nameof(DayrunninglightsLED));
 
-		public bool? PositionlightsLED
-		{
-			get { return GetElectricConsumerPropertyValue<bool?>(nameof(PositionlightsLED)); }
-		}
+		public bool? PositionlightsLED => GetElectricConsumerPropertyValue<bool?>(nameof(PositionlightsLED));
 
-		public bool? HeadlightsLED
-		{
-			get { return GetElectricConsumerPropertyValue<bool?>(nameof(HeadlightsLED)); }
-		}
+		public bool? HeadlightsLED => GetElectricConsumerPropertyValue<bool?>(nameof(HeadlightsLED));
 
-		public bool? BrakelightsLED
-		{
-			get { return GetElectricConsumerPropertyValue<bool?>(nameof(BrakelightsLED)); }
-		}
+		public bool? BrakelightsLED => GetElectricConsumerPropertyValue<bool?>(nameof(BrakelightsLED));
 
 
 		private T GetElectricConsumerPropertyValue<T>(string propertyName)
@@ -1206,93 +969,27 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 		public ConsolidatedHVACBusAuxiliariesData(IEnumerable<IManufacturingStageInputData> manufacturingStages)
 			: base(manufacturingStages) { }
 
-		public BusHVACSystemConfiguration? SystemConfiguration
-		{
-			get
-			{
-				return GetHVACBusAuxPropertyValue<BusHVACSystemConfiguration?>(nameof(SystemConfiguration));
-			}
-		}
+		public BusHVACSystemConfiguration? SystemConfiguration => GetHVACBusAuxPropertyValue<BusHVACSystemConfiguration?>(nameof(SystemConfiguration));
 
-		public HeatPumpType? HeatPumpTypeDriverCompartment
-		{
-			get
-			{
-				return GetHVACBusAuxPropertyValue<HeatPumpType?>(nameof(HeatPumpTypeDriverCompartment));
-			}
-		}
+		public HeatPumpType? HeatPumpTypeDriverCompartment => GetHVACBusAuxPropertyValue<HeatPumpType?>(nameof(HeatPumpTypeDriverCompartment));
 
-		public HeatPumpMode? HeatPumpModeDriverCompartment
-		{
-			get
-			{
-				return GetHVACBusAuxPropertyValue<HeatPumpMode?>(nameof(HeatPumpModeDriverCompartment));
-			}
-		}
+		public HeatPumpMode? HeatPumpModeDriverCompartment => GetHVACBusAuxPropertyValue<HeatPumpMode?>(nameof(HeatPumpModeDriverCompartment));
 
-		public IList<Tuple<HeatPumpType, HeatPumpMode>> HeatPumpPassengerCompartments
-		{
-			get
-			{
-				return GetHeatPumpPassengerCompartments();
-			}
-		}
+		public IList<Tuple<HeatPumpType, HeatPumpMode>> HeatPumpPassengerCompartments => GetHeatPumpPassengerCompartments();
 
-		public Watt AuxHeaterPower
-		{
-			get
-			{
-				return GetHVACBusAuxPropertyValue<Watt>(nameof(AuxHeaterPower));
-			}
-		}
+		public Watt AuxHeaterPower => GetHVACBusAuxPropertyValue<Watt>(nameof(AuxHeaterPower));
 
-		public bool? DoubleGlazing
-		{
-			get
-			{
-				return GetHVACBusAuxPropertyValue<bool?>(nameof(DoubleGlazing));
-			}
-		}
+		public bool? DoubleGlazing => GetHVACBusAuxPropertyValue<bool?>(nameof(DoubleGlazing));
 
-		public bool? AdjustableAuxiliaryHeater
-		{
-			get
-			{
-				return GetHVACBusAuxPropertyValue<bool?>(nameof(AdjustableAuxiliaryHeater));
-			}
-		}
+		public bool? AdjustableAuxiliaryHeater => GetHVACBusAuxPropertyValue<bool?>(nameof(AdjustableAuxiliaryHeater));
 
-		public bool? SeparateAirDistributionDucts
-		{
-			get
-			{
-				return GetHVACBusAuxPropertyValue<bool?>(nameof(SeparateAirDistributionDucts));
-			}
-		}
+		public bool? SeparateAirDistributionDucts => GetHVACBusAuxPropertyValue<bool?>(nameof(SeparateAirDistributionDucts));
 
-		public bool? WaterElectricHeater
-		{
-			get
-			{
-				return GetHVACBusAuxPropertyValue<bool?>(nameof(WaterElectricHeater));
-			}
-		}
+		public bool? WaterElectricHeater => GetHVACBusAuxPropertyValue<bool?>(nameof(WaterElectricHeater));
 
-		public bool? AirElectricHeater
-		{
-			get
-			{
-				return GetHVACBusAuxPropertyValue<bool?>(nameof(AirElectricHeater));
-			}
-		}
+		public bool? AirElectricHeater => GetHVACBusAuxPropertyValue<bool?>(nameof(AirElectricHeater));
 
-		public bool? OtherHeatingTechnology
-		{
-			get
-			{
-				return GetHVACBusAuxPropertyValue<bool?>(nameof(OtherHeatingTechnology));
-			}
-		}
+		public bool? OtherHeatingTechnology => GetHVACBusAuxPropertyValue<bool?>(nameof(OtherHeatingTechnology));
 
 		public bool? AdjustableCoolantThermostat { get; }
 

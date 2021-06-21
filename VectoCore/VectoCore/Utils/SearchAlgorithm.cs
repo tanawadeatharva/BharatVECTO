@@ -185,17 +185,16 @@ namespace TUGraz.VectoCore.Utils
 
 			var rand = new Random().Next();
 			using (
-				var f =
-					new StreamWriter(File.Open("LineSearch-" + Thread.CurrentThread.ManagedThreadId + "-statistics.csv",
+				var f = new StreamWriter(File.Open("LineSearch-" + Thread.CurrentThread.ManagedThreadId + "-statistics.csv",
 						FileMode.Append))) {
 				foreach (var d in debug.Data) {
-					f.WriteLine(string.Format("{0}, {1}, {2}, {3}, {4}, {5}, {6}",
-						rand,
-						(d.x - xmin) / (xmax - xmin),
-						(d.y - ymin) / (ymax - ymin),
-						d.x / Math.Max(Math.Abs(xmax), Math.Abs(xmin)),
-						d.y / Math.Max(Math.Abs(ymax), Math.Abs(ymin)),
-						d.x, d.y));
+					f.WriteLine($"{rand}, " +
+								$"{(d.x - xmin) / (xmax - xmin)}, " +
+								$"{(d.y - ymin) / (ymax - ymin)}, " +
+								$"{d.x / Math.Max(Math.Abs(xmax), Math.Abs(xmin))}, " +
+								$"{d.y / Math.Max(Math.Abs(ymax), Math.Abs(ymin))}, " +
+								$"{d.x}, " +
+								$"{d.y}");
 				}
 			}
 		}

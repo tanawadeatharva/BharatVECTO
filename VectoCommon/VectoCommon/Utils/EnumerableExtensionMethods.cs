@@ -163,8 +163,7 @@ namespace TUGraz.VectoCommon.Utils
 		/// <example>GetSection(data => data.X &lt; searchedX); //returns the pair where first &lt; searchedX and second &gt;= searchedX</example>>
 		public static Tuple<T, T> GetSection<T>(this IEnumerable<T> self, Func<T, bool> predicate, string message = null)
 		{
-			int unused;
-			return self.GetSection(predicate, out unused, message);
+			return self.GetSection(predicate, out var unused, message);
 		}
 
 		public static TSource MinBy<TSource>(this IEnumerable<TSource> source,

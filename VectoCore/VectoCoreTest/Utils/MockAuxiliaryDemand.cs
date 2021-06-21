@@ -60,17 +60,13 @@ namespace TUGraz.VectoCore.Tests.Utils
 		}
 
 
-		public CycleData CycleData
-		{
-			get {
-				return new CycleData {
-					AbsTime = 0.SI<Second>(),
-					AbsDistance = 0.SI<Meter>(),
-					LeftSample = _left.Current,
-					RightSample = _right.Current
-				};
-			}
-		}
+		public CycleData CycleData =>
+			new CycleData {
+				AbsTime = 0.SI<Second>(),
+				AbsDistance = 0.SI<Meter>(),
+				LeftSample = _left.Current,
+				RightSample = _right.Current
+			};
 
 		public bool PTOActive { get; set; }
 
@@ -82,12 +78,9 @@ namespace TUGraz.VectoCore.Tests.Utils
 			};
 		}
 
-		public Meter Altitude
-		{
-			get { return 0.SI<Meter>(); }
-		}
+		public Meter Altitude => 0.SI<Meter>();
 
-		public Radian RoadGradient { get { return 0.SI<Radian>(); } }
+		public Radian RoadGradient => 0.SI<Radian>();
 		public MeterPerSecond TargetSpeed { get; set; }
 		public Second StopTime { get; set; }
 
@@ -105,10 +98,7 @@ namespace TUGraz.VectoCore.Tests.Utils
 			_right.MoveNext();
 		}
 
-		public Meter CycleStartDistance
-		{
-			get { return 0.SI<Meter>(); }
-		}
+		public Meter CycleStartDistance => 0.SI<Meter>();
 
 		public IReadOnlyList<DrivingCycleData.DrivingCycleEntry> LookAhead(Meter lookaheadDistance)
 		{

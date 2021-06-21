@@ -20,30 +20,15 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering.DataProvider
 
 		#region Implementation of IEcoRollEngineeringInputData
 
-		public MeterPerSecond MinSpeed
-		{
-			get { return GetDouble("MinSpeed", DeclarationData.Driver.EcoRoll.MinSpeed.AsKmph).KMPHtoMeterPerSecond(); }
-		}
+		public MeterPerSecond MinSpeed => GetDouble("MinSpeed", DeclarationData.Driver.EcoRoll.MinSpeed.AsKmph).KMPHtoMeterPerSecond();
 
-		public Second ActivationDelay
-		{
-			get { return GetDouble("ActivationDelay", DeclarationData.Driver.EcoRoll.ActivationDelay.Value()).SI<Second>(); }
-		}
+		public Second ActivationDelay => GetDouble("ActivationDelay", DeclarationData.Driver.EcoRoll.ActivationDelay.Value()).SI<Second>();
 
-		public MeterPerSecond UnderspeedThreshold
-		{
-			get {
-				return GetDouble("Underspeed", DeclarationData.Driver.EcoRoll.UnderspeedThreshold.AsKmph).KMPHtoMeterPerSecond();
-			}
-		}
+		public MeterPerSecond UnderspeedThreshold => GetDouble("Underspeed", DeclarationData.Driver.EcoRoll.UnderspeedThreshold.AsKmph).KMPHtoMeterPerSecond();
 
-		public MeterPerSquareSecond AccelerationUpperLimit
-		{
-			get {
-				return GetDouble("MaxAcceleration", DeclarationData.Driver.EcoRoll.AccelerationUpperLimit.Value())
-					.SI<MeterPerSquareSecond>();
-			}
-		}
+		public MeterPerSquareSecond AccelerationUpperLimit =>
+			GetDouble("MaxAcceleration", DeclarationData.Driver.EcoRoll.AccelerationUpperLimit.Value())
+				.SI<MeterPerSquareSecond>();
 
 		#endregion
 	}

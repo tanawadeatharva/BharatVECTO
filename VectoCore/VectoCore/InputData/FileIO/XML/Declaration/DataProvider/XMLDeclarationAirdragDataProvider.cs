@@ -56,48 +56,28 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 		#region Implementation of IAirdragDeclarationInputData
 
-		public virtual SquareMeter AirDragArea
-		{
-			get {
-				return ElementExists(XMLNames.AirDrag_DeclaredCdxA)
-					? GetDouble(XMLNames.AirDrag_DeclaredCdxA).SI<SquareMeter>()
-					: null;
-			}
-		}
+		public virtual SquareMeter AirDragArea =>
+			ElementExists(XMLNames.AirDrag_DeclaredCdxA)
+				? GetDouble(XMLNames.AirDrag_DeclaredCdxA).SI<SquareMeter>()
+				: null;
 
-		public virtual SquareMeter TransferredAirDragArea
-		{
-			get
-			{
-				return ElementExists(XMLNames.AirDrag_TransferredCDxA) 
-					? GetDouble(XMLNames.AirDrag_TransferredCDxA).SI<SquareMeter>() 
-					: null;
-			}
-		}
+		public virtual SquareMeter TransferredAirDragArea =>
+			ElementExists(XMLNames.AirDrag_TransferredCDxA) 
+				? GetDouble(XMLNames.AirDrag_TransferredCDxA).SI<SquareMeter>() 
+				: null;
 
-		public virtual SquareMeter AirDragArea_0
-		{
-			get
-			{
-				return ElementExists(XMLNames.AirDrag_CdxA_0)
-					? GetDouble(XMLNames.AirDrag_CdxA_0).SI<SquareMeter>()
-					: null;
-			}
-		}
+		public virtual SquareMeter AirDragArea_0 =>
+			ElementExists(XMLNames.AirDrag_CdxA_0)
+				? GetDouble(XMLNames.AirDrag_CdxA_0).SI<SquareMeter>()
+				: null;
 
-		public override CertificationMethod CertificationMethod
-		{
-			get { return CertificationMethod.Measured; }
-		}
+		public override CertificationMethod CertificationMethod => CertificationMethod.Measured;
 
 		#endregion
 
 		#region Overrides of AbstractXMLResource
 
-		protected override XNamespace SchemaNamespace
-		{
-			get { return NAMESPACE_URI; }
-		}
+		protected override XNamespace SchemaNamespace => NAMESPACE_URI;
 
 		protected override DataSourceType SourceType { get; }
 
@@ -121,11 +101,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 		public XMLDeclarationAirdragDataProviderV20(IXMLDeclarationVehicleData vehicle, XmlNode componentNode, string sourceFile) : base(vehicle, componentNode, sourceFile) { }
 
-		protected override XNamespace SchemaNamespace
-		{
-			get { return NAMESPACE_URI; }
-		}
-
+		protected override XNamespace SchemaNamespace => NAMESPACE_URI;
 	}
 
 	// ---------------------------------------------------------------------------------------
@@ -141,10 +117,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		public XMLDeclarationAirdragDataProviderV28(IXMLDeclarationVehicleData vehicle, XmlNode componentNode,
 			string sourceFile) : base(vehicle, componentNode, sourceFile) { }
 
-		protected override XNamespace SchemaNamespace
-		{
-			get { return NAMESPACE_URI; }
-		}
+		protected override XNamespace SchemaNamespace => NAMESPACE_URI;
 	}
 
 }

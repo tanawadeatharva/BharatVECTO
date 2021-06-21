@@ -471,56 +471,32 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 			#region 4 parent instance properties
 
 			[Required, System.ComponentModel.DataAnnotations.Range(11, 12)]
-			private int private_parent_property
-			{
-				get { return 7; }
-			}
+			private int private_parent_property => 7;
 
 			[Required, System.ComponentModel.DataAnnotations.Range(13, 14)]
-			protected int protected_parent_property
-			{
-				get { return 7; }
-			}
+			protected int protected_parent_property => 7;
 
 			[Required, System.ComponentModel.DataAnnotations.Range(15, 16)]
-			internal int internal_parent_property
-			{
-				get { return 7; }
-			}
+			internal int internal_parent_property => 7;
 
 			[Required, System.ComponentModel.DataAnnotations.Range(17, 18)]
-			public int public_parent_property
-			{
-				get { return 7; }
-			}
+			public int public_parent_property => 7;
 
 			#endregion
 
 			#region 4 parent static properties
 
 			[Required, System.ComponentModel.DataAnnotations.Range(19, 20)]
-			private static int private_static_parent_property
-			{
-				get { return 7; }
-			}
+			private static int private_static_parent_property => 7;
 
 			[Required, System.ComponentModel.DataAnnotations.Range(19, 20)]
-			protected static int protected_static_parent_property
-			{
-				get { return 7; }
-			}
+			protected static int protected_static_parent_property => 7;
 
 			[Required, System.ComponentModel.DataAnnotations.Range(19, 20)]
-			internal static int internal_static_parent_property
-			{
-				get { return 7; }
-			}
+			internal static int internal_static_parent_property => 7;
 
 			[Required, System.ComponentModel.DataAnnotations.Range(19, 20)]
-			public static int public_static_parent_property
-			{
-				get { return 7; }
-			}
+			public static int public_static_parent_property => 7;
 
 			#endregion
 
@@ -560,56 +536,32 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 			#region 4 instance properties
 
 			[Required, System.ComponentModel.DataAnnotations.Range(11, 12)]
-			private int private_property
-			{
-				get { return 7; }
-			}
+			private int private_property => 7;
 
 			[Required, System.ComponentModel.DataAnnotations.Range(13, 14)]
-			protected int protected_property
-			{
-				get { return 7; }
-			}
+			protected int protected_property => 7;
 
 			[Required, System.ComponentModel.DataAnnotations.Range(15, 16)]
-			internal int internal_property
-			{
-				get { return 7; }
-			}
+			internal int internal_property => 7;
 
 			[Required, System.ComponentModel.DataAnnotations.Range(17, 18)]
-			public int public_property
-			{
-				get { return 7; }
-			}
+			public int public_property => 7;
 
 			#endregion
 
 			#region 4 static properties
 
 			[Required, System.ComponentModel.DataAnnotations.Range(19, 20)]
-			private static int private_static_property
-			{
-				get { return 7; }
-			}
+			private static int private_static_property => 7;
 
 			[Required, System.ComponentModel.DataAnnotations.Range(19, 20)]
-			protected static int protected_static_property
-			{
-				get { return 7; }
-			}
+			protected static int protected_static_property => 7;
 
 			[Required, System.ComponentModel.DataAnnotations.Range(19, 20)]
-			internal static int internal_static_property
-			{
-				get { return 7; }
-			}
+			internal static int internal_static_property => 7;
 
 			[Required, System.ComponentModel.DataAnnotations.Range(19, 20)]
-			public static int public_static_property
-			{
-				get { return 7; }
-			}
+			public static int public_static_property => 7;
 
 			#endregion
 
@@ -638,10 +590,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 		public string AppVersion { get; set; }
 		public string TechnicalReportId { get; set; }
 
-		public CertificationMethod CertificationMethod
-		{
-			get { return CertificationMethod.NotCertified; }
-		}
+		public CertificationMethod CertificationMethod => CertificationMethod.NotCertified;
 
 		public string CertificationNumber { get; set; }
 		public DigestData DigestValue { get; set; }

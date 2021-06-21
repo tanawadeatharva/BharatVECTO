@@ -95,7 +95,7 @@ namespace TUGraz.VectoCore.Tests.Algorithms
 
 			var digest = DataIntegrityHelper.ComputeDigestValue(otherLines);
 
-			Assert.AreEqual(string.Format("#@ {0}", digest), last);
+			Assert.AreEqual($"#@ {digest}", last);
 		}
 
 		private static DataTable CreateDataTable(string[] cols, int numRows)

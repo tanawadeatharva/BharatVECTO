@@ -83,16 +83,10 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 		#region Overrides of JSONEngineDataV3
 
-		public override IWHRData WasteHeatRecoveryDataElectrical
-		{
-			get { return _elWHRData ?? (_elWHRData = ReadWHRData(Body["WHRCorrectionFactors"]?["Electrical"])); }
-		}
+		public override IWHRData WasteHeatRecoveryDataElectrical => _elWHRData ?? (_elWHRData = ReadWHRData(Body["WHRCorrectionFactors"]?["Electrical"]));
 
 
-		public override IWHRData WasteHeatRecoveryDataMechanical
-		{
-			get { return _mechWHRData ?? (_mechWHRData = ReadWHRData(Body["WHRCorrectionFactors"]?["Mechanical"])); }
-		}
+		public override IWHRData WasteHeatRecoveryDataMechanical => _mechWHRData ?? (_mechWHRData = ReadWHRData(Body["WHRCorrectionFactors"]?["Mechanical"]));
 
 		public override WHRType WHRType
 		{
@@ -197,40 +191,19 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 			#region Implementation of IWHRData
 
-			public double UrbanCorrectionFactor
-			{
-				get { return CorrectionFactors?["Urban"]?.ToString().ToDouble() ?? 1.0; }
-			}
+			public double UrbanCorrectionFactor => CorrectionFactors?["Urban"]?.ToString().ToDouble() ?? 1.0;
 
-			public double RuralCorrectionFactor
-			{
-				get { return CorrectionFactors?["Rural"]?.ToString().ToDouble() ?? 1.0; }
-			}
+			public double RuralCorrectionFactor => CorrectionFactors?["Rural"]?.ToString().ToDouble() ?? 1.0;
 
-			public double MotorwayCorrectionFactor
-			{
-				get { return CorrectionFactors?["Motorway"]?.ToString().ToDouble() ?? 1.0; }
-			}
+			public double MotorwayCorrectionFactor => CorrectionFactors?["Motorway"]?.ToString().ToDouble() ?? 1.0;
 
-			public double BFColdHot
-			{
-				get { return CorrectionFactors?["ColdHotBalancingFactor"]?.ToString().ToDouble() ?? 1.0; }
-			}
+			public double BFColdHot => CorrectionFactors?["ColdHotBalancingFactor"]?.ToString().ToDouble() ?? 1.0;
 
-			public double CFRegPer
-			{
-				get { return CorrectionFactors?["CFRegPer"]?.ToString().ToDouble() ?? 1.0; }
-			}
+			public double CFRegPer => CorrectionFactors?["CFRegPer"]?.ToString().ToDouble() ?? 1.0;
 
-			public double EngineeringCorrectionFactor
-			{
-				get { return CorrectionFactors?["EngineeringCorrectionFactor"]?.ToString().ToDouble() ?? 1.0; }
-			}
+			public double EngineeringCorrectionFactor => CorrectionFactors?["EngineeringCorrectionFactor"]?.ToString().ToDouble() ?? 1.0;
 
-			public TableData GeneratedPower
-			{
-				get { return WHRMap; }
-			}
+			public TableData GeneratedPower => WHRMap;
 
 			#endregion
 		}
@@ -245,31 +218,16 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 		public JSONEngineDataV4(JObject data, string fileName, bool tolerateMissing = false)
 			: base(data, fileName, tolerateMissing) { }
 
-		public override Watt RatedPowerDeclared
-		{
-			get { return Body.GetEx<double>("RatedPower").SI<Watt>(); }
-		}
+		public override Watt RatedPowerDeclared => Body.GetEx<double>("RatedPower").SI<Watt>();
 
-		public override PerSecond RatedSpeedDeclared
-		{
-			get { return Body.GetEx<double>("RatedSpeed").RPMtoRad(); }
-		}
+		public override PerSecond RatedSpeedDeclared => Body.GetEx<double>("RatedSpeed").RPMtoRad();
 
-		public override NewtonMeter MaxTorqueDeclared
-		{
-			get { return Body.GetEx<double>("MaxTorque").SI<NewtonMeter>(); }
-		}
+		public override NewtonMeter MaxTorqueDeclared => Body.GetEx<double>("MaxTorque").SI<NewtonMeter>();
 
-		public override double CorrectionFactorRegPer
-		{
-			get { return Body.GetEx<double>("CFRegPer"); }
-		}
+		public override double CorrectionFactorRegPer => Body.GetEx<double>("CFRegPer");
 
 
-		public override FuelType FuelType
-		{
-			get { return Body.GetEx<string>("FuelType").ParseEnum<FuelType>(); }
-		}
+		public override FuelType FuelType => Body.GetEx<string>("FuelType").ParseEnum<FuelType>();
 	}
 
 
@@ -281,23 +239,13 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 		public JSONEngineDataV3(JObject data, string fileName, bool tolerateMissing = false)
 			: base(data, fileName, tolerateMissing) { }
 
-		public virtual CubicMeter Displacement
-		{
-			get { return Body.GetEx<double>(JsonKeys.Engine_Displacement).SI(Unit.SI.Cubic.Centi.Meter).Cast<CubicMeter>(); }
+		public virtual CubicMeter Displacement => Body.GetEx<double>(JsonKeys.Engine_Displacement).SI(Unit.SI.Cubic.Centi.Meter).Cast<CubicMeter>();
 
-			// convert vom ccm to m^3}
-		}
-
-		public virtual PerSecond IdleSpeed
-		{
-			get { return Body.GetEx<double>(JsonKeys.Engine_IdleSpeed).RPMtoRad(); }
-		}
+		// convert vom ccm to m^3}
+		public virtual PerSecond IdleSpeed => Body.GetEx<double>(JsonKeys.Engine_IdleSpeed).RPMtoRad();
 
 
-		public virtual FuelType FuelType
-		{
-			get { return FuelType.DieselCI; }
-		}
+		public virtual FuelType FuelType => FuelType.DieselCI;
 
 		public virtual TableData FuelConsumptionMap
 		{
@@ -334,45 +282,24 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			}
 		}
 
-		IList<IEngineFuelEngineeringInputData> IEngineModeEngineeringInputData.Fuels
-		{
-			get { return _fuels ?? (_fuels = ReadFuels()); }
-		}
+		IList<IEngineFuelEngineeringInputData> IEngineModeEngineeringInputData.Fuels => _fuels ?? (_fuels = ReadFuels());
 
-		public virtual IList<IEngineFuelDeclarationInputData> Fuels
-		{
-			get { return (_fuels ?? (_fuels = ReadFuels())).Cast<IEngineFuelDeclarationInputData>().ToList(); }
-		}
+		public virtual IList<IEngineFuelDeclarationInputData> Fuels => (_fuels ?? (_fuels = ReadFuels())).Cast<IEngineFuelDeclarationInputData>().ToList();
 
 		protected virtual IList<IEngineFuelEngineeringInputData> ReadFuels()
 		{
 			return new IEngineFuelEngineeringInputData[] { this };
 		}
 
-		public virtual IWHRData WasteHeatRecoveryDataElectrical
-		{
-			get { return null; }
-		}
+		public virtual IWHRData WasteHeatRecoveryDataElectrical => null;
 
-		public virtual IWHRData WasteHeatRecoveryDataMechanical
-		{
-			get { return null; }
-		}
+		public virtual IWHRData WasteHeatRecoveryDataMechanical => null;
 
-		public virtual Watt RatedPowerDeclared
-		{
-			get { return 0.SI<Watt>(); }
-		}
+		public virtual Watt RatedPowerDeclared => 0.SI<Watt>();
 
-		public virtual PerSecond RatedSpeedDeclared
-		{
-			get { return 0.RPMtoRad(); }
-		}
+		public virtual PerSecond RatedSpeedDeclared => 0.RPMtoRad();
 
-		public virtual NewtonMeter MaxTorqueDeclared
-		{
-			get { return 0.SI<NewtonMeter>(); }
-		}
+		public virtual NewtonMeter MaxTorqueDeclared => 0.SI<NewtonMeter>();
 
 		IList<IEngineModeEngineeringInputData> IEngineEngineeringInputData.EngineModes
 		{
@@ -384,15 +311,9 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			get { return new IEngineModeDeclarationInputData[] { this }; }
 		}
 
-		public virtual WHRType WHRType
-		{
-			get { return WHRType.None; }
-		}
+		public virtual WHRType WHRType => WHRType.None;
 
-		public virtual KilogramSquareMeter Inertia
-		{
-			get { return Body.GetEx<double>(JsonKeys.Engine_Inertia).SI<KilogramSquareMeter>(); }
-		}
+		public virtual KilogramSquareMeter Inertia => Body.GetEx<double>(JsonKeys.Engine_Inertia).SI<KilogramSquareMeter>();
 
 		public virtual double WHTCEngineering
 		{
@@ -405,25 +326,13 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			}
 		}
 
-		public virtual Second EngineStartTime
-		{
-			get { return null; }
-		}
+		public virtual Second EngineStartTime => null;
 
-		public virtual double WHTCMotorway
-		{
-			get { return Body.GetEx<double>(JsonKeys.Engine_WHTC_Motorway); }
-		}
+		public virtual double WHTCMotorway => Body.GetEx<double>(JsonKeys.Engine_WHTC_Motorway);
 
-		public virtual double WHTCRural
-		{
-			get { return Body.GetEx<double>(JsonKeys.Engine_WHTC_Rural); }
-		}
+		public virtual double WHTCRural => Body.GetEx<double>(JsonKeys.Engine_WHTC_Rural);
 
-		public virtual double WHTCUrban
-		{
-			get { return Body.GetEx<double>(JsonKeys.Engine_WHTC_Urban); }
-		}
+		public virtual double WHTCUrban => Body.GetEx<double>(JsonKeys.Engine_WHTC_Urban);
 
 		public double ColdHotBalancingFactor
 		{
@@ -436,41 +345,20 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			}
 		}
 
-		public virtual double CorrectionFactorRegPer
-		{
-			get { return 1; }
-		}
+		public virtual double CorrectionFactorRegPer => 1;
 
 
-		public virtual string Manufacturer
-		{
-			get { return Constants.NOT_AVailABLE; }
-		}
+		public virtual string Manufacturer => Constants.NOT_AVAILABLE;
 
-		public virtual string Model
-		{
-			get { return Body.GetEx<string>(JsonKeys.Engine_ModelName); }
-		}
+		public virtual string Model => Body.GetEx<string>(JsonKeys.Engine_ModelName);
 
 
-		public virtual DateTime Date
-		{
-			get { return DateTime.MinValue; }
-		}
+		public virtual DateTime Date => DateTime.MinValue;
 
-		public virtual CertificationMethod CertificationMethod
-		{
-			get { return CertificationMethod.NotCertified; }
-		}
+		public virtual CertificationMethod CertificationMethod => CertificationMethod.NotCertified;
 
-		public virtual string CertificationNumber
-		{
-			get { return Constants.NOT_AVailABLE; }
-		}
+		public virtual string CertificationNumber => Constants.NOT_AVAILABLE;
 
-		public virtual DigestData DigestValue
-		{
-			get { return null; }
-		}
+		public virtual DigestData DigestValue => null;
 	}
 }

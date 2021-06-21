@@ -4,14 +4,11 @@ Imports System.IO
 Imports System.Linq
 Imports System.Windows.Forms.DataVisualization.Charting
 Imports TUGraz.VectoCommon.InputData
-Imports TUGraz.VectoCommon.Models
 Imports TUGraz.VectoCommon.Utils
 Imports TUGraz.VectoCore.InputData.FileIO.JSON
 Imports TUGraz.VectoCore.InputData.Reader.ComponentData
-Imports TUGraz.VectoCore.Models.Declaration
 Imports TUGraz.VectoCore.Models.SimulationComponent.Data
 Imports TUGraz.VectoCore.Models.SimulationComponent.Data.ElectricMotor
-Imports TUGraz.VectoCore.Models.SimulationComponent.Data.Engine
 Imports TUGraz.VectoCore.Utils
 ' Copyright 2017 European Union.
 ' Licensed under the EUPL (the 'Licence');
@@ -121,7 +118,7 @@ Public Class ElectricMotorForm
         If File.Exists(Path.Combine(MyAppPath, "User Manual\help.html")) Then
             Dim defaultBrowserPath As String = BrowserUtils.GetDefaultBrowserPath()
             Process.Start(defaultBrowserPath,
-                        String.Format("""file://{0}""", Path.Combine(MyAppPath, "User Manual\help.html#engine-editor")))
+                          $"""file://{Path.Combine(MyAppPath, "User Manual\help.html#engine-editor")}""")
         Else
             MsgBox("User Manual not found!", MsgBoxStyle.Critical)
         End If
@@ -178,7 +175,7 @@ Public Class ElectricMotorForm
         tbInertia.Text = engine.Inertia.ToGUIFormat()
 
         tbOverloadTq.Text = If(engine.OverloadTorque?.Value().ToGUIFormat(), "")
-        tbOvlSpeed.Text = If(engine.OverloadTestSpeed?.Value().ToGUIFormat(), "")
+        tbOvlSpeed.Text = If(engine.OverloadTestSpeed?.AsRPM.ToGUIFormat(), "")
         tbOvlTime.Text = engine.OverloadTime.Value().ToGUIFormat()
         tbContTq.Text = engine.ContinuousTorque.ToGUIFormat()
         tbRatedSpeed.Text = engine.ContinuousTorqueSpeed.AsRPM.ToGUIFormat()

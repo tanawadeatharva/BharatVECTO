@@ -58,23 +58,16 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 		#region Implementation of ITorqueconverterDeclarationInputData
 
-		public virtual TableData TCData
-		{
-			get {
-				return ReadTableData(
-					XMLNames.TorqueConverter_Characteristics, XMLNames.TorqueConverter_Characteristics_Entry,
-					AttributeMappings.TorqueConverterDataMapping);
-			}
-		}
+		public virtual TableData TCData =>
+			ReadTableData(
+				XMLNames.TorqueConverter_Characteristics, XMLNames.TorqueConverter_Characteristics_Entry,
+				AttributeMappings.TorqueConverterDataMapping);
 
 		#endregion
 
 		#region Overrides of AbstractXMLResource
 
-		protected override XNamespace SchemaNamespace
-		{
-			get { return NAMESPACE_URI; }
-		}
+		protected override XNamespace SchemaNamespace => NAMESPACE_URI;
 
 		protected override DataSourceType SourceType { get; }
 
@@ -93,10 +86,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 		public XMLDeclarationTorqueConverterDataProviderV20(IXMLDeclarationVehicleData vehicle, XmlNode componentNode, string sourceFile) : base(vehicle, componentNode, sourceFile) { }
 
-		protected override XNamespace SchemaNamespace
-		{
-			get { return NAMESPACE_URI; }
-		}
+		protected override XNamespace SchemaNamespace => NAMESPACE_URI;
 	}
 
 	// ---------------------------------------------------------------------------------------
@@ -113,16 +103,10 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 		#region Overrides of AbstractCommonComponentType
 
-		public override string CertificationNumber
-		{
-			get { return GetString(XMLNames.Component_CertificationNumber, required: false); }
-		}
+		public override string CertificationNumber => GetString(XMLNames.Component_CertificationNumber, required: false);
 
 		#endregion
 
-		protected override XNamespace SchemaNamespace
-		{
-			get { return NAMESPACE_URI; }
-		}
+		protected override XNamespace SchemaNamespace => NAMESPACE_URI;
 	}
 }

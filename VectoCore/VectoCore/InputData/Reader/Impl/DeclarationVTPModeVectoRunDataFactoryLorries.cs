@@ -57,7 +57,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 		protected DeclarationVTPModeVectoRunDataFactoryLorries(IVTPDeclarationJobInputData job, IVTPReport report) : base(job, report)
 		{ }
 
-		protected override IDeclarationDataAdapter Dao { get { return _dao ?? (_dao = new DeclarationDataAdapterHeavyLorry()); } }
+		protected override IDeclarationDataAdapter Dao => _dao ?? (_dao = new DeclarationDataAdapterHeavyLorry());
 
 		protected override void Initialize()
 		{

@@ -95,7 +95,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 			}
 		}
 
-		public XmlNode XMLSource { get { return BaseNode; } }
+		public XmlNode XMLSource => BaseNode;
 
 		#endregion
 
@@ -111,10 +111,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 		#endregion
 
-		protected virtual XNamespace SchemaNamespace
-		{
-			get { return NAMESPACE_URI; }
-		}
+		protected virtual XNamespace SchemaNamespace => NAMESPACE_URI;
 	}
 
 	// ---------------------------------------------------------------------------------------
@@ -133,10 +130,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 			IXMLDeclarationVehicleData vehicle, XmlNode componentNode, string sourceFile) : base(
 			vehicle, componentNode, sourceFile) { }
 
-		protected override XNamespace SchemaNamespace
-		{
-			get { return NAMESPACE_URI; }
-		}
+		protected override XNamespace SchemaNamespace => NAMESPACE_URI;
 	}
 
 
@@ -155,9 +149,6 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 			IXMLDeclarationVehicleData vehicle, XmlNode componentNode, string sourceFile) : base(
 			vehicle, componentNode, sourceFile) { }
 
-		protected override XNamespace SchemaNamespace
-		{
-			get { return NAMESPACE_URI; }
-		}
+		protected override XNamespace SchemaNamespace => NAMESPACE_URI;
 	}
 }

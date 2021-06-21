@@ -538,10 +538,7 @@ namespace TUGraz.VectoCore.Tests.FileIO
 		public VectoSimulationJobType JobType { get; set; }
 		public IEngineEngineeringInputData EngineOnly { get; set; }
 
-		IVehicleDeclarationInputData IDeclarationJobInputData.Vehicle
-		{
-			get { return Vehicle; }
-		}
+		IVehicleDeclarationInputData IDeclarationJobInputData.Vehicle => Vehicle;
 
 		public string JobName { get; set; }
 		public string ShiftStrategy { get; set; }

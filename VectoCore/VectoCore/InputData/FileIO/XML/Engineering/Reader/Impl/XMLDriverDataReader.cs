@@ -109,13 +109,9 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering.Reader.Impl {
 			}
 		}
 
-		public IGearshiftEngineeringInputData ShiftParameters
-		{
-			get {
-				return CreateData(
-					XMLNames.DriverModel_ShiftStrategyParameters, ShiftParametersCreator, false);
-			}
-		}
+		public IGearshiftEngineeringInputData ShiftParameters =>
+			CreateData(
+				XMLNames.DriverModel_ShiftStrategyParameters, ShiftParametersCreator, false);
 
 		public IEngineStopStartEngineeringInputData EngineStopStartData
 		{
@@ -139,7 +135,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering.Reader.Impl {
 			var node = GetNode(elementName, required);
 			if (!required && node == null) {
 				try {
-					return creator(null, node);
+					return creator(null, null);
 				} catch (Exception e) {
 					throw new VectoException("Failed to create dummy data provider", e);
 				}

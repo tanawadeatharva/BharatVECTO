@@ -79,30 +79,15 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.Electric
 			}
 		}
 
-		public double AlternatorsEfficiencyIdleResultCard
-		{
-			get { return _alternatorMap.GetEfficiency(_signals.EngineSpeed, SmartIdleCurrent); }
-		}
+		public double AlternatorsEfficiencyIdleResultCard => _alternatorMap.GetEfficiency(_signals.EngineSpeed, SmartIdleCurrent);
 
-		public Ampere SmartTractionCurrent
-		{
-			get { return _resultCardTraction.GetSmartCurrentResult(HvacPlusNonBaseCurrents()); }
-		}
+		public Ampere SmartTractionCurrent => _resultCardTraction.GetSmartCurrentResult(HvacPlusNonBaseCurrents());
 
-		public double AlternatorsEfficiencyTractionOnResultCard
-		{
-			get { return _alternatorMap.GetEfficiency(_signals.EngineSpeed, SmartTractionCurrent); }
-		}
+		public double AlternatorsEfficiencyTractionOnResultCard => _alternatorMap.GetEfficiency(_signals.EngineSpeed, SmartTractionCurrent);
 
-		public Ampere SmartOverrunCurrent
-		{
-			get { return _resultCardOverrun.GetSmartCurrentResult(HvacPlusNonBaseCurrents()); }
-		}
+		public Ampere SmartOverrunCurrent => _resultCardOverrun.GetSmartCurrentResult(HvacPlusNonBaseCurrents());
 
-		public double AlternatorsEfficiencyOverrunResultCard
-		{
-			get { return _alternatorMap.GetEfficiency(_signals.EngineSpeed, SmartOverrunCurrent); }
-		}
+		public double AlternatorsEfficiencyOverrunResultCard => _alternatorMap.GetEfficiency(_signals.EngineSpeed, SmartOverrunCurrent);
 
 		#endregion
 	}

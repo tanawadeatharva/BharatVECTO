@@ -10,9 +10,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl {
 
 		public KeyValuePair<Tuple<PerSecond, NewtonMeter>, NewtonMeter>[] Data
 		{
-			set {
-				SetData(value);
-			}
+			set => SetData(value);
 		}
 
 		#region Overrides of Interpolate2D<PerSecond,NewtonMeter,NewtonMeter,KeyValuePair<Tuple<PerSecond,NewtonMeter>,NewtonMeter>>

@@ -35,10 +35,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		private List<SchmittTrigger> LoadStageSteps = new List<SchmittTrigger>();
 		private ShiftLineSet UpshiftLineTCLocked = new ShiftLineSet();
 
-		public new static string Name
-		{
-			get { return "AT - EffShift"; }
-		}
+		public new static string Name => "AT - EffShift";
 
 		public ATShiftStrategyOptimized(IVehicleContainer dataBus) : base(dataBus)
 		{

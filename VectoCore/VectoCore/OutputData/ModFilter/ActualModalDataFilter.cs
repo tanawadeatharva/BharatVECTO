@@ -164,9 +164,6 @@ namespace TUGraz.VectoCore.OutputData.ModFilter
 			}
 		}
 
-		public string ID
-		{
-			get { return "sim"; }
-		}
+		public string ID => "sim";
 	}
 }

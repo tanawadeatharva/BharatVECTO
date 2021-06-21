@@ -140,7 +140,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					// reduce the current simulation interval to extend the remaining interval
 					return new ResponseFailTimeInterval(this) {
 						AbsTime = absTime,
-						DeltaT = (CycleIterator.RightSample.Time - absTime)/2
+						DeltaT = (CycleIterator.RightSample.Time - absTime) / 2
 					};
 				}
 			}
@@ -176,33 +176,36 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			do {
 				response = NextComponent.Request(absTime, dt, acceleration, gradient, false);
 				debug.Add(response);
-				response.Switch()
-					.Case<ResponseGearShift>(() => response = NextComponent.Request(absTime, dt, acceleration, gradient, false))
-					.Case<ResponseUnderload>(r => {
+
+				switch (response) {
+					case ResponseGearShift _:
+						response = NextComponent.Request(absTime, dt, acceleration, gradient, false);
+						break;
+					case ResponseUnderload r:
 						response = HandleUnderload(absTime, dt, r, gradient, ref acceleration);
-					})
-					.Case<ResponseOverload>(r => {
+						break;
+					case ResponseOverload r:
 						response = HandleOverload(absTime, dt, r, gradient, ref acceleration);
-					})
-					.Case<ResponseEngineSpeedTooHigh>(r => {
+						break;
+					case ResponseEngineSpeedTooHigh r:
 						acceleration = SearchAlgorithm.Search(acceleration, r.DeltaEngineSpeed,
 							Constants.SimulationSettings.OperatingPointInitialSearchIntervalAccelerating,
 							getYValue: result => ((ResponseDryRun)result).DeltaEngineSpeed,
+							// ReSharper disable once AccessToModifiedClosure
 							evaluateFunction: x => NextComponent.Request(absTime, dt, x, gradient, true),
-							criterion:
-								y => ((ResponseDryRun)y).DeltaEngineSpeed.Value());
-						Log.Info(
-							"Found operating point for driver acceleration. absTime: {0}, dt: {1}, acceleration: {2}, gradient: {3}",
+							criterion: y => ((ResponseDryRun)y).DeltaEngineSpeed.Value());
+						Log.Info("Found operating point for driver acceleration. absTime: {0}, dt: {1}, acceleration: {2}, gradient: {3}",
 							absTime, dt, acceleration, gradient);
-					})
-					.Case<ResponseFailTimeInterval>(r => {
+						break;
+					case ResponseFailTimeInterval r:
 						dt = r.DeltaT;
-					})
-					.Case<ResponseSuccess>()
-					.Default(
-						r => {
-							throw new UnexpectedResponseException("MeasuredSpeedDrivingCycle received an unexpected response.", r);
-						});
+						break;
+					case ResponseSuccess _:
+						break;
+					default:
+						throw new UnexpectedResponseException("MeasuredSpeedDrivingCycle received an unexpected response.", response);
+				}
+
 			} while (!(response is ResponseSuccess || response is ResponseFailTimeInterval) && (++responseCount < 10));
 
 			AbsTime = absTime + dt;
@@ -261,7 +264,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		private IResponse HandleOverload(Second absTime, Second dt, ResponseOverload r, Radian gradient,
 			ref MeterPerSquareSecond acceleration)
 		{
-			IResponse response;
 			if (DataBus.ClutchInfo.ClutchClosed(absTime)) {
 				acceleration = SearchAlgorithm.Search(acceleration, r.Delta,
 					Constants.SimulationSettings.OperatingPointInitialSearchIntervalAccelerating,
@@ -301,7 +303,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 						criterion: y => ((ResponseDryRun)y).DeltaFullLoad.Value());
 				}
 			}
-			response = NextComponent.Request(absTime, dt, acceleration, gradient, false);
+			var response = NextComponent.Request(absTime, dt, acceleration, gradient, false);
 			return response;
 		}
 
@@ -323,28 +325,17 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			AdvanceState();
 		}
 
-		public double Progress
-		{
-			get { return AbsTime == null ? 0 : AbsTime.Value() / Data.Entries.Last().Time.Value(); }
-		}
+		public double Progress => AbsTime == null ? 0 : AbsTime.Value() / Data.Entries.Last().Time.Value();
 
-		public CycleData CycleData
-		{
-			get
-			{
-				return new CycleData {
-					AbsTime = CycleIterator.LeftSample.Time,
-					AbsDistance = null,
-					LeftSample = CycleIterator.LeftSample,
-					RightSample = CycleIterator.RightSample,
-				};
-			}
-		}
+		public CycleData CycleData =>
+			new CycleData {
+				AbsTime = CycleIterator.LeftSample.Time,
+				AbsDistance = null,
+				LeftSample = CycleIterator.LeftSample,
+				RightSample = CycleIterator.RightSample,
+			};
 
-		public bool PTOActive
-		{
-			get { return false; }
-		}
+		public bool PTOActive => false;
 
 		public DrivingCycleData.DrivingCycleEntry CycleLookAhead(Meter distance)
 		{
@@ -352,25 +343,15 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			//throw new System.NotImplementedException();
 		}
 
-		public Meter Altitude
-		{
-			get { return CycleIterator.LeftSample.Altitude; }
-		}
+		public Meter Altitude => CycleIterator.LeftSample.Altitude;
 
-		public Radian RoadGradient { get { return CycleIterator.LeftSample.RoadGradient; } }
-		public MeterPerSecond TargetSpeed
-		{
-			get { return CycleIterator.LeftSample.VehicleTargetSpeed; }
-		}
-		public Second StopTime
-		{
-			get { return CycleIterator.LeftSample.StoppingTime; }
-		}
+		public Radian RoadGradient => CycleIterator.LeftSample.RoadGradient;
 
-		public Meter CycleStartDistance
-		{
-			get { return 0.SI<Meter>(); }
-		}
+		public MeterPerSecond TargetSpeed => CycleIterator.LeftSample.VehicleTargetSpeed;
+
+		public Second StopTime => CycleIterator.LeftSample.StoppingTime;
+
+		public Meter CycleStartDistance => 0.SI<Meter>();
 
 		public IReadOnlyList<DrivingCycleData.DrivingCycleEntry> LookAhead(Meter lookaheadDistance)
 		{
@@ -389,25 +370,16 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			return retVal;
 		}
 
-		public SpeedChangeEntry LastTargetspeedChange { get { return null; } }
+		public SpeedChangeEntry LastTargetspeedChange => null;
 
-		public void FinishSimulation()
-		{
-			Data.Finish();
-		}
+		public void FinishSimulation() => Data.Finish();
 
 		public DrivingBehavior DriverBehavior { get; internal set; }
 
-		public DrivingAction DrivingAction
-		{
-			get { return DrivingAction.Accelerate; }
-		}
+		public DrivingAction DrivingAction => DrivingAction.Accelerate;
 
 		public MeterPerSquareSecond DriverAcceleration { get; protected set; }
 
-		public Meter Distance
-		{
-			get { return CurrentState.Distance; }
-		}
+		public Meter Distance => CurrentState.Distance;
 	}
 }

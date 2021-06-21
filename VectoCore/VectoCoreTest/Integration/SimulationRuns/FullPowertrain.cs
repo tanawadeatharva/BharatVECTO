@@ -106,7 +106,7 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 			var cycle = new DistanceBasedDrivingCycle(container, cycleData);
 			var cyclePort = cycle.OutPort();
 
-            cycle.AddComponent(new Driver(container, driverData, new DefaultDriverStrategy(container)))
+			cycle.AddComponent(new Driver(container, driverData, new DefaultDriverStrategy(container)))
 				.AddComponent(new Vehicle(container, vehicleData, airDragData))
 				.AddComponent(new Wheels(container, vehicleData.DynamicTyreRadius, vehicleData.WheelsInertia))
 				.AddComponent(new Brakes(container))
@@ -125,22 +125,26 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 			var cnt = 0;
 			do {
 				response = cyclePort.Request(absTime, ds);
-				response.Switch().
-					Case<ResponseDrivingCycleDistanceExceeded>(r => ds = r.MaxDistance).
-					Case<ResponseCycleFinished>(r => { }).
-					Case<ResponseSuccess>(r => {
+				switch (response) {
+					case ResponseCycleFinished _:
+						break;
+					case ResponseDrivingCycleDistanceExceeded r:
+						ds = r.MaxDistance;
+						break;
+					case ResponseSuccess r:
 						container.CommitSimulationStep(absTime, r.SimulationInterval);
 						absTime += r.SimulationInterval;
-
 						ds = container.VehicleInfo.VehicleSpeed.IsEqual(0)
 							? Constants.SimulationSettings.DriveOffDistance
 							: Constants.SimulationSettings.TargetTimeInterval * container.VehicleInfo.VehicleSpeed;
-
 						if (cnt++ % 100 == 0) {
 							modData.Finish(VectoRun.Status.Success);
 						}
-					}).
-					Default(r => Assert.Fail("Unexpected Response: {0}", r));
+						break;
+					default:
+						Assert.Fail("Unexpected Response: {0}", response);
+						break;
+				}
 			} while (!(response is ResponseCycleFinished));
 			modData.Finish(VectoRun.Status.Success);
 			Assert.IsInstanceOf<ResponseCycleFinished>(response);
@@ -157,7 +161,7 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 			var vehicleData = CreateVehicleData(3300.SI<Kilogram>());
 			var driverData = CreateDriverData(AccelerationFile);
 			var airDragData = CreateAirdragData();
-			
+
 			var runData = new VectoRunData() {
 				JobName = "Coach_FullPowertrain",
 				EngineData = engineData,
@@ -176,7 +180,7 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 
 
 			var cycle = new DistanceBasedDrivingCycle(container, cycleData);
-            var cyclePort = cycle.OutPort();
+			var cyclePort = cycle.OutPort();
 			cycle.AddComponent(new Driver(container, driverData, new DefaultDriverStrategy(container)))
 				.AddComponent(new Vehicle(container, vehicleData, airDragData))
 				.AddComponent(new Wheels(container, vehicleData.DynamicTyreRadius, vehicleData.WheelsInertia))
@@ -210,23 +214,29 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 				}
 				Log.Info("Test Got Response: {0},", response);
 
-				response.Switch().
-					Case<ResponseDrivingCycleDistanceExceeded>(r => ds = r.MaxDistance).
-					Case<ResponseCycleFinished>(r => { }).
-					Case<ResponseGearShift>(r => { Log.Debug("Gearshift"); }).
-					Case<ResponseSuccess>(r => {
+				switch (response) {
+					case ResponseCycleFinished _:
+						break;
+					case ResponseDrivingCycleDistanceExceeded r:
+						ds = r.MaxDistance;
+						break;
+					case ResponseGearShift _:
+						Log.Debug("Gearshift");
+						break;
+					case ResponseSuccess r:
 						container.CommitSimulationStep(absTime, r.SimulationInterval);
 						absTime += r.SimulationInterval;
-
 						ds = container.VehicleInfo.VehicleSpeed.IsEqual(0)
 							? Constants.SimulationSettings.DriveOffDistance
 							: Constants.SimulationSettings.TargetTimeInterval * container.VehicleInfo.VehicleSpeed;
-
 						if (cnt++ % 100 == 0) {
 							modData.Finish(VectoRun.Status.Success);
 						}
-					}).
-					Default(r => Assert.Fail("Unexpected Response: {0}", r));
+						break;
+					default:
+						Assert.Fail("Unexpected Response: {0}", response);
+						break;
+				}
 			}
 			modData.Finish(VectoRun.Status.Success);
 			Assert.IsInstanceOf<ResponseSuccess>(response);
@@ -292,26 +302,30 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 				}
 				Log.Info("Test Got Response: {0},", response);
 
-				response.Switch().
-					Case<ResponseDrivingCycleDistanceExceeded>(r => ds = r.MaxDistance).
-					Case<ResponseCycleFinished>(r => { }).
-					Case<ResponseGearShift>(r => { Log.Debug("Gearshift"); }).
-					Case<ResponseSuccess>(r => {
+				switch (response) {
+					case ResponseCycleFinished _:
+						break;
+					case ResponseDrivingCycleDistanceExceeded r:
+						ds = r.MaxDistance;
+						break;
+					case ResponseGearShift _:
+						Log.Debug("Gearshift");
+						break;
+					case ResponseSuccess r:
 						container.CommitSimulationStep(absTime, r.SimulationInterval);
 						absTime += r.SimulationInterval;
-
 						ds = container.VehicleInfo.VehicleSpeed.IsEqual(0)
 							? Constants.SimulationSettings.DriveOffDistance
 							: Constants.SimulationSettings.TargetTimeInterval * container.VehicleInfo.VehicleSpeed;
-
 						if (cnt++ % 100 == 0) {
 							modData.Finish(VectoRun.Status.Success);
 						}
-					}).
-					Default(r => {
+						break;
+					default:
 						modData.Finish(VectoRun.Status.Success);
-						Assert.Fail("Unexpected Response: {0}", r);
-					});
+						Assert.Fail("Unexpected Response: {0}", response);
+						break;
+				}
 			}
 			modData.Finish(VectoRun.Status.Success);
 			Assert.IsInstanceOf<ResponseCycleFinished>(response);
@@ -347,8 +361,8 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 				Gears = ratios.Select((ratio, i) =>
 					Tuple.Create((uint)i,
 						new GearData {
-//							MaxTorque = ratio > 5 ? 2300.SI<NewtonMeter>() : null,
-							LossMap = TransmissionLossMapReader.ReadFromFile(GearboxLossMap, ratio, string.Format("Gear {0}", i)),
+							// MaxTorque = ratio > 5 ? 2300.SI<NewtonMeter>() : null,
+							LossMap = TransmissionLossMapReader.ReadFromFile(GearboxLossMap, ratio, $"Gear {i}"),
 							Ratio = ratio,
 							ShiftPolygon = ShiftPolygonReader.ReadFromFile(GearboxShiftPolygonFile)
 						}))
@@ -441,7 +455,7 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 
 		private static AirdragData CreateAirdragData()
 		{
-			return new AirdragData() {
+			return new AirdragData {
 				CrossWindCorrectionCurve =
 					new CrosswindCorrectionCdxALookup(3.2634.SI<SquareMeter>(),
 						CrossWindCorrectionCurveReader.GetNoCorrectionCurve(3.2634.SI<SquareMeter>()),
@@ -458,9 +472,7 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 					//Deceleration = -0.5.SI<MeterPerSquareSecond>()
 					LookAheadDecisionFactor = new LACDecisionFactor()
 				},
-				OverSpeed = new DriverData.OverSpeedData {
-					Enabled = false
-				},
+				OverSpeed = new DriverData.OverSpeedData { Enabled = false }
 			};
 		}
 	}

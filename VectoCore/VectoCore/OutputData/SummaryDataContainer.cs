@@ -286,7 +286,7 @@ namespace TUGraz.VectoCore.OutputData
 			var row = GetResultRow(modData, runData);
 
 			row[Fields.SORT] = jobNr * 1000 + runNr;
-			row[Fields.JOB] = string.Format("{0}-{1}", jobNr, runNr); //ReplaceNotAllowedCharacters(current);
+			row[Fields.JOB] = $"{jobNr}-{runNr}"; //ReplaceNotAllowedCharacters(current);
 			row[Fields.INPUTFILE] = ReplaceNotAllowedCharacters(runData.JobName);
 			row[Fields.CYCLE] = ReplaceNotAllowedCharacters(runData.Cycle.Name + Constants.FileExtensions.CycleFile);
 
@@ -922,9 +922,9 @@ namespace TUGraz.VectoCore.OutputData
 						? ""
 						: data.CertificationNumber;
 			} else {
-				row[Fields.ANGLEDRIVE_MANUFACTURER] = Constants.NOT_AVailABLE;
-				row[Fields.ANGLEDRIVE_MODEL] = Constants.NOT_AVailABLE;
-				row[Fields.ANGLEDRIVE_RATIO] = Constants.NOT_AVailABLE;
+				row[Fields.ANGLEDRIVE_MANUFACTURER] = Constants.NOT_AVAILABLE;
+				row[Fields.ANGLEDRIVE_MODEL] = Constants.NOT_AVAILABLE;
+				row[Fields.ANGLEDRIVE_RATIO] = Constants.NOT_AVAILABLE;
 				row[Fields.ANGLEDRIVE_CERTIFICATION_METHOD] = "";
 				row[Fields.ANGLEDRIVE_CERTIFICATION_NUMBER] = "";
 			}
@@ -941,8 +941,8 @@ namespace TUGraz.VectoCore.OutputData
 					? ""
 					: data.CertificationNumber;
 			} else {
-				row[Fields.RETARDER_MANUFACTURER] = Constants.NOT_AVailABLE;
-				row[Fields.RETARDER_MODEL] = Constants.NOT_AVailABLE;
+				row[Fields.RETARDER_MANUFACTURER] = Constants.NOT_AVAILABLE;
+				row[Fields.RETARDER_MODEL] = Constants.NOT_AVAILABLE;
 				row[Fields.RETARDER_CERTIFICATION_METHOD] = "";
 				row[Fields.RETARDER_CERTIFICATION_NUMBER] = "";
 			}
@@ -983,8 +983,8 @@ namespace TUGraz.VectoCore.OutputData
 				row[Fields.GEAR_RATIO_LAST_GEAR] = data.Gears.Count > 0
 					? (ConvertedSI)data.Gears.Last().Value.Ratio.SI<Scalar>()
 					: (ConvertedSI)0.SI<Scalar>();
-				row[Fields.TORQUECONVERTER_MANUFACTURER] = Constants.NOT_AVailABLE;
-				row[Fields.TORQUECONVERTER_MODEL] = Constants.NOT_AVailABLE;
+				row[Fields.TORQUECONVERTER_MANUFACTURER] = Constants.NOT_AVAILABLE;
+				row[Fields.TORQUECONVERTER_MODEL] = Constants.NOT_AVAILABLE;
 				row[Fields.TORQUE_CONVERTER_CERTIFICATION_METHOD] = "";
 				row[Fields.TORQUE_CONVERTER_CERTIFICATION_NUMBER] = "";
 			}

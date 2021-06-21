@@ -55,7 +55,7 @@ namespace TUGraz.VectoCommon.Models
 
 		public override string ToString()
 		{
-			return string.Format("a: {0}, dt: {1}, ds: {2}", Acceleration, SimulationInterval, SimulationDistance);
+			return $"a: {Acceleration}, dt: {SimulationInterval}, ds: {SimulationDistance}";
 		}
 
 	}

@@ -16,7 +16,6 @@ Imports System.Windows.Forms
 Imports TUGraz.VectoCommon.InputData
 Imports TUGraz.VectoCommon.Models
 Imports TUGraz.VectoCommon.Utils
-Imports TUGraz.VectoCore.InputData.Reader
 Imports TUGraz.VectoCore.InputData.Reader.ComponentData
 Imports TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox
 

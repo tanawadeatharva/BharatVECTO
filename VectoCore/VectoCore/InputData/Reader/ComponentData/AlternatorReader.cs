@@ -73,7 +73,7 @@ namespace TUGraz.VectoCore.InputData.Reader.ComponentData
 						row.ParseDouble(Fields.Efficiency), row.ParseDouble(Fields.PulleyRatio)));
 			}
 
-			var g = map.GroupBy(x => x.AlternatorName);
+			var g = map.GroupBy(x => x.AlternatorName).ToList();
 			if (g.Any(x => x.Count() < 2)) {
 				throw new ArgumentException(
 					"Insufficient rows in csv to build a usable map for alternator {0}",

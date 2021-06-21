@@ -39,10 +39,10 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.NinjectModules
 			Bind<IXMLPrimaryVehicleBusJobInputData>().To<XMLDeclarationMultistagePrimaryVehicleBusJobInputDataProviderV01>()
 				.Named(XMLDeclarationMultistagePrimaryVehicleBusJobInputDataProviderV01.QUALIFIED_XSD_TYPE);
 
-			Bind<IXMLPrimaryVehicleBusJobInputData>().To<XMLDeclarationMultistageExemptedPrimaryVehicleBusJobInputDataProviderV01>()
-				.Named(XMLDeclarationMultistageExemptedPrimaryVehicleBusJobInputDataProviderV01.QUALIFIED_XSD_TYPE);
+            Bind<IXMLPrimaryVehicleBusJobInputData>().To<XMLDeclarationMultistageExemptedPrimaryVehicleBusJobInputDataProviderV01>()
+                .Named(XMLDeclarationMultistageExemptedPrimaryVehicleBusJobInputDataProviderV01.QUALIFIED_XSD_TYPE);
 
-			Bind<IXMLJobDataReader>().To<XMLJobDataMultistagePrimaryVehicleReaderV01>()
+            Bind<IXMLJobDataReader>().To<XMLJobDataMultistagePrimaryVehicleReaderV01>()
 				.Named(XMLJobDataMultistagePrimaryVehicleReaderV01.QUALIFIED_XSD_TYPE);
 
 			Bind<IXMLJobDataReader>().To<XMLJobDataMultistageExemptedPrimaryVehicleReaderV01>()

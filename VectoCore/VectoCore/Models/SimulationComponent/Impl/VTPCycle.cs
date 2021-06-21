@@ -174,7 +174,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
                 return;
             }
             var transmissionRatio = RunData.AxleGearData.AxleGear.Ratio *
-									(RunData.AngledriveData == null ? 1.0 : RunData.AngledriveData.Angledrive.Ratio) /
+									(RunData.AngledriveData?.Angledrive.Ratio ?? 1.0) /
 									RunData.VehicleData.DynamicTyreRadius;
 			var cardanStartSpeed = (RunData.GearshiftParameters.StartSpeed * transmissionRatio).Cast<PerSecond>();
 			var minEngineSpeed = (RunData.EngineData.FullLoadCurves[0].RatedSpeed - RunData.EngineData.IdleSpeed) *
@@ -315,14 +315,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			return DoHandleRequest(absTime, dt, CycleIterator.LeftSample.WheelAngularVelocity);
 		}
 
-		public override bool VehicleStopped
-		{
-			get
-			{
-				return CycleIterator.Previous().LeftSample.VehicleTargetSpeed
-					.IsEqual(0.KMPHtoMeterPerSecond(), 0.3.KMPHtoMeterPerSecond());
-			}
-		}
+		public override bool VehicleStopped =>
+			CycleIterator.Previous().LeftSample.VehicleTargetSpeed
+				.IsEqual(0.KMPHtoMeterPerSecond(), 0.3.KMPHtoMeterPerSecond());
 
 		protected override void DoCommitSimulationStep(Second time, Second simulationInterval)
 		{

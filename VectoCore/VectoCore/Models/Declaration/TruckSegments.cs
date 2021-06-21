@@ -45,18 +45,9 @@ namespace TUGraz.VectoCore.Models.Declaration
 	{
 		private DataTable _segmentTable;
 
-		protected override string ResourceId
-		{
-			get { return DeclarationData.DeclarationDataResourcePrefix + ".SegmentTable.csv"; }
-		}
+		protected override string ResourceId => DeclarationData.DeclarationDataResourcePrefix + ".SegmentTable.csv";
 
-		protected override string ErrorMessage
-		{
-			get {
-				return
-					"ERROR: Could not find the declaration segment for vehicle. Category: {0}, AxleConfiguration: {1}, GrossVehicleWeight: {2}";
-			}
-		}
+		protected override string ErrorMessage => "ERROR: Could not find the declaration segment for vehicle. Category: {0}, AxleConfiguration: {1}, GrossVehicleWeight: {2}";
 
 		protected override void ParseData(DataTable table)
 		{
@@ -203,10 +194,9 @@ namespace TUGraz.VectoCore.Models.Declaration
 
 				var payloads = row.Field<string>(missionType.ToString());
 
-				Kilogram refLoad, lowLoad;
 				var weight = grossVehicleWeight;
 				GetLoadings(
-					out lowLoad, out refLoad, payloads, (p, l) => GetLoading(p, weight, vehicleWeight, trailers, l), maxLoad);
+					out var lowLoad, out var refLoad, payloads, (p, l) => GetLoading(p, weight, vehicleWeight, trailers, l), maxLoad);
 				
 				var mission = new Mission {
 					MissionType = missionType,

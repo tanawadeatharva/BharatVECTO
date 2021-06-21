@@ -3,7 +3,6 @@ Imports System.IO
 Imports NUnit.Framework
 Imports TUGraz.VectoCommon.BusAuxiliaries
 Imports TUGraz.VectoCore.InputData.FileIO.JSON
-Imports TUGraz.VectoCore.Models.BusAuxiliaries
 Imports TUGraz.VectoCore.OutputData.FileIO
 
 

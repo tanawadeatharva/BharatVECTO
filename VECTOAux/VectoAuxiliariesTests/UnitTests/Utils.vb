@@ -7,7 +7,6 @@ Imports TUGraz.VectoCore.Models.BusAuxiliaries
 Imports TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.Electrics
 Imports TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.HVAC
 Imports TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.Pneumatics
-Imports TUGraz.VectoCore.Models.BusAuxiliaries.Interfaces
 Imports TUGraz.VectoCore.Models.Declaration
 Imports TUGraz.VectoCore.Models.SimulationComponent.Data
 

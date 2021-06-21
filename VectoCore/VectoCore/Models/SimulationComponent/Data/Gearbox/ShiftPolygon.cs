@@ -54,16 +54,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox
 		}
 
 		[JsonIgnore]
-		public ReadOnlyCollection<ShiftPolygonEntry> Upshift
-		{
-			get { return _upShiftPolygon.AsReadOnly(); }
-		}
+		public ReadOnlyCollection<ShiftPolygonEntry> Upshift => _upShiftPolygon.AsReadOnly();
 
 		[JsonIgnore]
-		public ReadOnlyCollection<ShiftPolygonEntry> Downshift
-		{
-			get { return _downShiftPolygon.AsReadOnly(); }
-		}
+		public ReadOnlyCollection<ShiftPolygonEntry> Downshift => _downShiftPolygon.AsReadOnly();
 
 		public string[] DownshiftSerialized
 		{
@@ -164,7 +158,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox
 		{
 			var validationService =
 				validationContext.GetService(typeof(VectoValidationModeServiceContainer)) as VectoValidationModeServiceContainer;
-			var gbxType = validationService != null ? validationService.GearboxType : null;
+			var gbxType = validationService?.GearboxType;
 
 			if (gbxType == null || gbxType.Value.AutomaticTransmission()) {
 				return ValidationResult.Success;

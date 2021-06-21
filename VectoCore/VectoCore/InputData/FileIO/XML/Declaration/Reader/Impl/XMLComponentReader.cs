@@ -91,26 +91,11 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 
 		#region Implementation of IXMLComponentReader
 
-		public virtual IVehicleComponentsDeclaration ComponentInputData
-		{
-			get { return _components ?? (_components = CreateComponent(XMLNames.Vehicle_Components, ComponentsCreator)); }
-		}
+		public virtual IVehicleComponentsDeclaration ComponentInputData => _components ?? (_components = CreateComponent(XMLNames.Vehicle_Components, ComponentsCreator));
 
-		public virtual IAirdragDeclarationInputData AirdragInputData
-		{
-			get
-			{
-				return _airdragInputData ?? (_airdragInputData = CreateComponent(XMLNames.Component_AirDrag, AirdragCreator, true));
-			}
-		}
+		public virtual IAirdragDeclarationInputData AirdragInputData => _airdragInputData ?? (_airdragInputData = CreateComponent(XMLNames.Component_AirDrag, AirdragCreator, true));
 
-		public virtual IGearboxDeclarationInputData GearboxInputData
-		{
-			get
-			{
-				return _gearboxInputData ?? (_gearboxInputData = CreateComponent(XMLNames.Component_Gearbox, GearboxCreator));
-			}
-		}
+		public virtual IGearboxDeclarationInputData GearboxInputData => _gearboxInputData ?? (_gearboxInputData = CreateComponent(XMLNames.Component_Gearbox, GearboxCreator));
 
 		public virtual ITorqueConverterDeclarationInputData TorqueConverterInputData
 		{
@@ -125,7 +110,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 			}
 		}
 
-		public virtual IBusAuxiliariesDeclarationData BusAuxiliariesInputData { get { return null; } }
+		public virtual IBusAuxiliariesDeclarationData BusAuxiliariesInputData => null;
 
 		public virtual ITransmissionInputData CreateGear(XmlNode gearNode)
 		{
@@ -173,62 +158,29 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 		}
 
 
-		public virtual IAxleGearInputData AxleGearInputData
-		{
-			get
-			{
-				return _axlegearInputData ?? (_axlegearInputData = CreateComponent(XMLNames.Component_Axlegear, AxlegearCreator));
-			}
-		}
+		public virtual IAxleGearInputData AxleGearInputData => _axlegearInputData ?? (_axlegearInputData = CreateComponent(XMLNames.Component_Axlegear, AxlegearCreator));
 
 
-		public virtual IAngledriveInputData AngledriveInputData
-		{
-			get
-			{
-				return _angledriveInputData ??
-						(_angledriveInputData = CreateComponent(XMLNames.Component_Angledrive, AngledriveCreator, true));
-			}
-		}
+		public virtual IAngledriveInputData AngledriveInputData =>
+			_angledriveInputData ??
+			(_angledriveInputData = CreateComponent(XMLNames.Component_Angledrive, AngledriveCreator, true));
 
-		public virtual IEngineDeclarationInputData EngineInputData
-		{
-			get { return _engineInputData ?? (_engineInputData = CreateComponent(XMLNames.Component_Engine, EngineCreator)); }
-		}
+		public virtual IEngineDeclarationInputData EngineInputData => _engineInputData ?? (_engineInputData = CreateComponent(XMLNames.Component_Engine, EngineCreator));
 
 
-		public virtual IAuxiliariesDeclarationInputData AuxiliaryData
-		{
-			get
-			{
-				return _auxiliaryInputData ??
-						(_auxiliaryInputData = CreateComponent(XMLNames.Component_Auxiliaries, AuxiliaryCreator));
-			}
-		}
+		public virtual IAuxiliariesDeclarationInputData AuxiliaryData =>
+			_auxiliaryInputData ??
+			(_auxiliaryInputData = CreateComponent(XMLNames.Component_Auxiliaries, AuxiliaryCreator));
 
 
-		public virtual IRetarderInputData RetarderInputData
-		{
-			get
-			{
-				return _retarderInputData ??
-						(_retarderInputData = CreateComponent(XMLNames.Component_Retarder, RetarderCreator, true));
-			}
-		}
+		public virtual IRetarderInputData RetarderInputData =>
+			_retarderInputData ??
+			(_retarderInputData = CreateComponent(XMLNames.Component_Retarder, RetarderCreator, true));
 
 
-		public virtual IAxlesDeclarationInputData AxlesDeclarationInputData
-		{
-			get
-			{
-				return _axlesInputData ?? (_axlesInputData = CreateComponent(XMLNames.Component_AxleWheels, AxleWheelsCreator));
-			}
-		}
+		public virtual IAxlesDeclarationInputData AxlesDeclarationInputData => _axlesInputData ?? (_axlesInputData = CreateComponent(XMLNames.Component_AxleWheels, AxleWheelsCreator));
 
-		public virtual ITyreDeclarationInputData Tyre
-		{
-			get { return CreateComponent(XMLNames.AxleWheels_Axles_Axle_Tyre, TyreCreator); }
-		}
+		public virtual ITyreDeclarationInputData Tyre => CreateComponent(XMLNames.AxleWheels_Axles_Axle_Tyre, TyreCreator);
 
 		#endregion
 
@@ -384,7 +336,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 			vehicle, componentsNode)
 		{ }
 
-		public override IBusAuxiliariesDeclarationData BusAuxiliariesInputData { get { return _busAuxInputData ?? (_busAuxInputData = CreateComponent(XMLNames.Component_Auxiliaries, BusAuxCreator)); } }
+		public override IBusAuxiliariesDeclarationData BusAuxiliariesInputData => _busAuxInputData ?? (_busAuxInputData = CreateComponent(XMLNames.Component_Auxiliaries, BusAuxCreator));
 
 		protected virtual IBusAuxiliariesDeclarationData BusAuxCreator(string version, XmlNode componentNode, string sourceFile)
 		{
@@ -411,33 +363,15 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 		public XMLMultistagePrimaryVehicleBusComponentReaderV01(IXMLDeclarationVehicleData vehicle, XmlNode componentsNode)
 			: base(vehicle, componentsNode) { }
 
-		public override IGearboxDeclarationInputData GearboxInputData
-		{
-			get
-			{
-				return _gearboxInputData ?? (_gearboxInputData = CreateComponent(XMLNames.Component_Transmission, GearboxCreator));
-			}
-		}
+		public override IGearboxDeclarationInputData GearboxInputData => _gearboxInputData ?? (_gearboxInputData = CreateComponent(XMLNames.Component_Transmission, GearboxCreator));
 
-		public override IRetarderInputData RetarderInputData
-		{
-			get { return null; }
-		}
+		public override IRetarderInputData RetarderInputData => null;
 
-		public override IAirdragDeclarationInputData AirdragInputData
-		{
-			get { return null; }
-		}
+		public override IAirdragDeclarationInputData AirdragInputData => null;
 
-		public override IAuxiliariesDeclarationInputData AuxiliaryData
-		{
-			get { return null; }
-		}
+		public override IAuxiliariesDeclarationInputData AuxiliaryData => null;
 
-		public override IBusAuxiliariesDeclarationData BusAuxiliariesInputData
-		{
-			get { return _busAuxInputData ?? (_busAuxInputData = CreateComponent(XMLNames.Component_Auxiliaries, BusAuxCreator)); }
-		}
+		public override IBusAuxiliariesDeclarationData BusAuxiliariesInputData => _busAuxInputData ?? (_busAuxInputData = CreateComponent(XMLNames.Component_Auxiliaries, BusAuxCreator));
 
 		protected virtual IBusAuxiliariesDeclarationData BusAuxCreator(string version, XmlNode componentNode, string sourceFile)
 		{
@@ -463,7 +397,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 
 		#region Overrides of XMLComponentReaderV10
 
-		public override IAxleGearInputData AxleGearInputData { get { return null; } }
+		public override IAxleGearInputData AxleGearInputData => null;
 
 		#endregion
 	}
@@ -506,64 +440,29 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 			
 		}
 
-		public override IAngledriveInputData AngledriveInputData
-		{
-			get { return null; }
-		}
+		public override IAngledriveInputData AngledriveInputData => null;
 
-		public override IAxleGearInputData AxleGearInputData
-		{
-			get { return null; }
-		}
+		public override IAxleGearInputData AxleGearInputData => null;
 
-		public override IAxlesDeclarationInputData AxlesDeclarationInputData
-		{
-			get { return null; }
-		}
+		public override IAxlesDeclarationInputData AxlesDeclarationInputData => null;
 
-		public override IEngineDeclarationInputData EngineInputData
-		{
-			get { return null; }
-		}
+		public override IEngineDeclarationInputData EngineInputData => null;
 
-		public override IGearboxDeclarationInputData GearboxInputData
-		{
-			get { return null; }
-		}
+		public override IGearboxDeclarationInputData GearboxInputData => null;
 
-		public override ITorqueConverterDeclarationInputData TorqueConverterInputData
-		{
-			get { return null; }
-		}
+		public override ITorqueConverterDeclarationInputData TorqueConverterInputData => null;
 
-		public override ITyreDeclarationInputData Tyre
-		{
-			get { return null; }
-		}
+		public override ITyreDeclarationInputData Tyre => null;
 
-		public override IRetarderInputData RetarderInputData
-		{
-			get { return null; }
-		}
+		public override IRetarderInputData RetarderInputData => null;
 
-		public override IAuxiliariesDeclarationInputData AuxiliaryData
-		{
-			get { return null; }
-		}
+		public override IAuxiliariesDeclarationInputData AuxiliaryData => null;
 
-		public override IAirdragDeclarationInputData AirdragInputData
-		{
-			get
-			{
-				return _airdragInputData ??
-						(_airdragInputData = CreateComponent(XMLNames.Component_AirDrag, AirdragCreator));
-			}
-		}
-		
-		public override IBusAuxiliariesDeclarationData BusAuxiliariesInputData
-		{
-			get { return _busAuxInputData ?? (_busAuxInputData = CreateComponent(XMLNames.Component_Auxiliaries, BusAuxCreator)); }
-		}
+		public override IAirdragDeclarationInputData AirdragInputData =>
+			_airdragInputData ??
+			(_airdragInputData = CreateComponent(XMLNames.Component_AirDrag, AirdragCreator));
+
+		public override IBusAuxiliariesDeclarationData BusAuxiliariesInputData => _busAuxInputData ?? (_busAuxInputData = CreateComponent(XMLNames.Component_Auxiliaries, BusAuxCreator));
 
 		protected virtual IBusAuxiliariesDeclarationData BusAuxCreator(string version, XmlNode componentNode, string sourceFile)
 		{

@@ -111,7 +111,7 @@ namespace TUGraz.VectoCore.Tests.Integration.ADAS
 			jobContainer.WaitFinished();
 
 			var progress = jobContainer.GetProgress();
-			Assert.IsTrue(progress.All(r => r.Value.Success), string.Concat<Exception>(progress.Select(r => r.Value.Error)));
+			Assert.IsTrue(progress.All(r => r.Value.Success), string.Concat(progress.Select(r => r.Value.Error)));
 			var modFilename = writer.GetModDataFileName(run.RunName, run.CycleName, run.RunSuffix);
 			GetGraphWriter().Write(modFilename);
 		}
@@ -152,7 +152,7 @@ namespace TUGraz.VectoCore.Tests.Integration.ADAS
 			jobContainer.WaitFinished();
 
 			var progress = jobContainer.GetProgress();
-			Assert.IsTrue(progress.All(r => r.Value.Success), string.Concat<Exception>(progress.Select(r => r.Value.Error)));
+			Assert.IsTrue(progress.All(r => r.Value.Success), string.Concat(progress.Select(r => r.Value.Error)));
 			var modFilename = writer.GetModDataFileName(run.RunName, run.CycleName, run.RunSuffix);
 			GetGraphWriter().Write(modFilename);
 		}
@@ -193,7 +193,7 @@ namespace TUGraz.VectoCore.Tests.Integration.ADAS
 			jobContainer.WaitFinished();
 
 			var progress = jobContainer.GetProgress();
-			Assert.IsTrue(progress.All(r => r.Value.Success), string.Concat<Exception>(progress.Select(r => r.Value.Error)));
+			Assert.IsTrue(progress.All(r => r.Value.Success), string.Concat(progress.Select(r => r.Value.Error)));
 			var modFilename = writer.GetModDataFileName(run.RunName, run.CycleName, run.RunSuffix);
 			GetGraphWriter().Write(modFilename);
 		}
@@ -287,7 +287,7 @@ namespace TUGraz.VectoCore.Tests.Integration.ADAS
 			jobContainer.WaitFinished();
 
 			var progress = jobContainer.GetProgress();
-			Assert.IsTrue(progress.All(r => r.Value.Success), string.Concat<Exception>(progress.Select(r => r.Value.Error)));
+			Assert.IsTrue(progress.All(r => r.Value.Success), string.Concat(progress.Select(r => r.Value.Error)));
 			var modFilename = writer.GetModDataFileName(run.RunName, run.CycleName, run.RunSuffix);
 			GetGraphWriter().Write(modFilename);
 		}
@@ -315,7 +315,7 @@ namespace TUGraz.VectoCore.Tests.Integration.ADAS
 			jobContainer.WaitFinished();
 			var progress = jobContainer.GetProgress();
 
-			Assert.IsTrue(progress.All(r => r.Value.Success), string.Concat<Exception>(progress.Select(r => r.Value.Error)));
+			Assert.IsTrue(progress.All(r => r.Value.Success), string.Concat(progress.Select(r => r.Value.Error)));
 
 			return jobContainer;
 		}
@@ -346,7 +346,7 @@ namespace TUGraz.VectoCore.Tests.Integration.ADAS
 			jobContainer.WaitFinished();
 
 			var progress = jobContainer.GetProgress();
-			Assert.IsTrue(progress.All(r => r.Value.Success), string.Concat<Exception>(progress.Select(r => r.Value.Error)));
+			Assert.IsTrue(progress.All(r => r.Value.Success), string.Concat(progress.Select(r => r.Value.Error)));
 
 			//var run = jobContainer.Runs[runIdx].Run;
 			//run.Run();

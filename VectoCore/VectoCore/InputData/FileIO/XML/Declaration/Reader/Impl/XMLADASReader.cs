@@ -63,10 +63,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 
 		#region Implementation of IXMLADASReader
 
-		public virtual IAdvancedDriverAssistantSystemDeclarationInputData ADASInputData
-		{
-			get { return _adas ?? (_adas = CreateComponent(XMLNames.Vehicle_ADAS, ADASCreator)); }
-		}
+		public virtual IAdvancedDriverAssistantSystemDeclarationInputData ADASInputData => _adas ?? (_adas = CreateComponent(XMLNames.Vehicle_ADAS, ADASCreator));
 
 		#endregion
 
@@ -79,10 +76,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 			return Factory.CreateADASData(version, Vehicle, componentNode, sourceFile);
 		}
 
-		public virtual XNamespace SchemaNamespace
-		{
-			get { return NAMESPACE_URI; }
-		}
+		public virtual XNamespace SchemaNamespace => NAMESPACE_URI;
 	}
 
 	// ---------------------------------------------------------------------------------------
@@ -99,15 +93,9 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 		public XMLADASReaderV20(IXMLDeclarationVehicleData vehicle, XmlNode vehicleNode) : base(
 			vehicle, vehicleNode) { }
 
-		public override IAdvancedDriverAssistantSystemDeclarationInputData ADASInputData
-		{
-			get { return _adas ?? (_adas = CreateComponent(XMLNames.Vehicle_ADAS, ADASCreator, true)); }
-		}
+		public override IAdvancedDriverAssistantSystemDeclarationInputData ADASInputData => _adas ?? (_adas = CreateComponent(XMLNames.Vehicle_ADAS, ADASCreator, true));
 
-		public override XNamespace SchemaNamespace
-		{
-			get { return NAMESPACE_URI; }
-		}
+		public override XNamespace SchemaNamespace => NAMESPACE_URI;
 	}
 
 	// ---------------------------------------------------------------------------------------
@@ -123,10 +111,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 		public XMLADASReaderV21(IXMLDeclarationVehicleData vehicle, XmlNode vehicleNode) : base(
 			vehicle, vehicleNode) { }
 
-		public override XNamespace SchemaNamespace
-		{
-			get { return NAMESPACE_URI; }
-		}
+		public override XNamespace SchemaNamespace => NAMESPACE_URI;
 	}
 
 	// ---------------------------------------------------------------------------------------
@@ -143,9 +128,6 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 			vehicle, vehicleNode)
 		{ }
 
-		public override XNamespace SchemaNamespace
-		{
-			get { return NAMESPACE_URI; }
-		}
+		public override XNamespace SchemaNamespace => NAMESPACE_URI;
 	}
 }

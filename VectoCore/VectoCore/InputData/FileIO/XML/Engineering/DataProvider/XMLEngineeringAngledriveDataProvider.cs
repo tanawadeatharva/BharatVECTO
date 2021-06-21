@@ -58,25 +58,15 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering.DataProvider
 			SourceType = (vehicle as IXMLResource).DataSource.SourceFile == fsBasePath ? DataSourceType.XMLEmbedded : DataSourceType.XMLFile;
 		}
 
-		public virtual AngledriveType Type
-		{
-			get { return Vehicle.AngledriveType; }
-		}
+		public virtual AngledriveType Type => Vehicle.AngledriveType;
 
-		public virtual double Ratio
-		{
-			get { return GetDouble(XMLNames.AngleDrive_Ratio); }
-		}
+		public virtual double Ratio => GetDouble(XMLNames.AngleDrive_Ratio);
 
-		public virtual TableData LossMap
-		{
-			get {
-				return XMLHelper.ReadEntriesOrResource(
-					BaseNode, DataSource.SourcePath,
-					XMLNames.AngleDrive_TorqueLossMap, XMLNames.Angledrive_LossMap_Entry,
-					AttributeMappings.TransmissionLossmapMapping);
-			}
-		}
+		public virtual TableData LossMap =>
+			XMLHelper.ReadEntriesOrResource(
+				BaseNode, DataSource.SourcePath,
+				XMLNames.AngleDrive_TorqueLossMap, XMLNames.Angledrive_LossMap_Entry,
+				AttributeMappings.TransmissionLossmapMapping);
 
 		public virtual double Efficiency
 		{
@@ -85,7 +75,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering.DataProvider
 
 		#region Overrides of AbstractXMLResource
 
-		protected override XNamespace SchemaNamespace { get { return NAMESPACE_URI; } }
+		protected override XNamespace SchemaNamespace => NAMESPACE_URI;
 		protected override DataSourceType SourceType { get; }
 
 		#endregion
@@ -103,7 +93,6 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering.DataProvider
 		public XMLEngineeringAngledriveDataProviderV10(
 			IXMLEngineeringVehicleData vehicle, XmlNode axlegearNode, string fsBasePath) : base(
 			vehicle, axlegearNode, fsBasePath) { }
-		protected override XNamespace SchemaNamespace { get { return NAMESPACE_URI; } }
-
+		protected override XNamespace SchemaNamespace => NAMESPACE_URI;
 	}
 }

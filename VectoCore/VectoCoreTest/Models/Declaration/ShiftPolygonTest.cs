@@ -576,10 +576,9 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 				shiftPolygons.Add(DeclarationData.Gearbox.ComputeShiftPolygon(GearboxType.AMT, i, fullLoadCurves[(uint)(i + 1)],
 					gearboxData.Gears,
 					engineData, axlegearRatio, rdyn, null));
-				List<Point> tmp1, tmp2, tmp3;
 
 				ShiftPolygonComparison.ComputShiftPolygonPoints(i, fullLoadCurves[(uint)(i + 1)], gearboxData.Gears,
-					engineData, axlegearRatio, rdyn, out tmp1, out tmp2, out tmp3);
+					engineData, axlegearRatio, rdyn, out var tmp1, out var tmp2, out var tmp3);
 				upshiftOrig.Add(tmp1);
 				downshiftTransformed.Add(tmp2);
 				downshiftOrig.Add(tmp3);
@@ -596,11 +595,11 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 				shiftLines += "Gear " + gear + "\n";
 				shiftLines += "Upshift\n";
 				foreach (var shiftPolygonEntry in shiftPolygon.Upshift) {
-					shiftLines += string.Format("{0} {1}\n", shiftPolygonEntry.AngularSpeed.AsRPM, shiftPolygonEntry.Torque.Value());
+					shiftLines += $"{shiftPolygonEntry.AngularSpeed.AsRPM} {shiftPolygonEntry.Torque.Value()}\n";
 				}
 				shiftLines += "Downshift\n";
 				foreach (var shiftPolygonEntry in shiftPolygon.Downshift) {
-					shiftLines += string.Format("{0} {1}\n", shiftPolygonEntry.AngularSpeed.AsRPM, shiftPolygonEntry.Torque.Value());
+					shiftLines += $"{shiftPolygonEntry.AngularSpeed.AsRPM} {shiftPolygonEntry.Torque.Value()}\n";
 				}
 			}
 		}
@@ -636,10 +635,9 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 				shiftPolygons.Add(DeclarationData.Gearbox.ComputeShiftPolygon(GearboxType.AMT, i, fullLoadCurves[(uint)(i + 1)],
 					gearboxData.Gears,
 					engineData, axlegearRatio, rdyn, null));
-				List<Point> tmp1, tmp2, tmp3;
 
 				ShiftPolygonComparison.ComputShiftPolygonPoints(i, fullLoadCurves[(uint)(i + 1)], gearboxData.Gears,
-					engineData, axlegearRatio, rdyn, out tmp1, out tmp2, out tmp3);
+					engineData, axlegearRatio, rdyn, out var tmp1, out var tmp2, out var tmp3);
 				upshiftOrig.Add(tmp1);
 				downshiftTransformed.Add(tmp2);
 				downshiftOrig.Add(tmp3);
@@ -656,11 +654,11 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 				shiftLines += "Gear " + gear + "\n";
 				shiftLines += "Upshift\n";
 				foreach (var shiftPolygonEntry in shiftPolygon.Upshift) {
-					shiftLines += string.Format("{0} {1}\n", shiftPolygonEntry.AngularSpeed.AsRPM, shiftPolygonEntry.Torque.Value());
+					shiftLines += $"{shiftPolygonEntry.AngularSpeed.AsRPM} {shiftPolygonEntry.Torque.Value()}\n";
 				}
 				shiftLines += "Downshift\n";
 				foreach (var shiftPolygonEntry in shiftPolygon.Downshift) {
-					shiftLines += string.Format("{0} {1}\n", shiftPolygonEntry.AngularSpeed.AsRPM, shiftPolygonEntry.Torque.Value());
+					shiftLines += $"{shiftPolygonEntry.AngularSpeed.AsRPM} {shiftPolygonEntry.Torque.Value()}\n";
 				}
 			}
 		}
@@ -739,9 +737,8 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 					DeclarationData.Gearbox.ComputeShiftPolygon(gearboxData.Type, i, fullLoadCurves[(uint)(i + 1)], gearboxData.Gears,
 						engineData, axlegearRatio, rdyn.SI<Meter>(), null)
 					);
-				List<Point> tmp1, tmp2, tmp3;
 				ComputShiftPolygonPoints(i, fullLoadCurves[(uint)(i + 1)], gearboxData.Gears,
-					engineData, axlegearRatio, rdyn.SI<Meter>(), out tmp1, out tmp2, out tmp3);
+					engineData, axlegearRatio, rdyn.SI<Meter>(), out var tmp1, out var tmp2, out var tmp3);
 				upshiftOrig.Add(tmp1);
 				downshiftTransformed.Add(tmp2);
 			}
@@ -759,11 +756,11 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 				str += "Gear " + g + "\n";
 				str += "downshift\n";
 				foreach (var entry in shiftPolygon.Downshift) {
-					str += string.Format("{0} {1}\n", entry.AngularSpeed.AsRPM, entry.Torque.Value());
+					str += $"{entry.AngularSpeed.AsRPM} {entry.Torque.Value()}\n";
 				}
 				str += "upshift\n";
 				foreach (var entry in shiftPolygon.Upshift) {
-					str += string.Format("{0} {1}\n", entry.AngularSpeed.AsRPM, entry.Torque.Value());
+					str += $"{entry.AngularSpeed.AsRPM} {entry.Torque.Value()}\n";
 				}
 				g++;
 			}
@@ -897,9 +894,8 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 					DeclarationData.Gearbox.ComputeShiftPolygon(gearboxData.Type, i, fullLoadCurves[(uint)(i + 1)], gearboxData.Gears,
 						engineData, axlegearRatio, rdyn, null)
 					);
-				List<Point> tmp1, tmp2, tmp3;
 				ComputShiftPolygonPoints(i, fullLoadCurves[(uint)(i + 1)], gearboxData.Gears,
-					engineData, axlegearRatio, rdyn, out tmp1, out tmp2, out tmp3);
+					engineData, axlegearRatio, rdyn, out var tmp1, out var tmp2, out var tmp3);
 				upshiftOrig.Add(tmp1);
 				downshiftTransformed.Add(tmp2);
 			}
@@ -915,11 +911,11 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 				str += "Gear " + g + "\n";
 				str += "downshift\n";
 				foreach (var entry in shiftPolygon.Downshift) {
-					str += string.Format("{0} {1}\n", entry.AngularSpeed.AsRPM, entry.Torque.Value());
+					str += $"{entry.AngularSpeed.AsRPM} {entry.Torque.Value()}\n";
 				}
 				str += "upshift\n";
 				foreach (var entry in shiftPolygon.Upshift) {
-					str += string.Format("{0} {1}\n", entry.AngularSpeed.AsRPM, entry.Torque.Value());
+					str += $"{entry.AngularSpeed.AsRPM} {entry.Torque.Value()}\n";
 				}
 				g++;
 			}

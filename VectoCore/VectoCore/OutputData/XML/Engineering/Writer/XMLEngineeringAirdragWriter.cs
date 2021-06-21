@@ -51,10 +51,7 @@ namespace TUGraz.VectoCore.OutputData.XML.Engineering.Writer
 
 		#region Overrides of AbstractXMLWriter
 
-		public override XNamespace ComponentDataNamespace
-		{
-			get { return _componentDataNamespace ?? (_componentDataNamespace = Writer.RegisterNamespace(NAMESPACE_URI)); }
-		}
+		public override XNamespace ComponentDataNamespace => _componentDataNamespace ?? (_componentDataNamespace = Writer.RegisterNamespace(NAMESPACE_URI));
 
 		#endregion
 
@@ -63,7 +60,7 @@ namespace TUGraz.VectoCore.OutputData.XML.Engineering.Writer
 		protected override object[] DoWriteXML(IAirdragEngineeringInputData data)
 		{
 			var tns = ComponentDataNamespace;
-			var id = string.Format("Airdrag-{0}", data.Model);
+			var id = $"Airdrag-{data.Model}";
 			return new object[] {
 					new XAttribute(XMLNames.Component_ID_Attr, id),
 					GetXMLTypeAttribute(),

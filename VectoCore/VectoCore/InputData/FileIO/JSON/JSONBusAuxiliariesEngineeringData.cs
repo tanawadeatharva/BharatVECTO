@@ -23,74 +23,38 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			_hvac = Body["HVAC"];
 		}
 		
-		public IBusAuxPneumaticSystemEngineeringData PneumaticSystem
-		{
-			get { return this; }
-		}
-		
-		public IBusAuxElectricSystemEngineeringData ElectricSystem
-		{
-			get { return this; }
-		}
-		
-		public IBusAuxHVACData HVACData { get { return this; } }
+		public IBusAuxPneumaticSystemEngineeringData PneumaticSystem => this;
+
+		public IBusAuxElectricSystemEngineeringData ElectricSystem => this;
+
+		public IBusAuxHVACData HVACData => this;
 
 
 		#region Implementation of  IBusAuxPneumaticSystemEngineeringData
 
-		public TableData CompressorMap
-		{
-			get { return VectoCSVFile.Read(Path.Combine(BasePath, _pneumatic.GetEx<string>("CompressorMap"))); }
-		}
+		public TableData CompressorMap => VectoCSVFile.Read(Path.Combine(BasePath, _pneumatic.GetEx<string>("CompressorMap")));
 
-		public NormLiterPerSecond AverageAirConsumed
-		{
-			get { return _pneumatic.GetEx<double>("AverageAirDemand").SI<NormLiterPerSecond>(); }
-		}
+		public NormLiterPerSecond AverageAirConsumed => _pneumatic.GetEx<double>("AverageAirDemand").SI<NormLiterPerSecond>();
 
-		public bool SmartAirCompression
-		{
-			get { return _pneumatic.GetEx<bool>("SmartAirCompression"); }
-		}
+		public bool SmartAirCompression => _pneumatic.GetEx<bool>("SmartAirCompression");
 
-		public double GearRatio
-		{
-			get { return _pneumatic.GetEx<double>("GearRatio"); }
-		}
+		public double GearRatio => _pneumatic.GetEx<double>("GearRatio");
 
 		#endregion
 
 		#region Implementation of IBusAuxElectricSystemEngineeringData
 
-		public double AlternatorEfficiency
-		{
-			get { return _electric.GetEx<double>("AlternatorEfficiency"); }
-		}
+		public double AlternatorEfficiency => _electric.GetEx<double>("AlternatorEfficiency");
 
-		public double DCDCConverterEfficiency
-		{
-			get
-			{
-				return _electric["DCDCConverterEfficiency"] == null ? 1 : _electric.GetEx<double>("DCDCConverterEfficiency");
-			}
-		}
+		public double DCDCConverterEfficiency => _electric["DCDCConverterEfficiency"] == null ? 1 : _electric.GetEx<double>("DCDCConverterEfficiency");
 
-		public Ampere CurrentDemand
-		{
-			get { return _electric.GetEx<double>("CurrentDemand").SI<Ampere>(); }
-		}
+		public Ampere CurrentDemand => _electric.GetEx<double>("CurrentDemand").SI<Ampere>();
 
-		public Ampere CurrentDemandEngineOffDriving { get { return _electric.GetEx<double>("CurrentDemandEngineOffDriving").SI<Ampere>(); } }
+		public Ampere CurrentDemandEngineOffDriving => _electric.GetEx<double>("CurrentDemandEngineOffDriving").SI<Ampere>();
 
-		public Ampere CurrentDemandEngineOffStandstill { get { return _electric.GetEx<double>("CurrentDemandEngineOffStandstill").SI<Ampere>(); } }
+		public Ampere CurrentDemandEngineOffStandstill => _electric.GetEx<double>("CurrentDemandEngineOffStandstill").SI<Ampere>();
 
-		public AlternatorType AlternatorType
-		{
-			get
-			{
-				return _electric["AlternatorType"] == null ? AlternatorType.Conventional :  _electric.GetEx<string>("AlternatorType").ParseEnum<AlternatorType>();
-			}
-		}
+		public AlternatorType AlternatorType => _electric["AlternatorType"] == null ? AlternatorType.Conventional :  _electric.GetEx<string>("AlternatorType").ParseEnum<AlternatorType>();
 
 		public WattSecond ElectricStorageCapacity
 		{
@@ -104,53 +68,23 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			}
 		}
 
-		public Watt MaxAlternatorPower
-		{
-			get { return _electric.GetEx<double>("MaxAlternatorPower").SI<Watt>(); }
-		}
+		public Watt MaxAlternatorPower => _electric.GetEx<double>("MaxAlternatorPower").SI<Watt>();
 
-		public bool ESSupplyFromHEVREESS
-		{
-			get
-			{
-				return _electric["ESSupplyFromHEVREESS"] == null ? false : _electric.GetEx<bool>("ESSupplyFromHEVREESS");
-			}
-		}
+		public bool ESSupplyFromHEVREESS => _electric["ESSupplyFromHEVREESS"] == null ? false : _electric.GetEx<bool>("ESSupplyFromHEVREESS");
 
-		public double ElectricStorageEfficiency
-		{
-			get
-			{
-				return _electric["BatteryEfficiency"] == null ? 1 : _electric.GetEx<double>("BatteryEfficiency");
-			}
-		}
+		public double ElectricStorageEfficiency => _electric["BatteryEfficiency"] == null ? 1 : _electric.GetEx<double>("BatteryEfficiency");
 
 		#endregion
 
 		#region Implementation of IBusAuxHVACData
 
-		public Watt ElectricalPowerDemand
-		{
-			get { return _hvac.GetEx<double>("ElectricPowerDemand").SI<Watt>(); }
-		}
+		public Watt ElectricalPowerDemand => _hvac.GetEx<double>("ElectricPowerDemand").SI<Watt>();
 
-		public Watt MechanicalPowerDemand
-		{
-			get { return _hvac.GetEx<double>("MechanicalPowerDemand").SI<Watt>(); }
-		}
+		public Watt MechanicalPowerDemand => _hvac.GetEx<double>("MechanicalPowerDemand").SI<Watt>();
 
-		public Joule AverageHeatingDemand
-		{
-			get { return _hvac.GetEx<double>("AverageHeatingDemand").SI(Unit.SI.Mega.Joule).Cast<Joule>(); }
-		}
+		public Joule AverageHeatingDemand => _hvac.GetEx<double>("AverageHeatingDemand").SI(Unit.SI.Mega.Joule).Cast<Joule>();
 
-		public Watt AuxHeaterPower
-		{
-			get
-			{
-				return _hvac.GetEx<double>("AuxHeaterPower").SI<Watt>();
-			}
-		}
+		public Watt AuxHeaterPower => _hvac.GetEx<double>("AuxHeaterPower").SI<Watt>();
 
 		#endregion
 	}

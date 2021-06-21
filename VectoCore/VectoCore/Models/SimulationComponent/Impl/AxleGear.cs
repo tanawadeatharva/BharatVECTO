@@ -76,17 +76,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			return PreviousState.TorqueLossResult.Value * PreviousState.InAngularVelocity;
 		}
 
-		public Tuple<PerSecond, NewtonMeter> CurrentAxleDemand
-		{
-			get {
-				return Tuple.Create(
-					(PreviousState.InAngularVelocity + CurrentState.InAngularVelocity) / 2.0, CurrentState.InTorque);
-			}
-		}
+		public Tuple<PerSecond, NewtonMeter> CurrentAxleDemand =>
+			Tuple.Create(
+				(PreviousState.InAngularVelocity + CurrentState.InAngularVelocity) / 2.0, CurrentState.InTorque);
 
-		public double Ratio
-		{
-			get { return ModelData.Ratio; }
-		}
+		public double Ratio => ModelData.Ratio;
 	}
 }

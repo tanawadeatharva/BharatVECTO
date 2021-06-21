@@ -293,7 +293,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 					tns + "CO2",
 					new XElement(
 						tns + "Mission",
-						string.Format("{0}, {1}", selectedMission.ToXMLFormat(), selectedLoading.ToString())
+						$"{selectedMission.ToXMLFormat()}, {selectedLoading.ToString()}"
 					),
 					new XElement(
 						tns + "Declared", new XAttribute(XMLNames.Report_Results_Unit_Attr, key),
@@ -328,7 +328,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 					//new XAttribute(XNamespace.Xmlns + "di", di),
 					new XAttribute(
 						xsi + "schemaLocation",
-						string.Format("{0} {1}VTPReport.xsd", rootNS, AbstractXMLWriter.SchemaLocationBaseUrl)),
+						$"{rootNS} {AbstractXMLWriter.SchemaLocationBaseUrl}VTPReport.xsd"),
 					new XElement(
 						rootNS + "Data",
 						new XAttribute(xsi + "type", "VTPReportDataType"),
@@ -442,7 +442,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 			bool status;
 			var componentName = count == 1
 				? VectoComponentsExtensionMethods.XMLElementName(component)
-				: string.Format("{0} ({1})", VectoComponentsExtensionMethods.XMLElementName(component), i + 1);
+				: $"{VectoComponentsExtensionMethods.XMLElementName(component)} ({i + 1})";
 			XElement retVal;
 			try {
 				var recomputed = InputDataHash.ComputeHash(component, i);
@@ -700,7 +700,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 
 		private string GetTagName(AuxiliaryType auxId)
 		{
-			return auxId.ToString() + "Technology";
+			return auxId + "Technology";
 		}
 
 		private object[] GetCommonDescription(CombustionEngineData data)

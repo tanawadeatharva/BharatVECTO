@@ -70,7 +70,7 @@ namespace TUGraz.VectoCore.OutputData.XML.Engineering.Writer
 
 			return new object[] {
 				GetXMLTypeAttribute(),
-				new XAttribute(XMLNames.Component_ID_Attr, string.Format("GBX-{0}", data.Model)),
+				new XAttribute(XMLNames.Component_ID_Attr, $"GBX-{data.Model}"),
 
 				GetDefaultComponentElements(data),
 				new XElement(tns + XMLNames.Gearbox_TransmissionType, data.Type.ToXMLFormat()),
@@ -83,10 +83,7 @@ namespace TUGraz.VectoCore.OutputData.XML.Engineering.Writer
 
 		#region Overrides of AbstractXMLWriter
 
-		public override XNamespace ComponentDataNamespace
-		{
-			get { return _componentNamespace ?? (_componentNamespace = Writer.RegisterNamespace(NAMESPACE_URI)); }
-		}
+		public override XNamespace ComponentDataNamespace => _componentNamespace ?? (_componentNamespace = Writer.RegisterNamespace(NAMESPACE_URI));
 
 		#endregion
 

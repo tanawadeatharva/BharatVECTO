@@ -52,8 +52,8 @@ namespace HashingTool.Views
 
 		public XMLFileSelector XMLFile
 		{
-			get { return (XMLFileSelector)GetValue(XMLFileProperty); }
-			set { SetValue(XMLFileProperty, value); }
+			get => (XMLFileSelector)GetValue(XMLFileProperty);
+			set => SetValue(XMLFileProperty, value);
 		}
 
 		private void btnDetails_Click(object sender, RoutedEventArgs e)

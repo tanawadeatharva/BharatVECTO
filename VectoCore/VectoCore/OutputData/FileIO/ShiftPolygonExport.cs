@@ -69,12 +69,11 @@ namespace TUGraz.VectoCore.OutputData.FileIO
 			sb.AppendLine("engine torque [Nm],downshift rpm [1/min],upshift rpm [1/min]");
 			foreach (var line in lines.Values) {
 				if (line.DownShift == null)
-					sb.AppendLine(string.Format("{0},,{1:0.0000}", line.Torque.ToOutputFormat(), line.UpShift.AsRPM));
+					sb.AppendLine($"{line.Torque.ToOutputFormat()},,{line.UpShift.AsRPM:0.0000}");
 				else if (line.UpShift == null)
-					sb.AppendLine(string.Format("{0},{1:0.0000},", line.Torque.ToOutputFormat(), line.DownShift.AsRPM));
+					sb.AppendLine($"{line.Torque.ToOutputFormat()},{line.DownShift.AsRPM:0.0000},");
 				else
-					sb.AppendLine(string.Format("{0},{1:0.0000},{2:0.0000}", line.Torque.ToOutputFormat(), line.DownShift.AsRPM,
-						line.UpShift.AsRPM));
+					sb.AppendLine($"{line.Torque.ToOutputFormat()},{line.DownShift.AsRPM:0.0000},{line.UpShift.AsRPM:0.0000}");
 			}
 
 			File.WriteAllText(fileName, sb.ToString());

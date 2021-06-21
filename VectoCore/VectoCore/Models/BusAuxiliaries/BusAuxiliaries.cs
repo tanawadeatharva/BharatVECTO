@@ -93,18 +93,12 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries
 
 		}
 
-		public override Watt ElectricPowerConsumer {
-			get { return AveragePowerDemandAtAlternatorFromElectrics; }
-		}
+		public override Watt ElectricPowerConsumer => AveragePowerDemandAtAlternatorFromElectrics;
 
-		public override Watt HVACElectricalPowerConsumer {
-			get { return ssmTool.ElectricalWAdjusted; }
-		}
+		public override Watt HVACElectricalPowerConsumer => ssmTool.ElectricalWAdjusted;
 
 
-		public override Watt ElectricPowerConsumerSum {
-			get { return ssmTool.ElectricalWAdjusted + AveragePowerDemandAtAlternatorFromElectrics; }
-		}
+		public override Watt ElectricPowerConsumerSum => ssmTool.ElectricalWAdjusted + AveragePowerDemandAtAlternatorFromElectrics;
 
 		protected Watt AveragePowerDemandAtAlternatorFromElectrics {
 			get {
@@ -245,21 +239,12 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries
 
 		public ISignals Signals { get; set; }
 
-		public virtual Watt ElectricPowerConsumer
-		{
-			get { return M2.AveragePowerDemandAtAlternatorFromElectrics; }
-		}
+		public virtual Watt ElectricPowerConsumer => M2.AveragePowerDemandAtAlternatorFromElectrics;
 
-		public virtual Watt HVACElectricalPowerConsumer
-		{
-			get { return M1.AveragePowerDemandAtAlternatorFromHVACElectrics; }
-		}
+		public virtual Watt HVACElectricalPowerConsumer => M1.AveragePowerDemandAtAlternatorFromHVACElectrics;
 
 
-		public virtual Watt ElectricPowerConsumerSum
-		{
-			get { return M1.AveragePowerDemandAtAlternatorFromHVACElectrics + M2.AveragePowerDemandAtAlternatorFromElectrics; }
-		}
+		public virtual Watt ElectricPowerConsumerSum => M1.AveragePowerDemandAtAlternatorFromHVACElectrics + M2.AveragePowerDemandAtAlternatorFromElectrics;
 
 		public virtual Watt ElectricPowerDemandMech
 		{
@@ -288,10 +273,7 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries
 			}
 		}
 
-		public virtual NormLiter PSDemandConsumer
-		{
-			get { return M3.AverageAirConsumed * Signals.SimulationInterval; }
-		}
+		public virtual NormLiter PSDemandConsumer => M3.AverageAirConsumed * Signals.SimulationInterval;
 
 		public virtual NormLiter PSAirGenerated
 		{
@@ -311,10 +293,7 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries
 			}
 		}
 
-		public virtual NormLiter PSAirGeneratedAlwaysOn
-		{
-			get { return M4.GetFlowRate() * Signals.SimulationInterval; }
-		}
+		public virtual NormLiter PSAirGeneratedAlwaysOn => M4.GetFlowRate() * Signals.SimulationInterval;
 
 
 		public virtual Watt PSPowerDemandAirGenerated
@@ -330,27 +309,15 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries
 			}
 		}
 
-		public virtual Watt PSPowerCompressorAlwaysOn
-		{
-			get { return M4.GetPowerCompressorOn(); }
-		}
+		public virtual Watt PSPowerCompressorAlwaysOn => M4.GetPowerCompressorOn();
 
-		public virtual Watt PSPowerCompressorDragOnly
-		{
-			get { return M4.GetPowerCompressorOff(); }
-		}
+		public virtual Watt PSPowerCompressorDragOnly => M4.GetPowerCompressorOff();
 
-		public virtual Watt HVACMechanicalPowerConsumer
-		{
-			get { return M1.AveragePowerDemandAtCrankFromHVACMechanicals; }
-		}
+		public virtual Watt HVACMechanicalPowerConsumer => M1.AveragePowerDemandAtCrankFromHVACMechanicals;
 
-		public virtual Watt HVACMechanicalPowerGenerated
-		{
-			get { return M1.AveragePowerDemandAtCrankFromHVACMechanicals; }
-		}
+		public virtual Watt HVACMechanicalPowerGenerated => M1.AveragePowerDemandAtCrankFromHVACMechanicals;
 
-		
+
 		//public string AuxiliaryName
 		//{
 		//	get { return "BusAuxiliaries"; }
@@ -361,10 +328,7 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries
 		//	get { return "Version 2.0 DEV"; }
 		//}
 
-		public virtual Watt AuxiliaryPowerAtCrankWatts
-		{
-			get { return M8.AuxPowerAtCrankFromElectricalHVACAndPneumaticsAncillaries; }
-		}
+		public virtual Watt AuxiliaryPowerAtCrankWatts => M8.AuxPowerAtCrankFromElectricalHVACAndPneumaticsAncillaries;
 
 		public WattSecond BatteryEnergyDemand(Second dt, double essFactor)
 		{

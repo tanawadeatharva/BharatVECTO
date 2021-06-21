@@ -13,14 +13,12 @@
 Imports System.Collections.Generic
 Imports System.IO
 Imports System.Linq
-Imports System.Text.RegularExpressions
 Imports TUGraz.VectoCommon.InputData
 Imports TUGraz.VectoCommon.Models
 Imports TUGraz.VectoCommon.Utils
 Imports TUGraz.VectoCore.InputData.FileIO.JSON
 Imports TUGraz.VectoCore.InputData.Impl
 Imports TUGraz.VectoCore.Models.Declaration
-Imports TUGraz.VectoCore.Models.SimulationComponent.Data
 
 ''' <summary>
 ''' Vehicle Editor.
@@ -302,7 +300,7 @@ Public Class VehicleForm
 		If File.Exists(Path.Combine(MyAppPath, "User Manual\help.html")) Then
 			Dim defaultBrowserPath As String = BrowserUtils.GetDefaultBrowserPath()
 			Process.Start(defaultBrowserPath,
-						String.Format("""file://{0}""", Path.Combine(MyAppPath, "User Manual\help.html#vehicle-editor")))
+						$"""file://{Path.Combine(MyAppPath, "User Manual\help.html#vehicle-editor")}""")
 		Else
 			MsgBox("User Manual not found!", MsgBoxStyle.Critical)
 		End If

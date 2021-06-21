@@ -60,66 +60,39 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering.DataProvider
 
 		#region Implementation of ILookaheadCoastingInputData
 
-		public virtual bool Enabled
-		{
-			get { return GetBool(XMLNames.DriverModel_LookAheadCoasting_Enabled); }
-		}
+		public virtual bool Enabled => GetBool(XMLNames.DriverModel_LookAheadCoasting_Enabled);
 
-		public virtual MeterPerSecond MinSpeed
-		{
-			get {
-				return GetNode(XMLNames.DriverModel_Overspeed_MinSpeed, required: false)
-							?.InnerText.ToDouble().KMPHtoMeterPerSecond() ??
-						DeclarationData.Driver.LookAhead.MinimumSpeed;
-			}
-		}
+		public virtual MeterPerSecond MinSpeed =>
+			GetNode(XMLNames.DriverModel_Overspeed_MinSpeed, required: false)
+				?.InnerText.ToDouble().KMPHtoMeterPerSecond() ??
+			DeclarationData.Driver.LookAhead.MinimumSpeed;
 
-		public virtual double CoastingDecisionFactorOffset
-		{
-			get {
-				return GetNode(XMLNames.DriverModel_LookAheadCoasting_DecisionFactorOffset, required: false)
-							?.InnerText.ToDouble() ??
-						DeclarationData.Driver.LookAhead.DecisionFactorCoastingOffset;
-			}
-		}
+		public virtual double CoastingDecisionFactorOffset =>
+			GetNode(XMLNames.DriverModel_LookAheadCoasting_DecisionFactorOffset, required: false)
+				?.InnerText.ToDouble() ??
+			DeclarationData.Driver.LookAhead.DecisionFactorCoastingOffset;
 
-		public virtual double CoastingDecisionFactorScaling
-		{
-			get {
-				return GetNode(XMLNames.DriverModel_LookAheadCoasting_DecisionFactorScaling, required: false)
-							?.InnerText.ToDouble() ??
-						DeclarationData.Driver.LookAhead.DecisionFactorCoastingScaling;
-			}
-		}
+		public virtual double CoastingDecisionFactorScaling =>
+			GetNode(XMLNames.DriverModel_LookAheadCoasting_DecisionFactorScaling, required: false)
+				?.InnerText.ToDouble() ??
+			DeclarationData.Driver.LookAhead.DecisionFactorCoastingScaling;
 
-		public virtual double LookaheadDistanceFactor
-		{
-			get {
-				return GetNode(XMLNames.DriverModel_LookAheadCoasting_PreviewDistanceFactor, required: false)
-							?.InnerText.ToDouble() ??
-						DeclarationData.Driver.LookAhead.LookAheadDistanceFactor;
-			}
-		}
+		public virtual double LookaheadDistanceFactor =>
+			GetNode(XMLNames.DriverModel_LookAheadCoasting_PreviewDistanceFactor, required: false)
+				?.InnerText.ToDouble() ??
+			DeclarationData.Driver.LookAhead.LookAheadDistanceFactor;
 
-		public virtual TableData CoastingDecisionFactorTargetSpeedLookup
-		{
-			get {
-				return XMLHelper.ReadEntriesOrResource(
-					BaseNode, DriverData.DataSource.SourcePath, XMLNames.DriverModel_LookAheadCoasting_SpeedDependentDecisionFactor,
-					XMLNames.LookAheadCoasting_SpeedDependentDecisionFactor_Entry,
-					AttributeMappings.CoastingDFTargetSpeedLookupMapping);
-			}
-		}
+		public virtual TableData CoastingDecisionFactorTargetSpeedLookup =>
+			XMLHelper.ReadEntriesOrResource(
+				BaseNode, DriverData.DataSource.SourcePath, XMLNames.DriverModel_LookAheadCoasting_SpeedDependentDecisionFactor,
+				XMLNames.LookAheadCoasting_SpeedDependentDecisionFactor_Entry,
+				AttributeMappings.CoastingDFTargetSpeedLookupMapping);
 
-		public virtual TableData CoastingDecisionFactorVelocityDropLookup
-		{
-			get {
-				return XMLHelper.ReadEntriesOrResource(
-					BaseNode, DriverData.DataSource.SourcePath, XMLNames.DriverModel_LookAheadCoasting_VelocityDropDecisionFactor,
-					XMLNames.LookAheadCoasting_VelocityDropDecisionFactor_Entry,
-					AttributeMappings.CoastingDFVelocityDropLookupMapping);
-			}
-		}
+		public virtual TableData CoastingDecisionFactorVelocityDropLookup =>
+			XMLHelper.ReadEntriesOrResource(
+				BaseNode, DriverData.DataSource.SourcePath, XMLNames.DriverModel_LookAheadCoasting_VelocityDropDecisionFactor,
+				XMLNames.LookAheadCoasting_VelocityDropDecisionFactor_Entry,
+				AttributeMappings.CoastingDFVelocityDropLookupMapping);
 
 		#endregion
 	}

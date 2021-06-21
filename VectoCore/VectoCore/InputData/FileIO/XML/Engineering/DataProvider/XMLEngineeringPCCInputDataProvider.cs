@@ -19,41 +19,17 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering.DataProvider {
 
 		#region Implementation of IPCCEngineeringInputData
 
-		public MeterPerSecond PCCEnabledSpeed
-		{
-			get { return GetDouble("EnablingSpeed", DeclarationData.Driver.PCC.PCCEnableSpeed.AsKmph).KMPHtoMeterPerSecond(); }
-		}
+		public MeterPerSecond PCCEnabledSpeed => GetDouble("EnablingSpeed", DeclarationData.Driver.PCC.PCCEnableSpeed.AsKmph).KMPHtoMeterPerSecond();
 
-		public MeterPerSecond MinSpeed
-		{
-			get { return GetDouble("MinSpeed", DeclarationData.Driver.PCC.MinSpeed.AsKmph).KMPHtoMeterPerSecond(); }
-		}
+		public MeterPerSecond MinSpeed => GetDouble("MinSpeed", DeclarationData.Driver.PCC.MinSpeed.AsKmph).KMPHtoMeterPerSecond();
 
-		public Meter PreviewDistanceUseCase1
-		{
-			get {
-				return GetDouble("PreviewDistanceUseCase1", DeclarationData.Driver.PCC.PreviewDistanceUseCase1.Value()).SI<Meter>();
-			}
-		}
+		public Meter PreviewDistanceUseCase1 => GetDouble("PreviewDistanceUseCase1", DeclarationData.Driver.PCC.PreviewDistanceUseCase1.Value()).SI<Meter>();
 
-		public Meter PreviewDistanceUseCase2
-		{
-			get {
-				return GetDouble("PreviewDistanceUseCase2", DeclarationData.Driver.PCC.PreviewDistanceUseCase2.Value()).SI<Meter>();
-			}
-		}
+		public Meter PreviewDistanceUseCase2 => GetDouble("PreviewDistanceUseCase2", DeclarationData.Driver.PCC.PreviewDistanceUseCase2.Value()).SI<Meter>();
 
-		public MeterPerSecond Underspeed
-		{
-			get { return GetDouble("AllowedUnderspeed", DeclarationData.Driver.PCC.Underspeed.AsKmph).KMPHtoMeterPerSecond(); }
-		}
+		public MeterPerSecond Underspeed => GetDouble("AllowedUnderspeed", DeclarationData.Driver.PCC.Underspeed.AsKmph).KMPHtoMeterPerSecond();
 
-		public MeterPerSecond OverspeedUseCase3
-		{
-			get {
-				return GetDouble("AllowedOverspeed", DeclarationData.Driver.PCC.OverspeedUseCase3.AsKmph).KMPHtoMeterPerSecond();
-			}
-		}
+		public MeterPerSecond OverspeedUseCase3 => GetDouble("AllowedOverspeed", DeclarationData.Driver.PCC.OverspeedUseCase3.AsKmph).KMPHtoMeterPerSecond();
 
 		#endregion
 	}

@@ -46,10 +46,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 		public readonly List<Wheels.Entry> Wheels;
 		public readonly CubicMeter CargoVolume;
 
-		public Kilogram MaxPayLoad
-		{
-			get { return GrossVehicleWeight - CurbWeight; }
-		}
+		public Kilogram MaxPayLoad => GrossVehicleWeight - CurbWeight;
 
 		public StandardBody(string name, Kilogram curbWeight, Kilogram grossVehicleWeight, SquareMeter[] deltaCrossWindArea,
 			Wheels.Entry? wheels, int axleCount, CubicMeter volume) :
@@ -92,15 +89,9 @@ namespace TUGraz.VectoCore.Models.Declaration
 		public static readonly StandardBody Empty = new StandardBody("", 0.SI<Kilogram>(), 0.SI<Kilogram>(),
 			new[] { 0.SI<SquareMeter>(), 0.SI<SquareMeter>() }, null, 0, 0.SI<CubicMeter>());
 
-		protected override string ResourceId
-		{
-			get { return DeclarationData.DeclarationDataResourcePrefix + ".Body_Trailers_Weights.csv"; }
-		}
+		protected override string ResourceId => DeclarationData.DeclarationDataResourcePrefix + ".Body_Trailers_Weights.csv";
 
-		protected override string ErrorMessage
-		{
-			get { return "StandardWeigths Lookup Error: No value found for ID '{0}'"; }
-		}
+		protected override string ErrorMessage => "StandardWeigths Lookup Error: No value found for ID '{0}'";
 
 		public override StandardBody Lookup(string id)
 		{

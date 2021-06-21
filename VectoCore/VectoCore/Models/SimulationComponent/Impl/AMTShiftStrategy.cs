@@ -64,7 +64,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				return;
 			}
 			var transmissionRatio = runData.AxleGearData.AxleGear.Ratio *
-									(runData.AngledriveData == null ? 1.0 : runData.AngledriveData.Angledrive.Ratio) /
+									(runData.AngledriveData?.Angledrive.Ratio ?? 1.0) /
 									runData.VehicleData.DynamicTyreRadius;
 			var minEngineSpeed = (runData.EngineData.FullLoadCurves[0].RatedSpeed - runData.EngineData.IdleSpeed) *
 								Constants.SimulationSettings.ClutchClosingSpeedNorm + runData.EngineData.IdleSpeed;
@@ -93,10 +93,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 																				DataBus.EngineInfo.EngineN95hSpeed));
 		}
 
-		public override GearshiftPosition NextGear
-		{
-			get { return _nextGear; }
-		}
+		public override GearshiftPosition NextGear => _nextGear;
 
 		public override ShiftPolygon ComputeDeclarationShiftPolygon(
 			GearboxType gearboxType, int i, EngineFullLoadCurve engineDataFullLoadCurve, IList<ITransmissionInputData> gearboxGears,
@@ -106,7 +103,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				i, engineDataFullLoadCurve, gearboxGears, engineData, axlegearRatio, dynamicTyreRadius);
 		}
 
-		public static string Name { get { return "AMT - Classic"; } }
+		public static string Name => "AMT - Classic";
 
 		public override GearshiftPosition Engage(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity)
 		{

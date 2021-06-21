@@ -17,18 +17,9 @@ namespace TUGraz.VectoCore.Models.Declaration
 
 		#region Overrides of LookupData
 
-		protected override string ResourceId
-		{
-			get { return DeclarationData.DeclarationDataResourcePrefix + ".PrimaryBusSegmentationTable.csv"; }
-		}
+		protected override string ResourceId => DeclarationData.DeclarationDataResourcePrefix + ".PrimaryBusSegmentationTable.csv";
 
-		protected override string ErrorMessage
-		{
-			get {
-				return
-					"ERROR: Could not find the declaration segment for vehicle. Category: {0}, AxleConfiguration: {1}, GrossVehicleWeight: {2}";
-			}
-		}
+		protected override string ErrorMessage => "ERROR: Could not find the declaration segment for vehicle. Category: {0}, AxleConfiguration: {1}, GrossVehicleWeight: {2}";
 
 		protected override void ParseData(DataTable table)
 		{
