@@ -101,25 +101,13 @@ namespace TUGraz.VectoCommon.Utils
 					}
 				}
 			}
-			string result;
-			if (numerator == "" && denominator == "") {
+			if (numerator == "" && denominator == "")
 				return "-";
-			}
-			if (numerator == "") {
-				if (denominator == "") {
-					result = "-";
-				} else {
-					result = "1/" + denominator;
-				}
-			} else {
-				if (denominator == "") {
-					result = numerator;
-				} else {
-					result = numerator + "/" + denominator;
-				}
-			}
-
-			return result;
+			if (numerator == "")
+				return "1/" + denominator;
+			if (denominator == "")
+				return numerator;
+			return numerator + "/" + denominator;
 		}
 	}
 
