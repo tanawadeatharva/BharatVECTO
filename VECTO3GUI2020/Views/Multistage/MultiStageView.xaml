@@ -14,7 +14,7 @@
                 DockPanel.Dock="Top" 
                 Command="{Binding LoadVehicleDataCommand}" 
                 Text="{Binding VehicleInputDataFilePath, TargetNullValue=Select Vehicle Input Data . . .}"/>
-            <Label DockPanel.Dock="Top" HorizontalAlignment="Center"  Visibility="{Binding Exempted}">Exempted Vehicle</Label>
+            <Label DockPanel.Dock="Top" HorizontalAlignment="Center"  Visibility="{Binding Exempted, Converter={StaticResource BooleanToVisibilityConverter}}">Exempted Vehicle</Label>
             <Border BorderThickness="1" BorderBrush="{DynamicResource ButtonHighlightColor}" Height="40" DockPanel.Dock="Bottom">
                 <DockPanel LastChildFill="False">
                     <Button DockPanel.Dock="Right"
