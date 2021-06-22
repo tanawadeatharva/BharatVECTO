@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
+using System.Text;
 using System.Windows.Data;
 using System.Windows.Input;
 using Microsoft.Toolkit.Mvvm.Input;
@@ -65,10 +67,12 @@ namespace VECTO3GUI2020.ViewModel
 
 		#region Commands
 
+		// ReSharper disable once UnusedMember.Global
 		public ICommand OpenFolderCommand =>
 			_openFolderCommand ?? (_openFolderCommand = new RelayCommand<string>(
 				OpenFolderExecute));
 
+		// ReSharper disable once UnusedMember.Global
 		public ICommand OpenFileCommand =>
 			_openFileCommand ?? (_openFileCommand = new RelayCommand<string>(
 				OpenFileExecute));
@@ -79,10 +83,17 @@ namespace VECTO3GUI2020.ViewModel
 				return;
 			}
 
+			link = Path.GetFullPath(link);
 
-			var directoryPath = Path.GetDirectoryName(link);
+			var explorerCommandStrBuilder = new StringBuilder();
+			explorerCommandStrBuilder.Append("explorer.exe");
+			explorerCommandStrBuilder.Append(" /select ");
+			explorerCommandStrBuilder.Append(link);
 
-			StartProcess(directoryPath);
+			//var directoryPath = Path.GetDirectoryName(link);
+			//StartProcess(directoryPath);
+
+			StartProcess("explorer.exe", ("/select," + link));
 		}
 
 		private void OpenFileExecute(string link){
@@ -95,11 +106,26 @@ namespace VECTO3GUI2020.ViewModel
 		
 		}
 
-		private void StartProcess(string command)
+		private void StartProcess(string command, params string[]arguments)
 		{
+			string argumentsString = "";
+			if (arguments != null) {
+				var argumentsStrBuilder = new StringBuilder();
+				foreach (var argument in arguments) {
+					argumentsStrBuilder.Append(argument);
+					if(argument != arguments.Last()) {
+						argumentsStrBuilder.Append(" ");
+					}
+				}
+
+				argumentsString = argumentsStrBuilder.ToString();
+				Debug.WriteLine(argumentsString);
+			}
+			
+
 			try
 			{
-				Process.Start(command);
+				Process.Start(command, argumentsString );
 			}
 			catch (Exception e)
 			{

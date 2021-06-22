@@ -593,14 +593,14 @@ namespace VECTO3GUI2020.ViewModel.Implementation
 		{
 			get
 			{
-				return _cancelSimulationCommand ?? new RelayCommand(() => {
+				return _cancelSimulationCommand ?? (_cancelSimulationCommand = new RelayCommand(() => {
 						_outputViewModel.AddMessage(new MessageEntry() {
 							Message="Canceling Simulation",
 							Type=MessageType.StatusMessage,
 						});
 						cancellationTokenSource.Cancel();
 					},
-					() => SimulationRunning);
+					() => SimulationRunning));
 			}            
 		}
 
