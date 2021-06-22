@@ -43,6 +43,9 @@ namespace VECTO3GUI2020.Behaviours
 		private void SourceCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
 		{
 			var newIndex = e.NewStartingIndex;
+			if (newIndex < 0) {
+				return;
+			}
 			Dispatcher.CurrentDispatcher.BeginInvoke(
 				DispatcherPriority.ApplicationIdle,
 				new Action(() => this.AssociatedObject.ScrollIntoView(this.AssociatedObject.Items[newIndex]))
