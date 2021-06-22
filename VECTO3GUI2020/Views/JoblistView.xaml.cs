@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using VECTO3GUI2020.ViewModel.Implementation;
@@ -19,7 +20,7 @@ namespace VECTO3GUI2020.Views
 		}
 
 
-		private void JobDataGrid_OnDrop(object sender, DragEventArgs e)
+		private async void JobDataGrid_OnDrop(object sender, DragEventArgs e)
 		{
 			var success = true;
 			if (e.Data.GetDataPresent(DataFormats.FileDrop)) {
@@ -28,7 +29,7 @@ namespace VECTO3GUI2020.Views
 				var fileNames = e.Data.GetData(DataFormats.FileDrop, true) as string[];
 				if (fileNames != null) {
 					foreach (var fileName in fileNames) {
-						((JobListViewModel)this.DataContext).AddJobAsync(fileName);
+						await ((JobListViewModel)this.DataContext).AddJobAsync(fileName);
 					}
 				}
 

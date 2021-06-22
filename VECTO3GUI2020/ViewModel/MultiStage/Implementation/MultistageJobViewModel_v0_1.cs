@@ -63,11 +63,12 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 			set => SetProperty(ref _manufacturingStageViewModel, value);
 		}
 
-		public MultiStageJobViewModel_v0_1(IMultistageBusInputDataProvider inputData, IMultiStageViewModelFactory vmFactory, IMultistageDependencies multistageDependencies, IXMLInputDataReader inputDataReader)
+		public MultiStageJobViewModel_v0_1(IMultistageBusInputDataProvider inputData, IMultiStageViewModelFactory vmFactory, IMultistageDependencies multistageDependencies, IXMLInputDataReader inputDataReader, IJobListViewModel jobListViewModel)
 		{
 			Title = "Edit Multistage Job";
 			_dataSource = inputData.DataSource;
 			_jobInputData = inputData.JobInputData;
+			_jobListViewModel = jobListViewModel;
 			_inputData = inputData;
 			_vmFactory = vmFactory;
 			_consolidateManufacturingStage = _jobInputData.ConsolidateManufacturingStage;
@@ -154,12 +155,12 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 			SaveVif(vifData:this, outputFile:outputFile, dialogHelper:_dialogHelper.Value);
 		}
 
-		public static void SaveVif(IMultistageVIFInputData vifData, FileOutputVIFWriter writer, IDialogHelper dialogHelper = null)
+		public void SaveVif(IMultistageVIFInputData vifData, FileOutputVIFWriter writer, IDialogHelper dialogHelper = null)
 		{
 			SaveVif(vifData, null, writer, dialogHelper);
 		}
 
-		public static void SaveVif(IMultistageVIFInputData vifData, string outputFile,
+		private void SaveVif(IMultistageVIFInputData vifData, string outputFile,
 			FileOutputVIFWriter writer = null, IDialogHelper dialogHelper = null)
 		{
 			try {
@@ -197,7 +198,9 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 					} else {
 						dialogHelper?.ShowMessageBox($"Written to {writer.XMLMultistageReportFileName}", "Info",
 							MessageBoxButton.OK, MessageBoxImage.Information);
+						_jobListViewModel.AddJobAsync(writer.XMLMultistageReportFileName);
 						Debug.WriteLine($"Written to {writer.XMLMultistageReportFileName}");
+
 					}
 				}
 
@@ -308,6 +311,7 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 		private readonly IMultistageBusInputDataProvider _inputData;
 		private bool _selected;
 		private readonly bool _exempted;
+		private readonly IJobListViewModel _jobListViewModel;
 
 		public ICommand LoadVehicleDataCommand
 		{

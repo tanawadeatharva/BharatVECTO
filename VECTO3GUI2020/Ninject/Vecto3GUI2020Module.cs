@@ -15,7 +15,7 @@ namespace VECTO3GUI2020.Ninject
 		public override void Load()
 		{
 
-			Bind<IJobListViewModel>().To<JobListViewModel>();
+			Bind<IJobListViewModel>().To<JobListViewModel>().InSingletonScope();
 			Bind<IMainWindowViewModel>().To<MainWindowViewModel>();
 			Bind<IMainViewModel>().To<JobListViewModel>();
 			Bind<ISettingsViewModel>().To<SettingsViewModel>();
