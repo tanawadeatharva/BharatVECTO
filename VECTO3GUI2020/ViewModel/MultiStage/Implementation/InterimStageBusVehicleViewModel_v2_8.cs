@@ -294,8 +294,8 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 					.NOT_APPLICABLE));
 
 			_parameterViewModels[nameof(LegislativeClass)].AllowedItems =
-				EnumHelper.GetValuesAsObservableCollectionExcluding<Enum, LegislativeClass>((TUGraz.VectoCommon.Models
-					.LegislativeClass.Unknown));
+				EnumHelper.GetValuesAsObservableCollectionIncluding<Enum, LegislativeClass>((TUGraz.VectoCommon.Models
+					.LegislativeClass.M3));
 
 			_parameterViewModels[nameof(RegisteredClass)].AllowedItems =
 				EnumHelper.GetValuesAsObservableCollectionExcluding<Enum, RegistrationClass>(RegistrationClass.unknown);
