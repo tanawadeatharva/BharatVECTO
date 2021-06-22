@@ -4,7 +4,10 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:VECTO3GUI2020.Views"
-             xmlns:converter="clr-namespace:VECTO3GUI2020.Helper.Converter" xmlns:implementation="clr-namespace:VECTO3GUI2020.ViewModel.Implementation" d:DataContext="{d:DesignInstance Type=implementation:JobListViewModel}"
+             xmlns:converter="clr-namespace:VECTO3GUI2020.Helper.Converter" xmlns:implementation="clr-namespace:VECTO3GUI2020.ViewModel.Implementation"
+             xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+             xmlns:behavior="clr-namespace:VECTO3GUI2020.Behaviours"
+             d:DataContext="{d:DesignInstance Type=implementation:JobListViewModel}"
              mc:Ignorable="d" 
              AutomationProperties.Name="JobListView"
              d:DesignHeight="450" d:DesignWidth="1000">
@@ -71,6 +74,10 @@
                           AlternatingRowBackground="LightGray" CellStyle="{DynamicResource DataGridCellStyle1}"
                           SelectedItem = "{Binding SelectedJob}"
                 >
+                        <i:Interaction.Behaviors>
+                            <behavior:AutoScrollDataGridBehaviour>
+                            </behavior:AutoScrollDataGridBehaviour>
+                        </i:Interaction.Behaviors>
                         <DataGrid.Columns>
                             <DataGridCheckBoxColumn IsReadOnly="False" Header="Simulate" Binding="{Binding Selected}" Width="1*"></DataGridCheckBoxColumn>
                             <DataGridTextColumn IsReadOnly="True" Header="Name" Binding="{Binding DocumentName}" Width="4*"></DataGridTextColumn>

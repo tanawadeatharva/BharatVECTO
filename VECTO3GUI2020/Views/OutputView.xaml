@@ -66,7 +66,7 @@
                         <DataGridTextColumn Header="Time" Binding="{Binding Time, StringFormat=hh:mm:ss dd.MM.yyyy}" Width="150" />
                     </DataGrid.Columns>
                 <DataGrid.RowStyle>
-                    <Style TargetType="DataGridRow">                   
+                    <Style TargetType="DataGridRow">
                         <Style.Triggers>
                             <DataTrigger Binding="{Binding Type}" Value="{x:Static impl:MessageType.StatusMessage}">
                                 <Setter Property="Background" Value="AliceBlue"/>
