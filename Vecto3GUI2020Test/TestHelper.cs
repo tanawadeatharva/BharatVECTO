@@ -20,9 +20,5 @@ namespace Vecto3GUI2020Test
 		{
 			return _inputDataReader.Create(fileName);
 		}
-
-
-
-
 	}
 }

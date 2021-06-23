@@ -2,11 +2,14 @@
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
+using Castle.Core.Logging;
 using Ninject;
 using NUnit.Framework;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
+using VECTO3GUI2020.ViewModel.Implementation;
 using VECTO3GUI2020.ViewModel.Interfaces;
 using VECTO3GUI2020.ViewModel.MultiStage.Implementation;
 
@@ -15,7 +18,9 @@ namespace Vecto3GUI2020Test.ViewModelTests
 	[TestFixture]
 	public class ExemptedTests : ViewModelTestBase
 	{
-		#region SaveInputData
+
+		public const string _exemptedMandatory = "exempted_vif_mandatory.xml";
+
 		[Test, Combinatorial]
 		public void LoadAndSaveExemptedPrimary()
 		{
@@ -81,11 +86,9 @@ namespace Vecto3GUI2020Test.ViewModelTests
 			Assert.AreEqual(passengerSeatsUpperDeck, vehicleVm.NumberPassengerSeatsUpperDeck);
 			Assert.AreEqual(PassengerSeatsLowerDeck, vehicleVm.NumberPassengerSeatsLowerDeck);
 		}
-		#endregion
 
-		#region SaveInputData
 		[Test]
-		public void SaveAsNewVif()
+		public async Task SaveAsNewVifAndSimulate()
 		{
 			var newMultiStageJob = loadFile(exempted);
 			Assert.IsTrue(newMultiStageJob.MultiStageJobViewModel.Exempted);
@@ -141,14 +144,14 @@ namespace Vecto3GUI2020Test.ViewModelTests
 			Assert.IsTrue(File.Exists(result));
 
 			//Check that file was added to JobList
-			var jobListVm = _kernel.Get<IJobListViewModel>();
+			var jobListVm = _kernel.Get<IJobListViewModel>() as JobListViewModel;
 			Assert.AreEqual(1, jobListVm.Jobs.Count);
 			Assert.AreEqual(result, jobListVm.Jobs[0].DataSource.SourceFile);
 
 			var inputDataProvider = _testHelper.GetInputDataProvider(result) as IMultistageBusInputDataProvider;
 			Assert.NotNull(inputDataProvider);
 
-
+			//Check added Manufacturing Stage
 			var lastManStage = inputDataProvider.JobInputData.ManufacturingStages.Last();
 
 
@@ -165,8 +168,28 @@ namespace Vecto3GUI2020Test.ViewModelTests
 			Assert.AreEqual(passengerSeatsUpperDeck, lastManStage.Vehicle.NumberPassengerSeatsUpperDeck);
 			Assert.AreEqual(PassengerSeatsLowerDeck, lastManStage.Vehicle.NumberPassengerSeatsLowerDeck);
 
+
+			Write("Starting simulation ...");
+			jobListVm.Jobs[0].Selected = true;
+			await jobListVm.RunSimulationExecute();
+
+
+			Write("Done!");
 		}
-		#endregion
+
+		[Test]
+		public async Task SimulateMinimalExemptedVif()
+		{
+			//Setup
+			var jobListViewModel = _kernel.Get<IJobListViewModel>() as JobListViewModel;
+			await jobListViewModel.AddJobAsync(GetFullPath(_exemptedMandatory));
+			Assert.AreEqual(1, jobListViewModel.Jobs.Count);
+
+			jobListViewModel.Jobs[0].Selected = true;
+			await jobListViewModel.RunSimulationExecute();
+
+
+		}
 
 
 
