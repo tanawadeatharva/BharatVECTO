@@ -717,18 +717,20 @@
 					<xs:documentation>P280 / I.1.1.12 / #83</xs:documentation>
 				</xs:annotation>
 			</xs:element>
+			<xs:sequence minOccurs="0">
+				<xs:element name="AxleConfiguration" type="vdecdef:VehicleAxleConfigurationDeclarationType">
+					<xs:annotation>
+						<xs:documentation>P037 / I.1.1.5 / #11</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+				<xs:element name="VehicleGroup" type="VehicleGroupType">
+					<xs:annotation>
+						<xs:documentation>VECTO / I.1.1.7 / #13</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+			</xs:sequence>
 			<xs:choice>
 				<xs:sequence>
-					<xs:element name="AxleConfiguration" type="vdecdef:VehicleAxleConfigurationDeclarationType">
-						<xs:annotation>
-							<xs:documentation>P037 / I.1.1.5 / #11</xs:documentation>
-						</xs:annotation>
-					</xs:element>
-					<xs:element name="VehicleGroup" type="VehicleGroupType">
-						<xs:annotation>
-							<xs:documentation>VECTO / I.1.1.7 / #13</xs:documentation>
-						</xs:annotation>
-					</xs:element>
 					<xs:element name="CO2StandardsGroup">
 						<xs:simpleType>
 							<xs:restriction base="xs:string">
@@ -770,6 +772,11 @@
 					</xs:element>
 				</xs:sequence>
 				<xs:sequence>
+					<xs:element name="SleeperCab" type="xs:boolean" minOccurs="0">
+						<xs:annotation>
+							<xs:documentation>P276 / I.1.1.13 / #84</xs:documentation>
+						</xs:annotation>
+					</xs:element>
 					<xs:element name="MaxNetPower1" minOccurs="0">
 						<xs:annotation>
 							<xs:documentation>P277</xs:documentation>
