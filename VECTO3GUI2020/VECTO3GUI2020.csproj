@@ -471,7 +471,7 @@
     <Compile Include="Views\XMLViewer.xaml.cs">
       <DependentUpon>XMLViewer.xaml</DependentUpon>
     </Compile>
-    <Page Include="DataGridStyles.xaml">
+    <Page Include="Resources\Styles\DataGridStyles.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Resources\DataTemplateSelectors.xaml">
