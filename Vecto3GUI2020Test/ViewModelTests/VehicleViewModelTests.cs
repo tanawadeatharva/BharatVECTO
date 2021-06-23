@@ -106,59 +106,18 @@ namespace Vecto3GUI2020Test.ViewModelTests
 			var vehicleVM =
 				vm.MultiStageJobViewModel.ManufacturingStageViewModel.Vehicle as
 					DeclarationInterimStageBusVehicleViewModel_v2_8;
-			setMockDialogHelper(stageInputFullSample);
+			SetMockDialogHelper(stageInputFullSample);
 			var vmConc = vm.MultiStageJobViewModel as MultiStageJobViewModel_v0_1;
 			vmConc.LoadVehicleDataCommand.Execute(null);
 			Assert.IsFalse(vmConc.ManufacturingStageViewModel.VehicleViewModel.HasErrors);
 			
 		}
 
-		//[Test]
-		//public void groupEditing()
-		//{
-		//	var vm = loadFile(primary_vehicle_only);
-		//	var vehicleVM =
-		//		vm.MultiStageJobViewModel.ManufacturingStageViewModel.Vehicle as
-		//			DeclarationInterimStageBusVehicleViewModel_v2_8;
-
-		//	vehicleVM.NumberOfPassengersUpperDeck = 2;
-
-		//	Assert.IsTrue(vehicleVM.NumberOfPassengersEditingEnabled);
-		//	Assert.AreEqual(2, vehicleVM.NumberOfPassengersUpperDeck);
-		//	vehicleVM.NumberOfPassengersLowerDeck = 3;
-		//	Assert.AreEqual(3, vehicleVM.NumberOfPassengersLowerDeck);
-		//}
-
-
-		//[Test]
-		//public void automaticallyEnableEditingWhenContentIsSet()
-		//{
-		//	var vm = loadFile(primary_vehicle_only);
-		//	var vehicleVM =
-		//		vm.MultiStageJobViewModel.ManufacturingStageViewModel.Vehicle as
-		//			DeclarationInterimStageBusVehicleViewModel_v2_8;
-
-			
-		//	vehicleVM.NumberOfPassengersUpperDeck = 2;
-		//	Assert.IsTrue(vehicleVM.NumberOfPassengersEditingEnabled);
-
-		//	vehicleVM.NumberOfPassengersUpperDeck = null;
-
-		//	getMockDialogHelper(stageInputFullSample);
-		//	var vmConc = vm.MultiStageJobViewModel as MultiStageJobViewModel_v0_1;
-		//	vmConc.LoadVehicleDataCommand.Execute(null);
-
-
-		//	Assert.IsTrue(vehicleVM.ParameterViewModels[nameof(vehicleVM.NumberOfPassengersUpperDeck)].EditingEnabled);
-		//	Assert.IsTrue(vehicleVM.NumberOfPassengersEditingEnabled);
-		//}
-
-
 
 
 		#region ADAS
 		[Test]
-		public void loadPrimaryAndEdit()
+		public void LoadPrimaryAndEdit()
 		{
 			var vm = loadFile(primary_vehicle_only);
 			Assert.NotNull(vm);
@@ -176,13 +135,6 @@ namespace Vecto3GUI2020Test.ViewModelTests
 			Assert.Null(vehicleData.ADAS);
 
 		}
-
-
-
-
-
-
-
 		#endregion
 
 

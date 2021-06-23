@@ -122,7 +122,7 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 
 							var auxiliariesErrorInfo =
 								vehicleViewModel.MultistageAuxiliariesViewModel as IDataErrorInfo;
-							if (!auxiliariesErrorInfo.Error.IsNullOrEmpty()) {
+							if (auxiliariesErrorInfo != null && !auxiliariesErrorInfo.Error.IsNullOrEmpty()) {
 								errorMessage += "Auxiliaries\n";
 								errorMessage += auxiliariesErrorInfo.Error.Replace(",", "\n");
 							}
@@ -149,10 +149,14 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 				}, () => true);
 			}
 		}
-
-		public void SaveVif(string outputFile)
+		/// <summary>
+		/// Creates a new VIF file
+		/// </summary>
+		/// <param name="outputFile"></param>
+		/// <returns>Name of the created File</returns>
+		public string SaveVif(string outputFile)
 		{
-			SaveVif(vifData:this, outputFile:outputFile, dialogHelper:_dialogHelper.Value);
+			return SaveVif(vifData:this, outputFile:outputFile, dialogHelper:_dialogHelper.Value);
 		}
 
 		public void SaveVif(IMultistageVIFInputData vifData, FileOutputVIFWriter writer, IDialogHelper dialogHelper = null)
@@ -160,12 +164,21 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 			SaveVif(vifData, null, writer, dialogHelper);
 		}
 
-		private void SaveVif(IMultistageVIFInputData vifData, string outputFile,
+
+		/// <summary>
+		/// Creates a new VIF file
+		/// </summary>
+		/// <param name="vifData"></param>
+		/// <param name="outputFile"></param>
+		/// <param name="writer"></param>
+		/// <param name="dialogHelper"></param>
+		/// <returns>Name of the created file</returns>
+
+		private string SaveVif(IMultistageVIFInputData vifData, string outputFile,
 			FileOutputVIFWriter writer = null, IDialogHelper dialogHelper = null)
 		{
 			try {
-
-
+				FileHelper.CreateDirectory(outputFile);
 				if (writer == null) {
 					var numberOfManufacturingStages =
 						vifData.MultistageJobInputData.JobInputData.ManufacturingStages?.Count ?? 0;
@@ -194,22 +207,21 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 						dialogHelper?.ShowMessageBox($"Error writing file {validator.ValidationError}", "Error",
 							MessageBoxButton.OK, MessageBoxImage.Error);
 						Debug.WriteLine("Invalid Outputfile");
-						return;
+						return null;
 					} else {
 						dialogHelper?.ShowMessageBox($"Written to {writer.XMLMultistageReportFileName}", "Info",
 							MessageBoxButton.OK, MessageBoxImage.Information);
 						_jobListViewModel.AddJobAsync(writer.XMLMultistageReportFileName);
 						Debug.WriteLine($"Written to {writer.XMLMultistageReportFileName}");
-
+						return writer.XMLMultistageReportFileName;
 					}
 				}
 
 			}catch (Exception e) {
-				dialogHelper?.ShowMessageBox($"{e.Message}", "Error writing VIF", MessageBoxButton.OK,
+				dialogHelper?.ShowMessageBox($"{e.GetInnerExceptionMessages()}", "Error writing VIF", MessageBoxButton.OK,
 					MessageBoxImage.Error);
-
+				return null;
 			}
-			
 		}
 
 		private ICommand _saveInputDataCommand;

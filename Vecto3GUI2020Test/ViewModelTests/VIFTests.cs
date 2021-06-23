@@ -18,7 +18,7 @@ namespace Vecto3GUI2020Test.ViewModelTests
 		[Test]
 		public void loadPrimaryVehicleOnlyAndCreateNewVIF()
 		{
-			var multistagevm = loadFile(primary_vehicle_only).MultiStageJobViewModel;
+			var multistagevm = loadFile(primary_vehicle_only).MultiStageJobViewModel as MultiStageJobViewModel_v0_1;
 			var stage = multistagevm.ManufacturingStageViewModel.StageCount;
 
 			Assert.AreEqual(2, stage);
@@ -33,10 +33,10 @@ namespace Vecto3GUI2020Test.ViewModelTests
 			var writer = GetFileOutputVIFWriter(multistagevm);
 			
 			deleteFile(writer.XMLMultistageReportFileName);
-			setMockDialogHelper(null, writer.XMLMultistageReportFileName);
-			_kernel.Rebind<IDialogHelper>().ToConstant(setMockDialogHelper(null, writer.XMLMultistageReportFileName).Object);
+			SetMockDialogHelper(null, writer.XMLMultistageReportFileName);
+			_kernel.Rebind<IDialogHelper>().ToConstant(SetMockDialogHelper(null, writer.XMLMultistageReportFileName).Object);
 
-			MultiStageJobViewModel_v0_1.SaveVif(multistagevm, writer);
+			multistagevm.SaveVif(multistagevm, writer);
 
 			Assert.IsTrue(File.Exists(writer.XMLMultistageReportFileName));
 
@@ -50,7 +50,7 @@ namespace Vecto3GUI2020Test.ViewModelTests
 		{
 			
 
-			setMockDialogHelper(consolidated_multiple_stages, null);
+			SetMockDialogHelper(consolidated_multiple_stages, null);
 			
 			var newMultistageJobViewModel = _kernel.Get<NewMultiStageJobViewModel>();
 			newMultistageJobViewModel.AddVifFile.Execute(null);
@@ -65,7 +65,7 @@ namespace Vecto3GUI2020Test.ViewModelTests
 			var multiStageViewModel = newMultistageJobViewModel.MultiStageJobViewModel as MultiStageJobViewModel_v0_1;
 			Assert.NotNull(multiStageViewModel);
 
-			setMockDialogHelper(stageInputFullSample, null);
+			SetMockDialogHelper(stageInputFullSample, null);
 
 			multiStageViewModel.LoadVehicleDataCommand.Execute(null);
 			
@@ -80,9 +80,9 @@ namespace Vecto3GUI2020Test.ViewModelTests
 			var writer = GetFileOutputVIFWriter(multiStageViewModel);
 			
 			deleteFile(writer.XMLMultistageReportFileName);
-			setMockDialogHelper(null, writer.XMLMultistageReportFileName);
+			SetMockDialogHelper(null, writer.XMLMultistageReportFileName);
 
-			MultiStageJobViewModel_v0_1.SaveVif(multiStageViewModel, writer);
+			multiStageViewModel.SaveVif(multiStageViewModel, writer);
 			
 			var validator = new XMLValidator(XmlReader.Create(writer.XMLMultistageReportFileName));
 			Assert.True(validator.ValidateXML(TUGraz.VectoCore.Utils.XmlDocumentType.MultistageOutputData));

@@ -17,31 +17,31 @@ namespace Vecto3GUI2020Test.ViewModelTests
 
 		#region Airdrag
 		[Test]
-		public void airdragModifiedInPreviousStages()
+		public void AirdragModifiedInPreviousStages()
 		{
 			var vm = loadFile(consolidated_multiple_stages_airdrag);
 
-			var vehicleVM = vm.MultiStageJobViewModel.ManufacturingStageViewModel.Vehicle as
+			var vehicleVm = vm.MultiStageJobViewModel.ManufacturingStageViewModel.Vehicle as
 				DeclarationInterimStageBusVehicleViewModel_v2_8;
 
-			Assert.IsTrue(vehicleVM.AirdragModifiedMultistageEditingEnabled);
+			Assert.IsTrue(vehicleVm.AirdragModifiedMultistageEditingEnabled);
 
 			//try to change to false
 
-			vehicleVM.AirdragModifiedMultistage = false; //should not change the value
-			Assert.IsTrue(vehicleVM.AirdragModifiedMultistageEditingEnabled);
+			vehicleVm.AirdragModifiedMultistage = false; //should not change the value
+			Assert.IsTrue(vehicleVm.AirdragModifiedMultistageEditingEnabled);
 		}
 
 		[Test]
-		public void airdragNotModifiedInPreviousStages()
+		public void AirdragNotModifiedInPreviousStages()
 		{
 			var vm = loadFile(consolidated_multiple_stages);
 
-			var vehicleVM =
+			var vehicleVm =
 				vm.MultiStageJobViewModel.ManufacturingStageViewModel.Vehicle as
 					DeclarationInterimStageBusVehicleViewModel_v2_8;
 
-			Assert.IsFalse(vehicleVM.AirdragModifiedMultistageEditingEnabled);
+			Assert.IsFalse(vehicleVm.AirdragModifiedMultistageEditingEnabled);
 		}
 
 		/// <summary>
@@ -50,32 +50,32 @@ namespace Vecto3GUI2020Test.ViewModelTests
 		///		=> 'AirdragModifiedMultistage' required in all consecutive stages
 		/// </summary>
 		[Test]
-		public void airdragComponentLoadedFirstTime()
+		public void AirdragComponentLoadedFirstTime()
 		{
 			///Load VIF without airdrag 
 
 			var vm = loadFile(primary_vehicle_only);
-			var vehicleVM =
+			var vehicleVm =
 				vm.MultiStageJobViewModel.ManufacturingStageViewModel.Vehicle as
 					DeclarationInterimStageBusVehicleViewModel_v2_8;
 
-			Assert.IsNull(vehicleVM.AirdragModifiedMultistage);
+			Assert.IsNull(vehicleVm.AirdragModifiedMultistage);
 
-			var airdragViewModel = vehicleVM.MultistageAirdragViewModel as MultistageAirdragViewModel;
+			var airdragViewModel = vehicleVm.MultistageAirdragViewModel as MultistageAirdragViewModel;
 			Assert.IsTrue(airdragViewModel.LoadAirdragFile(GetFullPath(airdragLoadTestFile)));
 
-			Assert.IsNull(vehicleVM.AirdragModifiedMultistage);
-			Assert.IsFalse(vehicleVM.AirdragModifiedMultistageMandatory);
+			Assert.IsNull(vehicleVm.AirdragModifiedMultistage);
+			Assert.IsFalse(vehicleVm.AirdragModifiedMultistageMandatory);
 
-			vehicleVM.AirdragModifiedMultistageEditingEnabled = true;
-			Assert.IsFalse(vehicleVM.AirdragModifiedMultistageEditingEnabled);
+			vehicleVm.AirdragModifiedMultistageEditingEnabled = true;
+			Assert.IsFalse(vehicleVm.AirdragModifiedMultistageEditingEnabled);
 
-			Assert.IsNull(vehicleVM.AirdragModifiedMultistage);
+			Assert.IsNull(vehicleVm.AirdragModifiedMultistage);
 
 			//Set Mandatory Fields
-			vehicleVM.Manufacturer = "testManufacturer";
-			vehicleVM.ManufacturerAddress = "Address";
-			vehicleVM.VIN = "123456789";
+			vehicleVm.Manufacturer = "testManufacturer";
+			vehicleVm.ManufacturerAddress = "Address";
+			vehicleVm.VIN = "123456789";
 
 			//Save as new VIF
 			var multistageJobViewModel = vm.MultiStageJobViewModel as MultiStageJobViewModel_v0_1;
@@ -84,41 +84,41 @@ namespace Vecto3GUI2020Test.ViewModelTests
 
 			var resultFile = $"{outputName}.VIF_Report_2.xml";
 			Assert.IsTrue(checkFileNameExists(resultFile));
-			var secondstageVM = loadFile(resultFile);
-			Assert.IsNotNull(secondstageVM);
-			var secondStageVehicleVM =
-				(secondstageVM.MultiStageJobViewModel.ManufacturingStageViewModel.VehicleViewModel) as
+			var secondstageVm = loadFile(resultFile);
+			Assert.IsNotNull(secondstageVm);
+			var secondStageVehicleVm =
+				(secondstageVm.MultiStageJobViewModel.ManufacturingStageViewModel.VehicleViewModel) as
 				DeclarationInterimStageBusVehicleViewModel_v2_8;
-			Assert.IsTrue(secondStageVehicleVM.AirdragModifiedMultistageEditingEnabled);
-			Assert.IsTrue(secondStageVehicleVM.AirdragModifiedMultistageMandatory);
-			Assert.IsNull(secondStageVehicleVM.ConsolidatedVehicleData.AirdragModifiedMultistage);
+			Assert.IsTrue(secondStageVehicleVm.AirdragModifiedMultistageEditingEnabled);
+			Assert.IsTrue(secondStageVehicleVm.AirdragModifiedMultistageMandatory);
+			Assert.IsNull(secondStageVehicleVm.ConsolidatedVehicleData.AirdragModifiedMultistage);
 
 			//try to disable AirdragModified
-			secondStageVehicleVM.AirdragModifiedMultistageEditingEnabled = false;
-			Assert.IsTrue(secondStageVehicleVM.AirdragModifiedMultistageEditingEnabled);
+			secondStageVehicleVm.AirdragModifiedMultistageEditingEnabled = false;
+			Assert.IsTrue(secondStageVehicleVm.AirdragModifiedMultistageEditingEnabled);
 		}
 		/// <summary>
 		///  no airdrag component set in VIF => AirdragModifiedMultistage is disabled
 		/// </summary>
 		[Test]
-		public void airdragModifiedDisabled()
+		public void AirdragModifiedDisabled()
 		{
 			var vm = loadFile(primary_vehicle_only);
-			var vehicleVM =
+			var vehicleVm =
 				vm.MultiStageJobViewModel.ManufacturingStageViewModel.Vehicle as
 					DeclarationInterimStageBusVehicleViewModel_v2_8;
 
-			Assert.IsNull(vehicleVM.AirdragModifiedMultistage);
+			Assert.IsNull(vehicleVm.AirdragModifiedMultistage);
 
-			Assert.IsNull(vehicleVM.AirdragModifiedMultistage);
-			Assert.IsFalse(vehicleVM.AirdragModifiedMultistageMandatory);
+			Assert.IsNull(vehicleVm.AirdragModifiedMultistage);
+			Assert.IsFalse(vehicleVm.AirdragModifiedMultistageMandatory);
 
-			var airdragViewModel = vehicleVM.MultistageAirdragViewModel;
+			var airdragViewModel = vehicleVm.MultistageAirdragViewModel;
 			Assert.IsTrue(airdragViewModel.LoadAirdragFile(GetFullPath(airdragLoadTestFile)), "Airdrag file not loaded");
-			Assert.IsFalse(vehicleVM.AirdragModifiedMultistageMandatory);
+			Assert.IsFalse(vehicleVm.AirdragModifiedMultistageMandatory);
 
-			vehicleVM.AirdragModifiedMultistageEditingEnabled = true;
-			Assert.IsFalse(vehicleVM.AirdragModifiedMultistageEditingEnabled);
+			vehicleVm.AirdragModifiedMultistageEditingEnabled = true;
+			Assert.IsFalse(vehicleVm.AirdragModifiedMultistageEditingEnabled);
 
 		}
 		/// <summary>
@@ -126,7 +126,7 @@ namespace Vecto3GUI2020Test.ViewModelTests
 		/// </summary>
 		[Test]
 
-		public void airdragModifiedMandatory()
+		public void AirdragModifiedMandatory()
 		{
 			//var vm = loadFile(primary_vehicle_only);
 			//var vehicleVM =
@@ -144,7 +144,7 @@ namespace Vecto3GUI2020Test.ViewModelTests
 		}
 
 		[Test]
-		public void temporarySaveAirdragComponent1()
+		public void TemporarySaveAirdragComponent1()
 		{
 			var vm = loadFile(consolidated_multiple_stages_airdrag);
 
@@ -176,7 +176,7 @@ namespace Vecto3GUI2020Test.ViewModelTests
 		}
 
 		[Test]
-		public void temporarySaveAirdragComponent2()
+		public void TemporarySaveAirdragComponent2()
 		{
 			var vm = loadFile(consolidated_multiple_stages_airdrag);
 
@@ -187,7 +187,7 @@ namespace Vecto3GUI2020Test.ViewModelTests
 
 			//Load input file
 			var multistageJobViewModel = vm.MultiStageJobViewModel as MultiStageJobViewModel_v0_1;
-			var mockDialogHelper = setMockDialogHelper(stageInputFullSample, null);
+			var mockDialogHelper = SetMockDialogHelper(stageInputFullSample, null);
 			multistageJobViewModel.LoadVehicleDataCommand.Execute(null);
 
 
@@ -214,7 +214,7 @@ namespace Vecto3GUI2020Test.ViewModelTests
 		}
 
 		[Test]
-		public void removeAirdragComponent()
+		public void RemoveAirdragComponent()
 		{
 			var vm = loadFile(consolidated_multiple_stages_airdrag);
 
@@ -225,7 +225,7 @@ namespace Vecto3GUI2020Test.ViewModelTests
 
 			//Load input file
 			var multistageJobViewModel = vm.MultiStageJobViewModel as MultiStageJobViewModel_v0_1;
-			var mockDialogHelper = setMockDialogHelper(stageInputFullSample, null);
+			var mockDialogHelper = SetMockDialogHelper(stageInputFullSample, null);
 			multistageJobViewModel.LoadVehicleDataCommand.Execute(null);
 
 
@@ -241,7 +241,7 @@ namespace Vecto3GUI2020Test.ViewModelTests
 
 
 		[Test]
-		public void airdragModifiedSetToTrueWhenComponentIsLoaded()
+		public void AirdragModifiedSetToTrueWhenComponentIsLoaded()
 		{
 			var vm = loadFile(consolidated_multiple_stages_airdrag);
 

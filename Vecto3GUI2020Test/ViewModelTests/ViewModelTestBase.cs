@@ -19,26 +19,20 @@ namespace Vecto3GUI2020Test
 	{
 		protected const string TestDataDirPath = @"Testdata\";
 		protected const string consolidated_multiple_stages = "vecto_multistage_consolidated_multiple_stages.xml";
-
-		protected const string consolidated_multiple_stages_airdrag =
-			"vecto_multistage_consolidated_multiple_stages_airdrag.xml";
-
-		protected const string consolidated_multiple_stages_hev =
-			"vecto_multistage_consolidated_multiple_stages_hev.xml";
-
+		protected const string consolidated_multiple_stages_airdrag = "vecto_multistage_consolidated_multiple_stages_airdrag.xml";
+		protected const string consolidated_multiple_stages_hev = "vecto_multistage_consolidated_multiple_stages_hev.xml";
 		protected const string consolidated_one_stage = "vecto_multistage_consolidated_one_stage.xml";
 		protected const string primary_vehicle_only = "vecto_multistage_primary_vehicle_only.xml";
-
-		
-
+		protected const string exempted = "exempted_primary_heavyBus.VIF.xml";
 		protected const string stageInputFullSample = "vecto_vehicle-stage_input_full-sample.xml";
-
 		protected const string airdragLoadTestFile = "AirdragLoadTestFile.xml";
 
 		//protected IXMLInputDataReader xmlInputReader;
 		protected IKernel _kernel;
 		private Mock<IDialogHelper> _mockDialogHelper;
 
+
+		protected TestHelper _testHelper;
 
 		[SetUp]
 		public void OneTimeSetUp()
@@ -54,8 +48,9 @@ namespace Vecto3GUI2020Test
 				new Vecto3GUI2020Module()
 			);
 			//xmlInputReader = _kernel.Get<IXMLInputDataReader>();
-			_kernel.Rebind<IDialogHelper>().ToConstant(setMockDialogHelper().Object);
+			_kernel.Rebind<IDialogHelper>().ToConstant(SetMockDialogHelper().Object);
 
+			_testHelper = new TestHelper(_kernel.Get<IXMLInputDataReader>());
 		}
 
 		[TearDown]
@@ -94,7 +89,7 @@ namespace Vecto3GUI2020Test
 
 		public virtual NewMultiStageJobViewModel loadFile(string fileName)
 		{
-			var mockDialogHelper = setMockDialogHelper(fileName);
+			var mockDialogHelper = SetMockDialogHelper(fileName);
 
 			var newMultistageJobViewModel = _kernel.Get<NewMultiStageJobViewModel>();
 			newMultistageJobViewModel.AddVifFile.Execute(null);
@@ -113,16 +108,10 @@ namespace Vecto3GUI2020Test
 				var airdragViewModel = (manstageVehicleViewModel as DeclarationInterimStageBusVehicleViewModel_v2_8)?.MultistageAirdragViewModel;
 				Assert.NotNull(airdragViewModel);
 			}
-			
-
-
-
-
-
 			return newMultistageJobViewModel;
 		}
 
-		protected virtual Mock<IDialogHelper> setMockDialogHelper(string fileToLoad = null, string fileToSave = null)
+		protected virtual Mock<IDialogHelper> SetMockDialogHelper(string fileToLoad = null, string fileToSave = null)
 		{
 			if (_mockDialogHelper == null) {
 				_mockDialogHelper = new Mock<IDialogHelper>();
@@ -139,6 +128,8 @@ namespace Vecto3GUI2020Test
 						dialogHelper.ShowMessageBox(It.IsAny<string>(), It.IsAny<string>()))
 					.Callback<string, string>((message, caption) => 
 						TestContext.WriteLine($"{{caption}}\n {message}"));
+
+				
 			}
 			if (fileToLoad != null) {
 				var filePath = Path.GetFullPath(TestDataDirPath + fileToLoad);
@@ -164,7 +155,7 @@ namespace Vecto3GUI2020Test
 			return _mockDialogHelper;
 		}
 
-		protected Mock<IDialogHelper> getMockDialogHelper()
+		protected Mock<IDialogHelper> GetMockDialogHelper()
 		{
 			return _mockDialogHelper;
 		}
@@ -174,6 +165,15 @@ namespace Vecto3GUI2020Test
 			var path = Path.GetFullPath(TestDataDirPath + fileName);
 			Debug.WriteLine(path);
 			return path;
+		}
+
+		protected void Write(string outputMessage)
+		{
+			TestContext.Write(outputMessage);
+		}
+		protected void WriteLine(string outputMessage)
+		{
+			TestContext.WriteLine(outputMessage);
 		}
 	}
 }

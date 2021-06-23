@@ -99,9 +99,6 @@
        
             <!--</Grid>-->
             <DockPanel DockPanel.Dock="Bottom" LastChildFill="False">
-                <i:Interaction.Behaviors>
-                    <behaviour:HideOnMainWindowBehavior></behaviour:HideOnMainWindowBehavior>
-                </i:Interaction.Behaviors>
                 <Button DockPanel.Dock="Right"
                         Width="100"
                         Command="{Binding CloseWindowCommand}" 

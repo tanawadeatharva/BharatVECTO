@@ -101,7 +101,7 @@ namespace VECTO3GUI2020.ViewModel.Implementation
 
         
 
-        public JobListViewModel()
+        private JobListViewModel()
         {
 			BindingOperations.EnableCollectionSynchronization(Jobs, _jobsLock);
 		}
@@ -111,7 +111,8 @@ namespace VECTO3GUI2020.ViewModel.Implementation
             IXMLInputDataReader inputDataReader,
             IDialogHelper dialogHelper,
             IWindowHelper windowHelper,
-			IMultiStageViewModelFactory multiStageViewModelFactory, IOutputViewModel outputViewModel) : this()
+			IMultiStageViewModelFactory multiStageViewModelFactory, 
+			IOutputViewModel outputViewModel) : this()
         {
             _documentViewModelFactory = documentViewModelFactory;
             _dialogHelper = dialogHelper;
@@ -136,16 +137,27 @@ namespace VECTO3GUI2020.ViewModel.Implementation
 			NLog.Config.SimpleConfigurator.ConfigureForTargetLogging(target);
 
 
-			System.Windows.Application.Current.Exit += new ExitEventHandler(this.OnApplicationExit);
+			if(System.Windows.Application.Current != null){
+				System.Windows.Application.Current.Exit += new ExitEventHandler(this.OnApplicationExit);
+				LoadFiles();
+			}
+		}
+
+
+		#region Store and Restore JobList
+		private void LoadFiles()
+		{
 			var filesToRead = ReadFileNamesFromFile();
-			if (filesToRead != null) {
-				foreach (var fileName in filesToRead) { 
+			if (filesToRead != null)
+			{
+				foreach (var fileName in filesToRead)
+				{
 					Task.Run(() => AddJobAsync(fileName));
 				}
 			}
 		}
 
-		#region Store and Restore JobList
+
 		private void OnApplicationExit(object sender, EventArgs e)
 		{
 			SaveFileNamesToFile();

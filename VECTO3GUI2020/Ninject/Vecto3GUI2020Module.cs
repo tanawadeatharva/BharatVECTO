@@ -1,4 +1,5 @@
-﻿using Ninject.Modules;
+﻿using System.Windows;
+using Ninject.Modules;
 using VECTO3GUI2020.Helper;
 using VECTO3GUI2020.Model.Implementation;
 using VECTO3GUI2020.Model.Interfaces;
@@ -24,6 +25,7 @@ namespace VECTO3GUI2020.Ninject
 			Bind<IDialogHelper>().To<DialogHelper>().InSingletonScope();
 			Bind<IWindowHelper>().To<WindowHelper>();
 			Bind<AboutViewModel>().ToSelf().InSingletonScope();
+			
 		}
 
 		#endregion
