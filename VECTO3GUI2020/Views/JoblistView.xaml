@@ -53,7 +53,7 @@
             <Grid Grid.Column="1">
                 <Border BorderBrush="{StaticResource AccentColorButton}" BorderThickness="0" >
                     <DataGrid ItemsSource="{Binding Jobs}"
-                          BorderBrush ="{StaticResource AccentColorButton}" BorderThickness="1"
+                          BorderBrush ="{StaticResource AccentColorButton}" BorderThickness="1 0 1 1"
                           Name="JobDataGrid"
                           HorizontalAlignment="Stretch"
                          
