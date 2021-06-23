@@ -130,7 +130,7 @@ namespace TUGraz.VectoCore.Models.Connector.Ports.Impl
 
 	public class ResponseBatteryEmpty : AbstractResponse
 	{
-		public ResponseBatteryEmpty(object source) : base(source) { }
+		public ResponseBatteryEmpty(object source, IElectricSystemResponse electricSupplyResponse) : base(source) { }
 	}
 
 	/// <summary>

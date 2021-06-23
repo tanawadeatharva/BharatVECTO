@@ -30,7 +30,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		protected internal Joule ThermalBuffer = 0.SI<Joule>();
 		protected internal bool DeRatingActive = false;
-		
+		private bool BatteryElectricPowertrain;
+
 		public Joule OverloadBuffer { get; }
 		public NewtonMeter ContinuousTorque { get; }
 
@@ -61,7 +62,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			
 			var peakElPwr = ModelData.EfficiencyData.LookupElectricPower(voltage, ModelData.OverloadTestSpeed, -ModelData.OverloadTorque, true)
 				.ElectricalPower;
-			var peakPwrLoss = -peakElPwr + ModelData.OverloadTorque * ModelData.OverloadTestSpeed; // losses need to be positive
+			var peakPwrLoss = -peakElPwr - ModelData.OverloadTorque * ModelData.OverloadTestSpeed; // losses need to be positive
 
 			OverloadBuffer = (peakPwrLoss - ContinuousPowerLoss) * ModelData.OverloadTime;
 			if (OverloadBuffer.IsSmallerOrEqual(0) && !(container is SimplePowertrainContainer)) {
@@ -115,6 +116,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			PreviousState.DrivetrainSpeed = outAngularVelocity;
 			PreviousState.DrivetrainOutTorque = outTorque;
+
+			BatteryElectricPowertrain = !DataBus.PowertrainInfo.HasCombustionEngine &&
+										DataBus.PowertrainInfo.ElectricMotorPositions.All(x => x.IsBatteryElectric());
 
 			if (NextComponent == null) {
 				return new ResponseSuccess(this) {
@@ -272,7 +276,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			var electricSupplyResponse =
 				ElectricPower.Request(absTime, dt, electricPower, dryRun);
-			if (!dryRun && !DataBus.IsTestPowertrain && !emOff && !(electricSupplyResponse is ElectricSystemResponseSuccess)) {
+			//if (!dryRun && !DataBus.IsTestPowertrain && BatteryElectricPowertrain && electricSupplyResponse is ElectricSystemUnderloadResponse) {
+			//	return new ResponseBatteryEmpty(this, electricSupplyResponse);
+			//}
+			if (NextComponent != null && !dryRun && !DataBus.IsTestPowertrain && !emOff && !(electricSupplyResponse is ElectricSystemResponseSuccess)) {
 				if ( !avgEmSpeed.IsEqual(DataBus.HybridControllerInfo.ElectricMotorSpeed(Position) / ModelData.RatioADC)) {
 					return new ResponseInvalidOperatingPoint(this);
 				}
@@ -304,8 +311,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				} else {
 
 					if (remainingPower.IsEqual(0, Constants.SimulationSettings.LineSearchTolerance)) {
-						if (electricSupplyResponse.MaxPowerDrive.IsGreaterOrEqual(0)) {
-							retVal = new ResponseBatteryEmpty(this);
+						//if (electricSupplyResponse.MaxPowerDrive.IsGreaterOrEqual(0)) {
+						if (electricSupplyResponse is ElectricSystemUnderloadResponse) {
+							retVal = new ResponseBatteryEmpty(this, electricSupplyResponse);
 						} else {
 							retVal = new ResponseSuccess(this) {
 								ElectricMotor = {

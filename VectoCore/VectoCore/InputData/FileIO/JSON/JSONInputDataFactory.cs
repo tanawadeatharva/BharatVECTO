@@ -211,6 +211,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 					return new JSONElectricMotorV1(json, filename, tolerateMissing);
 				case 2:
 					return new JSONElectricMotorV2(json, filename, tolerateMissing);
+				case 3:
+					return new JSONElectricMotorV3(json, filename, tolerateMissing);
 				default:
 					throw new VectoException("ElectricMotor-File: Unsupported FileVersion. Got {0}", version);
 			}

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.ElectricMotor;
@@ -59,27 +60,79 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 
 		public NewtonMeter LookupDragTorque(Volt voltage, PerSecond avgSpeed)
 		{
-			return null;
+			var tuple = VoltageLevels.GetSection(x => voltage > x.Voltage);
+
+			return VectoMath.Interpolate(tuple.Item1.Voltage, tuple.Item2.Voltage,
+				tuple.Item1.DragCurve.Lookup(avgSpeed),
+				tuple.Item2.DragCurve.Lookup(avgSpeed), voltage);
 		}
 
 		public NewtonMeter EfficiencyMapLookupTorque(Volt voltage, Watt electricPower, PerSecond avgSpeed, NewtonMeter maxEmTorque)
 		{
-			return null;
+			if (avgSpeed.IsGreaterOrEqual(MaxSpeed)) {
+				return 0.SI<NewtonMeter>();
+			}
+			var tuple = VoltageLevels.GetSection(x => voltage > x.Voltage);
+			var r1 = tuple.Item1.EfficiencyMap.LookupTorque(electricPower, avgSpeed, maxEmTorque);
+			var r2 = tuple.Item2.EfficiencyMap.LookupTorque(electricPower, avgSpeed, maxEmTorque);
+
+			if (r1 == null && r2 == null) {
+				return null;
+			}
+
+			var retVal = VectoMath.Interpolate(tuple.Item1.Voltage, tuple.Item2.Voltage,
+				r1, r2, voltage);
+			var elPwr = LookupElectricPower(voltage, avgSpeed, retVal, true);
+			if (elPwr.ElectricalPower != null && electricPower.IsEqual(elPwr.ElectricalPower)) {
+				return retVal;
+			}
+
+			//return null;
+			throw new NotImplementedException("EfficientyMapLookupTorque");
 		}
 
-		public EfficiencyMap.EfficiencyResult LookupElectricPower(Volt voltage, PerSecond avgSpeed, NewtonMeter maxTorque, bool allowExtrapolation = false)
+		public EfficiencyMap.EfficiencyResult LookupElectricPower(Volt voltage, PerSecond avgSpeed, NewtonMeter torque, bool allowExtrapolation = false)
 		{
-			return null;
+			var tuple = VoltageLevels.GetSection(x => voltage > x.Voltage);
+
+			var r1 = tuple.Item1.EfficiencyMap.LookupElectricPower(avgSpeed, torque, allowExtrapolation);
+			var r2 = tuple.Item2.EfficiencyMap.LookupElectricPower(avgSpeed, torque, allowExtrapolation);
+
+			if (r1 == null || r2 == null || r1.ElectricalPower == null || r2.ElectricalPower == null) {
+				return new EfficiencyMap.EfficiencyResult() {
+					ElectricalPower =  null,
+					Speed = avgSpeed,
+					Torque = torque
+				};
+			}
+
+			var pwr = VectoMath.Interpolate(tuple.Item1.Voltage, tuple.Item2.Voltage, r1.ElectricalPower,
+				r2.ElectricalPower, voltage);
+
+			return new EfficiencyMap.EfficiencyResult() {
+				ElectricalPower = pwr,
+				Extrapolated = r1.Extrapolated || r2.Extrapolated,
+				Speed = avgSpeed,
+				Torque = torque
+			};
 		}
 
 		public NewtonMeter FullGenerationTorque(Volt voltage, PerSecond avgSpeed)
 		{
-			return null;
+			var tuple = VoltageLevels.GetSection(x => voltage > x.Voltage);
+
+			return VectoMath.Interpolate(tuple.Item1.Voltage, tuple.Item2.Voltage,
+				tuple.Item1.FullLoadCurve.FullGenerationTorque(avgSpeed),
+				tuple.Item2.FullLoadCurve.FullGenerationTorque(avgSpeed), voltage);
 		}
 
 		public NewtonMeter FullLoadDriveTorque(Volt voltage, PerSecond avgSpeed)
 		{
-			return null;
+			var tuple = VoltageLevels.GetSection(x => voltage > x.Voltage);
+
+			return VectoMath.Interpolate(tuple.Item1.Voltage, tuple.Item2.Voltage,
+				tuple.Item1.FullLoadCurve.FullLoadDriveTorque(avgSpeed),
+				tuple.Item2.FullLoadCurve.FullLoadDriveTorque(avgSpeed), voltage);
 		}
 	}
 

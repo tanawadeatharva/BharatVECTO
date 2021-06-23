@@ -634,6 +634,9 @@
     <None Include="TestData\Hybrids\ElectricMotor\GenericDrag.vemd">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Include="TestData\Hybrids\ElectricMotor\GenericEMotorV2.vem">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="TestData\Hybrids\ElectricMotor\GenericEMotor.vem">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>

@@ -177,6 +177,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				case ResponseGearShift r:
 					retVal = r;
 					break;
+				case ResponseBatteryEmpty _:
+					return response;
 				default:
 					throw new UnexpectedResponseException("DrivingAction Accelerate.", response);
 			}
@@ -299,6 +301,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 									MaxDistance = r.Driver.Acceleration / 2 * r.DeltaT * r.DeltaT + DataBus.VehicleInfo.VehicleSpeed * r.DeltaT
 								};
 								break;
+							case ResponseBatteryEmpty _:
+								return retVal;
 							default:
 								throw new UnexpectedResponseException("DrivingAction Accelerate after Overload", retVal);
 						}
@@ -317,7 +321,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 						operatingPoint = limitedOperatingPoint;
 						break;
 					case ResponseBatteryEmpty _:
-						break;
+						return retVal;
 					case ResponseEngineSpeedTooHigh r:
 						nextOperatingPoint = SearchOperatingPoint(absTime, ds, gradient, operatingPoint.Acceleration, r);
 						retVal = NextComponent.Request(absTime, nextOperatingPoint.SimulationInterval, nextOperatingPoint.Acceleration, gradient, false);
@@ -506,6 +510,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 						MaxDistance = r.Driver.Acceleration / 2 * r.DeltaT * r.DeltaT + DataBus.VehicleInfo.VehicleSpeed * r.DeltaT
 					};
 					break;
+				case ResponseBatteryEmpty _:
+					return response;
 				default:
 					throw new UnexpectedResponseException("CoastOrRoll Action: unhandled response from powertrain.", response);
 			}
@@ -730,6 +736,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 						MaxDistance = DataBus.VehicleInfo.VehicleSpeed * r.DeltaT + point.Acceleration / 2 * r.DeltaT * r.DeltaT
 					};
 					break;
+				case ResponseBatteryEmpty _:
+					return response;
 				default:
 					throw new UnexpectedResponseException("DrivingAction Brake: first request.", response);
 			}
@@ -854,6 +862,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					}
 
 					break;
+				case ResponseBatteryEmpty _:
+					return retVal;
 				default:
 					throw new UnexpectedResponseException("DrivingAction Brake: request failed after braking power was found.", retVal);
 			}
