@@ -345,7 +345,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 					new XElement(tns + XMLNames.Bus_SizeOfAirSupply, supply.CompressorSize),
 					new XElement(tns + XMLNames.CompressorDrive, supply.CompressorDrive.GetLabel()),
 					new XElement(tns + XMLNames.Vehicle_Clutch, supply.Clutch),
-					new XElement(tns + XMLNames.Bus_CompressorRatio, supply.Ratio.ToMinSignificantDigits(3)),
+					new XElement(tns + XMLNames.Bus_CompressorRatio, supply.Ratio.ToMinSignificantDigits(3,3)),
 					new XElement(tns + XMLNames.Bus_SmartCompressionSystem, supply.SmartAirCompression),
 					new XElement(tns + XMLNames.Bus_SmartRegenerationSystem, supply.SmartRegeneration),
 					new XElement(tns + XMLNames.Bus_AirsuspensionControl, GetXMLAirsuspensionControl(consumer.AirsuspensionControl)),
