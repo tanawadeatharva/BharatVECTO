@@ -3,7 +3,10 @@ using System.Xml;
 using Moq;
 using Ninject;
 using NUnit.Framework;
+using NUnit.Framework.Internal;
 using TUGraz.VectoCommon.InputData;
+using TUGraz.VectoCommon.Models;
+using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.OutputData.FileIO;
 using TUGraz.VectoCore.Utils;
 using VECTO3GUI2020.Helper;
@@ -44,12 +47,55 @@ namespace Vecto3GUI2020Test.ViewModelTests
 			Assert.True(validator.ValidateXML(TUGraz.VectoCore.Utils.XmlDocumentType.MultistageOutputData));
 		}
 
+		[Test, Combinatorial]
+		public void CreateVifAllParameters(
+			[Values("manufacturer")] string manufacturer,
+			[Values(LegislativeClass.M3)] LegislativeClass legCategory)
+		{
+			var multistagevm = loadFile(primary_vehicle_only).MultiStageJobViewModel as MultiStageJobViewModel_v0_1;
+			var stage = multistagevm.ManufacturingStageViewModel.StageCount;
+
+			Assert.AreEqual(2, stage);
+
+			//Set Necessary Fields
+			var vehicle =
+				multistagevm.ManufacturingStageViewModel.Vehicle as DeclarationInterimStageBusVehicleViewModel_v2_8;
+			LegislativeClass
+
+			vehicle.ManufacturerAddress = "Address";
+			vehicle.Manufacturer = "Manufacturer";
+			vehicle.VIN = "VIN12345678";
+			vehicle.Model = "Model";
+
+
+		}
+
+
+		[Test]
+		public void CreateVifWrongDecimal()
+		{
+			var multistagevm = loadFile(primary_vehicle_only).MultiStageJobViewModel as MultiStageJobViewModel_v0_1;
+			var stage = multistagevm.ManufacturingStageViewModel.StageCount;
+
+			Assert.AreEqual(2, stage);
+
+		//Set Necessary Fields
+			var vehicle =
+			multistagevm.ManufacturingStageViewModel.Vehicle as DeclarationInterimStageBusVehicleViewModel_v2_8;
+			
+
+			vehicle.ManufacturerAddress = "Address";
+			vehicle.Manufacturer = "Manufacturer";
+			vehicle.VIN = "VIN12345678";
+			vehicle.Model = "Model";
+
+			//vehicle.MultistageAuxiliariesViewModel.
+		}
+
 
 		[Test]
 		public void TestAirdragLoadAndSave()
 		{
-			
-
 			SetMockDialogHelper(consolidated_multiple_stages, null);
 			
 			var newMultistageJobViewModel = _kernel.Get<NewMultiStageJobViewModel>();

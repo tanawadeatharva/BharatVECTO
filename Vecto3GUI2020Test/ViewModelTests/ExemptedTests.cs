@@ -21,7 +21,7 @@ namespace Vecto3GUI2020Test.ViewModelTests
 
 		public const string _exemptedMandatory = "exempted_vif_mandatory.xml";
 
-		[Test, Combinatorial]
+		[Test]
 		public void LoadAndSaveExemptedPrimary()
 		{
 			var newMultiStageJob = loadFile(exempted);
