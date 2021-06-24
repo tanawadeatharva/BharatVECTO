@@ -71,6 +71,7 @@ namespace Vecto3GUI2020Test.ViewModelTests
 		}
 
 
+
 		[Test]
 		public void CreateVifWrongDecimal()
 		{

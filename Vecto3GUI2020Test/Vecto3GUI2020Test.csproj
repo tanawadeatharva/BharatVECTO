@@ -109,6 +109,9 @@
     <None Update="inputdata\vecto_vehicle-completed_heavyBus_31b.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Update="TestData\bugreports\PrimaryDecimal\primary_heavyBus group41_nonSmart_rounded_decimals.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="TestData\exempted_primary_heavyBus.VIF.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
@@ -124,6 +127,10 @@
     <None Update="TestData\vecto_vehicle-completed_heavyBus_31b.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Testdata\bugreports\" />
   </ItemGroup>
 
 </Project>

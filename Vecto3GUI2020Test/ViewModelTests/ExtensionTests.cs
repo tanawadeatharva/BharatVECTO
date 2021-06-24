@@ -2,7 +2,8 @@
 using System.Collections.ObjectModel;
 using NUnit.Framework;
 using TUGraz.VectoCommon.Models;
-using VECTO3GUI2020.Helper;
+using TUGraz.VectoCommon.Utils;
+using EnumHelper = VECTO3GUI2020.Helper.EnumHelper;
 
 namespace Vecto3GUI2020Test.ViewModelTests
 {
@@ -38,6 +39,25 @@ namespace Vecto3GUI2020Test.ViewModelTests
 			Assert.False(collection2.Contains(VehicleCode.NOT_APPLICABLE));
 		}
 
-		
+
+		[TestCase(1.000, 3U, "1.000")]
+		[TestCase(1.210, 3U, "1.210")]
+		[TestCase(1.201, 3U, "1.201")]
+		[TestCase(1.3, 3U, "1.300")]
+		public void ToMinSignificantDigitsExtensionTest(double input, uint significantDigits, string expected)
+		{
+			var result = input.ToMinSignificantDigits(significantDigits); //Called like this in XMLPrimaryBusVehicleReport;
+			Assert.AreEqual(expected, result);
+		}
+
+		[TestCase(1.000, 3U, 3U, "1.000")]
+		[TestCase(1.210, 3U, 3U, "1.210")]
+		[TestCase(1.201, 3U, 3U, "1.201")]
+		[TestCase(1.3, 3U, 3U, "1.300")]
+		public void ToMinSignificantDigitsExtensionTest2(double input, uint significantDigits, uint decimals, string expected)
+		{
+			var result = input.ToMinSignificantDigits(significantDigits, decimals); //Called like this in XMLPrimaryBusVehicleReport;
+			Assert.AreEqual(expected, result);
+		}
 	}
 }
