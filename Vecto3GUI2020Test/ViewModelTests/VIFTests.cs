@@ -60,7 +60,7 @@ namespace Vecto3GUI2020Test.ViewModelTests
 			//Set Necessary Fields
 			var vehicle =
 				multistagevm.ManufacturingStageViewModel.Vehicle as DeclarationInterimStageBusVehicleViewModel_v2_8;
-			LegislativeClass
+			
 
 			vehicle.ManufacturerAddress = "Address";
 			vehicle.Manufacturer = "Manufacturer";
