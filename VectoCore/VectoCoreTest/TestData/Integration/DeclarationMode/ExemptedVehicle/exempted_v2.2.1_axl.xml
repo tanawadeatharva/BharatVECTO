@@ -14,7 +14,7 @@
 		<Date>2017-02-15T11:00:00Z</Date>
 		<LegislativeClass>N3</LegislativeClass>
 		<VehicleCategory>Tractor</VehicleCategory>
-		<AxleConfiguration>6x2</AxleConfiguration>
+		<AxleConfiguration>4x2</AxleConfiguration>
 		<CurbMassChassis>7100</CurbMassChassis>
 		<GrossVehicleMass>40000</GrossVehicleMass>
 		<ZeroEmissionVehicle>false</ZeroEmissionVehicle>

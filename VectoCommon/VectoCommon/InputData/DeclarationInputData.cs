@@ -137,7 +137,7 @@ namespace TUGraz.VectoCommon.InputData
 
 		bool VocationalVehicle { get; }
 
-		bool SleeperCab { get; }
+		bool? SleeperCab { get; }
 
 		TankSystem? TankSystem { get; }
 

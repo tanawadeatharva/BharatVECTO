@@ -166,7 +166,12 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 		public virtual AxleConfiguration AxleConfiguration
 		{
-			get { return AxleConfigurationHelper.Parse(GetString(XMLNames.Vehicle_AxleConfiguration)); }
+			get
+			{
+				return ElementExists(XMLNames.Vehicle_AxleConfiguration)
+					? AxleConfigurationHelper.Parse(GetString(XMLNames.Vehicle_AxleConfiguration))
+					: AxleConfiguration.AxleConfig_Undefined;
+			}
 		}
 
 		public virtual string ManufacturerAddress
@@ -215,9 +220,14 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 			get { return XmlConvert.ToBoolean(GetString(XMLNames.Vehicle_VocationalVehicle)); }
 		}
 
-		public virtual bool SleeperCab
+		public virtual bool? SleeperCab
 		{
-			get { return XmlConvert.ToBoolean(GetString(XMLNames.Vehicle_SleeperCab)); }
+			get
+			{
+				return ElementExists(XMLNames.Vehicle_SleeperCab)
+					? XmlConvert.ToBoolean(GetString(XMLNames.Vehicle_SleeperCab))
+					: (bool?)null;
+			}
 		}
 
 		public virtual TankSystem? TankSystem
@@ -316,7 +326,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 			get { return false; }
 		}
 
-		public override bool SleeperCab
+		public override bool? SleeperCab
 		{
 			get { return true; }
 		}
@@ -469,9 +479,9 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 			get { return false; }
 		}
 
-		public override bool SleeperCab
+		public override bool? SleeperCab
 		{
-			get { return false; }
+			get { return null; }
 		}
 
 		public override TankSystem? TankSystem
@@ -501,12 +511,12 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 		public override Watt MaxNetPower1
 		{
-			get { return HybridElectricHDV ? GetDouble(XMLNames.Vehicle_MaxNetPower1).SI<Watt>() : null; }
+			get { return ElementExists(XMLNames.Vehicle_MaxNetPower1) ? GetDouble(XMLNames.Vehicle_MaxNetPower1).SI<Watt>() : null; }
 		}
 
 		public override Watt MaxNetPower2
 		{
-			get { return HybridElectricHDV ? GetDouble(XMLNames.Vehicle_MaxNetPower2).SI<Watt>() : null; }
+			get { return ElementExists(XMLNames.Vehicle_MaxNetPower2) ? GetDouble(XMLNames.Vehicle_MaxNetPower2).SI<Watt>() : null; }
 		}
 
 		public override IVehicleComponentsDeclaration Components
@@ -571,6 +581,24 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 			IXMLDeclarationJobInputData jobData, XmlNode xmlNode, string sourceFile) : base(jobData, xmlNode,
 			sourceFile)
 		{
+		}
+
+		public override bool? SleeperCab
+		{
+			get
+			{
+				return ElementExists(XMLNames.Vehicle_SleeperCab) ? XmlConvert.ToBoolean(GetString(XMLNames.Vehicle_SleeperCab)) : (bool?)null; 
+			}
+		}
+
+		public override AxleConfiguration AxleConfiguration
+		{
+			get
+			{
+				return ElementExists(XMLNames.Vehicle_AxleConfiguration)
+					? AxleConfigurationHelper.Parse(GetString(XMLNames.Vehicle_AxleConfiguration))
+					: AxleConfiguration.AxleConfig_Undefined;
+			}
 		}
 	}
 }

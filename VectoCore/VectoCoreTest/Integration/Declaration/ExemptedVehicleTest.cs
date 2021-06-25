@@ -292,7 +292,7 @@ namespace TUGraz.VectoCore.Tests.Integration
 		TestCase(ExemptedSleeperT, null, true, 30000, 20000, false),
 		TestCase(ExemptedSleeperF, null, false, 30000, 20000, false),
 		TestCase(ExemptedPEVMaxNetPower, AxleConfiguration.AxleConfig_4x2, true, 30000, 20000, true),
-		TestCase(ExemptedPEVMaxNetPower, AxleConfiguration.AxleConfig_4x2, null, null, null, true),
+		TestCase(ExemptedPEVMin, null, null, null, null, true),
 
 		TestCase(ExemptedMin_v2, null, null, null, null, false),
 		TestCase(ExemptedAxl_v2, AxleConfiguration.AxleConfig_4x2, null, 30000, 20000, false),
@@ -301,7 +301,7 @@ namespace TUGraz.VectoCore.Tests.Integration
 		TestCase(ExemptedSleeperT_v2, null, true, 30000, 20000, false),
 		TestCase(ExemptedSleeperF_v2, null, false, 30000, 20000, false),
 		TestCase(ExemptedPEVMaxNetPower_v2, AxleConfiguration.AxleConfig_4x2, true, 30000, 20000, true),
-		TestCase(ExemptedPEVMaxNetPower_v2, AxleConfiguration.AxleConfig_4x2, null, null, null, true),
+		TestCase(ExemptedPEVMin_v2, null, null, null, null, true),
 		]
 		public void TestExemptedVehiclesAxleConfSleeperCabMRF(string filename, AxleConfiguration? expectedMrfAxleConf,
 			bool? expectedMrfSleeperCab, double? expectedMaxNetPower1, double? expectedMaxNetPower2, bool zeHDV)
@@ -336,7 +336,48 @@ namespace TUGraz.VectoCore.Tests.Integration
 			var val2 = new XMLValidator(writer.GetReport(ReportType.DeclarationReportCustomerXML).CreateReader());
 			Assert.IsTrue(val2.ValidateXML(XmlDocumentType.CustomerReport));
 
-			Assert.Fail("not fully implemented");
+			var mrf = writer.GetReport(ReportType.DeclarationReportManufacturerXML).Document;
+			Assert.NotNull(mrf);
+
+			var axleConfNode = mrf.XPathSelectElements(XMLHelper.QueryLocalName(XMLNames.Vehicle_AxleConfiguration))
+				.ToArray();
+			if (expectedMrfAxleConf == null) {
+				Assert.AreEqual(0, axleConfNode.Length);
+			} else {
+				Assert.AreEqual(1, axleConfNode.Length, "axleconfiguration missing in mrf");
+				Assert.AreEqual(expectedMrfAxleConf.Value, AxleConfigurationHelper.Parse(axleConfNode.First().Value), "axleconfiguration: incorrect value");
+			}
+
+			var sleeperCabNode = mrf.XPathSelectElements(XMLHelper.QueryLocalName(XMLNames.Vehicle_SleeperCab))
+				.ToArray();
+			if (expectedMrfSleeperCab == null) {
+				Assert.AreEqual(0, sleeperCabNode.Length);
+			} else {
+				Assert.AreEqual(1, sleeperCabNode.Length);
+				Assert.AreEqual(expectedMrfSleeperCab.Value, XmlConvert.ToBoolean(sleeperCabNode.First().Value));
+			}
+
+			var maxNetPower1Node = mrf.XPathSelectElements(XMLHelper.QueryLocalName(XMLNames.Vehicle_MaxNetPower1))
+				.ToArray();
+			if (expectedMaxNetPower1 == null) {
+				Assert.AreEqual(0, maxNetPower1Node.Length);
+			} else {
+				Assert.AreEqual(1, maxNetPower1Node.Length);
+				Assert.AreEqual(expectedMaxNetPower1.Value, maxNetPower1Node.First().Value.ToDouble());
+			}
+
+			var maxNetPower2Node = mrf.XPathSelectElements(XMLHelper.QueryLocalName(XMLNames.Vehicle_MaxNetPower2))
+				.ToArray();
+			if (expectedMaxNetPower2 == null) {
+				Assert.AreEqual(0, maxNetPower2Node.Length);
+			} else {
+				Assert.AreEqual(1, maxNetPower2Node.Length);
+				Assert.AreEqual(expectedMaxNetPower2.Value, maxNetPower2Node.First().Value.ToDouble());
+			}
+
+			var zeNode = mrf.XPathSelectElement(XMLHelper.QueryLocalName(XMLNames.Vehicle_ZeroEmissionVehicle));
+			Assert.NotNull(zeNode);
+			Assert.AreEqual(zeHDV, XmlConvert.ToBoolean(zeNode.Value));
 		}
 
 		private static void SetExemptedParameters(XPathNavigator nav, bool zeroEmission, bool hybrid, bool dualFuel)

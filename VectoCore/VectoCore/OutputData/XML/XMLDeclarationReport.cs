@@ -227,11 +227,18 @@ namespace TUGraz.VectoCore.OutputData.XML
 
 		public override void InitializeReport(VectoRunData modelData)
 		{
-			 WeightingGroup = modelData.Exempted
-				? WeightingGroup.Unknown
-				: DeclarationData.WeightingGroup.Lookup(
-					modelData.VehicleData.VehicleClass, modelData.VehicleData.SleeperCab,
-					modelData.EngineData.RatedPowerDeclared);
+			if (modelData.Exempted) {
+				WeightingGroup = WeightingGroup.Unknown;
+			} else {
+				if (modelData.VehicleData.SleeperCab == null) {
+					throw new VectoException("SleeperCab parameter is required");
+				}
+
+				WeightingGroup = DeclarationData.WeightingGroup.Lookup(
+						modelData.VehicleData.VehicleClass, modelData.VehicleData.SleeperCab.Value,
+						modelData.EngineData.RatedPowerDeclared);
+			}
+
 			_weightingFactors = WeightingGroup == WeightingGroup.Unknown
 				? ZeroWeighting
 				: DeclarationData.WeightingFactors.Lookup(WeightingGroup);

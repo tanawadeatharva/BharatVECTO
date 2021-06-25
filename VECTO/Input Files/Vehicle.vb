@@ -702,7 +702,7 @@ Public Class Vehicle
 	End Get
 	End Property
 
-	Public ReadOnly Property SleeperCab As Boolean Implements IVehicleDeclarationInputData.SleeperCab
+	Public ReadOnly Property SleeperCab As Boolean? Implements IVehicleDeclarationInputData.SleeperCab
 	get
 			Return DeclarationData.Vehicle.SleeperCabDefault
 	End Get
