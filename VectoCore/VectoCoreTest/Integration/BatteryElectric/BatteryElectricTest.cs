@@ -324,7 +324,7 @@ namespace TUGraz.VectoCore.Tests.Integration.BatteryElectric
 
 		[
 			TestCase("LongHaul", 2000, 0.8, 0, TestName = "PEV E3 DriveCycle LongHaul, SoC: 0.8 Payload: 2t P_auxEl: 0kW"),
-			TestCase("RegionalDelivery", 2000, 0.8, 0, TestName = "BPEVEV E3 DriveCycle RegionalDelivery, SoC: 0.8 Payload: 2t P_auxEl: 0kW"),
+			TestCase("RegionalDelivery", 2000, 0.8, 0, TestName = "PEV E3 DriveCycle RegionalDelivery, SoC: 0.8 Payload: 2t P_auxEl: 0kW"),
 			TestCase("UrbanDelivery", 2000, 0.8, 0, TestName = "PEV E3 DriveCycle UrbanDelivery, SoC: 0.8 Payload: 2t P_auxEl: 0kW"),
 			TestCase("Construction", 2000, 0.8, 0, TestName = "PEV E3 DriveCycle Construction, SoC: 0.8 Payload: 2t P_auxEl: 0kW"),
 			TestCase("Urban", 2000, 0.8, 0, TestName = "PEV E3 DriveCycle Urban, SoC: 0.8 Payload: 2t P_auxEl: 0kW"),

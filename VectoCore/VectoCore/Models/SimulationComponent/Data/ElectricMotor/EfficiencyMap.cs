@@ -173,7 +173,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.ElectricMotor
 			return null;
 		}
 
-		protected PerSecond MaxSpeed
+		public PerSecond MaxSpeed
 		{
 			get { return _maxSpeed ?? (_maxSpeed = _efficiencyMapMech2El.Entries.Select(x => x.Y).Max().SI<PerSecond>()); }
 		}

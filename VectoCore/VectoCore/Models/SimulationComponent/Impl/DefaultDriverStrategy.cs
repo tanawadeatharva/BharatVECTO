@@ -707,7 +707,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				: 0.SI<Watt>();
 
 			var emDragLoss = Driver.DataBus.PowertrainInfo.HasElectricMotor
-				? Driver.DataBus.PowertrainInfo.ElectricMotorPositions.Select(x => Driver.DataBus.ElectricMotorInfo(x).DragPower(Driver.DataBus.ElectricMotorInfo(x).ElectricMotorSpeed)).Sum() // Driver.DataBus.ElectricMotorInfo()
+				? Driver.DataBus.PowertrainInfo.ElectricMotorPositions.Select(x => 
+					Driver.DataBus.ElectricMotorInfo(x).DragPower(Driver.DataBus.BatteryInfo.InternalVoltage, Driver.DataBus.ElectricMotorInfo(x).ElectricMotorSpeed)).Sum() // Driver.DataBus.ElectricMotorInfo()
 				: 0.SI<Watt>();
 
 			var gearboxLoss = Driver.DataBus.GearboxInfo?.GearboxLoss() ?? 0.SI<Watt>();

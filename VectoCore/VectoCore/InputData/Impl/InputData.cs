@@ -292,4 +292,16 @@ namespace TUGraz.VectoCore.InputData.Impl
 		public string SimulationToolVersion { get; internal set; }
 		public DateTime Date { get; internal set; }
 	}
+
+	public class ElectricMotorVoltageLevel : IElectricMotorVoltageLevel
+	{
+		#region Implementation of IElectricMotorVoltageLevel
+
+		public Volt VoltageLevel { get; internal set; }
+		public TableData FullLoadCurve { get; internal set; }
+		public TableData DragCurve { get; internal set; }
+		public TableData EfficiencyMap { get; internal set; }
+
+		#endregion
+	}
 }

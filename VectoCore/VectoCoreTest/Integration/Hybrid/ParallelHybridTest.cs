@@ -1182,7 +1182,7 @@ namespace TUGraz.VectoCore.Tests.Integration.Hybrid
 			TestCase(80, 0.5, -5, 0, TestName = "P4 Hybrid ConstantSpeed 80km/h SoC: 0.5, DH 5%"),
 
 			TestCase(30, 0.25, 0, 1000, TestName = "P4 Hybrid ConstantSpeed 30km/h SoC: 0.25, level P_auxEl: 1kW"),
-			TestCase(30, 0.25, 0, 5000, TestName = "P4 Hybrid ConstantSpeed 30km/h SoC: 0.25, level P_auxEl: 5kW"),
+			TestCase(30, 0.25, 0, 3000, TestName = "P4 Hybrid ConstantSpeed 30km/h SoC: 0.25, level P_auxEl: 3kW"),
 		]
 		public void P4HybridConstantSpeed(double vmax, double initialSoC, double slope, double pAuxEl)
 		{
