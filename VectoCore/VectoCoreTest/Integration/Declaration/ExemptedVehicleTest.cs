@@ -46,7 +46,9 @@ using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.InputData.FileIO.XML;
 using TUGraz.VectoCore.InputData.FileIO.XML.Declaration;
 using TUGraz.VectoCore.Models.Simulation.Impl;
+using TUGraz.VectoCore.OutputData;
 using TUGraz.VectoCore.OutputData.FileIO;
+using TUGraz.VectoCore.Tests.Integration.Declaration;
 using TUGraz.VectoCore.Tests.Models.Simulation;
 using TUGraz.VectoCore.Tests.Utils;
 using TUGraz.VectoCore.Utils;
@@ -63,8 +65,8 @@ namespace TUGraz.VectoCore.Tests.Integration
 		const string ExemptedVehicleV2 = @"Testdata\Integration\DeclarationMode\ExemptedVehicle\vecto_vehicle-sample_exempted_v2.xml";
 		const string ExemptedVehicleV2NoHEV = @"Testdata\Integration\DeclarationMode\ExemptedVehicle\vecto_vehicle-sample_exempted_v2_nonHEV.xml";
 
-		private const string ExemptedAxl = @"TestData\Integration\DeclarationMode\ExemptedVehicle\exempted_axl.xml";
 		private const string ExemptedMin = @"TestData\Integration\DeclarationMode\ExemptedVehicle\exempted.xml";
+		private const string ExemptedAxl = @"TestData\Integration\DeclarationMode\ExemptedVehicle\exempted_axl.xml";
 		private const string ExemptedAxlSleeperT = @"TestData\Integration\DeclarationMode\ExemptedVehicle\exempted_axl+sleeperT.xml";
 		private const string ExemptedAxlSleeperF = @"TestData\Integration\DeclarationMode\ExemptedVehicle\exempted_axl+sleeperF.xml";
 		private const string ExemptedSleeperT = @"TestData\Integration\DeclarationMode\ExemptedVehicle\exempted_sleeperT.xml";
@@ -280,6 +282,62 @@ namespace TUGraz.VectoCore.Tests.Integration
 			Assert.IsFalse(File.Exists(monitoringFile));
 		}
 
+
+
+		[
+		TestCase(ExemptedMin, null, null, null, null, false),
+		TestCase(ExemptedAxl, AxleConfiguration.AxleConfig_4x2, null, 30000, 20000, false),
+		TestCase(ExemptedAxlSleeperT, AxleConfiguration.AxleConfig_4x2, true, 30000, 20000, false),
+		TestCase(ExemptedAxlSleeperF, AxleConfiguration.AxleConfig_4x2, false, 30000, 20000, false),
+		TestCase(ExemptedSleeperT, null, true, 30000, 20000, false),
+		TestCase(ExemptedSleeperF, null, false, 30000, 20000, false),
+		TestCase(ExemptedPEVMaxNetPower, AxleConfiguration.AxleConfig_4x2, true, 30000, 20000, true),
+		TestCase(ExemptedPEVMaxNetPower, AxleConfiguration.AxleConfig_4x2, null, null, null, true),
+
+		TestCase(ExemptedMin_v2, null, null, null, null, false),
+		TestCase(ExemptedAxl_v2, AxleConfiguration.AxleConfig_4x2, null, 30000, 20000, false),
+		TestCase(ExemptedAxlSleeperT_v2, AxleConfiguration.AxleConfig_4x2, true, 30000, 20000, false),
+		TestCase(ExemptedAxlSleeperF_v2, AxleConfiguration.AxleConfig_4x2, false, 30000, 20000, false),
+		TestCase(ExemptedSleeperT_v2, null, true, 30000, 20000, false),
+		TestCase(ExemptedSleeperF_v2, null, false, 30000, 20000, false),
+		TestCase(ExemptedPEVMaxNetPower_v2, AxleConfiguration.AxleConfig_4x2, true, 30000, 20000, true),
+		TestCase(ExemptedPEVMaxNetPower_v2, AxleConfiguration.AxleConfig_4x2, null, null, null, true),
+		]
+		public void TestExemptedVehiclesAxleConfSleeperCabMRF(string filename, AxleConfiguration? expectedMrfAxleConf,
+			bool? expectedMrfSleeperCab, double? expectedMaxNetPower1, double? expectedMaxNetPower2, bool zeHDV)
+		{
+			var writer = new MockDeclarationWriter(filename);
+
+
+			var inputData = xmlInputReader.CreateDeclaration(filename);
+
+			var factory = new SimulatorFactory(ExecutionMode.Declaration, inputData, writer) {
+				WriteModalResults = true,
+				ActualModalData = true
+			};
+			var jobContainer = new JobContainer(new MockSumWriter());
+
+			var runs = factory.SimulationRuns().ToList();
+			Assert.AreEqual(1, runs.Count);
+			foreach (var run in runs) {
+				jobContainer.AddRun(run);
+			}
+			//jobContainer.AddRuns(factory);
+
+			jobContainer.Execute();
+			jobContainer.WaitFinished();
+			var progress = jobContainer.GetProgress();
+			Assert.IsTrue(progress.All(r => r.Value.Success), string.Concat<Exception>(progress.Select(r => r.Value.Error)));
+
+
+			var validator = new XMLValidator(writer.GetReport(ReportType.DeclarationReportManufacturerXML).CreateReader());
+			Assert.IsTrue(validator.ValidateXML(XmlDocumentType.ManufacturerReport));
+
+			var val2 = new XMLValidator(writer.GetReport(ReportType.DeclarationReportCustomerXML).CreateReader());
+			Assert.IsTrue(val2.ValidateXML(XmlDocumentType.CustomerReport));
+
+			Assert.Fail("not fully implemented");
+		}
 
 		private static void SetExemptedParameters(XPathNavigator nav, bool zeroEmission, bool hybrid, bool dualFuel)
 		{
