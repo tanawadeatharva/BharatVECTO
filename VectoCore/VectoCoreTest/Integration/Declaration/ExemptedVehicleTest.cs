@@ -63,6 +63,27 @@ namespace TUGraz.VectoCore.Tests.Integration
 		const string ExemptedVehicleV2 = @"Testdata\Integration\DeclarationMode\ExemptedVehicle\vecto_vehicle-sample_exempted_v2.xml";
 		const string ExemptedVehicleV2NoHEV = @"Testdata\Integration\DeclarationMode\ExemptedVehicle\vecto_vehicle-sample_exempted_v2_nonHEV.xml";
 
+		private const string ExemptedAxl = @"TestData\Integration\DeclarationMode\ExemptedVehicle\exempted_axl.xml";
+		private const string ExemptedMin = @"TestData\Integration\DeclarationMode\ExemptedVehicle\exempted.xml";
+		private const string ExemptedAxlSleeperT = @"TestData\Integration\DeclarationMode\ExemptedVehicle\exempted_axl+sleeperT.xml";
+		private const string ExemptedAxlSleeperF = @"TestData\Integration\DeclarationMode\ExemptedVehicle\exempted_axl+sleeperF.xml";
+		private const string ExemptedSleeperT = @"TestData\Integration\DeclarationMode\ExemptedVehicle\exempted_sleeperT.xml";
+		private const string ExemptedSleeperF = @"TestData\Integration\DeclarationMode\ExemptedVehicle\exempted_sleeperF.xml";
+		private const string ExemptedPEVMaxNetPower = @"TestData\Integration\DeclarationMode\ExemptedVehicle\exempted_PEV.xml";
+		private const string ExemptedPEVMin = @"TestData\Integration\DeclarationMode\ExemptedVehicle\exempted_PEV_2.xml";
+
+		private const string ExemptedMin_v2 = @"TestData\Integration\DeclarationMode\ExemptedVehicle\exempted_v2.2.1.xml";
+
+		private const string ExemptedAxl_v2 = @"TestData\Integration\DeclarationMode\ExemptedVehicle\exempted_v2.2.1_axl.xml";
+		private const string ExemptedAxlSleeperT_v2 = @"TestData\Integration\DeclarationMode\ExemptedVehicle\exempted_v2.2.1_axl+SleeperT.xml";
+		private const string ExemptedAxlSleeperF_v2 = @"TestData\Integration\DeclarationMode\ExemptedVehicle\exempted_v2.2.1_axl+SleeperF.xml";
+		private const string ExemptedSleeperT_v2 = @"TestData\Integration\DeclarationMode\ExemptedVehicle\exempted_v2.2.1_sleeperT.xml";
+		private const string ExemptedSleeperF_v2 = @"TestData\Integration\DeclarationMode\ExemptedVehicle\exempted_v2.2.1_sleeperF.xml";
+		private const string ExemptedPEVMaxNetPower_v2 = @"TestData\Integration\DeclarationMode\ExemptedVehicle\exempted_v2.2.1_PEV.xml";
+		private const string ExemptedPEVMin_v2 = @"TestData\Integration\DeclarationMode\ExemptedVehicle\exempted_v2.2.1_PEV_2.xml";
+
+
+
 		protected IXMLInputDataReader xmlInputReader;
 		private IKernel _kernel;
 
