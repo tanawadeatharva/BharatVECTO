@@ -30,8 +30,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		protected internal Joule ThermalBuffer = 0.SI<Joule>();
 		protected internal bool DeRatingActive = false;
-		private bool BatteryElectricPowertrain;
-
+		
 		public Joule OverloadBuffer { get; }
 		public NewtonMeter ContinuousTorque { get; }
 
@@ -116,9 +115,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			PreviousState.DrivetrainSpeed = outAngularVelocity;
 			PreviousState.DrivetrainOutTorque = outTorque;
-
-			BatteryElectricPowertrain = !DataBus.PowertrainInfo.HasCombustionEngine &&
-										DataBus.PowertrainInfo.ElectricMotorPositions.All(x => x.IsBatteryElectric());
 
 			if (NextComponent == null) {
 				return new ResponseSuccess(this) {

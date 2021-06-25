@@ -1936,7 +1936,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 				for (var u = stepSize; u <= 1.0; u += stepSize) {
 					var emTorque = firstResponse.ElectricMotor.MaxRecuperationTorque * u;
 					if (!(emTorque).IsBetween(
-						firstResponse.ElectricMotor.MaxRecuperationTorque, firstResponse.ElectricMotor.MaxDriveTorque)) {
+						firstResponse.ElectricMotor.MaxRecuperationTorque, firstResponse.ElectricMotor.MaxDriveTorque ?? 0.SI<NewtonMeter>())) {
 						continue;
 					}
 

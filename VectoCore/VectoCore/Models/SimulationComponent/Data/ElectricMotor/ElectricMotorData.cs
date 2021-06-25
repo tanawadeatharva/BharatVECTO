@@ -5,6 +5,7 @@ using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.ElectricMotor;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox;
 using TUGraz.VectoCore.Models.SimulationComponent.Impl;
+using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 {
@@ -54,7 +55,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 			get
 			{
 				return _maxSpeed ?? (_maxSpeed = VoltageLevels
-					.Min(v => v.FullLoadCurve.FullLoadEntries.MaxBy(x => x.MotorSpeed).MotorSpeed));
+					.Min(v => v.EfficiencyMap.MaxSpeed));
 			}
 		}
 
@@ -83,12 +84,20 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 			var retVal = VectoMath.Interpolate(tuple.Item1.Voltage, tuple.Item2.Voltage,
 				r1, r2, voltage);
 			var elPwr = LookupElectricPower(voltage, avgSpeed, retVal, true);
-			if (elPwr.ElectricalPower != null && electricPower.IsEqual(elPwr.ElectricalPower)) {
+			if (elPwr.ElectricalPower != null && electricPower.IsEqual(elPwr.ElectricalPower, 1e-3.SI<Watt>())) {
 				return retVal;
 			}
 
+			var searchResult = SearchAlgorithm.Search(retVal, electricPower - elPwr.ElectricalPower,
+				interval: 10.SI<NewtonMeter>(), 
+				getYValue: x => (Watt)x,
+				evaluateFunction: x => LookupElectricPower(voltage, avgSpeed, x, true).ElectricalPower,
+				criterion: x => ((Watt)x).Value()
+			);
+
+			return searchResult;
 			//return null;
-			throw new NotImplementedException("EfficientyMapLookupTorque");
+			//throw new NotImplementedException("EfficientyMapLookupTorque");
 		}
 
 		public EfficiencyMap.EfficiencyResult LookupElectricPower(Volt voltage, PerSecond avgSpeed, NewtonMeter torque, bool allowExtrapolation = false)

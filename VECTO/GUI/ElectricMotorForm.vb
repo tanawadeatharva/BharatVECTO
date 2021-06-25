@@ -186,12 +186,14 @@ Public Class ElectricMotorForm
         tbDragTorqueHi.Text = GetRelativePath(voltageLevelHigh.DragCurve.Source, basePath)
         tbMaxTorqueHi.Text = GetRelativePath(voltageLevelHigh.FullLoadCurve.Source, basePath)
         tbMapHi.Text = GetRelativePath(voltageLevelHigh.EfficiencyMap.Source, basePath)
+        tbVoltageHi.Text = voltageLevelHigh.VoltageLevel.Value().ToGUIFormat()
 
         Dim voltageLevelLow As IElectricMotorVoltageLevel = engine.VoltageLevels.MinBy(function(level) level.VoltageLevel.Value())
 
         tbDragTorqueLow.Text = GetRelativePath(voltageLevelLow.DragCurve.Source, basePath)
         tbMaxTorqueLow.Text = GetRelativePath(voltageLevelLow.FullLoadCurve.Source, basePath)
         tbMapLow.Text = GetRelativePath(voltageLevelLow.EfficiencyMap.Source, basePath)
+        tbVoltageLow.Text = voltageLevelLow.VoltageLevel.Value().ToGUIFormat()
         
         DeclInit()
 
@@ -234,9 +236,15 @@ Public Class ElectricMotorForm
         em.ContTq = tbContTq.Text.ToDouble(0)
         em.OverloadRecoveryFactor = tbOverloadRecoveryFactor.Text.ToDouble(0)
 
+        em.PathMaxTorqueLow = tbMaxTorqueLow.Text
+        em.PathDragLow = tbDragTorqueLow.Text
+        em.PathMapLow = tbMapLow.Text
+        em.VoltageLevelLow = tbVoltageLow.Text.ToDouble(0)
+
         em.PathMaxTorqueHi = tbMaxTorqueHi.Text
         em.PathDragHi = tbDragTorqueHi.Text
         em.PathMapHi = tbMapHi.Text
+        em.VoltageLevelHigh = tbVoltageHi.Text.ToDouble(0)
 
         If Not em.SaveFile Then
             MsgBox("Cannot save to " & file, MsgBoxStyle.Critical)
