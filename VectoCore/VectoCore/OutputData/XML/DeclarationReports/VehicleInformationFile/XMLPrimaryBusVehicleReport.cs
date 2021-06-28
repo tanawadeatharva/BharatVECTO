@@ -345,7 +345,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 					new XElement(tns + XMLNames.Bus_SizeOfAirSupply, supply.CompressorSize),
 					new XElement(tns + XMLNames.CompressorDrive, supply.CompressorDrive.GetLabel()),
 					new XElement(tns + XMLNames.Vehicle_Clutch, supply.Clutch),
-					new XElement(tns + XMLNames.Bus_CompressorRatio, supply.Ratio.ToXMLFormat(3)),
+					new XElement(tns + XMLNames.Bus_CompressorRatio, supply.Ratio.ToMinSignificantDigits(3,3)),
 					new XElement(tns + XMLNames.Bus_SmartCompressionSystem, supply.SmartAirCompression),
 					new XElement(tns + XMLNames.Bus_SmartRegenerationSystem, supply.SmartRegeneration),
 					new XElement(tns + XMLNames.Bus_AirsuspensionControl, GetXMLAirsuspensionControl(consumer.AirsuspensionControl)),
@@ -583,14 +583,14 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 						new XAttribute(XMLNames.Report_Results_Unit_Attr, "MJ/km"),
 						(result.FuelConsumptionFinal[fuel.FuelType].EnergyDemand /
 						result.Distance.ConvertToKiloMeter() / 1e6)
-						.Value().ToXMLFormat( 5)));
+						.Value().ToMinSignificantDigits(5, 5)));
 				retVal.Add(fcResult);
 			}
 
 			retVal.Add(
 				new XElement(
 					tns + XMLNames.Report_Results_CO2, new XAttribute(XMLNames.Report_Results_Unit_Attr, "g/km"),
-					(result.CO2Total.ConvertToGramm() / result.Distance.ConvertToKiloMeter()).ToXMLFormat(2)));
+					(result.CO2Total.ConvertToGramm() / result.Distance.ConvertToKiloMeter()).ToMinSignificantDigits(3, 2)));
 
 			return retVal.Cast<object>().ToArray();
 		}
