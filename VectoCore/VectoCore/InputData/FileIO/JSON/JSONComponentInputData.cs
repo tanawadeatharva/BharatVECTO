@@ -349,7 +349,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			get { return DeclarationData.Vehicle.VocationalVehicleDefault; }
 		}
 
-		public bool SleeperCab
+		public bool? SleeperCab
 		{
 			get { return DeclarationData.Vehicle.SleeperCabDefault; }
 		}
