@@ -220,7 +220,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 					XMLHelper.ValueAsUnit(result.TotalVehicleMass, XMLNames.Unit_kg)),
 				new XElement(tns + XMLNames.Report_ResultEntry_Payload, XMLHelper.ValueAsUnit(result.Payload, XMLNames.Unit_kg)),
 				result.PassengerCount.HasValue && result.PassengerCount.Value > 0
-					? new XElement(tns + "PassengerCount", result.PassengerCount.Value.ToMinSignificantDigits(3, 1))
+					? new XElement(tns + "PassengerCount", result.PassengerCount.Value.ToXMLFormat(3, 1))
 					: null,
 				new XElement(tns + XMLNames.Report_Result_FuelMode,
 					result.FuelData.Count > 1 ? XMLNames.Report_Result_FuelMode_Val_Dual : XMLNames.Report_Result_FuelMode_Val_Single),
@@ -259,7 +259,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 						new XAttribute(XMLNames.Report_Results_Unit_Attr, XMLNames.Unit_t),
 						_weightedPayload.ConvertToTon().ToXMLFormat(3)
 					),
-					_passengerCount > 0 ? new XElement(tns + "AveragePAssengerCount", _passengerCount.ToMinSignificantDigits(2)) : null
+					_passengerCount > 0 ? new XElement(tns + "AveragePassengerCount", _passengerCount.ToXMLFormat(2)) : null
 				)
 				: null;
 			results.Add(summary);
