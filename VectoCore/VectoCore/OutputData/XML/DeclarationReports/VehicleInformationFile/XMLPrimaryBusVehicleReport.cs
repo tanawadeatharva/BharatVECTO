@@ -342,15 +342,15 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 		private XElement GetPneumaticSystem(IPneumaticSupplyDeclarationData supply, IPneumaticConsumersDeclarationData consumer)
 		{
 			return new XElement(tns + XMLNames.BusAux_PneumaticSystem,
-					new XElement(tns + XMLNames.Bus_SizeOfAirSupply, supply.CompressorSize),
-					new XElement(tns + XMLNames.CompressorDrive, supply.CompressorDrive.GetLabel()),
-					new XElement(tns + XMLNames.Vehicle_Clutch, supply.Clutch),
-					new XElement(tns + XMLNames.Bus_CompressorRatio, supply.Ratio.ToMinSignificantDigits(3,3)),
-					new XElement(tns + XMLNames.Bus_SmartCompressionSystem, supply.SmartAirCompression),
-					new XElement(tns + XMLNames.Bus_SmartRegenerationSystem, supply.SmartRegeneration),
-					new XElement(tns + XMLNames.Bus_AirsuspensionControl, GetXMLAirsuspensionControl(consumer.AirsuspensionControl)),
-					new XElement(tns + XMLNames.BusAux_PneumaticSystem_SCRReagentDosing, consumer.AdBlueDosing == ConsumerTechnology.Pneumatically)
-				);
+				new XElement(tns + XMLNames.Bus_SizeOfAirSupply, supply.CompressorSize),
+				new XElement(tns + XMLNames.CompressorDrive, supply.CompressorDrive.GetLabel()),
+				new XElement(tns + XMLNames.Vehicle_Clutch, supply.Clutch),
+				new XElement(tns + XMLNames.Bus_CompressorRatio, supply.Ratio.ToXMLFormat(3)),
+				new XElement(tns + XMLNames.Bus_SmartCompressionSystem, supply.SmartAirCompression),
+				new XElement(tns + XMLNames.Bus_SmartRegenerationSystem, supply.SmartRegeneration),
+				new XElement(tns + XMLNames.Bus_AirsuspensionControl, GetXMLAirsuspensionControl(consumer.AirsuspensionControl)),
+				new XElement(tns + XMLNames.BusAux_PneumaticSystem_SCRReagentDosing, consumer.AdBlueDosing == ConsumerTechnology.Pneumatically)
+			);
 		}
 
 		private string GetXMLAirsuspensionControl(ConsumerTechnology airsuspensionControl)
