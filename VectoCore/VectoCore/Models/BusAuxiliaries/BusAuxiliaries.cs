@@ -349,7 +349,7 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries
 		
 
 
-        public virtual void CycleStep(Second seconds, double essFactor)
+        public virtual void CycleStep(Second seconds)
         {
             try {
                 //M9.CycleStep(seconds);
