@@ -5,8 +5,11 @@ using TUGraz.VectoCommon.BusAuxiliaries;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
+using TUGraz.VectoCore.Models.BusAuxiliaries;
+using TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.Pneumatics;
 using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation.Data;
+using TUGraz.VectoCore.Models.SimulationComponent.Data;
 
 namespace TUGraz.VectoCore.OutputData
 {
@@ -20,45 +23,13 @@ namespace TUGraz.VectoCore.OutputData
 			var r = new CorrectedModalData();
 			var duration = modData.Duration;
 			var distance = modData.Distance;
-			var essParams = runData.DriverData.EngineStopStart;
-
-			var entriesAuxICEStandstill = modData.GetValues(x => new
-			{
-				dt = x.Field<Second>(ModalResultField.simulationInterval.GetName()), 
-				P_off = x.Field<Watt>(ModalResultField.P_aux_ESS_mech_ice_off.GetName()) ?? 0.SI<Watt>(),
-				P_on = x.Field<Watt>(ModalResultField.P_aux_ESS_mech_ice_on.GetName()) ?? 0.SI<Watt>(),
-				v = x.Field<MeterPerSecond>(ModalResultField.v_act.GetName()),
-				IceOn = x.Field<bool>(ModalResultField.ICEOn.GetName())
-			}).Where(x => x.v != null && x.v.IsEqual(0) && !x.IceOn).ToList();
-			var entriesAuxICEDriving = modData.GetValues(x => new {
-				dt = x.Field<Second>(ModalResultField.simulationInterval.GetName()),
-				P_off = x.Field<Watt>(ModalResultField.P_aux_ESS_mech_ice_off.GetName()) ?? 0.SI<Watt>(),
-				P_on = x.Field<Watt>(ModalResultField.P_aux_ESS_mech_ice_on.GetName()) ?? 0.SI<Watt>(),
-				v = x.Field<MeterPerSecond>(ModalResultField.v_act.GetName()),
-				IceOn = x.Field<bool>(ModalResultField.ICEOn.GetName())
-			}).Where(x => x.v != null && !x.v.IsEqual(0) && !x.IceOn).ToList();
-
-			r.ICEOffTimeStandstill = entriesAuxICEStandstill.Sum(x => x.dt) ?? 0.SI<Second>();
-			r.EnergyAuxICEOffStandstill = entriesAuxICEStandstill.Sum(x => x.P_off * x.dt) ?? 0.SI<WattSecond>(); 
-			r.EnergyAuxICEOnStandstill = entriesAuxICEStandstill.Sum(x => x.P_on * x.dt) ?? 0.SI<WattSecond>();
-				
-			r.ICEOffTimeDriving = entriesAuxICEDriving.Sum(x => x.dt) ?? 0.SI<Second>();
-			r.EnergyAuxICEOffDriving = entriesAuxICEDriving.Sum(x => x.P_off * x.dt) ?? 0.SI<WattSecond>();
-			r.EnergyPowerICEOnDriving = entriesAuxICEDriving.Sum(x => x.P_on * x.dt) ?? 0.SI<WattSecond>();
-
 			
-			r.WorkWHREl = modData.TimeIntegral<WattSecond>(ModalResultField.P_WHR_el_corr);
-			r.WorkWHRElMech = -r.WorkWHREl / DeclarationData.AlternaterEfficiency;
-			r.WorkWHRMech = -modData.TimeIntegral<WattSecond>(ModalResultField.P_WHR_mech_corr);
-			
+			SetMissingEnergyICEOFf(modData, r);
+
+			SetWHRWork(modData, runData, r);
+
 			if (runData.BusAuxiliaries != null) {
-				var workBusAuxPSCompOff = modData.EnergyPneumaticCompressorPowerOff();
-				var workBusAuxPSCompOn = modData.EnergyPneumaticCompressorAlwaysOn();
-				var airBusAuxPSON = modData.AirGeneratedAlwaysOn();
-				var deltaAir = modData.AirConsumed() - modData.AirGenerated();
-
-				var kAir = airBusAuxPSON.IsEqual(0) ? 0.SI(Unit.SI.Watt.Second.Per.Cubic.Meter) :(workBusAuxPSCompOn - workBusAuxPSCompOff) / (airBusAuxPSON - 0.SI<NormLiter>());
-				r.WorkBusAuxPSCorr = (kAir * deltaAir).Cast<WattSecond>();
+				SetBusAuxMissingPSWork(modData, runData, r);
 
 				var workBusAuxES = modData.EnergyBusAuxESConsumed() - modData.EnergyBusAuxESGenerated();
 				r.WorkBusAuxESMech = workBusAuxES /
@@ -70,73 +41,20 @@ namespace TUGraz.VectoCore.OutputData
 				r.WorkBusAuxESMech = 0.SI<WattSecond>();
 			}
 
-			var engineWasteheatSum = modData.FuelData.Aggregate(
-				0.SI<Joule>(),
-				(current, fuel) => current + modData.TotalFuelConsumption(ModalResultField.FCFinal, fuel) *
-					fuel.LowerHeatingValueVecto);
 
 			r.EnergyDCDCMissing = 0.SI<WattSecond>();
 			if (runData.BusAuxiliaries != null && runData.BusAuxiliaries.ElectricalUserInputsConfig.ConnectESToREESS) {
-				// either case C1, C2a, or C3a
-				var missingDCDCEnergy = modData.TimeIntegral<WattSecond>(ModalResultField.P_DCDC_missing);
-				if (runData.BusAuxiliaries.ElectricalUserInputsConfig.AlternatorType == AlternatorType.Smart) {
-					// case C3a
-					if (runData.ElectricMachinesData.Count != 1) {
-						throw new VectoException("exactly 1 electric machine is required. got {0} ({1})",
-							runData.ElectricMachinesData.Count,
-							string.Join(",", runData.ElectricMachinesData.Select(x => x.Item1.ToString())));
-					}
-					var emPos = runData.ElectricMachinesData.First().Item1;
-					var averageEmEfficiencyCharging = modData.ElectricMotorEfficiencyGenerate(emPos);
-					r.EnergyDCDCMissing = missingDCDCEnergy /
-										runData.BusAuxiliaries.ElectricalUserInputsConfig.DCDCEfficiency /
-										averageEmEfficiencyCharging;
-				} else {
-					// case C1, C2a
-					r.EnergyDCDCMissing = missingDCDCEnergy / DeclarationData.AlternaterEfficiency;
-				}
+				SetMissingDCDCEnergy(modData, runData, r);
 			}
 
-			r.AuxHeaterDemand = modData.AuxHeaterDemandCalc == null
-				? 0.SI<Joule>()
-				: modData.AuxHeaterDemandCalc(duration, engineWasteheatSum);
+			SetAuxHeaterDemand(modData, r, duration);
 
 			var kilogramCO2PerMeter = 0.SI<KilogramPerMeter>();
 
 			var firstFuel = true;
 			foreach (var fuel in modData.FuelData) {
-				var engFuel = runData.EngineData.Fuels.First(x => x.FuelData.Equals(fuel));
-				var f = new FuelConsumptionCorrection();
-				f.Fuel = fuel;
-				f.Distance = distance != null && distance.IsGreater(0) ? distance : null;
-				f.Duration = duration != null && duration.IsGreater(0) ? duration : null;
-
-				f.EngineLineCorrectionFactor = modData.EngineLineCorrectionFactor(fuel);
-				f.VehicleLine = modData.VehicleLineSlope(fuel);
-
-				f.FcModSum = modData.TotalFuelConsumption(ModalResultField.FCFinal, fuel);
-
-				var fcIceOnAuxStandstill = engFuel.ConsumptionMap.GetFuelConsumptionValue(
-					r.AvgAuxPowerICEOnStandstill / runData.EngineData.IdleSpeed, runData.EngineData.IdleSpeed);
-				var fcIceOnAuxDriving = engFuel.ConsumptionMap.GetFuelConsumptionValue(
-					r.AvgAuxPowerICEOnDriving / runData.EngineData.IdleSpeed, runData.EngineData.IdleSpeed);
-
-				f.FcESS_EngineStart = f.EngineLineCorrectionFactor * modData.WorkEngineStart();
-				f.FcESS_AuxStandstill_ICEOff = r.EnergyAuxICEOffStandstill * f.EngineLineCorrectionFactor *
-												essParams.UtilityFactorStandstill;
-				f.FcESS_AuxStandstill_ICEOn = fcIceOnAuxStandstill * r.ICEOffTimeStandstill *
-											(1 - essParams.UtilityFactorStandstill);
-				f.FcESS_AuxDriving_ICEOn = r.EnergyAuxICEOffDriving * f.EngineLineCorrectionFactor *
-											essParams.UtilityFactorDriving;
-				f.FcESS_AuxDriving_ICEOff = fcIceOnAuxDriving * r.ICEOffTimeDriving *
-											(1 - essParams.UtilityFactorDriving);
-				f.FcESS_DCDCMissing =
-					r.EnergyDCDCMissing * f.EngineLineCorrectionFactor * essParams.UtilityFactorStandstill;
-
-				f.FcBusAuxPs = f.EngineLineCorrectionFactor * r.WorkBusAuxPSCorr;
-				f.FcBusAuxEs =  f.EngineLineCorrectionFactor * r.WorkBusAuxESMech;
-				f.FcWHR =  f.EngineLineCorrectionFactor * r.WorkWHR;
-				f.FcAuxHtr = 0.SI<Kilogram>();
+				
+				var f = SetFuelConsumptionCorrection(modData, runData, r, fuel);
 				if (firstFuel) {
 					firstFuel = false;
 					f.FcAuxHtr = r.AuxHeaterDemand / fuel.LowerHeatingValueVecto;
@@ -146,12 +64,169 @@ namespace TUGraz.VectoCore.OutputData
 					? 0.SI<KilogramPerMeter>()
 					: f.FcFinal * fuel.CO2PerFuelWeight / distance;
 				
-				//--
 				r.FuelCorrection[fuel.FuelType] = f;
 			}
 
 			r.KilogramCO2PerMeter = kilogramCO2PerMeter;
 			return r;
+		}
+
+		private static FuelConsumptionCorrection SetFuelConsumptionCorrection(IModalDataContainer modData, VectoRunData runData,
+			CorrectedModalData r, IFuelProperties fuel)
+		{
+			var duration = modData.Duration;
+			var distance = modData.Distance;
+			var essParams = runData.DriverData.EngineStopStart;
+			var engFuel = runData.EngineData.Fuels.First(x => x.FuelData.Equals(fuel));
+
+			var fcIceIdle = engFuel.ConsumptionMap.GetFuelConsumptionValue(
+											0.SI<NewtonMeter>(),
+											runData.EngineData.IdleSpeed) *
+										engFuel.FuelConsumptionCorrectionFactor;
+			
+
+			var engLine = modData.EngineLineCorrectionFactor(fuel);
+
+			var f = new FuelConsumptionCorrection {
+				Fuel = fuel,
+				Distance = distance != null && distance.IsGreater(0) ? distance : null,
+				Duration = duration != null && duration.IsGreater(0) ? duration : null,
+				EngineLineCorrectionFactor = engLine,
+				VehicleLine = modData.VehicleLineSlope(fuel),
+				FcModSum = modData.TotalFuelConsumption(ModalResultField.FCFinal, fuel),
+				FcESS_EngineStart = engLine * modData.WorkEngineStart(),
+
+				FcESS_AuxStandstill_ICEOff = r.EnergyAuxICEOffStandstill * engLine *
+											essParams.UtilityFactorStandstill,
+				FcESS_AuxStandstill_ICEOn = r.EnergyAuxICEOnStandstill * engLine * (1 - essParams.UtilityFactorStandstill) + 
+											fcIceIdle * r.ICEOffTimeStandstill * (1 - essParams.UtilityFactorStandstill),
+
+				FcESS_AuxDriving_ICEOff = r.EnergyAuxICEOffDriving * engLine * essParams.UtilityFactorDriving,
+				FcESS_AuxDriving_ICEOn = r.EnergyAuxICEOnDriving * engLine * (1 - essParams.UtilityFactorDriving) +
+										fcIceIdle * r.ICEOffTimeDriving * (1 - essParams.UtilityFactorDriving),
+
+				FcESS_DCDCMissing = r.EnergyDCDCMissing * engLine * essParams.UtilityFactorStandstill,
+				FcBusAuxPs = engLine * r.WorkBusAuxPSCorr,
+				FcBusAuxEs = engLine * r.WorkBusAuxESMech,
+				FcWHR = engLine * r.WorkWHR,
+				FcAuxHtr = 0.SI<Kilogram>()
+			};
+
+			return f;
+		}
+
+		private static void SetAuxHeaterDemand(IModalDataContainer modData, CorrectedModalData r, Second duration)
+		{
+			var engineWasteheatSum = modData.FuelData.Aggregate(
+				0.SI<Joule>(),
+				(current, fuel) => current + modData.TotalFuelConsumption(ModalResultField.FCFinal, fuel) *
+					fuel.LowerHeatingValueVecto);
+			r.AuxHeaterDemand = modData.AuxHeaterDemandCalc == null
+				? 0.SI<Joule>()
+				: modData.AuxHeaterDemandCalc(duration, engineWasteheatSum);
+		}
+
+		private static void SetMissingDCDCEnergy(IModalDataContainer modData, VectoRunData runData, CorrectedModalData r)
+		{
+			// either case C1, C2a, or C3a
+			var missingDCDCEnergy = modData.TimeIntegral<WattSecond>(ModalResultField.P_DCDC_missing);
+			if (runData.BusAuxiliaries.ElectricalUserInputsConfig.AlternatorType == AlternatorType.Smart) {
+				// case C3a
+				if (runData.ElectricMachinesData.Count != 1) {
+					throw new VectoException("exactly 1 electric machine is required. got {0} ({1})",
+						runData.ElectricMachinesData.Count,
+						string.Join(",", runData.ElectricMachinesData.Select(x => x.Item1.ToString())));
+				}
+
+				var emPos = runData.ElectricMachinesData.First().Item1;
+				var averageEmEfficiencyCharging = modData.ElectricMotorEfficiencyGenerate(emPos);
+				r.EnergyDCDCMissing = missingDCDCEnergy /
+									runData.BusAuxiliaries.ElectricalUserInputsConfig.DCDCEfficiency /
+									averageEmEfficiencyCharging;
+			} else {
+				// case C1, C2a
+				r.EnergyDCDCMissing = missingDCDCEnergy / DeclarationData.AlternaterEfficiency;
+			}
+		}
+
+		private static void SetBusAuxMissingPSWork(IModalDataContainer modData, VectoRunData runData, CorrectedModalData r)
+		{
+			var actuations = new Actuations() {
+				Braking = runData.BusAuxiliaries.Actuations.Braking,
+				ParkBrakeAndDoors = runData.BusAuxiliaries.Actuations.ParkBrakeAndDoors,
+				Kneeling = runData.BusAuxiliaries.Actuations.Kneeling,
+				CycleTime = modData.Duration
+			};
+			var airDemand = M03Impl.TotalAirDemandCalculation(runData.BusAuxiliaries, actuations);
+
+			var deltaAir = airDemand - modData.AirGenerated();
+
+			var nonSmartAirGen = modData.GetValues(x => new {
+				dt = x.Field<Second>(ModalResultField.simulationInterval.GetName()),
+				airConsumed = x.Field<NormLiter>(ModalResultField.Nl_busAux_PS_consumer.GetName()),
+				airGenerated = x.Field<NormLiter>(ModalResultField.Nl_busAux_PS_generated.GetName()),
+				P_compOff = x.Field<Watt>(ModalResultField.P_busAux_PS_generated_dragOnly.GetName()),
+				P_compOn = x.Field<Watt>(ModalResultField.P_busAux_PS_generated_alwaysOn.GetName()),
+				Nl_alwaysOn = x.Field<NormLiter>(ModalResultField.Nl_busAux_PS_generated_alwaysOn.GetName())
+			}).Where(x => x.airConsumed.IsEqual(x.airGenerated)).ToArray();
+
+			var workBusAuxPSCompOff = nonSmartAirGen.Sum(x => x.P_compOff * x.dt);
+			var workBusAuxPSCompOn = nonSmartAirGen.Sum(x => x.P_compOn * x.dt);
+			var airBusAuxPSON = nonSmartAirGen.Sum(x => x.Nl_alwaysOn);
+
+			var kAir = airBusAuxPSON.IsEqual(0)
+				? 0.SI(Unit.SI.Watt.Second.Per.Cubic.Meter)
+				: (workBusAuxPSCompOn - workBusAuxPSCompOff) / (airBusAuxPSON - 0.SI<NormLiter>());
+			r.WorkBusAuxPSCorr = (kAir * deltaAir).Cast<WattSecond>();
+		}
+
+		private static void SetMissingEnergyICEOFf(IModalDataContainer modData, CorrectedModalData r)
+		{
+			var entriesAuxICEStandstill = modData.GetValues(x => new {
+				dt = x.Field<Second>(ModalResultField.simulationInterval.GetName()),
+				P_off = x.Field<Watt>(ModalResultField.P_aux_ESS_mech_ice_off.GetName()) ?? 0.SI<Watt>(),
+				P_on = x.Field<Watt>(ModalResultField.P_aux_ESS_mech_ice_on.GetName()) ?? 0.SI<Watt>(),
+				v = x.Field<MeterPerSecond>(ModalResultField.v_act.GetName()),
+				IceOn = x.Field<bool>(ModalResultField.ICEOn.GetName())
+			}).Where(x => x.v != null && x.v.IsEqual(0) && !x.IceOn).ToArray();
+
+			var entriesAuxICEDriving = modData.GetValues(x => new {
+				dt = x.Field<Second>(ModalResultField.simulationInterval.GetName()),
+				P_off = x.Field<Watt>(ModalResultField.P_aux_ESS_mech_ice_off.GetName()) ?? 0.SI<Watt>(),
+				P_on = x.Field<Watt>(ModalResultField.P_aux_ESS_mech_ice_on.GetName()) ?? 0.SI<Watt>(),
+				v = x.Field<MeterPerSecond>(ModalResultField.v_act.GetName()),
+				IceOn = x.Field<bool>(ModalResultField.ICEOn.GetName())
+			}).Where(x => x.v != null && !x.v.IsEqual(0) && !x.IceOn).ToArray();
+
+			r.ICEOffTimeStandstill = entriesAuxICEStandstill.Sum(x => x.dt) ?? 0.SI<Second>();
+
+			r.EnergyAuxICEOffStandstill = entriesAuxICEStandstill.Sum(x => x.P_off * x.dt) ?? 0.SI<WattSecond>();
+			r.EnergyAuxICEOnStandstill = entriesAuxICEStandstill.Sum(x => x.P_on * x.dt) ?? 0.SI<WattSecond>();
+
+			r.ICEOffTimeDriving = entriesAuxICEDriving.Sum(x => x.dt) ?? 0.SI<Second>();
+
+			r.EnergyAuxICEOffDriving = entriesAuxICEDriving.Sum(x => x.P_off * x.dt) ?? 0.SI<WattSecond>();
+			r.EnergyAuxICEOnDriving = entriesAuxICEDriving.Sum(x => x.P_on * x.dt) ?? 0.SI<WattSecond>();
+		}
+
+		private static void SetWHRWork(IModalDataContainer modData, VectoRunData runData, CorrectedModalData r)
+		{
+			r.WorkWHREl = modData.TimeIntegral<WattSecond>(ModalResultField.P_WHR_el_corr);
+			var altEff = DeclarationData.AlternaterEfficiency;
+			if (runData.BusAuxiliaries != null && runData.BusAuxiliaries.ElectricalUserInputsConfig.AlternatorType == AlternatorType.Smart) {
+				// case C3a
+				if (runData.ElectricMachinesData.Count != 1) {
+					throw new VectoException("exactly 1 electric machine is required. got {0} ({1})",
+						runData.ElectricMachinesData.Count,
+						string.Join(",", runData.ElectricMachinesData.Select(x => x.Item1.ToString())));
+				}
+
+				var emPos = runData.ElectricMachinesData.First().Item1;
+				altEff = modData.ElectricMotorEfficiencyGenerate(emPos);
+			}
+
+			r.WorkWHRElMech = -r.WorkWHREl / altEff;
+			r.WorkWHRMech = -modData.TimeIntegral<WattSecond>(ModalResultField.P_WHR_mech_corr);
 		}
 
 		#endregion
@@ -214,8 +289,8 @@ namespace TUGraz.VectoCore.OutputData
 
 		public Second ICEOffTimeDriving { get; set; }
 		public WattSecond EnergyAuxICEOffDriving { get; set; }
-		public WattSecond EnergyPowerICEOnDriving { get; set; }
-		public Watt AvgAuxPowerICEOnDriving => ICEOffTimeDriving.IsEqual(0) ? 0.SI<Watt>() : EnergyPowerICEOnDriving / ICEOffTimeDriving;
+		public WattSecond EnergyAuxICEOnDriving { get; set; }
+		public Watt AvgAuxPowerICEOnDriving => ICEOffTimeDriving.IsEqual(0) ? 0.SI<Watt>() : EnergyAuxICEOnDriving / ICEOffTimeDriving;
 
 		public WattSecond EnergyDCDCMissing { get; set; }
 

@@ -206,7 +206,7 @@ namespace TUGraz.VectoCore.OutputData
 					x => x.Field<bool>(ModalResultField.ICEOn.GetName())
 						? new Point(
 							x.Field<SI>(ModalResultField.P_ice_fcmap.GetName()).Value(),
-							x.Field<SI>(GetColumnName(fuel, ModalResultField.FCFinal)).Value())
+							x.Field<SI>(GetColumnName(fuel, ModalResultField.FCWHTCc)).Value())
 						: null).Where(x => x != null && x.Y > 0),
 				out var k, out var d, out var r);
 			if (double.IsInfinity(k) || double.IsNaN(k)) {
