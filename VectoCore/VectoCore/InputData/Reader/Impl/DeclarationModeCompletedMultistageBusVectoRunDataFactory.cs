@@ -106,7 +106,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 
 		protected virtual void Initialize()
 		{
-			if (CompletedVehicle.ExemptedVehicle || PrimaryVehicle.ExemptedVehicle)
+			if (PrimaryVehicle.ExemptedVehicle || CompletedVehicle.ExemptedVehicle)
 			{
 				return;
 			}
