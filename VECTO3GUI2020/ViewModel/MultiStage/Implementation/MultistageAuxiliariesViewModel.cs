@@ -274,15 +274,6 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 			set => SetProperty(ref _primaryVehicleHybridElectric, value);
 		}
 
-		private IndexedStorage<bool> _editingEnabledDictionary;
-		public IndexedStorage<bool> EditingEnabledDictionary
-		{
-			get
-			{
-				return _editingEnabledDictionary;
-			}
-		}
-
 
 
 		#region HVAC
@@ -364,23 +355,37 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 
 		public ICommand AddPassengerHeatpumpCommand
 		{
-			get => _addPassengerHeatpumpCommand ??
+			get
+			{
+				return _addPassengerHeatpumpCommand ?? (_addPassengerHeatpumpCommand =
 					new RelayCommand(() => {
 							HeatPumpGroupEditingEnabled = true;
 							if (HeatPumpConfigurationsPassenger == null) {
 								HeatPumpConfigurationsPassenger = new ObservableCollection<HeatPumpConfiguration>();
 							}
+
 							HeatPumpConfigurationsPassenger.Add(new HeatPumpConfiguration());
+							RemovePassengerHeatpumpCommand.NotifyCanExecuteChanged();
+
 						},
-						() => true);
+						() => true));
+			}
 		}
 
-		public ICommand _removePasssengerHeatpumpCommand;
+		private IRelayCommand _removePassengerHeatpumpCommand;
 
-		public ICommand RemovePassengerHeatpumpCommand
+		public IRelayCommand RemovePassengerHeatpumpCommand
 		{
-			get => _removePasssengerHeatpumpCommand ??
-					new RelayCommand<HeatPumpConfiguration>(hp => HeatPumpConfigurationsPassenger?.Remove(hp), (hp) => true);
+			get
+			{
+				return _removePassengerHeatpumpCommand ?? (_removePassengerHeatpumpCommand =
+					new RelayCommand<HeatPumpConfiguration>(hp => {
+						if (HeatPumpGroupEditingEnabled && HeatPumpConfigurationsPassenger.Count > 1) {
+							HeatPumpConfigurationsPassenger?.Remove(hp);
+							RemovePassengerHeatpumpCommand.NotifyCanExecuteChanged();
+						}
+					}, hp => HeatPumpConfigurationsPassenger.Count > 1));
+			}
 		}
 
 		public IList<Tuple<HeatPumpType, HeatPumpMode>> HeatPumpPassengerCompartments{
@@ -559,6 +564,10 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 					_parameterViewModels[nameof(SystemConfiguration)].EditingEnabled = value;
 					if (value == false) {
 						HeatPumpConfigurationsPassenger = null;
+					} else {
+						if (HeatPumpConfigurationsPassenger == null || HeatPumpConfigurationsPassenger.Count == 0) {
+							AddPassengerHeatpumpCommand.Execute(null);
+						}
 					}
 				}
 			}
@@ -648,9 +657,6 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 			set
 			{
 				SetProperty(ref _interiorLightsLed, value);
-				if (value != null) {
-					OnPropertyChanged(nameof(EditingEnabledDictionary));
-				}
 			}
 		}
 
