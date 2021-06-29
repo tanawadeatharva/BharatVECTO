@@ -82,15 +82,16 @@ namespace VECTO3GUI2020.ViewModel.Implementation
 		}
 
 
+
 		private IDialogHelper _dialogHelper;
         private IWindowHelper _windowHelper;
         private IDocumentViewModelFactory _documentViewModelFactory;
-		private ICommand _newMultiStageFileCommand;
+
 		private IMultiStageViewModelFactory _multiStageViewModelFactory;
 		private readonly IXMLInputDataReader _inputDataReader;
 		private IOutputViewModel _outputViewModel;
-		private IAsyncRelayCommand _addJobAsync;
-		private IAsyncRelayCommand _simulationCommand;
+
+
 
 		private readonly string StoredJobsFileName = "storedJobs.json";
 
@@ -144,6 +145,21 @@ namespace VECTO3GUI2020.ViewModel.Implementation
 		}
 
 
+		private void LogMethod(LogEventInfo evtInfo, object[] objects)
+		{
+			if (!SimulationRunning)
+			{
+				return;
+			}
+			if (evtInfo.Level == LogLevel.Error || evtInfo.Level == LogLevel.Warn || evtInfo.Level == LogLevel.Fatal)
+				_outputMessage.Report(new MessageEntry()
+				{
+					Type = MessageType.ErrorMessage,
+					Message = evtInfo.FormattedMessage,
+					Source = evtInfo.CallerMemberName,
+				});
+		}
+
 		#region Store and Restore JobList
 		private void LoadFiles()
 		{
@@ -179,31 +195,15 @@ namespace VECTO3GUI2020.ViewModel.Implementation
 
 		private void SaveFileNamesToFile()
 		{
-			
 			var filesToStore = Jobs.Select(job => job.DataSource.SourceFile).ToList();
 			string jsonString = JsonConvert.SerializeObject(filesToStore);
 			Debug.WriteLine(jsonString);
 			File.WriteAllText(StoredJobsFileName, jsonString);
-
 		}
-
-
-
 		#endregion
 
 
-		private void LogMethod(LogEventInfo evtInfo, object[] objects)
-		{
-			if (!SimulationRunning) {
-				return;
-			}
-			if(evtInfo.Level == LogLevel.Error || evtInfo.Level == LogLevel.Warn || evtInfo.Level == LogLevel.Fatal)
-				_outputMessage.Report(new MessageEntry() {
-					Type = MessageType.ErrorMessage,
-					Message = evtInfo.FormattedMessage,
-					Source = evtInfo.CallerMemberName,
-			});
-		}
+
 
 		#region Simulation
 		private CancellationTokenSource cancellationTokenSource = new CancellationTokenSource();
@@ -600,6 +600,10 @@ namespace VECTO3GUI2020.ViewModel.Implementation
 		private ICommand _moveJobDownCommand;
 		private ICommand _viewXMLCommand;
 		private IDocumentViewModel _selectedJob;
+		private IAsyncRelayCommand _addJobAsync;
+		private IAsyncRelayCommand _simulationCommand;
+		private IRelayCommand _newVifCommand;
+		private ICommand _newMultiStageFileCommand;
 
 		public ICommand CancelSimulation
 		{
@@ -614,6 +618,16 @@ namespace VECTO3GUI2020.ViewModel.Implementation
 					},
 					() => SimulationRunning));
 			}            
+		}
+
+		public IRelayCommand NewVifCommand
+		{
+			get
+			{
+				return _newVifCommand ?? (_newVifCommand = new Microsoft.Toolkit.Mvvm.Input.RelayCommand(() => {
+					_windowHelper.ShowWindow(_multiStageViewModelFactory.GetCreateVifViewModel());
+				}));
+			}
 		}
 
 
@@ -861,30 +875,4 @@ namespace VECTO3GUI2020.ViewModel.Implementation
 
         #endregion Commands
 	}
-
-
-
-
-
-	public class VectoSimulationProgress
-	{
-		public enum MsgType
-		{
-			StatusMessage,
-			InfoMessage,
-			Progress,
-			LogError,
-			LogWarning,
-
-		}
-
-		public string Message { get; set; }
-
-		public MsgType Type { get; set; }
-
-		public string Link { get; set; }
-	}
-
-
-
 }

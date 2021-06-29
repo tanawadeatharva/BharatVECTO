@@ -56,7 +56,6 @@
                           BorderBrush ="{StaticResource AccentColorButton}" BorderThickness="1 0 1 1"
                           Name="JobDataGrid"
                           HorizontalAlignment="Stretch"
-                         
                           CanUserReorderColumns="False" 
                           AutoGenerateColumns="False"
                           SelectionMode="Single"
@@ -69,7 +68,6 @@
                           AllowDrop="True"  Drop="JobDataGrid_OnDrop"
                           PreviewDrop = "JobDataGrid_OnPreviewDrop"
                           ColumnHeaderStyle="{StaticResource JobListDataGridHeaderStyle}"
-                              
                           RowHeight="30"
                           AlternatingRowBackground="LightGray" CellStyle="{DynamicResource DataGridCellStyle1}"
                           SelectedItem = "{Binding SelectedJob}"
@@ -106,20 +104,23 @@
                 <Border  BorderBrush="Transparent" BorderThickness="1">
                     <StackPanel >
                         <Button x:Name="button3" Margin="4" HorizontalAlignment="Stretch" 
-                        Style="{StaticResource MultiStageButtonStyle1}"
-                        Command="{Binding AddJobAsyncCommand, IsAsync=True}" Background="#FFDDDDDD">
-                            Add Job</Button>
+                                Style="{StaticResource MultiStageButtonStyle1}"
+                                Command="{Binding AddJobAsyncCommand, IsAsync=True}" Background="#FFDDDDDD">
+                                Add Job</Button>
                         <Button x:Name="button4" Margin ="4" HorizontalAlignment="Stretch" 
-                        Style="{StaticResource MultiStageButtonStyle1}"
-                        Command="{Binding EditJob}"
-                        CommandParameter="{Binding ElementName=JobDataGrid, Path=SelectedItem}">Edit Job</Button>
+                                Style="{StaticResource MultiStageButtonStyle1}"
+                                Command="{Binding EditJob}"
+                                CommandParameter="{Binding ElementName=JobDataGrid, Path=SelectedItem}">Edit Job</Button>
                         <Button x:Name="button5" Margin="4" HorizontalAlignment="Stretch"
-                        Style="{StaticResource MultiStageButtonStyle1}"
-                        Command="{Binding NewManufacturingStageFile}" AutomationProperties.AutomationId="JobListViewNewManufacturingStageFileButton">New Multistage Job</Button>
+                                Style="{StaticResource MultiStageButtonStyle1}"
+                                Command="{Binding NewManufacturingStageFile}">New Multistage Job</Button>
+                        <Button Margin="4" HorizontalAlignment="Stretch"
+                                Style="{StaticResource MultiStageButtonStyle1}"
+                                Command="{Binding NewVifCommand}">Create VIF</Button>
                         <Button x:Name="button6" Margin="4" HorizontalAlignment="Stretch" 
-                        Style="{StaticResource MultiStageButtonStyle1}"
-                        Command="{Binding RemoveJob, IsAsync=True}"
-                        CommandParameter="{Binding ElementName=JobDataGrid, Path=SelectedItem}">Remove Job</Button>
+                                Style="{StaticResource MultiStageButtonStyle1}"
+                                Command="{Binding RemoveJob, IsAsync=True}"
+                                CommandParameter="{Binding ElementName=JobDataGrid, Path=SelectedItem}">Remove Job</Button>
                     </StackPanel>
                 </Border>
             </Grid>

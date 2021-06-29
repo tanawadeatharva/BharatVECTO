@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCore.Utils;
+using VECTO3GUI2020.ViewModel.Implementation;
 using VECTO3GUI2020.ViewModel.Interfaces.Common;
 using VECTO3GUI2020.ViewModel.Interfaces.JobEdit.Vehicle;
 using VECTO3GUI2020.ViewModel.Interfaces.JobEdit.Vehicle.Components;
@@ -25,11 +26,14 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Interfaces
 		IManufacturingStageViewModel GetManufacturingStageViewModel(IManufacturingStageInputData consolidatedManufacturingStageInputData, bool exempted);
 		IMultistageAirdragViewModel GetMultistageAirdragViewModel();
 
+		
 		IMultistageAirdragViewModel GetMultistageAirdragViewModel(
 			IAirdragDeclarationInputData consolidatedAirdragInputData);
 
 		IMultistageAuxiliariesViewModel GetAuxiliariesViewModel(
 			IBusAuxiliariesDeclarationData consolidatedAuxiliariesInputData);
+
+		ICreateVifViewModel GetCreateVifViewModel();
 		//IViewModelBase CreateNewMultiStageJobViewModel();
 
 		//IMultiStageJobViewModel CreateMultiStageJobViewModel(string inputProviderType, IMultistageBusInputDataProvider inputData);

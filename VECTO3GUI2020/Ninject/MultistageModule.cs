@@ -8,6 +8,7 @@ using Ninject.Extensions.Factory;
 using Ninject.Modules;
 using TUGraz.VectoCore.Models.SimulationComponent;
 using VECTO3GUI2020.Ninject.Util;
+using VECTO3GUI2020.ViewModel.Implementation;
 using VECTO3GUI2020.ViewModel.Interfaces.Common;
 using VECTO3GUI2020.ViewModel.Interfaces.JobEdit.Vehicle;
 using VECTO3GUI2020.ViewModel.MultiStage.Implementation;
@@ -39,6 +40,9 @@ namespace VECTO3GUI2020.Ninject
 				NamedLikeFactoryMethod((IMultiStageViewModelFactory f) => f.GetAuxiliariesViewModel(null));
 
 			Bind<IMultistageDependencies>().To<MultistageLazyDependencies>();
+
+			Bind<ICreateVifViewModel>().To<CreateVifViewModel>().
+				NamedLikeFactoryMethod((IMultiStageViewModelFactory f) => f.GetCreateVifViewModel());
 		}
 	}
 }

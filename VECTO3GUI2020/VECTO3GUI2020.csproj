@@ -210,6 +210,7 @@
     <Compile Include="Util\XML\Implementation\ComponentWriter\XMLBusAuxiliariesWriter.cs" />
     <Compile Include="Util\XML\Implementation\ComponentWriter\XMLPTOWriter.cs" />
     <Compile Include="ViewModel\Implementation\AboutViewModel.cs" />
+    <Compile Include="ViewModel\Implementation\CreateVifViewModel.cs" />
     <Compile Include="ViewModel\Implementation\Document\DeclarationJobViewModel.cs" />
     <Compile Include="ViewModel\Implementation\Document\DeclarationTrailerJobDocumentViewModel.cs" />
     <Compile Include="Model\Interfaces\IAuxiliaryModelFactory.cs" />
@@ -421,6 +422,9 @@
     </Compile>
     <Compile Include="Views\Multistage\AirDragView_v2_8.xaml.cs">
       <DependentUpon>AirDragView_v2_8.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Multistage\CreateVifView.xaml.cs">
+      <DependentUpon>CreateVifView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\Multistage\CustomControls\FilePicker.xaml.cs">
       <DependentUpon>FilePicker.xaml</DependentUpon>
@@ -673,6 +677,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\Multistage\AirDragView_v2_8.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Multistage\CreateVifView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

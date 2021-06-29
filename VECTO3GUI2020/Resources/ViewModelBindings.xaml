@@ -227,10 +227,16 @@
     <DataTemplate x:Shared="False" DataType="{x:Type multistageimpl:MultistageAuxiliariesViewModel}">
         <multistageviews:ManufacturingStageAuxiliariesView/>
     </DataTemplate>
+
+
+    <DataTemplate DataType="{x:Type impl:CreateVifViewModel}">
+        <multistageviews:CreateVifView></multistageviews:CreateVifView>
+    </DataTemplate>
     <!--#endregion-->
 
     <DataTemplate DataType="{x:Type local:TestViewModel}">
         <local:Test></local:Test>
     </DataTemplate>
+
 
 </ResourceDictionary>
