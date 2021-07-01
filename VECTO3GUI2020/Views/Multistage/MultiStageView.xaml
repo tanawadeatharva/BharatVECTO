@@ -16,7 +16,7 @@
                 Text="{Binding VehicleInputDataFilePath, TargetNullValue=Select Vehicle Input Data . . .}"/>
             <Label DockPanel.Dock="Top" HorizontalAlignment="Center"  Visibility="{Binding Exempted, Converter={StaticResource BooleanToVisibilityConverter}}">Exempted Vehicle</Label>
             <Border BorderThickness="1" BorderBrush="{DynamicResource ButtonHighlightColor}" Height="40" DockPanel.Dock="Bottom">
-                <DockPanel LastChildFill="False">
+                <DockPanel LastChildFill="False" DockPanel.Dock="Bottom">
                     <Button DockPanel.Dock="Right"
                         Width="100"
                         Command="{Binding CloseWindowCommand}" 
@@ -36,17 +36,18 @@
                         Style="{DynamicResource MultiStageButtonStyle1}" 
                         Margin="4" 
                         Padding="4" 
-                        Command="{Binding SaveInputDataCommand}">Save Input</Button>
+                        Command="{Binding ManufacturingStageViewModel.SaveInputDataCommand}">Save Input</Button>
                     <Button 
                         DockPanel.Dock="Right" 
                         Width="100"  
                         Style="{DynamicResource MultiStageButtonStyle1}" 
                         Margin="4" 
                         Padding="4" 
-                        Command="{Binding SaveInputDataAsCommand}">Save Input As ... </Button>
+                        Command="{Binding ManufacturingStageViewModel.SaveInputDataAsCommand}">Save Input As ... </Button>
                 </DockPanel>
             </Border>
             <ContentControl DockPanel.Dock="Top" Content="{Binding ManufacturingStageViewModel}"/>
+          
         </DockPanel>
     </Grid>
 </UserControl>

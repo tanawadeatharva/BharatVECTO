@@ -32,11 +32,6 @@ namespace VECTO3GUI2020.ViewModel.Implementation.Document
 			set => SetProperty(ref _selected, value);
 		}
 
-		public bool CanBeEdited
-		{
-			get => false;
-			set => throw new System.NotImplementedException();
-		}
 
 		#endregion
         #region Members

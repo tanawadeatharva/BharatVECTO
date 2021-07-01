@@ -34,7 +34,7 @@ namespace Vecto3GUI2020Test.ViewModelTests
 
 			var vehicleVm =
 				multistageJobViewModel.ManufacturingStageViewModel.VehicleViewModel as
-					DeclarationInterimStageBusVehicleViewModel_v2_8;
+					InterimStageBusVehicleViewModel_v2_8;
 
 			Assert.IsTrue(vehicleVm.ExemptedVehicle);
 
@@ -68,7 +68,7 @@ namespace Vecto3GUI2020Test.ViewModelTests
 			vehicleVm.ParameterViewModels[nameof(vehicleVm.NumberPassengerSeatsUpperDeck)].CurrentContent = passengerSeatsUpperDeck;
 
 
-			multistageJobViewModel.SaveInputDataExecute(outputPath);
+			multistageJobViewModel.ManufacturingStageViewModel.SaveInputDataExecute(outputPath);
 
 
 			Assert.AreEqual(outputPath, multistageJobViewModel.VehicleInputDataFilePath);
@@ -100,7 +100,7 @@ namespace Vecto3GUI2020Test.ViewModelTests
 
 			var vehicleVm =
 				multistageJobViewModel.ManufacturingStageViewModel.VehicleViewModel as
-					DeclarationInterimStageBusVehicleViewModel_v2_8;
+					InterimStageBusVehicleViewModel_v2_8;
 
 			Assert.IsTrue(vehicleVm.ExemptedVehicle);
 

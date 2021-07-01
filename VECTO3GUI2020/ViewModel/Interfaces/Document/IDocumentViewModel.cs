@@ -11,6 +11,5 @@ namespace VECTO3GUI2020.ViewModel.Interfaces.Document
 		DataSource DataSource { get; }
 		IEditViewModel EditViewModel { get; }
 		bool Selected { get; set; }
-		bool CanBeEdited { get; set; }
 	}
 }

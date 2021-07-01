@@ -25,7 +25,7 @@ namespace Vecto3GUI2020Test.ViewModelTests
 			var vm = loadFile(primary_vehicle_only);
 			var vehicleVM =
 				vm.MultiStageJobViewModel.ManufacturingStageViewModel.Vehicle as
-					DeclarationInterimStageBusVehicleViewModel_v2_8;
+					InterimStageBusVehicleViewModel_v2_8;
 			var enteredString = "test";
 			var modelParam = vehicleVM.ParameterViewModels[nameof(vehicleVM.Model)];
 			//Null after loading
@@ -77,7 +77,7 @@ namespace Vecto3GUI2020Test.ViewModelTests
 			var vm = loadFile(primary_vehicle_only);
 			var vehicleVM =
 				vm.MultiStageJobViewModel.ManufacturingStageViewModel.Vehicle as
-					DeclarationInterimStageBusVehicleViewModel_v2_8;
+					InterimStageBusVehicleViewModel_v2_8;
 
 			Assert.IsNull(vehicleVM.CurbMassChassis?.Value());
 			var curbMassParameter = vehicleVM.ParameterViewModels[nameof(vehicleVM.CurbMassChassis)];
@@ -105,7 +105,7 @@ namespace Vecto3GUI2020Test.ViewModelTests
 			var vm = loadFile(primary_vehicle_only);
 			var vehicleVM =
 				vm.MultiStageJobViewModel.ManufacturingStageViewModel.Vehicle as
-					DeclarationInterimStageBusVehicleViewModel_v2_8;
+					InterimStageBusVehicleViewModel_v2_8;
 			SetMockDialogHelper(stageInputFullSample);
 			var vmConc = vm.MultiStageJobViewModel as MultiStageJobViewModel_v0_1;
 			vmConc.LoadVehicleDataCommand.Execute(null);
@@ -124,7 +124,7 @@ namespace Vecto3GUI2020Test.ViewModelTests
 
 			var vehicleViewModel =
 				vm.MultiStageJobViewModel.ManufacturingStageViewModel.Vehicle as
-					DeclarationInterimStageBusVehicleViewModel_v2_8;
+					InterimStageBusVehicleViewModel_v2_8;
 
 			var vehicleData = vm.MultiStageJobViewModel.ManufacturingStageViewModel.Vehicle;
 

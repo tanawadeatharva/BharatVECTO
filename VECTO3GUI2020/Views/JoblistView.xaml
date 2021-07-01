@@ -93,7 +93,7 @@
                         <DataGrid.InputBindings>
                             <MouseBinding
                         MouseAction="LeftDoubleClick"
-                        Command="{Binding EditJob}"
+                        Command="{Binding EditDocument}"
                         CommandParameter="{Binding ElementName=JobDataGrid, Path=SelectedItem}"></MouseBinding>
                         </DataGrid.InputBindings>
                     </DataGrid>
@@ -109,7 +109,7 @@
                                 Add Job</Button>
                         <Button x:Name="button4" Margin ="4" HorizontalAlignment="Stretch" 
                                 Style="{StaticResource MultiStageButtonStyle1}"
-                                Command="{Binding EditJob}"
+                                Command="{Binding EditDocument}"
                                 CommandParameter="{Binding ElementName=JobDataGrid, Path=SelectedItem}">Edit Job</Button>
                         <Button x:Name="button5" Margin="4" HorizontalAlignment="Stretch"
                                 Style="{StaticResource MultiStageButtonStyle1}"

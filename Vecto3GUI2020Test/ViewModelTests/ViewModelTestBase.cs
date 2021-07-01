@@ -96,7 +96,7 @@ namespace Vecto3GUI2020Test
 
 			Assert.NotNull(newMultistageJobViewModel.MultiStageJobViewModel);
 
-			var manstageVehicleViewModel = newMultistageJobViewModel.MultiStageJobViewModel.ManufacturingStageViewModel.Vehicle as DeclarationInterimStageBusVehicleViewModel_v2_8;
+			var manstageVehicleViewModel = newMultistageJobViewModel.MultiStageJobViewModel.ManufacturingStageViewModel.Vehicle as InterimStageBusVehicleViewModel_v2_8;
 			Assert.NotNull(manstageVehicleViewModel);
 
 			Assert.AreEqual(mockDialogHelper.Object.OpenXMLFileDialog(), newMultistageJobViewModel.VifPath);
@@ -105,11 +105,12 @@ namespace Vecto3GUI2020Test
 				var auxiliariesViewModel = manstageVehicleViewModel.MultistageAuxiliariesViewModel;
 				Assert.NotNull(auxiliariesViewModel);
 
-				var airdragViewModel = (manstageVehicleViewModel as DeclarationInterimStageBusVehicleViewModel_v2_8)?.MultistageAirdragViewModel;
+				var airdragViewModel = (manstageVehicleViewModel as InterimStageBusVehicleViewModel_v2_8)?.MultistageAirdragViewModel;
 				Assert.NotNull(airdragViewModel);
 			}
 			return newMultistageJobViewModel;
 		}
+
 
 		protected virtual Mock<IDialogHelper> SetMockDialogHelper(string fileToLoad = null, string fileToSave = null)
 		{

@@ -28,7 +28,7 @@ namespace Vecto3GUI2020Test.ViewModelTests
 
 			//Set Necessary Fields
 			var vehicle =
-				multistagevm.ManufacturingStageViewModel.Vehicle as DeclarationInterimStageBusVehicleViewModel_v2_8;
+				multistagevm.ManufacturingStageViewModel.Vehicle as InterimStageBusVehicleViewModel_v2_8;
 			vehicle.ManufacturerAddress = "Address";
 			vehicle.Manufacturer = "Manufacturer";
 			vehicle.VIN = "VIN12345678";
@@ -59,7 +59,7 @@ namespace Vecto3GUI2020Test.ViewModelTests
 
 			//Set Necessary Fields
 			var vehicle =
-				multistagevm.ManufacturingStageViewModel.Vehicle as DeclarationInterimStageBusVehicleViewModel_v2_8;
+				multistagevm.ManufacturingStageViewModel.Vehicle as InterimStageBusVehicleViewModel_v2_8;
 			
 
 			vehicle.ManufacturerAddress = "Address";
@@ -82,7 +82,7 @@ namespace Vecto3GUI2020Test.ViewModelTests
 
 		//Set Necessary Fields
 			var vehicle =
-			multistagevm.ManufacturingStageViewModel.Vehicle as DeclarationInterimStageBusVehicleViewModel_v2_8;
+			multistagevm.ManufacturingStageViewModel.Vehicle as InterimStageBusVehicleViewModel_v2_8;
 			
 
 			vehicle.ManufacturerAddress = "Address";
@@ -117,7 +117,7 @@ namespace Vecto3GUI2020Test.ViewModelTests
 			multiStageViewModel.LoadVehicleDataCommand.Execute(null);
 			
 			var vehicle =
-				multiStageViewModel.ManufacturingStageViewModel.Vehicle as DeclarationInterimStageBusVehicleViewModel_v2_8;
+				multiStageViewModel.ManufacturingStageViewModel.Vehicle as InterimStageBusVehicleViewModel_v2_8;
 			vehicle.ManufacturerAddress = "Address";
 			vehicle.Manufacturer = "Manufacturer";
 			vehicle.VIN = "VIN12345678";

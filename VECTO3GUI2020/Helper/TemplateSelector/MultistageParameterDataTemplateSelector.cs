@@ -2,6 +2,7 @@
 using System.Windows;
 using System.Windows.Controls;
 using TUGraz.VectoCommon.Exceptions;
+using VECTO3GUI2020.ViewModel.MultiStage.Implementation;
 using VECTO3GUI2020.Views.Multistage.CustomControls;
 
 namespace VECTO3GUI2020.Helper.TemplateSelector

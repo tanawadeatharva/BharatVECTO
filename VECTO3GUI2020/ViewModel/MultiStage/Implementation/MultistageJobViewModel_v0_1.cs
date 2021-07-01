@@ -33,6 +33,7 @@ using VECTO3GUI2020.ViewModel.Interfaces.Common;
 using VECTO3GUI2020.ViewModel.Interfaces.Document;
 using VECTO3GUI2020.ViewModel.Interfaces.JobEdit.Vehicle;
 using VECTO3GUI2020.ViewModel.MultiStage.Interfaces;
+using INotifyPropertyChanged = System.ComponentModel.INotifyPropertyChanged;
 using XmlDocumentType = TUGraz.VectoCore.Utils.XmlDocumentType;
 
 namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
@@ -42,6 +43,7 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 	{
 		IManufacturingStageViewModel ManufacturingStageViewModel { get; }
 		bool Exempted { get; }
+		ICommand LoadVehicleDataCommand { get; }
 	}
 
 
@@ -86,24 +88,28 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 			//var hybridElectric = inputData.PrimaryVehicleData.Vehicle.HybridElectricHDV;
 			//_manufacturingStageViewModel.VehicleViewModel.PrimaryVehicleHybridElectric = hybridElectric;
 			_multistageDependencies = multistageDependencies;
+
+
+            (_manufacturingStageViewModel as INotifyPropertyChanged).PropertyChanged += MultiStageJobViewModel_v0_1_PropertyChanged;
 		}
 
-
-
-
-
-		#region Commands
-
-
-
-		private ICommand _closeWindowCommand;
-		public ICommand CloseWindowCommand
-		{
-			get
-			{
-				return _closeWindowCommand ?? new RelayCommand<Window>(window => CloseWindow(window, _dialogHelper.Value), window => true);
+        private void MultiStageJobViewModel_v0_1_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+			
+			if (e.PropertyName == nameof(VehicleInputDataFilePath)) {
+				OnPropertyChanged(nameof(VehicleInputDataFilePath));
 			}
-		}
+        }
+
+
+
+
+
+        #region Commands
+
+
+
+      
 
 
 		private ICommand _saveVifCommand;
@@ -224,97 +230,9 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 			}
 		}
 
-		private ICommand _saveInputDataCommand;
-		private ICommand _saveInputDataAsCommand;
-
-		public ICommand SaveInputDataCommand =>
-			_saveInputDataCommand ?? new RelayCommand(() => {
-				SaveInputDataExecute(filename:_vehicleInputDataFilePath);
-			}, () => _vehicleInputDataFilePath != null);
-
-		public ICommand SaveInputDataAsCommand =>
-			_saveInputDataAsCommand ?? new RelayCommand(() => {
-				SaveInputDataExecute(filename:null);
-			}, () => true);
-
-		public void SaveInputDataExecute(string filename)
-		{
-			if(_manufacturingStageViewModel.Vehicle is IMultistageVehicleViewModel vehicleViewModel)
-			{
-				if (vehicleViewModel.HasErrors) {
-					var errorMessage = "Vehicle\n";
-					var vehicleErrorInfo = vehicleViewModel as IDataErrorInfo;
-					errorMessage += vehicleErrorInfo.Error.Replace(",", "\n");
-
-					
-					var auxiliariesErrorInfo =
-						vehicleViewModel.MultistageAuxiliariesViewModel as IDataErrorInfo;
-					if (auxiliariesErrorInfo != null && 
-						!auxiliariesErrorInfo.Error.IsNullOrEmpty())
-					{
-						errorMessage += "\n Auxiliaries \n";
-						errorMessage += auxiliariesErrorInfo.Error.Replace(",", "\n");
-					}
-
-					_dialogHelper.Value.ShowMessageBox(errorMessage, "Error", MessageBoxButton.OK,
-						MessageBoxImage.Error);
-					return;
-
-					//_dialogHelper.Value.ShowMessageBox("Vehicle\n" + string.Join("\n", vehicleViewModel.Errors.Values)
-					//												+ (vehicleViewModel.MultistageAuxiliariesViewModel.HasErrors ? ("\nAuxiliaries\n" + string.Join("\n", vehicleViewModel.MultistageAuxiliariesViewModel.Errors.Values)) : ""),
-					//	"Error");
-					return;
-				}
-			}
-			
-
-			if (filename == null) {
-				filename = _dialogHelper.Value.SaveToXMLDialog(Settings.Default.DefaultFilePath);
-				if (filename == null) {
-					return;
-				}
-			}
-
-			var vehicleWriter =
-				_multistageDependencies.XMLWriterFactory.CreateVehicleWriter(_manufacturingStageViewModel.Vehicle);
 
 
-
-			var xElement = vehicleWriter.GetElement();
-			var xDoc = xElement.CreateWrapperDocument(XMLNamespaces.V28);
-			Debug.WriteLine(xElement.CreateWrapperDocument(XMLNamespaces.V28).ToString());
-
-			
-			var valid = false;
-			var validationError = "";
-			try {
-				var validator = new XMLValidator(xDoc.ToXmlDocument());
-				valid = validator.ValidateXML(XmlDocumentType.DeclarationJobData);
-				validationError = validator.ValidationError;
-			} catch (Exception e) {
-				_dialogHelper.Value.ShowMessageBox(messageBoxText:(e.Message + "\n" + e.InnerException), caption:"Error saving File");
-			}
-			if (!valid) {
-				_dialogHelper.Value.ShowMessageBox($"Invalid Document: {validationError}", "Error");
-				var tempFile = Path.GetTempFileName();
-				try {
-					xDoc.Save(tempFile, SaveOptions.OmitDuplicateNamespaces);
-					LoadVehicleData(tempFile);
-					File.Delete(tempFile);
-				} catch (Exception e) {
-					_dialogHelper.Value.ShowMessageBox(e.Message, "Error");
-					throw;
-				}
-		
-
-			} else {
-				xDoc.Save(filename, SaveOptions.OmitDuplicateNamespaces);
-				LoadVehicleData(filename);
-			}
-		}
-
-
-		private ICommand _loadVehicleDataCommand;
+	
 		private readonly Lazy<IDialogHelper> _dialogHelper;
 		private readonly IXMLInputDataReader _inputDataReader;
 		private string _vehicleInputDataFilePath = null;
@@ -325,46 +243,18 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 		private readonly bool _exempted;
 		private readonly IJobListViewModel _jobListViewModel;
 
-		public ICommand LoadVehicleDataCommand
-		{
-			get
-			{
-				return _loadVehicleDataCommand ?? new RelayCommand(LoadVehicleDataExecute, () => true);
-			}
-		}
 
-		private void LoadVehicleDataExecute()
-		{
-			var fileName = _dialogHelper.Value.OpenXMLFileDialog();
-			if (fileName == null) {
-				return;
-			}
-
-			LoadVehicleData(fileName);
-			return;
-		}
-
-		private bool LoadVehicleData(string fileName)
-		{
-			try {
-				var inputData = (IDeclarationInputDataProvider)_inputDataReader.Create(fileName);
-				var vehicleInputData = inputData.JobInputData.Vehicle;
-				_manufacturingStageViewModel.SetInputData(vehicleInputData);
-
-				VehicleInputDataFilePath = fileName;
-			} catch (Exception e) {
-				_dialogHelper.Value.ShowMessageBox(e.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-				return false;
-			}
-
-			return true;
-		}
 
 		public string VehicleInputDataFilePath
 		{
-			get => _vehicleInputDataFilePath;
-			set => SetProperty(ref _vehicleInputDataFilePath, value);
+			get => ManufacturingStageViewModel.VehicleInputDataFilePath;
+			set
+			{
+				ManufacturingStageViewModel.VehicleInputDataFilePath = value;
+				OnPropertyChanged();
+			}
 		}
+
 		#endregion
 
 		#region Implementation of IInputDataProvider
@@ -381,12 +271,6 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 		{
 			get => _selected;
 			set => SetProperty(ref _selected, value);
-		}
-
-		public bool CanBeEdited
-		{
-			get => true;
-			set => throw new NotImplementedException();
 		}
 
 		#endregion
@@ -453,6 +337,11 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 		public string Name => "Multistage";
 
 		public bool Exempted => _exempted;
+
+		public ICommand LoadVehicleDataCommand
+		{
+			get => ManufacturingStageViewModel.LoadVehicleDataCommand;
+		}
 
 		#endregion
 	}

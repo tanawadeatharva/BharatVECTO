@@ -112,7 +112,7 @@ namespace VECTO3GUI2020.ViewModel.Implementation
             IXMLInputDataReader inputDataReader,
             IDialogHelper dialogHelper,
             IWindowHelper windowHelper,
-			IMultiStageViewModelFactory multiStageViewModelFactory, 
+			IMultiStageViewModelFactory multiStageViewModelFactory,
 			IOutputViewModel outputViewModel) : this()
         {
             _documentViewModelFactory = documentViewModelFactory;
@@ -605,6 +605,7 @@ namespace VECTO3GUI2020.ViewModel.Implementation
 		private IRelayCommand _newVifCommand;
 		private ICommand _newMultiStageFileCommand;
 
+
 		public ICommand CancelSimulation
 		{
 			get
@@ -707,8 +708,11 @@ namespace VECTO3GUI2020.ViewModel.Implementation
 			} else if (documentType == XmlDocumentType.DeclarationJobData) {
 				//Remove
 				var inputDataProvider = _inputDataReader.CreateDeclaration(fileName);
-				var result = new SimulationOnlyDeclarationJob(inputDataProvider.DataSource,
-					inputDataProvider.JobInputData.JobName, XmlDocumentType.DeclarationJobData) as IDocumentViewModel;
+				var result = _multiStageViewModelFactory.CreateDocumentViewModel(inputDataProvider);
+
+				//TODO Harry
+				//var result = new SimulationOnlyDeclarationJob(inputDataProvider.DataSource,
+				//	inputDataProvider.JobInputData.JobName, XmlDocumentType.DeclarationJobData) as IDocumentViewModel;
 				return Task.FromResult(result);
 
 
@@ -720,13 +724,13 @@ namespace VECTO3GUI2020.ViewModel.Implementation
 		}
 
 
-		public ICommand EditJob
+		public ICommand EditDocument
         {
             get
 			{
-				return _editJobCommand ?? (_editJobCommand = new Util.RelayCommand<IJobViewModel>(EditJobExecute,
-					(IJobViewModel jobentry) => {
-						var canExecute = jobentry != null && jobentry.CanBeEdited;
+				return _editJobCommand ?? (_editJobCommand = new Util.RelayCommand<IDocumentViewModel>(EditDocumentExecute,
+					(IDocumentViewModel jobentry) => {
+						var canExecute = jobentry != null && jobentry.EditViewModel != null;
 						return canExecute;
 					}));
 			}
@@ -737,7 +741,7 @@ namespace VECTO3GUI2020.ViewModel.Implementation
             }
         }
 
-        private void EditJobExecute(IDocumentViewModel selectedJob)
+        private void EditDocumentExecute(IDocumentViewModel selectedJob)
         {
 			if (selectedJob == null) {
 				return;

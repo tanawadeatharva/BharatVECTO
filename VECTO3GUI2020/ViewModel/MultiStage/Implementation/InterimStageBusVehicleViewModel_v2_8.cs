@@ -81,9 +81,12 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 	}
 
 
-	public class DeclarationInterimStageBusVehicleViewModel_v2_8 : ViewModelBase, IMultistageVehicleViewModel,
+	public class InterimStageBusVehicleViewModel_v2_8 : ViewModelBase, IMultistageVehicleViewModel,
 		IVehicleComponentsDeclaration, IAdvancedDriverAssistantSystemDeclarationInputData, IDataErrorInfo
 	{
+
+		public static string VERSION = typeof(XMLDeclarationInterimStageBusDataProviderV28).ToString();
+		public static string VERSION_EXEMPTED = typeof(XMLDeclarationExemptedInterimStageBusDataProviderV28).ToString();
 
 		private readonly IMultiStageViewModelFactory _multiStageViewModelFactory;
 
@@ -139,8 +142,50 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 			set { throw new NotImplementedException(); }
 		}
 
+		private bool _showConsolidatedData;
 
-		public DeclarationInterimStageBusVehicleViewModel_v2_8(IVehicleDeclarationInputData consolidatedVehicleData,
+		public bool ShowConsolidatedData
+		{
+			get => _showConsolidatedData;
+			set
+			{
+				SetProperty(ref _showConsolidatedData, value);
+				if (MultistageAuxiliariesViewModel != null) {
+					MultistageAuxiliariesViewModel.ShowConsolidatedData = value;
+				}
+
+				if (MultistageAirdragViewModel != null) {
+					MultistageAirdragViewModel.ShowConsolidatedData = value;
+				}
+				foreach (var multistageParameterViewModel in _parameterViewModels) {
+					multistageParameterViewModel.Value.ShowConsolidatedData = value;
+				}
+			}
+		}
+
+		public InterimStageBusVehicleViewModel_v2_8(IVehicleDeclarationInputData inputData, IMultiStageViewModelFactory multistageViewModelFactory)
+		{
+			if (inputData.GetType().ToString() == VERSION_EXEMPTED) {
+				_exemptedVehicle = true;
+				Debug.Assert(inputData.ExemptedVehicle);
+			}
+
+			_multiStageViewModelFactory = multistageViewModelFactory;
+
+			if (!_exemptedVehicle) {
+				MultistageAirdragViewModel = _multiStageViewModelFactory.GetMultistageAirdragViewModel();
+				MultistageAuxiliariesViewModel = _multiStageViewModelFactory.GetAuxiliariesViewModel();
+			}
+
+			CreateParameterViewModels();
+			SetVehicleInputData(inputData);
+			ShowConsolidatedData = false;
+			
+
+
+		}
+
+		public InterimStageBusVehicleViewModel_v2_8(IVehicleDeclarationInputData consolidatedVehicleData,
 			IMultiStageViewModelFactory multistageViewModelFactory, bool exempted)
 		{
 			ConsolidatedVehicleData = consolidatedVehicleData;
@@ -342,7 +387,7 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 		public void SetVehicleInputData(IVehicleDeclarationInputData vehicleInputData)
 		{
 			if (vehicleInputData.ExemptedVehicle != ExemptedVehicle) {
-				throw new VectoException("Only exempted stage inputs are allowed");
+				throw new VectoException(ExemptedVehicle ? "Only exempted stage inputs are allowed" : "Exempted Vehicle not allowed");
 			}
 
 			if (ExemptedVehicle) {
@@ -1176,5 +1221,6 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 		private int? _numberPassengersStandingLowerDeck;
 		private int? _numberPassengersStandingUpperDeck;
 		private bool _exemptedVehicle;
+
 	}
 }

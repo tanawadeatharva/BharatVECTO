@@ -5,10 +5,13 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using Microsoft.Toolkit.Mvvm.Input;
+using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCore.InputData.FileIO.XML;
 using TUGraz.VectoCore.Utils;
 using VECTO3GUI2020.Helper;
 using VECTO3GUI2020.ViewModel.Implementation.Common;
+using VECTO3GUI2020.ViewModel.Interfaces;
+using VECTO3GUI2020.ViewModel.Interfaces.Document;
 
 namespace VECTO3GUI2020.ViewModel.Implementation
 {
@@ -16,7 +19,7 @@ namespace VECTO3GUI2020.ViewModel.Implementation
 	{
 
 	}
-    public class CreateVifViewModel : ViewModelBase, ICreateVifViewModel
+    public class CreateVifViewModel : ViewModelBase, ICreateVifViewModel, IDocumentViewModel, IEditViewModel
 	{
 		private string _primaryInputFile;
 		private string _completedInputFile;
@@ -28,6 +31,7 @@ namespace VECTO3GUI2020.ViewModel.Implementation
 		{
 			_dialogHelper = dialogHelper;
 			_inputDataReader = inputDataReader;
+			Title = "Create VIF";
 		}
 
 
@@ -79,7 +83,28 @@ namespace VECTO3GUI2020.ViewModel.Implementation
 		#endregion
 
 
+		#region Implementation of IDocumentViewModel
 
+		public string DocumentName => throw new NotImplementedException();
 
+		public XmlDocumentType DocumentType => throw new NotImplementedException();
+
+		public DataSource DataSource => throw new NotImplementedException();
+
+		public IEditViewModel EditViewModel => this;
+
+		public bool Selected
+		{
+			get => throw new NotImplementedException();
+			set => throw new NotImplementedException();
+		}
+
+		#endregion
+
+		#region Implementation of IEditViewModel
+
+		public string Name => DocumentName;
+
+		#endregion
 	}
 }

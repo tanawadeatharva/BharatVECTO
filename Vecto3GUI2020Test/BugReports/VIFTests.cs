@@ -35,21 +35,28 @@ namespace Vecto3GUI2020Test.BugReports
 			TestContext.WriteLine($"Done! ({stop.Elapsed.TotalSeconds}s)");
 
 
-			var vifName = fileName.Replace(".xml", "RSLT_VIF.xml");
+			var vifName = fileName.Replace(".xml", ".RSLT_VIF.xml");
+			TestContext.WriteLine($"Trying to add {vifName} to JobList");
 			await jobListViewModel.AddJobAsync(GetFullPath(fileName: vifName));
 			Assert.AreEqual(2, jobListViewModel.Jobs.Count);
 
+			foreach (var documentViewModel in jobListViewModel.Jobs) {
+				TestContext.WriteLine($"{documentViewModel.DataSource.SourcePath}");
+			}
+
 			return;
-
-
 		}
+
+
+
+
 
 
 		#region Overrides of ViewModelTestBase
 
 		protected override string GetFullPath(string fileName)
 		{
-			fileName = "/bugreports/" + primaryDecimalTestFile;
+			fileName = "/bugreports/" + fileName;
 			return base.GetFullPath(fileName);
 		}
 

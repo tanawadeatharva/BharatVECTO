@@ -212,7 +212,7 @@
         <multistageviews:ManufacturingStageView></multistageviews:ManufacturingStageView>
     </DataTemplate>
 
-    <DataTemplate x:Shared="False" DataType="{x:Type multistageimpl:DeclarationInterimStageBusVehicleViewModel_v2_8}">
+    <DataTemplate x:Shared="False" DataType="{x:Type multistageimpl:InterimStageBusVehicleViewModel_v2_8}">
         <multistageviews:VehicleView_v2_8/>
     </DataTemplate>
 
@@ -228,6 +228,9 @@
         <multistageviews:ManufacturingStageAuxiliariesView/>
     </DataTemplate>
 
+    <DataTemplate DataType="{x:Type multistageimpl:StageInputViewModel}">
+        <multistageviews:ManufacturingStageView></multistageviews:ManufacturingStageView>
+    </DataTemplate>
 
     <DataTemplate DataType="{x:Type impl:CreateVifViewModel}">
         <multistageviews:CreateVifView></multistageviews:CreateVifView>

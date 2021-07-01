@@ -180,7 +180,7 @@
     <Compile Include="Helper\DialogHelper.cs" />
     <Compile Include="Helper\VisualTreeHelperExtensions.cs" />
     <Compile Include="Helper\TemplateSelector\MultistageParameterDataTemplateSelector.cs" />
-    <Compile Include="Helper\MultistageParameterViewModel.cs" />
+    <Compile Include="ViewModel\MultiStage\Implementation\MultistageParameterViewModel.cs" />
     <Compile Include="Helper\NameOfMarkUpExtension.cs" />
     <Compile Include="Helper\NameResolver.cs" />
     <Compile Include="Helper\TemplateSelector\MultistageVehicleDataTemplateSelector.cs" />
@@ -189,6 +189,7 @@
     <Compile Include="Helper\XmlHelper.cs" />
     <Compile Include="Ninject\FactoryModule.cs" />
     <Compile Include="Ninject\IMultistageDependencies.cs" />
+    <Compile Include="Ninject\MultiStageViewModelFactory.cs" />
     <Compile Include="Ninject\MultistageLazyDependencies.cs" />
     <Compile Include="Ninject\MultistageModule.cs" />
     <Compile Include="Ninject\Vecto3GUI2020Module.cs" />
@@ -207,6 +208,7 @@
       <DependentUpon>Test.xaml</DependentUpon>
     </Compile>
     <Compile Include="TestViewModel.cs" />
+    <Compile Include="Util\JSON\IJsonWriterFactory.cs" />
     <Compile Include="Util\XML\Implementation\ComponentWriter\XMLBusAuxiliariesWriter.cs" />
     <Compile Include="Util\XML\Implementation\ComponentWriter\XMLPTOWriter.cs" />
     <Compile Include="ViewModel\Implementation\AboutViewModel.cs" />
@@ -262,6 +264,7 @@
     <Compile Include="ViewModel\Implementation\JobEdit\Vehicle\Components\EngineFuelViewModel.cs" />
     <Compile Include="ViewModel\Implementation\JobEdit\Vehicle\Components\EngineModeViewModel.cs" />
     <Compile Include="ViewModel\Implementation\JobEdit\Vehicle\Components\TorqueConverterViewModel.cs" />
+    <Compile Include="ViewModel\Interfaces\Document\IMultistageDocumentViewModelFactory.cs" />
     <Compile Include="ViewModel\Interfaces\JobEdit\Vehicle\Components\IEngineFuelViewModel.cs" />
     <Compile Include="ViewModel\Interfaces\JobEdit\Vehicle\Components\IEngineModeViewModel.cs" />
     <Compile Include="ViewModel\Interfaces\Common\IViewModelBase.cs" />
@@ -323,8 +326,10 @@
     <Compile Include="ViewModel\MultiStage\Implementation\MultistageAuxiliariesViewModel.cs" />
     <Compile Include="ViewModel\MultiStage\Implementation\NewMultiStageJobViewModel.cs" />
     <Compile Include="ViewModel\MultiStage\Implementation\MultistageJobViewModel_v0_1.cs" />
+    <Compile Include="ViewModel\MultiStage\Implementation\StageInputViewModel.cs" />
+    <Compile Include="ViewModel\MultiStage\Implementation\StageViewModelBase.cs" />
     <Compile Include="ViewModel\MultiStage\Interfaces\IMultistageAirdragViewModel.cs" />
-    <Compile Include="ViewModel\MultiStage\Interfaces\IMultiStageViewModelFactory.cs" />
+    <Compile Include="ViewModel\MultiStage\Interfaces\IMultiStageViewModelFactoryDefaultInstanceProvider.cs" />
     <Compile Include="ViewModel\Implementation\OutputViewModel.cs" />
     <Compile Include="Views\AboutView.xaml.cs">
       <DependentUpon>AboutView.xaml</DependentUpon>
@@ -428,6 +433,9 @@
     </Compile>
     <Compile Include="Views\Multistage\CustomControls\FilePicker.xaml.cs">
       <DependentUpon>FilePicker.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Multistage\CustomControls\InputStageView.xaml.cs">
+      <DependentUpon>InputStageView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\Multistage\CustomControls\LabledTextBoxMultistage.xaml.cs">
       <DependentUpon>LabledTextBoxMultistage.xaml</DependentUpon>
@@ -688,6 +696,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Views\Multistage\CustomControls\InputStageView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\Multistage\CustomControls\LabledTextBoxMultistage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -833,6 +845,8 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Model\Multistage\" />
+    <Folder Include="Util\JSON\Implementation\" />
+    <Folder Include="Util\JSON\Interfaces\" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Resources\Icons\Trash_16x.ico" />

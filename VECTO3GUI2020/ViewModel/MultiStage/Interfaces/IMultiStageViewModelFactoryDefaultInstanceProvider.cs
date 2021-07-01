@@ -7,13 +7,29 @@ using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCore.Utils;
 using VECTO3GUI2020.ViewModel.Implementation;
 using VECTO3GUI2020.ViewModel.Interfaces.Common;
+using VECTO3GUI2020.ViewModel.Interfaces.Document;
 using VECTO3GUI2020.ViewModel.Interfaces.JobEdit.Vehicle;
 using VECTO3GUI2020.ViewModel.Interfaces.JobEdit.Vehicle.Components;
 using VECTO3GUI2020.ViewModel.MultiStage.Implementation;
 
 namespace VECTO3GUI2020.ViewModel.MultiStage.Interfaces
 {
-    public interface IMultiStageViewModelFactory
+
+	public interface IMultiStageViewModelFactory : IMultiStageViewModelFactoryDefaultInstanceProvider, IMultiStageViewModelFactoryTypeAsNameInstanceProvider
+	{
+		
+	}
+
+
+	public interface IMultiStageViewModelFactoryTypeAsNameInstanceProvider
+	{
+		IDocumentViewModel CreateDocumentViewModel(IDeclarationInputDataProvider inputData);
+		IVehicleViewModel CreateStageInputVehicleViewModel(IVehicleDeclarationInputData inputData);
+	}
+
+
+
+    public interface IMultiStageViewModelFactoryDefaultInstanceProvider
 	{
 		IViewModelBase GetNewMultistageJobViewModel();
 
@@ -26,14 +42,15 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Interfaces
 		IManufacturingStageViewModel GetManufacturingStageViewModel(IManufacturingStageInputData consolidatedManufacturingStageInputData, bool exempted);
 		IMultistageAirdragViewModel GetMultistageAirdragViewModel();
 
-		
 		IMultistageAirdragViewModel GetMultistageAirdragViewModel(
 			IAirdragDeclarationInputData consolidatedAirdragInputData);
 
+		IMultistageAuxiliariesViewModel GetAuxiliariesViewModel();
 		IMultistageAuxiliariesViewModel GetAuxiliariesViewModel(
 			IBusAuxiliariesDeclarationData consolidatedAuxiliariesInputData);
 
 		ICreateVifViewModel GetCreateVifViewModel();
+
 		//IViewModelBase CreateNewMultiStageJobViewModel();
 
 		//IMultiStageJobViewModel CreateMultiStageJobViewModel(string inputProviderType, IMultistageBusInputDataProvider inputData);

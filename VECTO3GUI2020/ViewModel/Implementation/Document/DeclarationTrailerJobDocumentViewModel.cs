@@ -26,12 +26,6 @@ namespace VECTO3GUI2020.ViewModel.Implementation.Document
 			set => throw new System.NotImplementedException();
 		}
 
-		public bool CanBeEdited
-		{
-			get => false;
-			set => throw new System.NotImplementedException();
-		}
-
 		IEditViewModel IDocumentViewModel.EditViewModel => throw new System.NotImplementedException();
 
         private IXMLInputDataReader _xMLInputDataReader;

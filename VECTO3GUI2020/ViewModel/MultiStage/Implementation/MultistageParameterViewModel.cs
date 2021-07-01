@@ -1,26 +1,16 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
-using System.Net.Mime;
 using System.Reflection;
 using System.Resources;
-using System.Runtime.InteropServices;
-using System.Windows;
-using System.Windows.Controls;
-using Castle.Core.Internal;
-using Castle.Core.Resource;
-using Castle.DynamicProxy.Internal;
-using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.Utils;
-using VECTO3GUI2020.Annotations;
+using VECTO3GUI2020.Helper;
 using VECTO3GUI2020.ViewModel.Implementation.Common;
 using VECTO3GUI2020.ViewModel.Interfaces.Common;
-using VECTO3GUI2020.Views.Multistage.CustomControls;
 
-namespace VECTO3GUI2020.Helper
+namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 {
 	public enum ViewMode
 	{
@@ -66,6 +56,7 @@ namespace VECTO3GUI2020.Helper
 		private readonly string _propertyName;
 		private bool _isReadOnly;
 		private bool _valueFieldIsEditable;
+		private bool _showConsolidatedData = true;
 
 		public MultistageParameterViewModel (
 			string propertyName,
@@ -82,7 +73,6 @@ namespace VECTO3GUI2020.Helper
 			PreviousContent = previousContent;
 			_propertyChangedCallback = propertyChangedCallback;
 			_parentViewModel = parentViewModel;
-			//_parentViewModel.PropertyChanged += ParentViewModelPropertyChanged;
 			_propertyInfo = parentViewModel.GetType().GetProperty(propertyName);
 			
 			_viewMode = viewMode;
@@ -196,10 +186,6 @@ namespace VECTO3GUI2020.Helper
 				if (type == typeof(string)) {
 					return "";
 				}
-				
-
-
-
 			}
 			catch (Exception ex)
 			{
@@ -378,6 +364,12 @@ namespace VECTO3GUI2020.Helper
 			get => !_mandatory;
 		}
 
+		public bool ShowConsolidatedData
+		{
+			get => _showConsolidatedData && !Mandatory;
+			set => SetProperty(ref _showConsolidatedData, value);
+		}
+
 		#region Implementation of IDataErrorInfo
 
 		public string this[string columnName]
@@ -418,4 +410,6 @@ namespace VECTO3GUI2020.Helper
 
 		#endregion
 	}
+
+
 }

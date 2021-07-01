@@ -6,10 +6,13 @@ using System.Threading.Tasks;
 using System.Windows.Automation.Peers;
 using Ninject.Extensions.Factory;
 using Ninject.Modules;
+using TUGraz.VectoCore.InputData.FileIO.XML.Declaration;
+using TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider;
 using TUGraz.VectoCore.Models.SimulationComponent;
 using VECTO3GUI2020.Ninject.Util;
 using VECTO3GUI2020.ViewModel.Implementation;
 using VECTO3GUI2020.ViewModel.Interfaces.Common;
+using VECTO3GUI2020.ViewModel.Interfaces.Document;
 using VECTO3GUI2020.ViewModel.Interfaces.JobEdit.Vehicle;
 using VECTO3GUI2020.ViewModel.MultiStage.Implementation;
 using VECTO3GUI2020.ViewModel.MultiStage.Interfaces;
@@ -27,7 +30,7 @@ namespace VECTO3GUI2020.Ninject
 			Bind<IMultiStageJobViewModel>().To<MultiStageJobViewModel_v0_1>().
 				NamedLikeFactoryMethod((IMultiStageViewModelFactory f) => f.GetMultiStageJobViewModel(null));
 
-			Bind<IVehicleViewModel>().To<DeclarationInterimStageBusVehicleViewModel_v2_8>().
+			Bind<IVehicleViewModel>().To<InterimStageBusVehicleViewModel_v2_8>().
 				NamedLikeFactoryMethod((IMultiStageViewModelFactory f)=>f.GetInterimStageVehicleViewModel());
 
 			Bind<IManufacturingStageViewModel>().To<ManufacturingStageViewModel_v0_1>().
@@ -43,6 +46,14 @@ namespace VECTO3GUI2020.Ninject
 
 			Bind<ICreateVifViewModel>().To<CreateVifViewModel>().
 				NamedLikeFactoryMethod((IMultiStageViewModelFactory f) => f.GetCreateVifViewModel());
+
+
+
+
+
+			Bind<IDocumentViewModel>().To<StageInputViewModel>()
+				.Named(typeof(XMLDeclarationInputDataProviderV20).ToString());
+
 		}
 	}
 }

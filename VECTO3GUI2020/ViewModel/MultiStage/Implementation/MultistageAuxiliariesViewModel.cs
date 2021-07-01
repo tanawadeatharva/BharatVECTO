@@ -38,11 +38,17 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 		object PrimaryVehicleHybridElectric { get; set; }
 		bool HasErrors { get; }
 		Dictionary<string, string> Errors { get; }
+		bool ShowConsolidatedData { get; set; }
 	}
 
 
 	public class MultistageAuxiliariesViewModel : ViewModelBase, IMultistageAuxiliariesViewModel, IDataErrorInfo
 	{
+
+		public MultistageAuxiliariesViewModel()
+		{
+			CreateParameterViewModels();
+		}
 
 		public MultistageAuxiliariesViewModel(IBusAuxiliariesDeclarationData consolidatedAuxiliariesInputData)
 		{
@@ -224,11 +230,23 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 			OnPropertyChanged(String.Empty);
 		}
 
+		private bool _showConsolidatedData;
+
+		public bool ShowConsolidatedData
+		{
+			get => _showConsolidatedData;
+			set
+			{
+				SetProperty(ref _showConsolidatedData, value);
+				foreach (var multistageParameterViewModel in ParameterViewModels) {
+					multistageParameterViewModel.Value.ShowConsolidatedData = value;
+				}
+			}
+		}
+
 
 
 		private IBusAuxiliariesDeclarationData _consolidatedInputData;
-
-
 		public IBusAuxiliariesDeclarationData ConsolidatedInputData
 		{
 			get => _consolidatedInputData;

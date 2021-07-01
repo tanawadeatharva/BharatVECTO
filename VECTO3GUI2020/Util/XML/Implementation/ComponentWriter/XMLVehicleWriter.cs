@@ -193,7 +193,7 @@ namespace VECTO3GUI2020.Util.XML.Implementation
 	{
 		private readonly bool _exempted;
 		public static readonly string[] SUPPORTEDVERSIONS = {
-			typeof(DeclarationInterimStageBusVehicleViewModel_v2_8).ToString()
+			typeof(InterimStageBusVehicleViewModel_v2_8).ToString()
 		};
 		public XMLVehicleWriter_v2_8(IVehicleDeclarationInputData inputData, IXMLWriterFactory xmlWriterFactory) : base(inputData, xmlWriterFactory)
 		{

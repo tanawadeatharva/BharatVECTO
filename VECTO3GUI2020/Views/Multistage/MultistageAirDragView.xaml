@@ -30,6 +30,8 @@
                     </DockPanel>
 
                     <StackPanel HorizontalAlignment="Stretch" Margin="4" >
+                        <StackPanel Visibility="{Binding ShowConsolidatedData,
+                            Converter={StaticResource BooleanToVisibilityConverter}}">
                         <Label Style="{DynamicResource LabelStyle1}">Consolidated Airdrag Data</Label>
                         <StackPanel Visibility="{Binding ConsolidatedAirdragData, Converter={StaticResource NullToVisibilityConverter}}">
                             <customControlsMultistage:LabledTextBoxMultistage Content="{Binding ConsolidatedAirdragData.Manufacturer, Mode=OneWay}" ReadOnly="True"/>
@@ -37,6 +39,7 @@
                             <customControlsMultistage:LabledTextBoxMultistage Content="{Binding ConsolidatedAirdragData.AirDragArea, Mode=OneWay}" ReadOnly="True"/>
                         </StackPanel>
                         <Label Visibility="{Binding ConsolidatedAirdragData, Converter={StaticResource NullToVisibilityConverter}, ConverterParameter=invert}">No data set</Label>
+                        </StackPanel>
                         <Label Style="{DynamicResource LabelStyle1}">Data from File</Label>
                         <ContentControl Content="{Binding AirDragViewModel}" 
                                         Visibility="{Binding AirDragViewModel, Converter={StaticResource NullToVisibilityConverter}}">

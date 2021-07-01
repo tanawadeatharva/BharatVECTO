@@ -22,7 +22,7 @@ namespace Vecto3GUI2020Test.ViewModelTests
 			var vm = loadFile(consolidated_multiple_stages_airdrag);
 
 			var vehicleVm = vm.MultiStageJobViewModel.ManufacturingStageViewModel.Vehicle as
-				DeclarationInterimStageBusVehicleViewModel_v2_8;
+				InterimStageBusVehicleViewModel_v2_8;
 
 			Assert.IsTrue(vehicleVm.AirdragModifiedMultistageEditingEnabled);
 
@@ -39,7 +39,7 @@ namespace Vecto3GUI2020Test.ViewModelTests
 
 			var vehicleVm =
 				vm.MultiStageJobViewModel.ManufacturingStageViewModel.Vehicle as
-					DeclarationInterimStageBusVehicleViewModel_v2_8;
+					InterimStageBusVehicleViewModel_v2_8;
 
 			Assert.IsFalse(vehicleVm.AirdragModifiedMultistageEditingEnabled);
 		}
@@ -57,7 +57,7 @@ namespace Vecto3GUI2020Test.ViewModelTests
 			var vm = loadFile(primary_vehicle_only);
 			var vehicleVm =
 				vm.MultiStageJobViewModel.ManufacturingStageViewModel.Vehicle as
-					DeclarationInterimStageBusVehicleViewModel_v2_8;
+					InterimStageBusVehicleViewModel_v2_8;
 
 			Assert.IsNull(vehicleVm.AirdragModifiedMultistage);
 
@@ -88,7 +88,7 @@ namespace Vecto3GUI2020Test.ViewModelTests
 			Assert.IsNotNull(secondstageVm);
 			var secondStageVehicleVm =
 				(secondstageVm.MultiStageJobViewModel.ManufacturingStageViewModel.VehicleViewModel) as
-				DeclarationInterimStageBusVehicleViewModel_v2_8;
+				InterimStageBusVehicleViewModel_v2_8;
 			Assert.IsTrue(secondStageVehicleVm.AirdragModifiedMultistageEditingEnabled);
 			Assert.IsTrue(secondStageVehicleVm.AirdragModifiedMultistageMandatory);
 			Assert.IsNull(secondStageVehicleVm.ConsolidatedVehicleData.AirdragModifiedMultistage);
@@ -106,7 +106,7 @@ namespace Vecto3GUI2020Test.ViewModelTests
 			var vm = loadFile(primary_vehicle_only);
 			var vehicleVm =
 				vm.MultiStageJobViewModel.ManufacturingStageViewModel.Vehicle as
-					DeclarationInterimStageBusVehicleViewModel_v2_8;
+					InterimStageBusVehicleViewModel_v2_8;
 
 			Assert.IsNull(vehicleVm.AirdragModifiedMultistage);
 
@@ -131,7 +131,7 @@ namespace Vecto3GUI2020Test.ViewModelTests
 			//var vm = loadFile(primary_vehicle_only);
 			//var vehicleVM =
 			//	vm.MultiStageJobViewModel.ManufacturingStageViewModel.Vehicle as
-			//		DeclarationInterimStageBusVehicleViewModel_v2_8;
+			//		InterimStageBusVehicleViewModel_v2_8;
 
 			//Assert.IsNull(vehicleVM.AirdragModifiedMultistage);
 
@@ -148,7 +148,7 @@ namespace Vecto3GUI2020Test.ViewModelTests
 		{
 			var vm = loadFile(consolidated_multiple_stages_airdrag);
 
-			var vehicleViewModel = vm.MultiStageJobViewModel.ManufacturingStageViewModel.VehicleViewModel as DeclarationInterimStageBusVehicleViewModel_v2_8;
+			var vehicleViewModel = vm.MultiStageJobViewModel.ManufacturingStageViewModel.VehicleViewModel as InterimStageBusVehicleViewModel_v2_8;
 
 			Assert.IsNull(vehicleViewModel.AirdragModifiedMultistage);
 
@@ -180,7 +180,7 @@ namespace Vecto3GUI2020Test.ViewModelTests
 		{
 			var vm = loadFile(consolidated_multiple_stages_airdrag);
 
-			var vehicleViewModel = vm.MultiStageJobViewModel.ManufacturingStageViewModel.VehicleViewModel as DeclarationInterimStageBusVehicleViewModel_v2_8;
+			var vehicleViewModel = vm.MultiStageJobViewModel.ManufacturingStageViewModel.VehicleViewModel as InterimStageBusVehicleViewModel_v2_8;
 
 			Assert.IsNull(vehicleViewModel.AirdragModifiedMultistage);
 
@@ -218,7 +218,7 @@ namespace Vecto3GUI2020Test.ViewModelTests
 		{
 			var vm = loadFile(consolidated_multiple_stages_airdrag);
 
-			var vehicleViewModel = vm.MultiStageJobViewModel.ManufacturingStageViewModel.VehicleViewModel as DeclarationInterimStageBusVehicleViewModel_v2_8;
+			var vehicleViewModel = vm.MultiStageJobViewModel.ManufacturingStageViewModel.VehicleViewModel as InterimStageBusVehicleViewModel_v2_8;
 
 			Assert.IsNull(vehicleViewModel.AirdragModifiedMultistage);
 
@@ -245,7 +245,7 @@ namespace Vecto3GUI2020Test.ViewModelTests
 		{
 			var vm = loadFile(consolidated_multiple_stages_airdrag);
 
-			var vehicleViewModel = vm.MultiStageJobViewModel.ManufacturingStageViewModel.VehicleViewModel as DeclarationInterimStageBusVehicleViewModel_v2_8;
+			var vehicleViewModel = vm.MultiStageJobViewModel.ManufacturingStageViewModel.VehicleViewModel as InterimStageBusVehicleViewModel_v2_8;
 
 			Assert.IsNull(vehicleViewModel.AirdragModifiedMultistage);
 

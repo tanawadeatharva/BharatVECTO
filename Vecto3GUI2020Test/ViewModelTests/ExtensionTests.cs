@@ -39,7 +39,7 @@ namespace Vecto3GUI2020Test.ViewModelTests
 			Assert.False(collection2.Contains(VehicleCode.NOT_APPLICABLE));
 		}
 
-
+		[Ignore("")]
 		[TestCase(1.000, 3U, "1.000")]
 		[TestCase(1.210, 3U, "1.210")]
 		[TestCase(1.201, 3U, "1.201")]

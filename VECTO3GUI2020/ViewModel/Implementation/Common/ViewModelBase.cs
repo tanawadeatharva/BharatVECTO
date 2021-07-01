@@ -2,6 +2,9 @@
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Windows;
+using System.Windows.Input;
+using Microsoft.Toolkit.Mvvm.Input;
+using Ninject;
 using VECTO3GUI2020.Helper;
 using VECTO3GUI2020.ViewModel.Interfaces.Common;
 
@@ -43,7 +46,22 @@ namespace VECTO3GUI2020.ViewModel.Implementation.Common
 
 		public virtual string Title { get; set; } = "No Title Set";
 
-		protected void CloseWindow(Window window, IDialogHelper dialogHelper, bool showDialog = true)
+        [Inject]
+        public IDialogHelper DialogHelper { get; set; }
+
+		protected bool AskForConfirmationOnClose { get; set; } = false;
+
+		private ICommand _closeWindowCommand;
+		public ICommand CloseWindowCommand
+		{
+			get
+			{
+				return _closeWindowCommand ?? new RelayCommand<Window>(window => CloseWindow(window, DialogHelper, AskForConfirmationOnClose), window => true);
+			}
+		}
+
+
+        protected void CloseWindow(Window window, IDialogHelper dialogHelper, bool showDialog = true)
 		{
 			MessageBoxResult result;
 			if (showDialog) {
