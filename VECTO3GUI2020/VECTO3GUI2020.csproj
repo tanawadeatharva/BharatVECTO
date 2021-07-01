@@ -155,6 +155,7 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Behaviours\AutoScrollDataGridBehaviour.cs" />
+    <Compile Include="Behaviours\PopUpHorizontalAlignmentBehavior.cs" />
     <Compile Include="Helper\ConvertedSIDummyCreator.cs" />
     <Compile Include="Helper\Converter\AlwaysVisibleConverter.cs" />
     <Compile Include="Helper\Converter\BoolToVisibilityConverter.cs" />
@@ -329,7 +330,7 @@
     <Compile Include="ViewModel\MultiStage\Implementation\StageInputViewModel.cs" />
     <Compile Include="ViewModel\MultiStage\Implementation\StageViewModelBase.cs" />
     <Compile Include="ViewModel\MultiStage\Interfaces\IMultistageAirdragViewModel.cs" />
-    <Compile Include="ViewModel\MultiStage\Interfaces\IMultiStageViewModelFactoryDefaultInstanceProvider.cs" />
+    <Compile Include="ViewModel\MultiStage\Interfaces\IMultiStageViewModelFactory.cs" />
     <Compile Include="ViewModel\Implementation\OutputViewModel.cs" />
     <Compile Include="Views\AboutView.xaml.cs">
       <DependentUpon>AboutView.xaml</DependentUpon>

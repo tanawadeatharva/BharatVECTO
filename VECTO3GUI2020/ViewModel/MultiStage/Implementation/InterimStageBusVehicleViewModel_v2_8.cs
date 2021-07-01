@@ -84,9 +84,11 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 	public class InterimStageBusVehicleViewModel_v2_8 : ViewModelBase, IMultistageVehicleViewModel,
 		IVehicleComponentsDeclaration, IAdvancedDriverAssistantSystemDeclarationInputData, IDataErrorInfo
 	{
+		public static readonly Type INPUTPROVIDERTYPE = typeof(XMLDeclarationInterimStageBusDataProviderV28);
+		public static readonly Type INPUTPROVIDERTYPEEXEMPTED = typeof(XMLDeclarationExemptedInterimStageBusDataProviderV28);
+		public static string VERSION = INPUTPROVIDERTYPE.ToString();
+		public static string VERSION_EXEMPTED = INPUTPROVIDERTYPEEXEMPTED.ToString();
 
-		public static string VERSION = typeof(XMLDeclarationInterimStageBusDataProviderV28).ToString();
-		public static string VERSION_EXEMPTED = typeof(XMLDeclarationExemptedInterimStageBusDataProviderV28).ToString();
 
 		private readonly IMultiStageViewModelFactory _multiStageViewModelFactory;
 
@@ -125,8 +127,7 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 
 		#endregion
 
-		public static readonly string INPUTPROVIDERTYPE =
-			typeof(XMLDeclarationInterimStageBusDataProviderV28).ToString();
+
 
 		public string Name => "Vehicle";
 
@@ -163,26 +164,28 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 			}
 		}
 
-		public InterimStageBusVehicleViewModel_v2_8(IVehicleDeclarationInputData inputData, IMultiStageViewModelFactory multistageViewModelFactory)
+		public InterimStageBusVehicleViewModel_v2_8(string inputProviderType, IMultiStageViewModelFactory multiStageViewModelFactory)
 		{
-			if (inputData.GetType().ToString() == VERSION_EXEMPTED) {
+			if (inputProviderType == VERSION_EXEMPTED)
+			{
 				_exemptedVehicle = true;
-				Debug.Assert(inputData.ExemptedVehicle);
 			}
 
-			_multiStageViewModelFactory = multistageViewModelFactory;
+			_multiStageViewModelFactory = multiStageViewModelFactory;
 
-			if (!_exemptedVehicle) {
+			if (!_exemptedVehicle)
+			{
 				MultistageAirdragViewModel = _multiStageViewModelFactory.GetMultistageAirdragViewModel();
 				MultistageAuxiliariesViewModel = _multiStageViewModelFactory.GetAuxiliariesViewModel();
 			}
 
 			CreateParameterViewModels();
-			SetVehicleInputData(inputData);
 			ShowConsolidatedData = false;
-			
-
-
+		}
+		public InterimStageBusVehicleViewModel_v2_8(IVehicleDeclarationInputData inputData, IMultiStageViewModelFactory multiStageViewModelFactory) : 
+			this(inputData.GetType().ToString(), multiStageViewModelFactory)
+		{
+			SetVehicleInputData(inputData);
 		}
 
 		public InterimStageBusVehicleViewModel_v2_8(IVehicleDeclarationInputData consolidatedVehicleData,

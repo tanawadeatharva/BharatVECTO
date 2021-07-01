@@ -3,7 +3,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using VECTO3GUI2020.ViewModel.Implementation;
-using VECTO3GUI2020.ViewModel.Interfaces;
+
 
 namespace VECTO3GUI2020.Views
 {

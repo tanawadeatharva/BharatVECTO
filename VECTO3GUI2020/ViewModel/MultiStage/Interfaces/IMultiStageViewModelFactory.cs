@@ -15,7 +15,10 @@ using VECTO3GUI2020.ViewModel.MultiStage.Implementation;
 namespace VECTO3GUI2020.ViewModel.MultiStage.Interfaces
 {
 
-	public interface IMultiStageViewModelFactory : IMultiStageViewModelFactoryDefaultInstanceProvider, IMultiStageViewModelFactoryTypeAsNameInstanceProvider
+	public interface IMultiStageViewModelFactory : 
+		IMultiStageViewModelFactoryDefaultInstanceProvider, 
+		IMultiStageViewModelFactoryTypeAsNameInstanceProvider, 
+		IMultistageViewModelFactoryFirstParameterAsNameInstanceProvider
 	{
 		
 	}
@@ -27,10 +30,16 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Interfaces
 		IVehicleViewModel CreateStageInputVehicleViewModel(IVehicleDeclarationInputData inputData);
 	}
 
+	public interface IMultistageViewModelFactoryFirstParameterAsNameInstanceProvider
+	{
+		IVehicleViewModel CreateStageInputVehicleViewModel(string inputProviderType);
+	}
+
 
 
     public interface IMultiStageViewModelFactoryDefaultInstanceProvider
 	{
+		IDocumentViewModel GetStageInputViewModel(bool exemptedVehicle);
 		IViewModelBase GetNewMultistageJobViewModel();
 
 		IMultiStageJobViewModel GetMultiStageJobViewModel(IMultistageBusInputDataProvider inputData);
@@ -49,7 +58,7 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Interfaces
 		IMultistageAuxiliariesViewModel GetAuxiliariesViewModel(
 			IBusAuxiliariesDeclarationData consolidatedAuxiliariesInputData);
 
-		ICreateVifViewModel GetCreateVifViewModel();
+		ICreateVifViewModel GetCreateNewVifViewModel();
 
 		//IViewModelBase CreateNewMultiStageJobViewModel();
 

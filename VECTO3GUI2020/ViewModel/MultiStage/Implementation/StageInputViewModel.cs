@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System.Diagnostics;
+using System.IO;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Utils;
@@ -21,11 +22,21 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 		private readonly string _documentName;
 		private bool _selected;
 
+		public StageInputViewModel(bool exemptedVehicle, IMultiStageViewModelFactory multiStageViewModelFactory) : base(multiStageViewModelFactory)
+		{
+			_vehicleViewModel = _viewModelFactory.CreateStageInputVehicleViewModel(
+				exemptedVehicle
+				? InterimStageBusVehicleViewModel_v2_8.VERSION_EXEMPTED
+				: InterimStageBusVehicleViewModel_v2_8.VERSION) as IMultistageVehicleViewModel;
+
+			Debug.Assert(_vehicleViewModel != null);
+			Init();
+		}
+
 
 		public StageInputViewModel(IDeclarationInputDataProvider inputData, IMultiStageViewModelFactory multiStageViewModelFactory) : base(multiStageViewModelFactory)
 		{
 			_documentName = inputData.JobInputData.JobName;
-			_viewModelFactory = multiStageViewModelFactory;
 			_vehicleViewModel =
 				_viewModelFactory.CreateStageInputVehicleViewModel(inputData.JobInputData.Vehicle) as IMultistageVehicleViewModel;
 			(_vehicleViewModel as InterimStageBusVehicleViewModel_v2_8).ShowConsolidatedData = false;
@@ -33,6 +44,11 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 			_documentType = XmlDocumentType.DeclarationJobData;
 			Title = $"Edit Stage Input - {Path.GetFileNameWithoutExtension(_dataSource.SourceFile)}";
 
+			Init();
+		}
+
+		private void Init()
+		{
 			Components.Add("vehicle", VehicleViewModel as IViewModelBase);
 			Components.Add("auxiliaries", VehicleViewModel.MultistageAuxiliariesViewModel as IViewModelBase);
 			Components.Add("airdrag", VehicleViewModel.MultistageAirdragViewModel as IViewModelBase);

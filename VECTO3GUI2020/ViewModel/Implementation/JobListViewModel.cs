@@ -203,6 +203,14 @@ namespace VECTO3GUI2020.ViewModel.Implementation
 		#endregion
 
 
+		private bool _newFilePopUpIsOpen = false;
+		public bool NewFilePopUpIsOpen
+		{
+			get => _newFilePopUpIsOpen;
+			set => SetProperty(ref _newFilePopUpIsOpen, value);
+		}
+
+
 
 
 		#region Simulation
@@ -604,6 +612,19 @@ namespace VECTO3GUI2020.ViewModel.Implementation
 		private IAsyncRelayCommand _simulationCommand;
 		private IRelayCommand _newVifCommand;
 		private ICommand _newMultiStageFileCommand;
+		private ICommand _openNewFilePopUpCommand;
+		private ICommand _newCompletedInputCommand;
+		private ICommand _newExemptedCompletedInputCommand;
+
+
+		public ICommand OpenPopUpCommand
+		{
+			get => _openNewFilePopUpCommand ??
+					(_openNewFilePopUpCommand = new RelayCommand(() => {
+						NewFilePopUpIsOpen = true;
+					}));
+		}
+
 
 
 		public ICommand CancelSimulation
@@ -621,12 +642,32 @@ namespace VECTO3GUI2020.ViewModel.Implementation
 			}            
 		}
 
+		public ICommand NewCompletedInputCommand
+		{
+			get
+			{
+				return _newCompletedInputCommand ?? (_newCompletedInputCommand = new RelayCommand(() => {
+					_windowHelper.ShowWindow(_multiStageViewModelFactory.GetStageInputViewModel(false));
+				}));
+			}
+		}
+
+		public ICommand NewExemptedCompletedInputCommand
+		{
+			get
+			{
+				return _newExemptedCompletedInputCommand ?? (_newExemptedCompletedInputCommand = new RelayCommand(() => {
+					_windowHelper.ShowWindow(_multiStageViewModelFactory.GetStageInputViewModel(true));
+				}));
+			}
+		}
+
 		public IRelayCommand NewVifCommand
 		{
 			get
 			{
 				return _newVifCommand ?? (_newVifCommand = new Microsoft.Toolkit.Mvvm.Input.RelayCommand(() => {
-					_windowHelper.ShowWindow(_multiStageViewModelFactory.GetCreateVifViewModel());
+					_windowHelper.ShowWindow(_multiStageViewModelFactory.GetCreateNewVifViewModel());
 				}));
 			}
 		}
@@ -642,7 +683,7 @@ namespace VECTO3GUI2020.ViewModel.Implementation
 
 
 
-		public ICommand NewManufacturingStageFile
+		public ICommand NewManufacturingStageFileCommand
 		{
 			get
 			{

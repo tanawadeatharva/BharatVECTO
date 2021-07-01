@@ -9,7 +9,7 @@ namespace VECTO3GUI2020.ViewModel.Interfaces
     public interface IJobListViewModel : IMainViewModel
     {
 		ObservableCollection<IDocumentViewModel> Jobs { get; }
-		ICommand NewManufacturingStageFile { get; }
+		ICommand NewManufacturingStageFileCommand { get; }
 		Task<IDocumentViewModel> AddJobAsync(string fileName);
 	}
 }

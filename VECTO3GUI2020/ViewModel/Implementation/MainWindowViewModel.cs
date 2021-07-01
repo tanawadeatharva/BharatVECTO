@@ -132,7 +132,7 @@ namespace VECTO3GUI2020.ViewModel.Implementation
 
         #region newMultiStage
 
-		public ICommand NewInterimFile => _jobListVm.NewManufacturingStageFile;
+		public ICommand NewInterimFile => _jobListVm.NewManufacturingStageFileCommand;
 
 
 
