@@ -749,11 +749,16 @@ namespace VECTO3GUI2020.ViewModel.Implementation
 			} else if (documentType == XmlDocumentType.DeclarationJobData) {
 				//Remove
 				var inputDataProvider = _inputDataReader.CreateDeclaration(fileName);
-				var result = _multiStageViewModelFactory.CreateDocumentViewModel(inputDataProvider);
+				IDocumentViewModel result;
+				try {
+				
+					result = _multiStageViewModelFactory.CreateDocumentViewModel(inputDataProvider);
+				} catch (Exception ex){
+					Debug.WriteLine(ex.GetInnerExceptionMessages());
+					result = new SimulationOnlyDeclarationJob(inputDataProvider.DataSource, inputDataProvider.JobInputData.JobName, XmlDocumentType.DeclarationJobData) as IDocumentViewModel;
+				}
 
-				//TODO Harry
-				//var result = new SimulationOnlyDeclarationJob(inputDataProvider.DataSource,
-				//	inputDataProvider.JobInputData.JobName, XmlDocumentType.DeclarationJobData) as IDocumentViewModel;
+
 				return Task.FromResult(result);
 
 
