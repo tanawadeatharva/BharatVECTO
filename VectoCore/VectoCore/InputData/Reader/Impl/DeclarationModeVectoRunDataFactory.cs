@@ -91,6 +91,10 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 			_dao = new DeclarationDataAdapter();
 			var vehicle = InputDataProvider.JobInputData.Vehicle;
 			if (vehicle.ExemptedVehicle) {
+				if (vehicle.AxleConfiguration != AxleConfiguration.AxleConfig_Undefined) {
+					_segment = GetVehicleClassification(vehicle.VehicleCategory,
+						vehicle.AxleConfiguration, vehicle.GrossVehicleMassRating, vehicle.CurbMassChassis, false);
+				}
 				return;
 			}
 
@@ -146,6 +150,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 					VehicleData = _dao.CreateVehicleData(InputDataProvider.JobInputData.Vehicle, null, null, allowVocational),
 					InputDataHash = InputDataProvider.XMLHash
 				};
+				powertrainConfig.VehicleData.VehicleClass = _segment.Found ? _segment.VehicleClass : VehicleClass.Class0;
 			} else {
 				powertrainConfig = new VectoRunData() {
 					VehicleData =

@@ -154,7 +154,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering.DataProvider
 			get { return false; }
 		}
 
-		public bool SleeperCab
+		public bool? SleeperCab
 		{
 			get { return false; }
 		}

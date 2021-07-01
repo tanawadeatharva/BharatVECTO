@@ -53,7 +53,8 @@ namespace TUGraz.VectoCore.OutputData.XML
 {
 	public class XMLManufacturerReport
 	{
-		public const string CURRENT_SCHEMA_VERSION = "0.7";
+		public const string SCHEMA_VERSION_STRING = "0.7";
+		public const string CURRENT_SCHEMA_VERSION = "0.7.1";
 		
 		protected XElement VehiclePart;
 		
@@ -66,13 +67,16 @@ namespace TUGraz.VectoCore.OutputData.XML
 
 		private bool _allSuccess = true;
 
-		public XMLManufacturerReport()
+		public XMLManufacturerReport(XMLDeclarationReport xmlDeclarationReport)
 		{
+			DeclarationReport = xmlDeclarationReport;
 			di = "http://www.w3.org/2000/09/xmldsig#";
 			tns = "urn:tugraz:ivt:VectoAPI:DeclarationOutput:v" + CURRENT_SCHEMA_VERSION;
 			VehiclePart = new XElement(tns + XMLNames.Component_Vehicle);
 			Results = new XElement(tns + XMLNames.Report_Results);
 		}
+
+		public XMLDeclarationReport DeclarationReport { get; }
 
 		public void Initialize(VectoRunData modelData)
 		{
@@ -93,6 +97,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 					: new[] {
 						new XElement(tns + XMLNames.Vehicle_AxleConfiguration, modelData.VehicleData.AxleConfiguration.GetName()),
 						new XElement(tns + XMLNames.Report_Vehicle_VehicleGroup, modelData.VehicleData.VehicleClass.GetClassNumber()),
+						new XElement(tns + XMLNames.Report_CO2StandardsGroup, DeclarationReport.WeightingGroup.ToXMLFormat()), 
 						new XElement(tns + XMLNames.Vehicle_VocationalVehicle, modelData.VehicleData.VocationalVehicle),
 						new XElement(tns + XMLNames.Vehicle_SleeperCab, modelData.VehicleData.SleeperCab),
 						new XElement(tns + XMLNames.Vehicle_PTO, modelData.PTO != null),
@@ -135,10 +140,26 @@ namespace TUGraz.VectoCore.OutputData.XML
 
 		private XElement[] ExemptedData(VectoRunData modelData)
 		{
-			return new [] {
-				modelData.VehicleData.HybridElectricHDV ? new XElement(tns + XMLNames.Vehicle_MaxNetPower1, XMLHelper.ValueAsUnit(modelData.VehicleData.MaxNetPower1, XMLNames.Unit_W)) : null,
-				modelData.VehicleData.HybridElectricHDV ? new XElement(tns + XMLNames.Vehicle_MaxNetPower2, XMLHelper.ValueAsUnit(modelData.VehicleData.MaxNetPower2, XMLNames.Unit_W)) : null 
-			};
+			var retVal = new List<XElement>();
+
+			if (modelData.VehicleData.AxleConfiguration != AxleConfiguration.AxleConfig_Undefined) {
+				retVal.Add(new XElement(tns + XMLNames.Vehicle_AxleConfiguration, modelData.VehicleData.AxleConfiguration.GetName()));
+				retVal.Add(new XElement(tns + XMLNames.Report_Vehicle_VehicleGroup, modelData.VehicleData.VehicleClass.GetClassNumber()));
+			}
+
+			if (modelData.VehicleData.SleeperCab.HasValue) {
+				retVal.Add(new XElement(tns + XMLNames.Vehicle_SleeperCab, modelData.VehicleData.SleeperCab.Value));
+			}
+
+			if (modelData.VehicleData.MaxNetPower1 != null) 
+			 retVal.Add(new XElement(tns + XMLNames.Vehicle_MaxNetPower1,
+				XMLHelper.ValueAsUnit(modelData.VehicleData.MaxNetPower1, XMLNames.Unit_W)));
+			if (modelData.VehicleData.MaxNetPower2 != null) {
+				retVal.Add(new XElement(tns + XMLNames.Vehicle_MaxNetPower2,
+					XMLHelper.ValueAsUnit(modelData.VehicleData.MaxNetPower2, XMLNames.Unit_W)));
+			}
+
+			return retVal.ToArray();
 		}
 
 		private XElement CreateDummySig()
@@ -403,9 +424,9 @@ namespace TUGraz.VectoCore.OutputData.XML
 			results.AddFirst(new XElement(tns + XMLNames.Report_Result_Status, _allSuccess ? "success" : "error"));
 			var vehicle = new XElement(VehiclePart);
 			vehicle.Add(InputDataIntegrity);
-			retVal.Add(new XProcessingInstruction("xml-stylesheet", "href=\"https://webgate.ec.europa.eu/CITnet/svn/VECTO/trunk/Share/XML/CSS/VectoReports.css\""));
+			retVal.Add(new XProcessingInstruction("xml-stylesheet", "href=\"https://citnet.tech.ec.europa.eu/CITnet/svn/VECTO/trunk/Share/XML/CSS/VectoReports.css\""));
 			retVal.Add(new XElement(tns + XMLNames.VectoManufacturerReport,
-				new XAttribute("schemaVersion", CURRENT_SCHEMA_VERSION),
+				new XAttribute("schemaVersion", SCHEMA_VERSION_STRING),
 				new XAttribute(XNamespace.Xmlns + "xsi", xsi.NamespaceName),
 				new XAttribute("xmlns", tns),
 				new XAttribute(XNamespace.Xmlns + "di", di),

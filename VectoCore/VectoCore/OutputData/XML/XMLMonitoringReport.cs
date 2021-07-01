@@ -44,7 +44,9 @@ namespace TUGraz.VectoCore.OutputData.XML
 {
 	public class XMLMonitoringReport
 	{
-		public const string CURRENT_SCHEMA_VERSION = "0.7";
+		public const string SCHEMA_VERSION_STRING = "0.7";
+
+		public const string CURRENT_SCHEMA_VERSION = "0.7.1";
 
 		private XMLManufacturerReport _manufacturerReport;
 
@@ -93,11 +95,11 @@ namespace TUGraz.VectoCore.OutputData.XML
 
 			//retVal.Add(
 			//	new XProcessingInstruction(
-			//		"xml-stylesheet", "href=\"https://webgate.ec.europa.eu/CITnet/svn/VECTO/trunk/Share/XML/CSS/VectoReports.css\""));
+			//		"xml-stylesheet", "href=\"https://citnet.tech.ec.europa.eu/CITnet/svn/VECTO/trunk/Share/XML/CSS/VectoReports.css\""));
 			retVal.Add(
 				new XElement(
 					tns + "VectoMonitoring",
-					new XAttribute("schemaVersion", CURRENT_SCHEMA_VERSION),
+					new XAttribute("schemaVersion", SCHEMA_VERSION_STRING),
 					new XAttribute(XNamespace.Xmlns + "xsi", xsi.NamespaceName),
 					new XAttribute("xmlns", tns),
 					new XAttribute(XNamespace.Xmlns + "di", di),

@@ -703,7 +703,7 @@ namespace TUGraz.VectoCore.OutputData
 
 			row[TOTAL_VEHICLE_MASS] = (ConvertedSI)data.TotalVehicleWeight;
 
-			row[SLEEPER_CAB] = data.SleeperCab ? "yes" : "no";
+			row[SLEEPER_CAB] = data.SleeperCab.HasValue ? (data.SleeperCab.Value ? "yes" : "no") : "-";
 
 			row[ROLLING_RESISTANCE_COEFFICIENT_WO_TRAILER] =
 				data.RollResistanceCoefficientWithoutTrailer;
@@ -813,9 +813,9 @@ namespace TUGraz.VectoCore.OutputData
 						? ""
 						: data.CertificationNumber;
 			} else {
-				row[ANGLEDRIVE_MANUFACTURER] = Constants.NOT_AVailABLE;
-				row[ANGLEDRIVE_MODEL] = Constants.NOT_AVailABLE;
-				row[ANGLEDRIVE_RATIO] = Constants.NOT_AVailABLE;
+				row[ANGLEDRIVE_MANUFACTURER] = Constants.NOT_AVAILABLE;
+				row[ANGLEDRIVE_MODEL] = Constants.NOT_AVAILABLE;
+				row[ANGLEDRIVE_RATIO] = Constants.NOT_AVAILABLE;
 				row[ANGLEDRIVE_CERTIFICATION_METHOD] = "";
 				row[ANGLEDRIVE_CERTIFICATION_NUMBER] = "";
 			}
@@ -832,8 +832,8 @@ namespace TUGraz.VectoCore.OutputData
 					? ""
 					: data.CertificationNumber;
 			} else {
-				row[RETARDER_MANUFACTURER] = Constants.NOT_AVailABLE;
-				row[RETARDER_MODEL] = Constants.NOT_AVailABLE;
+				row[RETARDER_MANUFACTURER] = Constants.NOT_AVAILABLE;
+				row[RETARDER_MODEL] = Constants.NOT_AVAILABLE;
 				row[RETARDER_CERTIFICATION_METHOD] = "";
 				row[RETARDER_CERTIFICATION_NUMBER] = "";
 			}
@@ -871,8 +871,8 @@ namespace TUGraz.VectoCore.OutputData
 				row[GEAR_RATIO_LAST_GEAR] = data.Gears.Count > 0
 					? (ConvertedSI)data.Gears.Last().Value.Ratio.SI<Scalar>()
 					: (ConvertedSI)0.SI<Scalar>();
-				row[TORQUECONVERTER_MANUFACTURER] = Constants.NOT_AVailABLE;
-				row[TORQUECONVERTER_MODEL] = Constants.NOT_AVailABLE;
+				row[TORQUECONVERTER_MANUFACTURER] = Constants.NOT_AVAILABLE;
+				row[TORQUECONVERTER_MODEL] = Constants.NOT_AVAILABLE;
 				row[TORQUE_CONVERTER_CERTIFICATION_METHOD] = "";
 				row[TORQUE_CONVERTER_CERTIFICATION_NUMBER] = "";
 			}

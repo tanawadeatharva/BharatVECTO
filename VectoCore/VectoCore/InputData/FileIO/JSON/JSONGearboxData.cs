@@ -473,7 +473,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 		public string Manufacturer
 		{
-			get { return Constants.NOT_AVailABLE; }
+			get { return Constants.NOT_AVAILABLE; }
 		}
 
 		public string Model
@@ -483,7 +483,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 		public string Date
 		{
-			get { return Constants.NOT_AVailABLE; }
+			get { return Constants.NOT_AVAILABLE; }
 		}
 
 		public CertificationMethod CertificationMethod
@@ -493,7 +493,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 		public string CertificationNumber
 		{
-			get { return Constants.NOT_AVailABLE; }
+			get { return Constants.NOT_AVAILABLE; }
 		}
 
 		public DigestData DigestValue

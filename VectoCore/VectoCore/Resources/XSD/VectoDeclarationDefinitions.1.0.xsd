@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- edited with XMLSpy v2016 rel. 2 sp1 (x64) (http://www.altova.com) by Helmut Eichlseder (TU Graz/Inst. f. VKM und THD) -->
+<!-- edited with XMLSpy v2021 (x64) (http://www.altova.com) by Markus Quaritsch (Technische Universität Graz) -->
 <?xml-stylesheet type="text/xsl" href="../RenderTable.xslt"?>
 <xs:schema xmlns:tns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v1.0" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:vectoParam="urn:tugraz:ivt:VectoAPI:ParameterDocumentation" xmlns:di="http://www.w3.org/2000/09/xmldsig#" targetNamespace="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v1.0" elementFormDefault="qualified" attributeFormDefault="unqualified" version="1.0" xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:ParameterDocumentation ParameterDocumentation.xsd">
 	<xs:import namespace="http://www.w3.org/2000/09/xmldsig#" schemaLocation="xmldsig-core-schema.xsd"/>
@@ -85,49 +85,52 @@
 		</xs:sequence>
 	</xs:complexType>
 	<xs:complexType name="AirDragDataDeclarationType">
-		<xs:sequence>
-			<xs:element name="Manufacturer" type="tns:ManufacturerType">
-				<xs:annotation>
-					<xs:documentation>P240</xs:documentation>
-				</xs:annotation>
-			</xs:element>
-			<xs:element name="Model" type="tns:ModelType">
-				<xs:annotation>
-					<xs:documentation>P241</xs:documentation>
-				</xs:annotation>
-			</xs:element>
-			<xs:element name="CertificationNumber" type="tns:CertificationNumberType">
-				<xs:annotation>
-					<xs:documentation>P268</xs:documentation>
-				</xs:annotation>
-			</xs:element>
-			<xs:element name="Date" type="tns:DateTimeWithTimezone">
-				<xs:annotation>
-					<xs:documentation>P243</xs:documentation>
-				</xs:annotation>
-			</xs:element>
-			<xs:element name="AppVersion" type="tns:AppVersionType">
-				<xs:annotation>
-					<xs:documentation>P244</xs:documentation>
-				</xs:annotation>
-			</xs:element>
-			<xs:element name="CdxA_0" type="tns:AirdragCdxAType">
-				<xs:annotation>
-					<xs:documentation>P245 - [m²]</xs:documentation>
-				</xs:annotation>
-			</xs:element>
-			<xs:element name="TransferredCdxA" type="tns:AirdragCdxAType">
-				<xs:annotation>
-					<xs:documentation>P246 - [m²]</xs:documentation>
-				</xs:annotation>
-			</xs:element>
-			<xs:element name="DeclaredCdxA" type="tns:AirdragCdxAType">
-				<xs:annotation>
-					<xs:documentation>P146 - [m²]  Drag coefficient * Cross Sectional Area (Truck &amp; Trailer)</xs:documentation>
-				</xs:annotation>
-			</xs:element>
-		</xs:sequence>
-		<xs:attribute name="id"/>
+		<xs:complexContent>
+			<xs:extension base="tns:AbstractAirdragDataDeclarationType">
+				<xs:sequence>
+					<xs:element name="Manufacturer" type="tns:ManufacturerType">
+						<xs:annotation>
+							<xs:documentation>P240</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="Model" type="tns:ModelType">
+						<xs:annotation>
+							<xs:documentation>P241</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="CertificationNumber" type="tns:CertificationNumberType">
+						<xs:annotation>
+							<xs:documentation>P268</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="Date" type="tns:DateTimeWithTimezone">
+						<xs:annotation>
+							<xs:documentation>P243</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="AppVersion" type="tns:AppVersionType">
+						<xs:annotation>
+							<xs:documentation>P244</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="CdxA_0" type="tns:AirdragCdxAType">
+						<xs:annotation>
+							<xs:documentation>P245 - [m²]</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="TransferredCdxA" type="tns:AirdragCdxAType">
+						<xs:annotation>
+							<xs:documentation>P246 - [m²]</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="DeclaredCdxA" type="tns:AirdragCdxAType">
+						<xs:annotation>
+							<xs:documentation>P146 - [m²]  Drag coefficient * Cross Sectional Area (Truck &amp; Trailer)</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
 	</xs:complexType>
 	<xs:complexType name="AngledriveComponentDeclarationType">
 		<xs:sequence>
@@ -1062,6 +1065,11 @@
 							<xs:element name="ZeroEmissionVehicle" type="tns:ZeroEmissionVehicleType">
 								<xs:annotation>
 									<xs:documentation>P269 - bool</xs:documentation>
+								</xs:annotation>
+							</xs:element>
+							<xs:element name="SleeperCab" type="tns:SleeperCabType" minOccurs="0">
+								<xs:annotation>
+									<xs:documentation>P276 - bool</xs:documentation>
 								</xs:annotation>
 							</xs:element>
 							<xs:element name="MaxNetPower1" type="tns:PowerType" minOccurs="0">
@@ -2518,7 +2526,7 @@ ToDo: -0.00
 			<xs:enumeration value="8.5 R17.5"/>
 			<xs:enumeration value="8 R17.5"/>
 			<xs:enumeration value="LT265/75 R16"/>
-			<xs:enumeration value="385/55 R19.5"/>	
+			<xs:enumeration value="385/55 R19.5"/>
 			<xs:enumeration value="24 R21"/>
 			<xs:enumeration value="205/70 R15C"/>
 			<xs:enumeration value="215/70 R15C"/>

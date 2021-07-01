@@ -278,14 +278,14 @@ Public Class Vehicle
 	Public ReadOnly Property Manufacturer As String Implements IComponentInputData.Manufacturer
 		Get
 			' Just for the interface. Value is not available in GUI yet.
-			Return TUGraz.VectoCore.Configuration.Constants.NOT_AVailABLE
+			Return TUGraz.VectoCore.Configuration.Constants.NOT_AVAILABLE
 		End Get
 	End Property
 
 	Public ReadOnly Property Model As String Implements IComponentInputData.Model
 		Get
 			' Just for the interface. Value is not available in GUI yet.
-			Return TUGraz.VectoCore.Configuration.Constants.NOT_AVailABLE
+			Return TUGraz.VectoCore.Configuration.Constants.NOT_AVAILABLE
 		End Get
 	End Property
 
@@ -305,7 +305,7 @@ Public Class Vehicle
 	Public ReadOnly Property CertificationNumber As String Implements IComponentInputData.CertificationNumber
 		Get
 			' Just for the interface. Value is not available in GUI yet.
-			Return TUGraz.VectoCore.Configuration.Constants.NOT_AVailABLE
+			Return TUGraz.VectoCore.Configuration.Constants.NOT_AVAILABLE
 		End Get
 	End Property
 
@@ -343,7 +343,7 @@ Public Class Vehicle
 
 	Public ReadOnly Property VIN As String Implements IVehicleDeclarationInputData.VIN
 		Get
-			Return TUGraz.VectoCore.Configuration.Constants.NOT_AVailABLE
+			Return TUGraz.VectoCore.Configuration.Constants.NOT_AVAILABLE
 		End Get
 	End Property
 
@@ -375,7 +375,7 @@ Public Class Vehicle
 
 	Public ReadOnly Property ManufacturerAddress As String Implements IVehicleDeclarationInputData.ManufacturerAddress
 		Get
-			Return TUGraz.VectoCore.Configuration.Constants.NOT_AVailABLE
+			Return TUGraz.VectoCore.Configuration.Constants.NOT_AVAILABLE
 		End Get
 	End Property
 
@@ -702,7 +702,7 @@ Public Class Vehicle
 	End Get
 	End Property
 
-	Public ReadOnly Property SleeperCab As Boolean Implements IVehicleDeclarationInputData.SleeperCab
+	Public ReadOnly Property SleeperCab As Boolean? Implements IVehicleDeclarationInputData.SleeperCab
 	get
 			Return DeclarationData.Vehicle.SleeperCabDefault
 	End Get
