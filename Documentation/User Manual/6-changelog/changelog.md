@@ -1,5 +1,29 @@
 #Changelog
 
+**VECTO-3.3.10**
+
+***Build 2373 (2021-07-01) RELEASE CANDIDATE***
+
+- Improvements
+    * [VECTO-1421] – Added vehicle sub-group (CO2-standards to MRF and CIF)
+    * [VECTO 1449] – Handling of exempted vehicles: See next slide for details
+    * [VECTO-1404] – Corrected URL for CSS in MRF and CIF
+- Bugfixes
+    * [VECTO-1419] – Simulation abort in urban cycle: failed to find operating point on search braking power with TC gear
+    * [VECTO-1439] – Bugfix handling duplicate entries in engine full-load curve when intersecting with max-torque of gearbox
+    * [VECTO-1429] – error in XML schema 2.x for exempted vehicles – MaxNetPower1/2 are optional input parameters
+
+***Handling of exempted vehicles***
+
+- Axle configuration and sleeper cab are optional input parameters for exempted vehicles (XML schema 1.0 and 2.2.1). 
+    * OEMs are recommended to provide these parameters for exempted vehicles.
+    * If the axle configuration is provided as input parameter, the MRF contains the vehicle group. 
+    * The sleeper cab input parameter is also part of the MRF if provided as input.
+- Input parameters MaxNetPower1/2 are optional input parameters for all exempted vehicles. 
+    * If provided in the input these parameters are part of the MRF for all exempted vehicle types
+    * It is recommended that those parameters are used to specify the rated power also for PEV (pure electric vehicles)
+
+
 **VECTO-3.3.9**
 
 ***Build 2175 (2020-12-15) OFFICIAL RELEASE***
