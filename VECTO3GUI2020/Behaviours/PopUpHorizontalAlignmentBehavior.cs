@@ -12,12 +12,6 @@ namespace VECTO3GUI2020.Behaviours
 		private double _popUpWidth;
 
 
-		private void _placementTarget_SizeChanged(object sender, SizeChangedEventArgs e)
-		{
-			if (e.WidthChanged) {
-				SetHorizontalAlignment(e.NewSize.Width, this.AssociatedObject.ActualWidth);
-			}
-		}
 
 		private void SetHorizontalAlignment(double placeMentTargetActualWidth, double popUpActualWidth)
 		{
@@ -25,6 +19,17 @@ namespace VECTO3GUI2020.Behaviours
 				this.AssociatedObject.HorizontalOffset = placeMentTargetActualWidth - popUpActualWidth;
 			}
 		}
+		private void AssociatedObject_Opened(object sender, System.EventArgs e)
+		{
+
+			var popUpWidth = this.AssociatedObject.ActualWidth;
+			if (this.AssociatedObject.ActualWidth == 0 && this.AssociatedObject.IsMeasureValid) {
+				popUpWidth = this.AssociatedObject.DesiredSize.Width;
+			}
+
+			//SetHorizontalAlignment(_placementTarget.ActualWidth, this.AssociatedObject.ActualWidth != 0 ? : this.AssociatedObject.ActualWidth);
+		}
+
 
 		#region Overrides of Behavior
 
@@ -33,22 +38,14 @@ namespace VECTO3GUI2020.Behaviours
 		{
 			_placementTarget = this.AssociatedObject.PlacementTarget as FrameworkElement;
 			_popUpWidth = this.AssociatedObject.MinWidth;
-			_initialHorizontalOffset = this.AssociatedObject.HorizontalOffset;
-            _placementTarget.SizeChanged += _placementTarget_SizeChanged;
-            this.AssociatedObject.SizeChanged += AssociatedObject_SizeChanged;
-			SetHorizontalAlignment(_placementTarget.ActualWidth, this.AssociatedObject.ActualWidth);
+            this.AssociatedObject.Opened += AssociatedObject_Opened;
 			base.OnAttached();
 		}
 
-        private void AssociatedObject_SizeChanged(object sender, SizeChangedEventArgs e)
-		{
-			_popUpWidth = e.NewSize.Width;
-            SetHorizontalAlignment(_placementTarget.ActualWidth, e.NewSize.Width);
-        }
 
-        protected override void OnDetaching()
+
+		protected override void OnDetaching()
 		{
-			_placementTarget.SizeChanged -= _placementTarget_SizeChanged;
 			this.AssociatedObject.HorizontalOffset = _initialHorizontalOffset;
 			base.OnDetaching();
 		}

@@ -1,4 +1,5 @@
-﻿using System.Configuration;
+﻿using System;
+using System.Configuration;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCore.Utils;
 using VECTO3GUI2020.ViewModel.Implementation.Common;
@@ -40,6 +41,12 @@ namespace VECTO3GUI2020.ViewModel.Implementation.Document
 		{
 			get => _selected;
 			set => SetProperty(ref _selected, value);
+		}
+
+		public bool CanBeSimulated
+		{
+			get => true;
+			set => throw new NotImplementedException();
 		}
 
 		#endregion

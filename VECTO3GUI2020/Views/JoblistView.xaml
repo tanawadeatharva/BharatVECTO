@@ -120,11 +120,7 @@
                                Margin="{Binding ElementName=newFileButton, Path=Margin}" 
                                MinWidth="{Binding ElementName=newFileButton, Path=ActualWidth}" 
                                IsOpen="{Binding NewFilePopUpIsOpen, Mode=TwoWay}" 
-                               StaysOpen="False">
-                     
-                            <!--<i:Interaction.Behaviors>
-                                <behavior:PopUpHorizontalAlignmentBehavior/>
-                            </i:Interaction.Behaviors>-->
+                               StaysOpen="False" PreviewMouseLeftButtonUp="NewFilePopup_OnPreviewMouseLeftButtonDown">
                             <Border BorderThickness="1px" BorderBrush="{StaticResource AccentColorButton}">
                                 <StackPanel Background="White">
                                     <Button Style="{StaticResource MultiStageButtonStyle1}" Command="{Binding NewManufacturingStageFileCommand}">New Manufacturing Stage</Button>

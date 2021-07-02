@@ -99,6 +99,12 @@ namespace VECTO3GUI2020.ViewModel.Implementation
 			set => throw new NotImplementedException();
 		}
 
+		public bool CanBeSimulated
+		{
+			get => throw new NotImplementedException();
+			set => throw new NotImplementedException();
+		}
+
 		#endregion
 
 		#region Implementation of IEditViewModel

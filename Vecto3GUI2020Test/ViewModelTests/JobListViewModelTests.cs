@@ -16,7 +16,16 @@ namespace Vecto3GUI2020Test.ViewModelTests
 	{
 		private string finalVIF = "final.VIF_Report_4.xml";
 
-		
+
+		[Test]
+		public async Task LoadPrimaryFile()
+		{
+			var jobListViewModel = _kernel.Get<IJobListViewModel>() as JobListViewModel;
+			Write("Trying to load {}");
+
+
+		}
+
 
 		[Test]
 		public async Task CancelSimulationWhileLoadingFiles()

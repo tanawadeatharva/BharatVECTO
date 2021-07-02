@@ -621,7 +621,10 @@ namespace VECTO3GUI2020.ViewModel.Implementation
 		{
 			get => _openNewFilePopUpCommand ??
 					(_openNewFilePopUpCommand = new RelayCommand(() => {
-						NewFilePopUpIsOpen = true;
+						if (NewFilePopUpIsOpen == false) {
+							NewFilePopUpIsOpen = true;
+						}
+						
 					}));
 		}
 

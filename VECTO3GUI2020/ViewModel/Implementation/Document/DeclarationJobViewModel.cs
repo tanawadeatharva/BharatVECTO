@@ -32,6 +32,11 @@ namespace VECTO3GUI2020.ViewModel.Implementation.Document
 			set => SetProperty(ref _selected, value);
 		}
 
+		public bool CanBeSimulated
+		{
+			get => throw new System.NotImplementedException();
+			set => throw new System.NotImplementedException();
+		}
 
 		#endregion
         #region Members

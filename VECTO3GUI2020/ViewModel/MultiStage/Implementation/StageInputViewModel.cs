@@ -73,6 +73,12 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 			set => SetProperty(ref _selected, value);
 		}
 
+		public bool CanBeSimulated
+		{
+			get => false;
+			set => throw new System.NotImplementedException();
+		}
+
 		#endregion
 
 		#region Implementation of IEditViewModel

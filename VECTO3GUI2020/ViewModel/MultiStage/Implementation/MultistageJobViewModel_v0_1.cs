@@ -273,6 +273,15 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 			set => SetProperty(ref _selected, value);
 		}
 
+		public bool CanBeSimulated
+		{
+			get
+			{
+				throw new NotImplementedException();
+			}
+			set => throw new NotImplementedException();
+		}
+
 		#endregion
 
 		#region Implementation of IMultistageVIFInputData
