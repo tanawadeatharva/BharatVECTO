@@ -11,5 +11,6 @@ namespace VECTO3GUI2020.ViewModel.Interfaces
 		ObservableCollection<IDocumentViewModel> Jobs { get; }
 		ICommand NewManufacturingStageFileCommand { get; }
 		Task<IDocumentViewModel> AddJobAsync(string fileName);
+		void AddJob(IDocumentViewModel jobToAdd);
 	}
 }

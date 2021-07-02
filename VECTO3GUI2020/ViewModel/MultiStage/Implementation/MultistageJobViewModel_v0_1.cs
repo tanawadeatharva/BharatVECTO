@@ -277,9 +277,8 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 		{
 			get
 			{
-				throw new NotImplementedException();
-			}
-			set => throw new NotImplementedException();
+				return true;
+			} set => throw new NotImplementedException();
 		}
 
 		#endregion

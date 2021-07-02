@@ -7,6 +7,7 @@
              xmlns:converter="clr-namespace:VECTO3GUI2020.Helper.Converter" xmlns:implementation="clr-namespace:VECTO3GUI2020.ViewModel.Implementation"
              xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
              xmlns:behavior="clr-namespace:VECTO3GUI2020.Behaviours"
+             xmlns:document="clr-namespace:VECTO3GUI2020.ViewModel.Interfaces.Document"
              d:DataContext="{d:DesignInstance Type=implementation:JobListViewModel}"
              mc:Ignorable="d" 
              AutomationProperties.Name="JobListView"
@@ -77,15 +78,23 @@
                             </behavior:AutoScrollDataGridBehaviour>
                         </i:Interaction.Behaviors>
                         <DataGrid.Columns>
-                            <DataGridCheckBoxColumn IsReadOnly="False" Header="Simulate" Binding="{Binding Selected}" Width="1*"></DataGridCheckBoxColumn>
+                            <DataGridTemplateColumn Header="Simulate" Width="1*" IsReadOnly="False">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate DataType="document:IDocumentViewModel">
+                                        <CheckBox HorizontalAlignment="Center" IsEnabled="{Binding CanBeSimulated}"
+                                                  IsChecked="{Binding Selected, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"></CheckBox>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
                             <DataGridTextColumn IsReadOnly="True" Header="Name" Binding="{Binding DocumentName}" Width="4*"></DataGridTextColumn>
                             <DataGridTextColumn IsReadOnly ="True" Header="Type" Binding="{Binding DocumentType}" Width="4*"></DataGridTextColumn>
-
                         </DataGrid.Columns>
+
+
                         <DataGrid.RowDetailsTemplate>
                             <DataTemplate>
-                                <StackPanel Orientation="Vertical">
-                                    <Label x:Name="label" Content="Filename"/>
+                                <StackPanel Orientation="Vertical" Visibility="{Binding DataSource, Converter={StaticResource NullToVisibilityConverter}}">
+                                    <!--<Label x:Name="label" Content="Filename"/>-->
                                     <TextBlock x:Name="textBlock" Text="{Binding DataSource.SourceFile}" TextWrapping="Wrap" Margin="10" />
                                 </StackPanel>
                             </DataTemplate>

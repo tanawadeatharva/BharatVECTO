@@ -14,6 +14,7 @@ using VECTO3GUI2020.Helper;
 using VECTO3GUI2020.Properties;
 using VECTO3GUI2020.Util;
 using VECTO3GUI2020.ViewModel.Implementation.Common;
+using VECTO3GUI2020.ViewModel.Interfaces;
 using VECTO3GUI2020.ViewModel.Interfaces.JobEdit.Vehicle;
 using VECTO3GUI2020.ViewModel.Interfaces.JobEdit.Vehicle.Components;
 using VECTO3GUI2020.ViewModel.MultiStage.Interfaces;
@@ -46,11 +47,13 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 
 		public NewMultiStageJobViewModel(IDialogHelper dialogHelper, 
 			IXMLInputDataReader inputDataReader, 
-			IMultiStageViewModelFactory vmFactory)
+			IMultiStageViewModelFactory vmFactory,
+			IJobListViewModel jobListViewModel)
 		{
 			_inputDataReader = inputDataReader;
 			_dialogHelper = dialogHelper;
 			_vmFactory = vmFactory;
+			_jobListViewModel = jobListViewModel;
 			Title = "New Multistage File";
 			VifPath = "Select VIF File";
 		}
@@ -87,11 +90,13 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 			MultiStageJobViewModel = null;
 			MultiStageJobViewModel =
 				_vmFactory.GetMultiStageJobViewModel(inputDataProvider);
+			_jobListViewModel.AddJob(MultiStageJobViewModel);
 			VifPath = fileName;
 		}
 
 
 		private ICommand _closeWindow;
+		private readonly IJobListViewModel _jobListViewModel;
 
 		public ICommand CloseWindow
 		{

@@ -22,8 +22,9 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 		private bool _canBeEdited;
 		private DataSource _dataSource;
 		private readonly XmlDocumentType _documentType;
-		private readonly string _documentName;
+		private string _documentName;
 		private bool _selected;
+		private static uint _newDocumentCounter = 0;
 
 		public StageInputViewModel(bool exemptedVehicle, IMultiStageViewModelFactory multiStageViewModelFactory) : base(multiStageViewModelFactory)
 		{
@@ -34,6 +35,8 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 
 			Debug.Assert(_vehicleViewModel != null);
 			Title = "Edit Stage Input - New File";
+			_documentType = XmlDocumentType.DeclarationJobData;
+			_documentName = $"New {(exemptedVehicle ? "Exempted " : "")}Stage Input {++_newDocumentCounter}";
 			Init();
 		}
 
@@ -56,7 +59,8 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 		{
 			DataSource = loadedInputData.DataSource;
 			UpdateTitle();
-			
+			DocumentName = loadedInputData.JobInputData.JobName;
+
 		}
 
 		#endregion
@@ -81,7 +85,11 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 
 		#region Implementation of IDocumentViewModel
 
-		public string DocumentName => _documentName;
+		public string DocumentName
+		{
+			get => _documentName;
+			set => SetProperty(ref _documentName, value);
+		}
 
 		public XmlDocumentType DocumentType => _documentType;
 
