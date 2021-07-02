@@ -25,7 +25,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			var engineDragEnergy = VectoMath.Abs(modelData.FullLoadCurves[0].DragLoadStationaryTorque(modelData.IdleSpeed)) *
 									modelData.IdleSpeed / 2.0 * modelData.EngineStartTime;
 
-			EngineStartEnergy = (engineRampUpEnergy + engineDragEnergy) / DeclarationData.AlternaterEfficiency / DeclarationData.AlternaterEfficiency;
+			EngineStartEnergy = (engineRampUpEnergy + engineDragEnergy) / DeclarationData.AlternatorEfficiency / DeclarationData.AlternatorEfficiency;
 		}
 
 		public override bool CombustionEngineOn { get; set; }

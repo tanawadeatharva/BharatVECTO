@@ -532,7 +532,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 			var engineDragEnergy = VectoMath.Abs(ModelData.EngineData.FullLoadCurves[0].DragLoadStationaryTorque(ModelData.EngineData.IdleSpeed)) *
 									ModelData.EngineData.IdleSpeed / 2.0 * ModelData.EngineData.EngineStartTime;
 
-			IceRampUpCosts = (engineRampUpEnergy + engineDragEnergy).Value() / DeclarationData.AlternaterEfficiency / DeclarationData.AlternaterEfficiency;
+			IceRampUpCosts = (engineRampUpEnergy + engineDragEnergy).Value() / DeclarationData.AlternatorEfficiency / DeclarationData.AlternatorEfficiency;
 
 			IceIdlingCosts = ModelData.EngineData.Fuels.Sum(
 				x => (x.ConsumptionMap.GetFuelConsumptionValue(0.SI<NewtonMeter>(), ModelData.EngineData.IdleSpeed)
