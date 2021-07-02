@@ -336,6 +336,8 @@ namespace VECTO3GUI2020.Util.XML.Implementation
 			_Xelement.Add(new XElement(_defaultNamespace + XMLNames.Bus_LowEntry, _inputData.LowEntry));
 
 			_Xelement.Add(new XElement(_defaultNamespace + XMLNames.Bus_HeighIntegratedBody, _inputData.Height?.ConvertToMilliMeter()));
+
+			_Xelement.DescendantsAndSelf().Where(e => e.Value.IsNullOrEmpty()).Remove();
 		}
 
 		#endregion
