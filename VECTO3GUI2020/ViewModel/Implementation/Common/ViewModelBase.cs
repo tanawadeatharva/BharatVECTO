@@ -44,14 +44,20 @@ namespace VECTO3GUI2020.ViewModel.Implementation.Common
             return propertyChanged;
         }
 
-		public virtual string Title { get; set; } = "No Title Set";
+		public virtual string Title
+		{
+			get => _title;
+			set => SetProperty(ref _title, value);
+		}
 
-        [Inject]
+		[Inject]
         public IDialogHelper DialogHelper { get; set; }
 
 		protected bool AskForConfirmationOnClose { get; set; } = false;
 
 		private ICommand _closeWindowCommand;
+		private string _title = "No Title Set";
+
 		public ICommand CloseWindowCommand
 		{
 			get
