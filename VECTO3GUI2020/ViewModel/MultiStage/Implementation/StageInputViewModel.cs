@@ -1,5 +1,8 @@
-﻿using System.Diagnostics;
+﻿using System;
+using System.ComponentModel;
+using System.Diagnostics;
 using System.IO;
+using Castle.Core.Smtp;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Utils;
@@ -17,7 +20,7 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 	public class StageInputViewModel : StageViewModelBase, IDocumentViewModel, IJobEditViewModel
 	{
 		private bool _canBeEdited;
-		private readonly DataSource _dataSource;
+		private DataSource _dataSource;
 		private readonly XmlDocumentType _documentType;
 		private readonly string _documentName;
 		private bool _selected;
@@ -30,9 +33,9 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 				: InterimStageBusVehicleViewModel_v2_8.VERSION) as IMultistageVehicleViewModel;
 
 			Debug.Assert(_vehicleViewModel != null);
+			Title = "Edit Stage Input - New File";
 			Init();
 		}
-
 
 		public StageInputViewModel(IDeclarationInputDataProvider inputData, IMultiStageViewModelFactory multiStageViewModelFactory) : base(multiStageViewModelFactory)
 		{
@@ -42,13 +45,32 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 			(_vehicleViewModel as InterimStageBusVehicleViewModel_v2_8).ShowConsolidatedData = false;
 			_dataSource = inputData.DataSource;
 			_documentType = XmlDocumentType.DeclarationJobData;
-			Title = $"Edit Stage Input - {Path.GetFileNameWithoutExtension(_dataSource.SourceFile)}";
+			Title = $"Edit Stage Input - {Path.GetFileName(_dataSource.SourceFile)}";
 
 			Init();
 		}
 
+		#region Overrides of StageViewModelBase
+
+		protected override bool LoadStageInputData(IDeclarationInputDataProvider inputData)
+		{
+			base.LoadStageInputData(inputData);
+			DataSource = inputData.DataSource;
+			return true;
+		}
+
+		#endregion
+
+		private void SetTitle()
+		{
+			Title = "Edit Stage Input - " + ((_dataSource?.SourceFile != null)
+				? Path.GetFileName(_dataSource.SourceFile)
+				: "New File");
+		}
+
 		private void Init()
 		{
+			SetTitle();
 			Components.Add("vehicle", VehicleViewModel as IViewModelBase);
 			Components.Add("auxiliaries", VehicleViewModel.MultistageAuxiliariesViewModel as IViewModelBase);
 			Components.Add("airdrag", VehicleViewModel.MultistageAirdragViewModel as IViewModelBase);
@@ -63,7 +85,15 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 
 		public XmlDocumentType DocumentType => _documentType;
 
-		public DataSource DataSource => _dataSource;
+		public DataSource DataSource
+		{
+			get => _dataSource;
+			set
+			{
+				SetProperty(ref _dataSource, value);
+				SetTitle();
+			}
+		}
 
 		public IEditViewModel EditViewModel => this;
 

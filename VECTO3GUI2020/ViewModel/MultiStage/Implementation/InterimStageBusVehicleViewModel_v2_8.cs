@@ -70,7 +70,7 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 		}
 	}
 
-	public interface IMultistageVehicleViewModel : IVehicleViewModel
+	public interface IMultistageVehicleViewModel : IVehicleViewModel, INotifyPropertyChanged
 	{
 		bool HasErrors { get; }
 		Dictionary<string, string> Errors { get; }

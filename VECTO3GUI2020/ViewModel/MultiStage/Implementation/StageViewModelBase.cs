@@ -24,7 +24,7 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 {
 	public interface IStageViewModelBase
 	{
-		string VehicleInputDataFilePath { get; set; }
+		string InputDataFilePath { get; set; }
 		IMultistageVehicleViewModel VehicleViewModel { get; set; }
 		ICommand SwitchComponentViewCommand { get; }
 		ICommand SaveInputDataCommand { get; }
@@ -36,7 +36,9 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 
 	public class StageViewModelBase : ViewModelBase, IStageViewModelBase
 	{
-		protected Dictionary<string, IViewModelBase> Components = new Dictionary<string, IViewModelBase>(StringComparer.CurrentCultureIgnoreCase);
+		protected Dictionary<string, IViewModelBase> Components =
+			new Dictionary<string, IViewModelBase>(StringComparer.CurrentCultureIgnoreCase);
+
 		protected IMultistageVehicleViewModel _vehicleViewModel;
 		protected IMultiStageViewModelFactory _viewModelFactory;
 		private IViewModelBase _currentview;
@@ -72,7 +74,9 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 			get => _vehicleViewModel;
 			set => SetProperty(ref _vehicleViewModel, value);
 		}
+
 		private bool _showSaveAndCloseButtons = false;
+
 		public bool ShowSaveAndCloseButtons
 		{
 			get => _showSaveAndCloseButtons;
@@ -80,17 +84,20 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 		}
 
 		#region Commands
+
 		public ICommand SwitchComponentViewCommand
 		{
-			get {
-				return _switchComponentViewCommand ?? new RelayCommand<string>(SwitchViewExecute, (string s) => SwitchViewCanExecute(s));
+			get
+			{
+				return _switchComponentViewCommand ??
+						new RelayCommand<string>(SwitchViewExecute, (string s) => SwitchViewCanExecute(s));
 			}
 		}
 
 		private void SwitchViewExecute(string viewToShow)
 		{
 			IViewModelBase newView;
-			var success= Components.TryGetValue(viewToShow, out newView);
+			var success = Components.TryGetValue(viewToShow, out newView);
 			if (success) {
 				CurrentView = newView;
 			}
@@ -107,14 +114,12 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 		private IXMLInputDataReader _inputDataReader;
 
 		public ICommand SaveInputDataCommand =>
-			_saveInputDataCommand ?? new RelayCommand(() => {
-				SaveInputDataExecute(filename: _vehicleInputDataFilePath);
-			}, () => _vehicleInputDataFilePath != null);
+			_saveInputDataCommand ??
+			new RelayCommand(() => { SaveInputDataExecute(filename: _vehicleInputDataFilePath); },
+				() => _vehicleInputDataFilePath != null);
 
 		public ICommand SaveInputDataAsCommand =>
-			_saveInputDataAsCommand ?? new RelayCommand(() => {
-				SaveInputDataExecute(filename: null);
-			}, () => true);
+			_saveInputDataAsCommand ?? new RelayCommand(() => { SaveInputDataExecute(filename: null); }, () => true);
 
 
 		private ICommand _loadVehicleDataCommand;
@@ -123,23 +128,21 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 
 		public ICommand LoadVehicleDataCommand
 		{
-			get
-			{
-				return _loadVehicleDataCommand ?? new RelayCommand(LoadVehicleDataExecute, () => true);
-			}
+			get { return _loadVehicleDataCommand ?? new RelayCommand(LoadVehicleDataExecute, () => true); }
 		}
+
 		#endregion Commands
 
 		#region File I/O
+
 		private void LoadVehicleDataExecute()
 		{
 			var fileName = _multistageDependencies.DialogHelper.OpenXMLFileDialog();
-			if (fileName == null)
-			{
+			if (fileName == null) {
 				return;
 			}
 
-			LoadVehicleData(fileName);
+			LoadStageInputData(fileName);
 			return;
 		}
 
@@ -168,11 +171,9 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 			}
 
 
-			if (filename == null)
-			{
+			if (filename == null) {
 				filename = dialogHelper.SaveToXMLDialog(Settings.Default.DefaultFilePath);
-				if (filename == null)
-				{
+				if (filename == null) {
 					return;
 				}
 			}
@@ -189,65 +190,64 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 
 			var valid = false;
 			var validationError = "";
-			try
-			{
+			try {
 				var validator = new XMLValidator(xDoc.ToXmlDocument());
 				valid = validator.ValidateXML(XmlDocumentType.DeclarationJobData);
 				validationError = validator.ValidationError;
+			} catch (Exception e) {
+				dialogHelper.ShowMessageBox(messageBoxText: (e.Message + "\n" + e.InnerException),
+					caption: "Error saving File");
 			}
-			catch (Exception e)
-			{
-				dialogHelper.ShowMessageBox(messageBoxText: (e.Message + "\n" + e.InnerException), caption: "Error saving File");
-			}
-			if (!valid)
-			{
+
+			if (!valid) {
 				dialogHelper.ShowMessageBox($"Invalid Document: {validationError}", "Error");
 				var tempFile = Path.GetTempFileName();
-				try
-				{
+				try {
 					xDoc.Save(tempFile, SaveOptions.OmitDuplicateNamespaces);
-					LoadVehicleData(tempFile);
-					File.Delete(tempFile);
-				}
-				catch (Exception e)
-				{
+					LoadStageInputData(tempFile);
+
+				} catch (Exception e) {
 					dialogHelper.ShowMessageBox(e.Message, "Error");
 					throw;
+				} finally {
+					if (File.Exists(tempFile)) {
+						File.Delete(tempFile);
+					}
+
+					;
 				}
 
 
-			}
-			else
-			{
+			} else {
 				xDoc.Save(filename, SaveOptions.OmitDuplicateNamespaces);
-				LoadVehicleData(filename);
+				LoadStageInputData(filename);
 			}
 		}
 
-
-
-
-		private bool LoadVehicleData(string fileName)
+		protected virtual bool LoadStageInputData(IDeclarationInputDataProvider inputData)
 		{
-			
+
+			var vehicleInputData = inputData.JobInputData.Vehicle;
+			VehicleViewModel.SetVehicleInputData(vehicleInputData);
+			InputDataFilePath = inputData.DataSource.SourceFile;
+			return true;
+		}
+		protected bool LoadStageInputData(string fileName)
+		{
 			try
 			{
 				var inputData = (IDeclarationInputDataProvider)_inputDataReader.Create(fileName);
-				var vehicleInputData = inputData.JobInputData.Vehicle;
-				VehicleViewModel.SetVehicleInputData(vehicleInputData);
-
-				VehicleInputDataFilePath = fileName;
+				return LoadStageInputData(inputData);
 			}
 			catch (Exception e)
 			{
 				_multistageDependencies.DialogHelper.ShowMessageBox(e.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
 				return false;
 			}
-
 			return true;
 		}
 
-		public string VehicleInputDataFilePath
+		public string InputDataFilePath
 		{
 			get => _vehicleInputDataFilePath;
 			set => SetProperty(ref _vehicleInputDataFilePath, value);
