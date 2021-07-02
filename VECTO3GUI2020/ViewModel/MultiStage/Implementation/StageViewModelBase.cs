@@ -224,20 +224,18 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 			}
 		}
 
-		protected virtual bool LoadStageInputData(IDeclarationInputDataProvider inputData)
-		{
-
-			var vehicleInputData = inputData.JobInputData.Vehicle;
-			VehicleViewModel.SetVehicleInputData(vehicleInputData);
-			InputDataFilePath = inputData.DataSource.SourceFile;
-			return true;
-		}
 		protected bool LoadStageInputData(string fileName)
 		{
 			try
 			{
 				var inputData = (IDeclarationInputDataProvider)_inputDataReader.Create(fileName);
-				return LoadStageInputData(inputData);
+				var vehicleInputData = inputData.JobInputData.Vehicle;
+				VehicleViewModel.SetVehicleInputData(vehicleInputData);
+				InputDataFilePath = inputData.DataSource.SourceFile;
+				LoadStageInputDataFollowUp(inputData);
+
+
+				return true;
 			}
 			catch (Exception e)
 			{
@@ -245,6 +243,11 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 				return false;
 			}
 			return true;
+		}
+
+		protected virtual void LoadStageInputDataFollowUp(IDeclarationInputDataProvider loadedInputData)
+		{
+
 		}
 
 		public string InputDataFilePath

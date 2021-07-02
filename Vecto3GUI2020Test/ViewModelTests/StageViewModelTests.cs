@@ -1,7 +1,10 @@
-﻿using System.Runtime.InteropServices;
+﻿using System.IO;
+using System.Runtime.InteropServices;
 using Ninject;
 using NUnit.Framework;
 using TUGraz.VectoCore.Configuration;
+using VECTO3GUI2020.ViewModel.Implementation;
+using VECTO3GUI2020.ViewModel.Interfaces;
 using VECTO3GUI2020.ViewModel.Interfaces.Document;
 using VECTO3GUI2020.ViewModel.Interfaces.JobEdit;
 using VECTO3GUI2020.ViewModel.MultiStage.Implementation;
@@ -29,16 +32,20 @@ namespace Vecto3GUI2020Test.ViewModelTests
 			var fileName = TestHelper.GetMethodName() + ".xml";
 			StageInput.SaveInputDataExecute(GetFullPath(fileName));
 			Assert.True(checkFileNameExists(fileName));
-
 			Assert.AreEqual(GetFullPath(fileName), StageInput.InputDataFilePath);
-			
+
 			//Check if title is updated
 			StringAssert.Contains(fileName, StageInput.Title);
 
 			//Check datasource
 			Assert.NotNull(StageInput.DataSource);
 
-
+			File.Delete(GetFullPath(fileName));
 		}
+
+
+
+
+
 	}
 }

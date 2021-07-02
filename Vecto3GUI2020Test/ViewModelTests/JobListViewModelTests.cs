@@ -70,6 +70,22 @@ namespace Vecto3GUI2020Test.ViewModelTests
 			Assert.AreEqual(path, jobListViewModel.Jobs[0].DataSource.SourceFile);
 		}
 
+		[TestCase(true, TestName = "Exempted")]
+		[TestCase(false, TestName = "NotExempted")]
+		public void addNewFilesToJobList(bool exempted)
+		{
+			var jobListVm = _kernel.Get<IJobListViewModel>() as JobListViewModel;
+			if (exempted)
+			{
+				jobListVm.NewExemptedCompletedInputCommand.Execute(null);
+			}
+			else
+			{
+				jobListVm.NewCompletedInputCommand.Execute(null);
+			}
+
+			Assert.AreEqual(1, jobListVm.Jobs.Count);
+		}
 
 
 		[Test]

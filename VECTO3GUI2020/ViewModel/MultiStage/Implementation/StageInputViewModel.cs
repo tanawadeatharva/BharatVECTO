@@ -52,16 +52,16 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 
 		#region Overrides of StageViewModelBase
 
-		protected override bool LoadStageInputData(IDeclarationInputDataProvider inputData)
+		protected override void LoadStageInputDataFollowUp(IDeclarationInputDataProvider loadedInputData)
 		{
-			base.LoadStageInputData(inputData);
-			DataSource = inputData.DataSource;
-			return true;
+			DataSource = loadedInputData.DataSource;
+			UpdateTitle();
+			
 		}
 
 		#endregion
 
-		private void SetTitle()
+		private void UpdateTitle()
 		{
 			Title = "Edit Stage Input - " + ((_dataSource?.SourceFile != null)
 				? Path.GetFileName(_dataSource.SourceFile)
@@ -70,7 +70,7 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 
 		private void Init()
 		{
-			SetTitle();
+			UpdateTitle();
 			Components.Add("vehicle", VehicleViewModel as IViewModelBase);
 			Components.Add("auxiliaries", VehicleViewModel.MultistageAuxiliariesViewModel as IViewModelBase);
 			Components.Add("airdrag", VehicleViewModel.MultistageAirdragViewModel as IViewModelBase);
@@ -91,7 +91,7 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 			set
 			{
 				SetProperty(ref _dataSource, value);
-				SetTitle();
+				UpdateTitle();
 			}
 		}
 

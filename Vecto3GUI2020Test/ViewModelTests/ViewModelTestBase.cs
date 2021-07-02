@@ -49,9 +49,19 @@ namespace Vecto3GUI2020Test
 			);
 			//xmlInputReader = _kernel.Get<IXMLInputDataReader>();
 			_kernel.Rebind<IDialogHelper>().ToConstant(SetMockDialogHelper().Object);
-
+			_kernel.Rebind<IWindowHelper>().ToConstant(GetMockWindowHelper());
 			_testHelper = new TestHelper(_kernel.Get<IXMLInputDataReader>());
 		}
+
+		private IWindowHelper GetMockWindowHelper()
+		{
+			Mock<IWindowHelper> mockWindowHelper = new Mock<IWindowHelper>();
+			mockWindowHelper.Setup(windowHelper => windowHelper.ShowWindow(It.IsAny<object>()))
+				.Callback<object>((obj) => WriteLine($"Window containing {obj.GetType().ToString()} was opened"));
+
+			return mockWindowHelper.Object;
+		}
+
 
 		[TearDown]
 		public void TearDown()
