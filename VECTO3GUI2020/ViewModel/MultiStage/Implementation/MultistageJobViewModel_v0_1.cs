@@ -217,7 +217,8 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 					} else {
 						dialogHelper?.ShowMessageBox($"Written to {writer.XMLMultistageReportFileName}", "Info",
 							MessageBoxButton.OK, MessageBoxImage.Information);
-						_jobListViewModel.AddJobAsync(writer.XMLMultistageReportFileName);
+						_jobListViewModel.AddJobAsync(writer.XMLMultistageReportFileName, true);
+
 						Debug.WriteLine($"Written to {writer.XMLMultistageReportFileName}");
 						return writer.XMLMultistageReportFileName;
 					}

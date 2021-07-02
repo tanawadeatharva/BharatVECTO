@@ -50,7 +50,6 @@ using VECTO3GUI2020.ViewModel.MultiStage.Implementation;
 using VECTO3GUI2020.ViewModel.MultiStage.Interfaces;
 using VECTO3GUI2020.Views;
 using IDocumentViewModel = VECTO3GUI2020.ViewModel.Interfaces.Document.IDocumentViewModel;
-using RelayCommand = VECTO3GUI2020.Util.RelayCommand;
 using XmlDocumentType = TUGraz.VectoCore.Utils.XmlDocumentType;
 
 namespace VECTO3GUI2020.ViewModel.Implementation
@@ -59,7 +58,7 @@ namespace VECTO3GUI2020.ViewModel.Implementation
     {
         #region Members and Properties
         private readonly Settings _settings = Settings.Default;
-
+		private bool _simulationLoggingEnabled = true; //Enabled and Disable NLOG Messages
 
 
 
@@ -98,6 +97,7 @@ namespace VECTO3GUI2020.ViewModel.Implementation
 		
         
 		#endregion
+
 
 
         
@@ -147,7 +147,7 @@ namespace VECTO3GUI2020.ViewModel.Implementation
 
 		private void LogMethod(LogEventInfo evtInfo, object[] objects)
 		{
-			if (!SimulationRunning)
+			if (!SimulationRunning || !_simulationLoggingEnabled)
 			{
 				return;
 			}
@@ -225,7 +225,7 @@ namespace VECTO3GUI2020.ViewModel.Implementation
 
 		}
 
-		public async Task<IDocumentViewModel> AddJobAsync(string fileName)
+		public async Task<IDocumentViewModel> AddJobAsync(string fileName, bool runSimulationAfterAdding = false)
 		{
 			if (fileName != null)
 			{
@@ -236,6 +236,10 @@ namespace VECTO3GUI2020.ViewModel.Implementation
 					{
 						Jobs.Add(result);
 					}
+					if (runSimulationAfterAdding) {
+						await RunSimulationExecute(result);
+					}
+
 					return result;
 				}
 				catch (Exception e)
@@ -305,7 +309,7 @@ namespace VECTO3GUI2020.ViewModel.Implementation
 
 
 		#region Simulation
-		private CancellationTokenSource cancellationTokenSource = new CancellationTokenSource();
+		private CancellationTokenSource _cancellationTokenSource = new CancellationTokenSource();
 		private bool _simulationRunning = false;
 
 		public bool SimulationRunning
@@ -314,8 +318,9 @@ namespace VECTO3GUI2020.ViewModel.Implementation
 			set
 			{
 				SetProperty(ref _simulationRunning, value);
-                OnPropertyChanged(nameof(SimulationCommand));
-                OnPropertyChanged(nameof(CancelSimulation));
+				SimulationCommand.NotifyCanExecuteChanged();
+				
+				(_cancelSimulationCommand as RelayCommand).NotifyCanExecuteChanged();
 			}
 		}
 
@@ -326,39 +331,53 @@ namespace VECTO3GUI2020.ViewModel.Implementation
 		private IProgress<string> _status;
 
 
-		public async Task RunSimulationExecute()
+		public async Task RunSimulationExecute(IDocumentViewModel jobToSimulate = null)
 		{
-			cancellationTokenSource = new CancellationTokenSource();
 			SimulationRunning = true;
-			await Task.Run(() => RunSimulationAsync(cancellationTokenSource.Token,
+			await Task.Run(() => RunSimulationAsync(_cancellationTokenSource.Token,
 				outputMessages: _outputMessage, 
 				progress: _progress, 
-				status: _status));
+				status: _status,
+				jobToSimulate: jobToSimulate));
 
+			_cancellationTokenSource = new CancellationTokenSource();
+			_simulationLoggingEnabled = true;
 			SimulationRunning = false;
 			_outputViewModel.Progress = 0;
-			cancellationTokenSource.Dispose();
-        }
+		}
 
-		private async Task RunSimulationAsync(CancellationToken ct, IProgress<MessageEntry> outputMessages,
-			IProgress<int> progress, IProgress<string> status)
+		private async Task RunSimulationAsync(CancellationToken ct, 
+			IProgress<MessageEntry> outputMessages,
+			IProgress<int> progress, 
+			IProgress<string> status, 
+			IDocumentViewModel jobToSimulate = null)
 		{
             progress.Report(0);
 			status.Report("starting...");
 			
 			IDocumentViewModel[] jobs;
-			lock (_jobsLock) {
-				jobs = Jobs.Where(x => x.Selected).ToArray();
-				if (jobs.Length == 0) {
-                    outputMessages.Report(new MessageEntry() {
-                        Message = "No Jobs Selected",
-                        Time = DateTime.Now,
-                        Type = MessageType.InfoMessage,
-					});
-					status.Report("No jobs selected");
-					return;
+			if (jobToSimulate == null) {
+				lock (_jobsLock)
+				{
+					jobs = Jobs.Where(x => x.Selected).ToArray();
+					if (jobs.Length == 0)
+					{
+						outputMessages.Report(new MessageEntry()
+						{
+							Message = "No Jobs Selected",
+							Time = DateTime.Now,
+							Type = MessageType.InfoMessage,
+						});
+						status.Report("No jobs selected");
+						return;
+					}
 				}
+			} else {
+				jobs = new IDocumentViewModel[] {
+					jobToSimulate
+				};
 			}
+
 
 			var sumFileWriter = new FileOutputWriter(GetOutputDirectory(Jobs.First(x => x.Selected).DataSource.SourceFile));
 			var sumContainer = new SummaryDataContainer(sumFileWriter);
@@ -700,7 +719,7 @@ namespace VECTO3GUI2020.ViewModel.Implementation
 		private ICommand _viewXMLCommand;
 		private IDocumentViewModel _selectedJob;
 		private IAsyncRelayCommand _addJobAsync;
-		private IAsyncRelayCommand _simulationCommand;
+		private IAsyncRelayCommand<IDocumentViewModel> _simulationCommand;
 		private IRelayCommand _newVifCommand;
 		private ICommand _newMultiStageFileCommand;
 		private ICommand _openNewFilePopUpCommand;
@@ -730,7 +749,9 @@ namespace VECTO3GUI2020.ViewModel.Implementation
 							Message="Canceling Simulation",
 							Type=MessageType.StatusMessage,
 						});
-						cancellationTokenSource.Cancel();
+						_simulationLoggingEnabled = false;
+						_cancellationTokenSource.Cancel();
+						
 					},
 					() => SimulationRunning));
 			}            
@@ -775,11 +796,12 @@ namespace VECTO3GUI2020.ViewModel.Implementation
 			}
 		}
 
-		public IAsyncRelayCommand SimulationCommand
+		public IAsyncRelayCommand<IDocumentViewModel> SimulationCommand
 		{
 			get
 			{
-				return _simulationCommand ?? new AsyncRelayCommand(RunSimulationExecute, () => !SimulationRunning);
+				return _simulationCommand ?? (_simulationCommand = 
+						new AsyncRelayCommand<IDocumentViewModel>(RunSimulationExecute, (d) => !SimulationRunning));
 			}
 		}
 
