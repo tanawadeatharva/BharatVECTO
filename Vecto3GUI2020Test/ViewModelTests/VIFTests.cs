@@ -10,13 +10,16 @@ using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.OutputData.FileIO;
 using TUGraz.VectoCore.Utils;
 using VECTO3GUI2020.Helper;
-
+using VECTO3GUI2020.ViewModel.Implementation;
+using VECTO3GUI2020.ViewModel.Interfaces;
 using VECTO3GUI2020.ViewModel.MultiStage.Implementation;
 
 namespace Vecto3GUI2020Test.ViewModelTests
 {
 	public class VIFTests : ViewModelTestBase
 	{
+
+		public const string _finalVifReport4 = "final.VIF_Report_4.xml";
 
 		[Test]
 		public void loadPrimaryVehicleOnlyAndCreateNewVIF()
@@ -26,7 +29,7 @@ namespace Vecto3GUI2020Test.ViewModelTests
 
 			Assert.AreEqual(2, stage);
 
-			//Set Necessary Fields
+			//Set Mandatory Fields
 			var vehicle =
 				multistagevm.ManufacturingStageViewModel.Vehicle as InterimStageBusVehicleViewModel_v2_8;
 			vehicle.ManufacturerAddress = "Address";
@@ -70,9 +73,39 @@ namespace Vecto3GUI2020Test.ViewModelTests
 
 		}
 
+		[TestCase(true, TestName="With Airdrag Component")]
+		[TestCase(false, TestName="Without Airdrag Component")]
+		public void CreateCompletedFinalVIFWidthAirdrag(bool loadAirdrag)
+		{
+			var multistagevm = loadFile(_finalVifReport4);
+
+			var VehicleViewModel = multistagevm.MultiStageJobViewModel.ManufacturingStageViewModel.VehicleViewModel as InterimStageBusVehicleViewModel_v2_8;
+
+			VehicleViewModel.Manufacturer = "Manufacturer";
+            VehicleViewModel.ManufacturerAddress = "Manufacturer Address";
+			VehicleViewModel.VIN = "1234567";
+			VehicleViewModel.Model = "asdf";
+			VehicleViewModel.AirdragModifiedEnum = AIRDRAGMODIFIED.FALSE;
+			VehicleViewModel.VehicleDeclarationType = VehicleDeclarationType.final;
 
 
-		[Test]
+			if (loadAirdrag) {
+				Assert.IsTrue(VehicleViewModel.MultistageAirdragViewModel.LoadAirdragFile(GetFullPath(airdragLoadTestFile)));
+			}
+		
+			var resultFile = multistagevm.MultiStageJobViewModel.SaveVif(GetFullPath(
+				"completed_final" + ".xml"));
+
+			
+			var jobListVm = _kernel.Get<IJobListViewModel>();
+			Assert.That(() => jobListVm.Jobs.Count, Is.EqualTo(2));
+
+			Assert.IsTrue(jobListVm.Jobs[1].CanBeSimulated);
+		}
+
+
+
+        [Test]
 		public void CreateVifWrongDecimal()
 		{
 			var multistagevm = loadFile(primary_vehicle_only).MultiStageJobViewModel as MultiStageJobViewModel_v0_1;

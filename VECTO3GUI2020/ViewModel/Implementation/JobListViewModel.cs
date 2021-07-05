@@ -237,7 +237,9 @@ namespace VECTO3GUI2020.ViewModel.Implementation
 						Jobs.Add(result);
 					}
 					if (runSimulationAfterAdding) {
-						await RunSimulationExecute(result);
+						if (result.CanBeSimulated) {
+							await RunSimulationExecute(result);
+						}
 					}
 
 					return result;
@@ -318,9 +320,9 @@ namespace VECTO3GUI2020.ViewModel.Implementation
 			set
 			{
 				SetProperty(ref _simulationRunning, value);
-				SimulationCommand.NotifyCanExecuteChanged();
+				SimulationCommand?.NotifyCanExecuteChanged();
 				
-				(_cancelSimulationCommand as RelayCommand).NotifyCanExecuteChanged();
+				(_cancelSimulationCommand as RelayCommand)?.NotifyCanExecuteChanged();
 			}
 		}
 
@@ -333,17 +335,27 @@ namespace VECTO3GUI2020.ViewModel.Implementation
 
 		public async Task RunSimulationExecute(IDocumentViewModel jobToSimulate = null)
 		{
+			if (SimulationRunning) {
+				return;
+			}
 			SimulationRunning = true;
-			await Task.Run(() => RunSimulationAsync(_cancellationTokenSource.Token,
-				outputMessages: _outputMessage, 
-				progress: _progress, 
-				status: _status,
-				jobToSimulate: jobToSimulate));
-
-			_cancellationTokenSource = new CancellationTokenSource();
-			_simulationLoggingEnabled = true;
-			SimulationRunning = false;
-			_outputViewModel.Progress = 0;
+			try {
+				await Task.Run(() => RunSimulationAsync(_cancellationTokenSource.Token,
+					outputMessages: _outputMessage,
+					progress: _progress,
+					status: _status,
+					jobToSimulate: jobToSimulate));
+			} catch (Exception ex) {
+				_outputViewModel.AddMessage(new MessageEntry() {
+					Type = MessageType.ErrorMessage,
+					Message = ex.Message
+				});
+			} finally {
+				_cancellationTokenSource = new CancellationTokenSource();
+				_simulationLoggingEnabled = true;
+				SimulationRunning = false;
+				_outputViewModel.Progress = 0;
+			}
 		}
 
 		private async Task RunSimulationAsync(CancellationToken ct, 
@@ -484,7 +496,7 @@ namespace VECTO3GUI2020.ViewModel.Implementation
 							outputMessages.Report(new MessageEntry()
 							{
 								Message = "Simulation canceled",
-								Type = MessageType.StatusMessage,
+								Type = MessageType.InfoMessage,
 							});
 							return;
 						}
@@ -557,7 +569,7 @@ namespace VECTO3GUI2020.ViewModel.Implementation
 					outputMessages.Report(new MessageEntry()
 					{
 						Message = "Simulation canceled",
-						Type = MessageType.StatusMessage,
+						Type = MessageType.InfoMessage,
 					});
 
 					return;
@@ -624,7 +636,6 @@ namespace VECTO3GUI2020.ViewModel.Implementation
 								Type = MessageType.StatusMessage,
 								Message = string.Format(
 									"{2} for '{0}' written to {1}", Path.GetFileName(jobEntry.DataSource.SourceFile), entry.Key, entry.Value),
-								//Link = "<XML>" + entry.Key
 								Link = entry.Key
 							});
 					}
@@ -638,7 +649,6 @@ namespace VECTO3GUI2020.ViewModel.Implementation
 					Type = MessageType.StatusMessage,
 					Message = string.Format("Sum file written to {0}", sumFileWriter.SumFileName),
 					Link = sumFileWriter.SumFileName,
-					//Link = "<CSV>" + sumFileWriter.SumFileName
 				});
 			}
 
@@ -747,10 +757,11 @@ namespace VECTO3GUI2020.ViewModel.Implementation
 				return _cancelSimulationCommand ?? (_cancelSimulationCommand = new RelayCommand(() => {
 						_outputViewModel.AddMessage(new MessageEntry() {
 							Message="Canceling Simulation",
-							Type=MessageType.StatusMessage,
+							Type=MessageType.InfoMessage,
 						});
 						_simulationLoggingEnabled = false;
 						_cancellationTokenSource.Cancel();
+						
 						
 					},
 					() => SimulationRunning));

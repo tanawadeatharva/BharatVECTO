@@ -103,22 +103,16 @@ namespace Vecto3GUI2020Test.ViewModelTests
 			jobListViewModel.Jobs[0].Selected = true;
 
 
-			jobListViewModel.RunSimulationExecute();
-
-
-
 			//Simulate for a while
 			var outputVm = _kernel.Get<IOutputViewModel>(); // SINGLETON
-			var constraint = Is.True.After(delayInMilliseconds: 100000, pollingInterval: 100);
-			Assert.That(() => outputVm.Progress >= 25, constraint);
-			
-
-
+			var simulationTask = jobListViewModel.RunSimulationExecute();
+			Assert.That(() => outputVm.Progress, Is.GreaterThanOrEqualTo(25).After(1 * 60 * 1000, 1),
+				() => $"Simulation reached {outputVm.Progress}%");
 
 			TestContext.Write("Canceling Simulation ... ");
 			Assert.IsTrue(jobListViewModel.SimulationRunning);
 			jobListViewModel.CancelSimulation.Execute(null);
-			Assert.That(() => jobListViewModel.SimulationRunning == false, constraint);
+			Assert.That(() => jobListViewModel.SimulationRunning, Is.False.After(20*1000, 50) );
 			TestContext.WriteLine("Done!");
 
 			watch.Stop();

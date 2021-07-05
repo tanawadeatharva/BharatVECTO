@@ -44,6 +44,13 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 		IManufacturingStageViewModel ManufacturingStageViewModel { get; }
 		bool Exempted { get; }
 		ICommand LoadVehicleDataCommand { get; }
+
+		/// <summary>
+		/// Creates a new VIF file
+		/// </summary>
+		/// <param name="outputFile"></param>
+		/// <returns>Name of the created File</returns>
+		string SaveVif(string outputFile);
 	}
 
 
@@ -78,6 +85,7 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 			_primaryVehicle = _jobInputData.PrimaryVehicle;
 			_dialogHelper = multistageDependencies.DialogHelperLazy;
 			_inputDataReader = inputDataReader;
+			_inputComplete = inputData.JobInputData.InputComplete;
 
 			_exempted = PrimaryVehicle.Vehicle.ExemptedVehicle;
 
@@ -133,11 +141,6 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 								errorMessage += auxiliariesErrorInfo.Error.Replace(",", "\n");
 							}
 
-
-							//_dialogHelper.Value.ShowMessageBox("Vehicle\n" + string.Join("\n", vehicleViewModel.Errors.Values) 
-							//												+ (vehicleViewModel.MultistageAuxiliariesViewModel.HasErrors ? ("\nAuxiliaries\n" + string.Join("\n", vehicleViewModel.MultistageAuxiliariesViewModel.Errors.Values)) : ""),
-								//"Error");
-
 							_dialogHelper.Value.ShowMessageBox(errorMessage, "Error", MessageBoxButton.OK,
 									MessageBoxImage.Error);
 							return;
@@ -179,7 +182,6 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 		/// <param name="writer"></param>
 		/// <param name="dialogHelper"></param>
 		/// <returns>Name of the created file</returns>
-
 		private string SaveVif(IMultistageVIFInputData vifData, string outputFile,
 			FileOutputVIFWriter writer = null, IDialogHelper dialogHelper = null)
 		{
@@ -217,7 +219,10 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 					} else {
 						dialogHelper?.ShowMessageBox($"Written to {writer.XMLMultistageReportFileName}", "Info",
 							MessageBoxButton.OK, MessageBoxImage.Information);
-						_jobListViewModel.AddJobAsync(writer.XMLMultistageReportFileName, true);
+
+						var runSimulation = vifData.VehicleInputData.VehicleDeclarationType ==
+											VehicleDeclarationType.final;
+						_jobListViewModel.AddJobAsync(writer.XMLMultistageReportFileName, runSimulation);
 
 						Debug.WriteLine($"Written to {writer.XMLMultistageReportFileName}");
 						return writer.XMLMultistageReportFileName;
@@ -278,8 +283,10 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 		{
 			get
 			{
-				return true;
-			} set => throw new NotImplementedException();
+				return InputComplete && _inputData.JobInputData.ConsolidateManufacturingStage.Vehicle.VehicleDeclarationType ==
+					VehicleDeclarationType.final;
+			}
+			set => throw new NotImplementedException();
 		}
 
 		#endregion

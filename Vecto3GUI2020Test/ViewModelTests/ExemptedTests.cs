@@ -145,8 +145,8 @@ namespace Vecto3GUI2020Test.ViewModelTests
 
 			//Check that file was added to JobList
 			var jobListVm = _kernel.Get<IJobListViewModel>() as JobListViewModel;
-			Assert.AreEqual(1, jobListVm.Jobs.Count);
-			Assert.AreEqual(result, jobListVm.Jobs[0].DataSource.SourceFile);
+			Assert.AreEqual(2, jobListVm.Jobs.Count);
+			Assert.AreEqual(result, jobListVm.Jobs[1].DataSource.SourceFile);
 
 			var inputDataProvider = _testHelper.GetInputDataProvider(result) as IMultistageBusInputDataProvider;
 			Assert.NotNull(inputDataProvider);
@@ -170,7 +170,7 @@ namespace Vecto3GUI2020Test.ViewModelTests
 
 
 			Write("Starting simulation ...");
-			jobListVm.Jobs[0].Selected = true;
+			jobListVm.Jobs[1].Selected = true;
 			await jobListVm.RunSimulationExecute();
 
 
