@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Security.Cryptography;
@@ -66,7 +67,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 		protected XNamespace v23 = "urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:DEV:v2.3";
 		protected XNamespace v28 = "urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:DEV:v2.8";
 		protected XNamespace v10 = "urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v1.0";
-
+		
 		private XElement _primaryVehicle;
 		private List<XElement> _manufacturingStages;
 		private List<XAttribute> _namespaceAttributes;
@@ -389,7 +390,8 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 			return new XElement(v28 + XMLNames.Component_AirDrag,
 				new XElement(v20 + XMLNames.Report_DataWrap,
 					new XAttribute(xsi + XMLNames.Component_Type_Attr, XMLNames.AirDrag_Data_Type_Attr),
-					new XAttribute("xmlns", v10.NamespaceName),
+					//new XAttribute("xmlns", v10.NamespaceName),
+					new XAttribute(XNamespace.Xmlns + "v1.0", v10.NamespaceName),
 					dataNode.Attributes != null && dataNode.Attributes[XMLNames.Component_ID_Attr] != null ?
 						new XAttribute(XMLNames.Component_ID_Attr, dataNode.Attributes[XMLNames.Component_ID_Attr].InnerText) : null,
 					GetElements(dataNode.ChildNodes)
