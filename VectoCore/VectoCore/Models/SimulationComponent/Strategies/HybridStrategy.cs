@@ -2087,7 +2087,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 			//	//tmp.FuelCosts = double.NaN; // = Tuple.Create(true, response.Gearbox.Gear - 1);
 			//	tmp.IgnoreReason |= HybridConfigurationIgnoreReason.EngineSpeedBelowDownshift;
 			//}
-			CheckGearshiftLimits(tmp, resp);
+			if (!tmp.IgnoreReason.EngineTorqueDemandTooHigh()) {
+				CheckGearshiftLimits(tmp, resp);
+			}
 
 			if (resp.Source is TorqueConverter) {
 				if (resp is ResponseUnderload) {
