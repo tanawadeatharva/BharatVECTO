@@ -32,6 +32,7 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 		ICommand LoadVehicleDataCommand { get; }
 		bool ShowSaveAndCloseButtons { get; set; }
 		void SaveInputDataExecute(string filename);
+		bool LoadStageInputData(string fileName);
 	}
 
 	public class StageViewModelBase : ViewModelBase, IStageViewModelBase
@@ -224,7 +225,7 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 			}
 		}
 
-		protected bool LoadStageInputData(string fileName)
+		public bool LoadStageInputData(string fileName)
 		{
 			try
 			{

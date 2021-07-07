@@ -117,6 +117,12 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 			set => throw new System.NotImplementedException();
 		}
 
+		public IAdditionalJobInfoViewModel AdditionalJobInfoVm
+		{
+			get => throw new NotImplementedException();
+			set => throw new NotImplementedException();
+		}
+
 		#endregion
 
 		#region Implementation of IEditViewModel

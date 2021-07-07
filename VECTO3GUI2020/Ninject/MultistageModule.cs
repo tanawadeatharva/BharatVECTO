@@ -11,6 +11,7 @@ using TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider;
 using TUGraz.VectoCore.Models.SimulationComponent;
 using VECTO3GUI2020.Ninject.Util;
 using VECTO3GUI2020.ViewModel.Implementation;
+using VECTO3GUI2020.ViewModel.Implementation.Common;
 using VECTO3GUI2020.ViewModel.Interfaces.Common;
 using VECTO3GUI2020.ViewModel.Interfaces.Document;
 using VECTO3GUI2020.ViewModel.Interfaces.JobEdit.Vehicle;
@@ -54,7 +55,8 @@ namespace VECTO3GUI2020.Ninject
 				.NamedLikeFactoryMethod((IMultiStageViewModelFactory f) => f.GetStageInputViewModel(default(bool)));
 
 
-
+			Bind<IAdditionalJobInfoViewModel>().To<AdditionalJobInfoViewModelMultiStage>()
+				.WhenInjectedInto(typeof(IMultiStageJobViewModel));
 		}
 	}
 }

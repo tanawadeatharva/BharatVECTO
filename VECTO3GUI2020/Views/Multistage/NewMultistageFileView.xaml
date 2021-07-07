@@ -6,6 +6,7 @@
              xmlns:local="clr-namespace:VECTO3GUI2020.Views.Multistage"
              xmlns:implementation="clr-namespace:VECTO3GUI2020.ViewModel.MultiStage.Implementation"
              xmlns:customControls="clr-namespace:VECTO3GUI2020.Views.Multistage.CustomControls"
+             Height="{StaticResource EditJobUserControlHeight}" Width="{StaticResource EditJobUserControlWidth}"
              mc:Ignorable="d" 
              d:DesignHeight="450" x:Name="NewMultistageJobView" d:DesignWidth="800" d:DataContext="{d:DesignInstance implementation:NewMultiStageJobViewModel }">
     <Grid>

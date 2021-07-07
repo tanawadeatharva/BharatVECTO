@@ -49,6 +49,12 @@ namespace VECTO3GUI2020.ViewModel.Implementation.Document
 			set => throw new NotImplementedException();
 		}
 
+		public IAdditionalJobInfoViewModel AdditionalJobInfoVm
+		{
+			get => throw new NotImplementedException();
+			set => throw new NotImplementedException();
+		}
+
 		#endregion
 
 		public SimulationOnlyDeclarationJob(DataSource dataSource, string name, XmlDocumentType documentType)

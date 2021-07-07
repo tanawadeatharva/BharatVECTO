@@ -7,6 +7,7 @@ using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Windows;
+using System.Windows.Forms;
 using System.Windows.Input;
 using System.Windows.Navigation;
 using System.Xml;
@@ -65,6 +66,9 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 		private VectoSimulationJobType _jobType;
 		private bool _inputComplete;
 		private readonly IMultiStageViewModelFactory _vmFactory;
+		private IAdditionalJobInfoViewModel _additionalJobInfoVm;
+
+
 
 		public IManufacturingStageViewModel ManufacturingStageViewModel
 		{
@@ -72,7 +76,12 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 			set => SetProperty(ref _manufacturingStageViewModel, value);
 		}
 
-		public MultiStageJobViewModel_v0_1(IMultistageBusInputDataProvider inputData, IMultiStageViewModelFactory vmFactory, IMultistageDependencies multistageDependencies, IXMLInputDataReader inputDataReader, IJobListViewModel jobListViewModel)
+		public MultiStageJobViewModel_v0_1(IMultistageBusInputDataProvider inputData, 
+			IMultiStageViewModelFactory vmFactory, 
+			IMultistageDependencies multistageDependencies,
+			IXMLInputDataReader inputDataReader, 
+			IJobListViewModel jobListViewModel,
+			IAdditionalJobInfoViewModel additionalJobInfo)
 		{
 			Title = "Edit Multistage Job";
 			_dataSource = inputData.DataSource;
@@ -86,6 +95,10 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 			_dialogHelper = multistageDependencies.DialogHelperLazy;
 			_inputDataReader = inputDataReader;
 			_inputComplete = inputData.JobInputData.InputComplete;
+			_invalidEntries = inputData.JobInputData.InvalidEntries.Distinct().ToList();
+			_additionalJobInfoVm = additionalJobInfo;
+			_additionalJobInfoVm.SetParent(this);
+			
 
 			_exempted = PrimaryVehicle.Vehicle.ExemptedVehicle;
 
@@ -101,7 +114,14 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
             (_manufacturingStageViewModel as INotifyPropertyChanged).PropertyChanged += MultiStageJobViewModel_v0_1_PropertyChanged;
 		}
 
-        private void MultiStageJobViewModel_v0_1_PropertyChanged(object sender, PropertyChangedEventArgs e)
+		public IAdditionalJobInfoViewModel AdditionalJobInfoVm
+		{
+			get => _additionalJobInfoVm;
+			set => SetProperty(ref _additionalJobInfoVm, value);
+		}
+
+
+		private void MultiStageJobViewModel_v0_1_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
 			
 			if (e.PropertyName == nameof(VehicleInputDataFilePath)) {
@@ -212,7 +232,7 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 					var validator = new XMLValidator(reader);
 					var valid = validator.ValidateXML(XmlDocumentType.MultistageOutputData);
 					if (!valid) {
-						dialogHelper?.ShowMessageBox($"Error writing file {validator.ValidationError}", "Error",
+						dialogHelper?.ShowMessageBox($"Error writing VIF {validator.ValidationError}", "Error",
 							MessageBoxButton.OK, MessageBoxImage.Error);
 						Debug.WriteLine("Invalid Outputfile");
 						return null;
@@ -220,8 +240,11 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 						dialogHelper?.ShowMessageBox($"Written to {writer.XMLMultistageReportFileName}", "Info",
 							MessageBoxButton.OK, MessageBoxImage.Information);
 
-						var runSimulation = vifData.VehicleInputData.VehicleDeclarationType ==
-											VehicleDeclarationType.final;
+						var runSimulation = vifData.VehicleInputData.VehicleDeclarationType == VehicleDeclarationType.final && 
+											(_dialogHelper.Value.ShowMessageBox("Do you want to start the simulation?",
+												"Run Simulation",
+												MessageBoxButton.YesNo,
+												MessageBoxImage.Question) == MessageBoxResult.Yes);
 						_jobListViewModel.AddJobAsync(writer.XMLMultistageReportFileName, runSimulation);
 
 						Debug.WriteLine($"Written to {writer.XMLMultistageReportFileName}");
@@ -248,7 +271,7 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 		private bool _selected;
 		private readonly bool _exempted;
 		private readonly IJobListViewModel _jobListViewModel;
-
+		private readonly IList<string> _invalidEntries;
 
 
 		public string VehicleInputDataFilePath
@@ -345,6 +368,7 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 			set => _inputComplete = value;
 		}
 
+		public IList<string> InvalidEntries => _invalidEntries;
 
 		#endregion
 
@@ -358,6 +382,7 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 		{
 			get => ManufacturingStageViewModel.LoadVehicleDataCommand;
 		}
+
 
 		#endregion
 	}

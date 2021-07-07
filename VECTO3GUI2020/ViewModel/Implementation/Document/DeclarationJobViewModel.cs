@@ -38,6 +38,12 @@ namespace VECTO3GUI2020.ViewModel.Implementation.Document
 			set => throw new System.NotImplementedException();
 		}
 
+		public IAdditionalJobInfoViewModel AdditionalJobInfoVm
+		{
+			get => throw new System.NotImplementedException();
+			set => throw new System.NotImplementedException();
+		}
+
 		#endregion
         #region Members
 

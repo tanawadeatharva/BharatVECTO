@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Input;
 using Microsoft.Toolkit.Mvvm.Input;
 using TUGraz.VectoCommon.InputData;
@@ -13,19 +9,20 @@ using VECTO3GUI2020.ViewModel.Implementation.Common;
 using VECTO3GUI2020.ViewModel.Interfaces;
 using VECTO3GUI2020.ViewModel.Interfaces.Document;
 
-namespace VECTO3GUI2020.ViewModel.Implementation
+namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 {
-	public interface ICreateVifViewModel
+	public interface ICreateVifViewModel: IDocumentViewModel, IEditViewModel
 	{
 
 	}
-    public class CreateVifViewModel : ViewModelBase, ICreateVifViewModel, IDocumentViewModel, IEditViewModel
+    public class CreateVifViewModel : ViewModelBase, ICreateVifViewModel
 	{
 		private string _primaryInputFile;
 		private string _completedInputFile;
 		private readonly IDialogHelper _dialogHelper;
 		private readonly IXMLInputDataReader _inputDataReader;
 
+		private static uint _newVifCounter = 0;
 
 		public CreateVifViewModel(IDialogHelper dialogHelper, IXMLInputDataReader inputDataReader)
 		{
@@ -51,7 +48,7 @@ namespace VECTO3GUI2020.ViewModel.Implementation
 		{
 			get => _selectCompletedInputFileCommand ?? (_selectCompletedInputFileCommand = new RelayCommand(() => {
 				var selectedFile = _dialogHelper.OpenXMLFileDialog();
-
+				
 			}));
 		}
 
@@ -78,7 +75,7 @@ namespace VECTO3GUI2020.ViewModel.Implementation
 
 		private ICommand _selectPrimaryInputFileCommand;
 		private ICommand _selectCompletedInputFileCommand;
-
+		private bool _selected;
 
 		#endregion
 
@@ -89,17 +86,23 @@ namespace VECTO3GUI2020.ViewModel.Implementation
 
 		public XmlDocumentType DocumentType => throw new NotImplementedException();
 
-		public DataSource DataSource => throw new NotImplementedException();
+		public DataSource DataSource => null;
 
 		public IEditViewModel EditViewModel => this;
 
 		public bool Selected
 		{
-			get => throw new NotImplementedException();
-			set => throw new NotImplementedException();
+			get => _selected;
+			set => SetProperty(ref _selected, value);
 		}
 
 		public bool CanBeSimulated
+		{
+			get => true;
+			set => throw new NotImplementedException();
+		}
+
+		public IAdditionalJobInfoViewModel AdditionalJobInfoVm
 		{
 			get => throw new NotImplementedException();
 			set => throw new NotImplementedException();

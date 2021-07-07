@@ -9,10 +9,12 @@
                     xmlns:vehicleimpl="clr-namespace:VECTO3GUI2020.ViewModel.Implementation.JobEdit.Vehicle"
                     xmlns:vehicleviews="clr-namespace:VECTO3GUI2020.Views.JobEditViews.Vehicle"
                     xmlns:multistageviews="clr-namespace:VECTO3GUI2020.Views.Multistage"
+                    xmlns:additionaljobInfoViews="clr-namespace:VECTO3GUI2020.Views.Multistage.AdditionalJobInfoViews"
                     xmlns:componentimpl="clr-namespace:VECTO3GUI2020.ViewModel.Implementation.JobEdit.Vehicle.Components"
                     xmlns:componentviews="clr-namespace:VECTO3GUI2020.Views.JobEditViews.Vehicle.Components"
                     xmlns:multistageimpl="clr-namespace:VECTO3GUI2020.ViewModel.MultiStage.Implementation"
-                    xmlns:viewModel="clr-namespace:VECTO3GUI2020.ViewModel">
+                    xmlns:viewModel="clr-namespace:VECTO3GUI2020.ViewModel"
+                    xmlns:common="clr-namespace:VECTO3GUI2020.ViewModel.Implementation.Common">
     <DataTemplate x:Shared="False" DataType="{x:Type impl:JobListViewModel}">
         <views:JobListView />
     </DataTemplate>
@@ -232,13 +234,17 @@
         <multistageviews:ManufacturingStageView></multistageviews:ManufacturingStageView>
     </DataTemplate>
 
-    <DataTemplate DataType="{x:Type impl:CreateVifViewModel}">
+    <DataTemplate DataType="{x:Type multistageimpl:CreateVifViewModel}">
         <multistageviews:CreateVifView></multistageviews:CreateVifView>
     </DataTemplate>
     <!--#endregion-->
 
     <DataTemplate DataType="{x:Type local:TestViewModel}">
         <local:Test></local:Test>
+    </DataTemplate>
+
+    <DataTemplate DataType="{x:Type common:AdditionalJobInfoViewModelMultiStage}">
+        <additionaljobInfoViews:AdditionalJobInfoViewMultiStage></additionaljobInfoViews:AdditionalJobInfoViewMultiStage>
     </DataTemplate>
 
 

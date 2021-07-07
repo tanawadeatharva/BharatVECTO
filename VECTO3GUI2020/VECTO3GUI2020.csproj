@@ -168,6 +168,7 @@
     <Compile Include="Helper\Converter\NullToUnsetValueConverter.cs" />
     <Compile Include="Helper\Converter\NullToVisibilityConverter.cs" />
     <Compile Include="Helper\Converter\LabledTextBoxConverter.cs" />
+    <Compile Include="Helper\Converter\PropertyNameToLabelTextConverter.cs" />
     <Compile Include="Helper\Converter\SIToUnitString.cs" />
     <Compile Include="Helper\Converter\SIValueToStringConverter.cs" />
     <Compile Include="Helper\Converter\VehicleCategoryToStringConverter.cs" />
@@ -181,8 +182,8 @@
     <Compile Include="Helper\DialogHelper.cs" />
     <Compile Include="Helper\VisualTreeHelperExtensions.cs" />
     <Compile Include="Helper\TemplateSelector\MultistageParameterDataTemplateSelector.cs" />
+    <Compile Include="ViewModel\Implementation\Common\AdditionalJobInfoViewModel.cs" />
     <Compile Include="ViewModel\MultiStage\Implementation\MultistageParameterViewModel.cs" />
-    <Compile Include="Helper\NameOfMarkUpExtension.cs" />
     <Compile Include="Helper\NameResolver.cs" />
     <Compile Include="Helper\TemplateSelector\MultistageVehicleDataTemplateSelector.cs" />
     <Compile Include="Helper\WindowHelper.cs" />
@@ -213,7 +214,7 @@
     <Compile Include="Util\XML\Implementation\ComponentWriter\XMLBusAuxiliariesWriter.cs" />
     <Compile Include="Util\XML\Implementation\ComponentWriter\XMLPTOWriter.cs" />
     <Compile Include="ViewModel\Implementation\AboutViewModel.cs" />
-    <Compile Include="ViewModel\Implementation\CreateVifViewModel.cs" />
+    <Compile Include="ViewModel\MultiStage\Implementation\CreateVifViewModel.cs" />
     <Compile Include="ViewModel\Implementation\Document\DeclarationJobViewModel.cs" />
     <Compile Include="ViewModel\Implementation\Document\DeclarationTrailerJobDocumentViewModel.cs" />
     <Compile Include="Model\Interfaces\IAuxiliaryModelFactory.cs" />
@@ -426,6 +427,9 @@
     <Compile Include="Views\MessageView.xaml.cs">
       <DependentUpon>MessageView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\Multistage\AdditionalJobInfoViews\AdditionalJobInfoViewMultiStage.xaml.cs">
+      <DependentUpon>AdditionalJobInfoViewMultiStage.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\Multistage\AirDragView_v2_8.xaml.cs">
       <DependentUpon>AirDragView_v2_8.xaml</DependentUpon>
     </Compile>
@@ -483,6 +487,14 @@
     <Compile Include="Views\XMLViewer.xaml.cs">
       <DependentUpon>XMLViewer.xaml</DependentUpon>
     </Compile>
+    <Page Include="Resources\Icons\StatusInformationOutline_nohalo_16x.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Resources\Sizes.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Resources\Styles\DataGridStyles.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -682,6 +694,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\MessageView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Multistage\AdditionalJobInfoViews\AdditionalJobInfoViewMultiStage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

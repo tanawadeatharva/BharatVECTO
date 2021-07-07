@@ -1,0 +1,82 @@
+﻿using System;
+using System.Collections.ObjectModel;
+using System.Linq;
+using TUGraz.VectoCommon.InputData;
+using VECTO3GUI2020.ViewModel.Interfaces.Common;
+using VECTO3GUI2020.ViewModel.MultiStage.Implementation;
+
+namespace VECTO3GUI2020.ViewModel.Implementation.Common
+{
+	public interface IAdditionalJobInfoViewModel
+	{
+		void SetParent(IViewModelBase parent);
+	}
+	public class AdditionalJobInfoViewModelBase : ViewModelBase, IAdditionalJobInfoViewModel
+	{
+		private IViewModelBase _parent
+			;
+
+		#region Implementation of IAdditionalJobInfoViewModel
+
+		public string Information { get; } = "Nothing to show here";
+
+
+
+
+
+		public virtual void SetParent(IViewModelBase parent)
+		{
+			_parent = parent;
+		}
+
+		#endregion
+	}
+
+	public class AdditionalJobInfoViewModelMultiStage : AdditionalJobInfoViewModelBase
+	{
+
+		private IMultiStageJobViewModel _parent;
+		private string _errorInfo;
+
+		public AdditionalJobInfoViewModelMultiStage()
+		{
+			Title = "Multistage Job Info";
+		}
+
+		#region Overrides of AdditionalJobInfoViewModelBase
+
+		public override void SetParent(IViewModelBase parent)
+		{
+			_parent = parent as IMultiStageJobViewModel;
+			if (parent == null) {
+				throw new ArgumentException(
+					"this class should only be used to extend the functionality of a class that implements the IMultistageJobViewModel interface");
+			}
+
+			if (_parent.CanBeSimulated) {
+				return;
+			}
+
+			//if (_parent.ManufacturingStageViewModel.VehicleViewModel.VehicleDeclarationType ==
+			//	VehicleDeclarationType.interim) {
+			//	ErrorInfo = "Only Jobs with the declaration type \"final\" can be simulated";
+			//	return;
+			//}
+
+			ErrorInfo = "This Job cannot be Simulated because the following Parameters are invalid";
+			foreach (var parentInvalidEntry in _parent.InvalidEntries) {
+				InvalidEntries.Add(parentInvalidEntry);
+			}
+		}
+
+		public ObservableCollection<string> InvalidEntries { get; set; } = new ObservableCollection<string>();
+
+		public string ErrorInfo
+		{
+			get => _errorInfo;
+			set => SetProperty(ref _errorInfo, value);
+		}
+
+		#endregion
+	}
+}

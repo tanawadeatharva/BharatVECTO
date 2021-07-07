@@ -1,5 +1,6 @@
 ﻿using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCore.Utils;
+using VECTO3GUI2020.ViewModel.Implementation.Common;
 using VECTO3GUI2020.ViewModel.Interfaces.JobEdit;
 
 namespace VECTO3GUI2020.ViewModel.Interfaces.Document
@@ -13,5 +14,6 @@ namespace VECTO3GUI2020.ViewModel.Interfaces.Document
 		bool Selected { get; set; }
 
         bool CanBeSimulated { get; set; }
+		IAdditionalJobInfoViewModel AdditionalJobInfoVm { get; set; }
 	}
 }

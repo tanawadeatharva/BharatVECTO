@@ -81,8 +81,30 @@
                             <DataGridTemplateColumn Header="Simulate" Width="1*" IsReadOnly="False">
                                 <DataGridTemplateColumn.CellTemplate>
                                     <DataTemplate DataType="document:IDocumentViewModel">
-                                        <CheckBox HorizontalAlignment="Center" IsEnabled="{Binding CanBeSimulated}"
-                                                  IsChecked="{Binding Selected, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"></CheckBox>
+                                        <Grid>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="1*"/>
+                                            </Grid.ColumnDefinitions>
+                                            <CheckBox 
+                                                HorizontalAlignment="Center" 
+                                                      IsEnabled="{Binding CanBeSimulated}"
+                                                Visibility="{Binding CanBeSimulated, 
+                                                Converter={StaticResource BooleanToVisibilityConverter}}"
+                                                      IsChecked="{Binding Selected, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                                            <Button Margin="0" 
+                                                    Padding="5" 
+                                                    Background="Transparent" 
+                                                    HorizontalAlignment="Center" 
+                                                    BorderThickness="0"
+                                                    Grid.Column="0" 
+                                                    Command="{Binding RelativeSource={RelativeSource AncestorType=DataGrid}, 
+                                                            Path=DataContext.OpenAdditionalJobInformationCommand}"
+                                                    CommandParameter="{Binding }"
+                                                    ContentTemplate="{DynamicResource InformationIcon}"
+                                                    Visibility="{Binding CanBeSimulated, Converter={StaticResource InvertedBoolToVisibilityConverter}}">
+                                            </Button>
+                                        </Grid>
+                                        
                                     </DataTemplate>
                                 </DataGridTemplateColumn.CellTemplate>
                             </DataGridTemplateColumn>

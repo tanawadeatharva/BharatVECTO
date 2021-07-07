@@ -20,6 +20,7 @@
                 <ResourceDictionary Source="Resources/ObjectProvider.xaml"/>
                 <ResourceDictionary Source="Resources/Icons/drawables.xaml"/>
                 <ResourceDictionary Source="Resources/DataTemplateSelectors.xaml"/>
+                <ResourceDictionary Source="Resources/Sizes.xaml"/>
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Application.Resources>

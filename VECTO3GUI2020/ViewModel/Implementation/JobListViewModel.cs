@@ -1,6 +1,4 @@
-﻿using Microsoft.Win32;
-using Ninject;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
@@ -11,14 +9,10 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Data;
-using System.Windows.Forms;
 using System.Windows.Input;
-using System.Windows.Threading;
 using System.Xml;
 using System.Xml.Linq;
 using Microsoft.Toolkit.Mvvm.Input;
-using Microsoft.WindowsAPICodePack.Shell.Interop;
-using Microsoft.WindowsAPICodePack.Shell.PropertySystem;
 using Newtonsoft.Json;
 using NLog;
 using NLog.Targets;
@@ -26,21 +20,17 @@ using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Resources;
-using TUGraz.VectoCommon.Utils;
-using TUGraz.VectoCore;
 using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.InputData.FileIO.JSON;
 using TUGraz.VectoCore.InputData.FileIO.XML;
 using TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider;
 using TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Interfaces;
-using TUGraz.VectoCore.InputData.Impl;
 using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.OutputData;
 using TUGraz.VectoCore.OutputData.FileIO;
 using TUGraz.VectoCore.Utils;
 using VECTO3GUI2020.Annotations;
 using VECTO3GUI2020.Helper;
-using VECTO3GUI2020.Model.Interfaces;
 using VECTO3GUI2020.Properties;
 using VECTO3GUI2020.ViewModel.Implementation.Common;
 using VECTO3GUI2020.ViewModel.Implementation.Document;
@@ -48,7 +38,6 @@ using VECTO3GUI2020.ViewModel.Interfaces;
 using VECTO3GUI2020.ViewModel.Interfaces.Document;
 using VECTO3GUI2020.ViewModel.MultiStage.Implementation;
 using VECTO3GUI2020.ViewModel.MultiStage.Interfaces;
-using VECTO3GUI2020.Views;
 using IDocumentViewModel = VECTO3GUI2020.ViewModel.Interfaces.Document.IDocumentViewModel;
 using XmlDocumentType = TUGraz.VectoCore.Utils.XmlDocumentType;
 
@@ -154,7 +143,7 @@ namespace VECTO3GUI2020.ViewModel.Implementation
 			if (evtInfo.Level == LogLevel.Error || evtInfo.Level == LogLevel.Warn || evtInfo.Level == LogLevel.Fatal)
 				_outputMessage.Report(new MessageEntry()
 				{
-					Type = MessageType.ErrorMessage,
+					Type = evtInfo.Level == LogLevel.Warn ? MessageType.WarningMessage : MessageType.ErrorMessage,
 					Message = evtInfo.FormattedMessage,
 					Source = evtInfo.CallerMemberName,
 				});
@@ -304,9 +293,7 @@ namespace VECTO3GUI2020.ViewModel.Implementation
 			get => _newFilePopUpIsOpen;
 			set => SetProperty(ref _newFilePopUpIsOpen, value);
 		}
-
-
-
+		
 
 
 
@@ -736,6 +723,8 @@ namespace VECTO3GUI2020.ViewModel.Implementation
 		private ICommand _newCompletedInputCommand;
 		private ICommand _newExemptedCompletedInputCommand;
 
+		private ICommand _openAdditionalJobInformationCommand;
+
 
 		public ICommand OpenPopUpCommand
 		{
@@ -802,7 +791,11 @@ namespace VECTO3GUI2020.ViewModel.Implementation
 			get
 			{
 				return _newVifCommand ?? (_newVifCommand = new Microsoft.Toolkit.Mvvm.Input.RelayCommand(() => {
-					_windowHelper.ShowWindow(_multiStageViewModelFactory.GetCreateNewVifViewModel());
+					var newVifViewModel = _multiStageViewModelFactory.GetCreateNewVifViewModel();
+					lock (_jobsLock) {
+						_jobs.Add(newVifViewModel);
+					}
+					_windowHelper.ShowWindow(newVifViewModel);
 				}));
 			}
 		}
@@ -980,6 +973,17 @@ namespace VECTO3GUI2020.ViewModel.Implementation
 		{
 			get => _outputViewModel;
 			set => SetProperty(ref _outputViewModel, value);
+		}
+
+		public ICommand OpenAdditionalJobInformationCommand
+		{
+			get
+			{
+				return _openAdditionalJobInformationCommand ?? (_openAdditionalJobInformationCommand = new RelayCommand<IDocumentViewModel>(
+					(docVm) => {
+						_windowHelper.ShowWindow(docVm.AdditionalJobInfoVm);
+					}) );
+			}
 		}
 
 		private void MoveJobDownExecute(IDocumentViewModel selectedJob)
