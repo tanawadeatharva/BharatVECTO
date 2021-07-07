@@ -88,6 +88,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 		public bool InputComplete => Reader.InputComplete;
 
+		public IList<string> InvalidEntries => Reader.InvalidEntries;
+
 		public IXMLMultistageJobReader Reader { protected get; set; }
 
 		public IXMLMultistageInputDataProvider InputData { get; }

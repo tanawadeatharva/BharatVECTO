@@ -65,6 +65,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration
 		VectoSimulationJobType JobType { get; }
 
 		bool InputComplete { get; }
+
+		IList<string> InvalidEntries { get; }
 	}
 
 	public interface IXMLMultistageReader 

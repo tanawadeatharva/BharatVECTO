@@ -105,6 +105,8 @@ namespace TUGraz.VectoCommon.InputData
 		VectoSimulationJobType JobType { get; }
 
 		bool InputComplete { get; }
+
+		IList<string> InvalidEntries { get; }
 	}
 
 
