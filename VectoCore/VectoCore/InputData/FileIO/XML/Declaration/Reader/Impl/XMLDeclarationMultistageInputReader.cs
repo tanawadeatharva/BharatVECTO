@@ -355,14 +355,11 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 
 		protected abstract bool IsInputDataCompleteTemplate(VectoSimulationJobType jobType, bool fullCheck);
 
-		protected bool IsInputDataComplete(VectoSimulationJobType jobType, bool fullCheck)
-		{
-			return fullCheck ? IsInputDataCompleteFullCheck(jobType) : IsInputDataComplete(jobType);
-		}
 
 		public bool IsInputDataComplete(VectoSimulationJobType jobType)
 		{
 			var result = (_checked && _isComplete) || IsInputDataCompleteTemplate(jobType, fullCheck: false);
+			_isComplete = result;
 			return result;
 		}
 
@@ -372,6 +369,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 				return true;
 			} else {
 				var result = IsInputDataCompleteTemplate(jobType, fullCheck: true);
+				_isComplete = result;
 				_fullChecked = true;
 				_checked = true;
 				return result;
@@ -675,10 +673,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 					& InputComplete(Width, nameof(Width))
 					& InputComplete(EntranceHeight, nameof(EntranceHeight))
 					& InputComplete(DoorDriveTechnology, nameof(DoorDriveTechnology))
-					& InputComplete(_consolidatedADAS, nameof(_consolidatedADAS))
-					& _consolidatedADAS.IsInputDataCompleteFullCheck(jobType)
-					& InputComplete(_consolidatedComponents, nameof(_consolidatedComponents))
-					& _consolidatedComponents.IsInputDataCompleteFullCheck(jobType);
+					& (InputComplete(_consolidatedADAS, nameof(_consolidatedADAS)) && _consolidatedADAS.IsInputDataCompleteFullCheck(jobType))
+					& (InputComplete(_consolidatedComponents, nameof(_consolidatedComponents)) && _consolidatedComponents.IsInputDataCompleteFullCheck(jobType));
 			}
 			
 		
@@ -698,10 +694,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 					&& InputComplete(Length, nameof(Length)) && InputComplete(Width, nameof(Width)) 
 					&& InputComplete(EntranceHeight, nameof(EntranceHeight))  
 					&& InputComplete(DoorDriveTechnology, nameof(DoorDriveTechnology)) 
-					&& InputComplete(_consolidatedADAS, nameof(_consolidatedADAS))
-					&& _consolidatedADAS.IsInputDataComplete(jobType)
-					&& InputComplete(_consolidatedComponents, nameof(_consolidatedComponents))
-					&& _consolidatedComponents.IsInputDataComplete(jobType);
+					&& InputComplete(_consolidatedADAS, nameof(_consolidatedADAS)) && _consolidatedADAS.IsInputDataComplete(jobType)
+					&& InputComplete(_consolidatedComponents, nameof(_consolidatedComponents)) && _consolidatedComponents.IsInputDataComplete(jobType);
 		}
 
 
@@ -721,8 +715,17 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 
 		protected override IList<string> GetInvalidEntriesTemplate(VectoSimulationJobType jobType)
 		{
-			return _invalidEntries.Concat(_consolidatedComponents.GetInvalidEntries(jobType))
-				.Concat(_consolidatedADAS.GetInvalidEntries(jobType)).ToList();
+			IEnumerable<string> concatenatedEntries = new List<string>();
+			if (_consolidatedComponents != null) {
+				concatenatedEntries = concatenatedEntries.Concat(_consolidatedComponents.GetInvalidEntries(jobType));
+			}
+
+			if (_consolidatedADAS != null) {
+				concatenatedEntries = concatenatedEntries.Concat(_consolidatedADAS.GetInvalidEntries(jobType));
+			}
+
+
+			return _invalidEntries.Concat(concatenatedEntries).ToList();
 		}
 	}
 

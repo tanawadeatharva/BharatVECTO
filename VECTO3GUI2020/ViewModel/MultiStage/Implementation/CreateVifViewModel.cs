@@ -29,6 +29,7 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 			_dialogHelper = dialogHelper;
 			_inputDataReader = inputDataReader;
 			Title = "Create VIF";
+			_documentName = $"New Vif {++_newVifCounter}";
 		}
 
 
@@ -76,13 +77,18 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 		private ICommand _selectPrimaryInputFileCommand;
 		private ICommand _selectCompletedInputFileCommand;
 		private bool _selected;
+		private  string _documentName;
 
 		#endregion
 
 
 		#region Implementation of IDocumentViewModel
+		public string DocumentName
+		{
+			get => _documentName;
+			set => SetProperty(ref _documentName, value);
+		}
 
-		public string DocumentName => throw new NotImplementedException();
 
 		public XmlDocumentType DocumentType => throw new NotImplementedException();
 
@@ -113,6 +119,8 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 		#region Implementation of IEditViewModel
 
 		public string Name => DocumentName;
+
+
 
 		#endregion
 	}

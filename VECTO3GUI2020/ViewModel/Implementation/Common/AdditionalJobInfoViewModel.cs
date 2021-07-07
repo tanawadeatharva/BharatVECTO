@@ -63,9 +63,13 @@ namespace VECTO3GUI2020.ViewModel.Implementation.Common
 			//	return;
 			//}
 
-			ErrorInfo = "This Job cannot be Simulated because the following Parameters are invalid";
-			foreach (var parentInvalidEntry in _parent.InvalidEntries) {
-				InvalidEntries.Add(parentInvalidEntry);
+			
+			if (_parent.InvalidEntries != null) {
+				ErrorInfo = "This Job cannot be Simulated because the following Parameters are invalid";
+				foreach (var parentInvalidEntry in _parent.InvalidEntries)
+				{
+					InvalidEntries.Add(parentInvalidEntry);
+				}
 			}
 		}
 

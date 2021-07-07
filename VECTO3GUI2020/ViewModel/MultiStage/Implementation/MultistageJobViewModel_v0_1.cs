@@ -95,7 +95,7 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 			_dialogHelper = multistageDependencies.DialogHelperLazy;
 			_inputDataReader = inputDataReader;
 			_inputComplete = inputData.JobInputData.InputComplete;
-			_invalidEntries = inputData.JobInputData.InvalidEntries.Distinct().ToList();
+			_invalidEntries = inputData.JobInputData?.InvalidEntries?.Distinct().ToList();
 			_additionalJobInfoVm = additionalJobInfo;
 			_additionalJobInfoVm.SetParent(this);
 			
