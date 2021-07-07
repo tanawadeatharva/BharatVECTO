@@ -43,6 +43,9 @@
     <Content Include="..\VectoCore\VectoCoreTest\TestData\XML\XMLReaderDeclaration\SchemaVersionMultistage.0.1\AirdragLoadTestFile.xml" Link="Testdata\AirdragLoadTestFile.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="..\VectoCore\VectoCoreTest\TestData\XML\XMLReaderDeclaration\SchemaVersionMultistage.0.1\AirdragLoadTestFilev2.xml" Link="Testdata\AirdragLoadTestFilev2.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="..\VectoCore\VectoCoreTest\TestData\XML\XMLReaderDeclaration\SchemaVersionMultistage.0.1\vecto_multistage_consolidated_multiple_stages.xml" Link="Testdata\vecto_multistage_consolidated_multiple_stages.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

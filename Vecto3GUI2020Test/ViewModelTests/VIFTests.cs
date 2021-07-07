@@ -73,9 +73,10 @@ namespace Vecto3GUI2020Test.ViewModelTests
 
 		}
 
-		[TestCase(true, TestName="With Airdrag Component")]
-		[TestCase(false, TestName="Without Airdrag Component")]
-		public void CreateCompletedFinalVIFWidthAirdrag(bool loadAirdrag)
+		[TestCase(true, 1, TestName="With Airdrag Component v1")]
+		[TestCase(true, 2, TestName="With Airdrag Component v2")]
+		[TestCase(false, 0, TestName="Without Airdrag Component")]
+		public void CreateCompletedFinalVIFWithAirdrag(bool loadAirdrag, int airdragVersion)
 		{
 			var multistagevm = loadFile(_finalVifReport4);
 
@@ -85,12 +86,19 @@ namespace Vecto3GUI2020Test.ViewModelTests
             VehicleViewModel.ManufacturerAddress = "Manufacturer Address";
 			VehicleViewModel.VIN = "1234567";
 			VehicleViewModel.Model = "asdf";
-			VehicleViewModel.AirdragModifiedEnum = AIRDRAGMODIFIED.FALSE;
+			VehicleViewModel.AirdragModifiedEnum = loadAirdrag ? AIRDRAGMODIFIED.TRUE: AIRDRAGMODIFIED.FALSE;
 			VehicleViewModel.VehicleDeclarationType = VehicleDeclarationType.final;
+
+			//SETADAS
+			VehicleViewModel.EngineStopStartNullable = true;
+			VehicleViewModel.EcoRollTypeNullable = EcoRollType.WithEngineStop;
+			VehicleViewModel.PredictiveCruiseControlNullable = PredictiveCruiseControlType.Option_1_2_3;
+			VehicleViewModel.ATEcoRollReleaseLockupClutch = false;
 
 
 			if (loadAirdrag) {
-				Assert.IsTrue(VehicleViewModel.MultistageAirdragViewModel.LoadAirdragFile(GetFullPath(airdragLoadTestFile)));
+				var airdragTestFile = airdragVersion == 2 ? airdragLoadTestFilev2 : airdragLoadTestFile;
+				Assert.IsTrue(VehicleViewModel.MultistageAirdragViewModel.LoadAirdragFile(GetFullPath(airdragTestFile)));
 			}
 		
 			var resultFile = multistagevm.MultiStageJobViewModel.SaveVif(GetFullPath(

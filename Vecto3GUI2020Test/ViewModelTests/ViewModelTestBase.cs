@@ -26,6 +26,7 @@ namespace Vecto3GUI2020Test
 		protected const string exempted = "exempted_primary_heavyBus.VIF.xml";
 		protected const string stageInputFullSample = "vecto_vehicle-stage_input_full-sample.xml";
 		protected const string airdragLoadTestFile = "AirdragLoadTestFile.xml";
+		protected const string airdragLoadTestFilev2 = "AirdragLoadTestFilev2.xml";
 
 		//protected IXMLInputDataReader xmlInputReader;
 		protected IKernel _kernel;
