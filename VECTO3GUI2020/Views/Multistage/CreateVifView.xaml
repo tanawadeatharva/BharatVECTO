@@ -8,7 +8,6 @@
              xmlns:implementation="clr-namespace:VECTO3GUI2020.ViewModel.Implementation"
              xmlns:implementation1="clr-namespace:VECTO3GUI2020.ViewModel.MultiStage.Implementation"
              mc:Ignorable="d"
-             Height="200" Width="600"
              d:DesignHeight="450" d:DesignWidth="800" d:DataContext="{d:DesignInstance implementation1:CreateVifViewModel}">
     <Grid>
         <DockPanel LastChildFill="False">
