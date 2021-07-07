@@ -14,14 +14,17 @@ namespace VECTO3GUI2020.Helper
 				Content = viewModel,
 				Width = 800,
 				Height = 600,
+				SizeToContent = SizeToContent.WidthAndHeight,
 				WindowStartupLocation = WindowStartupLocation.CenterScreen
 			};
+			
 
 			if (viewModel is IViewModelBase vmBase) {
 				window.Title = vmBase.Title;
 			}
 
 			window.Show();
+			window.SizeToContent = SizeToContent.Manual;
 		}
 
 
