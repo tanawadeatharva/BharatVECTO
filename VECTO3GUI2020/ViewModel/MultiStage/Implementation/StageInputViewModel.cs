@@ -58,7 +58,7 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 		protected override void LoadStageInputDataFollowUp(IDeclarationInputDataProvider loadedInputData)
 		{
 			DataSource = loadedInputData.DataSource;
-			UpdateTitle();
+			UpdateTitle();			
 			DocumentName = loadedInputData.JobInputData.JobName;
 
 		}

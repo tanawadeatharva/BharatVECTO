@@ -83,8 +83,9 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 			IJobListViewModel jobListViewModel,
 			IAdditionalJobInfoViewModel additionalJobInfo)
 		{
-			Title = "Edit Multistage Job";
+			
 			_dataSource = inputData.DataSource;
+			Title = $"Edit Multistage Job - {Path.GetFileName(_dataSource.SourceFile)}";
 			_jobInputData = inputData.JobInputData;
 			_jobListViewModel = jobListViewModel;
 			_inputData = inputData;
