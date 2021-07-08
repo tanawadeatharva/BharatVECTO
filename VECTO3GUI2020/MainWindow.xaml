@@ -17,17 +17,24 @@
 
 
     <Grid x:Name="Grid" >
-        <DockPanel Margin="0 10 0 0">
-            <!--<StackPanel DockPanel.Dock="Top" Grid.Row="0" Orientation="Vertical">
+        <DockPanel Margin="0 0 0 0">
+            <StackPanel DockPanel.Dock="Top" Grid.Row="0" Orientation="Vertical">
                 <Menu IsMainMenu="True">
                     <MenuItem Header="File" x:Name="MenuItemFile"  AutomationProperties.Name="=" VerticalAlignment="Stretch">
+                        <MenuItem Header="New File">
+                            <MenuItem Header="Primary and Interim Job" Command="{Binding JobListVm.NewVifCommand}"/>
+                            <MenuItem Header="Interim/Completed Job" Command="{Binding JobListVm.NewManufacturingStageFileCommand}"/>
+                            <MenuItem Header="Complete Job"></MenuItem>
+                            <Separator></Separator>
+                            <MenuItem Header="Create interim/completeted input" Command="{Binding JobListVm.NewCompletedInputCommand}"/>
+                            <MenuItem Header="Create extemted interim/completed input" Command="{Binding JobListVm.NewExemptedCompletedInputCommand}"/>
+                        </MenuItem>
+                        <MenuItem  Header="Load File" Command="{Binding AddJob}"/>
                         <MenuItem Header="Settings" Command="{Binding OpenSettings}"/>
-                        <MenuItem Header="New File" Command="{Binding NewInterimFile}"/>
-                        --><!--<MenuItem Header="Open File" Command="{Binding AddJob}"/>--><!--
                     </MenuItem>
                 </Menu>
-            </StackPanel>-->
-                <UniformGrid Rows="1" DockPanel.Dock="Top" Width="400" HorizontalAlignment="Left">
+            </StackPanel>
+                <UniformGrid Margin="0 10 0 0 " Rows="1" DockPanel.Dock="Top" Width="400" HorizontalAlignment="Left">
                     <Border x:Name="JobsButtonBorder" BorderThickness ="0 0 0 3">
                         <Border.Style>
                             <Style TargetType="Border">
@@ -89,31 +96,8 @@
                     </Button>
                 </Border>
             </UniformGrid>
-
-
-
-
-            <!--<Border DockPanel.Dock="Top" BorderBrush="{DynamicResource AccentColorButton}" BorderThickness="3" VerticalAlignment="Stretch"
-                    Visibility="{Binding JobsSelected, Converter={StaticResource BooleanToVisibilityConverter}}">
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="1*"/>
-                        </Grid.ColumnDefinitions>
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="1.5*"/>
-                            <RowDefinition Height="5"></RowDefinition>
-                            <RowDefinition Height="1*"/>
-                        </Grid.RowDefinitions>
-
-                    <ContentControl Grid.Row="0" Margin="0, 4, 0 0" Content="{Binding CurrentViewModelTop}"/>
-                    <GridSplitter Grid.Row="1" HorizontalAlignment="Stretch" Height="5"/>
-                    <ContentControl Visibility="{Binding JobsSelected,
-                        Converter={StaticResource BooleanToVisibilityConverter}}"  Grid.Row="2" Margin="0,0,0,0" Name="ContentControlBottom" Content="{Binding CurrentViewModelBottom}"/>
-                    </Grid>
-            </Border>-->
-
             <Border DockPanel.Dock="Top" BorderBrush="{DynamicResource AccentColorButton}" BorderThickness="3" VerticalAlignment="Stretch">
-                <ContentControl Content="{Binding CurrentViewModelTop}"></ContentControl>
+                <ContentControl Content="{Binding CurrentViewModel}"></ContentControl>
             </Border>
         </DockPanel>
     </Grid>

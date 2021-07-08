@@ -48,25 +48,5 @@ namespace VECTO3GUI2020.Views
 				e.Effects = DragDropEffects.None;
 			}
 		}
-
-		private void JobDataGrid_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
-		{
-				CommandManager.InvalidateRequerySuggested();
-		}
-
-		private void NewFilePopup_OnMouseLeave(object sender, MouseEventArgs e)
-		{
-			
-		}
-
-		private void NewFilePopup_OnMouseDown(object sender, MouseButtonEventArgs e)
-		{
-			newFilePopup.IsOpen = false;
-		}
-
-		private void NewFilePopup_OnPreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
-		{
-			newFilePopup.IsOpen = false;
-		}
 	}
 }

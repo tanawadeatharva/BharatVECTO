@@ -142,7 +142,7 @@
                                 Style="{StaticResource MultiStageButtonStyle1}"
                                 Command="{Binding EditDocument}"
                                 CommandParameter="{Binding ElementName=JobDataGrid, Path=SelectedItem}">Edit Job</Button>
-                        <Button x:Name="newFileButton" Margin="4" HorizontalAlignment="Stretch"
+                        <!--<Button x:Name="newFileButton" Margin="4" HorizontalAlignment="Stretch" 
                                 Style="{StaticResource MultiStageButtonStyle1}"
                                 Command="{Binding OpenPopUpCommand}">New File</Button>
                         <Popup HorizontalAlignment="Center" 
@@ -160,7 +160,7 @@
                                     <Button Style="{StaticResource MultiStageButtonStyle1}" Command="{Binding NewExemptedCompletedInputCommand}">New Exempted Completed Input</Button>
                                 </StackPanel>
                             </Border>
-                        </Popup>
+                        </Popup>-->
                         <Button x:Name="button6" Margin="4" HorizontalAlignment="Stretch" 
                                 Style="{StaticResource MultiStageButtonStyle1}"
                                 Command="{Binding RemoveJob, IsAsync=True}"
