@@ -53,6 +53,7 @@ namespace VECTO3GUI2020.ViewModel.Implementation.Common
 					"this class should only be used to extend the functionality of a class that implements the IMultistageJobViewModel interface");
 			}
 
+			//Title += $"- {_parent.DataSource.}"
 			if (_parent.CanBeSimulated) {
 				return;
 			}
@@ -64,7 +65,7 @@ namespace VECTO3GUI2020.ViewModel.Implementation.Common
 			//}
 
 			
-			if (_parent.InvalidEntries != null) {
+			if (_parent.InvalidEntries != null && _parent.InvalidEntries.Count != 0) {
 				ErrorInfo = "This Job cannot be Simulated because the following Parameters are invalid";
 				foreach (var parentInvalidEntry in _parent.InvalidEntries)
 				{
