@@ -1,24 +1,21 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Xml.Linq;
 using Castle.Core.Internal;
-using TUGraz.IVT.VectoXML.Writer;
 using TUGraz.VectoCommon.BusAuxiliaries;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Resources;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider;
-using TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Interfaces;
 using VECTO3GUI2020.Helper;
 using VECTO3GUI2020.Util.XML.Interfaces;
 using VECTO3GUI2020.ViewModel.Implementation.JobEdit.Vehicle;
 using VECTO3GUI2020.ViewModel.Interfaces.JobEdit.Vehicle;
 using VECTO3GUI2020.ViewModel.MultiStage.Implementation;
 
-namespace VECTO3GUI2020.Util.XML.Implementation
+namespace VECTO3GUI2020.Util.XML.Implementation.ComponentWriter
 {
     public abstract class XMLVehicleWriter : IXMLVehicleWriter
     {
@@ -188,6 +185,7 @@ namespace VECTO3GUI2020.Util.XML.Implementation
 	public class XMLVehicleWriter_PrimaryBus_v2_6 {}
 	
     public class XMLVehicleWriter_ExcemptedVehicle_v2_2 { }
+
 
 	public class XMLVehicleWriter_v2_8 : XMLVehicleWriter
 	{
