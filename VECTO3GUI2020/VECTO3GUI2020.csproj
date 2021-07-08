@@ -180,6 +180,7 @@
     <Compile Include="Helper\FileHelper.cs" />
     <Compile Include="Helper\IWindowHelper.cs" />
     <Compile Include="Helper\DialogHelper.cs" />
+    <Compile Include="Helper\ProcessHelper.cs" />
     <Compile Include="Helper\VisualTreeHelperExtensions.cs" />
     <Compile Include="Helper\TemplateSelector\MultistageParameterDataTemplateSelector.cs" />
     <Compile Include="ViewModel\Implementation\Common\AdditionalJobInfoViewModel.cs" />

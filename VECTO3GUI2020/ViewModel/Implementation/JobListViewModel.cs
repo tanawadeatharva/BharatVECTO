@@ -64,6 +64,8 @@ namespace VECTO3GUI2020.ViewModel.Implementation
 			{
 				if(SetProperty(ref _selectedJob, value)) {
 					RemoveJob.NotifyCanExecuteChanged();
+					_openSourceFileCommand?.NotifyCanExecuteChanged();
+					_showSourceFileInExplorerCommand?.NotifyCanExecuteChanged();
 				};
 
 			}
@@ -722,8 +724,30 @@ namespace VECTO3GUI2020.ViewModel.Implementation
 		private ICommand _openNewFilePopUpCommand;
 		private ICommand _newCompletedInputCommand;
 		private ICommand _newExemptedCompletedInputCommand;
-
 		private ICommand _openAdditionalJobInformationCommand;
+		private IRelayCommand _openSourceFileCommand;
+		private IRelayCommand _showSourceFileInExplorerCommand;
+
+
+		public ICommand OpenSourceFileCommand
+		{
+			get
+			{
+				return _openSourceFileCommand ?? (_openSourceFileCommand =
+					new RelayCommand(() => { ProcessHelper.OpenFile(_selectedJob?.DataSource.SourceFile); },
+						() => _selectedJob != null));
+			}
+		}
+
+		public ICommand ShowSourceFileCommand
+		{
+			get
+			{
+				return _showSourceFileInExplorerCommand ?? (_showSourceFileInExplorerCommand = 
+					new RelayCommand(() => { ProcessHelper.OpenFolder(_selectedJob?.DataSource.SourceFile); },
+					() => _selectedJob != null));
+			}
+		}
 
 
 		public ICommand OpenPopUpCommand
@@ -982,7 +1006,7 @@ namespace VECTO3GUI2020.ViewModel.Implementation
 				return _openAdditionalJobInformationCommand ?? (_openAdditionalJobInformationCommand = new RelayCommand<IDocumentViewModel>(
 					(docVm) => {
 						_windowHelper.ShowWindow(docVm.AdditionalJobInfoVm);
-					}) );
+					}));
 			}
 		}
 

@@ -20,17 +20,25 @@
         <DockPanel Margin="0 0 0 0">
             <StackPanel DockPanel.Dock="Top" Grid.Row="0" Orientation="Vertical">
                 <Menu IsMainMenu="True">
-                    <MenuItem Header="File" x:Name="MenuItemFile"  AutomationProperties.Name="=" VerticalAlignment="Stretch">
+                    <MenuItem Header="File" VerticalAlignment="Stretch">
                         <MenuItem Header="New File">
-                            <MenuItem Header="Primary and Interim Job" Command="{Binding JobListVm.NewVifCommand}"/>
-                            <MenuItem Header="Interim/Completed Job" Command="{Binding JobListVm.NewManufacturingStageFileCommand}"/>
-                            <MenuItem Header="Complete Job"></MenuItem>
+                            <MenuItem Header="New Primary and Interim Job" Command="{Binding JobListVm.NewVifCommand}"/>
+                            <MenuItem Header="New Interim/Completed Job" Command="{Binding JobListVm.NewManufacturingStageFileCommand}"/>
+                            <MenuItem Header="New Complete Job"></MenuItem>
                             <Separator></Separator>
                             <MenuItem Header="Create interim/completeted input" Command="{Binding JobListVm.NewCompletedInputCommand}"/>
                             <MenuItem Header="Create extemted interim/completed input" Command="{Binding JobListVm.NewExemptedCompletedInputCommand}"/>
                         </MenuItem>
                         <MenuItem  Header="Load File" Command="{Binding AddJob}"/>
                         <MenuItem Header="Settings" Command="{Binding OpenSettings}"/>
+                    </MenuItem>
+                    <MenuItem Header="Edit" VerticalAlignment="Stretch">
+                        <MenuItem Header="Edit Job" ToolTip="Edit selected Job" Command="{Binding JobListVm.EditDocument}"/>
+                        <MenuItem Header="Source File">
+                            <MenuItem Header="Show in Explorer" Command="{Binding JobListVm.ShowSourceFileCommand}"/>
+                            <MenuItem Header="Open in Editor" Command="{Binding JobListVm.OpenSourceFileCommand}"/>
+                        </MenuItem>
+                        <!--<MenuItem Header="Simulate Job" ToolTip="Simulates the selected Job"/>-->
                     </MenuItem>
                 </Menu>
             </StackPanel>

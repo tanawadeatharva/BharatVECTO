@@ -9,6 +9,7 @@ using System.Windows.Data;
 using System.Windows.Input;
 using Microsoft.Toolkit.Mvvm.Input;
 using Microsoft.WindowsAPICodePack.Shell.Interop;
+using VECTO3GUI2020.Helper;
 using VECTO3GUI2020.ViewModel.Implementation;
 using VECTO3GUI2020.ViewModel.Implementation.Common;
 using VECTO3GUI2020.ViewModel.Interfaces;
@@ -77,62 +78,18 @@ namespace VECTO3GUI2020.ViewModel
 			_openFileCommand ?? (_openFileCommand = new RelayCommand<string>(
 				OpenFileExecute));
 
-		private void OpenFolderExecute(string link)
+		private void OpenFolderExecute(string path)
 		{
-			if (link == null) {
+			ProcessHelper.OpenFolder(path);
+		}
+
+		private void OpenFileExecute(string path){
+			if (path == null) {
 				return;
 			}
 
-			link = Path.GetFullPath(link);
-
-			var explorerCommandStrBuilder = new StringBuilder();
-			explorerCommandStrBuilder.Append("explorer.exe");
-			explorerCommandStrBuilder.Append(" /select ");
-			explorerCommandStrBuilder.Append(link);
-
-			//var directoryPath = Path.GetDirectoryName(link);
-			//StartProcess(directoryPath);
-
-			StartProcess("explorer.exe", ("/select," + link));
+			ProcessHelper.OpenFile(path);
 		}
-
-		private void OpenFileExecute(string link){
-			if (link == null) {
-				return;
-			}
-
-			StartProcess(link);
-
-		
-		}
-
-		private void StartProcess(string command, params string[]arguments)
-		{
-			string argumentsString = "";
-			if (arguments != null) {
-				var argumentsStrBuilder = new StringBuilder();
-				foreach (var argument in arguments) {
-					argumentsStrBuilder.Append(argument);
-					if(argument != arguments.Last()) {
-						argumentsStrBuilder.Append(" ");
-					}
-				}
-
-				argumentsString = argumentsStrBuilder.ToString();
-				Debug.WriteLine(argumentsString);
-			}
-			
-
-			try
-			{
-				Process.Start(command, argumentsString );
-			}
-			catch (Exception e)
-			{
-				Debug.WriteLine(e.Message);
-			}
-		}
-
 		#endregion
 	}
 

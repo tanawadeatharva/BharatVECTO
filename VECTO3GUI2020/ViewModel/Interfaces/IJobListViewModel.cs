@@ -18,6 +18,8 @@ namespace VECTO3GUI2020.ViewModel.Interfaces
 		ICommand EditDocument { get; set; }
 		ICommand ViewXMLFile { get; set; }
 		IAsyncRelayCommand RemoveJob { get; set; }
+		ICommand OpenSourceFileCommand { get; }
+		ICommand ShowSourceFileCommand { get; }
 		Task<IDocumentViewModel> AddJobAsync(string fileName, bool runSimulationAfterAdding = false);
 		void AddJob(IDocumentViewModel jobToAdd);
 	}
