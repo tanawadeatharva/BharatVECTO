@@ -1444,7 +1444,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 				}
 			}
 
-			if ((!prohibitGearshift || AllowEmergencyShift) && best.IgnoreReason.EngineSpeedBelowDownshift()) {
+			if ((!prohibitGearshift || AllowEmergencyShift) && (best.IgnoreReason.EngineSpeedBelowDownshift() || best.IgnoreReason.EngineSpeedTooLow())) {
 				best = DoSelectBestOption(eval, absTime, dt, outTorque, outAngularVelocity, dryRun, currentGear);
 				if (best.IgnoreReason.EngineSpeedBelowDownshift()) {
 					//try downshift
@@ -2087,7 +2087,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 			//	//tmp.FuelCosts = double.NaN; // = Tuple.Create(true, response.Gearbox.Gear - 1);
 			//	tmp.IgnoreReason |= HybridConfigurationIgnoreReason.EngineSpeedBelowDownshift;
 			//}
-			CheckGearshiftLimits(tmp, resp);
+			if (!tmp.IgnoreReason.EngineTorqueDemandTooHigh()) {
+				CheckGearshiftLimits(tmp, resp);
+			}
 
 			if (resp.Source is TorqueConverter) {
 				if (resp is ResponseUnderload) {
