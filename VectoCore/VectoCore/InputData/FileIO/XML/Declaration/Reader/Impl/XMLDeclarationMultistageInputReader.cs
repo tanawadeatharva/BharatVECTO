@@ -69,6 +69,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 		protected IPrimaryVehicleInformationInputDataProvider _primaryVehicle;
 		protected IList<IManufacturingStageInputData> _manufacturingStages;
 		protected ConsolidateManufacturingStages _consolidateManufacturingStages;
+		private IList<string> _invalidEntries = new List<string>();
 
 		private XmlNodeList _manufacturingNodeStages;
 
@@ -142,8 +143,10 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 		{
 			get
 			{
-				if (ManufacturingStages.IsNullOrEmpty())
+				if (ManufacturingStages.IsNullOrEmpty()) {
+					_invalidEntries.Add("No Manufacturing Stages");
 					return false;
+				}
 
 				if (_consolidateManufacturingStages == null)
 					_consolidateManufacturingStages = GetConsolidateManufacturingStage();
@@ -156,7 +159,13 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 		{
 			get
 			{
-				return _consolidateManufacturingStages?.GetInvalidEntries(JobType);
+				var consolidatedInvalidEntries = _consolidateManufacturingStages?.GetInvalidEntries(JobType);
+				if (consolidatedInvalidEntries != null) {
+					return _invalidEntries.Concat(consolidatedInvalidEntries).ToList();
+				} else {
+					return _invalidEntries;
+				}
+				
 			}
 		}
 
