@@ -62,7 +62,7 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 
 		#region AddVifCommand
 
-		public ICommand AddVifFile
+		public ICommand AddVifFileCommand
 		{
 			get => _addVifCommand ?? new RelayCommand(AddVifFileExecute, () => true);
 		}
@@ -71,18 +71,27 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 		{
 			
 			var fileName = _dialogHelper.OpenXMLFileDialog();
-			if (fileName == null) {
+			AddVifFile(fileName);
+		}
+
+		internal void AddVifFile(string fileName)
+		{
+			if (fileName == null)
+			{
 				return;
 			}
 			IMultistageBusInputDataProvider inputDataProvider = null;
-			try {
+			try
+			{
 				inputDataProvider = _inputDataReader.Create(fileName) as IMultistageBusInputDataProvider;
 			}
-            catch(Exception e) {
+			catch (Exception e)
+			{
 				_dialogHelper.ShowMessageBox(e.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
 			}
 
-			if (inputDataProvider == null) {
+			if (inputDataProvider == null)
+			{
 				_dialogHelper.ShowMessageBox("invalid input file", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
 				return;
 			}

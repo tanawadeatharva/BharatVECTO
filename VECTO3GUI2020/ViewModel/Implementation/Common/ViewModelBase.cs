@@ -6,6 +6,7 @@ using System.Windows.Input;
 using Microsoft.Toolkit.Mvvm.Input;
 using Ninject;
 using VECTO3GUI2020.Helper;
+using VECTO3GUI2020.Properties;
 using VECTO3GUI2020.ViewModel.Interfaces.Common;
 
 namespace VECTO3GUI2020.ViewModel.Implementation.Common
@@ -56,7 +57,7 @@ namespace VECTO3GUI2020.ViewModel.Implementation.Common
 		protected bool AskForConfirmationOnClose { get; set; } = false;
 
 		private ICommand _closeWindowCommand;
-		private string _title = "No Title Set";
+		private string _title = GUILabels.DefaultTitle;
 
 		public ICommand CloseWindowCommand
 		{

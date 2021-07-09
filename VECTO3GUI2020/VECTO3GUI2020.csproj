@@ -183,6 +183,11 @@
     <Compile Include="Helper\ProcessHelper.cs" />
     <Compile Include="Helper\VisualTreeHelperExtensions.cs" />
     <Compile Include="Helper\TemplateSelector\MultistageParameterDataTemplateSelector.cs" />
+    <Compile Include="Properties\GUILabels.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>GUILabels.resx</DependentUpon>
+    </Compile>
     <Compile Include="ViewModel\Implementation\Common\AdditionalJobInfoViewModel.cs" />
     <Compile Include="ViewModel\MultiStage\Implementation\MultistageParameterViewModel.cs" />
     <Compile Include="Helper\NameResolver.cs" />
@@ -796,6 +801,11 @@
     <EmbeddedResource Include="Properties\BusStrings.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>BusStrings.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\GUILabels.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>GUILabels.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Strings.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>

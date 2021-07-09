@@ -44,7 +44,6 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 	{
 		IManufacturingStageViewModel ManufacturingStageViewModel { get; }
 		bool Exempted { get; }
-		ICommand LoadVehicleDataCommand { get; }
 
 		/// <summary>
 		/// Creates a new VIF file
@@ -219,7 +218,7 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 
 				var factory = new SimulatorFactory(ExecutionMode.Declaration, inputData, writer);
 
-				var jobContainer = new JobContainer(new NullSumWriter()); //TODO: Replace with real sumwriter
+				var jobContainer = new JobContainer(new NullSumWriter());
 
 				var runs = factory.SimulationRuns().ToList();
 				foreach (var run in runs) {
@@ -379,10 +378,6 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 
 		public bool Exempted => _exempted;
 
-		public ICommand LoadVehicleDataCommand
-		{
-			get => ManufacturingStageViewModel.LoadVehicleDataCommand;
-		}
 
 
 		#endregion
