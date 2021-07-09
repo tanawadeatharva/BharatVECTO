@@ -118,7 +118,7 @@ namespace Vecto3GUI2020Test.ViewModelTests
 		public void CreateCompletedExemptedVif()
 		{
 			var multistagevm = loadFile(exempted_primary_vif).MultiStageJobViewModel as MultiStageJobViewModel_v0_1;
-
+			var jobListVm = _kernel.Get<IJobListViewModel>();
 
 			var vehicleVm =
 				multistagevm.ManufacturingStageViewModel.VehicleViewModel as InterimStageBusVehicleViewModel_v2_8;
@@ -146,7 +146,10 @@ namespace Vecto3GUI2020Test.ViewModelTests
 			Assert.NotNull(vifName);
 			WriteLine($"Written to {vifName}");
 			Assert.IsTrue(checkFileNameExists(vifName));
-			File.Delete(vifName);
+
+			Assert.AreEqual(2, jobListVm.Jobs.Count);
+
+			Assert.IsTrue(jobListVm.Jobs[1].CanBeSimulated, string.Join("\n",((AdditionalJobInfoViewModelMultiStage)jobListVm.Jobs[1].AdditionalJobInfoVm).InvalidEntries));
 		}
 
 

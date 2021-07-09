@@ -66,7 +66,7 @@ namespace VECTO3GUI2020.ViewModel.Implementation.Common
 
 			
 			if (_parent.InvalidEntries != null && _parent.InvalidEntries.Count != 0) {
-				ErrorInfo = "This Job cannot be Simulated because the following Parameters are invalid";
+				ErrorInfo = "This Job cannot be Simulated! The following inputs are missing or invalid";
 				foreach (var parentInvalidEntry in _parent.InvalidEntries)
 				{
 					InvalidEntries.Add(parentInvalidEntry);
