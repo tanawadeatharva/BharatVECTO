@@ -658,8 +658,41 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 			return validAirdragEntries;
 		}
 
+		private bool IsInputDataCompleteExempted(VectoSimulationJobType jobType, bool fullCheck)
+		{
+			if (fullCheck)
+			{
+				//use Binary AND to execute all Statements and gather information about missing parameters.
+				return InputComplete(Model, nameof(Model))
+						& InputComplete(LegislativeClass, nameof(LegislativeClass))
+						& InputComplete(CurbMassChassis, nameof(CurbMassChassis))
+						& InputComplete(GrossVehicleMassRating, nameof(GrossVehicleMassRating))
+						& InputComplete(RegisteredClass, nameof(RegisteredClass))
+						& InputComplete(NumberPassengerSeatsLowerDeck, nameof(NumberPassengerSeatsLowerDeck))
+						& InputComplete(NumberPassengerSeatsUpperDeck, nameof(NumberPassengerSeatsUpperDeck))
+						& InputComplete(VehicleCode, nameof(VehicleCode))
+						& InputComplete(LowEntry, nameof(LowEntry))
+						& InputComplete(Height, nameof(Height));
+			}
+
+
+			return InputComplete(Model, nameof(Model))
+					&& InputComplete(LegislativeClass, nameof(LegislativeClass))
+					&& InputComplete(CurbMassChassis, nameof(CurbMassChassis))
+					&& InputComplete(GrossVehicleMassRating, nameof(GrossVehicleMassRating))
+					&& InputComplete(RegisteredClass, nameof(RegisteredClass))
+					&& InputComplete(NumberPassengerSeatsLowerDeck, nameof(NumberPassengerSeatsLowerDeck))
+					&& InputComplete(NumberPassengerSeatsUpperDeck, nameof(NumberPassengerSeatsUpperDeck))
+					&& InputComplete(VehicleCode, nameof(VehicleCode))
+					&& InputComplete(LowEntry, nameof(LowEntry)) && InputComplete(Height, nameof(Height));
+		}
+
+
 		protected override bool IsInputDataCompleteTemplate(VectoSimulationJobType jobType, bool fullCheck)
 		{
+			if (ExemptedVehicle) {
+				return IsInputDataCompleteExempted(jobType, fullCheck);
+			}
 			GetADAS();
 			GetComponents();
 			if (fullCheck) {

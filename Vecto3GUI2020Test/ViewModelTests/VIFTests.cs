@@ -153,24 +153,6 @@ namespace Vecto3GUI2020Test.ViewModelTests
 		}
 
 
-        [Test]
-		public void CreateVifWrongDecimal()
-		{
-			var multistagevm = loadFile(primary_vehicle_only).MultiStageJobViewModel as MultiStageJobViewModel_v0_1;
-
-			//Set Necessary Fields
-			var vehicle =
-			multistagevm.ManufacturingStageViewModel.Vehicle as InterimStageBusVehicleViewModel_v2_8;
-			
-
-			vehicle.ManufacturerAddress = "Address";
-			vehicle.Manufacturer = "Manufacturer";
-			vehicle.VIN = "VIN12345678";
-			vehicle.Model = "Model";
-
-			//vehicle.MultistageAuxiliariesViewModel.
-		}
-
 
 		[Test]
 		public void TestAirdragLoadAndSave()

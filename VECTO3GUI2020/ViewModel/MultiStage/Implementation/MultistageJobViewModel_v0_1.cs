@@ -306,8 +306,8 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 		{
 			get
 			{
-				return InputComplete && _inputData.JobInputData.ConsolidateManufacturingStage.Vehicle.VehicleDeclarationType ==
-					VehicleDeclarationType.final;
+				return (InputComplete && _inputData.JobInputData.ConsolidateManufacturingStage.Vehicle.VehicleDeclarationType ==
+					VehicleDeclarationType.final) || (InputComplete && Exempted);
 			}
 			set => throw new NotImplementedException();
 		}

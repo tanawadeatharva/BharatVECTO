@@ -57,12 +57,12 @@ namespace VECTO3GUI2020.ViewModel.Implementation.Common
 			if (_parent.CanBeSimulated) {
 				return;
 			}
-
-			//if (_parent.ManufacturingStageViewModel.VehicleViewModel.VehicleDeclarationType ==
-			//	VehicleDeclarationType.interim) {
-			//	ErrorInfo = "Only Jobs with the declaration type \"final\" can be simulated";
-			//	return;
-			//}
+			
+			if(_parent.JobInputData?.ConsolidateManufacturingStage?.Vehicle?.VehicleDeclarationType !=
+				VehicleDeclarationType.final && !_parent.Exempted)
+			{
+				ErrorInfo = "Job is not declared as \"final\"";
+			}
 
 			
 			if (_parent.InvalidEntries != null && _parent.InvalidEntries.Count != 0) {
