@@ -207,7 +207,7 @@ namespace VECTO3GUI2020.Util.XML.Implementation.ComponentWriter
 
 			_Xelement = new XElement(XMLNamespaces.V20 + XMLNames.Component_Vehicle);
 			
-			_Xelement.Add(new XAttribute(XMLNames.Component_ID_Attr, "TODO_ADDIDENTIFIER"));
+			_Xelement.Add(new XAttribute(XMLNames.Component_ID_Attr, _inputData.Identifier ?? ("VEH-" + Guid.NewGuid().ToString("n").Substring(0, 20))));
 			if (_exempted) {
 				_Xelement.Add(new XAttribute(XMLNamespaces.Xsi + XMLNames.Attr_Type, "ExemptedInterimStageInputType"));
 			} else {
