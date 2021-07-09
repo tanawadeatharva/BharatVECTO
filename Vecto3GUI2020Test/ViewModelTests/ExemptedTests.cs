@@ -24,7 +24,7 @@ namespace Vecto3GUI2020Test.ViewModelTests
 		[Test]
 		public void LoadAndSaveExemptedPrimary()
 		{
-			var newMultiStageJob = loadFile(exempted);
+			var newMultiStageJob = loadFile(exempted_primary_vif);
 			Assert.IsTrue(newMultiStageJob.MultiStageJobViewModel.Exempted);
 
 
@@ -90,7 +90,7 @@ namespace Vecto3GUI2020Test.ViewModelTests
 		[Test]
 		public async Task SaveAsNewVifAndSimulate()
 		{
-			var newMultiStageJob = loadFile(exempted);
+			var newMultiStageJob = loadFile(exempted_primary_vif);
 			Assert.IsTrue(newMultiStageJob.MultiStageJobViewModel.Exempted);
 
 
@@ -182,7 +182,7 @@ namespace Vecto3GUI2020Test.ViewModelTests
 		{
 			//Setup
 			var jobListViewModel = _kernel.Get<IJobListViewModel>() as JobListViewModel;
-			await jobListViewModel.AddJobAsync(GetFullPath(_exemptedMandatory));
+			await jobListViewModel.AddJobAsync(GetTestDataPath(_exemptedMandatory));
 			Assert.AreEqual(1, jobListViewModel.Jobs.Count);
 
 			jobListViewModel.Jobs[0].Selected = true;

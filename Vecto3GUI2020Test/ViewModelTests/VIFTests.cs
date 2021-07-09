@@ -1,4 +1,6 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
+using System.Linq;
 using System.Xml;
 using Moq;
 using Ninject;
@@ -11,6 +13,7 @@ using TUGraz.VectoCore.OutputData.FileIO;
 using TUGraz.VectoCore.Utils;
 using VECTO3GUI2020.Helper;
 using VECTO3GUI2020.ViewModel.Implementation;
+using VECTO3GUI2020.ViewModel.Implementation.Common;
 using VECTO3GUI2020.ViewModel.Interfaces;
 using VECTO3GUI2020.ViewModel.MultiStage.Implementation;
 
@@ -98,7 +101,7 @@ namespace Vecto3GUI2020Test.ViewModelTests
 
 			if (loadAirdrag) {
 				var airdragTestFile = airdragVersion == 2 ? airdragLoadTestFilev2 : airdragLoadTestFile;
-				Assert.IsTrue(VehicleViewModel.MultistageAirdragViewModel.LoadAirdragFile(GetFullPath(airdragTestFile)));
+				Assert.IsTrue(VehicleViewModel.MultistageAirdragViewModel.LoadAirdragFile(GetTestDataPath(airdragTestFile)));
 			}
 		
 			var resultFile = multistagevm.MultiStageJobViewModel.SaveVif(GetFullPath(
@@ -108,20 +111,51 @@ namespace Vecto3GUI2020Test.ViewModelTests
 			var jobListVm = _kernel.Get<IJobListViewModel>();
 			Assert.That(() => jobListVm.Jobs.Count, Is.EqualTo(2));
 
-			Assert.IsTrue(jobListVm.Jobs[1].CanBeSimulated);
+			Assert.IsTrue(jobListVm.Jobs[1].CanBeSimulated, String.Join("\n",((AdditionalJobInfoViewModelMultiStage) jobListVm.Jobs[1].AdditionalJobInfoVm).InvalidEntries));
 		}
 
+		[Test]
+		public void CreateCompletedExemptedVif()
+		{
+			var multistagevm = loadFile(exempted_primary_vif).MultiStageJobViewModel as MultiStageJobViewModel_v0_1;
+
+
+			var vehicleVm =
+				multistagevm.ManufacturingStageViewModel.VehicleViewModel as InterimStageBusVehicleViewModel_v2_8;
+
+			Assert.IsTrue(vehicleVm.ExemptedVehicle);
+			vehicleVm.Manufacturer = "Test Manufacturer 1";
+			vehicleVm.ManufacturerAddress = "Address";
+			vehicleVm.VIN = "123456789";
+			vehicleVm.Model = "Model";
+			vehicleVm.LegislativeClass = LegislativeClass.M3;
+			vehicleVm.CurbMassChassis = Kilogram.Create(20000);
+			vehicleVm.GrossVehicleMassRating = Kilogram.Create(20000);
+			vehicleVm.RegisteredClass = RegistrationClass.I_II;
+			vehicleVm.VehicleCode = VehicleCode.CC;
+			vehicleVm.LowEntry = true;
+			vehicleVm.Height = Meter.Create(2.6);
+			vehicleVm.NumberPassengerSeatsUpperDeck = 2;
+			vehicleVm.NumberPassengerSeatsLowerDeck = 10;
+
+
+			
+			
+			var vifName = multistagevm.SaveVif(TestHelper.GetMethodName() + ".xml");
+
+			Assert.NotNull(vifName);
+			WriteLine($"Written to {vifName}");
+			Assert.IsTrue(checkFileNameExists(vifName));
+			File.Delete(vifName);
+		}
 
 
         [Test]
 		public void CreateVifWrongDecimal()
 		{
 			var multistagevm = loadFile(primary_vehicle_only).MultiStageJobViewModel as MultiStageJobViewModel_v0_1;
-			var stage = multistagevm.ManufacturingStageViewModel.StageCount;
 
-			Assert.AreEqual(2, stage);
-
-		//Set Necessary Fields
+			//Set Necessary Fields
 			var vehicle =
 			multistagevm.ManufacturingStageViewModel.Vehicle as InterimStageBusVehicleViewModel_v2_8;
 			
@@ -138,10 +172,7 @@ namespace Vecto3GUI2020Test.ViewModelTests
 		[Test]
 		public void TestAirdragLoadAndSave()
 		{
-			SetMockDialogHelper(consolidated_multiple_stages, null);
-			
-			var newMultistageJobViewModel = _kernel.Get<NewMultiStageJobViewModel>();
-			newMultistageJobViewModel.AddVifFile.Execute(null);
+			var newMultistageJobViewModel = loadFile(consolidated_multiple_stages);
 			Assert.NotNull(newMultistageJobViewModel.MultiStageJobViewModel);
 
 			var manstageVehicleViewModel = newMultistageJobViewModel.MultiStageJobViewModel.ManufacturingStageViewModel.Vehicle as IMultistageVehicleViewModel;
@@ -155,7 +186,7 @@ namespace Vecto3GUI2020Test.ViewModelTests
 
 			SetMockDialogHelper(stageInputFullSample, null);
 
-			multiStageViewModel.LoadVehicleDataCommand.Execute(null);
+			multiStageViewModel.ManufacturingStageViewModel.LoadStageInputData(GetTestDataPath(stageInputFullSample));
 			
 			var vehicle =
 				multiStageViewModel.ManufacturingStageViewModel.Vehicle as InterimStageBusVehicleViewModel_v2_8;
@@ -180,7 +211,7 @@ namespace Vecto3GUI2020Test.ViewModelTests
 		private FileOutputVIFWriter GetFileOutputVIFWriter(IMultiStageJobViewModel multistageViewModel)
 		{
 			var outputFileName = primary_vehicle_only.Replace(".xml", "_vif_output_mandatory_fields.xml");
-			var outputFilePath = Path.Combine(TestDataDirPath, outputFileName);
+			var outputFilePath = GetFullPath(outputFileName);
 
 			var currentStageCount = multistageViewModel.MultistageJobInputData.JobInputData.ManufacturingStages?.Count ?? 0;
 			return  new FileOutputVIFWriter(outputFilePath, currentStageCount);

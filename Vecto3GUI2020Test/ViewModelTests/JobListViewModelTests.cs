@@ -18,23 +18,13 @@ namespace Vecto3GUI2020Test.ViewModelTests
 
 
 		[Test]
-		public async Task LoadPrimaryFile()
-		{
-			var jobListViewModel = _kernel.Get<IJobListViewModel>() as JobListViewModel;
-			Write("Trying to load {}");
-
-
-		}
-
-
-		[Test]
 		public async Task CancelSimulationWhileLoadingFiles()
 		{
 			var jobListViewModel = _kernel.Get<IJobListViewModel>() as JobListViewModel;
 			var watch = new Stopwatch();
 			watch.Start();
 			//load final vif
-			var loadedFile = await jobListViewModel.AddJobAsync(GetFullPath(finalVIF)).ConfigureAwait(false);
+			var loadedFile = await jobListViewModel.AddJobAsync(GetTestDataPath(finalVIF)).ConfigureAwait(false);
 
 			//select vif for simulation
 			Assert.AreNotEqual(0, jobListViewModel.Jobs.Count);
@@ -56,11 +46,11 @@ namespace Vecto3GUI2020Test.ViewModelTests
 			TestContext.WriteLine($"ExecutionTime {watch.Elapsed.TotalSeconds}s");
 		}
 
-		[TestCase(VIFTests.exempted, TestName="Exempted")]
+		[TestCase(VIFTests.exempted_primary_vif, TestName="Exempted")]
 
 		public async Task AddJobAsyncTest(string fileName)
 		{
-			var path = GetFullPath(fileName);
+			var path = GetTestDataPath(fileName);
 			var jobListViewModel = _kernel.Get<IJobListViewModel>() as JobListViewModel;
 			Assert.AreEqual(0, jobListViewModel.Jobs.Count);
 
@@ -96,7 +86,7 @@ namespace Vecto3GUI2020Test.ViewModelTests
 			watch.Start();
 
 			//load final vif
-			var loadedFile = await jobListViewModel.AddJobAsync(GetFullPath(finalVIF)).ConfigureAwait(false);
+			var loadedFile = await jobListViewModel.AddJobAsync(GetTestDataPath(finalVIF)).ConfigureAwait(false);
 
 			//select vif for simulation
 			Assert.AreNotEqual(0, jobListViewModel.Jobs.Count);
@@ -123,7 +113,7 @@ namespace Vecto3GUI2020Test.ViewModelTests
         public async Task LoadStageInputOnly()
         {
             var jobListVm = _kernel.Get<IJobListViewModel>();
-            var documentViewModel = await jobListVm.AddJobAsync(GetFullPath(stageInputFullSample));
+            var documentViewModel = await jobListVm.AddJobAsync(GetTestDataPath(stageInputFullSample));
             Assert.AreEqual(typeof(StageInputViewModel), documentViewModel.GetType());
 
             var stageInputDocumentViewModel = documentViewModel.EditViewModel as StageInputViewModel;

@@ -1,6 +1,7 @@
 using System;
 using System.Diagnostics;
 using System.IO;
+using System.Runtime.CompilerServices;
 using System.Windows;
 using Moq;
 using Ninject;
@@ -10,6 +11,7 @@ using TUGraz.VectoCore.InputData.FileIO.XML;
 using VECTO3GUI2020.Helper;
 using VECTO3GUI2020.Ninject;
 using VECTO3GUI2020.Ninject.Vehicle;
+using VECTO3GUI2020.ViewModel.Interfaces;
 using VECTO3GUI2020.ViewModel.MultiStage.Implementation;
 using VECTO3GUI2020.ViewModel.MultiStage.Interfaces;
 
@@ -17,13 +19,15 @@ namespace Vecto3GUI2020Test
 {
 	public class ViewModelTestBase
 	{
-		protected const string TestDataDirPath = @"Testdata\";
+		protected string TestDataFullPath;
+		protected string SourceDirectoryRoot;
+		protected string prevDirectory;
 		protected const string consolidated_multiple_stages = "vecto_multistage_consolidated_multiple_stages.xml";
 		protected const string consolidated_multiple_stages_airdrag = "vecto_multistage_consolidated_multiple_stages_airdrag.xml";
 		protected const string consolidated_multiple_stages_hev = "vecto_multistage_consolidated_multiple_stages_hev.xml";
 		protected const string consolidated_one_stage = "vecto_multistage_consolidated_one_stage.xml";
 		protected const string primary_vehicle_only = "vecto_multistage_primary_vehicle_only.xml";
-		protected const string exempted = "exempted_primary_heavyBus.VIF.xml";
+		protected const string exempted_primary_vif = "exempted_primary_heavyBus.VIF.xml";
 		protected const string stageInputFullSample = "vecto_vehicle-stage_input_full-sample.xml";
 		protected const string airdragLoadTestFile = "AirdragLoadTestFile.xml";
 		protected const string airdragLoadTestFilev2 = "AirdragLoadTestFilev2.xml";
@@ -35,8 +39,18 @@ namespace Vecto3GUI2020Test
 
 		protected TestHelper _testHelper;
 
+		[OneTimeSetUp]
+		public void OneTimeSetup()
+		{
+			prevDirectory = Environment.CurrentDirectory;
+			SourceDirectoryRoot = Directory.GetParent(prevDirectory).Parent.Parent.FullName;
+			TestDataFullPath = Path.Combine(SourceDirectoryRoot + "\\Testdata\\");
+		}
+
+
+
 		[SetUp]
-		public void OneTimeSetUp()
+		public void SetUp()
 		{
 			_kernel = new StandardKernel(
 				new VectoNinjectModule(),
@@ -52,6 +66,43 @@ namespace Vecto3GUI2020Test
 			_kernel.Rebind<IDialogHelper>().ToConstant(SetMockDialogHelper().Object);
 			_kernel.Rebind<IWindowHelper>().ToConstant(GetMockWindowHelper());
 			_testHelper = new TestHelper(_kernel.Get<IXMLInputDataReader>());
+
+
+			SetOutputDirectory();
+		}
+
+		private void SetOutputDirectory()
+		{
+
+			prevDirectory = Environment.CurrentDirectory;
+			SourceDirectoryRoot = Directory.GetParent(prevDirectory).Parent.Parent.FullName;
+			TestDataFullPath = Path.GetFullPath(@"Testdata\");
+
+
+			var className = TestContext.CurrentContext.Test.ClassName.Replace("Vecto3GUI2020Test.", "");
+			var testName = TestContext.CurrentContext.Test.Name;
+			var testOutputDirPath = Path.Combine(SourceDirectoryRoot + @"\Testdata\output\" + className + "\\" + testName);
+
+			//Create output directory
+
+			if (Directory.Exists(testOutputDirPath)) {
+				Directory.Delete(testOutputDirPath, true);
+			}
+			Directory.CreateDirectory(testOutputDirPath);
+			_kernel.Get<ISettingsViewModel>().DefaultOutputPath = testOutputDirPath;
+			Directory.SetCurrentDirectory(testOutputDirPath);
+
+			//var currentContext = TestContext.CurrentContext;
+
+			//var outputPath = Path.GetFullPath(TestDataDirPath + CurrentTestOutputPath);
+			//TestContext.CurrentContext.Test.Name = currentContext.
+			//var SettingsVm = _kernel.Get<ISettingsViewModel>();
+			//SettingsVm.DefaultOutputPath = 
+		}
+
+		protected string GetFullPath(string fileName)
+		{
+			return Path.GetFullPath(fileName);
 		}
 
 		private IWindowHelper GetMockWindowHelper()
@@ -69,11 +120,13 @@ namespace Vecto3GUI2020Test
 		{
 			_kernel.Dispose();
 			_kernel = null;
+
+			Directory.SetCurrentDirectory(prevDirectory);
 		}
 
 		public bool checkFileNameExists(string fileName)
 		{
-			var filePath = Path.GetFullPath(TestDataDirPath + fileName);
+			var filePath = Path.GetFullPath(fileName);
 			return checkFilePathExists(filePath);
 		}
 
@@ -94,23 +147,25 @@ namespace Vecto3GUI2020Test
 
 		public void deleteFile(string fileName)
 		{
-			var filePath = Path.GetFullPath(TestDataDirPath + fileName);
+			var filePath = Path.GetFullPath(fileName);
 			File.Delete(fileName);
 		}
 
 		public virtual NewMultiStageJobViewModel loadFile(string fileName)
 		{
-			var mockDialogHelper = SetMockDialogHelper(fileName);
+			
 
 			var newMultistageJobViewModel = _kernel.Get<NewMultiStageJobViewModel>();
-			newMultistageJobViewModel.AddVifFile.Execute(null);
+			var filePath = GetTestDataPath(fileName);
+			newMultistageJobViewModel.AddVifFile(filePath);
+		
 
 			Assert.NotNull(newMultistageJobViewModel.MultiStageJobViewModel);
 
 			var manstageVehicleViewModel = newMultistageJobViewModel.MultiStageJobViewModel.ManufacturingStageViewModel.Vehicle as InterimStageBusVehicleViewModel_v2_8;
 			Assert.NotNull(manstageVehicleViewModel);
 
-			Assert.AreEqual(mockDialogHelper.Object.OpenXMLFileDialog(), newMultistageJobViewModel.VifPath);
+			Assert.AreEqual(GetTestDataPath(fileName), newMultistageJobViewModel.VifPath);
 
 			if (!manstageVehicleViewModel.ExemptedVehicle) {
 				var auxiliariesViewModel = manstageVehicleViewModel.MultistageAuxiliariesViewModel;
@@ -144,7 +199,7 @@ namespace Vecto3GUI2020Test
 				
 			}
 			if (fileToLoad != null) {
-				var filePath = Path.GetFullPath(TestDataDirPath + fileToLoad);
+				var filePath = fileToLoad;
 
 				Assert.NotNull(filePath);
 				_mockDialogHelper.Setup(dialogHelper => dialogHelper.OpenXMLFileDialog(It.IsAny<string>())).Returns(filePath);
@@ -154,7 +209,7 @@ namespace Vecto3GUI2020Test
 			}
 
 			if (fileToSave != null) {
-				var filePath = Path.GetFullPath(TestDataDirPath + fileToSave);
+				var filePath = fileToLoad;
 				_mockDialogHelper.Setup(dialogHelper =>
 					dialogHelper.SaveToXMLDialog(It.IsAny<string>())).Returns(filePath);
 				_mockDialogHelper.Setup(dialogHelper =>
@@ -172,10 +227,9 @@ namespace Vecto3GUI2020Test
 			return _mockDialogHelper;
 		}
 
-		protected virtual string GetFullPath(string fileName)
+		protected virtual string GetTestDataPath(string fileName)
 		{
-			var path = Path.GetFullPath(TestDataDirPath + fileName);
-			Debug.WriteLine(path);
+			var path = Path.Combine(TestDataFullPath + fileName);
 			return path;
 		}
 

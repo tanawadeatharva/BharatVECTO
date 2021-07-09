@@ -23,7 +23,7 @@ namespace Vecto3GUI2020Test.BugReports
 		{
             //Load JobFile 
 			var jobListViewModel = _kernel.Get<IJobListViewModel>() as JobListViewModel;
-			await jobListViewModel.AddJobAsync(GetFullPath(fileName: fileName));
+			await jobListViewModel.AddJobAsync(GetTestDataPath(fileName: fileName));
 			Assert.AreEqual(1, jobListViewModel.Jobs.Count);
 			jobListViewModel.Jobs[0].Selected = true;
 
@@ -37,7 +37,7 @@ namespace Vecto3GUI2020Test.BugReports
 
 			var vifName = fileName.Replace(".xml", ".RSLT_VIF.xml");
 			TestContext.WriteLine($"Trying to add {vifName} to JobList");
-			await jobListViewModel.AddJobAsync(GetFullPath(fileName: vifName));
+			await jobListViewModel.AddJobAsync(GetTestDataPath(fileName: vifName));
 			Assert.AreEqual(2, jobListViewModel.Jobs.Count);
 
 			foreach (var documentViewModel in jobListViewModel.Jobs) {
@@ -51,15 +51,5 @@ namespace Vecto3GUI2020Test.BugReports
 
 
 
-
-		#region Overrides of ViewModelTestBase
-
-		protected override string GetFullPath(string fileName)
-		{
-			fileName = "/bugreports/" + fileName;
-			return base.GetFullPath(fileName);
-		}
-
-		#endregion
 	}
 }

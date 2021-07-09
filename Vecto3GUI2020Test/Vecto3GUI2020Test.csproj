@@ -135,6 +135,7 @@
 
   <ItemGroup>
     <Folder Include="Testdata\bugreports\" />
+    <Folder Include="TestData\output\" />
   </ItemGroup>
 
 </Project>
