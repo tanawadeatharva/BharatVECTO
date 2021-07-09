@@ -77,7 +77,23 @@
                             <behavior:AutoScrollDataGridBehaviour>
                             </behavior:AutoScrollDataGridBehaviour>
                         </i:Interaction.Behaviors>
-                        <DataGrid.Columns>
+
+                            <!--CONTEXT MENU-->
+
+                            <!--<DataGrid.Resources>
+                                <ContextMenu x:Key="RowMenu">
+                                    <MenuItem Header="Edit WIP" Command="{Binding RowCopyCommand}" />
+                                    <MenuItem Header="Show Source File">
+                                        <MenuItem Header="Show in Explorer"></MenuItem>
+                                    </MenuItem>
+                                </ContextMenu>
+                            </DataGrid.Resources>
+                            <DataGrid.RowStyle>
+                                <Style TargetType="DataGridRow" >
+                                    <Setter Property="ContextMenu" Value="{StaticResource RowMenu}" />
+                                </Style>
+                            </DataGrid.RowStyle>-->
+                            <DataGrid.Columns>
                             <DataGridTemplateColumn Header="Simulate" Width="1*" IsReadOnly="False">
                                 <DataGridTemplateColumn.CellTemplate>
                                     <DataTemplate DataType="document:IDocumentViewModel">
@@ -111,7 +127,6 @@
                             <DataGridTextColumn IsReadOnly="True" Header="Name" Binding="{Binding DocumentName}" Width="4*"></DataGridTextColumn>
                             <DataGridTextColumn IsReadOnly ="True" Header="Type" Binding="{Binding DocumentType}" Width="4*"></DataGridTextColumn>
                         </DataGrid.Columns>
-
 
                         <DataGrid.RowDetailsTemplate>
                             <DataTemplate>
