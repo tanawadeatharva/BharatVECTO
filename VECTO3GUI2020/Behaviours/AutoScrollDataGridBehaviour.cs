@@ -16,15 +16,17 @@ namespace VECTO3GUI2020.Behaviours
 		#region Overrides of Behavior
 
 		private INotifyCollectionChanged sourceCollection;
+		private DependencyPropertyDescriptor _dpd;
+
 		protected override void OnAttached()
 		{
 			base.OnAttached();
 
 			//subsrice to Itemssource
-			var dpd = DependencyPropertyDescriptor.FromProperty(ItemsControl.ItemsSourceProperty, typeof(DataGrid));
-			if (dpd != null)
+			_dpd = DependencyPropertyDescriptor.FromProperty(ItemsControl.ItemsSourceProperty, typeof(DataGrid));
+			if (_dpd != null)
 			{
-				dpd.AddValueChanged(this.AssociatedObject, OnItemsSourceChanged);
+				_dpd.AddValueChanged(this.AssociatedObject, OnItemsSourceChanged);
 			}
 
 
@@ -58,6 +60,10 @@ namespace VECTO3GUI2020.Behaviours
 		{
 			base.OnDetaching();
 			UnSubscribeFromSourceCollectionChanged();
+			if (_dpd != null)
+			{
+				_dpd.RemoveValueChanged(this.AssociatedObject, OnItemsSourceChanged);
+			}
 		}
 
 		private void UnSubscribeFromSourceCollectionChanged()
@@ -65,6 +71,7 @@ namespace VECTO3GUI2020.Behaviours
 			if (sourceCollection != null) {
 				sourceCollection.CollectionChanged -= SourceCollectionChanged;
 			}
+
 		}
 
 		#endregion
