@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Windows;
 using System.Windows.Input;
 using Microsoft.Toolkit.Mvvm.Input;
 using TUGraz.VectoCommon.InputData;
@@ -29,6 +30,7 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 			_dialogHelper = dialogHelper;
 			_inputDataReader = inputDataReader;
 			Title = "Create VIF";
+			SizeToContent = SizeToContent.WidthAndHeight;
 			_documentName = $"New Vif {++_newVifCounter}";
 		}
 

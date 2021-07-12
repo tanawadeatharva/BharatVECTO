@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Windows;
 using TUGraz.VectoCommon.InputData;
 using VECTO3GUI2020.ViewModel.Interfaces.Common;
 using VECTO3GUI2020.ViewModel.MultiStage.Implementation;
@@ -13,8 +14,7 @@ namespace VECTO3GUI2020.ViewModel.Implementation.Common
 	}
 	public class AdditionalJobInfoViewModelBase : ViewModelBase, IAdditionalJobInfoViewModel
 	{
-		private IViewModelBase _parent
-			;
+		private IViewModelBase _parent;
 
 		#region Implementation of IAdditionalJobInfoViewModel
 
@@ -41,6 +41,7 @@ namespace VECTO3GUI2020.ViewModel.Implementation.Common
 		public AdditionalJobInfoViewModelMultiStage()
 		{
 			Title = "Multistage Job Info";
+			SizeToContent = SizeToContent.WidthAndHeight;
 		}
 
 		#region Overrides of AdditionalJobInfoViewModelBase

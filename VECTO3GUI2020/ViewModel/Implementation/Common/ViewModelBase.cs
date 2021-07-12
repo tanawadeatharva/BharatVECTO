@@ -20,12 +20,36 @@ namespace VECTO3GUI2020.ViewModel.Implementation.Common
 	{
 		private string _error;
 		public event PropertyChangedEventHandler PropertyChanged;
-        /// <summary>
-        /// Needs to be called when a Property is changed
-        /// </summary>
-        ///
-        /// <param name="name">Is automatically set to CallerMemberName</param>
-        protected void OnPropertyChanged([CallerMemberName] string name = "")
+
+		#region Size And Window position
+		private double? _width = 800;
+		private double? _height = 600;
+		public double? Width
+		{
+			get => _width;
+			set => SetProperty(ref _width, value);
+		}
+		public double? Height
+		{
+			get => _height;
+			set => SetProperty(ref _height, value);
+		}
+
+		public SizeToContent _sizeToContent = SizeToContent.Manual;
+		public SizeToContent SizeToContent
+		{
+			get => _sizeToContent;
+			set => _sizeToContent = value;
+		}
+		#endregion
+
+
+		/// <summary>
+		/// Needs to be called when a Property is changed
+		/// </summary>
+		///
+		/// <param name="name">Is automatically set to CallerMemberName</param>
+		protected void OnPropertyChanged([CallerMemberName] string name = "")
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
 		}
@@ -45,6 +69,7 @@ namespace VECTO3GUI2020.ViewModel.Implementation.Common
             return propertyChanged;
         }
 
+		private string _title = GUILabels.DefaultTitle;
 		public virtual string Title
 		{
 			get => _title;
@@ -54,11 +79,10 @@ namespace VECTO3GUI2020.ViewModel.Implementation.Common
 		[Inject]
         public IDialogHelper DialogHelper { get; set; }
 
+
+#region Commands
 		protected bool AskForConfirmationOnClose { get; set; } = false;
-
 		private ICommand _closeWindowCommand;
-		private string _title = GUILabels.DefaultTitle;
-
 		public ICommand CloseWindowCommand
 		{
 			get
@@ -68,7 +92,8 @@ namespace VECTO3GUI2020.ViewModel.Implementation.Common
 		}
 
 
-        protected void CloseWindow(Window window, IDialogHelper dialogHelper, bool showDialog = true)
+
+		protected void CloseWindow(Window window, IDialogHelper dialogHelper, bool showDialog = true)
 		{
 			MessageBoxResult result;
 			if (showDialog) {
@@ -83,5 +108,6 @@ namespace VECTO3GUI2020.ViewModel.Implementation.Common
 				window?.Close();
 			}
 		}
+		#endregion
 	}
 }
