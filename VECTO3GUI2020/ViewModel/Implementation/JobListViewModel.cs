@@ -734,7 +734,7 @@ namespace VECTO3GUI2020.ViewModel.Implementation
 			get
 			{
 				return _openSourceFileCommand ?? (_openSourceFileCommand =
-					new RelayCommand(() => { ProcessHelper.OpenFile(_selectedJob?.DataSource.SourceFile); },
+					new RelayCommand(() => { ProcessHelper.OpenFile(_selectedJob?.DataSource?.SourceFile); },
 						() => _selectedJob != null));
 			}
 		}
@@ -744,7 +744,7 @@ namespace VECTO3GUI2020.ViewModel.Implementation
 			get
 			{
 				return _showSourceFileInExplorerCommand ?? (_showSourceFileInExplorerCommand = 
-					new RelayCommand(() => { ProcessHelper.OpenFolder(_selectedJob?.DataSource.SourceFile); },
+					new RelayCommand(() => { ProcessHelper.OpenFolder(_selectedJob?.DataSource?.SourceFile); },
 					() => _selectedJob != null));
 			}
 		}
