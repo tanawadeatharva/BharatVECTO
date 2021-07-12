@@ -153,6 +153,47 @@ namespace Vecto3GUI2020Test.ViewModelTests
 		}
 
 
+		[Test]
+		public void CreateIncompletedExemptedVif()
+		{
+			var multistagevm = loadFile(exempted_primary_vif).MultiStageJobViewModel as MultiStageJobViewModel_v0_1;
+			var jobListVm = _kernel.Get<IJobListViewModel>();
+
+			var vehicleVm =
+				multistagevm.ManufacturingStageViewModel.VehicleViewModel as InterimStageBusVehicleViewModel_v2_8;
+
+			Assert.IsTrue(vehicleVm.ExemptedVehicle);
+			vehicleVm.Manufacturer = "Test Manufacturer 1";
+			vehicleVm.ManufacturerAddress = "Address";
+			vehicleVm.VIN = "123456789";
+			vehicleVm.Model = "Model";
+			//vehicleVm.LegislativeClass = LegislativeClass.M3;
+			vehicleVm.CurbMassChassis = Kilogram.Create(20000);
+			vehicleVm.GrossVehicleMassRating = Kilogram.Create(20000);
+			//vehicleVm.RegisteredClass = RegistrationClass.I_II;
+			vehicleVm.VehicleCode = VehicleCode.CC;
+			vehicleVm.LowEntry = true;
+			vehicleVm.Height = Meter.Create(2.6);
+			vehicleVm.NumberPassengerSeatsUpperDeck = 2;
+			vehicleVm.NumberPassengerSeatsLowerDeck = 10;
+
+
+
+
+			var vifName = multistagevm.SaveVif(TestHelper.GetMethodName() + ".xml");
+
+			Assert.NotNull(vifName);
+			WriteLine($"Written to {vifName}");
+			Assert.IsTrue(checkFileNameExists(vifName));
+
+			Assert.AreEqual(2, jobListVm.Jobs.Count);
+
+			Assert.IsFalse(jobListVm.Jobs[1].CanBeSimulated);
+			var invalidEntries = (jobListVm.Jobs[1].AdditionalJobInfoVm as AdditionalJobInfoViewModelMultiStage).InvalidEntries;
+			Assert.Contains(nameof(vehicleVm.LegislativeClass), invalidEntries);
+			Assert.Contains(nameof(vehicleVm.RegisteredClass), invalidEntries);
+		}
+
 
 		[Test]
 		public void TestAirdragLoadAndSave()
