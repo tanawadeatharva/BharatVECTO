@@ -273,7 +273,6 @@
     <Compile Include="ViewModel\Implementation\JobEdit\Vehicle\Components\EngineFuelViewModel.cs" />
     <Compile Include="ViewModel\Implementation\JobEdit\Vehicle\Components\EngineModeViewModel.cs" />
     <Compile Include="ViewModel\Implementation\JobEdit\Vehicle\Components\TorqueConverterViewModel.cs" />
-    <Compile Include="ViewModel\Interfaces\Document\IMultistageDocumentViewModelFactory.cs" />
     <Compile Include="ViewModel\Interfaces\JobEdit\Vehicle\Components\IEngineFuelViewModel.cs" />
     <Compile Include="ViewModel\Interfaces\JobEdit\Vehicle\Components\IEngineModeViewModel.cs" />
     <Compile Include="ViewModel\Interfaces\Common\IViewModelBase.cs" />

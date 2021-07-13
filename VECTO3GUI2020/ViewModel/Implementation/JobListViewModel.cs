@@ -67,7 +67,6 @@ namespace VECTO3GUI2020.ViewModel.Implementation
 					_openSourceFileCommand?.NotifyCanExecuteChanged();
 					_showSourceFileInExplorerCommand?.NotifyCanExecuteChanged();
 				};
-
 			}
 		}
 
@@ -250,6 +249,36 @@ namespace VECTO3GUI2020.ViewModel.Implementation
 
 		private Task<IDocumentViewModel> LoadFileAsync([NotNull] string fileName)
 		{
+			var extension = Path.GetExtension(fileName);
+			switch (extension) {
+				case ".xml":
+					return LoadXMLFile(fileName);
+				case ".json":
+					return LoadJsonFile(fileName);
+				default: 
+					throw new VectoException($"{extension} not supported!");
+			}
+			
+		}
+
+		private Task<IDocumentViewModel> LoadJsonFile([NotNull] string fileName)
+		{
+			IDocumentViewModel result = null;
+			try {
+				var inputData = JSONInputDataFactory.ReadJsonJob(fileName, true);
+				return Task.FromResult(_multiStageViewModelFactory.CreateDocumentViewModel(inputData));
+
+			} catch (Exception ex) {
+				throw new VectoException($"File {fileName} not supported", ex);
+			}
+
+
+
+			return null;
+		}
+
+		private Task<IDocumentViewModel> LoadXMLFile([NotNull] string fileName)
+		{
 			var xElement = new System.Xml.XmlDocument();
 			xElement.Load(fileName);
 
@@ -273,11 +302,7 @@ namespace VECTO3GUI2020.ViewModel.Implementation
 					Debug.WriteLine(ex.GetInnerExceptionMessages());
 					result = new SimulationOnlyDeclarationJob(inputDataProvider.DataSource, inputDataProvider.JobInputData.JobName, XmlDocumentType.DeclarationJobData) as IDocumentViewModel;
 				}
-
-
 				return Task.FromResult(result);
-
-
 			}
 			else
 			{
@@ -285,6 +310,9 @@ namespace VECTO3GUI2020.ViewModel.Implementation
 			}
 
 			return null;
+
+
+
 		}
 
 		#endregion
