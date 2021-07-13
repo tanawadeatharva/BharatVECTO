@@ -27,6 +27,7 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Interfaces
 	public interface IMultiStageViewModelFactoryTypeAsNameInstanceProvider
 	{
 		IDocumentViewModel CreateDocumentViewModel(IDeclarationInputDataProvider inputData);
+		IDocumentViewModel CreateDocumentViewModel(IInputDataProvider inputData);
 		IVehicleViewModel CreateStageInputVehicleViewModel(IVehicleDeclarationInputData inputData);
 	}
 
