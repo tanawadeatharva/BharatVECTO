@@ -39,8 +39,8 @@
             <DockPanel DockPanel.Dock="Bottom" LastChildFill="False">
                 <UniformGrid DockPanel.Dock="Right" Rows="1" Width="500" HorizontalAlignment="Right">
                     <Button Style="{StaticResource MultiStageButtonStyle1}">Create new VIF</Button>
-                    <Button Style="{StaticResource MultiStageButtonStyle1}">Save Job as ...</Button>
-                    <Button Style="{StaticResource MultiStageButtonStyle1}">Save Job</Button>
+                    <Button Style="{StaticResource MultiStageButtonStyle1}" Command="{Binding SaveJobAsCommand}">Save Job as ...</Button>
+                    <Button Style="{StaticResource MultiStageButtonStyle1}" Command="{Binding SaveJobCommand}">Save Job</Button>
                     <Button Style="{StaticResource MultiStageButtonStyle1}"
                             Command="{Binding CloseWindowCommand}"
                             CommandParameter="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}}">Close</Button>
