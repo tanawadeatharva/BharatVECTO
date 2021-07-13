@@ -88,6 +88,8 @@ namespace TUGraz.VectoCommon.InputData
 		IVehicleDeclarationInputData CompletedVehicle { get; }
 	}
 
+	
+
 
 	public interface IMultistageBusInputDataProvider : IDeclarationInputDataProvider
 	{

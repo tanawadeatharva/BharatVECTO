@@ -9,6 +9,7 @@ using Ninject.Modules;
 using TUGraz.VectoCore.InputData.FileIO.XML.Declaration;
 using TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider;
 using TUGraz.VectoCore.Models.SimulationComponent;
+using VECTO3GUI2020.Model.Multistage;
 using VECTO3GUI2020.Ninject.Util;
 using VECTO3GUI2020.ViewModel.Implementation;
 using VECTO3GUI2020.ViewModel.Implementation.Common;
@@ -59,6 +60,8 @@ namespace VECTO3GUI2020.Ninject
 
 			Bind<IAdditionalJobInfoViewModel>().To<AdditionalJobInfoViewModelNewVif>()
 				.WhenInjectedInto(typeof(ICreateVifViewModel));
+
+			Bind<JSONJob>().ToSelf();
 		}
 	}
 }

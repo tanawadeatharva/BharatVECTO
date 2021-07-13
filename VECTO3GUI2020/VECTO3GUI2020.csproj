@@ -183,6 +183,7 @@
     <Compile Include="Helper\ProcessHelper.cs" />
     <Compile Include="Helper\VisualTreeHelperExtensions.cs" />
     <Compile Include="Helper\TemplateSelector\MultistageParameterDataTemplateSelector.cs" />
+    <Compile Include="Model\Multistage\JSONJob.cs" />
     <Compile Include="Properties\GUILabels.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -217,7 +218,6 @@
       <DependentUpon>Test.xaml</DependentUpon>
     </Compile>
     <Compile Include="TestViewModel.cs" />
-    <Compile Include="Util\JSON\IJsonWriterFactory.cs" />
     <Compile Include="Util\XML\Implementation\ComponentWriter\XMLBusAuxiliariesWriter.cs" />
     <Compile Include="Util\XML\Implementation\ComponentWriter\XMLPTOWriter.cs" />
     <Compile Include="ViewModel\Implementation\AboutViewModel.cs" />
@@ -879,11 +879,7 @@
   <ItemGroup>
     <Resource Include="Resources\Icons\folderpicker.ico" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Model\Multistage\" />
-    <Folder Include="Util\JSON\Implementation\" />
-    <Folder Include="Util\JSON\Interfaces\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <Resource Include="Resources\Icons\Trash_16x.ico" />
   </ItemGroup>

@@ -1122,4 +1122,37 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 				? null
 				: JSONInputDataFactory.ReadShiftParameters(Path.Combine(BasePath, Body.GetEx<string>("TCU")), false);
 	}
+
+
+	public class JSONInputDataV10_PrimaryAndInterimBus : JSONFile, IInputDataProvider
+	{
+		private readonly IXMLInputDataReader _xmlInputReader;
+		private string _primaryVehicleInputDataPath;
+		private IVehicleDeclarationInputData _primaryVehicleInputData;
+		public IVehicleDeclarationInputData PrimaryVehicle =>
+			_primaryVehicleInputData ?? (_primaryVehicleInputData =
+				_xmlInputReader.CreateDeclaration(_primaryVehicleInputDataPath).JobInputData.Vehicle);
+
+		private string _stageInputDataPath;
+		private IVehicleDeclarationInputData _stageInputData;
+
+		public IVehicleDeclarationInputData StageInputData => 
+			_stageInputData ?? (_stageInputData =
+				_xmlInputReader.CreateDeclaration(_stageInputDataPath).JobInputData.Vehicle);
+
+
+
+		public JSONInputDataV10_PrimaryAndInterimBus(JObject data, string filename, bool tolerateMissing = false) :
+			base(data, filename, tolerateMissing)
+		{
+			var kernel = new StandardKernel(new VectoNinjectModule());
+			_xmlInputReader = kernel.Get<IXMLInputDataReader>();
+			_primaryVehicleInputDataPath = default(string);
+			_stageInputDataPath = default(string);
+
+
+
+
+		}
+	}
 }

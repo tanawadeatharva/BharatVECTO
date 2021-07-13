@@ -99,7 +99,7 @@ namespace VECTO3GUI2020.ViewModel.Implementation.Common
 			_parent = parent as CreateVifViewModel;
 			Debug.Assert(_parent != null);
 
-			if()
+			//if()
 
 
 		}

@@ -11,6 +11,7 @@ using TUGraz.VectoCore.InputData.FileIO.XML.Declaration;
 using TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider;
 using TUGraz.VectoCore.Utils;
 using VECTO3GUI2020.Helper;
+using VECTO3GUI2020.Model.Multistage;
 using VECTO3GUI2020.ViewModel.Implementation.Common;
 using VECTO3GUI2020.ViewModel.Interfaces;
 using VECTO3GUI2020.ViewModel.Interfaces.Document;
@@ -33,6 +34,7 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 		private readonly IDialogHelper _dialogHelper;
 		private readonly IXMLInputDataReader _inputDataReader;
 		private static uint _newVifCounter = 0;
+		private readonly JSONJob _jsonJob;
 
 		private bool? _exemptedPrimary;
 
@@ -50,8 +52,9 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 			set => SetProperty(ref _stageInputExempted, value);
 		}
 
-		public CreateVifViewModel(IDialogHelper dialogHelper, IXMLInputDataReader inputDataReader)
+		public CreateVifViewModel(IDialogHelper dialogHelper, IXMLInputDataReader inputDataReader, IAdditionalJobInfoViewModel additionalJobInfo, JSONJob jsonJob)
 		{
+			_jsonJob = jsonJob;
 			_dialogHelper = dialogHelper;
 			_inputDataReader = inputDataReader;
 			Title = "Create VIF";
@@ -83,6 +86,10 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 			}
 		}
 
+		#region Commands
+
+		private ICommand _selectPrimaryInputFileCommand;
+		private ICommand _selectCompletedInputFileCommand;
 		public ICommand SelectCompletedInputFileCommand
 		{
 			get => _selectCompletedInputFileCommand ?? (_selectCompletedInputFileCommand = new RelayCommand(() => {
@@ -95,29 +102,36 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 
 		public bool LoadStageInput(string fileName)
 		{
-			if (fileName == null) {
+			if (fileName == null)
+			{
 				return false;
 			}
 
 			var valid = true;
 			IVehicleDeclarationInputData vehicleInputData = null;
-			try {
+			try
+			{
 				var inputData = _inputDataReader.Create(fileName) as IDeclarationInputDataProvider;
 				vehicleInputData = inputData.JobInputData.Vehicle;
 				var type = vehicleInputData.GetType();
 				valid = (inputData != null) && (vehicleInputData is XMLDeclarationInterimStageBusDataProviderV28) || (vehicleInputData is XMLDeclarationExemptedInterimStageBusDataProviderV28);
-			} catch (Exception e) {
+			}
+			catch (Exception e)
+			{
 				valid = false;
 			}
 
 			valid = valid && SetStageInputExempted(vehicleInputData.ExemptedVehicle);
 
-			if (valid) {
+			if (valid)
+			{
 				StageInputPath = fileName;
-			} else {
+			}
+			else
+			{
 				_dialogHelper.ShowMessageBox("Invalid File", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
 			}
-			
+
 
 
 
@@ -135,16 +149,20 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 
 		public bool LoadPrimaryInput(string fileName)
 		{
-			if (fileName == null) {
+			if (fileName == null)
+			{
 				return false;
 			}
 
 			var valid = true;
 			IDeclarationInputDataProvider inputData = null;
-			try {
+			try
+			{
 				inputData = _inputDataReader.Create(fileName) as IDeclarationInputDataProvider;
 				valid = inputData != null && inputData.JobInputData.Vehicle.VehicleCategory.IsBus();
-			} catch (Exception ex) {
+			}
+			catch (Exception ex)
+			{
 				valid = false;
 			}
 
@@ -152,9 +170,12 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 
 
 
-			if (valid) {
+			if (valid)
+			{
 				PrimaryInputPath = fileName;
-			} else {
+			}
+			else
+			{
 				_dialogHelper.ShowMessageBox("Invalid File", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
 			}
 
@@ -166,16 +187,19 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 		{
 			var valid = StageInputExempted == null || StageInputExempted == primaryExempted;
 
-			if (valid) {
+			if (valid)
+			{
 				ExemptedPrimary = primaryExempted;
-			} else {
+			}
+			else
+			{
 				_dialogHelper.ShowMessageBox(
 					caption: "Error",
 					button: MessageBoxButton.OK,
 					icon: MessageBoxImage.Error,
 					messageBoxText: (primaryExempted
 						? "Exempted primary vehicle not allowed for non-exempted interim/completed input"
-						: "Only exempted input allowed for selected interim/completed input"));
+						: "Only exempted input allowed for exempted interim/completed input"));
 			}
 			return valid;
 		}
@@ -184,9 +208,12 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 		{
 			var valid = ExemptedPrimary == null || ExemptedPrimary == stageInputExempted;
 
-			if (valid) {
+			if (valid)
+			{
 				StageInputExempted = stageInputExempted;
-			} else {
+			}
+			else
+			{
 				_dialogHelper.ShowMessageBox(
 					caption: "Error",
 					button: MessageBoxButton.OK,
@@ -199,17 +226,16 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 		}
 
 
-		#region Commands
 
-		private ICommand _selectPrimaryInputFileCommand;
-		private ICommand _selectCompletedInputFileCommand;
-		private bool _selected;
-		private  string _documentName;
+
+
+
 
 		#endregion
 
-
 		#region Implementation of IDocumentViewModel
+		private bool _selected;
+		private string _documentName;
 		public string DocumentName
 		{
 			get => _documentName;
