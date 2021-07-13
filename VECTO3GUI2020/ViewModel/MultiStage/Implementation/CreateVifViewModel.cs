@@ -100,6 +100,29 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 			}));
 		}
 
+		public ICommand SelectPrimaryInputFileCommand
+		{
+			get => _selectPrimaryInputFileCommand ?? (_selectPrimaryInputFileCommand = new RelayCommand(() => {
+				var selectedFilePath = _dialogHelper.OpenXMLFileDialog();
+				LoadPrimaryInput(selectedFilePath);
+
+			}));
+		}
+
+		private ICommand _saveJobCommand;
+
+		public ICommand SaveJobCommand
+		{
+			get => _saveJobCommand ?? (_saveJobCommand = new RelayCommand(() => { return; }));
+		}
+
+		private ICommand _saveJobAsCommand;
+
+		public ICommand SaveJobAsCommand
+		{
+			get => _saveJobAsCommand ?? (_saveJobAsCommand = new RelayCommand(() => { return; }));
+		}
+
 		public bool LoadStageInput(string fileName)
 		{
 			if (fileName == null)
@@ -138,14 +161,6 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 			return valid;
 		}
 
-		public ICommand SelectPrimaryInputFileCommand
-		{
-			get => _selectPrimaryInputFileCommand ?? (_selectPrimaryInputFileCommand = new RelayCommand(() => {
-				var selectedFilePath = _dialogHelper.OpenXMLFileDialog();
-				LoadPrimaryInput(selectedFilePath);
-
-			}));
-		}
 
 		public bool LoadPrimaryInput(string fileName)
 		{
