@@ -93,6 +93,11 @@ namespace VECTO3GUI2020.Ninject
 			return _multiStageViewModelFactoryTypeAsNameInstanceProvider.CreateDocumentViewModel(inputData);
 		}
 
+		public IDocumentViewModel CreateDocumentViewModel(IInputDataProvider inputData)
+		{
+			return _multiStageViewModelFactoryTypeAsNameInstanceProvider.CreateDocumentViewModel(inputData);
+		}
+
 		public IVehicleViewModel CreateStageInputVehicleViewModel(IVehicleDeclarationInputData inputData)
 		{
 			return _multiStageViewModelFactoryTypeAsNameInstanceProvider.CreateStageInputVehicleViewModel(inputData);
