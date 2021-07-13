@@ -14,32 +14,39 @@ namespace Vecto3GUI2020Test.ViewModelTests
 	[TestFixture]
 	public class JobListViewModelTests : ViewModelTestBase
 	{
-		private string finalVIF = "final.VIF_Report_4.xml";
+		private const string finalVIF = "final.VIF_Report_4.xml";
 
+		private const string _newVifJob = "newVifCompletedStage.json";
+		private JobListViewModel _jobListViewModel;
+
+		[SetUp]
+		public void SetupViewModelTests()
+		{
+			_jobListViewModel = _kernel.Get<IJobListViewModel>() as JobListViewModel;
+		}
 
 		[Test]
 		public async Task CancelSimulationWhileLoadingFiles()
 		{
-			var jobListViewModel = _kernel.Get<IJobListViewModel>() as JobListViewModel;
 			var watch = new Stopwatch();
 			watch.Start();
 			//load final vif
-			var loadedFile = await jobListViewModel.AddJobAsync(GetTestDataPath(finalVIF)).ConfigureAwait(false);
+			var loadedFile = await _jobListViewModel.AddJobAsync(GetTestDataPath(finalVIF)).ConfigureAwait(false);
 
 			//select vif for simulation
-			Assert.AreNotEqual(0, jobListViewModel.Jobs.Count);
-			jobListViewModel.Jobs[0].Selected = true;
+			Assert.AreNotEqual(0, _jobListViewModel.Jobs.Count);
+			_jobListViewModel.Jobs[0].Selected = true;
 
 
-			jobListViewModel.RunSimulationExecute();
+			_jobListViewModel.RunSimulationExecute();
 			TestContext.Write("Canceling Simulation ... ");
-			Assert.IsTrue(jobListViewModel.SimulationRunning);
-			jobListViewModel.CancelSimulation.Execute(null);
+			Assert.IsTrue(_jobListViewModel.SimulationRunning);
+			_jobListViewModel.CancelSimulation.Execute(null);
 
 
 			//Wait 
 			var constraint = Is.True.After(delayInMilliseconds: 100000, pollingInterval: 100);
-			Assert.That(() => jobListViewModel.SimulationRunning == false, constraint);
+			Assert.That(() => _jobListViewModel.SimulationRunning == false, constraint);
 			TestContext.WriteLine("Done!");
 
 			watch.Stop();
@@ -47,62 +54,58 @@ namespace Vecto3GUI2020Test.ViewModelTests
 		}
 
 		[TestCase(VIFTests.exempted_primary_vif, TestName="Exempted")]
-
 		public async Task AddJobAsyncTest(string fileName)
 		{
 			var path = GetTestDataPath(fileName);
-			var jobListViewModel = _kernel.Get<IJobListViewModel>() as JobListViewModel;
-			Assert.AreEqual(0, jobListViewModel.Jobs.Count);
+			Assert.AreEqual(0, _jobListViewModel.Jobs.Count);
 
-			await jobListViewModel.AddJobAsync(path);
-			Assert.AreEqual(1, jobListViewModel.Jobs.Count);
+			await _jobListViewModel.AddJobAsync(path);
+			Assert.AreEqual(1, _jobListViewModel.Jobs.Count);
 
-			Assert.AreEqual(path, jobListViewModel.Jobs[0].DataSource.SourceFile);
+			Assert.AreEqual(path, _jobListViewModel.Jobs[0].DataSource.SourceFile);
 		}
 
 		[TestCase(true, TestName = "Exempted")]
 		[TestCase(false, TestName = "NotExempted")]
 		public void addNewFilesToJobList(bool exempted)
 		{
-			var jobListVm = _kernel.Get<IJobListViewModel>() as JobListViewModel;
 			if (exempted)
 			{
-				jobListVm.NewExemptedCompletedInputCommand.Execute(null);
+				_jobListViewModel.NewExemptedCompletedInputCommand.Execute(null);
 			}
 			else
 			{
-				jobListVm.NewCompletedInputCommand.Execute(null);
+				_jobListViewModel.NewCompletedInputCommand.Execute(null);
 			}
 
-			Assert.AreEqual(1, jobListVm.Jobs.Count);
+			Assert.AreEqual(1, _jobListViewModel.Jobs.Count);
 		}
 
 
 		[Test]
 		public async Task CancelSimulationWhenJobContainerIsRunning()
 		{
-			var jobListViewModel = _kernel.Get<IJobListViewModel>() as JobListViewModel;
 			var watch = new Stopwatch();
 			watch.Start();
 
 			//load final vif
-			var loadedFile = await jobListViewModel.AddJobAsync(GetTestDataPath(finalVIF)).ConfigureAwait(false);
+			var loadedFile = await _jobListViewModel.AddJobAsync(GetTestDataPath(finalVIF)).ConfigureAwait(false);
 
 			//select vif for simulation
-			Assert.AreNotEqual(0, jobListViewModel.Jobs.Count);
-			jobListViewModel.Jobs[0].Selected = true;
+			Assert.AreNotEqual(0, _jobListViewModel.Jobs.Count);
+			_jobListViewModel.Jobs[0].Selected = true;
 
 
 			//Simulate for a while
 			var outputVm = _kernel.Get<IOutputViewModel>(); // SINGLETON
-			var simulationTask = jobListViewModel.RunSimulationExecute();
+			var simulationTask = _jobListViewModel.RunSimulationExecute();
 			Assert.That(() => outputVm.Progress, Is.GreaterThanOrEqualTo(25).After(1 * 60 * 1000, 1),
 				() => $"Simulation reached {outputVm.Progress}%");
 
 			TestContext.Write("Canceling Simulation ... ");
-			Assert.IsTrue(jobListViewModel.SimulationRunning);
-			jobListViewModel.CancelSimulation.Execute(null);
-			Assert.That(() => jobListViewModel.SimulationRunning, Is.False.After(20*1000, 50) );
+			Assert.IsTrue(_jobListViewModel.SimulationRunning);
+			_jobListViewModel.CancelSimulation.Execute(null);
+			Assert.That(() => _jobListViewModel.SimulationRunning, Is.False.After(20*1000, 50) );
 			TestContext.WriteLine("Done!");
 
 			watch.Stop();
@@ -112,15 +115,18 @@ namespace Vecto3GUI2020Test.ViewModelTests
         [Test]
         public async Task LoadStageInputOnly()
         {
-            var jobListVm = _kernel.Get<IJobListViewModel>();
-            var documentViewModel = await jobListVm.AddJobAsync(GetTestDataPath(stageInputFullSample));
+			var documentViewModel = await _jobListViewModel.AddJobAsync(GetTestDataPath(stageInputFullSample));
             Assert.AreEqual(typeof(StageInputViewModel), documentViewModel.GetType());
 
             var stageInputDocumentViewModel = documentViewModel.EditViewModel as StageInputViewModel;
             Assert.NotNull(stageInputDocumentViewModel);
+		}
 
-
-
-        }
+		[Test]
+		public async Task LoadNewVifJob()
+		{
+			var documentViewModel = await _jobListViewModel.AddJobAsync(GetTestDataPath(_newVifJob));
+			Assert.NotNull(documentViewModel);
+		}
     }
 }

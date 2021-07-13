@@ -203,7 +203,7 @@ namespace Vecto3GUI2020Test
 
 				_mockDialogHelper.Setup(dialogHelper =>
 						dialogHelper.ShowErrorMessage(It.IsAny<string>()))
-					.Callback<string, string>((message, caption) =>
+					.Callback<string>((message) =>
 						TestContext.WriteLine($"{{Error}}\n {message}"));
 
 

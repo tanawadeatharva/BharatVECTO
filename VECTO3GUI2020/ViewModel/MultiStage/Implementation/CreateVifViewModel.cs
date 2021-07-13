@@ -67,7 +67,7 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 			_documentName = $"New Vif {++_newVifCounter}";
 		}
 
-		public CreateVifViewModel(IDeclarationInputDataProvider inputData, 
+		public CreateVifViewModel(IInputDataProvider inputData, 
 			IDialogHelper dialogHelper, 
 			IXMLInputDataReader inputDataReader, 
 			IAdditionalJobInfoViewModel additionalJobInfo) : this(dialogHelper, inputDataReader, additionalJobInfo)
@@ -341,7 +341,7 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 			set
 			{
 				if (SetProperty(ref _dataSource, value)) {
-					_saveJobCommand.NotifyCanExecuteChanged();
+					_saveJobCommand?.NotifyCanExecuteChanged();
 				}
 			}
 		}
