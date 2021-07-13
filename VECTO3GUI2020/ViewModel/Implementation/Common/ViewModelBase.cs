@@ -1,7 +1,4 @@
-﻿using System.Collections.Generic;
-using System.ComponentModel;
-using System.Runtime.CompilerServices;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Input;
 using Microsoft.Toolkit.Mvvm.Input;
 using Ninject;
@@ -11,15 +8,14 @@ using VECTO3GUI2020.ViewModel.Interfaces.Common;
 
 namespace VECTO3GUI2020.ViewModel.Implementation.Common
 {
-    /// <summary>
+	/// <summary>
     /// Base Implementation of INotifyPropertyChanged
     /// https://docs.microsoft.com/en-us/dotnet/framework/wpf/data/how-to-implement-property-change-notification
     /// </summary>
     /// 
-    public class ViewModelBase : INotifyPropertyChanged, IViewModelBase
+    public class ViewModelBase : ObservableObject, IViewModelBase
 	{
 		private string _error;
-		public event PropertyChangedEventHandler PropertyChanged;
 
 		#region Size And Window position
 		private double? _width = 800;
@@ -44,30 +40,7 @@ namespace VECTO3GUI2020.ViewModel.Implementation.Common
 		#endregion
 
 
-		/// <summary>
-		/// Needs to be called when a Property is changed
-		/// </summary>
-		///
-		/// <param name="name">Is automatically set to CallerMemberName</param>
-		protected void OnPropertyChanged([CallerMemberName] string name = "")
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
-		}
-
-
-        //borrowed from Franz Kober
-        protected virtual bool SetProperty<T>(ref T field, T value, [CallerMemberName] string propertyName = null)
-        {
-            bool propertyChanged = false;
-
-            if (!EqualityComparer<T>.Default.Equals(field, value))
-            {
-                field = value;
-                OnPropertyChanged(propertyName);
-                propertyChanged = true;
-            }
-            return propertyChanged;
-        }
+		//borrowed from Franz Kober
 
 		private string _title = GUILabels.DefaultTitle;
 		public virtual string Title

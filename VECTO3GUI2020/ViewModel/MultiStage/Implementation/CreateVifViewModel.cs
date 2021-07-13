@@ -63,13 +63,24 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 		public string PrimaryInputPath
 		{
 			get => _primaryInputPath;
-			set => SetProperty(ref _primaryInputPath, value);
+			set
+			{
+				if (SetProperty(ref _primaryInputPath, value)) {
+					OnPropertyChanged(nameof(CanBeSimulated));
+				}
+			}
 		}
 
 		public string StageInputPath
 		{
 			get => _stageInputPath;
-			set => SetProperty(ref _stageInputPath, value);
+			set
+			{
+				if (SetProperty(ref _stageInputPath, value))
+				{
+					OnPropertyChanged(nameof(CanBeSimulated));
+				}
+			}
 		}
 
 		public ICommand SelectCompletedInputFileCommand
@@ -220,7 +231,7 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 
 		public bool CanBeSimulated
 		{
-			get => true;
+			get => PrimaryInputPath != null && StageInputPath != null;
 			set => throw new NotImplementedException();
 		}
 

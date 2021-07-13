@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.Linq;
 using System.Windows;
 using TUGraz.VectoCommon.InputData;
@@ -81,6 +82,26 @@ namespace VECTO3GUI2020.ViewModel.Implementation.Common
 		{
 			get => _errorInfo;
 			set => SetProperty(ref _errorInfo, value);
+		}
+
+		#endregion
+	}
+
+	public class AdditionalJobInfoViewModelNewVif : AdditionalJobInfoViewModelBase
+	{
+		private ICreateVifViewModel _parent;
+		public ObservableCollection<string> InvalidEntries { get; set; } = new ObservableCollection<string>();
+
+		#region Overrides of AdditionalJobInfoViewModelBase
+
+		public override void SetParent(IViewModelBase parent)
+		{
+			_parent = parent as CreateVifViewModel;
+			Debug.Assert(_parent != null);
+
+			if()
+
+
 		}
 
 		#endregion

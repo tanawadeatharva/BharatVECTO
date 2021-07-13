@@ -189,6 +189,7 @@
       <DependentUpon>GUILabels.resx</DependentUpon>
     </Compile>
     <Compile Include="ViewModel\Implementation\Common\AdditionalJobInfoViewModel.cs" />
+    <Compile Include="ViewModel\Implementation\Common\ObservableObject.cs" />
     <Compile Include="ViewModel\MultiStage\Implementation\MultistageParameterViewModel.cs" />
     <Compile Include="Helper\NameResolver.cs" />
     <Compile Include="Helper\TemplateSelector\MultistageVehicleDataTemplateSelector.cs" />
@@ -435,6 +436,9 @@
     </Compile>
     <Compile Include="Views\Multistage\AdditionalJobInfoViews\AdditionalJobInfoViewMultiStage.xaml.cs">
       <DependentUpon>AdditionalJobInfoViewMultiStage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Multistage\AdditionalJobInfoViews\AdditionalJobInfoViewNewVIF.xaml.cs">
+      <DependentUpon>AdditionalJobInfoViewNewVIF.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\Multistage\AirDragView_v2_8.xaml.cs">
       <DependentUpon>AirDragView_v2_8.xaml</DependentUpon>
@@ -704,6 +708,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\Multistage\AdditionalJobInfoViews\AdditionalJobInfoViewMultiStage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Multistage\AdditionalJobInfoViews\AdditionalJobInfoViewNewVIF.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

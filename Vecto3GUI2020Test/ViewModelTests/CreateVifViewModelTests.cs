@@ -40,9 +40,9 @@ namespace Vecto3GUI2020Test.ViewModelTests
 		}
 
 
-		[TestCase(stageInputFullSample, TestName = "InvalidPrimaryFile_StageInput")]
-		[TestCase(airdragLoadTestFile, TestName = "InvalidPrimaryFile_Airdrag")]
-		[TestCase(consolidated_multiple_stages_airdrag, TestName = "InvalidPrimaryFile_VIF")]
+		[TestCase(vecto_vehicle_primary_heavyBusSample, TestName = "InvalidStageInput_Primary")]
+		[TestCase(airdragLoadTestFile, TestName = "InvalidStageInput_Airdrag")]
+		[TestCase(consolidated_multiple_stages_airdrag, TestName = "InvalidStageFile_VIF")]
 		public void LoadInvalidCompletedFile(string fileName)
 		{
 			var filePath = GetTestDataPath(fileName);
@@ -66,8 +66,6 @@ namespace Vecto3GUI2020Test.ViewModelTests
 
 			Assert.IsTrue(_createVifViewModel.LoadPrimaryInput(exemptedPrimaryPath));
 			Assert.IsFalse(_createVifViewModel.LoadStageInput(stageInputPath));
-
-
 		}
 
 		
@@ -78,7 +76,6 @@ namespace Vecto3GUI2020Test.ViewModelTests
 			var filePath = GetTestDataPath(vecto_vehicle_primary_heavyBusSample);
 			Assert.IsTrue(_createVifViewModel.LoadPrimaryInput(filePath));
 			Assert.AreEqual(filePath, _createVifViewModel.PrimaryInputPath);
-
 		}
 
 		[TestCase(stageInputFullSample, TestName = "ValidStageInput_fullStageInput")]
@@ -105,7 +102,10 @@ namespace Vecto3GUI2020Test.ViewModelTests
 		[Test]
 		public void LoadValidExemptedFiles()
 		{
-
+			var primaryPath = GetTestDataPath(vecto_vehicle_primary_heavyBusExempted);
+			var stageInputPath = GetTestDataPath(vecto_vehicle_exempted_input_only_certain_entries);
+			Assert.IsTrue(_createVifViewModel.LoadPrimaryInput(primaryPath));
+			Assert.IsTrue(_createVifViewModel.LoadStageInput(stageInputPath));
 
 		}
 

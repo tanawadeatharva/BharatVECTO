@@ -54,9 +54,11 @@ namespace VECTO3GUI2020.Ninject
 			Bind<IDocumentViewModel>().To<StageInputViewModel>()
 				.NamedLikeFactoryMethod((IMultiStageViewModelFactory f) => f.GetStageInputViewModel(default(bool)));
 
-
 			Bind<IAdditionalJobInfoViewModel>().To<AdditionalJobInfoViewModelMultiStage>()
 				.WhenInjectedInto(typeof(IMultiStageJobViewModel));
+
+			Bind<IAdditionalJobInfoViewModel>().To<AdditionalJobInfoViewModelNewVif>()
+				.WhenInjectedInto(typeof(ICreateVifViewModel));
 		}
 	}
 }
