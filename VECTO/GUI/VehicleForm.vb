@@ -481,7 +481,7 @@ Public Class VehicleForm
 			If(angledrive.LossMap Is Nothing, "", GetRelativePath(angledrive.LossMap.Source, basePath))
 
 		If (vehicle.VehicleType = VectoSimulationJobType.BatteryElectricVehicle OrElse vehicle.VehicleType = VectoSimulationJobType.ParallelHybridVehicle) Then
-		    lvREESSPacks.Clear()
+		    lvREESSPacks.Items.Clear()
 		    For Each entry As IElectricStorageEngineeringInputData In vehicle.Components.ElectricStorage.ElectricStorageElements.OrderBy(function(x) x.StringId)
 		        lvREESSPacks.Items.Add(CreateREESSPackListViewItem(GetRelativePath(entry.REESSPack.DataSource.SourceFile, basePath), entry.Count, entry.StringId))
 		    Next

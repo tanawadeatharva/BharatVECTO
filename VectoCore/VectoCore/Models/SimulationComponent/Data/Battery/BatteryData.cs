@@ -17,8 +17,13 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Battery {
 		public List<Tuple<int, BatteryData>> Batteries { get; internal set; }
 
 		public double InitialSoC { get; internal set; }
-		public AmpereSecond Capacity {
-			get { throw new NotImplementedException();}
+		public AmpereSecond Capacity
+		{
+			get
+			{
+				return Batteries.Select(x => x.Item1).Distinct().OrderBy(x => x).Aggregate(0.SI<AmpereSecond>(),
+					(current, s) => current + Batteries.Where(x => x.Item1 == s).Min(x => x.Item2.Capacity));
+			}
 		}
 	}
 

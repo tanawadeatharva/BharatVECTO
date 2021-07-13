@@ -93,7 +93,7 @@ namespace TUGraz.VectoCore.OutputData
 			ModalResultField.EM_Off_,
 		};
 
-		private readonly ModalResultField[] _batteryColumns = new[] {
+		private readonly ModalResultField[] _batterySignals = new[] {
 			ModalResultField.U0_reess,
 			ModalResultField.U_reess_terminal,
 			ModalResultField.I_reess,
@@ -104,6 +104,9 @@ namespace TUGraz.VectoCore.OutputData
 			ModalResultField.P_reess_charge_max,
 			ModalResultField.P_reess_discharge_max
 		};
+
+		protected Dictionary<int, Dictionary<ModalResultField, DataColumn>> BatteryColumns =
+			new Dictionary<int, Dictionary<ModalResultField, DataColumn>>();
 
 		public static readonly IList<ModalResultField> FuelConsumptionSignals = new[] {
 			ModalResultField.FCMap, ModalResultField.FCNCVc, ModalResultField.FCWHTCc, // ModalResultField.FCAAUX,
@@ -883,7 +886,7 @@ namespace TUGraz.VectoCore.OutputData
 
 		public object this[ModalResultField key, int? idx] {
 			get {
-				if (!_batteryColumns.Contains(key)) {
+				if (!_batterySignals.Contains(key)) {
 					throw new VectoException("ModalResult with index is only supported for REESS fields");
 				}
 
@@ -891,14 +894,26 @@ namespace TUGraz.VectoCore.OutputData
 			}
 			set
 			{
-				if (!_batteryColumns.Contains(key)) {
-					throw new VectoException("ModalResult with index is only supported for REESS fields");
-				}
-
-				if (idx.HasValue) {
-					CurrentRow[$"{key.GetCaption()}_{idx.Value}"] = value;
-				} else {
+				if (idx == null) {
 					CurrentRow[key.GetName()] = value;
+				} else {
+					if (!_batterySignals.Contains(key)) {
+						throw new VectoException("ModalResult with index is only supported for REESS fields");
+					}
+					if (!BatteryColumns.ContainsKey(idx.Value)) {
+						BatteryColumns[idx.Value] = new Dictionary<ModalResultField, DataColumn>();
+					}
+
+					var entry = BatteryColumns[idx.Value];
+					if (!entry.ContainsKey(key)) {
+						var col = Data.Columns.Add($"{key.GetName()}_{idx.Value}", typeof(SI));
+						col.ExtendedProperties[ModalResults.ExtendedPropertyNames.Decimals] = key.GetAttribute().Decimals;
+						col.ExtendedProperties[ModalResults.ExtendedPropertyNames.OutputFactor] = key.GetAttribute().OutputFactor;
+						col.ExtendedProperties[ModalResults.ExtendedPropertyNames.ShowUnit] = key.GetAttribute().ShowUnit;
+						entry[key] = col;
+					}
+
+					CurrentRow[entry[key]] = value;
 				}
 			}
 		}

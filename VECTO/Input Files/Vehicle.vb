@@ -106,7 +106,8 @@ Public Class Vehicle
 
 		Axles = New List(Of AxleInputData)
 		torqueLimitsList = New List(Of ITorqueLimitInputData)
-		PtoLossMap = New SubPath()
+		ReessPacks = new List(Of Tuple(Of String,Integer,Integer))
+	    PtoLossMap = New SubPath()
 		PtoCycleStandstill = New SubPath()
         PtoCycleDriving = new SubPath()
 		ElectricMotorFile = New SubPath()
@@ -928,12 +929,12 @@ Public Class ElectricStorageSystemWrapper
 
     Public ReadOnly Property ElectricStorageElements As IList(Of IElectricStorageDeclarationInputData) Implements IElectricStorageSystemDeclarationInputData.ElectricStorageElements
 	get
-			_vehicle.ReessPacks.Select(Function(x) new ElectricStorageWrapper(x, _vehicle.FilePath)).toList()
+			return _vehicle.ReessPacks.Select(Function(x) new ElectricStorageWrapper(x, GetPath(_vehicle.FilePath))).Cast(of IElectricStorageDeclarationInputData) .toList()
 	End Get
     End Property
     Public ReadOnly Property IElectricStorageSystemEngineeringInputData_ElectricStorageElements As IList(Of IElectricStorageEngineeringInputData) Implements IElectricStorageSystemEngineeringInputData.ElectricStorageElements
 	get
-
+	    return _vehicle.ReessPacks.Select(Function(x) new ElectricStorageWrapper(x, GetPath(_vehicle.FilePath))).cast(of IElectricStorageEngineeringInputData).toList()
 	End Get
     End Property
 End Class

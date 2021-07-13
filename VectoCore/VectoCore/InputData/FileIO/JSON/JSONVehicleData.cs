@@ -125,11 +125,20 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 		protected virtual JSONElectricStorageSystemEngineeringInputData ReadBatteries()
 		{
 			var entries = new List<IElectricStorageEngineeringInputData>();
-			foreach (var entry in Body["Batteries"]) {
+			if (Body["Batteries"] != null) {
+				foreach (var entry in Body["Batteries"]) {
+					entries.Add(new JSONElectricStorageEngineeringInputData() {
+						Count = entry.GetEx<int>("NumPacks"),
+						StringId = entry.GetEx<int>("StreamId"),
+						REESSPack = JSONInputDataFactory.ReadREESSData(
+							Path.Combine(BasePath, entry.GetEx<string>("BatteryFile")), false)
+					});
+				}
+			} else {
 				entries.Add(new JSONElectricStorageEngineeringInputData() {
-					Count = entry.GetEx<int>("NumPacks"),
-					StringId = entry.GetEx<int>("StreamId"),
-					REESSPack = JSONInputDataFactory.ReadREESSData(Path.Combine(BasePath, entry["Battery"].GetEx<string>("BatteryFile")), false)
+					Count = Body["Battery"].GetEx<int>("NumPacks"),
+					StringId = 0,
+					REESSPack = JSONInputDataFactory.ReadREESSData(Path.Combine(BasePath, Body["Battery"].GetEx<string>("BatteryFile")), false)
 				});
 			}
 

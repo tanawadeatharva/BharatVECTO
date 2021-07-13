@@ -8,12 +8,13 @@ using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.Models.Connector.Ports.Impl;
 using TUGraz.VectoCore.Models.Simulation;
+using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Battery;
 using TUGraz.VectoCore.OutputData;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 {
-	public class BatterySystem : VectoSimulationComponent, IElectricEnergyStorage, IElectricEnergyStoragePort
+	public class BatterySystem : StatefulVectoSimulationComponent<BatterySystem.State>, IElectricEnergyStorage, IElectricEnergyStoragePort
 	{
 		public class BatteryString
 		{
@@ -42,6 +43,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			public AmpereSecond Capacity => _capacity ?? (_capacity = _batteries.Min(x => x.Capacity));
 
 			public double SoC => _batteries.Min(x => x.StateOfCharge * x.Capacity) / Capacity;
+			public WattSecond StoredEnergy => _batteries.Min(x => x.StateOfCharge * x.Capacity) * OpenCircuitVoltage;
 
 			public Watt MaxDischargePower(Second dt)
 			{
@@ -79,11 +81,17 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					current = SelectSolution(solutions, powerDemand.Value(), dt);
 				}
 
+				if (!dryRun) {
+					Current = current;
+				}
+
 				return _batteries.Select(x => {
 					var demand = (x.InternalVoltage + x.InternalResistance * current) * current;
 					return x.Request(absTime, dt, demand, dryRun);
 				}).ToList();
 			}
+
+			public Ampere Current { get; set; }
 
 			private Ampere SelectSolution(double[] solutions, double sign, Second dt)
 			{
@@ -114,19 +122,34 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		public override void CommitSimulationStep(Second time, Second simulationInterval, IModalDataContainer container)
 		{
+			base.CommitSimulationStep(time, simulationInterval, container);
 			foreach (var battery in Batteries) {
 				foreach (var b in battery.Value.Batteries) {
 					b.CommitSimulationStep(time, simulationInterval, container);
 				}
 			}
-			base.CommitSimulationStep(time, simulationInterval, container);
+			
 		}
 
 		protected override void DoWriteModalResults(Second time, Second simulationInterval, IModalDataContainer container)
 		{
-			
+			var cellVoltage = InternalVoltage;
+			container[ModalResultField.U0_reess] = cellVoltage;
+			container[ModalResultField.U_reess_terminal] =
+				cellVoltage +
+				CurrentState.TotalCurrent *
+				InternalResistance; // adding both terms because pos. current charges the battery!
+			container[ModalResultField.I_reess] = CurrentState.TotalCurrent;
+			container[ModalResultField.REESSStateOfCharge] = CurrentState.StateOfCharge.SI();
+			container[ModalResultField.P_reess_terminal] = CurrentState.PowerDemand;
+			container[ModalResultField.P_reess_int] = cellVoltage * CurrentState.TotalCurrent;
+			container[ModalResultField.P_reess_loss] = CurrentState.BatteryLoss;
+			container[ModalResultField.P_reess_charge_max] = CurrentState.MaxChargePower;
+			container[ModalResultField.P_reess_discharge_max] = CurrentState.MaxDischargePower;
 		}
 
+		public Ohm InternalResistance => (1 / Batteries.Sum(bs => 1 / bs.Value.InternalResistance.Value())).SI<Ohm>();
+		
 		protected override void DoCommitSimulationStep(Second time, Second simulationInterval)
 		{
 			
@@ -150,7 +173,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		public AmpereSecond TotalCapacity =>
 			_totalCapacity ?? (_totalCapacity = Batteries.Values.Sum(bs => bs.Capacity));
 
-		public WattSecond StoredEnergy { get; }
+		public WattSecond StoredEnergy => Batteries.Values.Sum(bs => bs.StoredEnergy);
 		
 		public Watt MaxChargePower(Second dt)
 		{
@@ -208,6 +231,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 						distributedPower += power;
 					}
 				}
+
+				if (limitBB.Count > 0) {
+					Log.Debug($"BB ${string.Join(", ", limitBB.Keys)} are at max - recalculating power distribution");
+				}
 			} while (!distributedPower.IsEqual(powerDemand));
 
 			powerDemands = powerDemands.Concat(limitBB).ToDictionary(x => x.Key, x=> x.Value);
@@ -228,6 +255,15 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					//StateOfCharge = (currentCharge + current * dt) / ModelData.Capacity
 				};
 			}
+
+			var current = Batteries.Values.Sum(x => x.Current);
+			
+			CurrentState.StateOfCharge = StateOfCharge;
+			CurrentState.PowerDemand = powerDemand;
+			CurrentState.MaxChargePower = maxChargePower;
+			CurrentState.MaxDischargePower = maxDischargePower;
+			CurrentState.TotalCurrent = current;
+			CurrentState.BatteryLoss = current * InternalResistance * current;
 
 			if (responses.All(bb => bb.Value.All(b => b is RESSResponseSuccess))) {
 				return new RESSResponseSuccess(this) {
@@ -277,5 +313,19 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		}
 
 		#endregion
+
+		public class State
+		{
+			public double StateOfCharge;
+
+			public Second SimulationInterval;
+
+			public Watt PowerDemand;
+
+			public Ampere TotalCurrent;
+			public Watt MaxChargePower;
+			public Watt MaxDischargePower;
+			public Watt BatteryLoss;
+		}
 	}
 }

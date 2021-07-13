@@ -520,7 +520,7 @@ public class JSONFileWriter : IOutputFileWriter
 		body.Add("InitialSoC", vehicle.InitialSOC * 100);
 		body.Add("PowertrainConfiguration", "ParallelHybrid");
 		body.Add("ElectricMotors", electricMotorsOut);
-		body.Add("Battery", battery);
+		body.Add("Batteries", battery);
 
 		WriteFile(header, body, filename);
 	}
@@ -551,7 +551,7 @@ public class JSONFileWriter : IOutputFileWriter
 		body.Add("InitialSoC", vehicle.InitialSOC * 100);
 		body.Add("PowertrainConfiguration", "BatteryElectric");
 		body.Add("ElectricMotors", electricMotorsOut);
-		body.Add("Battery", battery);
+		body.Add("Batteries", battery);
 
 		//body.Add("IdlingSpeed", vehicle.EngineIdleSpeed.AsRPM);
 		//body.Add("Retarder", retarderOut);
