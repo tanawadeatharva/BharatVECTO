@@ -978,7 +978,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			var kernel = new StandardKernel(new VectoNinjectModule());
 			_xmlInputReader = kernel.Get<IXMLInputDataReader>();
 
-			var primaryInputData = Path.Combine(BasePath,  Body.GetEx<string>("PrimaryVehicle"));
+			var primaryInputData = Path.Combine(BasePath,  Body.GetEx<string>(JsonKeys.PrimaryVehicle));
 			var completedInputData = Path.Combine(BasePath,  Body.GetEx<string>("CompletedVehicle"));
 
 			PrimaryVehicle = CreateReader(primaryInputData);
@@ -1147,12 +1147,20 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 		{
 			var kernel = new StandardKernel(new VectoNinjectModule());
 			_xmlInputReader = kernel.Get<IXMLInputDataReader>();
-			_primaryVehicleInputDataPath = default(string);
-			_stageInputDataPath = default(string);
+
+
+			_primaryVehicleInputDataPath = Body.GetEx<string>(JsonKeys.PrimaryVehicle);
+			_stageInputDataPath = Body.GetEx<string>(JsonKeys.InterimStage);
 
 
 
+		}
 
+		private void checkFileExtension(string path)
+		{
+			if (Path.GetExtension(path) != ".xml") {
+				throw new VectoException("unsupported vehicle file format {0}", path);
+			}
 		}
 	}
 }

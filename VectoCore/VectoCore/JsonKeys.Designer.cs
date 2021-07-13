@@ -484,6 +484,15 @@ namespace TUGraz.VectoCore {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to InterimStage.
+        /// </summary>
+        internal static string InterimStage {
+            get {
+                return ResourceManager.GetString("InterimStage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Cycles.
         /// </summary>
         internal static string Job_Cycles {
@@ -525,6 +534,15 @@ namespace TUGraz.VectoCore {
         internal static string JsonHeader_FileVersion {
             get {
                 return ResourceManager.GetString("JsonHeader_FileVersion", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to PrimaryVehicle.
+        /// </summary>
+        internal static string PrimaryVehicle {
+            get {
+                return ResourceManager.GetString("PrimaryVehicle", resourceCulture);
             }
         }
         

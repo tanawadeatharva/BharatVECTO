@@ -378,4 +378,10 @@
 	<data name="HEV_Vehicle_MaxDrivetrainPower" xml:space="preserve">
 		<value>MaxDrivetrainPower</value>
 	</data>
+  <data name="PrimaryVehicle" xml:space="preserve">
+    <value>PrimaryVehicle</value>
+  </data>
+  <data name="InterimStage" xml:space="preserve">
+    <value>InterimStage</value>
+  </data>
 </root>
