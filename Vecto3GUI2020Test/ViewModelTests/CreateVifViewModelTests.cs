@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics;
+using System.IO;
 using Ninject;
 using NUnit.Framework;
 using VECTO3GUI2020.ViewModel.MultiStage.Implementation;
@@ -59,6 +60,21 @@ namespace Vecto3GUI2020Test.ViewModelTests
 		}
 
 		[Test]
+		public void SaveFile()
+		{
+			LoadValidNonExemptedFiles();
+			var outputFile = "test.json";
+			var outputPath = GetFullPath(outputFile);
+			_createVifViewModel.SaveJob(outputPath);
+
+			FileAssert.Exists(outputPath);
+
+			Assert.AreEqual(Path.GetDirectoryName(outputPath), _createVifViewModel.DataSource.SourcePath);
+			Assert.AreEqual(outputPath, _createVifViewModel.DataSource.SourceFile);
+		}
+
+
+		[Test]
 		public void LoadNonExemptedCompletedAndExemptedPrimary()
 		{
 			var exemptedPrimaryPath = GetTestDataPath(vecto_vehicle_primary_heavyBusExempted);
@@ -88,6 +104,12 @@ namespace Vecto3GUI2020Test.ViewModelTests
 		}
 
 		[Test]
+		public void LoadValidNonExemptedFilesTest()
+		{
+			LoadValidNonExemptedFiles();
+		}
+
+
 		public void LoadValidNonExemptedFiles()
 		{
 			var primaryPath = GetTestDataPath(vecto_vehicle_primary_heavyBusSample);
@@ -95,8 +117,6 @@ namespace Vecto3GUI2020Test.ViewModelTests
 
 			Assert.IsTrue(_createVifViewModel.LoadPrimaryInput(primaryPath));
 			Assert.IsTrue(_createVifViewModel.LoadStageInput(stageInputPath));
-
-
 		}
 
 		[Test]

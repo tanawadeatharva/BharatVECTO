@@ -196,7 +196,17 @@ namespace Vecto3GUI2020Test
 					.Callback<string, string>((message, caption) => 
 						TestContext.WriteLine($"{{caption}}\n {message}"));
 
-				
+				_mockDialogHelper.Setup(dialogHelper =>
+						dialogHelper.ShowErrorMessage(It.IsAny<string>(), It.IsAny<string>()))
+					.Callback<string, string>((message, caption) =>
+						TestContext.WriteLine($"{{caption}}\n {message}"));
+
+				_mockDialogHelper.Setup(dialogHelper =>
+						dialogHelper.ShowErrorMessage(It.IsAny<string>()))
+					.Callback<string, string>((message, caption) =>
+						TestContext.WriteLine($"{{Error}}\n {message}"));
+
+
 			}
 			if (fileToLoad != null) {
 				var filePath = fileToLoad;
