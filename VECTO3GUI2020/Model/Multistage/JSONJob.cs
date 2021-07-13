@@ -1,22 +1,24 @@
 ﻿using System;
+using System.Diagnostics;
 using Newtonsoft.Json;
+using TUGraz.VectoCore;
 using VECTO3GUI2020.ViewModel.Implementation.Common;
 
 namespace VECTO3GUI2020.Model.Multistage
 {
 	public class JSONJob : ObservableObject
 	{
-		private JSONJobHeader _jobHeader;
+		private JSONJobHeader _header;
 
-		public JSONJobHeader JobHeader
+		public JSONJobHeader Header
 		{
-			get => _jobHeader;
-			set => SetProperty(ref _jobHeader, value);
+			get => _header;
+			set => SetProperty(ref _header, value);
 		}
 
 		private JSONJobBody _jobBody;
 
-		private JSONJobBody JobBody
+		public JSONJobBody Body
 		{
 			get => _jobBody;
 			set => SetProperty(ref _jobBody, value);
@@ -27,43 +29,40 @@ namespace VECTO3GUI2020.Model.Multistage
 
 	public class JSONJobHeader : ObservableObject
 	{
-		public class JobHeader : ObservableObject
-		{
-			public const int PrimaryAndInterimVersion = 10;
+		public static int PrimaryAndInterimVersion = 10;
 			//public const int CompletedBusFileVersion = 7;
 
-			private string _createdBy;
-			private DateTime _dateTime;
-			private string _appVersion;
-			private int _fileVersion;
+		private string _createdBy;
+		private DateTime _dateTime;
+		private string _appVersion;
+		private int _fileVersion;
 
 
-			public string CreatedBy
+		public string CreatedBy
+		{
+			get { return _createdBy; }
+			set { SetProperty(ref _createdBy, value); }
+		}
+
+		public DateTime Date
+		{
+			get { return _dateTime; }
+			set { SetProperty(ref _dateTime, value); }
+		}
+
+		public string AppVersion
+		{
+			get { return _appVersion; }
+			set { SetProperty(ref _appVersion, value); }
+		}
+
+		public int FileVersion
+		{
+			get { return _fileVersion; }
+			set
 			{
-				get { return _createdBy; }
-				set { SetProperty(ref _createdBy, value); }
-			}
-
-			public DateTime Date
-			{
-				get { return _dateTime; }
-				set { SetProperty(ref _dateTime, value); }
-			}
-
-			public string AppVersion
-			{
-				get { return _appVersion; }
-				set { SetProperty(ref _appVersion, value); }
-			}
-
-			public int FileVersion
-			{
-				get { return _fileVersion; }
-				set
-				{
-					SetProperty(ref _fileVersion, value);
-					//JobType = JobTypeHelper.GetJobTypeByFileVersion(_fileVersion);
-				}
+				SetProperty(ref _fileVersion, value);
+				//JobType = JobTypeHelper.GetJobTypeByFileVersion(_fileVersion);
 			}
 		}
 	}
@@ -71,19 +70,19 @@ namespace VECTO3GUI2020.Model.Multistage
 
 	public class JSONJobBody : ObservableObject
 	{
-		private string _interimVehicle;
+		private string _interimStage;
 		private string _primaryVehicle;
-
-		public string InterimVehicle
-		{
-			get { return _interimVehicle; }
-			set { SetProperty(ref _interimVehicle, value); }
-		}
 
 		public string PrimaryVehicle
 		{
 			get { return _primaryVehicle; }
 			set { SetProperty(ref _primaryVehicle, value); }
+		}
+
+		public string InterimStage
+		{
+			get { return _interimStage; }
+			set { SetProperty(ref _interimStage, value); }
 		}
 	}
 }
