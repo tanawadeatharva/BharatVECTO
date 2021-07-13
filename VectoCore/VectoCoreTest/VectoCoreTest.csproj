@@ -148,6 +148,7 @@
     <Compile Include="Models\SimulationComponentData\TorqueConverterDataTest.cs" />
     <Compile Include="Models\SimulationComponentData\ValidationTest.cs" />
     <Compile Include="Models\SimulationComponent\ATGearboxTest.cs" />
+    <Compile Include="Models\SimulationComponent\BatterySystemTest.cs" />
     <Compile Include="Models\SimulationComponent\BatteryTest.cs" />
     <Compile Include="Models\SimulationComponent\ElectricMotorTest.cs" />
     <Compile Include="Models\SimulationComponent\EngineFanAuxTest.cs" />

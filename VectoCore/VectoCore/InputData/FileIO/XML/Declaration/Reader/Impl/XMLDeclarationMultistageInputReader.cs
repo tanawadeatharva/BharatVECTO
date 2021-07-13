@@ -703,7 +703,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 		}
 
 
-		public IElectricStorageDeclarationInputData ElectricStorage => null;
+		public IElectricStorageSystemDeclarationInputData ElectricStorage => null;
 
 		public IElectricMachinesDeclarationInputData ElectricMachines => null;
 

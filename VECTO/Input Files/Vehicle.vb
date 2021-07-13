@@ -14,6 +14,7 @@ Imports System.Collections.Generic
 Imports System.ComponentModel.DataAnnotations
 Imports System.IO
 Imports System.Linq
+Imports System.Runtime.Remoting.Messaging
 Imports System.Xml
 Imports TUGraz.VECTO.Input_Files
 Imports TUGraz.VectoCommon.BusAuxiliaries
@@ -79,11 +80,11 @@ Public Class Vehicle
 
 	Public VehicleTankSystem As TankSystem?
 
-	Public ReadOnly BatteryFile As SubPath
 	Public ReadOnly ElectricMotorFile As SubPath
 
-	Public NumBatteryPacks As Integer
-	Public ElectricMotorPosition As PowertrainPosition
+	public ReadOnly ReessPacks As List(Of Tuple(Of String, Integer, Integer))
+
+    Public ElectricMotorPosition As PowertrainPosition
 	Public ElectricMotorCount As Integer
 	Public ElectricMotorRatio As Double
     'Public ElectricMotorMechEff As Double
@@ -108,7 +109,6 @@ Public Class Vehicle
 		PtoLossMap = New SubPath()
 		PtoCycleStandstill = New SubPath()
         PtoCycleDriving = new SubPath()
-		BatteryFile = New SubPath()
 		ElectricMotorFile = New SubPath()
 		ElectricMotorMechLossMap = new SubPath()
 
@@ -760,15 +760,15 @@ Public Class Vehicle
 		End Get
 	End Property
 
-	Public ReadOnly Property ElectricStorage As IElectricStorageEngineeringInputData Implements IVehicleComponentsEngineering.ElectricStorage
+	Public ReadOnly Property ElectricStorage As IElectricStorageSystemEngineeringInputData Implements IVehicleComponentsEngineering.ElectricStorage
 		Get
-			Return New ElectricStorageWrapper(Me)
+			Return New ElectricStorageSystemWrapper(Me)
 		End Get
 	End Property
 
 	Public ReadOnly Property IVehicleComponentsDeclaration_ElectricMachines As IElectricMachinesDeclarationInputData Implements IVehicleComponentsDeclaration.ElectricMachines
 
-	Public ReadOnly Property IVehicleComponentsDeclaration_ElectricStorage As IElectricStorageDeclarationInputData Implements IVehicleComponentsDeclaration.ElectricStorage
+	Public ReadOnly Property IVehicleComponentsDeclaration_ElectricStorage As IElectricStorageSystemDeclarationInputData Implements IVehicleComponentsDeclaration.ElectricStorage
 	Public ReadOnly Property ElectricMachines As IElectricMachinesEngineeringInputData Implements IVehicleComponentsEngineering.ElectricMachines
 		Get
 			Return New ElectricMachineWrapper(Me)
@@ -917,33 +917,57 @@ end Property
 	Public ReadOnly Property IAxlesDeclarationInputData_XMLSource As XmlNode Implements IAxlesDeclarationInputData.XMLSource
 End Class
 
+Public Class ElectricStorageSystemWrapper
+    Implements IElectricStorageSystemEngineeringInputData
+
+    Private _vehicle As Vehicle
+
+    Public Sub New(vehicle As Vehicle)
+        _vehicle = vehicle    
+    End Sub
+
+    Public ReadOnly Property ElectricStorageElements As IList(Of IElectricStorageDeclarationInputData) Implements IElectricStorageSystemDeclarationInputData.ElectricStorageElements
+	get
+			_vehicle.ReessPacks.Select(Function(x) new ElectricStorageWrapper(x, _vehicle.FilePath)).toList()
+	End Get
+    End Property
+    Public ReadOnly Property IElectricStorageSystemEngineeringInputData_ElectricStorageElements As IList(Of IElectricStorageEngineeringInputData) Implements IElectricStorageSystemEngineeringInputData.ElectricStorageElements
+	get
+
+	End Get
+    End Property
+End Class
+
 Public Class ElectricStorageWrapper
 	Implements IElectricStorageEngineeringInputData, IBatteryPackEngineeringInputData
 
-	Protected Vehicle As Vehicle
+    Public Property BatteryFile As SubPath
 
-	Public Sub New(veh As Vehicle)
-		Vehicle = veh
+    Public Sub New(veh As Tuple(Of String,Integer,Integer), filePath As String)
+		count = veh.Item2
+		StringId = veh.Item3
+        BatteryFile = New SubPath
+        BatteryFile.Init(filePath, veh.Item1)
 	End Sub
 
 
-	Public ReadOnly Property REESSPack As IREESSPackInputData Implements IElectricStorageEngineeringInputData.REESSPack
+
+    Public ReadOnly Property REESSPack As IREESSPackInputData Implements IElectricStorageEngineeringInputData.REESSPack
 		Get
 			Return Me
 		End Get
 	End Property
 
 	Public ReadOnly Property Count As Integer Implements IElectricStorageEngineeringInputData.Count
-		Get
-			Return Vehicle.NumBatteryPacks
-		End Get
-	End Property
+		
 
-	Public ReadOnly Property DataSource As DataSource Implements IComponentInputData.DataSource
+    Public ReadOnly Property StringId As Integer Implements IElectricStorageDeclarationInputData.StringId
+
+    Public ReadOnly Property DataSource As DataSource Implements IComponentInputData.DataSource
 		Get
 			Dim retVal As DataSource = New DataSource()
 			retVal.SourceType = DataSourceType.JSONFile
-			retVal.SourceFile = Vehicle.BatteryFile.FullPath
+			retVal.SourceFile = BatteryFile.FullPath
 			Return retVal
 		End Get
 	End Property

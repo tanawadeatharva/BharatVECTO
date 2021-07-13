@@ -284,6 +284,7 @@
     <Compile Include="InputData\FileIO\XML\XMLInputDataNinjectModule.cs" />
     <Compile Include="InputData\Reader\ComponentData\BatteryInternalResistanceReader.cs" />
     <Compile Include="InputData\Reader\ComponentData\BatteryMaxCurrentReader.cs" />
+    <Compile Include="Models\SimulationComponent\Impl\BatterySystem.cs" />
     <Compile Include="Models\SimulationComponent\Impl\PTODriveAuxiliary.cs" />
     <Compile Include="Models\SimulationComponent\Impl\RoadSweeperAuxiliary.cs" />
     <Compile Include="InputData\Reader\ComponentData\ElectricMotorMapReader.cs" />

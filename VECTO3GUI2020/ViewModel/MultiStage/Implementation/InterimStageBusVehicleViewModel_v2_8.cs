@@ -762,7 +762,7 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 		public IAxlesDeclarationInputData AxleWheels => throw new NotImplementedException();
 
 
-		public IElectricStorageDeclarationInputData ElectricStorage => throw new NotImplementedException();
+		public IElectricStorageSystemDeclarationInputData ElectricStorage => throw new NotImplementedException();
 
 		public IElectricMachinesDeclarationInputData ElectricMachines => throw new NotImplementedException();
 

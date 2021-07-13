@@ -129,7 +129,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 
 		public List<Tuple<PowertrainPosition, ElectricMotorData>> ElectricMachinesData { get; internal set; }
 
-		public BatteryData BatteryData { get; internal set; }
+		public BatterySystemData BatteryData { get; internal set; }
 
 		public SuperCapData SuperCapData { get; internal set; }
 

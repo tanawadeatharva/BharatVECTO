@@ -567,14 +567,19 @@ public class JSONFileWriter : IOutputFileWriter
 		WriteFile(header, body, filename);
 	}
 
-	private Dictionary<string, object> GetBattery(IVehicleEngineeringInputData vehicle, string basePath)
+	private Dictionary<string, object>[] GetBattery(IVehicleEngineeringInputData vehicle, string basePath)
 	{
-		var retVal = new Dictionary<string, object>()
-		{
-			{"NumPacks", vehicle.Components.ElectricStorage.Count},
-			{"BatteryFile", GetRelativePath(vehicle.Components.ElectricStorage.REESSPack.DataSource.SourceFile, basePath)}
+
+		var retVal = new List<Dictionary<string, object>>();
+		foreach (var entry in vehicle.Components.ElectricStorage.ElectricStorageElements) {
+
+			 retVal.Add(new Dictionary<string, object>() {
+				{ "NumPacks", entry.Count }, 
+				{ "BatteryFile", GetRelativePath(entry.REESSPack.DataSource.SourceFile, basePath) },
+				{ "StreamId", entry.StringId}
+			});
 		};
-		return retVal;
+		return retVal.ToArray();
 	}
 
 	private Array GetElectricMotors(IVehicleEngineeringInputData vehicle, string basePath)

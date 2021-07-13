@@ -93,6 +93,18 @@ namespace TUGraz.VectoCore.OutputData
 			ModalResultField.EM_Off_,
 		};
 
+		private readonly ModalResultField[] _batteryColumns = new[] {
+			ModalResultField.U0_reess,
+			ModalResultField.U_reess_terminal,
+			ModalResultField.I_reess,
+			ModalResultField.REESSStateOfCharge,
+			ModalResultField.P_reess_terminal,
+			ModalResultField.P_reess_int,
+			ModalResultField.P_reess_loss,
+			ModalResultField.P_reess_charge_max,
+			ModalResultField.P_reess_discharge_max
+		};
+
 		public static readonly IList<ModalResultField> FuelConsumptionSignals = new[] {
 			ModalResultField.FCMap, ModalResultField.FCNCVc, ModalResultField.FCWHTCc, // ModalResultField.FCAAUX,
 			ModalResultField.FCICEStopStart,  ModalResultField.FCFinal
@@ -867,6 +879,28 @@ namespace TUGraz.VectoCore.OutputData
 		{
 			get => CurrentRow[string.Format(key.GetCaption(), pos.GetName())];
 			set => CurrentRow[string.Format(key.GetCaption(), pos.GetName())] = value;
+		}
+
+		public object this[ModalResultField key, int? idx] {
+			get {
+				if (!_batteryColumns.Contains(key)) {
+					throw new VectoException("ModalResult with index is only supported for REESS fields");
+				}
+
+				return idx.HasValue ? CurrentRow[$"{key.GetCaption()}_{idx.Value}"] : CurrentRow[key.GetName()];
+			}
+			set
+			{
+				if (!_batteryColumns.Contains(key)) {
+					throw new VectoException("ModalResult with index is only supported for REESS fields");
+				}
+
+				if (idx.HasValue) {
+					CurrentRow[$"{key.GetCaption()}_{idx.Value}"] = value;
+				} else {
+					CurrentRow[key.GetName()] = value;
+				}
+			}
 		}
 
 		public object this[string auxId]

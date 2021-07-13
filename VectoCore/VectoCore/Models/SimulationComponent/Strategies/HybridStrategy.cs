@@ -557,15 +557,16 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 				shiftStrategyParameters.AllowedGearRangeFC = shiftStrategyParameters.AllowedGearRangeFC.LimitTo(1, 2);
 			}
 
-			var auxEnergyReserve = ModelData.ElectricAuxDemand * StrategyParameters.AuxReserveTime;
-			BatteryDischargeEnergyThreshold = 0.SI<WattSecond>();
-			if (auxEnergyReserve > 0) {
-				var minSoc = Math.Max(ModelData.BatteryData?.MinSOC ?? ModelData.SuperCapData.MinVoltage / ModelData.SuperCapData.MaxVoltage,
-					StrategyParameters.MinSoC);
-				BatteryDischargeEnergyThreshold =
-					ModelData.BatteryData.Capacity * minSoc * ModelData.BatteryData.SOCMap.Lookup(minSoc) +
-					auxEnergyReserve;
-			}
+			// TODO: MQ 20210712 how to handle with batterysystem
+			//var auxEnergyReserve = ModelData.ElectricAuxDemand * StrategyParameters.AuxReserveTime;
+			//BatteryDischargeEnergyThreshold = 0.SI<WattSecond>();
+			//if (auxEnergyReserve > 0) {
+			//	var minSoc = Math.Max(ModelData.BatteryData?.MinSOC ?? ModelData.SuperCapData.MinVoltage / ModelData.SuperCapData.MaxVoltage,
+			//		StrategyParameters.MinSoC);
+			//	BatteryDischargeEnergyThreshold =
+			//		ModelData.BatteryData.Capacity * minSoc * ModelData.BatteryData.SOCMap.Lookup(minSoc) +
+			//		auxEnergyReserve;
+			//}
 			AllowEmergencyShift = false;
 		}
 
@@ -2227,6 +2228,16 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 			foreach (var em in ModelData.ElectricMachinesData) {
 				retVal.MechanicalAssistPower[em.Item1] = null;
 			}
+
+			// TODO: MQ 20210712 how to handle with batterysystem
+			//var auxEnergyReserve = ModelData.ElectricAuxDemand * StrategyParameters.AuxReserveTime;
+			//if (auxEnergyReserve > 0) {
+			//	var minSoc = Math.Max(ModelData.BatteryData?.MinSOC ?? ModelData.SuperCapData.MinVoltage / ModelData.SuperCapData.MaxVoltage,
+			//		StrategyParameters.MinSoC);
+			//	BatteryDischargeEnergyThreshold =
+			//		ModelData.BatteryData.Capacity * minSoc * ModelData.BatteryData.SOCMap.Lookup(minSoc) +
+			//		auxEnergyReserve;
+			//}
 
 			PreviousState.AngularVelocity = outAngularVelocity;
 			PreviousState.GearboxEngaged = true;

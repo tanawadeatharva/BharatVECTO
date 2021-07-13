@@ -52,7 +52,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 {
 	public class JSONVehicleDataV10_HEV_BEV : JSONVehicleDataV9
 	{
-		private JSONElectricStorageEngineeringInputData _batteries;
+		private JSONElectricStorageSystemEngineeringInputData _batteries;
 		private JSONElectricMotors _electricMotors;
 
 		public JSONVehicleDataV10_HEV_BEV(JObject data, string fileName, IJSONVehicleComponents job, bool tolerateMissing = false) :
@@ -69,7 +69,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			return _electricMotors ?? (_electricMotors = ReadMotors());
 		}
 
-		protected override IElectricStorageEngineeringInputData GetElectricStorage()
+		protected override IElectricStorageSystemEngineeringInputData GetElectricStorage()
 		{
 			return _batteries ?? (_batteries = ReadBatteries());
 		}
@@ -122,12 +122,18 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 		}
 		
 
-		protected virtual JSONElectricStorageEngineeringInputData ReadBatteries()
+		protected virtual JSONElectricStorageSystemEngineeringInputData ReadBatteries()
 		{
-			return new JSONElectricStorageEngineeringInputData() {
-				Count = Body["Battery"].GetEx<int>("NumPacks"),
-				REESSPack = JSONInputDataFactory.ReadREESSData(Path.Combine(BasePath, Body["Battery"].GetEx<string>("BatteryFile")), false)
-			};
+			var entries = new List<IElectricStorageEngineeringInputData>();
+			foreach (var entry in Body["Batteries"]) {
+				entries.Add(new JSONElectricStorageEngineeringInputData() {
+					Count = entry.GetEx<int>("NumPacks"),
+					StringId = entry.GetEx<int>("StreamId"),
+					REESSPack = JSONInputDataFactory.ReadREESSData(Path.Combine(BasePath, entry["Battery"].GetEx<string>("BatteryFile")), false)
+				});
+			}
+
+			return new JSONElectricStorageSystemEngineeringInputData(entries);
 		}
 
 		public override TableData ElectricMotorTorqueLimits =>
@@ -381,9 +387,9 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 		IAxlesEngineeringInputData IVehicleComponentsEngineering.AxleWheels => this;
 
-		IElectricStorageEngineeringInputData IVehicleComponentsEngineering.ElectricStorage => GetElectricStorage();
+		IElectricStorageSystemEngineeringInputData IVehicleComponentsEngineering.ElectricStorage => GetElectricStorage();
 
-		protected virtual IElectricStorageEngineeringInputData GetElectricStorage()
+		protected virtual IElectricStorageSystemEngineeringInputData GetElectricStorage()
 		{
 			return null;
 		}
@@ -397,7 +403,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 		public virtual IBusAuxiliariesDeclarationData BusAuxiliaries => null;
 
-		IElectricStorageDeclarationInputData IVehicleComponentsDeclaration.ElectricStorage => GetElectricStorage();
+		IElectricStorageSystemDeclarationInputData IVehicleComponentsDeclaration.ElectricStorage => GetElectricStorage();
 
 		IElectricMachinesDeclarationInputData IVehicleComponentsDeclaration.ElectricMachines => GetElectricMachines();
 

@@ -229,6 +229,12 @@
     <Compile Include="GUI\BusAuxiliariesEngParametersForm.vb">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="GUI\REESSPackDialog.Designer.vb">
+      <DependentUpon>REESSPackDialog.vb</DependentUpon>
+    </Compile>
+    <Compile Include="GUI\REESSPackDialog.vb">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="GUI\HybridStrategyParamsForm.Designer.vb">
       <DependentUpon>HybridStrategyParamsForm.vb</DependentUpon>
     </Compile>
@@ -430,6 +436,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="GUI\BusAuxiliariesEngParametersForm.resx">
       <DependentUpon>BusAuxiliariesEngParametersForm.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GUI\REESSPackDialog.resx">
+      <DependentUpon>REESSPackDialog.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="GUI\HybridStrategyParamsForm.resx">
       <DependentUpon>HybridStrategyParamsForm.vb</DependentUpon>

@@ -1458,7 +1458,7 @@ namespace TUGraz.VectoCore.Tests.Integration.Hybrid
 				? (IHybridControlStrategy) new HybridStrategyAT(runData, container)
 				: new HybridStrategy(runData, container);
 			var es = new ElectricSystem(container);
-			var battery = new Battery(container, batteryData);
+			var battery = new BatterySystem(container, batteryData);
 			battery.Initialize(initialBatCharge);
 
 			var clutch = gearboxType.AutomaticTransmission() ? null :  new SwitchableClutch(container, runData.EngineData);

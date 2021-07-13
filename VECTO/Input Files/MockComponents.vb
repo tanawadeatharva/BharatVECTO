@@ -30,6 +30,6 @@ Public Class MockComponents
 
     Public Property AxleWheels As IAxlesDeclarationInputData Implements IVehicleComponentsDeclaration.AxleWheels
     Public ReadOnly Property BusAuxiliaries As IBusAuxiliariesDeclarationData Implements IVehicleComponentsDeclaration.BusAuxiliaries
-    Public ReadOnly Property ElectricStorage As IElectricStorageDeclarationInputData Implements IVehicleComponentsDeclaration.ElectricStorage
+    Public ReadOnly Property ElectricStorage As IElectricStorageSystemDeclarationInputData Implements IVehicleComponentsDeclaration.ElectricStorage
     Public ReadOnly Property ElectricMachines As IElectricMachinesDeclarationInputData Implements IVehicleComponentsDeclaration.ElectricMachines
 End Class

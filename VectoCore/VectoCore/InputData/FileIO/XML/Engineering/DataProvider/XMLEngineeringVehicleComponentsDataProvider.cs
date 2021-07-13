@@ -91,7 +91,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering.DataProvider
 
 		public IAxlesEngineeringInputData AxleWheels => _axleWheels ?? (_axleWheels = ComponentReader.AxlesEngineeringInputData);
 
-		public virtual IElectricStorageEngineeringInputData ElectricStorage => null;
+		public virtual IElectricStorageSystemEngineeringInputData ElectricStorage => null;
 		public virtual IElectricMachinesEngineeringInputData ElectricMachines => null;
 
 		#endregion
