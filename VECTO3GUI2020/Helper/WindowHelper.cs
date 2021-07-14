@@ -19,12 +19,16 @@ namespace VECTO3GUI2020.Helper
 			var width = viewModelBase?.Height ?? Double.NaN;
 			var sizeToContent = viewModelBase?.SizeToContent ?? SizeToContent.Manual;
 			var title = viewModelBase?.Title ?? GUILabels.DefaultTitle;
+			var minHeight = viewModelBase?.MinHeight ?? 0;
+			var minWidth = viewModelBase?.MinWidth ?? 0;
 
 
 			var window = new Window {
 				Content = viewModel,
 				Height = height,
 				Width = width,
+				MinHeight = minHeight,
+				MinWidth = minWidth,
 				SizeToContent = sizeToContent,
 				WindowStartupLocation = WindowStartupLocation.CenterScreen,
 				Title = title
@@ -34,6 +38,10 @@ namespace VECTO3GUI2020.Helper
 				SetBinding(viewModelBase, window, new PropertyPath(nameof(viewModelBase.Width)), FrameworkElement.WidthProperty);
 				SetBinding(viewModelBase, window, new PropertyPath(nameof(viewModelBase.SizeToContent)), Window.SizeToContentProperty);
 				SetBinding(viewModelBase, window, new PropertyPath(nameof(viewModelBase.Title)), Window.TitleProperty);
+				SetBinding(viewModelBase, window, new PropertyPath(nameof(viewModelBase.SizeToContent)), Window.SizeToContentProperty);
+				SetBinding(viewModelBase, window, new PropertyPath(nameof(viewModelBase.Title)), Window.TitleProperty);
+
+
 			}
 			
 

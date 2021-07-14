@@ -31,6 +31,22 @@ namespace VECTO3GUI2020.ViewModel.Implementation.Common
 			set => SetProperty(ref _height, value);
 		}
 
+		private double? _minHeight;
+
+		public double? MinHeight
+		{
+			get => _minHeight;
+			set => SetProperty(ref _minHeight, value);
+		}
+
+		private double? _minWidth;
+
+		public double? MinWidth
+		{
+			get => _minWidth;
+			set => SetProperty(ref _minWidth, value);
+		}
+
 		public SizeToContent _sizeToContent = SizeToContent.Manual;
 		public SizeToContent SizeToContent
 		{

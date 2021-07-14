@@ -8,6 +8,9 @@ namespace VECTO3GUI2020.ViewModel.Interfaces.Common
 		string Title { get; set; }
 		double? Width { get; set; }
 		double? Height { get; set; }
+
+		double? MinHeight { get; set; }
+		double? MinWidth { get; set; }
 		SizeToContent SizeToContent { get; set; }
 	}
 }
