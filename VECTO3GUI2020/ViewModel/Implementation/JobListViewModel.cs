@@ -267,14 +267,10 @@ namespace VECTO3GUI2020.ViewModel.Implementation
 			try {
 				var inputData = JSONInputDataFactory.ReadJsonJob(fileName, true);
 				return Task.FromResult(_multiStageViewModelFactory.CreateDocumentViewModel(inputData));
-
 			} catch (Exception ex) {
-				throw new VectoException($"File {fileName} not supported", ex);
+				return Task.FromException<IDocumentViewModel>(ex);
+				//_dialogHelper.ShowErrorMessage(ex.Message));
 			}
-
-
-
-			return null;
 		}
 
 		private Task<IDocumentViewModel> LoadXMLFile([NotNull] string fileName)
@@ -304,9 +300,10 @@ namespace VECTO3GUI2020.ViewModel.Implementation
 				}
 				return Task.FromResult(result);
 			}
-			else
-			{
-				throw new VectoXMLException($"{documentType.ToString()} not supported");
+			else {
+				return Task.FromException<IDocumentViewModel>(
+					new VectoXMLException($"{documentType.ToString()} not supported"));
+				//throw new VectoXMLException($"{documentType.ToString()} not supported");
 			}
 
 			return null;
