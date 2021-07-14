@@ -124,6 +124,7 @@ namespace TUGraz.VectoCore.OutputData
 
 		protected VectoRunData _runData;
 		private ICorrectedModalData _correctedModalData;
+		
 		public IModalDataPostProcessor PostProcessingCorrection { set; protected get; }
 
 
@@ -630,6 +631,11 @@ namespace TUGraz.VectoCore.OutputData
 			strCols = strCols.Concat(_additionalColumns);
 			strCols = strCols.Concat(new[] { ModalResultField.ICEOn }.Select(x => x.GetName()));
 			//dataColumns.Add(ModalResultField.altitude);
+
+			foreach (var batKey in BatteryColumns.Keys) {
+				strCols = strCols.Concat(BatteryColumns[batKey].Keys.Where(x => _batterySignals.Contains(x))
+					.Select(x => $"{x.GetName()}_{batKey}"));
+			}
 //#endif
 			var fileSuffix = RunSuffix;
 			if (WriteModalResults) {

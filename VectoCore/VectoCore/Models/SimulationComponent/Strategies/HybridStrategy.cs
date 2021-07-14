@@ -57,6 +57,15 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 			TestPowertrain.HybridController.Initialize(Controller.PreviousState.OutTorque, Controller.PreviousState.OutAngularVelocity);
 			TestPowertrain.Clutch.Initialize(DataBus.ClutchInfo.ClutchLosses);
 			TestPowertrain.Battery?.Initialize(DataBus.BatteryInfo.StateOfCharge);
+			if (TestPowertrain.BatterySystem != null) {
+				var batSystem = DataBus.BatteryInfo as BatterySystem;
+				foreach (var bsKey in batSystem.Batteries.Keys) {
+					for (var i = 0; i < batSystem.Batteries[bsKey].Batteries.Count; i++) {
+						TestPowertrain.BatterySystem.Batteries[bsKey].Batteries[i]
+							.Initialize(batSystem.Batteries[bsKey].Batteries[i].StateOfCharge);
+					}
+				}
+			}
 			TestPowertrain.SuperCap?.Initialize(DataBus.BatteryInfo.StateOfCharge);
 
 			TestPowertrain.Brakes.BrakePower = DataBus.Brakes.BrakePower;

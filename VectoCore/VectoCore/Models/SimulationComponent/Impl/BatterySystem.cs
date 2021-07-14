@@ -68,7 +68,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			public Watt MaxChargePower(Second dt)
 			{
 				var maxCurrent = MaxChargeCurrent(dt);
-				return OpenCircuitVoltage * MaxChargeCurrent(dt) +
+				return OpenCircuitVoltage * maxCurrent +
 						maxCurrent * InternalResistance * maxCurrent;
 			}
 
@@ -128,7 +128,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					b.CommitSimulationStep(time, simulationInterval, container);
 				}
 			}
-			
+			// write battery system average SoC after all battery components - then the SoC property changes from current to
+			// previous state and thus the average matches the individual batteries
+			if (container != null) {
+				container[ModalResultField.REESSStateOfCharge] = StateOfCharge.SI();
+			}
 		}
 
 		protected override void DoWriteModalResults(Second time, Second simulationInterval, IModalDataContainer container)
@@ -140,7 +144,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				CurrentState.TotalCurrent *
 				InternalResistance; // adding both terms because pos. current charges the battery!
 			container[ModalResultField.I_reess] = CurrentState.TotalCurrent;
-			container[ModalResultField.REESSStateOfCharge] = CurrentState.StateOfCharge.SI();
+			//container[ModalResultField.REESSStateOfCharge] = CurrentState.StateOfCharge.SI();
 			container[ModalResultField.P_reess_terminal] = CurrentState.PowerDemand;
 			container[ModalResultField.P_reess_int] = cellVoltage * CurrentState.TotalCurrent;
 			container[ModalResultField.P_reess_loss] = CurrentState.BatteryLoss;
@@ -210,7 +214,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				return PowerDemandExceeded(absTime, dt, powerDemand, maxDischargePower, maxChargePower, dryRun);
 			}
 
-			var averageSoC = (Batteries.Values.Sum(x => x.SoC * x.Capacity) / TotalCapacity).Value();
+			
 			var powerDemands = new Dictionary<int, Watt>();
 			var limitBB = new Dictionary<int, Watt>();
 			var distributedPower = 0.SI<Watt>();
@@ -218,12 +222,14 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				distributedPower = 0.SI<Watt>();
 				var remainingPower = powerDemand - (limitBB.Sum(x => x.Value) ?? 0.SI<Watt>());
 				powerDemands.Clear();
+				var totalCapacity = (Batteries.Where(x => !limitBB.ContainsKey(x.Key)).Sum(x => x.Value.Capacity) ?? 0.SI<AmpereSecond>());
+				var averageSoC = (Batteries.Where(x => !limitBB.ContainsKey(x.Key)).Sum(x => x.Value.SoC * x.Value.Capacity) / totalCapacity).Value();
 				foreach (var bs in Batteries) {
 					if (limitBB.ContainsKey(bs.Key)) {
 						continue;
 					}
 					var delta = 1 - Math.Sign(remainingPower.Value()) * (bs.Value.SoC - averageSoC) / averageSoC;
-					var power = bs.Value.Capacity / TotalCapacity * delta * remainingPower;
+					var power = bs.Value.Capacity / totalCapacity * delta * remainingPower;
 					if (!power.IsBetween(bs.Value.MaxDischargePower(dt), bs.Value.MaxChargePower(dt))) {
 						limitBB[bs.Key] = power.LimitTo(bs.Value.MaxDischargePower(dt), bs.Value.MaxChargePower(dt));
 					} else {
@@ -235,7 +241,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				if (limitBB.Count > 0) {
 					Log.Debug($"BB ${string.Join(", ", limitBB.Keys)} are at max - recalculating power distribution");
 				}
-			} while (!distributedPower.IsEqual(powerDemand));
+			} while (!(distributedPower + (limitBB.Sum(x => x.Value) ?? 0.SI<Watt>())) .IsEqual(powerDemand, 1e-3.SI<Watt>()));
 
 			powerDemands = powerDemands.Concat(limitBB).ToDictionary(x => x.Key, x=> x.Value);
 
