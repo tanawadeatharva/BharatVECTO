@@ -16,7 +16,12 @@
                 <Label Style="{DynamicResource LabelStyle1}">Select Primary Input</Label>
 
                 <DockPanel HorizontalAlignment="Stretch">
-                    <Button DockPanel.Dock="Right" ContentTemplate="{StaticResource TrashIcon}" Width="30" Padding="4" Margin="2 4">
+                    <Button DockPanel.Dock="Right"
+                            Command="{Binding RemovePrimaryCommand}"
+                            ContentTemplate="{StaticResource TrashIcon}"
+                            Width="30" 
+                            Padding="4" 
+                            Margin="2 4">
 
                     </Button>
                     <customControls:FilePicker DockPanel.Dock="Left"  HorizontalAlignment="Stretch"
@@ -26,7 +31,12 @@
                 </DockPanel>
                 <Label Style="{DynamicResource LabelStyle1}">Select Interim/Completed Input</Label>
                 <DockPanel HorizontalAlignment="Stretch">
-                    <Button DockPanel.Dock="Right" ContentTemplate="{StaticResource TrashIcon}" Width="30" Padding="4" Margin="2 4">
+                    <Button Command="{Binding RemoveStageInputCommand}"
+                        DockPanel.Dock="Right" 
+                            ContentTemplate="{StaticResource TrashIcon}"
+                            Width="30" 
+                            Padding="4"
+                            Margin="2 4">
 
                     </Button>
                     <customControls:FilePicker DockPanel.Dock="Left" 

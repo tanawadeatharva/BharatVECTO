@@ -26,10 +26,12 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 	{
 		bool LoadStageInput(string fileName);
 		bool LoadPrimaryInput(string fileName);
-		bool? ExemptedPrimary { get; set; }
-		bool? StageInputExempted { get; set; }
+		bool? IsPrimaryExempted { get; set; }
+		bool? IsStageInputExempted { get; set; }
 		string PrimaryInputPath { get; set; }
 		string StageInputPath { get; set; }
+		IRelayCommand RemoveStageInputCommand { get; }
+		IRelayCommand RemovePrimaryCommand { get; }
 		void SaveJob(string path);
 	}
     public class CreateVifViewModel : ViewModelBase, ICreateVifViewModel
@@ -40,20 +42,20 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 		private readonly IXMLInputDataReader _inputDataReader;
 		private static uint _newVifCounter = 0;
 
-		private bool? _exemptedPrimary;
+		private bool? _isPrimaryExempted;
 
-		public bool? ExemptedPrimary
+		public bool? IsPrimaryExempted
 		{
-			get => _exemptedPrimary;
-			set => SetProperty(ref _exemptedPrimary, value);
+			get => _isPrimaryExempted;
+			set => SetProperty(ref _isPrimaryExempted, value);
 		}
 
-		private bool? _stageInputExempted;
+		private bool? _isStageInputExempted;
 
-		public bool? StageInputExempted
+		public bool? IsStageInputExempted
 		{
-			get => _stageInputExempted;
-			set => SetProperty(ref _stageInputExempted, value);
+			get => _isStageInputExempted;
+			set => SetProperty(ref _isStageInputExempted, value);
 		}
 
 		public CreateVifViewModel(IDialogHelper dialogHelper, 
@@ -65,6 +67,8 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 			Title = "Create VIF";
 			SizeToContent = SizeToContent.WidthAndHeight;
 			_documentName = $"New Vif {++_newVifCounter}";
+			additionalJobInfo.SetParent(this);
+			_additionalJobInfo = additionalJobInfo;
 		}
 
 		public CreateVifViewModel(IInputDataProvider inputData, 
@@ -94,6 +98,7 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 			{
 				if (SetProperty(ref _primaryInputPath, value)) {
 					OnPropertyChanged(nameof(CanBeSimulated));
+					_removePrimaryCommand?.NotifyCanExecuteChanged();
 				}
 			}
 		}
@@ -145,6 +150,27 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 				}
 			}, () => DataSource != null));
 		}
+		public IRelayCommand _removeStageInputCommand;
+
+		public IRelayCommand RemoveStageInputCommand =>
+			_removeStageInputCommand ?? (_removeStageInputCommand = new RelayCommand(() => {
+				StageInputPath = null;
+				IsStageInputExempted = null;
+
+			}, () => PrimaryInputPath != null));
+
+
+
+
+		public IRelayCommand _removePrimaryCommand;
+
+		public IRelayCommand RemovePrimaryCommand => 
+			_removePrimaryCommand ?? (_removePrimaryCommand = new RelayCommand(() => {
+				PrimaryInputPath = null;
+				IsPrimaryExempted = null;
+
+			}, () => PrimaryInputPath != null));
+
 
 		private bool CanBeSaved()
 		{
@@ -273,11 +299,11 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 
 		private bool SetPrimaryInputExempted(bool primaryExempted)
 		{
-			var valid = StageInputExempted == null || StageInputExempted == primaryExempted;
+			var valid = IsStageInputExempted == null || IsStageInputExempted == primaryExempted;
 
 			if (valid)
 			{
-				ExemptedPrimary = primaryExempted;
+				IsPrimaryExempted = primaryExempted;
 			}
 			else
 			{
@@ -294,11 +320,11 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 
 		private bool SetStageInputExempted(bool stageInputExempted)
 		{
-			var valid = ExemptedPrimary == null || ExemptedPrimary == stageInputExempted;
+			var valid = IsPrimaryExempted == null || IsPrimaryExempted == stageInputExempted;
 
 			if (valid)
 			{
-				StageInputExempted = stageInputExempted;
+				IsStageInputExempted = stageInputExempted;
 			}
 			else
 			{
@@ -325,6 +351,7 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 		private bool _selected;
 		private string _documentName;
 		private DataSource _dataSource;
+		private IAdditionalJobInfoViewModel _additionalJobInfo;
 
 		public string DocumentName
 		{
@@ -362,8 +389,8 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 
 		public IAdditionalJobInfoViewModel AdditionalJobInfoVm
 		{
-			get => throw new NotImplementedException();
-			set => throw new NotImplementedException();
+			get => _additionalJobInfo;
+			set => SetProperty(ref _additionalJobInfo, value);
 		}
 
 		#endregion

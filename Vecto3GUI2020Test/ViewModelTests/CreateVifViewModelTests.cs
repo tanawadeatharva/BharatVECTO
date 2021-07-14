@@ -1,5 +1,6 @@
 ﻿using System.Diagnostics;
 using System.IO;
+using System.Windows.Input;
 using Ninject;
 using NUnit.Framework;
 using VECTO3GUI2020.ViewModel.MultiStage.Implementation;
@@ -37,7 +38,7 @@ namespace Vecto3GUI2020Test.ViewModelTests
 			var filePath = GetTestDataPath(fileName);
 			Assert.IsFalse(_createVifViewModel.LoadPrimaryInput(filePath));
 			Assert.IsNull(_createVifViewModel.PrimaryInputPath);
-			Assert.IsNull(_createVifViewModel.ExemptedPrimary);
+			Assert.IsNull(_createVifViewModel.IsPrimaryExempted);
 		}
 
 
@@ -48,7 +49,7 @@ namespace Vecto3GUI2020Test.ViewModelTests
 		{
 			var filePath = GetTestDataPath(fileName);
 			Assert.IsFalse(_createVifViewModel.LoadStageInput(filePath));
-			Assert.IsNull(_createVifViewModel.StageInputExempted);
+			Assert.IsNull(_createVifViewModel.IsStageInputExempted);
 			Assert.IsNull(_createVifViewModel.StageInputPath);
 		}
 
@@ -129,25 +130,48 @@ namespace Vecto3GUI2020Test.ViewModelTests
 
 		}
 
+		[Test]
+		public void RemoveInputs()
+		{
+			LoadValidNonExemptedFiles();
+			Assert.NotNull(_createVifViewModel.PrimaryInputPath);
+			Assert.NotNull(_createVifViewModel.StageInputPath);
 
-		//[TestCase(null, true, true, TestName="StageInputExempted_PrimaryNotSet1")]
-		//[TestCase(null, false, true, TestName = "StageInputExempted_PrimaryNotSet2")]
-		//[TestCase(true, true, true, TestName = "StageInputExempted_PrimaryExempted")]
-		//[TestCase(false, false, true, TestName = "StageInputExempted_PrimaryExempted2")]
-		//[TestCase(true, false, false, TestName = "StageInputExempted_PrimaryNonExempted")]
-		//[TestCase(false, true, false, TestName = "StageInputExempted_PrimaryNonExempted1")]
-		//public void SetStageInputExempted(bool? primaryExpected, bool stageInputExempted, bool expectedResult)
-		//{
+			bool removePrimaryNotified = false;
+			bool removeStageInputNotified = false;
+			_createVifViewModel.RemovePrimaryCommand.CanExecuteChanged +=
+				((sender, args) => removePrimaryNotified = true);
+			_createVifViewModel.RemoveStageInputCommand.CanExecuteChanged +=
+				((sender, args) => removeStageInputNotified = true);
 
-		//}
 
-		//[TestCase(null, true, TestName = "PrimaryNotSet")]
-		//[TestCase(null, true, TestName = "PrimaryNotSet")]
-		//[TestCase(null, true, TestName = "PrimaryNotSet")]
-		//public void SetPrimaryInputExempted(bool? primaryExpected, bool stageInputExempted, bool expectedResult)
-		//{
+			//Remove Primary
+			Assert.IsTrue(_createVifViewModel.RemovePrimaryCommand.CanExecute(null));
+			Assert.IsTrue(_createVifViewModel.RemoveStageInputCommand.CanExecute(null));
 
-		//}
+			_createVifViewModel.RemovePrimaryCommand.Execute(null);
+			Assert.IsTrue(removePrimaryNotified);
+			removePrimaryNotified = false;
+
+			Assert.IsFalse(_createVifViewModel.RemovePrimaryCommand.CanExecute(null));
+			Assert.IsNull(_createVifViewModel.PrimaryInputPath);
+			Assert.IsNull(_createVifViewModel.IsPrimaryExempted);
+
+
+			//Remove Stage Input
+			Assert.IsTrue(_createVifViewModel.RemovePrimaryCommand.CanExecute(null));
+			Assert.IsTrue(_createVifViewModel.RemoveStageInputCommand.CanExecute(null));
+
+			_createVifViewModel.RemoveStageInputCommand.Execute(null);
+			Assert.IsTrue(removeStageInputNotified);
+			removeStageInputNotified = false;
+
+			Assert.IsFalse(_createVifViewModel.RemovePrimaryCommand.CanExecute(null));
+			Assert.IsNull(_createVifViewModel.PrimaryInputPath);
+			Assert.IsNull(_createVifViewModel.IsPrimaryExempted);
+
+
+		}
 
 
 
