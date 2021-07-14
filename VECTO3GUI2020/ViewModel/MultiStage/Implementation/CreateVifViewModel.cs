@@ -1,6 +1,9 @@
 ﻿using System;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
+using System.ServiceModel.Channels;
+using System.Text;
 using System.Windows;
 using System.Windows.Input;
 using InteractiveDataDisplay.WPF;
@@ -41,6 +44,7 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 		private readonly IDialogHelper _dialogHelper;
 		private readonly IXMLInputDataReader _inputDataReader;
 		private static uint _newVifCounter = 0;
+		private readonly uint _newVifCount;
 
 		private bool? _isPrimaryExempted;
 
@@ -58,25 +62,69 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 			set => SetProperty(ref _isStageInputExempted, value);
 		}
 
+		private bool _stageInputHasToBeCompleted;
+		public bool StageInputHasToBeCompleted
+		{
+			get => _stageInputHasToBeCompleted;
+			set => SetProperty(ref _stageInputHasToBeCompleted, value);
+		}
+
+		#region Labeling
+
+		private  string _vifType;
+
+		private string VifType
+		{
+			get => _vifType;
+			set => SetProperty(ref _vifType, value);
+		}
+
+
+		#endregion
+
+
 		public CreateVifViewModel(IDialogHelper dialogHelper, 
 			IXMLInputDataReader inputDataReader, 
 			IAdditionalJobInfoViewModel additionalJobInfo)
 		{
+			SizeToContent = SizeToContent.WidthAndHeight;
+
+			_newVifCount = ++_newVifCounter;
 			_dialogHelper = dialogHelper;
 			_inputDataReader = inputDataReader;
-			Title = "Create VIF";
-			SizeToContent = SizeToContent.WidthAndHeight;
-			_documentName = $"New Vif {++_newVifCounter}";
-			additionalJobInfo.SetParent(this);
 			_additionalJobInfo = additionalJobInfo;
+			additionalJobInfo.SetParent(this);
+			UpdateTitleAndDocumentName();
+
+
+			(this as INotifyPropertyChanged).PropertyChanged += CreateVifViewModel_PropertyChanged;
 		}
 
-		public CreateVifViewModel(IInputDataProvider inputData, 
+        private void CreateVifViewModel_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+			switch (e.PropertyName) {
+				case nameof(DataSource):
+				case nameof(VifType):
+					UpdateTitleAndDocumentName();
+					break;
+				default:
+					break;
+			}
+        }
+
+        public CreateVifViewModel(IInputDataProvider inputData, 
 			IDialogHelper dialogHelper, 
 			IXMLInputDataReader inputDataReader, 
 			IAdditionalJobInfoViewModel additionalJobInfo) : this(dialogHelper, inputDataReader, additionalJobInfo)
 		{
 			SetInputData(inputData);
+		}
+
+		public CreateVifViewModel(bool completed, IDialogHelper dialogHelper, IXMLInputDataReader inputDataReader,
+			IAdditionalJobInfoViewModel additionalJobInfo) : this(dialogHelper, inputDataReader, additionalJobInfo)
+		{
+			_stageInputHasToBeCompleted = completed;
+			VifType = completed ? "Completed Job" : "Primary and Interim Job";
 		}
 
 
@@ -85,9 +133,21 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 			var inputDataProvider = inputData as JSONInputDataV10_PrimaryAndInterimBus;
 			Debug.Assert(inputDataProvider != null);
 			DataSource = inputData.DataSource;
-			Title += $"- {Path.GetFileName(_dataSource.SourceFile)}";
+			OnPropertyChanged(nameof(Title));
 			DocumentName = Path.GetFileNameWithoutExtension(_dataSource.SourceFile);
+		}
 
+		private void UpdateTitleAndDocumentName()
+		{
+			var titleStringBuilder = new StringBuilder();
+			titleStringBuilder.Append("Create ").Append(VifType);
+			if (DataSource != null) {
+				titleStringBuilder.Append(" - ").Append(Path.GetFileName(DataSource.SourceFile));
+			}
+
+			Title = titleStringBuilder.ToString();
+
+			DocumentName = Path.GetFileNameWithoutExtension(_dataSource?.SourceFile) ?? $"New {VifType} {_newVifCount}";
 		}
 
 
@@ -352,6 +412,7 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 		private string _documentName;
 		private DataSource _dataSource;
 		private IAdditionalJobInfoViewModel _additionalJobInfo;
+
 
 		public string DocumentName
 		{

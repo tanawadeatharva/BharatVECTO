@@ -744,7 +744,7 @@ namespace VECTO3GUI2020.ViewModel.Implementation
 		private IDocumentViewModel _selectedJob;
 		private IAsyncRelayCommand _addJobAsync;
 		private IAsyncRelayCommand<IDocumentViewModel> _simulationCommand;
-		private IRelayCommand _newVifCommand;
+		private IRelayCommand<bool> _newVifCommand;
 		private ICommand _newMultiStageFileCommand;
 		private ICommand _openNewFilePopUpCommand;
 		private ICommand _newCompletedInputCommand;
@@ -835,17 +835,17 @@ namespace VECTO3GUI2020.ViewModel.Implementation
 			}
 		}
 
-		public IRelayCommand NewVifCommand
+		public IRelayCommand<bool> NewVifCommand
 		{
 			get
 			{
-				return _newVifCommand ?? (_newVifCommand = new Microsoft.Toolkit.Mvvm.Input.RelayCommand(() => {
-					var newVifViewModel = _multiStageViewModelFactory.GetCreateNewVifViewModel();
+				return _newVifCommand ?? (_newVifCommand = new Microsoft.Toolkit.Mvvm.Input.RelayCommand<bool>((b) => {
+					var newVifViewModel = _multiStageViewModelFactory.GetCreateNewVifViewModel(b);
 					lock (_jobsLock) {
 						_jobs.Add(newVifViewModel);
 					}
 					_windowHelper.ShowWindow(newVifViewModel);
-				}));
+				}, b => true));
 			}
 		}
 

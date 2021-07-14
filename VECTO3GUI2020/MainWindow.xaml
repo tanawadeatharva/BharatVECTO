@@ -5,7 +5,9 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:VECTO3GUI2020"
         xmlns:resx="clr-namespace:VECTO3GUI2020.Properties"
-        xmlns:Implementation="clr-namespace:VECTO3GUI2020.ViewModel.Implementation" d:DataContext="{d:DesignInstance Type=Implementation:MainWindowViewModel}" x:Class="VECTO3GUI2020.MainWindow"
+        xmlns:Implementation="clr-namespace:VECTO3GUI2020.ViewModel.Implementation"
+        xmlns:system="clr-namespace:System;assembly=mscorlib"
+        d:DataContext="{d:DesignInstance Type=Implementation:MainWindowViewModel}" x:Class="VECTO3GUI2020.MainWindow"
         mc:Ignorable="d"
         Title="Vecto" Height="450" Width="820"
         MinWidth="600"
@@ -23,10 +25,21 @@
                 <Menu IsMainMenu="True">
                     <MenuItem Header="File" VerticalAlignment="Stretch">
                         <MenuItem Header="New File">
-                            <MenuItem Header="{x:Static resx:GUILabels.NewPrimaryAndInterimJob}" Command="{Binding JobListVm.NewVifCommand}"/>
                             <MenuItem Header="{x:Static resx:GUILabels.NewInterimCompletedJob}" Command="{Binding JobListVm.NewManufacturingStageFileCommand}"/>
-                            <MenuItem Header="{x:Static resx:GUILabels.NewCompleteJob}"></MenuItem>
-                            <Separator></Separator>
+                            <MenuItem Header="{x:Static resx:GUILabels.NewPrimaryAndInterimJob}" 
+                                      Command="{Binding JobListVm.NewVifCommand}" >
+                                <MenuItem.CommandParameter>
+                                    <system:Boolean>False</system:Boolean>
+                                </MenuItem.CommandParameter>
+                            </MenuItem>
+
+                            <MenuItem Header="{x:Static resx:GUILabels.NewCompleteJob}"
+                                      Command="{Binding JobListVm.NewVifCommand}">
+                                <MenuItem.CommandParameter>
+                                    <system:Boolean>True</system:Boolean>
+                                </MenuItem.CommandParameter>
+                            </MenuItem>
+                                <Separator></Separator>
                             <MenuItem Header="Create interim/completeted input" Command="{Binding JobListVm.NewCompletedInputCommand}"/>
                             <MenuItem Header="Create extemted interim/completed input" Command="{Binding JobListVm.NewExemptedCompletedInputCommand}"/>
                         </MenuItem>

@@ -121,7 +121,7 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 		private IAirdragDeclarationInputData _consolidatedAirdragInputData;
 		private string _airdragFilePath;
 		private readonly IMultistageDependencies _dependencies;
-		private bool _showConsolidatedData;
+		private bool _showConsolidatedData = true;
 
 		public ICommand LoadAirdragFileCommand
 		{

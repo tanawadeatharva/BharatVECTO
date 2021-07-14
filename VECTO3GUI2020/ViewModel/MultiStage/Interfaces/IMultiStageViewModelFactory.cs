@@ -59,6 +59,7 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Interfaces
 		IMultistageAuxiliariesViewModel GetAuxiliariesViewModel(
 			IBusAuxiliariesDeclarationData consolidatedAuxiliariesInputData);
 
+		ICreateVifViewModel GetCreateNewVifViewModel(bool completed);
 		ICreateVifViewModel GetCreateNewVifViewModel();
 
 		//IViewModelBase CreateNewMultiStageJobViewModel();

@@ -29,7 +29,12 @@
                                                Command="{Binding SelectPrimaryInputFileCommand}"/>
 
                 </DockPanel>
-                <Label Style="{DynamicResource LabelStyle1}">Select Interim/Completed Input</Label>
+                <Label Style="{DynamicResource LabelStyle1}"
+                       Visibility="{Binding StageInputHasToBeCompleted, 
+                    Converter={StaticResource InvertedBoolToVisibilityConverter}}">Select Interim Input</Label>
+                <Label Style="{DynamicResource LabelStyle1}" 
+                       Visibility="{Binding StageInputHasToBeCompleted, 
+                    Converter={StaticResource BooleanToVisibilityConverter}}">Select Completed Input</Label>
                 <DockPanel HorizontalAlignment="Stretch">
                     <Button Command="{Binding RemoveStageInputCommand}"
                         DockPanel.Dock="Right" 
@@ -48,7 +53,7 @@
             </StackPanel>
             <DockPanel DockPanel.Dock="Bottom" LastChildFill="False">
                 <UniformGrid DockPanel.Dock="Right" Rows="1" Width="500" HorizontalAlignment="Right">
-                    <Button Style="{StaticResource MultiStageButtonStyle1}">Create new VIF</Button>
+                    <Button Style="{StaticResource MultiStageButtonStyle1}">Create</Button>
                     <Button Style="{StaticResource MultiStageButtonStyle1}" Command="{Binding SaveJobAsCommand}">Save Job as ...</Button>
                     <Button Style="{StaticResource MultiStageButtonStyle1}" Command="{Binding SaveJobCommand}">Save Job</Button>
                     <Button Style="{StaticResource MultiStageButtonStyle1}"

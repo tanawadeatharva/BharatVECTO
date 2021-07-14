@@ -79,6 +79,11 @@ namespace VECTO3GUI2020.Ninject
 			return _multiStageVmFactoryDefaultInstanceProvider.GetAuxiliariesViewModel(consolidatedAuxiliariesInputData);
 		}
 
+		public ICreateVifViewModel GetCreateNewVifViewModel(bool completed)
+		{
+			return _multiStageVmFactoryDefaultInstanceProvider.GetCreateNewVifViewModel(completed);
+		}
+
 		public ICreateVifViewModel GetCreateNewVifViewModel()
 		{
 			return _multiStageVmFactoryDefaultInstanceProvider.GetCreateNewVifViewModel();

@@ -14,7 +14,7 @@ namespace VECTO3GUI2020.ViewModel.Interfaces
 		ICommand NewManufacturingStageFileCommand { get; }
 		ICommand NewCompletedInputCommand { get; }
 		ICommand NewExemptedCompletedInputCommand { get; }
-		IRelayCommand NewVifCommand { get; }
+		IRelayCommand<bool> NewVifCommand { get; }
 		ICommand EditDocument { get; set; }
 		ICommand ViewXMLFile { get; set; }
 		IAsyncRelayCommand RemoveJob { get; set; }
