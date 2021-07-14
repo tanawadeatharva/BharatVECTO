@@ -694,38 +694,57 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			return retVal;
 		}
 
-		public BatteryData CreateBatteryData(IElectricStorageEngineeringInputData batteryInputData, double initialSOC)
+		public BatterySystemData CreateBatteryData(IElectricStorageSystemEngineeringInputData batteryInputData, double initialSOC)
 		{
-			if (batteryInputData == null || batteryInputData.REESSPack.StorageType != REESSType.Battery) {
+			if (batteryInputData == null) {
 				return null;
 			}
 
-			var bat = batteryInputData.REESSPack as IBatteryPackEngineeringInputData;
+			var bat = batteryInputData.ElectricStorageElements.Where(x => x.REESSPack.StorageType == REESSType.Battery).ToArray();
 
-			return new BatteryData() {
-				MinSOC = bat.MinSOC,
-				MaxSOC = bat.MaxSOC,
-				MaxCurrent = BatteryMaxCurrentReader.Create(bat.MaxCurrentMap, batteryInputData.Count),
-				Capacity = batteryInputData.Count * bat.Capacity,
-				InternalResistance = BatteryInternalResistanceReader.Create(bat.InternalResistanceCurve, batteryInputData.Count),
-				SOCMap = BatterySOCReader.Create(bat.VoltageCurve),
-				InitialSoC = initialSOC
-			};
+			var retVal = new BatterySystemData();
+			foreach (var entry in bat) {
+                var b = entry.REESSPack as IBatteryPackDeclarationInputData;
+                if (b == null) {
+                    continue;
+                }
+
+                for (var i = 0; i < entry.Count; i++) {
+					retVal.Batteries.Add(Tuple.Create(entry.StringId, new BatteryData() {
+						MinSOC = b.MinSOC,
+						MaxSOC = b.MaxSOC,
+						MaxCurrent = BatteryMaxCurrentReader.Create(b.MaxCurrentMap, entry.Count),
+						Capacity = b.Capacity,
+						InternalResistance =
+							BatteryInternalResistanceReader.Create(b.InternalResistanceCurve, 1),
+						SOCMap = BatterySOCReader.Create(b.VoltageCurve),
+					}));
+				}
+			}
+
+			retVal.InitialSoC = initialSOC;
+			return retVal;
 		}
 
-		public SuperCapData CreateSuperCapData(IElectricStorageEngineeringInputData reessInputData, double initialSOC)
+		public SuperCapData CreateSuperCapData(IElectricStorageSystemEngineeringInputData reessInputData, double initialSOC)
 		{
-			if (reessInputData == null || reessInputData.REESSPack.StorageType != REESSType.SuperCap)
+			if (reessInputData == null)
 			{
 				return null;
 			}
 
-			var superCap = reessInputData.REESSPack as ISuperCapEngineeringInputData;
+			var superCaps = reessInputData.ElectricStorageElements.Where(x => x.REESSPack.StorageType == REESSType.SuperCap).ToArray();
+
+			var superCap = superCaps.FirstOrDefault()?.REESSPack as ISuperCapDeclarationInputData;
+
+			if (superCap == null) {
+				return null;
+			}
 
 			return new SuperCapData()
 			{
-				Capacity = reessInputData.Count * superCap.Capacity,
-				InternalResistance = superCap.InternalResistance / reessInputData.Count,
+				Capacity = superCaps.First().Count * superCap.Capacity,
+				InternalResistance = superCap.InternalResistance / superCaps.First().Count,
 				MinVoltage = superCap.MinVoltage,
 				MaxVoltage = superCap.MaxVoltage,
 				MaxCurrentCharge = superCap.MaxCurrentCharge,

@@ -615,6 +615,27 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 		
 		public int Count { get; internal set; }
+		public int StringId { get; internal set; }
 	}
 
+	public class JSONElectricStorageSystemEngineeringInputData : IElectricStorageSystemEngineeringInputData
+	{
+		private IList<IElectricStorageEngineeringInputData> _electricStorageElements;
+
+
+		public JSONElectricStorageSystemEngineeringInputData(IList<IElectricStorageEngineeringInputData> entries)
+		{
+			_electricStorageElements = entries;
+		}
+
+		public IList<IElectricStorageEngineeringInputData> ElectricStorageElements => _electricStorageElements;
+
+		#region Implementation of IElectricStorageSystemDeclarationInputData
+
+		IList<IElectricStorageDeclarationInputData> IElectricStorageSystemDeclarationInputData.ElectricStorageElements => _electricStorageElements.Cast<IElectricStorageDeclarationInputData>().ToList();
+
+		#endregion
+	}
+
+	
 }

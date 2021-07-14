@@ -226,8 +226,8 @@ namespace TUGraz.VectoCommon.InputData
 		IAxlesDeclarationInputData AxleWheels { get; }
 
 		IBusAuxiliariesDeclarationData BusAuxiliaries { get; }
-
-		IElectricStorageDeclarationInputData ElectricStorage { get; }
+		
+		IElectricStorageSystemDeclarationInputData ElectricStorage { get; }
 
 		IElectricMachinesDeclarationInputData ElectricMachines { get; }
 	}
@@ -761,11 +761,20 @@ namespace TUGraz.VectoCommon.InputData
 		public TableData MechanicalTransmissionLossMap { get; set; }
 	}
 
+	
+
+	public interface IElectricStorageSystemDeclarationInputData 
+	{
+		IList<IElectricStorageDeclarationInputData> ElectricStorageElements { get; }
+	}
+
 	public interface IElectricStorageDeclarationInputData
 	{
 		IREESSPackInputData REESSPack { get; }
 
 		int Count { get; }
+
+		int StringId { get; }
 	}
 
 	public enum REESSType
@@ -777,6 +786,7 @@ namespace TUGraz.VectoCommon.InputData
 	public interface IREESSPackInputData : IComponentInputData
 	{
 		REESSType StorageType { get; }
+
 	}
 
 	public interface IBatteryPackDeclarationInputData : IREESSPackInputData

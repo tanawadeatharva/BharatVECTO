@@ -102,5 +102,6 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 
 		public REESSType StorageType => Body["REESSType"] == null ? REESSType.Battery : Body.GetEx<string>("REESSType").ParseEnum<REESSType>();
+		//public int StreamNumber { get; }
 	}
 }

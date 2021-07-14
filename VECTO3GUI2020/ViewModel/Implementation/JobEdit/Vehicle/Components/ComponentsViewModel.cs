@@ -143,7 +143,7 @@ namespace VECTO3GUI2020.ViewModel.Implementation.JobEdit.Vehicle.Components
 			set => throw new NotImplementedException();
 		}
 
-		public IElectricStorageDeclarationInputData ElectricStorage => throw new NotImplementedException();
+		public IElectricStorageSystemDeclarationInputData ElectricStorage => throw new NotImplementedException();
 
 		public IElectricMachinesDeclarationInputData ElectricMachines => throw new NotImplementedException();
 

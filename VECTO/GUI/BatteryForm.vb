@@ -162,7 +162,7 @@ Public Class BatteryForm
         Dim inputData As IEngineeringInputDataProvider = TryCast(JSONInputDataFactory.ReadComponentData(file),
                                                                 IEngineeringInputDataProvider)
 
-        Dim reess as IREESSPackInputData = inputData.JobInputData.Vehicle.Components.ElectricStorage.REESSPack
+        Dim reess as IREESSPackInputData = inputData.JobInputData.Vehicle.Components.ElectricStorage.ElectricStorageElements.FirstOrDefault().REESSPack
 
         If Cfg.DeclMode <> reess.SavedInDeclarationMode Then
             Select Case WrongMode()
@@ -266,10 +266,10 @@ Public Class BatteryForm
         End Select
 
         If AutoSendTo Then
-            If VehicleForm.Visible Then
-                If UCase(FileRepl(VehicleForm.tbBattery.Text, JobDir)) <> UCase(file) Then _
-                    VehicleForm.tbBattery.Text = GetFilenameWithoutDirectory(file, JobDir)
-                VectoJobForm.UpdatePic()
+            If REESSPAckDialog.Visible Then
+                If UCase(FileRepl(REESSPAckDialog.tbBattery.Text, JobDir)) <> UCase(file) Then _
+                    REESSPAckDialog.tbBattery.Text = GetFilenameWithoutDirectory(file, JobDir)
+                'VectoJobForm.UpdatePic()
             End If
         End If
 

@@ -93,6 +93,21 @@ namespace TUGraz.VectoCore.OutputData
 			ModalResultField.EM_Off_,
 		};
 
+		private readonly ModalResultField[] _batterySignals = new[] {
+			ModalResultField.U0_reess,
+			ModalResultField.U_reess_terminal,
+			ModalResultField.I_reess,
+			ModalResultField.REESSStateOfCharge,
+			ModalResultField.P_reess_terminal,
+			ModalResultField.P_reess_int,
+			ModalResultField.P_reess_loss,
+			ModalResultField.P_reess_charge_max,
+			ModalResultField.P_reess_discharge_max
+		};
+
+		protected Dictionary<int, Dictionary<ModalResultField, DataColumn>> BatteryColumns =
+			new Dictionary<int, Dictionary<ModalResultField, DataColumn>>();
+
 		public static readonly IList<ModalResultField> FuelConsumptionSignals = new[] {
 			ModalResultField.FCMap, ModalResultField.FCNCVc, ModalResultField.FCWHTCc, // ModalResultField.FCAAUX,
 			ModalResultField.FCICEStopStart,  ModalResultField.FCFinal
@@ -109,6 +124,7 @@ namespace TUGraz.VectoCore.OutputData
 
 		protected VectoRunData _runData;
 		private ICorrectedModalData _correctedModalData;
+		
 		public IModalDataPostProcessor PostProcessingCorrection { set; protected get; }
 
 
@@ -615,6 +631,11 @@ namespace TUGraz.VectoCore.OutputData
 			strCols = strCols.Concat(_additionalColumns);
 			strCols = strCols.Concat(new[] { ModalResultField.ICEOn }.Select(x => x.GetName()));
 			//dataColumns.Add(ModalResultField.altitude);
+
+			foreach (var batKey in BatteryColumns.Keys) {
+				strCols = strCols.Concat(BatteryColumns[batKey].Keys.Where(x => _batterySignals.Contains(x))
+					.Select(x => $"{x.GetName()}_{batKey}"));
+			}
 //#endif
 			var fileSuffix = RunSuffix;
 			if (WriteModalResults) {
@@ -867,6 +888,40 @@ namespace TUGraz.VectoCore.OutputData
 		{
 			get => CurrentRow[string.Format(key.GetCaption(), pos.GetName())];
 			set => CurrentRow[string.Format(key.GetCaption(), pos.GetName())] = value;
+		}
+
+		public object this[ModalResultField key, int? idx] {
+			get {
+				if (!_batterySignals.Contains(key)) {
+					throw new VectoException("ModalResult with index is only supported for REESS fields");
+				}
+
+				return idx.HasValue ? CurrentRow[$"{key.GetCaption()}_{idx.Value}"] : CurrentRow[key.GetName()];
+			}
+			set
+			{
+				if (idx == null) {
+					CurrentRow[key.GetName()] = value;
+				} else {
+					if (!_batterySignals.Contains(key)) {
+						throw new VectoException("ModalResult with index is only supported for REESS fields");
+					}
+					if (!BatteryColumns.ContainsKey(idx.Value)) {
+						BatteryColumns[idx.Value] = new Dictionary<ModalResultField, DataColumn>();
+					}
+
+					var entry = BatteryColumns[idx.Value];
+					if (!entry.ContainsKey(key)) {
+						var col = Data.Columns.Add($"{key.GetName()}_{idx.Value}", typeof(SI));
+						col.ExtendedProperties[ModalResults.ExtendedPropertyNames.Decimals] = key.GetAttribute().Decimals;
+						col.ExtendedProperties[ModalResults.ExtendedPropertyNames.OutputFactor] = key.GetAttribute().OutputFactor;
+						col.ExtendedProperties[ModalResults.ExtendedPropertyNames.ShowUnit] = key.GetAttribute().ShowUnit;
+						entry[key] = col;
+					}
+
+					CurrentRow[entry[key]] = value;
+				}
+			}
 		}
 
 		public object this[string auxId]

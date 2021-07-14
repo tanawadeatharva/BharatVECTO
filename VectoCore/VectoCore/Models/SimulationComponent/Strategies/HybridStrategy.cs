@@ -57,6 +57,15 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 			TestPowertrain.HybridController.Initialize(Controller.PreviousState.OutTorque, Controller.PreviousState.OutAngularVelocity);
 			TestPowertrain.Clutch.Initialize(DataBus.ClutchInfo.ClutchLosses);
 			TestPowertrain.Battery?.Initialize(DataBus.BatteryInfo.StateOfCharge);
+			if (TestPowertrain.BatterySystem != null) {
+				var batSystem = DataBus.BatteryInfo as BatterySystem;
+				foreach (var bsKey in batSystem.Batteries.Keys) {
+					for (var i = 0; i < batSystem.Batteries[bsKey].Batteries.Count; i++) {
+						TestPowertrain.BatterySystem.Batteries[bsKey].Batteries[i]
+							.Initialize(batSystem.Batteries[bsKey].Batteries[i].StateOfCharge);
+					}
+				}
+			}
 			TestPowertrain.SuperCap?.Initialize(DataBus.BatteryInfo.StateOfCharge);
 
 			TestPowertrain.Brakes.BrakePower = DataBus.Brakes.BrakePower;
@@ -557,16 +566,17 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 				shiftStrategyParameters.AllowedGearRangeFC = shiftStrategyParameters.AllowedGearRangeFC.LimitTo(1, 2);
 			}
 
-			var auxEnergyReserve = ModelData.ElectricAuxDemand * StrategyParameters.AuxReserveTime;
-			BatteryDischargeEnergyThreshold = 0.SI<WattSecond>();
-			if (auxEnergyReserve > 0) {
-				var minSoc = Math.Max(ModelData.BatteryData?.MinSOC ?? ModelData.SuperCapData.MinVoltage / ModelData.SuperCapData.MaxVoltage,
-					StrategyParameters.MinSoC);
-				BatteryDischargeEnergyThreshold =
-					ModelData.BatteryData.Capacity * minSoc * ModelData.BatteryData.SOCMap.Lookup(minSoc) +
-					auxEnergyReserve;
-			}
-			AllowEmergencyShift = false;
+            // TODO: MQ 20210712 how to handle with batterysystem
+            //var auxEnergyReserve = ModelData.ElectricAuxDemand * StrategyParameters.AuxReserveTime;
+            BatteryDischargeEnergyThreshold = 0.SI<WattSecond>();
+            //if (auxEnergyReserve > 0) {
+            //	var minSoc = Math.Max(ModelData.BatteryData?.MinSOC ?? ModelData.SuperCapData.MinVoltage / ModelData.SuperCapData.MaxVoltage,
+            //		StrategyParameters.MinSoC);
+            //	BatteryDischargeEnergyThreshold =
+            //		ModelData.BatteryData.Capacity * minSoc * ModelData.BatteryData.SOCMap.Lookup(minSoc) +
+            //		auxEnergyReserve;
+            //}
+            AllowEmergencyShift = false;
 		}
 
 		public virtual IHybridController Controller { protected get; set; }
@@ -2229,6 +2239,16 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 			foreach (var em in ModelData.ElectricMachinesData) {
 				retVal.MechanicalAssistPower[em.Item1] = null;
 			}
+
+			// TODO: MQ 20210712 how to handle with batterysystem
+			//var auxEnergyReserve = ModelData.ElectricAuxDemand * StrategyParameters.AuxReserveTime;
+			//if (auxEnergyReserve > 0) {
+			//	var minSoc = Math.Max(ModelData.BatteryData?.MinSOC ?? ModelData.SuperCapData.MinVoltage / ModelData.SuperCapData.MaxVoltage,
+			//		StrategyParameters.MinSoC);
+			//	BatteryDischargeEnergyThreshold =
+			//		ModelData.BatteryData.Capacity * minSoc * ModelData.BatteryData.SOCMap.Lookup(minSoc) +
+			//		auxEnergyReserve;
+			//}
 
 			PreviousState.AngularVelocity = outAngularVelocity;
 			PreviousState.GearboxEngaged = true;

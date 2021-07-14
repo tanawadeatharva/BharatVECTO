@@ -19,6 +19,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies {
 		
 		public SimpleHybridController HybridController;
 		public Battery Battery;
+		public BatterySystem BatterySystem;
 		public SuperCap SuperCap;
 		public Clutch Clutch;
 		public IBrakes Brakes;
@@ -36,6 +37,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies {
 			
 			HybridController = Container.HybridController as SimpleHybridController;
 			Battery = Container.BatteryInfo as Battery;
+			BatterySystem = container.BatteryInfo as BatterySystem;
+			
 			SuperCap = Container.BatteryInfo as SuperCap;
 			Clutch = Container.ClutchInfo as Clutch;
 			CombustionEngine = Container.EngineInfo as StopStartCombustionEngine;

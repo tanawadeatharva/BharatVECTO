@@ -688,7 +688,7 @@ namespace TUGraz.VectoCore.Tests.Integration.BatteryElectric
 			
 
 			var es = new ElectricSystem(container);
-			var battery = new Battery(container, batteryData);
+			var battery = new BatterySystem(container, batteryData);
 			battery.Initialize(initialBatCharge);
 
 			var ctl = new BatteryElectricMotorController(container, es);
