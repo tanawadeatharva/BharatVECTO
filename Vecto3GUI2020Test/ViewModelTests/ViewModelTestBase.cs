@@ -81,6 +81,11 @@ namespace Vecto3GUI2020Test
 
 			var className = TestContext.CurrentContext.Test.ClassName.Replace("Vecto3GUI2020Test.", "");
 			var testName = TestContext.CurrentContext.Test.Name;
+			var invalidPathChars = Path.GetInvalidPathChars();
+			foreach (var invalidPathChar in invalidPathChars) {
+				testName = testName.Replace(invalidPathChar, '_');
+			}
+
 			var testOutputDirPath = Path.Combine(SourceDirectoryRoot + @"\Testdata\output\" + className + "\\" + testName);
 
 			//Create output directory
