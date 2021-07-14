@@ -61,6 +61,9 @@ namespace VECTO3GUI2020.Ninject
 			Bind<IAdditionalJobInfoViewModel>().To<AdditionalJobInfoViewModelNewVif>()
 				.WhenInjectedInto(typeof(ICreateVifViewModel));
 
+			Bind<IAdditionalJobInfoViewModel>().To<AdditionalJobInfoViewModelStageInput>()
+				.WhenInjectedInto(typeof(IStageViewModelBase));
+
 			Bind<JSONJob>().ToSelf();
 		}
 	}

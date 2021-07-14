@@ -26,41 +26,51 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 		private bool _selected;
 		private static uint _newDocumentCounter = 0;
 
-		public StageInputViewModel(bool exemptedVehicle, IMultiStageViewModelFactory multiStageViewModelFactory) : base(multiStageViewModelFactory)
+		private StageInputViewModel(IMultiStageViewModelFactory multistageViewModelFactory,
+			IAdditionalJobInfoViewModel additionalJobInfoViewModel) : base(multistageViewModelFactory)
+		{
+			_documentType = XmlDocumentType.DeclarationJobData;
+			_additionalJobInfoViewModel = additionalJobInfoViewModel;
+			_additionalJobInfoViewModel.SetParent(this);
+		}
+
+
+		public StageInputViewModel(bool exemptedVehicle, IMultiStageViewModelFactory multiStageViewModelFactory, IAdditionalJobInfoViewModel additionalJobInfoViewModel) : this(multiStageViewModelFactory, additionalJobInfoViewModel)
 		{
 			_vehicleViewModel = _viewModelFactory.CreateStageInputVehicleViewModel(
 				exemptedVehicle
 				? InterimStageBusVehicleViewModel_v2_8.VERSION_EXEMPTED
 				: InterimStageBusVehicleViewModel_v2_8.VERSION) as IMultistageVehicleViewModel;
 
-			Debug.Assert(_vehicleViewModel != null);
 			Title = "Edit Stage Input - New File";
-			_documentType = XmlDocumentType.DeclarationJobData;
+
 			_documentName = $"New {(exemptedVehicle ? "Exempted " : "")}Stage Input {++_newDocumentCounter}";
 			Init();
 		}
 
-		public StageInputViewModel(IDeclarationInputDataProvider inputData, IMultiStageViewModelFactory multiStageViewModelFactory) : base(multiStageViewModelFactory)
+		public StageInputViewModel(IDeclarationInputDataProvider inputData, IMultiStageViewModelFactory multiStageViewModelFactory, IAdditionalJobInfoViewModel additionalJobInfoViewModel) : this(multiStageViewModelFactory,additionalJobInfoViewModel)
 		{
 			_documentName = inputData.JobInputData.JobName;
 			_vehicleViewModel =
 				_viewModelFactory.CreateStageInputVehicleViewModel(inputData.JobInputData.Vehicle) as IMultistageVehicleViewModel;
 			(_vehicleViewModel as InterimStageBusVehicleViewModel_v2_8).ShowConsolidatedData = false;
-			_dataSource = inputData.DataSource;
-			_documentType = XmlDocumentType.DeclarationJobData;
-			Title = $"Edit Stage Input - {Path.GetFileName(_dataSource.SourceFile)}";
 
+			_dataSource = inputData.DataSource;
+
+			Title = $"Edit Stage Input - {Path.GetFileName(_dataSource.SourceFile)}";
 			Init();
 		}
 
 		#region Overrides of StageViewModelBase
-
+		/// <summary>
+		/// Called in base class after input data is loaded.
+		/// </summary>
+		/// <param name="loadedInputData"></param>
 		protected override void LoadStageInputDataFollowUp(IDeclarationInputDataProvider loadedInputData)
 		{
 			DataSource = loadedInputData.DataSource;
 			UpdateTitle();			
 			DocumentName = loadedInputData.JobInputData.JobName;
-
 		}
 
 		#endregion
@@ -116,11 +126,11 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 			get => false;
 			set => throw new System.NotImplementedException();
 		}
-
+		private IAdditionalJobInfoViewModel _additionalJobInfoViewModel;
 		public IAdditionalJobInfoViewModel AdditionalJobInfoVm
 		{
-			get => throw new NotImplementedException();
-			set => throw new NotImplementedException();
+			get => _additionalJobInfoViewModel;
+			set => SetProperty(ref _additionalJobInfoViewModel, value);
 		}
 
 		#endregion

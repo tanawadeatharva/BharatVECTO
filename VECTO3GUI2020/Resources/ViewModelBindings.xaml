@@ -235,7 +235,7 @@
     </DataTemplate>
 
     <DataTemplate DataType="{x:Type multistageimpl:CreateVifViewModel}">
-        <multistageviews:CreateVifView></multistageviews:CreateVifView>
+        <multistageviews:CreateVifView/>
     </DataTemplate>
     <!--#endregion-->
 
@@ -244,7 +244,15 @@
     </DataTemplate>
 
     <DataTemplate DataType="{x:Type common:AdditionalJobInfoViewModelMultiStage}">
-        <additionaljobInfoViews:AdditionalJobInfoViewMultiStage></additionaljobInfoViews:AdditionalJobInfoViewMultiStage>
+        <additionaljobInfoViews:AdditionalJobInfoViewMultiStage/>
+    </DataTemplate>
+
+    <DataTemplate DataType="{x:Type common:AdditionalJobInfoViewModelNewVif}">
+        <additionaljobInfoViews:AdditionalJobInfoViewNewVIF/>
+    </DataTemplate>
+
+    <DataTemplate DataType="{x:Type common:AdditionalJobInfoViewModelStageInput}">
+        <additionaljobInfoViews:AdditionalJobInfoStageInput/>
     </DataTemplate>
 
 

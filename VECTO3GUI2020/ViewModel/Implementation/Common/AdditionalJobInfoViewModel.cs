@@ -3,6 +3,7 @@ using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Linq;
 using System.Windows;
+using System.Windows.Media.TextFormatting;
 using TUGraz.VectoCommon.InputData;
 using VECTO3GUI2020.ViewModel.Interfaces.Common;
 using VECTO3GUI2020.ViewModel.MultiStage.Implementation;
@@ -13,23 +14,22 @@ namespace VECTO3GUI2020.ViewModel.Implementation.Common
 	{
 		void SetParent(IViewModelBase parent);
 	}
-	public class AdditionalJobInfoViewModelBase : ViewModelBase, IAdditionalJobInfoViewModel
+	public abstract class AdditionalJobInfoViewModelBase : ViewModelBase, IAdditionalJobInfoViewModel
 	{
-		private IViewModelBase _parent;
 
 		#region Implementation of IAdditionalJobInfoViewModel
 
 		public string Information { get; } = "Nothing to show here";
 
+		public abstract void SetParent(IViewModelBase parent);
 
 
-
-
-		public virtual void SetParent(IViewModelBase parent)
+		public AdditionalJobInfoViewModelBase()
 		{
-			_parent = parent;
+			SizeToContent = SizeToContent.WidthAndHeight;
+			MinHeight = 200;
+			MinWidth = 300;
 		}
-
 		#endregion
 	}
 
@@ -42,7 +42,6 @@ namespace VECTO3GUI2020.ViewModel.Implementation.Common
 		public AdditionalJobInfoViewModelMultiStage()
 		{
 			Title = "Multistage Job Info";
-			SizeToContent = SizeToContent.WidthAndHeight;
 		}
 
 		#region Overrides of AdditionalJobInfoViewModelBase
@@ -99,11 +98,22 @@ namespace VECTO3GUI2020.ViewModel.Implementation.Common
 			_parent = parent as CreateVifViewModel;
 			Debug.Assert(_parent != null);
 
-			//if()
-
 
 		}
 
+		#endregion
+	}
+
+	public class AdditionalJobInfoViewModelStageInput : AdditionalJobInfoViewModelBase
+	{
+		private IStageViewModelBase stageViewModel;
+		#region Overrides of AdditionalJobInfoViewModelBase
+
+		public override void SetParent(IViewModelBase parent)
+		{
+			stageViewModel = parent as IStageViewModelBase;
+			Debug.Assert(stageViewModel != null);
+		}
 		#endregion
 	}
 }

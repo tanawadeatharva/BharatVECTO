@@ -433,6 +433,9 @@
     <Compile Include="Views\MessageView.xaml.cs">
       <DependentUpon>MessageView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\Multistage\AdditionalJobInfoViews\AdditionalJobInfoStageInput.xaml.cs">
+      <DependentUpon>AdditionalJobInfoStageInput.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\Multistage\AdditionalJobInfoViews\AdditionalJobInfoViewMultiStage.xaml.cs">
       <DependentUpon>AdditionalJobInfoViewMultiStage.xaml</DependentUpon>
     </Compile>
@@ -703,6 +706,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\MessageView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Multistage\AdditionalJobInfoViews\AdditionalJobInfoStageInput.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
