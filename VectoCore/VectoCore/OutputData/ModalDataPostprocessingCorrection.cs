@@ -49,6 +49,8 @@ namespace TUGraz.VectoCore.OutputData
 
 			SetAuxHeaterDemand(modData, r, duration);
 
+			SetReesCorrectionDemand(modData, runData, r);
+
 			var kilogramCO2PerMeter = 0.SI<KilogramPerMeter>();
 
 			var firstFuel = true;
@@ -71,6 +73,33 @@ namespace TUGraz.VectoCore.OutputData
 			return r;
 		}
 
+		private void SetReesCorrectionDemand(IModalDataContainer modData, VectoRunData runData,
+			CorrectedModalData r)
+		{
+			var em = runData.ElectricMachinesData?.FirstOrDefault();
+			
+			if (em != null) {
+				var deltaEReess = modData.TimeIntegral<WattSecond>(ModalResultField.P_reess_int.GetName());
+				var startSoc = modData.REESSStartSoC();
+				var endSoc = modData.REESSEndSoC();
+                var emEff = 0.0;
+                if (endSoc < startSoc) {
+					var etaEmChg = modData.ElectricMotorEfficiencyGenerate(em.Item1);
+					var etaReessChg = (modData.WorkREESSChargeInternal() / modData.WorkREESSChargeTerminal()).Value();
+					emEff = 1.0 / (etaEmChg * etaReessChg);
+				} 
+				if (endSoc > startSoc) {
+					var etaEmDischg = modData.ElectricMotorEfficiencyDrive(em.Item1);
+					var etaReessDischg = modData.WorkREESSDischargeTerminal() / modData.WorkREESSDischargeInternal();
+					emEff = etaEmDischg * etaReessDischg;
+				}
+
+				r.DeltaEReessMech = -deltaEReess * emEff;
+			} else {
+				r.DeltaEReessMech = 0.SI<WattSecond>();
+			}
+		}
+
 		private static FuelConsumptionCorrection SetFuelConsumptionCorrection(IModalDataContainer modData, VectoRunData runData,
 			CorrectedModalData r, IFuelProperties fuel)
 		{
@@ -89,6 +118,9 @@ namespace TUGraz.VectoCore.OutputData
 			var comp =
 				runData.BusAuxiliaries?.PneumaticUserInputsConfig.CompressorMap
 					.Interpolate(runData.EngineData.IdleSpeed);
+
+			
+
 			var f = new FuelConsumptionCorrection {
 				Fuel = fuel,
 				Distance = distance != null && distance.IsGreater(0) ? distance : null,
@@ -117,7 +149,7 @@ namespace TUGraz.VectoCore.OutputData
 				FcBusAuxPSDragICEOffDriving = comp == null
 					? 0.SI<Kilogram>()
 					: comp.PowerOff * r.ICEOffTimeDriving * engLine * (1 - essParams.UtilityFactorDriving),
-
+				FcREESSSoc = r.DeltaEReessMech * engLine,
 				FcBusAuxEs = engLine * r.WorkBusAuxESMech,
 				FcWHR = engLine * r.WorkWHR,
 				FcAuxHtr = 0.SI<Kilogram>()
@@ -320,6 +352,7 @@ namespace TUGraz.VectoCore.OutputData
 		public WattSecond EnergyDCDCMissing { get; set; }
 		public NormLiter CorrectedAirDemand { get; set; }
 		public NormLiter DeltaAir { get; set; }
+		public WattSecond DeltaEReessMech { get; set; }
 
 		#endregion
 	}
@@ -355,6 +388,8 @@ namespace TUGraz.VectoCore.OutputData
 		}
 		public Kilogram FcBusAuxEs { get; set; }
 		public Kilogram FcWHR { get; set; }
+		public Kilogram FcREESSSoc { get; set; }
+
 		public Kilogram FcAuxHtr { get; set; }
 
 
@@ -362,7 +397,9 @@ namespace TUGraz.VectoCore.OutputData
 		public Kilogram FcBusAuxPsCorr => FcEssCorr + FcBusAuxPs;
 		public Kilogram FcBusAuxEsCorr => FcBusAuxPsCorr + FcBusAuxEs;
 		public Kilogram FcWHRCorr => FcBusAuxEsCorr + FcWHR;
-		public Kilogram FcAuxHtrCorr => FcWHRCorr + FcAuxHtr;
+		public Kilogram FcREESSSoCCorr => FcWHRCorr + FcREESSSoc;
+
+		public Kilogram FcAuxHtrCorr => FcREESSSoCCorr + FcAuxHtr;
 
 		public Kilogram FcFinal => FcAuxHtrCorr;
 
@@ -376,8 +413,10 @@ namespace TUGraz.VectoCore.OutputData
 		public KilogramPerSecond FC_WHR_CORR_H => Duration != null ? (FcWHRCorr / Duration) : null;
 		public KilogramPerSecond FC_AUXHTR_H => Duration != null ? (FcAuxHtr / Duration) : null;
 		public KilogramPerSecond FC_AUXHTR_H_CORR => Duration != null ? (FcAuxHtrCorr / Duration) : null;
+		public KilogramPerSecond FC_REESS_SOC_H => Duration != null ? (FcREESSSoCCorr / Duration) : null;
 		public KilogramPerSecond FC_FINAL_H => Duration != null ? FcFinal / Duration : null;
 
+		public KilogramPerMeter FC_REESS_SOC_KM => Distance != null ? (FcREESSSoCCorr / Distance) : null;
 		public KilogramPerMeter FC_ESS_CORR_KM => Distance != null ? (FcEssCorr / Distance) : null;
 		public KilogramPerMeter FC_WHR_CORR_KM => Distance != null ? (FcWHRCorr / Distance) : null;
 		public KilogramPerMeter FC_BusAux_PS_CORR_KM => Distance != null ? (FcBusAuxPsCorr / Distance) : null;

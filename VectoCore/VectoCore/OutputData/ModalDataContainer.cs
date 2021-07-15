@@ -466,14 +466,14 @@ namespace TUGraz.VectoCore.OutputData
 			return (integral / Duration.Value()).SI<PerSecond>();
         }
 
-		public double BatteryStartSoC()
+		public double REESSStartSoC()
 		{
-			return Data.AsEnumerable().Cast<DataRow>().First().Field<SI>(ModalResultField.REESSStateOfCharge.GetName()).Value() * 100;
+			return (Data.AsEnumerable().Cast<DataRow>().First().Field<SI>(ModalResultField.REESSStateOfCharge.GetName())?.Value() ?? 0) * 100;
 		}
 
 		public double REESSEndSoC()
 		{
-			return Data.AsEnumerable().Cast<DataRow>().Last().Field<SI>(ModalResultField.REESSStateOfCharge.GetName()).Value() * 100;
+			return (Data.AsEnumerable().Cast<DataRow>().Last().Field<SI>(ModalResultField.REESSStateOfCharge.GetName())?.Value() ?? 0) * 100;
         }
 
 		public WattSecond REESSLoss()

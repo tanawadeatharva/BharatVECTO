@@ -316,7 +316,7 @@ namespace TUGraz.VectoCore.Tests.Utils
 			throw new NotImplementedException();
 		}
 
-		public double REESS_StartSoC()
+		public double REESSStartSoC()
 		{
 			throw new NotImplementedException();
 		}
