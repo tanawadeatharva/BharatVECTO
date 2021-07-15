@@ -10,6 +10,7 @@ using InteractiveDataDisplay.WPF;
 using Microsoft.Toolkit.Mvvm.Input;
 using Microsoft.WindowsAPICodePack.Shell.Interop;
 using Newtonsoft.Json;
+using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCore.InputData.FileIO.JSON;
@@ -62,11 +63,11 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 			set => SetProperty(ref _isStageInputExempted, value);
 		}
 
-		private bool _stageInputHasToBeCompleted;
-		public bool StageInputHasToBeCompleted
+		private bool _completed;
+		public bool Completed
 		{
-			get => _stageInputHasToBeCompleted;
-			set => SetProperty(ref _stageInputHasToBeCompleted, value);
+			get => _completed;
+			set => SetProperty(ref _completed, value);
 		}
 
 		#region Labeling
@@ -75,10 +76,12 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 
 		private string VifType
 		{
-			get => _vifType;
+			get
+			{
+				return Completed ? "Completed Job" : "Primary Job with Interim Input";
+			}
 			set => SetProperty(ref _vifType, value);
 		}
-
 
 		#endregion
 
@@ -104,7 +107,7 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
         {
 			switch (e.PropertyName) {
 				case nameof(DataSource):
-				case nameof(VifType):
+				case nameof(Completed):
 					UpdateTitleAndDocumentName();
 					break;
 				default:
@@ -123,18 +126,26 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 		public CreateVifViewModel(bool completed, IDialogHelper dialogHelper, IXMLInputDataReader inputDataReader,
 			IAdditionalJobInfoViewModel additionalJobInfo) : this(dialogHelper, inputDataReader, additionalJobInfo)
 		{
-			_stageInputHasToBeCompleted = completed;
-			VifType = completed ? "Completed Job" : "Primary and Interim Job";
+			_completed = completed;
 		}
 
 
 		private void SetInputData(IInputDataProvider inputData)
 		{
-			var inputDataProvider = inputData as JSONInputDataV10_PrimaryAndInterimBus;
+			var inputDataProvider = inputData as JSONInputDataV10_PrimaryAndStageInputBus;
 			Debug.Assert(inputDataProvider != null);
+			
+
+			if (inputDataProvider.StageInputData != null && (inputDataProvider.StageInputData.ExemptedVehicle !=
+															inputDataProvider.PrimaryVehicle.ExemptedVehicle)) {
+				throw new VectoException("Can't combine exempted and non-exempted input data");
+			}
+
+			Completed = inputDataProvider.Completed ?? false;
+			StageInputPath = inputDataProvider.StageInputData?.DataSource?.SourcePath;
+			PrimaryInputPath = inputDataProvider.StageInputData?.DataSource?.SourcePath;
 			DataSource = inputData.DataSource;
-			OnPropertyChanged(nameof(Title));
-			DocumentName = Path.GetFileNameWithoutExtension(_dataSource.SourceFile);
+			UpdateTitleAndDocumentName();
 		}
 
 		private void UpdateTitleAndDocumentName()
@@ -146,7 +157,6 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 			}
 
 			Title = titleStringBuilder.ToString();
-
 			DocumentName = Path.GetFileNameWithoutExtension(_dataSource?.SourceFile) ?? $"New {VifType} {_newVifCount}";
 		}
 
@@ -171,6 +181,7 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 				if (SetProperty(ref _stageInputPath, value))
 				{
 					OnPropertyChanged(nameof(CanBeSimulated));
+					_removeStageInputCommand?.NotifyCanExecuteChanged();
 				}
 			}
 		}
@@ -217,7 +228,7 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 				StageInputPath = null;
 				IsStageInputExempted = null;
 
-			}, () => PrimaryInputPath != null));
+			}, () => StageInputPath != null));
 
 
 
@@ -398,11 +409,6 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 			}
 			return valid;
 		}
-
-
-
-
-
 
 
 		#endregion

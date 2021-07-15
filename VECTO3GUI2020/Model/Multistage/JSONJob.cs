@@ -72,6 +72,7 @@ namespace VECTO3GUI2020.Model.Multistage
 	{
 		private string _interimStage;
 		private string _primaryVehicle;
+		private bool _completed;
 
 		public string PrimaryVehicle
 		{
@@ -83,6 +84,12 @@ namespace VECTO3GUI2020.Model.Multistage
 		{
 			get { return _interimStage; }
 			set { SetProperty(ref _interimStage, value); }
+		}
+
+		public bool Completed
+		{
+			get => _completed;
+			set => SetProperty(ref _completed, value);
 		}
 	}
 }

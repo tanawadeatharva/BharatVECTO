@@ -121,9 +121,9 @@
     <value>VECTO</value>
   </data>
   <data name="NewPrimaryAndInterimJob" xml:space="preserve">
-    <value>New Primary and Interim Job</value>
+    <value>New Primary Job with Interim Input</value>
   </data>
-  <data name="NewInterimCompletedJob" xml:space="preserve">
+  <data name="NewInterimOrCompletedJob" xml:space="preserve">
     <value>New Interim/Completed Job</value>
   </data>
   <data name="NewCompleteJob" xml:space="preserve">

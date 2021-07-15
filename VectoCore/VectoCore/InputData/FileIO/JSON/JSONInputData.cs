@@ -1124,7 +1124,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 	}
 
 
-	public class JSONInputDataV10_PrimaryAndInterimBus : JSONFile, IInputDataProvider
+	public class JSONInputDataV10_PrimaryAndStageInputBus : JSONFile, IInputDataProvider
 	{
 		private readonly IXMLInputDataReader _xmlInputReader;
 		private string _primaryVehicleInputDataPath;
@@ -1140,9 +1140,16 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			_stageInputData ?? (_stageInputData =
 				_xmlInputReader.CreateDeclaration(_stageInputDataPath).JobInputData.Vehicle);
 
+		private bool? _completed;
+
+		public bool? Completed
+		{
+			get => _completed;
+			set => _completed = value;
+		}
 
 
-		public JSONInputDataV10_PrimaryAndInterimBus(JObject data, string filename, bool tolerateMissing = false) :
+		public JSONInputDataV10_PrimaryAndStageInputBus(JObject data, string filename, bool tolerateMissing = false) :
 			base(data, filename, tolerateMissing)
 		{
 			var kernel = new StandardKernel(new VectoNinjectModule());
@@ -1151,8 +1158,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 			_primaryVehicleInputDataPath = Body.GetEx<string>(JsonKeys.PrimaryVehicle);
 			_stageInputDataPath = Body.GetEx<string>(JsonKeys.InterimStage);
-
-
+			_completed = Body.GetValueOrDefault<bool>(JsonKeys.Completed);
 
 		}
 

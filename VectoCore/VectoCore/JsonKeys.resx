@@ -384,4 +384,7 @@
   <data name="InterimStage" xml:space="preserve">
     <value>InterimStage</value>
   </data>
+  <data name="Completed" xml:space="preserve">
+    <value>Completed</value>
+  </data>
 </root>

@@ -147,7 +147,6 @@ namespace Vecto3GUI2020Test.ViewModelTests
 
 			//Remove Primary
 			Assert.IsTrue(_createVifViewModel.RemovePrimaryCommand.CanExecute(null));
-			Assert.IsTrue(_createVifViewModel.RemoveStageInputCommand.CanExecute(null));
 
 			_createVifViewModel.RemovePrimaryCommand.Execute(null);
 			Assert.IsTrue(removePrimaryNotified);
@@ -159,7 +158,6 @@ namespace Vecto3GUI2020Test.ViewModelTests
 
 
 			//Remove Stage Input
-			Assert.IsTrue(_createVifViewModel.RemovePrimaryCommand.CanExecute(null));
 			Assert.IsTrue(_createVifViewModel.RemoveStageInputCommand.CanExecute(null));
 
 			_createVifViewModel.RemoveStageInputCommand.Execute(null);
@@ -169,13 +167,6 @@ namespace Vecto3GUI2020Test.ViewModelTests
 			Assert.IsFalse(_createVifViewModel.RemovePrimaryCommand.CanExecute(null));
 			Assert.IsNull(_createVifViewModel.PrimaryInputPath);
 			Assert.IsNull(_createVifViewModel.IsPrimaryExempted);
-
-
 		}
-
-
-
-
-
 	}
 }

@@ -7,15 +7,22 @@
              xmlns:customControls="clr-namespace:VECTO3GUI2020.Views.Multistage.CustomControls"
              xmlns:implementation="clr-namespace:VECTO3GUI2020.ViewModel.Implementation"
              xmlns:implementation1="clr-namespace:VECTO3GUI2020.ViewModel.MultiStage.Implementation"
-             Height="240"
              mc:Ignorable="d"
+             MinWidth="500"
+             MinHeight="200"
              d:DesignHeight="450" d:DesignWidth="800" d:DataContext="{d:DesignInstance implementation1:CreateVifViewModel}">
     <Grid>
-        <DockPanel Width="600" LastChildFill="False" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
-            <StackPanel DockPanel.Dock="Top">
+        <DockPanel LastChildFill="False" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+            <Grid DockPanel.Dock="Top" VerticalAlignment="Top">
+                <Grid.RowDefinitions>
+                    <RowDefinition></RowDefinition>
+                    <RowDefinition></RowDefinition>
+                    <RowDefinition></RowDefinition>
+                    <RowDefinition></RowDefinition>
+                </Grid.RowDefinitions>
                 <Label Style="{DynamicResource LabelStyle1}">Select Primary Input</Label>
 
-                <DockPanel HorizontalAlignment="Stretch">
+                <DockPanel Grid.Row="1" HorizontalAlignment="Stretch" DockPanel.Dock="Top">
                     <Button DockPanel.Dock="Right"
                             Command="{Binding RemovePrimaryCommand}"
                             ContentTemplate="{StaticResource TrashIcon}"
@@ -29,13 +36,13 @@
                                                Command="{Binding SelectPrimaryInputFileCommand}"/>
 
                 </DockPanel>
-                <Label Style="{DynamicResource LabelStyle1}"
-                       Visibility="{Binding StageInputHasToBeCompleted, 
+                <Label Grid.Row="2" Style="{DynamicResource LabelStyle1}"
+                       Visibility="{Binding Completed, 
                     Converter={StaticResource InvertedBoolToVisibilityConverter}}">Select Interim Input</Label>
-                <Label Style="{DynamicResource LabelStyle1}" 
-                       Visibility="{Binding StageInputHasToBeCompleted, 
+                <Label Grid.Row="2"  Style="{DynamicResource LabelStyle1}" 
+                       Visibility="{Binding Completed, 
                     Converter={StaticResource BooleanToVisibilityConverter}}">Select Completed Input</Label>
-                <DockPanel HorizontalAlignment="Stretch">
+                <DockPanel Grid.Row="3" HorizontalAlignment="Stretch">
                     <Button Command="{Binding RemoveStageInputCommand}"
                         DockPanel.Dock="Right" 
                             ContentTemplate="{StaticResource TrashIcon}"
@@ -48,9 +55,7 @@
                                                Text="{Binding StageInputPath}"
                                                Command="{Binding SelectCompletedInputFileCommand}"></customControls:FilePicker>
                 </DockPanel>
-
-               
-            </StackPanel>
+            </Grid>
             <DockPanel DockPanel.Dock="Bottom" LastChildFill="False">
                 <UniformGrid DockPanel.Dock="Right" Rows="1" Width="500" HorizontalAlignment="Right">
                     <Button Style="{StaticResource MultiStageButtonStyle1}">Create</Button>

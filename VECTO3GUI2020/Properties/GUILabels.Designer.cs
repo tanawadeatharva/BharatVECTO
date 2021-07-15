@@ -81,14 +81,14 @@ namespace VECTO3GUI2020.Properties {
         /// <summary>
         ///   Looks up a localized string similar to New Interim/Completed Job.
         /// </summary>
-        public static string NewInterimCompletedJob {
+        public static string NewInterimOrCompletedJob {
             get {
-                return ResourceManager.GetString("NewInterimCompletedJob", resourceCulture);
+                return ResourceManager.GetString("NewInterimOrCompletedJob", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to New Primary and Interim Job.
+        ///   Looks up a localized string similar to New Primary Job with Interim Input.
         /// </summary>
         public static string NewPrimaryAndInterimJob {
             get {
