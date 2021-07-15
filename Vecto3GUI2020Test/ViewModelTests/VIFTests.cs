@@ -136,7 +136,9 @@ namespace Vecto3GUI2020Test.ViewModelTests
 			vehicleVm.LowEntry = true;
 			vehicleVm.Height = Meter.Create(2.6);
 			vehicleVm.NumberPassengerSeatsUpperDeck = 2;
+			vehicleVm.NumberPassengersStandingLowerDeck = 13;
 			vehicleVm.NumberPassengerSeatsLowerDeck = 10;
+			vehicleVm.NumberPassengersStandingUpperDeck = 12;
 
 
 			

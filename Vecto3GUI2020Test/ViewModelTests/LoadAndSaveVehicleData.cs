@@ -327,9 +327,9 @@ namespace Vecto3GUI2020Test
 			Assert.AreEqual(LegislativeClass.M3, vehicleViewModel.LegislativeClass);
 			Assert.AreEqual(500, vehicleViewModel.CurbMassChassis.Value());//CorrectedActualMass
 			Assert.AreEqual(3500, vehicleViewModel.GrossVehicleMassRating.Value());//TechnicalPermissibleMaximumLadenMass
-			Assert.AreEqual(false, vehicleViewModel.AirdragModifiedMultistage);
-			Assert.AreEqual(AIRDRAGMODIFIED.FALSE, vehicleViewModel.AirdragModifiedEnum);
-			Assert.AreEqual(AIRDRAGMODIFIED.FALSE, vehicleViewModel.ParameterViewModels[nameof(vehicleViewModel.AirdragModifiedEnum)].CurrentContent);
+			Assert.AreEqual(true, vehicleViewModel.AirdragModifiedMultistage);
+			Assert.AreEqual(AIRDRAGMODIFIED.TRUE, vehicleViewModel.AirdragModifiedEnum);
+			Assert.AreEqual(AIRDRAGMODIFIED.TRUE, vehicleViewModel.ParameterViewModels[nameof(vehicleViewModel.AirdragModifiedEnum)].CurrentContent);
 			Assert.AreEqual(TankSystem.Compressed, vehicleViewModel.TankSystem);//NgTankSystem
 			Assert.AreEqual(RegistrationClass.II_III, vehicleViewModel.RegisteredClass);//ClassBus
 			Assert.AreEqual(1, vehicleViewModel.NumberPassengerSeatsLowerDeck);
