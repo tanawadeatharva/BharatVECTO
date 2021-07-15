@@ -95,5 +95,14 @@ namespace VECTO3GUI2020.Properties {
                 return ResourceManager.GetString("NewPrimaryAndInterimJob", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to No Manufacturing Steps.
+        /// </summary>
+        public static string no_manufacturing_stages {
+            get {
+                return ResourceManager.GetString("no manufacturing stages", resourceCulture);
+            }
+        }
     }
 }

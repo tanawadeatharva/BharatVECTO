@@ -144,7 +144,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 			get
 			{
 				if (ManufacturingStages.IsNullOrEmpty()) {
-					_invalidEntries.Add("There are no Manufacturing Steps");
+					_invalidEntries.Add("no manufacturing stages");
 					return false;
 				}
 
