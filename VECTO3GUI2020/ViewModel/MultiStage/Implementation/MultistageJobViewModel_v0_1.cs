@@ -298,7 +298,7 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 
 		public bool Selected
 		{
-			get => _selected;
+			get => _selected && CanBeSimulated;
 			set => SetProperty(ref _selected, value);
 		}
 

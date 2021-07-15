@@ -28,13 +28,13 @@ namespace VECTO3GUI2020.ViewModel.Implementation.Document
 
 		public bool Selected
 		{
-			get => _selected;
+			get => _selected && CanBeSimulated;
 			set => SetProperty(ref _selected, value);
 		}
 
 		public bool CanBeSimulated
 		{
-			get => throw new System.NotImplementedException();
+			get => false;
 			set => throw new System.NotImplementedException();
 		}
 

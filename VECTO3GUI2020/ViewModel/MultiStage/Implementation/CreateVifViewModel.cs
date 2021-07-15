@@ -36,7 +36,7 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 		string StageInputPath { get; set; }
 		IRelayCommand RemoveStageInputCommand { get; }
 		IRelayCommand RemovePrimaryCommand { get; }
-		void SaveJob(string path);
+		string SaveJob(string path);
 	}
     public class CreateVifViewModel : ViewModelBase, ICreateVifViewModel
 	{
@@ -254,10 +254,10 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 			return true;
 		}
 
-		public void SaveJob(string path)
+		public string SaveJob(string path)
 		{
 			if (path == null) {
-				return;
+				return null;
 			}
 
 			var jsonJob = new JSONJob() {
@@ -279,6 +279,7 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 			Debug.WriteLine(jsonString);
 			File.WriteAllText(path, jsonString);
 			SetInputData(JSONInputDataFactory.ReadJsonJob(path));
+			return path;
 		}
 
 		private ICommand _saveJobAsCommand;
@@ -444,7 +445,7 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 
 		public bool Selected
 		{
-			get => _selected;
+			get => _selected && CanBeSimulated;
 			set => SetProperty(ref _selected, value);
 		}
 
