@@ -59,7 +59,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent
 				dataBus.AddComponent(this);
 		}
 
-		public void CommitSimulationStep(Second time, Second simulationInterval, IModalDataContainer container)
+		public virtual void CommitSimulationStep(Second time, Second simulationInterval, IModalDataContainer container)
 		{
 			if (container != null) {
 				DoWriteModalResults(time, simulationInterval, container);

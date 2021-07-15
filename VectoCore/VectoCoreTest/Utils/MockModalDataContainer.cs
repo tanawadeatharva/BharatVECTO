@@ -54,6 +54,9 @@ namespace TUGraz.VectoCore.Tests.Utils
 		protected Dictionary<IFuelProperties, Dictionary<ModalResultField, DataColumn>> FuelColumns =
 			new Dictionary<IFuelProperties, Dictionary<ModalResultField, DataColumn>>();
 
+		protected Dictionary<int, Dictionary<ModalResultField, DataColumn>> BatteryColumns =
+			new Dictionary<int, Dictionary<ModalResultField, DataColumn>>();
+
 		private Second _duration;
 		private Meter _distance;
 
@@ -129,6 +132,41 @@ namespace TUGraz.VectoCore.Tests.Utils
 		{
 			get => throw new NotImplementedException();
 			set => throw new NotImplementedException();
+		}
+
+		public object this[ModalResultField key, int? pos]
+		{
+			get
+			{
+				if (pos == null) {
+					return CurrentRow[key.GetName()];
+				}
+
+				if (!BatteryColumns.ContainsKey(pos.Value)) {
+					return null;
+				}
+
+				var entry = BatteryColumns[pos.Value];
+				return !entry.ContainsKey(key) ? null : CurrentRow[entry[key]];
+			}
+			set
+			{
+				if (pos == null) {
+					CurrentRow[key.GetName()] = value;
+				} else {
+					if (!BatteryColumns.ContainsKey(pos.Value)) {
+						BatteryColumns[pos.Value] = new Dictionary<ModalResultField, DataColumn>();
+					}
+
+					var entry = BatteryColumns[pos.Value];
+					if (!entry.ContainsKey(key)) {
+						var col = Data.Columns.Add($"{key.GetName()}_{pos.Value}", typeof(SI));
+						entry[key] = col;
+					}
+
+					CurrentRow[entry[key]] = value;
+				}
+			}
 		}
 
 		public object this[string auxId]

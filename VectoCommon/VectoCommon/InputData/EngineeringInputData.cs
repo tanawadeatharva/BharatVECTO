@@ -161,7 +161,7 @@ namespace TUGraz.VectoCommon.InputData
 
 		//IBusAuxiliariesEngineeringData BusAuxiliaries { get; }
 
-		IElectricStorageEngineeringInputData ElectricStorage { get; }
+		IElectricStorageSystemEngineeringInputData ElectricStorage { get; }
 
 		IElectricMachinesEngineeringInputData ElectricMachines { get; }
 	}
@@ -483,6 +483,11 @@ namespace TUGraz.VectoCommon.InputData
 	public interface IElectricStorageEngineeringInputData : IElectricStorageDeclarationInputData
 	{
 
+	}
+
+	public interface IElectricStorageSystemEngineeringInputData  : IElectricStorageSystemDeclarationInputData
+	{
+		new IList<IElectricStorageEngineeringInputData> ElectricStorageElements { get; }
 	}
 
 	public interface IBatteryPackEngineeringInputData : IBatteryPackDeclarationInputData

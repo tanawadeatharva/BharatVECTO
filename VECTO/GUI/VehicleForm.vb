@@ -45,6 +45,12 @@ Public Class VehicleForm
 		Ratio = 1
 	End Enum
 
+	private Enum REESPackTbl
+		ReessFile = 0
+		Count = 1
+		StringId = 2
+	End Enum
+
 
 	Private _axlDlog As VehicleAxleDialog
 	Private _hdVclass As VehicleClass
@@ -56,6 +62,7 @@ Public Class VehicleForm
 	Public JobDir As String = ""
 	Private _torqueLimitDlog As VehicleTorqueLimitDialog
 	private _emRatioPerGearDlog as EMGearRatioDialog
+	private _reessPackDlg as REESSPackDialog
 	Friend VehicleType As VectoSimulationJobType
 
 	'Close - Check for unsaved changes
@@ -132,6 +139,7 @@ Public Class VehicleForm
 		_axlDlog = New VehicleAxleDialog
 		_torqueLimitDlog = New VehicleTorqueLimitDialog()
 		_emRatioPerGearDlog = new EMGearRatioDialog()
+		_reessPackDlg = New REESSPAckDialog()
 
 		cbPTOType.ValueMember = "Value"
 		cbPTOType.DisplayMember = "Label"
@@ -473,9 +481,11 @@ Public Class VehicleForm
 			If(angledrive.LossMap Is Nothing, "", GetRelativePath(angledrive.LossMap.Source, basePath))
 
 		If (vehicle.VehicleType = VectoSimulationJobType.BatteryElectricVehicle OrElse vehicle.VehicleType = VectoSimulationJobType.ParallelHybridVehicle) Then
-			tbBattery.Text = GetRelativePath(vehicle.Components.ElectricStorage.REESSPack.DataSource.SourceFile, basePath)
-			tbBatteryPackCnt.Text = vehicle.Components.ElectricStorage.Count.ToGUIFormat()
-			tbInitialSoC.Text = (vehicle.InitialSOC * 100).ToGUIFormat()
+		    lvREESSPacks.Items.Clear()
+		    For Each entry As IElectricStorageEngineeringInputData In vehicle.Components.ElectricStorage.ElectricStorageElements.OrderBy(function(x) x.StringId)
+		        lvREESSPacks.Items.Add(CreateREESSPackListViewItem(GetRelativePath(entry.REESSPack.DataSource.SourceFile, basePath), entry.Count, entry.StringId))
+		    Next
+		    tbInitialSoC.Text = (vehicle.InitialSOC * 100).ToGUIFormat()
 
 			Dim em As ElectricMachineEntry(Of IElectricMotorEngineeringInputData) = vehicle.Components.ElectricMachines.Entries.First()
 			tbElectricMotor.Text = GetRelativePath(em.ElectricMachine.DataSource.SourceFile, basePath)
@@ -518,6 +528,14 @@ Public Class VehicleForm
         retVal.SubItems(0).Text = gear.ToGUIFormat()
         retVal.SubItems.Add(ratio.ToGUIFormat())
 		return retval
+    End Function
+
+    Private Function CreateREESSPackListViewItem(batFile As String, count As Integer, stringid As Integer) As ListViewItem
+        dim retval as new ListViewItem
+        retVal.SubItems(0).Text = GetRelativePath(batFile, Path.GetDirectoryName(_vehFile))
+        retVal.SubItems.Add(count.ToGUIFormat())
+		retval.SubItems.Add(stringid.ToGUIFormat())
+        return retval
     End Function
 
     Private Sub UpdateForm(vehType As VectoSimulationJobType)
@@ -637,8 +655,9 @@ Public Class VehicleForm
 		End If
 
 		If (VehicleType = VectoSimulationJobType.ParallelHybridVehicle OrElse VehicleType = VectoSimulationJobType.BatteryElectricVehicle) Then
-			veh.BatteryFile.Init(GetPath(file), tbBattery.Text)
-			veh.NumBatteryPacks = tbBatteryPackCnt.Text.ToInt(0)
+		    For Each reess As ListViewItem In lvREESSPacks.Items
+		        veh.ReessPacks.Add(tuple.Create(reess.SubItems(REESPackTbl.ReessFile).Text, reess.SubItems(REESPackTbl.Count).Text.ToInt(), reess.SubItems(REESPackTbl.StringId).Text.ToInt()))
+		    Next
 			veh.InitialSOC = tbInitialSoC.Text.ToDouble() / 100.0
 
 			veh.ElectricMotorFile.Init(GetPath(file), tbElectricMotor.Text)
@@ -1105,11 +1124,6 @@ Public Class VehicleForm
 
 	End Sub
 
-	Private Sub btnBrowseBattery_Click(sender As Object, e As EventArgs) Handles btnBrowseBattery.Click
-		If REESSFileBrowser.OpenDialog(FileRepl(tbBattery.Text, GetPath(_vehFile))) Then
-			tbBattery.Text = GetFilenameWithoutDirectory(REESSFileBrowser.Files(0), GetPath(_vehFile))
-		End If
-	End Sub
 
 	Private Sub btnOpenElectricMotor_Click(sender As Object, e As EventArgs) Handles btnOpenElectricMotor.Click
 		Dim f As String
@@ -1136,37 +1150,6 @@ Public Class VehicleForm
 		If Not Trim(f) = "" Then
 			Try
 				ElectricMotorForm.OpenElectricMachineFile(f)
-			Catch ex As Exception
-				MsgBox(ex.Message, MsgBoxStyle.OkOnly, "Error loading Vehicle File")
-			End Try
-		End If
-	End Sub
-
-	Private Sub btnOpenBattery_Click(sender As Object, e As EventArgs) Handles btnOpenBattery.Click
-		Dim f As String
-		f = FileRepl(tbBattery.Text, GetPath(_vehFile))
-
-		'Thus Veh-file is returned
-		BatteryForm.JobDir = GetPath(_vehFile)
-		BatteryForm.AutoSendTo = True
-
-		If Not Trim(f) = "" Then
-			If Not File.Exists(f) Then
-				MsgBox("File not found!")
-				Exit Sub
-			End If
-		End If
-
-		If Not BatteryForm.Visible Then
-			BatteryForm.Show()
-		Else
-			If BatteryForm.WindowState = FormWindowState.Minimized Then BatteryForm.WindowState = FormWindowState.Normal
-			BatteryForm.BringToFront()
-		End If
-
-		If Not Trim(f) = "" Then
-			Try
-				BatteryForm.OpenBatteryFile(f)
 			Catch ex As Exception
 				MsgBox(ex.Message, MsgBoxStyle.OkOnly, "Error loading Vehicle File")
 			End Try
@@ -1203,7 +1186,7 @@ Public Class VehicleForm
 		gbRatiosPerGear.Enabled = cbEmPos.SelectedValue.Equals(PowertrainPosition.HybridP2_5) 
 	End Sub
 
-	Private Sub Button1_Click(sender As Object, e As EventArgs) Handles Button1.Click
+	Private Sub Button1_Click(sender As Object, e As EventArgs) Handles btnAddEMRatio.Click
 		_emRatioPerGearDlog.Clear()
 		If _emRatioPerGearDlog.ShowDialog() = DialogResult.OK Then
 			Dim gear As Integer = _emRatioPerGearDlog.tbGear.Text.ToInt(0)
@@ -1222,7 +1205,7 @@ Public Class VehicleForm
 		End If
 	End Sub
 
-	Private Sub Button2_Click(sender As Object, e As EventArgs) Handles Button2.Click
+	Private Sub Button2_Click(sender As Object, e As EventArgs) Handles btnRemoveEMRatio.Click
 		If lvRatioPerGear.SelectedItems.Count = 0 Then
 			If lvRatioPerGear.Items.Count = 0 Then
 				Exit Sub
@@ -1250,6 +1233,44 @@ Public Class VehicleForm
 
     Private Sub lvRatioPerGear_SelectedIndexChanged(sender As Object, e As EventArgs) Handles lvRatioPerGear.SelectedIndexChanged
 
+    End Sub
+
+    Private Sub lvREESSPacks_DoubleClick(sender As Object, e As EventArgs) Handles lvREESSPacks.DoubleClick
+        If lvREESSPacks.SelectedItems.Count = 0 Then Exit Sub
+
+        Dim entry As ListViewItem = lvREESSPacks.SelectedItems(0)
+        _reessPackDlg.tbBattery.Text = entry.SubItems(REESPackTbl.ReessFile).Text
+        _reessPackDlg.tbBatteryPackCnt.Text = entry.SubItems(REESPackTbl.Count).Text
+        _reessPackDlg.tbStreamId.Text = entry.SubItems(REESPackTbl.StringId).Text
+        _reessPackDlg.tbBattery.Focus()
+        If (_reessPackDlg.ShowDialog() = DialogResult.OK) Then
+            entry.SubItems(REESPackTbl.ReessFile).Text = _reessPackDlg.tbBattery.Text
+            entry.SubItems(REESPackTbl.Count).Text = _reessPackDlg.tbBatteryPackCnt.Text
+            entry.SubItems(REESPackTbl.StringId).Text = _reessPackDlg.tbStreamId.Text
+        End If
+    End Sub
+
+    Private Sub btnAddReessPack_Click(sender As Object, e As EventArgs) Handles btnAddReessPack.Click
+        _reessPackDlg.Clear()
+        If _reessPackDlg.ShowDialog() = DialogResult.OK Then
+
+            lvREESSPacks.Items.Add(CreateREESSPackListViewItem(_reessPackDlg.tbBattery.Text, _reessPackDlg.tbBatteryPackCnt.Text.ToInt(0), _reessPackDlg.tbStreamId.Text.ToInt(0)))
+
+            Change()
+
+        End If
+    End Sub
+
+    Private Sub btnRemoveReessPack_Click(sender As Object, e As EventArgs) Handles btnRemoveReessPack.Click
+        If lvREESSPacks.SelectedItems.Count = 0 Then
+            If lvREESSPacks.Items.Count = 0 Then
+                Exit Sub
+            Else
+                lvREESSPacks.Items(lvREESSPacks.Items.Count - 1).Selected = True
+            End If
+        End If
+
+        lvREESSPacks.SelectedItems(0).Remove()
     End Sub
 End Class
 
