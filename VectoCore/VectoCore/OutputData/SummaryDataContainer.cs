@@ -65,6 +65,8 @@ namespace TUGraz.VectoCore.OutputData
 			Fields.FC_BusAux_PS_CORR_H, Fields.FC_BusAux_PS_CORR_KM,
 			Fields.FC_BusAux_ES_CORR_H, Fields.FC_BusAux_ES_CORR_KM,
 			Fields.FCWHR_H_CORR, Fields.FCWHR_KM_CORR,
+			Fields.FC_HEV_SOC_H, Fields.FC_HEV_SOC_KM,
+			Fields.FC_HEV_SOC_CORR_H, Fields.FC_HEV_SOC_CORR_KM,
 			Fields.FC_AUXHTR_H, Fields.FC_AUXHTR_KM,
 			Fields.FC_AUXHTR_H_CORR, Fields.FC_AUXHTR_KM_CORR,
 			Fields.FCFINAL_H, Fields.FCFINAL_KM, Fields.FCFINAL_LITERPER100KM, Fields.FCFINAL_LITERPER100TKM,
@@ -430,17 +432,18 @@ namespace TUGraz.VectoCore.OutputData
 				row[FcCol(Fields.FC_BusAux_PS_CORR_H, suffix)] = fuelConsumption.FC_BusAux_PS_CORR_H?.ConvertToGrammPerHour();
 				row[FcCol(Fields.FC_BusAux_ES_CORR_H, suffix)] = fuelConsumption.FC_BusAux_ES_CORR_H?.ConvertToGrammPerHour();
 				row[FcCol(Fields.FCWHR_H_CORR, suffix)] = fuelConsumption.FC_WHR_CORR_H?.ConvertToGrammPerHour();
-				row[FcCol(Fields.FC_HEV_SOC_CORR_H, suffix)] = fuelConsumption.FC_REESS_SOC_H?.ConvertToGrammPerHour();
+				row[FcCol(Fields.FC_HEV_SOC_CORR_H, suffix)] = fuelConsumption.FC_REESS_SOC_CORR_H?.ConvertToGrammPerHour();
+				row[FcCol(Fields.FC_HEV_SOC_H, suffix)] = fuelConsumption.FC_REESS_SOC_H?.ConvertToGrammPerHour();
 				row[FcCol(Fields.FC_AUXHTR_H, suffix)] = fuelConsumption.FC_AUXHTR_H?.ConvertToGrammPerHour();
 				row[FcCol(Fields.FC_AUXHTR_H_CORR, suffix)] = fuelConsumption.FC_AUXHTR_H_CORR?.ConvertToGrammPerHour();
-
 
 				row[FcCol(Fields.FCFINAL_H, suffix)] = fuelConsumption.FC_FINAL_H?.ConvertToGrammPerHour();
 
 				row[FcCol(Fields.FCWHR_KM_CORR, suffix)] = fuelConsumption.FC_WHR_CORR_KM?.ConvertToGrammPerKiloMeter();
 				row[FcCol(Fields.FC_BusAux_PS_CORR_KM, suffix)] = fuelConsumption.FC_BusAux_PS_CORR_KM?.ConvertToGrammPerKiloMeter();
 				row[FcCol(Fields.FC_BusAux_ES_CORR_KM, suffix)] = fuelConsumption.FC_BusAux_ES_CORR_KM?.ConvertToGrammPerKiloMeter();
-				row[FcCol(Fields.FC_HEV_SOC_CORR_KM, suffix)] = fuelConsumption.FC_REESS_SOC_KM?.ConvertToGrammPerKiloMeter();
+				row[FcCol(Fields.FC_HEV_SOC_CORR_KM, suffix)] = fuelConsumption.FC_REESS_SOC_CORR_KM?.ConvertToGrammPerKiloMeter();
+				row[FcCol(Fields.FC_HEV_SOC_KM, suffix)] = fuelConsumption.FC_REESS_SOC_KM?.ConvertToGrammPerKiloMeter();
 				row[FcCol(Fields.FC_AUXHTR_KM, suffix)] = fuelConsumption.FC_AUXHTR_KM?.ConvertToGrammPerKiloMeter();
 				row[FcCol(Fields.FC_AUXHTR_KM_CORR, suffix)] = fuelConsumption.FC_AUXHTR_KM_CORR?.ConvertToGrammPerKiloMeter();
 
@@ -1097,6 +1100,8 @@ namespace TUGraz.VectoCore.OutputData
 			public const string FCESS_KM_CORR = "FC-ESS_Corr{0} [g/km]";
 			public const string FCWHR_H_CORR = "FC-WHR_Corr{0} [g/h]";
 			public const string FCWHR_KM_CORR = "FC-WHR_Corr{0} [g/km]";
+			public const string FC_HEV_SOC_H = "FC-SoC{0} [g/h]";
+			public const string FC_HEV_SOC_KM = "FC-SoC{0} [g/km]";
 			public const string FC_HEV_SOC_CORR_H = "FC-SoC_Corr{0} [g/h]";
 			public const string FC_HEV_SOC_CORR_KM = "FC-SoC_Corr{0} [g/km]";
 

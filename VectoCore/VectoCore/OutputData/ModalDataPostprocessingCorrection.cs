@@ -413,10 +413,12 @@ namespace TUGraz.VectoCore.OutputData
 		public KilogramPerSecond FC_WHR_CORR_H => Duration != null ? (FcWHRCorr / Duration) : null;
 		public KilogramPerSecond FC_AUXHTR_H => Duration != null ? (FcAuxHtr / Duration) : null;
 		public KilogramPerSecond FC_AUXHTR_H_CORR => Duration != null ? (FcAuxHtrCorr / Duration) : null;
-		public KilogramPerSecond FC_REESS_SOC_H => Duration != null ? (FcREESSSoCCorr / Duration) : null;
+		public KilogramPerSecond FC_REESS_SOC_H => Duration != null ? FcREESSSoc / Duration : null;
+		public KilogramPerSecond FC_REESS_SOC_CORR_H => Duration != null ? (FcREESSSoCCorr / Duration) : null;
 		public KilogramPerSecond FC_FINAL_H => Duration != null ? FcFinal / Duration : null;
 
-		public KilogramPerMeter FC_REESS_SOC_KM => Distance != null ? (FcREESSSoCCorr / Distance) : null;
+		public KilogramPerMeter FC_REESS_SOC_KM => Distance != null ? FcREESSSoc / Distance : null;
+		public KilogramPerMeter FC_REESS_SOC_CORR_KM => Distance != null ? (FcREESSSoCCorr / Distance) : null;
 		public KilogramPerMeter FC_ESS_CORR_KM => Distance != null ? (FcEssCorr / Distance) : null;
 		public KilogramPerMeter FC_WHR_CORR_KM => Distance != null ? (FcWHRCorr / Distance) : null;
 		public KilogramPerMeter FC_BusAux_PS_CORR_KM => Distance != null ? (FcBusAuxPsCorr / Distance) : null;
