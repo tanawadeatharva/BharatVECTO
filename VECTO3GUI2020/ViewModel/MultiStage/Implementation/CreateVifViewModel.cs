@@ -142,8 +142,8 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 			}
 
 			Completed = inputDataProvider.Completed ?? false;
-			StageInputPath = inputDataProvider.StageInputData?.DataSource?.SourcePath;
-			PrimaryInputPath = inputDataProvider.StageInputData?.DataSource?.SourcePath;
+			StageInputPath = inputDataProvider.StageInputData?.DataSource?.SourceFile;
+			PrimaryInputPath = inputDataProvider.PrimaryVehicle?.DataSource?.SourceFile;
 			DataSource = inputData.DataSource;
 			UpdateTitleAndDocumentName();
 		}

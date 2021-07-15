@@ -1,8 +1,11 @@
 ﻿using System.Diagnostics;
 using System.IO;
+using System.Threading.Tasks;
 using System.Windows.Input;
 using Ninject;
 using NUnit.Framework;
+using VECTO3GUI2020.ViewModel.Implementation;
+using VECTO3GUI2020.ViewModel.Interfaces;
 using VECTO3GUI2020.ViewModel.MultiStage.Implementation;
 
 namespace Vecto3GUI2020Test.ViewModelTests
@@ -167,6 +170,31 @@ namespace Vecto3GUI2020Test.ViewModelTests
 			Assert.IsFalse(_createVifViewModel.RemovePrimaryCommand.CanExecute(null));
 			Assert.IsNull(_createVifViewModel.PrimaryInputPath);
 			Assert.IsNull(_createVifViewModel.IsPrimaryExempted);
+		}
+
+
+		[Test]
+		public async Task SaveAndReload()
+		{
+			LoadValidNonExemptedFiles();
+			var primaryPath = _createVifViewModel.PrimaryInputPath;
+			var stagePath = _createVifViewModel.StageInputPath;
+
+			var savedToPath = _createVifViewModel.SaveJob("non_exempted.json");
+			WriteLine($"Saved to: {savedToPath}");
+
+			Assert.AreEqual(primaryPath, _createVifViewModel.PrimaryInputPath);
+			Assert.AreEqual(stagePath, _createVifViewModel.StageInputPath);
+
+			var jobListVm = _kernel.Get<IJobListViewModel>() as JobListViewModel;
+			var loadedDoc = await jobListVm.AddJobAsync(savedToPath) as CreateVifViewModel;
+
+			Assert.AreEqual(stagePath, loadedDoc.StageInputPath);
+			Assert.AreEqual(primaryPath, loadedDoc.PrimaryInputPath);
+
+
+
+
 		}
 	}
 }
