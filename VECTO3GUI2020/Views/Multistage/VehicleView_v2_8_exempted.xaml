@@ -36,10 +36,15 @@
                         Content="{Binding ParameterViewModels[HeightInMm]}"/>
 
                     <Label Style="{DynamicResource LabelStyle1}">Number of Passengers</Label>
+
                     <ContentControl 
                         Content="{Binding ParameterViewModels[NumberPassengerSeatsLowerDeck]}"/>
                     <ContentControl 
+                        Content="{Binding ParameterViewModels[NumberPassengersStandingLowerDeck]}"/>
+                    <ContentControl 
                         Content="{Binding ParameterViewModels[NumberPassengerSeatsUpperDeck]}"/>
+                    <ContentControl 
+                        Content="{Binding ParameterViewModels[NumberPassengersStandingUpperDeck]}"/>
 
 
 

@@ -669,7 +669,9 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 						& InputComplete(GrossVehicleMassRating, nameof(GrossVehicleMassRating))
 						& InputComplete(RegisteredClass, nameof(RegisteredClass))
 						& InputComplete(NumberPassengerSeatsLowerDeck, nameof(NumberPassengerSeatsLowerDeck))
+						& InputComplete(NumberPassengersStandingLowerDeck, nameof(NumberPassengersStandingLowerDeck))
 						& InputComplete(NumberPassengerSeatsUpperDeck, nameof(NumberPassengerSeatsUpperDeck))
+						& InputComplete(NumberPassengersStandingUpperDeck, nameof(NumberPassengersStandingUpperDeck))
 						& InputComplete(VehicleCode, nameof(VehicleCode))
 						& InputComplete(LowEntry, nameof(LowEntry))
 						& InputComplete(Height, nameof(Height));

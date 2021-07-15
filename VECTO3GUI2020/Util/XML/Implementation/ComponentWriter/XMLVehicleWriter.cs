@@ -327,8 +327,11 @@ namespace VECTO3GUI2020.Util.XML.Implementation.ComponentWriter
 
 			_Xelement.Add(new XElement(_defaultNamespace + XMLNames.Vehicle_RegisteredClass, _inputData.RegisteredClass.ToXMLFormat()));
 
-			_Xelement.Add(new XElement(_defaultNamespace + XMLNames.Bus_NumberPassengersLowerDeck, _inputData.NumberPassengerSeatsLowerDeck));
-			_Xelement.Add(new XElement(_defaultNamespace + XMLNames.Bus_NumberPassengersUpperDeck, _inputData.NumberPassengerSeatsUpperDeck));
+			_Xelement.Add(new XElement(_defaultNamespace + XMLNames.Bus_NumberPassengerSeatsLowerDeck, _inputData.NumberPassengerSeatsLowerDeck));
+			_Xelement.Add(new XElement(_defaultNamespace + XMLNames.Bus_NumberPassengersStandingLowerDeck, _inputData.NumberPassengersStandingUpperDeck));
+
+			_Xelement.Add(new XElement(_defaultNamespace + XMLNames.Bus_NumberPassengerSeatsUpperDeck, _inputData.NumberPassengerSeatsUpperDeck));
+			_Xelement.Add(new XElement(_defaultNamespace + XMLNames.Bus_NumberPassengersStandingUpperDeck, _inputData.NumberPassengersStandingUpperDeck));
 			_Xelement.Add(new XElement(_defaultNamespace + XMLNames.Vehicle_BodyworkCode, _inputData.VehicleCode.ToXMLFormat()));
 
 			_Xelement.Add(new XElement(_defaultNamespace + XMLNames.Bus_LowEntry, _inputData.LowEntry));
