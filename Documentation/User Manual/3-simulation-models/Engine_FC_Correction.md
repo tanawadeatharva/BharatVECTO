@@ -32,14 +32,15 @@ $\textrm{E\_aux\_ESS\_mech\_ICEon\_standstill} = \sum_{\forall \textrm{v\_act}_i
 $\textrm{E\_aux\_ESS\_mech\_ICEon\_driving} = \sum_{\forall \textrm{v\_act}_i > 0}{\textrm{P\_aux\_ESS\_mech\_ICE\_on} \cdot dt}$
 
 
-$\begin{align*}
+$$
+\begin{align*}
 \textbf{\textrm{FC\_ESS}} =\, &  \textrm{FC\_ICE\_start} + \\
      &  \textrm{E\_aux\_ESS\_mech\_ICEoff\_standstill} \cdot k_\textrm{engline} \cdot \textrm{UF}_\textrm{standstill}  + \\
-     &  (\textrm{E\_aux\_ESS\_mech\_ICEon\_standstill} \cdot k_\textrm{engline} + \textrm{FC}(n_\textrm{idle}, 0) \cdot \textrm{t\_ICEoff\_standstill}) \cdot (1 – \textrm{UF}_\textrm{standstill}) \\
+     &  (\textrm{E\_aux\_ESS\_mech\_ICEon\_standstill} \cdot k_\textrm{engline} + \textrm{FC}(n_\textrm{idle}, 0) \cdot \textrm{t\_ICEoff\_standstill}) \cdot (1 - \textrm{UF}_\textrm{standstill}) \\
      &   \textrm{E\_aux\_ESS\_mech\_ICEoff\_driving} \cdot k_\textrm{engline} \cdot \textrm{UF}_\textrm{driving} + \\
-     &  (\textrm{E\_aux\_ESS\_mech\_ICEon\_driving} \cdot k_\textrm{engline} + \textrm{FC}(n_\textrm{idle}, 0) \cdot \textrm{t\_ICEoff\_driving}) \cdot (1 – \textrm{UF}_\textrm{driving})
+     &  (\textrm{E\_aux\_ESS\_mech\_ICEon\_driving} \cdot k_\textrm{engline} + \textrm{FC}(n_\textrm{idle}, 0) \cdot \textrm{t\_ICEoff\_driving}) \cdot (1 - \textrm{UF}_\textrm{driving})
 \end{align*}
-$
+$$
 
 
 ####Bus Auxiliaries Correction -- Electric System
@@ -50,7 +51,7 @@ $\textrm{E\_BusAux\_ES\_consumed} = \sum{\textrm{P\_BusAux\_ES\_consumed} \cdot 
 
 $\textrm{E\_BusAux\_ES\_gen} =  \sum{\textrm{P\_BusAux\_ES\_gen} \cdot dt}$
 
-$\Delta\textrm{E\_BusAux\_ES\_mech} = (\textrm{E\_BusAux\_ES\_consumed} – \textrm{E\_BusAux\_ES\_gen}) / \textrm{AlternatorEfficiency} / \textrm{AlternatorGearEfficiency}$
+$\Delta\textrm{E\_BusAux\_ES\_mech} = (\textrm{E\_BusAux\_ES\_consumed} - \textrm{E\_BusAux\_ES\_gen}) / \textrm{AlternatorEfficiency} / \textrm{AlternatorGearEfficiency}$
 
 $\textbf{\textrm{FC\_BusAux\_ES}} = \textrm{E\_BusAux\_ES} \cdot k_\textrm{engline}$
 
@@ -78,7 +79,7 @@ $\textrm{E\_busAux\_PS\_alwaysOn} =  \sum_{\textrm{Nl\_busAux\_consumed}_i = \te
 
 $\textrm{Nl\_alwaysOn} =  \sum_{\textrm{Nl\_busAux\_consumed}_i = \textrm{Nl\_busAux\_gen}_i}{\textrm{Nl\_busAux\_gen\_max}}$
 
-$k_\textrm{Air} = \frac{\textrm{E\_busAux\_PS\_alwaysOn} – \textrm{E\_busAuxPS\_drag}}{\textrm{Nl\_alwaysOn} – 0}$
+$k_\textrm{Air} = \frac{\textrm{E\_busAux\_PS\_alwaysOn} - \textrm{E\_busAuxPS\_drag}}{\textrm{Nl\_alwaysOn} - 0}$
 
 
 ![](pics/BusAux_PS_kAir.png)
@@ -87,23 +88,24 @@ $\textrm{CorrectedAirDemand} = \textrm{[Calculate Air demand with actual cycle t
 
 $\textrm{AirGenerated} =  \sum{\textrm{Nl\_busAux\_PS\_gen}}$
 
-$\Delta\textrm{Air} = \textrm{CorrectedAirDemand} – \textrm{AirGenerated}$
+$\Delta\textrm{Air} = \textrm{CorrectedAirDemand} - \textrm{AirGenerated}$
 
 $\textrm{E\_busAux\_PS\_corr} = \Delta\textrm{Air} \cdot k_\textrm{Air}$
 
 $\textrm{FC\_BusAux\_PS\_AirDemand} = \textrm{E\_busAux\_PS\_corr} \cdot k_\textrm{engline}$
 
-$\textrm{FC\_BusAux\_PS\_Drag\_ICEoff\_driving} = \textrm{P\_PS\_drag}(n_\textrm{idle}) \cdot k_\textrm{engline} \cdot \textrm{t\_ICEoff\_driving} \cdot (1 – \textrm{UF}_\textrm{driving})$
+$\textrm{FC\_BusAux\_PS\_Drag\_ICEoff\_driving} = \textrm{P\_PS\_drag}(n_\textrm{idle}) \cdot k_\textrm{engline} \cdot \textrm{t\_ICEoff\_driving} \cdot (1 - \textrm{UF}_\textrm{driving})$
 
-$\textrm{FC\_BusAux\_PS\_Drag\_ICEoff\_standstill} = \textrm{P\_PS\_drag}(n_\textrm{idle}) \cdot k_\textrm{engline} \cdot \textrm{t\_ICEoff\_standstill} \cdot (1 – \textrm{UF}_\textrm{standstill})$
+$\textrm{FC\_BusAux\_PS\_Drag\_ICEoff\_standstill} = \textrm{P\_PS\_drag}(n_\textrm{idle}) \cdot k_\textrm{engline} \cdot \textrm{t\_ICEoff\_standstill} \cdot (1 - \textrm{UF}_\textrm{standstill})$
 
 
-$\begin{align*}
+$$
+\begin{align*}
 \textbf{\textrm{FC\_BusAux\_PS}} =\, &   \textrm{FC\_BusAux\_PS\_AirDemand}  + \\
  & \textrm{FC\_BusAux\_PS\_Drag\_ICEoff\_driving} + \\
  & \textrm{FC\_busAux\_PS\_Drag\_ICEoff\_standstill} \\
 \end{align*}
-$
+$$
 
 
 ####Bus Auxiliaries Correction -- Aux Heater
@@ -124,12 +126,13 @@ $\textrm{E\_WHR\_mech} = \sum{\textrm{P\_WHR\_mech} \cdot dt}$
 
 $\textrm{E\_WHR\_el} = \sum{\textrm{P\_WHR\_el} \cdot dt}$
 
-$\textrm{E\_WHR\_el\_mech} = \begin{cases}
+$$
+\textrm{E\_WHR\_el\_mech} = \begin{cases}
 \textrm{E\_WHR\_el} / \textrm{AlternatorEfficiency} & if conventional truck \\
 \textrm{E\_WHR\_el} / \eta_{\textrm{EM}_\textrm{chg}} & if bus with ES connected to REES and smart alternator \\
 \textrm{E\_WHR\_el} / \textrm{BusAlternatorEfficiency} & otherwise
 \end{cases}
-$
+$$
 
 $\textbf{\textrm{FC\_WHR}} = - (\textrm{E\_WHR\_mech} + \textrm{E\_WHR\_el\_mech}) \cdot k_\textrm{engline}$
 
@@ -138,13 +141,22 @@ $\textbf{\textrm{FC\_WHR}} = - (\textrm{E\_WHR\_mech} + \textrm{E\_WHR\_el\_mech
 
 If the REESS Soc at the end of the simulation is higher than the initial SoC the correction is done according to:
 
-$\textbf{\textrm{FC\_SoC}} = -\frac{\Delta\textrm{E\_REESS} \cdot k_\textrm{engline}}{\eta_{\textrm{EM}_\textrm{chg}} \cdot \eta_{\textrm{REESS}_\textrm{chg}}} $
-
+$$
+\textbf{\textrm{FC\_SoC}} = -\frac{\Delta\textrm{E\_REESS} \cdot k_\textrm{engline}}{\eta_{\textrm{EM}_\textrm{chg}} \cdot \eta_{\textrm{REESS}_\textrm{chg}}} 
+$$
 
 
 If the REESS Soc at the end of the simulation is lower than the initial SoC the correction is done according to:
 
-$\textbf{\textrm{FC\_SoC}} = - \Delta\textrm{E\_REESS} \cdot k_\textrm{engline} \cdot \eta_{\textrm{EM}_\textrm{dischg}} \cdot \eta_{\textrm{REESS}_\textrm{dischg}} $
+$$
+\textbf{\textrm{FC\_SoC}} = - \Delta\textrm{E\_REESS} \cdot k_\textrm{engline} \cdot \eta_{\textrm{EM}_\textrm{dischg}} \cdot \eta_{\textrm{REESS}_\textrm{dischg}} 
+$$
+
+
+$\eta_{\textrm{REESS}_\textrm{chg}} = \frac{\textrm{E\_REESS\_INT\_CHG}}{\textrm{E\_REEES\_T\_CHG}}$
+
+$\eta_{\textrm{REESS}_\textrm{dischg}} = \frac{\textrm{E\_REESS\_INT\_DISCHG}}{\textrm{E\_REEES\_T\_DISCHG}}$
+
 
 
 ###Engine-Line Approach
