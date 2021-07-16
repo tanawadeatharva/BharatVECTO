@@ -407,6 +407,7 @@ namespace TUGraz.VectoCore.OutputData
 
 		public KilogramPerWattSecond EngineLineCorrectionFactor { get; set; }
 		public KilogramPerWattSecond VehicleLine { get; set; }
+		public KilogramPerSecond FC_ESS_H => Duration != null ? (FcESS / Duration) : null;
 		public KilogramPerSecond FC_ESS_CORR_H => Duration != null ? (FcEssCorr / Duration) : null;
 		public KilogramPerSecond FC_BusAux_PS_CORR_H => Duration != null ? (FcBusAuxPsCorr / Duration) : null;
 		public KilogramPerSecond FC_BusAux_ES_CORR_H => Duration != null ? (FcBusAuxEsCorr / Duration) : null;
@@ -419,6 +420,7 @@ namespace TUGraz.VectoCore.OutputData
 
 		public KilogramPerMeter FC_REESS_SOC_KM => Distance != null ? FcREESSSoc / Distance : null;
 		public KilogramPerMeter FC_REESS_SOC_CORR_KM => Distance != null ? (FcREESSSoCCorr / Distance) : null;
+		public KilogramPerMeter FC_ESS_KM => Distance != null ? (FcESS / Distance) : null;
 		public KilogramPerMeter FC_ESS_CORR_KM => Distance != null ? (FcEssCorr / Distance) : null;
 		public KilogramPerMeter FC_WHR_CORR_KM => Distance != null ? (FcWHRCorr / Distance) : null;
 		public KilogramPerMeter FC_BusAux_PS_CORR_KM => Distance != null ? (FcBusAuxPsCorr / Distance) : null;

@@ -49,13 +49,12 @@ $E_{ICE,start} = E_{ICE,rampUp} / \eta_{alternator}^2$
 
 $E_{ICE,start}$ is the amount of energy the combustion engine needs to provide to compensate the start up is the ramp-up energy multiplied by the efficiency of the alternator.  $t_{ICE,start}$ is assumed to be 1 second and $\eta_{alternator}$ is 0.7.
 
-###Utility Factor
+###Auxiliaries and Utility Factor
 
-Engine Stop/Start is usually not activated at every vehicle stop. This is considered in VECTO via a utility factor (e.g. 0.8). This utility factor (f) is applied for every engine stop as follows:
-
-   - the auxiliary demand during engine stops is multiplied by the utility factor
-   - the fuel consumption FC_final during engine stop is the fuel consumption with the engine idling and all auxiliaires on multiplied by  1-f
-   - the energy demand for starting the engine is multiplied by the utility factor
+During ICE-off phases the ICE is fully shut of in the simulation (.vmod data). However, in reality the ICE is not always switched off due to certain
+boundary conditions (e.g. power demand from an auxiliary, temperature, etc.). This is considered in the [post-processing](#engine-fuel-consumption-correction). 
+Therefore, the demand for different auxiliaries is balanced in separate columns in the [.vmod](#modal-results-.vmod) file for the two cases a) ICE is really off, and b) ICE would be on. 
+This is done for the mechanical auxiliaries, bus-aux electric demand (all different cases like ES connected to the REESS, smart ES, conventional ES, and combinations thereof), bus-aux pneumatic system. A detailed description which auxiliary power demand is balanced in which columns can be found in [this spreadsheet](BusAuxCases with ESS_Formatted.xlsx) for all combinations of conventional vehicles, bus auxiliaries, and hybrid vehicles.
 
 <div class="declaration">
 **Auxiliary energy demand**
@@ -67,7 +66,12 @@ In Declaration Mode the energy demand of all auxiliaries except the engine cooli
 <div class="engineering">
 **Auxiliary energy demand**
 
-In Engineering Mode the energy demand of all auxiliaries is assumed to be drawn also during engine-off periods and the fuel consumption is corrected in a post-processing step.
+In Engineering Mode the energy demand of the auxiliaries can be specified for the cases:
+  - ICE on
+  - ICE off, vehicle standstill
+  - ICE off, vehicle driving
+
+
 </div>
 
 
@@ -167,7 +171,7 @@ In declaration mode, the whole long-haul cycle is considered as highway. Moreove
 
 1. In a preprocessing step the road gradient where the vehicle would accelerate on its own is computed for certain velocities. If the vehicle is equipped with eco-roll the powertrain is declutched, otherwise the engine is in full drag. The slope is calculated for every simulated cycle as this values vary with the vehicle's payload, rolling resistance and air drag.
 2. All positions in the driving cycle where the slope is lower than the road gradient required that the vehicle accelerates on its own are marked as potential candidates for PCC events. At this distance the vehicle's velocity shall be a minimum. Denoted as $x_{v_{low}}$.
-3. For every potential PCC event, the end position is marked in the driving cycle. This is the first position in the driving cycle after $x_v_{low}}$ where the slope is greater than the road gradient required that the vehicle accelerates on its own. Latest at this position the vehicle shall reach the target velocity again. Denoted as $x_{end, max}$
+3. For every potential PCC event, the end position is marked in the driving cycle. This is the first position in the driving cycle after $x_{v_{low}}$ where the slope is greater than the road gradient required that the vehicle accelerates on its own. Latest at this position the vehicle shall reach the target velocity again. Denoted as $x_{end, max}$
 4. For every potential PCC event, the earliest start position is marked. This is calculated as $x_{start} = x_{v_{low}} - d_{preview}$.
 5. For every potential PCC event, the vehicle's energy is calculated:
 $E(x_{v_{low}}) = m \cdot g \cdot h(x_{v{low}}) + \frac{m \cdot (v_{target}(x_{v_{low}}) - v_{neg})^2}{2}$
