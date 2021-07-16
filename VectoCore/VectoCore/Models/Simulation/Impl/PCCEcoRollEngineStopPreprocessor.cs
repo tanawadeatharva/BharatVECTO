@@ -4,7 +4,6 @@ using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.Models.Connector.Ports.Impl;
-using TUGraz.VectoCore.Models.SimulationComponent;
 using TUGraz.VectoCore.Models.SimulationComponent.Impl;
 using TUGraz.VectoCore.OutputData;
 using TUGraz.VectoCore.Utils;
@@ -33,26 +32,20 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 		public void RunPreprocessing()
 		{
-			var vehicle = Container?.VehicleInfo as Vehicle;
-
-			if (vehicle == null) {
+			if (!(Container?.VehicleInfo is Vehicle vehicle)) {
 				throw new VectoException("no vehicle found...");
 			}
 
-			var gearbox = Container.GearboxInfo as Gearbox;
-			if (gearbox != null) {
-				RunPreprocessingAMTGearbox(gearbox, vehicle);
-				return;
+			switch (Container.GearboxInfo) {
+				case Gearbox gearbox:
+					RunPreprocessingAMTGearbox(gearbox, vehicle);
+					return;
+				case ATGearbox atGearbox:
+					RunPreprocessingATGearbox(atGearbox, vehicle);
+					return;
+				default:
+					throw new VectoException("no valid gearbox found...");
 			}
-			var atGearbox = Container.GearboxInfo as ATGearbox;
-			if (atGearbox != null) {
-				RunPreprocessingATGearbox(atGearbox, vehicle);
-				return;
-			}
-
-			throw new VectoException("no valid gearbox found...");
-			
-
 		}
 
 		private void RunPreprocessingATGearbox(ATGearbox gearbox, Vehicle vehicle)
