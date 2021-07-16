@@ -1,5 +1,4 @@
-﻿using System;
-using System.IO;
+﻿using System.IO;
 using System.Linq;
 using Ninject;
 using NUnit.Framework;
@@ -16,12 +15,12 @@ namespace TUGraz.VectoCore.Tests.Integration.ADAS
 {
 	[TestFixture]
 	[Parallelizable(ParallelScope.All)]
-	public class ADASTests
+	public class ADASTestsPEV
 	{
 
-		public const string Group5PCC12 = @"TestData\Integration\ADAS\Group5PCCEng\Class5_Tractor_ENG_PCC12.vecto";
-		public const string Group5PCC123 = @"TestData\Integration\ADAS\Group5PCCEng\Class5_Tractor_ENG_PCC123.vecto";
-		public const string Group5PCC123EcoSS = @"TestData\Integration\ADAS\Group5PCCEng\Class5_Tractor_ENG_PCC123EcoSS.vecto";
+		public const string Group5PCC12 = @"TestData\Integration\ADAS-PEV\Group5PCCEng\Class5_Tractor_ENG_PCC12.vecto";
+		public const string Group5PCC123 = @"TestData\Integration\ADAS-PEV\Group5PCCEng\Class5_Tractor_ENG_PCC123.vecto";
+		public const string Group5PCC123EcoSS = @"TestData\Integration\ADAS-PEV\Group5PCCEng\Class5_Tractor_ENG_PCC123EcoSS.vecto";
 
 		protected IXMLInputDataReader xmlInputReader;
 		private IKernel _kernel;
@@ -55,21 +54,21 @@ namespace TUGraz.VectoCore.Tests.Integration.ADAS
 		}
 
 
-		[TestCase(@"TestData\Integration\ADAS\Group5_EngineStopStart.xml")]
+		[TestCase(@"TestData\Integration\ADAS-PEV\Group5_EngineStopStart.xml")]
 		public void TestVehicleWithADASEngineStopStart(string filename)
 		{
 			var container = RunAllDeclarationJob(filename);
 			//var container = RunSingleDeclarationJob(filename, 4);
 		}
 
-		[TestCase(@"TestData\Integration\ADAS\Group5_EcoRoll.xml")]
+		[TestCase(@"TestData\Integration\ADAS-PEV\Group5_EcoRoll.xml")]
 		public void TestVehicleWithADASEcoRoll(string filename)
 		{
 			var container = RunAllDeclarationJob(filename);
 			//var container = RunSingleDeclarationJob(filename, 4);
 		}
 
-		[TestCase(@"TestData\Integration\ADAS\Group5_EcoRollEngineStop.xml")]
+		[TestCase(@"TestData\Integration\ADAS-PEV\Group5_EcoRollEngineStop.xml")]
 		public void TestVehicleWithADASEcoRollEngineStopStart(string filename)
 		{
 			var container = RunAllDeclarationJob(filename);
@@ -90,7 +89,7 @@ namespace TUGraz.VectoCore.Tests.Integration.ADAS
 			]
 		public void TestEcoRoll(int cycleIdx)
 		{
-			string jobName = @"TestData\Integration\ADAS\Group5EcoRollEng\Class5_Tractor_ENG.vecto";
+			string jobName = @"TestData\Integration\ADAS-PEV\Group5EcoRollEng\Class5_Tractor_ENG.vecto";
 			var inputData = JSONInputDataFactory.ReadJsonJob(jobName);
 			var writer = new FileOutputWriter(Path.Combine(Path.GetDirectoryName(jobName), Path.GetFileName(jobName)));
 
@@ -131,7 +130,7 @@ namespace TUGraz.VectoCore.Tests.Integration.ADAS
 		]
 		public void TestEcoRollAT_Neutral(int cycleIdx)
 		{
-			string jobName = @"TestData\Integration\ADAS\Group9_RigidTruck_AT\Class_9_RigidTruck_AT_Eng_Neutral.vecto";
+			string jobName = @"TestData\Integration\ADAS-PEV\Group9_RigidTruck_AT\Class_9_RigidTruck_AT_Eng_Neutral.vecto";
 			var inputData = JSONInputDataFactory.ReadJsonJob(jobName);
 			var writer = new FileOutputWriter(Path.Combine(Path.GetDirectoryName(jobName), Path.GetFileName(jobName)));
 
@@ -172,7 +171,7 @@ namespace TUGraz.VectoCore.Tests.Integration.ADAS
 		]
 		public void TestEcoRollAT_TC(int cycleIdx)
 		{
-			string jobName = @"TestData\Integration\ADAS\Group9_RigidTruck_AT\Class_9_RigidTruck_AT_Eng_TC.vecto";
+			string jobName = @"TestData\Integration\ADAS-PEV\Group9_RigidTruck_AT\Class_9_RigidTruck_AT_Eng_TC.vecto";
 			var inputData = JSONInputDataFactory.ReadJsonJob(jobName);
 			var writer = new FileOutputWriter(Path.Combine(Path.GetDirectoryName(jobName), Path.GetFileName(jobName)));
 
@@ -199,14 +198,14 @@ namespace TUGraz.VectoCore.Tests.Integration.ADAS
 			GetGraphWriter().Write(modFilename);
 		}
 
-		[TestCase(@"TestData\Integration\ADAS\Group9_AT_EngineStopStart.xml")]
+		[TestCase(@"TestData\Integration\ADAS-PEV\Group9_AT_EngineStopStart.xml")]
 		public void TestATVehicleWithADASEngineStopStart(string filename)
 		{
 			//var container = RunAllDeclarationJob(filename);
 			var container = RunSingleDeclarationJob(filename, 5);
 		}
 
-		[TestCase(@"TestData\Integration\ADAS\Group9_AT_EcoRoll.xml")]
+		[TestCase(@"TestData\Integration\ADAS-PEV\Group9_AT_EcoRoll.xml")]
 		public void TestATVehicleWithADASEcoRoll(string filename)
 		{
 			var container = RunAllDeclarationJob(filename);
@@ -261,7 +260,7 @@ namespace TUGraz.VectoCore.Tests.Integration.ADAS
 		TestCase(1, TestName = "PCC Group5 LH RefLoad")]
 		public void TestTCCDeclaration(int runIdx)
 		{
-			var jobName = @"TestData\Integration\ADAS\Group5PCCDecl\Tractor_4x2_vehicle-class-5_5_t_0.xml";
+			var jobName = @"TestData\Integration\ADAS-PEV\Group5PCCDecl\Tractor_4x2_vehicle-class-5_5_t_0.xml";
 			RunSingleDeclarationJob(jobName, runIdx);
 		}
 
