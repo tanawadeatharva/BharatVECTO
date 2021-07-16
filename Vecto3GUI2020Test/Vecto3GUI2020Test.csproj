@@ -137,6 +137,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="HelperTests\" />
     <Folder Include="Testdata\bugreports\" />
     <Folder Include="TestData\output\" />
   </ItemGroup>

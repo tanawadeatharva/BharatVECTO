@@ -6,6 +6,7 @@ using System.ServiceModel.Channels;
 using System.Text;
 using System.Windows;
 using System.Windows.Input;
+using Castle.Core.Internal;
 using InteractiveDataDisplay.WPF;
 using Microsoft.Toolkit.Mvvm.Input;
 using Microsoft.WindowsAPICodePack.Shell.Interop;
@@ -23,6 +24,7 @@ using VECTO3GUI2020.Model.Multistage;
 using VECTO3GUI2020.ViewModel.Implementation.Common;
 using VECTO3GUI2020.ViewModel.Interfaces;
 using VECTO3GUI2020.ViewModel.Interfaces.Document;
+using Delegate = System.Delegate;
 
 namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 {
