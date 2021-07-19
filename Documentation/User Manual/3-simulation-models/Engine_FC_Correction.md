@@ -110,15 +110,16 @@ $$
 
 ####Bus Auxiliaries Correction -- Aux Heater
 
-The power demand for an additional fuel-fired heater is calculated in the post-processing. The HVAC steaty state model calculates the heating demand (weighted sum of different climatic conditions) and based on the engine's average waste heat over the cycle the power demand for the aux heater is calculated.
+The power demand for an additional fuel-fired heater is calculated in the post-processing. The HVAC steaty state model calculates the heating demand (weighted sum of different climatic conditions) and based on the engine's average waste heat over the cycle the power demand for the aux heater is calculated. The fuel consumption for the aux heater is only added for the main fuel:
+
 
 $E_\textrm{ice,waste heat} = \sum_\textrm{fuels} FC_\textrm{final,sum}(fuel) * NCV_\textrm{fuel}$
 
 $\overline{P}_\textrm{ice,waste heat} = E_\textrm{ice, waste heat} / t_\textrm{cycle}$
 
-$E_{auxHeater} = \textrm{HVACSSM}_\textrm{AuxHtr}(\overline{P}_\textrm{ice,waste heat}) * t_\textrm{cycle}$
+$\textrm{E\_auxHeater} = \textrm{HVACSSM}_\textrm{AuxHtr}(\overline{P}_\textrm{ice,waste heat}) * t_\textrm{cycle}$
 
-
+$\textbf{\textrm{FC\_BusAux\_AuxHeater}} = \textrm{E\_auxHeater} \cdot \textrm{NCV}_\textrm{main fuel}$
 
 ####Waste Heat Recovery Systems
 
@@ -158,17 +159,26 @@ $\eta_{\textrm{REESS}_\textrm{chg}} = \frac{\textrm{E\_REESS\_INT\_CHG}}{\textrm
 $\eta_{\textrm{REESS}_\textrm{dischg}} = \frac{\textrm{E\_REESS\_INT\_DISCHG}}{\textrm{E\_REEES\_T\_DISCHG}}$
 
 
+###Corrected Total Fuel Consumption
+
+The final fuel consumption after all corrections are applied is calcualted as follows:
+
+$$
+\begin{align*} 
+\textrm{FC\_FINAL} =\;&  \textrm{FC\_ModSum} \;+ \\
+                      &  \textrm{FC\_ESS} \;+ \\
+                      &  \textrm{FC\_DCDCMissing} \;+ \\
+                      &  \textrm{FC\_BusAux\_PS} \;+ \\
+                      &  \textrm{FC\_BusAux\_ES} \;+ \\
+                      &  \textrm{FC\_WHR} \;+ \\
+                      &  \textrm{FC\_BusAux\_AuxHeater} \;+ \\
+                      &  \textrm{FC\_SoC} \\
+\end{align*}
+$$
+
 
 ###Engine-Line Approach
 
-The total fuel consumption is corrected in a post-processing step according to the *engine-line* approach. Therefore, for every engine operating point where the engine is switched on and has a positive fuel consumption the fuel consumption is plotted over the engine power. The slope (k) of the linear regression of the fuel consumption is used to compute the additional fuel that is needed for the energy demand during engine-off periods and engine starts.
+The total fuel consumption is corrected in a post-processing step according to the *engine-line* approach. Therefore, for every engine operating point where the engine is  on and has a positive fuel consumption the fuel consumption is plotted over the engine power. The slope (k) of the linear regression of the fuel consumption is used to compute the additional fuel that is needed for the energy demand during engine-off periods and engine starts.
 
 ![](pics/FC_Correction.PNG)
-
-$\Delta FC = k * (E_\textrm{aux,ICE,off} + E_\textrm{ICE,start} - E_\textrm{WHR,corr}/\eta_\textrm{alternator}) + k * (E_\textrm{ES,mech,corr} + E_\textrm{PS,corr})$
-
-The fuel consumption for the aux heater is only added for the main fuel:
-
-$\Delta FC_\textrm{auxHeater} = E_\textrm{auxHeater} * NCV_\textrm{main fuel}$ 
-
-$FC_\textrm{final} = FC_\textrm{final,mod} + \Delta FC + \Delta FC_\textrm{auxHeater}$

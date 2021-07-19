@@ -176,6 +176,7 @@ namespace TUGraz.VectoCore.OutputData
 		IFuelProperties Fuel { get; }
 		KilogramPerWattSecond EngineLineCorrectionFactor { get; }
 		KilogramPerWattSecond VehicleLine { get; }
+		KilogramPerSecond FC_ESS_H { get; }
 		KilogramPerSecond FC_ESS_CORR_H { get; }
 		KilogramPerSecond FC_BusAux_PS_CORR_H { get; }
 		KilogramPerSecond FC_BusAux_ES_CORR_H { get; }
@@ -192,6 +193,7 @@ namespace TUGraz.VectoCore.OutputData
 		KilogramPerMeter FC_AUXHTR_KM_CORR { get; }
 		KilogramPerMeter FC_REESS_SOC_KM { get; }
 		KilogramPerMeter FC_REESS_SOC_CORR_KM { get; }
+		KilogramPerMeter FC_ESS_KM { get; }
 
 		KilogramPerMeter FC_ESS_CORR_KM { get; }
 		KilogramPerMeter FC_FINAL_KM { get; }

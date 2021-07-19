@@ -95,7 +95,7 @@ namespace TUGraz.VectoCore.OutputData
 
 		public static readonly IList<ModalResultField> FuelConsumptionSignals = new[] {
 			ModalResultField.FCMap, ModalResultField.FCNCVc, ModalResultField.FCWHTCc, // ModalResultField.FCAAUX,
-			ModalResultField.FCICEStopStart,  ModalResultField.FCFinal
+			/*ModalResultField.FCICEStopStart,*/  ModalResultField.FCFinal
 		};
 
 		private readonly Dictionary<String, SI> _timeIntegrals = new Dictionary<string, SI>();
@@ -502,7 +502,7 @@ namespace TUGraz.VectoCore.OutputData
 
 					//TimeIntegral<Kilogram>(GetColumnName(fuel, ModalResultField.FCAAUX));
 					TimeIntegral<Kilogram>(GetColumnName(fuel, ModalResultField.FCMap));
-					TimeIntegral<Kilogram>(GetColumnName(fuel, ModalResultField.FCICEStopStart));
+					//TimeIntegral<Kilogram>(GetColumnName(fuel, ModalResultField.FCICEStopStart));
 					TimeIntegral<Kilogram>(GetColumnName(fuel, ModalResultField.FCFinal));
 
 				}

@@ -141,7 +141,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 		/// <summary>
 		/// [g/h] Fuel consumption after correction for ADAS technologies. (Based on FC-AAUXc.)
 		/// </summary>
-		[ModalResultField(typeof(SI), name: "FC-ESS", caption: "FC-ESS{0} [g/h]", outputFactor: 3600 * 1000)] FCICEStopStart,
+		//[ModalResultField(typeof(SI), name: "FC-ESS", caption: "FC-ESS{0} [g/h]", outputFactor: 3600 * 1000)] FCICEStopStart,
 
 		/// <summary>
 		/// [g/h] Fuel consumption after WHTC Correction. (Based on FC-ADAS.)
