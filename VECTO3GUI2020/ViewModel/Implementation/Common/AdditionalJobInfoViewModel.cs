@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
 using System.Windows;
@@ -88,7 +89,7 @@ namespace VECTO3GUI2020.ViewModel.Implementation.Common
 
 	public class AdditionalJobInfoViewModelNewVif : AdditionalJobInfoViewModelBase
 	{
-		private ICreateVifViewModel _parent;
+		private CreateVifViewModel _parent;
 		public ObservableCollection<string> InvalidEntries { get; set; } = new ObservableCollection<string>();
 
 		#region Overrides of AdditionalJobInfoViewModelBase
@@ -96,13 +97,23 @@ namespace VECTO3GUI2020.ViewModel.Implementation.Common
 		public override void SetParent(IViewModelBase parent)
 		{
 			_parent = parent as CreateVifViewModel;
+            (_parent as INotifyPropertyChanged).PropertyChanged += AdditionalJobInfoViewModelNewVif_PropertyChanged;
 			Debug.Assert(_parent != null);
-
-
 		}
 
-		#endregion
-	}
+        private void AdditionalJobInfoViewModelNewVif_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+			if (e.PropertyName == nameof(_parent.CanBeSimulated)) {
+
+
+
+			}
+		}
+
+
+
+        #endregion
+    }
 
 	public class AdditionalJobInfoViewModelStageInput : AdditionalJobInfoViewModelBase
 	{

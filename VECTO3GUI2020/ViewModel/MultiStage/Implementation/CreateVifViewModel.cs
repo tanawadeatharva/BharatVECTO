@@ -123,7 +123,9 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 
 		private void CreateVifViewModel_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-
+			if (e.PropertyName != nameof(CanBeSimulated)) {
+				OnPropertyChanged(nameof(CanBeSimulated));
+			}
 			switch (e.PropertyName) {
 				case nameof(DataSource):
 				case nameof(Completed):
@@ -475,7 +477,7 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 
 		public bool CanBeSimulated
 		{
-			get => PrimaryInputPath != null && StageInputPath != null;
+			get => PrimaryInputPath != null && StageInputPath != null && !UnsavedChanges;
 			set => throw new NotImplementedException();
 		}
 
