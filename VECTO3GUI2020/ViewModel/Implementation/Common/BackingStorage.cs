@@ -40,8 +40,8 @@ namespace VECTO3GUI2020.ViewModel.Implementation.Common
 
 		private void ResetUnsavedChanges()
 		{
-			OnPropertyChanged(nameof(UnsavedChanges));
 			_unsavedChanges.Clear();
+			OnPropertyChanged(nameof(UnsavedChanges));
 		}
 
 		public void SaveChanges()

@@ -87,6 +87,8 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 
 		#endregion
 
+		public bool UnsavedChanges => _backingStorage.UnsavedChanges;
+
 
 		public CreateVifViewModel(IDialogHelper dialogHelper, 
 			IXMLInputDataReader inputDataReader, 
@@ -99,17 +101,33 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 			_inputDataReader = inputDataReader;
 			_additionalJobInfo = additionalJobInfo;
 			additionalJobInfo.SetParent(this);
+			
+
+			SetupBackingStorage();
+
+			
+
 			UpdateTitleAndDocumentName();
-
-
 			(this as INotifyPropertyChanged).PropertyChanged += CreateVifViewModel_PropertyChanged;
 		}
 
-        private void CreateVifViewModel_PropertyChanged(object sender, PropertyChangedEventArgs e)
+		private void SetupBackingStorage()
+		{
+			_backingStorage = new BackingStorage<CreateVifViewModel>(this,
+				nameof(this.PrimaryInputPath),
+				nameof(this.StageInputPath));
+			_backingStorage.PropertyChanged += (object s, PropertyChangedEventArgs e) => {
+				OnPropertyChanged(nameof(UnsavedChanges));
+			};
+		}
+
+		private void CreateVifViewModel_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
+
 			switch (e.PropertyName) {
 				case nameof(DataSource):
 				case nameof(Completed):
+				case nameof(UnsavedChanges):
 					UpdateTitleAndDocumentName();
 					break;
 				default:
@@ -123,6 +141,7 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 			IAdditionalJobInfoViewModel additionalJobInfo) : this(dialogHelper, inputDataReader, additionalJobInfo)
 		{
 			SetInputData(inputData);
+			_backingStorage.SaveChanges();
 		}
 
 		public CreateVifViewModel(bool completed, IDialogHelper dialogHelper, IXMLInputDataReader inputDataReader,
@@ -158,6 +177,7 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 				titleStringBuilder.Append(" - ").Append(Path.GetFileName(DataSource.SourceFile));
 			}
 
+			titleStringBuilder.Append(UnsavedChanges ? "*" : "");
 			Title = titleStringBuilder.ToString();
 			DocumentName = Path.GetFileNameWithoutExtension(_dataSource?.SourceFile) ?? $"New {VifType} {_newVifCount}";
 		}
@@ -281,12 +301,13 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 			Debug.WriteLine(jsonString);
 			File.WriteAllText(path, jsonString);
 			SetInputData(JSONInputDataFactory.ReadJsonJob(path));
+			_backingStorage.SaveChanges();
 			return path;
 		}
 
-		private ICommand _saveJobAsCommand;
+		private IRelayCommand _saveJobAsCommand;
 
-		public ICommand SaveJobAsCommand
+		public IRelayCommand SaveJobAsCommand
 		{
 			get => _saveJobAsCommand ?? (_saveJobAsCommand = new RelayCommand(() => {
 				if (CanBeSaved()) {
@@ -421,6 +442,7 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 		private string _documentName;
 		private DataSource _dataSource;
 		private IAdditionalJobInfoViewModel _additionalJobInfo;
+		private BackingStorage<CreateVifViewModel> _backingStorage;
 
 
 		public string DocumentName

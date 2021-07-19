@@ -163,6 +163,7 @@
     <Compile Include="Helper\Converter\InvertBoolConverter.cs" />
     <Compile Include="Helper\Converter\JobTypeStringConverter.cs" />
     <Compile Include="Helper\Converter\LabledTextBoxLabelConverter.cs" />
+    <Compile Include="Helper\Converter\MultipleBoolConverter.cs" />
     <Compile Include="Helper\Converter\MultistageParameterModeToVisibilityConverter.cs" />
     <Compile Include="Helper\Converter\BoolToIntConverter.cs" />
     <Compile Include="Helper\Converter\NullToUnsetValueConverter.cs" />
