@@ -1239,6 +1239,7 @@ Public Class VehicleForm
         If lvREESSPacks.SelectedItems.Count = 0 Then Exit Sub
 
         Dim entry As ListViewItem = lvREESSPacks.SelectedItems(0)
+		_reessPackDlg._vehFile = _vehFile
         _reessPackDlg.tbBattery.Text = entry.SubItems(REESPackTbl.ReessFile).Text
         _reessPackDlg.tbBatteryPackCnt.Text = entry.SubItems(REESPackTbl.Count).Text
         _reessPackDlg.tbStreamId.Text = entry.SubItems(REESPackTbl.StringId).Text
@@ -1252,6 +1253,7 @@ Public Class VehicleForm
 
     Private Sub btnAddReessPack_Click(sender As Object, e As EventArgs) Handles btnAddReessPack.Click
         _reessPackDlg.Clear()
+		_reessPackDlg._vehFile = _vehFile
         If _reessPackDlg.ShowDialog() = DialogResult.OK Then
 
             lvREESSPacks.Items.Add(CreateREESSPackListViewItem(_reessPackDlg.tbBattery.Text, _reessPackDlg.tbBatteryPackCnt.Text.ToInt(0), _reessPackDlg.tbStreamId.Text.ToInt(0)))

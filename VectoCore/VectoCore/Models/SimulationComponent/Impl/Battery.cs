@@ -24,6 +24,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			if (idx >= 0) {
 				BatteryId = idx;
 			}
+			CurrentState.PulseDuration = 0.SI<Second>();
+			PreviousState.PulseDuration = 0.SI<Second>();
+			PreviousState.PowerDemand = 0.SI<Watt>();
 		}
 
 		#region Implementation of IBatteryProvider
@@ -36,6 +39,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		public void Initialize(double initialSoC)
 		{
+			CurrentState.PulseDuration = 0.SI<Second>();
+			PreviousState.PulseDuration = 0.SI<Second>();
+			PreviousState.PowerDemand = 0.SI<Watt>();
+
 			if (initialSoC.IsSmaller(ModelData.MinSOC) || initialSoC.IsGreater(ModelData.MaxSOC))
 			{
 				throw new VectoException("SoC must be between {0} and {1}", ModelData.MinSOC, ModelData.MaxSOC);
@@ -45,16 +52,21 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		public IRESSResponse Request(Second absTime, Second dt, Watt powerDemand, bool dryRun = false)
 		{
+			var tPulse = PreviousState.PowerDemand.Sign() == powerDemand.Sign()
+				? PreviousState.PulseDuration
+				: 0.SI<Second>();
 			var maxChargePower = MaxChargePower(dt);
 			var maxDischargePower = MaxDischargePower(dt);
 
+			
 			if (powerDemand.IsGreater(maxChargePower, Constants.SimulationSettings.InterpolateSearchTolerance) ||
 				powerDemand.IsSmaller(maxDischargePower, Constants.SimulationSettings.InterpolateSearchTolerance))
 			{
-				return PowerDemandExceeded(absTime, dt, powerDemand, maxDischargePower, maxChargePower, dryRun);
+				return PowerDemandExceeded(absTime, dt, powerDemand, maxDischargePower, maxChargePower, tPulse, dryRun);
 			}
 
-			var internalResistance = ModelData.InternalResistance.Lookup(PreviousState.StateOfCharge);
+			
+			var internalResistance = ModelData.InternalResistance.Lookup(PreviousState.StateOfCharge, tPulse);
 			var current = 0.SI<Ampere>();
 			if (!powerDemand.IsEqual(0))
 			{
@@ -106,7 +118,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		}
 
 		private IRESSResponse PowerDemandExceeded(Second absTime, Second dt, Watt powerDemand, Watt maxDischargePower,
-			Watt maxChargePower, bool dryRun)
+			Watt maxChargePower, Second tPulse, bool dryRun)
 		{
 			var maxPower = powerDemand < 0 ? maxDischargePower : maxChargePower;
 
@@ -116,7 +128,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				ModelData.MaxCurrent.LookupMaxDischargeCurrent(PreviousState.StateOfCharge));
 			var current = powerDemand < 0 ? maxDischargeCurrent : maxChargeCurrent;
 
-			var batteryLoss = current * ModelData.InternalResistance.Lookup(PreviousState.StateOfCharge) * current;
+			var batteryLoss = current * ModelData.InternalResistance.Lookup(PreviousState.StateOfCharge, tPulse) * current;
 
 			AbstractRESSResponse response;
 			if (dryRun) {
@@ -146,11 +158,14 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		protected override void DoWriteModalResults(Second absTime, Second dt, IModalDataContainer container)
 		{
 			var cellVoltage = ModelData.SOCMap.Lookup(PreviousState.StateOfCharge);
+			var tPulse = PreviousState.PowerDemand.Sign() == CurrentState.PowerDemand.Sign()
+				? PreviousState.PulseDuration
+				: 0.SI<Second>();
 			container[ModalResultField.U0_reess, BatteryId] = cellVoltage;
 			container[ModalResultField.U_reess_terminal, BatteryId] =
 				cellVoltage +
 				CurrentState.TotalCurrent *
-				ModelData.InternalResistance.Lookup(PreviousState.StateOfCharge); // adding both terms because pos. current charges the battery!
+				ModelData.InternalResistance.Lookup(PreviousState.StateOfCharge, tPulse); // adding both terms because pos. current charges the battery!
 			container[ModalResultField.I_reess, BatteryId] = CurrentState.TotalCurrent;
 			container[ModalResultField.REESSStateOfCharge, BatteryId] = CurrentState.StateOfCharge.SI();
 			container[ModalResultField.P_reess_terminal, BatteryId] = CurrentState.PowerDemand;
@@ -164,6 +179,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		protected override void DoCommitSimulationStep(Second time, Second simulationInterval)
 		{
+			var tPulse = PreviousState.PowerDemand.Sign() == CurrentState.PowerDemand.Sign()
+				? PreviousState.PulseDuration
+				: 0.SI<Second>();
+			CurrentState.PulseDuration = tPulse + simulationInterval;
 			AdvanceState();
 		}
 
@@ -181,25 +200,27 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		public Watt MaxChargePower(Second dt)
 		{
-			//var maxChargeCurrent = VectoMath.Min((ModelData.MaxSOC - PreviousState.StateOfCharge) * ModelData.Capacity / dt,
-			//	ModelData.MaxCurrent.LookupMaxChargeCurrent(PreviousState.StateOfCharge));
 			var maxChargeCurrent = MaxChargeCurrent(dt);
+			var tPulse = PreviousState.PowerDemand.Sign() > 0 // keep on charging?
+				? PreviousState.PulseDuration
+				: 0.SI<Second>();
 			return InternalVoltage * maxChargeCurrent +
-					maxChargeCurrent * InternalResistance * maxChargeCurrent;
+					maxChargeCurrent * InternalResistance(tPulse) * maxChargeCurrent;
 		}
 
 		
 
 		public Watt MaxDischargePower(Second dt)
 		{
-			//var maxDischargeCurrent = VectoMath.Max(
-			//	((ModelData.MinSOC - PreviousState.StateOfCharge) * ModelData.Capacity / dt).LimitTo(ModelData.MaxCurrent.LookupMaxDischargeCurrent(PreviousState.StateOfCharge),
-			//		0.SI<Ampere>()), ModelData.MaxCurrent.LookupMaxDischargeCurrent(PreviousState.StateOfCharge));
 			var maxDischargeCurrent = MaxDischargeCurrent(dt);
 			var cellVoltage = InternalVoltage;
+			var tPulse = PreviousState.PowerDemand.Sign() < 0 // keep on discharging?
+				? PreviousState.PulseDuration
+				: 0.SI<Second>();
+			var internalResistance = InternalResistance(tPulse);
 			var maxDischargePower = InternalVoltage * maxDischargeCurrent +
-									maxDischargeCurrent * InternalResistance * maxDischargeCurrent;
-			var maxPower = -cellVoltage / (4 * InternalResistance) * cellVoltage;
+									maxDischargeCurrent * internalResistance * maxDischargeCurrent;
+			var maxPower = -cellVoltage / (4 * internalResistance) * cellVoltage;
 			return VectoMath.Max(maxDischargePower, maxPower);
 		}
 
@@ -207,7 +228,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		public double MaxSoC => ModelData.MaxSOC;
 
-		public Ohm InternalResistance => ModelData.InternalResistance.Lookup(PreviousState.StateOfCharge);
+		public Ohm InternalResistance(Second tPulse)
+		{
+			return ModelData.InternalResistance.Lookup(PreviousState.StateOfCharge, tPulse);
+		}
+
 		public AmpereSecond Capacity => ModelData.Capacity;
 
 		public Ampere MaxChargeCurrent(Second dt)
@@ -246,6 +271,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			public Watt MaxChargePower;
 			public Watt MaxDischargePower;
 			public Watt BatteryLoss;
+			public Second PulseDuration;
 		}
 
 

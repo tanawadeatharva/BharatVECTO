@@ -116,12 +116,45 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Battery {
 			Entries = entries;
 		}
 
-		public Ohm Lookup(double SoC)
+		public Ohm Lookup(double SoC, Second tPulse)
 		{
 			var idx = FindIndex(SoC);
-			return VectoMath.Interpolate(Entries[idx - 1].SoC, Entries[idx].SoC, Entries[idx - 1].Resistance,
-				Entries[idx].Resistance, SoC);
-        }
+			var entry1 = Entries[idx - 1];
+			var entry2 = Entries[idx];
+			
+			var resistance1 = InterpolateResistance(entry1.Resistance, tPulse);
+			var resistance2 = InterpolateResistance(entry2.Resistance, tPulse);
+
+			return VectoMath.Interpolate(entry1.SoC, entry2.SoC, resistance1, resistance2, SoC);
+		}
+
+		private Ohm InterpolateResistance(List<Tuple<Second, Ohm>> resistance, Second tPulse)
+		{
+			
+			if (tPulse < resistance.First().Item1) {
+				return resistance.First().Item2;
+			}
+
+			if (tPulse > resistance.Last().Item1) {
+				return resistance.Last().Item2;
+			}
+
+			Tuple<Second, Ohm> entry1 = null;
+			Tuple<Second, Ohm> entry2 = null;
+			for (var index = 1; index < resistance.Count; index++) {
+				if (tPulse >= resistance[index - 1].Item1 && tPulse <= resistance[index].Item1) {
+					entry1 = resistance[index - 1];
+					entry2 = resistance[index];
+				}
+			}
+
+			if (entry1 == null || entry2 == null) {
+				throw new VectoSimulationException("Failed to lookup internal resistance!");
+			}
+
+			return	VectoMath.Interpolate(entry1.Item1, entry2.Item1,
+					entry1.Item2, entry2.Item2, tPulse);
+		}
 
 		protected int FindIndex(double soc)
 		{
@@ -147,7 +180,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Battery {
 		public class InternalResistanceMapEntry
 		{
 			[Required, Range(0, 1)] public double SoC;
-			[Required, SIRange(0, 1e6)] public Ohm Resistance;
+			[Required, SIRange(0, 1e6)] public List<Tuple<Second, Ohm>> Resistance;
 		}
 
 	}
