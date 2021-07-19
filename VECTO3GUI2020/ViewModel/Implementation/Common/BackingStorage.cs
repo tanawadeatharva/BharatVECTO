@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
+using System.Reflection;
 using TUGraz.VectoCommon.Utils;
 
 namespace VECTO3GUI2020.ViewModel.Implementation.Common
@@ -18,11 +19,12 @@ namespace VECTO3GUI2020.ViewModel.Implementation.Common
 
 		private Dictionary<string, GetterDelegate> _getterDelegatesMap = new Dictionary<string, GetterDelegate>();
 		private Dictionary<string, Type> _propertyTypesMap = new Dictionary<string, Type>();
+		private IDictionary<string, IEqualityComparer> _equalityComparers = new Dictionary<string, IEqualityComparer>();
 
 		private IDictionary<string, object> _savedValues = null;
 		private IDictionary<string, object> _unsavedChanges = new Dictionary<string, object>();
 		private IDictionary<string, object> _currentValues = new Dictionary<string, object>();
-		private IDictionary<string, IEqualityComparer> _equalityComparers = new Dictionary<string, IEqualityComparer>();
+
 
 		public BackingStorage(T observedObject, params string[] observedProperties)
 		{
@@ -44,7 +46,7 @@ namespace VECTO3GUI2020.ViewModel.Implementation.Common
 
 		public void SaveChanges()
 		{
-			_savedValues = new ReadOnlyDictionary<string, object>(_currentValues);
+			_savedValues = new ReadOnlyDictionary<string, object>(new Dictionary<string, object>(_currentValues));
 			ResetUnsavedChanges();
 		}
 
@@ -86,7 +88,7 @@ namespace VECTO3GUI2020.ViewModel.Implementation.Common
 
 			if (_equalityComparers.ContainsKey(propertyName)) {
 				var equalityComparer = _equalityComparers[propertyName];
-				return equalityComparer.Equals(newValue, savedValue);
+				return !equalityComparer.Equals(newValue, savedValue);
 			} else {
 				return newValue == savedValue;
 			}
@@ -120,9 +122,9 @@ namespace VECTO3GUI2020.ViewModel.Implementation.Common
 
 			Type myGeneric = typeof(EqualityComparer<>);
 			Type constructedClass = myGeneric.MakeGenericType(type);
-
-			object created = Activator.CreateInstance(constructedClass);
-			return (IEqualityComparer)created;
+			return (IEqualityComparer)constructedClass
+				.GetProperty(nameof(EqualityComparer<T>.Default), BindingFlags.Static | BindingFlags.Public)
+				.GetValue(null);
 
 		}
 	}

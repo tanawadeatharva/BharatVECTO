@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Reflection;
 using System.Runtime.CompilerServices;
+using Castle.Components.DictionaryAdapter;
 using NUnit.Framework;
+using VECTO3GUI2020;
 using VECTO3GUI2020.ViewModel.Implementation.Common;
 using VECTO3GUI2020.ViewModel.MultiStage.Implementation;
 
@@ -14,7 +16,8 @@ namespace Vecto3GUI2020Test.HelperTests
 	{
 		private TestVm _testVm;
 		private Dictionary<string, object> _currentValues;
-		private Dictionary<string, object> _savedValues;
+		private IReadOnlyDictionary<string, object> _savedValues;
+		private IReadOnlyDictionary<string, object> _unsavedChanges;
 		private bool _unsavedChangesNotified = false;
 
 		public class TestVm : ObservableObject
@@ -43,6 +46,18 @@ namespace Vecto3GUI2020Test.HelperTests
 			}
 		}
 
+		#region Setup and Property implementation
+		private IReadOnlyDictionary<string, object> SavedValues
+		{
+			get
+			{
+				return _savedValues ?? (_savedValues = (IReadOnlyDictionary<string, object>)_testVm.BackingStorage.GetType()
+					.GetField("_savedValues", BindingFlags.NonPublic | BindingFlags.Instance)
+					.GetValue(_testVm.BackingStorage));
+			}
+		}
+
+
 		[SetUp]
 		public void SetUp()
 		{
@@ -51,11 +66,11 @@ namespace Vecto3GUI2020Test.HelperTests
 			_currentValues = (Dictionary<string, object>)_testVm.BackingStorage.
 				GetType().GetField("_currentValues", BindingFlags.NonPublic | BindingFlags.Instance).
 				GetValue(_testVm.BackingStorage);
-			_savedValues = (Dictionary<string, object>)_testVm.BackingStorage.
-				GetType().GetField("_savedValues", BindingFlags.NonPublic | BindingFlags.Instance).
+			_unsavedChanges = (Dictionary<string, object>)_testVm.BackingStorage.
+				GetType().GetField("_unsavedChanges", BindingFlags.NonPublic | BindingFlags.Instance).
 				GetValue(_testVm.BackingStorage);
 
-            _testVm.BackingStorage.PropertyChanged += BackingStorage_PropertyChanged;
+			_testVm.BackingStorage.PropertyChanged += BackingStorage_PropertyChanged;
 		}
 
         private void BackingStorage_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
@@ -69,7 +84,8 @@ namespace Vecto3GUI2020Test.HelperTests
 			}
         }
 
-        [Test]
+#endregion
+		[Test]
 		public void ValueUpdatedOnChange()
 		{
 
@@ -120,22 +136,55 @@ namespace Vecto3GUI2020Test.HelperTests
 		{
 			var originalString = "original";
 			var newValue = "new Value";
-
+			//Set to initial value
 			_testVm.StringTestProperty = originalString;
 			Assert.IsTrue(checkNotified(ref _unsavedChangesNotified));
 			Assert.IsTrue(_testVm.BackingStorage.UnsavedChanges);
 
+			//Save
 			_testVm.BackingStorage.SaveChanges();
+			Assert.GreaterOrEqual(SavedValues.Count, 1);
 			Assert.IsTrue(checkNotified(ref _unsavedChangesNotified));
 			Assert.IsFalse(_testVm.BackingStorage.UnsavedChanges);
 
+			//Set to new value
 			_testVm.StringTestProperty = newValue;
 			Assert.IsTrue(checkNotified(ref _unsavedChangesNotified));
 			Assert.IsTrue(_testVm.BackingStorage.UnsavedChanges);
 
+			//Set to initial value
 			_testVm.StringTestProperty = originalString;
 			Assert.IsTrue(checkNotified(ref _unsavedChangesNotified));
 			Assert.IsFalse(_testVm.BackingStorage.UnsavedChanges);
+		}
+
+
+		[Test]
+		public void SavedChangesNotModified()
+		{
+			string initialValue = "hello world";
+
+			_testVm.StringTestProperty = initialValue;
+
+			_testVm.BackingStorage.SaveChanges();
+			
+			Assert.AreEqual(SavedValues.Count, _currentValues.Count);
+			Assert.AreEqual( initialValue, SavedValues[nameof(_testVm.StringTestProperty)]);
+
+			_testVm.StringTestProperty = "New value";
+			Assert.AreEqual(initialValue, SavedValues[nameof(_testVm.StringTestProperty)]);
+		}
+
+		[Test]
+		public void createEqualityComparer()
+		{
+			var stringEqualityComparer = EqualityComparer<string>.Default;
+			var CreateEqualityComparererMethodInfo = _testVm.BackingStorage.GetType()
+				.GetMethod("CreateEqualityComparer", BindingFlags.NonPublic | BindingFlags.Static);
+
+			var generatedEqualityComparer = CreateEqualityComparererMethodInfo.Invoke(null, new []{ typeof(String) });
+			Assert.AreEqual(stringEqualityComparer.GetType(), generatedEqualityComparer.GetType());
+
 
 		}
 
