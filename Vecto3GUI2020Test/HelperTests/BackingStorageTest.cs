@@ -73,6 +73,18 @@ namespace Vecto3GUI2020Test.HelperTests
 			_testVm.BackingStorage.PropertyChanged += BackingStorage_PropertyChanged;
 		}
 
+		[TearDown]
+		public void TearDown()
+		{
+			_unsavedChangesNotified = false;
+			
+			_currentValues = null;
+			_unsavedChanges = null;
+			_savedValues = null;
+			_testVm.BackingStorage.PropertyChanged -= BackingStorage_PropertyChanged;
+			_testVm = null;
+		}
+
         private void BackingStorage_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
         {
 			switch (e.PropertyName) {
@@ -158,6 +170,13 @@ namespace Vecto3GUI2020Test.HelperTests
 			Assert.IsFalse(_testVm.BackingStorage.UnsavedChanges);
 		}
 
+		[Test]
+		public void UnsavedTrueBeforeFirstSave()
+		{
+			Assert.IsTrue(_testVm.BackingStorage.UnsavedChanges);
+			_testVm.BackingStorage.SaveChanges();
+			Assert.IsFalse(_testVm.BackingStorage.UnsavedChanges);
+		}
 
 		[Test]
 		public void SavedChangesNotModified()

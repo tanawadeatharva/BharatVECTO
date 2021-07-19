@@ -35,7 +35,7 @@ namespace VECTO3GUI2020.ViewModel.Implementation.Common
 
 		public bool UnsavedChanges
 		{
-			get => _unsavedChanges.Count != 0;
+			get => (_savedValues == null) || (_unsavedChanges.Count != 0);
 		}
 
 		private void ResetUnsavedChanges()
