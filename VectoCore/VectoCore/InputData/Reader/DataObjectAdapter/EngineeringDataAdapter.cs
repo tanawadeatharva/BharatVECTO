@@ -702,6 +702,10 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 
 			var bat = batteryInputData.ElectricStorageElements.Where(x => x.REESSPack.StorageType == REESSType.Battery).ToArray();
 
+			if (bat.Length == 0) {
+				return null;
+			}
+
 			var retVal = new BatterySystemData();
 			foreach (var entry in bat) {
                 var b = entry.REESSPack as IBatteryPackDeclarationInputData;
