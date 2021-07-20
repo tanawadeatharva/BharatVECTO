@@ -339,11 +339,13 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			}
 
 			retVal.ElectricMotor.MaxDriveTorque = maxDriveTorqueDt;
+			retVal.ElectricMotor.MaxDriveTorqueEM = maxDriveTorqueEm;
 			retVal.ElectricMotor.MaxRecuperationTorque = maxRecuperationTorqueDt;
 			retVal.ElectricMotor.AngularVelocity = avgEmSpeed;
 			retVal.ElectricMotor.AvgDrivetrainSpeed = avgDtSpeed;
 
 			retVal.ElectricMotor.TorqueRequest = outTorque;
+			retVal.ElectricMotor.TorqueRequestEmMap = emTorqueMap;
 			retVal.ElectricMotor.InertiaTorque =
 				avgDtSpeed.IsEqual(0) ? 0.SI<NewtonMeter>() : inertiaTorqueEm * avgEmSpeed / avgDtSpeed;
 			

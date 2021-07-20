@@ -165,6 +165,8 @@ namespace TUGraz.VectoCommon.Models
 		public NewtonMeter TorqueRequest { get; set; }
 		public NewtonMeter InertiaTorque { get; set; }
 		public PerSecond AvgDrivetrainSpeed { get; set; }
+		public NewtonMeter MaxDriveTorqueEM { get; set; }
+		public NewtonMeter TorqueRequestEmMap { get; set; }
 	}
 
 

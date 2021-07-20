@@ -433,7 +433,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			NewtonMeter inTorque, PerSecond inAngularVelocity, GearshiftPosition currentGear, IResponse response)
 		{
 			// down shift
-			if (IsBelowDownShiftCurve(currentGear, inTorque, inAngularVelocity)) {
+			if (IsBelowDownShiftCurve(currentGear, response.ElectricMotor.TorqueRequestEmMap, response.ElectricMotor.AngularVelocity)) {
 				currentGear = GearList.Predecessor(currentGear);
 				//while (SkipGears && currentGear > 1) {
 				//	currentGear--;
@@ -557,7 +557,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		private GearshiftPosition InitStartGear(Second absTime, NewtonMeter outTorque, PerSecond outAngularVelocity)
 		{
-			var emSpeeds = new Dictionary<GearshiftPosition, Tuple<PerSecond, PerSecond>>();
+			var emSpeeds = new Dictionary<GearshiftPosition, Tuple<PerSecond, PerSecond, double>>();
 
 			foreach (var gear in GearList.Reverse()) {
 				//for (var gear = (uint)GearboxModelData.Gears.Count; gear >= 1; gear--) {
@@ -572,14 +572,18 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 				var fullLoadPower = -(response.ElectricMotor.MaxDriveTorque * response.ElectricMotor.AngularVelocity);
 					//.DynamicFullLoadPower; //EnginePowerRequest - response.DeltaFullLoad;
-				var reserve = 1 - response.ElectricMotor.PowerRequest / fullLoadPower;
+				var reserve = 1 - response.ElectricMotor.TorqueRequestEmMap / response.ElectricMotor.MaxDriveTorqueEM;
 
-				if (reserve >= GearshiftParams.StartTorqueReserve) {
+				var isBelowDownshift = gear.Gear > 1 && 
+					IsBelowDownshiftCurve(GearboxModelData.Gears[gear.Gear].ShiftPolygon, response.ElectricMotor.TorqueRequest,
+						response.ElectricMotor.AngularVelocity);
+
+				if (reserve >= GearshiftParams.StartTorqueReserve && !isBelowDownshift) {
 					//_nextGear = gear;
 					//return gear;
 					emSpeeds[gear] = Tuple.Create(response.ElectricMotor.AngularVelocity,
 						(GearshiftParams.StartSpeed * TransmissionRatio * GearboxModelData.Gears[gear.Gear].Ratio)
-						.Cast<PerSecond>());
+						.Cast<PerSecond>(), (response.ElectricMotor.ElectricMotorPowerMech / response.ElectricSystem.RESSPowerDemand).Value());
 				}
 			}
 
@@ -592,12 +596,27 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			return _nextGear;
 		}
 
+		private bool IsBelowDownshiftCurve(ShiftPolygon shiftPolygon, NewtonMeter emTorque, PerSecond emSpeed)
+		{
+			foreach (var entry in shiftPolygon.Downshift.Pairwise(Tuple.Create)) {
+				if (!emTorque.IsBetween(entry.Item1.Torque, entry.Item2.Torque)) {
+					continue;
+				}
+
+				if (ShiftPolygon.IsLeftOf(emSpeed, emTorque, entry)) {
+					return true;
+				}
+			}
+
+			return false;
+		}
+
 		protected bool IsBelowDownShiftCurve(GearshiftPosition gear, NewtonMeter inTorque, PerSecond inEngineSpeed)
 		{
 			if (!GearList.HasPredecessor(gear)) {
 				return false;
 			}
-			return GearboxModelData.Gears[gear.Gear].ShiftPolygon.IsBelowDownshiftCurve(inTorque, inEngineSpeed);
+			return IsBelowDownshiftCurve(GearboxModelData.Gears[gear.Gear].ShiftPolygon, inTorque, inEngineSpeed);
 		}
 
 		protected bool IsAboveDownShiftCurve(GearshiftPosition gear, NewtonMeter inTorque, PerSecond inEngineSpeed)
