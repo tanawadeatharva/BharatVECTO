@@ -341,6 +341,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			retVal.ElectricMotor.MaxDriveTorque = maxDriveTorqueDt;
 			retVal.ElectricMotor.MaxDriveTorqueEM = maxDriveTorqueEm;
 			retVal.ElectricMotor.MaxRecuperationTorque = maxRecuperationTorqueDt;
+			retVal.ElectricMotor.MaxRecuperationTorqueEM = maxRecuperationTorqueEm;
 			retVal.ElectricMotor.AngularVelocity = avgEmSpeed;
 			retVal.ElectricMotor.AvgDrivetrainSpeed = avgDtSpeed;
 
