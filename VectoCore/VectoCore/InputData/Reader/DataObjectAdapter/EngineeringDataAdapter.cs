@@ -691,6 +691,14 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 				LoadstageThresholds = gsInputData.LoadStageThresholdsUp != null && gsInputData.LoadStageThresholdsDown != null ? gsInputData.LoadStageThresholdsUp.Zip(gsInputData.LoadStageThresholdsDown, Tuple.Create) : null
 			};
 
+			if (gsInputData.PEV_DeRatingDownshiftSpeedFactor != null) {
+				retVal.PEV_DeRatedDownshiftSpeedFactor = gsInputData.PEV_DeRatingDownshiftSpeedFactor.Value;
+			}
+
+			if (gsInputData.PEV_TargetSpeedBrakeNorm != null) {
+				retVal.PEV_TargetSpeedBrakeNorm = gsInputData.PEV_TargetSpeedBrakeNorm.Value;
+			}
+
 			return retVal;
 		}
 

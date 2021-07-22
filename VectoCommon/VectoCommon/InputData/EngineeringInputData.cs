@@ -341,6 +341,10 @@ namespace TUGraz.VectoCommon.InputData
 
 		Second ATLookAheadTime { get; }
 		double[][] ShiftSpeedsTCToLocked { get; }
+
+		double? PEV_TargetSpeedBrakeNorm { get; }
+
+		double? PEV_DeRatingDownshiftSpeedFactor { get; }
 	}
 
 	public interface ITorqueConverterEngineeringShiftParameterInputData

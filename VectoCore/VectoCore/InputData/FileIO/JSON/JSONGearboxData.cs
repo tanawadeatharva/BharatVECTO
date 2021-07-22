@@ -371,6 +371,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 		public PerSecond MinEngineSpeedPostUpshift => null;
 		public Second ATLookAheadTime => null;
 		public double[][] ShiftSpeedsTCToLocked => null;
+		public double? PEV_TargetSpeedBrakeNorm => null;
+		public double? PEV_DeRatingDownshiftSpeedFactor => null;
 
 		public double? VeloictyDropFactor => null;
 
