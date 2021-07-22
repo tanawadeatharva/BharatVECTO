@@ -107,7 +107,15 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.ElectricMotor {
 		{
 			var max = new Tuple<PerSecond, Watt>(0.SI<PerSecond>(), 0.SI<Watt>());
 			for (var idx = 1; idx < FullLoadEntries.Count; idx++) {
-				var currentMax = FindMaxPower(FullLoadEntries[idx - 1], FullLoadEntries[idx]);
+				var entry2 = FullLoadEntries[idx];
+				if (FullLoadEntries[idx].MotorSpeed > MaxSpeed) {
+					entry2 = new FullLoadEntry() {
+						MotorSpeed = MaxSpeed,
+						FullDriveTorque =  FullLoadDriveTorque(MaxSpeed),
+						FullGenerationTorque = FullGenerationTorque(MaxSpeed)
+					};
+				}
+				var currentMax = FindMaxPower(FullLoadEntries[idx - 1], entry2);
 				if (currentMax.Item2 > max.Item2) {
 					max = currentMax;
 				}

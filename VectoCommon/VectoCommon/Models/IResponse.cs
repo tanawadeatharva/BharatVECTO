@@ -168,6 +168,7 @@ namespace TUGraz.VectoCommon.Models
 		public NewtonMeter MaxDriveTorqueEM { get; set; }
 		public NewtonMeter MaxRecuperationTorqueEM { get; set; }
 		public NewtonMeter TorqueRequestEmMap { get; set; }
+		public bool DeRatingActive { get; set; }
 	}
 
 
