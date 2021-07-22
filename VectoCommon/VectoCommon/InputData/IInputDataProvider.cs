@@ -88,6 +88,8 @@ namespace TUGraz.VectoCommon.InputData
 		IVehicleDeclarationInputData CompletedVehicle { get; }
 	}
 
+	
+
 
 	public interface IMultistageBusInputDataProvider : IDeclarationInputDataProvider
 	{
@@ -105,6 +107,8 @@ namespace TUGraz.VectoCommon.InputData
 		VectoSimulationJobType JobType { get; }
 
 		bool InputComplete { get; }
+
+		IList<string> InvalidEntries { get; }
 	}
 
 

@@ -44,20 +44,12 @@ namespace VECTO3GUI2020
 				new DocumentModule(),
 				new XMLWriterFactoryModule(),
                 new FactoryModule(),
-                new MultistageModule()
+                new MultistageModule(),
+                new Vecto3GUI2020Module()
 			);
 
 
 
-			container.Bind<IJobListViewModel>().To<JobListViewModel>();
-            container.Bind<IMainWindowViewModel>().To<MainWindowViewModel>();
-            container.Bind<IMainViewModel>().To<JobListViewModel>();
-            container.Bind<ISettingsViewModel>().To<SettingsViewModel>();
-			container.Bind<IOutputViewModel>().To<OutputViewModel>().InSingletonScope();
-            container.Bind<ISettingsModel>().To<SettingsModel>();
-
-			container.Bind<IDialogHelper>().To<DialogHelper>().InSingletonScope();
-			container.Bind<IWindowHelper>().To<WindowHelper>();
 
 
 

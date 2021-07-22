@@ -17,7 +17,16 @@ namespace VECTO3GUI2020.Helper.Converter
 		/// <returns></returns>
 		public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
 		{
+			
+			
+
 			if (value is bool b) {
+				if (parameter != null) {
+					if (string.Equals((string)parameter, "invert", StringComparison.InvariantCultureIgnoreCase)) {
+						b = !b;
+					}
+				}
+
 				var visibility = b ? Visibility.Collapsed : Visibility.Visible;
 				return visibility;
 			}

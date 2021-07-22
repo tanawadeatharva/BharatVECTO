@@ -1,4 +1,5 @@
-﻿using System.Configuration;
+﻿using System;
+using System.Configuration;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCore.Utils;
 using VECTO3GUI2020.ViewModel.Implementation.Common;
@@ -38,14 +39,20 @@ namespace VECTO3GUI2020.ViewModel.Implementation.Document
 
 		public bool Selected
 		{
-			get => _selected;
+			get => _selected && CanBeSimulated;
 			set => SetProperty(ref _selected, value);
 		}
 
-		public bool CanBeEdited
+		public bool CanBeSimulated
 		{
-			get => false;
-			set => throw new System.NotImplementedException();
+			get => true;
+			set => throw new NotImplementedException();
+		}
+
+		public IAdditionalJobInfoViewModel AdditionalJobInfoVm
+		{
+			get => throw new NotImplementedException();
+			set => throw new NotImplementedException();
 		}
 
 		#endregion

@@ -237,8 +237,6 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 		public virtual string VIN => Constants.NOT_AVAILABLE;
 
-		public string LegislativeCategory => null;
-
 		public virtual LegislativeClass? LegislativeClass =>
 			Body["LegislativeClass"]?.Value<string>().ParseEnum<LegislativeClass>() ?? VectoCommon.Models.LegislativeClass.Unknown;
 
@@ -436,6 +434,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 		public virtual Watt MaxNetPower1 => null;
 
 		public virtual Watt MaxNetPower2 => null;
+
+		public virtual string ExemptedTechnology => null;
 
 		public virtual RegistrationClass? RegisteredClass => RegistrationClass.unknown;
 

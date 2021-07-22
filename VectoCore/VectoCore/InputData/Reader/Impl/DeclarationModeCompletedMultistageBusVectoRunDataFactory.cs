@@ -68,19 +68,45 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 
 		protected virtual void InitializeReport()
 		{
-			var powertrainConfig = _segmentCompletedBus.Missions.Select(
-					mission => CreateVectoRunDataSpecific(
-						mission, mission.Loadings.First(), 0))
-				.FirstOrDefault(x => x != null);
+			var powertrainConfig = CompletedVehicle.ExemptedVehicle || PrimaryVehicle.ExemptedVehicle
+				? GetExemptedVectoRunData()
+				:_segmentCompletedBus.Missions.Select(
+						mission => CreateVectoRunDataSpecific(
+							mission, mission.Loadings.First(), 0))
+					.FirstOrDefault(x => x != null);
 
 			Report.InitializeReport(powertrainConfig, new List<List<FuelData.Entry>>());
 		}
 
+		private VectoRunData GetExemptedVectoRunData()
+		{
+			return new VectoRunData() {
+				Exempted = true,
+				VehicleData = new VehicleData() {
+					ModelName = CompletedVehicle.Model,
+					Manufacturer = CompletedVehicle.Manufacturer,
+					ManufacturerAddress = CompletedVehicle.ManufacturerAddress,
+					VIN =  CompletedVehicle.VIN,
+					LegislativeClass = CompletedVehicle.LegislativeClass,
+					RegisteredClass = CompletedVehicle.RegisteredClass,
+					VehicleCode = CompletedVehicle.VehicleCode,
+					CurbMass = CompletedVehicle.CurbMassChassis,
+					GrossVehicleMass = CompletedVehicle.GrossVehicleMassRating,
+					ZeroEmissionVehicle = PrimaryVehicle.ZeroEmissionVehicle,
+					MaxNetPower1 = PrimaryVehicle.MaxNetPower1,
+					InputData = CompletedVehicle
+				},
+				Report = Report,
+				Mission = new Mission() {
+					MissionType = MissionType.ExemptedMission
+				}
+			};
+		}
 
 
 		protected virtual void Initialize()
 		{
-			if (CompletedVehicle.ExemptedVehicle || PrimaryVehicle.ExemptedVehicle)
+			if (PrimaryVehicle.ExemptedVehicle || CompletedVehicle.ExemptedVehicle)
 			{
 				return;
 			}
@@ -121,8 +147,12 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 		
 		protected virtual IEnumerable<VectoRunData> GetNextRun()
 		{
+			if (InputDataProvider.JobInputData.PrimaryVehicle.Vehicle.ExemptedVehicle) {
+				return new[] { GetExemptedVectoRunData() };
+			}
 			return VectoRunDataHeavyBusCompleted();
 		}
+
 
 		private IEnumerable<VectoRunData> VectoRunDataHeavyBusCompleted()
 		{

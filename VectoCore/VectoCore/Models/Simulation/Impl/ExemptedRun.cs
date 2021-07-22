@@ -63,6 +63,9 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl {
 
 		private void CheckValidInput()
 		{
+			if (Container.RunData.MultistageRun) {
+				return;
+			}
 			var vehicleData = Container.RunData.VehicleData;
 			if (vehicleData.ZeroEmissionVehicle && vehicleData.DualFuelVehicle) {
 				throw new VectoException("Invalid input: ZE-HDV and DualFuelVehicle are mutually exclusive!");

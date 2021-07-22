@@ -54,12 +54,12 @@ namespace TUGraz.VectoCore.Tests.XML
 			Assert.AreEqual("Some Manufacturer", vehicle.Manufacturer);
 			Assert.AreEqual("Some Manufacturer Address", vehicle.ManufacturerAddress);
 			Assert.AreEqual("VEH-1234567890", vehicle.VIN);
-			Assert.AreEqual(DateTime.Parse("2020-01-09T11:00:00Z").ToUniversalTime(), vehicle.Date);
+			Assert.AreEqual(DateTime.Parse("2021-06-30T22:00:00Z").ToUniversalTime(), vehicle.Date);
 			Assert.AreEqual("Sample Bus Model", vehicle.Model);
 			Assert.AreEqual(LegislativeClass.M3, vehicle.LegislativeClass);
 			Assert.AreEqual(500, vehicle.CurbMassChassis.Value());//CorrectedActualMass
 			Assert.AreEqual(3500, vehicle.GrossVehicleMassRating.Value());//TechnicalPermissibleMaximumLadenMass
-			Assert.AreEqual(null, vehicle.AirdragModifiedMultistage);
+			Assert.AreEqual(true, vehicle.AirdragModifiedMultistage);
 			Assert.AreEqual(TankSystem.Compressed, vehicle.TankSystem);//NgTankSystem
 			Assert.AreEqual(RegistrationClass.II_III, vehicle.RegisteredClass);//ClassBus
 			Assert.AreEqual(1, vehicle.NumberPassengerSeatsLowerDeck);
@@ -158,8 +158,10 @@ namespace TUGraz.VectoCore.Tests.XML
 			Assert.AreEqual(10000, vehicle.GrossVehicleMassRating.Value());//TechnicalPermissibleMaximumLadenMass
 			Assert.AreEqual(RegistrationClass.A, vehicle.RegisteredClass);//ClassBus
 			Assert.AreEqual(10, vehicle.NumberPassengerSeatsLowerDeck);
+			Assert.AreEqual(42, vehicle.NumberPassengersStandingLowerDeck);
 			Assert.AreEqual(20, vehicle.NumberPassengerSeatsUpperDeck);
-			Assert.AreEqual(VehicleCode.CC, vehicle.VehicleCode);
+			Assert.AreEqual(13, vehicle.NumberPassengersStandingUpperDeck);
+			Assert.AreEqual(VehicleCode.CE, vehicle.VehicleCode);
 			Assert.AreEqual(true, vehicle.LowEntry);
 			Assert.AreEqual(2.5, vehicle.Height.Value());
 		}

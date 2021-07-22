@@ -29,7 +29,6 @@ namespace TUGraz.VectoCore.Tests.Utils {
 		public string Identifier { get; }
 		public bool ExemptedVehicle { get; }
 		public string VIN { get; }
-		public string LegislativeCategory { get; }
 		public LegislativeClass? LegislativeClass { get; }
 		public VehicleCategory VehicleCategory { get; }
 		public AxleConfiguration AxleConfiguration { get; }
@@ -48,6 +47,7 @@ namespace TUGraz.VectoCore.Tests.Utils {
 		public bool DualFuelVehicle { get; }
 		public Watt MaxNetPower1 { get; }
 		public Watt MaxNetPower2 { get; }
+		public string ExemptedTechnology { get; }
 		public RegistrationClass? RegisteredClass { get; set; }
 		public int? NumberPassengerSeatsUpperDeck { get; set; }
 		public int? NumberPassengerSeatsLowerDeck { get; set; }
@@ -121,6 +121,7 @@ namespace TUGraz.VectoCore.Tests.Utils {
 		public ConsumerTechnology? DoorDriveTechnology { get; }
 		public VehicleDeclarationType VehicleDeclarationType { get; }
 		public Watt MaxNetPower2 { get; }
+		public string ExemptedTechnology { get; }
 		public RegistrationClass? RegisteredClass { get; set; }
 		public int? NumberPassengerSeatsUpperDeck { get; set; }
 		public int? NumberPassengerSeatsLowerDeck { get; set; }
@@ -138,7 +139,6 @@ namespace TUGraz.VectoCore.Tests.Utils {
 		public string Identifier { get; }
 		public bool ExemptedVehicle { get; }
 		public string VIN { get; }
-		public string LegislativeCategory { get; }
 		public LegislativeClass? LegislativeClass { get; }
 		public VehicleCategory VehicleCategory { get; }
 		public AxleConfiguration AxleConfiguration { get; }

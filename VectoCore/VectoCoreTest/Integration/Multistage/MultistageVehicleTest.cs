@@ -20,6 +20,7 @@ using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.OutputData;
 using TUGraz.VectoCore.OutputData.FileIO;
 using TUGraz.VectoCore.OutputData.XML;
+using TUGraz.VectoCore.Tests.Integration.Declaration;
 using TUGraz.VectoCore.Tests.Models.Simulation;
 using TUGraz.VectoCore.Utils;
 
@@ -41,6 +42,10 @@ namespace TUGraz.VectoCore.Tests.Integration.Multistage
 
 		const string InputFilePathGroup41 = InputDirPath + "vecto_vehicle-stage_input_full-sample_group41.xml";
 		const string VIFInputFileGroup41 = VIFDirPath + "vecto_multistage_primary_vehicle_stage_2_3_group41.xml";
+
+		const string VIFExemptedPrimaryBus = VIFDirPath + "exempted_primary_heavyBus.VIF.xml";
+		private const string ExepmtedCompletedBusInput = InputDirPath + "vecto_vehicle-exempted_input_full-sample.xml";
+
 
 		const string vifResult = VIFDirPath + "vif_vehicle-sample.VIF_Report_3.xml";
 
@@ -327,7 +332,7 @@ namespace TUGraz.VectoCore.Tests.Integration.Multistage
 			var vifDataProvider = xmlInputReader.Create(vifReader) as IMultistageBusInputDataProvider;
 
 			var inputData = new XMLDeclarationVIFInputData(vifDataProvider, null);
-			var writer = new FileOutputWriter("vif_vehicle-sample_test.xml");
+			var writer = new MockDeclarationWriter("vif_vehicle-sample_test.xml");
 			
 
 			var factory = new SimulatorFactory(ExecutionMode.Declaration, inputData, writer)
@@ -347,6 +352,35 @@ namespace TUGraz.VectoCore.Tests.Integration.Multistage
 			Assert.IsTrue(jobContainer.Runs.All(r => r.Success), string.Concat(jobContainer.Runs.Select(r => r.ExecException)));
 		}
 
+		[TestCase()]
+		public void TestMultistageExemptedSimulationRun()
+		{
+			TestSimulationMultistageVehicle(VIFExemptedPrimaryBus, ExepmtedCompletedBusInput, 1);
+
+			var vifReader = XmlReader.Create(_generatedVIFFilepath);
+			var vifDataProvider = xmlInputReader.Create(vifReader) as IMultistageBusInputDataProvider;
+
+			var inputData = new XMLDeclarationVIFInputData(vifDataProvider, null);
+			var writer = new FileOutputWriter("vif_vehicle-sample_test.xml");
+
+
+			var factory = new SimulatorFactory(ExecutionMode.Declaration, inputData, writer) {
+				WriteModalResults = true,
+				//ActualModalData = true,
+				Validate = false
+			};
+
+			var jobContainer = new JobContainer(new SummaryDataContainer(writer));
+			jobContainer.AddRuns(factory);
+
+			jobContainer.Execute();
+			jobContainer.WaitFinished();
+			var progress = jobContainer.GetProgress();
+			Assert.IsTrue(progress.All(r => r.Value.Success), string.Concat<Exception>(progress.Select(r => r.Value.Error)));
+			Assert.IsTrue(jobContainer.Runs.All(r => r.Success), string.Concat<Exception>(jobContainer.Runs.Select(r => r.ExecException)));
+		}
+
+
 		[NonParallelizable]
 		[TestCase(PrimaryBus, TestName = "Multistage Write VIF Primary"),
 		TestCase(PrimaryBus_SmartES, TestName = "Multistage Write VIF Primary SmartES")]
@@ -354,7 +388,7 @@ namespace TUGraz.VectoCore.Tests.Integration.Multistage
 		{
 			var inputData = xmlInputReader.Create(primaryFile);
 
-			var writer = new FileOutputWriter("vif_writing_test.xml");
+			var writer = new MockDeclarationWriter("vif_writing_test.xml");
 			
 			//var xmlreport = new XMLDeclarationReportMultistageBusVehicle(writer);
 			var xmlreport = new XMLDeclarationReportPrimaryVehicle(writer);
@@ -377,7 +411,7 @@ namespace TUGraz.VectoCore.Tests.Integration.Multistage
 		{
 			var inputData = xmlInputReader.Create(primaryFile);
 
-			var writer = new FileOutputWriter(outputFile);
+			var writer = new MockDeclarationWriter(outputFile);
 			var factory = new SimulatorFactory(ExecutionMode.Declaration, inputData, writer)
 			{
 				WriteModalResults = true,
@@ -451,7 +485,7 @@ namespace TUGraz.VectoCore.Tests.Integration.Multistage
 			Assert.AreEqual("Generic Model", vehicleData.Model);
 			Assert.AreEqual("VEH-1234567890", vehicleData.VIN);
 			Assert.AreEqual(DateTime.Parse("2017-02-15T11:00:00Z").ToUniversalTime(), vehicleData.Date);
-			Assert.AreEqual("M3", vehicleData.LegislativeCategory);
+			Assert.AreEqual(LegislativeClass.M3, vehicleData.LegislativeClass);
 			Assert.AreEqual("Bus", vehicleData.VehicleCategory.ToXMLFormat());
 			Assert.AreEqual(AxleConfiguration.AxleConfig_4x2, vehicleData.AxleConfiguration);
 			Assert.AreEqual(false, vehicleData.Articulated);

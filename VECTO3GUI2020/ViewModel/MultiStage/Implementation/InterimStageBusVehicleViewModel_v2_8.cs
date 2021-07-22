@@ -14,6 +14,7 @@ using System.Xml;
 using Castle.Core.Internal;
 using Microsoft.Build.Framework;
 using TUGraz.VectoCommon.BusAuxiliaries;
+using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
@@ -69,7 +70,7 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 		}
 	}
 
-	public interface IMultistageVehicleViewModel : IVehicleViewModel
+	public interface IMultistageVehicleViewModel : IVehicleViewModel, INotifyPropertyChanged
 	{
 		bool HasErrors { get; }
 		Dictionary<string, string> Errors { get; }
@@ -80,9 +81,14 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 	}
 
 
-	public class DeclarationInterimStageBusVehicleViewModel_v2_8 : ViewModelBase, IMultistageVehicleViewModel,
+	public class InterimStageBusVehicleViewModel_v2_8 : ViewModelBase, IMultistageVehicleViewModel,
 		IVehicleComponentsDeclaration, IAdvancedDriverAssistantSystemDeclarationInputData, IDataErrorInfo
 	{
+		public static readonly Type INPUTPROVIDERTYPE = typeof(XMLDeclarationInterimStageBusDataProviderV28);
+		public static readonly Type INPUTPROVIDERTYPEEXEMPTED = typeof(XMLDeclarationExemptedInterimStageBusDataProviderV28);
+		public static string VERSION = INPUTPROVIDERTYPE.ToString();
+		public static string VERSION_EXEMPTED = INPUTPROVIDERTYPEEXEMPTED.ToString();
+
 
 		private readonly IMultiStageViewModelFactory _multiStageViewModelFactory;
 
@@ -121,8 +127,7 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 
 		#endregion
 
-		public static readonly string INPUTPROVIDERTYPE =
-			typeof(XMLDeclarationInterimStageBusDataProviderV28).ToString();
+
 
 		public string Name => "Vehicle";
 
@@ -138,29 +143,79 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 			set { throw new NotImplementedException(); }
 		}
 
+		private bool _showConsolidatedData;
 
-		public DeclarationInterimStageBusVehicleViewModel_v2_8(IVehicleDeclarationInputData consolidatedVehicleData,
-			IMultiStageViewModelFactory multistageViewModelFactory)
+		public bool ShowConsolidatedData
+		{
+			get => _showConsolidatedData;
+			set
+			{
+				SetProperty(ref _showConsolidatedData, value);
+				if (MultistageAuxiliariesViewModel != null) {
+					MultistageAuxiliariesViewModel.ShowConsolidatedData = value;
+				}
+
+				if (MultistageAirdragViewModel != null) {
+					MultistageAirdragViewModel.ShowConsolidatedData = value;
+				}
+				foreach (var multistageParameterViewModel in _parameterViewModels) {
+					multistageParameterViewModel.Value.ShowConsolidatedData = value;
+				}
+			}
+		}
+
+		public InterimStageBusVehicleViewModel_v2_8(string inputProviderType, IMultiStageViewModelFactory multiStageViewModelFactory)
+		{
+			if (inputProviderType == VERSION_EXEMPTED)
+			{
+				_exemptedVehicle = true;
+			}
+
+			_multiStageViewModelFactory = multiStageViewModelFactory;
+
+			if (!_exemptedVehicle)
+			{
+				MultistageAirdragViewModel = _multiStageViewModelFactory.GetMultistageAirdragViewModel();
+				MultistageAuxiliariesViewModel = _multiStageViewModelFactory.GetAuxiliariesViewModel();
+			}
+
+			CreateParameterViewModels();
+			ShowConsolidatedData = false;
+		}
+		public InterimStageBusVehicleViewModel_v2_8(IVehicleDeclarationInputData inputData, IMultiStageViewModelFactory multiStageViewModelFactory) : 
+			this(inputData.GetType().ToString(), multiStageViewModelFactory)
+		{
+			SetVehicleInputData(inputData);
+		}
+
+		public InterimStageBusVehicleViewModel_v2_8(IVehicleDeclarationInputData consolidatedVehicleData,
+			IMultiStageViewModelFactory multistageViewModelFactory, bool exempted)
 		{
 			ConsolidatedVehicleData = consolidatedVehicleData;
-			
+			_exemptedVehicle = exempted;
 			_multiStageViewModelFactory = multistageViewModelFactory;
 
-			MultistageAirdragViewModel = _multiStageViewModelFactory.GetMultistageAirdragViewModel(consolidatedVehicleData?.Components?.AirdragInputData);
-			
-			MultistageAirdragViewModel.AirdragViewModelChanged += ((sender, args) => {
-				if (sender is IMultistageAirdragViewModel vm) {
-					if (AirdragModifiedMultistageMandatory) {
-						if (vm.AirDragViewModel != null) {
-							AirdragModifiedMultistage = true;
+
+			if (!exempted) {
+				MultistageAirdragViewModel = _multiStageViewModelFactory.GetMultistageAirdragViewModel(consolidatedVehicleData?.Components?.AirdragInputData);
+
+				MultistageAirdragViewModel.AirdragViewModelChanged += ((sender, args) => {
+					if (sender is IMultistageAirdragViewModel vm)
+					{
+						if (AirdragModifiedMultistageMandatory)
+						{
+							if (vm.AirDragViewModel != null)
+							{
+								AirdragModifiedMultistage = true;
+							}
 						}
 					}
-				}
-			});
+				});
 
-			MultistageAuxiliariesViewModel =
-				_multiStageViewModelFactory.GetAuxiliariesViewModel(consolidatedVehicleData?.Components?
-					.BusAuxiliaries);
+				MultistageAuxiliariesViewModel =
+					_multiStageViewModelFactory.GetAuxiliariesViewModel(consolidatedVehicleData?.Components?
+						.BusAuxiliaries);
+			}
 
 
 			CreateParameterViewModels();
@@ -287,8 +342,8 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 					.NOT_APPLICABLE));
 
 			_parameterViewModels[nameof(LegislativeClass)].AllowedItems =
-				EnumHelper.GetValuesAsObservableCollectionExcluding<Enum, LegislativeClass>((TUGraz.VectoCommon.Models
-					.LegislativeClass.Unknown));
+				EnumHelper.GetValuesAsObservableCollectionIncluding<Enum, LegislativeClass>((TUGraz.VectoCommon.Models
+					.LegislativeClass.M3));
 
 			_parameterViewModels[nameof(RegisteredClass)].AllowedItems =
 				EnumHelper.GetValuesAsObservableCollectionExcluding<Enum, RegistrationClass>(RegistrationClass.unknown);
@@ -334,6 +389,16 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 
 		public void SetVehicleInputData(IVehicleDeclarationInputData vehicleInputData)
 		{
+			if (vehicleInputData.ExemptedVehicle != ExemptedVehicle) {
+				throw new VectoException(ExemptedVehicle ? "Only exempted stage inputs are allowed" : "Exempted Vehicle not allowed");
+			}
+
+			if (ExemptedVehicle) {
+				SetExemptedVehicleInputData(vehicleInputData);
+				return;
+			}
+
+
 			Manufacturer = vehicleInputData.Manufacturer;
 			Identifier = vehicleInputData.Identifier;
 			ManufacturerAddress = vehicleInputData.ManufacturerAddress;
@@ -372,9 +437,28 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 			{
 				multistageParameterViewModel.UpdateEditingEnabled();
 			}
+			MultistageAirdragViewModel.SetAirdragInputData(vehicleInputData?.Components?.AirdragInputData);
+			MultistageAuxiliariesViewModel.SetAuxiliariesInputData(vehicleInputData?.Components?.BusAuxiliaries);
 			OnPropertyChanged(string.Empty);
 		}
 
+		private void SetExemptedVehicleInputData(IVehicleDeclarationInputData vehicleInputData)
+		{
+			Debug.Assert(vehicleInputData.ExemptedVehicle);
+			Manufacturer = vehicleInputData.Manufacturer;
+			Identifier = vehicleInputData.Identifier;
+			ManufacturerAddress = vehicleInputData.ManufacturerAddress;
+			VIN = vehicleInputData.VIN;
+			Model = vehicleInputData.Model;
+			LegislativeClass = vehicleInputData.LegislativeClass;
+			CurbMassChassis = vehicleInputData.CurbMassChassis;
+			GrossVehicleMassRating = vehicleInputData.GrossVehicleMassRating;
+			RegisteredClass = vehicleInputData.RegisteredClass;
+			NumberPassengerSeatsUpperDeck = vehicleInputData.NumberPassengerSeatsUpperDeck;
+			NumberPassengerSeatsLowerDeck = vehicleInputData.NumberPassengerSeatsLowerDeck;
+			VehicleCode = vehicleInputData.VehicleCode;
+			Height = vehicleInputData.Height;
+		}
 
 
 
@@ -687,6 +771,8 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 
 		#endregion;
 
+		public string ExemptedTechnology { get; }
+
 		public RegistrationClass? RegisteredClass
 		{
 			get => _registeredClass;
@@ -729,20 +815,16 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 
 		public IAirdragDeclarationInputData AirdragInputData
 		{
-			get => MultistageAirdragViewModel.AirDragViewModel;
+			get => MultistageAirdragViewModel?.AirDragViewModel;
 		}
 
 		public IBusAuxiliariesDeclarationData BusAuxiliaries
 		{
-			get => MultistageAuxiliariesViewModel.HasValues ? MultistageAuxiliariesViewModel : null;
+			get => MultistageAuxiliariesViewModel != null &&  MultistageAuxiliariesViewModel.HasValues ? MultistageAuxiliariesViewModel : null;
 		}
 
 		#region not implemented
 
-		public string LegislativeCategory
-		{
-			get => throw new NotImplementedException();
-		}
 		public IGearboxDeclarationInputData GearboxInputData => throw new NotImplementedException();
 
 		public ITorqueConverterDeclarationInputData TorqueConverterInputData => throw new NotImplementedException();
@@ -924,9 +1006,9 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 
 		public bool ExemptedVehicle
 		{
-			get { throw new NotImplementedException(); }
+			get => _exemptedVehicle;
+			//set => SetProperty(ref _exemptedVehicle, value);
 		}
-
 
 
 		public VehicleCategory VehicleCategory
@@ -1132,7 +1214,8 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 		{
 			get
 			{
-				return !Error.IsNullOrEmpty() || MultistageAuxiliariesViewModel.HasErrors;
+				return !Error.IsNullOrEmpty() || 
+						(MultistageAuxiliariesViewModel != null && MultistageAuxiliariesViewModel.HasErrors);
 			}
 		}
 		#endregion
@@ -1140,7 +1223,7 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 		private bool _airdragModifiedMultistageMandatory;
 		private int? _numberPassengersStandingLowerDeck;
 		private int? _numberPassengersStandingUpperDeck;
-
+		private bool _exemptedVehicle;
 
 	}
 }
