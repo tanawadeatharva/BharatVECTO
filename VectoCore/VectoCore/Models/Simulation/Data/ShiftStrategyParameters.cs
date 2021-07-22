@@ -8,6 +8,13 @@ using TUGraz.VectoCore.Models.SimulationComponent.Data.ShiftStrategy;
 namespace TUGraz.VectoCore.Models.Simulation.Data {
 	public class ShiftStrategyParameters
 	{
+		public ShiftStrategyParameters()
+		{
+			PEV_DownshiftMinSpeedFactor = 0.1;
+			PEV_TargetSpeedBrakeNorm = 0.7;
+			PEV_DeRatedDownshiftSpeedFactor = 1;
+		}
+
 		public MeterPerSecond StartVelocity { get; internal set; }
 
 		//public MeterPerSquareSecond StartAcceleration { get; internal set; }
@@ -101,5 +108,8 @@ namespace TUGraz.VectoCore.Models.Simulation.Data {
 		public double[] LoadStageThresoldsUp { get; set; }
 		public double[] LoadStageThresoldsDown { get; set; }
 		public double[][] ShiftSpeedsTCToLocked { get; set; }
+		public double PEV_TargetSpeedBrakeNorm { get; set; }
+		public double PEV_DeRatedDownshiftSpeedFactor { get; set; }
+		public double PEV_DownshiftMinSpeedFactor { get; set; }
 	}
 }

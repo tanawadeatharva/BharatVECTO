@@ -368,11 +368,14 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			}
 
 			// create new full-load curve with values closest to zero.
-			return new ElectricMotorFullLoadCurve(motorSpeeds.OrderBy(x => x.Value()).Distinct().Select(x => new ElectricMotorFullLoadCurve.FullLoadEntry() {
-				MotorSpeed = x,
-				FullDriveTorque = VectoMath.Max(fullLoadCurve.FullLoadDriveTorque(x), maxTorqueCurve.FullLoadDriveTorque(x)),
-				FullGenerationTorque = VectoMath.Min(fullLoadCurve.FullGenerationTorque(x), maxTorqueCurve.FullGenerationTorque(x)),
-			}).ToList());
+			return new ElectricMotorFullLoadCurve(motorSpeeds.OrderBy(x => x.Value()).Distinct().Select(x =>
+				new ElectricMotorFullLoadCurve.FullLoadEntry() {
+					MotorSpeed = x,
+					FullDriveTorque = VectoMath.Max(fullLoadCurve.FullLoadDriveTorque(x),
+						maxTorqueCurve.FullLoadDriveTorque(x)),
+					FullGenerationTorque = VectoMath.Min(fullLoadCurve.FullGenerationTorque(x),
+						maxTorqueCurve.FullGenerationTorque(x)),
+				}).ToList());
 		}
 
 		

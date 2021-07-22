@@ -601,9 +601,9 @@ namespace TUGraz.VectoCore.Models.Declaration
 				switch (type)
 				{
 					case GearboxType.AMT:
-						// TODO MQ: 2020-10-14: compute for AMT with ICE and AMT with EM differently
-					//return ComputeEfficiencyShiftPolygon(gearIdx, fullLoadCurve, gears, engine, axlegearRatio, dynamicTyreRadius);
-					case GearboxType.MT:
+                        // TODO MQ: 2020-10-14: compute for AMT with ICE and AMT with EM differently
+                        return ComputeEfficiencyShiftPolygon(gearIdx, fullLoadCurve, gears, engine, axlegearRatio, dynamicTyreRadius);
+                    case GearboxType.MT:
 						return ComputeManualTransmissionShiftPolygon(
 							gearIdx, fullLoadCurve, gears, engine, axlegearRatio, dynamicTyreRadius);
 					case GearboxType.ATSerial:
@@ -622,7 +622,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 
 			public static ShiftPolygon ComputeElectricMotorShiftPolygon(int gearIdx,
 				ElectricMotorFullLoadCurve fullLoadCurve, double emRatio, IList<ITransmissionInputData> gears,
-				double axlegearRatio, Meter dynamicTyreRadius)
+				double axlegearRatio, Meter dynamicTyreRadius, PerSecond downshiftMaxSpeed = null, PerSecond downshiftMinSpeed = null)
 			{
 				if (gears.Count < 2) {
 					throw new VectoException("ComputeShiftPolygon needs at least 2 gears. {0} gears given.", gears.Count);
@@ -631,17 +631,123 @@ namespace TUGraz.VectoCore.Models.Declaration
 				var downShift = new List<ShiftPolygon.ShiftPolygonEntry>();
 				var upShift = new List<ShiftPolygon.ShiftPolygonEntry>();
 				if (gearIdx > 0) {
-					downShift.Add(new ShiftPolygon.ShiftPolygonEntry(fullLoadCurve.MaxGenerationTorque * emRatio * 1.1, 0.RPMtoRad()));
-					downShift.Add(new ShiftPolygon.ShiftPolygonEntry(fullLoadCurve.MaxDriveTorque * emRatio * 1.1, 0.RPMtoRad()));
+					var nMax = downshiftMaxSpeed ?? fullLoadCurve.NP80low;
+					var nMin = downshiftMinSpeed ?? 0.1 * fullLoadCurve.RatedSpeed;
+
+					downShift.AddRange(DownshiftLineDrive(fullLoadCurve, nMin, nMax));
+					downShift.AddRange(DownshiftLineDrag(fullLoadCurve, nMin, nMax));
 
 				}
 				if (gearIdx >= gears.Count - 1) {
 					return new ShiftPolygon(downShift, upShift);
 				}
 
-				upShift.Add(new ShiftPolygon.ShiftPolygonEntry(fullLoadCurve.MaxGenerationTorque * emRatio * 1.1, fullLoadCurve.MaxSpeed / emRatio * 0.9));
-				upShift.Add(new ShiftPolygon.ShiftPolygonEntry(fullLoadCurve.MaxDriveTorque * emRatio * 1.1, fullLoadCurve.MaxSpeed / emRatio * 0.9));
+				upShift.Add(new ShiftPolygon.ShiftPolygonEntry(fullLoadCurve.MaxGenerationTorque  * 1.1, fullLoadCurve.MaxSpeed * 0.9));
+				upShift.Add(new ShiftPolygon.ShiftPolygonEntry(fullLoadCurve.MaxDriveTorque * 1.1, fullLoadCurve.MaxSpeed * 0.9));
 				return new ShiftPolygon(downShift, upShift);
+			}
+
+			private static List<ShiftPolygon.ShiftPolygonEntry> DownshiftLineDrive(ElectricMotorFullLoadCurve fullLoadCurve, PerSecond nMin, PerSecond nMax)
+			{
+				var retVal = new List<ShiftPolygon.ShiftPolygonEntry>();
+				var downShiftPoints = fullLoadCurve
+					.FullLoadEntries.Where(fldEntry => fldEntry.MotorSpeed >= nMin && fldEntry.MotorSpeed <= nMax)
+					.Select(
+						fldEntry =>
+							new Point(fldEntry.MotorSpeed.Value(), fldEntry.FullDriveTorque.Value() * ShiftPolygonEngineFldMargin))
+					.ToList();
+				//retVal.Add(new ShiftPolygon.ShiftPolygonEntry(fullLoadCurve.MaxDriveTorque * 1.1, nMax));
+				if (downShiftPoints.Count == 0) {
+					// coarse grid points in FLD
+					retVal.Add(
+						new ShiftPolygon.ShiftPolygonEntry(
+							fullLoadCurve.MaxDriveTorque * 1.1,
+							nMax));
+					retVal.Add(
+						new ShiftPolygon.ShiftPolygonEntry(
+							fullLoadCurve.FullLoadDriveTorque(nMax) * ShiftPolygonEngineFldMargin,
+							nMax));
+					retVal.Add(
+						new ShiftPolygon.ShiftPolygonEntry(
+							fullLoadCurve.FullLoadDriveTorque(nMin) * ShiftPolygonEngineFldMargin,
+							nMin));
+					
+				} else {
+					retVal.Add(
+						new ShiftPolygon.ShiftPolygonEntry(
+							fullLoadCurve.MaxDriveTorque * 1.1,
+							nMax));
+					if (downShiftPoints.Max(x => x.X) < nMax) {
+						retVal.Add(
+							new ShiftPolygon.ShiftPolygonEntry(
+								fullLoadCurve.FullLoadDriveTorque(nMax) * ShiftPolygonEngineFldMargin,
+								nMax));
+					}
+
+					retVal.AddRange(
+						downShiftPoints.Select(
+							x => new ShiftPolygon.ShiftPolygonEntry(
+								x.Y.SI<NewtonMeter>(), x.X.SI<PerSecond>())).OrderByDescending(x => x.AngularSpeed.Value()));
+					if (downShiftPoints.Min(x => x.X) > nMin) {
+						retVal.Add(
+							new ShiftPolygon.ShiftPolygonEntry(
+								fullLoadCurve.FullLoadDriveTorque(nMin) * ShiftPolygonEngineFldMargin,
+								nMin));
+					}
+				}
+
+				return retVal;
+			}
+
+			private static List<ShiftPolygon.ShiftPolygonEntry> DownshiftLineDrag(ElectricMotorFullLoadCurve fullLoadCurve, PerSecond nMin, PerSecond nMax)
+			{
+				var retVal = new List<ShiftPolygon.ShiftPolygonEntry>();
+				var downShiftPoints = fullLoadCurve
+					.FullLoadEntries.Where(fldEntry => fldEntry.MotorSpeed >= nMin && fldEntry.MotorSpeed <= nMax)
+					.Select(
+						fldEntry =>
+							new Point(fldEntry.MotorSpeed.Value(), fldEntry.FullGenerationTorque.Value() * ShiftPolygonEngineFldMargin))
+					.ToList();
+				//retVal.Add(new ShiftPolygon.ShiftPolygonEntry(fullLoadCurve.MaxGenerationTorque * 1.1, nMax));
+				if (downShiftPoints.Count == 0) {
+					// coarse grid points in FLD
+					retVal.Add(
+						new ShiftPolygon.ShiftPolygonEntry(
+							fullLoadCurve.FullGenerationTorque(nMin) * ShiftPolygonEngineFldMargin,
+							nMin));
+					retVal.Add(
+						new ShiftPolygon.ShiftPolygonEntry(
+							fullLoadCurve.FullGenerationTorque(nMax) * ShiftPolygonEngineFldMargin,
+							nMax));
+					retVal.Add(
+						new ShiftPolygon.ShiftPolygonEntry(
+							fullLoadCurve.MaxGenerationTorque * 1.1,
+							nMax));
+				} else {
+					if (downShiftPoints.Min(x => x.X) > nMin) {
+						retVal.Add(
+							new ShiftPolygon.ShiftPolygonEntry(
+								fullLoadCurve.FullGenerationTorque(nMin) * ShiftPolygonEngineFldMargin,
+								nMin));
+					}
+
+					retVal.AddRange(
+						downShiftPoints.Select(
+							x => new ShiftPolygon.ShiftPolygonEntry(
+								x.Y.SI<NewtonMeter>(), x.X.SI<PerSecond>())));
+					if (downShiftPoints.Max(x => x.X) < nMax) {
+						retVal.Add(
+							new ShiftPolygon.ShiftPolygonEntry(
+								fullLoadCurve.FullGenerationTorque(nMax) * ShiftPolygonEngineFldMargin,
+								nMax));
+					}
+					retVal.Add(
+						new ShiftPolygon.ShiftPolygonEntry(
+							fullLoadCurve.MaxGenerationTorque * 1.1,
+							nMax));
+				}
+
+				return retVal;
 			}
 
 			public static ShiftPolygon ComputeEfficiencyShiftPolygon(

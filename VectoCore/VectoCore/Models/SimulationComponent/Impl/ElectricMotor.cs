@@ -289,6 +289,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			IResponse retVal = null;
 			if (NextComponent == null) {
+				if (electricSupplyResponse.MaxPowerDrive.IsEqual(0.SI<Watt>(), 100.SI<Watt>())) {
+					retVal = new ResponseBatteryEmpty(this, electricSupplyResponse);
+					return retVal;
+				}
 				// electric motor only
 				var remainingPower = inTorqueDt * avgDtSpeed;
 				if (dryRun) {
@@ -339,11 +343,15 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			}
 
 			retVal.ElectricMotor.MaxDriveTorque = maxDriveTorqueDt;
+			retVal.ElectricMotor.MaxDriveTorqueEM = maxDriveTorqueEm;
 			retVal.ElectricMotor.MaxRecuperationTorque = maxRecuperationTorqueDt;
+			retVal.ElectricMotor.MaxRecuperationTorqueEM = maxRecuperationTorqueEm;
 			retVal.ElectricMotor.AngularVelocity = avgEmSpeed;
 			retVal.ElectricMotor.AvgDrivetrainSpeed = avgDtSpeed;
+			retVal.ElectricMotor.DeRatingActive = DeRatingActive;
 
 			retVal.ElectricMotor.TorqueRequest = outTorque;
+			retVal.ElectricMotor.TorqueRequestEmMap = emTorqueMap;
 			retVal.ElectricMotor.InertiaTorque =
 				avgDtSpeed.IsEqual(0) ? 0.SI<NewtonMeter>() : inertiaTorqueEm * avgEmSpeed / avgDtSpeed;
 			

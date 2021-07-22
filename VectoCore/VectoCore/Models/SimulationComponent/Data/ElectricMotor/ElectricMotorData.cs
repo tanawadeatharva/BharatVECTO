@@ -55,7 +55,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 			get
 			{
 				return _maxSpeed ?? (_maxSpeed = VoltageLevels
-					.Min(v => v.EfficiencyMap.MaxSpeed));
+					.Min(v => VectoMath.Min(v.EfficiencyMap.MaxSpeed, v.FullLoadCurve.MaxSpeed)));
 			}
 		}
 

@@ -252,6 +252,9 @@
       <SubType>Designer</SubType>
     </None>
     <None Include="default.runsettings" />
+    <None Include="TestData\BatteryElectric\GenericVehicleB2\3speedEV.vgbx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="TestData\BatteryElectric\GenericVehicleB2\BatteryElectricVehicle.vveh">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
@@ -259,6 +262,9 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="TestData\BatteryElectric\GenericVehicleB2\BEV_ENG.vecto">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\BatteryElectric\GenericVehicleB2\BEV_ENG_3speed.vecto">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="TestData\BatteryElectric\GenericVehicleB2\BEV_ENG_Cont30kW.vecto">
