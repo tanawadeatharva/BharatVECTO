@@ -10,6 +10,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Data {
 	{
 		public ShiftStrategyParameters()
 		{
+			PEV_DownshiftMinSpeedFactor = 0.1;
 			PEV_TargetSpeedBrakeNorm = 0.7;
 			PEV_DeRatedDownshiftSpeedFactor = 1;
 		}
@@ -109,5 +110,6 @@ namespace TUGraz.VectoCore.Models.Simulation.Data {
 		public double[][] ShiftSpeedsTCToLocked { get; set; }
 		public double PEV_TargetSpeedBrakeNorm { get; set; }
 		public double PEV_DeRatedDownshiftSpeedFactor { get; set; }
+		public double PEV_DownshiftMinSpeedFactor { get; set; }
 	}
 }

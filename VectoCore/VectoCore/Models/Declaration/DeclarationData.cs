@@ -622,7 +622,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 
 			public static ShiftPolygon ComputeElectricMotorShiftPolygon(int gearIdx,
 				ElectricMotorFullLoadCurve fullLoadCurve, double emRatio, IList<ITransmissionInputData> gears,
-				double axlegearRatio, Meter dynamicTyreRadius, PerSecond downshiftMaxSpeed = null)
+				double axlegearRatio, Meter dynamicTyreRadius, PerSecond downshiftMaxSpeed = null, PerSecond downshiftMinSpeed = null)
 			{
 				if (gears.Count < 2) {
 					throw new VectoException("ComputeShiftPolygon needs at least 2 gears. {0} gears given.", gears.Count);
@@ -632,7 +632,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 				var upShift = new List<ShiftPolygon.ShiftPolygonEntry>();
 				if (gearIdx > 0) {
 					var nMax = downshiftMaxSpeed ?? fullLoadCurve.NP80low;
-					var nMin = 0.1 * fullLoadCurve.RatedSpeed;
+					var nMin = downshiftMinSpeed ?? 0.1 * fullLoadCurve.RatedSpeed;
 
 					downShift.AddRange(DownshiftLineDrive(fullLoadCurve, nMin, nMax));
 					downShift.AddRange(DownshiftLineDrag(fullLoadCurve, nMin, nMax));

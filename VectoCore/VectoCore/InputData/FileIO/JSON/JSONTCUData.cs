@@ -277,6 +277,18 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			}
 		}
 
+		public double? PEV_DownshiftMinSpeedFactor
+		{
+			get
+			{
+				if (Body["PEV_DownshiftMinSpeedFactor"] != null) {
+					return Body.GetEx<double>("PEV_DownshiftMinSpeedFactor");
+				}
+
+				return null;
+			}
+		}
+
 		public TableData LoadStageShiftLines
 		{
 			get {

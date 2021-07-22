@@ -114,18 +114,18 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			ElectricMotorData electricMotorData = null)
 		{
 			return ComputeDeclarationShiftPolygon(i, gearboxGears, axlegearRatio, dynamicTyreRadius, electricMotorData,
-				null);
+				null, shiftStrategyParameters.PEV_DownshiftMinSpeedFactor * electricMotorData.EfficiencyData.VoltageLevels.First().FullLoadCurve.RatedSpeed);
 		}
 
 
 		public ShiftPolygon ComputeDeclarationShiftPolygon(int i,
 			IList<ITransmissionInputData> gearboxGears, double axlegearRatio,
 			Meter dynamicTyreRadius,
-			ElectricMotorData electricMotorData , PerSecond downshiftMaxSpeed )
+			ElectricMotorData electricMotorData, PerSecond downshiftMaxSpeed, PerSecond downshiftMinSpeed)
 		{
 			return DeclarationData.Gearbox.ComputeElectricMotorShiftPolygon(i,
 				electricMotorData.EfficiencyData.VoltageLevels.First().FullLoadCurve, electricMotorData.RatioADC,
-				gearboxGears, axlegearRatio, dynamicTyreRadius, downshiftMaxSpeed);
+				gearboxGears, axlegearRatio, dynamicTyreRadius, downshiftMaxSpeed, downshiftMinSpeed);
 		}
 
 		#endregion
@@ -160,7 +160,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			for (var i = 0u; i < gearData.Count; i++) {
 				var shiftPolygon = ComputeDeclarationShiftPolygon((int)i,
 					gearData, axleGearRatio,
-					rDyn,  limitedEm, shiftStrategyParameters.PEV_DeRatedDownshiftSpeedFactor * emFld.RatedSpeed);
+					rDyn, limitedEm, shiftStrategyParameters.PEV_DeRatedDownshiftSpeedFactor * emFld.RatedSpeed,
+					shiftStrategyParameters.PEV_DownshiftMinSpeedFactor * emFld.RatedSpeed);
 				retVal[i + 1] = shiftPolygon;
 			}
 

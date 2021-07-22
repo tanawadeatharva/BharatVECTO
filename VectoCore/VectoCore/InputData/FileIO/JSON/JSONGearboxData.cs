@@ -373,6 +373,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 		public double[][] ShiftSpeedsTCToLocked => null;
 		public double? PEV_TargetSpeedBrakeNorm => null;
 		public double? PEV_DeRatingDownshiftSpeedFactor => null;
+		public double? PEV_DownshiftMinSpeedFactor => null;
 
 		public double? VeloictyDropFactor => null;
 

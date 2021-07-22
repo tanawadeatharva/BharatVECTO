@@ -714,6 +714,12 @@ Public Class Gearbox
     End Get
     End Property
 
+    Public ReadOnly Property PEV_DownshiftMinSpeedFactor As Double? Implements IGearshiftEngineeringInputData.PEV_DownshiftMinSpeedFactor
+    get
+        Return Nothing
+    End Get
+    End Property
+
     Public Overridable ReadOnly Property LoadStageShiftLines As TableData _
         Implements IGearshiftEngineeringInputData.LoadStageShiftLines
         Get
