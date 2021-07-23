@@ -1132,6 +1132,64 @@ namespace TUGraz.VectoCore.Tests.Integration.CompletedBus
 			//Assert.IsTrue(jobContainer.Runs.All(r => r.Success), String.Concat<Exception>(jobContainer.Runs.Select(r => r.ExecException)));
 		}
 
+		private const string JobGrp32b = @"TestData\Integration\Buses\FactorMethod\CompletedBus_41-32b_ES-AUX.vecto";
+
+		[
+		TestCase(JobGrp32b, 2, 20, 5, 17, 9, 51, TestName = "CompleteBus PassengerCount IU specific RL"),
+		TestCase(JobGrp32b, 3, 20, 5, 17, 9, 49.572, TestName = "CompleteBus PassengerCount IU generic RL"),
+		TestCase(JobGrp32b, 6, 20, 5, 17, 9, 37, TestName = "CompleteBus PassengerCount CO specific RL"),
+		TestCase(JobGrp32b, 7, 20, 5, 17, 9, 38.556, TestName = "CompleteBus PassengerCount CO generic RL"),
+		]
+		public void TestPassengerCountAllocationCompletedBus(string jobName, int runIdx, int pSeatsLower, int pStdLower, int pSeatsUpper, int pStdUpper,  double expectedPassengers)
+		{
+			var inputData = CompletedVIF.CreateCompletedVifXML(
+				JSONInputDataFactory.ReadJsonJob(JobFile_Group41) as JSONInputDataCompletedBusFactorMethodV7,
+				xmlInputReader);
+
+			var modified = GetModifiedXML(inputData, pSeatsLower, pStdLower, pSeatsUpper, pStdUpper);
+
+			var writer = new FileOutputWriter("SanityCheckTest");
+			//var inputData = new MockCompletedBusInputData(XmlReader.Create(PifFile_33_34), modified);
+			//var inputData = new MockCompletedBusInputData(modified);
+
+			var factory = new SimulatorFactory(ExecutionMode.Declaration, new XMLDeclarationVIFInputData(modified, null), writer) {
+				WriteModalResults = true,
+				Validate = false
+			};
+
+			var runs = factory.DataReader.NextRun().ToList();
+			var run = runs[runIdx];
+			
+			Assert.NotNull(run.VehicleData.PassengerCount);
+			Assert.AreEqual(expectedPassengers, run.VehicleData.PassengerCount.Value, 1e-3);
+
+			var ssmInputs = run.BusAuxiliaries.SSMInputs as ISSMDeclarationInputs;
+			Assert.NotNull(ssmInputs);
+			Assert.AreEqual(expectedPassengers + 1, ssmInputs.NumberOfPassengers, 1e-3); // adding driver for SSM
+		}
+
+		private IMultistageBusInputDataProvider GetModifiedXML(string vifXML, int pSeatsLower, int pStdLower, int pSeatsUpper, int pStdUpper)
+		{
+			var vif = new XmlDocument();
+			vif.LoadXml(vifXML);
+
+			var pSeatsLowerNode = vif.SelectSingleNode("//*[local-name()='NumberPassengerSeatsLowerDeck']");
+			pSeatsLowerNode.InnerText = pSeatsLower.ToString();
+
+			var pStdLowerNode = vif.SelectSingleNode("//*[local-name()='NumberPassengersStandingLowerDeck']");
+			pStdLowerNode.InnerText = pStdLower.ToString();
+
+			var pSeatsUpperNode = vif.SelectSingleNode("//*[local-name()='NumberPassengerSeatsUpperDeck']");
+			pSeatsUpperNode.InnerText = pSeatsUpper.ToString();
+
+			var pStdUpperNode = vif.SelectSingleNode("//*[local-name()='NumberPassengersStandingUpperDeck']");
+			pStdUpperNode.InnerText = pStdUpper.ToString();
+
+			var completedVif = xmlInputReader.CreateDeclaration(XmlReader.Create(new StringReader(vif.OuterXml)));
+			return completedVif  as IMultistageBusInputDataProvider;
+		}
+
+
 		//[TestCase(@"E:\QUAM\tmp\primary_heavyBus group 42_SmartPS_spec engine map.xml", 0),]
 		public void TestRunPrimaryBusSimulationSngle(string jobName, int runIdx)
 		{
