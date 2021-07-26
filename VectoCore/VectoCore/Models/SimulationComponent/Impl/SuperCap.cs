@@ -56,6 +56,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		public double MinSoC => ModelData.MinVoltage / ModelData.MaxVoltage;
 
 		public double MaxSoC => 1;
+		public AmpereSecond Capacity => null;
+		public Volt NominalVoltage => null;
 
 		public void Initialize(double initialSoC)
 		{

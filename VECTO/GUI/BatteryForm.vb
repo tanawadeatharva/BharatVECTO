@@ -425,7 +425,7 @@ Public Class BatteryForm
         Try
             Dim riFile As String =
                     If(Not String.IsNullOrWhiteSpace(_batteryFile), Path.Combine(Path.GetDirectoryName(_batteryFile), tbRiCurve.Text), tbRiCurve.Text)
-            If File.Exists(riFile) Then riCurve = BatteryInternalResistanceReader.Create(VectoCSVFile.Read(riFile), 1)
+            If File.Exists(riFile) Then riCurve = BatteryInternalResistanceReader.Create(VectoCSVFile.Read(riFile))
         Catch ex As Exception
         End Try
 
@@ -450,15 +450,24 @@ Public Class BatteryForm
         End If
 
         If Not riCurve Is Nothing Then
-            Dim series As Series = New Series
-            series.Points.DataBindXY(riCurve.Entries.Select(Function(x) x.SoC * 100).ToArray(),
-                                     riCurve.Entries.Select(Function(x) x.Resistance.Value()).ToArray())
-            series.ChartType = SeriesChartType.FastLine
-            series.MarkerSize = 3
-            series.Color = Color.Red
-            series.Name = "Internal Resistance"
-            series.YAxisType = AxisType.Secondary
-            chart.Series.Add(series)
+            Dim series1 As Series = New Series
+            series1.Points.DataBindXY(riCurve.Entries.Select(Function(x) x.SoC * 100).ToArray(),
+                                     riCurve.Entries.Select(Function(x) x.Resistance.First.Item2.Value()).ToArray())
+            series1.ChartType = SeriesChartType.FastLine
+            series1.MarkerSize = 3
+            series1.Color = Color.MediumVioletRed
+            series1.Name = "Internal Resistance t_min"
+            series1.YAxisType = AxisType.Secondary
+            chart.Series.Add(series1)
+            Dim series2 As Series = New Series
+            series2.Points.DataBindXY(riCurve.Entries.Select(Function(x) x.SoC * 100).ToArray(),
+                                     riCurve.Entries.Select(Function(x) x.Resistance.Last().Item2.Value()).ToArray())
+            series2.ChartType = SeriesChartType.FastLine
+            series2.MarkerSize = 3
+            series2.Color = Color.PaleVioletRed
+            series2.Name = "Internal Resistance t_max"
+            series2.YAxisType = AxisType.Secondary
+            chart.Series.Add(series2)
         End If
 
 

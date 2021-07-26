@@ -729,10 +729,10 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 					retVal.Batteries.Add(Tuple.Create(entry.StringId, new BatteryData() {
 						MinSOC = b.MinSOC,
 						MaxSOC = b.MaxSOC,
-						MaxCurrent = BatteryMaxCurrentReader.Create(b.MaxCurrentMap, entry.Count),
+						MaxCurrent = BatteryMaxCurrentReader.Create(b.MaxCurrentMap),
 						Capacity = b.Capacity,
 						InternalResistance =
-							BatteryInternalResistanceReader.Create(b.InternalResistanceCurve, 1),
+							BatteryInternalResistanceReader.Create(b.InternalResistanceCurve),
 						SOCMap = BatterySOCReader.Create(b.VoltageCurve),
 					}));
 				}
