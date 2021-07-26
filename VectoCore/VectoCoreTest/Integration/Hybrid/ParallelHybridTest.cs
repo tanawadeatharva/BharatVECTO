@@ -552,6 +552,10 @@ namespace TUGraz.VectoCore.Tests.Integration.Hybrid
 
 		public const string Group5TestJob = @"TestData\Hybrids\GenericVehicle_Group5_P2\P2 Group 5.vecto";
 
+		public const string Group5TestJob_BatterySystem = @"TestData\Hybrids\GenericVehicle_Group5_P2_BatSystem\P2 Group 5.vecto";
+
+		public const string Group5TestJob_BatterySystem2 = @"TestData\Hybrids\GenericVehicle_Group5_P2_BatSystem\P2 Group 5_2.vecto";
+
 		[
 		TestCase(Group5TestJob, 0, TestName = "P2 Hybrid Group 5 DriveCycle LongHaul"),
 		TestCase(Group5TestJob, 1, TestName = "P2 Hybrid Group 5 DriveCycle Coach"),  
@@ -565,6 +569,33 @@ namespace TUGraz.VectoCore.Tests.Integration.Hybrid
 		TestCase(Group5TestJob, 9, TestName = "P2 Hybrid Group 5 DriveCycle UrbanDelivery"), 
 		]
 		public void P2HybridGroup5DriveCycle(string jobFile, int cycleIdx)
+		{ RunHybridJob(jobFile, cycleIdx); }
+
+		[
+			TestCase(Group5TestJob_BatterySystem, 0, TestName = "P2 Hybrid Group 5 BatterySystem DriveCycle LongHaul"),
+			TestCase(Group5TestJob_BatterySystem, 1, TestName = "P2 Hybrid Group 5 BatterySystem DriveCycle Coach"),
+			TestCase(Group5TestJob_BatterySystem, 2, TestName = "P2 Hybrid Group 5 BatterySystem DriveCycle Construction"),
+			TestCase(Group5TestJob_BatterySystem, 3, TestName = "P2 Hybrid Group 5 BatterySystem DriveCycle HeavyUrban"),
+			TestCase(Group5TestJob_BatterySystem, 4, TestName = "P2 Hybrid Group 5 BatterySystem DriveCycle Interurban"),
+			TestCase(Group5TestJob_BatterySystem, 5, TestName = "P2 Hybrid Group 5 BatterySystem DriveCycle MunicipalUtility"),
+			TestCase(Group5TestJob_BatterySystem, 6, TestName = "P2 Hybrid Group 5 BatterySystem DriveCycle RegionalDelivery"),
+			TestCase(Group5TestJob_BatterySystem, 7, TestName = "P2 Hybrid Group 5 BatterySystem DriveCycle Suburban"),
+			TestCase(Group5TestJob_BatterySystem, 8, TestName = "P2 Hybrid Group 5 BatterySystem DriveCycle Urban"),
+			TestCase(Group5TestJob_BatterySystem, 9, TestName = "P2 Hybrid Group 5 BatterySystem DriveCycle UrbanDelivery"),
+
+			TestCase(Group5TestJob_BatterySystem2, 0, TestName = "P2 Hybrid Group 5 BatterySystem 2 DriveCycle LongHaul"),
+			TestCase(Group5TestJob_BatterySystem2, 1, TestName = "P2 Hybrid Group 5 BatterySystem 2 DriveCycle Coach"),
+			TestCase(Group5TestJob_BatterySystem2, 2, TestName = "P2 Hybrid Group 5 BatterySystem 2 DriveCycle Construction"),
+			TestCase(Group5TestJob_BatterySystem2, 3, TestName = "P2 Hybrid Group 5 BatterySystem 2 DriveCycle HeavyUrban"),
+			TestCase(Group5TestJob_BatterySystem2, 4, TestName = "P2 Hybrid Group 5 BatterySystem 2 DriveCycle Interurban"),
+			TestCase(Group5TestJob_BatterySystem2, 5, TestName = "P2 Hybrid Group 5 BatterySystem 2 DriveCycle MunicipalUtility"),
+			TestCase(Group5TestJob_BatterySystem2, 6, TestName = "P2 Hybrid Group 5 BatterySystem 2 DriveCycle RegionalDelivery"),
+			TestCase(Group5TestJob_BatterySystem2, 7, TestName = "P2 Hybrid Group 5 BatterySystem 2 DriveCycle Suburban"),
+			TestCase(Group5TestJob_BatterySystem2, 8, TestName = "P2 Hybrid Group 5 BatterySystem 2 DriveCycle Urban"),
+			TestCase(Group5TestJob_BatterySystem2, 9, TestName = "P2 Hybrid Group 5 BatterySystem 2 DriveCycle UrbanDelivery"),
+
+		]
+		public void P2HybridGroup5DriveCycle_BatterySystem(string jobFile, int cycleIdx)
 		{ RunHybridJob(jobFile, cycleIdx); }
 
 
@@ -600,6 +631,8 @@ namespace TUGraz.VectoCore.Tests.Integration.Hybrid
 		TestCase(Group2TestJob, 9, TestName = "P2 Hybrid Group 2 DriveCycle Urban"),]
 		public void P2HybridGroup2DriveCycle(string jobFile, int cycleIdx)
 		{ RunHybridJob(jobFile, cycleIdx); }
+
+
 
 
 		public const string Group5_80kWh_TestJob = @"TestData\Hybrids\Hyb_P2_Group5\Hyb_P2_Group5_80kWh.vecto";
@@ -1458,7 +1491,7 @@ namespace TUGraz.VectoCore.Tests.Integration.Hybrid
 				? (IHybridControlStrategy) new HybridStrategyAT(runData, container)
 				: new HybridStrategy(runData, container);
 			var es = new ElectricSystem(container);
-			var battery = new Battery(container, batteryData);
+			var battery = new BatterySystem(container, batteryData);
 			battery.Initialize(initialBatCharge);
 
 			var clutch = gearboxType.AutomaticTransmission() ? null :  new SwitchableClutch(container, runData.EngineData);

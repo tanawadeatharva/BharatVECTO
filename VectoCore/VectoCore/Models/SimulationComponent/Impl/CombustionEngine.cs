@@ -485,7 +485,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				container[ModalResultField.FCNCVc, fuel.FuelData] = fcNCVcorr;
 				container[ModalResultField.FCWHTCc, fuel.FuelData] = fcWHTC;
 				//container[ModalResultField.FCAAUX, fuel.FuelData] = fcAAUX;
-				container[ModalResultField.FCICEStopStart, fuel.FuelData] = fcFinal;
+				//container[ModalResultField.FCICEStopStart, fuel.FuelData] = fcFinal;
 				container[ModalResultField.FCFinal, fuel.FuelData] = fcFinal;
 			}
 		}

@@ -20,11 +20,22 @@ namespace VECTO3GUI2020.Ninject
 		{
 			Bind<IXMLWriterFactory>().ToFactory(() => new UseFirstArgumentTypeAsNameInstanceProvider(fallback:true));
 			//Bind<IMultiStageViewModelFactory>().ToFactory(() => new UseFirstArgumentAsNameInstanceProvider(skipFirstArgument: true, fallback: true));
-			Bind<IMultiStageViewModelFactory>().ToFactory();
+			
 			Bind<IJobEditViewModelFactory>().ToFactory(() => new UseFirstArgumentTypeAsNameInstanceProvider());
 			Bind<IDocumentViewModelFactory>().ToFactory(() => new UseFirstArgumentAsNameInstanceProvider(false));
 			Bind<IComponentViewModelFactory>().ToFactory(
 				() => new UseFirstArgumentTypeAsNameInstanceProvider(true));
+
+
+			Bind<IMultiStageViewModelFactory>().To<MultiStageViewModelFactory>().
+				InSingletonScope();
+			Bind<IMultiStageViewModelFactoryDefaultInstanceProvider>().
+				ToFactory();
+			Bind<IMultiStageViewModelFactoryTypeAsNameInstanceProvider>().
+				ToFactory(() => new UseFirstArgumentTypeAsNameInstanceProvider());
+			Bind<IMultistageViewModelFactoryFirstParameterAsNameInstanceProvider>().ToFactory(() =>
+				new UseFirstArgumentAsNameInstanceProvider(skipFirstArgument: false));
+
 		}
 	}
 }

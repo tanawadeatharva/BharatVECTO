@@ -24,23 +24,22 @@ namespace TUGraz.VectoCore.Models.Declaration
 
 		protected override string ErrorMessage =>
 			"ERROR: Could not find the declaration segment for vehicle. numberOfAxles: {0}, vehicleCode: {1}, registrationClass: {2}, " +
-			"passengersLowerDeck: {3}, bodyHeight: {4} , lowEntry: {5}";
+			"passengerSeatsLowerDeck: {3}, bodyHeight: {4} , lowEntry: {5}";
 
 		protected override void ParseData(DataTable table)
 		{
 			_segmentTable = table.Copy();
 		}
 
-		public override Segment Lookup(int numberOfAxles, VehicleCode? vehicleCode, RegistrationClass? registrationClass, int? passengersLowerDeck, Meter bodyHeight, bool? lowEntry)
+		public override Segment Lookup(int numberOfAxles, VehicleCode? vehicleCode, RegistrationClass? registrationClass, int? passengerSeatsLowerDeck, Meter bodyHeight, bool? lowEntry)
 		{
-			return LookupCompletedBusVehicle(numberOfAxles, vehicleCode, registrationClass, passengersLowerDeck, bodyHeight, lowEntry);
+			return LookupCompletedBusVehicle(numberOfAxles, vehicleCode, registrationClass, passengerSeatsLowerDeck, bodyHeight, lowEntry);
 		}
 		
-
 		#endregion
 
 
-		private Segment LookupCompletedBusVehicle(int numberOfAxles, VehicleCode? vehicleCode, RegistrationClass? registrationClass, int? passengersLowerDeck, Meter bodyHeight, bool? lowEntry)
+		private Segment LookupCompletedBusVehicle(int numberOfAxles, VehicleCode? vehicleCode, RegistrationClass? registrationClass, int? passengerSeatsLowerDeck, Meter bodyHeight, bool? lowEntry)
 		{
 			var rows = _segmentTable.AsEnumerable().Where(
 				r => {
@@ -60,7 +59,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 					rows = rows.Where(
 						r => {
 							var limits = r.Field<string>("passengerslowerdeck").Split('-');
-							return ((int)passengersLowerDeck).IsBetween(limits[0].ToInt(), limits[1].ToInt());
+							return ((int)passengerSeatsLowerDeck).IsBetween(limits[0].ToInt(), limits[1].ToInt());
 						}).ToList();
 				} else if (rows.Any(r => r.Field<string>("bodyheight") != "-")) {
 					rows = rows.Where(

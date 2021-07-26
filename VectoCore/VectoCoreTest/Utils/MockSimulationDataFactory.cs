@@ -194,10 +194,10 @@ namespace TUGraz.VectoCore.Tests.Utils
 		}
 	
 
-		public static BatteryData CreateBatteryData(string file, double initialSoC, int cnt = 1)
+		public static BatterySystemData CreateBatteryData(string file, double initialSoC)
 		{
 			var inputData = JSONInputDataFactory.ReadREESSData(file, false);
-			return new EngineeringDataAdapter().CreateBatteryData(new MockBatteryInputData() {Count = cnt, REESSPack = inputData}, initialSoC);
+			return new EngineeringDataAdapter().CreateBatteryData(new MockBatteryInputData() {REESSPack = inputData}, initialSoC);
 		}
 	}
 }

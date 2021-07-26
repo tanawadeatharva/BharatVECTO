@@ -96,12 +96,16 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 				AngledriveData angledriveData = null;
 				if (electricMachinesData.Any(x => x.Item1 == PowertrainPosition.BatteryElectricE2)) {
 					// gearbox required!
+					gearshiftParams = dao.CreateGearshiftData(
+						InputDataProvider.JobInputData.Vehicle.Components.GearboxInputData.Type, InputDataProvider.DriverInputData.GearshiftInputData,
+						axlegearData.AxleGear.Ratio * (angledriveData?.Angledrive.Ratio ?? 1.0), null);
 					var tmpRunData = new VectoRunData() {
 						JobType = VectoSimulationJobType.BatteryElectricVehicle,
 						ShiftStrategy = InputDataProvider.JobInputData.ShiftStrategy,
 						GearboxData = new GearboxData() {
 							Type = vehicle.Components.GearboxInputData.Type,
 						},
+						GearshiftParameters = gearshiftParams
 						//ElectricMachinesData = electricMachinesData,
 						//VehicleData = dao.CreateVehicleData(vehicle)
 					};
@@ -115,9 +119,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 							ElectricMachinesData = electricMachinesData
 						}, tmpStrategy);
 					angledriveData = dao.CreateAngledriveData(vehicle.Components.AngledriveInputData);
-					gearshiftParams = dao.CreateGearshiftData(
-						gearboxData.Type, InputDataProvider.DriverInputData.GearshiftInputData,
-						axlegearData.AxleGear.Ratio * (angledriveData?.Angledrive.Ratio ?? 1.0),null);
+					
 				}
 
 				if (gearshiftParams == null) {

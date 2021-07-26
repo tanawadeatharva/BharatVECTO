@@ -134,10 +134,9 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.Interfaces
 		/// Cycle Step - Used to calculate fuelling
 		/// </summary>
 		/// <param name="seconds"></param>
-		/// <param name="essFactor"></param>
 		/// <returns></returns>
 		/// <remarks></remarks>
-		void CycleStep(Second seconds, double essFactor);
+		void CycleStep(Second seconds);
 
         ///// <summary>
         ///// Initialises AAUX Environment ( Begin Processs )

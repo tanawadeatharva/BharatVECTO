@@ -141,7 +141,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 		/// <summary>
 		/// [g/h] Fuel consumption after correction for ADAS technologies. (Based on FC-AAUXc.)
 		/// </summary>
-		[ModalResultField(typeof(SI), name: "FC-ESS", caption: "FC-ESS{0} [g/h]", outputFactor: 3600 * 1000)] FCICEStopStart,
+		//[ModalResultField(typeof(SI), name: "FC-ESS", caption: "FC-ESS{0} [g/h]", outputFactor: 3600 * 1000)] FCICEStopStart,
 
 		/// <summary>
 		/// [g/h] Fuel consumption after WHTC Correction. (Based on FC-ADAS.)
@@ -432,15 +432,15 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 		P_electricMotor_mech_B2,
         // -->
 
-		[ModalResultField(typeof(SI), caption: "P_reess_T [kW]", outputFactor: 1e-3)] P_reess_terminal,
-		[ModalResultField(typeof(SI), caption: "P_reess_int [kW]", outputFactor: 1e-3)] P_reess_int,
-		[ModalResultField(typeof(SI), caption: "P_reess_loss [kW]", outputFactor: 1e-3)] P_reess_loss,
+		[ModalResultField(typeof(SI), caption: "P_REESS_T [kW]", outputFactor: 1e-3)] P_reess_terminal,
+		[ModalResultField(typeof(SI), caption: "P_REESS_int [kW]", outputFactor: 1e-3)] P_reess_int,
+		[ModalResultField(typeof(SI), caption: "P_REESS_loss [kW]", outputFactor: 1e-3)] P_reess_loss,
 		[ModalResultField(typeof(SI), caption: "REESS SOC [%]", outputFactor: 100)] REESSStateOfCharge,
-		[ModalResultField(typeof(SI), caption: "P_reess charge max [kW]", outputFactor: 1e-3)] P_reess_charge_max,
-		[ModalResultField(typeof(SI), caption: "P_reess discharge max [kW]", outputFactor: 1e-3)] P_reess_discharge_max,
-		[ModalResultField(typeof(SI), caption: "U_reess_terminal [V]")] U_reess_terminal,
-		[ModalResultField(typeof(SI), caption: "U_0_reess [V]")] U0_reess,
-		[ModalResultField(typeof(SI), caption: "I_reess [A]")] I_reess,
+		[ModalResultField(typeof(SI), caption: "P_REESS_charge_max [kW]", outputFactor: 1e-3)] P_reess_charge_max,
+		[ModalResultField(typeof(SI), caption: "P_REESS_discharge_max [kW]", outputFactor: 1e-3)] P_reess_discharge_max,
+		[ModalResultField(typeof(SI), caption: "U_REESS_terminal [V]")] U_reess_terminal,
+		[ModalResultField(typeof(SI), caption: "U_0_REESS [V]")] U0_reess,
+		[ModalResultField(typeof(SI), caption: "I_REESS [A]")] I_reess,
 		[ModalResultField(typeof(SI), caption: "T_max_propulsion [Nm]")] MaxPropulsionTorqe,
 
 		[ModalResultField(typeof(SI), caption: "P_DC/DC_In [kW]", outputFactor: 1e-3)] P_DCDC_In,

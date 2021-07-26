@@ -978,7 +978,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			var kernel = new StandardKernel(new VectoNinjectModule());
 			_xmlInputReader = kernel.Get<IXMLInputDataReader>();
 
-			var primaryInputData = Path.Combine(BasePath,  Body.GetEx<string>("PrimaryVehicle"));
+			var primaryInputData = Path.Combine(BasePath,  Body.GetEx<string>(JsonKeys.PrimaryVehicle));
 			var completedInputData = Path.Combine(BasePath,  Body.GetEx<string>("CompletedVehicle"));
 
 			PrimaryVehicle = CreateReader(primaryInputData);
@@ -1121,5 +1121,52 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			Body["TCU"] == null
 				? null
 				: JSONInputDataFactory.ReadShiftParameters(Path.Combine(BasePath, Body.GetEx<string>("TCU")), false);
+	}
+
+
+	public class JSONInputDataV10_PrimaryAndStageInputBus : JSONFile, IInputDataProvider
+	{
+		private readonly IXMLInputDataReader _xmlInputReader;
+		private string _primaryVehicleInputDataPath;
+		private IVehicleDeclarationInputData _primaryVehicleInputData;
+		public IVehicleDeclarationInputData PrimaryVehicle =>
+			_primaryVehicleInputData ?? (_primaryVehicleInputData =
+				_xmlInputReader.CreateDeclaration(_primaryVehicleInputDataPath).JobInputData.Vehicle);
+
+		private string _stageInputDataPath;
+		private IVehicleDeclarationInputData _stageInputData;
+
+		public IVehicleDeclarationInputData StageInputData => 
+			_stageInputData ?? (_stageInputData =
+				_xmlInputReader.CreateDeclaration(_stageInputDataPath).JobInputData.Vehicle);
+
+		private bool? _completed;
+
+		public bool? Completed
+		{
+			get => _completed;
+			set => _completed = value;
+		}
+
+
+		public JSONInputDataV10_PrimaryAndStageInputBus(JObject data, string filename, bool tolerateMissing = false) :
+			base(data, filename, tolerateMissing)
+		{
+			var kernel = new StandardKernel(new VectoNinjectModule());
+			_xmlInputReader = kernel.Get<IXMLInputDataReader>();
+
+
+			_primaryVehicleInputDataPath = Body.GetEx<string>(JsonKeys.PrimaryVehicle);
+			_stageInputDataPath = Body.GetEx<string>(JsonKeys.InterimStage);
+			_completed = Body.GetValueOrDefault<bool>(JsonKeys.Completed);
+
+		}
+
+		private void checkFileExtension(string path)
+		{
+			if (Path.GetExtension(path) != ".xml") {
+				throw new VectoException("unsupported vehicle file format {0}", path);
+			}
+		}
 	}
 }

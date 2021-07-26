@@ -1,9 +1,31 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.Utils;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Battery {
+
+	public class BatterySystemData
+	{
+		public BatterySystemData()
+		{
+			Batteries = new List<Tuple<int, BatteryData>>();
+		}
+
+		public List<Tuple<int, BatteryData>> Batteries { get; internal set; }
+
+		public double InitialSoC { get; internal set; }
+		public AmpereSecond Capacity
+		{
+			get
+			{
+				return Batteries.Select(x => x.Item1).Distinct().OrderBy(x => x).Aggregate(0.SI<AmpereSecond>(),
+					(current, s) => current + Batteries.Where(x => x.Item1 == s).Min(x => x.Item2.Capacity));
+			}
+		}
+	}
 
 	public class BatteryData
 	{
@@ -23,9 +45,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Battery {
 
 		public MaxCurrentMap MaxCurrent { get; internal set; }
 
-		public double InitialSoC { get; internal set; }
-
-		//public double TargetSoC { get; internal set; }
 	}
 
 	public class SuperCapData

@@ -36,7 +36,8 @@ namespace TUGraz.VectoCore.Tests.XML
 		}
 
 
-		[TestCase]
+		[TestCase,
+		Ignore("CompleteBus no longer used - new multistep approach")]
 		public void TestCompleteBusVehicleData()
 		{
 			var reader = XmlReader.Create(CompleteBusExample);

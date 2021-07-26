@@ -29,10 +29,19 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 		protected override IEnumerable<VectoRunData> GetNextRun()
 		{
 			if (InputDataProvider.JobInputData.Vehicle.VehicleCategory == VehicleCategory.HeavyBusPrimaryVehicle) {
-				return VectoRunDataHeavyBusPrimary();
+				if (InputDataProvider.JobInputData.Vehicle.ExemptedVehicle) {
+					yield return CreateVectoRunData(InputDataProvider.JobInputData.Vehicle, 0, null,
+						new KeyValuePair<LoadingType, Tuple<Kilogram, double?>>());
+				} else {
+					foreach (var vectoRunData in VectoRunDataHeavyBusPrimary()) {
+						yield return vectoRunData;
+					}
+				}
 			}
 
-			return new List<VectoRunData>();
+			foreach (var entry in new List<VectoRunData>()) {
+				yield return entry;
+			}
 		}
 
 		protected override Segment GetSegment(IVehicleDeclarationInputData vehicle)
@@ -77,6 +86,19 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 		protected override VectoRunData CreateVectoRunData(
 			IVehicleDeclarationInputData vehicle, int modeIdx, Mission mission, KeyValuePair<LoadingType, Tuple<Kilogram, double?>> loading)
 		{
+			if (InputDataProvider.JobInputData.Vehicle.ExemptedVehicle) {
+				return new VectoRunData() {
+					Exempted = true,
+					Report = Report,
+					Mission = new Mission() { MissionType = MissionType.ExemptedMission },
+					VehicleData = DataAdapter.CreateVehicleData(InputDataProvider.JobInputData.Vehicle, new Segment(),
+						null,
+						new KeyValuePair<LoadingType, Tuple<Kilogram, double?>>(LoadingType.ReferenceLoad,
+							Tuple.Create<Kilogram, double?>(0.SI<Kilogram>(), null)), _allowVocational),
+					InputDataHash = InputDataProvider.XMLHash
+				};
+			}
+
 			var engine = vehicle.Components.EngineInputData;
 			var engineModes = engine.EngineModes;
 			var engineMode = engineModes[modeIdx];

@@ -90,8 +90,6 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering.DataProvider
 
 		public virtual string VIN => GetString(XMLNames.Vehicle_VIN);
 
-		public string LegislativeCategory => null;
-
 		public virtual LegislativeClass? LegislativeClass => GetString(XMLNames.Vehicle_LegislativeClass).ParseEnum<LegislativeClass>();
 
 		public virtual VehicleCategory VehicleCategory =>
@@ -131,6 +129,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering.DataProvider
 		public Watt MaxNetPower1 => null;
 
 		public Watt MaxNetPower2 => null;
+
+		public string ExemptedTechnology { get; }
 
 		public virtual RegistrationClass? RegisteredClass => RegistrationClass.unknown;
 		public virtual int? NumberPassengerSeatsUpperDeck => 0;

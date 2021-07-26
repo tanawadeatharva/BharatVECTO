@@ -268,8 +268,6 @@ namespace VECTO3GUI.ViewModel.Impl
 		#region Commands
 
 
-		
-
 		public ICommand RunSimulation
 		{
 			get { return _runSimulationCommand ?? (_runSimulationCommand = new RelayCommand(DoRunSimulation, CanRunSimulationCmd)); }

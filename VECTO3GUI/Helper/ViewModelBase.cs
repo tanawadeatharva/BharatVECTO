@@ -59,5 +59,7 @@ namespace VECTO3GUI.Helper
 			{
 				ErrorsChanged?.Invoke(this, new DataErrorsChangedEventArgs(propertyName));
 			}
+
+
 		}
 }

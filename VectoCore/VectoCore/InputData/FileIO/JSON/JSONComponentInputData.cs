@@ -183,8 +183,6 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 		public string VIN => VehicleData.VIN;
 
-		public string LegislativeCategory => null;
-
 		public LegislativeClass? LegislativeClass => VehicleData.LegislativeClass;
 
 		public VehicleCategory VehicleCategory => VehicleData.VehicleCategory;
@@ -201,11 +199,14 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 		public IBusAuxiliariesDeclarationData BusAuxiliaries => null;
 
-		public IElectricStorageEngineeringInputData ElectricStorage =>
-			new JSONElectricStorageEngineeringInputData {
-				REESSPack = Battery,
-				Count = 1
-			};
+		public IElectricStorageSystemEngineeringInputData ElectricStorage =>
+			new JSONElectricStorageSystemEngineeringInputData(new List<IElectricStorageEngineeringInputData>() {
+				new JSONElectricStorageEngineeringInputData {
+					REESSPack = Battery,
+					Count = 1,
+					StringId = 0,
+				}
+			});
 
 		public IElectricMachinesEngineeringInputData ElectricMachines { get
 		{
@@ -218,7 +219,14 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			});
 		} }
 
-		IElectricStorageDeclarationInputData IVehicleComponentsDeclaration.ElectricStorage => ElectricStorage;
+		IElectricStorageSystemDeclarationInputData IVehicleComponentsDeclaration.ElectricStorage => 
+			new JSONElectricStorageSystemEngineeringInputData(new List<IElectricStorageEngineeringInputData>() {
+				new JSONElectricStorageEngineeringInputData {
+					REESSPack = Battery,
+					Count = 1,
+					StringId = 0,
+				}
+			});
 
 		IElectricMachinesDeclarationInputData IVehicleComponentsDeclaration.ElectricMachines => ElectricMachines;
 
@@ -323,6 +331,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 		public Watt MaxNetPower1 => null;
 
 		public Watt MaxNetPower2 => null;
+
+		public string ExemptedTechnology => null;
 
 		public RegistrationClass? RegisteredClass => RegistrationClass.unknown;
 

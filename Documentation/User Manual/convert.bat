@@ -20,6 +20,8 @@ REM pandoc %LIST% -s -S --toc --toc-depth=2 --self-contained --email-obfuscation
 
 echo Generated outputfile: help.html
 
+pause
+
 REM pandoc -s -S --toc --toc-depth=2 -N %LIST% -o help.docx
 REM pandoc -s -S --toc --toc-depth=2 -N %LIST% -o help.pdf
 REM pandoc -s -S --toc --toc-depth=2 -N %LIST% -o help.latex

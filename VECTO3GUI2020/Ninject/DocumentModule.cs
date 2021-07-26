@@ -1,5 +1,6 @@
 ﻿using Ninject.Extensions.Factory;
 using Ninject.Modules;
+using TUGraz.VectoCore.InputData.FileIO.JSON;
 using TUGraz.VectoCore.Utils;
 using VECTO3GUI2020.Model.Interfaces;
 using VECTO3GUI2020.Ninject.Util;
@@ -18,6 +19,10 @@ namespace VECTO3GUI2020.Ninject
             Bind<IDocumentViewModel>().To<DeclarationJobViewModel>().Named(XmlDocumentType.DeclarationJobData.ToString());
 			Bind<IDocumentViewModel>().To<MultiStageJobViewModel_v0_1>()
 				.Named(XmlDocumentType.MultistageOutputData.ToString());
+
+			Bind<IDocumentViewModel>().To<CreateVifViewModel>()
+				.Named(typeof(JSONInputDataV10_PrimaryAndStageInputBus).ToString());
+
 			//Bind<IDocumentViewModel>().To<MultistageJobViewModel>().Named(XmlDocumentType.MultistageOutputData.ToString());
 			//Bind<IDocumentViewModel>().To<DeclarationTrailerJobDocumentViewModel>().Named(XmlDocumentType.DeclarationTrailerJobData.ToString());
 

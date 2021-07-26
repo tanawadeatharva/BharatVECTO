@@ -26,15 +26,17 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 		{
 			return new VectoRunData
 			{
-				Exempted = true,
+				Exempted = InputDataProvider.MultistageJobInputData.JobInputData.PrimaryVehicle.Vehicle.ExemptedVehicle,
+				MultistageRun = true,
+				ExecutionMode = ExecutionMode.Declaration,
 				Report = Report,
 				Mission = new Mission { MissionType = MissionType.ExemptedMission },
-				VehicleData = CreateExemptedVehicleData(InputDataProvider.MultistageJobInputData.JobInputData.PrimaryVehicle.Vehicle),
+				VehicleData = CreateVehicleData(InputDataProvider.MultistageJobInputData.JobInputData.PrimaryVehicle.Vehicle),
 				MultistageVIFInputData = InputDataProvider
 			};
 		}
 		
-		private VehicleData CreateExemptedVehicleData(IVehicleDeclarationInputData data)
+		private VehicleData CreateVehicleData(IVehicleDeclarationInputData data)
 		{
 			var exempted = SetCommonVehicleData(data);
 			exempted.VIN = data.VIN;
@@ -42,7 +44,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 			exempted.LegislativeClass = data.LegislativeClass;
 			exempted.ZeroEmissionVehicle = data.ZeroEmissionVehicle;
 			exempted.HybridElectricHDV = data.HybridElectricHDV;
-			exempted.DualFuelVehicle = true;
+			exempted.DualFuelVehicle = data.DualFuelVehicle;// true;
 			exempted.MaxNetPower1 = data.MaxNetPower1;
 			exempted.MaxNetPower2 = data.MaxNetPower2;
 

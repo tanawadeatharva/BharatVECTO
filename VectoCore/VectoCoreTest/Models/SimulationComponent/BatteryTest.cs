@@ -1,13 +1,15 @@
 ﻿using System.IO;
+using System.Linq;
 using NUnit.Framework;
+using TUGraz.VECTO;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.InputData.FileIO.JSON;
 using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter;
 using TUGraz.VectoCore.Models.Connector.Ports.Impl;
 using TUGraz.VectoCore.Models.SimulationComponent;
-using TUGraz.VectoCore.Models.SimulationComponent.Impl;
 using TUGraz.VectoCore.Tests.Utils;
+using Battery = TUGraz.VectoCore.Models.SimulationComponent.Impl.Battery;
 
 namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 {
@@ -41,12 +43,11 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			var tmp = new MockBatteryInputData()
 			{
 				REESSPack = inputData,
-				Count = 1
 			};
 			var batteryData = dao.CreateBatteryData(tmp, 0.8);
 
 			var container = new MockVehicleContainer();
-			var bat = new Battery(container, batteryData);
+			var bat = new Battery(container, batteryData.Batteries.First().Item2);
 			var modData = new MockModalDataContainer();
 			bat.Initialize(initialSoC);
 
@@ -77,12 +78,11 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			var tmp = new MockBatteryInputData()
 			{
 				REESSPack = inputData,
-				Count = 1
 			};
 			var batteryData = dao.CreateBatteryData(tmp, 0.8);
 
 			var container = new MockVehicleContainer();
-			var bat = new Battery(container, batteryData);
+			var bat = new Battery(container, batteryData.Batteries.First().Item2);
 
 			bat.Initialize(initialSoC);
 
@@ -110,13 +110,12 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			var tmp = new MockBatteryInputData()
 			{
 				REESSPack = inputData,
-				Count = 1
 			};
 			var batteryData = dao.CreateBatteryData(tmp, 0.8);
 
 			var container = new MockVehicleContainer();
 			var es = new ElectricSystem(container);
-			var bat = new Battery(container, batteryData);
+			var bat = new Battery(container, batteryData.Batteries.First().Item2);
 			es.Connect(bat);
 			es.Connect(new MockElectricConsumer(auxPower.SI<Watt>()));
 			bat.Initialize(initialSoC);
@@ -147,12 +146,11 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			var tmp = new MockBatteryInputData()
 			{
 				REESSPack = inputData,
-				Count = 1
 			};
 			var batteryData = dao.CreateBatteryData(tmp, 0.8);
 
 			var container = new MockVehicleContainer();
-			var bat = new Battery(container, batteryData);
+			var bat = new Battery(container, batteryData.Batteries.First().Item2);
 
 			bat.Initialize(initialSoC);
 
@@ -181,12 +179,11 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			var tmp = new MockBatteryInputData()
 			{
 				REESSPack = inputData,
-				Count = 1
 			};
 			var batteryData = dao.CreateBatteryData(tmp, 0.8);
 
 			var container = new MockVehicleContainer();
-			var bat = new Battery(container, batteryData);
+			var bat = new Battery(container, batteryData.Batteries.First().Item2);
 			var es = new ElectricSystem(container);
 			es.Connect(bat);
 			es.Connect(new MockElectricConsumer(auxPower.SI<Watt>()));

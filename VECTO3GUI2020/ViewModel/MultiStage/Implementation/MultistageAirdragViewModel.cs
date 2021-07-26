@@ -62,6 +62,12 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 			}
 		}
 
+		public bool ShowConsolidatedData
+		{
+			get => _showConsolidatedData;
+			set => SetProperty(ref _showConsolidatedData, value);
+		}
+
 		private void StoreAirdragViewModel()
 		{
 			if (AirDragViewModel != null && StoredAirdragViewModel != AirDragViewModel) {
@@ -115,6 +121,7 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 		private IAirdragDeclarationInputData _consolidatedAirdragInputData;
 		private string _airdragFilePath;
 		private readonly IMultistageDependencies _dependencies;
+		private bool _showConsolidatedData = true;
 
 		public ICommand LoadAirdragFileCommand
 		{

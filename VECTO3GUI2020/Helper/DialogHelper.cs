@@ -19,14 +19,16 @@ namespace VECTO3GUI2020.Helper
 
 		#region File and Folder Dialogs
 		private string _xmlFilter = "XML Files (*.xml)|*.xml";
+		private string _jsonFilter = "JSON Files (*.json)|*.json";
 
-		private Dictionary<string, string> lastUsedDirectories = new Dictionary<string, string>();
+		private Dictionary<string, string> lastUsedLoadDirectories = new Dictionary<string, string>();
+		private Dictionary<string, string> lastUsedSaveDirectories = new Dictionary<string, string>();
 
 		private string lastUsedDirectoryFolderPicker = null;
 		private string[] OpenFilesDialog(string filter, string initialDirectory, bool multiselect)
 		{
 			if (initialDirectory == null) {
-				initialDirectory = LookUpLastDir(filter);
+				initialDirectory = LookUpLastDir(lastUsedLoadDirectories, filter);
 			}
 
 
@@ -39,7 +41,7 @@ namespace VECTO3GUI2020.Helper
 			}) {
 				var result = fd.ShowDialog();
 				if (result == DialogResult.OK) {
-					lastUsedDirectories[filter] = Path.GetDirectoryName(fd.FileName);
+					lastUsedLoadDirectories[filter] = Path.GetDirectoryName(fd.FileName);
 					return fd.FileNames;
 				}
 			}
@@ -47,11 +49,33 @@ namespace VECTO3GUI2020.Helper
 
 			return null;
 		}
+		public string SaveToDialog(string initialDirectory, string filter)
+		{
+			if (initialDirectory == null) {
+				initialDirectory = LookUpLastDir(lastUsedSaveDirectories, filter);
+			}
+			using (var saveFileDialog = new SaveFileDialog
+			{
+				Filter = filter,
+				InitialDirectory = initialDirectory ?? _defaultInitialDirectory,
+				AddExtension = true
+			}) {
+				var result = saveFileDialog.ShowDialog();
+				{
+					if (result == DialogResult.OK) {
+						lastUsedSaveDirectories[filter] = Path.GetDirectoryName(saveFileDialog.FileName);
+						return saveFileDialog.FileName;
+					}
+				}
 
-		private string LookUpLastDir(string filter)
+				return null;
+			}
+		}
+
+		private static string LookUpLastDir(Dictionary<string, string> dict, string filter)
 		{
 			string lastUsedDirectory = null;
-			if (lastUsedDirectories.TryGetValue(filter, out lastUsedDirectory)) {
+			if (dict.TryGetValue(filter, out lastUsedDirectory)) {
 				return lastUsedDirectory;
 			} else {
 				return Settings.Default.DefaultFilePath;
@@ -83,6 +107,11 @@ namespace VECTO3GUI2020.Helper
 		public string OpenXMLFileDialog(string initialDirectory)
 		{
 			return OpenFilesDialog(_xmlFilter, initialDirectory, false)?[0];
+		}
+
+		public string OpenJsonFileDialog(string initialDirectory)
+		{
+			return OpenFilesDialog(_jsonFilter, initialDirectory, false)?[0];
 		}
 
 
@@ -125,16 +154,7 @@ namespace VECTO3GUI2020.Helper
 			return MessageBox.Show(messageBoxText, caption);
 		}
 
-		public string SaveToDialog(string initialDirectory, string filter)
-		{
-			using (var saveFileDialog = new SaveFileDialog {
-				Filter = filter
-			}) {
-				saveFileDialog.InitialDirectory = initialDirectory ?? _defaultInitialDirectory;
 
-				return saveFileDialog.ShowDialog() == DialogResult.OK ? saveFileDialog.FileName : null;
-			}
-		}
 
 
 		public string SaveToXMLDialog(string initialDirectory)
@@ -142,6 +162,20 @@ namespace VECTO3GUI2020.Helper
 			return SaveToDialog(initialDirectory, _xmlFilter);
 		}
 
+		public string SaveToJsonDialog(string initialDirectory)
+		{
+			return SaveToDialog(initialDirectory, _jsonFilter);
+		}
+
+		public MessageBoxResult ShowErrorMessage(string errorMessage, string caption)
+		{
+			return ShowMessageBox(errorMessage, caption, MessageBoxButton.OK, MessageBoxImage.Error);
+		}
+
+		public MessageBoxResult ShowErrorMessage(string errorMessage)
+		{
+			return ShowErrorMessage(errorMessage, "Error");
+		}
 
 
 		#endregion
@@ -188,6 +222,11 @@ namespace VECTO3GUI2020.Helper
 		/// <param name="initialDirectory"></param>
 		/// <returns></returns>
 		string OpenFolderDialog(string initialDirectory = null);
+		string OpenJsonFileDialog(string initialDirectory = null);
+		string SaveToDialog(string initialDirectory = null, string filter = "All files (*.*|*.*");
+		string SaveToXMLDialog(string initialDirectory = null);
+		string SaveToJsonDialog(string initialDirectory = null);
+
 
 		/// <summary>
 		/// Displays a messagebox
@@ -210,9 +249,7 @@ namespace VECTO3GUI2020.Helper
 		/// <returns></returns>
 		MessageBoxResult ShowMessageBox(string messageBoxText, string caption);
 
-
-		string SaveToDialog(string initialDirectory = null, string filter = "All files (*.*|*.*");
-
-		string SaveToXMLDialog(string initialDirectory = null);
+		MessageBoxResult ShowErrorMessage(string errorMessage, string caption);
+		MessageBoxResult ShowErrorMessage(string errorMessage);
 	}
 }

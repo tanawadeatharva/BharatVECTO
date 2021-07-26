@@ -65,6 +65,8 @@ namespace TUGraz.VectoCore.OutputData
 			Fields.FC_BusAux_PS_CORR_H, Fields.FC_BusAux_PS_CORR_KM,
 			Fields.FC_BusAux_ES_CORR_H, Fields.FC_BusAux_ES_CORR_KM,
 			Fields.FCWHR_H_CORR, Fields.FCWHR_KM_CORR,
+			Fields.FC_HEV_SOC_H, Fields.FC_HEV_SOC_KM,
+			Fields.FC_HEV_SOC_CORR_H, Fields.FC_HEV_SOC_CORR_KM,
 			Fields.FC_AUXHTR_H, Fields.FC_AUXHTR_KM,
 			Fields.FC_AUXHTR_H_CORR, Fields.FC_AUXHTR_KM_CORR,
 			Fields.FCFINAL_H, Fields.FCFINAL_KM, Fields.FCFINAL_LITERPER100KM, Fields.FCFINAL_LITERPER100TKM,
@@ -411,12 +413,12 @@ namespace TUGraz.VectoCore.OutputData
 				row[FcCol(Fields.FCWHTCC_KM, suffix)] =
 					modData.FuelConsumptionPerMeter(ModalResultField.FCWHTCc, fuel)?.ConvertToGrammPerKiloMeter();
 
-				row[FcCol(Fields.FCESS_H, suffix)] = modData.FuelConsumptionPerSecond(ModalResultField.FCICEStopStart, fuel)
-													?.ConvertToGrammPerHour();
-				row[FcCol(Fields.FCESS_KM, suffix)] = modData.FuelConsumptionPerMeter(ModalResultField.FCICEStopStart, fuel)
-													?.ConvertToGrammPerKiloMeter();
+					//modData.FuelConsumptionPerSecond(ModalResultField.FCICEStopStart, fuel)
+     //                                               ?.ConvertToGrammPerHour();
+					//modData.FuelConsumptionPerMeter(ModalResultField.FCICEStopStart, fuel)
+     //                                               ?.ConvertToGrammPerKiloMeter();
 
-				var fuelConsumption = modData.CorrectedModalData.FuelConsumptionCorrection(fuel);
+                var fuelConsumption = modData.CorrectedModalData.FuelConsumptionCorrection(fuel);
 
 				row[FcCol(Fields.K_ENGLINE, suffix)] = fuelConsumption.EngineLineCorrectionFactor.ConvertToGramPerKiloWattHour();
 				row[FcCol(Fields.K_VEHLINE, suffix)] = fuelConsumption.VehicleLine?.ConvertToGramPerKiloWattHour();
@@ -426,22 +428,27 @@ namespace TUGraz.VectoCore.OutputData
 					row[FcCol(Fields.K_VEHLINE, suffix)] = vehLine.ConvertToGramPerKiloWattHour();
 				}
 
+				row[FcCol(Fields.FCESS_H, suffix)] = fuelConsumption.FC_ESS_H?.ConvertToGrammPerHour();
 				row[FcCol(Fields.FCESS_H_CORR, suffix)] = fuelConsumption.FC_ESS_CORR_H?.ConvertToGrammPerHour();
 				row[FcCol(Fields.FC_BusAux_PS_CORR_H, suffix)] = fuelConsumption.FC_BusAux_PS_CORR_H?.ConvertToGrammPerHour();
 				row[FcCol(Fields.FC_BusAux_ES_CORR_H, suffix)] = fuelConsumption.FC_BusAux_ES_CORR_H?.ConvertToGrammPerHour();
 				row[FcCol(Fields.FCWHR_H_CORR, suffix)] = fuelConsumption.FC_WHR_CORR_H?.ConvertToGrammPerHour();
+				row[FcCol(Fields.FC_HEV_SOC_CORR_H, suffix)] = fuelConsumption.FC_REESS_SOC_CORR_H?.ConvertToGrammPerHour();
+				row[FcCol(Fields.FC_HEV_SOC_H, suffix)] = fuelConsumption.FC_REESS_SOC_H?.ConvertToGrammPerHour();
 				row[FcCol(Fields.FC_AUXHTR_H, suffix)] = fuelConsumption.FC_AUXHTR_H?.ConvertToGrammPerHour();
 				row[FcCol(Fields.FC_AUXHTR_H_CORR, suffix)] = fuelConsumption.FC_AUXHTR_H_CORR?.ConvertToGrammPerHour();
-
 
 				row[FcCol(Fields.FCFINAL_H, suffix)] = fuelConsumption.FC_FINAL_H?.ConvertToGrammPerHour();
 
 				row[FcCol(Fields.FCWHR_KM_CORR, suffix)] = fuelConsumption.FC_WHR_CORR_KM?.ConvertToGrammPerKiloMeter();
 				row[FcCol(Fields.FC_BusAux_PS_CORR_KM, suffix)] = fuelConsumption.FC_BusAux_PS_CORR_KM?.ConvertToGrammPerKiloMeter();
 				row[FcCol(Fields.FC_BusAux_ES_CORR_KM, suffix)] = fuelConsumption.FC_BusAux_ES_CORR_KM?.ConvertToGrammPerKiloMeter();
+				row[FcCol(Fields.FC_HEV_SOC_CORR_KM, suffix)] = fuelConsumption.FC_REESS_SOC_CORR_KM?.ConvertToGrammPerKiloMeter();
+				row[FcCol(Fields.FC_HEV_SOC_KM, suffix)] = fuelConsumption.FC_REESS_SOC_KM?.ConvertToGrammPerKiloMeter();
 				row[FcCol(Fields.FC_AUXHTR_KM, suffix)] = fuelConsumption.FC_AUXHTR_KM?.ConvertToGrammPerKiloMeter();
 				row[FcCol(Fields.FC_AUXHTR_KM_CORR, suffix)] = fuelConsumption.FC_AUXHTR_KM_CORR?.ConvertToGrammPerKiloMeter();
 
+				row[FcCol(Fields.FCESS_KM, suffix)] = fuelConsumption.FC_ESS_KM?.ConvertToGrammPerKiloMeter();
 				row[FcCol(Fields.FCESS_KM_CORR, suffix)] = fuelConsumption.FC_ESS_CORR_KM?.ConvertToGrammPerKiloMeter();
 				row[FcCol(Fields.FCFINAL_KM, suffix)] = fuelConsumption.FC_FINAL_KM?.ConvertToGrammPerKiloMeter();
 
@@ -702,7 +709,7 @@ namespace TUGraz.VectoCore.OutputData
 				}
 
 				foreach (var field in new[] {
-					Fields.REESS_DeltaSoC, Fields.E_REESS_LOSS, Fields.E_REESS_T_chg, Fields.E_REESS_T_dischg,
+					Fields.REESS_DeltaEnergy, Fields.E_REESS_LOSS, Fields.E_REESS_T_chg, Fields.E_REESS_T_dischg,
 					Fields.E_REESS_int_chg, Fields.E_REESS_int_dischg
 				}) {
 					if (Table.Columns.Contains(field)) {
@@ -722,14 +729,14 @@ namespace TUGraz.VectoCore.OutputData
 			if (runData.BatteryData != null) {
 				row[Fields.REESS_StartSoC] = runData.BatteryData.InitialSoC * 100;
 				row[Fields.REESS_EndSoC] = modData.REESSEndSoC();
-				row[Fields.REESS_DeltaSoC] = modData.TimeIntegral<WattSecond>(ModalResultField.P_reess_int.GetName())
+				row[Fields.REESS_DeltaEnergy] = modData.TimeIntegral<WattSecond>(ModalResultField.P_reess_int.GetName())
 					.ConvertToKiloWattHour();
 
 			}
 			if (runData.SuperCapData != null) {
 				row[Fields.REESS_StartSoC] = runData.SuperCapData.InitialSoC * 100;
 				row[Fields.REESS_EndSoC] = modData.REESSEndSoC();
-				row[Fields.REESS_DeltaSoC] = modData.TimeIntegral<WattSecond>(ModalResultField.P_reess_int.GetName())
+				row[Fields.REESS_DeltaEnergy] = modData.TimeIntegral<WattSecond>(ModalResultField.P_reess_int.GetName())
 					.ConvertToKiloWattHour();
 			}
 		}
@@ -1095,6 +1102,11 @@ namespace TUGraz.VectoCore.OutputData
 			public const string FCESS_KM_CORR = "FC-ESS_Corr{0} [g/km]";
 			public const string FCWHR_H_CORR = "FC-WHR_Corr{0} [g/h]";
 			public const string FCWHR_KM_CORR = "FC-WHR_Corr{0} [g/km]";
+			public const string FC_HEV_SOC_H = "FC-SoC{0} [g/h]";
+			public const string FC_HEV_SOC_KM = "FC-SoC{0} [g/km]";
+			public const string FC_HEV_SOC_CORR_H = "FC-SoC_Corr{0} [g/h]";
+			public const string FC_HEV_SOC_CORR_KM = "FC-SoC_Corr{0} [g/km]";
+
 
 			public const string FC_BusAux_PS_CORR_H = "FC-BusAux_PS_Corr{0} [g/h]";
 			public const string FC_BusAux_PS_CORR_KM = "FC-BusAux_PS_Corr{0} [g/km]";
@@ -1267,7 +1279,7 @@ namespace TUGraz.VectoCore.OutputData
 			public const string REESS_CAPACITY = "REESS Capacity";
 			public const string REESS_StartSoC = "REESS Start SoC [%]";
 			public const string REESS_EndSoC = "REESS End SoC [%]";
-			public const string REESS_DeltaSoC = "ΔE_REESS [kWh]";
+			public const string REESS_DeltaEnergy = "ΔE_REESS [kWh]";
 
 			public const string E_REESS_LOSS = "E_REESS_loss [kWh]";
 			public const string E_REESS_T_chg = "E_REESS_T_chg [kWh]";

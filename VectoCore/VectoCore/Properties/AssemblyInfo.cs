@@ -55,3 +55,5 @@ using System.Runtime.InteropServices;
 [assembly: System.Runtime.CompilerServices.InternalsVisibleTo("VectoAuxiliariesTests")]
 [assembly: System.Runtime.CompilerServices.InternalsVisibleTo("VECTO3")]
 [assembly: System.Runtime.CompilerServices.InternalsVisibleTo("VECTOMultistage")]
+[assembly: System.Runtime.CompilerServices.InternalsVisibleTo("Vecto3GUI2020Test")]
+

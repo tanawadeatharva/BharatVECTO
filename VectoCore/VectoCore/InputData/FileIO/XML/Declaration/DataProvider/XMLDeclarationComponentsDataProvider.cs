@@ -93,7 +93,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		public virtual IAxlesDeclarationInputData AxleWheels => _axleWheels ?? (_axleWheels = ComponentReader.AxlesDeclarationInputData);
 
 		public virtual IBusAuxiliariesDeclarationData BusAuxiliaries => null;
-		public virtual IElectricStorageDeclarationInputData ElectricStorage => null;
+		public virtual IElectricStorageSystemDeclarationInputData ElectricStorage => null;
 		public virtual IElectricMachinesDeclarationInputData ElectricMachines => null;
 
 		#endregion

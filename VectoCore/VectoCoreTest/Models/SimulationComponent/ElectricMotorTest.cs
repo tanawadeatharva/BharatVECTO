@@ -253,10 +253,9 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			var batInput = JSONInputDataFactory.ReadREESSData(BatFile, false);
 			var tmp = new MockBatteryInputData() {
 				REESSPack = batInput,
-				Count = 1
 			};
 			var batteryData = dao.CreateBatteryData(tmp, 0.8);
-			var battery = new Battery(container, batteryData);
+			var battery = new Battery(container, batteryData.Batteries.First().Item2);
 			var es = new ElectricSystem(container);
 			es.Connect(battery);
 
@@ -318,10 +317,9 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			var tmp = new MockBatteryInputData()
 			{
 				REESSPack = batInput,
-				Count = 1
 			};
 			var batteryData = dao.CreateBatteryData(tmp, 0.8);
-			var battery = new Battery(container, batteryData);
+			var battery = new Battery(container, batteryData.Batteries.First().Item2);
 			container.BatteryInfo = battery;
 			var es = new ElectricSystem(container);
 			es.Connect(battery);
@@ -374,7 +372,6 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			var tmp = new MockBatteryInputData()
 			{
 				REESSPack = batInput,
-				Count = 1
 			};
 			var batteryData = dao.CreateBatteryData(tmp, 0.8);
 
@@ -388,7 +385,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			var container = new VehicleContainer(ExecutionMode.Engineering, modData);
 			new EngineOnlyGearboxInfo(container);
 
-			var battery = new Battery(container, batteryData);
+			var battery = new Battery(container, batteryData.Batteries.First().Item2);
 			var es = new ElectricSystem(container);
 			es.Connect(battery);
 			battery.Initialize(initialSoc);

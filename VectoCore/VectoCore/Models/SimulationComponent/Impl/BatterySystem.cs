@@ -1,0 +1,337 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Runtime.InteropServices;
+using TUGraz.VectoCommon.Exceptions;
+using TUGraz.VectoCommon.Models;
+using TUGraz.VectoCommon.Utils;
+using TUGraz.VectoCore.Configuration;
+using TUGraz.VectoCore.Models.Connector.Ports.Impl;
+using TUGraz.VectoCore.Models.Simulation;
+using TUGraz.VectoCore.Models.Simulation.Data;
+using TUGraz.VectoCore.Models.SimulationComponent.Data.Battery;
+using TUGraz.VectoCore.OutputData;
+
+namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
+{
+	public class BatterySystem : StatefulVectoSimulationComponent<BatterySystem.State>, IElectricEnergyStorage, IElectricEnergyStoragePort
+	{
+		public class BatteryString
+		{
+			protected readonly List<Battery> _batteries;
+			
+			private AmpereSecond _capacity;
+
+			public BatteryString()
+            {
+				_batteries = new List<Battery>();
+            }
+
+			public IReadOnlyList<Battery> Batteries => _batteries;
+
+			public void AddBattery(Battery bat)
+			{
+				_batteries.Add(bat);
+				// Todo: update some properties?
+				_capacity = null;
+			}
+
+			public Volt OpenCircuitVoltage => _batteries.Sum(x => x.InternalVoltage);
+
+			public Ohm InternalResistance => _batteries.Sum(x => x.InternalResistance);
+
+			public AmpereSecond Capacity => _capacity ?? (_capacity = _batteries.Min(x => x.Capacity));
+
+			public double SoC => _batteries.Min(x => x.StateOfCharge * x.Capacity) / Capacity;
+			public WattSecond StoredEnergy => _batteries.Min(x => x.StateOfCharge * x.Capacity) * OpenCircuitVoltage;
+
+			public Watt MaxDischargePower(Second dt)
+			{
+				var maxDischargeCurrent = MaxDischargeCurrent(dt);
+					var maxDischargePower = OpenCircuitVoltage * maxDischargeCurrent +
+											maxDischargeCurrent * InternalResistance * maxDischargeCurrent;
+					var maxPower = -OpenCircuitVoltage / (4 * InternalResistance) * OpenCircuitVoltage;
+					return VectoMath.Max(maxDischargePower, maxPower);
+				
+			}
+
+			public Ampere MaxChargeCurrent(Second dt)
+			{
+				return _batteries.Min(x => x.MaxChargeCurrent(dt));
+			}
+
+			public Ampere MaxDischargeCurrent(Second dt)
+			{
+				return _batteries.Max(x => x.MaxDischargeCurrent(dt));
+			}
+
+			public Watt MaxChargePower(Second dt)
+			{
+				var maxCurrent = MaxChargeCurrent(dt);
+				return OpenCircuitVoltage * maxCurrent +
+						maxCurrent * InternalResistance * maxCurrent;
+			}
+
+			public IList<IRESSResponse> Request(Second absTime, Second dt, Watt powerDemand, bool dryRun)
+			{
+				var current = 0.SI<Ampere>();
+				if (!powerDemand.IsEqual(0)) {
+					var solutions = VectoMath.QuadraticEquationSolver(InternalResistance.Value(), OpenCircuitVoltage.Value(),
+						-powerDemand.Value());
+					current = SelectSolution(solutions, powerDemand.Value(), dt);
+				}
+
+				if (!dryRun) {
+					Current = current;
+				}
+
+				return _batteries.Select(x => {
+					var demand = (x.InternalVoltage + x.InternalResistance * current) * current;
+					return x.Request(absTime, dt, demand, dryRun);
+				}).ToList();
+			}
+
+			public Ampere Current { get; set; }
+
+			private Ampere SelectSolution(double[] solutions, double sign, Second dt)
+			{
+				var maxCurrent = Math.Sign(sign) < 0
+					? MaxDischargeCurrent(dt)
+					: MaxChargeCurrent(dt);
+				return solutions.Where(x => Math.Sign(sign) == Math.Sign(x) && Math.Abs(x).IsSmallerOrEqual(Math.Abs(maxCurrent.Value()), 1e-3)).Min().SI<Ampere>();
+			}
+		}
+
+		protected internal readonly Dictionary<int, BatteryString> Batteries = new Dictionary<int, BatteryString>();
+		
+		private AmpereSecond _totalCapacity;
+
+		public BatterySystem(IVehicleContainer dataBus, BatterySystemData batterySystemData) : base(dataBus)
+		{
+			var idx = 0;
+			foreach (var entry in batterySystemData.Batteries) {
+				var bat = new Battery(null, entry.Item2, idx++);
+				if (!Batteries.ContainsKey(entry.Item1)) {
+					Batteries[entry.Item1] = new BatteryString();
+				}
+				Batteries[entry.Item1].AddBattery(bat);
+			}
+		}
+
+		#region Overrides of VectoSimulationComponent
+
+		public override void CommitSimulationStep(Second time, Second simulationInterval, IModalDataContainer container)
+		{
+			base.CommitSimulationStep(time, simulationInterval, container);
+			foreach (var battery in Batteries) {
+				foreach (var b in battery.Value.Batteries) {
+					b.CommitSimulationStep(time, simulationInterval, container);
+				}
+			}
+			// write battery system average SoC after all battery components - then the SoC property changes from current to
+			// previous state and thus the average matches the individual batteries
+			if (container != null) {
+				container[ModalResultField.REESSStateOfCharge] = StateOfCharge.SI();
+			}
+		}
+
+		protected override void DoWriteModalResults(Second time, Second simulationInterval, IModalDataContainer container)
+		{
+			var cellVoltage = InternalVoltage;
+			container[ModalResultField.U0_reess] = cellVoltage;
+			container[ModalResultField.U_reess_terminal] =
+				cellVoltage +
+				CurrentState.TotalCurrent *
+				InternalResistance; // adding both terms because pos. current charges the battery!
+			container[ModalResultField.I_reess] = CurrentState.TotalCurrent;
+			//container[ModalResultField.REESSStateOfCharge] = CurrentState.StateOfCharge.SI();
+			container[ModalResultField.P_reess_terminal] = CurrentState.PowerDemand;
+			container[ModalResultField.P_reess_int] = cellVoltage * CurrentState.TotalCurrent;
+			container[ModalResultField.P_reess_loss] = CurrentState.BatteryLoss;
+			container[ModalResultField.P_reess_charge_max] = CurrentState.MaxChargePower;
+			container[ModalResultField.P_reess_discharge_max] = CurrentState.MaxDischargePower;
+		}
+
+		public Ohm InternalResistance => (1 / Batteries.Sum(bs => 1 / bs.Value.InternalResistance.Value())).SI<Ohm>();
+		
+		protected override void DoCommitSimulationStep(Second time, Second simulationInterval)
+		{
+			
+		}
+
+
+		#endregion
+
+		#region Implementation of IBatteryProvider
+
+		public IElectricEnergyStoragePort MainBatteryPort => this;
+
+		#endregion
+
+		#region Implementation of IRESSInfo
+
+		public Volt InternalVoltage => Batteries.Values.Select(x => x.OpenCircuitVoltage).Average();
+
+		public double StateOfCharge => Batteries.Values.Sum(bs => bs.SoC * bs.Capacity) / TotalCapacity;
+
+		public AmpereSecond TotalCapacity =>
+			_totalCapacity ?? (_totalCapacity = Batteries.Values.Sum(bs => bs.Capacity));
+
+		public WattSecond StoredEnergy => Batteries.Values.Sum(bs => bs.StoredEnergy);
+		
+		public Watt MaxChargePower(Second dt)
+		{
+			return Batteries.Values.Sum(bs => bs.MaxChargePower(dt));
+
+		}
+
+		public Watt MaxDischargePower(Second dt)
+		{
+			return Batteries.Values.Sum(bs => bs.MaxDischargePower(dt));
+		}
+
+		public double MinSoC { get; }
+		public double MaxSoC { get; }
+
+		#endregion
+
+		#region Implementation of IElectricEnergyStoragePort
+
+		public void Initialize(double initialSoC)
+		{
+			foreach (var b in Batteries.Values.SelectMany(bs => bs.Batteries)) {
+				b.Initialize(initialSoC);
+			}
+		}
+
+		public IRESSResponse Request(Second absTime, Second dt, Watt powerDemand, bool dryRun)
+		{
+			var maxChargePower = MaxChargePower(dt);
+			var maxDischargePower = MaxDischargePower(dt);
+
+			if (powerDemand.IsGreater(maxChargePower, Constants.SimulationSettings.InterpolateSearchTolerance) ||
+				powerDemand.IsSmaller(maxDischargePower, Constants.SimulationSettings.InterpolateSearchTolerance)) {
+				return PowerDemandExceeded(absTime, dt, powerDemand, maxDischargePower, maxChargePower, dryRun);
+			}
+
+			
+			var powerDemands = new Dictionary<int, Watt>();
+			var limitBB = new Dictionary<int, Watt>();
+			var distributedPower = 0.SI<Watt>();
+			do {
+				distributedPower = 0.SI<Watt>();
+				var remainingPower = powerDemand - (limitBB.Sum(x => x.Value) ?? 0.SI<Watt>());
+				powerDemands.Clear();
+				var totalCapacity = (Batteries.Where(x => !limitBB.ContainsKey(x.Key)).Sum(x => x.Value.Capacity) ?? 0.SI<AmpereSecond>());
+				var averageSoC = (Batteries.Where(x => !limitBB.ContainsKey(x.Key)).Sum(x => x.Value.SoC * x.Value.Capacity) / totalCapacity).Value();
+				foreach (var bs in Batteries) {
+					if (limitBB.ContainsKey(bs.Key)) {
+						continue;
+					}
+					var delta = 1 - Math.Sign(remainingPower.Value()) * (bs.Value.SoC - averageSoC) / averageSoC;
+					var power = bs.Value.Capacity / totalCapacity * delta * remainingPower;
+					if (!power.IsBetween(bs.Value.MaxDischargePower(dt), bs.Value.MaxChargePower(dt))) {
+						limitBB[bs.Key] = power.LimitTo(bs.Value.MaxDischargePower(dt), bs.Value.MaxChargePower(dt));
+					} else {
+						powerDemands[bs.Key] = power;
+						distributedPower += power;
+					}
+				}
+
+				if (limitBB.Count > 0) {
+					Log.Debug($"BB ${string.Join(", ", limitBB.Keys)} are at max - recalculating power distribution");
+				}
+			} while (!(distributedPower + (limitBB.Sum(x => x.Value) ?? 0.SI<Watt>())) .IsEqual(powerDemand, 1e-3.SI<Watt>()));
+
+			powerDemands = powerDemands.Concat(limitBB).ToDictionary(x => x.Key, x=> x.Value);
+
+			var responses = new Dictionary<int, IList<IRESSResponse>>();
+			foreach (var entry in powerDemands) {
+				responses[entry.Key] = Batteries[entry.Key].Request(absTime, dt, entry.Value, dryRun);
+			}
+
+			if (dryRun) {
+				return new RESSDryRunResponse(this) {
+					AbsTime = absTime,
+					SimulationInterval = dt,
+					MaxChargePower = maxChargePower,
+					MaxDischargePower = maxDischargePower,
+					PowerDemand = powerDemand,
+					LossPower = responses.Sum(x => x.Value.Sum(b => b.LossPower)),
+					//StateOfCharge = (currentCharge + current * dt) / ModelData.Capacity
+				};
+			}
+
+			var current = Batteries.Values.Sum(x => x.Current);
+			
+			CurrentState.StateOfCharge = StateOfCharge;
+			CurrentState.PowerDemand = powerDemand;
+			CurrentState.MaxChargePower = maxChargePower;
+			CurrentState.MaxDischargePower = maxDischargePower;
+			CurrentState.TotalCurrent = current;
+			CurrentState.BatteryLoss = current * InternalResistance * current;
+
+			if (responses.All(bb => bb.Value.All(b => b is RESSResponseSuccess))) {
+				return new RESSResponseSuccess(this) {
+					AbsTime = absTime,
+					SimulationInterval = dt,
+					MaxChargePower = maxChargePower,
+					MaxDischargePower = maxDischargePower,
+					PowerDemand = powerDemand,
+					LossPower = responses.Sum(x => x.Value.Sum(b => b.LossPower)),
+					//StateOfCharge = (currentCharge + current * dt) / ModelData.Capacity
+				};
+			}
+			throw new NotImplementedException("batterypack no success");
+		}
+
+
+		private IRESSResponse PowerDemandExceeded(Second absTime, Second dt, Watt powerDemand, Watt maxDischargePower,
+			Watt maxChargePower, bool dryRun)
+		{
+			var maxPower = powerDemand < 0 ? maxDischargePower : maxChargePower;
+
+			var maxChargeCurrent = Batteries.Values.Sum(bs => bs.MaxChargeCurrent(dt));
+			var maxDischargeCurrent = Batteries.Values.Sum(bs => bs.MaxDischargeCurrent(dt));
+			var current = powerDemand < 0 ? maxDischargeCurrent : maxChargeCurrent;
+			var internalResistance = (1 / Batteries.Values.Sum(bs => 1 / bs.InternalResistance.Value())).SI<Ohm>();
+
+			var batteryLoss = current * internalResistance * current;
+
+			AbstractRESSResponse response;
+			if (dryRun) {
+				response = new RESSDryRunResponse(this);
+			} else {
+				if (powerDemand > maxPower) {
+					response = new RESSOverloadResponse(this);
+				} else {
+					response = new RESSUnderloadResponse(this);
+				}
+			}
+			response.AbsTime = absTime;
+			response.SimulationInterval = dt;
+			response.MaxChargePower = maxChargePower;
+			response.MaxDischargePower = maxDischargePower;
+			response.PowerDemand = powerDemand;
+			response.LossPower = batteryLoss;
+
+			return response;
+		}
+
+		#endregion
+
+		public class State
+		{
+			public double StateOfCharge;
+
+			public Second SimulationInterval;
+
+			public Watt PowerDemand;
+
+			public Ampere TotalCurrent;
+			public Watt MaxChargePower;
+			public Watt MaxDischargePower;
+			public Watt BatteryLoss;
+		}
+	}
+}
