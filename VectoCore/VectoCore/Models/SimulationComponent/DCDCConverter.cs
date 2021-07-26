@@ -31,7 +31,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent
 
 		public Watt PowerDemand(Second absTime, Second dt, bool dryRun)
 		{
-			if ((-DataBus.BatteryInfo.MaxDischargePower(dt) * dt).IsGreater(PreviousState.ConsumedEnergy)) {
+			var dischargeEnergy = (-DataBus.BatteryInfo.MaxDischargePower(dt) * dt);
+			var chargeEnergy = (-DataBus.BatteryInfo.MaxChargePower(dt) * dt);
+			if (PreviousState.ConsumedEnergy.IsBetween(chargeEnergy, dischargeEnergy)) {
 				return PreviousState.ConsumedEnergy / dt / Efficiency;
 			}
 

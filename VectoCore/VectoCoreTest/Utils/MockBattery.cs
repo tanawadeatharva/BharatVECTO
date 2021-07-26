@@ -40,6 +40,8 @@ namespace TUGraz.VectoCore.Tests.Utils {
 		public double MinSoC => 0;
 
 		public double MaxSoC => 1;
+		public AmpereSecond Capacity => null;
+		public Volt NominalVoltage => null;
 
 		public IElectricEnergyStoragePort MainBatteryPort => this;
 

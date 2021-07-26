@@ -1135,7 +1135,7 @@
     <value>TechnicalPermissibleMaximumLadenMass</value>
   </data>
   <data name="Vehicle_ADAS_ATEcoRollReleaseLockupClutch" xml:space="preserve">
-    <value>ATEcoRollReleaseLockupClutch</value>
+    <value>APTEcoRollReleaseLockupClutch</value>
   </data>
   <data name="ManufacturerPrimaryVehicle" xml:space="preserve">
     <value>ManufacturerPrimaryVehicle</value>
