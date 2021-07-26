@@ -220,10 +220,11 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 
 				var jobContainer = new JobContainer(new NullSumWriter());
 
-				var runs = factory.SimulationRuns().ToList();
-				foreach (var run in runs) {
-					jobContainer.AddRun(run);
-				}
+				jobContainer.AddRuns(factory);
+				//var runs = factory.SimulationRuns().ToList();
+				//foreach (var run in runs) {
+				//	jobContainer.AddRun(run);
+				//}
 
 				jobContainer.Execute();
 				jobContainer.WaitFinished();
