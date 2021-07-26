@@ -4,10 +4,9 @@ namespace VECTO3GUI2020.ViewModel.Interfaces
 {
     public interface IMainWindowViewModel
     {
-        IMainViewModel CurrentViewModelTop { get; set; }
-        IMainViewModel CurrentViewModelBottom { get; set; }
+        IMainViewModel CurrentViewModel { get; set; }
 
-        #region Commands
+		#region Commands
         ICommand OpenSettings { get;}
         #endregion
     }

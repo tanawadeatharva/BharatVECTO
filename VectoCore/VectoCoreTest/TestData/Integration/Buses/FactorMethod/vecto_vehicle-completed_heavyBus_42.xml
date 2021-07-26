@@ -18,8 +18,10 @@ xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:DeclarationJob v:\VectoCore\VectoCor
 		<TechnicalPermissibleMaximumLadenMass>18000</TechnicalPermissibleMaximumLadenMass>
 		<AirdragModifiedMultistage>false</AirdragModifiedMultistage>		
 		<ClassBus>I+II</ClassBus>		
-		<NumberPassengersLowerDeck>30</NumberPassengersLowerDeck>
-		<NumberPassengersUpperDeck>0</NumberPassengersUpperDeck>
+		<NumberPassengerSeatsLowerDeck>30</NumberPassengerSeatsLowerDeck>
+		<NumberPassengersStandingLowerDeck>0</NumberPassengersStandingLowerDeck>
+		<NumberPassengerSeatsUpperDeck>0</NumberPassengerSeatsUpperDeck>
+		<NumberPassengersStandingUpperDeck>0</NumberPassengersStandingUpperDeck>
 		<BodyworkCode>CE</BodyworkCode>
 				<LowEntry>true</LowEntry>
 		<HeightIntegratedBody>3000</HeightIntegratedBody>

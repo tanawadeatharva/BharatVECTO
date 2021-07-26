@@ -1,24 +1,21 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Xml.Linq;
 using Castle.Core.Internal;
-using TUGraz.IVT.VectoXML.Writer;
 using TUGraz.VectoCommon.BusAuxiliaries;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Resources;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider;
-using TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Interfaces;
 using VECTO3GUI2020.Helper;
 using VECTO3GUI2020.Util.XML.Interfaces;
 using VECTO3GUI2020.ViewModel.Implementation.JobEdit.Vehicle;
 using VECTO3GUI2020.ViewModel.Interfaces.JobEdit.Vehicle;
 using VECTO3GUI2020.ViewModel.MultiStage.Implementation;
 
-namespace VECTO3GUI2020.Util.XML.Implementation
+namespace VECTO3GUI2020.Util.XML.Implementation.ComponentWriter
 {
     public abstract class XMLVehicleWriter : IXMLVehicleWriter
     {
@@ -51,7 +48,6 @@ namespace VECTO3GUI2020.Util.XML.Implementation
         {
 			if (_Xelement == null) {
 				Initialize();
-				
 				CreateElements();
 			}
 			return _Xelement;
@@ -190,14 +186,16 @@ namespace VECTO3GUI2020.Util.XML.Implementation
 	
     public class XMLVehicleWriter_ExcemptedVehicle_v2_2 { }
 
+
 	public class XMLVehicleWriter_v2_8 : XMLVehicleWriter
 	{
+		private readonly bool _exempted;
 		public static readonly string[] SUPPORTEDVERSIONS = {
-			typeof(DeclarationInterimStageBusVehicleViewModel_v2_8).ToString()
+			typeof(InterimStageBusVehicleViewModel_v2_8).ToString()
 		};
 		public XMLVehicleWriter_v2_8(IVehicleDeclarationInputData inputData, IXMLWriterFactory xmlWriterFactory) : base(inputData, xmlWriterFactory)
 		{
-			
+			_exempted = inputData.ExemptedVehicle;
 
 		}
 
@@ -209,14 +207,21 @@ namespace VECTO3GUI2020.Util.XML.Implementation
 
 			_Xelement = new XElement(XMLNamespaces.V20 + XMLNames.Component_Vehicle);
 			
-			_Xelement.Add(new XAttribute(XMLNames.Component_ID_Attr, "TODO_ADDIDENTIFIER"));
-			_Xelement.Add(new XAttribute(XMLNamespaces.Xsi + XMLNames.Attr_Type, "InterimStageInputType"));
+			_Xelement.Add(new XAttribute(XMLNames.Component_ID_Attr, _inputData.Identifier ?? ("VEH-" + Guid.NewGuid().ToString("n").Substring(0, 20))));
+			if (_exempted) {
+				_Xelement.Add(new XAttribute(XMLNamespaces.Xsi + XMLNames.Attr_Type, "ExemptedInterimStageInputType"));
+			} else {
+				_Xelement.Add(new XAttribute(XMLNamespaces.Xsi + XMLNames.Attr_Type, "InterimStageInputType"));
+			}
+			
 		}
 
 		protected override void CreateElements()
 		{
-
-
+			if (_exempted) {
+				CreateExemptedElements();
+				return;
+			}
 			_Xelement.Add(new XElement(_defaultNamespace + XMLNames.Component_Manufacturer, _inputData.Manufacturer));
 			_Xelement.Add(new XElement(_defaultNamespace + XMLNames.Component_ManufacturerAddress,
 				_inputData.ManufacturerAddress));
@@ -226,13 +231,9 @@ namespace VECTO3GUI2020.Util.XML.Implementation
 			_Xelement.Add(new XElement(_defaultNamespace + XMLNames.Component_Model, _inputData.Model));
 			_Xelement.Add(new XElement(_defaultNamespace + XMLNames.Bus_LegislativeCategory, _inputData.LegislativeClass.ToXMLFormat()));
 
-			
-
-
 			_Xelement.Add(new XElement(_defaultNamespace + XMLNames.Bus_CorrectedActualMass, _inputData.CurbMassChassis?.ToXMLFormat(0)));
 			_Xelement.Add(new XElement(_defaultNamespace + XMLNames.Vehicle_TPMLM,
 				_inputData.GrossVehicleMassRating?.ToXMLFormat(0)));
-
 
 			_Xelement.Add(new XElement(_defaultNamespace + XMLNames.Bus_AirdragModifiedMultistage, _inputData.AirdragModifiedMultistage));
 			_Xelement.Add(new XElement(_defaultNamespace + XMLNames.Vehicle_NgTankSystem, _inputData.TankSystem));
@@ -245,7 +246,6 @@ namespace VECTO3GUI2020.Util.XML.Implementation
 			_Xelement.Add(new XElement(_defaultNamespace + XMLNames.Vehicle_BodyworkCode, _inputData.VehicleCode.ToXMLFormat()));
 
 			_Xelement.Add(new XElement(_defaultNamespace + XMLNames.Bus_LowEntry, _inputData.LowEntry));
-
 
 			_Xelement.Add(new XElement(_defaultNamespace + XMLNames.Bus_HeighIntegratedBody, _inputData.Height?.ConvertToMilliMeter()));
 			_Xelement.Add(new XElement(_defaultNamespace + XMLNames.Bus_VehicleLength, _inputData.Length?.ConvertToMilliMeter()));
@@ -307,6 +307,38 @@ namespace VECTO3GUI2020.Util.XML.Implementation
 			}
 
 			
+		}
+
+		private void CreateExemptedElements()
+		{
+			_Xelement.Add(new XElement(_defaultNamespace + XMLNames.Component_Manufacturer, _inputData.Manufacturer));
+			_Xelement.Add(new XElement(_defaultNamespace + XMLNames.Component_ManufacturerAddress,
+				_inputData.ManufacturerAddress));
+
+			_Xelement.Add(new XElement(_defaultNamespace + XMLNames.Vehicle_VIN, _inputData.VIN));
+			_Xelement.Add(new XElement(_defaultNamespace + XMLNames.Component_Date, DateTime.Today.ToXmlFormat()));
+			_Xelement.Add(new XElement(_defaultNamespace + XMLNames.Component_Model, _inputData.Model));
+			_Xelement.Add(new XElement(_defaultNamespace + XMLNames.Bus_LegislativeCategory, _inputData.LegislativeClass.ToXMLFormat()));
+
+			_Xelement.Add(new XElement(_defaultNamespace + XMLNames.Bus_CorrectedActualMass, _inputData.CurbMassChassis?.ToXMLFormat(0)));
+			_Xelement.Add(new XElement(_defaultNamespace + XMLNames.Vehicle_TPMLM,
+				_inputData.GrossVehicleMassRating?.ToXMLFormat(0)));
+
+
+			_Xelement.Add(new XElement(_defaultNamespace + XMLNames.Vehicle_RegisteredClass, _inputData.RegisteredClass.ToXMLFormat()));
+
+			_Xelement.Add(new XElement(_defaultNamespace + XMLNames.Bus_NumberPassengerSeatsLowerDeck, _inputData.NumberPassengerSeatsLowerDeck));
+			_Xelement.Add(new XElement(_defaultNamespace + XMLNames.Bus_NumberPassengersStandingLowerDeck, _inputData.NumberPassengersStandingUpperDeck));
+
+			_Xelement.Add(new XElement(_defaultNamespace + XMLNames.Bus_NumberPassengerSeatsUpperDeck, _inputData.NumberPassengerSeatsUpperDeck));
+			_Xelement.Add(new XElement(_defaultNamespace + XMLNames.Bus_NumberPassengersStandingUpperDeck, _inputData.NumberPassengersStandingUpperDeck));
+			_Xelement.Add(new XElement(_defaultNamespace + XMLNames.Vehicle_BodyworkCode, _inputData.VehicleCode.ToXMLFormat()));
+
+			_Xelement.Add(new XElement(_defaultNamespace + XMLNames.Bus_LowEntry, _inputData.LowEntry));
+
+			_Xelement.Add(new XElement(_defaultNamespace + XMLNames.Bus_HeighIntegratedBody, _inputData.Height?.ConvertToMilliMeter()));
+
+			_Xelement.DescendantsAndSelf().Where(e => e.Value.IsNullOrEmpty()).Remove();
 		}
 
 		#endregion

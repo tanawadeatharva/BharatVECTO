@@ -260,7 +260,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 			}
 			 
 
-			public static Meter CalculateInternalLength(Meter vehicleLength, VehicleCode? vehicleCode, double numPassLowFloor)
+			public static Meter CalculateInternalLength(Meter vehicleLength, VehicleCode? vehicleCode, double numPassSeatsLowerDeck)
 				{
 				if (vehicleCode.GetFloorType()  == FloorType.LowFloor) {
 					return vehicleCode.IsDoubleDeckerBus() ? 2 * vehicleLength : vehicleLength;
@@ -268,7 +268,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 
 				if (vehicleCode.GetFloorType() == FloorType.HighFloor) {
 					if (vehicleCode.IsDoubleDeckerBus()) {
-						return numPassLowFloor > 6 ? 1.5 * vehicleLength : vehicleLength + 2.4.SI<Meter>();
+						return numPassSeatsLowerDeck > 6 ? 1.5 * vehicleLength : vehicleLength + 2.4.SI<Meter>();
 					}
 
 					return vehicleLength;

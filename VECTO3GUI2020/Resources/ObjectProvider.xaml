@@ -7,5 +7,4 @@
                         ObjectType="{x:Type helper:ConvertedSIDummyCreator}"
                         MethodName="CreateMillimeterDummy"/>
 
-    <ObjectDataProvider x:Key="BusStringResourceManager" ObjectType="{x:Type resources:ResourceManager}" ObjectInstance="{x:Static properties:BusStrings.ResourceManager}"/>
 </ResourceDictionary>

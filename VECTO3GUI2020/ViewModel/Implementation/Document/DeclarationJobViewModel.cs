@@ -28,13 +28,19 @@ namespace VECTO3GUI2020.ViewModel.Implementation.Document
 
 		public bool Selected
 		{
-			get => _selected;
+			get => _selected && CanBeSimulated;
 			set => SetProperty(ref _selected, value);
 		}
 
-		public bool CanBeEdited
+		public bool CanBeSimulated
 		{
 			get => false;
+			set => throw new System.NotImplementedException();
+		}
+
+		public IAdditionalJobInfoViewModel AdditionalJobInfoVm
+		{
+			get => throw new System.NotImplementedException();
 			set => throw new System.NotImplementedException();
 		}
 

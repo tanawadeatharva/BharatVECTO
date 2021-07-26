@@ -12,7 +12,7 @@
         <Grid MaxWidth="900">
             <DockPanel>
                 <Grid DockPanel.Dock="Top">
-                    <customControls:FilePicker x:Name="NewMultistageFilePicker" Grid.Row="0" Text="{Binding VifPath}" HorizontalAlignment="Stretch" Command="{Binding AddVifFile}"/>
+                    <customControls:FilePicker x:Name="NewMultistageFilePicker" Grid.Row="0" Text="{Binding VifPath}" HorizontalAlignment="Stretch" Command="{Binding AddVifFileCommand}"/>
                 </Grid>
                 <Button Style="{DynamicResource MultiStageButtonStyle1}" 
                         Margin="4"  DockPanel.Dock="Bottom" 

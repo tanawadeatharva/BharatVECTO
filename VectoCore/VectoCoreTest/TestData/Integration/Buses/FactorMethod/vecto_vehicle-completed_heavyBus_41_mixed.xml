@@ -19,8 +19,10 @@ xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:DeclarationJob v:\VectoCore\VectoCor
 		<AirdragModifiedMultistage>true</AirdragModifiedMultistage>
 		<NgTankSystem>Compressed</NgTankSystem>
 		<ClassBus>II+III</ClassBus>
-			<NumberPassengersLowerDeck>30</NumberPassengersLowerDeck>
-			<NumberPassengersUpperDeck>0</NumberPassengersUpperDeck>
+		<NumberPassengerSeatsLowerDeck>30</NumberPassengerSeatsLowerDeck>
+		<NumberPassengersStandingLowerDeck>0</NumberPassengersStandingLowerDeck>
+		<NumberPassengerSeatsUpperDeck>0</NumberPassengerSeatsUpperDeck>
+		<NumberPassengersStandingUpperDeck>0</NumberPassengersStandingUpperDeck>
 		<BodyworkCode>CA</BodyworkCode>
 		<LowEntry>true</LowEntry>
 		<HeightIntegratedBody>3000</HeightIntegratedBody>

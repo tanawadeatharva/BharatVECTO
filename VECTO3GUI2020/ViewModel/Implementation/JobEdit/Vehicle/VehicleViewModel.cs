@@ -179,8 +179,6 @@ namespace VECTO3GUI2020.ViewModel.Implementation.JobEdit.Vehicle
 			set => throw new NotImplementedException();
 		}
 
-		public virtual string LegislativeCategory => throw new NotImplementedException();
-
 		LegislativeClass? IVehicleDeclarationInputData.LegislativeClass { get; }
 
 		public virtual LegislativeClass LegislativeClass
@@ -281,6 +279,8 @@ namespace VECTO3GUI2020.ViewModel.Implementation.JobEdit.Vehicle
 			get => throw new NotImplementedException();
 			set => throw new NotImplementedException();
 		}
+
+		public string ExemptedTechnology { get; }
 
 		RegistrationClass? IVehicleDeclarationInputData.RegisteredClass { get; }
 		int? IVehicleDeclarationInputData.NumberPassengerSeatsUpperDeck { get; }

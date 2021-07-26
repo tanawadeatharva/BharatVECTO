@@ -14,7 +14,8 @@ namespace TUGraz.VectoCore.Tests.Utils
 {
 	public static class CompletedVIF
 	{
-		public static XMLDeclarationVIFInputData CreateCompletedVif(JSONInputDataCompletedBusFactorMethodV7 completedJson,
+		public static string CreateCompletedVifXML(
+			JSONInputDataCompletedBusFactorMethodV7 completedJson,
 			IXMLInputDataReader xmlInputReader)
 		{
 			var vifDataProvider = xmlInputReader.Create(completedJson.PrimaryInputDataFile);
@@ -33,10 +34,17 @@ namespace TUGraz.VectoCore.Tests.Utils
 
 			var completedVifXML = new XmlDocument();
 			completedVifXML.Load(writerAsm.XMLMultistageReportFileName);
-
-			var completedVif =
-				xmlInputReader.CreateDeclaration(XmlReader.Create(new StringReader(completedVifXML.OuterXml)));
+			var retVal = completedVifXML.OuterXml;
 			File.Delete(writerAsm.XMLMultistageReportFileName);
+			return retVal;
+		}
+
+		public static XMLDeclarationVIFInputData CreateCompletedVif(JSONInputDataCompletedBusFactorMethodV7 completedJson,
+			IXMLInputDataReader xmlInputReader)
+		{
+			var completedVif =
+				xmlInputReader.CreateDeclaration(XmlReader.Create(new StringReader(CreateCompletedVifXML(completedJson, xmlInputReader))));
+			
 			return new XMLDeclarationVIFInputData(completedVif as IMultistageBusInputDataProvider, null);
 			}
 	}
