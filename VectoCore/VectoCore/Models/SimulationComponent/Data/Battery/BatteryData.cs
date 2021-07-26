@@ -25,7 +25,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Battery {
 					(current, s) => current + Batteries.Where(x => x.Item1 == s).Min(x => x.Item2.Capacity));
 			}
 		}
-	}
+
+        
+    }
 
 	public class BatteryData
 	{

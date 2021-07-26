@@ -289,6 +289,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			IResponse retVal = null;
 			if (NextComponent == null) {
+				if (electricSupplyResponse.MaxPowerDrive.IsEqual(0.SI<Watt>(), 100.SI<Watt>())) {
+					retVal = new ResponseBatteryEmpty(this, electricSupplyResponse);
+					return retVal;
+				}
 				// electric motor only
 				var remainingPower = inTorqueDt * avgDtSpeed;
 				if (dryRun) {

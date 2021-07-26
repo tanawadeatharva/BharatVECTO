@@ -586,17 +586,17 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 				shiftStrategyParameters.AllowedGearRangeFC = shiftStrategyParameters.AllowedGearRangeFC.LimitTo(1, 2);
 			}
 
-            // TODO: MQ 20210712 how to handle with batterysystem
-            //var auxEnergyReserve = ModelData.ElectricAuxDemand * StrategyParameters.AuxReserveTime;
-            BatteryDischargeEnergyThreshold = 0.SI<WattSecond>();
-            //if (auxEnergyReserve > 0) {
-            //	var minSoc = Math.Max(ModelData.BatteryData?.MinSOC ?? ModelData.SuperCapData.MinVoltage / ModelData.SuperCapData.MaxVoltage,
-            //		StrategyParameters.MinSoC);
-            //	BatteryDischargeEnergyThreshold =
-            //		ModelData.BatteryData.Capacity * minSoc * ModelData.BatteryData.SOCMap.Lookup(minSoc) +
-            //		auxEnergyReserve;
-            //}
-            AllowEmergencyShift = false;
+			// TODO: MQ 20210712 how to handle with batterysystem
+			//var auxEnergyReserve = ModelData.ElectricAuxDemand * StrategyParameters.AuxReserveTime;
+			BatteryDischargeEnergyThreshold = 0.SI<WattSecond>();
+			//if (auxEnergyReserve > 0) {
+			//	var minSoc = Math.Max(ModelData.BatteryData?.MinSOC ?? ModelData.SuperCapData.MinVoltage / ModelData.SuperCapData.MaxVoltage,
+			//		StrategyParameters.MinSoC);
+			//	BatteryDischargeEnergyThreshold =
+			//		ModelData.BatteryData.Capacity * minSoc * ModelData.BatteryData.SOCMap.Lookup(minSoc) +
+			//		auxEnergyReserve;
+			//}
+			AllowEmergencyShift = false;
 		}
 
 		public virtual IHybridController Controller { protected get; set; }
@@ -2261,14 +2261,13 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 			}
 
 			// TODO: MQ 20210712 how to handle with batterysystem
-			//var auxEnergyReserve = ModelData.ElectricAuxDemand * StrategyParameters.AuxReserveTime;
-			//if (auxEnergyReserve > 0) {
-			//	var minSoc = Math.Max(ModelData.BatteryData?.MinSOC ?? ModelData.SuperCapData.MinVoltage / ModelData.SuperCapData.MaxVoltage,
-			//		StrategyParameters.MinSoC);
-			//	BatteryDischargeEnergyThreshold =
-			//		ModelData.BatteryData.Capacity * minSoc * ModelData.BatteryData.SOCMap.Lookup(minSoc) +
-			//		auxEnergyReserve;
-			//}
+			var auxEnergyReserve = ModelData.ElectricAuxDemand * StrategyParameters.AuxReserveTime;
+			if (auxEnergyReserve > 0) {
+				var minSoc = Math.Max(DataBus.BatteryInfo.MinSoC, StrategyParameters.MinSoC);
+				BatteryDischargeEnergyThreshold =
+					DataBus.BatteryInfo.Capacity * minSoc * DataBus.BatteryInfo.NominalVoltage +
+					auxEnergyReserve;
+			}
 
 			PreviousState.AngularVelocity = outAngularVelocity;
 			PreviousState.GearboxEngaged = true;

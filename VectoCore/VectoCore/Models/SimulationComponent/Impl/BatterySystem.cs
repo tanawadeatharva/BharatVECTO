@@ -21,6 +21,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			protected readonly List<Battery> _batteries;
 			
 			private AmpereSecond _capacity;
+			private AmpereSecond _capacityMinSoc;
+			private AmpereSecond _capacityMaxSoc;
 
 			public BatteryString()
             {
@@ -94,6 +96,14 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			public Ampere Current { get; set; }
 
+			public AmpereSecond CapacityMinSoc =>
+				_capacityMinSoc ?? (_capacityMinSoc = _batteries.Min(x => x.Capacity * x.MinSoC));
+
+			public AmpereSecond CapacityMaxSoc =>
+				_capacityMaxSoc ?? (_capacityMaxSoc = _batteries.Min(x => x.Capacity * x.MaxSoC));
+
+			public Volt NominalVoltage => Batteries.Sum(x => x.NominalVoltage);
+
 			private Ampere SelectSolution(double[] solutions, double sign, Second dt)
 			{
 				var maxCurrent = Math.Sign(sign) < 0
@@ -106,6 +116,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		protected internal readonly Dictionary<int, BatteryString> Batteries = new Dictionary<int, BatteryString>();
 		
 		private AmpereSecond _totalCapacity;
+		private Scalar _minSoc;
+		private Scalar _maxSoc;
 
 		public BatterySystem(IVehicleContainer dataBus, BatterySystemData batterySystemData) : base(dataBus)
 		{
@@ -206,9 +218,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			return Batteries.Values.Sum(bs => bs.MaxDischargePower(dt, tPulse));
 		}
 
-		public double MinSoC { get; }
-		public double MaxSoC { get; }
+		public double MinSoC => _minSoc ?? (_minSoc = Batteries.Values.Sum(x => x.CapacityMinSoc) / TotalCapacity);
+		public double MaxSoC => _maxSoc ?? (_maxSoc = Batteries.Values.Sum(x => x.CapacityMinSoc) / TotalCapacity);
+		public AmpereSecond Capacity => TotalCapacity;
 
+		public Volt NominalVoltage => Batteries.Values.Select(x => x.NominalVoltage).Average();
 		#endregion
 
 		#region Implementation of IElectricEnergyStoragePort

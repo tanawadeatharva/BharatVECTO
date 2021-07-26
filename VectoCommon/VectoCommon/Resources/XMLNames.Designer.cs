@@ -3787,7 +3787,7 @@ namespace TUGraz.VectoCommon.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to ATEcoRollReleaseLockupClutch.
+        ///   Looks up a localized string similar to APTEcoRollReleaseLockupClutch.
         /// </summary>
         public static string Vehicle_ADAS_ATEcoRollReleaseLockupClutch {
             get {

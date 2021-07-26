@@ -234,7 +234,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		}
 
 		public AmpereSecond Capacity => ModelData.Capacity;
-
+		
+		public Volt NominalVoltage => ModelData.SOCMap.Lookup(0.5);
+		
 		public Ampere MaxChargeCurrent(Second dt)
 		{
 			return VectoMath.Min(

@@ -62,13 +62,15 @@
 		"SteeringPumpTechnology": [
 			"Dual displacement with mech. control"
 		],
-		"ElectricSupply": {
-			"Alternators": [
-				{
-					"Technology": "standard alternator",
-					"Ratio": 1.0
-				}
-			],
+    "ElectricSupply": {
+      "Alternators": [
+        {
+          "Technology": "standard alternator",
+          "Ratio": 1.0
+        }
+      ],
+      "MaxAlternatorPower": 0,
+      "Technology":  "conventional", 
       "ResultCards": {
         "Idle": [
           {
@@ -114,7 +116,7 @@
         ]
       },
       "SmartElectrics": false
-		},
+    },
 		"ElectricConsumers": {
 		},
 		"PneumaticSupply": {
