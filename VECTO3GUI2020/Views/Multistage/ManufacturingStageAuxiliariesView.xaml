@@ -41,37 +41,39 @@
                     <Border Margin="5 0" BorderBrush="{DynamicResource ButtonHighlightColor}" BorderThickness="2" >
                         <StackPanel Margin="0">
                             <Label Margin="0" Style="{DynamicResource LabelStyle1}">Heat Pumps Passenger Compartment</Label>
-                            <Label Padding="10 4 0 4" Style="{DynamicResource LabelStyle1}">Consolidated Data</Label>
-                            <ItemsControl AlternationCount="2"
-                        Visibility="{Binding ConsolidatedHeatPumpConfigurationsPassenger, Converter={StaticResource NullToVisibilityConverter}}" 
-                        ItemsSource="{Binding ConsolidatedHeatPumpConfigurationsPassenger}" 
-                        HorizontalContentAlignment="Stretch"
-                        Padding="5 5 29 5 " >
-                                <ItemsControl.ItemTemplate>
-                                    <DataTemplate>
-                                        <Border BorderThickness="1">
-                                            <DockPanel LastChildFill="true" x:Name="ItemsDockPanel">
-                                                <UniformGrid DockPanel.Dock="Left" Columns="2">
-                                                    <ContentControl Grid.Column="0" DockPanel.Dock="Top" Content="{Binding Path=HeatPumpTypeVM}"/>
-                                                    <ContentControl Grid.Column="1" DockPanel.Dock="Top" Content="{Binding Path=HeatPumpModeVM}"/>
-                                                </UniformGrid>
-                                            </DockPanel>
-                                        </Border>
-                                        <DataTemplate.Triggers>
-                                            <Trigger Property="ItemsControl.AlternationIndex" Value="0">
-                                                <Setter Property="Background" Value="White" TargetName="ItemsDockPanel"/>
-                                            </Trigger>
-                                            <Trigger Property="ItemsControl.AlternationIndex" Value="1">
-                                                <Setter Property="Background" Value="LightGray" TargetName="ItemsDockPanel"/>
-                                            </Trigger>
-                                        </DataTemplate.Triggers>
-                                    </DataTemplate>
-                                </ItemsControl.ItemTemplate>
-                            </ItemsControl>
-                            <Label Visibility="{Binding ConsolidatedHeatPumpConfigurationsPassenger, 
-                        Converter={StaticResource NullToVisibilityConverter}, 
-                        ConverterParameter=invert}"
-                           HorizontalAlignment="Center">No consolidated data available</Label>
+                            <StackPanel Visibility="{Binding ShowConsolidatedData, Converter={StaticResource BooleanToVisibilityConverter}}">
+                                <Label Padding="10 4 0 4" Style="{DynamicResource LabelStyle1}">Consolidated Data</Label>
+                                <ItemsControl AlternationCount="2"
+                                    Visibility="{Binding ConsolidatedHeatPumpConfigurationsPassenger, Converter={StaticResource NullToVisibilityConverter}}" 
+                                    ItemsSource="{Binding ConsolidatedHeatPumpConfigurationsPassenger}" 
+                                    HorizontalContentAlignment="Stretch"
+                                    Padding="5 5 29 5 " >
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate>
+                                            <Border BorderThickness="1">
+                                                <DockPanel LastChildFill="true" x:Name="ItemsDockPanel">
+                                                    <UniformGrid DockPanel.Dock="Left" Columns="2">
+                                                        <ContentControl Grid.Column="0" DockPanel.Dock="Top" Content="{Binding Path=HeatPumpTypeVM}"/>
+                                                        <ContentControl Grid.Column="1" DockPanel.Dock="Top" Content="{Binding Path=HeatPumpModeVM}"/>
+                                                    </UniformGrid>
+                                                </DockPanel>
+                                            </Border>
+                                            <DataTemplate.Triggers>
+                                                <Trigger Property="ItemsControl.AlternationIndex" Value="0">
+                                                    <Setter Property="Background" Value="White" TargetName="ItemsDockPanel"/>
+                                                </Trigger>
+                                                <Trigger Property="ItemsControl.AlternationIndex" Value="1">
+                                                    <Setter Property="Background" Value="LightGray" TargetName="ItemsDockPanel"/>
+                                                </Trigger>
+                                            </DataTemplate.Triggers>
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
+                                <Label Visibility="{Binding ConsolidatedHeatPumpConfigurationsPassenger, 
+                                    Converter={StaticResource NullToVisibilityConverter}, 
+                                    ConverterParameter=invert}"
+                                    HorizontalAlignment="Center">No consolidated data available</Label>
+                            </StackPanel>
                             <DockPanel LastChildFill="true">
                                 <Button DockPanel.Dock="right"  ContentTemplate="{DynamicResource AddIcon}" Command="{Binding AddPassengerHeatpumpCommand}">
 

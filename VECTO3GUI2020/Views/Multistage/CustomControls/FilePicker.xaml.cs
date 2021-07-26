@@ -20,6 +20,15 @@ namespace VECTO3GUI2020.Views.Multistage.CustomControls
     /// </summary>
     public partial class FilePicker : UserControl
     {
+		public static readonly DependencyProperty ButtonContentTemplateProperty = DependencyProperty.Register(
+			"ButtonContentTemplate", typeof(DataTemplate), typeof(FilePicker), new PropertyMetadata(default(DataTemplate)));
+
+		public DataTemplate ButtonContentTemplate
+		{
+			get { return (DataTemplate)GetValue(ButtonContentTemplateProperty); }
+			set { SetValue(ButtonContentTemplateProperty, value); }
+		}
+
 
 		public static readonly DependencyProperty CommandProperty = DependencyProperty.Register(
 			"Command", typeof(ICommand), typeof(FilePicker), new PropertyMetadata(default(ICommand)));

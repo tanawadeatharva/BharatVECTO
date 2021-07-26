@@ -110,7 +110,7 @@ namespace TUGraz.VectoCore.OutputData
 
 		public static readonly IList<ModalResultField> FuelConsumptionSignals = new[] {
 			ModalResultField.FCMap, ModalResultField.FCNCVc, ModalResultField.FCWHTCc, // ModalResultField.FCAAUX,
-			ModalResultField.FCICEStopStart,  ModalResultField.FCFinal
+			/*ModalResultField.FCICEStopStart,*/  ModalResultField.FCFinal
 		};
 
 		private readonly Dictionary<String, SI> _timeIntegrals = new Dictionary<string, SI>();
@@ -222,7 +222,7 @@ namespace TUGraz.VectoCore.OutputData
 					x => x.Field<bool>(ModalResultField.ICEOn.GetName())
 						? new Point(
 							x.Field<SI>(ModalResultField.P_ice_fcmap.GetName()).Value(),
-							x.Field<SI>(GetColumnName(fuel, ModalResultField.FCFinal)).Value())
+							x.Field<SI>(GetColumnName(fuel, ModalResultField.FCWHTCc)).Value())
 						: null).Where(x => x != null && x.Y > 0),
 				out var k, out var d, out var r);
 			if (double.IsInfinity(k) || double.IsNaN(k)) {
@@ -482,14 +482,14 @@ namespace TUGraz.VectoCore.OutputData
 			return (integral / Duration.Value()).SI<PerSecond>();
         }
 
-		public double BatteryStartSoC()
+		public double REESSStartSoC()
 		{
-			return Data.AsEnumerable().Cast<DataRow>().First().Field<SI>(ModalResultField.REESSStateOfCharge.GetName()).Value() * 100;
+			return (Data.AsEnumerable().Cast<DataRow>().First().Field<SI>(ModalResultField.REESSStateOfCharge.GetName())?.Value() ?? 0) * 100;
 		}
 
 		public double REESSEndSoC()
 		{
-			return Data.AsEnumerable().Cast<DataRow>().Last().Field<SI>(ModalResultField.REESSStateOfCharge.GetName()).Value() * 100;
+			return (Data.AsEnumerable().Cast<DataRow>().Last().Field<SI>(ModalResultField.REESSStateOfCharge.GetName())?.Value() ?? 0) * 100;
         }
 
 		public WattSecond REESSLoss()
@@ -518,7 +518,7 @@ namespace TUGraz.VectoCore.OutputData
 
 					//TimeIntegral<Kilogram>(GetColumnName(fuel, ModalResultField.FCAAUX));
 					TimeIntegral<Kilogram>(GetColumnName(fuel, ModalResultField.FCMap));
-					TimeIntegral<Kilogram>(GetColumnName(fuel, ModalResultField.FCICEStopStart));
+					//TimeIntegral<Kilogram>(GetColumnName(fuel, ModalResultField.FCICEStopStart));
 					TimeIntegral<Kilogram>(GetColumnName(fuel, ModalResultField.FCFinal));
 
 				}

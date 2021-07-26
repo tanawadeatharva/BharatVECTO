@@ -25,7 +25,7 @@ namespace Vecto3GUI2020Test.ViewModelTests
 			var vm = loadFile(primary_vehicle_only);
 			var vehicleVM =
 				vm.MultiStageJobViewModel.ManufacturingStageViewModel.Vehicle as
-					DeclarationInterimStageBusVehicleViewModel_v2_8;
+					InterimStageBusVehicleViewModel_v2_8;
 			var enteredString = "test";
 			var modelParam = vehicleVM.ParameterViewModels[nameof(vehicleVM.Model)];
 			//Null after loading
@@ -77,7 +77,7 @@ namespace Vecto3GUI2020Test.ViewModelTests
 			var vm = loadFile(primary_vehicle_only);
 			var vehicleVM =
 				vm.MultiStageJobViewModel.ManufacturingStageViewModel.Vehicle as
-					DeclarationInterimStageBusVehicleViewModel_v2_8;
+					InterimStageBusVehicleViewModel_v2_8;
 
 			Assert.IsNull(vehicleVM.CurbMassChassis?.Value());
 			var curbMassParameter = vehicleVM.ParameterViewModels[nameof(vehicleVM.CurbMassChassis)];
@@ -105,67 +105,25 @@ namespace Vecto3GUI2020Test.ViewModelTests
 			var vm = loadFile(primary_vehicle_only);
 			var vehicleVM =
 				vm.MultiStageJobViewModel.ManufacturingStageViewModel.Vehicle as
-					DeclarationInterimStageBusVehicleViewModel_v2_8;
-			setMockDialogHelper(stageInputFullSample);
+					InterimStageBusVehicleViewModel_v2_8;
 			var vmConc = vm.MultiStageJobViewModel as MultiStageJobViewModel_v0_1;
-			vmConc.LoadVehicleDataCommand.Execute(null);
+			vmConc.ManufacturingStageViewModel.LoadStageInputData(stageInputFullSample);
 			Assert.IsFalse(vmConc.ManufacturingStageViewModel.VehicleViewModel.HasErrors);
 			
 		}
-
-		//[Test]
-		//public void groupEditing()
-		//{
-		//	var vm = loadFile(primary_vehicle_only);
-		//	var vehicleVM =
-		//		vm.MultiStageJobViewModel.ManufacturingStageViewModel.Vehicle as
-		//			DeclarationInterimStageBusVehicleViewModel_v2_8;
-
-		//	vehicleVM.NumberOfPassengersUpperDeck = 2;
-
-		//	Assert.IsTrue(vehicleVM.NumberOfPassengersEditingEnabled);
-		//	Assert.AreEqual(2, vehicleVM.NumberOfPassengersUpperDeck);
-		//	vehicleVM.NumberOfPassengersLowerDeck = 3;
-		//	Assert.AreEqual(3, vehicleVM.NumberOfPassengersLowerDeck);
-		//}
-
-
-		//[Test]
-		//public void automaticallyEnableEditingWhenContentIsSet()
-		//{
-		//	var vm = loadFile(primary_vehicle_only);
-		//	var vehicleVM =
-		//		vm.MultiStageJobViewModel.ManufacturingStageViewModel.Vehicle as
-		//			DeclarationInterimStageBusVehicleViewModel_v2_8;
-
-			
-		//	vehicleVM.NumberOfPassengersUpperDeck = 2;
-		//	Assert.IsTrue(vehicleVM.NumberOfPassengersEditingEnabled);
-
-		//	vehicleVM.NumberOfPassengersUpperDeck = null;
-
-		//	getMockDialogHelper(stageInputFullSample);
-		//	var vmConc = vm.MultiStageJobViewModel as MultiStageJobViewModel_v0_1;
-		//	vmConc.LoadVehicleDataCommand.Execute(null);
-
-
-		//	Assert.IsTrue(vehicleVM.ParameterViewModels[nameof(vehicleVM.NumberOfPassengersUpperDeck)].EditingEnabled);
-		//	Assert.IsTrue(vehicleVM.NumberOfPassengersEditingEnabled);
-		//}
-
 
 
 
 		#region ADAS
 		[Test]
-		public void loadPrimaryAndEdit()
+		public void LoadPrimaryAndEdit()
 		{
 			var vm = loadFile(primary_vehicle_only);
 			Assert.NotNull(vm);
 
 			var vehicleViewModel =
 				vm.MultiStageJobViewModel.ManufacturingStageViewModel.Vehicle as
-					DeclarationInterimStageBusVehicleViewModel_v2_8;
+					InterimStageBusVehicleViewModel_v2_8;
 
 			var vehicleData = vm.MultiStageJobViewModel.ManufacturingStageViewModel.Vehicle;
 
@@ -176,13 +134,6 @@ namespace Vecto3GUI2020Test.ViewModelTests
 			Assert.Null(vehicleData.ADAS);
 
 		}
-
-
-
-
-
-
-
 		#endregion
 
 

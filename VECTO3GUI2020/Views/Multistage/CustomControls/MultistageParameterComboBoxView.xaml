@@ -5,23 +5,10 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:VECTO3GUI2020.Views.Multistage.CustomControls"
              xmlns:helper="clr-namespace:VECTO3GUI2020.Helper"
+             xmlns:implementation="clr-namespace:VECTO3GUI2020.ViewModel.MultiStage.Implementation"
              mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="800" d:DataContext="{d:DesignInstance helper:MultistageParameterViewModel }" x:Name="ComboboxView">
+             d:DesignHeight="450" d:DesignWidth="800" d:DataContext="{d:DesignInstance implementation:MultistageParameterViewModel }" x:Name="ComboboxView">
     <Grid>
-        <!--<Grid>
-            <Grid.ColumnDefinitions>
-                --><!--<ColumnDefinition Width="4*" SharedSizeGroup="W"/>
-                <ColumnDefinition Width="1*" SharedSizeGroup="N"/>
-                <ColumnDefinition Width="4*" SharedSizeGroup="W"/>
-                <ColumnDefinition Width="4*" SharedSizeGroup="W"/>
-                <ColumnDefinition Width="1*" SharedSizeGroup="N"/>--><!--
-                <ColumnDefinition SharedSizeGroup=""></ColumnDefinition>
-                <ColumnDefinition SharedSizeGroup=""></ColumnDefinition>
-                <ColumnDefinition SharedSizeGroup=""></ColumnDefinition>
-                <ColumnDefinition SharedSizeGroup=""></ColumnDefinition>
-                <ColumnDefinition SharedSizeGroup=""></ColumnDefinition>
-            </Grid.ColumnDefinitions>-->
-
         <UniformGrid Rows="1" Margin="0 0 10 2">
             <DockPanel Margin="5 0">
             <Label x:Name="label1" DockPanel.Dock="Left">
@@ -37,7 +24,7 @@
             Mode=TwoWay}" Checked="CheckBoxCombo_OnChecked"/>
             </DockPanel>
             <ComboBox x:Name="comboBox"  HorizontalAlignment="Stretch" VerticalAlignment="Center" Margin="2 0 2 0" IsTabStop="False" 
-                      Visibility="{Binding Optional, 
+                      Visibility="{Binding ShowConsolidatedData, 
                         Converter={StaticResource BooleanToVisibilityConverter}}" IsHitTestVisible="False" Focusable="False" IsEditable="False"
                       SelectedValue="{Binding PreviousContent, Mode=TwoWay}"
                       ItemsSource="{Binding GeneratedListItems}">
@@ -72,8 +59,6 @@
                         </DataTemplate>
                     </ComboBox.ItemTemplate>
                 </ComboBox>
-
-
             </DockPanel>
         </UniformGrid>
     </Grid>

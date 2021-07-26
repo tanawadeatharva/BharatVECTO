@@ -9,11 +9,11 @@ using VECTO3GUI2020.ViewModel.MultiStage.Implementation;
 
 namespace Vecto3GUI2020Test.ViewModelTests
 {
-    [TestFixture]
-    public class MultistageAuxiliariesViewModelTests : ViewModelTestBase
-    {
+	[TestFixture]
+	public class MultistageAuxiliariesViewModelTests : ViewModelTestBase
+	{
 
-	
+
 
 		[Test]
 		public void TestAllowedValuesHeatPumpModePassenger()
@@ -33,18 +33,18 @@ namespace Vecto3GUI2020Test.ViewModelTests
 
 		[Test]
 		public void TestAllowedValuesHeatPumpModeDriver()
-        {
+		{
 			var auxVm = new MultistageAuxiliariesViewModel(null);
 			auxVm.HeatPumpTypeDriverCompartment = HeatPumpType.none;
-            Assert.IsTrue(auxVm.HeatPumpModeDriverCompartmentAllowedValues.Contains(HeatPumpMode.N_A));
-            Assert.IsFalse(auxVm.HeatPumpModeDriverCompartmentAllowedValues.Contains(HeatPumpMode.cooling));
-            Assert.IsFalse(auxVm.HeatPumpModeDriverCompartmentAllowedValues.Contains(HeatPumpMode.heating));
-            Assert.IsFalse(auxVm.HeatPumpModeDriverCompartmentAllowedValues.Contains(HeatPumpMode.heating_and_cooling));
+			Assert.IsTrue(auxVm.HeatPumpModeDriverCompartmentAllowedValues.Contains(HeatPumpMode.N_A));
+			Assert.IsFalse(auxVm.HeatPumpModeDriverCompartmentAllowedValues.Contains(HeatPumpMode.cooling));
+			Assert.IsFalse(auxVm.HeatPumpModeDriverCompartmentAllowedValues.Contains(HeatPumpMode.heating));
+			Assert.IsFalse(auxVm.HeatPumpModeDriverCompartmentAllowedValues.Contains(HeatPumpMode.heating_and_cooling));
 
 
-            auxVm.HeatPumpTypeDriverCompartment = HeatPumpType.R_744;
-            Assert.IsFalse(auxVm.HeatPumpModeDriverCompartmentAllowedValues.Contains(HeatPumpMode.N_A));
-        }
+			auxVm.HeatPumpTypeDriverCompartment = HeatPumpType.R_744;
+			Assert.IsFalse(auxVm.HeatPumpModeDriverCompartmentAllowedValues.Contains(HeatPumpMode.N_A));
+		}
 
 
 		[Test]
@@ -80,13 +80,45 @@ namespace Vecto3GUI2020Test.ViewModelTests
 			Assert.AreEqual(HeatPumpMode.N_A, auxVm.HeatPumpModeDriverCompartment);
 			Assert.AreEqual(HeatPumpMode.N_A,
 				auxVm.ParameterViewModels[nameof(auxVm.HeatPumpModeDriverCompartment)].CurrentContent);
-
 		}
 
+		[Test]
+		public void TestPassengerHeatPumpConfigurations()
+		{
+			var auxVm = new MultistageAuxiliariesViewModel(null);
+			auxVm.HeatPumpGroupEditingEnabled = true;
+
+
+			Assert.AreEqual(1, auxVm.HeatPumpConfigurationsPassenger.Count);
+
+			Assert.IsFalse(auxVm.RemovePassengerHeatpumpCommand.CanExecute(null));
+
+
+			bool canExecuteChangedFired = false;
+			auxVm.RemovePassengerHeatpumpCommand.CanExecuteChanged += (sender, args) => {
+				canExecuteChangedFired = true;
+			};
+
+			//Add another configuration
+			
+			auxVm.AddPassengerHeatpumpCommand.Execute(null);
+			Assert.AreEqual(2, auxVm.HeatPumpConfigurationsPassenger.Count);
+			Assert.IsTrue(canExecuteChangedFired, "Can Execute Changed Not Fired");
+			canExecuteChangedFired = false;
+			Assert.IsTrue(auxVm.RemovePassengerHeatpumpCommand.CanExecute(null));
+
+			//Remove configuration
+			auxVm.RemovePassengerHeatpumpCommand.Execute(auxVm.HeatPumpConfigurationsPassenger.Last());
+			Assert.AreEqual(1, auxVm.HeatPumpConfigurationsPassenger.Count);
+			Assert.IsTrue(canExecuteChangedFired);
+			Assert.IsFalse(auxVm.RemovePassengerHeatpumpCommand.CanExecute(null));
 
 
 
 
 
+
+
+		}
 	}
 }

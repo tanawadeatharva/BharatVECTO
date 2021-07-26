@@ -402,21 +402,24 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 		#endregion
 
 
-		protected double GetNumberOfPassengers(Mission mission, Meter length, Meter width, double registeredPassengers,
+		protected double GetNumberOfPassengers(Mission mission, Meter length, Meter width, double registeredPassengerSeats,
 			double registeredPassengersStanding, LoadingType loading)
 		{
 			var busFloorArea = DeclarationData.BusAuxiliaries.CalculateBusFloorSurfaceArea(length, width);
 			var passengerCountRef = busFloorArea * (loading == LoadingType.LowLoading
 				? mission.BusParameter.PassengerDensityLow
 				: mission.BusParameter.PassengerDensityRef);
-			//var passengerCountDecl = completedVehicle.NuberOfPassengersUpperDeck + completedVehicle.NumberOfPassengersLowerDeck;
+			
 			if (loading != LoadingType.ReferenceLoad && loading != LoadingType.LowLoading) {
 				throw new VectoException("Unhandled loading type: {0}", loading);
 			}
 
+			var passengerCount = registeredPassengerSeats +
+								(mission.MissionType == MissionType.Coach ? 0 : registeredPassengersStanding);
+
 			return loading == LoadingType.ReferenceLoad
-				? VectoMath.Min(passengerCountRef, registeredPassengers)
-				: VectoMath.Min(passengerCountRef * mission.MissionType.GetLowLoadFactorBus(), registeredPassengers);
+				? VectoMath.Min(passengerCountRef, passengerCount)
+				: VectoMath.Min(passengerCountRef * mission.MissionType.GetLowLoadFactorBus(), passengerCount);
 		}
 		
 		

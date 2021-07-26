@@ -703,6 +703,23 @@ Public Class Gearbox
         End Get
     End Property
 
+    Public ReadOnly Property PEV_TargetSpeedBrakeNorm As Double? Implements IGearshiftEngineeringInputData.PEV_TargetSpeedBrakeNorm
+    get
+        Return Nothing
+    End Get
+    End Property
+    Public ReadOnly Property PEV_DeRatingDownshiftSpeedFactor As Double? Implements IGearshiftEngineeringInputData.PEV_DeRatingDownshiftSpeedFactor
+    get
+        return Nothing
+    End Get
+    End Property
+
+    Public ReadOnly Property PEV_DownshiftMinSpeedFactor As Double? Implements IGearshiftEngineeringInputData.PEV_DownshiftMinSpeedFactor
+    get
+        Return Nothing
+    End Get
+    End Property
+
     Public Overridable ReadOnly Property LoadStageShiftLines As TableData _
         Implements IGearshiftEngineeringInputData.LoadStageShiftLines
         Get
@@ -802,7 +819,6 @@ Public Class MockEngineeringVehicle
     Public Property Identifier As String Implements IVehicleDeclarationInputData.Identifier
     Public Property ExemptedVehicle As Boolean Implements IVehicleDeclarationInputData.ExemptedVehicle
     Public Property VIN As String Implements IVehicleDeclarationInputData.VIN
-    Public ReadOnly Property LegislativeCategory As String Implements IVehicleDeclarationInputData.LegislativeCategory
     Public Property LegislativeClass As LegislativeClass? Implements IVehicleDeclarationInputData.LegislativeClass
     Public Property VehicleCategory As VehicleCategory Implements IVehicleDeclarationInputData.VehicleCategory
     Public Property AxleConfiguration As AxleConfiguration Implements IVehicleDeclarationInputData.AxleConfiguration
@@ -839,6 +855,7 @@ Public Class MockEngineeringVehicle
     Public Property DualFuelVehicle As Boolean Implements IVehicleDeclarationInputData.DualFuelVehicle
     Public Property MaxNetPower1 As Watt Implements IVehicleDeclarationInputData.MaxNetPower1
     Public Property MaxNetPower2 As Watt Implements IVehicleDeclarationInputData.MaxNetPower2
+    Public ReadOnly Property ExemptedTechnology As String Implements IVehicleDeclarationInputData.ExemptedTechnology
     Public ReadOnly Property RegisteredClass As RegistrationClass? Implements IVehicleDeclarationInputData.RegisteredClass
     Public ReadOnly Property NumberPassengerSeatsUpperDeck As Integer? Implements IVehicleDeclarationInputData.NumberPassengerSeatsUpperDeck
     Public ReadOnly Property NumberPassengerSeatsLowerDeck As Integer? Implements IVehicleDeclarationInputData.NumberPassengerSeatsLowerDeck

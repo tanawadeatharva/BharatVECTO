@@ -15,4 +15,6 @@
                      Color="{Binding Color, Source={StaticResource AccentColorButton}, Mode=OneWay}"  />
 
 
+    <SolidColorBrush x:Key="SemiTransparentWhite" Opacity="0.5" Color="White"></SolidColorBrush>
+    <SolidColorBrush x:Key="SemiTransparentYellow" Opacity="0.5" Color="Gold"></SolidColorBrush>
 </ResourceDictionary>

@@ -24,5 +24,6 @@ namespace VECTO3GUI2020.Views
         {
             InitializeComponent();
         }
-    }
+
+	}
 }

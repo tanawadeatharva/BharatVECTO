@@ -124,7 +124,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 						Container.AbsTime = AbsTime;
 					}
 				} while (response is ResponseSuccess);
-				if (!GetContainer().RunData.Exempted) {
+				if (!(GetContainer().RunData.Exempted || GetContainer().RunData.MultistageRun)) {
 					//foreach (var fuel in GetContainer().RunData.EngineData.Fuels) {
 						// calculate vehicleline correction here in local thread context because writing sum-data and report afterwards is synchronized
 						//var cf = GetContainer().ModalData.VehicleLineCorrectionFactor(fuel.FuelData);
@@ -171,7 +171,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 				throw ex;
 			}
 
-			Container.RunStatus = Container.RunData.Exempted
+			Container.RunStatus = Container.RunData.Exempted || Container.RunData.MultistageRun
 				? Status.Success
 				: CyclePort.Progress < 1
 					? (response is ResponseBatteryEmpty ? Status.REESSEmpty : Status.Aborted)

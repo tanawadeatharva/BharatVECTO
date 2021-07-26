@@ -88,6 +88,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 		public bool InputComplete => Reader.InputComplete;
 
+		public IList<string> InvalidEntries => Reader.InvalidEntries;
+
 		public IXMLMultistageJobReader Reader { protected get; set; }
 
 		public IXMLMultistageInputDataProvider InputData { get; }
@@ -120,6 +122,9 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		public XMLDeclarationMultistagePrimaryVehicleInputDataV01(XmlNode xmlNode, string fileName)
 			: base(xmlNode, fileName)
 		{
+			//var h = VectoHash.Load(xmlNode);
+			//XMLHash = h.ComputeXmlHash();
+
 			_signatureNode = xmlNode.LastChild;
 		}
 

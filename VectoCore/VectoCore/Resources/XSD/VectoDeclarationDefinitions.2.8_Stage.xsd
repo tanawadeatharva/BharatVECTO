@@ -203,14 +203,24 @@
 						</xs:annotation>
 					</xs:element>
 					<xs:sequence minOccurs="0">
-						<xs:element name="NumberPassengersLowerDeck" type="v2.8:NumberOfPassengersType">
+						<xs:element name="NumberPassengerSeatsLowerDeck" type="v2.8:NumberOfPassengersType">
 							<xs:annotation>
 								<xs:documentation>P283 - [-]</xs:documentation>
 							</xs:annotation>
 						</xs:element>
-						<xs:element name="NumberPassengersUpperDeck" type="v2.8:NumberOfPassengersType">
+						<xs:element name="NumberPassengersStandingLowerDeck" type="v2.8:NumberOfPassengersType">
+							<xs:annotation>
+								<xs:documentation>P354 - [-]</xs:documentation>
+							</xs:annotation>
+						</xs:element>
+						<xs:element name="NumberPassengerSeatsUpperDeck" type="v2.8:NumberOfPassengersType">
 							<xs:annotation>
 								<xs:documentation>P284 - [-]</xs:documentation>
+							</xs:annotation>
+						</xs:element>
+						<xs:element name="NumberPassengersStandingUpperDeck" type="v2.8:NumberOfPassengersType">
+							<xs:annotation>
+								<xs:documentation>P355 - [-]</xs:documentation>
 							</xs:annotation>
 						</xs:element>
 					</xs:sequence>

@@ -11,26 +11,18 @@ namespace VECTO3GUI2020.Ninject
 {
 	public class MultistageLazyDependencies : IMultistageDependencies
 	{
-
+		private readonly Lazy<IXMLWriterFactory> _xmlWriterFactory;
+		private readonly Lazy<IDeclarationInjectFactory> _injectFactory;
+		private readonly Lazy<IComponentViewModelFactory> _componentViewModelFactory;
+		private readonly Lazy<IMultiStageViewModelFactory> _multistageViewModelFactory;
 		private readonly Lazy<IDialogHelper> _dialogHelper;
+		public Lazy<IMultiStageViewModelFactory> MultistageViewModelFactory => _multistageViewModelFactory;
 		public Lazy<IDialogHelper> DialogHelperLazy => _dialogHelper;
 		public IDialogHelper DialogHelper => _dialogHelper.Value;
-
-
-		//private readonly Lazy<XMLValidator> _xmlValidator = new Lazy<XMLValidator>(() => {return });
-		//public Lazy<XMLValidator> XMLValidatorLazy => _xmlValidator;
-		//public XMLValidator XMLValidator => _xmlValidator.Value;
-
-
 		public IDeclarationInjectFactory InjectFactory => _injectFactory.Value;
 		public IComponentViewModelFactory ComponentViewModelFactory => _componentViewModelFactory.Value;
 		public IXMLWriterFactory XMLWriterFactory => _xmlWriterFactory.Value;
 
-		private Lazy<IXMLWriterFactory> _xmlWriterFactory;
-
-
-		private readonly Lazy<IDeclarationInjectFactory> _injectFactory;
-		private readonly Lazy<IComponentViewModelFactory> _componentViewModelFactory;
 		public MultistageLazyDependencies(
 			Lazy<IDialogHelper> dialogHelper,
 			Lazy<IDeclarationInjectFactory> injectFactory, 
@@ -42,7 +34,7 @@ namespace VECTO3GUI2020.Ninject
 			_componentViewModelFactory = componentViewModelFactory;
 			_injectFactory = injectFactory;
 			_xmlWriterFactory = xmlWriterFactory;
-
+			_multistageViewModelFactory = viewModelFactory;
 		}
 	}
 }

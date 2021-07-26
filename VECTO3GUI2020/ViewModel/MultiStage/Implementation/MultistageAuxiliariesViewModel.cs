@@ -38,11 +38,17 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 		object PrimaryVehicleHybridElectric { get; set; }
 		bool HasErrors { get; }
 		Dictionary<string, string> Errors { get; }
+		bool ShowConsolidatedData { get; set; }
 	}
 
 
 	public class MultistageAuxiliariesViewModel : ViewModelBase, IMultistageAuxiliariesViewModel, IDataErrorInfo
 	{
+
+		public MultistageAuxiliariesViewModel()
+		{
+			CreateParameterViewModels();
+		}
 
 		public MultistageAuxiliariesViewModel(IBusAuxiliariesDeclarationData consolidatedAuxiliariesInputData)
 		{
@@ -224,11 +230,23 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 			OnPropertyChanged(String.Empty);
 		}
 
+		private bool _showConsolidatedData;
+
+		public bool ShowConsolidatedData
+		{
+			get => _showConsolidatedData;
+			set
+			{
+				SetProperty(ref _showConsolidatedData, value);
+				foreach (var multistageParameterViewModel in ParameterViewModels) {
+					multistageParameterViewModel.Value.ShowConsolidatedData = value;
+				}
+			}
+		}
+
 
 
 		private IBusAuxiliariesDeclarationData _consolidatedInputData;
-
-
 		public IBusAuxiliariesDeclarationData ConsolidatedInputData
 		{
 			get => _consolidatedInputData;
@@ -272,15 +290,6 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 		{
 			get => _primaryVehicleHybridElectric;
 			set => SetProperty(ref _primaryVehicleHybridElectric, value);
-		}
-
-		private IndexedStorage<bool> _editingEnabledDictionary;
-		public IndexedStorage<bool> EditingEnabledDictionary
-		{
-			get
-			{
-				return _editingEnabledDictionary;
-			}
 		}
 
 
@@ -364,23 +373,37 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 
 		public ICommand AddPassengerHeatpumpCommand
 		{
-			get => _addPassengerHeatpumpCommand ??
+			get
+			{
+				return _addPassengerHeatpumpCommand ?? (_addPassengerHeatpumpCommand =
 					new RelayCommand(() => {
 							HeatPumpGroupEditingEnabled = true;
 							if (HeatPumpConfigurationsPassenger == null) {
 								HeatPumpConfigurationsPassenger = new ObservableCollection<HeatPumpConfiguration>();
 							}
+
 							HeatPumpConfigurationsPassenger.Add(new HeatPumpConfiguration());
+							RemovePassengerHeatpumpCommand.NotifyCanExecuteChanged();
+
 						},
-						() => true);
+						() => true));
+			}
 		}
 
-		public ICommand _removePasssengerHeatpumpCommand;
+		private IRelayCommand _removePassengerHeatpumpCommand;
 
-		public ICommand RemovePassengerHeatpumpCommand
+		public IRelayCommand RemovePassengerHeatpumpCommand
 		{
-			get => _removePasssengerHeatpumpCommand ??
-					new RelayCommand<HeatPumpConfiguration>(hp => HeatPumpConfigurationsPassenger?.Remove(hp), (hp) => true);
+			get
+			{
+				return _removePassengerHeatpumpCommand ?? (_removePassengerHeatpumpCommand =
+					new RelayCommand<HeatPumpConfiguration>(hp => {
+						if (HeatPumpGroupEditingEnabled && HeatPumpConfigurationsPassenger.Count > 1) {
+							HeatPumpConfigurationsPassenger?.Remove(hp);
+							RemovePassengerHeatpumpCommand.NotifyCanExecuteChanged();
+						}
+					}, hp => HeatPumpConfigurationsPassenger.Count > 1));
+			}
 		}
 
 		public IList<Tuple<HeatPumpType, HeatPumpMode>> HeatPumpPassengerCompartments{
@@ -559,6 +582,10 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 					_parameterViewModels[nameof(SystemConfiguration)].EditingEnabled = value;
 					if (value == false) {
 						HeatPumpConfigurationsPassenger = null;
+					} else {
+						if (HeatPumpConfigurationsPassenger == null || HeatPumpConfigurationsPassenger.Count == 0) {
+							AddPassengerHeatpumpCommand.Execute(null);
+						}
 					}
 				}
 			}
@@ -648,9 +675,6 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 			set
 			{
 				SetProperty(ref _interiorLightsLed, value);
-				if (value != null) {
-					OnPropertyChanged(nameof(EditingEnabledDictionary));
-				}
 			}
 		}
 

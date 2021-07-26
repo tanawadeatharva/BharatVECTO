@@ -108,9 +108,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 		public virtual string VIN => GetString(XMLNames.Vehicle_VIN);
 
-		public virtual string LegislativeCategory => null;
-
 		public virtual LegislativeClass? LegislativeClass => GetString(XMLNames.Vehicle_LegislativeClass).ParseEnum<LegislativeClass>();
+			//get { return GetString("LegislativeCategory").ParseEnum<LegislativeClass>(); }
 
 		public virtual VehicleCategory VehicleCategory
 		{
@@ -128,6 +127,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 
 		public virtual Kilogram GrossVehicleMassRating => GetDouble(XMLNames.Vehicle_GrossVehicleMass).SI<Kilogram>();
+			//get { return GetDouble(XMLNames.Vehicle_TPMLM).SI<Kilogram>(); }
 
 		public virtual IList<ITorqueLimitInputData> TorqueLimits
 		{
@@ -205,6 +205,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 			ElementExists(XMLNames.Vehicle_MaxNetPower2)
 				? GetDouble(XMLNames.Vehicle_MaxNetPower2).SI<Watt>()
 				: null;
+
+		public virtual string ExemptedTechnology => null;
 
 		public virtual RegistrationClass? RegisteredClass => RegistrationClass.unknown;
 
@@ -478,6 +480,123 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		#endregion
 	}
 
+	public class XMLDeclarationExemptedPrimaryBusDataProviderV26 : XMLDeclarationVehicleDataProviderV20
+	{
+		public new static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V26;
+
+		public new const string XSD_TYPE = "ExemptedPrimaryHeavyBusType";
+
+		public new static readonly string QUALIFIED_XSD_TYPE =
+			XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
+
+		public XMLDeclarationExemptedPrimaryBusDataProviderV26(
+			IXMLDeclarationJobInputData jobData, XmlNode xmlNode, string sourceFile) : base(jobData, xmlNode, sourceFile)
+		{
+			SourceType = DataSourceType.XMLEmbedded;
+
+		}
+
+		#region Overrides of AbstractXMLResource
+
+		protected override XNamespace SchemaNamespace {
+			get { return NAMESPACE_URI; }
+		}
+
+		protected override DataSourceType SourceType { get; }
+
+		#endregion
+
+		public override VehicleCategory VehicleCategory {
+			get { return VehicleCategory.HeavyBusPrimaryVehicle; }
+		}
+
+		public override bool ExemptedVehicle {
+			get { return true; }
+		}
+
+
+		public override IList<ITorqueLimitInputData> TorqueLimits {
+			get { return new List<ITorqueLimitInputData>(); }
+		}
+
+		public override PerSecond EngineIdleSpeed {
+			get { return null; }
+		}
+
+		public override bool VocationalVehicle {
+			get { return false; }
+		}
+
+		public override bool SleeperCab {
+			get { return false; }
+		}
+
+		public override TankSystem? TankSystem {
+			get { return null; }
+		}
+
+		public override IAdvancedDriverAssistantSystemDeclarationInputData ADAS {
+			get { return null; }
+		}
+
+		public override bool ZeroEmissionVehicle {
+			get { return XmlConvert.ToBoolean(GetString(XMLNames.Vehicle_ZeroEmissionVehicle)); }
+		}
+
+		public override bool HybridElectricHDV {
+			get { return false; }
+		}
+
+		public override bool DualFuelVehicle {
+			get { return false; }
+		}
+
+		public override Watt MaxNetPower1 {
+			get { return GetDouble("SumNetPower").SI<Watt>(); }
+		}
+
+		public override Watt MaxNetPower2 {
+			get { return null; }
+		}
+
+		public override string ExemptedTechnology
+		{
+			get { return GetString("Technology"); }
+		}
+
+		public override IVehicleComponentsDeclaration Components {
+			get { return null; }
+		}
+
+		public override XmlElement ComponentNode {
+			get { return null; }
+		}
+
+		public override XmlElement PTONode {
+			get { return null; }
+		}
+
+		public override XmlElement ADASNode {
+			get { return null; }
+		}
+
+		public override AngledriveType AngledriveType {
+			get { return AngledriveType.None; }
+		}
+
+		public override RetarderType RetarderType {
+			get { return RetarderType.None; }
+		}
+
+		public override double RetarderRatio {
+			get { return 0; }
+		}
+
+		public override IPTOTransmissionInputData PTOTransmissionInputData {
+			get { return null; }
+		}
+	}
+
 	public class XMLDeclarationMediumLorryVehicleDataProviderV26 : XMLDeclarationVehicleDataProviderV21
 	{
 		public new static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V26;
@@ -523,6 +642,28 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		protected override DataSourceType SourceType { get; }
 
 		#endregion
+
+		public override XmlElement ComponentNode {
+			get { return null; }
+		}
+
+
+		public override XmlElement ADASNode {
+			get { return null; }
+		}
+
+		public override AngledriveType AngledriveType {
+			get { return AngledriveType.None; }
+		}
+
+		public override RetarderType RetarderType {
+			get { return RetarderType.None; }
+		}
+
+		public override double RetarderRatio {
+			get { return 0; }
+		}
+
 	}
 
 	public class XMLDeclarationCompletedBusDataProviderV26 : XMLDeclarationVehicleDataProviderV20
@@ -639,36 +780,44 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 		public string VIN => GetString(XMLNames.Vehicle_VIN);
 
-		public string LegislativeCategory => GetString(XMLNames.Bus_LegislativeCategory);
+		public virtual LegislativeClass? LegislativeClass
+		{
+			get { return GetString(XMLNames.Bus_LegislativeCategory)?.ParseEnum<LegislativeClass>(); }
+		}
 
-		public VehicleCategory VehicleCategory => VehicleCategoryHelper.Parse(GetString("ChassisConfiguration"));
+		public virtual VehicleCategory VehicleCategory => VehicleCategoryHelper.Parse(GetString("ChassisConfiguration"));
 
-		public AxleConfiguration AxleConfiguration => AxleConfigurationHelper.Parse(GetString(XMLNames.Vehicle_AxleConfiguration));
+		public virtual AxleConfiguration AxleConfiguration => AxleConfigurationHelper.Parse(GetString(XMLNames.Vehicle_AxleConfiguration));
 
 		//TechnicalPermissibleMaximumLadenMass
-		public Kilogram GrossVehicleMassRating => GetDouble(XMLNames.TPMLM).SI<Kilogram>();
+		public virtual Kilogram GrossVehicleMassRating => GetDouble(XMLNames.TPMLM).SI<Kilogram>();
 
 		//IdlingSpeed
-		public PerSecond EngineIdleSpeed => GetDouble(XMLNames.Engine_IdlingSpeed).RPMtoRad();
+		public virtual PerSecond EngineIdleSpeed => GetDouble(XMLNames.Engine_IdlingSpeed).RPMtoRad();
 
-		public RetarderType RetarderType => GetString(XMLNames.Vehicle_RetarderType).ParseEnum<RetarderType>();
+		
+		public virtual RetarderType RetarderType => GetString(XMLNames.Vehicle_RetarderType).ParseEnum<RetarderType>();
 
-		public double RetarderRatio => GetDouble(XMLNames.Vehicle_RetarderRatio);
+		public virtual double RetarderRatio => GetDouble(XMLNames.Vehicle_RetarderRatio);
 
-		public AngledriveType AngledriveType => GetString(XMLNames.Vehicle_AngledriveType).ParseEnum<AngledriveType>();
+		
+		public virtual AngledriveType AngledriveType => GetString(XMLNames.Vehicle_AngledriveType).ParseEnum<AngledriveType>();
 
-		public bool ZeroEmissionVehicle => GetBool(XMLNames.Vehicle_ZeroEmissionVehicle);
+		
+		public virtual bool ZeroEmissionVehicle => GetBool(XMLNames.Vehicle_ZeroEmissionVehicle);
 
-		public XmlElement ADASNode => _adasNode ?? (_adasNode = GetNode(XMLNames.Vehicle_ADAS, required: false) as XmlElement);
+		
+		public virtual XmlElement ADASNode => _adasNode ?? (_adasNode = GetNode(XMLNames.Vehicle_ADAS, required: false) as XmlElement);
 
-		public IXMLADASReader ADASReader { get; set; }
+		public virtual IXMLADASReader ADASReader { get; set; }
 
-		public IAdvancedDriverAssistantSystemDeclarationInputData ADAS => _adas ?? (_adas = ADASReader.ADASInputData);
+		
+		public virtual IAdvancedDriverAssistantSystemDeclarationInputData ADAS => _adas ?? (_adas = ADASReader.ADASInputData);
 
 
-		public IList<ITorqueLimitInputData> TorqueLimits => ReadTorqueLimits();
+		public virtual IList<ITorqueLimitInputData> TorqueLimits => ReadTorqueLimits();
 
-		public XmlElement ComponentNode
+		public virtual XmlElement ComponentNode
 		{
 			get
 			{
@@ -681,23 +830,22 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 			}
 		}
 
-		public IXMLComponentReader ComponentReader { get; set; }
+		public virtual IXMLComponentReader ComponentReader { get; set; }
 
-		public Meter EntranceHeight { get; }
+		public virtual Meter EntranceHeight { get; }
 
 		public virtual ConsumerTechnology? DoorDriveTechnology => ConsumerTechnology.Unknown;
 
 		public virtual VehicleDeclarationType VehicleDeclarationType { get; }
 
 
-		public IVehicleComponentsDeclaration Components => _components ?? (_components = ComponentReader.ComponentInputData);
+		public virtual IVehicleComponentsDeclaration Components => _components ?? (_components = ComponentReader.ComponentInputData);
 
 
 		#region  Non seeded Properties
 
 		public string Identifier { get; }
-		public bool ExemptedVehicle { get; }
-		public LegislativeClass? LegislativeClass { get; }
+		public virtual bool ExemptedVehicle { get; }
 		public int? NumberPassengerSeatsUpperDeck { get; }
 		public int? NumberPassengerSeatsLowerDeck { get; }
 		public int? NumberPassengersStandingLowerDeck { get; }
@@ -712,8 +860,9 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 		public bool HybridElectricHDV { get; }
 		public bool DualFuelVehicle { get; }
-		public Watt MaxNetPower1 { get; }
+		public virtual Watt MaxNetPower1 { get; }
 		public Watt MaxNetPower2 { get; }
+		public virtual string ExemptedTechnology { get; }
 		public RegistrationClass? RegisteredClass { get; }
 		public VehicleCode? VehicleCode { get; }
 		public bool? LowEntry { get; }
@@ -761,7 +910,41 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		}
 	}
 
+	// ---------------------------------------------------------------------------------------
 
+	public class XMLDeclarationMultistageExemptedPrimaryVehicleBusDataProviderV01 : XMLDeclarationMultistagePrimaryVehicleBusDataProviderV01
+	{
+
+		public new static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_MULTISTAGE_BUS_VEHICLE_NAMESPACE_VO1;
+
+		public new const string XSD_TYPE = "VehicleExemptedPrimaryBusType";
+
+		public new static readonly string QUALIFIED_XSD_TYPE =
+			XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
+
+		public XMLDeclarationMultistageExemptedPrimaryVehicleBusDataProviderV01(IXMLPrimaryVehicleBusJobInputData busJobData, XmlNode xmlNode, string sourceFile) : base(busJobData, xmlNode, sourceFile) { }
+
+		#region Overrides of XMLDeclarationMultistagePrimaryVehicleBusDataProviderV01
+
+		public override XmlElement ComponentNode
+		{
+			get { return null; }
+		}
+
+		public override IVehicleComponentsDeclaration Components
+		{
+			get { return null; }
+		}
+
+		public override bool ExemptedVehicle { get { return true; } }
+
+		public override Watt MaxNetPower1
+		{
+			get { return GetDouble("SumNetPower").SI<Watt>(); }
+		}
+
+		#endregion
+	}
 
 	// ---------------------------------------------------------------------------------------
 
@@ -782,7 +965,10 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		{
 			get
 			{
-				return ElementExists(new [] {XMLNames.Component_Vehicle, XMLNames.Component_Model})
+				if (BaseNode.LocalName == XMLNames.Component_Vehicle) {
+					return BaseNode.SelectSingleNode($"./*[local-name()='{XMLNames.Component_Model}']")?.InnerText;
+				}
+				return ElementExists(new [] { XMLNames.Component_Vehicle, XMLNames.Component_Model})
 					? GetString(new[] { XMLNames.Component_Vehicle, XMLNames.Component_Model }) : null;
 			}
 		}
@@ -1001,9 +1187,9 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		{
 			get
 			{
-				if (!ElementExists(XMLNames.Bus_NumberPassengersLowerDeck))
+				if (!ElementExists(XMLNames.Bus_NumberPassengerSeatsLowerDeck))
 					return null;
-				var node = GetNode(XMLNames.Bus_NumberPassengersLowerDeck);
+				var node = GetNode(XMLNames.Bus_NumberPassengerSeatsLowerDeck);
 				return XmlConvert.ToInt32(node.InnerText);
 			}
 		}
@@ -1012,12 +1198,36 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		{
 			get
 			{
-				if (!ElementExists(XMLNames.Bus_NumberPassengersUpperDeck))
+				if (!ElementExists(XMLNames.Bus_NumberPassengerSeatsUpperDeck))
 					return null;
-				var node = GetNode(XMLNames.Bus_NumberPassengersUpperDeck);
+				var node = GetNode(XMLNames.Bus_NumberPassengerSeatsUpperDeck);
 				return XmlConvert.ToInt32(node.InnerText);
 			}
 		}
+
+
+		public override int? NumberPassengersStandingLowerDeck
+		{
+			get
+			{
+				if (!ElementExists(XMLNames.Bus_NumberPassengersStandingLowerDeck))
+					return null;
+				var node = GetNode(XMLNames.Bus_NumberPassengersStandingLowerDeck);
+				return XmlConvert.ToInt32(node.InnerText);
+			}
+		}
+
+		public override int? NumberPassengersStandingUpperDeck
+		{
+			get
+			{
+				if (!ElementExists(XMLNames.Bus_NumberPassengersStandingUpperDeck))
+					return null;
+				var node = GetNode(XMLNames.Bus_NumberPassengersStandingUpperDeck);
+				return XmlConvert.ToInt32(node.InnerText);
+			}
+		}
+
 
 		public override VehicleCode? VehicleCode =>
 			ElementExists(XMLNames.Vehicle_BodyworkCode)
@@ -1039,6 +1249,9 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		public override XmlElement ComponentNode => null;
 
 		public override IVehicleComponentsDeclaration Components => null;
+		
+
+		public override bool ExemptedVehicle => true;
 
 		#region Overrides of AbstractXMLResource
 

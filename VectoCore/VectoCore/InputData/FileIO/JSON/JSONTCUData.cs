@@ -253,6 +253,42 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			}
 		}
 
+		public double? PEV_TargetSpeedBrakeNorm
+		{
+			get
+			{
+				if (Body["PEV_TargetSpeedBrakeNorm"] != null) {
+					return Body.GetEx<double>("PEV_TargetSpeedBrakeNorm");
+				}
+
+				return null;
+			}
+		}
+
+		public double? PEV_DeRatingDownshiftSpeedFactor
+		{
+			get
+			{
+				if (Body["PEV_DeRatingDownshiftSpeedFactor"] != null) {
+					return Body.GetEx<double>("PEV_DeRatingDownshiftSpeedFactor");
+				}
+
+				return null;
+			}
+		}
+
+		public double? PEV_DownshiftMinSpeedFactor
+		{
+			get
+			{
+				if (Body["PEV_DownshiftMinSpeedFactor"] != null) {
+					return Body.GetEx<double>("PEV_DownshiftMinSpeedFactor");
+				}
+
+				return null;
+			}
+		}
+
 		public TableData LoadStageShiftLines
 		{
 			get {
