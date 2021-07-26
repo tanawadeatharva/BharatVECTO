@@ -1124,7 +1124,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 	}
 
 
-	public class JSONInputDataV10_PrimaryAndStageInputBus : JSONFile, IInputDataProvider
+	public class JSONInputDataV10_PrimaryAndStageInputBus : JSONFile, IInputDataProvider, IMultistagePrimaryAndStageInputDataProvider
 	{
 		private readonly IXMLInputDataReader _xmlInputReader;
 		private string _primaryVehicleInputDataPath;
@@ -1135,6 +1135,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 		private string _stageInputDataPath;
 		private IVehicleDeclarationInputData _stageInputData;
+
 
 		public IVehicleDeclarationInputData StageInputData => 
 			_stageInputData ?? (_stageInputData =
@@ -1168,5 +1169,13 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 				throw new VectoException("unsupported vehicle file format {0}", path);
 			}
 		}
+
+		#region Implementation of IDeclarationInputDataProvider
+
+		public IDeclarationJobInputData JobInputData => throw new NotImplementedException();
+
+		public IPrimaryVehicleInformationInputDataProvider PrimaryVehicleData => throw new NotImplementedException();
+
+		#endregion
 	}
 }
