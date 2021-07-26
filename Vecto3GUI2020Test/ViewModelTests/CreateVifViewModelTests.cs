@@ -56,12 +56,6 @@ namespace Vecto3GUI2020Test.ViewModelTests
 			Assert.IsNull(_createVifViewModel.StageInputPath);
 		}
 
-		[Ignore("incomplete")]
-		[Test]
-		public void LoadExemptedCompletedAndNonExemptedPrimary()
-		{
-
-		}
 
 		[Test]
 		public void SaveFile()
