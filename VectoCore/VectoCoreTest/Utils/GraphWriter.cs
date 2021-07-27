@@ -120,11 +120,16 @@ namespace TUGraz.VectoCore.Tests.Utils
 					if (yfield == ModalResultField.v_act) {
 						var y3 = LoadData(modDataV3, ModalResultField.v_targ.GetShortCaption());
 						var series3 = CreateSeries("v_target", legend, chartArea, chart, Color.Green, x, y3);
+						var min = Math.Min(y3.Min(), y.Min());
+						var max = Math.Max(y3.Max(), y.Max());
+						chartArea.AxisY.Minimum = Math.Floor(min - (max - min) * 0.1);
+						chartArea.AxisY.Maximum = Math.Ceiling(max + (max - min) * 0.1);
 					}
 
-					if ((Yfields.Contains(ModalResultField.altitude) && yfield == ModalResultField.altitude) || 
+
+					if ((Yfields.Contains(ModalResultField.altitude) && yfield == ModalResultField.altitude) ||
 						(!Yfields.Contains(ModalResultField.altitude) && yfield == ModalResultField.v_act)) {
-						
+
 						var grad = LoadData(modDataV3, ModalResultField.grad.GetShortCaption());
 
 						chartArea.AxisY2.Enabled = AxisEnabled.True;
@@ -373,8 +378,8 @@ namespace TUGraz.VectoCore.Tests.Utils
 		private static double[] LoadDataMapped(DataTable modDataV3, string field, Dictionary<string, double> mapping)
 		{
 			return (from x in modDataV3.Rows.Cast<DataRow>()
-				let val = x.Field<string>(field)
-				select mapping.ContainsKey(val) ? mapping[val] : double.NaN).ToArray();
+					let val = x.Field<string>(field)
+					select mapping.ContainsKey(val) ? mapping[val] : double.NaN).ToArray();
 		}
 
 		private static void AlignChart(Chart chart, string chartToAlign, string chartToAlignWith)
