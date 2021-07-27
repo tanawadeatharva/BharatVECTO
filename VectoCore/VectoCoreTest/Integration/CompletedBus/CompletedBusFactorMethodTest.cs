@@ -1053,7 +1053,48 @@ namespace TUGraz.VectoCore.Tests.Integration.CompletedBus
 
 		[TestCase(JobFile_Group41, TestName = "RunCompletedBusSimulation Group41/32b"),
 		TestCase(JobFile_Group42, TestName = "RunCompletedBusSimulation Group42/33b"),
-		TestCase(JobFilePrimary41, TestName = "RunPrimaryBusSimulation Group41"),
+		]
+		public void TestRunCompletedBusSimulation(string jobName)
+		{
+			var relativeJobPath = jobName;
+			var writer = new FileOutputWriter(relativeJobPath);
+			var inputData = Path.GetExtension(relativeJobPath) == ".xml"
+				? xmlInputReader.CreateDeclaration(relativeJobPath)
+				: JSONInputDataFactory.ReadJsonJob(relativeJobPath);
+
+			switch (inputData) {
+				case JSONInputDataSingleBusV6 _:
+				case JSONVTPInputDataV4 _:
+					break;
+				case JSONInputDataCompletedBusFactorMethodV7 completedJson: {
+					inputData = CompletedVIF.CreateCompletedVif(completedJson, xmlInputReader);
+					break;
+				}
+			}
+
+			var factory = new SimulatorFactory(ExecutionMode.Declaration,  inputData, writer) {
+				WriteModalResults = true,
+				//ActualModalData = true,
+				Validate = false
+			};
+			var jobContainer = new JobContainer(new SummaryDataContainer(writer));
+
+			//var runs = factory.SimulationRuns().ToArray();
+			//var runIdx = 0;
+			//runs[runIdx].Run();
+
+			//Assert.IsTrue(runs[runIdx].FinishedWithoutErrors);
+
+			jobContainer.AddRuns(factory);
+
+			jobContainer.Execute();
+			jobContainer.WaitFinished();
+			var progress = jobContainer.GetProgress();
+			Assert.IsTrue(progress.All(r => r.Value.Success), string.Concat(progress.Select(r => r.Value.Error)));
+			Assert.IsTrue(jobContainer.Runs.All(r => r.Success), String.Concat(jobContainer.Runs.Select(r => r.ExecException)));
+		}
+
+		[TestCase(JobFilePrimary41, TestName = "RunPrimaryBusSimulation Group41"),
 		TestCase(@"TestData\Integration\Buses\FactorMethod\primary_heavyBus group41_nonSmart_AT-P.xml", TestName = "RunPrimaryBusSimulation Group41 AT-P"),
 		TestCase(@"TestData\Integration\Buses\FactorMethod\vecto_vehicle-primary_heavyBus_ESS_electricFanSTP.xml", TestName = "RunPrimaryBusSimulation Group41 ES-AUX"),
 		TestCase(JobFilePrimary42, TestName = "RunPrimaryBusSimulation Group42"),
@@ -1061,7 +1102,7 @@ namespace TUGraz.VectoCore.Tests.Integration.CompletedBus
 		TestCase(@"TestData\Integration\Buses\FactorMethod\SingleBus_42-33b.vecto", TestName = "RunSingleBusSimulation Group 42/33b"),
 		TestCase(@"TestData\Integration\Buses\FactorMethod\SingleBus_41-32b_AT-P.vecto", TestName = "RunSingleBusSimulation Group 41/32b AT-P"),
 		]
-		public void TestRunCompletedBusSimulation(string jobName)
+		public void TestRunPrimaryOrSingleBusSimulation(string jobName)
 		{
 			var relativeJobPath = jobName;
 			var writer = new FileOutputWriter(relativeJobPath);
