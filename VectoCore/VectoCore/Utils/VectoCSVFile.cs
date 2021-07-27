@@ -75,7 +75,8 @@ namespace TUGraz.VectoCore.Utils
 		public static TableData Read(string fileName, bool ignoreEmptyColumns = false, bool fullHeader = false)
 		{
 			try {
-				using (var fs = new StreamReader(File.OpenRead(fileName))) {
+				//UpdateLastAccessTime(fileName);
+				using (var fs = File.OpenText(fileName)) {
 					var retVal = new TableData(fileName);
 					ReadCSV(retVal, fs, ignoreEmptyColumns, fullHeader);
 					return retVal;
@@ -83,6 +84,15 @@ namespace TUGraz.VectoCore.Utils
 			} catch (Exception e) {
 				LogManager.GetLogger(typeof(VectoCSVFile).FullName).Error(e);
 				throw new VectoException("Error reading file {0}: {1}", fileName, e.Message);
+			}
+		}
+
+		public static void UpdateLastAccessTime(string fileName)
+		{
+			try {
+				File.SetLastAccessTime(fileName, DateTime.Now);
+			} catch (Exception e) {
+				Console.WriteLine(e);
 			}
 		}
 

@@ -46,35 +46,12 @@ namespace TUGraz.VectoCore.Tests.Integration.ADAS
 
 			graphWriter.Yfields = new[] {
 				ModalResultField.v_act, ModalResultField.altitude, ModalResultField.acc, ModalResultField.Gear,
-				ModalResultField.P_ice_out, ModalResultField.FCMap
+				ModalResultField.P_ice_out
 			};
 			graphWriter.Series1Label = "ADAS PCC";
 			graphWriter.PlotIgnitionState = true;
 			return graphWriter;
 		}
-
-
-		[TestCase(@"TestData\Integration\ADAS-PEV\Group5_EngineStopStart.xml")]
-		public void TestVehicleWithADASEngineStopStart(string filename)
-		{
-			var container = RunAllDeclarationJob(filename);
-			//var container = RunSingleDeclarationJob(filename, 4);
-		}
-
-		[TestCase(@"TestData\Integration\ADAS-PEV\Group5_EcoRoll.xml")]
-		public void TestVehicleWithADASEcoRoll(string filename)
-		{
-			var container = RunAllDeclarationJob(filename);
-			//var container = RunSingleDeclarationJob(filename, 4);
-		}
-
-		[TestCase(@"TestData\Integration\ADAS-PEV\Group5_EcoRollEngineStop.xml")]
-		public void TestVehicleWithADASEcoRollEngineStopStart(string filename)
-		{
-			var container = RunAllDeclarationJob(filename);
-			//var container = RunSingleDeclarationJob(filename, 1);
-		}
-
 
 		[TestCase(0, TestName = "EcoRoll DH1.1 const"),
 		TestCase(1, TestName = "EcoRoll DH1.1 UH0.1"),
@@ -198,23 +175,6 @@ namespace TUGraz.VectoCore.Tests.Integration.ADAS
 			GetGraphWriter().Write(modFilename);
 		}
 
-		[TestCase(@"TestData\Integration\ADAS-PEV\Group9_AT_EngineStopStart.xml")]
-		public void TestATVehicleWithADASEngineStopStart(string filename)
-		{
-			//var container = RunAllDeclarationJob(filename);
-			var container = RunSingleDeclarationJob(filename, 5);
-		}
-
-		[TestCase(@"TestData\Integration\ADAS-PEV\Group9_AT_EcoRoll.xml")]
-		public void TestATVehicleWithADASEcoRoll(string filename)
-		{
-			var container = RunAllDeclarationJob(filename);
-			//var container = RunSingleDeclarationJob(filename, 1);
-		}
-
-
-
-
 		[TestCase(Group5PCC12, 0, TestName = "G5Eng PCC12 CrestCoast 1"),
 		TestCase(Group5PCC12, 1, TestName = "G5Eng PCC12 CrestCoast 2"),
 		TestCase(Group5PCC12, 2, TestName = "G5Eng PCC12 Case A"), // Case A
@@ -252,16 +212,7 @@ namespace TUGraz.VectoCore.Tests.Integration.ADAS
 		]
 		public void TestPCCEngineeringSampleCases(string jobName, int cycleIdx)
 		{
-			
 			RunSingleEngineeringCycle(jobName, cycleIdx);
-		}
-
-		[TestCase(5, TestName = "PCC Group5 RD RefLoad"),
-		TestCase(1, TestName = "PCC Group5 LH RefLoad")]
-		public void TestTCCDeclaration(int runIdx)
-		{
-			var jobName = @"TestData\Integration\ADAS-PEV\Group5PCCDecl\Tractor_4x2_vehicle-class-5_5_t_0.xml";
-			RunSingleDeclarationJob(jobName, runIdx);
 		}
 
 		public void RunSingleEngineeringCycle(string jobName, int cycleIdx)
@@ -274,11 +225,10 @@ namespace TUGraz.VectoCore.Tests.Integration.ADAS
 			var factory = new SimulatorFactory(ExecutionMode.Engineering, inputData, writer) {
 				WriteModalResults = true,
 				//ActualModalData = true,
-				Validate = false
+				Validate = false,
+				SumData = sumContainer
 			};
-
-			factory.SumData = sumContainer;
-
+			
 			var runs = factory.SimulationRuns().ToArray();
 			var run = runs[cycleIdx];
 
@@ -291,8 +241,6 @@ namespace TUGraz.VectoCore.Tests.Integration.ADAS
 			var modFilename = writer.GetModDataFileName(run.RunName, run.CycleName, run.RunSuffix);
 			GetGraphWriter().Write(modFilename);
 		}
-
-
 
 		public JobContainer RunAllDeclarationJob(string jobName)
 		{
@@ -319,7 +267,6 @@ namespace TUGraz.VectoCore.Tests.Integration.ADAS
 
 			return jobContainer;
 		}
-
 
 		public JobContainer RunSingleDeclarationJob(string jobName, int runIdx)
 		{

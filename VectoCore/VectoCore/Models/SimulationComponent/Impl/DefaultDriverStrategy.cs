@@ -113,11 +113,15 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			PCCSegments = new PCCSegments();
 
 			if (ADAS.PredictiveCruiseControl != PredictiveCruiseControlType.None) {
-				// create a dummy powertrain for pre-processing and estimatins
+				// create a dummy powertrain for pre-processing and estimations
 				var modData = new ModalDataContainer(data, null, null);
 				var builder = new PowertrainBuilder(modData);
 				var testContainer = new SimplePowertrainContainer(data);
-				builder.BuildSimplePowertrain(data, testContainer);
+				if (data.JobType != VectoSimulationJobType.BatteryElectricVehicle)
+					builder.BuildSimplePowertrain(data, testContainer);
+				else {
+					builder.BuildSimplePowertrainE2(data, testContainer);
+				}
 
 				container?.AddPreprocessor(new PCCSegmentPreprocessor(testContainer, PCCSegments, data?.DriverData.PCC));
 			}
@@ -318,7 +322,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 							break;
 						case EcoRollType.WithEngineStop:
 							dataBus.GearboxCtl.DisengageGearbox = true;
-							dataBus.EngineCtl.CombustionEngineOn = false;
+							if (dataBus.EngineCtl != null)
+								dataBus.EngineCtl.CombustionEngineOn = false;
 							break;
 						default: throw new ArgumentOutOfRangeException();
 					}
@@ -328,7 +333,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				case PCCStates.WithinSegment:
 				case PCCStates.PCCinterrupt:
 					dataBus.GearboxCtl.DisengageGearbox = false;
-					dataBus.EngineCtl.CombustionEngineOn = true;
+					if (dataBus.EngineCtl != null)
+						dataBus.EngineCtl.CombustionEngineOn = true;
 					break;
 				default: throw new ArgumentOutOfRangeException();
 			}
@@ -414,7 +420,13 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				}
 			} else {
 				if (ADAS.EcoRoll == EcoRollType.None) {
-					engineDragLoss = Driver.DataBus.EngineInfo.EngineDragPower(Driver.DataBus.EngineInfo.EngineSpeed);
+					if (Driver.DataBus.EngineInfo is null) {
+						// todo 20210721 mk search for the correct engine!
+						var engine = Driver.DataBus.ElectricMotorInfo(PowertrainPosition.BatteryElectricE2);
+						engineDragLoss = engine.DragPower(0.SI<Volt>(), engine.ElectricMotorSpeed);
+					} else {
+						engineDragLoss = Driver.DataBus.EngineInfo.EngineDragPower(Driver.DataBus.EngineInfo.EngineSpeed);
+					}
 				}
 			}
 

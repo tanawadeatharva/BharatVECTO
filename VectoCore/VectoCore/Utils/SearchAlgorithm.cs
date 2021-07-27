@@ -222,7 +222,7 @@ namespace TUGraz.VectoCore.Utils
 				var result = evaluateFunction(x2.SI<T>());
 				if (abortCriterion != null && abortCriterion(result, iterationCount)) {
 					LogManager.EnableLogging();
-					log.Debug("LineSearch aborted due to abortCriterion: {0}", result);
+					log.Debug("InterpolateSearch aborted due to abortCriterion: {0}", result);
 					LogManager.DisableLogging();
 					throw new VectoSearchAbortedException("InterpolateLinearSearch");
 				}
@@ -258,7 +258,7 @@ namespace TUGraz.VectoCore.Utils
 					result = evaluateFunction(x2.SI<T>());
 					if (abortCriterion != null && abortCriterion(result, iterationCount)) {
 						LogManager.EnableLogging();
-						log.Debug("LineSearch aborted due to abortCriterion: {0}", result);
+						log.Debug("InterpolateSearch aborted due to abortCriterion: {0}", result);
 						LogManager.DisableLogging();
 						throw new VectoSearchAbortedException("InterpolateLinearSearch");
 					}

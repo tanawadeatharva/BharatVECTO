@@ -13,11 +13,18 @@
     "CurbWeightExtra": 1900.0,
     "Loading": 3020.0,
     "MassMax": 11.99,
+    "CdxA": 4.83,
     "rdyn": 421.0,
     "PowertrainConfiguration": "BatteryElectric",
     "CdCorrMode": "CdofVdecl",
     "CdCorrFile": "",
-	  "ElectricMotors": [
+    "EngineStopStart": true,
+    "EcoRoll": "None",
+    "PredictiveCruiseControl": "None",
+    "ATEcoRollReleaseLockupClutch": false,
+
+    "VehicleHeight": 3.0,
+    "ElectricMotors": [
         {
           "Count": 2,
           "Ratio": 8.56,
@@ -73,12 +80,6 @@
           "Type": "VehicleNonDriven"
         }
       ]
-    },
-    "EngineStopStart": true,
-    "EcoRoll": "None",
-    "PredictiveCruiseControl": "None",
-    "ATEcoRollReleaseLockupClutch": false,
-    "CdxA": 4.83,
-    "VehicleHeight": 3.0
+    }
   }
 }

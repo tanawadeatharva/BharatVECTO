@@ -1,9 +1,12 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.Models.Connector.Ports.Impl;
+using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.SimulationComponent.Impl;
 using TUGraz.VectoCore.OutputData;
 using TUGraz.VectoCore.Utils;
@@ -100,9 +103,10 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 				}
 
 				var n = speed * ratio * data.GearboxData.Gears[gear.Gear].Ratio;
-				possible.Add(n < data.EngineData.IdleSpeed ? new GearshiftPosition(0) : gear);
+
+				possible.Add(n < (data.EngineData?.IdleSpeed ?? 0.SI<PerSecond>()) ? new GearshiftPosition(0) : gear);
 			}
-			
+
 			var selected = possible.MaxBy(x => x.Gear);
 			return selected;
 		}
@@ -123,7 +127,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 						var r = (ResponseDryRun)response;
 						return r.Gearbox.PowerRequest;
 					},
-					evaluateFunction: grad => { return vehicle.Request(absTime, simulationInterval, acceleration, grad, true); },
+					evaluateFunction: grad => vehicle.Request(absTime, simulationInterval, acceleration, grad, true),
 					criterion: response => {
 						var r = (ResponseDryRun)response;
 						return r.Gearbox.PowerRequest.Value();
