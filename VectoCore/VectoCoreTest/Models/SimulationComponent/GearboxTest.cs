@@ -51,6 +51,8 @@ using TUGraz.VectoCore.Tests.Utils;
 using TUGraz.VectoCore.Utils;
 using System.IO;
 using TUGraz.VectoCommon.InputData;
+using TUGraz.VectoCore.InputData.FileIO.JSON;
+using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter;
 
 // ReSharper disable RedundantAssignment
 // ReSharper disable UnusedVariable
@@ -512,10 +514,26 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 		TestCase(2, 1, 1900, 750, typeof(ResponseGearShift)),
 		TestCase(1, 1, 1200, 700, typeof(ResponseSuccess)),
 		TestCase(8, 4, 15000, 200, typeof(ResponseGearShift)),]
-		public void Gearbox_ShiftDown(int gear, int newGear, double t, double n, Type responseType)
+		public void Gearbox_ShiftDown_ACEA_Shiftlines(int gear, int newGear, double t, double n, Type responseType)
 		{
 			
 			var gearboxData = MockSimulationDataFactory.CreateGearboxDataFromFile(GearboxDataFile, EngineDataFile);
+
+			var gearboxInput = JSONInputDataFactory.ReadGearbox(GearboxDataFile);
+			var engineInput = JSONInputDataFactory.ReadEngine(EngineDataFile);
+			var dao = new DeclarationDataAdapterHeavyLorry();
+			var engineData = dao.CreateEngineData(new MockDeclarationVehicleInputData() {
+				EngineInputData = engineInput,
+				GearboxInputData = gearboxInput
+			}, engineInput.EngineModes.First(), new Mission() {
+					MissionType = MissionType.LongHaul
+				});
+			foreach (var entry in gearboxData.Gears) {
+				entry.Value.ShiftPolygon = DeclarationData.Gearbox.ComputeManualTransmissionShiftPolygon(
+					(int)(entry.Key - 1), engineData.FullLoadCurves.First().Value,
+					gearboxInput.Gears, engineData, ((IAxleGearInputData)gearboxInput).Ratio, 0.5.SI<Meter>());
+			}
+
 			var container = new VehicleContainer(ExecutionMode.Engineering) { RunData = GetDummyRunData(gearboxData) };
 			var gearbox = new Gearbox(container, new AMTShiftStrategy(container));
 			var cycleData = DrivingCycleDataReader.ReadFromStream("s,v,grad,stop\n0,0,0,10\n10,20,0,0\n20,21,0,0\n30,22,0,0\n40,23,0,0\n50,24,0,0\n60,25,0,0\n70,26,0,0\n80,27,0,0\n90,28,0,0\n100,29,0,0".ToStream(), CycleType.DistanceBased, "DummyCycle", false);
