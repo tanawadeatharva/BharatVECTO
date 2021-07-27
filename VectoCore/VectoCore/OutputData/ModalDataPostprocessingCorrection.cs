@@ -85,7 +85,9 @@ namespace TUGraz.VectoCore.OutputData
                 var emEff = 0.0;
                 if (endSoc < startSoc) {
 					var etaEmChg = modData.ElectricMotorEfficiencyGenerate(em.Item1);
-					var etaReessChg = (modData.WorkREESSChargeInternal() / modData.WorkREESSChargeTerminal()).Value();
+					var etaReessChg = 1.0;
+					if (modData.WorkREESSChargeInternal().Value() != 0 && modData.WorkREESSChargeTerminal().Value() != 0)
+						etaReessChg = (modData.WorkREESSChargeInternal() / modData.WorkREESSChargeTerminal()).Value();
 					emEff = 1.0 / (etaEmChg * etaReessChg);
 				} 
 				if (endSoc > startSoc) {
@@ -382,10 +384,7 @@ namespace TUGraz.VectoCore.OutputData
 
 		public Kilogram FcBusAuxPSDragICEOffStandstill { get; set; }
 		public Kilogram FcBusAuxPSDragICEOffDriving { get; set; }
-		public Kilogram FcBusAuxPs
-		{
-			get => FcBusAuxPSAirDemand + FcBusAuxPSDragICEOffDriving + FcBusAuxPSDragICEOffStandstill;
-		}
+		public Kilogram FcBusAuxPs => FcBusAuxPSAirDemand + FcBusAuxPSDragICEOffDriving + FcBusAuxPSDragICEOffStandstill;
 		public Kilogram FcBusAuxEs { get; set; }
 		public Kilogram FcWHR { get; set; }
 		public Kilogram FcREESSSoc { get; set; }
