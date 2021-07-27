@@ -584,6 +584,22 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 		public void Gearbox_ShiftUp(int gear, int newGear, double tq, double n, Type responseType)
 		{
 			var gearboxData = MockSimulationDataFactory.CreateGearboxDataFromFile(GearboxDataFile, EngineDataFile);
+
+			var gearboxInput = JSONInputDataFactory.ReadGearbox(GearboxDataFile);
+			var engineInput = JSONInputDataFactory.ReadEngine(EngineDataFile);
+			var dao = new DeclarationDataAdapterHeavyLorry();
+			var engineData = dao.CreateEngineData(new MockDeclarationVehicleInputData() {
+				EngineInputData = engineInput,
+				GearboxInputData = gearboxInput
+			}, engineInput.EngineModes.First(), new Mission() {
+				MissionType = MissionType.LongHaul
+			});
+			foreach (var entry in gearboxData.Gears) {
+				entry.Value.ShiftPolygon = DeclarationData.Gearbox.ComputeManualTransmissionShiftPolygon(
+					(int)(entry.Key - 1), engineData.FullLoadCurves.First().Value,
+					gearboxInput.Gears, engineData, ((IAxleGearInputData)gearboxInput).Ratio, 0.5.SI<Meter>());
+			}
+
 			var cycleData = DrivingCycleDataReader.ReadFromStream("s,v,grad,stop\n0,0,0,10\n10,20,0,0\n20,21,0,0\n30,22,0,0\n40,23,0,0\n50,24,0,0\n60,25,0,0\n70,26,0,0\n80,27,0,0\n90,28,0,0\n100,29,0,0".ToStream(), CycleType.DistanceBased, "DummyCycle", false);
 			var container = new MockVehicleContainer() {
 				VehicleSpeed = 10.SI<MeterPerSecond>(),
