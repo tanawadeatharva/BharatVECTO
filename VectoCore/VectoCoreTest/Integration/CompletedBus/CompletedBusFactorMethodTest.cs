@@ -1138,8 +1138,7 @@ namespace TUGraz.VectoCore.Tests.Integration.CompletedBus
 		TestCase(@"TestData\Integration\Buses\primary_heavyBus group P39_40_nonSmart_ESS.xml", 7, TestName = "RunBusSimulation Grp 39/40 P39DD HU/RL"),
 		TestCase(@"TestData\Integration\Buses\primary_heavyBus group P39_40_nonSmart_ESS.xml", 9, TestName = "RunBusSimulation Grp 39/40 P39DD U/RL"),
 		TestCase(@"TestData\Integration\Buses\primary_heavyBus group P39_40_nonSmart_ESS.xml", 19, TestName = "RunBusSimulation Grp 39/40 P40DD CO/RL"), // fails! is intended/known
-		
-			TestCase(@"TestData\Integration\Buses\primary_heavyBus group P39_40_nonSmart_ESS.xml", 18, TestName = "RunBusSimulation Grp 39/40 P40DD CO/LL"),
+		TestCase(@"TestData\Integration\Buses\primary_heavyBus group P39_40_nonSmart_ESS.xml", 18, TestName = "RunBusSimulation Grp 39/40 P40DD CO/LL"),  // fails! is intended/known
 
 		//TestCase(@"E:\QUAM\tmp\ESS_Tests\primary_heavyBus group 42_ConvAux_ESS_SmartPS.xml", 10, TestName = "RunBusSimulation ESS P33DD SU/LL ConvAux SmartPS"),
 		//TestCase(@"E:\QUAM\tmp\ESS_Tests\primary_heavyBus group 42_ESS_SmartPS.xml", 10, TestName = "RunBusSimulation ESS P33DD SU/LL ES Aux SmartPS"),
