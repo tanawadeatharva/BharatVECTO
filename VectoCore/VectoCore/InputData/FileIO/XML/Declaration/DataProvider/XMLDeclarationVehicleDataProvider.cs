@@ -643,15 +643,6 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 		#endregion
 
-		public override XmlElement ComponentNode {
-			get { return null; }
-		}
-
-
-		public override XmlElement ADASNode {
-			get { return null; }
-		}
-
 		public override AngledriveType AngledriveType {
 			get { return AngledriveType.None; }
 		}
