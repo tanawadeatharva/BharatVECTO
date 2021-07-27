@@ -331,6 +331,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 						x => VectoMath.Abs(DataBus.EngineInfo.EngineSpeed - x.Engine.EngineSpeed).Value());
 				}
 
+				if (operatingPoint == null) {
+					return null;
+				}
 				if (operatingPoint.InAngularVelocity.IsSmaller(DataBus.EngineInfo.EngineIdleSpeed)) {
 					operatingPoint = FindValidTorqueConverterOperatingPoint(absTime, dt, outAngularVelocity,
 						DataBus.EngineInfo.EngineIdleSpeed,
