@@ -85,16 +85,16 @@ namespace TUGraz.VectoCore.OutputData
                 var emEff = 0.0;
                 if (endSoc < startSoc) {
 					var etaEmChg = modData.ElectricMotorEfficiencyGenerate(em.Item1);
-					var etaReessChg = (modData.WorkREESSChargeInternal() / modData.WorkREESSChargeTerminal()).Value();
+					var etaReessChg = modData.WorkREESSChargeInternal().Value() / modData.WorkREESSChargeTerminal().Value();
 					emEff = 1.0 / (etaEmChg * etaReessChg);
 				} 
 				if (endSoc > startSoc) {
 					var etaEmDischg = modData.ElectricMotorEfficiencyDrive(em.Item1);
-					var etaReessDischg = modData.WorkREESSDischargeTerminal() / modData.WorkREESSDischargeInternal();
+					var etaReessDischg = modData.WorkREESSDischargeTerminal().Value() / modData.WorkREESSDischargeInternal().Value();
 					emEff = etaEmDischg * etaReessDischg;
 				}
 
-				r.DeltaEReessMech = -deltaEReess * emEff;
+				r.DeltaEReessMech = double.IsNaN(emEff) ? 0.SI<WattSecond>() : -deltaEReess * emEff;
 			} else {
 				r.DeltaEReessMech = 0.SI<WattSecond>();
 			}
