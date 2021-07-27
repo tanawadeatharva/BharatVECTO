@@ -29,21 +29,17 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 		public void RunPreprocessing()
 		{
 			var slopes = new Dictionary<MeterPerSecond, Radian>();
-			new PCCEcoRollEngineStopPreprocessor(
-					Container, slopes, PCCDriverData.MinSpeed,
-					VectoMath.Min(Container.VehicleInfo.MaxVehicleSpeed, Container.RunData.Cycle.Entries.Max(x => x.VehicleTargetSpeed)))
+			new PCCEcoRollEngineStopPreprocessor(Container, slopes, PCCDriverData.MinSpeed,
+					VectoMath.Min(Container.VehicleInfo.MaxVehicleSpeed, 
+					Container.RunData.Cycle.Entries.Max(x => x.VehicleTargetSpeed)))
 				.RunPreprocessing();
 
 			var runData = Container.RunData;
 
-			// average drag of all electric engines (if present)
-			var electricEngineDrag = !runData.ElectricMachinesData.Any()
-				? 0.SI<Watt>()
-				: runData.ElectricMachinesData.Average(e => 
+			var electricEngineDrag = runData.ElectricMachinesData.Sum(e => 
 					e.Item2.EfficiencyData.VoltageLevels[0].DragCurve.Entries.Average(x => 
 						(x.MotorSpeed * x.DragTorque).Value())).SI<Watt>();
 
-			// average drag for the combustion engine (if present)
 			var combustionEngineDrag = runData.EngineData?.FullLoadCurves[0].FullLoadEntries.Average(x => 
 											(x.EngineSpeed * x.TorqueDrag).Value()).SI<Watt>() 
 										?? 0.SI<Watt>();

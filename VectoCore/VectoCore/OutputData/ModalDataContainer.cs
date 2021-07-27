@@ -393,15 +393,16 @@ namespace TUGraz.VectoCore.OutputData
 			});
 			var eMech = 0.SI<WattSecond>();
 			var eEl = 0.SI<WattSecond>();
-			foreach (var entry in selected.Where(x => x.P_em.IsGreater(0)))
-			{
+			foreach (var entry in selected.Where(x => x.P_em.IsGreater(0))) {
 				eMech += entry.E_mech;
 				eEl += entry.E_el;
 			}
 
-			var eff = eEl.Value() / eMech.Value();
-			return eff;
-        }
+			if (eEl.Value() != 0 && eMech.Value() != 0)
+				return eEl.Value() / eMech.Value();
+			else
+				return 1;
+		}
 
 		public double ElectricMotorMotEfficiencyGenerate(PowertrainPosition emPos)
 		{
