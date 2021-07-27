@@ -39,7 +39,7 @@
     "Battery": {
       "NumPacks": 1,
       "BatteryFile": "GenericBattery_10kWh_658V.vbat"
-    }
+    },
     "Retarder": {
       "Type": "None",
       "Ratio": 1.0,

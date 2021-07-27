@@ -2309,10 +2309,10 @@
     <None Include="TestData\Integration\ADAS-HEV\Group5EcoRollEng\DriveDhSl1.1_Uh0.1.vdri">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="TestData\Integration\ADAS-HEV\Group5EcoRollEng\DriveDhSl1.3.vdri">
+    <None Include="TestData\Integration\ADAS-HEV\Group5EcoRollEng\DriveDhSl1.4.vdri">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="TestData\Integration\ADAS-HEV\Group5EcoRollEng\DriveDhSl1.5.vdri">
+    <None Include="TestData\Integration\ADAS-HEV\Group5EcoRollEng\DriveDhSl1.7.vdri">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="TestData\Integration\ADAS-HEV\Group5EcoRollEng\Engine_325kW_12.7l.veng">

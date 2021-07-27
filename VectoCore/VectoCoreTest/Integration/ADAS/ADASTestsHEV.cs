@@ -55,9 +55,9 @@ namespace TUGraz.VectoCore.Tests.Integration.ADAS
 
 		[TestCase(0, TestName = "EcoRoll DH1.1 const"),
 		TestCase(1, TestName = "EcoRoll DH1.1 UH0.1"),
-		TestCase(2, TestName = "EcoRoll DH1.3 const"),
+		TestCase(2, TestName = "EcoRoll DH1.4 const"),
 		TestCase(3, TestName = "EcoRoll DH0.8 const - too flat"),
-		TestCase(4, TestName = "EcoRoll DH1.5 const - too steep"),
+		TestCase(4, TestName = "EcoRoll DH1.7 const - too steep"),
 		TestCase(5, TestName = "EcoRoll DH1.1 const - Stop"),
 		TestCase(6, TestName = "EcoRoll DH1.1 const - TS60"),
 		TestCase(7, TestName = "EcoRoll DH1.1 const - TS68"),
