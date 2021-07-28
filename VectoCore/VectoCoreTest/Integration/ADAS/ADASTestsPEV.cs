@@ -15,7 +15,6 @@ namespace TUGraz.VectoCore.Tests.Integration.ADAS
 	[Parallelizable(ParallelScope.All)]
 	public class ADASTestsPEV
 	{
-
 		const string Group5PCC12 = @"TestData\Integration\ADAS-PEV\Group5PCCEng\Class5_Tractor_ENG_PCC12.vecto";
 		const string Group5PCC123 = @"TestData\Integration\ADAS-PEV\Group5PCCEng\Class5_Tractor_ENG_PCC123.vecto";
 		const string Group5PCC123EcoSS = @"TestData\Integration\ADAS-PEV\Group5PCCEng\Class5_Tractor_ENG_PCC123EcoSS.vecto";
@@ -41,129 +40,7 @@ namespace TUGraz.VectoCore.Tests.Integration.ADAS
 			graphWriter.PlotIgnitionState = true;
 			return graphWriter;
 		}
-
-		[TestCase(0, TestName = "EcoRoll DH1.1 const"),
-		TestCase(1, TestName = "EcoRoll DH1.1 UH0.1"),
-		TestCase(2, TestName = "EcoRoll DH1.3 const"),
-		TestCase(3, TestName = "EcoRoll DH0.8 const - too flat"),
-		TestCase(4, TestName = "EcoRoll DH1.5 const - too steep"),
-		TestCase(5, TestName = "EcoRoll DH1.1 const - Stop"),
-		TestCase(6, TestName = "EcoRoll DH1.1 const - TS60"),
-		TestCase(7, TestName = "EcoRoll DH1.1 const - TS68"),
-		TestCase(8, TestName = "EcoRoll DH1.1 const - TS72"),
-		TestCase(9, TestName = "EcoRoll DH1.1 const - TS80"),
-			]
-		public void TestEcoRoll(int cycleIdx)
-		{
-			string jobName = @"TestData\Integration\ADAS-PEV\Group5EcoRollEng\Class5_Tractor_ENG.vecto";
-			var inputData = JSONInputDataFactory.ReadJsonJob(jobName);
-			var writer = new FileOutputWriter(Path.Combine(Path.GetDirectoryName(jobName), Path.GetFileName(jobName)));
-
-			var sumContainer = new SummaryDataContainer(writer);
-			var jobContainer = new JobContainer(sumContainer);
-			var factory = new SimulatorFactory(ExecutionMode.Engineering, inputData, writer) {
-				WriteModalResults = true,
-				//ActualModalData = true,
-				Validate = false,
-				SumData = sumContainer
-			};
-
-
-			var runs = factory.SimulationRuns().ToArray();
-			var run = runs[cycleIdx];
-
-			jobContainer.AddRun(run);
-			jobContainer.Execute();
-			jobContainer.WaitFinished();
-
-			var progress = jobContainer.GetProgress();
-			Assert.IsTrue(progress.All(r => r.Value.Success), string.Concat(progress.Select(r => r.Value.Error)));
-			var modFilename = writer.GetModDataFileName(run.RunName, run.CycleName, run.RunSuffix);
-			GetGraphWriter().Write(modFilename);
-		}
-
-		[TestCase(0, TestName = "AT EcoRoll Neutral DH1.8 const"),
-		TestCase(1, TestName = "AT EcoRoll Neutral DH1.8 UH0.1"),
-		TestCase(2, TestName = "AT EcoRoll Neutral DH1.9 const"),
-		TestCase(3, TestName = "AT EcoRoll Neutral DH1.2 const - too flat"),
-		TestCase(4, TestName = "AT EcoRoll Neutral DH2.5 const - too steep"),
-		TestCase(5, TestName = "AT EcoRoll Neutral DH1.9 const - Stop"),
-		TestCase(6, TestName = "AT EcoRoll Neutral DH1.9 const - TS60"),
-		TestCase(7, TestName = "AT EcoRoll Neutral DH1.9 const - TS68"),
-		TestCase(8, TestName = "AT EcoRoll Neutral DH1.9 const - TS72"),
-		TestCase(9, TestName = "AT EcoRoll Neutral DH1.9 const - TS80"),
-		TestCase(10, TestName = "AT EcoRoll Neutral DH1.2 const"),
-		]
-		public void TestEcoRollAT_Neutral(int cycleIdx)
-		{
-			string jobName = @"TestData\Integration\ADAS-PEV\Group9_RigidTruck_AT\Class_9_RigidTruck_AT_Eng_Neutral.vecto";
-			var inputData = JSONInputDataFactory.ReadJsonJob(jobName);
-			var writer = new FileOutputWriter(Path.Combine(Path.GetDirectoryName(jobName), Path.GetFileName(jobName)));
-
-			var sumContainer = new SummaryDataContainer(writer);
-			var jobContainer = new JobContainer(sumContainer);
-			var factory = new SimulatorFactory(ExecutionMode.Engineering, inputData, writer) {
-				WriteModalResults = true,
-				//ActualModalData = true,
-				Validate = false,
-				SumData = sumContainer
-			};
-
-
-			var runs = factory.SimulationRuns().ToArray();
-			var run = runs[cycleIdx];
-
-			jobContainer.AddRun(run);
-			jobContainer.Execute();
-			jobContainer.WaitFinished();
-
-			var progress = jobContainer.GetProgress();
-			Assert.IsTrue(progress.All(r => r.Value.Success), string.Concat(progress.Select(r => r.Value.Error)));
-			var modFilename = writer.GetModDataFileName(run.RunName, run.CycleName, run.RunSuffix);
-			GetGraphWriter().Write(modFilename);
-		}
-
-
-		[TestCase(0, TestName = "AT EcoRoll TC DH1.8 const"),
-		TestCase(1, TestName = "AT EcoRoll TC DH1.8 UH0.1"),
-		TestCase(2, TestName = "AT EcoRoll TC DH1.9 const"),
-		TestCase(3, TestName = "AT EcoRoll TC DH1.2 const - too flat"),
-		TestCase(4, TestName = "AT EcoRoll TC DH2.5 const - too steep"),
-		TestCase(5, TestName = "AT EcoRoll TC DH1.9 const - Stop"),
-		TestCase(6, TestName = "AT EcoRoll TC DH1.9 const - TS60"),
-		TestCase(7, TestName = "AT EcoRoll TC DH1.9 const - TS68"),
-		TestCase(8, TestName = "AT EcoRoll TC DH1.9 const - TS72"),
-		TestCase(9, TestName = "AT EcoRoll TC DH1.9 const - TS80"),
-		]
-		public void TestEcoRollAT_TC(int cycleIdx)
-		{
-			string jobName = @"TestData\Integration\ADAS-PEV\Group9_RigidTruck_AT\Class_9_RigidTruck_AT_Eng_TC.vecto";
-			var inputData = JSONInputDataFactory.ReadJsonJob(jobName);
-			var writer = new FileOutputWriter(Path.Combine(Path.GetDirectoryName(jobName), Path.GetFileName(jobName)));
-
-			var sumContainer = new SummaryDataContainer(writer);
-			var jobContainer = new JobContainer(sumContainer);
-			var factory = new SimulatorFactory(ExecutionMode.Engineering, inputData, writer) {
-				WriteModalResults = true,
-				//ActualModalData = true,
-				Validate = false,
-				SumData = sumContainer
-			};
-
-
-			var runs = factory.SimulationRuns().ToArray();
-			var run = runs[cycleIdx];
-
-			jobContainer.AddRun(run);
-			jobContainer.Execute();
-			jobContainer.WaitFinished();
-
-			var progress = jobContainer.GetProgress();
-			Assert.IsTrue(progress.All(r => r.Value.Success), string.Concat(progress.Select(r => r.Value.Error)));
-			var modFilename = writer.GetModDataFileName(run.RunName, run.CycleName, run.RunSuffix);
-			GetGraphWriter().Write(modFilename);
-		}
-
+		
 		[TestCase(Group5PCC12, 0, TestName = "G5Eng PCC12 CrestCoast 1"),
 		TestCase(Group5PCC12, 1, TestName = "G5Eng PCC12 CrestCoast 2"),
 		TestCase(Group5PCC12, 2, TestName = "G5Eng PCC12 Case A"), // Case A
