@@ -116,6 +116,7 @@
     <Compile Include="Integration\Declaration\VocationalVehicleTest.cs" />
     <Compile Include="Integration\Declaration\TestMaxMassInMUCycle.cs" />
     <Compile Include="Integration\DualFuel\DualFuelTests.cs" />
+    <Compile Include="Integration\Multistage\SimulatorFactoryAdditionalJobsTest.cs" />
     <Compile Include="Integration\RoadSweepers\RoadSweeperTests.cs" />
     <Compile Include="Integration\Hybrid\ParallelHybridTest.cs" />
     <Compile Include="Integration\Multistage\MultistageVehicleTest.cs" />
@@ -5465,6 +5466,7 @@
     <None Include="TestData\XML\XMLWriter\EngineOnly\Engine_175kW_6.8l.veng">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Include="XML\XMLBusVehicleReport.cd" />
   </ItemGroup>
   <ItemGroup>
     <None Include="TestData\Cycles\EngineOnly_FullLoad.vdri">
