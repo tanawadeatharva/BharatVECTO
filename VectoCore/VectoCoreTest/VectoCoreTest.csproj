@@ -246,7 +246,6 @@
     <Compile Include="XML\XMLMultistageBusInputDataTest.cs" />
     <Compile Include="XML\XMLPrimaryBusInputDataTest.cs" />
     <Compile Include="XML\XMLReportTest.cs" />
-    <Compile Include="XML\XMLPrimaryVehicleReportBusReaderTest.cs" />
     <Compile Include="XML\XMLWritingTest.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -6601,12 +6600,6 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="TestData\XML\XMLReaderDeclaration\SchemaVersion2.6_Buses\exempted_primary_heavyBus.xml">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="TestData\XML\XMLReaderDeclaration\SchemaVersion2.6_Buses\PIF-heavyBus-sample.xml">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="TestData\XML\XMLReaderDeclaration\SchemaVersion2.6_Buses\primary_heavyBus group P39_40_nonSmart_ESS.RSLT_PIF.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="TestData\XML\XMLReaderDeclaration\SchemaVersion2.6_Buses\vecto_vehicle-completed_heavyBus-sample.xml">

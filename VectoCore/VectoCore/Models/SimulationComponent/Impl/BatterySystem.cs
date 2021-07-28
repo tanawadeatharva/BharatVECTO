@@ -219,7 +219,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		}
 
 		public double MinSoC => _minSoc ?? (_minSoc = Batteries.Values.Sum(x => x.CapacityMinSoc) / TotalCapacity);
-		public double MaxSoC => _maxSoc ?? (_maxSoc = Batteries.Values.Sum(x => x.CapacityMinSoc) / TotalCapacity);
+		public double MaxSoC => _maxSoc ?? (_maxSoc = Batteries.Values.Sum(x => x.CapacityMaxSoc) / TotalCapacity);
 		public AmpereSecond Capacity => TotalCapacity;
 
 		public Volt NominalVoltage => Batteries.Values.Select(x => x.NominalVoltage).Average();

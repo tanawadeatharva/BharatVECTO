@@ -498,103 +498,60 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 		#region Overrides of AbstractXMLResource
 
-		protected override XNamespace SchemaNamespace {
-			get { return NAMESPACE_URI; }
-		}
+		protected override XNamespace SchemaNamespace => NAMESPACE_URI;
 
 		protected override DataSourceType SourceType { get; }
 
 		#endregion
 
-		public override VehicleCategory VehicleCategory {
-			get { return VehicleCategory.HeavyBusPrimaryVehicle; }
-		}
+		public override VehicleCategory VehicleCategory => VehicleCategory.HeavyBusPrimaryVehicle;
 
-		public override bool ExemptedVehicle {
-			get { return true; }
-		}
+		public override bool ExemptedVehicle => true;
+
+		public override Kilogram GrossVehicleMassRating => GetDouble(XMLNames.Vehicle_TPMLM).SI<Kilogram>();
+
+		public override LegislativeClass? LegislativeClass => GetString(XMLNames.Bus_LegislativeCategory)?.ParseEnum<LegislativeClass>();
 
 
-		public override IList<ITorqueLimitInputData> TorqueLimits {
-			get { return new List<ITorqueLimitInputData>(); }
-		}
+		public override IList<ITorqueLimitInputData> TorqueLimits => new List<ITorqueLimitInputData>();
 
-		public override PerSecond EngineIdleSpeed {
-			get { return null; }
-		}
+		public override PerSecond EngineIdleSpeed => null;
 
-		public override bool VocationalVehicle {
-			get { return false; }
-		}
+		public override bool VocationalVehicle => false;
 
-		public override bool SleeperCab {
-			get { return false; }
-		}
+		public override bool SleeperCab => false;
 
-		public override TankSystem? TankSystem {
-			get { return null; }
-		}
+		public override TankSystem? TankSystem => null;
 
-		public override IAdvancedDriverAssistantSystemDeclarationInputData ADAS {
-			get { return null; }
-		}
+		public override IAdvancedDriverAssistantSystemDeclarationInputData ADAS => null;
 
-		public override bool ZeroEmissionVehicle {
-			get { return XmlConvert.ToBoolean(GetString(XMLNames.Vehicle_ZeroEmissionVehicle)); }
-		}
+		public override bool ZeroEmissionVehicle => XmlConvert.ToBoolean(GetString(XMLNames.Vehicle_ZeroEmissionVehicle));
 
-		public override bool HybridElectricHDV {
-			get { return false; }
-		}
+		public override bool HybridElectricHDV => false;
 
-		public override bool DualFuelVehicle {
-			get { return false; }
-		}
+		public override bool DualFuelVehicle => false;
 
-		public override Watt MaxNetPower1 {
-			get { return GetDouble("SumNetPower").SI<Watt>(); }
-		}
+		public override Watt MaxNetPower1 => GetDouble("SumNetPower").SI<Watt>();
 
-		public override Watt MaxNetPower2 {
-			get { return null; }
-		}
+		public override Watt MaxNetPower2 => null;
 
-		public override string ExemptedTechnology
-		{
-			get { return GetString("Technology"); }
-		}
+		public override string ExemptedTechnology => GetString("Technology");
 
-		public override IVehicleComponentsDeclaration Components {
-			get { return null; }
-		}
+		public override IVehicleComponentsDeclaration Components => null;
 
-		public override XmlElement ComponentNode {
-			get { return null; }
-		}
+		public override XmlElement ComponentNode => null;
 
-		public override XmlElement PTONode {
-			get { return null; }
-		}
+		public override XmlElement PTONode => null;
 
-		public override XmlElement ADASNode {
-			get { return null; }
-		}
+		public override XmlElement ADASNode => null;
 
-		public override AngledriveType AngledriveType {
-			get { return AngledriveType.None; }
-		}
+		public override AngledriveType AngledriveType => AngledriveType.None;
 
-		public override RetarderType RetarderType {
-			get { return RetarderType.None; }
-		}
+		public override RetarderType RetarderType => RetarderType.None;
 
-		public override double RetarderRatio {
-			get { return 0; }
-		}
+		public override double RetarderRatio => 0;
 
-		public override IPTOTransmissionInputData PTOTransmissionInputData {
-			get { return null; }
-		}
+		public override IPTOTransmissionInputData PTOTransmissionInputData => null;
 	}
 
 	public class XMLDeclarationMediumLorryVehicleDataProviderV26 : XMLDeclarationVehicleDataProviderV21
@@ -643,27 +600,13 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 		#endregion
 
-		public override XmlElement ComponentNode {
-			get { return null; }
-		}
+		public override XmlElement ADASNode => null;
 
+		public override AngledriveType AngledriveType => AngledriveType.None;
 
-		public override XmlElement ADASNode {
-			get { return null; }
-		}
+		public override RetarderType RetarderType => RetarderType.None;
 
-		public override AngledriveType AngledriveType {
-			get { return AngledriveType.None; }
-		}
-
-		public override RetarderType RetarderType {
-			get { return RetarderType.None; }
-		}
-
-		public override double RetarderRatio {
-			get { return 0; }
-		}
-
+		public override double RetarderRatio => 0;
 	}
 
 	public class XMLDeclarationCompletedBusDataProviderV26 : XMLDeclarationVehicleDataProviderV20
@@ -780,10 +723,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 		public string VIN => GetString(XMLNames.Vehicle_VIN);
 
-		public virtual LegislativeClass? LegislativeClass
-		{
-			get { return GetString(XMLNames.Bus_LegislativeCategory)?.ParseEnum<LegislativeClass>(); }
-		}
+		public virtual LegislativeClass? LegislativeClass => GetString(XMLNames.Bus_LegislativeCategory)?.ParseEnum<LegislativeClass>();
 
 		public virtual VehicleCategory VehicleCategory => VehicleCategoryHelper.Parse(GetString("ChassisConfiguration"));
 
@@ -926,22 +866,13 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 		#region Overrides of XMLDeclarationMultistagePrimaryVehicleBusDataProviderV01
 
-		public override XmlElement ComponentNode
-		{
-			get { return null; }
-		}
+		public override XmlElement ComponentNode => null;
 
-		public override IVehicleComponentsDeclaration Components
-		{
-			get { return null; }
-		}
+		public override IVehicleComponentsDeclaration Components => null;
 
-		public override bool ExemptedVehicle { get { return true; } }
+		public override bool ExemptedVehicle => true;
 
-		public override Watt MaxNetPower1
-		{
-			get { return GetDouble("SumNetPower").SI<Watt>(); }
-		}
+		public override Watt MaxNetPower1 => GetDouble("SumNetPower").SI<Watt>();
 
 		#endregion
 	}
