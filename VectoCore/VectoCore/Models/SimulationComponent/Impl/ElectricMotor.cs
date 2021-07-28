@@ -195,8 +195,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			var emTorque = emTorqueDt == null ? null : ConvertDrivetrainTorqueToEm(avgDtSpeed, emTorqueDt);
 			var emOff = emTorqueDt == null;
 
-			if (!dryRun && !DataBus.IsTestPowertrain && emTorqueDt != null && ((emTorque).IsSmaller(maxDriveTorqueEm ?? 0.SI<NewtonMeter>(), 1e-3) ||
-																		(emTorque).IsGreater(maxRecuperationTorqueEm ?? 0.SI<NewtonMeter>(), 1e-3))) {
+			if (!dryRun && !DataBus.IsTestPowertrain && emTorqueDt != null && NextComponent != null && (emTorque.IsSmaller(maxDriveTorqueEm ?? 0.SI<NewtonMeter>(), 1e-3) ||
+																		emTorque.IsGreater(maxRecuperationTorqueEm ?? 0.SI<NewtonMeter>(), 1e-3))) {
 				// check if provided EM torque (drivetrain) is valid)
 				if ((!avgDtSpeed.IsEqual(DataBus.HybridControllerInfo.ElectricMotorSpeed(Position) / ModelData.RatioADC) ||
 															!dt.IsEqual(DataBus.HybridControllerInfo.SimulationInterval))) {
