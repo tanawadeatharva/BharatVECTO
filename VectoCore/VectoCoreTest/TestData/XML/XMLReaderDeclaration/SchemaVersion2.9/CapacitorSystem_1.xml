@@ -1,31 +1,1 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<tns:VectoInputDeclaration xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.9" xmlns:tns="urn:tugraz:ivt:VectoAPI:DeclarationComponent:v2.9" xmlns:v2.0="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0" xmlns:v2.3="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:DEV:v2.3" xmlns:v2.9="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:DEV:v2.9" xmlns:di="http://www.w3.org/2000/09/xmldsig#" schemaVersion="2.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:DeclarationComponent v:\VectoCore\VectoCore\Resources\XSD/VectoDeclarationComponent.xsd">
-	<tns:CapacitorSystem xsi:type="v2.9:REESSComponentDeclarationType">
-		<v2.9:Data xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:DEV:v2.9" xsi:type="CapacitorDataType" id="EM-asdf" xmlns:v2.9="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:DEV:v2.9">
-			<Manufacturer>a</Manufacturer>
-			<Model>a</Model>
-			<CertificationNumber>token</CertificationNumber>
-			<Date>2017-01-01T00:00:00Z</Date>
-			<AppVersion>aaaaa</AppVersion>
-			
-			<CertificationMethod>Measurement</CertificationMethod>
-			<Capacitance>1</Capacitance>
-			<InternalResistance>23.45</InternalResistance>
-			<MinVoltage>3.55</MinVoltage>
-			<MaxVoltage>30.45</MaxVoltage>
-			<MaxChargingCurrent>100.00</MaxChargingCurrent>
-			<MaxDischargingCurrent>99.45</MaxDischargingCurrent>
-			<TestingTemperature>30</TestingTemperature>
-		</v2.9:Data>
-		<v2.9:Signature>
-			<di:Reference URI="#ENG-gooZah3D">
-				<di:Transforms>
-					<di:Transform Algorithm="urn:vecto:xml:2017:canonicalization"/>
-					<di:Transform Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#"/>
-				</di:Transforms>
-				<di:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"/>
-				<di:DigestValue>JWEwzKSP0lXvwRgQZTiWJm9dpdtQ72FOX0CC5Vy6f2Y=</di:DigestValue>
-			</di:Reference>
-		</v2.9:Signature>
-	</tns:CapacitorSystem>
-</tns:VectoInputDeclaration>
+<?xml version="1.0" encoding="UTF-8"?><tns:VectoInputDeclaration xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.9" xmlns:tns="urn:tugraz:ivt:VectoAPI:DeclarationComponent:v2.9" xmlns:v2.0="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0" xmlns:v2.3="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:DEV:v2.3" xmlns:v2.9="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:DEV:v2.9" xmlns:di="http://www.w3.org/2000/09/xmldsig#" schemaVersion="2.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:DeclarationComponent v:\VectoCore\VectoCore\Resources\XSD/VectoDeclarationComponent.xsd">	<tns:CapacitorSystem xsi:type="v2.9:REESSComponentDeclarationType">		<v2.9:Data xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:DEV:v2.9" xsi:type="CapacitorDataType" id="EM-asdf" xmlns:v2.9="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:DEV:v2.9">			<Manufacturer>a</Manufacturer>			<Model>a</Model>			<CertificationNumber>token</CertificationNumber>			<Date>2017-01-01T00:00:00Z</Date>			<AppVersion>aaaaa</AppVersion>						<CertificationMethod>Measurement</CertificationMethod>			<Capacitance>1.00</Capacitance>			<InternalResistance>23.45</InternalResistance>			<MinVoltage>3.55</MinVoltage>			<MaxVoltage>30.45</MaxVoltage>			<MaxChargingCurrent>100.00</MaxChargingCurrent>			<MaxDischargingCurrent>99.45</MaxDischargingCurrent>			<TestingTemperature>30</TestingTemperature>		</v2.9:Data>		<v2.9:Signature>			<di:Reference URI="#ENG-gooZah3D">				<di:Transforms>					<di:Transform Algorithm="urn:vecto:xml:2017:canonicalization"/>					<di:Transform Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#"/>				</di:Transforms>				<di:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"/>				<di:DigestValue>JWEwzKSP0lXvwRgQZTiWJm9dpdtQ72FOX0CC5Vy6f2Y=</di:DigestValue>			</di:Reference>		</v2.9:Signature>	</tns:CapacitorSystem></tns:VectoInputDeclaration>

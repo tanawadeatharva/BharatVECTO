@@ -27,9 +27,9 @@
 	<xs:complexType name="BatterySystemCurrentLimitsEntryType">
 		<xs:attribute name="SoC" use="required">
 			<xs:simpleType>
-				<xs:restriction base="v1.0:Double2">
-					<xs:minInclusive value="0.00"/>
-					<xs:maxInclusive value="100.00"/>
+				<xs:restriction base="xs:int">
+					<xs:minInclusive value="0"/>
+					<xs:maxInclusive value="100"/>
 				</xs:restriction>
 			</xs:simpleType>
 		</xs:attribute>
@@ -87,7 +87,7 @@
 					</xs:element>
 					<xs:element name="ConnectorsSubsystemsIncluded" type="xs:boolean"/>
 					<xs:element name="JunctionboxIncluded" type="xs:boolean"/>
-					<xs:element name="TestingTemperature" type="xs:int"/>
+					<xs:element name="TestingTemperature" type="xs:int" minOccurs="0"/>
 					<xs:element name="OCV">
 						<xs:complexType>
 							<xs:sequence>
@@ -116,9 +116,9 @@
 	<xs:complexType name="BatterySystemInternalResistanceEntryType">
 		<xs:attribute name="SoC" use="required">
 			<xs:simpleType>
-				<xs:restriction base="v1.0:Double2">
-					<xs:minInclusive value="0.00"/>
-					<xs:maxInclusive value="100.00"/>
+				<xs:restriction base="xs:int">
+					<xs:minInclusive value="0"/>
+					<xs:maxInclusive value="100"/>
 				</xs:restriction>
 			</xs:simpleType>
 		</xs:attribute>
@@ -154,9 +154,9 @@
 	<xs:complexType name="BatterySystemOCVEntryType">
 		<xs:attribute name="SoC" use="required">
 			<xs:simpleType>
-				<xs:restriction base="v1.0:Double2">
-					<xs:minInclusive value="0.00"/>
-					<xs:maxInclusive value="100.00"/>
+				<xs:restriction base="xs:int">
+					<xs:minInclusive value="0"/>
+					<xs:maxInclusive value="100"/>
 				</xs:restriction>
 			</xs:simpleType>
 		</xs:attribute>
@@ -240,7 +240,7 @@
 							</xs:restriction>
 						</xs:simpleType>
 					</xs:element>
-					<xs:element name="TestingTemperature" type="xs:int"/>
+					<xs:element name="TestingTemperature" type="xs:int" minOccurs="0"/>
 				</xs:sequence>
 			</xs:extension>
 		</xs:complexContent>
@@ -255,7 +255,101 @@
 		<xs:attribute name="coolantTempInlet" type="xs:int" use="required"/>
 		<xs:attribute name="coolingPower" type="xs:int" use="required"/>
 	</xs:complexType>
-	<xs:complexType name="ElectricMachineSystemDataDeclarationType">
+	<xs:complexType name="ElectricMachineSystemStandardValuesDataDeclarationType">
+		<xs:complexContent>
+			<xs:extension base="v2.9:AbstractElectricMachineSystemDataType">
+				<xs:sequence>
+					<xs:element name="Manufacturer" type="v1.0:ManufacturerType">
+						<xs:annotation>
+							<xs:documentation>P200</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="Model" type="v1.0:ModelType">
+						<xs:annotation>
+							<xs:documentation>P201</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="CertificationNumber" type="v1.0:CertificationNumberType">
+						<xs:annotation>
+							<xs:documentation>P261</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="Date" type="v1.0:DateTimeWithTimezone">
+						<xs:annotation>
+							<xs:documentation>P203</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="AppVersion" type="v1.0:AppVersionType">
+						<xs:annotation>
+							<xs:documentation>P204</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="ElectricMachineType" type="v2.9:ElectricMachineTypeType"/>
+					<xs:element name="CertificationMethod" type="v2.9:CertificationMethodType"/>
+					<xs:element name="R85RatedPower">
+						<xs:simpleType>
+							<xs:restriction base="xs:int">
+								<xs:minExclusive value="0"/>
+							</xs:restriction>
+						</xs:simpleType>
+					</xs:element>
+					<xs:element name="RotationalInertia">
+						<xs:simpleType>
+							<xs:restriction base="v1.0:Double2">
+								<xs:minExclusive value="0.00"/>
+							</xs:restriction>
+						</xs:simpleType>
+					</xs:element>
+					<xs:element name="ContinuousTorque">
+						<xs:simpleType>
+							<xs:restriction base="v1.0:Double2">
+								<xs:minExclusive value="0.00"/>
+							</xs:restriction>
+						</xs:simpleType>
+					</xs:element>
+					<xs:element name="TestSpeedContinuousTorque">
+						<xs:simpleType>
+							<xs:restriction base="v1.0:Double2">
+								<xs:minExclusive value="0.00"/>
+							</xs:restriction>
+						</xs:simpleType>
+					</xs:element>
+					<xs:element name="OverloadTorque">
+						<xs:simpleType>
+							<xs:restriction base="v1.0:Double2">
+								<xs:minExclusive value="0.00"/>
+							</xs:restriction>
+						</xs:simpleType>
+					</xs:element>
+					<xs:element name="TestSpeedOverloadTorque">
+						<xs:simpleType>
+							<xs:restriction base="v1.0:Double2">
+								<xs:minExclusive value="0.00"/>
+							</xs:restriction>
+						</xs:simpleType>
+					</xs:element>
+					<xs:element name="OverloadDuration">
+						<xs:simpleType>
+							<xs:restriction base="v1.0:Double2">
+								<xs:minExclusive value="0.00"/>
+							</xs:restriction>
+						</xs:simpleType>
+					</xs:element>
+					<xs:element name="DcDcConverterIncluded" type="xs:boolean"/>
+					<xs:element name="IHPCType" type="v2.9:IHPCTypeType"/>
+					<xs:element name="VoltageLevel" type="v2.9:ElectricMachineSystemVoltageLevelStandardValuesType"/>
+					<xs:element name="DragCurve">
+						<xs:complexType>
+							<xs:sequence>
+								<xs:element name="Entry" type="v2.9:ElectricMachineSystemDragTorqueEntryType" minOccurs="2" maxOccurs="unbounded"/>
+							</xs:sequence>
+						</xs:complexType>
+					</xs:element>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="ElectricMachineSystemMeasuredDataDeclarationType">
 		<xs:complexContent>
 			<xs:extension base="v2.9:AbstractElectricMachineSystemDataType">
 				<xs:sequence>
@@ -344,7 +438,7 @@
 					</xs:element>
 					<xs:element name="DcDcConverterIncluded" type="xs:boolean"/>
 					<xs:element name="IHPCType" type="v2.9:IHPCTypeType"/>
-					<xs:element name="VoltageLevel" type="v2.9:AbstractElectricMachineSystemVoltageLevelType" minOccurs="2" maxOccurs="unbounded"/>
+					<xs:element name="VoltageLevel" type="v2.9:ElectricMachineSystemVoltageLevelMeasuredType" minOccurs="2" maxOccurs="unbounded"/>
 					<xs:element name="DragCurve">
 						<xs:complexType>
 							<xs:sequence>
@@ -414,7 +508,7 @@
 		<xs:attribute name="torque" type="v1.0:Double2" use="required"/>
 		<xs:attribute name="electricPower" type="v1.0:Double2" use="required"/>
 	</xs:complexType>
-	<xs:complexType name="ElectricMachineSystemVoltageLevelType">
+	<xs:complexType name="ElectricMachineSystemVoltageLevelMeasuredType">
 		<xs:complexContent>
 			<xs:extension base="v2.9:AbstractElectricMachineSystemVoltageLevelType">
 				<xs:sequence>
@@ -443,13 +537,138 @@
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
+	<xs:complexType name="ElectricMachineSystemVoltageLevelStandardValuesType">
+		<xs:complexContent>
+			<xs:extension base="v2.9:AbstractElectricMachineSystemVoltageLevelType">
+				<xs:sequence>
+					<xs:element name="MaxTorqueCurve">
+						<xs:complexType>
+							<xs:sequence>
+								<xs:element name="Entry" type="v2.9:ElectricMachineSystemMaxTorqueEntryType" minOccurs="2" maxOccurs="unbounded"/>
+							</xs:sequence>
+						</xs:complexType>
+					</xs:element>
+					<xs:element name="PowerMap">
+						<xs:complexType>
+							<xs:sequence>
+								<xs:element name="Entry" type="v2.9:ElectricMachineSystemPowerMapEntryType" minOccurs="4" maxOccurs="unbounded"/>
+							</xs:sequence>
+						</xs:complexType>
+					</xs:element>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
 	<xs:complexType name="IEPCComponentDeclarationType">
 		<xs:sequence>
 			<xs:element name="Data" type="v2.9:AbstractIEPCDataType"/>
 			<xs:element name="Signature" type="v2.0:SignatureType"/>
 		</xs:sequence>
 	</xs:complexType>
-	<xs:complexType name="IEPCDataDeclarationType">
+	<xs:complexType name="IEPCStandardValuesDataDeclarationType">
+		<xs:complexContent>
+			<xs:extension base="v2.9:AbstractIEPCDataType">
+				<xs:sequence>
+					<xs:element name="Manufacturer" type="v1.0:ManufacturerType">
+						<xs:annotation>
+							<xs:documentation>P200</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="Model" type="v1.0:ModelType">
+						<xs:annotation>
+							<xs:documentation>P201</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="CertificationNumber" type="v1.0:CertificationNumberType">
+						<xs:annotation>
+							<xs:documentation>P261</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="Date" type="v1.0:DateTimeWithTimezone">
+						<xs:annotation>
+							<xs:documentation>P203</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="AppVersion" type="v1.0:AppVersionType">
+						<xs:annotation>
+							<xs:documentation>P204</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="ElectricMachineType" type="v2.9:ElectricMachineTypeType"/>
+					<xs:element name="CertificationMethod" type="v2.9:IEPCCertificationMethodType"/>
+					<xs:element name="R85RatedPower">
+						<xs:simpleType>
+							<xs:restriction base="xs:int">
+								<xs:minExclusive value="0"/>
+							</xs:restriction>
+						</xs:simpleType>
+					</xs:element>
+					<xs:element name="RotationalInertia">
+						<xs:simpleType>
+							<xs:restriction base="v1.0:Double2">
+								<xs:minExclusive value="0.00"/>
+							</xs:restriction>
+						</xs:simpleType>
+					</xs:element>
+					<xs:element name="ContinuousTorque">
+						<xs:simpleType>
+							<xs:restriction base="v1.0:Double2">
+								<xs:minExclusive value="0.00"/>
+							</xs:restriction>
+						</xs:simpleType>
+					</xs:element>
+					<xs:element name="TestSpeedContinuousTorque">
+						<xs:simpleType>
+							<xs:restriction base="v1.0:Double2">
+								<xs:minExclusive value="0.00"/>
+							</xs:restriction>
+						</xs:simpleType>
+					</xs:element>
+					<xs:element name="OverloadTorque">
+						<xs:simpleType>
+							<xs:restriction base="v1.0:Double2">
+								<xs:minExclusive value="0.00"/>
+							</xs:restriction>
+						</xs:simpleType>
+					</xs:element>
+					<xs:element name="TestSpeedOverloadTorque">
+						<xs:simpleType>
+							<xs:restriction base="v1.0:Double2">
+								<xs:minExclusive value="0.00"/>
+							</xs:restriction>
+						</xs:simpleType>
+					</xs:element>
+					<xs:element name="OverloadDuration">
+						<xs:simpleType>
+							<xs:restriction base="v1.0:Double2">
+								<xs:minExclusive value="0.00"/>
+							</xs:restriction>
+						</xs:simpleType>
+					</xs:element>
+					<xs:element name="DifferentialIncluded" type="xs:boolean"/>
+					<xs:element name="DesignTypeWheelMotor" type="xs:boolean"/>
+					<xs:element name="NrOfDesignTypeWheelMotorMeasured" minOccurs="0">
+						<xs:simpleType>
+							<xs:restriction base="xs:int">
+								<xs:enumeration value="1"/>
+								<xs:enumeration value="2"/>
+							</xs:restriction>
+						</xs:simpleType>
+					</xs:element>
+					<xs:element name="Gears" type="v2.9:AbstractIEPCGearsDeclarationType"/>
+					<xs:element name="VoltageLevel" type="v2.9:ElectricMachineSystemVoltageLevelStandardValuesType"/>
+					<xs:element name="DragCurve">
+						<xs:complexType>
+							<xs:sequence>
+								<xs:element name="Entry" type="v2.9:ElectricMachineSystemDragTorqueEntryType" minOccurs="2" maxOccurs="unbounded"/>
+							</xs:sequence>
+						</xs:complexType>
+					</xs:element>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="IEPCMeasuredDataDeclarationType">
 		<xs:complexContent>
 			<xs:extension base="v2.9:AbstractIEPCDataType">
 				<xs:sequence>
@@ -547,7 +766,7 @@
 						</xs:simpleType>
 					</xs:element>
 					<xs:element name="Gears" type="v2.9:AbstractIEPCGearsDeclarationType"/>
-					<xs:element name="VoltageLevel" type="v2.9:AbstractElectricMachineSystemVoltageLevelType" minOccurs="2" maxOccurs="unbounded"/>
+					<xs:element name="VoltageLevel" type="v2.9:ElectricMachineSystemVoltageLevelMeasuredType" minOccurs="2" maxOccurs="unbounded"/>
 					<xs:element name="DragCurve">
 						<xs:complexType>
 							<xs:sequence>
