@@ -1,10 +1,8 @@
 ﻿using System.IO;
 using System.Linq;
-using Ninject;
 using NUnit.Framework;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCore.InputData.FileIO.JSON;
-using TUGraz.VectoCore.InputData.FileIO.XML;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.OutputData;
@@ -18,23 +16,14 @@ namespace TUGraz.VectoCore.Tests.Integration.ADAS
 	public class ADASTestsPEV
 	{
 
-		public const string Group5PCC12 = @"TestData\Integration\ADAS-PEV\Group5PCCEng\Class5_Tractor_ENG_PCC12.vecto";
-		public const string Group5PCC123 = @"TestData\Integration\ADAS-PEV\Group5PCCEng\Class5_Tractor_ENG_PCC123.vecto";
-		public const string Group5PCC123EcoSS = @"TestData\Integration\ADAS-PEV\Group5PCCEng\Class5_Tractor_ENG_PCC123EcoSS.vecto";
-
-		protected IXMLInputDataReader xmlInputReader;
-		private IKernel _kernel;
+		const string Group5PCC12 = @"TestData\Integration\ADAS-PEV\Group5PCCEng\Class5_Tractor_ENG_PCC12.vecto";
+		const string Group5PCC123 = @"TestData\Integration\ADAS-PEV\Group5PCCEng\Class5_Tractor_ENG_PCC123.vecto";
+		const string Group5PCC123EcoSS = @"TestData\Integration\ADAS-PEV\Group5PCCEng\Class5_Tractor_ENG_PCC123EcoSS.vecto";
 
 		[OneTimeSetUp]
-		public void RunBeforeAnyTests()
-		{
-			Directory.SetCurrentDirectory(TestContext.CurrentContext.TestDirectory);
+		public void RunBeforeAnyTests() => Directory.SetCurrentDirectory(TestContext.CurrentContext.TestDirectory);
 
-			_kernel = new StandardKernel(new VectoNinjectModule());
-			xmlInputReader = _kernel.Get<IXMLInputDataReader>();
-		}
-
-		private GraphWriter  GetGraphWriter()
+		private GraphWriter GetGraphWriter()
 		{
 			var graphWriter = new GraphWriter();
 			//#if TRACE
@@ -75,14 +64,14 @@ namespace TUGraz.VectoCore.Tests.Integration.ADAS
 			var factory = new SimulatorFactory(ExecutionMode.Engineering, inputData, writer) {
 				WriteModalResults = true,
 				//ActualModalData = true,
-				Validate = false
+				Validate = false,
+				SumData = sumContainer
 			};
 
-			factory.SumData = sumContainer;
 
 			var runs = factory.SimulationRuns().ToArray();
 			var run = runs[cycleIdx];
-			
+
 			jobContainer.AddRun(run);
 			jobContainer.Execute();
 			jobContainer.WaitFinished();
@@ -94,7 +83,7 @@ namespace TUGraz.VectoCore.Tests.Integration.ADAS
 		}
 
 		[TestCase(0, TestName = "AT EcoRoll Neutral DH1.8 const"),
-		TestCase(1, TestName = "AT EcoRoll Neutral DH1.8 UH0.1"), 
+		TestCase(1, TestName = "AT EcoRoll Neutral DH1.8 UH0.1"),
 		TestCase(2, TestName = "AT EcoRoll Neutral DH1.9 const"),
 		TestCase(3, TestName = "AT EcoRoll Neutral DH1.2 const - too flat"),
 		TestCase(4, TestName = "AT EcoRoll Neutral DH2.5 const - too steep"),
@@ -116,10 +105,10 @@ namespace TUGraz.VectoCore.Tests.Integration.ADAS
 			var factory = new SimulatorFactory(ExecutionMode.Engineering, inputData, writer) {
 				WriteModalResults = true,
 				//ActualModalData = true,
-				Validate = false
+				Validate = false,
+				SumData = sumContainer
 			};
 
-			factory.SumData = sumContainer;
 
 			var runs = factory.SimulationRuns().ToArray();
 			var run = runs[cycleIdx];
@@ -157,10 +146,10 @@ namespace TUGraz.VectoCore.Tests.Integration.ADAS
 			var factory = new SimulatorFactory(ExecutionMode.Engineering, inputData, writer) {
 				WriteModalResults = true,
 				//ActualModalData = true,
-				Validate = false
+				Validate = false,
+				SumData = sumContainer
 			};
 
-			factory.SumData = sumContainer;
 
 			var runs = factory.SimulationRuns().ToArray();
 			var run = runs[cycleIdx];
@@ -216,7 +205,7 @@ namespace TUGraz.VectoCore.Tests.Integration.ADAS
 		}
 
 		public void RunSingleEngineeringCycle(string jobName, int cycleIdx)
-		{ 
+		{
 			var inputData = JSONInputDataFactory.ReadJsonJob(jobName);
 			var writer = new FileOutputWriter(Path.Combine(Path.GetDirectoryName(jobName), Path.GetFileName(jobName)));
 
@@ -228,7 +217,7 @@ namespace TUGraz.VectoCore.Tests.Integration.ADAS
 				Validate = false,
 				SumData = sumContainer
 			};
-			
+
 			var runs = factory.SimulationRuns().ToArray();
 			var run = runs[cycleIdx];
 
@@ -240,69 +229,6 @@ namespace TUGraz.VectoCore.Tests.Integration.ADAS
 			Assert.IsTrue(progress.All(r => r.Value.Success), string.Concat(progress.Select(r => r.Value.Error)));
 			var modFilename = writer.GetModDataFileName(run.RunName, run.CycleName, run.RunSuffix);
 			GetGraphWriter().Write(modFilename);
-		}
-
-		public JobContainer RunAllDeclarationJob(string jobName)
-		{
-			var relativeJobPath =  jobName;
-			
-			var writer = new FileOutputWriter(Path.Combine(Path.GetDirectoryName(relativeJobPath), Path.GetFileName(relativeJobPath)));
-			var inputData = Path.GetExtension(relativeJobPath) == ".xml"
-				? xmlInputReader.CreateDeclaration(relativeJobPath)
-				//? new XMLDeclarationInputDataProvider(relativeJobPath, true)
-				: JSONInputDataFactory.ReadJsonJob(relativeJobPath);
-			var factory = new SimulatorFactory(ExecutionMode.Declaration, inputData, writer) {
-				WriteModalResults = true,
-				//ActualModalData = true,
-				Validate = false
-			};
-			var sumContainer = new SummaryDataContainer(writer);
-			var jobContainer = new JobContainer(sumContainer);
-			jobContainer.AddRuns(factory);
-			jobContainer.Execute();
-			jobContainer.WaitFinished();
-			var progress = jobContainer.GetProgress();
-
-			Assert.IsTrue(progress.All(r => r.Value.Success), string.Concat(progress.Select(r => r.Value.Error)));
-
-			return jobContainer;
-		}
-
-		public JobContainer RunSingleDeclarationJob(string jobName, int runIdx)
-		{
-			var relativeJobPath = jobName;
-			var writer = new FileOutputWriter(Path.Combine(Path.GetDirectoryName(relativeJobPath), Path.GetFileName(relativeJobPath)));
-			var inputData = Path.GetExtension(relativeJobPath) == ".xml"
-				? xmlInputReader.CreateDeclaration(relativeJobPath)
-				//? new XMLDeclarationInputDataProvider(relativeJobPath, true)
-				: JSONInputDataFactory.ReadJsonJob(relativeJobPath);
-			var factory = new SimulatorFactory(ExecutionMode.Declaration, inputData, writer) {
-				WriteModalResults = true,
-				//ActualModalData = true,
-				Validate = false
-			};
-			var sumContainer = new SummaryDataContainer(writer);
-			var jobContainer = new JobContainer(sumContainer);
-
-			factory.SumData = sumContainer;
-
-			var runs = factory.SimulationRuns().ToArray();
-
-			jobContainer.AddRun(runs[runIdx]);
-			jobContainer.Execute();
-			jobContainer.WaitFinished();
-
-			var progress = jobContainer.GetProgress();
-			Assert.IsTrue(progress.All(r => r.Value.Success), string.Concat(progress.Select(r => r.Value.Error)));
-
-			//var run = jobContainer.Runs[runIdx].Run;
-			//run.Run();
-			//var runs = factory.SimulationRuns().ToArray();
-			//runs[runIdx].Run();
-
-			//Assert.IsTrue(runs.FinishedWithoutErrors);
-
-			return jobContainer;
 		}
 	}
 }

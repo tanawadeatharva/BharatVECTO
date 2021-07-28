@@ -1,5 +1,4 @@
-﻿using System;
-using System.IO;
+﻿using System.IO;
 using System.Linq;
 using Ninject;
 using NUnit.Framework;
@@ -18,24 +17,22 @@ namespace TUGraz.VectoCore.Tests.Integration.ADAS
 	[Parallelizable(ParallelScope.All)]
 	public class ADASTestsConventional
 	{
+		private const string Group5PCC12 = @"TestData\Integration\ADAS-Conventional\Group5PCCEng\Class5_Tractor_ENG_PCC12.vecto";
+		private const string Group5PCC123 = @"TestData\Integration\ADAS-Conventional\Group5PCCEng\Class5_Tractor_ENG_PCC123.vecto";
+		private const string Group5PCC123EcoSS = @"TestData\Integration\ADAS-Conventional\Group5PCCEng\Class5_Tractor_ENG_PCC123EcoSS.vecto";
 
-		public const string Group5PCC12 = @"TestData\Integration\ADAS-Conventional\Group5PCCEng\Class5_Tractor_ENG_PCC12.vecto";
-		public const string Group5PCC123 = @"TestData\Integration\ADAS-Conventional\Group5PCCEng\Class5_Tractor_ENG_PCC123.vecto";
-		public const string Group5PCC123EcoSS = @"TestData\Integration\ADAS-Conventional\Group5PCCEng\Class5_Tractor_ENG_PCC123EcoSS.vecto";
-
-		protected IXMLInputDataReader xmlInputReader;
+		private IXMLInputDataReader _xmlInputReader;
 		private IKernel _kernel;
 
 		[OneTimeSetUp]
 		public void RunBeforeAnyTests()
 		{
 			Directory.SetCurrentDirectory(TestContext.CurrentContext.TestDirectory);
-
 			_kernel = new StandardKernel(new VectoNinjectModule());
-			xmlInputReader = _kernel.Get<IXMLInputDataReader>();
+			_xmlInputReader = _kernel.Get<IXMLInputDataReader>();
 		}
 
-		private GraphWriter  GetGraphWriter()
+		private GraphWriter GetGraphWriter()
 		{
 			var graphWriter = new GraphWriter();
 			//#if TRACE
@@ -90,7 +87,7 @@ namespace TUGraz.VectoCore.Tests.Integration.ADAS
 			]
 		public void TestEcoRoll(int cycleIdx)
 		{
-			string jobName = @"TestData\Integration\ADAS-Conventional\Group5EcoRollEng\Class5_Tractor_ENG.vecto";
+			var jobName = @"TestData\Integration\ADAS-Conventional\Group5EcoRollEng\Class5_Tractor_ENG.vecto";
 			var inputData = JSONInputDataFactory.ReadJsonJob(jobName);
 			var writer = new FileOutputWriter(Path.Combine(Path.GetDirectoryName(jobName), Path.GetFileName(jobName)));
 
@@ -99,14 +96,13 @@ namespace TUGraz.VectoCore.Tests.Integration.ADAS
 			var factory = new SimulatorFactory(ExecutionMode.Engineering, inputData, writer) {
 				WriteModalResults = true,
 				//ActualModalData = true,
-				Validate = false
+				Validate = false,
+				SumData = sumContainer
 			};
-
-			factory.SumData = sumContainer;
 
 			var runs = factory.SimulationRuns().ToArray();
 			var run = runs[cycleIdx];
-			
+
 			jobContainer.AddRun(run);
 			jobContainer.Execute();
 			jobContainer.WaitFinished();
@@ -118,7 +114,7 @@ namespace TUGraz.VectoCore.Tests.Integration.ADAS
 		}
 
 		[TestCase(0, TestName = "AT EcoRoll Neutral DH1.8 const"),
-		TestCase(1, TestName = "AT EcoRoll Neutral DH1.8 UH0.1"), 
+		TestCase(1, TestName = "AT EcoRoll Neutral DH1.8 UH0.1"),
 		TestCase(2, TestName = "AT EcoRoll Neutral DH1.9 const"),
 		TestCase(3, TestName = "AT EcoRoll Neutral DH1.2 const - too flat"),
 		TestCase(4, TestName = "AT EcoRoll Neutral DH2.5 const - too steep"),
@@ -131,7 +127,7 @@ namespace TUGraz.VectoCore.Tests.Integration.ADAS
 		]
 		public void TestEcoRollAT_Neutral(int cycleIdx)
 		{
-			string jobName = @"TestData\Integration\ADAS-Conventional\Group9_RigidTruck_AT\Class_9_RigidTruck_AT_Eng_Neutral.vecto";
+			const string jobName = @"TestData\Integration\ADAS-Conventional\Group9_RigidTruck_AT\Class_9_RigidTruck_AT_Eng_Neutral.vecto";
 			var inputData = JSONInputDataFactory.ReadJsonJob(jobName);
 			var writer = new FileOutputWriter(Path.Combine(Path.GetDirectoryName(jobName), Path.GetFileName(jobName)));
 
@@ -140,10 +136,10 @@ namespace TUGraz.VectoCore.Tests.Integration.ADAS
 			var factory = new SimulatorFactory(ExecutionMode.Engineering, inputData, writer) {
 				WriteModalResults = true,
 				//ActualModalData = true,
-				Validate = false
+				Validate = false,
+				SumData = sumContainer
 			};
 
-			factory.SumData = sumContainer;
 
 			var runs = factory.SimulationRuns().ToArray();
 			var run = runs[cycleIdx];
@@ -172,7 +168,7 @@ namespace TUGraz.VectoCore.Tests.Integration.ADAS
 		]
 		public void TestEcoRollAT_TC(int cycleIdx)
 		{
-			string jobName = @"TestData\Integration\ADAS-Conventional\Group9_RigidTruck_AT\Class_9_RigidTruck_AT_Eng_TC.vecto";
+			const string jobName = @"TestData\Integration\ADAS-Conventional\Group9_RigidTruck_AT\Class_9_RigidTruck_AT_Eng_TC.vecto";
 			var inputData = JSONInputDataFactory.ReadJsonJob(jobName);
 			var writer = new FileOutputWriter(Path.Combine(Path.GetDirectoryName(jobName), Path.GetFileName(jobName)));
 
@@ -181,10 +177,9 @@ namespace TUGraz.VectoCore.Tests.Integration.ADAS
 			var factory = new SimulatorFactory(ExecutionMode.Engineering, inputData, writer) {
 				WriteModalResults = true,
 				//ActualModalData = true,
-				Validate = false
+				Validate = false,
+				SumData = sumContainer
 			};
-
-			factory.SumData = sumContainer;
 
 			var runs = factory.SimulationRuns().ToArray();
 			var run = runs[cycleIdx];
@@ -253,7 +248,6 @@ namespace TUGraz.VectoCore.Tests.Integration.ADAS
 		]
 		public void TestPCCEngineeringSampleCases(string jobName, int cycleIdx)
 		{
-			
 			RunSingleEngineeringCycle(jobName, cycleIdx);
 		}
 
@@ -266,7 +260,7 @@ namespace TUGraz.VectoCore.Tests.Integration.ADAS
 		}
 
 		public void RunSingleEngineeringCycle(string jobName, int cycleIdx)
-		{ 
+		{
 			var inputData = JSONInputDataFactory.ReadJsonJob(jobName);
 			var writer = new FileOutputWriter(Path.Combine(Path.GetDirectoryName(jobName), Path.GetFileName(jobName)));
 
@@ -275,10 +269,10 @@ namespace TUGraz.VectoCore.Tests.Integration.ADAS
 			var factory = new SimulatorFactory(ExecutionMode.Engineering, inputData, writer) {
 				WriteModalResults = true,
 				//ActualModalData = true,
-				Validate = false
+				Validate = false,
+				SumData = sumContainer
 			};
 
-			factory.SumData = sumContainer;
 
 			var runs = factory.SimulationRuns().ToArray();
 			var run = runs[cycleIdx];
@@ -297,11 +291,11 @@ namespace TUGraz.VectoCore.Tests.Integration.ADAS
 
 		public JobContainer RunAllDeclarationJob(string jobName)
 		{
-			var relativeJobPath =  jobName;
-			
+			var relativeJobPath = jobName;
+
 			var writer = new FileOutputWriter(Path.Combine(Path.GetDirectoryName(relativeJobPath), Path.GetFileName(relativeJobPath)));
 			var inputData = Path.GetExtension(relativeJobPath) == ".xml"
-				? xmlInputReader.CreateDeclaration(relativeJobPath)
+				? _xmlInputReader.CreateDeclaration(relativeJobPath)
 				//? new XMLDeclarationInputDataProvider(relativeJobPath, true)
 				: JSONInputDataFactory.ReadJsonJob(relativeJobPath);
 			var factory = new SimulatorFactory(ExecutionMode.Declaration, inputData, writer) {
@@ -327,7 +321,7 @@ namespace TUGraz.VectoCore.Tests.Integration.ADAS
 			var relativeJobPath = jobName;
 			var writer = new FileOutputWriter(Path.Combine(Path.GetDirectoryName(relativeJobPath), Path.GetFileName(relativeJobPath)));
 			var inputData = Path.GetExtension(relativeJobPath) == ".xml"
-				? xmlInputReader.CreateDeclaration(relativeJobPath)
+				? _xmlInputReader.CreateDeclaration(relativeJobPath)
 				//? new XMLDeclarationInputDataProvider(relativeJobPath, true)
 				: JSONInputDataFactory.ReadJsonJob(relativeJobPath);
 			var factory = new SimulatorFactory(ExecutionMode.Declaration, inputData, writer) {
