@@ -568,6 +568,12 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 			get { return null; }
 		}
 
+		#region Overrides of XMLDeclarationVehicleDataProviderV10
+
+		public override LegislativeClass? LegislativeClass => GetString("LegislativeCategory").ParseEnum<LegislativeClass>();
+
+		#endregion
+
 		public override XmlElement ComponentNode {
 			get { return null; }
 		}
@@ -591,6 +597,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		public override double RetarderRatio {
 			get { return 0; }
 		}
+		public override Kilogram GrossVehicleMassRating => GetDouble(XMLNames.Vehicle_TPMLM).SI<Kilogram>();
 
 		public override IPTOTransmissionInputData PTOTransmissionInputData {
 			get { return null; }
