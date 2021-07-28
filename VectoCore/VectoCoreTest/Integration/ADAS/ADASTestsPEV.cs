@@ -43,13 +43,13 @@ namespace TUGraz.VectoCore.Tests.Integration.ADAS
 		
 		[TestCase(Group5PCC12, 0, TestName = "G5Eng PCC12 CrestCoast 1"),
 		TestCase(Group5PCC12, 1, TestName = "G5Eng PCC12 CrestCoast 2"),
-		TestCase(Group5PCC12, 2, TestName = "G5Eng PCC12 Case A"), // Case A
-		TestCase(Group5PCC12, 3, TestName = "G5Eng PCC12 Case B"), // Case B
+		TestCase(Group5PCC12, 2, TestName = "G5Eng PCC12 Case A"), // Case A: Tests Use-Case 1: Creast Coasting (allowing slower speed before a crest)
+		TestCase(Group5PCC12, 3, TestName = "G5Eng PCC12 Case B"), // Case B: 
 		TestCase(Group5PCC12, 4, TestName = "G5Eng PCC12 Case C"), // Case C
-		TestCase(Group5PCC12, 5, TestName = "G5Eng PCC12 Case D"), // Case D
+		TestCase(Group5PCC12, 5, TestName = "G5Eng PCC12 Case D"), // Case D: Test two crests after each other
 		TestCase(Group5PCC12, 6, TestName = "G5Eng PCC12 Case E"), // Case E
 		TestCase(Group5PCC12, 7, TestName = "G5Eng PCC12 Case F"), // Case F
-		TestCase(Group5PCC12, 8, TestName = "G5Eng PCC12 Case G"), // Case G
+		TestCase(Group5PCC12, 8, TestName = "G5Eng PCC12 Case G"), // Case G: PCC Use Case 1 even if there is a small dip inbetween (at the crest)
 		TestCase(Group5PCC12, 9, TestName = "G5Eng PCC12 Case H"), // Case H
 		TestCase(Group5PCC12, 10, TestName = "G5Eng PCC12 Case I"), // Case I
 		TestCase(Group5PCC12, 11, TestName = "G5Eng PCC12 Case J"), // Case J
@@ -65,16 +65,16 @@ namespace TUGraz.VectoCore.Tests.Integration.ADAS
 		TestCase(Group5PCC123, 10, TestName = "G5Eng PCC123 Case I"), // Case I
 		TestCase(Group5PCC123, 11, TestName = "G5Eng PCC123 Case J"), // Case J
 
-		TestCase(Group5PCC123EcoSS, 2, TestName = "G5Eng PCC123-EcoSS Case A"), // Case A
-		TestCase(Group5PCC123EcoSS, 3, TestName = "G5Eng PCC123-EcoSS Case B"), // Case B
-		TestCase(Group5PCC123EcoSS, 4, TestName = "G5Eng PCC123-EcoSS Case C"), // Case C
-		TestCase(Group5PCC123EcoSS, 5, TestName = "G5Eng PCC123-EcoSS Case D"), // Case D
-		TestCase(Group5PCC123EcoSS, 6, TestName = "G5Eng PCC123-EcoSS Case E"), // Case E
-		TestCase(Group5PCC123EcoSS, 7, TestName = "G5Eng PCC123-EcoSS Case F"), // Case F
-		TestCase(Group5PCC123EcoSS, 8, TestName = "G5Eng PCC123-EcoSS Case G"), // Case G
-		TestCase(Group5PCC123EcoSS, 9, TestName = "G5Eng PCC123-EcoSS Case H"), // Case H
-		TestCase(Group5PCC123EcoSS, 10, TestName = "G5Eng PCC123-EcoSS Case I"), // Case I
-		TestCase(Group5PCC123EcoSS, 11, TestName = "G5Eng PCC123-EcoSS Case J"), // Case J
+		TestCase(Group5PCC123EcoSS, 2, TestName = "G5Eng PCC123EcoSS Case A"), // Case A should behave same as PCC123 (eco roll always off in PEV)
+		TestCase(Group5PCC123EcoSS, 3, TestName = "G5Eng PCC123EcoSS Case B"), // Case B should behave same as PCC123 (eco roll always off in PEV)
+		TestCase(Group5PCC123EcoSS, 4, TestName = "G5Eng PCC123EcoSS Case C"), // Case C should behave same as PCC123 (eco roll always off in PEV)
+		TestCase(Group5PCC123EcoSS, 5, TestName = "G5Eng PCC123EcoSS Case D"), // Case D should behave same as PCC123 (eco roll always off in PEV)
+		TestCase(Group5PCC123EcoSS, 6, TestName = "G5Eng PCC123EcoSS Case E"), // Case E should behave same as PCC123 (eco roll always off in PEV)
+		TestCase(Group5PCC123EcoSS, 7, TestName = "G5Eng PCC123EcoSS Case F"), // Case F should behave same as PCC123 (eco roll always off in PEV)
+		TestCase(Group5PCC123EcoSS, 8, TestName = "G5Eng PCC123EcoSS Case G"), // Case G should behave same as PCC123 (eco roll always off in PEV)
+		TestCase(Group5PCC123EcoSS, 9, TestName = "G5Eng PCC123EcoSS Case H"), // Case H should behave same as PCC123 (eco roll always off in PEV)
+		TestCase(Group5PCC123EcoSS, 10, TestName = "G5Eng PCC123EcoSS Case I"), // Case I should behave same as PCC123 (eco roll always off in PEV)
+		TestCase(Group5PCC123EcoSS, 11, TestName = "G5Eng PCC123EcoSS Case J"), // Case J should behave same as PCC123 (eco roll always off in PEV)
 		]
 		public void TestPCCEngineeringSampleCases(string jobName, int cycleIdx)
 		{
