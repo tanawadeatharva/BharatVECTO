@@ -1572,4 +1572,10 @@
   <data name="BusAux_Technology" xml:space="preserve">
     <value>Technology</value>
   </data>
+  <data name="Exempted_SumNetPower" xml:space="preserve">
+    <value>SumNetPower</value>
+  </data>
+  <data name="Exempted_Technology" xml:space="preserve">
+    <value>Technology</value>
+  </data>
 </root>

@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Xml;
 using System.Xml.Linq;
 using TUGraz.VectoCommon.Hashing;
 using TUGraz.VectoCommon.Models;
@@ -17,11 +19,14 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 		{
 			VehiclePart.Add(
 				new XAttribute(xsi + "type", "VehicleExemptedPrimaryBusType"),
-				new XElement(tns + XMLNames.Component_Manufacturer, modelData.VehicleData.Manufacturer),
-				new XElement(tns + XMLNames.Component_ManufacturerAddress, modelData.VehicleData.ManufacturerAddress),
+				new XElement(tns + XMLNames.ManufacturerPrimaryVehicle, modelData.VehicleData.Manufacturer),
+				new XElement(tns + XMLNames.ManufacturerAddressPrimaryVehicle,
+					modelData.VehicleData.ManufacturerAddress),
 				new XElement(tns + XMLNames.Component_Model, modelData.VehicleData.ModelName),
 				new XElement(tns + XMLNames.Vehicle_VIN, modelData.VehicleData.VIN),
-				new XElement(tns + "LegislativeCategory", modelData.VehicleData.LegislativeClass.ToXMLFormat()),
+				new XElement(tns + XMLNames.Component_Date, 
+					XmlConvert.ToString(DateTime.Now, XmlDateTimeSerializationMode.Utc)),
+				new XElement(tns + XMLNames.Bus_LegislativeCategory, modelData.VehicleData.LegislativeClass.ToXMLFormat()),
 				new XElement(tns + XMLNames.Bus_ChassisConfiguration, "Bus"),
 				new XElement(tns + XMLNames.Vehicle_AxleConfiguration, modelData.VehicleData.AxleConfiguration.GetName()),
 				new XElement(tns + XMLNames.Vehicle_Articulated, modelData.VehicleData.InputData.Articulated),
@@ -31,8 +36,8 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 				//new XElement(
 				//	tns + XMLNames.Vehicle_CurbMassChassis, XMLHelper.ValueAsUnit(modelData.VehicleData.CurbMass, XMLNames.Unit_kg)),
 				new XElement(tns + XMLNames.Vehicle_ZeroEmissionVehicle, modelData.VehicleData.ZeroEmissionVehicle),
-				new XElement(tns + "SumNetPower", XMLHelper.ValueAsUnit(modelData.VehicleData.MaxNetPower1, XMLNames.Unit_W)),
-				new XElement(tns + "Technology", modelData.VehicleData.InputData.ExemptedTechnology)
+				new XElement(tns + XMLNames.Exempted_SumNetPower, XMLHelper.ValueAsUnit(modelData.VehicleData.MaxNetPower1, XMLNames.Unit_W)),
+				new XElement(tns + XMLNames.Exempted_Technology, modelData.VehicleData.InputData.ExemptedTechnology)
 
 			);
 			Results.Add(new XElement(tns + XMLNames.Report_ExemptedVehicle));

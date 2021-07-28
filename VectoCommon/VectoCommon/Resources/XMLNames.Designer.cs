@@ -2338,6 +2338,24 @@ namespace TUGraz.VectoCommon.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to SumNetPower.
+        /// </summary>
+        public static string Exempted_SumNetPower {
+            get {
+                return ResourceManager.GetString("Exempted_SumNetPower", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Technology.
+        /// </summary>
+        public static string Exempted_Technology {
+            get {
+                return ResourceManager.GetString("Exempted_Technology", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Resource.
         /// </summary>
         public static string ExternalResource {
