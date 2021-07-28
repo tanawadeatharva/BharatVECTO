@@ -1128,18 +1128,24 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 	{
 		private readonly IXMLInputDataReader _xmlInputReader;
 		private string _primaryVehicleInputDataPath;
-		private IVehicleDeclarationInputData _primaryVehicleInputData;
-		public IVehicleDeclarationInputData PrimaryVehicle =>
-			_primaryVehicleInputData ?? (_primaryVehicleInputData =
-				_xmlInputReader.CreateDeclaration(_primaryVehicleInputDataPath).JobInputData.Vehicle);
 
 		private string _stageInputDataPath;
 		private IVehicleDeclarationInputData _stageInputData;
 
 
-		public IVehicleDeclarationInputData StageInputData => 
-			_stageInputData ?? (_stageInputData =
-				_xmlInputReader.CreateDeclaration(_stageInputDataPath).JobInputData.Vehicle);
+		private IDeclarationInputDataProvider _primaryVehicle;
+
+		public IDeclarationInputDataProvider PrimaryVehicle => 
+			_primaryVehicle ?? (_primaryVehicle =
+				_xmlInputReader.CreateDeclaration(_primaryVehicleInputDataPath));
+
+        public IVehicleDeclarationInputData StageInputData => 
+			_stageInputDataPath != null 
+			?
+            _stageInputData ?? (_stageInputData =
+                _xmlInputReader.CreateDeclaration(_stageInputDataPath).JobInputData.Vehicle)
+			:
+			null;
 
 		private bool? _completed;
 
