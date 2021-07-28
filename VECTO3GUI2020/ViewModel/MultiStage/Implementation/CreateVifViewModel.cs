@@ -160,7 +160,7 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 			
 
 			if (inputDataProvider.StageInputData != null && (inputDataProvider.StageInputData.ExemptedVehicle !=
-															inputDataProvider.PrimaryVehicle.ExemptedVehicle)) {
+															inputDataProvider.PrimaryVehicle.JobInputData.Vehicle.ExemptedVehicle)) {
 				throw new VectoException("Can't combine exempted and non-exempted input data");
 			}
 

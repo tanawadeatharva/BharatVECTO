@@ -84,7 +84,6 @@ namespace TUGraz.VectoCommon.InputData
 	public interface ISingleBusInputDataProvider : IDeclarationInputDataProvider
 	{
 		IVehicleDeclarationInputData PrimaryVehicle { get; }
-
 		IVehicleDeclarationInputData CompletedVehicle { get; }
 	}
 
@@ -98,7 +97,7 @@ namespace TUGraz.VectoCommon.InputData
 
 	public interface IMultistagePrimaryAndStageInputDataProvider : IInputDataProvider
 	{
-		IVehicleDeclarationInputData PrimaryVehicle { get; }
+		IDeclarationInputDataProvider PrimaryVehicle { get; }
 		IVehicleDeclarationInputData StageInputData { get; }
 	}
 

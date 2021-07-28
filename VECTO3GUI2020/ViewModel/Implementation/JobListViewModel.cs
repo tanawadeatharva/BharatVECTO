@@ -447,10 +447,18 @@ namespace VECTO3GUI2020.ViewModel.Implementation
 					switch (extension) {
 						case Constants.FileExtensions.VectoJobFile:
 							input = JSONInputDataFactory.ReadJsonJob(fullFileName);
-							var tmp = input as IDeclarationInputDataProvider;
-							mode = tmp?.JobInputData.SavedInDeclarationMode ?? false
-								? ExecutionMode.Declaration
-								: ExecutionMode.Engineering;
+							if (input is IDeclarationInputDataProvider tmp) {
+								mode = tmp.JobInputData.SavedInDeclarationMode
+									? ExecutionMode.Declaration
+									: ExecutionMode.Engineering;
+							} else {
+								mode = ExecutionMode.Engineering;
+							}
+
+							break;
+						case Constants.FileExtensions.Json:
+							input = JSONInputDataFactory.ReadJsonJob(fullFileName);
+							mode = ExecutionMode.Declaration;
 							break;
 						case ".xml":
 							var xdoc = XDocument.Load(fullFileName);
@@ -640,9 +648,16 @@ namespace VECTO3GUI2020.ViewModel.Implementation
 			foreach (var jobEntry in jobs)
 			{
 				var w = new FileOutputWriter(GetOutputDirectory(jobEntry.DataSource.SourceFile));
-				foreach (var entry in new Dictionary<string, string>() { { w.XMLFullReportName, "XML ManufacturereReport" }, { w.XMLCustomerReportName, "XML Customer Report" }, { w.XMLVTPReportName, "VTP Report" }, { w.XMLPrimaryVehicleReportName, "Primary Vehicle Information File" } })
+				foreach (var entry in 
+					new Dictionary<string, string>() {
+						{ w.XMLFullReportName, "XML ManufacturereReport" },
+						{ w.XMLCustomerReportName, "XML Customer Report" },
+						{ w.XMLVTPReportName, "VTP Report" },
+						{ w.XMLPrimaryVehicleReportName, "Primary Vehicle Information File" }
+					})
 				{
-					if (File.Exists(entry.Key))
+					if (File.Exists(entry.Key) &&
+						((DateTime.Now - File.GetLastWriteTime(entry.Key) < start.Elapsed)))
 					{
 						outputMessages.Report(
 							new MessageEntry()
