@@ -2099,11 +2099,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 					VectoMath.Min(
 						ModelData.GearboxData.Gears[resp.Gearbox.Gear.Gear].MaxSpeed,
 						DataBus.EngineInfo.EngineN95hSpeed)) ) {
-				tmp.FuelCosts = double.NaN;
+				tmp.FuelCosts = iceOff ? 0 : double.NaN;
 				tmp.IgnoreReason |= HybridConfigurationIgnoreReason.EngineSpeedTooHigh;
 			}
 			if (resp.Engine.EngineSpeed.IsSmallerOrEqual(ModelData.EngineData.IdleSpeed)) {
-				tmp.FuelCosts = double.NaN;
+				tmp.FuelCosts = iceOff ? 0 : double.NaN;
 				tmp.IgnoreReason |= HybridConfigurationIgnoreReason.EngineSpeedTooLow;
 			}
 

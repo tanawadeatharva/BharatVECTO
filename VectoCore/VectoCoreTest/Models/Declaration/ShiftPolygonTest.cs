@@ -463,10 +463,10 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 
 			var shiftPolygons = new List<ShiftPolygon>();
 			for (var i = 0; i < gearboxData.Gears.Count; i++) {
-				shiftPolygons.Add(DeclarationData.Gearbox.ComputeShiftPolygon(GearboxType.AMT, i,
+				shiftPolygons.Add(DeclarationData.Gearbox.ComputeManualTransmissionShiftPolygon(i,
 					engineData.FullLoadCurves[(uint)(i + 1)],
 					gearboxData.Gears,
-					engineData, axlegearRatio, rdyn, null));
+					engineData, axlegearRatio, rdyn));
 			}
 
 			for (var i = 0; i < Math.Min(gearboxData.Gears.Count, expectedDownshift.Length); i++) {

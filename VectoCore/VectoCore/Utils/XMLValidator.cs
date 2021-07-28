@@ -32,6 +32,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Xml;
 using System.Xml.Schema;
 using TUGraz.VectoCommon.Exceptions;
@@ -98,10 +99,7 @@ namespace TUGraz.VectoCore.Utils
 			_validationErrorAction(args?.Severity ?? XmlSeverityType.Error, new ValidationEvent { ValidationEventArgs = args });
 		}
 
-		public string ValidationError
-		{
-			get { return string.Join(Environment.NewLine, _validationErrors); }
-		}
+		public string ValidationError => _validationErrors.Any() ? string.Join(Environment.NewLine, _validationErrors) : null;
 
 		public static void CallBackExceptionOnError(XmlSeverityType severity, ValidationEvent evt)
 		{
