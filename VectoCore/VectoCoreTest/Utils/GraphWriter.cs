@@ -122,8 +122,8 @@ namespace TUGraz.VectoCore.Tests.Utils
 						var series3 = CreateSeries("v_target", legend, chartArea, chart, Color.Green, x, y3);
 						var min = Math.Min(y3.Min(), y.Min());
 						var max = Math.Max(y3.Max(), y.Max());
-						chartArea.AxisY.Minimum = Math.Floor(min - (max - min) * 0.1);
-						chartArea.AxisY.Maximum = Math.Ceiling(max + (max - min) * 0.1);
+						chartArea.AxisY.Minimum = Math.Floor(min - (max - min) * 0.1 - 1);
+						chartArea.AxisY.Maximum = Math.Ceiling(max + (max - min) * 0.1 + 1);
 					}
 
 
