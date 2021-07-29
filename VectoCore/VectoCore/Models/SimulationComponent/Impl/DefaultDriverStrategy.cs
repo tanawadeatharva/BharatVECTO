@@ -1001,6 +1001,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				case ResponseOverload _ when DataBus.VehicleInfo.VehicleSpeed.IsGreater(0):
 					third = Driver.DrivingActionCoast(absTime, ds, velocityWithOverspeed, gradient);
 					debug.Add(new { action = "second:Overload -> Coast", third });
+
+					if (third is ResponseGearShift) {
+						third = Driver.DrivingActionCoast(absTime, ds, velocityWithOverspeed, gradient);
+						debug.Add(new { action = "third:GearShift -> try again Coast", third });
+					}
 					break;
 			}
 
