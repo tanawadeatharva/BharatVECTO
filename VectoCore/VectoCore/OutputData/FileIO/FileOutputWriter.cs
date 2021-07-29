@@ -45,6 +45,26 @@ namespace TUGraz.VectoCore.OutputData.FileIO
 	{
 		private readonly string _jobFile;
 
+		public const string REPORT_ENDING_PREFIX = "VIF_Report_";
+
+		private int? _numberOfManufacturingStages = null;
+
+		public int? NumberOfManufacturingStages
+		{
+			get => _numberOfManufacturingStages;
+			set => _numberOfManufacturingStages = value;
+		}
+
+		public string XMLMultistageReportFileName
+		{
+			get
+			{
+				return Path.ChangeExtension(
+					RemoveExistingVIFEndingPrefix(_jobFile),
+					$"{REPORT_ENDING_PREFIX}{(_numberOfManufacturingStages ?? 0) + 2}.xml");
+			}
+		}
+
 		public string BasePath => Path.GetDirectoryName(_jobFile);
 
 		public string PDFReportName => Path.ChangeExtension(_jobFile, Constants.FileExtensions.PDFReport);
@@ -61,6 +81,7 @@ namespace TUGraz.VectoCore.OutputData.FileIO
 
 		public string SumFileName => Path.ChangeExtension(_jobFile, Constants.FileExtensions.SumFile);
 
+
 		/// <summary>
 		/// 
 		/// </summary>
@@ -68,6 +89,25 @@ namespace TUGraz.VectoCore.OutputData.FileIO
 		public FileOutputWriter(string jobFile)
 		{
 			_jobFile = jobFile;
+		}
+
+		protected FileOutputWriter(string jobFile, int numberOfManufacturingStages) : this(jobFile)
+		{
+			_numberOfManufacturingStages = numberOfManufacturingStages;
+		}
+
+
+
+		protected string RemoveExistingVIFEndingPrefix(string jobFile)
+		{
+			var vifReportIndex = jobFile.IndexOf(REPORT_ENDING_PREFIX, StringComparison.Ordinal);
+			if (vifReportIndex == -1)
+				return jobFile;
+
+			if (!jobFile.Contains(REPORT_ENDING_PREFIX))
+				return jobFile;
+
+			return $"{jobFile.Substring(0, vifReportIndex - 1)}.xml";
 		}
 
 		public void WriteSumData(DataTable data)
@@ -110,6 +150,9 @@ namespace TUGraz.VectoCore.OutputData.FileIO
 					break;
 				case ReportType.DeclarationVTPReportXML:
 					fileName = XMLVTPReportName;
+					break;
+				case ReportType.DeclarationReportMultistageVehicleXML:
+					fileName = XMLMultistageReportFileName;
 					break;
 				default:
 					throw new ArgumentOutOfRangeException("ReportType");

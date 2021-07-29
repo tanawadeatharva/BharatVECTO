@@ -748,6 +748,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
+    <None Include="OutputData\FileIO\FileWriter.cd" />
     <None Include="packages.config" />
     <EmbeddedResource Include="JsonKeys.resx">
       <Generator>ResXFileCodeGenerator</Generator>

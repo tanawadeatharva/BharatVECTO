@@ -35,13 +35,19 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Threading;
+using System.Xml;
+using Castle.DynamicProxy.Generators.Emitters.SimpleAST;
 using Newtonsoft.Json;
+using Ninject;
 using TUGraz.VectoCommon.BusAuxiliaries;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.InputData;
+using TUGraz.VectoCore.InputData.FileIO.XML;
+using TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider;
+using TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Interfaces;
 using TUGraz.VectoCore.InputData.Reader.Impl;
 using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation.Data;
@@ -50,14 +56,27 @@ using TUGraz.VectoCore.OutputData;
 using TUGraz.VectoCore.OutputData.FileIO;
 using TUGraz.VectoCore.OutputData.ModFilter;
 using TUGraz.VectoCore.OutputData.XML;
+using Formatting = Newtonsoft.Json.Formatting;
 
 namespace TUGraz.VectoCore.Models.Simulation.Impl
 {
 	public class SimulatorFactory : LoggingObject, ISimulatorFactory
 	{
 		private static int _jobNumberCounter;
-
+		
 		private readonly ExecutionMode _mode;
+
+		private Func<ISimulatorFactory> _followingSimulatorFactoryCreator = null;
+
+		public ISimulatorFactory FollowUpSimulatorFactory
+		{
+			get => CreateFollowUpSimulatorFactory ? _followingSimulatorFactoryCreator?.Invoke() : null;
+		}
+
+		public bool CreateFollowUpSimulatorFactory = false;
+		
+
+
 
 		public SimulatorFactory(ExecutionMode mode, IInputDataProvider dataProvider, IOutputDataWriter writer) : this(mode, dataProvider, writer, null, null, true)
 		{
@@ -70,7 +89,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			Log.Info("########## VectoCore Version {0} ##########", Assembly.GetExecutingAssembly().GetName().Version);
 			JobNumber = Interlocked.Increment(ref _jobNumberCounter);
 			_mode = mode;
-			ModWriter = writer;
+			ReportWriter = writer;
 			Validate = validate;
 
 			ThreadPool.GetMinThreads(out var workerThreads, out var completionThreads);
@@ -93,9 +112,8 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 		private void CreateDeclarationDataReader(IInputDataProvider dataProvider, IDeclarationReport declarationReport, IVTPReport vtpReport)
 		{
-			if (dataProvider is IVTPDeclarationInputDataProvider) {
-				var vtpProvider = dataProvider as IVTPDeclarationInputDataProvider;
-				var report = vtpReport ?? new XMLVTPReport(ModWriter);
+			if (dataProvider is IVTPDeclarationInputDataProvider vtpProvider) {
+				var report = vtpReport ?? new XMLVTPReport(ReportWriter);
 				if (vtpProvider.JobInputData.Vehicle.VehicleCategory.IsLorry()) {
 					DataReader = new DeclarationVTPModeVectoRunDataFactoryLorries(vtpProvider, report);
 				}
@@ -107,57 +125,142 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 			if (dataProvider is ISingleBusInputDataProvider) {
 				var singleBus = dataProvider as ISingleBusInputDataProvider;
-				var report = declarationReport ?? new XMLDeclarationReport(ModWriter);
+				var report = declarationReport ?? new XMLDeclarationReport(ReportWriter);
 				DataReader = new DeclarationModeSingleBusVectoRunDataFactory(singleBus, report);
 				return;
 			}
-			if (dataProvider is IDeclarationInputDataProvider) {
-				var declDataProvider = dataProvider as IDeclarationInputDataProvider;
+			if (dataProvider is IDeclarationInputDataProvider declDataProvider) {
 				if (declDataProvider.JobInputData.Vehicle.VehicleCategory.IsLorry()) {
-					var report = declarationReport ?? new XMLDeclarationReport(ModWriter);
+					var report = declarationReport ?? new XMLDeclarationReport(ReportWriter);
 					DataReader = new DeclarationModeTruckVectoRunDataFactory(declDataProvider, report);
 					return;
 				}
 
 				switch (declDataProvider.JobInputData.Vehicle.VehicleCategory) {
 					case VehicleCategory.HeavyBusCompletedVehicle:
-						var reportCompleted = declarationReport ?? new XMLDeclarationReportCompletedVehicle(ModWriter, declDataProvider.JobInputData.Vehicle.VehicleCategory == VehicleCategory.HeavyBusPrimaryVehicle) {
-							PrimaryVehicleReportInputData = declDataProvider.PrimaryVehicleData,
+						var reportCompleted = declarationReport ??
+											new XMLDeclarationReportCompletedVehicle(ReportWriter,
+												declDataProvider.JobInputData.Vehicle.VehicleCategory == VehicleCategory.HeavyBusPrimaryVehicle) {
+												PrimaryVehicleReportInputData = declDataProvider.PrimaryVehicleData,
 						};
 						DataReader = new DeclarationModeCompletedBusVectoRunDataFactory(declDataProvider, reportCompleted);
 						return;
 					case VehicleCategory.HeavyBusPrimaryVehicle:
-						var reportPrimary = declarationReport ?? new XMLDeclarationReportPrimaryVehicle(ModWriter, declDataProvider.JobInputData.Vehicle.VehicleCategory == VehicleCategory.HeavyBusPrimaryVehicle);
+						var reportPrimary = declarationReport ??
+											new XMLDeclarationReportPrimaryVehicle(ReportWriter,
+												declDataProvider.JobInputData.Vehicle.VehicleCategory == VehicleCategory.HeavyBusPrimaryVehicle);
 						DataReader = new DeclarationModePrimaryBusVectoRunDataFactory(declDataProvider, reportPrimary);
 						return;
+					default:
+						System.Diagnostics.Debug.Assert(false);
+						break;
 				}
 			}
 
-			if (dataProvider is IMultistageVIFInputData) {
-				var declDataProvider = dataProvider as IMultistageVIFInputData;
-
+			if (dataProvider is IMultistageVIFInputData multistageVifInputData) {
 				//ToDo FK: check if data completed == true && final 
-				//declDataProvider.MultistageJobInputData.JobInputData.InputComplete
-				//declDataProvider.VehicleInputData.VehicleDeclarationType == VehicleDeclarationType.final
-				
-				if (declDataProvider.VehicleInputData == null) {
-					var reportCompleted = declarationReport ?? new XMLDeclarationReportCompletedVehicle(ModWriter, true) {
-						PrimaryVehicleReportInputData = declDataProvider.MultistageJobInputData.JobInputData.PrimaryVehicle,
+				var inputComplete = multistageVifInputData.MultistageJobInputData.JobInputData.InputComplete;
+				var declType = multistageVifInputData.MultistageJobInputData.JobInputData.ConsolidateManufacturingStage
+					?.Vehicle.VehicleDeclarationType;
+				var final = declType == VehicleDeclarationType.final;
+				var exempted = multistageVifInputData.MultistageJobInputData.JobInputData.ConsolidateManufacturingStage?
+					.Vehicle.ExemptedVehicle == true;
+
+
+				if (multistageVifInputData.VehicleInputData == null) { // eigener writer für in-memory
+					var reportCompleted = new XMLDeclarationReportCompletedVehicle(ReportWriter, true) {
+						PrimaryVehicleReportInputData = multistageVifInputData.MultistageJobInputData.JobInputData.PrimaryVehicle,
 					};
 					DataReader = new DeclarationModeCompletedMultistageBusVectoRunDataFactory(
-						declDataProvider.MultistageJobInputData,
+						multistageVifInputData.MultistageJobInputData,
 						reportCompleted);
+					if ((final || exempted) && inputComplete) {
+						_followingSimulatorFactoryCreator = () => {
+							var container = new StandardKernel(
+								new VectoNinjectModule()
+							);
+							var inputDataReader = container.Get<IXMLInputDataReader>();
+
+							var mode = _mode;
+							var inputData =
+								inputDataReader.CreateDeclaration(((FileOutputWriter)ReportWriter)
+									.XMLMultistageReportFileName);
+
+							return new SimulatorFactory(
+								mode: _mode,
+								dataProvider: new XMLDeclarationVIFInputData(
+									inputData as IMultistageBusInputDataProvider, null),
+								writer: ReportWriter,
+								declarationReport: reportCompleted, 
+								vtpReport: vtpReport,
+								validate: Validate);
+
+						};
+					}
+
+				} else {
+					var report = declarationReport ?? new XMLDeclarationReportMultistageBusVehicle(ReportWriter);
+					DataReader = new DeclarationModeMultistageBusVectoRunDataFactory(multistageVifInputData, report);
+
+					_followingSimulatorFactoryCreator = () => {
+							var container = new StandardKernel(
+								new VectoNinjectModule()
+							);
+							var inputDataReader = container.Get<IXMLInputDataReader>();
+
+							var mode = _mode;
+							var inputData =
+								inputDataReader.CreateDeclaration(((FileOutputWriter)ReportWriter)
+									.XMLMultistageReportFileName);
+							return new SimulatorFactory(_mode, new XMLDeclarationVIFInputData(inputData as IMultistageBusInputDataProvider, null), ReportWriter, report, vtpReport, Validate) {
+								
+							};
+					};
+
 				}
-				else if(declDataProvider.VehicleInputData != null) {
-					var report = declarationReport ?? new XMLDeclarationReportMultistageBusVehicle(ModWriter);
-					DataReader = new DeclarationModeMultistageBusVectoRunDataFactory(declDataProvider, report);
-				}
+				return;
+			}
+
+			if (dataProvider is IMultistagePrimaryAndStageInputDataProvider multiStagePrimaryAndStageInputData)
+			{
+				System.Diagnostics.Debug.Assert(multiStagePrimaryAndStageInputData.PrimaryVehicle.JobInputData.Vehicle.VehicleCategory == VehicleCategory.HeavyBusPrimaryVehicle);
+
+				//var msOutputWriter = new MemoryStreamOutputWriter();
+				var reportPrimary = declarationReport ??
+									new XMLDeclarationReportPrimaryVehicle(ReportWriter,
+										true);
+				DataReader = new DeclarationModePrimaryBusVectoRunDataFactory(multiStagePrimaryAndStageInputData.PrimaryVehicle, reportPrimary);
+
+				CreateFollowUpSimulatorFactory = true;
+				_followingSimulatorFactoryCreator = (() => {
+					//replace with dependency injection 
+					var container = new StandardKernel(
+						new VectoNinjectModule()
+					);
+					var inputDataReader = container.Get<IXMLInputDataReader>();
+					var primaryInputData = inputDataReader.CreateDeclaration(((FileOutputWriter)ReportWriter).XMLPrimaryVehicleReportName);
+					var vifInputData = new XMLDeclarationVIFInputData(primaryInputData as IMultistageBusInputDataProvider,
+						multiStagePrimaryAndStageInputData.StageInputData);
+
+					var manStagesCount = vifInputData.MultistageJobInputData.JobInputData.ManufacturingStages?.Count ?? 0;
+					(ReportWriter as FileOutputWriter).NumberOfManufacturingStages = manStagesCount;
+					//TODO add manufacturing stages to ReportWriter
+					var factory = new SimulatorFactory(_mode,
+						vifInputData, ReportWriter,
+						declarationReport,
+						vtpReport,
+						Validate) {
+						CreateFollowUpSimulatorFactory = true,
+					};
+					return factory;
+				});
 				return;
 			}
 
 
 			throw new VectoException("Unknown InputData for Declaration Mode!");
 		}
+
 
 		private void CreateEngineeringDataReader(IInputDataProvider dataProvider)
 		{
@@ -189,7 +292,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 		public SummaryDataContainer SumData { get; set; }
 
-		public IOutputDataWriter ModWriter { get; private set; }
+		public IOutputDataWriter ReportWriter { get; private set; }
 
 		public int JobNumber { get; set; }
 
@@ -238,7 +341,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			var fuels = data.EngineData != null ? data.EngineData.Fuels.Select(x => x.FuelData).ToList() : new List<IFuelProperties>();
 			IModalDataContainer modContainer =
 				new ModalDataContainer(
-					data, ModWriter,
+					data, ReportWriter,
 					_mode == ExecutionMode.Declaration ? addReportResult : null,
 					GetModDataFilter(data)) {
 					WriteModalResults = _mode != ExecutionMode.Declaration || WriteModalResults
@@ -249,7 +352,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			if (SerializeVectoRunData) {
 				File.WriteAllText(
 					Path.Combine(
-						(ModWriter as FileOutputWriter)?.BasePath ?? "", $"{data.JobName}_{data.Cycle.Name}{data.ModFileSuffix}.json"),
+						(ReportWriter as FileOutputWriter)?.BasePath ?? "", $"{data.JobName}_{data.Cycle.Name}{data.ModFileSuffix}.json"),
 					JsonConvert.SerializeObject(data, Formatting.Indented));
 			}
 
