@@ -402,10 +402,10 @@ namespace VECTO3GUI2020.ViewModel.Implementation
 				jobs = new IDocumentViewModel[] {
 					jobToSimulate
 				};
+				
 			}
 
-
-			var sumFileWriter = new FileOutputWriter(GetOutputDirectory(Jobs.First(x => x.Selected).DataSource.SourceFile));
+			var sumFileWriter = new FileOutputWriter(GetOutputDirectory(jobs.First().DataSource.SourceFile));
 			var sumContainer = new SummaryDataContainer(sumFileWriter);
 			var jobContainer = new JobContainer(sumContainer);
 			var mode = ExecutionMode.Declaration;
@@ -653,11 +653,12 @@ namespace VECTO3GUI2020.ViewModel.Implementation
 						{ w.XMLFullReportName, "XML ManufacturereReport" },
 						{ w.XMLCustomerReportName, "XML Customer Report" },
 						{ w.XMLVTPReportName, "VTP Report" },
-						{ w.XMLPrimaryVehicleReportName, "Primary Vehicle Information File" }
+						{ w.XMLPrimaryVehicleReportName, "Primary Vehicle Information File" },
+						{ w.XMLMultistageReportFileName, "VIF File" },
+
 					})
 				{
-					if (File.Exists(entry.Key) &&
-						((DateTime.Now - File.GetLastWriteTime(entry.Key) < start.Elapsed)))
+					if (File.Exists(entry.Key))
 					{
 						outputMessages.Report(
 							new MessageEntry()
@@ -693,11 +694,15 @@ namespace VECTO3GUI2020.ViewModel.Implementation
 		private void PrintRuns(Dictionary<int, JobContainer.ProgressEntry> progress, Dictionary<int, FileOutputWriter> fileWriters, IProgress<MessageEntry> outputMessages)
 		{ 
 			foreach (var p in progress) {
-				var modFilename = fileWriters[p.Key]
-					.GetModDataFileName(p.Value.RunName, p.Value.CycleName, p.Value.RunSuffix);
+				var modFilename = "Add modFileName";
+				if (fileWriters.ContainsKey(p.Key)) {
+					modFilename = fileWriters[p.Key]
+						.GetModDataFileName(p.Value.RunName, p.Value.CycleName, p.Value.RunSuffix);
+					
+				}
 				var runName = string.Format("{0} {1} {2}", p.Value.RunName, p.Value.CycleName, p.Value.RunSuffix);
 
-                if (p.Value.Error != null)
+				if (p.Value.Error != null)
                 {
                     outputMessages.Report(new MessageEntry()
                     {
