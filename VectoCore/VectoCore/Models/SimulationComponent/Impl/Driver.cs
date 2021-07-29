@@ -1072,21 +1072,21 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				return operatingPoint;
 			} catch (VectoSearchFailedException vse) {
 				Log.Error("Failed to find operating point for braking power! absTime: {0}  {1}", absTime, vse);
-				if (DataBus.GearboxType.AutomaticTransmission() && !DataBus.TCLocked) {
+				if (DataBus.GearboxInfo.GearboxType.AutomaticTransmission() && !DataBus.GearboxInfo.TCLocked) {
 					// AT transmission in TC gear - maybe search failed because engine speed 'jumps' during
 					// search and cannot reach drag curve
 					// take an operating point that is 
 					try {
-						DataBus.BrakePower = SearchAlgorithm.Search(DataBus.BrakePower, deltaPower,
-							DataBus.BrakePower * 0.01,
+						DataBus.Brakes.BrakePower = SearchAlgorithm.Search(DataBus.Brakes.BrakePower, deltaPower,
+							DataBus.Brakes.BrakePower * 0.01,
 							getYValue: result => {
 								var response = (ResponseDryRun)result;
-								return DataBus.ClutchClosed(absTime)
+								return DataBus.ClutchInfo.ClutchClosed(absTime)
 									? response.DeltaDragLoad
-									: response.GearboxPowerRequest;
+									: response.Gearbox.PowerRequest;
 							},
 							evaluateFunction: x => {
-								DataBus.BrakePower = x;
+								DataBus.Brakes.BrakePower = x;
 								operatingPoint = ComputeTimeInterval(operatingPoint.Acceleration, ds);
 
 								IterationStatistics.Increment(this, "SearchBrakingPower");
@@ -1097,9 +1097,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 							},
 							criterion: result => {
 								var response = (ResponseDryRun)result;
-								var delta = DataBus.ClutchClosed(absTime)
+								var delta = DataBus.ClutchInfo.ClutchClosed(absTime)
 									? response.DeltaDragLoad
-									: response.GearboxPowerRequest;
+									: response.Gearbox.PowerRequest;
 								return Math.Min(delta.Value(), 0);
 							},
 							forceLineSearch: true);

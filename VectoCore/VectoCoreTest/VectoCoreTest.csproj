@@ -5757,16 +5757,16 @@
     <Content Include="TestData\Integration\DeclarationMode\ExemptedVehicle\exempted_v2.2.1_sleeperT.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="TestData\Integration\DeclarationMode\ExemptedVehicle\vecto_vehicle-sample_exempted_v2_nonHEV.xml">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="TestData\Integration\DeclarationMode\ExemptedVehicle\vecto_vehicle-sample_exempted_v2.xml">
+    <Content Include="TestData\Integration\DeclarationMode\ExemptedVehicle\vecto_vehicle-sample_exempted.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="TestData\Integration\DeclarationMode\ExemptedVehicle\vecto_vehicle-sample_exempted_nonHEV.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="TestData\Integration\DeclarationMode\ExemptedVehicle\vecto_vehicle-sample_exempted.xml">
+    <Content Include="TestData\Integration\DeclarationMode\ExemptedVehicle\vecto_vehicle-sample_exempted_v2.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="TestData\Integration\DeclarationMode\ExemptedVehicle\vecto_vehicle-sample_exempted_v2_nonHEV.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="TestData\Integration\MediumLorries\vecto_vehicle-medium_lorry.xml">

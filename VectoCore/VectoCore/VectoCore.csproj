@@ -911,18 +911,6 @@
     <EmbeddedResource Include="Resources\XSD\VectoMonitoring.xsd">
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="Resources\XSD\VectoMonitoring.0.7.1.xsd">
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Resources\XSD\VectoOutputCustomer.0.7.1.xsd">
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Resources\XSD\VectoOutputManufacturer.0.7.1.xsd">
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Resources\XSD\VectoDeclarationDefinitions.2.2.1.xsd">
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
     <EmbeddedResource Include="Resources\XSD\VectoOutputCustomer.0.8.xsd">
       <SubType>Designer</SubType>
     </EmbeddedResource>
@@ -986,6 +974,18 @@
       <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Resources\XSD\VectoOutputMultistage.0.1.xsd">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\XSD\VectoDeclarationDefinitions.2.2.1.xsd">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\XSD\VectoMonitoring.0.7.1.xsd">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\XSD\VectoOutputCustomer.0.7.1.xsd">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\XSD\VectoOutputManufacturer.0.7.1.xsd">
       <SubType>Designer</SubType>
     </EmbeddedResource>
     <None Include="Utils\VectoVersionCore.tt">

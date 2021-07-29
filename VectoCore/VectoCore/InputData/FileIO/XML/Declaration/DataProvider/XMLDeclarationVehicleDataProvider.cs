@@ -179,7 +179,9 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 		public virtual bool VocationalVehicle => XmlConvert.ToBoolean(GetString(XMLNames.Vehicle_VocationalVehicle));
 
-		public virtual bool SleeperCab => XmlConvert.ToBoolean(GetString(XMLNames.Vehicle_SleeperCab));
+		public virtual bool? SleeperCab => ElementExists(XMLNames.Vehicle_SleeperCab)
+			? XmlConvert.ToBoolean(GetString(XMLNames.Vehicle_SleeperCab))
+			: (bool?)null;
 
 		public virtual bool? AirdragModifiedMultistage { get; }
 
@@ -275,7 +277,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 		public override bool VocationalVehicle => false;
 
-		public override bool SleeperCab => true;
+		public override bool? SleeperCab => true;
 
 		public override TankSystem? TankSystem => VectoCommon.InputData.TankSystem.Compressed;
 
@@ -384,7 +386,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 		public override bool VocationalVehicle => false;
 
-		public override bool SleeperCab => false;
+		public override bool? SleeperCab => null;
 
 		public override TankSystem? TankSystem => null;
 
@@ -423,6 +425,32 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		#endregion
 	}
 
+
+	// ---------------------------------------------------------------------------------------
+
+	public class XMLDeclarationExemptedVehicleDataProviderV221 : XMLDeclarationExemptedVehicleDataProviderV22
+	{
+		public new static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V221;
+
+		public new const string XSD_TYPE = "ExemptedVehicleDeclarationType";
+
+		public new static readonly string QUALIFIED_XSD_TYPE =
+			XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
+
+		public XMLDeclarationExemptedVehicleDataProviderV221(
+			IXMLDeclarationJobInputData jobData, XmlNode xmlNode, string sourceFile) : base(jobData, xmlNode,
+			sourceFile)
+		{
+		}
+
+		public override bool? SleeperCab => ElementExists(XMLNames.Vehicle_SleeperCab) ? XmlConvert.ToBoolean(GetString(XMLNames.Vehicle_SleeperCab)) : (bool?)null;
+
+		public override AxleConfiguration AxleConfiguration =>
+			ElementExists(XMLNames.Vehicle_AxleConfiguration)
+				? AxleConfigurationHelper.Parse(GetString(XMLNames.Vehicle_AxleConfiguration))
+				: AxleConfiguration.AxleConfig_Undefined;
+	}
+
 	// ---------------------------------------------------------------------------------------
 
 
@@ -445,7 +473,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 		#region Overrides of XMLDeclarationVehicleDataProviderV10
 
-		public override bool SleeperCab => false;
+		public override bool? SleeperCab => false;
 
 		public override IAdvancedDriverAssistantSystemDeclarationInputData ADAS => ADASReader.ADASInputData;
 
@@ -519,7 +547,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 		public override bool VocationalVehicle => false;
 
-		public override bool SleeperCab => false;
+		public override bool? SleeperCab => false;
 
 		public override TankSystem? TankSystem => null;
 
@@ -568,7 +596,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 		#region Overrides of XMLDeclarationVehicleDataProviderV10
 
-		public override bool SleeperCab => false;
+		public override bool? SleeperCab => false;
 
 		public override bool VocationalVehicle => false;
 
@@ -794,7 +822,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		public CubicMeter CargoVolume => 0.SI<CubicMeter>();
 		public Kilogram CurbMassChassis { get; }
 		public bool VocationalVehicle { get; }
-		public bool SleeperCab { get; }
+		public bool? SleeperCab { get; }
 		public bool? AirdragModifiedMultistage { get; }
 		public TankSystem? TankSystem { get; }
 
