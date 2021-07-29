@@ -60,10 +60,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 
 		protected IDictionary<Tuple<MissionType, LoadingType>, double> _weightingFactors;
 
-		public XMLDeclarationReport(IReportWriter writer) : base(writer)
-		{
-			
-		}
+		public XMLDeclarationReport(IReportWriter writer) : base(writer) { }
 
 		public class ResultEntry : IResultEntry
 		{
@@ -177,6 +174,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 				WeightingFactor = weightingFactor;
 
 				PrimaryResult = runData.PrimaryResult;
+			
 			}
 
 		}
@@ -230,20 +228,29 @@ namespace TUGraz.VectoCore.OutputData.XML
 
 		public override void InitializeReport(VectoRunData modelData, List<List<FuelData.Entry>> fuelModes)
 		{
-			var weightingGroup = modelData.Exempted
-				? WeightingGroup.Unknown
-				: DeclarationData.WeightingGroup.Lookup(
-					modelData.VehicleData.VehicleClass, modelData.VehicleData.SleeperCab,
-					modelData.EngineData.RatedPowerDeclared);
-			_weightingFactors = weightingGroup == WeightingGroup.Unknown
+			if (modelData.Exempted) {
+				WeightingGroup = WeightingGroup.Unknown;
+			} else {
+				if (modelData.VehicleData.SleeperCab == null) {
+					throw new VectoException("SleeperCab parameter is required");
+				}
+
+				WeightingGroup = DeclarationData.WeightingGroup.Lookup(
+						modelData.VehicleData.VehicleClass, modelData.VehicleData.SleeperCab.Value,
+						modelData.EngineData.RatedPowerDeclared);
+			}
+
+			_weightingFactors = WeightingGroup == WeightingGroup.Unknown
 				? ZeroWeighting
-				: DeclarationData.WeightingFactors.Lookup(weightingGroup);
+				: DeclarationData.WeightingFactors.Lookup(WeightingGroup);
 
 			InstantiateReports(modelData);
 
 			ManufacturerRpt.Initialize(modelData, fuelModes);
 			CustomerRpt.Initialize(modelData, fuelModes);
 		}
+
+		public WeightingGroup WeightingGroup { get; protected set; }
 
 		protected virtual void InstantiateReports(VectoRunData modelData)
 		{

@@ -791,7 +791,7 @@ namespace TUGraz.VectoCore.OutputData
 
 			row[Fields.TOTAL_VEHICLE_MASS] = (ConvertedSI)data.TotalVehicleMass;
 
-			row[Fields.SLEEPER_CAB] = data.SleeperCab ? "yes" : "no";
+			row[SLEEPER_CAB] = data.SleeperCab.HasValue ? (data.SleeperCab.Value ? "yes" : "no") : "-";
 
 			row[Fields.ROLLING_RESISTANCE_COEFFICIENT_WO_TRAILER] =
 				data.RollResistanceCoefficientWithoutTrailer;

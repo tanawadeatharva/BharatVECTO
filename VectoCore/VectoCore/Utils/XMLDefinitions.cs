@@ -54,7 +54,7 @@ namespace TUGraz.VectoCore.Utils
 	public static class XMLDefinitions
 	{
 		//public const string SchemaBaseURL = "file:///E:/QUAM/Workspace/VECTO_quam/VectoCore/VectoCore/Resources/XSD/";
-		public const string SCHEMA_BASE_LOCATION = "https://webgate.ec.europa.eu/CITnet/svn/VECTO/trunk/Share/XML/XSD/";
+		public const string SCHEMA_BASE_LOCATION = "https://citnet.tech.ec.europa.eu/CITnet/svn/VECTO/trunk/Share/XML/XSD/";
 
 		public const string DEV = ":DEV";
 
@@ -82,6 +82,8 @@ namespace TUGraz.VectoCore.Utils
 		public const string DECLARATION_DEFINITIONS_NAMESPACE_URI_V21 = DECLARATION_NAMESPACE + ":v2.1";
 
 		public const string DECLARATION_DEFINITIONS_NAMESPACE_URI_V22 = DECLARATION_NAMESPACE + ":v2.2";
+
+		public const string DECLARATION_DEFINITIONS_NAMESPACE_URI_V221 = DECLARATION_NAMESPACE + ":v2.2.1";
 
 		public const string DECLARATION_DEFINITIONS_NAMESPACE_URI_V23 = DECLARATION_NAMESPACE + ":DEV:v2.3";
 

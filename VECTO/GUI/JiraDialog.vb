@@ -28,6 +28,6 @@ Public Class JiraDialog
 	End Sub
 
 	Private Sub Button1_Click(sender As Object, e As EventArgs) Handles Button1.Click
-		Process.Start("https://webgate.ec.europa.eu/CITnet/jira/browse/VECTO")
+		Process.Start("https://citnet.tech.ec.europa.eu/CITnet/jira/browse/VECTO")
 	End Sub
 End Class
