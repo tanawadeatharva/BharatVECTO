@@ -709,7 +709,8 @@ namespace VECTO3GUI2020.ViewModel.Implementation
                         Type = MessageType.StatusMessage,
                         Message = string.Format("Finished Run {0} with ERROR: {1}", runName,
                             p.Value.Error.Message),
-                        Link = modFilename
+                        //Link = modFilename
+                        //Link = modFilename
 						//Link = "<CSV>" + modFilename
 					});
                 }
