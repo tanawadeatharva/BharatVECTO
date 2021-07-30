@@ -32,7 +32,7 @@ namespace Vecto3GUI2020Test.ViewModelTests
 			var fileName = TestHelper.GetMethodName() + ".xml";
 			StageInput.SaveInputDataExecute(GetFullPath(fileName));
 			Assert.True(checkFileNameExists(fileName));
-			Assert.AreEqual(GetFullPath(fileName), StageInput.InputDataFilePath);
+			Assert.AreEqual(GetFullPath(fileName), StageInput.VehicleInputDataFilePath);
 
 			//Check if title is updated
 			StringAssert.Contains(fileName, StageInput.Title);

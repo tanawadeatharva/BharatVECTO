@@ -277,10 +277,10 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 
 		public string VehicleInputDataFilePath
 		{
-			get => ManufacturingStageViewModel.InputDataFilePath;
+			get => ManufacturingStageViewModel.VehicleInputDataFilePath;
 			set
 			{
-				ManufacturingStageViewModel.InputDataFilePath = value;
+				ManufacturingStageViewModel.VehicleInputDataFilePath = value;
 				OnPropertyChanged();
 			}
 		}

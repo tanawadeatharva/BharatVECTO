@@ -56,6 +56,7 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 			(_vehicleViewModel as InterimStageBusVehicleViewModel_v2_8).ShowConsolidatedData = false;
 
 			_dataSource = inputData.DataSource;
+			VehicleInputDataFilePath = _dataSource.SourceFile;
 
 			Title = $"Edit Stage Input - {Path.GetFileName(_dataSource.SourceFile)}";
 			Init();
@@ -69,6 +70,7 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 		protected override void LoadStageInputDataFollowUp(IDeclarationInputDataProvider loadedInputData)
 		{
 			DataSource = loadedInputData.DataSource;
+			VehicleInputDataFilePath = DataSource.SourceFile;
 			UpdateTitle();			
 			DocumentName = loadedInputData.JobInputData.JobName;
 		}
