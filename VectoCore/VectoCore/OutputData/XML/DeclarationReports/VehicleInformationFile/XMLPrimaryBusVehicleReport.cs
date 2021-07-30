@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Text;
 using System.Xml;
 using System.Xml.Linq;
 using TUGraz.VectoCommon.BusAuxiliaries;
@@ -56,8 +58,8 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 		{
 			var retVal = new XDocument();
 			retVal.Add(
-				new XElement(XMLNames.VectoOutputMultistage,
-					new XAttribute("xmlns", tns),
+				new XElement(tns + XMLNames.VectoOutputMultistage,
+					//new XAttribute("xmlns", tns.NamespaceName),
 					new XAttribute(XNamespace.Xmlns + "di", di),
 					new XAttribute(XNamespace.Xmlns + "xsi", xsi.NamespaceName),
 					new XAttribute(XNamespace.Xmlns + "v2.0", v20),
@@ -69,8 +71,19 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 					
 					GeneratePrimaryVehicle(resultSignature))
 				);
-
+			
 			Report = retVal;
+			var ms = new MemoryStream();
+			var writer = XmlWriter.Create(ms, new XmlWriterSettings() {
+				Encoding = Encoding.UTF8,
+				NamespaceHandling = NamespaceHandling.OmitDuplicates,
+			});
+			Report.WriteTo(writer);
+			writer.Flush();
+			ms.Position = 0;
+			var reader = XmlReader.Create(ms, new XmlReaderSettings() { });
+			Report = XDocument.Load(reader);
+			Debug.WriteLine(Report.ToString());
 		}
 		
 		protected virtual XElement GeneratePrimaryVehicle(XElement resultSignature)
@@ -257,16 +270,19 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 					$".//*[local-name()='{XMLNames.BusAux_ElectricSystem_SupplyFromHEVPossible}']")?.InnerText);
 
 
-			return new XElement(tns + XMLNames.Component_Auxiliaries,
+			var result =  new XElement(tns + XMLNames.Component_Auxiliaries,
 				new XElement(tns + XMLNames.ComponentDataWrapper,
 					new XAttribute(xsi + "type", "AuxiliaryDataPIFType"),
-					new XAttribute("xmlns", tns.NamespaceName),
+					//new XAttribute("xmlns", tns.NamespaceName), //automically created
 					new XElement(tns + XMLNames.BusAux_Fan, new XElement(tns + XMLNames.BusAux_Technology,  aux.FanTechnology)),
 					GetSteeringPumpElement(aux.SteeringPumpTechnology),
 					GetElectricSystem(aux.ElectricSupply, supplyHevPossible),
 					GetPneumaticSystem(aux.PneumaticSupply, aux.PneumaticConsumers),
 					GetHvac(aux.HVACAux))
 				);
+
+
+			return result;
 		}
 
 
