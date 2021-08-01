@@ -45,6 +45,8 @@ namespace TUGraz.VectoCore.OutputData.FileIO
 	{
 		private readonly string _jobFile;
 
+		public string JobFile => _jobFile;
+
 		public const string REPORT_ENDING_PREFIX = "VIF_Report_";
 
 		private int? _numberOfManufacturingStages = null;
@@ -110,12 +112,12 @@ namespace TUGraz.VectoCore.OutputData.FileIO
 			return $"{jobFile.Substring(0, vifReportIndex - 1)}.xml";
 		}
 
-		public void WriteSumData(DataTable data)
+		public virtual void WriteSumData(DataTable data)
 		{
 			VectoCSVFile.Write(SumFileName, data, true, true);
 		}
 
-		public string GetModDataFileName(string runName, string cycleName, string runSuffix)
+		public virtual string GetModDataFileName(string runName, string cycleName, string runSuffix)
 		{
 			string modFileName;
 			if (!string.IsNullOrWhiteSpace(cycleName) || !string.IsNullOrWhiteSpace(runSuffix)) {
@@ -127,7 +129,7 @@ namespace TUGraz.VectoCore.OutputData.FileIO
 			return Path.Combine(BasePath, string.Concat(modFileName.Split(Path.GetInvalidFileNameChars())));
 		}
 
-		public void WriteModData(int jobRunId, string runName, string cycleName, string runSuffix, DataTable modData)
+		public virtual void WriteModData(int jobRunId, string runName, string cycleName, string runSuffix, DataTable modData)
 		{
 			VectoCSVFile.Write(GetModDataFileName(runName, cycleName, runSuffix), modData, true);
 		}

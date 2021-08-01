@@ -35,7 +35,10 @@ using System.Xml.Linq;
 
 namespace TUGraz.VectoCore.OutputData
 {
-	public interface IOutputDataWriter : IModalDataWriter, IReportWriter, ISummaryWriter {}
+	public interface IOutputDataWriter : IModalDataWriter, IReportWriter, ISummaryWriter
+	{
+		string JobFile { get; }
+	}
 
 	public interface IModalDataWriter
 	{

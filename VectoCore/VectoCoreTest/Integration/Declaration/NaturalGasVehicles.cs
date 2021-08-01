@@ -135,9 +135,11 @@ namespace TUGraz.VectoCore.Tests.Integration.Declaration
 
 		private readonly Dictionary<ReportType, XDocument> _reports = new Dictionary<ReportType, XDocument>();
 
+		
+
 		public MockDeclarationWriter(string filename)
 		{
-			
+			JobFile = filename;
 		}
 
 		public XDocument GetReport(ReportType type)
@@ -172,6 +174,16 @@ namespace TUGraz.VectoCore.Tests.Integration.Declaration
 		public void WriteSumData(DataTable sortedAndFilteredTable)
 		{
 			SumData = sortedAndFilteredTable;
+		}
+
+		#endregion
+
+		#region Implementation of IOutputDataWriter
+
+		public string JobFile
+		{
+			get;
+			private set;
 		}
 
 		#endregion
