@@ -225,11 +225,20 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			{
 				System.Diagnostics.Debug.Assert(multiStagePrimaryAndStageInputData.PrimaryVehicle.JobInputData.Vehicle.VehicleCategory == VehicleCategory.HeavyBusPrimaryVehicle);
 
-				//var msOutputWriter = new MemoryStreamOutputWriter();
+				var tempOutputWriter = new TempFileOutputWriter(ReportWriter.JobFile);
+				var originalReportWriter = ReportWriter;
+				ReportWriter = tempOutputWriter;
+
+				var tempPrimaryReport = new XMLDeclarationReportPrimaryVehicle(tempOutputWriter, true);
+				
+				DataReader = new DeclarationModePrimaryBusVectoRunDataFactory(multiStagePrimaryAndStageInputData.PrimaryVehicle, tempPrimaryReport);
+
+
 				var reportPrimary = declarationReport ??
 									new XMLDeclarationReportPrimaryVehicle(ReportWriter,
 										true);
-				DataReader = new DeclarationModePrimaryBusVectoRunDataFactory(multiStagePrimaryAndStageInputData.PrimaryVehicle, reportPrimary);
+				
+
 
 				CreateFollowUpSimulatorFactory = true;
 				_followingSimulatorFactoryCreator = (() => {
@@ -237,22 +246,30 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 					var container = new StandardKernel(
 						new VectoNinjectModule()
 					);
-					var inputDataReader = container.Get<IXMLInputDataReader>();
-					var primaryInputData = inputDataReader.CreateDeclaration(((FileOutputWriter)ReportWriter).XMLPrimaryVehicleReportName);
-					var vifInputData = new XMLDeclarationVIFInputData(primaryInputData as IMultistageBusInputDataProvider,
-						multiStagePrimaryAndStageInputData.StageInputData);
+					try {
+						var inputDataReader = container.Get<IXMLInputDataReader>();
+						var primaryInputData = inputDataReader.CreateDeclaration(tempOutputWriter
+							.GetDocument(ReportType.DeclarationReportPrimaryVehicleXML).CreateReader());
+						//var primaryInputData = inputDataReader.CreateDeclaration(((FileOutputWriter)ReportWriter).XMLPrimaryVehicleReportName);
+						var vifInputData = new XMLDeclarationVIFInputData(
+							primaryInputData as IMultistageBusInputDataProvider,
+							multiStagePrimaryAndStageInputData.StageInputData);
 
-					var manStagesCount = vifInputData.MultistageJobInputData.JobInputData.ManufacturingStages?.Count ?? 0;
-					(ReportWriter as FileOutputWriter).NumberOfManufacturingStages = manStagesCount;
-					//TODO add manufacturing stages to ReportWriter
-					var factory = new SimulatorFactory(_mode,
-						vifInputData, ReportWriter,
-						declarationReport,
-						vtpReport,
-						Validate) {
-						CreateFollowUpSimulatorFactory = true,
-					};
-					return factory;
+						var manStagesCount =
+							vifInputData.MultistageJobInputData.JobInputData.ManufacturingStages?.Count ?? 0;
+						(ReportWriter as FileOutputWriter).NumberOfManufacturingStages = manStagesCount;
+						var factory = new SimulatorFactory(_mode,
+							vifInputData, originalReportWriter,
+							null,
+							vtpReport,
+							Validate) {
+							CreateFollowUpSimulatorFactory = true,
+						};
+						return factory;
+					} catch (Exception ex) {
+						Log.Error($"Failed to create additional Simulation run: {ex.Message}");
+						return null;
+					}
 				});
 				return;
 			}
