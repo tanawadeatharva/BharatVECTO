@@ -18,8 +18,9 @@ namespace VECTO3GUI2020.Helper
 		private readonly string _defaultInitialDirectory = Settings.Default.DefaultFilePath;
 
 		#region File and Folder Dialogs
-		private string _xmlFilter = "XML Files (*.xml)|*.xml";
-		private string _jsonFilter = "JSON Files (*.json)|*.json";
+		public const string XmlFilter = "XML Files (*.xml)|*.xml";
+		public const string JsonFilter = "JSON Files (*.json)|*.json";
+		//public const string _xmlAndJsonFile = "Vecto Files (*.xml, *.json)|*.xml;*.json";
 
 		private Dictionary<string, string> lastUsedLoadDirectories = new Dictionary<string, string>();
 		private Dictionary<string, string> lastUsedSaveDirectories = new Dictionary<string, string>();
@@ -101,17 +102,17 @@ namespace VECTO3GUI2020.Helper
 
 		public string[] OpenXMLFilesDialog(string initialDirectory)
 		{
-			return OpenFilesDialog(_xmlFilter, initialDirectory);
+			return OpenFilesDialog(XmlFilter, initialDirectory);
 		}
 
 		public string OpenXMLFileDialog(string initialDirectory)
 		{
-			return OpenFilesDialog(_xmlFilter, initialDirectory, false)?[0];
+			return OpenFilesDialog(XmlFilter, initialDirectory, false)?[0];
 		}
 
 		public string OpenJsonFileDialog(string initialDirectory)
 		{
-			return OpenFilesDialog(_jsonFilter, initialDirectory, false)?[0];
+			return OpenFilesDialog(JsonFilter, initialDirectory, false)?[0];
 		}
 
 
@@ -159,12 +160,12 @@ namespace VECTO3GUI2020.Helper
 
 		public string SaveToXMLDialog(string initialDirectory)
 		{
-			return SaveToDialog(initialDirectory, _xmlFilter);
+			return SaveToDialog(initialDirectory, XmlFilter);
 		}
 
 		public string SaveToJsonDialog(string initialDirectory)
 		{
-			return SaveToDialog(initialDirectory, _jsonFilter);
+			return SaveToDialog(initialDirectory, JsonFilter);
 		}
 
 		public MessageBoxResult ShowErrorMessage(string errorMessage, string caption)
