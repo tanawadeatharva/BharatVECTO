@@ -100,9 +100,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 				} finally {
 
 				}
-
 			}
-
 		}
 
 		
@@ -117,6 +115,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 		private static int _jobNumber;
 		private bool _multithreaded = true;
 		private bool _canceled = false;
+		private ReaderWriterLockSlim _cancelLock = new ReaderWriterLockSlim();
 
 		/// <summary>
 		/// Initializes a new empty instance of the <see cref="JobContainer"/> class.
@@ -129,14 +128,34 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 		public void AddRun(IVectoRun run)
 		{
-			Interlocked.Increment(ref _jobNumber);
-
 			try {
-				_runsRwLock.EnterWriteLock();
-				Runs.Add(new RunEntry(run, this));
-				_unfinishedRuns.Add(run.RunIdentifier);
+				_cancelLock.EnterReadLock();
+				if (_canceled) {
+					return;
+				}
+
+
+
+
+				Interlocked.Increment(ref _jobNumber);
+
+				try {
+					_runsRwLock.EnterWriteLock();
+					Runs.Add(new RunEntry(run, this));
+					_unfinishedRuns.Add(run.RunIdentifier);
+				} finally {
+					_runsRwLock.ExitWriteLock();
+				}
+
+
+
+
+
+
+
+
 			} finally {
-				_runsRwLock.ExitWriteLock();
+				_cancelLock.ExitReadLock();
 			}
 
 		}
@@ -167,27 +186,44 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 		/// <returns>A List of Run-Identifiers (unique), int</returns>
 		public List<int> AddRuns(ISimulatorFactory factory)
 		{
-			var runIDs = new List<int>();
-			factory.SumData = _sumWriter;
-			factory.JobNumber = Interlocked.Increment(ref _jobNumber);
-
 			try {
-				_runsRwLock.EnterWriteLock();
-				foreach (var run in factory.SimulationRuns()) {
-					var entry = new RunEntry(run, this, factory.JobNumber);
-					Runs.Add(entry);
-					_unfinishedRuns.Add(run.RunIdentifier);
-					runIDs.Add(entry.RunId);
+				_cancelLock.EnterReadLock();
+				var runIDs = new List<int>();
+				if (_canceled) {
+					return runIDs;
 				}
-			} finally {
-				_runsRwLock.ExitWriteLock();
+
+
+
+
+
+		
+				factory.SumData = _sumWriter;
+				factory.JobNumber = Interlocked.Increment(ref _jobNumber);
+
+				try
+				{
+					_runsRwLock.EnterWriteLock();
+					foreach (var run in factory.SimulationRuns())
+					{
+						var entry = new RunEntry(run, this, factory.JobNumber);
+						Runs.Add(entry);
+						_unfinishedRuns.Add(run.RunIdentifier);
+						runIDs.Add(entry.RunId);
+					}
+				}
+				finally
+				{
+					_runsRwLock.ExitWriteLock();
+				}
+
+				var added = _runContainerMap.TryAdd(factory.JobNumber, new RunContainer(factory, runIDs));
+				System.Diagnostics.Debug.Assert(added);
+				return runIDs;
 			}
-
-			var added = _runContainerMap.TryAdd(factory.JobNumber, new RunContainer(factory, runIDs));
-			System.Diagnostics.Debug.Assert(added);
-			return runIDs;
-
-
+			finally {
+				_cancelLock.ExitReadLock();
+			}
 		}
 
 		/// <summary>
@@ -195,88 +231,137 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 		/// </summary>
 		public void Execute(bool multithreaded = true)
 		{
-			
-			_multithreaded = multithreaded;
-			Log.Info("VectoRun started running. Executing Runs.");
-			if (_canceled) {
+			try {
+				_cancelLock.EnterReadLock();
+				_multithreaded = multithreaded;
+				Log.Info("VectoRun started running. Executing Runs.");
+				if (_canceled) {
 					Log.Info("JobContainer already cancelled\n");
 					return;
-			}
-
-
-			try {
-				_runsRwLock.EnterWriteLock();
-				if (multithreaded) {
-					Runs.ForEach(r => { r.RunWorkerAsync(); });
-				} else {
-					var first = new Task(() => { });
-					var task = first;
-					// ReSharper disable once LoopCanBeConvertedToQuery
-					foreach (var run in Runs) {
-						var r = run;
-						task = task.ContinueWith(t => r.RunWorkerAsync().Wait(),
-							TaskContinuationOptions.OnlyOnRanToCompletion);
-					}
-
-					first.Start();
 				}
+
+
+				try {
+					_runsRwLock.EnterWriteLock();
+					if (multithreaded) {
+						Runs.ForEach(r => { r.RunWorkerAsync(); });
+					} else {
+						var first = new Task(() => { });
+						var task = first;
+						// ReSharper disable once LoopCanBeConvertedToQuery
+						foreach (var run in Runs) {
+							var r = run;
+							task = task.ContinueWith(t => r.RunWorkerAsync().Wait(),
+								TaskContinuationOptions.OnlyOnRanToCompletion);
+						}
+
+						first.Start();
+					}
+				} finally {
+					_runsRwLock.ExitWriteLock();
+				}
+
+
 			} finally {
-				_runsRwLock.ExitWriteLock();
+				_cancelLock.ExitReadLock();
 			}
+			
 		}
 
 		public void Cancel()
 		{
-
-			foreach (var job in Runs) {
-				job.CancelAsync();
-			}
+			CancelCurrent();
 			WaitFinished();
 		}
 
 		public void CancelCurrent()
 		{
-			foreach (var job in Runs) {
-				job.CancelAsync();
+			try
+			{
+				_cancelLock.EnterWriteLock();
+				_canceled = true;
+				_runsRwLock.EnterReadLock();
+				foreach (var job in Runs)
+				{
+					job.CancelAsync();
+				}
+			}
+			finally
+			{
+				_runsRwLock.ExitReadLock();
+				_cancelLock.ExitWriteLock();
 			}
 		}
 
 		public void WaitFinished()
 		{
-			Task.WaitAll(Runs.Select(r => r.RunTask).ToArray());
+			try {
+				_cancelLock.EnterReadLock();
+				System.Diagnostics.Debug.Assert(_canceled == true);
+			} finally {
+				_cancelLock.ExitReadLock();
+			}
+
+			Task[] tasks;
+			try {
+				_runsRwLock.EnterReadLock();
+				tasks = Runs.Select(r => r.RunTask).ToArray();
+			} finally {
+				_runsRwLock.ExitReadLock();
+			}
+			
+
+			Task.WaitAll(tasks);
 		}
 
 		[MethodImpl(MethodImplOptions.Synchronized)]
 		private void JobCompleted(int runId, int runContainerId)
 		{
+			try {
+				_cancelLock.EnterReadLock();
+				if (_canceled) {
+					return;
+				}
+			} finally {
+				_cancelLock.ExitReadLock();
+			}
+
 			_runContainerMap.TryGetValue(runContainerId, out var runContainer);
+			
 			runContainer?.JobCompleted(runId);
 			AddFollowUpSimulatorFactories(runContainerId);
 
 			try {
 				_runsRwLock.EnterWriteLock();
 				_unfinishedRuns.Remove(runId);
+				if (AllCompletedUnsafe())
+				{
+					_sumWriter.Finish();
+				}
 			} finally {
 				_runsRwLock.ExitWriteLock();
-			}
-
-
-
-
-			if (AllCompleted) {
-				_sumWriter.Finish();
 			}
 		}
 
 		private void AddFollowUpSimulatorFactories(int runContainerId)
 		{
-			_runContainerMap.TryGetValue(runContainerId, out var runContainer);
-			var additionalSimulatorFactory = runContainer?.GetFollowUpSimulatorFactory();
-			if (additionalSimulatorFactory == null)
-				return;
+			try {
+				_runContainerMap.TryGetValue(runContainerId, out var runContainer);
+				var additionalSimulatorFactory = runContainer?.GetFollowUpSimulatorFactory();
+				if (additionalSimulatorFactory == null)
+					return;
 
-			AddRuns(additionalSimulatorFactory);
-			Execute(_multithreaded);
+				AddRuns(additionalSimulatorFactory);
+				Execute(_multithreaded);
+			} catch (Exception ex) {
+				Log.Error(ex.Message);
+			}
+			
+		}
+
+		private bool AllCompletedUnsafe()
+		{
+			return _unfinishedRuns.Count == 0;
 		}
 
 		public bool AllCompleted
@@ -285,11 +370,10 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			{
 				try {
 					_runsRwLock.EnterReadLock();
-					return _unfinishedRuns.Count == 0;
+					return AllCompletedUnsafe();
 				} finally {
 					_runsRwLock.ExitReadLock();
 				}
-				
 			}
 		}
 

@@ -444,6 +444,7 @@
     <Compile Include="OutputData\FileIO\BusAuxWriter.cs" />
     <Compile Include="OutputData\FileIO\FileOutputVIFWriter.cs" />
     <Compile Include="OutputData\FileIO\JSONFileWriter.cs" />
+    <Compile Include="OutputData\FileIO\TempFileOutputWriter.cs" />
     <Compile Include="OutputData\ModalDataPostprocessingCorrection.cs" />
     <Compile Include="OutputData\XML\DeclarationReports\CustomerInformationFile\IXMLCustomerReport.cs" />
     <Compile Include="OutputData\XML\DeclarationReports\CustomerInformationFile\XMLCustomerReportExemptedCompletedBus.cs" />
