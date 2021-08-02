@@ -43,6 +43,7 @@ using TUGraz.VectoCore.InputData.Reader.ComponentData;
 using TUGraz.VectoCore.InputData.Reader.Impl;
 using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation.Data;
+using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 
 // ReSharper disable MemberCanBePrivate.Global  -- used by API!
@@ -764,7 +765,7 @@ namespace TUGraz.VectoCore.OutputData
 
 			WriteAxlegearData(runData.AxleGearData, row);
 
-			WriteAuxTechnologies(runData.Aux, runData.BusAuxiliaries, row);
+			WriteAuxTechnologies(runData, row);
 
 			WriteAxleWheelsData(runData.VehicleData.AxleData, row);
 
@@ -791,7 +792,7 @@ namespace TUGraz.VectoCore.OutputData
 
 			row[Fields.TOTAL_VEHICLE_MASS] = (ConvertedSI)data.TotalVehicleMass;
 
-			row[Fields.SLEEPER_CAB] = data.SleeperCab ? "yes" : "no";
+			row[Fields.SLEEPER_CAB] = data.SleeperCab.HasValue ? (data.SleeperCab.Value ? "yes" : "no") : "-";
 
 			row[Fields.ROLLING_RESISTANCE_COEFFICIENT_WO_TRAILER] =
 				data.RollResistanceCoefficientWithoutTrailer;
@@ -886,8 +887,10 @@ namespace TUGraz.VectoCore.OutputData
 				: data.CertificationNumber;
 		}
 
-		private void WriteAuxTechnologies(IEnumerable<VectoRunData.AuxData> auxData, IAuxiliaryConfig busAux, DataRow row)
+		private void WriteAuxTechnologies(VectoRunData runData, DataRow row)
 		{
+			var auxData = runData.Aux;
+			var busAux = runData.BusAuxiliaries;
 			foreach (var aux in auxData) {
 				if (aux.ID == Constants.Auxiliaries.IDs.PTOConsumer || aux.ID == Constants.Auxiliaries.IDs.PTOTransmission) {
 					continue;
@@ -913,7 +916,7 @@ namespace TUGraz.VectoCore.OutputData
 				busAux.SSMInputs is ISSMDeclarationInputs inputs ? inputs.HVACTechnology : "engineering mode";
 			row[string.Format(Fields.AUX_TECH_FORMAT, Constants.Auxiliaries.IDs.ElectricSystem)] =
 				string.Join("/", busAux.ElectricalUserInputsConfig.AlternatorType.GetLabel());
-			row[string.Format(Fields.AUX_TECH_FORMAT, Constants.Auxiliaries.IDs.PneumaticSystem)] =
+			row[string.Format(Fields.AUX_TECH_FORMAT, Constants.Auxiliaries.IDs.PneumaticSystem)] = runData.JobType == VectoSimulationJobType.BatteryElectricVehicle ? "-" :
 				busAux.PneumaticUserInputsConfig.CompressorMap.Technology;
 		}
 
