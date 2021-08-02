@@ -600,8 +600,6 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 		#endregion
 
-		public override XmlElement ADASNode => null;
-
 		public override AngledriveType AngledriveType => AngledriveType.None;
 
 		public override RetarderType RetarderType => RetarderType.None;
