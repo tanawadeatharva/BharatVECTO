@@ -153,7 +153,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			if (component is IEngineInfo c17){
 				EngineInfo = c17;
 				commitPriority = 2;
-				HasCombustionEngine = true;
+				HasCombustionEngine = !(component is DummyEngineInfo); // true;
 			}
 			if (component is IGearboxInfo c18) {
 				GearboxInfo = c18;

@@ -44,6 +44,7 @@ namespace TUGraz.VectoCore.Tests.Integration.BatteryElectric
 
 		protected const string BEV_E2_Job = @"TestData\BatteryElectric\GenericVehicleB2\BEV_ENG.vecto";
 		protected const string BEV_E2_Job_3Speed = @"TestData\BatteryElectric\GenericVehicleB2\BEV_ENG_3speed.vecto";
+		protected const string BEV_E2_Job_BusAux = @"TestData\BatteryElectric\GenericVehicleB2\BEV_ENG_BusAux.vecto";
 		protected const string BEV_E2_Job_Cont30kW = @"TestData\BatteryElectric\GenericVehicleB2\BEV_ENG_Cont30kW.vecto";
 
 		public const string MotorFile = @"TestData\BatteryElectric\GenericVehicleB4\GenericEMotor_125kW_485Nm.vem";
@@ -577,6 +578,17 @@ namespace TUGraz.VectoCore.Tests.Integration.BatteryElectric
 			TestCase(BEV_E2_Job_3Speed, 7, TestName = "PEV E2 3Speed Job Suburban"),
 			TestCase(BEV_E2_Job_3Speed, 8, TestName = "PEV E2 3Speed Job Urban"),
 			TestCase(BEV_E2_Job_3Speed, 9, TestName = "PEV E2 3Speed Job UrbanDelivery"),
+
+			TestCase(BEV_E2_Job_BusAux, 0, TestName = "PEV E2 BusAux Job LongHaul"),
+			TestCase(BEV_E2_Job_BusAux, 1, TestName = "PEV E2 BusAux Job Coach"),
+			TestCase(BEV_E2_Job_BusAux, 2, TestName = "PEV E2 BusAux Job Construction"),
+			TestCase(BEV_E2_Job_BusAux, 3, TestName = "PEV E2 BusAux Job HeavyUrban"),
+			TestCase(BEV_E2_Job_BusAux, 4, TestName = "PEV E2 BusAux Job Interurban"),
+			TestCase(BEV_E2_Job_BusAux, 5, TestName = "PEV E2 BusAux Job MunicipalUtility"),
+			TestCase(BEV_E2_Job_BusAux, 6, TestName = "PEV E2 BusAux Job RegionalDelivery"),
+			TestCase(BEV_E2_Job_BusAux, 7, TestName = "PEV E2 BusAux Job Suburban"),
+			TestCase(BEV_E2_Job_BusAux, 8, TestName = "PEV E2 BusAux Job Urban"),
+			TestCase(BEV_E2_Job_BusAux, 9, TestName = "PEV E2 BusAux Job UrbanDelivery"),
 
 			TestCase(BEV_E2_Job_Cont30kW, 0, TestName = "PEV E2 Cont. 30kW Job LongHaul"),
 			TestCase(BEV_E2_Job_Cont30kW, 1, TestName = "PEV E2 Cont. 30kW Job Coach"),

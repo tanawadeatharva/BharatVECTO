@@ -62,7 +62,7 @@ Partial Class BusAuxiliariesEngParametersForm
         Me.tbDCDCEff = New System.Windows.Forms.TextBox()
         Me.pnES_HEVREESS = New System.Windows.Forms.Panel()
         Me.cbES_HEVREESS = New System.Windows.Forms.CheckBox()
-        Me.Panel1 = New System.Windows.Forms.Panel()
+        Me.pnAlternatorTechnology = New System.Windows.Forms.Panel()
         Me.cbAlternatorTechnology = New System.Windows.Forms.ComboBox()
         Me.lbAlternatorTechnology = New System.Windows.Forms.Label()
         Me.pnSmartElectricParams = New System.Windows.Forms.Panel()
@@ -133,7 +133,7 @@ Partial Class BusAuxiliariesEngParametersForm
         Me.gbElectricSystem.SuspendLayout
         Me.pnDCDCEff.SuspendLayout
         Me.pnES_HEVREESS.SuspendLayout
-        Me.Panel1.SuspendLayout
+        Me.pnAlternatorTechnology.SuspendLayout
         Me.pnSmartElectricParams.SuspendLayout
         Me.pnBattEfficiency.SuspendLayout
         Me.pnElectricStorageCapacity.SuspendLayout
@@ -313,7 +313,7 @@ Partial Class BusAuxiliariesEngParametersForm
         '
         Me.gbElectricSystem.Controls.Add(Me.pnDCDCEff)
         Me.gbElectricSystem.Controls.Add(Me.pnES_HEVREESS)
-        Me.gbElectricSystem.Controls.Add(Me.Panel1)
+        Me.gbElectricSystem.Controls.Add(Me.pnAlternatorTechnology)
         Me.gbElectricSystem.Controls.Add(Me.pnSmartElectricParams)
         Me.gbElectricSystem.Controls.Add(Me.pnAlternatorEfficiency)
         Me.gbElectricSystem.Controls.Add(Me.pnCurrentDemandEngineOffStandstill)
@@ -379,14 +379,14 @@ Partial Class BusAuxiliariesEngParametersForm
         Me.cbES_HEVREESS.Text = "ES supply from HEV REESS"
         Me.cbES_HEVREESS.UseVisualStyleBackColor = true
         '
-        'Panel1
+        'pnAlternatorTechnology
         '
-        Me.Panel1.Controls.Add(Me.cbAlternatorTechnology)
-        Me.Panel1.Controls.Add(Me.lbAlternatorTechnology)
-        Me.Panel1.Location = New System.Drawing.Point(10, 139)
-        Me.Panel1.Name = "Panel1"
-        Me.Panel1.Size = New System.Drawing.Size(288, 28)
-        Me.Panel1.TabIndex = 26
+        Me.pnAlternatorTechnology.Controls.Add(Me.cbAlternatorTechnology)
+        Me.pnAlternatorTechnology.Controls.Add(Me.lbAlternatorTechnology)
+        Me.pnAlternatorTechnology.Location = New System.Drawing.Point(10, 139)
+        Me.pnAlternatorTechnology.Name = "pnAlternatorTechnology"
+        Me.pnAlternatorTechnology.Size = New System.Drawing.Size(288, 28)
+        Me.pnAlternatorTechnology.TabIndex = 26
         '
         'cbAlternatorTechnology
         '
@@ -987,8 +987,8 @@ Partial Class BusAuxiliariesEngParametersForm
         Me.pnDCDCEff.PerformLayout
         Me.pnES_HEVREESS.ResumeLayout(false)
         Me.pnES_HEVREESS.PerformLayout
-        Me.Panel1.ResumeLayout(false)
-        Me.Panel1.PerformLayout
+        Me.pnAlternatorTechnology.ResumeLayout(false)
+        Me.pnAlternatorTechnology.PerformLayout
         Me.pnSmartElectricParams.ResumeLayout(false)
         Me.pnBattEfficiency.ResumeLayout(false)
         Me.pnBattEfficiency.PerformLayout
@@ -1102,7 +1102,7 @@ End Sub
     Friend WithEvents lblHvacMechPowerDemand As Label
     Friend WithEvents lblHvacMechPowerDemandUnit As Label
     Friend WithEvents tbHvacMechPowerDemand As TextBox
-    Friend WithEvents Panel1 As Panel
+    Friend WithEvents pnAlternatorTechnology As Panel
     Friend WithEvents cbAlternatorTechnology As ComboBox
     Friend WithEvents lbAlternatorTechnology As Label
     Friend WithEvents pnDCDCEff As Panel

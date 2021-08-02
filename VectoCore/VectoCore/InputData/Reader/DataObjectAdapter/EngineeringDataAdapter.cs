@@ -510,13 +510,21 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			return null;
 		}
 
-		public IAuxiliaryConfig CreateBusAuxiliariesData(IAuxiliariesEngineeringInputData auxInputData, VehicleData vehicleData)
+		public IAuxiliaryConfig CreateBusAuxiliariesData(IAuxiliariesEngineeringInputData auxInputData,
+			VehicleData vehicleData, VectoSimulationJobType jobType)
 		{
 			if (auxInputData == null || auxInputData.BusAuxiliariesData == null) {
 				return null;
 			}
 
 			var busAux = auxInputData.BusAuxiliariesData;
+			return jobType == VectoSimulationJobType.BatteryElectricVehicle
+				? GetBatteryElectricBusAuxiliariesData(vehicleData, busAux)
+				: GetBusAuxiliariesData(vehicleData, busAux);
+		}
+
+		private IAuxiliaryConfig GetBusAuxiliariesData(VehicleData vehicleData, IBusAuxiliariesEngineeringData busAux)
+		{
 			return new AuxiliaryConfig() {
 				//InputData = auxInputData.BusAuxiliariesData,
 				ElectricalUserInputsConfig = new ElectricsUserInputsConfig() {
@@ -586,6 +594,78 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 				VehicleData = vehicleData,
 			};
 		}
+
+		private IAuxiliaryConfig GetBatteryElectricBusAuxiliariesData(VehicleData vehicleData, IBusAuxiliariesEngineeringData busAux)
+		{
+			return new AuxiliaryConfig() {
+				//InputData = auxInputData.BusAuxiliariesData,
+				ElectricalUserInputsConfig = new ElectricsUserInputsConfig() {
+					PowerNetVoltage = Constants.BusAuxiliaries.ElectricSystem.PowernetVoltage,
+					//StoredEnergyEfficiency = Constants.BusAuxiliaries.ElectricSystem.StoredEnergyEfficiency,
+					ResultCardIdle = new DummyResultCard(),
+					ResultCardOverrun = new DummyResultCard(),
+					ResultCardTraction = new DummyResultCard(),
+					AlternatorGearEfficiency = Constants.BusAuxiliaries.ElectricSystem.AlternatorGearEfficiency,
+					DoorActuationTimeSecond = Constants.BusAuxiliaries.ElectricalConsumers.DoorActuationTimeSecond,
+					AlternatorMap = new SimpleAlternator(1),
+					AlternatorType = AlternatorType.None,
+					ConnectESToREESS = true,
+					DCDCEfficiency = busAux.ElectricSystem.DCDCConverterEfficiency.LimitTo(0, 1),
+					MaxAlternatorPower = 0.SI<Watt>(),
+					ElectricStorageCapacity =  0.SI<WattSecond>(),
+					StoredEnergyEfficiency = 1,
+					ElectricalConsumers = GetElectricConsumers(busAux.ElectricSystem)
+				},
+				PneumaticAuxillariesConfig = new PneumaticsConsumersDemand() {
+					AdBlueInjection = 0.SI<NormLiterPerSecond>(),
+					AirControlledSuspension = 0.SI<NormLiterPerSecond>(),
+					Braking = 0.SI<NormLiterPerKilogram>(),
+					BreakingWithKneeling = 0.SI<NormLiterPerKilogramMeter>(),
+					DeadVolBlowOuts = 0.SI<PerSecond>(),
+					DeadVolume = 0.SI<NormLiter>(),
+					NonSmartRegenFractionTotalAirDemand = 0,
+					SmartRegenFractionTotalAirDemand = 0,
+					OverrunUtilisationForCompressionFraction =
+						Constants.BusAuxiliaries.PneumaticConsumersDemands.OverrunUtilisationForCompressionFraction,
+					DoorOpening = 0.SI<NormLiter>(),
+					StopBrakeActuation = 0.SI<NormLiterPerKilogram>(),
+				},
+				PneumaticUserInputsConfig = new PneumaticUserInputsConfig() {
+					CompressorMap = new CompressorMap(new List<CompressorMapValues>() {
+							new CompressorMapValues(0.RPMtoRad(), 1.SI<NormLiterPerSecond>() , 1.SI<Watt>(), 0.SI<Watt>()),
+							new CompressorMapValues(1e12.RPMtoRad(), 1.SI<NormLiterPerSecond>() , 1.SI<Watt>(), 0.SI<Watt>())
+						}, 
+						"engineering mode", "none"),
+					CompressorGearEfficiency = Constants.BusAuxiliaries.PneumaticUserConfig.CompressorGearEfficiency,
+					CompressorGearRatio = 0,
+					SmartAirCompression = false,
+					SmartRegeneration = false,
+					KneelingHeight = 0.SI<Meter>(),
+					AirSuspensionControl = ConsumerTechnology.Pneumatically,
+					AdBlueDosing = ConsumerTechnology.Electrically,
+					Doors = ConsumerTechnology.Electrically
+				},
+				Actuations = new Actuations() {
+					Braking = 0,
+					Kneeling = 0,
+					ParkBrakeAndDoors = 0,
+					CycleTime = 1.SI<Second>()
+				},
+				SSMInputs = new SSMEngineeringInputs() {
+					MechanicalPower = 0.SI<Watt>(),
+					ElectricPower = 0.SI<Watt>(),
+					AuxHeaterPower = 0.SI<Watt>(),
+					HeatingDemand = 0.SI<WattSecond>(),
+					AuxHeaterEfficiency = Constants.BusAuxiliaries.SteadyStateModel.AuxHeaterEfficiency,
+					FuelEnergyToHeatToCoolant = Constants.BusAuxiliaries.Heater.FuelEnergyToHeatToCoolant,
+					CoolantHeatTransferredToAirCabinHeater =
+						Constants.BusAuxiliaries.Heater.CoolantHeatTransferredToAirCabinHeater,
+				},
+				VehicleData = vehicleData,
+			};
+		}
+
+		
 
 		private Dictionary<string, ElectricConsumerEntry> GetElectricConsumers(IBusAuxElectricSystemEngineeringData busAuxElectricSystem)
 		{
