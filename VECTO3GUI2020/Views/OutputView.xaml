@@ -34,7 +34,6 @@
                 Name="MessageList"
                 ColumnHeaderStyle="{StaticResource JobListDataGridHeaderStyle}"
                 ColumnHeaderHeight="30"
-                d:DataContext="{d:DesignInstance helper:DesignData}"
                 AlternationCount="2"
                 Background="White">
 
@@ -67,7 +66,7 @@
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
                         </DataGridTemplateColumn>
-                        <DataGridTextColumn Header="Time" Binding="{Binding Time, StringFormat=hh:mm:ss dd.MM.yyyy}" Width="150" />
+                        <DataGridTextColumn Header="Time" Binding="{Binding Time, StringFormat=HH:mm:ss dd.MM.yyyy}" Width="150" />
                     </DataGrid.Columns>
                 <DataGrid.RowStyle>
                     <Style TargetType="DataGridRow">
