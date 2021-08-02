@@ -29,6 +29,7 @@
 *   Martin Rexeis, rexeis@ivt.tugraz.at, IVT, Graz University of Technology
 */
 
+using System.Collections.Generic;
 using System.Data;
 using System.IO;
 using System.Xml.Linq;
@@ -38,6 +39,7 @@ namespace TUGraz.VectoCore.OutputData
 	public interface IOutputDataWriter : IModalDataWriter, IReportWriter, ISummaryWriter
 	{
 		string JobFile { get; }
+		
 	}
 
 	public interface IModalDataWriter
@@ -55,7 +57,12 @@ namespace TUGraz.VectoCore.OutputData
 		void WriteReport(ReportType type, XDocument data);
 
 		void WriteReport(ReportType type, Stream data);
+
+
+		IDictionary<ReportType, string> GetWrittenFiles();
 	}
+
+
 
 	public enum ReportType
 	{

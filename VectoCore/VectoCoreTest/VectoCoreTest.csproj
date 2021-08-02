@@ -116,7 +116,6 @@
     <Compile Include="Integration\Declaration\VocationalVehicleTest.cs" />
     <Compile Include="Integration\Declaration\TestMaxMassInMUCycle.cs" />
     <Compile Include="Integration\DualFuel\DualFuelTests.cs" />
-    <Compile Include="Integration\Multistage\SimulatorFactoryAdditionalJobsTest.cs" />
     <Compile Include="Integration\RoadSweepers\RoadSweeperTests.cs" />
     <Compile Include="Integration\Hybrid\ParallelHybridTest.cs" />
     <Compile Include="Integration\Multistage\MultistageVehicleTest.cs" />

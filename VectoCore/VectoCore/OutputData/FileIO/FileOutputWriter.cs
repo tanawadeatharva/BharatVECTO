@@ -30,8 +30,11 @@
 */
 
 using System;
+using System.Collections.Concurrent;
+using System.Collections.Generic;
 using System.Data;
 using System.IO;
+using System.Linq;
 using System.Text;
 using System.Xml;
 using System.Xml.Linq;
@@ -46,6 +49,12 @@ namespace TUGraz.VectoCore.OutputData.FileIO
 		private readonly string _jobFile;
 
 		public string JobFile => _jobFile;
+
+		private ConcurrentDictionary<ReportType, string> _writtenReports = new ConcurrentDictionary<ReportType, string>();
+		public IDictionary<ReportType, string> GetWrittenFiles()
+		{
+			return _writtenReports;
+		}
 
 		public const string REPORT_ENDING_PREFIX = "VIF_Report_";
 
@@ -131,7 +140,8 @@ namespace TUGraz.VectoCore.OutputData.FileIO
 
 		public virtual void WriteModData(int jobRunId, string runName, string cycleName, string runSuffix, DataTable modData)
 		{
-			VectoCSVFile.Write(GetModDataFileName(runName, cycleName, runSuffix), modData, true);
+			var modDataFileName = GetModDataFileName(runName, cycleName, runSuffix);
+			VectoCSVFile.Write(modDataFileName, modData, true);
 		}
 
 		public virtual void WriteReport(ReportType type, XDocument data)
@@ -167,6 +177,9 @@ namespace TUGraz.VectoCore.OutputData.FileIO
 					xmlWriter.Close();
 				}
 			}
+
+			var added = _writtenReports.TryAdd(type, fileName);
+			System.Diagnostics.Debug.Assert(added);
 		}
 
 		

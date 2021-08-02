@@ -46,6 +46,7 @@ namespace TUGraz.VectoCore.Models.Simulation
 		int JobNumber { get; set; }
 		IVectoRunDataFactory DataReader { get; }
 		ISimulatorFactory FollowUpSimulatorFactory { get; }
+		IOutputDataWriter ReportWriter { get; }
 
 		/// <summary>
 		/// Creates powertrain and initializes it with the component's data.

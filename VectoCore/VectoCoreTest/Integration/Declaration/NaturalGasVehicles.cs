@@ -167,6 +167,11 @@ namespace TUGraz.VectoCore.Tests.Integration.Declaration
 		{
 		}
 
+		public IDictionary<ReportType, string> GetWrittenFiles()
+		{
+			throw new NotImplementedException();
+		}
+
 		#endregion
 
 		#region Implementation of ISummaryWriter

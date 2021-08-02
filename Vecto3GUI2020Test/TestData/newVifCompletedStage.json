@@ -1,13 +1,13 @@
 {
   "Header": {
     "CreatedBy": "Harry",
-    "Date": "2021-07-27T00:00:00+02:00",
+    "Date": "2021-08-02T00:00:00+02:00",
     "AppVersion": "Vecto3GUI2020",
     "FileVersion": 10
   },
   "Body": {
     "PrimaryVehicle": "C:\\Users\\Harry\\source\\repos\\vecto-dev\\VectoCore\\VectoCoreTest\\TestData\\XML\\XMLReaderDeclaration\\SchemaVersion2.6_Buses\\vecto_vehicle-primary_heavyBus-sample.xml",
-    "InterimStage": "C:\\Users\\Harry\\source\\repos\\vecto-dev\\VectoCore\\VectoCoreTest\\TestData\\XML\\XMLReaderDeclaration\\SchemaVersion2.8\\vecto_vehicle-stage_input_full-sample.xml",
+    "InterimStage": "C:\\Users\\Harry\\source\\repos\\vecto-dev\\VectoCore\\VectoCoreTest\\TestData\\XML\\XMLReaderDeclaration\\SchemaVersion2.8\\vecto_vehicle-stage_input_full-sample_final.xml",
     "Completed": false
   }
 }

@@ -52,7 +52,9 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 		private class RunContainer
 		{
 			private readonly ISimulatorFactory _simulatorFactory;
-			
+			private IOutputDataWriter _outputWriter;
+
+			public IOutputDataWriter OutputWriter => _outputWriter;
 
 			private bool followUpSimulatorFactoryFetched = false;
 
@@ -73,16 +75,24 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 				try {
 					_unfinishedRunsRwLock.EnterWriteLock();
 					_unfinishedRuns.Remove(runId);
+					if (AllCompletedUnsafe()) {
+						_outputWriter = _simulatorFactory.ReportWriter;
+					}
 				} finally {
 					_unfinishedRunsRwLock.ExitWriteLock();
 				}
-			
 			}
+
+			private bool AllCompletedUnsafe()
+			{
+				return _unfinishedRuns.Count == 0;
+			}
+
 			private bool AllCompleted()
 			{
 				try {
 					_unfinishedRunsRwLock.EnterReadLock();
-					return _unfinishedRuns.Count == 0;
+					return AllCompletedUnsafe();
 				} finally {
 					_unfinishedRunsRwLock.ExitReadLock();
 				}
@@ -106,16 +116,16 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 		
 
 		private readonly SummaryDataContainer _sumWriter;
-
 		internal readonly List<RunEntry> Runs = new List<RunEntry>();
 		private readonly HashSet<int> _unfinishedRuns = new HashSet<int>();
 		private ReaderWriterLockSlim _runsRwLock = new ReaderWriterLockSlim();
 		private ConcurrentDictionary<int, RunContainer> _runContainerMap  = new ConcurrentDictionary<int, RunContainer>();
-
 		private static int _jobNumber;
 		private bool _multithreaded = true;
 		private bool _canceled = false;
 		private ReaderWriterLockSlim _cancelLock = new ReaderWriterLockSlim();
+
+		
 
 		/// <summary>
 		/// Initializes a new empty instance of the <see cref="JobContainer"/> class.
@@ -126,6 +136,19 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			_sumWriter = sumWriter;
 		}
 
+		
+		public IEnumerable<IOutputDataWriter> GetOutputDataWriters()
+		{
+			IList<IOutputDataWriter> outputDataWriters = new List<IOutputDataWriter>();
+			foreach (var runContainer in _runContainerMap.Values) {
+				if (runContainer.OutputWriter != null) {
+					outputDataWriters.Add(runContainer.OutputWriter);
+				}
+			}
+
+			return outputDataWriters.Distinct();
+		}
+
 		public void AddRun(IVectoRun run)
 		{
 			try {
@@ -133,9 +156,6 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 				if (_canceled) {
 					return;
 				}
-
-
-
 
 				Interlocked.Increment(ref _jobNumber);
 
@@ -146,14 +166,6 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 				} finally {
 					_runsRwLock.ExitWriteLock();
 				}
-
-
-
-
-
-
-
-
 			} finally {
 				_cancelLock.ExitReadLock();
 			}
@@ -193,11 +205,6 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 					return runIDs;
 				}
 
-
-
-
-
-		
 				factory.SumData = _sumWriter;
 				factory.JobNumber = Interlocked.Increment(ref _jobNumber);
 
@@ -309,7 +316,6 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			} finally {
 				_runsRwLock.ExitReadLock();
 			}
-			
 
 			Task.WaitAll(tasks);
 		}

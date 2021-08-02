@@ -507,7 +507,6 @@ namespace VECTO3GUI2020.ViewModel.Implementation
 						Validate = Settings.Default.Validate,
 						ActualModalData = Settings.Default.ActualModalData,
 						SerializeVectoRunData = Settings.Default.SerializeVectoRunData,
-						
 					};
 
 					var stopwatch = new Stopwatch();
@@ -645,33 +644,32 @@ namespace VECTO3GUI2020.ViewModel.Implementation
 					);
 				}
 			}
-			foreach (var jobEntry in jobs)
-			{
-				var w = new FileOutputWriter(GetOutputDirectory(jobEntry.DataSource.SourceFile));
-				foreach (var entry in 
-					new Dictionary<string, string>() {
-						{ w.XMLFullReportName, "XML ManufacturereReport" },
-						{ w.XMLCustomerReportName, "XML Customer Report" },
-						{ w.XMLVTPReportName, "VTP Report" },
-						{ w.XMLPrimaryVehicleReportName, "Primary Vehicle Information File" },
-						{ w.XMLMultistageReportFileName, "VIF File" },
 
-					})
-				{
-					if (File.Exists(entry.Key))
-					{
+			var outputWriters = jobContainer.GetOutputDataWriters();
+			var sortedOutputWriters = outputWriters.OrderBy(ow => ow.JobFile);
+
+			foreach (var outputDataWriter in sortedOutputWriters) {
+				var writtenFiles = outputDataWriter.GetWrittenFiles();
+				var jobFileName = outputDataWriter.JobFile;
+				foreach (var entry in new Dictionary<ReportType, string> {
+					{ ReportType.DeclarationReportPrimaryVehicleXML, "Primary Vehicle Information File" },
+					{ ReportType.DeclarationReportManufacturerXML, "XML Manufacturer Report" },
+					{ ReportType.DeclarationReportCustomerXML, "XML Customer Report" },
+					{ ReportType.DeclarationVTPReportXML, "VTP Report" },
+					{ ReportType.DeclarationReportMultistageVehicleXML, "VIF File" },
+				}) {
+					if (writtenFiles.ContainsKey(entry.Key)) {
 						outputMessages.Report(
 							new MessageEntry()
 							{
 								Type = MessageType.StatusMessage,
-								Message = string.Format(
-									"{2} for '{0}' written to {1}", Path.GetFileName(jobEntry.DataSource.SourceFile), entry.Key, entry.Value),
-								Link = entry.Key
-							});
+								Message = $"{entry.Value} for \n '{jobFileName}' \nwritten to \n '{writtenFiles[entry.Key]}'", 
+								Link = writtenFiles[entry.Key],
+							}
+						);
 					}
 				}
 			}
-
 			if (File.Exists(sumFileWriter.SumFileName))
 			{
 				outputMessages.Report(new MessageEntry()
