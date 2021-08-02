@@ -56,6 +56,9 @@ namespace TUGraz.VectoCore.OutputData.FileIO
 			return _writtenReports;
 		}
 
+		private volatile bool _sumFileWritten = false;
+		public bool SumFileWritten => _sumFileWritten;
+
 		public const string REPORT_ENDING_PREFIX = "VIF_Report_";
 
 		private int? _numberOfManufacturingStages = null;
@@ -124,6 +127,7 @@ namespace TUGraz.VectoCore.OutputData.FileIO
 		public virtual void WriteSumData(DataTable data)
 		{
 			VectoCSVFile.Write(SumFileName, data, true, true);
+			_sumFileWritten = true;
 		}
 
 		public virtual string GetModDataFileName(string runName, string cycleName, string runSuffix)

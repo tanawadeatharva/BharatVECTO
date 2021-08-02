@@ -12,6 +12,7 @@ using System.Windows.Data;
 using System.Windows.Input;
 using System.Xml;
 using System.Xml.Linq;
+using Castle.Core.Internal;
 using Microsoft.Toolkit.Mvvm.Input;
 using Newtonsoft.Json;
 using NLog;
@@ -647,9 +648,11 @@ namespace VECTO3GUI2020.ViewModel.Implementation
 
 			var outputWriters = jobContainer.GetOutputDataWriters();
 			var sortedOutputWriters = outputWriters.OrderBy(ow => ow.JobFile);
-
 			foreach (var outputDataWriter in sortedOutputWriters) {
 				var writtenFiles = outputDataWriter.GetWrittenFiles();
+				if (writtenFiles.IsNullOrEmpty()) {
+					continue;
+				}
 				var jobFileName = outputDataWriter.JobFile;
 				foreach (var entry in new Dictionary<ReportType, string> {
 					{ ReportType.DeclarationReportPrimaryVehicleXML, "Primary Vehicle Information File" },
@@ -670,12 +673,12 @@ namespace VECTO3GUI2020.ViewModel.Implementation
 					}
 				}
 			}
-			if (File.Exists(sumFileWriter.SumFileName))
+			if (sumFileWriter.SumFileWritten)
 			{
 				outputMessages.Report(new MessageEntry()
 				{
 					Type = MessageType.StatusMessage,
-					Message = string.Format("Sum file written to {0}", sumFileWriter.SumFileName),
+					Message = $"Sum file written to {sumFileWriter.SumFileName}",
 					Link = sumFileWriter.SumFileName,
 				});
 			}
