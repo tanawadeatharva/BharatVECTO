@@ -803,6 +803,14 @@ public class JSONFileWriter : IOutputFileWriter
 		}
 		body.Add("Padd_electric", input.JobInputData.Vehicle.Components.AuxiliaryInputData.Auxiliaries.ElectricPowerDemand.Value());
 
+		if (!job.SavedInDeclarationMode && job.Vehicle is IVehicleEngineeringInputData engVehicle) {
+			var aux = engVehicle.Components.AuxiliaryInputData;
+			if (aux.BusAuxiliariesData != null) {
+				body.Add("BusAux",
+					GetRelativePath(job.Vehicle.Components.AuxiliaryInputData.BusAuxiliariesData.DataSource.SourceFile,
+						basePath));
+			}
+		}
 		//if (!job.SavedInDeclarationMode)
 		//      {
 		//}
@@ -1168,7 +1176,7 @@ public class JSONFileWriter : IOutputFileWriter
 
 
 		var ps = new Dictionary<string, object>() {
-			{"CompressorMap", GetRelativePath(busAux.PneumaticSystem.CompressorMap.Source, Path.GetDirectoryName(filePath))},
+			{"CompressorMap", busAux.PneumaticSystem.CompressorMap != null ? GetRelativePath(busAux.PneumaticSystem.CompressorMap.Source, Path.GetDirectoryName(filePath)) : ""},
 			{"AverageAirDemand", busAux.PneumaticSystem.AverageAirConsumed.Value()},
 			{"SmartAirCompression", busAux.PneumaticSystem.SmartAirCompression},
 			{"GearRatio", busAux.PneumaticSystem.GearRatio},

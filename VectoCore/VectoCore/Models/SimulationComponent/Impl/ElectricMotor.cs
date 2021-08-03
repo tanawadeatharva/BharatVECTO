@@ -36,6 +36,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		public Watt ContinuousPowerLoss { get; }
 
+		public BusAuxiliariesAdapter BusAux { protected get; set; }
+
 		public ElectricMotor(IVehicleContainer container, ElectricMotorData data, IElectricMotorControl control, PowertrainPosition position) : base(container)
 		{
 			Control = control;
@@ -117,6 +119,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			PreviousState.DrivetrainOutTorque = outTorque;
 
 			if (NextComponent == null) {
+				var busAuxPwr = BusAux?.Initialize(0.SI<NewtonMeter>(), 1.RPMtoRad()) ?? 0.SI<NewtonMeter>();
+				if (!busAuxPwr.IsEqual(0)) {
+					Log.Warn("Check BusAux config for PEV!");
+				}
+
 				return new ResponseSuccess(this) {
 					Engine = {
 						PowerRequest = emOutTorque * emOutAngularVelocity,
@@ -325,6 +332,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 									EngineSpeed = outAngularVelocity
 								},
 							};
+							var busAuxPwr = BusAux?.TorqueDemand(absTime, dt, outTorque, outAngularVelocity, dryRun) ?? 0.SI<NewtonMeter>();
+							if (!busAuxPwr.IsEqual(0)) {
+								Log.Warn("Check BusAux config for PEV!");
+							}
 						}
 					} else {
 						if (remainingPower > 0) {
@@ -503,6 +514,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			var losses = (CurrentState.EmTorqueMap ?? 0.SI<NewtonMeter>()) * avgEMSpeed - CurrentState.ElectricPowerToBattery;
 			var contribution = (losses - ContinuousPowerLoss) * simulationInterval;
 			container[ModalResultField.ElectricMotor_OvlBuffer_, Position] = VectoMath.Max(0, (ThermalBuffer + contribution) / OverloadBuffer);
+
+			if (NextComponent == null && BusAux != null) {
+				BusAux.DoWriteModalResultsICE(time, simulationInterval, container);
+			}
 		}
 
 		protected override void DoCommitSimulationStep(Second time, Second simulationInterval)
@@ -540,6 +555,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		{
 			ElectricPower = powersupply;
 		}
+
 	}
 
 	public class ElectricMotorState // : SimpleComponentState

@@ -131,6 +131,9 @@ Public Class BusAuxEngineeringParams
 
     Public ReadOnly Property PS_CompressorMap As TableData Implements IBusAuxPneumaticSystemEngineeringData.CompressorMap
     get
+        if JobType =VectoSimulationJobType.BatteryElectricVehicle then
+                return Nothing
+        End If
         if Not file.Exists(CompressorMap.FullPath) Then
              Throw new VectoException("Compressor Map is missing or invalid")               
         End If
@@ -233,4 +236,7 @@ Public Class BusAuxEngineeringParams
         Return AlternatorType
     End Get
     End Property
+
+    Public Property JobType As VectoSimulationJobType
+
 End Class

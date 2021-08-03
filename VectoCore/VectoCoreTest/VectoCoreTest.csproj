@@ -262,6 +262,9 @@
     <None Include="TestData\BatteryElectric\GenericVehicleB2\BatteryElectricVehicle_Cont30kW.vveh">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Include="TestData\BatteryElectric\GenericVehicleB2\BEV_ENG_BusAux.vecto">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="TestData\BatteryElectric\GenericVehicleB2\BEV_ENG.vecto">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
@@ -296,6 +299,9 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="TestData\BatteryElectric\GenericVehicleB2\MaxCurrent.vimax">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\BatteryElectric\GenericVehicleB2\PEV-BusAux.vaux">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="TestData\BatteryElectric\GenericVehicleB2\Transmission\AMT_12.vgbx">

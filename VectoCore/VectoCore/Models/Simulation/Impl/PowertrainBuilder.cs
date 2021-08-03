@@ -531,8 +531,8 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 				.AddComponent(new Brakes(container));
 
 			var pos = data.ElectricMachinesData.First().Item1;
-			switch (pos)
-			{
+			IElectricMotor em = null;
+			switch (pos) {
 				case PowertrainPosition.HybridPositionNotSet:
 					throw new VectoException("invalid powertrain position");
 				case PowertrainPosition.HybridP0:
@@ -540,31 +540,55 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 				case PowertrainPosition.HybridP2:
 				case PowertrainPosition.HybridP3:
 				case PowertrainPosition.HybridP4:
-					throw new VectoException("testcase does not support parallel powertrain configurations");
+					throw new VectoException("BatteryElectric Vehicle does not support parallel powertrain configurations");
 				case PowertrainPosition.BatteryElectricE4:
-					powertrain.AddComponent(
-						GetElectricMachine(PowertrainPosition.BatteryElectricE4, data.ElectricMachinesData, container, es, ctl));
+					em = GetElectricMachine(PowertrainPosition.BatteryElectricE4, data.ElectricMachinesData, container,
+						es, ctl);
+					powertrain.AddComponent(em);
 					new DummyGearboxInfo(container);
 					//new MockEngineInfo(container);
 					new ATClutchInfo(container);
 					break;
 				case PowertrainPosition.BatteryElectricE3:
+					em = GetElectricMachine(PowertrainPosition.BatteryElectricE3, data.ElectricMachinesData,
+						container, es, ctl);
 					powertrain.AddComponent(new AxleGear(container, data.AxleGearData))
-						.AddComponent(
-							GetElectricMachine(PowertrainPosition.BatteryElectricE3, data.ElectricMachinesData, container, es, ctl));
+						.AddComponent(em);
 					new DummyGearboxInfo(container);
-					//new MockEngineInfo(container);
-					new ATClutchInfo(container);
+                    //new MockEngineInfo(container);
+                    new ATClutchInfo(container);
 					break;
 				case PowertrainPosition.BatteryElectricE2:
 					var strategy = new PEVAMTShiftStrategy(container);
+					em = GetElectricMachine(PowertrainPosition.BatteryElectricE2, data.ElectricMachinesData,
+						container, es, ctl);
 					powertrain.AddComponent(new AxleGear(container, data.AxleGearData))
 						.AddComponent(new PEVGearbox(container, strategy))
-						.AddComponent(
-							GetElectricMachine(PowertrainPosition.BatteryElectricE2, data.ElectricMachinesData, container, es, ctl));
+						.AddComponent(em);
 					new ATClutchInfo(container);
 					break;
 				default: throw new ArgumentOutOfRangeException(nameof(pos), pos, null);
+			}
+
+			new DummyEngineInfo(container);
+
+			if (data.BusAuxiliaries != null) {
+				if (!data.BusAuxiliaries.ElectricalUserInputsConfig.ConnectESToREESS) {
+					throw new VectoException("BusAux must be supplied from REESS!");
+				}
+
+				var auxCfg = data.BusAuxiliaries;
+
+				var busAux = new BusAuxiliariesAdapter(container, auxCfg);
+				
+				var electricStorage = new NoBattery(container);
+				busAux.ElectricStorage = electricStorage;
+
+				var dcdc = new DCDCConverter(container,
+					data.BusAuxiliaries.ElectricalUserInputsConfig.DCDCEfficiency);
+				busAux.DCDCConverter = dcdc;
+				es.Connect(dcdc);
+				em.BusAux = busAux;
 			}
 
 			return container;
@@ -1046,6 +1070,65 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			return ShiftStrategies.Where(x => x.Item1.Contains(type.Value)).Select(x => Tuple.Create(x.Item2, x.Item3))
 				.ToList();
 		}
+	}
+
+	internal class DummyEngineInfo : VectoSimulationComponent, IEngineInfo, IEngineControl
+	{
+		public DummyEngineInfo(VehicleContainer container) : base(container)
+		{
+			EngineIdleSpeed = 100.RPMtoRad();
+			EngineSpeed = 100.RPMtoRad();
+		}
+
+		#region Overrides of VectoSimulationComponent
+
+		protected override void DoWriteModalResults(Second time, Second simulationInterval, IModalDataContainer container)
+		{
+		}
+
+		protected override void DoCommitSimulationStep(Second time, Second simulationInterval)
+		{
+		}
+
+		#endregion
+
+		#region Implementation of IEngineInfo
+
+		public PerSecond EngineSpeed { get; }
+		public NewtonMeter EngineTorque { get; }
+		public Watt EngineStationaryFullPower(PerSecond angularSpeed)
+		{
+			return null;
+		}
+
+		public Watt EngineDynamicFullLoadPower(PerSecond avgEngineSpeed, Second dt)
+		{
+			return null;
+		}
+
+		public Watt EngineDragPower(PerSecond angularSpeed)
+		{
+			return 0.SI<Watt>();
+		}
+
+		public Watt EngineAuxDemand(PerSecond avgEngineSpeed, Second dt)
+		{
+			return null;
+		}
+
+		public PerSecond EngineIdleSpeed { get; }
+		public PerSecond EngineRatedSpeed { get; }
+		public PerSecond EngineN95hSpeed { get; }
+		public PerSecond EngineN80hSpeed { get; }
+		public bool EngineOn { get; }
+
+		#endregion
+
+		#region Implementation of IEngineControl
+
+		public bool CombustionEngineOn { get; set; }
+
+		#endregion
 	}
 
 	public class SimpleElectricMotorControl : IElectricMotorControl

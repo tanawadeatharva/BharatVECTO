@@ -42,16 +42,28 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport
 
 		private XElement[] ExemptedData(VectoRunData modelData)
 		{
-			return new[] {
-				modelData.VehicleData.HybridElectricHDV
-					? new XElement(
-						tns + XMLNames.Vehicle_MaxNetPower1, XMLHelper.ValueAsUnit(modelData.VehicleData.MaxNetPower1, XMLNames.Unit_W))
-					: null,
-				modelData.VehicleData.HybridElectricHDV
-					? new XElement(
-						tns + XMLNames.Vehicle_MaxNetPower2, XMLHelper.ValueAsUnit(modelData.VehicleData.MaxNetPower2, XMLNames.Unit_W))
-					: null
-			};
+			var retVal = new List<XElement>();
+
+			if (modelData.VehicleData.AxleConfiguration != AxleConfiguration.AxleConfig_Undefined) {
+				retVal.Add(new XElement(tns + XMLNames.Vehicle_AxleConfiguration,
+					modelData.VehicleData.AxleConfiguration.GetName()));
+				retVal.Add(new XElement(tns + XMLNames.Report_Vehicle_VehicleGroup,
+					modelData.VehicleData.VehicleClass.GetClassNumber()));
+			}
+
+			if (modelData.VehicleData.SleeperCab.HasValue) {
+				retVal.Add(new XElement(tns + XMLNames.Vehicle_SleeperCab, modelData.VehicleData.SleeperCab.Value));
+			}
+
+			if (modelData.VehicleData.MaxNetPower1 != null)
+				retVal.Add(new XElement(tns + XMLNames.Vehicle_MaxNetPower1,
+					XMLHelper.ValueAsUnit(modelData.VehicleData.MaxNetPower1, XMLNames.Unit_W)));
+			if (modelData.VehicleData.MaxNetPower2 != null) {
+				retVal.Add(new XElement(tns + XMLNames.Vehicle_MaxNetPower2,
+					XMLHelper.ValueAsUnit(modelData.VehicleData.MaxNetPower2, XMLNames.Unit_W)));
+			}
+
+			return retVal.ToArray();
 		}
 
 	}

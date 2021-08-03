@@ -137,6 +137,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 					? CyclesCache[cycle.CycleData.Source]
 					: DrivingCycleDataReader.ReadFromDataTable(cycle.CycleData, cycle.Name, crossWindRequired);
 
+				var vehicleData = dao.CreateVehicleData(vehicle);
 				yield return new VectoRunData
 				{
 					JobName = InputDataProvider.JobInputData.JobName,
@@ -144,12 +145,12 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 					GearboxData = gearboxData,
 					AxleGearData = axlegearData,
 					AngledriveData = angledriveData,
-					VehicleData = dao.CreateVehicleData(vehicle),
+					VehicleData = vehicleData,
 					AirdragData = dao.CreateAirdragData(vehicle.Components.AirdragInputData, vehicle),
 					DriverData = driver,
 					Aux = dao.CreateAuxiliaryData(vehicle.Components.AuxiliaryInputData),
-					//BusAuxiliaries = dao.CreateBusAuxiliariesData(vehicle.Components.AuxiliaryInputData),
-					Retarder = dao.CreateRetarderData(vehicle.Components.RetarderInputData),
+                    BusAuxiliaries = dao.CreateBusAuxiliariesData(vehicle.Components.AuxiliaryInputData, vehicleData, VectoSimulationJobType.BatteryElectricVehicle),
+                    Retarder = dao.CreateRetarderData(vehicle.Components.RetarderInputData),
 					//PTO = ptoTransmissionData,
 					Cycle = new DrivingCycleProxy(drivingCycle, cycle.Name),
 					ExecutionMode = ExecutionMode.Engineering,
@@ -272,7 +273,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 						DriverData = driver,
 						Aux = dao.CreateAuxiliaryData(vehicle.Components.AuxiliaryInputData),
 						BusAuxiliaries =
-							dao.CreateBusAuxiliariesData(vehicle.Components.AuxiliaryInputData, vehicleData),
+							dao.CreateBusAuxiliariesData(vehicle.Components.AuxiliaryInputData, vehicleData, jobType),
 						Retarder = dao.CreateRetarderData(vehicle.Components.RetarderInputData),
 						PTO = ptoTransmissionData,
 						Cycle = new DrivingCycleProxy(drivingCycle, cycle.Name),
