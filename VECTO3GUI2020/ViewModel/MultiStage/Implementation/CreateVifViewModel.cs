@@ -293,8 +293,8 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 					FileVersion = JSONJobHeader.PrimaryAndInterimVersion
 				},
 				Body = new JSONJobBody() {
-					PrimaryVehicle = PrimaryInputPath,
-					InterimStage = StageInputPath
+					PrimaryVehicle = PathHelper.GetRelativePath(path, PrimaryInputPath),
+					InterimStage = PathHelper.GetRelativePath(path, StageInputPath)
 				}
 			};
 

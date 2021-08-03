@@ -1164,7 +1164,9 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 
 			_primaryVehicleInputDataPath = Body.GetEx<string>(JsonKeys.PrimaryVehicle);
+			_primaryVehicleInputDataPath = PathHelper.GetAbsolutePath(filename, _primaryVehicleInputDataPath);
 			_stageInputDataPath = Body.GetEx<string>(JsonKeys.InterimStage);
+			_stageInputDataPath = PathHelper.GetAbsolutePath(filename, _stageInputDataPath);
 			_completed = Body.GetValueOrDefault<bool>(JsonKeys.Completed);
 
 		}
