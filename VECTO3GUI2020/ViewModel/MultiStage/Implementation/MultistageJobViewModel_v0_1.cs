@@ -291,7 +291,7 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 
 		public string DocumentName => Path.GetFileNameWithoutExtension(_inputData.DataSource.SourceFile);
 
-		public XmlDocumentType DocumentType => XmlDocumentType.MultistageOutputData;
+		public XmlDocumentType? DocumentType => XmlDocumentType.MultistageOutputData;
 
 		public DataSource DataSource => _dataSource;
 

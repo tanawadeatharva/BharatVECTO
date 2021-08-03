@@ -283,7 +283,8 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 			if (path == null) {
 				return null;
 			}
-
+			
+			
 			var jsonJob = new JSONJob() {
 				Header = new JSONJobHeader() {
 					AppVersion = "Vecto3GUI2020",
@@ -453,8 +454,8 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 			set => SetProperty(ref _documentName, value);
 		}
 
-
-		public XmlDocumentType DocumentType => throw new NotImplementedException();
+		//Remove this from
+		public XmlDocumentType? DocumentType => null;
 
 		public DataSource DataSource
 		{

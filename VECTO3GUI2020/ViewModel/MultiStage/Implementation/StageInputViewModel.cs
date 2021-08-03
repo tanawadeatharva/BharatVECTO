@@ -103,7 +103,7 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 			set => SetProperty(ref _documentName, value);
 		}
 
-		public XmlDocumentType DocumentType => _documentType;
+		public XmlDocumentType? DocumentType => _documentType;
 
 		public DataSource DataSource
 		{

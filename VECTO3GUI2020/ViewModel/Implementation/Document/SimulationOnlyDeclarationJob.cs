@@ -18,10 +18,9 @@ namespace VECTO3GUI2020.ViewModel.Implementation.Document
 			set => _documentName = value;
 		}
 
-		public XmlDocumentType DocumentType
+		public XmlDocumentType? DocumentType
 		{
 			get => _documentType;
-			set => _documentType = value;
 		}
 
 		public DataSource DataSource
@@ -33,7 +32,7 @@ namespace VECTO3GUI2020.ViewModel.Implementation.Document
 		public IEditViewModel EditViewModel { get; set; }
 
 		private bool _selected;
-		private XmlDocumentType _documentType;
+		private XmlDocumentType? _documentType;
 		private string _documentName;
 		private DataSource _dataSource;
 
