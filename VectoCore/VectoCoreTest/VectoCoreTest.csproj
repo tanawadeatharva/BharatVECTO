@@ -2707,6 +2707,9 @@
     <None Include="TestData\Integration\ADAS-PEV\Group5PCCEng\Default.vrlm">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Include="TestData\Integration\ADAS-PEV\Group5PCCEng\Emo_325kW_2170Nm.vem">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="TestData\Integration\ADAS-PEV\Group5PCCEng\Engine_325kW_12.7l.veng">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
@@ -2755,6 +2758,9 @@
     <None Include="TestData\Integration\ADAS-PEV\Group5PCCEng\GenericBattery_243kWh_750V.vbat">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Include="TestData\Integration\ADAS-PEV\Group5PCCEng\GenericDrag.vemd">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="TestData\Integration\ADAS-PEV\Group5PCCEng\GenericDrag_125kW_485Nm.vemd">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
@@ -2768,6 +2774,12 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="TestData\Integration\ADAS-PEV\Group5PCCEng\GenericMap_125kW_485Nm.vemo">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Integration\ADAS-PEV\Group5PCCEng\generic_e_flc_325kW_2170Nm.vemp">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Integration\ADAS-PEV\Group5PCCEng\generic_e_mot_325kW_2172Nm.vemo">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="TestData\Integration\ADAS-PEV\Group5PCCEng\Group5Eng_CaseA.vdri">
