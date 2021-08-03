@@ -1,7 +1,7 @@
 {
   "Header": {
     "CreatedBy": "",
-    "Date": "2021-08-03T08:50:05.6779432Z",
+    "Date": "2021-08-03T13:35:48.7867075Z",
     "AppVersion": "3",
     "FileVersion": 10
   },
@@ -75,7 +75,7 @@
     "PowertrainConfiguration": "BatteryElectric",
     "ElectricMotors": [
       {
-        "Count": 2,
+        "Count": 1,
         "Ratio": 2.0,
         "Position": "E2",
         "MotorFile": "GenericEMotor_125kW_485Nm.vem",
