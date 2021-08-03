@@ -23,6 +23,8 @@ namespace TUGraz.VectoCore.Tests.Utils
 
 			Assert.AreEqual("PrimaryAndStageInput", result );
 
+			Assert.AreEqual(path, PathHelper.GetAbsolutePath(relativeTo, result));
+
 		}
 
 		[Test]
@@ -39,6 +41,8 @@ namespace TUGraz.VectoCore.Tests.Utils
 
 			Assert.AreEqual("PrimaryAndStageInput\\file1.file", result);
 
+			Assert.AreEqual(path, PathHelper.GetAbsolutePath(relativeTo, result));
+
 		}
 		[Test]
 		public void RelativePathTest3()
@@ -52,7 +56,8 @@ namespace TUGraz.VectoCore.Tests.Utils
 
 			var result = PathHelper.GetRelativePath(relativeTo, path);
 
-			Assert.AreEqual("PrimaryAndStageInput\\file1.file", result);
+			Assert.AreEqual("..\\..\\..\\..\\file.file", result);
+			Assert.AreEqual(path, PathHelper.GetAbsolutePath(relativeTo, result));
 
 		}
 

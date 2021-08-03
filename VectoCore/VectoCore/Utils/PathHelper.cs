@@ -36,6 +36,12 @@ namespace TUGraz.VectoCore.Utils
 			return Path.Combine(result, pathFileName);
 		}
 
+		public static string GetAbsolutePath(string relativeTo, string relativePath)
+		{
+			var uri = new Uri(baseUri: new Uri(relativeTo), relativeUri: relativePath);
+			return Path.GetFullPath(uri.AbsolutePath);
+		}
+
 		private static string GetRelativePath(IEnumerable<string> relativeTo, IEnumerable<string> path)
 		{
 			var relList = relativeTo.ToList();
