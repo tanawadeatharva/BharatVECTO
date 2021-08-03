@@ -1,7 +1,7 @@
-﻿{
+{
   "Header": {
     "CreatedBy": "",
-    "Date": "2020-08-25T16:42:29.2557272Z",
+    "Date": "2021-08-03T09:19:40.4212564Z",
     "AppVersion": "3",
     "FileVersion": 8
   },
@@ -14,16 +14,15 @@
     "TCU": "AMT_12.vgbx",
     "ShiftStrategy": "TUGraz.VectoCore.Models.SimulationComponent.Impl.AMTShiftStrategy",
     "HybridStrategyParams": "Hybrid_Parameters.vhctl",
-    "AuxiliaryAssembly": "Classic",
-    "AuxiliaryVersion": "CLASSIC",
-    "AdvancedAuxiliaryFilePath": "",
-    "Aux": [],
     "Padd": 3000.0,
+    "Paux_ICEOff_Driving": 0.0,
+    "Paux_ICEOff_Standstill": 0.0,
     "Padd_electric": 0.0,
     "VACC": "Truck.vacc",
     "EngineStopStartAtVehicleStopThreshold": 2.0,
     "EngineStopStartMaxOffTimespan": 120.0,
     "EngineStopStartUtilityFactor": 0.8,
+    "EngineStopStartUtilityFactorDriving": 0.8,
     "EcoRollMinSpeed": 60.000000000000007,
     "EcoRollActivationDelay": 2.0,
     "EcoRollUnderspeedThreshold": 0.0,
@@ -49,18 +48,7 @@
       "OverSpeed": 2.5
     },
     "Cycles": [
-      "CrestCoast1.vdri",
-      "CrestCoast2.vdri",
-      "Group5Eng_CaseA.vdri",
-      "Group5Eng_CaseB.vdri",
-      "Group5Eng_CaseC.vdri",
-      "Group5Eng_CaseD.vdri",
-      "Group5Eng_CaseE.vdri",
-      "Group5Eng_CaseF.vdri",
-      "Group5Eng_CaseG.vdri",
-      "Group5Eng_CaseH.vdri",
-      "Group5Eng_CaseI.vdri",
-      "Group5Eng_CaseJ.vdri"
+      "Group5Eng_CaseA.vdri"
     ]
   }
 }

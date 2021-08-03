@@ -1,13 +1,12 @@
-﻿{
+{
   "Header": {
-    "CreatedBy": " ()",
-    "Date": "2016-10-13T08:55:18.2100810Z",
+    "CreatedBy": "",
+    "Date": "2021-08-03T08:50:46.6542922Z",
     "AppVersion": "3",
     "FileVersion": 9
   },
   "Body": {
     "SavedInDeclMode": false,
-    "EngineOnlyMode": false,
     "VehicleFile": "Class5_Tractor.vveh",
     "GearboxFile": "AMT_12.vgbx",
     "TCU": "AMT_12.vgbx",
@@ -16,6 +15,7 @@
     "EngineStopStartAtVehicleStopThreshold": 2.0,
     "EngineStopStartMaxOffTimespan": 120.0,
     "EngineStopStartUtilityFactor": 0.8,
+    "EngineStopStartUtilityFactorDriving": 0.8,
     "EcoRollMinSpeed": 60.000000000000007,
     "EcoRollActivationDelay": 2.0,
     "EcoRollUnderspeedThreshold": 0.0,
@@ -32,7 +32,8 @@
       "DF_offset": 2.5,
       "DF_scaling": 1.5,
       "DF_targetSpeedLookup": "",
-      "Df_velocityDropLookup": ""
+      "Df_velocityDropLookup": "",
+      "MinSpeed": 50.0
     },
     "OverSpeedEcoRoll": {
       "Mode": "Overspeed",
