@@ -63,9 +63,8 @@ namespace TUGraz.VectoCore.OutputData.FileIO
 
 		private int? _numberOfManufacturingStages = null;
 
-		public int? NumberOfManufacturingStages
+		public int NumberOfManufacturingStages
 		{
-			get => _numberOfManufacturingStages;
 			set => _numberOfManufacturingStages = value;
 		}
 

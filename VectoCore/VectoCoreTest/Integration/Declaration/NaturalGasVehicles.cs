@@ -172,6 +172,11 @@ namespace TUGraz.VectoCore.Tests.Integration.Declaration
 			throw new NotImplementedException();
 		}
 
+		public int NumberOfManufacturingStages
+		{
+			set => throw new NotImplementedException();
+		}
+
 		#endregion
 
 		#region Implementation of ISummaryWriter

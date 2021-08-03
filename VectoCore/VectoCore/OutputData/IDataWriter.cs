@@ -60,6 +60,7 @@ namespace TUGraz.VectoCore.OutputData
 
 
 		IDictionary<ReportType, string> GetWrittenFiles();
+		int NumberOfManufacturingStages { set; }
 	}
 
 
