@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="..\..\packages\NUnit3TestAdapter.3.11.2\build\net35\NUnit3TestAdapter.props" Condition="Exists('..\..\packages\NUnit3TestAdapter.3.11.2\build\net35\NUnit3TestAdapter.props')" />
   <Import Project="..\..\packages\NUnit.3.11.0\build\NUnit.props" Condition="Exists('..\..\packages\NUnit.3.11.0\build\NUnit.props')" />
+  <Import Project="..\..\packages\NUnit3TestAdapter.3.11.2\build\net35\NUnit3TestAdapter.props" Condition="Exists('..\..\packages\NUnit3TestAdapter.3.11.2\build\net35\NUnit3TestAdapter.props')" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
@@ -61,7 +61,6 @@
     </Reference>
     <Reference Include="nunit.framework, Version=3.11.0.0, Culture=neutral, PublicKeyToken=2638cd05610744eb, processorArchitecture=MSIL">
       <HintPath>..\..\packages\NUnit.3.11.0\lib\net45\nunit.framework.dll</HintPath>
-      <Private>True</Private>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
@@ -116,6 +115,7 @@
     <Compile Include="Integration\Declaration\VocationalVehicleTest.cs" />
     <Compile Include="Integration\Declaration\TestMaxMassInMUCycle.cs" />
     <Compile Include="Integration\DualFuel\DualFuelTests.cs" />
+    <Compile Include="Integration\Multistage\MultistageMultipleRunsTest.cs" />
     <Compile Include="Integration\RoadSweepers\RoadSweeperTests.cs" />
     <Compile Include="Integration\Hybrid\ParallelHybridTest.cs" />
     <Compile Include="Integration\Multistage\MultistageVehicleTest.cs" />
@@ -215,6 +215,7 @@
     <Compile Include="Utils\MockDriver.cs" />
     <Compile Include="Utils\MockVehicle.cs" />
     <Compile Include="Utils\MockDeclarationVehicleInputData.cs" />
+    <Compile Include="Utils\PathHelperTest.cs" />
     <Compile Include="Utils\ResultFileHelper.cs" />
     <Compile Include="Utils\MockPorts.cs" />
     <Compile Include="Models\Simulation\SimulationTests.cs" />
@@ -6084,8 +6085,8 @@
     <PropertyGroup>
       <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
     </PropertyGroup>
-    <Error Condition="!Exists('..\..\packages\NUnit.3.11.0\build\NUnit.props')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\NUnit.3.11.0\build\NUnit.props'))" />
     <Error Condition="!Exists('..\..\packages\NUnit3TestAdapter.3.11.2\build\net35\NUnit3TestAdapter.props')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\NUnit3TestAdapter.3.11.2\build\net35\NUnit3TestAdapter.props'))" />
+    <Error Condition="!Exists('..\..\packages\NUnit.3.11.0\build\NUnit.props')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\NUnit.3.11.0\build\NUnit.props'))" />
   </Target>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

@@ -570,6 +570,7 @@
     <Compile Include="Models\SimulationComponent\Impl\DrivingCycleEnumerator.cs" />
     <Compile Include="Models\SimulationComponent\Impl\EngineFanAuxiliary.cs" />
     <Compile Include="Models\SimulationComponent\Impl\GearRating.cs" />
+    <Compile Include="Utils\PathHelper.cs" />
     <Compile Include="Utils\SchmittTrigger.cs" />
     <Compile Include="Models\SimulationComponent\Impl\SimplePowertrainContainer.cs" />
     <Compile Include="Models\SimulationComponent\Impl\TorqueConverterWrapper.cs" />
