@@ -68,6 +68,8 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 		private Func<ISimulatorFactory> _followingSimulatorFactoryCreator = null;
 
+		private bool _simulate = true;
+
 		public ISimulatorFactory FollowUpSimulatorFactory
 		{
 			get => CreateFollowUpSimulatorFactory ? _followingSimulatorFactoryCreator?.Invoke() : null;
@@ -86,6 +88,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 		public SimulatorFactory(ExecutionMode mode, IInputDataProvider dataProvider, IOutputDataWriter writer,
 			IDeclarationReport declarationReport = null, IVTPReport vtpReport = null, bool validate = true)
 		{
+			System.Diagnostics.Debug.WriteLine("Created Simulator Factory");
 			Log.Info("########## VectoCore Version {0} ##########", Assembly.GetExecutingAssembly().GetName().Version);
 			JobNumber = Interlocked.Increment(ref _jobNumberCounter);
 			_mode = mode;
@@ -174,28 +177,29 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 					DataReader = new DeclarationModeCompletedMultistageBusVectoRunDataFactory(
 						multistageVifInputData.MultistageJobInputData,
 						reportCompleted);
-					if ((final || exempted) && inputComplete) {
-						_followingSimulatorFactoryCreator = () => {
-							var container = new StandardKernel(
-								new VectoNinjectModule()
-							);
-							var inputDataReader = container.Get<IXMLInputDataReader>();
+					if (!((final || exempted) && inputComplete)) {
+						_simulate = false;
+						//_followingSimulatorFactoryCreator = () => {
+						//	var container = new StandardKernel(
+						//		new VectoNinjectModule()
+						//	);
+						//	var inputDataReader = container.Get<IXMLInputDataReader>();
 
-							var mode = _mode;
-							var inputData =
-								inputDataReader.CreateDeclaration(((FileOutputWriter)ReportWriter)
-									.XMLMultistageReportFileName);
+						//	var mode = _mode;
+						//	var inputData =
+						//		inputDataReader.CreateDeclaration(((FileOutputWriter)ReportWriter)
+						//			.XMLMultistageReportFileName);
 
-							return new SimulatorFactory(
-								mode: _mode,
-								dataProvider: new XMLDeclarationVIFInputData(
-									inputData as IMultistageBusInputDataProvider, null),
-								writer: ReportWriter,
-								declarationReport: reportCompleted, 
-								vtpReport: vtpReport,
-								validate: Validate);
+						//	return new SimulatorFactory(
+						//		mode: _mode,
+						//		dataProvider: new XMLDeclarationVIFInputData(
+						//			inputData as IMultistageBusInputDataProvider, null),
+						//		writer: ReportWriter,
+						//		declarationReport: reportCompleted, 
+						//		vtpReport: vtpReport,
+						//		validate: Validate);
 
-						};
+						//};
 					}
 
 				} else {
@@ -225,7 +229,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			{
 				System.Diagnostics.Debug.Assert(multiStagePrimaryAndStageInputData.PrimaryVehicle.JobInputData.Vehicle.VehicleCategory == VehicleCategory.HeavyBusPrimaryVehicle);
 
-				var tempOutputWriter = new TempFileOutputWriter(ReportWriter.JobFile);
+				var tempOutputWriter = new TempFileOutputWriter(ReportWriter.JobFile, ReportType.DeclarationReportManufacturerXML);
 				var originalReportWriter = ReportWriter;
 				ReportWriter = tempOutputWriter;
 
@@ -327,7 +331,9 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 		{
 			var i = 0;
 			var warning1Hz = false;
-
+			if (!_simulate) {
+				yield break;
+			}
 			foreach (var data in DataReader.NextRun()) {
 				var current = i++;
 				var d = data;

@@ -46,7 +46,7 @@ namespace TUGraz.VectoCore.OutputData.FileIO
 {
 	public class FileOutputWriter : LoggingObject, IOutputDataWriter
 	{
-		private readonly string _jobFile;
+		protected readonly string _jobFile;
 
 		public string JobFile => _jobFile;
 
@@ -82,7 +82,8 @@ namespace TUGraz.VectoCore.OutputData.FileIO
 
 		public string PDFReportName => Path.ChangeExtension(_jobFile, Constants.FileExtensions.PDFReport);
 
-		public string XMLFullReportName => Path.ChangeExtension(_jobFile, "RSLT_MANUFACTURER.xml");
+		public virtual string XMLFullReportName => Path.ChangeExtension(_jobFile, "RSLT_MANUFACTURER.xml");
+
 
 		public string XMLCustomerReportName => Path.ChangeExtension(_jobFile, "RSLT_CUSTOMER.xml");
 

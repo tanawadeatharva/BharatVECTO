@@ -29,6 +29,9 @@ namespace TUGraz.VectoCore.Tests.Integration.Multistage
 		private FileOutputWriter _sumFileWriter;
 		private SummaryDataContainer _sumContainer;
 		private JobContainer _jobContainer;
+
+		private FileOutputWriter _fileoutputWriter;
+		private TempFileOutputWriter _tempFileOutputWriter;
 		private ExecutionMode _mode = ExecutionMode.Declaration;
 
 		private string _outputDirectory;
@@ -64,19 +67,20 @@ namespace TUGraz.VectoCore.Tests.Integration.Multistage
 		{
 			var inputFile = Path.GetFullPath(CompletedExempted);
 			var input = JSONInputDataFactory.ReadJsonJob(inputFile);
-			var fileWriter = StartSimulation(input);
+			StartSimulation(input);
 
 
 			while (!_jobContainer.AllCompleted) {
 				//Busy wait
 			}
 
-			var writtenFiles = fileWriter.GetWrittenFiles();
-			ShowWrittenFiles(fileWriter.GetWrittenFiles());
+			var writtenFiles = GetWrittenFiles();
+			ShowWrittenFiles(writtenFiles);
 
-			Assert.That(writtenFiles.ContainsKey(ReportType.DeclarationReportManufacturerXML));
-			Assert.That(writtenFiles.ContainsKey(ReportType.DeclarationReportCustomerXML));
-			Assert.That(writtenFiles.ContainsKey(ReportType.DeclarationReportMultistageVehicleXML));
+			Assert.IsTrue(writtenFiles.Contains(_tempFileOutputWriter.XMLFullReportName));
+			Assert.IsTrue(writtenFiles.Contains(_fileoutputWriter.XMLFullReportName));
+			Assert.IsTrue(writtenFiles.Contains(_fileoutputWriter.XMLCustomerReportName));
+			Assert.IsTrue(writtenFiles.Contains(_fileoutputWriter.XMLMultistageReportFileName));
 			
 		}
 
@@ -86,7 +90,7 @@ namespace TUGraz.VectoCore.Tests.Integration.Multistage
 		{
 			var inputFile = Path.GetFullPath(InterimExempted);
 			var input = JSONInputDataFactory.ReadJsonJob(inputFile);
-			var fileWriter = StartSimulation(input);
+			StartSimulation(input);
 
 
 			while (!_jobContainer.AllCompleted)
@@ -94,12 +98,25 @@ namespace TUGraz.VectoCore.Tests.Integration.Multistage
 				//Busy wait
 			}
 
-			var writtenFiles = fileWriter.GetWrittenFiles();
-			ShowWrittenFiles(fileWriter.GetWrittenFiles());
+			var writtenFiles = GetWrittenFiles();
+			ShowWrittenFiles(writtenFiles);
 
-			Assert.That(writtenFiles.ContainsKey(ReportType.DeclarationReportManufacturerXML));
-			Assert.That(writtenFiles.ContainsKey(ReportType.DeclarationReportCustomerXML));
-			Assert.That(writtenFiles.ContainsKey(ReportType.DeclarationReportMultistageVehicleXML));
+			Assert.IsTrue(writtenFiles.Contains(_tempFileOutputWriter.XMLFullReportName));
+			Assert.IsFalse(writtenFiles.Contains(_fileoutputWriter.XMLFullReportName));
+			Assert.IsFalse(writtenFiles.Contains(_fileoutputWriter.XMLCustomerReportName));
+			Assert.IsTrue(writtenFiles.Contains(_fileoutputWriter.XMLMultistageReportFileName));
+
+		}
+
+		private IList<string> GetWrittenFiles()
+		{
+			var files = new List<string>();
+			var outputWriters = _jobContainer.GetOutputDataWriters();
+			foreach (var outputDataWriter in outputWriters) {
+				files.AddRange(outputDataWriter.GetWrittenFiles().Values);
+			}
+
+			return files;
 		}
 
 		//SpecialCase II
@@ -108,7 +125,7 @@ namespace TUGraz.VectoCore.Tests.Integration.Multistage
 		{
 			var inputFile = Path.GetFullPath(CompletedDiesel);
 			var input = JSONInputDataFactory.ReadJsonJob(inputFile);
-			var fileWriter = StartSimulation(input);
+			StartSimulation(input);
 
 
 			while (!_jobContainer.AllCompleted)
@@ -116,12 +133,13 @@ namespace TUGraz.VectoCore.Tests.Integration.Multistage
 				//Busy wait
 			}
 
-			var writtenFiles = fileWriter.GetWrittenFiles();
-			ShowWrittenFiles(fileWriter.GetWrittenFiles());
+			var writtenFiles = GetWrittenFiles();
+			ShowWrittenFiles(writtenFiles);
 
-			Assert.That(writtenFiles.ContainsKey(ReportType.DeclarationReportManufacturerXML));
-			Assert.That(writtenFiles.ContainsKey(ReportType.DeclarationReportCustomerXML));
-			Assert.That(writtenFiles.ContainsKey(ReportType.DeclarationReportMultistageVehicleXML));
+			Assert.IsTrue(writtenFiles.Contains(_tempFileOutputWriter.XMLFullReportName));
+			Assert.IsTrue(writtenFiles.Contains(_fileoutputWriter.XMLFullReportName));
+			Assert.IsTrue(writtenFiles.Contains(_fileoutputWriter.XMLCustomerReportName));
+			Assert.IsTrue(writtenFiles.Contains(_fileoutputWriter.XMLMultistageReportFileName));
 
 
 		}
@@ -132,7 +150,9 @@ namespace TUGraz.VectoCore.Tests.Integration.Multistage
 		{
 			var inputFile = Path.GetFullPath(InterimDiesel);
 			var input = JSONInputDataFactory.ReadJsonJob(inputFile);
-			var fileWriter = StartSimulation(input);
+			
+			
+			StartSimulation(input);
 
 
 			while (!_jobContainer.AllCompleted)
@@ -140,19 +160,21 @@ namespace TUGraz.VectoCore.Tests.Integration.Multistage
 				//Busy wait
 			}
 
-			var writtenFiles = fileWriter.GetWrittenFiles();
-			ShowWrittenFiles(fileWriter.GetWrittenFiles());
+			var writtenFiles = GetWrittenFiles();
+			ShowWrittenFiles(writtenFiles);
 
-			Assert.That(writtenFiles.ContainsKey(ReportType.DeclarationReportManufacturerXML));
-			Assert.That(writtenFiles.ContainsKey(ReportType.DeclarationReportCustomerXML));
-			Assert.That(writtenFiles.ContainsKey(ReportType.DeclarationReportMultistageVehicleXML));
+			Assert.IsTrue(writtenFiles.Contains(_tempFileOutputWriter.XMLFullReportName));
+			Assert.IsFalse(writtenFiles.Contains(_fileoutputWriter.XMLFullReportName));
+			Assert.IsFalse(writtenFiles.Contains(_fileoutputWriter.XMLCustomerReportName));
+			Assert.IsTrue(writtenFiles.Contains(_fileoutputWriter.XMLMultistageReportFileName));
 		}
 
 
-		private FileOutputWriter StartSimulation(IInputDataProvider input)
+		private void StartSimulation(IInputDataProvider input)
 		{
-			var fileWriter = new FileOutputWriter(_outputDirectory);
-			var runsFactory = new SimulatorFactory(_mode, input, fileWriter)
+			_fileoutputWriter = new FileOutputWriter(_outputDirectory);
+			_tempFileOutputWriter = new TempFileOutputWriter(_outputDirectory);
+			var runsFactory = new SimulatorFactory(_mode, input, _fileoutputWriter)
 			{
 				WriteModalResults = true,
 				ModalResults1Hz = true,
@@ -166,19 +188,17 @@ namespace TUGraz.VectoCore.Tests.Integration.Multistage
 
 			_jobContainer.AddRuns(runsFactory);
 			_jobContainer.Execute();
-			return fileWriter;
 		}
 
-		private void ShowWrittenFiles(IDictionary<ReportType, string> getWrittenFiles)
+		private void ShowWrittenFiles(IList<string> writtenFiles)
 		{
-			if (getWrittenFiles.Count == 0)
+			if (writtenFiles.Count == 0)
 			{
 				TestContext.WriteLine("No Files Written");
 			}
-			foreach (var keyValuePair in getWrittenFiles)
+			foreach (var fileName in writtenFiles)
 			{
-				TestContext.WriteLine(keyValuePair.Key.ToString());
-				TestContext.WriteLine(keyValuePair.Value.ToString());
+				TestContext.WriteLine(fileName);
 			}
 		}
 
