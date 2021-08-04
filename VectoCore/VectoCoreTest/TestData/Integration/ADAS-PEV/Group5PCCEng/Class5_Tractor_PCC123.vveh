@@ -78,7 +78,7 @@
         "Count": 1,
         "Ratio": 2.0,
         "Position": "E2",
-        "MotorFile": "GenericEMotor_125kW_485Nm.vem",
+        "MotorFile": "Emo_325kW_2170Nm.vem",
         "MechanicalEfficiency": 0.97
       }
     ],
