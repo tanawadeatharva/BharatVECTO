@@ -403,6 +403,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 		[ModalResultField(typeof(SI), caption: "P_{0}_in [kW]", outputFactor: 1e-3)] P_EM_in_,
 		[ModalResultField(typeof(SI), caption: "P_{0}_out [kW]", outputFactor: 1e-3)] P_EM_out_,
 		[ModalResultField(typeof(SI), caption: "P_{0}_mech [kW]", outputFactor: 1e-3)] P_EM_mech_,
+		[ModalResultField(typeof(SI), caption: "P_E2_mech [kW]", outputFactor: 1e-3)] P_E2_mech_,
 		[ModalResultField(typeof(SI), caption: "P_{0}_loss [kW]", outputFactor: 1e-3)] P_EM_loss_,
 		
 		[ModalResultField(typeof(SI), caption: "P_{0}_transm_loss [kW]", outputFactor: 1e-3)] P_EM_TransmissionLoss_,
@@ -410,6 +411,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 		[ModalResultField(typeof(SI), caption: "EM_OVL-{0}-em [%]", outputFactor: 100)] ElectricMotor_OvlBuffer_,
 
 		[ModalResultField(typeof(SI), caption: "EM_{0}_off")] EM_Off_,
+		[ModalResultField(typeof(SI), caption: "EM_E2_off")] EM_E2_Off_,
 
 
 		// only for graphDrawing Testcase
