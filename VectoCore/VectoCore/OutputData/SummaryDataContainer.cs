@@ -231,7 +231,7 @@ namespace TUGraz.VectoCore.OutputData
 				lock (Table) {
 					var view = new DataView(Table, "", Fields.SORT, DataViewRowState.CurrentRows).ToTable();
 
-					var probablyEmptyCols = new[] { Fields.E_WHEEL, Fields.SPECIFIC_FC }.Select(x => x.Contains("{") ? x.Substring(0, x.IndexOf("{")) : x).ToArray();
+					var probablyEmptyCols = new[] { Fields.E_WHEEL, Fields.SPECIFIC_FC }.Select(x => x.Contains("{") ? x.Substring(0, x.IndexOf("{", StringComparison.Ordinal)) : x).ToArray();
 					var removeCandidates =
 						view.Columns.Cast<DataColumn>().Where(column => probablyEmptyCols.Any(x => column.ColumnName.StartsWith(x))).ToList();
 					var toRemove = new List<string>();
@@ -381,7 +381,7 @@ namespace TUGraz.VectoCore.OutputData
 
 			WriteGearshiftStats(modData, row, gearCount);
 
-			lock(Table)
+			lock (Table)
 				Table.Rows.Add(row);
 		}
 
@@ -1027,7 +1027,8 @@ namespace TUGraz.VectoCore.OutputData
 		protected void Dispose(bool disposing)
 		{
 			if (disposing) {
-				Table.Dispose();
+				lock (Table)
+					Table.Dispose();
 			}
 		}
 
