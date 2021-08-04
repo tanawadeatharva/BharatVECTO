@@ -55,7 +55,7 @@ namespace TUGraz.VectoCore.OutputData
 	/// </summary>
 	public class SummaryDataContainer : LoggingObject, IDisposable
 	{
-		protected readonly string[] fcColumns = {
+		protected readonly string[] FcColumns = {
 			Fields.FCMAP_H, Fields.FCMAP_KM,
 			Fields.FCNCVC_H, Fields.FCNCVC_KM,
 			Fields.FCWHTCC_H, Fields.FCWHTCC_KM,
@@ -72,9 +72,7 @@ namespace TUGraz.VectoCore.OutputData
 			Fields.FCFINAL_LiterPer100M3KM, Fields.FCFINAL_LiterPer100PassengerKM,
 			Fields.SPECIFIC_FC, Fields.K_VEHLINE, Fields.K_ENGLINE
 		};
-
-		// ReSharper restore InconsistentNaming
-
+		
 		internal readonly DataTable Table;
 		private readonly ISummaryWriter _sumWriter;
 
@@ -90,7 +88,7 @@ namespace TUGraz.VectoCore.OutputData
 			Table = new DataTable();
 			InitTableColumns();
 		}
-
+		
 		private void InitTableColumns()
 		{
 			lock (Table) {
@@ -256,10 +254,10 @@ namespace TUGraz.VectoCore.OutputData
 			}
 		}
 
-		private void UpdateTableColumns(IList<IFuelProperties> modDataFuelData, bool engineDataMultipleEngineFuelModes)
+		private void UpdateTableColumns(ICollection<IFuelProperties> modDataFuelData, bool engineDataMultipleEngineFuelModes)
 		{
 			foreach (var entry in modDataFuelData) {
-				foreach (var column in fcColumns.Reverse()) {
+				foreach (var column in FcColumns.Reverse()) {
 					var colName = string.Format(column, modDataFuelData.Count <= 1 && !engineDataMultipleEngineFuelModes ? "" : "_" + entry.FuelType.GetLabel());
 					lock (Table)
 						if (!Table.Columns.Contains(colName)) {
