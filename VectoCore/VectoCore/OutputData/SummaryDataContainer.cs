@@ -95,8 +95,9 @@ namespace TUGraz.VectoCore.OutputData
 
 		private void InitTableColumns()
 		{
-			Table.Columns.AddRange(
-				new[] {
+			lock (Table) {
+				Table.Columns.AddRange(
+					new[] {
 					Tuple.Create(Fields.SORT, typeof(int)),
 					Tuple.Create(Fields.JOB, typeof(string)),
 					Tuple.Create(Fields.INPUTFILE, typeof(string)),
@@ -169,17 +170,17 @@ namespace TUGraz.VectoCore.OutputData
 					Tuple.Create(Fields.ADAS_TECHNOLOGY_COMBINATION, typeof(string)),
 					Tuple.Create(Fields.PTO_TECHNOLOGY, typeof(string)),
 					Tuple.Create(Fields.REESS_CAPACITY, typeof(string)),
-					//Tuple.Create(PTO_OTHER_ELEMENTS, typeof(string)),
-				}.Select(x => new DataColumn(x.Item1, x.Item2)).ToArray());
+						//Tuple.Create(PTO_OTHER_ELEMENTS, typeof(string)),
+					}.Select(x => new DataColumn(x.Item1, x.Item2)).ToArray());
 
-			Table.Columns.AddRange(
-				new[] {
+				Table.Columns.AddRange(
+					new[] {
 					Fields.CARGO_VOLUME, Fields.TIME, Fields.DISTANCE, Fields.SPEED, Fields.ALTITUDE_DELTA,
-				}.Select(x => new DataColumn(x, typeof(ConvertedSI))).ToArray());
+					}.Select(x => new DataColumn(x, typeof(ConvertedSI))).ToArray());
 
 
-			Table.Columns.AddRange(
-				new[] {
+				Table.Columns.AddRange(
+					new[] {
 					Fields.CO2_KM, Fields.CO2_TKM, Fields.CO2_M3KM, Fields.CO2_PKM, Fields.P_WHEEL, Fields.P_WHEEL_POS, Fields.P_FCMAP, Fields.P_FCMAP_POS,
 					Fields.E_FCMAP_POS, Fields.E_FCMAP_NEG, Fields.E_POWERTRAIN_INERTIA, Fields.E_AUX, Fields.E_AUX_EL_HV, Fields.E_CLUTCH_LOSS,
 					Fields.E_TC_LOSS, Fields.E_SHIFT_LOSS, Fields.E_GBX_LOSS, Fields.E_RET_LOSS, Fields.E_ANGLE_LOSS,
@@ -194,10 +195,10 @@ namespace TUGraz.VectoCore.OutputData
 					Fields.MAX_SPEED, Fields.MAX_ACCELERATION, Fields.MAX_DECELERATION, Fields.AVG_ENGINE_SPEED,
 					Fields.MAX_ENGINE_SPEED, Fields.NUM_GEARSHIFTS, Fields.STOP_TIMESHARE, Fields.ICE_FULL_LOAD_TIME_SHARE, Fields.ICE_OFF_TIME_SHARE,
 					Fields.COASTING_TIME_SHARE, Fields.BRAKING_TIME_SHARE, Fields.AVERAGE_POS_ACC
-				}.Select(x => new DataColumn(x, typeof(ConvertedSI))).ToArray());
+					}.Select(x => new DataColumn(x, typeof(ConvertedSI))).ToArray());
 
-			Table.Columns.AddRange(
-				new[] {
+				Table.Columns.AddRange(
+					new[] {
 					Tuple.Create(Fields.ENGINE_CERTIFICATION_NUMBER, typeof(string)),
 					Tuple.Create(Fields.AVERAGE_ENGINE_EFFICIENCY, typeof(double)),
 					Tuple.Create(Fields.TORQUE_CONVERTER_CERTIFICATION_METHOD, typeof(string)),
@@ -217,40 +218,42 @@ namespace TUGraz.VectoCore.OutputData
 					Tuple.Create(Fields.AVERAGE_AXLEGEAR_EFFICIENCY, typeof(double)),
 					Tuple.Create(Fields.AIRDRAG_CERTIFICATION_NUMBER, typeof(string)),
 					Tuple.Create(Fields.AIRDRAG_CERTIFICATION_METHOD, typeof(string)),
-				}.Select(x => new DataColumn(x.Item1, x.Item2)).ToArray());
+					}.Select(x => new DataColumn(x.Item1, x.Item2)).ToArray());
+			}
 		}
 
 		/// <summary>
 		/// Finishes the summary data container (writes the data to the sumWriter).
 		/// </summary>
-		[MethodImpl(MethodImplOptions.Synchronized)]
 		public virtual void Finish()
 		{
 			if (_sumWriter != null) {
-				var view = new DataView(Table, "", Fields.SORT, DataViewRowState.CurrentRows).ToTable();
+				lock (Table) {
+					var view = new DataView(Table, "", Fields.SORT, DataViewRowState.CurrentRows).ToTable();
 
-				var probablyEmptyCols = new[] { Fields.E_WHEEL, Fields.SPECIFIC_FC }.Select(x => x.Contains("{") ? x.Substring(0, x.IndexOf("{")) : x).ToArray();
-				var removeCandidates =
-					view.Columns.Cast<DataColumn>().Where(column => probablyEmptyCols.Any(x => column.ColumnName.StartsWith(x))).ToList();
-				var toRemove = new List<string>();
-				foreach (var column in removeCandidates) {
-					//var column = view.Columns[colName];
-					if (view.AsEnumerable().All(dr => dr.IsNull(column))) {
-						toRemove.Add(column.ColumnName);
+					var probablyEmptyCols = new[] { Fields.E_WHEEL, Fields.SPECIFIC_FC }.Select(x => x.Contains("{") ? x.Substring(0, x.IndexOf("{")) : x).ToArray();
+					var removeCandidates =
+						view.Columns.Cast<DataColumn>().Where(column => probablyEmptyCols.Any(x => column.ColumnName.StartsWith(x))).ToList();
+					var toRemove = new List<string>();
+					foreach (var column in removeCandidates) {
+						//var column = view.Columns[colName];
+						if (view.AsEnumerable().All(dr => dr.IsNull(column))) {
+							toRemove.Add(column.ColumnName);
+						}
 					}
-				}
 
-				toRemove = toRemove.Concat(
-					view.Columns.Cast<DataColumn>().Where(column => column.ColumnName.StartsWith(Fields.INTERNAL_PREFIX)).Select(x => x.ColumnName)).ToList();
+					toRemove = toRemove.Concat(
+						view.Columns.Cast<DataColumn>().Where(column => column.ColumnName.StartsWith(Fields.INTERNAL_PREFIX)).Select(x => x.ColumnName)).ToList();
 
-				foreach (var dataColumn in toRemove) {
-					view.Columns.Remove(dataColumn);
-				}
+					foreach (var dataColumn in toRemove) {
+						view.Columns.Remove(dataColumn);
+					}
 
-				try {
-					_sumWriter.WriteSumData(view);
-				} catch (Exception e) {
-					LogManager.GetLogger(typeof(SummaryDataContainer).FullName).Error(e.Message);
+					try {
+						_sumWriter.WriteSumData(view);
+					} catch (Exception e) {
+						LogManager.GetLogger(typeof(SummaryDataContainer).FullName).Error(e.Message);
+					}
 				}
 			}
 		}
@@ -260,11 +263,12 @@ namespace TUGraz.VectoCore.OutputData
 			foreach (var entry in modDataFuelData) {
 				foreach (var column in fcColumns.Reverse()) {
 					var colName = string.Format(column, modDataFuelData.Count <= 1 && !engineDataMultipleEngineFuelModes ? "" : "_" + entry.FuelType.GetLabel());
-					if (!Table.Columns.Contains(colName)) {
-						var col = new DataColumn(colName, typeof(ConvertedSI));
-						Table.Columns.Add(col);
-						col.SetOrdinal(Table.Columns.IndexOf(Fields.ALTITUDE_DELTA) + 1);
-					}
+					lock (Table)
+						if (!Table.Columns.Contains(colName)) {
+							var col = new DataColumn(colName, typeof(ConvertedSI));
+							Table.Columns.Add(col);
+							col.SetOrdinal(Table.Columns.IndexOf(Fields.ALTITUDE_DELTA) + 1);
+						}
 				}
 			}
 		}
@@ -272,16 +276,16 @@ namespace TUGraz.VectoCore.OutputData
 		/// <summary>
 		/// Writes the result of one run into the summary data container.
 		/// </summary>
-		[MethodImpl(MethodImplOptions.Synchronized)]
 		protected DataRow GetResultRow(IModalDataContainer modData, VectoRunData runData)
 		{
 			if (modData.HasCombustionEngine) {
 				UpdateTableColumns(modData.FuelData, runData.EngineData.MultipleEngineFuelModes);
 			}
 
-			var row = Table.NewRow();
-			Table.Rows.Add(row);
-			return row;
+			lock (Table) {
+				var row = Table.NewRow();
+				return row;
+			}
 		}
 
 		public virtual void Write(IModalDataContainer modData, int jobNr, int runNr, VectoRunData runData)
@@ -329,10 +333,11 @@ namespace TUGraz.VectoCore.OutputData
 				WriteFuelconsumptionEntries(modData, row, vehicleLoading, cargoVolume, passengerCount, runData);
 			} else {
 				if (runData.ElectricMachinesData.Count > 0) {
-					if (!Table.Columns.Contains(Fields.ElectricEnergyConsumptionPerKm)) {
-						var col = Table.Columns.Add(Fields.ElectricEnergyConsumptionPerKm, typeof(ConvertedSI));
-						col.SetOrdinal(Table.Columns[Fields.CO2_KM].Ordinal);
-					}
+					lock (Table)
+						if (!Table.Columns.Contains(Fields.ElectricEnergyConsumptionPerKm)) {
+							var col = Table.Columns.Add(Fields.ElectricEnergyConsumptionPerKm, typeof(ConvertedSI));
+							col.SetOrdinal(Table.Columns[Fields.CO2_KM].Ordinal);
+						}
 
 					row[Fields.ElectricEnergyConsumptionPerKm] =
 						(-modData.TimeIntegral<WattSecond>(ModalResultField.P_reess_terminal) / modData.Distance).Cast<JoulePerMeter>().ConvertToKiloWattHourPerKiloMeter();
@@ -375,9 +380,10 @@ namespace TUGraz.VectoCore.OutputData
 			}
 
 			WriteGearshiftStats(modData, row, gearCount);
+
+			lock(Table)
+				Table.Rows.Add(row);
 		}
-
-
 
 		private void WriteFuelconsumptionEntries(
 			IModalDataContainer modData, DataRow row, Kilogram vehicleLoading,
@@ -386,7 +392,7 @@ namespace TUGraz.VectoCore.OutputData
 			var multipleEngineModes = runData.EngineData.MultipleEngineFuelModes;
 			var vtpCycle = runData.Cycle.CycleType == CycleType.VTP;
 
-		   
+
 			row[Fields.E_WHR_EL] = modData.CorrectedModalData.WorkWHREl.ConvertToKiloWattHour();
 			row[Fields.E_WHR_MECH] = modData.CorrectedModalData.WorkWHRMech.ConvertToKiloWattHour();
 
@@ -414,12 +420,12 @@ namespace TUGraz.VectoCore.OutputData
 				row[FcCol(Fields.FCWHTCC_KM, suffix)] =
 					modData.FuelConsumptionPerMeter(ModalResultField.FCWHTCc, fuel)?.ConvertToGrammPerKiloMeter();
 
-					//modData.FuelConsumptionPerSecond(ModalResultField.FCICEStopStart, fuel)
-     //                                               ?.ConvertToGrammPerHour();
-					//modData.FuelConsumptionPerMeter(ModalResultField.FCICEStopStart, fuel)
-     //                                               ?.ConvertToGrammPerKiloMeter();
+				//modData.FuelConsumptionPerSecond(ModalResultField.FCICEStopStart, fuel)
+				//                                               ?.ConvertToGrammPerHour();
+				//modData.FuelConsumptionPerMeter(ModalResultField.FCICEStopStart, fuel)
+				//                                               ?.ConvertToGrammPerKiloMeter();
 
-                var fuelConsumption = modData.CorrectedModalData.FuelConsumptionCorrection(fuel);
+				var fuelConsumption = modData.CorrectedModalData.FuelConsumptionCorrection(fuel);
 
 				row[FcCol(Fields.K_ENGLINE, suffix)] = fuelConsumption.EngineLineCorrectionFactor.ConvertToGramPerKiloWattHour();
 				row[FcCol(Fields.K_VEHLINE, suffix)] = fuelConsumption.VehicleLine?.ConvertToGramPerKiloWattHour();
@@ -454,10 +460,10 @@ namespace TUGraz.VectoCore.OutputData
 				row[FcCol(Fields.FCFINAL_KM, suffix)] = fuelConsumption.FC_FINAL_KM?.ConvertToGrammPerKiloMeter();
 
 				if (fuel.FuelDensity != null) {
-					
+
 					var fcVolumePerMeter = fuelConsumption.FuelVolumePerMeter;
 					row[FcCol(Fields.FCFINAL_LITERPER100KM, suffix)] = fcVolumePerMeter?.ConvertToLiterPer100Kilometer();
-					
+
 					if (vehicleLoading != null && !vehicleLoading.IsEqual(0) && fcVolumePerMeter != null) {
 						row[FcCol(Fields.FCFINAL_LITERPER100TKM, suffix)] =
 							(fcVolumePerMeter / vehicleLoading).ConvertToLiterPer100TonKiloMeter();
@@ -509,12 +515,13 @@ namespace TUGraz.VectoCore.OutputData
 					colName = string.Format(Fields.E_AUX_FORMAT, aux.Key);
 				}
 
-				if (!Table.Columns.Contains(colName)) {
-					var col = Table.Columns.Add(colName, typeof(ConvertedSI));
+				lock (Table)
+					if (!Table.Columns.Contains(colName)) {
+						var col = Table.Columns.Add(colName, typeof(ConvertedSI));
 
-					// move the new column to correct position
-					col.SetOrdinal(Table.Columns[Fields.E_AUX].Ordinal);
-				}
+						// move the new column to correct position
+						col.SetOrdinal(Table.Columns[Fields.E_AUX].Ordinal);
+					}
 
 				row[colName] = modData.AuxiliaryWork(aux.Value).ConvertToKiloWattHour();
 			}
@@ -532,9 +539,10 @@ namespace TUGraz.VectoCore.OutputData
 
 			for (uint i = 0; i <= gearCount; i++) {
 				var colName = string.Format(Fields.TIME_SHARE_PER_GEAR_FORMAT, i);
-				if (!Table.Columns.Contains(colName)) {
-					Table.Columns.Add(colName, typeof(ConvertedSI));
-				}
+				lock (Table)
+					if (!Table.Columns.Contains(colName)) {
+						Table.Columns.Add(colName, typeof(ConvertedSI));
+					}
 				row[colName] = (ConvertedSI)timeSharePerGear[i];
 			}
 		}
@@ -691,34 +699,38 @@ namespace TUGraz.VectoCore.OutputData
 				emColumns.Reverse();
 				foreach (var entry in emColumns) {
 					var colName = string.Format(entry.Item1, em.Item1.GetName());
-					if (!Table.Columns.Contains(colName)) {
-						var col = Table.Columns.Add(colName, typeof(ConvertedSI));
-						col.SetOrdinal(Table.Columns[Fields.E_GRAD].Ordinal + 1);
-					}
+					lock (Table)
+						if (!Table.Columns.Contains(colName)) {
+							var col = Table.Columns.Add(colName, typeof(ConvertedSI));
+							col.SetOrdinal(Table.Columns[Fields.E_GRAD].Ordinal + 1);
+						}
 					row[colName] = entry.Item2;
 				}
 			}
 
 			if (runData.BatteryData != null || runData.SuperCapData != null) {
 				foreach (var field in new[] { Fields.REESS_StartSoC, Fields.REESS_EndSoC }) {
-					if (Table.Columns.Contains(field)) {
-						continue;
+					lock (Table) {
+						if (Table.Columns.Contains(field)) {
+							continue;
+						}
+						var col = Table.Columns.Add(field, typeof(double));
+						col.SetOrdinal(Table.Columns[Fields.P_WHEEL].Ordinal);
 					}
-
-					var col = Table.Columns.Add(field, typeof(double));
-					col.SetOrdinal(Table.Columns[Fields.P_WHEEL].Ordinal);
 				}
 
 				foreach (var field in new[] {
 					Fields.REESS_DeltaEnergy, Fields.E_REESS_LOSS, Fields.E_REESS_T_chg, Fields.E_REESS_T_dischg,
 					Fields.E_REESS_int_chg, Fields.E_REESS_int_dischg
 				}) {
-					if (Table.Columns.Contains(field)) {
-						continue;
-					}
+					lock (Table) {
+						if (Table.Columns.Contains(field)) {
+							continue;
+						}
 
-					var col = Table.Columns.Add(field, typeof(ConvertedSI));
-					col.SetOrdinal(Table.Columns[Fields.P_WHEEL].Ordinal);
+						var col = Table.Columns.Add(field, typeof(ConvertedSI));
+						col.SetOrdinal(Table.Columns[Fields.P_WHEEL].Ordinal);
+					}
 				}
 				row[Fields.E_REESS_LOSS] = modData.REESSLoss().ConvertToKiloWattHour();
 				row[Fields.E_REESS_T_chg] = modData.WorkREESSChargeTerminal().ConvertToKiloWattHour();
@@ -898,12 +910,13 @@ namespace TUGraz.VectoCore.OutputData
 
 				var colName = string.Format(Fields.AUX_TECH_FORMAT, aux.ID);
 
-				if (!Table.Columns.Contains(colName)) {
-					var col = Table.Columns.Add(colName, typeof(string));
+				lock (Table)
+					if (!Table.Columns.Contains(colName)) {
+						var col = Table.Columns.Add(colName, typeof(string));
 
-					// move the new column to correct position
-					col.SetOrdinal(Table.Columns[Fields.CARGO_VOLUME].Ordinal);
-				}
+						// move the new column to correct position
+						col.SetOrdinal(Table.Columns[Fields.CARGO_VOLUME].Ordinal);
+					}
 
 				row[colName] = aux.Technology == null ? "" : string.Join("; ", aux.Technology);
 			}
@@ -1098,7 +1111,7 @@ namespace TUGraz.VectoCore.OutputData
 			public const string FCNCVC_KM = "FC-NCVc{0} [g/km]";
 			public const string FCWHTCC_H = "FC-WHTCc{0} [g/h]";
 			public const string FCWHTCC_KM = "FC-WHTCc{0} [g/km]";
-			
+
 			public const string FCESS_H = "FC-ESS{0} [g/h]";
 			public const string FCESS_KM = "FC-ESS{0} [g/km]";
 			public const string FCESS_H_CORR = "FC-ESS_Corr{0} [g/h]";
