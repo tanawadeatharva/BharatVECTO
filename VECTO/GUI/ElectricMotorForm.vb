@@ -1,4 +1,3 @@
-
 Imports System.Drawing.Imaging
 Imports System.IO
 Imports System.Linq
@@ -300,59 +299,17 @@ Public Class ElectricMotorForm
         End If
     End Function
 
-
-    Private Sub TbName_TextChanged(sender As Object, e As EventArgs) Handles tbMakeModel.TextChanged
+    Private Sub DataChanged(sender As Object, e As EventArgs) Handles tbMakeModel.TextChanged, tbMapLow.TextChanged, tbMapHi.TextChanged, tbInertia.TextChanged, tbRatedSpeed.TextChanged, tbOvlTime.TextChanged, tbOvlSpeed.TextChanged, tbOverloadTq.TextChanged, tbOverloadRecoveryFactor.TextChanged, tbContTq.TextChanged, tbVoltageLow.TextChanged, tbVoltageHi.TextChanged
         Change()
     End Sub
 
-    Private Sub TbDispl_TextChanged(sender As Object, e As EventArgs)
-        Change()
-        DeclInit()
-    End Sub
-
-    Private Sub TbInertia_TextChanged(sender As Object, e As EventArgs) Handles tbInertia.TextChanged
-        Change()
-    End Sub
-
-    Private Sub TbNleerl_TextChanged(sender As Object, e As EventArgs)
+    Private Sub DataChangedUpdatePic(sender As Object, e As EventArgs) _
+        Handles tbDragTorqueHi.TextChanged, tbMaxTorqueLow.TextChanged, tbMaxTorqueHi.TextChanged, tbDragTorqueLow.TextChanged
         UpdatePic()
         Change()
     End Sub
-
-    Private Sub TbMAP_TextChanged(sender As Object, e As EventArgs) _
-        Handles tbDragTorqueHi.TextChanged
-        UpdatePic()
-        Change()
-    End Sub
-
-    Private Sub TbWHTCurban_TextChanged(sender As Object, e As EventArgs)
-        Change()
-    End Sub
-
-    Private Sub TbWHTCrural_TextChanged(sender As Object, e As EventArgs)
-        Change()
-    End Sub
-
-    Private Sub TbWHTCmw_TextChanged(sender As Object, e As EventArgs)
-        Change()
-    End Sub
-
 
 #End Region
-
-
-    'Open VMAP file
-    Private Sub BtMAPopen_Click(sender As Object, e As EventArgs)
-        Dim fldfile As String
-
-        fldfile = FileRepl(tbDragTorqueHi.Text, GetPath(_emFile))
-
-        If fldfile <> NoFile AndAlso File.Exists(fldfile) Then
-            OpenFiles(FileRepl(tbMapHi.Text, GetPath(_emFile)), fldfile)
-        Else
-            OpenFiles(FileRepl(tbMapHi.Text, GetPath(_emFile)))
-        End If
-    End Sub
 
 
     'Save and close
@@ -521,54 +478,65 @@ Public Class ElectricMotorForm
 
 #End Region
 
-    Private Sub btnMaxTorqueCurveOpen_Click(sender As Object, e As EventArgs) Handles btnMaxTorqueCurveOpenHi.Click
-        Dim theFile As String
-
-        theFile = FileRepl(tbMaxTorqueHi.Text, GetPath(_emFile))
-
+    Private Sub CreateNewFile(textBox As Control)
+        Dim theFile As String: theFile = FileRepl(textBox.Text, GetPath(_emFile))
         If theFile <> NoFile AndAlso File.Exists(theFile) Then
-            OpenFiles(FileRepl(tbMaxTorqueHi.Text, GetPath(_emFile)), theFile)
+            OpenFiles(FileRepl(textBox.Text, GetPath(_emFile)), theFile)
         Else
-            OpenFiles(FileRepl(tbMaxTorqueHi.Text, GetPath(_emFile)))
+            OpenFiles(FileRepl(textBox.Text, GetPath(_emFile)))
         End If
+    End Sub
+    Private Sub SelectFile(fileBrowser As FileBrowser, textBox As Control)
+        If fileBrowser.OpenDialog(FileRepl(textBox.Text, GetPath(_emFile))) Then _
+            textBox.Text = GetFilenameWithoutDirectory(fileBrowser.Files(0), GetPath(_emFile))
+    End Sub
+
+    Private Sub btnMaxTorqueCurveOpen_Click(sender As Object, e As EventArgs) Handles btnMaxTorqueCurveOpenHi.Click
+        CreateNewFile(tbMaxTorqueHi)
     End Sub
 
     Private Sub btnDragCurveOpen_Click(sender As Object, e As EventArgs) Handles btnDragCurveOpenHi.Click
-        Dim theFile As String
-
-        theFile = FileRepl(tbDragTorqueHi.Text, GetPath(_emFile))
-
-        If theFile <> NoFile AndAlso File.Exists(theFile) Then
-            OpenFiles(FileRepl(tbDragTorqueHi.Text, GetPath(_emFile)), theFile)
-        Else
-            OpenFiles(FileRepl(tbDragTorqueHi.Text, GetPath(_emFile)))
-        End If
+        CreateNewFile(tbDragTorqueHi)
     End Sub
 
     Private Sub btnEmMapOpen_Click(sender As Object, e As EventArgs) Handles btnEmMapOpenHi.Click
-        Dim theFile As String
-
-        theFile = FileRepl(tbMapHi.Text, GetPath(_emFile))
-
-        If theFile <> NoFile AndAlso File.Exists(theFile) Then
-            OpenFiles(FileRepl(tbMapHi.Text, GetPath(_emFile)), theFile)
-        Else
-            OpenFiles(FileRepl(tbMapHi.Text, GetPath(_emFile)))
-        End If
+        CreateNewFile(tbMapHi)
+    End Sub
+    
+    Private Sub btnMaxTorqueCurveOpenLow_Click(sender As Object, e As EventArgs) Handles btnMaxTorqueCurveOpenLow.Click
+        CreateNewFile(tbMaxTorqueLow)
     End Sub
 
+    Private Sub btnDragCurveOpenLow_Click(sender As Object, e As EventArgs) Handles btnDragCurveOpenLow.Click
+        CreateNewFile(tbDragTorqueLow)
+    End Sub
+
+    Private Sub btnEmMapOpenLow_Click(sender As Object, e As EventArgs) Handles btnEmMapOpenLow.Click
+        CreateNewFile(tbMapLow)
+    End Sub
+    
     Private Sub btnBrowseMaxTorque_Click(sender As Object, e As EventArgs) Handles btnBrowseMaxTorqueHi.Click
-        If ElectricMachineMaxTorqueFileBrowser.OpenDialog(FileRepl(tbMaxTorqueHi.Text, GetPath(_emFile))) Then _
-            tbMaxTorqueHi.Text = GetFilenameWithoutDirectory(ElectricMachineMaxTorqueFileBrowser.Files(0), GetPath(_emFile))
+        SelectFile(ElectricMachineMaxTorqueFileBrowser, tbMaxTorqueHi)
     End Sub
 
     Private Sub btnBrowseDragCurve_Click(sender As Object, e As EventArgs) Handles btnBrowseDragCurveHi.Click
-        If ElectricMachineDragTorqueFileBrowser.OpenDialog(FileRepl(tbDragTorqueHi.Text, GetPath(_emFile))) Then _
-            tbDragTorqueHi.Text = GetFilenameWithoutDirectory(ElectricMachineDragTorqueFileBrowser.Files(0), GetPath(_emFile))
+        SelectFile(ElectricMachineDragTorqueFileBrowser, tbDragTorqueHi)
     End Sub
 
     Private Sub btnBrowseEmMap_Click(sender As Object, e As EventArgs) Handles btnBrowseEmMapHi.Click
-        If ElectricMachineEfficiencyMapFileBrowser.OpenDialog(FileRepl(tbMapHi.Text, GetPath(_emFile))) Then _
-            tbMapHi.Text = GetFilenameWithoutDirectory(ElectricMachineEfficiencyMapFileBrowser.Files(0), GetPath(_emFile))
+        SelectFile(ElectricMachineEfficiencyMapFileBrowser, tbMapHi)
     End Sub
+
+    Private Sub btnBrowseMaxTorqueLow_Click(sender As Object, e As EventArgs) Handles btnBrowseMaxTorqueLow.Click
+        SelectFile(ElectricMachineMaxTorqueFileBrowser, tbMaxTorqueLow)
+    End Sub
+
+    Private Sub btnBrowseDragCurveLow_Click(sender As Object, e As EventArgs) Handles btnBrowseDragCurveLow.Click
+        SelectFile(ElectricMachineDragTorqueFileBrowser, tbDragTorqueLow)
+    End Sub
+
+    Private Sub btnBrowseEmMapLow_Click(sender As Object, e As EventArgs) Handles btnBrowseEmMapLow.Click
+        SelectFile(ElectricMachineEfficiencyMapFileBrowser, tbMapLow)
+    End Sub
+
 End Class
