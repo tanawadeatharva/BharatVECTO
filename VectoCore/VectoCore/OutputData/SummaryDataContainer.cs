@@ -33,17 +33,14 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
-using System.Runtime.CompilerServices;
 using TUGraz.VectoCommon.BusAuxiliaries;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Configuration;
-using TUGraz.VectoCore.InputData.Reader.ComponentData;
 using TUGraz.VectoCore.InputData.Reader.Impl;
 using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation.Data;
-using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 
 // ReSharper disable MemberCanBePrivate.Global  -- used by API!
@@ -330,7 +327,7 @@ namespace TUGraz.VectoCore.OutputData
 			row[Fields.ALTITUDE_DELTA] = (ConvertedSI)modData.AltitudeDelta();
 
 			if (modData.HasCombustionEngine) {
-				WriteFuelconsumptionEntries(modData, row, vehicleLoading, cargoVolume, passengerCount, runData);
+				WriteFuelConsumptionEntries(modData, row, vehicleLoading, cargoVolume, passengerCount, runData);
 			} else {
 				if (runData.ElectricMachinesData.Count > 0) {
 					lock (Table)
@@ -385,7 +382,7 @@ namespace TUGraz.VectoCore.OutputData
 				Table.Rows.Add(row);
 		}
 
-		private void WriteFuelconsumptionEntries(
+		private void WriteFuelConsumptionEntries(
 			IModalDataContainer modData, DataRow row, Kilogram vehicleLoading,
 			CubicMeter cargoVolume, double? passengers, VectoRunData runData)
 		{
@@ -758,7 +755,7 @@ namespace TUGraz.VectoCore.OutputData
 		{
 			WriteVehicleData(runData, row);
 
-			if (runData.BusAuxiliaries != null && runData.BusAuxiliaries.InputData != null) {
+			if (runData.BusAuxiliaries?.InputData != null) {
 				// only write in declaration mode - if input data is set
 				// subtract driver!
 				row[Fields.PassengerCount] = runData.VehicleData.PassengerCount;
