@@ -48,7 +48,18 @@
       "OverSpeed": 2.5
     },
     "Cycles": [
-      "Group5Eng_CaseA.vdri"
+      "CrestCoast1.vdri",
+      "CrestCoast2.vdri",
+      "Group5Eng_CaseA.vdri",
+      "Group5Eng_CaseB.vdri",
+      "Group5Eng_CaseC.vdri",
+      "Group5Eng_CaseD.vdri",
+      "Group5Eng_CaseE.vdri",
+      "Group5Eng_CaseF.vdri",
+      "Group5Eng_CaseG.vdri",
+      "Group5Eng_CaseH.vdri",
+      "Group5Eng_CaseI.vdri",
+      "Group5Eng_CaseJ.vdri"
     ]
   }
 }
