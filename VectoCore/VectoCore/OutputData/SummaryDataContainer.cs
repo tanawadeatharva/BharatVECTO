@@ -32,6 +32,7 @@
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using TUGraz.VectoCommon.BusAuxiliaries;
 using TUGraz.VectoCommon.InputData;
@@ -619,10 +620,10 @@ namespace TUGraz.VectoCore.OutputData
 			}
 
 			if (runData.AngledriveData != null) {
-				var eAnglIn = modData.TimeIntegral<WattSecond>(ModalResultField.P_angle_in, x => x > 0);
-				var eAnglOut = modData.TimeIntegral<WattSecond>(ModalResultField.P_axle_in, x => x > 0);
+				var eAngleIn = modData.TimeIntegral<WattSecond>(ModalResultField.P_angle_in, x => x > 0);
+				var eAngleOut = modData.TimeIntegral<WattSecond>(ModalResultField.P_axle_in, x => x > 0);
 
-				row[Fields.AVERAGE_ANGLEDRIVE_EFFICIENCY] = (eAnglOut / eAnglIn).Value();
+				row[Fields.AVERAGE_ANGLEDRIVE_EFFICIENCY] = (eAngleOut / eAngleIn).Value();
 			}
 
 			var eAxlIn = modData.TimeIntegral<WattSecond>(ModalResultField.P_axle_in, x => x > 0);
@@ -1029,11 +1030,10 @@ namespace TUGraz.VectoCore.OutputData
 			}
 		}
 
+		[SuppressMessage("ReSharper", "InconsistentNaming")]
+		[SuppressMessage("ReSharper", "IdentifierTypo")]
 		public static class Fields
 		{
-
-			// ReSharper disable InconsistentNaming
-
 			public const string INTERNAL_PREFIX = "INTERNAL";
 
 			public const string SORT = INTERNAL_PREFIX + " Sorting";
