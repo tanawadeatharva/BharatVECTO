@@ -22,7 +22,7 @@
     <VehicleWidth>2500</VehicleWidth>
     <EntranceHeight>2000</EntranceHeight>
     <DoorDriveTechnology>electric</DoorDriveTechnology>
-    <VehicleDeclarationType>final</VehicleDeclarationType>
+    <VehicleDeclarationType>interim</VehicleDeclarationType>
     <ADAS>
       <v2.3:EngineStopStart>true</v2.3:EngineStopStart>
       <v2.3:EcoRollWithoutEngineStop>false</v2.3:EcoRollWithoutEngineStop>
