@@ -234,8 +234,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 				DataReader = new DeclarationModePrimaryBusVectoRunDataFactory(multiStagePrimaryAndStageInputData.PrimaryVehicle, tempPrimaryReport);
 
 
-				var reportPrimary = declarationReport ??
-									new XMLDeclarationReportPrimaryVehicle(ReportWriter,
+				var reportPrimary = new XMLDeclarationReportPrimaryVehicle(ReportWriter,
 										true);
 				
 

@@ -51,7 +51,7 @@ namespace TUGraz.VectoCore.OutputData.FileIO
 		public string JobFile => _jobFile;
 
 		private ConcurrentDictionary<ReportType, string> _writtenReports = new ConcurrentDictionary<ReportType, string>();
-		public IDictionary<ReportType, string> GetWrittenFiles()
+		public virtual IDictionary<ReportType, string> GetWrittenFiles()
 		{
 			return _writtenReports;
 		}

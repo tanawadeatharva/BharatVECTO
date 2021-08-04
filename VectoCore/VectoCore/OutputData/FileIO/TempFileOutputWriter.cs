@@ -7,7 +7,7 @@ using TUGraz.VectoCommon.Models;
 
 namespace TUGraz.VectoCore.OutputData.FileIO
 {
-	public class TempFileOutputWriter : FileOutputWriter, IOutputDataWriter
+	public class TempFileOutputWriter : FileOutputWriter
 	{
 		private Dictionary<ReportType, XDocument> _writtenReports = new Dictionary<ReportType, XDocument>();
 
@@ -15,6 +15,15 @@ namespace TUGraz.VectoCore.OutputData.FileIO
 		{
 
 		}
+
+		#region Overrides of FileOutputWriter
+
+		public override IDictionary<ReportType, string> GetWrittenFiles()
+		{
+			return new Dictionary<ReportType, string>();
+		}
+
+		#endregion
 
 		protected TempFileOutputWriter(string jobFile, int numberOfManufacturingStages) : base(jobFile,
 			numberOfManufacturingStages)
