@@ -68,7 +68,7 @@
     },
     "EngineStopStart": false,
     "EcoRoll": "None",
-    "PredictiveCruiseControl": "None",
+    "PredictiveCruiseControl": "Option_1_2",
     "ATEcoRollReleaseLockupClutch": false,
     "CdA": 5.3,
     "VehicleHeight": 4.0,
