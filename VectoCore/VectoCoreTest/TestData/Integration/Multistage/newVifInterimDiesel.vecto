@@ -6,8 +6,8 @@
     "FileVersion": 10
   },
   "Body": {
-    "PrimaryVehicle": "exempted_primary_heavyBus.xml",
-    "InterimStage": "vecto_vehicle-exempted_input_incomplete.xml",
+    "PrimaryVehicle": "vecto_vehicle-primary_heavyBus-sample_Diesel.xml",
+    "InterimStage": "vecto_vehicle-stage_input_full-sample_interim_noNG.xml",
     "Completed": false
   }
 }

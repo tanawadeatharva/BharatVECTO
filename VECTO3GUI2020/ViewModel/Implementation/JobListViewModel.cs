@@ -206,7 +206,7 @@ namespace VECTO3GUI2020.ViewModel.Implementation
 
 		public async Task<IDocumentViewModel> AddJobExecuteAsync()
 		{
-			var fileName = _dialogHelper.OpenXMLFileDialog();
+			var fileName = _dialogHelper.OpenXMLAndVectoFileDialog();
 			if (fileName != null)
 			{
 				return await AddJobAsync(fileName);
@@ -252,9 +252,9 @@ namespace VECTO3GUI2020.ViewModel.Implementation
 		{
 			var extension = Path.GetExtension(fileName);
 			switch (extension) {
-				case ".xml":
+				case Constants.FileExtensions.VectoXMLDeclarationFile:
 					return LoadXMLFile(fileName);
-				case ".json":
+				case Constants.FileExtensions.VectoJobFile:
 					return LoadJsonFile(fileName);
 				default: 
 					throw new VectoException($"{extension} not supported!");
@@ -448,18 +448,20 @@ namespace VECTO3GUI2020.ViewModel.Implementation
 					switch (extension) {
 						case Constants.FileExtensions.VectoJobFile:
 							input = JSONInputDataFactory.ReadJsonJob(fullFileName);
-							if (input is IDeclarationInputDataProvider tmp) {
-								mode = tmp.JobInputData.SavedInDeclarationMode
-									? ExecutionMode.Declaration
-									: ExecutionMode.Engineering;
-							} else {
-								mode = ExecutionMode.Engineering;
-							}
+							switch (input) {
+								case IDeclarationInputDataProvider declInput:
+									mode = declInput.JobInputData.SavedInDeclarationMode
+										? ExecutionMode.Declaration
+										: ExecutionMode.Engineering;
+									break;
+								case IMultistagePrimaryAndStageInputDataProvider primaryAndStage:
+									mode = ExecutionMode.Declaration;
+									break;
+								default:
+									input = null;
 
-							break;
-						case Constants.FileExtensions.Json:
-							input = JSONInputDataFactory.ReadJsonJob(fullFileName);
-							mode = ExecutionMode.Declaration;
+									break;
+							}
 							break;
 						case ".xml":
 							var xdoc = XDocument.Load(fullFileName);

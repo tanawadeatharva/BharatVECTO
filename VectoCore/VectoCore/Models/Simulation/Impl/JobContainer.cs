@@ -439,8 +439,9 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			private bool _done = false;
 			public bool Done => _done;
 
-			public bool Running;
+			volatile public bool Running;
 			public bool Success;
+			public bool Started = false;
 			public bool Canceled;
 			public double ExecTime;
 			public Exception ExecException;

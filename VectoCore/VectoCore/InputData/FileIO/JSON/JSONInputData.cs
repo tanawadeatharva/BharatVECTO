@@ -1177,13 +1177,5 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 				throw new VectoException("unsupported vehicle file format {0}", path);
 			}
 		}
-
-		#region Implementation of IDeclarationInputDataProvider
-
-		public IDeclarationJobInputData JobInputData => throw new NotImplementedException();
-
-		public IPrimaryVehicleInformationInputDataProvider PrimaryVehicleData => throw new NotImplementedException();
-
-		#endregion
 	}
 }

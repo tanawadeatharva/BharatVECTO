@@ -314,7 +314,7 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 		{
 			get => _saveJobAsCommand ?? (_saveJobAsCommand = new RelayCommand(() => {
 				if (CanBeSaved()) {
-					var path = _dialogHelper.SaveToJsonDialog();
+					var path = _dialogHelper.SaveToVectoJobDialog();
 					SaveJob(path);
 				}
 			}));

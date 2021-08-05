@@ -20,7 +20,8 @@ namespace VECTO3GUI2020.Helper
 		#region File and Folder Dialogs
 		public const string XmlFilter = "XML Files (*.xml)|*.xml";
 		public const string JsonFilter = "JSON Files (*.json)|*.json";
-		//public const string _xmlAndJsonFile = "Vecto Files (*.xml, *.json)|*.xml;*.json";
+		public const string VectoJobFilter = "Vecto Files (*.vecto)|*.vecto";
+		public const string XmlAndVectoJobFilter = "Vecto Files (*.xml, *.vecto)|*.xml;*.vecto";
 
 		private Dictionary<string, string> lastUsedLoadDirectories = new Dictionary<string, string>();
 		private Dictionary<string, string> lastUsedSaveDirectories = new Dictionary<string, string>();
@@ -112,7 +113,12 @@ namespace VECTO3GUI2020.Helper
 
 		public string OpenJsonFileDialog(string initialDirectory)
 		{
-			return OpenFilesDialog(JsonFilter, initialDirectory, false)?[0];
+			return OpenFilesDialog(VectoJobFilter, initialDirectory, false)?[0];
+		}
+
+		public string OpenXMLAndVectoFileDialog(string initialDirectory)
+		{
+			return OpenFilesDialog(XmlAndVectoJobFilter, initialDirectory, false)?[0];
 		}
 
 
@@ -163,9 +169,9 @@ namespace VECTO3GUI2020.Helper
 			return SaveToDialog(initialDirectory, XmlFilter);
 		}
 
-		public string SaveToJsonDialog(string initialDirectory)
+		public string SaveToVectoJobDialog(string initialDirectory)
 		{
-			return SaveToDialog(initialDirectory, JsonFilter);
+			return SaveToDialog(initialDirectory, VectoJobFilter);
 		}
 
 		public MessageBoxResult ShowErrorMessage(string errorMessage, string caption)
@@ -226,7 +232,9 @@ namespace VECTO3GUI2020.Helper
 		string OpenJsonFileDialog(string initialDirectory = null);
 		string SaveToDialog(string initialDirectory = null, string filter = "All files (*.*|*.*");
 		string SaveToXMLDialog(string initialDirectory = null);
-		string SaveToJsonDialog(string initialDirectory = null);
+		string SaveToVectoJobDialog(string initialDirectory = null);
+
+		string OpenXMLAndVectoFileDialog(string initialDirectory = null);
 
 
 		/// <summary>
@@ -252,5 +260,6 @@ namespace VECTO3GUI2020.Helper
 
 		MessageBoxResult ShowErrorMessage(string errorMessage, string caption);
 		MessageBoxResult ShowErrorMessage(string errorMessage);
+
 	}
 }
