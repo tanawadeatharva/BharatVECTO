@@ -259,9 +259,9 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 							multiStagePrimaryAndStageInputData.StageInputData);
 
 						var manStagesCount =
-							vifInputData.MultistageJobInputData.JobInputData.ManufacturingStages?.Count ?? 0;
+							vifInputData.MultistageJobInputData.JobInputData.ManufacturingStages?.Count ?? -1;
 
-						ReportWriter.NumberOfManufacturingStages = manStagesCount;
+						originalReportWriter.NumberOfManufacturingStages = manStagesCount;
 						var factory = new SimulatorFactory(_mode,
 							vifInputData, originalReportWriter,
 							null,
