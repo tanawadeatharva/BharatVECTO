@@ -463,6 +463,13 @@
 					</xs:element>
 					<xs:element name="ZeroEmissionVehicle" type="xs:boolean"/>
 					<xs:element name="NgTankSystem" type="v1.0:NgTankSystemType" minOccurs="0"/>
+					<xs:element name="VehicleTypeApprovalNumber">
+						<xs:simpleType>
+							<xs:restriction base="xs:token">
+								<xs:minLength value="1"/>
+							</xs:restriction>
+						</xs:simpleType>
+					</xs:element>
 					<xs:element name="ADAS" type="v2.1:AbstractAdvancedDriverAssistantSystemsType"/>
 					<xs:element name="TorqueLimits" type="v2.0:AbstractTorqueLimitsType" minOccurs="0"/>
 					<xs:element name="Components" type="v2.0:AbstractVehicleComponentsDeclarationType"/>

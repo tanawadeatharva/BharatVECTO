@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<tns:VectoInputDeclaration xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.9" xmlns:tns="urn:tugraz:ivt:VectoAPI:DeclarationComponent:v2.9" xmlns:v2.0="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0" xmlns:v2.3="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:DEV:v2.3" xmlns:v2.9="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:DEV:v2.9" xmlns:di="http://www.w3.org/2000/09/xmldsig#" schemaVersion="2.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:DeclarationComponent v:\VectoCore\VectoCore\Resources\XSD/VectoDeclarationComponent.xsd">
-	<tns:ElectricMachineSystem xsi:type="v2.9:ElectricMachineSystemComponentDeclarationType">
-		<v2.9:Data xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:DEV:v2.9" xsi:type="ElectricMachineSystemMeasuredDataDeclarationType" id="EM-asdf" xmlns:v2.9="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:DEV:v2.9">
+<tns:VectoInputDeclaration xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.10.1" xmlns:tns="urn:tugraz:ivt:VectoAPI:DeclarationComponent:v2.10" xmlns:v2.0="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0" xmlns:v2.3="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:DEV:v2.3" xmlns:v2.10.1="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:DEV:v2.10.1" xmlns:di="http://www.w3.org/2000/09/xmldsig#" schemaVersion="2.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:DeclarationComponent v:\VectoCore\VectoCore\Resources\XSD/VectoDeclarationComponent.xsd">
+	<tns:ElectricMachineSystem xsi:type="v2.10.1:ElectricMachineSystemComponentDeclarationType">
+		<v2.10.1:Data xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:DEV:v2.10.1" xsi:type="ElectricMachineSystemIHPCMeasuredDataDeclarationType" id="EM-asdf" xmlns:v2.9="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:DEV:v2.9">
 			<Manufacturer>a</Manufacturer>
 			<Model>a</Model>
 			<CertificationNumber>token</CertificationNumber>
@@ -18,14 +18,20 @@
 			<OverloadDuration>30.00</OverloadDuration>
 			<TestVoltageOverload>483</TestVoltageOverload>
 			<DcDcConverterIncluded>true</DcDcConverterIncluded>
-			<IHPCType>None</IHPCType>
+			<IHPCType>IHPC Type 1</IHPCType>
 			<VoltageLevel>
 				<Voltage>400</Voltage>
 				<MaxTorqueCurve>
 					<Entry outShaftSpeed="0.00" maxTorque="450.00" minTorque="-450.00"/>
 					<Entry outShaftSpeed="4000.00" maxTorque="100.00" minTorque="-100.00"/>
 				</MaxTorqueCurve>
-				<PowerMap>
+				<PowerMap gear="1">
+					<Entry outShaftSpeed="0.00" torque="400.00" electricPower="1000.00"/>
+					<Entry outShaftSpeed="0.00" torque="-400.00" electricPower="-1000.00"/>
+					<Entry outShaftSpeed="4000.00" torque="4000.00" electricPower="20000.00"/>
+					<Entry outShaftSpeed="4000.00" torque="-4000.00" electricPower="-20000.00"/>
+				</PowerMap>
+				<PowerMap gear="2">
 					<Entry outShaftSpeed="0.00" torque="400.00" electricPower="1000.00"/>
 					<Entry outShaftSpeed="0.00" torque="-400.00" electricPower="-1000.00"/>
 					<Entry outShaftSpeed="4000.00" torque="4000.00" electricPower="20000.00"/>
@@ -38,7 +44,13 @@
 					<Entry outShaftSpeed="0.00" maxTorque="450.00" minTorque="-450.00"/>
 					<Entry outShaftSpeed="4000.00" maxTorque="100.00" minTorque="-100.00"/>
 				</MaxTorqueCurve>
-				<PowerMap>
+				<PowerMap gear="1">
+					<Entry outShaftSpeed="0.00" torque="400.00" electricPower="1000.00"/>
+					<Entry outShaftSpeed="0.00" torque="-400.00" electricPower="-1000.00"/>
+					<Entry outShaftSpeed="4000.00" torque="4000.00" electricPower="20000.00"/>
+					<Entry outShaftSpeed="4000.00" torque="-4000.00" electricPower="-20000.00"/>
+				</PowerMap>
+				<PowerMap gear="2">
 					<Entry outShaftSpeed="0.00" torque="400.00" electricPower="1000.00"/>
 					<Entry outShaftSpeed="0.00" torque="-400.00" electricPower="-1000.00"/>
 					<Entry outShaftSpeed="4000.00" torque="4000.00" electricPower="20000.00"/>
@@ -52,8 +64,8 @@
 			<Conditioning circuitId="0">
 				<Entry coolantTempInlet="30" coolingPower="5000"/>
 			</Conditioning>
-		</v2.9:Data>
-		<v2.9:Signature>
+		</v2.10.1:Data>
+		<v2.10.1:Signature>
 			<di:Reference URI="#ENG-gooZah3D">
 				<di:Transforms>
 					<di:Transform Algorithm="urn:vecto:xml:2017:canonicalization"/>
@@ -62,6 +74,6 @@
 				<di:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"/>
 				<di:DigestValue>JWEwzKSP0lXvwRgQZTiWJm9dpdtQ72FOX0CC5Vy6f2Y=</di:DigestValue>
 			</di:Reference>
-		</v2.9:Signature>
+		</v2.10.1:Signature>
 	</tns:ElectricMachineSystem>
 </tns:VectoInputDeclaration>

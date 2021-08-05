@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<tns:VectoInputDeclaration xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.9" xmlns:tns="urn:tugraz:ivt:VectoAPI:DeclarationComponent:v2.9" xmlns:v2.0="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0" xmlns:v2.3="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:DEV:v2.3" xmlns:v2.9="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:DEV:v2.9" xmlns:di="http://www.w3.org/2000/09/xmldsig#" schemaVersion="2.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:DeclarationComponent v:\VectoCore\VectoCore\Resources\XSD/VectoDeclarationComponent.xsd">
-	<tns:BatterySystem xsi:type="v2.9:REESSComponentDeclarationType">
-		<v2.9:Data xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:DEV:v2.9" xsi:type="BatterySystemDataType" id="EM-asdf" xmlns:v2.9="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:DEV:v2.9">
+<tns:VectoInputDeclaration xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.10.1" xmlns:tns="urn:tugraz:ivt:VectoAPI:DeclarationComponent:v2.10" xmlns:v2.0="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0" xmlns:v2.3="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:DEV:v2.3" xmlns:v2.10.1="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:DEV:v2.10.1" xmlns:di="http://www.w3.org/2000/09/xmldsig#" schemaVersion="2.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:DeclarationComponent v:\VectoCore\VectoCore\Resources\XSD/VectoDeclarationComponent.xsd">
+	<tns:BatterySystem xsi:type="v2.10.1:REESSComponentDeclarationType">
+		<v2.10.1:Data xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:DEV:v2.10.1" xsi:type="BatterySystemDataType" id="EM-asdf" xmlns:v2.9="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:DEV:v2.9">
 			<Manufacturer>a</Manufacturer>
 			<Model>a</Model>
 			<CertificationNumber>token</CertificationNumber>
@@ -24,8 +24,8 @@
 				<Entry SoC="0" maxChagingCurrent="50.00" maxDischargingCurrent="0.00"/>
 				<Entry SoC="100" maxChagingCurrent="0.00" maxDischargingCurrent="50.00"/>
 			</CurrentLimits>
-		</v2.9:Data>
-		<v2.9:Signature>
+		</v2.10.1:Data>
+		<v2.10.1:Signature>
 			<di:Reference URI="#ENG-gooZah3D">
 				<di:Transforms>
 					<di:Transform Algorithm="urn:vecto:xml:2017:canonicalization"/>
@@ -34,6 +34,6 @@
 				<di:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"/>
 				<di:DigestValue>JWEwzKSP0lXvwRgQZTiWJm9dpdtQ72FOX0CC5Vy6f2Y=</di:DigestValue>
 			</di:Reference>
-		</v2.9:Signature>
+		</v2.10.1:Signature>
 	</tns:BatterySystem>
 </tns:VectoInputDeclaration>

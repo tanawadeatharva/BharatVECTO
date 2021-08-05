@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- edited with XMLSpy v2021 (x64) (http://www.altova.com) by Markus Quaritsch (Technische Universität Graz) -->
-<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:vectoParam="urn:tugraz:ivt:VectoAPI:ParameterDocumentation" xmlns:vdecdef1.0="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v1.0" xmlns:vdecdef2.0="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0" xmlns:v2.0="urn:tugraz:ivt:VectoAPI:DeclarationComponent:v2.0" xmlns:vdecdef="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions" xmlns:v2.9="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:DEV:v2.9" xmlns:ns1="urn:tugraz:ivt:VectoAPI:DeclarationComponent:v2.9" targetNamespace="urn:tugraz:ivt:VectoAPI:DeclarationComponent:v2.9" elementFormDefault="qualified" attributeFormDefault="unqualified" version="2.0" xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:ParameterDocumentation ParameterDocumentation.xsd">
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:vectoParam="urn:tugraz:ivt:VectoAPI:ParameterDocumentation" xmlns:vdecdef1.0="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v1.0" xmlns:vdecdef2.0="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0" xmlns:v2.0="urn:tugraz:ivt:VectoAPI:DeclarationComponent:v2.0" xmlns:vdecdef="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions" xmlns:v2.10.1="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:DEV:v2.10.1" xmlns:ns1="urn:tugraz:ivt:VectoAPI:DeclarationComponent:v2.10" targetNamespace="urn:tugraz:ivt:VectoAPI:DeclarationComponent:v2.10" elementFormDefault="qualified" attributeFormDefault="unqualified" version="2.0" xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:ParameterDocumentation ParameterDocumentation.xsd">
 	<xs:import namespace="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions" schemaLocation="VectoDeclarationDefinitions.xsd"/>
 	<xs:import namespace="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0" schemaLocation="VectoDeclarationDefinitions.2.0.xsd"/>
-	<xs:import namespace="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:DEV:v2.9" schemaLocation="VectoDeclarationDefinitions.2.9_xEV_Components.xsd"/>
+	<xs:import namespace="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:DEV:v2.10.1" schemaLocation="VectoDeclarationDefinitions.2.10.1_xEV_Components.xsd"/>
 	<xs:element name="VectoInputDeclaration">
 		<xs:annotation>
 			<xs:documentation>Root Node Declaration Data</xs:documentation>
@@ -18,10 +18,11 @@
 				<xs:element name="Tyre" type="vdecdef2.0:TyreComponentDeclarationType"/>
 				<xs:element name="Angledrive" type="vdecdef2.0:AngledriveComponentDeclarationType"/>
 				<xs:element name="AirDrag" type="vdecdef2.0:AirDragComponentDeclarationType"/>
-				<xs:element name="ElectricMachineSystem" type="v2.9:ElectricMachineSystemComponentDeclarationType"/>
-				<xs:element name="IEPC" type="v2.9:IEPCComponentDeclarationType"/>
-				<xs:element name="BatterySystem" type="v2.9:REESSComponentDeclarationType"/>
-				<xs:element name="CapacitorSystem" type="v2.9:REESSComponentDeclarationType"/>
+				<xs:element name="ElectricMachineSystem" type="v2.10.1:ElectricMachineSystemComponentDeclarationType"/>
+				<xs:element name="IEPC" type="v2.10.1:IEPCComponentDeclarationType"/>
+				<xs:element name="BatterySystem" type="v2.10.1:REESSComponentDeclarationType"/>
+				<xs:element name="CapacitorSystem" type="v2.10.1:REESSComponentDeclarationType"/>
+				<xs:element name="ADC" type="v2.10.1:ADCComponentDeclarationType"/>
 			</xs:choice>
 			<xs:attribute name="schemaVersion" use="required">
 				<xs:simpleType>
