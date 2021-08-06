@@ -710,6 +710,59 @@
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
+	<xs:complexType name="GearboxFWDDataDeclarationType">
+		<xs:annotation>
+			<xs:documentation>Gearbox Component</xs:documentation>
+		</xs:annotation>
+		<xs:complexContent>
+			<xs:extension base="v1.0:AbstractTransmissionDataDeclarationType">
+				<xs:sequence>
+					<xs:element name="Manufacturer" type="v1.0:ManufacturerType">
+						<xs:annotation>
+							<xs:documentation>P205</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="Model" type="v1.0:ModelType">
+						<xs:annotation>
+							<xs:documentation>P206</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="CertificationNumber" type="v1.0:CertificationNumberType">
+						<xs:annotation>
+							<xs:documentation>P262</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="Date" type="v1.0:DateTimeWithTimezone">
+						<xs:annotation>
+							<xs:documentation>P208</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="AppVersion" type="v1.0:AppVersionType">
+						<xs:annotation>
+							<xs:documentation>P209</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="TransmissionType" type="v1.0:GearboxTransmissionTypeType">
+						<xs:annotation>
+							<xs:documentation>P076 - [-]</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="MainCertificationMethod" type="v1.0:GearboxCertificationOptionType">
+						<xs:annotation>
+							<xs:documentation>P254 - [-]</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="DifferentialIncluded" type="xs:boolean">
+						<xs:annotation>
+							<xs:documentation>Pxxx - [bool[</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="AxlegearRatio" type="v1.0:Double3"/>
+					<xs:element name="Gears" type="v2.0:AbstractGearsDeclarationType"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
 	<xs:complexType name="GearboxDataDeclarationType">
 		<xs:annotation>
 			<xs:documentation>Gearbox Component</xs:documentation>

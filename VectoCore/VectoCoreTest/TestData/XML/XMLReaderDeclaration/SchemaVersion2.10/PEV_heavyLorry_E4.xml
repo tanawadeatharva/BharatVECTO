@@ -22,7 +22,7 @@
 		<VocationalVehicle>false</VocationalVehicle>
 		<SleeperCab>false</SleeperCab>
 		<VehicleTypeApprovalNumber>ASDF</VehicleTypeApprovalNumber>
-		<ArchitectureID>S2</ArchitectureID>
+		<ArchitectureID>E4</ArchitectureID>
 		<OvcHev>false</OvcHev>
 		<ADAS xsi:type="v2.10.2:ADAS_PEV_Type">
 			<PredictiveCruiseControl>1,2,3</PredictiveCruiseControl>
