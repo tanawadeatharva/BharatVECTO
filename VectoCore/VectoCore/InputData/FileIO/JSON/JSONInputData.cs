@@ -794,10 +794,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 					}
 
 					for (var i = 0; i < component.Count; i++) {
-						if (!_componentDigests.ContainsKey(component.Entry)) {
-							_componentDigests[component.Entry] = new List<string>();
-						}
-						_componentDigests[component.Entry].Add(
+						_componentDigests.GetOrAdd(component.Entry, _=> new List<string>()).Add(
 							XMLManufacturerReportReader.GetComponentDataDigestValue(xmlDoc, component.Entry, i));
 					}
 				}

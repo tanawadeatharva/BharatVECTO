@@ -29,11 +29,16 @@
 *   Martin Rexeis, rexeis@ivt.tugraz.at, IVT, Graz University of Technology
 */
 
+using Ninject.Planning.Bindings.Resolvers;
 using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Globalization;
+using System.Linq;
+using System.ServiceModel.Security;
+using System.Windows.Forms.DataVisualization.Charting;
 using TUGraz.VectoCommon.Exceptions;
+using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Utils;
 
 namespace TUGraz.VectoCore.Utils
@@ -51,6 +56,22 @@ namespace TUGraz.VectoCore.Utils
 			return defaultValue;
 		}
 
+		public static IEnumerable<TResult> SelectRows<TResult>(this DataTable self, Func<DataRow,TResult> selector) => self.Rows.Cast<DataRow>().Select(selector);
+
+		public static IEnumerable<TResult> SelectRows<TResult>(this DataTable self, Func<DataRow, int, TResult> selector) => self.Rows.Cast<DataRow>().Select(selector);
+
+		public static IEnumerable<DataRow> Where(this DataTable self, Func<DataRow, bool> predicate) => self.Rows.Cast<DataRow>().Where(predicate);
+
+		public static IEnumerable<DataRow> Where(this DataTable self, Func<DataRow, int, bool> predicate) => self.Rows.Cast<DataRow>().Where(predicate);
+
+		public static DataRow First(this DataTable self) => self.Rows.Cast<DataRow>().First();
+
+		public static DataRow First(this DataTable self, Func<DataRow, bool> predicate) => self.Rows.Cast<DataRow>().First(predicate);
+
+		public static DataRow Last(this DataTable self) => self.Rows.Cast<DataRow>().Last();
+
+		public static double Sum(this DataTable self, Func<DataRow, double> selector) => self.Rows.Cast<DataRow>().Sum(selector);
+		
 		public static double ParseDouble(this DataRow row, int columnIndex)
 		{
 			return row.ParseDouble(row.Table.Columns[columnIndex]);
