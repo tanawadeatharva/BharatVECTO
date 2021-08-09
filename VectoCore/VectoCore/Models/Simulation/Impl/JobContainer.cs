@@ -58,7 +58,8 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 			private bool followUpSimulatorFactoryFetched = false;
 
-			private readonly HashSet<int> _unfinishedRuns = new HashSet<int>();
+			private readonly ConcurrentDictionary<int, byte> _unfinishedRuns = new ConcurrentDictionary<int, byte>();
+			//private readonly HashSet<int> _unfinishedRuns = new HashSet<int>();
 			private readonly ReaderWriterLockSlim _unfinishedRunsRwLock = new ReaderWriterLockSlim();
 
 
@@ -66,7 +67,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			{
 				_simulatorFactory = simulatorFactory;
 				foreach (var runId in runIds) {
-					_unfinishedRuns.Add(runId);
+					_unfinishedRuns[runId] = Byte.MinValue;
 				}
 			}
 
@@ -74,7 +75,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			{
 				try {
 					_unfinishedRunsRwLock.EnterWriteLock();
-					_unfinishedRuns.Remove(runId);
+					_unfinishedRuns.TryRemove(runId, out var tmpByte);
 					if (AllCompletedUnsafe()) {
 						_outputWriter = _simulatorFactory.ReportWriter;
 					}
@@ -117,7 +118,8 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 		private readonly SummaryDataContainer _sumWriter;
 		internal readonly List<RunEntry> Runs = new List<RunEntry>();
-		private readonly HashSet<int> _unfinishedRuns = new HashSet<int>();
+		//private readonly HashSet<int> _unfinishedRuns = new HashSet<int>();
+		private readonly ConcurrentDictionary<int, byte> _unfinishedRuns = new ConcurrentDictionary<int, byte>();
 		private ReaderWriterLockSlim _runsRwLock = new ReaderWriterLockSlim();
 		private ConcurrentDictionary<int, RunContainer> _runContainerMap  = new ConcurrentDictionary<int, RunContainer>();
 		private static int _jobNumber;
@@ -162,7 +164,8 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 				try {
 					_runsRwLock.EnterWriteLock();
 					Runs.Add(new RunEntry(run, this));
-					_unfinishedRuns.Add(run.RunIdentifier);
+					_unfinishedRuns[run.RunIdentifier] = Byte.MinValue;
+					//_unfinishedRuns.Add(run.RunIdentifier);
 				} finally {
 					_runsRwLock.ExitWriteLock();
 				}
@@ -215,7 +218,8 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 					{
 						var entry = new RunEntry(run, this, factory.JobNumber);
 						Runs.Add(entry);
-						_unfinishedRuns.Add(run.RunIdentifier);
+						_unfinishedRuns[run.RunIdentifier] = Byte.MinValue;
+						//_unfinishedRuns.Add(run.RunIdentifier);
 						runIDs.Add(entry.RunId);
 					}
 				}
@@ -339,7 +343,8 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 			try {
 				_runsRwLock.EnterWriteLock();
-				_unfinishedRuns.Remove(runId);
+				//_unfinishedRuns.Remove(runId);
+				_unfinishedRuns.TryRemove(runId, out var tmpVal);
 				if (AllCompletedUnsafe())
 				{
 					_sumWriter.Finish();
@@ -374,18 +379,25 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 		{
 			get
 			{
+				return _unfinishedRuns.Count == 0;
+/*
 				try {
+					
+
 					_runsRwLock.EnterReadLock();
 					return AllCompletedUnsafe();
 				} finally {
 					_runsRwLock.ExitReadLock();
 				}
+*/
 			}
 		}
 
 		public Dictionary<int, ProgressEntry> GetProgress()
 		{
-			return Runs.ToDictionary(
+			try {
+				_runsRwLock.EnterReadLock();
+				return Runs.ToDictionary(
 					r => r.Run.RunIdentifier,
 					r => new ProgressEntry
 					{
@@ -401,6 +413,10 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 						Canceled = r.Canceled,
 						Error = r.ExecException
 					});
+			} finally {
+				_runsRwLock.ExitReadLock();
+			}
+			
 
 		}
 
@@ -471,16 +487,16 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 						ExecTime = stopWatch.Elapsed.TotalMilliseconds;
 						JobContainer.JobCompleted(RunId, _runContainerId);
 						_done = true;
-
-						//Notify which job has completed (ID)
 					}
 				});
 			}
 
 			public Task RunWorkerAsync()
 			{
-				if (Running == false) {
-					RunTask.Start();
+				
+				if (!Running && !Started) {
+					Started = true;
+					RunTask.Start(TaskScheduler.Current);
 				}
 				return RunTask;
 			}

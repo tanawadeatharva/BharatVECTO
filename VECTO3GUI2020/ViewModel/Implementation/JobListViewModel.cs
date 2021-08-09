@@ -9,6 +9,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Data;
+using System.Windows.Forms.VisualStyles;
 using System.Windows.Input;
 using System.Xml;
 using System.Xml.Linq;
@@ -355,12 +356,21 @@ namespace VECTO3GUI2020.ViewModel.Implementation
 			}
 			SimulationRunning = true;
 			try {
-				await Task.Run(() => RunSimulationAsync(_cancellationTokenSource.Token,
+				//await Task.Run(() => RunSimulationAsync(_cancellationTokenSource.Token,
+				//	outputMessages: _outputMessage,
+				//	progress: _progress,
+				//	status: _status,
+				//	jobToSimulate: jobToSimulate));
+				await Task.Factory.StartNew(() => RunSimulationAsync(_cancellationTokenSource.Token,
 					outputMessages: _outputMessage,
 					progress: _progress,
 					status: _status,
-					jobToSimulate: jobToSimulate));
-			} catch (Exception ex) {
+					jobToSimulate: jobToSimulate),
+						TaskCreationOptions.LongRunning | 
+						TaskCreationOptions.PreferFairness).Unwrap();
+
+			}
+			catch (Exception ex) {
 				_outputViewModel.AddMessage(new MessageEntry() {
 					Type = MessageType.ErrorMessage,
 					Message = ex.Message
@@ -379,6 +389,11 @@ namespace VECTO3GUI2020.ViewModel.Implementation
 			IProgress<string> status, 
 			IDocumentViewModel jobToSimulate = null)
 		{
+			if (Thread.CurrentThread.Name == null) {
+				Thread.CurrentThread.Name = "JobListThread";
+			};
+
+
             progress.Report(0);
 			status.Report("starting...");
 			
@@ -580,6 +595,7 @@ namespace VECTO3GUI2020.ViewModel.Implementation
 
 			var start = Stopwatch.StartNew();
 			jobContainer.Execute(true);
+			
 			while (!jobContainer.AllCompleted)
 			{
 				if (ct.IsCancellationRequested)
@@ -598,23 +614,25 @@ namespace VECTO3GUI2020.ViewModel.Implementation
 
 					return;
 				}
-
+				Debug.WriteLine(Thread.CurrentThread.Name);
 				var jobProgress = jobContainer.GetProgress();
 				var sumProgress = jobProgress.Sum(x => x.Value.Progress);
 				var duration = start.Elapsed.TotalSeconds;
-				jobProgress.Select(x => x.Value.Progress);
+				//jobProgress.Select(x => x.Value.Progress);
 
-
-
+				
+				
 				progress.Report(Convert.ToInt32(sumProgress * 100 / jobProgress.Count));
 				status.Report(string.Format(
 					"Duration: {0:F1}s, Current Progress: {1:P} ({2})", duration, sumProgress / jobProgress.Count,
 					string.Join(", ", jobProgress.Select(x => string.Format("{0,4:P}", x.Value.Progress)))));
-                var justFinished = jobProgress.Where(x => x.Value.Done & !finishedRuns.Contains(x.Key))
+                
+				var justFinished = jobProgress.Where(x => x.Value.Done & !finishedRuns.Contains(x.Key))
 					.ToDictionary(x => x.Key, x => x.Value);
 				PrintRuns(justFinished, fileWriters, outputMessages);
 				finishedRuns.AddRange(justFinished.Select(x => x.Key));
-				await Task.Delay(100);
+
+				Task.Delay(200, ct).Wait(200); //Used to reduce updates of UI Thread, under heavy load it's possible that Task.Delay() is not scheduled and we hang here, therefore the Timeout.
 			}
 			start.Stop();
 
@@ -818,7 +836,7 @@ namespace VECTO3GUI2020.ViewModel.Implementation
 			{
 				return _cancelSimulationCommand ?? (_cancelSimulationCommand = new RelayCommand(() => {
 						_outputViewModel.AddMessage(new MessageEntry() {
-							Message="Canceling Simulation",
+							Message="Canceling Simulation - this operation can take some time",
 							Type=MessageType.InfoMessage,
 						});
 						_simulationLoggingEnabled = false;
