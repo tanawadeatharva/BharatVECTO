@@ -17,13 +17,13 @@
 		<AngledriveType>None</AngledriveType>
 		<ZeroEmissionVehicle>false</ZeroEmissionVehicle>
 		<VehicleTypeApprovalNumber>ASDF</VehicleTypeApprovalNumber>
-		<ADAS xsi:type="v2.10.2:ADAS_Conventional_Type">
+		<ADAS xsi:type="ADAS_Conventional_Type">
 			<EngineStopStart>true</EngineStopStart>
 			<EcoRollWithoutEngineStop>false</EcoRollWithoutEngineStop>
 			<EcoRollWithEngineStop>true</EcoRollWithEngineStop>
 			<PredictiveCruiseControl>1,2,3</PredictiveCruiseControl>
 		</ADAS>
-		<TorqueLimits xmlns:v2.0="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0" xsi:type="v2.0:TorqueLimitsType"><!-- optional -->
+		<TorqueLimits xsi:type="v2.0:TorqueLimitsType"><!-- optional -->
 			<v2.0:Entry gear="9" maxTorque="2000"/>
 		</TorqueLimits>
 		<Components xsi:type="Components_Conventional_LorryType">

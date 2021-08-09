@@ -18,13 +18,13 @@
 		<VehicleTypeApprovalNumber>ASDF</VehicleTypeApprovalNumber>
 		<ArchitectureID>E2</ArchitectureID>
 		<OvcHev>false</OvcHev>
-		<ADAS xsi:type="v2.10.2:ADAS_PEV_Type">
+		<ADAS xsi:type="ADAS_PEV_Type">
 			<PredictiveCruiseControl>1,2,3</PredictiveCruiseControl>
 		</ADAS>
-		<TorqueLimits xmlns:v2.0="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0" xsi:type="v2.0:TorqueLimitsType"><!-- optional -->
+		<TorqueLimits xsi:type="v2.0:TorqueLimitsType"><!-- optional -->
 			<v2.0:Entry gear="9" maxTorque="2000"/>
 		</TorqueLimits>
-		<ElectricMotorTorqueLimits xsi:type="v2.10.2:ElectricMachineTorqueLimitsType"><!-- optional -->
+		<ElectricMotorTorqueLimits xsi:type="ElectricMachineTorqueLimitsType"><!-- optional -->
 			<ElectricMachine>
 				<Position>2</Position>
 				<VoltageLevel>

@@ -28,7 +28,7 @@
 			<v2.0:Entry gear="1" maxTorque="2500"/>
 			<v2.0:Entry gear="12" maxTorque="1900"/>
 		</TorqueLimits>
-		<ElectricMotorTorqueLimits xsi:type="v2.10.2:ElectricMachineTorqueLimitsType"><!-- optional -->
+		<ElectricMotorTorqueLimits xsi:type="ElectricMachineTorqueLimitsType"><!-- optional -->
 			<ElectricMachine>
 				<Position>2</Position>
 				<VoltageLevel>
@@ -47,7 +47,7 @@
 				</VoltageLevel>
 			</ElectricMachine>
 		</ElectricMotorTorqueLimits>
-		<ElectricMotorTorqueLimits xsi:type="v2.10.2:ElectricMachineTorqueLimitsType"><!-- optional -->
+		<ElectricMotorTorqueLimits xsi:type="ElectricMachineTorqueLimitsType"><!-- optional -->
 			<ElectricMachine>
 				<Position>GEN</Position>
 				<VoltageLevel>

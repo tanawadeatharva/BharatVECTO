@@ -22,13 +22,13 @@
 		<VocationalVehicle>false</VocationalVehicle>
 		<SleeperCab>false</SleeperCab>
 		<VehicleTypeApprovalNumber>ASDF</VehicleTypeApprovalNumber>
-		<ADAS xmlns:v2.10.2="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:DEV:v2.10.2" xsi:type="v2.10.2:ADAS_Conventional_Type">
+		<ADAS xsi:type="ADAS_Conventional_Type">
 			<v2.10.2:EngineStopStart>true</v2.10.2:EngineStopStart>
 			<v2.10.2:EcoRollWithoutEngineStop>false</v2.10.2:EcoRollWithoutEngineStop>
 			<v2.10.2:EcoRollWithEngineStop>true</v2.10.2:EcoRollWithEngineStop>
 			<v2.10.2:PredictiveCruiseControl>1,2,3</v2.10.2:PredictiveCruiseControl>
 		</ADAS>
-		<TorqueLimits xmlns:v2.0="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0" xsi:type="v2.0:TorqueLimitsType"><!-- optional -->
+		<TorqueLimits xsi:type="v2.0:TorqueLimitsType"><!-- optional -->
 			<v2.0:Entry gear="9" maxTorque="2000"/>
 		</TorqueLimits>
 		<Components xsi:type="Components_Conventional_LorryType">
@@ -283,7 +283,7 @@
 				</v2.0:Data>
 			</AxleWheels>
 			<Auxiliaries>
-				<Data xsi:type="v2.10.2:AUX_Conventional_LorryDataDeclarationType">
+				<Data xsi:type="AUX_Conventional_LorryDataDeclarationType">
 					<Fan>
 						<Technology>Hydraulic driven - Constant displacement pump</Technology>
 					</Fan>

@@ -17,7 +17,7 @@
 		<ZeroEmissionVehicle>false</ZeroEmissionVehicle>
 		<ArchitectureID>E-IEPC</ArchitectureID>
 		<OvcHev>false</OvcHev>
-		<ADAS xsi:type="v2.10.2:ADAS_IEPC_Type">
+		<ADAS xsi:type="ADAS_IEPC_Type">
 			<PredictiveCruiseControl>1,2,3</PredictiveCruiseControl>
 		</ADAS>
 		<Components xsi:type="Components_IEPC_PrimaryBusType">

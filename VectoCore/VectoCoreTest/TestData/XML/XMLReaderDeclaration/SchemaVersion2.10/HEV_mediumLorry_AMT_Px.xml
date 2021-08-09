@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <tns:VectoInputDeclaration xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:DEV:v2.10.2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" schemaVersion="2.0" xmlns:tns="urn:tugraz:ivt:VectoAPI:DeclarationInput:v2.0" xmlns:di="http://www.w3.org/2000/09/xmldsig#" xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:DeclarationJob V:\VectoCore\VectoCore\Resources\XSD/VectoDeclarationJob.xsd" xmlns:v1.0="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v1.0" xmlns:v2.0="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0" xmlns:v2.1="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.1" xmlns:v2.6="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:DEV:v2.6" xmlns:v2.10.1="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:DEV:v2.10.1" xmlns:v2.10.2="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:DEV:v2.10.2">
-	<v2.0:Vehicle xsi:type="v2.10.2:Vehicle_HEV-Px_MediumLorryDeclarationType" id="a">
+	<v2.0:Vehicle xsi:type="Vehicle_HEV-Px_MediumLorryDeclarationType" id="a">
 		<Manufacturer>TU Graz</Manufacturer>
 		<ManufacturerAddress>Inffeldgasse 19</ManufacturerAddress>
 		<Model>HEV Heavy Lorry Px</Model>
@@ -26,7 +26,7 @@
 		<TorqueLimits xsi:type="v2.0:TorqueLimitsType"><!-- optional -->
 			<v2.0:Entry gear="9" maxTorque="2000"/>
 		</TorqueLimits>
-		<ElectricMotorTorqueLimits xsi:type="v2.10.2:ElectricMachineTorqueLimitsType"><!-- optional -->
+		<ElectricMotorTorqueLimits xsi:type="ElectricMachineTorqueLimitsType"><!-- optional -->
 			<ElectricMachine>
 				<Position>2</Position>
 				<VoltageLevel>
@@ -49,7 +49,7 @@
 			<Entry rotationalSpeed="0.00" boostingTorque="0.00"/>
 			<Entry rotationalSpeed="1000.00" boostingTorque="0.00"/>
 		</BoostingLimitations>
-		<Components xsi:type="v2.10.2:Components_HEV-Px_LorryType">
+		<Components xsi:type="Components_HEV-Px_LorryType">
 			<Engine>
 				<v2.0:Data xsi:type="v1.0:EngineDataDeclarationType" id="ENG-gooZah3D" xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v1.0">
 					<Manufacturer>Generic Engine Manufacturer</Manufacturer>
