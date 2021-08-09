@@ -427,11 +427,8 @@
 					</Axles>
 				</v2.0:Data>
 			</AxleWheels>
-			<Auxiliaries xsi:type="v2.0:AuxiliariesComponentDeclarationType">
-				<v2.0:Data xsi:type="v2.0:AuxiliariesDataDeclarationType" xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0">
-					<Fan>
-						<Technology>Hydraulic driven - Constant displacement pump</Technology>
-					</Fan>
+			<Auxiliaries>
+				<Data xsi:type="AUX_PEV_LorryDataDeclarationType">
 					<SteeringPump>
 						<Technology>Variable displacement elec. controlled</Technology>
 					</SteeringPump>
@@ -444,7 +441,7 @@
 					<HVAC>
 						<Technology>Default</Technology>
 					</HVAC>
-				</v2.0:Data>
+				</Data>
 			</Auxiliaries>
 			<AirDrag><!-- optional -->
 				<Data id="CabinX23h" xsi:type="v2.0:AirDragDataDeclarationType" xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0">

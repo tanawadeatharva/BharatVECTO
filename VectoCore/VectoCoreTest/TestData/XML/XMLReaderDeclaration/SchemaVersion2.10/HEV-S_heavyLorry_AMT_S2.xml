@@ -28,7 +28,7 @@
 			<v2.10.2:EngineStopStart>true</v2.10.2:EngineStopStart>
 			<v2.10.2:PredictiveCruiseControl>1,2,3</v2.10.2:PredictiveCruiseControl>
 		</ADAS>
-		<TorqueLimits xmlns:v2.0="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0" xsi:type="v2.0:TorqueLimitsType"><!-- optional -->
+		<TorqueLimits xsi:type="v2.0:TorqueLimitsType"><!-- optional -->
 			<v2.0:Entry gear="9" maxTorque="2000"/>
 		</TorqueLimits>
 		<ElectricMotorTorqueLimits xsi:type="v2.10.2:ElectricMachineTorqueLimitsType"><!-- optional -->
@@ -526,8 +526,8 @@
 					</Axles>
 				</v2.0:Data>
 			</AxleWheels>
-			<Auxiliaries xsi:type="v2.0:AuxiliariesComponentDeclarationType">
-				<v2.0:Data xsi:type="v2.0:AuxiliariesDataDeclarationType"  xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0">
+			<Auxiliaries>
+				<v2.10.2:Data xsi:type="AUX_HEV_LorryDataDeclarationType">
 					<Fan>
 						<Technology>Hydraulic driven - Constant displacement pump</Technology>
 					</Fan>
@@ -543,7 +543,7 @@
 					<HVAC>
 						<Technology>Default</Technology>
 					</HVAC>
-				</v2.0:Data>
+				</v2.10.2:Data>
 			</Auxiliaries>
 			<AirDrag><!-- optional -->
 				<Data id="CabinX23h" xsi:type="v2.0:AirDragDataDeclarationType" xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0">
