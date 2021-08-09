@@ -137,6 +137,17 @@
 				<File FilePath="VectoCoreTest\TestData\XML\XMLReaderDeclaration\SchemaVersion2.10\PEV_primaryBus_E3.xml" HomeFolder="Yes"/>
 				<File FilePath="VectoCoreTest\TestData\XML\XMLReaderDeclaration\SchemaVersion2.10\PEV_primaryBus_E4.xml" HomeFolder="Yes"/>
 			</Folder>
+			<Folder FolderName="CompletedBus">
+				<File FilePath="VectoCoreTest\TestData\XML\XMLReaderDeclaration\SchemaVersion2.10\Conventional_completedBus_1.xml" HomeFolder="Yes"/>
+				<File FilePath="VectoCoreTest\TestData\XML\XMLReaderDeclaration\SchemaVersion2.10\xEV_completedBus_1.xml" HomeFolder="Yes"/>
+			</Folder>
+			<Folder FolderName="Exempted">
+				<File FilePath="VectoCoreTest\TestData\XML\XMLReaderDeclaration\SchemaVersion2.10\exempted_completedBus_input_full.xml" HomeFolder="Yes"/>
+				<File FilePath="VectoCoreTest\TestData\XML\XMLReaderDeclaration\SchemaVersion2.10\exempted_completedBus_input_only_mandatory_entries.xml" HomeFolder="Yes"/>
+				<File FilePath="VectoCoreTest\TestData\XML\XMLReaderDeclaration\SchemaVersion2.10\exempted_heavyLorry.xml" HomeFolder="Yes"/>
+				<File FilePath="VectoCoreTest\TestData\XML\XMLReaderDeclaration\SchemaVersion2.10\exempted_mediumLorry.xml" HomeFolder="Yes"/>
+				<File FilePath="VectoCoreTest\TestData\XML\XMLReaderDeclaration\SchemaVersion2.10\exempted_primaryBus.xml" HomeFolder="Yes"/>
+			</Folder>
 		</Folder>
 	</Folder>
 	<Folder FolderName="XSL Files" ExtStr="xsl;xslt">
