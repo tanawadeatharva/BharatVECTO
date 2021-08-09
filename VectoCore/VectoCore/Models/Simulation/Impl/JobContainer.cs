@@ -118,8 +118,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 		private readonly SummaryDataContainer _sumWriter;
 		internal readonly List<RunEntry> Runs = new List<RunEntry>();
-		//private readonly HashSet<int> _unfinishedRuns = new HashSet<int>();
-		private readonly ConcurrentDictionary<int, byte> _unfinishedRuns = new ConcurrentDictionary<int, byte>();
+		private readonly ConcurrentDictionary<int, byte> _unfinishedRuns = new ConcurrentDictionary<int, byte>(); //only key is used 
 		private ReaderWriterLockSlim _runsRwLock = new ReaderWriterLockSlim();
 		private ConcurrentDictionary<int, RunContainer> _runContainerMap  = new ConcurrentDictionary<int, RunContainer>();
 		private static int _jobNumber;
@@ -165,7 +164,6 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 					_runsRwLock.EnterWriteLock();
 					Runs.Add(new RunEntry(run, this));
 					_unfinishedRuns[run.RunIdentifier] = Byte.MinValue;
-					//_unfinishedRuns.Add(run.RunIdentifier);
 				} finally {
 					_runsRwLock.ExitWriteLock();
 				}
@@ -380,16 +378,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			get
 			{
 				return _unfinishedRuns.Count == 0;
-/*
-				try {
-					
 
-					_runsRwLock.EnterReadLock();
-					return AllCompletedUnsafe();
-				} finally {
-					_runsRwLock.ExitReadLock();
-				}
-*/
 			}
 		}
 
