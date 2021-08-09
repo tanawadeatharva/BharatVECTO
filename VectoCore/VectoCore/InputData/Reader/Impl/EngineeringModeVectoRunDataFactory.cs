@@ -42,6 +42,7 @@ using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Impl;
+using TUGraz.VectoCore.Utils;
 
 [assembly: InternalsVisibleTo("VectoCoreTest")]
 
@@ -133,9 +134,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 										CrossWindCorrectionMode.VAirBetaLookupTable;
 				//var ptoTransmissionData = dao.CreatePTOTransmissionData(vehicle.Components.PTOTransmissionInputData);
 
-				var drivingCycle = CyclesCache.ContainsKey(cycle.CycleData.Source)
-					? CyclesCache[cycle.CycleData.Source]
-					: DrivingCycleDataReader.ReadFromDataTable(cycle.CycleData, cycle.Name, crossWindRequired);
+				var drivingCycle = CyclesCache.GetOrAdd(cycle.CycleData.Source, _=>DrivingCycleDataReader.ReadFromDataTable(cycle.CycleData, cycle.Name, crossWindRequired));
 
 				var vehicleData = dao.CreateVehicleData(vehicle);
 				yield return new VectoRunData
@@ -226,9 +225,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 							: null;
 
 
-					var drivingCycle = CyclesCache.ContainsKey(cycle.CycleData.Source)
-						? CyclesCache[cycle.CycleData.Source]
-						: DrivingCycleDataReader.ReadFromDataTable(cycle.CycleData, cycle.Name, crossWindRequired);
+					var drivingCycle = CyclesCache.GetOrAdd(cycle.CycleData.Source, _=> DrivingCycleDataReader.ReadFromDataTable(cycle.CycleData, cycle.Name, crossWindRequired));
 
 					var electricMachines =
 						dao.CreateElectricMachines(vehicle.Components.ElectricMachines,

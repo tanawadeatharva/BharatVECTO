@@ -147,15 +147,9 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 			var engine = InputDataProvider.JobInputData.Vehicle.Components.EngineInputData;
 			var engineModes = engine.EngineModes;
 			var engineMode = engineModes[modeIdx];
-			DrivingCycleData cycle;
-			lock (CyclesCacheLock) {
-				if (CyclesCache.ContainsKey(mission.MissionType)) {
-					cycle = CyclesCache[mission.MissionType];
-				} else {
-					cycle = DrivingCycleDataReader.ReadFromStream(mission.CycleFile, CycleType.DistanceBased, "", false);
-					CyclesCache.Add(mission.MissionType, cycle);
-				}
-			}
+
+			var cycle = CyclesCache.GetOrAdd(mission.MissionType, _ => DrivingCycleDataReader.ReadFromStream(mission.CycleFile, CycleType.DistanceBased, "", false));
+			
 			var simulationRunData = new VectoRunData {
 				Loading = loading.Key,
 				VehicleData = DataAdapter.CreateVehicleData(vehicle, _segment, mission, loading, _allowVocational),

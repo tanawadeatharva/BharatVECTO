@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Xml;
@@ -28,10 +29,8 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 {
 	public class DeclarationModeCompletedBusVectoRunDataFactory : LoggingObject, IVectoRunDataFactory
 	{
-		protected static readonly object CyclesCacheLock = new object();
-
-		protected static readonly Dictionary<MissionType, DrivingCycleData> CyclesCache =
-			new Dictionary<MissionType, DrivingCycleData>();
+		protected static readonly ConcurrentDictionary<MissionType, DrivingCycleData> CyclesCache =
+			new ConcurrentDictionary<MissionType, DrivingCycleData>();
 
 		protected readonly IDeclarationInputDataProvider InputDataProvider;
 		protected IDeclarationReport Report;
@@ -229,17 +228,8 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 		}
 
 
-		protected VectoRunData CreateVectoRunDataSpecific(Mission mission, KeyValuePair<LoadingType, Tuple<Kilogram, double?>> loading, int modeIdx)
-		{
-			DrivingCycleData cycle;
-			lock (CyclesCacheLock) {
-				if (CyclesCache.ContainsKey(mission.MissionType)) {
-					cycle = CyclesCache[mission.MissionType];
-				} else {
-					cycle = DrivingCycleDataReader.ReadFromStream(mission.CycleFile, CycleType.DistanceBased, "", false);
-					CyclesCache.Add(mission.MissionType, cycle);
-				}
-			}
+		protected VectoRunData CreateVectoRunDataSpecific(Mission mission, KeyValuePair<LoadingType, Tuple<Kilogram, double?>> loading, int modeIdx) {
+			var cycle = CyclesCache.GetOrAdd(mission.MissionType, _ => DrivingCycleDataReader.ReadFromStream(mission.CycleFile, CycleType.DistanceBased, "", false));
 			
 			var simulationRunData = new VectoRunData {
 				Loading = loading.Key,
@@ -274,17 +264,8 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 		}
 
 		
-		protected VectoRunData CreateVectoRunDataGeneric(Mission mission, KeyValuePair<LoadingType, Tuple<Kilogram, double?>> loading, Segment primarySegment, int modeIdx)
-		{
-			DrivingCycleData cycle;
-			lock (CyclesCacheLock) {
-				if (CyclesCache.ContainsKey(mission.MissionType)) {
-					cycle = CyclesCache[mission.MissionType];
-				} else {
-					cycle = DrivingCycleDataReader.ReadFromStream(mission.CycleFile, CycleType.DistanceBased, "", false);
-					CyclesCache.Add(mission.MissionType, cycle);
-				}
-			}
+		protected VectoRunData CreateVectoRunDataGeneric(Mission mission, KeyValuePair<LoadingType, Tuple<Kilogram, double?>> loading, Segment primarySegment, int modeIdx) {
+			var cycle = CyclesCache.GetOrAdd(mission.MissionType, _ => DrivingCycleDataReader.ReadFromStream(mission.CycleFile, CycleType.DistanceBased, "", false));
 
 			var primaryBusAuxiliaries = PrimaryVehicle.Components.BusAuxiliaries;
 
