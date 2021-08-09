@@ -728,10 +728,10 @@ xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:DeclarationOutput:VehicleInterimFile
 							</v2.8:ElectricSystem>
 							<v2.8:HVAC>
 								<v2.8:SystemConfiguration>1</v2.8:SystemConfiguration>
-								<v2.8:HeatPumpTypeDriverCompartment>non R-744 2-stage</v2.8:HeatPumpTypeDriverCompartment>
-								<v2.8:HeatPumpModeDriverCompartment>heating</v2.8:HeatPumpModeDriverCompartment>
-								<v2.8:HeatPumpTypePassengerCompartment>non R-744 3-stage</v2.8:HeatPumpTypePassengerCompartment>
-								<v2.8:HeatPumpModePassengerCompartment>cooling</v2.8:HeatPumpModePassengerCompartment>
+								<v2.8:HeatPumpTypeCoolingDriverCompartment>R-744</v2.8:HeatPumpTypeCoolingDriverCompartment>
+								<v2.8:HeatPumpTypeHeatingDriverCompartment>non R-744 2-stage</v2.8:HeatPumpTypeHeatingDriverCompartment>
+								<v2.8:HeatPumpTypeCoolingPassengerCompartment>none</v2.8:HeatPumpTypeCoolingPassengerCompartment>
+								<v2.8:HeatPumpTypeHeatingPassengerCompartment>non R-744 continuous</v2.8:HeatPumpTypeHeatingPassengerCompartment>
 								<v2.8:AuxiliaryHeaterPower>50</v2.8:AuxiliaryHeaterPower>
 								<v2.8:DoubleGlazing>false</v2.8:DoubleGlazing>
 								<v2.8:AdjustableAuxiliaryHeater>true</v2.8:AdjustableAuxiliaryHeater>

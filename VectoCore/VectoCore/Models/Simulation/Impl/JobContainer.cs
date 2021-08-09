@@ -304,13 +304,6 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 		public void WaitFinished()
 		{
-			try {
-				_cancelLock.EnterReadLock();
-				System.Diagnostics.Debug.Assert(_canceled == true);
-			} finally {
-				_cancelLock.ExitReadLock();
-			}
-
 			Task[] tasks;
 			try {
 				_runsRwLock.EnterReadLock();

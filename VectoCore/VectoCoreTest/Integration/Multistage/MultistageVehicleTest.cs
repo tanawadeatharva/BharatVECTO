@@ -212,10 +212,11 @@ namespace TUGraz.VectoCore.Tests.Integration.Multistage
 
 			var hvac = data.Vehicle.Components.BusAuxiliaries.HVACAux;
 			Assert.AreEqual(BusHVACSystemConfiguration.Configuration1, hvac.SystemConfiguration);
-			Assert.AreEqual(HeatPumpType.non_R_744_2_stage, hvac.HeatPumpTypeDriverCompartment);
-			Assert.AreEqual(HeatPumpMode.heating, hvac.HeatPumpModeDriverCompartment);
-			Assert.AreEqual(HeatPumpType.non_R_744_3_stage, hvac.HeatPumpPassengerCompartments[0].Item1);
-			Assert.AreEqual(HeatPumpMode.cooling, hvac.HeatPumpPassengerCompartments[0].Item2);
+			Assert.AreEqual(HeatPumpType.R_744, hvac.HeatPumpTypeCoolingDriverCompartment);
+			Assert.AreEqual(HeatPumpType.non_R_744_2_stage, hvac.HeatPumpTypeHeatingDriverCompartment);
+			Assert.AreEqual(HeatPumpType.none, hvac.HeatPumpTypeCoolingPassengerCompartment);
+			Assert.AreEqual(HeatPumpType.non_R_744_continuous, hvac.HeatPumpTypeCoolingDriverCompartment);
+
 			Assert.AreEqual(50.SI<Watt>(), hvac.AuxHeaterPower);
 			Assert.AreEqual(false, hvac.DoubleGlazing);
 			Assert.AreEqual(true, hvac.AdjustableAuxiliaryHeater);
@@ -286,15 +287,10 @@ namespace TUGraz.VectoCore.Tests.Integration.Multistage
 			
 			var hvac = data.Vehicle.Components.BusAuxiliaries.HVACAux;
 			Assert.AreEqual(BusHVACSystemConfiguration.Configuration0, hvac.SystemConfiguration);
-			Assert.AreEqual(HeatPumpType.none, hvac.HeatPumpTypeDriverCompartment);
-			Assert.AreEqual(HeatPumpMode.heating, hvac.HeatPumpModeDriverCompartment);
-			Assert.AreEqual(3, hvac.HeatPumpPassengerCompartments.Count);
-			Assert.AreEqual(HeatPumpType.non_R_744_2_stage, hvac.HeatPumpPassengerCompartments[0].Item1);
-			Assert.AreEqual(HeatPumpMode.cooling, hvac.HeatPumpPassengerCompartments[0].Item2);
-			Assert.AreEqual(HeatPumpType.non_R_744_3_stage, hvac.HeatPumpPassengerCompartments[1].Item1);
-			Assert.AreEqual(HeatPumpMode.heating, hvac.HeatPumpPassengerCompartments[1].Item2);
-			Assert.AreEqual(HeatPumpType.non_R_744_2_stage, hvac.HeatPumpPassengerCompartments[2].Item1);
-			Assert.AreEqual(HeatPumpMode.cooling, hvac.HeatPumpPassengerCompartments[2].Item2);
+			Assert.AreEqual(HeatPumpType.none, hvac.HeatPumpTypeCoolingDriverCompartment);
+			Assert.AreEqual(HeatPumpType.non_R_744_2_stage, hvac.HeatPumpTypeHeatingDriverCompartment);
+			Assert.AreEqual(HeatPumpType.R_744, hvac.HeatPumpTypeCoolingPassengerCompartment);
+			Assert.AreEqual(HeatPumpType.non_R_744_continuous, hvac.HeatPumpTypeCoolingDriverCompartment);
 			Assert.AreEqual(50.SI<Watt>(), hvac.AuxHeaterPower);
 			Assert.AreEqual(false, hvac.DoubleGlazing);
 			Assert.AreEqual(true, hvac.AdjustableAuxiliaryHeater);

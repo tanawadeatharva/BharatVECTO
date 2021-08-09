@@ -498,20 +498,30 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 				return null;
 
 			if (hvac.SystemConfiguration == null &&
-				hvac.HeatPumpModeDriverCompartment == null && hvac.HeatPumpTypeDriverCompartment == null &&
-				hvac.HeatPumpPassengerCompartments?.Any() != true && hvac.AuxHeaterPower == null && hvac.DoubleGlazing == null && 
-				hvac.AdjustableAuxiliaryHeater == null && hvac.SeparateAirDistributionDucts == null &&
-				hvac.WaterElectricHeater == null && hvac.AirElectricHeater == null && hvac.OtherHeatingTechnology == null)
+				hvac.HeatPumpTypeCoolingDriverCompartment == null &&
+				hvac.HeatPumpTypeHeatingDriverCompartment == null &&
+				hvac.HeatPumpTypeCoolingPassengerCompartment == null &&
+				hvac.HeatPumpTypeHeatingPassengerCompartment == null &&
+				hvac.AuxHeaterPower == null &&
+				hvac.DoubleGlazing == null && 
+				hvac.AdjustableAuxiliaryHeater == null &&
+				hvac.SeparateAirDistributionDucts == null &&
+				hvac.WaterElectricHeater == null &&
+				hvac.AirElectricHeater == null &&
+				hvac.OtherHeatingTechnology == null)
 				return null;
 
 			return new XElement(v28 + XMLNames.BusAux_HVAC,
 				hvac.SystemConfiguration != null
 					? new XElement(v28 + XMLNames.Bus_SystemConfiguration, hvac.SystemConfiguration.GetXmlFormat()) : null,
-				hvac.HeatPumpTypeDriverCompartment != null
-					? new XElement(v28 + XMLNames.Bus_HeatPumpTypeDriver, hvac.HeatPumpTypeDriverCompartment.GetLabel()) : null,
-				hvac.HeatPumpModeDriverCompartment != null
-					? new XElement(v28 + XMLNames.Bus_HeatPumpModeDriver, hvac.HeatPumpModeDriverCompartment.GetLabel()) : null,
-				GetHeatPumpPassengerCompartments(hvac.HeatPumpPassengerCompartments),
+				hvac.HeatPumpTypeCoolingDriverCompartment != null
+					? new XElement(v28 + XMLNames.Bus_HeatPumpTypeCoolingDriver, hvac.HeatPumpTypeCoolingDriverCompartment.GetLabel()) : null,
+				hvac.HeatPumpTypeHeatingDriverCompartment != null
+					? new XElement(v28 + XMLNames.Bus_HeatPumpTypeHeatingDriver, hvac.HeatPumpTypeHeatingDriverCompartment.GetLabel()) : null,
+				hvac.HeatPumpTypeCoolingPassengerCompartment != null
+					? new XElement(v28 + XMLNames.Bus_HeatPumpTypeCoolingPassenger, hvac.HeatPumpTypeCoolingPassengerCompartment.GetLabel()) : null,
+				hvac.HeatPumpTypeHeatingPassengerCompartment != null
+					? new XElement(v28 + XMLNames.Bus_HeatPumpTypeHeatingPassenger, hvac.HeatPumpTypeHeatingPassengerCompartment.GetLabel()) : null,
 				hvac.AuxHeaterPower != null
 					? new XElement(v28 + XMLNames.Bus_AuxiliaryHeaterPower, hvac.AuxHeaterPower.ToXMLFormat(0)) : null,
 				hvac.DoubleGlazing != null
@@ -528,22 +538,6 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 					? new XElement(v28 + XMLNames.Bus_OtherHeatingTechnology, hvac.OtherHeatingTechnology) : null
 			);
 		}
-		
-		private IList<XElement> GetHeatPumpPassengerCompartments(IList<Tuple<HeatPumpType,HeatPumpMode>> heatPumps)
-		{
-			if (heatPumps?.Any() != true)
-				return null;
-			
-			var result = new List<XElement>();
-
-			for (int i = 0; i < heatPumps.Count; i++) {
-				result.Add(new XElement(v28 + XMLNames.Bus_HeatPumpTypePassenger, heatPumps[i].Item1.GetLabel()));
-				result.Add(new XElement(v28 + XMLNames.Bus_HeatPumpModePassenger, heatPumps[i].Item2.GetLabel()));
-			}
-
-			return result;
-		}
-
 
 		private XElement GetApplicationInformation()
 		{

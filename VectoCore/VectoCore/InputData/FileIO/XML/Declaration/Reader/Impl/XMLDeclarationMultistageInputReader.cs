@@ -1171,16 +1171,20 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 	// ---------------------------------------------------------------------------------------
 	public class ConsolidatedHVACBusAuxiliariesData : ConsolidatedDataBase, IHVACBusAuxiliariesDeclarationData
 	{
+
 		public ConsolidatedHVACBusAuxiliariesData(IEnumerable<IManufacturingStageInputData> manufacturingStages)
 			: base(manufacturingStages) { }
 
 		public BusHVACSystemConfiguration? SystemConfiguration => GetHVACBusAuxPropertyValue<BusHVACSystemConfiguration?>(nameof(SystemConfiguration));
 
-		public HeatPumpType? HeatPumpTypeDriverCompartment => GetHVACBusAuxPropertyValue<HeatPumpType?>(nameof(HeatPumpTypeDriverCompartment));
 
-		public HeatPumpMode? HeatPumpModeDriverCompartment => GetHVACBusAuxPropertyValue<HeatPumpMode?>(nameof(HeatPumpModeDriverCompartment));
+		public HeatPumpType? HeatPumpTypeCoolingDriverCompartment => GetHVACBusAuxPropertyValue<HeatPumpType?>(nameof(HeatPumpTypeCoolingDriverCompartment));
 
-		public IList<Tuple<HeatPumpType, HeatPumpMode>> HeatPumpPassengerCompartments => GetHeatPumpPassengerCompartments();
+		public HeatPumpType? HeatPumpTypeHeatingDriverCompartment => GetHVACBusAuxPropertyValue<HeatPumpType?>(nameof(HeatPumpTypeHeatingDriverCompartment));
+
+		public HeatPumpType? HeatPumpTypeCoolingPassengerCompartment => GetHVACBusAuxPropertyValue<HeatPumpType?>(nameof(HeatPumpTypeCoolingPassengerCompartment));
+
+		public HeatPumpType? HeatPumpTypeHeatingPassengerCompartment => GetHVACBusAuxPropertyValue<HeatPumpType?>(nameof(HeatPumpTypeHeatingPassengerCompartment));
 
 		public Watt AuxHeaterPower => GetHVACBusAuxPropertyValue<Watt>(nameof(AuxHeaterPower));
 
@@ -1200,19 +1204,6 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 
 		public bool EngineWasteGasHeatExchanger { get; }
 
-
-		private IList<Tuple<HeatPumpType, HeatPumpMode>> GetHeatPumpPassengerCompartments()
-		{
-			if (_manufacturingStages?.Any() != true)
-				return null; 
-
-			foreach (var entry in _manufacturingStages) {
-				if (entry.Vehicle?.Components?.BusAuxiliaries?.HVACAux?.HeatPumpPassengerCompartments != null)
-					return entry.Vehicle.Components.BusAuxiliaries.HVACAux.HeatPumpPassengerCompartments;
-			}
-
-			return null;
-		}
 
 
 		private T GetHVACBusAuxPropertyValue<T>(string propertyName)
@@ -1252,9 +1243,10 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 		{
 			if (fullCheck) {
 				return MethodComplete(IsCorrectSystemConfiguration(), nameof(IsCorrectSystemConfiguration))
-						& InputComplete(HeatPumpTypeDriverCompartment, nameof(HeatPumpTypeDriverCompartment))
-						& InputComplete(HeatPumpModeDriverCompartment, nameof(HeatPumpModeDriverCompartment))
-						& InputComplete(HeatPumpPassengerCompartments, nameof(HeatPumpPassengerCompartments))
+						& InputComplete(HeatPumpTypeCoolingDriverCompartment, nameof(HeatPumpTypeCoolingDriverCompartment))
+						& InputComplete(HeatPumpTypeHeatingDriverCompartment, nameof(HeatPumpTypeHeatingDriverCompartment))
+						& InputComplete(HeatPumpTypeCoolingPassengerCompartment, nameof(HeatPumpTypeCoolingPassengerCompartment))
+						& InputComplete(HeatPumpTypeHeatingPassengerCompartment, nameof(HeatPumpTypeHeatingPassengerCompartment))
 						& InputComplete(AuxHeaterPower, nameof(AuxHeaterPower))
 						& InputComplete(DoubleGlazing, nameof(DoubleGlazing))
 						& InputComplete(AdjustableAuxiliaryHeater, nameof(AdjustableAuxiliaryHeater))
@@ -1262,9 +1254,10 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 						& MethodComplete(RequiredParametersForJobType(jobType), nameof(RequiredParametersForJobType));
 			}
 			return MethodComplete(IsCorrectSystemConfiguration(), nameof(IsCorrectSystemConfiguration))
-					&& InputComplete(HeatPumpTypeDriverCompartment, nameof(HeatPumpTypeDriverCompartment))
-					&& InputComplete(HeatPumpModeDriverCompartment, nameof(HeatPumpModeDriverCompartment))
-					&& InputComplete(HeatPumpPassengerCompartments, nameof(HeatPumpPassengerCompartments))
+					&& InputComplete(HeatPumpTypeCoolingDriverCompartment, nameof(HeatPumpTypeCoolingDriverCompartment))
+					&& InputComplete(HeatPumpTypeHeatingDriverCompartment, nameof(HeatPumpTypeHeatingDriverCompartment))
+					&& InputComplete(HeatPumpTypeCoolingPassengerCompartment, nameof(HeatPumpTypeCoolingPassengerCompartment))
+					&& InputComplete(HeatPumpTypeHeatingPassengerCompartment, nameof(HeatPumpTypeHeatingPassengerCompartment))
 					&& InputComplete(AuxHeaterPower, nameof(AuxHeaterPower))
 					&& InputComplete(DoubleGlazing, nameof(DoubleGlazing))
 					&& InputComplete(AdjustableAuxiliaryHeater, nameof(AdjustableAuxiliaryHeater))

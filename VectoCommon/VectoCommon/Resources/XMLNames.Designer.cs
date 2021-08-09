@@ -700,38 +700,38 @@ namespace TUGraz.VectoCommon.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to HeatPumpModeDriverCompartment.
+        ///   Looks up a localized string similar to HeatPumpTypeCoolingDriverCompartment.
         /// </summary>
-        public static string Bus_HeatPumpModeDriver {
+        public static string Bus_HeatPumpTypeCoolingDriver {
             get {
-                return ResourceManager.GetString("Bus_HeatPumpModeDriver", resourceCulture);
+                return ResourceManager.GetString("Bus_HeatPumpTypeCoolingDriver", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to HeatPumpModePassengerCompartment.
+        ///   Looks up a localized string similar to HeatPumpTypeCoolingPassengerCompartment.
         /// </summary>
-        public static string Bus_HeatPumpModePassenger {
+        public static string Bus_HeatPumpTypeCoolingPassenger {
             get {
-                return ResourceManager.GetString("Bus_HeatPumpModePassenger", resourceCulture);
+                return ResourceManager.GetString("Bus_HeatPumpTypeCoolingPassenger", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to HeatPumpTypeDriverCompartment.
+        ///   Looks up a localized string similar to HeatPumpTypeHeatingDriverCompartment.
         /// </summary>
-        public static string Bus_HeatPumpTypeDriver {
+        public static string Bus_HeatPumpTypeHeatingDriver {
             get {
-                return ResourceManager.GetString("Bus_HeatPumpTypeDriver", resourceCulture);
+                return ResourceManager.GetString("Bus_HeatPumpTypeHeatingDriver", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to HeatPumpTypePassengerCompartment.
+        ///   Looks up a localized string similar to HeatPumpTypeHeatingPassengerCompartment.
         /// </summary>
-        public static string Bus_HeatPumpTypePassenger {
+        public static string Bus_HeatPumpTypeHeatingPassenger {
             get {
-                return ResourceManager.GetString("Bus_HeatPumpTypePassenger", resourceCulture);
+                return ResourceManager.GetString("Bus_HeatPumpTypeHeatingPassenger", resourceCulture);
             }
         }
         

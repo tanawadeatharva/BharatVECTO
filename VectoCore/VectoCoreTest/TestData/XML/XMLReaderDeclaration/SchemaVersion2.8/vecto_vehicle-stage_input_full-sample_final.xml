@@ -67,14 +67,10 @@
           </ElectricSystem>
           <HVAC>
             <SystemConfiguration>2</SystemConfiguration>
-            <HeatPumpTypeDriverCompartment>R-744</HeatPumpTypeDriverCompartment>
-            <HeatPumpModeDriverCompartment>heating</HeatPumpModeDriverCompartment>
-            <HeatPumpTypePassengerCompartment>non R-744 2-stage</HeatPumpTypePassengerCompartment>
-            <HeatPumpModePassengerCompartment>cooling</HeatPumpModePassengerCompartment>
-            <HeatPumpTypePassengerCompartment>non R-744 3-stage</HeatPumpTypePassengerCompartment>
-            <HeatPumpModePassengerCompartment>heating</HeatPumpModePassengerCompartment>
-            <HeatPumpTypePassengerCompartment>non R-744 2-stage</HeatPumpTypePassengerCompartment>
-            <HeatPumpModePassengerCompartment>cooling</HeatPumpModePassengerCompartment>
+            <HeatPumpTypeCoolingDriverCompartment>R-744</HeatPumpTypeCoolingDriverCompartment>
+            <HeatPumpTypeHeatingDriverCompartment>non R-744 2-stage</HeatPumpTypeHeatingDriverCompartment>
+            <HeatPumpTypeCoolingPassengerCompartment>none</HeatPumpTypeCoolingPassengerCompartment>
+            <HeatPumpTypeHeatingPassengerCompartment>non R-744 continuous</HeatPumpTypeHeatingPassengerCompartment>
             <AuxiliaryHeaterPower>50</AuxiliaryHeaterPower>
             <DoubleGlazing>false</DoubleGlazing>
             <AdjustableAuxiliaryHeater>true</AdjustableAuxiliaryHeater>

@@ -1398,17 +1398,17 @@
   <data name="Bus_AirElectricHeater" xml:space="preserve">
     <value>AirElectricHeater</value>
   </data>
-  <data name="Bus_HeatPumpModeDriver" xml:space="preserve">
-    <value>HeatPumpModeDriverCompartment</value>
+  <data name="Bus_HeatPumpTypeCoolingDriver" xml:space="preserve">
+    <value>HeatPumpTypeCoolingDriverCompartment</value>
   </data>
-  <data name="Bus_HeatPumpModePassenger" xml:space="preserve">
-    <value>HeatPumpModePassengerCompartment</value>
+  <data name="Bus_HeatPumpTypeHeatingDriver" xml:space="preserve">
+    <value>HeatPumpTypeHeatingDriverCompartment</value>
   </data>
-  <data name="Bus_HeatPumpTypeDriver" xml:space="preserve">
-    <value>HeatPumpTypeDriverCompartment</value>
+  <data name="Bus_HeatPumpTypeCoolingPassenger" xml:space="preserve">
+    <value>HeatPumpTypeCoolingPassengerCompartment</value>
   </data>
-  <data name="Bus_HeatPumpTypePassenger" xml:space="preserve">
-    <value>HeatPumpTypePassengerCompartment</value>
+  <data name="Bus_HeatPumpTypeHeatingPassenger" xml:space="preserve">
+    <value>HeatPumpTypeHeatingPassengerCompartment</value>
   </data>
   <data name="Bus_OtherHeatingTechnology" xml:space="preserve">
     <value>OtherHeatingTechnology</value>

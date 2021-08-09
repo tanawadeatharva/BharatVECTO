@@ -570,8 +570,14 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 		#region Implementation of IHVACBusAuxiliariesDeclarationData
 
         public virtual BusHVACSystemConfiguration? SystemConfiguration { get; set; }
-		public virtual HeatPumpType? HeatPumpTypeDriverCompartment => null;
-		public virtual HeatPumpMode? HeatPumpModeDriverCompartment => null;
+
+		public HeatPumpType? HeatPumpTypeCoolingDriverCompartment => null;
+
+		public HeatPumpType? HeatPumpTypeHeatingDriverCompartment => null;
+
+		public HeatPumpType? HeatPumpTypeCoolingPassengerCompartment => null;
+
+		public HeatPumpType? HeatPumpTypeHeatingPassengerCompartment => null;
 
 		public virtual IList<Tuple<HeatPumpType, HeatPumpMode>> HeatPumpPassengerCompartments => null;
 		public virtual Watt AuxHeaterPower => null;

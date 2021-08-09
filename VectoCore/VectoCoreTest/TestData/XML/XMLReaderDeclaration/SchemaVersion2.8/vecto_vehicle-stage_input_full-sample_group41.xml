@@ -72,10 +72,10 @@ xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:DeclarationJob E:\VECTO_DEV\fk_vecto
 					</ElectricSystem>
 					<HVAC>
 						<SystemConfiguration>7</SystemConfiguration>
-						<HeatPumpTypeDriverCompartment>non R-744 2-stage</HeatPumpTypeDriverCompartment>
-						<HeatPumpModeDriverCompartment>cooling</HeatPumpModeDriverCompartment>
-						<HeatPumpTypePassengerCompartment>non R-744 2-stage</HeatPumpTypePassengerCompartment>
-						<HeatPumpModePassengerCompartment>cooling</HeatPumpModePassengerCompartment>
+						<HeatPumpTypeCoolingDriverCompartment>R-744</HeatPumpTypeCoolingDriverCompartment>
+						<HeatPumpTypeHeatingDriverCompartment>non R-744 2-stage</HeatPumpTypeHeatingDriverCompartment>
+						<HeatPumpTypeCoolingPassengerCompartment>none</HeatPumpTypeCoolingPassengerCompartment>
+						<HeatPumpTypeHeatingPassengerCompartment>non R-744 continuous</HeatPumpTypeHeatingPassengerCompartment>
 						<AuxiliaryHeaterPower>0</AuxiliaryHeaterPower>
 						<DoubleGlazing>true</DoubleGlazing>
 						<AdjustableAuxiliaryHeater>true</AdjustableAuxiliaryHeater>

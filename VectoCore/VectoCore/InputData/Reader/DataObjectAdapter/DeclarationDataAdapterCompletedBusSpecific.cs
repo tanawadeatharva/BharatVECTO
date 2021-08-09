@@ -222,37 +222,47 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			if (completedVehicle.NumberPassengersStandingUpperDeck == null) {
 				throw new VectoException("NumberOfPassengersStandingUpperDeck input parameter is required");
 			}
-			if (busAux.HeatPumpTypeDriverCompartment == null) {
-				throw new VectoException("HeatPumpTypeDriverCompartment input parameter is required");
+			if (busAux.HeatPumpTypeCoolingDriverCompartment == null) {
+				throw new VectoException("HeatPumpTypeCoolingDriverCompartment input parameter is required");
 			}
-			if (busAux.HeatPumpPassengerCompartments == null || busAux.HeatPumpPassengerCompartments.Count == 0) {
-				throw new VectoException("HeatPumpPassengerCompartments input parameter is required");
-			}
-			if (busAux.HeatPumpModeDriverCompartment == null || (busAux.HeatPumpTypeDriverCompartment != HeatPumpType.none && busAux.HeatPumpModeDriverCompartment.Value == HeatPumpMode.N_A)) {
-				throw new VectoException("HeatPumpTypeDriverCompartment input parameter is required");
+			if (busAux.HeatPumpTypeHeatingDriverCompartment == null) {
+				throw new VectoException("HeatPumpTypeHeatingDriverCompartment input parameter is required");
 			}
 
-			if (hvacConfiguration.RequiresDriverAC() && busAux.HeatPumpTypeDriverCompartment == HeatPumpType.none) {
-				throw new VectoException("HVAC System Configuration {0} requires DriverAC Technology", hvacConfiguration);
+			if (busAux.HeatPumpTypeCoolingPassengerCompartment == null) {
+				throw new VectoException("HeatPumpTypeCoolingPassengerCompartment input parameter is required");
 			}
+
+
+
+			//if (busAux.HeatPumpPassengerCompartments == null || busAux.HeatPumpPassengerCompartments.Count == 0) {
+			//	throw new VectoException("HeatPumpPassengerCompartments input parameter is required");
+			//}
+			//if (busAux.HeatPumpModeDriverCompartment == null || (busAux.HeatPumpTypeDriverCompartment != HeatPumpType.none && busAux.HeatPumpModeDriverCompartment.Value == HeatPumpMode.N_A)) {
+			//	throw new VectoException("HeatPumpTypeDriverCompartment input parameter is required");
+			//}
+
+			//if (hvacConfiguration.RequiresDriverAC() && busAux.HeatPumpTypeCoolingDriverCompartment == HeatPumpType.none) {
+			//	throw new VectoException("HVAC System Configuration {0} requires DriverAC Technology", hvacConfiguration);
+			//}
 			
-			if (hvacConfiguration.RequiresPassengerAC() && busAux.HeatPumpPassengerCompartments.All(x => x.Item1 == HeatPumpType.none)) {
-				throw new VectoException("HVAC System Configuration {0} requires PassengerAC Technology", hvacConfiguration);
-			}
+			//if (hvacConfiguration.RequiresPassengerAC() && busAux.HeatPumpTypeCoolingPassengerCompartment == HeatPumpType.none) {
+			//	throw new VectoException("HVAC System Configuration {0} requires PassengerAC Technology", hvacConfiguration);
+			//}
 
-			if (busAux.HeatPumpPassengerCompartments.Any(x => x.Item1 != HeatPumpType.none && x.Item2 == HeatPumpMode.N_A)) {
-                throw new VectoException("HeatPumpModePassengerCompartment input parameter is required");
-            }
+			//if (busAux.HeatPumpPassengerCompartments.Any(x => x.Item1 != HeatPumpType.none && x.Item2 == HeatPumpMode.N_A)) {
+   //             throw new VectoException("HeatPumpModePassengerCompartment input parameter is required");
+   //         }
 
-            var heatPumpTypeDriverCompartment =
-				busAux.HeatPumpModeDriverCompartment == HeatPumpMode.heating
-					? HeatPumpType.none
-					: busAux.HeatPumpTypeDriverCompartment.Value;
+   //         var heatPumpTypeDriverCompartment =
+			//	busAux.HeatPumpModeDriverCompartment == HeatPumpMode.heating
+			//		? HeatPumpType.none
+			//		: busAux.HeatPumpTypeDriverCompartment.Value;
 
-            var heatPumpTypePassengerCompartment = (
-                busAux.HeatPumpPassengerCompartments.All(x => x.Item2 == HeatPumpMode.heating)
-                    ? new[] {HeatPumpType.none}.ToList()
-                    : busAux.HeatPumpPassengerCompartments.Select(x => x.Item1).ToList()).FirstOrDefault();
+   //         var heatPumpTypePassengerCompartment = (
+   //             busAux.HeatPumpPassengerCompartments.All(x => x.Item2 == HeatPumpMode.heating)
+   //                 ? new[] {HeatPumpType.none}.ToList()
+   //                 : busAux.HeatPumpPassengerCompartments.Select(x => x.Item1).ToList()).FirstOrDefault();
 
             var internalLength = hvacConfiguration == BusHVACSystemConfiguration.Configuration2
 				? 2 * Constants.BusParameters.DriverCompartmentLength // OK
@@ -294,14 +304,24 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			ssmInputs.HVACMaxCoolingPower = coolingPower.Item1 + coolingPower.Item2;
 
             //ToDo FK COP calculation
-            ssmInputs.HVACCompressorType = heatPumpTypePassengerCompartment; // use passenger compartment
+			var heatPumpTypePassengerCompartment = busAux.HeatPumpTypeCoolingPassengerCompartment.Value;
+			var heatPumpTypeDriverCompartment = busAux.HeatPumpTypeCoolingDriverCompartment.Value;
+
+			ssmInputs.HVACCompressorType = busAux.HeatPumpTypeCoolingPassengerCompartment.Value; // use passenger compartment
             ssmInputs.HVACTechnology = $"{busAux.SystemConfiguration.GetName()} " + 
 									   $"({string.Join(", ", heatPumpTypePassengerCompartment.GetName(), heatPumpTypeDriverCompartment.GetName())})";
 			ssmInputs.COP = DeclarationData.BusAuxiliaries.CalculateCOP(
                 coolingPower.Item1, heatPumpTypeDriverCompartment, coolingPower.Item2, heatPumpTypePassengerCompartment /* average */,
                 floorType);
 
-            return ssmInputs;
+			ssmInputs.HVACCompressorType = heatPumpTypePassengerCompartment; // use passenger compartment
+			ssmInputs.HVACTechnology = $"{busAux.SystemConfiguration.GetName()} " +
+									   $"({string.Join(", ", heatPumpTypePassengerCompartment.GetName(), heatPumpTypeDriverCompartment.GetName())})";
+			ssmInputs.COP = DeclarationData.BusAuxiliaries.CalculateCOP(
+				coolingPower.Item1, heatPumpTypeDriverCompartment, coolingPower.Item2, heatPumpTypePassengerCompartment /* average */,
+				floorType);
+
+			return ssmInputs;
 		}
 
 		

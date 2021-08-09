@@ -85,20 +85,33 @@ namespace VECTO3GUI2020.Util.XML.Implementation.ComponentWriter
 			if (_inputData.HVACAux != null) {
 				var hvacElement = new XElement(_defaultNamespace + "HVAC");
 				hvacElement.Add(new XElement(_defaultNamespace + XMLNames.Bus_SystemConfiguration, _inputData.HVACAux.SystemConfiguration.GetXmlFormat()));
-				var heatPumpTypeLabel = _inputData.HVACAux.HeatPumpTypeDriverCompartment.GetLabel();
-				if (heatPumpTypeLabel == "~null~") {
-					heatPumpTypeLabel = null;
-				}
-				hvacElement.Add(new XElement(_defaultNamespace + XMLNames.Bus_HeatPumpTypeDriver, heatPumpTypeLabel));
-				hvacElement.Add(new XElement(_defaultNamespace + XMLNames.Bus_HeatPumpModeDriver, _inputData.HVACAux.HeatPumpModeDriverCompartment.GetLabel()));
-				//TODO
-				if (_inputData.HVACAux.HeatPumpPassengerCompartments != null) {
-					foreach (var (heatPumpType, heatPumpMode) in _inputData.HVACAux.HeatPumpPassengerCompartments) {
-						hvacElement.Add(new XElement(_defaultNamespace + XMLNames.Bus_HeatPumpTypePassenger, heatPumpType.GetLabel()));
-						hvacElement.Add(new XElement(_defaultNamespace + XMLNames.Bus_HeatPumpModePassenger, heatPumpMode.GetLabel()));
-					}
-				}
 
+				var driverCoolingHeatPumpLabel = _inputData.HVACAux.HeatPumpTypeCoolingDriverCompartment.GetLabel();
+				if (driverCoolingHeatPumpLabel == "~null~") {
+					driverCoolingHeatPumpLabel = null;
+				}
+				hvacElement.Add(new XElement(_defaultNamespace + XMLNames.Bus_HeatPumpTypeCoolingDriver, driverCoolingHeatPumpLabel));
+
+				var driverHeatingHeatPumpLabel = _inputData.HVACAux.HeatPumpTypeHeatingDriverCompartment.GetLabel();
+				if (driverHeatingHeatPumpLabel == "~null~")
+				{
+					driverHeatingHeatPumpLabel = null;
+				}
+				hvacElement.Add(new XElement(_defaultNamespace + XMLNames.Bus_HeatPumpTypeHeatingDriver, driverHeatingHeatPumpLabel));
+				
+				var passengerCoolingHeatPumpLabel = _inputData.HVACAux.HeatPumpTypeCoolingPassengerCompartment.GetLabel();
+				if (passengerCoolingHeatPumpLabel == "~null~")
+				{
+					passengerCoolingHeatPumpLabel = null;
+				}
+				hvacElement.Add(new XElement(_defaultNamespace + XMLNames.Bus_HeatPumpTypeCoolingPassenger, passengerCoolingHeatPumpLabel));
+
+				var passengerHeatingHeatPumpLabel = _inputData.HVACAux.HeatPumpTypeHeatingPassengerCompartment.GetLabel();
+				if (passengerHeatingHeatPumpLabel == "~null~")
+				{
+					passengerHeatingHeatPumpLabel = null;
+				}
+				hvacElement.Add(new XElement(_defaultNamespace + XMLNames.Bus_HeatPumpTypeHeatingPassenger, passengerHeatingHeatPumpLabel));
 
 				hvacElement.Add(new XElement(_defaultNamespace + XMLNames.Bus_AuxiliaryHeaterPower, _inputData.HVACAux.AuxHeaterPower?.ToXMLFormat(0)));
 				hvacElement.Add(new XElement(_defaultNamespace + XMLNames.Bus_DoubleGlazing, _inputData.HVACAux.DoubleGlazing));

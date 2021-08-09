@@ -183,11 +183,10 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		#region Implementation of IHVACBusAuxiliariesDeclarationData
 
 		public virtual BusHVACSystemConfiguration? SystemConfiguration => BusHVACSystemConfiguration.Unknown;
-
-		public virtual HeatPumpType? HeatPumpTypeDriverCompartment => null;
-		public virtual HeatPumpMode? HeatPumpModeDriverCompartment => null;
-
-		public virtual IList<Tuple<HeatPumpType, HeatPumpMode>> HeatPumpPassengerCompartments => null;
+		public virtual HeatPumpType? HeatPumpTypeCoolingDriverCompartment => null;
+		public virtual HeatPumpType? HeatPumpTypeHeatingDriverCompartment => null;
+		public virtual HeatPumpType? HeatPumpTypeCoolingPassengerCompartment => null;
+		public virtual HeatPumpType? HeatPumpTypeHeatingPassengerCompartment => null;
 
 		public virtual Watt AuxHeaterPower => 0.SI<Watt>();
 
@@ -307,10 +306,18 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 		private bool IsBusHVACTagEmpty()
 		{
-			return SystemConfiguration == null && HeatPumpTypeDriverCompartment == null && HeatPumpModeDriverCompartment == null &&
-					HeatPumpPassengerCompartments?.Any() != true && AuxHeaterPower == null && DoubleGlazing == null && 
-					AdjustableAuxiliaryHeater == null && SeparateAirDistributionDucts == null && WaterElectricHeater == null &&
-					AirElectricHeater == null && OtherHeatingTechnology == null ;
+			return SystemConfiguration == null && 
+					HeatPumpTypeCoolingPassengerCompartment == null && 
+					HeatPumpTypeHeatingPassengerCompartment == null &&
+					HeatPumpTypeCoolingDriverCompartment == null && 
+					HeatPumpTypeHeatingDriverCompartment == null && 
+					AuxHeaterPower == null && 
+					DoubleGlazing == null && 
+					AdjustableAuxiliaryHeater == null && 
+					SeparateAirDistributionDucts == null && 
+					WaterElectricHeater == null &&
+					AirElectricHeater == null && 
+					OtherHeatingTechnology == null ;
 		}
 
 		public override XmlNode XMLSource => BaseNode;
@@ -322,49 +329,47 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 			ElementExists(XMLNames.Bus_SystemConfiguration) 
 				? BusHVACSystemConfigurationHelper.Parse(GetString(XMLNames.Bus_SystemConfiguration)) : null;
 
-		public override HeatPumpType? HeatPumpTypeDriverCompartment =>
-			ElementExists(XMLNames.Bus_HeatPumpTypeDriver)
-				? HeatPumpTypeHelper.Parse(GetString(XMLNames.Bus_HeatPumpTypeDriver)) : (HeatPumpType?)null;
 
-		public override HeatPumpMode? HeatPumpModeDriverCompartment
+		#region Overrides of XMLDeclarationPrimaryBusAuxiliariesDataProviderV26
+
+		public override HeatPumpType? HeatPumpTypeCoolingDriverCompartment
 		{
 			get
 			{
-				if (HeatPumpTypeDriverCompartment == HeatPumpType.none && !ElementExists(XMLNames.Bus_HeatPumpModeDriver)) 
-					return HeatPumpMode.N_A;
-				
-				return ElementExists(XMLNames.Bus_HeatPumpModeDriver)
-					? (HeatPumpMode?)HeatPumpModeHelper.Parse(GetString(XMLNames.Bus_HeatPumpModeDriver)) : null;
+				return ElementExists(XMLNames.Bus_HeatPumpTypeCoolingDriver)
+					? HeatPumpTypeHelper.Parse(GetString(XMLNames.Bus_HeatPumpTypeCoolingDriver)) : (HeatPumpType?)null;
 			}
 		}
 
-
-
-		public override IList<Tuple<HeatPumpType, HeatPumpMode>> HeatPumpPassengerCompartments =>
-			ElementExists(XMLNames.Bus_HeatPumpTypePassenger) 
-			&& ElementExists(XMLNames.Bus_HeatPumpModePassenger) 
-				? GetHeatPumpPassengerCompartments() : null;
-
-		private IList<Tuple<HeatPumpType, HeatPumpMode>> GetHeatPumpPassengerCompartments()
+		public override HeatPumpType? HeatPumpTypeHeatingDriverCompartment
 		{
-			var pumpTypeNodes = GetNodes(XMLNames.Bus_HeatPumpTypePassenger);
-			var pumpModeNodes = GetNodes(XMLNames.Bus_HeatPumpModePassenger);
-			
-			if (pumpTypeNodes == null || pumpModeNodes == null)
-				return null;
-			if (pumpTypeNodes.Count != pumpModeNodes.Count )
-				return null;
-
-			var heatPumps = new List<Tuple<HeatPumpType, HeatPumpMode>>();
-
-			for (int i = 0; i < pumpTypeNodes.Count; i++) {
-				var pumpType = HeatPumpTypeHelper.Parse(pumpTypeNodes[i]?.InnerText);
-				var pumpMode = HeatPumpModeHelper.Parse(pumpModeNodes[i]?.InnerText);
-				heatPumps.Add(new Tuple<HeatPumpType, HeatPumpMode>(pumpType, pumpMode));
+			get
+			{
+				return ElementExists(XMLNames.Bus_HeatPumpTypeHeatingDriver)
+					? HeatPumpTypeHelper.Parse(GetString(XMLNames.Bus_HeatPumpTypeHeatingDriver)) : (HeatPumpType?)null;
 			}
-			
-			return heatPumps.Any() != true ? null : heatPumps;
 		}
+
+		public override HeatPumpType? HeatPumpTypeCoolingPassengerCompartment
+		{
+			get
+			{
+				return ElementExists(XMLNames.Bus_HeatPumpTypeCoolingPassenger)
+					? HeatPumpTypeHelper.Parse(GetString(XMLNames.Bus_HeatPumpTypeCoolingPassenger)) : (HeatPumpType?)null;
+			}
+		}
+
+		public override HeatPumpType? HeatPumpTypeHeatingPassengerCompartment
+		{
+			get
+			{
+				return ElementExists(XMLNames.Bus_HeatPumpTypeHeatingPassenger)
+					? HeatPumpTypeHelper.Parse(GetString(XMLNames.Bus_HeatPumpTypeHeatingPassenger)) : (HeatPumpType?)null;
+			}
+		}
+
+		#endregion
+
 
 		public override Watt AuxHeaterPower =>
 			ElementExists(XMLNames.Bus_AuxiliaryHeaterPower)

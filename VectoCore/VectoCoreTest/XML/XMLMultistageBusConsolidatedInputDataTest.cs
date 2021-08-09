@@ -90,11 +90,10 @@ namespace TUGraz.VectoCore.Tests.XML
 
 			var busHVACAux = vehicle.Components.BusAuxiliaries.HVACAux;
 			Assert.AreEqual(BusHVACSystemConfiguration.Configuration1, busHVACAux.SystemConfiguration);
-			Assert.AreEqual(HeatPumpType.non_R_744_2_stage, busHVACAux.HeatPumpTypeDriverCompartment);
-			Assert.AreEqual(HeatPumpMode.heating, busHVACAux.HeatPumpModeDriverCompartment);
-			Assert.AreEqual(1, busHVACAux.HeatPumpPassengerCompartments.Count);
-			Assert.AreEqual(HeatPumpType.non_R_744_3_stage, busHVACAux.HeatPumpPassengerCompartments[0].Item1);
-			Assert.AreEqual(HeatPumpMode.cooling, busHVACAux.HeatPumpPassengerCompartments[0].Item2);
+			Assert.AreEqual(HeatPumpType.R_744, busHVACAux.HeatPumpTypeCoolingDriverCompartment);
+			Assert.AreEqual(HeatPumpType.non_R_744_2_stage, busHVACAux.HeatPumpTypeHeatingDriverCompartment);
+			Assert.AreEqual(HeatPumpType.none, busHVACAux.HeatPumpTypeCoolingPassengerCompartment);
+			Assert.AreEqual(HeatPumpType.non_R_744_continuous, busHVACAux.HeatPumpTypeHeatingPassengerCompartment);
 			Assert.AreEqual(50, busHVACAux.AuxHeaterPower.Value());
 			Assert.AreEqual(false, busHVACAux.DoubleGlazing);
 			Assert.AreEqual(true, busHVACAux.AdjustableAuxiliaryHeater);
@@ -204,13 +203,10 @@ namespace TUGraz.VectoCore.Tests.XML
 
 			var hvaux = inputDataProvider.JobInputData.ConsolidateManufacturingStage.Vehicle.Components.BusAuxiliaries.HVACAux;
 			Assert.NotNull(hvaux);
-			Assert.AreEqual(HeatPumpMode.heating, hvaux.HeatPumpModeDriverCompartment);
-			Assert.AreEqual(HeatPumpType.non_R_744_2_stage, hvaux.HeatPumpTypeDriverCompartment);
-			Assert.AreEqual(2, hvaux.HeatPumpPassengerCompartments.Count);
-			Assert.AreEqual(HeatPumpType.non_R_744_3_stage, hvaux.HeatPumpPassengerCompartments[0].Item1);
-			Assert.AreEqual(HeatPumpMode.cooling, hvaux.HeatPumpPassengerCompartments[0].Item2);
-			Assert.AreEqual(HeatPumpType.non_R_744_2_stage, hvaux.HeatPumpPassengerCompartments[1].Item1);
-			Assert.AreEqual(HeatPumpMode.heating, hvaux.HeatPumpPassengerCompartments[1].Item2);
+			Assert.AreEqual(HeatPumpType.R_744, hvaux.HeatPumpTypeCoolingDriverCompartment);
+			Assert.AreEqual(HeatPumpType.non_R_744_2_stage, hvaux.HeatPumpTypeHeatingDriverCompartment);
+			Assert.AreEqual(HeatPumpType.none, hvaux.HeatPumpTypeCoolingPassengerCompartment);
+			Assert.AreEqual(HeatPumpType.non_R_744_continuous, hvaux.HeatPumpTypeHeatingPassengerCompartment);
 
 			Assert.AreEqual(true, inputDataProvider.JobInputData.InputComplete);
 		}
@@ -223,11 +219,10 @@ namespace TUGraz.VectoCore.Tests.XML
 
 			var hvaux = inputDataProvider.JobInputData.ConsolidateManufacturingStage.Vehicle.Components.BusAuxiliaries.HVACAux;
 			Assert.NotNull(hvaux);
-			Assert.AreEqual(HeatPumpMode.N_A, hvaux.HeatPumpModeDriverCompartment);
-			Assert.AreEqual(HeatPumpType.none, hvaux.HeatPumpTypeDriverCompartment);
-			Assert.AreEqual(1, hvaux.HeatPumpPassengerCompartments.Count);
-			Assert.AreEqual(HeatPumpType.non_R_744_3_stage, hvaux.HeatPumpPassengerCompartments[0].Item1);
-			Assert.AreEqual(HeatPumpMode.cooling, hvaux.HeatPumpPassengerCompartments[0].Item2);
+			Assert.AreEqual(HeatPumpType.R_744, hvaux.HeatPumpTypeCoolingDriverCompartment);
+			Assert.AreEqual(HeatPumpType.non_R_744_2_stage, hvaux.HeatPumpTypeHeatingDriverCompartment);
+			Assert.AreEqual(HeatPumpType.none, hvaux.HeatPumpTypeCoolingPassengerCompartment);
+			Assert.AreEqual(HeatPumpType.non_R_744_continuous, hvaux.HeatPumpTypeHeatingPassengerCompartment);
 
 			Assert.AreEqual(true, inputDataProvider.JobInputData.InputComplete);
 		}
@@ -240,11 +235,10 @@ namespace TUGraz.VectoCore.Tests.XML
 
 			var hvaux = inputDataProvider.JobInputData.ConsolidateManufacturingStage.Vehicle.Components.BusAuxiliaries.HVACAux;
 			Assert.NotNull(hvaux);
-			Assert.AreEqual(HeatPumpMode.heating, hvaux.HeatPumpModeDriverCompartment);
-			Assert.AreEqual(HeatPumpType.non_R_744_2_stage, hvaux.HeatPumpTypeDriverCompartment);
-			Assert.AreEqual(1, hvaux.HeatPumpPassengerCompartments.Count);
-			Assert.AreEqual(HeatPumpType.non_R_744_3_stage, hvaux.HeatPumpPassengerCompartments[0].Item1);
-			Assert.AreEqual(HeatPumpMode.cooling, hvaux.HeatPumpPassengerCompartments[0].Item2);
+			Assert.AreEqual(HeatPumpType.R_744, hvaux.HeatPumpTypeCoolingDriverCompartment);
+			Assert.AreEqual(HeatPumpType.non_R_744_2_stage, hvaux.HeatPumpTypeHeatingDriverCompartment);
+			Assert.AreEqual(HeatPumpType.none, hvaux.HeatPumpTypeCoolingPassengerCompartment);
+			Assert.AreEqual(HeatPumpType.non_R_744_continuous, hvaux.HeatPumpTypeHeatingPassengerCompartment);
 
 			Assert.AreEqual(true, inputDataProvider.JobInputData.InputComplete);
 		}
@@ -257,11 +251,10 @@ namespace TUGraz.VectoCore.Tests.XML
 
 			var hvaux = inputDataProvider.JobInputData.ConsolidateManufacturingStage.Vehicle.Components.BusAuxiliaries.HVACAux;
 			Assert.NotNull(hvaux);
-			Assert.AreEqual(HeatPumpMode.heating, hvaux.HeatPumpModeDriverCompartment);
-			Assert.AreEqual(HeatPumpType.non_R_744_2_stage, hvaux.HeatPumpTypeDriverCompartment);
-			Assert.AreEqual(1, hvaux.HeatPumpPassengerCompartments.Count);
-			Assert.AreEqual(HeatPumpType.non_R_744_3_stage, hvaux.HeatPumpPassengerCompartments[0].Item1);
-			Assert.AreEqual(HeatPumpMode.cooling, hvaux.HeatPumpPassengerCompartments[0].Item2);
+			Assert.AreEqual(HeatPumpType.R_744, hvaux.HeatPumpTypeCoolingDriverCompartment);
+			Assert.AreEqual(HeatPumpType.non_R_744_2_stage, hvaux.HeatPumpTypeHeatingDriverCompartment);
+			Assert.AreEqual(HeatPumpType.none, hvaux.HeatPumpTypeCoolingPassengerCompartment);
+			Assert.AreEqual(HeatPumpType.non_R_744_continuous, hvaux.HeatPumpTypeHeatingPassengerCompartment);
 
 
 			Assert.AreEqual(true, inputDataProvider.JobInputData.InputComplete);
