@@ -80,28 +80,26 @@
 											</xs:restriction>
 										</xs:simpleType>
 									</xs:element>
-									<xs:element name="HeatPumpTypeDriverCompartment" type="v2.8:HVACHeatPumpType">
+									<xs:element name="HeatPumpTypeCoolingDriverCompartment" type="v2.8:HVACHeatPumpType">
 										<xs:annotation>
 											<xs:documentation>P318 - enum</xs:documentation>
 										</xs:annotation>
 									</xs:element>
-									<xs:element name="HeatPumpModeDriverCompartment" type="v2.8:HVACHeatPumpModeType">
+									<xs:element name="HeatPumpTypeHeatingDriverCompartment" type="v2.8:HVACHeatPumpType">
 										<xs:annotation>
 											<xs:documentation>P319 - enum</xs:documentation>
 										</xs:annotation>
 									</xs:element>
-									<xs:sequence maxOccurs="unbounded">
-										<xs:element name="HeatPumpTypePassengerCompartment" type="v2.8:HVACHeatPumpType">
-											<xs:annotation>
-												<xs:documentation>P320 - enum</xs:documentation>
-											</xs:annotation>
-										</xs:element>
-										<xs:element name="HeatPumpModePassengerCompartment" type="v2.8:HVACHeatPumpModeType">
-											<xs:annotation>
-												<xs:documentation>P321 - enum</xs:documentation>
-											</xs:annotation>
-										</xs:element>
-									</xs:sequence>
+									<xs:element name="HeatPumpTypeCoolingPassengerCompartment" type="v2.8:HVACHeatPumpType">
+										<xs:annotation>
+											<xs:documentation>P320 - enum</xs:documentation>
+										</xs:annotation>
+									</xs:element>
+									<xs:element name="HeatPumpTypeHeatingPassengerCompartment" type="v2.8:HVACHeatPumpType">
+										<xs:annotation>
+											<xs:documentation>P321 - enum</xs:documentation>
+										</xs:annotation>
+									</xs:element>
 								</xs:sequence>
 								<xs:element name="AuxiliaryHeaterPower" minOccurs="0">
 									<xs:annotation>
@@ -466,13 +464,16 @@
 			<xs:appinfo>
 				<vectoParam:description>
 					<vectoParam:parameterId component="Vehicle/Auxiliaries">318</vectoParam:parameterId>
+					<vectoParam:parameterId component="Vehicle/Auxiliaries">319</vectoParam:parameterId>
 					<vectoParam:parameterId component="Vehicle/Auxiliaries">320</vectoParam:parameterId>
+					<vectoParam:parameterId component="Vehicle/Auxiliaries">321</vectoParam:parameterId>
 					<vectoParam:unit>-</vectoParam:unit>
 				</vectoParam:description>
 			</xs:appinfo>
 		</xs:annotation>
 		<xs:restriction base="xs:string">
 			<xs:enumeration value="none"/>
+			<xs:enumeration value="not applicable"/>
 			<xs:enumeration value="R-744"/>
 			<xs:enumeration value="non R-744 2-stage"/>
 			<xs:enumeration value="non R-744 3-stage"/>
