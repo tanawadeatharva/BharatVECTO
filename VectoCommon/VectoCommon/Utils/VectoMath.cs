@@ -711,22 +711,15 @@ namespace TUGraz.VectoCommon.Utils
 
 		public bool ContainsInCircumcircle(Point p)
 		{
-			var p0X = P1.X - p.X;
-			var p0Y = P1.Y - p.Y;
-			var p1X = P2.X - p.X;
-			var p1Y = P2.Y - p.Y;
-			var p2X = P3.X - p.X;
-			var p2Y = P3.Y - p.Y;
-
-			var p0Square = p0X * p0X + p0Y * p0Y;
-			var p1Square = p1X * p1X + p1Y * p1Y;
-			var p2Square = p2X * p2X + p2Y * p2Y;
-
-			var det01 = p0X * p1Y - p1X * p0Y;
-			var det12 = p1X * p2Y - p2X * p1Y;
-			var det20 = p2X * p0Y - p0X * p2Y;
-
-			var result = p0Square * det12 + p1Square * det20 + p2Square * det01;
+			var ax = P1.X - p.X;
+			var ay = P1.Y - p.Y;
+			var bx = P2.X - p.X;
+			var by = P2.Y - p.Y;
+			var cx = P3.X - p.X;
+			var cy = P3.Y - p.Y;
+			var result = (ax * ax + ay * ay) * (bx * cy - cx * by)
+						- (bx * bx + by * by) * (ax * cy - cx * ay)
+						+ (cx * cx + cy * cy) * (ax * by - bx * ay);
 			return result > 0;
 		}
 
