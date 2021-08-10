@@ -155,14 +155,13 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 				HeatPumpGroupEditingEnabledCallback;
 			_parameterViewModels[nameof(HeatPumpTypeCoolingPassengerCompartment)].EditingChangedCallback =
 				HeatPumpGroupEditingEnabledCallback;
-
 			_parameterViewModels[nameof(HeatPumpTypeHeatingPassengerCompartment)].EditingChangedCallback =
 				HeatPumpGroupEditingEnabledCallback;
 			//Setup AllowedValues 
-			_heatPumpTypeDriverCompartmentAllowedValues =
+			HeatPumpTypeDriverAllowedValues =
 				EnumHelper.GetValuesAsObservableCollection<Enum, HeatPumpType>();
 
-			_heatPumpTypePassengerCompartmentAllowedValues =
+			HeatPumpTypePassengerAllowedValues =
 				EnumHelper.GetValuesAsObservableCollectionExcluding<Enum, HeatPumpType>(HeatPumpType.not_applicable);
 
 			SystemConfigurationAllowedValues =
@@ -428,13 +427,24 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 		public ObservableCollection<Enum> HeatPumpTypeDriverAllowedValues
 		{
 			get => _heatPumpTypeDriverCompartmentAllowedValues;
-			set => SetProperty(ref _heatPumpTypeDriverCompartmentAllowedValues, value);
+			set
+			{
+				if (SetProperty(ref _heatPumpTypeDriverCompartmentAllowedValues, value)) {
+					_parameterViewModels[nameof(HeatPumpTypeCoolingDriverCompartment)].AllowedItems = value;
+					_parameterViewModels[nameof(HeatPumpTypeHeatingDriverCompartment)].AllowedItems = value;
+				}
+			}
 		}
 
 		public ObservableCollection<Enum> HeatPumpTypePassengerAllowedValues
 		{
 			get => _heatPumpTypePassengerCompartmentAllowedValues;
-			set => SetProperty(ref _heatPumpTypePassengerCompartmentAllowedValues, value);
+			set {
+				if (SetProperty(ref _heatPumpTypePassengerCompartmentAllowedValues, value)) {
+					_parameterViewModels[nameof(HeatPumpTypeCoolingPassengerCompartment)].AllowedItems = value;
+					_parameterViewModels[nameof(HeatPumpTypeHeatingPassengerCompartment)].AllowedItems = value;
+				}
+			}
 		}
 
 		public HeatPumpType? HeatPumpTypeHeatingDriverCompartment
