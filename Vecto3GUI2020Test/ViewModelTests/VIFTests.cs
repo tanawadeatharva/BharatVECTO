@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
+using System.Windows;
 using System.Xml;
 using Moq;
 using Ninject;
@@ -23,6 +24,7 @@ namespace Vecto3GUI2020Test.ViewModelTests
 	{
 
 		public const string _finalVifReport4 = "final.VIF_Report_4.xml";
+		public const string _vectoMultistageOneStage = "vecto_multistage_consolidated_one_stage.xml";
 
 		[Test]
 		public void loadPrimaryVehicleOnlyAndCreateNewVIF()
@@ -81,6 +83,9 @@ namespace Vecto3GUI2020Test.ViewModelTests
 		[TestCase(false, 0, TestName="Without Airdrag Component")]
 		public void CreateCompletedFinalVIFWithAirdrag(bool loadAirdrag, int airdragVersion)
 		{
+			GetMockDialogHelper().Setup(dialogHelper => dialogHelper.ShowMessageBox(It.IsAny<string>(),
+				It.IsAny<string>(), MessageBoxButton.YesNo, It.IsAny<MessageBoxImage>())).Returns(MessageBoxResult.No);
+
 			var multistagevm = loadFile(_finalVifReport4);
 
 			var VehicleViewModel = multistagevm.MultiStageJobViewModel.ManufacturingStageViewModel.VehicleViewModel as InterimStageBusVehicleViewModel_v2_8;
