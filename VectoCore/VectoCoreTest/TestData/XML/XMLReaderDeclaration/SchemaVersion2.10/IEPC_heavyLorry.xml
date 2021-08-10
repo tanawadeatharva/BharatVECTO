@@ -13,7 +13,7 @@
 		<TechnicalPermissibleMaximumLadenMass>12000</TechnicalPermissibleMaximumLadenMass>
 		<RetarderType>None</RetarderType>
 		<AngledriveType>None</AngledriveType>
-		<PTO xmlns:v2.0="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0" xsi:type="v2.0:PTOType">
+		<PTO xsi:type="v2.0:PTOType">
 			<v2.0:PTOShaftsGearWheels>none</v2.0:PTOShaftsGearWheels>
 			<v2.0:PTOOtherElements>none</v2.0:PTOOtherElements>
 		</PTO>
@@ -287,7 +287,7 @@
 			<Auxiliaries>
 				<Data xsi:type="AUX_IEPC_LorryDataDeclarationType">
 					<SteeringPump>
-						<Technology>Variable displacement elec. controlled</Technology>
+						<Technology axleNumber="1">Variable displacement elec. controlled</Technology>
 					</SteeringPump>
 					<ElectricSystem>
 						<Technology>Standard technology - LED headlights, all</Technology>

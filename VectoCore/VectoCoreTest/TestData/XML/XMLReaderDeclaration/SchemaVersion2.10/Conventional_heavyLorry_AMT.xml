@@ -23,10 +23,10 @@
 		<SleeperCab>false</SleeperCab>
 		<VehicleTypeApprovalNumber>ASDF</VehicleTypeApprovalNumber>
 		<ADAS xsi:type="ADAS_Conventional_Type">
-			<v2.10.2:EngineStopStart>true</v2.10.2:EngineStopStart>
-			<v2.10.2:EcoRollWithoutEngineStop>false</v2.10.2:EcoRollWithoutEngineStop>
-			<v2.10.2:EcoRollWithEngineStop>true</v2.10.2:EcoRollWithEngineStop>
-			<v2.10.2:PredictiveCruiseControl>1,2,3</v2.10.2:PredictiveCruiseControl>
+			<EngineStopStart>true</EngineStopStart>
+			<EcoRollWithoutEngineStop>false</EcoRollWithoutEngineStop>
+			<EcoRollWithEngineStop>true</EcoRollWithEngineStop>
+			<PredictiveCruiseControl>1,2,3</PredictiveCruiseControl>
 		</ADAS>
 		<TorqueLimits xsi:type="v2.0:TorqueLimitsType"><!-- optional -->
 			<v2.0:Entry gear="9" maxTorque="2000"/>
@@ -288,7 +288,7 @@
 						<Technology>Hydraulic driven - Constant displacement pump</Technology>
 					</Fan>
 					<SteeringPump>
-						<Technology>Variable displacement elec. controlled</Technology>
+						<Technology axleNumber="1">Variable displacement elec. controlled</Technology>
 					</SteeringPump>
 					<ElectricSystem>
 						<Technology>Standard technology - LED headlights, all</Technology>

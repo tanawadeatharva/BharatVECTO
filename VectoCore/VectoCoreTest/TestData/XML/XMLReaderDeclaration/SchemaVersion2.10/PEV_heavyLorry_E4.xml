@@ -278,7 +278,7 @@
 			<Auxiliaries>
 				<Data xsi:type="AUX_PEV_LorryDataDeclarationType">
 					<SteeringPump>
-						<Technology>Variable displacement elec. controlled</Technology>
+						<Technology axleNumber="1">Variable displacement elec. controlled</Technology>
 					</SteeringPump>
 					<ElectricSystem>
 						<Technology>Standard technology - LED headlights, all</Technology>

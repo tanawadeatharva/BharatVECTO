@@ -156,7 +156,7 @@
 					<xs:element name="Fan">
 						<xs:complexType>
 							<xs:sequence>
-								<xs:element name="Technology" type="v1.0:AuxFanTechnologyType">
+								<xs:element name="Technology" type="v2.10.2:AuxFanTechnologyLorryType">
 									<xs:annotation>
 										<xs:documentation>P181</xs:documentation>
 									</xs:annotation>
@@ -167,10 +167,24 @@
 					<xs:element name="SteeringPump">
 						<xs:complexType>
 							<xs:sequence>
-								<xs:element name="Technology" type="v1.0:AuxSPTechnologyType" maxOccurs="4">
+								<xs:element name="Technology" maxOccurs="4">
 									<xs:annotation>
 										<xs:documentation>P182</xs:documentation>
 									</xs:annotation>
+									<xs:complexType>
+										<xs:simpleContent>
+											<xs:extension base="v2.10.2:AuxSPTechnologyLorryType">
+												<xs:attribute name="axleNumber" use="required">
+													<xs:simpleType>
+														<xs:restriction base="xs:int">
+															<xs:minInclusive value="1"/>
+															<xs:maxInclusive value="4"/>
+														</xs:restriction>
+													</xs:simpleType>
+												</xs:attribute>
+											</xs:extension>
+										</xs:simpleContent>
+									</xs:complexType>
 								</xs:element>
 							</xs:sequence>
 						</xs:complexType>
@@ -178,7 +192,7 @@
 					<xs:element name="ElectricSystem">
 						<xs:complexType>
 							<xs:sequence>
-								<xs:element name="Technology" type="v1.0:AuxESTechnologyType">
+								<xs:element name="Technology" type="v2.10.2:AuxESTechnologyLorryType">
 									<xs:annotation>
 										<xs:documentation>P183</xs:documentation>
 									</xs:annotation>
@@ -189,7 +203,7 @@
 					<xs:element name="PneumaticSystem">
 						<xs:complexType>
 							<xs:sequence>
-								<xs:element name="Technology" type="v1.0:AuxPSTechnologyType">
+								<xs:element name="Technology" type="v2.10.2:AuxPSTechnologyLorryType">
 									<xs:annotation>
 										<xs:documentation>P184</xs:documentation>
 									</xs:annotation>
@@ -200,7 +214,7 @@
 					<xs:element name="HVAC">
 						<xs:complexType>
 							<xs:sequence>
-								<xs:element name="Technology" type="v1.0:AuxHVACTechnologyType">
+								<xs:element name="Technology" type="v2.10.2:AuxHVACTechnologyLorryType">
 									<xs:annotation>
 										<xs:documentation>P185</xs:documentation>
 									</xs:annotation>
@@ -219,7 +233,7 @@
 					<xs:element name="Fan">
 						<xs:complexType>
 							<xs:sequence>
-								<xs:element name="Technology" type="v2.10.2:AuxFanTechnologyType">
+								<xs:element name="Technology" type="v2.10.2:AuxFanTechnologyPrimaryBusType">
 									<xs:annotation>
 										<xs:documentation>P181</xs:documentation>
 									</xs:annotation>
@@ -236,7 +250,7 @@
 									</xs:annotation>
 									<xs:complexType>
 										<xs:simpleContent>
-											<xs:extension base="v2.10.2:AuxSPTechnologyType">
+											<xs:extension base="v2.10.2:AuxSPTechnologyPrimaryBusType">
 												<xs:attribute name="axleNumber" use="required">
 													<xs:simpleType>
 														<xs:restriction base="xs:int">
@@ -290,7 +304,7 @@
 					<xs:element name="Fan">
 						<xs:complexType>
 							<xs:sequence>
-								<xs:element name="Technology" type="v1.0:AuxFanTechnologyType">
+								<xs:element name="Technology" type="v2.10.2:AuxFanTechnologyLorryType">
 									<xs:annotation>
 										<xs:documentation>P181</xs:documentation>
 									</xs:annotation>
@@ -301,10 +315,24 @@
 					<xs:element name="SteeringPump">
 						<xs:complexType>
 							<xs:sequence>
-								<xs:element name="Technology" type="v1.0:AuxSPTechnologyType" maxOccurs="4">
+								<xs:element name="Technology" maxOccurs="4">
 									<xs:annotation>
 										<xs:documentation>P182</xs:documentation>
 									</xs:annotation>
+									<xs:complexType>
+										<xs:simpleContent>
+											<xs:extension base="v2.10.2:AuxSPTechnologyLorryType">
+												<xs:attribute name="axleNumber" use="required">
+													<xs:simpleType>
+														<xs:restriction base="xs:int">
+															<xs:minInclusive value="1"/>
+															<xs:maxInclusive value="4"/>
+														</xs:restriction>
+													</xs:simpleType>
+												</xs:attribute>
+											</xs:extension>
+										</xs:simpleContent>
+									</xs:complexType>
 								</xs:element>
 							</xs:sequence>
 						</xs:complexType>
@@ -312,7 +340,7 @@
 					<xs:element name="ElectricSystem">
 						<xs:complexType>
 							<xs:sequence>
-								<xs:element name="Technology" type="v1.0:AuxESTechnologyType">
+								<xs:element name="Technology" type="v2.10.2:AuxESTechnologyLorryType">
 									<xs:annotation>
 										<xs:documentation>P183</xs:documentation>
 									</xs:annotation>
@@ -323,7 +351,7 @@
 					<xs:element name="PneumaticSystem">
 						<xs:complexType>
 							<xs:sequence>
-								<xs:element name="Technology" type="v1.0:AuxPSTechnologyType">
+								<xs:element name="Technology" type="v2.10.2:AuxPSTechnologyLorryType">
 									<xs:annotation>
 										<xs:documentation>P184</xs:documentation>
 									</xs:annotation>
@@ -334,7 +362,7 @@
 					<xs:element name="HVAC">
 						<xs:complexType>
 							<xs:sequence>
-								<xs:element name="Technology" type="v1.0:AuxHVACTechnologyType">
+								<xs:element name="Technology" type="v2.10.2:AuxHVACTechnologyLorryType">
 									<xs:annotation>
 										<xs:documentation>P185</xs:documentation>
 									</xs:annotation>
@@ -353,7 +381,7 @@
 					<xs:element name="Fan">
 						<xs:complexType>
 							<xs:sequence>
-								<xs:element name="Technology" type="v2.10.2:AuxFanTechnologyType">
+								<xs:element name="Technology" type="v2.10.2:AuxFanTechnologyPrimaryBusType">
 									<xs:annotation>
 										<xs:documentation>P181</xs:documentation>
 									</xs:annotation>
@@ -370,7 +398,7 @@
 									</xs:annotation>
 									<xs:complexType>
 										<xs:simpleContent>
-											<xs:extension base="v2.10.2:AuxSPTechnologyType">
+											<xs:extension base="v2.10.2:AuxSPTechnologyPrimaryBusType">
 												<xs:attribute name="axleNumber" use="required">
 													<xs:simpleType>
 														<xs:restriction base="xs:int">
@@ -429,7 +457,7 @@
 					<xs:element name="Fan">
 						<xs:complexType>
 							<xs:sequence>
-								<xs:element name="Technology" type="v2.10.2:AuxFanTechnologyType">
+								<xs:element name="Technology" type="v2.10.2:AuxFanTechnologyPrimaryBusType">
 									<xs:annotation>
 										<xs:documentation>P181</xs:documentation>
 									</xs:annotation>
@@ -446,7 +474,7 @@
 									</xs:annotation>
 									<xs:complexType>
 										<xs:simpleContent>
-											<xs:extension base="v2.10.2:AuxSPTechnologyType">
+											<xs:extension base="v2.10.2:AuxSPTechnologyPrimaryBusType">
 												<xs:attribute name="axleNumber" use="required">
 													<xs:simpleType>
 														<xs:restriction base="xs:int">
@@ -504,10 +532,24 @@
 					<xs:element name="SteeringPump">
 						<xs:complexType>
 							<xs:sequence>
-								<xs:element name="Technology" type="v1.0:AuxSPTechnologyType" maxOccurs="4">
+								<xs:element name="Technology" maxOccurs="4">
 									<xs:annotation>
 										<xs:documentation>P182</xs:documentation>
 									</xs:annotation>
+									<xs:complexType>
+										<xs:simpleContent>
+											<xs:extension base="v2.10.2:AuxSPTechnologyLorryType">
+												<xs:attribute name="axleNumber" use="required">
+													<xs:simpleType>
+														<xs:restriction base="xs:int">
+															<xs:minInclusive value="1"/>
+															<xs:maxInclusive value="4"/>
+														</xs:restriction>
+													</xs:simpleType>
+												</xs:attribute>
+											</xs:extension>
+										</xs:simpleContent>
+									</xs:complexType>
 								</xs:element>
 							</xs:sequence>
 						</xs:complexType>
@@ -515,7 +557,7 @@
 					<xs:element name="ElectricSystem">
 						<xs:complexType>
 							<xs:sequence>
-								<xs:element name="Technology" type="v1.0:AuxESTechnologyType">
+								<xs:element name="Technology" type="v2.10.2:AuxESTechnologyLorryType">
 									<xs:annotation>
 										<xs:documentation>P183</xs:documentation>
 									</xs:annotation>
@@ -526,7 +568,7 @@
 					<xs:element name="PneumaticSystem">
 						<xs:complexType>
 							<xs:sequence>
-								<xs:element name="Technology" type="v1.0:AuxPSTechnologyType">
+								<xs:element name="Technology" type="v2.10.2:AuxPSTechnologyLorryType">
 									<xs:annotation>
 										<xs:documentation>P184</xs:documentation>
 									</xs:annotation>
@@ -537,7 +579,7 @@
 					<xs:element name="HVAC">
 						<xs:complexType>
 							<xs:sequence>
-								<xs:element name="Technology" type="v1.0:AuxHVACTechnologyType">
+								<xs:element name="Technology" type="v2.10.2:AuxHVACTechnologyLorryType">
 									<xs:annotation>
 										<xs:documentation>P185</xs:documentation>
 									</xs:annotation>
@@ -562,7 +604,7 @@
 									</xs:annotation>
 									<xs:complexType>
 										<xs:simpleContent>
-											<xs:extension base="v2.10.2:AuxSPTechnologyType">
+											<xs:extension base="v2.10.2:AuxSPTechnologyPrimaryBusType">
 												<xs:attribute name="axleNumber" use="required">
 													<xs:simpleType>
 														<xs:restriction base="xs:int">
@@ -614,10 +656,24 @@
 					<xs:element name="SteeringPump">
 						<xs:complexType>
 							<xs:sequence>
-								<xs:element name="Technology" type="v1.0:AuxSPTechnologyType" maxOccurs="4">
+								<xs:element name="Technology" maxOccurs="4">
 									<xs:annotation>
 										<xs:documentation>P182</xs:documentation>
 									</xs:annotation>
+									<xs:complexType>
+										<xs:simpleContent>
+											<xs:extension base="v2.10.2:AuxSPTechnologyLorryType">
+												<xs:attribute name="axleNumber" use="required">
+													<xs:simpleType>
+														<xs:restriction base="xs:int">
+															<xs:minInclusive value="1"/>
+															<xs:maxInclusive value="4"/>
+														</xs:restriction>
+													</xs:simpleType>
+												</xs:attribute>
+											</xs:extension>
+										</xs:simpleContent>
+									</xs:complexType>
 								</xs:element>
 							</xs:sequence>
 						</xs:complexType>
@@ -625,7 +681,7 @@
 					<xs:element name="ElectricSystem">
 						<xs:complexType>
 							<xs:sequence>
-								<xs:element name="Technology" type="v1.0:AuxESTechnologyType">
+								<xs:element name="Technology" type="v2.10.2:AuxESTechnologyLorryType">
 									<xs:annotation>
 										<xs:documentation>P183</xs:documentation>
 									</xs:annotation>
@@ -636,7 +692,7 @@
 					<xs:element name="PneumaticSystem">
 						<xs:complexType>
 							<xs:sequence>
-								<xs:element name="Technology" type="v1.0:AuxPSTechnologyType">
+								<xs:element name="Technology" type="v2.10.2:AuxPSTechnologyLorryType">
 									<xs:annotation>
 										<xs:documentation>P184</xs:documentation>
 									</xs:annotation>
@@ -647,7 +703,7 @@
 					<xs:element name="HVAC">
 						<xs:complexType>
 							<xs:sequence>
-								<xs:element name="Technology" type="v1.0:AuxHVACTechnologyType">
+								<xs:element name="Technology" type="v2.10.2:AuxHVACTechnologyLorryType">
 									<xs:annotation>
 										<xs:documentation>P185</xs:documentation>
 									</xs:annotation>
@@ -672,7 +728,7 @@
 									</xs:annotation>
 									<xs:complexType>
 										<xs:simpleContent>
-											<xs:extension base="v2.10.2:AuxSPTechnologyType">
+											<xs:extension base="v2.10.2:AuxSPTechnologyPrimaryBusType">
 												<xs:attribute name="axleNumber" use="required">
 													<xs:simpleType>
 														<xs:restriction base="xs:int">
@@ -2119,8 +2175,30 @@
 			<xs:enumeration value="E4"/>
 		</xs:restriction>
 	</xs:simpleType>
-	<xs:simpleType name="AuxFanTechnologyType">
+	<xs:simpleType name="AuxESTechnologyLorryType">
 		<xs:restriction base="xs:string">
+			<xs:enumeration value="Standard technology"/>
+			<xs:enumeration value="Standard technology - LED headlights, all"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="AuxFanTechnologyLorryType">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="Crankshaft mounted - Electronically controlled visco clutch"/>
+			<xs:enumeration value="Crankshaft mounted - Bimetallic controlled visco clutch"/>
+			<xs:enumeration value="Crankshaft mounted - Discrete step clutch"/>
+			<xs:enumeration value="Crankshaft mounted - On/off clutch"/>
+			<xs:enumeration value="Belt driven or driven via transm. - Electronically controlled visco clutch"/>
+			<xs:enumeration value="Belt driven or driven via transm. - Bimetallic controlled visco clutch"/>
+			<xs:enumeration value="Belt driven or driven via transm. - Discrete step clutch"/>
+			<xs:enumeration value="Belt driven or driven via transm. - On/off clutch"/>
+			<xs:enumeration value="Hydraulic driven - Variable displacement pump"/>
+			<xs:enumeration value="Hydraulic driven - Constant displacement pump"/>
+			<xs:enumeration value="Electrically driven - Electronically controlled"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="AuxFanTechnologyPrimaryBusType">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="Crankshaft mounted - Electronically controlled visco clutch"/>
 			<xs:enumeration value="Crankshaft mounted - Electronically controlled visco clutch"/>
 			<xs:enumeration value="Crankshaft mounted - Bimetallic controlled visco clutch"/>
 			<xs:enumeration value="Crankshaft mounted - Discrete step clutch 2 stages"/>
@@ -2136,21 +2214,73 @@
 			<xs:enumeration value="Electrically driven - Electronically controlled"/>
 		</xs:restriction>
 	</xs:simpleType>
-	<xs:simpleType name="AuxSPTechnologyType">
-		<xs:annotation>
-			<xs:documentation>P182</xs:documentation>
-			<xs:appinfo>
-				<vectoParam:description>
-					<vectoParam:parameterId component="Vehicle/Auxiliaries">182</vectoParam:parameterId>
-					<vectoParam:comment>Multiple entires allowed, one per steered axle</vectoParam:comment>
-					<vectoParam:unit>-</vectoParam:unit>
-				</vectoParam:description>
-			</xs:appinfo>
-		</xs:annotation>
+	<xs:simpleType name="AuxHVACTechnologyLorryType">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="None"/>
+			<xs:enumeration value="Default"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="AuxPSTechnologyLorryType">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="Crankshaft mounted - Electronically controlled visco clutch"/>
+			<xs:enumeration value="Small"/>
+			<xs:enumeration value="Small + ESS"/>
+			<xs:enumeration value="Small + visco clutch "/>
+			<xs:enumeration value="Small + mech. clutch"/>
+			<xs:enumeration value="Small + ESS + AMS"/>
+			<xs:enumeration value="Small + visco clutch + AMS"/>
+			<xs:enumeration value="Small + mech. clutch + AMS"/>
+			<xs:enumeration value="Medium Supply 1-stage"/>
+			<xs:enumeration value="Medium Supply 1-stage + ESS"/>
+			<xs:enumeration value="Medium Supply 1-stage + visco clutch "/>
+			<xs:enumeration value="Medium Supply 1-stage + mech. clutch"/>
+			<xs:enumeration value="Medium Supply 1-stage + ESS + AMS"/>
+			<xs:enumeration value="Medium Supply 1-stage + visco clutch + AMS"/>
+			<xs:enumeration value="Medium Supply 1-stage + mech. clutch + AMS"/>
+			<xs:enumeration value="Medium Supply 2-stage"/>
+			<xs:enumeration value="Medium Supply 2-stage + ESS"/>
+			<xs:enumeration value="Medium Supply 2-stage + visco clutch "/>
+			<xs:enumeration value="Medium Supply 2-stage + mech. clutch"/>
+			<xs:enumeration value="Medium Supply 2-stage + ESS + AMS"/>
+			<xs:enumeration value="Medium Supply 2-stage + visco clutch + AMS"/>
+			<xs:enumeration value="Medium Supply 2-stage + mech. clutch + AMS"/>
+			<xs:enumeration value="Large Supply"/>
+			<xs:enumeration value="Large Supply + ESS"/>
+			<xs:enumeration value="Large Supply + visco clutch "/>
+			<xs:enumeration value="Large Supply + mech. clutch"/>
+			<xs:enumeration value="Large Supply + ESS + AMS"/>
+			<xs:enumeration value="Large Supply + visco clutch + AMS"/>
+			<xs:enumeration value="Large Supply + mech. clutch + AMS"/>
+			<xs:enumeration value="Vacuum pump"/>
+			<xs:enumeration value="Small + elec. driven"/>
+			<xs:enumeration value="Small + ESS + elec. driven "/>
+			<xs:enumeration value="Medium Supply 1-stage + elec. driven"/>
+			<xs:enumeration value="Medium Supply 1-stage + AMS + elec. driven "/>
+			<xs:enumeration value="Medium Supply 2-stage + elec. driven"/>
+			<xs:enumeration value="Medium Supply 2-stage + AMS + elec. driven"/>
+			<xs:enumeration value="Large Supply + elec. driven"/>
+			<xs:enumeration value="Large Supply + AMS + elec. driven"/>
+			<xs:enumeration value="Vacuum pump + elec. driven"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="AuxSPTechnologyLorryType">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="Crankshaft mounted - Electronically controlled visco clutch"/>
+			<xs:enumeration value="Fixed displacement"/>
+			<xs:enumeration value="Fixed displacement with elec. control"/>
+			<xs:enumeration value="Dual displacement"/>
+			<xs:enumeration value="Dual displacement with elec. control"/>
+			<xs:enumeration value="Variable displacement mech. controlled"/>
+			<xs:enumeration value="Variable displacement elec. controlled"/>
+			<xs:enumeration value="Electric driven pump"/>
+			<xs:enumeration value="Full electric steering gear"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="AuxSPTechnologyPrimaryBusType">
 		<xs:restriction base="xs:string">
 			<xs:enumeration value="Fixed displacement"/>
 			<xs:enumeration value="Fixed displacement with elec. control"/>
-			<xs:enumeration value="Dual displacement with mech. control"/>
+			<xs:enumeration value="Dual displacement"/>
 			<xs:enumeration value="Dual displacement with elec. control"/>
 			<xs:enumeration value="Variable displacement mech. controlled"/>
 			<xs:enumeration value="Variable displacement elec. controlled"/>
