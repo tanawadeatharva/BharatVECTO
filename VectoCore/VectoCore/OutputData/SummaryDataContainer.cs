@@ -73,7 +73,7 @@ namespace TUGraz.VectoCore.OutputData
 		};
 
 		// ReSharper restore InconsistentNaming
-
+		private object _tableLock = new object();
 		internal readonly DataTable Table;
 		private readonly ISummaryWriter _sumWriter;
 
@@ -269,18 +269,29 @@ namespace TUGraz.VectoCore.OutputData
 		/// <summary>
 		/// Writes the result of one run into the summary data container.
 		/// </summary>
-		[MethodImpl(MethodImplOptions.Synchronized)]
+		//[MethodImpl(MethodImplOptions.Synchronized)]
 		protected DataRow GetResultRow(IModalDataContainer modData, VectoRunData runData)
 		{
-			if (modData.HasCombustionEngine) {
-				UpdateTableColumns(modData.FuelData, runData.EngineData.MultipleEngineFuelModes);
-			}
+			lock (_tableLock) {
+				if (modData.HasCombustionEngine)
+				{
+					UpdateTableColumns(modData.FuelData, runData.EngineData.MultipleEngineFuelModes);
+				}
 
-			var row = Table.NewRow();
-			Table.Rows.Add(row);
-			return row;
+				var row = Table.NewRow();
+				//Table.Rows.Add(row);
+				return row;
+			}
 		}
 
+		protected void AddResultRow(DataRow row)
+		{
+			lock (_tableLock) {
+				Table.Rows.Add(row);
+			}
+		}
+
+		//[MethodImpl(MethodImplOptions.Synchronized)]
 		public virtual void Write(IModalDataContainer modData, int jobNr, int runNr, VectoRunData runData)
 		{
 			var row = GetResultRow(modData, runData);
@@ -372,6 +383,8 @@ namespace TUGraz.VectoCore.OutputData
 			}
 
 			WriteGearshiftStats(modData, row, gearCount);
+
+			AddResultRow(row);
 		}
 
 
