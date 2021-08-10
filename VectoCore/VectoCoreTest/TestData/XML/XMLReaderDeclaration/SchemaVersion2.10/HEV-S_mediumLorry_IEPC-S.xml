@@ -19,9 +19,9 @@
 		<VehicleTypeApprovalNumber>ASDF</VehicleTypeApprovalNumber>
 		<ArchitectureID>S-IEPC</ArchitectureID>
 		<OvcHev>false</OvcHev>
-		<ADAS xmlns:v2.10.2="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:DEV:v2.10.2" xsi:type="v2.10.2:ADAS_HEV_Type">
-			<v2.10.2:EngineStopStart>true</v2.10.2:EngineStopStart>
-			<v2.10.2:PredictiveCruiseControl>1,2,3</v2.10.2:PredictiveCruiseControl>
+		<ADAS xsi:type="ADAS_HEV_Type">
+			<EngineStopStart>true</EngineStopStart>
+			<PredictiveCruiseControl>1,2,3</PredictiveCruiseControl>
 		</ADAS>
 		<TorqueLimits xmlns:v2.0="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0" xsi:type="v2.0:TorqueLimitsType">
 			<!-- optional -->
