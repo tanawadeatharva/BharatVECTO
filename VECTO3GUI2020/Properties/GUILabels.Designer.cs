@@ -61,11 +61,83 @@ namespace VECTO3GUI2020.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Airdrag Data.
+        /// </summary>
+        public static string _consolidateAirdragData {
+            get {
+                return ResourceManager.GetString("_consolidateAirdragData", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Bus Auxiliaries Data.
+        /// </summary>
+        public static string _consolidateBusAuxiliariesData {
+            get {
+                return ResourceManager.GetString("_consolidateBusAuxiliariesData", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to ADAS.
+        /// </summary>
+        public static string _consolidatedADAS {
+            get {
+                return ResourceManager.GetString("_consolidatedADAS", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Components.
+        /// </summary>
+        public static string _consolidatedComponents {
+            get {
+                return ResourceManager.GetString("_consolidatedComponents", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to HVAC Data.
+        /// </summary>
+        public static string _consolidatedHVACBusAuxiliariesData {
+            get {
+                return ResourceManager.GetString("_consolidatedHVACBusAuxiliariesData", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Electric Consumer Data.
+        /// </summary>
+        public static string _consolidateElectricConsumerData {
+            get {
+                return ResourceManager.GetString("_consolidateElectricConsumerData", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to VECTO.
         /// </summary>
         public static string DefaultTitle {
             get {
                 return ResourceManager.GetString("DefaultTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Invalid Airdrag Entries.
+        /// </summary>
+        public static string IsAirdragEntriesValid {
+            get {
+                return ResourceManager.GetString("IsAirdragEntriesValid", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Invalid Tank System.
+        /// </summary>
+        public static string IsTankSystemValid {
+            get {
+                return ResourceManager.GetString("IsTankSystemValid", resourceCulture);
             }
         }
         

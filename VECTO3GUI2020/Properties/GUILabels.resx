@@ -132,4 +132,28 @@
   <data name="no manufacturing stages" xml:space="preserve">
     <value>No Manufacturing Steps</value>
   </data>
+  <data name="IsAirdragEntriesValid" xml:space="preserve">
+    <value>Invalid Airdrag Entries</value>
+  </data>
+  <data name="IsTankSystemValid" xml:space="preserve">
+    <value>Invalid Tank System</value>
+  </data>
+  <data name="_consolidateAirdragData" xml:space="preserve">
+    <value>Airdrag Data</value>
+  </data>
+  <data name="_consolidateBusAuxiliariesData" xml:space="preserve">
+    <value>Bus Auxiliaries Data</value>
+  </data>
+  <data name="_consolidatedADAS" xml:space="preserve">
+    <value>ADAS</value>
+  </data>
+  <data name="_consolidatedComponents" xml:space="preserve">
+    <value>Components</value>
+  </data>
+  <data name="_consolidatedHVACBusAuxiliariesData" xml:space="preserve">
+    <value>HVAC Data</value>
+  </data>
+  <data name="_consolidateElectricConsumerData" xml:space="preserve">
+    <value>Electric Consumer Data</value>
+  </data>
 </root>
