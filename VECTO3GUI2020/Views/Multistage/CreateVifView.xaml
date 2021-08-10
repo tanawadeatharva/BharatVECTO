@@ -8,7 +8,7 @@
              xmlns:implementation="clr-namespace:VECTO3GUI2020.ViewModel.Implementation"
              xmlns:implementation1="clr-namespace:VECTO3GUI2020.ViewModel.MultiStage.Implementation"
              mc:Ignorable="d"
-             MinWidth="500"
+             Width="600"
              MinHeight="200"
              d:DesignHeight="450" d:DesignWidth="800" d:DataContext="{d:DesignInstance implementation1:CreateVifViewModel}">
     <Grid>
@@ -36,9 +36,9 @@
                             Margin="2 4">
 
                     </Button>
-                    <customControls:FilePicker DockPanel.Dock="Left"  HorizontalAlignment="Stretch"
-                                               Text="{Binding PrimaryInputPath}"
-                                               Command="{Binding SelectPrimaryInputFileCommand}"/>
+                    <customControls:FilePicker  DockPanel.Dock="Left"  HorizontalAlignment="Stretch"
+                                                Text="{Binding PrimaryInputPath}"
+                                                Command="{Binding SelectPrimaryInputFileCommand}"/>
 
                 </DockPanel>
                 <Label Grid.Row="2" Style="{DynamicResource LabelStyle1}"
@@ -56,7 +56,7 @@
                             Margin="2 4">
 
                     </Button>
-                    <customControls:FilePicker DockPanel.Dock="Left" 
+                    <customControls:FilePicker  DockPanel.Dock="Left" 
                                                Text="{Binding StageInputPath}"
                                                Command="{Binding SelectCompletedInputFileCommand}"></customControls:FilePicker>
                 </DockPanel>
