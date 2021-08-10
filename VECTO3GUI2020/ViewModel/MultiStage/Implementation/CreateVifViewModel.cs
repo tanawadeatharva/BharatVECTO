@@ -100,12 +100,9 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 			_dialogHelper = dialogHelper;
 			_inputDataReader = inputDataReader;
 			_additionalJobInfo = additionalJobInfo;
-			additionalJobInfo.SetParent(this);
-			
-
 			SetupBackingStorage();
+			additionalJobInfo.SetParent(this);
 
-			
 
 			UpdateTitleAndDocumentName();
 			(this as INotifyPropertyChanged).PropertyChanged += CreateVifViewModel_PropertyChanged;
