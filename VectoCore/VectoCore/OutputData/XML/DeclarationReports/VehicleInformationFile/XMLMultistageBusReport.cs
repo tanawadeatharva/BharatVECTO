@@ -393,9 +393,9 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 		{
 			return new XElement(v28 + XMLNames.Component_AirDrag,
 				new XElement(v20 + XMLNames.Report_DataWrap,
-					new XAttribute(xsi + XMLNames.Component_Type_Attr, XMLNames.AirDrag_Data_Type_Attr),
-					//new XAttribute("xmlns", v10.NamespaceName),
 					new XAttribute(XNamespace.Xmlns + "v1.0", v10.NamespaceName),
+					new XAttribute(xsi + XMLNames.Component_Type_Attr, "v1.0:" + XMLNames.AirDrag_Data_Type_Attr),
+					//new XAttribute("xmlns", v10.NamespaceName),
 					dataNode.Attributes != null && dataNode.Attributes[XMLNames.Component_ID_Attr] != null ?
 						new XAttribute(XMLNames.Component_ID_Attr, dataNode.Attributes[XMLNames.Component_ID_Attr].InnerText) : null,
 					GetElements(dataNode.ChildNodes)

@@ -900,7 +900,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 			if (fullCheck) {
 				//use Binary AND to execute all Statements and gather information about missing parameters.
 				return InputComplete(_consolidateBusAuxiliariesData, nameof(_consolidateBusAuxiliariesData))
-						& _consolidateBusAuxiliariesData.IsInputDataCompleteFullCheck(jobType);
+						& (_consolidateBusAuxiliariesData != null && _consolidateBusAuxiliariesData.IsInputDataCompleteFullCheck(jobType));
 			}
 			return InputComplete(_consolidateBusAuxiliariesData, nameof(_consolidateBusAuxiliariesData)) 
 					&& _consolidateBusAuxiliariesData.IsInputDataComplete(jobType);
@@ -922,6 +922,9 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 
 		protected override IList<string> GetInvalidEntriesTemplate(VectoSimulationJobType jobType)
 		{
+			if (_consolidateBusAuxiliariesData == null) {
+				return new List<string>();
+			}
 			return _invalidEntries.Concat(_consolidateBusAuxiliariesData.GetInvalidEntries(jobType)).ToList();
 		}
 	}
