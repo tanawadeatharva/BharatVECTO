@@ -139,7 +139,9 @@
 			</Folder>
 			<Folder FolderName="CompletedBus">
 				<File FilePath="VectoCoreTest\TestData\XML\XMLReaderDeclaration\SchemaVersion2.10\Conventional_completedBus_1.xml" HomeFolder="Yes"/>
-				<File FilePath="VectoCoreTest\TestData\XML\XMLReaderDeclaration\SchemaVersion2.10\xEV_completedBus_1.xml" HomeFolder="Yes"/>
+				<File FilePath="VectoCoreTest\TestData\XML\XMLReaderDeclaration\SchemaVersion2.10\HEV_completedBus_1.xml" HomeFolder="Yes"/>
+				<File FilePath="VectoCoreTest\TestData\XML\XMLReaderDeclaration\SchemaVersion2.10\IEPC_completedBus_1.xml" HomeFolder="Yes"/>
+				<File FilePath="VectoCoreTest\TestData\XML\XMLReaderDeclaration\SchemaVersion2.10\PEV_completedBus_1.xml" HomeFolder="Yes"/>
 			</Folder>
 			<Folder FolderName="Exempted">
 				<File FilePath="VectoCoreTest\TestData\XML\XMLReaderDeclaration\SchemaVersion2.10\exempted_completedBus_input_full.xml" HomeFolder="Yes"/>

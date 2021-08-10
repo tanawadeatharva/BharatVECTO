@@ -131,6 +131,11 @@
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
+	<xs:complexType name="AirDragModifiedUseStandardValueType">
+		<xs:complexContent>
+			<xs:extension base="v1.0:AbstractAirdragDataDeclarationType"/>
+		</xs:complexContent>
+	</xs:complexType>
 	<xs:complexType name="AUX_Conventional_CompletedBusType">
 		<xs:complexContent>
 			<xs:extension base="v2.10.2:Abstract_AUX_Conventional_CompletedBusDeclarationType">

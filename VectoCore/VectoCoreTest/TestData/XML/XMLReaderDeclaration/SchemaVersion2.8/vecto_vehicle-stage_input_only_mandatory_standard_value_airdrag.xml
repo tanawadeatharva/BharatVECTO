@@ -1,19 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<tns:VectoInputDeclaration schemaVersion="2.8" xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:DEV:v2.8"
+<tns:VectoInputDeclaration schemaVersion="2.0" xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:DEV:v2.10.2"
 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"  
 xmlns:tns="urn:tugraz:ivt:VectoAPI:DeclarationInput:v2.0" 
 xmlns:v2.0="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0" 
 xmlns:di="http://www.w3.org/2000/09/xmldsig#" 
 xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:DeclarationJob V:\\VectoCore\VectoCore\Resources\XSD/VectoDeclarationJob.xsd">
-	<v2.0:Vehicle id="VEH-1234567890" xsi:type="InterimStageInputType" >
+	<v2.0:Vehicle id="VEH-1234567890" xsi:type="Vehicle_Conventional_CompletedBusDeclarationType" >
 		<Manufacturer>Some Manufacturer 3</Manufacturer>
 		<ManufacturerAddress>Some Manufacturer Address 3</ManufacturerAddress>
 		<VIN>VEH-1234567890</VIN>
 		<Date>2020-01-09T11:00:00Z</Date>
 		<VehicleDeclarationType>final</VehicleDeclarationType>
-		<Components xmlns:v2.8="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:DEV:v2.8" xsi:type="v2.8:CompletedVehicleComponentsDeclarationType">
-			<v2.8:AirDrag>
-				<v2.0:Data xsi:type="v2.8:AirDragModifiedUseStandardValueType" id="std"/>
+		<Components xsi:type="Components_Conventional_CompletedBusType">
+			<AirDrag>
+				<v2.0:Data xsi:type="AirDragModifiedUseStandardValueType" id="std"/>
 				<v2.0:Signature>
 					<di:Reference URI="#std">
 						<di:Transforms>
@@ -24,9 +24,9 @@ xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:DeclarationJob V:\\VectoCore\VectoCo
 						<di:DigestValue>b9SHCfOoVrBxFQ8wwDK32OO+9bd85DuaUdgs6j/29N8=</di:DigestValue>
 					</di:Reference>
 				</v2.0:Signature>
-			</v2.8:AirDrag>
+			</AirDrag>
 			<Auxiliaries>
-				<Data xsi:type="v2.8:CompletedVehicleAuxiliaryDataDeclarationType"></Data>
+				<Data xsi:type="AUX_Conventional_CompletedBusType"></Data>
 			</Auxiliaries>
 		</Components>
 	</v2.0:Vehicle>
