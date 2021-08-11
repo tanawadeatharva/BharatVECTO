@@ -724,7 +724,7 @@ xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:DeclarationOutput:VehicleInterimFile
 							<HVAC>
 								<SystemConfiguration>1</SystemConfiguration>
 								<HeatPumpTypeDriverCompartment>
-									<Cooling>not applicable</Cooling>
+									<Cooling>none</Cooling>
 									<Heating>not applicable</Heating>
 								</HeatPumpTypeDriverCompartment>
 								<HeatPumpTypePassengerCompartment>

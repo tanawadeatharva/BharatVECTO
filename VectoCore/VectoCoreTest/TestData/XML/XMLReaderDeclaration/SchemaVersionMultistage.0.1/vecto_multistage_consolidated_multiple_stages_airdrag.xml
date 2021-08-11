@@ -774,7 +774,7 @@ xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:DeclarationOutput:VehicleInterimFile
 								</HeatPumpTypeDriverCompartment>
 								<HeatPumpTypePassengerCompartment>
 									<Cooling>non R-744 3-stage</Cooling>
-									<Heating>non R-744 2-stage</Heating>
+									<Heating>none</Heating>
 								</HeatPumpTypePassengerCompartment>
 								<AuxiliaryHeaterPower>50</AuxiliaryHeaterPower>
 								<DoubleGlazing>false</DoubleGlazing>

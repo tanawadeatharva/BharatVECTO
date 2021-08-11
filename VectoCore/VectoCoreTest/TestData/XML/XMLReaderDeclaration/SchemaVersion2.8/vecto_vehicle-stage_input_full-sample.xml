@@ -69,11 +69,11 @@
 						<SystemConfiguration>0</SystemConfiguration>
 						<HeatPumpTypeDriverCompartment>
 							<Cooling>none</Cooling>
-							<Heating>none</Heating>
+							<Heating>non R-744 3-stage</Heating>
 						</HeatPumpTypeDriverCompartment>
 						<HeatPumpTypePassengerCompartment>
-							<Cooling>non R-744 3-stage</Cooling>
-							<Heating>non R-744 3-stage</Heating>
+							<Cooling>non R-744 2-stage</Cooling>
+							<Heating>non R-744 4-stage</Heating>
 						</HeatPumpTypePassengerCompartment>
 						<AuxiliaryHeaterPower>50</AuxiliaryHeaterPower>
 						<DoubleGlazing>false</DoubleGlazing>
