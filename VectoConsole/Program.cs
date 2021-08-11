@@ -359,7 +359,7 @@ Examples:
 			WriteLine($@"VectoCore: {VectoSimulationCore.VersionNumber}");
 		}
 
-		private static void PrintProgress(Dictionary<int, JobContainer.ProgressEntry> progessData,
+		private static void PrintProgress(IDictionary<int, JobContainer.ProgressEntry> progessData,
 			bool showTiming = true, bool force = false)
 		{
 			try {

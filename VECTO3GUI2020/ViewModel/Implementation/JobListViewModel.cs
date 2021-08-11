@@ -356,20 +356,19 @@ namespace VECTO3GUI2020.ViewModel.Implementation
 			}
 			SimulationRunning = true;
 			try {
-				//await Task.Run(() => RunSimulationAsync(_cancellationTokenSource.Token,
-				//	outputMessages: _outputMessage,
-				//	progress: _progress,
-				//	status: _status,
-				//	jobToSimulate: jobToSimulate));
-				await Task.Factory.StartNew(() => RunSimulationAsync(_cancellationTokenSource.Token,
-					outputMessages: _outputMessage,
-					progress: _progress,
-					status: _status,
-					jobToSimulate: jobToSimulate),
-						TaskCreationOptions.LongRunning | 
-						TaskCreationOptions.PreferFairness).Unwrap();
+                await Task.Run(() => RunSimulationAsync(_cancellationTokenSource.Token,
+                    outputMessages: _outputMessage,
+                    progress: _progress,
+                    status: _status,
+                    jobToSimulate: jobToSimulate));
+                //await Task.Factory.StartNew(() => RunSimulationAsync(_cancellationTokenSource.Token,
+                //	outputMessages: _outputMessage,
+                //	progress: _progress,
+                //	status: _status,
+                //	jobToSimulate: jobToSimulate),
+                //		TaskCreationOptions.LongRunning).Unwrap();
 
-			}
+            }
 			catch (Exception ex) {
 				_outputViewModel.AddMessage(new MessageEntry() {
 					Type = MessageType.ErrorMessage,
@@ -632,7 +631,8 @@ namespace VECTO3GUI2020.ViewModel.Implementation
 				PrintRuns(justFinished, fileWriters, outputMessages);
 				finishedRuns.AddRange(justFinished.Select(x => x.Key));
 
-				Task.Delay(200, ct).Wait(200); //Used to reduce updates of UI Thread, under heavy load it's possible that Task.Delay() is not scheduled and we hang here, therefore the Timeout.
+				var delayMs = 500;
+				Task.Delay(delayMs, ct).Wait(delayMs);
 			}
 			start.Stop();
 

@@ -1080,7 +1080,7 @@ Imports TUGraz.VectoCore.Utils
                 Return
             End If
 
-            Dim progress As Dictionary(Of Integer, JobContainer.ProgressEntry) = jobContainer.GetProgress()
+            Dim progress As IDictionary(Of Integer, JobContainer.ProgressEntry) = jobContainer.GetProgress()
             Dim sumProgress As Double = progress.Sum(Function(pair) pair.Value.Progress)
             Dim duration As Double = (DateTime.Now() - start).TotalSeconds
 

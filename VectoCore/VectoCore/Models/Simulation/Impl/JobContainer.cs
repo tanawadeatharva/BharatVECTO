@@ -126,7 +126,9 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 		private bool _canceled = false;
 		private ReaderWriterLockSlim _cancelLock = new ReaderWriterLockSlim();
 
-		
+		private ConcurrentDictionary<int, ProgressEntry> _progressDictionary =
+			new ConcurrentDictionary<int, ProgressEntry>();
+
 
 		/// <summary>
 		/// Initializes a new empty instance of the <see cref="JobContainer"/> class.
@@ -315,7 +317,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			Task.WaitAll(tasks);
 		}
 
-		[MethodImpl(MethodImplOptions.Synchronized)]
+		//[MethodImpl(MethodImplOptions.Synchronized)]
 		private void JobCompleted(int runId, int runContainerId)
 		{
 			try {
@@ -375,26 +377,56 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			}
 		}
 
-		public Dictionary<int, ProgressEntry> GetProgress()
+		public IDictionary<int, ProgressEntry> GetProgress()
 		{
 			try {
 				_runsRwLock.EnterReadLock();
-				return Runs.ToDictionary(
-					r => r.Run.RunIdentifier,
-					r => new ProgressEntry
+				foreach (var runEntry in Runs) {
+					var key = runEntry.Run.RunIdentifier;
+					//Update existing entry
+					if(_progressDictionary.ContainsKey(key))
 					{
-						RunId = r.Run.RunIdentifier,
-						JobRunId = r.Run.JobRunIdentifier,
-						RunName = r.Run.RunName,
-						CycleName = r.Run.CycleName,
-						RunSuffix = r.Run.RunSuffix,
-						Progress = r.Run.Progress,
-						Done = r.Done,
-						ExecTime = r.ExecTime,
-						Success = r.Success,
-						Canceled = r.Canceled,
-						Error = r.ExecException
-					});
+						var entry = _progressDictionary[key];
+						entry.Progress = runEntry.Run.Progress;
+						entry.Done = runEntry.Done;
+						entry.ExecTime = runEntry.ExecTime;
+						entry.Success = runEntry.Success;
+						entry.Canceled = runEntry.Canceled;
+						entry.Error = runEntry.ExecException;
+					} else {
+						var progressEntry = new ProgressEntry {
+							RunId = runEntry.Run.RunIdentifier,
+							JobRunId = runEntry.Run.JobRunIdentifier,
+							RunName = runEntry.Run.RunName,
+							CycleName = runEntry.Run.CycleName,
+							RunSuffix = runEntry.Run.RunSuffix,
+							Progress = runEntry.Run.Progress,
+							Done = runEntry.Done,
+							ExecTime = runEntry.ExecTime,
+							Success = runEntry.Success,
+							Canceled = runEntry.Canceled,
+							Error = runEntry.ExecException
+						};
+						_progressDictionary[key] = progressEntry;
+					}
+				}
+				return _progressDictionary;
+				//return Runs.ToDictionary(
+				//	r => r.Run.RunIdentifier,
+				//	r => new ProgressEntry
+				//	{
+				//		RunId = r.Run.RunIdentifier,
+				//		JobRunId = r.Run.JobRunIdentifier,
+				//		RunName = r.Run.RunName,
+				//		CycleName = r.Run.CycleName,
+				//		RunSuffix = r.Run.RunSuffix,
+				//		Progress = r.Run.Progress,
+				//		Done = r.Done,
+				//		ExecTime = r.ExecTime,
+				//		Success = r.Success,
+				//		Canceled = r.Canceled,
+				//		Error = r.ExecException
+				//	});
 			} finally {
 				_runsRwLock.ExitReadLock();
 			}
