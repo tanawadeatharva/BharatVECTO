@@ -823,6 +823,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					};
 					break;
 				case ResponseUnderload r:
+					if (DataBus.HybridControllerInfo != null) {
+						DrivingAction = DrivingAction.Brake;
+					}
 					if (DataBus.GearboxInfo.GearboxType.AutomaticTransmission()) {
 						operatingPoint = SearchBrakingPower(absTime, operatingPoint.SimulationDistance, gradient,
 							operatingPoint.Acceleration, response);
@@ -1194,71 +1197,79 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 							return r != null && !actionRoll && !allowDistanceDecrease && !ds.IsEqual(r.Driver.OperatingPoint.SimulationDistance);
 						});
 				return ComputeTimeInterval(retVal.Acceleration, retVal.SimulationDistance);
-			} catch (VectoSearchAbortedException) {
-				// search aborted, try to go ahead with the last acceleration
-				if (!searchEngineSpeed && !actionRoll && !coastingOrRoll) {
-					var nanCount1 = 0;
-					retVal.Acceleration = SearchAlgorithm.Search(acceleration, delta,
-						Constants.SimulationSettings.OperatingPointInitialSearchIntervalAccelerating,
-						getYValue: response => {
-							var r = (ResponseDryRun)response;
+			} catch (VectoException ve) {
+				switch (ve) {
+					case VectoSearchFailedException _:
+					case VectoSearchAbortedException _:
+						
+						// search aborted, try to go ahead with the last acceleration
+						if (!searchEngineSpeed && !actionRoll && !coastingOrRoll) {
+							var nanCount1 = 0;
+							retVal.Acceleration = SearchAlgorithm.Search(acceleration, delta,
+								Constants.SimulationSettings.OperatingPointInitialSearchIntervalAccelerating,
+								getYValue: response => {
+									var r = (ResponseDryRun)response;
 
-							return (r.DeltaFullLoad);
-						},
-						evaluateFunction:
-						acc => {
-							// calculate new time interval only when vehiclespeed and acceleration are != 0
-							// else: use same timeinterval as before.
-							var vehicleDrivesAndAccelerates =
-									!(acc.IsEqual(0) && DataBus.VehicleInfo.VehicleSpeed.IsEqual(0));
-							if (vehicleDrivesAndAccelerates) {
-								var tmp = ComputeTimeInterval(acc, ds);
-								if (tmp.SimulationInterval.IsEqual(0.SI<Second>(), 1e-9.SI<Second>())) {
-									throw new VectoSearchAbortedException(
-										"next TimeInterval is 0. a: {0}, v: {1}, dt: {2}", acc,
-										DataBus.VehicleInfo.VehicleSpeed, tmp.SimulationInterval);
-								}
+									return (r.DeltaFullLoad);
+								},
+								evaluateFunction:
+								acc => {
+									// calculate new time interval only when vehiclespeed and acceleration are != 0
+									// else: use same timeinterval as before.
+									var vehicleDrivesAndAccelerates =
+											!(acc.IsEqual(0) && DataBus.VehicleInfo.VehicleSpeed.IsEqual(0));
+									if (vehicleDrivesAndAccelerates) {
+										var tmp = ComputeTimeInterval(acc, ds);
+										if (tmp.SimulationInterval.IsEqual(0.SI<Second>(), 1e-9.SI<Second>())) {
+											throw new VectoSearchAbortedException(
+												"next TimeInterval is 0. a: {0}, v: {1}, dt: {2}", acc,
+												DataBus.VehicleInfo.VehicleSpeed, tmp.SimulationInterval);
+										}
 
-								retVal.Acceleration = tmp.Acceleration;
-								retVal.SimulationInterval = tmp.SimulationInterval;
-								retVal.SimulationDistance = tmp.SimulationDistance;
+										retVal.Acceleration = tmp.Acceleration;
+										retVal.SimulationInterval = tmp.SimulationInterval;
+										retVal.SimulationDistance = tmp.SimulationDistance;
 
 
-							} else {
-								retVal.Acceleration = acc;
-								retVal.SimulationDistance = 0.SI<Meter>();
-							}
+									} else {
+										retVal.Acceleration = acc;
+										retVal.SimulationDistance = 0.SI<Meter>();
+									}
 
-							IterationStatistics.Increment(this, "SearchOperatingPoint");
-							DriverAcceleration = acc;
-							var response = NextComponent.Request(absTime, retVal.SimulationInterval, acc, gradient,
-								true);
-							response.Driver.OperatingPoint = retVal;
-							return response;
+									IterationStatistics.Increment(this, "SearchOperatingPoint");
+									DriverAcceleration = acc;
+									var response = NextComponent.Request(absTime, retVal.SimulationInterval, acc, gradient,
+										true);
+									response.Driver.OperatingPoint = retVal;
+									return response;
 
-						},
-						criterion: response => {
-							var r = (ResponseDryRun)response;
+								},
+								criterion: response => {
+									var r = (ResponseDryRun)response;
 
-							delta = (r.DeltaFullLoad);
-							return Math.Max(delta.Value(), 0);
-						},
-						abortCriterion:
-						(response, cnt) => {
-							var r = (ResponseDryRun)response;
-							if (DataBus.GearboxInfo.GearboxType.AutomaticTransmission() &&
-								r.DeltaDragLoad.Value().IsSmallerOrEqual(-double.MaxValue / 20)) {
-								nanCount1++;
-							}
+									delta = (r.DeltaFullLoad);
+									return Math.Max(delta.Value(), 0);
+								},
+								abortCriterion:
+								(response, cnt) => {
+									var r = (ResponseDryRun)response;
+									if (DataBus.GearboxInfo.GearboxType.AutomaticTransmission() &&
+										r.DeltaDragLoad.Value().IsSmallerOrEqual(-double.MaxValue / 20)) {
+										nanCount1++;
+									}
 
-							if (nanCount1 > 10) {
-								return true;
-							}
+									if (nanCount1 > 10) {
+										return true;
+									}
 
-							return r != null && !allowDistanceDecrease &&
-									!ds.IsEqual(r.Driver.OperatingPoint.SimulationDistance);
-						});
-					return ComputeTimeInterval(retVal.Acceleration, retVal.SimulationDistance);
+									return r != null && !allowDistanceDecrease &&
+											!ds.IsEqual(r.Driver.OperatingPoint.SimulationDistance);
+								},
+								forceLineSearch: true);
+							return ComputeTimeInterval(retVal.Acceleration, retVal.SimulationDistance);
+						}
+						break;
+
 				}
 			} catch (Exception) {
 				Log.Error("Failed to find operating point! absTime: {0}", absTime);
