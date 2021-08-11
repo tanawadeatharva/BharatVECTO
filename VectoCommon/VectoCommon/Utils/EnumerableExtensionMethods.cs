@@ -61,6 +61,7 @@ namespace TUGraz.VectoCommon.Utils
 					return self.OrderBy(x => x).SequenceEqual(other.OrderBy(x => x));
 				}
 			}
+
 			return true;
 		}
 
@@ -148,11 +149,13 @@ namespace TUGraz.VectoCommon.Utils
 				if (!predicate(self[i]))
 					break;
 			}
+
 			if (i == 0) {
 				i = 1;
 			} else if (i == self.Length) {
 				i--;
 			}
+
 			return Tuple.Create(self[i - 1], self[i]);
 		}
 
@@ -173,6 +176,7 @@ namespace TUGraz.VectoCommon.Utils
 				if (!e.MoveNext()) {
 					throw new InvalidOperationException("Sequence is empty.");
 				}
+
 				var min = e.Current;
 				var minProjection = projectionToComparable(e.Current);
 
@@ -183,6 +187,7 @@ namespace TUGraz.VectoCommon.Utils
 						minProjection = currentProjection;
 					}
 				}
+
 				return min;
 			}
 		}
@@ -194,6 +199,7 @@ namespace TUGraz.VectoCommon.Utils
 				if (!e.MoveNext()) {
 					throw new InvalidOperationException("Sequence is empty.");
 				}
+
 				var max = e.Current;
 				var maxProjection = projectionToComparable(e.Current);
 
@@ -204,6 +210,7 @@ namespace TUGraz.VectoCommon.Utils
 						maxProjection = currentProjection;
 					}
 				}
+
 				return max;
 			}
 		}
@@ -239,6 +246,39 @@ namespace TUGraz.VectoCommon.Utils
 		public static IEnumerable<T> Repeat<T>(this T element, int count)
 		{
 			return Enumerable.Repeat(element, count);
+		}
+
+		/// <summary>
+		/// Deconstruct an IEnumerable into individual variables. (Tuple Unpacking)
+		/// </summary>
+		/// <typeparam name="T"></typeparam>
+		/// <param name="values"></param>
+		/// <param name="item1"></param>
+		/// <param name="item2"></param>
+		/// <param name="item3"></param>
+		/// <param name="item4"></param>
+		/// <param name="item5"></param>
+		/// <param name="item6"></param>
+		/// <param name="item7"></param>
+		public static void Deconstruct<T>(this IEnumerable<T> values, out T item1, out T item2, 
+			out T item3, out T item4, out T item5, out T item6, out T item7)
+		{
+			using (var enumerator = values.GetEnumerator()) {
+				enumerator.MoveNext();
+				item1 = enumerator.Current;
+				enumerator.MoveNext();
+				item2 = enumerator.Current;
+				enumerator.MoveNext();
+				item3 = enumerator.Current;
+				enumerator.MoveNext();
+				item4 = enumerator.Current;
+				enumerator.MoveNext();
+				item5 = enumerator.Current;
+				enumerator.MoveNext();
+				item6 = enumerator.Current;
+				enumerator.MoveNext();
+				item7 = enumerator.Current;
+			}
 		}
 	}
 }
