@@ -84,8 +84,8 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 	public class InterimStageBusVehicleViewModel_v2_8 : ViewModelBase, IMultistageVehicleViewModel,
 		IVehicleComponentsDeclaration, IAdvancedDriverAssistantSystemDeclarationInputData, IDataErrorInfo
 	{
-		public static readonly Type INPUTPROVIDERTYPE = typeof(XMLDeclarationInterimStageBusDataProviderV28);
-		public static readonly Type INPUTPROVIDERTYPEEXEMPTED = typeof(XMLDeclarationExemptedInterimStageBusDataProviderV28);
+		public static readonly Type INPUTPROVIDERTYPE = typeof(XMLDeclarationCompletedBusDataProviderV210);
+		public static readonly Type INPUTPROVIDERTYPEEXEMPTED = typeof(XMLDeclarationExemptedCompletedBusDataProviderV210);
 		public static string VERSION = INPUTPROVIDERTYPE.ToString();
 		public static string VERSION_EXEMPTED = INPUTPROVIDERTYPEEXEMPTED.ToString();
 

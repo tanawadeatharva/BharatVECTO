@@ -333,7 +333,7 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 				var inputData = _inputDataReader.Create(fileName) as IDeclarationInputDataProvider;
 				vehicleInputData = inputData.JobInputData.Vehicle;
 				var type = vehicleInputData.GetType();
-				valid = (inputData != null) && (vehicleInputData is XMLDeclarationInterimStageBusDataProviderV28) || (vehicleInputData is XMLDeclarationExemptedInterimStageBusDataProviderV28);
+				valid = (inputData != null) && (vehicleInputData is XMLDeclarationCompletedBusDataProviderV210) || (vehicleInputData is XMLDeclarationExemptedCompletedBusDataProviderV210);
 			}
 			catch (Exception e)
 			{
