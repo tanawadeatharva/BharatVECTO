@@ -6,8 +6,8 @@
     "FileVersion": 10
   },
   "Body": {
-    "PrimaryVehicle": "C:\\Users\\Harry\\source\\repos\\vecto-dev\\VectoCore\\VectoCoreTest\\TestData\\XML\\XMLReaderDeclaration\\SchemaVersion2.6_Buses\\vecto_vehicle-primary_heavyBus-sample.xml",
-    "InterimStage": "C:\\Users\\Harry\\source\\repos\\vecto-dev\\VectoCore\\VectoCoreTest\\TestData\\XML\\XMLReaderDeclaration\\SchemaVersion2.8\\vecto_vehicle-stage_input_full-sample.xml",
+    "PrimaryVehicle": "C:\\Users\\Harry\\source\\repos\\vecto-dev\\VectoCore\\VectoCoreTest\\TestData\\XML\\XMLReaderDeclaration\\SchemaVersion2.10\\vecto_vehicle-primary_heavyBus-sample.xml",
+    "InterimStage": "C:\\Users\\Harry\\source\\repos\\vecto-dev\\VectoCore\\VectoCoreTest\\TestData\\XML\\XMLReaderDeclaration\\SchemaVersion2.10\\vecto_vehicle-stage_input_full-sample.xml",
     "Completed": false
   }
 }

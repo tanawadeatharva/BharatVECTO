@@ -16,7 +16,7 @@ namespace TUGraz.VectoCore.Tests.XML
 		protected IXMLInputDataReader xmlInputReader;
 		private IKernel _kernel;
 		
-		const string DirPath = @"TestData\XML\XMLReaderDeclaration\SchemaVersion2.8\";
+		const string DirPath = @"TestData\XML\XMLReaderDeclaration\SchemaVersion2.10\";
 		const string VehicleInterimStageInput = DirPath + "vecto_vehicle-stage_input_full-sample.xml";
 		const string VehicleExemptedInterimStageInput = DirPath + "vecto_vehicle-exempted_input_full-sample.xml";
 		const string VehicleExemptedMandatoryOnly = DirPath + "vecto_vehicle-exempted_input_only_mandatory_entries.xml";
