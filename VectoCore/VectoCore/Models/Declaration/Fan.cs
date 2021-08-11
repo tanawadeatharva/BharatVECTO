@@ -30,7 +30,6 @@
 */
 
 using System;
-using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using TUGraz.VectoCommon.Exceptions;
@@ -43,9 +42,9 @@ namespace TUGraz.VectoCore.Models.Declaration
 
 	public class Fan : IDeclarationAuxiliaryTable
 	{
-		readonly FanMediumLorries fanMediumLorries=new FanMediumLorries();
-		readonly FanHeavyLorries fanHeavyLorries=new FanHeavyLorries();
-		
+		readonly FanMediumLorries fanMediumLorries = new FanMediumLorries();
+		readonly FanHeavyLorries fanHeavyLorries = new FanHeavyLorries();
+
 		public Watt LookupPowerDemand(VehicleClass vehicleClass, MissionType mission, string technology)
 		{
 			if (string.IsNullOrWhiteSpace(technology)) {
@@ -79,75 +78,53 @@ namespace TUGraz.VectoCore.Models.Declaration
 				: fanHeavyLorries.Lookup(mission, technology, true)).PowerDemand;
 		}
 
-		//protected override string ResourceId { get; }
 		public string[] FullyElectricTechnologies()
 		{
 			return fanHeavyLorries.FullyElectricTechnologies();
 		}
 
-		public string[] GetTechnologies()
-		{
-			return fanHeavyLorries.GetTechnologies();
-        }
+		public string[] GetTechnologies() => fanHeavyLorries.GetTechnologies();
 	}
 
 	public abstract class AbstractFan : LookupData<MissionType, string, bool, AuxDemandEntry>, IDeclarationAuxiliaryTable
-    {
-        //private readonly List<string> FullyElectricFanTechnologies = new List<string>();
-
-        protected override string ErrorMessage => "Auxiliary Lookup Error: No value found for Fan. Mission: '{0}', Technology: '{1}'";
+	{
+		protected override string ErrorMessage => "Auxiliary Lookup Error: No value found for Fan. Mission: '{0}', Technology: '{1}'";
 
 		protected override void ParseData(DataTable table)
-        {
-            foreach (DataRow row in table.Rows)
-            {
-                var name = row.Field<string>("technology");
-                var electric = row.ParseBoolean("fullyelectric");
-                
-                foreach (DataColumn col in table.Columns)
-                {
-                    if (col.Caption != "technology" && col.Caption != "fullyelectric")
-                    {
-                        Data[Tuple.Create(col.Caption.ParseEnum<MissionType>(), name, electric)] = new AuxDemandEntry
-                        {
-                            PowerDemand = row.ParseDouble(col).SI<Watt>(),
-                        };
-                    }
-                }
-            }
-        }
-
-        public override AuxDemandEntry Lookup(MissionType mission, string technology, bool electrical)
-        {
-			
-			var lookup = Tuple.Create(mission, technology, electrical);
-			if (Data.ContainsKey(lookup)) {
-				return Data[lookup];
-			}
-			return new AuxDemandEntry() { PowerDemand = 0.SI<Watt>()};
-        }
-
-
-
-        public string[] FullyElectricTechnologies()
 		{
-			return Data.Keys.Where(x => x.Item3).Select(x => x.Item2).Distinct().ToArray();
+			foreach (DataRow row in table.Rows) {
+				var name = row.Field<string>("technology");
+				var electric = row.ParseBoolean("fullyelectric");
+
+				foreach (DataColumn col in table.Columns) {
+					if (col.Caption != "technology" && col.Caption != "fullyelectric") {
+						Data[Tuple.Create(col.Caption.ParseEnum<MissionType>(), name, electric)] = new AuxDemandEntry {
+							PowerDemand = row.ParseDouble(col).SI<Watt>(),
+						};
+					}
+				}
+			}
 		}
 
-        public string[] GetTechnologies()
-        {
-            return Data.Keys.Select(x => x.Item2).Distinct().ToArray();
-        }
-    }
+		public override AuxDemandEntry Lookup(MissionType mission, string technology, bool electrical)
+		{
+			var lookup = Tuple.Create(mission, technology, electrical);
+			return Data.GetValueOrDefault(lookup, new AuxDemandEntry { PowerDemand = 0.SI<Watt>() });
+		}
+		
+		public string[] FullyElectricTechnologies() => Data.Keys.Where(x => x.Item3).Select(x => x.Item2).Distinct().ToArray();
+
+		public string[] GetTechnologies() => Data.Keys.Select(x => x.Item2).Distinct().ToArray();
+	}
 
 
 	public sealed class FanMediumLorries : AbstractFan
-    {
+	{
 		protected override string ResourceId => DeclarationData.DeclarationDataResourcePrefix + ".VAUX.Fan-Tech-Medium.csv";
 	}
 
 	public sealed class FanHeavyLorries : AbstractFan
-    {
+	{
 		protected override string ResourceId => DeclarationData.DeclarationDataResourcePrefix + ".VAUX.Fan-Tech.csv";
 	}
 }
