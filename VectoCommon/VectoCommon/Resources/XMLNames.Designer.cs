@@ -583,15 +583,6 @@ namespace TUGraz.VectoCommon.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to ChassisConfiguration.
-        /// </summary>
-        public static string Bus_ChassisConfiguration {
-            get {
-                return ResourceManager.GetString("Bus_ChassisConfiguration", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to CompressorRatio.
         /// </summary>
         public static string Bus_CompressorRatio {
@@ -696,24 +687,6 @@ namespace TUGraz.VectoCommon.Resources {
         public static string Bus_HeatPump {
             get {
                 return ResourceManager.GetString("Bus_HeatPump", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to HeatPumpModeDriverCompartment.
-        /// </summary>
-        public static string Bus_HeatPumpModeDriver {
-            get {
-                return ResourceManager.GetString("Bus_HeatPumpModeDriver", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to HeatPumpModePassengerCompartment.
-        /// </summary>
-        public static string Bus_HeatPumpModePassenger {
-            get {
-                return ResourceManager.GetString("Bus_HeatPumpModePassenger", resourceCulture);
             }
         }
         
@@ -1308,6 +1281,33 @@ namespace TUGraz.VectoCommon.Resources {
         public static string BusAux_Technology {
             get {
                 return ResourceManager.GetString("BusAux_Technology", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Cooling.
+        /// </summary>
+        public static string BusHVACHeatPumpCooling {
+            get {
+                return ResourceManager.GetString("BusHVACHeatPumpCooling", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Heating.
+        /// </summary>
+        public static string BusHVACHeatPumpHeating {
+            get {
+                return ResourceManager.GetString("BusHVACHeatPumpHeating", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to ChassisConfiguration.
+        /// </summary>
+        public static string ChassisConfiguration {
+            get {
+                return ResourceManager.GetString("ChassisConfiguration", resourceCulture);
             }
         }
         

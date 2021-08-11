@@ -24,7 +24,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 				new XElement(tns + XMLNames.Vehicle_VIN, modelData.VehicleData.VIN),
 				new XElement(tns + XMLNames.Component_Date, XmlConvert.ToString(modelData.VehicleData.Date, XmlDateTimeSerializationMode.Utc)),
 				new XElement(tns + "LegislativeCategory", modelData.VehicleData.LegislativeClass.ToXMLFormat()),
-				new XElement(tns + XMLNames.Bus_ChassisConfiguration, "Bus"),
+				new XElement(tns + XMLNames.ChassisConfiguration, "Bus"),
 				new XElement(tns + XMLNames.Vehicle_AxleConfiguration, modelData.VehicleData.AxleConfiguration.GetName()),
 				new XElement(tns + XMLNames.Vehicle_Articulated, modelData.VehicleData.InputData.Articulated),
 				new XElement(

@@ -1546,7 +1546,7 @@
 							<xs:documentation>P251 - enum</xs:documentation>
 						</xs:annotation>
 					</xs:element>
-					<xs:element name="ChassisConfiguration" type="v2.10.2:VehicleCategoryHeavyLorryDeclarationType">
+					<xs:element name="ChassisConfiguration" type="v2.10.2:ChassisConfigurationHeavyLorryDeclarationType">
 						<xs:annotation>
 							<xs:documentation>P036 - enum</xs:documentation>
 						</xs:annotation>
@@ -1604,7 +1604,7 @@
 							<xs:documentation>P251 - enum</xs:documentation>
 						</xs:annotation>
 					</xs:element>
-					<xs:element name="ChassisConfiguration" type="v2.10.2:VehicleCategoryHeavyLorryDeclarationType">
+					<xs:element name="ChassisConfiguration" type="v2.10.2:ChassisConfigurationHeavyLorryDeclarationType">
 						<xs:annotation>
 							<xs:documentation>P036 - enum</xs:documentation>
 						</xs:annotation>
@@ -2339,7 +2339,56 @@
 			<xs:enumeration value="4x2"/>
 			<xs:enumeration value="6x2"/>
 			<xs:enumeration value="6x4"/>
+			<xs:enumeration value="8x2"/>
 			<xs:enumeration value="8x4"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="ChassisConfiguration">
+		<xs:union memberTypes="v2.10.2:ChassisConfigurationHeavyLorryDeclarationType v2.10.2:ChassisConfigurationMediumLorryDeclarationType v2.10.2:ChassisConfigurationPrimaryBusDeclarationType"/>
+	</xs:simpleType>
+	<xs:simpleType name="ChassisConfigurationHeavyLorryDeclarationType">
+		<xs:annotation>
+			<xs:appinfo>
+				<vectoParam:description>
+					<vectoParam:parameterId component="Vehicle">036</vectoParam:parameterId>
+					<vectoParam:unit>-</vectoParam:unit>
+				</vectoParam:description>
+			</xs:appinfo>
+			<xs:documentation>P036 - enum (Declaration)</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="Tractor"/>
+			<xs:enumeration value="Rigid Lorry"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="ChassisConfigurationMediumLorryDeclarationType">
+		<xs:annotation>
+			<xs:appinfo>
+				<vectoParam:description>
+					<vectoParam:parameterId component="Vehicle">036</vectoParam:parameterId>
+					<vectoParam:unit>-</vectoParam:unit>
+				</vectoParam:description>
+			</xs:appinfo>
+			<xs:documentation>P036 - enum (Declaration)</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="Tractor"/>
+			<xs:enumeration value="Rigid Lorry"/>
+			<xs:enumeration value="Van"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="ChassisConfigurationPrimaryBusDeclarationType">
+		<xs:annotation>
+			<xs:appinfo>
+				<vectoParam:description>
+					<vectoParam:parameterId component="Vehicle">036</vectoParam:parameterId>
+					<vectoParam:unit>-</vectoParam:unit>
+				</vectoParam:description>
+			</xs:appinfo>
+			<xs:documentation>P036 - enum (Declaration)</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="Bus"/>
 		</xs:restriction>
 	</xs:simpleType>
 	<xs:simpleType name="DeclarationType">
@@ -2502,51 +2551,6 @@
 			<xs:enumeration value="B"/>
 			<xs:enumeration value="I+II"/>
 			<xs:enumeration value="II+III"/>
-		</xs:restriction>
-	</xs:simpleType>
-	<xs:simpleType name="VehicleCategoryHeavyLorryDeclarationType">
-		<xs:annotation>
-			<xs:appinfo>
-				<vectoParam:description>
-					<vectoParam:parameterId component="Vehicle">036</vectoParam:parameterId>
-					<vectoParam:unit>-</vectoParam:unit>
-				</vectoParam:description>
-			</xs:appinfo>
-			<xs:documentation>P036 - enum (Declaration)</xs:documentation>
-		</xs:annotation>
-		<xs:restriction base="xs:string">
-			<xs:enumeration value="Tractor"/>
-			<xs:enumeration value="Rigid Lorry"/>
-		</xs:restriction>
-	</xs:simpleType>
-	<xs:simpleType name="VehicleCategoryMediumLorryDeclarationType">
-		<xs:annotation>
-			<xs:appinfo>
-				<vectoParam:description>
-					<vectoParam:parameterId component="Vehicle">036</vectoParam:parameterId>
-					<vectoParam:unit>-</vectoParam:unit>
-				</vectoParam:description>
-			</xs:appinfo>
-			<xs:documentation>P036 - enum (Declaration)</xs:documentation>
-		</xs:annotation>
-		<xs:restriction base="xs:string">
-			<xs:enumeration value="Tractor"/>
-			<xs:enumeration value="Rigid Lorry"/>
-			<xs:enumeration value="Van"/>
-		</xs:restriction>
-	</xs:simpleType>
-	<xs:simpleType name="VehicleCategoryPrimaryBusDeclarationType">
-		<xs:annotation>
-			<xs:appinfo>
-				<vectoParam:description>
-					<vectoParam:parameterId component="Vehicle">036</vectoParam:parameterId>
-					<vectoParam:unit>-</vectoParam:unit>
-				</vectoParam:description>
-			</xs:appinfo>
-			<xs:documentation>P036 - enum (Declaration)</xs:documentation>
-		</xs:annotation>
-		<xs:restriction base="xs:string">
-			<xs:enumeration value="Bus"/>
 		</xs:restriction>
 	</xs:simpleType>
 	<xs:simpleType name="VehicleCodeType">
@@ -2926,7 +2930,7 @@
 					<xs:documentation>P251 - enum</xs:documentation>
 				</xs:annotation>
 			</xs:element>
-			<xs:element name="ChassisConfiguration" type="v2.10.2:VehicleCategoryPrimaryBusDeclarationType">
+			<xs:element name="ChassisConfiguration" type="v2.10.2:ChassisConfigurationPrimaryBusDeclarationType">
 				<xs:annotation>
 					<xs:documentation>P036 - enum</xs:documentation>
 				</xs:annotation>
@@ -3092,7 +3096,7 @@
 					<xs:documentation>P251 - enum</xs:documentation>
 				</xs:annotation>
 			</xs:element>
-			<xs:element name="ChasisConfiguration" type="v2.10.2:VehicleCategoryHeavyLorryDeclarationType">
+			<xs:element name="ChasisConfiguration" type="v2.10.2:ChassisConfigurationHeavyLorryDeclarationType">
 				<xs:annotation>
 					<xs:documentation>P036 - enum</xs:documentation>
 				</xs:annotation>
@@ -3135,7 +3139,7 @@
 					<xs:documentation>P251 - enum</xs:documentation>
 				</xs:annotation>
 			</xs:element>
-			<xs:element name="ChassisConfiguration" type="v2.10.2:VehicleCategoryMediumLorryDeclarationType">
+			<xs:element name="ChassisConfiguration" type="v2.10.2:ChassisConfigurationMediumLorryDeclarationType">
 				<xs:annotation>
 					<xs:documentation>P036 - enum</xs:documentation>
 				</xs:annotation>

@@ -428,9 +428,9 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 	public class XMLDeclarationPrimaryBusVehicleDataProviderV26 : XMLDeclarationVehicleDataProviderV20
 	{
-		public new static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V26;
+		public new static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V210_JOBS;
 
-		public new const string XSD_TYPE = "PrimaryVehicleDeclarationType";
+		public new const string XSD_TYPE = "Vehicle_Conventional_PrimaryBusDeclarationType";
 
 		public new static readonly string QUALIFIED_XSD_TYPE =
 			XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
@@ -482,9 +482,9 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 	public class XMLDeclarationExemptedPrimaryBusDataProviderV26 : XMLDeclarationVehicleDataProviderV20
 	{
-		public new static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V26;
+		public new static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V210_JOBS;
 
-		public new const string XSD_TYPE = "ExemptedPrimaryHeavyBusType";
+		public new const string XSD_TYPE = "Vehicle_Exempted_PrimaryBusType";
 
 		public new static readonly string QUALIFIED_XSD_TYPE =
 			XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
@@ -556,9 +556,9 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 	public class XMLDeclarationMediumLorryVehicleDataProviderV26 : XMLDeclarationVehicleDataProviderV21
 	{
-		public new static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V26;
+		public new static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V210_JOBS;
 
-		public new const string XSD_TYPE = "VehicleMediumLorryDeclarationType";
+		public new const string XSD_TYPE = "Vehicle_Conventional_MediumLorryDeclarationType";
 
 		public new static readonly string QUALIFIED_XSD_TYPE =
 			XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
@@ -612,83 +612,83 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		public override double RetarderRatio => 0;
 	}
 
-	public class XMLDeclarationCompletedBusDataProviderV26 : XMLDeclarationVehicleDataProviderV20
-	{
-		public new static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V26;
+	//public class XMLDeclarationCompletedBusDataProviderV26 : XMLDeclarationVehicleDataProviderV20
+	//{
+	//	public new static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V210_JOBS;
 
-		public new const string XSD_TYPE = "CompletedVehicleDeclarationType";
+	//	public new const string XSD_TYPE = "Vehicle_Conventional_CompletedBusDeclarationType";
 
-		public new static readonly string QUALIFIED_XSD_TYPE =
-			XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
+	//	public new static readonly string QUALIFIED_XSD_TYPE =
+	//		XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
 
-		public XMLDeclarationCompletedBusDataProviderV26(
-			IXMLDeclarationJobInputData jobData, XmlNode xmlNode, string sourceFile) : base(jobData, xmlNode, sourceFile)
-		{
-			SourceType = DataSourceType.XMLEmbedded;
-		}
+	//	public XMLDeclarationCompletedBusDataProviderV26(
+	//		IXMLDeclarationJobInputData jobData, XmlNode xmlNode, string sourceFile) : base(jobData, xmlNode, sourceFile)
+	//	{
+	//		SourceType = DataSourceType.XMLEmbedded;
+	//	}
 
 
-		#region Overrides of XMLDeclarationVehicleDataProviderV10
+	//	#region Overrides of XMLDeclarationVehicleDataProviderV10
 
-		public override VehicleCategory VehicleCategory => VehicleCategory.HeavyBusCompletedVehicle;
+	//	public override VehicleCategory VehicleCategory => VehicleCategory.HeavyBusCompletedVehicle;
 
-		public override RegistrationClass? RegisteredClass => RegistrationClassHelper.Parse(GetString(XMLNames.Vehicle_RegisteredClass)).First();
+	//	public override RegistrationClass? RegisteredClass => RegistrationClassHelper.Parse(GetString(XMLNames.Vehicle_RegisteredClass)).First();
 
-		public override VehicleCode? VehicleCode => GetString(XMLNames.Vehicle_VehicleCode).ParseEnum<VehicleCode>();
+	//	public override VehicleCode? VehicleCode => GetString(XMLNames.Vehicle_VehicleCode).ParseEnum<VehicleCode>();
 
-		//TechnicalPermissibleMaximumLadenMass
-		public override Kilogram GrossVehicleMassRating => GetDouble(XMLNames.TPMLM).SI<Kilogram>();
+	//	//TechnicalPermissibleMaximumLadenMass
+	//	public override Kilogram GrossVehicleMassRating => GetDouble(XMLNames.TPMLM).SI<Kilogram>();
 
-		public override TankSystem? TankSystem =>
-			ElementExists(XMLNames.Vehicle_NgTankSystem)
-				? EnumHelper.ParseEnum<TankSystem>(GetString(XMLNames.Vehicle_NgTankSystem))
-				: (TankSystem?)null;
+	//	public override TankSystem? TankSystem =>
+	//		ElementExists(XMLNames.Vehicle_NgTankSystem)
+	//			? EnumHelper.ParseEnum<TankSystem>(GetString(XMLNames.Vehicle_NgTankSystem))
+	//			: (TankSystem?)null;
 
-		public override int? NumberPassengerSeatsLowerDeck
-		{
-			get {
-				var node = GetNode(XMLNames.Bus_LowerDeck);
-				return XmlConvert.ToInt32(node.InnerText);
-			}
-		}
+	//	public override int? NumberPassengerSeatsLowerDeck
+	//	{
+	//		get {
+	//			var node = GetNode(XMLNames.Bus_LowerDeck);
+	//			return XmlConvert.ToInt32(node.InnerText);
+	//		}
+	//	}
 
-		public override int? NumberPassengerSeatsUpperDeck
-		{
-			get {
-				var node = GetNode(XMLNames.Bus_UpperDeck);
-				return XmlConvert.ToInt32(node.InnerText);
-			}
-		}
+	//	public override int? NumberPassengerSeatsUpperDeck
+	//	{
+	//		get {
+	//			var node = GetNode(XMLNames.Bus_UpperDeck);
+	//			return XmlConvert.ToInt32(node.InnerText);
+	//		}
+	//	}
 
-		//HeightIntegratedBody
-		public override Meter Height => GetDouble(XMLNames.Bus_HeighIntegratedBody).SI<Meter>();
+	//	//HeightIntegratedBody
+	//	public override Meter Height => GetDouble(XMLNames.Bus_HeighIntegratedBody).SI<Meter>();
 
-		//VehicleLength
-		public override Meter Length => GetDouble(XMLNames.Bus_VehicleLength).SI<Meter>();
+	//	//VehicleLength
+	//	public override Meter Length => GetDouble(XMLNames.Bus_VehicleLength).SI<Meter>();
 
-		//VehicleWidth
-		public override Meter Width => GetDouble(XMLNames.Bus_VehicleWidth).SI<Meter>();
+	//	//VehicleWidth
+	//	public override Meter Width => GetDouble(XMLNames.Bus_VehicleWidth).SI<Meter>();
 
-		public override XmlElement PTONode => null;
+	//	public override XmlElement PTONode => null;
 
-		#endregion
+	//	#endregion
 
 		
-		public override bool? LowEntry => GetBool(XMLNames.Bus_LowEntry);
+	//	public override bool? LowEntry => GetBool(XMLNames.Bus_LowEntry);
 
-		public override Meter EntranceHeight => GetDouble(XMLNames.Bus_EntranceHeight).SI<Meter>();
+	//	public override Meter EntranceHeight => GetDouble(XMLNames.Bus_EntranceHeight).SI<Meter>();
 
-		public override ConsumerTechnology? DoorDriveTechnology => ConsumerTechnologyHelper.Parse(GetString(XMLNames.BusAux_PneumaticSystem_DoorDriveTechnology));
+	//	public override ConsumerTechnology? DoorDriveTechnology => ConsumerTechnologyHelper.Parse(GetString(XMLNames.BusAux_PneumaticSystem_DoorDriveTechnology));
 
 
-		#region Overrides of AbstractXMLResource
+	//	#region Overrides of AbstractXMLResource
 
-		protected override XNamespace SchemaNamespace => NAMESPACE_URI;
+	//	protected override XNamespace SchemaNamespace => NAMESPACE_URI;
 
-		protected override DataSourceType SourceType { get; }
+	//	protected override DataSourceType SourceType { get; }
 
-		#endregion
-	}
+	//	#endregion
+	//}
 
 
 	public class XMLDeclarationMultistagePrimaryVehicleBusDataProviderV01 : AbstractCommonComponentType, IXMLDeclarationVehicleData
@@ -884,8 +884,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 	public class XMLDeclarationInterimStageBusDataProviderV28 : XMLDeclarationVehicleDataProviderV20
 	{
-		public new static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V28;
-		public new const string XSD_TYPE = "InterimStageInputType";
+		public new static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V210_JOBS;
+		public new const string XSD_TYPE = "Vehicle_Conventional_CompletedBusDeclarationType";
 		public new static readonly string QUALIFIED_XSD_TYPE =
 			XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
 
@@ -1083,8 +1083,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 	public class XMLDeclarationExemptedInterimStageBusDataProviderV28 : XMLDeclarationVehicleDataProviderV20
 	{
-		public new static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V28;
-		public new const string XSD_TYPE = "ExemptedInterimStageInputType";
+		public new static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V210_JOBS;
+		public new const string XSD_TYPE = "Vehicle_Exempted_CompletedBusType";
 		public new static readonly string QUALIFIED_XSD_TYPE =
 			XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
 		

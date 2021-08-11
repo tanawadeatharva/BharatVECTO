@@ -28,6 +28,22 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.NinjectModules
 
 			Bind<IXMLAirdragDeclarationInputData>().To<XMLDeclarationAirdragDataProviderV28>().Named(
 				XMLDeclarationAirdragDataProviderV28.QUALIFIED_XSD_TYPE);
+
+
+			Bind<IXMLAdvancedDriverAssistantSystemDeclarationInputData>()
+				.To<XMLDeclarationADASDataProviderV210>().Named(XMLDeclarationADASDataProviderV210.QUALIFIED_XSD_TYPE);
+
+
+
+			Bind<IXMLADASReader>()
+				.To<XMLADASReaderV210>().Named(XMLADASReaderV210.QUALIFIED_XSD_TYPE_CONVENTIONAL);
+			Bind<IXMLADASReader>()
+				.To<XMLADASReaderV210>().Named(XMLADASReaderV210.QUALIFIED_XSD_TYPE_HEV);
+			Bind<IXMLADASReader>()
+				.To<XMLADASReaderV210>().Named(XMLADASReaderV210.QUALIFIED_XSD_TYPE_PEV);
+			Bind<IXMLADASReader>()
+				.To<XMLADASReaderV210>().Named(XMLADASReaderV210.QUALIFIED_XSD_TYPE_IEPC);
+
 		}
 
 		#endregion

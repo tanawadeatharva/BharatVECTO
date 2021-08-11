@@ -194,6 +194,9 @@ namespace TUGraz.VectoCommon.BusAuxiliaries
 
 	public enum HeatPumpType
 	{
+		[GuiLabel("not applicable")]
+		not_applicable,
+
 		[GuiLabel("None")]
 		none,
 
@@ -216,6 +219,7 @@ namespace TUGraz.VectoCommon.BusAuxiliaries
 	public static class HeatPumpTypeHelper
 	{
 		private const string NONE = "none";
+		private const string NOT_APPLICABLE = "not applicable";
 		private const string R_744 = "R-744";
 		private const string NON_R_744_2_STAGE = "non R-744 2-stage";
 		private const string NON_R_744_3_STAGE = "non R-744 3-stage";
@@ -227,12 +231,13 @@ namespace TUGraz.VectoCommon.BusAuxiliaries
 			switch (parse)
 			{
 				case NONE: return HeatPumpType.none;
+				case NOT_APPLICABLE: return HeatPumpType.not_applicable;
 				case R_744: return HeatPumpType.R_744;
 				case NON_R_744_2_STAGE: return HeatPumpType.non_R_744_2_stage;
 				case NON_R_744_3_STAGE: return HeatPumpType.non_R_744_3_stage;
 				case NON_R_744_4_STAGE: return HeatPumpType.non_R_744_4_stage;
 				case NON_R_744_CONTINUOUS: return HeatPumpType.non_R_744_continuous;
-				// to support old input parametersd
+				// to support old input parameters
 				case "2-stage": return HeatPumpType.non_R_744_2_stage;
 				case "3-stage": return HeatPumpType.non_R_744_3_stage;
 				case "4-stage": return HeatPumpType.non_R_744_4_stage;
@@ -247,6 +252,7 @@ namespace TUGraz.VectoCommon.BusAuxiliaries
 			}
 			switch (type) {
 				case HeatPumpType.none: return NONE;
+				case HeatPumpType.not_applicable: return NOT_APPLICABLE;
 				case HeatPumpType.R_744: return R_744;
 				case HeatPumpType.non_R_744_2_stage: return NON_R_744_2_STAGE;
 				case HeatPumpType.non_R_744_3_stage: return NON_R_744_3_STAGE;
@@ -300,55 +306,6 @@ namespace TUGraz.VectoCommon.BusAuxiliaries
 		}
 	}
 
-	public enum HeatPumpMode
-	{
-		
-		[GuiLabel("Heating")]
-		heating,
-		[GuiLabel("Heating and cooling")]
-		heating_and_cooling,
-		[GuiLabel("Cooling")]
-		cooling,
-		[GuiLabel("not_applicable")]
-		N_A,
-	}
-
-	public static class HeatPumpModeHelper
-	{
-		private const string HEATING = "heating";
-		private const string HEATING_AND_COOLING = "heating and cooling";
-		private const string COOLING = "cooling";
-		private const string N_A = "N.A.";
-
-		public static HeatPumpMode Parse(string parse)
-		{
-			switch (parse)
-			{
-				case HEATING: return HeatPumpMode.heating;
-				case HEATING_AND_COOLING: return HeatPumpMode.heating_and_cooling;
-				case COOLING: return HeatPumpMode.cooling;
-				case N_A: return HeatPumpMode.N_A;
-				default: throw new InvalidEnumArgumentException("HeatPumpMode"); 
-			}
-		}
-
-		public static string GetLabel(this HeatPumpMode? type)
-		{
-			switch (type)
-			{
-				case HeatPumpMode.heating: return HEATING;
-				case HeatPumpMode.heating_and_cooling: return HEATING_AND_COOLING;
-				case HeatPumpMode.cooling: return COOLING;
-				case HeatPumpMode.N_A: return N_A;
-				default: return null;
-			}
-		}
-
-		public static string GetLabel(this HeatPumpMode type)
-		{
-			return GetLabel(type as HeatPumpMode?);
-		}
-	}
 
 	public interface ISSMEngineeringInputs : ISSMInputs
 	{

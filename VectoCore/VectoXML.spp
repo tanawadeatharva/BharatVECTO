@@ -173,8 +173,6 @@
 			<File FilePath="VectoCore\Resources\XSD\VectoDeclarationDefinitions.2.10.2_JobInputData.xsd" HomeFolder="Yes"/>
 			<File FilePath="VectoCore\Resources\XSD\VectoDeclarationDefinitions.2.2.xsd" HomeFolder="Yes"/>
 			<File FilePath="VectoCore\Resources\XSD\VectoDeclarationDefinitions.2.3_DEV.xsd" HomeFolder="Yes"/>
-			<File FilePath="VectoCore\Resources\XSD\VectoDeclarationDefinitions.2.6_Buses.xsd" HomeFolder="Yes"/>
-			<File FilePath="VectoCore\Resources\XSD\VectoDeclarationDefinitions.2.8_Stage.xsd" HomeFolder="Yes"/>
 			<File FilePath="VectoCore\Resources\XSD\VectoDeclarationDefinitions.xsd" HomeFolder="Yes"/>
 			<File FilePath="VectoCore\Resources\XSD\VectoDeclarationJob.xsd" HomeFolder="Yes"/>
 			<File FilePath="VectoCore\Resources\XSD\VectoInput.1.0.xsd" HomeFolder="Yes"/>
