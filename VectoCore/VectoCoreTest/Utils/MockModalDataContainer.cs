@@ -33,6 +33,7 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
+using System.Linq.Expressions;
 using TUGraz.VectoCommon.BusAuxiliaries;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
@@ -42,6 +43,7 @@ using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.OutputData;
+using TUGraz.VectoCore.Utils;
 
 
 namespace TUGraz.VectoCore.Tests.Utils
@@ -113,18 +115,19 @@ namespace TUGraz.VectoCore.Tests.Utils
 		public object this[ModalResultField key, IFuelProperties fuel]
 		{
 			get {
-				if (!FuelColumns.ContainsKey(fuel) || !FuelColumns[fuel].ContainsKey(key)) {
-					throw new VectoException("unknown fuel {0} for key {1}", fuel.GetLabel(), key.GetName());
+				try {
+					return CurrentRow[FuelColumns[fuel][key]];
+				} catch (KeyNotFoundException e) {
+					throw new VectoException($"unknown fuel {fuel.GetLabel()} for key {key.GetName()}", e);
 				}
 
-				return CurrentRow[FuelColumns[fuel][key]];
 			}
 			set {
-				if (!FuelColumns.ContainsKey(fuel) || !FuelColumns[fuel].ContainsKey(key)) {
-					throw new VectoException("unknown fuel {0} for key {1}", fuel.GetLabel(), key.GetName());
+				try {
+					CurrentRow[FuelColumns[fuel][key]] = value;
+				} catch (KeyNotFoundException e) {
+					throw new VectoException($"unknown fuel {fuel.GetLabel()} for key {key.GetName()}", e);
 				}
-
-				CurrentRow[FuelColumns[fuel][key]] = value;
 			}
 		}
 
@@ -136,35 +139,22 @@ namespace TUGraz.VectoCore.Tests.Utils
 
 		public object this[ModalResultField key, int? pos]
 		{
-			get
-			{
+			get {
 				if (pos == null) {
 					return CurrentRow[key.GetName()];
 				}
 
-				if (!BatteryColumns.ContainsKey(pos.Value)) {
-					return null;
-				}
-
-				var entry = BatteryColumns[pos.Value];
-				return !entry.ContainsKey(key) ? null : CurrentRow[entry[key]];
+				return BatteryColumns.TryGetValue(pos.Value, out var entry) && entry.TryGetValue(key, out var col)
+					? CurrentRow[col]
+					: null;
 			}
-			set
-			{
+			set {
 				if (pos == null) {
 					CurrentRow[key.GetName()] = value;
 				} else {
-					if (!BatteryColumns.ContainsKey(pos.Value)) {
-						BatteryColumns[pos.Value] = new Dictionary<ModalResultField, DataColumn>();
-					}
-
-					var entry = BatteryColumns[pos.Value];
-					if (!entry.ContainsKey(key)) {
-						var col = Data.Columns.Add($"{key.GetName()}_{pos.Value}", typeof(SI));
-						entry[key] = col;
-					}
-
-					CurrentRow[entry[key]] = value;
+					var entry = BatteryColumns.GetOrAdd(pos.Value, _ => new Dictionary<ModalResultField, DataColumn>());
+					var col = entry.GetOrAdd(key, _ => Data.Columns.Add($"{key.GetName()}_{pos.Value}", typeof(SI)));
+					CurrentRow[col] = value;
 				}
 			}
 		}
@@ -193,8 +183,8 @@ namespace TUGraz.VectoCore.Tests.Utils
 
 		public string StackTrace => null;
 
-		public void Finish(VectoRun.Status runStatus, Exception exception = null) {}
-		
+		public void Finish(VectoRun.Status runStatus, Exception exception = null) { }
+
 		public bool WriteModalResults { get; set; }
 
 		public IEnumerable<T> GetValues<T>(ModalResultField key)
@@ -250,16 +240,16 @@ namespace TUGraz.VectoCore.Tests.Utils
 
 		public string GetColumnName(IFuelProperties fuelData, ModalResultField mrf)
 		{
-			if (!FuelColumns.ContainsKey(fuelData) || !FuelColumns[fuelData].ContainsKey(mrf)) {
-				throw new VectoException("unknown fuel {0} for key {1}", fuelData.GetLabel(), mrf.GetName());
+			try {
+				return FuelColumns[fuelData][mrf].ColumnName;
+			} catch (KeyNotFoundException e) {
+				throw new VectoException($"unknown fuel {fuelData.GetLabel()} for key {mrf.GetName()}", e);
 			}
-
-			return FuelColumns[fuelData][mrf].ColumnName;
 		}
 
 		public void Reset()
 		{
-			
+
 		}
 
 		public Second Duration => _duration;
@@ -275,12 +265,12 @@ namespace TUGraz.VectoCore.Tests.Utils
 
 		public void CalculateAggregateValues()
 		{
-			
+
 		}
 
 		public void AddElectricMotor(PowertrainPosition pos)
 		{
-			
+
 		}
 
 		public KilogramPerWattSecond VehicleLineSlope(IFuelProperties fuel)

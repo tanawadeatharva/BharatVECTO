@@ -149,16 +149,7 @@ namespace TUGraz.VectoCore.OutputData.XML.Engineering
 		}
 
 
-		public XNamespace RegisterNamespace(string namespaceUri)
-		{
-			if (_namespaces.ContainsKey(namespaceUri)) {
-				return _namespaces[namespaceUri];
-			}
-
-			var ns = XNamespace.Get(namespaceUri);
-			_namespaces.Add(namespaceUri, ns);
-			return ns;
-		}
+		public XNamespace RegisterNamespace(string namespaceUri) => _namespaces.GetOrAdd(namespaceUri, XNamespace.Get);
 
 		#region Implementation of IXMLEngineeringWriter
 

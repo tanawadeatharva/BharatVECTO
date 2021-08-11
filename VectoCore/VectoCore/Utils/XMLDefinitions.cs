@@ -50,7 +50,7 @@ namespace TUGraz.VectoCore.Utils
 		MultistageOutputData = 1 << 10
 	}
 
-	
+
 	public static class XMLDefinitions
 	{
 		//public const string SchemaBaseURL = "file:///E:/QUAM/Workspace/VECTO_quam/VectoCore/VectoCore/Resources/XSD/";
@@ -58,14 +58,14 @@ namespace TUGraz.VectoCore.Utils
 
 		public const string DEV = ":DEV";
 
-		public const string ENGINEERING_NAMESPACE = "urn:tugraz:ivt:VectoAPI:EngineeringDefinitions"; 
+		public const string ENGINEERING_NAMESPACE = "urn:tugraz:ivt:VectoAPI:EngineeringDefinitions";
 
 		public const string ENGINEERING_INPUT_NAMESPACE_URI_V07 = "urn:tugraz:ivt:VectoAPI:EngineeringInput:v0.7";
 
 		public const string ENGINEERING_INPUT_NAMESPACE_URI_V10 = "urn:tugraz:ivt:VectoAPI:EngineeringInput:v1.0";
 
 		public const string ENGINEERING_DEFINITONS_NAMESPACE_V07 = ENGINEERING_NAMESPACE + ":v0.7";
-		
+
 		public const string ENGINEERING_DEFINITONS_NAMESPACE_V10 = ENGINEERING_NAMESPACE + ":v1.0";
 
 		public const string ENGINEERING_DEFINITONS_NAMESPACE_V11 = ENGINEERING_NAMESPACE + ":v1.1";
@@ -74,7 +74,7 @@ namespace TUGraz.VectoCore.Utils
 
 
 		public const string DECLARATION_NAMESPACE = "urn:tugraz:ivt:VectoAPI:DeclarationDefinitions";
-			
+
 		public const string DECLARATION_DEFINITIONS_NAMESPACE_URI_V10 = DECLARATION_NAMESPACE + ":v1.0";
 
 		public const string DECLARATION_DEFINITIONS_NAMESPACE_URI_V20 = DECLARATION_NAMESPACE + ":v2.0";
@@ -95,7 +95,7 @@ namespace TUGraz.VectoCore.Utils
 
 		public const string DECLARATION_INPUT_NAMESPACE_URI_V20 = DECLARATION_INPUT_NAMESPACE + ":v2.0";
 
-//		public const string DECLARATION_COMPONENT_NAMESPACE_URI_V10 = "urn:tugraz:ivt:VectoAPI:DeclarationComponent:v1.0";
+		//		public const string DECLARATION_COMPONENT_NAMESPACE_URI_V10 = "urn:tugraz:ivt:VectoAPI:DeclarationComponent:v1.0";
 
 		public const string DECLARATION_PRIMARY_BUS_VEHICLE_NAMESPACE = "urn:tugraz:ivt:VectoAPI:DeclarationOutput:PrimaryVehicleInformation";
 
@@ -140,12 +140,11 @@ namespace TUGraz.VectoCore.Utils
 
 		public static string GetSchemaFilename(XmlDocumentType type)
 		{
-			if (!schemaFilenames.ContainsKey(type)) {
-				throw new Exception($"Invalid argument '{type}' - only use single flags");
+			try {
+				return schemaFilenames[type];
+			} catch (KeyNotFoundException e) {
+				throw new Exception($"Invalid argument '{type}' - only use single flags", e);
 			}
-			var entry = schemaFilenames[type];
-			
-			return entry;
 		}
 
 

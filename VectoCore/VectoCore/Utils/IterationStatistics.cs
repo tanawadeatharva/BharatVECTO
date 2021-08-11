@@ -65,22 +65,8 @@ namespace TUGraz.VectoCore.Utils
 		public static void Increment<T>(T o, string key, double? value = null)
 		{
 			var t = typeof(T).Name;
-
-			if (!Current.ContainsKey(t))
-				Current[t] = new Dictionary<string, double>();
-
-			if (Current[t].ContainsKey(key))
-				if (value.HasValue)
-					Current[t][key] += value.Value;
-				else
-					Current[t][key]++;
-
-			else {
-				if (value.HasValue)
-					Current[t][key] = value.Value;
-				else
-					Current[t][key] = 1;
-			}
+			var c = Current.GetOrAdd(t, _ => new Dictionary<string, double>());
+			c[key] = c.GetValueOrDefault(key, 0) + value ?? 1;
 		}
 
 		public static void StartIteration()

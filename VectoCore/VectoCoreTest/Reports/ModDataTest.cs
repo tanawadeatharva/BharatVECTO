@@ -52,6 +52,7 @@ using Ninject;
 using TUGraz.VectoCore.InputData.FileIO.XML;
 using TUGraz.VectoCore.InputData.Reader.ComponentData;
 using TUGraz.VectoCore.Tests.Models.Simulation;
+using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Tests.Reports
 {
@@ -470,12 +471,8 @@ namespace TUGraz.VectoCore.Tests.Reports
 		{
 			Assert.IsTrue(modData.Rows.Count > 0);
 
-			var ptoTransmissionColumn = auxKeys.ContainsKey(Constants.Auxiliaries.IDs.PTOTransmission)
-				? auxKeys[Constants.Auxiliaries.IDs.PTOTransmission]
-				: null;
-			var ptoConsumerColumn = auxKeys.ContainsKey(Constants.Auxiliaries.IDs.PTOConsumer)
-				? auxKeys[Constants.Auxiliaries.IDs.PTOConsumer]
-				: null;
+			var ptoTransmissionColumn = auxKeys.GetValueOrDefault(Constants.Auxiliaries.IDs.PTOTransmission);
+			var ptoConsumerColumn = auxKeys.GetValueOrDefault(Constants.Auxiliaries.IDs.PTOConsumer);
 			foreach (DataRow row in modData.Rows) {
 				if (distanceBased && totalDistance.IsEqual(((Meter)row[ModalResultField.dist.GetName()]).Value())) {
 					continue;
@@ -645,12 +642,8 @@ namespace TUGraz.VectoCore.Tests.Reports
 		{
 			Assert.IsTrue(modData.Rows.Count > 0);
 
-			var ptoTransmissionColumn = auxKeys.ContainsKey(Constants.Auxiliaries.IDs.PTOTransmission)
-				? auxKeys[Constants.Auxiliaries.IDs.PTOTransmission]
-				: null;
-			var ptoConsumerColumn = auxKeys.ContainsKey(Constants.Auxiliaries.IDs.PTOConsumer)
-				? auxKeys[Constants.Auxiliaries.IDs.PTOConsumer]
-				: null;
+			var ptoTransmissionColumn = auxKeys.GetValueOrDefault(Constants.Auxiliaries.IDs.PTOTransmission);
+			var ptoConsumerColumn = auxKeys.GetValueOrDefault(Constants.Auxiliaries.IDs.PTOConsumer);
 			foreach (DataRow row in modData.Rows) {
 				if (totalDistance.IsEqual(((Meter)row[ModalResultField.dist.GetName()]))) {
 					continue;
