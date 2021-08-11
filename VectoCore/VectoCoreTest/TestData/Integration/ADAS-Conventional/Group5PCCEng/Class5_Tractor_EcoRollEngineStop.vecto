@@ -1,14 +1,14 @@
 {
   "Header": {
     "CreatedBy": "",
-    "Date": "2021-08-04T09:12:32.4672462Z",
+    "Date": "2021-08-11T14:55:21.8570171Z",
     "AppVersion": "3",
     "FileVersion": 5
   },
   "Body": {
     "SavedInDeclMode": false,
     "EngineOnlyMode": false,
-    "VehicleFile": "Class5_Tractor_PCC12.vveh",
+    "VehicleFile": "Class5_Tractor_EcoRollEngineStop.vveh",
     "EngineFile": "Engine_325kW_12.7l.veng",
     "GearboxFile": "AMT_12.vgbx",
     "TCU": "AMT_12.vgbx",

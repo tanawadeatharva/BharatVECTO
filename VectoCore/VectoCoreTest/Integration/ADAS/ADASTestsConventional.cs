@@ -2,9 +2,15 @@
 using System.Linq;
 using Ninject;
 using NUnit.Framework;
+using System;
+using System.Collections.Generic;
+using System.Data;
+using System.Threading.Tasks;
 using TUGraz.VectoCommon.Models;
+using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.InputData.FileIO.JSON;
 using TUGraz.VectoCore.InputData.FileIO.XML;
+using TUGraz.VectoCore.Models.Simulation;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.OutputData;
@@ -17,13 +23,13 @@ namespace TUGraz.VectoCore.Tests.Integration.ADAS
 	[Parallelizable(ParallelScope.All)]
 	public class ADASTestsConventional
 	{
-		private const string Group5NoPCC = @"TestData\Integration\ADAS-Conventional\Group5PCCEng\Class5_Tractor_ENG.vecto";
-		private const string Group5PCC12 = @"TestData\Integration\ADAS-Conventional\Group5PCCEng\Class5_Tractor_ENG_PCC12.vecto";
-		private const string Group5PCC123 = @"TestData\Integration\ADAS-Conventional\Group5PCCEng\Class5_Tractor_ENG_PCC123.vecto";
-		private const string Group5PCC123EcoNoEngineStop = @"TestData\Integration\ADAS-Conventional\Group5PCCEng\Class5_Tractor_ENG_PCC123Eco.vecto";
-		private const string Group5PCC123EcoEngineStop = @"TestData\Integration\ADAS-Conventional\Group5PCCEng\Class5_Tractor_ENG_PCC123EcoEngineStop.vecto";
-		private const string Group5WithEngineStop = @"TestData\Integration\ADAS-Conventional\Group5PCCEng\Class5_Tractor_ENG_WithEngineStop.vecto";
-		private const string Group5WithOutEngineStop = @"TestData\Integration\ADAS-Conventional\Group5PCCEng\Class5_Tractor_ENG_WithoutEngineStop.vecto";
+		private const string Group5NoADAS = @"TestData\Integration\ADAS-Conventional\Group5PCCEng\Class5_Tractor_NoADAS.vecto";
+		private const string Group5EcoRollWithoutEngineStop = @"TestData\Integration\ADAS-Conventional\Group5PCCEng\Class5_Tractor_EcoRollWithoutEngineStop.vecto";
+		private const string Group5EcoRollEngineStop = @"TestData\Integration\ADAS-Conventional\Group5PCCEng\Class5_Tractor_EcoRollEngineStop.vecto";
+		private const string Group5PCC12 = @"TestData\Integration\ADAS-Conventional\Group5PCCEng\Class5_Tractor_PCC12.vecto";
+		private const string Group5PCC123 = @"TestData\Integration\ADAS-Conventional\Group5PCCEng\Class5_Tractor_PCC123.vecto";
+		private const string Group5PCC123EcoRollWithoutEngineStop = @"TestData\Integration\ADAS-Conventional\Group5PCCEng\Class5_Tractor_PCC123EcoRollWithoutEngineStop.vecto";
+		private const string Group5PCC123EcoRollEngineStop = @"TestData\Integration\ADAS-Conventional\Group5PCCEng\Class5_Tractor_PCC123EcoRollEngineStop.vecto";
 
 		private IXMLInputDataReader _xmlInputReader;
 		private IKernel _kernel;
@@ -215,44 +221,44 @@ namespace TUGraz.VectoCore.Tests.Integration.ADAS
 
 		// FC: Group5NoPCC <= Group5PCC12 <= Group5PCC123 <= Group5PCC123EcoEngineStop
 		// FC for Group5PCC123EcoNoEngineStop can sometimes be bigger than all others.
-		[TestCase(Group5WithOutEngineStop, 0, TestName = "G5Eng EcoRoll Without Engine Stop CrestCoast 1"),
-		TestCase(Group5WithOutEngineStop, 1, TestName = "G5Eng EcoRoll Without Engine Stop CrestCoast 2"),
-		TestCase(Group5WithOutEngineStop, 2, TestName = "G5Eng EcoRoll Without Engine Stop Case A"), // Case A
-		TestCase(Group5WithOutEngineStop, 3, TestName = "G5Eng EcoRoll Without Engine Stop Case B"), // Case B
-		TestCase(Group5WithOutEngineStop, 4, TestName = "G5Eng EcoRoll Without Engine Stop Case C"), // Case C
-		TestCase(Group5WithOutEngineStop, 5, TestName = "G5Eng EcoRoll Without Engine Stop Case D"), // Case D
-		TestCase(Group5WithOutEngineStop, 6, TestName = "G5Eng EcoRoll Without Engine Stop Case E"), // Case E
-		TestCase(Group5WithOutEngineStop, 7, TestName = "G5Eng EcoRoll Without Engine Stop Case F"), // Case F
-		TestCase(Group5WithOutEngineStop, 8, TestName = "G5Eng EcoRoll Without Engine Stop Case G"), // Case G
-		TestCase(Group5WithOutEngineStop, 9, TestName = "G5Eng EcoRoll Without Engine Stop Case H"), // Case H
-		TestCase(Group5WithOutEngineStop, 10, TestName = "G5Eng EcoRoll Without Engine Stop Case I"), // Case I
-		TestCase(Group5WithOutEngineStop, 11, TestName = "G5Eng EcoRoll Without Engine Stop Case J"), // Case J
+		[TestCase(Group5EcoRollWithoutEngineStop, 0, TestName = "G5Eng EcoRoll Without Engine Stop CrestCoast 1"),
+		TestCase(Group5EcoRollWithoutEngineStop, 1, TestName = "G5Eng EcoRoll Without Engine Stop CrestCoast 2"),
+		TestCase(Group5EcoRollWithoutEngineStop, 2, TestName = "G5Eng EcoRoll Without Engine Stop Case A"), // Case A
+		TestCase(Group5EcoRollWithoutEngineStop, 3, TestName = "G5Eng EcoRoll Without Engine Stop Case B"), // Case B
+		TestCase(Group5EcoRollWithoutEngineStop, 4, TestName = "G5Eng EcoRoll Without Engine Stop Case C"), // Case C
+		TestCase(Group5EcoRollWithoutEngineStop, 5, TestName = "G5Eng EcoRoll Without Engine Stop Case D"), // Case D
+		TestCase(Group5EcoRollWithoutEngineStop, 6, TestName = "G5Eng EcoRoll Without Engine Stop Case E"), // Case E
+		TestCase(Group5EcoRollWithoutEngineStop, 7, TestName = "G5Eng EcoRoll Without Engine Stop Case F"), // Case F
+		TestCase(Group5EcoRollWithoutEngineStop, 8, TestName = "G5Eng EcoRoll Without Engine Stop Case G"), // Case G
+		TestCase(Group5EcoRollWithoutEngineStop, 9, TestName = "G5Eng EcoRoll Without Engine Stop Case H"), // Case H
+		TestCase(Group5EcoRollWithoutEngineStop, 10, TestName = "G5Eng EcoRoll Without Engine Stop Case I"), // Case I
+		TestCase(Group5EcoRollWithoutEngineStop, 11, TestName = "G5Eng EcoRoll Without Engine Stop Case J"), // Case J
 
-		TestCase(Group5WithEngineStop, 0, TestName = "G5Eng EcoRoll With Engine Stop CrestCoast 1"),
-		TestCase(Group5WithEngineStop, 1, TestName = "G5Eng EcoRoll With Engine Stop CrestCoast 2"),
-		TestCase(Group5WithEngineStop, 2, TestName = "G5Eng EcoRoll With Engine Stop Case A"), // Case A
-		TestCase(Group5WithEngineStop, 3, TestName = "G5Eng EcoRoll With Engine Stop Case B"), // Case B
-		TestCase(Group5WithEngineStop, 4, TestName = "G5Eng EcoRoll With Engine Stop Case C"), // Case C
-		TestCase(Group5WithEngineStop, 5, TestName = "G5Eng EcoRoll With Engine Stop Case D"), // Case D
-		TestCase(Group5WithEngineStop, 6, TestName = "G5Eng EcoRoll With Engine Stop Case E"), // Case E
-		TestCase(Group5WithEngineStop, 7, TestName = "G5Eng EcoRoll With Engine Stop Case F"), // Case F
-		TestCase(Group5WithEngineStop, 8, TestName = "G5Eng EcoRoll With Engine Stop Case G"), // Case G
-		TestCase(Group5WithEngineStop, 9, TestName = "G5Eng EcoRoll With Engine Stop Case H"), // Case H
-		TestCase(Group5WithEngineStop, 10, TestName = "G5Eng EcoRoll With Engine Stop Case I"), // Case I
-		TestCase(Group5WithEngineStop, 11, TestName = "G5Eng EcoRoll With Engine Stop Case J"), // Case J
-		
-		TestCase(Group5NoPCC, 0, TestName = "G5Eng NoPCC CrestCoast 1"),
-		TestCase(Group5NoPCC, 1, TestName = "G5Eng NoPCC CrestCoast 2"),
-		TestCase(Group5NoPCC, 2, TestName = "G5Eng NoPCC Case A"), // Case A
-		TestCase(Group5NoPCC, 3, TestName = "G5Eng NoPCC Case B"), // Case B
-		TestCase(Group5NoPCC, 4, TestName = "G5Eng NoPCC Case C"), // Case C
-		TestCase(Group5NoPCC, 5, TestName = "G5Eng NoPCC Case D"), // Case D
-		TestCase(Group5NoPCC, 6, TestName = "G5Eng NoPCC Case E"), // Case E
-		TestCase(Group5NoPCC, 7, TestName = "G5Eng NoPCC Case F"), // Case F
-		TestCase(Group5NoPCC, 8, TestName = "G5Eng NoPCC Case G"), // Case G
-		TestCase(Group5NoPCC, 9, TestName = "G5Eng NoPCC Case H"), // Case H
-		TestCase(Group5NoPCC, 10, TestName = "G5Eng NoPCC Case I"), // Case I
-		TestCase(Group5NoPCC, 11, TestName = "G5Eng NoPCC Case J"), // Case J
+		TestCase(Group5EcoRollEngineStop, 0, TestName = "G5Eng EcoRoll With Engine Stop CrestCoast 1"),
+		TestCase(Group5EcoRollEngineStop, 1, TestName = "G5Eng EcoRoll With Engine Stop CrestCoast 2"),
+		TestCase(Group5EcoRollEngineStop, 2, TestName = "G5Eng EcoRoll With Engine Stop Case A"), // Case A
+		TestCase(Group5EcoRollEngineStop, 3, TestName = "G5Eng EcoRoll With Engine Stop Case B"), // Case B
+		TestCase(Group5EcoRollEngineStop, 4, TestName = "G5Eng EcoRoll With Engine Stop Case C"), // Case C
+		TestCase(Group5EcoRollEngineStop, 5, TestName = "G5Eng EcoRoll With Engine Stop Case D"), // Case D
+		TestCase(Group5EcoRollEngineStop, 6, TestName = "G5Eng EcoRoll With Engine Stop Case E"), // Case E
+		TestCase(Group5EcoRollEngineStop, 7, TestName = "G5Eng EcoRoll With Engine Stop Case F"), // Case F
+		TestCase(Group5EcoRollEngineStop, 8, TestName = "G5Eng EcoRoll With Engine Stop Case G"), // Case G
+		TestCase(Group5EcoRollEngineStop, 9, TestName = "G5Eng EcoRoll With Engine Stop Case H"), // Case H
+		TestCase(Group5EcoRollEngineStop, 10, TestName = "G5Eng EcoRoll With Engine Stop Case I"), // Case I
+		TestCase(Group5EcoRollEngineStop, 11, TestName = "G5Eng EcoRoll With Engine Stop Case J"), // Case J
+
+		TestCase(Group5NoADAS, 0, TestName = "G5Eng NoPCC CrestCoast 1"),
+		TestCase(Group5NoADAS, 1, TestName = "G5Eng NoPCC CrestCoast 2"),
+		TestCase(Group5NoADAS, 2, TestName = "G5Eng NoPCC Case A"), // Case A
+		TestCase(Group5NoADAS, 3, TestName = "G5Eng NoPCC Case B"), // Case B
+		TestCase(Group5NoADAS, 4, TestName = "G5Eng NoPCC Case C"), // Case C
+		TestCase(Group5NoADAS, 5, TestName = "G5Eng NoPCC Case D"), // Case D
+		TestCase(Group5NoADAS, 6, TestName = "G5Eng NoPCC Case E"), // Case E
+		TestCase(Group5NoADAS, 7, TestName = "G5Eng NoPCC Case F"), // Case F
+		TestCase(Group5NoADAS, 8, TestName = "G5Eng NoPCC Case G"), // Case G
+		TestCase(Group5NoADAS, 9, TestName = "G5Eng NoPCC Case H"), // Case H
+		TestCase(Group5NoADAS, 10, TestName = "G5Eng NoPCC Case I"), // Case I
+		TestCase(Group5NoADAS, 11, TestName = "G5Eng NoPCC Case J"), // Case J
 
 		// FuelConsumption should always be <= Group5NoPCC
 		TestCase(Group5PCC12, 0, TestName = "G5Eng PCC12 CrestCoast 1"),
@@ -281,30 +287,30 @@ namespace TUGraz.VectoCore.Tests.Integration.ADAS
 		TestCase(Group5PCC123, 11, TestName = "G5Eng PCC123 Case J"), // Case J
 
 		// FuelConsumption can sometimes be greater than Group5PCC123 (because of engine idling)
-		TestCase(Group5PCC123EcoNoEngineStop, 2, TestName = "G5Eng PCC123-Eco WithoutEngineStop Case A"), // Case A
-		TestCase(Group5PCC123EcoNoEngineStop, 3, TestName = "G5Eng PCC123-Eco WithoutEngineStop Case B"), // Case B
-		TestCase(Group5PCC123EcoNoEngineStop, 4, TestName = "G5Eng PCC123-Eco WithoutEngineStop Case C"), // Case C
-		TestCase(Group5PCC123EcoNoEngineStop, 5, TestName = "G5Eng PCC123-Eco WithoutEngineStop Case D"), // Case D
-		TestCase(Group5PCC123EcoNoEngineStop, 6, TestName = "G5Eng PCC123-Eco WithoutEngineStop Case E"), // Case E
-		TestCase(Group5PCC123EcoNoEngineStop, 7, TestName = "G5Eng PCC123-Eco WithoutEngineStop Case F"), // Case F
-		TestCase(Group5PCC123EcoNoEngineStop, 8, TestName = "G5Eng PCC123-Eco WithoutEngineStop Case G"), // Case G
-		TestCase(Group5PCC123EcoNoEngineStop, 9, TestName = "G5Eng PCC123-Eco WithoutEngineStop Case H"), // Case H
-		TestCase(Group5PCC123EcoNoEngineStop, 10, TestName = "G5Eng PCC123-Eco WithoutEngineStop Case I"), // Case I
-		TestCase(Group5PCC123EcoNoEngineStop, 11, TestName = "G5Eng PCC123-Eco WithoutEngineStop Case J"), // Case J
+		TestCase(Group5PCC123EcoRollWithoutEngineStop, 2, TestName = "G5Eng PCC123-Eco WithoutEngineStop Case A"), // Case A
+		TestCase(Group5PCC123EcoRollWithoutEngineStop, 3, TestName = "G5Eng PCC123-Eco WithoutEngineStop Case B"), // Case B
+		TestCase(Group5PCC123EcoRollWithoutEngineStop, 4, TestName = "G5Eng PCC123-Eco WithoutEngineStop Case C"), // Case C
+		TestCase(Group5PCC123EcoRollWithoutEngineStop, 5, TestName = "G5Eng PCC123-Eco WithoutEngineStop Case D"), // Case D
+		TestCase(Group5PCC123EcoRollWithoutEngineStop, 6, TestName = "G5Eng PCC123-Eco WithoutEngineStop Case E"), // Case E
+		TestCase(Group5PCC123EcoRollWithoutEngineStop, 7, TestName = "G5Eng PCC123-Eco WithoutEngineStop Case F"), // Case F
+		TestCase(Group5PCC123EcoRollWithoutEngineStop, 8, TestName = "G5Eng PCC123-Eco WithoutEngineStop Case G"), // Case G
+		TestCase(Group5PCC123EcoRollWithoutEngineStop, 9, TestName = "G5Eng PCC123-Eco WithoutEngineStop Case H"), // Case H
+		TestCase(Group5PCC123EcoRollWithoutEngineStop, 10, TestName = "G5Eng PCC123-Eco WithoutEngineStop Case I"), // Case I
+		TestCase(Group5PCC123EcoRollWithoutEngineStop, 11, TestName = "G5Eng PCC123-Eco WithoutEngineStop Case J"), // Case J
 
 		// FuelConsumption should always be <= Group5PCC123
-		TestCase(Group5PCC123EcoEngineStop, 0, TestName = "G5Eng PCC123-Eco-EngineStop CrestCoast 1"),
-		TestCase(Group5PCC123EcoEngineStop, 1, TestName = "G5Eng PCC123-Eco-EngineStop CrestCoast 2"),
-		TestCase(Group5PCC123EcoEngineStop, 2, TestName = "G5Eng PCC123-Eco-EngineStop Case A"), // Case A
-		TestCase(Group5PCC123EcoEngineStop, 3, TestName = "G5Eng PCC123-Eco-EngineStop Case B"), // Case B
-		TestCase(Group5PCC123EcoEngineStop, 4, TestName = "G5Eng PCC123-Eco-EngineStop Case C"), // Case C
-		TestCase(Group5PCC123EcoEngineStop, 5, TestName = "G5Eng PCC123-Eco-EngineStop Case D"), // Case D
-		TestCase(Group5PCC123EcoEngineStop, 6, TestName = "G5Eng PCC123-Eco-EngineStop Case E"), // Case E
-		TestCase(Group5PCC123EcoEngineStop, 7, TestName = "G5Eng PCC123-Eco-EngineStop Case F"), // Case F
-		TestCase(Group5PCC123EcoEngineStop, 8, TestName = "G5Eng PCC123-Eco-EngineStop Case G"), // Case G
-		TestCase(Group5PCC123EcoEngineStop, 9, TestName = "G5Eng PCC123-Eco-EngineStop Case H"), // Case H
-		TestCase(Group5PCC123EcoEngineStop, 10, TestName = "G5Eng PCC123-Eco-EngineStop Case I"), // Case I
-		TestCase(Group5PCC123EcoEngineStop, 11, TestName = "G5Eng PCC123-Eco-EngineStop  Case J"), // Case J
+		TestCase(Group5PCC123EcoRollEngineStop, 0, TestName = "G5Eng PCC123-Eco-EngineStop CrestCoast 1"),
+		TestCase(Group5PCC123EcoRollEngineStop, 1, TestName = "G5Eng PCC123-Eco-EngineStop CrestCoast 2"),
+		TestCase(Group5PCC123EcoRollEngineStop, 2, TestName = "G5Eng PCC123-Eco-EngineStop Case A"), // Case A
+		TestCase(Group5PCC123EcoRollEngineStop, 3, TestName = "G5Eng PCC123-Eco-EngineStop Case B"), // Case B
+		TestCase(Group5PCC123EcoRollEngineStop, 4, TestName = "G5Eng PCC123-Eco-EngineStop Case C"), // Case C
+		TestCase(Group5PCC123EcoRollEngineStop, 5, TestName = "G5Eng PCC123-Eco-EngineStop Case D"), // Case D
+		TestCase(Group5PCC123EcoRollEngineStop, 6, TestName = "G5Eng PCC123-Eco-EngineStop Case E"), // Case E
+		TestCase(Group5PCC123EcoRollEngineStop, 7, TestName = "G5Eng PCC123-Eco-EngineStop Case F"), // Case F
+		TestCase(Group5PCC123EcoRollEngineStop, 8, TestName = "G5Eng PCC123-Eco-EngineStop Case G"), // Case G
+		TestCase(Group5PCC123EcoRollEngineStop, 9, TestName = "G5Eng PCC123-Eco-EngineStop Case H"), // Case H
+		TestCase(Group5PCC123EcoRollEngineStop, 10, TestName = "G5Eng PCC123-Eco-EngineStop Case I"), // Case I
+		TestCase(Group5PCC123EcoRollEngineStop, 11, TestName = "G5Eng PCC123-Eco-EngineStop  Case J"), // Case J
 		]
 		public void TestPCCEngineeringSampleCases(string jobName, int cycleIdx)
 		{
@@ -411,6 +417,53 @@ namespace TUGraz.VectoCore.Tests.Integration.ADAS
 			//Assert.IsTrue(runs.FinishedWithoutErrors);
 
 			return jobContainer;
+		}
+
+		[TestCase]
+		public void CompareAllEngineeringJobs()
+		{
+			var jobName = Group5NoADAS;
+			var writer = new FileOutputWriter(Path.Combine(Path.GetDirectoryName(jobName), Path.GetFileName(jobName)));
+			var sumContainer = new SummaryDataContainer(writer);
+			var jobContainer = new JobContainer(sumContainer);
+
+			var jobNames = new[] {
+				Group5NoADAS,
+				Group5EcoRollWithoutEngineStop,
+				Group5EcoRollEngineStop,
+				Group5PCC12,
+				Group5PCC123,
+				Group5PCC123EcoRollWithoutEngineStop,
+				Group5PCC123EcoRollEngineStop,
+			};
+
+			var tasks = jobNames.Select(job => Task.Factory.StartNew(j =>
+				new SimulatorFactory(ExecutionMode.Engineering, 
+					JSONInputDataFactory.ReadJsonJob((string)j), writer, validate: false, writeModalResults: true), 
+				job, TaskCreationOptions.LongRunning));
+
+			foreach (var task in tasks) {
+				jobContainer.AddRuns(task.Result);
+			}
+
+			jobContainer.Execute();
+			jobContainer.WaitFinished();
+			var progress = jobContainer.GetProgress();
+
+			Assert.IsTrue(progress.All(r => r.Value.Success), string.Concat(progress.Select(r => r.Value.Error)));
+
+			var crestCoastRuns = sumContainer.Table.Select(@"[Job [-\]] LIKE '*-0'", "Job [-]");
+			var values = crestCoastRuns.Select(row => row.Field<ConvertedSI>("FC-Final [g/h]")).ToArray();
+			var (NoADAS, EcoRollNoStop, EcoRollEngineStop, PCC12, PCC123, PCC123NoEngineStop, PCC123EngineStop) = values;
+
+			foreach (var val in values) {
+				Console.WriteLine(val);
+			}
+
+
+
+
+
 		}
 	}
 }

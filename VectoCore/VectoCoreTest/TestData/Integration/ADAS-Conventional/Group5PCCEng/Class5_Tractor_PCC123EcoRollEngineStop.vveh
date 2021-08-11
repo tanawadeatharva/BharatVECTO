@@ -1,7 +1,7 @@
 {
   "Header": {
     "CreatedBy": "",
-    "Date": "2021-08-04T15:43:32.3193775Z",
+    "Date": "2021-08-11T14:56:21.5069784Z",
     "AppVersion": "3",
     "FileVersion": 8
   },
@@ -67,8 +67,8 @@
       ]
     },
     "EngineStopStart": false,
-    "EcoRoll": "WithoutEngineStop",
-    "PredictiveCruiseControl": "None",
+    "EcoRoll": "WithEngineStop",
+    "PredictiveCruiseControl": "Option_1_2_3",
     "ATEcoRollReleaseLockupClutch": false,
     "CdA": 5.3,
     "VehicleHeight": 0.0,
