@@ -118,6 +118,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			DCDCConverter?.Initialize();
 			PreviousState.PowerDemand = GetBusAuxPowerDemand(0.SI<Second>(), 1.SI<Second>(), torque, angularSpeed) +
 										(AdditionalAux?.PowerDemandESSEngineOn(0.SI<Second>(), 1.SI<Second>(), angularSpeed) ?? 0.SI<Watt>());
+			if (angularSpeed.IsEqual(0)) {
+				return 0.SI<NewtonMeter>();
+			}
+
 			return PreviousState.PowerDemand / angularSpeed;
 		}
 
