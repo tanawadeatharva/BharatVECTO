@@ -29,7 +29,9 @@
 	<xs:complexType name="Abstract_AUX_PEV_LorryDeclarationType"/>
 	<xs:complexType name="Abstract_AUX_PEV_PrimaryBusDeclarationType"/>
 	<xs:complexType name="Abstract_AUX_xEV_CompletedBusDeclarationType"/>
-	<xs:complexType name="Abstract_Components_Conventional_CompletedBusType" abstract="true"/>
+	<xs:complexType name="Abstract_Components_Conventional_CompletedBusDeclarationType" abstract="true"/>
+	<xs:complexType name="Abstract_Components_Conventional_LorryDeclarationType" abstract="true"/>
+	<xs:complexType name="Abstract_Components_Conventional_PrimaryBusDeclarationType" abstract="true"/>
 	<xs:complexType name="Abstract_Components_HEV-IEPC-S_LorryDeclarationType" abstract="true">
 		<xs:complexContent>
 			<xs:extension base="v2.0:AbstractVehicleComponentsDeclarationType"/>
@@ -81,15 +83,13 @@
 		</xs:complexContent>
 	</xs:complexType>
 	<xs:complexType name="Abstract_Components_xEV_CompletedBusType" abstract="true"/>
-	<xs:complexType name="AbstractBoostingLimitationsType" abstract="true"/>
+	<xs:complexType name="AbstractBoostingLimitationsDeclarationType" abstract="true"/>
 	<xs:complexType name="AbstractCompletedBusVehicleType" abstract="true">
 		<xs:complexContent>
 			<xs:extension base="v2.0:AbstractVehicleDeclarationType"/>
 		</xs:complexContent>
 	</xs:complexType>
-	<xs:complexType name="AbstractConventionalLorryVehicleComponentsDeclarationType" abstract="true"/>
-	<xs:complexType name="AbstractConventionalPrimaryBusVehicleComponentsDeclarationType" abstract="true"/>
-	<xs:complexType name="AbstractElectricMotorVehicleTorqueLimitsType" abstract="true"/>
+	<xs:complexType name="AbstractElectricMotorVehicleTorqueLimitsDeclarationType" abstract="true"/>
 	<xs:complexType name="ADAS_Conventional_Type">
 		<xs:complexContent>
 			<xs:extension base="v2.10.2:Abstract_ADAS_ConventionalType">
@@ -154,7 +154,7 @@
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
-	<xs:complexType name="AUX_Conventional_LorryDataDeclarationType">
+	<xs:complexType name="AUX_Conventional_LorryDataType">
 		<xs:complexContent>
 			<xs:extension base="v2.0:AbstractAuxiliaryDataDeclarationType">
 				<xs:sequence>
@@ -302,7 +302,7 @@
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
-	<xs:complexType name="AUX_HEV_LorryDataDeclarationType">
+	<xs:complexType name="AUX_HEV_LorryDataType">
 		<xs:complexContent>
 			<xs:extension base="v2.10.2:Abstract_AUX_HEV_LorryDeclarationType">
 				<xs:sequence>
@@ -530,7 +530,7 @@
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
-	<xs:complexType name="AUX_IEPC_LorryDataDeclarationType">
+	<xs:complexType name="AUX_IEPC_LorryDataType">
 		<xs:complexContent>
 			<xs:extension base="v2.10.2:Abstract_AUX_IEPC_LorryDeclarationType">
 				<xs:sequence>
@@ -654,7 +654,7 @@
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
-	<xs:complexType name="AUX_PEV_LorryDataDeclarationType">
+	<xs:complexType name="AUX_PEV_LorryDataType">
 		<xs:complexContent>
 			<xs:extension base="v2.10.2:Abstract_AUX_PEV_LorryDeclarationType">
 				<xs:sequence>
@@ -799,7 +799,7 @@
 	</xs:complexType>
 	<xs:complexType name="BoostingLimitationsType">
 		<xs:complexContent>
-			<xs:extension base="v2.10.2:AbstractBoostingLimitationsType">
+			<xs:extension base="v2.10.2:AbstractBoostingLimitationsDeclarationType">
 				<xs:sequence>
 					<xs:element name="Entry" minOccurs="2" maxOccurs="unbounded">
 						<xs:complexType>
@@ -813,7 +813,7 @@
 	</xs:complexType>
 	<xs:complexType name="Components_Conventional_CompletedBusType">
 		<xs:complexContent>
-			<xs:extension base="v2.10.2:Abstract_Components_Conventional_CompletedBusType">
+			<xs:extension base="v2.10.2:Abstract_Components_Conventional_CompletedBusDeclarationType">
 				<xs:sequence>
 					<xs:element name="AirDrag" type="v2.0:AirDragComponentDeclarationType" minOccurs="0"/>
 					<xs:element name="Auxiliaries" minOccurs="0">
@@ -829,7 +829,7 @@
 	</xs:complexType>
 	<xs:complexType name="Components_Conventional_LorryType">
 		<xs:complexContent>
-			<xs:extension base="v2.10.2:AbstractConventionalLorryVehicleComponentsDeclarationType">
+			<xs:extension base="v2.10.2:Abstract_Components_Conventional_LorryDeclarationType">
 				<xs:sequence>
 					<xs:element name="Engine" type="v2.0:EngineComponentDeclarationType"/>
 					<xs:element name="Gearbox" type="v2.0:GearboxComponentDeclarationType"/>
@@ -852,7 +852,7 @@
 	</xs:complexType>
 	<xs:complexType name="Components_Conventional_PrimaryBusType">
 		<xs:complexContent>
-			<xs:extension base="v2.10.2:AbstractConventionalPrimaryBusVehicleComponentsDeclarationType">
+			<xs:extension base="v2.10.2:Abstract_Components_Conventional_PrimaryBusDeclarationType">
 				<xs:sequence>
 					<xs:element name="Engine" type="v2.0:EngineComponentDeclarationType"/>
 					<xs:element name="Gearbox" type="v2.0:GearboxComponentDeclarationType"/>
@@ -1287,7 +1287,7 @@
 	</xs:complexType>
 	<xs:complexType name="ElectricMachineTorqueLimitsType">
 		<xs:complexContent>
-			<xs:extension base="v2.10.2:AbstractElectricMotorVehicleTorqueLimitsType">
+			<xs:extension base="v2.10.2:AbstractElectricMotorVehicleTorqueLimitsDeclarationType">
 				<xs:sequence>
 					<xs:element name="ElectricMachine" maxOccurs="unbounded">
 						<xs:complexType>
@@ -1418,7 +1418,7 @@
 						</xs:annotation>
 					</xs:element>
 					<xs:element name="ADAS" type="v2.10.2:Abstract_ADAS_ConventionalType" minOccurs="0"/>
-					<xs:element name="Components" type="v2.10.2:Abstract_Components_Conventional_CompletedBusType" minOccurs="0"/>
+					<xs:element name="Components" type="v2.10.2:Abstract_Components_Conventional_CompletedBusDeclarationType" minOccurs="0"/>
 				</xs:sequence>
 			</xs:extension>
 		</xs:complexContent>
@@ -1436,7 +1436,7 @@
 					<xs:group ref="v2.10.2:Vehicle_HeavyLorryParametersSequenceGroup_2"/>
 					<xs:element name="ADAS" type="v2.10.2:Abstract_ADAS_ConventionalType"/>
 					<xs:element name="TorqueLimits" type="v2.0:AbstractTorqueLimitsType" minOccurs="0"/>
-					<xs:element name="Components" type="v2.10.2:AbstractConventionalLorryVehicleComponentsDeclarationType"/>
+					<xs:element name="Components" type="v2.10.2:Abstract_Components_Conventional_LorryDeclarationType"/>
 				</xs:sequence>
 			</xs:extension>
 		</xs:complexContent>
@@ -1454,7 +1454,7 @@
 					<xs:group ref="v2.10.2:Vehicle_MediumLorryParametersSequenceGroup_2"/>
 					<xs:element name="ADAS" type="v2.1:AbstractAdvancedDriverAssistantSystemsType"/>
 					<xs:element name="TorqueLimits" type="v2.0:AbstractTorqueLimitsType" minOccurs="0"/>
-					<xs:element name="Components" type="v2.10.2:AbstractConventionalLorryVehicleComponentsDeclarationType"/>
+					<xs:element name="Components" type="v2.10.2:Abstract_Components_Conventional_LorryDeclarationType"/>
 				</xs:sequence>
 			</xs:extension>
 		</xs:complexContent>
@@ -1478,12 +1478,12 @@
 					<xs:element name="ZeroEmissionVehicle" type="xs:boolean"/>
 					<xs:element name="ADAS" type="v2.10.2:Abstract_ADAS_ConventionalType"/>
 					<xs:element name="TorqueLimits" type="v2.0:AbstractTorqueLimitsType" minOccurs="0"/>
-					<xs:element name="Components" type="v2.10.2:AbstractConventionalPrimaryBusVehicleComponentsDeclarationType"/>
+					<xs:element name="Components" type="v2.10.2:Abstract_Components_Conventional_PrimaryBusDeclarationType"/>
 				</xs:sequence>
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
-	<xs:complexType name="Vehicle_Exempted_CompletedBusType">
+	<xs:complexType name="Vehicle_Exempted_CompletedBusDeclarationType">
 		<xs:annotation>
 			<xs:documentation>Exempted vehicle stage input parts</xs:documentation>
 		</xs:annotation>
@@ -1536,7 +1536,7 @@
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
-	<xs:complexType name="Vehicle_Exempted_HeavyLorryType">
+	<xs:complexType name="Vehicle_Exempted_HeavyLorryDeclarationType">
 		<xs:complexContent>
 			<xs:extension base="v2.0:AbstractVehicleDeclarationType">
 				<xs:sequence>
@@ -1594,7 +1594,7 @@
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
-	<xs:complexType name="Vehicle_Exempted_MediumLorryType">
+	<xs:complexType name="Vehicle_Exempted_MediumLorryDeclarationType">
 		<xs:complexContent>
 			<xs:extension base="v2.0:AbstractVehicleDeclarationType">
 				<xs:sequence>
@@ -1651,7 +1651,7 @@
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
-	<xs:complexType name="Vehicle_Exempted_PrimaryBusType">
+	<xs:complexType name="Vehicle_Exempted_PrimaryBusDeclarationType">
 		<xs:complexContent>
 			<xs:extension base="v2.0:AbstractVehicleDeclarationType">
 				<xs:sequence>
@@ -1735,8 +1735,8 @@
 					<xs:group ref="v2.10.2:Vehicle_xEV-Parameters_SequenceGroup"/>
 					<xs:element name="ADAS" type="v2.10.2:Abstract_ADAS_HEVType"/>
 					<xs:element name="TorqueLimits" type="v2.0:AbstractTorqueLimitsType" minOccurs="0"/>
-					<xs:element name="ElectricMotorTorqueLimits" type="v2.10.2:AbstractElectricMotorVehicleTorqueLimitsType" minOccurs="0"/>
-					<xs:element name="BoostingLimitations" type="v2.10.2:AbstractBoostingLimitationsType" minOccurs="0"/>
+					<xs:element name="ElectricMotorTorqueLimits" type="v2.10.2:AbstractElectricMotorVehicleTorqueLimitsDeclarationType" minOccurs="0"/>
+					<xs:element name="BoostingLimitations" type="v2.10.2:AbstractBoostingLimitationsDeclarationType" minOccurs="0"/>
 					<xs:element name="Components" type="v2.10.2:Abstract_Components_HEV-IEPC-S_LorryDeclarationType"/>
 				</xs:sequence>
 			</xs:extension>
@@ -1757,8 +1757,8 @@
 					<xs:group ref="v2.10.2:Vehicle_xEV-Parameters_SequenceGroup"/>
 					<xs:element name="ADAS" type="v2.10.2:Abstract_ADAS_HEVType"/>
 					<xs:element name="TorqueLimits" type="v2.0:AbstractTorqueLimitsType" minOccurs="0"/>
-					<xs:element name="ElectricMotorTorqueLimits" type="v2.10.2:AbstractElectricMotorVehicleTorqueLimitsType" minOccurs="0"/>
-					<xs:element name="BoostingLimitations" type="v2.10.2:AbstractBoostingLimitationsType" minOccurs="0"/>
+					<xs:element name="ElectricMotorTorqueLimits" type="v2.10.2:AbstractElectricMotorVehicleTorqueLimitsDeclarationType" minOccurs="0"/>
+					<xs:element name="BoostingLimitations" type="v2.10.2:AbstractBoostingLimitationsDeclarationType" minOccurs="0"/>
 					<xs:element name="Components" type="v2.10.2:Abstract_Components_HEV-IEPC-S_LorryDeclarationType"/>
 				</xs:sequence>
 			</xs:extension>
@@ -1785,8 +1785,8 @@
 					<xs:group ref="v2.10.2:Vehicle_xEV-Parameters_SequenceGroup"/>
 					<xs:element name="ADAS" type="v2.10.2:Abstract_ADAS_HEVType"/>
 					<xs:element name="TorqueLimits" type="v2.0:AbstractTorqueLimitsType" minOccurs="0"/>
-					<xs:element name="ElectricMotorTorqueLimits" type="v2.10.2:AbstractElectricMotorVehicleTorqueLimitsType" minOccurs="0"/>
-					<xs:element name="BoostingLimitations" type="v2.10.2:AbstractBoostingLimitationsType" minOccurs="0"/>
+					<xs:element name="ElectricMotorTorqueLimits" type="v2.10.2:AbstractElectricMotorVehicleTorqueLimitsDeclarationType" minOccurs="0"/>
+					<xs:element name="BoostingLimitations" type="v2.10.2:AbstractBoostingLimitationsDeclarationType" minOccurs="0"/>
 					<xs:element name="Components" type="v2.10.2:Abstract_Components_HEV-IEPC-S_PrimaryBusDeclarationType"/>
 				</xs:sequence>
 			</xs:extension>
@@ -1807,8 +1807,8 @@
 					<xs:group ref="v2.10.2:Vehicle_xEV-Parameters_SequenceGroup"/>
 					<xs:element name="ADAS" type="v2.10.2:Abstract_ADAS_HEVType"/>
 					<xs:element name="TorqueLimits" type="v2.0:AbstractTorqueLimitsType" minOccurs="0"/>
-					<xs:element name="ElectricMotorTorqueLimits" type="v2.10.2:AbstractElectricMotorVehicleTorqueLimitsType" minOccurs="0"/>
-					<xs:element name="BoostingLimitations" type="v2.10.2:AbstractBoostingLimitationsType" minOccurs="0"/>
+					<xs:element name="ElectricMotorTorqueLimits" type="v2.10.2:AbstractElectricMotorVehicleTorqueLimitsDeclarationType" minOccurs="0"/>
+					<xs:element name="BoostingLimitations" type="v2.10.2:AbstractBoostingLimitationsDeclarationType" minOccurs="0"/>
 					<xs:element name="Components" type="v2.10.2:Abstract_Components_HEV-Px_LorryDeclarationType"/>
 				</xs:sequence>
 			</xs:extension>
@@ -1829,8 +1829,8 @@
 					<xs:group ref="v2.10.2:Vehicle_xEV-Parameters_SequenceGroup"/>
 					<xs:element name="ADAS" type="v2.10.2:Abstract_ADAS_HEVType"/>
 					<xs:element name="TorqueLimits" type="v2.0:AbstractTorqueLimitsType" minOccurs="0"/>
-					<xs:element name="ElectricMotorTorqueLimits" type="v2.10.2:AbstractElectricMotorVehicleTorqueLimitsType" minOccurs="0"/>
-					<xs:element name="BoostingLimitations" type="v2.10.2:AbstractBoostingLimitationsType" minOccurs="0"/>
+					<xs:element name="ElectricMotorTorqueLimits" type="v2.10.2:AbstractElectricMotorVehicleTorqueLimitsDeclarationType" minOccurs="0"/>
+					<xs:element name="BoostingLimitations" type="v2.10.2:AbstractBoostingLimitationsDeclarationType" minOccurs="0"/>
 					<xs:element name="Components" type="v2.10.2:Abstract_Components_HEV-Px_LorryDeclarationType"/>
 				</xs:sequence>
 			</xs:extension>
@@ -1857,8 +1857,8 @@
 					<xs:group ref="v2.10.2:Vehicle_xEV-Parameters_SequenceGroup"/>
 					<xs:element name="ADAS" type="v2.10.2:Abstract_ADAS_HEVType"/>
 					<xs:element name="TorqueLimits" type="v2.0:AbstractTorqueLimitsType" minOccurs="0"/>
-					<xs:element name="ElectricMotorTorqueLimits" type="v2.10.2:AbstractElectricMotorVehicleTorqueLimitsType" minOccurs="0"/>
-					<xs:element name="BoostingLimitations" type="v2.10.2:AbstractBoostingLimitationsType" minOccurs="0"/>
+					<xs:element name="ElectricMotorTorqueLimits" type="v2.10.2:AbstractElectricMotorVehicleTorqueLimitsDeclarationType" minOccurs="0"/>
+					<xs:element name="BoostingLimitations" type="v2.10.2:AbstractBoostingLimitationsDeclarationType" minOccurs="0"/>
 					<xs:element name="Components" type="v2.10.2:Abstract_Components_HEV-Px_PrimaryBusDeclarationType"/>
 				</xs:sequence>
 			</xs:extension>
@@ -1879,7 +1879,7 @@
 					<xs:group ref="v2.10.2:Vehicle_xEV-Parameters_SequenceGroup"/>
 					<xs:element name="ADAS" type="v2.10.2:Abstract_ADAS_HEVType"/>
 					<xs:element name="TorqueLimits" type="v2.0:AbstractTorqueLimitsType" minOccurs="0"/>
-					<xs:element name="ElectricMotorTorqueLimits" type="v2.10.2:AbstractElectricMotorVehicleTorqueLimitsType" minOccurs="0" maxOccurs="2"/>
+					<xs:element name="ElectricMotorTorqueLimits" type="v2.10.2:AbstractElectricMotorVehicleTorqueLimitsDeclarationType" minOccurs="0" maxOccurs="2"/>
 					<xs:element name="Components" type="v2.10.2:Abstract_Components_HEV-Sx_LorryDeclarationType"/>
 				</xs:sequence>
 			</xs:extension>
@@ -1900,7 +1900,7 @@
 					<xs:group ref="v2.10.2:Vehicle_xEV-Parameters_SequenceGroup"/>
 					<xs:element name="ADAS" type="v2.10.2:Abstract_ADAS_HEVType"/>
 					<xs:element name="TorqueLimits" type="v2.0:AbstractTorqueLimitsType" minOccurs="0"/>
-					<xs:element name="ElectricMotorTorqueLimits" type="v2.10.2:AbstractElectricMotorVehicleTorqueLimitsType" minOccurs="0" maxOccurs="2"/>
+					<xs:element name="ElectricMotorTorqueLimits" type="v2.10.2:AbstractElectricMotorVehicleTorqueLimitsDeclarationType" minOccurs="0" maxOccurs="2"/>
 					<xs:element name="Components" type="v2.10.2:Abstract_Components_HEV-Sx_LorryDeclarationType"/>
 				</xs:sequence>
 			</xs:extension>
@@ -1927,7 +1927,7 @@
 					<xs:group ref="v2.10.2:Vehicle_xEV-Parameters_SequenceGroup"/>
 					<xs:element name="ADAS" type="v2.10.2:Abstract_ADAS_HEVType"/>
 					<xs:element name="TorqueLimits" type="v2.0:AbstractTorqueLimitsType" minOccurs="0"/>
-					<xs:element name="ElectricMotorTorqueLimits" type="v2.10.2:AbstractElectricMotorVehicleTorqueLimitsType" minOccurs="0" maxOccurs="2"/>
+					<xs:element name="ElectricMotorTorqueLimits" type="v2.10.2:AbstractElectricMotorVehicleTorqueLimitsDeclarationType" minOccurs="0" maxOccurs="2"/>
 					<xs:element name="Components" type="v2.10.2:Abstract_Components_HEV-Sx_PrimaryBusDeclarationType"/>
 				</xs:sequence>
 			</xs:extension>
@@ -2065,7 +2065,7 @@
 					<xs:group ref="v2.10.2:Vehicle_xEV-Parameters_SequenceGroup"/>
 					<xs:element name="ADAS" type="v2.10.2:Abstract_ADAS_PEVType"/>
 					<xs:element name="TorqueLimits" type="v2.0:AbstractTorqueLimitsType" minOccurs="0"/>
-					<xs:element name="ElectricMotorTorqueLimits" type="v2.10.2:AbstractElectricMotorVehicleTorqueLimitsType" minOccurs="0"/>
+					<xs:element name="ElectricMotorTorqueLimits" type="v2.10.2:AbstractElectricMotorVehicleTorqueLimitsDeclarationType" minOccurs="0"/>
 					<xs:element name="Components" type="v2.10.2:Abstract_Components_PEV_LorryDeclarationType"/>
 				</xs:sequence>
 			</xs:extension>
@@ -2081,7 +2081,7 @@
 					<xs:group ref="v2.10.2:Vehicle_xEV-Parameters_SequenceGroup"/>
 					<xs:element name="ADAS" type="v2.10.2:Abstract_ADAS_PEVType"/>
 					<xs:element name="TorqueLimits" type="v2.0:AbstractTorqueLimitsType" minOccurs="0"/>
-					<xs:element name="ElectricMotorTorqueLimits" type="v2.10.2:AbstractElectricMotorVehicleTorqueLimitsType" minOccurs="0"/>
+					<xs:element name="ElectricMotorTorqueLimits" type="v2.10.2:AbstractElectricMotorVehicleTorqueLimitsDeclarationType" minOccurs="0"/>
 					<xs:element name="Components" type="v2.10.2:Abstract_Components_PEV_LorryDeclarationType"/>
 				</xs:sequence>
 			</xs:extension>
@@ -2103,7 +2103,7 @@
 					<xs:group ref="v2.10.2:Vehicle_xEV-Parameters_SequenceGroup"/>
 					<xs:element name="ADAS" type="v2.10.2:Abstract_ADAS_PEVType"/>
 					<xs:element name="TorqueLimits" type="v2.0:AbstractTorqueLimitsType" minOccurs="0"/>
-					<xs:element name="ElectricMotorTorqueLimits" type="v2.10.2:AbstractElectricMotorVehicleTorqueLimitsType" minOccurs="0"/>
+					<xs:element name="ElectricMotorTorqueLimits" type="v2.10.2:AbstractElectricMotorVehicleTorqueLimitsDeclarationType" minOccurs="0"/>
 					<xs:element name="Components" type="v2.10.2:Abstract_Components_PEV_PrimaryBusDeclarationType"/>
 				</xs:sequence>
 			</xs:extension>
@@ -2141,7 +2141,7 @@
 	<xs:simpleType name="AlternatorTechnologyType">
 		<xs:union memberTypes="v2.10.2:AlternatorTechnology_Conventional_Type v2.10.2:AlternatorTechnology_HEV_Type v2.10.2:AlternatorTechnology_PEV_Type v2.10.2:AlternatorTechnology_IEPC_Type v2.10.2:AlternatorTechnology_HEV-S_Type"/>
 	</xs:simpleType>
-	<xs:simpleType name="ArchitectureID">
+	<xs:simpleType name="ArchitectureIDType">
 		<xs:union memberTypes="v2.10.2:ArchitectureID_HEV_Type v2.10.2:ArchitectureID_IEPC_Type v2.10.2:ArchitectureID_PEV_Type"/>
 	</xs:simpleType>
 	<xs:simpleType name="ArchitectureID_HEV_Type">
@@ -2485,7 +2485,7 @@
 			<xs:enumeration value="M3"/>
 		</xs:restriction>
 	</xs:simpleType>
-	<xs:simpleType name="NumberOfPassengersType">
+	<xs:simpleType name="PassengerCountType">
 		<xs:annotation>
 			<xs:appinfo>
 				<vectoParam:description>
@@ -2998,22 +2998,22 @@
 	</xs:group>
 	<xs:group name="Vehicle_CompletedBus_PassengerCountSequenceGroup">
 		<xs:sequence>
-			<xs:element name="NumberPassengerSeatsLowerDeck" type="v2.10.2:NumberOfPassengersType">
+			<xs:element name="NumberPassengerSeatsLowerDeck" type="v2.10.2:PassengerCountType">
 				<xs:annotation>
 					<xs:documentation>P283 - [-]</xs:documentation>
 				</xs:annotation>
 			</xs:element>
-			<xs:element name="NumberPassengersStandingLowerDeck" type="v2.10.2:NumberOfPassengersType">
+			<xs:element name="NumberPassengersStandingLowerDeck" type="v2.10.2:PassengerCountType">
 				<xs:annotation>
 					<xs:documentation>P354 - [-]</xs:documentation>
 				</xs:annotation>
 			</xs:element>
-			<xs:element name="NumberPassengerSeatsUpperDeck" type="v2.10.2:NumberOfPassengersType">
+			<xs:element name="NumberPassengerSeatsUpperDeck" type="v2.10.2:PassengerCountType">
 				<xs:annotation>
 					<xs:documentation>P284 - [-]</xs:documentation>
 				</xs:annotation>
 			</xs:element>
-			<xs:element name="NumberPassengersStandingUpperDeck" type="v2.10.2:NumberOfPassengersType">
+			<xs:element name="NumberPassengersStandingUpperDeck" type="v2.10.2:PassengerCountType">
 				<xs:annotation>
 					<xs:documentation>P355 - [-]</xs:documentation>
 				</xs:annotation>

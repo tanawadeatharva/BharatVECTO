@@ -533,7 +533,7 @@
 				</v2.0:Data>
 			</AxleWheels>
 			<Auxiliaries>
-				<Data xsi:type="AUX_Conventional_LorryDataDeclarationType">
+				<Data xsi:type="AUX_Conventional_LorryDataType">
 					<Fan>
 						<Technology>Belt driven or driven via transm. - Electronically controlled visco clutch</Technology>
 					</Fan>

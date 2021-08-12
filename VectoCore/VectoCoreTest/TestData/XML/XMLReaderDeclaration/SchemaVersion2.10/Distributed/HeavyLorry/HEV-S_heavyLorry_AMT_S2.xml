@@ -527,7 +527,7 @@
 				</v2.0:Data>
 			</AxleWheels>
 			<Auxiliaries>
-				<v2.10.2:Data xsi:type="AUX_HEV_LorryDataDeclarationType">
+				<v2.10.2:Data xsi:type="AUX_HEV_LorryDataType">
 					<Fan>
 						<Technology>Hydraulic driven - Constant displacement pump</Technology>
 					</Fan>

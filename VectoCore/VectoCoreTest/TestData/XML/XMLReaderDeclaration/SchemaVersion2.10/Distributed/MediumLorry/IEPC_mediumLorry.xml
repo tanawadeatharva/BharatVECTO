@@ -280,7 +280,7 @@
 				</v2.0:Data>
 			</AxleWheels>
 			<Auxiliaries>
-				<Data xsi:type="AUX_IEPC_LorryDataDeclarationType">
+				<Data xsi:type="AUX_IEPC_LorryDataType">
 					<SteeringPump>
 						<Technology axleNumber="1">Variable displacement elec. controlled</Technology>
 					</SteeringPump>
