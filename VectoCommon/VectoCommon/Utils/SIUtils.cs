@@ -35,9 +35,10 @@ namespace TUGraz.VectoCommon.Utils
 {
 	public struct SIUtils
 	{
+		private const int UnitCount = 7;
 		public static bool CompareUnits(int[] units1, int[] units2)
 		{
-			for (var i = 0; i < units1.Length; i++) {
+			for (var i = 0; i < UnitCount; i++) {
 				if (units1[i] != units2[i]) {
 					return false;
 				}
@@ -47,8 +48,8 @@ namespace TUGraz.VectoCommon.Utils
 
 		public static int[] CombineUnits(int[] units1, int[] units2)
 		{
-			var units = new int[units1.Length];
-			for (var i = 0; i < units1.Length; i++) {
+			var units = new int[UnitCount];
+			for (var i = 0; i < UnitCount; i++) {
 				units[i] = units1[i] + units2[i];
 			}
 			return units;
@@ -56,8 +57,8 @@ namespace TUGraz.VectoCommon.Utils
 
 		public static int[] MultiplyUnits(int[] units, int factor)
 		{
-			var result = new int[units.Length];
-			for (var i = 0; i < units.Length; i++) {
+			var result = new int[UnitCount];
+			for (var i = 0; i < UnitCount; i++) {
 				if (units[i] != 0) {
 					result[i] = units[i] * factor;
 				}
