@@ -39,6 +39,10 @@ namespace TUGraz.VectoCommon.Utils
 {
 	public static class EnumerableExtensionMethods
 	{
+		public static IEnumerable<(T value, int index)> Select<T>(this IEnumerable<T> self) => 
+			self.Select((value, index) => (value, index));
+
+
 		public static IEnumerable<double> ToDouble(this IEnumerable<string> self, double? defaultValue = null)
 		{
 			return self.Select(s => s.ToDouble(defaultValue));
@@ -93,6 +97,14 @@ namespace TUGraz.VectoCommon.Utils
 				}
 			}
 		}
+
+		/// <summary>
+		/// Zips all elements of two enumerable together. If the enumerables dont have the same length an exception is thrown.
+		/// </summary>
+		/// <exception cref="System.InvalidOperationException">Enumeration already finished. Thrown if the enumerables dont have the same length.</exception>
+		public static IEnumerable<(T1 firstEnumerable, T2 secondEnumerable)> Zip<T1,T2>(this IEnumerable<T1> self, IEnumerable<T2> other) =>
+			self.ZipAll(other, (arg1, arg2) => (arg1,arg2));
+
 
 		/// <summary>
 		/// Sums up the values of selector.
