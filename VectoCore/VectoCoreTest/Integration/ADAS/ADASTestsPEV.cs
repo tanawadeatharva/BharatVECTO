@@ -245,7 +245,7 @@ namespace TUGraz.VectoCore.Tests.Integration.ADAS
 		{
 			var sumResults = summaryDataContainer.Table.Select($@"[Cycle [-\]] = '{s}'", "Input File [-]");
 			Assert.AreEqual(3, sumResults.Length, $"{s}: Not enough result rows in sum file");
-			var values = sumResults.Select(row => row.Field<ConvertedSI>("FC-Final [g/km]")).ToArray();
+			var values = sumResults.Select(row => row.Field<ConvertedSI>("EC_el_final [kWh/km]")).ToArray();
 			var (NoADAS, PCC12, PCC123) = values;
 
 			Assert.LessOrEqual(PCC12, NoADAS, $"{s}: Enabling ADAS should always reduce fuel consumption.");
