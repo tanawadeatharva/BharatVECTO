@@ -1,14 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<tns:VectoInputDeclaration schemaVersion="2.0" 
-xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
-xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:DEV:v2.10.2" 
-xmlns:tns="urn:tugraz:ivt:VectoAPI:DeclarationInput:v2.0" 
-xmlns:v2.10.2="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:DEV:v2.10.2" 
-xmlns:v2.2="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.2" 
-xmlns:v2.1="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.1" 
-xmlns:v2.0="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0" 
-xmlns:v1.0="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v1.0"
-xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:DeclarationJob v:\VectoCore\VectoCore\Resources\XSD/VectoDeclarationJob.xsd">
+<tns:VectoInputDeclaration schemaVersion="2.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:DEV:v2.10.2" xmlns:tns="urn:tugraz:ivt:VectoAPI:DeclarationInput:v2.0" xmlns:v2.10.2="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:DEV:v2.10.2" xmlns:v2.2="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.2" xmlns:v2.1="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.1" xmlns:v2.0="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0" xmlns:v1.0="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v1.0" xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:DeclarationJob v:\VectoCore\VectoCore\Resources\XSD/VectoDeclarationJob.xsd">
 	<v2.0:Vehicle id="VEH-class5_Class-5_5t0_van" xsi:type="Vehicle_Conventional_MediumLorryDeclarationType">
 		<Manufacturer>Generic Vendor</Manufacturer>
 		<ManufacturerAddress>N.A.</ManufacturerAddress>
@@ -21,7 +12,7 @@ xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:DeclarationJob v:\VectoCore\VectoCor
 		<CorrectedActualMass>4229</CorrectedActualMass>
 		<TechnicalPermissibleMaximumLadenMass>7000</TechnicalPermissibleMaximumLadenMass>
 		<IdlingSpeed>600</IdlingSpeed>
-    <CargoVolume>8.550</CargoVolume>
+		<CargoVolume>8.550</CargoVolume>
 		<RetarderType>Transmission Output Retarder</RetarderType>
 		<RetarderRatio>1.000</RetarderRatio>
 		<AngledriveType>None</AngledriveType>
@@ -200,7 +191,7 @@ xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:DeclarationJob v:\VectoCore\VectoCor
 				</v2.0:Signature>
 			</Engine>
 			<Gearbox>
-				<v2.0:Data id="GBX-GB_12-gear" xsi:type="GearboxDataDeclarationType"  xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0">
+				<v2.0:Data id="GBX-GB_12-gear" xsi:type="GearboxDataDeclarationType" xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0">
 					<Manufacturer>Generic Vendor</Manufacturer>
 					<Model>GB_12-gear</Model>
 					<CertificationNumber>GBX-GB_12-gear</CertificationNumber>
@@ -456,7 +447,7 @@ xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:DeclarationJob v:\VectoCore\VectoCor
 				</v2.0:Signature>
 			</Retarder>
 			<Axlegear>
-				<v2.0:Data xsi:type="AxlegearDataDeclarationType" id="AXL-EC3ohnoh"  xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0">
+				<v2.0:Data xsi:type="AxlegearDataDeclarationType" id="AXL-EC3ohnoh" xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0">
 					<Manufacturer>Generic Gearbox Manufacturer</Manufacturer>
 					<Model>Generic 40t Long Haul Truck AxleGear</Model>
 					<CertificationNumber>e12*0815/8051*2017/05E0000*00</CertificationNumber>
@@ -961,7 +952,7 @@ xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:DeclarationJob v:\VectoCore\VectoCor
 					</TorqueLossMap>
 				</v2.0:Data>
 				<v2.0:Signature>
-					<Reference URI="#AXL-EC3ohnoh"  xmlns="http://www.w3.org/2000/09/xmldsig#">
+					<Reference URI="#AXL-EC3ohnoh" xmlns="http://www.w3.org/2000/09/xmldsig#">
 						<Transforms>
 							<Transform Algorithm="urn:vecto:xml:2017:canonicalization"/>
 							<Transform Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#"/>
