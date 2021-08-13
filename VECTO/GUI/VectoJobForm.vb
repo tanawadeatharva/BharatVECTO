@@ -1487,7 +1487,7 @@ Public Class VectoJobForm
         'Thus Veh-file is returned
         BusAuxiliariesEngParametersForm.JobDir = GetPath(VectoFile)
         BusAuxiliariesEngParametersForm.AutoSendTo = True
-
+        BusAuxiliariesEngParametersForm.JobType = JobType
         If Not Trim(f) = "" Then
             If Not File.Exists(f) Then
                 MsgBox("File not found!")
@@ -1501,18 +1501,19 @@ Public Class VectoJobForm
             If BusAuxiliariesEngParametersForm.WindowState = FormWindowState.Minimized Then BusAuxiliariesEngParametersForm.WindowState = FormWindowState.Normal
             BusAuxiliariesEngParametersForm.BringToFront()
         End If
-        Dim vehicleType As VehicleCategory
-        Try
-            If Not Trim(f) = "" Then
-                Dim vehInput As IVehicleDeclarationInputData =
-                        CType(JSONInputDataFactory.ReadComponentData(FileRepl(TbVEH.Text, GetPath(VectoFile))),
-                              IEngineeringInputDataProvider).JobInputData.Vehicle
-                vehicleType = vehInput.VehicleCategory
-            End If
+        'Dim vehicleType As VehicleCategory
+        'Try
+        '    If Not Trim(f) = "" Then
+        '        Dim vehInput As IVehicleDeclarationInputData =
+        '                CType(JSONInputDataFactory.ReadComponentData(FileRepl(TbVEH.Text, GetPath(VectoFile))),
+        '                      IEngineeringInputDataProvider).JobInputData.Vehicle
+        '        vehicleType = vehInput.VehicleCategory
+        '    End If
 
-        Catch ex As Exception
-            vehicleType = VehicleCategory.RigidTruck
-        End Try
+        'Catch ex As Exception
+        '    vehicleType = VehicleCategory.RigidTruck
+        'End Try
+        
         Try
             If Not Trim(f) = "" Then BusAuxiliariesEngParametersForm.OpenBusAuxParametersFile(f)
         Catch ex As Exception
