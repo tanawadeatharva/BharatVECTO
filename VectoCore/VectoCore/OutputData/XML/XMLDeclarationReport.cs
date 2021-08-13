@@ -60,10 +60,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 
 		protected IDictionary<Tuple<MissionType, LoadingType>, double> _weightingFactors;
 
-		public XMLDeclarationReport(IReportWriter writer) : base(writer)
-		{
-			
-		}
+		public XMLDeclarationReport(IReportWriter writer) : base(writer) { }
 
 		public class ResultEntry : IResultEntry
 		{
@@ -177,6 +174,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 				WeightingFactor = weightingFactor;
 
 				PrimaryResult = runData.PrimaryResult;
+			
 			}
 
 		}
@@ -238,9 +236,13 @@ namespace TUGraz.VectoCore.OutputData.XML
 				}
 
 				WeightingGroup = DeclarationData.WeightingGroup.Lookup(
-					modelData.VehicleData.VehicleClass, modelData.VehicleData.SleeperCab.Value,
-					modelData.EngineData.RatedPowerDeclared);
+						modelData.VehicleData.VehicleClass, modelData.VehicleData.SleeperCab.Value,
+						modelData.EngineData.RatedPowerDeclared);
 			}
+
+			_weightingFactors = WeightingGroup == WeightingGroup.Unknown
+				? ZeroWeighting
+				: DeclarationData.WeightingFactors.Lookup(WeightingGroup);
 
 			InstantiateReports(modelData);
 

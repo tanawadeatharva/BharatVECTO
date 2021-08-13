@@ -38,7 +38,7 @@ namespace TUGraz.VectoCore.Tests.Utils {
 		public string ManufacturerAddress { get; }
 		public PerSecond EngineIdleSpeed { get; }
 		public bool VocationalVehicle { get; }
-		public bool SleeperCab { get; }
+		public bool? SleeperCab { get; }
 		public bool? AirdragModifiedMultistage { get; }
 		public TankSystem? TankSystem { get; }
 		public IAdvancedDriverAssistantSystemDeclarationInputData ADAS { get; }
@@ -148,7 +148,7 @@ namespace TUGraz.VectoCore.Tests.Utils {
 		public string ManufacturerAddress { get; }
 		public PerSecond EngineIdleSpeed { get; }
 		public bool VocationalVehicle { get; }
-		public bool SleeperCab { get; }
+		public bool? SleeperCab { get; }
 		public bool? AirdragModifiedMultistage { get; }
 		public TankSystem? TankSystem { get; }
 

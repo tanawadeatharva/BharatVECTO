@@ -144,7 +144,7 @@ namespace TUGraz.VectoCommon.InputData
 
 		bool VocationalVehicle { get; }
 
-		bool SleeperCab { get; }
+		bool? SleeperCab { get; }
 
 		bool? AirdragModifiedMultistage { get; }
 
@@ -308,7 +308,7 @@ namespace TUGraz.VectoCommon.InputData
 		public static EcoRollType Get(bool ecoRollWithoutEngineStop, bool ecoRollWithEngineStop)
 		{
 			if (ecoRollWithEngineStop && ecoRollWithoutEngineStop) {
-				throw new VectoException("invalid combination or EcoRoll");
+				throw new VectoException("invalid combination for EcoRoll");
 			}
 
 			if (ecoRollWithoutEngineStop) {

@@ -584,7 +584,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 
 		public PerSecond EngineIdleSpeed { get; }
 		public bool VocationalVehicle { get; }
-		public bool SleeperCab { get; }
+		public bool? SleeperCab { get; }
 		public bool ZeroEmissionVehicle { get; }
 		public bool HybridElectricHDV { get; }
 		public bool DualFuelVehicle { get; }
