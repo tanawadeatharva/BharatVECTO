@@ -52,10 +52,10 @@ namespace TUGraz.VectoCore.Utils
 			return defaultValue;
 		}
 
-		public static IEnumerable<TResult> SelectRows<TResult>(this DataTable self, Func<DataRow,TResult> selector) => 
+		public static IEnumerable<TResult> SelectData<TResult>(this DataTable self, Func<DataRow,TResult> selector) => 
 			self.Rows.Cast<DataRow>().Select(selector);
 
-		public static IEnumerable<TResult> SelectRows<TResult>(this DataTable self, Func<DataRow, int, TResult> selector) => 
+		public static IEnumerable<TResult> SelectData<TResult>(this DataTable self, Func<DataRow, int, TResult> selector) => 
 			self.Rows.Cast<DataRow>().Select(selector);
 
 		public static IEnumerable<DataRow> Where(this DataTable self, Func<DataRow, bool> predicate) => 
