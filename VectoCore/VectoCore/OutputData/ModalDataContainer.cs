@@ -772,21 +772,14 @@ namespace TUGraz.VectoCore.OutputData
 			return dataColumns;
 		}
 
-		public IEnumerable<T> GetValues<T>(DataColumn col)
-		{
-			return Data.Rows.Cast<DataRow>().Select(x => x.Field<T>(col));
-		}
+		public IEnumerable<T> GetValues<T>(DataColumn col) =>
+			Data.Rows.Cast<DataRow>().Select(x => x.Field<T>(col));
 
-		public IEnumerable<T> GetValues<T>(Func<DataRow, T> selectorFunc)
-		{
-			return from DataRow row in Data.Rows select selectorFunc(row);
-		}
+		public IEnumerable<T> GetValues<T>(Func<DataRow, T> selectorFunc) =>
+			Data.Rows.Cast<DataRow>().Select(selectorFunc);
 
-		public T TimeIntegral<T>(ModalResultField field, Func<SI, bool> filter = null) where T : SIBase<T>
-		{
-
-			return TimeIntegral<T>(field.GetName(), filter);
-		}
+		public T TimeIntegral<T>(ModalResultField field, Func<SI, bool> filter = null) where T : SIBase<T> =>
+			TimeIntegral<T>(field.GetName(), filter);
 
 		public T TimeIntegral<T>(string field, Func<SI, bool> filter = null) where T : SIBase<T>
 		{
