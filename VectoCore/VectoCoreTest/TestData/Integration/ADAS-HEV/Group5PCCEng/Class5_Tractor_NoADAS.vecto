@@ -1,14 +1,14 @@
 {
   "Header": {
     "CreatedBy": "",
-    "Date": "2021-08-03T08:49:22.9874955Z",
+    "Date": "2021-08-13T16:01:09.2389451Z",
     "AppVersion": "3",
     "FileVersion": 8
   },
   "Body": {
     "SavedInDeclMode": false,
     "EngineOnlyMode": false,
-    "VehicleFile": "Class5_Tractor.vveh",
+    "VehicleFile": "Class5_Tractor_NoADAS.vveh",
     "EngineFile": "Engine_325kW_12.7l.veng",
     "GearboxFile": "AMT_12.vgbx",
     "TCU": "AMT_12.vgbx",
