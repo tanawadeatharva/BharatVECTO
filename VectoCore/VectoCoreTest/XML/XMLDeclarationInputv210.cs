@@ -3,6 +3,7 @@ using System.Linq;
 using System.Xml;
 using Ninject;
 using NUnit.Framework;
+using TUGraz.VectoCommon.BusAuxiliaries;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCore.InputData.FileIO.XML;
 using TUGraz.VectoCore.Models.Simulation;
@@ -61,10 +62,10 @@ namespace TUGraz.VectoCore.Tests.XML
 		TestCase(@"PrimaryBus\PEV_primaryBus_AMT_E2.xml"),
 		TestCase(@"PrimaryBus\PEV_primaryBus_E3.xml"),
 		TestCase(@"PrimaryBus\PEV_primaryBus_E4.xml"),
-		TestCase(@"CompletedBus\Conventional_completedBus_1.xml"),
-		TestCase(@"CompletedBus\HEV_completedBus_1.xml"),
-		TestCase(@"CompletedBus\IEPC_completedBus_1.xml"),
-		TestCase(@"CompletedBus\PEV_completedBus_1.xml"),
+		//TestCase(@"CompletedBus\Conventional_completedBus_1.xml"),
+		//TestCase(@"CompletedBus\HEV_completedBus_1.xml"),
+		//TestCase(@"CompletedBus\IEPC_completedBus_1.xml"),
+		//TestCase(@"CompletedBus\PEV_completedBus_1.xml"),
 		TestCase(@"ExemptedVehicles\exempted_completedBus_input_full.xml"),
 		TestCase(@"ExemptedVehicles\exempted_completedBus_input_only_mandatory_entries.xml"),
 		TestCase(@"ExemptedVehicles\exempted_heavyLorry.xml"),
@@ -76,6 +77,33 @@ namespace TUGraz.VectoCore.Tests.XML
 			ReadDeclarationJob(jobFile);
 		}
 
+		[TestCase(@"CompletedBus\Conventional_completedBus_1.xml"),
+		TestCase(@"CompletedBus\HEV_completedBus_1.xml"),
+		TestCase(@"CompletedBus\IEPC_completedBus_1.xml"),
+		TestCase(@"CompletedBus\PEV_completedBus_1.xml"),
+		]
+		public void TestReadingCompletedBus_V210(string jobfile)
+		{
+			var filename = Path.Combine(BASE_DIR, jobfile);
+			var dataProvider = xmlInputReader.CreateDeclaration(XmlReader.Create(filename));
+
+			Assert.NotNull(dataProvider);
+			Assert.NotNull(dataProvider.JobInputData);
+			Assert.NotNull(dataProvider.JobInputData.Vehicle);
+
+			var veh = dataProvider.JobInputData.Vehicle;
+			Assert.AreEqual(1, veh.NumberPassengerSeatsLowerDeck);
+			Assert.AreEqual(9.5, veh.Length.Value());
+
+			Assert.NotNull(veh.Components);
+			Assert.NotNull(veh.Components.BusAuxiliaries);
+
+			var busAux = veh.Components.BusAuxiliaries;
+			Assert.AreEqual(BusHVACSystemConfiguration.Configuration0, busAux.HVACAux.SystemConfiguration);
+			Assert.AreEqual(HeatPumpType.non_R_744_3_stage, busAux.HVACAux.HeatPumpTypeCoolingPassengerCompartment);
+
+			Assert.IsTrue(busAux.ElectricConsumers.BrakelightsLED);
+		}
 
 		public IVectoRun[] ReadDeclarationJob(string jobfile)
 		{
