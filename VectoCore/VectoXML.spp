@@ -54,7 +54,6 @@
 		<Folder FolderName="Schema 2.10 DEV Buses ML">
 			<File FilePath="VectoCoreTest\TestData\XML\XMLReaderDeclaration\SchemaVersion2.10\PIF-heavyBus-sample.xml" HomeFolder="Yes"/>
 			<File FilePath="VectoCoreTest\TestData\XML\XMLReaderDeclaration\SchemaVersion2.10\vecto_vehicle-completed_heavyBus-sample.xml" HomeFolder="Yes"/>
-			<File FilePath="VectoCoreTest\TestData\XML\XMLReaderDeclaration\SchemaVersion2.10\vecto_vehicle-medium_lorryFWD-sample.xml" HomeFolder="Yes"/>
 			<File FilePath="VectoCoreTest\TestData\XML\XMLReaderDeclaration\SchemaVersion2.10\vecto_vehicle-primary_heavyBus-sample.xml" HomeFolder="Yes"/>
 			<File FilePath="VectoCoreTest\TestData\XML\XMLReaderDeclaration\SchemaVersion2.10\vecto_vehicle-primary_heavyBusSmartES-sample.xml" HomeFolder="Yes"/>
 			<File FilePath="VectoCoreTest\TestData\XML\XMLReaderDeclaration\SchemaVersion2.10\vecto_vehicle-primary_heavyBusSmartES_invalid_testdata.xml" HomeFolder="Yes"/>
