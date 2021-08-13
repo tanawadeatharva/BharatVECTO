@@ -1,13 +1,13 @@
 {
   "Header": {
     "CreatedBy": "",
-    "Date": "2021-08-03T13:36:05.6327467Z",
+    "Date": "2021-08-13T16:22:28.9151347Z",
     "AppVersion": "3",
     "FileVersion": 9
   },
   "Body": {
     "SavedInDeclMode": false,
-    "VehicleFile": "Class5_Tractor_PCC123EcoSS.vveh",
+    "VehicleFile": "Class5_Tractor_NoADAS.vveh",
     "GearboxFile": "AMT_12.vgbx",
     "TCU": "AMT_12.vgbx",
     "Padd_electric": 3540.0,

@@ -2719,28 +2719,22 @@
     <None Include="TestData\Integration\ADAS-PEV\Group5PCCEng\Axle_4x2_Tractor.vtlm">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="TestData\Integration\ADAS-PEV\Group5PCCEng\Class5_Tractor.vveh">
+    <None Include="TestData\Integration\ADAS-PEV\Group5PCCEng\Class5_Tractor_NoADAS.vecto">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="TestData\Integration\ADAS-PEV\Group5PCCEng\Class5_Tractor_ENG.vecto">
+    <None Include="TestData\Integration\ADAS-PEV\Group5PCCEng\Class5_Tractor_NoADAS.vveh">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="TestData\Integration\ADAS-PEV\Group5PCCEng\Class5_Tractor_ENG_PCC12.vecto">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="TestData\Integration\ADAS-PEV\Group5PCCEng\Class5_Tractor_ENG_PCC123.vecto">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="TestData\Integration\ADAS-PEV\Group5PCCEng\Class5_Tractor_ENG_PCC123EcoSS.vecto">
+    <None Include="TestData\Integration\ADAS-PEV\Group5PCCEng\Class5_Tractor_PCC12.vecto">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="TestData\Integration\ADAS-PEV\Group5PCCEng\Class5_Tractor_PCC12.vveh">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="TestData\Integration\ADAS-PEV\Group5PCCEng\Class5_Tractor_PCC123.vveh">
+    <None Include="TestData\Integration\ADAS-PEV\Group5PCCEng\Class5_Tractor_PCC123.vecto">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="TestData\Integration\ADAS-PEV\Group5PCCEng\Class5_Tractor_PCC123EcoSS.vveh">
+    <None Include="TestData\Integration\ADAS-PEV\Group5PCCEng\Class5_Tractor_PCC123.vveh">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="TestData\Integration\ADAS-PEV\Group5PCCEng\CrestCoast1.vdri">
