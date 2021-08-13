@@ -29,16 +29,12 @@
 *   Martin Rexeis, rexeis@ivt.tugraz.at, IVT, Graz University of Technology
 */
 
-using Ninject.Planning.Bindings.Resolvers;
 using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Globalization;
 using System.Linq;
-using System.ServiceModel.Security;
-using System.Windows.Forms.DataVisualization.Charting;
 using TUGraz.VectoCommon.Exceptions;
-using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Utils;
 
 namespace TUGraz.VectoCore.Utils
@@ -46,7 +42,7 @@ namespace TUGraz.VectoCore.Utils
 	public static class DataTableExtensionMethods
 	{
 		public static double ParseDoubleOrGetDefault(this DataRow row, string columnName,
-			double defaultValue = default(double))
+			double defaultValue = default)
 		{
 			if (row.Table.Columns.Contains(columnName)) {
 				if (double.TryParse(row.Field<string>(columnName), NumberStyles.Any, CultureInfo.InvariantCulture, out var result)) {
@@ -56,36 +52,38 @@ namespace TUGraz.VectoCore.Utils
 			return defaultValue;
 		}
 
-		public static IEnumerable<TResult> SelectRows<TResult>(this DataTable self, Func<DataRow,TResult> selector) => self.Rows.Cast<DataRow>().Select(selector);
+		public static IEnumerable<TResult> SelectRows<TResult>(this DataTable self, Func<DataRow,TResult> selector) => 
+			self.Rows.Cast<DataRow>().Select(selector);
 
-		public static IEnumerable<TResult> SelectRows<TResult>(this DataTable self, Func<DataRow, int, TResult> selector) => self.Rows.Cast<DataRow>().Select(selector);
+		public static IEnumerable<TResult> SelectRows<TResult>(this DataTable self, Func<DataRow, int, TResult> selector) => 
+			self.Rows.Cast<DataRow>().Select(selector);
 
-		public static IEnumerable<DataRow> Where(this DataTable self, Func<DataRow, bool> predicate) => self.Rows.Cast<DataRow>().Where(predicate);
+		public static IEnumerable<DataRow> Where(this DataTable self, Func<DataRow, bool> predicate) => 
+			self.Rows.Cast<DataRow>().Where(predicate);
 
-		public static IEnumerable<DataRow> Where(this DataTable self, Func<DataRow, int, bool> predicate) => self.Rows.Cast<DataRow>().Where(predicate);
+		public static IEnumerable<DataRow> Where(this DataTable self, Func<DataRow, int, bool> predicate) => 
+			self.Rows.Cast<DataRow>().Where(predicate);
 
-		public static DataRow First(this DataTable self) => self.Rows.Cast<DataRow>().First();
+		public static DataRow First(this DataTable self) => 
+			self.Rows.Cast<DataRow>().First();
 
-		public static DataRow First(this DataTable self, Func<DataRow, bool> predicate) => self.Rows.Cast<DataRow>().First(predicate);
+		public static DataRow First(this DataTable self, Func<DataRow, bool> predicate) => 
+			self.Rows.Cast<DataRow>().First(predicate);
 
-		public static DataRow Last(this DataTable self) => self.Rows.Cast<DataRow>().Last();
+		public static DataRow Last(this DataTable self) => 
+			self.Rows.Cast<DataRow>().Last();
 
-		public static double Sum(this DataTable self, Func<DataRow, double> selector) => self.Rows.Cast<DataRow>().Sum(selector);
+		public static double Sum(this DataTable self, Func<DataRow, double> selector) => 
+			self.Rows.Cast<DataRow>().Sum(selector);
 		
-		public static double ParseDouble(this DataRow row, int columnIndex)
-		{
-			return row.ParseDouble(row.Table.Columns[columnIndex]);
-		}
+		public static double ParseDouble(this DataRow row, int columnIndex) => 
+			row.ParseDouble(row.Table.Columns[columnIndex]);
 
-		public static T SI<T>(this DataRow row, int columnIndex) where T : SIBase<T>
-		{
-			return row.ParseDouble(row.Table.Columns[columnIndex]).SI<T>();
-		}
+		public static T SI<T>(this DataRow row, int columnIndex) where T : SIBase<T> => 
+			row.ParseDouble(row.Table.Columns[columnIndex]).SI<T>();
 
-		public static T SI<T>(this DataRow row, string columnName) where T : SIBase<T>
-		{
-			return row.ParseDouble(columnName).SI<T>();
-		}
+		public static T SI<T>(this DataRow row, string columnName) where T : SIBase<T> => 
+			row.ParseDouble(columnName).SI<T>();
 
 		public static double ParseDouble(this DataRow row, string columnName)
 		{
@@ -115,25 +113,17 @@ namespace TUGraz.VectoCore.Utils
 			}
 		}
 
-		public static bool ParseBoolean(this DataRow row, string columnName)
-		{
-			if (!row.Table.Columns.Contains(columnName)) {
-				throw new KeyNotFoundException($"Column {columnName} was not found in DataRow.");
-			}
-			return row.Field<string>(row.Table.Columns[columnName]).ToBoolean();
-		}
+		public static bool ParseBoolean(this DataRow row, string columnName) => 
+			!row.Table.Columns.Contains(columnName)
+				? throw new KeyNotFoundException($"Column {columnName} was not found in DataRow.")
+				: row.Field<string>(row.Table.Columns[columnName]).ToBoolean();
 
-		public static bool? ParseBooleanOrGetDefault(this DataRow row, string columnName, bool? defaultValue = null)
-		{
-			if (!row.Table.Columns.Contains(columnName)) {
-				return defaultValue;
-			}
-			return row.Field<string>(row.Table.Columns[columnName]).ToBoolean();
-		}
+		public static bool? ParseBooleanOrGetDefault(this DataRow row, string columnName, bool? defaultValue = null) => 
+			!row.Table.Columns.Contains(columnName) 
+				? defaultValue 
+				: row.Field<string>(row.Table.Columns[columnName]).ToBoolean();
 
-		public static IEnumerable<T> Values<T>(this DataColumn column)
-		{
-			return column.Table.AsEnumerable().Select(r => r.Field<T>(column));
-		}
+		public static IEnumerable<T> Values<T>(this DataColumn column) => 
+			column.Table.AsEnumerable().Select(r => r.Field<T>(column));
 	}
 }
