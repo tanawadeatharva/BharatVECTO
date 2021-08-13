@@ -136,6 +136,56 @@
 			<xs:extension base="v1.0:AbstractAirdragDataDeclarationType"/>
 		</xs:complexContent>
 	</xs:complexType>
+	<xs:complexType name="AUX_Component_Conventional_CompletedBus_Type">
+		<xs:sequence>
+			<xs:element name="Data" type="v2.10.2:Abstract_AUX_Conventional_CompletedBusDeclarationType"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="AUX_Component_Conventional_Lorry_Type">
+		<xs:sequence>
+			<xs:element name="Data" type="v2.0:AbstractAuxiliaryDataDeclarationType"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="AUX_Component_Conventional_PrimaryBus_Type">
+		<xs:sequence>
+			<xs:element name="Data" type="v2.10.2:Abstract_AUX_Conventional_PrimaryBusDeclarationType"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="AUX_Component_HEV_Lorry_Type">
+		<xs:sequence>
+			<xs:element name="Data" type="v2.10.2:Abstract_AUX_HEV_LorryDeclarationType"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="AUX_Component_HEV-P_PrimaryBus_Type">
+		<xs:sequence>
+			<xs:element name="Data" type="v2.10.2:Abstract_AUX_HEV-P_PrimaryBusDeclarationType"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="AUX_Component_HEV-S_PrimaryBus_Type">
+		<xs:sequence>
+			<xs:element name="Data" type="v2.10.2:Abstract_AUX_HEV-S_PrimaryBusDeclarationType"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="AUX_Component_IEPC_Lorry_Type">
+		<xs:sequence>
+			<xs:element name="Data" type="v2.10.2:Abstract_AUX_IEPC_LorryDeclarationType"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="AUX_Component_IEPC_PrimaryBus_Type">
+		<xs:sequence>
+			<xs:element name="Data" type="v2.10.2:Abstract_AUX_IEPC_PrimaryBusDeclarationType"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="AUX_Component_PEV_Lorry_Type">
+		<xs:sequence>
+			<xs:element name="Data" type="v2.10.2:Abstract_AUX_PEV_LorryDeclarationType"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="AUX_Component_PEV_PrimaryBus_Type">
+		<xs:sequence>
+			<xs:element name="Data" type="v2.10.2:Abstract_AUX_PEV_PrimaryBusDeclarationType"/>
+		</xs:sequence>
+	</xs:complexType>
 	<xs:complexType name="AUX_Conventional_CompletedBusType">
 		<xs:complexContent>
 			<xs:extension base="v2.10.2:Abstract_AUX_Conventional_CompletedBusDeclarationType">
@@ -816,13 +866,7 @@
 			<xs:extension base="v2.10.2:Abstract_Components_Conventional_CompletedBusDeclarationType">
 				<xs:sequence>
 					<xs:element name="AirDrag" type="v2.0:AirDragComponentDeclarationType" minOccurs="0"/>
-					<xs:element name="Auxiliaries" minOccurs="0">
-						<xs:complexType>
-							<xs:sequence>
-								<xs:element name="Data" type="v2.10.2:Abstract_AUX_Conventional_CompletedBusDeclarationType"/>
-							</xs:sequence>
-						</xs:complexType>
-					</xs:element>
+					<xs:element name="Auxiliaries" type="v2.10.2:AUX_Component_Conventional_CompletedBus_Type" minOccurs="0"/>
 				</xs:sequence>
 			</xs:extension>
 		</xs:complexContent>
@@ -838,13 +882,7 @@
 					<xs:element name="Retarder" type="v2.0:RetarderComponentDeclarationType" minOccurs="0"/>
 					<xs:element name="Axlegear" type="v2.0:AxlegearComponentDeclarationType"/>
 					<xs:element name="AxleWheels" type="v2.0:AxleWheelsComponentDeclarationType"/>
-					<xs:element name="Auxiliaries">
-						<xs:complexType>
-							<xs:sequence>
-								<xs:element name="Data" type="v2.0:AbstractAuxiliaryDataDeclarationType"/>
-							</xs:sequence>
-						</xs:complexType>
-					</xs:element>
+					<xs:element name="Auxiliaries" type="v2.10.2:AUX_Component_Conventional_Lorry_Type"/>
 					<xs:element name="AirDrag" type="v2.0:AirDragComponentDeclarationType" minOccurs="0"/>
 				</xs:sequence>
 			</xs:extension>
@@ -861,13 +899,7 @@
 					<xs:element name="Retarder" type="v2.0:RetarderComponentDeclarationType" minOccurs="0"/>
 					<xs:element name="Axlegear" type="v2.0:AxlegearComponentDeclarationType"/>
 					<xs:element name="AxleWheels" type="v2.0:AxleWheelsComponentDeclarationType"/>
-					<xs:element name="Auxiliaries">
-						<xs:complexType>
-							<xs:sequence>
-								<xs:element name="Data" type="v2.10.2:Abstract_AUX_Conventional_PrimaryBusDeclarationType"/>
-							</xs:sequence>
-						</xs:complexType>
-					</xs:element>
+					<xs:element name="Auxiliaries" type="v2.10.2:AUX_Component_Conventional_PrimaryBus_Type"/>
 				</xs:sequence>
 			</xs:extension>
 		</xs:complexContent>
@@ -880,13 +912,7 @@
 					<xs:element name="Retarder" type="v2.0:RetarderComponentDeclarationType" minOccurs="0"/>
 					<xs:element name="Axlegear" type="v2.0:AxlegearComponentDeclarationType" minOccurs="0"/>
 					<xs:element name="AxleWheels" type="v2.0:AxleWheelsComponentDeclarationType"/>
-					<xs:element name="Auxiliaries">
-						<xs:complexType>
-							<xs:sequence>
-								<xs:element name="Data" type="v2.10.2:Abstract_AUX_HEV_LorryDeclarationType"/>
-							</xs:sequence>
-						</xs:complexType>
-					</xs:element>
+					<xs:element name="Auxiliaries" type="v2.10.2:AUX_Component_HEV_Lorry_Type"/>
 					<xs:element name="AirDrag" type="v2.0:AirDragComponentDeclarationType" minOccurs="0"/>
 				</xs:sequence>
 			</xs:extension>
@@ -900,13 +926,7 @@
 					<xs:element name="Retarder" type="v2.0:RetarderComponentDeclarationType" minOccurs="0"/>
 					<xs:element name="Axlegear" type="v2.0:AxlegearComponentDeclarationType" minOccurs="0"/>
 					<xs:element name="AxleWheels" type="v2.0:AxleWheelsComponentDeclarationType"/>
-					<xs:element name="Auxiliaries">
-						<xs:complexType>
-							<xs:sequence>
-								<xs:element name="Data" type="v2.10.2:Abstract_AUX_HEV-S_PrimaryBusDeclarationType"/>
-							</xs:sequence>
-						</xs:complexType>
-					</xs:element>
+					<xs:element name="Auxiliaries" type="v2.10.2:AUX_Component_HEV-S_PrimaryBus_Type"/>
 				</xs:sequence>
 			</xs:extension>
 		</xs:complexContent>
@@ -924,13 +944,7 @@
 					<xs:element name="Retarder" type="v2.0:RetarderComponentDeclarationType" minOccurs="0"/>
 					<xs:element name="Axlegear" type="v2.0:AxlegearComponentDeclarationType"/>
 					<xs:element name="AxleWheels" type="v2.0:AxleWheelsComponentDeclarationType"/>
-					<xs:element name="Auxiliaries">
-						<xs:complexType>
-							<xs:sequence>
-								<xs:element name="Data" type="v2.10.2:Abstract_AUX_HEV_LorryDeclarationType"/>
-							</xs:sequence>
-						</xs:complexType>
-					</xs:element>
+					<xs:element name="Auxiliaries" type="v2.10.2:AUX_Component_HEV_Lorry_Type"/>
 					<xs:element name="AirDrag" type="v2.0:AirDragComponentDeclarationType" minOccurs="0"/>
 				</xs:sequence>
 			</xs:extension>
@@ -949,13 +963,7 @@
 					<xs:element name="Retarder" type="v2.0:RetarderComponentDeclarationType" minOccurs="0"/>
 					<xs:element name="Axlegear" type="v2.0:AxlegearComponentDeclarationType"/>
 					<xs:element name="AxleWheels" type="v2.0:AxleWheelsComponentDeclarationType"/>
-					<xs:element name="Auxiliaries">
-						<xs:complexType>
-							<xs:sequence>
-								<xs:element name="Data" type="v2.10.2:Abstract_AUX_HEV-P_PrimaryBusDeclarationType"/>
-							</xs:sequence>
-						</xs:complexType>
-					</xs:element>
+					<xs:element name="Auxiliaries" type="v2.10.2:AUX_Component_HEV-P_PrimaryBus_Type"/>
 				</xs:sequence>
 			</xs:extension>
 		</xs:complexContent>
@@ -971,13 +979,7 @@
 					<xs:element name="Retarder" type="v2.0:RetarderComponentDeclarationType" minOccurs="0"/>
 					<xs:element name="Axlegear" type="v2.0:AxlegearComponentDeclarationType"/>
 					<xs:element name="AxleWheels" type="v2.0:AxleWheelsComponentDeclarationType"/>
-					<xs:element name="Auxiliaries">
-						<xs:complexType>
-							<xs:sequence>
-								<xs:element name="Data" type="v2.10.2:Abstract_AUX_HEV_LorryDeclarationType"/>
-							</xs:sequence>
-						</xs:complexType>
-					</xs:element>
+					<xs:element name="Auxiliaries" type="v2.10.2:AUX_Component_HEV_Lorry_Type"/>
 					<xs:element name="AirDrag" type="v2.0:AirDragComponentDeclarationType" minOccurs="0"/>
 				</xs:sequence>
 			</xs:extension>
@@ -994,13 +996,7 @@
 					<xs:element name="Retarder" type="v2.0:RetarderComponentDeclarationType" minOccurs="0"/>
 					<xs:element name="Axlegear" type="v2.0:AxlegearComponentDeclarationType"/>
 					<xs:element name="AxleWheels" type="v2.0:AxleWheelsComponentDeclarationType"/>
-					<xs:element name="Auxiliaries">
-						<xs:complexType>
-							<xs:sequence>
-								<xs:element name="Data" type="v2.10.2:Abstract_AUX_HEV-S_PrimaryBusDeclarationType"/>
-							</xs:sequence>
-						</xs:complexType>
-					</xs:element>
+					<xs:element name="Auxiliaries" type="v2.10.2:AUX_Component_HEV-S_PrimaryBus_Type"/>
 				</xs:sequence>
 			</xs:extension>
 		</xs:complexContent>
@@ -1013,13 +1009,7 @@
 					<xs:element name="Retarder" type="v2.0:RetarderComponentDeclarationType" minOccurs="0"/>
 					<xs:element name="Axlegear" type="v2.0:AxlegearComponentDeclarationType"/>
 					<xs:element name="AxleWheels" type="v2.0:AxleWheelsComponentDeclarationType"/>
-					<xs:element name="Auxiliaries">
-						<xs:complexType>
-							<xs:sequence>
-								<xs:element name="Data" type="v2.10.2:Abstract_AUX_HEV_LorryDeclarationType"/>
-							</xs:sequence>
-						</xs:complexType>
-					</xs:element>
+					<xs:element name="Auxiliaries" type="v2.10.2:AUX_Component_HEV_Lorry_Type"/>
 					<xs:element name="AirDrag" type="v2.0:AirDragComponentDeclarationType" minOccurs="0"/>
 				</xs:sequence>
 			</xs:extension>
@@ -1033,13 +1023,7 @@
 					<xs:element name="Retarder" type="v2.0:RetarderComponentDeclarationType" minOccurs="0"/>
 					<xs:element name="Axlegear" type="v2.0:AxlegearComponentDeclarationType"/>
 					<xs:element name="AxleWheels" type="v2.0:AxleWheelsComponentDeclarationType"/>
-					<xs:element name="Auxiliaries">
-						<xs:complexType>
-							<xs:sequence>
-								<xs:element name="Data" type="v2.10.2:Abstract_AUX_HEV-S_PrimaryBusDeclarationType"/>
-							</xs:sequence>
-						</xs:complexType>
-					</xs:element>
+					<xs:element name="Auxiliaries" type="v2.10.2:AUX_Component_HEV-S_PrimaryBus_Type"/>
 				</xs:sequence>
 			</xs:extension>
 		</xs:complexContent>
@@ -1051,13 +1035,7 @@
 					<xs:group ref="v2.10.2:Components_HEV-Sx_GenSetSequenceGroup"/>
 					<xs:element name="Retarder" type="v2.0:RetarderComponentDeclarationType" minOccurs="0"/>
 					<xs:element name="AxleWheels" type="v2.0:AxleWheelsComponentDeclarationType"/>
-					<xs:element name="Auxiliaries">
-						<xs:complexType>
-							<xs:sequence>
-								<xs:element name="Data" type="v2.10.2:Abstract_AUX_HEV_LorryDeclarationType"/>
-							</xs:sequence>
-						</xs:complexType>
-					</xs:element>
+					<xs:element name="Auxiliaries" type="v2.10.2:AUX_Component_HEV_Lorry_Type"/>
 					<xs:element name="AirDrag" type="v2.0:AirDragComponentDeclarationType" minOccurs="0"/>
 				</xs:sequence>
 			</xs:extension>
@@ -1070,13 +1048,7 @@
 					<xs:group ref="v2.10.2:Components_HEV-Sx_GenSetSequenceGroup"/>
 					<xs:element name="Retarder" type="v2.0:RetarderComponentDeclarationType" minOccurs="0"/>
 					<xs:element name="AxleWheels" type="v2.0:AxleWheelsComponentDeclarationType"/>
-					<xs:element name="Auxiliaries">
-						<xs:complexType>
-							<xs:sequence>
-								<xs:element name="Data" type="v2.10.2:Abstract_AUX_HEV-S_PrimaryBusDeclarationType"/>
-							</xs:sequence>
-						</xs:complexType>
-					</xs:element>
+					<xs:element name="Auxiliaries" type="v2.10.2:AUX_Component_HEV-S_PrimaryBus_Type"/>
 				</xs:sequence>
 			</xs:extension>
 		</xs:complexContent>
@@ -1090,13 +1062,7 @@
 					<xs:element name="Retarder" type="v2.0:RetarderComponentDeclarationType" minOccurs="0"/>
 					<xs:element name="Axlegear" type="v2.0:AxlegearComponentDeclarationType" minOccurs="0"/>
 					<xs:element name="AxleWheels" type="v2.0:AxleWheelsComponentDeclarationType"/>
-					<xs:element name="Auxiliaries">
-						<xs:complexType>
-							<xs:sequence>
-								<xs:element name="Data" type="v2.10.2:Abstract_AUX_IEPC_LorryDeclarationType"/>
-							</xs:sequence>
-						</xs:complexType>
-					</xs:element>
+					<xs:element name="Auxiliaries" type="v2.10.2:AUX_Component_IEPC_Lorry_Type"/>
 					<xs:element name="AirDrag" type="v2.0:AirDragComponentDeclarationType" minOccurs="0"/>
 				</xs:sequence>
 			</xs:extension>
@@ -1111,13 +1077,7 @@
 					<xs:element name="Retarder" type="v2.0:RetarderComponentDeclarationType" minOccurs="0"/>
 					<xs:element name="Axlegear" type="v2.0:AxlegearComponentDeclarationType" minOccurs="0"/>
 					<xs:element name="AxleWheels" type="v2.0:AxleWheelsComponentDeclarationType"/>
-					<xs:element name="Auxiliaries">
-						<xs:complexType>
-							<xs:sequence>
-								<xs:element name="Data" type="v2.10.2:Abstract_AUX_IEPC_PrimaryBusDeclarationType"/>
-							</xs:sequence>
-						</xs:complexType>
-					</xs:element>
+					<xs:element name="Auxiliaries" type="v2.10.2:AUX_Component_IEPC_PrimaryBus_Type"/>
 				</xs:sequence>
 			</xs:extension>
 		</xs:complexContent>
@@ -1134,13 +1094,7 @@
 					<xs:element name="Retarder" type="v2.0:RetarderComponentDeclarationType" minOccurs="0"/>
 					<xs:element name="Axlegear" type="v2.0:AxlegearComponentDeclarationType"/>
 					<xs:element name="AxleWheels" type="v2.0:AxleWheelsComponentDeclarationType"/>
-					<xs:element name="Auxiliaries">
-						<xs:complexType>
-							<xs:sequence>
-								<xs:element name="Data" type="v2.10.2:Abstract_AUX_PEV_LorryDeclarationType"/>
-							</xs:sequence>
-						</xs:complexType>
-					</xs:element>
+					<xs:element name="Auxiliaries" type="v2.10.2:AUX_Component_PEV_Lorry_Type"/>
 					<xs:element name="AirDrag" type="v2.0:AirDragComponentDeclarationType" minOccurs="0"/>
 				</xs:sequence>
 			</xs:extension>
@@ -1158,13 +1112,7 @@
 					<xs:element name="Retarder" type="v2.0:RetarderComponentDeclarationType" minOccurs="0"/>
 					<xs:element name="Axlegear" type="v2.0:AxlegearComponentDeclarationType"/>
 					<xs:element name="AxleWheels" type="v2.0:AxleWheelsComponentDeclarationType"/>
-					<xs:element name="Auxiliaries">
-						<xs:complexType>
-							<xs:sequence>
-								<xs:element name="Data" type="v2.10.2:Abstract_AUX_PEV_PrimaryBusDeclarationType"/>
-							</xs:sequence>
-						</xs:complexType>
-					</xs:element>
+					<xs:element name="Auxiliaries" type="v2.10.2:AUX_Component_PEV_PrimaryBus_Type"/>
 				</xs:sequence>
 			</xs:extension>
 		</xs:complexContent>
@@ -1178,13 +1126,7 @@
 					<xs:element name="Retarder" type="v2.0:RetarderComponentDeclarationType" minOccurs="0"/>
 					<xs:element name="Axlegear" type="v2.0:AxlegearComponentDeclarationType"/>
 					<xs:element name="AxleWheels" type="v2.0:AxleWheelsComponentDeclarationType"/>
-					<xs:element name="Auxiliaries">
-						<xs:complexType>
-							<xs:sequence>
-								<xs:element name="Data" type="v2.10.2:Abstract_AUX_PEV_LorryDeclarationType"/>
-							</xs:sequence>
-						</xs:complexType>
-					</xs:element>
+					<xs:element name="Auxiliaries" type="v2.10.2:AUX_Component_PEV_Lorry_Type"/>
 					<xs:element name="AirDrag" type="v2.0:AirDragComponentDeclarationType" minOccurs="0"/>
 				</xs:sequence>
 			</xs:extension>
@@ -1199,13 +1141,7 @@
 					<xs:element name="Retarder" type="v2.0:RetarderComponentDeclarationType" minOccurs="0"/>
 					<xs:element name="Axlegear" type="v2.0:AxlegearComponentDeclarationType"/>
 					<xs:element name="AxleWheels" type="v2.0:AxleWheelsComponentDeclarationType"/>
-					<xs:element name="Auxiliaries">
-						<xs:complexType>
-							<xs:sequence>
-								<xs:element name="Data" type="v2.10.2:Abstract_AUX_PEV_PrimaryBusDeclarationType"/>
-							</xs:sequence>
-						</xs:complexType>
-					</xs:element>
+					<xs:element name="Auxiliaries" type="v2.10.2:AUX_Component_PEV_PrimaryBus_Type"/>
 				</xs:sequence>
 			</xs:extension>
 		</xs:complexContent>
@@ -1218,13 +1154,7 @@
 					<xs:element name="ElectricEnergyStorage" type="v2.10.2:ElectricEnergyStorageType"/>
 					<xs:element name="Retarder" type="v2.0:RetarderComponentDeclarationType" minOccurs="0"/>
 					<xs:element name="AxleWheels" type="v2.0:AxleWheelsComponentDeclarationType"/>
-					<xs:element name="Auxiliaries">
-						<xs:complexType>
-							<xs:sequence>
-								<xs:element name="Data" type="v2.10.2:Abstract_AUX_PEV_LorryDeclarationType"/>
-							</xs:sequence>
-						</xs:complexType>
-					</xs:element>
+					<xs:element name="Auxiliaries" type="v2.10.2:AUX_Component_PEV_Lorry_Type"/>
 					<xs:element name="AirDrag" type="v2.0:AirDragComponentDeclarationType" minOccurs="0"/>
 				</xs:sequence>
 			</xs:extension>
@@ -1238,13 +1168,7 @@
 					<xs:element name="ElectricEnergyStorage" type="v2.10.2:ElectricEnergyStorageType"/>
 					<xs:element name="Retarder" type="v2.0:RetarderComponentDeclarationType" minOccurs="0"/>
 					<xs:element name="AxleWheels" type="v2.0:AxleWheelsComponentDeclarationType"/>
-					<xs:element name="Auxiliaries">
-						<xs:complexType>
-							<xs:sequence>
-								<xs:element name="Data" type="v2.10.2:Abstract_AUX_PEV_PrimaryBusDeclarationType"/>
-							</xs:sequence>
-						</xs:complexType>
-					</xs:element>
+					<xs:element name="Auxiliaries" type="v2.10.2:AUX_Component_PEV_PrimaryBus_Type"/>
 				</xs:sequence>
 			</xs:extension>
 		</xs:complexContent>
@@ -2141,9 +2065,6 @@
 	<xs:simpleType name="AlternatorTechnologyType">
 		<xs:union memberTypes="v2.10.2:AlternatorTechnology_Conventional_Type v2.10.2:AlternatorTechnology_HEV_Type v2.10.2:AlternatorTechnology_PEV_Type v2.10.2:AlternatorTechnology_IEPC_Type v2.10.2:AlternatorTechnology_HEV-S_Type"/>
 	</xs:simpleType>
-	<xs:simpleType name="ArchitectureIDType">
-		<xs:union memberTypes="v2.10.2:ArchitectureID_HEV_Type v2.10.2:ArchitectureID_IEPC_Type v2.10.2:ArchitectureID_PEV_Type"/>
-	</xs:simpleType>
 	<xs:simpleType name="ArchitectureID_HEV_Type">
 		<xs:union memberTypes="v2.10.2:ArchitectureID_HEV-Px_Type v2.10.2:ArchitectureID_HEV-Sx_Type v2.10.2:ArchitectureID_HEV-IEPC-S_Type"/>
 	</xs:simpleType>
@@ -2179,6 +2100,9 @@
 			<xs:enumeration value="E3"/>
 			<xs:enumeration value="E4"/>
 		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="ArchitectureIDType">
+		<xs:union memberTypes="v2.10.2:ArchitectureID_HEV_Type v2.10.2:ArchitectureID_IEPC_Type v2.10.2:ArchitectureID_PEV_Type"/>
 	</xs:simpleType>
 	<xs:simpleType name="AuxESTechnologyLorryType">
 		<xs:restriction base="xs:string">

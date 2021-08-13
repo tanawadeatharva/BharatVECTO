@@ -1377,7 +1377,7 @@
   <data name="Report_Result_PassengerCount" xml:space="preserve">
     <value>PassengerCount</value>
   </data>
-  <data name="Bus_LegislativeCategory" xml:space="preserve">
+  <data name="Vehicle_LegislativeCategory" xml:space="preserve">
     <value>LegislativeCategory</value>
   </data>
   <data name="Bus_ADAS_APTEcoRollReleaseLockupClutch" xml:space="preserve">
@@ -1386,7 +1386,7 @@
   <data name="Bus_AirdragModifiedMultistage" xml:space="preserve">
     <value>AirdragModifiedMultistage</value>
   </data>
-  <data name="Bus_CorrectedActualMass" xml:space="preserve">
+  <data name="CorrectedActualMass" xml:space="preserve">
     <value>CorrectedActualMass</value>
   </data>
   <data name="Bus_NumberPassengersLowerDeck" xml:space="preserve">

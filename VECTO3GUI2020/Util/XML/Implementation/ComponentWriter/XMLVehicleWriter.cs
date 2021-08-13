@@ -229,9 +229,9 @@ namespace VECTO3GUI2020.Util.XML.Implementation.ComponentWriter
 			_Xelement.Add(new XElement(_defaultNamespace + XMLNames.Vehicle_VIN, _inputData.VIN));
 			_Xelement.Add(new XElement(_defaultNamespace + XMLNames.Component_Date, DateTime.Today.ToXmlFormat()));
 			_Xelement.Add(new XElement(_defaultNamespace + XMLNames.Component_Model, _inputData.Model));
-			_Xelement.Add(new XElement(_defaultNamespace + XMLNames.Bus_LegislativeCategory, _inputData.LegislativeClass.ToXMLFormat()));
+			_Xelement.Add(new XElement(_defaultNamespace + XMLNames.Vehicle_LegislativeCategory, _inputData.LegislativeClass.ToXMLFormat()));
 
-			_Xelement.Add(new XElement(_defaultNamespace + XMLNames.Bus_CorrectedActualMass, _inputData.CurbMassChassis?.ToXMLFormat(0)));
+			_Xelement.Add(new XElement(_defaultNamespace + XMLNames.CorrectedActualMass, _inputData.CurbMassChassis?.ToXMLFormat(0)));
 			_Xelement.Add(new XElement(_defaultNamespace + XMLNames.Vehicle_TPMLM,
 				_inputData.GrossVehicleMassRating?.ToXMLFormat(0)));
 
@@ -318,9 +318,9 @@ namespace VECTO3GUI2020.Util.XML.Implementation.ComponentWriter
 			_Xelement.Add(new XElement(_defaultNamespace + XMLNames.Vehicle_VIN, _inputData.VIN));
 			_Xelement.Add(new XElement(_defaultNamespace + XMLNames.Component_Date, DateTime.Today.ToXmlFormat()));
 			_Xelement.Add(new XElement(_defaultNamespace + XMLNames.Component_Model, _inputData.Model));
-			_Xelement.Add(new XElement(_defaultNamespace + XMLNames.Bus_LegislativeCategory, _inputData.LegislativeClass.ToXMLFormat()));
+			_Xelement.Add(new XElement(_defaultNamespace + XMLNames.Vehicle_LegislativeCategory, _inputData.LegislativeClass.ToXMLFormat()));
 
-			_Xelement.Add(new XElement(_defaultNamespace + XMLNames.Bus_CorrectedActualMass, _inputData.CurbMassChassis?.ToXMLFormat(0)));
+			_Xelement.Add(new XElement(_defaultNamespace + XMLNames.CorrectedActualMass, _inputData.CurbMassChassis?.ToXMLFormat(0)));
 			_Xelement.Add(new XElement(_defaultNamespace + XMLNames.Vehicle_TPMLM,
 				_inputData.GrossVehicleMassRating?.ToXMLFormat(0)));
 

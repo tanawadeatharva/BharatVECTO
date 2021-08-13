@@ -510,7 +510,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 		public override Kilogram GrossVehicleMassRating => GetDouble(XMLNames.Vehicle_TPMLM).SI<Kilogram>();
 
-		public override LegislativeClass? LegislativeClass => GetString(XMLNames.Bus_LegislativeCategory)?.ParseEnum<LegislativeClass>();
+		public override LegislativeClass? LegislativeClass => GetString(XMLNames.Vehicle_LegislativeCategory)?.ParseEnum<LegislativeClass>();
 
 
 		public override IList<ITorqueLimitInputData> TorqueLimits => new List<ITorqueLimitInputData>();
@@ -568,6 +568,10 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 		#region Overrides of XMLDeclarationVehicleDataProviderV10
 
+		public override VehicleCategory VehicleCategory => VehicleCategoryHelper.Parse(GetString("ChassisConfiguration"));
+
+		public override LegislativeClass? LegislativeClass => GetString(XMLNames.Vehicle_LegislativeCategory)?.ParseEnum<LegislativeClass>();
+
 		public override bool SleeperCab => false;
 
 		public override bool VocationalVehicle => false;
@@ -575,6 +579,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		public override IPTOTransmissionInputData PTOTransmissionInputData => null;
 
 		public override XmlElement PTONode => null;
+
+		public override Kilogram CurbMassChassis => GetDouble(XMLNames.CorrectedActualMass).SI<Kilogram>();
 
 		public override Kilogram GrossVehicleMassRating => GetDouble(XMLNames.Vehicle_TPMLM).SI<Kilogram>();
 
@@ -599,17 +605,6 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		protected override DataSourceType SourceType { get; }
 
 		#endregion
-
-		public override XmlElement ComponentNode => null;
-
-
-		public override XmlElement ADASNode => null;
-
-		public override AngledriveType AngledriveType => AngledriveType.None;
-
-		public override RetarderType RetarderType => RetarderType.None;
-
-		public override double RetarderRatio => 0;
 	}
 
 	
@@ -648,7 +643,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 		public string VIN => GetString(XMLNames.Vehicle_VIN);
 
-		public virtual LegislativeClass? LegislativeClass => GetString(XMLNames.Bus_LegislativeCategory)?.ParseEnum<LegislativeClass>();
+		public virtual LegislativeClass? LegislativeClass => GetString(XMLNames.Vehicle_LegislativeCategory)?.ParseEnum<LegislativeClass>();
 
 		public virtual VehicleCategory VehicleCategory => VehicleCategoryHelper.Parse(GetString("ChassisConfiguration"));
 
@@ -830,13 +825,13 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		}
 
 		public override LegislativeClass? LegislativeClass =>
-			ElementExists(XMLNames.Bus_LegislativeCategory)
-				? GetString(XMLNames.Bus_LegislativeCategory).ParseEnum<LegislativeClass>()
+			ElementExists(XMLNames.Vehicle_LegislativeCategory)
+				? GetString(XMLNames.Vehicle_LegislativeCategory).ParseEnum<LegislativeClass>()
 				:  (LegislativeClass?)null;
 
 		public override Kilogram CurbMassChassis =>
-			ElementExists(XMLNames.Bus_CorrectedActualMass)
-				? GetDouble(XMLNames.Bus_CorrectedActualMass).SI<Kilogram>()
+			ElementExists(XMLNames.CorrectedActualMass)
+				? GetDouble(XMLNames.CorrectedActualMass).SI<Kilogram>()
 				: null;
 
 		public override Kilogram GrossVehicleMassRating =>
@@ -1020,13 +1015,13 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 				? GetString(XMLNames.Component_Model) : null;
 
 		public override LegislativeClass? LegislativeClass =>
-			ElementExists(XMLNames.Bus_LegislativeCategory)
-				? GetString(XMLNames.Bus_LegislativeCategory).ParseEnum<LegislativeClass>()
+			ElementExists(XMLNames.Vehicle_LegislativeCategory)
+				? GetString(XMLNames.Vehicle_LegislativeCategory).ParseEnum<LegislativeClass>()
 				: (LegislativeClass?)null;
 
 		public override Kilogram CurbMassChassis =>
-			ElementExists(XMLNames.Bus_CorrectedActualMass)
-				? GetDouble(XMLNames.Bus_CorrectedActualMass).SI<Kilogram>()
+			ElementExists(XMLNames.CorrectedActualMass)
+				? GetDouble(XMLNames.CorrectedActualMass).SI<Kilogram>()
 				: null;
 
 		public override Kilogram GrossVehicleMassRating =>

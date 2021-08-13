@@ -12,6 +12,10 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.NinjectModules
 
 		public override void Load()
 		{
+
+			Bind<IXMLVehicleComponentsDeclaration>().To<XMLDeclarationComponentsDataProviderV210_Lorry>().Named(
+				XMLDeclarationComponentsDataProviderV210_Lorry.QUALIFIED_XSD_TYPE);
+
 			Bind<IXMLDeclarationVehicleData>().To<XMLDeclarationCompletedBusDataProviderV210>()
 				.Named(XMLDeclarationCompletedBusDataProviderV210.QUALIFIED_XSD_TYPE);
 			
@@ -29,6 +33,11 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.NinjectModules
 			Bind<IXMLAirdragDeclarationInputData>().To<XMLDeclarationAirdragDataProviderV210>().Named(
 				XMLDeclarationAirdragDataProviderV210.QUALIFIED_XSD_TYPE);
 
+			Bind<IXMLAuxiliariesDeclarationInputData>().To<XMLDeclarationAuxiliariesDataProviderV210_Lorry>().Named(
+				XMLDeclarationAuxiliariesDataProviderV210_Lorry.QUALIFIED_XSD_TYPE);
+
+			Bind<IXMLAuxiliaryDeclarationInputData>().To<XMLAuxiliaryDeclarationDataProviderV210_Lorry>()
+				.Named(XMLAuxiliaryDeclarationDataProviderV210_Lorry.QUALIFIED_XSD_TYPE);
 
 			Bind<IXMLAdvancedDriverAssistantSystemDeclarationInputData>()
 				.To<XMLDeclarationADASDataProviderV210>().Named(XMLDeclarationADASDataProviderV210.QUALIFIED_XSD_TYPE);
@@ -49,6 +58,12 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.NinjectModules
 			Bind<IXMLDeclarationVehicleData>().To<XMLDeclarationMediumLorryVehicleDataProviderV210>()
 				.Named(XMLDeclarationMediumLorryVehicleDataProviderV210.QUALIFIED_XSD_TYPE);
 
+
+			Bind<IXMLComponentReader>().To<XMLComponentReaderV210_Lorry>()
+				.Named(XMLComponentReaderV210_Lorry.QUALIFIED_XSD_TYPE);
+
+			Bind<IXMLAuxiliaryReader>().To<XMLComponentReaderV210_Lorry>()
+				.Named(XMLComponentReaderV210_Lorry.AUXILIARIES_READER_QUALIFIED_XSD_TYPE);
 
 			Bind<IXMLComponentReader>().To<XMLComponentReaderV210_PrimaryBus>().Named(XMLComponentReaderV210_PrimaryBus.QUALIFIED_XSD_TYPE);
 

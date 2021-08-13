@@ -37,9 +37,9 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 				_vehicleInputData.Model != null
 					? new XElement(v210 + XMLNames.Component_Model, _vehicleInputData.Model) : null,
 				_vehicleInputData.LegislativeClass != null
-					? new XElement(v210 + XMLNames.Bus_LegislativeCategory, _vehicleInputData.LegislativeClass.ToXMLFormat()) : null,
+					? new XElement(v210 + XMLNames.Vehicle_LegislativeCategory, _vehicleInputData.LegislativeClass.ToXMLFormat()) : null,
 				_vehicleInputData.CurbMassChassis != null
-					? new XElement(v210 + XMLNames.Bus_CorrectedActualMass, _vehicleInputData.CurbMassChassis.ToXMLFormat(0)) : null,
+					? new XElement(v210 + XMLNames.CorrectedActualMass, _vehicleInputData.CurbMassChassis.ToXMLFormat(0)) : null,
 				_vehicleInputData.GrossVehicleMassRating != null
 					? new XElement(v210 + XMLNames.TPMLM, _vehicleInputData.GrossVehicleMassRating.ToXMLFormat(0)) : null,
 				_vehicleInputData.RegisteredClass != null
@@ -267,9 +267,9 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 				_vehicleInputData.Model != null
 					? new XElement(v210 + XMLNames.Component_Model, _vehicleInputData.Model) : null,
 				_vehicleInputData.LegislativeClass != null
-					? new XElement(v210 + XMLNames.Bus_LegislativeCategory, _vehicleInputData.LegislativeClass.ToXMLFormat()) : null,
+					? new XElement(v210 + XMLNames.Vehicle_LegislativeCategory, _vehicleInputData.LegislativeClass.ToXMLFormat()) : null,
 				_vehicleInputData.CurbMassChassis != null
-					? new XElement(v210 + XMLNames.Bus_CorrectedActualMass, _vehicleInputData.CurbMassChassis.ToXMLFormat(0)) : null,
+					? new XElement(v210 + XMLNames.CorrectedActualMass, _vehicleInputData.CurbMassChassis.ToXMLFormat(0)) : null,
 				_vehicleInputData.GrossVehicleMassRating != null
 					? new XElement(v210 + XMLNames.TPMLM, _vehicleInputData.GrossVehicleMassRating.ToXMLFormat(0)) : null,
 				GetAirdragModifiedMultistageEntry(),

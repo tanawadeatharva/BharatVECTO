@@ -601,15 +601,6 @@ namespace TUGraz.VectoCommon.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to CorrectedActualMass.
-        /// </summary>
-        public static string Bus_CorrectedActualMass {
-            get {
-                return ResourceManager.GetString("Bus_CorrectedActualMass", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Dayrunninglights.
         /// </summary>
         public static string Bus_Dayrunninglights {
@@ -723,15 +714,6 @@ namespace TUGraz.VectoCommon.Resources {
         public static string Bus_Interiorlights {
             get {
                 return ResourceManager.GetString("Bus_Interiorlights", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to LegislativeCategory.
-        /// </summary>
-        public static string Bus_LegislativeCategory {
-            get {
-                return ResourceManager.GetString("Bus_LegislativeCategory", resourceCulture);
             }
         }
         
@@ -1560,6 +1542,15 @@ namespace TUGraz.VectoCommon.Resources {
         public static string CompressorDrive {
             get {
                 return ResourceManager.GetString("CompressorDrive", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to CorrectedActualMass.
+        /// </summary>
+        public static string CorrectedActualMass {
+            get {
+                return ResourceManager.GetString("CorrectedActualMass", resourceCulture);
             }
         }
         
@@ -4098,6 +4089,15 @@ namespace TUGraz.VectoCommon.Resources {
         public static string Vehicle_IdlingSpeed {
             get {
                 return ResourceManager.GetString("Vehicle_IdlingSpeed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to LegislativeCategory.
+        /// </summary>
+        public static string Vehicle_LegislativeCategory {
+            get {
+                return ResourceManager.GetString("Vehicle_LegislativeCategory", resourceCulture);
             }
         }
         
