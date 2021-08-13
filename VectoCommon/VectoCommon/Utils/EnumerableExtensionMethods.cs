@@ -268,6 +268,26 @@ namespace TUGraz.VectoCommon.Utils
 		/// <param name="item1"></param>
 		/// <param name="item2"></param>
 		/// <param name="item3"></param>
+		public static void Deconstruct<T>(this IEnumerable<T> values, out T item1, out T item2, out T item3)
+		{
+			using (var enumerator = values.GetEnumerator()) {
+				enumerator.MoveNext();
+				item1 = enumerator.Current;
+				enumerator.MoveNext();
+				item2 = enumerator.Current;
+				enumerator.MoveNext();
+				item3 = enumerator.Current;
+			}
+		}
+
+		/// <summary>
+		/// Deconstruct an IEnumerable into individual variables. (Tuple Unpacking)
+		/// </summary>
+		/// <typeparam name="T"></typeparam>
+		/// <param name="values"></param>
+		/// <param name="item1"></param>
+		/// <param name="item2"></param>
+		/// <param name="item3"></param>
 		/// <param name="item4"></param>
 		/// <param name="item5"></param>
 		/// <param name="item6"></param>

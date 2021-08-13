@@ -74,7 +74,6 @@ namespace TUGraz.VectoCore.Tests.Integration.ADAS
 			var jobContainer = new JobContainer(sumContainer);
 			var factory = new SimulatorFactory(ExecutionMode.Engineering, inputData, writer) {
 				WriteModalResults = true,
-				//ActualModalData = true,
 				Validate = false,
 				SumData = sumContainer
 			};
@@ -115,7 +114,6 @@ namespace TUGraz.VectoCore.Tests.Integration.ADAS
 			var jobContainer = new JobContainer(sumContainer);
 			var factory = new SimulatorFactory(ExecutionMode.Engineering, inputData, writer) {
 				WriteModalResults = true,
-				//ActualModalData = true,
 				Validate = false,
 				SumData = sumContainer
 			};
@@ -156,7 +154,6 @@ namespace TUGraz.VectoCore.Tests.Integration.ADAS
 			var jobContainer = new JobContainer(sumContainer);
 			var factory = new SimulatorFactory(ExecutionMode.Engineering, inputData, writer) {
 				WriteModalResults = true,
-				//ActualModalData = true,
 				Validate = false,
 				SumData = sumContainer
 			};
@@ -276,7 +273,6 @@ namespace TUGraz.VectoCore.Tests.Integration.ADAS
 			var jobContainer = new JobContainer(sumContainer);
 			var factory = new SimulatorFactory(ExecutionMode.Engineering, inputData, writer) {
 				WriteModalResults = true,
-				//ActualModalData = true,
 				Validate = false,
 				SumData = sumContainer
 			};
@@ -298,7 +294,7 @@ namespace TUGraz.VectoCore.Tests.Integration.ADAS
 
 
 		[TestCase]
-		public void CompareADASHEVEngineeringJobs()
+		public void CompareADAS_HEV_EngineeringJobs()
 		{
 			var jobName = Group5NoADAS;
 			var writer = new FileOutputWriter(Path.Combine(Path.GetDirectoryName(jobName), "Group5_HEV_Compare"));

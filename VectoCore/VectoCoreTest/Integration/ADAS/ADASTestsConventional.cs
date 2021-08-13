@@ -46,11 +46,11 @@ namespace TUGraz.VectoCore.Tests.Integration.ADAS
 		private GraphWriter GetGraphWriter()
 		{
 			var graphWriter = new GraphWriter();
-			//#if TRACE
+			#if TRACE
 			graphWriter.Enable();
-			//#else
-			//graphWriter.Disable();
-			//#endif
+			#else
+			graphWriter.Disable();
+			#endif
 			graphWriter.Xfields = new[] { ModalResultField.dist };
 
 			graphWriter.Yfields = new[] {
@@ -415,7 +415,7 @@ namespace TUGraz.VectoCore.Tests.Integration.ADAS
 		}
 
 		[TestCase]
-		public void CompareADASConventionalEngineeringJobs()
+		public void CompareADAS_Conventional_EngineeringJobs()
 		{
 			var jobName = Group5NoADAS;
 			var writer = new FileOutputWriter(Path.Combine(Path.GetDirectoryName(jobName), "Group5_Conventional_Compare"));
@@ -630,17 +630,16 @@ namespace TUGraz.VectoCore.Tests.Integration.ADAS
 			}
 		}
 
-		IEnumerable<(T2 Distance, T1 Before, T1 After)> GetDistancesOfStateChanges<T1, T2>(IEnumerable<T1> states, IEnumerable<T2> locations)
+		IEnumerable<(T2 Distance, T1 Before, T1 After)> GetDistancesOfStateChanges<T1, T2>(IEnumerable<T1> states, IEnumerable<T2> distances)
 		{
 			using (var values = states.GetEnumerator()) {
-				using (var locs = locations.GetEnumerator()) {
-					locs.MoveNext();
+				using (var distance = distances.GetEnumerator()) {
+					distance.MoveNext();
 					values.MoveNext();
 					var value = values.Current;
-					while (values.MoveNext()) {
-						locs.MoveNext();
+					while (values.MoveNext() | distance.MoveNext()) {
 						if (!value.Equals(values.Current)) {
-							yield return (locs.Current, value, values.Current);
+							yield return (distance.Current, value, values.Current);
 							value = values.Current;
 						}
 					}
