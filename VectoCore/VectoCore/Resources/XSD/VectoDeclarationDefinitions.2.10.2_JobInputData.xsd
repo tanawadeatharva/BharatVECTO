@@ -1319,6 +1319,11 @@
 				<xs:sequence>
 					<xs:group ref="v2.10.2:Vehicle_CompletedBus_GeneralParametersSequenceGroup"/>
 					<xs:group ref="v2.10.2:Vehicle_CompletedBusParametersSequenceGroup"/>
+					<xs:element name="NgTankSystem" type="v1.0:NgTankSystemType" minOccurs="0">
+						<xs:annotation>
+							<xs:documentation>P275 - enum</xs:documentation>
+						</xs:annotation>
+					</xs:element>
 					<xs:group ref="v2.10.2:Vehicle_CompletedBus_PassengerCountSequenceGroup" minOccurs="0"/>
 					<xs:element name="BodyworkCode" type="v2.10.2:VehicleCodeType" minOccurs="0">
 						<xs:annotation>
@@ -1616,6 +1621,11 @@
 				<xs:sequence>
 					<xs:group ref="v2.10.2:Vehicle_CompletedBus_GeneralParametersSequenceGroup"/>
 					<xs:group ref="v2.10.2:Vehicle_CompletedBusParametersSequenceGroup"/>
+					<xs:element name="NgTankSystem" type="v1.0:NgTankSystemType" minOccurs="0">
+						<xs:annotation>
+							<xs:documentation>P275 - enum</xs:documentation>
+						</xs:annotation>
+					</xs:element>
 					<xs:group ref="v2.10.2:Vehicle_CompletedBus_PassengerCountSequenceGroup" minOccurs="0"/>
 					<xs:element name="BodyworkCode" type="v2.10.2:VehicleCodeType" minOccurs="0">
 						<xs:annotation>
@@ -1899,7 +1909,7 @@
 			<xs:extension base="v2.0:AbstractVehicleDeclarationType">
 				<xs:sequence>
 					<xs:group ref="v2.10.2:Vehicle_HeavyLorryParametersSequenceGroup_1"/>
-					<xs:group ref="v2.10.2:Vehicle_HeavyLorryParametersSequenceGroup_2"/>
+					<xs:group ref="v2.10.2:Vehicle_HeavyLorryPEVParametersSequenceGroup_2"/>
 					<xs:element name="ArchitectureID" type="v2.10.2:ArchitectureID_IEPC_Type"/>
 					<xs:group ref="v2.10.2:Vehicle_xEV-Parameters_SequenceGroup"/>
 					<xs:element name="ADAS" type="v2.10.2:Abstract_ADAS_IEPCType"/>
@@ -1913,7 +1923,7 @@
 			<xs:extension base="v2.0:AbstractVehicleDeclarationType">
 				<xs:sequence>
 					<xs:group ref="v2.10.2:Vehicle_MediumLorryParametersSequenceGroup_1"/>
-					<xs:group ref="v2.10.2:Vehicle_MediumLorryParametersSequenceGroup_2"/>
+					<xs:group ref="v2.10.2:Vehicle_MediumLorryPEVParametersSequenceGroup_2"/>
 					<xs:element name="ArchitectureID" type="v2.10.2:ArchitectureID_IEPC_Type"/>
 					<xs:group ref="v2.10.2:Vehicle_xEV-Parameters_SequenceGroup"/>
 					<xs:element name="ADAS" type="v2.10.2:Abstract_ADAS_IEPCType"/>
@@ -1984,7 +1994,7 @@
 			<xs:extension base="v2.0:AbstractVehicleDeclarationType">
 				<xs:sequence>
 					<xs:group ref="v2.10.2:Vehicle_HeavyLorryParametersSequenceGroup_1"/>
-					<xs:group ref="v2.10.2:Vehicle_HeavyLorryParametersSequenceGroup_2"/>
+					<xs:group ref="v2.10.2:Vehicle_HeavyLorryPEVParametersSequenceGroup_2"/>
 					<xs:element name="ArchitectureID" type="v2.10.2:ArchitectureID_PEV_Type"/>
 					<xs:group ref="v2.10.2:Vehicle_xEV-Parameters_SequenceGroup"/>
 					<xs:element name="ADAS" type="v2.10.2:Abstract_ADAS_PEVType"/>
@@ -2000,7 +2010,7 @@
 			<xs:extension base="v2.0:AbstractVehicleDeclarationType">
 				<xs:sequence>
 					<xs:group ref="v2.10.2:Vehicle_MediumLorryParametersSequenceGroup_1"/>
-					<xs:group ref="v2.10.2:Vehicle_MediumLorryParametersSequenceGroup_2"/>
+					<xs:group ref="v2.10.2:Vehicle_MediumLorryPEVParametersSequenceGroup_2"/>
 					<xs:element name="ArchitectureID" type="v2.10.2:ArchitectureID_PEV_Type"/>
 					<xs:group ref="v2.10.2:Vehicle_xEV-Parameters_SequenceGroup"/>
 					<xs:element name="ADAS" type="v2.10.2:Abstract_ADAS_PEVType"/>
@@ -2971,11 +2981,6 @@
 					<xs:documentation>P334 - bool</xs:documentation>
 				</xs:annotation>
 			</xs:element>
-			<xs:element name="NgTankSystem" type="v1.0:NgTankSystemType" minOccurs="0">
-				<xs:annotation>
-					<xs:documentation>P275 - enum</xs:documentation>
-				</xs:annotation>
-			</xs:element>
 			<xs:element name="ClassBus" type="v2.10.2:RegisteredClassType" minOccurs="0">
 				<xs:annotation>
 					<xs:documentation>P282 - enum</xs:documentation>
@@ -3055,6 +3060,27 @@
 			</xs:element>
 		</xs:sequence>
 	</xs:group>
+	<xs:group name="Vehicle_HeavyLorryPEVParametersSequenceGroup_2">
+		<xs:sequence>
+			<xs:group ref="v2.10.2:Vehicle_RetarderSequenceGroup"/>
+			<xs:element name="AngledriveType" type="v1.0:AngledriveTypeType">
+				<xs:annotation>
+					<xs:documentation>P180 - enum</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="PTO" type="v2.0:AbstractPTODataType"/>
+			<xs:element name="ZeroEmissionVehicle" type="xs:boolean"/>
+			<xs:element name="VocationalVehicle" type="xs:boolean"/>
+			<xs:element name="SleeperCab" type="xs:boolean"/>
+			<xs:element name="VehicleTypeApprovalNumber">
+				<xs:simpleType>
+					<xs:restriction base="xs:token">
+						<xs:minLength value="1"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+		</xs:sequence>
+	</xs:group>
 	<xs:group name="Vehicle_MediumLorryParametersSequenceGroup_1">
 		<xs:sequence>
 			<xs:group ref="v2.10.2:Vehicle_GeneralParametersSequenceGroup"/>
@@ -3093,6 +3119,31 @@
 			</xs:element>
 			<xs:element name="ZeroEmissionVehicle" type="xs:boolean"/>
 			<xs:element name="NgTankSystem" type="v1.0:NgTankSystemType" minOccurs="0"/>
+			<xs:element name="VehicleTypeApprovalNumber">
+				<xs:simpleType>
+					<xs:restriction base="xs:token">
+						<xs:minLength value="1"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+		</xs:sequence>
+	</xs:group>
+	<xs:group name="Vehicle_MediumLorryPEVParametersSequenceGroup_2">
+		<xs:sequence>
+			<xs:element name="CargoVolume" minOccurs="0">
+				<xs:simpleType>
+					<xs:restriction base="v1.0:Double3">
+						<xs:minExclusive value="0.000"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:group ref="v2.10.2:Vehicle_RetarderSequenceGroup"/>
+			<xs:element name="AngledriveType" type="v1.0:AngledriveTypeType">
+				<xs:annotation>
+					<xs:documentation>P180 - enum</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="ZeroEmissionVehicle" type="xs:boolean"/>
 			<xs:element name="VehicleTypeApprovalNumber">
 				<xs:simpleType>
 					<xs:restriction base="xs:token">

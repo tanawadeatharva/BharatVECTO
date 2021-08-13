@@ -10,7 +10,6 @@
 		<CorrectedActualMass>500</CorrectedActualMass>
 		<TechnicalPermissibleMaximumLadenMass>3500</TechnicalPermissibleMaximumLadenMass>
 		<AirdragModifiedMultistage>true</AirdragModifiedMultistage>
-		<NgTankSystem>Compressed</NgTankSystem>
 		<ClassBus>II+III</ClassBus>
 		<NumberPassengerSeatsLowerDeck>1</NumberPassengerSeatsLowerDeck>
 		<NumberPassengersStandingLowerDeck>10</NumberPassengersStandingLowerDeck>
