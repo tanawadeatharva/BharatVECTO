@@ -20,6 +20,7 @@
 		</PTO>
 		<ZeroEmissionVehicle>false</ZeroEmissionVehicle>
 		<VocationalVehicle>false</VocationalVehicle>
+		<NgTankSystem>Liquefied</NgTankSystem><!-- optional -->
 		<SleeperCab>false</SleeperCab>
 		<VehicleTypeApprovalNumber>ASDF</VehicleTypeApprovalNumber>
 		<ArchitectureID>S-IEPC</ArchitectureID>
@@ -78,6 +79,7 @@
 					</FuelConsumptionMap>
 					<FullLoadAndDragCurve>
 						<Entry engineSpeed="560.00" maxTorque="1180.00" dragTorque="-149.00"/>
+						<Entry engineSpeed="1800.00" maxTorque="1800.00" dragTorque="-300.00"/>
 						<Entry engineSpeed="2100.00" maxTorque="1100.00" dragTorque="-320.00"/>
 					</FullLoadAndDragCurve>
 				</v2.0:Data>
