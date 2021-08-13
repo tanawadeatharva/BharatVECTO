@@ -22,9 +22,9 @@ namespace TUGraz.VectoCore.Tests.Integration.ADAS
 	[Parallelizable(ParallelScope.All)]
 	public class ADASTestsPEV
 	{
-		private const string Group5NoADAS = @"TestData\Integration\ADAS-HEV\Group5PCCEng\Class5_Tractor_NoADAS.vecto";
-		private const string Group5PCC12 = @"TestData\Integration\ADAS-HEV\Group5PCCEng\Class5_Tractor_PCC12.vecto";
-		private const string Group5PCC123 = @"TestData\Integration\ADAS-HEV\Group5PCCEng\Class5_Tractor_PCC123.vecto";
+		private const string Group5NoADAS = @"TestData\Integration\ADAS-PEV\Group5PCCEng\Class5_Tractor_NoADAS.vecto";
+		private const string Group5PCC12 = @"TestData\Integration\ADAS-PEV\Group5PCCEng\Class5_Tractor_PCC12.vecto";
+		private const string Group5PCC123 = @"TestData\Integration\ADAS-PEV\Group5PCCEng\Class5_Tractor_PCC123.vecto";
 
 		[OneTimeSetUp]
 		public void RunBeforeAnyTests() => Directory.SetCurrentDirectory(TestContext.CurrentContext.TestDirectory);
