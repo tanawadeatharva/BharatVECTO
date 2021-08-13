@@ -5,6 +5,7 @@ using NUnit.Framework;
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Threading;
 using System.Threading.Tasks;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
@@ -438,9 +439,9 @@ namespace TUGraz.VectoCore.Tests.Integration.ADAS
 			};
 
 			var tasks = jobNames.Select(job => Task.Factory.StartNew(j =>
-				new SimulatorFactory(ExecutionMode.Engineering, 
-					JSONInputDataFactory.ReadJsonJob((string)j), writer, validate: false, writeModalResults: true), 
-				job, TaskCreationOptions.LongRunning));
+				new SimulatorFactory(ExecutionMode.Engineering,
+					JSONInputDataFactory.ReadJsonJob((string)j), writer, validate: false, writeModalResults: true),
+				job, TaskCreationOptions.LongRunning)).ToArray();
 
 			foreach (var task in tasks) {
 				jobContainer.AddRuns(task.Result);
@@ -452,18 +453,137 @@ namespace TUGraz.VectoCore.Tests.Integration.ADAS
 
 			Assert.IsTrue(progress.All(r => r.Value.Success), string.Concat(progress.Select(r => r.Value.Error)));
 
-			var crestCoastRuns = sumContainer.Table.Select(@"[Job [-\]] LIKE '*-0'", "Job [-]");
-			var values = crestCoastRuns.Select(row => row.Field<ConvertedSI>("FC-Final [g/h]")).ToArray();
-			var (NoADAS, EcoRollNoStop, EcoRollEngineStop, PCC12, PCC123, PCC123NoEngineStop, PCC123EngineStop) = values;
+			var c = "CrestCoast1.vdri"; var result = CheckCycle(c);
+			Assert.AreEqual(203, result.NoADAS, 5);
+			Assert.AreEqual(result.PCC12, result.NoADAS, $"{c}: since there is no pcc event, pcc should consume the same.");
+			Assert.AreEqual(result.PCC123, result.NoADAS, $"{c}: since there is no pcc event, pcc should consume the same.");
+			Assert.AreEqual(result.EcoRollEngineStop, result.PCC123EngineStop, $"{c}: since there is no pcc event, pcc should consume the same.");
+			Assert.AreEqual(result.EcoRollEngineStop, result.PCC123EngineStop, $"{c}: since there is no pcc event, pcc should consume the same.");
+			Assert.GreaterOrEqual(result.EcoRollNoStop, result.NoADAS, $"{c}: Enabling EcoRoll increases fuel consumption.");
+			Assert.GreaterOrEqual(result.EcoRollEngineStop, result.NoADAS, $"{c}: Enabling EcoRoll increases fuel consumption.");
 
-			foreach (var val in values) {
-				Console.WriteLine(val);
+			c = "CrestCoast2.vdri"; result = CheckCycle(c);
+			Assert.AreEqual(250, result.NoADAS, 5);
+			Assert.AreEqual(result.PCC12, result.NoADAS, $"{c}: since there is no pcc event, pcc should consume the same.");
+			Assert.AreEqual(result.PCC123, result.NoADAS, $"{c}: since there is no pcc event, pcc should consume the same.");
+			Assert.AreEqual(result.EcoRollEngineStop, result.PCC123EngineStop, $"{c}: since there is no pcc event, pcc should consume the same.");
+			Assert.AreEqual(result.EcoRollEngineStop, result.PCC123EngineStop, $"{c}: since there is no pcc event, pcc should consume the same.");
+			Assert.GreaterOrEqual(result.EcoRollNoStop, result.NoADAS, $"{c}: Enabling EcoRoll increases fuel consumption.");
+			Assert.GreaterOrEqual(result.EcoRollEngineStop, result.NoADAS, $"{c}: Enabling EcoRoll increases fuel consumption.");
+			
+			c = "Group5Eng_CaseA.vdri"; result = CheckCycle(c);
+			Assert.AreEqual(264, result.NoADAS, 5);
+			Assert.Less(result.PCC12, result.NoADAS, $"{c}: pcc should be less.");
+			Assert.Less(result.PCC123, result.NoADAS, $"{c}: pcc should be less.");
+			Assert.AreEqual(result.PCC12, result.PCC123, $"{c}: pcc 12 and 123 should be equal.");
+			Assert.Less(result.EcoRollNoStop, result.NoADAS);
+			Assert.Less(result.EcoRollEngineStop, result.EcoRollNoStop);
+			Assert.Less(result.PCC123EngineStop, result.EcoRollEngineStop);
+			Assert.Less(result.PCC123NoEngineStop, result.EcoRollNoStop);
+			Assert.Less(result.PCC123NoEngineStop, result.EcoRollEngineStop);
+			
+			c = "Group5Eng_CaseB.vdri"; result = CheckCycle(c);
+			Assert.AreEqual(224, result.NoADAS, 5);
+			Assert.AreEqual(result.PCC12, result.PCC123);
+			Assert.Less(result.PCC12, result.NoADAS);
+			Assert.Less(result.NoADAS, result.EcoRollEngineStop);
+			Assert.Less(result.NoADAS, result.EcoRollNoStop);
+			Assert.Less(result.PCC123NoEngineStop, result.PCC123);
+			Assert.Less(result.PCC123EngineStop, result.PCC123NoEngineStop);
+
+			c = "Group5Eng_CaseC.vdri"; result = CheckCycle(c);
+			Assert.AreEqual(197, result.NoADAS, 5);
+			Assert.Greater(result.EcoRollNoStop, result.NoADAS);
+			Assert.Less(result.EcoRollEngineStop, result.EcoRollNoStop);
+			Assert.Less(result.PCC12, result.NoADAS);
+			Assert.Less(result.PCC123, result.PCC12);
+			Assert.Greater(result.PCC123NoEngineStop, result.PCC123);
+			Assert.Less(result.PCC123EngineStop, result.PCC123NoEngineStop);
+			
+			c = "Group5Eng_CaseD.vdri"; result = CheckCycle(c);
+			Assert.AreEqual(248, result.NoADAS, 5);
+			Assert.Greater(result.EcoRollNoStop, result.NoADAS);
+			Assert.Less(result.EcoRollEngineStop, result.EcoRollNoStop);
+			Assert.Less(result.PCC12, result.NoADAS);
+			Assert.Less(result.PCC123, result.PCC12);
+			Assert.Less(result.PCC123NoEngineStop, result.PCC123);
+			Assert.Less(result.PCC123EngineStop, result.PCC123NoEngineStop);
+			
+			c = "Group5Eng_CaseE.vdri"; result = CheckCycle(c);
+			Assert.AreEqual(230, result.NoADAS, 5);
+			Assert.Less(result.EcoRollNoStop, result.NoADAS);
+			Assert.Less(result.EcoRollEngineStop, result.EcoRollNoStop);
+			Assert.Less(result.PCC12, result.NoADAS);
+			Assert.AreEqual(result.PCC123, result.PCC12);
+			Assert.Less(result.PCC123NoEngineStop, result.PCC123);
+			Assert.Less(result.PCC123EngineStop, result.PCC123NoEngineStop);
+
+			c = "Group5Eng_CaseF.vdri"; result = CheckCycle(c);
+			Assert.AreEqual(220, result.NoADAS, 5);
+			Assert.Less(result.EcoRollNoStop, result.NoADAS);
+			Assert.Less(result.EcoRollEngineStop, result.EcoRollNoStop);
+			Assert.Less(result.PCC12, result.NoADAS);
+			Assert.AreEqual(result.PCC123, result.PCC12);
+			Assert.Less(result.PCC123NoEngineStop, result.PCC123);
+			Assert.Less(result.PCC123EngineStop, result.PCC123NoEngineStop);
+
+			c = "Group5Eng_CaseG.vdri"; result = CheckCycle(c);
+			Assert.AreEqual(236, result.NoADAS, 5);
+			Assert.AreEqual(result.EcoRollNoStop, result.NoADAS);
+			Assert.AreEqual(result.EcoRollEngineStop, result.EcoRollNoStop);
+			Assert.Less(result.PCC12, result.NoADAS);
+			Assert.Less(result.PCC123, result.PCC12);
+			Assert.Greater(result.PCC123NoEngineStop, result.PCC123);
+			Assert.Less(result.PCC123EngineStop, result.PCC123);
+
+			c = "Group5Eng_CaseH.vdri"; result = CheckCycle(c);
+			Assert.AreEqual(204, result.NoADAS, 5);
+			Assert.Greater(result.EcoRollNoStop, result.NoADAS);
+			Assert.Less(result.EcoRollEngineStop, result.EcoRollNoStop);
+			Assert.Less(result.PCC12, result.NoADAS);
+			Assert.AreEqual(result.PCC123, result.PCC12);
+			Assert.Less(result.PCC123NoEngineStop, result.PCC123);
+			Assert.Less(result.PCC123EngineStop, result.PCC123NoEngineStop);
+
+			c = "Group5Eng_CaseI.vdri"; result = CheckCycle(c);
+			Assert.AreEqual(214, result.NoADAS, 5);
+			Assert.AreEqual(result.EcoRollNoStop, result.NoADAS);
+			Assert.AreEqual(result.EcoRollEngineStop, result.EcoRollNoStop);
+			Assert.AreEqual(result.PCC12, result.NoADAS);
+			Assert.AreEqual(result.PCC123, result.PCC12);
+			Assert.AreEqual(result.PCC123NoEngineStop, result.PCC123);
+			Assert.AreEqual(result.PCC123EngineStop, result.PCC123NoEngineStop);
+			
+			c = "Group5Eng_CaseJ.vdri"; result = CheckCycle(c);
+			Assert.AreEqual(303, result.NoADAS, 5);
+			Assert.AreEqual(result.EcoRollNoStop, result.NoADAS);
+			Assert.AreEqual(result.EcoRollEngineStop, result.EcoRollNoStop);
+			Assert.Less(result.PCC12, result.NoADAS);
+			Assert.Less(result.PCC123, result.PCC12);
+			Assert.Greater(result.PCC123NoEngineStop, result.PCC123);
+			Assert.Less(result.PCC123EngineStop, result.PCC123NoEngineStop);
+
+			(ConvertedSI NoADAS, ConvertedSI EcoRollNoStop, ConvertedSI EcoRollEngineStop,
+				ConvertedSI PCC12, ConvertedSI PCC123, ConvertedSI PCC123NoEngineStop, ConvertedSI PCC123EngineStop)
+				CheckCycle(string s)
+			{
+				var sumResults = sumContainer.Table.Select($@"[Cycle [-\]] = '{s}'", "Job [-]");
+				var values = sumResults.Select(row => row.Field<ConvertedSI>("FC-Final [g/km]")).ToArray();
+				var (NoADAS, EcoRollNoStop, EcoRollEngineStop, PCC12, PCC123, PCC123NoEngineStop, PCC123EngineStop) = values;
+
+				Assert.LessOrEqual(PCC12, NoADAS, $"{s}: Enabling ADAS should always reduce fuel consumption.");
+				Assert.LessOrEqual(PCC123, NoADAS, $"{s}: Enabling ADAS should always reduce fuel consumption.");
+
+				Assert.LessOrEqual(PCC123EngineStop, PCC123NoEngineStop, $"{s}: with engine stop should always consume less then without engine stop");
+				Assert.LessOrEqual(EcoRollEngineStop, EcoRollNoStop, $"{s}: with engine stop should always consume less then without engine stop");
+
+				Assert.LessOrEqual(PCC123NoEngineStop, EcoRollNoStop, $"{s}: PCC EcoRoll should always be lower as EcoRoll.");
+				Assert.LessOrEqual(PCC123EngineStop, EcoRollEngineStop, $"{s}: PCC EcoRoll should always be lower as EcoRoll.");
+		
+				Assert.LessOrEqual(PCC123, PCC12, $"{s}: better pcc options should consume less");
+				
+				return (NoADAS, EcoRollNoStop, EcoRollEngineStop, PCC12, PCC123, PCC123NoEngineStop, PCC123EngineStop);
 			}
-
-
-
-
-
 		}
 	}
 }
