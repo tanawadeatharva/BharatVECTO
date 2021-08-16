@@ -46,11 +46,11 @@ namespace TUGraz.VectoCore.Tests.Integration.ADAS
 		private GraphWriter GetGraphWriter()
 		{
 			var graphWriter = new GraphWriter();
-			#if TRACE
+			//#if TRACE
 			graphWriter.Enable();
-			#else
-			graphWriter.Disable();
-			#endif
+			//#else
+			//graphWriter.Disable();
+			//#endif
 			graphWriter.Xfields = new[] { ModalResultField.dist };
 
 			graphWriter.Yfields = new[] {

@@ -45,7 +45,7 @@ namespace TUGraz.VectoCore.Tests.Integration.ADAS
 
 			graphWriter.Yfields = new[] {
 				ModalResultField.v_act, ModalResultField.altitude, ModalResultField.acc, ModalResultField.Gear,
-				ModalResultField.P_ice_out
+				ModalResultField.P_ice_out, ModalResultField.FCMap
 			};
 			graphWriter.Series1Label = "ADAS PCC";
 			graphWriter.PlotIgnitionState = true;
