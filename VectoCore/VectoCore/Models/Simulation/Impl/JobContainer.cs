@@ -502,7 +502,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 						JobContainer.JobCompleted(RunId, _runContainerId);
 						_done = true;
 					}
-				});
+				}, TaskCreationOptions.LongRunning);
 			}
 
 			public Task RunWorkerAsync()
