@@ -60,10 +60,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 
 		protected IDictionary<Tuple<MissionType, LoadingType>, double> _weightingFactors;
 
-		public XMLDeclarationReport(IReportWriter writer) : base(writer)
-		{
-			
-		}
+		public XMLDeclarationReport(IReportWriter writer) : base(writer) { }
 
 		public class ResultEntry : IResultEntry
 		{
@@ -177,11 +174,12 @@ namespace TUGraz.VectoCore.OutputData.XML
 				WeightingFactor = weightingFactor;
 
 				PrimaryResult = runData.PrimaryResult;
+
 			}
 
 		}
 
-		
+
 
 		public virtual XDocument FullReport => ManufacturerRpt.Report;
 
@@ -202,9 +200,9 @@ namespace TUGraz.VectoCore.OutputData.XML
 			if (!sumWeightinFactors.IsEqual(0) && !sumWeightinFactors.IsEqual(1)) {
 				throw new VectoException("Mission Profile Weighting factors do not sum up to 1!");
 			}
-			
-				ManufacturerRpt.WriteResult(result);
-				CustomerRpt.WriteResult(result);
+
+			ManufacturerRpt.WriteResult(result);
+			CustomerRpt.WriteResult(result);
 		}
 
 		protected override void GenerateReports()
@@ -238,8 +236,8 @@ namespace TUGraz.VectoCore.OutputData.XML
 				}
 
 				WeightingGroup = DeclarationData.WeightingGroup.Lookup(
-					modelData.VehicleData.VehicleClass, modelData.VehicleData.SleeperCab.Value,
-					modelData.EngineData.RatedPowerDeclared);
+						modelData.VehicleData.VehicleClass, modelData.VehicleData.SleeperCab.Value,
+						modelData.EngineData.RatedPowerDeclared);
 			}
 
 			InstantiateReports(modelData);

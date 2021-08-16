@@ -72,7 +72,7 @@ namespace TUGraz.VectoCore.OutputData
 			Fields.FCFINAL_LiterPer100M3KM, Fields.FCFINAL_LiterPer100PassengerKM,
 			Fields.SPECIFIC_FC, Fields.K_VEHLINE, Fields.K_ENGLINE
 		};
-		
+
 		internal readonly DataTable Table;
 		private readonly ISummaryWriter _sumWriter;
 
@@ -88,7 +88,7 @@ namespace TUGraz.VectoCore.OutputData
 			Table = new DataTable();
 			InitTableColumns();
 		}
-		
+
 		private void InitTableColumns()
 		{
 			lock (Table) {
@@ -259,12 +259,13 @@ namespace TUGraz.VectoCore.OutputData
 			foreach (var entry in modDataFuelData) {
 				foreach (var column in FcColumns.Reverse()) {
 					var colName = string.Format(column, modDataFuelData.Count <= 1 && !engineDataMultipleEngineFuelModes ? "" : "_" + entry.FuelType.GetLabel());
-					lock (Table)
+					lock (Table) {
 						if (!Table.Columns.Contains(colName)) {
 							var col = new DataColumn(colName, typeof(ConvertedSI));
 							Table.Columns.Add(col);
 							col.SetOrdinal(Table.Columns.IndexOf(Fields.ALTITUDE_DELTA) + 1);
 						}
+					}
 				}
 			}
 		}
@@ -284,6 +285,7 @@ namespace TUGraz.VectoCore.OutputData
 			}
 		}
 
+		//[MethodImpl(MethodImplOptions.Synchronized)]
 		public virtual void Write(IModalDataContainer modData, int jobNr, int runNr, VectoRunData runData)
 		{
 			var row = GetResultRow(modData, runData);

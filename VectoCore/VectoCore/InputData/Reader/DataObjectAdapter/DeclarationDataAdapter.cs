@@ -176,6 +176,9 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			exempted.DualFuelVehicle = data.DualFuelVehicle;
 			exempted.MaxNetPower1 = data.MaxNetPower1;
 			exempted.MaxNetPower2 = data.MaxNetPower2;
+			exempted.SleeperCab = data.SleeperCab;
+			exempted.AxleConfiguration = data.AxleConfiguration;
+
 			return exempted;
 		}
 

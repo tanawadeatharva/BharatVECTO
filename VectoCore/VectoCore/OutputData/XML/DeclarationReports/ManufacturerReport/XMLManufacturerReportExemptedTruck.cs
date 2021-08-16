@@ -45,10 +45,8 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport
 			var retVal = new List<XElement>();
 
 			if (modelData.VehicleData.AxleConfiguration != AxleConfiguration.AxleConfig_Undefined) {
-				retVal.Add(new XElement(tns + XMLNames.Vehicle_AxleConfiguration,
-					modelData.VehicleData.AxleConfiguration.GetName()));
-				retVal.Add(new XElement(tns + XMLNames.Report_Vehicle_VehicleGroup,
-					modelData.VehicleData.VehicleClass.GetClassNumber()));
+				retVal.Add(new XElement(tns + XMLNames.Vehicle_AxleConfiguration, modelData.VehicleData.AxleConfiguration.GetName()));
+				retVal.Add(new XElement(tns + XMLNames.Report_Vehicle_VehicleGroup, modelData.VehicleData.VehicleClass.GetClassNumber()));
 			}
 
 			if (modelData.VehicleData.SleeperCab.HasValue) {
@@ -62,6 +60,8 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport
 				retVal.Add(new XElement(tns + XMLNames.Vehicle_MaxNetPower2,
 					XMLHelper.ValueAsUnit(modelData.VehicleData.MaxNetPower2, XMLNames.Unit_W)));
 			}
+
+			return retVal.ToArray();
 
 			return retVal.ToArray();
 		}

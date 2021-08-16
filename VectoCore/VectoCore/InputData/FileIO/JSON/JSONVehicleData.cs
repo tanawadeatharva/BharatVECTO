@@ -415,7 +415,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 		public virtual bool VocationalVehicle => DeclarationData.Vehicle.VocationalVehicleDefault;
 
-		public virtual bool SleeperCab => DeclarationData.Vehicle.SleeperCabDefault;
+		public virtual bool? SleeperCab => DeclarationData.Vehicle.SleeperCabDefault;
 
 		public virtual bool? AirdragModifiedMultistage { get; }
 
