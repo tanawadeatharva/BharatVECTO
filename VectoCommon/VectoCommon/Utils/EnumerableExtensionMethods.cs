@@ -102,9 +102,8 @@ namespace TUGraz.VectoCommon.Utils
 		/// Zips all elements of two enumerable together. If the enumerables dont have the same length an exception is thrown.
 		/// </summary>
 		/// <exception cref="System.InvalidOperationException">Enumeration already finished. Thrown if the enumerables dont have the same length.</exception>
-		public static IEnumerable<(T1 firstEnumerable, T2 secondEnumerable)> Zip<T1,T2>(this IEnumerable<T1> self, IEnumerable<T2> other) =>
+		public static IEnumerable<(T1 Item1, T2 Item2)> Zip<T1,T2>(this IEnumerable<T1> self, IEnumerable<T2> other) =>
 			self.ZipAll(other, (arg1, arg2) => (arg1,arg2));
-
 
 		/// <summary>
 		/// Sums up the values of selector.

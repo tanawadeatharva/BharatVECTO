@@ -261,14 +261,16 @@ namespace TUGraz.VectoCore.Tests.Integration.ADAS
 			var m = modData[(Group5PCC123, c.Slice(0, -5))];
 			var pccStates = m.SelectData(x => Convert.ToInt32(x["PCCState"]));
 			var distances = m.SelectData(x => x.Field<Meter>(ModalResultField.dist.GetName()).Value());
-			var sections = GetDistancesOfStateChanges(pccStates, distances);
+			var deltas = m.SelectData(x => (x.Field<MeterPerSecond>(ModalResultField.v_targ.GetName()) * 2.SI<Second>()).Value());
+
+			var sections = GetDistancesOfStateChanges(pccStates, distances.Zip(deltas));
 			if (expectedSections.Length == 0) {
 				Assert.IsFalse(sections.Any());
 			} else {
 				foreach (var (exp, actual) in expectedSections.Zip(sections)) {
 					Assert.AreEqual(exp.Before, actual.Before, $"Cycle {c}: Expected change from {exp.Before} --> {exp.After} at distance {exp.Distance}");
 					Assert.AreEqual(exp.After, actual.After, $"Cycle {c}: Expected change from {exp.Before} --> {exp.After} at distance {exp.Distance}");
-					Assert.AreEqual(exp.Distance, actual.Distance, 10, $"Cycle {c}: Expected change from {exp.Before} --> {exp.After} at distance {exp.Distance}");
+					Assert.AreEqual(exp.Distance, actual.Distance.Item1, actual.Distance.Item2, $"Cycle {c}: Expected change from {exp.Before} --> {exp.After} at distance {exp.Distance}");
 				}
 			}
 		}

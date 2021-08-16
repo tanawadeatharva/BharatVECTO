@@ -334,8 +334,8 @@ namespace TUGraz.VectoCore.Tests.Integration.ADAS
 			Assert.AreEqual(result.PCC123, result.NoADAS, $"{c}: since there is no pcc event, pcc should consume the same.");
 			Assert.AreEqual(result.EcoRollEngineStop, result.PCC123EngineStop, $"{c}: since there is no pcc event, pcc should consume the same.");
 			Assert.AreEqual(result.EcoRollEngineStop, result.PCC123EngineStop, $"{c}: since there is no pcc event, pcc should consume the same.");
-			Assert.GreaterOrEqual(result.EcoRollNoStop, result.NoADAS, $"{c}: Enabling EcoRoll increases fuel consumption.");
-			Assert.GreaterOrEqual(result.EcoRollEngineStop, result.NoADAS, $"{c}: Enabling EcoRoll increases fuel consumption.");
+			Assert.Less(result.EcoRollNoStop, result.NoADAS, $"{c}: Enabling EcoRoll increases fuel consumption.");
+			Assert.Less(result.EcoRollEngineStop, result.NoADAS, $"{c}: Enabling EcoRoll increases fuel consumption.");
 			TestPCCSections(modData, c);
 
 			var m = modData[(Group5PCC123, c.Slice(0, -5))];
@@ -474,7 +474,7 @@ namespace TUGraz.VectoCore.Tests.Integration.ADAS
 
 			var sumResults = summaryDataContainer.Table.Select($@"[Cycle [-\]] = '{s}'", "Input File [-]");
 			Assert.AreEqual(7, sumResults.Length, $"{s}: Not enough result rows in sum file");
-			var values = sumResults.Select(row => row.Field<ConvertedSI>("FC-Final [g/km]")).ToArray();
+			var values = sumResults.Select(row => row.Field<ConvertedSI>(string.Format(SummaryDataContainer.Fields.FCFINAL_KM, ""))).ToArray();
 			var (EcoRollEngineStop, EcoRollNoStop, NoADAS, PCC12, PCC123, PCC123EngineStop, PCC123NoEngineStop) = values;
 
 			Assert.LessOrEqual(PCC12, NoADAS, $"{s}: Enabling ADAS should always reduce fuel consumption.");
@@ -497,14 +497,17 @@ namespace TUGraz.VectoCore.Tests.Integration.ADAS
 			var m = modData[(Group5PCC123, c.Slice(0, -5))];
 			var pccStates = m.SelectData(x => Convert.ToInt32(x["PCCState"]));
 			var distances = m.SelectData(x => x.Field<Meter>(ModalResultField.dist.GetName()).Value());
-			var sections = GetDistancesOfStateChanges(pccStates, distances);
+
+			var deltas = m.SelectData(x => (x.Field<MeterPerSecond>(ModalResultField.v_targ.GetName()) * 2.SI<Second>()).Value());
+			
+			var sections = GetDistancesOfStateChanges(pccStates, distances.Zip(deltas));
 			if (expectedSections.Length == 0) {
 				Assert.IsFalse(sections.Any());
 			} else {
 				foreach (var (exp, actual) in expectedSections.Zip(sections)) {
 					Assert.AreEqual(exp.Before, actual.Before, $"Cycle {c}: Expected change from {exp.Before} --> {exp.After} at distance {exp.Distance}");
 					Assert.AreEqual(exp.After, actual.After, $"Cycle {c}: Expected change from {exp.Before} --> {exp.After} at distance {exp.Distance}");
-					Assert.AreEqual(exp.Distance, actual.Distance, 10, $"Cycle {c}: Expected change from {exp.Before} --> {exp.After} at distance {exp.Distance}");
+					Assert.AreEqual(exp.Distance, actual.Distance.Item1, actual.Distance.Item2, $"Cycle {c}: Expected change from {exp.Before} --> {exp.After} at distance {exp.Distance}");
 				}
 			}
 		}
