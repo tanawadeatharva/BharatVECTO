@@ -344,7 +344,8 @@ namespace TUGraz.VectoCore.Tests.Integration.ADAS
 				Assert.AreEqual(0, p, $"PCCStates Index[{i}] should be zero.");
 			}
 
-			c = "CrestCoast2.vdri"; result = CheckCycle(c, sumContainer);
+			c = "CrestCoast2.vdri";
+			result = CheckCycle(c, sumContainer);
 			Assert.AreEqual(250, result.NoADAS, 5);
 			Assert.AreEqual(result.PCC12, result.NoADAS, $"{c}: since there is no pcc event, pcc should consume the same.");
 			Assert.AreEqual(result.PCC123, result.NoADAS, $"{c}: since there is no pcc event, pcc should consume the same.");
