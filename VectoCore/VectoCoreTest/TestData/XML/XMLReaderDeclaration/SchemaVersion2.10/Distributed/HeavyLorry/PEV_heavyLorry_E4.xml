@@ -60,7 +60,7 @@
 						<Date>2017-01-01T00:00:00Z</Date>
 						<AppVersion>aaaaa</AppVersion>
 						<ElectricMachineType>ASM</ElectricMachineType>
-						<CertificationMethod>Measurement</CertificationMethod>
+						<CertificationMethod>Measured</CertificationMethod>
 						<R85RatedPower>1</R85RatedPower>
 						<RotationalInertia>0.10</RotationalInertia>
 						<ContinuousTorque>200.00</ContinuousTorque>
@@ -127,6 +127,7 @@
 							<CertificationNumber>token</CertificationNumber>
 							<Date>2017-01-01T00:00:00Z</Date>
 							<AppVersion>aaaaa</AppVersion>
+							<CertificationMethod>Measured</CertificationMethod>
 							<BatteryType>HPBS</BatteryType>
 							<RatedCapacity>72.00</RatedCapacity>
 							<ConnectorsSubsystemsIncluded>true</ConnectorsSubsystemsIncluded>
@@ -164,6 +165,7 @@
 							<CertificationNumber>token</CertificationNumber>
 							<Date>2017-01-01T00:00:00Z</Date>
 							<AppVersion>aaaaa</AppVersion>
+							<CertificationMethod>Measured</CertificationMethod>
 							<BatteryType>HPBS</BatteryType>
 							<RatedCapacity>72.00</RatedCapacity>
 							<ConnectorsSubsystemsIncluded>true</ConnectorsSubsystemsIncluded>

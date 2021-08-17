@@ -72,15 +72,15 @@
 			<File FilePath="VectoCoreTest\TestData\XML\XMLReaderDeclaration\SchemaVersion2.10\vecto_vehicle-stage_vif_input.xml" HomeFolder="Yes"/>
 		</Folder>
 		<Folder FolderName="Schema 2.10_Components" ValidFileSet="Yes" ValidFile="VectoCore\Resources\XSD\VectoComponent.2.10.xsd">
-			<File FilePath="VectoCoreTest\TestData\XML\XMLReaderDeclaration\SchemaVersion2.10\BatterySystem_1.xml" HomeFolder="Yes"/>
-			<File FilePath="VectoCoreTest\TestData\XML\XMLReaderDeclaration\SchemaVersion2.10\CapacitorSystem_1.xml" HomeFolder="Yes"/>
-			<File FilePath="VectoCoreTest\TestData\XML\XMLReaderDeclaration\SchemaVersion2.10\ElectricMachineSystem-IHPC_1.xml" HomeFolder="Yes"/>
-			<File FilePath="VectoCoreTest\TestData\XML\XMLReaderDeclaration\SchemaVersion2.10\ElectricMachineSystem_1.xml" HomeFolder="Yes"/>
-			<File FilePath="VectoCoreTest\TestData\XML\XMLReaderDeclaration\SchemaVersion2.10\ElectricMachineSystem_StdValues.xml" HomeFolder="Yes"/>
-			<File FilePath="VectoCoreTest\TestData\XML\XMLReaderDeclaration\SchemaVersion2.10\Gearbox_APT-N.xml" HomeFolder="Yes"/>
-			<File FilePath="VectoCoreTest\TestData\XML\XMLReaderDeclaration\SchemaVersion2.10\Gearbox_IHPC.xml" HomeFolder="Yes"/>
-			<File FilePath="VectoCoreTest\TestData\XML\XMLReaderDeclaration\SchemaVersion2.10\IEPC_1.xml" HomeFolder="Yes"/>
-			<File FilePath="VectoCoreTest\TestData\XML\XMLReaderDeclaration\SchemaVersion2.10\IEPC_StdValues.xml" HomeFolder="Yes"/>
+			<File FilePath="VectoCoreTest\TestData\XML\XMLReaderDeclaration\SchemaVersion2.10\Distributed\ComponentData\BatterySystem_1.xml" HomeFolder="Yes"/>
+			<File FilePath="VectoCoreTest\TestData\XML\XMLReaderDeclaration\SchemaVersion2.10\Distributed\ComponentData\CapacitorSystem_1.xml" HomeFolder="Yes"/>
+			<File FilePath="VectoCoreTest\TestData\XML\XMLReaderDeclaration\SchemaVersion2.10\Distributed\ComponentData\ElectricMachineSystem-IHPC_1.xml" HomeFolder="Yes"/>
+			<File FilePath="VectoCoreTest\TestData\XML\XMLReaderDeclaration\SchemaVersion2.10\Distributed\ComponentData\ElectricMachineSystem_1.xml" HomeFolder="Yes"/>
+			<File FilePath="VectoCoreTest\TestData\XML\XMLReaderDeclaration\SchemaVersion2.10\Distributed\ComponentData\ElectricMachineSystem_StdValues.xml" HomeFolder="Yes"/>
+			<File FilePath="VectoCoreTest\TestData\XML\XMLReaderDeclaration\SchemaVersion2.10\Distributed\ComponentData\Gearbox_APT-N.xml" HomeFolder="Yes"/>
+			<File FilePath="VectoCoreTest\TestData\XML\XMLReaderDeclaration\SchemaVersion2.10\Distributed\ComponentData\Gearbox_IHPC.xml" HomeFolder="Yes"/>
+			<File FilePath="VectoCoreTest\TestData\XML\XMLReaderDeclaration\SchemaVersion2.10\Distributed\ComponentData\IEPC_1.xml" HomeFolder="Yes"/>
+			<File FilePath="VectoCoreTest\TestData\XML\XMLReaderDeclaration\SchemaVersion2.10\Distributed\ComponentData\IEPC_StdValues.xml" HomeFolder="Yes"/>
 		</Folder>
 		<Folder FolderName="Schema 2.10_Jobs">
 			<Folder FolderName="HeavyLorry">
@@ -160,15 +160,15 @@
 					<File FilePath="VectoCoreTest\TestData\XML\XMLReaderDeclaration\SchemaVersion2.10\Distributed\CompletedBus\PEV_completedBus_1.xml"/>
 				</Folder>
 				<Folder FolderName="ComponentData">
-					<File FilePath="VectoCoreTest\TestData\XML\XMLReaderDeclaration\SchemaVersion2.10\Distributed\ComponentData\BatterySystem_1.xml" HomeFolder="Yes"/>
-					<File FilePath="VectoCoreTest\TestData\XML\XMLReaderDeclaration\SchemaVersion2.10\Distributed\ComponentData\CapacitorSystem_1.xml" HomeFolder="Yes"/>
-					<File FilePath="VectoCoreTest\TestData\XML\XMLReaderDeclaration\SchemaVersion2.10\Distributed\ComponentData\ElectricMachineSystem-IHPC_1.xml" HomeFolder="Yes"/>
-					<File FilePath="VectoCoreTest\TestData\XML\XMLReaderDeclaration\SchemaVersion2.10\Distributed\ComponentData\ElectricMachineSystem_1.xml" HomeFolder="Yes"/>
-					<File FilePath="VectoCoreTest\TestData\XML\XMLReaderDeclaration\SchemaVersion2.10\Distributed\ComponentData\ElectricMachineSystem_StdValues.xml" HomeFolder="Yes"/>
-					<File FilePath="VectoCoreTest\TestData\XML\XMLReaderDeclaration\SchemaVersion2.10\Distributed\ComponentData\Gearbox_APT-N.xml" HomeFolder="Yes"/>
-					<File FilePath="VectoCoreTest\TestData\XML\XMLReaderDeclaration\SchemaVersion2.10\Distributed\ComponentData\Gearbox_IHPC.xml" HomeFolder="Yes"/>
-					<File FilePath="VectoCoreTest\TestData\XML\XMLReaderDeclaration\SchemaVersion2.10\Distributed\ComponentData\IEPC_1.xml" HomeFolder="Yes"/>
-					<File FilePath="VectoCoreTest\TestData\XML\XMLReaderDeclaration\SchemaVersion2.10\Distributed\ComponentData\IEPC_StdValues.xml" HomeFolder="Yes"/>
+					<File FilePath="VectoCoreTest\TestData\XML\XMLReaderDeclaration\SchemaVersion2.10\Distributed\ComponentData\BatterySystem_1.xml"/>
+					<File FilePath="VectoCoreTest\TestData\XML\XMLReaderDeclaration\SchemaVersion2.10\Distributed\ComponentData\CapacitorSystem_1.xml"/>
+					<File FilePath="VectoCoreTest\TestData\XML\XMLReaderDeclaration\SchemaVersion2.10\Distributed\ComponentData\ElectricMachineSystem-IHPC_1.xml"/>
+					<File FilePath="VectoCoreTest\TestData\XML\XMLReaderDeclaration\SchemaVersion2.10\Distributed\ComponentData\ElectricMachineSystem_1.xml"/>
+					<File FilePath="VectoCoreTest\TestData\XML\XMLReaderDeclaration\SchemaVersion2.10\Distributed\ComponentData\ElectricMachineSystem_StdValues.xml"/>
+					<File FilePath="VectoCoreTest\TestData\XML\XMLReaderDeclaration\SchemaVersion2.10\Distributed\ComponentData\Gearbox_APT-N.xml"/>
+					<File FilePath="VectoCoreTest\TestData\XML\XMLReaderDeclaration\SchemaVersion2.10\Distributed\ComponentData\Gearbox_IHPC.xml"/>
+					<File FilePath="VectoCoreTest\TestData\XML\XMLReaderDeclaration\SchemaVersion2.10\Distributed\ComponentData\IEPC_1.xml"/>
+					<File FilePath="VectoCoreTest\TestData\XML\XMLReaderDeclaration\SchemaVersion2.10\Distributed\ComponentData\IEPC_StdValues.xml"/>
 				</Folder>
 				<Folder FolderName="ExemptedVehicles">
 					<File FilePath="VectoCoreTest\TestData\XML\XMLReaderDeclaration\SchemaVersion2.10\Distributed\ExemptedVehicles\exempted_completedBus_input_full.xml"/>

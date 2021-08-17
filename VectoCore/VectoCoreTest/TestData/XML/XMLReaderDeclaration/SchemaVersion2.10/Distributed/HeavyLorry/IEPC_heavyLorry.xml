@@ -48,10 +48,10 @@
 					<DesignTypeWheelMotor>true</DesignTypeWheelMotor>
 					<Gears xsi:type="v2.10.1:IEPCGearsDeclarationType">
 						<Gear number="1">
-							<v2.0:Ratio>3.000</v2.0:Ratio>
+							<Ratio>3.000</Ratio>
 						</Gear>
 						<Gear number="2">
-							<v2.0:Ratio>1.000</v2.0:Ratio>
+							<Ratio>1.000</Ratio>
 							<MaxOutShaftTorque>2000.00</MaxOutShaftTorque>
 						</Gear>
 					</Gears>
@@ -106,6 +106,7 @@
 							<CertificationNumber>token</CertificationNumber>
 							<Date>2017-01-01T00:00:00Z</Date>
 							<AppVersion>aaaaa</AppVersion>
+							<CertificationMethod>Measured</CertificationMethod>
 							<BatteryType>HPBS</BatteryType>
 							<RatedCapacity>72.00</RatedCapacity>
 							<ConnectorsSubsystemsIncluded>true</ConnectorsSubsystemsIncluded>
@@ -143,6 +144,7 @@
 							<CertificationNumber>token</CertificationNumber>
 							<Date>2017-01-01T00:00:00Z</Date>
 							<AppVersion>aaaaa</AppVersion>
+							<CertificationMethod>Measured</CertificationMethod>
 							<BatteryType>HPBS</BatteryType>
 							<RatedCapacity>72.00</RatedCapacity>
 							<ConnectorsSubsystemsIncluded>true</ConnectorsSubsystemsIncluded>

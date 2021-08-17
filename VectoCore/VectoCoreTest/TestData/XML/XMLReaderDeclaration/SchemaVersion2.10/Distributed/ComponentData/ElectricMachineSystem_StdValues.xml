@@ -8,7 +8,7 @@
 			<Date>2017-01-01T00:00:00Z</Date>
 			<AppVersion>aaaaa</AppVersion>
 			<ElectricMachineType>ASM</ElectricMachineType>
-			<CertificationMethod>Measurement</CertificationMethod>
+			<CertificationMethod>Standard values</CertificationMethod>
 			<R85RatedPower>1</R85RatedPower>
 			<RotationalInertia>0.10</RotationalInertia>
 			<ContinuousTorque>200.00</ContinuousTorque>
