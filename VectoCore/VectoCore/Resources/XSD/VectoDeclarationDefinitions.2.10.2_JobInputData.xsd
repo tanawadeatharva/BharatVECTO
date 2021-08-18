@@ -19,7 +19,8 @@
 	<xs:complexType name="Abstract_AUX_Conventional_LorryDeclarationType" abstract="true"/>
 	<xs:complexType name="Abstract_AUX_Conventional_PrimaryBusDeclarationType" abstract="true"/>
 	<xs:complexType name="Abstract_AUX_HEV_CompletedBusDeclarationType"/>
-	<xs:complexType name="Abstract_AUX_HEV_LorryDeclarationType"/>
+	<xs:complexType name="Abstract_AUX_HEV-P_LorryDeclarationType"/>
+	<xs:complexType name="Abstract_AUX_HEV-S_LorryDeclarationType"/>
 	<xs:complexType name="Abstract_AUX_HEV-P_PrimaryBusDeclarationType"/>
 	<xs:complexType name="Abstract_AUX_HEV-S_PrimaryBusDeclarationType"/>
 	<xs:complexType name="Abstract_AUX_IEPC_CompletedBusDeclarationType"/>
@@ -151,9 +152,14 @@
 			<xs:element name="Data" type="v2.10.2:Abstract_AUX_Conventional_PrimaryBusDeclarationType"/>
 		</xs:sequence>
 	</xs:complexType>
-	<xs:complexType name="AUX_Component_HEV_Lorry_Type">
+	<xs:complexType name="AUX_Component_HEV-P_Lorry_Type">
 		<xs:sequence>
-			<xs:element name="Data" type="v2.10.2:Abstract_AUX_HEV_LorryDeclarationType"/>
+			<xs:element name="Data" type="v2.10.2:Abstract_AUX_HEV-P_LorryDeclarationType"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="AUX_Component_HEV-S_Lorry_Type">
+		<xs:sequence>
+			<xs:element name="Data" type="v2.10.2:Abstract_AUX_HEV-S_LorryDeclarationType"/>
 		</xs:sequence>
 	</xs:complexType>
 	<xs:complexType name="AUX_Component_HEV-P_PrimaryBus_Type">
@@ -353,9 +359,9 @@
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
-	<xs:complexType name="AUX_HEV_LorryDataType">
+	<xs:complexType name="AUX_HEV-P_LorryDataType">
 		<xs:complexContent>
-			<xs:extension base="v2.10.2:Abstract_AUX_HEV_LorryDeclarationType">
+			<xs:extension base="v2.10.2:Abstract_AUX_HEV-P_LorryDeclarationType">
 				<xs:sequence>
 					<xs:element name="Fan">
 						<xs:complexType>
@@ -378,6 +384,83 @@
 									<xs:complexType>
 										<xs:simpleContent>
 											<xs:extension base="v2.10.2:AuxSPTechnologyLorryType">
+												<xs:attribute name="axleNumber" use="required">
+													<xs:simpleType>
+														<xs:restriction base="xs:int">
+															<xs:minInclusive value="1"/>
+															<xs:maxInclusive value="4"/>
+														</xs:restriction>
+													</xs:simpleType>
+												</xs:attribute>
+											</xs:extension>
+										</xs:simpleContent>
+									</xs:complexType>
+								</xs:element>
+							</xs:sequence>
+						</xs:complexType>
+					</xs:element>
+					<xs:element name="ElectricSystem">
+						<xs:complexType>
+							<xs:sequence>
+								<xs:element name="Technology" type="v2.10.2:AuxESTechnologyLorryType">
+									<xs:annotation>
+										<xs:documentation>P183</xs:documentation>
+									</xs:annotation>
+								</xs:element>
+							</xs:sequence>
+						</xs:complexType>
+					</xs:element>
+					<xs:element name="PneumaticSystem">
+						<xs:complexType>
+							<xs:sequence>
+								<xs:element name="Technology" type="v2.10.2:AuxPSTechnologyLorryType">
+									<xs:annotation>
+										<xs:documentation>P184</xs:documentation>
+									</xs:annotation>
+								</xs:element>
+							</xs:sequence>
+						</xs:complexType>
+					</xs:element>
+					<xs:element name="HVAC">
+						<xs:complexType>
+							<xs:sequence>
+								<xs:element name="Technology" type="v2.10.2:AuxHVACTechnologyLorryType">
+									<xs:annotation>
+										<xs:documentation>P185</xs:documentation>
+									</xs:annotation>
+								</xs:element>
+							</xs:sequence>
+						</xs:complexType>
+					</xs:element>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="AUX_HEV-S_LorryDataType">
+		<xs:complexContent>
+			<xs:extension base="v2.10.2:Abstract_AUX_HEV-S_LorryDeclarationType">
+				<xs:sequence>
+					<xs:element name="Fan">
+						<xs:complexType>
+							<xs:sequence>
+								<xs:element name="Technology" type="v2.10.2:AuxFanTechnologyLorryType">
+									<xs:annotation>
+										<xs:documentation>P181</xs:documentation>
+									</xs:annotation>
+								</xs:element>
+							</xs:sequence>
+						</xs:complexType>
+					</xs:element>
+					<xs:element name="SteeringPump">
+						<xs:complexType>
+							<xs:sequence>
+								<xs:element name="Technology" maxOccurs="4">
+									<xs:annotation>
+										<xs:documentation>P182</xs:documentation>
+									</xs:annotation>
+									<xs:complexType>
+										<xs:simpleContent>
+											<xs:extension base="v2.10.2:AuxSPTechnology_HEV-S_LorryType">
 												<xs:attribute name="axleNumber" use="required">
 													<xs:simpleType>
 														<xs:restriction base="xs:int">
@@ -531,7 +614,7 @@
 									</xs:annotation>
 									<xs:complexType>
 										<xs:simpleContent>
-											<xs:extension base="v2.10.2:AuxSPTechnologyPrimaryBusType">
+											<xs:extension base="v2.10.2:AuxSPTechnology_HEV-S_PrimaryBusType">
 												<xs:attribute name="axleNumber" use="required">
 													<xs:simpleType>
 														<xs:restriction base="xs:int">
@@ -596,7 +679,7 @@
 									</xs:annotation>
 									<xs:complexType>
 										<xs:simpleContent>
-											<xs:extension base="v2.10.2:AuxSPTechnologyLorryType">
+											<xs:extension base="v2.10.2:AuxPSTechnology_PEV_LorryType">
 												<xs:attribute name="axleNumber" use="required">
 													<xs:simpleType>
 														<xs:restriction base="xs:int">
@@ -626,7 +709,7 @@
 					<xs:element name="PneumaticSystem">
 						<xs:complexType>
 							<xs:sequence>
-								<xs:element name="Technology" type="v2.10.2:AuxPSTechnologyLorryType">
+								<xs:element name="Technology" type="v2.10.2:AuxPSTechnology_PEV_LorryType">
 									<xs:annotation>
 										<xs:documentation>P184</xs:documentation>
 									</xs:annotation>
@@ -662,7 +745,7 @@
 									</xs:annotation>
 									<xs:complexType>
 										<xs:simpleContent>
-											<xs:extension base="v2.10.2:AuxSPTechnologyPrimaryBusType">
+											<xs:extension base="v2.10.2:AuxSPTechnology_PEV_PrimaryBusType">
 												<xs:attribute name="axleNumber" use="required">
 													<xs:simpleType>
 														<xs:restriction base="xs:int">
@@ -710,7 +793,7 @@
 									</xs:annotation>
 									<xs:complexType>
 										<xs:simpleContent>
-											<xs:extension base="v2.10.2:AuxSPTechnologyLorryType">
+											<xs:extension base="v2.10.2:AuxSPTechnology_PEV_LorryType">
 												<xs:attribute name="axleNumber" use="required">
 													<xs:simpleType>
 														<xs:restriction base="xs:int">
@@ -740,7 +823,7 @@
 					<xs:element name="PneumaticSystem">
 						<xs:complexType>
 							<xs:sequence>
-								<xs:element name="Technology" type="v2.10.2:AuxPSTechnologyLorryType">
+								<xs:element name="Technology" type="v2.10.2:AuxPSTechnology_PEV_LorryType">
 									<xs:annotation>
 										<xs:documentation>P184</xs:documentation>
 									</xs:annotation>
@@ -776,7 +859,7 @@
 									</xs:annotation>
 									<xs:complexType>
 										<xs:simpleContent>
-											<xs:extension base="v2.10.2:AuxSPTechnologyPrimaryBusType">
+											<xs:extension base="v2.10.2:AuxSPTechnology_PEV_PrimaryBusType">
 												<xs:attribute name="axleNumber" use="required">
 													<xs:simpleType>
 														<xs:restriction base="xs:int">
@@ -897,7 +980,7 @@
 					<xs:element name="Retarder" type="v2.0:RetarderComponentDeclarationType" minOccurs="0"/>
 					<xs:element name="Axlegear" type="v2.0:AxlegearComponentDeclarationType" minOccurs="0"/>
 					<xs:element name="AxleWheels" type="v2.0:AxleWheelsComponentDeclarationType"/>
-					<xs:element name="Auxiliaries" type="v2.10.2:AUX_Component_HEV_Lorry_Type"/>
+					<xs:element name="Auxiliaries" type="v2.10.2:AUX_Component_HEV-S_Lorry_Type"/>
 					<xs:element name="AirDrag" type="v2.0:AirDragComponentDeclarationType" minOccurs="0"/>
 				</xs:sequence>
 			</xs:extension>
@@ -929,7 +1012,7 @@
 					<xs:element name="Retarder" type="v2.0:RetarderComponentDeclarationType" minOccurs="0"/>
 					<xs:element name="Axlegear" type="v2.0:AxlegearComponentDeclarationType"/>
 					<xs:element name="AxleWheels" type="v2.0:AxleWheelsComponentDeclarationType"/>
-					<xs:element name="Auxiliaries" type="v2.10.2:AUX_Component_HEV_Lorry_Type"/>
+					<xs:element name="Auxiliaries" type="v2.10.2:AUX_Component_HEV-P_Lorry_Type"/>
 					<xs:element name="AirDrag" type="v2.0:AirDragComponentDeclarationType" minOccurs="0"/>
 				</xs:sequence>
 			</xs:extension>
@@ -964,7 +1047,7 @@
 					<xs:element name="Retarder" type="v2.0:RetarderComponentDeclarationType" minOccurs="0"/>
 					<xs:element name="Axlegear" type="v2.0:AxlegearComponentDeclarationType"/>
 					<xs:element name="AxleWheels" type="v2.0:AxleWheelsComponentDeclarationType"/>
-					<xs:element name="Auxiliaries" type="v2.10.2:AUX_Component_HEV_Lorry_Type"/>
+					<xs:element name="Auxiliaries" type="v2.10.2:AUX_Component_HEV-S_Lorry_Type"/>
 					<xs:element name="AirDrag" type="v2.0:AirDragComponentDeclarationType" minOccurs="0"/>
 				</xs:sequence>
 			</xs:extension>
@@ -994,7 +1077,7 @@
 					<xs:element name="Retarder" type="v2.0:RetarderComponentDeclarationType" minOccurs="0"/>
 					<xs:element name="Axlegear" type="v2.0:AxlegearComponentDeclarationType"/>
 					<xs:element name="AxleWheels" type="v2.0:AxleWheelsComponentDeclarationType"/>
-					<xs:element name="Auxiliaries" type="v2.10.2:AUX_Component_HEV_Lorry_Type"/>
+					<xs:element name="Auxiliaries" type="v2.10.2:AUX_Component_HEV-S_Lorry_Type"/>
 					<xs:element name="AirDrag" type="v2.0:AirDragComponentDeclarationType" minOccurs="0"/>
 				</xs:sequence>
 			</xs:extension>
@@ -1020,7 +1103,7 @@
 					<xs:group ref="v2.10.2:Components_HEV-Sx_GenSetSequenceGroup"/>
 					<xs:element name="Retarder" type="v2.0:RetarderComponentDeclarationType" minOccurs="0"/>
 					<xs:element name="AxleWheels" type="v2.0:AxleWheelsComponentDeclarationType"/>
-					<xs:element name="Auxiliaries" type="v2.10.2:AUX_Component_HEV_Lorry_Type"/>
+					<xs:element name="Auxiliaries" type="v2.10.2:AUX_Component_HEV-S_Lorry_Type"/>
 					<xs:element name="AirDrag" type="v2.0:AirDragComponentDeclarationType" minOccurs="0"/>
 				</xs:sequence>
 			</xs:extension>
@@ -2177,6 +2260,19 @@
 			<xs:enumeration value="Vacuum pump + elec. driven"/>
 		</xs:restriction>
 	</xs:simpleType>
+	<xs:simpleType name="AuxPSTechnology_PEV_LorryType">
+		<xs:restriction base="v2.10.2:AuxPSTechnologyLorryType">
+			<xs:enumeration value="Small + elec. driven"/>
+			<xs:enumeration value="Small + ESS + elec. driven "/>
+			<xs:enumeration value="Medium Supply 1-stage + elec. driven"/>
+			<xs:enumeration value="Medium Supply 1-stage + AMS + elec. driven "/>
+			<xs:enumeration value="Medium Supply 2-stage + elec. driven"/>
+			<xs:enumeration value="Medium Supply 2-stage + AMS + elec. driven"/>
+			<xs:enumeration value="Large Supply + elec. driven"/>
+			<xs:enumeration value="Large Supply + AMS + elec. driven"/>
+			<xs:enumeration value="Vacuum pump + elec. driven"/>
+		</xs:restriction>
+	</xs:simpleType>
 	<xs:simpleType name="AuxSPTechnologyLorryType">
 		<xs:restriction base="xs:string">
 			<xs:enumeration value="Crankshaft mounted - Electronically controlled visco clutch"/>
@@ -2190,6 +2286,18 @@
 			<xs:enumeration value="Full electric steering gear"/>
 		</xs:restriction>
 	</xs:simpleType>
+	<xs:simpleType name="AuxSPTechnology_HEV-S_LorryType">
+		<xs:restriction base="v2.10.2:AuxSPTechnologyLorryType">
+			<xs:enumeration value="Electric driven pump"/>
+			<xs:enumeration value="Full electric steering gear"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="AuxSPTechnology_PEV_LorryType">
+		<xs:restriction base="v2.10.2:AuxSPTechnologyLorryType">
+			<xs:enumeration value="Electric driven pump"/>
+			<xs:enumeration value="Full electric steering gear"/>
+		</xs:restriction>
+	</xs:simpleType>
 	<xs:simpleType name="AuxSPTechnologyPrimaryBusType">
 		<xs:restriction base="xs:string">
 			<xs:enumeration value="Fixed displacement"/>
@@ -2198,6 +2306,18 @@
 			<xs:enumeration value="Dual displacement with elec. control"/>
 			<xs:enumeration value="Variable displacement mech. controlled"/>
 			<xs:enumeration value="Variable displacement elec. controlled"/>
+			<xs:enumeration value="Electric driven pump"/>
+			<xs:enumeration value="Full electric steering gear"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="AuxSPTechnology_PEV_PrimaryBusType">
+		<xs:restriction base="v2.10.2:AuxSPTechnologyPrimaryBusType">
+			<xs:enumeration value="Electric driven pump"/>
+			<xs:enumeration value="Full electric steering gear"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="AuxSPTechnology_HEV-S_PrimaryBusType">
+		<xs:restriction base="v2.10.2:AuxSPTechnologyPrimaryBusType">
 			<xs:enumeration value="Electric driven pump"/>
 			<xs:enumeration value="Full electric steering gear"/>
 		</xs:restriction>

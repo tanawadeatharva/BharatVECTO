@@ -283,7 +283,7 @@
 			<Auxiliaries>
 				<Data xsi:type="AUX_IEPC_PrimaryBusType">
 					<SteeringPump>
-						<Technology axleNumber="1">Variable displacement elec. controlled</Technology>
+						<Technology axleNumber="1">Electric driven pump</Technology>
 					</SteeringPump>
 					<PneumaticSystem>
 						<CompressorDrive>electrically</CompressorDrive>

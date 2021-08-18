@@ -411,12 +411,12 @@
 				</v2.0:Data>
 			</AxleWheels>
 			<Auxiliaries>
-				<Data xsi:type="AUX_HEV_LorryDataType">
+				<Data xsi:type="AUX_HEV-S_LorryDataType">
 					<Fan>
 						<Technology>Hydraulic driven - Constant displacement pump</Technology>
 					</Fan>
 					<SteeringPump>
-						<Technology axleNumber="1">Variable displacement elec. controlled</Technology>
+						<Technology axleNumber="1">Electric driven pump</Technology>
 					</SteeringPump>
 					<ElectricSystem>
 						<Technology>Standard technology - LED headlights, all</Technology>

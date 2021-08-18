@@ -423,13 +423,13 @@
 			<Auxiliaries>
 				<Data xsi:type="AUX_PEV_LorryDataType">
 					<SteeringPump>
-						<Technology axleNumber="1">Variable displacement elec. controlled</Technology>
+						<Technology axleNumber="1">Electric driven pump</Technology>
 					</SteeringPump>
 					<ElectricSystem>
 						<Technology>Standard technology - LED headlights, all</Technology>
 					</ElectricSystem>
 					<PneumaticSystem>
-						<Technology>Medium Supply 2-stage</Technology>
+						<Technology>Medium Supply 2-stage + elec. driven</Technology>
 					</PneumaticSystem>
 					<HVAC>
 						<Technology>Default</Technology>
