@@ -336,7 +336,8 @@
 					<xs:element name="PneumaticSystem">
 						<xs:complexType>
 							<xs:sequence>
-								<xs:group ref="v2.10.2:BusAuxPneumaticSystemGroup"/>
+								<xs:group ref="v2.10.2:BusAuxPneumaticSystemGen_Conventional_SequenceGroup"/>
+								<xs:group ref="v2.10.2:BusAuxPneumaticSystemConsumerSequenceGroup"/>
 							</xs:sequence>
 						</xs:complexType>
 					</xs:element>
@@ -489,7 +490,8 @@
 					<xs:element name="PneumaticSystem">
 						<xs:complexType>
 							<xs:sequence>
-								<xs:group ref="v2.10.2:BusAuxPneumaticSystemGroup"/>
+								<xs:group ref="v2.10.2:BusAuxPneumaticSystemGen_HEV-Px_SequenceGroup"/>
+								<xs:group ref="v2.10.2:BusAuxPneumaticSystemConsumerSequenceGroup"/>
 							</xs:sequence>
 						</xs:complexType>
 					</xs:element>
@@ -564,7 +566,8 @@
 					<xs:element name="PneumaticSystem">
 						<xs:complexType>
 							<xs:sequence>
-								<xs:group ref="v2.10.2:BusAuxPneumaticSystemGroup_HEV-S"/>
+								<xs:group ref="v2.10.2:BusAuxPneumaticSystemGen_HEV-S_SequenceGroup"/>
+								<xs:group ref="v2.10.2:BusAuxPneumaticSystemConsumerSequenceGroup"/>
 							</xs:sequence>
 						</xs:complexType>
 					</xs:element>
@@ -675,21 +678,11 @@
 							</xs:sequence>
 						</xs:complexType>
 					</xs:element>
-					<xs:element name="ElectricSystem">
-						<xs:complexType>
-							<xs:sequence>
-								<xs:element name="AlternatorTechnology" type="v2.10.2:AlternatorTechnology_IEPC_Type">
-									<xs:annotation>
-										<xs:documentation>P294 - enum</xs:documentation>
-									</xs:annotation>
-								</xs:element>
-							</xs:sequence>
-						</xs:complexType>
-					</xs:element>
 					<xs:element name="PneumaticSystem">
 						<xs:complexType>
 							<xs:sequence>
-								<xs:group ref="v2.10.2:BusAuxPneumaticSystemGroup"/>
+								<xs:group ref="v2.10.2:BusAuxPneumaticSystemGen_IEPC_SequenceGroup"/>
+								<xs:group ref="v2.10.2:BusAuxPneumaticSystemConsumerSequenceGroup"/>
 							</xs:sequence>
 						</xs:complexType>
 					</xs:element>
@@ -799,20 +792,12 @@
 							</xs:sequence>
 						</xs:complexType>
 					</xs:element>
-					<xs:element name="ElectricSystem">
-						<xs:complexType>
-							<xs:sequence>
-								<xs:element name="AlternatorTechnology" type="v2.10.2:AlternatorTechnology_PEV_Type">
-									<xs:annotation>
-										<xs:documentation>P294 - enum</xs:documentation>
-									</xs:annotation>
-								</xs:element>
-							</xs:sequence>
-						</xs:complexType>
-					</xs:element>
 					<xs:element name="PneumaticSystem">
 						<xs:complexType>
-							<xs:group ref="v2.10.2:BusAuxPneumaticSystemGroup"/>
+							<xs:sequence>
+								<xs:group ref="v2.10.2:BusAuxPneumaticSystemGen_PEV_SequenceGroup"/>
+								<xs:group ref="v2.10.2:BusAuxPneumaticSystemConsumerSequenceGroup"/>
+							</xs:sequence>
 						</xs:complexType>
 					</xs:element>
 					<xs:element name="HVAC">
@@ -2062,18 +2047,8 @@
 			<xs:enumeration value="no alternator"/>
 		</xs:restriction>
 	</xs:simpleType>
-	<xs:simpleType name="AlternatorTechnology_IEPC_Type">
-		<xs:restriction base="xs:string">
-			<xs:enumeration value="no alternator"/>
-		</xs:restriction>
-	</xs:simpleType>
-	<xs:simpleType name="AlternatorTechnology_PEV_Type">
-		<xs:restriction base="xs:string">
-			<xs:enumeration value="no alternator"/>
-		</xs:restriction>
-	</xs:simpleType>
 	<xs:simpleType name="AlternatorTechnologyType">
-		<xs:union memberTypes="v2.10.2:AlternatorTechnology_Conventional_Type v2.10.2:AlternatorTechnology_HEV_Type v2.10.2:AlternatorTechnology_PEV_Type v2.10.2:AlternatorTechnology_IEPC_Type v2.10.2:AlternatorTechnology_HEV-S_Type"/>
+		<xs:union memberTypes="v2.10.2:AlternatorTechnology_Conventional_Type v2.10.2:AlternatorTechnology_HEV_Type v2.10.2:AlternatorTechnology_HEV-S_Type"/>
 	</xs:simpleType>
 	<xs:simpleType name="ArchitectureID_HEV_Type">
 		<xs:union memberTypes="v2.10.2:ArchitectureID_HEV-Px_Type v2.10.2:ArchitectureID_HEV-Sx_Type v2.10.2:ArchitectureID_HEV-IEPC-S_Type"/>
@@ -2758,7 +2733,32 @@
 			</xs:element>
 		</xs:sequence>
 	</xs:group>
-	<xs:group name="BusAuxPneumaticSystemGroup">
+	<xs:group name="BusAuxPneumaticSystemConsumerSequenceGroup">
+		<xs:sequence>
+			<xs:element name="SmartRegenerationSystem" type="xs:boolean">
+				<xs:annotation>
+					<xs:documentation>P312</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="AirsuspensionControl">
+				<xs:annotation>
+					<xs:documentation>P315</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:enumeration value="mechanically"/>
+						<xs:enumeration value="electronically"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="PneumaticSCRReagentDosing" type="xs:boolean">
+				<xs:annotation>
+					<xs:documentation>P316</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:group>
+	<xs:group name="BusAuxPneumaticSystemGen_Conventional_SequenceGroup">
 		<xs:sequence>
 			<xs:element name="SizeOfAirSupply" type="v2.10.2:PneumaticSystemTechnologyType"/>
 			<xs:element name="CompressorDrive">
@@ -2781,16 +2781,83 @@
 				</xs:simpleType>
 			</xs:element>
 			<xs:element name="SmartCompressionSystem" type="xs:boolean"/>
-			<xs:element name="SmartRegenerationSystem" type="xs:boolean"/>
-			<xs:element name="AirsuspensionControl">
+		</xs:sequence>
+	</xs:group>
+	<xs:group name="BusAuxPneumaticSystemGen_HEV-Px_SequenceGroup">
+		<xs:sequence>
+			<xs:element name="SizeOfAirSupply" type="v2.10.2:PneumaticSystemTechnologyType"/>
+			<xs:element name="CompressorDrive">
+				<xs:annotation>
+					<xs:documentation>P310 - enum</xs:documentation>
+				</xs:annotation>
 				<xs:simpleType>
 					<xs:restriction base="xs:string">
 						<xs:enumeration value="mechanically"/>
-						<xs:enumeration value="electronically"/>
+						<xs:enumeration value="electrically"/>
 					</xs:restriction>
 				</xs:simpleType>
 			</xs:element>
-			<xs:element name="PneumaticSCRReagentDosing" type="xs:boolean"/>
+			<xs:element name="Clutch" type="v2.10.2:PneumaticSystemClutchTypeType"/>
+			<xs:element name="CompressorRatio">
+				<xs:simpleType>
+					<xs:restriction base="v1.0:Double3">
+						<xs:minInclusive value="0.000"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="SmartCompressionSystem" type="xs:boolean"/>
+		</xs:sequence>
+	</xs:group>
+	<xs:group name="BusAuxPneumaticSystemGen_HEV-S_SequenceGroup">
+		<xs:sequence>
+			<xs:element name="SizeOfAirSupply" type="v2.10.2:PneumaticSystemTechnologyType"/>
+			<xs:element name="CompressorDrive">
+				<xs:annotation>
+					<xs:documentation>P310 - enum</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:enumeration value="mechanically"/>
+						<xs:enumeration value="electrically"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="Clutch" type="v2.10.2:PneumaticSystemClutchTypeType"/>
+			<xs:element name="CompressorRatio">
+				<xs:simpleType>
+					<xs:restriction base="v1.0:Double3">
+						<xs:minInclusive value="0.000"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+		</xs:sequence>
+	</xs:group>
+	<xs:group name="BusAuxPneumaticSystemGen_IEPC_SequenceGroup">
+		<xs:sequence>
+			<xs:element name="CompressorDrive">
+				<xs:annotation>
+					<xs:documentation>P310 - enum</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:enumeration value="electrically"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+		</xs:sequence>
+	</xs:group>
+	<xs:group name="BusAuxPneumaticSystemGen_PEV_SequenceGroup">
+		<xs:sequence>
+			<xs:element name="CompressorDrive">
+				<xs:annotation>
+					<xs:documentation>P310 - enum</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:enumeration value="electrically"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
 		</xs:sequence>
 	</xs:group>
 	<xs:group name="BusAuxPneumaticSystemGroup_HEV-S">

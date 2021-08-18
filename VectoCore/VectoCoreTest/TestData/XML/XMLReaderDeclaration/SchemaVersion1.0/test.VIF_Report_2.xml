@@ -583,8 +583,8 @@ xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:DeclarationOutput:VehicleInterimFile
         <LegislativeCategory>M3</LegislativeCategory>
         <CorrectedActualMass>8300</CorrectedActualMass>
         <TechnicalPermissibleMaximumLadenMass>18000</TechnicalPermissibleMaximumLadenMass>
-        <NgTankSystem>Compressed</NgTankSystem>
         <ClassBus>II+III</ClassBus>
+        <NgTankSystem>Compressed</NgTankSystem>
         <NumberPassengerSeatsLowerDeck>30</NumberPassengerSeatsLowerDeck>
         <NumberPassengersStandingLowerDeck>0</NumberPassengersStandingLowerDeck>
         <NumberPassengerSeatsUpperDeck>0</NumberPassengerSeatsUpperDeck>

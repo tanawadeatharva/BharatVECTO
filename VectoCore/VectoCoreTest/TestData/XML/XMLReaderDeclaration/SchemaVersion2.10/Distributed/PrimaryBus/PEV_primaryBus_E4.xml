@@ -276,15 +276,8 @@
 					<SteeringPump>
 						<Technology axleNumber="1">Variable displacement elec. controlled</Technology>
 					</SteeringPump>
-					<ElectricSystem>
-						<AlternatorTechnology>no alternator</AlternatorTechnology>
-					</ElectricSystem>
 					<PneumaticSystem>
-						<SizeOfAirSupply>Large Supply 2-stage</SizeOfAirSupply>
-						<CompressorDrive>mechanically</CompressorDrive>
-						<Clutch>none</Clutch>
-						<CompressorRatio>1.000</CompressorRatio>
-						<SmartCompressionSystem>true</SmartCompressionSystem>
+						<CompressorDrive>electrically</CompressorDrive>
 						<SmartRegenerationSystem>false</SmartRegenerationSystem>
 						<AirsuspensionControl>electronically</AirsuspensionControl>
 						<PneumaticSCRReagentDosing>true</PneumaticSCRReagentDosing>
