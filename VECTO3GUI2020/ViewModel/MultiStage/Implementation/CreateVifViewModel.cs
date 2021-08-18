@@ -154,16 +154,23 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 		{
 			var inputDataProvider = inputData as JSONInputDataV10_PrimaryAndStageInputBus;
 			Debug.Assert(inputDataProvider != null);
+
+			try {
+				if (inputDataProvider.StageInputData != null && (inputDataProvider.StageInputData.ExemptedVehicle !=
+																inputDataProvider.PrimaryVehicle.JobInputData.Vehicle
+																	.ExemptedVehicle)) {
+					throw new VectoException("Can't combine exempted and non-exempted input data");
+				}
+
+				StageInputPath = inputDataProvider.StageInputData?.DataSource?.SourceFile;
+				PrimaryInputPath = inputDataProvider.PrimaryVehicle?.DataSource?.SourceFile;
+			} catch (Exception ex) {
+				_dialogHelper.ShowErrorMessage(ex.Message);
+			}
 			
 
-			if (inputDataProvider.StageInputData != null && (inputDataProvider.StageInputData.ExemptedVehicle !=
-															inputDataProvider.PrimaryVehicle.JobInputData.Vehicle.ExemptedVehicle)) {
-				throw new VectoException("Can't combine exempted and non-exempted input data");
-			}
-
 			Completed = inputDataProvider.Completed ?? false;
-			StageInputPath = inputDataProvider.StageInputData?.DataSource?.SourceFile;
-			PrimaryInputPath = inputDataProvider.PrimaryVehicle?.DataSource?.SourceFile;
+
 			DataSource = inputData.DataSource;
 			UpdateTitleAndDocumentName();
 		}
