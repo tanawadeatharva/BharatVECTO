@@ -1127,14 +1127,13 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 	public class JSONInputDataV10_PrimaryAndStageInputBus : JSONFile, IInputDataProvider, IMultistagePrimaryAndStageInputDataProvider
 	{
 		private readonly IXMLInputDataReader _xmlInputReader;
-		private string _primaryVehicleInputDataPath;
-
-		private string _stageInputDataPath;
+		private readonly string _primaryVehicleInputDataPath;
+		private readonly string _stageInputDataPath;
 		private IVehicleDeclarationInputData _stageInputData;
-
-
 		private IDeclarationInputDataProvider _primaryVehicle;
 
+		public string PrimaryVehicleInputDataPath => _primaryVehicleInputDataPath;
+		public string StageInputDataPath => _stageInputDataPath;
 		public IDeclarationInputDataProvider PrimaryVehicle => 
 			_primaryVehicle ?? (_primaryVehicle =
 				_xmlInputReader.CreateDeclaration(_primaryVehicleInputDataPath));
@@ -1146,6 +1145,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
                 _xmlInputReader.CreateDeclaration(_stageInputDataPath).JobInputData.Vehicle)
 			:
 			null;
+
+
 
 		private bool? _completed;
 
