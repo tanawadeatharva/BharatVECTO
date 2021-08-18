@@ -12,14 +12,8 @@ namespace Vecto3GUI2020Test.ViewModelTests
 	[TestFixture]
 	public class MultistageAuxiliariesViewModelTests : ViewModelTestBase
 	{
-		[Test]
-		public void TestAllowedValuesHeatPumpTypePassenger()
-		{
-			var auxVm = new MultistageAuxiliariesViewModel(null);
-			Assert.IsFalse(auxVm.HeatPumpTypePassengerAllowedValues.Contains(HeatPumpMode.N_A));
-        }
 
-       [Test]
+		[Test]
         public void TestAllowedValuesHeatPumpTypeDriver()
         {
             var auxVm = new MultistageAuxiliariesViewModel(null);
